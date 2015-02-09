@@ -2,9 +2,7 @@
 
 #include <string.h>
 
-#define LLOG(x)
-
-bool IsSpc(byte c)
+inline bool IsSpc(byte c)
 {
 	return c > 0 && c <= 32;
 }
@@ -14,7 +12,7 @@ String CppMacro::ToString() const
 	return String().Cat() << "(" << AsString(param) << ") " << body;
 }
 
-String CppMacro::Expand(const Vector<String>& p)
+String CppMacro::Expand(const Vector<String>& p) const
 {
 	String r;
 	const char *s = body;
@@ -82,18 +80,18 @@ String CppMacro::Expand(const Vector<String>& p)
 		}
 		r.Cat(*s++);
 	}
-	LLOG("EXPAND: " << r);
 	return r;
 }
 
-void Cpp::Define(const char *s)
+String Cpp::Define(const char *s)
 {
 	CParser p(s);
+	String id;
 	try {
-		String id;
 		if(!p.IsId())
-			return;
-		CppMacro& m = macro.GetAdd(p.ReadId());
+			return Null;
+		id = p.ReadId();
+		CppMacro& m = macro.GetAdd(id);
 		m.param.Clear();
 		if(p.Char('(')) {
 			while(p.IsId()) {
@@ -107,6 +105,7 @@ void Cpp::Define(const char *s)
 		m.body = p.GetPtr();
 	}
 	catch(CParser::Error) {}
+	return "#define " + id;
 }
 
 const char *Cpp::SkipString(const char *s)
@@ -140,7 +139,6 @@ void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)
 		else
 			h.Cat(*s++);
 	}
-	LLOG("param: " << h);
 	param.Add(h);
 }
 
@@ -164,53 +162,59 @@ String Cpp::Expand(const char *s)
 			while(IsAlNum(*s) || *s == '_')
 				s++;
 			String id(b, s);
-			int q = macro.Find(id);
-			if(q >= 0 && !macro[q].flag) {
-				LLOG("Expanding " << id);
-				Vector<String> param;
-				const char *s0 = s;
-				while(*s && (byte)*s <= ' ') s++;
-				if(*s == '(') {
-					s++;
-					const char *b = s;
-					int level = 0;
-					for(;;)
-						if(*s == ',' && level == 0) {
-							ParamAdd(param, b, s);
-							s++;
-							b = s;
-						}
-						else
-						if(*s == ')') {
-							s++;
-							if(level == 0) {
-								ParamAdd(param, b, s - 1);
-								break;
+			if(notmacro.Find(id) < 0) {
+				const CppMacro *m = NULL;
+				for(int i = 0; i < macro_set.GetCount() && !m; i++)
+					m = macro_set[i]->FindPtr(id);
+				if(m) {
+					Vector<String> param;
+					const char *s0 = s;
+					while(*s && (byte)*s <= ' ') s++;
+					if(*s == '(') {
+						s++;
+						const char *b = s;
+						int level = 0;
+						for(;;)
+							if(*s == ',' && level == 0) {
+								ParamAdd(param, b, s);
+								s++;
+								b = s;
 							}
-							level--;
-						}
-						else
-						if(*s == '(') {
-							s++;
-							level++;
-						}
-						else
-						if(*s == '\0')
-							break;
-						else
-						if(*s == '\"' || *s == '\'')
-							s = SkipString(s);
-						else
-							s++;
+							else
+							if(*s == ')') {
+								s++;
+								if(level == 0) {
+									ParamAdd(param, b, s - 1);
+									break;
+								}
+								level--;
+							}
+							else
+							if(*s == '(') {
+								s++;
+								level++;
+							}
+							else
+							if(*s == '\0')
+								break;
+							else
+							if(*s == '\"' || *s == '\'')
+								s = SkipString(s);
+							else
+								s++;
+					}
+					else
+						s = s0; // otherwise we eat spaces after parameterless macro
+					int ti = notmacro.GetCount();
+					notmacro.Add(id);
+					usedmacro.FindAdd(id);
+					id = '\x1a' + Expand(m->Expand(param));
+					notmacro.Trim(ti);
 				}
 				else
-					s = s0; // otherwise we eat spaces after parameterless macro
-				macro[q].flag = true;
-				r.Cat(Expand(macro[q].Expand(param)));
-				macro[q].flag = false;
+					notmacro.FindAdd(id);
 			}
-			else
-				r.Cat(id);
+			r.Cat(id);
 		}
 		else
 		if(s[0] == '/' && s[1] == '*') {
@@ -229,8 +233,32 @@ String Cpp::Expand(const char *s)
 	return r;
 }
 
-String Cpp::Preprocess(Stream& in, bool needresult)
+const VectorMap<String, CppMacro> *GetFileMacros(const String& filepath)
 {
+	static ArrayMap<String, CppMacroRecord> cache;
+	Time last_write = FileGetTime(filepath);
+	CppMacroRecord& m = cache.GetAdd(filepath);
+	if(m.last_write != last_write) {
+		m.last_write = last_write;
+		Cpp cpp;
+		FileIn in(filepath);
+		m.includes.Clear();
+		cpp.Do(in, m.includes);
+		m.macro = pick(cpp.macro);
+	}
+	return &m.macro;
+}
+
+String Cpp::Do(Stream& in, Index<String>& header)
+{
+	bool needresult = true; _DBG_
+	
+	macro0.Add("__declspec").variadic = true;
+	macro0.Add("__cdecl").variadic = true;
+	macro_set.Add(&macro0);
+	
+	macro_set.Add(&macro);
+
 	incomment = false;
 	StringBuffer result;
 	result.Clear();
@@ -249,7 +277,7 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 		if(*s == '#') {
 			result.Cat("\n");
 			if(strncmp(s + 1, "define", 6) == 0)
-				Define(s + 7);
+				result << Define(s + 7) << "\n";
 			else
 			if(strncmp(s + 1, "undef", 5) == 0) {
 				CParser p(s + 6);
@@ -257,23 +285,25 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 					macro.UnlinkKey(p.ReadId());
 			}
 			else
-			if(strncmp(s + 1, "include", 7) == 0 && level < 100) {
+			if(strncmp(s + 1, "include", 7) == 0) {
 				String path = GetIncludePath(s + 8);
-				DDUMP(path);
-				if(path.GetCount()) {
+				if(path.GetCount() && header.Find(path) < 0) {
+					int lheader = header.GetCount();
+					header.Add(path);
 					Cpp inc;
-					inc.level = level + 1;
-					inc.filedir = filedir;
+					inc.filedir = GetFileFolder(path);
 					inc.include_path = include_path;
 					FileIn in(path);
-					inc.Preprocess(in, false);
-					inc.macro.Sweep();
-					for(int i = 0; i < inc.macro.GetCount(); i++)
-						macro.GetAdd(inc.macro.GetKey(i)) = inc.macro[i];
+					inc.Do(in, header);
+					macro_set.Drop();
+					for(int i = lheader; i < header.GetCount(); i++)
+						macro_set.Add(GetFileMacros(header[i]));
+					macro_set.Add(&macro);
+					notmacro.Clear();
 				}
 			}
 		}
-		else
+		else {
 			if(needresult)
 				result.Cat(Expand(l) + "\n");
 			else {
@@ -295,6 +325,7 @@ String Cpp::Preprocess(Stream& in, bool needresult)
 						s++;
 				}
 			}
+		}
 		if(needresult)
 			while(el--)
 				result.Cat("\n");
