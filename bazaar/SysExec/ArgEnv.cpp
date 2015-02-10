@@ -2,13 +2,53 @@
 
 NAMESPACE_UPP
 
+#ifdef PLATFORM_WIN32
+static void fixSpecials(String &s)
+{
+	// this stuff just for windows... sig
+	if(s.FindFirstOf(" \t\n\v\"") >= 0)
+	{
+		String sOld = s;
+		s.Clear();
+		s = "\"";
+
+		const char *sp = sOld;
+		for(;;) {
+			int num_backslashes = 0;
+			while(*sp == '\\') {
+				sp++;
+				num_backslashes++;
+			}
+			if(*sp == '\0') {
+				s.Cat('\\', 2 * num_backslashes);
+				break;
+			}
+			else
+			if(*sp == '\"') {
+				s.Cat('\\', 2 * num_backslashes + 1);
+				s << '\"';
+			}
+			else {
+				s.Cat('\\', num_backslashes);
+				s.Cat(*sp);
+			}
+			sp++;
+		}
+		s << '\"';
+	}
+}
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // parses an args line to be useable by spawnxx functions
-char **BuildArgs(String const &command, String const &argline)
+char **BuildArgs(String command, String const &argline)
 {
 	Array<String> args;
 	
 	// first arg should be command name
+#ifdef PLATFORM_WIN32
+		fixSpecials(command);
+#endif
 	args.Add(command);
 
 	// skips leading spaces
@@ -54,6 +94,9 @@ char **BuildArgs(String const &command, String const &argline)
 			}
 		}
 
+#ifdef PLATFORM_WIN32
+		fixSpecials(s);
+#endif
 		// skips trailing spaces
 		while (c && isspace(c))
 			c = argline[++pos];
