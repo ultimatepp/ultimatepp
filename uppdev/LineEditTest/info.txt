@@ -1,0 +1,27 @@
+TIMING Insert         : 623.00 ms - 623.00 ms (623.00 ms / 1 ), min: 623.00 ms, max: 623.00 ms, nesting: 1 - 1
+TIMING Remove0        : 11.00 ms - 11.00 ms (11.00 ms / 1 ), min: 11.00 ms, max: 11.00 ms, nesting: 1 - 1
+TIMING Get            : 227.00 ms - 227.00 ms (227.00 ms / 1 ), min: 227.00 ms, max: 227.00 ms, nesting: 1 - 1
+TIMING Remove         : 238.00 ms - 238.00 ms (238.00 ms / 1 ), min: 238.00 ms, max: 238.00 ms, nesting: 1 - 1
+TIMING Remove selection:  1.18 s  -  1.18 s  ( 1.18 s  / 1 ), min:  1.18 s , max:  1.18 s , nesting: 1 - 1
+TIMING GetPos         : 20.20 ms - 71.50 ns (31.00 ms / 282551 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 282551
+TIMING GetGPos        : 27.60 ms - 195.45 ns (33.00 ms / 141226 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 141226
+TIMING GetLinePos     : 17.98 ms - 39.87 us (18.00 ms / 451 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 451
+==================================
+TIMING Insert         : 637.00 ms - 637.00 ms (637.00 ms / 1 ), min: 637.00 ms, max: 637.00 ms, nesting: 1 - 1
+TIMING Remove0        : 10.00 ms - 10.00 ms (10.00 ms / 1 ), min: 10.00 ms, max: 10.00 ms, nesting: 1 - 1
+TIMING Get            : 17.00 ms - 17.00 ms (17.00 ms / 1 ), min: 17.00 ms, max: 17.00 ms, nesting: 1 - 1
+TIMING Remove         : 27.00 ms - 27.00 ms (27.00 ms / 1 ), min: 27.00 ms, max: 27.00 ms, nesting: 1 - 1
+TIMING Remove selection: 973.00 ms - 973.00 ms (973.00 ms / 1 ), min: 973.00 ms, max: 973.00 ms, nesting: 1 - 1
+TIMING GetPos         : 21.71 ms - 76.87 ns (31.00 ms / 282398 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 282398
+TIMING GetGPos        : 27.35 ms - 193.73 ns (32.00 ms / 141199 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 141199
+TIMING GetLinePos     :  7.00 ms - 241.35 us ( 7.00 ms / 29 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 29
+==================================
+TIMING Insert0        : 147.00 ms - 147.00 ms (147.00 ms / 1 ), min: 147.00 ms, max: 147.00 ms, nesting: 1 - 1
+TIMING Insert         : 147.00 ms - 147.00 ms (147.00 ms / 1 ), min: 147.00 ms, max: 147.00 ms, nesting: 1 - 1
+TIMING Remove0        : 10.00 ms - 10.00 ms (10.00 ms / 1 ), min: 10.00 ms, max: 10.00 ms, nesting: 1 - 1
+TIMING Get            : 16.00 ms - 16.00 ms (16.00 ms / 1 ), min: 16.00 ms, max: 16.00 ms, nesting: 1 - 1
+TIMING Remove         : 26.00 ms - 26.00 ms (26.00 ms / 1 ), min: 26.00 ms, max: 26.00 ms, nesting: 1 - 1
+TIMING Remove selection: 481.00 ms - 481.00 ms (481.00 ms / 1 ), min: 481.00 ms, max: 481.00 ms, nesting: 1 - 1
+TIMING GetPos         : 12.75 ms - 45.17 ns (22.00 ms / 282398 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 282398
+TIMING GetGPos        : 26.38 ms - 186.81 ns (31.00 ms / 141199 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 141199
+TIMING GetLinePos     :  7.00 ms - 241.35 us ( 7.00 ms / 29 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 29

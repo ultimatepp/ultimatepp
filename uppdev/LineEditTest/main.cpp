@@ -2,22 +2,22 @@
 
 using namespace Upp;
 
-class Test : public TopWindow
-{
-public:
-  LineEdit a, b;
-  Splitter s;
-  void aChanged() { b <<= ~a; }
-  Test()
-  {
-    a <<= THISBACK(aChanged);
-    Add(s.Vert(a, b).SizePos());
-    Zoomable().Sizeable();
-  }
-  typedef Test CLASSNAME;
-};
-
 GUI_APP_MAIN
 {
-   Test().Run();
+	LineEdit  editor;
+//	FileIn in("C:/xxx/logs/local1.info");
+	FileIn in("C:/Users/CXL/Downloads/local1.info");
+	editor.Load(in);
+/*	RDUMP(editor.GetRectSelection());
+	Rect r = Rect(0, 0, 5, editor.GetLineCount() - 3);
+	RDUMP(r);
+	editor.SetRectSelection(r);
+	RDUMP(editor.GetRectSelection());
+	{
+		RTIMING("Remove selection");
+		editor.Cut();
+	}*/
+	TopWindow win;
+	win.Add(editor.SizePos());
+	win.Run();
 }
