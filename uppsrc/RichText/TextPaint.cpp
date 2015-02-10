@@ -6,10 +6,9 @@ RichContext RichText::Context(const Rect& page, PageY py) const
 {
 	RichContext c(style);
 	c.page = GetPageMinusHeaderFooter(page);
+	c.py = py;
 	if(py.y < c.page.top)
-		c.py = PageY(0, c.page.top);
-	else
-		c.py = py;
+		c.py.y = c.page.top;
 	return c;
 }
 
@@ -52,7 +51,7 @@ RichCaret RichText::GetCaret(int pos, const Rect& page) const
 
 int RichText::GetPos(int x, PageY y, const Rect& page) const
 {
-	return RichTxt::GetPos(x, y, Context(page, y));
+	return RichTxt::GetPos(x, y, Context(page, PageY(0, 0)));
 }
 
 int RichText::GetVertMove(int pos, int gx, const Rect& page, int dir) const
@@ -62,7 +61,7 @@ int RichText::GetVertMove(int pos, int gx, const Rect& page, int dir) const
 
 RichHotPos  RichText::GetHotPos(int x, PageY y, int tolerance, const Rect& page) const
 {
-	RichHotPos p = RichTxt::GetHotPos(x, y, tolerance, Context(page, y));
+	RichHotPos p = RichTxt::GetHotPos(x, y, tolerance, Context(page, PageY(0, 0)));
 	if(p.column < -2)
 		p.table = 0;
 	return p;
