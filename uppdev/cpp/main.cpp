@@ -62,7 +62,7 @@ CONSOLE_APP_MAIN
 	DUMP(x.Expand("This is: TEST(  \"1\" \"2\" \",\", ',')!"));
 */
 //	Test("C:/OpenSSL-Win32/include/openssl/ssl.h");
-	Test("C:/Program Files/Microsoft SDKs/Windows/v7.1/Include/WinBase.h");
+//	Test("C:/Program Files/Microsoft SDKs/Windows/v7.1/Include/WinBase.h");
 //	Test("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\string.h");
 	return;
 	Cpp x;
