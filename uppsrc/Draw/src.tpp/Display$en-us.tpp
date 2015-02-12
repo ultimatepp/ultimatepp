@@ -98,10 +98,13 @@ keep aspect ratio with cx.&]
 [ {{10000t/25b/25@(113.42.0) [s0;%- [*@(229)4 AttrText]]}}&]
 [s3; &]
 [s1;:AttrText`:`:struct:%- [@(0.0.255) struct]_AttrText&]
-[s9; Simple helper class convertible to the Value. StdDisplay, StdRightDisplay 
+[s9; Helper class convertible to the Value. StdDisplay, StdRightDisplay 
 and StdCenterDisplay detect whether Value passed in is of AttrText 
 type and handle it differently by adopting non`-null attributes 
-for the text painted.&]
+for the text painted. AttrText is `'rich`' Value type, supporting 
+comparison and serialization. It can be compred to other Value 
+types. It is also possible to assign text that is different from 
+AttrText value.&]
 [s3;%- &]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
@@ -110,11 +113,15 @@ for the text painted.&]
 [s2; Text to be displayed.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:font:%- [_^Font^ Font]_font&]
+[s5;:AttrText`:`:value:%- [_^Value^ Value]_[* value]&]
+[s2; Represents Value of AttrText, usually for comparison/sorting.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AttrText`:`:font:%- [_^Font^ Font]_[* font]&]
 [s2; Font of text. It is default initialized by constructor to StdFont.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:ink:%- [_^Color^ Color]_ink&]
+[s5;:AttrText`:`:ink:%- [_^Color^ Color]_[* ink]&]
 [s2; Text color.&]
 [s3;%- &]
 [s4;%- &]
@@ -123,45 +130,46 @@ for the text painted.&]
 nor read`-only state.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:paper:%- [_^Color^ Color]_paper&]
+[s5;:AttrText`:`:paper:%- [_^Color^ Color]_[* paper]&]
 [s2; Background color&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:align:%- [@(0.0.255) int]_align&]
+[s5;:AttrText`:`:normalpaper:%- [_^Color^ Color]_[* normalpaper]&]
+[s2; Background color to be used if the item is not in selected nor 
+focused nor read`-only state.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AttrText`:`:align:%- [@(0.0.255) int]_[* align]&]
 [s2; Current alignment. Can be one of ALIGN`_LEFT, ALIGN`_RIGHT, 
 ALIGN`_CENTER.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:img:%- [_^Image^ Image]_img&]
+[s5;:AttrText`:`:img:%- [_^Image^ Image]_[* img]&]
 [s2; Icon aligned to the left side.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:imgspc:%- [@(0.0.255) int]_imgspc&]
+[s5;:AttrText`:`:imgspc:%- [@(0.0.255) int]_[* imgspc]&]
 [s2; Space between icon and text.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:Set`(const char`*`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Set([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[@3 s])&]
-[s5;:AttrText`:`:Set`(const wchar`*`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Set([@(0.0.255) c
-onst]_[_^wchar^ wchar]_`*[@3 s])&]
-[s5;:AttrText`:`:Set`(const WString`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Set([@(0.0.255) c
-onst]_[_^WString^ WString][@(0.0.255) `&]_[@3 s])&]
-[s5;:AttrText`:`:operator`=`(const char`*`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_oper
-ator`=([@(0.0.255) const]_[@(0.0.255) char]_`*[@3 s])&]
-[s5;:AttrText`:`:operator`=`(const wchar`*`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_ope
-rator`=([@(0.0.255) const]_[_^wchar^ wchar]_`*[@3 s])&]
-[s5;:AttrText`:`:operator`=`(const WString`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_o
-perator`=([@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[@3 s])&]
-[s2; Sets the text to [%-*@3 s].&]
+[s5;:AttrText`:`:Set`(const Value`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Set]([@(0.0.255) c
+onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s5;:AttrText`:`:operator`=`(const Value`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* op
+erator`=]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 v])&]
+[s2; Sets the value of AttrText and also text of it (using AsString).&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:operator`=`(const String`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* o
-perator`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
-[s2; Sets the text to [%-*@3 s].&]
+[s5;:AttrText`:`:Text`(const String`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Text]([@(0.0.255) c
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 txt])&]
+[s5;:AttrText`:`:Text`(const WString`&`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Text](
+[@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_[*@3 txt])&]
+[s5;:AttrText`:`:Text`(const char`*`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Text]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 txt])&]
+[s2; Sets the text independent of Value.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:Ink`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Ink([_^Color^ Color]_
-[@3 c])&]
+[s5;:AttrText`:`:Ink`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Ink]([_^Color^ Colo
+r]_[@3 c])&]
 [s2; Sets the text color.&]
 [s7; [%-*C@3 c]-|The color.&]
 [s7; [*/ Return value]-|`*this.&]
@@ -173,8 +181,8 @@ perator`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 nor focused nor read`-only state.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:Paper`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Paper([_^Color^ Co
-lor]_[@3 c])&]
+[s5;:AttrText`:`:Paper`(Color`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Paper]([_^Color^ C
+olor]_[@3 c])&]
 [s2; Sets the paper color.&]
 [s7; [%-*C@3 c]-|The color.&]
 [s7; [*/ Return value]-|`*this.&]
@@ -186,7 +194,7 @@ er]([_^Color^ Color]_[*@3 c])&]
 nor focused nor read`-only state.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:SetFont`(Font`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_SetFont([_^Font^ F
+[s5;:AttrText`:`:SetFont`(Font`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* SetFont]([_^Font^ F
 ont]_[@3 f])&]
 [s2; Sets the font.&]
 [s7; [%-*C@3 f]-|The font.&]
@@ -213,53 +221,41 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2; Calls font.Strikeout([%-*@3 b]). Returns `*this.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:Align`(int`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Align([@(0.0.255) in
-t]_[@3 a])&]
+[s5;:AttrText`:`:Align`(int`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Align]([@(0.0.255) i
+nt]_[@3 a])&]
 [s2; Sets the text horizontal alignment. Approved values are ALIGN`_LEFT, 
 ALIGN`_CENTER and ALIGN`_RIGHT.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:Left`(`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Left()&]
+[s5;:AttrText`:`:Left`(`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Left]()&]
 [s2; Aligns the text left.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:Center`(`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Center()&]
+[s5;:AttrText`:`:Center`(`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Center]()&]
 [s2; Aligns the text to the center.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AttrText`:`:Right`(`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_Right()&]
+[s5;:AttrText`:`:Right`(`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_[* Right]()&]
 [s2; Aligns the text right.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AttrText`:`:SetImage`(const Image`&`,int`):%- [_^AttrText^ AttrText][@(0.0.255) `&]_
-SetImage([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[@3 m], [@(0.0.255) int]_[@3 spc]_
-`=_[@3 4])&]
+[* SetImage]([@(0.0.255) const]_[_^Image^ Image][@(0.0.255) `&]_[@3 m], 
+[@(0.0.255) int]_[@3 spc]_`=_[@3 4])&]
 [s2; Sets the icon and space between the icon and text.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:operator Value`(`)const:%- operator_Value()_[@(0.0.255) const]&]
-[s7; [*/ Return value]-|AttrText as raw Value.&]
+[s5;:AttrText`:`:operator Value`(`)const:%- operator_[* Value]()_[@(0.0.255) const]&]
+[s7; Converts AttrText to Value.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AttrText`:`:AttrText`(const Value`&`):%- [* AttrText]([@(0.0.255) const]_[_^Value^ Val
 ue][@(0.0.255) `&]_[*@3 v])&]
-[s2; Converts Value to AttrText. Value can be either of AttrText 
-type, or IsString type.&]
+[s2; Converts Value to AttrText. If [%-*@3 v] is not AttrText, it gets 
+Set as Value of default constructed AttrText.&]
 [s3; &]
 [s4;%- &]
-[s5;:AttrText`:`:AttrText`(const char`*`):%- [* AttrText]([@(0.0.255) const]_[@(0.0.255) ch
-ar]_`*[@3 text])&]
-[s5;:AttrText`:`:AttrText`(const wchar`*`):%- [* AttrText]([@(0.0.255) const]_[_^wchar^ wch
-ar]_`*[@3 text])&]
-[s5;:AttrText`:`:AttrText`(const WString`&`):%- [* AttrText]([@(0.0.255) const]_[_^WString^ W
-String][@(0.0.255) `&]_[@3 text])&]
-[s5;:AttrText`:`:AttrText`(const String`&`):%- [* AttrText]([@(0.0.255) const]_[_^String^ S
-tring][@(0.0.255) `&]_[*@3 text])&]
-[s2; Assigns text attribute. Assigns Null to all other members except 
-font, which is initialized to StdFont.&]
-[s3; &]
-[s4;%- &]
-[s5;:AttrText`:`:AttrText`(`):%- AttrText()&]
+[s5;:AttrText`:`:AttrText`(`):%- [* AttrText]()&]
 [s2; Default constructor. Assigns Null to all members except font, 
 which is initialized to StdFont.&]
 [s3; &]

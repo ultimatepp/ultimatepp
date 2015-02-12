@@ -19,8 +19,9 @@ public:
 	virtual ~Display();
 };
 
-struct AttrText {
-	WString text;
+struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
+	String  text;
+	Value   value;
 	Font    font;
 	Color   ink;
 	Color   normalink;
@@ -30,13 +31,13 @@ struct AttrText {
 	Image   img;
 	int     imgspc;
 
-	AttrText& Set(const char *s)                    { text = s; return *this; }
-	AttrText& Set(const wchar *s)                   { text = s; return *this; }
-	AttrText& Set(const WString& s)                 { text = s; return *this; }
-	AttrText& operator=(const char *s)              { text = s; return *this; }
-	AttrText& operator=(const wchar *s)             { text = s; return *this; }
-	AttrText& operator=(const WString& s)           { text = s; return *this; }
-	AttrText& operator=(const String& s)            { text = s.ToWString(); return *this; }
+	AttrText& Set(const Value& v);
+	AttrText& operator=(const Value& v)             { Set(v); }
+	
+	AttrText& Text(const String& txt)               { text = txt; return *this; }
+	AttrText& Text(const WString& txt)              { text = txt.ToString(); return *this; }
+	AttrText& Text(const char *txt)                 { text = txt; return *this; }
+
 	AttrText& Ink(Color c)                          { ink = c; return *this; }
 	AttrText& NormalInk(Color c)                    { normalink = c; return *this; }
 	AttrText& Paper(Color c)                        { paper = c; return *this; }
@@ -54,13 +55,23 @@ struct AttrText {
 	AttrText& Right()                               { return Align(ALIGN_RIGHT); }
 	AttrText& SetImage(const Image& m, int spc = 4) { img = m; imgspc = spc; return *this; }
 
+	void  Serialize(Stream& s);
+	void  Jsonize(JsonIO& jio);
+	void  Xmlize(XmlIO& xio);
+
+	bool  operator==(const AttrText& f) const       { return value == f.value; }
+	bool  operator!=(const AttrText& f) const       { return !operator==(f); }
+
+	dword GetHashValue() const                      { return CombineHash(text, font, ink, paper); }
+	bool  IsNullInstance() const                    { return IsNull(text); }
+	void  SetNull()                                 { Init(); img = Null; text = Null; }
+
+	String   ToString() const                       { return AsString(value); }
+	int      Compare(const AttrText& x) const       { return value.Compare(x.value); }
+	int      PolyCompare(const Value& v) const      { DLOG("PolyCompare " << value << ' ' << v << ": " << value.Compare(v)); return value.Compare(v); }
+
 	operator Value() const;
 	AttrText(const Value& v);
-
-	explicit AttrText(const char *text);
-	explicit AttrText(const wchar *text);
-	explicit AttrText(const WString& text);
-	explicit AttrText(const String& text);
 	AttrText()                                      { Init(); }
 
 private:

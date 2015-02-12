@@ -64,6 +64,7 @@ public:
 	String   ToString() const                       { return typeid(T).name(); }
 	int      Compare(const T&) const                { NEVER(); return 0; }
 	int      PolyCompare(const Value&) const        { NEVER(); return 0; }
+
 	
 	operator ValueTypeRef();
 };

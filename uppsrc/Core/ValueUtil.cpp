@@ -660,7 +660,7 @@ int StdValueCompare(const Value& a, const Value& b, int language)
 		return cmp<Time>(a, b);
 	if((ta == STRING_V || ta == WSTRING_V) && (tb == STRING_V || tb == WSTRING_V))
 		return GetLanguageInfo(language).Compare(WString(a), WString(b));
-	return cmp<int>(ta, tb);
+	return a.Compare(b);
 }
 
 int StdValueCompare(const Value& a, const Value& b)

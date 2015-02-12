@@ -8,19 +8,54 @@ NAMESPACE_UPP
 
 #define LLOG(x) // RLOG(x)
 
+AttrText& AttrText::Set(const Value& v)
+{
+	value = v;
+	text = AsString(v);
+	return *this;
+}
+
 AttrText::operator Value() const
 {
-	return RawToValue(*this);
+	return RichToValue(*this);
 }
 
 AttrText::AttrText(const Value& v)
 {
-	if(IsString(v)) {
-		Init();
-		text = v;
-	}
-	else
+	if(v.Is<AttrText>())
 		*this = ValueTo<AttrText>(v);
+	else {
+		Init();
+		Set(v);
+	}
+}
+
+void AttrText::Serialize(Stream& s)
+{
+	int version = 0;
+	s / version
+	  % text % font % ink % normalink % paper % normalpaper % align % img % imgspc;
+}
+
+void AttrText::Jsonize(JsonIO& jio)
+{
+	jio
+		("text", text)
+		("value", value)
+		("font", font)
+		("ink", ink)
+		("normalink", normalink)
+		("paper", paper)
+		("normalpaper", normalpaper)
+		("align", align)
+		("img", img)
+		("imgspc", imgspc)
+	;
+}
+
+void AttrText::Xmlize(XmlIO& xio)
+{
+	XmlizeByJsonize(xio, *this);
 }
 
 void AttrText::Init()
@@ -32,26 +67,6 @@ void AttrText::Init()
 	font = StdFont();
 	align = Null;
 	imgspc = 0;
-}
-
-AttrText::AttrText(const char *text) : text(text)
-{
-	Init();
-}
-
-AttrText::AttrText(const wchar *text) : text(text)
-{
-	Init();
-}
-
-AttrText::AttrText(const WString& text) : text(text)
-{
-	Init();
-}
-
-AttrText::AttrText(const String& text) : text(text.ToWString())
-{
-	Init();
 }
 
 class StdDisplayClass : public Display
@@ -106,7 +121,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	int width = r.GetWidth();
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text;
+		txt = t.text.ToWString();
 		font = t.font;
 		if(!IsNull(t.paper))
 			paper = t.paper;
@@ -159,7 +174,7 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	Size isz(0, 0);
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text;
+		txt = t.text.ToWString();
 		font = t.font;
 		if(!IsNull(t.img)) {
 			isz = t.img.GetSize();
