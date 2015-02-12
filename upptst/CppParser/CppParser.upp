@@ -1,0 +1,12 @@
+uses
+	Core,
+	CppBase;
+
+file
+	CppParser.cpp,
+	test1.in,
+	test1.out;
+
+mainconfig
+	"" = "SSE2";
+
