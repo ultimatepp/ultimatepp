@@ -21,7 +21,7 @@ library(OSX11) "fontconfig freetype expat";
 library(FREEBSD) xcb;
 
 file
-	Draw.h options PCH,
+	Draw.h options(BUILDER_OPTION) PCH,
 	FontInt.h,
 	Font.cpp,
 	FontCR.cpp,

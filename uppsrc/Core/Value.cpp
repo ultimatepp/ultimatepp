@@ -121,8 +121,8 @@ int Value::Compare(const Value& v) const
 	}
 	if(st != VOIDV) {
 		int q = PolyCompare(v);
-		if(q) return q; // Perhaps optimize this
-		return v.PolyCompare(*this);
+		if(q) return q;
+		return -v.PolyCompare(*this);
 	}
 	return 0;
 }
