@@ -214,19 +214,35 @@ public:
 	String EvalStr(String line, int numDigits = 3);
 	void SetCaseSensitivity(bool val = true) {noCase = !val;}
 	
-	VectorMap<String, double> constants;
-	VectorMap<String, double> variables;
+	const String &GetFunction(int id) 						{return functions.GetKey(id);}
+	int GetFunctionsCount() 								{return functions.GetCount();}
+	
+	void SetConstant(String name, double value = 0)			{constants.GetAdd(name, value);}
+	void SetConstant(int id, double value = 0)				{constants[id] = value;}
+	double GetConstant(String name)							{return constants.Get(name, Null);}
+	void GetConstant(int id, String &name, double &value)	{name = constants.GetKey(id); value = constants[id];}
+	int GetConstantsCount() 								{return constants.GetCount();}
+
+	void SetVariable(String name, double value = 0)			{variables.GetAdd(name, value);}
+	void SetVariable(int id, double value = 0)				{variables[id] = value;}
+	double GetVariable(String name)							{return variables.Get(name, Null);}	
+	void GetVariable(int id, String &name, double &value)	{name = variables.GetKey(id); value = variables[id];}
+	int GetVariablesCount() 								{return variables.GetCount();}
 
 private:
 	void *Functions_Get(CParser& p);
 	double Term(CParser& p);
+	double Pow(CParser& p);
 	double Mul(CParser& p);
 	double Exp(CParser& p);
 	String TermStr(CParser& p, int numDigits);
+	String PowStr(CParser& p, int numDigits);
 	String MulStr(CParser& p, int numDigits);
 	String ExpStr(CParser& p, int numDigits);
 	bool noCase;
 	
+	VectorMap<String, double> constants;
+	VectorMap<String, double> variables;
 	VectorMap<String, double (*)(double)> functions;
 };
 
@@ -237,15 +253,15 @@ public:
 	void Init(String _name, String _strEquation, String varHoriz = "x") {
 		name = _name;
 		strEquation = _strEquation;
-		eval.constants.GetAdd(varHoriz);
-		idx = eval.constants.GetCount() - 1;
+		eval.SetConstant(varHoriz);
+		idx = eval.GetConstantsCount() - 1;
 		eval.EvalStr(strEquation);
-		coeff.SetCount(eval.variables.GetCount());
+		coeff.SetCount(eval.GetVariablesCount());
 	}
 	double f(double x) {
-		eval.constants[idx] = x;
+		eval.SetConstant(idx, x);
 		for (int i = 0; i < coeff.GetCount(); ++i)
-			eval.variables[i] = coeff[i];
+			eval.SetVariable(i, coeff[i]);
 		return eval.Eval(strEquation);
 	}
 	String SetName(String _name) 					{name = _name;}
