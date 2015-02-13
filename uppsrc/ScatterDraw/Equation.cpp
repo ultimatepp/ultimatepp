@@ -167,20 +167,29 @@ double EvalExpr::Term(CParser& p) {
 		return p.ReadDouble();
 }
 
-double EvalExpr::Mul(CParser& p) {
+double EvalExpr::Pow(CParser& p) {
 	double x = Term(p);
-	for(;;)
+	for(;;) {
+		if(p.Char('^'))
+			x = pow(x, Term(p));
+		else
+			return x;
+	}
+}
+
+double EvalExpr::Mul(CParser& p) {
+	double x = Pow(p);
+	for(;;) {
 		if(p.Char('*'))
 			x = x * Mul(p);
 		else if(p.Char('/')) {
-			double y = Mul(p);
+			double y = Pow(p);
 			if(y == 0)
 				p.ThrowError(t_("Divide by zero"));
 			x = x / y;
-		} else if(p.Char('^'))
-			x = pow(x, Mul(p));
-		else
+		} else
 			return x;
+	}
 }
 
 double EvalExpr::Exp(CParser& p) {
@@ -254,15 +263,22 @@ String EvalExpr::TermStr(CParser& p, int numDigits) {
 	return FormatDoubleFix(p.ReadDouble(), IsNull(numDigits) ? 3 : numDigits);
 }
 
-String EvalExpr::MulStr(CParser& p, int numDigits) {
+String EvalExpr::PowStr(CParser& p, int numDigits) {
 	String x = TermStr(p, numDigits);
+	for(;;)
+		if(p.Char('^'))
+			x = x + "^" + TermStr(p, numDigits);
+		else
+			return x;
+}
+
+String EvalExpr::MulStr(CParser& p, int numDigits) {
+	String x = PowStr(p, numDigits);
 	for(;;)
 		if(p.Char('*'))
 			x = x + "*" + MulStr(p, numDigits);
 		else if(p.Char('/')) 
-			x = x + "/" + MulStr(p, numDigits);
-		else if(p.Char('^'))
-			x = x + "^" + MulStr(p, numDigits);
+			x = x + "/" + PowStr(p, numDigits);
 		else
 			return x;
 }
