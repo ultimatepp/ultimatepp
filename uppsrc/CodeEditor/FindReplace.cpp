@@ -602,10 +602,14 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 	
 	if(pick_text || pick_selection)
 	{
-		WString s = GetSelection().ToWString();
 		if(IsSelection()) {
-			if(s.Find('\n') < 0)
-				find_text = s;
+			int l, h;
+			GetSelection(l, h);
+			if(h - l < 100) {
+				find_text = GetSelectionW();
+				if(find_text.Find('\n') >= 0)
+					find_text.Clear();
+			}
 		}
 		else
 		if(pick_text) {
@@ -837,8 +841,21 @@ void CodeEditor::SetFindReplaceData(const FindReplaceData& r)
 
 void CodeEditor::FindPrevNext(bool prev)
 {
-	if(!findreplace.IsOpen())
+	if(!findreplace.IsOpen()) {
+		WString find_text;
+		if(IsSelection()) {
+			int l, h;
+			GetSelection(l, h);
+			if(h - l < 100) {
+				find_text = GetSelectionW();
+				if(find_text.Find('\n') >= 0)
+					find_text.Clear();
+			}
+		}
+		if(find_text.GetCount())
+			findreplace.find <<= find_text;
 		OpenNormalFindReplace0(false);
+	}
 	if(Find(prev, false))
 		NoFindError();
 	else
