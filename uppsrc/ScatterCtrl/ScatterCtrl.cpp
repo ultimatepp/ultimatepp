@@ -96,9 +96,9 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 	double y   = -(pt.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
 	double y2  = -(pt.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
 	
-	double dx  = x  - _x;
-	double dy  = y  - _y;
-	double dy2 = y2 - _y2;
+	double dx  = fabs(x  - _x);
+	double dy  = fabs(y  - _y);
+	double dy2 = fabs(y2 - _y2);
 
 	String strx, _strx, dstrx, stry, _stry, dstry;
 	if (cbModifFormatX) {
