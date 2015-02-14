@@ -11,7 +11,7 @@ NAMESPACE_UPP
 AttrText& AttrText::Set(const Value& v)
 {
 	value = v;
-	text = AsString(v);
+	text = AsString(v).ToWString();
 	return *this;
 }
 
@@ -121,7 +121,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	int width = r.GetWidth();
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text.ToWString();
+		txt = t.text;
 		font = t.font;
 		if(!IsNull(t.paper))
 			paper = t.paper;
@@ -174,7 +174,7 @@ Size StdDisplayClass::GetStdSize(const Value& q) const
 	Size isz(0, 0);
 	if(IsType<AttrText>(q)) {
 		const AttrText& t = ValueTo<AttrText>(q);
-		txt = t.text.ToWString();
+		txt = t.text;
 		font = t.font;
 		if(!IsNull(t.img)) {
 			isz = t.img.GetSize();

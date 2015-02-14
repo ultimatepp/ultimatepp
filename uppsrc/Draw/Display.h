@@ -20,7 +20,7 @@ public:
 };
 
 struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
-	String  text;
+	WString text;
 	Value   value;
 	Font    font;
 	Color   ink;
@@ -32,11 +32,11 @@ struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
 	int     imgspc;
 
 	AttrText& Set(const Value& v);
-	AttrText& operator=(const Value& v)             { Set(v); }
+	AttrText& operator=(const Value& v)             { Set(v); return *this; }
 	
-	AttrText& Text(const String& txt)               { text = txt; return *this; }
-	AttrText& Text(const WString& txt)              { text = txt.ToString(); return *this; }
-	AttrText& Text(const char *txt)                 { text = txt; return *this; }
+	AttrText& Text(const String& txt)               { text = txt.ToWString(); return *this; }
+	AttrText& Text(const WString& txt)              { text = txt; return *this; }
+	AttrText& Text(const char *txt)                 { text = String(txt).ToWString(); return *this; }
 
 	AttrText& Ink(Color c)                          { ink = c; return *this; }
 	AttrText& NormalInk(Color c)                    { normalink = c; return *this; }
@@ -68,7 +68,7 @@ struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
 
 	String   ToString() const                       { return AsString(value); }
 	int      Compare(const AttrText& x) const       { return value.Compare(x.value); }
-	int      PolyCompare(const Value& v) const      { DLOG("PolyCompare " << value << ' ' << v << ": " << value.Compare(v)); return value.Compare(v); }
+	int      PolyCompare(const Value& v) const      { return value.Compare(v); }
 
 	operator Value() const;
 	AttrText(const Value& v);
