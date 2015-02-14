@@ -2,7 +2,7 @@ uses
 	Core;
 
 file
-	SpinLock.cpp;
+	SpinLock.cpp optimize_speed;
 
 mainconfig
 	"" = "SSE2 MT";

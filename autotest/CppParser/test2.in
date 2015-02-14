@@ -1,0 +1,5 @@
+template<true, typename _Ty>
+struct _CrtEnableIf<true, _Ty>
+{
+    typedef _Ty _Type;
+};
