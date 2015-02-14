@@ -142,7 +142,9 @@ public:
 	const char *Pos(int pos = 0);
 	int         operator[](int pos)         { return Code(pos); }
 	operator    int()                       { return Code(0); }
-	void        operator++()                { Get(); }
+	void        operator++()                { return Get(); }
+	
+	void        Dump(int pos);
 
 	void        Init(const char *s, const Vector<String>& ignore);
 	void        StartStatCollection();

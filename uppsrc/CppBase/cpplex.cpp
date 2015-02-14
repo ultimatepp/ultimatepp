@@ -1,5 +1,7 @@
 #include "CppBase.h"
 
+// #define LOGNEXT
+
 NAMESPACE_UPP
 
 #ifdef _MSC_VER
@@ -400,6 +402,59 @@ void Lex::Get(int n)
 		if(term.GetCount() == 0)
 			break;
 	}
+#ifdef LOGNEXT
+	Dump(0);
+#endif
+}
+
+void Lex::Dump(int pos)
+{
+#ifdef LOGNEXT
+	int code = Code(pos);
+	switch(code) {
+	case t_string: LOG(AsCString(Text(pos))); break;
+	case t_double: LOG(Double(pos)); break;
+	case t_integer: LOG(Int(pos)); break;
+	case t_character: LOG("char " << AsCString(String(Chr(pos), 1))); break;
+	default:
+		if(code < 0)
+			LOG(decode(Code(),
+				t_dblcolon, "::",
+				t_mulass, "*=",
+				t_divass, "/=",
+				t_modass, "%=",
+				t_xorass, "^=",
+				t_neq, "!=",
+				t_dot_asteriks, ".*",
+				t_elipsis, "...",
+				t_inc, "++",
+				t_addass, "+=",
+				t_dec, "--",
+				t_arrow_asteriks, "->*",
+				t_arrow, "->",
+				t_subass, "-=",
+				t_and, "&&",
+				t_andass, "&=",
+				t_or, "||",
+				t_orass, "|=",
+				t_eq, "==",
+				t_shl, "<<",
+				t_shlass, "<<=",
+				t_le, "<=",
+				t_shr, ">>",
+				t_shrass, ">>=",
+				t_ge, ">=",
+				te_integeroverflow, "<integer overflow>",
+				te_badcharacter, "<bad char>",
+				te_badstring, "<bad string>",
+				"???"));
+		else
+		if(code < 256)
+			LOG((char)code);
+		else
+			LOG(id[code - 256]);
+	}
+#endif
 }
 
 void Lex::SkipToGrounding()
