@@ -1,0 +1,8 @@
+_CrtEnableIf<true, _Ty>  {
+	STRUCTTEMPLATE struct, line 1
+}
+_CrtEnableIf<true, _Ty> ::_Type {
+	TYPEDEF typedef, line 4
+}
+<locals> {
+}

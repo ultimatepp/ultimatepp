@@ -1,0 +1,18 @@
+void Test() {}
+
+class Foo {
+	Foo();
+};
+
+struct Point {
+	int x, y;
+	Point *next;
+	Foo bar;
+};
+
+Point global;
+
+void foo()
+{
+	int x = 10;
+	Point a, b, *c;
