@@ -380,7 +380,7 @@ String Parser::Name(String& name, bool& castoper)
 			s << h;
 			break;
 		}
-		if(lex == '<')
+		if(lex == '<') // void Fn<byte>(); situation
 			s << TemplateParams();
 		if(Key(t_dblcolon)) {
 			s << "::";
@@ -1134,7 +1134,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		return true;
 	}
 	if((lex == tk_class || lex == tk_struct || lex == tk_union) && lex[1] != '{') {
-		int t = lex.GetCode();
+		int t = lex.GetCode(); // t is now struct/class/union
 		context.typenames.FindAdd(lex);
 		Context cc;
 		cc <<= context;
@@ -1158,7 +1158,9 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		do {
 			Check(lex.IsId(), "Missing identifier");
 			context.typenames.FindAdd(lex);
-			name = lex.GetId();
+			name = lex.GetId(); // name of structure
+			if(lex == '<')
+				name << TemplateParams();
 			ScopeCat(context.scope, name);
 		}
 		while(Key(t_dblcolon));
