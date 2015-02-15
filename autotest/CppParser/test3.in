@@ -1,0 +1,9 @@
+extern "C++"
+{
+    template <size_t _Size, typename _DstType>
+    inline
+    typename _CrtEnableIf<(_Size > 1), void *>::_Type  memcpy(_DstType (&_Dst)[_Size],      const void *_Src,   size_t _SrcSize) throw()
+    {
+        return memcpy_s(_Dst, _Size * sizeof(_DstType), _Src, _SrcSize) == 0 ? _Dst : 0;
+    }
+}
