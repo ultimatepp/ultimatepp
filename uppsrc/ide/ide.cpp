@@ -5,14 +5,16 @@ void Ide::MakeTitle()
 	String title;
 	if(!main.IsEmpty())
 		title << main;
-	if(mainconfigname == mainconfigparam)
+	if(!mainconfigname.IsEmpty() &&  mainconfigname == mainconfigparam)
 		title << " - " << mainconfigname;
 	else
 	if(!mainconfigname.IsEmpty()) {
 		title << " - " << mainconfigname;
 		title << " ( " << mainconfigparam << " )";
 	}
-	title << " - TheIDE";
+	if(!title.IsEmpty())
+		title << " - ";
+	title << "TheIDE";
 	if(designer) {
 		title << " - [" << designer->GetFileName();
 		int cs = designer->GetCharset();
