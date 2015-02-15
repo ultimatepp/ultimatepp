@@ -38,14 +38,37 @@ static inline bool sSpaces(String& res, const char *& s)
 	return false;
 }
 
-String FnItem(const char *s, const char *pname, const char *qname, const String& name) {
+String FnItem(const char *s, const char *pname, const char *qname, const String& name)
+{ // Converts function natural text to (unqualified) item
 	String res;
 	while(*s && (byte)*s <= ' ') s++;
-	while(*s) {
+	while(*s) { // Get the name of function into res
 		while(*s && !iscid(*s) && *s != '~')
 			s++;
-		while(iscid(*s) || *s == '~')
-			res.Cat(*s++);
+		int lvl = 0;
+		int plvl = 0;
+		for(;;) {
+			if(*s == '<' && plvl == 0) { // resolve template params, like Fn<int, true>
+				res.Cat(*s++);
+				lvl++;
+			}
+			if(*s == '>' && plvl == 0) {
+				res.Cat(*s++);
+				lvl--;
+			}
+			if(*s == '(' && lvl) {
+				res.Cat(*s++);
+				plvl++;
+			}
+			if(*s == ')') {
+				res.Cat(*s++);
+				plvl--;
+			}
+			if(iscid(*s) || *s == '~' || *s && lvl)
+				res.Cat(*s++);
+			else
+				break;
+		}
 		if(res == s_operator) {
 			while(*s && *s != '(') {
 				if((byte)*s >= ' ')
@@ -310,6 +333,12 @@ String Parser::TemplateParams(String& param)
 		else
 		if(Key('<'))
 			level++;
+		else
+		if(Key('('))
+			level++;
+		else
+		if(Key(')'))
+			level--;
 		else
 			++lex;
 	}
@@ -677,7 +706,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		if(Key(tk_virtual))
 			d.s_virtual = true;
 		else
-		if(!(Key(tk_inline) || Key(tk_force_inline)))
+		if(!(Key(tk_inline) || Key(tk_force_inline) || Key(tk___inline)))
 			break;
 	}
 	Qualifier();
@@ -1332,21 +1361,14 @@ void Parser::Do()
 			++lex;
 	}
 	else
-	if(Key(tk_extern) && lex == t_string) {
+	if(Key(tk_extern) && lex == t_string) { // extern "C++" kind
 		++lex;
-		++lex;
-		if(Key('{')) {
-			int bl = lex.GetBracesLevel();
-			while(lex != '}')
-				try {
-					if(lex == t_eof)
-						ThrowError("Unexpected end of file");
-					Do();
-				}
-				catch(Error) {
-					Resume(bl);
-				}
-		}
+		if(Key('{'))
+			while(!Key('}')) {
+				if(lex == t_eof)
+					ThrowError("Unexpected end of file");
+				Do();
+			}
 		Key(';');
 	}
 	else

@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-// #define LOGNEXT
+// #define LOGNEXT _DBG_
 
 NAMESPACE_UPP
 
