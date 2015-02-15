@@ -1,0 +1,19 @@
+ERRORS: [63: Name expected]
+<globals> {
+	VARIABLE , line 3
+	VARIABLE , line 63
+	VARIABLE , line 201
+	FUNCTION Foo(int,const String&), line 65
+	FUNCTION Foo(int,const String&), line 67
+	FUNCTION GetCppFile(int), line 21
+	FUNCTION GetCppFileIndex(const String&), line 13
+	FUNCTION PreProcess(Stream&), line 69
+	FUNCTION SLPos(SrcFile&), line 51
+	VARIABLE cpp_file, line 11
+	VARIABLE cpp_file_mutex, line 10
+}
+SrcFile {
+	CONSTRUCTOR SrcFile(), line 56
+}
+<locals> {
+}
