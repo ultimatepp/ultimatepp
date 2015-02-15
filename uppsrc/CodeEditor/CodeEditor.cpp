@@ -75,8 +75,8 @@ inline bool IsComment(int a, int b) {
 	return a == '/' && b == '*' || a == '*' && b == '/' || a == '/' && b == '/';
 }
 
-void CodeEditor::PreInsert(int pos, const WString& text) {
-	if(IsFullRefresh()) return;
+void CodeEditor::PreInsert(int pos, const WString& text)
+{
 }
 
 inline bool RBR(int c) {

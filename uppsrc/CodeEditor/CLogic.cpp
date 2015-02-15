@@ -197,6 +197,12 @@ void CSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 	String s = TrimLeft(e.GetUtf8Line(e.GetLine(pos)));
 	if(s.StartsWith("#if") || s.StartsWith("#e"))
 		e.Refresh();
+
+	WString h = e.GetWLine(e.GetLinePos(pos)); // block highlighting changes if start of line is changed
+	for(int i = 0; i < pos; i++)
+		if(findarg(h[i], ' ', '\t') < 0)
+			return;
+	e.Refresh();
 }
 
 END_UPP_NAMESPACE
