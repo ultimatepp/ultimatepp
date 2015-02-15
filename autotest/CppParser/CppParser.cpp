@@ -25,6 +25,8 @@ void Test(const char *path)
 		DUMPC(errs);
 	Qualify(base);
 	String out;
+	if(errs.GetCount())
+		out << "ERRORS: " << errs << '\n';
 	for(int i = 0; i < base.GetCount(); i++) {
 		out << Nvl(base.GetKey(i), "<globals>") << " {\n";
 		const Array<CppItem>& ma = base[i];

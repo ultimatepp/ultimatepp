@@ -4,6 +4,8 @@ uses
 
 file
 	CppParser.cpp,
+	test0.in,
+	test0.out,
 	test1.in,
 	test1.out,
 	test2.in,
