@@ -5,7 +5,10 @@ uses
 file
 	CppParser.cpp,
 	test1.in,
-	test1.out;
+	test1.out,
+	test2.in,
+	test2.out,
+	test3.in;
 
 mainconfig
 	"" = "SSE2";
