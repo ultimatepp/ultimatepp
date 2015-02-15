@@ -71,6 +71,7 @@ CPPID(static_cast)
 CPPID(dynamic_cast)
 CPPID(long)
 //CPPID(__stdcall)
+CPPID(__inline)
 
 CPPID(if)
 CPPID(while)
