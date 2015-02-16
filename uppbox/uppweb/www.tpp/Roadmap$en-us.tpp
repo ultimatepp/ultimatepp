@@ -23,6 +23,121 @@ topic "Changelog";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
+[s0;*_3 &]
+[s0; [*_3 Release candidate]&]
+[s0;3 &]
+[s0; [*_4 8182][*3  (Feb 2015)]&]
+[s0;4 &]
+[s0; [* Core]&]
+[s0;* &]
+[s0;i150;O0; U`+`+ abandoned `"default pick`" semantics for containers. 
+The transfer semantics now has to be specified explicitly, either 
+as `'[* pick]`' or `'[* clone]`' (this is enforced in C`+`+11 mode, 
+in legacy mode old behaviour is maintained and pick/clone are 
+optional).&]
+[s0;i150;O0; New containers, based on fast`-insertion arrays: [* InVector, 
+InArray, SortedIndex, SortedVectorMap, SortedArrayMap]. SortedIndex, 
+SortedVectorMap and SortedArrayMap provide binary searches, while 
+maintaining random access to the array, with performance comparable 
+to binary tree based containers (e.g. std`::map).&]
+[s0;i150;O0; New [* Core/POP3] package `- support for retrieving emails 
+form POP3 servers.&]
+[s0;i150;O0; Initial round of C`+`+11 support (lambda callbacks, 
+minor fixes)&]
+[s0;i150;O0; A set of small utility functions [* findarg], [* decode], 
+[* min]/[* max] now supporting more arguments. [* SplitTo ]and [* Merge] 
+for splitting/merging strings.&]
+[s0;i150;O0; [* InFilterStream], [* OutFilterStream] classes that can 
+provide some sort of processing (e.g. compression) to regular 
+streams.&]
+[s0;i150;O0; New Date related functions [* EasterDay], [* GetMonths], 
+[* GetWeek], [* GetWeekDate].&]
+[s0;i150;O0; MIME / fileextension mapping functions [* FileExtToMIME 
+]and [* MIMEToFileExt].&]
+[s0;i150;O0; Some ARMv7 related optimization (unaligned access, byte 
+swaps).&]
+[s0;i150;O0; [* SpinLock] class.&]
+[s0;i150;O0; Stream optimization methods [* GetPtr], [* PutPtr], [* GetSzPtr] 
+provide safe access to Stream internal buffer.&]
+[s0;i150;O0; String/WString`::[* Find](const String`&) significantly 
+speed optimized.&]
+[s0;i150;O0; [* Value] invalid casts now throwing exception [* ValueTypeError] 
+instead of panic.&]
+[s0;i150;O0; [* WebSocket] class.&]
+[s0;i150;O0; `[[* Stable]`][* SortBy]`[[* Keys]`|[* Values]`] functions for 
+sorting VectorMap, ArrayMap.&]
+[s0;i150;O0; [* plugin]/[* lz4 ]`- adapted fast compression library&]
+[s0;i150;O0; [* plugin]/[* lzma ]`- adapted high ratio compression library&]
+[s0; &]
+[s0; [* GUI programming `& graphics]&]
+[s0;* &]
+[s0;i150;O0; [* Gtk ]backend (U`+`+ now using Gtk for host platform 
+interface)&]
+[s0;i150;O0; [* EditDateDlg], [* EditNumber ]simple function for entering 
+single value (equivalent to EditText)&]
+[s0;i150;O0; ArrayCtrl new methods to add/retrieve ValueMaps and 
+ValueArrays, new [* CreateCtrl]<T> method.&]
+[s0;i150;O0; LineEdit heavily optimized to be able to work with huge 
+files (>100MB).&]
+[s0;i150;O0; LineEdit now able to work with [* rectangular selections.]&]
+[s0;i150;O0; [* DDARasterizer] and [* SDraw] are new tools providing 
+Draw with minimal host platform support (only two operations, 
+paint Image and paint colored rectangle, are required).&]
+[s0;i150;O0; Image rescaling now supports varios filters, like bicubic 
+or lanczos.&]
+[s0;i150;O0; AttrText is now rich comparable Value: it is now possible 
+to sort ArrayCtrl by AttrText filled columns.&]
+[s0;i150;O0; [* GLDraw] `- Draw implemented using OpenGL (ES).&]
+[s0;i150;O0; [* SVG parser] (to Painter interface).&]
+[s0;i150;O0; [* plugin]/[* ppm ]`- trivial image format support.&]
+[s0;i150;O0; [* RichText]/RichEdit [* header]/[* footer ]support, QTF now 
+using BASE64 for binary data (instead of 7`-bit raw encoding).&]
+[s0;i150;O0; [* Turtle] is another web framework of U`+`+ `- this one 
+allows to convert existing GUI applications into Web application: 
+simple javascript terminal connects to server where GUI application 
+runs.&]
+[s0; &]
+[s0; [* Sql]&]
+[s0; &]
+[s0;i150;O0; New variants of Insert/Select/Update commands (now roughly 
+supporting all important combinations of SQL standard).&]
+[s0;i150;O0; [* SqlSetFrom ]functions creates a SqlSet from any container.&]
+[s0;i150;O0; S`_ structures refactored, now provide an improved interface 
+with better introspection.&]
+[s0;i150;O0; Sql console redesigned.&]
+[s0;i150;O0; &]
+[s0; &]
+[s0; [* TheIDE]&]
+[s0;* &]
+[s0;i150;O0; Win64 PDB (Visual C`+`+ compiled code) debugger.&]
+[s0;i150;O0; Find GUI refactored, added support for incremental finds, 
+added regexp support.&]
+[s0;i150;O0; Block replace now has grep`-like feature to remove matching/non`-matchin
+g lines (instead of replacing matches)&]
+[s0;i150;O0; Case insensitive replace now has `"mimic case`" option 
+(mimics the case of first and next characters, so replacing `"vector`" 
+`-> `"array`", when match is `"Vector`", result is `"Array`").&]
+[s0;i150;O0; Compilation errors now parsed and displayed nicely.&]
+[s0;i150;O0; Assist`+`+ context goto (Alt`+J) now supports local 
+variables (goes to declaration).&]
+[s0;i150;O0; Layout/Icon designers now have find Search filter.&]
+[s0;i150;O0; Ide now displays long numbers with thousands separators.&]
+[s0;i150;O0; Syntax highlighting refactored, added highlighting of 
+HTML, XML, .log files, .xsd files, .diff files.&]
+[s0;i150;O0; Directory comparison tool.&]
+[s0;i150;O0; Simple Json/XML viewers.&]
+[s0;i150;O0; Comment/Uncomment block.&]
+[s0;i150;O0; Selected identifier is now highlighted in all the text.&]
+[s0;i150;O0; Current line is highlighted with faint lines.&]
+[s0;i150;O0; Precompiled headers support for release mode (BLITZ 
+still far better for debug builds).&]
+[s0;i150;O0; Insert file path (plain or as CString) function.&]
+[s0;i150;O0; Layout code generator now can place double`-quotes around 
+elements, generate handlers for buttons.&]
+[s0;i150;O0; Layout designer now can sort widgets based on their 
+graphical position.&]
+[s0;i150;O0; Code navigator is completely redesigned.&]
+[s0; &]
 [s0;4 &]
 [s0; [*_3 Current release]&]
 [s0;3 &]
