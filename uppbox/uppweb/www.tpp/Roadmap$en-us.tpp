@@ -23,7 +23,7 @@ topic "Changelog";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
-[s0;*_3 &]
+[s0;*3 &]
 [s0; [*_3 Release candidate]&]
 [s0;3 &]
 [s0; [*_4 8182][*3  (Feb 2015)]&]
@@ -96,6 +96,10 @@ using BASE64 for binary data (instead of 7`-bit raw encoding).&]
 allows to convert existing GUI applications into Web application: 
 simple javascript terminal connects to server where GUI application 
 runs.&]
+[s0;i150;O0; [* ScatterDraw/ScatterCtrl] `- Added legend table, linked 
+scroll controls, units, data fitting to equations, run time user 
+equations, zoom window, improved text drawing, huge datasets 
+handling and key/mouse handling.&]
 [s0; &]
 [s0; [* Sql]&]
 [s0; &]
@@ -105,7 +109,6 @@ supporting all important combinations of SQL standard).&]
 [s0;i150;O0; S`_ structures refactored, now provide an improved interface 
 with better introspection.&]
 [s0;i150;O0; Sql console redesigned.&]
-[s0;i150;O0; &]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;* &]
