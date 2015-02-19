@@ -605,9 +605,11 @@ void HttpRequest::StartRequest()
 
 bool HttpRequest::SendingData()
 {
+	const int upload_chunk =  64*1024;
+
 	if(count < data.GetLength())
 		for(;;) {
-			int n = min(2048, data.GetLength() - (int)count);
+			int n = min(upload_chunk, data.GetLength() - (int)count);
 			n = TcpSocket::Put(~data + count, n);
 			if(n == 0) {
 				if(count < data.GetLength())
@@ -619,8 +621,8 @@ bool HttpRequest::SendingData()
 			count += n;
 		}
 	for(;;) {
-		Buffer<byte> buffer(2048);
-		int n = poststream->Get(buffer, (int)min((int64)2048, postlen + data.GetLength() - count));
+		Buffer<byte> buffer(upload_chunk);
+		int n = poststream->Get(buffer, (int)min((int64)upload_chunk, postlen + data.GetLength() - count));
 		if(n < 0) {
 			HttpError("error reading input stream");
 			return false;
