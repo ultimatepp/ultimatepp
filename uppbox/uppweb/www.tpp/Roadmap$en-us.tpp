@@ -68,6 +68,8 @@ instead of panic.&]
 sorting VectorMap, ArrayMap.&]
 [s0;i150;O0; [* plugin]/[* lz4 ]`- adapted fast compression library&]
 [s0;i150;O0; [* plugin]/[* lzma ]`- adapted high ratio compression library&]
+[s0;i150;O0; [* plugin]/[* lzma] `- popular OpenGL utility library adapted 
+as package&]
 [s0; &]
 [s0; [* GUI programming `& graphics]&]
 [s0;* &]
@@ -100,6 +102,10 @@ runs.&]
 scroll controls, units, data fitting to equations, run time user 
 equations, zoom window, improved text drawing, huge datasets 
 handling and key/mouse handling.&]
+[s0;i150;O0; X11 backend: Multimonitor support, removed flickering 
+when opening window&]
+[s0;i150;O0; [* Error]`[[* OK]`|[* Cancel]`|[* Yes]`|[* No]...`] `- new Prompt 
+variants with Error decorations&]
 [s0; &]
 [s0; [* Sql]&]
 [s0; &]
@@ -113,8 +119,8 @@ with better introspection.&]
 [s0; [* TheIDE]&]
 [s0;* &]
 [s0;i150;O0; Win64 PDB (Visual C`+`+ compiled code) debugger.&]
-[s0;i150;O0; Find GUI refactored, added support for incremental finds, 
-added regexp support.&]
+[s0;i150;O0; Find/replace GUI refactored, added support for incremental 
+finds, added regexp support.&]
 [s0;i150;O0; Block replace now has grep`-like feature to remove matching/non`-matchin
 g lines (instead of replacing matches)&]
 [s0;i150;O0; Case insensitive replace now has `"mimic case`" option 
@@ -126,7 +132,8 @@ variables (goes to declaration).&]
 [s0;i150;O0; Layout/Icon designers now have find Search filter.&]
 [s0;i150;O0; Ide now displays long numbers with thousands separators.&]
 [s0;i150;O0; Syntax highlighting refactored, added highlighting of 
-HTML, XML, .log files, .xsd files, .diff files.&]
+HTML, XML, .log files, .xsd files, .diff files, C`+`+11 keywords 
+highlighted, TODO and FIXME comments highlighted&]
 [s0;i150;O0; Directory comparison tool.&]
 [s0;i150;O0; Simple Json/XML viewers.&]
 [s0;i150;O0; Comment/Uncomment block.&]
@@ -140,6 +147,9 @@ elements, generate handlers for buttons.&]
 [s0;i150;O0; Layout designer now can sort widgets based on their 
 graphical position.&]
 [s0;i150;O0; Code navigator is completely redesigned.&]
+[s0;i150;O0; Icon designer supports various rescaling filters and 
+new icon smoothing function.&]
+[s0;i150;O0; Ide now has line duplicate feature (CTRL`+D).&]
 [s0; &]
 [s0;4 &]
 [s0; [*_3 Current release]&]
