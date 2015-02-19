@@ -716,4 +716,4 @@ button can be pressed again so the function can be called twice.&]
 it opens a new window using, lets say, PromptOK(). This way ChildLostFocus 
 will be called twice: the second one because PromptOK() makes 
 the field to loose the focus.&]
-[s0; ]]
+[s3; ]]

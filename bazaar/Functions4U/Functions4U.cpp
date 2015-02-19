@@ -24,6 +24,7 @@ NAMESPACE_UPP
 #define TFILE <Functions4U/Functions4U.t>
 #include <Core/t.h>
 
+	
 /*
 Hi Koldo,
 
@@ -38,13 +39,12 @@ I checked the functions in Functions4U. Here are some notes about trashing:
 .local/share/Trash/files
 .local/share/Trash/info
 
-Un fichero por cada vez que se borra con
+A file every time a file is removed with
 
 KK.trashinfo
 [Trash Info]
 Path=/home/pubuntu/KK
 DeletionDate=2010-05-19T18:00:52
-
 
 
 You might also be interested in following:
@@ -238,14 +238,17 @@ bool FolderDeleteX(const char *path, EXT_FILE_FLAGS flags) {
 }
 
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags) {
+	String spath = path;
+	if (spath.EndsWith(DIR_SEPS))
+		spath = spath.Left(spath.GetCount() - 1);
 	if (!(flags & BROWSE_LINKS))
-		return  DirectoryExists(path);
-	if (DirectoryExists(path))
+		return  DirectoryExists(spath);
+	if (DirectoryExists(spath))
 		return true;
-	if (!IsSymLink(path))
+	if (!IsSymLink(spath))
 		return false;
 	String filePath;
-	filePath = GetSymLinkPath(path);
+	filePath = GetSymLinkPath(spath);
 	if (filePath.IsEmpty())
 		return false;
 	return DirectoryExists(filePath); 
@@ -275,7 +278,11 @@ String GetRelativePath(String &from, String &path) {
 		if (f_from != f_path) {
 			if (first) 
 				return Null;
-			ret << ".." << DIR_SEPS << f_path << DIR_SEPS << path.Mid(pos_path);	
+			String fileName = path.Mid(pos_path);
+			if (fileName.IsEmpty()) 
+				ret << ".." << DIR_SEPS << f_path;	
+			else
+				ret << ".." << DIR_SEPS << f_path << DIR_SEPS << fileName;	
 			while (pos_from < from.GetCount()) {
 				ret.Insert(0, String("..") + DIR_SEPS);
 				Tokenize(from, DIR_SEPS, pos_from);		
@@ -527,17 +534,17 @@ String LoadFile(const char *fileName, off_t from, size_t len)
 	size_t size = 1024;
 	if (len != 0 && size > len)
 		size = len;
-	int nsize;
+	size_t nsize;
 	StringBuffer s;
 	Buffer<char> buf(size);
 	size_t loaded;
-	for (loaded = 0; (nsize = read(fid, buf, size)) == size && (len == 0 || loaded < len); loaded += nsize) {
+	for (loaded = 0; (nsize = read(fid, buf, unsigned(size))) == size && (len == 0 || loaded < len); loaded += nsize) {
 		if (len != 0 && loaded + size > len)
 			size = len - loaded;
-		s.Cat(buf, size);
+		s.Cat(buf, int(size));
 	}
 	if (nsize > 1 && (len == 0 || loaded < len))
-		s.Cat(buf, nsize-1);
+		s.Cat(buf, int(nsize-1));
 	close(fid);
 	return s;
 }
@@ -1170,11 +1177,10 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 		line = GetLine(strFile, posLine);
 		while (pos >= 0) {
 			Value name = GetField(line, pos, separator, decimalSign, onlyStrings);
-			//if (!IsNull(name)) {
+			if (pos >= 0 && !IsNull(name)) {
 				Vector<Value> &data = result.Add();
 				data.Add(name);
-			//} else
-			//	break;
+			}
 		}
 		while (posLine >= 0) {
 			pos = 0;
