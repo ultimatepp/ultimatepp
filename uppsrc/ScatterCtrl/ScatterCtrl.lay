@@ -1,4 +1,4 @@
-LAYOUT(Properties, 536, 336)
+LAYOUT(Properties, 436, 252)
 	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
 	ITEM(Button, close, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
 END_LAYOUT
@@ -98,11 +98,13 @@ LAYOUT(Series, 420, 228)
 	ITEM(Option, primary, SetLabel(t_("Primary")).RightPosZ(4, 68).TopPosZ(4, 16))
 END_LAYOUT
 
-LAYOUT(Data, 400, 200)
-	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 0))
+LAYOUT(Data, 436, 252)
+	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
+	ITEM(Button, close, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(DataSeries, 400, 200)
 	ITEM(ArrayCtrl, data, HSizePosZ(0, 0).VSizePosZ(0, 0))
+	ITEM(EditInt, scatterIndex, LeftPosZ(12, 64).TopPosZ(168, 19))
 END_LAYOUT
 

@@ -15,6 +15,10 @@ void ScatterCtrl::DoShowEditDlg() {
 	PropertiesDlg(*this).Run(true);
 }
 
+void ScatterCtrl::DoShowData() {
+	DataDlg(*this).Run(true);
+}
+
 void MeasuresTab::Init(ScatterCtrl& scatter) {
 	CtrlLayout(*this);
 	SizePos();
@@ -271,10 +275,19 @@ void SeriesTab::UpdateFields() {
 }
 
 
-void DataTab::Init(ScatterCtrl& scatter) 
+void DataDlg::OnClose() {
+	RejectBreak(IDOK);
+	Close();	Close();
+}
+
+DataDlg::DataDlg(ScatterCtrl& scatter) 
 {
 	CtrlLayout(*this);
-	SizePos();
+	Sizeable().Zoomable();
+	
+	Title(t_("Scatter data"));
+	close <<= THISBACK(OnClose);
+	close.Exit();
 	
 	pscatter = &scatter;
 
@@ -284,6 +297,8 @@ void DataTab::Init(ScatterCtrl& scatter)
 		if (!IsNull(scatter.GetCount(c))) {
 			WithDataSeries <StaticRect> &dataseries = series.Add();
 			CtrlLayout(dataseries);
+			dataseries.scatterIndex.Hide();
+			dataseries.scatterIndex = c;
 			tab.Add(dataseries.SizePos(), scatter.GetLegend(c));
 		}
 	OnTab(); 
@@ -291,17 +306,17 @@ void DataTab::Init(ScatterCtrl& scatter)
 	tab <<= THISBACK(OnTab);
 }
 
-Value DataTab::DataSourceX::Format(const Value& q) const 
+Value DataDlg::DataSourceX::Format(const Value& q) const 
 {
 	return pscatter->GetValueX(index, q);
 }
 
-Value DataTab::DataSourceY::Format(const Value& q) const 
+Value DataDlg::DataSourceY::Format(const Value& q) const 
 {
 	return pscatter->GetValueY(index, q);
 }
 
-void DataTab::OnTab() 
+void DataDlg::OnTab() 
 {
 	int index = tab.Get();
 	if (index < 0)
@@ -309,21 +324,22 @@ void DataTab::OnTab()
 	
 	ScatterCtrl &scatter = *pscatter;
 	ArrayCtrl &data = series[index].data;	
+	int scatterIndex = series[index].scatterIndex;
 	data.Reset();
 	data.MultiSelect().SetLineCy(EditField::GetStdHeight());
-	data.SetVirtualCount(int(scatter.GetCount(index)));
+	data.SetVirtualCount(int(scatter.GetCount(scatterIndex)));
 	dataSourceX.pscatter = dataSourceY.pscatter = pscatter;
-	dataSourceX.index = dataSourceY.index = index;
+	dataSourceX.index = dataSourceY.index = scatterIndex;
 	String textX = pscatter->GetLabelX() + 
-				   (pscatter->GetUnitsX(index).IsEmpty() ? "" : " [" + pscatter->GetUnitsX(index) + "]"); 
-	String textY = pscatter->GetLegend(index) + 
-				   (pscatter->GetUnitsY(index).IsEmpty() ? "" : " [" + pscatter->GetUnitsY(index) + "]"); 
+				   (pscatter->GetUnitsX(scatterIndex).IsEmpty() ? "" : " [" + pscatter->GetUnitsX(scatterIndex) + "]"); 
+	String textY = pscatter->GetLegend(scatterIndex) + 
+				   (pscatter->GetUnitsY(scatterIndex).IsEmpty() ? "" : " [" + pscatter->GetUnitsY(scatterIndex) + "]"); 
 	data.AddRowNumColumn(textX).SetConvert(dataSourceX);
 	data.AddRowNumColumn(textY).SetConvert(dataSourceY);	
 	data.WhenBar = THISBACK(OnArrayBar);
 }
 
-void DataTab::ArrayCopy() {
+void DataDlg::ArrayCopy() {
 	int index = tab.Get();
 	if (index < 0)
 		return;
@@ -332,7 +348,7 @@ void DataTab::ArrayCopy() {
 	data.SetClipboard(true, true);
 }
 
-void DataTab::ArraySelect() {
+void DataDlg::ArraySelect() {
 	int index = tab.Get();
 	if (index < 0)
 		return;
@@ -341,7 +357,7 @@ void DataTab::ArraySelect() {
 	data.Select(0, data.GetCount(), true);
 }
 
-void DataTab::OnArrayBar(Bar &menu) {
+void DataDlg::OnArrayBar(Bar &menu) {
 	menu.Add(t_("Select all"), Null, THISBACK(ArraySelect)).Key(K_CTRL_A).Help(t_("Select all rows"));
 	menu.Add(t_("Copy"), ScatterImgP::Copy(), THISBACK(ArrayCopy)).Key(K_CTRL_C).Help(t_("Copy selected rows"));
 }
@@ -349,6 +365,7 @@ void DataTab::OnArrayBar(Bar &menu) {
 PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter) 
 {
 	CtrlLayout(*this);
+	Sizeable().Zoomable();
 	
 	Title(t_("Scatter properties"));
 	
@@ -356,11 +373,11 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter)
 	tab.Add(texts, t_("Texts"));
 	tab.Add(legend, t_("Legend"));
 	tab.Add(series, t_("Series"));
-	tab.Add(data, t_("Data"));
 	OnTab(); 
 	
 	tab <<= THISBACK(OnTab);
 	close <<= THISBACK(OnClose);
+	close.Exit();
 }
 
 void PropertiesDlg::OnTab() 
@@ -373,8 +390,6 @@ void PropertiesDlg::OnTab()
 		legend.Init(scatter);
 	else if (tab.IsAt(series))
 		series.Init(scatter);
-	else if (tab.IsAt(data))
-		data.Init(scatter);
 }
 
 void PropertiesDlg::OnClose() {
