@@ -26,11 +26,15 @@ void _DBG_Ungrab(void)
 void Ctrl::PanicMsgBox(const char *title, const char *text)
 {
 	LLOG("PanicMsgBox " << title << ": " << text);
-	_DBG_Ungrab();
-	GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-	                                           GTK_BUTTONS_CLOSE, "%s: %s", title, text);
-	gtk_dialog_run(GTK_DIALOG (dialog));
-	gtk_widget_destroy(dialog);
+	if(system("which xmessage") == 0)
+		system(String().Cat() << "xmessage -center \"" << title << "\n" << text << "\"");
+	else {
+		_DBG_Ungrab();
+		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+		                                           GTK_BUTTONS_CLOSE, "%s: %s", title, text);
+		gtk_dialog_run(GTK_DIALOG (dialog));
+		gtk_widget_destroy(dialog);
+	}
 	__BREAK__;
 }
 
