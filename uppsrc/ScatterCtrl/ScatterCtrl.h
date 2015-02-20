@@ -277,7 +277,7 @@ private:
 	void DoMouseAction(bool down, Point pt, ScatterAction action, int value);
 	void DoKeyAction(ScatterAction action);
 	void ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
-	void ProcessKey(int key); 
+	bool ProcessKey(int key); 
 	void LabelPopUp(bool down, Point &pt); 
 	void Scrolling(bool down, Point &pt, bool isOut = false);
 	void MouseZoom(int zdelta, bool hor, bool ver);
@@ -285,6 +285,7 @@ private:
 	
 	void ContextMenu(Bar& bar);
 	void DoShowEditDlg();
+	void DoShowData();
 	
 	virtual Image CursorImage(Point p, dword keyflags);
 	

@@ -262,18 +262,22 @@ void ScatterCtrl::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool s
 	}	
 }
 
-void ScatterCtrl::ProcessKey(int key) 
+bool ScatterCtrl::ProcessKey(int key) 
 {
 	if (key & K_KEYUP)
-		return;
+		return true;
 	bool ctrl = key & K_CTRL;
 	bool alt = key & K_ALT;
 	bool shift = key & K_SHIFT;
 	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP); 
+	bool processed = false;
 	for (int i = 0; i < keyBehavior.GetCount(); ++i) {
-		if (keyBehavior[i].ctrl  == ctrl  && keyBehavior[i].alt == alt && keyBehavior[i].shift == shift && keyBehavior[i].key == key)
+		if (keyBehavior[i].ctrl  == ctrl  && keyBehavior[i].alt == alt && keyBehavior[i].shift == shift && keyBehavior[i].key == key) {
+			processed = true;
 		    DoKeyAction(keyBehavior[i].action);
-	}	
+		}
+	}
+	return processed;
 }
 
 void ScatterCtrl::LabelPopUp(bool down, Point &pt) 
@@ -371,8 +375,19 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 
 bool ScatterCtrl::Key(dword key, int count)
 {
-	ProcessKey(key);
-	return false;
+	if (!ProcessKey(key)) {
+		if (key == K_CTRL_P)
+			DoShowEditDlg();
+		else if (key == K_CTRL_D)
+			DoShowData();
+		else if (key == K_CTRL_C)
+			SaveToClipboard(false);
+		else if (key == K_CTRL_S)
+			SaveToFile(Null);
+		else
+			return false;
+	}
+	return true;
 }
 
 void ScatterCtrl::GotFocus()
@@ -519,11 +534,11 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK1(FitToData, mouseHandlingY));
 		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
 		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY));
-		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0));
-		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0));
+		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT);
+		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT);
 		if (mouseHandlingY) {
-			bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2));
-			bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2));			
+			bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP);
+			bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN);			
 		}
 		bar.Separator();
 	}
@@ -531,12 +546,12 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	if (showPropDlg)
 #endif	
 	{
-		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK(DoShowEditDlg));			
+		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK(DoShowEditDlg)).Key(K_CTRL_P);		
+		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);		
 		bar.Separator();
 	}
 	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C);
-	bar.Add(t_("Save to file"), ScatterImg::Save(),
- THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
+	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
 }
 
 void ScatterCtrl::SaveToFile(String fileName)

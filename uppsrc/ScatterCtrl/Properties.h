@@ -50,11 +50,13 @@ private:
 	void UpdateFields();
 };
 
-class DataTab : public WithData<StaticRect> {
+class DataDlg : public WithData<TopWindow> {
 public:
-	typedef DataTab CLASSNAME;
+	typedef DataDlg CLASSNAME;
 	
-	void Init(ScatterCtrl& scatter);
+	void OnClose();
+	
+	DataDlg(ScatterCtrl& scatter);
 	void OnTab(); 
 	void OnArrayBar(Bar &menu);
 	void ArrayCopy();
@@ -94,7 +96,7 @@ private:
 	TextsTab texts;
 	LegendTab legend;
 	SeriesTab series;
-	DataTab data;
 };
+
 
 #endif
