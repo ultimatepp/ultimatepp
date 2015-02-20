@@ -95,8 +95,13 @@ public:
 	virtual String GetName() 			       	{return t_("Polynomial");}
 	virtual String GetFullName() 		       	{return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
 	virtual String GetEquation(int numDigits = 3);
-	virtual void GuessCoeff(DataSource &series) {coeff[0] = series.AvgY();}
 	void SetDegree(int num)				       	{degree = num;	SetNumCoeff(num + 1);}
+	virtual void GuessCoeff(DataSource &series) {
+		coeff[0] = series.AvgY();
+		int realDegree = degree;
+		for (degree = 2; degree < realDegree; degree++) 
+			Fit(series);
+	}
 };	
 
 class PolynomialEquation2 : public PolynomialEquation {
