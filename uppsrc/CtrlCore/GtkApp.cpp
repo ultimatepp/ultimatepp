@@ -26,8 +26,14 @@ void _DBG_Ungrab(void)
 void Ctrl::PanicMsgBox(const char *title, const char *text)
 {
 	LLOG("PanicMsgBox " << title << ": " << text);
+	if(system("which gxmessage") == 0)
+		IGNORE_RESULT(system(String().Cat() << "gxmessage -center \"" << title << "\n" << text << "\""));
+	else
+	if(system("which kdialog") == 0)
+		IGNORE_RESULT(system(String().Cat() << "kdialog --error \"" << title << "\n" << text << "\""));
+	else
 	if(system("which xmessage") == 0)
-		system(String().Cat() << "xmessage -center \"" << title << "\n" << text << "\"");
+		IGNORE_RESULT(system(String().Cat() << "xmessage -center \"" << title << "\n" << text << "\""));
 	else {
 		_DBG_Ungrab();
 		GtkWidget *dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,

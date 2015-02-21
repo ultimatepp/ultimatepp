@@ -8,6 +8,7 @@ NAMESPACE_UPP
 
 void Ctrl::Create(Ctrl *owner, bool popup)
 {
+	MemoryIgnoreLeaksBlock ___;
 	GuiLock __;
 	ASSERT_(IsMainThread(), "Only the main thread can open a window");
 	LLOG("Create " << Name() << " " << GetRect());
