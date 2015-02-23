@@ -1,6 +1,5 @@
 #include <RichEdit/RichEdit.h>
 
-<<<<<<< .mine
 #define Time    XTime
 #define Font    XFont
 #define Display XDisplay
@@ -15,8 +14,6 @@
 #undef Font
 #undef Display
 
-=======
->>>>>>> .r8093
 using namespace Upp;
 
 String FileName()
