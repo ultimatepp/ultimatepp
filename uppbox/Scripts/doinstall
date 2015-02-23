@@ -24,3 +24,4 @@ echo UPP = \"$HOME/upp/reference\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"
 echo UPP = \"$HOME/upp/tutorial\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/tutorial.var
 echo UPP = \"$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/bazaar.var
 echo UPP = \"$HOME/MyApps\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyApps.var
+echo UPP = \"$HOME/MyApps\;$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyAppsWBazaar.var
