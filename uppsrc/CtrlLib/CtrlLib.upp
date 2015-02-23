@@ -113,6 +113,7 @@ file
 	ChGtk0.cpp,
 	ChGtk.cpp,
 	ClassicCtrls.iml,
+	AmbientCtrls.iml,
 	Meta readonly separator,
 	Normal.upt,
 	Complex.upt,
