@@ -497,6 +497,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 			}
 			else
 				break;
+			FocusSync();
 		}
 		Event& e = Events.Head();
 		CurrentTime = e.time;
