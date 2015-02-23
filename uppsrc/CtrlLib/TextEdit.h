@@ -147,9 +147,9 @@ public:
 	int     GetCursorLine()                   { return GetLine(GetCursor()); }
 
 	void    SetSelection(int anchor = 0, int cursor = INT_MAX);
-	bool    IsSelection() const               { return anchor >= 0 && !rectsel; }
-	bool    IsRectSelection() const           { return anchor >= 0 && rectsel; }
-	bool    IsAnySelection() const            { return anchor >= 0; }
+	bool    IsSelection() const               { return IsAnySelection() && !rectsel; }
+	bool    IsRectSelection() const           { return IsAnySelection() && rectsel; }
+	bool    IsAnySelection() const            { return anchor >= 0 && anchor != cursor; }
 	bool    GetSelection(int& l, int& h) const;
 	String  GetSelection(byte charset = CHARSET_DEFAULT) const;
 	WString GetSelectionW() const;
