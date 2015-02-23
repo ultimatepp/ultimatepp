@@ -69,11 +69,6 @@ String ass = upptmp + "/uppsrc";
 String upp = "u:/upp.src";
 String uppsrc = upp + "/uppsrc";
 
-void CopyIdeFile(const String& fn)
-{
-	SaveFile(upptmp + '/' + fn, LoadFile("c:/theide/" + fn));
-}
-
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
@@ -85,7 +80,7 @@ void Make(String pkg, String exe, String method = "MSC9")
 
 CONSOLE_APP_MAIN
 {
-	Vector<String> s = Split(Syx("svnversion " + upp), NoDigit);
+	Vector<String> s = Split(Syx("svnversion " + uppsrc), NoDigit);
 	if(s.GetCount() == 0)
 		Error("Invalid version");
 	String version = s.Top();
@@ -95,6 +90,8 @@ CONSOLE_APP_MAIN
 	RealizeDirectory(tmp);
 	
 	RealizeDirectory("u:/upload");
+
+	CopyFolder(upp + "/uppbox/win32-files", upptmp);
 	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
@@ -105,10 +102,6 @@ CONSOLE_APP_MAIN
 	Make("ide", "theide32.exe");
 	Make("ide", "theide64.exe", "MSC9X64");
 	Make("umk", "umk.exe");
-
-	CopyIdeFile("c:/theide/dbghelp.dll");
-	CopyIdeFile("c:/theide/en-us.scd");
-	CopyIdeFile("c:/theide/en-gb.scd");
 
 	SetCurrentDirectory(upptmp);
 	
