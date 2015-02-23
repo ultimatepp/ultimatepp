@@ -64,6 +64,7 @@ CONSOLE_APP_MAIN
 //	Test("C:/OpenSSL-Win32/include/openssl/ssl.h");
 //	Test("C:/Program Files/Microsoft SDKs/Windows/v7.1/Include/WinBase.h");
 //	Test("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\string.h");
+	Test("C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/include/vector");
 	return;
 	Cpp x;
 	x.filedir = GetFileFolder(GetDataFile("x"));
