@@ -712,7 +712,7 @@ void AppMain___()
 #endif
 
 #ifdef _DEBUG
-	Ctrl::ShowRepaint(20); _DBG_
+//	Ctrl::ShowRepaint(20); _DBG_
 #endif
 
 #ifdef PLATFORM_WIN32
