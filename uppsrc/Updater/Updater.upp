@@ -1,4 +1,4 @@
-description "Utility for U++ enterprise application update system";
+description "Utility for U++ enterprise application update system\377";
 
 uses
 	CtrlLib;

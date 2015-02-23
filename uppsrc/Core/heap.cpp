@@ -278,3 +278,20 @@ void MemoryCheck()
 #endif
 
 END_UPP_NAMESPACE
+
+#ifdef UPP_HEAP
+#include <new>
+
+void *operator new(size_t size) throw(std::bad_alloc) { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete(void *ptr) throw()              { UPP::MemoryFree(ptr); }
+
+void *operator new[](size_t size) throw(std::bad_alloc) { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete[](void *ptr) throw()              { UPP::MemoryFree(ptr); }
+
+void *operator new(size_t size, const std::nothrow_t&) throw() { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete(void *ptr, const std::nothrow_t&) throw() { UPP::MemoryFree(ptr); }
+
+void *operator new[](size_t size, const std::nothrow_t&) throw() { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete[](void *ptr, const std::nothrow_t&) throw() { UPP::MemoryFree(ptr); }
+
+#endif

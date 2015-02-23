@@ -10,6 +10,14 @@
 
 NAMESPACE_UPP
 
+#define IMAGECLASS AmbientCtrlsImg
+#define IMAGEFILE <CtrlLib/AmbientCtrls.iml>
+#include <Draw/iml_header.h>
+
+#define IMAGECLASS AmbientCtrlsImg
+#define IMAGEFILE <CtrlLib/AmbientCtrls.iml>
+#include <Draw/iml_source.h>
+
 extern int    gtk_antialias;
 extern int    gtk_hinting;
 extern String gtk_hintstyle;
@@ -145,6 +153,10 @@ void ChHostSkin()
 
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 
+	int classiq = engine == "Redmond" || engine == "Raleigh" || engine == "Glider" || engine == "Simple";
+	if(!classiq)
+		ColoredOverride(CtrlsImg::Iml(), AmbientCtrlsImg::Iml());
+
 	Color fc = Blend(SColorHighlight, SColorShadow);
 
 	ChGtkIs().Clear();
@@ -182,9 +194,7 @@ void ChHostSkin()
 	}
 
 	Point po(0, 0);
-
-	int classiq = engine == "Redmond" || engine == "Raleigh" || engine == "Glider" || engine == "Simple";
-
+	
 	{
 		Button::Style& s = Button::StyleNormal().Write();
 		s.overpaint = 3;
@@ -474,6 +484,7 @@ void ChHostSkin()
 	}
 
 	int efm = 0;
+	if(engine.Find("oxygen") < 0)
 	{
 		EditField::Style& s = EditField::StyleDefault().Write();
 		Image img;
@@ -512,6 +523,7 @@ void ChHostSkin()
 		s.sep2 = SColorShadow();
 		s.sep1 = SColorLight();
 		s.sepm = 4;
+		if(engine.Find("oxygen") < 0)
 		{
 			MultiButton::Style& s = MultiButton::StyleFrame().Write();
 			for(int i = 0; i < 4; i++)

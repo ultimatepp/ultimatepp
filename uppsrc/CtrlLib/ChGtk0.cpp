@@ -70,11 +70,16 @@ void SetChGtkSpy_(void (*spy)(const char *name, int state, int shadow, const cha
 	chgtkspy__ = spy;
 }
 
+INITBLOCK { // This is required to avoid animation related problems with Oxygen-GTK theme
+	setenv("OXYGEN_APPLICATION_NAME_OVERRIDE", "firefox", 1);
+}
+
 Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy,
              Rect rect)
 {
 	MemoryIgnoreLeaksBlock __;
 	GdkPixbuf *icon = NULL;
+
 	if(type == GTK_ICON || type == GTK_THEMEICON) {
 		gtk_widget_set_sensitive(widget, 1);
 		gtk_widget_set_state(widget, GTK_STATE_NORMAL);
@@ -91,6 +96,7 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 		gtk_widget_set_sensitive(widget, state != 4);
 		gtk_widget_set_state(widget, (GtkStateType)state);
 	}
+
 	int ht = type & 0xf000;
 	int rcx, rcy;
 	int margin = (type >> 4) & 7;
