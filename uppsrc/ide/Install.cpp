@@ -214,6 +214,9 @@ bool Install()
 		String dir2 = ~dlg.myapps;
 		RealizeDirectory(dir2);
 		FileIn in(ipp);
+		String out = GetExeDirFile("out");
+		if(exe.Find("Program Files") >= 0) // We do not want to put 'out' dir into Program Files
+			out = GetHomeDirFile("upp.out");
 		while(!in.IsEof()) {
 			Vector<String> ln = Split(in.GetLine(), '|');
 			if(ln.GetCount() != 4)
@@ -221,7 +224,7 @@ bool Install()
 			SaveFile(AppendFileName(dir, ln[0]),
 				"UPP = " + AsCString(Rdir(ln[1], dir, dir2)) + ";\r\n"
 				"COMMON = " + AsCString(Rdir(ln[2], dir, dir2)) + ";\r\n"
-				"OUTPUT = " + AsCString(Rdir(ln[3], dir, dir2)) + ";\r\n"
+				"OUTPUT = " + AsCString(out /* Rdir(ln[3], dir, dir2) */) + ";\r\n"
 			);
 		}
 		in.Close();
