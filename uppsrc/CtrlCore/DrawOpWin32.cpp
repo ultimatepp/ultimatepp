@@ -152,7 +152,7 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 {
 	GuiLock __;
 	ASSERT(count_count > 0 && vertex_count > 0);
-	if(vertex_count < 2 || IsNull(color))
+	if(vertex_count < 2 || IsNull(color) || IsNull(width))
 		return;
 	bool is_xor = !IsNull(doxor);
 	if(is_xor)
