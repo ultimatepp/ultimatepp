@@ -1,0 +1,14 @@
+description "Using multiple layouts for various purposes\377";
+
+uses
+	CtrlLib;
+
+file
+	layoutfile1.lay,
+	layoutfile2.lay,
+	Layouts.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+
