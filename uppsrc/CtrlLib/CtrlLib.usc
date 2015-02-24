@@ -905,7 +905,7 @@ ctrl ArrayCtrl {
 	group "Complex";
 
 	GetStdSize() { return Size(150, 100); }
-	Frame SetFrame = InsetFrame();
+	Frame SetFrame = InsetFrame() @1;
 	bool AutoHideSb = false;
 	bool Header = true;
 	bool Inserting = false;
@@ -922,6 +922,7 @@ ctrl ArrayCtrl {
 	bool MouseMoveCursor = false;
 	bool MultiSelect = false;
 	int  SetLineCy;
+
 //	Qtf  SetInfo @1 ? "Info of control" ;
 
 	Paint(w) {
