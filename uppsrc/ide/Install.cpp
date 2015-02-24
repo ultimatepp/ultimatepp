@@ -215,8 +215,11 @@ bool Install()
 		RealizeDirectory(dir2);
 		FileIn in(ipp);
 		String out = GetExeDirFile("out");
-		if(exe.Find("Program Files") >= 0) // We do not want to put 'out' dir into Program Files
+		if(exe.StartsWith(GetProgramsFolder()) || exe.Find("Program Files") >= 0) {
+			// We do not want to put folders dir into Program Files
 			out = GetHomeDirFile("upp.out");
+			dir = GetHomeDirFile("upp.src");
+		}
 		while(!in.IsEof()) {
 			Vector<String> ln = Split(in.GetLine(), '|');
 			if(ln.GetCount() != 4)
