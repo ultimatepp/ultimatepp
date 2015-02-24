@@ -99,7 +99,7 @@ void Bombs::Paint(Draw& w)
 				}
 			}
 			else
-			if(!(f & HIDDEN))
+			if(!(f & HIDDEN)) {
 				if(f & BOMB)
 					txt = "B";
 				else {
@@ -107,6 +107,7 @@ void Bombs::Paint(Draw& w)
 					txt = String(f + '0', 1);
 					ink = f == 0 ? SLtGreen : f == 1 ? SLtBlue : SBlack;
 				}
+			}
 			Size tsz = GetTextSize(txt, Roman(2 * UNIT / 3));
 			w.DrawText(x * UNIT + (UNIT - tsz.cx) / 2, y * UNIT + (UNIT - tsz.cy) / 2,
 			           txt, Roman(2 * UNIT / 3), ink);
