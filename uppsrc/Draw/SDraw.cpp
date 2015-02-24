@@ -27,6 +27,8 @@ void SDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 
 void SDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
+	if(IsNull(width) || IsNull(color))
+		return;
 	Width(width);
 	docolor = color;
 	Move(Point(x1, y1));
@@ -75,7 +77,7 @@ void SDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 {
 	if(width == 0)
 		width = 1;
-	if(width < 0 || IsNull(color))
+	if(IsNull(color))
 		return;
 	Width(width);
 	docolor = color;

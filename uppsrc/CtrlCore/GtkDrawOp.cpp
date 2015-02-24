@@ -174,6 +174,8 @@ static void sDrawLineStroke(cairo_t *cr, int width)
 
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
+	if(IsNull(width) || IsNull(color))
+		return;
 	FlushText();
 	SetColor(color);
 	if(width == PEN_SOLID)
@@ -206,6 +208,8 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
                                     int count_count, int width, Color color, Color doxor)
 {
+	if(vertex_count < 2 || IsNull(color))
+		return;
 	FlushText();
 	while(--count_count >= 0) {
 		const Point *pp = vertices;
