@@ -1,0 +1,10 @@
+LAYOUT(DialogLayout, 196, 96)
+	ITEM(Label, dv___0, SetLabel(t_("This is some dialog")).LeftPosZ(8, 116).TopPosZ(8, 21))
+	ITEM(Label, info, SetLabel(t_("INFO...")).LeftPosZ(8, 116).TopPosZ(32, 21))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(120, 68).TopPosZ(64, 24))
+END_LAYOUT
+
+LAYOUT(MainLayout, 488, 276)
+	ITEM(TabCtrl, tabs, LeftPosZ(4, 480).TopPosZ(4, 268))
+END_LAYOUT
+

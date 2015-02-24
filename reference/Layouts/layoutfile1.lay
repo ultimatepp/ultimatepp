@@ -1,0 +1,9 @@
+LAYOUT(FirstTabLayout, 400, 200)
+	ITEM(Label, dv___0, SetLabel(t_("This is first layout")).LeftPosZ(12, 124).TopPosZ(8, 21))
+	ITEM(Button, dialog, SetLabel(t_("Push to invoke dialog")).LeftPosZ(12, 128).TopPosZ(40, 24))
+END_LAYOUT
+
+LAYOUT(SecondTabLayout, 400, 200)
+	ITEM(Label, dv___0, SetLabel(t_("This is second layout")).LeftPosZ(12, 124).TopPosZ(8, 21))
+END_LAYOUT
+

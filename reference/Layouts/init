@@ -1,0 +1,4 @@
+#ifndef _Layouts_icpp_init_stub
+#define _Layouts_icpp_init_stub
+#include "CtrlLib/init"
+#endif
