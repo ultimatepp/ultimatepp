@@ -216,9 +216,8 @@ bool Install()
 		FileIn in(ipp);
 		String out = GetExeDirFile("out");
 		if(ToLower(exe).StartsWith(ToLower(GetProgramsFolder())) || ToLower(exe).Find("program files") >= 0) {
-			// We do not want to put folders dir into Program Files
+			// We do not want to put MyApps folder dir into Program Files
 			out = GetHomeDirFile("upp.out");
-			dir = GetHomeDirFile("upp.src");
 		}
 		while(!in.IsEof()) {
 			Vector<String> ln = Split(in.GetLine(), '|');
