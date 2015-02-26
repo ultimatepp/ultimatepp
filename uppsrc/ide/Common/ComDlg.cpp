@@ -46,8 +46,10 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".icpp")
 		img = IdeCommonImg::ISource();
 	else
-	if(ext == ".c" || ext == ".cpp" || ext == ".cc" || ext == ".cxx"
-	               || ext == ".m" || ext == ".mm")  //should later have diff img?
+	if(findarg(ext, ".cpp", ".cc", ".cxx", ".mm") >= 0)
+		img = IdeCommonImg::Cpp();
+	else
+	if(findarg(ext, ".c", ".m") >= 0)
 		img = IdeCommonImg::Source();
 	else
 	if(ext == ".h" || ext == ".hpp" || ext == ".hh" || ext == ".hxx")
