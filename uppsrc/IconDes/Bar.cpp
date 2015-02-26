@@ -221,6 +221,14 @@ struct CachedIconImage : public Display {
 		Point p = r.CenterPos(m.GetSize());
 		w.DrawImage(p.x, p.y, m);
 	}
+	virtual Size GetStdSize(const Value& q) const
+	{
+		Image m = q;
+		if(IsNull(m))
+			return Size(0, 0);
+		Size isz = m.GetSize();
+		return isz.cx < 200 && isz.cy < 200 ? isz : IconDesImg::LargeImage().GetSize();
+	}
 };
 
 void IconDes::SerializeSettings(Stream& s)
