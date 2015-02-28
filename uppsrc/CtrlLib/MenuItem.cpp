@@ -170,19 +170,26 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 	Size sz = GetSize();
 	if(GUI_GlobalStyle() >= GUISTYLE_XP) {
 		bool opaque = InOpaqueBar();
-//		bool opaque2 = opaque || state == 2;
-		bool opaque2 = opaque || state; //TODO: This would probably cause problems in linux dark themes - check!
-		// But fixes issues in ide / Win
+		bool opaque2 = opaque || state;
+		Color bg = SColorFace();
 		if(opaque2)
 			ChPaint(w, 0, 0, sz.cx, sz.cy, style->topitem[state]);
 		else
 		if(opaque)
-			w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace());
+			w.DrawRect(0, 0, sz.cx, sz.cy, bg);
 		String text = GetText();
 		Size isz = GetTextSize(text, StdFont());
+		Color txt = opaque ? style->topitemtext[0] : GetLabelTextColor(this);
+		Color hltxt = opaque2 ? style->topitemtext[state] : GetLabelTextColor(this);
+		if(!opaque) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)
+			int g = Grayscale(bg);
+			if(abs(g - Grayscale(txt)) < 70)
+				txt = IsDark(bg) ? White() : Black();
+			if(abs(g - Grayscale(hltxt)) < 70)
+				hltxt = IsDark(bg) ? White() : Black();
+		}
 		DrawMenuText(w, 6, (sz.cy - isz.cy) / 2, text, GetFont(), IsItemEnabled(), state,
-		             opaque ? style->topitemtext[0] : GetLabelTextColor(this),
-		             opaque2 ? style->topitemtext[state] : GetLabelTextColor(this));
+		             txt, hltxt);
 	}
 	else {
 		w.DrawRect(sz, SColorFace);
