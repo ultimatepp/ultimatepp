@@ -366,8 +366,11 @@ void SelectPackageDlg::SyncList()
 	bpd.fnt.Bold();
 	for(int i = 0; i < packages.GetCount(); i++) {
 		const PkInfo& pkg = packages[i];
-		clist.Add(pkg.package, IsNull(pkg.icon) ? IdeImg::Package() : pkg.icon);
-		alist.Add(pkg.package, pkg.nest, pkg.description, pkg.icon);
+		Image icon = pkg.icon;
+		if(IsNull(icon))
+			icon = pkg.main ? IdeImg::MainPackage() : IdeImg::Package();
+		clist.Add(pkg.package, icon);
+		alist.Add(pkg.package, pkg.nest, pkg.description, icon);
 		alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
 	}
 	if(!alist.FindSetCursor(n))
