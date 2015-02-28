@@ -29,6 +29,8 @@ FileSel&  OutputFs();
 
 void      ShellOpenFolder(const String& dir);
 
+Image     ImageOver(const Image& back, const Image& over);
+
 Image     IdeFileImage(const String& filename, bool fast, bool include_path, bool pch);
 
 bool FinishSave(String tmpfile, String outfile);
