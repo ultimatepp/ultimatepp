@@ -530,7 +530,7 @@ void Ide::SetIcon()
 	case 1:  Icon(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge()); break;
 	case 2:  Icon(IdeImg::IconRunning(), IdeImg::IconRunningLarge()); break;
 	case 3:  Icon(IdeImg::IconBuilding(), IdeImg::IconBuildingLarge()); break;
-	default: Icon(IdeImg::Package(), IdeImg::PackageLarge());
+	default: Icon(IdeImg::Icon(), IdeImg::PackageLarge());
 	}
 }
 

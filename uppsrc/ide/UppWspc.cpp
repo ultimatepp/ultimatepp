@@ -87,7 +87,9 @@ void WorkspaceWork::SyncErrorPackages()
 		#ifdef PLATFORM_WIN32
 			path = ToLower(path);
 		#endif
-			ff.icon = speed[i] ? IdeCommonImg::FastPackage() : IdeImg::Package();
+			ff.icon = i ? IdeImg::Package() : IdeImg::MainPackage();
+			if(speed[i])
+				ff.icon = ImageOver(ff.icon, IdeImg::FastPackage());
 			ff.underline = Null;
 			for(int q = 0; q < errorfiles.GetCount(); q++) {
 				if(errorfiles[q].StartsWith(path)) {
