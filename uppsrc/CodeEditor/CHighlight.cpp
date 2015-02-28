@@ -69,7 +69,7 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 	if(c == HighlightSetup::INK_CONST_FLOAT) {
 		p += *p == '-' || *p == '+';
 		while(IsDigit(*p)) p++;
-		if(*p == 'f')
+		if(*p == 'f' || *p == 'F')
 			p++;
 	}
 	if(c == HighlightSetup::INK_CONST_OCT && p - t == 1)
