@@ -606,8 +606,6 @@ void ChHostSkin()
 		else
 			s.topitemtext[1] = ChGtkColor(0, top_item);
 		s.topitemtext[2] = ChGtkColor(2, top_item);
-		if(engine == "Ambiance")
-			s.topitemtext[1] = Black();
 		SColorMenuText_Write(s.topitemtext[1]);
 		if(Qt)
 			GtkCh(s.topitem[1], sw, GTK_STATE_PRELIGHT);
