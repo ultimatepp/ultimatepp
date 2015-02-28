@@ -55,21 +55,22 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 {
 	int c = octal ? HighlightSetup::INK_CONST_OCT : HighlightSetup::INK_CONST_INT;
 	const wchar *t = p;
-	bool isDot, isFloat = false;
 	while(IsDigit(*p)) p++;
 	int fixdigits = int(p - t);
-	if(*p == '.' || (*p == 'e' || *p == 'E') && !css) {
-		if(*p == '.')
-			isDot = true;
+	if(*p == '.') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
-		if(*p == '-')
-			p++;
 	}
-	while((IsDigit(*p) || *p == 'e' || *p == '-' || (isDot && *p == 'f')) && (isFloat == false)) {
-		if(*p == 'f')
-			isFloat = true;
+	while(IsDigit(*p)) p++;
+	if(*p == 'e' || *p == 'E') {
+		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
+	}
+	if(c == HighlightSetup::INK_CONST_FLOAT) {
+		p += *p == '-' || *p == '+';
+		while(IsDigit(*p)) p++;
+		if(*p == 'f')
+			p++;
 	}
 	if(c == HighlightSetup::INK_CONST_OCT && p - t == 1)
 		c = HighlightSetup::INK_CONST_INT;
