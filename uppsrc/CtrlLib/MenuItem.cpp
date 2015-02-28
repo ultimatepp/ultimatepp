@@ -181,7 +181,7 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 		Size isz = GetTextSize(text, StdFont());
 		Color txt = opaque ? style->topitemtext[0] : GetLabelTextColor(this);
 		Color hltxt = opaque2 ? style->topitemtext[state] : GetLabelTextColor(this);
-		if(!opaque) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)
+		if(!opaque && state != 2) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)
 			int g = Grayscale(bg);
 			if(abs(g - Grayscale(txt)) < 70)
 				txt = IsDark(bg) ? White() : Black();
