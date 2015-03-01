@@ -94,6 +94,7 @@ void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 
 bool Ctrl::IsWaitingEvent()
 {
+	ASSERT_(IsMainThread(), "IsWaitingEvent can only run in the main thread");
 	GuiLock __;
 	return XPending(Xdisplay);
 }
@@ -356,6 +357,7 @@ void SweepMkImageCache();
 
 bool Ctrl::ProcessEvents(bool *)
 {
+	ASSERT_(IsMainThread(), "ProcessEvents can only run in the main thread");
 	GuiLock __;
 	if(ProcessEvent()) {
 		while(ProcessEvent() && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
@@ -420,7 +422,7 @@ void Ctrl::SysEndLoop()
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
+	ASSERT_(IsMainThread(), "EventLoop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	int64 loopno = ++EventLoopNo;
