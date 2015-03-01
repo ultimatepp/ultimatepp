@@ -113,9 +113,9 @@ the Setup`->Environment dialog.]]
 in the Assembly setup dialog.]]
 ::^ [s0; [*2 .bm]]
 ::= [s0; [2 A text file that contains the build settings associated with 
-a particular compiler/ linker.]]
+a particular compiler/ linker (`"build method`")]]
 ::^ [s0; [*2 cfg folder]]
 ::= [s0; [2 This folder holds cache files from theide (tdx,cache,pkg`_cache) 
 `+ cfg (per package settings `- opened files, cursor positions 
 etc.)]]}}&]
-[s0; ]
+[s0; ]]

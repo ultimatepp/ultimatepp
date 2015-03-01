@@ -19,7 +19,7 @@ topic "Copyright (C) 2005 Mirek Fidler, Tomas Rylek and various contributors (se
 [l321;b83;a83;*C$7;2 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
-[s0; [*+117 Copyright © 1998, 2014 Ultimate`+`+ team]&]
+[s0; [*+117 Copyright © 1998, 2015 Ultimate`+`+ team]&]
 [s0; All rights reserved.&]
 [s0; &]
 [s0; Redistribution and use in source and binary forms, with or without 
