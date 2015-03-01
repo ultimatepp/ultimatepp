@@ -279,6 +279,7 @@ bool Ctrl::IsWaitingEvent0(bool fetch)
 
 bool Ctrl::IsWaitingEvent()
 {
+	ASSERT_(IsMainThread(), "IsWaitingEvent can only run in the main thread");
 	return IsWaitingEvent0(true);
 }
 
@@ -552,6 +553,7 @@ bool Ctrl::ProcessEvents0(bool *quit, bool fetch)
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
+	ASSERT_(IsMainThread(), "ProcessEvents can only run in the main thread");
 	return ProcessEvents0(quit, true);
 }
 
@@ -567,7 +569,7 @@ void WakeUpGuiThread()
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
+	ASSERT_(IsMainThread(), "EventLoop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);

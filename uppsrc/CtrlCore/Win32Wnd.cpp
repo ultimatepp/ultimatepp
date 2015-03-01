@@ -779,13 +779,14 @@ void Ctrl::sProcessMSG(MSG& msg)
 
 bool Ctrl::IsWaitingEvent()
 {
+	ASSERT_(IsMainThread(), "IsWaitingEvent can only run in the main thread");
 	MSG msg;
 	return PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE);
 }
 
 bool Ctrl::ProcessEvent(bool *quit)
 {
-	ASSERT(IsMainThread());
+	ASSERT_(IsMainThread(), "ProcessEvent can only run in the main thread");
 	if(!GetMouseLeft() && !GetMouseRight() && !GetMouseMiddle())
 		ReleaseCtrlCapture();
 	MSG msg;
@@ -808,6 +809,7 @@ void Ctrl::SysEndLoop()
 
 bool Ctrl::ProcessEvents(bool *quit)
 {
+	ASSERT_(IsMainThread(), "ProcessEvents can only run in the main thread");
 	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
 		SweepMkImageCache();
@@ -820,7 +822,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
-	ASSERT_(IsMainThread(), "Event loop can only run in the main thread");
+	ASSERT_(IsMainThread(), "EventLoop can only run in the main thread");
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
 	LLOG("Entering event loop at level " << LoopLevel << LOG_BEGIN);
