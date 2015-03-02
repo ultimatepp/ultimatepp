@@ -7,4 +7,4 @@ topic "Bildschirmfotos // Screenshots";
 [s0; [^topic`:`/`/uppweb`/www`/idess`$de`-de^2 Bildschirmfoto TheIDE]&]
 [s0; [^topic`:`/`/uppweb`/www`/chss`$de`-de^2 Bildschirmfoto Chameleon]&]
 [s0; [^topic`:`/`/uppweb`/www`/examples`$de`-de^2 U`+`+ Beispiele]&]
-[s0; ]
+[s0; ]]
