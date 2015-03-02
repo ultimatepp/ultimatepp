@@ -210,6 +210,10 @@ TOPIC("ss$de-de")
 #include "ss$de-de.tppi"
 END_TOPIC
 
+TOPIC("ss$en-us")
+#include "ss$en-us.tppi"
+END_TOPIC
+
 TOPIC("ubuntuinstall$en-us")
 #include "ubuntuinstall$en-us.tppi"
 END_TOPIC
