@@ -126,8 +126,16 @@ TOPIC("extlinks$en-us")
 #include "extlinks$en-us.tppi"
 END_TOPIC
 
+TOPIC("idess$cs-cz")
+#include "idess$cs-cz.tppi"
+END_TOPIC
+
 TOPIC("idess$de-de")
 #include "idess$de-de.tppi"
+END_TOPIC
+
+TOPIC("idess$en-us")
+#include "idess$en-us.tppi"
 END_TOPIC
 
 TOPIC("index$ca-es")
