@@ -7,6 +7,7 @@ TagSyntax::TagSyntax()
 	Clear();
 	hout = NULL;
 	html = true;
+	witz = false;
 }
 
 void TagSyntax::Clear()

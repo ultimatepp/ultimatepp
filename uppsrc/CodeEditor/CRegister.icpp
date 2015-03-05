@@ -13,9 +13,9 @@ void RegisterCSyntax(const char *id, int kind,
 	EditorSyntax::Register(id, callback1(CreateCSyntax, kind), exts, description);
 }
 
-void CreateTagSyntax(One<EditorSyntax>& e, bool html)
+void CreateTagSyntax(One<EditorSyntax>& e, bool html, bool witz)
 {
-	e.Create<TagSyntax>().Html(html);
+	e.Create<TagSyntax>().Html(html).Witz(witz);
 }
 
 void CreateDiffSyntax(One<EditorSyntax>& e)
@@ -45,8 +45,9 @@ INITBLOCK
 	RegisterCSyntax("usc", CSyntax::HIGHLIGHT_USC, "*.usc", "U++ widget definitions (.usc)");
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
 	
-	EditorSyntax::Register("xml", callback1(CreateTagSyntax, false), "*.xml *.xsd", "XML (.xml)");
-	EditorSyntax::Register("html", callback1(CreateTagSyntax, true), "*.html *.htm", "HTML (.html)");
+	EditorSyntax::Register("xml", callback2(CreateTagSyntax, false, false), "*.xml *.xsd", "XML (.xml)");
+	EditorSyntax::Register("html", callback2(CreateTagSyntax, true, false), "*.html *.htm", "HTML (.html)");
+	EditorSyntax::Register("witz", callback2(CreateTagSyntax, true, true), "*.witz", "Skylark templates (.witz)");
 	
 	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
 
