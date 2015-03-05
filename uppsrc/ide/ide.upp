@@ -43,6 +43,7 @@ file
 	Bottom.cpp,
 	t.cpp,
 	Cpp.cpp,
+	Assist.h,
 	Assist.cpp,
 	ParamInfo.cpp,
 	Navigator.cpp,
