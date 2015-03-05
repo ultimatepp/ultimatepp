@@ -14,6 +14,7 @@ private:
 	enum { TEXT, TAG0, TAG, ENDTAG, ATTR, COMMENT, DECL, PI, SCRIPT };
 	
 	bool    html;
+	bool    witz;
 	int     status;
 	int     hl_ink;
 	int     hl_paper;
@@ -35,7 +36,8 @@ private:
 	void SetPut(int ink, int n = 1, int paper = PAPER_NORMAL)   { Set(ink, paper); Put(n); }
 
 public:
-	void     Html(bool b)                                       { html = b; }
+	TagSyntax&  Html(bool b)                                    { html = b; return *this; }
+	TagSyntax&  Witz(bool b)                                    { html = b; return *this; }
 	CSyntax *GetScript()                                        { return status == SCRIPT ? &script : NULL; }
 
 	TagSyntax();
