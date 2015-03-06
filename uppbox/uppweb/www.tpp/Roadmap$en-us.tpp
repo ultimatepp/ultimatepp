@@ -68,7 +68,7 @@ instead of panic.&]
 sorting VectorMap, ArrayMap.&]
 [s0;i150;O0; [* plugin]/[* lz4 ]`- adapted fast compression library&]
 [s0;i150;O0; [* plugin]/[* lzma ]`- adapted high ratio compression library&]
-[s0;i150;O0; [* plugin]/[* lzma] `- popular OpenGL utility library adapted 
+[s0;i150;O0; [* plugin]/[* glew] `- popular OpenGL utility library adapted 
 as package&]
 [s0; &]
 [s0; [* GUI programming `& graphics]&]
