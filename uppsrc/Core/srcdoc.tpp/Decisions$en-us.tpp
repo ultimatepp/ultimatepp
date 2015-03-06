@@ -39,7 +39,7 @@ pragmatic resolution `- our experience is that it is quite hard
 and annoying to achieve robustness here and it cannot be reliably 
 tested. Also, most platforms with virtual memory will almost 
 freeze long before out`-of`-memory problem due to intensive page 
-swapping. Connected issue `- default and copy constructors are 
+swapping. Related issue `- default and copy constructors are 
 not allowed to throw exceptions in U`+`+ (the common reason to 
 throw exception here was out`-of`-memory condition). This limitation 
 will be removed in future releases.&]
@@ -47,12 +47,12 @@ will be removed in future releases.&]
 (including GUI elements, like number of rows in DropList) is 
 2][%%` 31 ][%% `- 1 `= ]2,147,483,647.&]
 [s0;i150;b33;O0; GUI is designed in a way that all user events are 
-passed and processed the main thread. The synchronization is 
-done using single global mutex (operated by EnterGuiMutex, LeaveGuiMutex 
-or GuiLock scoped helper). Other threads can directly work with 
-GUI as long they do use this global mutex. There are some operations 
-(like opening/closing windows, message loops) that cannot be 
-performed by any other thread than main.&]
+passed and processed by the main thread. The synchronization 
+is done using single global mutex (operated by EnterGuiMutex, 
+LeaveGuiMutex or GuiLock scoped helper). Other threads can directly 
+work with GUI as long they do use this global mutex. There are 
+some operations (like opening/closing windows, message loops) 
+that cannot be performed by any other thread than main.&]
 [s0;i150;b33;O0; U`+`+ does not use OS`-native widgets. The main 
 reason for this is to achieve widget interface model optimal 
 for rapid development. The less important reason is that this 

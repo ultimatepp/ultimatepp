@@ -31,14 +31,14 @@ in `"picked`" state and number of operations that can be performed
 on it is limited. In most cases, only allowed operations here 
 are operator`=, destructor and Clear. This one of reasons for 
 having `'pick`' function (and using term `'pick`' instead of 
-`'move`', even if the semantics is about the same as `'std`::move`'.&]
+`'move`', even if the semantics is about the same as `'std`::move`').&]
 [s7; Vector<int> a, b;&]
 [s7; a `= pick(b); // moves content of b to a, b is put into picked 
 state&]
 [s7; b `= clone(a); // a and b now contain the same data&]
 [s3; C`+`+03 compatibility&]
 [s5; In ideal world, we would be now using only C`+`+11. In real 
-world, we will need to support C`+`+03 for forseeable future.&]
+world, we will need to support C`+`+03 for foreseeable future.&]
 [s5; pick constructor/operator`= in C`+`+11 can obviously use&]
 [s7; T(T`&`&);&]
 [s7; T`& operator`=(T`&`&);&]

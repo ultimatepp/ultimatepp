@@ -40,7 +40,7 @@ of containers.&]
 (most) `'`=`' cases, with `&`& based move semantics for specific 
 or explicit cases (std`::move). NTL requires to specify the mode 
 of transfer with `'pick`' (corresponds to std`::move) or `'clone`' 
-functions in all cases, except the assignement of temporary value 
+functions in all cases, except the assignment of temporary value 
 (where the final semantics is the same).&]
 [s3; Random access and random access notation&]
 [s5; STL uses iterators as the preferred way how to access and identify 
@@ -58,7 +58,7 @@ ndex], is introduced, as an ideal building block for all kinds
 of associative operations.&]
 [s5; [* InVector, Sorted maps]&]
 [s5; NTL provides random access containers with fast insertion at 
-arbitrary position, which scales well to milions of items. This 
+arbitrary position, which scale well to milions of items. This 
 is then based to create `'sorted maps`' that are using binary 
 search.&]
 [s3; Algorithm requirements&]
