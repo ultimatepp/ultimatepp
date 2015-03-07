@@ -215,6 +215,9 @@ public:
 	operator int() const             { return Is(INT_V) ? GetSmallRaw<int>() : GetOtherInt(); }
 	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
+	
+//	operator std::string() const     { return (String)*this; }
+//	operator std::wstring() const    { return (WString)*this; }
 
 	Value(const String& s) : data(s) { Magic(); }
 	Value(const WString& s);
