@@ -98,7 +98,7 @@ Vector<ItemTextPart> ParseItemNatural(const String& name,
 		p.pari = pari;
 		int n = 1;
 		if(*s >= '0' && *s <= '9') {
-			while(s[n] >= '0' && s[n] <= '9')
+			while(s[n] >= '0' && s[n] <= '9' || (s[n] == 'x' || s[n] == 'X'))
 				n++;
 			p.type = ITEM_NUMBER;
 		}
