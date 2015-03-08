@@ -1,0 +1,11 @@
+description "Demostrates FileSel features that uses separate thread to resolve file image\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+
