@@ -565,7 +565,7 @@ static auxthread_t auxthread__ sExeIconThread(void *)
 	return 0;
 }
 
-void LazyFileIcons::Done(Image img)
+void LazyExeFileIcons::Done(Image img)
 {
 	if(pos >= ndx.GetCount())
 		return;
@@ -580,7 +580,7 @@ void LazyFileIcons::Done(Image img)
 	pos++;
 }
 
-String LazyFileIcons::Path()
+String LazyExeFileIcons::Path()
 {
 	if(pos >= ndx.GetCount())
 		return Null;
@@ -591,7 +591,7 @@ String LazyFileIcons::Path()
 	return ToSystemCharset(AppendFileName(dir, f.name));
 }
 
-void LazyFileIcons::Do()
+void LazyExeFileIcons::Do()
 {
 	int start = msecs();
 	for(;;) {
@@ -604,7 +604,8 @@ void LazyFileIcons::Do()
 			sExeMutex.Enter();
 			bool running = sExeRunning;
 			if(!running) {
-				done = path == sExePath;
+				path == sExePath;
+				done = path.GetCount();
 				memcpy(&info, &sExeInfo, sizeof(info));
 				*sExePath = '\0';
 				memset(&sExeInfo, 0, sizeof(sExeInfo));
@@ -633,7 +634,7 @@ void LazyFileIcons::Do()
 	}
 }
 
-void LazyFileIcons::ReOrder()
+void LazyExeFileIcons::ReOrder()
 { // gather .exe files; sort based on length so that small .exe get resolved first
 	ndx.Clear();
 	Vector<int> len;
@@ -648,7 +649,7 @@ void LazyFileIcons::ReOrder()
 	Restart(0);
 }
 
-void LazyFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_)
+void LazyExeFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_)
 {
 	list = &list_;
 	dir = dir_;
@@ -865,7 +866,110 @@ void FileSel::SearchLoad()
 #ifdef GUI_WIN
 	lazyicons.Start(list, d, WhenIcon);
 #endif
+#ifdef _MULTITHREADED
+	StartLI();
+#endif
 }
+
+#ifdef _MULTITHREADED
+
+StaticMutex FileSel::li_mutex;
+void      (*FileSel::li_current)(const String& path, Image& result);
+String      FileSel::li_path;
+Image       FileSel::li_result;
+bool        FileSel::li_running;
+int         FileSel::li_pos;
+
+void FileSel::LIThread()
+{
+	String path;
+	void (*li)(const String& path, Image& result);
+	{
+		Mutex::Lock __(li_mutex);
+		path = li_path;
+		li = li_current;
+	}
+	Image result;
+	if(path.GetCount())
+		li(path, result);
+	if(!IsNull(result) && result.GetWidth() > 16 || result.GetHeight() > 16)
+		result = Rescale(result, 16, 16);
+	{
+		Mutex::Lock __(li_mutex);
+		li_result = result;
+		li_running = false;
+	}
+}
+
+String FileSel::LIPath()
+{
+	return li_pos >= 0 && li_pos < list.GetCount() ? FilePath(list.Get(li_pos).name) : Null;
+}
+
+void FileSel::DoLI()
+{
+	int start = msecs();
+	for(;;) {
+		for(;;) {
+			bool done = false;
+			String path = LIPath();
+			if(IsNull(path))
+				return;
+			bool running;
+			Image img;
+			{
+				Mutex::Lock __(li_mutex);
+				running = li_running;
+				if(!running) {
+					done = li_path == path && li_current == WhenIconLazy;
+					img = li_result;
+				}
+			}
+			if(done) {
+				if(li_pos < 0 || li_pos >= list.GetCount())
+					return;
+				if(!IsNull(img)) {
+					const FileList::File& f = list.Get(li_pos);
+					WhenIcon(f.isdir, f.name, img);
+					if(f.hidden)
+						img = Contrast(img, 200);
+					list.SetIcon(li_pos, img);
+				}
+				li_pos++;
+			}
+			if(!running)
+				break;
+			Sleep(0);
+			if(msecs(start) > 10 || Ctrl::IsWaitingEvent()) {
+				ScheduleLI();
+				return;
+			}
+		}
+
+		String path = LIPath();
+		if(IsNull(path))
+			return;
+		{
+			Mutex::Lock __(li_mutex);
+			if(!li_running) {
+				li_current = WhenIconLazy;
+				li_path = path;
+				li_running = true;
+				Thread::Start(callback(LIThread));
+			}
+		}
+	}
+}
+
+void FileSel::StartLI()
+{
+	if(WhenIconLazy) {
+		li_pos = 0;
+		ScheduleLI();
+	}
+}
+
+#endif
 
 String TrimDot(String f) {
 	int i = f.Find('.');
@@ -2037,6 +2141,8 @@ FileSel::FileSel() {
 	
 	list.AutoHideSb();
 	places.AutoHideSb();
+	
+	WhenIconLazy = NULL;
 }
 
 FileSel::~FileSel() {}

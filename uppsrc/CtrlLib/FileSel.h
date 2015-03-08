@@ -129,7 +129,7 @@ void SortByExt(FileList& list);
 
 #ifdef GUI_WIN
 // Helper class for lazy (using aux thread) evaluation of .exe icons in Win32
-class LazyFileIcons {
+class LazyExeFileIcons {
 	TimeCallback tm;
 	String       dir;
 	FileList    *list;
@@ -140,7 +140,7 @@ class LazyFileIcons {
 	AuxMutex     mutex;
 
 	void   Do();
-	void   Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyFileIcons::Do)); }
+	void   Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyExeFileIcons::Do)); }
 	String Path();
 	void   Done(Image img);
 
@@ -183,7 +183,7 @@ protected:
 #endif
 
 #ifdef GUI_WIN
-	LazyFileIcons  lazyicons;
+	LazyExeFileIcons  lazyicons;
 #endif
 
 	DisplayCtrl    preview_display;
@@ -201,6 +201,22 @@ protected:
 	bool        rdonly;
 	bool        bidname;
 	bool        appmodal;
+
+#ifdef _MULTITHREADED
+	static StaticMutex li_mutex;
+	static void      (*li_current)(const String& path, Image& result);
+	static String      li_path;
+	static Image       li_result;
+	static bool        li_running;
+	static int         li_pos;
+	TimeCallback       li_tm;
+	
+	static void LIThread();
+	String      LIPath();
+	void        StartLI();
+	void        DoLI();
+	void        ScheduleLI()                                 { li_tm.KillSet(0, THISBACK(DoLI)); }
+#endif
 
 	void        LoadNet();
 	void        SelectNet();
@@ -237,9 +253,12 @@ protected:
 	using       WithFileSelectorLayout<TopWindow>::Title;
 
 	typedef FileSel CLASSNAME;
-public:
 
+public:
 	Callback3<bool, const String&, Image&> WhenIcon;
+#ifdef _MULTITHREADED
+	void (*WhenIconLazy)(const String& path, Image& result);
+#endif
 
 	void        Serialize(Stream& s);
 
