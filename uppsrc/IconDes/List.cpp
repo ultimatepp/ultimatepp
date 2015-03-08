@@ -179,6 +179,24 @@ struct ImgPreview : Display {
 	}
 };
 
+#ifdef _MULTITHREADED
+static void sLoadImage(const String& path, Image& result)
+{
+	if(findarg(ToLower(GetFileExt(path)), ".png", ".gif", ".jpeg", ".jpg") < 0)
+		return;	
+	FileIn in(path);
+	if(!in)
+		return;
+	One<StreamRaster> r = StreamRaster::OpenAny(in);
+	if(!r)
+		return;
+	Size sz = r->GetSize();
+	if(sz.cx > 80 || sz.cy > 80)
+		return;
+	result = r->GetImage();
+}
+#endif
+
 FileSel& IconDes::ImgFile()
 {
 	static FileSel sel;
@@ -186,6 +204,9 @@ FileSel& IconDes::ImgFile()
 		sel.Type("Image files", "*.png *.bmp *.jpg *.jpeg *.gif");
 		sel.AllFilesType();
 		sel.Multi();
+#ifdef _MULTITHREADED
+		sel.WhenIconLazy = sLoadImage;
+#endif
 		sel.Preview(Single<ImgPreview>());
 	}
 	return sel;
