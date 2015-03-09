@@ -133,6 +133,13 @@ ValueArray or ValueMap (technical and performance reasons).&]
 Value types. If conversion is not possible, throws ValueTypeError.&]
 [s3; &]
 [s4;%- &]
+[s5;:Value`:`:operator std`:`:string`(`)const:%- [* operator_std`::string]()_[@(0.0.255) c
+onst]&]
+[s5;:Value`:`:operator std`:`:wstring`(`)const:%- [* operator_std`::wstring]()_[@(0.0.255) c
+onst]&]
+[s2; Converts Value to `[W`]String and then to std`::`[w`]string.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Value`:`:Value`(const Nuller`&`):%- [* Value]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
 ])&]
 [s2; Support for assignment from Null (e.g. Value v `= Null). Creates 

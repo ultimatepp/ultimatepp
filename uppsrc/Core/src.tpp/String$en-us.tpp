@@ -236,11 +236,10 @@ rator<<`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s2; `"Deep`" assignment. It is equivalent of standard assignment 
 followed by [* Shrink ]operation (in other words, internal buffer 
 gets reallocated to the exact size of source).&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
-[s5;:String`:`:operator std`:`:string`(`)const:%- [* operator_std`::string]()_[@(0.0.255) c
-onst]&]
-[s2; Conversion for minimal STL compatibility.&]
+[s5;:String`:`:ToStd`(`)const:%- [* std`::string]_[* ToStd]()_[@(0.0.255) const]&]
+[s2; Converts String to std`::string.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:String0`:`:operator const char`*`(`)const:%- [@(0.0.255) operator]_[@(0.0.255) const
@@ -438,8 +437,10 @@ nt]_[*@3 pos], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[
 [s4;%- &]
 [s5;:WString0`:`:Trim`(int`):%- [@(0.0.255) void]_[* Trim]([@(0.0.255) int]_[*@3 pos])&]
 [s2; Sets the number of characters (length) to [%-*@3 pos].&]
-[s3; &]
-[s0;%- &]
+[s3;%- &]
+[s4;%- &]
+[s5;:WString`:`:ToStd`(`)const:%- std`::wstring_[* ToStd]()_[@(0.0.255) const]&]
+[s2; Converts WString to std`::string.&]
 [s0;%- &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 AString]]}}&]

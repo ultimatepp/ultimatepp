@@ -185,6 +185,11 @@ t]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 l])&]
 [s2;%% Appends the first [%-*@3 l] characters of [%-*@3 s].&]
 [s3;%% &]
 [s4; &]
+[s5;:WStringBuffer`:`:Cat`(const wchar`*`,const wchar`*`): [@(0.0.255) void]_[* Cat]([@(0.0.255) c
+onst]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 e])&]
+[s2;%% Same as Cat([%-*@3 s], [%-*@3 e] `- [%-*@3 s]).&]
+[s3;%% &]
+[s4; &]
 [s5;:WStringBuffer`:`:GetLength`(`)const: [@(0.0.255) int]_[* GetLength]()_[@(0.0.255) cons
 t]&]
 [s5;:WStringBuffer`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
