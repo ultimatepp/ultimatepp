@@ -2141,8 +2141,10 @@ FileSel::FileSel() {
 	
 	list.AutoHideSb();
 	places.AutoHideSb();
-	
+
+#ifdef _MULTITHREADED	
 	WhenIconLazy = NULL;
+#endif
 }
 
 FileSel::~FileSel() {}
