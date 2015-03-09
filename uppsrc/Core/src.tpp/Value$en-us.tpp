@@ -201,6 +201,11 @@ onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
 [s2; Conversion to text for supporting rich types.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Value`:`:operator`~`(`)const:%- [_^String^ String]_[@(0.0.255) operator]_`~()_[@(0.0.255) c
+onst]&]
+[s2; Same as ToString().&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Value`:`:GetTypeName`(`)const:%- [_^String^ String]_[* GetTypeName]()_[@(0.0.255) cons
 t]&]
 [s2; Returns the text with typename for debugging purposes.&]
