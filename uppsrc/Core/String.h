@@ -372,7 +372,7 @@ public:
 	friend void Swap(String& a, String& b)                 { a.Swap(b); }
 
 	String(const std::string& s)                           { String0::Set0(s.c_str(), (int)s.length()); }
-	operator std::string() const                           { return std::string(Begin(), End()); }
+	std::string ToStd() const                              { return std::string(Begin(), End()); }
 };
 
 inline std::string to_string(const String& s)              { return std::string(s.Begin(), s.End()); }
@@ -736,6 +736,7 @@ public:
 #ifndef _HAVE_NO_STDWSTRING
 	WString(const std::wstring& s);
 	operator std::wstring() const;
+	std::wstring ToStd() const                              { return std::wstring(Begin(), End()); }
 #endif
 
 };

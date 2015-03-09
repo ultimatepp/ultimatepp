@@ -216,8 +216,8 @@ public:
 	operator int64() const           { return Is(INT64_V) ? GetSmallRaw<int64>() : GetOtherInt64(); }
 	operator bool() const            { return Is(BOOL_V) ? GetSmallRaw<bool>() : GetOtherBool(); }
 	
-//	operator std::string() const     { return (String)*this; }
-//	operator std::wstring() const    { return (WString)*this; }
+	operator std::string() const     { return ((String)*this).ToStd(); }
+	operator std::wstring() const    { return ((WString)*this).ToStd(); }
 
 	Value(const String& s) : data(s) { Magic(); }
 	Value(const WString& s);
@@ -241,7 +241,8 @@ public:
 	bool operator>(const Value& x) const  { return Compare(x) > 0; }
 
 	String ToString() const;
-	String GetTypeName() const       { return GetName(); }
+	String operator ~() const             { return ToString(); }
+	String GetTypeName() const            { return GetName(); }
 
 	void  Serialize(Stream& s);
 	void  Xmlize(XmlIO& xio);
