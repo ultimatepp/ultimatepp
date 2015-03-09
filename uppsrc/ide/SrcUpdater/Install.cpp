@@ -282,7 +282,11 @@ void InstallWizard::Perform(){
 			if(!CopyFolder(UpdaterCfg().localsrc,UpdaterCfg().globalsrc,&p)){
 				Exclamation(DeQtf("Failed to copy "+UpdaterCfg().globalsrc+" to "+UpdaterCfg().localsrc));
 			}
-			DeleteFile(AppendFileName(UpdaterCfg().localsrc,"GCC.bm"));
+			FindFile ff(AppendFileName(UpdaterCfg().globalsrc, "*.bm"));
+			while (ff) {
+				DeleteFile(AppendFileName(UpdaterCfg().localsrc, ff.GetName()));
+				ff.Next();
+			}
 			break;
 		}
 		case 1:{
