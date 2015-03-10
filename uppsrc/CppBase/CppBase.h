@@ -318,6 +318,7 @@ class Parser {
 		bool    isdestructor;
 		bool    isptr;
 		bool    nofn;
+		bool    oper;
 		bool    castoper;
 
 		String  tnames;
@@ -383,8 +384,8 @@ class Parser {
 	String TemplateParams(String& pnames);
 	String TemplateParams();
 	String TemplatePnames();
-	String Name(String& h, bool& castoper);
-	String Name(bool& castoper);
+	String Name(String& h, bool& castoper, bool& oper);
+	String Name(bool& castoper, bool& oper);
 	String Constant();
 	String ReadOper(bool& castoper);
 
