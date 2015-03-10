@@ -131,13 +131,6 @@ ValueArray or ValueMap (technical and performance reasons).&]
 [s5;:Value`:`:Value`(Time`):%- [* Value]([_^Time^ Time]_[*@3 t])&]
 [s2; Support of direct T`->Value and Value`->T conversions of standard 
 Value types. If conversion is not possible, throws ValueTypeError.&]
-[s3; &]
-[s4;%- &]
-[s5;:Value`:`:operator std`:`:string`(`)const:%- [* operator_std`::string]()_[@(0.0.255) c
-onst]&]
-[s5;:Value`:`:operator std`:`:wstring`(`)const:%- [* operator_std`::wstring]()_[@(0.0.255) c
-onst]&]
-[s2; Converts Value to `[W`]String and then to std`::`[w`]string.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Value`:`:Value`(const Nuller`&`):%- [* Value]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
