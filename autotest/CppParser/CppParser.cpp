@@ -60,7 +60,11 @@ void Test(const char *path)
 CONSOLE_APP_MAIN {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	
+#ifdef flagSINGLE
+	FindFile ff(GetDataFile("test5.in"));
+#else
 	FindFile ff(GetDataFile("*.in"));
+#endif
 	while(ff) {
 		Test(ff.GetPath());
 		ff.Next();
