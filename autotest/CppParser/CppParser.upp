@@ -13,8 +13,11 @@ file
 	test3.in,
 	test3.out,
 	test4.in,
-	test4.out;
+	test4.out,
+	test5.in,
+	test5.out;
 
 mainconfig
-	"" = "SSE2";
+	"" = "",
+	"" = "SINGLE";
 

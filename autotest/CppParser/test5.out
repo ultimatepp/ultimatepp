@@ -1,0 +1,9 @@
+Value {
+	STRUCT class, line 1
+	INSTANCEFUNCTION operator<(const Value&)const, line 4
+	INSTANCEFUNCTION operator<=(const Value&)const, line 2
+	INSTANCEFUNCTION operator>(const Value&)const, line 5
+	INSTANCEFUNCTION operator>=(const Value&)const, line 3
+}
+<locals> {
+}

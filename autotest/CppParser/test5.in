@@ -1,0 +1,6 @@
+class Value {
+	bool operator<=(const Value& x) const { return Compare(x) <= 0; }
+	bool operator>=(const Value& x) const { return Compare(x) >= 0; }
+	bool operator<(const Value& x) const  { return Compare(x) < 0; }
+	bool operator>(const Value& x) const  { return Compare(x) > 0; }
+};
