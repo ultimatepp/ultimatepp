@@ -38,7 +38,7 @@ static inline bool sSpaces(String& res, const char *& s)
 	return false;
 }
 
-String FnItem(const char *s, const char *pname, const char *qname, const String& name)
+String FnItem(const char *s, const char *pname, const char *qname, const String& name, bool oper)
 { // Converts function natural text to (unqualified) item
 	String res;
 	while(*s && (byte)*s <= ' ') s++;
@@ -48,11 +48,11 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 		int lvl = 0;
 		int plvl = 0;
 		for(;;) {
-			if(*s == '<' && plvl == 0) { // resolve template params, like Fn<int, true>
+			if(*s == '<' && plvl == 0 && !oper) { // resolve template params, like Fn<int, true>
 				res.Cat(*s++);
 				lvl++;
 			}
-			if(*s == '>' && plvl == 0) {
+			if(*s == '>' && plvl == 0 && !oper) {
 				res.Cat(*s++);
 				lvl--;
 			}
@@ -232,7 +232,7 @@ Parser::Decla::Decla()
 	function = type_def = false;
 	s_static = s_auto = s_register = s_extern = s_mutable = s_explicit = s_virtual = false;
 	isfriend = istemplate = istructor = isptr = nofn = false;
-	castoper = false;
+	castoper = oper = false;
 }
 
 
@@ -390,7 +390,7 @@ String Parser::ReadOper(bool& castoper) {
 	return r;
 }
 
-String Parser::Name(String& name, bool& castoper)
+String Parser::Name(String& name, bool& castoper, bool& oper)
 {
 	String s;
 	if(Key(t_dblcolon)) {
@@ -405,6 +405,7 @@ String Parser::Name(String& name, bool& castoper)
 		}
 		else {
 			String h = ReadOper(castoper);
+			oper = true;
 			name << h;
 			s << h;
 			break;
@@ -425,10 +426,10 @@ String Parser::Name(String& name, bool& castoper)
 	return s;
 }
 
-String Parser::Name(bool& castoper)
+String Parser::Name(bool& castoper, bool& oper)
 {
 	String h;
-	return Name(h, castoper);
+	return Name(h, castoper, oper);
 }
 
 String Parser::Constant()
@@ -600,11 +601,11 @@ void Parser::Declarator(Decl& d, const char *p)
 //		d.name = ReadOper();
 //	else
 	if(lex.IsId() || lex == t_dblcolon || lex == tk_operator) {
-		d.name = Name(d.castoper);
+		d.name = Name(d.castoper, d.oper);
 		bool dummy;
 		if(Key(':'))
 			if(!Key(t_integer))
-				Name(dummy);
+				Name(dummy, dummy);
 	}
 	if(Key('(')) {
 		if(inbody || (lex < 256 || lex == tk_true || lex == tk_false)
@@ -768,6 +769,7 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		Qualifier();
 		a.function = true;
 		a.natural = String(p, lex.Pos());
+		a.oper = true;
 		return r;
 	}
 	String st = SimpleType(d);
@@ -1233,7 +1235,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 				if(Key(tk_virtual)) access << " virtual";
 				String h;
 				bool dummy;
-				String n = Name(h, dummy);
+				String n = Name(h, dummy, dummy);
 				ScAdd(im.pname, h);
 				if(c)
 					im.ptype << ';';
@@ -1302,7 +1304,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 		if(q > 0)
 			nn0 = d.name.Mid(0, q - 1);
 	}
-	String item = FnItem(d.natural, pname, d.name, nm);
+	String item = FnItem(d.natural, pname, d.name, nm, d.oper);
 	String scope = context.scope;
 	String nn;
 	const char *s = nn0;
