@@ -949,6 +949,8 @@ public:
 	void      SyncErrorsMessage();
 	void      ShowError();
 	void      ShowFound();
+	void      CopyFound(bool all);
+	void      FFoundMenu(Bar& bar);
 	void      SelError();
 	WString   FormatErrorLine(const String& text, int& linecy);
 	

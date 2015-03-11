@@ -455,6 +455,26 @@ void Ide::ShowFound()
 		GoToError(ffound);
 }
 
+void Ide::CopyFound(bool all)
+{
+	String txt;
+	for(int i = 0; i < ffound.GetCount(); i++) {
+		if(all)
+			txt << ffound.Get(i, 0) << " (" << ffound.Get(i, 1) << "): ";
+		String h = ffound.Get(i, 2);
+		if(*h == '\1')
+			h = Split(~h + 1, '\1', false).Top();
+		txt << h << "\r\n";
+	}
+	WriteClipboardText(txt);
+}
+
+void Ide::FFoundMenu(Bar& bar)
+{
+	bar.Add("Copy text", THISBACK1(CopyFound, false));
+	bar.Add("Copy all", THISBACK1(CopyFound, true));
+}
+
 void Ide::SelError()
 {
 	if(removing_notes)
