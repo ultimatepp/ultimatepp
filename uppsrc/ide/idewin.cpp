@@ -396,6 +396,7 @@ Ide::Ide()
 	ffound.ColumnWidths("207 41 834");
 	ffound.ColumnAt(0).SetDisplay(Single<FoundFileDisplay>());
 	ffound.ColumnAt(2).SetDisplay(Single<FoundDisplay>());
+	ffound.WhenBar = THISBACK(FFoundMenu);
 
 	error.WhenSel = THISBACK(SelError);
 	error.WhenLeftClick = THISBACK(ShowError);
