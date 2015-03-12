@@ -13,7 +13,8 @@ void Test(const char *path)
 
 	Cpp cpp;
 	cpp.filedir = GetFileFolder(path);
-	cpp.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
+	cpp.include_path = cpp.filedir;//"C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
+//	cpp.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
 	FileIn in(path);
 	Index<String> inc;
 	String pp = cpp.Do(in, inc);
@@ -33,6 +34,7 @@ void Test(const char *path)
 		for(int j = 0; j < ma.GetCount(); j++) {
 			const CppItem& m = ma[j];
 			out << '\t' << CppItemKindAsString(m.kind) << ' ' << m.qitem << ' ' << m.line << "\n";
+			DDUMP(StoreAsString(const_cast<CppItem&>(m)).GetCount());
 		}
 		out << "}\n";
 	}
@@ -61,8 +63,10 @@ CONSOLE_APP_MAIN
 	DUMP(x.Expand("This is: TEST((1   , 2), 3)!"));
 	DUMP(x.Expand("This is: TEST(  \"1\" \"2\" \",\", ',')!"));
 */
+	DDUMP(sizeof(CppItem));
 //	Test("C:/OpenSSL-Win32/include/openssl/ssl.h");
 //	Test("C:/Program Files/Microsoft SDKs/Windows/v7.1/Include/WinBase.h");
+	Test("C:/Program Files (x86)/Microsoft Visual Studio 9.0/VC/include/string.h");
 //	Test("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\string.h");
 	Test("C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/include/vector");
 	return;
