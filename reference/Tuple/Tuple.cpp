@@ -12,6 +12,12 @@ CONSOLE_APP_MAIN
 	DUMP(x.b);
 	DUMP(x);
 	
+	x.SetA(1);
+	DUMP(x);
+	
+	x.Set(0, "bar");
+	DUMP(x);
+	
 	Tuple2<int, String> y = Tuple<int, String>(13, "hello");
 	
 	DUMP(x == y);
