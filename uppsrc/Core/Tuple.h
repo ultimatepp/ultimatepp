@@ -18,6 +18,10 @@ struct Tuple2 {
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ')'; }
 	
+	Tuple2&  SetA(const A& a_)                { a = a_; return *this; }
+	Tuple2&  SetB(const B& b_)                { b = b_; return *this; }
+	Tuple2&  Set(const A& a_, const B& b_)    { a = a_; b = b_; return *this; }
+	
 	template <typename AA, typename BB>
 	operator Tuple2<AA, BB>() const           { Tuple2<AA, BB> t; t.a = (AA)a; t.b = (BB)b; return t; }
 };
@@ -64,6 +68,12 @@ struct Tuple3 {
 	void Serialize(Stream& s)                 { s % a % b % c; }
 	
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ')'; }
+
+	Tuple3&  SetA(const A& a_)                { a = a_; return *this; }
+	Tuple3&  SetB(const B& b_)                { b = b_; return *this; }
+	Tuple3&  SetC(const C& c_)                { c = c_; return *this; }
+	Tuple3&  Set(const A& a_, const B& b_, const C& c_)
+	                                          { a = a_; b = b_; c = c_; return *this; }
 
 	template <typename AA, typename BB, typename CC>
 	operator Tuple3<AA, BB, CC>() const       { Tuple3<AA, BB, CC> t; t.a = (AA)a; t.b = (BB)b; t.c = (CC)c; return t; }
@@ -114,6 +124,13 @@ struct Tuple4 {
 	void Serialize(Stream& s)                 { s % a % b % c % d; }
 
 	String   ToString() const                 { return String().Cat() << '(' << a << ", " << b << ", " << c << ", " << d << ')'; }
+
+	Tuple4&  SetA(const A& a_)                { a = a_; return *this; }
+	Tuple4&  SetB(const B& b_)                { b = b_; return *this; }
+	Tuple4&  SetC(const C& c_)                { c = c_; return *this; }
+	Tuple4&  SetD(const D& c_)                { d = d_; return *this; }
+	Tuple4&  Set(const A& a_, const B& b_, const C& c_, const D& d_)
+	                                          { a = a_; b = b_; c = c_; d = d_; return *this; }
 
 	template <typename AA, typename BB, typename CC, typename DD>
 	operator Tuple4<AA, BB, CC, DD>() const    { Tuple4<AA, BB, CC, DD> t; t.a = (AA)a; t.b = (BB)b; t.c = (CC)c; t.d = (DD)d; return t; }
