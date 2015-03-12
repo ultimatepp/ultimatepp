@@ -2,7 +2,7 @@
 #define _RichText_icpp_init_stub
 #include "plugin\png/init"
 #include "Draw/init"
-#define BLITZ_INDEX__ F879f8417b17173ef5a1decd1d548c525
+#define BLITZ_INDEX__ Fe06c765f424ade6abd0ef0872b0f0559
 #include "RichImage.icpp"
 #undef BLITZ_INDEX__
 #endif

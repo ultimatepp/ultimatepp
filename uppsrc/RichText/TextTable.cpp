@@ -172,9 +172,9 @@ RichCell::Format RichText::GetCellFormat(int table, const Rect& sel) const
 	return GetConstTable(table).GetCellFormat(sel);
 }
 
-void RichText::SetCellFormat(int table, const Rect& sel, const RichCell::Format& fmt, bool setkeep)
+void RichText::SetCellFormat(int table, const Rect& sel, const RichCell::Format& fmt, bool setkeep, bool setround)
 {
-	GetUpdateTable(table).SetCellFormat(sel, fmt, setkeep);
+	GetUpdateTable(table).SetCellFormat(sel, fmt, setkeep, setround);
 	RefreshAll();
 }
 

@@ -451,6 +451,7 @@ void Ide::BuildPackageMenu(Bar& menu)
 		.Help("Build current package");
 	menu.Add(b, AK_CLEANPACKAGE, THISBACK(PackageClean))
 		.Help("Remove all intermediate files of the current package");
+	menu.MenuSeparator();
 }
 
 void Ide::BuildMenu(Bar& menu)
@@ -481,10 +482,8 @@ void Ide::BuildMenu(Bar& menu)
 
 	menu.MenuSeparator();
 
-	if(menu.IsMenuBar()) {
+	if(menu.IsMenuBar())
 		BuildPackageMenu(menu);
-		menu.MenuSeparator();
-	}
 
 	BuildFileMenu(menu);
 	

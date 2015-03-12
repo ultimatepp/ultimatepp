@@ -510,7 +510,8 @@ void sSetRect(Rect& t, const Rect& s)
 		t.bottom = s.bottom;
 }
 
-void  RichTable::SetCellFormat(const Rect& sel, const RichCell::Format& fmt, bool setkeep)
+void  RichTable::SetCellFormat(const Rect& sel, const RichCell::Format& fmt,
+                               bool setkeep, bool setround)
 {
 	for(int i = sel.top; i <= sel.bottom; i++)
 		for(int j = sel.left; j <= sel.right; j++)
@@ -528,6 +529,8 @@ void  RichTable::SetCellFormat(const Rect& sel, const RichCell::Format& fmt, boo
 					f.minheight = fmt.minheight;
 				if(setkeep)
 					f.keep = fmt.keep;
+				if(setround)
+					f.round = fmt.round;
 			}
 
 	Normalize();

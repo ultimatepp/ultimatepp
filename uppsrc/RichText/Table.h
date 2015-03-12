@@ -8,6 +8,7 @@ public:
 		Color    color;
 		Color    bordercolor;
 		bool     keep;
+		bool     round;
 
 		Format();
 	};
@@ -19,7 +20,7 @@ public:
 private:
 	bool     Reduce(RichContext& rc) const;
 	PageY    Align(const RichContext& rc, PageY npy) const;
-	void     DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border) const;
+	void     DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border, const Rect& margin) const;
 
 	void        ClearText();
 	void        ClearText(const RichPara::Format& format, const RichStyles& style);
@@ -175,7 +176,8 @@ private:
 	bool          IsColumnEmpty(int column);
 	void          SplitCell(Point cl, Size sz, const RichStyles& style);
 	RichCell::Format GetCellFormat(const Rect& sel) const;
-	void             SetCellFormat(const Rect& sel, const RichCell::Format& fmt, bool setkeep);
+	void             SetCellFormat(const Rect& sel, const RichCell::Format& fmt,
+	                               bool setkeep, bool setround);
 
 	PageY         GetHeight(RichContext rc) const;
 	PageY         GetTop(RichContext rc) const;
