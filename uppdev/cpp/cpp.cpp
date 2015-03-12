@@ -105,6 +105,7 @@ String Cpp::Define(const char *s)
 		m.body = p.GetPtr();
 	}
 	catch(CParser::Error) {}
+	notmacro.UnlinkKey(id);
 	return "#define " + id;
 }
 

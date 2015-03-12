@@ -60,9 +60,9 @@ GUI_APP_MAIN
 	DUMP(ScrollBarSize());
 	
 	
-	e.Pick(ParseRTF(LoadFile("C:/xxx/data.bin")));
+//	e.Pick(ParseRTF(LoadFile("C:/xxx/data.bin")));
 
-//	e.Pick(ParseQTF(LoadFile(FileName())));
+	e.Pick(ParseQTF(LoadFile(FileName())));
 //	e.SetQTF(LoadFile("U:\\xxx\\PainterBug.qtf"));
 //	e.ClipZoom(4, 1);
 //	Ctrl::ShowRepaint(50);
