@@ -1057,7 +1057,6 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 			    .Check(actual.optimize_speed);
 			menu.Separator();
 			BuildPackageMenu(menu);
-			menu.Separator();
 			menu.Add("Open Package Directory",THISBACK(OpenPackageFolder));
 		}
 	}

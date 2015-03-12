@@ -288,7 +288,6 @@ void RichEdit::CellProperties()
 	int  tab;
 	Rect a;
 	if(tablesel) {
-		dlg.keep.Hide();
 		tab = tablesel;
 		a = cells;
 	}
@@ -312,18 +311,25 @@ void RichEdit::CellProperties()
 		(dlg.color, fmt.color)
 		(dlg.border, fmt.bordercolor)
 		(dlg.keep, fmt.keep)
+		(dlg.round, fmt.round)
 	;
 	dlg.align.Set(0, ALIGN_TOP);
 	dlg.align.Set(1, ALIGN_CENTER);
 	dlg.align.Set(2, ALIGN_BOTTOM);
 	dlg.color.WithVoid().VoidText(t_("(no change)"));
 	dlg.border.WithVoid().VoidText(t_("(no change)"));
+	if(tablesel) {
+		dlg.keep.ThreeState();
+		dlg.keep <<= Null;
+		dlg.round.ThreeState();
+		dlg.round <<= Null;
+	}
 	if(dlg.Run() != IDOK)
 		return;
 	r.Retrieve();
 	NextUndo();
 	SaveTable(tab);
-	text.SetCellFormat(tab, a, fmt, tablesel);
+	text.SetCellFormat(tab, a, fmt, !tablesel || !IsNull(dlg.keep), !tablesel || !IsNull(dlg.round));
 	Finish();
 }
 

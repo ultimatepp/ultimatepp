@@ -429,6 +429,8 @@ void QTFEncodeTxt(String& qtf, const RichTxt& text, const RichStyles& styles, co
 						qtf << '|' << c.vspan;
 					if(f.keep)
 						qtf << "k";
+					if(f.round)
+						qtf << "o";
 					qtf << ' ';
 					QTFEncodeTxt(qtf, c.text, styles, defstyle, options, sm, charset, lang);
 				}

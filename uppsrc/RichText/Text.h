@@ -105,7 +105,8 @@ public:
 	void                  SplitCell(int table, Point cell, Size sz);
 	void                  JoinCell(int table, const Rect& sel);
 	RichCell::Format      GetCellFormat(int table, const Rect& sel) const;
-	void                  SetCellFormat(int table, const Rect& sel, const RichCell::Format& fmt, bool setkeep);
+	void                  SetCellFormat(int table, const Rect& sel, const RichCell::Format& fmt,
+	                                    bool setkeep, bool setround);
 	FormatInfo            GetTableFormatInfo(int table, const Rect& sel) const;
 	void                  ApplyTableFormatInfo(int table, const Rect& sel, const RichText::FormatInfo& fi);
 	void                  AdjustTableSel(int table, Rect& sel) const        { return GetConstTable(table).AdjustSel(sel); }

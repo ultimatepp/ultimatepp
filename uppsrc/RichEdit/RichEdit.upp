@@ -4,7 +4,7 @@ uses
 	CtrlLib;
 
 file
-	RichEdit.h options PCH,
+	RichEdit.h options(BUILDER_OPTION) PCH,
 	Ruler.cpp,
 	UnitEdit.cpp,
 	Editor.cpp,

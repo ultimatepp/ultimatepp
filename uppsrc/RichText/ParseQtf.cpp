@@ -426,6 +426,7 @@ void RichQtfParser::TableFormat(bool bw)
 		case 'R': t.format.bordercolor = GetColor(); break;
 		case '!': t.format = RichCell::Format(); break;
 		case 'k': t.format.keep = true;
+		case 'o': t.format.round = true;
 		case 'K': tab.format.keep = true;
 		case 'a':
 			Number2(a, b);
