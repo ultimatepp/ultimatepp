@@ -128,7 +128,7 @@ struct Tuple4 {
 	Tuple4&  SetA(const A& a_)                { a = a_; return *this; }
 	Tuple4&  SetB(const B& b_)                { b = b_; return *this; }
 	Tuple4&  SetC(const C& c_)                { c = c_; return *this; }
-	Tuple4&  SetD(const D& c_)                { d = d_; return *this; }
+	Tuple4&  SetD(const D& d_)                { d = d_; return *this; }
 	Tuple4&  Set(const A& a_, const B& b_, const C& c_, const D& d_)
 	                                          { a = a_; b = b_; c = c_; d = d_; return *this; }
 
