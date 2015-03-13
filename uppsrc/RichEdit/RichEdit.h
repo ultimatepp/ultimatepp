@@ -92,6 +92,7 @@ public:
 	virtual Value Format(const Value& v) const;
 	virtual void  SetData(const Value& v);
 	virtual bool  Key(dword key, int repcnt);
+	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
 
 private:
 	SpinButtons spin;
