@@ -34,7 +34,7 @@ void UnitEdit::Read(double& d, int& u) const
 	u = unit;
 	d = Null;
 	if(s && *s) {
-		char *e;
+		const char *e;
 		int sign = 1;
 		for(;;) {
 			if(*s == '-' && sgn)
@@ -44,7 +44,10 @@ void UnitEdit::Read(double& d, int& u) const
 				break;
 			s++;
 		}
-		d = sign * strtod(s, &e);
+		d = ScanDouble(s, &e);
+		if(IsNull(d))
+			return;
+		d *= sign;
 		if(e == s) {
 			d = Null;
 			return;
@@ -102,6 +105,11 @@ bool UnitEdit::Key(dword key, int repcnt)
 	if(key == K_UP)   { Spin(+1); return true; }
 	if(key == K_DOWN) { Spin(-1); return true; }
 	return EditField::Key(key, repcnt);
+}
+
+void UnitEdit::MouseWheel(Point p, int zdelta, dword keyflags)
+{
+	Spin(zdelta < 0 ? -1 : 1);
 }
 
 void UnitEdit::Spin(int delta)
