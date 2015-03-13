@@ -471,6 +471,7 @@ void RichQtfParser::FinishCell()
 		b.hspan = oldtab;
 	}
 	b.format.keep = false;
+	b.format.round = false;
 }
 
 void RichQtfParser::FinishTable()
