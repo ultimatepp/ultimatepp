@@ -28,6 +28,7 @@ CONSOLE_APP_MAIN
 	for(FindFile ff(GetDataFile("*.qtf")); ff; ff.Next()) {
 		String qtf = LoadFile(ff.GetPath());
 		LOG(ff.GetName() << ' ' << qtf.GetCount());
+		
 		ASSERT(qtf.GetLength() > 10000);
 		RichText txt = ParseQTF(qtf);
 		String qtf2 = AsQTF(txt);
