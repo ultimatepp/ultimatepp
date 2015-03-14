@@ -26,7 +26,8 @@ void Ide::MakeTitle()
 	if(!editfile.IsEmpty()) {
 		title << " - [" << editfile;
 		int chrset = editor.GetCharset();
-		title << " " << (chrset == TextCtrl::CHARSET_UTF8_BOM ? "UTF-8 BOM" : CharsetName(chrset));
+		title << " " << (chrset == TextCtrl::CHARSET_UTF8_BOM ? "UTF-8 BOM" : CharsetName(chrset))
+		      << " " << (findarg(Nvl(editfile_line_endings, line_endings), LF, DETECT_LF) >= 0 ? "LF" : "CRLF");
 		if(editor.IsReadOnly())
 			title << " (Read Only)";
 		if(editor.IsDirty())

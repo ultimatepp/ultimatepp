@@ -109,6 +109,10 @@ void Ide::FileProperties()
 	d.font <<= d.Breaker(111);
 	d.highlight <<= f.highlight;
 	d.highlight <<= d.Breaker(111);
+	d.line_endings.Add(CRLF, "CRLF");
+	d.line_endings.Add(LF, "LF");
+	d.line_endings <<= findarg(Nvl(editfile_line_endings, line_endings), LF, DETECT_LF) >= 0 ? LF : CRLF;
+	d.line_endings.Enable(findarg(line_endings, DETECT_CRLF, DETECT_LF) >= 0);
 	for(;;) {
 		switch(d.Run()) {
 		case IDCANCEL:
@@ -126,6 +130,11 @@ void Ide::FileProperties()
 			PackageCursor();
 			filelist.SetCursor(c);
 			editor.ClearUndo();
+			if(editfile_line_endings != ~d.line_endings) {
+				editfile_line_endings = ~d.line_endings;
+				SaveFile(true);
+			}
+			MakeTitle();
 			return;
 		}
 		if(!IsNull(editfile)) {
