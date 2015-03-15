@@ -4,3 +4,4 @@ LAYOUT(HexGotoLayout, 280, 68)
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(140, 64).TopPosZ(36, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(208, 64).TopPosZ(36, 24))
 END_LAYOUT
+

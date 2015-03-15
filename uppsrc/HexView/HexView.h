@@ -3,7 +3,6 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-
 NAMESPACE_UPP
 
 #define LAYOUTFILE <HexView/HexView.lay>
@@ -88,6 +87,7 @@ public:
 	HexView& SetFont(Font fnt);
 	HexView& Charset(byte chrset)     { charset = chrset; Refresh(); return *this; }
 	HexView& FixedColumns(int c = 0)  { fixed = c; Layout(); Refresh(); return *this; }
+	HexView& InfoMode(int m = 1)      { info.SetMode(m); return *this; }
 
 	typedef HexView CLASSNAME;
 

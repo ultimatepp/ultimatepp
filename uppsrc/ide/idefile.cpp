@@ -460,20 +460,26 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editfile_isfolder = IsFolder(editfile);
 	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
-	if(!astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
-	   && editastext.Find(path) < 0 && !IsNestReadOnly(editfile)) {
+	bool candesigner = !astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
+	   && editastext.Find(path) < 0 && !IsNestReadOnly(editfile);
+	
+	if(candesigner) {
 		for(int i = 0; i < GetIdeModuleCount() && !designer; i++)
 			designer = GetIdeModule(i).CreateDesigner(this, path, charset);
-		if(designer) {
-			editpane.Add(designer->DesignerCtrl().SizePos());
-			designer->RestoreEditPos();
-			if(filetabs)
-				tabs.SetAddFile(editfile);
-			MakeTitle();
-			SetBar();
-			designer->SetFocus();
-			return;
-		}
+	}
+
+	if(!designer && editastext.Find(path) < 0 && (FileIsBinary(path) || editashex.Find(path) >= 0))
+		designer.Create<FileHexView>().Open(path);
+
+	if(designer) {
+		editpane.Add(designer->DesignerCtrl().SizePos());
+		designer->RestoreEditPos();
+		if(filetabs)
+			tabs.SetAddFile(editfile);
+		MakeTitle();
+		SetBar();
+		designer->SetFocus();
+		return;
 	}
 
 	tabs.SetAddFile(editfile);
@@ -574,9 +580,20 @@ void Ide::TriggerAssistSync()
 		text_updated.KillSet(1000, THISBACK(EditFileAssistSync));
 }
 
+void Ide::EditAsHex()
+{
+	String path = editfile;
+	editastext.RemoveKey(editfile);
+	editashex.FindPut(editfile);
+	byte cs = editor.GetCharset();
+	FlushFile();
+	EditFile0(path, cs);
+}
+
 void Ide::EditAsText()
 {
 	String path = editfile;
+	editashex.RemoveKey(editfile);
 	editastext.FindPut(editfile);
 	byte cs = editor.GetCharset();
 	FlushFile();
@@ -586,6 +603,7 @@ void Ide::EditAsText()
 void Ide::EditUsingDesigner()
 {
 	String path = editfile;
+	editashex.RemoveKey(editfile);
 	editastext.RemoveKey(editfile);
 	byte cs = editor.GetCharset();
 	FlushFile();

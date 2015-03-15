@@ -13,6 +13,7 @@
 #include <ide/LayDes/LayDes.h>
 #include <ide/Debuggers/Debuggers.h>
 #include <TextDiffCtrl/TextDiffCtrl.h>   
+#include <ide/Designers/Designers.h>
 
 #define LAYOUTFILE <ide/ide.lay>
 #include <CtrlCore/lay.h>
@@ -497,6 +498,7 @@ public:
 
 	ArrayMap<String, FileData> filedata;
 	Index<String> editastext;
+	Index<String> editashex;
 
 	DropList   mainconfiglist;
 	String     mainconfigname;
@@ -753,6 +755,7 @@ public:
 
 	void      Edit(Bar& menu);
 		void  EditAsText();
+		void  EditAsHex();
 		void  EditUsingDesigner();
 		void  EditMakeTabs()     { editor.MakeTabsOrSpaces(true); }
 		void  EditMakeSpaces()   { editor.MakeTabsOrSpaces(false); }

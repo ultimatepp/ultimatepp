@@ -1340,6 +1340,7 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 	const CppItem& pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
 	String path = GetCppFile(pos.file);
 	editastext.RemoveKey(path);
+	editashex.RemoveKey(path);
 	if(ToLower(GetFileExt(path)) == ".lay") {
 		AddHistory();
 		EditFile(path);

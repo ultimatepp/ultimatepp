@@ -1,5 +1,4 @@
-#include <ide/Common/Common.h>
-#include <ide/IconDes/IconDes.h>
+#include "Designers.h"
 
 struct IdeQtfDes : IdeDesigner, RichEditWithToolBar {
 	String  filename;
