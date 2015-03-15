@@ -464,7 +464,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			return false;
 		}
 		bool isgemsc10 = HasFlag("MSC10") || HasFlag("MSC10X64") || HasFlag("MSC11")
-			|| HasFlag("MSC11X64") || HasFlag("MSC12X64");
+			|| HasFlag("MSC11X64") || HasFlag("MSC12") || HasFlag("MSC12X64");
 		Vector<Host::FileInfo> objinfo = host->GetFileInfo(obj);
 		for(int i = 0; i < obj.GetCount(); i++)
 			if(objinfo[i] > producttime) {
