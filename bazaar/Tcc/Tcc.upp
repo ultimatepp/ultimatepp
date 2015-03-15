@@ -3,9 +3,9 @@ description "Tiny C Compiler wrapper\377B255,170,0";
 uses
 	Core;
 
-uses(GCC) plugin/tcc;
+uses(CLANG | GCC) plugin/tcc;
 
-options(GCC) -DLIBTCC;
+options(POSIX) -DLIBTCC;
 
 options(WIN32) "-DTCC_TARGET_PE -DLIBTCC";
 

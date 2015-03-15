@@ -8,7 +8,7 @@ library(MSC) "avcodec.lib avformat.lib avutil.lib swscale.lib avdevice.lib avcor
 
 library(GCC WIN32) "avcodec avformat avutil swscale avdevice avcore";
 
-library(GCC !WIN32) "avutil avcodec avformat avdevice swscale";
+library(POSIX) "avutil avcodec avformat avdevice swscale";
 
 link(MSC) /FORCE:MULTIPLE;
 

@@ -1,4 +1,4 @@
-options(GCC) "-include \"UppFreetype.h\"";
+options(CLANG | GCC) "-include \"UppFreetype.h\"";
 
 options(MSC) "-FI \"UppFreetype.h\"";
 

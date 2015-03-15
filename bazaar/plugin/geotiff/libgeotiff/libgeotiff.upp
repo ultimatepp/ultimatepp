@@ -1,5 +1,7 @@
 noblitz;
 
+options(BUILDER_OPTION) NOWARNINGS;
+
 uses
 	plugin\z,
 	plugin\tif;
