@@ -179,6 +179,8 @@ void Ide::SearchMenu(Bar& menu)
 
 void Ide::Edit(Bar& menu)
 {
+	if(editfile.GetCount() && editashex.Find(editfile) < 0)
+		menu.Add(AK_EDITASHEX, THISBACK(EditAsHex));
 	if(designer) {
 		if(FileExists(designer->GetFileName())) {
 			menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))

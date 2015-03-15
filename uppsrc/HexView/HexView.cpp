@@ -144,7 +144,7 @@ HexViewInfo::HexViewInfo()
 
 int HexView::Byte(int64 adr)
 {
-	return IsBadReadPtr((byte *)(uintptr_t)adr, 1) ? -1 : *(byte *)(unsigned)adr;
+	return 0;
 }
 
 void HexView::Paint(Draw& w)

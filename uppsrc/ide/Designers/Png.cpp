@@ -1,4 +1,4 @@
-#include "Img.h"
+#include "Designers.h"
 
 void IdePngDes::Save()
 {

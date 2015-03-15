@@ -1,9 +1,12 @@
 #ifndef _ide_Designers_icpp_init_stub
 #define _ide_Designers_icpp_init_stub
-#define BLITZ_INDEX__ Fadb0baddbb7b757e3ed9acaca887cd9a
+#define BLITZ_INDEX__ F30af27bc27b2245be0afb8cf140e0a02
 #include "Img.icpp"
 #undef BLITZ_INDEX__
-#define BLITZ_INDEX__ F421424bc1424dfd0a7a9d53622c87987
+#define BLITZ_INDEX__ F2b9cc9e34248ca7ce468509d67805881
 #include "Qtf.icpp"
+#undef BLITZ_INDEX__
+#define BLITZ_INDEX__ F231a40d13d2e3c77ea055dcf401dd5dc
+#include "HexView.icpp"
 #undef BLITZ_INDEX__
 #endif
