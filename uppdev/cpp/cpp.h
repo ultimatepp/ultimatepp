@@ -41,7 +41,7 @@ struct Cpp {
 	Index<String>               header;
 	VectorMap<String, CppMacro> macro0;
 	VectorMap<String, CppMacro> macro;
-	Index<String>               notmacro;
+	Index<String>               notmacro; // speed optimization
 	Index<String>               usedmacro;
 	
 	void SyncSet();
