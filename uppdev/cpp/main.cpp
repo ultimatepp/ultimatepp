@@ -68,8 +68,8 @@ CONSOLE_APP_MAIN
 //	Test("C:/Program Files/Microsoft SDKs/Windows/v7.1/Include/WinBase.h");
 	Test("C:/Program Files (x86)/Microsoft Visual Studio 9.0/VC/include/string.h");
 //	Test("C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include\\string.h");
-	Test("C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/include/vector");
-	return;
+//	Test("C:/Program Files (x86)/Microsoft Visual Studio 10.0/VC/include/vector");
+//	return;
 	Cpp x;
 	x.filedir = GetFileFolder(GetDataFile("x"));
 	x.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
