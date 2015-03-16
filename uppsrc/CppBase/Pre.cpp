@@ -98,11 +98,11 @@ SrcFile PreProcess(Stream& in)
 		if(*rm == '#')
 		{
 			if(rm[1] == 'd' && rm[2] == 'e' && rm[3] == 'f' &&
-			   rm[4] == 'i' && rm[5] == 'n' && rm[6] == 'e' && !iscid(rm[7])) {
+			   rm[4] == 'i' && rm[5] == 'n' && rm[6] == 'e' && !iscid2(rm[7])) {
 				const char *s = rm + 8;
 				while(*s == ' ') s++;
 				String macro;
-				while(iscid(*s))
+				while(iscid2(*s))
 					macro.Cat(*s++);
 				if(*s == '(') {
 					while(*s != ')' && *s)

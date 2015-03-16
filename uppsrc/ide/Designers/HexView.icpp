@@ -8,25 +8,17 @@ bool  FileIsBinary(const char *path)
 		if(*data.Last() == '\r')
 			data.Cat(in.Get());
 		const char *end = data.End();
-		int le = -1;
 		const char *s = data;
 		while(s < end) {
 			int c = (byte)*s;
 			if(c < 32) {
 				if(c == '\r') {
-					if(s[1] != '\n' || le == 0)
+					if(s[1] != '\n')
 						return true;
-					le = 1;
 					s += 2;
 				}
 				else
-				if(c == '\n') {
-					if(le == 1)
-						return true;
-					s++;
-				}
-				else
-				if(c == '\t')
+				if(c == '\t' || c == '\n')
 					s++;
 				else
 					return true;

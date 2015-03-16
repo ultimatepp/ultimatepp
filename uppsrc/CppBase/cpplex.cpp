@@ -9,14 +9,13 @@ NAMESPACE_UPP
 #pragma optimize("t", on)
 #endif
 
-
 #define case_id \
 	case '_':case 'a':case 'b':case 'c':case 'd':case 'e':case 'f':case 'g':case 'h': \
 	case 'i':case 'j':case 'k':case 'l':case 'm':case 'n':case 'o':case 'p':case 'q': \
 	case 'r':case 's':case 't':case 'u':case 'v':case 'w':case 'x':case 'y':case 'z': \
 	case 'A':case 'B':case 'C':case 'D':case 'E':case 'F':case 'G':case 'H':case 'I': \
 	case 'J':case 'K':case 'L':case 'M':case 'N':case 'O':case 'P':case 'Q':case 'R': \
-	case 'S':case 'T':case 'U':case 'V':case 'W':case 'X':case 'Y':case 'Z'
+	case 'S':case 'T':case 'U':case 'V':case 'W':case 'X':case 'Y':case 'Z':case '$'
 
 #define case_nonzero_digit \
 	case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9'
@@ -167,7 +166,7 @@ void Lex::Next()
 			String x;
 			x.Reserve(12);
 			x.Cat(c);
-			while(iscid(*ptr))
+			while(iscid2(*ptr))
 				x.Cat(*ptr++);
 			int q = id.FindAdd(x);
 			if(q == tk_rval_ - 256) { // simple hack for transitionary macro

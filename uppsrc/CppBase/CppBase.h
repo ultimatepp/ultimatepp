@@ -5,6 +5,17 @@
 
 NAMESPACE_UPP
 
+
+inline bool iscib2(int c)
+{
+	return iscib(c) || c == '$';
+}
+
+inline bool iscid2(int c)
+{
+	return c >= '0' && c <= '9' || iscib2(c);
+}
+
 int            GetCppFileIndex(const String& path);
 const String&  GetCppFile(int i);
 Vector<String> GetCppFiles();
