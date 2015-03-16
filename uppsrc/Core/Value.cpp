@@ -401,6 +401,11 @@ void Value::Xmlize(XmlIO& xio)
 {
 	RegisterStd();
 	if(xio.IsStoring()) {
+		if(IsError()) {
+			Value v = Null;
+			v.Xmlize(xio);
+			return;
+		}
 		dword type = GetType();
 		String name = GetName(type);
 		if(name.GetCount() == 0) {
