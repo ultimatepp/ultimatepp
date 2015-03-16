@@ -7,6 +7,7 @@ file
 	cpp.cpp,
 	main.cpp,
 	test.h,
+	testfile,
 	cpp.txt;
 
 mainconfig

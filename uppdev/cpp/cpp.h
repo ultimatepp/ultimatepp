@@ -7,7 +7,7 @@
 
 using namespace Upp;
 
-struct CppMacro : Moveable<CppMacro> {
+struct CppMacro : Moveable<CppMacro>, DeepCopyOption<CppMacro> {
 	String        body;
 	Index<String> param;
 	bool          variadic;
@@ -17,37 +17,28 @@ struct CppMacro : Moveable<CppMacro> {
 	String ToString() const;
 	
 	CppMacro()    { variadic = false; }
+	rval_default(CppMacro);
+	CppMacro(const CppMacro& s, int) { body = s.body, param = clone(s.param); variadic = s.variadic; }
 };
-
-struct CppMacroRecord {
-	Time                        last_write;
-	VectorMap<String, CppMacro> macro;
-	Index<String>               includes;
-	
-	CppMacroRecord() { last_write = Time::Low(); }
-};
-
-const VectorMap<String, CppMacro> *GetFileMacros(const String& filepath);
 
 struct Cpp {
 	bool                        incomment;
 	
+	String                      path;
 	String                      filedir;
 	String                      include_path;
 	
-	VectorMap<String, CppMacro> used_macro;
-	Index<String>               not_macro;
-	
 	Index<String>               header;
-	VectorMap<String, CppMacro> macro0;
 	VectorMap<String, CppMacro> macro;
-	Index<String>               notmacro; // speed optimization
 	Index<String>               usedmacro;
+	Index<String>               notmacro;
+	
+	CppBase                     base;
+	
+	Cpp                        *parent;
 	
 	void SyncSet();
 	
-	Vector<const VectorMap<String, CppMacro> *> macro_set;
-
 	String   Define(const char *s);
 
 	static const char *SkipString(const char *s);
@@ -57,7 +48,16 @@ struct Cpp {
 	void   Include(const char *s);
 	String GetIncludePath(const char *s);
 	
-	String  Do(Stream& in, Index<String>& header);
+	void   Do(Stream& in, Index<String>& header);
+	void   DoCpp(Stream& in);
+	
+	Callback3<const String&, int, const String&> WhenError;
+	
+	void AddError(int ln, const String& s) { WhenError(path, ln, s); }
+	
+	Cpp() { parent = NULL; }
+	
+	typedef Cpp CLASSNAME;
 };
 
 
