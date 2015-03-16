@@ -131,9 +131,9 @@ String QualifyIds(Scopefo& nf, const String& k, bool all)
 		int c = *s;
 		if(c == ':') {
 			const char *b = s++;
-			while(*s == ':' || iscid(*s)) s++;
+			while(*s == ':' || iscid2(*s)) s++;
 			if(all) {
-				if(iscid(*r.Last()))
+				if(iscid2(*r.Last()))
 					r << ' ';
 				Scopefo nnf(nf.GetScope(), nf.base);
 				Qualify(r, nnf, b, s);
@@ -142,26 +142,26 @@ String QualifyIds(Scopefo& nf, const String& k, bool all)
 				r.Cat(b, s);
 		}
 		else
-		if(iscid(c)) {
-			if(iscid(*r.Last()))
+		if(iscid2(c)) {
+			if(iscid2(*r.Last()))
 				r << ' ';
-			if(s[0] == 'c' && s[1] == 'o' && s[2] == 'n' && s[3] == 's' && s[4] == 't' && !iscid(s[5])) {
+			if(s[0] == 'c' && s[1] == 'o' && s[2] == 'n' && s[3] == 's' && s[4] == 't' && !iscid2(s[5])) {
 				r << s_const;
 				s += 5;
 			}
 			else
-			if(s[0] == 'm' && s[1] == 'u' && s[2] == 't' && s[3] == 'a' && s[4] == 'b' && s[5] == 'l' && s[6] == 'e' && !iscid(s[7])) {
+			if(s[0] == 'm' && s[1] == 'u' && s[2] == 't' && s[3] == 'a' && s[4] == 'b' && s[5] == 'l' && s[6] == 'e' && !iscid2(s[7])) {
 				r << "mutable";
 				s += 7;
 			}
 			else
-			if(s[0] == 'v' && s[1] == 'o' && s[2] == 'l' && s[3] == 'a' && s[4] == 't' && s[5] == 'i' && s[6] == 'l' && s[7] == 'e' && !iscid(s[8])) {
+			if(s[0] == 'v' && s[1] == 'o' && s[2] == 'l' && s[3] == 'a' && s[4] == 't' && s[5] == 'i' && s[6] == 'l' && s[7] == 'e' && !iscid2(s[8])) {
 				r << "volatile";
 				s += 8;
 			}
 			else {
 				const char *b = s++;
-				while(*s == ':' || iscid(*s)) s++;
+				while(*s == ':' || iscid2(*s)) s++;
 				if(all)
 					Qualify(r, nf, b, s);
 				else
