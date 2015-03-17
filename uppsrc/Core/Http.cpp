@@ -351,7 +351,7 @@ bool HttpRequest::Do()
 		StartRequest();
 		break;
 	case REQUEST:
-		if(SendingData())
+		if(SendingData(true))
 			break;
 		StartPhase(HEADER);
 		break;
@@ -603,7 +603,7 @@ void HttpRequest::StartRequest()
 	LLOGB("HTTP request body:\n" << pd);
 }
 
-bool HttpRequest::SendingData()
+bool HttpRequest::SendingData(bool request)
 {
 	const int upload_chunk =  64*1024;
 
@@ -614,26 +614,27 @@ bool HttpRequest::SendingData()
 			if(n == 0) {
 				if(count < data.GetLength())
 					return true;
-				if(poststream)
+				if(poststream && request)
 					break;
 				return false;
 			}
 			count += n;
 		}
-	for(;;) {
-		Buffer<byte> buffer(upload_chunk);
-		int n = poststream->Get(buffer, (int)min((int64)upload_chunk, postlen + data.GetLength() - count));
-		if(n < 0) {
-			HttpError("error reading input stream");
-			return false;
+	if(poststream && request)
+		for(;;) {
+			Buffer<byte> buffer(upload_chunk);
+			int n = poststream->Get(buffer, (int)min((int64)upload_chunk, postlen + data.GetLength() - count));
+			if(n < 0) {
+				HttpError("error reading input stream");
+				return false;
+			}
+			if(n == 0)
+				break;
+			n = TcpSocket::Put(buffer, n);
+			if(n == 0)
+				break;
+			count += n;
 		}
-		if(n == 0)
-			break;
-		n = TcpSocket::Put(buffer, n);
-		if(n == 0)
-			break;
-		count += n;
-	}
 	return count < data.GetLength() + postlen;
 }
 

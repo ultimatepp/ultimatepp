@@ -397,7 +397,7 @@ class HttpRequest : public TcpSocket {
 	void         ProcessSSLProxyResponse();
 	void         AfterConnect();
 	void         StartRequest();
-	bool         SendingData();
+	bool         SendingData(bool request = false);
 
 	bool         ReadingHeader();
 	void         StartBody();
