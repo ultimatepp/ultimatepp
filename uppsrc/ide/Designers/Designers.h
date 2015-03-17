@@ -1,9 +1,9 @@
 #ifndef _ide_Designers_Designers_h_
 #define _ide_Designers_Designers_h_
 
+#include <HexView/HexView.h>
 #include <ide/Common/Common.h>
 #include <ide/IconDes/IconDes.h>
-#include <HexView/HexView.h>
 
 struct IdeImgView : IdeDesigner, Ctrl {
 	Size   img_sz;
