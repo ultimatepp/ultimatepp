@@ -7,6 +7,7 @@ GUI_APP_MAIN
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
 	String fn;
+	fs.AllFilesType();
 	fs.Type("jpeg", "*.jpg");
 	fs.ExecuteOpen();
 	return;
