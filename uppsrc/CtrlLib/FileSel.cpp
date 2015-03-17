@@ -604,8 +604,7 @@ void LazyExeFileIcons::Do()
 			sExeMutex.Enter();
 			bool running = sExeRunning;
 			if(!running) {
-				path == sExePath;
-				done = path.GetCount();
+				done = path == sExePath;
 				memcpy(&info, &sExeInfo, sizeof(info));
 				*sExePath = '\0';
 				memset(&sExeInfo, 0, sizeof(sExeInfo));
