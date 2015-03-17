@@ -14,15 +14,17 @@ void Test(const char *path)
 	cpp.path = path;
 	cpp.filedir = GetFileFolder(path);
 //	cpp.include_path = cpp.filedir;//"C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
-	cpp.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
+//	cpp.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
+	cpp.include_path = "C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.0\\Include;C:\\u\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\Program Files (x86)\\MySQL\\MySQL Connector C 6.1\\include";
+	cpp.include_path << ";c:/u/upp.src/uppsrc";
 	FileIn in(path);
 	Index<String> inc;
-	cpp.DoCpp(in);
+	cpp.DoCpp(in, inc);
 //	StringStream ss(pp);
 //	Parse(ss, Vector<String>() << "__cdecl", base, path, callback(AddError));
 	DLOG("=======================");
-//	DUMPC(inc);
-//	DLOG("=======================");
+	DUMPC(inc);
+	DLOG("=======================");
 	DUMPC(errs);
 	DLOG("=======================");
 	Qualify(cpp.base);
@@ -43,7 +45,7 @@ void Test(const char *path)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE, NULL, 150000000);
-	Test(GetDataFile("testfile"));
+	Test("c:/u/upp.src/uppsrc/Core/Cpu.cpp");
 	return;
 }
 

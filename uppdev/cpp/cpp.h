@@ -49,7 +49,7 @@ struct Cpp {
 	String GetIncludePath(const char *s);
 	
 	void   Do(Stream& in, Index<String>& header);
-	void   DoCpp(Stream& in);
+	void   DoCpp(Stream& in, Index<String>& header);
 	
 	Callback3<const String&, int, const String&> WhenError;
 	
