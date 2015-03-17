@@ -2,8 +2,6 @@
 
 NAMESPACE_UPP
 
-#ifdef PLATFORM_WIN32
-
 inline int FormatHexDigit(int c) {
 	return c < 10 ? c + '0' : c - 10 + 'a';
 }
@@ -485,7 +483,5 @@ HexView::HexView()
 	CtrlLayoutOKCancel(go, "Go to");
 	WhenGoto = THISBACK(StdGoto);
 }
-
-#endif
 
 END_UPP_NAMESPACE
