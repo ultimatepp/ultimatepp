@@ -238,7 +238,7 @@ String Cpp::Expand(const char *s)
 }
 
 
-void Cpp::DoCpp(Stream& in)
+void Cpp::DoCpp(Stream& in, Index<String>& header)
 {
 	Vector<String> ignorelist = Split("__declspec;__cdecl;"
                                          "__out;__in;__inout;__deref_in;__deref_inout;__deref_out;"
@@ -247,7 +247,6 @@ void Cpp::DoCpp(Stream& in)
                                          ';');
 	for(int i = 0; i < ignorelist.GetCount(); i++)
 		macro.GetAdd(ignorelist[i]).variadic = true;
-	Index<String> header;
 	Do(in, header);
 }
 
@@ -257,8 +256,10 @@ void Cpp::Do(Stream& in, Index<String>& header)
 	StringBuffer result;
 	result.Clear();
 	result.Reserve(16384);
+	int lineno = 0;
 	while(!in.IsEof()) {
 		String l = in.GetLine();
+		lineno++;
 		int el = 0;
 		while(*l.Last() == '\\' && !in.IsEof()) {
 			el++;
@@ -274,21 +275,21 @@ void Cpp::Do(Stream& in, Index<String>& header)
 			else {
 				result.Cat("\n");
 				if(strncmp(s + 1, "include", 7) == 0) {
-					DLOG(path << ": " << l);
-					String path = GetIncludePath(s + 8);
+					String hdr = Expand(s + 8);
+					String header_path = GetIncludePath(hdr);
 					if(path.GetCount() == 0) DLOG("Include file " << String(s + 8) << " not found");
-					if(path.GetCount() && header.Find(path) < 0) {
-						DLOG(">>> #include " << String(s + 8) << " -> " << path << LOG_BEGIN);
-						int lheader = header.GetCount();
-						header.Add(path);
+					String include = String().Cat() << path << ':' << lineno << ':' << header_path;
+					if(path.GetCount() && header.Find(include) < 0) {
+						DLOG(">>> " << l << " -> " << header_path << LOG_BEGIN);
+						header.Add(include);
 						Cpp cpp;
 						cpp.WhenError = Proxy(WhenError);
-						cpp.path = path;
-						cpp.filedir = GetFileFolder(path);
+						cpp.path = header_path;
+						cpp.filedir = GetFileFolder(header_path);
 						cpp.include_path = include_path;
 						cpp.parent = this;
 						DDUMP(cpp.macro.GetCount());
-						FileIn in(path);
+						FileIn in(header_path);
 						cpp.Do(in, header);
 						DLOG(path << ": " << cpp.macro);
 						DLOG("USED: " << cpp.usedmacro);
