@@ -3211,6 +3211,7 @@ void GridCtrl::SetValues(const Vector< Vector<Value> >& v)
 			items[r][c].val = v[i][j];
 		}
 
+	SyncCtrls();
 	SyncSummary();
 	Refresh();
 }
