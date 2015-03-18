@@ -9,6 +9,7 @@ void AddError(const String& path, int ln, const String& s)
 
 void Test(const char *path)
 {
+	DDUMP(sizeof(CppItem));
 	Cpp cpp;
 	cpp.WhenError = callback(AddError);
 	cpp.path = path;
@@ -45,7 +46,9 @@ void Test(const char *path)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE, NULL, 150000000);
-	Test("c:/u/upp.src/uppsrc/Core/Cpu.cpp");
+//	Test(GetDataFile("testfile"));
+	Test("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp");
+	getchar();
 	return;
 }
 

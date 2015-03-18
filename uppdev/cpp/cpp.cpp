@@ -250,6 +250,17 @@ void Cpp::DoCpp(Stream& in, Index<String>& header)
 	Do(in, header);
 }
 
+void Cpp::Parse()
+{
+	DDUMP(result.GetCount());
+	String r = result;
+	_DBG_ SaveFile("c:/xxx/cpp/" + GetFileTitle(path) + ".hpp", r);
+	DDUMP(result.GetCount());
+	StringStream ss(r);
+	DDUMP(result.GetCount());
+	Parse(ss, Vector<String>(), base, path, THISBACK(AddError));
+}
+
 void Cpp::Do(Stream& in, Index<String>& header)
 {
 	incomment = false;
@@ -281,6 +292,7 @@ void Cpp::Do(Stream& in, Index<String>& header)
 					String include = String().Cat() << path << ':' << lineno << ':' << header_path;
 					if(path.GetCount() && header.Find(include) < 0) {
 						DLOG(">>> " << l << " -> " << header_path << LOG_BEGIN);
+						Parse(result);
 						header.Add(include);
 						Cpp cpp;
 						cpp.WhenError = Proxy(WhenError);
@@ -314,13 +326,7 @@ void Cpp::Do(Stream& in, Index<String>& header)
 		while(el--)
 			result.Cat("\n");
 	}
-	DDUMP(result.GetCount());
-	String r = result;
-	_DBG_ SaveFile("c:/xxx/cpp/" + GetFileTitle(path) + ".hpp", r);
-	DDUMP(result.GetCount());
-	StringStream ss(r);
-	DDUMP(result.GetCount());
-	Parse(ss, Vector<String>(), base, path, THISBACK(AddError));
+	Parse(result);
 }
 
 String Cpp::GetIncludePath(const char *s)

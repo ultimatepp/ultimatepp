@@ -48,6 +48,8 @@ struct Cpp {
 	void   Include(const char *s);
 	String GetIncludePath(const char *s);
 	
+	void   Parse();
+
 	void   Do(Stream& in, Index<String>& header);
 	void   DoCpp(Stream& in, Index<String>& header);
 	
