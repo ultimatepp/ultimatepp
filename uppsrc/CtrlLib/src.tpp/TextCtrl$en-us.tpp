@@ -478,6 +478,12 @@ behind the widget is visible, allowing client code to provide
 any background it needs.&]
 [s3;%% &]
 [s4; &]
+[s5;:TextCtrl`:`:MaxLength`(int`): [_^TextCtrl^ TextCtrl][@(0.0.255) `&]_[* MaxLength]([@(0.0.255) i
+nt]_[*@3 len])&]
+[s2;%% Sets the maximum size of text in unicode characters. Has to 
+be less than 1Gchars. The default is 400Mchars.&]
+[s3;%% &]
+[s4; &]
 [s5;:TextCtrl`:`:IsProcessTab`(`): [@(0.0.255) bool]_[* IsProcessTab]()&]
 [s2;%% Tests whether ProcessTab mode is active.&]
 [s3;%% &]

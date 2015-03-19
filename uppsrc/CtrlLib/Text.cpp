@@ -24,6 +24,7 @@ TextCtrl::TextCtrl()
 	processenter = true;
 	nobg = false;
 	rectsel = false;
+	max_total = 400 * 1024 * 1024;
 }
 
 TextCtrl::~TextCtrl() {}
@@ -145,6 +146,8 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				}
 				if(b < s) {
 					LTIMING("ln.Cat");
+					if(b - s + ln.GetCount() > max_total)
+						break;
 					ln.Cat((const char *)b, (const char *)s);
 				}
 				if(s < e) {
@@ -153,6 +156,8 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					if(*s == '\n') {
 						LTIMING("ADD");
 						int len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+						if(total + len + 1 > max_total)
+							break;
 						total += len + 1;
 						Ln& l = line.Add();
 						l.len = len;
@@ -191,6 +196,8 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				}
 				if(b < s) {
 					LTIMING("ln.Cat");
+					if(b - s + ln.GetCount() > max_total)
+						break;
 					ln.Cat((const char *)b, (const char *)s);
 				}
 				if(s < e) {
@@ -200,11 +207,15 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 						if(b8 & 128) {
 							LTIMING("ToUnicode");
 							WString w = ToUnicode(~ln, ln.GetCount(), charset);
+							if(total + w.GetLength() + 1 > max_total)
+								break;
 							line.Add(w);
 							total += w.GetLength() + 1;
 						}
 						else {
 							LTIMING("ADD");
+							if(total + ln.GetCount() + 1 > max_total)
+								break;
 							total += ln.GetCount() + 1;
 							Ln& l = line.Add();
 							l.len = ln.GetCount();
@@ -220,8 +231,10 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 		}
 
 	WString w = ToUnicode(~ln, ln.GetCount(), charset);
-	line.Add(w);
-	total += w.GetLength();
+	if(total + w.GetLength() <= max_total) {
+		line.Add(w);
+		total += w.GetLength();
+	}
 	InsertLines(0, line.GetCount());
 	Update();
 	SetSb();
@@ -607,7 +620,7 @@ int TextCtrl::InsertU(int pos, const WString& txt, bool typing) {
 
 void TextCtrl::RemoveU(int pos, int size) {
 	if(size + pos > total)
-		size = total - pos;
+		size = int(total - pos);
 	if(size <= 0) return;
 	if(undosteps) {
 		UndoRec& u = undo.AddTail();
@@ -623,6 +636,8 @@ void TextCtrl::RemoveU(int pos, int size) {
 }
 
 int TextCtrl::Insert(int pos, const WString& _txt, bool typing) {
+	if(pos + _txt.GetCount() > max_total)
+		return 0;
 	WString txt = _txt;
 	if(charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
 		for(int i = 0; i < txt.GetCount(); i++)
