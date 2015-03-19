@@ -84,6 +84,7 @@ protected:
 
 	bool             processtab, processenter;
 	bool             nobg;
+	int              max_total;
 
 	void   IncDirty();
 	void   DecDirty();
@@ -194,6 +195,7 @@ public:
 	TextCtrl& ProcessEnter(bool b = true)      { processenter = b; return *this; }
 	TextCtrl& NoProcessEnter()                 { return ProcessEnter(false); }
 	TextCtrl& NoBackground(bool b = true)      { nobg = b; Transparent(); Refresh(); return *this; }
+	TextCtrl& MaxLength(int len)               { max_total = len; return *this; }
 	bool      IsNoBackground() const           { return nobg; }
 	bool      IsProcessTab() const             { return processtab; }
 	bool      IsProcessEnter() const           { return processenter; }
