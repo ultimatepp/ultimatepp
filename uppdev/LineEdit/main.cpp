@@ -2,6 +2,11 @@
 
 using namespace Upp;
 
+void ShowLen(LineEdit *edit, TopWindow *win)
+{
+	win->Title(AsString(edit->GetLength()));
+}
+
 GUI_APP_MAIN
 {
 	LineEdit edit;
@@ -15,6 +20,7 @@ GUI_APP_MAIN
 	win.Open();
 	edit.ShowLineEndings();
 	edit.ShowCurrentLine(LtCyan());
+	edit <<= callback2(ShowLen, &edit, &win);
 	Ctrl::EventLoop();
 	SaveFile(fn, ~edit);
 }
