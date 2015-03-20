@@ -124,8 +124,16 @@ Unlikely to be used in the client code.&]
 ]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)&]
 [s2;%% Loads the text from the stream with defined [%-*@3 charset]. 
 Function returns the detected line endings mode `- LE`_CRLF, 
-LE`_LF or LE`_DEFAULT if there were no line endings in the file.&]
+LE`_LF or LE`_DEFAULT if there were no line endings in the file. 
+If file is bigger then the limit set by MaxLength, editor is 
+put into `'truncated`' and read`-only mode.&]
 [s3;%% &]
+[s4; &]
+[s5;:TextCtrl`:`:IsTruncated`(`)const: [@(0.0.255) bool]_[* IsTruncated]()_[@(0.0.255) cons
+t]&]
+[s2;%% Indicates that last Load had to truncate the size because 
+of MaxLength limit.&]
+[s3; &]
 [s4; &]
 [s5;:TextCtrl`:`:Save`(Stream`&`,byte`,int`)const: [@(0.0.255) void]_[* Save]([_^Stream^ St
 ream][@(0.0.255) `&]_[*@3 s], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT, 
@@ -135,7 +143,7 @@ that cannot be represented in suggested [%-*@3 charset] are saved
 as `'?`'. [%-*@3 line`_endings] parameter sets the line ending 
 mode. LE`_DEFAULT uses platform specific line endings (CRLF in 
 Windows, LF in POSIX), LE`_CRLF sets CRLF line endings, LE`_LF 
-sets LF line endings).&]
+sets LF line endings). If IsTruncated is true, Save is blocked.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:GetInvalidCharPos`(byte`)const: [@(0.0.255) int]_[* GetInvalidCharPos]([_^byte^ b
