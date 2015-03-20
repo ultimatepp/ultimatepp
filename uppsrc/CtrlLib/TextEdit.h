@@ -75,6 +75,7 @@ protected:
 	int              dirty;
 	int              undo_op;
 	byte             charset;
+	bool             truncated;
 
 	bool             selclick;
 	Point            dropcaret;
@@ -112,6 +113,7 @@ public:
 	enum { LE_DEFAULT, LE_CRLF, LE_LF };
 
 	int    Load(Stream& s, byte charset = CHARSET_DEFAULT);
+	bool   IsTruncated() const                                { return false; }
 	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, int line_endings = LE_DEFAULT) const;
 
 	int    GetInvalidCharPos(byte charset = CHARSET_DEFAULT) const;

@@ -531,7 +531,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		editor.SetPickUndoData(pick(fd.undodata));
 		editor.SetLineInfo(fd.lineinfo);
 		editor.SetLineInfoRem(pick(fd.lineinforem));
-		if(ff.IsReadOnly() || IsNestReadOnly(editfile)) {
+		if(ff.IsReadOnly() || IsNestReadOnly(editfile) || editor.IsTruncated()) {
 			editor.SetReadOnly();
 			editor.NoShowReadOnly();
 		}
