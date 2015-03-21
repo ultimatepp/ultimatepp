@@ -288,7 +288,7 @@ void Ide::FindInFiles(bool replace) {
 					if(*s == '\\') {
 						s++;
 						if(*s == '\0') break;
-						q.Cat(*s);
+						pattern.Cat(*s);
 					}
 					else
 					switch(*s) {
