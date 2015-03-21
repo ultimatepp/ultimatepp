@@ -941,6 +941,7 @@ public:
 		int    linepos;
 		int    kind;
 		String message;
+		String error_pos;
 		
 		ErrorInfo() { lineno = linepos = kind = 0; }
 	};
@@ -948,7 +949,6 @@ public:
 	FindLineErrorCache error_cache;
 	void      ConsoleLine(const String& line);
 	void      ConsoleRunEnd();
-	void      AddNote(const ErrorInfo& f);
 	void      SyncErrorsMessage();
 	void      ShowError();
 	void      ShowFound();
@@ -956,6 +956,7 @@ public:
 	void      FFoundMenu(Bar& bar);
 	void      SelError();
 	WString   FormatErrorLine(const String& text, int& linecy);
+	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
 	
 	struct FoundDisplay : Display {
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;

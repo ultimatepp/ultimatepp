@@ -357,7 +357,10 @@ WString Ide::FormatErrorLine(const String& text, int& linecy)
 	Font fnt = StdFont();
 	WString h = text.ToWString();
 	linecy = fnt.GetCy();
-	for(const wchar *s = h; *s; s++) {
+	const wchar *s = h;
+	while(findarg(*s, ' ', '\t') >= 0)
+		s++;
+	while(*s) {
 		int chcx = fnt[*s];
 		if(x + chcx > cx) {
 			txt.Cat('\n');
@@ -366,8 +369,99 @@ WString Ide::FormatErrorLine(const String& text, int& linecy)
 		}
 		txt.Cat(*s);
 		x += chcx;
+		s++;
 	}
 	return txt;
+}
+
+WString Ide::FormatErrorLineEP(const String& text, const char *ep, int& linecy)
+{
+	WString txt;
+	int cx = error.HeaderObject().GetTabWidth(2) - error.HeaderTab(2).GetMargin() * 2;
+	int x = 0;
+	Font fnt = StdFont();
+	WString h = text.ToWString();
+	linecy = fnt.GetCy();
+	const wchar *s = h;
+	while(findarg(*s, ' ', '\t') >= 0) {
+		s++;
+		if(*ep)
+			ep++;
+	}
+	int lep = ' ';
+	while(*s) {
+		int chcx = fnt[*s];
+		if(x + chcx > cx) {
+			txt.Cat('\n');
+			x = 0;
+			linecy += fnt.GetCy();
+		}
+		if(lep != *ep) {
+			txt.Cat(decode(*ep, '~', 2, '^', 3, 1));
+			lep = *ep;
+		}
+		txt.Cat(*s);
+		x += chcx;
+		s++;
+		if(*ep)
+			ep++;
+	}
+	return txt;
+}
+
+struct ElepDisplay : public Display {
+	Size    DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+
+	virtual Size GetStdSize(const Value& q) const;
+	virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
+};
+
+Size ElepDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	w.DrawRect(r, paper);
+	WString txt = q;
+	int st = 1;
+	const wchar *s = txt;
+	const wchar *b = s;
+	int x = 0;
+	int y = 0;
+	int cx = 0;
+	int linecy = StdFont().GetLineHeight();
+	for(;;) {
+		if((byte)*s < ' ') {
+			int tcx = GetTextSize(b, StdFont(), s - b).cx;
+			if(st != 1 && (style & CURSOR) == 0)
+				w.DrawRect(x + r.left, y + r.top, tcx, linecy,
+				           HighlightSetup::GetHlStyle(st == 2 ? HighlightSetup::PAPER_WARNING
+				                                              : HighlightSetup::PAPER_ERROR).color);
+			w.DrawText(x + r.left, y + r.top, b, StdFont(), ink, s - b);
+			x += tcx;
+			cx = max(cx, tcx + x);
+			if(*s == '\0')
+				break;
+			if(*s == '\n') {
+				x = 0;
+				y += linecy;
+			}
+			else
+				st = *s;
+			b = ++s;
+		}
+		else
+			s++;
+	}
+	return Size(cx, y + linecy);
+}
+
+Size ElepDisplay::GetStdSize(const Value& q) const
+{
+	NilDraw w;
+	return DoPaint(w, Rect(0, 0, INT_MAX, INT_MAX), q, Null, Null, 0);
+}
+
+void ElepDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
+{
+	DoPaint(w, r, q, ink, paper, style);
 }
 
 void Ide::ConsoleLine(const String& line)
@@ -400,10 +494,27 @@ void Ide::ConsoleLine(const String& line)
 	else {
 		f.lineno = Null;
 		f.file = Null;
-		f.message = TrimLeft(line);
+		f.message = line;
 	}
-	if(addnotes)
-		AddNote(f);
+	if(addnotes) {
+		int cnt = error.GetCount();
+		if(cnt == 0)
+			return;
+		ValueArray n = error.Get(cnt - 1, "NOTES");
+		bool iserrorpos = true;
+		for(const char *s = f.message; *s; s++)
+			if(*s != ' ' && *s != '~' && *s != '^')
+				iserrorpos = false;
+		int i = n.GetCount() - 1;
+		if(iserrorpos && i >= 0) {
+			ErrorInfo f0 = ValueTo<ErrorInfo>(n[i]);
+			f0.error_pos = f.message;
+			n.Set(i, RawToValue(f0));
+		}
+		else
+			n.Add(RawToValue(f));
+		error.Set(cnt - 1, "NOTES", n);
+	}
 }
 
 void Ide::SyncErrorsMessage()
@@ -438,16 +549,6 @@ void Ide::SyncErrorsMessage()
 void Ide::ConsoleRunEnd()
 {
 	addnotes = false;
-}
-
-void Ide::AddNote(const ErrorInfo& f)
-{
-	int cnt = error.GetCount();
-	if(cnt == 0)
-		return;
-	ValueArray n = error.Get(cnt - 1, "NOTES");
-	n.Add(RawToValue(f));
-	error.Set(cnt - 1, "NOTES", n);
 }
 
 void Ide::ShowFound()
@@ -499,7 +600,12 @@ void Ide::SelError()
 				error.Set(ii, 0, f.file);
 				error.Set(ii, 1, f.lineno);
 				int linecy;
-				error.Set(ii, 2, FormatErrorLine(f.message, linecy));
+				if(f.error_pos.GetCount()) {
+					error.Set(ii, 2, FormatErrorLineEP(f.message, f.error_pos, linecy));
+					error.SetDisplay(ii, 2, Single<ElepDisplay>());
+				}
+				else
+					error.Set(ii, 2, FormatErrorLine(f.message, linecy));
 				error.Set(ii, "INFO", n[i]);
 				error.Set(ii, "NOTES", "0");
 				error.SetLineCy(ii, linecy);
