@@ -1,0 +1,16 @@
+%'\1'%"\2"%
+%1 +1%3%
+%"1" "2" ","%','%
+"a"
+"a x y"
+"\"A\""
+a3
+3a
+a#
+a"X"
+"Y""X"
+x
+haha
+haha ble
+alfa xy.r #hahaha
+	
