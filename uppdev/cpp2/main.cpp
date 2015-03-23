@@ -12,42 +12,18 @@ String include_path =
 	"C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.0\\Include;C:\\u\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\Program Files (x86)\\MySQL\\MySQL Connector C 6.1\\include;"
 	";c:/u/upp.src/uppsrc";
 
-void Test(const char *path)
+void Test(const char *sourcefile, const char *currentfile)
 {
-	DDUMP(sizeof(CppItem));
+	DDUMP(sourcefile);
+	DDUMP(currentfile);
 	Cpp cpp;
-	cpp.WhenError = callback(AddError);
-	cpp.path = path;
-	cpp.filedir = GetFileFolder(path);
-//	cpp.include_path = cpp.filedir;//"C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include";
-	cpp.include_path << "C:\\Program Files (x86)\\Microsoft Visual Studio 10.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.1\\Include;C:\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\u\\OpenSSL-Win32\\include;";
-	cpp.include_path << "C:\\Program Files (x86)\\Microsoft Visual Studio 9.0\\Vc\\Include;C:\\Program Files\\Microsoft SDKs\\Windows\\v7.0\\Include;C:\\u\\OpenSSL-Win32\\include;C:\\u\\pgsql\\include;C:\\Program Files (x86)\\MySQL\\MySQL Connector C 6.1\\include;";
-	cpp.include_path << ";c:/u/upp.src/uppsrc";
-	FileIn in(path);
-	Index<String> inc;
-	cpp.DoCpp(in, inc);
-//	StringStream ss(pp);
-//	Parse(ss, Vector<String>() << "__cdecl", base, path, callback(AddError));
-	DLOG("=======================");
-	DUMPC(cpp.macro.GetKeys());
-	DLOG("=======================");
-	DUMPC(inc);
-	DLOG("=======================");
-	DUMPC(errs);
-	DLOG("=======================");
-	Qualify(cpp.base);
-	String out;
-	for(int i = 0; i < cpp.base.GetCount(); i++) {
-		out << Nvl(cpp.base.GetKey(i), "<globals>") << " {\n";
-		const Array<CppItem>& ma = cpp.base[i];
-		for(int j = 0; j < ma.GetCount(); j++) {
-			const CppItem& m = ma[j];
-			out << '\t' << CppItemKindAsString(m.kind) << ' ' << m.qitem << ' ' << m.line << "\n";
-			// DDUMP(StoreAsString(const_cast<CppItem&>(m)).GetCount());
-		}
-		out << "}\n";
-	}
-	LOG(out);
+	cpp.include_path = include_path;
+	FileIn in(sourcefile);
+	DDUMP(cpp.Preprocess(sourcefile, in, currentfile));
+	DDUMP(cpp.namespace_stack);
+	DDUMP(cpp.output);
+	DDUMP(cpp.usedmacro);
+	DLOG("=================================");
 }
 
 void RecursePP(const char *path, const char *include_path, Index<String>& visited)
@@ -66,6 +42,20 @@ void RecursePP(const char *path, const char *include_path, Index<String>& visite
 	p.Dump();
 }
 
+void TestC(const char *ln)
+{
+	for(int q = 0; q < 2; q++) {
+		bool incomment = q;
+		String l = ln;
+		DDUMP(incomment);
+		LOG(l);
+		RemoveComments(l, incomment);
+		LOG(l);
+		LOG(incomment);
+		LOG("-----------------------");
+	}
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE, NULL, 150000000);
@@ -78,6 +68,25 @@ CONSOLE_APP_MAIN
 //	f.Parse(in);
 //	f.Dump();
 
+
+//	Test("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp");
+#if 0
+	TestC("test");
+	TestC("*/ test /*c2*/ /* comment");
+	TestC(" */ test /*c2*/ a /* comment */");
+	TestC("  */ test /*c2*/ a /*/* comment */");
+	return;
+#endif	
+	{
+		RTIMING("Pass1");
+		Test("C:\\u\\upp.src\\uppsrc\\Core\\Profile.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
+	}
+	if(0) {
+		RTIMING("Pass2");
+		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
+	}
+
+#if 0
 	{
 		RTIMING("Pass1");
 		Index<String> visited;
@@ -85,6 +94,7 @@ CONSOLE_APP_MAIN
 	}
 	
 	DDUMP(IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core.h", include_path));
+	DDUMP(IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core2.h", include_path));
 	
 	for(int i = 0; i < 1000; i++) {
 		RTIMING("IncludesFile true");
@@ -95,7 +105,7 @@ CONSOLE_APP_MAIN
 		RTIMING("IncludesFile false");
 		IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core1.h", include_path);
 	}
-
+#endif
 //	GetPPFile(GetDataFile("test.h")).Dump();
 	return;
 }

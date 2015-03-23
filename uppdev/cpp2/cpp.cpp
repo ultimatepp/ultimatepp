@@ -83,43 +83,12 @@ String CppMacro::Expand(const Vector<String>& p) const
 	return r;
 }
 
-String Cpp::Define(const char *s)
+void Cpp::Define(const char *s)
 {
-	CParser p(s);
-	String id;
-	String r;
-	try {
-		if(!p.IsId())
-			return Null;
-		id = p.ReadId();
-		r << "#define " << id;
-		CppMacro& m = macro.GetAdd(id);
-		m.param.Clear();
-		if(p.Char('(')) {
-			r << '(';
-			bool next = false;
-			while(p.IsId()) {
-				String pid = p.ReadId();
-				if(next)
-					r << ", ";
-				r << pid;
-				m.param.Add(p.ReadId());
-				p.Char(',');
-				next = true;
-			}
-			if(p.Char3('.', '.', '.')) {
-				m.variadic = true;
-				if(next)
-					r << ", ";
-				r << "...";
-			}
-			p.Char(')');
-			r << ')';
-		}
-		m.body = p.GetPtr();
-	}
-	catch(CParser::Error) {}
-	return r;
+	CppMacro m;
+	String id = m.Define(s);
+	if(id.GetCount())
+		macro.GetAdd(id) = pick(m);
 }
 
 const char *Cpp::SkipString(const char *s)
@@ -158,6 +127,12 @@ void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)
 
 String Cpp::Expand(const char *s)
 {
+	Index<String> notmacro;
+	return Expand(s, notmacro);
+}
+
+String Cpp::Expand(const char *s, Index<String>& notmacro)
+{
 	StringBuffer r;
 	while(*s) {
 		if(incomment) {
@@ -177,12 +152,7 @@ String Cpp::Expand(const char *s)
 				s++;
 			String id(b, s);
 			if(notmacro.Find(id) < 0) {
-				const CppMacro *m = NULL;
-				const Cpp *p = this;
-				while(!m && p) {
-					m = p->macro.FindPtr(id);
-					p = p->parent;
-				}
+				const CppMacro *m = macro.FindPtr(id);
 				if(m && !id.StartsWith("__$allowed_on_")) {
 					Vector<String> param;
 					const char *s0 = s;
@@ -229,8 +199,6 @@ String Cpp::Expand(const char *s)
 					id = '\x1a' + Expand(m->Expand(param));
 					notmacro.Trim(ti);
 				}
-				else
-					notmacro.Add(id);
 			}
 			r.Cat(id);
 		}
@@ -251,37 +219,64 @@ String Cpp::Expand(const char *s)
 	return r;
 }
 
-
-void Cpp::DoCpp(Stream& in, Index<String>& header)
+bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& currentfile)
 {
+	macro.Clear();
 	Vector<String> ignorelist = Split("__declspec;__cdecl;"
-                                         "__out;__in;__inout;__deref_in;__deref_inout;__deref_out;"
-                                         "__AuToQuOtE;__xin;__xout;"
-                                         "$drv_group;$allowed_on_parameter",
-                                         ';');
+                                      "__out;__in;__inout;__deref_in;__deref_inout;__deref_out;"
+                                      "__AuToQuOtE;__xin;__xout;"
+                                      "$drv_group;$allowed_on_parameter",
+                                      ';');
 	for(int i = 0; i < ignorelist.GetCount(); i++)
 		macro.GetAdd(ignorelist[i]).variadic = true;
-	Do(in, header);
+	done = false;
+	incomment = false;
+	Index<String> visited;
+	Do(NormalizePath(sourcefile), in, NormalizePath(currentfile), visited);
+	return done;
 }
 
-void Cpp::Parse(StringBuffer& result)
+void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, Index<String>& visited)
 {
-	DDUMP(result.GetCount());
-	String r = result;
-	_DBG_ SaveFile("c:/xxx/cpp/" + GetFileTitle(path) + ".hpp", r);
-	DDUMP(result.GetCount());
-	StringStream ss(r);
-	DDUMP(result.GetCount());
-	Upp::Parse(ss, Vector<String>(), base, path, THISBACK(AddError));
-}
-
-void Cpp::Do(Stream& in, Index<String>& header)
-{
+	DDUMP(currentfile);
+	if(visited.Find(currentfile) >= 0 || visited.GetCount() > 20000)
+		return;
+	visited.Add(currentfile);
+	String current_folder = GetFileFolder(currentfile);
+	if(sourcefile != currentfile) {
+		const PPFile& pp = GetPPFile(currentfile);
+		pp.Dump();
+		for(int i = 0; i < pp.item.GetCount() && !done; i++) {
+			const PPItem& m = pp.item[i];
+			if(m.type == PP_DEFINE) {
+				if(m.macro.body.GetCount())
+					macro.GetAdd(m.id) = clone(m.macro);
+			}
+			else
+			if(m.type == PP_INCLUDE) {
+				String s = GetIncludePath(m.id, current_folder, include_path);
+				if(s.GetCount())
+					Do(sourcefile, in, s, visited);
+			}
+			else
+			if(m.type == PP_NAMESPACE)
+				namespace_stack.Add(m.id);
+			else
+			if(m.type == PP_NAMESPACE_END && namespace_stack.GetCount())
+				namespace_stack.Drop();
+			else
+			if(m.type == PP_USING)
+				namespace_using.FindAdd(m.id);
+		}
+		return;
+	}
+	
 	incomment = false;
 	StringBuffer result;
 	result.Clear();
 	result.Reserve(16384);
 	int lineno = 0;
+	bool incomment = false;
 	while(!in.IsEof()) {
 		String l = in.GetLine();
 		lineno++;
@@ -291,46 +286,20 @@ void Cpp::Do(Stream& in, Index<String>& header)
 			l.Trim(l.GetLength() - 1);
 			l.Cat(in.GetLine());
 		}
-		const char *s = l;
-		while(*s == ' ')
-			s++;
-		if(*s == '#') {
-			if(strncmp(s + 1, "define", 6) == 0)
-				result << Define(s + 7) << "\n";
+		RemoveComments(l, incomment);
+		CParser p(l);
+		if(p.Char('#')) {
+			if(p.Id("define")) {
+				result.Cat(l + "\n");
+				Define(p.GetPtr());
+			}
 			else {
-				result.Cat("\n");
-				if(strncmp(s + 1, "include", 7) == 0) {
-					String hdr = Expand(s + 8);
-					String header_path = GetIncludePath(hdr);
-					if(path.GetCount() == 0) DLOG("Include file " << String(s + 8) << " not found");
-					String include = String().Cat() << path << ':' << lineno << ':' << header_path;
-					if(path.GetCount() && header.Find(include) < 0) {
-						DLOG(">>> " << l << " -> " << header_path << LOG_BEGIN);
-						Parse(result);
-						header.Add(include);
-						Cpp cpp;
-						cpp.WhenError = Proxy(WhenError);
-						cpp.path = header_path;
-						cpp.filedir = GetFileFolder(header_path);
-						cpp.include_path = include_path;
-						cpp.parent = this;
-						DDUMP(cpp.macro.GetCount());
-						FileIn in(header_path);
-						cpp.Do(in, header);
-						DLOG(path << ": " << cpp.macro);
-						DLOG("USED: " << cpp.usedmacro);
-						// TODO: caching, this is the place to retrieve used macro values
-						{ RTIMING("Mixing macros");
-						for(int i = 0; i < cpp.macro.GetCount(); i++)
-							macro.GetAdd(cpp.macro.GetKey(i)) = pick(cpp.macro[i]);
-						}
-						DDUMP(macro.GetCount());
-						RTIMING("Mixing bases");
-						for(int i = 0; i < cpp.base.GetCount(); i++)
-							base.GetAdd(cpp.base.GetKey(i)).AppendPick(cpp.base[i]);
-						DLOG("---" << LOG_END);
-					}
-					notmacro.Clear();
+				result.Cat('\n');
+				if(p.Id("include")) {
+					String hdr = Expand(p.GetPtr());
+					String header_path = GetIncludePath(hdr, current_folder, include_path);
+					if(header_path.GetCount())
+						Do(Null, NilStream(), header_path, visited);
 				}
 			}
 		}
@@ -340,29 +309,6 @@ void Cpp::Do(Stream& in, Index<String>& header)
 		while(el--)
 			result.Cat("\n");
 	}
-	Parse(result);
-}
-
-String Cpp::GetIncludePath(const char *s)
-{
-	while(IsSpace(*s))
-		s++;
-	int type = *s;
-	if(type == '<' || type == '\"' || type == '?') {
-		s++;
-		String name;
-		if(type == '<') type = '>';
-		while(*s != '\r' && *s != '\n') {
-			if(*s == type) {
-				if(type == '\"') {
-					String fn = NormalizePath(name, filedir);
-					if(FileExists(fn))
-						return fn;
-				}
-				return GetFileOnPath(name, include_path, false);
-			}
-			name.Cat(*s++);
-		}
-	}
-	return Null;
+	done = true;
+	output = result;
 }

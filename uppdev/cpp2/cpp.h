@@ -7,6 +7,8 @@
 
 using namespace Upp;
 
+void RemoveComments(String& l, bool& incomment);
+
 struct CppMacro : Moveable<CppMacro>, DeepCopyOption<CppMacro> {
 	String        body;
 	Index<String> param;
@@ -37,7 +39,7 @@ struct PPItem {
 	CppMacro macro;
 };
 
-struct PPFile {
+struct PPFile { // contains "macro extract" of file, only info about macros defined and namespaces
 	FileTime       filetime;
 	Array<PPItem>  item;
 	Index<String>  includes;
@@ -54,52 +56,32 @@ const PPFile& GetPPFile(const char *path);
 
 String GetIncludePath(const String& s, const String& filedir, const String& include_path);
 
-bool   IncludesFile(const String& include, const String& path, const String& include_path);
+bool   IncludesFile(const String& parent_path, const String& header_path, const String& include_path);
 
 struct Cpp {
 	bool                        incomment;
+	bool                        done;
 	
-	String                      path;
-	String                      filedir;
 	String                      include_path;
 	
-	Index<String>               header;
 	VectorMap<String, CppMacro> macro;
+
+	String                      output;
 	Index<String>               usedmacro;
-	Index<String>               notmacro;
+	Index<String>               namespace_using;
+	Vector<String>              namespace_stack;
 	
-	CppBase                     base;
-	
-	Cpp                        *parent;
-	
-	void SyncSet();
-	
-	String   Define(const char *s);
+	void   Define(const char *s);
 
 	static const char *SkipString(const char *s);
-	void ParamAdd(Vector<String>& param, const char *b, const char *e);
-
+	void   ParamAdd(Vector<String>& param, const char *b, const char *e);
+	String Expand(const char *s, Index<String>& notmacro);
 	String Expand(const char *s);
-	void   Include(const char *s);
-	String GetIncludePath(const char *s);
-	
-	void   Parse(StringBuffer& result);
+	void   Do(const String& sourcefile, Stream& in, const String& currentfile, Index<String>& visited);
 
-	void   Do(Stream& in, Index<String>& header);
-	void   DoCpp(Stream& in, Index<String>& header);
-	
-	Callback3<const String&, int, const String&> WhenError;
-	
-	void AddError(int ln, const String& s) { WhenError(path, ln, s); }
-	
-	Cpp() { parent = NULL; }
+	bool   Preprocess(const String& sourcefile, Stream& in, const String& currentfile);
 	
 	typedef Cpp CLASSNAME;
 };
-
-String Preprocess(const String& filename, const String& include_path);
-
-String Preprocess(const String& sourcefile, Stream& in, const String& surrogatefile,
-                  const String& include_path);
 
 #endif
