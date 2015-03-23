@@ -1,5 +1,37 @@
 #include "cpp.h"
 
+void SetSpaces(String& l, int pos, int count)
+{
+	StringBuffer s = l;
+	memset(~s + pos, ' ', count);
+	l = s;
+}
+
+void RemoveComments(String& l, bool& incomment)
+{
+	int q = -1;
+	int w = -1;
+	if(incomment)
+		q = w = 0;
+	else {
+		q = l.Find("/*");
+		if(q >= 0)
+			w = q + 2;
+	}
+	while(q >= 0) {
+		int eq = l.Find("*/", w);
+		if(eq < 0) {
+			incomment = true;
+			SetSpaces(l, q, l.GetCount() - q);
+			return;
+		}
+		SetSpaces(l, q, eq + 2 - q);
+		incomment = false;
+		q = l.Find("/*");
+		w = q + 2;
+	}
+}
+
 String CppMacro::Define(const char *s)
 {
 	CParser p(s);
@@ -42,13 +74,15 @@ void PPFile::Parse(Stream& in)
 	bool was_using = false;
 	bool was_namespace = false;
 	int  level = 0;
+	bool incomment = false;
 	Vector<int> namespace_block;
-	while(!in.IsEof()) { // TODO: Do comments...
+	while(!in.IsEof()) {
 		String l = in.GetLine();
 		while(*l.Last() == '\\' && !in.IsEof()) {
 			l.Trim(l.GetLength() - 1);
 			l.Cat(in.GetLine());
 		}
+		RemoveComments(l, incomment);
 		try {
 			CParser p(l);
 			if(p.Char('#')) {
