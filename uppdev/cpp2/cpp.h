@@ -10,19 +10,14 @@ using namespace Upp;
 void RemoveComments(String& l, bool& incomment);
 
 struct CppMacro : Moveable<CppMacro>, DeepCopyOption<CppMacro> {
+	String        param;
 	String        body;
-	Index<String> param;
-	bool          variadic;
 	
 	String Define(const char *s);
 
 	String Expand(const Vector<String>& p) const;
 	
 	String ToString() const;
-	
-	CppMacro()    { variadic = false; }
-	rval_default(CppMacro);
-	CppMacro(const CppMacro& s, int) { body = s.body, param = clone(s.param); variadic = s.variadic; }
 };
 
 enum PPItemType {
@@ -77,9 +72,11 @@ struct Cpp {
 	void   ParamAdd(Vector<String>& param, const char *b, const char *e);
 	String Expand(const char *s, Index<String>& notmacro);
 	String Expand(const char *s);
-	void   Do(const String& sourcefile, Stream& in, const String& currentfile, Index<String>& visited);
+	void   Do(const String& sourcefile, Stream& in, const String& currentfile,
+	          Index<String>& visited, const Index<String> *get_macros);
 
-	bool   Preprocess(const String& sourcefile, Stream& in, const String& currentfile);
+	bool   Preprocess(const String& sourcefile, Stream& in, const String& currentfile,
+	                  const Index<String> *get_macros = NULL);
 	
 	typedef Cpp CLASSNAME;
 };
