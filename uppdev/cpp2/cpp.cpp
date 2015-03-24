@@ -150,6 +150,8 @@ bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& current
 	done = false;
 	incomment = false;
 	Index<String> visited;
+	if(get_macros)
+		DUMP(*get_macros);
 	Do(NormalizePath(sourcefile), in, NormalizePath(currentfile), visited, get_macros);
 	return done;
 }
