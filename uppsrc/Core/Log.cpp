@@ -37,6 +37,8 @@ struct LogOut {
 
 	int   part;
 	
+	bool  line_begin;
+	
 	void  Create(bool append);
 	void  Create()                                     { Create(options & LOG_APPEND); }
 	void  Close();
@@ -61,6 +63,8 @@ void LogOut::Rotate()
 void LogOut::Create(bool append)
 {
 	Close();
+	
+	line_begin = true;
 	
 	int rotn = options >> 24;
 	if(rotn) {
@@ -174,7 +178,7 @@ void LogOut::Line(const char *s, int len, int depth)
 	char h[600];
 	char *p = h;
 	int   ll = 0;
-	if(options & (LOG_TIMESTAMP|LOG_TIMESTAMP_UTC)) {
+	if((options & (LOG_TIMESTAMP|LOG_TIMESTAMP_UTC)) && line_begin) {
 		Time t = (options & LOG_TIMESTAMP_UTC) ? GetUtcTime() : GetSysTime();
 		ll = sprintf(h, "%02d.%02d.%04d %02d:%02d:%02d ",
 		                t.day, t.month, t.year, t.hour, t.minute, t.second);
@@ -183,8 +187,9 @@ void LogOut::Line(const char *s, int len, int depth)
 		p += ll;
 	}
 	char *beg = p; 
-	for(int q = depth; q--;)
+	for(int q = min(depth, 99); q--;)
 		*p++ = '\t';
+	line_begin = len && s[len - 1] == '\n';
 	memcpy(p, s, len);
 	p += len;
 	*p = '\0';
