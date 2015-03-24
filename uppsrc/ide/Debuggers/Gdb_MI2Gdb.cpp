@@ -48,7 +48,16 @@ MIValue Gdb_MI2::ParseGdb(String const &output, bool wait)
 	StringStream ss(output);
 	while(!ss.IsEof())
 	{
-		String s = TrimBoth(ss.GetLine());
+		String s;
+		String str = ss.GetLine();
+		s = str;
+		while(str.GetCount() == 1024 && !ss.IsEof())
+		{
+			str = ss.GetLine();
+			s << str;
+		}
+		
+		s = TrimBoth(s);
 		
 		// check 'running' and 'stopped' async output
 		if(s.StartsWith("*running"))
