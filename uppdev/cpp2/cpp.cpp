@@ -1,88 +1,5 @@
 #include "cpp.h"
 
-#include <string.h>
-
-inline bool IsSpc(byte c)
-{
-	return c > 0 && c <= 32;
-}
-
-String CppMacro::ToString() const
-{
-	return String().Cat() << "(" << AsString(param) << ") " << body;
-}
-
-String CppMacro::Expand(const Vector<String>& p) const
-{
-	String r;
-	const char *s = body;
-	while(*s) {
-		if(IsAlpha(*s) || *s == '_') {
-			const char *b = s;
-			s++;
-			while(IsAlNum(*s) || *s == '_')
-				s++;
-			String id(b, s);
-			static String VA_ARGS("__VA_ARGS__"); // Speed optimization
-			if(id == VA_ARGS) {
-				bool next = false;
-				for(int i = param.GetCount(); i < p.GetCount(); i++) {
-					if(next)
-						r.Cat(", ");
-					r.Cat(p[i]);
-					next = true;
-				}
-			}
-			else {
-				int q = param.Find(id);
-				if(q >= 0) {
-					if(q < p.GetCount())
-						r.Cat(p[q]);
-				}
-				else
-					r.Cat(id);
-			}
-			continue;
-		}
-		if(s[0] == '#' && s[1] == '#') {
-			int q = r.GetLength();
-			while(q > 0 && IsSpc(r[q - 1]))
-				q--;
-			r.Trim(q);
-			s += 2;
-			while((byte)*s <= ' ')
-				s++;
-			continue;
-		}
-		if(*s == '#') {
-			const char *ss = s + 1;
-			while(IsSpc(*ss))
-				ss++;
-			if(IsAlpha(*ss) || *ss == '_') {
-				const char *b = ss;
-				ss++;
-				while(IsAlNum(*ss) || *ss == '_')
-					ss++;
-				String id(b, ss);
-				int q = param.Find(id);
-				if(q >= 0) {
-					if(q <= p.GetCount()) {
-						if(q < p.GetCount())
-							r.Cat(AsCString(p[q]));
-						s = ss;
-						continue;
-					}
-				}
-				r.Cat(String(s, ss));
-				s = ss;
-				continue;
-			}
-		}
-		r.Cat(*s++);
-	}
-	return r;
-}
-
 void Cpp::Define(const char *s)
 {
 	CppMacro m;
@@ -145,10 +62,10 @@ String Cpp::Expand(const char *s, Index<String>& notmacro)
 				r.Cat(*s++);
 		}
 		else
-		if(iscib2(*s)) {
+		if(iscib(*s)) {
 			const char *b = s;
 			s++;
-			while(iscid2(*s))
+			while(iscid(*s))
 				s++;
 			String id(b, s);
 			if(notmacro.Find(id) < 0) {
@@ -219,7 +136,8 @@ String Cpp::Expand(const char *s, Index<String>& notmacro)
 	return r;
 }
 
-bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& currentfile)
+bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& currentfile,
+                     const Index<String> *get_macros)
 {
 	macro.Clear();
 	Vector<String> ignorelist = Split("__declspec;__cdecl;"
@@ -228,35 +146,39 @@ bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& current
                                       "$drv_group;$allowed_on_parameter",
                                       ';');
 	for(int i = 0; i < ignorelist.GetCount(); i++)
-		macro.GetAdd(ignorelist[i]).variadic = true;
+		macro.GetAdd(ignorelist[i]).param = ".";
 	done = false;
 	incomment = false;
 	Index<String> visited;
-	Do(NormalizePath(sourcefile), in, NormalizePath(currentfile), visited);
+	Do(NormalizePath(sourcefile), in, NormalizePath(currentfile), visited, get_macros);
 	return done;
 }
 
-void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, Index<String>& visited)
+void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile,
+             Index<String>& visited, const Index<String> *get_macros)
 {
-	DDUMP(currentfile);
+//	DUMP(currentfile);
 	if(visited.Find(currentfile) >= 0 || visited.GetCount() > 20000)
 		return;
 	visited.Add(currentfile);
 	String current_folder = GetFileFolder(currentfile);
 	if(sourcefile != currentfile) {
 		const PPFile& pp = GetPPFile(currentfile);
+	#ifdef _DEBUG
 		pp.Dump();
+	#endif
 		for(int i = 0; i < pp.item.GetCount() && !done; i++) {
 			const PPItem& m = pp.item[i];
 			if(m.type == PP_DEFINE) {
-				if(m.macro.body.GetCount())
-					macro.GetAdd(m.id) = clone(m.macro);
+//				RTIMING("macro Add");
+				if(!get_macros || get_macros->Find(m.id) >= 0)
+					macro.GetAdd(m.id) = m.macro;
 			}
 			else
 			if(m.type == PP_INCLUDE) {
 				String s = GetIncludePath(m.id, current_folder, include_path);
 				if(s.GetCount())
-					Do(sourcefile, in, s, visited);
+					Do(sourcefile, in, s, visited, get_macros);
 			}
 			else
 			if(m.type == PP_NAMESPACE)
@@ -271,6 +193,11 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, In
 		return;
 	}
 	
+	done = true;
+	if(get_macros)
+		return;
+
+	RTIMING("Expand");
 	incomment = false;
 	StringBuffer result;
 	result.Clear();
@@ -299,7 +226,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, In
 					String hdr = Expand(p.GetPtr());
 					String header_path = GetIncludePath(hdr, current_folder, include_path);
 					if(header_path.GetCount())
-						Do(Null, NilStream(), header_path, visited);
+						Do(Null, NilStream(), header_path, visited, get_macros);
 				}
 			}
 		}
@@ -309,6 +236,6 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, In
 		while(el--)
 			result.Cat("\n");
 	}
-	done = true;
+	DUMP(macro.GetCount());
 	output = result;
 }

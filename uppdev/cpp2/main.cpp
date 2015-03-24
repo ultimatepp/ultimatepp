@@ -19,11 +19,18 @@ void Test(const char *sourcefile, const char *currentfile)
 	Cpp cpp;
 	cpp.include_path = include_path;
 	FileIn in(sourcefile);
-	DDUMP(cpp.Preprocess(sourcefile, in, currentfile));
+	RDUMP(cpp.Preprocess(sourcefile, in, currentfile));
 	DDUMP(cpp.namespace_stack);
-	DDUMP(cpp.output);
+//	DDUMP(cpp.output);
 	DDUMP(cpp.usedmacro);
 	DLOG("=================================");
+
+	{
+		Cpp cpp;
+		cpp.include_path = include_path;
+		cpp.Preprocess(sourcefile, NilStream(), currentfile, &cpp.usedmacro);
+		DDUMP(cpp.macro);
+	}
 }
 
 void RecursePP(const char *path, const char *include_path, Index<String>& visited)
@@ -47,7 +54,7 @@ void TestC(const char *ln)
 	for(int q = 0; q < 2; q++) {
 		bool incomment = q;
 		String l = ln;
-		DDUMP(incomment);
+		DUMP(incomment);
 		LOG(l);
 		RemoveComments(l, incomment);
 		LOG(l);
@@ -79,13 +86,14 @@ CONSOLE_APP_MAIN
 #endif	
 	{
 		RTIMING("Pass1");
-		Test("C:\\u\\upp.src\\uppsrc\\Core\\Profile.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
+		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
 	}
-	if(0) {
+#ifndef _DEBUG
+	for(int i = 0; i < 100; i++) {
 		RTIMING("Pass2");
 		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
 	}
-
+#endif
 #if 0
 	{
 		RTIMING("Pass1");

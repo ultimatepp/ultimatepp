@@ -32,33 +32,6 @@ void RemoveComments(String& l, bool& incomment)
 	}
 }
 
-String CppMacro::Define(const char *s)
-{
-	CParser p(s);
-	String id;
-	try {
-		if(!p.IsId())
-			return Null;
-		id = p.ReadId();
-		param.Clear();
-		variadic = false;
-		if(p.Char('(')) {
-			while(p.IsId()) {
-				param.Add(p.ReadId());
-				p.Char(',');
-			}
-			if(p.Char3('.', '.', '.'))
-				variadic = true;
-			p.Char(')');
-		}
-		body = p.GetPtr();
-	}
-	catch(CParser::Error) {
-		return Null;
-	}
-	return id;
-}
-
 void PPFile::CheckEndNamespace(Vector<int>& namespace_block, int level)
 {
 	if(namespace_block.GetCount() && namespace_block.Top() == level) {
@@ -191,15 +164,8 @@ void PPFile::Dump() const
 		                     PP_USING, "using namespace", PP_NAMESPACE, "namespace",
 		                     PP_NAMESPACE_END, "}", "")
 		   << ' ' << m.id;
-		if(m.type == PP_DEFINE) {
-			if(m.macro.param.GetCount() || m.macro.variadic) {
-				ll << '(' << Join(m.macro.param.GetKeys(), ", ");
-				if(m.macro.variadic)
-					ll << "...";
-				ll << ')';
-			}
-			ll << ' ' << m.macro.body;
-		}
+		if(m.type == PP_DEFINE)
+			ll << m.macro;
 		if(m.type == PP_NAMESPACE)
 			ll << " {";
 		LOG(ll);
@@ -255,6 +221,7 @@ FileTime GetFileTimeCached(const String& p)
 
 String GetIncludePath(const String& s, const String& filedir, const String& include_path)
 {
+	RTIMING("GetIncludePath");
 	String key;
 	key << s << "#" << filedir << "#" << include_path;
 	int q = sIncludePath.Find(key);
