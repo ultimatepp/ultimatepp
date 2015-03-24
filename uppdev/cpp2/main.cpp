@@ -14,39 +14,32 @@ String include_path =
 
 void Test(const char *sourcefile, const char *currentfile)
 {
-	DDUMP(sourcefile);
-	DDUMP(currentfile);
+	DUMP(sourcefile);
+	DUMP(currentfile);
 	Cpp cpp;
 	cpp.include_path = include_path;
 	FileIn in(sourcefile);
-	RDUMP(cpp.Preprocess(sourcefile, in, currentfile));
-	DDUMP(cpp.namespace_stack);
+	{ RTIMING("Preprocess");
+		cpp.Preprocess(sourcefile, in, currentfile);
+		DUMP(cpp.namespace_stack);
 //	DDUMP(cpp.output);
-	DDUMP(cpp.usedmacro);
-	DLOG("=================================");
+		DUMP(cpp.usedmacro);
+	}
+	LOG("=================================");
 
 	{
-		Cpp cpp;
-		cpp.include_path = include_path;
-		cpp.Preprocess(sourcefile, NilStream(), currentfile, &cpp.usedmacro);
-		DDUMP(cpp.macro);
+		Cpp cpp2;
+		cpp2.include_path = include_path;
+		cpp2.Preprocess(sourcefile, NilStream(), currentfile, &cpp.usedmacro);
+		DUMP(cpp2.macro);
 	}
-}
-
-void RecursePP(const char *path, const char *include_path, Index<String>& visited)
-{
-	const PPFile& p = GetPPFile(path);
-	String filedir = GetFileFolder(path);
-	for(int i = 0; i < p.includes.GetCount(); i++) {
-		String ip = GetIncludePath(p.includes[i], filedir, include_path);
-		if(visited.Find(ip) < 0) {
-			visited.Add(ip);
-			RecursePP(ip, include_path, visited);
-		}
+	for(int i = 0; i < 100; i++)
+	{
+		RTIMING("GetMacros");
+		Cpp cpp2;
+		cpp2.include_path = include_path;
+		cpp2.Preprocess(sourcefile, NilStream(), currentfile, &cpp.usedmacro);
 	}
-	LOG("-------------------------");
-	LOG(path);
-	p.Dump();
 }
 
 void TestC(const char *ln)
@@ -90,7 +83,6 @@ CONSOLE_APP_MAIN
 	}
 #ifndef _DEBUG
 	for(int i = 0; i < 100; i++) {
-		RTIMING("Pass2");
 		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
 	}
 #endif
