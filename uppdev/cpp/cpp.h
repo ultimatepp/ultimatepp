@@ -62,7 +62,6 @@ struct Cpp {
 	typedef Cpp CLASSNAME;
 };
 
-
 String Preprocess(const String& filename, const String& include_path);
 
 #endif
