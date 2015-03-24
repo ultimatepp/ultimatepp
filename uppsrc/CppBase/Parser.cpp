@@ -43,7 +43,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 	String res;
 	while(*s && (byte)*s <= ' ') s++;
 	while(*s) { // Get the name of function into res
-		while(*s && !iscid2(*s) && *s != '~')
+		while(*s && !iscid(*s) && *s != '~')
 			s++;
 		int lvl = 0;
 		int plvl = 0;
@@ -64,7 +64,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 				res.Cat(*s++);
 				plvl--;
 			}
-			if(iscid2(*s) || *s == '~' || *s && lvl)
+			if(iscid(*s) || *s == '~' || *s && lvl)
 				res.Cat(*s++);
 			else
 				break;
@@ -86,19 +86,19 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 	while(*s) {
 		const char *w = bew(qname, s);
 		byte c = *s;
-		if(w && !iscid2(*w)) {
-			if(iscid2(*res.Last()))
+		if(w && !iscid(*w)) {
+			if(iscid(*res.Last()))
 				res.Cat(' ');
 			res.Cat(name);
 			s = w;
 		}
 		else
-		if(iscid2(c)) {
+		if(iscid(c)) {
 			const char *b = s++;
-			while(iscid2(*s)) s++;
+			while(iscid(*s)) s++;
 			String q(b, s);
 			if(q != s_virtual && q != s_inline && q != s_static && !InScList(q, pname)) {
-				if(iscid2(*res.Last()))
+				if(iscid(*res.Last()))
 					res.Cat(' ');
 				res.Cat(q);
 			}
@@ -142,9 +142,9 @@ String Purify(const char *s, const char *qname, const String& name) {
 			s = w;
 		}
 		else
-		if(iscid2(*s)) {
+		if(iscid(*s)) {
 			const char *b = s++;
-			while(iscid2(*s)) s++;
+			while(iscid(*s)) s++;
 			String q(b, s);
 			if(q != s_virtual && q != s_inline && q != s_static)
 				res.Cat(q);
@@ -162,9 +162,9 @@ String Purify(const char *s) {
 	String res;
 	while(*s && (byte)*s <= ' ') s++;
 	while(*s) {
-		if(iscid2(*s)) {
+		if(iscid(*s)) {
 			const char *b = s++;
-			while(iscid2(*s)) s++;
+			while(iscid(*s)) s++;
 			String q(b, s);
 			if(q != s_virtual && q != s_inline)
 				res.Cat(q);
@@ -376,7 +376,7 @@ String Parser::ReadOper(bool& castoper) {
 	bool spc = false;
 	while(p < lex.Pos()) {
 		if((byte)*p > ' ') {
-			if(spc && iscid2(*p)) {
+			if(spc && iscid(*p)) {
 				castoper = true;
 				r.Cat(' ');
 			}
@@ -1450,7 +1450,7 @@ void Parser::Do()
 			String n = lex.GetText();
 			String name;
 			const char *s = n;
-			while(*s && iscid2(*s))
+			while(*s && iscid(*s))
 				name.Cat(*s++);
 			CppItem& im = Item(context.scope, n, name);
 			im.kind = MACRO;
@@ -1459,7 +1459,7 @@ void Parser::Do()
 				s++;
 				String p;
 				for(;;) {
-					if(iscid2(*s))
+					if(iscid(*s))
 						p.Cat(*s++);
 					else {
 						ScAdd(im.pname, p);

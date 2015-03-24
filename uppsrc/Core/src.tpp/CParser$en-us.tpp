@@ -23,7 +23,12 @@ Text has to exist during the time it is processed by CParser
 indicate the failure to parse required symbol. When using CParser 
 to build concrete parser, it is common to use this exception 
 (preferably via ThrowError method) to indicate errors as well.&]
+[s9;%% Routines handling with identifiers allow ascii letters, digits 
+and characters `'`_`' and `'`$`'. `'`$`' is not exactly in C 
+standard, but is allowed by JavaSript, JSON, Java and most C/C`+`+ 
+compiler as extension.&]
 [s9;%% CParser objects cannot be transfered (copied).&]
+[s9;%% &]
 [s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]

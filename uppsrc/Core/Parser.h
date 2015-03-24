@@ -1,5 +1,5 @@
 inline bool iscib(int c) {
-	return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_';
+	return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '_' || c == '$';
 }
 
 inline bool iscid(int c) {
