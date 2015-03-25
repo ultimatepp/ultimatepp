@@ -255,9 +255,9 @@ Size DrawLabel::Paint(Ctrl *ctrl, Draw& w, const Rect& r, bool visibleaccesskey)
 	}
 	paintrect.Paint(w, p.x + push, p.y + push, txtsz.cx, isz.cy, color, Null);
 	if(*text) {
-		if(disabled)
-			DrawSmartText(w, p.x + push + 1, p.y + push + (isz.cy - txtsz.cy) / 2 + 1,
-			              txtsz.cx, text, font, SColorPaper);
+		if(disabled && *text != '\1')
+			DrawSmartText(w, p.x + push + 1, p.y + push + 1,
+			              nowrap ? INT_MAX/2 : txtcx, text, font, SColorPaper);
 		DrawSmartText(w, p.x + push, p.y + push, nowrap ? INT_MAX/2 : txtcx,
 		              text, font, color, visibleaccesskey ? accesskey : 0);
 		if(focus)
