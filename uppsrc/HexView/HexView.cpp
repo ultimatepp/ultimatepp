@@ -214,7 +214,7 @@ void HexView::SetSb()
 	sbm = 0;
 	while((total >> sbm) > (1 << 30))
 		sbm++;
-	sb.SetTotal(int(total >> sbm) / columns + 1);
+	sb.SetTotal(int(total >> sbm) / columns + 2);
 	sb.SetPage(int(rows >> sbm));
 	sb.Set(int(sc >> sbm) / columns + 1);
 }
@@ -244,7 +244,7 @@ void HexView::SetSc(int64 address)
 
 void HexView::Scroll()
 {
-	int64 q = (int)sb << sbm;
+	int64 q = (int64)(int)sb << sbm;
 	if(q == 0)
 		sc = 0;
 	else
