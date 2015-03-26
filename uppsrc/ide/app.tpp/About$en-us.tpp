@@ -71,7 +71,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.]]}}&]
 [s0;+108 &]
 [s0;+92 &]
-[s0; [+92 Ultimate`+`+ includes sources of following libraries:]&]
+[s0; [+92 Ultimate`+`+ includes sources of following libraries and 
+resources:]&]
 [ {{2168:7832h1;@(204) [s0; [+75 Library]]
 :: [s0; [+75 Authors]]
 ::^@2 [s0; [+75 zlib]]
@@ -95,7 +96,9 @@ Alexei Frounze]]
 ::^ [s0; [+75 Sqlite]]
 ::= [s0; [+75 D. Richard Hipp]]
 ::^ [s0; [+75 tif]]
-::= [s0; [+75 Sam Leffler, Silicon Graphics, Inc.]]}}&]
+::= [s0; [+75 Sam Leffler, Silicon Graphics, Inc.]]
+::^ [s0; [+75 SILK icon set]]
+::= [s0; [^http`:`/`/www`.famfamfam`.com`/lab`/icons`/silk`/^+75 Mark James]]}}&]
 [s0;+92 &]
 [s0; [+92 All those sources are contained in `"plugin`" directory. 
 Refer there for licenses, however all libraries have BSD`-compatible 
