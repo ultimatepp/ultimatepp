@@ -260,12 +260,18 @@ RichText RichEdit::GetSelection(int maxcount) const
 	}
 	else {
 		if(begtabsel) {
+			int pos = 0;
 			RichPos p = text.GetRichPos(0, 1);
 			if(p.table) {
-				RichTable tab = text.CopyTable(p.table);
 				clip.SetStyles(text.GetStyles());
-				clip.CatPick(pick(tab));
-				clip.CatPick(text.Copy(p.tablen + 1, minmax(abs(cursor - p.tablen - 1), 0, maxcount)));
+				do {
+					RichTable tab = text.CopyTable(p.table);
+					clip.CatPick(pick(tab));
+					pos += p.tablen + 1;
+					p = text.GetRichPos(pos, 1);
+				}
+				while(p.table);
+				clip.CatPick(text.Copy(pos, minmax(abs(cursor - pos), 0, maxcount)));
 			}
 		}
 		else
