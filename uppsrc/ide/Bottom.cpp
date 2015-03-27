@@ -149,11 +149,11 @@ void RightTabs::FrameAddSize(Size& sz)
 void Ide::BTabs()
 {
 	btabs.Clear();
-	btabs.Add(IdeImg::close, "Close");
+	btabs.Add(IdeImg::close, "Close (Esc)");
 	btabs.Add(IdeImg::console, "Console");
 	btabs.Add(IdeImg::errors, "Errors");
 	btabs.Add(IdeImg::console2, "Find in files");
-	btabs.Add(IdeImg::calc, "Calc");
+	btabs.Add(IdeImg::calc, "Calculator");
 	if(bottomctrl)
 		btabs.Add(IdeImg::debug, "Debug");
 }
