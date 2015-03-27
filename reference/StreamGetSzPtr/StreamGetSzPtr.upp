@@ -1,0 +1,11 @@
+description "Using Stream::GetSzPtr to optimize the algorithm to count lines in Stream\377";
+
+uses
+	Core;
+
+file
+	StreamGetSzPtr.cpp;
+
+mainconfig
+	"" = "SSE2";
+
