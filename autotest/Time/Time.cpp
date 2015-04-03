@@ -3,10 +3,11 @@
 using namespace Upp;
 
 #define TEST(a, b) \
-DUMP(a); \
+{ Time av = a; \
+LOG(#a << " -> " << av); \
 LOG(b); \
 ASSERT(a == b); \
-LOG("===================");
+LOG("==================="); }
 
 CONSOLE_APP_MAIN
 {
@@ -30,13 +31,13 @@ CONSOLE_APP_MAIN
 	if(d > Date(d.year, 3, 30) && d < Date(d.year, 10, 20)) {
 		LOG("Daylight saving CZ time");
 		ASSERT(GetTimeZone() == 120);
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1200"), Time(2014, 3, 25, 22, 1, 15));
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1000"), Time(2014, 3, 25, 20, 1, 15));
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +0100"), Time(2014, 3, 25, 11, 1, 15));
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +0000"), Time(2014, 3, 25, 10, 1, 15));
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -0100"), Time(2014, 3, 25,  9, 1, 15));
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -1000"), Time(2014, 3, 25,  0, 1, 15));
-		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -1200"), Time(2014, 3, 24, 22, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1200"), Time(2014, 3, 25,  2, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +1000"), Time(2014, 3, 25,  4, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +0100"), Time(2014, 3, 25, 13, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 +0000"), Time(2014, 3, 25, 14, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -0100"), Time(2014, 3, 25, 15, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -1000"), Time(2014, 3, 26,  0, 1, 15));
+		TEST(ScanWwwTime("Tue, 25 Mar 2014 12:01:15 -1200"), Time(2014, 3, 26,  2, 1, 15));
 	}
 	ASSERT(ScanTimeZone("-1000") == -600);
 	DUMP(ScanTimeZone(GetTimeZoneText()));
