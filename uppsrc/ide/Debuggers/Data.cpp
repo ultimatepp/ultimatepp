@@ -305,6 +305,7 @@ void Pdb::Data()
 	case TAB_THIS: This(); break;
 	case TAB_WATCHES: Watches(); break;
 	case TAB_EXPLORER: Explorer(); break;
+	case TAB_MEMORY: memory.Refresh(); break;
 	}
 }
 
