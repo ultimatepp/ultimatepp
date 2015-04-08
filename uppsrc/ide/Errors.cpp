@@ -429,12 +429,12 @@ Size ElepDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Col
 	int linecy = StdFont().GetLineHeight();
 	for(;;) {
 		if((byte)*s < ' ') {
-			int tcx = GetTextSize(b, StdFont(), s - b).cx;
+			int tcx = GetTextSize(b, StdFont(), int(s - b)).cx;
 			if(st != 1 && (style & CURSOR) == 0)
 				w.DrawRect(x + r.left, y + r.top, tcx, linecy,
 				           HighlightSetup::GetHlStyle(st == 2 ? HighlightSetup::PAPER_WARNING
 				                                              : HighlightSetup::PAPER_ERROR).color);
-			w.DrawText(x + r.left, y + r.top, b, StdFont(), ink, s - b);
+			w.DrawText(x + r.left, y + r.top, b, StdFont(), ink, int(s - b));
 			x += tcx;
 			cx = max(cx, tcx + x);
 			if(*s == '\0')

@@ -438,6 +438,11 @@ Ide::Ide()
 	editor.WhenOpenFindReplace = THISBACK(AddHistory);
 	editor.WhenPaste = THISBACK(IdePaste);
 
+#ifdef CPU_64
+	editor.MaxLength(700000000);
+	editor2.MaxLength(700000000);
+#endif
+
 	macro_api = MacroEditor();
 
 	mainconfiglist.WhenClick = THISBACK(MainConfig);
