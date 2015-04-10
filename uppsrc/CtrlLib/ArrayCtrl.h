@@ -552,7 +552,7 @@ public:
 	void       SetCtrl(int i, int col, Ctrl& ctrl, bool value = true);
 	Ctrl      *GetCtrl(int i, int col);
 	template <class T>
-	T&         CreateCtrl(int i, int col, bool value = true) { T *c = new T; SetCtrl(i, col, c, true, value); return *c; }
+	T&         CreateCtrl(int i, int col, bool value = true) { T *c = new T; SetCtrl(i, col, c, true, value); SyncLineCtrls(i); return *c; }
 
 	ArrayCtrl& SetLineCy(int cy);
 	void       SetLineCy(int i, int cy);
