@@ -17,9 +17,7 @@ trl][3 , ][@(0.0.255)3 private][3 _][*@3;3 TextArrayOps]&]
 [s0;%% &]
 [s2;%% 
 @@image:406&143
-€ƒÁ€—€€€€€€€€€€ø¯œí—Á‰€°¤„¯ó«±â»±…¡½èË¶Çîâá‚†İñØáŸ¡ä±Ãü…±åØ‹‚‘†åİè’•Îªë¤à°³»½
-àÄŠÌ…×Êêîš»€Š±­”ÛÇ—©­«ú‡§ìó©´ï×Óá¿™ĞÈ½æÂ¡”¤ĞİÈ§‚©à¾¡¤Ö“Ï€ªô¢…±ô§ŠÀÓİ®óß¶Ê’
-˜‹²Å±ÿ
+(A0EAFwAAAAAAAAAAAHic7ZfBCYAwEASvcyuxEDuxBSE96MtH7uJhgoZd2GEfIeSxwwUx5diLgpFl3egSFU4qpOAwsw+7vUQKDkwF18pumjuACrGtW0eXKa0reqeQ7HMpNG/X0+G/GVBI5kKhkJSkUMgngqngPqFWE88AKvQihTH0p4pAU4Eu89+2SpILMkWx/w==)
 &]
 [s0; &]
 [s9;%% This widget is used whenever there is a type of value that 
@@ -280,8 +278,13 @@ onst]&]
 [s4; &]
 [s5;:EditField`:`:SetFont`(Font`): [_^EditField^ EditField][@(0.0.255) `&]_[* SetFont]([_^Font^ F
 ont]_[*@3 `_font])&]
-[s2;%% [%- Sets the ][%-*@3 font]. Returns `*this.&]
+[s2;%% [%- Sets the ][%-*@3 font] of displayed text. Returns `*this.&]
 [s3; &]
+[s4; &]
+[s5;:EditField`:`:SetColor`(Color`): [_^EditField^ EditField][@(0.0.255) `&]_[* SetColor]([_^Color^ C
+olor]_[*@3 c])&]
+[s2;%% [%- Sets the color] of displayed text. Returns `*this.&]
+[s3;%% &]
 [s4; &]
 [s5;:EditField`:`:ClickSelect`(bool`): [_^EditField^ EditField][@(0.0.255) `&]_[* ClickSele
 ct]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]

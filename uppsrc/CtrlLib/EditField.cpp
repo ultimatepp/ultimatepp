@@ -308,7 +308,7 @@ void EditField::Paint(Draw& w)
 	Color paper = enabled && !IsReadOnly() ? (HasFocus() ? style->focus : style->paper) : style->disabled;
 	if(nobg)
 		paper = Null;
-	Color ink = enabled ? style->text : style->textdisabled;
+	Color ink = enabled ? Nvl(textcolor, style->text) : style->textdisabled;
 	if(enabled && (convert && convert->Scan(text).IsError() || errorbg))
 		paper = style->invalid;
 	int fcy = font.GetCy();
@@ -1044,6 +1044,7 @@ void EditField::Reset()
 	SetStyle(StyleDefault());
 	SetFrame(edge);
 	font = StdFont();
+	textcolor = Null;
 	showspaces = false;
 	no_internal_margin = false;
 	fsell = fselh = -1;
@@ -1053,6 +1054,13 @@ EditField& EditField::SetFont(Font _font)
 {
 	font = _font;
 	Finish(true);
+	return *this;
+}
+
+EditField& EditField::SetColor(Color c)
+{
+	textcolor = c;
+	Refresh();
 	return *this;
 }
 

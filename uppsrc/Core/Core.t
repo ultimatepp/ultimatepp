@@ -291,7 +291,7 @@ zhTW("\345\233\233")
 
 T_("date\vFr")
 caES("Dive")
-csCZ("Pa")
+csCZ("P\303\241")
 deDE("Fr")
 esES("Vi")
 fiFI("Pe")
