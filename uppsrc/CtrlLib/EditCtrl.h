@@ -119,6 +119,7 @@ protected:
 	const Convert  *convert;
 	const Convert  *inactive_convert;
 	Font            font;
+	Color           textcolor;
 
 	WString         nulltext;
 	Color           nullink;
@@ -233,6 +234,7 @@ public:
 	bool       IsAutoFormat() const          { return autoformat; }
 	EditField& SetCharset(byte cs)           { charset = cs; return *this; }
 	EditField& SetFont(Font _font);
+	EditField& SetColor(Color c);
 	EditField& ClickSelect(bool b = true)    { clickselect = b; return *this; }
 	bool       IsClickSelect() const         { return clickselect; }
 	EditField& InitCaps(bool b = true)       { initcaps = b; return *this; }
