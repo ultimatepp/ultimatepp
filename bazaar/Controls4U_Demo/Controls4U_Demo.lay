@@ -1,5 +1,6 @@
-LAYOUT(Main, 640, 476)
-	ITEM(TabCtrl, tab, HSizePosZ(4, 4).VSizePosZ(4, 4))
+LAYOUT(Main, 592, 504)
+	ITEM(ArrayCtrl, grid, HSizePosZ(4, 384).VSizePosZ(4, 4))
+	ITEM(StaticRect, rect, SetFrame(ThinInsetFrame()).HSizePosZ(212, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(EditFileFolder, 468, 200)

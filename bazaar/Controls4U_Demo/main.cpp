@@ -18,25 +18,30 @@ Controls4U_Demo::Controls4U_Demo() {
 	CtrlLayout(*this, "Controls4U Demo");
 	Sizeable().Zoomable();
 
-	tab.Add(fileBrowser_Demo.SizePos(), "FileBrowser (experimental)");	
+	grid.AddColumn("Demos");
+	controls.Add(&fileBrowser_Demo);	grid.Add("FileBrowser (experimental)");
+	controls.Add(&meter_Demo);			grid.Add("Meter & Knob");
+	controls.Add(&jbcontrols_Demo);		grid.Add("JBControls");
+	controls.Add(&staticClock_Demo);	grid.Add("StaticClock");
+	controls.Add(&editFileFolder_Demo);	grid.Add("StaticImage & EditFile/Folder");
+	controls.Add(&staticImageSet_Demo);	grid.Add("StaticImageSet");
+	controls.Add(&staticCtrls_Demo);	grid.Add("Static Controls");
+	controls.Add(&staticCtrlsTest_Demo);grid.Add("Static Controls Test");
+	//tab.Add(painterCanvas_Demo);		grid.Add("PainterCanvas (experimental)");
+	controls.Add(&functions4U_Demo);	grid.Add("Functions4U samples");
 #if defined(PLATFORM_WIN32) 	
-	tab.Add(vlc_Demo.SizePos(), "VLC ActiveX");
-	tab.Add(firefox_Demo.SizePos(), "Firefox ActiveX");
-	tab.Add(iexplorer_Demo.SizePos(), "Internet Explorer ActiveX");
+	controls.Add(&vlc_Demo);			grid.Add("VLC ActiveX");
+	controls.Add(&firefox_Demo);		grid.Add("Firefox ActiveX");
+	controls.Add(&iexplorer_Demo);		grid.Add("Internet Explorer ActiveX");
 #endif
-	tab.Add(meter_Demo.SizePos(), "Meter & Knob");
-	tab.Add(jbcontrols_Demo.SizePos(), "JBControls");
-	tab.Add(staticClock_Demo.SizePos(), "StaticClock");
-	tab.Add(editFileFolder_Demo.SizePos(), "StaticImage & EditFile/Folder");
-	tab.Add(staticImageSet_Demo.SizePos(), "StaticImageSet");
-	tab.Add(staticCtrls_Demo.SizePos(), "Static Controls");
-	tab.Add(staticCtrlsTest_Demo.SizePos(), "Static Controls Test");
-	//tab.Add(painterCanvas_Demo.SizePos(), "PainterCanvas (experimental)");
-	tab.Add(functions4U_Demo.SizePos(), "Functions4U samples");
-	tab.Add(aboutDlg.SizePos(), "About U++");
+	controls.Add(&aboutDlg);			grid.Add("About U++");
 
-	tab.Set(tab.Find(jbcontrols_Demo));	// Select the last
-	//tab.Set(tab.Find(painterCanvas_Demo));	// Select the last
+	for (int i = 0; i < controls.GetCount(); ++i) 
+		rect.Add(controls[i]->SizePos());
+	
+	grid.WhenSel << THISBACK (OnGridSel);
+	grid.SetCursor(2);
+	OnGridSel();
 	
 	timerOn = false;
 	SetTimeCallback(-100, THISBACK(Timer));
@@ -260,3 +265,14 @@ StaticImageSet_Demo::StaticImageSet_Demo() {
 	imageSet.Add(Images::paper());
 	imageSet.Add(Images::ClockImage());
 }
+
+void Controls4U_Demo::OnGridSel() {
+	int row = grid.GetCursor();
+	for (int i = 0; i < controls.GetCount(); ++i) {
+		if (i == row)
+			controls[i]->Show();
+		else 
+			controls[i]->Hide();
+	}
+}
+

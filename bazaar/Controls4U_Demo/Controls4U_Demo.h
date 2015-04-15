@@ -95,6 +95,10 @@ public:
 #endif
 	int timerOn;
 	void Timer();
+	
+private:
+	Vector<StaticRect *> controls;
+	void OnGridSel();;
 };
 
 #endif
