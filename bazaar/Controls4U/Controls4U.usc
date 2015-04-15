@@ -1297,3 +1297,41 @@ ctrl PainterCanvas {
 		}
 	}
 }
+
+ctrl HyperlinkLabel {
+	group "Static";
+
+	GetMinSize() { return XMinSize(); }
+	GetStdSize() { sz = XMinSize(); sz.cy += 6; sz.cx *= 5; return sz; }
+
+	Doc    SetHyperlink ? "Hyperlink" ;
+	Doc    SetText ? "Label of control" ;
+	Align  SetAlign = ALIGN_LEFT;
+	Font   SetFont = StdFont();
+	Frame  SetFrame @1;
+
+	ViewRect(w) {
+		r = GetRect();
+		DrawCtrlFrame(w, r, .SetFrame);
+		return r;
+	}
+	ViewSize(w) {
+		r = ViewRect(w);
+		return Size(r.right - r.left, r.bottom - r.top);
+	}
+
+	Paint(w) {
+		sz = ViewSize(w);
+		textsize = GetTextSize(.SetText, .SetFont);
+		px = 0;
+		if(.SetAlign == "ALIGN_CENTER")
+			px = (sz.cx - textsize.cx) / 2;
+		if(.SetAlign == "ALIGN_RIGHT")
+			px = sz.cx - textsize.cx;
+		w.DrawText(px, (sz.cy - textsize.cy) / 2, .SetText, .SetFont, :SLtBlue);
+	}
+	Sample() {
+		.SetText = "Text";
+		.SetFont = Arial(10).Bold().Italic();
+	}
+};

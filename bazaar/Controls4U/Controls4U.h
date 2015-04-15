@@ -137,6 +137,7 @@ public:
 	bool Set(Image image);
 	void Clear()							{Set(Image());}
 	Image &Get()							{return origImage;}
+	void SetData(const Value& data)			{Set(data.ToString());}
 	
 	void  operator=(String fileName)      	{Set(fileName);}
 	void  operator=(Image image)       		{Set(image);}	
@@ -632,6 +633,21 @@ struct AboutUpp : StaticRect {
 	typedef AboutUpp CLASSNAME;
 
 	AboutUpp();
+};
+
+
+class HyperlinkLabel : public Label {
+public:
+	HyperlinkLabel() {
+		NoIgnoreMouse();
+		SetInk(LtBlue());
+	}
+	HyperlinkLabel& SetHyperlink(const char* str) 		{hyperlink = str; return *this;}
+
+private:
+	String hyperlink;
+	virtual Image CursorImage(Point p, dword keyflags) 	{return Image::Hand();}
+	virtual void LeftDown(Point p, dword keyflags) 		{LaunchWebBrowser(hyperlink);}
 };
 
 END_UPP_NAMESPACE
