@@ -478,7 +478,7 @@ public:
 	HttpRequest&  Cookie(const String& id, const String& value,
 	                     const String& domain = Null, const String& path = Null);
 	HttpRequest&  CopyCookies(const HttpRequest& r);
-	HttpRequest&  ClearCookies();
+	HttpRequest&  ClearCookies()                          { cookies.Clear(); }
 
 	HttpRequest&  StdHeaders(bool sh)                     { std_headers = sh; return *this; }
 	HttpRequest&  NoStdHeaders()                          { return StdHeaders(false); }

@@ -272,6 +272,11 @@ domain match (can be set to Null to match always)..&]
 ]_[* CopyCookies]([@(0.0.255) const]_[_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[*@3 r])&]
 [s2;%% Copies cookies from another HttpRequest.&]
 [s3;%% &]
+[s4; &]
+[s5;:HttpRequest`:`:ClearCookies`(`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* ClearC
+ookies]()&]
+[s2;%% Clears all cookies.&]
+[s3; &]
 [s4;%% &]
 [s5;:HttpRequest`:`:StdHeaders`(bool`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* StdH
 eaders]([@(0.0.255) bool]_[*@3 sh])&]
