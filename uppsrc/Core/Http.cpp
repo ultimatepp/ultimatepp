@@ -308,9 +308,8 @@ void HttpRequest::New()
 	phase = BEGIN;
 }
 
-void HttpRequest::Clear()
+void HttpRequest::NewRequest()
 {
-	TcpSocket::Clear();
 	New();
 	Init();
 	host = proxy_host = proxy_username = proxy_password = ssl_proxy_host =
@@ -318,6 +317,12 @@ void HttpRequest::Clear()
 	custom_method = accept = agent = contenttype = username = password =
 	digest = request_headers = postdata = multipart = Null;
 	cookies.Clear();
+}
+
+void HttpRequest::Clear()
+{
+	TcpSocket::Clear();
+	NewRequest();
 }
 
 bool HttpRequest::Do()
