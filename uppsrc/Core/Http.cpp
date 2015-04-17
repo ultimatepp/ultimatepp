@@ -316,13 +316,13 @@ void HttpRequest::NewRequest()
 	ssl_proxy_username = ssl_proxy_password = path =
 	custom_method = accept = agent = contenttype = username = password =
 	digest = request_headers = postdata = multipart = Null;
-	cookies.Clear();
 }
 
 void HttpRequest::Clear()
 {
 	TcpSocket::Clear();
 	NewRequest();
+	cookies.Clear();
 }
 
 bool HttpRequest::Do()

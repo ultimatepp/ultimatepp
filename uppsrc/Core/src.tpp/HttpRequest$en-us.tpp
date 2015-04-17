@@ -482,17 +482,20 @@ or String`::GetVoid() on failer.&]
 [s4; &]
 [s5;:HttpRequest`:`:New`(`): [@(0.0.255) void]_[* New]()&]
 [s2;%% Starts a new HTTP request. Unlike Clear, it does not change 
-any existing settings. Does not break TCP connection to server.&]
+any existing settings. Does not break TCP connection to server. 
+New request uses cookies received in previous requests.&]
 [s3; &]
 [s4; &]
 [s5;:HttpRequest`:`:NewRequest`(`): [@(0.0.255) void]_[* NewRequest]()&]
 [s2;%% Starts a new HTTP request without breaking the connection 
-to the server. Sets all settings to initial state.&]
+to the server. Sets all settings to initial state, except Cookies 
+received `- those are send with the new request.&]
 [s3; &]
 [s4; &]
 [s5;:HttpRequest`:`:Clear`(`): [@(0.0.255) void]_[* Clear]()&]
 [s2;%% Sets HTTP request to initial default state (same as freshly 
-constructed object). Terminates TCP connection to server.&]
+constructed object) including cookies. Terminates TCP connection 
+to server.&]
 [s3; &]
 [s4;%% &]
 [s5;:HttpRequest`:`:HttpRequest`(`): [* HttpRequest]()&]
