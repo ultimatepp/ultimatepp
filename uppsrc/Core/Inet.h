@@ -538,7 +538,7 @@ public:
 	String  Execute();
 
 	void    New();
-
+	void    NewRequest();
 	void    Clear();
 
 	HttpRequest();
