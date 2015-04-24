@@ -1,0 +1,4 @@
+#ifndef _ChromiumBrowser_icpp_init_stub
+#define _ChromiumBrowser_icpp_init_stub
+#include "CtrlLib/init"
+#endif

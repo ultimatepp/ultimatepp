@@ -1,0 +1,10 @@
+LAYOUT(ChromiumBrowserExampleLayout, 420, 280)
+	ITEM(Button, Back, Tip(t_("Go back")).LeftPosZ(4, 48).TopPosZ(4, 44))
+	ITEM(Button, Forward, Tip(t_("Go forward")).LeftPosZ(56, 48).TopPosZ(4, 44))
+	ITEM(Button, Refresh, Tip(t_("Refresh current page")).LeftPosZ(108, 48).TopPosZ(4, 44))
+	ITEM(EditString, Url, SetFont(StdFontZ(32)).HSizePosZ(160, 108).TopPosZ(4, 44))
+	ITEM(Button, Go, Tip(t_("Go")).RightPosZ(56, 48).TopPosZ(4, 44))
+	ITEM(Button, Stop, Tip(t_("Stop")).RightPosZ(4, 48).TopPosZ(4, 44))
+	ITEM(ChromiumBrowser, Browser, StartPage("http://ultimatepp.org").HSizePosZ(0, 0).VSizePosZ(52, 0))
+END_LAYOUT
+

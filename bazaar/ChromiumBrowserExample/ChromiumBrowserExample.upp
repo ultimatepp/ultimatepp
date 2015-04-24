@@ -1,0 +1,23 @@
+charset "UTF-8";
+
+uses
+	CtrlLib,
+	ChromiumBrowser;
+
+options(GCC) -std=c++11;
+
+link(GCC) "-Wl,-rpath .";
+
+file
+	Utils readonly separator,
+	Utils.h,
+	Utils.cpp,
+	Main readonly separator,
+	ChromiumBrowserExample.iml,
+	ChromiumBrowserExample.lay,
+	ChromiumBrowserExample.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT SSE2 NOGTK USEMALLOC";
+
