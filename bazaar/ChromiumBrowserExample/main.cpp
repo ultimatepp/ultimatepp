@@ -20,17 +20,16 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Go.SetImage(IMG::go);
 	Stop.SetImage(IMG::stop);
 	
-	Browser.WhenUrlChange		= LAMBDA(String url) { Url.SetData(url); Url.CancelSelection(); };
-	Browser.WhenTakeFocus		= LAMBDA() { Url.SetFocus(); };
+	Browser.WhenUrlChange		= THISBACK(OnUrlChnage);
+	Browser.WhenTakeFocus		= THISBACK(OnTakeFocus);
 	Browser.WhenKeyboard		= STDBACK(::ShowKeyboard);
-	Browser.WhenMessage			= LAMBDA(String msg) { RLOG(msg);};
-	Browser.WhenConsoleMessage	= LAMBDA(String url, int line, String msg) {RLOG(Format("Console message: url=%s, line=%d, msg=%s", url, line, msg));};
+	Browser.WhenConsoleMessage	= THISBACK(OnConsoleMessage);
 	
 	Back.WhenAction				= callback(&Browser, &ChromiumBrowser::GoBack);
 	Forward.WhenAction			= callback(&Browser, &ChromiumBrowser::GoForward);
 	Refresh.WhenAction			= callback(&Browser, &ChromiumBrowser::RefreshPage);
-	Url.WhenEnter				= LAMBDA() { Browser.Browse(~Url); };
-	Go.WhenAction				= LAMBDA() { Browser.Browse(~Url); };
+	Url.WhenEnter				= THISBACK(OnBrowser);
+	Go.WhenAction				= THISBACK(OnBrowser);
 	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
 }
 

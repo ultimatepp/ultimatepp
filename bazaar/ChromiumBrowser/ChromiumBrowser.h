@@ -19,8 +19,11 @@ private:
 	virtual void GotFocus()						{SetFocus0(true);}
 	virtual void LostFocus()					{SetFocus0(false);}
 
-
 	void MessageLoop();	
+#ifdef PLATFORM_WIN32
+	LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+#endif 
+
 	
 public:
 	typedef ChromiumBrowser CLASSNAME;

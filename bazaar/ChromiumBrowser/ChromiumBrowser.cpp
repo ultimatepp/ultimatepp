@@ -6,6 +6,8 @@
 
 using namespace Upp;
 
+
+#ifdef PLATFORM_LINUX
 Vector<char*> GetArgs()
 {
 	const Vector<String>& cmdline = CommandLine();
@@ -20,15 +22,28 @@ Vector<char*> GetArgs()
 	}
 	return argv;
 }
+#endif
 
 
 void ChromiumBrowser::ChildProcess()
 {
 	CefRefPtr<ClientApp> app(new ClientApp);
 	
+#ifdef PLATFORM_LINUX
+
 	Vector<char *> args = GetArgs();
 	RDUMP(args);
 	CefMainArgs main_args(args.GetCount(), &args[0]);
+
+#elif defined(PLATFORM_WIN32)
+
+	CefMainArgs main_args(Ctrl::hInstance);
+
+#else
+
+	#error "Unsupported platform"
+
+#endif
 	
 	int exit_code = CefExecuteProcess(main_args, app.get(), NULL);
   	if (exit_code >= 0){
@@ -49,9 +64,21 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 {
 	CefRefPtr<ClientApp> app(new ClientApp);
 	
+#ifdef PLATFORM_LINUX
+
 	Vector<char *> args = GetArgs();
 	RDUMP(args);
 	CefMainArgs main_args(args.GetCount(), &args[0]);
+
+#elif defined(PLATFORM_WIN32)
+
+	CefMainArgs main_args(Ctrl::hInstance);
+
+#else
+
+	#error "Unsupported platform"
+
+#endif
 	
 	int exit_code = CefExecuteProcess(main_args, app.get(), NULL);
   	if (exit_code >= 0){
@@ -79,6 +106,34 @@ void ChromiumBrowser::MessageLoop()
 }
 
 
+#ifdef PLATFORM_WIN32
+LRESULT ChromiumBrowser::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	switch (message) {
+		
+		case WM_SIZE:
+			Layout();
+			break;
+
+		case WM_ERASEBKGND:
+			if (handler) {
+				// Dont erase the background if the browser window has been loaded
+				// (this avoids flashing)
+				return 0;
+			}
+			break;
+
+		case WM_CREATE:
+			AfterInit(false);
+			break;
+	}
+	
+	return DHCtrl::WindowProc(message, wParam, lParam);
+}
+#endif
+
+
+
 void ChromiumBrowser::AfterInit(bool Error)
 {
 	handler = new ClientHandler(WhenUrlChange, WhenMessage, WhenTakeFocus, WhenKeyboard, WhenConsoleMessage);
@@ -88,9 +143,35 @@ void ChromiumBrowser::AfterInit(bool Error)
     
 	Size sz = GetSize();
  	CefWindowInfo info;
+
+#ifdef PLATFORM_LINUX
+
     info.SetAsChild(hwnd, CefRect(0, 0, sz.cx, sz.cy));
+
+#elif defined(PLATFORM_WIN32)
+
+	RECT rect;
+	rect.left = rect.top = 0;
+	rect.right = sz.cx;
+	rect.bottom = sz.cy;
+	HWND hwnd = GetHWND();
+	info.SetAsChild(hwnd, rect); 
+
+#else
+
+	#error "Unsupported platform"
+
+#endif
+
 	CefBrowserHost::CreateBrowser(info, handler.get(), ~start_page, br_settings, NULL);
 	SetTimeCallback(50, THISBACK(MessageLoop));
+
+#ifdef PLATFORM_WIN32
+
+	EnableWindow(hwnd, true);
+
+#endif
+
 }
 
 
@@ -101,6 +182,13 @@ void ChromiumBrowser::BeforeTerminate()
 		Sleep(20);
 		handler->GetBrowser()->GetHost()->CloseBrowser(false);
 	}
+
+#ifdef PLATFORM_WIN32
+
+	EnableWindow(GetHWND(), false);
+
+#endif
+
 	CefShutdown();
 	DeleteFolderDeep(tmp_dir);
 }
@@ -109,6 +197,8 @@ void ChromiumBrowser::BeforeTerminate()
 void ChromiumBrowser::Layout()
 {
 	if (handler && handler->GetBrowser()){
+#ifdef PLATFORM_LINUX
+
 		Size sz = GetSize();
 		XWindowChanges change = {0};
 		change.width = sz.cx;
@@ -116,12 +206,27 @@ void ChromiumBrowser::Layout()
 		change.x = 0;
 		change.y = 0;
 		XConfigureWindow(Xdisplay, handler->GetBrowser()->GetHost()->GetWindowHandle(), CWHeight | CWWidth | CWY, &change);
+
+#elif defined(PLATFORM_WIN32)
+
+		CefWindowHandle hwnd = handler->GetBrowser()->GetHost()->GetWindowHandle();
+		HDWP hdwp = BeginDeferWindowPos(1);
+		Size sz = GetSize();
+		hdwp = DeferWindowPos(hdwp, hwnd, NULL, 0, 0, sz.cx, sz.cy, SWP_NOZORDER);
+		EndDeferWindowPos(hdwp);
+
+#else
+
+	#error "Unsupported platform"
+
+#endif
 	}
 }
 
 
 ChromiumBrowser::~ChromiumBrowser()
 {
+	BeforeTerminate();
 }
 
 
