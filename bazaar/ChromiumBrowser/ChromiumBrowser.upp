@@ -19,5 +19,6 @@ file
 	ClientApp.h,
 	ClientApp.cpp,
 	ClientHandler.h,
-	ClientHandler.cpp;
+	ClientHandler.cpp,
+	src.tpp;
 

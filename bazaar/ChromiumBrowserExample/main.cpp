@@ -10,7 +10,7 @@ using namespace Upp;
 
 ChromiumBrowserExample::ChromiumBrowserExample()
 {
-	CtrlLayout(*this, "Embedded Chromium Example");
+	CtrlLayout(*this, "Embedded Chromium Example " + Browser.GetVersion());
 	Sizeable().MaximizeBox();
 	Icon(IMG::icon);
 	
@@ -20,7 +20,7 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Go.SetImage(IMG::go);
 	Stop.SetImage(IMG::stop);
 	
-	Browser.WhenUrlChange		= THISBACK(OnUrlChnage);
+	Browser.WhenUrlChange		= THISBACK(OnUrlChange);
 	Browser.WhenTakeFocus		= THISBACK(OnTakeFocus);
 	Browser.WhenKeyboard		= STDBACK(::ShowKeyboard);
 	Browser.WhenConsoleMessage	= THISBACK(OnConsoleMessage);
@@ -46,3 +46,5 @@ GUI_APP_MAIN
 		::ShowKeyboard(false);
 	}
 }
+
+

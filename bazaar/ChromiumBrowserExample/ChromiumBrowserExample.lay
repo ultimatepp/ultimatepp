@@ -1,4 +1,4 @@
-LAYOUT(ChromiumBrowserExampleLayout, 536, 440)
+LAYOUT(ChromiumBrowserExampleLayout, 388, 260)
 	ITEM(Button, Back, Tip(t_("Go back")).LeftPosZ(4, 48).TopPosZ(4, 44))
 	ITEM(Button, Forward, Tip(t_("Go forward")).LeftPosZ(56, 48).TopPosZ(4, 44))
 	ITEM(Button, Refresh, Tip(t_("Refresh current page")).LeftPosZ(108, 48).TopPosZ(4, 44))
