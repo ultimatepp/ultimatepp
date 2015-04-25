@@ -2,6 +2,8 @@ description "Chromium Embedded Framework widget\377";
 
 charset "UTF-8";
 
+noblitz;
+
 uses
 	CtrlLib;
 
@@ -16,7 +18,4 @@ file
 	ClientApp.cpp,
 	ClientHandler.h,
 	ClientHandler.cpp;
-
-mainconfig
-	"" = "GUI MT SSE2 USEMALLOC";
 

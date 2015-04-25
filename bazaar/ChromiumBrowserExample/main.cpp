@@ -1,6 +1,8 @@
 #include "ChromiumBrowserExample.h"
 #include "Utils.h"
 
+using namespace Upp;
+
 #define IMAGECLASS IMG
 #define IMAGEFILE <ChromiumBrowserExample/ChromiumBrowserExample.iml>
 #include <Draw/iml.h>

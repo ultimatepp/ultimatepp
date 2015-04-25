@@ -16,7 +16,6 @@
 #undef LOG_INFO
 #undef LOG_WARNING
 
-namespace Upp{
 
 class ClientApp:	public CefApp,
              		public CefBrowserProcessHandler,
@@ -27,7 +26,7 @@ private:
 
 	CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler()	{ return this; }
 
-	VectorMap<String, Callback3<const CefV8ValueList&, CefRefPtr<CefV8Value>&, CefString&> > functions;
+	Upp::VectorMap<Upp::String, Upp::Callback3<const CefV8ValueList&, CefRefPtr<CefV8Value>&, CefString&> > functions;
 	void JSExample1(const CefV8ValueList&, CefRefPtr<CefV8Value>&, CefString&);
 
 public:
@@ -55,6 +54,5 @@ public:
 	IMPLEMENT_REFCOUNTING(ClientApp);
 };
 
-}
 
 #endif

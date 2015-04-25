@@ -4,7 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <ChromiumBrowser/ChromiumBrowser.h>
 
-using namespace Upp;
+namespace Upp{
 
 #define LAYOUTFILE <ChromiumBrowserExample/ChromiumBrowserExample.lay>
 #include <CtrlCore/lay.h>
@@ -14,5 +14,7 @@ public:
 	typedef ChromiumBrowserExample CLASSNAME;
 	ChromiumBrowserExample();
 };
+
+}
 
 #endif

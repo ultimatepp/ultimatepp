@@ -1,5 +1,7 @@
 charset "UTF-8";
 
+noblitz;
+
 uses
 	CtrlLib,
 	ChromiumBrowser;

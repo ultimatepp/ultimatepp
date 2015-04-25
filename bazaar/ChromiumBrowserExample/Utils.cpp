@@ -11,7 +11,6 @@ void Upp::ShowKeyboard(bool show)
 		Size sz = GetScreenSize();
 		int e = system(Format(DOCK ";" BOTTOM ";onboard -l Phone -x %d -y %d -s %d`x%d &", 0, sz.cy - sz.cy / 4, sz.cx, sz.cy / 4));
 	}else{
-		String tmp;
-		Sys("killall onboard", tmp);
+		Sys("killall onboard");
 	}
 }

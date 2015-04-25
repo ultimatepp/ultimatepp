@@ -1,12 +1,10 @@
 #include "ClientApp.h"
 
-using namespace Upp;
-
 
 ClientApp::ClientApp()
 {
 	//Add our own JS functions to the list
-	functions.Add("JSExample1", THISBACK(JSExample1));
+	functions.Add("JSExample1", Upp::callback(this, &ClientApp::JSExample1));
 }
 
 
@@ -43,7 +41,7 @@ bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, con
 		functions[f].Execute(arguments, retval, exception);
 		return true;
 	}else{
-		RLOG(String("ERROR: Unknown native function: ") + name.ToString());
+		RLOG(Upp::String("ERROR: Unknown native function: ") + name.ToString());
 	}
 
 	return false;
