@@ -37,8 +37,8 @@ class.&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Linux]]}}&]
 [s0; &]
-[s0;i150;O0; download CEF binary package for Linux from https://cefbuilds.com/. 
-I recommend downloading stable release (not `"dev channel`")&]
+[s0;i150;O0; download CEF package for Linux from https://cefbuilds.com/. 
+Downloading stable release is recommended (not `"dev channel`").&]
 [s0;i150;O0; unpack archive to your `"work`" directory&]
 [s0;i150;O0; go to CEF directory and run following commands:&]
 [s0; -|[C1 cmake `-G `"Unix Makefiles`" `-DCMAKE`_BUILD`_TYPE`=Release]&]
@@ -141,32 +141,30 @@ look like this:&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Windows]]}}&]
 [s0; &]
-[s0;i150;O0; download CEF binary package from branch 2171 for Windows 
-from https://cefbuilds.com/. Newer builds do not have `*.sln file 
-for Visual Studio. [C TODO: build instructions for branch 2272 and 
-newer.]&]
+[s0;i150;O0; Required software: VS Express 2013 for Desktop, CMake 
+(http://www.cmake.org/download/)&]
+[s0;i150;O0; download CEF package for Windows from https://cefbuilds.com/&]
 [s0;i150;O0; unpack archive to your `"work`" directory&]
-[s0;i150;O0; Open cefclient2010.sln in Visual Studio, accept project 
-files upgrade request.&]
+[s0;i150;O0; go to CEF directory and run following command:&]
+[s0; -|[C cmake `-G `"Visual Studio 12`"]&]
+[s0;i150;O0; Open cef.sln in Visual Studio&]
 [s0;i150;O0; Change active solution configuration to `"Release`" 
 (menu Build / Configuration Manager)&]
-[s0;i150;O0; right click on `"lib`_cef`_wrapper`" in `"Solution Explorer`" 
-window and select `"Build`"&]
 [s0;i150;O0; right click on `"cefclient`" in `"Solution Explorer`" 
 window and select `"Build`"&]
 [s0;i150;O0; run cefclient to check your build&]
 [s0;i150;O0; Change active solution configuration to `"Debug`" and 
-rebuild `"lib`_cef`_wrapper`" and `"cefclient`"&]
+rebuild `"cefclient`"&]
 [s0;i150;O0; configure library paths in TheIDE, menu [* Setup ]/ [* Build 
 methods]:&]
 [s0; -|[* INCLUDE directories] `- add CEF library directory, for example:&]
-[s0; -|[C1 c:`\MyApps`\cef`_binary`_3.2171.2069`_windows32]&]
+[s0; -|[C1 c:`\MyApps`\cef`_binary`_3.2272.2077`_windows32]&]
 [s0; -|[* LIB directories] `- the same path as above, for example&]
-[s0; [C1 -|C:`\MyApps`\cef`_binary`_3.2171.2069`_windows32]&]
+[s0; [C1 -|C:`\MyApps`\cef`_binary`_3.2272.2077`_windows32 ]&]
 [s0;i150;O0; Open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
 [s0;i150;O0; Before you run compiled application, copy asset files 
-and libraries to output directory. Please check [C out/Release] 
+and libraries to output directory. Please check [C cefclient`\Release] 
 subdirectory from CEF to see the list of required files. It should 
 look like this:&]
 [s0; &]
@@ -248,6 +246,7 @@ single web page. It means that your have to plan carefully your
 looks like this:&]
 [s0; [C -|GUI`_APP`_MAIN]&]
 [s0; [C -|`{]&]
+[s0; [C -|-|SetLanguage(SetLNGCharset(GetSystemLNG(), CHARSET`_UTF8));]&]
 [s0; [C -|-|if (ChromiumBrowser`::IsChildProcess())`{]&]
 [s0; [C -|-|-|ChromiumBrowser`::ChildProcess();]&]
 [s0; [C -|-|`}else`{]&]
@@ -258,7 +257,7 @@ looks like this:&]
 new process is executed by CEF&]
 [s0; &]
 [s0;i150;O0; CEF uses UTF8 encoding. All urls, strings containing 
-javascript should you this encoding. &]
+javascript should use this encoding. &]
 [s0;* &]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
