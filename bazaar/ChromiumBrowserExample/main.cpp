@@ -28,9 +28,11 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Back.WhenAction				= callback(&Browser, &ChromiumBrowser::GoBack);
 	Forward.WhenAction			= callback(&Browser, &ChromiumBrowser::GoForward);
 	Refresh.WhenAction			= callback(&Browser, &ChromiumBrowser::RefreshPage);
-	Url.WhenEnter				= THISBACK(OnBrowser);
-	Go.WhenAction				= THISBACK(OnBrowser);
+	Url.WhenEnter				= THISBACK(OnBrowse);
+	Go.WhenAction				= THISBACK(OnBrowse);
 	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
+
+	Maximize();
 }
 
 

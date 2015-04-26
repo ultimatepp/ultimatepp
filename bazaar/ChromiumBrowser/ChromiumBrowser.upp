@@ -1,4 +1,4 @@
-description "Chromium Embedded Framework widget\377";
+description "Chromium Embedded Framework control\377";
 
 charset "UTF-8";
 
@@ -9,7 +9,9 @@ uses
 
 library(LINUX) "libcef.so cef_dll_wrapper";
 
-library(WIN32 !DEBUG) "libcef libcef_dll_wrapper";
+library(WIN32 !DEBUG) "Release\\libcef out\\Release\\lib\\libcef_dll_wrapper";
+
+library(WIN32 DEBUG) "Debug\\libcef out\\Debug\\lib\\libcef_dll_wrapper";
 
 file
 	ChromiumBrowser.iml,

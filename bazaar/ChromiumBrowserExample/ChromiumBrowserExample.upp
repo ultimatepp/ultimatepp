@@ -1,3 +1,5 @@
+description "Chromium browser usage example\377";
+
 charset "UTF-8";
 
 noblitz;

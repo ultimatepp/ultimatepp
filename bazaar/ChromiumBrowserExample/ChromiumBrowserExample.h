@@ -16,7 +16,7 @@ private:
 	void OnUrlChange(String url) 							{ Url.SetData(url); Url.CancelSelection(); }
 	void OnTakeFocus()										{ Url.SetFocus(); }
 	void OnConsoleMessage(String url, int line, String msg) { RLOG(Format("Console message: url=%s, line=%d, msg=%s", url, line, msg)); }
-	void OnBrowser() 										{ Browser.Browse(~Url); }
+	void OnBrowse() 										{ Browser.Browse(~Url); }
 
 public:
 	typedef ChromiumBrowserExample CLASSNAME;
