@@ -106,6 +106,7 @@ file
 	Callback2.h,
 	Callback3.h,
 	Callback4.h,
+	Callback5.h,
 	Callback.h,
 	Callback.cpp optimize_speed,
 	TimeDate.h,
