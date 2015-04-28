@@ -83,6 +83,6 @@ type with [/ default] deep copy, you can easily create it with
 [s7; WithDeepCopy<IntArray> b(a); // b now has deep copy semantics&]
 [s7; a`[3`] `= 10; //legal&]
 [s7; b `= a; // deep copy&]
-[s7; a `= b; // pick&]
+[s7; a `= pick(b); // pick&]
 [s7; b`[4`] `= 1; // illegal&]
 [s0; ]]
