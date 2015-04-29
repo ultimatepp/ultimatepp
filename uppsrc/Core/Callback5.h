@@ -59,7 +59,7 @@ struct Callback5Action
 #ifdef HAS_LAMBDA
 template <class P1, class P2, class P3, class P4, class P5>
 
-struct LambdaCallback5 : public Callback4Action<P1, P2, P3, P4, P5>
+struct LambdaCallback5 : public Callback5Action<P1, P2, P3, P4, P5>
 {
 	std::function < void ( P1, P2, P3, P4 , P5 ) > fn;
 	virtual void Execute ( P1 p1, P2 p2, P3 p3, P4 p4 , P5 p5 )
@@ -142,7 +142,7 @@ class Callback5 : Moveable< Callback5<P1, P2, P3, P4, P5> >
 		template <class T>
 		Callback5 ( AnyLambda<T> l )
 		{
-			action = new LambdaCallback4<P1, P2, P3, P4, P5> ( l.l );
+			action = new LambdaCallback5<P1, P2, P3, P4, P5> ( l.l );
 		}
 
 #endif
