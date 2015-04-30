@@ -2535,4 +2535,22 @@ Image GetRect(const Image& orig, const Rect &r) {
 	return ib;
 }
 
+
+double tmGetTimeX() {
+#ifdef __linux__
+	struct timeval t;
+	if(gettimeofday(&t, 0) != 0)
+	    return Null;
+	return t.tv_sec + t.tv_usec/1E6;
+#elif defined(_WIN32) || defined(WIN32)
+	LARGE_INTEGER clock;
+	LARGE_INTEGER freq;
+	if(!QueryPerformanceCounter(&clock) || !QueryPerformanceFrequency(&freq))
+	    return Null;
+	return double(clock.QuadPart)/freq.QuadPart;
+#else
+	return double(time(0));		// Low resolution
+#endif
+}
+
 END_UPP_NAMESPACE
