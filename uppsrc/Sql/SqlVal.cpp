@@ -65,7 +65,7 @@ String SqlS::operator()(int at, byte cond) const
 	if(at <= priority)
 		return text;
 	StringBuffer out;
-	out << SqlCase(cond, "(")() << text << SqlCase(cond, ")")();
+	out << SqlCode(cond, "(")() << text << SqlCode(cond, ")")();
 	return out;
 }
 
@@ -170,7 +170,7 @@ SqlVal::SqlVal(const SqlId& (*id)())
 	SetHigh((*id)().Quoted());
 }
 
-SqlVal::SqlVal(const Case& x) {
+SqlVal::SqlVal(const SqlCase& x) {
 	SetHigh(~x);
 }
 
@@ -199,7 +199,7 @@ SqlVal operator%(const SqlVal& a, const SqlVal& b) {
 }
 
 SqlVal operator|(const SqlVal& a, const SqlVal& b) {
-	return SqlVal(a, SqlCase(ORACLE|PGSQL|SQLITE3, "||")(" + "), b, SqlS::MUL);
+	return SqlVal(a, SqlCode(ORACLE|PGSQL|SQLITE3, "||")(" + "), b, SqlS::MUL);
 }
 
 SqlVal& operator+=(SqlVal& a, const SqlVal& b)     { return a = a + b; }
@@ -249,7 +249,7 @@ SqlVal Decode(const SqlVal& exp, const SqlSet& variants) {
 	ASSERT(!variants.IsEmpty());
 	Vector<SqlVal> v = variants.Split();
 	ASSERT(v.GetCount() > 1);
-	Case cs(exp == v[0], v[1]);
+	SqlCase cs(exp == v[0], v[1]);
 	int i;
 	for(i = 2; i + 1 < v.GetCount(); i += 2)
 		cs(exp == v[i], v[i + 1]);
@@ -257,7 +257,7 @@ SqlVal Decode(const SqlVal& exp, const SqlSet& variants) {
 		cs(v[i]);
 	else
 		cs(Null);
-	return SqlVal(SqlCase(ORACLE, "decode("  + ~exp  + ", " + ~variants + ')')('(' + ~cs + ')'),
+	return SqlVal(SqlCode(ORACLE, "decode("  + ~exp  + ", " + ~variants + ')')('(' + ~cs + ')'),
 	              SqlS::FN);
 }
 
@@ -330,14 +330,14 @@ SqlVal Variance(const SqlVal& a) {
 }
 
 SqlVal Greatest(const SqlVal& a, const SqlVal& b) {
-	return SqlVal(SqlCase(MSSQL, '(' + ~Case(a < b, b)(a) + ')')
-	                     (~SqlFunc(SqlCase(SQLITE3, "max")("greatest"), a, b)),
+	return SqlVal(SqlCode(MSSQL, '(' + ~Case(a < b, b)(a) + ')')
+	                     (~SqlFunc(SqlCode(SQLITE3, "max")("greatest"), a, b)),
 	              SqlS::FN);
 }
 
 SqlVal Least(const SqlVal& a, const SqlVal& b) {
-	return SqlVal(SqlCase(MSSQL, '(' + ~Case(a > b, b)(a) + ')')
-	                     (~SqlFunc(SqlCase(SQLITE3, "min")("least"), a, b)),
+	return SqlVal(SqlCode(MSSQL, '(' + ~Case(a > b, b)(a) + ')')
+	                     (~SqlFunc(SqlCode(SQLITE3, "min")("least"), a, b)),
 	              SqlS::FN);
 }
 
@@ -347,7 +347,7 @@ SqlVal ConvertCharset(const SqlVal& exp, const SqlVal& charset) { //TODO Dialect
 }
 
 SqlVal ConvertAscii(const SqlVal& exp) {
-	return SqlVal(SqlCase(MSSQL, String().Cat() << "((" << ~exp << ") collate SQL_Latin1_General_Cp1251_CS_AS)")
+	return SqlVal(SqlCode(MSSQL, String().Cat() << "((" << ~exp << ") collate SQL_Latin1_General_Cp1251_CS_AS)")
 			             (~ConvertCharset(exp, "US7ASCII")), SqlS::FN); // This is Oracle really, TODO: Add other dialects
 }
 
@@ -360,7 +360,7 @@ SqlVal Lower(const SqlVal& exp) {
 }
 
 SqlVal Length(const SqlVal& exp) {
-	return exp.IsEmpty() ? exp : SqlFunc(SqlCase(MSSQL, "len")("length"), exp);
+	return exp.IsEmpty() ? exp : SqlFunc(SqlCode(MSSQL, "len")("length"), exp);
 }
 
 SqlVal UpperAscii(const SqlVal& exp) {
@@ -373,7 +373,7 @@ SqlVal Substr(const SqlVal& a, const SqlVal& b) {
 
 SqlVal Substr(const SqlVal& a, const SqlVal& b, const SqlVal& c)
 {
-	return SqlFunc(SqlCase(MSSQL, "substring")("substr"), a, b, c);
+	return SqlFunc(SqlCode(MSSQL, "substring")("substr"), a, b, c);
 }
 
 SqlVal Instr(const SqlVal& a, const SqlVal& b) {
@@ -396,7 +396,7 @@ SqlVal Wild(const char* s) {
 }
 
 SqlVal SqlDate(const SqlVal& year, const SqlVal& month, const SqlVal& day) {
-	return SqlVal(SqlCase(ORACLE, ~SqlFunc("to_date", year|"."|month|"."|day, "SYYYY.MM.DD")) // Similiar to common, but keep proved version to be sure...
+	return SqlVal(SqlCode(ORACLE, ~SqlFunc("to_date", year|"."|month|"."|day, "SYYYY.MM.DD")) // Similiar to common, but keep proved version to be sure...
 	                     (MSSQL, ~SqlFunc("datefromparts", year, month, day))
 	                     ("to_date(to_char(" + ~day + ", '00') || to_char(" + ~month +
 	                               ", '00') || to_char(" + ~year + ",'9999'), 'DDMMYYYY')"),
@@ -420,12 +420,12 @@ SqlVal NextDay(const SqlVal& date) {//TODO Dialect!
 }
 
 SqlVal SqlCurrentDate() {
-	return SqlVal(SqlCase(SQLITE3, "date('now')")
+	return SqlVal(SqlCode(SQLITE3, "date('now')")
 	                     ("current_date"), SqlVal::HIGH);
 }
 
 SqlVal SqlCurrentTime() {
-	return SqlVal(SqlCase(SQLITE3, "time('now')")
+	return SqlVal(SqlCode(SQLITE3, "time('now')")
 	                     ("current_timestamp"), SqlVal::HIGH);
 }
 
@@ -434,7 +434,7 @@ SqlVal Cast(const char* type, const SqlId& a) {
 }
 
 SqlVal SqlNvl(const SqlVal& a, const SqlVal& b) {
-	return SqlFunc(SqlCase
+	return SqlFunc(SqlCode
 						(PGSQL, "coalesce")
 						(MY_SQL|SQLITE3, "ifnull")
 						(MSSQL, "isnull")
@@ -467,7 +467,7 @@ SqlVal Prior(const SqlId& a) {
 }
 
 SqlVal NextVal(const SqlId& a) {
-	return SqlVal(SqlCase
+	return SqlVal(SqlCode
 	                 (PGSQL, "nextval('" + a.ToString() + "')")
 	                 (MSSQL, "next value for " + a.Quoted())
 	                 (a.Quoted() + ".NEXTVAL")
@@ -475,7 +475,7 @@ SqlVal NextVal(const SqlId& a) {
 }
 
 SqlVal CurrVal(const SqlId& a) {
-	return SqlVal(SqlCase
+	return SqlVal(SqlCode
 				    (PGSQL, "currval('" + a.ToString() + "')")
 				    (a.Quoted() + ".CURRVAL")
 				  , SqlS::HIGH);

@@ -12,7 +12,7 @@ class SqlBool;
 class SqlVal;
 class SqlSet;
 class SqlSelect;
-class Case;
+class SqlCase;
 
 struct S_info;
 
@@ -79,12 +79,12 @@ enum {
 	SQLC_COMMA = 12,
 };
 
-class SqlCase {
+class SqlCode {
 	String s;
 
 public:
-	SqlCase(byte cond, const String& text);
-	SqlCase operator()(byte cond, const String& text);
+	SqlCode(byte cond, const String& text);
+	SqlCode operator()(byte cond, const String& text);
 
 	String operator()(const String& text);
 	String operator()();
@@ -234,7 +234,7 @@ public:
 	SqlVal(const Nuller&);
 	SqlVal(const SqlId& id);
 	SqlVal(const SqlId& (*id)());
-	SqlVal(const Case& x);
+	SqlVal(const SqlCase& x);
 };
 
 SqlVal operator-(const SqlVal& a);
@@ -417,23 +417,25 @@ inline SqlBool operator!=(const SqlVal& a, const SqlSet& b) { return NotIn(a, b)
 
 inline const SqlVal& operator+(const SqlVal& a) { return a; }
 
-class Case : public SqlS, Moveable<Case> {
+class SqlCase : public SqlS, Moveable<SqlCase> {
 public:
-	Case(const SqlBool& cond, const SqlVal& val)
+	SqlCase(const SqlBool& cond, const SqlVal& val)
 	{
 		text = "case when " + ~cond + " then " + ~val + " end";
 	}
-	Case& operator()(const SqlBool& cond, const SqlVal& val)
+	SqlCase& operator()(const SqlBool& cond, const SqlVal& val)
 	{
 		text.Insert(text.GetLength() - 4, " when " + ~cond + " then " + ~val);
 		return *this;
 	}
-	Case& operator()(const SqlVal& val)
+	SqlCase& operator()(const SqlVal& val)
 	{
 		text.Insert(text.GetLength() - 4, " else " + ~val);
 		return *this;
 	}
 };
+
+inline SqlCase Case(const SqlBool& cond, const SqlVal& val) { return SqlCase(cond, val); }
 
 class Sql;
 

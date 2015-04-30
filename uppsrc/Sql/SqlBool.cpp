@@ -51,7 +51,7 @@ SqlBool operator!=(const SqlVal& a, const SqlVal& b) {
 
 SqlBool IsSame(const SqlVal& a, const SqlVal& b)
 {
-	return SqlBool(a, SqlCase(MY_SQL, "<=>")(" is not distinct from "), b, SqlS::COMP);
+	return SqlBool(a, SqlCode(MY_SQL, "<=>")(" is not distinct from "), b, SqlS::COMP);
 }
 
 SqlBool operator&&(const SqlBool& a, const SqlBool& b) {
@@ -91,7 +91,7 @@ SqlBool SqlFirstRow() {
 }
 
 SqlBool Like(const SqlVal& a, const SqlVal& b, bool cs) {
-	return SqlBool(a, SqlCase
+	return SqlBool(a, SqlCode
 			(MY_SQL, cs ? " like binary " : " like ")
 			(PGSQL, cs ? " like " : " ilike ")
 			(" like "),	b, SqlS::COMP);
@@ -102,7 +102,7 @@ SqlBool LikeUpperAscii(const SqlVal& a, const SqlVal& b) {
 }
 
 SqlBool NotLike(const SqlVal& a, const SqlVal& b, bool cs) {
-	return SqlBool(a, SqlCase
+	return SqlBool(a, SqlCode
 			(PGSQL, cs ? " not like " : " not ilike ")
 			(" not like "), b, SqlS::COMP);
 }

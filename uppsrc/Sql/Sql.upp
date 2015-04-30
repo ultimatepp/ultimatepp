@@ -11,7 +11,7 @@ uses
 file
 	Sql.h options(BUILDER_OPTION) PCH,
 	Sqlexp.h,
-	SqlCase.cpp optimize_speed,
+	SqlCode.cpp optimize_speed,
 	SqlVal.cpp optimize_speed,
 	SqlBool.cpp optimize_speed,
 	SqlSet.cpp optimize_speed,
