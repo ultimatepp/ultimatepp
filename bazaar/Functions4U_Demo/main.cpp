@@ -65,8 +65,8 @@ void FilesDemo() {
 	Puts(Format("\nFileStrAppend(%s, \". Text appended at the end.\") = %s (has to be true)", 
 				filename1, boolres ? "true" : "false"));
 	
-	boolres = UpperFolder(GetFileDirectory(filename1));
-	Puts(Format("\nUpperFolder(%s) = %s (has to be true)", filename1, boolres ? "true" : "false"));
+	//boolres = UpperFolder(GetFileDirectory(filename1));
+	//Puts(Format("\nUpperFolder(%s) = %s (has to be true)", filename1, boolres ? "true" : "false"));
 	
 	String upperFolder = GetUpperFolder(GetFileDirectory(filename1));
 	Puts(Format("\nGetUpperFolder(%s) = %s (has to be %s)", filename1, upperFolder, GetDesktopFolder()));
@@ -78,7 +78,6 @@ void FilesDemo() {
 	String lfilename1 = ToLower(filename1);
 	filename1 = FileRealName(lfilename1);
 	Puts(Format("\nFileRealName(%s) = %s", lfilename1, filename1));
-	     
 }
 
 void NonReentrantDemo() {
