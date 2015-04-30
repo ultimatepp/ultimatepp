@@ -141,6 +141,7 @@ void Gdb_MI2::Run()
 	if(!started)
 	{
 		Exclamation(t_("Failed to start application"));
+		IdeEndDebug();
 		return;
 	}
 	Lock();
