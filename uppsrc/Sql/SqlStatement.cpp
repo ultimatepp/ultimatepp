@@ -18,13 +18,13 @@ String SqlStatement::Get() const
 SqlSelect& SqlSelect::SetOp(const SqlSelect& s2, const char *op)
 {
 	String q;
-	q << SqlCase(SQLITE3, "")("((")
+	q << SqlCode(SQLITE3, "")("((")
 	  << text
-	  << SqlCase(SQLITE3, "")(")")
+	  << SqlCode(SQLITE3, "")(")")
 	  << op
-	  << SqlCase(SQLITE3, "")("(")
+	  << SqlCode(SQLITE3, "")("(")
 	  << s2.text
-	  << SqlCase(SQLITE3, "")("))")
+	  << SqlCode(SQLITE3, "")("))")
 	;
 	text = q;
 	return *this;
@@ -44,7 +44,7 @@ SqlSelect& SqlSelect::operator&=(const SqlSelect& s2) {
 }
 
 SqlSelect& SqlSelect::operator-=(const SqlSelect& s2) {
-	return SetOp(s2, SqlCase(MSSQL|PGSQL|SQLITE3," except ")(" minus "));
+	return SetOp(s2, SqlCode(MSSQL|PGSQL|SQLITE3," except ")(" minus "));
 }
 
 SqlSelect operator|(const SqlSelect& s1, const SqlSelect& s2) {
@@ -105,7 +105,7 @@ SqlSelect& SqlSelect::OrderBy(const SqlSet& set) {
 }
 
 SqlSelect& SqlSelect::ForUpdate() {
-	text << SqlCase(SQLITE3, "")(" for update");
+	text << SqlCode(SQLITE3, "")(" for update");
  	return *this;
 }
  
@@ -117,8 +117,8 @@ SqlSelect& SqlSelect::NoWait() {
 SqlSelect& SqlSelect::Limit(int limit) {
 	ASSERT(text.StartsWith("select "));
 	String s = AsString(limit);
-	text.Insert(6, SqlCase(MSSQL, " top " + s)());
-	text << SqlCase(MSSQL, "")(" limit " + s);
+	text.Insert(6, SqlCode(MSSQL, " top " + s)());
+	text << SqlCode(MSSQL, "")(" limit " + s);
 	return *this;
 }
 
@@ -147,7 +147,7 @@ SqlSelect& SqlSelect::Hint(const char *hint)
 }
 
 SqlSelect& SqlSelect::Get() {
-	text = "select " + text + SqlCase(ORACLE, " from DUAL")("");
+	text = "select " + text + SqlCode(ORACLE, " from DUAL")("");
 	valid = true;
 	return *this;
 }
@@ -267,9 +267,9 @@ SqlVal SqlSelect::AsValue() const
 SqlSet SqlSelect::AsTable(const SqlId& tab) const
 {
 	StringBuffer t;
-	t << SqlCase(MSSQL|PGSQL, "")("(")
+	t << SqlCode(MSSQL|PGSQL, "")("(")
 	  << "(" << text << ") as \t" << tab.ToString() << '\t'
-	  << SqlCase(MSSQL|PGSQL, "")(")");
+	  << SqlCode(MSSQL|PGSQL, "")(")");
 	return SqlSet(String(t), SqlSet::HIGH);
 }
 
@@ -311,7 +311,7 @@ SqlWith& SqlWith::With(SqlId table)
 SqlWith& SqlWith::WithRecursive(SqlId table)
 {
 	text << (text.GetCount() ? ", " : "with ")
-	     << SqlCase(MSSQL, "")("recursive ")
+	     << SqlCode(MSSQL, "")("recursive ")
 	     << table.Quoted();
 	args = false;
 	return *this;
