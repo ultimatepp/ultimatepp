@@ -126,6 +126,11 @@ LRESULT ChromiumBrowser::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_CREATE:
 			AfterInit(false);
 			break;
+			
+		case WM_QUIT:
+			//TODO: explain why we do not get QUIT message
+			BeforeTerminate();
+			break;
 	}
 	
 	return DHCtrl::WindowProc(message, wParam, lParam);
