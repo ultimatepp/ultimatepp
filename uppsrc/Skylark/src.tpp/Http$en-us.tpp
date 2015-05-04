@@ -19,7 +19,7 @@ It provides data associated with request, like POST or GET form
 values, session variables or cookie values, and is used to store 
 any `'output`' values like response fields, cookies, new values 
 of session variables..&]
-[s2;%% &]
+[s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Http`:`:operator`(`)`(const char`*`,const Value`&`): [_^Http^ Http][@(0.0.255) `&]_[* o
@@ -206,6 +206,11 @@ value is used, otherwise returns value reported by [^topic`:`/`/Core`/src`/TcpSo
 cpSocket`::GetPeerAddr()]. This function may return empty string 
 if called when socket is not available (e.g. after calling [^topic`:`/`/Skylark`/src`/Http`$en`-us`#Http`:`:Finalize`(`)^ H
 ttp`::Finalize()]).&]
+[s3; &]
+[s4; &]
+[s5;:Http`:`:GetRequestContent`(`)const: [_^String^ String]_[* GetRequestContent]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the content of request.&]
 [s3; &]
 [s4;%% &]
 [s5;:Http`:`:SetCookie`(const char`*`,const String`&`,Time`,const char`*`,const char`*`,bool`,bool`): [_^Http^ H
