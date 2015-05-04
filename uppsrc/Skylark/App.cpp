@@ -173,7 +173,7 @@ void SkylarkApp::Run()
 {
 //	DisableHUP();
 	if(static_dir.GetCount() == 0)
-		static_dir = root + "/static";
+		static_dir = root.IsEmpty() ? "static" : (root + "/static");
 
 	SqlSession::PerThread();
 	SqlId::UseQuotes();
