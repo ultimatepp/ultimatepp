@@ -248,7 +248,7 @@ element&]
 [s0;3 &]
 [ {{4495:5505h1;@(216) [s0; Function]
 :: [s0; Description]
-::^@2 [s0; [*C cycle(i, p0, p1, ..., pn)]]
+::^@2 [s0; [*C cycle(i, p1, ..., pn)]]
 :: [s0; Returns p`[i mod n`].]
 :: [s0; [*C raw(text)]]
 :: [s0; Returns argument as `"raw`" text that is not supposed to be 
@@ -264,5 +264,10 @@ CSRF attack prevention.]
 AJAX POSTs.]
 :: [s0; [*C set()]]
 :: [s0; Returns html formatted list of current shared variables. Useful 
-for debugging.]}}&]
+for debugging.]
+:: [s0; [*C render(witz`_template, p1, ...)]]
+:: [s0; Inserts another template into output. Current variables are 
+copied to new template, parameters p1... are copied as `$`_1, 
+`$`_2 etc. This is similar to using #include, but with it is 
+easier to pass arguments to included template this way.]}}&]
 [s0; ]]

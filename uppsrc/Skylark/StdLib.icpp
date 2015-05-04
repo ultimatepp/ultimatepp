@@ -65,6 +65,23 @@ Value VariablesSet(const Vector<Value>&, const Renderer *r)
 	return Raw(html);
 }
 
+Value Render(const Vector<Value>& arg, const Renderer *r) {
+    if (arg.GetCount() < 1)
+        return "";
+    // create new Renderer, as we can not modify the one currently used
+    Renderer rr;
+    // copy variables so they are available in the rendered template too
+    for(int i = 1; i < r->Variables().GetCount(); i++) {
+        rr(r->Variables().GetKey(i), r->Variables()[i]);
+    }
+    // add arguments as variables
+    for(int i = 1; i < arg.GetCount(); i++) {
+        rr("_"+IntStr(i), arg[i]);
+    }
+    // render the template passed in first argument
+    return rr.Render(AsString(arg[0]));
+}
+
 INITBLOCK {
 	Compiler::Register("cycle", Cycle);
 	Compiler::Register("raw", RawFn);
@@ -72,6 +89,7 @@ INITBLOCK {
 	Compiler::Register("post_identity", PostIdentity);
 	Compiler::Register("js_identity", JsIdentity);
 	Compiler::Register("set", VariablesSet);
+    Compiler::Register("render", Render);
 };
 
 };
