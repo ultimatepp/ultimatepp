@@ -117,6 +117,8 @@ public:
 	int    GetLength() const                           { return atoi(GetHeader("content-length")); }
 	String GetPeerAddr() const;
 
+	String GetRequestContent() const                   { return content; }
+
 	String GetHandlerId() const                        { return handlerid; }
 
 	Value  operator[](const char *id) const            { return Renderer::operator[](id); }
