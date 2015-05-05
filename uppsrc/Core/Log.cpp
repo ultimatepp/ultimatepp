@@ -234,6 +234,7 @@ static LogOut sLog = { LOG_FILE, 10 * 1024 * 1024 };
 struct ThreadLog {
 	char  buffer[512];
 	int   len;
+	int   line_depth;
 	int   depth;
 	
 	void  Put(int w);
@@ -251,9 +252,11 @@ void ThreadLog::Put(int w)
 	else {
 		buffer[len++] = w;
 		if(w == '\n' || len > 500) {
-			sLog.Line(buffer, len, depth);
+			sLog.Line(buffer, len, line_depth);
 			len = 0;
 		}
+		if(w != '\r')
+			line_depth = depth;
 	}
 }
 
