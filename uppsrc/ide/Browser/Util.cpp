@@ -45,7 +45,7 @@ const CppItem *GetCodeRefItem(const String& ref, const String& rfile)
 		int i = q;
 		int qml = 0;
 		while(i < n.GetCount() && n[i].qitem == item) {
-			int ml = GetMatchLen(GetCppFile(n[i].file), rfile);
+			int ml = GetMatchLen(GetSourceFilePath(n[i].file), rfile);
 			if(ml > qml) {
 				q = i;
 				qml = ml;

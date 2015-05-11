@@ -154,8 +154,8 @@ String AsString(double x, int digits)
 {
 	if(IsNull(x)) return Null;
 	if(fabs(x) >= 1e15)
-		return FormatDoubleExp(x, tabs(digits), digits < 0 ? FD_ZERO : 0);
-	return FormatDoubleFix(x, tabs(digits), digits < 0 ? FD_ZERO : 0);
+		return FormatDoubleExp(x, tabs(digits), digits < 0 ? FD_ZEROS : 0);
+	return FormatDoubleFix(x, tabs(digits), digits < 0 ? FD_ZEROS : 0);
 }
 
 // modulo: working version of math function `fmod'.

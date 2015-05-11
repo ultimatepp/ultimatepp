@@ -18,7 +18,7 @@ bool MatchPm(int file, const String& pm)
 {
 	if(IsNull(pm))
 		return true;
-	return GetCppFile(file).StartsWith(pm);
+	return GetSourceFilePath(file).StartsWith(pm);
 }
 
 bool MatchPm(const Array<CppItem>& n, const String& pm)
@@ -89,7 +89,7 @@ void CodeBrowser::Load()
 		for(int i = 0; i < n.GetCount(); i++) {
 			int f = n[i].file;
 			if(fi.Find(f) < 0) {
-				String s = GetFileText(GetCppFile(f));
+				String s = GetFileText(GetSourceFilePath(f));
 				if(s.StartsWith(pm) && MatchCib(s, match) &&
 				   (IsNull(find) || MatchCib(s, find) || n[i].uname.StartsWith(find))) {
 					txt.Add(s);
@@ -110,7 +110,7 @@ void CodeBrowser::Load()
 				String fn = AppendFileName(pp, p[j]);
 				String s = GetFileText(AppendFileName(pn, p[j]));
 				if(fs.Find(s) < 0 && (IsNull(find) || MatchCib(s, find)) && MatchCib(s, match) && MatchPm(fn, pm)) {
-					int f = GetCppFileIndex(SourcePath(pn, p[j]));
+					int f = GetSourceFileIndex(SourcePath(pn, p[j]));
 					txt.Add(s);
 					ndx.Add(f);
 					fs.Add(s);
@@ -134,7 +134,7 @@ int ItemCompare(const Value& v1, const Value& v2)
 	const CppItemInfo& b = ValueTo<CppItemInfo>(v2);
 	int q = a.inherited - b.inherited;
 	if(q) return q;
-	q = SgnCompare(GetCppFile(a.file), GetCppFile(b.file));
+	q = SgnCompare(GetSourceFilePath(a.file), GetSourceFilePath(b.file));
 	return q ? q : a.line - b.line;
 }
 
@@ -156,16 +156,20 @@ void GatherMethods(const String& type, VectorMap<String, bool>& inherited, bool 
 	int q = CodeBase().Find(type);
 	if(q < 0) return;
 	const Array<CppItem>& n = CodeBase()[q];
-	for(int i = 0; i < n.GetCount(); i = FindNext(n, i)) {
+	Index<String> set;
+	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
-		if(m.IsType()) {
-			Vector<String> base = Split(m.qptype, ';');
-			for(int i = 0; i < base.GetCount(); i++)
-				GatherMethods(base[i], inherited, true, done);
-		}
-		if(m.IsCode() && g) {
-			bool& virt = inherited.GetAdd(m.qitem);
-			virt = virt || m.virt;
+		if(set.Find(m.qitem) < 0) {
+			set.Add(m.qitem);
+			if(m.IsType()) {
+				Vector<String> base = Split(m.qptype, ';');
+				for(int i = 0; i < base.GetCount(); i++)
+					GatherMethods(base[i], inherited, true, done);
+			}
+			if(m.IsCode() && g) {
+				bool& virt = inherited.GetAdd(m.qitem);
+				virt = virt || m.virt;
+			}
 		}
 	}
 }
@@ -188,7 +192,7 @@ void CodeBrowser::LoadScope()
 	int file = IsNumber(x) ? (int)x : -1;
 	String scope = file < 0 ? String(x) : String();
 	int q = CodeBase().Find(scope);
-	bool filematch = file >= 0 && MatchCib(GetFileText(GetCppFile(file)), find);
+	bool filematch = file >= 0 && MatchCib(GetFileText(GetSourceFilePath(file)), find);
 	bool scopematch = !filematch && MatchCib(scope, find);
 	if(q >= 0) {
 		const Array<CppItem>& n = CodeBase()[q];
@@ -196,7 +200,7 @@ void CodeBrowser::LoadScope()
 		if(file < 0)
 			GatherMethods(scope, inherited, false);
 		Index<String> set;
-		for(int i = 0; i < n.GetCount(); i = file < 0 ? FindNext(n, i) : i + 1) {
+		for(int i = 0; i < n.GetCount(); i = i++) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
 			if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file || scopematch) && set.Find(m.qitem) < 0) {

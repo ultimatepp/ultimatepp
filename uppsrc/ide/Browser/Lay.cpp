@@ -25,7 +25,7 @@ inline void WriteLines(String& r, int count)
 		r << '\n';
 }
 
-void ScanLayFile(const char *fn)
+String PreprocessLayFile(const char *fn)
 {
 	LTIMING("Lay file");
 	String s = LoadFile(fn);
@@ -77,7 +77,5 @@ void ScanLayFile(const char *fn)
 	}
 	catch(CParser::Error) {}
 	LDUMP(r);
-	StringStream ss(r);
-	CppBase& base = CodeBase();
-	Parse(ss, IgnoreList(), base, fn, CNULL);
+	return r;
 }

@@ -2,19 +2,22 @@
 
 void AssistEditor::Annotate(const String& filename)
 {
-	int fi = GetCppFileIndex(filename);
+	int fi = GetSourceFileIndex(filename);
 	CppBase& base = CodeBase();
 	ClearAnnotations();
 	for(int j = 0; j < base.GetCount(); j++) {
-		const Array<CppItem>& n = base[j];
-		for(int k = 0; k < n.GetCount(); k++) {
-			const CppItem& m = n[k];
-			if(m.file == fi) {
-				String coderef = MakeCodeRef(base.GetKey(j), m.qitem);
-				SetAnnotation(m.line - 1,
-				              GetRefLinks(coderef).GetCount() ? IdeImg::tpp_doc()
-				                                              : IdeImg::tpp_pen(),
-				              coderef);
+		String nest = base.GetKey(j);
+		if(*nest != '@') { // Annotation of anonymous structures not suported
+			const Array<CppItem>& n = base[j];
+			for(int k = 0; k < n.GetCount(); k++) {
+				const CppItem& m = n[k];
+				if(m.file == fi) {
+					String coderef = MakeCodeRef(nest, m.qitem);
+					SetAnnotation(m.line - 1,
+					              GetRefLinks(coderef).GetCount() ? IdeImg::tpp_doc()
+					                                              : IdeImg::tpp_pen(),
+					              coderef);
+				}
 			}
 		}
 	}
@@ -92,22 +95,31 @@ void AssistEditor::SyncAnnotationPopup()
 			topic_text = ParseQTF(ReadTopic(LoadFile(path)).text);
 		
 		RichText result;
-		for(int i = 0; i < topic_text.GetPartCount(); i++)
-			if(IsCodeItem(topic_text, i) && topic_text.Get(i).format.label == coderef) {
-				while(i > 0 && IsCodeItem(topic_text, i)) i--;
-				if(!IsCodeItem(topic_text, i)) i++;
-				while(IsCodeItem(topic_text, i))
-					result.Cat(topic_text.Get(i++));
-				while(i < topic_text.GetPartCount() && !IsCodeItem(topic_text, i)
-				      && !IsBeginEnd(topic_text, i))
-					if(topic_text.IsPara(i))
+		String cr = coderef;
+		for(int pass = 0; pass < 2; pass++) {
+			for(int i = 0; i < topic_text.GetPartCount(); i++)
+				if(IsCodeItem(topic_text, i) && topic_text.Get(i).format.label == cr) {
+					while(i > 0 && IsCodeItem(topic_text, i)) i--;
+					if(!IsCodeItem(topic_text, i)) i++;
+					while(IsCodeItem(topic_text, i))
 						result.Cat(topic_text.Get(i++));
-					else {
-						RichTable table(topic_text.GetTable(i++), 1);
-						result.CatPick(pick(table));
+					while(i < topic_text.GetPartCount() && !IsCodeItem(topic_text, i)
+					      && !IsBeginEnd(topic_text, i)) {
+						if(topic_text.IsPara(i))
+							result.Cat(topic_text.Get(i++));
+						else {
+							RichTable table(topic_text.GetTable(i++), 1);
+							result.CatPick(pick(table));
+						}
 					}
+					pass = 2;
+					break;
+				}
+			if(pass == 0 && cr.StartsWith("Upp::"))
+				cr = cr.Mid(5);
+			else
 				break;
-			}
+		}
 		result.SetStyles(topic_text.GetStyles());
 		annotation_popup.Pick(pick(result), GetRichTextStdScreenZoom());
 	}

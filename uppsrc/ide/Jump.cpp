@@ -35,7 +35,7 @@ void JumpDlg::GoTo()
 {
 	if(navlines.IsCursor()) {
 		const NavLine& l = navlines.Get(0).To<NavLine>();
-		theide->GotoPos(GetCppFile(l.file), l.line);
+		theide->GotoPos(GetSourceFilePath(l.file), l.line);
 	}
 }
 

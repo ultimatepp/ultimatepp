@@ -203,4 +203,3 @@ Size CppItemInfoDisplay::GetStdSize(const Value& q) const
 	return Size(DoPaint(w, Rect(0, 0, INT_MAX, INT_MAX), q, Null, Null, 0),
 	            max(16, BrowserFont().Info().GetHeight()));
 }
-

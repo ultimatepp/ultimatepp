@@ -26,7 +26,7 @@ void Lz4::Decompress()
 
 void Lz4::PutOut(const void *ptr, int size)
 {
-	LLOG("ZLIB PutOut " << out.GetCount());
+	LLOG("LZ4 PutOut " << out.GetCount());
 	out.Cat((const char *)ptr, (int)size);
 }
 

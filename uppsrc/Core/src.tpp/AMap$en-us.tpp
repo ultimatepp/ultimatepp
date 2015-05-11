@@ -132,6 +132,17 @@ number is returned. Unlinked elements are ignored.&]
 is not in AMap.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:AMap`:`:FindNext`(int`)const:%- [@(0.0.255) int]_[* FindNext]([@(0.0.255) int]_[*@3 i])_
+[@(0.0.255) const]&]
+[s2; Retrieves the position of next element with the same key as 
+element at the specified position. If multi`-key ordering is 
+not broken and more than one element with that value exists in 
+AMap, the lowest position greater than specified one is retrieved 
+(so that positions got by subsequent calls to FindNext are in 
+ascending order). When there are no more elements with required 
+key, a negative number is returned. Unlinked elements are ignored.&]
+[s3; &]
+[s4;%- &]
 [s5;:AMap`:`:Find`(const K`&`,unsigned`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) cons
 t]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])_[@(0.0.255) const]&]
 [s2; Retrieves the position of next element with the same key as 
@@ -178,7 +189,7 @@ is not in AMap.&]
 as element at the specified position. If multi`-key ordering 
 is not broken and more than one element with that value exists 
 in AMap, the greatest position lower than specified one is retrieved 
-(so that positions got by subsequent calls to FindNext are in 
+(so that positions got by subsequent calls to FindPrev are in 
 descending order). When there are no more elements with required 
 key, a negative number is returned. Unlinked elements are ignored.&]
 [s7; [*C@3 i]-|Position of element.&]
@@ -256,8 +267,18 @@ Value is transfered using deep copy constructor.&]
 [s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:PutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:AMap`:`:PutDefault`(const K`&`):%- [@(0.0.255) int]_[* PutDefault]([@(0.0.255) const]_
+[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s2; Similar to Put, but value is default constructed.&]
+[s6; T must have deep copy constructor.&]
+[s6; Invalidates multi`-key ordering.&]
+[s6; Invalidates iterators to AMap.&]
+[s6; Invalidates references to keys.&]
+[s6; Invalidates references to VectorMap values.&]
+[s3; &]
+[s4;%- &]
+[s5;:AMap`:`:PutPick`(const K`&`,T rval`_`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) con
+st]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T]_[@(0.0.255) rval`_]_[*@3 x])&]
 [s2; If there are any unlinked elements in AMap, one of them is replaced 
 by the specified key/value pair. If there is no unlinked element, 
 the key/value pair is added at the end of AIndex using [* Add]. 
@@ -492,7 +513,7 @@ is not in AMap.&]
 [s4;%- &]
 [s5;:AMap`:`:FindPtr`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* FindPtr]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
-[s2; Retrieves a constant pointer to value of first element with 
+[s2; Retrieves a constant pointer to value of the first element with 
 the specified key in AMap. If multi`-key ordering is not broken 
 and more than one element with the same value exists in AMap, 
 the lowest position is retrieved. If the element does not exist 
@@ -501,6 +522,17 @@ in AMap, NULL pointer is returned. Unlinked elements are ignored.&]
 [s7; [*/ Return value]-|Pointer to value or NULL pointer if element 
 is not in AMap.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:AMap`:`:FindLastPtr`(const K`&`):%- [*@4 T]_`*[* FindLastPtr]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
+]_[*@3 k])&]
+[s5;:AMap`:`:FindLastPtr`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* FindLastPtr](
+[@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
+[s2; Retrieves a constant pointer to value of the last element with 
+the specified key in AMap. If multi`-key ordering is not broken 
+and more than one element with the same value exists in AMap, 
+the greatest position is retrieved. If the element does not exist 
+in AMap, NULL pointer is returned. Unlinked elements are ignored..&]
+[s3; &]
 [s4;%- &]
 [s5;:AMap`:`:UnlinkKey`(const K`&`,unsigned`):%- [@(0.0.255) int]_[* UnlinkKey]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) unsigned]_[*@3 h])&]

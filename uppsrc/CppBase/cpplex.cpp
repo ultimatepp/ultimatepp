@@ -87,16 +87,12 @@ Lex::Lex()
 	for(int i = 0; cppk[i]; i++)
 		id.Add(cppk[i]);
 	endkey = id.GetCount();
-	braceslevel = ignore_low = ignore_high = body = 0;
+	braceslevel = body = 0;
 }
 
-void Lex::Init(const char *s, const Vector<String>& ig)
+void Lex::Init(const char *s)
 {
 	ptr = s;
-	ignore_low = id.GetCount();
-	for(int i = 0; i < ig.GetCount(); i++)
-		id.Add(ig[i]);
-	ignore_high = id.GetCount();
 }
 
 void Lex::StartStatCollection()
@@ -173,21 +169,6 @@ void Lex::Next()
 				AddCode('&');
 				AddCode('&');
 			}
-			else
-			if(q >= ignore_low && q < ignore_high)
-				while(*ptr && (byte)*ptr <= ' ') {
-					ptr++;
-					if(*ptr == '(') {
-						int level = 1;
-						while(*ptr && level) {
-							if(*ptr == '(')
-								level++;
-							if(*ptr == ')')
-								level--;
-							ptr++;
-						}
-					}
-				}
 			else
 				AddCode(q + 256);
 			break;

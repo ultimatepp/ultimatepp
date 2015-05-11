@@ -28,7 +28,7 @@ static inline bool sSpaces(String& res, const char *& s)
 {
 	if((byte)*s <= ' ') {
 		char c = *s++;
-		if(c != '\2') {
+		if(c != '\2' && c != '\x1f') {
 			res.Cat(' ');
 			while((byte)*s <= ' ' && *s)
 				s++;
@@ -44,7 +44,13 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 	while(*s && (byte)*s <= ' ') s++;
 	while(*s) { // Get the name of function into res
 		while(*s && !iscid(*s) && *s != '~')
-			s++;
+			if(*s == '[') { // Skip MSVC attributes
+				while(*s)
+					if(*s++ == '[')
+						break;
+			}
+			else
+				s++;
 		int lvl = 0;
 		int plvl = 0;
 		for(;;) {
@@ -83,6 +89,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 			break;
 		res.Clear();
 	}
+	bool wasid = false;
 	while(*s) {
 		const char *w = bew(qname, s);
 		byte c = *s;
@@ -91,6 +98,7 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 				res.Cat(' ');
 			res.Cat(name);
 			s = w;
+			wasid = true;
 		}
 		else
 		if(iscid(c)) {
@@ -104,17 +112,24 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 			}
 			else
 				while((byte)*s <= ' ' && *s) s++;
+			wasid = true;
 		}
 		else
 		if(c == '=') {
 			s++;
 			int l = 0;
-			while(*s && !(l == 0 && (*s == ',' || *s == ')'))) {
-				if(*s == '(')
+			int tl = 0;
+			while(*s && !(l == 0 && (*s == ',' && tl == 0 || *s == ')'))) {
+				if(*s == '(' || *s == '[')
 					l++;
 				else
-				if(*s == ')')
+				if(*s == ')' || *s == ']')
 					l--;
+				if(*s == '<') // we always consider < > to be template bracket, not operator here
+					tl++;
+				else
+				if(*s == '>')
+					tl--;
 				s++;
 			}
 		}
@@ -124,8 +139,16 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 			while((byte)*s <= ' ' && *s)
 				s++;
 		}
+		else
+		if(c == '[' && !wasid) { // Skip MSVC attribute
+			while(*s)
+				if(*s++ == ']')
+					break;
+		}
 		else {
 			res.Cat(c);
+			if(c == ',')
+				wasid = false;
 			s++;
 		}
 	}
@@ -135,11 +158,14 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 String Purify(const char *s, const char *qname, const String& name) {
 	String res;
 	while(*s && (byte)*s <= ' ') s++;
+	bool wasid = false;
+	bool firstpar = true;
 	while(*s) {
 		const char *w = bew(qname, s);
 		if(w && w > s) {
 			res.Cat(name);
 			s = w;
+			wasid = true;
 		}
 		else
 		if(iscid(*s)) {
@@ -150,10 +176,27 @@ String Purify(const char *s, const char *qname, const String& name) {
 				res.Cat(q);
 			else
 				while((byte)*s <= ' ' && *s) s++;
+			wasid = true;
 		}
 		else
-		if(!sSpaces(res, s))
+		if(*s == '[' && !wasid) { // skip MSVC attribute
+			do {
+				while(*s)
+					if(*s++ == ']')
+						break;
+				while(*s == ' ' || *s == '\2' || *s == '\x1f')
+					s++;
+			}
+			while(*s == '[');
+		}
+		else
+		if(!sSpaces(res, s)) {
+			if(*s == ',')
+				wasid = false;
+			if(*s == '(' && firstpar)
+				wasid = firstpar = false;
 			res.Cat(*s++);
+		}
 	}
 	return TrimRight(res);
 }
@@ -195,6 +238,65 @@ void ScAdd(String& s, const String& a)
 	s << a;
 }
 
+
+void TpSkip(CParser& p)
+{
+	int lvl = 0;
+	for(;;) {
+		if(lvl == 0 && (p.IsChar(',') || p.IsChar('>')) || p.IsEof())
+			break;
+		if(p.Char('<'))
+			lvl++;
+		else
+		if(p.Char('>'))
+			lvl--;
+		else
+			p.SkipTerm();
+	}
+}
+
+String Subst(const String& s, const Vector<String>& tpar)
+{
+	if(tpar.GetCount() == 0)
+		return s;
+	String r;
+	CParser p(s);
+	while(!p.IsEof()) {
+		if(p.IsId()) {
+			String id = p.ReadId();
+			int q = FindIndex(tpar, id);
+			if(q >= 0)
+				r << AsString(q);
+			else
+				r << id;
+		}
+		else
+			r << p.GetChar();
+	}
+	return r;
+}
+
+String CleanTp(const String& tp)
+{
+	int q = tp.Find('<');
+	int w = tp.ReverseFind('>');
+	if(q < 0 || w < 0) return tp;
+	String a = TrimLeft(TrimRight(tp.Mid(q + 1, w - q - 1)));
+	const char *s = a;
+	String r;
+	while(*s) {
+		if(*s == ',') {
+			r.Cat(';');
+			s++;
+			while(*s && *s <= ' ')
+				s++;
+		}
+		else
+			r.Cat(*s++);
+	}
+	return r;
+}
+
 String Parser::Context::Dump() const
 {
 	return "Scopeing: " + scope;
@@ -221,10 +323,11 @@ inline void ScopeCat(String& scope, const String& s)
 void Parser::Context::operator<<=(const Context& t)
 {
 	scope = t.scope;
-	typenames <<= t.typenames;
-	tparam <<= t.tparam;
+	typenames = clone(t.typenames);
+	tparam = clone(t.tparam);
 	access = t.access;
 	ctname = t.ctname;
+	namespace_using = t.namespace_using;
 }
 
 Parser::Decla::Decla()
@@ -274,8 +377,8 @@ void Parser::ThrowError(const String& e)
 	int i = 0;
 	while(i < 40 && lex[i] != t_eof)
 		i++;
-	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
-	     "  " << AsCString(String(lex.Pos(), lex.Pos(i))));
+	DLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
+	     ", code:  " << AsCString(String(lex.Pos(), lex.Pos(i))));
 #endif
 	throw Error();
 }
@@ -458,8 +561,122 @@ String Parser::TType()
 	return lex.Id();
 }
 
-String Parser::SimpleType(Decla& d)
+String Parser::StructDeclaration(const String& tn, const String& tp)
 {
+	int t = lex.GetCode(); // t is now struct/class/union
+	context.typenames.FindAdd(lex);
+	Context cc;
+	cc <<= context;
+	CParser p(tp);
+	Vector<String> tpar;
+	if(p.Char('<')) {
+		while(!p.IsEof() && !p.Char('>')) {
+			if((p.Id("class") || p.Id("typename") || p.Id("struct")) && p.IsId()) {
+				tpar.Add(p.ReadId());
+				context.tparam.Add(lex.Id(tpar.Top()));
+			}
+			else
+				context.tparam.Add(0);
+			TpSkip(p);
+			p.Char(',');
+		}
+	}
+	if(Key(t_dblcolon))
+		context.scope = Null;
+	String name;
+	String new_scope = context.scope;
+	if(lex.IsId())
+		do {
+			context.typenames.FindAdd(lex);
+			name = lex.GetId(); // name of structure
+			if(lex == '<')
+				name << TemplateParams();
+			ScopeCat(new_scope, name);
+		}
+		while(Key(t_dblcolon));
+	else {
+		name = AnonymousName();
+		ScopeCat(new_scope, name);
+	}
+	if(lex.IsId() || lex == '*') { // struct My { struct My *p; }
+		return name;
+	}
+	context.scope = new_scope;
+	context.access = t == tk_class ? PRIVATE : PUBLIC;
+	if(tn.GetCount()) {
+		if(context.ctname.GetCount())
+			context.ctname << ';';
+		context.ctname << tn;
+	}
+	String nn;
+	if(!tp.IsEmpty())
+		nn = "template " + tp + " ";
+	String key = (t == tk_class ? "class" : t == tk_union ? "union" : "struct");
+	nn << key << ' ' << name;
+	LLOG("Struct "  << context.scope << " using " << context.namespace_using);
+	CppItem& im = Item(context.scope, context.namespace_using, key, name, lex != ';');
+	im.kind = tp.IsEmpty() ? STRUCT : STRUCTTEMPLATE;
+	im.type = name;
+	im.access = cc.access;
+	im.tname = tn;
+	im.ctname = context.ctname;
+	im.tparam = CleanTp(tp);
+	im.ptype.Clear();
+	im.pname.Clear();
+	im.param.Clear();
+	if(lex == ';') { // TODO: perhaps could be united with following code
+		context = pick(cc);
+		im.natural = Gpurify(nn);
+		SetScopeCurrent();
+		return name;
+	}
+	if(Key(':')) {
+		nn << " : ";
+		bool c = false;
+		do {
+			String access = t == tk_class ? "private" : "public";
+			if(Key(tk_public)) access = "public";
+			else
+			if(Key(tk_protected)) access = "protected";
+			else
+			if(Key(tk_private)) access = "private";
+			if(Key(tk_virtual)) access << " virtual";
+			String h;
+			bool dummy;
+			String n = Name(h, dummy, dummy);
+			ScAdd(im.pname, h);
+			if(c)
+				im.ptype << ';';
+			im.ptype << Subst(n, tpar);
+			ScAdd(im.param, access + ' ' + n);
+			if(c)
+				nn << ", ";
+			nn << access + ' ' + n;
+			c = true;
+		}
+		while(Key(','));
+	}
+	if(Key('{')) {
+		struct_level++;
+		ScopeBody();
+		struct_level--;
+		im.natural = Gpurify(nn);
+		im.decla = true;
+	}
+	else
+		if(IsNull(im.natural))
+			im.natural = Gpurify(nn);
+	context = pick(cc);
+	SetScopeCurrent();
+	return name;
+}
+
+String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
+{ // returns the name of constructor
+	if(findarg((int)lex, tk_struct, tk_class, tk_union) >= 0 && !d.isfriend) {
+		d.type = StructDeclaration(tname, tparam);
+		return String();
+	}
 	Key(tk_typename) || Key(tk_struct) || Key(tk_class) || Key(tk_union) || Key(tk_enum);
 	if(Key(tk_bool) || Key(tk_float) || Key(tk_double) || Key(tk_void))
 		return Null;
@@ -505,8 +722,8 @@ String Parser::SimpleType(Decla& d)
 
 void Parser::Qualifier()
 {
-	Key(tk_const);
-	Key(tk_volatile);
+	while(Key(tk_const) || Key(tk_volatile) || VCAttribute())
+		;
 	if(Key(tk_throw)) {
 		while(lex != t_eof && !Key(')'))
 			++lex;
@@ -528,7 +745,7 @@ void Parser::ParamList(Decl& d) {
 				break;
 			}
 			else
-				d.param.Add() = pick(Declaration().Top());
+				d.param.Add() = pick(Declaration(false, false, Null, Null).Top());
 			if(Key(t_elipsis)) {
 				Elipsis(d);
 				break;
@@ -583,11 +800,7 @@ void Parser::Declarator(Decl& d, const char *p)
 		d.isptr = true;
 		return;
 	}
-	if(Key('&')) {
-		Declarator(d, p);
-		return;
-	}
-	if(Key(tk_const)) {
+	if(Key('&') || Key(t_and) || Key(tk_const) || Key(tk_volatile)) { // t_and is r-value here
 		Declarator(d, p);
 		return;
 	}
@@ -609,7 +822,7 @@ void Parser::Declarator(Decl& d, const char *p)
 	}
 	if(Key('(')) {
 		if(inbody || (lex < 256 || lex == tk_true || lex == tk_false)
-		   && lex != ')' && lex != t_dblcolon) {
+		   && lex != ')' && lex != '[' && lex != t_dblcolon) {
 			int level = 0;
 			for(;;) {
 				if(lex == t_eof) break;
@@ -644,9 +857,17 @@ void Parser::Declarator(Decl& d, const char *p)
 	}
 	if(Key('=') || (inbody && lex == '(')) {
 		int level = 0;
+		int tlevel = 0;
 		for(;;) {
-			if(lex == t_eof || level == 0 && (lex == ',' || lex == ')' || lex == ';'))
+			if(lex == t_eof  || lex == ';'
+			   || level == 0 && ((lex == ',' && tlevel == 0) || lex == ')'))
 				break;
+			if(Key('<')) // we ignore < > as operators, always consider them template bracket
+				tlevel++;
+			else
+			if(Key('>'))
+				tlevel--;
+			else
 			if(Key('(') || Key('{'))
 				level++;
 			else
@@ -664,27 +885,13 @@ Parser::Decl& Parser::Finish(Decl& d, const char *s)
 	return d;
 }
 
-Parser::Decl Parser::Type() {
-	Decl d;
-	const char *p = lex.Pos();
-	Qualifier();
-	SimpleType(d);
-	Declarator(d, p);
-	return pick(Finish(d, p));
-}
-
 bool Parser::IsParamList(int q)
 {
 	return true;
 }
 
-Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
+void Parser::ReadMods(Decla& d)
 {
-	Array<Decl> r;
-	Decla d;
-	const char *p = lex.Pos();
-	if(Key(tk_friend))
-		d.isfriend = true;
 	for(;;) {
 		if(Key(tk_static))
 			d.s_static = true;
@@ -707,9 +914,19 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		if(Key(tk_virtual))
 			d.s_virtual = true;
 		else
-		if(!(Key(tk_inline) || Key(tk_force_inline) || Key(tk___inline)))
+		if(!(Key(tk_inline) || Key(tk_force_inline) || Key(tk___inline) || VCAttribute()))
 			break;
 	}
+}
+
+Array<Parser::Decl> Parser::Declaration0(bool l0, bool more, const String& tname, const String& tparam)
+{
+	Array<Decl> r;
+	Decla d;
+	const char *p = lex.Pos();
+	if(Key(tk_friend))
+		d.isfriend = true;
+	ReadMods(d);
 	Qualifier();
 	if(l0) {
 		if(lex == tk_SKYLARK && lex[1] == '(' && lex.IsId(2)) {
@@ -772,7 +989,9 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		a.oper = true;
 		return r;
 	}
-	String st = SimpleType(d);
+	String st = ReadType(d, tname, tparam);
+	if(!lex.IsGrounded()) // 'static' etc.. can be after type too... (but not allow it on start of line)
+		ReadMods(d); 
 	if(!st.IsEmpty()) {
 		Decl& a = r.Add();
 		a.name = st;
@@ -787,37 +1006,38 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more)
 		return r;
 	}
 	String natural1 = String(p, lex.Pos());
-	do {
-		const char *p1 = lex.Pos();
-		Decl& a = r.Add();
-		(Decla&)a = d;
-		Declarator(a, p);
-		if(a.castoper)
-			a.name = Filter(natural1, CharFilterNotWhitespace) + a.name;
-		a.natural = natural1 + String(p1, lex.Pos());
-		p = lex.Pos();
-	}
-	while(more && Key(','));
+	if(lex != ';') // struct/class declaration without defining variable
+		do {
+			const char *p1 = lex.Pos();
+			Decl& a = r.Add();
+			(Decla&)a = d;
+			Declarator(a, p);
+			if(a.castoper)
+				a.name = Filter(natural1, CharFilterNotWhitespace) + a.name;
+			a.natural = natural1 + String(p1, lex.Pos());
+			p = lex.Pos();
+		}
+		while(more && Key(','));
 	return r;
 }
 
-Array<Parser::Decl> Parser::Declaration(bool l0, bool more)
+Array<Parser::Decl> Parser::Declaration(bool l0, bool more, const String& tname, const String& tparam)
 {
 	if(Key(tk_typedef)) {
-		Array<Decl> r = Declaration(false, true);
+		Array<Decl> r = Declaration0(false, true, tname, tparam);
 		for(int i = 0; i < r.GetCount(); i++) {
 			r[i].type_def = true;
 			r[i].natural = "typedef " + r[i].natural;
 		}
 		return r;
 	}
-	return Declaration0(l0, more);
+	return Declaration0(l0, more, tname, tparam);
 }
 
 void Parser::Locals(const String& type)
 {
 	Line();
-	Array<Parser::Decl> d = Declaration(true, true);
+	Array<Parser::Decl> d = Declaration(true, true, Null, Null);
 	for(int i = 0; i < d.GetCount(); i++) {
 		Local& l = local.Add(d[i].name);
 		l.type = type;
@@ -852,18 +1072,38 @@ String NoTemplatePars(const String& s)
 	return q >= 0 ? s.Mid(0, q) : s;
 }
 
-bool Parser::TryDecl()
+bool Parser::VCAttribute()
 {
+	if(lex[0] == '[') // Skip Visual C++ attribute
+		for(;;) {
+			if(lex[0] == ']') {
+				++lex;
+				return true;
+			}
+			if(lex[0] == t_eof)
+				return false;
+			++lex;
+		}
+	return false;
+}
+
+bool Parser::TryDecl()
+{ // attempt to interpret code as local variable declaration
+	for(;;) {
+		if(lex[0] == tk_static || lex[0] == tk_const || lex[0] == tk_auto ||
+	       lex[0] == tk_register || lex[0] == tk_volatile)
+	    	++lex;
+		else
+		if(!VCAttribute())
+			break;
+	}
+	int t = lex[0];
 	int q = 0;
-	while(lex[0] == tk_static || lex[0] == tk_const || lex[0] == tk_auto ||
-	      lex[0] == tk_register || lex[0] == tk_volatile)
-	      	++lex;
-	int t = lex[q];
 	if(t == tk_int || t == tk_bool || t == tk_float || t == tk_double || t == tk_void ||
 	   t == tk_long || t == tk_signed || t == tk_unsigned || t == tk_short ||
 	   t == tk_char || t == tk___int8 || t == tk___int16 || t == tk___int32 || t == tk___int64) {
 	    q++;
-		while(lex[q] == '*' || lex[q] == '&')
+		while(lex[q] == '*' || lex[q] == '&' || lex[q] == t_and) // t_and is r-value here
 			q++;
 		if(!lex.IsId(q))
 			return false;
@@ -889,11 +1129,11 @@ bool Parser::TryDecl()
 			return false;
 		type << Tparam(q);
 	}
-	while(lex[q] == '*' || lex[q] == '&')
+	while(lex[q] == '*' || lex[q] == '&' || lex[q] == t_and) // t_and is r-value here
 		q++;
 	if(!lex.IsId(q))
 		return false;
-	type = Qualify(*base, current_scope, type);
+	type = Qualify(*base, current_scope, type, context.namespace_using);
 	if(base->Find(NoTemplatePars(type)) >= 0) {
 		Locals(type);
 		return true;
@@ -930,12 +1170,15 @@ void Parser::Statement()
 		++lex;
 	}
 	if(Key('{')) {
+		Context cc;
+		cc <<= context;
 		int l = local.GetCount();
 		while(!Key('}')) {
 			if(lex == t_eof)
 				ThrowError("eof");
 			Statement();
 		}
+		context <<= cc;
 		local.Trim(l);
 	}
 	else
@@ -993,6 +1236,9 @@ void Parser::Statement()
 		local.Trim(l);
 	}
 	else
+	if(UsingNamespace())
+		;
+	else
 	if(TryDecl())
 		Key(';');
 	else
@@ -1035,55 +1281,36 @@ bool Parser::EatBody()
 	return true;
 }
 
-String CleanTp(const String& tp)
-{
-	int q = tp.Find('<');
-	int w = tp.ReverseFind('>');
-	if(q < 0 || w < 0) return tp;
-	String a = TrimLeft(TrimRight(tp.Mid(q + 1, w - q - 1)));
-	const char *s = a;
-	String r;
-	while(*s) {
-		if(*s == ',') {
-			r.Cat(';');
-			s++;
-			while(*s && *s <= ' ')
-				s++;
-		}
-		else
-			r.Cat(*s++);
-	}
-	return r;
-}
-
 void Parser::SetScopeCurrent()
 {
 	current_scope = context.scope;
 }
 
-CppItem& Parser::Item(const String& scope, const String& item, const String& name, bool impl)
+CppItem& Parser::Item(const String& scope, const String& using_namespace, const String& item,
+                      const String& name, bool impl)
 {
 	current_scope = scope;
 	if(dobody)
 		current = CppItem();
 	current_key = item;
 	current_name = name;
-	Array<CppItem>& n = base->GetAdd(current_scope);
-	CppItem& im = dobody ? current : n.Add();
+	CppItem& im = dobody ? current : base->GetAdd(current_scope).Add();
 	im.item = item;
 	im.name = name;
 	im.file = filei;
 	im.line = line + 1;
 	im.impl = impl;
 	im.filetype = filetype;
+	im.using_namespaces = using_namespace;
 	LLOG("New item " << GetCppFile(filei) << ' ' << line + 1 << "    " << scope << "::" << item);
 	return im;
 }
 
-CppItem& Parser::Item(const String& scope, const String& item, const String& name)
+CppItem& Parser::Item(const String& scope, const String& using_namespace, const String& item,
+                      const String& name)
 {
 	String h = Purify(item);
-	CppItem& im = Item(scope, h, name, false);
+	CppItem& im = Item(scope, using_namespace, h, name, false);
 	im.natural = h;
 	return im;
 }
@@ -1113,161 +1340,85 @@ void Parser::ScopeBody()
 	}
 }
 
-void TpSkip(CParser& p)
+String Parser::AnonymousName()
 {
 	int lvl = 0;
-	for(;;) {
-		if(lvl == 0 && (p.IsChar(',') || p.IsChar('>')) || p.IsEof())
-			break;
-		if(p.Char('<'))
-			lvl++;
+	for(int i = 0; lex[i] != t_eof; i++) {
+		if(lex[i] == '{') lvl++;
 		else
-		if(p.Char('>'))
-			lvl--;
-		else
-			p.SkipTerm();
+		if(lex[i] == '}')
+			if(--lvl == 0) {
+				if(lex.IsId(i + 1))
+					return "." + lex.Id(i + 1);
+				break;
+			}
 	}
-}
 
-String Subst(const String& s, const Vector<String>& tpar)
-{
-	if(tpar.GetCount() == 0)
-		return s;
-	String r;
-	CParser p(s);
-	while(!p.IsEof()) {
-		if(p.IsId()) {
-			String id = p.ReadId();
-			int q = FindIndex(tpar, id);
-			if(q >= 0)
-				r << AsString(q);
-			else
-				r << id;
-		}
-		else
-			r << p.GetChar();
-	}
-	return r;
+	dword x[4];
+	x[0] = Random();
+	x[1] = Random();
+	x[2] = Random();
+	x[3] = Random();
+	
+	return "@" + Base64Encode(String((const char *)&x, sizeof(x))) + "/" + title;
 }
 
 bool Parser::Scope(const String& tp, const String& tn) {
 	if(Key(tk_namespace)) {
 		Check(lex.IsId(), "Expected name of namespace");
 		String name = lex.GetId();
+		LLOG("namespace " << name);
+		namespace_info << ';' << name;
+		Context c0;
+		c0 <<= context;
+		int struct_level0 = struct_level;
+		ScopeCat(context.scope, name);
 		if(Key('{')) {
 			Context cc;
 			cc <<= context;
-			ScopeBody();
-			context <<= cc;
-		}
-		Key(';');
-		SetScopeCurrent();
-		return true;
-	}
-	if((lex == tk_class || lex == tk_struct || lex == tk_union) && lex[1] != '{') {
-		int t = lex.GetCode(); // t is now struct/class/union
-		context.typenames.FindAdd(lex);
-		Context cc;
-		cc <<= context;
-		CParser p(tp);
-		Vector<String> tpar;
-		if(p.Char('<')) {
-			while(!p.IsEof() && !p.Char('>')) {
-				if((p.Id("class") || p.Id("typename") || p.Id("struct")) && p.IsId()) {
-					tpar.Add(p.ReadId());
-					context.tparam.Add(lex.Id(tpar.Top()));
+			while(!Key('}')) {
+				if(lex == t_eof)
+					ThrowError("Unexpected end of file");
+				try {
+					Do();
 				}
-				else
-					context.tparam.Add(0);
-				TpSkip(p);
-				p.Char(',');
+				catch(Error) {
+					if(struct_level0)
+						throw;
+					context <<= cc;
+					struct_level = struct_level0;
+					LLOG("---- Recovery to namespace level");
+					++lex;
+					lex.SkipToGrounding();
+					lex.ClearBracesLevel();
+					LLOG("Grounding skipped to " << GetLine(lex.Pos()));
+				}
+				catch(Lex::Grounding) {
+					LLOG("---- Grounding to namespace level");
+					context <<= cc;
+					struct_level = struct_level0;
+					lex.ClearBracesLevel();
+					lex.ClearBody();
+				}
 			}
 		}
-		if(Key(t_dblcolon))
-			context.scope = Null;
-		String name;
-		do {
-			Check(lex.IsId(), "Missing identifier");
-			context.typenames.FindAdd(lex);
-			name = lex.GetId(); // name of structure
-			if(lex == '<')
-				name << TemplateParams();
-			ScopeCat(context.scope, name);
-		}
-		while(Key(t_dblcolon));
-		context.access = t == tk_class ? PRIVATE : PUBLIC;
-		if(tn.GetCount()) {
-			if(context.ctname.GetCount())
-				context.ctname << ';';
-			context.ctname << tn;
-		}
-		String nn;
-		if(!tp.IsEmpty())
-			nn = "template " + tp + " ";
-		String key = (t == tk_class ? "class" : t == tk_union ? "union" : "struct");
-		nn << key << ' ' << name;
-		CppItem& im = Item(context.scope, key, name, lex != ';');
-		im.kind = tp.IsEmpty() ? STRUCT : STRUCTTEMPLATE;
-		im.type = name;
-		im.access = cc.access;
-		im.tname = tn;
-		im.ctname = context.ctname;
-		im.tparam = CleanTp(tp);
-		im.ptype.Clear();
-		im.pname.Clear();
-		im.param.Clear();
-		if(Key(';')) {
-			context = pick(cc);
-			im.natural = Gpurify(nn);
-			SetScopeCurrent();
+		LLOG("End namespace");
+		Key(';');
+		context <<= c0;
+		SetScopeCurrent();
+		namespace_info << ";}";
+		return true;
+	}
+ // TODO: Remove
+#if 0
+	if((lex == tk_class || lex == tk_struct || lex == tk_union)/* && lex[1] != '{'*/) {
+		if(StructDeclaration(tp, tn).GetCount()) {
+			CheckKey(';');
 			return true;
 		}
-		if(Key(':')) {
-			nn << " : ";
-			bool c = false;
-			do {
-				String access = t == tk_class ? "private" : "public";
-				if(Key(tk_public)) access = "public";
-				else
-				if(Key(tk_protected)) access = "protected";
-				else
-				if(Key(tk_private)) access = "private";
-				if(Key(tk_virtual)) access << " virtual";
-				String h;
-				bool dummy;
-				String n = Name(h, dummy, dummy);
-				ScAdd(im.pname, h);
-				if(c)
-					im.ptype << ';';
-				im.ptype << Subst(n, tpar);
-				ScAdd(im.param, access + ' ' + n);
-				if(c)
-					nn << ", ";
-				nn << access + ' ' + n;
-				c = true;
-			}
-			while(Key(','));
-		}
-		if(Key('{')) {
-			ScopeBody();
-			im.natural = Gpurify(nn);
-			im.decla = true;
-		}
-		else
-			if(IsNull(im.natural))
-				im.natural = Gpurify(nn);
-		context = pick(cc);
-		CheckKey(';');
-		SetScopeCurrent();
-		return true;
 	}
+#endif
 	return false;
-}
-
-String DeTemp(const char *s)
-{
-	String r;
-	return r;
 }
 
 CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
@@ -1324,7 +1475,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	while(*s == ':') s++;
 	if(*s)
 		ScopeCat(scope, s);
-	CppItem& im = Item(scope, item, nm, body);
+	CppItem& im = Item(scope, context.namespace_using, item, nm, body);
 	im.natural.Clear();
 	if(!IsNull(templ)) {
 		im.natural = TrimRight(Gpurify(templ)) + ' ';
@@ -1354,14 +1505,77 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	return im;
 }
 
+void Parser::Enum()
+{
+	String name;
+	if(lex.IsId())
+		name = lex.GetId();
+	if(Key('{')) {
+		for(;;) {
+			Line();
+			String val;
+			Check(lex.IsId(), "Expected identifier");
+			String id = lex.GetId();
+			CppItem& im = Item(context.scope, context.namespace_using, id, id);
+			im.natural = "enum ";
+			if(!IsNull(name))
+				im.natural << name << ' ';
+			im.natural << id;
+			if(Key('='))
+				im.natural << " = " << Constant();
+			im.kind = ENUM;
+			im.access = context.access;
+			Key(',');
+			if(Key('}')) break;
+		}
+	}
+	while(!Key(';')) {
+		if(lex.IsId() || lex == ',' || lex == '*') // typedef name ignored here
+			++lex;
+		else
+			break;
+	}
+	Key(';');
+	SetScopeCurrent();
+}
+
+bool Parser::UsingNamespace()
+{
+	if(Key(tk_using)) {
+		if(Key(tk_namespace))
+			while(lex.IsId()) {
+				Vector<String> h = Split(context.namespace_using, ';');
+				String u;
+				do {
+					u << lex.GetId();
+					if(Key(t_dblcolon))
+						u << "::";
+				}
+				while(lex.IsId());
+				if(FindIndex(h, u) < 0)
+					h.Add(u);
+				context.namespace_using = Join(h, ";");
+				Key(',');
+			}
+		while(!Key(';') && lex != t_eof)
+			++lex;
+		namespace_info << ";using " << context.namespace_using;
+		return true;
+	}
+	return false;
+}
+
 void Parser::Do()
 {
 	LLOG("Do, scope: " << current_scope);
+	if(lex.IsGrounded() && struct_level)
+		throw Lex::Grounding();
 	Line();
-	if(Key(tk_using)) {
-		while(!Key(';') && lex != t_eof)
-			++lex;
-	}
+	if(UsingNamespace())
+		;
+	else
+	if(Key(';')) // 'empty' declaraion, result of some ignores
+		;
 	else
 	if(Key(tk_extern) && lex == t_string) { // extern "C++" kind
 		++lex;
@@ -1391,7 +1605,7 @@ void Parser::Do()
 			String tnames;
 			String tparam = TemplateParams(tnames);
 			if(!Scope(tparam, tnames)) {
-				Array<Decl> r = Declaration(true, true);
+				Array<Decl> r = Declaration(true, true, tnames, tparam);
 				CppItem *functionItem = 0;
 				bool body = lex == '{';
 				for(int i = 0; i < r.GetCount(); i++) {
@@ -1419,30 +1633,13 @@ void Parser::Do()
 	else
 	if(lex == tk_enum && (lex[1] == '{' || lex[2] == '{')) {
 		++lex;
-		String name;
-		if(lex.IsId())
-			name = lex.GetId();
-		if(Key('{')) {
-			for(;;) {
-				Line();
-				String val;
-				Check(lex.IsId(), "Expected identifier");
-				String id = lex.GetId();
-				CppItem& im = Item(context.scope, id, id);
-				im.natural = "enum ";
-				if(!IsNull(name))
-					im.natural << name << ' ';
-				im.natural << id;
-				if(Key('='))
-					im.natural << " = " << Constant();
-				im.kind = ENUM;
-				im.access = context.access;
-				Key(',');
-				if(Key('}')) break;
-			}
-		}
-		Key(';');
-		SetScopeCurrent();
+		Enum();
+	}
+	else
+	if(lex == tk_typedef && lex[1] == tk_enum && (lex[2] == '{' || lex[3] == '{')) {
+		++lex;
+		++lex;
+		Enum();
 	}
 	else
 	if(Key('#')) {
@@ -1452,7 +1649,7 @@ void Parser::Do()
 			const char *s = n;
 			while(*s && iscid(*s))
 				name.Cat(*s++);
-			CppItem& im = Item(context.scope, n, name);
+			CppItem& im = Item("", context.namespace_using, n, name);
 			im.kind = MACRO;
 			s = strchr(n, '(');
 			if(s) {
@@ -1489,16 +1686,14 @@ void Parser::Do()
 			Key(':');
 		}
 		else {
-			Array<Decl> r = Declaration(true, true);
+			Array<Decl> r = Declaration(true, true, Null, Null);
 			CppItem *functionItem = 0;
 			bool body = lex == '{';
 			for(int i = 0; i < r.GetCount(); i++) {
 				Decl& d = r[i];
 				if(d.function) {
-					if(!d.isfriend) {
-						CppItem &im = Fn(d, Null, body, String(), String());
-						functionItem = &im;
-					}
+					if(!d.isfriend)
+						functionItem = &Fn(d, Null, body, String(), String());
 				}
 				else {
 					String h = d.natural;
@@ -1508,9 +1703,10 @@ void Parser::Do()
 					String scope = context.scope;
 					if(d.type_def)
 						ScopeCat(scope, d.name);
-					CppItem& im = Item(scope, d.isfriend ? "friend class"
-					                          : d.type_def ? "typedef"
-					                          : d.name, d.name);
+					CppItem& im = Item(scope, context.namespace_using,
+					                   d.isfriend ? "friend class"
+					                   : d.type_def ? "typedef"
+					                   : d.name, d.name);
 					im.natural = Purify(h);
 					im.type = d.type;
 					im.access = context.access;
@@ -1538,33 +1734,26 @@ void Parser::Do()
 	}
 }
 
-void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const String& fn,
-                Callback2<int, const String&> _err, const Vector<String>& typenames)
+void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
+                 const String& title_, Callback2<int, const String&> _err,
+                 const Vector<String>& typenames,
+                 const Vector<String>& namespace_stack,
+                 const Index<String>& namespace_using)
 {
 	LLOG("= C++ Parser ==================================== " << fn);
 	base = &_base;
 	file = PreProcess(in);
-	lex.Init(~file.text, ignore);
+	lex.Init(~file.text);
 	err = _err;
-	filei = GetCppFileIndex(fn);
-	String ext = ToLower(GetFileExt(fn));
-	if(ext == ".h")
-		filetype = FILE_H;
-	else
-	if(ext == ".hpp")
-		filetype = FILE_HPP;
-	else
-	if(ext == ".cpp")
-		filetype = FILE_CPP;
-	else
-	if(ext == ".c")
-		filetype = FILE_C;
-	else
-		filetype = FILE_OTHER;
+	filei = filei_;
+	filetype = filetype_;
+	title = title_;
 	lpos = 0;
 	line = 0;
 	if(whenFnEnd)
 		lex.StartStatCollection();
+
+	context.namespace_using = Join(namespace_using.GetKeys(), ";");
 
 	while(lex != t_eof)
 		try {
@@ -1573,8 +1762,9 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 				context.access = PUBLIC;
 				context.typenames.Clear();
 				context.tparam.Clear();
-				context.scope.Clear();
+				context.scope = Join(namespace_stack, "::");
 				inbody = false;
+				struct_level = 0;
 				for(int i = 0; i < typenames.GetCount(); i++)
 					context.typenames.Add(lex.Id(typenames[i]));
 				Do();
@@ -1601,12 +1791,13 @@ void Parser::Do(Stream& in, const Vector<String>& ignore, CppBase& _base, const 
 		}
 }
 
-void Parse(Stream& s, const Vector<String>& ignore, CppBase& base, const String& fn,
-           Callback2<int, const String&> _err)
+/*
+void Parse(Stream& s, CppBase& base, int file, int filetype, const String& title, Callback2<int, const String&> _err)
 {
 	LTIMING("Parse");
 	Parser p;
-	p.Do(s, ignore, base, fn, _err);
+	p.Do(s, base, file, filetype, title, _err);
 }
+*/
 
 END_UPP_NAMESPACE

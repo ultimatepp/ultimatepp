@@ -124,6 +124,8 @@ inline void LOGF(const char *format, ...) {}
 #define ACTIVATE_TIMING()   LOG_NOP
 #define DEACTIVATE_TIMING() LOG_NOP
 
+#define TIMESTOP(x)      LOG_NOP
+
 #endif
 
 struct DebugLogBlock

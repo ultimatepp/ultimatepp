@@ -56,7 +56,7 @@ void GotoDlg::SyncList()
 	for(int i = 0; i < item.GetCount(); i++) {
 		const CppItemInfo& f = item[i];		
 		if(ToLower(f.name).Find(n) >= 0 && (IsNull(typei) || typei == f.typei) && (IsNull(scope) || scope == f.scope)) {
-			list.Add(f.scope, RawToValue(f), f.item, f.line, GetCppFile(f.file), f.scope);
+			list.Add(f.scope, RawToValue(f), f.item, f.line, GetSourceFilePath(f.file), f.scope);
 			nc.FindAdd(f.scope);
 		}
 	}
@@ -69,7 +69,7 @@ void GotoDlg::SyncList()
 			    (ci ? q && memcmp_i(n, f.name, n.GetLength()) == 0 : q == 0)) &&
 			   (IsNull(typei) || typei == f.typei) &&
 			   (IsNull(scope) || scope == f.scope)) {
-				list.Add(f.scope, RawToValue(f), f.item, f.line, GetCppFile(f.file), f.scope);
+				list.Add(f.scope, RawToValue(f), f.item, f.line, GetSourceFilePath(f.file), f.scope);
 				nc.FindAdd(f.scope);
 			}
 		}
@@ -118,7 +118,7 @@ struct CppItemInfoSortLine {
 struct CppItemInfoSortGlobal {
 	bool operator()(const CppItemInfo& a, const CppItemInfo& b) const {
 		return CombineCompare(a.scope, b.scope)
-		                     (GetCppFile(a.file), GetCppFile(b.file))
+		                     (GetSourceFilePath(a.file), GetSourceFilePath(b.file))
 		                     (a.line, b.line) < 0;
 	}
 };
@@ -143,7 +143,7 @@ GotoDlg::GotoDlg(const String& s)
 			mf.scope = base.GetKey(i);
 			mf.virt = false;
 			mf.access = m.impl ? (int)WITHBODY : (int)PUBLIC;
-			mf.item = global ? String().Cat() << GetFileName(GetCppFile(m.file)) << " (" << m.line << ')'
+			mf.item = global ? String().Cat() << GetFileName(GetSourceFilePath(m.file)) << " (" << m.line << ')'
 			                 : AsString(m.line);
 			mf.typei = 0;
 			item.Add(mf);
@@ -243,11 +243,14 @@ bool Ide::SwapSIf(const char *cref)
 	if(q < 0)
 		return false;
 	const Array<CppItem>& n = CodeBase()[q];
-	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key);
+	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key, p.context.namespace_using);
 	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
 		return false;
 	q = FindItem(n, qitem);
-	int count = q >= 0 ? GetCount(n, q) : 0;
+	int count = 0;
+	for(int i = 0; i < n.GetCount(); i++)
+		if(n[i].qitem == qitem)
+			count++;
 	if(!cref && count < 2) {
 		int typei = -1;
 		for(int i = 0; i < n.GetCount(); i++) {
@@ -262,14 +265,14 @@ bool Ide::SwapSIf(const char *cref)
 			GotoCpp(n[typei]);
 		return false;
 	}
-	if(count < 1)
+	if(count < 1 || IsNull(editfile))
 		return false;
-	int file = GetCppFileIndex(editfile);
+	int file = GetSourceFileIndex(editfile);
 	int line = p.current.line;
 	LLOG("SwapS line: " << line);
 	int i;
 	for(i = 0; i < count; i++) {
-		LLOG("file: " << GetCppFile(n[q + i].file) << ", line: " << n[q + i].line);
+		LLOG("file: " << GetSourceFilePath(n[q + i].file) << ", line: " << n[q + i].line);
 		if(n[q + i].file == file && n[q + i].line == line) {
 			i++;
 			break;

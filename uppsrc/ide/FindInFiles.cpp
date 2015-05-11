@@ -429,6 +429,9 @@ void FindInFilesDlg::Sync()
 FindInFilesDlg::FindInFilesDlg()
 {
 	regexp <<= style <<= THISBACK(Sync);
+	readonly.Add(Null, "All files");
+	readonly.Add(0, "Writable");
+	readonly.Add(1, "Read only");
 	readonly <<= Null;
 	workspace <<= THISBACK(Sync);
 }

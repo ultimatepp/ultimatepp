@@ -57,7 +57,7 @@ void Ide::GotoPos(String path, int line)
 
 void Ide::GotoCpp(const CppItem& pos)
 {
-	GotoPos(GetCppFile(pos.file), pos.line);
+	GotoPos(GetSourceFilePath(pos.file), pos.line);
 }
 
 void Ide::RescanCode()

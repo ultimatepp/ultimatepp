@@ -181,11 +181,13 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Abbr();
 
 	void           Context(Parser& parser, int pos);
-	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
+	void           ExpressionType(const String& type, const String& usings,
+	                              const Vector<String>& xp, int ii,
 	                              Index<String>& typeset, bool variable,
 	                              bool can_shortcut_operator, Index<String>& visited_bases,
 	                              int lvl);
-	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
+	void           ExpressionType(const String& type, const String& usings,
+	                              const Vector<String>& xp, int ii,
 	                              Index<String>& typeset, bool variable, int lvl);
 //	void           ExpressionType(const String& type, const Vector<String>& xp, int ii,
 //	                              Index<String>& typeset);
@@ -198,6 +200,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           DCopy();
 	void           Virtuals();
 	void           Thisbacks();
+	void           AssistItemAdd(const String& scope, const CppItem& m, int typei);
+	void           GatherItems0(const String& type, bool only_public, Index<String>& in_types,
+	                           bool types);
 	void           GatherItems(const String& type, bool only_public, Index<String>& in_types,
 	                           bool types);
 

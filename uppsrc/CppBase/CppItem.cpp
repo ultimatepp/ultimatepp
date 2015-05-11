@@ -56,8 +56,7 @@ void CppItem::Dump(Stream& s) const
 	PUT(lvalue);
 	PUT(isptr);
 	PUT(impl);
-	PUT(qualify_type);
-	PUT(qualify_param);
+	PUT(qualify);
 #undef PUT
 	s << ' ' << line << '\n';
 #define PUT(x) if(x.GetCount()) s << "      " << #x << ": " << x << '\n';

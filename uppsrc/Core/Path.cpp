@@ -868,6 +868,7 @@ int Compare_FileTime(const FileTime& fa, const FileTime& fb)
 
 Time FileGetTime(const char *filename)
 {
+	RTIMING("FileGetTime");
 #if defined(PLATFORM_WIN32)
 	HANDLE handle;
 	if(IsWinNT())

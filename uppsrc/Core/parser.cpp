@@ -416,7 +416,7 @@ void CParser::SkipTerm()
 {
 	LTIMING("SkipTerm");
 	if(IsId())
-		while(IsAlNum(*term) || *term == '_')
+		while(iscid(*term))
 			term++;
 	else
 	if(IsNumber())
