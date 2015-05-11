@@ -1,8 +1,8 @@
 _CrtEnableIf<true, _Ty>  {
-	STRUCTTEMPLATE struct, line 1
+	STRUCTTEMPLATE, name: _CrtEnableIf<true, _Ty> , qitem: struct, qtype: _CrtEnableIf<true,_Ty>, qptype: , natural: template <true, typename _Ty> struct _CrtEnableIf<true, _Ty> , line 1, using 
 }
 _CrtEnableIf<true, _Ty> ::_Type {
-	TYPEDEF typedef, line 4
+	TYPEDEF, name: _Type, qitem: typedef, qtype: 1, qptype: , natural: typedef _Ty _Type, line 4, using 
 }
 <locals> {
 }

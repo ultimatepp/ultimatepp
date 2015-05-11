@@ -1,0 +1,5 @@
+template <class T, class B = EmptyClass>
+class Moveable : public B
+{
+	int boo;
+};

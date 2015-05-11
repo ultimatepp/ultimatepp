@@ -1,0 +1,28 @@
+typedef struct {
+	int x;
+	struct Foo {
+		int a;
+	} y;
+	struct {
+		int bar;
+	};
+	struct {
+		int foo;
+	} quack;
+} name;
+
+namespace std {
+	struct string {};
+};
+
+// void Foo(string a);
+
+using namespace std;
+
+struct Bar {
+	struct string {};
+
+	std::string Foo(string a);
+};
+
+void Foo(string a);

@@ -1,0 +1,80 @@
+_LARGE_INTEGER {
+	STRUCT, name: _LARGE_INTEGER, qitem: struct, qtype: _LARGE_INTEGER, qptype: , natural: , line 1, using 
+	STRUCT, name: _LARGE_INTEGER, qitem: union, qtype: _LARGE_INTEGER, qptype: , natural: union _LARGE_INTEGER, line 3, using 
+	INSTANCEVARIABLE, name: u, qitem: u, qtype: .u, qptype: , natural: struct { DWORD LowPart; LONG HighPart; } u, line 10, using 
+	INSTANCEVARIABLE, name: QuadPart, qitem: QuadPart, qtype: LONGLONG, qptype: , natural: LONGLONG QuadPart, line 13, using 
+}
+_LARGE_INTEGER::@rAp/jC+qxJd1pha3wMwh2A==/title {
+	STRUCT, name: @rAp/jC+qxJd1pha3wMwh2A==/title, qitem: struct, qtype: @rAp/jC+qxJd1pha3wMwh2A==/title, qptype: , natural: struct @rAp/jC+qxJd1pha3wMwh2A==/title, line 4, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 5, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 6, using 
+}
+_LARGE_INTEGER::.u {
+	STRUCT, name: .u, qitem: struct, qtype: .u, qptype: , natural: struct .u, line 8, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 9, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 10, using 
+}
+LARGE_INTEGER {
+	TYPEDEF, name: LARGE_INTEGER, qitem: typedef, qtype: _LARGE_INTEGER, qptype: , natural: typedef union _LARGE_INTEGER { struct { DWORD LowPart; LONG HighPart; } ; struct { DWORD LowPart; LONG HighPart; } u; LONGLONG QuadPart; } LARGE_INTEGER, line 13, using 
+}
+PLARGE_INTEGER {
+	TYPEDEF, name: PLARGE_INTEGER, qitem: typedef, qtype: LARGE_INTEGER, qptype: , natural: typedef LARGE_INTEGER *PLARGE_INTEGER, line 16, using 
+}
+_ULARGE_INTEGER {
+	STRUCT, name: _ULARGE_INTEGER, qitem: struct, qtype: _ULARGE_INTEGER, qptype: , natural: , line 19, using 
+	STRUCT, name: _ULARGE_INTEGER, qitem: union, qtype: _ULARGE_INTEGER, qptype: , natural: union _ULARGE_INTEGER, line 21, using 
+	INSTANCEVARIABLE, name: u, qitem: u, qtype: .u, qptype: , natural: struct { DWORD LowPart; DWORD HighPart; } u, line 28, using 
+	INSTANCEVARIABLE, name: QuadPart, qitem: QuadPart, qtype: ULONGLONG, qptype: , natural: ULONGLONG QuadPart, line 31, using 
+}
+_ULARGE_INTEGER::@Q7NOmvtSotvDdn2LZ33l2A==/title {
+	STRUCT, name: @Q7NOmvtSotvDdn2LZ33l2A==/title, qitem: struct, qtype: @Q7NOmvtSotvDdn2LZ33l2A==/title, qptype: , natural: struct @Q7NOmvtSotvDdn2LZ33l2A==/title, line 22, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 23, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: DWORD, qptype: , natural: DWORD HighPart, line 24, using 
+}
+_ULARGE_INTEGER::.u {
+	STRUCT, name: .u, qitem: struct, qtype: .u, qptype: , natural: struct .u, line 26, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 27, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: DWORD, qptype: , natural: DWORD HighPart, line 28, using 
+}
+ULARGE_INTEGER {
+	TYPEDEF, name: ULARGE_INTEGER, qitem: typedef, qtype: _ULARGE_INTEGER, qptype: , natural: typedef union _ULARGE_INTEGER { struct { DWORD LowPart; DWORD HighPart; } ; struct { DWORD LowPart; DWORD HighPart; } u; ULONGLONG QuadPart; } ULARGE_INTEGER, line 31, using 
+}
+PULARGE_INTEGER {
+	TYPEDEF, name: PULARGE_INTEGER, qitem: typedef, qtype: ULARGE_INTEGER, qptype: , natural: typedef ULARGE_INTEGER *PULARGE_INTEGER, line 34, using 
+}
+_LUID {
+	STRUCT, name: _LUID, qitem: struct, qtype: _LUID, qptype: , natural: struct _LUID, line 36, using 
+	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 37, using 
+	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 38, using 
+}
+LUID {
+	TYPEDEF, name: LUID, qitem: typedef, qtype: _LUID, qptype: , natural: typedef struct _LUID { DWORD LowPart; LONG HighPart; } LUID, line 38, using 
+}
+PLUID {
+	TYPEDEF, name: PLUID, qitem: typedef, qtype: _LUID, qptype: , natural: typedef struct _LUID { DWORD LowPart; LONG HighPart; } *PLUID, line 38, using 
+}
+<globals> {
+	MACRO, name: _DWORDLONG_, qitem: _DWORDLONG_, qtype: , qptype: , natural: _DWORDLONG_, line 41, using 
+}
+DWORDLONG {
+	TYPEDEF, name: DWORDLONG, qitem: typedef, qtype: ULONGLONG, qptype: , natural: typedef ULONGLONG DWORDLONG, line 42, using 
+}
+PDWORDLONG {
+	TYPEDEF, name: PDWORDLONG, qitem: typedef, qtype: DWORDLONG, qptype: , natural: typedef DWORDLONG *PDWORDLONG, line 43, using 
+}
+_LIST_ENTRY {
+	STRUCT, name: _LIST_ENTRY, qitem: struct, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY, line 45, using 
+	INSTANCEVARIABLE, name: Flink, qitem: Flink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Flink, line 46, using , pointer
+	INSTANCEVARIABLE, name: Blink, qitem: Blink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Blink, line 47, using , pointer
+}
+LIST_ENTRY {
+	TYPEDEF, name: LIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } LIST_ENTRY, line 47, using 
+}
+PLIST_ENTRY {
+	TYPEDEF, name: PLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } *PLIST_ENTRY, line 47, using 
+}
+PRLIST_ENTRY {
+	TYPEDEF, name: PRLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } * PRLIST_ENTRY, line 47, using 
+}
+<locals> {
+}

@@ -1,0 +1,10 @@
+<globals> {
+	ENUM, name: FOO, qitem: FOO, qtype: , qptype: , natural: enum Alpha FOO, line 2, using 
+	ENUM, name: BAR, qitem: BAR, qtype: , qptype: , natural: enum Alpha BAR, line 2, using 
+	ENUM, name: FOO, qitem: FOO, qtype: , qptype: , natural: enum FOO, line 6, using 
+	ENUM, name: BAR, qitem: BAR, qtype: , qptype: , natural: enum BAR, line 6, using 
+	ENUM, name: FOO, qitem: FOO, qtype: , qptype: , natural: enum Gamma FOO, line 10, using 
+	ENUM, name: BAR, qitem: BAR, qtype: , qptype: , natural: enum Gamma BAR, line 10, using 
+}
+<locals> {
+}

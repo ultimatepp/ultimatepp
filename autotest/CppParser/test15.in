@@ -1,0 +1,3 @@
+ #define _THROW0()	throw ()
+
+void Test() _THROW0()

@@ -4,9 +4,6 @@ uses
 
 file
 	cpp.h,
-	macro.cpp,
-	ppfile.cpp,
-	cpp.cpp,
 	main.cpp,
 	test.h,
 	testfile,

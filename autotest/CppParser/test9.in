@@ -1,0 +1,6 @@
+SHORT
+_InterlockedCompareExchange16 (
+                                                              SHORT volatile *Destination,
+                                               SHORT ExChange,
+                                               SHORT Comperand
+    );

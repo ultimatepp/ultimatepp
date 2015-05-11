@@ -1,0 +1,46 @@
+.vPROCESSOR_IDLESTATE_INFO {
+	STRUCT, name: .vPROCESSOR_IDLESTATE_INFO, qitem: struct, qtype: .vPROCESSOR_IDLESTATE_INFO, qptype: , natural: struct .vPROCESSOR_IDLESTATE_INFO, line 1, using 
+	INSTANCEVARIABLE, name: TimeCheck, qitem: TimeCheck, qtype: DWORD, qptype: , natural: DWORD TimeCheck, line 2, using 
+	INSTANCEVARIABLE, name: DemotePercent, qitem: DemotePercent, qtype: BYTE, qptype: , natural: BYTE DemotePercent, line 3, using 
+	INSTANCEVARIABLE, name: PromotePercent, qitem: PromotePercent, qtype: BYTE, qptype: , natural: BYTE PromotePercent, line 4, using 
+	INSTANCEVARIABLE, name: Spare, qitem: Spare, qtype: BYTE, qptype: , natural: BYTE Spare[2], line 5, using , pointer
+}
+<globals> {
+	VARIABLE, name: vPROCESSOR_IDLESTATE_INFO, qitem: vPROCESSOR_IDLESTATE_INFO, qtype: .vPROCESSOR_IDLESTATE_INFO, qptype: , natural: struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } vPROCESSOR_IDLESTATE_INFO, line 5, using 
+	VARIABLE, name: vPPROCESSOR_IDLESTATE_INFO, qitem: vPPROCESSOR_IDLESTATE_INFO, qtype: .vPROCESSOR_IDLESTATE_INFO, qptype: , natural: struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } *vPPROCESSOR_IDLESTATE_INFO, line 5, using , pointer
+	VARIABLE, name: xxx, qitem: xxx, qtype: Point, qptype: , natural: struct Point { int x, y; } xxx, line 16, using 
+	VARIABLE, name: yyy, qitem: yyy, qtype: Point, qptype: , natural: struct Point { int x, y; } yyy, line 16, using 
+}
+.PROCESSOR_IDLESTATE_INFO {
+	STRUCT, name: .PROCESSOR_IDLESTATE_INFO, qitem: struct, qtype: .PROCESSOR_IDLESTATE_INFO, qptype: , natural: struct .PROCESSOR_IDLESTATE_INFO, line 8, using 
+	INSTANCEVARIABLE, name: TimeCheck, qitem: TimeCheck, qtype: DWORD, qptype: , natural: DWORD TimeCheck, line 9, using 
+	INSTANCEVARIABLE, name: DemotePercent, qitem: DemotePercent, qtype: BYTE, qptype: , natural: BYTE DemotePercent, line 10, using 
+	INSTANCEVARIABLE, name: PromotePercent, qitem: PromotePercent, qtype: BYTE, qptype: , natural: BYTE PromotePercent, line 11, using 
+	INSTANCEVARIABLE, name: Spare, qitem: Spare, qtype: BYTE, qptype: , natural: BYTE Spare[2], line 12, using , pointer
+}
+PROCESSOR_IDLESTATE_INFO {
+	TYPEDEF, name: PROCESSOR_IDLESTATE_INFO, qitem: typedef, qtype: .PROCESSOR_IDLESTATE_INFO, qptype: , natural: typedef struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } PROCESSOR_IDLESTATE_INFO, line 12, using 
+}
+PPROCESSOR_IDLESTATE_INFO {
+	TYPEDEF, name: PPROCESSOR_IDLESTATE_INFO, qitem: typedef, qtype: .PROCESSOR_IDLESTATE_INFO, qptype: , natural: typedef struct { DWORD TimeCheck; BYTE DemotePercent; BYTE PromotePercent; BYTE Spare[2]; } *PPROCESSOR_IDLESTATE_INFO, line 12, using 
+}
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 15, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 16, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 16, using 
+}
+PointT {
+	STRUCT, name: PointT, qitem: struct, qtype: PointT, qptype: , natural: struct PointT, line 19, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 20, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 20, using 
+}
+PPP {
+	TYPEDEF, name: PPP, qitem: typedef, qtype: PointT, qptype: , natural: typedef struct PointT { int x, y; } PPP, line 20, using 
+}
+TPoint {
+	STRUCTTEMPLATE, name: TPoint, qitem: struct, qtype: TPoint, qptype: , natural: template <class T> struct TPoint, line 23, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: 0, qptype: , natural: T x, line 25, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: 0, qptype: , natural: T y, line 25, using 
+}
+<locals> {
+}

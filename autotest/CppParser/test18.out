@@ -1,0 +1,5 @@
+<globals> {
+	FUNCTION, name: EncodeHtml, qitem: EncodeHtml(const String&,const VectorMap<String,String>&), qtype: String, qptype: String;VectorMap<String,String>, natural: String EncodeHtml(const String& x, const VectorMap<String, String>& escape = VectorMap<String, String>()), line 1, using 
+}
+<locals> {
+}

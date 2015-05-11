@@ -1,0 +1,8 @@
+file
+	file.cpp,
+	file2.h,
+	file1.h;
+
+mainconfig
+	"" = "";
+

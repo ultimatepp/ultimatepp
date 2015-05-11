@@ -1,0 +1,26 @@
+struct {
+    DWORD TimeCheck;
+    BYTE  DemotePercent;
+    BYTE  PromotePercent;
+    BYTE  Spare[2];
+} vPROCESSOR_IDLESTATE_INFO, *vPPROCESSOR_IDLESTATE_INFO;
+
+typedef struct {
+    DWORD TimeCheck;
+    BYTE  DemotePercent;
+    BYTE  PromotePercent;
+    BYTE  Spare[2];
+} PROCESSOR_IDLESTATE_INFO, *PPROCESSOR_IDLESTATE_INFO;
+
+struct Point {
+	int x, y;
+} xxx, yyy;
+
+typedef struct PointT {
+	int x, y;
+} PPP;
+
+template <class T>
+struct TPoint {
+	T x, y;
+};

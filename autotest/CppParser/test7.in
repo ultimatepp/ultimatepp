@@ -1,0 +1,20 @@
+__inline
+char *
+__insecure__strlwr_l(
+[SA_Pre(     Null=SA_No,       NullTerminated=SA_Yes)]
+[SA_Pre(Deref=1,       Valid=SA_Yes)]
+[SA_Post(       NullTerminated=SA_Yes)]
+[SA_Post(Deref=1,       Valid=SA_Yes)]
+char *_String,
+[SA_Pre(   Null=SA_Maybe)] [SA_Pre(Deref=1,       Valid=SA_Yes)]
+[SA_Pre(Deref=1,  Access=SA_Read)]
+_locale_t _Locale)
+{
+	char *  _strlwr_l([SA_Pre(     Null=SA_No,       NullTerminated=SA_Yes)]
+                      [SA_Pre(Deref=1,       Valid=SA_Yes)]
+                      [SA_Post(       NullTerminated=SA_Yes)]
+                      [SA_Post(Deref=1,       Valid=SA_Yes)]
+                      char *_String,
+                      [SA_Pre(   Null=SA_Maybe)] [SA_Pre(Deref=1,       Valid=SA_Yes)]
+					  [SA_Pre(Deref=1,  Access=SA_Read)] _locale_t _Locale);
+    return _strlwr_l(_String, _Locale);     }

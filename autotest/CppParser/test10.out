@@ -1,0 +1,6 @@
+Moveable {
+	STRUCTTEMPLATE, name: Moveable, qitem: class, qtype: Moveable, qptype: 1, natural: template <class T, class B = EmptyClass> class Moveable : public B, line 1, using 
+	INSTANCEVARIABLE, name: boo, qitem: boo, qtype: , qptype: , natural: int boo, line 4, using 
+}
+<locals> {
+}

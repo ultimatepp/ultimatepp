@@ -22,11 +22,13 @@ void Test(const char *sourcefile, const char *currentfile)
 	{ RTIMING("Preprocess");
 		cpp.Preprocess(sourcefile, in, currentfile);
 		DUMP(cpp.namespace_stack);
-//	DDUMP(cpp.output);
 		DUMP(cpp.usedmacro);
+		DUMP(cpp.macro.GetCount());
 	}
 	LOG("=================================");
+	LOG(cpp.output);
 
+/*
 	{
 		Cpp cpp2;
 		cpp2.include_path = include_path;
@@ -40,6 +42,7 @@ void Test(const char *sourcefile, const char *currentfile)
 		cpp2.include_path = include_path;
 		cpp2.Preprocess(sourcefile, NilStream(), currentfile, &cpp.usedmacro);
 	}
+*/
 }
 
 void TestC(const char *ln)
@@ -68,45 +71,10 @@ CONSOLE_APP_MAIN
 //	f.Parse(in);
 //	f.Dump();
 
+	GetPPFile("C:\\u\\upp.src\\uppsrc\\Core\\Core.h").Dump();
+	DLOG("==============");
+	Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
 
-//	Test("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp");
-#if 0
-	TestC("test");
-	TestC("*/ test /*c2*/ /* comment");
-	TestC(" */ test /*c2*/ a /* comment */");
-	TestC("  */ test /*c2*/ a /*/* comment */");
-	return;
-#endif	
-	{
-		RTIMING("Pass1");
-		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
-	}
-#ifndef _DEBUG
-	for(int i = 0; i < 100; i++) {
-		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
-	}
-#endif
-#if 0
-	{
-		RTIMING("Pass1");
-		Index<String> visited;
-//		RecursePP("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", include_path, visited);
-	}
-	
-	DDUMP(IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core.h", include_path));
-	DDUMP(IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core2.h", include_path));
-	
-	for(int i = 0; i < 1000; i++) {
-		RTIMING("IncludesFile true");
-		IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core.h", include_path);
-	}
-
-	for(int i = 0; i < 1000; i++) {
-		RTIMING("IncludesFile false");
-		IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core1.h", include_path);
-	}
-#endif
-//	GetPPFile(GetDataFile("test.h")).Dump();
 	return;
 }
 

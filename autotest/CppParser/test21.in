@@ -1,0 +1,5 @@
+int static foo();
+
+FOO
+
+static Bar bar;
