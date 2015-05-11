@@ -1,0 +1,1 @@
+String EncodeHtml(const String& x, const VectorMap<String, String>& escape = VectorMap<String, String>());

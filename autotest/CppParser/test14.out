@@ -1,0 +1,36 @@
+.name {
+	STRUCT, name: .name, qitem: struct, qtype: .name, qptype: , natural: struct .name, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 2, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: .name::Foo, qptype: , natural: struct Foo { int a; } y, line 4, using 
+	INSTANCEVARIABLE, name: quack, qitem: quack, qtype: .quack, qptype: , natural: struct { int foo; } quack, line 10, using 
+}
+.name::Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: .name::Foo, qptype: , natural: struct Foo, line 3, using 
+	INSTANCEVARIABLE, name: a, qitem: a, qtype: , qptype: , natural: int a, line 4, using 
+}
+.name::@WJqy9ozNzEU6OSliwUJIeg==/title {
+	STRUCT, name: @WJqy9ozNzEU6OSliwUJIeg==/title, qitem: struct, qtype: @WJqy9ozNzEU6OSliwUJIeg==/title, qptype: , natural: struct @WJqy9ozNzEU6OSliwUJIeg==/title, line 6, using 
+	INSTANCEVARIABLE, name: bar, qitem: bar, qtype: , qptype: , natural: int bar, line 7, using 
+}
+.name::.quack {
+	STRUCT, name: .quack, qitem: struct, qtype: .quack, qptype: , natural: struct .quack, line 9, using 
+	INSTANCEVARIABLE, name: foo, qitem: foo, qtype: , qptype: , natural: int foo, line 10, using 
+}
+name {
+	TYPEDEF, name: name, qitem: typedef, qtype: .name, qptype: , natural: typedef struct { int x; struct Foo { int a; } y; struct { int bar; }; struct { int foo; } quack; } name, line 10, using 
+}
+std::string {
+	STRUCT, name: string, qitem: struct, qtype: std::string, qptype: , natural: struct string, line 15, using 
+}
+Bar {
+	STRUCT, name: Bar, qitem: struct, qtype: Bar, qptype: , natural: struct Bar, line 22, using std
+	INSTANCEFUNCTION, name: Foo, qitem: Foo(Bar::string), qtype: std::string, qptype: Bar::string, natural: std::string Foo(string a), line 25, using std
+}
+Bar::string {
+	STRUCT, name: string, qitem: struct, qtype: Bar::string, qptype: , natural: struct string, line 23, using std
+}
+<globals> {
+	FUNCTION, name: Foo, qitem: Foo(std::string), qtype: , qptype: std::string, natural: void Foo(string a), line 28, using std
+}
+<locals> {
+}

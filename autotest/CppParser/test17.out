@@ -1,0 +1,16 @@
+_LIST_ENTRY {
+	STRUCT, name: _LIST_ENTRY, qitem: struct, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY, line 1, using 
+	INSTANCEVARIABLE, name: Flink, qitem: Flink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Flink, line 2, using , pointer
+	INSTANCEVARIABLE, name: Blink, qitem: Blink, qtype: _LIST_ENTRY, qptype: , natural: struct _LIST_ENTRY *Blink, line 3, using , pointer
+}
+LIST_ENTRY {
+	TYPEDEF, name: LIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } LIST_ENTRY, line 3, using 
+}
+PLIST_ENTRY {
+	TYPEDEF, name: PLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } *PLIST_ENTRY, line 3, using 
+}
+PRLIST_ENTRY {
+	TYPEDEF, name: PRLIST_ENTRY, qitem: typedef, qtype: _LIST_ENTRY, qptype: , natural: typedef struct _LIST_ENTRY { struct _LIST_ENTRY *Flink; struct _LIST_ENTRY *Blink; } * PRLIST_ENTRY, line 3, using 
+}
+<locals> {
+}

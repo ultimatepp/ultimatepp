@@ -1,0 +1,5 @@
+<globals> {
+	FUNCTION, name: __insecure__strlwr_l, qitem: __insecure__strlwr_l(char*,_locale_t), qtype: , qptype: ;_locale_t, natural: __inline char * __insecure__strlwr_l( char *_String, _locale_t _Locale), line 1, using 
+}
+<locals> {
+}

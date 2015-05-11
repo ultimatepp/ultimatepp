@@ -1,0 +1,5 @@
+Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Foo, qptype: , natural: struct Foo, line 1, using 
+}
+<locals> {
+}

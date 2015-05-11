@@ -1,0 +1,7 @@
+<globals> {
+	FUNCTION, name: foo, qitem: foo(), qtype: , qptype: , natural: int foo(), line 1, using 
+	VARIABLE, name: , qitem: , qtype: FOO, qptype: , natural: FOO, line 3, using 
+	VARIABLE, name: bar, qitem: bar, qtype: Bar, qptype: , natural: static Bar bar, line 5, using 
+}
+<locals> {
+}

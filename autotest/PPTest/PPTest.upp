@@ -1,0 +1,14 @@
+uses
+	Core,
+	CppBase;
+
+file
+	PPTest.cpp,
+	test.in,
+	test.out,
+	help.in;
+
+mainconfig
+	"" = "",
+	"" = "SAVE";
+

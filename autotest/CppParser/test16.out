@@ -1,0 +1,11 @@
+<globals> {
+	ENUM, name: MandatoryLevelUntrusted, qitem: MandatoryLevelUntrusted, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelUntrusted = 0, line 2, using 
+	ENUM, name: MandatoryLevelLow, qitem: MandatoryLevelLow, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelLow, line 3, using 
+	ENUM, name: MandatoryLevelMedium, qitem: MandatoryLevelMedium, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelMedium, line 4, using 
+	ENUM, name: MandatoryLevelHigh, qitem: MandatoryLevelHigh, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelHigh, line 5, using 
+	ENUM, name: MandatoryLevelSystem, qitem: MandatoryLevelSystem, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelSystem, line 6, using 
+	ENUM, name: MandatoryLevelSecureProcess, qitem: MandatoryLevelSecureProcess, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelSecureProcess, line 7, using 
+	ENUM, name: MandatoryLevelCount, qitem: MandatoryLevelCount, qtype: , qptype: , natural: enum _MANDATORY_LEVEL MandatoryLevelCount, line 8, using 
+}
+<locals> {
+}

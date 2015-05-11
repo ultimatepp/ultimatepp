@@ -1,0 +1,5 @@
+<globals> {
+	FUNCTION, name: function, qitem: function(string[4],int[4][5],const int&,int(*)[4]), qtype: , qptype: string;;;, natural: int function(string x[4], int y[4][5], const int& x, int (*f)[4]), line 1, using 
+}
+<locals> {
+}

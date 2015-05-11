@@ -1,0 +1,5 @@
+<globals> {
+	FUNCTION, name: _InterlockedCompareExchange16, qitem: _InterlockedCompareExchange16(SHORT volatile*,SHORT,SHORT), qtype: SHORT, qptype: SHORT;SHORT;SHORT, natural: SHORT _InterlockedCompareExchange16 ( SHORT volatile *Destination, SHORT ExChange, SHORT Comperand ), line 1, using 
+}
+<locals> {
+}

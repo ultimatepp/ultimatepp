@@ -1,0 +1,5 @@
+#ifndef _PPTest_icpp_init_stub
+#define _PPTest_icpp_init_stub
+#include "Core/init"
+#include "CppBase/init"
+#endif

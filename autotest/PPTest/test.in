@@ -1,0 +1,127 @@
+#define COMBINE__(a, b)            a##b
+#define COMBINE(a, b)              COMBINE__(a, b)
+
+#define COMBINE3__(a, b, c)        a##b##c
+#define COMBINE3(a, b, c)          COMBINE3__(a, b, c)
+
+#define COMBINE4__(a, b, c, d)     a##b##c##d
+#define COMBINE4(a, b, c, d)       COMBINE4__(a, b, c, d)
+
+#define COMBINE5__(a, b, c, d, e)  a##b##c##d##e
+#define COMBINE5(a, b, c, d, e)    COMBINE5__(a, b, c, d, e)
+
+#define _cm_  ,
+
+#define __countof(a)          int(sizeof(a) / sizeof(a[0]))
+
+#define __Expand1(x) x(1)
+#define __Expand2(x)  __Expand1(x) x(2)
+#define __Expand3(x)  __Expand2(x) x(3)
+#define __Expand4(x)  __Expand3(x) x(4)
+#define __Expand5(x)  __Expand4(x) x(5)
+
+#define __List1(x) x(1)
+#define __List2(x)  __List1(x), x(2)
+#define __List3(x)  __List2(x), x(3)
+#define __List4(x)  __List3(x), x(4)
+#define __List5(x)  __List4(x), x(5)
+
+#define E__p(I)       p##I
+
+#define MK__s__(x)       s__s##x
+#define MK__s_(x)        MK__s__(x)
+
+// #define MK__s            MK__s_(__LINE__)
+
+#define MK__s            MK__s_(COMBINE3(BLITZ_INDEX__, _, __LINE__))
+
+#define INITBLOCK \
+static void COMBINE(MK__s, _fn)(); static UPP::Callinit MK__s(COMBINE(MK__s, _fn), __FILE__, __LINE__); \
+static void COMBINE(MK__s, _fn)()
+
+
+//---------------------------------------------------
+
+#define E__NFValue(I)  const Value& COMBINE(p, I)
+#define E__NFBody(I) \
+String Format(const char *fmt, __List##I(E__NFValue));
+__Expand5(E__NFBody)
+
+// =============
+
+INITBLOCK {
+	Value::SvoRegister<Color>("Color");
+}
+
+// =============
+
+
+ #define max (a, b) (a < b ? b : a)
+
+max(12, 23)
+
+max (A, B)
+
+#undef max
+
+#define max(a, b) (a < b ? b : a)
+
+max(12, 23)
+
+max (A, B)
+
+// =============
+
+#define macro something // comment
+
+macro
+something
+//$- comment
+
+#define mm(a, b, c, d) (d) [c] {b} <a>
+
+mm(1, 2, 3, 4)
+
+mm(1, 2,
+3, 4)
+
+mm(1,
+2,
+3,
+4
+)
+
+// =============
+
+#define MACRO(x)     123+x
+
+MACRO(
+x
+)
+
+MACRO(x
+)
+
+MACRO(x)
+
+ MACRO(x)
+
+ MACRO(x
+)
+
+// =============
+
+#undef _STCONS
+
+ #define _STCONS(ty, name, val)	static const ty name = (ty)(val)
+
+	_STCONS(float_denorm_style, has_denorm, denorm_absent);
+
+
+
+#define InterlockedIncrement16 _InterlockedIncrement16
+
+SHORT
+InterlockedIncrement16 (
+	SHORT volatile *Addend
+);

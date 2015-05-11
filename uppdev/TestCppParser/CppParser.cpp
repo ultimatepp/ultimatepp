@@ -17,9 +17,14 @@ void Test(const char *path)
 
 	FileIn in(path);
 	errs.Clear();
+	
+	Index<String> hh;
+	hh.Add("test");
 
 	Parser p;
-	p.Do(in, base, 0, 0, callback(AddError));
+//	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError), Vector<String>(), Vector<String>(), Index<String>());
+	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError),
+	     Vector<String>(), Vector<String>(), hh);
 
 	if(errs.GetCount())
 		DUMPC(errs);
@@ -30,10 +35,12 @@ void Test(const char *path)
 		const Array<CppItem>& ma = base[i];
 		for(int j = 0; j < ma.GetCount(); j++) {
 			const CppItem& m = ma[j];
-			out << '\t' << CppItemKindAsString(m.kind) << ", name: " << m.name << ", qitem: " << m.qitem << ", qtype: " << m.qtype << ", line " << m.line;
-			if(m.isptr)
-				out << ", pointer";
-			out << "\n";
+			out << '\t' << CppItemKindAsString(m.kind) << ", name: " << m.name << ", qitem: " << m.qitem
+			            << ", qtype " << m.qtype << ", qptype: " << m.qptype << ", line " << m.line
+			            << ", using " << m.using_namespaces
+			            << ", item " << m.item
+			            << ", natural " << m.natural
+			            << "\n";
 		}
 		out << "}\n";
 	}
@@ -42,7 +49,8 @@ void Test(const char *path)
 	
 	p.dobody = true;
 	in.Seek(0);
-	p.Do(in, base, 0, 0, callback(AddError));
+	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError),
+	     Vector<String>(), Vector<String>(), hh);
 	
 	out << "<locals> {\n";
 	for(int i = 0; i < p.local.GetCount(); i++) {
@@ -57,8 +65,15 @@ void Test(const char *path)
 	LOG("-------------------------------------------------------------------------------");
 }
 
-CONSOLE_APP_MAIN
-{
+CONSOLE_APP_MAIN {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-	Test(GetDataFile("test.in"));
+//	Test("C:/xxx/cpp/math");
+	Test(GetDataFile("test1.in"));
+	/*
+	FindFile ff(GetDataFile("test1.in"));
+	while(ff) {
+		Test(ff.GetPath());
+		ff.Next();
+	}
+	*/
 }

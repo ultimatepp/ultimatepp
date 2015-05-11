@@ -1,0 +1,5 @@
+<globals> {
+	FUNCTION, name: test, qitem: test(const int), qtype: , qptype: , natural: void test(const int a), line 1, using 
+}
+<locals> {
+}

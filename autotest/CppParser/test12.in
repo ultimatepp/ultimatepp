@@ -1,0 +1,11 @@
+enum Alpha {
+	FOO, BAR
+};
+
+typedef enum {
+	FOO, BAR
+} Beta;
+
+typedef enum Gamma {
+	FOO, BAR
+} Gamma;

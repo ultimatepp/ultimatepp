@@ -18,8 +18,11 @@ void Test(const char *path)
 	FileIn in(path);
 	errs.Clear();
 
+	Index<String> hh;
+
 	Parser p;
-	p.Do(in, Vector<String>(), base, path, callback(AddError));
+	p.Do(in, base, 0, 0, "title", callback(AddError),
+	     Vector<String>(), Vector<String>(), hh);
 
 	if(errs.GetCount())
 		DUMPC(errs);
@@ -32,14 +35,23 @@ void Test(const char *path)
 		const Array<CppItem>& ma = base[i];
 		for(int j = 0; j < ma.GetCount(); j++) {
 			const CppItem& m = ma[j];
-			out << '\t' << CppItemKindAsString(m.kind) << ' ' << m.qitem << ", line " << m.line << "\n";
+			out << '\t' << CppItemKindAsString(m.kind) << ", name: " << m.name << ", qitem: " << m.qitem 
+			            << ", qtype: " << m.qtype
+			            << ", qptype: " << m.qptype
+			            << ", natural: " << m.natural
+			            << ", line " << m.line
+			            << ", using " << m.using_namespaces;
+			if(m.isptr)
+				out << ", pointer";
+		 	out << "\n";
 		}
 		out << "}\n";
 	}
 	
 	p.dobody = true;
 	in.Seek(0);
-	p.Do(in, Vector<String>(), base, path, callback(AddError));
+	p.Do(in, base, 0, 0, "title", callback(AddError),
+	     Vector<String>(), Vector<String>(), hh);
 	
 	out << "<locals> {\n";
 	for(int i = 0; i < p.local.GetCount(); i++) {
@@ -52,19 +64,21 @@ void Test(const char *path)
 	LOG("====");
 	LOG(out);
 	LOG("-------------------------------------------------------------------------------");
+#ifdef flagSAVE
+	SaveFile(ForceExt(path, ".out"), out);
+#else
 	String h = LoadFile(ForceExt(path, ".out"));
 	h.Replace("\r", "");
 	ASSERT(out == h);
+#endif
 }
 
 CONSOLE_APP_MAIN {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+
+	SeedRandom(0);
 	
-#ifdef flagSINGLE
-	FindFile ff(GetDataFile("test5.in"));
-#else
 	FindFile ff(GetDataFile("*.in"));
-#endif
 	while(ff) {
 		Test(ff.GetPath());
 		ff.Next();

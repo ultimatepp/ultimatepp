@@ -15,9 +15,41 @@ file
 	test4.in,
 	test4.out,
 	test5.in,
-	test5.out;
+	test5.out,
+	test6.in,
+	test6.out,
+	test7.in,
+	test7.out,
+	test8.in,
+	test8.out,
+	test9.in,
+	test9.out,
+	test10.in,
+	test10.out,
+	test11.in,
+	test11.out,
+	test12.in,
+	test12.out,
+	test13.in,
+	test13.out,
+	test14.in,
+	test14.out,
+	test15.in,
+	test15.out,
+	test16.in,
+	test16.out,
+	test17.in,
+	test17.out,
+	test18.in,
+	test18.out,
+	test19.in,
+	test19.out,
+	test20.in,
+	test20.out,
+	test21.in,
+	test21.out;
 
 mainconfig
 	"" = "",
-	"" = "SINGLE";
+	"" = "SAVE";
 
