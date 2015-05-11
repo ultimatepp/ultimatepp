@@ -5,6 +5,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
 	String path = GetDataFile("test.in");
 	PPSync(GetFileFolder(path));
 	
