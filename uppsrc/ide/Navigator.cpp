@@ -2,6 +2,19 @@
 
 #define LTIMING(x) // RTIMING(x)
 
+String FormatNest(const String& nest)
+{
+	if(nest.StartsWith("@")) {
+		String h = "[anonymous] (";
+		int q = nest.ReverseFind('/');
+		if(q >= 0)
+			h << nest.Mid(q + 1);
+		h << ")";
+		return h;
+	}
+	return nest;
+}
+
 int CharFilterNavigator(int c)
 {
 	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? ToUpper(c) : 0;
@@ -81,9 +94,9 @@ void Navigator::SyncCursor()
 	search.NullText("Symbol/lineno " + k);
 	search.Tip(IsNull(search) ? String() : "Clear " + k);
 
-	if(!navigating) {
+	if(!navigating && theide->editfile.GetCount()) {
 		navlines.KillCursor();
-		int q = linefo.Find(GetCppFileIndex(theide->editfile));
+		int q = linefo.Find(GetSourceFileIndex(theide->editfile));
 		if(q < 0)
 			return;
 		navigating = true;
@@ -98,8 +111,10 @@ void Navigator::SyncCursor()
 
 void Navigator::SyncLines()
 {
+	if(IsNull(theide->editfile))
+		return;
 	int ln = GetCurrentLine() + 1;
-	int fi = GetCppFileIndex(theide->editfile);
+	int fi = GetSourceFileIndex(theide->editfile);
 	int q = -1;
 	for(int i = 0; i < navlines.GetCount(); i++) {
 		const NavLine& l = navlines.Get(i, 0).To<NavLine>();
@@ -121,7 +136,7 @@ void Navigator::SyncNavLines()
 	if(ii >= 0 && ii < litem.GetCount()) {
 		Vector<NavLine> l = GetNavLines(*litem[ii]);
 		for(int i = 0; i < l.GetCount(); i++) {
-			String p = GetCppFile(l[i].file);
+			String p = GetSourceFilePath(l[i].file);
 			navlines.Add(RawToValue(l[i]));
 		}
 		navlines.ScrollTo(sc);
@@ -134,7 +149,7 @@ int Navigator::LineDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Colo
 	w.DrawRect(r, paper);
 	const NavLine& l = q.To<NavLine>();
 	x += r.left;
-	String p = GetCppFile(l.file);
+	String p = GetSourceFilePath(l.file);
 	int y = r.top + (r.GetHeight() - StdFont().GetCy()) / 2;
 	PaintTeXt(w, x, y, GetFileName(GetFileFolder(p)) + "/", StdFont(), ink);
 	PaintTeXt(w, x, y, GetFileName(p), StdFont().Bold(), ink);
@@ -162,14 +177,14 @@ void Navigator::GoToNavLine()
 	int ii = navlines.GetClickPos().y;
 	if(ii >= 0 && ii < navlines.GetCount() && theide) {
 		const NavLine& l = navlines.Get(ii, 0).To<NavLine>();
-		theide->GotoPos(GetCppFile(l.file), l.line);
+		theide->GotoPos(GetSourceFilePath(l.file), l.line);
 	}
 }
 
 bool Navigator::NavLine::operator<(const NavLine& b) const
 {
-	String p1 = GetCppFile(file);
-	String p2 = GetCppFile(b.file);
+	String p1 = GetSourceFilePath(file);
+	String p2 = GetSourceFilePath(b.file);
 	return CombineCompare(!impl, !b.impl)
 	                     (GetFileExt(p1), GetFileExt(p2)) // .h > .c
 	                     (GetFileName(p1), GetFileName(p2))
@@ -212,12 +227,12 @@ void Navigator::Navigate()
 			Vector<NavLine> l = GetNavLines(m);
 			int q = l.GetCount() - 1;
 			for(int i = q; i >= 0; i--)
-				if(GetCppFile(l[i].file) == theide->editfile && l[i].line == ln) {
+				if(GetSourceFilePath(l[i].file) == theide->editfile && l[i].line == ln) {
 					q = (i + l.GetCount() - 1) % l.GetCount();
 					break;
 				}
 			if(q >= 0 && q < l.GetCount())
-				theide->GotoPos(GetCppFile(l[q].file), l[q].line);
+				theide->GotoPos(GetSourceFilePath(l[q].file), l[q].line);
 		}
 	}
 	navigating = false;
@@ -326,8 +341,9 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		                                    : SColorFace);
 		if(m.kind == KIND_FILE)
 			return PaintFileName(w, r, m.type, ink);
-		w.DrawText(x, y, m.type, StdFont().Bold(), ink);
-		return GetTextSize(m.type, StdFont().Bold()).cx;
+		String h = FormatNest(m.type);
+		w.DrawText(x, y, h, StdFont().Bold(), ink);
+		return GetTextSize(h, StdFont().Bold()).cx;
 	}
 	
 	w.DrawRect(r, paper);
@@ -381,7 +397,7 @@ void Navigator::NavGroup(bool local)
 		if(m.kind == TYPEDEF)
 			g.Trim(max(g.ReverseFind("::"), 0));
 		if(IsNull(g))
-			g = "\xff" + GetCppFile(m.decl_file);
+			g = "\xff" + GetSourceFilePath(m.decl_file);
 		if(local)
 			if(gitem.GetCount() && gitem.TopKey() == g)
 				gitem.Top().Add(&m);
@@ -433,7 +449,9 @@ void Navigator::Search()
 	int lineno = StrInt(s);
 	gitem.Clear();
 	nitem.Clear();
-	int fileii = GetCppFileIndex(theide->editfile);
+	if(IsNull(theide->editfile))
+		return;
+	int fileii = GetSourceFileIndex(theide->editfile);
 	if(!IsNull(lineno)) {
 		NavItem& m = nitem.Add();
 		m.type = "Go to line " + AsString(lineno);
@@ -473,13 +491,13 @@ void Navigator::Search()
 		bool local = sorting && IsNull(s);
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
-			bool foundnest = wholeclass ? ToUpper(nest) == search_nest
-			                            : ToUpper(nest).Find(search_nest) >= 0;
+			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
+			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
 			if(local || foundnest || both) {
 				const Array<CppItem>& ci = b[i];
 				for(int j = 0; j < ci.GetCount(); j++) {
 					const CppItem& m = ci[j];
-					if(local ? m.file == fileii : m.uname.Find(search_name) >= 0 || both && foundnest) {
+					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
 						String key = nest + '\1' + m.qitem;
 						int q = imap.Find(key);
 						if(q < 0) {
@@ -497,8 +515,6 @@ void Navigator::Search()
 						else {
 							NavItem& mm = imap[q];
 							String n = mm.natural;
-							if(m.natural.GetCount() > mm.natural.GetCount())
-								mm.natural = m.natural;
 							if(!m.impl &&
 							  (!mm.decl
 							    || CombineCompare(mm.decl_file, m.file)(mm.decl_line, m.line) < 0)) {
@@ -549,6 +565,8 @@ int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Col
 	String h = q;
 	if(*h == '\xff')
 		return PaintFileName(w, r, h, ink);
+	else
+		h = FormatNest(h);
 	w.DrawText(r.left, r.top, h, StdFont().Bold(), ink);
 	return GetTextSize(h, StdFont().Bold()).cx;
 }
@@ -580,7 +598,7 @@ void Navigator::Scope()
 		if(all) {
 			NavItem& m = nest_item.Add();
 			m.kind = kind;
-			m.type = grp;
+			m.type = FormatNest(grp);
 			litem.Add(&m);
 		}
 		else

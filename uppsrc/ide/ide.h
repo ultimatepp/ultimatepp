@@ -283,7 +283,7 @@ int    memcmp_i(const char *s, const char *t, int n);
 String ParseTemplatedType(const String& type, Vector<String>& tparam);
 String ResolveTParam(const String& type, const Vector<String>& tparam);
 void   ResolveTParam(Vector<String>& type, const Vector<String>& tparam);
-String Qualify(const String& scope, const String& type);
+String Qualify(const String& scope, const String& type, const String& usings);
 int    CharFilterMacro(int c);
 int    CharFilterFileName(int c);
 
@@ -378,6 +378,8 @@ public:
 
 	virtual   String    IdeGetFileName();
 	virtual   String    IdeGetNestFolder();
+
+	virtual   String    IdeGetIncludePath();
 
 	virtual   bool      IsPersistentFindReplace();
 
@@ -834,6 +836,7 @@ public:
 		void  ToggleStopOnErrors();
 		One<Host> CreateHostRunDir();
 		void  OpenOutputFolder();
+		void  PreprocessInternal();
 
 	void      DebugMenu(Bar& menu);
 		void  RunArgs();
@@ -876,7 +879,7 @@ public:
 		void  SearchCode();
 		void  Goto();
 		void  GotoGlobal();
-		void  ScanFile();
+		void  ScanFile(bool check_macros);
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
 		void  FindId(const String& id);
@@ -947,7 +950,7 @@ public:
 	};
 	
 	FindLineErrorCache error_cache;
-	void      ConsoleLine(const String& line);
+	void      ConsoleLine(const String& line, bool assist = false);
 	void      ConsoleRunEnd();
 	void      SyncErrorsMessage();
 	void      ShowError();
@@ -1033,6 +1036,8 @@ public:
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopicsWin();
+
+	String    GetIncludePath();
 
 	void      TopicBack();
 

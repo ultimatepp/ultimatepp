@@ -76,8 +76,6 @@ Vector<ItemTextPart> ParseItemNatural(const String& name,
                                       const String& ctname,
                                       const char *s)
 {
-	LLOG("ParseItemNatural " << natural << ", pname: " << pname
-	                         << ", tname: " << tname << ", ctname: " << ctname);
 	Vector<ItemTextPart> part;
 	int len = name.GetLength();
 	if(len == 0) {
@@ -112,7 +110,7 @@ Vector<ItemTextPart> ParseItemNatural(const String& name,
 			else {
 				String id;
 				n = 0;
-				while(IsAlNum(s[n]) || s[n] == '_' || s[n] == ':')
+				while(iscid(s[n]) || s[n] == ':')
 					id.Cat(s[n++]);
 				if(IsCppType(id))
 					p.type = ITEM_CPP_TYPE;
@@ -172,8 +170,13 @@ Vector<ItemTextPart> ParseItemNatural(const String& name,
 				pari = 0;
 				par = 0;
 			}
-			while(s[n] && !iscid(s[n]))
+			while(s[n] && !iscid(s[n])) {  // Anonymous structure name
+				if(s[n] == '@') {
+					p.len = n;
+					return part;
+				}
 				n++;
+			}
 		}
 		p.len = n;
 		s += n;

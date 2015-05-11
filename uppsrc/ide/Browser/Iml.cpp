@@ -2,7 +2,7 @@
 
 #define LDUMP(x) // DDUMP(x)
 
-void ScanImlFile(const char *fn)
+String PreprocessImlFile(const char *fn)
 {
 	String s = LoadFile(fn);
 	
@@ -50,7 +50,5 @@ void ScanImlFile(const char *fn)
 		"static void   Reset();"
 	"};\n";
 	LDUMP(r);
-	StringStream ss(r);
-	CppBase& base = CodeBase();
-	Parse(ss, IgnoreList(), base, fn, CNULL);
+	return r;
 }

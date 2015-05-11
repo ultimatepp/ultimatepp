@@ -41,8 +41,8 @@ static void AddObjectExports(const char *path, Index<String>& out)
 	if(!mapping.Open(path))
 		return;
 	const byte *begin = mapping.Begin();
-if(!begin)
-	return;
+	if(!begin)
+		return;
 	const COFF_IMAGE_FILE_HEADER *hdr = (const COFF_IMAGE_FILE_HEADER *)begin;
 	if(hdr->Machine != COFF_IMAGE_FILE_MACHINE_I386)
 		return;

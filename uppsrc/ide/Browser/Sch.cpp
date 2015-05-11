@@ -15,7 +15,7 @@ String ReadId(CParser& p, String& rr)
 	return id;
 }
 
-void ScanSchFile(const char *fn)
+Vector<String> PreprocessSchFile(const char *fn)
 {
 	String s = LoadFile(fn);
 	CParser p(s);
@@ -108,8 +108,5 @@ void ScanSchFile(const char *fn)
 		}
 		catch(CParser::Error)
 		{}
-	StringStream ss(r), sr(rr);
-	CppBase& base = CodeBase();
-	Parse(sr, IgnoreList(), base, fn, CNULL);
-	Parse(ss, IgnoreList(), base, fn, CNULL);
+	return Vector<String>() << r << rr;
 }

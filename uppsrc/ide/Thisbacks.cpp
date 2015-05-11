@@ -54,8 +54,8 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 	if(q < 0)
 		return;
 	const Array<CppItem>& n = CodeBase()[q];
-	for(int i = 0; i < n.GetCount(); i = FindNext(n, i))
-		nname.Add(n[i].name);
+	for(int i = 0; i < n.GetCount(); i++)
+		nname.FindAdd(n[i].name);
 	Index<String> done;
 	GatherCallbacks("", done, scope, PRIVATE);
 }

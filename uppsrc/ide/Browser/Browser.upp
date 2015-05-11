@@ -4,7 +4,8 @@ uses
 	CppBase,
 	ide\Common,
 	PdfDraw,
-	RichEdit;
+	RichEdit,
+	plugin/lz4;
 
 file
 	Browser.h options(BUILDER_OPTION) PCH,
@@ -12,13 +13,14 @@ file
 	Lay.cpp,
 	Iml.cpp,
 	Sch.cpp,
-	Base.cpp optimize_speed,
 	Util.cpp,
+	Base.cpp optimize_speed,
 	Item.cpp,
 	ItemDisplay.cpp,
 	CodeBrowser.cpp optimize_speed,
 	Browser.lay,
 	Browser.iml,
+	todo.txt,
 	Topic readonly separator,
 	TopicBase.cpp,
 	Reference.cpp,

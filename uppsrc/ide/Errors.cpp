@@ -62,7 +62,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				}
 			}
 			file = FollowCygwinSymlink(file);
-			if(IsFullPath(file) && FileExists(f.file) && IsTextFile(f.file)) {
+			if(IsFullPath(file) && FileExists(file) && IsTextFile(file)) {
 				f.file = file;
 				while(*s && !IsDigit(*s)) {
 					if(*s == '/' || IsAlpha(*s))
@@ -95,8 +95,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				if(is_java && f.file.GetLength() > upplen
 				&& !MemICmp(f.file, uppout, upplen) && f.file[upplen] == DIR_SEP) { // check for preprocessed file
 					FileIn fi(f.file);
-					if(fi.IsOpen())
-					{
+					if(fi.IsOpen()) {
 						String fake_file = f.file;
 						int fake_line = 1;
 						int file_line = 1;
@@ -464,7 +463,7 @@ void ElepDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color
 	DoPaint(w, r, q, ink, paper, style);
 }
 
-void Ide::ConsoleLine(const String& line)
+void Ide::ConsoleLine(const String& line, bool assist)
 {
 	if(linking) {
 		linking_line.Add(line);
@@ -472,6 +471,8 @@ void Ide::ConsoleLine(const String& line)
 	}
 	ErrorInfo f;
 	if(FindLineError(line, error_cache, f)) {
+		if(assist)
+			f.kind = 1;
 		if(findarg(f.kind, 1, 2) >= 0 || error.GetCount() == 0) {
 			Color paper = HighlightSetup::GetHlStyle(f.kind == 1 ? HighlightSetup::PAPER_ERROR
 			                                                     : HighlightSetup::PAPER_WARNING).color;

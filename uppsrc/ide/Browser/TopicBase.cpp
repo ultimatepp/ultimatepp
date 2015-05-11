@@ -241,6 +241,8 @@ Vector<String> GetRefLinks(const String& ref)
 {
 	Vector<String> l;
 	int q = ref_ref().Find(ref);
+	if(q < 0 && ref.StartsWith("Upp::")) // fix old docs
+		q = ref_ref().Find(ref.Mid(5));
 	while(q >= 0) {
 		l.Add(ref_link()[q]);
 		q = ref_ref().FindNext(q);

@@ -423,6 +423,32 @@ void Ide::SetupBuildMethods()
 			break;
 		}
 	}
+	SyncCodeBase();
 	SyncBuildMode();
 	SetBar();
+}
+
+String Ide::GetIncludePath()
+{
+	SetupDefaultMethod();
+	VectorMap<String, String> bm = GetMethodVars(method);
+	String include = GetVar("UPP") + ';' + bm.Get("INCLUDE", "")
+#ifdef PLATFORM_POSIX
+			+ ";/usr/include;/usr/local/include"
+#endif
+	;
+
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pkg = wspc.GetPackage(i);
+		for(int j = 0; j < pkg.include.GetCount(); j++)
+			MergeWith(include, ";", SourcePath(wspc[i], pkg.include[j].text));
+	}
+	
+	return include;
+}
+
+String Ide::IdeGetIncludePath()
+{
+	return GetIncludePath();
 }

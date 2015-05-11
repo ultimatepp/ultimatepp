@@ -81,6 +81,7 @@ public:
 	virtual void      IdeFlushFile() = 0;
 	virtual String    IdeGetFileName() = 0;
 	virtual String    IdeGetNestFolder() = 0;
+	virtual String    IdeGetIncludePath() = 0;
 
 	virtual String GetDefaultMethod();
 	virtual VectorMap<String, String> GetMethodVars(const String& method);
@@ -193,6 +194,9 @@ String VarFilePath();
 Vector<String> GetUppDirs();
 String GetUppDir();
 void   SetVar(const String& var, const String& val, bool save = true);
+
+String GetCurrentBuildMethod();
+String GetCurrentMainPackage();
 
 String GetAnyFileName(const char *path);
 String GetAnyFileTitle(const char *path);

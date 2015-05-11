@@ -336,20 +336,7 @@ bool AssistEditor::IncludeAssist()
 	}
 	else {
 		p.Char('<');
-		theide->SetupDefaultMethod();
-		VectorMap<String, String> bm = GetMethodVars(theide->method);
-		include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", "")
-#ifdef PLATFORM_POSIX
-			+ ";/usr/include;/usr/local/include"
-#endif
-		);
-		// Also adding internal includes
-		const Workspace& wspc = GetIdeWorkspace();
-		for(int i = 0; i < wspc.GetCount(); i++) {
-			const Package& pkg = wspc.GetPackage(i);
-			for(int j = 0; j < pkg.include.GetCount(); j++)
-				include.Add(SourcePath(wspc[i], pkg.include[j].text));
-		}
+		include = SplitDirs(theide->GetIncludePath());
 		include_local = false;
 	}
 	include_path.Clear();
@@ -460,7 +447,7 @@ void AssistEditor::Assist()
 		while(Ch(q - 1) == ':')
 			q--;
 		Vector<String> tparam;
-		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q)), tparam);
+		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q), parser.context.namespace_using), tparam);
 		GatherItems(scope, false, in_types, true);
 	}
 	else {
@@ -506,8 +493,9 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	type.SetCursor(0);
 	if(!assist.GetCount())
 		return;
-	int cy = min(300, lcy * max(type.GetCount(), assist.GetCount()));
-	cy += 4;
+//	int cy = min(300, lcy * max(type.GetCount(), assist.GetCount()));
+//	cy += 4;	
+	int cy = VertLayoutZoom(304);
 	cy += HeaderCtrl::GetStdHeight();
 	assist.SetLineCy(lcy);
 	Point p = GetCaretPoint() + GetScreenView().TopLeft();
@@ -933,9 +921,25 @@ void AssistEditor::DCopy()
 	String txt = Get(l, h - l);
 	StringStream ss(txt);
 	String cls = ctx.current_scope;
+/* TODO: remove
 	CppBase cpp;
 	Parser parser;
 	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
+*/
+	CppBase cpp;
+	Cpp pp;
+	pp.Preprocess(theide->editfile, ss, GetMasterFile(theide->editfile));
+
+	Parser parser;
+	parser.dobody = true;
+	StringStream pin(pp.output);
+	parser.Do(ss, cpp, Null, Null, Null, CNULL, Split(cls, ':'),
+	          pp.namespace_stack, pp.namespace_using);
+
+//	QualifyTypes(CodeBase(), parser.current_scope, parser.current);
+//	inbody = parser.IsInBody();
+
+
 	for(int i = 0; i < cpp.GetCount(); i++) {
 		const Array<CppItem>& n = cpp[i];
 		bool decl = decla;
@@ -1221,7 +1225,7 @@ void Ide::ContextGoto0(int pos)
 					t.Trim(t.GetCount() - 2);
 				scope.Add(t);
 				istype.Add(false);
-				Scopefo f(CodeBase(), t); // Try base classes too!
+				ScopeInfo f(CodeBase(), t); // Try base classes too!
 				todo.Append(f.GetBases());
 			}
 		}
@@ -1229,7 +1233,7 @@ void Ide::ContextGoto0(int pos)
 
 	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
 		Vector<String> todo;
-		todo.Add(RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, qual + "::" + id)));
+		todo.Add(RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, qual + "::" + id, parser.context.namespace_using)));
 		while(scope.GetCount() < 100 && todo.GetCount()) {
 			String t = todo[0];
 			if(t.EndsWith("::"))
@@ -1245,7 +1249,7 @@ void Ide::ContextGoto0(int pos)
 				scope.Add(tt);
 				istype.Add(true);
 			}
-			Scopefo f(CodeBase(), t); // Try base classes too!
+			ScopeInfo f(CodeBase(), t); // Try base classes too!
 			todo.Append(f.GetBases());
 		}
 	}
@@ -1259,7 +1263,7 @@ void Ide::ContextGoto0(int pos)
 				t.Trim(t.GetCount() - 2);
 			scope.Add(t);
 			istype.Add(false);
-			Scopefo f(CodeBase(), t); // Try base classes too!
+			ScopeInfo f(CodeBase(), t); // Try base classes too!
 			todo.Append(f.GetBases());
 		}
 		q = parser.local.Find(id);
@@ -1270,7 +1274,7 @@ void Ide::ContextGoto0(int pos)
 			return;
 		}
 		// Can be unqualified type name like 'String'
-		String t = RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, id));
+		String t = RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, id, parser.context.namespace_using));
 		if(CodeBase().Find(t) >= 0) {
 			scope.Add(t);
 			istype.Add(true);
@@ -1322,7 +1326,7 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 	String currentfile = editfile;
 	while(i < n.GetCount() && n[i].qitem == qitem) {
 		const CppItem& m = n[i];
-		int ml = GetMatchLen(editfile, GetCppFile(m.file));
+		int ml = GetMatchLen(editfile, GetSourceFilePath(m.file));
 		if(m.impl && ml > qimplml) {
 			qimplml = ml;
 			qimpl = i;
@@ -1338,7 +1342,7 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 		i++;
 	}
 	const CppItem& pos = n[qimpl >= 0 ? qimpl : qcpp >= 0 ? qcpp : q];
-	String path = GetCppFile(pos.file);
+	String path = GetSourceFilePath(pos.file);
 	editastext.RemoveKey(path);
 	editashex.RemoveKey(path);
 	if(ToLower(GetFileExt(path)) == ".lay") {

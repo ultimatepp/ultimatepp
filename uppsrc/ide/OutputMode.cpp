@@ -450,6 +450,7 @@ void Ide::SetMethod(const String& m)
 {
 	method = m;
 	current_builder = GetMethodVars(method).Get("BUILDER", "");
+	NewCodeBase();
 }
 
 void Ide::SelectMethod()

@@ -133,7 +133,6 @@ void Ide::SetMain(const String& package)
 	mainconfigname.Clear();
 	mainconfigparam.Clear();
 	ScanWorkspace();
-	SyncWorkspace();
 	LoadFromFile(THISBACK(SerializeWorkspace), WorkspaceFile());
 	editorsplit.Zoom(0);
 	UpdateFormat();
@@ -147,9 +146,10 @@ void Ide::SetMain(const String& package)
 	SetHdependDirs();
 	SetBar();
 	HideBottom();
+	SyncUsc();
+	NewCodeBase();
 	if(IsNull(e))
 		e = GetFirstFile();
-	StartCodeBase();
 	EditFile(e);
 }
 

@@ -58,6 +58,16 @@ void Ide::SwapPackagesFiles()
 	wesplit.Zoom(wesplit.GetZoom() == 1 ? -1 : 1);
 }
 
+void IdePutErrorLine(const String& line)
+{
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	if(ide && ide->console.verbosebuild) {
+		ide->SetBottom(Ide::BERRORS);
+		ide->ConsoleRunEnd();
+		ide->ConsoleLine(line, true);
+	}
+}
+
 void Ide::ConsoleClear()
 {
 	console <<= Null;
@@ -183,6 +193,18 @@ void Ide::IdeRemoveRight(Ctrl& ctrl)
 bool Ide::IdeIsDebug() const
 {
 	return debugger;
+}
+
+String GetCurrentBuildMethod()
+{
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	return ide ? ide->method : String();
+}
+
+String GetCurrentMainPackage()
+{
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	return ide ? ide->main : String();
 }
 
 void Ide::IdeEndDebug()
@@ -401,7 +423,7 @@ Ide::Ide()
 	error.WhenSel = THISBACK(SelError);
 	error.WhenLeftClick = THISBACK(ShowError);
 	ffound.WhenSel = ffound.WhenLeftClick = THISBACK(ShowFound);
-	console.WhenLine = THISBACK(ConsoleLine);
+	console.WhenLine = THISBACK1(ConsoleLine, false);
 	console.WhenRunEnd = THISBACK(ConsoleRunEnd);
 	
 	addnotes = false;
@@ -1039,6 +1061,14 @@ void AppMain___()
 	#endif
 			Ini::user_log = true;
 		}
+		
+		String ppcfg = ConfigFile("pp_config.json");
+	#ifndef _DEBUG
+		if(!FileExists(ppcfg))
+	#endif
+			SaveFile(ppcfg, GetStdConfig());
+		
+		LoadPPConfig(LoadFile(ppcfg));
 		
 		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {

@@ -509,7 +509,7 @@ String NlsFormat(int value) { return GetLanguageInfo().FormatInt(value); }
 */
 
 String NlsFormat(double value, int decimal_places)
-{ return GetLanguageInfo().FormatDouble(value, tabs(decimal_places), decimal_places >= 0 ? 0 : FD_ZERO); }
+{ return GetLanguageInfo().FormatDouble(value, tabs(decimal_places), decimal_places >= 0 ? 0 : FD_ZEROS); }
 /*
 String NlsFormat(double value, int decimal_places)
 {
@@ -518,7 +518,7 @@ String NlsFormat(double value, int decimal_places)
 */
 
 String NlsFormatRel(double value, int relative_places)
-{ return GetLanguageInfo().FormatDouble(value, tabs(relative_places), FD_REL | (relative_places >= 0 ? 0 : FD_ZERO)); }
+{ return GetLanguageInfo().FormatDouble(value, tabs(relative_places), FD_REL | (relative_places >= 0 ? 0 : FD_ZEROS)); }
 
 /*
 String NlsFormatRel(double value, int relative_places)

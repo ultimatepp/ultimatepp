@@ -19,7 +19,7 @@ void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
 	if(q < 0)
 		return;
 	const Array<CppItem>& m = CodeBase()[q];
-	for(int i = 0; i < m.GetCount(); i = FindNext(m, i)) {
+	for(int i = 0; i < m.GetCount(); i++) {
 		const CppItem& im = m[i];
 		if(im.IsType()) {
 			Vector<String> b = Split(im.qptype, ';');
@@ -38,7 +38,7 @@ void GatherVirtuals(ArrayMap<String, AssistItemInfo>& item, const String& scope,
 					item[q].overed = scope;
 				else
 				if(im.virt) {
-					AssistItemInfo& f = item.Add(k);
+					AssistItemInfo& f = item.GetAdd(k);
 					f.defined = f.overed = scope;
 					f.name = im.name;
 					(CppItem&)f = im;

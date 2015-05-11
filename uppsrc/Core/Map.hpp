@@ -422,6 +422,21 @@ int AMap<K, T, V, HashFn>::Put(const K& k, const T& x)
 }
 
 template <class K, class T, class V, class HashFn>
+int AMap<K, T, V, HashFn>::PutDefault(const K& k)
+{
+	int i = key.Put(k);
+	if(i >= value.GetCount()) {
+		ASSERT(i == value.GetCount());
+		value.Add();
+	}
+	else {
+		DestroyArray(&value[i], &value[i] + 1);
+		ConstructArray(&value[i], &value[i] + 1);
+	}
+	return i;
+}
+
+template <class K, class T, class V, class HashFn>
 int AMap<K, T, V, HashFn>::PutPick(const K& k, T rval_ x)
 {
 	int i = key.Put(k);
@@ -438,8 +453,11 @@ template <class K, class T, class V, class HashFn>
 T&  AMap<K, T, V, HashFn>::Put(const K& k)
 {
 	int i = key.Put(k);
-	if(i < value.GetCount())
+	if(i < value.GetCount()) {
+		DestroyArray(&value[i], &value[i] + 1);
+		ConstructArray(&value[i], &value[i] + 1);
 		return value[i];
+	}
 	else {
 		ASSERT(i == value.GetCount());
 		return value.Add();
@@ -451,11 +469,7 @@ int AMap<K, T, V, HashFn>::FindPut(const K& k)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
-	if(i < 0) {
-		i = key.Put(k, hash);
-		value.At(i);
-	}
-	return i;
+	return i < 0 ? PutDefault(k) : i;
 }
 
 template <class K, class T, class V, class HashFn>
@@ -520,17 +534,17 @@ T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, T rval_ x) {
 
 template <class K, class T, class V, class HashFn>
 T&  AMap<K, T, V, HashFn>::GetPut(const K& k) {
-	return value[FindAdd(k)];
+	return value[FindPut(k)];
 }
 
 template <class K, class T, class V, class HashFn>
 T&  AMap<K, T, V, HashFn>::GetPut(const K& k, const T& x) {
-	return value[FindAdd(k, x)];
+	return value[FindPut(k, x)];
 }
 
 template <class K, class T, class V, class HashFn>
 T&  AMap<K, T, V, HashFn>::GetPutPick(const K& k, T rval_ x) {
-	return value[FindAddPick(k, x)];
+	return value[FindPutPick(k, x)];
 }
 
 #ifdef UPP
