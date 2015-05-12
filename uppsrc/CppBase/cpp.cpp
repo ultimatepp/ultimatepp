@@ -5,19 +5,6 @@ NAMESPACE_UPP
 #define LTIMING(x)  RTIMING(x)
 #define LLOG(x)     // DLOG(x)
 
-const char *Cpp::SkipString(const char *s)
-{
-	CParser p(s);
-	try {
-		p.ReadOneString(*s);
-	}
-	catch(CParser::Error) {}
-	s = p.GetPtr();
-	while((byte)*(s - 1) <= ' ')
-		s--;
-	return s;
-}
-
 void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)
 {
 	while(s < e && (byte)*s <= ' ') s++;

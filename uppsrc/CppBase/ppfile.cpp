@@ -22,6 +22,19 @@ void SetSpaces(String& l, int pos, int count)
 	l = s;
 }
 
+const char *SkipString(const char *s)
+{
+	CParser p(s);
+	try {
+		p.ReadOneString(*s);
+	}
+	catch(CParser::Error) {}
+	s = p.GetPtr();
+	while((byte)*(s - 1) <= ' ')
+		s--;
+	return s;
+}
+
 void RemoveComments(String& l, bool& incomment)
 {
 	int q = -1;
@@ -29,7 +42,14 @@ void RemoveComments(String& l, bool& incomment)
 	if(incomment)
 		q = w = 0;
 	else {
-		q = l.Find("/*");
+		const char *s = l;
+		while(*s) {
+			if(*s == '\"')
+				s = SkipString(s);
+			else
+			if(s[0] == '/' && s[1] == '*')
+				q = int(s - ~l);
+		}
 		if(q >= 0)
 			w = q + 2;
 	}
