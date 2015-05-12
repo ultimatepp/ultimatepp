@@ -8,6 +8,8 @@ NAMESPACE_UPP
 bool IsCPPFile(const String& file);
 bool IsHFile(const String& path);
 
+const char *SkipString(const char *s);
+
 void RemoveComments(String& l, bool& incomment);
 
 void LoadPPConfig(const String& json);
@@ -122,7 +124,6 @@ struct Cpp {
 	
 	void   Define(const char *s);
 
-	static const char *SkipString(const char *s);
 	void   ParamAdd(Vector<String>& param, const char *b, const char *e);
 	String Expand(const char *s);
 	void   DoFlatInclude(const String& header_path);
