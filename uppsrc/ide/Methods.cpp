@@ -432,9 +432,25 @@ String Ide::GetIncludePath()
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
-	String include = GetVar("UPP") + ';' + bm.Get("INCLUDE", "")
+	String include = GetVar("UPP") + ';' + bm.Get("INCLUDE", "");
 #ifdef PLATFORM_POSIX
-			+ ";/usr/include;/usr/local/include"
+	static String sys_includes;
+	ONCELOCK {
+		Index<String> r;
+		for(int pass = 0; pass < 2; pass++) {
+			String h = Sys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null");
+			Vector<String> ln = Split(h, '\n');
+			for(int i = 0; i < ln.GetCount(); i++) {
+				String dir = TrimBoth(ln[i]);
+				if(DirectoryExists(dir))
+					r.FindAdd(NormalizePath(dir));
+			}
+		}
+		r.FindAdd("/usr/include");
+		r.FindAdd("/usr/local/include");
+		sys_includes = Join(r.GetKeys(), ";");
+	}
+	MergeWith(include, ";", sys_includes);
 #endif
 	;
 
