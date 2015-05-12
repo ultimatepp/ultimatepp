@@ -19,7 +19,10 @@ String GetStdConfig()
                                  "__out;__in;__inout;__deref_in;__deref_inout;__deref_out;"
                                  "__pragma(...);__pascal;_far;_pascal;_cdecl;"
                                  "__AuToQuOtE;__xin;__xout;__export;"
-                                 "__clrcall;__alignof(...)";
+                                 "__clrcall;__alignof(...);"
+                                 
+                                 "__asm__(...);__asm(...);__restrict;__inline;__typeof;"
+	;
 	ValueMap json;
 	ValueArray va;
 	Vector<String> h = Split(ns, ';');
