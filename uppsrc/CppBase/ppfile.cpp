@@ -17,7 +17,7 @@ bool IsHFile(const String& path)
 
 void SetSpaces(String& l, int pos, int count)
 {
-	StringBuffer s = l;
+	StringBuffer s(l);
 	memset(~s + pos, ' ', count);
 	l = s;
 }
