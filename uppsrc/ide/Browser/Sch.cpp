@@ -108,5 +108,5 @@ Vector<String> PreprocessSchFile(const char *fn)
 		}
 		catch(CParser::Error)
 		{}
-	return Vector<String>() << r << rr;
+	return pick(Vector<String>() << r << rr);
 }

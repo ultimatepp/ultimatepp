@@ -208,7 +208,7 @@ bool CheckFile(const SourceFileInfo& f, const String& path)
 	return f.included_id_macros == included_id_macros;
 }
 
-void ParseFiles(Progress& pi, const Index<int> parse_file)
+void ParseFiles(Progress& pi, const Index<int>& parse_file)
 {
 	pi.SetTotal(parse_file.GetCount());
 	pi.SetPos(0);

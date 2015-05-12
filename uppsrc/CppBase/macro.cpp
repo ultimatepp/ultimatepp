@@ -68,7 +68,7 @@ String CppMacro::Expand(const Vector<String>& p, const Vector<String>& ep) const
 		variadic = true;
 		pp.Trim(pp.GetCount() - 1);
 	}
-	Index<String> param(pick(Split(pp, ',')));
+	Index<String> param(Split(pp, ','));
 	static String VA_ARGS("__VA_ARGS__"); // static - Speed optimization
 	while(*s) {
 		if(IsAlpha(*s) || *s == '_') {
