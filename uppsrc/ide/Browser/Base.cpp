@@ -167,7 +167,8 @@ void BaseInfoSync(Progress& pi)
 			String n = wspc[i];
 			for(int i = 0; i < pk.file.GetCount(); i++) {
 				String path = SourcePath(n, pk.file[i]);
-				if(pass ? IsHFile(path) : IsCPPFile(path))
+				if(pass ? IsHFile(path)
+				   : IsCPPFile(path) || findarg(ToLower(GetFileExt(path)), ".lay", ".sch", ".iml") >= 0)
 					GatherSources(path, path);
 			}
 		}
@@ -324,7 +325,7 @@ Vector<String> ParseSrc(Stream& in, int file, Callback2<int, const String&> erro
 		p.Do(pin, CodeBase(), file, filetype, GetFileName(path), error, Vector<String>(),
 		     cpp.namespace_stack, cpp.namespace_using);
 		if(sfi.defined_namespace_info != p.namespace_info) {
-			p.namespace_info = sfi.defined_namespace_info;
+			sfi.defined_namespace_info = p.namespace_info;
 			namespace_info_changed = true;
 		}
 		if(cpp.includes != sfi.includes) {
@@ -369,7 +370,6 @@ void CodeBaseScanFile(Stream& in, const String& fn, bool check_macros)
 	bool includes_changed = false;
 	Vector<String> cm = ParseSrc(in, file, CNULL, check_macros, true,
 	                             namespace_info_changed, includes_changed);
-	LDUMP(cm);
 	LDUMP(f.defined_macros);
 	LDUMP(check_macros);
 	if(check_macros && (includes_changed || namespace_info_changed || cm.GetCount())) {

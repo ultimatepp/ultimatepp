@@ -30,7 +30,8 @@ String PreprocessLayFile(const char *fn)
 	LTIMING("Lay file");
 	String s = LoadFile(fn);
 	CParser p(s);
-	String r;
+
+	String r = "using Upp;";
 	try {
 		int line = p.GetLine();
 		if(p.Char('#') && p.Id("ifdef")) {
