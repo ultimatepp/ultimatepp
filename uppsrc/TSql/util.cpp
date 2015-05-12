@@ -619,7 +619,7 @@ SqlVal SchemaAlias(const SqlId& table)
 
 SqlId SchemaId(const SqlId& table_id, const SqlId& alias_id)
 {
-	return SqlId(SchemaTableName(~table_id) + SqlCase(MSSQL, " as ")(" ") + ~alias_id);
+	return SqlId(SchemaTableName(~table_id) + SqlCode(MSSQL, " as ")(" ") + ~alias_id);
 }
 
 SqlId SchemaId(const SqlId& table_id)
@@ -773,7 +773,7 @@ SqlVal GetYearDayIndex(const SqlVal& date)
 {
 	SqlVal mssql("substring(convert(varchar(max), " + ~date + ", 1), 1, 5)", SqlS::FN);
 	SqlVal oracle(SqlFunc("to_char", date, "MM/DD"));
-	return SqlVal(SqlCase(MSSQL, ~mssql)(~oracle), SqlS::FN);
+	return SqlVal(SqlCode(MSSQL, ~mssql)(~oracle), SqlS::FN);
 }
 
 String GetYearDayIndex(Date date)
