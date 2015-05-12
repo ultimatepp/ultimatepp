@@ -47,8 +47,12 @@ void RemoveComments(String& l, bool& incomment)
 			if(*s == '\"')
 				s = SkipString(s);
 			else
-			if(s[0] == '/' && s[1] == '*')
+			if(s[0] == '/' && s[1] == '*') {
 				q = int(s - ~l);
+				break;
+			}
+			else
+				s++;
 		}
 		if(q >= 0)
 			w = q + 2;
