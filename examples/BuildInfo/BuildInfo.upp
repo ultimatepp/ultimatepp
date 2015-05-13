@@ -7,5 +7,5 @@ file
 	BuildInfo.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 
