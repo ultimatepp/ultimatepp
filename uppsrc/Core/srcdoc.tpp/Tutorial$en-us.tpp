@@ -527,8 +527,8 @@ but has some more convenient features (like Create method).&]
 [s7; &]
 [s7; &]
 [s5; One represents a convenient and recommended method how to deal 
-with class factories in U`+`+: Define then as function with reference 
-to One parameter, e.g.:&]
+with class factories in U`+`+: Define them as a function (or method) 
+with reference to One parameter, e.g.:&]
 [s7; void MakeDerived1(One<Base>`& t)&]
 [s7; `{&]
 [s7; -|t.Create<Derived1>();&]
@@ -554,7 +554,7 @@ to One parameter, e.g.:&]
 [s3; 12. Any&]
 [s5; Any is a container that can contain none or one element of [*/ any] 
 type, the only requirement is that the type has default constructor. 
-Impotant thing to remember is that [* Is] method matches [/ exact] 
+Important thing to remember is that [* Is] method matches [/ exact] 
 type ignoring class hierarchies (FileIn is derived from Stream, 
 but if Any contains FileIn, Is<Stream>() returns false).&]
 [s7; void Do([* Any]`& x)&]
