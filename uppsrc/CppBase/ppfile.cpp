@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x)  RTIMING(x)
+#define LTIMING(x)  // RTIMING(x)
 #define LLOG(x)     // LOG(x)
 
 bool IsCPPFile(const String& path)
@@ -394,12 +394,13 @@ Time GetFileTimeCached(const String& p)
 
 String GetIncludePath(const String& s, const String& filedir)
 {
-	LTIMING("GetIncludePath");
+	RTIMING("GetIncludePath");
 	String key;
-	key << s << "#" << filedir << "#" << GetIncludePath();
+	key << s << "#" << filedir;
 	int q = sIncludePath.Find(key);
 	if(q >= 0)
 		return sIncludePath[q];
+	RTIMING("GetIncludePath 2");
 	String p = GetIncludePath0(s, filedir);
 	sIncludePath.Add(key, p);
 	return p;
@@ -407,11 +408,12 @@ String GetIncludePath(const String& s, const String& filedir)
 
 const PPFile& GetPPFile(const char *path)
 {
+	RTIMING("GetPPFile");
 	Time tm = GetFileTimeCached(path);
 	PPFile& f = sPPfile.GetPut(path);
 	if(f.filetime != tm) {
 		f.filetime = tm;
-		LTIMING("PP read");
+		RTIMING("PP read");
 		FileIn in(path);
 		f.Parse(in);
 	}
@@ -423,14 +425,18 @@ bool IsSameFile(const String& f1, const String& f2)
 	return NormalizePath(f1) == NormalizePath(f2);
 }
 
-bool IncludesFile(const String& parent_path, const String& path, Index<String>& visited)
+bool IncludesFile0(const String& parent_path, const String& path, Index<String>& visited)
 {
-	HITCOUNT("IncludesFile0");
+	RHITCOUNT("IncludesFile0");
 	if(visited.Find(parent_path) >= 0)
 		return false;
 	visited.Add(parent_path);
 	if(IsSameFile(parent_path, path))
 		return true;
+	{
+		RTIMING("GetPPFile");
+		GetPPFile(parent_path);
+	}
 	const PPFile& f = GetPPFile(parent_path);
 	for(int i = 0; i < f.includes.GetCount(); i++) {
 		String key = path + "#" + f.includes[i];
@@ -443,7 +449,7 @@ bool IncludesFile(const String& parent_path, const String& path, Index<String>& 
 		else {
 			HITCOUNT("IncludesFile getpath");
 			String p = GetIncludePath(f.includes[i], GetFileFolder(parent_path));
-			bool   b = p.GetCount() && IncludesFile(p, path, visited);
+			bool   b = p.GetCount() && IncludesFile0(p, path, visited);
 			sIncludes.Add(key, b);
 			if(b)
 				return true;
@@ -454,9 +460,15 @@ bool IncludesFile(const String& parent_path, const String& path, Index<String>& 
 
 bool IncludesFile(const String& parent_path, const String& path)
 {
-	LTIMING("IncludesFile");
+	RTIMING("IncludesFile");
 	Index<String> visited;
-	return IncludesFile(parent_path, path, visited);
+	String key = path + "#" + parent_path;
+	int q = sIncludes.Find(key);
+	if(q >= 0)
+		return sIncludes[q];
+	bool b = IncludesFile0(parent_path, path, visited);
+	sIncludes.Add(key, b);
+	return b;
 }
 
 void CreateFlatPP(PPFile& fp, const char *path, Index<String>& visited)
@@ -481,6 +493,7 @@ void CreateFlatPP(PPFile& fp, const char *path, Index<String>& visited)
 
 const PPFile& GetFlatPPFile(const char *path, Index<String>& visited)
 {
+	RTIMING("GetFlatPPFile");
 	LLOG("GetFlatPPFile " << path);
 	int q = sFlatPP.Find(path);
 	if(q >= 0)
