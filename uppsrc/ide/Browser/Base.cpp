@@ -195,7 +195,7 @@ String GetSourceFilePath(int file)
 
 bool CheckFile(const SourceFileInfo& f, const String& path)
 {
-	LTIMING("CheckFile");
+	RTIMING("CheckFile");
 	LDUMP(f.time);
 	LDUMP(FileGetTime(path));
 	if(f.time != FileGetTime(path))

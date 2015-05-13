@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x)  RTIMING(x)
+#define LTIMING(x)  // RTIMING(x)
 #define LLOG(x)     // DLOG(x)
 
 void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)
@@ -156,7 +156,7 @@ bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& current
                      bool get_macros)
 {
 	LLOG("===== Preprocess " << sourcefile << " <- " << currentfile);
-	LTIMING("Cpp::Preprocess");
+	RTIMING("Cpp::Preprocess");
 	macro.Clear();
 	macro.Reserve(1000);
 	segment_id.Clear();
@@ -192,6 +192,7 @@ bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& current
 
 void Cpp::DoFlatInclude(const String& header_path)
 {
+	RTIMING("DoFlatInclude");
 	LLOG("Flat include " << header_path);
 	if(header_path.GetCount()) {
 		const PPFile& pp = GetFlatPPFile(header_path);
@@ -223,6 +224,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile,
 	String current_folder = GetFileFolder(currentfile);
 	bool notthefile = sourcefile != currentfile;
 	if(notthefile || get_macros) {
+		RTIMING("DO2");
 		const PPFile& pp = GetPPFile(currentfile);
 		for(int i = 0; i < pp.item.GetCount() && !done; i++) {
 			const PPItem& m = pp.item[i];
@@ -268,7 +270,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile,
 	namespaces = Join(namespace_stack, ";");
 
 	if(!get_macros) {
-		LTIMING("Expand");
+		RTIMING("Expand");
 		incomment = false;
 		prefix_macro.Clear();
 		StringBuffer result;
