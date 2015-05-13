@@ -40,7 +40,7 @@ CONSOLE_APP_MAIN
 		SaveFile(AppendFileName(outdir, pdfname), pdf);
 		
 		String h = LoadDataFile(pdfname);
-		ASSERT(h.GetCount() == pdf.GetCount());qtf
+		ASSERT(h.GetCount() == pdf.GetCount());
 		int q = h.ReverseFind("trailer");
 		ASSERT(pdf.Mid(0, q) == h.Mid(0, q));
 	}
