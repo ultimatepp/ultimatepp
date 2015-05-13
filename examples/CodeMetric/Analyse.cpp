@@ -44,7 +44,12 @@ CodeMetric::CodeMetric(const String &fileContent) :
 	CppBase base;
 	Parser parser;
 	parser.whenFnEnd = THISBACK(StoreMetric);
-	parser.Do(stream, Vector<String>(), base, "file", THISBACK(StoreError));
+
+	parser.Do(stream, base, 0, 0,
+	          "file", CNULL,
+	          Vector<String>(),
+	          Vector<String>(),
+	          Index<String>());
 
 	const SrcFile &srcFile = parser.getPreprocessedFile();
 
