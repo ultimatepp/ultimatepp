@@ -23,21 +23,22 @@ String CodeBaseCacheDir()
 	return ConfigFile("cfg/codebase");
 }
 
+struct RCB_FileInfo {
+	String path;
+	Time   time;
+	int64  length;
+	
+	bool operator<(const RCB_FileInfo& a) const { return time > a.time; }
+};
+
 void ReduceCodeBaseCache()
 {
-	struct FileInfo {
-		String path;
-		Time   time;
-		int64  length;
-		
-		bool operator<(const FileInfo& a) const { return time > a.time; }
-	};
-	Array<FileInfo> file;
+	Array<RCB_FileInfo> file;
 	FindFile ff(AppendFileName(CodeBaseCacheDir(), "*.*"));
 	int64 total = 0;
 	while(ff) {
 		if(ff.IsFile()) {
-			FileInfo& m = file.Add();
+			RCB_FileInfo& m = file.Add();
 			m.path = ff.GetPath();
 			m.time = ff.GetLastAccessTime();
 			m.length = ff.GetLength();
