@@ -200,7 +200,7 @@ void CodeBrowser::LoadScope()
 		if(file < 0)
 			GatherMethods(scope, inherited, false);
 		Index<String> set;
-		for(int i = 0; i < n.GetCount(); i = i++) {
+		for(int i = 0; i < n.GetCount(); i++) {
 			CppItemInfo m;
 			(CppItem&) m = n[i];
 			if((find.GetCount() && m.uname.StartsWith(find) || filematch && m.file == file || scopematch) && set.Find(m.qitem) < 0) {
