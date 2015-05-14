@@ -14,7 +14,7 @@ ArrayMap<String, SourceFileInfo> source_file;
 
 void SourceFileInfo::Serialize(Stream& s)
 {
-	s % time % ids % included_id_macros % namespace_info % using_info
+	s % time % check_info % ids % included_id_macros % namespace_info % using_info
 	  % defined_macros % defined_namespace_info % includes;
 }
 
@@ -82,7 +82,7 @@ void SerializeCodeBase(Stream& s)
 	CodeBase().Serialize(s);
 }
 
-#define CPP_CODEBASE_VERSION 8
+#define CPP_CODEBASE_VERSION 9
 
 void SaveCodeBase()
 {
@@ -201,6 +201,8 @@ bool CheckFile(const SourceFileInfo& f, const String& path)
 	LDUMP(FileGetTime(path));
 	if(f.time != FileGetTime(path))
 		return false;
+	if(!f.check_info)
+		return true;
 	Cpp pp;
 	FileIn in(path);
 	pp.Preprocess(path, in, GetMasterFile(path), true);
@@ -280,6 +282,7 @@ Vector<String> ParseSrc(Stream& in, int file, Callback2<int, const String&> erro
 	String ext = ToLower(GetFileExt(path));
 	int filetype = FILE_OTHER;
 	SourceFileInfo& sfi = source_file[file];
+	sfi.time = FileGetTime(path);
 	Cpp cpp;
 	bool b = false;
 	if(ext == ".lay")
@@ -291,14 +294,14 @@ Vector<String> ParseSrc(Stream& in, int file, Callback2<int, const String&> erro
 	if(ext == ".sch")
 		pp.Append(PreprocessSchFile(path));
 	else {
+		sfi.check_info = true;
 		cpp.Preprocess(path, in, GetMasterFile(GetSourceFilePath(file)));
 		filetype = decode(ext, ".h", FILE_H, ".hpp", FILE_HPP,
 		                       ".cpp",FILE_CPP, ".c", FILE_C, FILE_OTHER);
 		if(do_macros) {
 			sfi.ids = cpp.ids.PickKeys();
 			sfi.included_id_macros = cpp.GetIncludedMacroValues(sfi.ids.GetKeys());
-			LDUMP(sfi.ids);
-			sfi.time = FileGetTime(path);
+			LDUMP(sfi.ids);			
 			LDUMP(sfi.time);
 			VectorMap<String, String> dm = cpp.GetDefinedMacros();
 			LDUMP(dm);

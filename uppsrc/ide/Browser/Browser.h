@@ -22,6 +22,7 @@ CppBase&       CodeBase();
 
 struct SourceFileInfo {
 	Time                      time;
+	bool                      check_info; // this is not special file, like .iml, .sch
 	Index<String>             ids; // all identifiers in the file
 	String                    included_id_macros; // included macros from ids set
 	String                    namespace_info; // namespace defined at the start of file
@@ -32,7 +33,7 @@ struct SourceFileInfo {
 	
 	void Serialize(Stream& s);
 
-	SourceFileInfo() { time = Null; }
+	SourceFileInfo() { time = Null; check_info = false; }
 };
 
 void           NewCodeBase();

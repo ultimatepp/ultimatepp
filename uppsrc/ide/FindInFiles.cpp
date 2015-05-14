@@ -12,7 +12,7 @@ FileSel& sSD()
 }
 
 void Ide::SerializeFindInFiles(Stream& s) {
-	int version = 6;
+	int version = 7;
 	s / version;
 	s % ff.files;
 	ff.files.SerializeList(s);
@@ -26,8 +26,11 @@ void Ide::SerializeFindInFiles(Stream& s) {
 	}
 	if(version >= 1)
 		s % sSD();
-	if(version >= 3)
-		s % ff.readonly;
+	if(version >= 3 && version < 7) {
+		DropList dummy;
+		s % dummy;
+	}
+
 	if(version >= 4)
 		s % ff.samecase;
 	if(version >= 5)
