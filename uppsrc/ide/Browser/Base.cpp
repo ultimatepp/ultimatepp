@@ -199,8 +199,10 @@ bool CheckFile(const SourceFileInfo& f, const String& path)
 	RTIMING("CheckFile");
 	LDUMP(f.time);
 	LDUMP(FileGetTime(path));
-	if(f.time != FileGetTime(path))
+	if(f.time != FileGetTime(path)) {
+		DLOG("Wrong time: " << path);
 		return false;
+	}
 	if(!f.check_info)
 		return true;
 	Cpp pp;
@@ -209,6 +211,11 @@ bool CheckFile(const SourceFileInfo& f, const String& path)
 	String included_id_macros = pp.GetIncludedMacroValues(f.ids.GetKeys());
 	LDUMP(included_id_macros);
 	LDUMP(f.included_id_macros);
+	if(f.included_id_macros != included_id_macros) {
+		DLOG("Other reason: " << path);
+		DDUMP(f.included_id_macros);
+		DDUMP(included_id_macros);
+	}
 	return f.included_id_macros == included_id_macros;
 }
 
@@ -427,6 +434,7 @@ void SyncCodeBase()
 {
 	LTIMING("SyncCodeBase");
 	LTIMESTOP("SyncCodeBase");
+	DLOG("============= Sync code base");
 	Progress pi;
 	pi.Title("Parsing source files");
 	UpdateCodeBase(pi);
