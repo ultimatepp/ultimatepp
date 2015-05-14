@@ -208,9 +208,6 @@ void Cpp::DoFlatInclude(const String& header_path)
 				namespace_using.FindAdd(m.text);
 				usings << ";" << m.text;
 			}
-			else
-			if(m.type == PP_INCLUDE) // In flat PP, only marker
-				usings << ";[" << m.text << "]";
 		}
 	}
 }

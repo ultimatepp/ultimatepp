@@ -252,17 +252,19 @@ void PPFile::Parse(Stream& in)
 						String id;
 						while(p.Char2(':', ':'))
 							id = "::";
-						id << p.ReadId();
-						while(p.Char2(':', ':'))
-							id << "::" << p.ReadId();
-						if(!was_using)
-							namespace_block.Add(level);
-						if(!was_using || level == 0) {
-							PPItem& m = item.Add();
-							next_segment = true;
-							m.type = type;
-							m.text = id;
-							DLOG("namespace " << id);
+						if(p.IsId()) {
+							id << p.ReadId();
+							while(p.Char2(':', ':') && p.IsId())
+								id << "::" << p.ReadId();
+							if(!was_using)
+								namespace_block.Add(level);
+							if(!was_using || level == 0) {
+								PPItem& m = item.Add();
+								next_segment = true;
+								m.type = type;
+								m.text = id;
+								DLOG("namespace " << id);
+							}
 						}
 						was_namespace = was_using = false;
 					}
@@ -503,7 +505,6 @@ const PPFile& GetFlatPPFile(const char *path, Index<String>& visited)
 	const PPFile& pp = GetPPFile(path);
 	for(int i = 0; i < pp.item.GetCount(); i++) {
 		const PPItem& m = pp.item[i];
-		fp.item.Add(m);
 		if(m.type == PP_INCLUDE) {
 			String s = GetIncludePath(m.text, GetFileFolder(path));
 			if(s.GetCount() && visited.Find(s) < 0) {
@@ -513,6 +514,8 @@ const PPFile& GetFlatPPFile(const char *path, Index<String>& visited)
 					fp.item.Add(pp.item[i]);
 			}
 		}
+		else
+			fp.item.Add(m);
 	}
 	return fp;
 }
