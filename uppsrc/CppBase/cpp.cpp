@@ -383,7 +383,8 @@ String Cpp::GetIncludedMacroValues(const Vector<String>& m)
 		if(mm.GetCount())
 			r << '#' << m[i] << '\n' << mm << '\n';
 	}
-	return MD5String(r);
+	return r;
+//	return MD5String(r);
 }
 
 END_UPP_NAMESPACE

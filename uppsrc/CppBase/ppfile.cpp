@@ -262,6 +262,7 @@ void PPFile::Parse(Stream& in)
 							next_segment = true;
 							m.type = type;
 							m.text = id;
+							DLOG("namespace " << id);
 						}
 						was_namespace = was_using = false;
 					}
