@@ -377,7 +377,7 @@ void Parser::ThrowError(const String& e)
 	int i = 0;
 	while(i < 40 && lex[i] != t_eof)
 		i++;
-	DLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
+	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
 	     ", code:  " << AsCString(String(lex.Pos(), lex.Pos(i))));
 #endif
 	throw Error();

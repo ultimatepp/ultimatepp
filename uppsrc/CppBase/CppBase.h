@@ -82,8 +82,6 @@ private:
 PPMacro            *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti);
 const     CppMacro *FindMacro(const String& id, Index<int>& segment_id, int& segmenti);
 
-String    GetAllMacros(const String& id, Index<int>& segment_id);
-
 void   PPSync(const String& include_path);
 String GetIncludePath();
 

@@ -145,19 +145,6 @@ const CppMacro *FindMacro(const String& id, Index<int>& segment_id, int& segment
 	return m ? &m->macro : NULL;
 }
 
-String GetAllMacros(const String& id, Index<int>& segment_id)
-{
-	String r;
-	int q = sAllMacros.Find(id);
-	while(q >= 0) {
-		const PPMacro& m = sAllMacros[q];
-		if(segment_id.Find(m.segment_id) >= 0)
-			r << '\n' << m.macro;
-		q = sAllMacros.FindNext(q);
-	}
-	return r;
-}
-
 void PPFile::CheckEndNamespace(Vector<int>& namespace_block, int level)
 {
 	if(namespace_block.GetCount() && namespace_block.Top() == level) {
@@ -525,6 +512,19 @@ const PPFile& GetFlatPPFile(const char *path)
 	Index<String> visited;
 	visited.Add(path);
 	return GetFlatPPFile(path, visited);
+}
+
+String GetAllMacros(const String& id, Index<int>& segment_id)
+{
+	String r;
+	int q = sAllMacros.Find(id);
+	while(q >= 0) {
+		const PPMacro& m = sAllMacros[q];
+		if(segment_id.Find(m.segment_id) >= 0)
+			r << '\n' << m.macro;
+		q = sAllMacros.FindNext(q);
+	}
+	return r;
 }
 
 END_UPP_NAMESPACE
