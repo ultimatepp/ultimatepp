@@ -150,46 +150,6 @@ String Cpp::Expand(const char *s)
 	return r;
 }
 
-Index<String> Cpp::kw;
-
-bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& currentfile,
-                     bool get_macros)
-{
-	LLOG("===== Preprocess " << sourcefile << " <- " << currentfile);
-	RTIMING("Cpp::Preprocess");
-	macro.Clear();
-	macro.Reserve(1000);
-	segment_id.Clear();
-	segment_id.Reserve(100);
-
-	const Vector<String>& ignorelist = GetIgnoreList();
-
-	for(int i = 0; i < ignorelist.GetCount(); i++) {
-		PPMacro h;
-		PPMacro& pp = macro.GetAdd(h.macro.Define(ignorelist[i]));
-		pp = h;
-		pp.segment_id = -999999999;
-	}
-	segment_id.Add(-999999999);
-
-	std_macros = macro.GetCount();
-
-	ONCELOCK {
-		const char **h = CppKeyword();
-		while(*h) {
-			kw.Add(*h);
-			h++;
-		}
-	}
-	notmacro = clone(kw);
-
-	done = false;
-	incomment = false;
-	Index<String> visited;
-	Do(NormalizePath(sourcefile), in, NormalizePath(currentfile), visited, get_macros);
-	return done;
-}
-
 void Cpp::DoFlatInclude(const String& header_path)
 {
 	RTIMING("DoFlatInclude");
@@ -197,7 +157,7 @@ void Cpp::DoFlatInclude(const String& header_path)
 	if(header_path.GetCount()) {
 		const PPFile& pp = GetFlatPPFile(header_path);
 		LLOG("DoFlatInclude " << header_path << ", " << pp.item.GetCount() << " items");
-		for(int i = 0; i < pp.item.GetCount() && !done; i++) {
+		for(int i = 0; i < pp.item.GetCount(); i++) {
 			const PPItem& m = pp.item[i];
 			if(m.type == PP_DEFINES) {
 				segment_id.FindAdd(m.segment_id);
@@ -212,6 +172,7 @@ void Cpp::DoFlatInclude(const String& header_path)
 	}
 }
 
+#if 0
 void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile,
              Index<String>& visited, bool get_macros)
 {
@@ -356,6 +317,220 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile,
 	}
 	done = true;
 }
+#endif
+
+static String sReadCppName(CParser& p)
+{
+	String id;
+	for(;;)
+		if(p.IsId())
+			id.Cat(p.ReadId());
+		else
+		if(p.Char2(':', ':'))
+			id.Cat("::");
+		else
+			break;
+	return id;
+}
+
+void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile,
+             Index<String>& visited, bool get_macros)
+{
+	if(visited.Find(currentfile) >= 0 || visited.GetCount() > 100) // TODO: Remove?
+		return;
+	visited.Add(currentfile);
+	String current_folder = GetFileFolder(currentfile);
+	bool finalfile = sourcefile == currentfile;
+	
+	if(finalfile) { // Need to recognize usings and namespaces
+		done = true;
+		CParser p(output);
+		DDUMP(output);
+		try { // TODO: Add grounding (to namespace level)
+			Vector<int> namespace_block;
+			while(!p.IsEof()) {
+				int plvl = 0;
+				if(p.Id("using") && p.Id("namespace")) {
+					do {
+						String id = sReadCppName(p);
+						if(id.GetCount())
+							namespace_using.FindAdd(id);
+					}
+					while(p.Char(','));
+				}
+				else
+				if(p.Id("namespace")) {
+					String id = sReadCppName(p);
+					if(id.GetCount()) {
+						namespace_stack.Add(id);
+						namespace_block.Add(plvl);
+					}
+				}
+				else
+				if(p.Char('{'))
+					plvl++;
+				else
+				if(p.Char('}')) {
+					if(namespace_block.GetCount() && namespace_block.Top() == plvl) {
+						namespace_stack.Drop();
+						namespace_block.Drop();
+					}
+					plvl--;
+				}
+				else
+					p.SkipTerm();
+			}
+		}
+		catch(CParser::Error) {}
+		namespaces = Join(namespace_stack, ";");
+		DDUMP(namespace_stack);
+		DDUMP(namespace_using);
+		output.Clear();
+	}
+
+	RTIMING("Expand");
+	incomment = false;
+	prefix_macro.Clear();
+	output.Reserve(8192);
+	int lineno = 0;
+	bool incomment = false;
+	int segment_serial = 0;
+	segment_id.Add(--segment_serial);
+
+#ifdef IGNORE_ELSE
+	int ignore_else = 0;
+#endif
+
+	while(!in.IsEof()) {
+		String l = prefix_macro + in.GetLine();
+		prefix_macro.Clear();
+		lineno++;
+		int el = 0;
+		while(*l.Last() == '\\' && !in.IsEof()) {
+			el++;
+			l.Trim(l.GetLength() - 1);
+			l.Cat(in.GetLine());
+		}
+		RemoveComments(l, incomment);
+		CParser p(l);
+		if(p.Char('#')) {
+			if(p.Id("define")) {
+				output.Cat(l + "\n");
+				CppMacro m;
+				String id = m.Define(p.GetPtr());
+				if(id.GetCount()) {
+					PPMacro& pp = macro.Add(id);
+					pp.macro = m;
+					pp.segment_id = segment_serial;
+					notmacro.Trim(kw.GetCount());
+				}
+			}
+			else
+			if(p.Id("undef")) {
+				output.Cat(l + "\n");
+				if(p.IsId()) {
+					segment_id.Add(--segment_serial);
+					PPMacro& m = macro.Add(p.ReadId());
+					m.segment_id = segment_serial;
+					m.macro.SetUndef();
+					notmacro.Trim(kw.GetCount());
+					segment_id.Add(--segment_serial);
+				}
+			}
+			else {
+				output.Cat('\n');
+			#ifdef IGNORE_ELSE
+				if(ignore_else) {
+					if(p.Id("if") || p.Id("ifdef") || p.Id("ifndef"))
+						ignore_else++;
+					else
+					if(p.Id("endif"))
+						ignore_else--;
+				}
+				else {
+					if(p.Id("else") || p.Id("elif"))
+						ignore_else = 1;
+				}
+			#endif
+				if(p.Id("include")) {
+					LTIMING("Expand include");
+					String s = GetIncludePath(p.GetPtr(), current_folder);
+					DLOG("#include " << s);
+					if(s.GetCount()) {
+						DDUMP(IncludesFile(s, sourcefile));
+						if(!finalfile && IncludesFile(s, sourcefile)) {
+							DLOG("Include IN " << s);
+							RHITCOUNT("Include IN");
+							Do(sourcefile, in, s, visited, get_macros);
+							return;
+						}
+						else {
+							DLOG("Include FLAT " << s);
+							RHITCOUNT("Include FLAT");
+							DoFlatInclude(s);
+							segment_id.Add(--segment_serial);
+							includes << ';' << s;
+						}
+					}
+				}
+			}
+		}
+		else {
+			LTIMING("Expand expand");
+		#ifdef IGNORE_ELSE
+			if(ignore_else)
+				output.Cat('\n');
+			else
+		#endif
+				output.Cat(Expand(l) + "\n");
+		}
+		while(el--)
+			output.Cat("\n");
+	}
+}
+
+Index<String> Cpp::kw;
+
+bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& currentfile,
+                     bool get_macros)
+{
+	DLOG("===== Preprocess " << sourcefile << " <- " << currentfile);
+	RTIMING("Cpp::Preprocess");
+	macro.Clear();
+	macro.Reserve(1000);
+	segment_id.Clear();
+	segment_id.Reserve(100);
+
+	const Vector<String>& ignorelist = GetIgnoreList();
+
+	for(int i = 0; i < ignorelist.GetCount(); i++) {
+		PPMacro h;
+		PPMacro& pp = macro.GetAdd(h.macro.Define(ignorelist[i]));
+		pp = h;
+		pp.segment_id = -999999999;
+	}
+	segment_id.Add(-999999999);
+
+	std_macros = macro.GetCount();
+
+	ONCELOCK {
+		const char **h = CppKeyword();
+		while(*h) {
+			kw.Add(*h);
+			h++;
+		}
+	}
+	notmacro = clone(kw);
+
+	done = false;
+	incomment = false;
+	output.Clear();
+	Index<String> visited;
+	Do(NormalizePath(sourcefile), in, NormalizePath(currentfile), visited, get_macros);
+	if(!done)
+		output.Clear();
+	return done;
+}
 
 VectorMap<String, String> Cpp::GetDefinedMacros()
 {
@@ -369,10 +544,12 @@ VectorMap<String, String> Cpp::GetDefinedMacros()
 	return r;
 }
 
+String GetAllMacros(const String& id, Index<int>& segment_id);
+
 String Cpp::GetIncludedMacroValues(const Vector<String>& m)
 {
 	String r;
-	LTIMING("GetUsedMacroValues");
+	RTIMING("GetUsedMacroValues");
 	r << "##namespace\n" << namespaces << "\n"
 	  << "##usings\n" << usings << "\n";
 	for(int i = 0; i < m.GetCount(); i++) {
@@ -380,8 +557,11 @@ String Cpp::GetIncludedMacroValues(const Vector<String>& m)
 		if(mm.GetCount())
 			r << '#' << m[i] << '\n' << mm << '\n';
 	}
+#ifdef DEBUG
 	return r;
-//	return MD5String(r);
+#else
+	return MD5String(r);
+#endif
 }
 
 END_UPP_NAMESPACE
