@@ -631,58 +631,7 @@ Array<String> GetDriveList() {
 	return ret;
 }
 #endif
-/* Replaced by GetCurrentDirectory() and SetCurrentDirectory()
-String Getcwd() {
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
-	wchar ret[MAX_PATH];
-	if (_wgetcwd(ret, MAX_PATH))
-		return FromSystemCharsetW(ret);
-#else
-#define MAX_PATH 1024
-	char ret[MAX_PATH];
-	if (getcwd(ret, MAX_PATH))
-		return String(ret);
-#endif
-	return Null;
-}
 
-bool Chdir (const String &folder) {
-#if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-	return 0 == _wchdir(ToSystemCharsetW(folder));
-#else
-	return 0 == chdir(folder);
-#endif
-}
-*/
-/*
-String Format(Time time, const char *fmt) {
-	String  s; 
-	if(IsNull(time))
-		return String();
-		
-	return Format(Date(time)) + Format(fmt, time.hour, time.minute, time.second);
-}
-
-String GetFirefoxDownloadFolder()
-{
-	String profilesPath = "mozilla/firefox";
-#ifdef PLATFORM_POSIX	// Is hidden
-	profilesPath = String(".") + profilesPath;
-#endif
-	StringParse profiles = LoadFile(AppendFileName(GetAppDataFolder(), AppendFileName(profilesPath, "profiles.ini")));
-	if (!profiles.GoAfter("Path")) return "";
-	if (!profiles.GoAfter("=")) return "";
-	String path = profiles.GetText();
-	String pathPrefs = AppendFileName(AppendFileName(AppendFileName(GetAppDataFolder(), profilesPath), path), "prefs.js");
-	StringParse prefs = LoadFile(pathPrefs);
-	if (!prefs.GoAfter("\"browser.download.dir\"")) {
-		if (!prefs.GoAfter("\"browser.download.lastDir\""))
-			return "";		
-	}
-	if (!prefs.GoAfter(",")) return "";
-	return prefs.GetText();
-}
-*/
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 String GetShellFolder2(int clsid) 
@@ -703,32 +652,7 @@ String GetShellFolder2(const char *local, const char *users)
 									   HKEY_LOCAL_MACHINE));
 	return ret;
 }
-/*
-String GetIEDownloadFolder() 
-{
-	String ret = FromSystemCharset(GetWinRegString("Download Directory", "Software\\Microsoft\\Internet Explorer", HKEY_CURRENT_USER));
-	if (ret == "")
-		ret =  FromSystemCharset(GetWinRegString("Save Directory", "Software\\Microsoft\\Internet Explorer\\Main", HKEY_CURRENT_USER)); 
-	return ret;
-}
-String GetDesktopFolder()	{return GetShellFolder("Desktop", "Common Desktop");}
-String GetProgramsFolder()	{return FromSystemCharset(GetWinRegString("ProgramFilesDir", "Software\\Microsoft\\Windows\\CurrentVersion", HKEY_LOCAL_MACHINE));}
-String GetAppDataFolder()	{return GetShellFolder("AppData", "Common AppData");}
-String GetMusicFolder()		{return GetShellFolder("My Music", "CommonMusic");}
-String GetPicturesFolder()	{return GetShellFolder("My Pictures", "CommonPictures");}
-String GetVideoFolder()		{return GetShellFolder("My Video", "CommonVideo");}
-String GetTemplatesFolder()	{return GetShellFolder("Templates", "Common Templates");}
-String GetDownloadFolder()	
-{
-	String browser = GetExtExecutable("html");
-	browser = ToLower(browser);
-	if (browser.Find("iexplore") >= 0)
-		return GetIEDownloadFolder();
-	else if (browser.Find("firefox") >= 0)
-		return GetFirefoxDownloadFolder();
-	return GetDesktopFolder();		// I do not know to do it in other browsers !!
-};
-*/ 
+
 String GetPersonalFolder()	{return GetShellFolder2("Personal", 0);}
 String GetStartupFolder()	{return GetShellFolder2(CSIDL_STARTUP);}
 
@@ -934,6 +858,11 @@ String SecondsToString(double seconds, bool units, bool dec) {
 	min = (int)(seconds/60.);
 	seconds -= min*60;	
 	return HMSToString(hour, min, seconds, units, dec);
+}
+
+String SeasonName(int iseason) {
+	static const char *season[] = {t_("winter"), t_("spring"), t_("summer"), t_("autumn")};
+	return iseason >= 0 && iseason < 4 ? season[iseason] : "";
 }
 
 String BytesToString(uint64 _bytes, bool units)
@@ -2553,4 +2482,11 @@ double tmGetTimeX() {
 #endif
 }
 
+
+
 END_UPP_NAMESPACE
+
+// Dummy functions added after TheIDE change
+Upp::String GetCurrentMainPackage() {return "dummy";}
+Upp::String GetCurrentBuildMethod()	{return "dummy";}
+void IdePutErrorLine(const Upp::String& line) {}

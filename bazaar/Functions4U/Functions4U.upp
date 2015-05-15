@@ -8,9 +8,9 @@ uses
 	plugin\gif,
 	plugin\png,
 	plugin/tif,
-	plugin/bmp;
-
-uses(GUI) ide/Browser;
+	plugin/bmp,
+	ide/Browser,
+	plugin/lz4;
 
 library(WIN32) oleaut32;
 

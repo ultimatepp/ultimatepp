@@ -208,6 +208,8 @@ String HMSToString(int hour, int min, double seconds, bool units = false, bool d
 double StringToSeconds(String str);		// The opposite
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
+String SeasonName(int iseason);
+	
 String FormatDoubleAdjust(double d, double range);
 
 String RemoveAccents(String str);
@@ -281,7 +283,7 @@ bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char sep
 
 	
 // A String based class to parse into
-class StringParse :  public String {
+class StringParse : public String {
 public:
 	void GoInit()	{pos = 0; lastSeparator='\0';};
 	StringParse():String("") {GoInit();};

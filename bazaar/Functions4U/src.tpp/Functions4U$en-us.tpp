@@ -408,6 +408,11 @@ pp`::Date][@(0.0.255) `&]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s
 but returning directly a Date.&]
 [s3; &]
 [s4;%- &]
+[s5;:SeasonName`(int`):%- [_^String^ String]_[* SeasonName]([@(0.0.255) int]_[*@3 i])&]
+[s2; It returns the name of the season beginning from `"winter`" 
+([%-*@3 i] `= 0).&]
+[s3; &]
+[s4;%- &]
 [s5;:FormatDoubleAdjust`(double`,double`):%- [_^String^ String]_[* FormatDoubleAdjust]([@(0.0.255) d
 ouble]_[*@3 d], [@(0.0.255) double]_[*@3 range])&]
 [s2; Returns number [%-*@3 d] in [%-*@3 range ]converted to a String, 
