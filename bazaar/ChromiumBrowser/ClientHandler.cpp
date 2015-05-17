@@ -23,7 +23,7 @@ bool ClientHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefStr
 	return true;
 }
 
-#if CHROME_VERSION_BUILD > 2357
+#if CHROME_VERSION_BUILD >= 2357
 bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefFrame> frame,
                              const CefString& target_url,
