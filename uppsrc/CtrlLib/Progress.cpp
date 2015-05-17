@@ -133,6 +133,8 @@ void Progress::Reset() {
 	total = 0;
 	cancel = false;
 	granularity = 50;
+	show_delay = 250;
+	
 	set_time = show_time = GetTickCount(); // + 300;
 }
 
@@ -189,7 +191,7 @@ void Progress::Process()
 {
 	if(!IsOpen()) {
 		dword t = GetTickCount();
-		if((int)(t - show_time) >= granularity) {
+		if((int)(t - show_time) >= show_delay) {
 			Create();
 			show_time = t;
 		}

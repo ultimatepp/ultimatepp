@@ -56,6 +56,7 @@ protected:
 	int      pos;
 	String   text;
 	int      granularity;
+	int      show_delay;
 	dword    set_time;
 	dword    show_time;
 	Ctrl    *owner;
@@ -89,6 +90,7 @@ public:
 	void     Reset();
 
 	void     Granularity(int ms)           { granularity = ms; }
+	void     Delay(int ms)                 { show_delay = ms; }
 
 	void     AlignText(int align)          { info.SetAlign(align); }
 

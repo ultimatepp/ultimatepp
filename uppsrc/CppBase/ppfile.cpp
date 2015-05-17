@@ -327,7 +327,7 @@ void PPFile::Dump() const
 
 static VectorMap<String, String>   sIncludePath;
 static VectorMap<String, bool>     sIncludes;
-static ArrayMap<String, PPFile>    sFlatPP;
+static ArrayMap<String, FlatPP>    sFlatPP;
 static String                      sInclude_Path;
 
 void PPSync(const String& include_path)
@@ -393,13 +393,13 @@ Time GetFileTimeCached(const String& p)
 
 String GetIncludePath(const String& s, const String& filedir)
 {
-	RTIMING("GetIncludePath");
+	LTIMING("GetIncludePath");
 	String key;
 	key << s << "#" << filedir;
 	int q = sIncludePath.Find(key);
 	if(q >= 0)
 		return sIncludePath[q];
-	RTIMING("GetIncludePath 2");
+	LTIMING("GetIncludePath 2");
 	String p = GetIncludePath0(s, filedir);
 	sIncludePath.Add(key, p);
 	return p;
@@ -407,12 +407,11 @@ String GetIncludePath(const String& s, const String& filedir)
 
 const PPFile& GetPPFile(const char *path)
 {
-	RTIMING("GetPPFile");
+	LTIMING("GetPPFile");
 	Time tm = GetFileTimeCached(path);
 	PPFile& f = sPPfile.GetPut(path);
 	if(f.filetime != tm) {
 		f.filetime = tm;
-		RTIMING("PP read");
 		FileIn in(path);
 		f.Parse(in);
 	}
@@ -424,108 +423,45 @@ bool IsSameFile(const String& f1, const String& f2)
 	return NormalizePath(f1) == NormalizePath(f2);
 }
 
-bool IncludesFile0(const String& parent_path, const String& path, Index<String>& visited)
+const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 {
-	RHITCOUNT("IncludesFile0");
-	if(visited.Find(parent_path) >= 0)
-		return false;
-	visited.Add(parent_path);
-	if(IsSameFile(parent_path, path))
-		return true;
-	{
-		RTIMING("GetPPFile");
-		GetPPFile(parent_path);
-	}
-	const PPFile& f = GetPPFile(parent_path);
-	for(int i = 0; i < f.includes.GetCount(); i++) {
-		String key = path + "#" + f.includes[i];
-		int q = sIncludes.Find(key);
-		if(q >= 0) {
-			HITCOUNT("IncludesFile cached");
-			if(sIncludes[q])
-				return true;
-		}
-		else {
-			HITCOUNT("IncludesFile getpath");
-			String p = GetIncludePath(f.includes[i], GetFileFolder(parent_path));
-			bool   b = p.GetCount() && IncludesFile0(p, path, visited);
-			sIncludes.Add(key, b);
-			if(b)
-				return true;
-		}
-	}
-	return false;
-}
-
-#if 0 // TODO: remove?
-bool IncludesFile(const String& parent_path, const String& path)
-{
-	RTIMING("IncludesFile");
-	Index<String> visited;
-	String key = path + "#" + parent_path;
-	int q = sIncludes.Find(key);
-	if(q >= 0)
-		return sIncludes[q];
-	bool b = IncludesFile0(parent_path, path, visited);
-	sIncludes.Add(key, b);
-	return b;
-}
-
-void CreateFlatPP(PPFile& fp, const char *path, Index<String>& visited)
-{
-	if(visited.Find(path) >= 0)
-		return;
-	visited.Add(path);
-	LLOG("CreateFlatPP " << path << LOG_BEGIN);
-	const PPFile& pp = GetPPFile(path);
-	for(int i = 0; i < pp.item.GetCount(); i++) {
-		const PPItem& m = pp.item[i];
-		if(m.type == PP_INCLUDE) {
-			String s = GetIncludePath(m.text, GetFileFolder(path));
-			if(s.GetCount())
-				CreateFlatPP(fp, s, visited);
-		}
-		else
-			fp.item.Add(m);
-	}
-	LLOG(LOG_END);
-}
-
-#endif
-
-const PPFile& GetFlatPPFile(const char *path, Index<String>& visited)
-{
-	RTIMING("GetFlatPPFile");
-	DLOG("GetFlatPPFile " << path);
-	LOGBEGIN();
+	LTIMING("GetFlatPPFile");
 	int q = sFlatPP.Find(path);
 	if(q >= 0)
 		return sFlatPP[q];
 	FlatPP& fp = sFlatPP.Add(path);
 	const PPFile& pp = GetPPFile(path);
+	int n = visited.GetCount();
+	visited.FindAdd(path);
 	for(int i = 0; i < pp.item.GetCount(); i++) {
 		const PPItem& m = pp.item[i];
 		if(m.type == PP_INCLUDE) {
 			String s = GetIncludePath(m.text, GetFileFolder(path));
-			DLOG("#include " << m.text << " -> " << s);
+			LLOG("#include " << m.text << " -> " << s);
 			if(s.GetCount() && visited.Find(s) < 0) {
 				visited.Add(s);
 				const FlatPP& pp = GetFlatPPFile(s, visited);
-				for(int i = 0; i < pp.item.GetCount(); i++)
-					fp.item.Add(pp.item[i]);
-				fp.includes.Add(s);
+				for(int i = 0; i < pp.segment_id.GetCount(); i++)
+					fp.segment_id.Add(pp.segment_id[i]);
+				for(int i = 0; i < pp.usings.GetCount(); i++)
+					fp.usings.Add(pp.usings[i]);
+				fp.includes.FindAdd(s);
 				for(int i = 0; i < pp.includes.GetCount(); i++)
 					fp.includes.FindAdd(pp.includes[i]);
 			}
 		}
 		else
-			fp.item.Add(m);
+		if(m.type == PP_DEFINES)
+			fp.segment_id.FindAdd(m.segment_id);
+		else
+		if(m.type == PP_USING)
+			fp.usings.FindAdd(m.text);
 	}
-	LOGEND();
+	visited.Trim(n);
 	return fp;
 }
 
-const PPFile& GetFlatPPFile(const char *path)
+const FlatPP& GetFlatPPFile(const char *path)
 {
 	Index<String> visited;
 	visited.Add(path);

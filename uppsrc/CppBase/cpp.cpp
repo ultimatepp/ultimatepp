@@ -152,26 +152,19 @@ String Cpp::Expand(const char *s)
 
 void Cpp::DoFlatInclude(const String& header_path)
 {
-	RTIMING("DoFlatInclude");
+	LTIMING("DoFlatInclude");
 	LLOG("Flat include " << header_path);
 	if(header_path.GetCount()) {
 		if(visited.Find(header_path) >= 0)
 			return;
 		visited.Add(header_path);
-		const PPFile& pp = GetFlatPPFile(header_path);
-		DLOG("DoFlatInclude " << header_path << ", " << pp.item.GetCount() << " items");
-		RTIMING("DoFlatInclude2");
-		for(int i = 0; i < pp.item.GetCount(); i++) {
-			const PPItem& m = pp.item[i];
-			if(m.type == PP_DEFINES) {
-				segment_id.FindAdd(m.segment_id);
-			//	DDUMP(m.segment_id);
-			}
-			else
-			if(m.type == PP_USING) {
-				namespace_using.FindAdd(m.text);
-				usings << ";" << m.text;
-			}
+		const FlatPP& pp = GetFlatPPFile(header_path);
+		LLOG("DoFlatInclude " << header_path << ", " << pp.segment_id.GetCount() << " segments");
+		for(int i = 0; i < pp.segment_id.GetCount(); i++)
+			segment_id.FindAdd(pp.segment_id[i]);
+		for(int i = 0; i < pp.usings.GetCount(); i++) {
+			namespace_using.FindAdd(pp.usings[i]);
+			usings << ";" << pp.usings[i];
 		}
 		for(int i = 0; i < pp.includes.GetCount(); i++)
 			visited.FindAdd(pp.includes[i]);
@@ -186,7 +179,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 	String current_folder = GetFileFolder(currentfile);
 	bool notthefile = sourcefile != currentfile;
 	if(notthefile || get_macros) {
-		RTIMING("DO2");
+		LTIMING("DO2");
 		const PPFile& pp = GetPPFile(currentfile);
 		for(int i = 0; i < pp.item.GetCount() && !done; i++) {
 			const PPItem& m = pp.item[i];
@@ -232,7 +225,7 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 	namespaces = Join(namespace_stack, ";");
 
 	if(!get_macros) {
-		RTIMING("Expand");
+		LTIMING("Expand");
 		incomment = false;
 		prefix_macro.Clear();
 		StringBuffer result;
@@ -328,7 +321,7 @@ bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& current
                      bool get_macros)
 {
 	LLOG("===== Preprocess " << sourcefile << " <- " << currentfile);
-	RTIMING("Cpp::Preprocess");
+	LTIMING("Cpp::Preprocess");
 	macro.Clear();
 	macro.Reserve(1000);
 	segment_id.Clear();
@@ -382,7 +375,7 @@ String GetAllMacros(const String& id, Index<int>& segment_id);
 String Cpp::GetIncludedMacroValues(const Vector<String>& m)
 {
 	String r;
-	RTIMING("GetUsedMacroValues");
+	LTIMING("GetUsedMacroValues");
 	r << "##namespace\n" << namespaces << "\n"
 	  << "##usings\n" << usings << "\n";
 	for(int i = 0; i < m.GetCount(); i++) {
