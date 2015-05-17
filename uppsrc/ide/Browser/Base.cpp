@@ -180,7 +180,7 @@ Index<String> sTimePath;
 
 Time GetDependsTime(const Vector<int>& file)
 {
-	RTIMING("CreateTimePrint");
+	LTIMING("CreateTimePrint");
 	static Index<String> path;
 	String r;
 	Time tm = Time::Low();
@@ -192,9 +192,7 @@ Time GetDependsTime(const Vector<int>& file)
 
 bool CheckFile(SourceFileInfo& f, const String& path)
 {
-	RTIMING("CheckFile");
-	LDUMP(f.time);
-	LDUMP(FileGetTime(path));
+	LTIMING("CheckFile");
 	if(f.time != FileGetTime(path))
 		return false;
 	if(!f.check_info)
@@ -204,24 +202,12 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 	Cpp pp;
 	FileIn in(path);
 	pp.Preprocess(path, in, GetMasterFile(path), true);
-	DLOG("CheckFile " << path);
-	DDUMP(f.ids.GetKeys());
 	String included_id_macros = pp.GetIncludedMacroValues(f.ids.GetKeys());
-	DDUMP(included_id_macros);
-#ifdef _DEBUG
-	if(f.included_id_macros != included_id_macros) {
-		LLOG("Other reason: " << path);
-		LDUMP(f.included_id_macros);
-		LDUMP(included_id_macros);
-	}
-#endif
 	if(f.included_id_macros != included_id_macros) {
 		f.depends_time = Null;
 		f.depends.Clear();
 		return false;
 	}
-	
-	RTIMING("VISITED ADD");
 	for(int i = 0; i < pp.visited.GetCount(); i++)
 		f.depends.Add(sTimePath.FindAdd(pp.visited[i]));
 	f.depends_time = GetDependsTime(f.depends);
@@ -260,12 +246,11 @@ void UpdateCodeBase2(Progress& pi)
 		String path = src[i];
 		int q = GetSourceFileIndex(path);
 		SourceFileInfo& f = source_file[q];
-		DLOG("== CHECK == " << q << ": " << path);
+		LLOG("== CHECK == " << q << ": " << path);
 		if(CheckFile(f, path))
 			keep_file.Add(q);
 		else {
-			LLOG("PARSE!");
-			DLOG("PARSE: " << path);
+			LLOG("PARSE: " << path);
 			parse_file.Add(q);
 		}
 	}
