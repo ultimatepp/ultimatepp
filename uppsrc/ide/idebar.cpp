@@ -577,7 +577,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 			menu.Add(!designer, "Insert", THISBACK(InsertMenu));
 			menu.MenuSeparator();
-			menu.Add("Check source files for changes", callback(SyncCodeBase));
+			menu.Add("Check source files for changes", THISBACK(CheckCodeBase));
 			menu.Add("Reparse source files", THISBACK(RescanCode));
 			menu.MenuSeparator();
 		}

@@ -363,6 +363,11 @@ void Ide::Deactivate()
 	}
 }
 
+void Ide::Activate()
+{
+	InvalidateFileTimeCache();
+}
+
 bool Ide::Key(dword key, int count) {
 	dword *k = IdeKeys::AK_DELLINE().key;
 	if(key == k[0] || key == k[1]) {

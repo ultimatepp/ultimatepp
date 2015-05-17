@@ -330,6 +330,7 @@ public:
 	virtual   bool   FileRemove();
 	virtual   void   DragAndDrop(Point p, PasteClip& d);
 	virtual   void   Deactivate();
+	virtual   void   Activate();
 	virtual   void   Layout();
 
 	virtual   void   PutConsole(const char *s);
@@ -870,6 +871,7 @@ public:
 		void  Abbreviations();
 
 	void      BrowseMenu(Bar& menu);
+		void  CheckCodeBase();
 		void  RescanCode();
 		void  QueryId();
 		void  OpenTopic(const String& topic, const String& createafter, bool before);

@@ -1,0 +1,52 @@
+TIMING IncludesFile   :  2.75 ms - 746.50 ns ( 3.00 ms / 3688 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 3688
+TIMING GetUsedMacroValues: 242.82 ms - 92.54 us (243.00 ms / 2624 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 2624
+TIMING GetFlatPPFile  : 59.65 ms - 11.43 us (60.00 ms / 5220 ), min:  0.00 ns, max:  8.00 ms, nesting: 16 - 6836
+TIMING DoFlatInclude  :  1.04 s  - 198.59 us ( 1.04 s  / 5220 ), min:  0.00 ns, max:  8.00 ms, nesting: 1 - 5220
+HITCOUNT Include FLAT: hit count = 5220
+TIMING DO2            :  1.08 s  - 411.14 us ( 1.08 s  / 2624 ), min:  0.00 ns, max:  8.00 ms, nesting: 1 - 2624
+TIMING Cpp::Preprocess:  1.46 s  - 555.95 us ( 1.46 s  / 2624 ), min:  0.00 ns, max:  8.00 ms, nesting: 1 - 2624
+TIMING CheckFile      :  2.34 s  - 879.45 us ( 2.34 s  / 2656 ), min:  0.00 ns, max:  8.00 ms, nesting: 1 - 2656
+TIMING GetIncludePath 2: 399.84 ms - 167.72 us (400.00 ms / 2384 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 2384
+TIMING GetIncludePath : 438.06 ms - 31.22 us (439.00 ms / 14032 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 14032
+TIMING GetPPFile      : 159.54 ms - 23.45 us (160.00 ms / 6804 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 6804
+HITCOUNT GatherSources: hit count = 5988
+TIMING GatherSources  : 604.89 ms - 362.64 us (605.00 ms / 1668 ), min:  0.00 ns, max: 111.00 ms, nesting: 18 - 5988
+TIMING FileGetTime    : 391.49 ms - 51.53 us (392.00 ms / 7598 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 7598
+===========================
+TIMING Expand         :  1.50 s  - 11.73 ms ( 1.50 s  / 128 ), min:  0.00 ns, max: 801.00 ms, nesting: 1 - 128
+HITCOUNT IncludesFile cached: hit count = 270819
+HITCOUNT IncludesFile getpath: hit count = 237840
+TIMING GetPPFile      : 581.12 ms -  2.54 us (596.00 ms / 228534 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 228534
+HITCOUNT Include IN: hit count = 7294
+HITCOUNT IncludesFile0: hit count = 255333
+TIMING IncludesFile   :  5.51 s  - 114.39 us ( 5.52 s  / 48201 ), min:  0.00 ns, max: 17.00 ms, nesting: 1 - 48201
+TIMING GetUsedMacroValues: 235.86 ms - 112.53 us (236.00 ms / 2096 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 2096
+TIMING GetFlatPPFile  : 77.09 ms -  1.73 us (80.00 ms / 44688 ), min:  0.00 ns, max:  7.00 ms, nesting: 16 - 45900
+TIMING DoFlatInclude  : 925.09 ms - 20.69 us (928.00 ms / 44705 ), min:  0.00 ns, max:  8.00 ms, nesting: 1 - 44705
+HITCOUNT Include FLAT: hit count = 44567
+TIMING DO2            :  8.14 s  -  3.88 ms ( 8.14 s  / 2096 ), min:  0.00 ns, max: 802.00 ms, nesting: 17 - 9172
+TIMING Cpp::Preprocess:  8.45 s  -  4.03 ms ( 8.45 s  / 2096 ), min:  0.00 ns, max: 802.00 ms, nesting: 1 - 2096
+TIMING CheckFile      :  7.48 s  -  3.75 ms ( 7.48 s  / 1992 ), min:  0.00 ns, max: 18.00 ms, nesting: 1 - 1992
+TIMING GetIncludePath 2: 275.88 ms - 154.30 us (276.00 ms / 1788 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 1788
+TIMING GetIncludePath : 697.10 ms -  2.28 us (717.00 ms / 305613 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 305613
+TIMING GetPPFile      :  1.16 s  -  2.46 us ( 1.19 s  / 469375 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 469375
+HITCOUNT GatherSources: hit count = 4491
+TIMING GatherSources  : 412.92 ms - 330.07 us (413.00 ms / 1251 ), min:  0.00 ns, max: 81.00 ms, nesting: 18 - 4491
+TIMING FileGetTime    : 324.56 ms - 47.59 us (325.00 ms / 6820 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 6820
+======================
+TIMING IncludesFile   : 48.75 ms - 573.26 ns (54.00 ms / 85038 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 85038
+HITCOUNT Include IN: hit count = 14508
+TIMING GetUsedMacroValues: 498.76 ms - 126.72 us (499.00 ms / 3936 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 3936
+TIMING DoFlatInclude2 :  1.88 s  - 31.30 us ( 1.88 s  / 59952 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 59952
+TIMING GetFlatPPFile  : 180.30 ms -  3.01 us (184.00 ms / 59952 ), min:  0.00 ns, max:  9.00 ms, nesting: 16 - 62376
+TIMING DoFlatInclude  :  2.35 s  - 29.15 us ( 2.35 s  / 80436 ), min:  0.00 ns, max: 11.00 ms, nesting: 1 - 80436
+HITCOUNT Include FLAT: hit count = 80436
+TIMING DO2            :  2.75 s  - 697.85 us ( 2.75 s  / 3936 ), min:  0.00 ns, max: 11.00 ms, nesting: 17 - 17970
+TIMING Cpp::Preprocess:  3.33 s  - 844.96 us ( 3.33 s  / 3936 ), min:  0.00 ns, max: 11.00 ms, nesting: 1 - 3936
+TIMING CheckFile      :  4.74 s  -  1.19 ms ( 4.74 s  / 3984 ), min:  0.00 ns, max: 11.00 ms, nesting: 1 - 3984
+TIMING GetIncludePath 2: 598.78 ms - 167.44 us (599.00 ms / 3576 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 3576
+TIMING GetIncludePath : 781.26 ms -  6.23 us (789.00 ms / 125388 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 125388
+TIMING GetPPFile      : 266.50 ms - 10.99 us (268.00 ms / 24240 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 24240
+HITCOUNT GatherSources: hit count = 8982
+TIMING GatherSources  :  1.01 s  - 403.62 us ( 1.01 s  / 2502 ), min:  0.00 ns, max: 137.00 ms, nesting: 1 - 2502
+TIMING FileGetTime    : 516.36 ms - 50.15 us (517.00 ms / 10297 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10297

@@ -60,6 +60,12 @@ void Ide::GotoCpp(const CppItem& pos)
 	GotoPos(GetSourceFilePath(pos.file), pos.line);
 }
 
+void Ide::CheckCodeBase()
+{
+	InvalidateFileTimeCache();
+	SyncCodeBase();
+}
+
 void Ide::RescanCode()
 {
 /*

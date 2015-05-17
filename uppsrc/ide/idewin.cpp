@@ -724,6 +724,10 @@ void AppMain___()
 
 	bool firstinstall = false;
 
+#ifdef _DEBUG
+	SetVppLogSizeLimit(100000000);
+#endif
+
 #ifdef PLATFORM_POSIX
 	LoadUpdaterCfg();
 
