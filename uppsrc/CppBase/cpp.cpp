@@ -171,6 +171,8 @@ void Cpp::DoFlatInclude(const String& header_path)
 	}
 }
 
+#define IGNORE_ELSE
+
 void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bool get_macros)
 {
 	if(visited.Find(currentfile) >= 0 || visited.GetCount() > 20000)
