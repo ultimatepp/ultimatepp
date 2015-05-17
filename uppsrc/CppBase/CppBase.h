@@ -93,9 +93,25 @@ String GetSegmentFile(int segment_id);
 
 const PPFile& GetPPFile(const char *path);
 
+void InvalidateFileTimeCache();
+void InvalidateFileTimeCache(const String& path);
+Time GetFileTimeCached(const String& path);
+
 String GetIncludePath(const String& s, const String& filedir);
 bool   IncludesFile(const String& parent_path, const String& header_path);
-const  PPFile& GetFlatPPFile(const char *path); // with #includes resolved
+
+struct FlatPP {
+	Index<int>    segment_id;
+	Index<String> usings;
+	Index<String> includes;
+};
+
+const FlatPP& GetFlatPPFile(const char *path); // with #includes resolved
+
+void                 ClearSources();
+const Index<String>& GetAllSources();
+void                 GatherSources(const String& master_path, const String& path_);
+String               GetMasterFile(const String& file);
 
 struct Cpp {
 	static Index<String>        kw;
@@ -103,6 +119,8 @@ struct Cpp {
 	bool                        incomment;
 	bool                        done;
 	
+	Index<String>               visited;
+
 	Index<int>                  segment_id; // segments of included macros
 	VectorMap<String, PPMacro>  macro; // macros defined
 	int                         std_macros; // standard macros (keywords and trick - fixed)
@@ -125,8 +143,7 @@ struct Cpp {
 	void   ParamAdd(Vector<String>& param, const char *b, const char *e);
 	String Expand(const char *s);
 	void   DoFlatInclude(const String& header_path);
-	void   Do(const String& sourcefile, Stream& in, const String& currentfile,
-	          Index<String>& visited, bool get_macros);
+	void   Do(const String& sourcefile, Stream& in, const String& currentfile, bool get_macros);
 
 	bool   Preprocess(const String& sourcefile, Stream& in, const String& currentfile,
 	                  bool just_get_macros = false);

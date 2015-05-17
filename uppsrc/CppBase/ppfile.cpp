@@ -250,7 +250,6 @@ void PPFile::Parse(Stream& in)
 								next_segment = true;
 								m.type = type;
 								m.text = id;
-								DLOG("namespace " << id);
 							}
 						}
 						was_namespace = was_using = false;
@@ -326,7 +325,6 @@ void PPFile::Dump() const
 	DUMPC(includes);
 }
 
-static VectorMap<String, Time>     sPathFileTime;
 static VectorMap<String, String>   sIncludePath;
 static VectorMap<String, bool>     sIncludes;
 static ArrayMap<String, PPFile>    sFlatPP;
@@ -334,7 +332,6 @@ static String                      sInclude_Path;
 
 void PPSync(const String& include_path)
 {
-	sPathFileTime.Clear();
 	sIncludePath.Clear();
 	sIncludes.Clear();
 	sFlatPP.Clear();
@@ -371,6 +368,18 @@ String GetIncludePath0(const char *s, const char *filedir)
 	return Null;
 }
 
+static VectorMap<String, Time>     sPathFileTime;
+
+void InvalidateFileTimeCache()
+{
+	sPathFileTime.Clear();
+}
+
+void InvalidateFileTimeCache(const String& path)
+{
+	sPathFileTime.UnlinkKey(path);
+}
+
 Time GetFileTimeCached(const String& p)
 {
 	LTIMING("GetFileTimeCached");
@@ -378,7 +387,7 @@ Time GetFileTimeCached(const String& p)
 	if(q >= 0)
 		return sPathFileTime[q];
 	Time m = FileGetTime(p);
-	sPathFileTime.Add(p, m);
+	sPathFileTime.Put(p, m);
 	return m;
 }
 
@@ -448,6 +457,7 @@ bool IncludesFile0(const String& parent_path, const String& path, Index<String>&
 	return false;
 }
 
+#if 0 // TODO: remove?
 bool IncludesFile(const String& parent_path, const String& path)
 {
 	RTIMING("IncludesFile");
@@ -481,29 +491,37 @@ void CreateFlatPP(PPFile& fp, const char *path, Index<String>& visited)
 	LLOG(LOG_END);
 }
 
+#endif
+
 const PPFile& GetFlatPPFile(const char *path, Index<String>& visited)
 {
 	RTIMING("GetFlatPPFile");
-	LLOG("GetFlatPPFile " << path);
+	DLOG("GetFlatPPFile " << path);
+	LOGBEGIN();
 	int q = sFlatPP.Find(path);
 	if(q >= 0)
 		return sFlatPP[q];
-	PPFile& fp = sFlatPP.Add(path);
+	FlatPP& fp = sFlatPP.Add(path);
 	const PPFile& pp = GetPPFile(path);
 	for(int i = 0; i < pp.item.GetCount(); i++) {
 		const PPItem& m = pp.item[i];
 		if(m.type == PP_INCLUDE) {
 			String s = GetIncludePath(m.text, GetFileFolder(path));
+			DLOG("#include " << m.text << " -> " << s);
 			if(s.GetCount() && visited.Find(s) < 0) {
 				visited.Add(s);
-				const PPFile& pp = GetFlatPPFile(s, visited);
+				const FlatPP& pp = GetFlatPPFile(s, visited);
 				for(int i = 0; i < pp.item.GetCount(); i++)
 					fp.item.Add(pp.item[i]);
+				fp.includes.Add(s);
+				for(int i = 0; i < pp.includes.GetCount(); i++)
+					fp.includes.FindAdd(pp.includes[i]);
 			}
 		}
 		else
 			fp.item.Add(m);
 	}
+	LOGEND();
 	return fp;
 }
 

@@ -16,8 +16,6 @@
 
 class Browser;
 
-String         GetMasterFile(const String& file);
-
 CppBase&       CodeBase();
 
 struct SourceFileInfo {
@@ -30,10 +28,12 @@ struct SourceFileInfo {
 	VectorMap<String, String> defined_macros; // macros defined by the file (to detect changes)
 	String                    defined_namespace_info; // set of usings and namespaces in the file (to detect changes)
 	String                    includes; // includes in the file (to detect changes)
+	Vector<int>               depends; // indicies of file this files depends on, for time-check
+	Time                      depends_time;
 	
 	void Serialize(Stream& s);
 
-	SourceFileInfo() { time = Null; check_info = false; }
+	SourceFileInfo() { time = Null; check_info = false; depends_time = Null; }
 };
 
 void           NewCodeBase();

@@ -8,14 +8,16 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
-
-VectorMap<String, String>        sSrcFile;
 ArrayMap<String, SourceFileInfo> source_file;
 
 void SourceFileInfo::Serialize(Stream& s)
 {
 	s % time % check_info % ids % included_id_macros % namespace_info % using_info
 	  % defined_macros % defined_namespace_info % includes;
+	if(s.IsLoading()) {
+		depends.Clear();
+		depends_time = Null;
+	}
 }
 
 String CodeBaseCacheDir()
@@ -136,27 +138,12 @@ void FinishCodeBase()
 	Qualify(CodeBase());
 }
 
-void GatherSources(const String& master_path, const String& path_)
-{
-	RHITCOUNT("GatherSources");
-	String path = NormalizePath(path_);
-	if(sSrcFile.Find(path) >= 0)
-		return;
-	sSrcFile.Add(path, master_path);
-	const PPFile& f = GetPPFile(path);
-	for(int i = 0; i < f.includes.GetCount(); i++) {
-		String p = GetIncludePath(f.includes[i], GetFileFolder(path));
-		if(p.GetCount())
-			GatherSources(master_path, p);
-	}
-}
-
 void BaseInfoSync(Progress& pi)
 { // clears temporary caches (file times etc..)
 	PPSync(TheIde()->IdeGetIncludePath());
 
 	LTIMESTOP("Gathering files");
-	sSrcFile.Clear();
+	ClearSources();
 	const Workspace& wspc = GetIdeWorkspace();
 	LTIMING("Gathering files");
 	pi.SetText("Gathering files");
@@ -174,12 +161,7 @@ void BaseInfoSync(Progress& pi)
 			}
 		}
 
-	SweepPPFiles(sSrcFile.GetIndex());
-}
-
-String GetMasterFile(const String& file)
-{
-	return sSrcFile.Get(file, Null);
+	SweepPPFiles(GetAllSources());
 }
 
 int GetSourceFileIndex(const String& path)
@@ -194,29 +176,56 @@ String GetSourceFilePath(int file)
 	return source_file.GetKey(file);
 }
 
-bool CheckFile(const SourceFileInfo& f, const String& path)
+Index<String> sTimePath;
+
+Time GetDependsTime(const Vector<int>& file)
+{
+	RTIMING("CreateTimePrint");
+	static Index<String> path;
+	String r;
+	Time tm = Time::Low();
+	for(int i = 0; i < file.GetCount(); i++)
+		if(file[i] < sTimePath.GetCount())
+			tm = max(tm, GetFileTimeCached(sTimePath[file[i]]));
+	return tm;
+}
+
+bool CheckFile(SourceFileInfo& f, const String& path)
 {
 	RTIMING("CheckFile");
 	LDUMP(f.time);
 	LDUMP(FileGetTime(path));
-	if(f.time != FileGetTime(path)) {
-		DLOG("Wrong time: " << path);
+	if(f.time != FileGetTime(path))
 		return false;
-	}
 	if(!f.check_info)
+		return true;
+	if(!IsNull(f.depends_time) && f.depends_time == GetDependsTime(f.depends))
 		return true;
 	Cpp pp;
 	FileIn in(path);
 	pp.Preprocess(path, in, GetMasterFile(path), true);
+	DLOG("CheckFile " << path);
+	DDUMP(f.ids.GetKeys());
 	String included_id_macros = pp.GetIncludedMacroValues(f.ids.GetKeys());
-	LDUMP(included_id_macros);
-	LDUMP(f.included_id_macros);
+	DDUMP(included_id_macros);
+#ifdef _DEBUG
 	if(f.included_id_macros != included_id_macros) {
-		DLOG("Other reason: " << path);
-		DDUMP(f.included_id_macros);
-		DDUMP(included_id_macros);
+		LLOG("Other reason: " << path);
+		LDUMP(f.included_id_macros);
+		LDUMP(included_id_macros);
 	}
-	return f.included_id_macros == included_id_macros;
+#endif
+	if(f.included_id_macros != included_id_macros) {
+		f.depends_time = Null;
+		f.depends.Clear();
+		return false;
+	}
+	
+	RTIMING("VISITED ADD");
+	for(int i = 0; i < pp.visited.GetCount(); i++)
+		f.depends.Add(sTimePath.FindAdd(pp.visited[i]));
+	f.depends_time = GetDependsTime(f.depends);
+	return true;
 }
 
 void ParseFiles(Progress& pi, const Index<int>& parse_file)
@@ -241,20 +250,22 @@ void UpdateCodeBase2(Progress& pi)
 	const Workspace& wspc = GetIdeWorkspace();
 
 	pi.SetText("Checking source files");
-	pi.SetTotal(sSrcFile.GetCount());
 	pi.SetPos(0);
 	Index<int>  keep_file;
 	Index<int>  parse_file;
-	for(int i = 0; i < sSrcFile.GetCount(); i++) {
+	const Index<String>& src = GetAllSources();
+	pi.SetTotal(src.GetCount());
+	for(int i = 0; i < src.GetCount(); i++) {
 		pi.Step();
-		String path = sSrcFile.GetKey(i);
+		String path = src[i];
 		int q = GetSourceFileIndex(path);
-		const SourceFileInfo& f = source_file[q];
-		LLOG("== CHECK == " << q << ": " << path);
+		SourceFileInfo& f = source_file[q];
+		DLOG("== CHECK == " << q << ": " << path);
 		if(CheckFile(f, path))
 			keep_file.Add(q);
 		else {
 			LLOG("PARSE!");
+			DLOG("PARSE: " << path);
 			parse_file.Add(q);
 		}
 	}
@@ -369,6 +380,7 @@ void CodeBaseScanFile(Stream& in, const String& fn, bool check_macros)
 {
 	LLOG("===== CodeBaseScanFile " << fn);
 
+	InvalidateFileTimeCache(fn);
 	PPSync(TheIde()->IdeGetIncludePath());
 
 	LTIMING("CodeBaseScan");
@@ -434,7 +446,7 @@ void SyncCodeBase()
 {
 	LTIMING("SyncCodeBase");
 	LTIMESTOP("SyncCodeBase");
-	DLOG("============= Sync code base");
+	LLOG("============= Sync code base");
 	Progress pi;
 	pi.Title("Parsing source files");
 	UpdateCodeBase(pi);
@@ -448,11 +460,11 @@ void NewCodeBase()
 	if(start) return;
 	start++;
 	LoadCodeBase();
-	LOG("NewCodeBase loaded " << CodeBase().GetCount());
+	LLOG("NewCodeBase loaded " << CodeBase().GetCount());
 	SyncCodeBase();
-	LOG("NewCodeBase synced " << CodeBase().GetCount());
+	LLOG("NewCodeBase synced " << CodeBase().GetCount());
 	SaveCodeBase();
-	LOG("NewCodeBase saved " << CodeBase().GetCount());
+	LLOG("NewCodeBase saved " << CodeBase().GetCount());
 	start--;
 }
 

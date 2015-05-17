@@ -11,6 +11,7 @@ file
 	ppconfig.cpp,
 	macro.cpp,
 	ppfile.cpp,
+	srcfiles.cpp,
 	cpp.cpp,
 	Pre.cpp,
 	cpplex.cpp,
