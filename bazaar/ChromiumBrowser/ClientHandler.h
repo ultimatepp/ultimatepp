@@ -10,7 +10,11 @@
 #undef ITEM
 
 #include "include/cef_client.h"
+#include "include/cef_version.h"
 
+#ifndef CHROME_VERSION_BUILD
+#error "Unknown CEF version"
+#endif
 
 class ClientHandler : public CefClient, public CefLifeSpanHandler, public CefDisplayHandler,
 					public CefLoadHandler, public CefFocusHandler, public CefContextMenuHandler,
@@ -41,7 +45,7 @@ public:
 	virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE	{ return this; }
 	virtual CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() OVERRIDE			{ return this; }
 
-
+#if (CHROME_VERSION_BUILD >= 2357)
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefFrame> frame,
                              const CefString& target_url,
@@ -53,6 +57,17 @@ public:
                              CefRefPtr<CefClient>& client,
                              CefBrowserSettings& settings,
                              bool* no_javascript_access) OVERRIDE; 
+#else
+	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
+                             CefRefPtr<CefFrame> frame,
+                             const CefString& target_url,
+                             const CefString& target_frame_name,
+                             const CefPopupFeatures& popupFeatures,
+                             CefWindowInfo& windowInfo,
+                             CefRefPtr<CefClient>& client,
+                             CefBrowserSettings& settings,
+                             bool* no_javascript_access) OVERRIDE;
+#endif
 
     virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
 							CefRefPtr<CefFrame> frame,

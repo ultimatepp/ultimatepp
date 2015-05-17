@@ -23,7 +23,7 @@ bool ClientHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefStr
 	return true;
 }
 
-
+#if CHROME_VERSION_BUILD > 2357
 bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefFrame> frame,
                              const CefString& target_url,
@@ -35,6 +35,17 @@ bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefClient>& client,
                              CefBrowserSettings& settings,
                              bool* no_javascript_access)
+#else
+bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
+                             CefRefPtr<CefFrame> frame,
+                             const CefString& target_url,
+                             const CefString& target_frame_name,
+                             const CefPopupFeatures& popupFeatures,
+                             CefWindowInfo& windowInfo,
+                             CefRefPtr<CefClient>& client,
+                             CefBrowserSettings& settings,
+                             bool* no_javascript_access)
+#endif
 {
     RLOG(Upp::Format("Popup canceled, frame name: '%s', url '%s'", target_frame_name.ToString().c_str(), target_url.ToString().c_str()));
 	// Cancel popups

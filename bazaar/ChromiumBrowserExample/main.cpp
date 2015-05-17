@@ -1,5 +1,4 @@
 #include "ChromiumBrowserExample.h"
-#include "Utils.h"
 
 using namespace Upp;
 
@@ -32,7 +31,12 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Go.WhenAction				= THISBACK(OnBrowse);
 	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
 
+#ifdef PLATFORM_WIN32
 	Maximize();
+#elif defined(PLATFORM_LINUX)
+	//Delayed maximization - workaround for linux backend
+	SetTimeCallback(100, THISBACK1(Maximize, false));
+#endif
 }
 
 
@@ -45,7 +49,6 @@ GUI_APP_MAIN
 		ChromiumBrowser::ChildProcess();
 	}else{
 		ChromiumBrowserExample().Run();
-		::ShowKeyboard(false);
 	}
 }
 

@@ -3,6 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 #include <ChromiumBrowser/ChromiumBrowser.h>
+#include "Utils.h"
 
 namespace Upp{
 
@@ -12,7 +13,8 @@ namespace Upp{
 class ChromiumBrowserExample : public WithChromiumBrowserExampleLayout<TopWindow> {
 	
 private:
-	
+
+	void Close()											{ Upp::ShowKeyboard(false); TopWindow::Close(); }	
 	void OnUrlChange(String url) 							{ Url.SetData(url); Url.CancelSelection(); }
 	void OnTakeFocus()										{ Url.SetFocus(); }
 	void OnConsoleMessage(String url, int line, String msg) { RLOG(Format("Console message: url=%s, line=%d, msg=%s", url, line, msg)); }
