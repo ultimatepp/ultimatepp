@@ -415,8 +415,6 @@ struct CppItem {
 String CppItemKindAsString(int kind);
 
 int FindItem(const Array<CppItem>& x, const String& qitem);
-//int GetCount(const Array<CppItem>& x, int i);
-//int FindNext(const Array<CppItem>& x, int i);
 int FindName(const Array<CppItem>& x, const String& name, int i = 0);
 
 struct CppBase : ArrayMap<String, Array<CppItem> > {
