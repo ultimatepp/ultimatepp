@@ -306,6 +306,7 @@ void WorkspaceWork::PackageCursor()
 		Vector<String> d = GetUppDirs();
 		for(int i = 0; i < d.GetCount(); i++)
 			actual.file.AddPick(Package::File(AppendFileName(d[i], "$.tpp")));
+		actual.file.AddPick(Package::File(ConfigFile("global.defs")));
 	}
 	else {
 		String pp = PackagePathA(actualpackage);
@@ -1106,5 +1107,7 @@ void UppList::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color pap
 	FileList::File file = ValueTo<FileList::File>(q);
 	if(GetFileName(file.name) == "$.tpp" && IsFolder(file.name))
 		file.name = GetFileName(GetFileFolder(file.name)) + " templates";
+	if(file.name == ConfigFile("global.defs"))
+		file.name = "Fixed macros";
 	FileList::Paint(w, r, RawToValue(file), ink, paper, style);
 }

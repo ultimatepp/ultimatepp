@@ -1066,13 +1066,13 @@ void AppMain___()
 			Ini::user_log = true;
 		}
 		
-		String ppcfg = ConfigFile("pp_config.json");
+		String ppdefs = ConfigFile("global.defs");
 	#ifndef _DEBUG
-		if(!FileExists(ppcfg))
+		if(!FileExists(ppdefs))
 	#endif
-			SaveFile(ppcfg, GetStdConfig());
+			SaveFile(ppdefs, GetStdDefs());
 		
-		LoadPPConfig(LoadFile(ppcfg));
+		SetPPDefs(LoadFile(ppdefs));
 		
 		ide.LoadLastMain();
 		if(clset || ide.OpenMainPackage()) {

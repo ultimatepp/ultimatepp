@@ -75,18 +75,6 @@ static VectorMap<String, PPMacro> sAllMacros;
 static ArrayMap<String, PPFile>   sPPfile;
 static int                        sPPserial;
 
-void SerializePPFiles(Stream& s)
-{
-	s % sAllMacros % sPPfile % sPPserial;
-}
-
-void CleanPP()
-{
-	sAllMacros.Clear();
-	sPPfile.Clear();
-	sPPserial = 0;
-}
-
 void SweepPPFiles(const Index<String>& keep)
 {
 	for(int i = 0; i < sPPfile.GetCount(); i++)
@@ -118,13 +106,12 @@ PPMacro *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti)
 		while(q >= 0) {
 			PPMacro& m = sAllMacros[q];
 			if(m.macro.IsUndef()) {
-				if(pass == 0 && segment_id.Find(m.segment_id) >= 0) {
-					undef.FindAdd(m.segment_id);
-				}
+				if(pass == 0 && segment_id.Find(m.segment_id) >= 0)
+					undef.FindAdd(m.segment_id); // cancel out undefined macro...
 			}
 			else
 			if(pass == 0 || undef.Find(m.undef_segment_id) < 0) {
-				int si = segment_id.Find(m.segment_id);
+				int si = m.segment_id == 0 ? INT_MAX : segment_id.Find(m.segment_id); // defs macros always override
 				if(si > best || si >= 0 && si == best && m.line > line) {
 					best = si;
 					line = m.line;
@@ -477,6 +464,87 @@ String GetAllMacros(const String& id, Index<int>& segment_id)
 		q = sAllMacros.FindNext(q);
 	}
 	return r;
+}
+
+static VectorMap<String, String> s_namespace_macro;
+static Index<String> s_namespace_end_macro;
+
+static String sDefs;
+
+void LoadPPConfig()
+{
+	for(int i = 0; i < sAllMacros.GetCount(); i++)
+		if(sAllMacros[i].segment_id == 0 && !sAllMacros.IsUnlinked(i))
+			sAllMacros.Unlink(i);
+
+	s_namespace_macro.Clear();
+	s_namespace_end_macro.Clear();
+
+	StringStream ss(sDefs);
+	int linei = 0;
+	while(!ss.IsEof()) {
+		String l = ss.GetLine();
+		try {
+			CParser p(l);
+			if(p.Char('#')) {
+				if(p.Id("define")) {
+					CppMacro def;
+					String   id = def.Define(p.GetPtr());
+					if(id.GetCount()) {
+						PPMacro m;
+						m.segment_id = 0;
+						m.line = linei;
+						m.macro = def;
+						sAllMacros.Put(id, m);
+						if(findarg(TrimBoth(def.body), "}", "};") >= 0)
+							s_namespace_end_macro.Add(id);
+						try {
+							CParser p(def.body);
+							if(p.Id("namespace") && p.IsId()) {
+								String n = p.ReadId();
+								if(p.Char('{') && p.IsEof())
+									s_namespace_macro.Add(id, n);
+							}
+						}
+						catch(CParser::Error) {}
+					}
+				}
+			}
+		}
+		catch(CParser::Error) {}
+		linei++;
+	}
+}
+
+const VectorMap<String, String>& GetNamespaceMacros()
+{
+	return s_namespace_macro;
+}
+
+const Index<String>& GetNamespaceEndMacros()
+{
+	return s_namespace_end_macro;
+}
+
+void SetPPDefs(const String& defs)
+{
+	sDefs = defs;
+	LoadPPConfig();
+}
+
+void CleanPP()
+{
+	sAllMacros.Clear();
+	sPPfile.Clear();
+	sPPserial = 0;
+	LoadPPConfig();
+}
+
+void SerializePPFiles(Stream& s)
+{
+	s % sAllMacros % sPPfile % sPPserial;
+	if(s.IsLoading())
+		LoadPPConfig();
 }
 
 END_UPP_NAMESPACE

@@ -12,13 +12,12 @@ const char *SkipString(const char *s);
 
 void RemoveComments(String& l, bool& incomment);
 
-void LoadPPConfig(const String& json);
+String GetStdDefs();
 
-String GetStdConfig();
+void   SetPPDefs(const String& defs);
 
 const VectorMap<String, String>& GetNamespaceMacros();
 const Index<String>&             GetNamespaceEndMacros();
-const Vector<String>&            GetIgnoreList();
 
 struct CppMacro : Moveable<CppMacro> {
 

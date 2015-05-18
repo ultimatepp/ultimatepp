@@ -146,6 +146,32 @@ void BaseInfoSync(Progress& pi)
 	ClearSources();
 	const Workspace& wspc = GetIdeWorkspace();
 	LTIMING("Gathering files");
+	Vector<String> defs;
+	defs.Add(ConfigFile("global.defs"));
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		pi.Step();
+		const Package& pk = wspc.GetPackage(i);
+		String n = wspc[i];
+		for(int i = 0; i < pk.file.GetCount(); i++) {
+			String path = SourcePath(n, pk.file[i]);
+			if(GetFileExt(path) == ".defs")
+				defs.Add(path);
+		}
+	}
+
+	String fp;
+	for(int i = 0; i < defs.GetCount(); i++)
+		fp << defs[i] << "\n" << GetFileTimeCached(defs[i]) << "\n";
+
+	static String defs_fp;
+	if(fp != defs_fp) {
+		defs_fp = fp;
+		String h;
+		for(int i = 0; i < defs.GetCount(); i++)
+			h << LoadFile(defs[i]) << "\n";
+		SetPPDefs(h);
+	}
+
 	pi.SetText("Gathering files");
 	pi.SetTotal(wspc.GetCount());
 	for(int pass = 0; pass < 2; pass++)
@@ -193,7 +219,7 @@ Time GetDependsTime(const Vector<int>& file)
 bool CheckFile(SourceFileInfo& f, const String& path)
 {
 	LTIMING("CheckFile");
-	if(f.time != FileGetTime(path))
+	if(f.time != GetFileTimeCached(path))
 		return false;
 	if(!f.check_info)
 		return true;
@@ -380,38 +406,10 @@ void CodeBaseScanFile(Stream& in, const String& fn, bool check_macros)
 	                             namespace_info_changed, includes_changed);
 	LDUMP(f.defined_macros);
 	LDUMP(check_macros);
-	if(check_macros && (includes_changed || namespace_info_changed || cm.GetCount())) {
+	if(check_macros && (includes_changed || namespace_info_changed || cm.GetCount()))
 		SyncCodeBase();
-		return;
-	}
-/*
-		if( && check_macros) {
-		}
-		if((namespace_info_changed || cm.GetCount()) && check_macros) {
-			SyncCodeBase(); return; _DBG_
-			DLOG("Checking files");
-			Progress pi;
-			BaseInfoSync(pi);
-			pi.SetText("Checking source files");
-			pi.SetTotal(sSrcFile.GetCount());
-			pi.SetPos(0);
-			Index<int>  parse_file;
-			for(int i = 0; i < sSrcFile.GetCount(); i++) {
-				pi.Step();
-				String path = sSrcFile.GetKey(i);
-				DDUMP(path);
-				int q = GetSourceFileIndex(path);			
-				const SourceFileInfo& f = source_file[q];
-				if((namespace_info_changed || HasIntersection(f.ids, cm)) && !CheckFile(f, path))
-					parse_file.Add(q);
-			}
-			
-			CodeBase().RemoveFiles(parse_file);
-			
-			ParseFiles(pi, parse_file);
-		}
-*/
-	FinishCodeBase();
+	else
+		FinishCodeBase();
 }
 
 void CodeBaseScanFile(const String& fn, bool check_macros)
@@ -422,6 +420,7 @@ void CodeBaseScanFile(const String& fn, bool check_macros)
 
 void ClearCodeBase()
 {
+	// TODO: Create combined defs
 	CleanPP();
 	CodeBase().Clear();
 	source_file.Clear();
