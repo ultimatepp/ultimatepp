@@ -209,6 +209,8 @@ void QualifyPass1(CppBase& base)
 		ScopeInfo nf(base, ni);
 		for(int i = 0; i < n.GetCount(); i++) {
 			CppItem& m = n[i];
+			if(m.kind == NAMESPACE)
+				base.namespaces.FindAdd(base.GetKey(ni));
 			if(m.IsType() && m.qualify) {
 				m.qualify = false;
 				m.qtype = QualifyIds(nf, m.type, m.using_namespaces, true); // type of item, now qualified (probaly already was)
@@ -256,14 +258,15 @@ void   Qualify(CppBase& base)
 		md5 << '\n';
 	}
 	String c5 = md5.FinishString();
-	if(c5 != base.serial_md5) { // set of types changed, requalify everything
-		base.serial_md5 = c5;
+	if(c5 != base.types_md5) { // set of types changed, requalify everything
+		base.types_md5 = c5;
 		for(int ni = 0; ni < base.GetCount(); ni++) {
 			Array<CppItem>& n = base[ni];
 			for(int i = 0; i < n.GetCount(); i++)
 				n[i].qualify = true;
 		}
 	}
+	base.namespaces.Clear();
 	QualifyPass1(base);
 	QualifyPass2(base);
 }

@@ -916,29 +916,24 @@ void AssistEditor::DCopy()
 	}
 	else
 		decla = true;
+
 	Parser ctx;
 	Context(ctx, l);
 	String txt = Get(l, h - l);
 	StringStream ss(txt);
 	String cls = ctx.current_scope;
-/* TODO: remove
+	int best = 0;
+	const Index<String>& ns = CodeBase().namespaces;
+	for(int i = 0; i < ns.GetCount(); i++) {
+		String h = ns[i] + "::";
+		if(h.GetCount() > best && cls.StartsWith(h))
+			best = h.GetCount();			
+	}
+	cls.Remove(0, best);
 	CppBase cpp;
-	Parser parser;
-	parser.Do(ss, IgnoreList(), cpp, Null, CNULL, Split(cls, ':'));
-*/
-	CppBase cpp;
-	Cpp pp;
-	pp.Preprocess(theide->editfile, ss, GetMasterFile(theide->editfile));
-
-	Parser parser;
-	parser.dobody = true;
-	StringStream pin(pp.output);
+	Parser parser; // we do not need/want preprocessing here
 	parser.Do(ss, cpp, Null, Null, Null, CNULL, Split(cls, ':'),
-	          pp.namespace_stack, pp.namespace_using);
-
-//	QualifyTypes(CodeBase(), parser.current_scope, parser.current);
-//	inbody = parser.IsInBody();
-
+	          Vector<String>(), Index<String>());
 
 	for(int i = 0; i < cpp.GetCount(); i++) {
 		const Array<CppItem>& n = cpp[i];
