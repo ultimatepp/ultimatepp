@@ -72,6 +72,9 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	else
 	if(ext == ".key")
 		img = IdeCommonImg::keyboard();
+	else
+	if(ext == ".defs")
+		img = IdeCommonImg::Defs();
 }
 
 struct sImageAdd : ImageMaker {

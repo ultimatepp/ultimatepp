@@ -327,19 +327,8 @@ bool Cpp::Preprocess(const String& sourcefile, Stream& in, const String& current
 	macro.Clear();
 	macro.Reserve(1000);
 	segment_id.Clear();
+	segment_id.Add(0);
 	segment_id.Reserve(100);
-
-	const Vector<String>& ignorelist = GetIgnoreList();
-
-	for(int i = 0; i < ignorelist.GetCount(); i++) {
-		PPMacro h;
-		PPMacro& pp = macro.GetAdd(h.macro.Define(ignorelist[i]));
-		pp = h;
-		pp.segment_id = -999999999;
-	}
-	segment_id.Add(-999999999);
-
-	std_macros = macro.GetCount();
 
 	ONCELOCK {
 		const char **h = CppKeyword();
@@ -364,11 +353,9 @@ VectorMap<String, String> Cpp::GetDefinedMacros()
 {
 	LTIMING("GetDefinedMacros");
 	VectorMap<String, String> r;
-	for(int i = std_macros; i < macro.GetCount(); i++)
-		r.GetAdd(macro.GetKey(i)) << macro[i].macro << "\n";
-	LLOG("GetDefinedMacros " << r);
 	for(int i = 0; i < r.GetCount(); i++)
 		r[i] = MD5String(r[i]);
+	LLOG("GetDefinedMacros " << r);
 	return r;
 }
 
