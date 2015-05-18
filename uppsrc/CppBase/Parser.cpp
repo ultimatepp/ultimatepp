@@ -1363,6 +1363,14 @@ String Parser::AnonymousName()
 	return "@" + Base64Encode(String((const char *)&x, sizeof(x))) + "/" + title;
 }
 
+void Parser::AddNamespace(const String& n, const String& name)
+{
+	String h = "namespace " + n;
+	CppItem& m = Item(n, Null, h, name);
+	m.kind = NAMESPACE;
+	m.natural = h;
+}
+
 bool Parser::Scope(const String& tp, const String& tn) {
 	if(Key(tk_namespace)) {
 		Check(lex.IsId(), "Expected name of namespace");
@@ -1373,6 +1381,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		c0 <<= context;
 		int struct_level0 = struct_level;
 		ScopeCat(context.scope, name);
+		AddNamespace(context.scope, name);
 		if(Key('{')) {
 			Context cc;
 			cc <<= context;
@@ -1754,6 +1763,12 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 		lex.StartStatCollection();
 
 	context.namespace_using = Join(namespace_using.GetKeys(), ";");
+	
+	String n;
+	for(int i = 0; i < namespace_stack.GetCount(); i++) {
+		MergeWith(n, "::", namespace_stack[i]);
+		AddNamespace(n, namespace_stack[i]);
+	}
 
 	while(lex != t_eof)
 		try {

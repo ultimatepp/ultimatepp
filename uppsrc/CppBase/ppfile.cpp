@@ -326,14 +326,12 @@ void PPFile::Dump() const
 }
 
 static VectorMap<String, String>   sIncludePath;
-static VectorMap<String, bool>     sIncludes;
 static ArrayMap<String, FlatPP>    sFlatPP;
 static String                      sInclude_Path;
 
 void PPSync(const String& include_path)
 {
 	sIncludePath.Clear();
-	sIncludes.Clear();
 	sFlatPP.Clear();
 	sInclude_Path = include_path;
 }

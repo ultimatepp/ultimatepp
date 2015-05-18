@@ -329,6 +329,7 @@ enum Kind {
 	ENUM,
 	MACRO,
 	FRIENDCLASS,
+	NAMESPACE,
 };
 
 inline bool IsCppType(int i)
@@ -418,7 +419,8 @@ int FindItem(const Array<CppItem>& x, const String& qitem);
 int FindName(const Array<CppItem>& x, const String& name, int i = 0);
 
 struct CppBase : ArrayMap<String, Array<CppItem> > {
-	String         serial_md5;
+	String         types_md5;
+	Index<String>  namespaces;
 
 	bool           IsType(int i) const;
 	void           Sweep(const Index<int>& keep_file);
@@ -525,6 +527,7 @@ struct Parser {
 	bool   IsParamList(int q);
 	void   Elipsis(Decl& d);
 	Decl&  Finish(Decl& d, const char *p);
+	void   AddNamespace(const String& n, const String& name);
 	bool   Scope(const String& tp, const String& tn);
 
 	String TemplateParams(String& pnames);
