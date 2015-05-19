@@ -1,3 +1,4 @@
+//$ namespace Upp {
 //$ class Ctrl {
 private:
 	bool         activex:1;
@@ -70,4 +71,5 @@ public:
 	static void InitWin32(HINSTANCE hinst);
 	static void ExitWin32();
 	static void GuiFlush()                              { ::GdiFlush(); }
+//$ };
 //$ };
