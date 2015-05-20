@@ -26,12 +26,16 @@ void ChHostSkin()
 
 #else
 
+END_UPP_NAMESPACE
+
 #include <uxtheme.h>
 #if defined(_MSC_VER) && _MSC_VER > 1400	// Visual C > 2005
 #include <vssym32.h>
 #else
 #include <tmschema.h>
 #endif
+
+NAMESPACE_UPP
 
 #define DLLFILENAME "uxtheme.dll"
 #define DLIMODULE   XpTheme
