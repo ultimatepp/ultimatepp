@@ -7,7 +7,6 @@ NAMESPACE_UPP
 #pragma optimize("t", on)
 #endif
 
-
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // TIMING(x)
 

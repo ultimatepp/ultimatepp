@@ -30,6 +30,7 @@ String CppItemKindAsString(int kind)
 				ENUM, "ENUM",
 				MACRO, "MACRO",
 				FRIENDCLASS, "FRIENDCLASS",
+				NAMESPACE, "NAMESPACE",
 				"?kind:" + AsString(kind));
 }
 
