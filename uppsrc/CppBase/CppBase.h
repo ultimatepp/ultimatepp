@@ -111,6 +111,7 @@ void                 ClearSources();
 const Index<String>& GetAllSources();
 void                 GatherSources(const String& master_path, const String& path_);
 String               GetMasterFile(const String& file);
+const VectorMap<String, String>& GetAllSourceMasters();
 
 struct Cpp {
 	static Index<String>        kw;

@@ -138,18 +138,13 @@ void FinishCodeBase()
 	Qualify(CodeBase());
 }
 
-void BaseInfoSync(Progress& pi)
-{ // clears temporary caches (file times etc..)
-	PPSync(TheIde()->IdeGetIncludePath());
-
-	LTIMESTOP("Gathering files");
-	ClearSources();
-	const Workspace& wspc = GetIdeWorkspace();
-	LTIMING("Gathering files");
+void LoadDefs()
+{
+	LTIMING("LoadDefs");
 	Vector<String> defs;
 	defs.Add(ConfigFile("global.defs"));
+	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		pi.Step();
 		const Package& pk = wspc.GetPackage(i);
 		String n = wspc[i];
 		for(int i = 0; i < pk.file.GetCount(); i++) {
@@ -171,7 +166,17 @@ void BaseInfoSync(Progress& pi)
 			h << LoadFile(defs[i]) << "\n";
 		SetPPDefs(h);
 	}
+}
 
+void BaseInfoSync(Progress& pi)
+{ // clears temporary caches (file times etc..)
+	PPSync(TheIde()->IdeGetIncludePath());
+
+	LTIMESTOP("Gathering files");
+	ClearSources();
+	LoadDefs();
+	const Workspace& wspc = GetIdeWorkspace();
+	LTIMING("Gathering files");
 	pi.SetText("Gathering files");
 	pi.SetTotal(wspc.GetCount());
 	for(int pass = 0; pass < 2; pass++)
