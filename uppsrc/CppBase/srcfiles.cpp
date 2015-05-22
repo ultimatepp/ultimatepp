@@ -18,6 +18,11 @@ const Index<String>& GetAllSources()
 	return sSrcFile.GetIndex();
 }
 
+const VectorMap<String, String>& GetAllSourceMasters()
+{
+	return sSrcFile;
+}
+
 void GatherSources(const String& master_path, const String& path_, Vector<int>& parents)
 {
 	RHITCOUNT("GatherSources");
