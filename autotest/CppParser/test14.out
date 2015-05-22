@@ -19,6 +19,9 @@
 name {
 	TYPEDEF, name: name, qitem: typedef, qtype: .name, qptype: , natural: typedef struct { int x; struct Foo { int a; } y; struct { int bar; }; struct { int foo; } quack; } name, line 10, using 
 }
+std {
+	NAMESPACE, name: std, qitem: namespace std, qtype: , qptype: , natural: namespace std, line 14, using 
+}
 std::string {
 	STRUCT, name: string, qitem: struct, qtype: std::string, qptype: , natural: struct string, line 15, using 
 }
