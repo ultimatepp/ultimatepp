@@ -1302,6 +1302,8 @@ int GUI_DragDistance();
 int GUI_DblClickTime();
 int GUI_WheelScrollLines();
 
+int GUI_HiDPI();
+
 void GUI_GlobalStyle_Write(int);
 void GUI_DragFullWindow_Write(int);
 void GUI_PopUpEffect_Write(int);
@@ -1312,6 +1314,7 @@ void GUI_AKD_Conservative_Write(int);
 void GUI_DragDistance_Write(int);
 void GUI_DblClickTime_Write(int);
 void GUI_WheelScrollLines_Write(int);
+void GUI_HiDPI_Write(int);
 
 void  EditFieldIsThin_Write(int);
 void  TopSeparator1_Write(Value);

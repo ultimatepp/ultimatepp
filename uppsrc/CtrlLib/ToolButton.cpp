@@ -164,7 +164,9 @@ Image ToolButton::GetImage() const
 	UPP::Image m = img;
 	if(IsDarkColorFace() && !nodarkadjust)
 		m = MakeImage(m, AdjustForDarkBk);
-	return CachedRescale(m, min(m.GetSize(), maxiconsize));
+	m = CachedRescale(m, min(m.GetSize(), maxiconsize));
+	m = DPI(m);
+	return m;
 }
 
 Bar::Item& ToolButton::Image(const UPP::Image& img_)

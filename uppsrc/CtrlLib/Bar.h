@@ -227,6 +227,8 @@ public:
 	void  PaintBar(Draw& w, const SeparatorCtrl::Style& ss,
 	               const Value& pane, const Value& iconbar = Null, int iconsz = 0);
 
+	int      GetHeight() const           { return pane.GetPaneSize(true, INT_MAX).cy; }
+
 	BarCtrl& Align(int align);
 	BarCtrl& Top()                       { return Align(BAR_TOP); }
 	BarCtrl& Bottom()                    { return Align(BAR_BOTTOM); }

@@ -2,6 +2,11 @@
 
 NAMESPACE_UPP
 
+Image DPI(const Image& img)
+{
+	return GUI_HiDPI() ? CachedRescale(img, 2 * img.GetSize(), FILTER_LANCZOS3) : img;
+}
+
 void CtrlsImageLook(Value *look, int i, int n)
 {
 	while(n--)
