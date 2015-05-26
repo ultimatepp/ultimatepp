@@ -316,10 +316,11 @@ void Ide::SetupBars()
 	menubar.Transparent();
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
+		int tcy = max(mainconfiglist.GetStdSize().cy + VertLayoutZoom(2), toolbar.GetStdHeight());
 		bararea.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
-		bararea.Add(toolbar.HSizePos(l, r).VCenterPos(toolbar.GetStdHeight()));
+		bararea.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
 		bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
-		bararea.Height(max(menubar.GetStdHeight(), toolbar.GetStdHeight()));
+		bararea.Height(max(menubar.GetStdHeight(), tcy));
 		AddFrame(bararea);
 		toolbar.Transparent();
 	}
@@ -717,8 +718,13 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
+#ifdef flagTEST_HIDPI
+	Font fnt = GetStdFont();
+	SetStdFont(fnt.Height(2 * fnt.GetHeight()));
+#endif
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
+	GUI_HiDPI_Write(1);
 
 	const Vector<String>& arg = CommandLine();
 

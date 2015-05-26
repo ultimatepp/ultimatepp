@@ -17,22 +17,7 @@ rCtrl]&]
 [s0;%% &]
 [s2;%% 
 @@image:2300&162
-€ƒðš€€€ƒæÿ€€€€øœíÍî“±Ö€ýþ¼ƒÇÀ•ëÞùƒ¸Æóà€’ÂÜª ¨Å€‚¨•  ¢Î”´¢âÂ‘ªÀÔ•Œ‹©‰ñý»žû
-«×“ô¬ÏÑæß»žØÞ¯ŽÕ»Í—Ç‹¥Ãä°ŒÃ°Œ–ëÙÝ‡÷îÞ¾Âõ£ˆÕÅÕìõÞø†áè œÅ ¸üúðü¼‡’à¢ŽÖÕôµÝôü«×î
-ç¤û°³Ì–î¢é‚ÀÍ³”™ýà¦±‹ª¨ªâçÇ„—ü¼Âð¾á¶‚‚¹“Þ®ªÁê“ËÑûÌÄ®ª¢ªÞìýÌæï××ï¾ÿ„ Ž”ì“ºšˆõéÞ’à
-·ÛÊ«ŒÎ£Ö§øÓ¬Ýý‚ÙÈ¬¥„š×¤¥à“ÝˆêÈùÉ¾¡€°Ôƒ”ÒÊôºÂÍãœî¾Áä–íé“Áˆ³á¶íùýþ¡â“ç‹¥ïØ§„Ùš
-•Ÿ¸“ã“ÿ¬ò‚œ¢ÐðÉÈéæ™Ÿèé¤žŸý‚ð‰¸ŸÊœ¾šÞ¿ûÿ·„€ð‰ˆ—Õšëµ¨‚ß¥Í²™Óä—°øïØíŸà„¥ûë…Ž“Ì»Ä
-´’ª›ñÀìÃ”äÖÌ§ƒµ×éñûäž–ùÄøïüì»¨¨¾„¼ýû‚îþ‰’Èçô•ÛßØ‹ž§ÝòôœÀ¦ù‰Î„´°Ïâ«§ËÈ”ì…Âö½¸˜’
-ªðŸä³‘Ù¥¶ÏŒÆâÿéÇå˜ì×¬œŸŸ´òÉ“·ÇšË—¯šíÿÄÏóŸ´±ƒ®ü–°ŽÝæìÓÆÄõÄ±¸Ê£Ù©«ÏÓ°ÁàÁÆ«¥¶æè
-—¡›Ò§­²«”»¿‘ñ™È²’¾Ùýý¨ÐÿÔè§þžîó£“šËôÔŸäû«ÛÕœ—†´³Ä±ÁéÎÚšˆ™Ï©•¾ñÖ–ÎœÑî²þ’³ó‰ÌÚ¢Æ§
-›¥™…üýÎÐæ¦’ŒÏöö¿ÈèÌ·íÍ½¨Ïð×š“ªÉƒÅŽ¾É¼‡ìéêƒ‘üâœÖÙô‰ÆŒÏŒÏôú‰“¸ˆŸ¡ØÛå–Ä§Â±™È²¾ù¼
-³÷Ùàº«±ÿÙÔ÷þ‚–É°Š®Ü§Á´ÞÓäâüÉä‹´ˆ£Ø›˜™ŽÍ§Ÿ„î¹ñ‡ëÓ¼õ“ûÃþêûì„©Ì¬¬–Ï†³’û©‘“ŸÌÞý²±Ý
-æöö÷Ý¿™ÞÆ§¢°„£¸ÛÍþÐ€Úßçƒ¡àŒ‡ñŠÐƒ‚…“ŒØ´Ö…†ÒŸÈï­¥¨Ø«›¤¦³œÅŸ¸íÑ¦‘ñ›É‰¤ã“Ç¯¸œÔ—ý
-øýÒùåûÕÌÅüí’ò…à‡ýÒ”áÙâûóÎÿ‡¬ä¦·¬†¦¾±×öÎâ¯²Öú‰×Ù†û¤›ýˆçÌòç§ö“ÒÊ²‘äî¿ùøÝâƒ„ŽŸ÷ˆ
-±û¤–Šî“Äàãü›àÆÀ˜»Ä‹Ðé“¬ÌÎÊ‡ºò˜Ã«½ûÏœŠðìÃüäÖðóŽÖˆ÷žœ¤ó™Èýç±³ù‚Â—û›ÙÐ•›Ä‘ÞÙú»õÓ¡ÄÈ
-È§Å‘þ“·¼Á¥èñ„œâ¹øè»¿Ö‰Õž¿ÛÄ¯ŸÌÜÚ™•ô‰¶‰áÈÍÎ¤™Ÿì»Î÷¡ðýöÛŒÆÛ™àŽðÚ‹’ˆÓÚæŠ¾®©Í¬Øú¬ž
-óÀì«ÒðÉÖ¹ÿýñÍûæ–§Ó¤ïý²Þž›Ñ³¸Áû¬ëž¢ô÷ÉÛ¿ú¯Þ”Ÿ”–­ó‰ãÓÊªàè×ÌôŒÁÜ¼É—ã“ÓÓ“îŸÕñàþƒ„
-»ù„ ÝÓáá²ôÏ“„úûÉ”ÎþÿÀ€ùÄ¾¥†á®ŽúÉûžÿýÜ¡€Êüß£Ã°—‡¯±¿šá˜‹–…ÿ¿Œ†á¨µó‡×Œ˜ß
+(A3ABGgAAAOb/AAAAAHic7Z3NbhMxEID9frwDj8CV6155A7hz4IAQEkLcIKhFgAKoFSAiThQQtCJCkSpAVJWMqYlx/Tsee9eTdKxP0Wa7ntjenS+Ou02XR4slwzAMwzAMlp3Z3Qf3bt6+daMIVUVV7N54hmHooJygOPx6cHy8kuCiDlZVdN10/CvX7hCk+7AzTJbuaYJATTOUGeAmsYuqqKpnxwQXfLzCPmE2AoK5ky6qweqTS9HMxC6qoqrefUzm71fX73+EoI6U7BMaiHXp3pJg28qrDM6jHSf40yzdfYLILCWEmlek4BPdHQjqSMk+IYCdsNSU0kp0OkJNnO4+QWSW7ZNBCLNhtu39fiHik+eL7xDYJwTZGp84kxDjE39yApyiUPBJaWYZn2hppB/9gvCJOB/KnL6aXj97t4SA8ImIl5prtSiCX6WyGdPkFzD42O2f4ASl+4WOE8wdu8QSKptxwOxDZFbMJ4M1V/F7ZJ4W+cRvfGy7qKi+PH37DQJufpJIZ/QVW18LHifd8nScJnkBCU4EtE9iKyfLyBQFQva9OJiScJ9ksw+RWbZPjEZij3/HZRjsV6ycn7TyyZM3R5pLl6+abX9Pc580MQOuFjCO3ebs00T1xDE4SqOpK0/TsA3BQUYrJTbm6KGb0ietMis7P5FxmUgyPtl9fahQHdTop/6e7vOTmkt0VJ9kq9tVnJeGtMSxQWnO2hoZTymVPnFWTpzRbrJ+EvOJTFqixielmQX8/U5QJpKMT3b2v2hMN51tTb1PcFeaE6pJxY4+STwNB2lqg5F84pxZ9IlGjE+M9PqJkzgIn9gBW2UWxCcxmUgyPnm899lgOquxf9R3foKWSbAu3CfBNAFe5OJ8SeQLtCNYG5gZDk2fhO45cYdrvPUTe8N+6uyBBKnMrKxPhrMS+ykRn8xefbIxXXb2910/md4norAEIzjb/lCA2l9ng+AMB3EK0AMFjxMMWDRWhlKfSG8tJVgrG6QmsxyfOO1RJhHxyYkk45NHLw8cVJf9nR19Unnl+9WBAUX87RJyhQd9UhRh2eLzzn+HrI3kN6yGJj6xV07irzLW+onZhvskm32IzPLnJ3aT0jKRZO4/efjiA4SOn3eI+yQWCu6TRGN8G2BGwJjEi1Dpk6xMSoe68hhDq/tPnIrw7ENkVvDzjtaInpykc5nI/bGz+QJCl/vZ0BWbxBFe+jt106FEyCdFEf4dE7dBJejxhJxi+Gg7v9aJVT/bxK+fTFwQmRX0iTaJyE1OJBmf7M73IfD99ltGW5ngDnBakohT2mYKPinNrNh6rB7A7CtS8MnW/31xzfvmFtOk7w19sl4b0bO4wXssnqJ090nbvy/eFJ+Ulo3zCePTSqpgV0x0jA3B3EkX45PT0xMf1fHgfoOE+YQg3dOBYbJ0TxME+vuUTn7/QAD5PiWGYS4O+vsef/1cIYB83yPDMBeHsb+PmmGYCwX/vwyGYSjzB9cMmN8=)
 &]
 [s0;%% &]
 [s9;%% This class provides tool`-bars.&]
@@ -76,7 +61,8 @@ tyle][@(0.0.255) `&]_[* StyleDefault]()&]
 [s3;%% &]
 [s4; &]
 [s5;:ToolBar`:`:GetStdHeight`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetStdHeight]()&]
-[s2;%% Returns the standard height of a toolbar when used as a frame.&]
+[s2;%% Returns the standard height of a toolbar when used as a frame. 
+Not that this is only valid for toolbar with normal sized icons.&]
 [s3; &]
 [s0; &]
 [ {{10000@3 [s0;%% [*@(229)4 ToolBar`::Style]]}}&]
@@ -85,4 +71,4 @@ tyle][@(0.0.255) `&]_[* StyleDefault]()&]
 ][*@3;3 ChStyle][@(0.0.255)3 <][*3 Style][@(0.0.255)3 >][3 _]&]
 [s9;%% This structure defines the visual style of a ToolBar.&]
 [s3; &]
-[s0; ]
+[s0; ]]
