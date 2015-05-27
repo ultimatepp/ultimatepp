@@ -721,10 +721,11 @@ void AppMain___()
 #ifdef flagTEST_HIDPI
 	Font fnt = GetStdFont();
 	SetStdFont(fnt.Height(2 * fnt.GetHeight()));
+	GUI_HiDPI_Write(1);
+	DDUMP(GUI_HiDPI());
 #endif
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
-	GUI_HiDPI_Write(1);
 
 	const Vector<String>& arg = CommandLine();
 

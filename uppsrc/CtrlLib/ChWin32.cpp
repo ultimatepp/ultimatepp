@@ -595,6 +595,8 @@ void ChSysInit()
 	CtrlsImg::Reset();
 	ChReset();
 	XpClear();
+	
+	GUI_HiDPI_Write(GetStdFontCy() > 22);
 
 	GUI_GlobalStyle_Write(IsWinXP() && !ScreenInPaletteMode() && IsSysFlag(0x1022 /*SPI_GETFLATMENU*/)
 	                      ? GUISTYLE_XP : GUISTYLE_CLASSIC);
