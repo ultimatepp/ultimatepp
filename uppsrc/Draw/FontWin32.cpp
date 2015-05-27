@@ -20,8 +20,12 @@ void GetStdFontSys(String& name, int& height)
 	if(SetProcessDPIAware)
 		(*SetProcessDPIAware)();
 	NONCLIENTMETRICS ncm;
+#if (WINVER >= 0x0600)
+	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
+#else
 	ncm.cbSize = sizeof(ncm);
-	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+#endif
+	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
 	name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
 	height = abs((int)ncm.lfMenuFont.lfHeight);
 #endif
