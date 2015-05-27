@@ -30,7 +30,7 @@ Size SystemDraw::GetPageSize() const
 
 Size SystemDraw::GetNativeDpi() const
 {
-	return Dots() ? nativeDpi : Size(96, 96);
+	return nativeDpi;
 }
 
 #ifndef PLATFORM_WINCE
