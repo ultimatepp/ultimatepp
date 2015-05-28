@@ -2,15 +2,12 @@
 
 #define LTIMING(x) // RTIMING(x)
 
-String FormatNest(const String& nest)
+String FormatNest(String nest)
 {
-	if(nest.StartsWith("@")) {
-		String h = "[anonymous] (";
-		int q = nest.ReverseFind('/');
-		if(q >= 0)
-			h << nest.Mid(q + 1);
-		h << ")";
-		return h;
+	int q = nest.Find("@");
+	if(q >= 0) {
+		nest.Trim(q);
+		nest << "[anonymous]";
 	}
 	return nest;
 }
