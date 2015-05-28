@@ -1,0 +1,79 @@
+class TreeNodeInfo : Moveable<TreeNodeInfo>                  {
+	enum { SMALLCHARS = 40 };
+
+	int8  kind;
+	byte  len;
+	word  impressions;
+	dword sortaccel;
+public:
+	struct Extended {
+		String name;
+		String aname;
+		String urlname;
+		String aurlname;
+		String title;
+		String atitle;
+		String altname;
+		String aaltname;
+		String nodeid;
+		int    doubled_id;
+		int    parent_id;
+		int    master_id;
+		int    impressions;
+		
+		bool   master, noprotection, nosamecustomer, nooccupancyhigh, noncommercial, erotica;
+
+		Extended();
+	};
+	union {
+		Extended *extended;
+		char      text[SMALLCHARS];
+	};
+private:
+	enum { EMPTY = -100 };
+
+	Extended& Ext();
+	void      Free();
+	void      Init();
+	void      Copy(const TreeNodeInfo& src);
+
+	friend struct TreeInfo;
+
+public:	
+//	int    GetId() const                    { return id; }
+	String GetName() const                  { return kind ? String(text, len) : extended->name; }
+	String GetUrlName() const               { return kind ? GetName() : extended->urlname; }
+	String GetNameA() const                 { return kind ? GetName() : extended->aname; }
+
+	String GetUrlNameA() const              { return kind ? String() : extended->aurlname; }
+	String GetAltName() const               { return kind ? String() : extended->altname; }
+	String GetAltNameA() const              { return kind ? String() : extended->aaltname; }
+	String GetTitle() const                 { return kind ? String() : extended->title; }
+	String GetTitleA() const                { return kind ? String() : extended->atitle; }
+
+	int    GetDoubledId() const             { return kind ? (int)Null : extended->doubled_id; }
+	int    GetParentId() const              { return kind == EMPTY ? Null : kind ? kind : extended->parent_id; }
+	int    GetMasterId() const              { return kind == EMPTY ? Null : kind ? kind : extended->master_id; }
+	
+	int    GetImpressions() const           { return kind ? impressions : extended->impressions; }
+
+	String GetNodeId() const                { return kind ? String() : extended->nodeid; }
+	bool   IsMaster() const                 { return kind ? false : extended->master; }
+	bool   NoProtection() const             { return kind ? false : extended->noprotection; }
+	bool   NoSameCustomer() const           { return kind ? false : extended->nosamecustomer; }
+	bool   NoOccupancyHigh() const          { return kind ? false : extended->nooccupancyhigh; }
+	bool   NonCommercial() const            { return kind ? false : extended->noncommercial; }
+	bool   Erotica() const                  { return kind ? false : extended->erotica; }
+	
+	bool   IsExtended() const               { return kind == 0; }
+	
+	int    Less(dword sortaccel, const char *aname, int alen, const char *name, int len) const;
+	int    Less(const TreeNodeInfo& b) const;
+	
+	void   Serialize(Stream& s);
+
+	TreeNodeInfo& operator=(const TreeNodeInfo& src);
+	TreeNodeInfo(const TreeNodeInfo& src);
+	TreeNodeInfo();
+	~TreeNodeInfo();
+};
