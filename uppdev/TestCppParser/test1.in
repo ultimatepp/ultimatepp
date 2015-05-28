@@ -1,1 +1,23 @@
-inline int static foo();
+using Upp;template <class T> struct WithSaleTabLayout : public T {	static Size GetLayoutSize();
+	SqlArray msale;
+	CommentsCtrl sale_comment;
+	Button comment;
+	TabCtrl alt;
+	Button newsale;
+	Label product_schema_txt;
+	DropList product_schema;
+	Button history;
+	Button status1;
+	Button status2;
+	Button status3;
+	Button addproduct;
+	Button print;
+	Button order;
+	Button attachments;
+	RichTextCtrl crm_person;
+};
+
+template <class T> struct WithPosHistoryLayout : public T {	static Size GetLayoutSize();
+	ArrayCtrl list;
+	Button cancel;
+};
