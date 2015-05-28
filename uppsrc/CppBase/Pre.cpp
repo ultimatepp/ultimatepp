@@ -33,8 +33,9 @@ SrcFile PreProcess(Stream& in) // This is not really C preprocess, only removes 
 		}
 		const char *rm = ln;
 		if(IsAlNum(*rm)) {
-			const char *s = ln.Last();
-			while(s > rm && *s == ' ') s--;
+			const char *s = ln;
+			while(*s && iscid(*s) || *s == '\t' || *s == ' ')
+				s++;
 			if(*s != ':') // check for label, labeled lines are not grounded
 				res.text << '\2';
 		}
