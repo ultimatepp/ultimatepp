@@ -361,11 +361,13 @@ void Ide::Deactivate()
 		SaveFile();
 		DeactivationSave(false);
 	}
+	TopWindow::Deactivate();
 }
 
 void Ide::Activate()
 {
 	InvalidateFileTimeCache();
+	TopWindow::Activate();
 }
 
 bool Ide::Key(dword key, int count) {
