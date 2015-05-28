@@ -293,6 +293,16 @@ foreground or changing its caption).&]
 [s5;:Ctrl`:`:Deactivate`(`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Deactivate]()&]
 [s2;b17;a17; This method is called when Ctrl is top`-level and is 
 deactivated `- focus has gone outside of Ctrl and its child Ctrls.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:DeactivateBy`(Upp`:`:Ctrl`*`):%- [@(0.0.255) virtual] 
+[@(0.0.255) void]_[* DeactivateBy]([_^Upp`:`:Ctrl^ Ctrl]_`*[*@3 new`_focus])&]
+[s2; Similar to Deactivate without parameter, but if a widget that 
+caused deactivation by getting a focus is part of the same appliaction, 
+[%-*@3 new`_focus] contains a pointer to it. If deactivation is 
+caused by switching to another application, this parameter is 
+NULL. Both variants of Deactivate are called, the variant with 
+paremeter is called first.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:FrameMouseEvent`(int`,Point`,int`,dword`):%- [@(0.0.255) virtual] 

@@ -796,6 +796,7 @@ public:
 
 	virtual void   Activate();
 	virtual void   Deactivate();
+	virtual void   DeactivateBy(Ctrl *new_focus);
 
 	virtual Image  FrameMouseEvent(int event, Point p, int zdelta, dword keyflags);
 	virtual Image  MouseEvent(int event, Point p, int zdelta, dword keyflags);

@@ -354,14 +354,14 @@ void Ide::CycleFiles()
 	}
 }
 
-void Ide::Deactivate()
+void Ide::DeactivateBy(Ctrl *new_focus)
 {
-	if(deactivate_save && issaving == 0) {
+	if(deactivate_save && issaving == 0 && !new_focus && editor.GetLength() < 1000000) {
 		DeactivationSave(true);
 		SaveFile();
 		DeactivationSave(false);
 	}
-	TopWindow::Deactivate();
+	TopWindow::DeactivateBy(new_focus);
 }
 
 void Ide::Activate()
