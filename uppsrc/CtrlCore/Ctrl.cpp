@@ -47,6 +47,8 @@ int  Ctrl::OverPaint() const                        { return 0; }
 
 void Ctrl::Activate()                               {}
 void Ctrl::Deactivate()                             {}
+void Ctrl::DeactivateBy(Ctrl *)                     {}
+
 void Ctrl::CancelMode()                             {}
 void Ctrl::MouseEnter(Point p, dword keyflags)      {}
 void Ctrl::LeftDown(Point p, dword keyflags)        {}

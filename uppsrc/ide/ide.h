@@ -329,7 +329,7 @@ public:
 	virtual   void   FileRename(const String& nm);
 	virtual   bool   FileRemove();
 	virtual   void   DragAndDrop(Point p, PasteClip& d);
-	virtual   void   Deactivate();
+	virtual   void   DeactivateBy(Ctrl *new_focus);
 	virtual   void   Activate();
 	virtual   void   Layout();
 
