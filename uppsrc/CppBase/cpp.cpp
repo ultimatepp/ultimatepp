@@ -166,8 +166,6 @@ void Cpp::DoFlatInclude(const String& header_path)
 			namespace_using.FindAdd(pp.usings[i]);
 			usings << ";" << pp.usings[i];
 		}
-		for(int i = 0; i < pp.includes.GetCount(); i++)
-			visited.FindAdd(pp.includes[i]);
 	}
 }
 
