@@ -55,6 +55,7 @@ void DirDiffDlg::Compare()
 		String p2 = AppendFileName(~dir2, f[i]);
 		if(!FileEqual(p1, p2))
 			files.Add(f[i], NativePathIcon(FileExists(p1) ? p1 : p2));
+		info = AsString(files.GetCount()) + " files";
 	}
 }
 
@@ -105,7 +106,8 @@ DirDiffDlg::DirDiffDlg()
 	
 	files_pane.Add(dir1.TopPos(0, cy).HSizePos());
 	files_pane.Add(dir2.TopPos(cy + div, cy).HSizePos());
-	files_pane.Add(hidden.TopPos(2 * cy + 2 * div, bcy).HSizePos(0, bcx));
+	files_pane.Add(hidden.TopPos(2 * cy + 2 * div, bcy).LeftPos(0, bcx));
+	files_pane.Add(info.TopPos(2 * cy + 2 * div, bcy).HSizePos(bcx + 2 * div, bcx + div));
 	files_pane.Add(compare.TopPos(2 * cy + 2 * div, bcy).RightPos(0, bcx));
 	files_pane.Add(files.VSizePos(2 * cy + bcy + 3 * div, 0).HSizePos());
 

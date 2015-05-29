@@ -197,6 +197,7 @@ class DirDiffDlg : public TopWindow {
 	WithDropChoice<EditString> dir2;
 	Option                     hidden;
 	Button                     compare;
+	Label                      info;
 
 	FrameTop<ParentCtrl>       left, right;
 	EditString                 lfile, rfile;
