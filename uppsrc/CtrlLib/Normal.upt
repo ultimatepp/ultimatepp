@@ -2,7 +2,6 @@ template "Basic CtrlLib application" main;
 
 option "Create header" header;
 option "Multithreaded" mt;
-option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 ??header
@@ -31,4 +30,4 @@ file<:?header:>
 	main.cpp;
 
 mainconfig
-	"" = "GUI<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";
+	"" = "GUI<:?mt:> MT<:.:>";
