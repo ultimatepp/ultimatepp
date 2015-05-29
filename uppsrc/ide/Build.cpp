@@ -159,7 +159,6 @@ void Ide::PreprocessInternal()
 {
 	if(editor.GetLength() >= 1000000) // Sanity...
 		return;
-	LOG("===== Preprocess internal");
 	int l = editor.GetCurrentLine();
 	PPSync(GetIncludePath());
 	String pfn = ConfigFile(GetFileTitle(editfile) + ".i.tmp");

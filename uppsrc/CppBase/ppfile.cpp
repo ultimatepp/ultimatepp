@@ -430,9 +430,6 @@ const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 					fp.segment_id.Add(pp.segment_id[i]);
 				for(int i = 0; i < pp.usings.GetCount(); i++)
 					fp.usings.Add(pp.usings[i]);
-				fp.includes.FindAdd(s);
-				for(int i = 0; i < pp.includes.GetCount(); i++)
-					fp.includes.FindAdd(pp.includes[i]);
 			}
 		}
 		else
