@@ -118,6 +118,8 @@ void VisGenDlg::Refresh()
 		for(int i = 0; i < sel.GetCount(); i++) {
 			String id = layout.item[sel[i]].variable;
 			if(!IsNull(id)) {
+				if(pars && !(name1 || name2))
+					s << ~name;
 				if(pars)
 					s << '(';
 				String ss;
