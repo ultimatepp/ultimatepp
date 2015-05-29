@@ -5,7 +5,6 @@ select("No layouts", "Generate layout file", "Main window has layout", "Main win
        "Layout" lay = 2;
 option "Imagelist file" iml;
 option "Multithreaded" mt;
-option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 #ifndef _<:PACKAGE:>_<:PACKAGE:>_h
@@ -64,4 +63,4 @@ file
 	<:PACKAGE:>.iml<:.:>;
 
 mainconfig
-	"" = "GUI<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";
+	"" = "GUI<:?mt:> MT<:.:>";

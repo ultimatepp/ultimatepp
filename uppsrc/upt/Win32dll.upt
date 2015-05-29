@@ -1,7 +1,7 @@
 template "Win32 DLL project (no U++)" main;
 
 option "Multithreaded" mt;
-option "Use SSE2" sse2 = 1;
+
 
 @@<:PACKAGE:>.h
 #ifndef _<:PACKAGE:>_<:PACKAGE:>_h
@@ -45,4 +45,4 @@ file
 	<:PACKAGE:>.cpp;
 
 mainconfig
-	"" = "DLL<:?mt:> MT<:.:><:?sse2:> SSE2<:.:>";
+	"" = "DLL<:?mt:> MT<:.:>";

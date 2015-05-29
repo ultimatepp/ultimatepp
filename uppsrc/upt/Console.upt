@@ -2,7 +2,6 @@ template "Console application (no U++)" main;
 
 select("C", "C++")
        "Language" language = 1;
-option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:><:?language == 0 :>.c<:.:><:?language == 1 :>.cpp<:.:>
 <:?language == 0 :>#include <stdio.h><:.:><:?language == 1 :>#include <iostream><:.:>
@@ -16,4 +15,4 @@ file
 	<:PACKAGE:><:?language == 0 :>.c<:.:><:?language == 1 :>.cpp<:.:>;
 
 mainconfig
-	"" = "<:?sse2:>SSE2<:.:>";
+	"" = "";

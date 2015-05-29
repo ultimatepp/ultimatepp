@@ -3,7 +3,6 @@ template "Core console project" main;
 option "Create header" header;
 option "Commandline loop" cmdline;
 option "Multithreaded" mt;
-option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 ??header
@@ -34,4 +33,4 @@ file<:?header:>
 	<:PACKAGE:>.cpp;
 
 mainconfig
-	"" = "<:?mt:>MT<:.:><:?mt && sse2:> <:.:><:?sse2:>SSE2<:.:>";
+	"" = "<:?mt:>MT<:.:>";

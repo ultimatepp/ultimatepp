@@ -4,7 +4,6 @@ option "Create header" header;
 option "Initialize video" video;
 option "Double buffering" doublebuff;
 option "Full screen" fullscreen;
-option "Use SSE2" sse2 = 1;
 
 @@<:PACKAGE:>.h
 ??header
@@ -89,4 +88,4 @@ file<:?header:>
 	<:PACKAGE:>.cpp;
 
 mainconfig
-	"" = "<:?sse2:>SSE2<:.:>";
+	"" = "";
