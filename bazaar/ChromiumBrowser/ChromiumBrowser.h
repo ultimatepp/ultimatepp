@@ -30,11 +30,11 @@ public:
 	ChromiumBrowser();
 	~ChromiumBrowser();
 	
-	Callback1<String>							WhenUrlChange;
-	Callback1<String>							WhenMessage;
-	Callback									WhenTakeFocus;
-	Callback1<bool>								WhenKeyboard;
-	Callback3<Upp::String, int, Upp::String>	WhenConsoleMessage;
+	Callback1<String>								WhenUrlChange;
+	Callback2<String, WithDeepCopy<Vector<Value> > >	WhenMessage;
+	Callback										WhenTakeFocus;
+	Callback1<bool>									WhenKeyboard;
+	Callback3<Upp::String, int, Upp::String>		WhenConsoleMessage;
 	
 	static void ChildProcess();
 	static bool IsChildProcess();

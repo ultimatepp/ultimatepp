@@ -66,11 +66,45 @@ void ClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
 bool ClientHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message)
 {
 	if (message->GetName().ToString() == "show_keyboard"){
+		
 		PostCallback(callback1(WhenKeyboard, true));
+
 	}else if (message->GetName().ToString() == "hide_keyboard"){
+		
 		PostCallback(callback1(WhenKeyboard, false));
+		
 	}else{ 
-		PostCallback(callback1(WhenMessage, message->GetName().ToString()));
+
+		CefRefPtr<CefListValue> args = message->GetArgumentList();
+		Upp::Vector<Upp::Value> par;
+	
+		for (unsigned i = 0; i < args->GetSize(); i++){
+			CefValueType type = args->GetType(i);
+			switch(type){
+				
+				case VTYPE_BOOL: 
+					par.Add(args->GetBool(i));
+					break;
+				
+				case VTYPE_DOUBLE:
+					par.Add(args->GetDouble(i));
+					break;
+					
+				case VTYPE_INT:
+					par.Add(args->GetInt(i));
+					break;
+					
+				case VTYPE_STRING:
+					par.Add(args->GetString(i).ToString().c_str());
+					break;
+				
+				default:
+					par.Add("OnProcessMessageReceived: unsupported parameter type");
+					break; 
+			}
+		}
+		
+		PostCallback(callback2(WhenMessage, message->GetName().ToString(), par));
 	}
 	return true;
 }
@@ -87,8 +121,10 @@ void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
 										CefRefPtr<CefContextMenuParams> params, 
 										CefRefPtr<CefMenuModel> model)
 {
+#ifndef _DEBUG
 	//Empty context menu
 	model->Clear();
+#endif
 }
 
 

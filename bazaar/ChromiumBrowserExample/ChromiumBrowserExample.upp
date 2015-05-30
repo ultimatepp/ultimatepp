@@ -13,6 +13,8 @@ options(GCC) -std=c++11;
 link(GCC) "-Wl,-rpath .";
 
 file
+	html/test_page.html,
+	files.brc,
 	Utils readonly separator,
 	Utils.h,
 	Utils.cpp,

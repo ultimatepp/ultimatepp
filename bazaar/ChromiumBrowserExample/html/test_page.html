@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+	<style>
+  		body {background-color: #EFEFEF}
+		canvas, label, button {
+		    padding-left: 0;
+		    padding-right: 0;
+		    margin-left: auto;
+		    margin-right: auto;
+		    display: block;
+		}
+	</style>
+</head>
+<body>
+
+<p><label style="font-size:30px" id="some_label">Waiting for some action...</label></p>
+<p><button style="font-size:30px" onclick="JSExample1('some string', true, 777);">Press me to execute native function from JS!</button></p>
+
+<script>
+function CallbackExample(r)
+{
+	document.getElementById('some_label').innerHTML = 'Javascript function executed by native code: ' + r;
+}
+</script>
+
+</body>
+</html>

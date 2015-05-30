@@ -6,6 +6,7 @@ using namespace Upp;
 #define IMAGEFILE <ChromiumBrowserExample/ChromiumBrowserExample.iml>
 #include <Draw/iml.h>
 
+#include "files.brc"
 
 ChromiumBrowserExample::ChromiumBrowserExample()
 {
@@ -23,6 +24,7 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Browser.WhenTakeFocus		= THISBACK(OnTakeFocus);
 	Browser.WhenKeyboard		= STDBACK(::ShowKeyboard);
 	Browser.WhenConsoleMessage	= THISBACK(OnConsoleMessage);
+	Browser.WhenMessage			= THISBACK(OnMessage);
 	
 	Back.WhenAction				= callback(&Browser, &ChromiumBrowser::GoBack);
 	Forward.WhenAction			= callback(&Browser, &ChromiumBrowser::GoForward);
@@ -30,6 +32,7 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Url.WhenEnter				= THISBACK(OnBrowse);
 	Go.WhenAction				= THISBACK(OnBrowse);
 	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
+	JSTests.WhenAction			= THISBACK(OnJSTests);
 
 #ifdef PLATFORM_WIN32
 	Maximize();
@@ -37,6 +40,27 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	//Delayed maximization - workaround for linux backend
 	SetTimeCallback(100, THISBACK1(Maximize, false));
 #endif
+}
+
+
+
+void ChromiumBrowserExample::OnJSTests()
+{
+	Browser.ShowHTML(String(test_page, test_page_length));
+}
+
+
+void ChromiumBrowserExample::OnMessage(String name, WithDeepCopy<Vector<Value> > par)	
+{ 
+	String tmp = "Native function executed by JS:&[* " + name + "(";
+	for (int i = 0; i < par.GetCount(); i++){
+		if (i > 0) tmp += ',';
+		tmp += DeQtfLf(par[i].ToString());
+	}
+	tmp += ") ]&&After you press OK javascript function will be executed by native code";
+	PromptOK(tmp);
+	
+	Browser.ExecuteJavaScript(Format("CallbackExample(%d);", (int)Random()));
 }
 
 

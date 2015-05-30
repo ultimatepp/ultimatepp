@@ -1,10 +1,13 @@
 #include "ClientApp.h"
 
 
+static const char * const func_names[]={
+	"JSExample1"
+};
+
+
 ClientApp::ClientApp()
 {
-	//Add our own JS functions to the list
-	functions.Add("JSExample1", Upp::callback(this, &ClientApp::JSExample1));
 }
 
 
@@ -20,9 +23,9 @@ void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 {
 	//Register our JS functions
 	CefRefPtr<CefV8Value> object = context->GetGlobal();
-	for(int f = 0; f < functions.GetCount(); f++){
-		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(~functions.GetKey(f), this);
-		object->SetValue(~functions.GetKey(f), func, V8_PROPERTY_ATTRIBUTE_NONE);
+	for(int f = 0; f < __countof(func_names); f++){
+		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(func_names[f], this);
+		object->SetValue(func_names[f], func, V8_PROPERTY_ATTRIBUTE_NONE);
 	}			
 }
 
@@ -36,19 +39,26 @@ void ClientApp::OnFocusedNodeChanged(CefRefPtr<CefBrowser> browser, CefRefPtr<Ce
 
 bool ClientApp::Execute(const CefString& name, CefRefPtr<CefV8Value> object, const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
-	int f = functions.Find(name.ToString());
-	if (f >= 0){
-		functions[f].Execute(arguments, retval, exception);
-		return true;
-	}else{
-		RLOG(Upp::String("ERROR: Unknown native function: ") + name.ToString());
-	}
-
-	return false;
+	CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create(name);
+	CefRefPtr<CefListValue> par = message->GetArgumentList();
+	V8ValueListToCefListValue(arguments, par);
+	CefRefPtr<CefBrowser> browser = CefV8Context::GetCurrentContext()->GetBrowser();
+	if (browser) browser->SendProcessMessage(PID_BROWSER, message);	
+	return true;
 }
 
 
-void ClientApp::JSExample1(const CefV8ValueList& args, CefRefPtr<CefV8Value>& retval, CefString& exc)
+void ClientApp::V8ValueListToCefListValue(const CefV8ValueList& src, CefRefPtr<CefListValue> & dst) 
 {
-	retval = CefV8Value::CreateString("Function that returns some string");
+    for (unsigned i = 0; i < src.size(); i++) 
+    {
+		if (!src[i]->IsValid())							{ dst->SetString(dst->GetSize(),"Invalid V8Value");			continue;}
+		if (src[i]->IsUndefined() || src[i]->IsNull())	{ dst->SetNull(dst->GetSize()); 							continue;}
+		if (src[i]->IsBool()) 							{ dst->SetBool(dst->GetSize(),	src[i]->GetBoolValue());	continue;}
+		if (src[i]->IsInt()) 							{ dst->SetInt(dst->GetSize(),	src[i]->GetIntValue());		continue;}
+		if (src[i]->IsDouble()) 						{ dst->SetDouble(dst->GetSize(),src[i]->GetDoubleValue());	continue;}
+		if (src[i]->IsString()) 						{ dst->SetString(dst->GetSize(),src[i]->GetStringValue());	continue;}
+		
+		dst->SetString(dst->GetSize(), "Unimplemented V8Value conversion");
+    }
 }

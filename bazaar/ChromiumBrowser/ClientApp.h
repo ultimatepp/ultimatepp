@@ -25,9 +25,7 @@ class ClientApp:	public CefApp,
 private:
 
 	CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler()	{ return this; }
-
-	Upp::VectorMap<Upp::String, Upp::Callback3<const CefV8ValueList&, CefRefPtr<CefV8Value>&, CefString&> > functions;
-	void JSExample1(const CefV8ValueList&, CefRefPtr<CefV8Value>&, CefString&);
+	void V8ValueListToCefListValue(const CefV8ValueList& src, CefRefPtr<CefListValue> & dst);
 
 public:
 	typedef ClientApp CLASSNAME;

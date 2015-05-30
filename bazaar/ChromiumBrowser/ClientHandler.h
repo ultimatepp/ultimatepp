@@ -23,7 +23,7 @@ class ClientHandler : public CefClient, public CefLifeSpanHandler, public CefDis
 
 public:
 	ClientHandler(	Upp::Callback1<Upp::String> & wuc, 
-					Upp::Callback1<Upp::String> & wm,
+					Upp::Callback2<Upp::String, Upp::WithDeepCopy<Upp::Vector<Upp::Value> > > & wm,
 					Upp::Callback & tf,
 					Upp::Callback1<bool> & wk,
 					Upp::Callback3<Upp::String, int, Upp::String> & wcm): 
@@ -33,7 +33,7 @@ public:
 	~ClientHandler() { }
 	
 	Upp::Callback1<Upp::String> & WhenUrlChange;
-	Upp::Callback1<Upp::String> & WhenMessage;
+	Upp::Callback2<Upp::String, Upp::WithDeepCopy<Upp::Vector<Upp::Value> > > & WhenMessage;
 	Upp::Callback & WhenTakeFocus;
 	Upp::Callback1<bool> & WhenKeyboard;
 	Upp::Callback3<Upp::String, int, Upp::String> & WhenConsoleMessage;
