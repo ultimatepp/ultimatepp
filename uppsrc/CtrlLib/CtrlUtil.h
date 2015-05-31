@@ -57,6 +57,7 @@ struct Win32PrintDlg_;
 class PrinterJob {
 #ifdef GUI_WIN
 	One<Win32PrintDlg_> pdlg;
+	bool Execute0(bool dodlg);
 #endif
 #ifdef PLATFORM_X11
 	Size                pgsz;
