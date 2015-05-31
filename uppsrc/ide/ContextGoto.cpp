@@ -281,11 +281,16 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 	
+	Vector<String> usings = Split(parser.context.namespace_using, ';');
+	usings.Add(""); // Add global namespace too
+	
 	Index<String> done;
-	String r;
-	if(GetIdScope(r, "", id, done)) { // global
-		scope.Add(r);
-		istype.Add(false);
+	for(int i = 0; i < usings.GetCount(); i++) {
+		String r;
+		if(GetIdScope(r, usings[i], id, done)) {
+			scope.Add(r);
+			istype.Add(false);
+		}
 	}
 
 	for(int j = 0; j < scope.GetCount(); j++) {

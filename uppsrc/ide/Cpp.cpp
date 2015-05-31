@@ -253,6 +253,9 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 			return typeset;
 		}
 	}
+	Vector<String> usings = Split(parser.context.namespace_using, ';');
+	for(int i = 0; i < usings.GetCount(); i++)
+		ExpressionType(usings[i], parser.context.namespace_using, xp, 0, typeset, false, 0);
 	ExpressionType("", parser.context.namespace_using, xp, 0, typeset, false, 0);
 	return typeset;
 }
