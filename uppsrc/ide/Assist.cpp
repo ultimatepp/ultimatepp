@@ -462,6 +462,9 @@ void AssistEditor::Assist()
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);
 			Index<String> in_types2;
+			Vector<String> usings = Split(parser.context.namespace_using, ';');
+			for(int i = 0; i < usings.GetCount(); i++)
+				GatherItems(usings[i], false, in_types2, true);
 			GatherItems("", false, in_types2, true);
 		}
 	}
