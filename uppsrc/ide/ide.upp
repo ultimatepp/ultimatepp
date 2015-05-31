@@ -45,6 +45,8 @@ file
 	Cpp.cpp,
 	Assist.h,
 	Assist.cpp,
+	DCopy.cpp,
+	ContextGoto.cpp,
 	ParamInfo.cpp,
 	Navigator.cpp,
 	Annotations.cpp,
