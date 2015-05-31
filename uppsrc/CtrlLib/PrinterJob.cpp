@@ -220,6 +220,7 @@ public:
 	bool IsCanceled();	
 
 private:
+	void StandardizePrinterName(String& printerName);
 	void OnOK();
 	
 private:
@@ -250,7 +251,7 @@ void PrinterDlg::FillOpt(const String& s, const char *id, DropList& dl, bool pgs
 
 void PrinterDlg::SyncPrinterOptions()
 {
-	Vector<String> l = Split(System("lpoptions -l -d " + String(~printer)), '\n');
+	Vector<String> l = Split(System("lpoptions -d " + String(~printer) + " -l"), '\n');
 	paper.Disable();
 	paper.Clear();
 	slot.Disable();
@@ -286,6 +287,7 @@ PrinterDlg::PrinterDlg() : canceled(true)
 	int q = h.Find(':');
 	if(q >= 0) {
 		String p = h.Mid(q + 1);
+		StandardizePrinterName(p);
 		if(printer.HasKey(p)) {
 			printer <<= p;
 			SyncPrinterOptions();
@@ -301,6 +303,13 @@ PrinterDlg::PrinterDlg() : canceled(true)
 bool PrinterDlg::IsCanceled()
 {
 	return canceled;
+}
+
+void PrinterDlg::StandardizePrinterName(String& printerName)
+{
+	printerName.Replace(" ", "");
+	printerName.Replace("\r", "");
+	printerName.Replace("\n", "");
 }
 
 void PrinterDlg::OnOK()
@@ -351,13 +360,14 @@ PrinterJob::PrinterJob(const char *_name)
 	from = to = 0;
 	current = 0;
 	pgsz = GetDefaultPageSize();
+	dlgSuccess = false;
 }
 
 PrinterJob::~PrinterJob()
 {
 }
 
-bool PrinterJob::Execute0(bool dodlg)
+bool PrinterJob::Execute0()
 {
 	PrinterDlg dlg;
 	dlg.from <<= from + 1;
@@ -371,11 +381,11 @@ bool PrinterJob::Execute0(bool dodlg)
 	String h;
 	GetDefaultPageSize(&h);
 	h.IsEmpty() ? dlg.paper <<= "A4" : dlg.paper <<= h;
-	if(dodlg) {
-		dlg.Run();
-		if (!dlg.IsCanceled())
-			return false;
-	}
+	
+	dlg.Run();
+	if(dlg.IsCanceled())
+		return false;
+	
 	options.Clear();
 	options << "-d " << ~dlg.printer;
 	options << " -o media=";
@@ -411,7 +421,8 @@ bool PrinterJob::Execute0(bool dodlg)
 
 bool PrinterJob::Execute()
 {
-	return Execute0(false);
+	dlgSuccess = Execute0();
+	return dlgSuccess;
 }
 
 struct PrinterDraw : PdfDraw {
@@ -429,9 +440,8 @@ struct PrinterDraw : PdfDraw {
 Draw& PrinterJob::GetDraw()
 {
 	if(!draw) {
-		bool canceled = Execute0(true);
 		PrinterDraw *pd = new PrinterDraw(pgsz);
-		pd->canceled = canceled;
+		pd->canceled = !dlgSuccess;
 		pd->options = options;
 		draw = pd;
 	}

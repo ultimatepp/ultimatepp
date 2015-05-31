@@ -68,8 +68,9 @@ class PrinterJob {
 	bool                landscape;
 	String              name;
 	String              options;
-	bool                Execute0(bool dodlg);
-
+	bool                dlgSuccess;
+	bool                Execute0();
+	
 public:
 	Draw&               GetDraw();
 	operator            Draw&()                         { return GetDraw(); }
