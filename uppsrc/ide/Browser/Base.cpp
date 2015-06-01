@@ -197,7 +197,7 @@ void BaseInfoSync(Progress& pi)
 
 int GetSourceFileIndex(const String& path)
 {
-	return source_file.FindPut(path);
+	return source_file.FindPut(NormalizeSourcePath(path));
 }
 
 String GetSourceFilePath(int file)
@@ -232,7 +232,8 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 		return true;
 	Cpp pp;
 	FileIn in(path);
-	pp.Preprocess(path, in, GetMasterFile(path), true);
+	String npath = NormalizeSourcePath(path);
+	pp.Preprocess(npath, in, GetMasterFile(npath), true);
 	String included_id_macros = pp.GetIncludedMacroValues(f.ids.GetKeys());
 	if(f.included_id_macros != included_id_macros) {
 		f.depends_time = Null;

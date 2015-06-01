@@ -10,6 +10,8 @@
 #define LLOG(x)
 #endif
 
+#define LTIMING(x)
+
 static Array<CppItem> sEmpty;
 
 const Array<CppItem>& GetTypeItems(const String& type)
@@ -117,12 +119,15 @@ void AssistScanError(int line, const String& text)
 
 void AssistEditor::Context(Parser& parser, int pos)
 {
+	LTIMING("Context");
+
 	theide->ScanFile(false);
 	String s = Get(0, pos);
 	StringStream ss(s);
 
 	Cpp cpp;
-	cpp.Preprocess(theide->editfile, ss, GetMasterFile(theide->editfile));
+	String path = NormalizeSourcePath(theide->editfile);
+	cpp.Preprocess(path, ss, GetMasterFile(path));
 
 	parser.dobody = true;
 	StringStream pin(cpp.output);
@@ -273,13 +278,15 @@ int CharFilterT(int c)
 
 void AssistEditor::AssistItemAdd(const String& scope, const CppItem& m, int typei)
 {
+	if(*m.name == '.' || m.name.GetCount() == 0)
+		return;
 	CppItemInfo& f = assist_item.Add(m.name);
 	f.typei = typei;
 	f.scope = scope;
 	(CppItem&)f = m;
 }
 
-void AssistEditor::GatherItems0(const String& type, bool only_public, Index<String>& in_types, bool types)
+void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types)
 {
 	LLOG("GatherItems " << type);
 	if(in_types.Find(type) >= 0) {
@@ -292,6 +299,7 @@ void AssistEditor::GatherItems0(const String& type, bool only_public, Index<Stri
 	int q = CodeBase().Find(ntp);
 	if(q >= 0) {
 		if(types) {
+			LLOG("GatherItems types");
 			if(ntp.GetCount())
 				ntp << "::";
 			int typei = assist_type.FindAdd("<types>");
@@ -338,7 +346,7 @@ void AssistEditor::GatherItems0(const String& type, bool only_public, Index<Stri
 			ResolveTParam(b, tparam);
 			for(int i = 0; i < b.GetCount(); i++)
 				if(b[i].GetCount())
-					GatherItems0(b[i], only_public, in_types, types);
+					GatherItems(b[i], only_public, in_types, types);
 		}
 	}
 	in_types.Drop();
@@ -346,24 +354,24 @@ void AssistEditor::GatherItems0(const String& type, bool only_public, Index<Stri
 
 bool OrderAssistItems(const CppItemInfo& a, const CppItemInfo& b)
 {
-	if(a.impl != b.impl)
-		return b.impl;
+	if(a.typei != b.typei)
+		return a.typei < b.typei;
 	return a.qitem < b.qitem;
 }
 
-void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types)
+void AssistEditor::RemoveDuplicates()
 {
-	int i0 = assist_item.GetCount();
-	GatherItems0(type, only_public, in_types, types);
-	StableSort(assist_item.Begin() + i0, assist_item.End(), OrderAssistItems);
+	LTIMING("RemoveDuplicates");
+	StableSort(assist_item, OrderAssistItems);
 	Vector<int> remove;
-	int i = i0;
-	while(i < assist_item.GetCount()) {
+	int i = 0;
+	while(i < assist_item.GetCount()) { // Remove identical items
 		int ii = i;
 		i++;
-		while(i < assist_item.GetCount() && assist_item[i].qitem == assist_item[ii].qitem)
+		while(i < assist_item.GetCount()
+			  && assist_item[ii].typei == assist_item[i].typei
+		      && assist_item[ii].qitem == assist_item[i].qitem)
 			remove.Add(i++);
-			i++;
 	}
 	assist_item.Remove(remove);
 }

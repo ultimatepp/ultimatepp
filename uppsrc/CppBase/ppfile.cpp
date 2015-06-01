@@ -341,11 +341,11 @@ String GetIncludePath0(const char *s, const char *filedir)
 		while(*s != '\r' && *s != '\n') {
 			if(*s == type) {
 				if(type == '\"') {
-					String fn = NormalizePath(name, filedir);
+					String fn = NormalizeSourcePath(name, filedir);
 					if(FileExists(fn))
 						return fn;
 				}
-				return GetFileOnPath(name, GetIncludePath(), false);
+				return NormalizeSourcePath(GetFileOnPath(name, GetIncludePath(), false));
 			}
 			name.Cat(*s++);
 		}
