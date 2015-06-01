@@ -84,7 +84,7 @@ void SerializeCodeBase(Stream& s)
 	CodeBase().Serialize(s);
 }
 
-#define CPP_CODEBASE_VERSION 9
+#define CPP_CODEBASE_VERSION 10
 
 void SaveCodeBase()
 {
