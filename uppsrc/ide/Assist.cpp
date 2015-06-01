@@ -315,10 +315,6 @@ void AssistEditor::SyncAssist()
 			}
 		}
 	}
-//	if(!include_assist) {
-//		LTIMING("Sort assist");
-//		assist.Sort(0, CppItemInfoOrder);
-//	}
 }
 
 bool AssistEditor::IncludeAssist()
@@ -458,7 +454,7 @@ void AssistEditor::Assist()
 			Index<String> typeset = EvaluateExpressionType(parser, xp);
 			for(int i = 0; i < typeset.GetCount(); i++)
 				if(typeset[i].GetCount())
-					GatherItems(typeset[i], xp.GetCount(), in_types, xp.GetCount() == 0);
+					GatherItems(typeset[i], true, in_types, false);
 		}
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);

@@ -278,7 +278,7 @@ int CharFilterT(int c)
 
 void AssistEditor::AssistItemAdd(const String& scope, const CppItem& m, int typei)
 {
-	if(*m.name == '.' || m.name.GetCount() == 0)
+	if(!iscib(*m.name) || m.name.GetCount() == 0)
 		return;
 	CppItemInfo& f = assist_item.Add(m.name);
 	f.typei = typei;
@@ -299,7 +299,6 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 	int q = CodeBase().Find(ntp);
 	if(q >= 0) {
 		if(types) {
-			LLOG("GatherItems types");
 			if(ntp.GetCount())
 				ntp << "::";
 			int typei = assist_type.FindAdd("<types>");
@@ -326,7 +325,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 			const CppItem& im = n[i];
 			if(im.kind == STRUCT || im.kind == STRUCTTEMPLATE)
 				base << im.qptype << ';';
-			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && type == ""))
+			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && IsNull(type)))
 			   && (!op || im.access == PUBLIC)) {
 				int q = assist_item.Find(im.name);
 				while(q >= 0) {
@@ -368,7 +367,8 @@ void AssistEditor::RemoveDuplicates()
 		i++;
 		while(i < assist_item.GetCount()
 			  && assist_item[ii].typei == assist_item[i].typei
-		      && assist_item[ii].qitem == assist_item[i].qitem)
+		      && assist_item[ii].qitem == assist_item[i].qitem
+		      && assist_item[ii].scope == assist_item[i].scope)
 			remove.Add(i++);
 	}
 	assist_item.Remove(remove);
