@@ -315,10 +315,10 @@ void AssistEditor::SyncAssist()
 			}
 		}
 	}
-	if(!include_assist) {
-		LTIMING("Sort assist");
-		assist.Sort(0, CppItemInfoOrder);
-	}
+//	if(!include_assist) {
+//		LTIMING("Sort assist");
+//		assist.Sort(0, CppItemInfoOrder);
+//	}
 }
 
 bool AssistEditor::IncludeAssist()

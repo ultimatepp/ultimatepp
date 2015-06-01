@@ -354,9 +354,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 
 bool OrderAssistItems(const CppItemInfo& a, const CppItemInfo& b)
 {
-	if(a.typei != b.typei)
-		return a.typei < b.typei;
-	return a.qitem < b.qitem;
+	return CombineCompare(a.uname, b.uname)(a.typei, b.typei)(a.qitem, b.qitem) < 0;
 }
 
 void AssistEditor::RemoveDuplicates()
