@@ -10,6 +10,8 @@
 #define LLOG(x)
 #endif
 
+#define LTIMING(x)
+
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
 	virtual void FramePaint(Draw& w, const Rect& r) {
@@ -286,41 +288,37 @@ Vector<String> AssistEditor::ReadBack(int q)
 	return r;
 }
 
-int memcmp_i(const char *s, const char *t, int n)
-{
-	while(n--) {
-		int q = ToUpper(*s++) - ToUpper(*t++);
-		if(q)
-			return q;
-	}
-	return 0;
-}
-
 void AssistEditor::SyncAssist()
 {
-	String name;
-	name = ReadIdBack(GetCursor(), include_assist);
+	LTIMING("SyncAssist");
+	String name = ReadIdBack(GetCursor(), include_assist);
+	String uname = ToUpper(name);
 	assist.Clear();
 	int typei = type.GetCursor() - 1;
-	for(int p = 0; p < 2; p++) {
+	Buffer<bool> found(assist_item.GetCount(), false);
+	for(int pass = 0; pass < 2; pass++) {
 		VectorMap<String, int> over;
+		LTIMING("FindPass");
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const CppItemInfo& m = assist_item[i];
-			if((typei < 0 || m.typei == typei) &&
-			   (p ? memcmp_i(name, m.name, name.GetCount()) == 0
-			        && memcmp(name, m.name, name.GetCount())
-			      : memcmp(name, m.name, name.GetCount()) == 0)) {
-				int q = include_assist ? -1 : over.Find(m.name);
-				if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
-					assist.Add(RawToValue(m));
-					if(q < 0)
-						over.Add(m.name, m.typei);
-				}
+			if(!found[i] &&
+			   (typei < 0 || m.typei == typei) &&
+			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))) {
+					int q = include_assist ? -1 : over.Find(m.name);
+					if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
+						LTIMING("Assist Add");
+						found[i] = true;
+						assist.Add(RawToValue(m));
+						if(q < 0)
+							over.Add(m.name, m.typei);
+					}
 			}
 		}
 	}
-	if(!include_assist)
+	if(!include_assist) {
+		LTIMING("Sort assist");
 		assist.Sort(0, CppItemInfoOrder);
+	}
 }
 
 bool AssistEditor::IncludeAssist()
@@ -408,6 +406,7 @@ bool AssistEditor::IncludeAssist()
 
 void AssistEditor::Assist()
 {
+	LTIMING("Assist");
 	if(!assist_active)
 		return;
 	CloseAssist();
@@ -432,6 +431,7 @@ void AssistEditor::Assist()
 			thisback = true;
 			thisbackn = false;
 			GatherItems(parser.current_scope, false, in_types, false);
+			RemoveDuplicates();
 			PopUpAssist();
 			return;
 		}
@@ -439,6 +439,7 @@ void AssistEditor::Assist()
 			thisback = true;
 			thisbackn = true;
 			GatherItems(parser.current_scope, false, in_types, false);
+			RemoveDuplicates();
 			PopUpAssist();
 			return;
 		}
@@ -461,13 +462,15 @@ void AssistEditor::Assist()
 		}
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);
-			Index<String> in_types2;
 			Vector<String> usings = Split(parser.context.namespace_using, ';');
 			for(int i = 0; i < usings.GetCount(); i++)
-				GatherItems(usings[i], false, in_types2, true);
-			GatherItems("", false, in_types2, true);
+				if(parser.current_scope != usings[i]) // Do not scan namespace already scanned
+					GatherItems(usings[i], false, in_types, true);
+			if(parser.current_scope.GetCount()) // Do not scan global namespace twice
+				GatherItems("", false, in_types, true);
 		}
 	}
+	RemoveDuplicates();
 	PopUpAssist();
 }
 

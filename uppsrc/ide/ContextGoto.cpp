@@ -297,14 +297,17 @@ void Ide::ContextGoto0(int pos)
 		q = CodeBase().Find(scope[j]);
 		if(q >= 0) {
 			const Array<CppItem>& n = CodeBase()[q];
-			for(int pass = 0; pass < 2; pass++)
-				for(int i = 0; i < n.GetCount(); i++) {
-					if((pass || !istype[j] || n[i].IsType()) && n[i].name == id) {
-						JumpToDefinition(n, i, scope[j]);
-						FindId(id);
-						return;
+			for(int anyfile = 0; anyfile < 2; anyfile++)
+				for(int pass = 0; pass < 2; pass++)
+					for(int i = 0; i < n.GetCount(); i++) {
+						if(n[i].name == id
+						   && (pass || !istype[j] || n[i].IsType())
+						   && (anyfile || findarg(n[i].filetype, FILE_CPP, FILE_C) >= 0)) {
+							JumpToDefinition(n, i, scope[j]);
+							FindId(id);
+							return;
+						}
 					}
-				}
 		}
 	}
 }

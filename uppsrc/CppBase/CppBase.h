@@ -107,6 +107,9 @@ struct FlatPP {
 
 const FlatPP& GetFlatPPFile(const char *path); // with #includes resolved
 
+String               NormalizeSourcePath(const String& path, const String& currdir);
+String               NormalizeSourcePath(const String& path);
+
 void                 ClearSources();
 const Index<String>& GetAllSources();
 void                 GatherSources(const String& master_path, const String& path_);

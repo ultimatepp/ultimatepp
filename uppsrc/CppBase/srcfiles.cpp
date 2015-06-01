@@ -7,6 +7,21 @@ NAMESPACE_UPP
 static VectorMap<String, String> sSrcFile;
 static Index<uint64>             sIncludes;
 
+String NormalizeSourcePath(const String& path, const String& currdir)
+{
+	LTIMING("NormalizeSourcePath");
+#ifdef PLATFORM_WIN32
+	return ToLower(NormalizePath(path, currdir));
+#else
+	return NormalizePath(path, currdir);
+#endif
+}
+
+String NormalizeSourcePath(const String& path)
+{
+	return NormalizeSourcePath(path, GetCurrentDirectory());
+}
+
 void ClearSources()
 {
 	sSrcFile.Clear();
@@ -26,7 +41,7 @@ const VectorMap<String, String>& GetAllSourceMasters()
 void GatherSources(const String& master_path, const String& path_, Vector<int>& parents)
 {
 	RHITCOUNT("GatherSources");
-	String path = NormalizePath(path_);
+	String path = NormalizeSourcePath(path_);
 	if(sSrcFile.Find(path) >= 0)
 		return;
 	int ii = sSrcFile.GetCount();
@@ -47,7 +62,7 @@ void GatherSources(const String& master_path, const String& path)
 {
 	LTIMING("GatherSources");
 	Vector<int> parents;
-	GatherSources(master_path, path, parents);
+	GatherSources(NormalizeSourcePath(master_path), path, parents);
 }
 
 String GetMasterFile(const String& file)

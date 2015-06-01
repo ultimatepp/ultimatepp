@@ -173,6 +173,7 @@ void Cpp::DoFlatInclude(const String& header_path)
 
 void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bool get_macros)
 {
+	LLOG("Cpp::Do " << sourcefile << ", current: " << currentfile);
 	if(visited.Find(currentfile) >= 0 || visited.GetCount() > 20000)
 		return;
 	visited.Add(currentfile);

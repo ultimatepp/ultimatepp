@@ -201,10 +201,9 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           Virtuals();
 	void           Thisbacks();
 	void           AssistItemAdd(const String& scope, const CppItem& m, int typei);
-	void           GatherItems0(const String& type, bool only_public, Index<String>& in_types,
-	                           bool types);
 	void           GatherItems(const String& type, bool only_public, Index<String>& in_types,
 	                           bool types);
+	void           RemoveDuplicates();
 
 	void           SelParam();
 	int            Ch(int q);
