@@ -733,6 +733,7 @@ void AppMain___()
 
 #ifdef _DEBUG
 	SetVppLogSizeLimit(100000000);
+	MemoryLimitKb(1000000);
 #endif
 
 #ifdef PLATFORM_POSIX
