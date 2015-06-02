@@ -164,7 +164,8 @@ void Ide::PreprocessInternal()
 	String pfn = ConfigFile(GetFileTitle(editfile) + ".i.tmp");
 	Cpp cpp;
 	StringStream in(editor.Get());
-	cpp.Preprocess(editfile, in, GetMasterFile(editfile));
+	String p = NormalizeSourcePath(editfile);
+	cpp.Preprocess(p, in, GetMasterFile(p));
 	Upp::SaveFile(pfn, cpp.output);
 	HideBottom();
 	EditFile(pfn);
