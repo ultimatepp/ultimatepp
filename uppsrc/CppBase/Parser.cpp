@@ -1737,8 +1737,6 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 {
 	LLOG("= C++ Parser ==================================== " << fn);
 	base = &_base;
-	file = PreProcess(in, *this);
-	lex.Init(~file.text);
 	err = _err;
 	filei = filei_;
 	filetype = filetype_;
@@ -1755,6 +1753,9 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 		MergeWith(n, "::", namespace_stack[i]);
 		AddNamespace(n, namespace_stack[i]);
 	}
+
+	file = PreProcess(in, *this);
+	lex.Init(~file.text);
 
 	while(lex != t_eof)
 		try {
