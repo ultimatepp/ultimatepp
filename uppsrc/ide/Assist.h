@@ -125,11 +125,19 @@ struct AssistEditor : CodeEditor, Navigator {
 	StaticRect     navigatorpane;
 	Splitter       navigator_splitter;
 	
+	struct AssistItemConvert : Convert {
+		AssistEditor *editor;
+
+		virtual Value Format(const Value& q) const;
+	}
+	assist_convert;
+	
 	Splitter       popup;
 	ArrayCtrl      assist;
 	ArrayCtrl      type;
-	Index<String>                 assist_type;
-	ArrayMap<String, CppItemInfo> assist_item;
+	Index<String>      assist_type;
+	Array<CppItemInfo> assist_item;
+	Vector<int>        assist_item_ndx;
 	RichTextCtrl   annotation_popup;
 	
 	int            assist_cursor;

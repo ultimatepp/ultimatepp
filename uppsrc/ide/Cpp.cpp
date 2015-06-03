@@ -10,7 +10,7 @@
 #define LLOG(x)
 #endif
 
-#define LTIMING(x)
+#define LTIMING(x) // DTIMING(x)
 
 static Array<CppItem> sEmpty;
 
@@ -280,7 +280,7 @@ void AssistEditor::AssistItemAdd(const String& scope, const CppItem& m, int type
 {
 	if(!iscib(*m.name) || m.name.GetCount() == 0)
 		return;
-	CppItemInfo& f = assist_item.Add(m.name);
+	CppItemInfo& f = assist_item.Add();
 	f.typei = typei;
 	f.scope = scope;
 	(CppItem&)f = m;
@@ -288,6 +288,7 @@ void AssistEditor::AssistItemAdd(const String& scope, const CppItem& m, int type
 
 void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types)
 {
+	LTIMING("GatherItems");
 	LLOG("GatherItems " << type);
 	if(in_types.Find(type) >= 0) {
 		LLOG("-> recursion, exiting");
@@ -327,13 +328,13 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 				base << im.qptype << ';';
 			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && IsNull(type)))
 			   && (!op || im.access == PUBLIC)) {
-				int q = assist_item.Find(im.name);
+/*				int q = assist_item.Find(im.name);
 				while(q >= 0) {
 					if(assist_item[q].typei != typei)
 						assist_item[q].over = true;
 					q = assist_item.FindNext(q);
 				}
-				AssistItemAdd(ntp, im, typei);
+*/				AssistItemAdd(ntp, im, typei);
 			}
 		}
 		if(!thisback) {
@@ -353,14 +354,18 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 
 bool OrderAssistItems(const CppItemInfo& a, const CppItemInfo& b)
 {
-	return CombineCompare(a.uname, b.uname)(a.typei, b.typei)(a.qitem, b.qitem) < 0;
+	return CombineCompare(a.uname, b.uname)(a.typei, b.typei)(a.qitem, b.qitem)(b.filetype, a.filetype) < 0;
 }
 
 void AssistEditor::RemoveDuplicates()
 {
 	LTIMING("RemoveDuplicates");
-	StableSort(assist_item, OrderAssistItems);
+	{ LTIMING("Sort");
+	Upp::Sort(assist_item, OrderAssistItems);
+	}
 	Vector<int> remove;
+	{
+	LTIMING("Find duplicates");
 	int i = 0;
 	while(i < assist_item.GetCount()) { // Remove identical items
 		int ii = i;
@@ -371,5 +376,7 @@ void AssistEditor::RemoveDuplicates()
 		      && assist_item[ii].scope == assist_item[i].scope)
 			remove.Add(i++);
 	}
+	}
+	LTIMING("Final remove");
 	assist_item.Remove(remove);
 }
