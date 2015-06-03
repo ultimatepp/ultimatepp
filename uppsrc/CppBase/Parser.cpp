@@ -743,8 +743,11 @@ void Parser::ParamList(Decl& d) {
 				Elipsis(d);
 				break;
 			}
-			else
-				d.param.Add() = pick(Declaration(false, false, Null, Null).Top());
+			else {
+				Array<Parser::Decl> decl = Declaration(false, false, Null, Null);
+				if(decl.GetCount())
+					d.param.Add() = pick(decl.Top());
+			}
 			if(Key(t_elipsis)) {
 				Elipsis(d);
 				break;
@@ -1305,6 +1308,18 @@ CppItem& Parser::Item(const String& scope, const String& using_namespace, const 
 	return im;
 }
 
+void Parser::AddMacro(int lineno, const String& macro)
+{
+	String name;
+	const char *s = macro;
+	while(*s && iscid(*s))
+		name.Cat(*s++);
+	CppItem& im = Item("", "", macro, name);
+	im.kind = MACRO;
+	im.line = lineno;
+	im.access = PUBLIC;
+}
+
 CppItem& Parser::Item(const String& scope, const String& using_namespace, const String& item,
                       const String& name)
 {
@@ -1650,34 +1665,6 @@ void Parser::Do()
 		Enum();
 	}
 	else
-	if(Key('#')) {
-		if(lex.Code() == t_string) {
-			String n = lex.GetText();
-			String name;
-			const char *s = n;
-			while(*s && iscid(*s))
-				name.Cat(*s++);
-			CppItem& im = Item("", context.namespace_using, n, name);
-			im.kind = MACRO;
-			s = strchr(n, '(');
-			if(s) {
-				s++;
-				String p;
-				for(;;) {
-					if(iscid(*s))
-						p.Cat(*s++);
-					else {
-						ScAdd(im.pname, p);
-						p.Clear();
-						if(*s == ')' || *s == '\0') break;
-						s++;
-					}
-				}
-			}
-			im.access = context.access;
-		}
-	}
-	else
 	if(!Scope(String(), String())) {
 		if(Key(tk_public)) {
 			context.access = PUBLIC;
@@ -1750,7 +1737,7 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 {
 	LLOG("= C++ Parser ==================================== " << fn);
 	base = &_base;
-	file = PreProcess(in);
+	file = PreProcess(in, *this);
 	lex.Init(~file.text);
 	err = _err;
 	filei = filei_;

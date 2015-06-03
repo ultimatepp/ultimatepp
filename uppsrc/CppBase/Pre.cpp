@@ -19,12 +19,14 @@ SrcFile::SrcFile() :
 {
 }
 
-SrcFile PreProcess(Stream& in) // This is not really C preprocess, only removes (or processes) comment and directives
+SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preprocess, only removes (or processes) comment and directives
 {
 	SrcFile res;
 	bool include = true;
+	int lineno = 0;
 	while(!in.IsEof()) {
 		String ln = in.GetLine();
+		lineno++;
 		SLPos(res);
 		while(*ln.Last() == '\\') {
 			ln.Trim(ln.GetLength() - 1);
@@ -61,7 +63,7 @@ SrcFile PreProcess(Stream& in) // This is not really C preprocess, only removes 
 					macro << ')';
 				}
 				if(include)
-					res.text << '#' << AsCString(macro);
+					parser.AddMacro(lineno, macro);
 			}
 			res.preprocessorLinesRemoved++;
 		}
