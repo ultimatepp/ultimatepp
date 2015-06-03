@@ -1,0 +1,14 @@
+<globals> {
+	MACRO, name: KRPANO_TOUR_XML, qitem: KRPANO_TOUR_XML, qtype: , qptype: , natural: KRPANO_TOUR_XML, line 9, using 
+	MACRO, name: TEST, qitem: TEST(x), qtype: , qptype: , natural: TEST(x), line 10, using 
+	MACRO, name: TEST2, qitem: TEST2(x, y), qtype: , qptype: , natural: TEST2(x, y), line 11, using 
+	ENUM, name: RES_IMAGE, qitem: RES_IMAGE, qtype: , qptype: , natural: enum ResourceType RES_IMAGE = 0, line 2, using 
+	ENUM, name: RES_SWF, qitem: RES_SWF, qtype: , qptype: , natural: enum ResourceType RES_SWF = 1, line 3, using 
+	ENUM, name: RES_ATTACHMENT, qitem: RES_ATTACHMENT, qtype: , qptype: , natural: enum ResourceType RES_ATTACHMENT = 2, line 4, using 
+	ENUM, name: RES_DOWNLOAD, qitem: RES_DOWNLOAD, qtype: , qptype: , natural: enum ResourceType RES_DOWNLOAD = 3, line 5, using 
+	ENUM, name: RES_SCREENSHOT, qitem: RES_SCREENSHOT, qtype: , qptype: , natural: enum ResourceType RES_SCREENSHOT = 4, line 6, using 
+	ENUM, name: RES_UPLOADED_IMAGE, qitem: RES_UPLOADED_IMAGE, qtype: , qptype: , natural: enum ResourceType RES_UPLOADED_IMAGE = 5, line 7, using 
+	ENUM, name: RES_PANORAMA_TREE_NFS, qitem: RES_PANORAMA_TREE_NFS, qtype: , qptype: , natural: enum ResourceType RES_PANORAMA_TREE_NFS = 6, line 12, using 
+}
+<locals> {
+}
