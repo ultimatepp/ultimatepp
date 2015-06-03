@@ -115,8 +115,10 @@ void AssistEditor::SyncAnnotationPopup()
 					pass = 2;
 					break;
 				}
-			if(pass == 0 && cr.StartsWith("Upp::"))
+			if(pass == 0 && cr.StartsWith("Upp::")) { // Patch until docs are converted
 				cr = cr.Mid(5);
+				cr.Replace(" Upp::", " ");
+			}
 			else
 				break;
 		}

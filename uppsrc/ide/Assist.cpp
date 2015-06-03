@@ -10,7 +10,7 @@
 #define LLOG(x)
 #endif
 
-#define LTIMING(x)
+#define LTIMING(x) // DTIMING(x)
 
 class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameLayout(Rect& r)                   { r.right -= 1; }
@@ -20,11 +20,24 @@ class IndexSeparatorFrameCls : public CtrlFrame {
 	virtual void FrameAddSize(Size& sz) { sz.cx += 2; }
 };
 
+Value AssistEditor::AssistItemConvert::Format(const Value& q) const
+{
+	int ii = q;
+	if(ii >= 0 && ii < editor->assist_item_ndx.GetCount()) {
+		ii = editor->assist_item_ndx[ii];
+		if(ii < editor->assist_item.GetCount())
+			return RawToValue(editor->assist_item[ii]);	
+	}
+	CppItemInfo empty;
+	return RawToValue(empty);
+}
+
 AssistEditor::AssistEditor()
 {
+	assist_convert.editor = this;
 	assist.NoHeader();
 	assist.NoGrid();
-	assist.AddColumn().Margin(0).SetDisplay(Single<CppItemInfoDisplay>());
+	assist.AddRowNumColumn().Margin(0).SetConvert(assist_convert).SetDisplay(Single<CppItemInfoDisplay>());
 	assist.NoWantFocus();
 	assist.WhenLeftClick = THISBACK(AssistInsert);
 	type.NoHeader();
@@ -293,12 +306,11 @@ void AssistEditor::SyncAssist()
 	LTIMING("SyncAssist");
 	String name = ReadIdBack(GetCursor(), include_assist);
 	String uname = ToUpper(name);
-	assist.Clear();
+	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
 	Buffer<bool> found(assist_item.GetCount(), false);
 	for(int pass = 0; pass < 2; pass++) {
 		VectorMap<String, int> over;
-		LTIMING("FindPass");
 		for(int i = 0; i < assist_item.GetCount(); i++) {
 			const CppItemInfo& m = assist_item[i];
 			if(!found[i] &&
@@ -306,15 +318,15 @@ void AssistEditor::SyncAssist()
 			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))) {
 					int q = include_assist ? -1 : over.Find(m.name);
 					if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
-						LTIMING("Assist Add");
 						found[i] = true;
-						assist.Add(RawToValue(m));
+						assist_item_ndx.Add(i);
 						if(q < 0)
 							over.Add(m.name, m.typei);
 					}
 			}
 		}
 	}
+	assist.SetVirtualCount(assist_item_ndx.GetCount());
 }
 
 bool AssistEditor::IncludeAssist()
@@ -375,17 +387,21 @@ bool AssistEditor::IncludeAssist()
 		}
 	}
 	IndexSort(upper_folder, folder);
+	Index<String> fnset;
 	for(int i = 0; i < folder.GetCount(); i++) {
 		String fn = folder[i];
-		CppItemInfo& f = assist_item.GetAdd(fn);
-		f.name = f.natural = fn;
-		f.access = 0;
-		f.kind = KIND_INCLUDEFOLDER;
+		if(fnset.Find(fn) < 0) {
+			fnset.Add(fn);
+			CppItemInfo& f = assist_item.Add();
+			f.name = f.natural = fn;
+			f.access = 0;
+			f.kind = KIND_INCLUDEFOLDER;
+		}
 	}
 	IndexSort(upper_file, file);
 	for(int i = 0; i < file.GetCount(); i++) {
 		String fn = file[i];
-		CppItemInfo& f = assist_item.Add(fn);
+		CppItemInfo& f = assist_item.Add();
 		f.name = f.natural = fn;
 		f.access = 0;
 		static Index<String> hdr(Split(".h;.hpp;.hh;.hxx", ';'));
@@ -420,6 +436,7 @@ void AssistEditor::Assist()
 		q--;
 	SkipSpcBack(q);
 	thisback = false;
+	LTIMING("Assist2");
 	if(Ch(q - 1) == '(') {
 		--q;
 		String id = IdBack(q);
@@ -466,12 +483,14 @@ void AssistEditor::Assist()
 				GatherItems("", false, in_types, true);
 		}
 	}
+	LTIMING("Assist3");
 	RemoveDuplicates();
 	PopUpAssist();
 }
 
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
+	LTIMING("PopUpAssist");
 	if(assist_item.GetCount() == 0)
 		return;
 	int lcy = max(16, BrowserFont().Info().GetHeight());
@@ -497,6 +516,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		return;
 //	int cy = min(300, lcy * max(type.GetCount(), assist.GetCount()));
 //	cy += 4;	
+	LTIMING("PopUpAssist2");
 	int cy = VertLayoutZoom(304);
 	cy += HeaderCtrl::GetStdHeight();
 	assist.SetLineCy(lcy);
@@ -540,7 +560,7 @@ void AssistEditor::Complete()
 	CloseAssist();
 	Vector<String> id = GetFileIds();
 	for(int i = 0; i < id.GetCount(); i++) {
-		CppItemInfo& f = assist_item.Add(id[i]);
+		CppItemInfo& f = assist_item.Add();
 		f.name = id[i];
 		f.natural = id[i];
 		f.access = 0;
@@ -621,7 +641,16 @@ void AssistEditor::Abbr()
 void AssistEditor::AssistInsert()
 {
 	if(assist.IsCursor()) {
-		const CppItemInfo& f = ValueTo<CppItemInfo>(assist.Get(0));
+		int ii = assist.GetCursor();
+		if(ii <= 0 || ii >= assist_item_ndx.GetCount())
+			return;
+		ii = assist_item_ndx[ii];
+		if(ii >= assist_item.GetCount()) {
+			CloseAssist();
+			IgnoreMouseUp();
+			return;
+		}
+		const CppItemInfo& f = assist_item[ii];
 		if(include_assist) {
 			int ln = GetLine(GetCursor());
 			int pos = GetPos(ln);
