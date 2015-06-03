@@ -311,7 +311,9 @@ struct SrcFile {
 	int commentLinesRemoved;
 };
 
-SrcFile PreProcess(Stream& in);
+struct Parser;
+
+SrcFile PreProcess(Stream& in, Parser& parser);
 
 enum Kind {
 	STRUCT,
@@ -579,6 +581,8 @@ struct Parser {
 	typedef Parser CLASSNAME;
 
 public:
+	void AddMacro(int lineno, const String& macro);
+
 	struct FunctionStat
 	{
 		FunctionStat(const String & scope,
