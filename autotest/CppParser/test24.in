@@ -1,0 +1,13 @@
+enum ResourceType {
+	RES_IMAGE = 0,
+	RES_SWF = 1,
+	RES_ATTACHMENT = 2,
+	RES_DOWNLOAD = 3,
+	RES_SCREENSHOT = 4,
+	RES_UPLOADED_IMAGE = 5,
+
+#define KRPANO_TOUR_XML "tour.xml"
+#define TEST(x) x * x
+#define TEST2(x, y) x / y
+	RES_PANORAMA_TREE_NFS = 6, //New(72) Filesystem Tree with 'tour.xml' in root.
+};

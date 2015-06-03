@@ -1,3 +1,6 @@
+<globals> {
+	MACRO, name: _DWORDLONG_, qitem: _DWORDLONG_, qtype: , qptype: , natural: _DWORDLONG_, line 41, using 
+}
 _LARGE_INTEGER {
 	STRUCT, name: _LARGE_INTEGER, qitem: struct, qtype: _LARGE_INTEGER, qptype: , natural: , line 1, using 
 	STRUCT, name: _LARGE_INTEGER, qitem: union, qtype: _LARGE_INTEGER, qptype: , natural: union _LARGE_INTEGER, line 3, using 
@@ -52,9 +55,6 @@ LUID {
 }
 PLUID {
 	TYPEDEF, name: PLUID, qitem: typedef, qtype: _LUID, qptype: , natural: typedef struct _LUID { DWORD LowPart; LONG HighPart; } *PLUID, line 38, using 
-}
-<globals> {
-	MACRO, name: _DWORDLONG_, qitem: _DWORDLONG_, qtype: , qptype: , natural: _DWORDLONG_, line 41, using 
 }
 DWORDLONG {
 	TYPEDEF, name: DWORDLONG, qitem: typedef, qtype: ULONGLONG, qptype: , natural: typedef ULONGLONG DWORDLONG, line 42, using 
