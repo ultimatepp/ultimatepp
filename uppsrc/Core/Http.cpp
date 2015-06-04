@@ -445,7 +445,7 @@ void HttpRequest::Start()
 	LLOG("Using " << (use_proxy ? "proxy " : "") << h << ":" << p);
 
 	StartPhase(DNS);
-	if(IsNull(GetTimeout())) {
+	if(IsNull(GetTimeout()) && timeout == INT_MAX) {
 		if(WhenWait) {
 			addrinfo.Start(h, p);
 			while(addrinfo.InProgress()) {
@@ -471,6 +471,8 @@ void HttpRequest::Dns()
 			return;
 		}
 		Sleep(1);
+		if(msecs(start_time) >= timeout)
+			break;
 	}
 }
 
