@@ -159,6 +159,8 @@ struct Ide : public IdeContext, public MakeBuild {
 
 	virtual bool IsPersistentFindReplace() { return false; }
 
+	virtual String    IdeGetIncludePath() {}
+
 	void ExportMakefile(const String& ep);
 	void ExportProject(const String& ep, bool all, bool deletedir = true);
 
