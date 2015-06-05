@@ -642,7 +642,7 @@ void AssistEditor::AssistInsert()
 {
 	if(assist.IsCursor()) {
 		int ii = assist.GetCursor();
-		if(ii <= 0 || ii >= assist_item_ndx.GetCount())
+		if(ii < 0 || ii >= assist_item_ndx.GetCount())
 			return;
 		ii = assist_item_ndx[ii];
 		if(ii >= assist_item.GetCount()) {
