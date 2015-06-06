@@ -38,7 +38,7 @@ ing[@(0.0.255) `&]_path, Image[@(0.0.255) `&]_result)&]
 for additional resolving of file icon. Note that FileSel, when 
 closed/destroyed, does not wait for this function to finish, 
 so it should not rely on any data outside of function. Only available 
-when MT is active.devious &]
+when MT is active. &]
 [s3; &]
 [s4; &]
 [s5;:FileSel`:`:Serialize`(Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
@@ -293,6 +293,7 @@ ath], [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 name],
 the moment be left to its default values (they are only used 
 internally). If [%-*@3 name] or icon [%-*@3 m] is not specified, 
 they are created based on [%-*@3 path].&]
+[s3;%% &]
 [s4; &]
 [s5;:FileSel`:`:AddPlaceSeparator`(`): [_^FileSel^ FileSel][@(0.0.255) `&]_[* AddPlaceSepar
 ator]()&]
