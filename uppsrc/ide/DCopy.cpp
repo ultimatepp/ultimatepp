@@ -51,9 +51,12 @@ void AssistEditor::DCopy()
 	int best = 0;
 	const Index<String>& ns = CodeBase().namespaces;
 	for(int i = 0; i < ns.GetCount(); i++) {
-		String h = ns[i] + "::";
-		if(h.GetCount() > best && cls.StartsWith(h))
-			best = h.GetCount();			
+		String h = ns[i];
+		for(int pass = 0; pass < 2; pass++) {
+			if(h.GetCount() > best && cls.StartsWith(h))
+				best = h.GetCount();
+			h << "::";
+		}
 	}
 	cls.Remove(0, best);
 	CppBase cpp;
