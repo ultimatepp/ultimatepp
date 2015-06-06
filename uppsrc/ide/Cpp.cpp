@@ -221,13 +221,7 @@ void AssistEditor::ExpressionType(const String& type, const String& usings, cons
 	Index<String> visited_bases;
 	ExpressionType(type, usings, xp, ii, typeset, variable, true, visited_bases, lvl + 1);
 }
-/*
-void AssistEditor::ExpressionType(const String& type, const Vector<String>& xp, int ii,
-                                  Index<String>& typeset)
-{
-	ExpressionType(type, xp, ii, typeset, false);
-}
-*/
+
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
 {
 	String type;
