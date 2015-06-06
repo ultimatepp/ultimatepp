@@ -71,11 +71,6 @@ void TextsTab::Init(ScatterCtrl& scatter) {
 	bottomMargin <<= scatter.GetPlotAreaBottomMargin();
 	bottomMargin <<= THISBACK(Change);
 	
-	mouseHandlingX <<= scatter.GetMouseHandlingX();
-	mouseHandlingX <<= THISBACK(Change);
-	mouseHandlingY <<= scatter.GetMouseHandlingY();
-	mouseHandlingY <<= THISBACK(Change);
-	
 	Change();
 }
 	
@@ -85,8 +80,6 @@ void TextsTab::Change() {
 	scatter.SetTitle(title);
     scatter.SetLabels(xLabel, yLabel, yLabel2);
 	scatter.SetPlotAreaMargin(~leftMargin, ~rightMargin, ~topMargin, ~bottomMargin);
-
-	scatter.SetMouseHandling(mouseHandlingX, mouseHandlingY);
 
 	scatter.SetModify();
 	scatter.Refresh();

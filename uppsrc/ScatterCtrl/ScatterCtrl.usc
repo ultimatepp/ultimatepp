@@ -20,8 +20,6 @@ ctrl ScatterCtrl {
 	GetMinSize() {sz.cx=150; sz.cy = 100; return sz; }
 	GetStdSize() {sz.cx=300; sz.cy = 200; return sz; }
 	
-	Frame  SetFrame;
-	Color  SetColor = :White;
 	Text SetTitle;
 	Font SetTitleFont;
 	Color SetTitleColor = :Black;
@@ -54,6 +52,9 @@ ctrl ScatterCtrl {
 	bool SetFastViewX = false;
 	bool SetSequentialXAll = false;
 
+	Frame  SetFrame;
+	Color  SetColor = :White;
+	
 	Paint(w) {          
 		r = GetRect();
 		w.DrawRect(r, .SetColor);

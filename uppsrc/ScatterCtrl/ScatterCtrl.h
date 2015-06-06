@@ -165,6 +165,11 @@ public:
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
 	bool GetMouseHandlingX()								{return mouseHandlingX;}
 	bool GetMouseHandlingY()								{return mouseHandlingY;}
+private:
+	void ChangeMouseHandlingX()								{mouseHandlingX = !mouseHandlingX;}
+	void ChangeMouseHandlingY()								{mouseHandlingY = !mouseHandlingY;}
+
+public:
 	ScatterCtrl& ShowInfo(bool show = true)					{showInfo = show;		 return *this;}
 	
 #ifdef PLATFORM_WIN32
@@ -259,9 +264,11 @@ private:
 	Array<KeyBehavior> keyBehavior;
 	
 	void ProcessPopUp(const Point & pt);
+	bool PointInPlot(Point &pt);
 
 	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point, dword);
+	virtual void LeftDouble(Point p, dword);
 	virtual void LeftUp(Point, dword);
 	virtual void MiddleDown(Point, dword);
 	virtual void MouseMove(Point, dword);

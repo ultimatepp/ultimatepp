@@ -280,11 +280,16 @@ bool ScatterCtrl::ProcessKey(int key)
 	return processed;
 }
 
+bool ScatterCtrl::PointInPlot(Point &pt) 
+{
+	return 	hPlotLeft <= pt.x && 				pt.x <= (GetSize().cx - hPlotRight) && 
+		  	(vPlotTop + titleHeight) <= pt.y && pt.y <= (GetSize().cy - vPlotBottom);
+}
+
 void ScatterCtrl::LabelPopUp(bool down, Point &pt) 
 {
 	if (down) {
-		if(showInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-		  			   (vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		if(showInfo && PointInPlot(pt)) {
 			popText.AppearOnly(this);
 			
 			isLabelPopUp = true;
@@ -312,8 +317,7 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 void ScatterCtrl::ZoomWindow(bool down, Point &pt) 
 {
 	if (down) {
-		if (hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-		  				(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		if (PointInPlot(pt)) {
 			isZoomWindow = true;
 			if (IsNull(popLT))
 				popLT = pt;
@@ -354,8 +358,7 @@ void ScatterCtrl::Scrolling(bool down, Point &pt, bool isOut)
 {
 	static Image mouseImg;
 	if (down) {
-		if((mouseHandlingX || mouseHandlingY) && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-			(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		if((mouseHandlingX || mouseHandlingY) && PointInPlot(pt)) {
 			butDownX = pt.x;
 			butDownY = pt.y;	
 			isScrolling = true;
@@ -406,6 +409,14 @@ void ScatterCtrl::LeftDown(Point pt, dword keyFlags)
 		SetFocus();
 	isLeftDown = true;
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false);
+}
+
+void ScatterCtrl::LeftDouble(Point pt, dword)
+{
+	if(!HasFocus()) 
+		SetFocus();
+	if (!PointInPlot(pt))
+		MenuBar::Execute(THISBACK(ContextMenu));
 }
 
 void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
@@ -463,8 +474,7 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 			ScatterDraw::Scroll(factorX, -factorY);
 	} 
 	if(isLabelPopUp) {
-		if (showInfo && hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-						(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		if (showInfo && PointInPlot(pt)) {
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
@@ -473,8 +483,7 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 			Refresh();
 		}
 	} else if (isZoomWindow) {
-		if (hPlotLeft <= pt.x && pt.x <= GetSize().cx - hPlotRight && 
-						(vPlotTop + titleHeight) <= pt.y && pt.y <= GetSize().cy - vPlotBottom) {
+		if (PointInPlot(pt)) {
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
@@ -534,14 +543,19 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK1(FitToData, mouseHandlingY));
 		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
 		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY));
+	}
+	bar.Add(t_("Attach X axis"), Null, THISBACK(ChangeMouseHandlingX)).Check(!mouseHandlingX);
+	if (mouseHandlingX) {
 		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT);
 		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT);
-		if (mouseHandlingY) {
-			bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP);
-			bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN);			
-		}
-		bar.Separator();
 	}
+	bar.Add(t_("Attach Y axis"), Null, THISBACK(ChangeMouseHandlingY)).Check(!mouseHandlingY);
+	if (mouseHandlingY) {
+		bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP);
+		bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN);			
+	}
+	if (mouseHandlingX || mouseHandlingY)
+		bar.Separator();
 #ifndef _DEBUG
 	if (showPropDlg)
 #endif	
