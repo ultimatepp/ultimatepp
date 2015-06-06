@@ -21,6 +21,12 @@ esES("")
 euES("")
 frFR("")
 
+T_("Attach X axis")
+caES("")
+esES("Fijar eje X")
+euES("")
+frFR("")
+
 T_("Scroll Left")
 caES("Moure a l'esquerra")
 esES("Mover a la izquierda")
@@ -32,6 +38,12 @@ caES("More a la dreta")
 esES("Mover a la derecha")
 euES("Korritu eskubidea")
 frFR("Faites d\303\251filer \303\240 droite")
+
+T_("Attach Y axis")
+caES("")
+esES("Fijar eje Y")
+euES("")
+frFR("")
 
 T_("Scroll Up")
 caES("Moure amunt")
@@ -251,31 +263,19 @@ frFR("\303\211tiquette Y:")
 
 T_("Left margin:")
 caES("")
-esES("")
+esES("Margen izquierdo:")
 euES("")
 frFR("")
 
 T_("Right margin:")
 caES("")
-esES("")
+esES("Margen derecho:")
 euES("")
 frFR("")
 
 T_("Bottom margin:")
 caES("")
-esES("")
-euES("")
-frFR("")
-
-T_("Y mouse handling enabled")
-caES("")
-esES("")
-euES("")
-frFR("")
-
-T_("X mouse handling enabled")
-caES("")
-esES("")
+esES("Margen inferior:")
 euES("")
 frFR("")
 
@@ -459,11 +459,3 @@ esES("Primaria")
 euES("Lehen")
 frFR("Primaire")
 
-
-// Obsolete
-
-T_("General")
-caES("General")
-esES("General")
-euES("Oro har")
-frFR("G\303\251n\303\251ral")
