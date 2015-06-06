@@ -1,0 +1,11 @@
+description "intended to test umk compilation\377";
+
+uses
+	umk;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+

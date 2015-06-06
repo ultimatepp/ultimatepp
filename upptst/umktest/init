@@ -1,0 +1,4 @@
+#ifndef _umktest_icpp_init_stub
+#define _umktest_icpp_init_stub
+#include "umk/init"
+#endif
