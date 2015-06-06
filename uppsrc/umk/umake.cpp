@@ -47,6 +47,8 @@ int IsCommaOrColon(int c)
 	return c == ':' || c == ',' ? c : 0;
 }
 
+#ifdef flatMAIN
+
 CONSOLE_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
@@ -232,3 +234,5 @@ CONSOLE_APP_MAIN
 		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
 		     "See http://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");	
 }
+
+#endif
