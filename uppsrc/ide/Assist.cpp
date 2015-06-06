@@ -265,6 +265,8 @@ Vector<String> AssistEditor::ReadBack(int q)
 			continue;
 		}
 		else {
+//			if(findarg(c, '(', '[', '{') >= 0)
+//				break;
 			if(c == ']') {
 				if(wasid)
 					break;
@@ -438,19 +440,12 @@ void AssistEditor::Assist()
 	thisback = false;
 	LTIMING("Assist2");
 	if(Ch(q - 1) == '(') {
-		--q;
-		String id = IdBack(q);
-		if(id == "THISBACK") {
+		int qq = q - 1;
+		String id = IdBack(qq);
+		int tn = findarg(id, "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4");
+		if(tn >= 0) {
 			thisback = true;
-			thisbackn = false;
-			GatherItems(parser.current_scope, false, in_types, false);
-			RemoveDuplicates();
-			PopUpAssist();
-			return;
-		}
-		if(id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4") {
-			thisback = true;
-			thisbackn = true;
+			thisbackn = tn > 0;
 			GatherItems(parser.current_scope, false, in_types, false);
 			RemoveDuplicates();
 			PopUpAssist();
