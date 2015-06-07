@@ -4,6 +4,8 @@
 
 String FormatNest(String nest)
 {
+	if(*nest == '~')
+		nest = nest.Mid(1);
 	int q = nest.Find("@");
 	if(q >= 0) {
 		nest.Trim(q);
@@ -304,6 +306,7 @@ void Navigator::NavItem::Set(const CppItem& m)
 	line = m.line;
 	file = m.file;
 	impl = m.impl;
+	pass = false;
 }
 
 void Navigator::NavigatorDisplay::PaintBackground(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
@@ -395,6 +398,8 @@ void Navigator::NavGroup(bool local)
 			g.Trim(max(g.ReverseFind("::"), 0));
 		if(IsNull(g))
 			g = "\xff" + GetSourceFilePath(m.decl_file);
+		if(m.pass)
+			g = "~" + g; // Second pass contains less matching items, sort it after the first pass
 		if(local)
 			if(gitem.GetCount() && gitem.TopKey() == g)
 				gitem.Top().Add(&m);
@@ -484,48 +489,60 @@ void Navigator::Search()
 	else {
 		navigator_global = true;
 		const CppBase& b = CodeBase();
+		int ii = 0;
+		String usearch_nest = ToUpper(search_nest);
+		String usearch_name = ToUpper(search_name);
 		ArrayMap<String, NavItem> imap;
 		bool local = sorting && IsNull(s);
-		for(int i = 0; i < b.GetCount(); i++) {
-			String nest = b.GetKey(i);
-//			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
-//			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
-			bool foundnest = (wholeclass ? nest == search_nest
-			                             : nest.Find(search_nest) >= 0) && *nest != '@';
-			if(local || foundnest || both) {
-				const Array<CppItem>& ci = b[i];
-				for(int j = 0; j < ci.GetCount(); j++) {
-					const CppItem& m = ci[j];
-//					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
-					if(local ? m.file == fileii : *m.uname != '@' && m.name.Find(search_name) >= 0 || both && foundnest) {
-						String key = nest + '\1' + m.qitem;
-						int q = imap.Find(key);
-						if(q < 0) {
-							NavItem& ni = imap.Add(key);
-							ni.Set(m);
-							ni.nest = nest;
-							ni.decl_line = ni.line;
-							ni.decl_file = ni.file;
-							ni.decl = !ni.impl;
-							NavLine& l = ni.linefo.Add();
-							l.impl = m.impl;
-							l.file = m.file;
-							l.line = m.line;
-						}
-						else {
-							NavItem& mm = imap[q];
-							String n = mm.natural;
-							if(!m.impl &&
-							  (!mm.decl
-							    || CombineCompare(mm.decl_file, m.file)(mm.decl_line, m.line) < 0)) {
-									mm.decl = true;
-									mm.decl_line = m.line;
-									mm.decl_file = m.file;
+		for(int pass = 0; pass < 2; pass++) {
+			for(int i = 0; i < b.GetCount(); i++) {
+				String nest = b.GetKey(i);
+	//			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
+	//			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
+				bool foundnest = (wholeclass ? pass ? ToUpper(nest) == usearch_nest 
+				                                    : nest == search_nest
+				                             : (pass ? ToUpper(nest).Find(usearch_nest) >= 0
+				                                     : nest.Find(search_nest) >= 0))
+				                 && *nest != '@';
+				if(local || foundnest || both) {
+					const Array<CppItem>& ci = b[i];
+					for(int j = 0; j < ci.GetCount(); j++) {
+						const CppItem& m = ci[j];
+	//					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
+						if(local ? m.file == fileii
+						         : *m.uname != '@' && (pass ? m.uname.Find(usearch_name) >= 0
+						                                    : m.name.StartsWith(search_name))
+						           || both && foundnest) {
+							String key = nest + '\1' + m.qitem;
+							int q = imap.Find(key);
+							if(q < 0) {
+								NavItem& ni = imap.Add(key);
+								ni.Set(m);
+								ni.nest = nest;
+								ni.decl_line = ni.line;
+								ni.decl_file = ni.file;
+								ni.decl = !ni.impl;
+								ni.pass = pass;
+								NavLine& l = ni.linefo.Add();
+								l.impl = m.impl;
+								l.file = m.file;
+								l.line = m.line;
 							}
-							NavLine& l = mm.linefo.Add();
-							l.impl = m.impl;
-							l.file = m.file;
-							l.line = m.line;
+							else {
+								NavItem& mm = imap[q];
+								String n = mm.natural;
+								if(!m.impl &&
+								  (!mm.decl
+								    || CombineCompare(mm.decl_file, m.file)(mm.decl_line, m.line) < 0)) {
+										mm.decl = true;
+										mm.decl_line = m.line;
+										mm.decl_file = m.file;
+								}
+								NavLine& l = mm.linefo.Add();
+								l.impl = m.impl;
+								l.file = m.file;
+								l.line = m.line;
+							}
 						}
 					}
 				}
