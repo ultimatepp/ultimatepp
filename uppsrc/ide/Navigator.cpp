@@ -14,7 +14,7 @@ String FormatNest(String nest)
 
 int CharFilterNavigator(int c)
 {
-	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? ToUpper(c) : 0;
+	return c == ':' ? '.' : IsAlNum(c) || c == '_' || c == '.' ? c : 0;
 }
 
 void PaintTeXt(Draw& w, int& x, int y, const String& text, Font font, Color ink)
@@ -488,13 +488,16 @@ void Navigator::Search()
 		bool local = sorting && IsNull(s);
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
-			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
-			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
+//			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
+//			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
+			bool foundnest = (wholeclass ? nest == search_nest
+			                             : nest.Find(search_nest) >= 0) && *nest != '@';
 			if(local || foundnest || both) {
 				const Array<CppItem>& ci = b[i];
 				for(int j = 0; j < ci.GetCount(); j++) {
 					const CppItem& m = ci[j];
-					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
+//					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
+					if(local ? m.file == fileii : *m.uname != '@' && m.name.Find(search_name) >= 0 || both && foundnest) {
 						String key = nest + '\1' + m.qitem;
 						int q = imap.Find(key);
 						if(q < 0) {
