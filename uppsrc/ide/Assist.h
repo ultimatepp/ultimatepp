@@ -25,10 +25,11 @@ struct Navigator {
 		int16           at;
 		int             line;
 		int             file;
-		bool            impl;
 		int             decl_line; // header position
 		int             decl_file;
+		bool            impl;
 		bool            decl;
+		bool            pass;
 		Vector<NavLine> linefo;
 		
 		void Set(const CppItem& m);
