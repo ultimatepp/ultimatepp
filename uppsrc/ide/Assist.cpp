@@ -466,7 +466,7 @@ void AssistEditor::Assist()
 			Index<String> typeset = EvaluateExpressionType(parser, xp);
 			for(int i = 0; i < typeset.GetCount(); i++)
 				if(typeset[i].GetCount())
-					GatherItems(typeset[i], true, in_types, false);
+					GatherItems(typeset[i], xp[0] != "this", in_types, false);
 		}
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);
