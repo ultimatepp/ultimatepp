@@ -20,9 +20,9 @@ const VectorMap<String, String>& GetNamespaceMacros();
 const Index<String>&             GetNamespaceEndMacros();
 
 struct CppMacro : Moveable<CppMacro> {
-
 	String        param;
 	String        body;
+	byte          md5[16];
 	
 	String Define(const char *s);
 	void   SetUndef()                { body = "\x7f"; }
