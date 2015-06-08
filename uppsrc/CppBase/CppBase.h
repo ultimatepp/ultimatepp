@@ -30,7 +30,7 @@ struct CppMacro : Moveable<CppMacro> {
 
 	String Expand(const Vector<String>& p, const Vector<String>& ep) const;
 
-	void   Serialize(Stream& s)      { s % param % body; }
+	void   Serialize(Stream& s);
 	
 	String ToString() const;
 };
@@ -67,15 +67,17 @@ struct PPFile { // contains "macro extract" of file, only info about macros defi
  	Time           filetime;
 	Array<PPItem>  item;
 	Index<String>  includes;
-	
+	Vector<String> keywords;
+	String         md5sum;
+
 	void Parse(Stream& in);
-	void Serialize(Stream& s) { s % filetime % item % includes; }
+	void Serialize(Stream& s) { s % filetime % item % includes % keywords % md5sum; }
 	void Dump() const;
 
 private:
 	Vector<int>    ppmacro;   // indicies of macros in sAllMacros
 
-	void CheckEndNamespace(Vector<int>& namespace_block, int level);
+	void CheckEndNamespace(Vector<int>& namespace_block, int level, Md5Stream& md5);
 };
 
 PPMacro            *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti);
@@ -102,7 +104,7 @@ bool   IncludesFile(const String& parent_path, const String& header_path);
 struct FlatPP {
 	Index<int>    segment_id;
 	Index<String> usings;
-//	Index<String> includes;
+	Index<String> includes;
 };
 
 const FlatPP& GetFlatPPFile(const char *path); // with #includes resolved
@@ -135,11 +137,7 @@ struct Cpp {
 	Index<String>               namespace_using; // 'using namespace' up to start of file
 	Vector<String>              namespace_stack; // namspace up to start of file
 	
-	Index<String>               ids; // all ids in the file
-	
-	String                      usings; // usings combined for the purpose of change detection ("CheckFile")
-	String                      namespaces; // namespace_stack at the beginning of file, combined, for detection
-	String                      includes; // all file includes, combined, for detection
+	Md5Stream                   md5;
 	
 	void   Define(const char *s);
 
@@ -151,8 +149,7 @@ struct Cpp {
 	bool   Preprocess(const String& sourcefile, Stream& in, const String& currentfile,
 	                  bool just_get_macros = false);
 
-	VectorMap<String, String> GetDefinedMacros();
-	String GetIncludedMacroValues(const Vector<String>& id);
+	String GetDependeciesMd5(const Vector<String>& m);
 	
 	typedef Cpp CLASSNAME;
 };

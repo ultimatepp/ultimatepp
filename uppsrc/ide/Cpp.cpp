@@ -121,7 +121,7 @@ void AssistEditor::Context(Parser& parser, int pos)
 {
 	LTIMING("Context");
 
-	theide->ScanFile(false);
+	theide->ScanFile();
 	String s = Get(0, pos);
 	StringStream ss(s);
 

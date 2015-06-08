@@ -62,6 +62,12 @@ String CppMacro::ToString() const
 	return r;
 }
 
+void CppMacro::Serialize(Stream& s)
+{
+	s % param % body;
+	s.SerializeRaw(md5, 16);
+}
+
 String CppMacro::Expand(const Vector<String>& p, const Vector<String>& ep) const
 {
 	String r;
