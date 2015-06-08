@@ -36,6 +36,10 @@ String CppMacro::Define(const char *s)
 		while(!p.IsEof() && !p.IsChar2('/', '/'))
 			p.SkipTerm();
 		body = String(b, p.GetPtr());
+		Md5Stream m;
+		m.Put(param);
+		m.Put(body);
+		m.Finish(md5);
 	}
 	catch(CParser::Error) {
 		return Null;
