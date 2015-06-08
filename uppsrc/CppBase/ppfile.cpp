@@ -132,11 +132,12 @@ const CppMacro *FindMacro(const String& id, Index<int>& segment_id, int& segment
 	return m ? &m->macro : NULL;
 }
 
-void PPFile::CheckEndNamespace(Vector<int>& namespace_block, int level)
+void PPFile::CheckEndNamespace(Vector<int>& namespace_block, int level, Md5Stream& md5)
 {
 	if(namespace_block.GetCount() && namespace_block.Top() == level) {
 		namespace_block.Drop();
 		item.Add().type = PP_NAMESPACE_END;
+		md5.Put('.');
 	}
 }
 
@@ -155,7 +156,9 @@ void PPFile::Parse(Stream& in)
 	Vector<int> namespace_block;
 	bool next_segment = true;
 	Index<int> local_segments;
+	keywords.Clear();
 	int linei = 0;
+	Md5Stream md5;
 	while(!in.IsEof()) {
 		String l = in.GetLine();
 		while(*l.Last() == '\\' && !in.IsEof()) {
@@ -182,12 +185,19 @@ void PPFile::Parse(Stream& in)
 						m.line = linei;
 						m.macro = def;
 						ppmacro.Add(sAllMacros.Put(id, m));
+						md5.Put("#", 1);
+						md5.Put(id);
+						md5.Put(0);
+						md5.Put(m.macro.md5, 16);						
 					}
 				}
 				else
 				if(p.Id("undef")) {
 					if(p.IsId()) {
 						String id = p.ReadId();
+						md5.Put("#", 1);
+						md5.Put(id);
+						md5.Put(1);
 						int segmenti = -1;
 						PPMacro *um = FindPPMacro(id, local_segments, segmenti);
 						if(um) { // heuristic: only local undefs are allowed
@@ -217,6 +227,8 @@ void PPFile::Parse(Stream& in)
 						item.Drop();
 					else
 						includes.FindAdd(m.text);
+					md5.Put('@');
+					md5.Put(m.text);
 				}
 			}
 			else {
@@ -238,6 +250,9 @@ void PPFile::Parse(Stream& in)
 								m.type = type;
 								m.text = id;
 							}
+							md5.Put('$');
+							md5.Put(type);
+							md5.Put(id);
 						}
 						was_namespace = was_using = false;
 					}
@@ -262,20 +277,23 @@ void PPFile::Parse(Stream& in)
 								m.text = namespace_macro[q];
 								namespace_block.Add(level);
 								level++;
+								md5.Put('%');
+								md5.Put(id);
 							}
 							else {
 								q = namespace_end_macro.Find(id);
 								if(q >= 0) {
 									level--;
-									CheckEndNamespace(namespace_block, level);
+									CheckEndNamespace(namespace_block, level, md5);
 								}
 							}
+							keywords.Add(id);
 						}
 						else
 						if(p.Char('}')) {
 							if(level > 0) {
 								level--;
-								CheckEndNamespace(namespace_block, level);
+								CheckEndNamespace(namespace_block, level, md5);
 							}
 						}
 						else
@@ -290,6 +308,17 @@ void PPFile::Parse(Stream& in)
 		catch(...) {}
 		linei++;
 	}
+	md5sum = md5.FinishString();
+	Sort(keywords);
+	Vector<int> remove;
+	int i = 0;
+	while(i < keywords.GetCount()) { // Remove identical items
+		int ii = i;
+		i++;
+		while(i < keywords.GetCount() && keywords[ii] == keywords[i])
+			remove.Add(i++);
+	}
+	keywords.Remove(remove);
 }
 
 void PPFile::Dump() const
@@ -418,6 +447,7 @@ const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 	const PPFile& pp = GetPPFile(path);
 	int n = visited.GetCount();
 	visited.FindAdd(path);
+	fp.includes.FindAdd(path);
 	for(int i = 0; i < pp.item.GetCount(); i++) {
 		const PPItem& m = pp.item[i];
 		if(m.type == PP_INCLUDE) {
@@ -427,9 +457,11 @@ const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 				visited.Add(s);
 				const FlatPP& pp = GetFlatPPFile(s, visited);
 				for(int i = 0; i < pp.segment_id.GetCount(); i++)
-					fp.segment_id.Add(pp.segment_id[i]);
+					fp.segment_id.FindAdd(pp.segment_id[i]);
 				for(int i = 0; i < pp.usings.GetCount(); i++)
-					fp.usings.Add(pp.usings[i]);
+					fp.usings.FindAdd(pp.usings[i]);
+				for(int i = 0; i < pp.includes.GetCount(); i++)
+					fp.includes.FindAdd(pp.includes[i]);
 			}
 		}
 		else
@@ -450,17 +482,29 @@ const FlatPP& GetFlatPPFile(const char *path)
 	return GetFlatPPFile(path, visited);
 }
 
-String GetAllMacros(const String& id, Index<int>& segment_id)
+void GetAllMacros(Md5Stream& md5, const String& id, Index<int>& segment_id)
 {
+	Vector< Tuple2<int, int> > pos;
+	Vector<const CppMacro *> def;
 	String r;
 	int q = sAllMacros.Find(id);
 	while(q >= 0) {
 		const PPMacro& m = sAllMacros[q];
-		if(segment_id.Find(m.segment_id) >= 0)
-			r << '\n' << m.macro;
+		int si = segment_id.Find(m.segment_id);
+		if(si >= 0) {
+			pos.Add(MakeTuple(si, m.line));
+			def.Add(&m.macro);
+		}
 		q = sAllMacros.FindNext(q);
 	}
-	return r;
+	IndexSort(pos, def);
+	int n = def.GetCount();
+	if(n) {
+		md5.Put(&n, sizeof(int));
+		md5.Put(id);
+		for(int i = 0; i < n; i++)
+			md5.Put(def[i]->md5, 16);
+	}
 }
 
 static VectorMap<String, String> s_namespace_macro;

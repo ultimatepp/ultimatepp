@@ -8,12 +8,13 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
+#define CPP_CODEBASE_VERSION 314
+
 ArrayMap<String, SourceFileInfo> source_file;
 
 void SourceFileInfo::Serialize(Stream& s)
 {
-	s % time % check_info % ids % included_id_macros % namespace_info % using_info
-	  % defined_macros % defined_namespace_info % includes;
+	s % time % check_info % dependencies_md5sum % md5sum;
 	if(s.IsLoading()) {
 		depends.Clear();
 		depends_time = Null;
@@ -83,8 +84,6 @@ void SerializeCodeBase(Stream& s)
 	SerializePPFiles(s);
 	CodeBase().Serialize(s);
 }
-
-#define CPP_CODEBASE_VERSION 10
 
 void SaveCodeBase()
 {
@@ -234,16 +233,14 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 	FileIn in(path);
 	String npath = NormalizeSourcePath(path);
 	pp.Preprocess(npath, in, GetMasterFile(npath), true);
-	String included_id_macros = pp.GetIncludedMacroValues(f.ids.GetKeys());
-	if(f.included_id_macros != included_id_macros) {
-		f.depends_time = Null;
-		f.depends.Clear();
-		return false;
-	}
+	String md5 = pp.GetDependeciesMd5(GetPPFile(path).keywords);
+	bool r = f.dependencies_md5sum == md5;
+	f.depends.Clear();
+	f.dependencies_md5sum = md5;
 	for(int i = 0; i < pp.visited.GetCount(); i++)
 		f.depends.Add(sTimePath.FindAdd(pp.visited[i]));
 	f.depends_time = GetDependsTime(f.depends);
-	return true;
+	return r;
 }
 
 void ParseFiles(Progress& pi, const Index<int>& parse_file)
@@ -258,8 +255,7 @@ void ParseFiles(Progress& pi, const Index<int>& parse_file)
 		FileIn fi(path);
 		LDUMP(path);
 		LDUMP(parse_file[i]);
-		bool dummy;
-		ParseSrc(fi, parse_file[i], callback1(BrowserScanError, i), true, false, dummy, dummy);
+		ParseSrc(fi, parse_file[i], callback1(BrowserScanError, i));
 	}
 }
 
@@ -305,12 +301,8 @@ void UpdateCodeBase(Progress& pi)
 	UpdateCodeBase2(pi);
 }
 
-Vector<String> ParseSrc(Stream& in, int file, Callback2<int, const String&> error,
-                        bool do_macros, bool get_changes,
-                        bool& namespace_info_changed,
-                        bool& includes_changed)
+void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
 {
-	Vector<String> cm;
 	String path = GetSourceFilePath(file);
 	LLOG("====== Parse " << file << ": " << path);
 	Vector<String> pp;
@@ -333,45 +325,10 @@ Vector<String> ParseSrc(Stream& in, int file, Callback2<int, const String&> erro
 		cpp.Preprocess(path, in, GetMasterFile(GetSourceFilePath(file)));
 		filetype = decode(ext, ".h", FILE_H, ".hpp", FILE_HPP,
 		                       ".cpp",FILE_CPP, ".c", FILE_C, FILE_OTHER);
-		if(do_macros) {
-			sfi.ids = cpp.ids.PickKeys();
-			sfi.included_id_macros = cpp.GetIncludedMacroValues(sfi.ids.GetKeys());
-			LDUMP(sfi.ids);			
-			LDUMP(sfi.time);
-			VectorMap<String, String> dm = cpp.GetDefinedMacros();
-			LDUMP(dm);
-			if(sfi.defined_macros != dm) {
-				LTIMING("Find changed macros");
-				if(get_changes) {
-					Buffer<bool> found(sfi.defined_macros.GetCount(), false);
-					for(int i = 0; i < dm.GetCount() && cm.GetCount() < 10; i++) {
-						String id = dm.GetKey(i);
-						int q = sfi.defined_macros.Find(id);
-						if(q < 0 || sfi.defined_macros[q] != dm[i])
-							cm.Add(id);
-						if(q >= 0)
-							found[q] = true;
-					}
-					for(int i = 0; i < sfi.defined_macros.GetCount() && cm.GetCount() < 10; i++)
-						if(!found[i])
-							cm.Add(sfi.defined_macros.GetKey(i));
-				}
-				sfi.defined_macros = pick(dm);
-			}
-		}
 		StringStream pin(cpp.output);
 		Parser p;
 		p.Do(pin, CodeBase(), file, filetype, GetFileName(path), error, Vector<String>(),
 		     cpp.namespace_stack, cpp.namespace_using);
-		if(sfi.defined_namespace_info != p.namespace_info) {
-			sfi.defined_namespace_info = p.namespace_info;
-			namespace_info_changed = true;
-		}
-		if(cpp.includes != sfi.includes) {
-			sfi.includes = cpp.includes;
-			includes_changed = true;
-		}
-		return cm;
 	}
 
 	for(int i = 0; i < pp.GetCount(); i++) {
@@ -380,20 +337,9 @@ Vector<String> ParseSrc(Stream& in, int file, Callback2<int, const String&> erro
 		p.Do(pin, CodeBase(), file, filetype, GetFileName(path), error, Vector<String>(),
 		     cpp.namespace_stack, cpp.namespace_using);
 	}
-	return cm;
 }
 
-bool HasIntersection(const Index<String>& ids, const Vector<String>& cm)
-{
-	if(cm.GetCount() >= 10)
-		return true;
-	for(int i = 0; i < cm.GetCount(); i++)
-		if(ids.Find(cm[i]) >= 0)
-			return true;
-	return false;
-}
-
-void CodeBaseScanFile(Stream& in, const String& fn, bool check_macros)
+void CodeBaseScanFile0(Stream& in, const String& fn)
 {
 	LLOG("===== CodeBaseScanFile " << fn);
 
@@ -405,23 +351,29 @@ void CodeBaseScanFile(Stream& in, const String& fn, bool check_macros)
 	int file = GetSourceFileIndex(fn);
 	CppBase& base = CodeBase();
 	base.RemoveFile(file);
-	SourceFileInfo& f = source_file[file];
-	bool namespace_info_changed = false;
-	bool includes_changed = false;
-	Vector<String> cm = ParseSrc(in, file, CNULL, check_macros, true,
-	                             namespace_info_changed, includes_changed);
-	LDUMP(f.defined_macros);
-	LDUMP(check_macros);
-	if(check_macros && (includes_changed || namespace_info_changed || cm.GetCount()))
-		SyncCodeBase();
-	else
-		FinishCodeBase();
+	ParseSrc(in, file, CNULL);
 }
 
-void CodeBaseScanFile(const String& fn, bool check_macros)
+void CodeBaseScanFile(Stream& in, const String& fn)
 {
+	CodeBaseScanFile0(in, fn);
+	FinishCodeBase();
+}
+
+void CodeBaseScanFile(const String& fn)
+{
+	LLOG("CodeBaseScanFile " << fn);
 	FileIn in(fn);
-	CodeBaseScanFile(in, fn, check_macros);
+	CodeBaseScanFile(in, fn);
+	int file = GetSourceFileIndex(fn);
+	SourceFileInfo& f = source_file[file];
+	String md5sum = GetPPFile(fn).md5sum;
+	if(md5sum != f.md5sum) {
+		SyncCodeBase();
+		f.md5sum = md5sum;
+	}
+	else
+		FinishCodeBase();
 }
 
 void ClearCodeBase()

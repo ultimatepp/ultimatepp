@@ -48,7 +48,7 @@ inline  void LOGNOP__() {}
 
 #define _cm_  ,
 
-#define __countof(a)          int(sizeof(a) / sizeof(a[0]))
+#define __countof(a)          int(sizeof(a) / sizeof(a[0]) )
 
 #define __Expand1(x) x(1)
 #define __Expand2(x)  __Expand1(x) x(2)

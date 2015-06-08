@@ -208,12 +208,12 @@ bool Ide::IsProjectFile(const String& f) const
 	return false;
 }
 
-void Ide::ScanFile(bool check_macros)
+void Ide::ScanFile()
 {
 	if(IsCppBaseFile()) {
 		String s = ~editor;
 		StringStream ss(s);
-		CodeBaseScanFile(ss, editfile, check_macros);
+		CodeBaseScanFile(ss, editfile);
 	}
 }
 
@@ -274,7 +274,7 @@ void Ide::SaveFile0(bool always)
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
 		if(IsProjectFile(fn) && ToUpper(GetFileExt(fn)) == ".LAY")
-			CodeBaseScanFile(fn, true);
+			CodeBaseScanFile(fn);
 		return;
 	}
 
@@ -380,7 +380,8 @@ void Ide::SaveFile0(bool always)
 
 	if(editor.IsDirty()) {
 		text_updated.Kill();
-		ScanFile(true);
+		if(IsCppBaseFile())
+			CodeBaseScanFile(editfile);
 	}
 
 	editor.ClearDirty();
@@ -571,7 +572,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 
 void Ide::EditFileAssistSync()
 {
-	ScanFile(false);
+	ScanFile();
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
 }
@@ -690,7 +691,7 @@ void Ide::CheckFileUpdate()
 		"Reload", "Keep")) return;
 
 	if(IsCppBaseFile())
-		CodeBaseScanFile(editfile, false);
+		CodeBaseScanFile(editfile);
 	ReloadFile();
 }
 
