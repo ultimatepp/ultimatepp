@@ -39,7 +39,7 @@ void Ide::SerializeFindInFiles(Stream& s) {
 		s % ff.workspace;
 }
 
-void SearchForFiles(Vector<String>& files, String dir, String mask, int readonly, Progress& pi) {
+void SearchForFiles(Index<String>& files, String dir, String mask, int readonly, Progress& pi) {
 	FindFile ff(AppendFileName(dir, "*.*"));
 	while(ff) {
 		if(ff.IsFolder() && *ff.GetName() != '.')
@@ -48,7 +48,7 @@ void SearchForFiles(Vector<String>& files, String dir, String mask, int readonly
 		if(ff.IsFile() && PatternMatchMulti(mask, ff.GetName())) {
 			if(IsNull(readonly) || !!readonly == !!ff.IsReadOnly()) {
 				if(pi.StepCanceled()) return;
-				files.Add(AppendFileName(dir, ff.GetName()));
+				files.FindAdd(AppendFileName(dir, ff.GetName()));
 			}
 		}
 		ff.Next();
@@ -266,7 +266,7 @@ void Ide::FindInFiles(bool replace) {
 		ff.replace.AddHistory();
 		Progress pi("Found %d files to search.");
 		pi.AlignText(ALIGN_LEFT);
-		Vector<String> files;
+		Index<String> files;
 		if(ff.workspace) {
 			const Workspace& wspc = GetIdeWorkspace();
 			for(int i = 0; i < wspc.GetCount(); i++)
