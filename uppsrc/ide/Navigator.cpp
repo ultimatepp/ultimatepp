@@ -51,7 +51,9 @@ void DrawFileName(Draw& w, const Rect& r, const String& h, Color ink)
 
 int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 {
-	if(h.GetCount())
+	if(*h == '\xff')
+		h.Remove(0, 1);
+	if(*h == '~')
 		h.Remove(0, 1);
 	return DrawFileName0(w, r, h, ink, 0);
 }
@@ -339,6 +341,8 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0) {
 		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
 		                                    : SColorFace);
+		DUMPHEX(m.type);
+		DDUMP((int)m.kind);
 		if(m.kind == KIND_FILE)
 			return PaintFileName(w, r, m.type, ink);
 		String h = FormatNest(m.type);
@@ -397,7 +401,11 @@ void Navigator::NavGroup(bool local)
 		if(m.kind == TYPEDEF)
 			g.Trim(max(g.ReverseFind("::"), 0));
 		if(IsNull(g))
-			g = "\xff" + GetSourceFilePath(m.decl_file);
+			if(m.pass)
+				g = "\xff~" + GetSourceFilePath(m.decl_file); // Second pass contains less matching items, sort it after the first pass
+			else
+				g = "\xff" + GetSourceFilePath(m.decl_file);
+		else
 		if(m.pass)
 			g = "~" + g; // Second pass contains less matching items, sort it after the first pass
 		if(local)
