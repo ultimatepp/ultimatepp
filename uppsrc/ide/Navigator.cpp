@@ -341,8 +341,6 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	if(findarg(m.kind, KIND_FILE, KIND_NEST) >= 0) {
 		w.DrawRect(r, focuscursor ? paper : m.kind == KIND_NEST ? Blend(SColorMark, SColorPaper, 220)
 		                                    : SColorFace);
-		DUMPHEX(m.type);
-		DDUMP((int)m.kind);
 		if(m.kind == KIND_FILE)
 			return PaintFileName(w, r, m.type, ink);
 		String h = FormatNest(m.type);
