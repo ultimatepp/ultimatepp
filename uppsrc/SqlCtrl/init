@@ -4,7 +4,7 @@
 #include "CtrlLib/init"
 #include "Report/init"
 #include "CodeEditor/init"
-#define BLITZ_INDEX__ F96a1ec818c4cc17747e79bf1c64548ae
+#define BLITZ_INDEX__ Fb6fe57a94b58c245d45f2decc640592c
 #include "SqlCtrl_init.icpp"
 #undef BLITZ_INDEX__
 #endif

@@ -731,8 +731,8 @@ void AppMain___()
 
 	bool firstinstall = false;
 
+	SetVppLogSizeLimit(200000000);
 #ifdef _DEBUG
-	SetVppLogSizeLimit(100000000);
 	MemoryLimitKb(1000000);
 #endif
 
