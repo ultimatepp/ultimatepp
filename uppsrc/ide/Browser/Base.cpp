@@ -8,6 +8,8 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
+#define CLOG(x)       RLOG(x)
+
 #define CPP_CODEBASE_VERSION 314
 
 ArrayMap<String, SourceFileInfo> source_file;
@@ -113,7 +115,7 @@ bool TryLoadCodeBase(const char *pattern)
 		LTIMING("Load code base");
 		StringStream ss(LZ4Decompress(LoadFile(path)));
 		if(Load(callback(SerializeCodeBase), ss, CPP_CODEBASE_VERSION)) {
-			LLOG("Loaded " << ff.GetPath());
+			CLOG("*** Loaded " << ff.GetPath() << ' ' << GetSysTime() << ", file count: " << source_file.GetCount() << ", codebase: " << CodeBase().GetCount());
 			return true;
 		}
 	}
@@ -235,6 +237,7 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 	pp.Preprocess(npath, in, GetMasterFile(npath), true);
 	String md5 = pp.GetDependeciesMd5(GetPPFile(path).keywords);
 	bool r = f.dependencies_md5sum == md5;
+	if(!r) CLOG(path << " " << f.dependencies_md5sum << " != " << md5);
 	f.depends.Clear();
 	f.dependencies_md5sum = md5;
 	for(int i = 0; i < pp.visited.GetCount(); i++)
@@ -261,13 +264,18 @@ void ParseFiles(Progress& pi, const Index<int>& parse_file)
 
 void UpdateCodeBase2(Progress& pi)
 {
+	CLOG("============= UpdateCodeBase2 " << GetSysTime());
 	const Workspace& wspc = GetIdeWorkspace();
 
 	pi.SetText("Checking source files");
 	pi.SetPos(0);
 	Index<int>  keep_file;
 	Index<int>  parse_file;
+	CLOG("Gathered files: " << GetAllSourceMasters());
 	const Index<String>& src = GetAllSources();
+	for(int i = 0; i < source_file.GetCount(); i++)
+		if(!source_file.IsUnlinked(i))
+			CLOG(i << " " << source_file.GetKey(i) << " " << source_file[i].dependencies_md5sum << " " << source_file[i].time);
 	pi.SetTotal(src.GetCount());
 	for(int i = 0; i < src.GetCount(); i++) {
 		pi.Step();
@@ -398,6 +406,8 @@ void SyncCodeBase()
 void NewCodeBase()
 {
 	ReduceCodeBaseCache();
+	if(GetIdeWorkspace().GetCount() == 0)
+		return;
 	static int start;
 	if(start) return;
 	start++;
@@ -409,31 +419,6 @@ void NewCodeBase()
 	LLOG("NewCodeBase saved " << CodeBase().GetCount());
 	start--;
 }
-
-/*
-void CheckCodeBase()
-{
-	RTIMESTOP("CheckCodeBase");
-	Progress pi;
-	pi.Title("Checking source files");
-	BaseInfoSync(pi);
-	for(int i = 0; i < sSrcFile.GetCount(); i++)
-		if(source_file.Find(sSrcFile.GetKey(i)) < 0) {
-			UpdateCodeBase2(pi);
-			FinishCodeBase();
-			return;
-		}
-	for(int i = 0; i < source_file.GetCount(); i++)
-		if(!source_file.IsUnlinked(i)) {
-			String path = source_file.GetKey(i);
-			if(sSrcFile.Find(source_file.GetKey(i)) < 0 || source_file[i].time != FileGetTime(path)) {
-				UpdateCodeBase2(pi);
-				FinishCodeBase();
-				return;
-			}
-		}
-}
-*/
 
 void RescanCodeBase()
 {
