@@ -338,7 +338,7 @@ int FindBinary(const C& v, const T& val, int pos, int count, const L& less)
 template <class I, class T, class L>
 I FindBinaryIter(I begin, I end, const T& val, const L& less)
 {
-	int q = FindUpperBound(begin, begin, end, val, less);
+	int q = FindBinary(begin, val, 0, end - begin, less);
 	return q < 0 ? NULL : begin + q;
 }
 
