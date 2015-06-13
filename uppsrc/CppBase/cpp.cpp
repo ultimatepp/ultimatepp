@@ -362,9 +362,13 @@ void GetAllMacros(Md5Stream& md5, const String& id, Index<int>& segment_id);
 String Cpp::GetDependeciesMd5(const Vector<String>& m)
 {
 	String r;
-	for(int i = 0; i < m.GetCount(); i++) {
+	Md5Stream md5;
+	md5.Put(Join(namespace_stack, ";"));
+	md5.Put('@');
+	md5.Put(Join(namespace_using.GetKeys(), ";"));
+	md5.Put('@');
+	for(int i = 0; i < m.GetCount(); i++)
 		GetAllMacros(md5, m[i], segment_id);
-	}
 	return md5.FinishString();
 }
 

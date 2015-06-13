@@ -10,13 +10,13 @@
 
 #define CLOG(x)       RLOG(x)
 
-#define CPP_CODEBASE_VERSION 314
+#define CPP_CODEBASE_VERSION 3141
 
 ArrayMap<String, SourceFileInfo> source_file;
 
 void SourceFileInfo::Serialize(Stream& s)
 {
-	s % time % check_info % dependencies_md5sum % md5sum;
+	s % time % dependencies_md5sum % md5sum;
 	if(s.IsLoading()) {
 		depends.Clear();
 		depends_time = Null;
@@ -25,7 +25,11 @@ void SourceFileInfo::Serialize(Stream& s)
 
 String CodeBaseCacheDir()
 {
+#ifdef _DEBUG
+	return ConfigFile("cfg/debug_codebase");
+#else
 	return ConfigFile("cfg/codebase");
+#endif
 }
 
 struct RCB_FileInfo {
@@ -91,7 +95,7 @@ void SaveCodeBase()
 {
 	LTIMING("SaveCodeBase");
 	LLOG("Save code base " << CodeBase().GetCount());
-	RealizeDirectory(ConfigFile("cfg/codebase"));
+	RealizeDirectory(CodeBaseCacheDir());
 	StringStream ss;
 	Store(callback(SerializeCodeBase), ss, CPP_CODEBASE_VERSION);
 	String data = ss.GetResult();
@@ -225,18 +229,19 @@ Time GetDependsTime(const Vector<int>& file)
 bool CheckFile(SourceFileInfo& f, const String& path)
 {
 	LTIMING("CheckFile");
-	if(f.time != GetFileTimeCached(path))
-		return false;
-	if(!f.check_info)
-		return true;
-	if(!IsNull(f.depends_time) && f.depends_time == GetDependsTime(f.depends))
+	Time ftm = GetFileTimeCached(path);
+	bool tmok = f.time == ftm;
+	f.time = ftm;
+	if(findarg(ToLower(GetFileExt(path)), ".lay", ".iml", ".sch") >= 0)
+		return tmok;
+	if(!IsNull(f.depends_time) && tmok && f.depends_time == GetDependsTime(f.depends) && f.dependencies_md5sum.GetCount())
 		return true;
 	Cpp pp;
 	FileIn in(path);
 	String npath = NormalizeSourcePath(path);
 	pp.Preprocess(npath, in, GetMasterFile(npath), true);
 	String md5 = pp.GetDependeciesMd5(GetPPFile(path).keywords);
-	bool r = f.dependencies_md5sum == md5;
+	bool r = f.dependencies_md5sum == md5 && tmok;
 	if(!r) CLOG(path << " " << f.dependencies_md5sum << " != " << md5);
 	f.depends.Clear();
 	f.dependencies_md5sum = md5;
@@ -317,7 +322,6 @@ void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
 	String ext = ToLower(GetFileExt(path));
 	int filetype = FILE_OTHER;
 	SourceFileInfo& sfi = source_file[file];
-	sfi.time = FileGetTime(path);
 	Cpp cpp;
 	bool b = false;
 	if(ext == ".lay")
@@ -329,7 +333,6 @@ void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
 	if(ext == ".sch")
 		pp.Append(PreprocessSchFile(path));
 	else {
-		sfi.check_info = true;
 		cpp.Preprocess(path, in, GetMasterFile(GetSourceFilePath(file)));
 		filetype = decode(ext, ".h", FILE_H, ".hpp", FILE_HPP,
 		                       ".cpp",FILE_CPP, ".c", FILE_C, FILE_OTHER);
@@ -396,7 +399,11 @@ void SyncCodeBase()
 {
 	LTIMING("SyncCodeBase");
 	LTIMESTOP("SyncCodeBase");
-	LLOG("============= Sync code base");
+	CLOG("============= Sync code base");
+	if(IsNull(GetCurrentMainPackage())) {
+		ClearCodeBase();
+		return;
+	}
 	Progress pi;
 	pi.Title("Parsing source files");
 	UpdateCodeBase(pi);
@@ -406,8 +413,10 @@ void SyncCodeBase()
 void NewCodeBase()
 {
 	ReduceCodeBaseCache();
-	if(GetIdeWorkspace().GetCount() == 0)
+	if(IsNull(GetCurrentMainPackage())) {
+		ClearCodeBase();
 		return;
+	}
 	static int start;
 	if(start) return;
 	start++;
