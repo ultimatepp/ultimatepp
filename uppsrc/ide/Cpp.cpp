@@ -120,13 +120,16 @@ void AssistScanError(int line, const String& text)
 void AssistEditor::Context(Parser& parser, int pos)
 {
 	LTIMING("Context");
-
+	
+	
 	theide->ScanFile();
 	String s = Get(0, pos);
 	StringStream ss(s);
 
-	Cpp cpp;
 	String path = NormalizeSourcePath(theide->editfile);
+	LLOG("---------- Context " << path);
+
+	Cpp cpp;
 	cpp.Preprocess(path, ss, GetMasterFile(path));
 
 	parser.dobody = true;

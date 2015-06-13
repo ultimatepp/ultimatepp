@@ -347,6 +347,7 @@ static String                      sInclude_Path;
 
 void PPSync(const String& include_path)
 {
+	LLOG("* PPSync");
 	sIncludePath.Clear();
 	sFlatPP.Clear();
 	sInclude_Path = include_path;
@@ -424,6 +425,7 @@ const PPFile& GetPPFile(const char *path)
 	LTIMING("GetPPFile");
 	Time tm = GetFileTimeCached(path);
 	PPFile& f = sPPfile.GetPut(path);
+	LLOG("GetPPFile " << path << ", " << f.filetime << ", " << tm);
 	if(f.filetime != tm) {
 		f.filetime = tm;
 		FileIn in(path);
@@ -440,9 +442,12 @@ bool IsSameFile(const String& f1, const String& f2)
 const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 {
 	LTIMING("GetFlatPPFile");
+	LLOG("GetFlatPPFile " << path);
 	int q = sFlatPP.Find(path);
-	if(q >= 0)
+	if(q >= 0) {
+		LLOG("From cache");
 		return sFlatPP[q];
+	}
 	FlatPP& fp = sFlatPP.Add(path);
 	const PPFile& pp = GetPPFile(path);
 	int n = visited.GetCount();

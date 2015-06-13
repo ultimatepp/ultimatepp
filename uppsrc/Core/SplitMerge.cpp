@@ -193,6 +193,7 @@ static void sMergeWith(String& dest, const char *delim, const String& s)
 	}
 }
 
+//$-
 #define E__TL(I)       typename COMBINE(T, I)
 #define E__NFIf(I)     COMBINE(p, I) = r[I - 1]
 #define E__NFValue(I)  String& COMBINE(p, I)

@@ -141,7 +141,7 @@ public:
 	SqlId         operator()(SqlId p) const;
 	SqlId         operator()(const S_info& table) const;
 
-//$	SqlId     operator()(SqlId p, SqlId p1, ...);
+//$-SqlId     operator()(SqlId p, SqlId p1, ...);
 #define E__PutSqlId(I)      PutOf(x, p##I)
 #define E__SqlId(I)         const SqlId& p##I
 #define E__Of(I) \
@@ -155,7 +155,7 @@ __Expand(E__Of)
 #undef  E__Of
 #undef E__PutSqlId
 #undef E__SqlId
-
+//$+
 	SqlId()                                      {}
 	SqlId(const char *s) : id(s)                 {}
 	SqlId(const String& s) : id(s)               {}
@@ -483,9 +483,10 @@ public:
 	SqlSet() {}
 	explicit SqlSet(const SqlVal& p0);
 
+//$-SqlSet(const SqlVal& p0, ...)
 #define E__SqlSet(I)   SqlSet(const SqlVal& p0, __List##I(E__SqlVal));
 	__Expand(E__SqlSet);
-
+//$+
 	explicit SqlSet(Fields nfields);
 
 	SqlSet(const String& s, PRIORITY p)   { text = s; priority = p; }
@@ -618,9 +619,11 @@ public:
 	SqlSelect(Fields f);
 	SqlSelect(const SqlSet& s)                        { Set(s); }
 	SqlSelect()                                       { on = valid = false; }
+//$-SqlSelect(SqlVal v, ...);
 #define E__QSelect(I)   SqlSelect(__List##I(E__SqlVal));
-__Expand(E__QSelect);
+	__Expand(E__QSelect);
 #undef  E__QSelect
+//$+
 
 	bool IsEmpty()                                    { return text.IsEmpty(); }
 
@@ -647,9 +650,11 @@ inline SqlSelect SelectAll()                { return SqlSelect(SqlAll()); }
 inline SqlSelect Select(const SqlSet& set)  { return SqlSelect(set); }
 inline SqlSelect Select(Fields f)           { return SqlSelect(f); }
 
+//$-SqlSelect Select(SqlVal v, ...);
 #define E__QSelect(I)   SqlSelect Select(__List##I(E__SqlVal));
 __Expand(E__QSelect);
 #undef  E__QSelect
+//$-
 
 class SqlDelete {
 	String text;
@@ -913,6 +918,7 @@ public:
 	SqlWith& With(SqlId table);
 	SqlWith& WithRecursive(SqlId table);
 	SqlWith& Arg(SqlId arg);
+//$-SqlWith& operator()(SqlId id, ..)
 #define E__SqlId(I)     const SqlId& p##I
 #define E__Arg(I)       Arg(p##I)
 #define E__Args(I) \
@@ -921,6 +927,7 @@ public:
 #undef E__Args
 #undef E__Arg
 #undef E__SqlId
+//$+
 
 	SqlWith& As(const SqlSelect& select);
 	

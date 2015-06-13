@@ -105,6 +105,7 @@ void SaveCodeBase()
 
 bool TryLoadCodeBase(const char *pattern)
 {
+	CLOG("+++ Trying to load " << pattern);
 	FindFile ff(pattern);
 	String path;
 	int64  len = -1;
@@ -242,7 +243,7 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 	pp.Preprocess(npath, in, GetMasterFile(npath), true);
 	String md5 = pp.GetDependeciesMd5(GetPPFile(path).keywords);
 	bool r = f.dependencies_md5sum == md5 && tmok;
-	if(!r) CLOG(path << " " << f.dependencies_md5sum << " != " << md5);
+	if(!r) CLOG(path << " " << f.dependencies_md5sum << " " << md5);
 	f.depends.Clear();
 	f.dependencies_md5sum = md5;
 	for(int i = 0; i < pp.visited.GetCount(); i++)
@@ -317,7 +318,7 @@ void UpdateCodeBase(Progress& pi)
 void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
 {
 	String path = GetSourceFilePath(file);
-	LLOG("====== Parse " << file << ": " << path);
+	CLOG("====== Parse " << file << ": " << path);
 	Vector<String> pp;
 	String ext = ToLower(GetFileExt(path));
 	int filetype = FILE_OTHER;
@@ -354,7 +355,7 @@ void CodeBaseScanFile0(Stream& in, const String& fn)
 {
 	LLOG("===== CodeBaseScanFile " << fn);
 
-	InvalidateFileTimeCache(fn);
+	InvalidateFileTimeCache(NormalizeSourcePath(fn));
 	PPSync(TheIde()->IdeGetIncludePath());
 
 	LTIMING("CodeBaseScan");
@@ -379,6 +380,7 @@ void CodeBaseScanFile(const String& fn)
 	int file = GetSourceFileIndex(fn);
 	SourceFileInfo& f = source_file[file];
 	String md5sum = GetPPFile(fn).md5sum;
+	CLOG("CodeBaseScanFile " << fn << ", " << md5sum << " " << f.md5sum);
 	if(md5sum != f.md5sum) {
 		SyncCodeBase();
 		f.md5sum = md5sum;
