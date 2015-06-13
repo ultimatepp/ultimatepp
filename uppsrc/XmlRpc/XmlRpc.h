@@ -36,6 +36,7 @@ public:
 	                                                    try { data >> x; } catch(ValueTypeMismatch) { return false; } return true; }
 	XmlRpcCall& operator()(const char *method)        { Method(method); return *this; }
 
+//$-template<class T1, ...> XmlRpcCall& operator()(const char *method, T1 p1, ...)
 #define E__Templ(I)  class COMBINE(T, I)
 #define E__Decl(I)   const COMBINE(T, I)& COMBINE(p, I)
 #define E__Param(I)  *this << COMBINE(p, I)
@@ -48,11 +49,11 @@ public:
 	}
 
 	__Expand20(E__Body)
-
 #undef E__Templ
 #undef E__Decl
 #undef E__Param
 #undef E__Body
+//$+
 
 	String GetFaultString() const                               { return faultString; }
 	int    GetFaultCode() const                                 { return faultCode; }

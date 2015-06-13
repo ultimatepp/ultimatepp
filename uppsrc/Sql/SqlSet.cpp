@@ -86,6 +86,7 @@ SqlSet SqlSetFrom(const ValueArray& va)
 
 static inline void sCat(SqlSet& s, SqlVal v) { s.Cat(v); }
 
+//$-
 #define E__Cat(I)       sCat(*this, p##I)
 
 #define E__SqlSetF(I) \
@@ -95,6 +96,7 @@ SqlSet::SqlSet(const SqlVal& p0, __List##I(E__SqlVal)) { \
 	priority = SET; \
 }
 __Expand(E__SqlSetF);
+//$+
 
 FieldOperator::FieldOperator() {}
 FieldOperator::~FieldOperator() {}

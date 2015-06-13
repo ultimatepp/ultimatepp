@@ -164,6 +164,7 @@ void Cpp::DoFlatInclude(const String& header_path)
 			segment_id.FindAdd(pp.segment_id[i]);
 		for(int i = 0; i < pp.usings.GetCount(); i++) {
 			namespace_using.FindAdd(pp.usings[i]);
+			LLOG("Flat usings " << pp.usings[i]);
 			md5.Put('$');
 			md5.Put(pp.usings[i]);
 		}
@@ -253,6 +254,10 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 #endif
 	while(!in.IsEof()) {
 		String l = prefix_macro + in.GetLine();
+		if(l.StartsWith("//$")) { // Do not remove assist++ parser directives
+			result.Cat(l + "\n");
+			continue;
+		}
 		prefix_macro.Clear();
 		lineno++;
 		int el = 0;

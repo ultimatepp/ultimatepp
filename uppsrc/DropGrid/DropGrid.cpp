@@ -1047,6 +1047,7 @@ DropGrid& DropGrid::AddSeparator(Color c)
 	return *this;
 }
 
+//$-
 #define E__Addv0(I)    list.Set(q, I - 1, p##I)
 #define E__AddF0(I) \
 DropGrid& DropGrid::Add(__List##I(E__Value)) { \

@@ -172,6 +172,8 @@ void Sql::ExecuteX(const String& s) {
 	ExecuteX();
 }
 
+//$-
+
 #define E__SetParam(I)    SetParam(I - 1, p##I)
 
 #define E__RunF(I) \
@@ -204,6 +206,8 @@ void Sql::ExecuteX(const String& s, __List##I(E__Value)) { \
 }
 __Expand(E__ExecuteFX)
 
+//$+
+
 bool Sql::Fetch() {
 	SqlSession& session = GetSession();
 	session.SetStatus(SqlSession::START_FETCHING);
@@ -232,6 +236,7 @@ bool Sql::Fetch() {
 	return b;
 }
 
+//$-
 #define E__GetColumn(I) cn->GetColumn(I - 1, p##I)
 
 #define E__FetchF(I) \
@@ -241,6 +246,7 @@ bool Sql::Fetch(__List##I(E__Ref)) { \
 	return true; \
 }
 __Expand(E__FetchF)
+//$+
 
 Vector<Value> Sql::GetRow() const {
 	Vector<Value> row;
@@ -376,6 +382,7 @@ Value Sql::Select(const String& s) {
 	return Select0("select " + s);
 }
 
+//$-
 #define E__SelectF(I) \
 Value Sql::Select(const String& s, __List##I(E__Value)) { \
 	__List##I(E__SetParam); \
@@ -408,7 +415,6 @@ bool Sql::Insert(SqlId table, SqlId c0, const Value& v0, __List##I(E__IdVal)) { 
 }
 __Expand(E__InsertIdF)
 
-
 static inline void sComma(int I, String& s) {
 	if(I > 1) s.Cat(", ");
 }
@@ -435,6 +441,7 @@ bool Sql::Update(SqlId table, SqlId key, const Value& keyval, __List##I(E__IdVal
 	               " set " + list + " where " + key.ToString() + " = ?"); \
 }
 __Expand(E__UpdateIdF)
+//$+
 
 bool Sql::Delete(const char *table, const char *key, const Value& keyval) {
 	return Execute("delete from " + String(table) + " where " + key + " = ?", keyval);

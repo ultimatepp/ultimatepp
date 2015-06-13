@@ -280,6 +280,7 @@ SqlSelect::SqlSelect(Fields f)
 	text = ~set;
 }
 
+//$-
 #define E__SCat(I)       set.Cat(p##I)
 
 #define E__QSqlSelectF(I) \
@@ -298,6 +299,7 @@ SqlSelect Select(__List##I(E__SqlVal)) { \
 	return Select(set); \
 }
 __Expand(E__QSelectF);
+//$+
 
 // -------------------------------
 
