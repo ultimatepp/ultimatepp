@@ -20,7 +20,6 @@ CppBase&       CodeBase();
 
 struct SourceFileInfo {
 	Time                      time;
-	bool                      check_info; // this is not special file, like .iml, .sch
 	String                    dependencies_md5sum; // dependencies from other files - usings, initial namespace, macros
 	String                    md5sum; // preprocessing 'fingerprint' to detect changes
 	Vector<int>               depends; // indicies of file this files depends on, for time-check
@@ -28,7 +27,7 @@ struct SourceFileInfo {
 	
 	void Serialize(Stream& s);
 
-	SourceFileInfo() { time = Null; check_info = false; depends_time = Null; }
+	SourceFileInfo() { time = Null; depends_time = Null; }
 };
 
 void           NewCodeBase();
