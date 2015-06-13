@@ -14,4 +14,12 @@ CONSOLE_APP_MAIN
 	Check(FindMax(x, 2, 3), 2);
 	Check(FindMax(x, 2, 4), 5);
 	Check(FindMin(x, 2, 4), 4);
+	
+	Sort(x);
+	Check(FindBinaryIter(x.Begin(), x.End(), 1) - x.Begin(), 0);
+	Check(FindBinaryIter(x.Begin(), x.End(), 2) - x.Begin(), 1);
+	Check(FindBinaryIter(x.Begin(), x.End(), 7), NULL);
+	Check(FindBinaryIter(x.Begin(), x.End(), 0), NULL);
+	Check(FindBinaryIter(x.Begin(), x.End(), 11), NULL);
+	Check(FindBinaryIter(x.Begin(), x.End(), 10) - x.Begin(), 5);
 }
