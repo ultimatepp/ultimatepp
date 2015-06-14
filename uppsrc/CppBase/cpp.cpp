@@ -155,21 +155,16 @@ void Cpp::DoFlatInclude(const String& header_path)
 	LLOG("Flat include " << header_path);
 	if(header_path.GetCount()) {
 		md5.Put(header_path);
-		if(visited.Find(header_path) >= 0)
-			return;
-		visited.Add(header_path);
 		const FlatPP& pp = GetFlatPPFile(header_path);
 		LLOG("DoFlatInclude " << header_path << ", " << pp.segment_id.GetCount() << " segments");
 		for(int i = 0; i < pp.segment_id.GetCount(); i++)
 			segment_id.FindAdd(pp.segment_id[i]);
 		for(int i = 0; i < pp.usings.GetCount(); i++) {
 			namespace_using.FindAdd(pp.usings[i]);
-			LLOG("Flat usings " << pp.usings[i]);
+			LLOG(" Flat usings " << pp.usings[i]);
 			md5.Put('$');
 			md5.Put(pp.usings[i]);
 		}
-		for(int i = 0; i < pp.includes.GetCount(); i++)
-			visited.FindAdd(pp.includes[i]);
 	}
 }
 
