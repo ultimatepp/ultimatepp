@@ -31,7 +31,7 @@ String PreprocessLayFile(const char *fn)
 	String s = LoadFile(fn);
 	CParser p(s);
 
-	String r = "using Upp;";
+	String r = "using namespace Upp;";
 	try {
 		int line = p.GetLine();
 		if(p.Char('#') && p.Id("ifdef")) {

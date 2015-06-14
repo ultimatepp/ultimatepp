@@ -32,7 +32,7 @@ String PreprocessImlFile(const char *fn)
 	}
 	catch(CParser::Error) {}
 
-	String r = "using Upp;";
+	String r = "using namespace Upp;";
 	r << "struct " << GetFileTitle(fn) << "Img {\n";
 	if(iml.GetCount())
 		r << "enum {" << i_ml << "};\n" << iml;
