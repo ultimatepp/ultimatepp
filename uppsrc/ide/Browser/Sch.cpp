@@ -19,8 +19,8 @@ Vector<String> PreprocessSchFile(const char *fn)
 {
 	String s = LoadFile(fn);
 	CParser p(s);
-	String r = "using Upp;";
-	String rr = "using Upp;";
+	String r = "using namespace Upp;";
+	String rr = "using namespace Upp;";
 	String S_name;
 	int line;
 	while(!p.IsEof())
