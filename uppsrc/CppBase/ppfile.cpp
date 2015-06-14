@@ -452,7 +452,6 @@ const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 	const PPFile& pp = GetPPFile(path);
 	int n = visited.GetCount();
 	visited.FindAdd(path);
-	fp.includes.FindAdd(path);
 	for(int i = 0; i < pp.item.GetCount(); i++) {
 		const PPItem& m = pp.item[i];
 		if(m.type == PP_INCLUDE) {
@@ -465,8 +464,6 @@ const FlatPP& GetFlatPPFile(const char *path, Index<String>& visited)
 					fp.segment_id.FindAdd(pp.segment_id[i]);
 				for(int i = 0; i < pp.usings.GetCount(); i++)
 					fp.usings.FindAdd(pp.usings[i]);
-				for(int i = 0; i < pp.includes.GetCount(); i++)
-					fp.includes.FindAdd(pp.includes[i]);
 			}
 		}
 		else

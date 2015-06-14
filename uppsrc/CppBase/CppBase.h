@@ -104,7 +104,6 @@ bool   IncludesFile(const String& parent_path, const String& header_path);
 struct FlatPP {
 	Index<int>    segment_id;
 	Index<String> usings;
-	Index<String> includes;
 };
 
 const FlatPP& GetFlatPPFile(const char *path); // with #includes resolved
