@@ -293,6 +293,8 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 
+DDUMP(scope);
+DDUMP(id);
 	for(int j = 0; j < scope.GetCount(); j++) {
 		q = CodeBase().Find(scope[j]);
 		if(q >= 0) {
@@ -300,6 +302,10 @@ void Ide::ContextGoto0(int pos)
 			for(int anyfile = 0; anyfile < 2; anyfile++)
 				for(int pass = 0; pass < 2; pass++)
 					for(int i = 0; i < n.GetCount(); i++) {
+						DDUMP(i);
+						DDUMP(n[i].name);
+						DDUMP(n[i].file);
+						DDUMP(n[i].line);
 						if(n[i].name == id
 						   && (pass || !istype[j] || n[i].IsType())
 						   && (anyfile || findarg(n[i].filetype, FILE_CPP, FILE_C) >= 0)) {
