@@ -301,18 +301,28 @@ void Ide::ContextGoto0(int pos)
 	for(int j = 0; j < scope.GetCount(); j++) {
 		q = CodeBase().Find(scope[j]);
 		if(q >= 0) {
+			int ii = -1;
 			const Array<CppItem>& n = CodeBase()[q];
-			for(int anyfile = 0; anyfile < 2; anyfile++)
-				for(int pass = 0; pass < 2; pass++)
-					for(int i = 0; i < n.GetCount(); i++) {
-						if(n[i].name == id
-						   && (pass || !istype[j] || n[i].IsType())
-						   && (anyfile || findarg(n[i].filetype, FILE_CPP, FILE_C) >= 0)) {
-							JumpToDefinition(n, i, scope[j]);
-							FindId(id);
-							return;
-						}
+			for(int i = 0; i < n.GetCount(); i++) {
+				const CppItem& m = n[i];
+				if(n[i].name == id) {
+					if(ii < 0)
+						ii = i;
+					else {
+						const CppItem& mm = n[ii];
+						if(CombineCompare(findarg(mm.kind, CONSTRUCTOR) < 0, findarg(m.kind, CONSTRUCTOR) < 0)
+						                 (!istype[j] || mm.IsType(), !istype[j] || m.IsType())
+							             (findarg(mm.filetype, FILE_CPP, FILE_C) >= 0,
+							              findarg(m.filetype, FILE_CPP, FILE_C) >= 0)
+							             (mm.line, m.line) < 0)
+							ii = i;
 					}
+				}
+			}
+			if(ii >= 0) {
+				JumpToDefinition(n, ii, scope[j]);
+				FindId(id);
+			}
 		}
 	}
 }
