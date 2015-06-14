@@ -470,12 +470,10 @@ void AssistEditor::Assist()
 		}
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);
-			Vector<String> usings = Split(parser.context.namespace_using, ';');
-			for(int i = 0; i < usings.GetCount(); i++)
-				if(parser.current_scope != usings[i]) // Do not scan namespace already scanned
-					GatherItems(usings[i], false, in_types, true);
-			if(parser.current_scope.GetCount()) // Do not scan global namespace twice
-				GatherItems("", false, in_types, true);
+			Vector<String> ns = GetNamespaces(parser);
+			for(int i = 0; i < ns.GetCount(); i++)
+				if(parser.current_scope != ns[i]) // Do not scan namespace already scanned
+					GatherItems(ns[i], false, in_types, true);
 		}
 	}
 	LTIMING("Assist3");

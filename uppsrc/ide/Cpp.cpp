@@ -148,6 +148,20 @@ void AssistEditor::Context(Parser& parser, int pos)
 #endif
 }
 
+
+Vector<String> GetNamespaces(const Parser& parser)
+{
+	Vector<String> ns;
+	Vector<String> h = Split(parser.current_scope, ':');
+	while(h.GetCount()) {
+		ns.Add(Join(h, "::"));
+		h.Drop();
+	}
+	ns.Append(Split(parser.context.namespace_using, ';'));
+	ns.Add(""); // Add global namespace too
+	return ns;
+}
+
 String Qualify(const String& scope, const String& type, const String& usings)
 {
 	return Qualify(CodeBase(), scope, type, usings);
@@ -255,10 +269,9 @@ Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<St
 			return typeset;
 		}
 	}
-	Vector<String> usings = Split(parser.context.namespace_using, ';');
-	for(int i = 0; i < usings.GetCount(); i++)
-		ExpressionType(usings[i], parser.context.namespace_using, xp, 0, typeset, false, 0);
-	ExpressionType("", parser.context.namespace_using, xp, 0, typeset, false, 0);
+	Vector<String> ns = GetNamespaces(parser);
+	for(int i = 0; i < ns.GetCount(); i++)
+		ExpressionType(ns[i], parser.context.namespace_using, xp, 0, typeset, false, 0);
 	return typeset;
 }
 
