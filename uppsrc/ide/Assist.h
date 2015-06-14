@@ -1,3 +1,5 @@
+Vector<String> GetNamespaces(const Parser& parser);
+
 struct Navigator {
 	virtual int GetCurrentLine() = 0;
 

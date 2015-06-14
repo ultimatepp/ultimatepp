@@ -230,6 +230,8 @@ void Ide::ContextGoto0(int pos)
 			}
 		}
 	}
+	
+	Vector<String> ns = GetNamespaces(parser);
 
 	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
 		Vector<String> todo;
@@ -275,9 +277,12 @@ void Ide::ContextGoto0(int pos)
 		}
 		// Can be unqualified type name like 'String'
 		String t = RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, id, parser.context.namespace_using));
-		if(CodeBase().Find(t) >= 0) {
-			scope.Add(t);
-			istype.Add(true);
+		for(int i = 0; i < ns.GetCount(); i++) {
+			String tt = Merge("::", ns[i], t);
+			if(CodeBase().Find(tt) >= 0) {
+				scope.Add(tt);
+				istype.Add(true);
+			}
 		}
 	}
 	
@@ -285,16 +290,14 @@ void Ide::ContextGoto0(int pos)
 	usings.Add(""); // Add global namespace too
 	
 	Index<String> done;
-	for(int i = 0; i < usings.GetCount(); i++) {
+	for(int i = 0; i < ns.GetCount(); i++) {
 		String r;
-		if(GetIdScope(r, usings[i], id, done)) {
+		if(GetIdScope(r, ns[i], id, done)) {
 			scope.Add(r);
 			istype.Add(false);
 		}
 	}
 
-DDUMP(scope);
-DDUMP(id);
 	for(int j = 0; j < scope.GetCount(); j++) {
 		q = CodeBase().Find(scope[j]);
 		if(q >= 0) {
@@ -302,10 +305,6 @@ DDUMP(id);
 			for(int anyfile = 0; anyfile < 2; anyfile++)
 				for(int pass = 0; pass < 2; pass++)
 					for(int i = 0; i < n.GetCount(); i++) {
-						DDUMP(i);
-						DDUMP(n[i].name);
-						DDUMP(n[i].file);
-						DDUMP(n[i].line);
 						if(n[i].name == id
 						   && (pass || !istype[j] || n[i].IsType())
 						   && (anyfile || findarg(n[i].filetype, FILE_CPP, FILE_C) >= 0)) {
