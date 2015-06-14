@@ -177,7 +177,7 @@ struct FindReplaceDlg : FrameBottom< WithIDEFindReplaceLayout<TopWindow> > {
 #include "LogSyntax.h"
 
 class CodeEditor : public LineEdit,
-public HighlightSetup //TODO:SYNTAX
+public HighlightSetup
 {
 	friend class EditorBar;
 
