@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#if 0
+#if 1
 #define LDUMP(x)     DDUMP(x)
 #define LDUMPC(x)    DDUMPC(x)
 #define LLOG(x)      DLOG(x)
@@ -174,6 +174,7 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
                                   int lvl)
 {
 	LLOG("--- ExpressionType " << scan_counter);
+	DDUMP(ttype);
 	if(++scan_counter > 500 || lvl > 30) // sort of ugly limitation of parsing permutations
 		return;
 	if(ii >= xp.GetCount()) {
@@ -208,7 +209,7 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
-			LLOG("Member " << m.qtype << "'" << m.name << "'");
+			LLOG("Member " << m.qtype << " " << m.name);
 			mtype.FindAdd(MakeTuple(m.qtype, m.IsData() && !m.isptr));
 		}
 	}
@@ -241,6 +242,7 @@ void AssistEditor::ExpressionType(const String& type, const String& usings, cons
 
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
 {
+	DDUMP(xp);
 	String type;
 	Index<String> typeset;
 	if(xp.GetCount() == 0)

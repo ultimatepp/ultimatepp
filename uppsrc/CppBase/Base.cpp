@@ -9,7 +9,8 @@ void CppItem::Serialize(Stream& s)
 {
 	s % kind % access
 	  % item % name % natural % at % tparam % param % pname
-	  % tname % ctname % type % ptype % virt % filetype % file % line % impl;
+	  % tname % ctname % type % ptype % virt % filetype % file % line % impl
+	  % using_namespaces;
 }
 
 struct CmpItem {
