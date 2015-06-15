@@ -197,10 +197,10 @@ void Navigator::GoToNavLine()
 
 bool Navigator::NavLine::operator<(const NavLine& b) const
 {
-	String p1 = GetSourceFilePath(file);
+	String p1 = GetSourceFilePath(file); // 
 	String p2 = GetSourceFilePath(b.file);
-	return CombineCompare(!impl, !b.impl)
-	                     (GetFileExt(p1), GetFileExt(p2)) // .h > .c
+	return CombineCompare/*(!impl, !b.impl)*/
+	                     (GetFileExt(p2), GetFileExt(p1)) // .h > .c
 	                     (GetFileName(p1), GetFileName(p2))
 	                     (p1, p2)
 	                     (line, b.line) < 0;
@@ -240,9 +240,9 @@ void Navigator::Navigate()
 		else {
 			Vector<NavLine> l = GetNavLines(m);
 			int q = l.GetCount() - 1;
-			for(int i = q; i >= 0; i--)
-				if(GetSourceFilePath(l[i].file) == theide->editfile && l[i].line == ln) {
-					q = (i + l.GetCount() - 1) % l.GetCount();
+			for(int i = 0; i < l.GetCount(); i++)
+				if(GetSourceFilePath(l[i].file) == NormalizeSourcePath(theide->editfile) && l[i].line == ln) {
+					q = (i + l.GetCount() + 1) % l.GetCount();
 					break;
 				}
 			if(q >= 0 && q < l.GetCount())
