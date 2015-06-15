@@ -1,7 +1,5 @@
 #include "CppBase.h"
 
-Upp::String GetSourceFilePath(int file); _DBG_
-
 NAMESPACE_UPP
 
 #define LLOG(x)     // DLOG(x)
@@ -239,13 +237,6 @@ void QualifyPass2(CppBase& base)
 				m.qptype = QualifyIds(nf, m.ptype, m.using_namespaces, true);
 				m.qitem = m.IsCode() ? QualifyIds(nf, m.item, m.using_namespaces, false)
 				                     : m.item;
-				if(m.name == "CodeBase") {
-					DDUMP(m.using_namespaces);
-					DDUMP(m.qitem);
-					DDUMP(m.type);
-					DDUMP(m.qtype);
-					DDUMP(GetSourceFilePath(m.file));
-				}
 			}
 		}
 	}
