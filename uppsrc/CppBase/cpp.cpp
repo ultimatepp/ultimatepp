@@ -3,7 +3,7 @@
 NAMESPACE_UPP
 
 #define LTIMING(x)  // RTIMING(x)
-#define LLOG(x)     // DLOG(x)
+#define LLOG(x)     DLOG(x)
 
 void Cpp::ParamAdd(Vector<String>& param, const char *s, const char *e)
 {
@@ -233,6 +233,8 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 	
 	if(get_macros)
 		return;
+	
+	DDUMP(namespace_using);
 
 	LTIMING("Expand");
 	incomment = false;
