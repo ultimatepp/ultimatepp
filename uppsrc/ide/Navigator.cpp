@@ -30,11 +30,24 @@ int DrawFileName0(Draw& w, const Rect& r, const String& h, Color ink, int x)
 {
 	if(h.GetCount() == 0)
 		return 0;
+	int q = h.Find("\xff");
+	String ns;
+	String fn = h;
+	if(q >= 0) {
+		ns = h.Mid(0, q) + ' ';
+		fn = h.Mid(q + 1);
+	}
 	String s = GetFileName(GetFileFolder(h)) + "/";
 	x += r.left;
+	if(ns.GetCount()) {
+		PaintTeXt(w, x, r.top, ns, StdFont().Bold(), ink);
+		PaintTeXt(w, x, r.top, "(", StdFont(), ink);
+	}
 	PaintTeXt(w, x, r.top, s, StdFont(), ink);
 	s = GetFileName(h);
 	PaintTeXt(w, x, r.top, s, StdFont().Bold(), ink);
+	if(ns.GetCount())
+		PaintTeXt(w, x, r.top, ")", StdFont(), ink);
 	return x - r.left;
 }
 
@@ -398,11 +411,15 @@ void Navigator::NavGroup(bool local)
 		String g = m.nest;
 		if(m.kind == TYPEDEF)
 			g.Trim(max(g.ReverseFind("::"), 0));
-		if(IsNull(g))
+		if(IsNull(g) || CodeBase().namespaces.Find(g) >= 0) {
+			if(g.GetCount()) // We want to show the namespace
+				g = g + '\xff';
+			g << GetSourceFilePath(m.decl_file);
 			if(m.pass)
-				g = "\xff~" + GetSourceFilePath(m.decl_file); // Second pass contains less matching items, sort it after the first pass
+				g = "\xff~" + g; // Second pass contains less matching items, sort it after the first pass
 			else
-				g = "\xff" + GetSourceFilePath(m.decl_file);
+				g = "\xff" + g;
+		}
 		else
 		if(m.pass)
 			g = "~" + g; // Second pass contains less matching items, sort it after the first pass
