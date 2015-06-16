@@ -1,9 +1,16 @@
 #include "Browser.h"
 
-String ReadId(CParser& p, String& rr)
+String   SchId(CParser& p, String& rr)
 {
 	p.Char('(');
 	String id = p.ReadId();
+	rr << "SqlId " << id << "(\"" << id << "\");";
+	return id;
+}
+
+String ReadId(CParser& p, String& rr)
+{
+	String id = SchId(p, rr);
 	p.Char(',');
 	if(p.IsNumber())
 		p.ReadNumber();
@@ -11,7 +18,6 @@ String ReadId(CParser& p, String& rr)
 	if(p.IsNumber())
 		p.ReadNumber();
 	p.Char(')');
-	rr << "SqlId " << id << "(\"" << id << "\");";
 	return id;
 }
 
@@ -27,12 +33,39 @@ Vector<String> PreprocessSchFile(const char *fn)
 		try {
 			line = p.GetLine();
 			if(p.Id("TABLE") || p.Id("TABLE_") || p.Id("TYPE") || p.Id("TYPE_")) {
-				S_name = "S_" + ReadId(p, rr);
+				S_name = "S_" + SchId(p, rr);
 				r << "struct " << S_name << " {";
 			}
 			else
+			if(p.Id("TABLE_I") || p.Id("TABLE_I_") || p.Id("TYPE_I") || p.Id("TYPE_I_")) {
+				S_name = "S_" + SchId(p, rr);
+				p.Char(',');
+				String S_base = "S_" + p.ReadId();
+				r << "struct " << S_name << " : " << S_base << " {";
+			}
+			else
+			if(p.Id("TABLE_II") || p.Id("TABLE_II_") || p.Id("TYPE_II") || p.Id("TYPE_II_")) {
+				S_name = "S_" + SchId(p, rr);
+				p.Char(',');
+				String S_base = "S_" + p.ReadId();
+				p.Char(',');
+				String S_base2 = "S_" + p.ReadId();
+				r << "struct " << S_name << " : " << S_base << ", " << S_base2 << " {";
+			}
+			else
+			if(p.Id("TABLE_III") || p.Id("TABLE_III_") || p.Id("TYPE_III") || p.Id("TYPE_III_")) {
+				S_name = "S_" + SchId(p, rr);
+				p.Char(',');
+				String S_base = "S_" + p.ReadId();
+				p.Char(',');
+				String S_base2 = "S_" + p.ReadId();
+				p.Char(',');
+				String S_base3 = "S_" + p.ReadId();
+				r << "struct " << S_name << " : " << S_base << ", " << S_base2 << ", " << S_base3 << " {";
+			}
+			else
 			if(p.Id("END_TABLE") || p.Id("END_TYPE"))
-				r <<
+				r << "\t"
 					"static const char           TableName[];"
 					"static const SqlSet&        ColumnSet();"
 					"static SqlSet               ColumnSet(const String& prefix);"
