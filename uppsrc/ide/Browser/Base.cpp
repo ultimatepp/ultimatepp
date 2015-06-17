@@ -336,7 +336,7 @@ void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
 	else {
 		cpp.Preprocess(path, in, GetMasterFile(GetSourceFilePath(file)));
 		filetype = decode(ext, ".h", FILE_H, ".hpp", FILE_HPP,
-		                       ".cpp",FILE_CPP, ".c", FILE_C, FILE_OTHER);
+		                       ".cpp", FILE_CPP, ".icpp", FILE_CPP, ".c", FILE_C, FILE_OTHER);
 		StringStream pin(cpp.output);
 		Parser p;
 		p.Do(pin, CodeBase(), file, filetype, GetFileName(path), error, Vector<String>(),
