@@ -187,6 +187,8 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	String type = ParseTemplatedType(ttype, tparam);
 	int c0 = typeset.GetCount();
 	const Array<CppItem>& n = GetTypeItems(type);
+	LDUMP(type);
+	LDUMP(tparam);
 	for(int i = 0; i < n.GetCount(); i++)
 		if(n[i].kind == TYPEDEF) {
 			ExpressionType(n[i].qtype, usings, xp, ii, typeset, variable, can_shortcut_operator, visited_bases, lvl + 1);
