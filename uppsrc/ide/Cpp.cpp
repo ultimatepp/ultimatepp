@@ -200,6 +200,9 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 		type = ResolveTParam(Qualify(ttype, id.Mid(0, q - 1), usings), tparam);
 		id = id.Mid(q + 1);
 	}
+	q = id.Find('<'); // as in Single<Display>
+	if(q >= 0)
+		id.Trim(q);
 	LLOG("ExpressionType " << type << " ii: " << ii << " id:" << id << " variable:" << variable);
 	if(*id == '.' || (!variable && !iscid(*id))) {
 		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
@@ -211,6 +214,7 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 		id = "operator" + id;
 		LLOG("id as: " << id);
 	}
+	LDUMP(id);
 	Index< Tuple2<String, bool> > mtype;
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
