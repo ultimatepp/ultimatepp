@@ -1,0 +1,11 @@
+description "Assist tests - not to be compiled/run\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
