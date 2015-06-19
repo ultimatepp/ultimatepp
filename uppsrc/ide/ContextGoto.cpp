@@ -223,10 +223,12 @@ void Ide::ContextGoto0(int pos)
 				todo.Remove(0);
 				if(t.EndsWith("::"))
 					t.Trim(t.GetCount() - 2);
-				scope.Add(t);
-				istype.Add(false);
-				ScopeInfo f(CodeBase(), t); // Try base classes too!
-				todo.Append(f.GetBases());
+				if(t.GetCount()) {
+					scope.Add(t);
+					istype.Add(false);
+					ScopeInfo f(CodeBase(), t); // Try base classes too!
+					todo.Append(f.GetBases());
+				}
 			}
 		}
 	}
@@ -263,17 +265,21 @@ void Ide::ContextGoto0(int pos)
 			todo.Remove(0);
 			if(t.EndsWith("::"))
 				t.Trim(t.GetCount() - 2);
-			scope.Add(t);
-			istype.Add(false);
-			ScopeInfo f(CodeBase(), t); // Try base classes too!
-			todo.Append(f.GetBases());
+			if(t.GetCount()) {
+				scope.Add(t);
+				istype.Add(false);
+				ScopeInfo f(CodeBase(), t); // Try base classes too!
+				todo.Append(f.GetBases());
+			}
 		}
-		q = parser.local.Find(id);
-		if(q >= 0) { // Try locals
-			AddHistory();
-			editor.SetCursor(editor.GetPos(parser.local[q].line - 1));
-			FindId(id);
-			return;
+		if(scope.GetCount() == 0) {
+			q = parser.local.Find(id);
+			if(q >= 0) { // Try locals
+				AddHistory();
+				editor.SetCursor(editor.GetPos(parser.local[q].line - 1));
+				FindId(id);
+				return;
+			}
 		}
 		// Can be unqualified type name like 'String'
 		String t = RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, id, parser.context.namespace_using));
@@ -322,6 +328,7 @@ void Ide::ContextGoto0(int pos)
 			if(ii >= 0) {
 				JumpToDefinition(n, ii, scope[j]);
 				FindId(id);
+				return;
 			}
 		}
 	}
