@@ -64,6 +64,17 @@ void JumpTo()
 	p.x // should jump to Point::x, not local variable
 }
 
+void JumpTo()
+{
+	int local_var;
+	Point foo;	
+	local_var // should jump to local variable declaration two lines above
+}
+
+struct JumpToTest {
+	int x; // test that this does not jump anywhere...
+}
+
 #endif
 
 GUI_APP_MAIN
