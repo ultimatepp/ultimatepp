@@ -4,47 +4,64 @@
 
 // Each test in separate function to activate grounding
 
-void Test()
+void Autocomplete()
 {
 	String x;
 	// Should not show anything here - qualification missing
 	x.
 }
 
-void Test()
+void Autocomplete()
 {
 	Upp::String x;
 	x.
 }
 
+void Autocomplete()
+{
+	Upp::MD5String
+}
+
 using namespace Upp;
 
-void Test()
+void Autocomplete()
+{
+	MD5String
+}
+
+void Autocomplete()
 {
 	String h;
 	h.
 }
 
-void Test()
+void Autocomplete()
 {
 	One<String>()->
 }
 
-void Test()
+void Autocomplete()
 {
 	Single<String>()->
 }
 
-void Test()
+void Autocomplete()
 {
 	EditDouble x;
 	x.HSizePos().
 }
 
-void Test()
+void Autocomplete()
 {
 	EditDouble x;
 	x.SetFilter(Char
+}
+
+void JumpTo()
+{
+	Point p;
+	int x;
+	p.x // should jump to Point::x, not local variable
 }
 
 #endif
