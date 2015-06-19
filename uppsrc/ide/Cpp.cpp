@@ -77,6 +77,7 @@ String ParseTemplatedType(const String& type, Vector<String>& tparam)
 
 String ResolveTParam(const String& type, const Vector<String>& tparam)
 {
+	LLOG("ResolveTParam " << type << ' ' << tparam);
 	String r;
 	const char *s = type;
 	while(*s) {
@@ -167,6 +168,16 @@ String Qualify(const String& scope, const String& type, const String& usings)
 	return Qualify(CodeBase(), scope, type, usings);
 }
 
+String ResolveReturnType(const CppItem& m, const Vector<String>& tparam)
+{
+	if(m.tparam.GetCount()) {
+		int q = InScListIndex(m.qtype, m.tname);
+		if(q >= 0 && q < tparam.GetCount())
+			return tparam[q];
+	}
+	return m.qtype;
+}
+
 void AssistEditor::ExpressionType(const String& ttype, const String& usings,
                                   const Vector<String>& xp, int ii,
                                   Index<String>& typeset, bool variable,
@@ -200,10 +211,13 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 		type = ResolveTParam(Qualify(ttype, id.Mid(0, q - 1), usings), tparam);
 		id = id.Mid(q + 1);
 	}
-	q = id.Find('<'); // as in Single<Display>
-	if(q >= 0)
-		id.Trim(q);
+	if(id.Find('<') >= 0) // as in Single<Display>
+		id = ParseTemplatedType(id, tparam);
 	LLOG("ExpressionType " << type << " ii: " << ii << " id:" << id << " variable:" << variable);
+	
+	for(int i = 0; i < tparam.GetCount(); i++) // need to qualify template parameters
+		tparam[i] = Qualify(ttype, tparam[i], usings);
+
 	if(*id == '.' || (!variable && !iscid(*id))) {
 		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
 		return;
@@ -220,7 +234,7 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 		const CppItem& m = n[i];
 		if(m.name == id) {
 			LLOG("Member " << m.qtype << " " << m.name);
-			mtype.FindAdd(MakeTuple(m.qtype, m.IsData() && !m.isptr));
+			mtype.FindAdd(MakeTuple(ResolveReturnType(m, tparam), m.IsData() && !m.isptr));
 		}
 	}
 	for(int i = 0; i < mtype.GetCount(); i++)

@@ -376,7 +376,7 @@ struct CppItem {
 	String         natural;
 	String         type;
 	String         qtype;
-	String         tparam;
+	String         tparam; // complete template parameters list, like '<class T>'
 	String         param;
 	String         pname;
 	String         ptype; // fn: types of parameters, struct: base classes
