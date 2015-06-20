@@ -17,6 +17,7 @@ void LocalProcess::Init() {
 #endif
 #ifdef PLATFORM_POSIX
 	pid = 0;
+	doublefork = false;
 	rpipe[0] = rpipe[1] = wpipe[0] = wpipe[1] = epipe[0] = epipe[1] = -1;
 #endif
 	exit_code = Null;
@@ -264,8 +265,35 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 			sNoBlock(epipe[0]);
 			close(epipe[1]); epipe[1]=-1;
 		}
+		if (doublefork)
+			pid = 0;
 		return true;
 	}
+
+	if (doublefork) {
+		pid_t pid2 = fork();
+		LLOG("\tfork2, pid2 = " << (int)pid2 << ", getpid = " << (int)getpid());
+		if (pid2 < 0) {
+			LLOG("fork2 failed");
+			Exit(1);
+		}
+		if (pid2) {
+			LLOG("exiting intermediary process");
+			close(rpipe[0]); rpipe[0]=-1;
+			close(wpipe[1]); wpipe[1]=-1;
+			sNoBlock(rpipe[1]);
+			sNoBlock(wpipe[0]);
+			if (spliterr) {
+				sNoBlock(epipe[0]);
+				close(epipe[1]); epipe[1]=-1;
+			}
+			// we call exec instead of Exit, because exit doesn't behave nicelly with threads
+			execl("/usr/bin/true", "[closing fork]", (char*)NULL);
+			// only call Exit when execl fails
+			Exit(0);
+		}
+	}
+
 	LLOG("child process - execute application");
 //	rpipe[1] = wpipe[0] = -1;
 	dup2(rpipe[0], 0);
@@ -372,6 +400,10 @@ void LocalProcess::Kill() {
 
 void LocalProcess::Detach()
 {
+#ifdef PLATFORM_POSIX
+	if (doublefork)
+		waitpid(pid, 0, WUNTRACED);
+#endif
 	Free();
 }
 
