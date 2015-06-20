@@ -462,11 +462,19 @@ void AssistEditor::Assist()
 	else {
 		String tp;
 		Vector<String> xp = ReadBack(q);
+		bool isok = false;
+		for(int i = 0; i < xp.GetCount(); i++)
+			if(iscib(*xp[i])) {
+				isok = true;
+				break;
+			}	
 		if(xp.GetCount()) {
-			Index<String> typeset = EvaluateExpressionType(parser, xp);
-			for(int i = 0; i < typeset.GetCount(); i++)
-				if(typeset[i].GetCount())
-					GatherItems(typeset[i], xp[0] != "this", in_types, false);
+			if(isok) { // Do nothing on pressing '.' when there is no identifier before
+				Index<String> typeset = EvaluateExpressionType(parser, xp);
+				for(int i = 0; i < typeset.GetCount(); i++)
+					if(typeset[i].GetCount())
+						GatherItems(typeset[i], xp[0] != "this", in_types, false);
+			}
 		}
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);
