@@ -200,11 +200,13 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	const Array<CppItem>& n = GetTypeItems(type);
 	LDUMP(type);
 	LDUMP(tparam);
-	for(int i = 0; i < n.GetCount(); i++)
-		if(n[i].kind == TYPEDEF) {
-			ExpressionType(n[i].qtype, usings, xp, ii, typeset, variable, can_shortcut_operator, visited_bases, lvl + 1);
-			return;
-		}
+	if(CodeBase().namespaces.Find(ttype) < 0 && ttype.GetCount()) // do not search for namespace typedefs
+		for(int i = 0; i < n.GetCount(); i++)
+			if(n[i].kind == TYPEDEF) {
+				LLOG("typedef -> " << n[i].qtype);
+				ExpressionType(n[i].qtype, usings, xp, ii, typeset, variable, can_shortcut_operator, visited_bases, lvl + 1);
+				return;
+			}
 	String id = xp[ii];
 	int q = id.ReverseFind(':');
 	if(q > 0 && id[q - 1] == ':') {
