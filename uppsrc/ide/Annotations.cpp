@@ -7,7 +7,7 @@ void AssistEditor::Annotate(const String& filename)
 	ClearAnnotations();
 	for(int j = 0; j < base.GetCount(); j++) {
 		String nest = base.GetKey(j);
-		if(*nest != '@') { // Annotation of anonymous structures not suported
+		if(*nest != '@') { // Annotations of anonymous structures not suported
 			const Array<CppItem>& n = base[j];
 			for(int k = 0; k < n.GetCount(); k++) {
 				const CppItem& m = n[k];
@@ -115,11 +115,7 @@ void AssistEditor::SyncAnnotationPopup()
 					pass = 2;
 					break;
 				}
-			if(pass == 0 && cr.StartsWith("Upp::")) { // Patch until docs are converted
-				cr = cr.Mid(5);
-				cr.Replace(" Upp::", " ");
-			}
-			else
+			if(pass == 0 && !LegacyRef(cr))
 				break;
 		}
 		result.SetStyles(topic_text.GetStyles());

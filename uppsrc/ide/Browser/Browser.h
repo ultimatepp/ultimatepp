@@ -195,6 +195,8 @@ void            SyncTopicFile(const String& link);
 String          GetTopicTitle(const String& link);
 void            InvalidateTopicInfoPath(const String& path);
 
+bool LegacyRef(String& ref);
+
 Vector<String>  GetRefLinks(const String& ref);
 
 int             TopicWordIndex(const String& w);

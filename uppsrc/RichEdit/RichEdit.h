@@ -771,7 +771,7 @@ public:
 	Value           GetVar(const String& id) const           { return vars.Get(id, Value()); }
 	void            EvaluateFields();
 
-	void            GotoLabel(const String& lbl);
+	bool            GotoLabel(const String& lbl);
 	void            BeginPara();
 	void            NextPara();
 	void            PrevPara();
