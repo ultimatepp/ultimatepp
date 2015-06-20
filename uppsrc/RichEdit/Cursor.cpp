@@ -420,14 +420,15 @@ void RichEdit::GotoEntry()
 	GotoType(RichText::INDEXENTRIES, indexentry);
 }
 
-void RichEdit::GotoLabel(const String& lbl)
+bool RichEdit::GotoLabel(const String& lbl)
 {
 	Vector<RichValPos> f = text.GetValPos(pagesz, RichText::LABELS);
 	for(int i = 0; i < f.GetCount(); i++)
 		if(f[i].data == WString(lbl)) {
 			Move(f[i].pos);
-			break;
+			return true;
 		}
+	return false;
 }
 
 void RichEdit::BeginPara()

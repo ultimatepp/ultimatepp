@@ -357,7 +357,11 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 {
 	if(topic.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
-		editor.GotoLabel(link);
+		if(!editor.GotoLabel(link)) {
+			String l = link;
+			LegacyRef(l);
+			editor.GotoLabel(l);
+		}
 		if(!IsNull(create)) {
 			if(!before)
 				for(bool firstpass = true; firstpass; firstpass = false)

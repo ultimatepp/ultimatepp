@@ -237,15 +237,31 @@ void SyncRefs()
 	SyncRefsFinished = true;
 }
 
-Vector<String> GetRefLinks(const String& ref)
+bool LegacyRef(String& ref)
 {
+	if(ref.StartsWith("Upp::")) { // Fix links with legacy docs
+		ref = ref.Mid(5);
+		ref.Replace(" Upp::", " ");
+		ref.Replace("(Upp::", "(");
+		ref.Replace(",Upp::", ",");
+		return true;
+	}
+	return false;
+}
+
+Vector<String> GetRefLinks(const String& ref_)
+{
+	String ref = ref_;
 	Vector<String> l;
-	int q = ref_ref().Find(ref);
-	if(q < 0 && ref.StartsWith("Upp::")) // fix old docs
-		q = ref_ref().Find(ref.Mid(5));
-	while(q >= 0) {
-		l.Add(ref_link()[q]);
-		q = ref_ref().FindNext(q);
+	for(int pass = 0; pass < 2; pass++) {
+		int q = ref_ref().Find(ref);
+		while(q >= 0) {
+			l.Add(ref_link()[q]);
+			q = ref_ref().FindNext(q);
+		}
+		
+		if(pass == 0 && !LegacyRef(ref))
+			break;
 	}
 	return l;
 }
