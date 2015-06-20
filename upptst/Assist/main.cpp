@@ -57,6 +57,19 @@ void Autocomplete()
 	x.SetFilter(Char
 }
 
+void Autocomplete()
+{
+	Point p;
+	p.
+}
+
+Index<String> Tags();
+
+void Autocomplete()
+{
+	Tags().
+}
+
 void JumpTo()
 {
 	Point p;
