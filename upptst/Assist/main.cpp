@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-#if 0 // Do not compile these tests
+#if 0 // Do not compile these tests in nightly job
 
 // Each test in separate function to activate grounding
 
@@ -36,7 +36,7 @@ void Autocomplete()
 }
 
 void Autocomplete()
-{
+{ // Check that this displays String autocomplete (not One)
 	One<String>()->
 }
 
@@ -47,7 +47,7 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	EditDouble x;
+	EditDouble x; // Also try jump to HSizePos
 	x.HSizePos().
 }
 
