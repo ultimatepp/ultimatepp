@@ -52,6 +52,7 @@ private:
 	pid_t        pid;
 	int          rpipe[2], wpipe[2], epipe[2];
 	String       exit_string;
+	bool         doublefork;
 #endif
 	int          exit_code;
 	String       wreso, wrese; // Output fetched during Write
@@ -68,6 +69,8 @@ public:
 	bool Start2(const char *cmd, const Vector<String>& arg, const char *envptr = NULL)       { return DoStart(cmd, &arg, true, envptr); }
 	
 #ifdef PLATFORM_POSIX
+	LocalProcess& DoubleFork(bool b = true)                           { doublefork = b; return *this; }
+
 	int  GetPid()  const                                              { return pid; }
 #endif
 
