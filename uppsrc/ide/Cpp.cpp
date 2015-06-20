@@ -217,6 +217,10 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	
 	for(int i = 0; i < tparam.GetCount(); i++) // need to qualify template parameters
 		tparam[i] = Qualify(ttype, tparam[i], usings);
+	
+	bool tryop = id == "->";
+	if(tryop)
+		id = "operator->";
 
 	if(*id == '.' || (!variable && !iscid(*id))) {
 		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
@@ -237,6 +241,12 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 			mtype.FindAdd(MakeTuple(ResolveReturnType(m, tparam), m.IsData() && !m.isptr));
 		}
 	}
+	
+	if(mtype.GetCount() == 0 && tryop) {
+		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
+		return;
+	}
+	
 	for(int i = 0; i < mtype.GetCount(); i++)
 		ExpressionType(ResolveTParam(mtype[i].a, tparam), usings, xp, ii + 1, typeset, mtype[i].b, lvl + 1);
 	
