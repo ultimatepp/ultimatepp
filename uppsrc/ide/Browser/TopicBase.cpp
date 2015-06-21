@@ -275,8 +275,6 @@ String GetTopicTitle(const String& link)
 	return q >= 0 ? topic_info()[q].title : Null;
 }
 
-
-
 int MatchWord(const Vector<int>& w, const String& pattern)
 {
 	const Index<String>& ws = TopicWords();
