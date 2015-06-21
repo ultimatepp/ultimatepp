@@ -7,8 +7,8 @@ _LARGE_INTEGER {
 	INSTANCEVARIABLE, name: u, qitem: u, qtype: .u, qptype: , natural: struct { DWORD LowPart; LONG HighPart; } u, line 10, using 
 	INSTANCEVARIABLE, name: QuadPart, qitem: QuadPart, qtype: LONGLONG, qptype: , natural: LONGLONG QuadPart, line 13, using 
 }
-_LARGE_INTEGER::@rAp/jC+qxJd1pha3wMwh2A==/title {
-	STRUCT, name: @rAp/jC+qxJd1pha3wMwh2A==/title, qitem: struct, qtype: @rAp/jC+qxJd1pha3wMwh2A==/title, qptype: , natural: struct @rAp/jC+qxJd1pha3wMwh2A==/title, line 4, using 
+_LARGE_INTEGER::=/title {
+	STRUCT, name: =/title, qitem: struct, qtype: =/title, qptype: , natural: struct =/title, line 4, using 
 	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 5, using 
 	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: LONG, qptype: , natural: LONG HighPart, line 6, using 
 }
@@ -29,8 +29,8 @@ _ULARGE_INTEGER {
 	INSTANCEVARIABLE, name: u, qitem: u, qtype: .u, qptype: , natural: struct { DWORD LowPart; DWORD HighPart; } u, line 28, using 
 	INSTANCEVARIABLE, name: QuadPart, qitem: QuadPart, qtype: ULONGLONG, qptype: , natural: ULONGLONG QuadPart, line 31, using 
 }
-_ULARGE_INTEGER::@Q7NOmvtSotvDdn2LZ33l2A==/title {
-	STRUCT, name: @Q7NOmvtSotvDdn2LZ33l2A==/title, qitem: struct, qtype: @Q7NOmvtSotvDdn2LZ33l2A==/title, qptype: , natural: struct @Q7NOmvtSotvDdn2LZ33l2A==/title, line 22, using 
+_ULARGE_INTEGER::=/title {
+	STRUCT, name: =/title, qitem: struct, qtype: =/title, qptype: , natural: struct =/title, line 22, using 
 	INSTANCEVARIABLE, name: LowPart, qitem: LowPart, qtype: DWORD, qptype: , natural: DWORD LowPart, line 23, using 
 	INSTANCEVARIABLE, name: HighPart, qitem: HighPart, qtype: DWORD, qptype: , natural: DWORD HighPart, line 24, using 
 }

@@ -61,8 +61,8 @@ TreeNodeInfo::Extended {
 	INSTANCEVARIABLE, name: erotica, qitem: erotica, qtype: , qptype: , natural: bool erotica, line 24, using 
 	CONSTRUCTOR, name: Extended, qitem: Extended(), qtype: , qptype: , natural: Extended(), line 26, using 
 }
-TreeNodeInfo::@WF5rkVGLjWSl5vPsGUIJ1g==/title {
-	STRUCT, name: @WF5rkVGLjWSl5vPsGUIJ1g==/title, qitem: union, qtype: @WF5rkVGLjWSl5vPsGUIJ1g==/title, qptype: , natural: union @WF5rkVGLjWSl5vPsGUIJ1g==/title, line 28, using 
+TreeNodeInfo::=/title {
+	STRUCT, name: =/title, qitem: union, qtype: =/title, qptype: , natural: union =/title, line 28, using 
 	INSTANCEVARIABLE, name: extended, qitem: extended, qtype: TreeNodeInfo::Extended, qptype: , natural: Extended *extended, line 29, using , pointer
 	INSTANCEVARIABLE, name: text, qitem: text, qtype: , qptype: , natural: char text[SMALLCHARS], line 30, using , pointer
 }
