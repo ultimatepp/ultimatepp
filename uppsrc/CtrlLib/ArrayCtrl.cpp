@@ -554,6 +554,8 @@ void ArrayCtrl::SetVirtualCount(int c) {
 	Refresh();
 	SyncInfo();
 	SetSb();
+	if(cursor >= virtualcount)
+		GoEnd();
 }
 
 void ArrayCtrl::SetSb() {
