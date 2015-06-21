@@ -22,11 +22,21 @@ void Autocomplete()
 	Upp::MD5String
 }
 
+void Autocomplete()
+{
+	Upp::String
+}
+
 using namespace Upp;
 
 void Autocomplete()
 {
 	MD5String
+}
+
+void Autocomplete()
+{
+	String
 }
 
 void Autocomplete()
@@ -68,6 +78,11 @@ Index<String> Tags();
 void Autocomplete()
 {
 	Tags().
+}
+
+void Autocomplete()
+{
+	type // check that there are not wrong item is the list for 'type'
 }
 
 void JumpTo()
