@@ -336,7 +336,7 @@ void AssistEditor::AssistItemAdd(const String& scope, const CppItem& m, int type
 void AssistEditor::GatherItems(const String& type, bool only_public, Index<String>& in_types, bool types)
 {
 	LTIMING("GatherItems");
-	LLOG("GatherItems " << type);
+	LLOG("---- GatherItems " << type);
 	if(in_types.Find(type) >= 0) {
 		LLOG("-> recursion, exiting");
 		return;
@@ -352,7 +352,9 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 			int typei = assist_type.FindAdd("<types>");
 			for(int i = 0; i < CodeBase().GetCount(); i++) {
 				String nest = CodeBase().GetKey(i);
-				if(nest.GetLength() > ntp.GetLength() && memcmp(~ntp, ~nest, ntp.GetLength()) == 0) {
+				if(nest.GetLength() > ntp.GetLength() &&        // Subscope of scope
+				   memcmp(~ntp, ~nest, ntp.GetLength()) == 0 && // e.g. Upp:: -> Upp::String
+				   nest.Find("::", ntp.GetLength()) < 0) {      // but not Upp::String::Buffer
 					Array<CppItem>& n = CodeBase()[i];
 					for(int i = 0; i < n.GetCount(); i++) {
 						const CppItem& m = n[i];
