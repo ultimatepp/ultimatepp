@@ -47,7 +47,7 @@ int IsCommaOrColon(int c)
 	return c == ':' || c == ',' ? c : 0;
 }
 
-#ifdef flatMAIN
+#ifdef flagMAIN
 
 CONSOLE_APP_MAIN
 {
