@@ -19,7 +19,7 @@ int main(int argc, char **argv, const char **envptr) { \
 	UPP::InitGtkApp(argc, argv, envptr); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \
-	ExitGtkApp(); \
+	UPP::ExitGtkApp(); \
 	UPP::AppExit__(); \
 	return UPP::GetExitCode(); \
 } \

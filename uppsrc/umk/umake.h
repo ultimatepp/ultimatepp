@@ -74,7 +74,7 @@ public:
 	void Kill(int slot);
 	void Kill();
 	void ClearError()                         { error_keys.Clear(); }
-	Vector<String> PickErrors()               { Vector<String> e = error_keys; error_keys.Clear(); return e; }
+	Vector<String> PickErrors()               { Vector<String> e = pick(error_keys); error_keys.Clear(); return e; }
 	void Wait(int slot);
 	bool Wait();
 
