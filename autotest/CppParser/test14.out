@@ -8,8 +8,8 @@
 	STRUCT, name: Foo, qitem: struct, qtype: .name::Foo, qptype: , natural: struct Foo, line 3, using 
 	INSTANCEVARIABLE, name: a, qitem: a, qtype: , qptype: , natural: int a, line 4, using 
 }
-.name::@WJqy9ozNzEU6OSliwUJIeg==/title {
-	STRUCT, name: @WJqy9ozNzEU6OSliwUJIeg==/title, qitem: struct, qtype: @WJqy9ozNzEU6OSliwUJIeg==/title, qptype: , natural: struct @WJqy9ozNzEU6OSliwUJIeg==/title, line 6, using 
+.name::=/title {
+	STRUCT, name: =/title, qitem: struct, qtype: =/title, qptype: , natural: struct =/title, line 6, using 
 	INSTANCEVARIABLE, name: bar, qitem: bar, qtype: , qptype: , natural: int bar, line 7, using 
 }
 .name::.quack {

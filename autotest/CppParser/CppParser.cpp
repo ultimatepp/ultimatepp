@@ -9,6 +9,19 @@ void AddError(int ln, const String& s)
 	errs.Add(AsString(ln) + ": " + s);
 }
 
+void CleanAnonymous(String& s)
+{
+	for(;;) {
+		int q = s.Find('@');
+		if(q < 0)
+			return;
+		int qq = s.Find("/title", q);
+		if(qq < 0)
+			return;
+		s.Remove(q, qq - q - 1);
+	}
+}
+
 void Test(const char *path)
 {
 	CppBase base;
@@ -61,6 +74,7 @@ void Test(const char *path)
 		out << ", line: " << p.local[i].line << "\n";
 	}
 	out << "}";
+	CleanAnonymous(out);
 	LOG("====");
 	LOG(out);
 	LOG("-------------------------------------------------------------------------------");
@@ -76,12 +90,10 @@ void Test(const char *path)
 CONSOLE_APP_MAIN {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	SeedRandom(0);
-	
-	FindFile ff(GetDataFile("*.in"));
-	while(ff) {
-		Test(ff.GetPath());
-		ff.Next();
+	for(int i = 0; i < 10000; i++) {
+		String p = GetDataFile("test" + AsString(i) + ".in");
+		if(FileExists(p))
+			Test(p);
 	}
 	LOG("=========== OK");
 }
