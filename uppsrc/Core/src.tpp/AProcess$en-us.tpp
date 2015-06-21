@@ -76,7 +76,10 @@ them and providing output.&]
 [s4; &]
 [s5;:AProcess`:`:Detach`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Detach]()&]
 [s2;%% Disconnects AProcess instance from running child process. 
-Process continues to run while AProcess instance can be destructed.&]
+Process continues to run while AProcess instance can be destructed. 
+Please notice the importance to provide a mechanism to avoid 
+zombies in POSIX here (e.g. use DoubleFork or appropriate SIGCHLD 
+handler).&]
 [s3; &]
 [s4; &]
 [s5;:AProcess`:`:Get`(`): [_^String^ String]_[* Get]()&]
@@ -137,6 +140,13 @@ are read separately using Read2 method. This variant passes individual
 arguments instead of whole commandline, this has advantage that 
 arguments are in POSIX passed directly to execv, without parsing 
 the commandline.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:LocalProcess`:`:DoubleFork`(bool`): [_^Upp`:`:LocalProcess^ LocalProcess][@(0.0.255) `&
+]_[* DoubleFork]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s6; `[POSIX`]&]
+[s2;%% Activates double`-fork mode to avoid zombies. Use this in 
+POSIX if you want to Detach the process.&]
 [s3;%% &]
 [s4; &]
 [s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&

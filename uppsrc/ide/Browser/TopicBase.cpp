@@ -244,6 +244,8 @@ bool LegacyRef(String& ref)
 		ref.Replace(" Upp::", " ");
 		ref.Replace("(Upp::", "(");
 		ref.Replace(",Upp::", ",");
+		ref.Replace("<Upp::", "<");
+		ref.Replace("const Upp::", "const ");
 		return true;
 	}
 	return false;
