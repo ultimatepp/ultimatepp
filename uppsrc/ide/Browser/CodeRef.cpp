@@ -364,11 +364,11 @@ void TopicEditor::GoTo(const String& _topic, const String& link, const String& c
 		}
 		if(!IsNull(create)) {
 			if(!before)
-				for(bool firstpass = true; firstpass; firstpass = false)
+				for(int pass = 0; pass < 2; pass++)
 					for(;;) {
 						int c = editor.GetCursor();
 						RichText::FormatInfo f = editor.GetFormatInfo();
-						if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && !firstpass)
+						if(f.styleid == BeginUuid() || (IsNull(f.label) || f.label == "noref") && pass)
 							break;
 						editor.NextPara();
 						if(editor.GetCursor() == c)

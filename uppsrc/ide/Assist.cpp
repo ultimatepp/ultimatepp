@@ -328,6 +328,7 @@ void AssistEditor::SyncAssist()
 			}
 		}
 	}
+	assist.Clear();
 	assist.SetVirtualCount(assist_item_ndx.GetCount());
 }
 
