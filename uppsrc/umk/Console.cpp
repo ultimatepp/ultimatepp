@@ -73,7 +73,7 @@ int Console::Flush()
 int Console::Execute(One<AProcess> p, const char *command, Stream *out, bool q)
 {
 	Wait();
-	if(!Run(p, command, out, q, 0))
+	if(!Run(pick(p), command, out, q, 0))
 		return -1;
 	Wait();
 	return processes[0].exitcode;
@@ -85,7 +85,7 @@ int Console::Execute(const char *command, Stream *out, const char *envptr, bool 
 		Wait();
 		One<AProcess> p;
 		if(p.Create<LocalProcess>().Start(command, envptr))
-			return Execute(p, command, out, q);
+			return Execute(pick(p), command, out, q);
 	}
 	catch(Exc e) {
 	}
@@ -116,7 +116,7 @@ bool Console::Run(const char *cmdline, Stream *out, const char *envptr, bool qui
 		Wait(slot);
 		One<AProcess> sproc;
 		return sproc.Create<LocalProcess>().Start(cmdline, envptr) &&
-		       Run(sproc, cmdline, out, quiet, slot, key, blitz_count);
+		       Run(pick(sproc), cmdline, out, quiet, slot, key, blitz_count);
 	}
 	catch(Exc e) {
 		Append(e);
@@ -137,7 +137,7 @@ bool Console::Run(One<AProcess> process, const char *cmdline, Stream *out, bool 
 		spooled_output << cmdline << "\n";
 	Wait(slot);
 	Slot& pslot = processes[slot];
-	pslot.process = process;
+	pslot.process = pick(process);
 	pslot.cmdline = cmdline;
 	pslot.outfile = out;
 	pslot.output = Null;

@@ -43,7 +43,7 @@ int Ide::IdeConsoleExecuteWithInput(const char *cmdline, Stream *out, const char
 
 int Ide::IdeConsoleExecute(One<AProcess> process, const char *cmdline, Stream *out, bool quiet)
 {
-	return console.Execute(process, cmdline, out, quiet);
+	return console.Execute(pick(process), cmdline, out, quiet);
 }
 
 int Ide::IdeConsoleAllocSlot()
@@ -58,7 +58,7 @@ bool Ide::IdeConsoleRun(const char *cmdline, Stream *out, const char *envptr, bo
 
 bool Ide::IdeConsoleRun(One<AProcess> process, const char *cmdline, Stream *out, bool quiet, int slot, String key, int blitz_count)
 {
-	return console.Run(process, cmdline, out, quiet, slot, key, blitz_count);
+	return console.Run(pick(process), cmdline, out, quiet, slot, key, blitz_count);
 }
 
 void Ide::IdeConsoleFlush()
