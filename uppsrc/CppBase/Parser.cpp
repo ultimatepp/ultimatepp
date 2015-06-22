@@ -1686,32 +1686,33 @@ void Parser::Do()
 			bool body = lex == '{';
 			for(int i = 0; i < r.GetCount(); i++) {
 				Decl& d = r[i];
-				if(d.function) {
-					if(!d.isfriend)
-						functionItem = &Fn(d, Null, body, String(), String());
-				}
-				else {
-					String h = d.natural;
-					int q = h.Find('=');
-					if(q >= 0)
-						h = TrimRight(h.Mid(0, q));
-					String scope = context.scope;
-					if(d.type_def)
-						ScopeCat(scope, d.name);
-					CppItem& im = Item(scope, context.namespace_using,
-					                   d.isfriend ? "friend class"
-					                   : d.type_def ? "typedef"
-					                   : d.name, d.name);
-					im.natural = Purify(h);
-					im.type = d.type;
-					im.access = context.access;
-					im.kind = d.isfriend ? FRIENDCLASS :
-					          d.type_def ? TYPEDEF :
-					          IsNull(scope) ? VARIABLE :
-					          d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
-					if(im.IsData())
-						im.isptr = d.isptr;
-				}
+				if(d.name.GetCount())
+					if(d.function) {
+						if(!d.isfriend)
+							functionItem = &Fn(d, Null, body, String(), String());
+					}
+					else {
+						String h = d.natural;
+						int q = h.Find('=');
+						if(q >= 0)
+							h = TrimRight(h.Mid(0, q));
+						String scope = context.scope;
+						if(d.type_def)
+							ScopeCat(scope, d.name);
+						CppItem& im = Item(scope, context.namespace_using,
+						                   d.isfriend ? "friend class"
+						                   : d.type_def ? "typedef"
+						                   : d.name, d.name);
+						im.natural = Purify(h);
+						im.type = d.type;
+						im.access = context.access;
+						im.kind = d.isfriend ? FRIENDCLASS :
+						          d.type_def ? TYPEDEF :
+						          IsNull(scope) ? VARIABLE :
+						          d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
+						if(im.IsData())
+							im.isptr = d.isptr;
+					}
 			}
 			if(body && functionItem && whenFnEnd) {
 				symbolsOutsideFunctions.Merge( lex.FinishStatCollection() );
