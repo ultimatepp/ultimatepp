@@ -186,9 +186,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncParamInfo();
 	void           StartParamInfo(const CppItem& m, int pos);
 
-	Vector<String> GetFileIds();
 	void           Complete();
-	void           Complete2();
 	void           Abbr();
 
 	void           Context(Parser& parser, int pos);

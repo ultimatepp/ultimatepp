@@ -540,27 +540,53 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		popup.Ctrl::PopUp(this, false, false, true);
 }
 
-Vector<String> AssistEditor::GetFileIds()
+bool sILess(const String& a, const String& b)
 {
-	Index<String> id;
+	return ToUpper(a) < ToUpper(b);
+}
+
+void AssistEditor::Complete()
+{
+	CloseAssist();
+
+	Index<String> ids;
 	int l = GetCursorLine() - 1;
 	while(l >= 0) {
 		String x = GetUtf8Line(l);
 		CParser p(x);
 		while(!p.IsEof())
 			if(p.IsId())
-				id.FindAdd(p.ReadId());
+				ids.FindAdd(p.ReadId());
 			else
 				p.SkipTerm();
 		l--;
 	}
-	return id.PickKeys();
-}
+	
+	Vector<String> id = ids.PickKeys();
+	Upp::Sort(id, sILess);
 
-void AssistEditor::Complete()
-{
-	CloseAssist();
-	Vector<String> id = GetFileIds();
+	int c = GetCursor();
+	String q = IdBack(c);
+	if(q.GetCount()) {
+		String h;
+		for(int i = 0; i < id.GetCount(); i++) {
+			String s = id[i];
+			if(s.StartsWith(q)) {
+				if(IsNull(h))
+					h = s;
+				else {
+					s.Trim(min(s.GetCount(), h.GetCount()));
+					for(int j = 0; j < s.GetCount(); j++)
+						if(s[j] != h[j]) {
+							h.Trim(j);
+							break;
+						}
+				}
+			}
+		}
+		if(h.GetCount() > q.GetCount())
+			Paste(h.Mid(q.GetCount()).ToWString());
+	}
 	for(int i = 0; i < id.GetCount(); i++) {
 		CppItemInfo& f = assist_item.Add();
 		f.name = id[i];
@@ -570,34 +596,6 @@ void AssistEditor::Complete()
 	}
 	assist_type.Clear();
 	PopUpAssist(true);
-}
-
-void AssistEditor::Complete2()
-{
-	CloseAssist();
-	int c = GetCursor();
-	String q = IdBack(c);
-	if(IsNull(q))
-		return;
-	String h;
-	Vector<String> id = GetFileIds();
-	for(int i = 0; i < id.GetCount(); i++) {
-		String s = id[i];
-		if(s.StartsWith(q)) {
-			if(IsNull(h))
-				h = s;
-			else {
-				s.Trim(min(s.GetCount(), h.GetCount()));
-				for(int j = 0; j < s.GetCount(); j++)
-					if(s[j] != h[j]) {
-						h.Trim(j);
-						break;
-					}
-			}
-		}
-	}
-	if(h.GetCount() > q.GetCount())
-		Paste(h.Mid(q.GetCount()).ToWString());
 }
 
 void AssistEditor::Abbr()
