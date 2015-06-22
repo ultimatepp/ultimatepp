@@ -235,8 +235,13 @@ void Navigator::Navigate()
 	if(theide && ii >= 0 && ii < litem.GetCount()) {
 		int ln = GetCurrentLine() + 1;
 		const NavItem& m = *litem[ii];
-		if(m.kind == KIND_LINE || IsNull(search))
+		if(m.kind == KIND_LINE || IsNull(search)) {
 			theide->GotoPos(Null, m.line);
+			search.Clear();
+			Search();
+			navigating = false;
+			SyncCursor();
+		}
 		else {
 			Vector<NavLine> l = GetNavLines(m);
 			int q = l.GetCount() - 1;
