@@ -103,7 +103,9 @@ is used as method. Returns `*this.&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpRequest`:`:DEL`(`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* DEL]()&]
-[s2;%% Same as Method(METHOD`_DELETE). Returns `*this.&]
+[s2;%% Same as Method(METHOD`_DELETE). Returns `*this. Note that 
+this method is not named `"DELETE`" because of name`-clash with 
+Win32 #define.&]
 [s3; &]
 [s4; &]
 [s5;:HttpRequest`:`:TRACE`(`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* TRACE]()&]
