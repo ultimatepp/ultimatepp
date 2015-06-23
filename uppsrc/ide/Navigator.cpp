@@ -4,8 +4,6 @@
 
 String FormatNest(String nest)
 {
-	if(*nest == '~')
-		nest = nest.Mid(1);
 	int q = nest.Find("@");
 	if(q >= 0) {
 		nest.Trim(q);
@@ -65,8 +63,6 @@ void DrawFileName(Draw& w, const Rect& r, const String& h, Color ink)
 int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 {
 	if(*h == '\xff')
-		h.Remove(0, 1);
-	if(*h == '~')
 		h.Remove(0, 1);
 	return DrawFileName0(w, r, h, ink, 0);
 }
@@ -416,18 +412,16 @@ void Navigator::NavGroup(bool local)
 		String g = m.nest;
 		if(m.kind == TYPEDEF)
 			g.Trim(max(g.ReverseFind("::"), 0));
-		if(IsNull(g) || CodeBase().namespaces.Find(g) >= 0) {
+		if(IsNull(m.nest) || CodeBase().namespaces.Find(m.nest) >= 0) {
 			if(g.GetCount()) // We want to show the namespace
-				g = g + '\xff';
-			g << GetSourceFilePath(m.decl_file);
-			if(m.pass)
-				g = "\xff~" + g; // Second pass contains less matching items, sort it after the first pass
+				g << '\xff';
 			else
-				g = "\xff" + g;
+				g.Clear();
+			g << GetSourceFilePath(m.decl_file);
+			g = '\xff' + g;
 		}
-		else
-		if(m.pass)
-			g = "~" + g; // Second pass contains less matching items, sort it after the first pass
+		if(!local)
+			g = (char)(m.pass + 10) + g;
 		if(local)
 			if(gitem.GetCount() && gitem.TopKey() == g)
 				gitem.Top().Add(&m);
@@ -522,15 +516,17 @@ void Navigator::Search()
 		String usearch_name = ToUpper(search_name);
 		ArrayMap<String, NavItem> imap;
 		bool local = sorting && IsNull(s);
-		for(int pass = 0; pass < 2; pass++) {
+		for(int pass = -1; pass < 2; pass++) {
 			for(int i = 0; i < b.GetCount(); i++) {
 				String nest = b.GetKey(i);
 	//			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
 	//			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
-				bool foundnest = (wholeclass ? pass ? ToUpper(nest) == usearch_nest 
+				bool foundnest = (wholeclass ? pass < 0 ? false :
+				                               pass ? ToUpper(nest) == usearch_nest 
 				                                    : nest == search_nest
-				                             : (pass ? ToUpper(nest).Find(usearch_nest) >= 0
-				                                     : nest.Find(search_nest) >= 0))
+				                             : pass < 0 ? nest == search_nest :
+				                               (pass ? ToUpper(nest).Find(usearch_nest) >= 0
+				                                     : nest.StartsWith(search_nest)))
 				                 && *nest != '@';
 				if(local || foundnest || both) {
 					const Array<CppItem>& ci = b[i];
@@ -538,7 +534,8 @@ void Navigator::Search()
 						const CppItem& m = ci[j];
 	//					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
 						if(local ? m.file == fileii
-						         : *m.uname != '@' && (pass ? m.uname.Find(usearch_name) >= 0
+						         : *m.uname != '@' && (pass < 0 ? m.name == search_name :
+						                               pass ? m.uname.Find(usearch_name) >= 0
 						                                    : m.name.StartsWith(search_name))
 						           || both && foundnest) {
 							String key = nest + '\1' + m.qitem;
@@ -579,7 +576,12 @@ void Navigator::Search()
 		nitem = imap.PickValues();
 		NavGroup(false);
 		SortByKey(gitem);
-		Index<String> sc;
+		Vector<String> keys = gitem.PickKeys();
+		Vector<Vector<NavItem *> > values = gitem.PickValues();
+		IndexSort(keys, values);
+		for(int i = 0; i < keys.GetCount(); i++)
+			keys[i].Remove(0);
+		gitem = pick(VectorMap<String, Vector<NavItem *> > (keys, values));
 		for(int i = 0; i < gitem.GetCount(); i++)
 			Sort(gitem[i], sorting ? SortByNames : SortByLines);
 	}
@@ -657,6 +659,7 @@ void Navigator::Scope()
 			litem.Add(m);
 		}
 	}
+	list.Clear();
 	list.SetVirtualCount(litem.GetCount());
 }
 

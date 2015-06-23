@@ -31,7 +31,7 @@ struct Navigator {
 		int             decl_file;
 		bool            impl;
 		bool            decl;
-		bool            pass;
+		int8            pass;
 		Vector<NavLine> linefo;
 		
 		void Set(const CppItem& m);
