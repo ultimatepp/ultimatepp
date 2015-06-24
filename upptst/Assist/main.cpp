@@ -1,4 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
+#include <Sql/Sql.h>
 
 #if 0 // Do not compile these tests in nightly job
 
@@ -83,6 +84,21 @@ void Autocomplete()
 void Autocomplete()
 {
 	type // check that there are not wrong item is the list for 'type'
+}
+
+void Autocomplete()
+{
+	Select().From().LeftJoinRef().Where().OrderBy().Lim
+}
+
+enum {
+	TEST_ONE,
+	TEST_TWO
+};
+
+void Autocomplete()
+{
+	b ? TEST_ONE : TES
 }
 
 void JumpTo()
