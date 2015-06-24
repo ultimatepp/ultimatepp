@@ -79,7 +79,7 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 		if(t[i] == 'e')
 			ts = false;
 		hls.Put(HighlightSetup::hl_style[c],
-		        c == HighlightSetup::INK_CONST_OCT || (fixdigits < 4 && n - fixdigits < 5)
+		        c == HighlightSetup::INK_CONST_OCT || (fixdigits < 5 && n - fixdigits < 5)
 		             || i == fixdigits || !ts ? 0 :
 		        i < fixdigits ? decode((fixdigits - i) % 3, 1, LineEdit::SHIFT_L, 0, LineEdit::SHIFT_R, 0) :
 		                        decode((i - fixdigits) % 3, 1, LineEdit::SHIFT_R, 0, LineEdit::SHIFT_L, 0));

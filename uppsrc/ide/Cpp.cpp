@@ -194,6 +194,7 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	}
 	LDUMP(ii);
 	LDUMP(xp[ii]);
+	LDUMP(can_shortcut_operator);
 	Vector<String> tparam;
 	String type = ParseTemplatedType(ttype, tparam);
 	int c0 = typeset.GetCount();
@@ -219,20 +220,27 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	
 	for(int i = 0; i < tparam.GetCount(); i++) // need to qualify template parameters
 		tparam[i] = Qualify(ttype, tparam[i], usings);
-	
+
+/*	
 	bool tryop = id == "->";
 	if(tryop)
 		id = "operator->";
-
-	if(*id == '.' || (!variable && !iscid(*id))) {
-		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
-		return;
+	else
+	if(id == "[]") {
+		tryop = true;
+		id = "operator[]";
 	}
+*/
 	bool shortcut_oper = false;
-	if(!iscid(*id)) {
+	if(!iscid(*id) && *id != '.') {
 		shortcut_oper = can_shortcut_operator;
 		id = "operator" + id;
 		LLOG("id as: " << id);
+	}
+	if(*id == '.' || (!variable && !iscid(*id))) {
+		LLOG(". " << ttype);
+		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
+		return;
 	}
 	LDUMP(id);
 	Index< Tuple2<String, bool> > mtype;
@@ -242,11 +250,6 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 			LLOG("Member " << m.qtype << " " << m.name);
 			mtype.FindAdd(MakeTuple(ResolveReturnType(m, tparam), m.IsData() && !m.isptr));
 		}
-	}
-	
-	if(mtype.GetCount() == 0 && tryop) {
-		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
-		return;
 	}
 	
 	for(int i = 0; i < mtype.GetCount(); i++)
@@ -265,6 +268,7 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 			if(typeset.GetCount() != c0)
 				return;
 		}
+
 	if(shortcut_oper)
 		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
 }
@@ -316,11 +320,6 @@ Index<String> AssistEditor::EvaluateExpressionType(const Parser& parser, const V
 {
 	scan_counter = 0;
 	return ExpressionType(parser, xp);
-}
-
-int CharFilterT(int c)
-{
-	return c >= '0' && c <= '9' ? "TUVWXYZMNO"[c - '0'] : c;
 }
 
 void AssistEditor::AssistItemAdd(const String& scope, const CppItem& m, int typei)
