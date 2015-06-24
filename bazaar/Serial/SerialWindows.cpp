@@ -3,6 +3,7 @@
 #ifdef WIN32
 
 #include <tchar.h>
+typedef DWORD REGSAM;
 #include <setupapi.h>
 
 NAMESPACE_UPP
@@ -172,6 +173,74 @@ void Serial::Close(void)
 	fd = INVALID_HANDLE_VALUE;
 }
 
+// flush data
+bool Serial::FlushInput(void)
+{
+	return PurgeComm(fd, PURGE_RXCLEAR);
+}
+
+bool Serial::FlushOutput(void)
+{
+	return PurgeComm(fd, PURGE_TXCLEAR);
+}
+
+bool Serial::FlushAll(void)
+{
+	return PurgeComm(fd, PURGE_RXCLEAR) & PurgeComm(fd, PURGE_TXCLEAR);
+}
+
+// read a single byte, block 'timeout' milliseconds
+bool Serial::Read(byte &c, word timeout)
+{
+	char buf[1];
+	unsigned long count = 0;
+	
+	int tim = msecs() + timeout;
+	for(;;)
+	{
+		count = 0;
+		ReadFile(fd, buf, 1, &count, NULL);
+		if(!count)
+		{
+			if(msecs() > tim)
+				return false;
+			continue;
+		}
+		c = (byte)buf[0];
+		return true;
+	}		
+}
+
+bool Serial::Read(char &c, word timeout)
+{
+	char buf[1];
+	unsigned long count = 0;
+	
+	int tim = msecs() + timeout;
+	for(;;)
+	{
+		count = 0;
+		ReadFile(fd, buf, 1, &count, NULL);
+		if(!count)
+		{
+			if(msecs() > tim)
+				return false;
+			continue;
+		}
+		c = buf[0];
+		return true;
+	}		
+}
+
+// write a single byte
+bool Serial::Write(char c)
+{
+	unsigned long count = 0;
+	WriteFile(fd, &c, 1, &count, NULL);
+	return count == 1;
+}
+		
+
 // read data, requested amount, blocks 'timeout' milliseconds
 // if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
 String Serial::Read(size_t reqSize, word timeout)
@@ -287,7 +356,7 @@ static HMODULE LoadLibraryFromSystem32(LPCTSTR lpFileName)
 	TCHAR szFullPath[_MAX_PATH];
 	szFullPath[0] = _T('\0');
 
-	if (GetSystemDirectory(szFullPath, _countof(szFullPath)) == 0)
+	if (::GetSystemDirectory(szFullPath, _countof(szFullPath)) == 0)
 		return NULL;
 
 	//Setup the full path and delegate to LoadLibrary
