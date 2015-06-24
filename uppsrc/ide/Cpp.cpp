@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#if 1
+#if 0
 #define LDUMP(x)     DDUMP(x)
 #define LDUMPC(x)    DDUMPC(x)
 #define LLOG(x)      DLOG(x)

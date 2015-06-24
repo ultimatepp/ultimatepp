@@ -209,9 +209,8 @@ String AssistEditor::CompleteIdBack(int& q)
 			id = '<' + id;
 		}
 		else
-		if(Ch(q - 1) == ':') {
-			while(Ch(q - 1) == ':')
-				q--;
+		if(Ch(q - 1) == ':' && Ch(q - 2) == ':') {
+			q -= 2;
 			id = "::" + id;
 		}
 		else {
@@ -253,10 +252,9 @@ Vector<String> AssistEditor::ReadBack(int q)
 			for(;;) {
 				id = IdBack(q) + id;
 				SkipSpcBack(q);
-				if(Ch(q - 1) != ':')
+				if(!(Ch(q - 1) == ':' && Ch(q - 2) == ':'))
 					break;
-				while(Ch(q - 1) == ':')
-					q--;
+				q -= 2;
 				id = "::" + id;
 				SkipSpcBack(q);
 			}
@@ -453,9 +451,8 @@ void AssistEditor::Assist()
 			return;
 		}
 	}
-	if(Ch(q - 1) == ':') {
-		while(Ch(q - 1) == ':')
-			q--;
+	if(Ch(q - 1) == ':' && Ch(q - 2) == ':') {
+		q -= 2;
 		Vector<String> tparam;
 		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q), parser.context.namespace_using), tparam);
 		GatherItems(scope, false, in_types, true);
