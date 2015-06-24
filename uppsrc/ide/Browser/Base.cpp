@@ -271,8 +271,6 @@ void ParseFiles(Progress& pi, const Index<int>& parse_file)
 void UpdateCodeBase2(Progress& pi)
 {
 	CLOG("============= UpdateCodeBase2 " << GetSysTime());
-	const Workspace& wspc = GetIdeWorkspace();
-
 	pi.SetText("Checking source files");
 	pi.SetPos(0);
 	Index<int>  keep_file;
@@ -322,9 +320,7 @@ void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
 	Vector<String> pp;
 	String ext = ToLower(GetFileExt(path));
 	int filetype = FILE_OTHER;
-	SourceFileInfo& sfi = source_file[file];
 	Cpp cpp;
-	bool b = false;
 	if(ext == ".lay")
 		pp.Add(PreprocessLayFile(path));
 	else
