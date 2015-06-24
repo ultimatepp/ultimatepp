@@ -290,9 +290,9 @@ Image Colorize2(const Image& img, Color color, int alpha, int gray)
 				int div = 255 - gray;
 				int ao = ga - gray;
 				int ac = div - ao;
-				r = (ao * s->r + ac * r) / div;
-				g = (ao * s->g + ac * g) / div;
-				b = (ao * s->b + ac * b) / div;
+				r = (ao * s->r + ac * r0) / div;
+				g = (ao * s->g + ac * g0) / div;
+				b = (ao * s->b + ac * b0) / div;
 			}
 			t->r = (alpha * (r - s->r) >> 8) + s->r;
 			t->g = (alpha * (g - s->g) >> 8) + s->g;

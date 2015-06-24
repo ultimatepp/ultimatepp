@@ -511,7 +511,6 @@ void Navigator::Search()
 	else {
 		navigator_global = true;
 		const CppBase& b = CodeBase();
-		int ii = 0;
 		String usearch_nest = ToUpper(search_nest);
 		String usearch_name = ToUpper(search_name);
 		ArrayMap<String, NavItem> imap;
@@ -519,8 +518,6 @@ void Navigator::Search()
 		for(int pass = -1; pass < 2; pass++) {
 			for(int i = 0; i < b.GetCount(); i++) {
 				String nest = b.GetKey(i);
-	//			bool foundnest = (wholeclass ? ToUpper(nest) == search_nest
-	//			                             : ToUpper(nest).Find(search_nest) >= 0) && *nest != '@';
 				bool foundnest = (wholeclass ? pass < 0 ? false :
 				                               pass ? ToUpper(nest) == usearch_nest 
 				                                    : nest == search_nest
@@ -532,7 +529,6 @@ void Navigator::Search()
 					const Array<CppItem>& ci = b[i];
 					for(int j = 0; j < ci.GetCount(); j++) {
 						const CppItem& m = ci[j];
-	//					if(local ? m.file == fileii : *m.uname != '@' && m.uname.Find(search_name) >= 0 || both && foundnest) {
 						if(local ? m.file == fileii
 						         : *m.uname != '@' && (pass < 0 ? m.name == search_name :
 						                               pass ? m.uname.Find(usearch_name) >= 0
@@ -581,7 +577,8 @@ void Navigator::Search()
 		IndexSort(keys, values);
 		for(int i = 0; i < keys.GetCount(); i++)
 			keys[i].Remove(0);
-		gitem = pick(VectorMap<String, Vector<NavItem *> > (keys, values));
+		VectorMap<String, Vector<NavItem *> > h(pick(keys), pick(values));
+		gitem = pick(h);
 		for(int i = 0; i < gitem.GetCount(); i++)
 			Sort(gitem[i], sorting ? SortByNames : SortByLines);
 	}
