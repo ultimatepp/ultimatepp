@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#if 0
+#if 1
 #define LDUMP(x)     DDUMP(x)
 #define LDUMPC(x)    DDUMPC(x)
 #define LLOG(x)      DLOG(x)
@@ -184,8 +184,8 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
                                   bool can_shortcut_operator, Index<String>& visited_bases,
                                   int lvl)
 {
-	LLOG("--- ExpressionType " << scan_counter);
-	if(++scan_counter > 500 || lvl > 30) // sort of ugly limitation of parsing permutations
+	LLOG("--- ExpressionType " << scan_counter << ", lvl " << lvl << ", ttype " << ttype);
+	if(++scan_counter > 1000 || lvl > 100) // sort of ugly limitation of parsing permutations
 		return;
 	if(ii >= xp.GetCount()) {
 		LLOG("--- Final type: " << ttype);
@@ -277,7 +277,7 @@ void AssistEditor::ExpressionType(const String& type, const String& usings, cons
                                   Index<String>& typeset, bool variable, int lvl)
 {
 	Index<String> visited_bases;
-	ExpressionType(type, usings, xp, ii, typeset, variable, true, visited_bases, lvl + 1);
+	ExpressionType(type, usings, xp, ii, typeset, variable, true, visited_bases, lvl);
 }
 
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
