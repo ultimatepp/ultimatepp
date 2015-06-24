@@ -1686,7 +1686,7 @@ void Parser::Do()
 			bool body = lex == '{';
 			for(int i = 0; i < r.GetCount(); i++) {
 				Decl& d = r[i];
-				if(d.name.GetCount())
+				if(d.name.GetCount()) {
 					if(d.function) {
 						if(!d.isfriend)
 							functionItem = &Fn(d, Null, body, String(), String());
@@ -1713,6 +1713,7 @@ void Parser::Do()
 						if(im.IsData())
 							im.isptr = d.isptr;
 					}
+				}
 			}
 			if(body && functionItem && whenFnEnd) {
 				symbolsOutsideFunctions.Merge( lex.FinishStatCollection() );
