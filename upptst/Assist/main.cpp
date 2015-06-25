@@ -74,11 +74,40 @@ void Autocomplete()
 	p.
 }
 
-Index<String> Tags();
+Index<String>& Tags();
 
 void Autocomplete()
 {
 	Tags().
+}
+
+void Autocomplete()
+{
+	Tags()[i].
+}
+
+void Autocomplete()
+{
+	Index<String> x;
+	x[i].
+}
+
+VectorMap<String, String>& Map();
+
+void Autocomplete()
+{
+	Map().
+}
+
+void Autocomplete()
+{
+	Map()[i].
+}
+
+void Autocomplete()
+{
+	VectorMap<String, String> map;
+	map[i].
 }
 
 void Autocomplete()
