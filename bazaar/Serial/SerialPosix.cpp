@@ -118,8 +118,14 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 	// disable break processing
 	tty.c_iflag &= ~IGNBRK;
 
-	// ignore carriage returns
-	tty.c_iflag |= IGNCR;
+	// DO NOT ignore carriage returns
+	tty.c_iflag &= ~IGNCR;
+	
+	// DO NOT translate cr/lf
+	tty.c_iflag &= ~ICRNL;
+	
+	// DO NOT translate cr
+	tty.c_iflag &= ~INLCR;
 	
 	// no signaling chars, no echo, no canonical mode
 	tty.c_lflag = 0;	
