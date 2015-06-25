@@ -14,8 +14,8 @@ String PreprocessImlFile(const char *fn)
 			if(p.Id("IMAGE_ID")) {
 				p.Char('(');
 				String id = p.ReadId();
-				i_ml << "I_" << id << ",\n";
-				iml << "static Image " << id << "();\n";
+				i_ml << "\tI_" << id << ",\n";
+				iml << "\tstatic Image " << id << "();\n";
 				p.Char(')');
 			}
 			else
@@ -32,21 +32,26 @@ String PreprocessImlFile(const char *fn)
 	}
 	catch(CParser::Error) {}
 
-	String r = "using namespace Upp;";
+	String r;
+#ifdef PLATFORM_WIN32
+	FindFile ff(fn);
+	r << "struct " << GetFileTitle(ff.GetPath()) << "Img {\n";
+#else
 	r << "struct " << GetFileTitle(fn) << "Img {\n";
+#endif
 	if(iml.GetCount())
-		r << "enum {" << i_ml << "};\n" << iml;
+		r << "\tenum {" << i_ml << "\t};\n" << iml;
 	r <<
-		"static Iml&   Iml();"
-		"static int         Find(const UPP::String& s);"
-		"static int         Find(const char *s);"
-		"static int         GetCount();"
+		"\n\tstatic Iml&   Iml();"
+		"static int    Find(const Upp::String& s);"
+		"static int    Find(const char *s);"
+		"static int    GetCount();"
 		"static String GetId(int i);"
 		"static Image  Get(int i);"
 		"static Image  Get(const char *s);"
-		"static Image  Get(const UPP::String& s);"
-		"static void   Set(int i, const UPP::Image& m);"
-		"static void   Set(const char *s, const UPP::Image& m);"
+		"static Image  Get(const Upp::String& s);"
+		"static void   Set(int i, const Upp::Image& m);"
+		"static void   Set(const char *s, const Upp::Image& m);"
 		"static void   Reset();"
 	"};\n";
 	LDUMP(r);
