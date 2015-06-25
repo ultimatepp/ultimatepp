@@ -286,9 +286,17 @@ void Ide::SearchCode()
 	if(!IsNull(~editor.search)) {
 		editor.search.Clear();
 		editor.Search();
+		editor.SetFocus();
 	}
-	else
+	else {
+		String h = editor.GetWord();
+		if(h.GetCount()) {
+			editor.search <<= h;
+			editor.search.SelectAll();
+			editor.Search();
+		}
 		editor.search.SetFocus();
+	}
 }
 
 void Ide::SwitchHeader() {
