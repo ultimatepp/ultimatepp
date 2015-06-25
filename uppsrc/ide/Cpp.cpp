@@ -244,16 +244,21 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 	}
 	LDUMP(id);
 	Index< Tuple2<String, bool> > mtype;
+	Index<String> done;
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
 			LLOG("Member " << m.qtype << " " << m.name);
-			mtype.FindAdd(MakeTuple(ResolveReturnType(m, tparam), m.IsData() && !m.isptr));
+			String t = ResolveReturnType(m, tparam);
+			if(done.Find(t) < 0) {
+				bool skipfnpars = m.IsCode() && ii + 1 < xp.GetCount() && xp[ii + 1] == "()";
+				ExpressionType(ResolveTParam(t, tparam), usings, xp, ii + skipfnpars + 1,
+				               typeset, m.IsData() && !m.isptr, lvl + 1);
+			}
 		}
 	}
 	
 	for(int i = 0; i < mtype.GetCount(); i++)
-		ExpressionType(ResolveTParam(mtype[i].a, tparam), usings, xp, ii + 1, typeset, mtype[i].b, lvl + 1);
 	
 	if(typeset.GetCount() != c0 || IsNull(type))
 		return;
@@ -269,8 +274,10 @@ void AssistEditor::ExpressionType(const String& ttype, const String& usings,
 				return;
 		}
 
-	if(shortcut_oper)
+	if(shortcut_oper) {
+		LLOG("Shortcut " << xp[ii] << ", ttype " << ttype);
 		ExpressionType(ttype, usings, xp, ii + 1, typeset, false, lvl + 1);
+	}
 }
 
 void AssistEditor::ExpressionType(const String& type, const String& usings, const Vector<String>& xp, int ii,
@@ -282,6 +289,7 @@ void AssistEditor::ExpressionType(const String& type, const String& usings, cons
 
 Index<String> AssistEditor::ExpressionType(const Parser& parser, const Vector<String>& xp)
 {
+	LLOG("**** ExpressionType " << xp);
 	String type;
 	Index<String> typeset;
 	if(xp.GetCount() == 0)
