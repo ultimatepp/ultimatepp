@@ -588,12 +588,10 @@ operator`[`] to be about 10 times slower than in Vector (but
 that is still very fast), while Insert at any position scales 
 well up to hundreds of megabytes of data (e.g. InVector containing 
 100M of String elements is handled without problems).&]
-[s7; -|InVector<int> v;&]
+[s7; -|[* InVector]<int> v;&]
 [s7; -|for(int i `= 0; i < 1000000; i`+`+)&]
 [s7; -|-|v.Add(i);&]
-[s7; -|v.Insert(0, `-1); // This is fast&]
-[s7; -|DUMP(v`[0`]);&]
-[s7; -|DUMP(v`[1`]);&]
+[s7; -|v.[* Insert](0, `-1); // This is fast&]
 [s7; &]
 [s5; While the interface of InVector/InArray is almost identical 
 to Vector/Array, InVector/InArray in addition implements FindLowerBound/FindUpper
@@ -601,7 +599,7 @@ Bound functions `- while normal random access algorithms work,
 it is possible to provide InVector specific optimization that 
 basically matches the performace of Find`*Bound on sample Vector.&]
 [s7; &]
-[s7; -|DUMP(v.FindLowerBound(55));&]
+[s7; -|DUMP(v.[* FindLowerBound](55));&]
 [s7; &]
 [s3; 14. SortedIndex, SortedVectorMap, SortedArrayMap&]
 [s5; SortedIndex is similar to regular Index, but keeps its elements 
@@ -610,27 +608,27 @@ to StdLess). Implementation is using InVector, so it works fine
 even with very large number of elements (performance is similar 
 to tree based std`::set). Unlike Index, SortedIndex provides lower/upper 
 bounds searches, so it allow range search.&]
-[s7; -|SortedIndex<int> x;&]
+[s7; -|[* SortedIndex]<int> x;&]
 [s7; -|x.Add(5);&]
 [s7; -|x.Add(3);&]
 [s7; -|x.Add(7);&]
 [s7; -|x.Add(1);&]
 [s7; -|&]
 [s7; -|DUMPC(x);&]
-[s7; -|DUMP(x.Find(3));&]
-[s7; -|DUMP(x.Find(3));&]
-[s7; -|DUMP(x.FindLowerBound(3));&]
-[s7; -|DUMP(x.FindUpperBound(6));&]
+[s7; -|DUMP(x.[* Find](3));&]
+[s7; -|DUMP(x.[* Find](3));&]
+[s7; -|DUMP(x.[* FindLowerBound](3));&]
+[s7; -|DUMP(x.[* FindUpperBound](6));&]
 [s7; &]
 [s5; SortedVectorMap and SortedArrayMap are then SortedIndex based 
 equivalents to VectorMap/ArrayMap `- maps that keep keys sorted:&]
-[s7; -|SortedVectorMap<String, int> m;&]
+[s7; -|[* SortedVectorMap]<String, int> m;&]
 [s7; -|m.Add(`"zulu`", 11);&]
 [s7; -|m.Add(`"frank`", 12);&]
 [s7; -|m.Add(`"alfa`", 13);&]
 [s7; -|&]
 [s7; -|DUMPM(m);&]
-[s7; -|DUMP(m.Get(`"zulu`"));&]
+[s7; -|DUMP(m.[* Get](`"zulu`"));&]
 [s7; &]
 [s3; 15. Tuples&]
 [s5; U`+`+ has template classes Tuple2, Tuple3 and Tuple4 for combining 
