@@ -58,9 +58,9 @@ ndex], is introduced, as an ideal building block for all kinds
 of associative operations.&]
 [s5; [* InVector, Sorted maps]&]
 [s5; NTL provides random access containers with fast insertion at 
-arbitrary position, which scale well to milions of items. This 
-is then based to create `'sorted maps`' that are using binary 
-search.&]
+arbitrary position, which scale well to milions of items. These 
+containers then provide basis for `'sorted maps`' that are using 
+binary search.&]
 [s3; Algorithm requirements&]
 [s5; Requirements of STL algorithms are very loosely defined. NTL 
 tries to provide more specific requirements and also minimal 

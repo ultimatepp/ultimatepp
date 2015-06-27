@@ -685,11 +685,75 @@ POD arrays to be intialized with classic C style:&]
 [s7; -|-|`{ 3, `"one`" `},&]
 [s7; -|`};&]
 [s7; -|&]
+[s5; &]
 [s5; Simple FindTuple template function is provided to search for 
 tuple based on the first value:&]
 [s7; &]
-[s7; -|Tuple2<int, const char `*> `*f `= FindTuple(map, `_`_countof(map), 
-2);&]
-[s7; -|if(f)&]
-[s7; -|-|DUMP(f`->b);&]
+[s3; 15. Sorting&]
+[s5; IndexSort is sort variant that is able to sort two random access 
+container (like Vector or Array) of the same size, based on values 
+in on of containers:&]
+[s7; -|Vector<int> a;&]
+[s7; -|Vector<String> b;-|&]
+[s7; -|&]
+[s7; -|a << 5 << 10 << 2 << 9 << 7 << 3;&]
+[s7; -|b << `"five`" << `"ten`" << `"two`" << `"nine`" << `"seven`" 
+<< `"three`";&]
+[s7; -|&]
+[s7; -|[* IndexSort](a, b);&]
+[s7; &]
+[s16; a `= `[2, 3, 5, 7, 9, 10`]&]
+[s16; b `= `[two, three, five, seven, nine, ten`]&]
+[s7; &]
+[s7; -|[* IndexSort](b, a);&]
+[s7; &]
+[s16; a `= `[5, 9, 7, 10, 3, 2`]&]
+[s16; b `= `[five, nine, seven, ten, three, two`]&]
+[s5; Order of sorted items is defined by sorting predicate. By default, 
+operator< comparing items of container is used (this predicate 
+can be provided by StdLess template), but it is possible to specify 
+different sorting order, e.g. by using predefined StdGreater 
+predicate:&]
+[s7; -|Sort(a, [* StdGreater]<int>());&]
+[s7; &]
+[s16; a `= `[10, 9, 7, 5, 3, 2`]&]
+[s5; Sometimes, instead of sorting items in the container, it is 
+useful to know the order of items as sorted, using GetSortOrder:&]
+[s7; -|Vector<int> o `= [* GetSortOrder](a);&]
+[s7; &]
+[s16; o `= `[5, 4, 3, 2, 1, 0`]&]
+[s5; FieldRelation predefined predicate can be used to sort container 
+of structures by specific field:&]
+[s7; -|Vector<Point> p;&]
+[s7; -|p << Point(5, 10) << Point(7, 2) << Point(4, 8) << Point(1, 
+0);&]
+[s7; -|&]
+[s7; -|Sort(p, [* FieldRelation](`&Point`::x, StdLess<int>()));&]
+[s7; &]
+[s16; p `= `[`[1, 0`], `[4, 8`], `[5, 10`], `[7, 2`]`]&]
+[s5; MethodRelation is good for sorting of structures based on constant 
+method of structure:-|&]
+[s7; struct Foo `{&]
+[s7; -|String a;&]
+[s7; -|&]
+[s7; -|int [* Get]() const `{ return atoi(a); `}&]
+[s7; -|....&]
+[s7; `};&]
+[s7; ....&]
+[s7; -|Array<Foo> f;&]
+[s7; -|f << `"12`" << `"1`" << `"10`" << `"7`" << `"5`";&]
+[s7; -|&]
+[s7; -|Sort(f, [* MethodRelation](`&Foo`::[* Get], StdLess<int>()));&]
+[s7; &]
+[s16; f `= `[1, 5, 7, 10, 12`]&]
+[s5; Normal Sort is not stable `- equal items can appear in sorted 
+sequence in random order. If maintaining original order of equal 
+items is important, use StableSort variant (with slight performance 
+penalty):&]
+[s7; -|Vector<Point> t;&]
+[s7; -|t << Point(10, 10) << Point(7, 1) << Point(7, 2) << Point(7, 
+3) << Point(1, 0);&]
+[s7; -|[* StableSort](t, FieldRelation(`&Point`::x, StdLess<int>()));&]
+[s7; &]
+[s16; t `= `[`[1, 0`], `[7, 1`], `[7, 2`], `[7, 3`], `[10, 10`]`]&]
 [s7; ]]
