@@ -1,0 +1,11 @@
+description "Sorting\377";
+
+uses
+	Core;
+
+file
+	Ntl16.cpp;
+
+mainconfig
+	"" = "";
+
