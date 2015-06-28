@@ -17,19 +17,24 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
 	String h;
-	h = IDE_VERSION;
+	h = "\1[> [R45 [@r/ The][@b IDE]][A4` ";
+	h << IDE_VERSION;
 	if(sizeof(void *) == 8)
 		h << " (64 bit)";
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif
 	v = h;
-	v.RightPos(10, Ctrl::MINSIZE).TopPos(70, 40);
+	v.HSizePos(10, 10).TopPos(10, 40);
 	l.Add(v);
-	v.SetFont(Arial(20));
 	v.SetInk(Blend(Gray, Blue));
-	v1 = Format("%d`KB", MemoryUsedKb());
-	v1.LeftPos(300, 100).BottomPos(20, 12);
+	const CppBase& cpp = CodeBase();
+	int total = 0;
+	for(int i = 0; i < cpp.GetCount(); i++)
+		total += cpp[i].GetCount();
+	
+	v1 = Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
+	v1.LeftPos(300, 100).BottomPos(20, Arial(20).GetHeight() * 3);
 	v1.SetFont(Arial(10));
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
