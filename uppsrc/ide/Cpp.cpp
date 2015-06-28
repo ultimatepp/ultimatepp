@@ -384,13 +384,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 				base << im.qptype << ';';
 			if((im.IsCode() || !thisback && (im.IsData() || im.IsMacro() && IsNull(type)))
 			   && (!op || im.access == PUBLIC)) {
-/*				int q = assist_item.Find(im.name);
-				while(q >= 0) {
-					if(assist_item[q].typei != typei)
-						assist_item[q].over = true;
-					q = assist_item.FindNext(q);
-				}
-*/				AssistItemAdd(ntp, im, typei);
+				AssistItemAdd(ntp, im, typei);
 			}
 		}
 		if(!thisback) {
