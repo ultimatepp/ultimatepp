@@ -267,10 +267,6 @@ void Navigator::NavigatorEnter()
 	if(list.GetCount()) {
 		list.GoBegin();
 		Navigate();
-		if(litem[0]->kind == KIND_LINE) {
-			search.Clear();
-			Search();
-		}
 	}
 }
 
