@@ -843,6 +843,9 @@ void Parser::Declarator(Decl& d, const char *p)
 			ParamList(d);
 			p = lex.Pos();
 			Qualifier();
+			if(filetype == FILE_C && lex != '{' && lex != ';') // K&R style function header
+				while(lex != '{' && lex != t_eof)
+					++lex;
 		}
 	}
 	EatInitializers();
