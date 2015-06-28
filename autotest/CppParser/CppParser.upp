@@ -53,7 +53,9 @@ file
 	test23.in,
 	test23.out,
 	test24.in,
-	test24.out;
+	test24.out,
+	test25.inc,
+	test25.out;
 
 mainconfig
 	"" = "",

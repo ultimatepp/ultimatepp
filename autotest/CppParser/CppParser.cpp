@@ -22,7 +22,7 @@ void CleanAnonymous(String& s)
 	}
 }
 
-void Test(const char *path)
+void Test(const char *path, int filetype)
 {
 	CppBase base;
 	
@@ -34,7 +34,7 @@ void Test(const char *path)
 	Index<String> hh;
 
 	Parser p;
-	p.Do(in, base, 0, 0, "title", callback(AddError),
+	p.Do(in, base, 0, filetype, "title", callback(AddError),
 	     Vector<String>(), Vector<String>(), hh);
 
 	if(errs.GetCount())
@@ -63,7 +63,7 @@ void Test(const char *path)
 	
 	p.dobody = true;
 	in.Seek(0);
-	p.Do(in, base, 0, 0, "title", callback(AddError),
+	p.Do(in, base, 0, filetype, "title", callback(AddError),
 	     Vector<String>(), Vector<String>(), hh);
 	
 	out << "<locals> {\n";
@@ -93,7 +93,10 @@ CONSOLE_APP_MAIN {
 	for(int i = 0; i < 10000; i++) {
 		String p = GetDataFile("test" + AsString(i) + ".in");
 		if(FileExists(p))
-			Test(p);
+			Test(p, FILE_H);
+		p << 'c';
+		if(FileExists(p))
+			Test(p, FILE_C);
 	}
 	LOG("=========== OK");
 }
