@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-#define LTIMING(x) RTIMING(x)
+#define LTIMING(x) // RTIMING(x)
 
 static VectorMap<String, String> sSrcFile;
 static Index<uint64>             sIncludes;

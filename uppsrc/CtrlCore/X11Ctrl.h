@@ -1,3 +1,4 @@
+//$ namespace Upp {
 //$ class Ctrl {
 	bool         ignoretakefocus:1;
 protected:
@@ -109,4 +110,4 @@ public:
 	static void InitX11(const char *display);
 	static void ExitX11();
 	static void GuiFlush()                              { XFlush(Xdisplay); }
-//$ };
+//$ }};

@@ -1,3 +1,4 @@
+//$ namespace Upp {
 //$ class Ctrl {
 	void Create(Ctrl *owner, bool popup);
 
@@ -181,4 +182,4 @@ public:
 
 	static GdkFilterReturn RootKeyFilter(GdkXEvent *xevent, GdkEvent *event, gpointer data);
 
-//$ };
+//$ }};
