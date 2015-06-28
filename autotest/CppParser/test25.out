@@ -1,0 +1,11 @@
+<globals> {
+	FUNCTION, name: deflateInit_, qitem: deflateInit_(strm,level,version,stream_size)z_streamp strm;int level;const char*version;int stream_size;, qtype: , qptype: strm;level;version;stream_size, natural: int deflateInit_(strm, level, version, stream_size) z_streamp strm; int level; const char *version; int stream_size;, line 1, using 
+	FUNCTION, name: Foo, qitem: Foo(int,Bar*), qtype: , qptype: ;Bar, natural: void Foo(int x, Bar *y), line 12, using 
+}
+AAA {
+	STRUCT, name: AAA, qitem: struct, qtype: AAA, qptype: , natural: struct AAA, line 14, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 15, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 15, using 
+}
+<locals> {
+}
