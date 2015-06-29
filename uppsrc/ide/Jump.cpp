@@ -1,25 +1,39 @@
 #include "ide.h"
 
-struct JumpDlg : WithJumpLayout<TopWindow>, Navigator {
-	typedef JumpDlg CLASSNAME;
+struct NavDlg : WithJumpLayout<TopWindow>, Navigator {
+	typedef NavDlg CLASSNAME;
 	
 	virtual bool Key(dword key, int count);
 
 	virtual int GetCurrentLine();
 	
 	void GoTo();
+	
+	void Serialize(Stream& s);
 
-	JumpDlg();
+	NavDlg();
 };
 
-JumpDlg::JumpDlg()
+void NavDlg::Serialize(Stream& s)
+{
+	
+	SerializePlacement(s);
+}
+
+INITBLOCK {
+	RegisterGlobalConfig("NavDlg");
+}
+
+NavDlg::NavDlg()
 {
 	CtrlLayoutOKCancel(*this, "Navigator");
 	dlgmode = true;
 	search.WhenEnter.Clear();
+	Sizeable().Zoomable();
+	Icon(IdeImg::Navigator());
 }
 
-bool JumpDlg::Key(dword key, int count)
+bool NavDlg::Key(dword key, int count)
 {
 	if(key == K_UP || key == K_DOWN) {
 		if(list.IsCursor())
@@ -31,7 +45,7 @@ bool JumpDlg::Key(dword key, int count)
 	return TopWindow::Key(key, count);
 }
 
-void JumpDlg::GoTo()
+void NavDlg::GoTo()
 {
 	if(navlines.IsCursor()) {
 		const NavLine& l = navlines.Get(0).To<NavLine>();
@@ -39,16 +53,18 @@ void JumpDlg::GoTo()
 	}
 }
 
-int JumpDlg::GetCurrentLine()
+int NavDlg::GetCurrentLine()
 {
 	return theide->editor.GetCurrentLine();
 }
 
-void Ide::GotoGlobal()
+void Ide::NavigatorDlg()
 {
-	JumpDlg dlg;
+	NavDlg dlg;
+	LoadFromGlobal(dlg, "NavDlg");
 	dlg.theide = this;
 	dlg.Search();
 	if(dlg.ExecuteOK())
 		dlg.GoTo();
+	StoreToGlobal(dlg, "NavDlg");
 }

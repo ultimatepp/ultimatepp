@@ -22,6 +22,10 @@ TOPIC("Contact$en-us")
 #include "Contact$en-us.tppi"
 END_TOPIC
 
+TOPIC("Cpp$en-us")
+#include "Cpp$en-us.tppi"
+END_TOPIC
+
 TOPIC("CrossComp$en-gb")
 #include "CrossComp$en-gb.tppi"
 END_TOPIC

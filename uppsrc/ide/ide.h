@@ -880,7 +880,7 @@ public:
 		void  ToggleNavigator();
 		void  SearchCode();
 		void  Goto();
-		void  GotoGlobal();
+		void  NavigatorDlg();
 		void  ScanFile();
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
