@@ -1,0 +1,7 @@
+void Foo::Foo() {
+
+void Foo::Bar();
+
+void Foo::Bar2() {
+label:
+	int x = 10;
