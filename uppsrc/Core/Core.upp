@@ -176,6 +176,7 @@ file
 	sub.upt,
 	core.upt,
 	ignorelist,
+	core.defs,
 	Info readonly separator,
 	src.tpp,
 	srcdoc.tpp,

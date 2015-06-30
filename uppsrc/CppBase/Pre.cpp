@@ -36,9 +36,19 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 		const char *rm = ln;
 		if(IsAlNum(*rm)) {
 			const char *s = ln;
-			while(*s && iscid(*s) || *s == '\t' || *s == ' ')
+			bool islbl = false;
+			bool wassemi = false;
+			while(*s && iscid(*s) || findarg(*s, '\t', ' ', ':') >= 0) { // check for label, labeled lines are not grounded
+				if(*s == ':' && !wassemi) {
+					islbl = true;
+					wassemi = true; // second ':' cancels label
+				}
+				else
+				if(*s != '\t' && *s != ' ')
+					islbl = false; // something was after the label, e.g. void Foo::Bar()
 				s++;
-			if(*s != ':') // check for label, labeled lines are not grounded
+			}
+			if(!islbl)
 				res.text << '\2';
 		}
 		else
