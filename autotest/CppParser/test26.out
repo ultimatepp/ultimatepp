@@ -1,0 +1,8 @@
+Foo {
+	INSTANCEFUNCTION, name: Foo, qitem: Foo(), qtype: , qptype: , natural: void Foo(), line 1, using 
+	INSTANCEFUNCTION, name: Bar, qitem: Bar(), qtype: , qptype: , natural: void Bar(), line 3, using 
+	INSTANCEFUNCTION, name: Bar2, qitem: Bar2(), qtype: , qptype: , natural: void Bar2(), line 5, using 
+}
+<locals> {
+x , line: 7
+}
