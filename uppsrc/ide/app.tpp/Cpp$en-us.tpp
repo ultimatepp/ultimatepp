@@ -14,7 +14,7 @@ topic "Assist++ C++ parser directives";
 [l321;t246;C@5;1 $$12,12#20902679421464641399138805415013:code]
 [a83;*R6 $$13,11#31310162474203024125188417583966:caption]
 [{_}%EN-US 
-[s13; Specifics of theide C`+`+ parser&]
+[s13; Specifics of TheIDE C`+`+ parser&]
 [s11; Assist`+`+ C`+`+ parser does not follow C/C`+`+ standards exactly, 
 for performance and practical reasons. This documents provides 
 information about deviations, heuristics and tricks that we use 
@@ -50,8 +50,7 @@ For example&]
 [s12; `}&]
 [s12; #endif&]
 [s11; both CloseWindow definitions will be in codebase.&]
-[s11;i150;O0; All #define directives are recorded, when expanding 
-macro, the last one is used.&]
+[s11;i150;O0; When expanding macro, last #define directive is used.&]
 [s12; #define FOO 1&]
 [s12; #define FOO 2&]
 [s12; FOO&]
@@ -70,7 +69,7 @@ with Upp`::byte&]
 [s11;i150;O0; #include in file adds all macros that are (recursively) 
 defined by included file and also all `"using namespace`" directives. 
 It [* DOES NOT] use namespace block definitions, for example this 
-abomination is not supported&]
+abomination is not supported:&]
 [s11; [* StartNamespace.h]&]
 [s12; namespace MyNamespace `{&]
 [s12; &]
@@ -82,7 +81,7 @@ abomination is not supported&]
 [s12; void Foo();&]
 [s12; #include `"EndNamespace.h`"&]
 [s11; is [*/ NOT] supported.&]
-[s11;i150;O0; However, if file gets into the project through include, 
+[s11;i150;O0; However, if file gets into the project through #include, 
 all macros, usings and namespace block definitions are correctly 
 included/used. Consider&]
 [s11; [* MasterHeader.h]&]
