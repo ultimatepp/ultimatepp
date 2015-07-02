@@ -1,8 +1,5 @@
 #define INITBLOCK void INITBLOCK()
 #define EXITBLOCK void EXITBLOCK()
 
-#define INITBLOCK void INITBLOCK_(bool)
-#define EXITBLOCK void EXITBLOCK_(bool)
-
 #define CONSOLE_APP_MAIN void CONSOLE_APP_MAIN()
 
