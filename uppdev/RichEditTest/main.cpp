@@ -66,9 +66,9 @@ GUI_APP_MAIN
 //	e.SetQTF(LoadFile("U:\\xxx\\PainterBug.qtf"));
 //	e.ClipZoom(4, 1);
 //	Ctrl::ShowRepaint(50);
-	RichEdit::PosInfo f;
-	LoadFromFile(f, ConfigFile("pos"));
-	e.SetPosInfo(f);
+//	RichEdit::PosInfo f;
+//	LoadFromFile(f, ConfigFile("pos"));
+//	e.SetPosInfo(f);
 //	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
 	MyApp w;
 //	w.ToolWindow();
@@ -82,18 +82,41 @@ GUI_APP_MAIN
 #else
 	w.Add(e.SizePos());
 #endif
+
+	{
+		static const char styles[] =
+			"[ $$0,0#00000000000000000000000000000000:Default]"
+		;
+
+		DLOG("===================");
+    	DDUMP(e.GetLength());
+
+		WString text = e.Get().GetPlainText();
+		DDUMP(text.GetLength());
+	    e.Select(0, e.GetLength());
+	    e.Cut();
+	    DDUMP(e.GetLength());
+	    e.PasteText(ParseQTF(String().Cat() << "[%CS-CZ " << styles << "[s0; \1" << text.ToString() << "\1"));
+	    DDUMP(e.GetLength());
+	    e.Select(0, e.GetLength());
+	    RichEdit h;
+	    e.ApplyFormatInfo(h.GetFormatInfo());
+	    DDUMP(e.GetLength());
+	    e.Select(0, 0);
+	}
+
 	w.Run();
 /*	
 	String strQTF = e.GetQTF(CHARSET_ISO8859_1);
 	e.SetQTF(strQTF);
 	w.Run();
 */
-	String x = e.GetQTF();
+/*	String x = e.GetQTF();
 	SaveFile(FileName(), x);
 	f = e.GetPosInfo();
 	StoreToFile(f, ConfigFile("pos"));
-	
-	SaveFile(GetHomeDirFile("test.rtf"), EncodeRTF(e.Get()));
+*/	
+//	SaveFile(GetHomeDirFile("test.rtf"), EncodeRTF(e.Get()));
 	
 	LOG("Exit");
 }

@@ -23,7 +23,7 @@ void Test(const char *path)
 
 	Parser p;
 //	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError), Vector<String>(), Vector<String>(), Index<String>());
-	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError),
+	p.Do(in, base, 0, FILE_C, GetFileTitle(path), callback(AddError),
 	     Vector<String>(), Vector<String>(), hh);
 
 	if(errs.GetCount())
@@ -49,7 +49,7 @@ void Test(const char *path)
 	
 	p.dobody = true;
 	in.Seek(0);
-	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError),
+	p.Do(in, base, 0, FILE_C, GetFileTitle(path), callback(AddError),
 	     Vector<String>(), Vector<String>(), hh);
 	
 	out << "<locals> {\n";
