@@ -1,6 +1,8 @@
 #ifndef _ide_Builders_icpp_init_stub
 #define _ide_Builders_icpp_init_stub
 #include "ide\Core/init"
+#include "ide/Android/init"
+#include "ide/Java/init"
 #define BLITZ_INDEX__ Fab5aa4644e1c1b5af8ed5faf2d4db317
 #include "GccBuilder.icpp"
 #undef BLITZ_INDEX__
@@ -12,6 +14,9 @@
 #undef BLITZ_INDEX__
 #define BLITZ_INDEX__ Fecf66fc39eec6a21e32d6c41cad4d431
 #include "JavaBuilder.icpp"
+#undef BLITZ_INDEX__
+#define BLITZ_INDEX__ Fea8152e4f0407437ab942dc131a5c47f
+#include "AndroidBuilder.icpp"
 #undef BLITZ_INDEX__
 #define BLITZ_INDEX__ Fa99182ca8dccb6e49a9bb75dbfd7c33d
 #include "ScriptBuilder.icpp"

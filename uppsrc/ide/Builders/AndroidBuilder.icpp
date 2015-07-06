@@ -371,17 +371,18 @@ void AndroidBuilder::CleanPackage(const String& package)
 		DeleteFolderDeep(sandboxDir);
 }
 
-bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const String& dest)
+bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const String& dst)
 {
-	if(!RealizeDirectory(GetFileDirectory(dest)))
+	if(!RealizeDirectory(GetFileDirectory(dst)))
 		return false;
 	
-	if(FileExists(dest)) {
-		if(GetFileTime(src).Get() <= GetFileTime(dest).Get())
+	if(FileExists(dst)) {
+		if(GetFileTime(dst) > GetFileTime(src))
 			return true;
 	}
+	SaveFile(dst, LoadFile(src));
 	
-	return FileCopy(src, dest);
+	return true;
 }
 
 bool AndroidBuilder::RealizePackageSourcesDirectory(const String& packageName)
