@@ -82,7 +82,8 @@ bool OwcBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	if (HasFlag("BLITZ")) {
-		Blitz b = BlitzStep(sfile, soptions, obj, immfile, ".obj", optimize, Index<String>());
+		BlitzBuilderComponent bc(this);
+		Blitz b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".obj", optimize, Index<String>());
 		if (b.build) {
 			PutConsole("BLITZ:" + b.info);
 			int slot = AllocSlot();

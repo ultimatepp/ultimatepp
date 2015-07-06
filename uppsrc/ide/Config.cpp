@@ -146,7 +146,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 5;
+	int version = 6;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -242,6 +242,8 @@ void Ide::Serialize(Stream& s)
 	s % astyle_EmptyLineFill;
 	s % astyle_TabSpaceConversionMode;
 	s % astyle_TestBox;
+	if(version >= 6)
+		s % androidSDKPath;
 	s % LinuxHostConsole;
 	editor.SerializeNavigator(s);
 	s % showtime;

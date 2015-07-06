@@ -135,28 +135,69 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		ConsoleShow();
 		return NULL;
 	}
-	One<Builder> b = (*BuilderMap().Get(builder))();
+	Builder* b = (*BuilderMap().Get(builder))();
 	b->host = host;
-	b->compiler = bm.Get("COMPILER", "");
-	b->include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
-	const Workspace& wspc = GetIdeWorkspace();
-	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pkg = wspc.GetPackage(i);
-		for(int j = 0; j < pkg.include.GetCount(); j++)
-			b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
-	}	
-	b->libpath = SplitDirs(bm.Get("LIB", ""));
-	b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
-	b->c_options = bm.Get("COMMON_C_OPTIONS", "");
-	b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
-	b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
-	b->release_size_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_SIZE_OPTIONS", ""));
-	b->debug_link = bm.Get("DEBUG_LINK", "");
-	b->release_link = bm.Get("RELEASE_LINK", "");
 	b->script = bm.Get("SCRIPT", "");
-	b->main_conf = !!main_conf.GetCount();
-	b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
-	b->start_time = start_time;
+	if(AndroidBuilder::GetBuildersNames().Find(builder) > -1) {
+		AndroidBuilder* ab = dynamic_cast<AndroidBuilder*>(b);
+		ab->androidNDK.SetPath((bm.Get("NDK_PATH", "")));
+		ab->jdk.SetPath((bm.Get("JDK_PATH", "")));
+		
+		String platformVersion = bm.Get("SDK_PLATFORM_VERSION", "");
+		if(!platformVersion.IsEmpty())
+			ab->androidSDK.SetPlatform(platformVersion);
+		else
+			ab->androidSDK.DeducePlatform();
+		String buildToolsRelease = bm.Get("SDK_BUILD_TOOLS_RELEASE", "");
+		if(!buildToolsRelease.IsEmpty())
+			ab->androidSDK.SetBuildToolsRelease(buildToolsRelease);
+		else
+			ab->androidSDK.DeduceBuildToolsRelease();
+		
+		ab->ndk_blitz = bm.Get("NDK_BLITZ", "") == "1";
+		if(bm.Get("NDK_ARCH_ARMEABI", "") == "1")
+			ab->ndkArchitectures.Add("armeabi");
+		if(bm.Get("NDK_ARCH_ARMEABI_V7A", "") == "1")
+			ab->ndkArchitectures.Add("armeabi-v7a");
+		if(bm.Get("NDK_ARCH_ARM64_V8A", "") == "1")
+			ab->ndkArchitectures.Add("arm64-v8a");
+		if(bm.Get("NDK_ARCH_X86", "") == "1")
+			ab->ndkArchitectures.Add("x86");
+		if(bm.Get("NDK_ARCH_X86_64", "") == "1")
+			ab->ndkArchitectures.Add("x86_64");
+		if(bm.Get("NDK_ARCH_MIPS", "") == "1")
+			ab->ndkArchitectures.Add("mips");
+		if(bm.Get("NDK_ARCH_MIPS64", "") == "1")
+			ab->ndkArchitectures.Add("mips64");
+		ab->ndkToolchain = bm.Get("NDK_TOOLCHAIN", "");
+		ab->ndkCppRuntime = bm.Get("NDK_CPP_RUNTIME", "");
+		ab->ndkCppFlags = bm.Get("NDK_COMMON_CPP_OPTIONS", "");
+		ab->ndkCFlags = bm.Get("NDK_COMMON_C_OPTIONS", "");
+		
+		b = ab;
+	}
+	else {
+		// TODO: cpp builder variables only!!!
+		b->compiler = bm.Get("COMPILER", "");
+		b->include = SplitDirs(GetVar("UPP") + ';' + bm.Get("INCLUDE", "") + ';' + add_includes);
+		const Workspace& wspc = GetIdeWorkspace();
+		for(int i = 0; i < wspc.GetCount(); i++) {
+			const Package& pkg = wspc.GetPackage(i);
+			for(int j = 0; j < pkg.include.GetCount(); j++)
+				b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
+		}	
+		b->libpath = SplitDirs(bm.Get("LIB", ""));
+		b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
+		b->c_options = bm.Get("COMMON_C_OPTIONS", "");
+		b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
+		b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
+		b->release_size_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_SIZE_OPTIONS", ""));
+		b->debug_link = bm.Get("DEBUG_LINK", "");
+		b->release_link = bm.Get("RELEASE_LINK", "");
+		b->main_conf = !!main_conf.GetCount();
+		b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
+		b->start_time = start_time;
+	}
 	return b;
 }
 
@@ -523,6 +564,14 @@ void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 	One<Builder> builder = CreateBuilder(~host);
 	if(!builder)
 		return;
+	builder->outdir = OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
+	                         *host, *builder), wspc[package], GetMethodVars(method));
+	// TODO: almost perfect, but target will be detected after build. if build dosen't occure the target is empty :(
+	// How to make sure we know target? Target directory is where android project sandbox is.
+	builder->target = target;
+	builder->CleanPackage(wspc[package]);
+	// TODO: Each builder should call delete folder by itself.
+	// For example in CppBuilder DeleteFolderDeep(outdir).
 	host->DeleteFolderDeep(OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
 		*host, *builder), wspc[package], GetMethodVars(method)));
 }

@@ -44,6 +44,9 @@ Project Templates]&]
 [s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
+[s0;l224;^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ &]
+[s0;l224; [^topic`:`/`/ide`/app`/Android`$en`-us^ Working with ][^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A
+ndroid ][^topic`:`/`/ide`/app`/Android`$en`-us^ builder]&]
 [s0; &]
 [s0; &]
 [s0; [*4 Ultimate`+`+ donors]&]

@@ -198,6 +198,9 @@ void   SetVar(const String& var, const String& val, bool save = true);
 String GetCurrentBuildMethod();
 String GetCurrentMainPackage();
 
+int    GetHydraThreads();
+String GetAndroidSDKPath();
+
 String GetAnyFileName(const char *path);
 String GetAnyFileTitle(const char *path);
 String CatAnyPath(String path, const char *more);
@@ -381,11 +384,15 @@ enum {
 
 String Join(const String& a, const String& b, const char *sep = " ");
 
+String GetExeExt();
+String NormalizeExePath(String exePath);
+
 struct Builder {
 	Host            *host;
 	Index<String>    config;
-	String           compiler;
 	String           method;
+	
+	String           compiler;
 	String           outdir;
 	Vector<String>   include;
 	Vector<String>   libpath;
@@ -398,8 +405,10 @@ struct Builder {
 	String           debug_link;
 	String           release_link;
 	String           version;
+	
 	String           script;
 	String           mainpackage;
+	
 	bool             doall;
 	bool             main_conf;
 	bool             allow_pch;
@@ -412,6 +421,7 @@ struct Builder {
 	{ return false; }
 	virtual bool Preprocess(const String& package, const String& file, const String& result, bool asmout)
 	{ return false; }
+	virtual void CleanPackage(const String& package) {}
 	virtual void   AddFlags(Index<String>& cfg) {}
 	virtual void   AddMakeFile(MakeFile& mfinfo, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
@@ -420,6 +430,24 @@ struct Builder {
 
 	Builder()          { doall = false; main_conf = false; }
 	virtual ~Builder() {}
+	
+	// TODO: move other methods if needed
+	void                   ChDir(const String& path);
+	String                 GetHostPath(const String& path) const;
+	String                 GetHostPathShort(const String& path) const;
+	String                 GetHostPathQ(const String& path) const;
+	String                 GetHostPathShortQ(const String& path) const;
+	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
+	Host::FileInfo         GetFileInfo(const String& path) const;
+	Time                   GetFileTime(const String& path) const;
+	int                    Execute(const char *cmdline);
+	int                    Execute(const char *cl, Stream& out);
+	void                   DeleteFile(const Vector<String>& path);
+	void                   DeleteFile(const String& path);
+	bool                   FileExists(const String& path) const;
+	void                   SaveFile(const String& path, const String& data);
+	String                 LoadFile(const String& path);
+	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
 };
 
 VectorMap<String, Builder *(*)()>& BuilderMap();

@@ -10,10 +10,14 @@
 #include <CodeEditor/CodeEditor.h>
 #include <usvn/usvn.h>
 #include <ide/IconDes/IconDes.h>
+#include <ide/Java/Java.h>
 #include <ide/LayDes/LayDes.h>
 #include <ide/Debuggers/Debuggers.h>
 #include <TextDiffCtrl/TextDiffCtrl.h>   
 #include <ide/Designers/Designers.h>
+#include <ide/Android/Android.h>
+
+#include "MethodsCtrls.h"
 
 #define LAYOUTFILE <ide/ide.lay>
 #include <CtrlCore/lay.h>
@@ -291,6 +295,9 @@ bool   isincludefnchar(int c);
 
 Size   GetDrawFileNameSize(const String& h);
 void   DrawFileName(Draw& w, const Rect& r, const String& h, Color ink);
+
+void   AddPath(EditString *es);
+void   InsertPath(EditString *es);
 
 #include "Assist.h"
 
@@ -602,7 +609,9 @@ public:
 	bool	astyle_EmptyLineFill;
 	bool	astyle_TabSpaceConversionMode;
 	WString	astyle_TestBox;
-
+	
+	String androidSDKPath;
+	
 	// Formats a string of code with a given formatter
 	WString FormatCodeString(WString const &Src, astyle::ASFormatter &Formatter);
 
@@ -843,6 +852,8 @@ public:
 		void  RunArgs();
 		bool ShouldHaveConsole();
 		void  BuildAndExecute();
+		void  ExecuteBinary();
+		void  ExecuteApk();
 		void  BuildAndDebug0(const String& srcfile);
 		void  BuildAndDebug(bool runto);
 		void  BuildAndExtDebug();
@@ -869,7 +880,12 @@ public:
 		void  CheckUpdatesManual();
 		void  SetUpdateTimer(int period);
 		void  Abbreviations();
-
+	
+	void      SetupMobilePlatforms(Bar& bar);
+		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
+		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
+		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
+	
 	void      BrowseMenu(Bar& menu);
 		void  CheckCodeBase();
 		void  RescanCode();

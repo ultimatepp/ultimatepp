@@ -17,7 +17,9 @@ uses
 	usvn,
 	TextDiffCtrl,
 	TabBar,
-	ide/Designers;
+	ide/Designers,
+	ide/Android,
+	ide/Java;
 
 uses(POSIX) ide\SrcUpdater;
 
@@ -74,6 +76,9 @@ file
 	Json.cpp,
 	Update.cpp,
 	Compile readonly separator,
+	MethodsCtrls.h,
+	MethodsCtrls.cpp,
+	Methods.h,
 	Methods.cpp,
 	AutoSetup.cpp,
 	OutputMode.cpp,
@@ -84,6 +89,7 @@ file
 	Resources readonly separator,
 	ide.lay,
 	ide.iml,
+	ide.usc,
 	app.tpp,
 	ide.rc
 		depends() xide.ico

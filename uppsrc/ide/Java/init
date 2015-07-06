@@ -1,0 +1,4 @@
+#ifndef _ide_Java_icpp_init_stub
+#define _ide_Java_icpp_init_stub
+#include "ide/Core/init"
+#endif

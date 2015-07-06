@@ -207,6 +207,18 @@ String GetCurrentMainPackage()
 	return ide ? ide->main : String();
 }
 
+int GetHydraThreads()
+{
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	return ide ? ide->hydra1_threads : CPU_Cores();
+}
+
+String GetAndroidSDKPath()
+{
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	return ide ? ide->androidSDKPath : String();
+}
+
 void Ide::IdeEndDebug()
 {
 	console.Kill();
@@ -544,7 +556,9 @@ Ide::Ide()
 	astyle_EmptyLineFill = false;
 	astyle_TabSpaceConversionMode = false;
 	astyle_TestBox = "#include <stdio.h>\n#ifndef __abcd_h\n#include <abcd.h>\n#endif\n\nvoid test(int a, int b)\n{\n  /* this is a switch */\n  switch(a)\n\n  {\n    case 1:\n      b = 2;\n      break;\n    case 2:\n      b = 4;\n      break;\n    default:\n    break;\n  }\n\n  /* this are more statements on one line */\n  a = 2*a;b=-5;a=2*(b+2)*(a+3)/4;\n\n  /* single line blocks */\n  {int z;z = 2*a+b;}\n\n  /* loop */\n  for(int i = 0;i< 10;i++) { a = b+2*i;}\n\n}\n";
-
+	
+	androidSDKPath = "";
+	
 	console.WhenSelect = THISBACK(FindError);
 	console.SetSlots(hydra1_threads);
 

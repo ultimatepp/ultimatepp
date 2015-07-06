@@ -91,44 +91,132 @@ bool Ide::ShouldHaveConsole()
 void Ide::BuildAndExecute()
 {
 	if(Build()) {
-		int time = msecs();
-		One<Host> h = CreateHostRunDir();
-		h->ChDir(Nvl(rundir, GetFileFolder(target)));
-		String cmdline;
-		if(!runexternal)
-			cmdline << '\"' << h->GetHostPath(target) << "\" ";
-		cmdline << ToSystemCharset(runarg);
-		int exitcode;
-		switch(runmode) {
-		case RUN_WINDOW:
+		String targetExt = GetFileExt(target);
+		if(targetExt == ".apk")
+			ExecuteApk();
+		else
+			ExecuteBinary();
+	}
+}
+
+void Ide::ExecuteBinary()
+{
+	int time = msecs();
+	One<Host> h = CreateHostRunDir();
+	h->ChDir(Nvl(rundir, GetFileFolder(target)));
+	String cmdline;
+	if(!runexternal)
+		cmdline << '\"' << h->GetHostPath(target) << "\" ";
+	cmdline << ToSystemCharset(runarg);
+		
+	int exitcode;
+	switch(runmode) {
+	case RUN_WINDOW:
+		HideBottom();
+		h->Launch(cmdline, ShouldHaveConsole());
+		break;
+	case RUN_CONSOLE:
+		ShowConsole();
+		PutConsole(String().Cat() << "Executing: " << cmdline);
+		console.Sync();
+		exitcode = h->ExecuteWithInput(cmdline, console_utf8);
+		PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
+		break;
+	case RUN_FILE: {
 			HideBottom();
-			h->Launch(cmdline, ShouldHaveConsole());
-			break;
-		case RUN_CONSOLE:
-			ShowConsole();
-			PutConsole(String().Cat() << "Executing: " << cmdline);
-			console.Sync();
-			exitcode = h->ExecuteWithInput(cmdline, console_utf8);
-			PutConsole("Finished in " + GetPrintTime(time) + ", exit code: " + AsString(exitcode));
-			break;
-		case RUN_FILE: {
-				HideBottom();
-				String fn;
-				if(IsNull(stdout_file))
-					fn = ForceExt(target, ".ol");
-				else
-					fn = stdout_file;
-				FileOut out(fn);
-				if(!out) {
-					PromptOK("Unable to open output file [* " + DeQtf(stdout_file) + "] !");
-					return;
-				}
-				if(h->Execute(cmdline, out, console_utf8) >= 0) {
-					out.Close();
-					EditFile(fn);
-				}
+			String fn;
+			if(IsNull(stdout_file))
+				fn = ForceExt(target, ".ol");
+			else
+				fn = stdout_file;
+			FileOut out(fn);
+			if(!out) {
+				PromptOK("Unable to open output file [* " + DeQtf(stdout_file) + "] !");
+				return;
+			}
+			if(h->Execute(cmdline, out, console_utf8) >= 0) {
+				out.Close();
+				EditFile(fn);
 			}
 		}
+	}
+}
+
+class SelectAndroidDeviceDlg : public WithSelectAndroidDeviceLayout<TopWindow> {
+	typedef SelectAndroidDeviceDlg CLASSNAME;
+	
+public:
+	SelectAndroidDeviceDlg(AndroidSDK* sdk);
+	
+	int    GetDeviceCount() const    { return devicesArray.GetCount(); }
+	String GetSelectedSerial() const;
+	
+private:
+	void LoadPhysicalDevices();
+	
+private:
+	AndroidSDK* sdk;
+};
+
+SelectAndroidDeviceDlg::SelectAndroidDeviceDlg(AndroidSDK* sdk) :
+	sdk(sdk)
+{
+	CtrlLayoutOKCancel(*this, "Android device selection");
+	
+	devicesArray.AddColumn("Device/Model");
+	devicesArray.AddColumn("Serial");
+	
+	LoadPhysicalDevices();
+}
+
+String SelectAndroidDeviceDlg::GetSelectedSerial() const
+{
+	int row = devicesArray.IsCursor() ? devicesArray.GetCursor() : 0;
+	return devicesArray.GetCount() ? devicesArray.Get(row, 1) : "";
+}
+
+void SelectAndroidDeviceDlg::LoadPhysicalDevices()
+{
+	Vector<AndroidDevice> devices = sdk->FindDevices();
+	for(int i = 0; i < devices.GetCount(); i++) {
+		if(devices[i].IsPhysicalDevice()) {
+			devicesArray.Add(devices[i].GetModel(), devices[i].GetSerial());
+		}
+	}
+	
+	if(devicesArray.GetCount())
+		devicesArray.Select(0);
+	else
+		ok.Disable();
+}
+
+void Ide::ExecuteApk()
+{
+	AndroidSDK sdk(androidSDKPath, true);
+	if(!sdk.Validate())
+		return;
+	
+	SelectAndroidDeviceDlg select(&sdk);
+	if(select.GetDeviceCount() != 1 && select.Run() != IDOK)
+		return;
+	if(!select.GetDeviceCount())
+		return;
+	
+	One<Host> host = CreateHost(false);
+	Apk apk(target, sdk);
+	String packageName = apk.FindPackageName();
+	String lauchableActivityName = apk.FindLauchableActivity();
+	
+	Adb adb = sdk.MakeAdb();
+	host->Execute(adb.MakeInstallCmd(select.GetSelectedSerial() ,target));
+	
+	if(!packageName.IsEmpty() && !lauchableActivityName.IsEmpty()) {
+		String lauchApkOnDeviceCmd;
+		lauchApkOnDeviceCmd << NormalizeExePath(sdk.AdbPath());
+		// lauchApkOnDeviceCmd << " logcat *:E shell am start";
+		lauchApkOnDeviceCmd << " shell am start";
+		lauchApkOnDeviceCmd << " -n " << packageName << "/" << lauchableActivityName;
+		host->Execute(lauchApkOnDeviceCmd);
 	}
 }
 
@@ -183,6 +271,13 @@ void Ide::BuildAndDebug(bool runto)
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String builder = bm.Get("BUILDER", "");
+	
+	// TODO: implement debugging on android
+	if(builder == "ANDROID") {
+		BuildAndExecute();
+		return;
+	}
+	
 	if(!Build())
 		return;
 	if(!FileExists(target))

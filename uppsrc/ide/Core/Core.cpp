@@ -561,3 +561,25 @@ String Join(const String& a, const String& b, const char *sep)
 	h << b;
 	return h;
 }
+
+String GetExeExt()
+{
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
+	return ".exe";
+#else
+	return "";
+#endif	
+}
+
+String NormalizeExePath(String exePath)
+{
+	if(exePath.Find(" ") >= 0) {
+	#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
+		exePath = "\"" + exePath + "\"";
+	#else
+		exePath.Replace(" ", "\\ ");
+	#endif
+	}
+	
+	return exePath;
+}

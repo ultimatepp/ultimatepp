@@ -160,7 +160,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	int recompile = 0;
 	Blitz b;
 	if(blitz) {
-		b = BlitzStep(sfile, soptions, obj, immfile, ".o", optimize, noblitz);
+		BlitzBuilderComponent bc(this);
+		b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".o", optimize, noblitz);
 		recompile = b.build;
 	}
 
