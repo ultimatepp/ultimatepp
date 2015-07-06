@@ -89,78 +89,9 @@ String CppBuilder::GetSharedLibPath(const String& package) const
 	return CatAnyPath(GetFileFolder(target), outfn);
 }
 
-String CppBuilder::GetHostPath(const String& path) const
-{
-	return host->GetHostPath(path);
-}
-
-String CppBuilder::GetHostPathShort(const String& path) const
-{
-#ifdef PLATFORM_WIN32
-	const dword SHORT_PATH_LENGTH = 2048;
-	char short_path[SHORT_PATH_LENGTH];
-	dword length = ::GetShortPathName((LPCTSTR) path, (LPTSTR) short_path, SHORT_PATH_LENGTH);
-	if(length > 0)
-		return String(short_path, length);
-#endif
-	return path;
-}
-
-String TrimSlash(String s)
-{
-	while(findarg(*s.Last(), '/', '\\') >= 0)
-		s.Trim(s.GetCount() - 1);
-	return s;
-}
-
-String CppBuilder::GetHostPathQ(const String& path) const
-{
-	return '\"' + TrimSlash(GetHostPath(path)) + '\"';
-}
-
-String CppBuilder::GetHostPathShortQ(const String& path) const
-{
-	return '\"' + TrimSlash(GetHostPathShort(path)) + '\"';
-}
-
 String CppBuilder::GetLocalPath(const String& path) const
 {
 	return host->GetLocalPath(path);
-}
-
-Vector<Host::FileInfo> CppBuilder::GetFileInfo(const Vector<String>& path) const
-{
-	return host->GetFileInfo(path);
-}
-
-Host::FileInfo CppBuilder::GetFileInfo(const String& path) const
-{
-	return GetFileInfo(Vector<String>() << path)[0];
-}
-
-Time CppBuilder::GetFileTime(const String& path) const
-{
-	return GetFileInfo(path);
-}
-
-void CppBuilder::DeleteFile(const Vector<String>& path)
-{
-	host->DeleteFile(path);
-}
-
-void CppBuilder::DeleteFile(const String& path)
-{
-	host->DeleteFile(Vector<String>() << path);
-}
-
-int CppBuilder::Execute(const char *cmdline)
-{
-	return host->Execute(cmdline);
-}
-
-int CppBuilder::Execute(const char *cl, Stream& out)
-{
-	return host->Execute(cl, out);
 }
 
 int CppBuilder::AllocSlot()
@@ -191,26 +122,6 @@ bool CppBuilder::Wait(int slot)
 void CppBuilder::OnFinish(Callback cb)
 {
 	host->OnFinish(cb);
-}
-
-void CppBuilder::ChDir(const String& path)
-{
-	host->ChDir(path);
-}
-
-void CppBuilder::SaveFile(const String& path, const String& data)
-{
-	host->SaveFile(path, data);
-}
-
-String CppBuilder::LoadFile(const String& path)
-{
-	return host->LoadFile(path);
-}
-
-bool CppBuilder::FileExists(const String& path) const
-{
-	return !IsNull(GetFileInfo(path).length);
 }
 
 int CasFilter(int c) {
@@ -372,85 +283,6 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 	Vector<String> out;
 	out.Add(path);
 	return out;
-}
-
-String BlitzBaseFile()
-{
-	return ConfigFile("blitzbase");
-}
-
-void ResetBlitz()
-{
-	SaveFile(BlitzBaseFile(), "");
-}
-
-Time BlitzBaseTime()
-{
-	return max(GetSysTime() - 3600, Time(GetFileTime(BlitzBaseFile())));
-}
-
-Blitz CppBuilder::BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
-                            Vector<String>& obj, Vector<String>& immfile,
-                            const char *objext, Vector<bool>& optimize,
-                            const Index<String>& noblitz)
-{
-	Blitz b;
-	Vector<String> excluded;
-	Vector<String> excludedoptions;
-	Vector<bool>   excludedoptimize;
-	b.object = CatAnyPath(outdir, "$blitz" + String(objext));
-	Time blitztime = GetFileTime(b.object);
-	String blitz;
-	b.count = 0;
-	b.build = false;
-	if(!IdeGetOneFile().IsEmpty())
-		return b;
-	for(int i = 0; i < sfile.GetCount(); i++) {
-		String fn = sfile[i];
-		String ext = ToLower(GetFileExt(fn));
-		String objfile = CatAnyPath(outdir, GetFileTitle(fn) + objext);
-		Time fntime = GetFileTime(fn);
-		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
-		   && HdependBlitzApproved(fn) && IsNull(soptions[i]) && !optimize[i]
-		   && fntime < BlitzBaseTime()
-		   && noblitz.Find(fn) < 0) {
-			if(HdependFileTime(fn) > blitztime)
-				b.build = true;
-			blitz << "\r\n"
-			      << "#define BLITZ_INDEX__ F" << i << "\r\n"
-			      << "#include \"" << GetHostPath(fn) << "\"\r\n";
-			b.info << ' ' << GetFileName(fn);
-			const Vector<String>& d = HdependGetDefines(fn);
-			for(int i = 0; i < d.GetCount(); i++)
-				blitz << "#ifdef " << d[i] << "\r\n"
-				      << "#undef " << d[i] << "\r\n"
-				      << "#endif\r\n";
-			blitz << "#undef BLITZ_INDEX__\r\n";
-			b.count++;
-		}
-		else {
-			excluded.Add(fn);
-			excludedoptions.Add(soptions[i]);
-			excludedoptimize.Add(optimize[i]);
-		}
-	}
-	b.path = CatAnyPath(outdir, "$blitz.cpp");
-	if(b.count > 1) {
-		sfile = pick(excluded);
-		soptions = pick(excludedoptions);
-		optimize = pick(excludedoptimize);
-		if(LoadFile(b.path) != blitz) {
-			SaveFile(b.path, blitz);
-			b.build = true;
-		}
-		obj.Add(b.object);
-		immfile.Add(b.object);
-	}
-	else {
-		DeleteFile(b.path);
-		b.build = false;
-	}
-	return b;
 }
 
 String CppBuilder::Includes(const char *sep, const String& package, const Package& pkg)

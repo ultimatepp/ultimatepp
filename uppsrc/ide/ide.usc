@@ -1,0 +1,4 @@
+// MethodsCtrl
+subctrl TextOption {
+	>Option;
+}

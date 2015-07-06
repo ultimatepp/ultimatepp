@@ -2,23 +2,16 @@
 #define BUILDERS_H
 
 #include <ide/Core/Core.h>
+#include <ide/Android/Android.h>
+#include <ide/Java/Java.h>
 //#include <coff/binobj/binobj.h>
 #include <plugin/bz2/bz2.h>
 
+#include "Android.h"
+#include "BuilderComponents.h"
 #include "Build.h"
 
 void PutCompileTime(int time, int count);
-
-struct Blitz {
-	bool   build;
-	int    count;
-	String path;
-	String object;
-	String info;
-};
-
-String BlitzBaseFile();
-void   ResetBlitz();
 
 String BrcToC(CParser& binscript, String basedir);
 
@@ -27,31 +20,15 @@ struct CppBuilder : Builder {
 
 	const Workspace& wspc;
 	Time             targettime;
-
+	
 	String                 GetSharedLibPath(const String& package) const;
-	String                 GetHostPath(const String& path) const;
-	String                 GetHostPathShort(const String& path) const;
-	String                 GetHostPathQ(const String& path) const;
-	String                 GetHostPathShortQ(const String& path) const;
 	String                 GetLocalPath(const String& path) const;
-	Vector<Host::FileInfo> GetFileInfo(const Vector<String>& path) const;
-	Host::FileInfo         GetFileInfo(const String& path) const;
-	Time                   GetFileTime(const String& path) const;
-	bool                   FileExists(const String& path) const;
-	void                   DeleteFile(const Vector<String>& path);
-	void                   DeleteFile(const String& path);
-	void                   ChDir(const String& path);
-	void                   SaveFile(const String& path, const String& data);
-	String                 LoadFile(const String& path);
-	int                    Execute(const char *cmdline);
-	int                    Execute(const char *cl, Stream& out);
 	int                    AllocSlot();
 	bool                   Run(const char *cmdline, int slot, String key, int blitz_count);
 	bool                   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);
 	bool                   Wait();
 	bool                   Wait(int slot);
 	void                   OnFinish(Callback cb);
-	bool                   HasFlag(const char *f) const        { return config.Find(f) >= 0; }
 	bool                   Cp(const String& cmd, const String& package, bool& error);
 	bool                   Cd(const String& cmd);
 	Vector<String>         CustomStep(const String& path, const String& package, bool& error);
@@ -76,11 +53,6 @@ struct CppBuilder : Builder {
 	String                 GetSoLinkName(String libName) const;
 
 	void                   ShowTime(int count, int start_time);
-
-	Blitz BlitzStep(Vector<String>& sfile, Vector<String>& soptions,
-	                Vector<String>& obj, Vector<String>& immfile,
-	                const char *objext, Vector<bool>& optimize,
-	                const Index<String>& noblitz);
 
 	virtual void           AddMakeFile(MakeFile& makefile, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
@@ -182,6 +154,71 @@ private:
 	ArrayMap<String, EscValue> globals;
 	bool is_parsed;
 	bool script_error;
+};
+
+class AndroidBuilder : public Builder {
+public:
+	AndroidSDK androidSDK;
+	AndroidNDK androidNDK;
+	Jdk jdk;
+	
+	bool           ndk_blitz;
+	Vector<String> ndkArchitectures;
+	String         ndkToolchain;
+	String         ndkCppRuntime;
+	String         ndkCppFlags;
+	String         ndkCFlags; 
+	
+public:
+	static Index<String> GetBuildersNames();
+		
+public:
+	AndroidBuilder();
+	
+	String GetTargetExt() const;
+	
+	virtual bool BuildPackage(const String& packageName, Vector<String>& linkfile, Vector<String>& immfile, String& linkoptions,
+		const Vector<String>& all_uses, const Vector<String>& all_libraries, int optimize);
+	virtual bool Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
+	virtual bool Preprocess(const String& package, const String& file, const String& target, bool asmout);
+	virtual void CleanPackage(const String& package);
+	
+protected:
+	bool MovePackageFileToAndroidProject(const String& src, const String& dest); 
+	bool RealizePackageSourcesDirectory(const String& packageName);
+
+protected:
+	bool ValidateBuilderEnviorement();
+	void PutErrorOnConsole(const String& msg);
+	bool FileNeedsUpdate(const String& path, const String& data);
+	void UpdateFile(const String& path, const String& data);
+	void GenerateApplicationMakeFile();
+	void GenerateMakeFile();
+	bool GenerateRFile();
+	
+	bool AddSharedLibsToApk(const String& apkPath);
+	
+	bool PreprocessJava(const String& package, const String& file, const String& target);
+	
+protected:
+	String GetSandboxDir() const;
+	
+	String GetAndroidProjectDir() const;
+	String GetAndroidProjectJavaSourcesDir() const;
+	String GetAndroidProjectJniSourcesDir() const;
+	String GetAndroidProjectLibsDir() const;
+	String GetAndroidProjectResourcesDir() const;
+	String GetAndroidProjectBuildDir() const;
+	String GetAndroidProjectClassesDir() const;
+	String GetAndroidProjectBinDir() const;
+	
+	String GetAndroidProjectJniMakeFilePath() const;
+	String GetAndroidProjectJniApplicationMakeFilePath() const;
+	
+	String GetFilePathInAndroidProject(const String& nestDir,
+	                                   const String& packageName,
+	                                   const String& fileName) const;
+	
 };
 
 void DeletePCHFile(const String& pch_file);

@@ -3,7 +3,9 @@ description "TheIDE - builders - routines to compile programs\377B";
 noblitz;
 
 uses
-	ide\Core;
+	ide\Core,
+	ide/Android,
+	ide/Java;
 
 file
 	Builders.h options(BUILDER_OPTION) PCH,
@@ -11,10 +13,20 @@ file
 	MakeFile.cpp,
 	GccBuilder.icpp,
 	coff.h,
+	Builders readonly separator,
 	MscBuilder.icpp,
 	OwcBuilder.icpp,
 	JavaBuilder.icpp,
+	AndroidBuilder.icpp,
 	ScriptBuilder.icpp,
+	Android readonly separator,
+	Android.h,
+	AndroidApplicationMakeFile.cpp,
+	AndroidMakeFile.cpp,
+	AndroidModuleMakeFile.cpp,
+	Components readonly separator,
+	BuilderComponents.h,
+	Blitz.cpp,
 	Info readonly separator,
 	Build.h,
 	Build.cpp,

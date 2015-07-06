@@ -1,27 +1,4 @@
-#include "ide.h"
-
-class TextOption : public Option {
-public:
-	virtual void   SetData(const Value& data);
-	virtual Value  GetData() const;
-};
-
-void  TextOption::SetData(const Value& data)
-{
-	String s = data;
-	Set(!(IsNull(s) || s == "0"));
-}
-
-Value TextOption::GetData() const
-{
-	return Get() ? "1" : "0";
-}
-
-class TextSwitch : public Switch {
-public:
-	virtual void   SetData(const Value& data);
-	virtual Value  GetData() const;
-};
+#include "Methods.h"
 
 void  TextSwitch::SetData(const Value& data)
 {
@@ -34,25 +11,7 @@ Value TextSwitch::GetData() const
 	return AsString(Switch::GetData());
 }
 
-class DirTable : public ArrayCtrl {
-public:
-	virtual void   SetData(const Value& data);
-	virtual Value  GetData() const;
-
-protected:
-	void Modify()  { Update(); }
-
-	EditString      edit;
-	SelectDirButton edit_dir;
-
-	void Init(const char *name = NULL);
-
-public:
-	DirTable();
-	DirTable(const char *name);
-};
-
-void   DirTable::SetData(const Value& data)
+void DirTable::SetData(const Value& data)
 {
 	Vector<String> l = Split((String)data, ';');
 	Clear();
@@ -60,7 +19,7 @@ void   DirTable::SetData(const Value& data)
 		Add(l[i]);
 }
 
-Value  DirTable::GetData() const
+Value DirTable::GetData() const
 {
 	String s;
 	for(int i = 0; i < GetCount(); i++) {
@@ -90,21 +49,6 @@ DirTable::DirTable(const char *name)
 {
 	Init(name);
 }
-
-class DirMap : public ArrayCtrl {
-public:
-	virtual void   SetData(const Value& data);
-	virtual Value  GetData() const;
-
-protected:
-	void Modify()  { Update(); }
-
-	EditString      localpath, remotepath;
-	SelectDirButton edit_dir;
-
-public:
-	DirMap();
-};
 
 void DirMap::SetData(const Value& data)
 {
@@ -138,39 +82,265 @@ DirMap::DirMap()
 	WhenArrayAction = localpath <<= remotepath <<= callback(this, &DirMap::Modify);
 }
 
-struct BuildMethods : public WithBuildMethodsLayout<TopWindow>
+void BuilderSetupInterface::InitBuilderSetup(BuilderSetup& bs)
 {
-	TextOption debug_blitz;
-	TextSwitch debug_linkmode;
-	TextOption release_blitz;
-	TextSwitch release_linkmode;
-	TextOption linkmode_lock;
-	TextOption allow_pch;
-	DirTable   path;
-	DirTable   include;
-	DirTable   lib;
-	DirMap     remote_path_map;
-	OpenFileButton open_script;
+	bs.setupCtrl = this;
+	InitSetupCtrlsMap(bs.setupCtrlsMap);
+}
 
-	EditStringNotNull name;
-	Index<String>     origfile;
-	String            default_method;
+AndroidBuilderSetup::AndroidBuilderSetup()
+{
+	CtrlLayout(*this);
+	
+	ndk_path <<= THISBACK(OnNdkPathChange);
+	
+	ndkDownload.SetImage(IdeImg::DownloadBlack());
+	ndkDownload.Tip("Download");
+	ndkDownload <<= callback1(LaunchWebBrowser, AndroidNDK::GetDownloadUrl());
+	ndk_path.AddFrame(ndkDownload);
+	
+	ndkBrowse.SetImage(CtrlImg::right_arrow());
+	ndkBrowse.Tip("Select directory");
+	ndkBrowse <<= THISBACK(OnNdkPathInsert);
+	ndk_path.AddFrame(ndkBrowse);
+	
+	jdkDownload.SetImage(IdeImg::DownloadBlack());
+	jdkDownload.Tip("Download");
+	jdkDownload <<= callback1(LaunchWebBrowser, Jdk::GetDownloadUrl());
+	jdk_path.AddFrame(jdkDownload);
+	
+	jdkBrowse.SetImage(CtrlImg::right_arrow());
+	jdkBrowse.Tip("Select directory");
+	jdkBrowse <<= callback1(InsertPath, &jdk_path);
+	jdk_path.AddFrame(jdkBrowse);
+}
 
-	void Load();
-	bool Save();
+void AndroidBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
+{
+	map.Add("NDK_PATH",                &ndk_path);
+	map.Add("JDK_PATH",                &jdk_path);
+	map.Add("SDK_PLATFORM_VERSION",    &sdk_platform_version);
+	map.Add("SDK_BUILD_TOOLS_RELEASE", &sdk_build_tools_release);
+	map.Add("NDK_BLITZ",               &ndk_blitz);
+	map.Add("NDK_ARCH_ARMEABI",        &ndk_arch_armeabi);
+	map.Add("NDK_ARCH_ARMEABI_V7A",    &ndk_arch_armeabi_v7a);
+	map.Add("NDK_ARCH_ARM64_V8A",      &ndk_arch_arm64_v8a);
+	map.Add("NDK_ARCH_X86",            &ndk_arch_x86);
+	map.Add("NDK_ARCH_X86_64",         &ndk_arch_x86_64);
+	map.Add("NDK_ARCH_MIPS",           &ndk_arch_mips);
+	map.Add("NDK_ARCH_MIPS64",         &ndk_arch_mips64);
+	map.Add("NDK_TOOLCHAIN",           &ndk_toolchain);
+	map.Add("NDK_CPP_RUNTIME",         &ndk_cpp_runtime);
+	map.Add("NDK_COMMON_CPP_OPTIONS",  &ndk_common_cpp_options);
+	map.Add("NDK_COMMON_C_OPTIONS",    &ndk_common_c_options);
+}
 
-	void NewBuilder();
-	void ShowDefault();
-	void SetDefault();
-	void ChangeMethod();
-	void Import();
+AndroidBuilderSetup::~AndroidBuilderSetup()
+{
+	
+}
 
-	void MethodMenu(Bar& bar);
+void AndroidBuilderSetup::New(const String& builder)
+{
+	OnLoad();
+	
+	ndk_arch_armeabi.Set(1);
+	ndk_arch_armeabi_v7a.Set(1);
+	ndk_arch_arm64_v8a.Set(1);
+	ndk_common_cpp_options.SetData("-fexceptions -frtti");
+}
 
-	typedef BuildMethods CLASSNAME;
+void AndroidBuilderSetup::OnLoad()
+{
+	String sdkPath = GetAndroidSDKPath();
+	
+	sdk_path.SetData(sdkPath);
+	OnSdkPathChange(sdkPath);
+}
 
-	BuildMethods();
-};
+void AndroidBuilderSetup::OnCtrlLoad(const String& ctrlKey, const String& value)
+{
+	VectorMap<Id, Ctrl*> map;
+	InitSetupCtrlsMap(map);
+	
+	if(map.Find(ctrlKey) > -1) {
+		Ctrl* ctrl = map.Get(ctrlKey);
+		if(ctrl == &ndk_path)
+			OnNdkPathChange0(value);
+	}
+}
+
+void AndroidBuilderSetup::OnShow()
+{	
+	AndroidSDK sdk(GetAndroidSDKPath(), true);
+	if(!sdk.Validate())
+		return;
+	
+	if(((String)sdk_platform_version.GetValue()).IsEmpty())
+		sdk_platform_version.SetData(sdk.FindDefaultPlatform());
+	if(((String)sdk_build_tools_release.GetValue()).IsEmpty())
+		sdk_build_tools_release.SetData(sdk.FindDefaultBuildToolsRelease());
+}
+
+void AndroidBuilderSetup::OnSdkPathChange(const String& sdkPath)
+{
+	AndroidSDK sdk(sdkPath, true);
+	if(sdk.Validate()) {
+		LoadPlatforms(sdk);
+		LoadBuildTools(sdk);
+	}
+}
+
+void AndroidBuilderSetup::OnNdkPathInsert()
+{
+	String currentPath = ndk_path.GetData();
+	
+	InsertPath(&ndk_path);
+	if(currentPath != ndk_path.GetData())
+		OnNdkPathChange();
+}
+
+void AndroidBuilderSetup::OnNdkPathChange()
+{
+	OnNdkPathChange0(ndk_path.GetData());
+}
+
+void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
+{
+	AndroidNDK ndk(ndkPath);
+	if(ndk.Validate()) {
+		LoadToolchains(ndk);
+		LoadCppRuntimes(ndk);
+	}
+}
+
+void AndroidBuilderSetup::LoadPlatforms(const AndroidSDK& sdk)
+{
+	Vector<String> platforms = pick(sdk.FindPlatforms());
+	Sort(platforms, StdGreater<String>());
+	
+	LoadDropList(sdk_platform_version,
+	             platforms,
+	             sdk.FindDefaultPlatform());
+}
+
+void AndroidBuilderSetup::LoadBuildTools(const AndroidSDK& sdk)
+{
+	Vector<String> releases = pick(sdk.FindBuildToolsReleases());
+	Sort(releases, StdGreater<String>());
+	
+	LoadDropList(sdk_build_tools_release,
+	             releases,
+	             sdk.FindDefaultBuildToolsRelease());
+}
+
+void AndroidBuilderSetup::LoadToolchains(const AndroidNDK& ndk)
+{
+	Vector<String> toolchains = pick(ndk.FindToolchains());
+	Sort(toolchains, StdGreater<String>());
+	
+	LoadDropList(ndk_toolchain, toolchains, ndk.FindDefaultToolchain());
+}
+
+void AndroidBuilderSetup::LoadCppRuntimes(const AndroidNDK& ndk)
+{
+	Vector<String> runtimes = pick(ndk.FindCppRuntimes());
+	
+	LoadDropList(ndk_cpp_runtime, runtimes, ndk.FindDefaultCppRuntime());
+}
+
+void AndroidBuilderSetup::LoadDropList(DropList& dropList,
+                                       Vector<String> values,
+                                       const String& defaultKey)
+{
+	dropList.Clear();
+	
+	for(int i = 0; i < values.GetCount(); i++)
+		dropList.Add(values[i]);
+	
+	if(!defaultKey.IsEmpty() && dropList.GetCount()) {
+		int idx = dropList.Find(defaultKey);
+		if(idx >= 0)
+			dropList.SetIndex(idx);
+	}
+}
+
+DefaultBuilderSetup::DefaultBuilderSetup()
+{
+	CtrlLayout(*this);
+	
+	allow_pch.SetLabel("Allow precompiled headers");
+	
+	paths.Add(path.SizePos(), "PATH - executable directories");
+	paths.Add(include.SizePos(), "INCLUDE directories");
+	paths.Add(lib.SizePos(), "LIB directories");
+
+	debug_info.Add("0", "None");
+	debug_info.Add("1", "Minimal");
+	debug_info.Add("2", "Full");
+}
+
+DefaultBuilderSetup::~DefaultBuilderSetup()
+{
+	
+}
+
+void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
+{
+	map.Add("COMPILER",                  &compiler);
+	map.Add("COMMON_OPTIONS",            &common_options);
+	map.Add("COMMON_CPP_OPTIONS",        &common_cpp_options);
+	map.Add("COMMON_C_OPTIONS",          &common_c_options);
+	map.Add("COMMON_FLAGS",              &common_flags);
+	map.Add("DEBUG_INFO",                &debug_info);
+	map.Add("DEBUG_BLITZ",               &debug_blitz);
+	map.Add("DEBUG_LINKMODE",            &debug_linkmode);
+	map.Add("DEBUG_OPTIONS",             &debug_options);
+	map.Add("DEBUG_FLAGS",               &debug_flags);
+	map.Add("DEBUG_LINK",                &debug_link);
+	map.Add("RELEASE_BLITZ",             &release_blitz);
+	map.Add("RELEASE_LINKMODE",          &release_linkmode);
+	map.Add("RELEASE_OPTIONS",           &speed_options);
+	map.Add("RELEASE_SIZE_OPTIONS",      &size_options);
+	map.Add("RELEASE_FLAGS",             &release_flags);
+	map.Add("RELEASE_LINK",              &release_link);
+	map.Add("DEBUGGER",                  &debugger);
+	map.Add("ALLOW_PRECOMPILED_HEADERS", &allow_pch);
+	map.Add("PATH",                      &path);
+	map.Add("INCLUDE",                   &include);
+	map.Add("LIB",                       &lib);
+}
+
+void DefaultBuilderSetup::New(const String& builder)
+{
+	bool gcc = builder == "GCC" || builder == "GCC32" || builder == "GCC_ARM";
+	if(IsNull(speed_options)) {
+		if(gcc)
+			speed_options <<= "-O3 -ffunction-sections -fdata-sections";
+		else
+			speed_options <<= "-O2";
+	}
+	if(IsNull(size_options)) {
+		if(gcc)
+			size_options <<= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
+		else
+			size_options <<= "-O1";
+	}
+	if(IsNull(debug_options)) {
+		if(gcc)
+			debug_options <<= "-O0";
+		else
+			debug_options <<= "-Od";
+	}
+	if(IsNull(debugger)) {
+		if(gcc)
+			debugger <<= "gdb";
+		else
+			debugger <<= "msdev";
+	}
+	if(IsNull(release_link) && gcc)
+		release_link <<= "-Wl,--gc-sections";
+}
 
 int CharFilterFileName(int c)
 {
@@ -180,49 +350,15 @@ int CharFilterFileName(int c)
 BuildMethods::BuildMethods()
 {
 	CtrlLayoutOKCancel(*this, "Build methods");
+	Sizeable().Zoomable();
 	method.AddColumn("Method").Edit(name);
 	name.SetFilter(CharFilterFileName);
+	
 	method.AddCtrl("BUILDER", builder);
-	method.AddCtrl("COMPILER", compiler);
-	method.AddCtrl("COMMON_OPTIONS", common_options);
-	method.AddCtrl("COMMON_CPP_OPTIONS", common_cpp_options);
-	method.AddCtrl("COMMON_C_OPTIONS", common_c_options);
-	method.AddCtrl("COMMON_FLAGS", common_flags);
-	method.AddCtrl("DEBUG_INFO", debug_info);
-	method.AddCtrl("DEBUG_BLITZ", debug_blitz);
-	method.AddCtrl("DEBUG_LINKMODE", debug_linkmode);
-	method.AddCtrl("DEBUG_OPTIONS", debug_options);
-	method.AddCtrl("DEBUG_FLAGS", debug_flags);
-	method.AddCtrl("DEBUG_LINK", debug_link);
-	method.AddCtrl("RELEASE_BLITZ", release_blitz);
-	method.AddCtrl("RELEASE_LINKMODE", release_linkmode);
-	method.AddCtrl("RELEASE_OPTIONS", speed_options);
-	method.AddCtrl("RELEASE_SIZE_OPTIONS", size_options);
-	method.AddCtrl("RELEASE_FLAGS", release_flags);
-	method.AddCtrl("RELEASE_LINK", release_link);
-	method.AddCtrl("DEBUGGER", debugger);
-	method.AddCtrl("PATH", path);
-	method.AddCtrl("INCLUDE", include);
-	method.AddCtrl("LIB", lib);
-#if 0 // REMOTE REMOVED
-	method.AddCtrl("REMOTE_HOST", remote_host);
-	method.AddCtrl("REMOTE_OS", remote_os);
-	remote_os.Add("WIN32");
-	remote_os.Add("LINUX");
-	remote_os.Add("WINCE");
-	remote_os.Add("UNIX");
-	remote_os.Add("SOLARIS");
-	remote_os.Add("BSD");
-	method.AddCtrl("REMOTE_TRANSFER", remote_file_access);
-	remote_file_access.Add("0", "direct (SAMBA)");
-	remote_file_access.Add("1", "indirect (transfer)");
-	method.AddCtrl("REMOTE_MAP", remote_path_map);
-#endif
+	InitSetups();
+	
 	method.AddCtrl("SCRIPT", scriptfile);
 	method.AddCtrl("LINKMODE_LOCK", linkmode_lock);
-	
-	allow_pch.SetLabel("Allow precompiled headers");
-	method.AddCtrl("ALLOW_PRECOMPILED_HEADERS", allow_pch);
 	
 	open_script.Attach(scriptfile);
 	open_script.Type("Build scripts (*.bsc)", "*.bsc")
@@ -231,14 +367,6 @@ BuildMethods::BuildMethods()
 	method.Appending().Removing().Duplicating();
 	method.WhenCursor = THISBACK(ChangeMethod);
 	method.WhenBar = THISBACK(MethodMenu);
-
-	paths.Add(path.SizePos(), "PATH - executable directories");
-	paths.Add(include.SizePos(), "INCLUDE directories");
-	paths.Add(lib.SizePos(), "LIB directories");
-
-	debug_info.Add("0", "None");
-	debug_info.Add("1", "Minimal");
-	debug_info.Add("2", "Full");
 
 	for(int i = 0; i < BuilderMap().GetCount(); i++)
 		builder.Add(BuilderMap().GetKey(i));
@@ -291,35 +419,14 @@ static int sCompare(const Value& v1, const Value& v2)
 
 void BuildMethods::NewBuilder()
 {
-	String b = ~builder;
-	bool gcc = b == "GCC" || b == "GCC32" || b == "GCC_ARM";
-	if(IsNull(speed_options)) {
-		if(gcc)
-			speed_options <<= "-O3 -ffunction-sections -fdata-sections";
-		else
-			speed_options <<= "-O2";
+	String builderName = ~builder;
+	for(int i = 0; i < setups.GetCount(); i++) {
+		Index<String> currentBuilders = StringToBuilders(setups.GetKey(i));
+		if(currentBuilders.Find(builderName) > -1)
+			setups[i].setupCtrl->New(builderName);
 	}
-	if(IsNull(size_options)) {
-		if(gcc)
-			size_options <<= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
-		else
-			size_options <<= "-O1";
-	}
-	if(IsNull(debug_options)) {
-		if(gcc)
-			debug_options <<= "-O0";
-		else
-			debug_options <<= "-Od";
-	}
-	if(IsNull(debugger)) {
-		if(gcc)
-			debugger <<= "gdb";
-		else
-			debugger <<= "msdev";
-	}
-	if(IsNull(release_link) && gcc)
-		release_link <<= "-Wl,--gc-sections";
-	ChangeMethod();
+	
+	SwitchSetupView();
 }
 
 void BuildMethods::ChangeMethod()
@@ -328,6 +435,7 @@ void BuildMethods::ChangeMethod()
 	if(method.IsCursor())
 		b = method.Get("BUILDER");
 	scriptfile.Enable(b == "SCRIPT");
+	SwitchSetupView();
 }
 
 void BuildMethods::Load()
@@ -337,10 +445,34 @@ void BuildMethods::Load()
 		VectorMap<String, String> map;
 		String fn = ConfigFile(ff.GetName());
 		if(LoadVarFile(fn, map)) {
+			String builderName = map.Get("BUILDER");
+			int setupIdx = -1;
+			String prefix;
+			for(int i = 0; i < setups.GetCount(); i++) {
+				Index<String> currentBuilders = StringToBuilders(setups.GetKey(i));
+				prefix = GetSetupPrefix(currentBuilders);
+				if(currentBuilders.Find(builderName) >= 0) {
+					setupIdx = i;
+					break;
+				}
+			}
+			
+			if(setupIdx >= 0)
+				setups[setupIdx].setupCtrl->OnLoad();
+			
+			map = MapBuilderVars(map);
 			origfile.Add(fn);
 			method.Add(GetFileTitle(fn));
-			for(int j = 1; j < method.GetIndexCount(); j++)
-				method.Set(method.GetCount() - 1, j, map.Get(method.GetId(j).ToString(), Null));
+			for(int j = 1; j < method.GetIndexCount(); j++) {
+				String key = method.GetId(j).ToString();
+				String val = map.Get(key, Null);
+				if(setupIdx >= 0) {
+					if(key.GetCount() >= prefix.GetCount())
+						key.Remove(0, prefix.GetCount());
+					setups[setupIdx].setupCtrl->OnCtrlLoad(key, val);
+				}
+				method.Set(method.GetCount() - 1, j, val);
+			}
 		}
 		ff.Next();
 	}
@@ -367,6 +499,9 @@ bool BuildMethods::Save()
 			map.Add(method.GetId(j).ToString(), method.Get(i, j));
 		if(map.Get("BUILDER", "") != "SCRIPT")
 			map.RemoveKey("SCRIPT");
+		
+		map = SieveBuilderVars(map);
+		
 		String fn = ConfigFile(String(method.Get(i, 0)) + ".bm");
 		if(!SaveVarFile(fn, map)) {
 			Exclamation("Error saving [* " + fn + "] !");
@@ -388,7 +523,6 @@ struct BoldDisplay : Display {
 	}
 };
 
-
 void BuildMethods::ShowDefault()
 {
 	String m = GetDefaultMethod();
@@ -405,6 +539,173 @@ void BuildMethods::SetDefault()
 		SaveFile(ConfigFile("default_method"), method.GetKey());
 		ShowDefault();
 	}
+}
+
+String BuildMethods::GetSetupPrefix(const String& setupKey) const
+{
+	return setupKey + "_";
+}
+
+String BuildMethods::GetSetupPrefix(const Index<String>& buildersGroup) const
+{
+	return buildersGroup.GetCount() ? GetSetupPrefix(buildersGroup[0]) : "";
+}
+
+void BuildMethods::InitSetups()
+{
+	Index<String> builders = GetBuilders();
+	
+	String androidKey = BuildersToString(AndroidBuilder::GetBuildersNames());
+	androidSetup.InitBuilderSetup(setups.Add(androidKey));
+	SieveBuilders(builders, AndroidBuilder::GetBuildersNames());
+
+	String defaultKey = BuildersToString(builders);
+	defaultSetup.InitBuilderSetup(setups.Add(defaultKey));
+	
+	for(int i = 0; i < setups.GetCount(); i++) {
+		Index<String> currentBuilders = StringToBuilders(setups.GetKey(i));
+		if(currentBuilders.IsEmpty())
+			continue;
+			
+		String setupKey = currentBuilders[0];
+		
+		ParentCtrl *currentSetup = setups[i].setupCtrl;
+		setup.Add(currentSetup->SizePos());
+		currentSetup->Hide();
+		
+		for(int j = 0; j < setups[i].setupCtrlsMap.GetCount(); j++) {
+			String ctrlKey = setups[i].setupCtrlsMap.GetKey(j);
+			Ctrl*  ctrl    = setups[i].setupCtrlsMap[j];
+			method.AddCtrl(GetSetupPrefix(setupKey) + ctrlKey, *ctrl);
+		}
+	}
+}
+
+void BuildMethods::SwitchSetupView()
+{
+	if(!method.IsCursor()) {
+		builder.Hide();
+		builderLabel.Hide();
+		setup.Hide();
+		return;
+	}
+	else {
+		builder.Show();
+		builderLabel.Show();
+	}
+	String builderName = ~builder;
+	builderName.IsEmpty() ? setup.Hide() : setup.Show();
+	
+	if(!builderName.IsEmpty()) {
+		for(int i = 0; i < setups.GetCount(); i++) {
+			Index<String> currentBuilders = StringToBuilders(setups.GetKey(i));
+			
+			if(currentBuilders.Find(builderName) > -1) {
+				setups[i].setupCtrl->Show();
+				setups[i].setupCtrl->OnShow();
+			}
+			else
+				setups[i].setupCtrl->Hide();
+		}
+	}
+}
+
+VectorMap<String, String> BuildMethods::SieveBuilderVars(const VectorMap<String, String>& map)
+{
+	VectorMap<String, String> sievedMap;
+	
+	String builder = map.Get("BUILDER");
+	if(builder.IsEmpty())
+		return VectorMap<String, String>();
+	
+	for(int i = 0; i < map.GetCount(); i++) {
+		String key = map.GetKey(i);
+		String value = map[i];
+		
+		bool toInsert = true;
+		for(int j = 0; j < setups.GetCount(); j++) {
+			Index<String> currentBuilders = StringToBuilders(setups.GetKey(j));
+			if(currentBuilders.IsEmpty())
+				continue;
+			String prefix = GetSetupPrefix(currentBuilders[0]);
+			if(key.StartsWith(prefix)) {
+				if(currentBuilders.Find(builder) > -1)
+					key.Remove(0, prefix.GetCount());
+				else
+					toInsert = false;
+			}
+		}
+		if(toInsert)
+			sievedMap.Add(key, value);
+	}
+	
+	return sievedMap;
+}
+
+VectorMap<String, String> BuildMethods::MapBuilderVars(const VectorMap<String, String>& map)
+{
+	VectorMap<String, String> mapedMap;
+	Index<String> varsToMaped;
+
+	String builder = map.Get("BUILDER");
+	if(builder.IsEmpty())
+		return VectorMap<String, String>();
+	
+	for(int i = 0; i < setups.GetCount(); i++) {
+		Index<String> currentBuilders = StringToBuilders(setups.GetKey(i));
+		if(currentBuilders.IsEmpty())
+			continue;
+		
+		if(currentBuilders.Find(builder) >= 0) {
+			String setupPrefix = GetSetupPrefix(currentBuilders);
+			
+			for(int j = 0; j < map.GetCount(); j++) {
+				String ctrlName = map.GetKey(j);
+				
+				if(setups[i].setupCtrlsMap.Find(ctrlName) > -1)
+					mapedMap.Add(setupPrefix + ctrlName, map[j]);
+				else
+					mapedMap.Add(ctrlName, map[j]);
+			}
+		}
+	}
+
+	return mapedMap;
+}
+
+void BuildMethods::SieveBuilders(Index<String>& sievedBuilders,
+                                 const Index<String>& builders) const
+{
+	for(int i = 0; i < builders.GetCount(); i++)
+		sievedBuilders.RemoveKey(builders[i]);
+}
+
+String BuildMethods::BuildersToString(const Index<String>& builders) const
+{
+	String str;
+	for(int i = 0; i < builders.GetCount(); i++) {
+		str << builders[i];
+		if(i + 1 < builders.GetCount())
+			str << " ";
+	}
+	return str;
+}
+
+Index<String> BuildMethods::StringToBuilders(const String& str) const
+{
+	Vector<String> vec = Split(str, ' ');
+	Index<String> builders;
+	for(int i = 0; i < vec.GetCount(); i++)
+		builders.Add(vec[i]);
+	return builders;
+}
+
+Index<String> BuildMethods::GetBuilders() const
+{
+	Index<String> builders;
+	for(int i = 0; i < BuilderMap().GetCount(); i++)
+		builders.Add(BuilderMap().GetKey(i));
+	return builders;
 }
 
 void Ide::SetupBuildMethods()

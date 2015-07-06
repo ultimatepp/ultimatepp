@@ -1,0 +1,45 @@
+template "Android SDK application (no U++)" main;
+
+option "Text view" textView = 1;
+
+@@<:PACKAGE:>.java
+package org.upp.<:PACKAGE:>;
+
+import android.app.Activity;
+import android.os.Bundle;<:?textView:>
+import android.widget.TextView;<:.:>
+
+public class <:PACKAGE:> extends Activity
+{
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		<:?textView:>
+		TextView textView = new TextView(this);
+		textView.setText("Hello <:PACKAGE:>!\n");
+
+		setContentView(textView);<:.:>
+	}
+}
+@@AndroidManifest.xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.upp.<:PACKAGE:>">
+    <application>
+        <activity android:name=".<:PACKAGE:>"
+                  android:label="<:PACKAGE:>">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+	</application>
+</manifest>
+@@<:PACKAGE:>.upp
+file
+	<:PACKAGE:>.java,
+	AndroidManifest.xml;
+
+mainconfig
+	"" = "";

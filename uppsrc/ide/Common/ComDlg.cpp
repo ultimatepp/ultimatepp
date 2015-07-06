@@ -31,6 +31,9 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".json")
 		img = IdeCommonImg::json();
 	else
+	if(ext == ".java" || ext == ".class")
+		img = IdeCommonImg::java();
+	else
 	if(ext == ".xml" || ext == ".xsd")
 		img = IdeCommonImg::xml();
 	else
@@ -136,16 +139,17 @@ void IdeFs(FileSel& fs)
 
 void SourceFs(FileSel& fs)
 {
-	fs.Type("C++ files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp)", "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp");
+	fs.Type("C/C++ files (*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp)", "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp");
 	fs.Type("Diff/Patch files (*.diff *.patch)", "*.diff *.patch");
 	fs.Type("Image files (*.iml)", "*.iml");
+	fs.Type("Java files (*.java)", "*.java");
 	fs.Type("Json files (*.json)", "*.json");
 	fs.Type("Language files (*.lng)", "*.lng");
 	fs.Type("Layout files (*.lay)", "*.lay");
 	fs.Type("Web development files (*.html *.js *.css *.witz)", "*.html *.js *.css *.witz");
 	fs.Type("Xml files (*.xml *.xsd)", "*.xml *.xsd");
 	fs.Type("Other special files (*.sch *.usc *.rc *.brc *.upt)", "*.sch *.usc *.rc *.brc *.upt");
-	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.iml *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz *.json *.xml *.xsd *.qtf";
+	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.iml *.java *.json *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz *.xml *.xsd *.qtf";
 	fs.Type("All source files (" + mask + ")", mask);
 	IdeFs(fs);
 }
@@ -213,7 +217,7 @@ void ShellOpenFolder(const String& dir)
 		tempDir.Replace(" ", "\\ ");
 
 		IGNORE_RESULT(
-			system("open " + dir + " &")
+			system("open " + tempDir + " &")
 		);
 	#else
 		String tempDir = dir;

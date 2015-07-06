@@ -317,6 +317,16 @@ void AddPath(EditString *es)
 	es->SetWantFocus();
 }
 
+void InsertPath(EditString *es)
+{
+	String s = SelectDirectory();
+	if(IsNull(s))
+		return;
+	es->Clear();
+	*es <<= s;
+	es->SetWantFocus();
+}
+
 void Ide::SetupFormat() {
 	FormatDlg dlg;
 	dlg.Title("Format setup");
@@ -325,6 +335,7 @@ void Ide::SetupFormat() {
 	WithSetupEditorLayout<ParentCtrl> edt;
 	WithSetupIdeLayout<ParentCtrl> ide;
 	WithSetupAssistLayout<ParentCtrl> assist;
+	WithSetupMobilePlatformsLayout<ParentCtrl> mobile;
 	AStyleSetupDialog ast(this);
 #ifdef PLATFORM_WIN32
 	ide.console_txt.Hide();
@@ -364,6 +375,7 @@ void Ide::SetupFormat() {
 	dlg.Add(assist, "Assist");
 	dlg.Add(ide, "IDE");
 	dlg.Add(ast, "Code formatting");
+	dlg.Add(mobile, "Mobile platforms");
 	dlg.WhenClose = dlg.Acceptor(IDEXIT);
 	FontSelectManager ed, vf, con, f1, f2, tf;
 	ed.Set(fnt.face, fnt.height, fnt.bold, fnt.italic, fnt.naa);
@@ -459,6 +471,8 @@ void Ide::SetupFormat() {
 		(ast.EmptyLineFill,                 astyle_EmptyLineFill)
 		(ast.TabSpaceConversionMode,        astyle_TabSpaceConversionMode)
 		(ast.TestBox,						astyle_TestBox)
+		
+		(mobile.AndroidSDKPath, androidSDKPath)
 	;
 	hlt.hlstyle.AddColumn("Style");
 	hlt.hlstyle.AddColumn("Color").Ctrls(HlPusherFactory);
@@ -480,12 +494,25 @@ void Ide::SetupFormat() {
 	ide.chstyle.Add(3, "Host platform, blue bars");
 	ide.chstyle.Add(4, "Standard, blue bars");
 
-	FrameRight<Button> browse;
-	browse.SetImage(CtrlImg::right_arrow());
-	browse <<= callback1(AddPath, &ide.uscpath);
-	ide.uscpath.AddFrame(browse);
+	FrameRight<Button> uscBrowse;
+	uscBrowse.SetImage(CtrlImg::right_arrow());
+	uscBrowse <<= callback1(AddPath, &ide.uscpath);
+	ide.uscpath.AddFrame(uscBrowse);
 	ide.uscpath <<= LoadFile(GetHomeDirFile("usc.path"));
-
+	
+	FrameRight<Button> androidSDKDownload;
+	androidSDKDownload.SetImage(IdeImg::DownloadBlack());
+	androidSDKDownload.Tip("Download");
+	androidSDKDownload <<= callback1(LaunchWebBrowser, AndroidSDK::GetDownloadUrl());
+	mobile.AndroidSDKPath.AddFrame(androidSDKDownload);
+	
+	FrameRight<Button> androidSDKBrowse;
+	androidSDKBrowse.SetImage(CtrlImg::right_arrow());
+	androidSDKBrowse.Tip("Select directory");
+	androidSDKBrowse <<= callback1(InsertPath, &mobile.AndroidSDKPath);
+	mobile.AndroidSDKPath.AddFrame(androidSDKBrowse);
+	mobile.AndroidSDKPath <<= androidSDKPath;
+	
 	for(;;) {
 		int c = dlg.Run();
 		Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);

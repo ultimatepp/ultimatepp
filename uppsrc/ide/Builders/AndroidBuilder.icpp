@@ -1,0 +1,688 @@
+#include "Builders.h"
+
+Index<String> AndroidBuilder::GetBuildersNames()
+{
+	Index<String> builders;
+	
+	builders.Add("ANDROID");
+	
+	return builders;
+}
+
+AndroidBuilder::AndroidBuilder()
+{
+	androidSDK.SetPath(GetAndroidSDKPath());
+}
+
+String AndroidBuilder::GetTargetExt() const
+{
+	return ".apk";
+}
+
+bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
+	                              Vector<String>& immfile, String& linkoptions,
+	                              const Vector<String>& all_uses,
+	                              const Vector<String>& all_libraries,
+	                              int)
+{
+	if(!ValidateBuilderEnviorement())
+		return false;
+	
+	const bool isMainPackage = HasFlag("MAIN");
+	const bool isResourcesPackage = HasFlag("ANDROID_RESOURCES_PACKAGE");
+	String uppManifestPath = PackagePath(package);
+	String packageDir = GetFileFolder(uppManifestPath);
+	
+	ChDir(packageDir);
+	PutVerbose("cd " + packageDir);
+	
+	Package pkg;
+	pkg.Load(uppManifestPath);
+	
+	if(!isResourcesPackage)
+		if(!RealizePackageSourcesDirectory(package))
+			return false;
+	
+	Vector<String> javaSourceFiles;
+	Vector<String> nativeSourceFiles;
+	Vector<String> nativeSourceFilesInPackage;
+	Vector<String> nativeSourceFilesOptions;
+	Vector<String> nativeObjects;
+	Vector<bool>   optimizeNativeSourceFiles;
+	
+	Index<String> noBlitzNativeSourceFiles;
+	
+	bool error = false;
+	String androidManifestPath;
+	
+	bool isBlitz = HasFlag("BLITZ") || ndk_blitz;
+	
+	String resourcesDir   = GetAndroidProjectResourcesDir();
+	String javaSourcesDir = GetAndroidProjectJavaSourcesDir();
+	String jniSourcesDir  = GetAndroidProjectJniSourcesDir();
+	for(int i = 0; i < pkg.GetCount(); i++) {
+		if(!IdeIsBuilding())
+			return false;
+		if(pkg[i].separator)
+			continue;
+		
+		String globalOptions = Gather(pkg[i].option, config.GetKeys());
+		
+		String filePath       = SourcePath(package, pkg[i]);
+		String fileExt        = ToLower(GetFileExt(filePath));
+		String fileName       = GetFileName(filePath);
+		String packageFile    = AppendFileName(package, pkg[i]);
+		String packageFileDir = GetFileFolder(packageFile);
+		packageFileDir.Find(package + DIR_SEPS);
+		
+		if(isResourcesPackage) {
+			if(packageFileDir.Find(package + DIR_SEPS) != -1)
+				packageFileDir.Remove(0, String(package + DIR_SEPS).GetCount());
+			String filePathInAndroidProject = GetFilePathInAndroidProject(resourcesDir, packageFileDir, fileName);
+				
+			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
+				error = true;
+		}
+		else
+		if(fileExt == ".java") {
+			String filePathInAndroidProject = GetFilePathInAndroidProject(javaSourcesDir, packageFileDir, fileName);
+			
+			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
+				return false;
+			
+			javaSourceFiles.Add(filePathInAndroidProject);
+		}
+		else
+		if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
+		   fileExt == ".c"    ||
+		   fileExt == ".hpp"  || fileExt == ".hxx" || fileExt == ".h") {
+			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir, packageFileDir, fileName);
+			
+			nativeSourceFilesOptions.Add(globalOptions);			
+			if(pkg[i].noblitz)
+				noBlitzNativeSourceFiles.Add(packageFile);
+			optimizeNativeSourceFiles.Add(pkg[i].optimize_speed); // TODO: seems android makefile dosen't support this
+			
+			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
+				return false;
+			
+			if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
+			   fileExt == "c") {
+				nativeSourceFiles.Add(filePathInAndroidProject);
+				nativeSourceFilesInPackage.Add(packageFile);
+			}
+		}
+		else
+		if(fileExt == ".xml") {
+			if(isMainPackage && fileName == "AndroidManifest.xml") {
+				if(androidManifestPath.GetCount()) {
+					PutConsole("AndroidManifest.xml is duplicated.");
+					return false;
+				}
+				
+				if(!FileCopy(filePath, GetAndroidProjectDir() + DIR_SEPS + "AndroidManifest.xml"))
+					return false;
+					
+				androidManifestPath = filePath;
+			}
+		}
+		else
+		if(fileExt == ".o") {
+			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir, packageFileDir, fileName);
+			
+			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
+				return false;
+			
+			nativeObjects.Add(filePathInAndroidProject);
+		}
+	}
+	
+	if(isMainPackage && androidManifestPath.IsEmpty()) {
+		PutConsole("Failed to find Android manifest file.");
+		return false;
+	}
+	
+	if(!isResourcesPackage && !error && !javaSourceFiles.IsEmpty()) {
+		if(!RealizeDirectory(GetAndroidProjectClassesDir()))
+			return false;
+		
+		String compileCmd;
+		compileCmd << NormalizeExePath(jdk.GetJavacPath());
+		compileCmd << (HasFlag("DEBUG") ? " -g" : " -g:none");
+		compileCmd << " -d "<< GetAndroidProjectClassesDir();
+		compileCmd << " -classpath ";
+		compileCmd << NormalizeExePath(androidSDK.AndroidJarPath()) << Java::GetDelimiter();
+		compileCmd << GetAndroidProjectBuildDir();
+		compileCmd << " -sourcepath ";
+		compileCmd << GetAndroidProjectJavaSourcesDir() << " ";
+		for(int i = 0; i < javaSourceFiles.GetCount(); i++) {
+			compileCmd << javaSourceFiles[i];
+			if(i < javaSourceFiles.GetCount() - 1)
+				compileCmd << " ";
+		}
+		
+		linkfile.Add(compileCmd);
+	}
+
+	if(!isResourcesPackage && !error && !nativeSourceFiles.IsEmpty()) {
+		if(isBlitz) {
+			BlitzBuilderComponent bc(this);
+			Blitz blitz = bc.MakeBlitzStep(nativeSourceFilesInPackage,
+			                               nativeSourceFilesOptions,
+			                               nativeObjects,
+			                               immfile,
+			                               ".o",
+			                               optimizeNativeSourceFiles,
+			                               noBlitzNativeSourceFiles);
+			
+			String destinationFileName = GetFileName(blitz.path);
+			destinationFileName.Replace("$blitz.cpp", "@blitz.cpp");
+			
+			String blitzDestinationFileInPackage;
+			blitzDestinationFileInPackage << package << DIR_SEPS;
+			blitzDestinationFileInPackage << destinationFileName;
+			
+			if(FileExists(blitz.path)) {
+				String blitzDestinationFile;
+				blitzDestinationFile << GetAndroidProjectJniSourcesDir() << DIR_SEPS;
+				blitzDestinationFile << blitzDestinationFileInPackage;
+				
+				CopyFile(blitzDestinationFile, blitz.path);
+			
+				nativeSourceFilesInPackage.Clear();
+				nativeSourceFilesInPackage.Add(blitzDestinationFileInPackage);
+				for(int i = 0; i < noBlitzNativeSourceFiles.GetCount(); i++)
+					nativeSourceFilesInPackage.Add(noBlitzNativeSourceFiles[i]);
+			}
+		}
+		
+		AndroidModuleMakeFile pkgMakeFile(package);
+	
+		// TODO: improve sieve mechanisme
+		for(int i = 0; i < nativeSourceFilesInPackage.GetCount(); i++)
+			pkgMakeFile.AddSourceFile(nativeSourceFilesInPackage[i]);
+		for(int i = 0; i < pkg.flag.GetCount(); i++)
+			pkgMakeFile.AddCppFlag(pkg.flag[i].text);
+		for(int i = 0; i < pkg.library.GetCount(); i++)
+			pkgMakeFile.AddLdLibrary(pkg.library[i].text);
+		for(int i = 0; i < pkg.uses.GetCount(); i++)
+			pkgMakeFile.AddSharedLibrary(pkg.uses[i].text);
+		
+		String pkgMakeFilePath = GetAndroidProjectJniSourcesDir() + DIR_SEPS + package + DIR_SEPS + "Android.mk";
+		UpdateFile(pkgMakeFilePath, pkgMakeFile.ToString());
+	}
+
+	return !error;
+}
+
+bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
+	                         bool createmap)
+{
+	if(!ValidateBuilderEnviorement())
+		return false;
+	
+	PutConsole("Building Android Project");
+	StringStream ss;
+	if(!GenerateRFile())
+		return false;
+	
+	// We need to compile java packages in this place, because we need to generate "R.java" file before...
+	// We don't know which packages contain resources.
+	PutConsole("-----");
+	PutConsole("Compiling java sources...");
+	bool error = false;
+	int time = GetTickCount();
+	for(int i = 0; i < linkfile.GetCount(); i++) {
+		if(Execute(linkfile[i], ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+	}
+	PutConsole("Java sources compiled in " + GetPrintTime(time) + ".");
+	
+	// Now, we are going to start compiling c/c++ sources
+	if(DirectoryExists(GetAndroidProjectJniSourcesDir())) {
+		if(!androidNDK.Validate()) {
+			PutErrorOnConsole("Android NDK was not detected");
+			return false;
+		}
+		
+		time = GetTickCount();
+		PutConsole("-----");
+		PutConsole("Compiling native sources...");
+		
+		GenerateApplicationMakeFile();
+		GenerateMakeFile();
+		
+		NDKBuild ndkBuild(androidNDK.GetNdkBuildPath());
+		ndkBuild.SetWorkingDir(GetAndroidProjectDir());
+		ndkBuild.SetJobs(GetHydraThreads());
+		if(Execute(ndkBuild.ToString(), ss) != 0 ) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+		PutConsole("Native sources compiled in " + GetPrintTime(time) + ".");
+	}
+	
+	PutConsole("-----");
+	PutConsole("Creating dex file...");
+	RealizeDirectory(GetAndroidProjectBinDir());
+	String dxCmd;
+	dxCmd << NormalizeExePath(androidSDK.DxPath());
+	dxCmd << " --dex ";
+	dxCmd << "--output=" << GetAndroidProjectBinDir() << DIR_SEPS << "classes.dex ";
+	dxCmd << GetAndroidProjectClassesDir();
+	// PutConsole(dxCmd);
+	if(Execute(dxCmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	
+	PutConsole("Creating apk file...");
+	String unsignedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".unsigned.apk";
+	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
+	DeleteFile(unsignedApkPath);
+	String apkCmd;
+	apkCmd << NormalizeExePath(androidSDK.AaptPath());
+	apkCmd << " package -v -f";
+	if(DirectoryExists(GetAndroidProjectResourcesDir()))
+		apkCmd << " -S " << GetAndroidProjectResourcesDir();
+	apkCmd << " -M " << GetAndroidProjectDir() << DIR_SEPS << "AndroidManifest.xml";
+	apkCmd << " -I " << NormalizeExePath(androidSDK.AndroidJarPath());
+	apkCmd << " -F " << unsignedApkPath;
+	apkCmd << " " << GetAndroidProjectBinDir();
+	// PutConsole(apkCmd);
+	if(Execute(apkCmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	
+	if(DirectoryExists(GetAndroidProjectLibsDir())) {
+		PutConsole("Adding native libraries to apk...");
+		if(!AddSharedLibsToApk(unsignedApkPath))
+			return false;
+	}
+	
+	// In release mode we definitly shouldn't signing apk!!!
+	if(HasFlag("DEBUG")) {
+		String debugKeystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
+		if(!FileExists(debugKeystorePath)) { 
+			PutConsole("Generating debug key...");
+			String keytoolCmd;
+			keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
+			keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android"; 
+			keytoolCmd << " -keystore " << debugKeystorePath;
+			keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\" -validity 100000";
+			//PutConsole(keytoolCmd);
+			if(Execute(keytoolCmd, ss) != 0) {
+				PutConsole(ss.GetResult());
+				return false;
+			}
+		}
+	
+		PutConsole("Signing apk file...");
+		DeleteFile(signedApkPath);
+		String jarsignerCmd;
+		jarsignerCmd << NormalizeExePath(jdk.GetJarsignerPath());
+		jarsignerCmd << " -keystore " + debugKeystorePath;
+		jarsignerCmd << " -storepass android";
+		jarsignerCmd << " -keypass android";
+		// TODO: not sure about below line. But I think for debug purpose we shouldn't use tsa.
+		// http://en.wikipedia.org/wiki/Trusted_timestamping
+		//jarsignerCmd << " -tsa https://timestamp.geotrust.com/tsa";
+		jarsignerCmd << " -signedjar " << signedApkPath;
+		jarsignerCmd << " " << unsignedApkPath;
+		jarsignerCmd << " androiddebugkey";
+		//PutConsole(jarsignerCmd);
+		if(Execute(jarsignerCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+		
+		PutConsole("Aliging apk file...");
+		DeleteFile(target);
+		String zipalignCmd;
+		zipalignCmd << NormalizeExePath(androidSDK.ZipalignPath());
+		zipalignCmd << " -f 4 ";
+		zipalignCmd << (HasFlag("DEBUG") ? signedApkPath : unsignedApkPath) << " ";
+		zipalignCmd << target;
+		//PutConsole(zipalignCmd);
+		if(Execute(zipalignCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+bool AndroidBuilder::Preprocess(const String& package, const String& file, const String& target, bool asmout)
+{
+	String ext = GetFileExt(file);
+	if(ext == ".java")
+		return PreprocessJava(package, file, target);
+	return false;
+}
+
+void AndroidBuilder::CleanPackage(const String& package)
+{
+	String sandboxDir = GetSandboxDir();
+	if(DirectoryExists(sandboxDir))
+		DeleteFolderDeep(sandboxDir);
+}
+
+bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const String& dest)
+{
+	if(!RealizeDirectory(GetFileDirectory(dest)))
+		return false;
+	
+	if(FileExists(dest)) {
+		if(GetFileTime(src).Get() <= GetFileTime(dest).Get())
+			return true;
+	}
+	
+	return FileCopy(src, dest);
+}
+
+bool AndroidBuilder::RealizePackageSourcesDirectory(const String& packageName)
+{
+	return RealizeDirectory(GetAndroidProjectJavaSourcesDir() + DIR_SEPS + packageName);
+}
+
+bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
+{
+	// TODO: A little bit workearound (I know one thing that shared libs should be in "lib" directory not in "libs")
+	// So, we need to create temporary lib directory with .so files :(
+	const String androidProjectDir = GetAndroidProjectDir();
+	const String libsDir = GetAndroidProjectLibsDir();
+	const String libDir = androidProjectDir + DIR_SEPS + "lib";
+	
+	Vector<String> sharedLibsToAdd;
+	for(FindFile ff(AppendFileName(libsDir, "*")); ff; ff.Next()) {
+		if (!ff.IsHidden () && !ff.IsSymLink () && ff.IsDirectory()) {
+			for(FindFile ffa(AppendFileName (ff.GetPath(), "*")); ffa; ffa.Next ()) {
+				if(!ffa.IsHidden() && !ffa.IsSymLink() && !ffa.IsDirectory()) {
+					// TODO: in libs directory we can find another java libs (.jar)
+					String fileExt = ToLower(GetFileExt(ffa.GetPath()));
+					if(fileExt == ".so") {
+						const String libPath = String("lib") + DIR_SEPS + ff.GetName() + DIR_SEPS + ffa.GetName();
+						const String destPath = androidProjectDir + DIR_SEPS + libPath;
+						if(!RealizePath(destPath) || !FileCopy(ffa.GetPath(), destPath))
+							return false;
+						sharedLibsToAdd.Add(libPath);
+					}
+				}
+			}
+		}
+	}
+	
+	ChDir(androidProjectDir);	
+	String aaptAddCmd;
+	aaptAddCmd << NormalizeExePath(androidSDK.AaptPath());
+	aaptAddCmd << " add " << apkPath;
+	for(int i = 0; i < sharedLibsToAdd.GetCount(); i++)
+		aaptAddCmd << " " << sharedLibsToAdd[i];
+	// PutConsole(aaptAddCmd);
+	StringStream ss;
+	if(Execute(aaptAddCmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	if(!DeleteFolderDeep(libDir))
+		return false;
+	
+	return true;
+}
+
+bool AndroidBuilder::ValidateBuilderEnviorement()
+{
+	if(!androidSDK.Validate()) {
+		PutErrorOnConsole("Android SDK was not detected");
+		return false;
+	}
+	if(!androidSDK.ValidateBuildTools()) {
+		PutErrorOnConsole("Android SDK build tools was not detected");
+		return false;
+	}
+	if(!androidSDK.ValidatePlatform()) {
+		PutErrorOnConsole("Android SDK platform was not detected");
+		return false;
+	}
+	if(!jdk.Validate()) {
+		PutErrorOnConsole("JDK was not detected");
+		return false;
+	}
+	
+	return true;
+}
+
+void AndroidBuilder::PutErrorOnConsole(const String& msg)
+{
+	PutConsole("Error: " + msg + ".");
+}
+
+bool AndroidBuilder::FileNeedsUpdate(const String& path, const String& data)
+{
+	return !(FileExists(path) && LoadFile(path).Compare(data) == 0);
+}
+
+void AndroidBuilder::UpdateFile(const String& path, const String& data)
+{
+	if(!FileNeedsUpdate(path, data))
+		return;
+	
+	SaveFile(path, data);
+}
+
+void AndroidBuilder::GenerateApplicationMakeFile()
+{
+	AndroidApplicationMakeFile makeFile;
+	makeFile.SetPlatform(androidSDK.GetPlatform());
+	makeFile.SetArchitectures(ndkArchitectures);
+	makeFile.SetCppRuntime(ndkCppRuntime);
+	makeFile.SetCppFlags(ndkCppFlags);
+	makeFile.SetCFlags(ndkCFlags);
+	makeFile.SetOptim(HasFlag("DEBUG") ? "debug" : "release");
+	makeFile.SetToolchain(ndkToolchain);
+	
+	UpdateFile(GetAndroidProjectJniApplicationMakeFilePath(), makeFile.ToString());
+}
+
+void AndroidBuilder::GenerateMakeFile()
+{
+	Vector<String> modules;
+	for(FindFile ff(AppendFileName(GetAndroidProjectJniSourcesDir(), "*")); ff; ff.Next()) {
+		if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder())
+			modules.Add(ff.GetName());
+	}
+	
+	AndroidMakeFile makeFile;
+	makeFile.AddHeader();
+	for(int i = 0; i < modules.GetCount(); i++)
+		makeFile.AddInclusion(modules[i] + DIR_SEPS + "Android.mk");
+	
+	UpdateFile(GetAndroidProjectJniMakeFilePath(), makeFile.ToString());
+}
+
+bool AndroidBuilder::GenerateRFile()
+{
+	// TODO: gen in gen folder
+	if(DirectoryExists(GetAndroidProjectResourcesDir())) {
+		StringStream ss;
+		String aaptCmd;
+		aaptCmd << NormalizeExePath(androidSDK.AaptPath());
+		aaptCmd << " package -v -f -m";
+		aaptCmd << " -S " << GetAndroidProjectDir() << DIR_SEPS << "res";
+		aaptCmd << " -J " << GetAndroidProjectDir() << DIR_SEPS << "java";
+		aaptCmd << " -M " << GetAndroidProjectDir() << DIR_SEPS << "AndroidManifest.xml";
+		aaptCmd << " -I " << NormalizeExePath(androidSDK.AndroidJarPath());
+		
+		if(Execute(aaptCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+	}
+	
+	return true;
+}
+
+bool AndroidBuilder::PreprocessJava(const String& package, const String& file, const String& target)
+{
+	StringStream ss;
+	String ext = GetFileExt(file);
+	if(ext != ".java")
+		return false;
+	String fileName = GetFileName(file);
+	fileName.Replace(ext, "");
+	String targetDir = GetFileDirectory(target);
+	String classesDir = targetDir + "classes";
+	String classFileName = fileName + ".class";
+	
+	if(DirectoryExists(classesDir))
+		DeleteFolderDeep(classesDir);
+	RealizeDirectory(classesDir);
+	
+	String compileCmd;
+	compileCmd << NormalizeExePath(jdk.GetJavacPath());
+	compileCmd << " -d "<< classesDir;
+	compileCmd << " -classpath ";
+	compileCmd << NormalizeExePath(androidSDK.AndroidJarPath()) << Java::GetDelimiter();
+	compileCmd << GetAndroidProjectBuildDir();
+	compileCmd << " -sourcepath " << GetAndroidProjectJavaSourcesDir();
+	compileCmd << " " << file;
+	if(Execute(compileCmd) != 0)
+		return false;
+	
+	String classFileDir;
+	BiVector<String> paths;
+	paths.AddTail(classesDir);
+	while(!paths.IsEmpty()) {
+		for(FindFile ff(AppendFileName(paths.Head(), "*")); ff; ff.Next()) {
+			if(!ff.IsHidden()) {
+				if(!ff.IsSymLink() && ff.IsDirectory())
+					paths.AddTail(ff.GetPath());
+				else
+				if(ff.GetName().Compare(classFileName) == 0) {
+					classFileDir = GetFileDirectory(ff.GetPath());
+					paths.Clear();
+					break;
+				}
+			}
+		}
+		if(!paths.IsEmpty())
+			paths.DropHead();
+	}
+	
+	if(classFileDir.IsEmpty())
+		return false;
+	
+	String relativeClassFileDir = classFileDir;
+	relativeClassFileDir.Replace(classesDir + DIR_SEPS, "");
+	String className = relativeClassFileDir + fileName;
+	className.Replace(DIR_SEPS, ".");
+	
+	String javahCmd;
+	javahCmd << NormalizeExePath(jdk.GetJavahPath());
+	javahCmd << " -classpath ";
+	javahCmd << classesDir << Java::GetDelimiter();
+	javahCmd << NormalizeExePath(androidSDK.AndroidJarPath()) << Java::GetDelimiter();
+	javahCmd << GetAndroidProjectBuildDir();
+	javahCmd << " -o " << target;
+	javahCmd << " " << className;
+	// PutConsole(javahCmd);
+	if(Execute(javahCmd, ss) != 0) {
+		PutConsole(ss.GetResult());
+		return false;
+	}
+	
+	return true;
+}
+
+// -------------------------------------------------------------------
+
+String AndroidBuilder::GetSandboxDir() const
+{
+	if(target.IsEmpty())
+		return String();
+		
+	int targetExtLen = GetTargetExt().GetCount();
+	String mainPackageName = GetFileName(target);
+	mainPackageName.Remove(mainPackageName.GetCount() - targetExtLen, targetExtLen);
+	return GetFileFolder(target) + DIR_SEPS + "Sandbox" + DIR_SEPS + mainPackageName;
+}
+
+String AndroidBuilder::GetAndroidProjectDir() const
+{
+	return GetSandboxDir() + DIR_SEPS + "AndroidProject";
+}
+
+String AndroidBuilder::GetAndroidProjectJavaSourcesDir() const
+{
+	return GetAndroidProjectDir() + DIR_SEPS + "java";
+}
+
+String AndroidBuilder::GetAndroidProjectJniSourcesDir() const
+{
+	return GetAndroidProjectDir() + DIR_SEPS + "jni";
+}
+
+String AndroidBuilder::GetAndroidProjectLibsDir() const
+{
+	return GetAndroidProjectDir() + DIR_SEPS + "libs";
+}
+
+String AndroidBuilder::GetAndroidProjectResourcesDir() const
+{
+	return GetAndroidProjectDir() + DIR_SEPS + "res";
+}
+
+String AndroidBuilder::GetAndroidProjectBuildDir() const
+{
+	return GetAndroidProjectDir() + DIR_SEPS + "build";
+}
+
+String AndroidBuilder::GetAndroidProjectClassesDir() const
+{
+	return GetAndroidProjectBuildDir() + DIR_SEPS + "classes";
+}
+
+String AndroidBuilder::GetAndroidProjectBinDir() const
+{
+	return GetAndroidProjectBuildDir() + DIR_SEPS + "bin";
+}
+
+// -------------------------------------------------------------------
+
+String AndroidBuilder::GetAndroidProjectJniMakeFilePath() const
+{
+	return GetAndroidProjectJniSourcesDir() + DIR_SEPS + "Android.mk";
+}
+
+String AndroidBuilder::GetAndroidProjectJniApplicationMakeFilePath() const
+{
+	return GetAndroidProjectJniSourcesDir() + DIR_SEPS + "Application.mk";
+}
+
+// -------------------------------------------------------------------
+
+String AndroidBuilder::GetFilePathInAndroidProject(const String& nestDir,
+	                                               const String& packageName,
+	                                               const String& fileName) const
+{
+	return nestDir + DIR_SEPS + packageName + DIR_SEPS + fileName;
+}
+	             
+
+// -------------------------------------------------------------------
+
+Builder *CreateAndroidBuilder()
+{
+	return new AndroidBuilder();
+}
+
+INITBLOCK
+{
+	Index<String> builders = AndroidBuilder::GetBuildersNames();
+	for(int i = 0; i < builders.GetCount(); i++)
+		RegisterBuilder(builders[i], &CreateAndroidBuilder);
+}

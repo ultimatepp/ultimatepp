@@ -1,0 +1,10 @@
+description "TheIDE - Java spport module\377B";
+
+uses
+	ide/Core;
+
+file
+	Java.h,
+	Java.cpp,
+	Jdk.cpp;
+

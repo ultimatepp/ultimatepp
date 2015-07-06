@@ -2,6 +2,10 @@ TOPIC("About$en-us")
 #include "About$en-us.tppi"
 END_TOPIC
 
+TOPIC("AndroidBuilder$en-us")
+#include "AndroidBuilder$en-us.tppi"
+END_TOPIC
+
 TOPIC("Assist$en-us")
 #include "Assist$en-us.tppi"
 END_TOPIC
