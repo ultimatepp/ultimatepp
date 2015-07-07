@@ -1,0 +1,4 @@
+#ifndef _AndroidMath_icpp_init_stub
+#define _AndroidMath_icpp_init_stub
+#include "AndroidMathUtility/init"
+#endif
