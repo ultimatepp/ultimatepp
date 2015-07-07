@@ -168,7 +168,7 @@ static EPSGEllipsoid epsg_ellipsoids[] =
 		20855233,
 		{ { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0, 0 } },
 		"Clarke's 1858/II solution. Derived parameters: a = 6378293.645m using his 1865 "
-		"ratio of 0.304797265 feet per metre; 1/f = 294.26068…  In Australia and Amoco "
+		"ratio of 0.304797265 feet per metre; 1/f = 294.26068 deg  In Australia and Amoco "
 		"Trinidad 1/f taken to two decimal places (294.26 exactly}, elsewhere a and b "
 		"used to derive 1/f.",
 		"\"Ellipsoidisch Parameter der Erdfigur (1800-1950)\" by Georg Strasser."
@@ -476,7 +476,7 @@ static EPSGEllipsoid epsg_ellipsoids[] =
 		20854895,
 		{ { 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 }, { 0, 0, 0 } },
 		"Clarke gave a and b and also 1/f=293.465 (to 3 decimal places).  "
-		"1/f derived from a and b = 293.4663077…",
+		"1/f derived from a and b = 293.4663077 deg",
 		"\"Ellipsoidisch Parameter der Erdfigur (1800-1950)\" by Georg Strasser."
 	},
 

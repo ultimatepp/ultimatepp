@@ -90,7 +90,7 @@ static double scan_dbl(const char *p, const char *e = 0)
 		else
 			exp++;
 	int raise = exp;
-	if(p != e && *p == '.') // decimal part
+	if(p != e && *p == '.') { // decimal part
 		while(++p != e && (byte)((c = *p) - '0') < 10)
 			if(c != '0') {
 				if(raise) { mantissa *= ipow10(raise); exp -= raise; raise = 0; }
@@ -99,6 +99,7 @@ static double scan_dbl(const char *p, const char *e = 0)
 			}
 			else
 				raise++;
+	}
 	if(p != e && (*p == 'E' || *p == 'e')) { // exponent
 		int vexp = scan_int(p + 1, e);
 		if(!IsNull(vexp))
@@ -866,7 +867,7 @@ Value DbfStream::GetItemDateShort(int i) const
 {
 	const byte *p = record.Begin() + fields[i].offset;
 	Date date;
-	if(IsDigit(*p))
+	if(IsDigit(*p)) {
 		if(p[2] == '.') {
 			date.day = 10 * p[0] + p[1] - 11 * '0';
 			date.month = 10 * p[3] + p[4] - 11 * '0';
@@ -877,6 +878,7 @@ Value DbfStream::GetItemDateShort(int i) const
 			date.month = 10 * p[4] + p[5] - 11 * '0';
 			date.day = 10 * p[6] + p[7] - 11 * '0';
 		}
+	}
 	return date;
 }
 
@@ -933,8 +935,8 @@ Value DbfStream::GetItemMemo(int i, bool binary) const
 					return Value();
 				if(!binary) {
 					byte *p;
-					if(p = (byte *)memchr(buffer, '\0', len)) len = (unsigned)(p - buffer);
-					if(p = (byte *)memchr(buffer, '\x1A', len)) len = (unsigned)(p - buffer);
+					if((p = (byte *)memchr(buffer, '\0', len))) len = (unsigned)(p - buffer);
+					if((p = (byte *)memchr(buffer, '\x1A', len))) len = (unsigned)(p - buffer);
 				}
 				out = String(buffer, len);
 			}

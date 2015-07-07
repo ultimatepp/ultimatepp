@@ -294,7 +294,7 @@ bool MIMEHeader::Parse(const char *s)
 					p.SkipTerm();
 				String id = ToLower(TrimBoth(String(b, p.GetPtr())));
 				String val;
-				if(p.Char('='))
+				if(p.Char('=')) {
 					if(p.IsChar('\''))
 						val = p.ReadString('\'');
 					else
@@ -306,6 +306,7 @@ bool MIMEHeader::Parse(const char *s)
 							p.SkipTerm();
 						val = TrimBoth(String(b, p.GetPtr()));
 					}
+				}
 				param.Add(id, val);
 			}
 			else
