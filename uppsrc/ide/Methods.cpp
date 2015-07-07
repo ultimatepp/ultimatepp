@@ -250,7 +250,7 @@ void AndroidBuilderSetup::LoadCppRuntimes(const AndroidNDK& ndk)
 }
 
 void AndroidBuilderSetup::LoadDropList(DropList& dropList,
-                                       Vector<String> values,
+                                       const Vector<String>& values,
                                        const String& defaultKey)
 {
 	dropList.Clear();
