@@ -32,7 +32,7 @@ bool AndroidNDK::Validate() const
 
 String AndroidNDK::FindDefaultToolchain() const
 {
-	Vector<String> toolchains = pick(FindToolchains());
+	Vector<String> toolchains = FindToolchains();
 	Sort(toolchains, StdGreater<String>());
 	
 	return toolchains.GetCount() ? toolchains[toolchains.GetCount() - 1] : "";

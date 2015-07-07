@@ -88,7 +88,7 @@ private:
 	void LoadBuildTools(const AndroidSDK& sdk);
 	void LoadToolchains(const AndroidNDK& ndk);
 	void LoadCppRuntimes(const AndroidNDK& ndk);
-	void LoadDropList(DropList& dropList, Vector<String> values, const String& defaultKey = "");
+	void LoadDropList(DropList& dropList, const Vector<String>& values, const String& defaultKey = "");
 };
 
 class BuilderSetup {

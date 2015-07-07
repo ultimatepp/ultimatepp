@@ -390,6 +390,9 @@ T clone(const T& x) { T c(x, 1); return c; }
 template <typename T>
 T&& pick(T& x) { return static_cast<T&&>(x); }
 
+template <typename T>
+T&& pick(T&& x) { return static_cast<T&&>(x); }
+
 #else
 
 template <class T>
