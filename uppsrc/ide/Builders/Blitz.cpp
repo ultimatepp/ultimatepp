@@ -22,18 +22,19 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
                                            const char *objext, Vector<bool>& optimize,
                                            const Index<String>& noblitz)
 {
-	if(IsBuilder())
-		return Blitz();
-	
 	Blitz b;
+	b.count = 0;
+	b.build = false;
+
+	if(!IsBuilder())
+		return b;
+	
 	Vector<String> excluded;
 	Vector<String> excludedoptions;
 	Vector<bool>   excludedoptimize;
 	b.object = CatAnyPath(builder->outdir, "$blitz" + String(objext));
 	Time blitztime = GetFileTime(b.object);
 	String blitz;
-	b.count = 0;
-	b.build = false;
 	if(!IdeGetOneFile().IsEmpty())
 		return b;
 	for(int i = 0; i < sfile.GetCount(); i++) {

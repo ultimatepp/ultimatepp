@@ -1,4 +1,4 @@
-//$ class TopWindow {
+//$ class Upp::TopWindow {
 public:
 	virtual LRESULT  WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
