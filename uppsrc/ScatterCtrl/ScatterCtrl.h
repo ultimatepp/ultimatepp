@@ -264,7 +264,6 @@ private:
 	Array<KeyBehavior> keyBehavior;
 	
 	void ProcessPopUp(const Point & pt);
-	bool PointInPlot(Point &pt);
 
 	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point, dword);
@@ -291,7 +290,7 @@ private:
 	void ZoomWindow(bool down, Point &pt); 
 	
 	void ContextMenu(Bar& bar);
-	void DoShowEditDlg();
+	void DoShowEditDlg(int itab);
 	void DoShowData();
 	
 	virtual Image CursorImage(Point p, dword keyflags);
