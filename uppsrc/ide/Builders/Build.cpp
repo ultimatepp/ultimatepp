@@ -127,6 +127,7 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 One<Builder> MakeBuild::CreateBuilder(Host *host)
 {
 	SetupDefaultMethod();
+	InitBlitz();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String builder = bm.Get("BUILDER", "GCC");
 	int q = BuilderMap().Find(builder);

@@ -12,9 +12,26 @@ void ResetBlitz()
 	SaveFile(BlitzBaseFile(), "");
 }
 
-Time BlitzBaseTime()
+Time blitz_base_time;
+
+void InitBlitz()
 {
-	return max(GetSysTime() - 3600, Time(GetFileTime(BlitzBaseFile())));
+	Time ltm = Time::High();
+
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) { // find lowest file time
+		const Package& pk = wspc.GetPackage(i);
+		String n = wspc[i];
+		for(int i = 0; i < pk.GetCount(); i++) {
+			String path = SourcePath(n, pk.file[i]);
+			if(FileExists(path))
+				ltm = min(ltm, FileGetTime(path));
+		}
+	}
+	
+	blitz_base_time = max(GetSysTime() - 3600, Time(GetFileTime(BlitzBaseFile())));
+	if(ltm != Time::High())
+		blitz_base_time = max(blitz_base_time, ltm + 3 * 60); // should solve first build after install/checkout
 }
 
 Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>& soptions,
@@ -44,7 +61,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
 		Time fntime = GetFileTime(fn);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
 		   && HdependBlitzApproved(fn) && IsNull(soptions[i]) && !optimize[i]
-		   && fntime < BlitzBaseTime()
+		   && fntime < blitz_base_time
 		   && noblitz.Find(fn) < 0) {
 			if(HdependFileTime(fn) > blitztime)
 				b.build = true;
