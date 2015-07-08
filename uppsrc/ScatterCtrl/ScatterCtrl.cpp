@@ -280,12 +280,6 @@ bool ScatterCtrl::ProcessKey(int key)
 	return processed;
 }
 
-bool ScatterCtrl::PointInPlot(Point &pt) 
-{
-	return 	hPlotLeft <= pt.x && 				pt.x <= (GetSize().cx - hPlotRight) && 
-		  	(vPlotTop + titleHeight) <= pt.y && pt.y <= (GetSize().cy - vPlotBottom);
-}
-
 void ScatterCtrl::LabelPopUp(bool down, Point &pt) 
 {
 	if (down) {
@@ -380,7 +374,7 @@ bool ScatterCtrl::Key(dword key, int count)
 {
 	if (!ProcessKey(key)) {
 		if (key == K_CTRL_P)
-			DoShowEditDlg();
+			DoShowEditDlg(0);
 		else if (key == K_CTRL_D)
 			DoShowData();
 		else if (key == K_CTRL_C)
@@ -415,8 +409,10 @@ void ScatterCtrl::LeftDouble(Point pt, dword)
 {
 	if(!HasFocus()) 
 		SetFocus();
-	if (!PointInPlot(pt))
-		MenuBar::Execute(THISBACK(ContextMenu));
+	if (PointInLegend(pt))
+		DoShowEditDlg(3);
+	else if (PointInBorder(pt))
+		DoShowEditDlg(0);
 }
 
 void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
@@ -540,7 +536,7 @@ ScatterCtrl &ScatterCtrl::SetMouseHandling(bool valx, bool valy)
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
-		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK1(FitToData, mouseHandlingY));
+		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK2(FitToData, mouseHandlingY, 0));
 		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
 		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY));
 	}
@@ -560,7 +556,7 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	if (showPropDlg)
 #endif	
 	{
-		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK(DoShowEditDlg)).Key(K_CTRL_P);		
+		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P);		
 		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);		
 		bar.Separator();
 	}

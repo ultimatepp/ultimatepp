@@ -9,10 +9,10 @@ NAMESPACE_UPP
 #define  LAYOUTFILE <ScatterCtrl/ScatterCtrl.lay>
 #include <CtrlCore/lay.h>
 
-#include "Properties.h"
+#include "Properties.h"	
 
-void ScatterCtrl::DoShowEditDlg() {
-	PropertiesDlg(*this).Run(true);
+void ScatterCtrl::DoShowEditDlg(int itab) {
+	PropertiesDlg(*this, itab).Run(true);
 }
 
 void ScatterCtrl::DoShowData() {
@@ -355,7 +355,7 @@ void DataDlg::OnArrayBar(Bar &menu) {
 	menu.Add(t_("Copy"), ScatterImgP::Copy(), THISBACK(ArrayCopy)).Key(K_CTRL_C).Help(t_("Copy selected rows"));
 }
 
-PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter) 
+PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter, int itab) : scatter(scatter) 
 {
 	CtrlLayout(*this);
 	Sizeable().Zoomable();
@@ -366,6 +366,7 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter) : scatter(scatter)
 	tab.Add(texts, t_("Texts"));
 	tab.Add(legend, t_("Legend"));
 	tab.Add(series, t_("Series"));
+	tab.Set(itab);
 	OnTab(); 
 	
 	tab <<= THISBACK(OnTab);

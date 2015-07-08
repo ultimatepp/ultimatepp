@@ -86,7 +86,7 @@ class PropertiesDlg : public WithProperties<TopWindow> {
 public:
 	typedef PropertiesDlg CLASSNAME;
 	
-	PropertiesDlg(ScatterCtrl& scatter);
+	PropertiesDlg(ScatterCtrl& scatter, int tab = 0);
 	void OnTab(); 
 	void OnClose();
 		
