@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 void IconDes::LeftDown(Point p, dword flags)
 {
+	SetFocus();
 	if(!IsCurrent())
 		return;
 	SaveUndo();

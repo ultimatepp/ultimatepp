@@ -74,9 +74,13 @@ void IconDes::Paint(Draw& w)
 				}
 			}
 		w.DrawImage(-spos.x, -spos.y, pb);
+		Rect r = pb.GetSize();
+		r.Offset(-spos);
+		w.DrawRect(r.right, 0, 1, r.bottom + 1, LtRed());
+		w.DrawRect(0, r.bottom, r.right, 1, LtRed());
 		m1refresh = Null;
 		if(IsPasting() && IsPasting())
-			DrawFrame(w, Rect(spos, Current().paste_image.GetSize()), LtRed);
+			DrawFrame(w, Rect(Current().pastepos - spos, Current().paste_image.GetSize()), LtRed);
 		return;
 	}
 	Point hotspot = image.GetHotSpot();
