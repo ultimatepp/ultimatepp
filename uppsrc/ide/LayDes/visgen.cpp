@@ -62,6 +62,7 @@ void VisGenDlg::Refresh()
 			String bn = layout.item[i].variable;
 			if(layout.item[i].type == "Button" && findarg(bn, "cancel", "ok", "exit") < 0) {
 				String mn = InitCaps(bn);
+				mn.Replace("_", "");
 				if(b1.GetCount() == 0)
 					b1 = b2 = "\n";
 				b1 << '\t' << "void " << mn << "();\n";
