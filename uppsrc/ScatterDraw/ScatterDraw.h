@@ -57,6 +57,8 @@ protected:
 		One<MarkPlot> markPlot;
 		double markWidth;
 		Color markColor;
+		double markBorderWidth;
+		Color markBorderColor;
 		
 		Color fillColor;
 		
@@ -164,7 +166,7 @@ public:
 	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
 	int GetMode()	{return mode;};
 	
-	void FitToData(bool Y = false);
+	void FitToData(bool Y = false, double factor = 0);
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
 	
@@ -191,6 +193,7 @@ public:
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
 	double GetYMin2 () const {return yMin2;}
+	double GetY2Min () const {return yMin2;}
 	
 	ScatterDraw &Graduation_FormatX(Formats fi);	
 	ScatterDraw &Graduation_FormatY(Formats fi);
@@ -208,6 +211,12 @@ public:
 														{return AddSeries<ArrayDouble>(yData, xData);}		
 	ScatterDraw &AddSeries(Vector<Pointf> &points)		{return AddSeries<VectorPointf>(points);}
 	ScatterDraw &AddSeries(Array<Pointf> &points)		{return AddSeries<ArrayPointf>(points);}
+	ScatterDraw &AddSeries(Vector<Vector <double> > &data, int idx, int idy, 
+		Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, bool useCols = true, int beginData = 0, int numData = Null) {
+		ScatterDraw &series = AddSeries<VectorVectorY<double> >(data, idx, idy, idsx, idsy, idsFixed, useCols, beginData, numData);
+//		series.multiPlot = true;
+		return series;
+	}
 	ScatterDraw &AddSeries(double (*function)(double))	{return AddSeries<FuncSource>(function);}
 	ScatterDraw &AddSeries(void (*function)(double&, double))
 														{return AddSeries<FuncSourceV>(function);}
@@ -239,7 +248,16 @@ public:
 	template <class C, class T1, class T2, class T3, class T4, class T5, class T6>
 	ScatterDraw &AddSeries(T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6)	
 								{return _AddSeries(new C(arg1, arg2, arg3, arg4, arg5, arg6));}
-		
+	template <class C, class T1, class T2, class T3, class T4, class T5, class T6, class T7>
+	ScatterDraw &AddSeries(T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6, T7 &arg7)	
+								{return _AddSeries(new C(arg1, arg2, arg3, arg4, arg5, arg6, arg7));}
+	template <class C, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8>
+	ScatterDraw &AddSeries(T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6, T7 &arg7, T8 &arg8)	
+								{return _AddSeries(new C(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));}									
+	template <class C, class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
+	ScatterDraw &AddSeries(T1 &arg1, T2 &arg2, T3 &arg3, T4 &arg4, T5 &arg5, T6 &arg6, T7 &arg7, T8 &arg8, T9 &arg9)	
+								{return _AddSeries(new C(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));}	
+																
 	template <class Y>
 	ScatterDraw &AddSeries(Vector<Y> &yData, double x0, double deltaX)		{return _AddSeries(new VectorY<Y>(yData, x0, deltaX));}
 	template <class Y>
@@ -300,11 +318,11 @@ public:
 	template <class C>
 	ScatterDraw &PlotStyle()								{return PlotStyle(new C());};
 	template <class C, class T1>
-	ScatterDraw &PlotStyle(T1 &arg1)						{return PlotStyle(new C(arg1));};
+	ScatterDraw &PlotStyle(T1 arg1)							{return PlotStyle(new C(arg1));};
 	template <class C, class T1, class T2>
-	ScatterDraw &PlotStyle(T1 &arg1, T2 &arg2)				{return PlotStyle(new C(arg1, arg2));};
+	ScatterDraw &PlotStyle(T1 arg1, T2 arg2)				{return PlotStyle(new C(arg1, arg2));};
 	template <class C, class T1, class T2, class T3>
-	ScatterDraw &PlotStyle(T1 &arg1, T2 &arg2, T3 &arg3)	{return PlotStyle(new C(arg1, arg2, arg3));};			
+	ScatterDraw &PlotStyle(T1 arg1, T2 arg2, T3 arg3)		{return PlotStyle(new C(arg1, arg2, arg3));};			
 	ScatterDraw &PlotStyle(SeriesPlot *data);
 	
 	ScatterDraw &NoPlot()	{return PlotStyle();};
@@ -313,11 +331,12 @@ public:
 	template <class C>
 	ScatterDraw &MarkStyle()								{return MarkStyle(new C());};
 	template <class C, class T1>
-	ScatterDraw &MarkStyle(T1 &arg1)						{return MarkStyle(new C(arg1));};
+	ScatterDraw &MarkStyle(T1 arg1)							{return MarkStyle(new C(arg1));};
 	template <class C, class T1, class T2>
-	ScatterDraw &MarkStyle(T1 &arg1, T2 &arg2)				{return MarkStyle(new C(arg1, arg2));};
+	ScatterDraw &MarkStyle(T1 arg1, T2 arg2)				{return MarkStyle(new C(arg1, arg2));};
 	template <class C, class T1, class T2, class T3>
-	ScatterDraw &MarkStyle(T1 &arg1, T2 &arg2, T3 &arg3)	{return MarkStyle(new C(arg1, arg2, arg3));};			
+	ScatterDraw &MarkStyle(T1 arg1, T2 arg2, T3 arg3)		{return MarkStyle(new C(arg1, arg2, arg3));};			
+	
 	ScatterDraw &MarkStyle(MarkPlot *data);
 	ScatterDraw &MarkStyle(int index, MarkPlot *data);
 	ScatterDraw &MarkStyle(int index, const String name);
@@ -331,7 +350,9 @@ public:
 	const String GetDash(int index);
 	ScatterDraw &Fill(Color color = Null);
 	ScatterDraw &MarkColor(Color color = Null);
+	ScatterDraw &MarkBorderColor(Color color = Null);
 	ScatterDraw &MarkWidth(double markWidth = 8);
+	ScatterDraw &MarkBorderWidth(double markWidth = 1);
 	ScatterDraw &Hide() {series[series.GetCount() - 1].opacity = 0;	return *this;}
 	
 	ScatterDraw &Opacity(double opacity = 1) {series[series.GetCount() - 1].opacity = opacity;	return *this;}
@@ -360,6 +381,10 @@ public:
 	double GetMarkWidth(int index);
 	void SetMarkColor(int index, const Color& pcolor);
 	Color GetMarkColor(int index) const;
+	ScatterDraw &SetMarkBorderWidth(int index, double width);
+	double GetMarkBorderWidth(int index);
+	void SetMarkBorderColor(int index, const Color& pcolor);
+	Color GetMarkBorderColor(int index) const;
 	void NoMark(int index);
 	bool IsShowMark(int index) const throw (Exc);
 	
@@ -411,6 +436,7 @@ public:
 	bool IsEmpty()	{return series.IsEmpty();}
 	
 	ScatterDraw& LinkedWith(ScatterDraw& ctrl);
+	void Unlinked();
 	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
@@ -495,17 +521,22 @@ protected:
 	void AdjustMinUnitY();
 	void AdjustMinUnitY2();
 	
+	bool PointInPlot(Point &pt);
+	bool PointInBorder(Point &pt);
+	bool PointInLegend(Point &pt);
+	
 private:
 	Size size;		// Size to be used for all but screen painting
 	static void ParseTextMultiline(const String &text, Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
 	
-	void DoFitToData(bool Y);
+	void DoFitToData(bool Y, double factor = 0);
 	void DoZoom(double scale, bool hor, bool ver); 
 	void DoScroll(double factorX, double factorY);
 	
 	int plotW, plotH;
 	bool labelsChanged;
+	//bool multiPlot;
 	
 	Index<ScatterDraw *> linkedCtrls;
 	ScatterDraw *linkedMaster;
@@ -842,8 +873,37 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 												int(plotH*(1 + yMin/yRange)));
 			
 				if (series[j].markWidth >= 1 && series[j].markPlot) {
-					for (int i = 0; i < points.GetCount(); i++) 
-						series[j].markPlot->Paint(w, scale, points[i], series[j].markWidth, series[j].markColor);              
+					if (!series[j].markPlot->IsMultiPlot()) 
+						for (int i = 0; i < points.GetCount(); i++) 
+							series[j].markPlot->Paint(w, scale, points[i], 
+								series[j].markWidth, series[j].markColor, 
+								series[j].markBorderWidth, series[j].markBorderColor);              
+					else {
+						for (int64 i = 0; i < series[j].PointsData()->GetCount(); ++i) {
+							int ix = fround(plotW*(series[j].PointsData()->x(i) - xMin)/xRange);
+							int iy;
+							if (series[j].primaryY)
+								iy = plotH - fround(plotH*(series[j].PointsData()->y(i) - yMin)/yRange);
+							else
+								iy = plotH - fround(plotH*(series[j].PointsData()->y(i) - yMin2)/yRange2);
+							Vector<int> dataX, dataY;
+							Vector<double> dataFixed;
+							for (int ii = 0; ii < series[j].PointsData()->GetznxCount(); ++ii) 
+								dataX << fround(plotW*(series[j].PointsData()->znx(ii, i) - xMin)/xRange);
+							if (series[j].primaryY) {
+								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(); ++ii) 
+									dataY << (plotH - fround(plotH*(series[j].PointsData()->zny(ii, i) - yMin)/yRange));
+							} else {
+								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(); ++ii) 
+									dataY << (plotH - fround(plotH*(series[j].PointsData()->zny(ii, i) - yMin2)/yRange2));
+							}
+							for (int ii = 0; ii < series[j].PointsData()->GetznFixedCount(); ++ii) 
+								dataFixed << series[j].PointsData()->znFixed(ii, i);
+							series[j].markPlot->Paint(w, scale, ix, iy, dataX, dataY, dataFixed, 
+								series[j].markWidth, series[j].markColor, 
+								series[j].markBorderWidth, series[j].markBorderColor);   
+						}
+					}
 				}	
 			}
 		} catch(ValueTypeError error) {

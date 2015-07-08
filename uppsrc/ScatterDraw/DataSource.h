@@ -9,15 +9,19 @@ public:
 
 	DataSource() : isParam(false), isExplicit(false), key(111111) {}
 	virtual ~DataSource() 				{key = 0;}	
-	virtual double y(int64 id)			{return xn(0, id);}
-	virtual double x(int64 id)			{return xn(1, id);}
-	virtual double xn(int n, int64 id)	{NEVER();	return Null;}
-	virtual double y(double t)			{return xn(0, t);}
-	virtual double x(double t)			{return xn(1, t);}
-	virtual double xn(int n, double t)	{NEVER();	return Null;}
-	virtual double f(double x)			{NEVER();	return Null;}
-	virtual double f(Vector<double> xn)	{NEVER();	return Null;}
+	virtual double y(int64 id)				{NEVER();	return Null;}
+	virtual double x(int64 id)				{NEVER();	return Null;}
+	virtual double znx(int n, int64 id)		{NEVER();	return Null;}
+	virtual double zny(int n, int64 id)		{NEVER();	return Null;}
+	virtual double znFixed(int n, int64 id)	{NEVER();	return Null;}
+	virtual double y(double t)				{NEVER();	return Null;}
+	virtual double x(double t)				{NEVER();	return Null;}
+	virtual double f(double x)				{NEVER();	return Null;}
+	virtual double f(Vector<double> zn)		{NEVER();	return Null;}
 	virtual int64 GetCount()			{NEVER();	return Null;}
+	virtual int GetznxCount()			{return 0;}
+	virtual int GetznyCount()			{return 0;}
+	virtual int GetznFixedCount()		{return 0;}
 	bool IsParam()						{return isParam;}
 	bool IsExplicit()					{return isExplicit;}
 	bool IsDeleted()					{return key != 111111;}
@@ -49,17 +53,18 @@ private:
 
 class CArray : public DataSource {
 private:
-	double *yData, *x1Data, *x2Data;
+	double *xData, *yData, *zData;
 	int64 numData;
 	double x0, deltaX;
 	
 public:
-	CArray(double *yData, int numData, double x0, double deltaX) : yData(yData), numData(numData), x0(x0), deltaX(deltaX) {x1Data = NULL;}
-	CArray(double *yData, double *xData, int numData) : yData(yData), x1Data(xData), numData(numData) {x2Data = NULL; x0 = deltaX = 0;}
-	CArray(double *yData, double *x1Data, double *x2Data, int numData) : yData(yData), x1Data(x1Data), x2Data(x2Data), numData(numData) {x0 = deltaX = 0;}
+	CArray(double *yData, int numData, double x0, double deltaX) : yData(yData), numData(numData), x0(x0), deltaX(deltaX) {xData = NULL;}
+	CArray(double *yData, double *xData, int numData) : yData(yData), xData(xData), numData(numData) {zData = NULL; x0 = deltaX = 0;}
+	CArray(double *yData, double *xData, double *zData, int numData) : yData(yData), xData(xData), zData(zData), numData(numData) {x0 = deltaX = 0;}
 	virtual inline double y(int64 id) 	{return yData[ptrdiff_t(id)];}
-	virtual inline double x(int64 id) 	{return x1Data ? x1Data[ptrdiff_t(id)] : id*deltaX + x0;}
-	virtual double xn(int n, int64 id);
+	virtual inline double x(int64 id) 	{return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;}
+	virtual double znFixed(int n, int64 id); 
+	virtual int GetznFixedCount()		{return 1;}
 	virtual inline int64 GetCount()		{return numData;}
 };
 
@@ -99,28 +104,33 @@ template <class Y>
 class VectorVectorY : public DataSource {
 private:
 	Vector<Vector<Y> > *data;
-	bool useCols;
-	Vector<int> ids;
+	bool useRows;
+	int idx, idy;
+	Vector<int> idsx, idsy, idsFixed;
 	int beginData;
 	int64 numData;
 	
 public:
-	VectorVectorY() : data(0), useCols(true), beginData(0), numData(Null) {ids << 0 << 1;}
-	VectorVectorY(Vector<Vector<Y> > &data, Vector<int> &ids, bool useCols = true, int beginData = 0, int numData = Null) : 
-		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
-		Init(data, ids, useCols, beginData, numData);
+	VectorVectorY() : data(0), useRows(true), beginData(0), numData(Null), idx(0), idy(1) {}
+	VectorVectorY(Vector<Vector<Y> > &data, int idy, int idx, 
+				  Vector<int> &idsy, Vector<int> &idsx, Vector<int> &idsFixed, bool useRows = true, int beginData = 0, int numData = Null) : 
+		data(&data), useRows(useRows), beginData(beginData), numData(numData) {
+		Init(data, idy, idx, idsy, idsx, idsFixed, useRows, beginData, numData);
 	}
-	void Init(Vector<Vector<Y> > &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
+	void Init(Vector<Vector<Y> > &_data, int _idy, int _idx, Vector<int> &_idsy, Vector<int> &_idsx, Vector<int> &_idsFixed, 
+			  bool _useRows = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
-		useCols = _useCols;
+		useRows = _useRows;
 		
-		ids.SetCount(_ids.GetCount());
-		for (int i = 0; i < ids.GetCount(); ++i)
-			ids[i] = _ids[i];
+		idx = _idx;
+		idy = _idy;
+		idsx = clone(_idsx);
+		idsy = clone(_idsy);
+		idsFixed = clone(_idsFixed);
 		beginData = _beginData;
 		numData = _numData;
 		if (IsNull(_numData)) {
-			if (!useCols) {
+			if (!useRows) {
 				if (data->IsEmpty())
 					numData = 0;
 				else	
@@ -129,20 +139,20 @@ public:
 				numData = data->GetCount() - beginData;
 		}
 	}
-	void Init(Vector<Vector<Y> > &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
-		Vector<int> ids;
-		ids << idY << idX;
-		Init(_data, ids, _useCols, _beginData, _numData);
+	void Init(Vector<Vector<Y> > &_data, int idy, int idx, bool _useRows = true, int _beginData = 0, int _numData = Null) {
+		static Vector<int> idsVoid;
+		Init(_data, idy, idx, idsVoid, idsVoid, idsVoid, _useRows, _beginData, _numData);
 	}
-	virtual inline double y(int64 id)	{return useCols ? (*data)[beginData + int(id)][ids[0]] : (*data)[ids[0]][beginData + int(id)];}
-	virtual inline double x(int64 id) {
-		if (IsNull(ids[1]))
-			return double(id);
-		else
-			return useCols ? (*data)[beginData + int(id)][ids[1]] : (*data)[ids[1]][beginData + int(id)];
-	}
-	virtual inline double xn(int n, int64 id)	{return useCols ? (*data)[beginData + int(id)][ids[n]] : (*data)[ids[n]][beginData + int(id)];}
-	virtual inline int64 GetCount()	{return numData;};
+	virtual inline double y(int64 id) {return useRows ? (*data)[beginData + int(id)][idy] : (*data)[idy][beginData + int(id)];}
+	virtual inline double x(int64 id) {return useRows ? (*data)[beginData + int(id)][idx] : (*data)[idx][beginData + int(id)];}
+	//virtual inline double xn(int n, int64 id) 	{return useRows ? (*data)[beginData + int(id)][ids[n]] : (*data)[ids[n]][beginData + int(id)];}
+	virtual inline int64  GetCount()			{return numData;};
+	virtual double znx(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsx[n]] : (*data)[idsx[n]][beginData + int(id)];}
+	virtual double zny(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsy[n]] : (*data)[idsy[n]][beginData + int(id)];}
+	virtual double znFixed(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsFixed[n]] : (*data)[idsFixed[n]][beginData + int(id)];}
+	virtual int GetznxCount()			{return idsx.GetCount();}
+	virtual int GetznyCount()			{return idsy.GetCount();}
+	virtual int GetznFixedCount()		{return idsFixed.GetCount();}
 };
 
 class VectorDouble : public DataSource {

@@ -602,6 +602,11 @@ nst]&]
 [s3; Returns the secondary Y axis origin.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:GetY2Min`(`)const:%- [@(0.0.255) double]_[* GetY2Min]_()_[@(0.0.255) co
+nst]&]
+[s3; Returns the secondary Y axis origin.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:SetPolar`(bool`):%- [_^ScatterDraw^ ScatterDraw]_`&[* SetPolar]([@(0.0.255) b
 ool]_[*@3 polar]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 polar] is true, ScatterDraw is converted into a Polar 
@@ -659,6 +664,12 @@ ddSeries]([_^Array^ Array]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
 ].&]
 [s3; [%-*@3 points] has to be stored in a permanent location during 
 ScatterDraw life to avoid memory problems.&]
+[s1; &]
+[s6;%- &]
+[s5;:Upp`:`:ScatterDraw`:`:AddSeries`(Upp`:`:Vector`<Upp`:`:Vector`<double`>`>`&`):%- [_^Upp`:`:ScatterDraw^ S
+catterDraw]_`&[* AddSeries]([_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Vector^ Vector]_<[@(0.0.255) d
+ouble]>_>_`&[*@3 data])&]
+[s3; Adds a new series stored in [%-*@3 data] .&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:Opacity`(double`):%- [_^ScatterDraw^ ScatterDraw]_`&[* Opacity]([@(0.0.255) d

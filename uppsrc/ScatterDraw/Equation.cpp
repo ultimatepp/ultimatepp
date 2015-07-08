@@ -199,6 +199,8 @@ double EvalExpr::Exp(CParser& p) {
 			x = x + Mul(p);
 		else if(p.Char('-'))
 			x = x - Mul(p);
+		else if(p.Char(':'))
+			x = x*60 + Mul(p);
 		else
 			return x;
 	}
@@ -290,6 +292,8 @@ String EvalExpr::ExpStr(CParser& p, int numDigits) {
 			x = x + " + " + MulStr(p, numDigits);
 		else if(p.Char('-'))
 			x = x + " - " + MulStr(p, numDigits);
+		else if(p.Char(':'))
+			x = x + ":" + MulStr(p, numDigits);
 		else {
 			x.Replace("+ -", "- ");
 			return x;
