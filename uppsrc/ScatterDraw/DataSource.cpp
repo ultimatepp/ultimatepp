@@ -84,15 +84,9 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 }
 	
 	
-double CArray::xn(int n, int64 id) {
-	switch (n) {
-	case 0:		ASSERT(yData);	
-				return yData[id];
-	case 1:		ASSERT(x1Data);	
-				return x1Data[id];
-	case 2:		ASSERT(x2Data);	
-				return x2Data[id];
-	}
+double CArray::znFixed(int n, int64 id) {
+	if (n == 0)
+		return zData[id];
 	NEVER();
 	return Null;
 }

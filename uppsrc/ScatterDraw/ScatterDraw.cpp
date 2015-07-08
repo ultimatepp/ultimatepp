@@ -139,6 +139,22 @@ ScatterDraw &ScatterDraw::SetDrawY2Reticle(bool set) {
 	return *this;
 }
 
+bool ScatterDraw::PointInPlot(Point &pt) 
+{
+	return 	hPlotLeft <= pt.x && 				pt.x <= (GetSize().cx - hPlotRight) && 
+		  	(vPlotTop + titleHeight) <= pt.y && pt.y <= (GetSize().cy - vPlotBottom);
+}
+
+bool ScatterDraw::PointInBorder(Point &pt) 
+{
+	return !PointInPlot(pt);
+}
+
+bool ScatterDraw::PointInLegend(Point &pt) 
+{
+	return false;
+}
+
 void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 	if (series.IsEmpty())
 		return;
@@ -235,7 +251,8 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 				DrawPolylineOpa(w, vp, scale, 1, scale*series[i].thickness, series[i].color, series[i].dash);
 			Point p(lx + scale*7, ly);
 			if (series[i].markWidth >= 1 && series[i].markPlot)
-				series[i].markPlot->Paint(w, scale, p, series[i].markWidth, series[i].markColor);   
+				series[i].markPlot->Paint(w, scale, p, series[i].markWidth, series[i].markColor, 
+					series[i].markBorderWidth, series[i].markBorderColor);   
 			Font &font = series[i].primaryY ? scaledFont : italic;
 			DrawText(w, lx + lineLen + xWidth, ly - scale*6, 0, legends[i], font, series[i].color);                   
 		}
@@ -332,19 +349,19 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 	return *this;
 }
 
-void ScatterDraw::FitToData(bool vertical) {
+void ScatterDraw::FitToData(bool vertical, double factor) {
 	if (linkedMaster) {
 		linkedMaster->FitToData(vertical);
 		return;
 	}
-	DoFitToData(vertical);
+	DoFitToData(vertical, factor);
 	if (!linkedCtrls.IsEmpty()) {
 		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
 	    	linkedCtrls[i]->DoFitToData(vertical);
 	}
 }
 	
-void ScatterDraw::DoFitToData(bool vertical) {
+void ScatterDraw::DoFitToData(bool vertical, double factor) {
 	double minx, maxx, miny, miny2, maxy, maxy2;
 	minx = miny = miny2 = -DOUBLE_NULL;
 	maxx = maxy = maxy2 = DOUBLE_NULL;
@@ -355,6 +372,11 @@ void ScatterDraw::DoFitToData(bool vertical) {
 				continue;
 			minx = min(minx, series[j].PointsData()->MinX());
 			maxx = max(maxx, series[j].PointsData()->MaxX());
+		}
+		if (minx != -DOUBLE_NULL) {
+			double deltaX = (maxx - minx)*factor;
+			minx -= deltaX;
+			maxx += deltaX;
 		}
 		if (vertical) {
 			for (int j = 0; j < series.GetCount(); j++) {
@@ -376,7 +398,17 @@ void ScatterDraw::DoFitToData(bool vertical) {
 							maxy2 = py;
 					}
 				}
-			}		
+			}
+			if (miny != -DOUBLE_NULL) {
+				double deltaY = (maxy - miny)*factor;
+				miny -= deltaY;
+				maxy += deltaY;		
+			}
+			if (miny2 != -DOUBLE_NULL) {
+				double deltaY2 = (maxy2 - miny2)*factor;
+				miny2 -= deltaY2;
+				maxy2 += deltaY2;		
+			}
 		}
 		if (minx != -DOUBLE_NULL) {
 			if (maxx == minx) {
@@ -396,7 +428,7 @@ void ScatterDraw::DoFitToData(bool vertical) {
 		if (vertical) {
 			if (miny != -DOUBLE_NULL) {
 				if (maxy == miny) 
-					yRange2 = maxy > 0 ? 2*maxy : 1;
+					yRange = maxy > 0 ? 2*maxy : 1;
 				else	
 					yRange = maxy - miny;
 				double deltaY = yMin - miny;
@@ -555,6 +587,8 @@ ScatterDraw::ScatterBasicSeries::ScatterBasicSeries() {
 	markPlot = new CircleMarkPlot();
 	markWidth = 8;
 	markColor = Null;
+	markBorderWidth = 1;
+	markBorderColor = Null;
 	fillColor = Null;
 }
 
@@ -753,10 +787,32 @@ ScatterDraw &ScatterDraw::MarkColor(Color color) {
 	return *this;	
 }
 
+ScatterDraw &ScatterDraw::MarkBorderColor(Color color) {
+	int index = series.GetCount() - 1;
+
+	if (IsNull(color)) {
+		color = GetNewColor(index + 1);
+		color = Color(max(color.GetR()-30, 0), max(color.GetG()-30, 0), max(color.GetB()-30, 0));
+	}
+	series[index].markBorderColor = color;
+	
+	Refresh();
+	return *this;	
+}
+
 ScatterDraw &ScatterDraw::MarkWidth(double markWidth) {
 	int index = series.GetCount() - 1;
 	
 	series[index].markWidth = markWidth;
+	
+	Refresh();
+	return *this;
+}
+
+ScatterDraw &ScatterDraw::MarkBorderWidth(double markWidth) {
+	int index = series.GetCount() - 1;
+	
+	series[index].markBorderWidth = markWidth;
 	
 	Refresh();
 	return *this;
@@ -871,7 +927,6 @@ double ScatterDraw::GetMarkWidth(int index) {
 	return series[index].markWidth;
 }
 
-
 void ScatterDraw::SetMarkColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].markColor = color;
@@ -881,6 +936,17 @@ void ScatterDraw::SetMarkColor(int index, const Color& color) {
 Color ScatterDraw::GetMarkColor(int index) const {
 	ASSERT(IsValid(index));
 	return series[index].markColor;
+}
+
+void ScatterDraw::SetMarkBorderColor(int index, const Color& color) {
+	ASSERT(IsValid(index));
+	series[index].markBorderColor = color;
+	Refresh();
+}
+
+Color ScatterDraw::GetMarkBorderColor(int index) const {
+	ASSERT(IsValid(index));
+	return series[index].markBorderColor;
 }
 
 void ScatterDraw::NoMark(int index) {
@@ -1356,16 +1422,27 @@ Size GetTextSizeMultiline(Array <Size> &sizes) {
 }
 
 ScatterDraw &ScatterDraw::LinkedWith(ScatterDraw &ctrl) {
-	ScatterDraw *master;
+	Unlinked();
+
 	if (ctrl.linkedMaster) 
-		master = ctrl.linkedMaster;
-	else
-		master = &ctrl;
-	
-	master->linkedCtrls.FindAdd(this);
-	linkedMaster = master;
+		linkedMaster = ctrl.linkedMaster;
+	else 
+		linkedMaster = &ctrl;
+
+	linkedMaster->linkedCtrls.FindAdd(this);
 
 	return *this;
+}
+
+void ScatterDraw::Unlinked() {
+	if (!linkedMaster) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) 
+			linkedCtrls[i]->linkedMaster = 0;
+		linkedCtrls.Clear();
+	} else {
+		linkedMaster->linkedCtrls.RemoveKey(this);
+		linkedMaster = 0;
+	}
 }
 	
 ScatterDraw::ScatterDraw() {
@@ -1407,6 +1484,7 @@ ScatterDraw::ScatterDraw() {
 	legendBorderColor = Black();
 	legendRowSpacing = 5;
 	linkedMaster = 0;
+	//multiPlot = false;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color) {
