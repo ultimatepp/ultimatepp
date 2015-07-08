@@ -22,7 +22,7 @@ enum EXT_FILE_FLAGS {NO_FLAG = 0,
 					 //ASK_BEFORE_DELETE = 8
 };
 
-bool LaunchFile(const char *file);
+bool LaunchFile(const char *file, const char *params = 0);
 
 bool FileCat(const char *file, const char *appendFile);
 
@@ -39,6 +39,7 @@ inline String Trim(const String& s) {return TrimBoth(s);};
 
 String FitFileName(String fileName, int len);
 
+String Tokenize2(const String &str, const String &token, int &pos);
 String Tokenize(const String &str, const String &token, int &pos);
 String Tokenize(const String &str, const String &token);
 	
@@ -531,6 +532,10 @@ Image GetRect(const Image& orig, const Rect &r);
 
 double tmGetTimeX();
 
+int SysX(const char *cmd, String& out, String& err, double timeOut = Null, 
+			Gate3<double, String&, String&> progress = false, bool convertcharset = true);
+			
+	
 class _NRFuse {
 public:
 	_NRFuse(bool *_inside) {inside = _inside; failed = true;}
@@ -552,6 +557,73 @@ private:
 								_fuseNR.failed = false;							\
 							} else 												\
 								return v
+
+
+class LocalProcessX {
+public:
+	LocalProcessX() : status(STOP_OK) {}
+	enum Status {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
+	bool Start(const char *cmd, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
+		p.ConvertCharset(convertcharset);
+		ts.Reset();
+		if(!p.Start(cmd, NULL, dir))
+			return false;
+		status = RUNNING;
+		timeOut = _timeOut;
+		refreshTime = _refreshTime;
+	
+#ifdef CTRLLIB_H
+		if (refreshTime > 0)
+			SetTimeCallback(-int(refreshTime/1000), callback(this, &LocalProcessX::Perform), this);
+#endif
+		return true;
+	}
+	void Perform() {
+		if (status <= 0)
+			return;
+		String out;
+		double elapsed = ts.Seconds();
+		p.Read(out);
+		if(p.IsRunning()) {
+			if (timeOut > 0 && elapsed > timeOut) 
+				status = STOP_TIMEOUT;
+		} else 
+			status = STOP_OK;
+		
+		if (!WhenTimer(elapsed, out, status <= 0))
+			status = STOP_USER;
+		
+		if (status < 0)
+			p.Kill();
+
+#ifdef CTRLLIB_H		
+		if (status <= 0 && refreshTime > 0)
+			KillTimeCallback(this);
+#endif
+	}
+	void Stop(Status _status = STOP_USER) {
+		if (!IsRunning())
+			return;
+		status = _status;
+		p.Kill();		
+#ifdef CTRLLIB_H		
+		if (refreshTime > 0)
+			KillTimeCallback(this);
+#endif		
+	}
+	void Write(String str) {p.Write(str);}
+	int GetStatus()  {return status;}
+	bool IsRunning() {return status > 0;}
+	Gate3<double, String&, bool> WhenTimer;
+
+//private:
+	LocalProcess p;
+private:
+	TimeStop ts;
+	Status status;
+	double timeOut;
+	double refreshTime;
+};
 
 END_UPP_NAMESPACE
 

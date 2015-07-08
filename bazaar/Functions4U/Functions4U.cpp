@@ -63,7 +63,7 @@ Honza
 // LaunchFile
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-bool LaunchFileCreateProcess(const char *file) {
+bool LaunchFileCreateProcess(const char *file, const char *params) {
 	STARTUPINFOW startInfo;
     PROCESS_INFORMATION procInfo;
 
@@ -85,14 +85,17 @@ bool LaunchFileCreateProcess(const char *file) {
 	return true;
 }
 
-bool LaunchFileShellExecute(const char *file) {
-	return 32 < uint64(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), NULL, L".", SW_SHOWNORMAL));		 
+bool LaunchFileShellExecute(const char *file, const char *params) {
+	return 32 < uint64(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), ToSystemCharsetW(params), L".", SW_SHOWNORMAL));		 
 }
 
-bool LaunchFile(const char *_file) {
-	String file = WinPath(_file);
-	if (!LaunchFileShellExecute(file))			// First try
-	   	return LaunchFileCreateProcess(file);	// Second try
+bool LaunchFile(const char *file, const char *params) {
+	String _file = WinPath(file);
+	String _params;
+	if (params)
+		_params = WinPath(params);
+	if (!LaunchFileShellExecute(_file, _params))			// First try
+	   	return LaunchFileCreateProcess(_file, _params);		// Second try
 	return true;
 }
 #endif
@@ -114,17 +117,18 @@ String GetDesktopManagerNew() {
 	}
 }
 
-bool LaunchFile(const char *_file) {
+bool LaunchFile(const char *_file, const char *_params) {
 	String file = UnixPath(_file);
+	String params = UnixPath(_params);
 	int ret;
 	if (GetDesktopManagerNew() == "gnome") 
-		ret = system("gnome-open \"" + String(file) + "\"");
+		ret = system("gnome-open \"" + file + "\" " + params);
 	else if (GetDesktopManagerNew() == "kde") 
-		ret = system("kfmclient exec \"" + String(file) + "\" &"); 
+		ret = system("kfmclient exec \"" + file + "\" " + params + " &"); 
 	else if (GetDesktopManagerNew() == "enlightenment") {
 		String mime = GetExtExecutable(GetFileExt(file));
 		String program = mime.Left(mime.Find("."));		// Left side of mime executable is the program to run
-		ret = system(program + " \"" + String(file) + "\" &"); 
+		ret = system(program + " \"" + file + "\" " + params + " &"); 
 	} else 
 		ret = system("xdg-open \"" + String(file) + "\"");
 	return (ret >= 0);
@@ -1013,6 +1017,22 @@ String FitFileName(const String fileName, int len) {
 	return begin + "..." + end;
 }
 
+String Tokenize2(const String &str, const String &token, int &pos) {
+	int npos;
+	for (int i = 0; i < token.GetCount(); ++i) {
+		if ((npos = str.Find(token[i], pos)) >= 0) 
+			break;
+	}
+	int oldpos = pos;
+	if (npos < 0) {
+		pos = Null;
+		return str.Mid(oldpos);
+	} else {
+		pos = npos + token.GetCount();
+		return str.Mid(oldpos, npos - oldpos);
+	}
+}
+
 String Tokenize(const String &str, const String &token, int &pos) {
 	int npos;
 	for (int i = 0; i < token.GetCount(); ++i) {
@@ -1088,10 +1108,13 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 		else
 			return t;
 	} else {
-		int it = int(dbl);
-		if (dbl - double(it) != 0)
+		if (dbl != double(fround(dbl)))
 			return dbl;				
-		else 
+		int64 it64 = ScanInt64(sret);
+		int it = int(it64);
+		if (it64 != it)
+			return it64;
+		else
 			return it;
 	}
 }
@@ -1180,7 +1203,7 @@ bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow
 	for (int row = 0; true; row++) {
 		String line = in.GetLine();
 		if (line.IsVoid()) {
-			WhenRow(Null, result);
+			WhenRow(row, result);
 			return true;
 		}
 		int pos = 0;
@@ -2467,10 +2490,10 @@ Image GetRect(const Image& orig, const Rect &r) {
 
 double tmGetTimeX() {
 #ifdef __linux__
-	struct timeval t;
-	if(gettimeofday(&t, 0) != 0)
-	    return Null;
-	return t.tv_sec + t.tv_usec/1E6;
+	timespec t;
+	if (0 != clock_gettime(CLOCK_REALTIME, &t))
+		return Null;
+	return t.tv_sec + t.tv_nsec/1000.;
 #elif defined(_WIN32) || defined(WIN32)
 	LARGE_INTEGER clock;
 	LARGE_INTEGER freq;
@@ -2483,6 +2506,39 @@ double tmGetTimeX() {
 }
 
 
+int SysX(const char *cmd, String& out, String& err, double timeOut, 
+			Gate3<double, String&, String&> progress, bool convertcharset) {
+	out.Clear();
+	LocalProcess p;
+	p.ConvertCharset(convertcharset);
+	double t0 = tmGetTimeX();
+	if(!p.Start2(cmd))
+		return -1;
+	int ret = Null;
+	String os, es;
+	while(p.IsRunning()) {
+		if (p.Read2(os, es)) {
+			out.Cat(os);
+			err.Cat(es);
+		}
+		double elapsed = tmGetTimeX() - t0;
+		if (!IsNull(timeOut) && elapsed > timeOut) {
+			ret = -2;
+			break;
+		}
+		if (progress(elapsed, out, err)) {
+			ret = -3;
+			break;
+		}
+		Sleep(1);
+	}
+	out.Cat(os);
+	err.Cat(es);
+	if (!IsNull(ret))
+		p.Kill();
+		
+	return IsNull(ret) ? 0 : ret;
+}
 
 END_UPP_NAMESPACE
 

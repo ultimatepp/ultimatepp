@@ -16,14 +16,15 @@ topic "Functions4U. Reference";
 [s0; &]
 [ {{10000@1 [s0; [* Running files and commands]]}}&]
 [s4;%- &]
-[s5;:LaunchFile`(const char`*`):%- [@(0.0.255) bool]_[* LaunchFile]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 file])&]
-[s2; Opens the file [%-*@3 file ]with the adecuated program defined 
-in the OS by default.&]
+[s5;:Upp`:`:LaunchFile`(const char`*`,const char`*`):%- [@(0.0.255) bool]_[* LaunchFile](
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 p
+arams]_`=_[@3 0])&]
+[s2; Opens the file [%-*@3 file][%-  with ][%-*@3 params ]with the adecuated 
+program defined in the OS by default.&]
 [s0; &]
 [s0;l288; [/ Example:]&]
-[s0;l288; [/ LaunchFile(`"c:`\`\My spreadsheet.txt`"). It will open 
-default program (like gedit or notepad) with document `"My spreadsheet.txt`".]&]
+[s2; [/ LaunchFile(`"c:`\`\My spreadsheet.txt`"). It will open default 
+program (like gedit or notepad) with document `"My spreadsheet.txt`".]&]
 [s3; &]
 [s0; &]
 [ {{10000@1 [s0; [* File Handling]]}}&]
@@ -721,4 +722,9 @@ button can be pressed again so the function can be called twice.&]
 it opens a new window using, lets say, PromptOK(). This way ChildLostFocus 
 will be called twice: the second one because PromptOK() makes 
 the field to loose the focus.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:tmGetTimeX`(`):%- [@(0.0.255) double]_[* tmGetTimeX]()&]
+[s2; High resolution clock. Returns time in seconds or Null in case 
+of error.&]
 [s3; ]]

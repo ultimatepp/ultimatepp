@@ -16,7 +16,6 @@ functions]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/QtfEquation`$en`-us^2 QtfEquation]&]
 [s0;2 &]
 [s0;2 &]
-[s0; [2 There is also a ][^topic`:`/`/Functions4U`/srcdoc`/ChangesLog`$en`-us^2 News 
-and changes log][2 . and a ][^topic`:`/`/Functions4U`/srcdoc`/ToDo`$en`-us^2 ToDo 
+[s0; [2 There is also a ][^topic`:`/`/Functions4U`/srcdoc`/ToDo`$en`-us^2 ToDo 
 list][2 .]&]
-[s0;2 ]
+[s0;2 ]]
