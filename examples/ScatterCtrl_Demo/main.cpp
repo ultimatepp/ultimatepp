@@ -79,7 +79,7 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 	SetMode();
 
 	examplesList.WhenSel = THISBACK(OnSel);
-	examplesList.Select(0, false);
+	examplesList.SetCursor(13);
 	OnSel();
 
 	Sizeable().Zoomable().Icon(MyImages::i1());
