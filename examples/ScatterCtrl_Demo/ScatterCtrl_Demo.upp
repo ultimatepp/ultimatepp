@@ -23,8 +23,10 @@ file
 	tab10.cpp,
 	tab11.cpp,
 	tab12.cpp,
-	tab14.cpp,
-	tabPie.cpp,
+	tab14_UserEquation.cpp,
+	tab15_RangePlot.cpp,
+	tab16_BallPlot.cpp,
+	tab20_Pie.cpp,
 	symbol.iml;
 
 mainconfig

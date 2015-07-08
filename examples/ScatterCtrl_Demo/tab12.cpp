@@ -21,8 +21,23 @@ void Tab12::Init()
 	scatter2.AddSeries(s2).Legend("Series 2").NoMark().Stroke(2, LtBlue());
 	scatter3.AddSeries(s3).Legend("Series 3").NoMark().Stroke(2, LtGreen());
 	scatter1.ShowInfo();	
-	scatter2.ShowInfo().LinkedWith(scatter1);	
-	scatter3.ShowInfo().LinkedWith(scatter2);	
+	scatter2.ShowInfo();	
+	scatter3.ShowInfo();	
+	link = true;
+	OnLink();
+	link.WhenAction = THISBACK(OnLink);
+}
+
+void Tab12::OnLink() {
+	if (link) {
+		scatter1.SetTitle("Plots are linked together");
+		scatter2.LinkedWith(scatter1);
+		scatter3.LinkedWith(scatter1);
+	} else {
+		scatter1.SetTitle("Plots are not linked now");
+		scatter2.Unlinked();
+		scatter3.Unlinked();
+	}
 }
 
 ScatterDemo *Construct12()

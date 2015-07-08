@@ -130,7 +130,7 @@ public:
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 
 private:
-	Vector<Pointf> s1,s2, s3;
+	Vector<Pointf> s1, s2, s3;
 };
 
 class Tab9 : public WithTab9<ScatterDemo> {
@@ -186,6 +186,7 @@ public:
 
 private:
 	Vector<Pointf> s1, s2, s3;
+	void OnLink();
 };
 
 class TabUserEquation : public WithTabUserEquation<ScatterDemo> {
@@ -198,6 +199,30 @@ public:
 
 private:
 	UserEquation userEquation;
+};
+
+class TabRangePlot : public WithTabRangePlot<ScatterDemo> {
+public:
+	typedef TabRangePlot CLASSNAME;
+	
+	void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+	
+private:
+	Vector<Vector <double> > s1;
+	Vector<int> idsRange;
+};
+
+class TabBallPlot : public WithTabBallPlot<ScatterDemo> {
+public:
+	typedef TabBallPlot CLASSNAME;
+	
+	void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+	
+private:
+	Vector<Vector <double> > s1;
+	Vector<int> idsBall;
 };
 
 class TabPie : public WithTabPie<StaticRect> {
