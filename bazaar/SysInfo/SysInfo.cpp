@@ -914,6 +914,41 @@ Array<int64> GetProcessList()
 	return ret;	
 }
 
+Array<int64> GetChildProcessList(int64 processID)
+{
+	PROCESSENTRY32 proc;
+	Array<int64> child, all, parents;
+	HANDLE hSnap = ::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hSnap == INVALID_HANDLE_VALUE) 
+		return child;
+	proc.dwSize = sizeof(proc);
+	long f = Process32First(hSnap, &proc);
+	while (f) {
+		all << proc.th32ProcessID;
+		parents << proc.th32ParentProcessID;
+       	f = Process32Next(hSnap, &proc);
+	}
+	CloseHandle(hSnap);
+	child << processID;
+	int init = 0;
+	while (true) {
+		int count = child.GetCount();
+		if (init >= count)
+			break;
+		for (int cid = init; cid < count; ++cid) {
+			for (int i = 0; i < all.GetCount(); ++i) {
+				if (all[i] == child[cid])
+					continue;
+				else if (parents[i] == child[cid])
+					child << parents[i];
+			}
+		}
+		init = count;
+	}
+	child.Remove(0);
+	return child;	
+}
+
 String GetProcessName(int64 processID)
 {
 	WCHAR szProcessName[MAX_PATH];

@@ -74,6 +74,9 @@ int Window_GetStatus(int64 windowId);
 /////////////////////////////////////////////////////////////////////
 // Process list
 bool GetProcessList(Upp::Array<int64> &pid, Upp::Array<String> &pNames);
+#if defined(PLATFORM_WIN32) 
+Upp::Array<int64> GetChildProcessList(int64 processID);
+#endif
 Upp::Array<int64> GetProcessList();
 String GetProcessName(int64 pid);
 String GetProcessFileName(int64 processID);
