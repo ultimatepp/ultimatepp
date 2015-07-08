@@ -60,13 +60,7 @@ int            GetMatchLen(const char *s, const char *t);
 
 enum WithBodyEnum { WITHBODY = 33 };
 
-inline Font BrowserFont()
-#ifdef PLATFORM_WIN32
-{ return StdFont(); }
-//{ return Arial(Ctrl::VertLayoutZoom(11)); }
-#else
-{ return Arial(Ctrl::VertLayoutZoom(9)); }
-#endif
+inline Font BrowserFont() { return StdFont(); }
 
 struct CppItemInfo : CppItem {
 	String scope;
