@@ -1,8 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
+#include <Controls4U/Controls4U.h>
 
 using namespace Upp;
-
-#include <Controls4U/Controls4U.h>
 
 #if defined(PLATFORM_WIN32) 
 
@@ -250,12 +249,12 @@ void VLC_Demo::UpdateInfo() {
 	if (t == -1)
 		time <<= "-";	
 	else
-		time <<= FormatDouble(t/1000., 2, FD_ZERO);
+		time <<= FormatDouble(t/1000., 2, FD_ZEROS);
 	int l = player.GetLength();
 	if (l == -1)
 		length = "-";	
 	else
-		length = FormatDouble(l/1000., 2, FD_ZERO);
+		length = FormatDouble(l/1000., 2, FD_ZEROS);
 }
 
 
