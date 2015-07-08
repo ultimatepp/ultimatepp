@@ -1,4 +1,4 @@
-//$ class TopWindow {
+//$ class Upp::TopWindow {
 public:
 	virtual void   State(int reason);
 

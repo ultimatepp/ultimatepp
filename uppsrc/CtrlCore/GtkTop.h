@@ -1,4 +1,4 @@
-//$ class TopWindow : Ctrl {
+//$ class Upp::TopWindow : Ctrl {
 	ImageGdk gdk_icon;
 	ImageGdk gdk_largeicon;
 	bool     topmost;
