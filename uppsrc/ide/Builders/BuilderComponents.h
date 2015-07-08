@@ -28,6 +28,7 @@ struct Blitz {
 
 String BlitzBaseFile();
 void   ResetBlitz();
+void   InitBlitz();
 
 class BlitzBuilderComponent : public BuilderComponent {
 public:
