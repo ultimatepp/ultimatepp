@@ -11,9 +11,9 @@ file
 	Vector.cpp,
 	Math readonly separator,
 	Vector.java,
+	AndroidMath.java,
 	Runtime readonly separator,
 	AndroidManifest.xml,
-	AndroidMath.java,
 	AndroidMathActivity.java;
 
 mainconfig
