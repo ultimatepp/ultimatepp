@@ -17,4 +17,9 @@ CONSOLE_APP_MAIN
 	Value v = x;
 	e = v;
 	DUMP(IsNull(e));
+	
+	int a = Null;
+	int b = 123;
+	int c = 1;
+	DUMP(Nvl(a, b, c));
 }
