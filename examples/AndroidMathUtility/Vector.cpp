@@ -26,13 +26,34 @@ Vector::Vector(const Vector& vec)
 		for(int i = 0; i < size; i++) {
 			data[i] = vec.data[i];
 		}
-		
 	}
 }
 
 Vector::~Vector()
 {
 	delete[] data;
+}
+
+float Vector::Get(int id) const
+{
+	return this->data[id];
+}
+
+int Vector::GetSize() const
+{
+	return this->size;
+}
+
+void Vector::Set(int id, float value)
+{
+	this->data[id] = value;
+}
+
+void Vector::MultipleByScalar(float scalar)
+{
+	for(int i = 0; i < size; i++) {
+		this->data[i] *= scalar;
+	}
 }
 
 std::string Vector::ToString() const
