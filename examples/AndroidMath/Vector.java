@@ -1,7 +1,7 @@
 package org.upp.AndroidMath;
 
 /**
- * Class which whole implementaiton is native.
+ * Class which whole funtional implementaiton is native.
  */
 public class Vector
 {
@@ -15,6 +15,9 @@ public class Vector
 		copyConstruct(vec);
 	}
 	
+	/**
+	 * We override finalize method due to possibilite of memory leaks.
+	 */
 	@Override
 	protected void finalize() throws Throwable
 	{
@@ -37,6 +40,8 @@ public class Vector
 	private native void destroy();
 	
 	static {
+		// In this place we are loading native libraries.
+		// Native library always has upp package name!
 		System.loadLibrary("AndroidMath");
 	}
 }
