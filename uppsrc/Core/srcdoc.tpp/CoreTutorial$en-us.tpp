@@ -459,7 +459,17 @@ to any value type that can contain Null:&]
 [s7; -|e `= v;&]
 [s7; &]
 [s16; IsNull(e) `= true&]
-[s5; &]
+[s0; &]
+[s5; Function Nvl is U`+`+ analog of well known SQL function coalesce 
+(ifnull, Nvl), which returns the first non`-null argument (or 
+Null if all are Null).&]
+[s7; &]
+[s7; -|int a `= Null;&]
+[s7; -|int b `= 123;&]
+[s7; -|int c `= 1;&]
+[s7; &]
+[s16; Nvl(a, b, c) `= 123&]
+[s0; &]
 [s3; 8. Client types and Value, RawValue, RichValue&]
 [s5; There are two Value compatibility levels. The simple one, [*/ RawValue], 
 has little requirements for the type used `- only copy constructor 
