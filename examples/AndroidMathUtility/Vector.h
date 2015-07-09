@@ -12,7 +12,12 @@ public:
 	Vector(const Vector& vec);
 	virtual ~Vector();
 	
-	int GetSize() const { return this->size; }
+	float Get(int id) const;
+	int GetSize() const;
+	
+	void Set(int id, float value);
+	
+	void MultipleByScalar(float scalar);
 	
 	std::string ToString() const;
 	

@@ -2,22 +2,28 @@
 #define _JniMath_MemoryManager_h_
 
 #include <jni.h>
-#include <string>
-#include <sstream>
 #include <vector>
 
 /**
- * Java "HashCode()" object memory manager.
+ * Java simply memory manager.
  */
 template <class T>
 class MemoryManager {
 public:
 	void Insert(JNIEnv *env, jobject jobj, const T& obj)
 	{
-		std::string hashCode = GetJobjectHasCode(env, jobj);
-		if(!hashCode.empty()) {
-			hashCodes.push_back(hashCode);
+		jobject weakGlobalRef = env->NewWeakGlobalRef(jobj);
+		if(!env->IsSameObject(weakGlobalRef, NULL)) {
+			objs.push_back(env->NewWeakGlobalRef(weakGlobalRef));
 			values.push_back(obj);
+		}
+	}
+	
+	void MakeCopy(JNIEnv *env, jobject jobjSrc, jobject jobjDst)
+	{
+		if(!env->IsSameObject(jobjSrc, jobjDst)) {
+			T t(*Get(env, jobjSrc));
+			Insert(env, jobjSrc, t);
 		}
 	}
 	
@@ -25,7 +31,7 @@ public:
 	{
 		int idx = FindIdx(env, jobj);
 		if(idx >= 0) {
-			hashCodes.erase(hashCodes.begin() + idx);
+			objs.erase(objs.begin() + idx);
 			values.erase(values.begin() + idx);
 		}
 	}
@@ -33,38 +39,27 @@ public:
 	T* Get(JNIEnv *env, jobject jobj)
 	{
 		int idx = FindIdx(env, jobj);
-		return idx != -1 ? &values[idx] : NULL;
+		return idx >= 0 ? &values[idx] : NULL;
+	}
+	
+	int GetCount()
+	{
+		return static_cast<int>(values.size());
 	}
 	
 private:
 	int FindIdx(JNIEnv *env, jobject jobj)
 	{
-		std::string hashCode = GetJobjectHasCode(env, jobj);
-		for(int i = 0; i < hashCodes.size(); i++) {
-			if(hashCode == hashCodes[i]) {
+		for(int i = 0; i < objs.size(); i++) {
+			if(env->IsSameObject(objs[i], jobj)) {
 				return i;
 			}
 		}
-		return -1;
-	}
-
-	std::string GetJobjectHasCode(JNIEnv *env, jobject jobj)
-	{
-		jclass cls = env->GetObjectClass(jobj);
-		jmethodID mid = env->GetMethodID(cls, "hashCode", "()I");
-		if(mid == 0) {
-			return "";
-		}
-		int ret = env->CallIntMethod(jobj, mid);
-	
-		std::stringstream ss;
-		ss << ret;
-	
-		return ss.str();
+		return 0;
 	}
 
 private:
-	std::vector<std::string> hashCodes;
+	std::vector<jobject> objs;
 	std::vector<T> values; 
 };
 

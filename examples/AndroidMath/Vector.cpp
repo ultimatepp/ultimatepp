@@ -32,6 +32,17 @@ JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_construct
 
 /*
  * Class:     org_upp_AndroidMath_Vector
+ * Method:    copyConstruct
+ * Signature: (Lorg/upp/AndroidMath/Vector;)V
+ */
+JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_copyConstruct
+  (JNIEnv *env, jobject objSrc, jobject objDst)
+{
+	mm.MakeCopy(env, objSrc, objDst);
+}
+
+/*
+ * Class:     org_upp_AndroidMath_Vector
  * Method:    destruct
  * Signature: ()V
  */
@@ -60,9 +71,11 @@ JNIEXPORT jint JNICALL Java_org_upp_AndroidMath_Vector_getSize
  * Signature: (I)F
  */
 JNIEXPORT jfloat JNICALL Java_org_upp_AndroidMath_Vector_get
-  (JNIEnv *, jobject, jint)
+  (JNIEnv *env, jobject obj, jint id)
 {
-	return 0.0f;
+	Vector* vec = mm.Get(env, obj);
+	
+	return vec->Get(id);
 }
 
 /*
@@ -71,9 +84,22 @@ JNIEXPORT jfloat JNICALL Java_org_upp_AndroidMath_Vector_get
  * Signature: (IF)V
  */
 JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_set
-  (JNIEnv *, jobject, jint, jfloat)
+  (JNIEnv *env, jobject obj, jint id, jfloat value)
 {
-	
+	Vector* vec = mm.Get(env, obj);
+	vec->Set(id, value);
+}
+
+/*
+ * Class:     org_upp_AndroidMath_Vector
+ * Method:    multipleByScalar
+ * Signature: (F)V
+ */
+JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_multipleByScalar
+  (JNIEnv *env, jobject obj, jfloat scalar)
+{
+	Vector* vec = mm.Get(env, obj);
+	vec->MultipleByScalar(scalar);
 }
 
 /*
@@ -86,7 +112,7 @@ JNIEXPORT jstring JNICALL Java_org_upp_AndroidMath_Vector_toString
 {
 	Vector* vec = mm.Get(env, obj);
 	
-	return env->NewStringUTF(vec->ToString().c_str());
+	return env->NewStringUTF((vec->ToString()).c_str());
 }
 
 #ifdef __cplusplus
