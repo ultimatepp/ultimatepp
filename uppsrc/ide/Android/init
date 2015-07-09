@@ -1,4 +1,5 @@
 #ifndef _ide_Android_icpp_init_stub
 #define _ide_Android_icpp_init_stub
 #include "ide/Core/init"
+#include "plugin/pcre/init"
 #endif

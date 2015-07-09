@@ -1,7 +1,8 @@
 description "TheIDE - Android SDK/NDK spport module\377B";
 
 uses
-	ide/Core;
+	ide/Core,
+	plugin/pcre;
 
 file
 	Android.h,
