@@ -47,6 +47,16 @@ int IsCommaOrColon(int c)
 	return c == ':' || c == ',' ? c : 0;
 }
 
+int GetHydraThreads()
+{
+	return CPU_Cores();
+}
+
+String GetAndroidSDKPath()
+{
+	return String();
+}
+
 #ifdef flagMAIN
 
 CONSOLE_APP_MAIN
