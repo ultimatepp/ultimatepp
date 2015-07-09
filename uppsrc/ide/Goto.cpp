@@ -242,43 +242,42 @@ bool Ide::SwapSIf(const char *cref)
 	LLOG("SwapS scope: " << p.current_scope);
 	if(q < 0)
 		return false;
-	const Array<CppItem>& n = CodeBase()[q];
+	const Array<CppItem>& nn = CodeBase()[q];
 	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key, p.context.namespace_using);
 	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
 		return false;
-	q = FindItem(n, qitem);
-	int count = 0;
-	for(int i = 0; i < n.GetCount(); i++)
-		if(n[i].qitem == qitem)
-			count++;
-	if(!cref && count < 2) {
+	Vector<const CppItem *> n;
+	for(int i = 0; i < nn.GetCount(); i++)
+		if(nn[i].qitem == qitem)
+			n.Add(&nn[i]);
+	if(!cref && n.GetCount() < 2) {
 		int typei = -1;
 		for(int i = 0; i < n.GetCount(); i++) {
-			if(n[i].IsType())
+			if(nn[i].IsType())
 				typei = i;
-			if(i != q && n[i].name == p.current_name) {
-				GotoCpp(n[i]);
+			if(nn[i].qitem != qitem && nn[i].name == p.current_name) {
+				GotoCpp(*n[i]);
 				return true;
 			}
 		}
-		if(typei >= 0 && n[typei].name.GetCount())
-			GotoCpp(n[typei]);
+		if(typei >= 0 && nn[typei].name.GetCount())
+			GotoCpp(nn[typei]);
 		return false;
 	}
-	if(count < 1 || IsNull(editfile))
+	if(n.GetCount() == 0 || IsNull(editfile))
 		return false;
 	int file = GetSourceFileIndex(editfile);
 	int line = p.current.line;
 	LLOG("SwapS line: " << line);
 	int i;
-	for(i = 0; i < count; i++) {
+	for(i = 0; i < n.GetCount(); i++) {
 		LLOG("file: " << GetSourceFilePath(n[q + i].file) << ", line: " << n[q + i].line);
-		if(n[q + i].file == file && n[q + i].line == line) {
+		if(n[i]->file == file && n[i]->line == line) {
 			i++;
 			break;
 		}
 	}
-	GotoCpp(n[q + i % count]);
+	GotoCpp(*n[i % n.GetCount()]);
 	return true;
 }
 
