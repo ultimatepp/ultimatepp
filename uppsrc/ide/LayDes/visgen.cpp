@@ -36,12 +36,15 @@ void VisGenDlg::Refresh()
 	String s;
 	int q = ~type;
 	pars.Enable(q >= 2);
+	brackets.Enable(q >= 2);
+	label1.Enable(q >= 2);
 	toupper1.Enable(q >= 2);
 	name1.Enable(q >= 2);
-	quotes1.Enable(q >= 2);
+	quotes1.Enable(q >= 2 && !label1);
+	label2.Enable(q >= 3);
 	toupper2.Enable(q >= 3);
 	name2.Enable(q >= 3);
-	quotes2.Enable(q >= 3);
+	quotes2.Enable(q >= 3 && !label2);
 	String oce = "\tCtrlLayout";
 	bool ok = false;
 	if(HasItem("ok")) {
@@ -117,34 +120,51 @@ void VisGenDlg::Refresh()
 	}
 	else
 		for(int i = 0; i < sel.GetCount(); i++) {
-			String id = layout.item[sel[i]].variable;
-			if(!IsNull(id)) {
-				if(pars && !(name1 || name2))
+			String id1 = layout.item[sel[i]].variable;
+			String id2 = id1;
+			int w = layout.item[sel[i]].FindProperty("SetLabel");
+			String lbl;
+			if(w >= 0 && IsString(~layout.item[sel[i]].property[w]))
+				lbl = AsCString(ToUtf8((WString)~layout.item[sel[i]].property[w]));
+			if(label1)
+				id1 = lbl;
+			if(label2)
+				id2 = lbl;
+			if(!IsNull(id1) || (q == 4 && !IsNull(id2))) {
+				if((pars || brackets) && !(name1 || name2))
 					s << ~name;
 				if(pars)
 					s << '(';
 				String ss;
 				if(name1 && !IsNull(~name))
-					ss << ~name << '.';
+					s << ~name << '.';
 				if(toupper1)
-					ss << ToUpper(id);
+					ss << ToUpper(id1);
 				else
-					ss << id;
-				if(quotes1)
+					ss << id1;
+				if(quotes1 && !label1)
 					ss = AsCString(ss);
+				if(brackets)
+					s << '[';
 				s << ss;
+				if(brackets)
+					s << ']';
 				if(q == 4) {
 					s << ", ";
 					String ss;
 					if(name2 && !IsNull(~name))
 						ss << ~name << '.';
 					if(toupper2)
-						ss << ToUpper(id);
+						ss << ToUpper(id2);
 					else
-						ss << id;
-					if(quotes2)
+						ss << id2;
+					if(quotes2 && !label2)
 						ss = AsCString(ss);
+					if(brackets)
+						s << '[';
 					s << ss;
+					if(brackets)
+						s << ']';
 				}
 				if(pars)
 					s << ')';
@@ -181,9 +201,12 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	type <<= THISBACK(Type);
 	name <<=
 	pars <<=
+	brackets <<=
+	label1 <<=
 	toupper1 <<=
 	quotes1 <<=
 	name1 <<=
+	label2 <<=
 	toupper2 <<=
 	quotes2 <<=
 	name2 <<= 
