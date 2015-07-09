@@ -11,6 +11,15 @@ inline int            Nvl(int a)                               { return Nvl(a, 0
 inline int64          Nvl(int64 a)                             { return Nvl(a, (int64)0); }
 inline double         Nvl(double a)                            { return Nvl(a, 0.0); }
 
+template <class T>
+inline T              Nvl(T a, T b, T c)                       { return Nvl(Nvl(a, b), c); }
+
+template <class T>
+inline T              Nvl(T a, T b, T c, T d)                  { return Nvl(Nvl(a, b), c, d); }
+
+template <class T>
+inline T              Nvl(T a, T b, T c, T d, T e)             { return Nvl(Nvl(a, b), c, d, e); }
+
 int StdValueCompare(const Value& a, const Value& b, int language);
 int StdValueCompare(const Value& a, const Value& b);
 
