@@ -121,7 +121,7 @@ void Navigator::SyncCursor()
 
 void Navigator::SyncLines()
 {
-	if(IsNull(theide->editfile))
+	if(IsNull(theide->editfile) || navigating)
 		return;
 	int ln = GetCurrentLine() + 1;
 	int fi = GetSourceFileIndex(theide->editfile);
@@ -233,9 +233,11 @@ void Navigator::Navigate()
 		const NavItem& m = *litem[ii];
 		if(m.kind == KIND_LINE || IsNull(search)) {
 			theide->GotoPos(Null, m.line);
-			search.Clear();
-			Search();
-			navigating = false;
+			if(m.kind == KIND_LINE) { // Go to line - restore file view
+				search.Clear();
+				Search();
+				navigating = false;
+			}
 			SyncCursor();
 		}
 		else {
