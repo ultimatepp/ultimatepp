@@ -243,27 +243,19 @@ bool Ide::SwapSIf(const char *cref)
 	if(q < 0)
 		return false;
 	const Array<CppItem>& nn = CodeBase()[q];
-	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key, p.context.namespace_using);
+//	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key, p.context.namespace_using);
 	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
 		return false;
 	Vector<const CppItem *> n;
 	for(int i = 0; i < nn.GetCount(); i++)
-		if(nn[i].qitem == qitem)
+		if(nn[i].name == p.current_name)
 			n.Add(&nn[i]);
-	if(!cref && n.GetCount() < 2) {
-		int typei = -1;
-		for(int i = 0; i < n.GetCount(); i++) {
-			if(nn[i].IsType())
-				typei = i;
-			if(nn[i].qitem != qitem && nn[i].name == p.current_name) {
-				GotoCpp(*n[i]);
-				return true;
+	if(!cref && n.GetCount() < 2)
+		for(int i = 0; i < n.GetCount(); i++)
+			if(nn[i].IsType()) {
+				GotoCpp(nn[i]);
+				return false;
 			}
-		}
-		if(typei >= 0 && nn[typei].name.GetCount())
-			GotoCpp(nn[typei]);
-		return false;
-	}
 	if(n.GetCount() == 0 || IsNull(editfile))
 		return false;
 	int file = GetSourceFileIndex(editfile);
