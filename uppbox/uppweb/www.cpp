@@ -401,6 +401,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		AddFiles(topic.text, d, "brc", b);
 		AddFiles(topic.text, d, "sch", b);
 		AddFiles(topic.text, d, "xml", b);
+		AddFiles(topic.text, d, "java", b);
 		if(b) {
 			if(next)
 				ttxt << "\n::^ ";
