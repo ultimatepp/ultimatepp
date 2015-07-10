@@ -344,6 +344,39 @@ void Ide::CtrlClick(int pos)
 	ContextGoto0(pos);
 }
 
+bool Ide::GotoDesignerFile(const String& path, const String& scope, const String& name, int line)
+{
+	if(ToLower(GetFileExt(path)) == ".lay") {
+		AddHistory();
+		EditFile(path);
+		LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
+		if(l) {
+			if(scope.StartsWith("With"))
+				l->FindLayout(scope.Mid(4), name);
+		}
+		else {
+			editor.SetCursor(editor.GetPos(line - 1));
+			editor.TopCursor(4);
+			editor.SetFocus();
+		}
+		AddHistory();
+		return true;
+	}
+	else
+	if(ToLower(GetFileExt(path)) == ".iml") {
+		AddHistory();
+		EditFile(path);
+		IdeIconDes *l = dynamic_cast<IdeIconDes *>(~designer);
+		if(l)
+			l->FindId(name);
+		else
+			editor.SetFocus();
+		AddHistory();
+		return true;
+	}
+	return false;
+}
+
 void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 {
 	String qitem = n[q].qitem;
@@ -375,32 +408,37 @@ void Ide::JumpToDefinition(const Array<CppItem>& n, int q, const String& scope)
 	String path = GetSourceFilePath(pos.file);
 	editastext.RemoveKey(path);
 	editashex.RemoveKey(path);
-	if(ToLower(GetFileExt(path)) == ".lay") {
-		AddHistory();
-		EditFile(path);
-		LayDesigner *l = dynamic_cast<LayDesigner *>(~designer);
-		if(l) {
-			if(scope.StartsWith("With"))
-				l->FindLayout(scope.Mid(4), pos.name);
-		}
-		else {
-			editor.SetCursor(editor.GetPos(pos.line - 1));
-			editor.TopCursor(4);
-			editor.SetFocus();
-		}
-		AddHistory();
-	}
-	else
-	if(ToLower(GetFileExt(path)) == ".iml") {
-		AddHistory();
-		EditFile(path);
-		IdeIconDes *l = dynamic_cast<IdeIconDes *>(~designer);
-		if(l)
-			l->FindId(pos.name);
-		else
-			editor.SetFocus();
-		AddHistory();
-	}
-	else
+	if(!GotoDesignerFile(path, scope, pos.name, pos.line))
 		GotoCpp(pos);
+}
+
+void Ide::GotoFileAndId(const String& path, const String& id)
+{
+	AddHistory();
+	EditFile(path);
+	WString wid = id.ToWString();
+	if(editor.GetLength() < 100000) {
+		for(int i = 0; i < editor.GetLineCount(); i++) {
+			WString ln = editor.GetWLine(i);
+			int q = ln.Find(wid);
+			while(q >= 0) {
+				if(q == 0 || !iscid(ln[q - 1]) && !iscid(ln[q + wid.GetCount()])) {
+					editor.SetCursor(editor.GetPos(i, q));
+					editor.CenterCursor();
+					return;
+				}
+				if(q + 1 >= ln.GetCount())
+					break;
+				q = ln.Find(wid, q + 1);
+			}
+		}
+	}
+	AddHistory();
+}
+
+void IdeGotoFileAndId(const String& path, const String& id)
+{
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	if(ide)
+		ide->GotoFileAndId(path, id);
 }

@@ -139,6 +139,8 @@ bool      IdeIsDebugLock();
 
 void      IdeSetBar();
 
+void      IdeGotoFileAndId(const String& path, const String& id);
+
 #include "Host.h"
 
 struct IdeMacro {

@@ -29,6 +29,7 @@ void LayDes::EditBar(Bar& bar)
 	bar.Add(islayout, "Select all", CtrlImg::select_all(), THISBACK(SelectAll))
 	   .Key(K_CTRL_A);
 	bar.Add(islayout, AK_VISGEN, LayImg::Members(), THISBACK(VisGen));
+	bar.Add(islayout, AK_FINDSOURCE, IdeCommonImg::Cpp(), THISBACK(GotoUsing));
 	bar.Separator();
 	bar.Add(islayout && CurrentLayout().IsUndo(), "Undo", CtrlImg::undo(), THISBACK(Undo))
 	   .Key(K_ALT_BACKSPACE)
@@ -156,6 +157,30 @@ void LayDes::Settings()
 	setting.Execute();
 	Refresh();
 	SyncItems();
+}
+
+void LayDes::GotoUsing()
+{
+	if(IsNull(currentlayout))
+		return;
+	
+	String lid = "With" + CurrentLayout().name;
+	const Workspace& wspc = GetIdeWorkspace();
+	for(int i = 0; i < wspc.GetCount(); i++) { // find lowest file time
+		const Package& pk = wspc.GetPackage(i);
+		String n = wspc[i];
+		for(int i = 0; i < pk.GetCount(); i++) {
+			String path = SourcePath(n, pk.file[i]);
+			if(IsCPPFile(path) || IsHFile(path)) {
+				const PPFile& f = GetPPFile(NormalizeSourcePath(path));
+				if(FindIndex(f.keywords, lid) >= 0) {
+					IdeGotoFileAndId(path, lid);
+					return;
+				}
+			}
+		}
+	}
+	Exclamation("No code found using this layout.");
 }
 
 void LayDes::OptionBar(Bar& bar)
