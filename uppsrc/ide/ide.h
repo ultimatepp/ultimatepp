@@ -1050,7 +1050,9 @@ public:
 	bool      OpenMainPackage();
 	void      NewMainPackage();
 
+	bool      GotoDesignerFile(const String& path, const String& scope, const String& name, int line);
 	void      JumpToDefinition(const Array<CppItem>& n, int q, const String& scope);
+	void      GotoFileAndId(const String& path, const String& id);
 	void      SearchTopics();
 	void      ShowTopics();
 	void      ShowTopicsWin();

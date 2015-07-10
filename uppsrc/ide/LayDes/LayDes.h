@@ -5,6 +5,7 @@
 #include <RichEdit/RichEdit.h>
 #include <CodeEditor/CodeEditor.h>
 #include <IconDes/IconDes.h>
+#include <ide/Browser/Browser.h>
 
 #define LAYOUTFILE <ide/LayDes/LayDes.lay>
 #include <CtrlCore/lay.h>
@@ -448,6 +449,8 @@ private:
 	void        MainMenuBar(Bar& bar);
 
 	void        EditMenu(Bar& bar);
+	
+	void        GotoUsing();
 
 	void        SyncUsc();
 	void        Save();

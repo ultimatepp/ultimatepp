@@ -248,8 +248,11 @@ void Navigator::Navigate()
 					q = (i + l.GetCount() + 1) % l.GetCount();
 					break;
 				}
-			if(q >= 0 && q < l.GetCount())
-				theide->GotoPos(GetSourceFilePath(l[q].file), l[q].line);
+			if(q >= 0 && q < l.GetCount()) {
+				String path = GetSourceFilePath(l[q].file);
+				if(!theide->GotoDesignerFile(path, m.nest, m.name, l[q].line))
+					theide->GotoPos(path, l[q].line);
+			}
 		}
 	}
 	navigating = false;
