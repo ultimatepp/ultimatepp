@@ -10,13 +10,13 @@
 #define LLOG(x)  // LOG(x)
 
 #ifdef PLATFORM_WIN32 
-String rootdir = "u:\\upp.src";
+String rootdir =   "d:\\devweb\\upp.src";
 String uppbox =    rootdir + "uppbox";
 String uppsrc =    rootdir + "uppsrc";
 String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
-String targetdir = "u:\\uppwww";
-String pdfdir    = "u:\\pdf";
+String targetdir = "d:\\devweb\\uppwww";
+String pdfdir    = "d:\\devweb\\pdf";
 #else
 String rootdir = "/root/upp.src";
 String uppbox =    rootdir + "uppbox";
@@ -394,6 +394,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		AddFiles(topic.text, d, "hpp", b);
 		AddFiles(topic.text, d, "cpp", b);
 		AddFiles(topic.text, d, "icpp", b);
+		AddFiles(topic.text, d, "java", b);
 		AddFiles(topic.text, d, "witz", b);
 		AddFiles(topic.text, d, "usc", b);
 		AddFiles(topic.text, d, "lay", b);
@@ -401,7 +402,6 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		AddFiles(topic.text, d, "brc", b);
 		AddFiles(topic.text, d, "sch", b);
 		AddFiles(topic.text, d, "xml", b);
-		AddFiles(topic.text, d, "java", b);
 		if(b) {
 			if(next)
 				ttxt << "\n::^ ";
