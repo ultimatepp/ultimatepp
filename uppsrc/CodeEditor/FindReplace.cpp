@@ -731,8 +731,8 @@ void CodeEditor::ReplaceWildcard()
 		menu.Add(t_("Matched any character"), THISBACK1(InsertWildcard, "?"));
 		ptxt = t_("Matched wildcard %d");
 	}
-	menu.Add(t_("0-based replace index"), THISBACK1(InsertWildcard, "0"));
-	menu.Add(t_("1-based replace index"), THISBACK1(InsertWildcard, "1"));
+	menu.Add(t_("0-based replace index"), THISBACK1(InsertWildcard, "@@"));
+	menu.Add(t_("1-based replace index"), THISBACK1(InsertWildcard, "@#"));
 	menu.Separator();
 	for(int i = 1; i <= 9; i++)
 		menu.Add(Format(ptxt, i), THISBACK1(InsertWildcard, "@"+AsString(i)));

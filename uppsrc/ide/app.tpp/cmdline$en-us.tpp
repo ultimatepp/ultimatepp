@@ -26,4 +26,4 @@ topic "TheIDE command-line & umk";
 [s0; [3 TheIDE can specify assembly and package in command`-line]&]
 [s0;3 &]
 [s0; [*C3 theide ][*C@4;3 assembly][*C@5;3  ][*C@4;3 package]&]
-[s0; ]
+[s0; ]]
