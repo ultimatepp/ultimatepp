@@ -97,6 +97,8 @@ struct TemplateDlg : public WithNewPackageLayout<TopWindow> {
 	virtual ~TemplateDlg();
 };
 
+int FilterPackageName(int c);
+
 class BaseSetupDlg : public WithBaseSetupLayout<TopWindow>
 {
 public:
@@ -204,11 +206,17 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	Vector<String> GetSvnDirs();
 	void           SyncSvnDir(const String& dir);
 	void           SyncSvnDirs();
+
+	void           RenamePackage();
+	void           DeletePackage();
+	void           PackageMenu(Bar& bar);
 	
 	enum {
 		MAIN = 1, FIRST = 2
 	};
 };
+
+bool RenamePackageFs(const String& upp, const String& newname);
 
 String SelectPackage(const char *title, const char *startwith = NULL,
 	bool selectvars = false, bool all = false);
@@ -355,8 +363,13 @@ struct WorkspaceWork {
 	void AddAnyUses();
 	void TogglePackageSpeed();
 
+	void PackageOp(String active, String from_package, String rename);
+
 	void RemovePackageMenu(Bar& bar);
 	void RemovePackage(String from_package);
+
+	void RenamePackage();
+	void DeletePackage();
 
 	static bool IsAux(const String& p);
 	bool IsAux();

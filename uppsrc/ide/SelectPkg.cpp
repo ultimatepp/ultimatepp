@@ -6,6 +6,73 @@
 #define LSLOW()
 #endif
 
+void SelectPackageDlg::PackageMenu(Bar& menu)
+{
+	bool b = GetCurrentName().GetCount();
+	menu.Add(b, "Rename package..", THISBACK(RenamePackage));
+	menu.Add(b, "Delete package", THISBACK(DeletePackage));
+}
+
+bool RenamePackageFs(const String& upp, const String& newname)
+{
+	if(IsNull(newname)) {
+		Exclamation("Wrong name.");
+		return false;
+	}
+	if(FileExists(PackagePath(newname))) {
+		Exclamation("Package [* \1" + newname + "\1] already exists!");
+		return false;
+	}
+	String pf = GetFileFolder(upp);
+	String npf = GetFileFolder(pf) + "/" + newname;
+	if(!FileMove(pf, npf)) {
+		Exclamation("Renaming package folder has failed.");
+		return false;
+	}
+	if(!FileMove(npf + "/" + GetFileName(upp), npf + "/" + newname + ".upp")) {
+		FileMove(npf, pf);
+		Exclamation("Renaming .upp file has failed.");
+		return false;
+	}
+	return true;
+}
+
+void SelectPackageDlg::RenamePackage()
+{
+	String n = GetCurrentName();
+	if(IsNull(n))
+		return;
+	WithRenamePackageLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Rename package");
+	dlg.name.SetFilter(FilterPackageName);
+again:
+	if(dlg.Execute() != IDOK)
+		return;
+	if(!RenamePackageFs(PackagePath(GetCurrentName()), ~dlg.name))
+		goto again;
+	Load();
+}
+
+void SelectPackageDlg::DeletePackage()
+{
+	String n = GetCurrentName();
+	if(IsNull(n))
+		return;
+	String pp = GetFileFolder(PackagePath(GetCurrentName()));
+	if(!DirectoryExists(pp)) {
+		Exclamation("Directory does not exist!");
+		return;
+	}
+	if(!PromptYesNo("Do you really want to delete package [* \1" + GetCurrentName() + "\1]?&&"
+	                "[/ Warning:] [* Package will not be removed "
+	                "from uses of any other package!]"))
+		return;
+	if(!PromptYesNo("This operation is irreversible.&Do you really want to proceed?"))
+		return;
+	DeleteFolderDeep(pp);
+	Load();
+}
+
 SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool main)
 : selectvars(selectvars_)
 {
@@ -56,6 +123,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	base.BackPaintHint();
 	loadi = 0;
 	loading = false;
+	clist.WhenBar = alist.WhenBar = THISBACK(PackageMenu);
 }
 
 bool SelectPackageDlg::Key(dword key, int count)
