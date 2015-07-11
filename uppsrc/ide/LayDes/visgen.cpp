@@ -35,16 +35,16 @@ void VisGenDlg::Refresh()
 {
 	String s;
 	int q = ~type;
-	pars.Enable(q >= 2);
-	brackets.Enable(q >= 2);
-	label1.Enable(q >= 2);
-	toupper1.Enable(q >= 2);
-	name1.Enable(q >= 2);
-	quotes1.Enable(q >= 2 && !label1);
-	label2.Enable(q >= 3);
-	toupper2.Enable(q >= 3);
-	name2.Enable(q >= 3);
-	quotes2.Enable(q >= 3 && !label2);
+	pars.Enable(q >= 3);
+	brackets.Enable(q >= 3);
+	label1.Enable(q >= 3);
+	toupper1.Enable(q >= 3);
+	name1.Enable(q >= 3);
+	quotes1.Enable(q >= 3 && !label1);
+	label2.Enable(q >= 4);
+	toupper2.Enable(q >= 4);
+	name2.Enable(q >= 4);
+	quotes2.Enable(q >= 4 && !label2);
 	String oce = "\tCtrlLayout";
 	bool ok = false;
 	if(HasItem("ok")) {

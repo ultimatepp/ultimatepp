@@ -1016,12 +1016,11 @@ void WorkspaceWork::RemovePackageMenu(Bar& bar)
 	}
 }
 
-void WorkspaceWork::RemovePackage(String from_package)
+void WorkspaceWork::PackageOp(String active, String from_package, String rename)
 {
-	String active = UnixPath(GetActivePackage());
-	if(IsNull(from_package) && !PromptYesNo(NFormat(
-		"Remove package [* \1%s\1] from uses sections of all current packages ?", active)))
-		return;
+	active = UnixPath(active);
+	from_package = UnixPath(from_package);
+	rename = UnixPath(rename);
 	for(int i = 0; i < package.GetCount(); i++)
 		if(IsNull(from_package) || UnixPath(package[i].name) == from_package) {
 			String pp = PackagePath(package[i].name);
@@ -1030,11 +1029,23 @@ void WorkspaceWork::RemovePackage(String from_package)
 			prj.Load(pp);
 			for(int i = prj.uses.GetCount(); --i >= 0;)
 				if(UnixPath(prj.uses[i].text) == active)
-					prj.uses.Remove(i);
+					if(rename.GetCount())
+						prj.uses[i].text = rename;
+					else
+						prj.uses.Remove(i);
 			prj.Save(pp);
 		}
 	ScanWorkspace();
 	SyncWorkspace();
+}
+
+void WorkspaceWork::RemovePackage(String from_package)
+{
+	String active = UnixPath(GetActivePackage());
+	if(IsNull(from_package) && !PromptYesNo(NFormat(
+		"Remove package [* \1%s\1] from uses sections of all current packages ?", active)))
+		return;
+	PackageOp(GetActivePackage(), from_package, Null);
 }
 
 void WorkspaceWork::TogglePackageSpeed()
@@ -1045,6 +1056,43 @@ void WorkspaceWork::TogglePackageSpeed()
 	SaveLoadPackageNS();
 }
 
+void WorkspaceWork::RenamePackage()
+{
+	if(IsAux() || !package.IsCursor())
+		return;
+	WithRenamePackageLayout<TopWindow> dlg;
+	CtrlLayoutOKCancel(dlg, "Rename package");
+	dlg.name.SetFilter(FilterPackageName);
+again:
+	if(dlg.Execute() != IDOK)
+		return;
+	String pn = ~dlg.name;
+	if(!RenamePackageFs(GetActivePackage(), pn))
+		goto again;
+	PackageOp(GetActivePackage(), Null, pn);
+}
+
+void WorkspaceWork::DeletePackage()
+{
+	String active = GetActivePackage();
+	if(package.GetCursor() == 0) {
+		Exclamation("Cannot delete the main package!");
+		return;
+	}
+	if(IsAux() || !package.IsCursor() ||
+	   !PromptYesNo("Do you really want to delete package [* \1" + active + "\1]?&&"
+	                "[/ Warning:] [* Package will only be removed&"
+	                "from packages of current workspace!]"))
+		return;
+	if(!PromptYesNo("This operation is irreversible.&Do you really want to proceed?"))
+		return;
+	if(!DeleteFolderDeep(GetFileFolder(GetActivePackagePath()))) {
+		Exclamation("Deleting directory has failed.");
+		return;
+	}
+	PackageOp(active, Null, Null);
+}
+
 void WorkspaceWork::PackageMenu(Bar& menu)
 {
 	if(!menu.IsScanKeys()) {
@@ -1053,6 +1101,8 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 		menu.Add(cando, ~NFormat("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
 		RemovePackageMenu(menu);
 		if(menu.IsMenuBar()) {
+			menu.Add(cando, "Rename package..", THISBACK(RenamePackage));
+			menu.Add(cando, "Delete package", THISBACK(DeletePackage));
 			menu.Separator();
 			menu.Add(cando, "Optimize for speed", THISBACK(TogglePackageSpeed))
 			    .Check(actual.optimize_speed);

@@ -8,7 +8,7 @@ library(SOLARIS) "nsl socket";
 library(WIN32) ws2_32;
 
 file
-	Web.h options PCH,
+	Web.h options(BUILDER_OPTION) PCH,
 	Package readonly separator,
 	Web.t charset "UTF-8",
 	Web_init.icpp,
