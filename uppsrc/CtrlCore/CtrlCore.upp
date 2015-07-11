@@ -57,6 +57,7 @@ file
 	llay.h,
 	CtrlCore.iml,
 	CtrlCore.t,
+	CtrlCore.defs,
 	Win32 readonly separator,
 	Win32Gui.h,
 	Win32GuiA.h,
