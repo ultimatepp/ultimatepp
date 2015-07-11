@@ -155,15 +155,11 @@ void LoadDefs()
 		String n = wspc[i];
 		for(int i = 0; i < pk.file.GetCount(); i++) {
 			String path = SourcePath(n, pk.file[i]);
-			DDUMP(path);
-			DDUMP(GetFileExt(path));
 			if(GetFileExt(path) == ".defs")
 				defs.Add(path);
 		}
 	}
 	
-	DDUMP(defs);
-
 	String fp;
 	for(int i = 0; i < defs.GetCount(); i++)
 		fp << defs[i] << "\n" << GetFileTimeCached(defs[i]) << "\n";
