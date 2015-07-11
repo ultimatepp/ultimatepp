@@ -7,5 +7,5 @@ file
 	StreamGetSzPtr.cpp;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 
