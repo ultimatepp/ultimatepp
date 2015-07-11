@@ -24,7 +24,7 @@ topic "TheIDE and Ultimate++ File Types";
 [s0;2 &]
 [s0; [*2 File types recognized by TheIDE][2 :]&]
 [s0;2 &]
-[ {{2413:7587^ [s0; [*2 .cpp, .cc, .cxx, .c]&]
+[ {{2413:7587<64;^ [s0; [*2 .cpp, .cc, .cxx, .c, .m, .mm]&]
 [s0;*2 ]
 :: [s0; [2 Files with these extensions are recognized as source files 
 by TheIDE C`+`+ builders. ]]
@@ -40,6 +40,8 @@ object file. This forces the file to be always linked. The rationale
 of this is that you can put module initialization code into .icpp 
 that is linked into the executable even when code is not referenced 
 from other files.]]
+:: [s0; [*2 .java]]
+:: [s0; [2 Java files (Android builder).]]
 :: [s0; [*2 .rc]]
 :: [s0; [2 Windows resource files.]]
 :: [s0; [*2 .lay]]
@@ -54,10 +56,23 @@ package to various languages.]]
 for layout designer, including visual representation description 
 using ESC scripts.]]
 :: [s0; [*2 .upt]]
-:: [s0; [2 Project templates.]]}}&]
+:: [s0; [2 Project templates.]]
+:: [s0; [*2 .defs]]
+:: [s0; [2 Fixed macro definitions overrides for Assist`+`+ C`+`+ parser.]]
+:: [s0; [*2 .png]&]
+[s0;*2 ]
+:: [s0; [2 TheIDE displays images and if they are smaller than 1024x768, 
+edits them using icon designer.]]
+:: [s0; [*2 .jpg]&]
+[s0; [*2 .gif]&]
+[s0; [*2 .bmp]]
+:: [s0; [2 TheIDE displays images.]]
+:: [s0; [*2 .qtf]]
+:: [s0; [2 U`+`+ rich text format.]]}}&]
 [s0;2 &]
 [s0;2 &]
-[s0; [*2 Other text files you might encounter in packages]&]
+[s0; [*2 Other text files you might encounter in packages (TheIDE might 
+have highlighting for them)]&]
 [s0;2 &]
 [ {{2353:7647^ [s0; [*2 .key]]
 :: [s0; [2 Re`-definable keys definition file.]]
@@ -69,6 +84,8 @@ for various purposes.]]
 U`+`+ database applications build database schema building scripts 
 from these files and also use them to define structures and constants 
 and variables needed for database interaction.]]
+:: [s0; [*2 .witz]]
+:: [s0; [2 Skylark HTML templates.]]
 :: [s0; [*2 COPYING]]
 :: [s0; [2 This file usually contains license info for package.]]
 :: [s0; [*2 COPYING`-PLAIN]]

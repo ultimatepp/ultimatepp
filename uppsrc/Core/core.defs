@@ -2,4 +2,3 @@
 #define EXITBLOCK void EXITBLOCK()
 
 #define CONSOLE_APP_MAIN void CONSOLE_APP_MAIN()
-
