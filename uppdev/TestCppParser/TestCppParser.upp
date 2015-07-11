@@ -14,5 +14,5 @@ file
 	totest.in;
 
 mainconfig
-	"" = "SSE2";
+	"" = "";
 

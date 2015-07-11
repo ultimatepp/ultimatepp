@@ -130,6 +130,12 @@ void Autocomplete()
 	b ? TEST_ONE : TES
 }
 
+void Autocomplete()
+{
+	Splitter popup;
+	popup.Ctrl::PopUp  // Should show PopUp method (does not work yet)
+}
+
 void JumpTo()
 {
 	Point p;
