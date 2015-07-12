@@ -30,18 +30,6 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 {
 	if(IsReadOnly())
 		return false;
-	for(int i = 0; i < RichObject::GetTypeCount(); i++) {
-		RichObjectType& rt = RichObject::GetType(i);
-		if(rt.Accept(d)) {
-			Value data = rt.Read(d);
-			if(!IsNull(data)) {
-				RichPara p;
-				p.Cat(RichObject(&rt, data, pagesz), formatinfo);
-				clip.Cat(p);
-			}
-			return true;
-		}
-	}
 	if(AcceptFiles(d)) {
 		Vector<String> s = GetFiles(d);
 		if(s.GetCount()) {
@@ -61,17 +49,31 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 		}
 		d.Reject();
 	}
-	if(d.Accept("text/QTF"))
+	if(d.Accept("text/QTF")) {
 		clip = ParseQTF(~d, 0, context);
-	else
-	if(d.Accept(RTFS))
+		return true;
+	}
+	if(d.Accept(RTFS)) {
 		clip = ParseRTF(~d);
-	else
-	if(AcceptText(d))
+		return true;
+	}
+	for(int i = 0; i < RichObject::GetTypeCount(); i++) {
+		RichObjectType& rt = RichObject::GetType(i);
+		if(rt.Accept(d)) {
+			Value data = rt.Read(d);
+			if(!IsNull(data)) {
+				RichPara p;
+				p.Cat(RichObject(&rt, data, pagesz), formatinfo);
+				clip.Cat(p);
+			}
+			return true;
+		}
+	}
+	if(AcceptText(d)) {
 		clip = AsRichText(GetWString(d), formatinfo);
-	else
-		return false;
-	return true;
+		return true;
+	}
+	return false;
 }
 
 void RichEdit::ClipPaste(RichText& clip)
