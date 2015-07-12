@@ -315,6 +315,7 @@ public:
 	Array<OptItem>           uses;
 	Array<OptItem>           target;
 	Array<OptItem>           library;
+	Array<OptItem>           static_library;
 	Array<OptItem>           link;
 	Array<OptItem>           option;
 	Array<OptItem>           include;

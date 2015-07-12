@@ -39,6 +39,7 @@ String AndroidModuleMakeFile::ToString() const
 	AppendStaticLibraries(makeFile);
 	AppendSharedLibraries(makeFile);
 	makeFile << "include $(BUILD_SHARED_LIBRARY)\n";
+	AppendModules(makeFile);
 	
 	return makeFile;
 }
@@ -61,6 +62,11 @@ void AndroidModuleMakeFile::AddLdLibrary(const String& ldLibrary)
 void AndroidModuleMakeFile::AddStaticLibrary(const String& staticLibrary)
 {
 	staticLibraries.Add(staticLibrary);
+}
+
+void AndroidModuleMakeFile::AddStaticModuleLibrary(const String& staticModuleLibrary)
+{
+	staticModuleLibraries.Add(staticModuleLibrary);
 }
 
 void AndroidModuleMakeFile::AddSharedLibrary(const String& sharedLibrary)
@@ -101,12 +107,35 @@ void AndroidModuleMakeFile::AppendLdLibraries(String& makeFile) const
 
 void AndroidModuleMakeFile::AppendStaticLibraries(String& makeFile) const
 {
-	AndroidMakeFile::AppendStringVector(makeFile, staticLibraries, "LOCAL_STATIC_LIBRARIES");
+	Vector<String> allLibs;
+	allLibs.Append(staticLibraries);
+	allLibs.Append(staticModuleLibraries);
+	
+	AndroidMakeFile::AppendStringVector(makeFile, allLibs, "LOCAL_STATIC_LIBRARIES");
 }
 
 void AndroidModuleMakeFile::AppendSharedLibraries(String& makeFile) const
 {
 	AndroidMakeFile::AppendStringVector(makeFile, sharedLibraries, "LOCAL_SHARED_LIBRARIES");
+}
+
+void AndroidModuleMakeFile::AppendModules(String& makeFile) const
+{
+	if(staticModuleLibraries.GetCount()) {
+		for(int i = 0; i < staticModuleLibraries.GetCount(); i++) {
+			if(i == 0)
+				makeFile << "\n";
+			
+			const String androidPrefix = "android_";
+			
+			String module = staticModuleLibraries[i];
+			if(module.StartsWith(androidPrefix))
+				module.Remove(0, androidPrefix.GetCount());
+			module = "android/" + module;
+			
+			makeFile << "$(call import-module, " << module << ")\n";
+		}
+	}
 }
 
 END_UPP_NAMESPACE

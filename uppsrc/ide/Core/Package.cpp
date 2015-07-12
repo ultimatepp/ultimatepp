@@ -206,6 +206,7 @@ bool Package::Load(const char *path)
 	for(;;) {
 		Reset();
 		library.Clear();
+		static_library.Clear();
 		target.Clear();
 		flag.Clear();
 		option.Clear();
@@ -227,6 +228,7 @@ bool Package::Load(const char *path)
 				if(!LoadOpt(p, "options", option) &&
 				   !LoadOpt(p, "link", link) &&
 				   !LoadOpt(p, "library", library) &&
+				   !LoadOpt(p, "static_library", static_library) &&
 				   !LoadOpt(p, "flags", flag) &&
 				   !LoadOpt(p, "target", target) &&
 				   !LoadOpt(p, "uses", uses) &&
@@ -436,6 +438,7 @@ bool Package::Save(const char *path) const {
 	putopt(out, "uses", uses);
 	putopt(out, "target", target);
 	putopt(out, "library", library);
+	putopt(out, "static_library", static_library);
 	putopt(out, "options", option);
 	putopt(out, "link", link);
 	putopt(out, "include", include);
