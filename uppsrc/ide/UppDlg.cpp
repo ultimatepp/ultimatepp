@@ -609,6 +609,7 @@ PackageEditor::PackageEditor()
 	Add("Uses", actual.uses);
 	Add("Targets", actual.target);
 	Add("Libraries", actual.library);
+	Add("Static libraries", actual.static_library);
 	Add("Link options", actual.link);
 	Add("Compiler options", actual.option);
 	Add("Internal includes", actual.include);

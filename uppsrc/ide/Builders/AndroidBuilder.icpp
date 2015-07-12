@@ -201,10 +201,17 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		// TODO: improve sieve mechanisme
 		for(int i = 0; i < nativeSourceFilesInPackage.GetCount(); i++)
 			pkgMakeFile.AddSourceFile(nativeSourceFilesInPackage[i]);
+		
 		for(int i = 0; i < pkg.flag.GetCount(); i++)
 			pkgMakeFile.AddCppFlag(pkg.flag[i].text);
+		
 		for(int i = 0; i < pkg.library.GetCount(); i++)
 			pkgMakeFile.AddLdLibrary(pkg.library[i].text);
+		
+		Vector<String> staticLibs = Split(Gather(pkg.static_library, config.GetKeys()), ' ');
+		for(int i = 0; i < staticLibs.GetCount(); i++)
+			pkgMakeFile.AddStaticModuleLibrary(staticLibs[i]);
+		
 		for(int i = 0; i < pkg.uses.GetCount(); i++)
 			pkgMakeFile.AddSharedLibrary(pkg.uses[i].text);
 		
@@ -228,17 +235,20 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	
 	// We need to compile java packages in this place, because we need to generate "R.java" file before...
 	// We don't know which packages contain resources.
-	PutConsole("-----");
-	PutConsole("Compiling java sources...");
-	bool error = false;
-	int time = GetTickCount();
-	for(int i = 0; i < linkfile.GetCount(); i++) {
-		if(Execute(linkfile[i], ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
+	int time;
+	if(linkfile.GetCount()) {
+		PutConsole("-----");
+		PutConsole("Compiling java sources...");
+		bool error = false;
+		time = GetTickCount();
+		for(int i = 0; i < linkfile.GetCount(); i++) {
+			if(Execute(linkfile[i], ss) != 0) {
+				PutConsole(ss.GetResult());
+				return false;
+			}
 		}
+		PutConsole("Java sources compiled in " + GetPrintTime(time) + ".");
 	}
-	PutConsole("Java sources compiled in " + GetPrintTime(time) + ".");
 	
 	// Now, we are going to start compiling c/c++ sources
 	if(DirectoryExists(GetAndroidProjectJniSourcesDir())) {
@@ -264,18 +274,21 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 		PutConsole("Native sources compiled in " + GetPrintTime(time) + ".");
 	}
 	
-	PutConsole("-----");
-	PutConsole("Creating dex file...");
-	RealizeDirectory(GetAndroidProjectBinDir());
-	String dxCmd;
-	dxCmd << NormalizeExePath(androidSDK.DxPath());
-	dxCmd << " --dex ";
-	dxCmd << "--output=" << GetAndroidProjectBinDir() << DIR_SEPS << "classes.dex ";
-	dxCmd << GetAndroidProjectClassesDir();
-	// PutConsole(dxCmd);
-	if(Execute(dxCmd, ss) != 0) {
-		PutConsole(ss.GetResult());
-		return false;
+	String classesDir = GetAndroidProjectClassesDir();
+	if(DirectoryExists(classesDir)) {
+		PutConsole("-----");
+		PutConsole("Creating dex file...");
+		RealizeDirectory(GetAndroidProjectBinDir());
+		String dxCmd;
+		dxCmd << NormalizeExePath(androidSDK.DxPath());
+		dxCmd << " --dex ";
+		dxCmd << "--output=" << GetAndroidProjectBinDir() << DIR_SEPS << "classes.dex ";
+		dxCmd << classesDir;
+		// PutConsole(dxCmd);
+		if(Execute(dxCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
 	}
 	
 	PutConsole("Creating apk file...");

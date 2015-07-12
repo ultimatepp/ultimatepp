@@ -55,6 +55,7 @@ public:
 	void AddCppFlag(const String& name, const String& value = "");
 	void AddLdLibrary(const String& ldLibrary);
 	void AddStaticLibrary(const String& staticLibrary);
+	void AddStaticModuleLibrary(const String& staticModuleLibrary);
 	void AddSharedLibrary(const String& sharedLibrary);
 	
 	String GetName() const { return this->name; }	
@@ -67,6 +68,7 @@ protected:
 	void AppendLdLibraries(String& makeFile) const;
 	void AppendStaticLibraries(String& makeFile) const;
 	void AppendSharedLibraries(String& makeFile) const;
+	void AppendModules(String& makeFile) const;
 	
 private:
 	String name;
@@ -74,6 +76,7 @@ private:
 	VectorMap<String, String> cppFlags;
 	Vector<String> ldLibraries;
 	Vector<String> staticLibraries;
+	Vector<String> staticModuleLibraries;
 	Vector<String> sharedLibraries;
 };
 
