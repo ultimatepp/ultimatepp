@@ -11,6 +11,10 @@ void DlCharset(DropList& d)
 {
 	d.Add(CHARSET_UTF8, "UTF8");
 	d.Add(TextCtrl::CHARSET_UTF8_BOM, "UTF8 BOM");
+	d.Add(TextCtrl::CHARSET_UTF16_LE, "UTF16 LE");
+	d.Add(TextCtrl::CHARSET_UTF16_BE, "UTF16 BE");
+	d.Add(TextCtrl::CHARSET_UTF16_LE_BOM, "UTF16 LE BOM");
+	d.Add(TextCtrl::CHARSET_UTF16_BE_BOM, "UTF16 BE BOM");
 	for(int i = 1; i < CharsetCount(); i++)
 		d.Add(i, CharsetName(i));
 }

@@ -493,7 +493,7 @@ throw an exception) `- this is the difference from Get() method.&]
 [s2; Reads 16`-bit value from the stream in platform specific format 
 (either little`-endian or big`-endian). If there is not enough 
 data in the stream, LoadError is invoked (that in turn might 
-throw an exception).&]
+throw an exception) and `-1 returned.&]
 [s7; [*/ Return value]-|16`-bit value.&]
 [s3; &]
 [s4;%- &]
@@ -501,7 +501,8 @@ throw an exception).&]
 [s2; Reads 32`-bit value from the stream in platform specific format 
 (either little`-endian or big`-endian). If there is not enough 
 data in the stream, LoadError is invoked (that in turn might 
-throw an exception).&]
+throw an exception) and `-1 returned (but that is a valid return 
+value as well).&]
 [s7; [*/ Return value]-|32`-bit value.&]
 [s3; &]
 [s4;%- &]
@@ -509,49 +510,54 @@ throw an exception).&]
 [s2; Reads 64`-bit value from the stream in platform specific format 
 (either little`-endian or big`-endian). If there is not enough 
 data in the stream, LoadError is invoked (that in turn might 
-throw an exception).&]
+throw an exception) and `-1 returned (but that is a valid return 
+value as well).&]
 [s7; [*/ Return value]-|64`-bit value.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get16le`(`):%- [@(0.0.255) int]_[* Get16le]()&]
 [s2; Reads 16`-bit value from the stream in the little`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
-(that in turn might throw an exception).&]
+(that in turn might throw an exception) and `-1 returned.&]
 [s7; [*/ Return value]-|16`-bit value.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get32le`(`):%- [@(0.0.255) int]_[* Get32le]()&]
 [s2; Reads 32`-bit value from the stream in the little`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
-(that in turn might throw an exception).&]
+(that in turn might throw an exception) and `-1 returned (but 
+that is a valid return value as well).&]
 [s7; [*/ Return value]-|32`-bit value.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get64le`(`):%- [_^int64^ int64]_[* Get64le]()&]
 [s2; Reads 64`-bit value from the stream in the little`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
-(that in turn might throw an exception).&]
+(that in turn might throw an exception) and `-1 returned (but 
+that is a valid value return as well).&]
 [s7; [*/ Return value]-|64`-bit value.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get16be`(`):%- [@(0.0.255) int]_[* Get16be]()&]
 [s2; Reads 16`-bit value from the stream in the big`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
-(that in turn might throw an exception).&]
+(that in turn might throw an exception) and `-1 is returned.&]
 [s7; [*/ Return value]-|16`-bit value.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get32be`(`):%- [@(0.0.255) int]_[* Get32be]()&]
 [s2; Reads 32`-bit value from the stream in the big`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
-(that in turn might throw an exception).&]
+(that in turn might throw an exception) and `-1 returned (but 
+that is a valid value return as well).&]
 [s7; [*/ Return value]-|32`-bit value.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Get64be`(`):%- [_^int64^ int64]_[* Get64be]()&]
 [s2; Reads 64`-bit value from the stream in the big`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
-(that in turn might throw an exception).&]
+(that in turn might throw an exception) and `-1 returned (but 
+that is a valid value return as well).&]
 [s7; [*/ Return value]-|64`-bit value.&]
 [s3; &]
 [s4;%- &]

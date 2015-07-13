@@ -7,7 +7,7 @@ static void sLoadBom(Stream& in, String *t, WString *wt, byte def_charset)
 	if(in.IsOpen()) {
 		String s;
 		if(in.GetLeft() > 3) {
-			word header = in.Get16();
+			word header = in.Get16le();
 			if(header == 0xfffe || header == 0xfeff) {
 				int n = (int)in.GetLeft() / 2;
 				WStringBuffer ws(n);

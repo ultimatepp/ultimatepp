@@ -274,7 +274,13 @@ int    GetType(const Vector<String>& conf, const char *flags, int def);
 bool   GetFlag(const Vector<String>& conf, const char *flag);
 String RemoveType(Vector<String>& conf, const char *flags);
 
-enum { CHARSET_UTF8_BOM = 250 }; // Same as TextCtrl::CHARSET_UTF8_BOM
+enum {
+	CHARSET_UTF8_BOM = 250, // same as TextCtrl::CHARSET_UTF8_BOM; CtrlLib not included here
+	CHARSET_UTF16_LE,
+	CHARSET_UTF16_BE,
+	CHARSET_UTF16_LE_BOM,
+	CHARSET_UTF16_BE_BOM
+};
 
 class Package {
 	void Reset();
@@ -337,6 +343,8 @@ public:
 
 	Package();
 };
+
+String IdeCharsetName(byte charset);
 
 class Workspace {
 	void     AddUses(Package& p, bool match, const Vector<String>& flag);

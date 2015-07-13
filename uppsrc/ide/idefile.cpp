@@ -29,7 +29,7 @@ void Ide::FileCursor()
 {
 	WorkspaceWork::FileCursor();
 	if(IsActiveFile() && !filelist[filelist.GetCursor()].isdir) {
-		const Package::File& f = ActiveFile();
+		Package::File& f = ActiveFile();
 		editor.SetEditable(!f.readonly);
 		editor.TabSize(f.tabsize > 0 ? f.tabsize : editortabsize);
 		SetupEditor();
@@ -47,6 +47,7 @@ void Ide::FileCursor()
 		String p = GetActiveFileName();
 		if(p != HELPNAME)
 			p = GetActiveFilePath();
+
 		EditFile0(p, f.charset ? f.charset : actual.charset ? actual.charset : default_charset,
 		          false, headername);
 	}
@@ -471,7 +472,8 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 			designer = GetIdeModule(i).CreateDesigner(this, path, charset);
 	}
 
-	if(!designer && editastext.Find(path) < 0 && (FileIsBinary(path) || editashex.Find(path) >= 0))
+	if(!designer && editastext.Find(path) < 0 &&
+	   (charset == CHARSET_DEFAULT && FileIsBinary(path) || editashex.Find(path) >= 0))
 		designer.Create<FileHexView>().Open(path);
 
 	if(designer) {
@@ -522,6 +524,17 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 				editor.SetCharset(CHARSET_UTF8);
 			}
 			else {
+				String s = in.Get(3);
+				DUMPHEX(s);
+				if(s.GetCount() >= 2) {
+					if((byte)s[0] == 0xff && (byte)s[1] == 0xfe)
+						charset = CHARSET_UTF16_LE_BOM;
+					if((byte)s[0] == 0xfe && (byte)s[1] == 0xff)
+						charset = CHARSET_UTF16_BE_BOM;
+				}
+				if(s.GetCount() >= 3 && (byte)s[0] == 0xef && (byte)s[1] == 0xbb && (byte)s[2] == 0xbf)
+					charset = CHARSET_UTF8_BOM;
+				in.Seek(0);
 				int le = editor.Load(in, charset);
 				editfile_line_endings = le == TextCtrl::LE_CRLF ? CRLF : le == TextCtrl::LE_LF ? LF : (int)Null;
 			}
