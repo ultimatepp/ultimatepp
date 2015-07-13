@@ -41,15 +41,15 @@ Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
 Find and Replace]&]
-[s0;l224;^topic`:`/`/ide`/app`/IconDes`$en`-us^ &]
+[s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
 [s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
 [s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
 a Cross Development Tool]&]
-[s0;l224;^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ &]
-[s0;l224; [^topic`:`/`/ide`/app`/Android`$en`-us^ Working with ][^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A
-ndroid ][^topic`:`/`/ide`/app`/Android`$en`-us^ builder]&]
+[s0;l224; &]
+[s0;l224; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
+Android builder]&]
 [s0; &]
 [s0; &]
 [s0; [*4 Ultimate`+`+ donors]&]
