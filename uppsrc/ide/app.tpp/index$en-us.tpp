@@ -27,17 +27,20 @@ with TheIDE]&]
 Assemblies and Nests]&]
 [s0;l224; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
 Packages and Assemblies]&]
+[s0;l224; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+ (code completion, 
+navigation and trasformation)]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Blitz`$en`-us^ BLITZ]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
-[s0;l224; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
 [s0;l224; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
 [s0;l224; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
+[s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
+Find and Replace]&]
 [s0;l224;^topic`:`/`/ide`/app`/IconDes`$en`-us^ &]
 [s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
 [s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
