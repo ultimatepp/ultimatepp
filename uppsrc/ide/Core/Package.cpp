@@ -187,7 +187,12 @@ void Package::SetPackageResolver(bool (*Resolve)(const String& error, const Stri
 
 byte CharsetByNameX(const String& s)
 {
-	return s == "UTF-8-BOM" ? CHARSET_UTF8_BOM : CharsetByName(s);
+	return decode(s, "UTF-8-BOM", CHARSET_UTF8_BOM,
+	                 "UTF-16-LE", CHARSET_UTF16_LE,
+	                 "UTF-16-BE", CHARSET_UTF16_BE,
+	                 "UTF-16-LE-BOM", CHARSET_UTF16_LE_BOM,
+	                 "UTF-16-BE-BOM", CHARSET_UTF16_BE_BOM,
+	                 CharsetByName(s));
 }
 
 void Package::Option(bool& option, const char *name)
@@ -409,6 +414,15 @@ void putfopt(Stream& out, const char *key, const Array<OptItem>& m)
 		out << "\n\t\t" << key << AsStringWhen(m[i].when) << ' ' << WriteValue(m[i].text);
 }
 
+String IdeCharsetName(byte charset) {
+	return decode(charset, CHARSET_UTF8_BOM, "UTF-8-BOM",
+		                   CHARSET_UTF16_LE, "UTF-16-LE",
+		                   CHARSET_UTF16_BE, "UTF-16-BE",
+		                   CHARSET_UTF16_LE_BOM, "UTF-16-LE-BOM",
+		                   CHARSET_UTF16_BE_BOM, "UTF-16-BE-BOM",
+		                   CharsetName(charset));
+}
+
 bool Package::Save(const char *path) const {
 	StringStream out;
 	if(description.GetCount() || italic || bold || !IsNull(ink)) {
@@ -422,11 +436,8 @@ bool Package::Save(const char *path) const {
 			d << (int)ink.GetR() << ',' << (int)ink.GetG() << ',' << (int)ink.GetB();
 		out << "description " << AsCString(d) << ";\n\n";
 	}
-	if(charset > 0 && charset < CharsetCount() || charset == CHARSET_UTF8)
-		out << "charset " << AsCString(CharsetName(charset)) << ";\n\n";
-	else
-	if(charset == CHARSET_UTF8_BOM)
-		out << "charset \"UTF-8-BOM\";\n\n";
+	if(charset > 0)
+		out << "charset " << AsCString(IdeCharsetName(charset)) << ";\n\n";
 	if(optimize_speed)
 		out << "optimize_speed;\n\n";
 	if(noblitz)
@@ -465,11 +476,8 @@ bool Package::Save(const char *path) const {
 				out << " options(BUILDER_OPTION) NOPCH";
 			if(f.noblitz)
 				out << " options(BUILDER_OPTION) NOBLITZ";
-			if(f.charset > 0 && f.charset < CharsetCount() || f.charset == CHARSET_UTF8)
-				out << " charset " << AsCString(CharsetName(f.charset));
-			else
-			if(f.charset == CHARSET_UTF8_BOM)
-				out << " charset \"UTF-8-BOM\"";
+			if(f.charset > 0)
+				out << " charset " << AsCString(IdeCharsetName(f.charset));
 			if(!IsNull(f.highlight))
 				out << " highlight " << f.highlight;
 			putfopt(out, "options", f.option);

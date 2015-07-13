@@ -98,6 +98,7 @@ protected:
 	void   DoPaste() { Paste(); }
 	void   DoRemoveSelection() { RemoveSelection(); }
 	void   RefreshLines(int l1, int l2);
+	static bool   IsUnicodeCharset(byte charset);
 
 public:
 	virtual void   RefreshLine(int i);
@@ -109,7 +110,7 @@ public:
 	void   CachePos(int pos);
 	void   CacheLinePos(int linei);
 
-	enum { CHARSET_UTF8_BOM = 250 };
+	enum { CHARSET_UTF8_BOM = 250, CHARSET_UTF16_LE, CHARSET_UTF16_BE, CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM };
 	enum { LE_DEFAULT, LE_CRLF, LE_LF };
 
 	int    Load(Stream& s, byte charset = CHARSET_DEFAULT);

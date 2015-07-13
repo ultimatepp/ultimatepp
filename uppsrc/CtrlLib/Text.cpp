@@ -105,6 +105,12 @@ void   TextCtrl::CacheLinePos(int linei)
 	}
 }
 
+bool   TextCtrl::IsUnicodeCharset(byte charset)
+{
+	return findarg(charset, CHARSET_UTF8, CHARSET_UTF8_BOM, CHARSET_UTF16_LE, CHARSET_UTF16_BE,
+	                        CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM) >= 0;
+}
+
 int   TextCtrl::Load(Stream& in, byte charset) {
 	Clear();
 	line.Clear();
@@ -120,9 +126,40 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			in.Seek(pos);
 		charset = CHARSET_UTF8;
 	}
+	int be16 = findarg(charset, CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM);
+	if(be16 >= 0 && in.GetLeft() >= 2) {
+		int64 pos = in.GetPos();
+		dword h = in.Get16le();
+		if(h != (be16 ? 0xfffe : 0xfeff))
+			in.Seek(pos);
+		charset = be16 ? CHARSET_UTF16_BE : CHARSET_UTF16_LE;
+	}
 	bool cr = false;
 	byte b8 = 0;
-	truncated = true;
+	if(charset == CHARSET_UTF16_LE || charset == CHARSET_UTF16_BE) {
+		WStringBuffer wln;
+		for(;;) {
+			int c = charset == CHARSET_UTF16_LE ? in.Get16le() : in.Get16be();
+			if(c < 0) {
+				WString l = wln;
+				line.Add(l);
+				total += l.GetCount();
+				goto finish;
+			}
+			if(c == '\r')
+				cr = true;
+			else
+			if(c == '\n') {
+				WString l = wln;
+				line.Add(l);
+				total += l.GetCount() + 1;
+				wln.Clear();
+			}
+			else
+				wln.Cat(c);
+		}
+	}
+	else
 	if(charset == CHARSET_UTF8)
 		for(;;) {
 			byte h[200];
@@ -233,19 +270,19 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			}
 		}
 
-	truncated = false;
 out_of_limit:
-	WString w = ToUnicode(~ln, ln.GetCount(), charset);
-	if(total + w.GetLength() <= max_total) {
-		line.Add(w);
-		total += w.GetLength();
+	{
+		WString w = ToUnicode(~ln, ln.GetCount(), charset);
+		if(total + w.GetLength() <= max_total) {
+			line.Add(w);
+			total += w.GetLength();
+		}
 	}
+finish:
 	InsertLines(0, line.GetCount());
 	Update();
 	SetSb();
 	PlaceCaret(0);
-	if(truncated)
-		SetReadOnly();
 	return line.GetCount() > 1 ? cr ? LE_CRLF : LE_LF : LE_DEFAULT;
 }
 
@@ -257,6 +294,14 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 		s.Put(bom, 3);
 		charset = CHARSET_UTF8;
 	}
+	if(charset == CHARSET_UTF16_LE_BOM) {
+		s.Put16le(0xfeff);
+		charset = CHARSET_UTF16_LE;
+	}
+	if(charset == CHARSET_UTF16_BE_BOM) {
+		s.Put16be(0xfeff);
+		charset = CHARSET_UTF16_BE;
+	}
 	charset = ResolveCharset(charset);
 	String le = "\n";
 #ifdef PLATFORM_WIN32
@@ -265,6 +310,30 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 #endif
 	if(line_endings == LE_CRLF)
 		le = "\r\n";
+	int be16 = findarg(charset, CHARSET_UTF16_LE, CHARSET_UTF16_BE);
+	if(be16 >= 0) {
+		String wle;
+		for(int i = 0; i < le.GetCount(); i++) {
+			if(be16)
+				wle.Cat(0);
+			wle.Cat(le[i]);
+			if(!be16)
+				wle.Cat(0);
+		}
+		for(int i = 0; i < line.GetCount(); i++) {
+			if(i)
+				s.Put(wle);
+			WString txt = line[i];
+			const wchar *e = txt.End();
+			if(be16)
+				for(const wchar *w = txt; w != e; w++)
+					s.Put16be(*w);
+			else
+				for(const wchar *w = txt; w != e; w++)
+					s.Put16le(*w);
+		}
+		return;
+	}
 	for(int i = 0; i < line.GetCount(); i++) {
 		if(i)
 			s.Put(le);
@@ -294,7 +363,7 @@ String TextCtrl::Get(byte charset) const
 int TextCtrl::GetInvalidCharPos(byte charset) const
 {
 	int q = 0;
-	if(charset != CHARSET_UTF8 && charset != CHARSET_UTF8_BOM)
+	if(!IsUnicodeCharset(charset))
 		for(int i = 0; i < line.GetCount(); i++) {
 			WString txt = line[i];
 			WString ctxt = ToUnicode(FromUnicode(txt, charset), charset);
@@ -349,7 +418,7 @@ Value TextCtrl::GetData() const
 String TextCtrl::GetEncodedLine(int i, byte charset) const
 {
 	charset = ResolveCharset(charset);
-	if(charset == CHARSET_UTF8 && charset != CHARSET_UTF8_BOM)
+	if(charset == CHARSET_UTF8)
 		return line[i].text;
 	return FromUnicode(FromUtf8(line[i].text), charset);
 }
@@ -648,7 +717,7 @@ int TextCtrl::Insert(int pos, const WString& _txt, bool typing) {
 	if(pos + _txt.GetCount() > max_total)
 		return 0;
 	WString txt = _txt;
-	if(charset != CHARSET_UNICODE && charset != CHARSET_UTF8_BOM)
+	if(!IsUnicodeCharset(charset))
 		for(int i = 0; i < txt.GetCount(); i++)
 			if(FromUnicode(txt[i], charset) == DEFAULTCHAR)
 				txt.Set(i, '?');
