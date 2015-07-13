@@ -525,7 +525,6 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 			}
 			else {
 				String s = in.Get(3);
-				DUMPHEX(s);
 				if(s.GetCount() >= 2) {
 					if((byte)s[0] == 0xff && (byte)s[1] == 0xfe)
 						charset = CHARSET_UTF16_LE_BOM;
