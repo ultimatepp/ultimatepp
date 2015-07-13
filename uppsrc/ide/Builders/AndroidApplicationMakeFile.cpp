@@ -34,7 +34,7 @@ void AndroidApplicationMakeFile::SetPlatform(const String& platform)
 
 void AndroidApplicationMakeFile::SetArchitectures(const Vector<String>& architectures)
 {
-	this->architectures = architectures;
+	this->architectures = clone(architectures);
 }
 
 void AndroidApplicationMakeFile::AddArchitecture(const String& architecture)
