@@ -112,7 +112,7 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	type // check that there are not wrong item is the list for 'type'
+	type // check that there are not wrong items in the list for 'type'
 }
 
 void Autocomplete()
@@ -151,7 +151,7 @@ void Autocomplete()
 void Autocomplete()
 {
 	Splitter popup;
-	popup.Ctrl::PopUp  // Should show PopUp method (does not work yet)
+	popup.Ctrl::PopUp
 }
 
 void JumpTo()
