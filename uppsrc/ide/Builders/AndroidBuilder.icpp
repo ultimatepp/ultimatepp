@@ -205,8 +205,9 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		for(int i = 0; i < pkg.flag.GetCount(); i++)
 			pkgMakeFile.AddCppFlag(pkg.flag[i].text);
 		
-		for(int i = 0; i < pkg.library.GetCount(); i++)
-			pkgMakeFile.AddLdLibrary(pkg.library[i].text);
+		Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
+		for(int i = 0; i < libs.GetCount(); i++)
+			pkgMakeFile.AddLdLibrary(libs[i]);
 		
 		Vector<String> staticLibs = Split(Gather(pkg.static_library, config.GetKeys()), ' ');
 		for(int i = 0; i < staticLibs.GetCount(); i++)

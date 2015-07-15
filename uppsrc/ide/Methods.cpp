@@ -445,7 +445,9 @@ void BuildMethods::Load()
 		VectorMap<String, String> map;
 		String fn = ConfigFile(ff.GetName());
 		if(LoadVarFile(fn, map)) {
-			String builderName = map.Get("BUILDER");
+			int builderIdx = map.Find("BUILDER");
+			String builderName = builderIdx >= 0 ? map[builderIdx] : "";
+			
 			int setupIdx = -1;
 			String prefix;
 			for(int i = 0; i < setups.GetCount(); i++) {
@@ -646,8 +648,9 @@ VectorMap<String, String> BuildMethods::MapBuilderVars(const VectorMap<String, S
 {
 	VectorMap<String, String> mapedMap;
 	Index<String> varsToMaped;
-
-	String builder = map.Get("BUILDER");
+	
+	int builderIdx = map.Find("BUILDER");
+	String builder = builderIdx >= 0 ? map[builderIdx] : "";
 	if(builder.IsEmpty())
 		return VectorMap<String, String>();
 	
