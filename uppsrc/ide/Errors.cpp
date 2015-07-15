@@ -160,16 +160,24 @@ void Ide::FindError()
 bool Ide::Next(int tab, ArrayCtrl& a, int d)
 {
 	if(btabs.GetCursor() == tab) {
-		int c = a.GetCursor() + d;
-		if(c >= 0 && c < a.GetCount())
-			a.SetCursor(c);
-		else {
-			if(d > 0)
-				a.GoBegin();
-			else
-				a.GoEnd();
+		int c = a.GetCursor();
+		for(;;) {
+			c += d;
+			if(c >= 0 && c < a.GetCount()) {
+				Value v = a.Get(c, "INFO");
+				if(v.Is<ErrorInfo>() && !IsNull(v.To<ErrorInfo>().file)) {
+					a.SetCursor(c);
+					return true;
+				}
+			}
+			else {
+				if(d > 0)
+					a.GoBegin();
+				else
+					a.GoEnd();
+				return true;
+			}
 		}
-		return true;
 	}
 	return false;
 }
