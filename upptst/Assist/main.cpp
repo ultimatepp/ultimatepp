@@ -120,6 +120,24 @@ void Autocomplete()
 	Select().From().LeftJoinRef().Where().OrderBy().Lim
 }
 
+struct Ide { 
+	struct ErrorInfo {
+		String file;
+	};
+}
+
+void Ide::AutoComplete()
+{
+	Value v;
+	ValueTo<ErrorInfo>().
+}
+
+void Ide::AutoComplete()
+{
+	Value v;
+	v.To<ErrorInfo>().
+}
+
 enum {
 	TEST_ONE,
 	TEST_TWO
