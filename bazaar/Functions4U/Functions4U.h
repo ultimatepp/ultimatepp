@@ -563,10 +563,10 @@ class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
 	enum Status {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
-	bool Start(const char *cmd, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
+	bool Start(const char *cmd, const char *envptr = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
 		ts.Reset();
-		if(!p.Start(cmd, NULL, dir))
+		if(!p.Start(cmd, envptr))
 			return false;
 		status = RUNNING;
 		timeOut = _timeOut;
