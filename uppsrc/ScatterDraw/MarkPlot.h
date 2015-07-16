@@ -281,7 +281,7 @@ public:
 	}
 };	
 
-class BallPlot : public MarkPlot {
+class BubblePlot : public MarkPlot {
 private:
 	template <class T>
 	void DoPaint(T& w, const int& scale, int x, int y, const Vector<double>& dataFixed, const double& size, 
@@ -293,7 +293,7 @@ private:
 	}
 	
 public:
-	BallPlot() {multiPlot = true;}
+	BubblePlot() {multiPlot = true;}
 	virtual void Paint(Draw &p, const int& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
