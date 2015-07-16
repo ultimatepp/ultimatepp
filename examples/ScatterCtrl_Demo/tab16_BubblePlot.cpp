@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void TabBallPlot::Init()
+void TabBubblePlot::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -14,7 +14,7 @@ void TabBallPlot::Init()
 	}
 	idsBall << 2;
 	static Vector<int> idVoid;
-	scatter.AddSeries(s1, 1, 0, idVoid, idVoid, idsBall).Legend("Importance").MarkStyle<BallPlot>()
+	scatter.AddSeries(s1, 1, 0, idVoid, idVoid, idsBall).Legend("Importance").MarkStyle<BubblePlot>()
 		   .NoPlot().MarkColor(Green()).MarkBorderColor(LtRed()).MarkBorderWidth(3);
 	
 	scatter.SetLabelY("Size");
@@ -23,10 +23,10 @@ void TabBallPlot::Init()
 
 ScatterDemo *Construct16()
 {
-	static TabBallPlot tab;
+	static TabBubblePlot tab;
 	return &tab;
 }
 
 INITBLOCK {
-	RegisterExample("BallPlot", Construct16, __FILE__);
+	RegisterExample("BubblePlot", Construct16, __FILE__);
 }

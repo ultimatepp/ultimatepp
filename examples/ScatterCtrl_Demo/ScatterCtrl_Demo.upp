@@ -25,7 +25,7 @@ file
 	tab12.cpp,
 	tab14_UserEquation.cpp,
 	tab15_RangePlot.cpp,
-	tab16_BallPlot.cpp,
+	tab16_BubblePlot.cpp,
 	tab20_Pie.cpp,
 	symbol.iml;
 
