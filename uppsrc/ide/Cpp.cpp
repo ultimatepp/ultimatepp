@@ -222,16 +222,7 @@ void AssistEditor::ExpressionType(const String& ttype,
 	
 	for(int i = 0; i < tparam.GetCount(); i++) // need to qualify template parameters
 		tparam[i] = Qualify(context_type, tparam[i], usings);
-/*	
-	bool tryop = id == "->";
-	if(tryop)
-		id = "operator->";
-	else
-	if(id == "[]") {
-		tryop = true;
-		id = "operator[]";
-	}
-*/
+
 	bool shortcut_oper = false;
 	if(!iscid(*id) && *id != '.') {
 		shortcut_oper = can_shortcut_operator;

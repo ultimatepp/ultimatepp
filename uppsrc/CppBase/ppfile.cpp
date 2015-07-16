@@ -47,6 +47,12 @@ void RemoveComments(String& l, bool& incomment)
 			if(*s == '\"')
 				s = SkipString(s);
 			else
+			if(s[0] == '/' && s[1] == '/') {
+				q = int(s - ~l);
+				SetSpaces(l, q, l.GetCount() - q);
+				return;
+			}
+			else
 			if(s[0] == '/' && s[1] == '*') {
 				q = int(s - ~l);
 				break;
