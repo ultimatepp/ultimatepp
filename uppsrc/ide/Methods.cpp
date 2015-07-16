@@ -445,9 +445,7 @@ void BuildMethods::Load()
 		VectorMap<String, String> map;
 		String fn = ConfigFile(ff.GetName());
 		if(LoadVarFile(fn, map)) {
-			int builderIdx = map.Find("BUILDER");
-			String builderName = builderIdx >= 0 ? map[builderIdx] : "";
-			
+			String builderName = map.Get("BUILDER", Null);
 			int setupIdx = -1;
 			String prefix;
 			for(int i = 0; i < setups.GetCount(); i++) {
@@ -499,7 +497,7 @@ bool BuildMethods::Save()
 		VectorMap<String, String> map;
 		for(int j = 1; j < method.GetIndexCount(); j++)
 			map.Add(method.GetId(j).ToString(), method.Get(i, j));
-		if(map.Get("BUILDER", "") != "SCRIPT")
+		if(map.Get("BUILDER", Null) != "SCRIPT")
 			map.RemoveKey("SCRIPT");
 		
 		map = SieveBuilderVars(map);
@@ -616,7 +614,7 @@ VectorMap<String, String> BuildMethods::SieveBuilderVars(const VectorMap<String,
 {
 	VectorMap<String, String> sievedMap;
 	
-	String builder = map.Get("BUILDER");
+	String builder = map.Get("BUILDER", Null);
 	if(builder.IsEmpty())
 		return VectorMap<String, String>();
 	
@@ -648,9 +646,8 @@ VectorMap<String, String> BuildMethods::MapBuilderVars(const VectorMap<String, S
 {
 	VectorMap<String, String> mapedMap;
 	Index<String> varsToMaped;
-	
-	int builderIdx = map.Find("BUILDER");
-	String builder = builderIdx >= 0 ? map[builderIdx] : "";
+
+	String builder = map.Get("BUILDER", Null);
 	if(builder.IsEmpty())
 		return VectorMap<String, String>();
 	
