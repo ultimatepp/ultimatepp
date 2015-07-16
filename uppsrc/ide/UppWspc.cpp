@@ -1028,11 +1028,12 @@ void WorkspaceWork::PackageOp(String active, String from_package, String rename)
 			Package prj;
 			prj.Load(pp);
 			for(int i = prj.uses.GetCount(); --i >= 0;)
-				if(UnixPath(prj.uses[i].text) == active)
+				if(UnixPath(prj.uses[i].text) == active) {
 					if(rename.GetCount())
 						prj.uses[i].text = rename;
 					else
 						prj.uses.Remove(i);
+				}
 			prj.Save(pp);
 		}
 	ScanWorkspace();
