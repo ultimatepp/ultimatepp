@@ -102,12 +102,12 @@ LAYOUT(TabRangePlot, 420, 236)
 	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
-LAYOUT(TabBallPlot, 420, 236)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Ball Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+LAYOUT(TabBubblePlot, 420, 236)
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Bubble Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)
-	ITEM(PieCtrl, chart, SetLegendBackColor(Color(229, 229, 229)).SetLegendHeight(80).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
+	ITEM(PieCtrl, chart, SetLegendHeight(80).SetLegendBackColor(Color(229, 229, 229)).SetTitle(t_("Average Weather")).SetFrame(ThinInsetFrame()).HSizePosZ(8, 12).VSizePosZ(40, 12))
 	ITEM(Label, dv___1, SetLabel(t_(" EXPERIMENTAL")).SetFrame(ThinInsetFrame()).LeftPosZ(8, 84).TopPosZ(8, 24))
 END_LAYOUT
 

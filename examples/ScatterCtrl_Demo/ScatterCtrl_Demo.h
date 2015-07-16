@@ -213,9 +213,9 @@ private:
 	Vector<int> idsRange;
 };
 
-class TabBallPlot : public WithTabBallPlot<ScatterDemo> {
+class TabBubblePlot : public WithTabBubblePlot<ScatterDemo> {
 public:
-	typedef TabBallPlot CLASSNAME;
+	typedef TabBubblePlot CLASSNAME;
 	
 	void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
