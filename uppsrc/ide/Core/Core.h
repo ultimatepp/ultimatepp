@@ -274,7 +274,7 @@ int    GetType(const Vector<String>& conf, const char *flags, int def);
 bool   GetFlag(const Vector<String>& conf, const char *flag);
 String RemoveType(Vector<String>& conf, const char *flags);
 
-enum {
+enum IdeCharsets {
 	CHARSET_UTF8_BOM = 250, // same as TextCtrl::CHARSET_UTF8_BOM; CtrlLib not included here
 	CHARSET_UTF16_LE,
 	CHARSET_UTF16_BE,
