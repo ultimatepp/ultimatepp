@@ -12,29 +12,23 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	Image logo = IdeImg::logo();
 	Size  isz = logo.GetSize();
 	ImageCtrl& l = ctrl.Create<ImageCtrl>();
-	Label& v = ctrl.Create<Label>();
 	Label& v1 = ctrl.Create<Label>();
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
-	String h;
-	h = "\1[= [R45 [@r/ The][@b IDE]][A4` ";
-	h << IDE_VERSION;
-	if(sizeof(void *) == 8)
-		h << " (64 bit)";
-#ifdef GUI_GTK
-	h << " (Gtk)";
-	h << "      ";
-#endif
-	v = h;
-	v.HSizePos(256, 10).TopPos(10, 40);
-	l.Add(v);
-	v.SetInk(Blend(Gray, Blue));
 	const CppBase& cpp = CodeBase();
 	int total = 0;
 	for(int i = 0; i < cpp.GetCount(); i++)
 		total += cpp[i].GetCount();
-	
-	v1 = Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
+	String h;
+	h << "Version " << IDE_VERSION;
+	if(sizeof(void *) == 8)
+		h << " (64 bit)";
+#ifdef GUI_GTK
+	h << " (Gtk)";
+#endif
+	h << "\n";
+	h << Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
+	v1 = h;
 	v1.LeftPos(300, 100).BottomPos(20, Arial(20).GetHeight() * 3);
 	v1.SetFont(Arial(10));
 	l.Add(v1);
