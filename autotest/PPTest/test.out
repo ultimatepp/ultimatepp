@@ -31,7 +31,7 @@
 #define MK__s__(x)       s__s##x
 #define MK__s_(x)        MK__s__(x)
 
-// #define MK__s            MK__s_(__LINE__)
+                                            
 
 #define MK__s            MK__s_(COMBINE3(BLITZ_INDEX__, _, __LINE__))
 
@@ -40,20 +40,20 @@
 
 
 
-//---------------------------------------------------
+                                                     
 
 #define E__NFValue(I)  const Value& COMBINE(p, I)
 #define E__NFBody(I) String Format(const char *fmt, __List##I(E__NFValue));
 
 String Format(const char *fmt, const Value& p1); String Format(const char *fmt, const Value& p1, const Value& p2); String Format(const char *fmt, const Value& p1, const Value& p2, const Value& p3); String Format(const char *fmt, const Value& p1, const Value& p2, const Value& p3, const Value& p4); String Format(const char *fmt, const Value& p1, const Value& p2, const Value& p3, const Value& p4, const Value& p5);
 
-// =============
+                
 
  static void s__sBLITZ_INDEX_____LINE___fn(); static UPP::Callinit             s__sBLITZ_INDEX_____LINE__(s__sBLITZ_INDEX_____LINE___fn, __FILE__, __LINE__); static void s__sBLITZ_INDEX_____LINE___fn() {
 	Value::SvoRegister<Color>("Color");
 }
 
-// =============
+                
 
 
  #define max (a, b) (a < b ? b : a)
@@ -70,11 +70,11 @@
 
 (A < B ? B : A)
 
-// =============
+                
 
-#define macro something // comment
+#define macro something           
 
- something 
+ something           
 something
 //$- comment
 
@@ -91,7 +91,7 @@ something
 
 (4) [3] {2} <1>
 
-// =============
+                
 
 #define MACRO(x)     123+x
 
@@ -109,7 +109,7 @@ something
  
  123+x
 
-// =============
+                
 
 #undef _STCONS
 
