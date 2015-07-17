@@ -17,15 +17,16 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	l.SetImage(logo);
 	Size sz = Size(isz.cx, isz.cy/* + 80*/);
 	String h;
-	h = "\1[> [R45 [@r/ The][@b IDE]][A4` ";
+	h = "\1[= [R45 [@r/ The][@b IDE]][A4` ";
 	h << IDE_VERSION;
 	if(sizeof(void *) == 8)
 		h << " (64 bit)";
 #ifdef GUI_GTK
 	h << " (Gtk)";
+	h << "      ";
 #endif
 	v = h;
-	v.HSizePos(10, 10).TopPos(10, 40);
+	v.HSizePos(256, 10).TopPos(10, 40);
 	l.Add(v);
 	v.SetInk(Blend(Gray, Blue));
 	const CppBase& cpp = CodeBase();
