@@ -156,7 +156,7 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	String txt[2];
+	String txt[2]; // does not work!!!!
 	txt[1].
 }
 
