@@ -1,4 +1,4 @@
-//$ class Ctrl {
+//$ class Upp::Ctrl {
 private:
 	static Ptr<Ctrl>      desktop;
 	static Vector<Ctrl *> topctrl;
