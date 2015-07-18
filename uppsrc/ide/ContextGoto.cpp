@@ -233,7 +233,7 @@ void Ide::ContextGoto0(int pos)
 		}
 	}
 	
-	Vector<String> ns = GetNamespaces(parser);
+	Vector<String> ns = parser.GetNamespaces();
 
 	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
 		Vector<String> todo;
