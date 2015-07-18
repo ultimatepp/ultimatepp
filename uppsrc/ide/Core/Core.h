@@ -397,6 +397,7 @@ String Join(const String& a, const String& b, const char *sep = " ");
 
 String GetExeExt();
 String NormalizeExePath(String exePath);
+String NormalizePathSeparator(String path);
 
 struct Builder {
 	Host            *host;

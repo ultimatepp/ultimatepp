@@ -583,3 +583,14 @@ String NormalizeExePath(String exePath)
 	
 	return exePath;
 }
+
+String NormalizePathSeparator(String path)
+{
+	#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
+		path.Replace("/", DIR_SEPS);
+	#else
+		path.Replace("\\", DIR_SEPS);
+	#endif
+	
+	return path;
+}

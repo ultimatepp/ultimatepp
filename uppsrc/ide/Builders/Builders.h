@@ -185,8 +185,10 @@ public:
 	
 protected:
 	bool MovePackageFileToAndroidProject(const String& src, const String& dest); 
-	bool RealizePackageSourcesDirectory(const String& packageName);
-
+	bool RealizePackageJavaSourcesDirectory(const String& packageName);
+	
+	bool RealizeLinkDirectories() const;
+	
 protected:
 	bool ValidateBuilderEnviorement();
 	void PutErrorOnConsole(const String& msg);
@@ -212,13 +214,17 @@ protected:
 	String GetAndroidProjectClassesDir() const;
 	String GetAndroidProjectBinDir() const;
 	
+	String GetAndroidProjectManifestPath() const;
 	String GetAndroidProjectJniMakeFilePath() const;
 	String GetAndroidProjectJniApplicationMakeFilePath() const;
 	
+protected:
 	String GetFilePathInAndroidProject(const String& nestDir,
 	                                   const String& packageName,
 	                                   const String& fileName) const;
 	
+	String RemoveDirNameFromFileName(String fileName) const;
+	String NormalizeModuleName(String moduleName) const;
 };
 
 void DeletePCHFile(const String& pch_file);
