@@ -476,7 +476,7 @@ void AssistEditor::Assist()
 		}
 		else {
 			GatherItems(parser.current_scope, false, in_types, true);
-			Vector<String> ns = GetNamespaces(parser);
+			Vector<String> ns = parser.GetNamespaces();
 			for(int i = 0; i < ns.GetCount(); i++)
 				if(parser.current_scope != ns[i]) // Do not scan namespace already scanned
 					GatherItems(ns[i], false, in_types, true);

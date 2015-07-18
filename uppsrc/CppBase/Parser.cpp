@@ -1798,13 +1798,17 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 		}
 }
 
-/*
-void Parse(Stream& s, CppBase& base, int file, int filetype, const String& title, Callback2<int, const String&> _err)
+Vector<String> Parser::GetNamespaces() const
 {
-	LTIMING("Parse");
-	Parser p;
-	p.Do(s, base, file, filetype, title, _err);
+	Vector<String> ns;
+	Vector<String> h = Split(current_scope, ':');
+	while(h.GetCount()) {
+		ns.Add(Join(h, "::"));
+		h.Drop();
+	}
+	ns.Append(Split(context.namespace_using, ';'));
+	ns.Add(""); // Add global namespace too
+	return ns;
 }
-*/
 
 END_UPP_NAMESPACE

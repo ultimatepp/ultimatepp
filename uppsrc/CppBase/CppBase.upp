@@ -20,6 +20,7 @@ file
 	ScopeInfo.cpp,
 	Qualify.cpp,
 	CppItem.cpp,
+	Expression.cpp,
 	Info readonly separator,
 	Copying;
 

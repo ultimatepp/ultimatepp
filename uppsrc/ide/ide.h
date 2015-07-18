@@ -284,10 +284,11 @@ public:
 };
 
 int    memcmp_i(const char *s, const char *t, int n);
-String ParseTemplatedType(const String& type, Vector<String>& tparam);
+
 String ResolveTParam(const String& type, const Vector<String>& tparam);
 void   ResolveTParam(Vector<String>& type, const Vector<String>& tparam);
 String Qualify(const String& scope, const String& type, const String& usings);
+
 int    CharFilterMacro(int c);
 int    CharFilterFileName(int c);
 

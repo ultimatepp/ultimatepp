@@ -617,6 +617,8 @@ public:
 
 	const SrcFile &getPreprocessedFile() { return file; }
 
+	Vector<String> GetNamespaces() const;
+
 	void  Do(Stream& in, CppBase& _base, int file, int filetype,
 	         const String& title, Callback2<int, const String&> _err,
 	         const Vector<String>& typenames,
@@ -660,7 +662,12 @@ String QualifyKey(const CppBase& base, const String& scope, const String& type, 
 
 void   Qualify(CppBase& base);
 
-// void Parse(Stream& s, CppBase& base, int file, int filetype, const String& title, Callback2<int, const String&> err);
+const Array<CppItem>& GetTypeItems(const CppBase& codebase, const String& type);
+String                ParseTemplatedType(const String& type, Vector<String>& tparam);
+String                ResolveTParam(const CppBase& codebase, const String& type, const Vector<String>& tparam);
+void                  ResolveTParam(const CppBase& codebase, Vector<String>& type, const Vector<String>& tparam);
+
+Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const Vector<String>& xp);
 
 END_UPP_NAMESPACE
 
