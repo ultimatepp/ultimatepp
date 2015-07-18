@@ -69,7 +69,6 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		String fileName       = NormalizePathSeparator(pkg[i]);
 		String packageFile    = AppendFileName(package, fileName);
 		String packageFileDir = GetFileFolder(packageFile);
-		packageFileDir.Find(package + DIR_SEPS);
 		
 		if(isResourcesPackage) {
 			if(packageFileDir.Find(package + DIR_SEPS) != -1)
