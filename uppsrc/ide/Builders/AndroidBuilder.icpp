@@ -39,10 +39,6 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	Package pkg;
 	pkg.Load(uppManifestPath);
 	
-	if(!isResourcesPackage)
-		if(!RealizePackageSourcesDirectory(package))
-			return false;
-	
 	Vector<String> javaSourceFiles;
 	Vector<String> nativeSourceFiles;
 	Vector<String> nativeSourceFilesInPackage;
@@ -70,23 +66,29 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		
 		String filePath       = SourcePath(package, pkg[i]);
 		String fileExt        = ToLower(GetFileExt(filePath));
-		String fileName       = GetFileName(filePath);
-		String packageFile    = AppendFileName(package, pkg[i]);
+		String fileName       = NormalizePathSeparator(pkg[i]);
+		String packageFile    = AppendFileName(package, fileName);
 		String packageFileDir = GetFileFolder(packageFile);
 		packageFileDir.Find(package + DIR_SEPS);
 		
 		if(isResourcesPackage) {
 			if(packageFileDir.Find(package + DIR_SEPS) != -1)
 				packageFileDir.Remove(0, String(package + DIR_SEPS).GetCount());
-			String filePathInAndroidProject = GetFilePathInAndroidProject(resourcesDir, packageFileDir, fileName);
-				
+			String filePathInAndroidProject = GetFilePathInAndroidProject(resourcesDir,
+			                                                              packageFileDir,
+			                                                              fileName);
+			
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
 				error = true;
 		}
 		else
 		if(fileExt == ".java") {
-			String filePathInAndroidProject = GetFilePathInAndroidProject(javaSourcesDir, packageFileDir, fileName);
+			String filePathInAndroidProject = GetFilePathInAndroidProject(javaSourcesDir,
+			                                                              packageFileDir,
+			                                                              fileName);
 			
+			if(!RealizePackageJavaSourcesDirectory(package))
+				return false;
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
 				return false;
 			
@@ -96,7 +98,9 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
 		   fileExt == ".c"    ||
 		   fileExt == ".hpp"  || fileExt == ".hxx" || fileExt == ".h") {
-			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir, packageFileDir, fileName);
+			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir,
+			                                                              packageFileDir,
+			                                                              fileName);
 			
 			nativeSourceFilesOptions.Add(globalOptions);			
 			if(pkg[i].noblitz)
@@ -107,9 +111,9 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 				return false;
 			
 			if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
-			   fileExt == "c") {
+			   fileExt == ".c") {
 				nativeSourceFiles.Add(filePathInAndroidProject);
-				nativeSourceFilesInPackage.Add(packageFile);
+				nativeSourceFilesInPackage.Add(NormalizePathSeparator(packageFile));
 			}
 		}
 		else
@@ -120,7 +124,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 					return false;
 				}
 				
-				if(!FileCopy(filePath, GetAndroidProjectDir() + DIR_SEPS + "AndroidManifest.xml"))
+				if(!FileCopy(filePath, GetAndroidProjectManifestPath()))
 					return false;
 					
 				androidManifestPath = filePath;
@@ -163,7 +167,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		
 		linkfile.Add(compileCmd);
 	}
-
+	
 	if(!isResourcesPackage && !error && !nativeSourceFiles.IsEmpty()) {
 		if(isBlitz) {
 			BlitzBuilderComponent bc(this);
@@ -196,9 +200,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 			}
 		}
 		
-		AndroidModuleMakeFile pkgMakeFile(package);
-	
-		// TODO: improve sieve mechanisme
+		AndroidModuleMakeFile pkgMakeFile(NormalizeModuleName(package));
 		for(int i = 0; i < nativeSourceFilesInPackage.GetCount(); i++)
 			pkgMakeFile.AddSourceFile(nativeSourceFilesInPackage[i]);
 		
@@ -224,7 +226,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 }
 
 bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
-	                         bool createmap)
+	                      bool createmap)
 {
 	if(!ValidateBuilderEnviorement())
 		return false;
@@ -232,6 +234,8 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	PutConsole("Building Android Project");
 	StringStream ss;
 	if(!GenerateRFile())
+		return false;
+	if(!RealizeLinkDirectories())
 		return false;
 	
 	// We need to compile java packages in this place, because we need to generate "R.java" file before...
@@ -279,7 +283,6 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	if(DirectoryExists(classesDir)) {
 		PutConsole("-----");
 		PutConsole("Creating dex file...");
-		RealizeDirectory(GetAndroidProjectBinDir());
 		String dxCmd;
 		dxCmd << NormalizeExePath(androidSDK.DxPath());
 		dxCmd << " --dex ";
@@ -399,9 +402,19 @@ bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const St
 	return true;
 }
 
-bool AndroidBuilder::RealizePackageSourcesDirectory(const String& packageName)
+bool AndroidBuilder::RealizePackageJavaSourcesDirectory(const String& packageName)
 {
-	return RealizeDirectory(GetAndroidProjectJavaSourcesDir() + DIR_SEPS + packageName);
+	String dir = GetAndroidProjectJavaSourcesDir() + DIR_SEPS + packageName;
+	
+	return DirectoryExists(dir) || RealizeDirectory(dir);
+}
+
+bool AndroidBuilder::RealizeLinkDirectories() const
+{
+	if(!RealizeDirectory(GetAndroidProjectBinDir()))
+		return false;
+	
+	return true;
 }
 
 bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
@@ -505,16 +518,41 @@ void AndroidBuilder::GenerateApplicationMakeFile()
 
 void AndroidBuilder::GenerateMakeFile()
 {
+	const String makeFileName = "Android.mk";
+	const String baseDir = GetAndroidProjectJniSourcesDir();
 	Vector<String> modules;
-	for(FindFile ff(AppendFileName(GetAndroidProjectJniSourcesDir(), "*")); ff; ff.Next()) {
-		if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder())
-			modules.Add(ff.GetName());
+	
+	BiVector<String> dirs;
+	dirs.AddHead(baseDir);
+	while(!dirs.IsEmpty()) {
+		String currentDir = dirs.Head();
+		for(FindFile ff1(AppendFileName(currentDir, "*")); ff1; ff1.Next()) {
+			if(!ff1.IsHidden() && !ff1.IsSymLink() && ff1.IsFolder()) {
+				bool isEmpty = true;
+				for(FindFile ff2(AppendFileName(ff1.GetPath(), "*")); ff2; ff2.Next()) {
+					if(!ff2.IsHidden() && !ff2.IsSymLink() && ff2.IsFile()) {
+						isEmpty = false;
+						break;
+					}
+				}
+				
+				if(!isEmpty) {
+					String moduleName = ff1.GetPath();
+					moduleName.Remove(moduleName.Find(baseDir), baseDir.GetCount() + 1);
+					modules.Add(moduleName);
+				}
+				else {
+					dirs.AddTail(ff1.GetPath());
+				}
+			}
+		}
+		dirs.DropHead();
 	}
 	
 	AndroidMakeFile makeFile;
 	makeFile.AddHeader();
 	for(int i = 0; i < modules.GetCount(); i++)
-		makeFile.AddInclusion(modules[i] + DIR_SEPS + "Android.mk");
+		makeFile.AddInclusion(modules[i] + DIR_SEPS + makeFileName);
 	
 	UpdateFile(GetAndroidProjectJniMakeFilePath(), makeFile.ToString());
 }
@@ -668,6 +706,11 @@ String AndroidBuilder::GetAndroidProjectBinDir() const
 
 // -------------------------------------------------------------------
 
+String AndroidBuilder::GetAndroidProjectManifestPath() const
+{
+	return GetAndroidProjectDir() + DIR_SEPS + "AndroidManifest.xml";
+}
+
 String AndroidBuilder::GetAndroidProjectJniMakeFilePath() const
 {
 	return GetAndroidProjectJniSourcesDir() + DIR_SEPS + "Android.mk";
@@ -684,9 +727,22 @@ String AndroidBuilder::GetFilePathInAndroidProject(const String& nestDir,
 	                                               const String& packageName,
 	                                               const String& fileName) const
 {
-	return nestDir + DIR_SEPS + packageName + DIR_SEPS + fileName;
+	return nestDir + DIR_SEPS + packageName + DIR_SEPS + RemoveDirNameFromFileName(fileName);
+}	             
+
+String AndroidBuilder::RemoveDirNameFromFileName(String fileName) const
+{
+	int idx = fileName.ReverseFind(DIR_SEPS);
+	if(idx >= 0)
+		fileName.Remove(0, idx);
+	return fileName;
 }
-	             
+
+String AndroidBuilder::NormalizeModuleName(String moduleName) const
+{
+	moduleName.Replace(DIR_SEPS, "_");
+	return moduleName;
+}
 
 // -------------------------------------------------------------------
 

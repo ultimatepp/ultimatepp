@@ -1,7 +1,7 @@
 topic "Android builder";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0;a83; [*+184 Working with Android builder]&]
+[s0;a83; [*6 Working with Android builder]&]
 [s0;b42; [*4 Introduction]&]
 [s0;b42;a42; [2 Google Android is lead mobile operating system all 
 around the world. In this reference, we want to show you how 
