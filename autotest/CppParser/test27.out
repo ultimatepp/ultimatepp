@@ -1,0 +1,8 @@
+Alfa {
+	STRUCT, name: Alfa, qitem: struct, qtype: Alfa, qptype: , natural: struct Alfa, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: unsigned x:5, line 2, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: unsigned y:10, line 3, using 
+	INSTANCEVARIABLE, name: h, qitem: h, qtype: String, qptype: , natural: String h, line 4, using 
+}
+<locals> {
+}

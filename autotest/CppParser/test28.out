@@ -1,0 +1,23 @@
+Vector {
+	STRUCTTEMPLATE, name: Vector, qitem: struct, qtype: Vector, qptype: , natural: template <class T> struct Vector, line 1, using 
+	INSTANCEFUNCTION, name: begin, qitem: begin(), qtype: Vector::Iterator, qptype: , natural: Iterator begin(), line 8, using 
+}
+Vector::Iterator {
+	STRUCT, name: Iterator, qitem: struct, qtype: Vector::Iterator, qptype: , natural: struct Iterator, line 3, using 
+	INSTANCEFUNCTIONTEMPLATE, name: operator->, qitem: operator->(T), qtype: V, qptype: 0, natural: template <class V> V operator->(T), line 4, using 
+}
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 11, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: x, qptype: , natural: xy, line 11, using 
+}
+<globals> {
+	FUNCTION, name: Foo, qitem: Foo(), qtype: , qptype: , natural: void Foo(), line 13, using 
+}
+<locals> {
+x Point, line: 14
+v Vector<Point>, line: 15
+y Point, line: 16
+vv Vector<Point>, line: 17
+i Point, line: 18
+ii Point, line: 19
+}

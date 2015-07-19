@@ -1,0 +1,5 @@
+struct Alfa {
+	unsigned x:5;
+	unsigned y:10;
+	String   h;
+};

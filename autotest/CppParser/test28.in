@@ -1,0 +1,19 @@
+template <class T>
+struct Vector {
+	struct Iterator {
+		template<class V>
+		V operator->(T);
+	};
+
+	Iterator begin();
+};
+
+struct Point { x, y };
+
+void Foo() {
+	Point x;
+	Vector<Point> v;
+	const auto& y = x;
+	auto vv = v;
+	for(auto i : v) {
+		for(const auto& ii : vv) {
