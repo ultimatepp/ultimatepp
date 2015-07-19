@@ -204,7 +204,7 @@ String Parser::ResolveAutoType()
 	if(lex == ':') // resolve for declaration, like 'for(auto i: vector)'
 		xp << "." << "begin" << "()" << "->"; // incorrect, should rather use operator*(), but sufficient for now
 	Index<String> s = GetExpressionType(*base, *this, xp);
-	int i = FindMin(s); // Ugly hack: we are not resolving overloading at all, so just choose stable type if there are more
+	int i = FindMax(s); // Ugly hack: we are not resolving overloading at all, so just choose stable type if there are more, not Null
 	return i < 0 ? String() : s[i];
 }
 	

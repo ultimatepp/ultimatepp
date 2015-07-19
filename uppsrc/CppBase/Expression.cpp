@@ -151,6 +151,70 @@ String ExpressionTyper::ResolveReturnType(const CppItem& m, const Vector<String>
 	return m.qtype;
 }
 
+Vector<String> SplitTScope(const char *s)
+{
+	Vector<String> r;
+	const char *b = s;
+	while(*s) {
+		if(*s == '<') {
+			s++;
+			int lvl = 0;
+			while(*s) {
+				int c = *s++;
+				if(c == '>') {
+					if(lvl == 0)
+						break;
+					lvl--;
+				}
+				if(c == '<')
+					lvl++;
+			}
+		}
+		else
+		if(*s == ':') {
+			if(s > b)
+				r.Add(String(b, s));
+			while(*s == ':')
+				s++;
+			b = s;
+		}
+		else
+			s++;
+	}
+	if(s > b)
+		r.Add(String(b, s));
+	return r;
+}
+
+String AddTParams(const String& type, const String& ttype)
+{ // Upp::Vector::Foo, Upp::Vector<Upp::String>::Bar -> Upp::Vector<Upp::String>::Foo
+	if(ttype.Find('<') < 0)
+		return type;
+	Vector<String> t = SplitTScope(type);
+	Vector<String> tt = SplitTScope(ttype);
+	int i = 0;
+	String r;
+	while(i < t.GetCount() && i < tt.GetCount()) {
+		int q = tt[i].Find('<');
+		if(q < 0)
+			q = tt[i].GetLength();
+		if(tt[i].Mid(0, q) != t[i])
+			break;
+		if(i)
+			r << "::";
+		r << tt[i];
+		i++;
+	}
+	while(i < t.GetCount()) {
+		if(i)
+			r << "::";
+		r << t[i];
+		i++;
+	}
+	LLOG("AddTParam " << type << ", " << ttype << " -> " << r);
+	return r;
+}
+
 void ExpressionTyper::ExpressionType(const String& ttype, int ii,
                                      bool variable, bool can_shortcut_operator,
                                      Index<String>& visited_bases, int lvl)
@@ -176,7 +240,7 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
 		for(int i = 0; i < n.GetCount(); i++)
 			if(n[i].kind == TYPEDEF) {
 				LLOG("typedef -> " << n[i].qtype);
-				ExpressionType(n[i].qtype, ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
+				ExpressionType(AddTParams(ResolveTParam(codebase, n[i].qtype, tparam), ttype), ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
 				return;
 			}
 	String id = xp[ii];
@@ -204,19 +268,14 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
 		return;
 	}
 	LDUMP(id);
-	Index<String> done;
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
 			LLOG("Member " << m.qtype << " " << m.name);
-			String t = ResolveReturnType(m, tparam);
-			if(done.Find(t) < 0) {
-				bool skipfnpars = m.IsCode() && ii + 1 < xp.GetCount() && xp[ii + 1] == "()";
-				if(t.StartsWith(type + "::")) // Resolve Vector::Iterator -> Vector<String>::Iterator
-					t.Insert(type.GetCount(), "<" + Join(tparam, ",") + ">");
-				ExpressionType(ResolveTParam(codebase, t, tparam), ii + skipfnpars + 1,
-				               m.IsData() && !m.isptr, lvl + 1);
-			}
+			String t = AddTParams(ResolveReturnType(m, tparam), ttype);
+			bool skipfnpars = m.IsCode() && ii + 1 < xp.GetCount() && xp[ii + 1] == "()";
+			ExpressionType(ResolveTParam(codebase, t, tparam), ii + skipfnpars + 1,
+			               m.IsData() && !m.isptr, lvl + 1);
 		}
 	}
 	
