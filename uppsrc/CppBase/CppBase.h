@@ -452,7 +452,6 @@ struct Parser {
 		bool    s_static;
 		bool    s_extern;
 		bool    s_register;
-		bool    s_auto;
 		bool    s_mutable;
 		bool    s_explicit;
 		bool    s_virtual;
@@ -668,6 +667,7 @@ String                ResolveTParam(const CppBase& codebase, const String& type,
 void                  ResolveTParam(const CppBase& codebase, Vector<String>& type, const Vector<String>& tparam);
 
 Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const Vector<String>& xp);
+Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const char *s);
 
 END_UPP_NAMESPACE
 

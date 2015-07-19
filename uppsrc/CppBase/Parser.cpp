@@ -332,7 +332,7 @@ void Parser::Context::operator<<=(const Context& t)
 Parser::Decla::Decla()
 {
 	function = type_def = false;
-	s_static = s_auto = s_register = s_extern = s_mutable = s_explicit = s_virtual = false;
+	s_static = s_register = s_extern = s_mutable = s_explicit = s_virtual = false;
 	isfriend = istemplate = istructor = isptr = nofn = false;
 	castoper = oper = false;
 }
@@ -696,25 +696,29 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 	const char *p = lex.Pos();
 	bool cs = false;
 	Index<int> cix;
-	if(Key(t_dblcolon))
-		d.type << "::";
-	Check(lex.IsId(), "Name expected");
-	while(lex.IsId()) {
-		d.type << TType();
-		if(cix.Find(lex) >= 0)
-			cs = true;
-		else
-			cix.Add(lex);
-		++lex;
-		if(lex == '<')
-			d.type << TemplateParams();
-		if(Key(t_dblcolon)) {
+	if(Key(tk_auto))
+		d.type = "*";
+	else {
+		if(Key(t_dblcolon))
 			d.type << "::";
-			if(Key('~'))
+		Check(lex.IsId(), "Name expected");
+		while(lex.IsId()) {
+			d.type << TType();
+			if(cix.Find(lex) >= 0)
 				cs = true;
+			else
+				cix.Add(lex);
+			++lex;
+			if(lex == '<')
+				d.type << TemplateParams();
+			if(Key(t_dblcolon)) {
+				d.type << "::";
+				if(Key('~'))
+					cs = true;
+			}
+			else
+				break;
 		}
-		else
-			break;
 	}
 	return cs ? String(p, lex.Pos()) : String();
 }
@@ -848,6 +852,11 @@ void Parser::Declarator(Decl& d, const char *p)
 					++lex;
 		}
 	}
+	if(*d.type == '*') { // C++11 auto declaration
+		Index<String> s = GetExpressionType(*base, *this, lex.Pos());
+		int i = FindMin(s); // Ugly hack: we are not resolving overloading at all, so just choose stable type if there are more
+		d.type = i < 0 ? String() : s[i];
+	}
 	EatInitializers();
 	while(Key('[')) {
 		d.isptr = true;
@@ -903,9 +912,6 @@ void Parser::ReadMods(Decla& d)
 		else
 		if(Key(tk_extern))
 			d.s_extern = true;
-		else
-		if(Key(tk_auto))
-			d.s_auto = true;
 		else
 		if(Key(tk_register))
 			d.s_register = true;
@@ -1045,7 +1051,7 @@ void Parser::Locals(const String& type)
 	Array<Parser::Decl> d = Declaration(true, true, Null, Null);
 	for(int i = 0; i < d.GetCount(); i++) {
 		Local& l = local.Add(d[i].name);
-		l.type = type;
+		l.type = *type == '*' ? d[i].type : type;
 		l.isptr = d[i].isptr;
 		l.line = line + 1;
 	}
@@ -1095,7 +1101,7 @@ bool Parser::VCAttribute()
 bool Parser::TryDecl()
 { // attempt to interpret code as local variable declaration
 	for(;;) {
-		if(lex[0] == tk_static || lex[0] == tk_const || lex[0] == tk_auto ||
+		if(lex[0] == tk_static || lex[0] == tk_const ||
 	       lex[0] == tk_register || lex[0] == tk_volatile)
 	    	++lex;
 		else
@@ -1106,13 +1112,14 @@ bool Parser::TryDecl()
 	int q = 0;
 	if(t == tk_int || t == tk_bool || t == tk_float || t == tk_double || t == tk_void ||
 	   t == tk_long || t == tk_signed || t == tk_unsigned || t == tk_short ||
-	   t == tk_char || t == tk___int8 || t == tk___int16 || t == tk___int32 || t == tk___int64) {
+	   t == tk_char || t == tk___int8 || t == tk___int16 || t == tk___int32 || t == tk___int64 ||
+	   t == tk_auto) {
 	    q++;
-		while(lex[q] == '*' || lex[q] == '&' || lex[q] == t_and) // t_and is r-value here
+		while(lex[q] == '*' || lex[q] == '&' || lex[q] == t_and || lex[q] == tk_const) // t_and is r-value here
 			q++;
 		if(!lex.IsId(q))
 			return false;
-		Locals(Null);
+		Locals(t == tk_auto ? "*" : String());
 		return true;
 	}
 	String type;
