@@ -52,6 +52,16 @@ void Autocomplete()
 }
 
 void Autocomplete()
+{ // Check that this displays One autocomplete (not String)
+	One<String>().
+}
+
+void Autocomplete()
+{ // Displays String, it is OK as Single is function
+	Single<String>().
+}
+
+void Autocomplete()
 {
 	Single<String>()->
 }
@@ -157,7 +167,13 @@ void Autocomplete()
 void Autocomplete()
 {
 	Vector<String> v;
-	v.begin().
+	v.begin()->
+}
+
+void Autocomplete()
+{
+	Array<String> v;
+	v.begin()->
 }
 
 void Autocomplete()
@@ -169,6 +185,13 @@ void Autocomplete()
 
 void Autocomplete()
 {
+	Array<String> v;
+	for(const auto& i : v)
+		i.
+}
+
+void Autocomplete()
+{
 	Vector<String> v;
 	for(const auto& i : v)
 		i.
@@ -176,7 +199,14 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	String txt[2]; // does not work!!!!
+	std::vector<std::string> v; // does not work yet!!!
+	for(const auto& i : v)
+		i.
+}
+
+void Autocomplete()
+{
+	String txt[2]; // does not work yet!!!!
 	txt[1].
 }
 
