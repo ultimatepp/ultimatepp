@@ -156,6 +156,26 @@ void Autocomplete()
 
 void Autocomplete()
 {
+	Vector<String> v;
+	v.begin().
+}
+
+void Autocomplete()
+{
+	Vector<String> v;
+	auto x = v[0];
+	x.
+}
+
+void Autocomplete()
+{
+	Vector<String> v;
+	for(const auto& i : v)
+		i.
+}
+
+void Autocomplete()
+{
 	String txt[2]; // does not work!!!!
 	txt[1].
 }
