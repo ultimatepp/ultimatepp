@@ -16,6 +16,7 @@ file
 	Pre.cpp,
 	cpplex.cpp,
 	Parser.cpp,
+	Body.cpp,
 	Base.cpp,
 	ScopeInfo.cpp,
 	Qualify.cpp,

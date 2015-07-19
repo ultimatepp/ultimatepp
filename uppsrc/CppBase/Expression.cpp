@@ -50,7 +50,6 @@ String ParseTemplatedType(const String& type, Vector<String>& tparam)
 				}
 			}
 			tparam.Add(t);
-			break;
 		}
 		else
 			r.Cat(*s++);
@@ -213,6 +212,8 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
 			String t = ResolveReturnType(m, tparam);
 			if(done.Find(t) < 0) {
 				bool skipfnpars = m.IsCode() && ii + 1 < xp.GetCount() && xp[ii + 1] == "()";
+				if(t.StartsWith(type + "::")) // Resolve Vector::Iterator -> Vector<String>::Iterator
+					t.Insert(type.GetCount(), "<" + Join(tparam, ",") + ">");
 				ExpressionType(ResolveTParam(codebase, t, tparam), ii + skipfnpars + 1,
 				               m.IsData() && !m.isptr, lvl + 1);
 			}
@@ -359,11 +360,6 @@ Vector<String> MakeXP(const char *s)
 	}
 	catch(CParser::Error) {}
 	return xp;
-}
-
-Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const char *s)
-{
-	return GetExpressionType(codebase, parser, MakeXP(s));
 }
 
 };

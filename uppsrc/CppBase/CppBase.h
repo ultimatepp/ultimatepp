@@ -512,6 +512,7 @@ struct Parser {
 
 	bool   Key(int code);
 	bool   EatBody();
+	String ResolveAutoType();
 
 	void   Cv();
 	String TType();
@@ -667,7 +668,7 @@ String                ResolveTParam(const CppBase& codebase, const String& type,
 void                  ResolveTParam(const CppBase& codebase, Vector<String>& type, const Vector<String>& tparam);
 
 Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const Vector<String>& xp);
-Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const char *s);
+Vector<String> MakeXP(const char *s);
 
 END_UPP_NAMESPACE
 
