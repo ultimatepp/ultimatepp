@@ -286,4 +286,84 @@ Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, c
 	return ExpressionTyper(codebase, parser, xp).ExpressionType();
 }
 
+void SkipPars(CParser& p)
+{
+	int lvl = 1;
+	while(lvl && !p.IsEof())
+		if(p.Char('(') || p.Char('['))
+			lvl++;
+		else
+		if(p.Char(')') || p.Char(']'))
+			lvl--;
+		else
+			p.SkipTerm();
+}
+
+Vector<String> MakeXP(const char *s)
+{
+	Vector<String> xp;
+	try {
+		CParser p(s);
+		while(!p.IsChar2(':', ':') && !p.IsId() && !p.IsEof())
+			p.SkipTerm();
+		while(!p.IsEof()) {
+			String id;
+			if(p.IsChar2(':', ':') || p.IsId()) {
+				for(;;)
+					if(p.Char2(':', ':'))
+						id.Cat("::");
+					else
+					if(p.IsId())
+						id.Cat(p.ReadId());
+					else
+						break;
+				const char *s = p.GetPtr();
+				if(p.Char('<')) {
+					int lvl = 1;
+					while(lvl && !p.IsEof()) {
+						if(p.Char('<'))
+							lvl++;
+						else
+						if(p.Char('>'))
+							lvl--;
+						else
+							p.SkipTerm();
+					}
+					while(s < p.GetPtr()) {
+						if((byte)*s > ' ')
+							id.Cat(*s);
+						s++;
+					}
+				}
+				xp.Add(id);
+			}
+			else
+			if(p.Char('(')) {
+				xp.Add("()");
+				SkipPars(p);
+			}
+			else
+			if(p.Char('[')) {
+				xp.Add("[]");
+				SkipPars(p);
+			}
+			else
+			if(p.Char2('-', '>'))
+				xp.Add("->");
+			else
+			if(p.Char('.'))
+				xp.Add(".");
+			else
+				break;
+		}
+	}
+	catch(CParser::Error) {}
+	return xp;
+}
+
+Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const char *s)
+{
+	return GetExpressionType(codebase, parser, MakeXP(s));
+}
+
 };
