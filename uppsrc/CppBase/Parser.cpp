@@ -867,10 +867,11 @@ void Parser::Declarator(Decl& d, const char *p)
 				++lex;
 		}
 	}
-	if(Key('=') || (inbody && lex == '(')) {
+	if(Key('=') || (inbody && lex == '(')) { // TODO: Add C++11 initializers here (?)
 		int level = 0;
 		int tlevel = 0;
 		for(;;) {
+			TryLambda();
 			if(lex == t_eof  || lex == ';'
 			   || level == 0 && ((lex == ',' && tlevel == 0) || lex == ')'))
 				break;

@@ -166,31 +166,31 @@ enum t_Terms {
 	t_integer,
 	t_double,
 	t_character,
-	t_dblcolon,
-	t_mulass,
-	t_divass,
-	t_modass,
-	t_xorass,
-	t_neq,
-	t_dot_asteriks,
-	t_elipsis,
-	t_inc,
-	t_addass,
-	t_dec,
-	t_arrow_asteriks,
-	t_arrow,
-	t_subass,
-	t_and,
-	t_andass,
-	t_or,
-	t_orass,
-	t_eq,
-	t_shl,
-	t_shlass,
-	t_le,
-	t_shr,
-	t_shrass,
-	t_ge,
+	t_dblcolon,       // ::
+	t_mulass,         // *=
+	t_divass,         // /=
+	t_modass,         // %=
+	t_xorass,         // ^=
+	t_neq,            // <>
+	t_dot_asteriks,   // .*
+	t_elipsis,        // ...
+	t_inc,            // ++
+	t_addass,         // +=
+	t_dec,            // -
+	t_arrow_asteriks, // ->*
+	t_arrow,          // ->
+	t_subass,         // -=
+	t_and,            // &
+	t_andass,         // &=
+	t_or,             // |
+	t_orass,          // |=
+	t_eq,             // ==
+	t_shl,            // <<
+	t_shlass,         // <<=
+	t_le,             // <=
+	t_shr,            // >>
+	t_shrass,         // >>=
+	t_ge,             // >=
 	te_integeroverflow,
 	te_badcharacter,
 	te_badstring,
@@ -513,6 +513,8 @@ struct Parser {
 	bool   Key(int code);
 	bool   EatBody();
 	String ResolveAutoType();
+	void   TryLambda();
+	bool   Skipars(int& q);
 
 	void   Cv();
 	String TType();

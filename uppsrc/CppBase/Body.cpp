@@ -177,10 +177,75 @@ void Parser::Statement()
 		for(;;) {
 			if(lex == t_eof)
 				ThrowError("");
+			TryLambda();
 			if(Key(';') || lex == '{' || lex == '}' || lex >= tk_if && lex <= tk_do)
 				break;
 			++lex;
 		}
+}
+
+bool Parser::Skipars(int& q)
+{
+	int par = lex[q];
+	q++;
+	int lvl = 1;
+	while(lex[q] != t_eof) {
+		int c = lex[q++];
+		if(c == '(' || c == '[' || c == '{')
+			lvl++;
+		else
+		if(c == ')' || c == ']' || c == '}') {
+			lvl--;
+			if(lvl == 0)
+				return c == decode(par, '(', ')', '[', ']', '{', '}', 0);
+		}
+	}
+	return false;
+}
+
+void Parser::TryLambda()
+{
+	if(lex != '[' || !dobody)
+		return;
+	int q = 0;
+	if(!Skipars(q))
+		return;
+	int params = q;
+	if(lex[q] == '(')
+		if(!Skipars(q))
+			return;
+	if(lex[q] == tk_mutable)
+		q++;
+	if(lex[q] == t_arrow) {
+		q++; // TODO: auto declaration could assign a type here
+		for(;;) {
+			if(lex[q] == ';' || lex[q] == t_eof)
+				return;
+			if(lex[q] == '{')
+				break;
+			q++;
+		}
+	}
+	if(lex[q] == '{') {
+		lex.Get(params);
+		if(Key('(')) {
+			Decl d;
+			Line();
+			ParamList(d);
+			for(int i = 0; i < d.param.GetCount(); i++) {
+				const Decla& p = d.param[i];
+				if(dobody) {
+					Local& l = local.Add(p.name);
+					l.type = p.type;
+					l.isptr = p.isptr;
+					l.line = line + 1;
+				}
+			}
+		}
+		while(lex != '{' && lex != t_eof)
+			++lex;
+		Statement();
+	}
 }
 
 bool Parser::EatBody()
