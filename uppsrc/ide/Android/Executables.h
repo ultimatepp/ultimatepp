@@ -7,20 +7,46 @@
 
 NAMESPACE_UPP
 
+class LogCat;
+
 class Adb : public Moveable<Adb> {
 public:
 	Adb(const String& path);
 	virtual ~Adb();
 	
 public:
+	String GetPath() const   { return this->path; }
+	String GetSerial() const { return this->serial; }
+	
+	void SetPath(const String& path)     { this->path = path; }
+	void SetSerial(const String& serial) { this->serial = serial; }
+	
+public:
 	String MakeListDevicesCmd() const;
-
-	String MakeInstallCmd(const String& serial, const String& apkPath) const;
-	String MakeInstallOnDeviceCmd(const String& apkPath) const;
-	String MakeInstallOnEmulatorCmd(const String& apkPath) const;
+	
+	String MakeCmd() const;
+	
+	String MakeInstallCmd(const String& apkPath) const;
+	String MakeInstallOnDefaultDeviceCmd(const String& apkPath) const;
+	String MakeInstallOnDefaultEmulatorCmd(const String& apkPath) const;
+	
+	String MakeLaunchOnDeviceCmd(const String& packageName, const String& activityName) const;
 	
 private:
 	String path;
+	String serial;
+};
+
+class LogCat : public Moveable<LogCat> {
+public:
+	LogCat();
+	virtual ~LogCat();
+
+public:
+	String MakeCmdByTag(const String& packageName) const;
+	String MakeCmdByTag(const Adb& adb, const String& packageName) const;
+	
+private:
 	
 };
 
@@ -32,7 +58,7 @@ public:
 	void SetJobs(int jobs)                       { this->jobs = jobs; }
 	void SetWorkingDir(const String& workingDir) { this->workingDir = workingDir; }
 	
-	String ToString() const;
+	String MakeCmd() const;
 	
 private:
 	String path;

@@ -32,8 +32,13 @@ public:
 public:
 	String GetBinDir() const        { return path + DIR_SEPS + "bin"; }
 	
+	String GetJarPath() const       { return GetBinDir() + DIR_SEPS + "jar" + GetExeExt(); }
 	String GetJavacPath() const     { return GetBinDir() + DIR_SEPS + "javac" + GetExeExt(); }
+	String GetJavadocPath() const   { return GetBinDir() + DIR_SEPS + "javadoc" + GetExeExt(); }
 	String GetJavahPath() const     { return GetBinDir() + DIR_SEPS + "javah" + GetExeExt(); }
+	String GetJavapPath() const     { return GetBinDir() + DIR_SEPS + "javap" + GetExeExt(); }
+	String GetJdbPath() const       { return GetBinDir() + DIR_SEPS + "jdb" + GetExeExt(); }
+	
 	String GetJarsignerPath() const { return GetBinDir() + DIR_SEPS + "jarsigner" + GetExeExt(); }
 	String GetKeytoolPath() const   { return GetBinDir() + DIR_SEPS + "keytool" + GetExeExt(); }
 	

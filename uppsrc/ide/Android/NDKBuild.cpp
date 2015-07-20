@@ -13,7 +13,7 @@ NDKBuild::~NDKBuild()
 	
 }
 
-String NDKBuild::ToString() const
+String NDKBuild::MakeCmd() const
 {
 	String cmd = NormalizeExePath(path);
 	if(!workingDir.IsEmpty())

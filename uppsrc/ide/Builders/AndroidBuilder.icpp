@@ -271,7 +271,7 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 		NDKBuild ndkBuild(androidNDK.GetNdkBuildPath());
 		ndkBuild.SetWorkingDir(GetAndroidProjectDir());
 		ndkBuild.SetJobs(GetHydraThreads());
-		if(Execute(ndkBuild.ToString(), ss) != 0 ) {
+		if(Execute(ndkBuild.MakeCmd(), ss) != 0 ) {
 			PutConsole(ss.GetResult());
 			return false;
 		}
