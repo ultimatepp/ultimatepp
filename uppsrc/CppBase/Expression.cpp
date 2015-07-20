@@ -394,35 +394,35 @@ Index<String> ExpressionTyper::ExpressionType()
 	LLOG("**** ExpressionType " << xp);
 	String type;
 	if(xp.GetCount() == 0)
-		return typeset;
+		return pick(typeset);
 	if(xp[0] == "this") {
 		LLOG("this: " << type);
 		ExpressionType(context_type, 1, false, 0);
-		return typeset;
+		return pick(typeset);
 	}
 	int q = parser.local.FindLast(xp[0]);
 	if(q >= 0) {
 		String type = Qualify(codebase, context_type, parser.local[q].type, parser.context.namespace_using);
 		LLOG("Found type local: " << type << " in scope: " << context_type);
 		ExpressionType(type, 1, !parser.local[q].isptr, 0);
-		return typeset;
+		return pick(typeset);
 	}
 	ExpressionType(context_type, 0, false, 0);
 	if(typeset.GetCount())
-		return typeset;
+		return pick(typeset);
 	if(xp.GetCount() >= 2 && xp[1] == "()") {
 		String qtype = Qualify(codebase, context_type, xp[0], parser.context.namespace_using);
 		Vector<String> tparam;
 		if(codebase.Find(ParseTemplatedType(qtype, tparam)) >= 0) {
 			LLOG("Is constructor " << qtype);
 			ExpressionType(qtype, 2, false, 0);
-			return typeset;
+			return pick(typeset);
 		}
 	}
 	Vector<String> ns = parser.GetNamespaces();
 	for(int i = 0; i < ns.GetCount(); i++)
 		ExpressionType(ns[i], 0, false, 0);
-	return typeset;
+	return pick(typeset);
 }
 
 Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const Vector<String>& xp)
