@@ -135,13 +135,13 @@ String QualifyIds(ScopeInfo& nf, const String& k, const String& usings, bool all
 		if(c == ':') {
 			const char *b = s++;
 			while(*s == ':' || iscid(*s)) s++;
-			if(all) {
+/*			if(all) {
 				if(iscid(*r.Last()))
 					r << ' ';
 				ScopeInfo nnf(nf.GetScope(), nf.base);
 				Qualify(r, nnf, b, s, usings);
 			}
-			else
+			else*/
 				r.Cat(b, s);
 		}
 		else
@@ -242,7 +242,7 @@ void QualifyPass2(CppBase& base)
 	}
 }
 
-void   Qualify(CppBase& base)
+void Qualify(CppBase& base)
 {
 	Md5Stream md5;
 	Vector<int> no = GetSortOrder(base.GetKeys());

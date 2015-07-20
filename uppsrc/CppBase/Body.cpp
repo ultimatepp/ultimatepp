@@ -1,6 +1,21 @@
 #include "CppBase.h"
 
+#define LLOG(x) // DLOG(x)
+
 NAMESPACE_UPP
+
+void Parser::Locals(const String& type)
+{
+	Line();
+	Array<Parser::Decl> d = Declaration(true, true, Null, Null);
+	for(int i = 0; i < d.GetCount(); i++) {
+		Local& l = local.Add(d[i].name);
+		l.type = *type == '*' ? d[i].type : type;
+		l.isptr = d[i].isptr;
+		l.line = line + 1;
+		LLOG("== Local variable " << d[i].name << ": " << l.type);
+	}
+}
 
 bool Parser::TryDecl()
 { // attempt to interpret code as local variable declaration
