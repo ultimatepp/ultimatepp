@@ -1,0 +1,9 @@
+struct Point { int x, y; }
+
+void Fn()
+{
+	auto x = [] {
+		Point a;
+		Point b;
+		Call([&,=a](Point c, Point d) mutable -> Point {
+			Point p;

@@ -1,0 +1,15 @@
+Point {
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 1, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 1, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 1, using 
+}
+<globals> {
+	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 3, using 
+}
+<locals> {
+a Point, line: 6
+b Point, line: 7
+c Point, line: 8
+d Point, line: 8
+p Point, line: 9
+}
