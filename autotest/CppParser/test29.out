@@ -1,0 +1,26 @@
+Upp {
+	NAMESPACE, name: Upp, qitem: namespace Upp, qtype: , qptype: , natural: namespace Upp, line 1, using 
+}
+Upp::Vector {
+	STRUCT, name: Vector, qitem: struct, qtype: Upp::Vector, qptype: , natural: struct Vector, line 3, using 
+}
+Upp::Vector::Iterator {
+	TYPEDEF, name: Iterator, qitem: typedef, qtype: T, qptype: , natural: typedef T *Iterator, line 4, using 
+}
+Upp::AMap {
+	STRUCTTEMPLATE, name: AMap, qitem: struct, qtype: Upp::AMap, qptype: , natural: template <class K, class T, class V, class HashFn> struct AMap, line 7, using 
+}
+Upp::AMap::Iterator {
+	TYPEDEF, name: Iterator, qitem: typedef, qtype: 2::Iterator, qptype: , natural: typedef typename V::Iterator Iterator, line 9, using 
+}
+Upp::VectorMap {
+	STRUCTTEMPLATE, name: VectorMap, qitem: struct, qtype: Upp::VectorMap, qptype: MoveableAndDeepCopyOption<Upp::VectorMap<0,1,2>>;Upp::AMap<0,1,Upp::Vector<1>,2>, natural: template <class K, class T, class HashFn = StdHash<K> > struct VectorMap : public MoveableAndDeepCopyOption<VectorMap<K, T, HashFn> >, public AMap< K, T, Vector<T>, HashFn > , line 12, using 
+}
+Upp::VectorMap::Iterator {
+	TYPEDEF, name: Iterator, qitem: typedef, qtype: Upp::AMap<K,T,Upp::Vector<T>,HashFn>::Iterator, qptype: , natural: typedef typename AMap< K, T, Vector<T>, HashFn >::Iterator Iterator, line 15, using 
+}
+Upp::VectorMap::iterator {
+	TYPEDEF, name: iterator, qitem: typedef, qtype: Upp::VectorMap::Iterator, qptype: , natural: typedef Iterator iterator, line 16, using 
+}
+<locals> {
+}

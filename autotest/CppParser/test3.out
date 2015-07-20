@@ -1,5 +1,5 @@
 <globals> {
-	FUNCTIONTEMPLATE, name: memcpy, qitem: memcpy(_DstType(&)[_Size],const void*,size_t)throw(), qtype: _CrtEnableIf<(_Size>1),void*>, qptype: _DstType;;size_t, natural: template <size_t _Size, typename _DstType> typename _CrtEnableIf<(_Size > 1), void *>::_Type memcpy(_DstType (&_Dst)[_Size], const void *_Src, size_t _SrcSize) throw(), line 3, using 
+	FUNCTIONTEMPLATE, name: memcpy, qitem: memcpy(_DstType(&)[_Size],const void*,size_t)throw(), qtype: _CrtEnableIf<(_Size>1),void*>::_Type, qptype: _DstType;;size_t, natural: template <size_t _Size, typename _DstType> typename _CrtEnableIf<(_Size > 1), void *>::_Type memcpy(_DstType (&_Dst)[_Size], const void *_Src, size_t _SrcSize) throw(), line 3, using 
 }
 <locals> {
 }

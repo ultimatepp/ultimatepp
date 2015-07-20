@@ -1,0 +1,18 @@
+namespace Upp {
+templace <class T>
+struct Vector {
+	typedef T *Iterator;
+};
+
+template <class K, class T, class V, class HashFn>
+struct AMap {
+	typedef typename V::Iterator       Iterator;
+};
+
+template <class K, class T, class HashFn = StdHash<K> >
+struct VectorMap : public MoveableAndDeepCopyOption<VectorMap<K, T, HashFn> >,
+                  public AMap< K, T, Vector<T>, HashFn > {
+	typedef typename AMap< K, T, Vector<T>, HashFn >::Iterator Iterator;
+	typedef Iterator iterator;
+};
+};
