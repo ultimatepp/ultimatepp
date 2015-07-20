@@ -205,19 +205,14 @@ void Ide::ExecuteApk()
 	One<Host> host = CreateHost(false);
 	Apk apk(target, sdk);
 	String packageName = apk.FindPackageName();
-	String lauchableActivityName = apk.FindLauchableActivity();
+	String activityName = apk.FindLauchableActivity();
 	
 	Adb adb = sdk.MakeAdb();
-	host->Execute(adb.MakeInstallCmd(select.GetSelectedSerial() ,target));
+	adb.SetSerial(select.GetSelectedSerial());
+	host->Execute(adb.MakeInstallCmd(target));
 	
-	if(!packageName.IsEmpty() && !lauchableActivityName.IsEmpty()) {
-		String lauchApkOnDeviceCmd;
-		lauchApkOnDeviceCmd << NormalizeExePath(sdk.AdbPath());
-		// lauchApkOnDeviceCmd << " logcat *:E shell am start";
-		lauchApkOnDeviceCmd << " shell am start";
-		lauchApkOnDeviceCmd << " -n " << packageName << "/" << lauchableActivityName;
-		host->Execute(lauchApkOnDeviceCmd);
-	}
+	if(!packageName.IsEmpty() && !activityName.IsEmpty())
+		host->Execute(adb.MakeLaunchOnDeviceCmd(packageName, activityName));
 }
 
 void Ide::BuildAndDebug0(const String& srcfile)
