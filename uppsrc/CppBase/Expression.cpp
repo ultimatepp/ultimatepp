@@ -80,7 +80,7 @@ String ResolveTParam(const CppBase& codebase, const String& type, const Vector<S
 	LLOG("Resolved " << type << " -> " << r);
 	const Array<CppItem>& x = GetTypeItems(codebase, r);
 	if(x.GetCount() && x[0].kind == TYPEDEF) {
-		LLOG("Is typedef " << x[0].qtype << ';' << x[0].type << ';' << x[0].natural);
+		LLOG("Is typedef " << x[0].qtype << ", unqualified " << x[0].type << ", natural " << x[0].natural);
 		String h = x[0].qtype;
 		if(h != type && h != r)
 			return ResolveTParam(codebase, h, tparam);
@@ -113,6 +113,8 @@ struct ExpressionTyper {
 	void                  ExpressionType(const String& ttype, int ii, bool variable, int lvl);
 
 	Index<String>         ExpressionType();
+	
+	enum { MAX_COUNT = 1000 };
 
 	ExpressionTyper(const CppBase& codebase, const Parser& parser, const Vector<String>& xp);	                
 };
@@ -219,16 +221,10 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
                                      bool variable, bool can_shortcut_operator,
                                      Index<String>& visited_bases, int lvl)
 {
-	LLOG("--- ExpressionType " << scan_counter << ", lvl " << lvl << ", ttype " << ttype);
-	if(++scan_counter > 1000 || lvl > 100) // sort of ugly limitation of parsing permutations
+	LLOG("--- ExpressionType " << scan_counter << ", lvl " << lvl << ", ttype " << ttype
+	     << ", ii " << ii << ": " << ii << (ii < xp.GetCount() ? xp[ii] : "<end>"));
+	if(++scan_counter >= MAX_COUNT || lvl > 100) // sort of ugly limitation of parsing permutations
 		return;
-	if(ii >= xp.GetCount()) {
-		LLOG("--- Final type: " << ttype);
-		typeset.FindAdd(ttype);
-		return;
-	}
-	LDUMP(ii);
-	LDUMP(xp[ii]);
 	LDUMP(can_shortcut_operator);
 	Vector<String> tparam;
 	String type = ParseTemplatedType(ttype, tparam);
@@ -236,6 +232,65 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
 	const Array<CppItem>& n = GetTypeItems(codebase, type);
 	LDUMP(type);
 	LDUMP(tparam);
+	
+	// STL/NTL is too much to parse for now, so until we have better expression resolver, let us play dirty
+	static Index<String> std_container;
+	static Index<String> std_pair_container;
+	static Index<String> std_container_iterator;
+	static Index<String> std_pair_container_iterator;
+	static Index<String> upp_map_container;
+	static Index<String> upp_map_container_iterator;
+	static Index<String> upp_map_container_key_iterator;
+	ONCELOCK {
+		Vector<String> a = Split("array;vector;deque;forward_list;list;stack;queue;priority_queue;"
+		                         "set;multiset;unordered_set;unordered_multiset", ';');
+		for(int i = 0; i < a.GetCount(); i++) {
+			std_container.Add("std::" + a[i]);
+			std_container_iterator.Add("std::" + a[i] + "::iterator");
+		}
+		a = Split("map;multimap;unordered_map;unordered_multimap", ';');
+		for(int i = 0; i < a.GetCount(); i++) {
+			std_container.Add("std::" + a[i]);
+			std_pair_container_iterator.Add("std::" + a[i] + "::iterator");
+		}
+		a = Split("VectorMap;ArrayMap", ';');
+		for(int i = 0; i < a.GetCount(); i++) {
+			upp_map_container.Add("Upp::" + a[i]);
+			upp_map_container_iterator.Add("Upp::" + a[i] + "::iterator");
+			upp_map_container_iterator.Add("Upp::" + a[i] + "::Iterator");
+			upp_map_container_key_iterator.Add("Upp::" + a[i] + "::KeyIterator");
+		}
+	}
+	if(tparam.GetCount() > 0 && std_container_iterator.Find(type) >= 0) {
+		LLOG("# nasty iterator");
+		typeset.Clear();
+		ExpressionType(tparam[0], ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	if(tparam.GetCount() > 1 && std_pair_container_iterator.Find(type) >= 0) {
+		LLOG("# nasty pair iterator");
+		typeset.Clear();
+		ExpressionType("std::pair<" + tparam[0] + "," + tparam[1] + ">",
+		               ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	if(tparam.GetCount() > 1 && upp_map_container_iterator.Find(type) >= 0) {
+		LLOG("# Upp map nasty iterator");
+		typeset.Clear();
+		ExpressionType(tparam[1], ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	if(tparam.GetCount() > 1 && upp_map_container_key_iterator.Find(type) >= 0) {
+		LLOG("# Upp map nasty key iterator");
+		typeset.Clear();
+		ExpressionType(tparam[0], ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+
 	if(codebase.namespaces.Find(ttype) < 0 && ttype.GetCount()) // do not search for namespace typedefs
 		for(int i = 0; i < n.GetCount(); i++)
 			if(n[i].kind == TYPEDEF) {
@@ -243,7 +298,36 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
 				ExpressionType(AddTParams(ResolveTParam(codebase, n[i].qtype, tparam), ttype), ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
 				return;
 			}
+	if(ii >= xp.GetCount()) {
+		LLOG("==== Final type: " << ttype);
+		typeset.FindAdd(ttype);
+		return;
+	}
 	String id = xp[ii];
+
+	// More nasty tricks to make things work with containers (hopefully temporary)
+	if((id == "begin" || id == "end") && std_container.Find(type) >= 0) {
+		LLOG("# nasty begin/end");
+		typeset.Clear();
+		ExpressionType(ttype + "::iterator", ii + 1, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	if(findarg(id, "begin", "end", "Begin", "End") >= 0 && upp_map_container.Find(type) >= 0) {
+		LLOG("# nasty Upp begin/end");
+		typeset.Clear();
+		ExpressionType(ttype + "::Iterator", ii + 1, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	if(findarg(id, "begin", "end", "KeyBegin", "KeyEnd") >= 0 && upp_map_container.Find(type) >= 0) {
+		LLOG("# nasty Upp begin/end");
+		typeset.Clear();
+		ExpressionType(ttype + "::KeyIterator", ii + 1, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	
 	int q = id.ReverseFind(':');
 	if(q > 0 && id[q - 1] == ':') {
 		type = ResolveTParam(codebase, Qualify(codebase, ttype, id.Mid(0, q - 1), usings), tparam);
@@ -271,7 +355,6 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii,
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
 		if(m.name == id) {
-			LLOG("Member " << m.qtype << " " << m.name);
 			String t = AddTParams(ResolveReturnType(m, tparam), ttype);
 			bool skipfnpars = m.IsCode() && ii + 1 < xp.GetCount() && xp[ii + 1] == "()";
 			ExpressionType(ResolveTParam(codebase, t, tparam), ii + skipfnpars + 1,
@@ -307,6 +390,7 @@ void ExpressionTyper::ExpressionType(const String& ttype, int ii, bool variable,
 
 Index<String> ExpressionTyper::ExpressionType()
 {
+	LLOG("------------------------------------------------------");
 	LLOG("**** ExpressionType " << xp);
 	String type;
 	if(xp.GetCount() == 0)

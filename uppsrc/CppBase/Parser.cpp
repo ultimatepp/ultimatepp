@@ -1043,18 +1043,6 @@ Array<Parser::Decl> Parser::Declaration(bool l0, bool more, const String& tname,
 	return Declaration0(l0, more, tname, tparam);
 }
 
-void Parser::Locals(const String& type)
-{
-	Line();
-	Array<Parser::Decl> d = Declaration(true, true, Null, Null);
-	for(int i = 0; i < d.GetCount(); i++) {
-		Local& l = local.Add(d[i].name);
-		l.type = *type == '*' ? d[i].type : type;
-		l.isptr = d[i].isptr;
-		l.line = line + 1;
-	}
-}
-
 String Parser::Tparam(int& q)
 {
 	if(lex[q] != '<')
