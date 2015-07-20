@@ -1,5 +1,9 @@
 #include <CtrlLib/CtrlLib.h>
 #include <Sql/Sql.h>
+#include <vector>
+#include <map>
+
+using namespace std;
 
 #if 0 // Do not compile these tests in nightly job
 
@@ -59,11 +63,6 @@ void Autocomplete()
 void Autocomplete()
 { // Displays String, it is OK as Single is function
 	Single<String>().
-}
-
-void Autocomplete()
-{
-	Single<String>()->
 }
 
 void Autocomplete()
@@ -199,7 +198,56 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	std::vector<std::string> v; // does not work yet!!!
+	VectorMap<int, String> m;
+	for(auto i : m)
+		i.
+}
+
+void Autocomplete()
+{
+	VectorMap<int, String> m;
+	auto i = m.Begin();
+	i.
+}
+
+void Autocomplete()
+{
+	VectorMap<Point, String> m;
+	auto i = m.KeyBegin();
+	i.
+}
+
+void Autocomplete()
+{
+	vector<string> v;
+	for(const auto& i : v)
+		i.
+}
+
+void Autocomplete()
+{
+	vector<string> v;
+	auto q = v.end();
+	q.
+}
+
+void Autocomplete()
+{
+	map<int, string> m;
+	for(const auto& i : m)
+		i.second.
+}
+
+void Autocomplete()
+{
+	map<string, int> m;
+	auto q = m.begin();
+	q.first.
+}
+
+void Autocomplete()
+{
+	std::vector<std::string> v;
 	for(const auto& i : v)
 		i.
 }
