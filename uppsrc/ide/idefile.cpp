@@ -974,6 +974,10 @@ bool Ide::HotKey(dword key)
 {
 	if(designer && designer->DesignerCtrl().HotKey(key))
 		return true;
+	if(designer && dynamic_cast<FileHexView *>(~designer) && Match(IdeKeys::AK_EDITASHEX, key)) {
+		EditUsingDesigner();
+		return true;
+	}
 	return TopWindow::HotKey(key);
 }
 
