@@ -368,4 +368,9 @@ String GetDesc(const KeyInfo& f, bool parenthesis)
 	return f.key[0] ? parenthesis ? "(" + GetKeyDesc(f.key[0]) + ")" : GetKeyDesc(f.key[0]) : String();
 }
 
+bool Match(const KeyInfo& k, dword key)
+{
+	return findarg(key, k.key[0], k.key[1], k.key[2], k.key[3]) >= 0;
+}
+
 END_UPP_NAMESPACE
