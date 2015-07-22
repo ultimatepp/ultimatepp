@@ -205,7 +205,7 @@ void Ide::ExecuteApk()
 	One<Host> host = CreateHost(false);
 	Apk apk(target, sdk);
 	String packageName = apk.FindPackageName();
-	String activityName = apk.FindLauchableActivity();
+	String activityName = apk.FindLaunchableActivity();
 	
 	Adb adb = sdk.MakeAdb();
 	adb.SetSerial(select.GetSelectedSerial());
@@ -213,6 +213,8 @@ void Ide::ExecuteApk()
 	
 	if(!packageName.IsEmpty() && !activityName.IsEmpty())
 		host->Execute(adb.MakeLaunchOnDeviceCmd(packageName, activityName));
+	
+	Cout() << "PID: " << adb.GetPid(packageName) << "\n";
 }
 
 void Ide::BuildAndDebug0(const String& srcfile)

@@ -18,7 +18,7 @@ String Apk::FindPackageName() const
 	return FindValueInAndroidManifest("package", "name");
 }
 
-String Apk::FindLauchableActivity() const
+String Apk::FindLaunchableActivity() const
 {
 	return FindValueInAndroidManifest("launchable-activity", "name");
 }

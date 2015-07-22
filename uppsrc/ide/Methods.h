@@ -78,7 +78,9 @@ public:
 	virtual void InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map);
 
 private:
+	void OnSdkShow();
 	void OnSdkPathChange(const String& sdkPath);
+	void OnNdkShow();
 	void OnNdkPathInsert();
 	void OnNdkPathChange();
 	void OnNdkPathChange0(const String& ndkPath);
@@ -89,6 +91,13 @@ private:
 	void LoadToolchains(const AndroidNDK& ndk);
 	void LoadCppRuntimes(const AndroidNDK& ndk);
 	void LoadDropList(DropList& dropList, const Vector<String>& values, const String& defaultKey = "");
+	
+private:
+	void GroupNdkCtrls();
+	void ClearNdkCtrls();
+	
+private:
+	Vector<Ptr<Ctrl> > ndkCtrls;
 };
 
 class BuilderSetup {
