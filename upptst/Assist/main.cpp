@@ -165,8 +165,8 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	Vector<String> v;
-	v.begin()->
+	String txt[2];
+	txt[1].
 }
 
 void Autocomplete()
@@ -250,12 +250,6 @@ void Autocomplete()
 	std::vector<std::string> v;
 	for(const auto& i : v)
 		i.
-}
-
-void Autocomplete()
-{
-	String txt[2]; // does not work yet!!!!
-	txt[1].
 }
 
 void JumpTo()
