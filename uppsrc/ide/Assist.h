@@ -90,6 +90,7 @@ struct Navigator {
 	Vector<NavLine> GetNavLines(const NavItem& m);
 
 	void           Navigate();
+	void           ScopeDblClk();
 	void           NavigatorClick();
 	void           NavigatorEnter();
 	void           SyncLines();

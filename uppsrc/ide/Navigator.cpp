@@ -74,6 +74,7 @@ Navigator::Navigator()
 	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
 	scope.NoWantFocus();
 	scope.WhenSel = THISBACK(Scope);
+	scope.WhenLeftDouble = THISBACK(ScopeDblClk);
 
 	list.NoHeader();
 	list.AddRowNumColumn().SetDisplay(navidisplay);
@@ -256,6 +257,19 @@ void Navigator::Navigate()
 		}
 	}
 	navigating = false;
+}
+
+void Navigator::ScopeDblClk()
+{
+	if(!scope.IsCursor())
+		return;
+	String h = scope.GetKey();
+	if((byte)*h == 0xff)
+		theide->GotoPos(h.Mid(1), 1);
+	else {
+		list.GoBegin();
+		Navigate();
+	}
 }
 
 void Navigator::NavigatorClick()

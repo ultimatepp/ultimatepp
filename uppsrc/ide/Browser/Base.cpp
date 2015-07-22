@@ -8,8 +8,10 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
-#ifndef _DEBUG
-#define CLOG(x)       // RLOG(x)
+#ifdef _DEBUG
+#define CLOG(x)
+#else
+#define CLOG(x)          RLOG(x)
 #endif
 
 #define CPP_CODEBASE_VERSION 314159
