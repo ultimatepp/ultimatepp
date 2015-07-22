@@ -1,7 +1,7 @@
 #ifndef _SDLCtrl_h_
 #define _SDLCtrl_h_
 
-#include <SDL/SDLWrapper.h>
+#include "SDLWrapper.h"
 
 inline bool Odd_(int val)	  	{return val%2;}
 
@@ -58,7 +58,7 @@ protected:
 class SDLCtrl : public Ctrl {
 typedef SDLCtrl CLASSNAME;	
 	class SDLCtrlIn : public DHCtrl, public SDLSurface {
-	typedef SDLCtrl CLASSNAME;	
+	typedef SDLCtrlIn CLASSNAME;	
 	public:
 		SDLCtrlIn();
 		~SDLCtrlIn();
@@ -70,7 +70,7 @@ typedef SDLCtrl CLASSNAME;
 	#ifdef PLATFORM_POSIX
 		XDisplay *display;
 	#else
-		long hwndSDL;
+		HWND hwndSDL;
 	#endif
 		int videoflags;
 		int bpp;

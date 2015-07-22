@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#include <SDL/SDLCtrl.h>
+#include "SDLCtrl.h"
 
 SDL_Cursor *CursorFromImage(const Image &image) {
 	int width = image.GetWidth();
@@ -67,7 +67,7 @@ SDLCtrl::SDLCtrlIn::SDLCtrlIn() {
 		return;
 	}
 #ifdef PLATFORM_WIN32
-	hwndSDL = long(wmInfo.window);
+	hwndSDL = wmInfo.window;
 #else
 	wmInfo.info.x11.lock_func();
 	hwnd = long(wmInfo.info.x11.wmwindow);
@@ -113,7 +113,7 @@ void SDLCtrl::SDLCtrlIn::Layout() {
 		SetWindowPos(hwnd, NULL, r.left, r.top, 
 					 r.GetWidth(), r.GetHeight(), SWP_NOACTIVATE|SWP_NOZORDER);
 	}
-	ShowWindow(HWND(hwndSDL), IsVisible() ? SW_SHOW : SW_HIDE);
+	ShowWindow(hwndSDL, IsVisible() ? SW_SHOW : SW_HIDE);
 #endif
 	if(!CreateScreen())
 		return;
@@ -130,8 +130,8 @@ void SDLCtrl::SDLCtrlIn::State(int reason) {
 			CloseHWND();
 			HWND phwnd = GetTopCtrl()->GetHWND();
 			if(phwnd) {
-				hwnd = HWND(hwndSDL);
-				SetParent(HWND(hwndSDL), phwnd);
+				hwnd = hwndSDL;
+				SetParent(hwndSDL, phwnd);
 			}
 		}
 		break;
@@ -144,5 +144,5 @@ void SDLCtrl::SDLCtrlIn::State(int reason) {
 void SDLCtrl::SDLCtrlIn::SetError(String str) {
 	if (!strError.IsEmpty())
 		strError << "\n"; 
-	strError << ToUpper(str[0]) + DeQtfLf(str.Mid(1)); 
+	strError << InitCaps(str); 
 }
