@@ -1,5 +1,5 @@
-#ifndef JAVA_H
-#define JAVA_H
+#ifndef _Java_Java_h_
+#define _Java_Java_h_
 
 #include <Core/Core.h>
 

@@ -122,7 +122,7 @@ public:
 	virtual ~Apk();
 	
 	String FindPackageName() const;
-	String FindLauchableActivity() const;
+	String FindLaunchableActivity() const;
 	
 private:
 	String FindValueInAndroidManifest(const String& badge, const String& tag) const;

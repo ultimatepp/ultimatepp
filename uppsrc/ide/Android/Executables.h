@@ -22,6 +22,9 @@ public:
 	void SetSerial(const String& serial) { this->serial = serial; }
 	
 public:
+	int GetPid(const String& packageName) const;
+	
+public:
 	String MakeListDevicesCmd() const;
 	
 	String MakeCmd() const;
@@ -31,6 +34,8 @@ public:
 	String MakeInstallOnDefaultEmulatorCmd(const String& apkPath) const;
 	
 	String MakeLaunchOnDeviceCmd(const String& packageName, const String& activityName) const;
+	
+	String MakeGetAllProcessesCmd() const;
 	
 private:
 	String path;
