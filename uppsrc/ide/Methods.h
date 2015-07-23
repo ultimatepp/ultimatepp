@@ -93,11 +93,9 @@ private:
 	void LoadDropList(DropList& dropList, const Vector<String>& values, const String& defaultKey = "");
 	
 private:
-	void GroupNdkCtrls();
+	void EnableNdkCtrls(bool enable = true);
+	void DisableNdkCtrls();
 	void ClearNdkCtrls();
-	
-private:
-	Vector<Ptr<Ctrl> > ndkCtrls;
 };
 
 class BuilderSetup {
