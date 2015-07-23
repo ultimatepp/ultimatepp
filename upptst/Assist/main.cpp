@@ -281,13 +281,26 @@ struct JumpDerived {
 	}
 };
 
+void AddContact();
+
 struct MYTabs : FileTabs {
 	void 	RenameFile(const WString &from, const WString &to, Image icon = Null);
+	void    AddContact();
 };
 
 void MYTabs::RenameFile(const WString &from, const WString &to, Image icon)
 {
 	FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
+	Upp::FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
+	::Upp::FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
+	RenameFile(from, to, icon); // to MyTabs
+	MYTabs::RenameFile(from, to, icon); // to MyTabs
+	::MYTabs::RenameFile(from, to, icon); // to MyTabs
+}
+
+void MYTabs::AddContact()
+{
+	::AddContact(); // should jump to global namespace 'add contact'
 }
 
 #endif
