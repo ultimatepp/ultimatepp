@@ -1,15 +1,16 @@
 topic "This example ";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
+[b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
 [s1; Introduction&]
-[s0;b83; The main goal of this example is to show major capabilities 
+[s2; The main goal of this example is to show major capabilities 
 of Android Builder. We draw the attention on mixing Java and 
 C/C`+`+ code in one project. Moreover we show how to use supportive 
 package. It is really important, because whole U`+`+ architecture 
 is highly modular.&]
-[s0;b83; Please notice that you can generate JNI stubs by clicking 
-on preprocess button inside TheIDE during editing Java files.&]
+[s2; Please notice that you can generate JNI stubs by clicking on 
+preprocess button inside TheIDE during editing Java files.&]
 [s1; Result&]
 [s0;=b83;a83; 
 @@rawimage:1125&2000
