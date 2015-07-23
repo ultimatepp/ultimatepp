@@ -172,6 +172,11 @@ void Autocomplete()
 
 void Autocomplete()
 {
+	VectorMap<String, String>()[i].
+}
+
+void Autocomplete()
+{
 	Array<String> v;
 	v.begin()->
 }
@@ -290,9 +295,9 @@ struct MYTabs : FileTabs {
 
 void MYTabs::RenameFile(const WString &from, const WString &to, Image icon)
 {
-	FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
-	Upp::FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
-	::Upp::FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
+	FileTabs::RenameFile(from, to, icon); // should jump to FileTabs, not here
+	Upp::FileTabs::RenameFile(from, to, icon); // should jump to FileTabs, not here
+	::Upp::FileTabs::RenameFile(from, to, icon); // should jump to FileTabs, not here
 	RenameFile(from, to, icon); // to MyTabs
 	MYTabs::RenameFile(from, to, icon); // to MyTabs
 	::MYTabs::RenameFile(from, to, icon); // to MyTabs
