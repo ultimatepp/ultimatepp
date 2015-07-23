@@ -2,4 +2,5 @@
 #define _Assist_icpp_init_stub
 #include "CtrlLib/init"
 #include "Sql/init"
+#include "TabBar/init"
 #endif

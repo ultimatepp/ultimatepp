@@ -2,6 +2,7 @@
 #include <Sql/Sql.h>
 #include <vector>
 #include <map>
+#include <TabBar/TabBar.h>
 
 using namespace std;
 
@@ -268,6 +269,25 @@ void JumpTo()
 
 struct JumpToTest {
 	int x; // test that this does not jump anywhere...
+}
+
+struct JumpBase {
+	void Foo();
+};
+
+struct JumpDerived {
+	void Foo() {
+		JumpBase::Foo(); // should jump to JumpBase
+	}
+};
+
+struct MYTabs : FileTabs {
+	void 	RenameFile(const WString &from, const WString &to, Image icon = Null);
+};
+
+void MYTabs::RenameFile(const WString &from, const WString &to, Image icon)
+{
+	FileTabs::RenameFile(from, to, icon); // should jump tp FileTabs, not here
 }
 
 #endif

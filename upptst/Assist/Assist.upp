@@ -2,7 +2,8 @@ description "Assist tests - not to be compiled/run\377";
 
 uses
 	CtrlLib,
-	Sql;
+	Sql,
+	TabBar;
 
 file
 	main.cpp;
