@@ -166,7 +166,7 @@ void Ide::ContextGoto0(int pos)
 	while(iscid(editor.Ch(q - 1)))
 		q--;
 	String tp;
-	Vector<String> xp = editor.ReadBack(q); // try to load expression lien "x[i]." or "ptr->"
+	Vector<String> xp = editor.ReadBack(q); // try to load expression like "x[i]." or "ptr->"
 	Index<String> type;
 	Parser parser;
 	int ci = pos;
@@ -181,7 +181,7 @@ void Ide::ContextGoto0(int pos)
 		ci++;
 	}
 	editor.Context(parser, ci);
-	
+	DDUMP(xp);
 	if(xp.GetCount()) {
 		type = editor.EvaluateExpressionType(parser, xp);
 		if(type.GetCount() == 0)
@@ -235,9 +235,23 @@ void Ide::ContextGoto0(int pos)
 	
 	Vector<String> ns = parser.GetNamespaces();
 
+	DDUMP(qual);
+	DDUMP(id);
 	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
 		Vector<String> todo;
-		todo.Add(RemoveTemplateParams(Qualify(CodeBase(), parser.current_scope, qual + "::" + id, parser.context.namespace_using)));
+		String qa = Qualify(CodeBase(), parser.current_scope, qual + "::" + id, parser.context.namespace_using);
+		qa = RemoveTemplateParams(qa);
+		if(CodeBase().Find(qa) < 0) { // Upp::FileTabs::RenameFile
+			int q = qa.ReverseFind("::");
+			if(q > 0) {
+				String h = qa.Mid(0, q);
+				if(CodeBase().Find(h) >= 0) {
+					scope.Add(h);
+					istype.Add(false);
+				}
+			}
+		}
+		todo.Add(qa);
 		while(scope.GetCount() < 100 && todo.GetCount()) {
 			String t = todo[0];
 			if(t.EndsWith("::"))

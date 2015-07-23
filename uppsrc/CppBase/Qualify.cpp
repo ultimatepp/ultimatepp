@@ -29,13 +29,13 @@ bool Qualify0(ScopeInfo& nf, const String& type, const String& usings, String& q
 				return true;
 			}
 			if(DoQualify(hnf, qs, usings, qn)) {
-				if(nf.base.Find(type) >= 0) {
-					qt = type;
+				String tp = type.Mid(q + 1);
+				if(nf.base.Find(qn) >= 0) {
+					qt = qn + "::" + tp;
 					return true;
 				}
 				int scopei = nf.base.Find(qn);
 				if(scopei >= 0) {
-					String tp = type.Mid(q + 1);
 					ScopeInfo nnf(nf.base, scopei);
 					const Vector<String>& bs = nnf.GetBases();
 					for(int i = 0; i < bs.GetCount(); i++) {
