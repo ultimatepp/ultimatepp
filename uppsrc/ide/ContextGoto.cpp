@@ -206,6 +206,8 @@ void Ide::ContextGoto0(int pos)
 			else
 				break;
 		}
+		if(qual.GetCount() == 0)
+			qual = ":";
 	}
 		
 	Vector<String> scope;
@@ -234,9 +236,12 @@ void Ide::ContextGoto0(int pos)
 	
 	Vector<String> ns = parser.GetNamespaces();
 
+	if(qual.GetCount() > 2 && qual.StartsWith("::"))
+		qual = qual.Mid(2);
 	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
 		Vector<String> todo;
-		String qa = Qualify(CodeBase(), parser.current_scope, qual + "::" + id, parser.context.namespace_using);
+		String qa = Qualify(CodeBase(), parser.current_scope, *qual == ':' ? id : qual + "::" + id,
+		                    parser.context.namespace_using);
 		qa = RemoveTemplateParams(qa);
 		if(CodeBase().Find(qa) < 0) { // Upp::FileTabs::RenameFile
 			int q = qa.ReverseFind("::");
@@ -246,6 +251,10 @@ void Ide::ContextGoto0(int pos)
 					scope.Add(h);
 					istype.Add(false);
 				}
+			}
+			else {
+				scope.Add(Null); // Add global namespace
+				istype.Add(false);
 			}
 		}
 		todo.Add(qa);
