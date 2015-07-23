@@ -786,7 +786,7 @@ END_LAYOUT
 
 LAYOUT(RenamePackageLayout, 228, 100)
 	ITEM(Label, dv___0, SetLabel(t_("Package name")).LeftPosZ(4, 84).TopPosZ(4, 21))
-	ITEM(Label, dv___1, SetLabel(t_("\001[g [/ Warning:] [* Package will only be renamed&in packages of current workspace!")).LeftPosZ(4, 224).TopPosZ(28, 32))
+	ITEM(Label, dv___1, SetLabel(t_("\001[g [/ Warning:] [* Package will only be renamed&in packages of current workspace!")).LeftPosZ(4, 216).TopPosZ(28, 32))
 	ITEM(EditString, name, LeftPosZ(92, 128).TopPosZ(4, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
