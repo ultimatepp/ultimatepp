@@ -6,6 +6,10 @@ TOPIC("AddressBook$ru-ru")
 #include "AddressBook$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("AndroidMath$en-us")
+#include "AndroidMath$en-us.tppi"
+END_TOPIC
+
 TOPIC("AnimatedHello$en-us")
 #include "AnimatedHello$en-us.tppi"
 END_TOPIC
