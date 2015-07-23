@@ -181,7 +181,6 @@ void Ide::ContextGoto0(int pos)
 		ci++;
 	}
 	editor.Context(parser, ci);
-	DDUMP(xp);
 	if(xp.GetCount()) {
 		type = editor.EvaluateExpressionType(parser, xp);
 		if(type.GetCount() == 0)
@@ -235,8 +234,6 @@ void Ide::ContextGoto0(int pos)
 	
 	Vector<String> ns = parser.GetNamespaces();
 
-	DDUMP(qual);
-	DDUMP(id);
 	if(qual.GetCount()) { // Ctrl::MOUSELEFT, Vector<String>::Iterator
 		Vector<String> todo;
 		String qa = Qualify(CodeBase(), parser.current_scope, qual + "::" + id, parser.context.namespace_using);
