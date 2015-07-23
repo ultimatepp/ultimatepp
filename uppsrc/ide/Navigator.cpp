@@ -435,7 +435,7 @@ void Navigator::NavGroup(bool local)
 		String g = m.nest;
 		if(m.kind == TYPEDEF)
 			g.Trim(max(g.ReverseFind("::"), 0));
-		if(IsNull(m.nest) || CodeBase().namespaces.Find(m.nest) >= 0) {
+		if(IsNull(g) || CodeBase().namespaces.Find(m.nest) >= 0) {
 			if(g.GetCount()) // We want to show the namespace
 				g << '\xff';
 			else
@@ -612,7 +612,7 @@ void Navigator::Search()
 		String s = gitem.GetKey(i);
 		if(done.Find(s) < 0) {
 			done.Add(s);
-			scope.Add(gitem.GetKey(i));
+			scope.Add(s);
 		}
 	}
 	scope.ScrollTo(sc);
