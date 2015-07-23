@@ -7,6 +7,10 @@
 #define TOPICFILE <ide/app.tpp/all.i>
 #include <Core/topic_group.h>
 
+#ifndef bmYEAR
+#include <build_info.h>
+#endif
+
 Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 {
 	Image logo = IdeImg::logo();
@@ -26,10 +30,11 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif
-	h << "\n";
-	h << Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
+	h << "\n"
+	  << Format("Compiled %d-%02d-%02d %d:%02d\n", bmYEAR , bmMONTH, bmDAY, bmHOUR, bmMINUTE)
+	  << Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
 	v1 = h;
-	v1.LeftPos(300, 100).BottomPos(20, Arial(20).GetHeight() * 3);
+	v1.HSizePos(230, 10).BottomPos(20, Arial(20).GetHeight() * 5);
 	v1.SetFont(Arial(10));
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
