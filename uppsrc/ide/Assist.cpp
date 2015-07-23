@@ -199,6 +199,11 @@ String AssistEditor::CompleteIdBack(int& q)
 	String id;
 	for(;;) {
 		SkipSpcBack(q);
+		if(Ch(q - 1) == ',') {
+			q--;
+			id = ',' + id;
+		}
+		else
 		if(Ch(q - 1) == '>') {
 			q--;
 			id = '>' + id;
@@ -224,7 +229,6 @@ String AssistEditor::CompleteIdBack(int& q)
 	}
 	return id;
 }
-
 
 Vector<String> AssistEditor::ReadBack(int q)
 {
