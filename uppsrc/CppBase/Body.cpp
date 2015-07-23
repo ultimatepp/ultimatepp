@@ -217,7 +217,7 @@ void Parser::TryLambda()
 	if(lex[q] == tk_mutable)
 		q++;
 	if(lex[q] == t_arrow) {
-		q++; // TODO: auto declaration could assign a type here
+		q++; // TODO: auto declaration could assign a return type here
 		for(;;) {
 			if(lex[q] == ';' || lex[q] == t_eof)
 				return;
