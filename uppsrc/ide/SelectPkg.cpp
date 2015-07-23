@@ -45,6 +45,8 @@ void SelectPackageDlg::RenamePackage()
 	WithRenamePackageLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Rename package");
 	dlg.name.SetFilter(FilterPackageName);
+	dlg.name <<= n;
+	dlg.name.SelectAll();
 again:
 	if(dlg.Execute() != IDOK)
 		return;

@@ -1066,6 +1066,8 @@ void WorkspaceWork::RenamePackage()
 	WithRenamePackageLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Rename package");
 	dlg.name.SetFilter(FilterPackageName);
+	dlg.name <<= package.Get(package.GetCursor()).name;
+	dlg.name.SelectAll();
 again:
 	if(dlg.Execute() != IDOK)
 		return;
