@@ -94,8 +94,6 @@ AndroidBuilderSetup::AndroidBuilderSetup()
 	
 	ndk_path <<= THISBACK(OnNdkPathChange);
 	
-	GroupNdkCtrls();
-	
 	ndkDownload.SetImage(IdeImg::DownloadBlack());
 	ndkDownload.Tip("Download");
 	ndkDownload <<= callback1(LaunchWebBrowser, AndroidNDK::GetDownloadUrl());
@@ -203,13 +201,10 @@ void AndroidBuilderSetup::OnNdkShow()
 		LoadToolchains(ndk);
 		LoadCppRuntimes(ndk);
 		
-		EnableCtrls(ndkCtrls);
+		EnableNdkCtrls();
 	}
-	else {
-		// TODO: waiting for DisableCtrls method in CtrlCore :)
-		for(int i = 0; i < ndkCtrls.GetCount(); i++)
-			ndkCtrls[i]->Disable();
-	}
+	else
+		DisableNdkCtrls();
 }
 
 void AndroidBuilderSetup::OnNdkPathInsert()
@@ -293,23 +288,25 @@ void AndroidBuilderSetup::LoadDropList(DropList& dropList,
 	}
 }
 
-void AndroidBuilderSetup::GroupNdkCtrls()
+void AndroidBuilderSetup::EnableNdkCtrls(bool enable)
 {
-	if(!ndkCtrls.IsEmpty())
-		ndkCtrls.Clear();
-	
-	ndkCtrls.Add(&ndk_blitz);
-	ndkCtrls.Add(&ndk_arch_armeabi);
-	ndkCtrls.Add(&ndk_arch_armeabi_v7a);
-	ndkCtrls.Add(&ndk_arch_arm64_v8a);
-	ndkCtrls.Add(&ndk_arch_x86);
-	ndkCtrls.Add(&ndk_arch_x86_64);
-	ndkCtrls.Add(&ndk_arch_mips);
-	ndkCtrls.Add(&ndk_arch_mips64);
-	ndkCtrls.Add(&ndk_toolchain);
-	ndkCtrls.Add(&ndk_cpp_runtime);
-	ndkCtrls.Add(&ndk_common_cpp_options);
-	ndkCtrls.Add(&ndk_common_c_options);
+	ndk_blitz.Enable(enable);
+	ndk_arch_armeabi.Enable(enable);
+	ndk_arch_armeabi_v7a.Enable(enable);
+	ndk_arch_arm64_v8a.Enable(enable);
+	ndk_arch_x86.Enable(enable);
+	ndk_arch_x86_64.Enable(enable);
+	ndk_arch_mips.Enable(enable);
+	ndk_arch_mips64.Enable(enable);
+	ndk_toolchain.Enable(enable);
+	ndk_cpp_runtime.Enable(enable);
+	ndk_common_cpp_options.Enable(enable);
+	ndk_common_c_options.Enable(enable);
+}
+
+void AndroidBuilderSetup::DisableNdkCtrls()
+{
+	EnableNdkCtrls(false);
 }
 
 void AndroidBuilderSetup::ClearNdkCtrls()
