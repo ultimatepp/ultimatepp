@@ -70,10 +70,6 @@ void Ide::File(Bar& menu)
 		    .Help("Close the current file tab");
 		menu.Add(AK_CLOSETABS, THISBACK(ClearTabs))
 		    .Help("Close all file tabs");
-		menu.Add("Go back", THISBACK(HistoryBk))
-		    .Key(K_ALT_LEFT);
-		menu.Add("Go forward", THISBACK(HistoryFw))
-		    .Key(K_ALT_RIGHT);
 		if(!designer) {
 			menu.Add("Bookmarks", THISBACK(FileBookmark))
 				.Help("Set one of available bookmarks (1..9, 0) on current file");
@@ -582,8 +578,8 @@ void Ide::DebugMenu(Bar& menu)
 
 void Ide::BrowseMenu(Bar& menu)
 {
-	if (menu.IsMenuBar()) {
-		if(!IsEditorMode()) {
+	if(!IsEditorMode()) {
+		if(menu.IsMenuBar()) {
 			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
 		    	 .Check(editor.IsNavigator());
 			menu.Add(AK_GOTO, THISBACK(SearchCode));
@@ -598,10 +594,24 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 			menu.Add(!designer, "Insert", THISBACK(InsertMenu));
 			menu.MenuSeparator();
+		}
+		
+		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK(HistoryBk))
+			.Key(K_ALT_LEFT)
+			.Enable(histi > 0);
+		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK(HistoryFw))
+			.Key(K_ALT_RIGHT)
+			.Enable(histi < history.GetCount() - 1);
+		
+		if(menu.IsMenuBar()) {
+			menu.MenuSeparator();
 			menu.Add("Check source files for changes", THISBACK(CheckCodeBase));
 			menu.Add("Reparse source files", THISBACK(RescanCode));
 			menu.MenuSeparator();
 		}
+		
+	}
+	if(menu.IsMenuBar()) {
 		menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
 		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
@@ -651,6 +661,11 @@ void Ide::MainMenu(Bar& menu)
 
 void Ide::MainTool(Bar& bar)
 {
+	if(!IsEditorMode()) {
+		BrowseMenu(bar);
+		if(!toolbar_in_row)
+			bar.Separator();
+	}
 	Edit(bar);
 	if(debugger) {
 		if(!designer)
@@ -667,7 +682,6 @@ void Ide::MainTool(Bar& bar)
 		DebugMenu(bar);
 	}
 	Setup(bar);
-	BrowseMenu(bar);
 	bar.Separator();
 	HelpMenu(bar);
 }
