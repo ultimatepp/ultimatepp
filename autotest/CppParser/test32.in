@@ -1,0 +1,53 @@
+// This is a test of minor C++11 features
+
+template <class T, class U>
+class Test {
+	T a = 10;
+	U b{123};
+};
+
+class Y {
+	Y& operator=(const Y&) = default;	// default copy semantics
+	Y(const Y&) = default;
+};
+
+constexpr int operator|(Flags f1, Flags f2) { return Flags(int(f1)|int(f2)); }
+
+class X {
+	X(int x) { if (0<x && x<=max) a=x; else throw bad_X(x); }
+	X() :X{42} { }
+	X(string s) :X{lexical_cast<int>(s)} { }
+	// ...
+};
+
+struct Point { int x, y; }
+
+union U1 {
+		int m1;
+		complex<double> m2;	// ok
+		string m3;
+};
+
+alignas(double) unsigned char aligned_array[1024];
+
+double foo(double) noexcept;
+
+struct OverrideFinal {
+	void Foo() final;
+	void Bar() override;
+};
+
+int override;
+int final;
+
+thread_local int ThreadLocal;
+
+void Fn()
+{
+	Test< Test< Test<Point> >, Point> x;
+	Test<Test<Test<Point>>, Point> y;
+	int x{7};
+	foo({123});
+	int y = foo({123});
+	long long ll = 9223372036854775807LL;
+	char* p = nullptr;

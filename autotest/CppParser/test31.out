@@ -1,0 +1,21 @@
+<globals> {
+	ENUM, name: ONE, qitem: ONE, qtype: , qptype: , natural: enum Foo ONE, line 1, using 
+	ENUM, name: TWO, qitem: TWO, qtype: , qptype: , natural: enum Foo TWO, line 1, using 
+	ENUM, name: AONE, qitem: AONE, qtype: , qptype: , natural: enum FooA AONE, line 3, using 
+	ENUM, name: ATWO, qitem: ATWO, qtype: , qptype: , natural: enum FooA ATWO, line 3, using 
+	ENUM, name: EE1, qitem: EE1, qtype: , qptype: , natural: enum EE EE1 = 1, line 5, using 
+	ENUM, name: EE2, qitem: EE2, qtype: , qptype: , natural: enum EE EE2 = 2, line 5, using 
+	ENUM, name: EEbig, qitem: EEbig, qtype: , qptype: , natural: enum EE EEbig = 0xFFFFFFF0U , line 5, using 
+}
+ClassFoo {
+	STRUCT, name: ClassFoo, qitem: class, qtype: ClassFoo, qptype: , natural: , line 7, using 
+	ENUM, name: ClONE, qitem: ClONE, qtype: , qptype: , natural: enum ClONE, line 7, using 
+	ENUM, name: ClBTWO, qitem: ClBTWO, qtype: , qptype: , natural: enum ClBTWO, line 7, using 
+}
+Cl3Foo {
+	STRUCT, name: Cl3Foo, qitem: class, qtype: Cl3Foo, qptype: , natural: , line 9, using 
+	ENUM, name: C3ONE, qitem: C3ONE, qtype: , qptype: , natural: enum C3ONE, line 9, using 
+	ENUM, name: C3TWO, qitem: C3TWO, qtype: , qptype: , natural: enum C3TWO, line 9, using 
+}
+<locals> {
+}

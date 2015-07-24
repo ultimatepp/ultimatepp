@@ -65,7 +65,11 @@ file
 	test29.in,
 	test29.out,
 	test30.in,
-	test30.out;
+	test30.out,
+	test31.in,
+	test31.out,
+	test32.in,
+	test32.out;
 
 mainconfig
 	"" = "",
