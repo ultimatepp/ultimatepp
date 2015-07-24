@@ -85,7 +85,8 @@ void Ide::File(Bar& menu)
 			.Help("Show / hide bottom pane (with console, calc and browser tabs)");
 	}
 
-	menu.Add(AK_PACKAGESFILES, THISBACK(SwapPackagesFiles));
+	menu.Add(AK_PACKAGESFILES, THISBACK(SwapPackagesFiles))
+	    .Check(wesplit.GetZoom() != 1);
 
 	menu.MenuSeparator();
 
