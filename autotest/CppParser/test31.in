@@ -1,0 +1,12 @@
+enum Foo { ONE, TWO };
+
+enum FooA : int { AONE, ATWO };
+
+enum EE : unsigned long { EE1 = 1, EE2 = 2, EEbig = 0xFFFFFFF0U };
+
+enum class ClassFoo { ClONE, ClBTWO };
+
+enum class Cl3Foo : char { C3ONE, C3TWO };
+
+enum Foo;
+enum Cl4foo : char;
