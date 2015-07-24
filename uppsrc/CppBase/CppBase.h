@@ -519,7 +519,7 @@ struct Parser {
 	void   Cv();
 	String TType();
 	String ReadType(Decla& d, const String& tname, const String& tparam);
-	void   Qualifier();
+	void   Qualifier(bool override_final = false);
 	void   ParamList(Decl& d);
 	void   Declarator(Decl& d, const char *p);
 	void   EatInitializers();
@@ -546,6 +546,8 @@ struct Parser {
 	void   Check(bool b, const char *err);
 	void   CheckKey(int c);
 
+	void   ClassEnum();
+	bool   IsEnum(int i);
 	bool   UsingNamespace();
 	void   SetScopeCurrent();
 	void   ScopeBody();

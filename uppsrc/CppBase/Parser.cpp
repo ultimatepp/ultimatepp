@@ -691,7 +691,8 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 		return Null;
 	}
 	if(Key(tk_int) || Key(tk_char) ||
-	   Key(tk___int8) || Key(tk___int16) || Key(tk___int32) || Key(tk___int64)) return Null;
+	   Key(tk___int8) || Key(tk___int16) || Key(tk___int32) || Key(tk___int64) ||
+	   Key(tk_char16_t) || Key(tk_char32_t)) return Null;
 	if(sgn) return Null;
 	const char *p = lex.Pos();
 	bool cs = false;
@@ -723,14 +724,26 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 	return cs ? String(p, lex.Pos()) : String();
 }
 
-void Parser::Qualifier()
+void Parser::Qualifier(bool override_final)
 {
-	while(Key(tk_const) || Key(tk_volatile) || VCAttribute())
-		;
-	if(Key(tk_throw)) {
-		while(lex != t_eof && !Key(')'))
+	for(;;)
+		if(Key(tk_const) || Key(tk_volatile) || Key(tk_constexpr) || Key(tk_thread_local) || VCAttribute())
+			;
+		else
+		if(override_final && lex.IsId() && findarg(lex.Id(), "override", "final") >= 0)
 			++lex;
-	}
+		else
+		if(Key(tk_throw) || Key(tk_noexcept) || Key(tk_alignas)) {
+			while(lex != t_eof && lex != ';' && !Key(')'))
+				++lex;
+		}
+		else
+		if(lex[0] == '=' && findarg(lex[1], tk_delete, tk_default) >= 0) {
+			++lex;
+			++lex;
+		}
+		else
+			break;
 }
 
 void Parser::Elipsis(Decl& d)
@@ -792,9 +805,30 @@ int Parser::RPtr()
 
 void Parser::EatInitializers()
 {
-	if(Key(':'))
-		while(lex != '{' && lex != t_eof)
-			++lex;
+	if(Key(':')) {
+		int lvl = 0;
+		for(;;) {
+			if(lex == t_eof)
+				break;
+			if(lvl == 0) {
+				if(lex == '{')
+					break;
+				if(lex.IsId() && lex[1] == '{') { // : X{123} { case
+					lvl++;
+					++lex;
+					++lex;
+				}
+			}
+			else
+				if(lex == '{')
+					lvl++;
+			if(lex == '(')
+				lvl++;
+			if(lex == ')' || lex == '}')
+				lvl--;
+			++lex; 
+		}
+	}
 }
 
 void Parser::Declarator(Decl& d, const char *p)
@@ -846,7 +880,7 @@ void Parser::Declarator(Decl& d, const char *p)
 			d.function = !d.nofn;
 			ParamList(d);
 			p = lex.Pos();
-			Qualifier();
+			Qualifier(true);
 			if(filetype == FILE_C && lex != '{' && lex != ';') // K&R style function header
 				while(lex != '{' && lex != t_eof)
 					++lex;
@@ -1234,15 +1268,6 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		namespace_info << ";}";
 		return true;
 	}
- // TODO: Remove
-#if 0
-	if((lex == tk_class || lex == tk_struct || lex == tk_union)/* && lex[1] != '{'*/) {
-		if(StructDeclaration(tp, tn).GetCount()) {
-			CheckKey(';');
-			return true;
-		}
-	}
-#endif
 	return false;
 }
 
@@ -1335,6 +1360,8 @@ void Parser::Enum()
 	String name;
 	if(lex.IsId())
 		name = lex.GetId();
+	while(lex != '{' && lex != ';' && lex != t_eof)
+		++lex;
 	if(Key('{')) {
 		for(;;) {
 			Line();
@@ -1390,6 +1417,49 @@ bool Parser::UsingNamespace()
 	return false;
 }
 
+bool Parser::IsEnum(int i)
+{
+	for(;;) {
+		if(lex[i] == '{')
+			return true;
+		else
+		if(lex.IsId(i) || lex[i] == ':' ||
+		   findarg(lex[i], tk_bool, tk_signed, tk_unsigned, tk_long, tk_int, tk_short,
+		                       tk_char, tk___int8, tk___int16, tk___int32, tk___int64,
+		                       tk_char16_t, tk_char32_t) >= 0)
+			i++;
+		else
+			return false;
+	}
+}
+
+void Parser::ClassEnum()
+{
+	context.typenames.FindAdd(lex);
+	Context cc;
+	cc <<= context;
+	String name = lex.GetId();
+	String new_scope = context.scope;
+	ScopeCat(new_scope, name);
+	context.scope = new_scope;
+	context.access = PUBLIC;
+	String key = "class";
+	LLOG("enum class "  << context.scope << " using " << context.namespace_using);
+	CppItem& im = Item(context.scope, context.namespace_using, key, name, lex != ';');
+	im.kind = STRUCT;
+	im.type = name;
+	im.access = cc.access;
+	im.tname.Clear();
+	im.ctname.Clear();
+	im.tparam.Clear();
+	im.ptype.Clear();
+	im.pname.Clear();
+	im.param.Clear();
+	Enum();
+	context = pick(cc);
+	SetScopeCurrent();
+}
+
 void Parser::Do()
 {
 	LLOG("Do, scope: " << current_scope);
@@ -1399,7 +1469,7 @@ void Parser::Do()
 	if(UsingNamespace())
 		;
 	else
-	if(Key(';')) // 'empty' declaraion, result of some ignores
+	if(Key(';')) // 'empty' declaration, result of some ignores
 		;
 	else
 	if(Key(tk_extern) && lex == t_string) { // extern "C++" kind
@@ -1456,12 +1526,18 @@ void Parser::Do()
 		}
 	}
 	else
-	if(lex == tk_enum && (lex[1] == '{' || lex[2] == '{')) {
+	if(lex == tk_enum && IsEnum(1)) {
 		++lex;
 		Enum();
 	}
 	else
-	if(lex == tk_typedef && lex[1] == tk_enum && (lex[2] == '{' || lex[3] == '{')) {
+	if(lex == tk_enum && lex[1] == tk_class && IsEnum(2)) {
+		++lex;
+		++lex;
+		ClassEnum(); // like enum class Foo { A, B }
+	}
+	else
+	if(lex == tk_typedef && lex[1] == tk_enum && IsEnum(2)) {
 		++lex;
 		++lex;
 		Enum();

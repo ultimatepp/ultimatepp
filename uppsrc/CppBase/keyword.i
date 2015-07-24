@@ -88,3 +88,10 @@ CPPID(RPC_GMETHOD)
 CPPID(force_inline)
 
 CPPID(rval_)
+
+CPPID(constexpr)
+CPPID(noexcept)
+CPPID(alignas)
+CPPID(thread_local)
+CPPID(char16_t)
+CPPID(char32_t)
