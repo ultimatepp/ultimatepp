@@ -34,7 +34,11 @@ bool Parser::TryDecl()
 	   t == tk_char || t == tk___int8 || t == tk___int16 || t == tk___int32 || t == tk___int64 ||
 	   t == tk_auto) {
 	    q++;
-		while(lex[q] == '*' || lex[q] == '&' || lex[q] == t_and || lex[q] == tk_const) // t_and is r-value here
+	    if(findarg(lex[q], tk_long, tk_int, tk_char) >= 0)
+	        q++;
+	    if(findarg(lex[q], tk_long, tk_int, tk_char) >= 0)
+	        q++;
+		while(findarg(lex[q], '*', '&', t_and, tk_const) >= 0) // t_and is r-value here
 			q++;
 		if(!lex.IsId(q))
 			return false;
