@@ -1,7 +1,10 @@
 // This is a test of minor C++11 features
 
+static_assert(sizeof(long)>=8, "64-bit code generation required for this library.");
+
 template <class T, class U>
 class Test {
+	static_assert(sizeof(long)>=8, "64-bit code generation required for this library.");
 	T a = 10;
 	U b{123};
 };
@@ -44,6 +47,7 @@ thread_local int ThreadLocal;
 
 void Fn()
 {
+	static_assert(sizeof(long)>=8, "64-bit code generation required for this library.");
 	Test< Test< Test<Point> >, Point> x;
 	Test<Test<Test<Point>>, Point> y;
 	int x{7};

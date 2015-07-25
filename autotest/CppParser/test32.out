@@ -1,49 +1,49 @@
 Test {
-	STRUCTTEMPLATE, name: Test, qitem: class, qtype: Test, qptype: , natural: template <class T, class U> class Test, line 3, using 
-	INSTANCEVARIABLE, name: a, qitem: a, qtype: 0, qptype: , natural: T a, line 5, using 
-	INSTANCEVARIABLE, name: b, qitem: b, qtype: 1, qptype: , natural: U b, line 6, using 
+	STRUCTTEMPLATE, name: Test, qitem: class, qtype: Test, qptype: , natural: template <class T, class U> class Test, line 5, using 
+	INSTANCEVARIABLE, name: a, qitem: a, qtype: 0, qptype: , natural: T a, line 8, using 
+	INSTANCEVARIABLE, name: b, qitem: b, qtype: 1, qptype: , natural: U b, line 9, using 
 }
 Y {
-	STRUCT, name: Y, qitem: class, qtype: Y, qptype: , natural: class Y, line 9, using 
-	INSTANCEFUNCTION, name: operator=, qitem: operator=(const Y&), qtype: Y, qptype: Y, natural: Y& operator=(const Y&) = default, line 10, using 
-	CONSTRUCTOR, name: Y, qitem: Y(const Y&), qtype: , qptype: Y, natural: Y(const Y&) = default, line 11, using 
+	STRUCT, name: Y, qitem: class, qtype: Y, qptype: , natural: class Y, line 12, using 
+	INSTANCEFUNCTION, name: operator=, qitem: operator=(const Y&), qtype: Y, qptype: Y, natural: Y& operator=(const Y&) = default, line 13, using 
+	CONSTRUCTOR, name: Y, qitem: Y(const Y&), qtype: , qptype: Y, natural: Y(const Y&) = default, line 14, using 
 }
 <globals> {
-	FUNCTION, name: operator|, qitem: operator|(Flags,Flags), qtype: , qptype: Flags;Flags, natural: constexpr int operator|(Flags f1, Flags f2), line 14, using 
-	VARIABLE, name: aligned_array, qitem: aligned_array, qtype: , qptype: , natural: alignas(double) unsigned char aligned_array[1024], line 31, using , pointer
-	FUNCTION, name: foo, qitem: foo(double)noexcept, qtype: , qptype: , natural: double foo(double) noexcept, line 33, using 
-	VARIABLE, name: override, qitem: override, qtype: , qptype: , natural: int override, line 40, using 
-	VARIABLE, name: final, qitem: final, qtype: , qptype: , natural: int final, line 41, using 
-	VARIABLE, name: ThreadLocal, qitem: ThreadLocal, qtype: , qptype: , natural: thread_local int ThreadLocal, line 43, using 
-	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 45, using 
+	FUNCTION, name: operator|, qitem: operator|(Flags,Flags), qtype: , qptype: Flags;Flags, natural: constexpr int operator|(Flags f1, Flags f2), line 17, using 
+	VARIABLE, name: aligned_array, qitem: aligned_array, qtype: , qptype: , natural: alignas(double) unsigned char aligned_array[1024], line 34, using , pointer
+	FUNCTION, name: foo, qitem: foo(double)noexcept, qtype: , qptype: , natural: double foo(double) noexcept, line 36, using 
+	VARIABLE, name: override, qitem: override, qtype: , qptype: , natural: int override, line 43, using 
+	VARIABLE, name: final, qitem: final, qtype: , qptype: , natural: int final, line 44, using 
+	VARIABLE, name: ThreadLocal, qitem: ThreadLocal, qtype: , qptype: , natural: thread_local int ThreadLocal, line 46, using 
+	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 48, using 
 }
 X {
-	STRUCT, name: X, qitem: class, qtype: X, qptype: , natural: class X, line 16, using 
-	CONSTRUCTOR, name: X, qitem: X(int), qtype: , qptype: , natural: X(int x), line 17, using 
-	CONSTRUCTOR, name: X, qitem: X(), qtype: , qptype: , natural: X(), line 18, using 
-	CONSTRUCTOR, name: X, qitem: X(string), qtype: , qptype: string, natural: X(string s), line 19, using 
+	STRUCT, name: X, qitem: class, qtype: X, qptype: , natural: class X, line 19, using 
+	CONSTRUCTOR, name: X, qitem: X(int), qtype: , qptype: , natural: X(int x), line 20, using 
+	CONSTRUCTOR, name: X, qitem: X(), qtype: , qptype: , natural: X(), line 21, using 
+	CONSTRUCTOR, name: X, qitem: X(string), qtype: , qptype: string, natural: X(string s), line 22, using 
 }
 Point {
-	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 23, using 
-	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 23, using 
-	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 23, using 
+	STRUCT, name: Point, qitem: struct, qtype: Point, qptype: , natural: struct Point, line 26, using 
+	INSTANCEVARIABLE, name: x, qitem: x, qtype: , qptype: , natural: int x, line 26, using 
+	INSTANCEVARIABLE, name: y, qitem: y, qtype: , qptype: , natural: int y, line 26, using 
 }
 U1 {
-	STRUCT, name: U1, qitem: union, qtype: U1, qptype: , natural: union U1, line 25, using 
-	INSTANCEVARIABLE, name: m1, qitem: m1, qtype: , qptype: , natural: int m1, line 26, using 
-	INSTANCEVARIABLE, name: m2, qitem: m2, qtype: complex<double>, qptype: , natural: complex<double> m2, line 27, using 
-	INSTANCEVARIABLE, name: m3, qitem: m3, qtype: string, qptype: , natural: string m3, line 28, using 
+	STRUCT, name: U1, qitem: union, qtype: U1, qptype: , natural: union U1, line 28, using 
+	INSTANCEVARIABLE, name: m1, qitem: m1, qtype: , qptype: , natural: int m1, line 29, using 
+	INSTANCEVARIABLE, name: m2, qitem: m2, qtype: complex<double>, qptype: , natural: complex<double> m2, line 30, using 
+	INSTANCEVARIABLE, name: m3, qitem: m3, qtype: string, qptype: , natural: string m3, line 31, using 
 }
 OverrideFinal {
-	STRUCT, name: OverrideFinal, qitem: struct, qtype: OverrideFinal, qptype: , natural: struct OverrideFinal, line 35, using 
-	INSTANCEFUNCTION, name: Foo, qitem: Foo()final, qtype: , qptype: , natural: void Foo() final, line 36, using 
-	INSTANCEFUNCTION, name: Bar, qitem: Bar()override, qtype: , qptype: , natural: void Bar() override, line 37, using 
+	STRUCT, name: OverrideFinal, qitem: struct, qtype: OverrideFinal, qptype: , natural: struct OverrideFinal, line 38, using 
+	INSTANCEFUNCTION, name: Foo, qitem: Foo()final, qtype: , qptype: , natural: void Foo() final, line 39, using 
+	INSTANCEFUNCTION, name: Bar, qitem: Bar()override, qtype: , qptype: , natural: void Bar() override, line 40, using 
 }
 <locals> {
-x Test<Test<Test<Point>>,Point>, line: 47
-y Test<Test<Test<Point>>,Point>, line: 48
-x , line: 49
-y , line: 51
-ll , line: 52
-p  pointer, line: 53
+x Test<Test<Test<Point>>,Point>, line: 51
+y Test<Test<Test<Point>>,Point>, line: 52
+x , line: 53
+y , line: 55
+ll , line: 56
+p  pointer, line: 57
 }
