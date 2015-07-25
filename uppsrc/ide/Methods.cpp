@@ -1,16 +1,5 @@
 #include "Methods.h"
 
-void  TextSwitch::SetData(const Value& data)
-{
-	String s = data;
-	Switch::SetData(atoi((String)data));
-}
-
-Value TextSwitch::GetData() const
-{
-	return AsString(Switch::GetData());
-}
-
 void DirTable::SetData(const Value& data)
 {
 	Vector<String> l = Split((String)data, ';');
@@ -328,8 +317,6 @@ void AndroidBuilderSetup::ClearNdkCtrls()
 DefaultBuilderSetup::DefaultBuilderSetup()
 {
 	CtrlLayout(*this);
-	
-	allow_pch.SetLabel("Allow precompiled headers");
 	
 	paths.Add(path.SizePos(), "PATH - executable directories");
 	paths.Add(include.SizePos(), "INCLUDE directories");

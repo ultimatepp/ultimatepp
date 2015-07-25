@@ -11,6 +11,12 @@ public:
 	virtual Value  GetData() const;
 };
 
+class TextSwitch : public Switch {
+public:
+	virtual void   SetData(const Value& data);
+	virtual Value  GetData() const;
+};
+
 END_UPP_NAMESPACE
 
 #endif

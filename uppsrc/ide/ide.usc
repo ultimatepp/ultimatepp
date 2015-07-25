@@ -1,4 +1,8 @@
 // MethodsCtrl
 subctrl TextOption {
-	>Option;
-}
+	> Option;
+};
+
+subctrl TextSwitch {
+	> Switch;
+};

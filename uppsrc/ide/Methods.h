@@ -3,12 +3,6 @@
 
 #include "ide.h"
 
-class TextSwitch : public Switch {
-public:
-	virtual void   SetData(const Value& data);
-	virtual Value  GetData() const;
-};
-
 class DirTable : public ArrayCtrl {
 public:
 	virtual void   SetData(const Value& data);
@@ -106,11 +100,6 @@ public:
 
 class DefaultBuilderSetup : public WithBuildMethodsDefaultBuilderSetupLayout<BuilderSetupInterface> {
 public:
-	TextOption debug_blitz;
-	TextSwitch debug_linkmode;
-	TextOption release_blitz;
-	TextSwitch release_linkmode;
-	TextOption allow_pch;
 	DirTable   path;
 	DirTable   include;
 	DirTable   lib;
