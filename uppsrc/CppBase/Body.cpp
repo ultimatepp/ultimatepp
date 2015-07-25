@@ -47,6 +47,24 @@ bool Parser::TryDecl()
 		return true;
 	}
 	String type;
+	if(t == tk_decltype && lex[q + 1] == '(') {
+		q += 2;
+		int q0 = q;
+		int lvl = 1;
+		for(;;) {
+			if(lex[q] == t_eof)
+				break;
+			if(lex[q] == '(')
+				lvl++;
+			else
+			if(lex[q] == ')' && --lvl == 0) {
+				Locals("@" + String(lex.Pos(q0), lex.Pos(q)));
+				return true;
+			}
+			++q;
+		}
+		return false;
+	}
 	if(lex[q] == t_dblcolon) {
 		type << "::";
 		q++;
