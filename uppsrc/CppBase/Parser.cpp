@@ -144,6 +144,9 @@ String FnItem(const char *s, const char *pname, const char *qname, const String&
 				if(*s++ == ']')
 					break;
 		}
+		else
+		if(c == '-' && s[1] == '>')
+			break; // trailing return type
 		else {
 			res.Cat(c);
 			if(c == ',')
@@ -697,6 +700,24 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 	const char *p = lex.Pos();
 	bool cs = false;
 	Index<int> cix;
+	if(Key(tk_decltype) && Key('(')) {
+		const char *p = lex.Pos();
+		int lvl = 1;
+		for(;;) {
+			if(lex == t_eof)
+				break;
+			if(lex == '(')
+				lvl++;
+			else
+			if(lex == ')' && --lvl == 0) {
+				d.type = "@" + String(p, lex.Pos());
+				++lex;
+				break;
+			}
+			++lex;
+		}
+	}
+	else
 	if(Key(tk_auto))
 		d.type = "*";
 	else {
@@ -881,6 +902,12 @@ void Parser::Declarator(Decl& d, const char *p)
 			ParamList(d);
 			p = lex.Pos();
 			Qualifier(true);
+
+			if(d.function && Key(t_arrow)) { // C++11 trailing return type
+				d.type.Clear();
+				ReadType(d, Null, Null);
+			}
+			
 			if(filetype == FILE_C && lex != '{' && lex != ';') // K&R style function header
 				while(lex != '{' && lex != t_eof)
 					++lex;
@@ -1279,7 +1306,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	String ptype;
 	for(int i = 0; i < d.param.GetCount(); i++) {
 		const Decla& p = d.param[i];
-		if(dobody) {
+		if(dobody) { // put arguments to the list of local variables
 			Local& l = local.Add(p.name);
 			l.type = p.type;
 			l.isptr = p.isptr;
@@ -1468,6 +1495,10 @@ void Parser::Do()
 	Line();
 	if(UsingNamespace())
 		;
+	else
+	if(Key(tk_static_assert))
+		while(lex != t_eof && lex != ';')
+			++lex;
 	else
 	if(Key(';')) // 'empty' declaration, result of some ignores
 		;
