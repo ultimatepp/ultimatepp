@@ -1,0 +1,11 @@
+auto Foo(int x) -> String;
+
+template <class T, class V>
+decltype(function(T) + v) Test();
+
+auto Bar(int x, int y) -> decltype(x + y);
+
+template <class H>
+void Body()
+{
+	decltype(H + H) hh;

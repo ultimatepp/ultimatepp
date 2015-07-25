@@ -1,0 +1,9 @@
+<globals> {
+	FUNCTION, name: Foo, qitem: Foo(int), qtype: String, qptype: , natural: auto Foo(int x) -> String, line 1, using 
+	FUNCTIONTEMPLATE, name: Test, qitem: Test(), qtype: @function(T)+v, qptype: , natural: template <class T, class V> decltype(function(T) + v) Test(), line 3, using 
+	FUNCTION, name: Bar, qitem: Bar(int,int), qtype: @x+y, qptype: ;, natural: auto Bar(int x, int y) -> decltype(x + y), line 6, using 
+	FUNCTIONTEMPLATE, name: Body, qitem: Body(), qtype: , qptype: , natural: template <class H> void Body(), line 8, using 
+}
+<locals> {
+hh @H + H, line: 11
+}
