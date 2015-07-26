@@ -779,7 +779,6 @@ void Ide::SetupBuildMethods()
 #ifdef PLATFORM_WIN32
 String ScanMingwIncludes(const String& dir)
 {
-	DDUMP(dir);
 	String r;
 	FindFile ff(dir + "/*.*");
 	bool isinclude = false;
@@ -797,13 +796,11 @@ String ScanMingwIncludes(const String& dir)
 
 String FindMingwIncludes(const String& path)
 {
-	DDUMP(path);
 	String r;
 	Vector<String> h = Split(path, ";");
 	for(int i = 0; i < h.GetCount(); i++)
 		if(ToLower(GetFileName(h[i])) == "bin")
 			MergeWith(r, ";", ScanMingwIncludes(GetFileFolder(h[i])));
-	DDUMP(r);
 	return r;
 }
 #endif
@@ -813,9 +810,6 @@ String Ide::GetIncludePath()
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String include = GetVar("UPP") + ';' + bm.Get("INCLUDE", "");
-	DDUMP(bm);
-	DDUMP(bm.Get("BUILDER"));
-	DDUMP(BuilderMap());
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
