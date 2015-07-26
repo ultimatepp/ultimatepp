@@ -1,0 +1,4 @@
+using Foo = String;
+
+template<class T>
+	using Vec = std::vector<T,My_alloc<T>>;

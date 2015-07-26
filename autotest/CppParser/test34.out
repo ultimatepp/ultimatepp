@@ -1,0 +1,8 @@
+Foo {
+	TYPEDEF, name: Foo, qitem: typedef, qtype: String, qptype: , natural: using Foo, line 1, using 
+}
+Vec {
+	TYPEDEF, name: Vec, qitem: typedef, qtype: vector<T,My_alloc<T>>, qptype: , natural: using Vec = std::vector<T,My_alloc<T>>, line 3, using 
+}
+<locals> {
+}
