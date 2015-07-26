@@ -381,7 +381,10 @@ String GetIncludePath0(const char *s, const char *filedir)
 					if(FileExists(fn))
 						return fn;
 				}
-				return NormalizeSourcePath(GetFileOnPath(name, GetIncludePath(), false));
+				String p = GetFileOnPath(name, GetIncludePath(), false);
+				if(p.GetCount())
+					return NormalizeSourcePath(p);
+				return Null;
 			}
 			name.Cat(*s++);
 		}

@@ -140,6 +140,12 @@ are read separately using Read2 method. This variant passes individual
 arguments instead of whole commandline, this has advantage that 
 arguments are in POSIX passed directly to execv, without parsing 
 the commandline.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LocalProcess`:`:Finish`(Upp`:`:String`&`): [@(0.0.255) int]_[* Finish]([_^Upp`:`:String^ S
+tring][@(0.0.255) `&]_[*@3 out])&]
+[s2;%% Runs the started process until it exits. Returns standard 
+output in [%-*@3 out] and exit code as return value.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:LocalProcess`:`:DoubleFork`(bool`): [_^Upp`:`:LocalProcess^ LocalProcess][@(0.0.255) `&
@@ -176,9 +182,8 @@ ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[
 [s2;%% Equivalent of default constructor and then invoking Start([%-*@3 cmd][%- , 
 ][%-*@3 arg][%- , ][%-*@3 envptr]).&]
 [s0; &]
-[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Global functions related to LocalProcess]]}}&]
-[s3; &]
+[s3;%% &]
 [s5;:Sys`(const char`*`,String`&`,bool`): [@(0.0.255) int]_[* Sys]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 cmd], [_^String^ String][@(0.0.255) `&]_[*@3 out], [@(0.0.255) bool]_[*@3 convert
 charset]_`=_[@(0.0.255) true])&]
