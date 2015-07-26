@@ -45,6 +45,10 @@ int final;
 
 thread_local int ThreadLocal;
 
+inline namespace Upp {
+	int in_inline_namespace;
+};
+
 void Fn()
 {
 	static_assert(sizeof(long)>=8, "64-bit code generation required for this library.");

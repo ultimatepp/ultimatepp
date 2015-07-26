@@ -15,7 +15,8 @@ Y {
 	VARIABLE, name: override, qitem: override, qtype: , qptype: , natural: int override, line 43, using 
 	VARIABLE, name: final, qitem: final, qtype: , qptype: , natural: int final, line 44, using 
 	VARIABLE, name: ThreadLocal, qitem: ThreadLocal, qtype: , qptype: , natural: thread_local int ThreadLocal, line 46, using 
-	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 48, using 
+	VARIABLE, name: in_inline_namespace, qitem: in_inline_namespace, qtype: , qptype: , natural: int in_inline_namespace, line 49, using 
+	FUNCTION, name: Fn, qitem: Fn(), qtype: , qptype: , natural: void Fn(), line 52, using 
 }
 X {
 	STRUCT, name: X, qitem: class, qtype: X, qptype: , natural: class X, line 19, using 
@@ -40,10 +41,10 @@ OverrideFinal {
 	INSTANCEFUNCTION, name: Bar, qitem: Bar()override, qtype: , qptype: , natural: void Bar() override, line 40, using 
 }
 <locals> {
-x Test<Test<Test<Point>>,Point>, line: 51
-y Test<Test<Test<Point>>,Point>, line: 52
-x , line: 53
-y , line: 55
-ll , line: 56
-p  pointer, line: 57
+x Test<Test<Test<Point>>,Point>, line: 55
+y Test<Test<Test<Point>>,Point>, line: 56
+x , line: 57
+y , line: 59
+ll , line: 60
+p  pointer, line: 61
 }
