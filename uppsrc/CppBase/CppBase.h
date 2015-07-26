@@ -551,6 +551,7 @@ struct Parser {
 	bool   UsingNamespace();
 	void   SetScopeCurrent();
 	void   ScopeBody();
+	void   DoNamespace();
 	void   Do();
 	String AnonymousName();
 	String StructDeclaration(const String& tp, const String& tn);

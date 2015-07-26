@@ -1500,6 +1500,17 @@ void Parser::ClassEnum()
 	SetScopeCurrent();
 }
 
+void Parser::DoNamespace()
+{
+	if(Key('{'))
+		while(!Key('}')) {
+			if(lex == t_eof)
+				ThrowError("Unexpected end of file");
+			Do();
+		}
+	Key(';');
+}
+
 void Parser::Do()
 {
 	LLOG("Do, scope: " << current_scope);
@@ -1513,18 +1524,18 @@ void Parser::Do()
 		while(lex != t_eof && lex != ';')
 			++lex;
 	else
+	if(lex == tk_inline && lex[1] == tk_namespace) { // for now, inline namespace is simply ignored
+		while(lex != t_eof && lex != '{')
+			++lex;
+		DoNamespace();
+	}
+	else
 	if(Key(';')) // 'empty' declaration, result of some ignores
 		;
 	else
 	if(Key(tk_extern) && lex == t_string) { // extern "C++" kind
 		++lex;
-		if(Key('{'))
-			while(!Key('}')) {
-				if(lex == t_eof)
-					ThrowError("Unexpected end of file");
-				Do();
-			}
-		Key(';');
+		DoNamespace();
 	}
 	else
 	if(Key(tk_template)) {
