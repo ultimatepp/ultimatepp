@@ -473,6 +473,7 @@ void Ide::AddHistory()
 	b.file = editfile;
 	b.pos = editor.GetEditPos();
 	TouchFile(editfile);
+	SetBar();
 }
 
 void Ide::HistoryBk()
@@ -480,14 +481,17 @@ void Ide::HistoryBk()
 	while(histi > 0 && --histi < history.GetCount())
 		if(IsHistDiff(histi)) {
 			GotoBookmark(history[histi]);
+			SetBar();
 			break;
 		}
 }
 
 void Ide::HistoryFw()
 {
-	if(histi < history.GetCount() - 1 && ++histi >= 0)
+	if(histi < history.GetCount() - 1 && ++histi >= 0) {
 		GotoBookmark(history[histi]);
+		SetBar();
+	}
 }
 
 void Ide::BookKey(int key) {
