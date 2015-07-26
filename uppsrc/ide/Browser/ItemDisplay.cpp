@@ -144,7 +144,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		for(int i = 1; i < min(m.inherited, 5); i++)
 			w.DrawRect(x + 10, r.top + 7 + 2 * i, 7, 1, SColorText);
 	}
-	x += 15;
+	x += 16;
 	int y = ry - Draw::GetStdFontCy() / 2;
 	int x0 = x;
 	Vector<ItemTextPart> n = ParseItemNatural(m);
