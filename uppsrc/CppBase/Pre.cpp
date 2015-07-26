@@ -60,9 +60,12 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 		else
 		if(*rm == '#')
 		{
-			if(rm[1] == 'd' && rm[2] == 'e' && rm[3] == 'f' &&
-			   rm[4] == 'i' && rm[5] == 'n' && rm[6] == 'e' && !iscid(rm[7])) {
-				const char *s = rm + 8;
+			const char *s = rm + 1;
+			while(*s == ' ' || *s == '\t')
+				s++;
+			if(s[0] == 'd' && s[1] == 'e' && s[2] == 'f' &&
+			   s[3] == 'i' && s[4] == 'n' && s[5] == 'e' && !iscid(s[6])) {
+				s += 6;
 				while(*s == ' ') s++;
 				String macro;
 				while(iscid(*s))

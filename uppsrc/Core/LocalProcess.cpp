@@ -601,19 +601,24 @@ void LocalProcess::CloseWrite()
 #endif
 }
 
-int Sys(const char *cmd, String& out, bool convertcharset)
+int LocalProcess::Finish(String& out)
 {
 	out.Clear();
+	while(IsRunning()) {
+		out.Cat(Get());
+		Sleep(1); // p.Wait would be much better here!
+	}
+	out.Cat(Get());
+	return GetExitCode();
+}
+
+int Sys(const char *cmd, String& out, bool convertcharset)
+{
 	LocalProcess p;
 	p.ConvertCharset(convertcharset);
 	if(!p.Start(cmd))
 		return -1;
-	while(p.IsRunning()) {
-		out.Cat(p.Get());
-		Sleep(1); // p.Wait would be much better here!
-	}
-	out.Cat(p.Get());
-	return p.GetExitCode();
+	return p.Finish(out);
 }
 
 String Sys(const char *cmd, bool convertcharset)
@@ -624,17 +629,11 @@ String Sys(const char *cmd, bool convertcharset)
 
 int Sys(const char *cmd, const Vector<String>& arg, String& out, bool convertcharset)
 {
-	out.Clear();
 	LocalProcess p;
 	p.ConvertCharset(convertcharset);
 	if(!p.Start(cmd, arg))
 		return -1;
-	while(p.IsRunning()) {
-		out.Cat(p.Get());
-		Sleep(1); // p.Wait would be much better here!
-	}
-	out.Cat(p.Get());
-	return p.GetExitCode();
+	return p.Finish(out);
 }
 
 String Sys(const char *cmd, const Vector<String>& arg, bool convertcharset)

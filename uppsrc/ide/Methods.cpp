@@ -776,34 +776,18 @@ void Ide::SetupBuildMethods()
 	SetBar();
 }
 
+void ExtractIncludes(Index<String>& r, String h)
+{
 #ifdef PLATFORM_WIN32
-String ScanMingwIncludes(const String& dir)
-{
-	String r;
-	FindFile ff(dir + "/*.*");
-	bool isinclude = false;
-	while(ff) {
-		if(ff.IsFolder())
-			MergeWith(r, ";", ScanMingwIncludes(ff.GetPath()));
-		if(GetFileExt(ff.GetName()) == ".h")
-			isinclude = true;
-		ff.Next();
-	}
-	if(isinclude)
-		r = Merge(";", dir, r);
-	return r;
-}
-
-String FindMingwIncludes(const String& path)
-{
-	String r;
-	Vector<String> h = Split(path, ";");
-	for(int i = 0; i < h.GetCount(); i++)
-		if(ToLower(GetFileName(h[i])) == "bin")
-			MergeWith(r, ";", ScanMingwIncludes(GetFileFolder(h[i])));
-	return r;
-}
+	h.Replace("\r", "");
 #endif
+	Vector<String> ln = Split(h, '\n');
+	for(int i = 0; i < ln.GetCount(); i++) {
+		String dir = TrimBoth(ln[i]);
+		if(DirectoryExists(dir))
+			r.FindAdd(NormalizePath(dir));
+	}
+}
 
 String Ide::GetIncludePath()
 {
@@ -814,15 +798,8 @@ String Ide::GetIncludePath()
 	static String sys_includes;
 	ONCELOCK {
 		Index<String> r;
-		for(int pass = 0; pass < 2; pass++) {
-			String h = Sys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null");
-			Vector<String> ln = Split(h, '\n');
-			for(int i = 0; i < ln.GetCount(); i++) {
-				String dir = TrimBoth(ln[i]);
-				if(DirectoryExists(dir))
-					r.FindAdd(NormalizePath(dir));
-			}
-		}
+		for(int pass = 0; pass < 2; pass++)
+			ExtractIncludes(r, Sys(pass ? "clang -v -x c++ -E /dev/null" : "gcc -v -x c++ -E /dev/null"));
 		r.FindAdd("/usr/include");
 		r.FindAdd("/usr/local/include");
 		sys_includes = Join(r.GetKeys(), ";");
@@ -834,8 +811,25 @@ String Ide::GetIncludePath()
 	static VectorMap<String, String> mingw_include;
 	int q = mingw_include.Find(method);
 	if(q < 0) {
+		String gcc = GetFileOnPath("gcc.exe", bm.Get("PATH")); // TODO clang
+		Index<String> r;
+		if(gcc.GetCount()) {
+			String dummy = ConfigFile("dummy.cpp");
+			Upp::SaveFile(dummy, String());
+			VectorMap<String, String> env(Environment(), 1);
+			env.GetAdd("PATH") = Join(SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", "")), ";");
+			String environment;
+			for(int i = 0; i < env.GetCount(); i++)
+				environment << env.GetKey(i) << '=' << env[i] << '\0';
+			environment.Cat(0);
+			DUMPHEX(environment);
+			LocalProcess p;
+			String out;
+			if(p.Start(gcc + " -v -x c++ -E " + dummy, environment) && p.Finish(out) == 0)
+				ExtractIncludes(r, out);
+		}
 		q = mingw_include.GetCount();
-		mingw_include.Add(method, FindMingwIncludes(bm.Get("PATH")));
+		mingw_include.Add(method, Join(r.GetKeys(), ";"));
 	}
 	MergeWith(include, ";", mingw_include[q]);
 #endif
