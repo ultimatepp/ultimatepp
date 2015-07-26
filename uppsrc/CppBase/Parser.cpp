@@ -1102,6 +1102,18 @@ Array<Parser::Decl> Parser::Declaration(bool l0, bool more, const String& tname,
 		}
 		return r;
 	}
+	const char *b = lex.Pos();
+	if(Key(tk_using) && lex.IsId()) {
+		String name = lex.GetId();
+		Key('=');
+		Array<Decl> r;
+		Decl& d = r.Add();
+		ReadType(d, tname, tparam);
+		d.name = name;
+		d.natural = String(b, lex.Pos());
+		d.type_def = true;
+		return r;
+	}
 	return Declaration0(l0, more, tname, tparam);
 }
 
@@ -1420,7 +1432,8 @@ void Parser::Enum()
 
 bool Parser::UsingNamespace()
 {
-	if(Key(tk_using)) {
+	if(lex == tk_using && !(lex.IsId(1) && lex[2] == '=')) {
+		++lex;
 		if(Key(tk_namespace))
 			while(lex.IsId()) {
 				Vector<String> h = Split(context.namespace_using, ';');
@@ -1530,30 +1543,47 @@ void Parser::Do()
 		else {
 			String tnames;
 			String tparam = TemplateParams(tnames);
-			if(!Scope(tparam, tnames)) {
+			if(lex == tk_using) { //C++11 template alias template <...> using ID =
 				Array<Decl> r = Declaration(true, true, tnames, tparam);
-				CppItem *functionItem = 0;
-				bool body = lex == '{';
 				for(int i = 0; i < r.GetCount(); i++) {
-					Decl& d = r[i];
-					if(!d.isfriend && d.function) {
-						CppItem& m = Fn(d, "template " + tparam + ' ', body, tnames, tparam);
-						functionItem = &m;
+					Decla& d = r[i];
+					if(d.type_def) {
+						String scope = context.scope;
+						ScopeCat(scope, d.name);
+						CppItem& im = Item(scope, context.namespace_using, "typedef", d.name);
+						im.natural = Purify(d.natural);
+						im.type = d.type;
+						im.access = context.access;
+						im.kind = TYPEDEF;
 					}
 				}
-				if(body && functionItem && whenFnEnd) {
-					symbolsOutsideFunctions.Merge( lex.FinishStatCollection() );
-					lex.StartStatCollection(); // start collection of function symbols
+			}
+			else {
+				if(!Scope(tparam, tnames)) {
+					Array<Decl> r = Declaration(true, true, tnames, tparam);
+					CppItem *functionItem = 0;
+					bool body = lex == '{';
+					for(int i = 0; i < r.GetCount(); i++) {
+						Decl& d = r[i];
+						if(!d.isfriend && d.function) {
+							CppItem& m = Fn(d, "template " + tparam + ' ', body, tnames, tparam);
+							functionItem = &m;
+						}
+					}
+					if(body && functionItem && whenFnEnd) {
+						symbolsOutsideFunctions.Merge( lex.FinishStatCollection() );
+						lex.StartStatCollection(); // start collection of function symbols
+					}
+					EatBody();
+					if(body && functionItem && whenFnEnd) {
+						whenFnEnd(FunctionStat(current_scope, *functionItem,
+						                       lex.FinishStatCollection(), maxScopeDepth));
+						lex.StartStatCollection(); // start collection of orphan symbols
+					}
+					Key(';');
 				}
 				EatBody();
-				if(body && functionItem && whenFnEnd) {
-					whenFnEnd(FunctionStat(current_scope, *functionItem,
-					                       lex.FinishStatCollection(), maxScopeDepth));
-					lex.StartStatCollection(); // start collection of orphan symbols
-				}
-				Key(';');
 			}
-			EatBody();
 		}
 	}
 	else
