@@ -776,11 +776,46 @@ void Ide::SetupBuildMethods()
 	SetBar();
 }
 
+#ifdef PLATFORM_WIN32
+String ScanMingwIncludes(const String& dir)
+{
+	DDUMP(dir);
+	String r;
+	FindFile ff(dir + "/*.*");
+	bool isinclude = false;
+	while(ff) {
+		if(ff.IsFolder())
+			MergeWith(r, ";", ScanMingwIncludes(ff.GetPath()));
+		if(GetFileExt(ff.GetName()) == ".h")
+			isinclude = true;
+		ff.Next();
+	}
+	if(isinclude)
+		r = Merge(";", dir, r);
+	return r;
+}
+
+String FindMingwIncludes(const String& path)
+{
+	DDUMP(path);
+	String r;
+	Vector<String> h = Split(path, ";");
+	for(int i = 0; i < h.GetCount(); i++)
+		if(ToLower(GetFileName(h[i])) == "bin")
+			MergeWith(r, ";", ScanMingwIncludes(GetFileFolder(h[i])));
+	DDUMP(r);
+	return r;
+}
+#endif
+
 String Ide::GetIncludePath()
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String include = GetVar("UPP") + ';' + bm.Get("INCLUDE", "");
+	DDUMP(bm);
+	DDUMP(bm.Get("BUILDER"));
+	DDUMP(BuilderMap());
 #ifdef PLATFORM_POSIX
 	static String sys_includes;
 	ONCELOCK {
@@ -798,9 +833,18 @@ String Ide::GetIncludePath()
 		r.FindAdd("/usr/local/include");
 		sys_includes = Join(r.GetKeys(), ";");
 	}
-	MergeWith(include, ";", sys_includes);
+	if(findarg(bm.Get("BUILDER"), "GCC", "CLANG") >= 0)
+		MergeWith(include, ";", sys_includes);
 #endif
-	;
+#ifdef PLATFORM_WIN32
+	static VectorMap<String, String> mingw_include;
+	int q = mingw_include.Find(method);
+	if(q < 0) {
+		q = mingw_include.GetCount();
+		mingw_include.Add(method, FindMingwIncludes(bm.Get("PATH")));
+	}
+	MergeWith(include, ";", mingw_include[q]);
+#endif
 
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
