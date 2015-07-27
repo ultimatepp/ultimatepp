@@ -14,6 +14,13 @@ public:
 	static String GetScriptExt();
 	static String GetCmdExt();
 	
+	static void NormalizeVersions(Vector<String>& versions);
+	static void RemoveVersionsNormalization(Vector<String>& versions);
+	
+private:
+	static String FindVersionsPrefix(const Vector<String>& versions);
+	static String FindLongestVersion(const Vector<String>& versions);
+	
 private:
 	Android();
 	Android(const Android&);
@@ -95,16 +102,22 @@ public:
 	
 	bool Validate() const;
 	
+	String FindDefaultPlatform() const;
 	String FindDefaultToolchain() const;
 	String FindDefaultCppRuntime() const;
 	
+	Vector<String> FindPlatforms() const;
 	Vector<String> FindToolchains() const;
 	Vector<String> FindCppRuntimes() const;
 	
 public:
+	String GetIncludeDir() const;
+
+	String GetPlatformsDir() const  { return path + DIR_SEPS + "platforms"; }
+	String GetToolchainsDir() const { return path + DIR_SEPS + "toolchains"; }
+	
 	String GetNdkBuildPath() const  { return path + DIR_SEPS + "ndk-build" + Android::GetCmdExt(); }
 	String GetGdbPath() const       { return path + DIR_SEPS + "ndk-gdb"; }
-	String GetToolchainsDir() const { return path + DIR_SEPS + "toolchains"; }
 	
 public:
 	String GetPath() const { return this->path; }

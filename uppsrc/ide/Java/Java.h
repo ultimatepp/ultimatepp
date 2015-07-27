@@ -31,6 +31,7 @@ public:
 	
 public:
 	String GetBinDir() const        { return path + DIR_SEPS + "bin"; }
+	String GetIncludeDir() const    { return path + DIR_SEPS + "include"; }
 	
 	String GetJarPath() const       { return GetBinDir() + DIR_SEPS + "jar" + GetExeExt(); }
 	String GetJavacPath() const     { return GetBinDir() + DIR_SEPS + "javac" + GetExeExt(); }
