@@ -7,9 +7,11 @@
 #define TOPICFILE <ide/app.tpp/all.i>
 #include <Core/topic_group.h>
 
+/*
 #ifndef bmYEAR
 #include <build_info.h>
 #endif
+*/
 
 Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 {
@@ -31,7 +33,7 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	h << " (Gtk)";
 #endif
 	h << "\n"
-	  << Format("Compiled %d-%02d-%02d %d:%02d\n", bmYEAR , bmMONTH, bmDAY, bmHOUR, bmMINUTE)
+//	  << Format("Compiled %d-%02d-%02d %d:%02d\n", bmYEAR , bmMONTH, bmDAY, bmHOUR, bmMINUTE)
 	  << Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
 	v1 = h;
 	v1.HSizePos(230, 10).BottomPos(20, Arial(20).GetHeight() * 5);
