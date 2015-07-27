@@ -46,8 +46,7 @@ String AndroidNDK::FindDefaultToolchain() const
 	Vector<String> toolchains = FindToolchains();
 	Sort(toolchains, StdGreater<String>());
 	
-	int count = toolchains.GetCount();
-	return count ? toolchains[count - 1] : "";
+	return toolchains[toolchains.GetCount() - 1];
 }
 
 String AndroidNDK::FindDefaultCppRuntime() const
