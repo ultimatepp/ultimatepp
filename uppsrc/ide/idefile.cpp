@@ -1,11 +1,25 @@
 #include "ide.h"
 
-void Ide::SetupEditor(int f, String hl, String fn)
+void Ide::SetupEditor(int f, String hl, String path)
 {
 	if(IsNull(hl)) {
-		hl = EditorSyntax::GetSyntaxForFilename(fn);
+		hl = EditorSyntax::GetSyntaxForFilename(path);
 		if(IsNull(hl))		
-			hl = EditorSyntax::GetSyntaxForFilename(ToLower(fn));
+			hl = EditorSyntax::GetSyntaxForFilename(ToLower(path));
+		if(IsNull(hl) && IsNull(GetFileExt(path))) {
+			FileIn in(path);
+			String h = in.Get(4096);
+			CParser p(h);
+			while(!p.IsEof()) {
+				if(p.Char('#')) {
+					if(p.Id("define") || p.Id("ipathdef") || p.Id("ifdef") || p.Id("include") || p.Id("pragma")) {
+						hl = "cpp";
+						break;
+					}
+				}
+				p.SkipTerm();
+			}
+		}
 	}
 	switch(f) {
 	case 1:  editor.SetFont(font1); break;
@@ -22,7 +36,10 @@ void Ide::SetupEditor()
 	if(!IsActiveFile())
 		return;
 	Package::File& f = ActiveFile();
-	SetupEditor(f.font, f.highlight, GetFileExt(GetActiveFileName()));
+	String p = GetActiveFileName();
+	if(p != HELPNAME)
+		p = GetActiveFilePath();
+	SetupEditor(f.font, f.highlight, p);
 }
 
 void Ide::FileCursor()

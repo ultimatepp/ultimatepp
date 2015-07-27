@@ -462,7 +462,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 //				lnk << " -dynamic -fPIC"; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
 			if(HasFlag("WINCE"))
 				lnk << " -mwindowsce";
-			else if(HasFlag("WIN32")) {
+			else if(HasFlag("WIN32") && !HasFlag("CLANG")) {
 				lnk << " -mwindows";
 				if(HasFlag("MT"))
 					lnk << " -mthreads";
