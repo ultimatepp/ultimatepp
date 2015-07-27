@@ -822,7 +822,6 @@ String Ide::GetIncludePath()
 			for(int i = 0; i < env.GetCount(); i++)
 				environment << env.GetKey(i) << '=' << env[i] << '\0';
 			environment.Cat(0);
-			DUMPHEX(environment);
 			LocalProcess p;
 			String out;
 			if(p.Start(gcc + " -v -x c++ -E " + dummy, environment) && p.Finish(out) == 0)
