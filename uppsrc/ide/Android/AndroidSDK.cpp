@@ -173,7 +173,10 @@ String AndroidSDK::FindDefaultPlatform() const
 {
 	Vector<String> platforms = FindPlatforms();
 	if(platforms.GetCount()) {
+		Android::NormalizeVersions(platforms);
 		Sort(platforms, StdGreater<String>());
+		Android::RemoveVersionsNormalization(platforms);
+		
 		int idx = 0;
 		for(int i = 0; i < platforms.GetCount(); i++) {
 			if(RegExp("^android-[0-9]*$").Match(platforms[i])) {

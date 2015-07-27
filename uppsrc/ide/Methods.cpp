@@ -832,7 +832,12 @@ String Ide::GetIncludePath()
 	}
 	MergeWith(include, ";", mingw_include[q]);
 #endif
-
+	if(findarg(bm.Get("BUILDER"), "ANDROID") >= 0) {
+		AndroidNDK ndk(bm.Get("NDK_PATH"));
+		if(ndk.Validate())
+			MergeWith(include, ";", ndk.GetIncludeDir());
+	}
+	
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& pkg = wspc.GetPackage(i);

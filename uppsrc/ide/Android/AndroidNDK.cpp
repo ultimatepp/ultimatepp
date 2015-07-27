@@ -30,17 +30,41 @@ bool AndroidNDK::Validate() const
 	return true;
 }
 
+String AndroidNDK::FindDefaultPlatform() const
+{
+	Vector<String> platforms = FindPlatforms();
+	
+	Android::NormalizeVersions(platforms);
+	Sort(platforms, StdGreater<String>());
+	Android::RemoveVersionsNormalization(platforms);
+	
+	return !platforms.IsEmpty() ? platforms[0] : "";
+}
+
 String AndroidNDK::FindDefaultToolchain() const
 {
 	Vector<String> toolchains = FindToolchains();
 	Sort(toolchains, StdGreater<String>());
 	
-	return toolchains.GetCount() ? toolchains[toolchains.GetCount() - 1] : "";
+	int count = toolchains.GetCount();
+	return count ? toolchains[count - 1] : "";
 }
 
 String AndroidNDK::FindDefaultCppRuntime() const
 {
 	return "gnustl_shared";
+}
+
+Vector<String> AndroidNDK::FindPlatforms() const
+{
+	Vector<String> platforms;
+	
+	for(FindFile ff(AppendFileName(GetPlatformsDir(), "*")); ff; ff.Next()) {
+		if(!ff.IsHidden() && ff.IsFolder())
+			platforms.Add(ff.GetName());
+	}
+	
+	return platforms;
 }
 
 Vector<String> AndroidNDK::FindToolchains() const
@@ -81,6 +105,17 @@ Vector<String> AndroidNDK::FindCppRuntimes() const
 	runtimes.Add("c++_shared");
 	
 	return runtimes;
+}
+
+String AndroidNDK::GetIncludeDir() const
+{
+	String dir;
+	dir << GetPlatformsDir() << DIR_SEPS << FindDefaultPlatform() << DIR_SEPS;
+	// TODO: decide how to implement architecture selection.
+	dir << "arch-arm" << DIR_SEPS;
+	dir << "usr" << DIR_SEPS << "include";
+	
+	return DirectoryExists(dir) ? dir : "";
 }
 
 END_UPP_NAMESPACE
