@@ -258,6 +258,12 @@ void Autocomplete()
 		i.
 }
 
+void Autocomplete()
+{
+	Vector<VectorMap<String, String>> lvs;
+	lvs[0].
+}
+
 void JumpTo()
 {
 	Point p;
@@ -291,16 +297,22 @@ void AddContact();
 struct MYTabs : FileTabs {
 	void 	RenameFile(const WString &from, const WString &to, Image icon = Null);
 	void    AddContact();
+	int     local;
 };
 
 void MYTabs::RenameFile(const WString &from, const WString &to, Image icon)
 {
+	local; // jump to member
+	int local;
 	FileTabs::RenameFile(from, to, icon); // should jump to FileTabs, not here
 	Upp::FileTabs::RenameFile(from, to, icon); // should jump to FileTabs, not here
 	::Upp::FileTabs::RenameFile(from, to, icon); // should jump to FileTabs, not here
 	RenameFile(from, to, icon); // to MyTabs
 	MYTabs::RenameFile(from, to, icon); // to MyTabs
 	::MYTabs::RenameFile(from, to, icon); // to MyTabs
+	local; // jump to local variable
+	this->local; // jump to member
+	MYTabs::local; // jump to member
 }
 
 void MYTabs::AddContact()
