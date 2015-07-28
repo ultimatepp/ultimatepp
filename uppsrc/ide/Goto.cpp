@@ -247,9 +247,12 @@ bool Ide::SwapSIf(const char *cref)
 	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
 		return false;
 	Vector<const CppItem *> n;
-	for(int i = 0; i < nn.GetCount(); i++)
-		if(nn[i].name == p.current_name)
+	bool destructor = p.current_key.Find('~') >= 0;
+	for(int i = 0; i < nn.GetCount(); i++) {
+		const CppItem& m = nn[i];
+		if(m.name == p.current_name && destructor == (m.kind == DESTRUCTOR) && !IsCppType(m.kind))
 			n.Add(&nn[i]);
+	}
 	if(!cref && n.GetCount() < 2)
 		for(int i = 0; i < n.GetCount(); i++)
 			if(nn[i].IsType()) {

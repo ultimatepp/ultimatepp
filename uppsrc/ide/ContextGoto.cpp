@@ -209,7 +209,7 @@ void Ide::ContextGoto0(int pos)
 		if(qual.GetCount() == 0)
 			qual = ":";
 	}
-		
+
 	Vector<String> scope;
 	Vector<bool> istype; // prefer type (e.g. struct Foo) over constructor (Foo::Foo())
 
