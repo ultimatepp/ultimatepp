@@ -1062,11 +1062,14 @@ Array<Parser::Decl> Parser::Declaration0(bool l0, bool more, const String& tname
 	}
 	String st = ReadType(d, tname, tparam);
 	if(!lex.IsGrounded()) // 'static' etc.. can be after type too... (but not allow it on start of line)
-		ReadMods(d); 
+		ReadMods(d);
 	if(!st.IsEmpty()) {
 		Decl& a = r.Add();
+		int q = st.Find('~');
+		if(q >= 0)
+			st.Remove(q, 1);
 		a.name = st;
-		a.isdestructor = st.Find('~') > 0;
+		a.isdestructor = q >= 0;
 		a.function = true;
 		a.istructor = true;
 		if(Key('('))

@@ -337,7 +337,7 @@ void   LineEdit::Paint0(Draw& w) {
 					wkind = 0;
 				}
 			}
-			if(wkind == ' ')
+			if(wkind && !empty)
 				warn_whitespace = true;
 			if(warn_whitespace)
 				showcolor = color[WARN_WHITESPACE];
