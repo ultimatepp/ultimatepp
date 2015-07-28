@@ -176,7 +176,7 @@ void Ide::ContextGoto0(int pos)
 			ci++;
 			break;
 		}
-		if(c == '}' || c == 0)
+		if(c == '}' || c == 0 || c == ';')
 			break;
 		ci++;
 	}
@@ -292,7 +292,7 @@ void Ide::ContextGoto0(int pos)
 				todo.Append(f.GetBases());
 			}
 		}
-		if(scope.GetCount() == 0) {
+		if(xp.GetCount() == 0) {
 			q = parser.local.Find(id);
 			if(q >= 0) { // Try locals
 				AddHistory();
