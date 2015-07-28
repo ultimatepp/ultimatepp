@@ -30,6 +30,8 @@ public:
 		PAPER_NORMAL,
 		PAPER_READONLY,
 		PAPER_SELECTED,
+		WHITESPACE,
+		WARN_WHITESPACE,
 		COLOR_COUNT,
 	};
 
@@ -288,6 +290,7 @@ protected:
 	bool             showspaces;
 	bool             showlines;
 	bool             showreadonly;
+	bool             warnwhitespace;
 	bool             dorectsel; // TODO: Refactor this ugly hack!
 
 	void   Paint0(Draw& w);
@@ -390,6 +393,8 @@ public:
 	bool      IsShowSpaces() const            { return showspaces; }
 	LineEdit& ShowLineEndings(bool sl = true) { showlines = sl; Refresh(); return *this; }
 	bool      IsShowLineEndings() const       { return showlines; }
+	LineEdit& WarnWhiteSpace(bool b = true)   { warnwhitespace = b; Refresh(); return *this; }
+	bool      IsWantWhiteSpace() const        { return warnwhitespace; }
 	LineEdit& WithCutLine(bool b)             { cutline = b; return *this; }
 	LineEdit& NoCutLine()                     { return WithCutLine(false); }
 	bool      IsWithCutLine() const           { return cutline; }

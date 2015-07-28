@@ -24,6 +24,7 @@ LineEdit::LineEdit() {
 	showreadonly = true;
 	dorectsel = false;
 	hline = Null;
+	warnwhitespace = false;
 }
 
 LineEdit::~LineEdit() {}
@@ -304,7 +305,6 @@ void   LineEdit::Paint0(Draw& w) {
 	selh -= cpos;
 	int pos = cpos;
 	int fascent = font.Info().GetAscent();
-	Color showcolor = Blend(SColorLight, SColorHighlight);
 	int cursorline = GetLine(cursor);
 	Highlight ih;
 	ih.ink = color[IsShowEnabled() ? INK_NORMAL : INK_DISABLED];
@@ -314,7 +314,39 @@ void   LineEdit::Paint0(Draw& w) {
 	ih.font = font;
 	ih.chr = 0;
 	for(int i = sc.y; i < ll; i++) {
+		Color showcolor = color[WHITESPACE];
 		WString tx = line[i];
+		bool warn_whitespace = false;
+		if(warnwhitespace && i != GetCursorLine()) {
+			int wkind = 0;
+			bool empty = true;
+			for(const wchar *s = tx; *s; s++) {
+				if(*s == '\t') {
+					if(wkind == ' ') {
+						warn_whitespace = true;
+						break;
+					}
+					wkind = '\t';
+				}
+				else
+				if(*s == ' ')
+					wkind = ' ';
+				else
+				if(*s > ' ') {
+					empty = false;
+					wkind = 0;
+				}
+			}
+			if(wkind == ' ')
+				warn_whitespace = true;
+			if(empty && !warn_whitespace) {
+				String l = GetUtf8Line(i);
+				warn_whitespace = (i < 0 || !GetUtf8Line(i - 1).StartsWith(l)) &&
+				                  (i >= GetLineCount() || !GetUtf8Line(i - 1).StartsWith(l));
+			}
+			if(warn_whitespace)
+				showcolor = color[WARN_WHITESPACE];
+		}
 		bool do_highlight = tx.GetCount() < 100000;
 		int len = tx.GetLength();
 		if(w.IsPainting(0, y, sz.cx, fsz.cy)) {
@@ -329,6 +361,7 @@ void   LineEdit::Paint0(Draw& w) {
 			}
 			else
 				ln = tx.GetCount();
+			int lgp = -1;
 			for(int pass = 0; pass < 2; pass++) {
 				int gp = 0;
 				int scx = fsz.cx * sc.x;
@@ -354,6 +387,8 @@ void   LineEdit::Paint0(Draw& w) {
 					}
 					sOptimizedTextRenderer tw(w);
 					while(q < ln) {
+						if(q == tx.GetCount())
+							lgp = gp;
 						Highlight h;
 						if(do_highlight)
 							h = hl[q];
@@ -374,7 +409,8 @@ void   LineEdit::Paint0(Draw& w) {
 							LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
 							if(pass == 0 && x >= -fsz.cy * tabsize) {
 								w.DrawRect(x, y, fsz.cx * l, fsz.cy, h.paper);
-								if(showtabs && h.paper != SColorHighlight && q < tx.GetLength()) {
+								if((showtabs || warn_whitespace) &&
+								   h.paper != SColorHighlight && q < tx.GetLength()) {
 									w.DrawRect(x + 2, y + fsz.cy / 2, l * fsz.cx - 4, 1, showcolor);
 									w.DrawRect(ngp * fsz.cx - scx - 3, y + 3, 1, fsz.cy - 6, showcolor);
 								}
@@ -389,8 +425,11 @@ void   LineEdit::Paint0(Draw& w) {
 							LLOG("Highlight -> space[" << q << "] paper = " << h.paper);
 							if(pass == 0 && x >= -fsz.cy) {
 								w.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
-								if(showspaces && h.paper != SColorHighlight && q < tx.GetLength())
-									w.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, 2, 2, showcolor);
+								if((showspaces || warn_whitespace)
+								   && h.paper != SColorHighlight && q < tx.GetLength()) {
+									int n = fsz.cy / 10 + 1;
+									w.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, n, n, showcolor);
+								}
 								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
 									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 							}
@@ -427,9 +466,9 @@ void   LineEdit::Paint0(Draw& w) {
 					if(bordercolumn > 0 && bordercolumn >= gp)
 						w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 				}
-				if(pass == 0 && showlines) {
+				if(pass == 0 && (showlines || warn_whitespace)) {
 					int yy = 2 * fsz.cy / 3;
-					int x = gp * fsz.cx - scx;
+					int x = (lgp >= 0 ? lgp : gp) * fsz.cx - scx;
 					w.DrawRect(x, y + yy, fsz.cx / 2, 1, showcolor);
 					if(fsz.cx > 2)
 						w.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
@@ -450,6 +489,7 @@ void   LineEdit::Paint0(Draw& w) {
 		selh -= len + 1;
 		pos += len + 1;
 	}
+	
 	w.DrawRect(0, y, sz.cx, sz.cy - y, color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL]);
 	DrawTiles(w, DropCaret(), CtrlImg::checkers());
 }

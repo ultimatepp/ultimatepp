@@ -344,12 +344,35 @@ Default is off.&]
 [s5;:LineEdit`:`:ShowSpaces`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* ShowSpaces]([@(0.0.255) b
 ool]_[*@3 ss]_`=_[@(0.0.255) true])&]
 [s2;%% In this mode widget displays spaces with faint dots. Default 
-is off..&]
+is off.&]
 [s3;%% &]
 [s4; &]
 [s5;:LineEdit`:`:IsShowSpaces`(`)const: [@(0.0.255) bool]_[* IsShowSpaces]()_[@(0.0.255) co
 nst]&]
 [s2;%% Returns status of ShowSpaces.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LineEdit`:`:ShowLineEndings`(bool`): [_^Upp`:`:LineEdit^ LineEdit][@(0.0.255) `&
+]_[* ShowLineEndings]([@(0.0.255) bool]_[*@3 sl]_`=_[@(0.0.255) true])&]
+[s2;%% In this mode widget displays line endings with faint dots. 
+Default is off.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:LineEdit`:`:IsShowLineEndings`(`)const: [@(0.0.255) bool]_[* IsShowLineEnding
+s]()_[@(0.0.255) const]&]
+[s2;%% Returns status of ShowLineEndings.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LineEdit`:`:WarnWhiteSpace`(bool`): [_^Upp`:`:LineEdit^ LineEdit][@(0.0.255) `&
+]_[* WarnWhiteSpace]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% In this mode widget shows whitespaces that seem to be misplaced, 
+like tabs after spaces or if line ends with spaces. Default is 
+off.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:LineEdit`:`:IsWantWhiteSpace`(`)const: [@(0.0.255) bool]_[* IsWantWhiteSpace](
+)_[@(0.0.255) const]&]
+[s2;%% Returns status of WarnWhiteSpace.&]
 [s3; &]
 [s4; &]
 [s5;:LineEdit`:`:WithCutLine`(bool`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* WithCutLine](
