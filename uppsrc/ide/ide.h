@@ -557,6 +557,7 @@ public:
 	bool      show_status_bar;
 	bool      toolbar_in_row;
 	bool      show_tabs;
+	bool      warnwhitespace;
 	int       line_endings;
 	bool      tabs_icons;
 	int       tabs_crosses;

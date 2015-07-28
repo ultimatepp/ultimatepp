@@ -119,11 +119,12 @@ Font FontSelectManager::Get() {
 void Ide::UpdateFormat(CodeEditor& editor)
 {
 	if(!IsActiveFile() || ActiveFile().tabsize <= 0)
-		editor.TabSize(editortabsize);
+	 	editor.TabSize(editortabsize);
 	editor.IndentSpaces(indent_spaces);
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);
 	editor.ShowLineEndings(show_tabs);
+	editor.WarnWhiteSpace(warnwhitespace);
 	editor.NoParenthesisIndent(no_parenthesis_indent);
 	editor.HiliteScope(hilite_scope);
 	editor.HiliteBracket(hilite_bracket);
@@ -413,6 +414,7 @@ void Ide::SetupFormat() {
 		(edt.indent_spaces, indent_spaces)
 		(edt.no_parenthesis_indent, no_parenthesis_indent)
 		(edt.showtabs, show_tabs)
+		(edt.warnwhitespace, warnwhitespace)
 		(edt.lineends, line_endings)
 		(edt.numbers, line_numbers)
 		(edt.bookmark_pos, bookmark_pos)

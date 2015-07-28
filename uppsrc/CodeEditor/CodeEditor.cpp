@@ -56,6 +56,8 @@ void CodeEditor::Highlight(const String& h)
 	SetColor(LineEdit::PAPER_NORMAL, hl_style[HighlightSetup::PAPER_NORMAL].color);
 	SetColor(LineEdit::PAPER_READONLY, hl_style[HighlightSetup::PAPER_READONLY].color);
 	SetColor(LineEdit::PAPER_SELECTED, hl_style[HighlightSetup::PAPER_SELECTED].color);
+	SetColor(LineEdit::WHITESPACE, hl_style[HighlightSetup::WHITESPACE].color);
+	SetColor(LineEdit::WARN_WHITESPACE, hl_style[HighlightSetup::WARN_WHITESPACE].color);
 	Refresh();
 	EditorBarLayout();
 }
