@@ -339,11 +339,6 @@ void   LineEdit::Paint0(Draw& w) {
 			}
 			if(wkind == ' ')
 				warn_whitespace = true;
-			if(empty && !warn_whitespace) {
-				String l = GetUtf8Line(i);
-				warn_whitespace = (i < 0 || !GetUtf8Line(i - 1).StartsWith(l)) &&
-				                  (i >= GetLineCount() || !GetUtf8Line(i - 1).StartsWith(l));
-			}
 			if(warn_whitespace)
 				showcolor = color[WARN_WHITESPACE];
 		}
