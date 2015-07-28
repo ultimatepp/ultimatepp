@@ -295,10 +295,21 @@ struct JumpDerived {
 void AddContact();
 
 struct MYTabs : FileTabs {
-	void 	RenameFile(const WString &from, const WString &to, Image icon = Null);
+	void	RenameFile(const WString &from, const WString &to, Image icon = Null);
 	void    AddContact();
 	int     local;
+	
+	MYTabs(); // Test Alt+I
+	~MYTabs(); // Test Alt+I
 };
+
+MYTabs::MYTabs()
+{
+}
+
+MYTabs::~MYTabs()
+{
+}
 
 void MYTabs::RenameFile(const WString &from, const WString &to, Image icon)
 {
