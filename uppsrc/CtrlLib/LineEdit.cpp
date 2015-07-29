@@ -317,30 +317,34 @@ void   LineEdit::Paint0(Draw& w) {
 		Color showcolor = color[WHITESPACE];
 		WString tx = line[i];
 		bool warn_whitespace = false;
-		if(warnwhitespace && i != GetCursorLine()) {
-			int wkind = 0;
-			bool empty = true;
-			for(const wchar *s = tx; *s; s++) {
-				if(*s == '\t') {
-					if(wkind == ' ') {
-						warn_whitespace = true;
-						break;
+		if(warnwhitespace && !IsSelection()) {
+			int pos = GetCursor();
+			int linei = GetLinePos(pos);
+			if(linei != i || pos < tx.GetCount()) {
+				int wkind = 0;
+				bool empty = true;
+				for(const wchar *s = tx; *s; s++) {
+					if(*s == '\t') {
+						if(wkind == ' ') {
+							warn_whitespace = true;
+							break;
+						}
+						wkind = '\t';
 					}
-					wkind = '\t';
+					else
+					if(*s == ' ')
+						wkind = ' ';
+					else
+					if(*s > ' ') {
+						empty = false;
+						wkind = 0;
+					}
 				}
-				else
-				if(*s == ' ')
-					wkind = ' ';
-				else
-				if(*s > ' ') {
-					empty = false;
-					wkind = 0;
-				}
+				if(wkind && !empty)
+					warn_whitespace = true;
+				if(warn_whitespace)
+					showcolor = color[WARN_WHITESPACE];
 			}
-			if(wkind && !empty)
-				warn_whitespace = true;
-			if(warn_whitespace)
-				showcolor = color[WARN_WHITESPACE];
 		}
 		bool do_highlight = tx.GetCount() < 100000;
 		int len = tx.GetLength();
@@ -692,13 +696,8 @@ int LineEdit::PlaceCaretNoG(int newcursor, bool sel) {
 		}
 		rectsel = false;
 	}
-	if(!IsNull(hline)) {
-		Point op = GetColumnLine(cursor);
-		if(op.y != p.y) {
-			RefreshLine(op.y);
-			RefreshLine(p.y);
-		}
-	}
+	RefreshLine(GetColumnLine(cursor).y);
+	RefreshLine(p.y);
 	cursor = newcursor;
 	ScrollIntoCursor();
 	PlaceCaret0(p);
