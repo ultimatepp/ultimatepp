@@ -60,7 +60,7 @@ private:
 
 private:
 	std::vector<jobject> objs;
-	std::vector<T> values; 
+	std::vector<T> values;
 };
 
 #endif
