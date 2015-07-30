@@ -40,7 +40,7 @@ public:
 	virtual void      PutConsole(const char *s) = 0;
 	virtual void      PutVerbose(const char *s) = 0;
 	virtual void      PutLinking() = 0;
-	virtual void      PutLinkingEnd(bool ok) = 0; 
+	virtual void      PutLinkingEnd(bool ok) = 0;
 
 	virtual const Workspace& IdeWorkspace() const = 0;
 	virtual bool             IdeIsBuilding() const = 0;

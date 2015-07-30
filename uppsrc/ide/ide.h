@@ -769,6 +769,8 @@ public:
 		void   SvnHistory();
 
 	void      Edit(Bar& menu);
+		bool IsDesignerFile(const String& path);
+		void  DoEditAsText(const String& path);
 		void  EditAsText();
 		void  EditAsHex();
 		void  EditUsingDesigner();

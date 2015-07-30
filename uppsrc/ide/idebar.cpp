@@ -125,15 +125,15 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(AK_FORMATCODE, THISBACK(FormatCode))
 	    .Help("Reformat code in editor");
 	menu.Add(editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
-	    .Help("Convert letters in selection to uppercase"); 
+	    .Help("Convert letters in selection to uppercase");
 	menu.Add(editor.IsSelection(), AK_TOLOWER, THISBACK(TextToLower))
-	    .Help("Convert letters in selection to lowercase"); 
+	    .Help("Convert letters in selection to lowercase");
 	menu.Add(editor.IsSelection(), AK_TOASCII, THISBACK(TextToAscii))
 		.Help("Covert text to 7-bit ASCII removing all accents and special symbols");
 	menu.Add(editor.IsSelection(), AK_INITCAPS, THISBACK(TextInitCaps))
-	    .Help("Capitalize the first character of words in selection"); 
+	    .Help("Capitalize the first character of words in selection");
 	menu.Add(editor.IsSelection(), AK_SWAPCASE, THISBACK(SwapCase))
-	    .Help("Swap the case of letters in selection"); 
+	    .Help("Swap the case of letters in selection");
 	menu.Add(editor.IsSelection(), AK_TOCSTRING, THISBACK(ToCString))
 	    .Help("Convert selection to CString");
 	menu.Add(editor.IsSelection(), AK_TOCOMMENT, THISBACK(ToComment))
@@ -194,13 +194,13 @@ void Ide::Edit(Bar& menu)
 			if(editastext.Find(editfile) >= 0)
 				menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
 				    .Help("Edit converted strings");
-			else				
+			else
 				menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
 				    .Help("Edit raw strings");
 			menu.MenuSeparator();
 		}
 		else
-		if(editastext.Find(editfile) >= 0) {
+		if(editastext.Find(editfile) >= 0 && IsDesignerFile(editfile)) {
 			menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
 			    .Help("Edit using the designer (not as text)");
 			menu.MenuSeparator();
@@ -541,7 +541,7 @@ void Ide::DebugMenu(Bar& menu)
 		if(console.IsRunning())
 			menu.Add("Stop !", THISBACK(StopDebug))
 			    .Help("Stop controlled process");
-		if(menu.IsMenuBar()) 
+		if(menu.IsMenuBar())
 			menu.Add(AK_RUNOPTIONS, THISBACK(RunArgs))
 				.Help("Current directory, command line, stdout redirection");
 		menu.Add(b, AK_EXECUTE, IdeImg::execute(), THISBACK(BuildAndExecute))
@@ -581,7 +581,7 @@ void Ide::BrowseMenu(Bar& menu)
 	if(!IsEditorMode()) {
 		if(menu.IsMenuBar()) {
 			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
-		    	 .Check(editor.IsNavigator());
+			    .Check(editor.IsNavigator());
 			menu.Add(AK_GOTO, THISBACK(SearchCode));
 			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));

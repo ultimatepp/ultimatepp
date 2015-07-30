@@ -45,7 +45,8 @@ void Ide::GotoPos(String path, int line)
 	LLOG("GotoPos " << path << ':' << line);
 	if(path.GetCount()) {
 		AddHistory();
-		editastext.FindAdd(path);
+		if(IsDesignerFile(path))
+		DoEditAsText(path);
 		EditFile(path);
 	}
 	editor.SetCursor(editor.GetPos(line - 1));
