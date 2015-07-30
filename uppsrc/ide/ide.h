@@ -671,9 +671,10 @@ public:
 
 	void      BookKey(int key);
 	void      AddHistory();
+	int       GetHistory(int d);
+	void      History(int dir);
+	void      EditorEdit();
 	void      GotoBookmark(const Bookmark& b);
-	void      HistoryFw();
-	void      HistoryBk();
 	bool      IsHistDiff(int i);
 	
 	void      IdePaste(String& s);

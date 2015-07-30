@@ -51,8 +51,7 @@ void Ide::GotoPos(String path, int line)
 	editor.SetCursor(editor.GetPos(line - 1));
 	editor.TopCursor(4);
 	editor.SetFocus();
-	if(path.GetCount())
-		AddHistory();
+	AddHistory();
 }
 
 void Ide::GotoCpp(const CppItem& pos)

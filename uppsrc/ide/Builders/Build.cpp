@@ -675,8 +675,20 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				".PHONY: all\n"
 				"all: prepare $(OutFile)\n"
 				"\n"
+				".PHONY: build_info\n"
+				"build_info:\n"
+				"	date '+#define bmYEAR    %y%n'\\\n"
+				"	'#define bmMONTH   %m%n'\\\n"
+				"	'#define bmDAY     %d%n'\\\n"
+				"	'#define bmHOUR    %H%n'\\\n"
+				"	'#define bmMINUTE  %M%n'\\\n"
+				"	'#define bmSECOND  %S%n'\\\n"
+				"	'#define bmTIME    Time(%y, %m, %d, %H, %M, %S)' > build_info.h\n"
+				"	echo '#define bmMACHINE \"'`hostname`'\"' >> build_info.h\n"
+				"	echo '#define bmUSER    \"'`whoami`'\"' >> build_info.h\n"
+				"\n"
 				".PHONY: prepare\n"
-				"prepare:\n";
+				"prepare: build_info\n";
 		}
 		config << mf.config;
 		install << mf.install;

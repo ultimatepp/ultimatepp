@@ -596,12 +596,12 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.MenuSeparator();
 		}
 		
-		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK(HistoryBk))
+		menu.Add("Go back", IdeImg::AssistGoBack(), THISBACK1(History, -1))
 			.Key(K_ALT_LEFT)
-			.Enable(histi > 0);
-		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK(HistoryFw))
+			.Enable(GetHistory(-1) >= 0);
+		menu.Add("Go forward", IdeImg::AssistGoForward(), THISBACK1(History, 1))
 			.Key(K_ALT_RIGHT)
-			.Enable(histi < history.GetCount() - 1);
+			.Enable(GetHistory(1) >= 0);
 		
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();

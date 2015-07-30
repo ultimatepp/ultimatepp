@@ -442,8 +442,10 @@ void Ide::GotoBookmark(const Bookmark& b)
 
 bool Ide::IsHistDiff(int i)
 {
+	if(i < 0 || i >= history.GetCount())
+		return false;
 	Bookmark& b = history[i];
-	return b.file != editfile || abs(editor.GetCursor() - b.pos.cursor) > 200;
+	return b.file != editfile || abs(editor.GetCursor() - b.pos.cursor) > 20;
 }
 
 void Ide::IdePaste(String& data)
@@ -462,33 +464,39 @@ void Ide::IdePaste(String& data)
 
 void Ide::AddHistory()
 {
-	if(history.GetCount() && histi - 1 >= 0 && histi <= history.GetCount()) {
-		if(IsHistDiff(histi - 1))
+	if(history.GetCount()) {
+		if(IsHistDiff(histi))
 			++histi;
 	}
 	else
-		histi = 1;
-	history.SetCount(histi);
+		histi = 0;
+	history.At(histi);
 	Bookmark& b = history.Top();
 	b.file = editfile;
 	b.pos = editor.GetEditPos();
-	TouchFile(editfile);
 	SetBar();
 }
 
-void Ide::HistoryBk()
+void Ide::EditorEdit()
 {
-	while(histi > 0 && --histi < history.GetCount())
-		if(IsHistDiff(histi)) {
-			GotoBookmark(history[histi]);
-			SetBar();
-			break;
-		}
+	AddHistory();
+	TouchFile(editfile);
 }
 
-void Ide::HistoryFw()
+int  Ide::GetHistory(int d)
 {
-	if(histi < history.GetCount() - 1 && ++histi >= 0) {
+	if(history.GetCount())
+		for(int i = histi + (d > 0); i >= 0 && i < history.GetCount(); i += d)
+			if(IsHistDiff(i))
+				return i;
+	return -1;
+}
+
+void Ide::History(int d)
+{
+	int i = GetHistory(d);
+	if(i >= 0) {
+		histi = i;
 		GotoBookmark(history[histi]);
 		SetBar();
 	}
