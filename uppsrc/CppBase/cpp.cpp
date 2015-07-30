@@ -234,6 +234,13 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 	if(get_macros)
 		return;
 	
+	if(in.Peek() == 0xef) { // Skip UTF-8 BOM
+		int64 pos = in.GetPos();
+		in.Get();
+		if(in.Get() != 0xbb || in.Get() != 0xbf)
+			in.Seek(pos); // Was not UTF-8 BOM after all
+	}
+
 	LTIMING("Expand");
 	incomment = false;
 	prefix_macro.Clear();
