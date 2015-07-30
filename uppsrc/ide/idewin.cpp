@@ -467,7 +467,7 @@ Ide::Ide()
 	editor2.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);
-	editor.WhenAction = THISBACK(AddHistory);
+	editor.WhenAction = THISBACK(EditorEdit);
 	editor.WhenBar = THISBACK(EditorMenu);
 	editor.WhenFontScroll = THISBACK(EditorFontScroll);
 	editor.WhenOpenFindReplace = THISBACK(AddHistory);

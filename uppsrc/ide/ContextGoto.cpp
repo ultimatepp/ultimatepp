@@ -82,7 +82,7 @@ void Ide::FindId(const String& id)
 		}
 		else
 			pos++;
-	}	
+	}
 }
 
 String RemoveTemplateParams(const String& s)
@@ -159,6 +159,8 @@ void Ide::ContextGoto0(int pos)
 		if(!IsNull(path)) {
 			AddHistory();
 			EditFile(path);
+			editor.SetCursor(0);
+			AddHistory();
 		}
 		return;
 	}
