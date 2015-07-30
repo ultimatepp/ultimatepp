@@ -20,9 +20,8 @@ void Parser::Locals(const String& type)
 bool Parser::TryDecl()
 { // attempt to interpret code as local variable declaration
 	for(;;) {
-		if(lex[0] == tk_static || lex[0] == tk_const ||
-	       lex[0] == tk_register || lex[0] == tk_volatile)
-	    	++lex;
+		if(findarg(lex[0], tk_static, tk_const, tk_register, tk_volatile) >= 0)
+			++lex;
 		else
 		if(!VCAttribute())
 			break;
