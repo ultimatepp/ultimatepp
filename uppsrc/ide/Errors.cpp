@@ -284,8 +284,7 @@ void Ide::GoToError(const ErrorInfo& f)
 	if(IsNull(f.file))
 		return;
 	String file = NormalizePath(f.file);
-	editastext.FindAdd(file);
-	editashex.RemoveKey(file);
+	DoEditAsText(file);
 	EditFile(file);
 	editor.SetCursor(editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0)));
 	editor.CenterCursor();

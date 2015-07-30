@@ -59,6 +59,7 @@ struct IdeModule {
 	virtual void         CleanUsc() {}
 	virtual bool         ParseUsc(CParser&)                                       { return false; }
 	virtual Image        FileIcon(const char *filename)                           { return Null; }
+	virtual bool         AcceptsFile(const char *filename)                        { return !IsNull(FileIcon(filename)); }
 	virtual IdeDesigner *CreateDesigner(Ide *ide, const char *path, byte charset) { return CreateDesigner(path, charset); }
 	virtual IdeDesigner *CreateDesigner(const char *path, byte charset)           { return NULL; }
 	virtual void         Serialize(Stream& s) {}

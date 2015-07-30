@@ -622,11 +622,25 @@ void Ide::EditAsHex()
 	EditFile0(path, cs);
 }
 
+bool Ide::IsDesignerFile(const String& path)
+{
+	for(int i = 0; i < GetIdeModuleCount(); i++)
+		if(GetIdeModule(i).AcceptsFile(path))
+			return true;
+	return false;
+}
+
+void Ide::DoEditAsText(const String& path)
+{
+	if(IsDesignerFile(path))
+		editastext.FindAdd(path);
+	editashex.RemoveKey(editfile);
+}
+
 void Ide::EditAsText()
 {
 	String path = editfile;
-	editashex.RemoveKey(editfile);
-	editastext.FindPut(editfile);
+	DoEditAsText(path);
 	byte cs = editor.GetCharset();
 	FlushFile();
 	EditFile0(path, cs);
