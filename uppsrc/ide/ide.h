@@ -536,7 +536,7 @@ public:
 	String    recent_stdout_file;
 
 // ------------------------------------
-	enum { LF, CRLF, DETECT_LF, DETECT_CRLF };
+	enum LineEndingEnum { LF, CRLF, DETECT_LF, DETECT_CRLF };
 
 	One<Debugger> debugger;
 
