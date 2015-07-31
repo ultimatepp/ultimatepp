@@ -4,7 +4,7 @@ void Ide::SetupEditor(int f, String hl, String path)
 {
 	if(IsNull(hl)) {
 		hl = EditorSyntax::GetSyntaxForFilename(path);
-		if(IsNull(hl))		
+		if(IsNull(hl))
 			hl = EditorSyntax::GetSyntaxForFilename(ToLower(path));
 		if(IsNull(hl) && IsNull(GetFileExt(path))) {
 			FileIn in(path);
@@ -29,6 +29,9 @@ void Ide::SetupEditor(int f, String hl, String path)
 	                        hl == "t" ? tfont : editorfont); break;
 	}
 	editor.Highlight(hl);
+
+	editor.WarnWhiteSpace(warnwhitespace &&
+	                      findarg(hl, "cpp", "java", "js", "cs", "json", "css", "lay", "sch", "t", "usc") >= 0);
 }
 
 void Ide::SetupEditor()

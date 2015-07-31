@@ -119,7 +119,7 @@ Font FontSelectManager::Get() {
 void Ide::UpdateFormat(CodeEditor& editor)
 {
 	if(!IsActiveFile() || ActiveFile().tabsize <= 0)
-	 	editor.TabSize(editortabsize);
+		editor.TabSize(editortabsize);
 	editor.IndentSpaces(indent_spaces);
 	editor.IndentAmount(indent_amount);
 	editor.ShowTabs(show_tabs);

@@ -190,7 +190,7 @@ void LineEdit::PasteColumn(const WString& text)
 		RemoveSelection();
 		Point p = GetColumnLine(cursor);
 		pos = cursor;
-		for(int i = 0; i < cl.GetCount(); i++) { 
+		for(int i = 0; i < cl.GetCount(); i++) {
 			CacheLinePos(i + p.y);
 			int li = p.y + i;
 			if(li < line.GetCount()) {
@@ -254,7 +254,7 @@ public:
 	void DrawChar(int x, int y, int chr, int width, Font afont, Color acolor);
 	void Flush();
 
-	sOptimizedTextRenderer(Draw& w) : w(w) { y = Null; }	
+	sOptimizedTextRenderer(Draw& w) : w(w) { y = Null; }
 	~sOptimizedTextRenderer()              { Flush(); }
 };
 
