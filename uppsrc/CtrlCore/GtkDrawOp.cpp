@@ -130,7 +130,7 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 	FlushText();
 	cairo_rectangle(cr, x, y, cx, cy);
 	if(color == InvertColor()) {
-#if GTK_CHECK_VERSION(2,24,0)
+#if GTK_CHECK_VERSION(2,24,0) && (CAIRO_VERSION_MAJOR > 1 || CAIRO_VERSION_MINOR > 9)
 		SetColor(White());
 		cairo_set_operator(cr, CAIRO_OPERATOR_DIFFERENCE);
 		cairo_fill(cr);
