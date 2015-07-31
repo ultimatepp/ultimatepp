@@ -29,6 +29,11 @@ void Draw::SinCos(int angle, double& sina, double& cosa)
 	}
 }
 
+Draw::Draw()
+{
+	hmul = 1;
+}
+
 Draw::~Draw() {}
 
 Size Draw::GetPixelsPerInch() const
@@ -115,6 +120,11 @@ int Draw::GetCloffLevel() const { return 0; }
 
 // -------------------------------
 
+Image Draw::Hmul(const Image& img)
+{
+	return hmul ? CachedRescale(img, hmul * img.GetSize(), FILTER_LANCZOS3) : img;
+}
+
 void Draw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 {
 	NEVER();
@@ -175,12 +185,12 @@ void Draw::DrawRect(const Rect& rect, Color color)
 
 void Draw::DrawRect(int x, int y, int cx, int cy, Color color)
 {
-	DrawRectOp(x, y, cx, cy, color);
+	DrawRectOp(Hmul(x), Hmul(y), Hmul(cx), Hmul(cy), color);
 }
 
 void Draw::DrawImage(int x, int y, int cx, int cy, const Image& img, const Rect& src)
 {
-	DrawImageOp(x, y, cx, cy, img, src, Null);
+	DrawImageOp(Hmul(x), Hmul(y), Hmul(cx), Hmul(cy), Hmul(img), Hmul(src), Null);
 }
 
 void Draw::DrawImage(int x, int y, int cx, int cy, const Image& img)
@@ -191,7 +201,7 @@ void Draw::DrawImage(int x, int y, int cx, int cy, const Image& img)
 void Draw::DrawImage(int x, int y, int cx, int cy, const Image& img, const Rect& src, Color color)
 {
 	if(IsNull(color)) return;
-	DrawImageOp(x, y, cx, cy, img, src, color);
+	DrawImageOp(Hmul(x), Hmul(y), Hmul(cx), Hmul(cy), Hmul(img), Hmul(src), color);
 }
 
 void Draw::DrawImage(int x, int y, int cx, int cy, const Image& img, Color color)
@@ -225,36 +235,36 @@ void Draw::DrawImage(const Rect& r, const Image& img, Color color)
 void Draw::DrawImage(int x, int y, const Image& img, const Rect& src)
 {
 	Size sz = src.GetSize();
-	DrawImageOp(x, y, sz.cx, sz.cy, img, src, Null);
+	DrawImageOp(Hmul(x), Hmul(y), Hmul(sz.cx), Hmul(sz.cy), img, Hmul(src), Null);
 }
 
 void Draw::DrawImage(int x, int y, const Image& img)
 {
 	Size sz = img.GetSize();
-	DrawImageOp(x, y, sz.cx, sz.cy, img, img.GetSize(), Null);
+	DrawImageOp(Hmul(x), Hmul(y), Hmul(sz.cx), Hmul(sz.cy), Hmul(img), Hmul(img.GetSize()), Null);
 }
 
 void Draw::DrawImage(int x, int y, const Image& img, const Rect& src, Color color)
 {
 	if(IsNull(color)) return;
-	DrawImageOp(x, y, src.Width(), src.Height(), img, src, color);
+	DrawImageOp(Hmul(x), Hmul(y), Hmul(src.Width()), Hmul(src.Height()), Hmul(img), Hmul(src), color);
 }
 
 void Draw::DrawImage(int x, int y, const Image& img, Color color)
 {
 	if(IsNull(color)) return;
 	Size sz = img.GetSize();
-	DrawImageOp(x, y, sz.cx, sz.cy, img, sz, color);
+	DrawImageOp(Hmul(x), Hmul(y), Hmul(sz.cx), Hmul(sz.cy), img, Hmul(sz), color);
 }
 
 void Draw::DrawData(int x, int y, int cx, int cy, const String& data, const char *type)
 {
-	DrawDataOp(x, y, cx, cy, data, type);
+	DrawDataOp(Hmul(x), Hmul(y), Hmul(cx), Hmul(cy), data, type);
 }
 
 void Draw::DrawData(const Rect& r, const String& data, const char *type)
 {
-	DrawDataOp(r.left, r.top, r.GetWidth(), r.GetHeight(), data, type);
+	DrawDataOp(Hmul(r.left), Hmul(r.top), Hmul(r.GetWidth()), Hmul(r.GetHeight()), data, type);
 }
 
 void Draw::DrawLine(Point p1, Point p2, int width, Color color)
@@ -264,15 +274,27 @@ void Draw::DrawLine(Point p1, Point p2, int width, Color color)
 
 void Draw::DrawLine(int x1, int y1, int x2, int y2, int width, Color color)
 {
-	DrawLineOp(x1, y1, x2, y2, width, color);
+	DrawLineOp(Hmul(x1), Hmul(y1), Hmul(x2), Hmul(y2), Hmul(width), color);
+}
+
+Buffer<Point> Draw::Hmul(const Point *p, int count)
+{
+	Buffer<Point> r(count);
+	for(int i = 0; i < count; i++)
+		r[i] = hmul * p[i];
+	return r;
 }
 
 void Draw::DrawPolyPolyline(const Point *vertices, int vertex_count,
                             const int *counts, int count_count,
                             int width, Color color, Color doxor)
 {
-	DrawPolyPolylineOp(vertices, vertex_count, counts, count_count, width,
-	                 color, doxor);
+	if(hmul != 1) {
+		Buffer<Point> v2 = Hmul(vertices, vertex_count);
+		DrawPolyPolylineOp(~v2, vertex_count, counts, count_count, Hmul(width), color, doxor);
+	}
+	else
+		DrawPolyPolylineOp(vertices, vertex_count, counts, count_count, width, color, doxor);
 }
 
 void Draw::DrawPolyPolyline(const Vector<Point>& vertices, const Vector<int>& counts,
@@ -301,9 +323,16 @@ void Draw::DrawPolyPolyPolygon(const Point *vertices, int vertex_count,
                               int disjunct_polygon_count_count, Color color,
                               int width, Color outline, uint64 pattern, Color doxor)
 {
-	DrawPolyPolyPolygonOp(vertices, vertex_count, subpolygon_counts, subpolygon_count_count,
-	                      disjunct_polygon_counts, disjunct_polygon_count_count, color,
-	                      width, outline, pattern, doxor);
+	if(hmul != 1) {
+		Buffer<Point> v2 = Hmul(vertices, vertex_count);
+		DrawPolyPolyPolygonOp(~v2, vertex_count, subpolygon_counts, subpolygon_count_count,
+		                      disjunct_polygon_counts, disjunct_polygon_count_count, color,
+		                      width, outline, pattern, doxor);
+	}
+	else
+		DrawPolyPolyPolygonOp(vertices, vertex_count, subpolygon_counts, subpolygon_count_count,
+		                      disjunct_polygon_counts, disjunct_polygon_count_count, color,
+		                      width, outline, pattern, doxor);
 }
 
 void Draw::DrawPolyPolyPolygon(const Vector<Point>& vertices,
@@ -368,17 +397,17 @@ void Draw::DrawPolygon(const Vector<Point>& vertices,
 
 void Draw::DrawEllipse(int x, int y, int cx, int cy, Color color, int pen, Color pencolor)
 {
-	DrawEllipse(RectC(x, y, cx, cy), color, pen, pencolor);
+	DrawEllipse(RectC(x, y, cx, cy), color, Hmul(pen), pencolor);
 }
 
 void Draw::DrawEllipse(const Rect& r, Color color, int pen, Color pencolor)
 {
-	DrawEllipseOp(r, color, pen, pencolor);
+	DrawEllipseOp(Hmul(r), color, Hmul(pen), pencolor);
 }
 
 void Draw::DrawArc(const Rect& rc, Point start, Point end, int width, Color color)
 {
-	DrawArcOp(rc, start, end, width, color);
+	DrawArcOp(Hmul(rc), Hmul(start), Hmul(end), Hmul(width), color);
 }
 
 void Draw::Offset(int x, int y)
@@ -459,10 +488,11 @@ Drawing AsDrawing(const Painting& pw)
 	return dw.GetResult();
 }
 
-void Draw::DrawPaintingOp(const Rect& target, const Painting& pw)
+void Draw::DrawPaintingOp(const Rect& target_, const Painting& pw)
 {
 	if(!HasPainter())
 		return;
+	Rect target = Hmul(target_);
 	Size sz = target.GetSize();
 	if((sz.cx > 2000 || sz.cy > 1500) && IsPrinter()) {
 		int yy = 0;
