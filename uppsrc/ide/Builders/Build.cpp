@@ -186,7 +186,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 			const Package& pkg = wspc.GetPackage(i);
 			for(int j = 0; j < pkg.include.GetCount(); j++)
 				b->include.Add(SourcePath(wspc[i], pkg.include[j].text));
-		}	
+		}
 		b->libpath = SplitDirs(bm.Get("LIB", ""));
 		b->cpp_options = bm.Get("COMMON_CPP_OPTIONS", "");
 		b->c_options = bm.Get("COMMON_C_OPTIONS", "");
@@ -655,7 +655,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		b->AddMakeFile(mf, wspc[i], GetAllUses(wspc, i, bm, mainconfigparam, *host, *b),
 		               GetAllLibraries(wspc, i, bm, mainconfigparam, *host, *b), allconfig,
 		               exporting);
-		if(!i) {
+		if(i == 0) { // main package
 			String tdir = mf.outdir;
 			String trg;
 			if(tm.target_override) {
@@ -668,6 +668,11 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 			output = Nvl(trg, mf.output);
 			if(exporting)
 				output = wspc[i] + ".out";
+			StringStream ss;
+			Vector<String> bi = SvnInfo(wspc[i]);
+			String svn_info;
+			for(int i = 0; i < bi.GetCount(); i++)
+				svn_info << "   echo '" << bi[i] << "' >> build_info.h\n";
 			install << "\n"
 				"OutDir = " << tdir << "\n"
 				"OutFile = " << output << "\n"
@@ -686,6 +691,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				"	'#define bmTIME    Time(%y, %m, %d, %H, %M, %S)' > build_info.h\n"
 				"	echo '#define bmMACHINE \"'`hostname`'\"' >> build_info.h\n"
 				"	echo '#define bmUSER    \"'`whoami`'\"' >> build_info.h\n"
+				<< svn_info <<
 				"\n"
 				".PHONY: prepare\n"
 				"prepare: build_info\n";

@@ -15,6 +15,8 @@ void PutCompileTime(int time, int count);
 
 String BrcToC(CParser& binscript, String basedir);
 
+Vector<String> SvnInfo(const String& package);
+
 struct CppBuilder : Builder {
 	virtual String GetTargetExt() const;
 
