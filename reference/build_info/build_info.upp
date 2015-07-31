@@ -1,0 +1,11 @@
+description "Demonstates the use of build_info, supplied by U++ builder\377";
+
+uses
+	Core;
+
+file
+	build_info.cpp;
+
+mainconfig
+	"" = "";
+
