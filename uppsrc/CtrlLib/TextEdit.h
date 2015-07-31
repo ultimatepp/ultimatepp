@@ -112,8 +112,8 @@ public:
 	void   CachePos(int pos);
 	void   CacheLinePos(int linei);
 
-	enum { CHARSET_UTF8_BOM = 250, CHARSET_UTF16_LE, CHARSET_UTF16_BE, CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM };
-	enum { LE_DEFAULT, LE_CRLF, LE_LF };
+	enum CS { CHARSET_UTF8_BOM = 250, CHARSET_UTF16_LE, CHARSET_UTF16_BE, CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM };
+	enum LE { LE_DEFAULT, LE_CRLF, LE_LF };
 
 	int    Load(Stream& s, byte charset = CHARSET_DEFAULT);
 	bool   IsTruncated() const                                { return false; }
