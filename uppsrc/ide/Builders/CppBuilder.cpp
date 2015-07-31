@@ -303,6 +303,44 @@ String CppBuilder::IncludesShort(const char *sep, const String& package, const P
 	return cc;
 }
 
+bool IsSvnDir2(const String& p)
+{ // this is a cope of usvn/IsSvnDir to avoid modular issues
+	if(IsNull(p))
+		return false;
+	if(DirectoryExists(AppendFileName(p, ".svn")) || DirectoryExists(AppendFileName(p, "_svn")))
+		return true;
+	String path = p;
+	String path0;
+	while(path != path0) {
+		path0 = path;
+		path = GetFileFolder(path);
+		if(DirectoryExists(AppendFileName(path, ".svn")))
+			return true;
+	}
+	return false;
+}
+
+Vector<String> SvnInfo(const String& package)
+{
+	Vector<String> info;
+	String d = GetFileFolder(PackagePath(package));
+	if(IsSvnDir2(d)) {
+		String v = Sys("svnversion " + d);
+		if(IsDigit(*v))
+			info.Add("#define bmSVN_REVISION " + AsCString(TrimBoth(v)));
+		v = Sys("svn info " + d);
+		StringStream in(v);
+		while(!in.IsEof()) {
+			String l = in.GetLine();
+			if(l.StartsWith("URL: ")) {
+				info.Add("#define bmSVN_URL " + AsCString(TrimBoth(l.Mid(5))));
+				break;
+			}
+		}
+	}
+	return info;
+}
+
 String CppBuilder::DefinesTargetTime(const char *sep, const String& package, const Package& pkg)
 {
 	String cc;
@@ -324,6 +362,10 @@ String CppBuilder::DefinesTargetTime(const char *sep, const String& package, con
 	        (int)t.year, (int)t.month, (int)t.day, (int)t.hour, (int)t.minute, (int)t.second);
 	info << "#define bmMACHINE " << AsCString(GetComputerName()) << "\r\n";
 	info << "#define bmUSER    " << AsCString(GetUserName()) << "\r\n";
+	
+	if(package == mainpackage)
+		info << Join(SvnInfo(package), "\r\n");
+
 	return cc;
 }
 
