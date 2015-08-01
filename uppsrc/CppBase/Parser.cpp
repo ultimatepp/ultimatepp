@@ -876,7 +876,7 @@ void Parser::Declarator(Decl& d, const char *p)
 //	else
 	if(lex.IsId() || lex == t_dblcolon || lex == tk_operator) {
 		d.name = Name(d.castoper, d.oper);
-		if(IsNull(d.type) && lex == ':' && lex[1] == t_integer) { // Bitfield, like 'unsigned x:5'
+		if(lex == ':' && lex[1] == t_integer) { // Bitfield, like 'unsigned x:5'
 			++lex;
 			++lex;
 		}
