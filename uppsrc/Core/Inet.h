@@ -582,9 +582,9 @@ public:
 	bool   WebAccept(TcpSocket& socket, HttpHeader& hdr);
 	bool   WebAccept(TcpSocket& socket);
 
-	bool   RecieveRaw();
-	String Recieve();
-	
+	bool   ReceiveRaw();
+	String Receive();
+
 	bool   IsFin()           { return opcode & FIN; }
 	int    GetOpCode() const { return opcode & 15; }
 	bool   IsText() const    { return GetOpCode() == TEXT; }
@@ -611,6 +611,10 @@ public:
 	WebSocket& MaxLen(int64 maxlen_)                                { maxlen = maxlen_; return *this; }
 	
 	WebSocket()                                                     { Reset(); }
+
+// keep missspelled method names
+	bool   RecieveRaw() { return ReceiveRaw(); }
+	String Recieve()    { return Receive(); }
 };
 
 void ParseProxyUrl(const char *p, String& proxy_host, int& proxy_port);
