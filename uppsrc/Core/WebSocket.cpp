@@ -38,7 +38,7 @@ int64 WebSocket::ReadLen(int n)
 	return len;
 }
 
-bool WebSocket::RecieveRaw()
+bool WebSocket::ReceiveRaw()
 {
 	if(IsError())
 		return false;
@@ -59,19 +59,19 @@ bool WebSocket::RecieveRaw()
 		socket->Get(key, 4);
 
 	if(IsError()) {
-		socket->SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
+		socket->SetSockError("websocket receive", ERROR_DATA, "Invalid data");
 		return false;
 	}
 
 	if(len > maxlen || len < 0) {
-		socket->SetSockError("websocket recieve", ERROR_LEN_LIMIT, "Frame limit exceeded, size " + AsString(len));
+		socket->SetSockError("websocket receive", ERROR_LEN_LIMIT, "Frame limit exceeded, size " + AsString(len));
 		return false;
 	}
 
 	StringBuffer frame((int)len); // TODO int64
 	char *buffer = ~frame;
 	if(!socket->GetAll(buffer, (int)len)) {
-		socket->SetSockError("websocket recieve", ERROR_DATA, "Invalid data");
+		socket->SetSockError("websocket receive", ERROR_DATA, "Invalid data");
 		return false;
 	}
 	
@@ -83,9 +83,9 @@ bool WebSocket::RecieveRaw()
 	return true;
 }
 
-String WebSocket::Recieve()
+String WebSocket::Receive()
 {
-	LLOG("WebSocket::Recieve");
+	LLOG("WebSocket::Receive");
 	for(;;) {
 		if(!RecieveRaw()) {
 			LLOG("WebSocket::Recieve failed");
@@ -99,7 +99,7 @@ String WebSocket::Recieve()
 			break;
 		}
 	}
-	LLOG("WebSocket::Recieve len: " << data.GetLength());
+	LLOG("WebSocket::Receive len: " << data.GetLength());
 	return data;
 }
 
