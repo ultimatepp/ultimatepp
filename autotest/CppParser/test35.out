@@ -1,0 +1,6 @@
+<globals> {
+	VARIABLE, name: backpaint, qitem: backpaint, qtype: byte, qptype: , natural: byte backpaint:2, line 1, using 
+	VARIABLE, name: hasdhctrl, qitem: hasdhctrl, qtype: , qptype: , natural: bool hasdhctrl:1, line 2, using 
+}
+<locals> {
+}

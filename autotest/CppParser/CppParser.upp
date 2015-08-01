@@ -73,7 +73,9 @@ file
 	test33.in,
 	test33.out,
 	test34.in,
-	test34.out;
+	test34.out,
+	test35.in,
+	test35.out;
 
 mainconfig
 	"" = "",
