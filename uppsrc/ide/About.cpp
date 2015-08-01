@@ -7,11 +7,9 @@
 #define TOPICFILE <ide/app.tpp/all.i>
 #include <Core/topic_group.h>
 
-/*
 #ifndef bmYEAR
 #include <build_info.h>
 #endif
-*/
 
 Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 {
@@ -26,15 +24,25 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	for(int i = 0; i < cpp.GetCount(); i++)
 		total += cpp[i].GetCount();
 	String h;
+#ifdef bmSVN_REVISION
+	h << "Version " << bmSVN_REVISION;
+#else
 	h << "Version " << IDE_VERSION;
+#endif
 	if(sizeof(void *) == 8)
 		h << " (64 bit)";
+	else
+		h << " (32 bit)";
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif
-	h << "\n"
-//	  << Format("Compiled %d-%02d-%02d %d:%02d\n", bmYEAR , bmMONTH, bmDAY, bmHOUR, bmMINUTE)
-	  << Format("%d`KB\n%d classes\n%d items", MemoryUsedKb(), cpp.GetCount(), total);
+	h << "\n";
+#ifdef bmTIME
+	h << "Compiled " << bmTIME << "\n";
+#endif
+	h << "Using " << MemoryUsedKb() << " KB\n";
+	if(cpp.GetCount())
+		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	v1 = h;
 	v1.HSizePos(230, 10).BottomPos(20, Arial(20).GetHeight() * 5);
 	v1.SetFont(Arial(10));
