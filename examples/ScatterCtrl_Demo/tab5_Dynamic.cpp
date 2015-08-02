@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void Tab5::Init()
+void Tab5_Dynamic::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -20,7 +20,7 @@ void Tab5::Init()
 	bStop.Disable();	
 }
 
-void Tab5::Animate()
+void Tab5_Dynamic::Animate()
 {
 	s1 << Pointf(t, 50+20*sin(t));
 	s2 << Pointf(t, 50+30*cos(t));
@@ -30,21 +30,21 @@ void Tab5::Animate()
 		scatter.SetXYMin(scatter.GetXMin() + 0.1, 0);
 }
 
-void Tab5::Start()
+void Tab5_Dynamic::Start()
 {
 	SetTimeCallback(-5, THISBACK(Animate));
 	bStart.Disable();
 	bStop.Enable();
 }
 
-void Tab5::Stop()
+void Tab5_Dynamic::Stop()
 {
 	KillTimeCallback();
 	bStart.Enable();
 	bStop.Disable();
 }
 
-void Tab5::Reset()
+void Tab5_Dynamic::Reset()
 {
 	t = 0;
 	s1.Clear();
@@ -53,25 +53,25 @@ void Tab5::Reset()
 	scatter.Refresh();
 }
 
-void Tab5::PgDown()
+void Tab5_Dynamic::PgDown()
 {
 	scatter.SetXYMin(scatter.GetXMin()-5, 0);
 	scatter.Refresh();
 }
 
-void Tab5::PgUp()
+void Tab5_Dynamic::PgUp()
 {
 	scatter.SetXYMin(scatter.GetXMin()+5, 0);
 	scatter.Refresh();
 }
 
-void Tab5::Plus()
+void Tab5_Dynamic::Plus()
 {
 	scatter.SetRange(scatter.GetXRange()/2, 100);
 	scatter.Refresh();
 }
 
-void Tab5::Minus()
+void Tab5_Dynamic::Minus()
 {
 	scatter.SetRange(scatter.GetXRange()*2, 100);
 	scatter.Refresh();
@@ -79,7 +79,7 @@ void Tab5::Minus()
 
 ScatterDemo *Construct5()
 {
-	static Tab5 tab;
+	static Tab5_Dynamic tab;
 	return &tab;
 }
 

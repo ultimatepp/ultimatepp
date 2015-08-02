@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void Tab12::Init()
+void Tab12_Linked::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -28,7 +28,7 @@ void Tab12::Init()
 	link.WhenAction = THISBACK(OnLink);
 }
 
-void Tab12::OnLink() {
+void Tab12_Linked::OnLink() {
 	if (link) {
 		scatter1.SetTitle("Plots are linked together");
 		scatter2.LinkedWith(scatter1);
@@ -42,7 +42,7 @@ void Tab12::OnLink() {
 
 ScatterDemo *Construct12()
 {
-	static Tab12 tab;
+	static Tab12_Linked tab;
 	return &tab;
 }
 

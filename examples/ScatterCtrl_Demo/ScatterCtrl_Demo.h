@@ -21,9 +21,9 @@ struct ScatterDemo : StaticRect {
  
 void RegisterExample(const char *name, ScatterDemo* (*ctrl)(), String fileName);
 
-class Tab1 : public WithTab1<ScatterDemo> {
+class Tab1_Basic : public WithTab1Basic<ScatterDemo> {
 public:
-	typedef Tab1 CLASSNAME;
+	typedef Tab1_Basic CLASSNAME;
 	
 	virtual void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
@@ -36,9 +36,9 @@ private:
 	VectorMap<double, double> s5;
 };
 
-class Tab2 : public WithTab2<ScatterDemo> {
+class Tab2_Functiona : public WithTab2Functions<ScatterDemo> {
 public:
-	typedef Tab2 CLASSNAME;
+	typedef Tab2_Functiona CLASSNAME;
 	
 	void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
@@ -46,17 +46,17 @@ public:
 	Callback back1, back2, back3;
 };
 
-class Tab3 : public WithTab3<ScatterDemo> {
+class Tab3_ParametricFunctions : public WithTab3ParametricFunctions<ScatterDemo> {
 public:
-	typedef Tab3 CLASSNAME;
+	typedef Tab3_ParametricFunctions CLASSNAME;
 	
 	void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 };
 
-class Tab4 : public WithTab4<ScatterDemo> {
+class Tab4_Formatting : public WithTab4Formatting<ScatterDemo> {
 public:
-	typedef Tab4 CLASSNAME;
+	typedef Tab4_Formatting CLASSNAME;
 	
 	void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
@@ -65,9 +65,9 @@ private:
 	Vector<Pointf> s1, s2;
 };
 
-class Tab5 : public WithTab5<ScatterDemo> {
+class Tab5_Dynamic : public WithTab5Dynamic<ScatterDemo> {
 public:
-	typedef Tab5 CLASSNAME;
+	typedef Tab5_Dynamic CLASSNAME;
 	
 	void Init();
 	void Animate();
@@ -85,9 +85,9 @@ private:
 	Vector<Pointf> s1, s2;
 };
 
-class Tab6 : public WithTab6<ScatterDemo> {
+class Tab6_Logarithmic : public WithTab6Logarithmic<ScatterDemo> {
 public:
-	typedef Tab6 CLASSNAME;
+	typedef Tab6_Logarithmic CLASSNAME;
 	
 	void Init();
 	void FormatX(String& s, int i, double d);	
@@ -97,9 +97,9 @@ private:
 	Vector<Pointf> s1;
 };
 
-class Tab7 : public WithTab7<ScatterDemo> {
+class Tab7_Operations : public WithTab7Operations<ScatterDemo> {
 public:
-	typedef Tab7 CLASSNAME;
+	typedef Tab7_Operations CLASSNAME;
 	
 	void Init();		
 	void AddSeries();
@@ -112,9 +112,9 @@ private:
 	Array<Vector<Pointf> > series;
 };
 
-class Tab8 : public WithTab8<ScatterDemo> {
+class Tab8_Secondary : public WithTab8Secondary<ScatterDemo> {
 public:
-	typedef Tab8 CLASSNAME;
+	typedef Tab8_Secondary CLASSNAME;
 
 	void Init();
 	void MyFormat(String& s, int i, double d)
@@ -133,9 +133,9 @@ private:
 	Vector<Pointf> s1, s2, s3;
 };
 
-class Tab9 : public WithTab9<ScatterDemo> {
+class Tab9_Big : public WithTab9Big<ScatterDemo> {
 public:
-	typedef Tab9 CLASSNAME;
+	typedef Tab9_Big CLASSNAME;
 	
 	void Init();
 	void OnFastView()		{scatter.SetFastViewX(fastView);};
@@ -146,9 +146,9 @@ private:
 	Vector<Pointf> s1,s2;
 };
 
-class Tab10 : public WithTab10<ScatterDemo> {
+class Tab10_User : public WithTab10User<ScatterDemo> {
 public:
-	typedef Tab10 CLASSNAME;
+	typedef Tab10_User CLASSNAME;
 	
 	void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
@@ -157,11 +157,11 @@ private:
 	double sx[5], sy[5];
 };
 
-class Tab11 : public WithTab11<ScatterDemo> {
+class Tab11_Trend : public WithTab11Trend<ScatterDemo> {
 public:
-	typedef Tab11 CLASSNAME;
+	typedef Tab11_Trend CLASSNAME;
 
-	Tab11() {};	
+	Tab11_Trend() {};	
 	void Init();
 	void OnSeries();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
@@ -177,9 +177,9 @@ private:
 	SinEquation sin;
 };
 
-class Tab12 : public WithTab12<ScatterDemo> {
+class Tab12_Linked : public WithTab12Linked<ScatterDemo> {
 public:
-	typedef Tab12 CLASSNAME;
+	typedef Tab12_Linked CLASSNAME;
 	
 	virtual void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter1;};

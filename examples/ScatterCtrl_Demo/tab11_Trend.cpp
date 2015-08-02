@@ -1,6 +1,6 @@
 #include "ScatterCtrl_Demo.h"
 
-void Tab11::Init()
+void Tab11_Trend::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -18,7 +18,7 @@ void Tab11::Init()
 	OnSeries();
 }
 
-void Tab11::OnSeries() {
+void Tab11_Trend::OnSeries() {
 	double l_r2, p2_r2, p4_r2, f_r2, exp_r2, rat1_r2, s_r2;
 	
 	scatter.RemoveAllSeries();
@@ -96,7 +96,7 @@ void Tab11::OnSeries() {
 
 ScatterDemo *Construct11()
 {
-	static Tab11 tab;
+	static Tab11_Trend tab;
 	return &tab;
 }
 

@@ -53,7 +53,7 @@ public:
 	}
 };
 
-void Tab10::Init()
+void Tab10_User::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -68,7 +68,7 @@ void Tab10::Init()
 
 ScatterDemo *Construct10()
 {
-	static Tab10 tab;
+	static Tab10_User tab;
 	return &tab;
 }
 

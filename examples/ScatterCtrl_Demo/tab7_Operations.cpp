@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void Tab7::Init()
+void Tab7_Operations::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -14,7 +14,7 @@ void Tab7::Init()
 	bRemoveAllSeries 	<<= THISBACK(RemoveAllSeries);
 }
 
-void Tab7::AddSeries()
+void Tab7_Operations::AddSeries()
 {
 	int num = scatter.GetCount();
 	double f = 1 + num*1.1;	
@@ -24,7 +24,7 @@ void Tab7::AddSeries()
 	scatter.AddSeries(s).Legend(String("series") + AsString(num));	
 } 
 
-void Tab7::RemoveFirstSeries()	
+void Tab7_Operations::RemoveFirstSeries()	
 {
 	if (scatter.IsEmpty())
 		return;
@@ -32,7 +32,7 @@ void Tab7::RemoveFirstSeries()
 	series.Remove(0);
 }
 
-void Tab7::RemoveLastSeries()		
+void Tab7_Operations::RemoveLastSeries()		
 {
 	if (scatter.IsEmpty())
 		return;
@@ -41,7 +41,7 @@ void Tab7::RemoveLastSeries()
 	series.Remove(topIndex);
 }
 
-void Tab7::RemoveAllSeries()		
+void Tab7_Operations::RemoveAllSeries()		
 {
 	scatter.RemoveAllSeries();
 	series.Clear();
@@ -49,7 +49,7 @@ void Tab7::RemoveAllSeries()
 
 ScatterDemo *Construct7()
 {
-	static Tab7 tab;
+	static Tab7_Operations tab;
 	return &tab;
 }
 
