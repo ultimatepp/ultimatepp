@@ -34,7 +34,7 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	else
 		h << " (32 bit)";
 #ifdef GUI_GTK
-	h << " (Gtu
+	h << " (Gtk)";
 #endif
 	h << "\n";
 #ifdef bmTIME
