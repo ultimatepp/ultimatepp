@@ -63,7 +63,7 @@ Honza
 // LaunchFile
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-bool LaunchFileCreateProcess(const char *file, const char *params) {
+bool LaunchFileCreateProcess(const char *file, const char *params, const char *directory) {
 	STARTUPINFOW startInfo;
     PROCESS_INFORMATION procInfo;
 
@@ -75,7 +75,7 @@ bool LaunchFileCreateProcess(const char *file, const char *params) {
 	wexec = Format("\"%s\" \"%s\"", GetExtExecutable(GetFileExt(file)), file).ToWString();
 	WStringBuffer wsbexec(wexec);
 	
-    if(!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, NULL, &startInfo, &procInfo))  
+    if(!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, ToSystemCharsetW(directory), &startInfo, &procInfo))  
         return false;
 
    	WaitForSingleObject(procInfo.hProcess, 0);
@@ -85,17 +85,19 @@ bool LaunchFileCreateProcess(const char *file, const char *params) {
 	return true;
 }
 
-bool LaunchFileShellExecute(const char *file, const char *params) {
-	return 32 < uint64(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), ToSystemCharsetW(params), L".", SW_SHOWNORMAL));		 
+bool LaunchFileShellExecute(const char *file, const char *params, const char *directory) {
+	return 32 < uint64(ShellExecuteW(NULL, L"open", ToSystemCharsetW(file), ToSystemCharsetW(params), ToSystemCharsetW(directory), SW_SHOWNORMAL));		 
 }
 
-bool LaunchFile(const char *file, const char *params) {
+bool LaunchFile(const char *file, const char *params, const char *directory) {
 	String _file = WinPath(file);
-	String _params;
+	String _params, _directory;
 	if (params)
 		_params = WinPath(params);
-	if (!LaunchFileShellExecute(_file, _params))			// First try
-	   	return LaunchFileCreateProcess(_file, _params);		// Second try
+	if (directory)
+		_directory = WinPath(directory);
+	if (!LaunchFileShellExecute(_file, _params, _directory))			// First try
+	   	return LaunchFileCreateProcess(_file, _params, _directory);		// Second try
 	return true;
 }
 #endif
@@ -117,7 +119,7 @@ String GetDesktopManagerNew() {
 	}
 }
 
-bool LaunchFile(const char *_file, const char *_params) {
+bool LaunchFile(const char *_file, const char *_params, const char *) {
 	String file = UnixPath(_file);
 	String params = UnixPath(_params);
 	int ret;
@@ -1096,26 +1098,39 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 	
 	if (sret.IsEmpty())
 		return Null;
-		
-	double dbl = ScanDouble(sret, NULL, decimalSign == ',');
-		
-	if (IsNull(dbl)) {
+	
+	bool hasDecimal = false, hasLetter = false;
+	for (int i = 0; i < sret.GetCount(); ++i) {
+		if (sret[i] == decimalSign)
+			hasDecimal = true;
+		else if (!IsNumber(sret[i]))
+			hasLetter = true;
+	}
+	if (!hasLetter) {
+		if (hasDecimal) {
+			double dbl = ScanDouble(sret, NULL, decimalSign == ',');
+			if (IsNull(dbl))
+				return sret;
+			else 
+				return dbl;
+		} else {
+			int64 it64 = ScanInt64(sret);
+			if (IsNull(it64))
+				return sret;
+			int it = int(it64);
+			if (it64 != it)
+				return it64;
+			else
+				return it;
+		}
+	} else {
 		Time t = ScanTime(sret);
-		if (IsNull(t))
+		if (IsNull(t)) 
 			return sret;
 		else if (t.hour == t.minute == t.second == 0)
 			return Date(t);
 		else
 			return t;
-	} else {
-		if (dbl != double(fround(dbl)))
-			return dbl;				
-		int64 it64 = ScanInt64(sret);
-		int it = int(it64);
-		if (it64 != it)
-			return it64;
-		else
-			return it;
 	}
 }
 
