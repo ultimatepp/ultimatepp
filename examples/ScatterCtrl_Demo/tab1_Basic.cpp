@@ -4,7 +4,7 @@ enum {
 	SERIE2
 };
 
-void Tab1::Init()
+void Tab1_Basic::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -39,7 +39,7 @@ void Tab1::Init()
 
 ScatterDemo *Construct1()
 {
-	static Tab1 tab;
+	static Tab1_Basic tab;
 	return &tab;
 }
 

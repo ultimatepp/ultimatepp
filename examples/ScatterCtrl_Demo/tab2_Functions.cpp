@@ -9,7 +9,7 @@ void   vfunct1(double& y, double x) {y = 0;}
 void   vfunct2(double& y, double x) {y = x*x;}
 void   vfunct3(double& y, double x) {y = -x*x;}
 
-void Tab2::Init()
+void Tab2_Functiona::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -28,7 +28,7 @@ void Tab2::Init()
 
 ScatterDemo *Construct2()
 {
-	static Tab2 tab;
+	static Tab2_Functiona tab;
 	return &tab;
 }
 

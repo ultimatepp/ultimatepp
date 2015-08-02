@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void Tab8::Init()
+void Tab8_Secondary::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -32,7 +32,7 @@ void Tab8::Init()
 
 ScatterDemo *Construct8()
 {
-	static Tab8 tab;
+	static Tab8_Secondary tab;
 	return &tab;
 }
 

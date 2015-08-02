@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void Tab6::Init()
+void Tab6_Logarithmic::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -15,14 +15,14 @@ void Tab6::Init()
 	scatter.cbModifFormatX = THISBACK(FormatX);
 }
 
-void Tab6::FormatX(String& s, int i, double d)
+void Tab6_Logarithmic::FormatX(String& s, int i, double d)
 {
 	s = FormatDoubleExp(pow(10., d), 1);
 }
 
 ScatterDemo *Construct6()
 {
-	static Tab6 tab;
+	static Tab6_Logarithmic tab;
 	return &tab;
 }
 

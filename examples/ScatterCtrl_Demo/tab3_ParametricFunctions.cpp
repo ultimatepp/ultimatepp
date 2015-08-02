@@ -12,7 +12,7 @@ void para5(Pointf& xy, double t) {xy = Pointf(-0.25+0.5*t, 0);}
 void para1p(Pointf& xy, double t, double a, double b) 	{xy = Pointf(a*cos(2*M_PI*t),b*sin(2*M_PI*t));}
 void para3p(Pointf& xy, double t, double a) 			{xy = Pointf(a+(0.5+t)*cos(6*M_PI*t),(0.5+t)*sin(6*M_PI*t));}
 
-void Tab3::Init()
+void Tab3_ParametricFunctions::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -34,7 +34,7 @@ void Tab3::Init()
 
 ScatterDemo *Construct3()
 {
-	static Tab3 tab;
+	static Tab3_ParametricFunctions tab;
 	return &tab;
 }
 

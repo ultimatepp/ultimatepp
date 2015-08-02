@@ -1,7 +1,7 @@
 #include "ScatterCtrl_Demo.h"
 
 
-void Tab9::Init()
+void Tab9_Big::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -25,7 +25,7 @@ void Tab9::Init()
 
 ScatterDemo *Construct9()
 {
-	static Tab9 tab;
+	static Tab9_Big tab;
 	return &tab;
 }
 
