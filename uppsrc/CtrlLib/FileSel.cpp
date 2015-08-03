@@ -487,7 +487,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 					StdFont()
 				);
 		#ifdef PLATFORM_WIN32
-			list.Add(t_("Network"), CtrlImg::Network(), StdFont().Bold(), SColorText,
+			list.Add(t_("Network"), DPI(CtrlImg::Network()), StdFont().Bold(), SColorText,
 			         true, -1, Null, SColorDisabled, Null, StdFont());
 		#endif
 	}
@@ -1565,7 +1565,7 @@ Image GetDirIcon(const String& s)
 #endif
 	if(IsNull(img))
 		img = CtrlImg::Dir();
-	return img;
+	return DPI(img);
 }
 
 void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
@@ -1575,7 +1575,7 @@ void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 	w.DrawRect(r, paper);
 	Image img = GetDirIcon(s);
 	w.DrawImage(r.left, r.top + (r.Height() - img.GetSize().cx) / 2, img);
-	w.DrawText(r.left + 20,
+	w.DrawText(r.left + Ctrl::Zx(20),
 	           r.top + (r.Height() - StdFont().Bold().Info().GetHeight()) / 2,
 			   ~s, StdFont().Bold(), ink);
 }
@@ -1584,9 +1584,10 @@ struct HomeDisplay : public Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q,
 	                   Color ink, Color paper, dword style) const {
 		w.DrawRect(r, paper);
-		w.DrawImage(r.left, r.top + (r.Height() - CtrlImg::Home().GetSize().cx) / 2,
+		Image img = DPI(CtrlImg::Home());
+		w.DrawImage(r.left, r.top + (r.Height() - img.GetSize().cx) / 2,
 			        CtrlImg::Home());
-		w.DrawText(r.left + 20,
+		w.DrawText(r.left + Ctrl::Zx(20),
 		           r.top + (r.Height() - StdFont().Bold().Info().GetHeight()) / 2,
 				   String(q), StdFont().Bold(), ink);
 	}
@@ -1925,7 +1926,7 @@ void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name
 		row = row < 0 ? places.GetCount() : row;
 		places.Insert(row);
 		places.Set(row, 0, path);
-		places.Set(row, 1, m);
+		places.Set(row, 1, DPI(m));
 		places.Set(row, 2, name);
 		places.Set(row, 3, group);
 		places.SetLineCy(row, max(m.GetSize().cy + 4, GetStdFontCy() + 4));
@@ -1937,7 +1938,7 @@ void FileSel::AddPlaceRaw(const String& path, const Image& m, const String& name
 FileSel& FileSel::AddPlace(const String& path, const Image& m, const String& name, const char* group, int row)
 {
 	if(path.GetCount())
-		AddPlaceRaw(NormalizePath(path), m, name, group, row);
+		AddPlaceRaw(NormalizePath(path), DPI(m), name, group, row);
 	return *this;
 }
 

@@ -705,9 +705,9 @@ public:
 	bool   Print();
 	void   DoPrint()                             { Print(); }
 
-	void   StyleTool(Bar& bar, int width = 120);
-	void   FaceTool(Bar& bar, int width = 130);
-	void   HeightTool(Bar& bar, int width = 50);
+	void   StyleTool(Bar& bar, int width = Zx(120));
+	void   FaceTool(Bar& bar, int width = Zx(130));
+	void   HeightTool(Bar& bar, int width = Zx(50));
 	void   BoldTool(Bar& bar, dword key = K_CTRL_B);
 	void   ItalicTool(Bar& bar, dword key = K_CTRL_I);
 	void   UnderlineTool(Bar& bar, dword key = K_CTRL_U);
@@ -717,10 +717,10 @@ public:
 	void   SubscriptTool(Bar& bar, dword key = 0);
 	void   InkTool(Bar& bar);
 	void   PaperTool(Bar& bar);
-	void   LanguageTool(Bar& bar, int width = HZoom(60));
-	void   HyperlinkTool(Bar& bar, int width = 180, dword key = 0, const char *tip = NULL);
+	void   LanguageTool(Bar& bar, int width = Zx(60));
+	void   HyperlinkTool(Bar& bar, int width = Zx(180), dword key = 0, const char *tip = NULL);
 	void   SpellCheckTool(Bar& bar);
-	void   IndexEntryTool(Bar& bar, int width = 80, dword key = 0, const char *tip = NULL);
+	void   IndexEntryTool(Bar& bar, int width = Zx(80), dword key = 0, const char *tip = NULL);
 
 	void   LeftTool(Bar& bar, dword key = K_CTRL_L);
 	void   RightTool(Bar& bar, dword key = K_CTRL_R);
@@ -732,7 +732,7 @@ public:
 	void   BoxWhiteBulletTool(Bar& bar, dword key = 0);
 	void   TextBulletTool(Bar& bar, dword key = 0);
 	void   ParaFormatTool(Bar& bar, dword key = 0);
-	void   LabelTool(Bar& bar, int width = 80, dword key = 0, const char *tip = NULL);
+	void   LabelTool(Bar& bar, int width = Zx(80), dword key = 0, const char *tip = NULL);
 	void   ToParaTool(Bar& bar, dword key = K_CTRL_K);
 
 	void   UndoTool(Bar& bar, dword key = K_CTRL_Z);

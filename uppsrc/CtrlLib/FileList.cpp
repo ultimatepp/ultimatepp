@@ -238,7 +238,7 @@ void FileList::Insert(int ii,
 	m.isdir = isdir;
 	m.unixexe = unixexe;
 	m.hidden = hidden;
-	m.icon = icon;
+	m.icon = DPI(icon);
 	m.name = name;
 	m.font = font;
 	m.ink = ink;
@@ -264,7 +264,7 @@ void FileList::Set(int ii,
 	m.isdir = isdir;
 	m.unixexe = unixexe;
 	m.hidden = hidden;
-	m.icon = icon;
+	m.icon = DPI(icon);
 	m.name = name;
 	m.font = font;
 	m.ink = ink;
@@ -293,7 +293,7 @@ void FileList::SetIcon(int ii, const Image& icon)
 	Value v;
 	File& m = CreateRawValue<File>(v);
 	m = Get(ii);
-	m.icon = icon;
+	m.icon = DPI(icon);
 	ColumnList::Set(ii, v, !m.isdir);
 	KillEdit();
 }
@@ -308,7 +308,7 @@ void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 	m.isdir = isdir;
 	m.unixexe = unixexe;
 	m.hidden = hidden;
-	m.icon = icon;
+	m.icon = DPI(icon);
 	m.name = name;
 	m.font = font;
 	m.ink = ink;
@@ -369,7 +369,7 @@ void FileList::Sort(const Order& order)
 }
 
 FileList::FileList() {
-	iconwidth = 16;
+	iconwidth = Zx(16);
 	ItemHeight(max(Draw::GetStdFontCy(), 16));
 	Ctrl::Add(edit);
 	edit.Hide();

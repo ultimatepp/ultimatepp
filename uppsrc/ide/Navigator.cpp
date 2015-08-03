@@ -391,9 +391,9 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 		return GetTextSize(m.type, StdFont().Bold()).cx;
 	}
 
-	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);	
+	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);
 
-	x += 15;
+	x += Ctrl::Zx(15);
 	Vector<ItemTextPart> n = ParseItemNatural(m.name, m.natural, m.ptype, m.pname, m.type,
 	                                          m.tname, m.ctname, ~m.natural + m.at);
 	int starti = 0;

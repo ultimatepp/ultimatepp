@@ -51,10 +51,10 @@ Draw& EditPageDraw::Page(int _page)
 Rect RichEdit::GetTextRect() const
 {
 	Size sz = GetSize();
-	if(sz.cy < 16)
-		sz.cy = 16;
-	if(sz.cx < 80)
-		return RectC(0, 0, 48, max(sz.cy, 16));
+	if(sz.cy < Zx(16))
+		sz.cy = Zx(16);
+	if(sz.cx < Zx(80))
+		return RectC(0, 0, Zx(48), max(sz.cy, Zy(16)));
 	int cx = zoom * (sz.cx - 2 * viewborder) / 100;
 	return RectC((sz.cx - cx) / 2, 0, cx, sz.cy);
 }
@@ -368,7 +368,7 @@ struct DisplayFont : public Display {
 	{
 		Font fnt;
 		fnt.Face((int)q);
-		fnt.Height(r.Height() - 4);
+		fnt.Height(r.Height() - Ctrl::Zy(4));
 		w.DrawRect(r, paper);
 		w.DrawText(r.left, r.top + (r.Height() - fnt.Info().GetHeight()) / 2,
 		           Font::GetFaceName((int)q), fnt, ink);
@@ -462,7 +462,6 @@ void SetupFaceList(DropList& face)
 {
 	face.ValueDisplay(Single<ValueDisplayFont>());
 	face.SetDisplay(Single<DisplayFont>());
-	face.SetLineCy(20);
 }
 
 void RichEdit::SpellCheck()
@@ -599,7 +598,7 @@ RichEdit::RichEdit()
 	Unicode();
 	BackPaint();
 
-	viewborder = 16;
+	viewborder = Zx(16);
 
 	face.NoWantFocus();
 	height.NoWantFocus();
@@ -637,7 +636,7 @@ RichEdit::RichEdit()
 
 	adjustunits.Image(RichEditImg::AdjustUnits());
 	adjustunits <<= THISBACK(SetupUnits);
-	ruler.Add(adjustunits.RightPos(4, 16).TopPos(2, 16));
+	ruler.Add(adjustunits.RightPosZ(4, 16).VSizePosZ(2, 2));
 
 	undosteps = 500;
 

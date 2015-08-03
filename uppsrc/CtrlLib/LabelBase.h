@@ -1,4 +1,4 @@
-Image DPI(const Image& img);
+Image DPI(const Image& img, int excy = 16);
 
 enum {
 	CTRL_NORMAL, CTRL_HOT, CTRL_PRESSED, CTRL_DISABLED,

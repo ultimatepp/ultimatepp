@@ -192,7 +192,10 @@ struct sCachedRescale : public ImageMaker
 	}
 
 	virtual Image Make() const {
-		return IsNull(filter) ? Rescale(img, sz, src) : RescaleFilter(img, sz, src, filter);
+		ImageBuffer m = pick(IsNull(filter) ? Rescale(img, sz, src) : RescaleFilter(img, sz, src, filter));
+		m.SetHotSpot(sz * (img.GetHotSpot() - src.TopLeft()) / src.GetSize());
+		m.Set2ndSpot(sz * (img.Get2ndSpot() - src.TopLeft()) / src.GetSize());
+		return m;
 	}
 };
 
