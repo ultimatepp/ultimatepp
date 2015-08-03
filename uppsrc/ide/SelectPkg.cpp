@@ -98,7 +98,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	alist.ColumnWidths("108 79 317");
 	alist.WhenCursor = THISBACK(ListCursor);
 	alist.EvenRowColor();
-	alist.SetLineCy(max(16, Draw::GetStdFontCy()));
+	alist.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
 	list.Add(clist.SizePos());
 	list.Add(alist.SizePos());
 	splitter.Horz(base, list);
@@ -387,8 +387,8 @@ struct PackageDisplay : Display {
 	virtual Size GetStdSize(const Value& q) const {
 		ValueArray va = q;
 		Size sz = GetTextSize(String(va[0]), fnt);
-		sz.cx += 20;
-		sz.cy = max(sz.cy, 16);
+		sz.cx += Ctrl::Zx(20);
+		sz.cy = max(sz.cy, Ctrl::Zy(16));
 		return sz;
 	}
 
@@ -396,9 +396,12 @@ struct PackageDisplay : Display {
 		ValueArray va = q;
 		String txt = va[0];
 		Image icon = va[1];
+		if(IsNull(icon))
+			icon = IdeImg::Package();
+		icon = DPI(icon);
 		w.DrawRect(r, paper);
-		w.DrawImage(r.left, r.top + (r.Height() - 16) / 2, IsNull(icon) ? IdeImg::Package() : icon);
-		w.DrawText(r.left + 20, r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
+		w.DrawImage(r.left, r.top + (r.Height() - icon.GetHeight()) / 2, icon);
+		w.DrawText(r.left + Ctrl::Zx(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
 	}
 
 	PackageDisplay() { fnt = StdFont(); }

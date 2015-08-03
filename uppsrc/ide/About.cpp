@@ -13,7 +13,7 @@
 
 Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 {
-	Image logo = IdeImg::logo();
+	Image logo = DPI(IdeImg::logo(), 9999);
 	Size  isz = logo.GetSize();
 	ImageCtrl& l = ctrl.Create<ImageCtrl>();
 	Label& v1 = ctrl.Create<Label>();
@@ -44,20 +44,20 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	v1 = h;
-	v1.HSizePos(230, 10).BottomPos(20, Arial(20).GetHeight() * 5);
-	v1.SetFont(Arial(10));
+	v1.HSizePosZ(220, 10).BottomPosZ(20, Arial(Ctrl::Zy(20)).GetHeight() * 5);
+	v1.SetFont(Arial(Ctrl::Zy(10)));
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
 	parent.Add(l.TopPos(0, isz.cy).LeftPos(0, isz.cx));
 #if 0
-	parent.Add(ctrl.Create<StaticRect>().Color(Blue).LeftPos(2, isz.cx - 4).TopPos(isz.cy, 1));
+	parent.Add(ctrl.Create<StaticRect>().Color(Blue).LeftPos(2, isz.cx - Zx(4)).TopPos(isz.cy, Zy(1)));
 	RichTextView& w = ctrl.Create<RichTextView>();
 	w.SetQTF(GetTopic("ide/app/Sponsor$en-us"));
 	w.PageWidth(2900);
 	w.NoSb();
 	w.SetFrame(NullFrame());
 	w.NoLazy();
-	parent.Add(w.TopPos(isz.cy + 3, 99).LeftPos(0, isz.cx));
+	parent.Add(w.TopPos(isz.cy + Zy(3), Zy(99)).LeftPos(0, isz.cx));
 #endif
 	return sz;
 }
@@ -102,11 +102,12 @@ struct AboutDlg : TopWindow {
 
 	AboutDlg() {
 		Size isz = MakeLogo(*this, ctrl);
-		SetRect(0, 0, 1000, isz.cy);
+		int cx = min(Zx(1000), GetWorkArea().GetWidth());
+		SetRect(0, 0, cx, isz.cy);
 		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(130, 1024));
 		about.SetZoom(Zoom(1, 1));
-		about.RightPos(0, 1000 - isz.cx).VSizePos();
-		about.HMargins(4);
+		about.RightPos(0, cx - isz.cx).VSizePos();
+		about.HMargins(Zx(4));
 		about.SetFrame(NullFrame());
 		about.NoLazy();
 		Background(PaintRect(ColorDisplay(), SColorPaper()));

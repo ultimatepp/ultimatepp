@@ -16,8 +16,8 @@ MenuItemBase::MenuItemBase()
 	isenabled = true;
 	type = 0;
 	font = StdFont();
-	leftgap = 16;
-	textgap = 6;
+	leftgap = Zx(16);
+	textgap = Zy(6);
 	accesskey = 0;
 	NoWantFocus();
 	style = &MenuBar::StyleDefault();
@@ -210,7 +210,7 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 
 Bar::Item& MenuItem::Image(const UPP::Image& img)
 {
-	licon = img;
+	licon = DPI(img);
 	if(IsDarkColorFace() && !nodarkadjust)
 		licon = MakeImage(licon, AdjustForDarkBk);
 	Refresh();
@@ -219,7 +219,7 @@ Bar::Item& MenuItem::Image(const UPP::Image& img)
 
 MenuItem& MenuItem::RightImage(const UPP::Image& img)
 {
-	ricon = img;
+	ricon = DPI(img);
 	if(IsDarkColorFace() && !nodarkadjust)
 		ricon = MakeImage(ricon, AdjustForDarkBk);
 	Refresh();
@@ -307,26 +307,27 @@ void MenuItem::Paint(Draw& w)
 		case RADIO0: li = CtrlImg::MenuRadio0(); break;
 		case RADIO1: li = CtrlImg::MenuRadio1(); break;
 		}
+		li = DPI(li);
 	}
-	Size imsz = li.GetSize();
-	Size isz = min(maxiconsize, imsz);
-	if(isz != imsz)
-		li = CachedRescale(li, isz);
+	Size isz = li.GetSize();
+//	Size isz = min(maxiconsize, imsz);
+//	if(isz != imsz)
+//		li = CachedRescale(li, isz);
 	int iy = (sz.cy - isz.cy) / 2;
 	bool chk = false;
-	int x = (max(isz.cx, leftgap - 2) - isz.cx) / 2;
+	int x = Zx(2);
 	if(!licon.IsEmpty() && type) {
 		chk = type == CHECK1 || type == RADIO1;
-		x = 2;
 		if(GUI_GlobalStyle() >= GUISTYLE_XP) {
-			if(chk && !hl) {
-				DrawXPButton(w, RectC(0, iy - 2, isz.cx + 4, isz.cy + 4), BUTTON_EDGE|BUTTON_CHECKED);
-			}
+			if(chk && !hl)
+				DrawXPButton(w, RectC(0, iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4)),
+				             BUTTON_EDGE|BUTTON_CHECKED);
 		}
 		else {
-			w.DrawRect(1, iy - 1, isz.cx + 2, isz.cy + 2, chk ? Blend(SColorFace, SColorLight)
-			                                                  : SColorFace);
-			DrawBorder(w, 0, iy - 2, isz.cx + 4, isz.cy + 4, chk ? ThinInsetBorder : ThinOutsetBorder);
+			w.DrawRect(x - Zx(1), iy - Zy(1), isz.cx + Zx(2), isz.cy + Zy(2),
+			           chk ? Blend(SColorFace, SColorLight) : SColorFace);
+			DrawBorder(w, x - Zx(2), iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4),
+			           chk ? ThinInsetBorder : ThinOutsetBorder);
 		}
 	}
 	if(isenabled)
@@ -342,10 +343,10 @@ void MenuItem::Paint(Draw& w)
 		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, ricon, hl ? style->itemtext : style->menutext);
 	else
 		w.DrawImage(sz.cx - isz.cx, (sz.cy - isz.cy) / 2, DisabledImage(ricon));
-	x = sz.cx - max(isz.cx, 16) - 1;
+	x = sz.cx - max(isz.cx, Zx(16)) - Zx(1);
 	if(!IsEmpty(keydesc)) {
 		isz = GetTextSize(keydesc, StdFont());
-		UPP::DrawMenuText(w, x - isz.cx - 2, (sz.cy - isz.cy) / 2, keydesc, font, isenabled, hl,
+		UPP::DrawMenuText(w, x - isz.cx - Zx(2), (sz.cy - isz.cy) / 2, keydesc, font, isenabled, hl,
 		                  0, SColorMenuMark(), style->itemtext, false);
 	}
 }
@@ -356,13 +357,13 @@ Size MenuItem::GetMinSize() const
 	Size sz2(0, 0);
 	if(accel) {
 		sz2 = GetTextSize(GetKeyDesc(accel), font);
-		sz2.cx += 12;
+		sz2.cx += Zx(12);
 	}
 	Size lsz = min(maxiconsize, licon.GetSize());
 	Size rsz = ricon.GetSize();
-	return AddFrameSize(Size(max(lsz.cx, leftgap) + sz1.cx + max(sz2.cx, (rsz.cx ? 16 : 0))
-	                         + max(rsz.cx, 16) + textgap + 10,
-	                         max(max(lsz.cy, rsz.cy) + 4, sz1.cy + 6)));
+	return AddFrameSize(Size(max(lsz.cx, leftgap) + sz1.cx + max(sz2.cx, (rsz.cx ? Zx(16) : 0))
+	                         + max(rsz.cx, Zx(16)) + textgap + Zx(10),
+	                         max(max(lsz.cy, rsz.cy) + Zy(4), sz1.cy + Zy(6))));
 }
 
 void MenuItem::LeftUp(Point, dword)

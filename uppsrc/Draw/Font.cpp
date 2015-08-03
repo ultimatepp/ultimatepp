@@ -170,6 +170,9 @@ void Font::InitStdFont()
 		String name;
 		int    height = 0;
 		GetStdFontSys(name, height);
+#ifdef flagTEST_HIDPI
+		height *= 2;
+#endif
 #ifdef PLATFORM_WIN32
 		int q = FindFaceNameIndex(name);
 		if(q <= 0)

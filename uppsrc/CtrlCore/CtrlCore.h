@@ -1202,7 +1202,8 @@ public:
 	static void NoLayoutZoom();
 	static void GetZoomRatio(Size& m, Size& d);
 
-	static int  HZoom(int cx)                            { return HorzLayoutZoom(cx); }
+	static int  Zx(int cx)                               { return HorzLayoutZoom(cx); }
+	static int  Zy(int cy)                               { return VertLayoutZoom(cy); }
 
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);

@@ -82,7 +82,7 @@ void WorkspaceWork::SyncErrorPackages()
 	for(int i = 0; i < package.GetCount(); i++) {
 		FileList::File f = package.Get(i);
 		if(!IsAux(f.name) && i < speed.GetCount()) {
-			FileList::File ff = f;		
+			FileList::File ff = f;
 			String path = GetFileFolder(PackagePath(f.name));
 		#ifdef PLATFORM_WIN32
 			path = ToLower(path);
@@ -98,6 +98,7 @@ void WorkspaceWork::SyncErrorPackages()
 					break;
 				}
 			}
+			ff.icon = DPI(ff.icon);
 			package.Set(i, ff);
 		}
 	}

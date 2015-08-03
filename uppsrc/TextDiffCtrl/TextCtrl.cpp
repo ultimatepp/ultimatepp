@@ -13,7 +13,7 @@ TextCompareCtrl::TextCompareCtrl()
 	number_bg = WhiteGray();
 	SetFrame(FieldFrame());
 	AddFrame(scroll);
-	SetFont(Courier(14), Courier(10));
+	SetFont(Courier(Zy(14)), Courier(Zy(10)));
 	scroll.NoAutoHide();
 	scroll.WhenScroll = THISBACK(SelfScroll);
 	maxwidth = 0;
@@ -28,7 +28,7 @@ TextCompareCtrl::TextCompareCtrl()
 int TextCompareCtrl::GetLineNo(int y, int& ii)
 {
 	ii = scroll.Get().y + y / letter.cy;
-	return ii >= 0 && ii < lines.GetCount() ? lines[ii].number : Null;	
+	return ii >= 0 && ii < lines.GetCount() ? lines[ii].number : Null;
 }
 
 void TextCompareCtrl::DoSelection(int y, bool shift)

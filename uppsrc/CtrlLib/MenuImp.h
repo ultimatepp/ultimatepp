@@ -60,7 +60,7 @@ public:
 	MenuItemBase&  SetFont(Font f)                { font = f; return *this; }
 	MenuItemBase&  Style(const MenuBar::Style *s) { style = s; return *this; }
 	Font           GetFont() const                { return font; }
-	MenuItemBase&  MaxIconSize(Size sz)           { maxiconsize = sz; return *this; }
+	MenuItemBase&  MaxIconSize(Size sz)           { maxiconsize = sz; return *this; } // deprecated
 	bool           InOpaqueBar() const;
 	MenuItemBase&  NoDarkAdjust(bool b = true)    { nodarkadjust = b; return *this; }
 

@@ -43,9 +43,9 @@ CH_STYLE(MenuBar, Style, StyleDefault)
 	popupframe = Image(ib);
 	popupbody = SColorMenu();
 	popupiconbar = Null;
-	leftgap = 26;
-	textgap = 6;
-	lsepm = rsepm = 2;
+	leftgap = Ctrl::Zx(26);
+	textgap = Ctrl::Zx(6);
+	lsepm = rsepm = Ctrl::Zx(2);
 	pullshift.x = 0;
 	pullshift.y = -1;
 }

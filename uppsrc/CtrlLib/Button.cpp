@@ -418,7 +418,7 @@ void  Button::AssignAccessKeys(dword used)
 
 Button& Button::SetImage(const Image& _img)
 {
-	img = _img;
+	img = DPI(_img);
 	monoimg = false;
 	Refresh();
 	return *this;
@@ -426,7 +426,7 @@ Button& Button::SetImage(const Image& _img)
 
 Button& Button::SetMonoImage(const Image& _img)
 {
-	img = _img;
+	img = DPI(_img);
 	monoimg = true;
 	Refresh();
 	return *this;
@@ -446,7 +446,7 @@ CH_STYLE(SpinButtons, Style, StyleDefault)
 	inc = dec = Button::StyleNormal();
 	CtrlsImageLook(inc.look, CtrlsImg::I_EB, CtrlsImg::SpU(), inc.monocolor);
 	CtrlsImageLook(dec.look, CtrlsImg::I_EB, CtrlsImg::SpD(), dec.monocolor);
-	width = 12;
+	width = Ctrl::Zx(12);
 }
 
 void SpinButtons::FrameLayout(Rect& r)
