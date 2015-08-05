@@ -57,7 +57,6 @@ void      InvalidateFontList();
 
 CommonFontInfo   GetFontInfoSys(Font font);
 GlyphInfo        GetGlyphInfoSys(Font font, int chr);
-void             GetStdFontSys(String& name, int& height);
 Vector<FaceInfo> GetAllFacesSys();
 String           GetFontDataSys(Font font);
 

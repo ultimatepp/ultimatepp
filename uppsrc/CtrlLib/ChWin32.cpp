@@ -595,6 +595,24 @@ void ChSysInit()
 	CtrlsImg::Reset();
 	ChReset();
 	XpClear();
+
+	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
+	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
+	if(SetProcessDPIAware/* && Ctrl::IsHiDPIEnabled()*/)
+		(*SetProcessDPIAware)();
+	NONCLIENTMETRICS ncm;
+#if (WINVER >= 0x0600)
+	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
+#else
+	ncm.cbSize = sizeof(ncm);
+#endif
+	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
+	String name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
+	int height = abs((int)ncm.lfMenuFont.lfHeight);
+	
+	int q = Font::FindFaceNameIndex(name);
+	if(height > 0 && height < 200) // sanity..
+		SetStdFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 	
 	GUI_HiDPI_Write(GetStdFontCy() > 22);
 

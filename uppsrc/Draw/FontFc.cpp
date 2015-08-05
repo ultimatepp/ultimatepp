@@ -15,11 +15,6 @@ FT_EXPORT( const char* ) FT_Get_X11_Font_Format( FT_Face  face ); // Put here to
 
 NAMESPACE_UPP
 
-void GetStdFontSys(String& name, int& height)
-{
-	name = "xxxx";
-}
-
 static FT_Library sFTlib;
 
 EXITBLOCK 

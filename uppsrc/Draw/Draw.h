@@ -412,15 +412,6 @@ void PaintImageBuffer(ImageBuffer& ib, const Drawing& p, int mode = MODE_ANTIALI
 class Draw : NoCopy {
 	struct DrawingPos;
 	
-	int hmul;
-	
-	int           Hmul(int x)                     { return hmul * x; }
-	Point         Hmul(Point p)                   { return hmul * p; }
-	Size          Hmul(Size sz)                   { return hmul * sz; }
-	Rect          Hmul(const Rect& r)             { return Rect(Hmul(r.left), Hmul(r.top), Hmul(r.right), Hmul(r.bottom)); }
-	Buffer<Point> Hmul(const Point *p, int count);
-	Image         Hmul(const Image& img);
-
 public:
 	enum {
 		DOTS = 0x001,
@@ -610,16 +601,12 @@ public:
 
 	static void SinCos(int angle, double& sina, double& cosa);
 	
-	void HDPIMultiplier(int m)                          { hmul = m; }
-
 	// deprecated:
 	static void SetStdFont(Font font)                   { UPP::SetStdFont(font); }
 	static Font GetStdFont()                            { return UPP::GetStdFont(); }
 	static Size GetStdFontSize()                        { return UPP::GetStdFontSize(); }
 	static int  GetStdFontCy()                          { return GetStdFontSize().cy; }
 	Size   GetPagePixels() const                        { return GetPageSize(); }
-	
-	Draw();
 };
 
 void DrawImageBandRLE(Draw& w, int x, int y, const Image& m, int minp);
