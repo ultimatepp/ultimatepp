@@ -1575,7 +1575,7 @@ void FolderDisplay::Paint(Draw& w, const Rect& r, const Value& q,
 	w.DrawRect(r, paper);
 	Image img = GetDirIcon(s);
 	w.DrawImage(r.left, r.top + (r.Height() - img.GetSize().cx) / 2, img);
-	w.DrawText(r.left + Ctrl::Zx(20),
+	w.DrawText(r.left + Zx(20),
 	           r.top + (r.Height() - StdFont().Bold().Info().GetHeight()) / 2,
 			   ~s, StdFont().Bold(), ink);
 }
@@ -1587,7 +1587,7 @@ struct HomeDisplay : public Display {
 		Image img = DPI(CtrlImg::Home());
 		w.DrawImage(r.left, r.top + (r.Height() - img.GetSize().cx) / 2,
 			        CtrlImg::Home());
-		w.DrawText(r.left + Ctrl::Zx(20),
+		w.DrawText(r.left + Zx(20),
 		           r.top + (r.Height() - StdFont().Bold().Info().GetHeight()) / 2,
 				   String(q), StdFont().Bold(), ink);
 	}

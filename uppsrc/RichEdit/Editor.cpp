@@ -368,7 +368,7 @@ struct DisplayFont : public Display {
 	{
 		Font fnt;
 		fnt.Face((int)q);
-		fnt.Height(r.Height() - Ctrl::Zy(4));
+		fnt.Height(r.Height() - Zy(4));
 		w.DrawRect(r, paper);
 		w.DrawText(r.left, r.top + (r.Height() - fnt.Info().GetHeight()) / 2,
 		           Font::GetFaceName((int)q), fnt, ink);

@@ -387,8 +387,8 @@ struct PackageDisplay : Display {
 	virtual Size GetStdSize(const Value& q) const {
 		ValueArray va = q;
 		Size sz = GetTextSize(String(va[0]), fnt);
-		sz.cx += Ctrl::Zx(20);
-		sz.cy = max(sz.cy, Ctrl::Zy(16));
+		sz.cx += Zx(20);
+		sz.cy = max(sz.cy, Zy(16));
 		return sz;
 	}
 
@@ -401,7 +401,7 @@ struct PackageDisplay : Display {
 		icon = DPI(icon);
 		w.DrawRect(r, paper);
 		w.DrawImage(r.left, r.top + (r.Height() - icon.GetHeight()) / 2, icon);
-		w.DrawText(r.left + Ctrl::Zx(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
+		w.DrawText(r.left + Zx(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
 	}
 
 	PackageDisplay() { fnt = StdFont(); }
