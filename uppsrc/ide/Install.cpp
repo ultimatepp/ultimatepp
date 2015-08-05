@@ -167,7 +167,7 @@ bool CheckLicense()
 	CtrlLayoutOKCancel(d, "License agreement");
 	d.license = GetTopic("ide/app/BSD$en-us").text;
 	d.license.Margins(4);
-	d.license.SetZoom(Zoom(18, 100));
+	d.license.SetZoom(Zoom(Zy(18), 100));
 	d.ActiveFocus(d.license);
 	if(d.Run() != IDOK) {
 		Uninstall();
@@ -194,7 +194,7 @@ bool Install()
 		CtrlLayoutOKCancel(d, "Installation guide");
 		d.info = GetTopic("ide/app/install$en-us").text;
 		d.info.Margins(4);
-		d.info.SetZoom(Zoom(18, 100));
+		d.info.SetZoom(Zoom(Zy(18), 100));
 		d.ActiveFocus(d.info);
 		if(d.Run() != IDOK)
 			return false;

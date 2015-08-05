@@ -462,9 +462,9 @@ void ChHostSkin()
 				Win32Look(s.topitem[1], XP_MENU, 8 , 2 /*HOT*/);
 				Win32Look(s.topitem[2], XP_MENU, 8 , 3 /*HOT*/);
 				Win32Look(s.popupiconbar, XP_MENU, 13, 1);
-				s.leftgap = Ctrl::Zx(32);
-				s.textgap = Ctrl::Zx(6);
-				s.lsepm = Ctrl::Zx(32);
+				s.leftgap = Zx(32);
+				s.textgap = Zx(6);
+				s.lsepm = Zx(32);
 				s.separator.l1 = Blend(SColorMenu(), SColorShadow());
 				s.separator.l2 = SColorLight();
 			}
@@ -598,7 +598,7 @@ void ChSysInit()
 
 	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
 	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
-	if(SetProcessDPIAware/* && Ctrl::IsHiDPIEnabled()*/)
+	if(SetProcessDPIAware && Ctrl::IsHiDPIEnabled())
 		(*SetProcessDPIAware)();
 	NONCLIENTMETRICS ncm;
 #if (WINVER >= 0x0600)
@@ -610,9 +610,12 @@ void ChSysInit()
 	String name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
 	int height = abs((int)ncm.lfMenuFont.lfHeight);
 	
+	DDUMP(name);
+	DDUMP(height);
+	
 	int q = Font::FindFaceNameIndex(name);
 	if(height > 0 && height < 200) // sanity..
-		SetStdFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
+		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 	
 	GUI_HiDPI_Write(GetStdFontCy() > 22);
 

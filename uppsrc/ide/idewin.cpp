@@ -733,12 +733,8 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
-#ifdef flagTEST_HIDPI
-	Font fnt = GetStdFont();
-	SetStdFont(fnt.Height(2 * fnt.GetHeight()));
-	GUI_HiDPI_Write(1);
-	DDUMP(GUI_HiDPI());
-#endif
+	Ctrl::SetHiDPIEnabled();
+
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 

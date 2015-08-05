@@ -1203,10 +1203,7 @@ public:
 	static void GetZoomRatio(Size& m, Size& d);
 	
 	static void SetHiDPIEnabled(bool set = true);
-	static bool GetHiDPIEnabled();
-
-	static int  Zx(int cx)                               { return HorzLayoutZoom(cx); }
-	static int  Zy(int cy)                               { return VertLayoutZoom(cy); }
+	static bool IsHiDPIEnabled();
 
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);
@@ -1269,6 +1266,9 @@ bool   GuiPlatformHasSizeGrip();
 void   GuiPlatformGripResize(TopWindow *q);
 Color  GuiPlatformGetScreenPixel(int x, int y);
 void   GuiPlatformAfterMenuPopUp();
+
+inline int Zx(int cx) { return Ctrl::HorzLayoutZoom(cx); }
+inline int Zy(int cy) { return Ctrl::VertLayoutZoom(cy); }
 
 Font FontZ(int face, int height = 0);
 

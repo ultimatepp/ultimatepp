@@ -814,9 +814,10 @@ bool ApplicationHiDPIEnabled;
 void Ctrl::SetHiDPIEnabled(bool set)
 {
 	ApplicationHiDPIEnabled = set;
+	ReSkin();
 }
 
-bool Ctrl::GetHiDPIEnabled()
+bool Ctrl::IsHiDPIEnabled()
 {
 	return ApplicationHiDPIEnabled;
 }

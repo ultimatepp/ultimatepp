@@ -17,7 +17,7 @@ void CtrlsImageLook(Value *look, int i, int n)
 void CtrlsImageLook(Value *look, int i, const Image& image, const Color *color, int n)
 {
 	for(int q = 0; q < n; q++)
-		*look++ = ChLookWith(CtrlsImg::Get(i++), image, *color++);
+		*look++ = ChLookWith(CtrlsImg::Get(i++), DPI(image), *color++);
 }
 
 void CtrlsImageLook(Value *look, int i, const Image& image, int n)

@@ -44,8 +44,8 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	v1 = h;
-	v1.HSizePosZ(220, 10).BottomPosZ(20, Arial(Ctrl::Zy(20)).GetHeight() * 5);
-	v1.SetFont(Arial(Ctrl::Zy(10)));
+	v1.HSizePosZ(220, 10).BottomPosZ(20, ArialZ(20).GetHeight() * 5);
+	v1.SetFont(ArialZ(10));
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
 	parent.Add(l.TopPos(0, isz.cy).LeftPos(0, isz.cx));
@@ -104,7 +104,7 @@ struct AboutDlg : TopWindow {
 		Size isz = MakeLogo(*this, ctrl);
 		int cx = min(Zx(1000), GetWorkArea().GetWidth());
 		SetRect(0, 0, cx, isz.cy);
-		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(130, 1024));
+		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(Zy(130), 1024));
 		about.SetZoom(Zoom(1, 1));
 		about.RightPos(0, cx - isz.cx).VSizePos();
 		about.HMargins(Zx(4));

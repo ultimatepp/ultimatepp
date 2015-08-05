@@ -393,7 +393,7 @@ int Navigator::NavigatorDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 
 	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);
 
-	x += Ctrl::Zx(15);
+	x += Zx(15);
 	Vector<ItemTextPart> n = ParseItemNatural(m.name, m.natural, m.ptype, m.pname, m.type,
 	                                          m.tname, m.ctname, ~m.natural + m.at);
 	int starti = 0;

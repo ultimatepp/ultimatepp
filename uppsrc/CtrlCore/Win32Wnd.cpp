@@ -245,11 +245,6 @@ void Ctrl::InitWin32(HINSTANCE hInstance)
 	GuiLock __;
 	LLOG("InitWin32");
 
-	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
-	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
-	if(SetProcessDPIAware)
-		(*SetProcessDPIAware)();
-
 	InstallPanicMessageBox(&Win32PanicMessageBox);
 //	RLOGBLOCK("Ctrl::InitWin32");
 	sMainThreadId = GetCurrentThreadId();

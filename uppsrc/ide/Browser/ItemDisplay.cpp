@@ -49,7 +49,7 @@ void PaintCppItemImage(Draw& w, int& x, int ry, int access, int kind, bool focus
 	                           Image());
 	if(!IsNull(img))
 		w.DrawImage(x, ry - img.GetHeight() / 2, DPI(img));
-	x += Ctrl::Zx(3);
+	x += Zx(3);
 	img = BrowserImg::unknown();
 	Image bk;
 	switch(kind) {
@@ -142,11 +142,11 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 	PaintCppItemImage(w, x, ry, m.access, m.kind, focuscursor);
 
 	if(m.inherited) {
-		w.DrawImage(x + Ctrl::Zx(10), r.top, BrowserImg::inherited());
+		w.DrawImage(x + Zx(10), r.top, BrowserImg::inherited());
 		for(int i = 1; i < min(m.inherited, 5); i++)
-			w.DrawRect(x + Ctrl::Zx(10), r.top + Ctrl::Zy(7) + 2 * i, Ctrl::Zx(7), Ctrl::Zy(1), SColorText);
+			w.DrawRect(x + Zx(10), r.top + Zy(7) + 2 * i, Zx(7), Zy(1), SColorText);
 	}
-	x += Ctrl::Zx(16);
+	x += Zx(16);
 	int y = ry - Draw::GetStdFontCy() / 2;
 	int x0 = x;
 	Vector<ItemTextPart> n = ParseItemNatural(m);
@@ -187,7 +187,7 @@ int CppItemInfoDisplay::DoPaint(Draw& w, const Rect& r, const Value& q,
 						w.DrawText(p.x + ax, p.y + ay, txt, fnt, White);
 				w.DrawText(p.x, p.y, txt, fnt, Blue);
 			}
-			x += sz.cx + Ctrl::Zx(3);
+			x += sz.cx + Zx(3);
 		}
 	}
 
@@ -203,5 +203,5 @@ Size CppItemInfoDisplay::GetStdSize(const Value& q) const
 {
 	NilDraw w;
 	return Size(DoPaint(w, Rect(0, 0, INT_MAX, INT_MAX), q, Null, Null, 0),
-	            max(Ctrl::Zy(16), BrowserFont().Info().GetHeight()));
+	            max(Zy(16), BrowserFont().Info().GetHeight()));
 }

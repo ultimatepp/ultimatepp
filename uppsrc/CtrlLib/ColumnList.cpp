@@ -21,7 +21,7 @@ int ColumnList::GetColumnItems() const {
 
 int  ColumnList::GetDragColumn(int x) const {
 	if (mode == MODE_ROWS)
-		return -1;	
+		return -1;
 	int cx = GetColumnCx();
 	int i = 0;
 	if(cx == 0) return -1;
@@ -490,23 +490,23 @@ void ColumnList::SetSb()
 	case MODE_LIST:
 		sb.SetTotal(GetCount());
 		sb.SetPage(GetPageItems());
-		sb.SetLine(1);		
+		sb.SetLine(1);
 		break;
 	case MODE_COLUMN: {
 		int icnt = max(1, GetColumnItems());
 		int ccnt = GetCount()/icnt;
-		ccnt += (GetCount() % icnt) ? 1 : 0;	
+		ccnt += (GetCount() % icnt) ? 1 : 0;
 		sb.SetTotal(ccnt);
 		sb.SetPage(ncl);
-		sb.SetLine(1);		
+		sb.SetLine(1);
 		break;
 		}
 	case MODE_ROWS:	{
 		int rcnt = GetCount()/ncl;
 		rcnt += (GetCount() % ncl) ? 1 : 0;
 		sb.SetTotal(rcnt*cy);
-		sb.SetPage((GetSize().cy/cy)*cy);	
-		sb.SetLine(cy);	
+		sb.SetPage((GetSize().cy/cy)*cy);
+		sb.SetLine(cy);
 		break;
 		}
 	}
@@ -541,11 +541,11 @@ void ColumnList::Scroll()
 	case MODE_LIST:
 		sz.cy = sz.cy / cy * cy;
 		scroller.Scroll(*this, sz, sb, cy);
-		break;		
+		break;
 	case MODE_COLUMN:
 		sz.cy = sz.cy / cy * cy;
 		scroller.Scroll(*this, sz, Point(sb, 0), Size(GetColumnCx(0), 0));
-		break;		
+		break;
 	case MODE_ROWS:
 		scroller.Scroll(*this, sz, sb, 1);
 		break;
@@ -800,28 +800,28 @@ void ColumnList::Set(int ii, const Value& key, const Value& val, bool canselect)
 	m.display = NULL;
 	RefreshItem(ii);
 	SyncInfo();
-	SetSb();	
+	SetSb();
 }
 
 void ColumnList::Set(int ii, const Value& key, const Value& val, const Display& display, bool canselect)
 {
 	Set(ii, key, val, canselect);
 	item[ii].display = &display;
-	SyncInfo();	
+	SyncInfo();
 }
 
 void ColumnList::Set(const Value &key, const Value& val, const Display& display, bool canselect)
 {
 	int ii = Find(key);
 	if (ii >= 0)
-		Set(ii, key, val, display, canselect);		
+		Set(ii, key, val, display, canselect);
 }
 
 void ColumnList::Set(const Value &key, const Value& val, bool canselect)
 {
 	int ii = Find(key);
 	if (ii >= 0)
-		Set(ii, key, val, canselect);			
+		Set(ii, key, val, canselect);
 }
 
 void ColumnList::Remove(int ii)
@@ -1054,6 +1054,7 @@ ColumnList::ColumnList() {
 	ncl = 1;
 	cx = 50;
 	cy = Draw::GetStdFontCy();
+	DDUMP(cy);
 	cursor = -1;
 	ListMode();
 	AddFrame(sb);

@@ -43,7 +43,7 @@ private:
 	bool       nobg;
 	bool       popupex;
 	bool       selclick;
-	int	   	   mode;
+	int        mode;
 
 	DisplayPopup info;
 
@@ -92,8 +92,8 @@ private:
 public:
 	enum {
 		MODE_LIST,
-		MODE_COLUMN,		
-		MODE_ROWS	
+		MODE_COLUMN,
+		MODE_ROWS
 	};
 
 	Callback         WhenLeftClick;
