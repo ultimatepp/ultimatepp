@@ -809,6 +809,18 @@ Font FontZ(int face, int height)
 	return Font(face, Ctrl::VertLayoutZoom(height));
 }
 
+bool ApplicationHiDPIEnabled;
+
+void Ctrl::SetHiDPIEnabled(bool set)
+{
+	ApplicationHiDPIEnabled = set;
+}
+
+bool Ctrl::GetHiDPIEnabled()
+{
+	return ApplicationHiDPIEnabled;
+}
+
 Font StdFontZ(int height)   { return FontZ(Font::STDFONT, height); }
 Font SansSerifZ(int height) { return FontZ(Font::SANSSERIF, height); }
 Font SerifZ(int height)     { return FontZ(Font::SERIF, height); }

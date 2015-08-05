@@ -1201,6 +1201,9 @@ public:
 	static Size LayoutZoom(Size sz);
 	static void NoLayoutZoom();
 	static void GetZoomRatio(Size& m, Size& d);
+	
+	static void SetHiDPIEnabled(bool set = true);
+	static bool GetHiDPIEnabled();
 
 	static int  Zx(int cx)                               { return HorzLayoutZoom(cx); }
 	static int  Zy(int cy)                               { return VertLayoutZoom(cy); }

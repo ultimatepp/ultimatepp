@@ -9,28 +9,6 @@ NAMESPACE_UPP
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
-void GetStdFontSys(String& name, int& height)
-{
-#ifdef PLATFORM_WINCE
-	name = "Arial";
-	height = 10;
-#else
-	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
-	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
-	if(SetProcessDPIAware)
-		(*SetProcessDPIAware)();
-	NONCLIENTMETRICS ncm;
-#if (WINVER >= 0x0600)
-	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
-#else
-	ncm.cbSize = sizeof(ncm);
-#endif
-	::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &ncm, 0);
-	name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
-	height = abs((int)ncm.lfMenuFont.lfHeight);
-#endif
-}
-
 #define FONTCACHE 96
 
 struct HFontEntry {

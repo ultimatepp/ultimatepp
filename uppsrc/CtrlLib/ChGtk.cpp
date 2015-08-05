@@ -495,7 +495,7 @@ void ChHostSkin()
 			if(i == CTRL_DISABLED)
 				GTK_WIDGET_FLAGS (w) &= GTK_SENSITIVE;
 			img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN, "entry", GTK_SHADOW, 20, 20);
-			if(i == 0)	
+			if(i == 0)
 				efm = max(ImageMargin(img, 4, 0), 1);
 			if(!Qt)
 				img = GetGTK(w, GTK_STATE_NORMAL, GTK_SHADOW_IN,

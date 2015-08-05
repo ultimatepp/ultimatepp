@@ -163,28 +163,11 @@ void Font::SetStdFont(Font font)
 
 void Font::InitStdFont()
 {
-	ONCELOCK {
+	ONCELOCK { // TODO: This is now sort of obsolete function....
 		Mutex::Lock __(sFontLock);
 		FaceList();
 		AStdFont = Arial(12);
-		String name;
-		int    height = 0;
-		GetStdFontSys(name, height);
-#ifdef flagTEST_HIDPI
-		height *= 2;
-#endif
-#ifdef PLATFORM_WIN32
-		int q = FindFaceNameIndex(name);
-		if(q <= 0)
-			q = FindFaceNameIndex("Tahoma");
-		if(q <= 0)
-			q = FindFaceNameIndex("Microsoft Sans Serif");
-		if(q <= 0)
-			q = FindFaceNameIndex("MS Sans Serif");
-		if(q > 0)
-			AStdFont = Font(q, max(height, 1));
 		SyncStdFont();
-#endif
 	}
 }
 
