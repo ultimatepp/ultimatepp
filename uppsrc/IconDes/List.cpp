@@ -6,7 +6,9 @@ static String sFormatImageName(const String& name, const Image& img, bool exp)
 {
 	Size sz = img.GetSize();
 	String r;
-	r << name << " (" << sz.cx << " x " << sz.cy << ')';
+	r << name << " (" << sz.cx << " x " << sz.cy
+	  << decode(img.GetResolution(), IMAGE_RESOLUTION_UHD, " UHD", IMAGE_RESOLUTION_NONE, " n.r.", "")
+	  << ')';
 	if(exp)
 		r << " ex.";
 	return r;
@@ -63,6 +65,10 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		Size sz = GetImageSize();
 		dlg.cx <<= sz.cx;
 		dlg.cy <<= sz.cy;
+		int resolution = IMAGE_RESOLUTION_STANDARD;
+		if(IsCurrent())
+			resolution = Current().image.GetResolution();
+		dlg.resolution <<= decode(resolution, IMAGE_RESOLUTION_STANDARD, 0, IMAGE_RESOLUTION_UHD, 1, 2);
 	}
 	dlg.name.SetFilter(sCharFilterCid);
 }
@@ -112,6 +118,13 @@ void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
 	GoTo(ii);
 }
 
+void SetRes(Image& m, int resolution)
+{
+	ImageBuffer ib = m;
+	ib.SetResolution(decode(resolution, 0, IMAGE_RESOLUTION_STANDARD, 1, IMAGE_RESOLUTION_UHD, IMAGE_RESOLUTION_NONE));
+	m = ib;
+}
+
 void IconDes::InsertImage()
 {
 	WithImageLayout<TopWindow> dlg;
@@ -121,7 +134,9 @@ void IconDes::InsertImage()
 			return;
 	}
 	while(!CheckName(dlg));
-	ImageInsert(~dlg.name, CreateImage(Size(~dlg.cx, ~dlg.cy), Null), dlg.exp);
+	Image m = CreateImage(Size(~dlg.cx, ~dlg.cy), Null);
+	SetRes(m, ~dlg.resolution);
+	ImageInsert(~dlg.name, m, dlg.exp);
 }
 
 void IconDes::Duplicate()
@@ -310,6 +325,7 @@ void IconDes::EditImage()
 			if(!CheckName(dlg)) break;
 			c.name = ~dlg.name;
 			c.exp = ~dlg.exp;
+			SetRes(c.image, ~dlg.resolution);
 			ilist.Set(1, sFormatImageName(c.name, c.image, c.exp));
 			int q = ilist.GetKey();
 			Reset();

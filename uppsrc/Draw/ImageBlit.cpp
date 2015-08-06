@@ -383,39 +383,6 @@ int GetChMaskPos32(dword mask)
 	return 0;
 }
 
-Vector<Image> UnpackImlData(const void *ptr, int len)
-{
-	Vector<Image> img;
-	String data = ZDecompress(ptr, len);
-	const char *s = data;
-	while(s + 6 * 2 + 1 <= data.End()) {
-		ImageBuffer ib(Peek16le(s + 1), Peek16le(s + 3));
-		ib.SetHotSpot(Point(Peek16le(s + 5), Peek16le(s + 7)));
-		ib.Set2ndSpot(Point(Peek16le(s + 9), Peek16le(s + 11)));
-		s += 13;
-		int len = ib.GetLength();
-		RGBA *t = ib;
-		const RGBA *e = t + len;
-		if(s + 4 * len > data.End())
-			break;
-		while(t < e) {
-			t->a = s[3];
-			t->r = s[0];
-			t->g = s[1];
-			t->b = s[2];
-			s += 4;
-			t++;
-		}
-		img.Add() = ib;
-	}
-	return img;
-}
-
-Vector<Image> UnpackImlData(const String& d)
-{
-	return UnpackImlData(~d, d.GetLength());
-}
-
 void TransformComponents(RGBA *t, const RGBA *s, int len,
 	const byte r[], const byte g[], const byte b[], const byte a[])
 {

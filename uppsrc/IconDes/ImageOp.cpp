@@ -146,9 +146,9 @@ String PackImlData(const Vector<Image>& image)
 {
 	StringBuffer block;
 	for(int i = 0; i < image.GetCount(); i++) {
-		Image img = image[i];
+		const Image& img = image[i];
 		StringStream ss;
-		ss.Put(0);
+		ss.Put(img.GetResolution() << 6);
 		Size sz = img.GetSize();
 		ss.Put16le(sz.cx);
 		ss.Put16le(sz.cy);

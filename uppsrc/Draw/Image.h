@@ -54,6 +54,12 @@ inline byte Saturate255(int x)             { return byte(~(x >> 24) & (x | (-(x 
 
 class  Image;
 
+enum ImageResolutionIntent {
+	IMAGE_RESOLUTION_NONE = -1,
+	IMAGE_RESOLUTION_STANDARD = 0,
+	IMAGE_RESOLUTION_UHD = 1,
+};
+
 class ImageBuffer : NoCopy {
 	mutable int  kind;
 	Size         size;
@@ -61,12 +67,14 @@ class ImageBuffer : NoCopy {
 	Point        hotspot;
 	Point        spot2;
 	Size         dots;
+	int8         resolution;
 
 	void         Set(Image& img);
 	void         DeepCopy(const ImageBuffer& img);
 
 	RGBA*        Line(int i) const      { ASSERT(i >= 0 && i < size.cy); return (RGBA *)~pixels + i * size.cx; }
 	friend void  DropPixels___(ImageBuffer& b) { b.pixels.Clear(); }
+	void         InitAttrs();
 
 	friend class Image;
 
@@ -88,6 +96,12 @@ public:
 	Size  GetDots() const               { return dots; }
 	void  SetDPI(Size sz);
 	Size  GetDPI();
+
+	void  CopyAttrs(const ImageBuffer& img);
+	void  CopyAttrs(const Image& img);
+	
+	void  SetResolution(int i)          { resolution = i; }
+	int   GetResolution() const         { return resolution; }
 
 	Size  GetSize() const               { return size; }
 	int   GetWidth() const              { return size.cx; }
@@ -165,11 +179,12 @@ public:
 	Point GetHotSpot() const;
 	Point Get2ndSpot() const;
 	Size  GetDots() const;
-	Size  GetDPI();	
+	Size  GetDPI();
 	int   GetKindNoScan() const;
 	int   GetKind() const;
+	int   GetResolution() const;
 
-	const RGBA *Begin() const                 { return data ? ~data->buffer : NULL; } 
+	const RGBA *Begin() const                 { return data ? ~data->buffer : NULL; }
 	const RGBA *End() const                   { return Begin() + GetLength(); }
 	const RGBA* operator~() const             { return Begin(); }
 	operator const RGBA*() const              { return Begin(); }
