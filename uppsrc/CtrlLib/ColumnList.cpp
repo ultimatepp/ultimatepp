@@ -1054,7 +1054,6 @@ ColumnList::ColumnList() {
 	ncl = 1;
 	cx = 50;
 	cy = Draw::GetStdFontCy();
-	DDUMP(cy);
 	cursor = -1;
 	ListMode();
 	AddFrame(sb);

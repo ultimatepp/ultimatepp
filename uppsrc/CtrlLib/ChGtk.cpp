@@ -585,7 +585,7 @@ void ChHostSkin()
 		int m = ImageMargin(mimg, 4, 5);
 		s.popupframe = WithHotSpot(mimg, m, m);
 		s.popupbody = Crop(mimg, m, m, 32 - 2 * m, 32 - 2 * m);
-		s.leftgap = Ctrl::Zx(26);
+		s.leftgap = Zx(26);
 		ChGtkNew(menu_item, "menuitem", GTK_BOX);
 		int sw = GTK_SHADOW_OUT;
 		if(gtk_check_version(2, 1, 0))
