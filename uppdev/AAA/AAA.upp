@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	test.iml,
+	srcdoc.tpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI SSE2";
+

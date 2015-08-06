@@ -89,7 +89,7 @@ GUI_APP_MAIN
 		;
 
 		DLOG("===================");
-    	DDUMP(e.GetLength());
+		DDUMP(e.GetLength());
 
 		WString text = e.Get().GetPlainText();
 		DDUMP(text.GetLength());

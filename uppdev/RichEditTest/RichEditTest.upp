@@ -10,7 +10,7 @@ file
 	test.iml;
 
 mainconfig
-	"" = "GUI X11",
+	"" = "GUI X11 TEST_HIDPI",
 	"" = "GUI NOGTK",
 	"" = "GUI MT",
 	"" = "GUI USEMALLOC",
