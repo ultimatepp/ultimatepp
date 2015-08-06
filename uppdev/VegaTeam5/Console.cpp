@@ -10,7 +10,7 @@ struct FontListDisplay : Display {
 		Font fnt = Courier(12); //Font(q, r.Height() - 2);
 	//	String txt = Font::GetFaceName(q);
 		String txt = AsString(q);
-	 	w.DrawRect(r, paper);
+		w.DrawRect(r, paper);
 		w.DrawText(r.left + 2, r.top + (r.Height() - GetTextSize(txt, fnt).cy) / 2, txt, fnt, ink); // <- Change is here - "w." no more needed
 	}
 };
@@ -20,7 +20,7 @@ struct FontDisplay : Display {
 		               Color ink, Color paper, dword style) const
 	{	Font fnt = Courier(13).Bold(); //Font(q, r.Height() - 2);
 		String txt = AsString(q);
-	 	w.DrawRect(r, paper);
+		w.DrawRect(r, paper);
 		w.DrawText(r.left + 2, r.top + (r.Height() - GetTextSize(txt, fnt).cy) / 2, txt, fnt, ink); // <- Change is here - "w." no more needed
 	}
 };

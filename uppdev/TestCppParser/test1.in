@@ -1,7 +1,2 @@
-void Foo::Foo() {
-
-void Foo::Bar();
-
-void Foo::Bar2() {
-label:
-	int x = 10;
+	byte         backpaint:2;//2
+	bool         hasdhctrl:1;
