@@ -54,6 +54,7 @@ file
 	RescaleFilter.cpp optimize_speed,
 	MakeCache.cpp,
 	DrawRasterData.cpp,
+	Iml.cpp,
 	iml.h,
 	iml_header.h,
 	iml_source.h,

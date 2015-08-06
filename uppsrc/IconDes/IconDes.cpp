@@ -7,6 +7,9 @@ IconDes::Slot::Slot()
 	pastepos = Null;
 	supersampling = false;
 	exp = false;
+	ImageBuffer b;
+	b.SetResolution(IMAGE_RESOLUTION_STANDARD);
+	image = b;
 }
 
 IconDes::Slot& IconDes::Current()

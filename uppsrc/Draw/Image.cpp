@@ -48,16 +48,36 @@ void ImageBuffer::Create(int cx, int cy)
 	}
 #endif
 	kind = IMAGE_UNKNOWN;
+	InitAttrs();
+}
+
+void ImageBuffer::InitAttrs()
+{
 	spot2 = hotspot = Point(0, 0);
 	dots = Size(0, 0);
+	resolution = IMAGE_RESOLUTION_NONE;
+}
+
+void ImageBuffer::CopyAttrs(const ImageBuffer& img)
+{
+	SetHotSpot(img.GetHotSpot());
+	Set2ndSpot(img.Get2ndSpot());
+	SetDots(img.GetDots());
+	SetResolution(img.GetResolution());
+}
+
+void ImageBuffer::CopyAttrs(const Image& img)
+{
+	if(img.data)
+		CopyAttrs(img.data->buffer);
+	else
+		InitAttrs();
 }
 
 void ImageBuffer::DeepCopy(const ImageBuffer& img)
 {
 	Create(img.GetSize());
-	SetHotSpot(img.GetHotSpot());
-	Set2ndSpot(img.Get2ndSpot());
-	SetDots(img.GetDots());
+	CopyAttrs(img);
 	memcpy(pixels, img.pixels, GetLength() * sizeof(RGBA));
 }
 
@@ -67,9 +87,7 @@ void ImageBuffer::Set(Image& img)
 		if(img.data->refcount == 1) {
 			size = img.GetSize();
 			kind = IMAGE_UNKNOWN;
-			hotspot = img.GetHotSpot();
-			spot2 = img.Get2ndSpot();
-			dots = img.GetDots();
+			CopyAttrs(img);
 			pixels = pick(img.data->buffer.pixels);
 			img.Clear();
 		}
@@ -105,10 +123,8 @@ ImageBuffer::ImageBuffer(ImageBuffer& b)
 {
 	kind = b.kind;
 	size = b.size;
-	dots = b.dots;
 	pixels = pick(b.pixels);
-	hotspot = b.hotspot;
-	spot2 = b.spot2;
+	CopyAttrs(b);
 }
 
 void ImageBuffer::SetDPI(Size dpi) 
@@ -178,6 +194,11 @@ Size Image::GetDPI()
 	return data ?  Size(int(600.*size.cx/dots.cx), int(600.*size.cy/dots.cy)): Size(0, 0);
 }
 
+int Image::GetResolution() const
+{
+	return data ? data->buffer.GetResolution() : IMAGE_RESOLUTION_NONE;
+}
+
 int Image::GetKindNoScan() const
 {
 	return data ? data->buffer.GetKind() : IMAGE_EMPTY;
@@ -227,7 +248,7 @@ void Image::Serialize(Stream& s)
 				}
 				len -= INT_MAX;
 				offset += INT_MAX;
-			}			
+			}
 			if(!s.GetAll((void*)(ptr+offset), (int)len))
 				s.SetError();
 			
@@ -304,7 +325,7 @@ Image::~Image()
 }
 
 Image::Image(const Init& init)
-{
+{ // Legacy (before cca 2008) iml support
 	ASSERT(init.info[0] >= 1);
 	Size sz;
 	sz.cx = Peek32le(init.info + 1);
@@ -372,8 +393,7 @@ static Image sMultiply(const Image& img, int (*op)(RGBA *t, const RGBA *s, int l
 	if(k == IMAGE_OPAQUE || k == IMAGE_EMPTY)
 		return img;
 	ImageBuffer ib(img.GetSize());
-	ib.SetHotSpot(img.GetHotSpot());
-	ib.Set2ndSpot(img.Get2ndSpot());
+	ib.CopyAttrs(img);
 	ib.SetKind((*op)(~ib, ~img, ib.GetLength()));
 	return ib;
 }
@@ -388,177 +408,12 @@ Image Unmultiply(const Image& img)
 	return sMultiply(img, Unmultiply);
 }
 
-void Iml::Init(int n)
-{
-	for(int i = 0; i < n; i++)
-		map.Add(name[i]);
-}
-
-void Iml::Reset()
-{
-	int n = map.GetCount();
-	map.Clear();
-	Init(n);
-}
-
-void Iml::Set(int i, const Image& img)
-{
-	map[i].image = img;
-	map[i].loaded = true;
-}
-
-static StaticMutex sImlLock;
-
-Image Iml::Get(int i)
-{
-	IImage& m = map[i];
-	if(!m.loaded) {
-		Mutex::Lock __(sImlLock);
-		if(data.GetCount()) {
-			int ii = 0;
-			for(;;) {
-				const Data& d = data[ii];
-				if(i < d.count) {
-					static const char   *cached_data;
-					static Vector<Image> cached;
-					if(cached_data != d.data) {
-						cached_data = d.data;
-						cached = UnpackImlData(d.data, d.len);
-						if(premultiply)
-							for(int i = 0; i < cached.GetCount(); i++)
-								cached[i] = Premultiply(cached[i]);
-					}
-					m.image = cached[i];
-					break;
-				}
-				i -= d.count;
-				ii++;
-			}
-		}
-		else
-			m.image = Premultiply(Image(img_init[i]));
-		m.loaded = true;
-	}
-	return m.image;
-}
-
-#ifdef _DEBUG
-int  Iml::GetBinSize() const
-{
-	int size = 0;
-	for(int i = 0; i < map.GetCount(); i++) {
-		const Image::Init& init = img_init[i];
-		size += (int)strlen(name[i]) + 1 + 24;
-		for(int q = 0; q < init.scan_count; q++)
-			size += (int)strlen(init.scans[q]);
-	}
-	return size;
-}
-#endif
-
-Iml::Iml(const Image::Init *img_init, const char **name, int n)
-:	img_init(img_init),
-	name(name)
-{
-#ifdef flagCHECKINIT
-	RLOG("Constructing iml " << *name);
-#endif
-	premultiply = true;
-	Init(n);
-}
-
-void Iml::AddData(const byte *_data, int len, int count)
-{
-	Data& d = data.Add();
-	d.data = (const char *)_data;
-	d.len = len;
-	d.count = count;
-	data.Shrink();
-}
-
-static StaticCriticalSection sImgMapLock;
-
-static VectorMap<String, Iml *>& sImgMap()
-{
-	static VectorMap<String, Iml *> x;
-	return x;
-}
-
-void Register(const char *imageclass, Iml& list)
-{
-#ifdef flagCHECKINIT
-	RLOG("Registering iml " << imageclass);
-#endif
-	INTERLOCKED_(sImgMapLock)
-		sImgMap().GetAdd(imageclass) = &list;
-}
-
-int GetImlCount()
-{
-	int q = 0;
-	INTERLOCKED_(sImgMapLock)
-		q = sImgMap().GetCount();
-	return q;
-}
-
-Iml& GetIml(int i)
-{
-	return *sImgMap()[i];
-}
-
-String GetImlName(int i)
-{
-	Mutex::Lock __(sImlLock);
-	return sImgMap().GetKey(i);
-}
-
-int FindIml(const char *name)
-{
-	Mutex::Lock __(sImlLock);
-	return sImgMap().Find(name);
-}
-
-Image GetImlImage(const char *name)
-{
-	Image m;
-	const char *w = strchr(name, ':');
-	if(w) {
-		Mutex::Lock __(sImlLock);
-		int q = FindIml(String(name, w));
-		if(q >= 0) {
-			Iml& iml = *sImgMap()[q];
-			while(*w == ':')
-				w++;
-			q = iml.Find(w);
-			if(q >= 0)
-				m = iml.Get(q);
-		}
-	}
-	return m;
-}
-
-void SetImlImage(const char *name, const Image& m)
-{
-	const char *w = strchr(name, ':');
-	if(w) {
-		Mutex::Lock __(sImlLock);
-		int q = FindIml(String(name, w));
-		if(q >= 0) {
-			Iml& iml = *sImgMap()[q];
-			while(*w == ':')
-				w++;
-			q = iml.Find(w);
-			if(q >= 0)
-				iml.Set(q, m);
-		}
-	}
-}
-
 String StoreImageAsString(const Image& img)
 {
 	if(img.GetKind() == IMAGE_EMPTY)
 		return Null;
 	int type = img.GetKind() == IMAGE_OPAQUE ? 3 : 4;
+	type |= decode(img.GetResolution(), IMAGE_RESOLUTION_STANDARD, 0x40, IMAGE_RESOLUTION_UHD, 0x80, 0);
 	StringStream ss;
 	ss.Put(type);
 	Size sz = img.GetSize();
@@ -600,6 +455,8 @@ Image  LoadImageFromString(const String& src)
 		return Null;
 	StringStream ss(src);
 	int type = ss.Get();
+	int resolution = decode(type & 0xc0, 0x40, IMAGE_RESOLUTION_STANDARD, 0x80, IMAGE_RESOLUTION_UHD, 0);
+	type &= 0x3f;
 	Size sz;
 	sz.cx = ss.Get16le();
 	sz.cy = ss.Get16le();
@@ -623,6 +480,7 @@ Image  LoadImageFromString(const String& src)
 	ImageBuffer ib(sz);
 	ib.SetHotSpot(p);
 	ib.SetDots(dots);
+	ib.SetResolution(resolution);
 	RGBA *t = ib;
 	const RGBA *e = t + ib.GetLength();
 	const byte *s = data;
