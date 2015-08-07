@@ -28,6 +28,8 @@ void Ide::MakeTitle()
 		int chrset = editor.GetCharset();
 		title << " " << IdeCharsetName(chrset)
 		      << " " << (findarg(Nvl(editfile_line_endings, line_endings), LF, DETECT_LF) >= 0 ? "LF" : "CRLF");
+		if(editor.IsTruncated())
+			title << " (Truncated)";
 		if(editor.IsReadOnly())
 			title << " (Read Only)";
 		if(editor.IsDirty())

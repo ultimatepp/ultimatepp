@@ -26,7 +26,11 @@ TextCtrl::TextCtrl()
 	processenter = true;
 	nobg = false;
 	rectsel = false;
+#ifdef CPU_64
 	max_total = 400 * 1024 * 1024;
+#else
+	max_total = 200 * 1024 * 1024;
+#endif
 	truncated = false;
 }
 
@@ -121,6 +125,7 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 	total = 0;
 	SetCharset(charset);
 	charset = ResolveCharset(charset);
+	truncated = false;
 	if(charset == CHARSET_UTF8_BOM && in.GetLeft() >= 3) {
 		int64 pos = in.GetPos();
 		byte h[3];
@@ -198,8 +203,10 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					if(*s == '\n') {
 						LTIMING("ADD");
 						int len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
-						if(total + len + 1 > max_total)
+						if(total + len + 1 > max_total) {
+							truncated = true;
 							goto out_of_limit;
+						}
 						total += len + 1;
 						Ln& l = line.Add();
 						l.len = len;
@@ -238,8 +245,10 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				}
 				if(b < s) {
 					LTIMING("ln.Cat");
-					if(b - s + ln.GetCount() > max_total)
+					if(b - s + ln.GetCount() > max_total) {
+						truncated = true;
 						goto out_of_limit;
+					}
 					ln.Cat((const char *)b, (const char *)s);
 				}
 				if(s < e) {
@@ -249,15 +258,19 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 						if(b8 & 128) {
 							LTIMING("ToUnicode");
 							WString w = ToUnicode(~ln, ln.GetCount(), charset);
-							if(total + w.GetLength() + 1 > max_total)
+							if(total + w.GetLength() + 1 > max_total) {
+								truncated = true;
 								goto out_of_limit;
+							}
 							line.Add(w);
 							total += w.GetLength() + 1;
 						}
 						else {
 							LTIMING("ADD");
-							if(total + ln.GetCount() + 1 > max_total)
+							if(total + ln.GetCount() + 1 > max_total) {
+								truncated = true;
 								goto out_of_limit;
+							}
 							total += ln.GetCount() + 1;
 							Ln& l = line.Add();
 							l.len = ln.GetCount();
