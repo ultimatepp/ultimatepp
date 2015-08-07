@@ -8,17 +8,18 @@ void TabRangePlot::Init()
 	
 	scatter.SetMouseHandling(true, true).ShowContextMenu();
 
-	for (double size = 0; size <= 10; size += 2.) {
+	for (double time = 0; time <= 10; time += 2.) {
 		Vector<double> &data = s1.Add();
-		double val = size * 10.;
-		data << size << val << (val - 10) << (val - 4) << (val + 4) << (val + 10); 		
+		double size = time * 10.;
+		data << time << ((size - 10) + Random(50)) << ((size - 4) + Random(50)) << 
+						((size + 4) + Random(50)) << ((size + 10) + Random(50)); 		
 	}
-	idsRange << 2 << 3 << 4 << 5;
+	idsRange << 1 << 2 << 3 << 4;
 	static Vector<int> idVoid;
-	scatter.AddSeries(s1, 1, 0, idsRange, idVoid, idVoid).Legend("Time").Units("sec")
-		   .MarkStyle<RangePlot>(RangePlot::MIN_AVG_MAX).NoPlot();
+	scatter.AddSeries(s1, 0, Null, idVoid, idsRange, idVoid).Legend("Size").Units("m")
+		   .MarkStyle<RangePlot>(RangePlot::MIN_AVG_MAX);//.NoPlot();
 	
-	scatter.SetLabelY("Size");
+	scatter.SetLabelY("Size").SetLabelX("time [seg]");
 	scatter.FitToData(true, 0.2);
 }
 
