@@ -4,6 +4,7 @@ uses
 file
 	test.iml,
 	srcdoc.tpp,
+	Upscale.cpp,
 	main.cpp;
 
 mainconfig
