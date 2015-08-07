@@ -120,7 +120,7 @@ void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
 
 void SetRes(Image& m, int resolution)
 {
-	ImageBuffer ib = m;
+	ImageBuffer ib(m);
 	ib.SetResolution(decode(resolution, 0, IMAGE_RESOLUTION_STANDARD, 1, IMAGE_RESOLUTION_UHD, IMAGE_RESOLUTION_NONE));
 	m = ib;
 }
