@@ -610,9 +610,6 @@ void ChSysInit()
 	String name = FromSystemCharset(ncm.lfMenuFont.lfFaceName);
 	int height = abs((int)ncm.lfMenuFont.lfHeight);
 	
-	DDUMP(name);
-	DDUMP(height);
-	
 	int q = Font::FindFaceNameIndex(name);
 	if(height > 0 && height < 200) // sanity..
 		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
