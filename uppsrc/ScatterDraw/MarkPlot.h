@@ -221,6 +221,8 @@ private:
 			pdata = &dataY;
 		else
 			pdata = &dataX;
+		if (pdata->GetCount() == 0)
+			return;
 		int min, max, avg = 0;
 		if (rangeType == ALL) {
 			min = (*pdata)[0];

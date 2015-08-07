@@ -213,9 +213,7 @@ public:
 	ScatterDraw &AddSeries(Array<Pointf> &points)		{return AddSeries<ArrayPointf>(points);}
 	ScatterDraw &AddSeries(Vector<Vector <double> > &data, int idx, int idy, 
 		Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, bool useCols = true, int beginData = 0, int numData = Null) {
-		ScatterDraw &series = AddSeries<VectorVectorY<double> >(data, idx, idy, idsx, idsy, idsFixed, useCols, beginData, numData);
-//		series.multiPlot = true;
-		return series;
+		return AddSeries<VectorVectorY<double> >(data, idx, idy, idsx, idsy, idsFixed, useCols, beginData, numData);
 	}
 	ScatterDraw &AddSeries(double (*function)(double))	{return AddSeries<FuncSource>(function);}
 	ScatterDraw &AddSeries(void (*function)(double&, double))
@@ -873,12 +871,12 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 												int(plotH*(1 + yMin/yRange)));
 			
 				if (series[j].markWidth >= 1 && series[j].markPlot) {
-					if (!series[j].markPlot->IsMultiPlot()) 
+					if (!series[j].markPlot->IsMultiPlot()) {
 						for (int i = 0; i < points.GetCount(); i++) 
 							series[j].markPlot->Paint(w, scale, points[i], 
 								series[j].markWidth, series[j].markColor, 
 								series[j].markBorderWidth, series[j].markBorderColor);              
-					else {
+					} else {
 						for (int64 i = 0; i < series[j].PointsData()->GetCount(); ++i) {
 							int ix = fround(plotW*(series[j].PointsData()->x(i) - xMin)/xRange);
 							int iy;
@@ -888,13 +886,13 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 								iy = plotH - fround(plotH*(series[j].PointsData()->y(i) - yMin2)/yRange2);
 							Vector<int> dataX, dataY;
 							Vector<double> dataFixed;
-							for (int ii = 0; ii < series[j].PointsData()->GetznxCount(); ++ii) 
+							for (int ii = 0; ii < series[j].PointsData()->GetznxCount(i); ++ii) 
 								dataX << fround(plotW*(series[j].PointsData()->znx(ii, i) - xMin)/xRange);
 							if (series[j].primaryY) {
-								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(); ++ii) 
+								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(i); ++ii) 
 									dataY << (plotH - fround(plotH*(series[j].PointsData()->zny(ii, i) - yMin)/yRange));
 							} else {
-								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(); ++ii) 
+								for (int ii = 0; ii < series[j].PointsData()->GetznyCount(i); ++ii) 
 									dataY << (plotH - fround(plotH*(series[j].PointsData()->zny(ii, i) - yMin2)/yRange2));
 							}
 							for (int ii = 0; ii < series[j].PointsData()->GetznFixedCount(); ++ii) 

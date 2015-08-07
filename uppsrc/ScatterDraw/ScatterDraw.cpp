@@ -289,16 +289,25 @@ void ScatterDraw::AdjustMinUnitY2() {
 }
 
 ScatterDraw &ScatterDraw::SetRange(double rx, double ry, double ry2) {
-	ASSERT(!(rx <= 0 || ry <= 0 || ry2 <= 0));
-	xRange = rx;
-	yRange = ry;
-	yRange2 = ry2;
-	xMajorUnit = xRange/10;
-	AdjustMinUnitX();
-	yMajorUnit = yRange/10;   
-	AdjustMinUnitY();
-	yMajorUnit2 = yRange2/10;   
-	AdjustMinUnitY2();
+	ASSERT(IsNull(rx) || rx > 0);
+	ASSERT(IsNull(ry) || ry > 0);
+	ASSERT(IsNull(ry2) || ry2 > 0);
+	
+	if (!IsNull(rx)) {
+		xRange = rx;
+		xMajorUnit = xRange/10;
+		AdjustMinUnitX();
+	}
+	if (!IsNull(ry)) {
+		yRange = ry;
+		yMajorUnit = yRange/10;   
+		AdjustMinUnitY();
+	}
+	if (!IsNull(ry2)) {
+		yRange2 = ry2;
+		yMajorUnit2 = yRange2/10;   
+		AdjustMinUnitY2();
+	}
 	WhenSetRange();
 	return *this;
 }
@@ -332,19 +341,28 @@ ScatterDraw &ScatterDraw::SetMajorUnitsNum(int nx, int ny) {
 }
 
 ScatterDraw &ScatterDraw::SetMinUnits(double ux, double uy) {
-	xMinUnit = ux;
-	yMinUnit = uy;
-	yMinUnit2 = yRange2*yMinUnit/yRange;
-	AdjustMinUnitX();
-	AdjustMinUnitY();
-	AdjustMinUnitY2();	
+	if (!IsNull(ux))
+		xMinUnit = ux;
+	if (!IsNull(uy)) {	
+		yMinUnit = uy;
+		yMinUnit2 = yRange2*yMinUnit/yRange;
+	}
+	if (!IsNull(ux))
+		AdjustMinUnitX();
+	if (!IsNull(uy)) {
+		AdjustMinUnitY();
+		AdjustMinUnitY2();	
+	}
 	return *this;
 }
 
 ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
-	xMin = xmin;
-	yMin = ymin;
-	yMin2 = ymin2;
+	if (!IsNull(xmin))
+		xMin = xmin;
+	if (!IsNull(ymin))
+		yMin = ymin;
+	if (!IsNull(ymin2))
+		yMin2 = ymin2;
 	WhenSetXYMin();
 	return *this;
 }
@@ -1727,6 +1745,8 @@ INITBLOCK {
 	MarkPlot::Register<CrossMarkPlot>("Cross");
 	MarkPlot::Register<XMarkPlot>("X");
 	MarkPlot::Register<RhombMarkPlot>("Rhomb");
+	MarkPlot::Register<RangePlot>("Range");
+	MarkPlot::Register<BubblePlot>("Bubble");
 }
 
 END_UPP_NAMESPACE

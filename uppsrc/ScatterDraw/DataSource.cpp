@@ -62,7 +62,6 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 	double lastZero = Null;
 	double firstZero;
 	for (int64 id = 1; id < GetCount(); ++id) {
-		double kk = y(id);
 		if (((y(id) - avg) > 0) != isPossitive) {
 			isPossitive = !isPossitive;
 			double zero = x(id-1) - (y(id-1) - avg)*(x(id) - x(id-1))/(y(id) - y(id-1));
