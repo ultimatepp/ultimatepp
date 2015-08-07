@@ -19,8 +19,8 @@ public:
 	virtual double f(double x)				{NEVER();	return Null;}
 	virtual double f(Vector<double> zn)		{NEVER();	return Null;}
 	virtual int64 GetCount()			{NEVER();	return Null;}
-	virtual int GetznxCount()			{return 0;}
-	virtual int GetznyCount()			{return 0;}
+	virtual int GetznxCount(int64 id)	{return 0;}
+	virtual int GetznyCount(int64 id)	{return 0;}
 	virtual int GetznFixedCount()		{return 0;}
 	bool IsParam()						{return isParam;}
 	bool IsExplicit()					{return isExplicit;}
@@ -112,12 +112,12 @@ private:
 	
 public:
 	VectorVectorY() : data(0), useRows(true), beginData(0), numData(Null), idx(0), idy(1) {}
-	VectorVectorY(Vector<Vector<Y> > &data, int idy, int idx, 
-				  Vector<int> &idsy, Vector<int> &idsx, Vector<int> &idsFixed, bool useRows = true, int beginData = 0, int numData = Null) : 
+	VectorVectorY(Vector<Vector<Y> > &data, int idx, int idy, 
+				  Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, bool useRows = true, int beginData = 0, int numData = Null) : 
 		data(&data), useRows(useRows), beginData(beginData), numData(numData) {
-		Init(data, idy, idx, idsy, idsx, idsFixed, useRows, beginData, numData);
+		Init(data, idx, idy, idsx, idsy, idsFixed, useRows, beginData, numData);
 	}
-	void Init(Vector<Vector<Y> > &_data, int _idy, int _idx, Vector<int> &_idsy, Vector<int> &_idsx, Vector<int> &_idsFixed, 
+	void Init(Vector<Vector<Y> > &_data, int _idx, int _idy, Vector<int> &_idsx, Vector<int> &_idsy, Vector<int> &_idsFixed, 
 			  bool _useRows = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
 		useRows = _useRows;
@@ -139,19 +139,41 @@ public:
 				numData = data->GetCount() - beginData;
 		}
 	}
-	void Init(Vector<Vector<Y> > &_data, int idy, int idx, bool _useRows = true, int _beginData = 0, int _numData = Null) {
+	void Init(Vector<Vector<Y> > &_data, int idx, int idy, bool _useRows = true, int _beginData = 0, int _numData = Null) {
 		static Vector<int> idsVoid;
-		Init(_data, idy, idx, idsVoid, idsVoid, idsVoid, _useRows, _beginData, _numData);
+		Init(_data, idx, idy, idsVoid, idsVoid, idsVoid, _useRows, _beginData, _numData);
 	}
-	virtual inline double y(int64 id) {return useRows ? (*data)[beginData + int(id)][idy] : (*data)[idy][beginData + int(id)];}
+	virtual inline double y(int64 id) {
+		if (!IsNull(idy) && idy >= 0) {
+			if (useRows) 
+				return (*data)[beginData + int(id)][idy];
+			else
+				return (*data)[idy][beginData + int(id)];
+		} else {
+			if (GetznyCount(id) == 0)
+				return Null;
+			double ret = 0;
+			for (int i = 0; i < GetznyCount(id); ++i) 
+				ret += zny(i, id);
+			return ret/GetznyCount(id);
+		}
+	}
 	virtual inline double x(int64 id) {return useRows ? (*data)[beginData + int(id)][idx] : (*data)[idx][beginData + int(id)];}
 	//virtual inline double xn(int n, int64 id) 	{return useRows ? (*data)[beginData + int(id)][ids[n]] : (*data)[ids[n]][beginData + int(id)];}
-	virtual inline int64  GetCount()			{return numData;};
+	virtual inline int64 GetCount()		{return numData;};
 	virtual double znx(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsx[n]] : (*data)[idsx[n]][beginData + int(id)];}
-	virtual double zny(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsy[n]] : (*data)[idsy[n]][beginData + int(id)];}
+	virtual double zny(int n, int64 id)	{
+		if (!IsNull(idy) && idy < 0) 
+			return useRows ? (*data)[beginData + int(id)][n - idy] : (*data)[n - idy][beginData + int(id)];	
+		return useRows ? (*data)[beginData + int(id)][idsy[n]] : (*data)[idsy[n]][beginData + int(id)];
+	}
 	virtual double znFixed(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsFixed[n]] : (*data)[idsFixed[n]][beginData + int(id)];}
 	virtual int GetznxCount()			{return idsx.GetCount();}
-	virtual int GetznyCount()			{return idsy.GetCount();}
+	virtual int GetznyCount(int64 id) {
+		if (!IsNull(idy) && idy < 0) 
+			return (useRows ? (*data)[beginData + int(id)].GetCount() : (*data).GetCount()) + idy;
+		return idsy.GetCount();
+	}
 	virtual int GetznFixedCount()		{return idsFixed.GetCount();}
 };
 
