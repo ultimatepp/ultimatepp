@@ -222,7 +222,7 @@ public:
 	
 private:
 	Vector<Vector <double> > s1;
-	Vector<int> idsBall;
+	Vector<int> idsBubble;
 };
 
 class TabPie : public WithTabPie<StaticRect> {

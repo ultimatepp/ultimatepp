@@ -10,11 +10,11 @@ void TabBubblePlot::Init()
 
 	for (double size = 0; size <= 10; size += 2.) {
 		Vector<double> &data = s1.Add();
-		data << size << 10 + 50*sin(size/M_PI) << size*4 + 4; 		
+		data << size << (10 + 10*Random(30)*size) << Random(80); 		
 	}
-	idsBall << 2;
+	idsBubble << 2;
 	static Vector<int> idVoid;
-	scatter.AddSeries(s1, 1, 0, idVoid, idVoid, idsBall).Legend("Importance").MarkStyle<BubblePlot>()
+	scatter.AddSeries(s1, 0, 1, idVoid, idVoid, idsBubble).Legend("Importance").MarkStyle<BubblePlot>()
 		   .NoPlot().MarkColor(Green()).MarkBorderColor(LtRed()).MarkBorderWidth(3);
 	
 	scatter.SetLabelY("Size");

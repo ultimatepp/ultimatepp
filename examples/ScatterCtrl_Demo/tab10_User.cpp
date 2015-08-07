@@ -45,10 +45,12 @@ private:
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor) const {
+	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor, 
+				const double&, const Color&) const {
 		DoPaint(p, scale, cp, size, markColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor) const {
+	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor, 
+				const double&, const Color&) const {
 		DoPaint(p, scale, cp, size, markColor);
 	}
 };

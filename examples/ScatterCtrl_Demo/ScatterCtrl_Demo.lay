@@ -99,7 +99,7 @@ LAYOUT(Tab13, 420, 236)
 END_LAYOUT
 
 LAYOUT(TabRangePlot, 420, 236)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabBubblePlot, 420, 236)
