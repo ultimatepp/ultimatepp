@@ -67,7 +67,7 @@ AssistEditor::AssistEditor()
 	WhenAnnotationMove = THISBACK(SyncAnnotationPopup);
 	WhenAnnotationClick = THISBACK1(EditAnnotation, true);
 	WhenAnnotationRightClick = THISBACK1(EditAnnotation, false);
-	Annotations(12);
+	Annotations(Zx(12));
 	annotation_popup.Background(White);
 	annotation_popup.SetFrame(BlackFrame());
 	annotation_popup.Margins(6);
