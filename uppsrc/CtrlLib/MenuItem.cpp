@@ -210,7 +210,7 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 
 Bar::Item& MenuItem::Image(const UPP::Image& img)
 {
-	licon = DPI(img);
+	licon = img;
 	if(IsDarkColorFace() && !nodarkadjust)
 		licon = MakeImage(licon, AdjustForDarkBk);
 	Refresh();
@@ -219,7 +219,7 @@ Bar::Item& MenuItem::Image(const UPP::Image& img)
 
 MenuItem& MenuItem::RightImage(const UPP::Image& img)
 {
-	ricon = DPI(img);
+	ricon = img;
 	if(IsDarkColorFace() && !nodarkadjust)
 		ricon = MakeImage(ricon, AdjustForDarkBk);
 	Refresh();
@@ -307,7 +307,6 @@ void MenuItem::Paint(Draw& w)
 		case RADIO0: li = CtrlImg::MenuRadio0(); break;
 		case RADIO1: li = CtrlImg::MenuRadio1(); break;
 		}
-		li = DPI(li);
 	}
 	Size isz = li.GetSize();
 //	Size isz = min(maxiconsize, imsz);

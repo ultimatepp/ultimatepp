@@ -614,7 +614,9 @@ void ChSysInit()
 	if(height > 0 && height < 200) // sanity..
 		Font::SetDefaultFont(Font(q >= 0 ? q : Font::SANSSERIF, height));
 	
+	bool uhd = GetStdFontCy() > 22;
 	GUI_HiDPI_Write(GetStdFontCy() > 22);
+	SetUHDMode(uhd);
 
 	GUI_GlobalStyle_Write(IsWinXP() && !ScreenInPaletteMode() && IsSysFlag(0x1022 /*SPI_GETFLATMENU*/)
 	                      ? GUISTYLE_XP : GUISTYLE_CLASSIC);

@@ -70,9 +70,9 @@ void RichRuler::Paint(Draw& w)
 			if(xp > tabpos)
 				w.DrawRect(x0 + x, sz.cy - Zy(4), Zx(1), Zy(3), SColorShadow);
 		}
-	w.DrawImage(Zx(4), Zy(6), DPI(newtabalign == ALIGN_RIGHT  ? RichEditImg::RightTab() :
-	                              newtabalign == ALIGN_CENTER ? RichEditImg::CenterTab() :
-	                                                            RichEditImg::LeftTab()));
+	w.DrawImage(Zx(4), Zy(6), newtabalign == ALIGN_RIGHT  ? RichEditImg::RightTab() :
+	                          newtabalign == ALIGN_CENTER ? RichEditImg::CenterTab() :
+	                                                        RichEditImg::LeftTab());
 }
 
 int RichRuler::FindMarker(Point p)

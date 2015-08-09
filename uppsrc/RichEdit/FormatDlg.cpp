@@ -267,7 +267,7 @@ ParaFormatting::ParaFormatting()
 	bullet.Add(RichPara::BULLET_BOXWHITE, RichEditImg::BoxWhiteBullet());
 	bullet.Add(RichPara::BULLET_TEXT, RichEditImg::TextBullet());
 	bullet.SetDisplay(CenteredHighlightImageDisplay());
-	bullet.SetLineCy(18);
+	bullet.SetLineCy(RichEditImg::RoundBullet().GetHeight() + Zy(2));
 	for(int i = 0; i < 8; i++) {
 		DropList& list = n[i];
 		list.Add(Null);
