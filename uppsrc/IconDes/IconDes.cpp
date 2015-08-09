@@ -217,17 +217,21 @@ Image IconDes::MakeIconDesCursor(const Image& arrow, const Image& cmask)
 {
 	RGBA c = CurrentColor();
 	c.a = 255;
-	ImageBuffer ib(arrow.GetSize());
-	const RGBA *a = ~arrow;
-	const RGBA *m = ~cmask;
+	Image ucmask = Unmultiply(cmask);
+	ImageBuffer ib(ucmask.GetSize());
+	const RGBA *m = ~ucmask;
 	RGBA *t = ~ib;
-	RGBA *e = ~ib + ib.GetLength();
+	RGBA *e = ib.End();
 	while(t < e) {
-		*t++ = m->a ? c : *a;
+		*t = c;
+		t->a = m->a;
 		m++;
-		a++;
+		t++;
 	}
-	return ib;
+	Image cm(ib);
+	Image r = arrow;
+	Over(r, Point(0, 0), Premultiply(cm), r.GetSize());
+	return r;
 }
 
 void IconDes::ColorChanged()
