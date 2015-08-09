@@ -225,7 +225,7 @@ void Font::Serialize(Stream& s) {
 	int version = 1;
 	s / version;
 	if(version >= 1) {
-    	enum {
+		enum {
 			OLD_STDFONT, OLD_SCREEN_SERIF, OLD_SCREEN_SANS, OLD_SCREEN_FIXED,
 			OLD_ROMAN,
 			OLD_ARIAL,

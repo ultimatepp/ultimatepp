@@ -10,6 +10,7 @@ Size DbgDisas::GetBox() const
 	Size sz = GetTextSize("12345678", CourierZ(12));
 	if(mode64)
 		sz.cx *= 2;
+	sz.cy = max(sz.cy, opfont.GetCy());
 	return sz;
 }
 
@@ -37,11 +38,12 @@ void DbgDisas::Paint(Draw& w)
 		int x = 0;
 		w.DrawRect(0, y, sz.cx, box.cy, i == cursor ? HasFocus() ? SColorHighlight : SColorFace
 		                                            : i & 1 ? Blend(SColorMark, SColorPaper, 220) : SColorPaper());
+		int hexy = y + (box.cy - hexfont.GetCy()) / 2;
 		if(sz.cx > bcx * 15) {
 			bool lbl = taddr.Find(addr[i]) >= 0;
 			if(lbl && i != cursor)
 				w.DrawRect(0, y, box.cx, box.cy, lblpaper);
-			w.DrawText(0, y, mode64 ? Sprintf("%16llX", (uint64)addr[i]) : Sprintf("%08X", (uint32)addr[i]),
+			w.DrawText(0, hexy, mode64 ? Sprintf("%16llX", (uint64)addr[i]) : Sprintf("%08X", (uint32)addr[i]),
 			           hexfont,
 			           HasFocus() && i == cursor ? SColorPaper : lbl ? lblink : SColorText);
 			x += box.cx;
@@ -51,11 +53,12 @@ void DbgDisas::Paint(Draw& w)
 		x += HorzLayoutZoom(18);
 		if(sz.cx - x - (maxb + 1) * bcx > bcx * 12) {
 			for(int i = 0; i < min(n.bytes.GetCount(), maxb); i++)
-				w.DrawText(x + i * bcx, y, Sprintf("%02X", (byte)n.bytes[i]), hexfont, ink);
+				w.DrawText(x + i * bcx, hexy, Sprintf("%02X", (byte)n.bytes[i]), hexfont, ink);
 			x += (maxb + 1) * bcx;
 		}
-		w.DrawText(x, y, n.code, opfont, ink);
-		w.DrawText(x + codecx, y, n.args, opfont, ink);
+		int opy = y + (box.cy - opfont.GetCy()) / 2;
+		w.DrawText(x, opy, n.code, opfont, ink);
+		w.DrawText(x + codecx, opy, n.args, opfont, ink);
 		y += box.cy;
 		i++;
 	}
@@ -110,7 +113,7 @@ void DbgDisas::Clear()
 	inst.Clear();
 	taddr.Clear();
 	addr.Clear();
-	opfont = StdFont(12);
+	opfont = StdFontZ(12);
 	codecx = GetTextSize("movlmo", opfont).cx;
 }
 

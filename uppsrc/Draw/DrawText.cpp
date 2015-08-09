@@ -222,7 +222,7 @@ void Draw::DrawText(int x, int y, const String& text, Font font, Color ink, cons
 Size GetTextSize(const wchar *text, Font font, int n)
 {
 #if defined(flagWINGL) || defined(flagLINUXGL)
-	return GetTextSize(text, resources.GetFont(font), n); 
+	return GetTextSize(text, resources.GetFont(font), n);
 #else
 	FontInfo fi = font.Info();
 	if(n < 0)
