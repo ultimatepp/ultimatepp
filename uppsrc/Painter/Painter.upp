@@ -4,7 +4,7 @@ uses
 	Draw;
 
 file
-	Painter.h options PCH,
+	Painter.h options(BUILDER_OPTION) PCH,
 	Painter.hpp,
 	Painter.cpp,
 	SvgArc.cpp,

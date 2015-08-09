@@ -7,7 +7,7 @@ void DbgDisas::MouseWheel(Point, int zdelta, dword)
 
 Size DbgDisas::GetBox() const
 {
-	Size sz = GetTextSize("12345678", Courier(12));
+	Size sz = GetTextSize("12345678", CourierZ(12));
 	if(mode64)
 		sz.cx *= 2;
 	return sz;
@@ -24,7 +24,7 @@ void DbgDisas::Paint(Draw& w)
 	Size box = GetBox();
 	int i = sb;
 	int y = 0;
-	Font hexfont = Courier(12);
+	Font hexfont = CourierZ(12);
 	int maxb = 0;
 	for(int i = 0; i < inst.GetCount(); i++)
 		maxb = max(inst[i].bytes.GetCount(), maxb);

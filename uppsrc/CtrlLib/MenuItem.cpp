@@ -646,12 +646,12 @@ bool TopMenuItem::Key(dword key, int count)
 
 Size TopMenuItem::GetMinSize() const
 {
-	return AddFrameSize(GetTextSize(text, StdFont()) + Size(12, 7));
+	return AddFrameSize(GetTextSize(text, StdFont()) + Zsz(12, 7));
 }
 
 int TopMenuItem::GetStdHeight(Font font)
 {
-	return font.Info().GetHeight() + 7;
+	return font.Info().GetHeight() + Zy(7);
 }
 
 void TopMenuItem::SyncState()

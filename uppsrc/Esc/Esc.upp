@@ -6,7 +6,7 @@ uses
 	Core;
 
 file
-	Esc.h options PCH,
+	Esc.h options(BUILDER_OPTION) PCH,
 	EscValue.cpp,
 	EscArray.cpp,
 	EscMap.cpp,

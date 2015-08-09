@@ -209,12 +209,12 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	label2 <<=
 	toupper2 <<=
 	quotes2 <<=
-	name2 <<= 
+	name2 <<=
 	buttons <<= THISBACK(Refresh);
 	Refresh();
 	view.Highlight("cpp");
 	view.HideBar();
-	view.SetFont(Courier(12));
+	view.SetFont(CourierZ(12));
 	if(cursor.GetCount())
 		sel <<= cursor;
 	else

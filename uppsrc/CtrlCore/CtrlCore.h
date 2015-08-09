@@ -1267,8 +1267,9 @@ void   GuiPlatformGripResize(TopWindow *q);
 Color  GuiPlatformGetScreenPixel(int x, int y);
 void   GuiPlatformAfterMenuPopUp();
 
-inline int Zx(int cx) { return Ctrl::HorzLayoutZoom(cx); }
-inline int Zy(int cy) { return Ctrl::VertLayoutZoom(cy); }
+inline int  Zx(int cx) { return Ctrl::HorzLayoutZoom(cx); }
+inline int  Zy(int cy) { return Ctrl::VertLayoutZoom(cy); }
+inline Size Zsz(int cx, int cy) { return Size(Zx(cx), Zy(cy)); }
 
 Font FontZ(int face, int height = 0);
 

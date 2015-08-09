@@ -128,7 +128,7 @@ void HexViewInfo::Paint(Draw& w)
 void HexViewInfo::SetMode(int _mode)
 {
 	mode = _mode;
-	Height(mode * GetTextSize("X", Courier(12)).cy + 3);
+	Height(mode * GetTextSize("X", CourierZ(12)).cy + 3);
 	Show(mode);
 }
 
@@ -137,7 +137,7 @@ HexViewInfo::HexViewInfo()
 	SetMode(0);
 	AddFrame(TopSeparatorFrame());
 	AddFrame(RightSeparatorFrame());
-	font = Courier(12);
+	font = CourierZ(12);
 }
 
 int HexView::Byte(int64 adr)
@@ -466,7 +466,7 @@ void  HexView::SerializeSettings(Stream& s)
 
 HexView::HexView()
 {
-	SetFont(Courier(12));
+	SetFont(CourierZ(12));
 	BackPaint();
 	charset = CHARSET_WIN1252;
 	sb <<= THISBACK(Scroll);

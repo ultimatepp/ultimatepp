@@ -50,9 +50,9 @@ void SvnSync::SyncList()
 		String path = GetFullPath(w.working);
 		list.Add(REPOSITORY, path,
 		         AttrText("Working directory").SetFont(StdFont().Bold()).Ink(White).Paper(Blue),
-		         AttrText(path).SetFont(Arial(20).Bold()).Paper(Blue).Ink(White),
-		         AttrText("").SetFont(Arial(20).Bold()).Paper(Blue).Ink(White));
-		list.SetLineCy(list.GetCount() - 1, 26);
+		         AttrText(path).SetFont(ArialZ(20).Bold()).Paper(Blue).Ink(White),
+		         AttrText("").SetFont(ArialZ(20).Bold()).Paper(Blue).Ink(White));
+		list.SetLineCy(list.GetCount() - 1, Zy(26));
 		Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
 		bool actions = false;
 		for(int pass = 0; pass < 2; pass++)

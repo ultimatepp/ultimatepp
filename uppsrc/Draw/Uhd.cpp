@@ -37,4 +37,15 @@ Image DPI(const Image& img)
 	return img;
 }
 
+Image DPI(const Image& img, int expected)
+{
+	if(img.GetSize().cy <= expected && IsUHDMode()) {
+		Image m = CachedRescale(img, 2 * img.GetSize(), FILTER_LANCZOS3);
+		ImageBuffer h(m);
+		h.SetResolution(IMAGE_RESOLUTION_UHD);
+		return h;
+	}
+	return img;
+}
+
 };

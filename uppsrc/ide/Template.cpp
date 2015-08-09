@@ -101,20 +101,20 @@ void AppPreview::MouseWheel(Point p, int zdelta, dword keyflags) {
 void AppPreview::Layout()
 {
 	sb.SetTotal(line.GetCount());
-	sb.SetPage(GetSize().cy / Courier(12).Info().GetHeight());
+	sb.SetPage(GetSize().cy / CourierZ(12).GetHeight());
 }
 
 void AppPreview::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	FontInfo fi = Courier(12).Info();
+	FontInfo fi = CourierZ(12).Info();
 	int y = 0;
 	int i = sb;
 	while(y < sz.cy) {
 		bool hdr = i < line.GetCount() && line[i].header;
 		w.DrawRect(0, y, sz.cx, fi.GetHeight(), hdr ? LtCyan : SColorPaper);
 		if(i < line.GetCount())
-			w.DrawText(0, y, line[i].text, hdr ? Arial(12).Bold().Italic() : Courier(12), SColorText);
+			w.DrawText(0, y, line[i].text, hdr ? ArialZ(12).Bold().Italic() : CourierZ(12), SColorText);
 		y += fi.GetHeight();
 		i++;
 	}

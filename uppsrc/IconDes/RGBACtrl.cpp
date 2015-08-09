@@ -191,7 +191,7 @@ RGBACtrl::RGBACtrl()
 	ramp <<= THISBACK(Ramp);
 	Add(alpha);
 	alpha <<= THISBACK(Alpha);
-	text.SetFont(Courier(11));
+	text.SetFont(CourierZ(11));
 	text.NoWantFocus();
 	text.SetReadOnly();
 	Add(text);

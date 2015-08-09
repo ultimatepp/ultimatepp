@@ -202,4 +202,7 @@ void SetUHDMode(bool b = true);
 bool IsUHDMode();
 
 Image DPI(const Image& m);
+Image DPI(const Image& img, int expected);
+
+inline int   DPI(int a)   { return IsUHDMode() ? 2 * a : a; }
 inline Size  DPI(Size sz) { return IsUHDMode() ? 2 * sz : sz; }
