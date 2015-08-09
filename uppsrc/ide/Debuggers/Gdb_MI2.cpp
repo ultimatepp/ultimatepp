@@ -430,7 +430,7 @@ Gdb_MI2::Gdb_MI2()
 	quickwatch.evaluate.Ok() <<= quickwatch.Acceptor(IDOK);
 	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
 	quickwatch.value.SetReadOnly();
-	quickwatch.value.SetFont(Courier(12));
+	quickwatch.value.SetFont(CourierZ(12));
 	quickwatch.value.SetColor(TextCtrl::PAPER_READONLY, White);
 	quickwatch.Sizeable().Zoomable();
 	quickwatch.NoCenter();

@@ -13,7 +13,7 @@ TextCompareCtrl::TextCompareCtrl()
 	number_bg = WhiteGray();
 	SetFrame(FieldFrame());
 	AddFrame(scroll);
-	SetFont(Courier(Zy(14)), Courier(Zy(10)));
+	SetFont(CourierZ(14), CourierZ(10));
 	scroll.NoAutoHide();
 	scroll.WhenScroll = THISBACK(SelfScroll);
 	maxwidth = 0;

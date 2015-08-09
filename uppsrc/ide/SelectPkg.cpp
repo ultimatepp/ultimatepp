@@ -398,7 +398,8 @@ struct PackageDisplay : Display {
 		Image icon = va[1];
 		if(IsNull(icon))
 			icon = IdeImg::Package();
-		icon = DPI(icon);
+		else
+			icon = DPI(icon, 16);
 		w.DrawRect(r, paper);
 		w.DrawImage(r.left, r.top + (r.Height() - icon.GetHeight()) / 2, icon);
 		w.DrawText(r.left + Zx(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
@@ -558,7 +559,7 @@ void SelectPackageDlg::Load()
 						}
 					}
 				}
-				else 
+				else
 					nest.Unlink(i); // cached folder was deleted
 				ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
 			}

@@ -9,7 +9,7 @@ LineEdit::LineEdit() {
 	nohbar = false;
 	showtabs = false;
 	tabsize = 4;
-	font = Courier(16);
+	font = CourierZ(16);
 	SetFrame(ViewFrame());
 	sb.NoBox();
 	AddFrame(sb);
@@ -1190,7 +1190,7 @@ void LineEdit::LeftDrag(Point p, dword flags)
 		ImageDraw iw(sz);
 		iw.DrawRect(sz, Black());
 		iw.Alpha().DrawRect(sz, Black());
-		DrawTLText(iw.Alpha(), 0, 0, 9999, sample, Courier(10), White());
+		DrawTLText(iw.Alpha(), 0, 0, 9999, sample, CourierZ(10), White());
 		NextUndo();
 		if(DoDragAndDrop(ClipFmtsText(), iw) == DND_MOVE && !IsReadOnly()) {
 			RemoveSelection();

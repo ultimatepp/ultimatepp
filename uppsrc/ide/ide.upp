@@ -114,6 +114,6 @@ mainconfig
 	"" = "GUI MT TEST_HIDPI";
 
 custom() "",
-	"",
+	"ASDFASDFASDF",
 	"$(OUTDIR)/$(FILE).obj";
 

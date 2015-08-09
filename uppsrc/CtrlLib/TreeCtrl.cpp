@@ -56,7 +56,7 @@ TreeCtrl::Node::Node(const Image& img, Ctrl& ctrl, int cx, int cy)
 TreeCtrl::TreeCtrl()
 {
 	display = &StdDisplay();
-	levelcx = 16;
+	levelcx = DPI(16);
 	nocursor = false;
 	noroot = false;
 	dirty = true;

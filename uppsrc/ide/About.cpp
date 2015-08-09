@@ -13,7 +13,7 @@
 
 Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 {
-	Image logo = DPI(IdeImg::logo(), 9999);
+	Image logo = IdeImg::logo();
 	Size  isz = logo.GetSize();
 	ImageCtrl& l = ctrl.Create<ImageCtrl>();
 	Label& v1 = ctrl.Create<Label>();

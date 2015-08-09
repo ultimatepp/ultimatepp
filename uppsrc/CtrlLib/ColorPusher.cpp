@@ -120,7 +120,6 @@ void ColorButton::Paint(Draw& w)
 {
 	Size sz = GetSize();
 	Size isz = (IsNull(image) ? staticimage : image).GetSize();
-	DDUMP(image.GetSize());
 	Point center = (sz - isz) / 2;
 	if(GUI_GlobalStyle() >= GUISTYLE_XP)
 		ChPaint(w, sz, style->look[!IsEnabled() ? CTRL_DISABLED : push ? CTRL_PRESSED

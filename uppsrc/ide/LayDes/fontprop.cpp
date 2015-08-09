@@ -119,15 +119,15 @@ void FontProperty::Read(CParser& p) {
 	else
 	if(p.Id("Serif") || p.Id("SerifZ") || p.Id("ScreenSerif") || p.Id("ScreenSerifZ") ||
 	   p.Id("Roman") || p.Id("RomanZ"))
-	   	f.Face(Font::SERIF);
+		f.Face(Font::SERIF);
 	else
 	if(p.Id("SansSerif") || p.Id("SansSerifZ") || p.Id("ScreenSans") || p.Id("ScreenSansZ") ||
 	   p.Id("Arial") || p.Id("ArialZ"))
-	   	f.Face(Font::SANSSERIF);
+		f.Face(Font::SANSSERIF);
 	else
 	if(p.Id("Monospace") || p.Id("MonospaceZ") || p.Id("ScreenFixed") || p.Id("ScreenFixedZ") ||
 	   p.Id("Courier") || p.Id("CourierZ"))
-	   	f.Face(Font::MONOSPACE);
+		f.Face(Font::MONOSPACE);
 	p.PassChar('(');
 	if(p.IsInt())
 		f.Height(p.ReadInt());

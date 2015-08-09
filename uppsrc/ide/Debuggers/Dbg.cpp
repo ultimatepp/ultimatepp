@@ -236,7 +236,7 @@ Dbg::Dbg()
 	CtrlLayoutOKCancel(quickwatch, "Quick watch");
 	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
 	quickwatch.value.SetReadOnly();
-	quickwatch.value.SetFont(Courier(12));
+	quickwatch.value.SetFont(CourierZ(12));
 	quickwatch.Sizeable().Zoomable();
 	quickwatch.NoCenter();
 	quickwatch.SetRect(0, 150, 300, 400);
