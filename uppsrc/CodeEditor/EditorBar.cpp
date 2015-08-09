@@ -91,7 +91,7 @@ void EditorBar::Paint(Draw& w)
 			String n = AsString((i + 1) % 1000000);
 			Font fnt = editor->GetFont();
 			Size tsz = GetTextSize(n, fnt);
-			w.DrawText(sz.cx - Zx(4 - 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, Brown);
+			w.DrawText(sz.cx - Zx(4 + 12) - tsz.cx, y + (fy - tsz.cy) / 2, n, fnt, Brown);
 		}
 		if(hi_if) {
 			Vector<IfState> nextif;
