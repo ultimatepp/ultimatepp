@@ -22,12 +22,24 @@ void Test(const char *sourcefile, const char *currentfile)
 	{ RTIMING("Preprocess");
 		cpp.Preprocess(sourcefile, in, currentfile);
 		DUMP(cpp.namespace_stack);
+<<<<<<< .mine
+		DUMP(cpp.output);
+=======
+>>>>>>> .r8434
 		DUMP(cpp.usedmacro);
+<<<<<<< .mine
+		DUMP(cpp.definedmacro);
+=======
 		DUMP(cpp.macro.GetCount());
+>>>>>>> .r8434
 	}
 	LOG("=================================");
+<<<<<<< .mine
+/*
+=======
 	LOG(cpp.output);
 
+>>>>>>> .r8434
 /*
 	{
 		Cpp cpp2;
@@ -35,6 +47,7 @@ void Test(const char *sourcefile, const char *currentfile)
 		cpp2.Preprocess(sourcefile, NilStream(), currentfile, &cpp.usedmacro);
 		DUMP(cpp2.macro);
 	}
+*/
 	for(int i = 0; i < 100; i++)
 	{
 		RTIMING("GetMacros");
@@ -76,6 +89,41 @@ CONSOLE_APP_MAIN
 	Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
 
 	return;
+<<<<<<< .mine
+#endif	
+	{
+		RTIMING("Pass1");
+		Test("C:\\u\\upp.src\\uppsrc\\Core\\Topt.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
+	}
+#ifndef _DEBUG
+	for(int i = 0; i < 100; i++) {
+		Test("C:\\u\\upp.src\\uppsrc\\Core\\Format.h", "C:\\u\\upp.src\\uppsrc\\Core\\Format.cpp");
+	}
+#endif
+#if 0
+	{
+		RTIMING("Pass1");
+		Index<String> visited;
+//		RecursePP("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", include_path, visited);
+	}
+	
+	DDUMP(IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core.h", include_path));
+	DDUMP(IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core2.h", include_path));
+	
+	for(int i = 0; i < 1000; i++) {
+		RTIMING("IncludesFile true");
+		IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core.h", include_path);
+	}
+
+	for(int i = 0; i < 1000; i++) {
+		RTIMING("IncludesFile false");
+		IncludesFile("c:/u/upp.src/uppsrc/CtrlLib/EditField.cpp", "c:/u/upp.src/uppsrc/Core/Core1.h", include_path);
+	}
+#endif
+//	GetPPFile(GetDataFile("test.h")).Dump();
+	return;
+=======
+>>>>>>> .r8434
 }
 
 // TEST:a,b:|a|b|\n

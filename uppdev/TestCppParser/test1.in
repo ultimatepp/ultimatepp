@@ -1,2 +1,19 @@
+<<<<<<< .mine
+<<<<<<< .mine
+using namespace Upp;struct testImg {
+enum {I_Hahah,
+};
+static Image Hahah();
+static Iml&   Iml();static int         Find(const UPP::String& s);static int         Find(const char *s);static int         GetCount();static String GetId(int i);static Image  Get(int i);static Image  Get(const char *s);static Image  Get(const UPP::String& s);static void   Set(int i, const UPP::Image& m);static void   Set(const char *s, const UPP::Image& m);static void   Reset();};
+=======
+void Foo::Foo() {
+
+void Foo::Bar();
+
+void Foo::Bar2() {
+label:
+	int x = 10;>>>>>>> .r8637
+=======
 	byte         backpaint:2;//2
 	bool         hasdhctrl:1;
+>>>>>>> .r8796

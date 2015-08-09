@@ -23,12 +23,22 @@ void Test(const char *path)
 
 	Parser p;
 //	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError), Vector<String>(), Vector<String>(), Index<String>());
+<<<<<<< .mine
+<<<<<<< .mine
+	RTIMESTOP("TEST");
+	p.Do(in, base, 0, 0, GetFileTitle(path), callback(AddError),
+=======
+	p.Do(in, base, 0, FILE_C, GetFileTitle(path), callback(AddError),
+=======
 	p.Do(in, base, 0, FILE_CPP, GetFileTitle(path), callback(AddError),
+>>>>>>> .r8796
+>>>>>>> .r8637
 	     Vector<String>(), Vector<String>(), hh);
+
+	Qualify(base);
 
 	if(errs.GetCount())
 		DUMPC(errs);
-	Qualify(base);
 	String out;
 	for(int i = 0; i < base.GetCount(); i++) {
 		out << Nvl(base.GetKey(i), "<globals>") << " {\n";

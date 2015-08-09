@@ -35,6 +35,8 @@ GUI_APP_MAIN
 //	ChStdSkin();
 //	SetLanguage(LNG_('P','L','P','L'));
 
+	Ctrl::SetHiDPIEnabled();
+
 //	InstallCrashDump();
 	DUMP(GetStdFontCy());
 	DUMP(GUI_PopUpEffect());

@@ -4,6 +4,13 @@ uses
 
 file
 	cpp.h,
+<<<<<<< .mine
+	util.cpp,
+	macro.cpp,
+	ppfile.cpp,
+	cpp.cpp,
+=======
+>>>>>>> .r8434
 	main.cpp,
 	test.h,
 	testfile,
