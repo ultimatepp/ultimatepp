@@ -198,3 +198,8 @@ Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, i
 Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
 Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
 
+void SetUHDMode(bool b = true);
+bool IsUHDMode();
+
+Image DPI(const Image& m);
+inline Size  DPI(Size sz) { return IsUHDMode() ? 2 * sz : sz; }

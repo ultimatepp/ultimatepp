@@ -2,12 +2,6 @@
 
 NAMESPACE_UPP
 
-Image DPI(const Image& img, int excy)
-{
-	return GUI_HiDPI() && img.GetSize().cy <= excy ? CachedRescale(img, 2 * img.GetSize(), FILTER_LANCZOS3)
-	                                               : img;
-}
-
 void CtrlsImageLook(Value *look, int i, int n)
 {
 	while(n--)
@@ -17,13 +11,13 @@ void CtrlsImageLook(Value *look, int i, int n)
 void CtrlsImageLook(Value *look, int i, const Image& image, const Color *color, int n)
 {
 	for(int q = 0; q < n; q++)
-		*look++ = ChLookWith(CtrlsImg::Get(i++), DPI(image), *color++);
+		*look++ = ChLookWith(CtrlsImg::Get(i++), image, *color++);
 }
 
 void CtrlsImageLook(Value *look, int i, const Image& image, int n)
 {
 	for(int q = 0; q < n; q++)
-		*look++ = ChLookWith(CtrlsImg::Get(i++), DPI(image));
+		*look++ = ChLookWith(CtrlsImg::Get(i++), image);
 }
 
 String DeAmp(const char *s)

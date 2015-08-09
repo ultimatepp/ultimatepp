@@ -78,7 +78,7 @@ Image Iml::Get(int i)
 							for(int i = 0; i < cached.GetCount(); i++)
 								cached[i] = Premultiply(cached[i]);
 					}
-					m.image = cached[i];
+					m.image = DPI(cached[i]);
 					break;
 				}
 				i -= d.count;

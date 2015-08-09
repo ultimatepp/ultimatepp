@@ -170,7 +170,7 @@ Image ToolButton::GetImage() const
 
 Bar::Item& ToolButton::Image(const UPP::Image& img_)
 {
-	Upp::Image m = DPI(img_);
+	Upp::Image m = img_;
 	if(!m.IsSame(img)) {
 		img = m;
 		Refresh();

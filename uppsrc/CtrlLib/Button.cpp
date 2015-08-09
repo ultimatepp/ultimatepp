@@ -418,7 +418,7 @@ void  Button::AssignAccessKeys(dword used)
 
 Button& Button::SetImage(const Image& _img)
 {
-	img = DPI(_img);
+	img = _img;
 	monoimg = false;
 	Refresh();
 	return *this;
@@ -426,7 +426,7 @@ Button& Button::SetImage(const Image& _img)
 
 Button& Button::SetMonoImage(const Image& _img)
 {
-	img = DPI(_img);
+	img = _img;
 	monoimg = true;
 	Refresh();
 	return *this;

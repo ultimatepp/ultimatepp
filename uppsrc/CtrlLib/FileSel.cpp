@@ -487,7 +487,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 					StdFont()
 				);
 		#ifdef PLATFORM_WIN32
-			list.Add(t_("Network"), DPI(CtrlImg::Network()), StdFont().Bold(), SColorText,
+			list.Add(t_("Network"), CtrlImg::Network(), StdFont().Bold(), SColorText,
 			         true, -1, Null, SColorDisabled, Null, StdFont());
 		#endif
 	}
@@ -1584,7 +1584,7 @@ struct HomeDisplay : public Display {
 	virtual void Paint(Draw& w, const Rect& r, const Value& q,
 	                   Color ink, Color paper, dword style) const {
 		w.DrawRect(r, paper);
-		Image img = DPI(CtrlImg::Home());
+		Image img = CtrlImg::Home();
 		w.DrawImage(r.left, r.top + (r.Height() - img.GetSize().cx) / 2,
 			        CtrlImg::Home());
 		w.DrawText(r.left + Zx(20),

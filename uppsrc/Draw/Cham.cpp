@@ -130,8 +130,6 @@ Value ChBorder(const ColorF *colors, const Value& face)
 	return RawToValue(b);
 }
 
-Image DPI(const Image& img, int excy = 16);
-
 Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 {
 	if(IsType<sChLookWith>(v)) {
@@ -139,15 +137,14 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 		if(op == LOOK_PAINT) {
 			LOGPNG(AsString(x.img.GetSerialId()), x.img);
 			ChPaint(w, r, x.look);
-			Image m = DPI(x.img);
-			Point p = r.CenterPos(m.GetSize()) + x.offset;
+			Point p = r.CenterPos(x.img.GetSize()) + x.offset;
 			if(x.colorfn)
-				w.DrawImage(p.x, p.y, m, (*x.colorfn)(x.ii));
+				w.DrawImage(p.x, p.y, x.img, (*x.colorfn)(x.ii));
 			else
 			if(!IsNull(x.color))
-				w.DrawImage(p.x, p.y, m, x.color);
+				w.DrawImage(p.x, p.y, x.img, x.color);
 			else
-				w.DrawImage(p.x, p.y, m);
+				w.DrawImage(p.x, p.y, x.img);
 			return 1;
 		}
 		return sChOp(w, r, x.look, op);
@@ -186,7 +183,7 @@ Value StdChLookFn(Draw& w, const Rect& r, const Value& v, int op)
 	}
 	if(IsType<Image>(v)) {
 		Image img = v;
-		img = DPI(img);
+		img = img;
 		Size isz = img.GetSize();
 		Size sz = r.GetSize();
 		Point p = img.GetHotSpot();
