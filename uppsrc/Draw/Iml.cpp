@@ -7,7 +7,6 @@ Vector<Image> UnpackImlData(const void *ptr, int len)
 	Vector<Image> img;
 	String data = ZDecompress(ptr, len);
 	const char *s = data;
-	int version = 0;
 	while(s + 6 * 2 + 1 <= data.End()) {
 		ImageBuffer ib(Peek16le(s + 1), Peek16le(s + 3));
 		int q = byte(*s) >> 6;
