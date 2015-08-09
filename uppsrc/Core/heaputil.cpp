@@ -332,7 +332,7 @@ EXITBLOCK {
 	if(bigstat) {
 		total += bigstat;
 		VppLog() << Sprintf(">64KB %8dx %2d%%, total %8dx %2d%%\n",
-		 	                bigstat, 100 * bigstat / sum, total, 100 * total / sum);
+		                    bigstat, 100 * bigstat / sum, total, 100 * total / sum);
 	}
 }
 #endif

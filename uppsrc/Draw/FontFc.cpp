@@ -17,7 +17,7 @@ NAMESPACE_UPP
 
 static FT_Library sFTlib;
 
-EXITBLOCK 
+EXITBLOCK
 {
 	if(sFTlib)
 		FT_Done_FreeType(sFTlib);
@@ -89,14 +89,6 @@ struct FtFaceEntry {
 	String  path;
 };
 
-static FtFaceEntry ft_cache[FONTCACHE];
-
-void ClearFtFaceCache()
-{
-	for(int i = 0; i < FONTCACHE; i++)
-		ft_cache[i].font.Height(-30000);
-}
-
 FT_Face (*FTFaceXft)(Font fnt, String *rpath);
 
 FT_Face FTFace(Font fnt, String *rpath = NULL)
@@ -104,8 +96,10 @@ FT_Face FTFace(Font fnt, String *rpath = NULL)
 	LTIMING("FTFace");
 	if(FTFaceXft)
 		return (*FTFaceXft)(fnt, rpath);
+	static FtFaceEntry ft_cache[FONTCACHE];
 	ONCELOCK {
-		ClearFtFaceCache();
+		for(int i = 0; i < FONTCACHE; i++)
+			ft_cache[i].font.Height(-30000);
 	}
 	FtFaceEntry be;
 	be = ft_cache[0];

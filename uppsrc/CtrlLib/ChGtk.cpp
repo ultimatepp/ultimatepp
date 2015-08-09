@@ -149,8 +149,6 @@ void ChHostSkin()
 	Font::SetDefaultFont(Font(fontname, (fontheight * xdpi + 512*72) / (1024*72))
 	                     .Bold(bold).Italic(italic));
 
-	ClearFtFaceCache();
-
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
 
 	int classiq = engine == "Redmond" || engine == "Raleigh" || engine == "Glider" || engine == "Simple";
@@ -697,8 +695,6 @@ void ChHostSkin()
 	GUI_DropShadows_Write(1);
 	GUI_AltAccessKeys_Write(1);
 	GUI_AKD_Conservative_Write(0);
-	
-	ClearFtFaceCache();
 	
 	CurrentSoundTheme = GtkStyleString("gtk-sound-theme-name");
 }
