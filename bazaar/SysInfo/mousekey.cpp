@@ -266,6 +266,7 @@ bool Mouse_SetPos(long x, long y, int64 windowId) {
 	return true;
 }
 
+#ifdef flagXTEST
 // libxtst-dev
 void Mouse_FakeClick(int button, int press) {
 	_XDisplay *dpy = XOpenDisplay(NULL);
@@ -432,8 +433,6 @@ KeyCodes keyCodes[] = {
 	""
 };
 
-#endif
-
 void Mouse_LeftClick()
 {
     Mouse_LeftDown(); 
@@ -516,5 +515,9 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 #endif
 	Sleep(finalDelay);
 }
+
+#endif
+
+#endif
 
 END_UPP_NAMESPACE

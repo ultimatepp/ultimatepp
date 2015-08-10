@@ -1,12 +1,13 @@
 description "OS, hardware and Desktop handling functions\377B255,170,0";
 
 uses
-	Core,
-	Functions4U;
+	Core;
 
 library(WIN32) "ws2_32 psapi gdi32 vfw32 oleaut32 iphlpapi PowrProf netapi32 wbemuuid";
 
-library(POSIX | LINUX | FREEBSD) "Xtst X11";
+library(POSIX | LINUX | FREEBSD) X11;
+
+library(XTEST) Xtst;
 
 options(MSC) "/D PSAPI_VERSION=1";
 
