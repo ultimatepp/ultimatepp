@@ -45,7 +45,7 @@ void Test::Paint(Draw& w)
 	simg = Unmultiply(simg);
 	
 
-	Image r = UpscaleA2(simg);
+	Image r = Upscale(simg);
 	w.DrawImage(10, 100, r);
 
 	w.DrawImage(10, 150 + 2 * isz.cy, Magnify(r, 4, 4));
