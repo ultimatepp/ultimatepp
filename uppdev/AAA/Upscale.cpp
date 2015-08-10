@@ -19,7 +19,7 @@ RGBA Blend(RGBA a, RGBA b)
 
 RGBA Get(const Image& img, int x, int y)
 {
-	return Rect(img.GetSize()).Contains(x, y) ? img[y][x] : RGBAZero();
+	return Rect(img.GetSize()).Contains(x, y) ? img[y][x] : White();
 }
 
 int  SqrDistance(RGBA a, RGBA b)
@@ -82,6 +82,8 @@ struct Colors : Vector<RGBA> {
 Image Upscale(const Image& simg)
 {
 	Size isz = simg.GetSize();
+	
+	Image lan = RescaleFilter(simg, 2 * isz, FILTER_BILINEAR);
 
 	ImageBuffer ib(2 * isz);
 	
@@ -105,25 +107,46 @@ Image Upscale(const Image& simg)
 			// 0 1
 			// 3 2
 			int *pp = p;
+/*			Index<int> in;
+			in.FindAdd(p[1]);
+			in.FindAdd(p[3]);
+			in.FindAdd(p[5]);
+			in.FindAdd(p[7]);
+			DDUMP(in.GetCount()); */
+			bool cq = (x ^ y) & 1;
 			for(int r = 0; r < 4; r++) {
-				RGBA& t = ib[2 * y + (r >= 2)][2 * x + (r == 1 || r == 2)];
+				int ix = 2 * x + (r == 1 || r == 2);
+				int iy = 2 * y + (r >= 2);
+				RGBA& t = ib[iy][ix];
 				t = c;
 				if(pp[1] == pp[7]
-//				   && ci != pp[0]
-//				   && (pp[0] != pp[1] || pp[0] != pp[6] || pp[0] != pp[2])
-//				   && (pp[7] != pp[3] && pp[7] != pp[4])
-//				   && (pp[1] != pp[5] && pp[1] != pp[4])
+			       && pp[1] != pp[3] && pp[1] != pp[4] && pp[1] != pp[5]
+				   && !(pp[0] == pp[7] && pp[0] == pp[6] && pp[0] == pp[1] && pp[0] == pp[2] && p[0] != p[1])  // Box rule
+				   /*&& (cq == (r == 0 || r == 2) || pp[1] != pp[0])*/
 				) {
-				    DLOG(r);
-					DLOG("x: " << (r == 1 || r == 2));
-					DLOG("y: " << (r >= 2));
-					t = Blend(colors.Get(2 * r + 1), colors.Get(2 * r + 7));
+					RGBA h = Blend(colors.Get(2 * r + 1), colors.Get(2 * r + 7));
+//					if((Grayscale(h) < Grayscale(c)) == !(r & 1))
+						t = h;
 				}
 				pp += 2;
 			}
 		}
 	
 	return ib;
+}
+
+bool TryAA(int m, int d, RGBA a, RGBA b, RGBA c)
+{
+	DDUMP(m);
+	DDUMP(d);
+	DDUMP(abs(m * (c.r - a.r) / d + a.r - b.r));
+	DDUMP(abs(m * (c.g - a.g) / d + a.g - b.g));
+	DDUMP(abs(m * (c.b - a.b) / d + a.b - b.b));
+	if(abs(m) > abs(d) || m * d < 0 || abs(m) < 10)
+		return false;
+	return (abs(m * (b.r - a.r) / d + a.r - b.r) < 4 &&
+	        abs(m * (c.g - a.g) / d + a.g - b.g) < 4 &&
+	        abs(m * (c.b - a.b) / d + a.b - b.b) < 4);
 }
 
 int AADetected(RGBA a, RGBA b, RGBA c)
@@ -133,34 +156,9 @@ int AADetected(RGBA a, RGBA b, RGBA c)
 	if(IsSimilar(a, c, 500) || IsSimilar(b, c, 500) || IsSimilar(a, b, 500))
 		return false;
 
-	int d = c.g - a.g;
-	int m = b.g - a.g;
-	
-	if(abs(c.r - a.r) > d) {
-		d = c.r - a.r;
-		m = b.r - a.r;
-	}
-
-	if(abs(c.b - a.b) > d) {
-		d = c.b - a.b;
-		m = b.b - a.b;
-	}
-	
-	if(abs(m) > abs(d) || m * d <= 0)
-		return false;
-	
-	DDUMP(d);
-	DDUMP(m);
-
-	DDUMP(abs(m * (c.r - a.r) / d + a.r - b.r));
-	DDUMP(abs(m * (c.b - a.b) / d + a.b - b.b));
-	
-	DDUMP(m * (c.r - a.r) / d + a.r);
-	DDUMP(m * (c.b - a.b) / d + a.b);
-	
-	return (abs(m * (c.r - a.r) / d + a.r - b.r) < 4 &&
-	        abs(m * (c.g - a.g) / d + a.g - b.g) < 4 &&
-	        abs(m * (c.b - a.b) / d + a.b - b.b) < 4) * abs(d);
+	return TryAA(b.g - a.g, c.g - a.g, a, b, c) ||
+	       TryAA(b.r - a.r, c.r - a.r, a, b, c) ||
+	       TryAA(b.g - a.g, c.g - a.g, a, b, c);
 }
 
 Image UpscaleA(const Image& simg)
@@ -231,8 +229,8 @@ Image UpscaleA2(const Image& simg)
 	
 	Fill(~ib, RGBAZero(), ib.GetLength());
 
-	for(int x = 0; x < isz.cx; x++)
-		for(int y = 0; y < isz.cy; y++) {
+	for(int y = 0; y < isz.cy; y++)
+		for(int x = 0; x < isz.cx; x++) {
 			DLOG("---------- " << x << ", " << y);
 			RGBA c = simg[y][x];
 			int p[16];
@@ -248,14 +246,21 @@ Image UpscaleA2(const Image& simg)
 
 			RGBA t[4];
 			t[0] = t[1] = t[2] = t[3] = c;
-		//	if(AADetected(m.Get(0), c, m.Get(4)))
-		//		t[3] = m.Get(4);
-		//	if(AADetected(m.Get(6), c, m.Get(2)))
-		//		t[1] = m.Get(2);
-			if(AADetected(m.Get(7), c, m.Get(3)) &&
-			   (pp[0] == pp[7] && pp[6] == pp[7] )
+			bool h = AADetected(m.Get(7), c, m.Get(3));
+			bool v = AADetected(m.Get(1), c, m.Get(5));
+			if(h && v) {
+				const int *pp = p;
+				for(int i = 0; i < 4; i++) {
+					if(pp[0] == pp[1] && pp[1] == pp[7])
+						t[decode(i, 2, 3, 3, 2, i)] = m.Get(i * 2);
+					pp += 2;
+				}
+			}
+			else
+			if(h)
 				t[1] = t[3] = m.Get(3);
-			if(AADetected(m.Get(1), c, m.Get(5)))
+			else
+			if(v)
 				t[2] = t[3] = m.Get(5);
 			
 			ib[2 * y + 0][2 * x + 0] = t[0];
