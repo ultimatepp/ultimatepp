@@ -43,16 +43,20 @@ void RichRuler::Paint(Draw& w)
 			w.DrawRect(x0 + x, Zy(3) + h, Zx(1), h, SColorHighlight);
 	}
 	i = 0;
+	int xs = 0;
 	for(;;)
 		if(++i % numbers == 0) {
 			int x = fround(i * grid) * zoom;
 			if(x >= cx) break;
 			String n = Format("%d", (int)(i * numbermul + 0.5));
-			Size tsz = GetTextSize(n, Arial(Zy(10)));
-			if(x + tsz.cx - tsz.cx / 2 < cx) {
-				int px = x0 + x - tsz.cx / 2;
+			Size tsz = GetTextSize(n, ArialZ(9));
+			int px = x0 + x - tsz.cx / 2;
+			if(px >= xs && x + tsz.cx - tsz.cx / 2 < cx) {
 				w.DrawRect(px, Zy(4), tsz.cx, sz.cy - Zy(8), SColorPaper);
-				w.DrawText(x0 + x - tsz.cx / 2, Zy(4), n, Arial(Zy(10)), SColorText);
+				
+				w.DrawText(px, Zy(4) + (sz.cy - Zy(8) - tsz.cy) / 2,
+				           n, ArialZ(9), SColorText);
+				xs = px + tsz.cx + Zx(4);
 			}
 		}
 	FieldFrame().FramePaint(w, RectC(x0 - Zx(1), Zy(3), cx + Zx(3), sz.cy - Zy(6)));
