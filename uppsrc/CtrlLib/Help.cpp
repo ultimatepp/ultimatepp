@@ -88,7 +88,7 @@ void HelpWindow::Forward()
 
 void HelpWindow::SetZoom()
 {
-	zoom.d = 1000000 / Zy(1000);
+	zoom.d = 1000000 / Zy(800);
 	current_link = Null;
 	GoTo0(topic);
 	Refresh();
