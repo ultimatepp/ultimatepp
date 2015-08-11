@@ -968,7 +968,7 @@ CodeEditor::CodeEditor() {
 	bracket_start = 0;
 	stat_edit_time = 0;
 	last_key_time = Null;
-	SetFont(CourierZ(16));
+	SetFont(CourierZ(12));
 	AddFrame(bar);
 	bar.SetEditor(this);
 	UndoSteps(10000);

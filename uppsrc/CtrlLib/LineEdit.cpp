@@ -9,7 +9,7 @@ LineEdit::LineEdit() {
 	nohbar = false;
 	showtabs = false;
 	tabsize = 4;
-	font = CourierZ(16);
+	font = CourierZ(12);
 	SetFrame(ViewFrame());
 	sb.NoBox();
 	AddFrame(sb);
