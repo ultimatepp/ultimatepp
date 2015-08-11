@@ -79,7 +79,7 @@ void FontSelectManager::Set(DropList& _face, DropList& _height,
 	LoadFonts(face, fni, false);
 	face->SetIndex(0);
 	height->ClearList();
-	for(int i = 6; i < 32; i++)
+	for(int i = 6; i < 64; i++)
 		height->Add(i);
 	FaceSelect();
 }
