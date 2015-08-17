@@ -545,7 +545,7 @@ public:
 	bool        Open(const char *file, bool delete_share = false);
 	bool        Create(const char *file, int64 filesize, bool delete_share = false);
 	bool        Expand(int64 filesize);
-	bool        Map(int64 offset, dword len);
+	bool        Map(int64 offset, size_t len);
 	bool        Unmap();
 	bool        Close();
 
@@ -553,25 +553,25 @@ public:
 
 	int64       GetFileSize() const       { return filesize; }
 	Time        GetTime() const;
-	String      GetData(int64 offset, dword len);
+	String      GetData(int64 offset, int len);
 
 	int64       GetOffset() const         { return offset; }
-	dword       GetCount() const          { return size; }
+	size_t      GetCount() const          { return size; }
 
 	int64       GetRawOffset() const      { return rawoffset; }
-	dword       GetRawCount() const       { return rawsize; }
+	size_t      GetRawCount() const       { return rawsize; }
 
 	const byte *operator ~ () const       { ASSERT(IsOpen()); return base; }
 	const byte *Begin() const             { ASSERT(IsOpen()); return base; }
 	const byte *End() const               { ASSERT(IsOpen()); return base + size; }
-	const byte *GetIter(int i) const      { ASSERT(IsOpen() && i >= 0 && (dword)i <= size); return base + i; }
-	const byte& operator [] (int i) const { ASSERT(IsOpen() && i >= 0 && (dword)i < size); return base[i]; }
+	const byte *GetIter(int i) const      { ASSERT(IsOpen() && i >= 0 && (size_t)i <= size); return base + i; }
+	const byte& operator [] (int i) const { ASSERT(IsOpen() && i >= 0 && (size_t)i < size); return base[i]; }
 
 	byte       *operator ~ ()             { ASSERT(IsOpen()); return base; }
 	byte       *Begin()                   { ASSERT(IsOpen()); return base; }
 	byte       *End()                     { ASSERT(IsOpen()); return base + size; }
-	byte       *GetIter(int i)            { ASSERT(IsOpen() && i >= 0 && (dword)i <= size); return base + i; }
-	byte&       operator [] (int i)       { ASSERT(IsOpen() && i >= 0 && (dword)i < size); return base[i]; }
+	byte       *GetIter(int i)            { ASSERT(IsOpen() && i >= 0 && (size_t)i <= size); return base + i; }
+	byte&       operator [] (int i)       { ASSERT(IsOpen() && i >= 0 && (size_t)i < size); return base[i]; }
 
 private:
 #ifdef PLATFORM_WIN32
@@ -588,8 +588,8 @@ private:
 	int64       filesize;
 	int64       offset;
 	int64       rawoffset;
-	dword       size;
-	dword       rawsize;
+	size_t      size;
+	size_t      rawsize;
 	bool        write;
 };
 

@@ -69,6 +69,7 @@ file
 	Stream.h,
 	Stream.cpp optimize_speed,
 	BlockStream.cpp optimize_speed,
+	FileMapping.cpp optimize_speed,
 	FilterStream.h,
 	FilterStream.cpp,
 	Profile.h,
