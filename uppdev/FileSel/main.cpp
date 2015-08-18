@@ -4,12 +4,14 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
+	Ctrl::SetHiDPIEnabled();
+
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
 	String fn;
 	fs.AllFilesType();
 	fs.Type("jpeg", "*.jpg");
-	fs.ExecuteOpen();
+	fs.ExecuteSelectDir();
 	return;
 	
 	for(;0;) {

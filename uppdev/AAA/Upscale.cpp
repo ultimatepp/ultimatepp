@@ -114,19 +114,20 @@ Image Upscale(const Image& simg)
 			in.FindAdd(p[7]);
 			DDUMP(in.GetCount()); */
 			bool cq = (x ^ y) & 1;
+			
 			for(int r = 0; r < 4; r++) {
 				int ix = 2 * x + (r == 1 || r == 2);
 				int iy = 2 * y + (r >= 2);
 				RGBA& t = ib[iy][ix];
 				t = c;
-				if(pp[1] == pp[7]
-			       && pp[1] != pp[3] && pp[1] != pp[4] && pp[1] != pp[5]
-				   && !(pp[0] == pp[7] && pp[0] == pp[6] && pp[0] == pp[1] && pp[0] == pp[2] && p[0] != p[1])  // Box rule
-				   /*&& (cq == (r == 0 || r == 2) || pp[1] != pp[0])*/
+				bool mrule = ci == pp[4] && ci == pp[3] && ci == pp[5] && ci != pp[0];
+				if(pp[1] == pp[7] && pp[0] == pp[1] &&
+				   (!mrule || (Grayscale(colors.Get(2 * r + 0)) > Grayscale(c)))
+//			       && pp[1] != pp[3] && pp[1] != pp[4] && pp[1] != pp[5]
+//				   && !(pp[0] == pp[7] && pp[0] == pp[6] && pp[0] == pp[1] && pp[0] == pp[2])  // Box rule
+//				   && ((cq/* && (r == 0 || r == 2)*/) || (pp[1] != pp[0]))
 				) {
-					RGBA h = Blend(colors.Get(2 * r + 1), colors.Get(2 * r + 7));
-//					if((Grayscale(h) < Grayscale(c)) == !(r & 1))
-						t = h;
+					t = Blend(colors.Get(2 * r + 7), colors.Get(2 * r + 1));
 				}
 				pp += 2;
 			}
