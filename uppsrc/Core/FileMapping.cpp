@@ -1,5 +1,9 @@
 #include "Core.h"
 
+#ifdef PLATFORM_POSIX
+#include <sys/mman.h>
+#endif
+
 NAMESPACE_UPP
 
 static int sMappingGranularity_()
