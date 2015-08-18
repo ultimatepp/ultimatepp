@@ -1636,13 +1636,13 @@ bool FileSel::Execute(int _mode) {
 		sort_lbl.Hide();
 		ok.SetLabel(t_("&Select"));
 		Logc p = filename.GetPos().y;
-		int q = ok.GetPos().y.GetA() + ok.GetPos().y.GetB() + 8;
+		int q = ok.GetPos().y.GetA() + ok.GetPos().y.GetB() + Zy(8);
 		p.SetA(q);
 		filename.SetPosY(p);
 		filesize.SetPosY(p);
 		filetime.SetPosY(p);
 		p = splitter.Ctrl::GetPos().y;
-		p.SetB(q + 20);
+		p.SetB(q + Zy(20));
 		splitter.SetPosY(p);
 		LogPos ps = search.GetPos();
 		LogPos pl = sort_lbl.GetPos();

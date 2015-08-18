@@ -68,6 +68,13 @@ void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect)
 	DstSrcOp(dest, p, src, srect, AlphaBlend);
 }
 
+Image GetOver(const Image& dest, const Image& src)
+{
+	Image r = dest;
+	Over(r, src);
+	return r;
+}
+
 void Fill(ImageBuffer& dest, const Rect& rect, RGBA color)
 {
 	Rect r = dest.GetSize() & rect;
@@ -96,6 +103,11 @@ void  Over(Image& dest, Point p, const Image& _src, const Rect& srect)
 	ImageBuffer b(dest);
 	Over(b, p, src, srect);
 	dest = b;
+}
+
+void  Over(Image& dest, const Image& _src)
+{
+	Over(dest, Point(0, 0), _src, _src.GetSize());
 }
 
 void Fill(Image& dest, const Rect& rect, RGBA color)

@@ -185,11 +185,11 @@ Image RecreateAlpha(const Image& overwhite, const Image& overblack)
 	RGBA *t = r;
 	RGBA *e = t + r.GetLength();
 	while(t < e) {
-		t->a = bs->r - ws->r + 255;
+		t->a = Saturate255(bs->r - ws->r + 255);
 		if(t->a) {
-			t->r = bs->r * 255 / t->a;
-			t->g = bs->g * 255 / t->a;
-			t->b = bs->b * 255 / t->a;
+			t->r = Saturate255(bs->r * 255 / t->a);
+			t->g = Saturate255(bs->g * 255 / t->a);
+			t->b = Saturate255(bs->b * 255 / t->a);
 		}
 		else
 			t->r = t->g = t->b = 0;

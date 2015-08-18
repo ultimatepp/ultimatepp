@@ -6,11 +6,13 @@ Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2);
 Image WithHotSpot(const Image& m, int x1, int y1);
 
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
+void Over(Image& dest, const Image& src);
 void Copy(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void Fill(ImageBuffer& dest, const Rect& rect, RGBA color);
 
 void  Copy(Image& dest, Point p, const Image& src, const Rect& srect);
 void  Over(Image& dest, Point p, const Image& src, const Rect& srect);
+Image GetOver(const Image& dest, const Image& src);
 void  Fill(Image& dest, const Rect& rect, RGBA color);
 
 void  OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);

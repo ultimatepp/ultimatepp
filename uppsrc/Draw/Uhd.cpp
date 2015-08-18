@@ -2,6 +2,91 @@
 
 namespace Upp {
 
+// Upscale2x is based on xBR filter idea by Hyllian, google search on 'xBR filter'
+// should eventually lead you to a forum topic where he made the algorithm public:
+// http://board.byuu.org/viewtopic.php?f=10&t=2248
+ 
+namespace Upscale2x_helper {
+	int d(RGBA c1, RGBA c2)
+	{
+		int r = abs(c1.r - c2.r);
+		int g = abs(c1.g - c2.g);
+		int b = abs(c1.b - c2.b);
+		return 48 * (r *  299 + g *  587 + b *  114)
+		     +  7 * (r * -169 + g * -331 + b *  500)
+		     +  6 * (r *  500 + g * -419 + b *  -81);
+	}
+};
+
+Image Upscale2x(const Image& src, RGBA bg)
+{
+	using namespace Upscale2x_helper;
+	Size isz = src.GetSize();
+	ImageBuffer dst;
+	dst.Create(2 * isz);
+	for(int y = 0; y < isz.cy; y++)
+		for(int x = 0; x < isz.cx; x++) {
+	        static const int8 cm[] = {
+			//  -2  -1   0  +1  +2
+				-1,  0,  1,  2, -1, // -2
+				17, 19,  3,  4,  5, // -1
+				16, 18, -1,  8,  6, //  0
+				15, 14, 13,  9,  7, // +1
+				-1, 12, 11, 10, -1, // +2
+	        };
+	
+	        RGBA pp[40];
+	        const int8 *q = cm;
+			for(int dy = -2; dy <= 2; dy++)
+				for(int dx = -2; dx <= 2; dx++) {
+					if(*q >= 0) {
+						int xx = x + dx;
+						int yy = y + dy;
+						pp[*q] = pp[*q + 20] = xx >= 0 && xx < isz.cx
+						                       && yy >= 0 && yy < isz.cy ? src[yy][xx] : bg;
+					}
+					q++;
+				}
+	
+			RGBA c = src[y][x];
+			RGBA *p = pp;
+			
+			for(int rot = 0; rot < 4; rot++) {
+				RGBA t = c;
+				if(d(c, p[14]) + d(c, p[4]) + d(p[19], p[16]) + d(p[19], p[1]) + 4 * d(p[18], p[3])
+				   < d(p[18], p[13]) + d(p[18], p[17]) + d(p[3], p[8]) + d(p[3], p[0]) + 4 * d(c, p[19])) {
+					RGBA nc = d(c, p[18]) <= d(c, p[3]) ? p[18] : p[3];
+					t.r = (nc.r + c.r) >> 1;
+					t.g = (nc.g + c.g) >> 1;
+					t.b = (nc.b + c.b) >> 1;
+				}
+				// 0 1
+				// 3 2
+				dst[2 * y + (rot >= 2)][2 * x + (rot == 1 || rot == 2)] = t;
+				p += 5;
+			}
+		}
+	return dst;
+}
+
+Image Upscale2x(const Image& src)
+{
+	Size isz = src.GetSize();
+	Image s = RecreateAlpha(Upscale2x(GetOver(CreateImage(isz, White()), src), White()),
+	                        Upscale2x(GetOver(CreateImage(isz, Black()), src), Black()));
+	ImageBuffer h(s);
+	h.SetResolution(IMAGE_RESOLUTION_UHD);
+	return h;
+}
+
+Image Downscale2x(const Image& src)
+{
+	Image m = RescaleFilter(src, src.GetSize() / 2, FILTER_LANCZOS3);
+	ImageBuffer h(m);
+	h.SetResolution(IMAGE_RESOLUTION_STANDARD);
+	return h;
+}
+
 static bool sUHDMode;
 
 void SetUHDMode(bool b)
@@ -19,32 +104,20 @@ bool IsUHDMode()
 Image DPI(const Image& img)
 {
 	if(IsUHDMode()) {
-		if(img.GetResolution() == IMAGE_RESOLUTION_STANDARD) {
-			Image m = CachedRescale(img, 2 * img.GetSize(), FILTER_LANCZOS3);
-			ImageBuffer h(m);
-			h.SetResolution(IMAGE_RESOLUTION_UHD);
-			return h;
-		}
+		if(img.GetResolution() == IMAGE_RESOLUTION_STANDARD)
+			return MakeImage(img, Upscale2x);
 	}
 	else {
-		if(img.GetResolution() == IMAGE_RESOLUTION_UHD) {
-			Image m = CachedRescale(img, img.GetSize() - 2, FILTER_LANCZOS3);
-			ImageBuffer h(m);
-			h.SetResolution(IMAGE_RESOLUTION_UHD);
-			return h;
-		}
+		if(img.GetResolution() == IMAGE_RESOLUTION_UHD)
+			return MakeImage(img, Downscale2x);
 	}
 	return img;
 }
 
 Image DPI(const Image& img, int expected)
 {
-	if(img.GetSize().cy <= expected && IsUHDMode()) {
-		Image m = CachedRescale(img, 2 * img.GetSize(), FILTER_LANCZOS3);
-		ImageBuffer h(m);
-		h.SetResolution(IMAGE_RESOLUTION_UHD);
-		return h;
-	}
+	if(img.GetSize().cy <= expected && IsUHDMode())
+		return MakeImage(img, Upscale2x);
 	return img;
 }
 
