@@ -291,6 +291,12 @@ mage][@(0.0.255) `&]_[*@3 dest], [_^Point^ Point]_[*@3 p], [@(0.0.255) const]_[_
 into Point [%-*@3 p] of Image [%-*@3 dest].&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Over`(Upp`:`:Image`&`,const Upp`:`:Image`&`): [@(0.0.255) void]_[* Over]([_^Upp`:`:Image^ I
+mage][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_
+[*@3 src])&]
+[s2;%% Same as Over([%-*@3 dest], Point(0, 0), [%-*@3 src], [%-*@3 src].GetSize()).&]
+[s3;%% &]
+[s4; &]
 [s5;:Fill`(Image`&`,const Rect`&`,RGBA`): [@(0.0.255) void]_[* Fill]([_^Image^ Image][@(0.0.255) `&
 ]_[*@3 dest], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], 
 [_^RGBA^ RGBA]_[*@3 color])&]
