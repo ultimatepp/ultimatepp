@@ -42,7 +42,7 @@ void CSyntax::InitKeywords()
 		"double", "__leave", "static_cast",
 		"dynamic_cast", "long", "__stdcall", "while",
 		"force_inline",
-		"and", "bitor", "or", "xor", 
+		"and", "bitor", "or", "xor",
 		"compl", "bitand", "and_eq", "or_eq",
 		"xor_eq", "not", "not_eq",
 		"char16_t", "char32_t", "constexpr", "decltype",

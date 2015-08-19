@@ -387,11 +387,11 @@ T clone(const T& x) { T c(x, 1); return c; }
 #define rval_ &&
 #define rval_default(T) T(T&&) = default; T& operator=(T&&) = default;
 
-template <typename T>
-T&& pick(T& x) { return static_cast<T&&>(x); }
+//template <typename T>
+//T&& pick(T& x) { return static_cast<T&&>(x); }
 
 template <typename T>
-T&& pick(T&& x) { return static_cast<T&&>(x); }
+auto pick(T&& x) noexcept -> decltype(std::move(x)) { return std::move(x); }
 
 #else
 
