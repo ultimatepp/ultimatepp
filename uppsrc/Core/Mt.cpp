@@ -333,8 +333,10 @@ bool Thread::Priority(int percent)
 		policy = SCHED_OTHER;
 		percent_max = 125;
 		percent_min = minmax(percent_min, 0, percent_max);
-		param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))*(minmax(percent, percent_min, percent_max)-percent_min)/(percent_max - percent_min);
-		if (pthread_setschedparam(handle, policy, &param))
+		param.sched_priority = (sched_get_priority_max(policy) - sched_get_priority_min(policy))
+		                       * (minmax(percent, percent_min, percent_max) - percent_min)
+		                       / max(percent_max - percent_min, 1);
+		if(pthread_setschedparam(handle, policy, &param))
 			return false;
 	}
 	return true;
