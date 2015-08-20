@@ -1083,7 +1083,7 @@ bool LineEdit::Key(dword key, int count) {
 		case K_SHIFT|K_BACKSPACE:
 			Backspace();
 			break;
-	   	case K_SHIFT_TAB:
+		case K_SHIFT_TAB:
 			AlignChar();
 			break;
 		case K_CTRL_Y:
