@@ -22,7 +22,7 @@ String LogCat::MakeCmdByTag(const String& packageName) const
 }
 
 String LogCat::MakeCmdByTag(const Adb& adb, const String& packageName) const
-{	
+{
 	return adb.MakeCmd() + " " + MakeCmdByTag(packageName);
 }
 

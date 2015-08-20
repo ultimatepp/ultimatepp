@@ -11,7 +11,7 @@ void AndroidMakeFile::AppendString(String& makeFile,
 }
 
 void AndroidMakeFile::AppendStringVector(String& makeFile,
-                                         const Vector<String>& vec, 
+                                         const Vector<String>& vec,
                                          const String& variableName,
                                          const String& variablePrefix,
                                          const String& variableSuffix)

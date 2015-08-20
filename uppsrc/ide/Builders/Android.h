@@ -58,7 +58,7 @@ public:
 	void AddStaticModuleLibrary(const String& staticModuleLibrary);
 	void AddSharedLibrary(const String& sharedLibrary);
 	
-	String GetName() const { return this->name; }	
+	String GetName() const { return this->name; }
 	void   SetName(const String& name) { this->name = name; }
 	
 protected:

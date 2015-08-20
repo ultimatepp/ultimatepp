@@ -28,7 +28,7 @@ String Apk::FindValueInAndroidManifest(const String& badge, const String& tag) c
 	String out;
 	if(Sys(sdk.AaptPath() + " dump badging " + path + " AndroidManifest.xml", out) == 0) {
 		Vector<String> lines = Split(out, '\n');
-		for(int i = 0; i < lines.GetCount(); i++) {	
+		for(int i = 0; i < lines.GetCount(); i++) {
 			if(lines[i].Find(badge) >= 0)
 				return FindBadgeTagValue(lines[i], tag);
 		}
