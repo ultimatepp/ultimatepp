@@ -8,7 +8,7 @@ String Android::GetScriptExt()
 	return ".bat";
 #else
 	return "";
-#endif	
+#endif
 }
 
 String Android::GetCmdExt()
@@ -17,7 +17,7 @@ String Android::GetCmdExt()
 	return ".cmd";
 #else
 	return "";
-#endif		
+#endif
 }
 
 void Android::NormalizeVersions(Vector<String>& versions)
@@ -62,7 +62,7 @@ String Android::FindVersionsPrefix(const Vector<String>& versions)
 	for(int i = 0; i < versions.GetCount(); i++) {
 		String currentPrefix;
 		String version = versions[i];
-		for(int j = 0; j < 10; j++) { 
+		for(int j = 0; j < 10; j++) {
 			int idx = version.Find(IntStr(j));
 			if(idx < 0)
 				continue;

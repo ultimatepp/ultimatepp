@@ -169,7 +169,7 @@ public:
 	String         ndkToolchain;
 	String         ndkCppRuntime;
 	String         ndkCppFlags;
-	String         ndkCFlags; 
+	String         ndkCFlags;
 	
 public:
 	static Index<String> GetBuildersNames();
@@ -186,7 +186,7 @@ public:
 	virtual void CleanPackage(const String& package);
 	
 protected:
-	bool MovePackageFileToAndroidProject(const String& src, const String& dest); 
+	bool MovePackageFileToAndroidProject(const String& src, const String& dest);
 	bool RealizePackageJavaSourcesDirectory(const String& packageName);
 	
 	bool RealizeLinkDirectories() const;
