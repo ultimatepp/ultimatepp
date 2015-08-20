@@ -25,6 +25,7 @@ bool RichEdit::Key(dword key, int count)
 			return true;
 		}
 	case K_BACKSPACE:
+	case K_SHIFT_BACKSPACE:
 		if(RemoveSelection(true)) return true;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
