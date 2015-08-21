@@ -29,7 +29,6 @@ bool VLCPlayer::AddTarget(const String movie) {
 	return true;
 }
 
-
 bool VLCPlayer::Play() {
 	IIVLC vlc(this);
 	if (!vlc) 

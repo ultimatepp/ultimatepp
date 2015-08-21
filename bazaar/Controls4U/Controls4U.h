@@ -650,6 +650,97 @@ private:
 	virtual void LeftDown(Point p, dword keyflags) 		{LaunchWebBrowser(hyperlink);}
 };
 
+class BarDisplay : public Display {
+public:
+	BarDisplay() : ink(SColorText), value(0), align(ALIGN_LEFT) {}
+
+	virtual void Paint(Draw& w, const Rect& r, const Value& , Color, Color, dword) const {
+		int width = int(r.Width()*value);
+		w.DrawRect(r.left, r.top, width, r.bottom, color);
+		w.DrawRect(r.left + width, r.top, r.right - width, r.bottom, paper);
+		if (!text.IsEmpty()) {
+			Size sz = GetTextSize(text, StdFont());
+		    int xtext;
+		    switch (align) {
+		    case ALIGN_LEFT:	xtext = 0;							break;
+		    case ALIGN_CENTER:	xtext = (r.GetWidth() - sz.cx)/2;	break;
+		    default:			xtext = r.GetWidth() - sz.cx;
+		    }
+	    
+			w.DrawText(r.left + xtext, r.top + (r.Height() - StdFont().Info().GetHeight())/2,
+			           text, StdFont(), ink);
+		}
+	}
+	BarDisplay &SetValue(double _value) {value = _value;return *this;}
+	BarDisplay &SetText(const char *str){text = str;	return *this;}
+	BarDisplay &SetColor(Color _color, Color _paper = Null, Color _ink = SColorText) {color = _color; 
+										ink = _ink;	paper = _paper;	return *this;}
+	BarDisplay &SetAlign(int a)       	{align = a; return *this;}
+	
+private:
+	Color color, ink, paper;
+	String text;
+	double value;
+	int align;
+};
+
+class TextDisplay : public Display {
+public:
+	TextDisplay() : ink(SColorText), align(ALIGN_LEFT) {}
+	
+	virtual void Paint(Draw& w, const Rect& r, const Value&, Color, Color, dword) const {
+	    w.DrawRect(r.left, r.top, r.right, r.bottom, paper);
+	    
+	    Size sz = GetTextSize(text, StdFont());
+	    int xtext;
+	    switch (align) {
+	    case ALIGN_LEFT:	xtext = 0;							break;
+	    case ALIGN_CENTER:	xtext = (r.GetWidth() - sz.cx)/2;	break;
+	    default:			xtext = r.GetWidth() - sz.cx;
+	    }
+		w.DrawText(r.left + xtext, r.top + (r.Height() - StdFont().Info().GetHeight()) / 2,
+			           text, StdFont(), ink);	
+	}
+	TextDisplay &SetText(const char *str) 					{text = str;					return *this;}
+	TextDisplay &SetColor(Color _ink, Color _paper = Null)	{ink = _ink;	paper = _paper;	return *this;}
+	TextDisplay &SetInk(Color _ink)							{ink = _ink;					return *this;}
+	TextDisplay &SetPaper(Color _paper)						{paper = _paper;				return *this;}
+	TextDisplay &SetAlign(int a)             				{align = a; 					return *this;}
+	
+private:
+	Color ink, paper;
+	String text;
+	int align;
+};
+
+class InfoCtrlBar : public InfoCtrl {
+public:
+	InfoCtrlBar() {Set(PaintRect(bar));}
+
+	InfoCtrlBar &SetValue(double value) 											{bar.SetValue(value);				return *this;}	
+	InfoCtrlBar &SetText(const char *str) 											{bar.SetText(str);					return *this;}
+	InfoCtrlBar &SetColor(Color color, Color paper = Null, Color ink = SColorText)	{bar.SetColor(color, paper, ink);	return *this;}
+	InfoCtrlBar &SetAlign(int a)             										{bar.SetAlign(a);					return *this;}
+	
+private:
+		BarDisplay bar;
+};
+
+class InfoCtrlText : public InfoCtrl {
+public:
+	InfoCtrlText() {Set(PaintRect(text));}
+
+	InfoCtrlText &SetText(const char *str) 					{text.SetText(str);			return *this;}
+	InfoCtrlText &SetColor(Color ink, Color paper = Null)	{text.SetColor(ink, paper);	return *this;}
+	InfoCtrlText &SetInk(Color ink)							{text.SetInk(ink);			return *this;}
+	InfoCtrlText &SetPaper(Color paper)						{text.SetPaper(paper);		return *this;}
+	InfoCtrlText &SetAlign(int a)             				{text.SetAlign(a);			return *this;}
+	
+private:
+	TextDisplay text;
+};
+	
+	
 END_UPP_NAMESPACE
 
 #endif
