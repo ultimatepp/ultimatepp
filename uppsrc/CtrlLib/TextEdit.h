@@ -116,7 +116,7 @@ public:
 	enum LE { LE_DEFAULT, LE_CRLF, LE_LF };
 
 	int    Load(Stream& s, byte charset = CHARSET_DEFAULT);
-	bool   IsTruncated() const                                { return false; }
+	bool   IsTruncated() const                                { return truncated; }
 	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, int line_endings = LE_DEFAULT) const;
 
 	int    GetInvalidCharPos(byte charset = CHARSET_DEFAULT) const;
