@@ -322,11 +322,11 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	// In release mode we definitly shouldn't signing apk!!!
 	if(HasFlag("DEBUG")) {
 		String debugKeystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
-		if(!FileExists(debugKeystorePath)) { 
+		if(!FileExists(debugKeystorePath)) {
 			PutConsole("Generating debug key...");
 			String keytoolCmd;
 			keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
-			keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android"; 
+			keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android";
 			keytoolCmd << " -keystore " << debugKeystorePath;
 			keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\" -validity 100000";
 			//PutConsole(keytoolCmd);
@@ -443,7 +443,7 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 		}
 	}
 	
-	ChDir(androidProjectDir);	
+	ChDir(androidProjectDir);
 	String aaptAddCmd;
 	aaptAddCmd << NormalizeExePath(androidSDK.AaptPath());
 	aaptAddCmd << " add " << apkPath;
