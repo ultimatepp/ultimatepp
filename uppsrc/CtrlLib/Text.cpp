@@ -27,7 +27,7 @@ TextCtrl::TextCtrl()
 	nobg = false;
 	rectsel = false;
 #ifdef CPU_64
-	max_total = 600 * 1024 * 1024;
+	max_total = 1000 * 1024 * 1024;
 #else
 #ifdef _DEBUG
 	max_total = 100 * 1024 * 1024;
@@ -302,7 +302,6 @@ finish:
 	Update();
 	SetSb();
 	PlaceCaret(0);
-	DDUMP(truncated);
 	return line.GetCount() > 1 ? cr ? LE_CRLF : LE_LF : LE_DEFAULT;
 }
 
