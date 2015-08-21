@@ -53,6 +53,10 @@ extern String CurrentSoundTheme;
 
 void ChHostSkin()
 {
+	int fcx = 17 * (1 + IsUHDMode());
+	FrameButtonWidth_Write(fcx);
+	ScrollBarArrowSize_Write(fcx);
+	
 	MemoryIgnoreLeaksBlock __;
 	static struct { void (*set)(Color); int ii; } col[] = {
 		{ SColorPaper_Write, 6*5 + 0 },
@@ -81,7 +85,7 @@ void ChHostSkin()
 	ColoredOverride(CtrlsImg::Iml(), ClassicCtrlsImg::Iml());
 	
 	ChLookFn(GtkLookFn);
-	
+
 	bool KDE = Environment().Get("KDE_FULL_SESSION", String()) == "true";
 
 	String engine = GtkStyleString("gtk-theme-name");
@@ -159,7 +163,7 @@ void ChHostSkin()
 
 	ChGtkIs().Clear();
 	GtkWidget *w = Setup(gtk_radio_button_new(NULL));
-	int is = GtkInt(w, "indicator-size") + 2;
+	int is = DPI(GtkInt(w, "indicator-size")) + 2;
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = false;
 	GtkIml(CtrlsImg::I_S0, w, 2, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is);
@@ -203,9 +207,9 @@ void ChHostSkin()
 		po.x = GtkInt("child-displacement-x");
 		po.y = GtkInt("child-displacement-y");
 
-		s.ok = GtkImage("gtk-ok", 4, 16);
-		s.cancel = GtkImage("gtk-cancel", 4, 16);
-		s.exit = GtkImage("gtk-quit", 4, 16);
+		s.ok = GtkImage("gtk-ok", DPI(16), DPI(16));
+		s.cancel = GtkImage("gtk-cancel", DPI(16), DPI(16));
+		s.exit = GtkImage("gtk-quit", DPI(16), DPI(16));
 
 		ChGtkColor(s.textcolor, 0 * 5);
 		s.pressoffset = po;
@@ -260,7 +264,7 @@ void ChHostSkin()
 		ChGtkNew(vscrollbar, "slider", GTK_SLIDER|GTK_VAL1);
 
 		s.thumbmin = GTK_RANGE(vscrollbar)->min_slider_size;
-		s.barsize = max(14, GtkInt("slider_width")); // 'max' - ugly fix for ThinIce theme
+		s.barsize = max(DPI(14), GtkInt("slider_width")); // 'max' - ugly fix for ThinIce theme
 		s.arrowsize = max(s.barsize, GtkInt("stepper_size")); // 'max' - ugly fix for ThinIce theme
 
 		/* The only theme with 3 buttons is Amaranth and it does not look good...

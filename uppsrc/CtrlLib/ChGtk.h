@@ -147,7 +147,7 @@ String GtkStyleString(const char *name);
 
 void GtkChScrollBar(Value *lbutton, Value *lbutton2,
                     Value *lower, Value *thumb, Value *upper,
-                    Value *ubutton2, Value *ubutton, 
+                    Value *ubutton2, Value *ubutton,
                     int i_larrow, int i_uarrow, bool horz);
 
 };

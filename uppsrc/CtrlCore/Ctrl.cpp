@@ -955,6 +955,9 @@ void Ctrl::ReSkin()
 	if(lock)
 		return;
 	lock++;
+	bool uhd = GetStdFontCy() > 22;
+	GUI_HiDPI_Write(GetStdFontCy() > 22);
+	SetUHDMode(uhd);
 	if(s_chdefault)
 		(*s_chdefault)();
 	if(skin)
