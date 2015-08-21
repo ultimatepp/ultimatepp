@@ -433,6 +433,10 @@ KeyCodes keyCodes[] = {
 	""
 };
 
+#endif
+
+#endif
+
 void Mouse_LeftClick()
 {
     Mouse_LeftDown(); 
@@ -515,9 +519,5 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 #endif
 	Sleep(finalDelay);
 }
-
-#endif
-
-#endif
 
 END_UPP_NAMESPACE
