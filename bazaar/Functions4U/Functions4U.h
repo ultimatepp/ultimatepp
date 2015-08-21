@@ -563,10 +563,11 @@ class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
 	enum Status {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
-	bool Start(const char *cmd, const char *envptr = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
+	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
-		ts.Reset();
-		if(!p.Start(cmd, envptr))
+		timeElapsed.Reset();
+		timeToTimeout.Reset();
+		if(!p.Start(cmd, envptr, dir))
 			return false;
 		status = RUNNING;
 		timeOut = _timeOut;
@@ -582,16 +583,22 @@ public:
 		if (status <= 0)
 			return;
 		String out;
-		double elapsed = ts.Seconds();
 		p.Read(out);
 		if(p.IsRunning()) {
-			if (timeOut > 0 && elapsed > timeOut) 
+			if (timeOut > 0 && timeToTimeout.Seconds() > timeOut) 
 				status = STOP_TIMEOUT;
 		} else 
 			status = STOP_OK;
 		
-		if (!WhenTimer(elapsed, out, status <= 0))
+		bool resetTimeout = false;
+		if (!out.IsEmpty())
+			resetTimeout = true;
+		
+		if (!WhenTimer(timeElapsed.Seconds(), out, status <= 0, resetTimeout))
 			status = STOP_USER;
+		
+		if (resetTimeout)
+			timeToTimeout.Reset();
 		
 		if (status < 0)
 			p.Kill();
@@ -614,16 +621,39 @@ public:
 	void Write(String str) {p.Write(str);}
 	int GetStatus()  {return status;}
 	bool IsRunning() {return status > 0;}
-	Gate3<double, String&, bool> WhenTimer;
+	Gate4<double, String&, bool, bool&> WhenTimer;
 
 //private:
 	LocalProcess p;
 private:
-	TimeStop ts;
+	TimeStop timeElapsed, timeToTimeout;
 	Status status;
 	double timeOut;
 	double refreshTime;
 };
+
+template <class T>
+class threadSafe {
+public:
+	threadSafe() 		{val = Null;}
+	threadSafe(T v) 	{BarrierWrite(val, v);}
+	void operator=(T v) {BarrierWrite(val, v);}
+	operator T() 		{return ReadWithBarrier(val);}
+	threadSafe& operator++() {
+		BarrierWrite(val, ReadWithBarrier(val) + 1);
+		return *this;
+	}
+   	threadSafe operator++(int) 	{
+		threadSafe tmp = *this;
+   		++*this;
+   		return tmp;
+	}
+   
+private:
+	volatile T val;
+};
+
+
 
 END_UPP_NAMESPACE
 
