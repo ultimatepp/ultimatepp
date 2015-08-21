@@ -194,8 +194,8 @@ ool]_[* GetDriveInformation]([_^String^ String]_[*@3 drive], [_^String^ String]_
 [s2; Returns false if drive is not mounted or it is not accessible&]
 [s3; &]
 [s4; &]
-[s5;:GetCompilerInfo`(String`&`,int`&`,Time`&`,String`&`,int`&`):%- [@(0.0.255) void]_[* G
-etCompilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
+[s5;:GetCompilerInfo`(name`, version`, time`, mode`, bits`):%- [@(0.0.255) void]_[* GetCo
+mpilerInfo]([_^String^ String]_`&[*@3 name], [@(0.0.255) int]_`&[*@3 version], 
 [_^Time^ Time]_`&[*@3 time], [_^String^ String]_`&[*@3 mode], [_^String^ int]_`&[*@3 bits])&]
 [s2; Returns compiling information, like compiler [%-*@3 name, ]compiler 
 [%-*@3 version], program compilation [%-*@3 time], compiling [%-*@3 mode] 

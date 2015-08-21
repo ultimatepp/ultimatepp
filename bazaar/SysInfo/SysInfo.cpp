@@ -22,7 +22,12 @@ NAMESPACE_UPP
 
 /////////////////////////////////////////////////////////////////////
 // Hardware Info
-#if defined(PLATFORM_WIN32) 
+#if defined(PLATFORM_WIN32)  
+
+#ifdef COMPILER_MINGW
+REFCLSID CLSID_WbemAdministrativeLocator =
+   { 0xcb8555cc, 0x9128, 0x11d1, {0xad, 0x9b, 0x00, 0xc0, 0x4f, 0xd8, 0xfd, 0xff}};
+#endif 
 
 bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2") {
 	HRESULT hRes;
@@ -1094,12 +1099,12 @@ BOOL CALLBACK TerminateAppEnum(HWND hwnd, LPARAM lParam)
   	return TRUE;
 }
 
-bool ProcessTerminate(int64 processId, int timeout)
+bool ProcessTerminate(int64 pId, int timeout)
 {
-  	HANDLE hProc = ::OpenProcess(SYNCHRONIZE|PROCESS_TERMINATE, FALSE, DWORD(processId));
+  	HANDLE hProc = ::OpenProcess(SYNCHRONIZE|PROCESS_TERMINATE, FALSE, DWORD(pId));
   	if(hProc == NULL)
     	return false;
-  	::EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)processId) ;
+  	::EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)pId) ;
 
 	int ret;
   	int state = ::WaitForSingleObject(hProc, timeout);
@@ -1714,8 +1719,30 @@ bool Shutdown(String action) {
 #endif
 
 
-void GetCompilerInfo(String &name, int &version, Upp::Time &time, String &mode, int &bits) {	
-	time = ScanTime("mdy", String(__DATE__) + " " + __TIME__);
+void GetCompilerInfoAux(String &name, int &version, Upp::Time &time, String &mode, int &bits, const char *sdate, const char *stime) {	
+	/*const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
+	String date = sdate;
+	String month = date.Left(3);
+	int i;
+	for (i = 0; i < 12; i++) {
+		if (month == months[i]) {
+			time.month = i + 1;
+			break;
+		}
+	}
+	if (i == 12) 
+		time = ScanTime("mdy", String(sdate) + " " + stime);
+	else {
+		time.day = ScanInt(date.Mid(4, 2));
+		time.year = ScanInt(date.Mid(7, 4));
+		String tim = stime;
+		time.hour = ScanInt(tim.Left(2));
+		time.minute = ScanInt(tim.Mid(3, 2));
+		time.second = ScanInt(tim.Mid(6, 2));
+	}*/
+	
+	time = FileGetTime(GetExeFilePath());		// More reliable
 	
 	name = "";
 	version = 0;
