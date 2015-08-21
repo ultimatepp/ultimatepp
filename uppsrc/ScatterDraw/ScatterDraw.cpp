@@ -378,7 +378,59 @@ void ScatterDraw::FitToData(bool vertical, double factor) {
 	    	linkedCtrls[i]->DoFitToData(vertical);
 	}
 }
+
+double ScatterDraw::GetXMin() {
+	double minx = -DOUBLE_NULL;
+	//double maxx = DOUBLE_NULL;
 	
+	for (int j = 0; j < series.GetCount(); j++) {
+		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+			continue;
+		minx = min(minx, series[j].PointsData()->MinX());
+		//maxx = max(maxx, series[j].PointsData()->MaxX());
+	}
+	return minx;
+}
+
+double ScatterDraw::GetXMax() {
+	//double minx = -DOUBLE_NULL;
+	double maxx = DOUBLE_NULL;
+	
+	for (int j = 0; j < series.GetCount(); j++) {
+		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+			continue;
+		//minx = min(minx, series[j].PointsData()->MinX());
+		maxx = max(maxx, series[j].PointsData()->MaxX());
+	}
+	return maxx;
+}
+
+double ScatterDraw::GetYMin() {
+	double miny = -DOUBLE_NULL;
+	//double maxy = DOUBLE_NULL;
+	
+	for (int j = 0; j < series.GetCount(); j++) {
+		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+			continue;
+		miny = min(miny, series[j].PointsData()->MinY());
+		//maxy = max(maxy, series[j].PointsData()->MaxY());
+	}
+	return miny;
+}
+
+double ScatterDraw::GetYMax() {
+	//double miny = -DOUBLE_NULL;
+	double maxy = DOUBLE_NULL;
+	
+	for (int j = 0; j < series.GetCount(); j++) {
+		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+			continue;
+		//miny = min(miny, series[j].PointsData()->MinY());
+		maxy = max(maxy, series[j].PointsData()->MaxY());
+	}
+	return maxy;
+}
+			
 void ScatterDraw::DoFitToData(bool vertical, double factor) {
 	double minx, maxx, miny, miny2, maxy, maxy2;
 	minx = miny = miny2 = -DOUBLE_NULL;

@@ -11,6 +11,8 @@ double DataSource::Min(Getdatafun getdata) {
 		if (!IsNull(d) && minVal > d)
 			minVal = d;
 	}
+	if (minVal == -DOUBLE_NULL)
+		return Null;
 	return minVal;		
 }
  
@@ -21,25 +23,44 @@ double DataSource::Max(Getdatafun getdata) {
 		if (!IsNull(d) && maxVal < d)
 			maxVal = d;
 	}
+	if (maxVal == DOUBLE_NULL)
+		return Null;
 	return maxVal;
 }
 
 double DataSource::Avg(Getdatafun getdata) {
 	double ret = 0;
-	for (int64 i = 0; i < GetCount(); ++i)
-		ret += Membercall(getdata)(i);
-	return ret/GetCount();
+	int count = 0;
+	for (int64 i = 0; i < GetCount(); ++i) {
+		double d = Membercall(getdata)(i);
+		if (!IsNull(d)) {
+			ret += d;
+			count++;
+		}
+	}
+	if (count == 0) 
+		return Null;
+	return ret/count;
 }
 
 double DataSource::Variance(Getdatafun getdata, double avg) {
 	if (IsNull(avg))
 		avg = Avg(getdata);
+	if (IsNull(avg))
+		return Null;
 	double ret = 0;
+	int count = 0;
 	for (int64 i = 0; i < GetCount(); ++i) {
-		double val = Membercall(getdata)(i) - avg;
-		ret += val*val;
+		double d = Membercall(getdata)(i);
+		if (!IsNull(d)) {
+			d -= avg;
+			ret += d*d;
+			count++;
+		}
 	}
-	return ret/(GetCount() - 1);
+	if (count <= 0)
+		return Null;
+	return ret/(count - 1);
 }
 
 double DataSource::StdDev(Getdatafun getdata, double avg) {

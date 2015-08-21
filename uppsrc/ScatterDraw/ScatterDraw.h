@@ -166,6 +166,11 @@ public:
 	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
 	int GetMode()	{return mode;};
 	
+	double GetXMax();
+	double GetXMin();
+	double GetYMax();
+	double GetYMin();
+	
 	void FitToData(bool Y = false, double factor = 0);
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
