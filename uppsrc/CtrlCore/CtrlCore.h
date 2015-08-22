@@ -1309,8 +1309,6 @@ int GUI_DragDistance();
 int GUI_DblClickTime();
 int GUI_WheelScrollLines();
 
-int GUI_HiDPI();
-
 void GUI_GlobalStyle_Write(int);
 void GUI_DragFullWindow_Write(int);
 void GUI_PopUpEffect_Write(int);
