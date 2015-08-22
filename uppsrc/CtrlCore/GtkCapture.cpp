@@ -23,9 +23,13 @@ void Ctrl::StartGrabPopup()
 		Ctrl *w = activePopup[0];
 		if(w && w->IsOpen()) {
 			ReleaseWndCapture0();
+			static GdkCursor *NormalArrowCursor;
+			ONCELOCK {
+				NormalArrowCursor = gdk_cursor_new(GDK_LEFT_PTR);
+			}
 			if(gdk_pointer_grab(w->gdk(), FALSE,
 							    GdkEventMask(GDK_BUTTON_RELEASE_MASK|GDK_BUTTON_PRESS_MASK|GDK_POINTER_MOTION_MASK),
-							    NULL, NULL, CurrentTime) == GDK_GRAB_SUCCESS)
+							    NULL, NormalArrowCursor, CurrentTime) == GDK_GRAB_SUCCESS)
 				grabpopup = w;
 		}
 	}
