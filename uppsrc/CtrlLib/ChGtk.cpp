@@ -150,7 +150,7 @@ void ChHostSkin()
 		}
 	}
 
-	Font::SetDefaultFont(Font(fontname, (fontheight * xdpi + 512*72) / (1024*72))
+	Font::SetDefaultFont(Font(fontname, fround(fontheight * xdpi + 512*72.0) / (1024*72))
 	                     .Bold(bold).Italic(italic));
 
 	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
