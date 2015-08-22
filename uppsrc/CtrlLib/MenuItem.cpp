@@ -496,7 +496,7 @@ bool SubMenuItem::HotKey(dword key)
 
 Size TopSubMenuItem::GetMinSize() const
 {
-	return AddFrameSize(GetTextSize(text, font) + Size(12, 7));
+	return AddFrameSize(GetTextSize(text, font) + Zsz(10, 5));
 }
 
 int  TopSubMenuItem::GetState()
@@ -646,7 +646,7 @@ bool TopMenuItem::Key(dword key, int count)
 
 Size TopMenuItem::GetMinSize() const
 {
-	return AddFrameSize(GetTextSize(text, StdFont()) + Zsz(12, 7));
+	return AddFrameSize(GetTextSize(text, StdFont()) + Zsz(10, 5));
 }
 
 int TopMenuItem::GetStdHeight(Font font)
