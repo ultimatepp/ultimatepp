@@ -118,6 +118,7 @@ void Font::SyncStdFont()
 {
 	Mutex::Lock __(sFontLock);
 	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
+	SyncUHDMode();
 }
 
 void (*whenSetStdFont)();

@@ -101,6 +101,13 @@ bool IsUHDMode()
 	return sUHDMode;
 }
 
+void SyncUHDMode()
+{
+	bool uhd = GetStdFontCy() > 22;
+	if(uhd != IsUHDMode())
+		SetUHDMode(uhd);
+}
+
 Image DPI(const Image& img)
 {
 	if(IsUHDMode()) {

@@ -202,6 +202,7 @@ Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress 
 
 void SetUHDMode(bool b = true);
 bool IsUHDMode();
+void SyncUHDMode();
 
 Image DPI(const Image& m);
 Image DPI(const Image& img, int expected);
