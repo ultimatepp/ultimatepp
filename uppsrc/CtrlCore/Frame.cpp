@@ -122,7 +122,7 @@ CtrlFrame& TopSeparatorFrame()    { return Single<TopSeparatorFrameCls>(); }
 CtrlFrame& RightSeparatorFrame()  { return Single<RightSeparatorFrameCls>(); }
 CtrlFrame& LeftSeparatorFrame()   { return Single<LeftSeparatorFrameCls>(); }
 
-CH_INT(FrameButtonWidth, 17);
+CH_INT(FrameButtonWidth, DPI(17));
 CH_INT(ScrollBarArrowSize, FrameButtonWidth());
 
 void LayoutFrameLeft(Rect& r, Ctrl *ctrl, int cx)

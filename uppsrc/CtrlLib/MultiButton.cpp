@@ -13,15 +13,15 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 		edge[i] = EditFieldEdge();
 	}
 	activeedge = false;
-	trivialborder = 1;
-	border = 1;
+	trivialborder = DPI(1);
+	border = DPI(1);
 	pressoffset = Button::StyleEdge().pressoffset;
 	sep1 = SColorHighlight();
 	sep2 = SColorLight();
-	sepm = 2;
+	sepm = DPI(2);
 	stdwidth = FrameButtonWidth();
 	trivialsep = false;
-	margin = Rect(2, 2, 2, 2);
+	margin = Rect(DPI(2), DPI(2), DPI(2), DPI(2));
 	usetrivial = false;
 	overpaint = loff = roff = 0;
 	error = Blend(LtRed(), Red());
