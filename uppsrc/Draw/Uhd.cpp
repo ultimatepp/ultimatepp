@@ -76,6 +76,8 @@ Image Upscale2x(const Image& src)
 	                        Upscale2x(GetOver(CreateImage(isz, Black()), src), Black()));
 	ImageBuffer h(s);
 	h.SetResolution(IMAGE_RESOLUTION_UHD);
+	h.SetHotSpot(src.GetHotSpot() * 2);
+	h.Set2ndSpot(src.Get2ndSpot() * 2);
 	return h;
 }
 
@@ -84,6 +86,8 @@ Image Downscale2x(const Image& src)
 	Image m = RescaleFilter(src, src.GetSize() / 2, FILTER_LANCZOS3);
 	ImageBuffer h(m);
 	h.SetResolution(IMAGE_RESOLUTION_STANDARD);
+	h.SetHotSpot(src.GetHotSpot() / 2);
+	h.Set2ndSpot(src.Get2ndSpot() / 2);
 	return h;
 }
 
