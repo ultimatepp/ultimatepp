@@ -601,7 +601,7 @@ void ChSysInit()
 	if(SetProcessDPIAware && Ctrl::IsHiDPIEnabled())
 		(*SetProcessDPIAware)();
 	NONCLIENTMETRICS ncm;
-#if (WINVER >= 0x0600)
+#if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
 	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
 #else
 	ncm.cbSize = sizeof(ncm);

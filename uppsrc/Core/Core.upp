@@ -37,7 +37,6 @@ file
 	Defs.h,
 	Cpu.cpp optimize_speed,
 	Mt.h,
-	Core.upp,
 	Mt.cpp,
 	OL_Set.cpp,
 	Global.h,
