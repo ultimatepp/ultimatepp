@@ -92,6 +92,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#ifdef _MSC_VER
+#define HAVE__SNPRINTF
+#endif
+
 #ifndef HAVE_SNPRINTF
 # ifdef HAVE__SNPRINTF
 #  define snprintf _snprintf

@@ -1319,7 +1319,6 @@ void GUI_AKD_Conservative_Write(int);
 void GUI_DragDistance_Write(int);
 void GUI_DblClickTime_Write(int);
 void GUI_WheelScrollLines_Write(int);
-void GUI_HiDPI_Write(int);
 
 void  EditFieldIsThin_Write(int);
 void  TopSeparator1_Write(Value);

@@ -13,6 +13,7 @@
 #include "nasmlib.h"
 
 #ifndef HAVE_SNPRINTF
+#ifndef HAVE__SNPRINTF
 
 int snprintf(char *str, size_t size, const char *format, ...)
 {
@@ -32,4 +33,5 @@ int snprintf(char *str, size_t size, const char *format, ...)
     return rv;
 }
 
+#endif
 #endif
