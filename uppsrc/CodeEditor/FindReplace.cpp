@@ -503,10 +503,13 @@ void CodeEditor::Replace()
 	NextUndo();
 	FindReplaceAddHistory();
 	if(!found) return;
+	bool h = persistent_find_replace;
+	persistent_find_replace = true; // avoid closing of findreplace by selection change
 	if(RemoveSelection()) {
 		Paste(GetReplaceText());
 		Find(false, false, true);
 	}
+	persistent_find_replace = h;
 }
 
 int CodeEditor::BlockReplace()

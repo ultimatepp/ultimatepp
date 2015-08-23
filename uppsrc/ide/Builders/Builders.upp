@@ -5,15 +5,16 @@ noblitz;
 uses
 	ide\Core,
 	ide/Android,
-	ide/Java;
+	ide/Java,
+	ide/Android;
 
 file
 	Builders.h options(BUILDER_OPTION) PCH,
 	CppBuilder.cpp,
 	MakeFile.cpp,
-	GccBuilder.icpp,
 	coff.h,
 	Builders readonly separator,
+	GccBuilder.icpp,
 	MscBuilder.icpp,
 	OwcBuilder.icpp,
 	JavaBuilder.icpp,

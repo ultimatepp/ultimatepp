@@ -381,7 +381,7 @@ public:
 
 	void   SerializeFind(Stream& s);
 	bool   IsFindOpen() const                       { return findreplace.IsOpen(); }
-	void   FindClose()                              { findreplace.Close(); }
+	void   FindClose()                              { CloseFindReplace(); }
 
 	void   Goto();
 

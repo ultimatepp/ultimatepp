@@ -82,6 +82,7 @@ void Ide::DoBuild()
 
 void Ide::PackageBuild()
 {
+	InitBlitz();
 	BeginBuilding(true, true);
 	const Workspace& wspc = IdeWorkspace();
 	int pi = GetPackageIndex();
