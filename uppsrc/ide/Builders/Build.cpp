@@ -127,7 +127,6 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 One<Builder> MakeBuild::CreateBuilder(Host *host)
 {
 	SetupDefaultMethod();
-	InitBlitz();
 	VectorMap<String, String> bm = GetMethodVars(method);
 	String builder = bm.Get("BUILDER", "GCC");
 	int q = BuilderMap().Find(builder);
@@ -441,6 +440,8 @@ Vector<String> MakeBuild::GetAllLibraries(const Workspace& wspc, int index,
 
 bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console)
 {
+	InitBlitz();
+
 	String hfile = outfile + ".xxx";
 	SaveFile(hfile, "");
 	start_time = GetFileTime(hfile); // Defensive way to get correct filetime of start
@@ -530,7 +531,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 			// changes during compilation, it is recompiled during next build
 			SetFileTime(target, start_time);
 			for(int i = 0; i < immfile.GetCount(); i++)
-				SetFileTime(immfile[i], start_time); 
+				SetFileTime(immfile[i], start_time);
 		}
 	}
 	EndBuilding(ok);

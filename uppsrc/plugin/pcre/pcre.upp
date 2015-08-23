@@ -4,6 +4,9 @@ noblitz;
 
 options(BUILDER_OPTION) NOWARNINGS;
 
+uses
+	Core;
+
 file
 	Pcre.h,
 	RegExp.h,
