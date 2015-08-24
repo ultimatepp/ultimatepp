@@ -1844,7 +1844,7 @@ FileBrowser::FileBrowser() {
 	folders.WhenLeftDouble = THISBACK(FoldersWhenLeftDouble);
 	folders.WhenClose 	   = THISBACK(FoldersWhenClose);
 
-	Array<String> ds = GetDriveList();
+	Vector<String> ds = GetDriveList();
 	String desktopFolder = GetDesktopFolder();	
 	if (!desktopFolder.IsEmpty())
 		folders.Add(0, NativePathIconX(desktopFolder, true, flags), desktopFolder, 
