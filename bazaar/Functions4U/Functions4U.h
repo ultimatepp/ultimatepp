@@ -562,12 +562,12 @@ private:
 class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
-	enum Status {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
+	enum LPStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2}; // name clash with X11 Status
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Reset();
 		timeToTimeout.Reset();
-		if(!p.Start(cmd, envptr, dir))
+		if(!p.Start(cmd, envptr/*, dir*/))
 			return false;
 		status = RUNNING;
 		timeOut = _timeOut;
@@ -608,7 +608,7 @@ public:
 			KillTimeCallback(this);
 #endif
 	}
-	void Stop(Status _status = STOP_USER) {
+	void Stop(LPStatus _status = STOP_USER) {
 		if (!IsRunning())
 			return;
 		status = _status;
@@ -627,7 +627,7 @@ public:
 	LocalProcess p;
 private:
 	TimeStop timeElapsed, timeToTimeout;
-	Status status;
+	LPStatus status;
 	double timeOut;
 	double refreshTime;
 };

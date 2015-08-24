@@ -1,5 +1,7 @@
 #include "SysInfo_in.h"
 
+#ifdef flagXTEST
+
 NAMESPACE_UPP
 
 struct KeyCodes {
@@ -521,3 +523,5 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 }
 
 END_UPP_NAMESPACE
+
+#endif
