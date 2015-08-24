@@ -347,7 +347,7 @@ Pdb::~Pdb()
 One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline)
 {
 	One<Debugger> dbg;
-	if(!dbg.Create<Pdb>().Create(host, exefile, cmdline))
+	if(!dbg.Create<Pdb>().Create(pick(host), exefile, cmdline))
 		dbg.Clear();
 	return dbg;
 }

@@ -96,7 +96,7 @@ void Pdb::LoadModuleInfo()
 		}
 	}
 	UnloadModuleSymbols();
-	module = nm;
+	module = pick(nm);
 	refreshmodules = false;
 }
 

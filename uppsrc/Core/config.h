@@ -138,3 +138,7 @@
 #if __cplusplus >= 201100
 #define CPP_11
 #endif
+
+#if _MSC_VER >= 1900 // MSC from VS2015 is good enought C++11 compiler...
+#define CPP_11
+#endif
