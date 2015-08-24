@@ -290,11 +290,11 @@ void Ide::BuildAndDebug(bool runto)
 #ifdef COMPILER_MSC
 	if(builder == "GCC")
 		if(gdbSelector)
-			debugger = Gdb_MI2Create(host, target, runarg, console);
+			debugger = Gdb_MI2Create(pick(host), target, runarg, console);
 		else
-			debugger = GdbCreate(host, target, runarg, console);
+			debugger = GdbCreate(pick(host), target, runarg, console);
 	else
-		debugger = PdbCreate(host, target, runarg);
+		debugger = PdbCreate(pick(host), target, runarg);
 #else
 	if(gdbSelector)
 		debugger = Gdb_MI2Create(pick(host), target, runarg, console);

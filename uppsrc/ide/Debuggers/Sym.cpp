@@ -222,8 +222,8 @@ void Pdb::GetLocals(Frame& frame, Context& context, VectorMap<String, Pdb::Val>&
 	c.pdb = this;
 	c.context = &context;
 	SymEnumSymbols(hProcess, 0, 0, &EnumLocals, &c);
-	param = c.param;
-	local = c.local;
+	param = pick(c.param);
+	local = pick(c.local);
 }
 
 BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserContext)

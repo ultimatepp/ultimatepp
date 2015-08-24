@@ -26,14 +26,14 @@ Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, Visual r
 				ch = p.mark = true;
 		}
 	}
-	return RawPickToValue(vis);
+	return RawPickToValue(pick(vis));
 }
 
 void Pdb::Vis(ArrayCtrl& a, const String& key, const VectorMap<String, Value>& prev,
               Visual rval_ vis)
 {
 	bool ch;
-	a.Add(key, Vis(key, prev, vis, ch));
+	a.Add(key, Vis(key, prev, pick(vis), ch));
 }
 
 void Pdb::Locals()
@@ -62,7 +62,7 @@ void Pdb::AddThis(const VectorMap<String, Val>& m, adr_t address, const VectorMa
 		catch(CParser::Error e) {
 			vis.Cat(e, SColorDisabled);
 		}
-		Vis(self, m.GetKey(i), prev, vis);
+		Vis(self, m.GetKey(i), prev, pick(vis));
 	}
 }
 
@@ -110,7 +110,7 @@ void Pdb::TryAuto(const String& exp, const VectorMap<String, Value>& prev)
 			r.Clear();
 		}
 		if(r.part.GetCount())
-			Vis(autos, exp, prev, r);
+			Vis(autos, exp, prev, pick(r));
 	}
 }
 
@@ -196,7 +196,7 @@ void Pdb::Explorer()
 	catch(CParser::Error e) {
 		Visual v;
 		v.Cat(e, LtRed);
-		explorer.Add("", RawPickToValue(v));
+		explorer.Add("", RawPickToValue(pick(v)));
 	}
 	exback.Enable(exprev.GetCount());
 	exfw.Enable(exnext.GetCount());
@@ -286,7 +286,7 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 		Visualise(r, v, 2);
 		if(r.part.GetCount()) {
 			mt.sz = r.GetSize() + Size(4, 4);
-			mt.value = RawPickToValue(r);
+			mt.value = RawPickToValue(pick(r));
 			mt.display = &Single<VisualDisplay>();
 			DR_LOG("Pdb::Tip true");
 			return true;
