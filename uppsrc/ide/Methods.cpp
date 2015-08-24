@@ -811,7 +811,7 @@ String Ide::GetIncludePath()
 	static VectorMap<String, String> mingw_include;
 	int q = mingw_include.Find(method);
 	if(q < 0) {
-		String gcc = GetFileOnPath("gcc.exe", bm.Get("PATH")); // TODO clang
+		String gcc = GetFileOnPath("gcc.exe", bm.Get("PATH", "")); // TODO clang
 		Index<String> r;
 		if(gcc.GetCount()) {
 			String dummy = ConfigFile("dummy.cpp");
@@ -832,7 +832,7 @@ String Ide::GetIncludePath()
 	}
 	MergeWith(include, ";", mingw_include[q]);
 #endif
-	if(findarg(bm.Get("BUILDER"), "ANDROID") >= 0) {
+	if(findarg(bm.Get("BUILDER", ""), "ANDROID") >= 0) {
 		AndroidNDK ndk(bm.Get("NDK_PATH"));
 		if(ndk.Validate())
 			MergeWith(include, ";", ndk.GetIncludeDir());
