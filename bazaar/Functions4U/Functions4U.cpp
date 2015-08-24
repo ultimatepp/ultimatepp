@@ -278,9 +278,9 @@ String GetRelativePath(String &from, String &path) {
 	String ret;
 	int pos_from = 0, pos_path = 0;
 	bool first = true;
-	while (pos_from < from.GetCount()) {
-		String f_from = Tokenize(from, DIR_SEPS, pos_from);
-		String f_path = Tokenize(path, DIR_SEPS, pos_path);
+	while (!IsNull(pos_from)) {
+		String f_from = Tokenize2(from, DIR_SEPS, pos_from);
+		String f_path = Tokenize2(path, DIR_SEPS, pos_path);
 		if (f_from != f_path) {
 			if (first) 
 				return Null;
@@ -289,9 +289,9 @@ String GetRelativePath(String &from, String &path) {
 				ret << ".." << DIR_SEPS << f_path;	
 			else
 				ret << ".." << DIR_SEPS << f_path << DIR_SEPS << fileName;	
-			while (pos_from < from.GetCount()) {
+			while (!IsNull(pos_from)) {
 				ret.Insert(0, String("..") + DIR_SEPS);
-				Tokenize(from, DIR_SEPS, pos_from);		
+				Tokenize2(from, DIR_SEPS, pos_from);		
 			}
 			return ret;
 		}
@@ -380,7 +380,7 @@ int GetUid() {
 }
 
 String GetMountDirectory(const String &path) {
-	Array<String> drives = GetDriveList();	
+	Vector<String> drives = GetDriveList();	
 	for (int i = 0; i < drives.GetCount(); ++i) {		
 		if (path.Find(drives[i]) == 0)
 			return drives[i];
@@ -588,9 +588,9 @@ String GetExtExecutable(const String _ext)
 }
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
-Array<String> GetDriveList() {
+Vector<String> GetDriveList() {
 	char drvStr[26*4+1];		// A, B, C, ...
-	Array<String> ret;
+	Vector<String> ret;
 	
 	int lenDrvStrs = ::GetLogicalDriveStrings(sizeof(drvStr), drvStr);
 	// To get the error call GetLastError()
@@ -606,8 +606,8 @@ Array<String> GetDriveList() {
 }
 #endif
 #if defined(PLATFORM_POSIX)
-Array<String> GetDriveList() {
-	Array<String> ret;
+Vector<String> GetDriveList() {
+	Vector<String> ret;
 	// Search for mountable file systems
 	String mountableFS = "cofs.";
 	StringParse sfileSystems(LoadFile_Safe("/proc/filesystems"));
@@ -978,7 +978,7 @@ String FitFileName(const String fileName, int len) {
 	if (fileName.GetCount() <= len)
 		return fileName;
 	
-	Array<String> path;
+	Vector<String> path;
 	
 	const char *s = fileName;
 	char c;
@@ -1020,6 +1020,10 @@ String FitFileName(const String fileName, int len) {
 }
 
 String Tokenize2(const String &str, const String &token, int &pos) {
+	if (IsNull(pos) || pos == str.GetCount()) {
+		pos = Null;
+		return Null;
+	}
 	int npos;
 	for (int i = 0; i < token.GetCount(); ++i) {
 		if ((npos = str.Find(token[i], pos)) >= 0) 
@@ -1027,7 +1031,7 @@ String Tokenize2(const String &str, const String &token, int &pos) {
 	}
 	int oldpos = pos;
 	if (npos < 0) {
-		pos = Null;
+		pos = str.GetCount();
 		return str.Mid(oldpos);
 	} else {
 		pos = npos + token.GetCount();
@@ -1035,6 +1039,25 @@ String Tokenize2(const String &str, const String &token, int &pos) {
 	}
 }
 
+String Tokenize2(const String &str, const String &token) {
+	int dummy = 0;
+	return Tokenize2(str, token, dummy);
+}
+
+Vector<String> Tokenize(const String &str, const String &token) {
+	Vector<String> ret;
+	
+	Tokenize(str, token, ret);
+	
+	return ret;
+}
+
+void Tokenize(const String &str, const String &token, Vector<String> &ret) {
+	for (int pos = 0; !IsNull(pos); ret << Tokenize2(str, token, pos))
+		;
+	ret.Remove(ret.GetCount() - 1);
+}
+/*
 String Tokenize(const String &str, const String &token, int &pos) {
 	int npos;
 	for (int i = 0; i < token.GetCount(); ++i) {
@@ -1055,7 +1078,7 @@ String Tokenize(const String &str, const String &token) {
 	int dummy = 0;
 	return Tokenize(str, token, dummy);
 }
-
+*/
 String GetLine(const String &str, int &pos) {
 	String ret;
 	int npos = str.Find("\n", pos);
@@ -1656,7 +1679,7 @@ int64 FindStringInFile(const char *file, const String text, int64 pos0) {
 	return -1;	
 }
 
-bool MatchPathName(const char *name, const Array<String> &cond, const Array<String> &ext) {
+bool MatchPathName(const char *name, const Vector<String> &cond, const Vector<String> &ext) {
 	for (int i = 0; i < cond.GetCount(); ++i) {
 		if(!PatternMatch(cond[i], name))
 			return false;
@@ -1668,9 +1691,9 @@ bool MatchPathName(const char *name, const Array<String> &cond, const Array<Stri
 	return true;
 }
 
-void SearchFile_Each(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
-								 const Array<String> &extFiles,  const Array<String> &extFolders, 
-								 const String text, Array<String> &files, Array<String> &errorList) {
+void SearchFile_Each(String dir, const Vector<String> &condFiles, const Vector<String> &condFolders, 
+								 const Vector<String> &extFiles,  const Vector<String> &extFolders, 
+								 const String text, Vector<String> &files, Vector<String> &errorList) {
 	FindFile ff;
 	if (ff.Search(AppendFileName(dir, "*"))) {
 		do {
@@ -1701,21 +1724,20 @@ void SearchFile_Each(String dir, const Array<String> &condFiles, const Array<Str
 	}
 }
 
-Array<String> SearchFile(String dir, const Array<String> &condFiles, const Array<String> &condFolders, 
-								 const Array<String> &extFiles,  const Array<String> &extFolders, 
-								 const String text, Array<String> &errorList) {
-	Array<String> files;								     
+Vector<String> SearchFile(String dir, const Vector<String> &condFiles, const Vector<String> &condFolders, 
+								 const Vector<String> &extFiles,  const Vector<String> &extFolders, 
+								 const String text, Vector<String> &errorList) {
+	Vector<String> files;								     
 	//errorList.Clear();
 
 	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
 	
-	
 	return files;
 }
 
-Array<String> SearchFile(String dir, String condFile, String text, Array<String> &errorList)
+Vector<String> SearchFile(String dir, String condFile, String text, Vector<String> &errorList)
 {
-	Array<String> condFiles, condFolders, extFiles, extFolders, files;
+	Vector<String> condFiles, condFolders, extFiles, extFolders, files;
 	//errorList.Clear();
 
 	condFiles.Add(condFile);
@@ -1724,10 +1746,10 @@ Array<String> SearchFile(String dir, String condFile, String text, Array<String>
 	return files;
 }
 
-Array<String> SearchFile(String dir, String condFile, String text)
+Vector<String> SearchFile(String dir, String condFile, String text)
 {
-	Array<String> errorList;
-	Array<String> condFiles, condFolders, extFiles, extFolders, files;
+	Vector<String> errorList;
+	Vector<String> condFiles, condFolders, extFiles, extFolders, files;
 	
 	condFiles.Add(condFile);
 	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
@@ -2083,7 +2105,7 @@ void FileDiffArray::Clear()
 
 // True if equal
 bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom,
-						 Array<String> &excepFolders, Array<String> &excepFiles, int sensSecs) {
+						 Vector<String> &excepFolders, Vector<String> &excepFiles, int sensSecs) {
 	if (master.GetCount() == 0) {
 		if (secondary.GetCount() == 0)
 			return true;
@@ -2094,7 +2116,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, con
 	
 	bool equal = true;
 	diffList.Clear();
-	Array<bool> secReviewed;
+	Vector<bool> secReviewed;
 	secReviewed.SetCount(secondary.GetCount(), false);
 	
 	for (int i = 0; i < master.GetCount(); ++i) {

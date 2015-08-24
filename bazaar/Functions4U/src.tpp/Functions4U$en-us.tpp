@@ -191,9 +191,10 @@ har]_`*[*@3 fileName])&]
 [s2; Returns true id [%-*@3 fileName] is a folder.&]
 [s3; &]
 [s4; &]
-[s5;:SearchFile`(String`,String`,String`,Array`<String`>`&`):%- [_^Array^ Array]<[_^String^ S
-tring]>_[* SearchFile]([_^String^ String]_[*@3 dir], [_^String^ String]_[*@3 condFile], 
-[_^String^ String]_[*@3 text], [_^Array^ Array]<[_^String^ String]>_`&[*@3 errorList])&]
+[s5;:Upp`:`:SearchFile`(Upp`:`:String`,Upp`:`:String`,Upp`:`:String`,Upp`:`:Vector`<Upp`:`:String`>`&`):%- [_^Upp`:`:Vector^ V
+ector]<[_^Upp`:`:String^ String]>_[* SearchFile]([_^Upp`:`:String^ String]_[*@3 dir], 
+[_^Upp`:`:String^ String]_[*@3 condFile], [_^Upp`:`:String^ String]_[*@3 text], 
+[_^Upp`:`:Vector^ Vector]<[_^Upp`:`:String^ String]>_`&[*@3 errorList])&]
 [s2; Returns an Array of Strings containing the file names with full 
 path of the files under folder [%-*@3 dir] that comply with condition 
 (with wildcards) [%-*@3 condFile] and that contain inside the text 
@@ -201,8 +202,8 @@ path of the files under folder [%-*@3 dir] that comply with condition
 [s2; [%-*@3 errorList] contains the errors.&]
 [s3; &]
 [s4;%- &]
-[s5;:SearchFile`(String`,String`,String`):%- [_^Array^ Array]<[_^String^ String]>_[* Search
-File]([_^String^ String]_[*@3 dir], [_^String^ String]_[*@3 condFile], 
+[s5;:SearchFile`(String`,String`,String`):%- [_^Array^ Vector]<[_^String^ String]>_[* Searc
+hFile]([_^String^ String]_[*@3 dir], [_^String^ String]_[*@3 condFile], 
 [_^String^ String]_[*@3 text]_`=_`"`")&]
 [s2; Returns an Array of Strings containing the file names with full 
 path of the files under folder [%-*@3 dir] that comply with condition 
@@ -304,22 +305,36 @@ ng][@(0.0.255) `&]_[*@3 s])&]
 Spaces are chars like, `' `', `'`\t`', `'`\n`', ...&]
 [s3; &]
 [s4;%- &]
-[s5;:Tokenize`(const String`&`,const String`&`,int`&`):%- [_^String^ String]_[* Tokenize](
-[@(0.0.255) const]_[_^String^ String]_`&[*@3 str], [@(0.0.255) const]_[_^String^ String]_`&
-[*@3 token], [@(0.0.255) int]_`&[*@3 pos])&]
-[s2; Finds the next token in [%-*@3 str] beginning from [%-*@3 pos]. 
-[%-*@3 token] is a String that contains token identifier chars.&]
-[s0;l288; Returns the String from original [%-*@3 pos] to the char 
-after found token or until the end of the String if no token 
-is found. [%-*@3 pos] is updated to the next char after returned 
-String.&]
+[s5;:Upp`:`:Tokenize`(const Upp`:`:String`&`,const Upp`:`:String`&`):%- [_^Upp`:`:Vector^ V
+ector]<String>_[* Tokenize]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 token])&]
+[s2; Returns all substrings in [%-*@3 str] that are between [%-*@3 token].&]
 [s3; &]
 [s4;%- &]
-[s5;:Tokenize`(const String`&`,const String`&`):%- [_^String^ String]_[* Tokenize]([@(0.0.255) c
-onst]_[_^String^ String]_`&[*@3 str], [@(0.0.255) const]_[_^String^ String]_`&[*@3 tokenEnd
-])&]
-[s2; Finds a token in [%-*@3 str]. [%-*@3 tokenEnd] is a String that 
-contains token identifier chars.&]
+[s5;:Upp`:`:Tokenize`(const Upp`:`:String`&`,const Upp`:`:String`&`,Upp`:`:Vector`<Upp`:`:String`>`&`):%- [@(0.0.255) v
+oid]_[* Tokenize]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 token], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:String^ S
+tring]>_`&[*@3 ret])&]
+[s2; Sets in [%-*@3 ret] all substrings in [%-*@3 str] that are between 
+[%-*@3 token].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Tokenize2`(const Upp`:`:String`&`,const Upp`:`:String`&`,int`&`):%- [_^Upp`:`:String^ S
+tring]_[* Tokenize2]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 token], [@(0.0.255) int]_`&[*@3 pos])&]
+[s2; Finds the next token in [%-*@3 str] beginning from [%-*@3 pos]. 
+[%-*@3 token] is a String that contains token identifier chars.&]
+[s2; Returns the String from original [%-*@3 pos] to the char after 
+found token or until the end of the String if no token is found. 
+[%-*@3 pos] is updated to the next char after returned String, 
+or Null if there are not more chars available.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Tokenize2`(const Upp`:`:String`&`,const Upp`:`:String`&`):%- [_^Upp`:`:String^ S
+tring]_[* Tokenize2]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 token])&]
+[s2; Finds a token in [%-*@3 str]. [%-*@3 token] is a String that contains 
+token identifier chars.&]
 [s2; Returns the String to the char after found token or until the 
 end of the String if no token is found.&]
 [s3; &]
@@ -687,7 +702,7 @@ onst]_[_^String^ String]_[*@3 ext])&]
 [s0; [/ -|GetExtExecutable(`"html`") `-> `"Firefox.exe`"]&]
 [s3; &]
 [s4;%- &]
-[s5;:GetDriveList`(`):%- [_^Array^ Array]<[_^String^ String]>_[* GetDriveList]()&]
+[s5;:GetDriveList`(`):%- [_^Array^ Vector]<[_^String^ String]>_[* GetDriveList]()&]
 [s2; Returns an array with the paths to all drives, internal or external, 
 identified in the system.&]
 [s3; &]

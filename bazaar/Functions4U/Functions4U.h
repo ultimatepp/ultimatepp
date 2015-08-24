@@ -11,9 +11,9 @@
 
 #include <Functions4U/SvgColors.h>
 #include "StaticPlugin.h"
+#include "LocalProcess2.h"
 
 NAMESPACE_UPP
-
 
 enum EXT_FILE_FLAGS {NO_FLAG = 0, 
 					 USE_TRASH_BIN = 1,
@@ -39,9 +39,12 @@ inline String Trim(const String& s) {return TrimBoth(s);};
 
 String FitFileName(String fileName, int len);
 
+Vector<String> Tokenize(const String &str, const String &token);
+void Tokenize(const String &str, const String &token, Vector<String> &ret);
 String Tokenize2(const String &str, const String &token, int &pos);
-String Tokenize(const String &str, const String &token, int &pos);
-String Tokenize(const String &str, const String &token);
+String Tokenize2(const String &str, const String &token);
+//String Tokenize(const String &str, const String &token, int &pos);
+//String Tokenize(const String &str, const String &token);
 	
 /////////
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG); 
@@ -78,11 +81,11 @@ int64 GetLength(const char *fileDirName);
 int64 GetDirectoryLength(const char *directoryName);
 
 ///////////////////////////////
-Upp::Array<String> SearchFile(String dir, const Upp::Array<String> &condFiles, const Upp::Array<String> &condFolders, 
-								 const Upp::Array<String> &extFiles,  const Upp::Array<String> &extFolders, 
-								 const String text, Upp::Array<String> &errorList);
-Upp::Array<String> SearchFile(String dir, String condFile, String text, Upp::Array<String> &errorList);//, int flags = 0);
-Upp::Array<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
+Vector<String> SearchFile(String dir, const Vector<String> &condFiles, const Vector<String> &condFolders, 
+								 const Vector<String> &extFiles,  const Vector<String> &extFolders, 
+								 const String text, Vector<String> &errorList);
+Vector<String> SearchFile(String dir, String condFile, String text, Vector<String> &errorList);//, int flags = 0);
+Vector<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
 ///////////////////////////////
 
 bool FileToTrashBin(const char *path);
@@ -122,8 +125,7 @@ struct FileDiffData {
 	uint64 lengthMaster, lengthSecondary;
 };
 
-class ErrorHandling
-{
+class ErrorHandling {
 public:
 	void SetLastError(String _lastError)	{lastError = _lastError;};
 	String GetLastError()					{return lastError;};
@@ -134,8 +136,7 @@ private:
 
 class FileDiffArray;
 
-class FileDataArray : public ErrorHandling
-{
+class FileDataArray : public ErrorHandling {
 public:
 	FileDataArray(bool use = false, int fileFlags = 0);
 	bool Init(String folder, FileDataArray &orig, FileDiffArray &diff);
@@ -150,7 +151,7 @@ public:
 	void SortByName(bool ascending = true);
 	void SortByDate(bool ascending = true);
 	void SortBySize(bool ascending = true);
-	Upp::Array<String> &GetLastError()	{return errorList;};
+	Vector<String> &GetLastError()	{return errorList;};
 	int Find(String &relFileName, String &fileName, bool isFolder);
 	int Find(FileDataArray &data, int id);
 	String FullFileName(int i)		{return AppendFileName(basePath, fileList[i].fileName);};
@@ -165,7 +166,7 @@ private:
 	String GetFileText();
 	
 	Upp::Array<FileData> fileList;
-	Upp::Array<String> errorList;
+	Vector<String> errorList;
 	String basePath;
 	long fileCount, folderCount;
 	int64 fileSize;
@@ -173,14 +174,13 @@ private:
 	int fileFlags;
 };
 
-class FileDiffArray : public ErrorHandling
-{
+class FileDiffArray : public ErrorHandling {
 public:
 	FileDiffArray();
 	void Clear();
 	FileDiffData& operator[](long i)	{return diffList[i];}
 	bool Compare(FileDataArray &master, FileDataArray &secondary, const String folderFrom, 
-		Upp::Array<String> &excepFolders, Upp::Array<String> &excepFiles, int sensSecs = 0);
+		Vector<String> &excepFolders, Vector<String> &excepFiles, int sensSecs = 0);
 	bool Apply(String toFolder, String fromFolder, EXT_FILE_FLAGS flags = NO_FLAG);
 	long GetCount()				{return diffList.GetCount();};
 	bool SaveFile(const char *fileName);
@@ -483,7 +483,7 @@ String WideToString(LPCWSTR wcs, int len = -1);
 
 String GetExtExecutable(const String ext);
 
-Upp::Array<String> GetDriveList();
+Vector<String> GetDriveList();
 
 
 class Dl {
@@ -559,15 +559,17 @@ private:
 								return v
 
 
+
+
 class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
-	enum LPStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2}; // name clash with X11 Status
+	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Reset();
 		timeToTimeout.Reset();
-		if(!p.Start(cmd, envptr/*, dir*/))
+		if(!p.Start(cmd, envptr, dir))
 			return false;
 		status = RUNNING;
 		timeOut = _timeOut;
@@ -608,7 +610,7 @@ public:
 			KillTimeCallback(this);
 #endif
 	}
-	void Stop(LPStatus _status = STOP_USER) {
+	void Stop(ProcessStatus _status = STOP_USER) {
 		if (!IsRunning())
 			return;
 		status = _status;
@@ -624,27 +626,27 @@ public:
 	Gate4<double, String&, bool, bool&> WhenTimer;
 
 //private:
-	LocalProcess p;
+	LocalProcess2 p;
 private:
 	TimeStop timeElapsed, timeToTimeout;
-	LPStatus status;
+	ProcessStatus status;
 	double timeOut;
 	double refreshTime;
 };
 
 template <class T>
-class threadSafe {
+class ThreadSafe {
 public:
-	threadSafe() 		{val = Null;}
-	threadSafe(T v) 	{BarrierWrite(val, v);}
-	void operator=(T v) {BarrierWrite(val, v);}
-	operator T() 		{return ReadWithBarrier(val);}
-	threadSafe& operator++() {
+	inline ThreadSafe() 		{val = Null;}
+	inline ThreadSafe(T v) 		{BarrierWrite(val, v);}
+	inline void operator=(T v) 	{BarrierWrite(val, v);}
+	inline operator T() 		{return ReadWithBarrier(val);}
+	inline ThreadSafe& operator++() {
 		BarrierWrite(val, ReadWithBarrier(val) + 1);
 		return *this;
 	}
-   	threadSafe operator++(int) 	{
-		threadSafe tmp = *this;
+   	inline ThreadSafe operator++(int) {
+		ThreadSafe tmp = *this;
    		++*this;
    		return tmp;
 	}
