@@ -1,3 +1,6 @@
+#ifndef _Functions4U_LocalProcess2_h
+#define _Functions4U_LocalProcess2_h
+
 NAMESPACE_UPP
 
 class LocalProcess2 : public AProcess {
@@ -76,3 +79,4 @@ public:
 
 END_UPP_NAMESPACE
 
+#endif
