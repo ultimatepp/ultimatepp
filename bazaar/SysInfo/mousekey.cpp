@@ -1,7 +1,5 @@
 #include "SysInfo_in.h"
 
-#ifdef flagXTEST
-
 NAMESPACE_UPP
 
 struct KeyCodes {
@@ -268,8 +266,9 @@ bool Mouse_SetPos(long x, long y, int64 windowId) {
 	return true;
 }
 
-#ifdef flagXTEST
 // libxtst-dev
+#if !defined(flagNO_XTEST)
+
 void Mouse_FakeClick(int button, int press) {
 	_XDisplay *dpy = XOpenDisplay(NULL);
 	XTestFakeButtonEvent(dpy, button, press, CurrentTime);
@@ -349,6 +348,8 @@ void PressKey(wchar key, _XDisplay *dpy = NULL) {
 	}
 }
 
+#endif
+
 bool GetKeyLockStatus0(bool &caps, bool &num, bool &scroll, _XDisplay *dpy) {
 	int x, y, xx, yy;
 	Window dm1, dm2;
@@ -377,6 +378,8 @@ bool GetKeyLockStatus(bool &caps, bool &num, bool &scroll) {
 	XCloseDisplay(dpy);
 	return true;
 }
+
+#if !defined(flagNO_XTEST)
 
 bool SetKeyLockStatus(bool caps, bool num, bool scroll) {
 	_XDisplay *dpy;
@@ -434,10 +437,11 @@ KeyCodes keyCodes[] = {
 	"CAPSLOCK", XK_Caps_Lock, 	"BACKSPACE",XK_BackSpace,
 	""
 };
-
 #endif
 
 #endif
+
+#if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)
 
 void Mouse_LeftClick()
 {
@@ -522,6 +526,6 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 	Sleep(finalDelay);
 }
 
-END_UPP_NAMESPACE
-
 #endif
+
+END_UPP_NAMESPACE

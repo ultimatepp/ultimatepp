@@ -51,6 +51,12 @@ so in case of problems in Ubuntu go to terminal and run this:&]
 [s0; [C sudo apt`-get install libxtst`-dev]&]
 [s0; &]
 [s0; &]
+[s0; In any case to avoid compiling problems the flag set by default 
+is NO`_XTEST that avoids the using of fake mouse and keyboard 
+functions. After installing package XTest, NO`_XTEST can be removed 
+to use all functions.&]
+[s0; &]
+[s0; &]
 [s0; To have CPU temperature it is necessary to install [* acpi] or 
 [* lm`-sensors.]&]
 [s0; &]

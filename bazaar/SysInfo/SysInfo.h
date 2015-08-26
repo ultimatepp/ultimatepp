@@ -74,9 +74,6 @@ int Window_GetStatus(int64 windowId);
 /////////////////////////////////////////////////////////////////////
 // Process list
 bool GetProcessList(Upp::Array<int64> &pid, Upp::Array<String> &pNames);
-#if defined(PLATFORM_WIN32) 
-Upp::Array<int64> GetChildProcessList(int64 processID);
-#endif
 Upp::Array<int64> GetProcessList();
 String GetProcessName(int64 pid);
 String GetProcessFileName(int64 processID);
@@ -130,6 +127,7 @@ bool CloseCDTray(String drive);
 bool Mouse_GetPos(long &x, long &y);
 bool Mouse_SetPos(long x, long y, int64 windowId = 0);
 
+#if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)
 void Mouse_LeftClick();
 void Mouse_LeftDown();
 void Mouse_LeftUp();
@@ -144,6 +142,7 @@ void Mouse_MiddleDblClick();
 void Mouse_RightDblClick();
 
 void Keyb_SendKeys(String text, long finalDelay = 100, long delayBetweenKeys = 50);
+#endif
 
 bool Window_SaveCapture(int64 windowId, String fileName, int left = -1, int top = -1, int width = -1, int height = -1);
 Image Window_SaveCapture(int64 windowId, int left = -1, int top = -1, int width = -1, int height = -1);

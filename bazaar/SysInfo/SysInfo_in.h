@@ -48,7 +48,7 @@
 	#include <X11/Xfuncs.h>
 	#include <X11/Xutil.h>
 	#include <X11/Xatom.h>
-#ifdef flagXTEST // XTEST is not available by default, add compilation flag to include it
+#ifndef flagNO_XTEST
 	#include <X11/extensions/XTest.h>
 #endif
 	#include <X11/XKBlib.h>
