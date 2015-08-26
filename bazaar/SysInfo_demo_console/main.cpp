@@ -131,7 +131,7 @@ void Test()
 	Puts("\nPress enter to continue...");	TestGetchar();
 	
 	Puts("\nDrives list:");
-	Array<String> drives;
+	Vector<String> drives;
 	drives = GetDriveList();
 	for (int i = 0; i < drives.GetCount(); ++i) {
 		Puts(Format("Drive path:'%s'", drives[i]));
@@ -193,12 +193,14 @@ void Test()
 			Mouse_GetPos(x, y);
 			Puts(Format("Mouse pos is %d, %d", (int)x, (int)y));
 			Mouse_SetPos(200, 200, windowId);
-			
+
+#if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)	
 			Mouse_LeftClick();
     		Keyb_SendKeys("{HOME}This text is added by Keyb_SendKeys.\n");
     		Keyb_SendKeys("And the window resized and moved by Window_SetRect.\n", 0, 0);
     		Keyb_SendKeys("And a window capture in c:\\Windowgrab.bmp.\n", 0, 0);
     		Keyb_SendKeys("Some chars just for test: \\/:;,.ºª^[]{}´?¿~#@!¡\n", 0, 0);  		
+#endif
 #if defined(PLATFORM_WIN32)			
     		Window_SetRect(windowId, 10, 10, 800, 400);
 #endif    	
