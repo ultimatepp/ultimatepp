@@ -1898,7 +1898,7 @@
 		"select \"COL\" from ((select \"COL\" from \"TABLE1\") as \"TABLE2\")"); // select "COL" from ((select "COL" from "TABLE1") as "TABLE2")
 	TEST(ORACLE,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
-		"select \"COL\" from ((select \"COL\" from \"TABLE1\") as \"TABLE2\")"); // select "COL" from ((select "COL" from "TABLE1") as "TABLE2")
+		"select \"COL\" from ((select \"COL\" from \"TABLE1\") \"TABLE2\")"); // select "COL" from ((select "COL" from "TABLE1") as "TABLE2")
 	TEST(MSSQL,
 		Select(COL).From(Select(COL).From(TABLE1).AsTable(TABLE2)),
 		"select \"COL\" from (select \"COL\" from \"TABLE1\") as \"TABLE2\""); // select "COL" from (select "COL" from "TABLE1") as "TABLE2"
@@ -1942,7 +1942,7 @@
 		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") as \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join ((select "COL" from "TABLE1") as "TABLE2") on "TABLE1"."COL" = "TABLE1"."COLUMN1"
 	TEST(ORACLE,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
-		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") as \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join ((select "COL" from "TABLE1") as "TABLE2") on "TABLE1"."COL" = "TABLE1"."COLUMN1"
+		"select \"COL\" from \"TABLE1\" left outer join ((select \"COL\" from \"TABLE1\") \"TABLE2\") on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join ((select "COL" from "TABLE1") as "TABLE2") on "TABLE1"."COL" = "TABLE1"."COLUMN1"
 	TEST(MSSQL,
 		Select(COL).From(TABLE1).LeftJoin(Select(COL).From(TABLE1).AsTable(TABLE2)).On(COL.Of(TABLE1) == COLUMN1.Of(TABLE1)),
 		"select \"COL\" from \"TABLE1\" left outer join (select \"COL\" from \"TABLE1\") as \"TABLE2\" on \"TABLE1\".\"COL\" = \"TABLE1\".\"COLUMN1\""); // select "COL" from "TABLE1" left outer join (select "COL" from "TABLE1") as "TABLE2" on "TABLE1"."COL" = "TABLE1"."COLUMN1"
@@ -2118,7 +2118,7 @@
 		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= '2014-01-01 00:00:00' group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= '2014-01-01 00:00:00' group by "ID") as "ID")
 	TEST(ORACLE,
 		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
-		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by \"ID\") as \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by "ID") as "ID")
+		"select * from \"ID\" inner join ((select * from \"ID\" where \"ID\" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by \"ID\") \"ID\")"); // select * from "ID" inner join ((select * from "ID" where "ID" >= to_date('2014/1/1/0', 'SYYYY/MM/DD/SSSSS') group by "ID") as "ID")
 	TEST(MSSQL,
 		SelectAll().From(ID).InnerJoin( SelectAll().From(ID).Where(ID >= Time(2014, 1, 1, 0, 0, 0)).GroupBy(ID).AsTable(ID)),
 		"select * from \"ID\" inner join (select * from \"ID\" where \"ID\" >= convert(datetime, '2014/1/1', 120) group by \"ID\") as \"ID\""); // select * from "ID" inner join (select * from "ID" where "ID" >= convert(datetime, '2014/1/1', 120) group by "ID") as "ID"
