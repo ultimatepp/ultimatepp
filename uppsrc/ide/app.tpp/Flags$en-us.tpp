@@ -87,8 +87,7 @@ SHARED.]
 [s3; Other flags (to be supplied by user)&]
 [s0; &]
 [ {{2426:7574 [s0;%- [* X11]]
-:: [s0; On POSIX systems turns on X11 backend. GTK libraries are used 
-for creating host platform theme.]
+:: [s0; On POSIX systems turns on X11 backend.]
 :: [s0;%- [* NOGTK]]
 :: [s0; On POSIX systems turns on X11 backend and prevents linking against 
 GTK libraries.]
