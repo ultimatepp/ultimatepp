@@ -312,7 +312,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
 			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
 			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :
-			                              uq < kw_sql_base ? hl_style[INK_SQLBASE] : 
+			                              uq < kw_sql_base ? hl_style[INK_SQLBASE] :
 			                              uq < kw_sql_func ? hl_style[INK_SQLFUNC] :
 			                              hl_style[INK_SQLBOOL] :
 			                    IsUpperString(iid) && !macro ? hl_style[INK_UPPER] :

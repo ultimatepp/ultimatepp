@@ -151,7 +151,7 @@ void CSyntax::InitKeywords()
 		"opacity",
 		"background-clip", "background-origin", "background-size", "border-bottom-left-radius", "border-bottom-right-radius",
 		"border-image", "border-image-outset", "border-image-repeat", "border-image-slice", "border-image-source",
-		"border-image-width", "border-radius", "border-top-left-radius", "border-top-right-radius", "box-decoration-break", 
+		"border-image-width", "border-radius", "border-top-left-radius", "border-top-right-radius", "box-decoration-break",
 		"box-shadow",
 		"overflow-x", "overflow-y",
 		"align-content", "align-items", "align-self", "flex", "flex-basis", "flex-direction", "flex-flow", "flex-grow",
@@ -202,7 +202,7 @@ void CSyntax::InitKeywords()
 	};
 	static const char *upp_macros[] = {
 		"CLASSNAME", "THISBACK", "THISBACK1", "THISBACK2", "THISBACK3", "THISBACK4",
-		"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK4", 
+		"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK4",
 		"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT", "ASSERT_",
 		"NAMESPACE_UPP", "END_UPP_NAMESPACE", "NEVER_", "SKYLARK", "RPC_METHOD", "RPC_GMETHOD",
 		NULL
@@ -212,7 +212,7 @@ void CSyntax::InitKeywords()
 		"LLOG", "LLOGF", "LDUMP", "LDUMPC", "LDUMPCC", "LDUMPCCC", "LDUMPM",
 		"DLOG", "DLOGF", "DDUMP", "DDUMPC", "DDUMPCC", "DDUMPCCC", "DDUMPM",
 		"RLOG", "RLOGF", "RDUMP", "RDUMPC", "RDUMPCC", "RDUMPCCC", "RDUMPM",
-		"LOGBEGIN", "LOGEND", "LOGBLOCK", "LOGHEXDUMP", "LOGSRCPOS", 
+		"LOGBEGIN", "LOGEND", "LOGBLOCK", "LOGHEXDUMP", "LOGSRCPOS",
 		"RLOGBEGIN", "RLOGEND", "RLOGBLOCK", "RLOGHEXDUMP", "RLOGSRCPOS", "RQUOTE",
 		"RTIMING", "TIMING", "LTIMING", "DTIMING", "RTIMESTOP", "TIMESTOP", "LTIMESTOP", "DTIMESTOP",
 		"LOGHEX", "DUMPHEX", "DLOGHEX", "DDUMPHEX", "RLOGHEX", "RDUMPHEX", "LLOGHEX", "LDUMPHEX",
@@ -304,6 +304,22 @@ void CSyntax::InitKeywords()
 		"alert", "eval", "toString", "valueOf", "length",
 		NULL
 	};
+	static const char *php[] = {
+		"__halt_compiler", "abstract", "and", "array", "as", "break", "callable", "case",
+		"catch", "class", "clone", "const", "continue", "declare", "default", "die", "do",
+		"echo", "else", "elseif", "empty", "enddeclare", "endfor", "endforeach", "endif",
+		"endswitch", "endwhile", "eval", "exit", "extends", "final", "for", "foreach",
+		"function", "global", "goto", "if", "implements", "include", "include_once",
+		"instanceof", "insteadof", "interface", "isset", "list", "namespace", "new", "or",
+		"print", "private", "protected", "public", "require", "require_once", "return",
+		"static", "switch", "throw", "trait", "try", "unset", "use", "var", "while", "xor",
+		NULL
+	};
+	static const char *php2[] = {
+		"__CLASS__", "__DIR__", "__FILE__", "__FUNCTION__", "__LINE__",
+		"__METHOD__", "__NAMESPACE__", "__TRAIT__",
+		NULL
+	};
 
 	LoadSyntax(cpp, upp); // Order here is important, must be the same as enum
 	LoadSyntax(usc, usclib);
@@ -316,7 +332,8 @@ void CSyntax::InitKeywords()
 	LoadSyntax(cs, empty);
 	LoadSyntax(javascript, javascriptn);
 	LoadSyntax(css, cssn);
-	LoadSyntax(empty, empty);
+	LoadSyntax(empty, empty); // This is JSON - no keywords to highlights
+	LoadSyntax(php, php2);
 
 	kw_macros = InitUpp(upp_macros);
 	kw_logs = InitUpp(upp_logs);
@@ -327,12 +344,12 @@ void CSyntax::InitKeywords()
 
 int CSyntax::LoadSyntax(const char *keywords[], const char *names[])	// Changed
 {
-	Index <String> &key = keyword.Add()	;
+	Index<String>& key = keyword.Add()	;
 	while(*keywords)
 		key.Add(*keywords++);
-	Index <String> &nam = name.Add();
+	Index <String>& nam = name.Add();
 	while(*names)
-		nam.Add(*names++);	
+		nam.Add(*names++);
 	return keyword.GetCount() - 1;
 }
 
