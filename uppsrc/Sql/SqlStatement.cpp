@@ -268,7 +268,7 @@ SqlSet SqlSelect::AsTable(const SqlId& tab) const
 {
 	StringBuffer t;
 	t << SqlCode(MSSQL|PGSQL, "")("(")
-	  << "(" << text << ") " << SqlCode(ORACLE,"")("as") << " \t" << tab.ToString() << '\t'
+	  << "(" << text << ")" << SqlCode(ORACLE,"")(" as") << " \t" << tab.ToString() << '\t'
 	  << SqlCode(MSSQL|PGSQL, "")(")");
 	return SqlSet(String(t), SqlSet::HIGH);
 }
