@@ -73,8 +73,10 @@ struct MouseKeyboard : WithMouseKeyboard<StaticRect> {
 	}
 	void Fill();
 	void OnButLock();
+#ifndef flagNO_XTEST
 	void OnButKey();
 	void OnButMouse();
+#endif
 	void OnTimer();
 	void OnRemoveAccents();
 };

@@ -17,5 +17,6 @@ file
 	Readme;
 
 mainconfig
-	"" = "GUI .NOGTK";
+	"" = "GUI .NOGTK",
+	"" = "GUI .NOGTK NO_XTEST";
 

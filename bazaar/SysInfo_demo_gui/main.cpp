@@ -185,7 +185,7 @@ void SystemInfo::Fill() {
 	Drives.AddColumn("Free User", 6);
 	Drives.AddColumn("Total Free bytes", 10);
 	Drives.AddColumn("Total Free", 6);
-	Array<String> drives;
+	Vector<String> drives;
 	drives = GetDriveList();
 	for (int i = 0; i < drives.GetCount(); ++i) {
 		Vector <Value> row;
@@ -474,13 +474,21 @@ void ScreenGrabTab::ButGrab_Push() {
 #endif
 }
 
-void MouseKeyboard::Fill() {
+void MouseKeyboard::Fill() { 
 	OnTimer();
+#ifndef flagNO_XTEST
 	capsLock.WhenAction = THISBACK(OnButLock);
 	numLock.WhenAction = THISBACK(OnButLock);
 	scrollLock.WhenAction = THISBACK(OnButLock);
 	butKey.WhenAction = THISBACK(OnButKey);
 	butMouse.WhenAction = THISBACK(OnButMouse);
+#else
+	capsLock.Enable(false);
+	numLock.Enable(false);
+	scrollLock.Enable(false);
+	butKey.Enable(false);
+	butMouse.Enable(false);
+#endif
 	editAccents <<= "Århus Ørsted Ñandú\ncrème brûlée";
 	editAccents.SetFont(Courier(12));
 	OnRemoveAccents();
@@ -499,6 +507,8 @@ void MouseKeyboard::OnTimer() {
 void MouseKeyboard::OnRemoveAccents() {
 	labNoAccents = RemoveAccents(~editAccents);
 }
+
+#ifndef flagNO_XTEST
 
 void MouseKeyboard::OnButLock() {
 	SetKeyLockStatus(~capsLock, ~numLock, ~scrollLock);	
@@ -563,6 +573,8 @@ void MouseKeyboard::OnButMouse()
 	Sleep(100);
 	Mouse_LeftUp();
 }
+
+#endif
 
 void ScreenGrabTab::ButSnap_Push()
 {
