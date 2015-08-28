@@ -56,7 +56,7 @@ TreeCtrl::Node::Node(const Image& img, Ctrl& ctrl, int cx, int cy)
 TreeCtrl::TreeCtrl()
 {
 	display = &StdDisplay();
-	levelcx = DPI(16);
+	levelcx = 16;
 	nocursor = false;
 	noroot = false;
 	dirty = true;
@@ -981,7 +981,8 @@ void TreeCtrl::Paint(Draw& w)
 	if(!nobg)
 		w.DrawRect(sz, SColorPaper);
 	int levelcx2 = levelcx >> 1;
-	for(int i = 0; i < line.GetCount(); i++) {
+	int start = multiroot ? 1 : 0;
+	for(int i = start; i < line.GetCount(); i++) {
 		Line& l = line[i];
 		if(l.ll >= 0) {
 			int yl = line[i].y + item[l.itemi].GetSize(display).cy - org.y;
@@ -1012,11 +1013,26 @@ void TreeCtrl::Paint(Draw& w)
 				dri.top++;
 		}
 		if(w.IsPainting(0, y, sz.cx, msz.cy) && msz.cy > 0) {
-			w.DrawRect(op.x, op.y, levelcx2, 1, SColorShadow);
-			if(m.canopen || m.child.GetCount()) {
-				Image im = m.isopen ? CtrlImg::treeminus() : CtrlImg::treeplus();
-				op -= im.GetSize() / 2;
-				w.DrawImage(op.x, op.y, im);
+			if (multiroot) {
+				if(m.canopen || m.child.GetCount()) {
+					Image im = m.isopen ? CtrlImg::treeminus() : CtrlImg::treeplus();
+					op -= im.GetSize() / 2;
+					w.DrawImage(op.x, op.y, im);
+				}
+				else if (l.level > 0)
+					w.DrawRect(op.x, op.y, levelcx2, 1, SColorShadow);
+				else {
+					op -= CtrlImg::cross().GetSize() / 2;
+					w.DrawImage(op.x, op.y, imgEmpty);
+				}
+			}
+			else {
+				w.DrawRect(op.x, op.y, levelcx2, 1, SColorShadow);
+				if(m.canopen || m.child.GetCount()) {
+					Image im = m.isopen ? CtrlImg::treeminus() : CtrlImg::treeplus();
+					op -= im.GetSize() / 2;
+					w.DrawImage(op.x, op.y, im);
+				}
 			}
 			w.DrawImage(x, y + (msz.cy - isz.cy) / 2, m.image);
 			x += isz.cx;

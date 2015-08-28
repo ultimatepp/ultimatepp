@@ -17,39 +17,7 @@ trl]&]
 [s2;%% &]
 [s2;%% 
 @@image:1212&1156
-ŠƒÂ€¹€€€‚Çÿ€€€€ø·œíÉÒÜ´²”€ó¥ÎÁ¨¸€‹¶Ü€ÆÇ€â€¬Òì€Ø°„Ö”‹Èƒ€¬ Å˜ªƒö™þÌ¤”ø±ô°Šôôô
-õ¬ç·äçûê¢ÕÊ­ëø–¾¯»»í¿ºÃ€ßàåäú÷ï¼‘ýÁÔÇäÑÊë—á«à‘ø­Á¢ðƒÅàÇŸ·è”ÄÑóüŠ¡ŸÙåðœ”‹æ­ÙÔèß
-ÃÖ¥ê¢ÒÃÖ¯¶¨¸¸Ø´ƒ…°ˆü”­Ê¿–”Íµ¨ê§¬Ü”ëæÀ¢î©µ»–þÿÃ¿„…â‡ðâÆÒäæ¬õ‰ÃÍÚ”¿£•ËÄÃò¹–©½—‡
-ü¶¶‡õèÇ¢’è—òÙ³¤€‹Ç¤ø×ÑÜå«½Ú°ß¢‹ªêØÔ­–û×–øÏ¦¹‹ÒæÊì»šŸ®·Šñ€‰È§ëäü¿å…£Ãó´ðƒºÅà‡‹ÀÏÊ
-¢–…·¤á÷àö‘øÁ¢ð³¬þÅéÓ´æßÁÅ›§°¶½œàÝ‚–Í½™ãÑñÌ¹ÅËÍð¬®Ã‹î¸ÚŽÑÙ¬ãÿàØÜ¤”Ö–åžŸ¹óÞ°¦ä¯£¬½
-¼ø¸–ÉÑŸ¢öá‘§ð”–“ª£Û´·‡¬¤šæþéÐ®°¡ìäøñ‚£…Õ²üôÒ®¡áÿ¢ˆýë­Äþž­Ç›Ž®äë¸äÿ–‰åéßÍµÒ›Âº·
-‡éú¦«Õíï­îœ×»ÒÖ½Ö·®îÌñÜ°½ÐÖ¤Å¿£•ŠË”ÖŠÅÑå½ã©¬ç“³Èïï§¸­Ü¯ìòþÎâÏ×¢¡¥©Åé‚•óÙ±öÚäÉÀ’Ï
-´…»³è¨ºÊ«ìãÚ¤œŽå˜ô½ýÙ´©¨Ÿ²£êáéÊ«¶Õ¦º½ñžó™ˆƒê‹êêé•ë¢ÜÓÄ‘£®žÅ‘ÝÚ¼´œ÷¸ô±¬ãë¾éú¸¢
-”¾Ç³Üˆò¤×Êéåæ£–ðÁ×à‘øéÄ†¢¬Û´Ø„þµ°ˆüàÑî¹¯Â×Ò†–‰·³åŠÍòÌêûåÁó‡ùÈ©š®Øá®ŸÃùÒ«‹ò¾Ìê•
-û»§íÍ²Šºçþ›¤êœ¢®ˆÎøÒôàÑîøÛìÒ¬¼ÈÒš”ÓØ¤Ã£¼½õØÏ¢°¼·÷‹Ò—Ñ¹Å¢…©æØ¤ªŒ«›§…é‡Ñ…¤½×Ï”Ãª©º
-©¯¡é¶éÚÊ¯«°ÿ¶–úÉ‘ðïúÛí¹ûíœƒÊº‡‹Å•ë•›×ßÇ—´çõÒÍÍÅßä¤˜¡ØùäÆÕ®«ôû«×’¢¥þÔ¨¬ÍøÔÙ¯É•Ó
-» ¸üË¦ªä˜¸·ÿå¤ÐÚ×…Û½Ù”»×ôìÈõèÜšÝâšÕÙ¸ÆªéöºÅõ–íÉñÚ´•¨Š‰Â¥º†Ë­Í±§•Å¢µÒÕÝŸÍÕÙÓµè°
-ÜÜÞÂš¹’±™¹¸¹¹…Ðú¾‡°ô£×ÙÄ¤Õ‹Ââµñë‹ýê“ÕÉç½ëæ˜—¥‡žîçö©œ ËÑñ²Ûä¼’ö§À‚©â‘ô‰‚–Ÿ¬‚¿Ø
-ô„þ°ˆüìþó·Ôà¥Â•í·ç÷‹–÷Í³²Äõ½–½æú½ç×ÚíªçïñÔ¹–ÙÚÚ—Õ¦è‘±ÙÍ±Åìß’‹¢»™ð½Ø”³åÛÔ–ùÆ²¶ÚÛ
-§¢ô¢Ýá‘òØñŽ‹‹­òýËˆï©â¨âÃá¨‡åˆñŠÄ•©»’¨šªÅéÖŸ¨åå“Ú›þ ­þË ­¼üñæÒêÔúÉšÉ®ÕÎÉ¨‡ˆÜýñ
-ÄÁ­Ýª¹”âú–Åú§Ê´¹‹Ó¡öÜê×Ñ°æÙ¤Ö‘—¬¸÷°ÑÀÅéüÉ×ß¸‘óÇ¶Ò¸’ÅÊ¹°Þ·ÕÜÞ¶–éì›é¡²ÆÊœ”Ç¥–ÉóÛÔ
-ÎÌ²Øù¢–å™ò±žï¿á§ÃúÍÿËÍèüÑñ»Î¢¹“¾ì´¨î¬·Ûž´ü·¸Ê¨Æ¾•õùÏ±¶ÅÄéú–´†éŠƒŠçËÔ§ºåé”³Èìÿ°­
-ß¾ñ²æ–¥€ä‘Ò¼Æý¶³”ƒÕò›¥Ð¸Úí‡¿¥Ö¿Šõ³±÷´¼²äá‚ü¯ûÝ’ÝóÄ¼Š¶…‹™À–ŸÎ¬Áâ¯É¶–€Ÿ¬‚¿í­º
-Ä¥ñü´ÖÅùõªõäÌÖ£¡æÅ³¦÷½Ó”¥ûõ‹ôÞ½÷¬ÃìÈ¢£ŒµÍÝ´öŒå™×±²÷ÃàÑâãçÙ»Â¢¿éÓº¢åÒ ¿ÍÍ™ÛÑùúä¨ú
-×ÛÒÇÊßÀõ—Æ´û·Äöó‹Äòñ¯ÚÑÄµ•·Òº–¹šÊâº³Î³‡âØÛ¤ù÷µ´â‰Ò¾¶ÅýâµÍ’­±Âè¾”š°¨ß­úøÑË›ˆÊå
-‹¬³œÔ–éþé×ÑÙ Üµ´ÐîÑ þ¹ÍŽØ¹¨¢Å•¬äºš–Ï‘ú™‰®üÄ‰ÆÉ‡³Ò»Í÷å„ÔúŽ­îï†èÁÝ¢áéùìêí’æ½Çï”Î¬
-¸Ú–åáö´ö»ý°Ë‹àÈà¶‘øÁ¢ðƒÅÍà‡‹À–€Ÿ¬‚¿Ø„þå°ˆüà‘øÁÖ¢ðƒÅà‡‹‰À–Ÿ¬‚Ð¿Ø„þ°ˆüìà‘øÁ¢ðƒ
-šÅà‡‹À–Ÿ¬‚¿Ø„Êþ°ˆüà‘ø­Á¢ðƒÅà‡“‹À–Ÿ¬ ‚¿Ø„þ°ˆÙüà‘øÁ¢ðµƒÅà‡‹À‚–Ÿ¬‚¿Ø”„þ°ˆüà‘
-ÛøÁ¢ðƒÅà¦‡‹À–ŸÀ¬‚¿Ø„þ°²ˆüà‘øÁ¢ëðƒÅà‡‹À„–Ÿ¬‚¿¨Ø„þ°ˆüà¶‘øÁ¢ðƒÅÍà‡‹À–€Ÿ¬‚¿Ø„þ
-å°ˆüà‘øÁÖ¢ðƒÅà‡‹‰À–Ÿ¬‚Ð¿Ø„þ°ˆüìà‘øÁ¢ðƒšÅà‡‹À–¡Ÿ¬‚¿‘Å¹ã†ÁÌŠœÅ»ï¾óÖ»ŸµŽ¥¹˜÷Žõ
-Ý¦þŠõ‰â„œÓúëÆ…ÖÑÚ¡€èÑ¸÷Œ’‹¿Ü½¹óß½¼üåãÞÃÀµËý¨’Íé›í›¿¶ŠŠö†É¢Ñ³±ÎîçßžèñîüÏÙ±¦½¾áŸ
-…Ò»·þî••ª‚ˆ–›£ìöç¾¹‘Å«¯í½™¾¼øñüì¿µóõûˆñ›ˆÄÿûŒéÊ¯ïÞþµÕˆ‹èš­ý”íÎ¢¶ñãÓó×Ã˜Õû¹ÄÔòü¸
-âÌýÎâÌì•ë×¿Èÿíž˜Þ˜Ó”Þ»ó¹ÊÕ¤‹š®ý”­­êÑµ©‚þ±þ¯Ì¬ºÖáÉä­êŸÛšÓ•”¾¸÷µÕÔúˆ ØôÉÙß”Ž±õ°•œ¢
-­²¨ÚÛÉä¬öêž˜˜Ó”þšþÿÚ«È­èÿªÅ¢¿¾ÞºÆÔöð²ŒçÈ¢´Â‘³Á¨ùââÌÓú—ðÁÍÖ¡¬è®¤ƒÍ¢«‡ˆ±ÚÞ‰£±èÊ
-‡‘·¨ýîé¼ÌÓúèá­Ö¥‘ÛÐÔƒ‹ÅðŸýõùŠ©‡µ°°²¨ÜÕÏÙä¬êž˜˜Óï”þñèî«¨ŒÀµèÒ˜ÁÒ¿ÏË’‹®õ²™ÿº£üÛá
-üÌÓúøÏû­´¢ÝÐôé£ì»•ûÅŸŸû©ÏŠ±Ÿðåô¿š¨­ÏÌéÊ©Ÿ¼þØªÄ…«–¾ÊÖ¹÷Óýå÷¿è‘ÝÕ»®Ö§ìÓú£×“¿ÚÅ…€
-Í¢Å‡ç£ã”Ñ¶ñ™îØ¾ïîž£©õ‰øâÄÓúôé“¨ÖÑ¡€èÑ‰ÓÏôÛ¿Óÿöìé«¨ çê‘Ñ¶Ä§éÇ­¡®ÛÈ¢€ŠÊÂ‹ˆ¢ºÚ‹
-äŒ»áïÈ¨à€Ò
+(A8IAuQAAAEf/AAAAAHic7Z1J0tw0FIBzJc7BHTgAC7ZcgA1HgOIALFLsWDAEVhQLSICsIEUYKgMZ/swkkJCUMXQwivT09Kxnt2Tn++pVyi1reJY+u7vtvzrDAODl5Pr3b7z9AUFUx2RRa5dhq2AR+MEi8INF4Ee36JTE0XN8IZ9Z5XAcFItmLVlUaF/WpWoiUkPWtqi4uFi0A7AI/BQtSj8UzbUo6icsFGvmwKJuqbsWnX7/nUOEheKH8OJGZOYsdY0Jw9oUv6MVS8TyuRYpPReHNjaH9ejHomiXclmzJADHpHjXUVxlvdow3yKLKljULZZ715ZPJjmL0ubKOxqfrjeK8QlIJ2tkfD+FI8NzNPCDReAHi8DPShaFNyRh92AR+MEi8LOsRenTtObfwZsnsDY9HOCCFs29mWPRzDlFS83wrEOL7rhajlGsY3/g2FykVhblHp85czCm5K+jLL14OJbJ0Z8iYZGncI2UlqqjWzS3BywaZv5pUK4w7GR4cQKjBbJ89FKuIeGiiP3rrcT+Lcebjq5ka2R/Fonl6V+1DdKbQjq36fqmK1Vtb+4c17tS1j03ru5M8Vyw0Fakxb+jFUuUVopFUWXjKaznk7NI76e4rVyv7H7OYk/XoqGpRekCFfNZ9lpkScCSTwU7s2ioukrs41qkHI5ldD0Bnf1ZNKgfMqNq4WkrtlWmOj3xc5mIg+oLammVa6Jc08SjLh5FkV1aNBz3uPSxLOu+aXo4oo0+R7NciHINV0rpZWajFkFXYBH46cQirNs0WAR+sAj8YNHuOcLX0oYWiTflik1yncxq5cFzh/nIqS7YYa6fQ3kri3I+zGqVu6dtzbKKuv6bpGocoq5OeFL0YFFuW2xSrLzI0hTTWKTDIzz1WM+isLw3i9KXUbnFoqlm2CQqDCunhWmH0QUk10+Uw6qpOq8habZp2kqrsP+2Fp16kXBv+lttue2cA8q6h4uVa5UbV1/HtOf1Us1NReSkmKHYeeRVrqt0eyvXIqV+VKgsTVRZL8mNldOguHzLpqpkODd/5aRQWoXbvVmUO5D07Mh16Fya4hrV2bhGqul2OkV1Fm3xWjSVKAqJJboGSy1NsZXFojVS1V3N1dnTtWgwXF7CmrkSsbk4ObmFUHoQh7D0o9dZJFWLQmI18ZCLfeoT1cm96+YYF6WHbuf2qZwgS/EyW2S8EvbAgqliEfQJFoEfLAI/WAR+sAj87P631GAlwpXt5/eLFvfNM0T1PRa95nrnV9rtqudv1DkWWdral6ZokTGBWc3FbF8Si6I78D1YlLNlWxZ5xjK2Wtui9KJdYZFycQ4Li61y/YjvKeIoYsOoB2UIcYrEqRC7Eo8oGkXpVp8o5WXam34grX5LLTx8cWbSanpJmkmuVc7JqIeIXH1xQS3dKjkUj3qWRXonyrSLUyH23OpXsGZZJNYRlzh3sNFAxWlJV9+4kfPHUriSRcq5MDfV3N62FukbaaGyRsqcRyWWSfNbVEyy2PkiFuXyMR7vkD9hw/rNf0vNaFFxu86iuZNstKjurLdbNPy3uMooRhX1+c+xtkVpepY0BmmKiudLVCc6ZZQzSOx/sK2+8bKQ5halZBFSPEZ9NpSDVXKbpVBabQe/pdY/dbMx9zQ8MmEC/C973ZLzRLyKtgWLwA8WgZ9OLOIvSTYNFoEfLAI/bS06JXH8NFZF+ap15EzWo6FFs6Z3PdOU+3WLdF69d0NsyKIjjDXdNPaMZRnXsndDYNHiY9m7wiI/6dMi5VKgv81N21F5+uQoetvSx0rfQPWXxrSNezdEc4vEcvGv2sQ1FTfSOpaaSmK6gbNOh+JYW6T5d7RiiVK+tkXiNc2SrbHCPhQasCjfrXjRS5uIyuWssxzUFml+11FZoFy1tNBu0aD+OU1YuaiiRRUsOhqWTxH6ma58RIlGSQfSu0135YRUDq1u74bowaJh6fnsau1mvUdvlE4sWhZl4fa0dv2wS4vgyGAR+MEi8INF4AeLwA8WgR8sAj9YBH6wCPxgEfjBIvCDReAHi8APFoEfLAI/WAR+sAj8YBH4wSLwg0XgB4vADxaBHywCP1gEfrAI/GAR+MEi8INF4AeLwA8WgR8sAj9YBH6wCPxgEfjBIvCDReAHi8APFoEfLAI/WAR+sAj8YBH4wSLwg0XgB4vADxaBHywCP1gEfrAI/GAR+MEi8INF4AeLwA8WgR8sAj9YBH6wCPxgEfjBIvCDReAHi8APFoEfLAI/WAR+sAj8YBH4wSLwg0XgB4vADxaBHywCP1gEfrAI/GAR+MEi8INF4AeLwA8WgR8sAj+RReMGQcyKnEXvnT7z1rsfjiW5GPeOdaZ+ivWJYoRTeuvGhVZRIYBo0bh3jAu/XD25c1+8fI3l495DNUt9KBJN6e2bP7aKCgEGyaJRs7HOZ9+e6HHu/Nmxpr0+YZ/SO7d+bhUVAogWjRujbGe+uRHFq6+9Gb68ePH8PzXz9XuI8YjEf/uMaUrv3v61VYgLGi19lG3OonHj03PXwxj7OcRU8ny4TP1OYkzslde/SP9tnpgY05Teu3O5VaQLmi59lK1q0bUpgn7+L0wsutZh5C1qn1sa05Q+uHe1VVQIoFj0ydnfDjH1MJUcIrIo2ttJ5CxqnpgY05T+fv9aq8gtaKqBxaKPv746xtT28DKMyKK0Qg+Rs6h5YmJMU/rwwc1WoSxoJIPNoiuHCNpeCSOx6EqHkbeofW5pTFP66OGtVpFb0FQDi0UffXV5iqmHsDCyKNzVT+Qsap6YGNOU/vHobquoEEC16FIYQT/PSxKLLvUZ/zoj/NthTFP6+M/7rSJd0HTpo2yV+0Wfn/spirGf8GV0vyitT8yNaUqfPH7YKsQFjZY+yla5d/3ldz/oEd27LtYn7FP615M/WkWFAKJFh+cjY51RNvEZ7lg+7o2eoyn1iWJEU/r06ZNWUSGAaNEJz/RbP9N/9uxpq6gQIGcR0TbEJ+nHoS7byCKACkKLCKI6WosMO+FvSKjgUg==)
 &]
 [s0;%% &]
 [s9;%% TreeCtrl hierarchy management is based on integer id numbers. 
@@ -603,6 +571,20 @@ trl]([@(0.0.255) bool]_[*@3 a]_`=_[@(0.0.255) true])&]
 [s2;%% Paints the background area of embedded widgets with the same 
 color as that used to paint regular values `- respects selection, 
 cursor position etc.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:RenderMultiRoot`(bool`): [_^Upp`:`:TreeCtrl^ TreeCtrl][@(0.0.255) `&
+]_[* RenderMultiRoot]([@(0.0.255) bool]_[*@3 a]_`=_[@(0.0.255) true])&]
+[s2;%% When active, no lines are drawn connecting zero level nodes 
+(so it looks like there are multiple roots).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:EmptyNodeIcon`(const Upp`:`:Image`&`): [_^Upp`:`:TreeCtrl^ Tree
+Ctrl][@(0.0.255) `&]_[* EmptyNodeIcon]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&
+]_[*@3 a])&]
+[s2;%% When RenderMultiRoot is active and there the node is zero 
+level and has not elements, [%-*@3 a] is drawn on the left side 
+to indicate it is empty.&]
 [s3;%% &]
 [s4; &]
 [s5;:TreeCtrl`:`:SetScrollBarStyle`(const ScrollBar`:`:Style`&`): [_^TreeCtrl^ TreeCtrl
