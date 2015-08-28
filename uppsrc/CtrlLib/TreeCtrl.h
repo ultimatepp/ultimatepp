@@ -101,6 +101,8 @@ private:
 	bool         mousemove;
 	bool         accel;
 	bool         highlight_ctrl;
+	bool         multiroot;
+	Image        imgEmpty;
 
 	bool         selclick;
 	int          dropitem, dropinsert;
@@ -315,7 +317,9 @@ public:
 	TreeCtrl& Accel(bool a = true)           { accel = a; return *this; }
 	TreeCtrl& SetDisplay(const Display& d);
 	TreeCtrl& HighlightCtrl(bool a = true)   { highlight_ctrl = a; Refresh(); return *this; }
-
+	TreeCtrl& RenderMultiRoot(bool a = true) { multiroot = a; Refresh(); return *this; }
+	TreeCtrl& EmptyNodeIcon(const Image& a)  { imgEmpty = a; Refresh(); return *this; }
+	
 	TreeCtrl& SetScrollBarStyle(const ScrollBar::Style& s) { sb.SetStyle(s); return *this; }
 
 	typedef TreeCtrl CLASSNAME;
