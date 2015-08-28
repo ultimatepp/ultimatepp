@@ -542,18 +542,18 @@ void Navigator::Search()
 			for(int i = 0; i < b.GetCount(); i++) {
 				String nest = b.GetKey(i);
 				bool foundnest = (wholeclass ? pass < 0 ? false :
-				                               pass ? ToUpper(nest) == usearch_nest 
+				                               pass ? ToUpper(nest) == usearch_nest
 				                                    : nest == search_nest
 				                             : pass < 0 ? nest == search_nest :
 				                               (pass ? ToUpper(nest).Find(usearch_nest) >= 0
 				                                     : nest.StartsWith(search_nest)))
-				                 && *nest != '@';
+				                 && nest.Find('@') < 0;
 				if(local || foundnest || both) {
 					const Array<CppItem>& ci = b[i];
 					for(int j = 0; j < ci.GetCount(); j++) {
 						const CppItem& m = ci[j];
 						if(local ? m.file == fileii
-						         : *m.uname != '@' && (pass < 0 ? m.name == search_name :
+						         : m.uname.Find('@') < 0 && (pass < 0 ? m.name == search_name :
 						                               pass ? m.uname.Find(usearch_name) >= 0
 						                                    : m.name.StartsWith(search_name))
 						           || both && foundnest) {
