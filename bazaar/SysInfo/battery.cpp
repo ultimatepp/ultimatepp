@@ -27,7 +27,7 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 		remainingMin = Null;
 */
 	percentage = 100;
-	Array<String> files = SearchFile("/proc/acpi/battery", "state");
+	Vector<String> files = SearchFile("/proc/acpi/battery", "state");
 	if (files.GetCount() == 0)
 		return false;
 	StringParse state = LoadFile_Safe(files[0]);
@@ -58,7 +58,7 @@ bool GetBatteryStatus(bool &discharging, int &percentage, int &remainingMin)
 
 bool GetBatteryInfo(bool &present/*, int &designCapacity, int &lastFullCapacity, String &vendor, String &type, String &model, String &serial*/)
 {
-	Array<String> files = SearchFile("/proc/acpi/battery", "info");
+	Vector<String> files = SearchFile("/proc/acpi/battery", "info");
 	if (files.GetCount() == 0)
 		return false;
 	StringParse info = LoadFile_Safe(files[0]);
