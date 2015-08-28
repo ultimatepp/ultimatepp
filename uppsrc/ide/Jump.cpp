@@ -8,6 +8,8 @@ struct NavDlg : WithJumpLayout<TopWindow>, Navigator {
 	virtual int GetCurrentLine();
 	
 	void GoTo();
+	void Ok()               { if(navlines.IsCursor()) Break(IDOK); }
+	void ListSel()          { navlines.GoBegin(); }
 	
 	void Serialize(Stream& s);
 
@@ -31,6 +33,9 @@ NavDlg::NavDlg()
 	search.WhenEnter.Clear();
 	Sizeable().Zoomable();
 	Icon(IdeImg::Navigator());
+	list.WhenSel << THISBACK(ListSel);
+	list.WhenLeftDouble = THISBACK(Ok);
+	navlines.WhenLeftDouble = THISBACK(Ok);
 }
 
 bool NavDlg::Key(dword key, int count)
