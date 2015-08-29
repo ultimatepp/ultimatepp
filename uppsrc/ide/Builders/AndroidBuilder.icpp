@@ -382,6 +382,7 @@ bool AndroidBuilder::Preprocess(const String& package, const String& file, const
 
 void AndroidBuilder::CleanPackage(const String& package)
 {
+	// TODO: Sandbox dir should be only deleted in main package!
 	String sandboxDir = GetSandboxDir();
 	if(DirectoryExists(sandboxDir))
 		DeleteFolderDeep(sandboxDir);
