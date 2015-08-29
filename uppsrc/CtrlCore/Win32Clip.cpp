@@ -364,7 +364,7 @@ Image GetImage(PasteClip& clip)
 	if(clip.Accept("dib")) {
 		String data = ~clip;
 		if((unsigned)data.GetCount() < sizeof(BITMAPINFO)) return Null;
-		BITMAPINFO *lpBI = 	(BITMAPINFO *)~data;
+		BITMAPINFO *lpBI = (BITMAPINFO *)~data;
 		BITMAPINFOHEADER& hdr = lpBI->bmiHeader;
 		byte *bits = (byte *)lpBI + hdr.biSize;
 		if(hdr.biBitCount <= 8)

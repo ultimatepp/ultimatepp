@@ -17,7 +17,7 @@ file
 	lib\crc32.h,
 	lib\deflate.c,
 	lib\deflate.h,
-	lib\gzio.c,
+	lib\gzguts.h,
 	lib\infback.c,
 	lib\inffast.c,
 	lib\inffast.h,
@@ -32,5 +32,7 @@ file
 	lib\zconf.h,
 	lib\zlib.h,
 	lib\zutil.c,
-	lib\zutil.h;
+	lib\zutil.h,
+	lib\ChangeLog,
+	lib\README;
 
