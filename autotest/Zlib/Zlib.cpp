@@ -39,7 +39,7 @@ CONSOLE_APP_MAIN
 	String data = "Hello!";
 	StringStream in(data);
 	StringStream out;
-	ASSERT(ZCompress(out, in) == out.GetResult().GetCount());	
+	ASSERT(ZCompress(out, in) == out.GetResult().GetCount());
 
 	LOG("============= OK");
 }
