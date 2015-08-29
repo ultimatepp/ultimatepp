@@ -217,7 +217,7 @@ public:
 	void SyncPrinterOptions();
 
 	PrinterDlg();
-	bool IsCanceled();	
+	bool IsCanceled();
 
 private:
 	void StandardizePrinterName(String& printerName);
@@ -263,7 +263,7 @@ void PrinterDlg::SyncPrinterOptions()
 }
 
 PrinterDlg::PrinterDlg() : canceled(true)
-{	
+{
 	CtrlLayoutOKCancel(*this, "Print");
 	printer <<= THISBACK(SyncPrinterOptions);
 	ok <<= THISBACK(OnOK);
