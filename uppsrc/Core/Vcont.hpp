@@ -530,6 +530,16 @@ void Array<T>::Insert(int i, const Array& x, int offset, int count) {
 		vector[q + i] = DeepCopyNew(x[q + offset]);
 }
 
+#ifdef CPP_11
+template <class T>
+void Array<T>::Insert(int i, std::initializer_list<T> init)
+{
+	vector.InsertN(i, init.size());
+	for(auto q : init)
+		vector[i++] = DeepCopyNew(q);
+}
+#endif
+
 #ifdef UPP
 template <class T>
 void Array<T>::Xmlize(XmlIO& xio, const char *itemtag)
