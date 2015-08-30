@@ -3,11 +3,17 @@
 int64 NewInVectorSerial();
 
 template <class T>
-InVector<T>::InVector()
+void InVector<T>::Init()
 {
 	serial = NewInVectorSerial();
 	slave = 0;
 	Reset();
+}
+
+template <class T>
+InVector<T>::InVector()
+{
+	Init();
 }
 
 template <class T>

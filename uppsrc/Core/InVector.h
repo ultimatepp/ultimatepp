@@ -71,6 +71,8 @@ private:
 	void SetEnd(ConstIterator& it) const;
 
 	void     Chk() const                            { ASSERT_(!IsPicked(), "Broken rval_ semantics"); }
+	
+	void     Init();
 
 #ifdef flagIVTEST
 	void Check(int blki, int offset) const;
@@ -140,6 +142,10 @@ public:
 	bool IsPicked() const                           { return data.IsPicked(); }
 
 	InVector(const InVector& v, int);
+
+#ifdef CPP_11
+	InVector(std::initializer_list<T> init)         { Init(); for(auto i : init) Add(i); }
+#endif
 
 	void Swap(InVector& b);
 
@@ -359,7 +365,11 @@ public:
 	InArray(const InArray& v, int);
 
 	~InArray()                                      { Free(); }
-	
+
+#ifdef CPP_11
+	InArray(std::initializer_list<T> init)          { for(auto i : init) Add(i); }
+#endif
+
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
 #ifdef UPP
