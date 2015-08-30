@@ -1,0 +1,11 @@
+description "C++ 11 std::initializer_list tests\377";
+
+uses
+	Core;
+
+file
+	initializer_list.cpp;
+
+mainconfig
+	"" = "";
+
