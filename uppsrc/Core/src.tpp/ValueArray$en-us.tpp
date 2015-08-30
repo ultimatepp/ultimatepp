@@ -55,6 +55,12 @@ version).&]
 [s2;%% Destructor.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:ValueArray`:`:ValueArray`(std`:`:initializer`_list`<Upp`:`:Value`>`): [* Va
+lueArray]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^Upp`:`:Value^ Value
+]>_[*@3 init])&]
+[s2;%% C`+`+11 initialization.&]
+[s3;%% &]
+[s4; &]
 [s5;:ValueArray`:`:operator`=`(const ValueArray`&`): [_^ValueArray^ ValueArray][@(0.0.255) `&
 ]_[* operator`=]([@(0.0.255) const]_[_^ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Assignment operator.&]

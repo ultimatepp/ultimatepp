@@ -273,6 +273,7 @@ public:
 
 #ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
+	void     Append(std::initializer_list<T> init) { Insert(GetCount(), init); }
 	Array(std::initializer_list<T> init) { Insert(0, init); }
 #endif
 

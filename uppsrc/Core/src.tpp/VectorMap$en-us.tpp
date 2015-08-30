@@ -55,6 +55,12 @@ operator is implicitly defined by composition.&]
 [s2; Default constructor. Constructs empty [* VectorMap].&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:VectorMap`:`:VectorMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* V
+ectorMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ std`::p
+air]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+[s2; C`+`+ 11 initialization.&]
+[s3; &]
+[s4;%- &]
 [s5;:VectorMap`:`:VectorMap`(const VectorMap`&`,int`):%- [* VectorMap]([@(0.0.255) const]_
 [* VectorMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
@@ -90,4 +96,4 @@ of elements.&]
 [s2; Drops last element of VectorMap and returns its value.&]
 [s7; [*/ Return value]-|Value of dropped element.&]
 [s3; &]
-[s0; ]
+[s0; ]]

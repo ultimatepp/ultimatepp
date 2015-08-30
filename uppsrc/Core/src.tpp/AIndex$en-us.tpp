@@ -71,6 +71,11 @@ are more important in derived concrete index flavors.&]
 [s6; -|Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AIndex`:`:AIndex`(std`:`:initializer`_list`<T`>`):%- [* AIndex]([_^std`:`:initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s2; C`+`+ 11 initialization.&]
+[s3; &]
 [s4; &]
 [s5;:AIndex`:`:AIndex`(pick`_ V`&`):%- [* AIndex]([@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&
 ]_[*@3 s])&]

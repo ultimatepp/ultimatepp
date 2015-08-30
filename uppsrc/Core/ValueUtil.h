@@ -230,6 +230,10 @@ public:
 	explicit ValueArray(const Vector<Value>& values, int deep);
 	~ValueArray();
 
+#ifdef CPP_11
+	ValueArray(std::initializer_list<Value> init)    { Init0(); for(auto i : init) { DDUMP(i); Add(i); }}
+#endif
+
 	ValueArray& operator=(const ValueArray& v);
 	ValueArray& operator=(Vector<Value> rval_ values) { *this = ValueArray(pick(values)); return *this; }
 
@@ -320,6 +324,10 @@ public:
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
 	ValueMap(const VectorMap<Value, Value>& m, int deep);
 	~ValueMap();
+
+#ifdef CPP_11
+	ValueMap(std::initializer_list<std::pair<Value, Value>> init) { Init0(); for(auto i : init) { Add(i.first, i.second); }}
+#endif
 
 	ValueMap& operator=(const ValueMap& v);
 	ValueMap& operator=(VectorMap<Value, Value> rval_ m) { *this = ValueMap(pick(m)); return *this; }

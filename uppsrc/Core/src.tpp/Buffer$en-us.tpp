@@ -60,6 +60,14 @@ the specified value [%-@3 init].&]
 [s5;:Buffer`:`:`~Buffer`(`):%- [@(0.0.255) `~][* Buffer]()&]
 [s2; Default destructor.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Buffer`:`:Buffer`(size`_t`,std`:`:initializer`_list`<T`>`):%- [* Buffer]([_^size`_t^ s
+ize`_t]_[*@3 size], [_^std`:`:initializer`_list^ std`::initializer`_list]<[*@4 T]>_[*@3 in
+it])&]
+[s5;:Upp`:`:Buffer`:`:Buffer`(std`:`:initializer`_list`<T`>`):%- [* Buffer]([_^std`:`:initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s2; C`+`+ 11 initialization.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
