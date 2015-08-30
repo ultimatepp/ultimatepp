@@ -44,13 +44,6 @@ dsc]]
 [s0; &]
 [s1;#b0; Quellcode&]
 [s0;2 &]
-[s0; [2 Der öffentliche SVN Mirror wird durch Google Code unter ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 h
-ttp://code.google.com/p/upp`-mirror/source/checkout][2  gehostet. 
-Der Mirror wird meist eine Stunde nach dem Entwickler`-SVN`-Repo 
-geupdated. Wenn du die Entwicklung von U`+`+ beschleunigen möchtest 
-benutze diesen und melde Fehler in unserem ][^http`:`/`/www`.ultimatepp`.org`/forum^2 F
-orum][2 !]&]
-[s0;2 &]
 [s0; [2 Für die Gentoo Benutzer, ein E`-Build, welcher den Subversion 
 Checkout nutzt, ist in Arbeit. Schau in den betreffenden ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 F
 orums Thread][2  wenn du dich dafür interessierst.]&]
