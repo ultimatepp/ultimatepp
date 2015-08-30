@@ -121,6 +121,10 @@ public:
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
 	AMap(Index<K, HashFn> rval_ ndx, V rval_ val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(Vector<K> rval_ ndx, V rval_ val) : key(pick(ndx)), value(pick(val)) {}
+	
+#ifdef CPP_11
+	AMap(std::initializer_list<std::pair<K, T>> init) { for(auto i : init) Add(i.first, i.second); }
+#endif
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
@@ -157,6 +161,10 @@ public:
 	VectorMap(Vector<K> rval_ ndx, Vector<T> rval_ val) : AMap<K, T, Vector<T>, HashFn>(pick(ndx), pick(val)) {}
 	VectorMap()                                                       {}
 
+#ifdef CPP_11
+	VectorMap(std::initializer_list<std::pair<K, T>> init) : AMap(init) {}
+#endif
+
 	friend void    Swap(VectorMap& a, VectorMap& b)      { a.B::Swap(b); }
 
 	typedef typename AMap< K, T, Vector<T>, HashFn >::ConstIterator ConstIterator; // GCC bug (?)
@@ -185,6 +193,10 @@ public:
 	ArrayMap(Index<K, HashFn> rval_ ndx, Array<T> rval_ val) : AMap<K, T, Array<T>, HashFn>(pick(ndx), pick(val)) {}
 	ArrayMap(Vector<K> rval_ ndx, Array<T> rval_  val) : AMap<K, T, Array<T>, HashFn>(pick(ndx), pick(val)) {}
 	ArrayMap() {}
+
+#ifdef CPP_11
+	ArrayMap(std::initializer_list<std::pair<K, T>> init) : AMap(init) {}
+#endif
 
 	friend void    Swap(ArrayMap& a, ArrayMap& b)        { a.B::Swap(b); }
 

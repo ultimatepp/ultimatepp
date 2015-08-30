@@ -53,6 +53,12 @@ T, Array<T>, HashFn >]&]
 [s2; Default constructor. Creates empty ArrayMap.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:ArrayMap`:`:ArrayMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* A
+rrayMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ std`::pa
+ir]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+[s2; C`+`+ 11 initialization.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayMap`:`:ArrayMap`(const ArrayMap`&`,int`):%- [* ArrayMap]([@(0.0.255) const]_[* Ar
 rayMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
@@ -149,4 +155,4 @@ deletion of the element.&]
 to original element. Client is responsible for deletion of the 
 original element.&]
 [s3; &]
-[s0; ]
+[s0; ]]

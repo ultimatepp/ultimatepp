@@ -65,6 +65,11 @@ constructor.&]
 [s5;:Vector`:`:`~Vector`(`):%- [@(0.0.255) `~][* Vector]()&]
 [s2; Destructor. Calls destructors of all elements in Vector.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Vector`:`:Vector`(std`:`:initializer`_list`<T`>`):%- [* Vector]([_^std`:`:initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s2; C`+`+ 11 initialization.&]
+[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
@@ -344,6 +349,18 @@ inserted.&]
 [s7; [*C@3 count]-|Number of elements to insert.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Vector`:`:Insert`(int`,std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_
+[* Insert]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
+[*@4 T]>_[*@3 init])&]
+[s2; Inserts C`+`+11 style initialization list.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Vector`:`:Append`(int`,std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_
+[* Append]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
+[*@4 T]>_[*@3 init])&]
+[s2; Appends C`+`+11 style initialization list.&]
+[s3; &]
+[s4;%- &]
 [s5;:Vector`:`:InsertPick`(int`,pick`_ Vector`&`):%- [@(0.0.255) void]_[* InsertPick]([@(0.0.255) i
 nt]_[*@3 i], [@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) `&]_[*@3 x])&]
 [s2; Inserts source Vector at specified position using pick transfer 
@@ -497,7 +514,7 @@ but destroys it by picking.&]
 [s2; Returns [* true] if Vector is in picked state.&]
 [s7; [*/ Return value]-|[* true] if Vector is in picked state, [* false] 
 otherwise.&]
-[s3;%- &]
+[s3; &]
 [s4; &]
 [s5;%- friend_T`&_operator<<`=[@(64) (T`&_][@3 dest][@(64) , ][@(0.0.255) const][@(64) _T`&_][@3 s
 rc][@(64) )]&]

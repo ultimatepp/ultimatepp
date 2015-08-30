@@ -80,6 +80,10 @@ of type derived from T.&]
 [s5;:Array`:`:`~Array`(`):%- [@(0.0.255) `~][* Array]()&]
 [s2; Destructor. Invokes the destructor of every element in the Array.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Array`:`:Array`(std`:`:initializer`_list`<T`>`):%- [* Array]([_^std`:`:initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s2; C`+`+11 initialization.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s4;H0;%- &]
@@ -374,6 +378,17 @@ nt]_[*@3 i], [@(0.0.255) const]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x],
 inserted.&]
 [s7; [*C@3 count]-|Number of elements to insert.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Array`:`:Insert`(int`,std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_
+[* Insert]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
+[*@4 T]>_[*@3 init])&]
+[s2; Inserts C`+`+11 style initializer list.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Array`:`:Append`(std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_[* Appe
+nd]([_^std`:`:initializer`_list^ std`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s2; Appends C`+`+11 style initializer list.&]
+[s3; &]
 [s4;%- &]
 [s5;:Array`:`:Append`(const Array`&`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) const]_[_^Array^ A
 rray][@(0.0.255) `&]_[*@3 x])&]

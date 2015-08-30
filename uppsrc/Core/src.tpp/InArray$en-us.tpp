@@ -220,6 +220,11 @@ nt]_[*@3 pos])&]
 y][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]
 [s2; Deep copy constructor.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:InArray`:`:InArray`(std`:`:initializer`_list`<T`>`):%- [* InArray]([_^std`:`:initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s2; C`+`+ 11 initialization.&]
+[s3; &]
 [s4; &]
 [s5;:InArray`:`:Swap`(InArray`&`):%- [@(0.0.255) void]_[* Swap]([_^InArray^ InArray][@(0.0.255) `&
 ]_[*@3 b])&]
