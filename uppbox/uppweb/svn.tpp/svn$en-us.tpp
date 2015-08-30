@@ -18,7 +18,4 @@ ppweb]&]
 ][^topic`:`/`/uppweb`/svn`/svnmajorweb`$en`-us^2 Uppweb]&]
 [s0;2 &]
 [s0;%- [ISVNTABLE;2 `[svntable`]]&]
-[s0;2 &]
-[s0; [2 Full history can be found at ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 h
-ttp://code.google.com/p/upp`-mirror/source/list][2 .]&]
-[s0; ]
+[s0; ]]

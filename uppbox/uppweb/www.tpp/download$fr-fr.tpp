@@ -44,13 +44,6 @@ dsc]]
 [s0; &]
 [s1;#b0; Code source&]
 [s0;2 &]
-[s0; [2 Un miroir public du dépôt SVN officiel est hébergé par 
-Google Code ici : ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 h
-ttp://code.google.com/p/upp`-mirror/source/checkout][2 . Ce miroir 
-a au plus une heure de retard sur le dépôt SVN des développeurs. 
-Si vous voulez accélérer le développement d`'U`+`+, utilisez 
-ce miroir et reportez les problèmes rencontrés sur notre ][^http`:`/`/www`.ultimatepp`.org`/forum^2 f
-orum][2  !]&]
 [s0;2 &]
 [s0; [2 Un ][^http`:`/`/gitorious`.org`/upp`-mirror^2 miroir Git][2  est 
 aussi disponible pour ceux qui n`'aiment pas Subversion. Notez 

@@ -48,12 +48,6 @@ dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
 [s0; &]
 [s1;#b0; Source code&]
 [s0;2 &]
-[s0; [2 Public SVN mirror is hosted by Google Code at ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/checkout^2 h
-ttp://code.google.com/p/upp`-mirror/source/checkout][2 . The mirror 
-is at most 1 hour behind the developers SVN repository. If you 
-want to accelerate U`+`+ development, use this and report bugs 
-in our ][^http`:`/`/www`.ultimatepp`.org`/forum^2 forum][2 !]&]
-[s0;2 &]
 [s0; [2 For Gentoo users, an ebuild using subversion checkout is under 
 construction. Have a look at the corresponding ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 f
 orum thread][2  if you are interested.]&]
