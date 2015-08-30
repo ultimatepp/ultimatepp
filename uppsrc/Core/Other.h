@@ -124,6 +124,13 @@ public:
 
 	void operator=(Buffer rval_ v)      { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
 	Buffer(Buffer rval_ v)              { ptr = v.ptr; v.ptr = NULL; }
+
+#ifdef CPP_11
+	Buffer(size_t size, std::initializer_list<T> init) : Buffer(size) {
+		T *t = ptr; for(auto i : init) DeepCopyConstruct(t++, i);
+	}
+	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
+#endif
 };
 
 class Bits : Moveable<Bits> {
