@@ -64,6 +64,10 @@ public:
 	BiVector()                                  { start = items = alloc = 0; vector = NULL; }
 	~BiVector()                                 { Free(); } // gcc4.0 workaround!!
 
+#ifdef CPP_11
+	BiVector(std::initializer_list<T> init);
+#endif
+
 	typedef ConstIIterator<BiVector> ConstIterator;
 	typedef IIterator<BiVector>      Iterator;
 
@@ -143,6 +147,10 @@ public:
 	void operator=(BiArray rval_ src)        { Free(); bv = pick(src.bv); }
 	BiArray()                                {}
 	~BiArray()                               { Free(); }
+
+#ifdef CPP_11
+	BiArray(std::initializer_list<T> init);
+#endif
 
 	typedef ConstIIterator<BiArray> ConstIterator;
 	typedef IIterator<BiArray>      Iterator;

@@ -125,6 +125,14 @@ AIndex<T, V, HashFn>::AIndex(const V& s, int) : key(s, 1) {
 	Hash();
 }
 
+#ifdef CPP_11
+template <class T, class V, class HashFn>
+AIndex<T, V, HashFn>::AIndex(std::initializer_list<T> init) : key(init)
+{
+	Hash();
+}
+#endif
+
 template <class T, class V, class HashFn>
 T& AIndex<T, V, HashFn>::Add(const T& x, unsigned _hash) {
 	T& t = key.Add(x);

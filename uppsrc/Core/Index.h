@@ -204,6 +204,9 @@ protected:
 	AIndex(const V& s, int);
 	AIndex() {}
 	AIndex(const AIndex& s, int);
+#ifdef CPP_11
+	AIndex(std::initializer_list<T> init);
+#endif
 };
 
 template <class T, class HashFn = StdHash<T> >
@@ -226,6 +229,10 @@ public:
 
 	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
 	STL_INDEX_COMPATIBILITY(Index<T _cm_ HashFn>)
+
+#ifdef CPP_11
+	Index(std::initializer_list<T> init) : B(init) {}
+#endif
 };
 
 template <class T, class HashFn = StdHash<T> >
@@ -259,4 +266,8 @@ public:
 
 	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
 	STL_INDEX_COMPATIBILITY(ArrayIndex<T _cm_ HashFn>)
+
+#ifdef CPP_11
+	ArrayIndex(std::initializer_list<T> init) : B(init) {}
+#endif
 };

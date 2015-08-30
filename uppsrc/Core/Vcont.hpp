@@ -797,6 +797,25 @@ String BiVector<T>::ToString() const
 
 #endif
 
+#ifdef CPP_11
+template <class T>
+BiVector<T>::BiVector(std::initializer_list<T> init)
+{
+	start = items = alloc = 0; vector = NULL;
+
+	start = 0;
+	alloc = items = init.size();
+	if(!alloc) {
+		vector = NULL;
+		return;
+	}
+	vector = (T *) new byte[alloc * sizeof(T)];
+	T *t = vector;
+	for(auto q : init)
+		DeepCopyConstruct(t++, q);
+}
+#endif
+
 // ------------------
 
 template <class T>
@@ -835,5 +854,14 @@ String BiArray<T>::ToString() const
 {
 	return AsStringArray(*this);
 }
+
+#ifdef CPP_11
+template <class T>
+BiArray<T>::BiArray(std::initializer_list<T> init)
+{
+	for(auto q : init)
+		AddTail(q);
+}
+#endif
 
 #endif

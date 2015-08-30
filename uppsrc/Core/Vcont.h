@@ -131,6 +131,7 @@ public:
 
 #ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
+	void     Append(int i, std::initializer_list<T> init) { Insert(GetCount(), init); }
 	Vector(std::initializer_list<T> init) { vector = NULL; items = alloc = 0; Insert(0, init); }
 #endif
 
@@ -270,8 +271,10 @@ public:
 // Deep copy
 	Array(const Array& v, int)          { __DeepCopy(v); }
 
+#ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
 	Array(std::initializer_list<T> init) { Insert(0, init); }
+#endif
 
 	class Iterator;
 
