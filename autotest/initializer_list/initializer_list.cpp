@@ -14,6 +14,7 @@ void Test()
 	v.Insert(1, { 11, 12 });
 	DDUMP(v);
 	v.Append({333});
+	DDUMP(v);
 	ASSERT(AsString(v) == "[1, 11, 12, 2, 3, 4, 333]");
 }
 
@@ -39,6 +40,13 @@ CONSOLE_APP_MAIN
 	Test2<ArrayIndex<int>>();
 	Test2<BiVector<int>>();
 	Test2<BiArray<int>>();
+	
+	Buffer<String> x = { "one", "two", "three" };
+	for(int i = 0; i < 3; i++)
+		DDUMP(x[i]);
+	ASSERT(x[0] == "one");
+	ASSERT(x[1] == "two");
+	ASSERT(x[2] == "three");
 
 //	VectorTest<InVector<int>>();
 //	VectorTest<InArray<
