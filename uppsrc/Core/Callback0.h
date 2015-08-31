@@ -64,6 +64,8 @@ inline Callback Proxy(Callback& cb)
 
 Callback callback(Callback cb1, Callback cb2);
 Callback& operator<<(Callback& a, Callback b);
+inline
+Callback& operator<<(Callback& a, std::function<void ()> fn) { return a << Callback(lambda(fn)); };
 
 //0 args to Callback1
 
@@ -147,6 +149,12 @@ Callback1<P1>& operator<<(Callback1<P1>& a, Callback1<P1> b)
 	else
 		a = b;
 	return a;
+}
+
+template <class P1>
+Callback1<P1>& operator<<(Callback1<P1>& a, std::function<void (P1)> b)
+{
+	return a << Callback(lambda(b));
 }
 
 //0 args to Callback2
