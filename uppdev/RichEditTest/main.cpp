@@ -50,6 +50,7 @@ GUI_APP_MAIN
 	DUMPM(Environment());
 	
 	RichEditWithToolBar e;
+	e.WhenBar << Callback1<Bar&>(lambda([](Bar&) { PromptOK("BAR!"); }));
 //	e.SetPage(Size(6074, 3968));
 	Vector<int> h;
 	for(int i = 1; i < Font::GetFaceCount(); i++)

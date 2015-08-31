@@ -4,6 +4,10 @@ using namespace Upp;
 
 String fn = "c:/xxx/test.txt";
 
+void Foo(std::function<void ()> x)
+{
+}
+
 GUI_APP_MAIN
 {
 	LineEdit  editor;
@@ -27,5 +31,10 @@ GUI_APP_MAIN
 	TopWindow win;   
 	win.Add(editor.SizePos());
 	win.Run();
+	std::function<void ()> x = [&] { PromptOK("HELLO!"); };
+	Foo(x);
+	Foo([&] { PromptOK("HELLO!"); });
+	editor.WhenAction = [&] { PromptOK("HELLO!"); };
+	editor <<= Callback([&] { PromptOK("HELLO!"); });
 	SaveFile(fn, ~editor);
 }
