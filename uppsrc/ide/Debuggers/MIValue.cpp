@@ -753,7 +753,7 @@ MIValue &MIValue::Add(String const &key, String const &data)
 {
 	MIValue v;
 	v.Set(data);
-	return Add(key, v);
+	return Add(key, pick(v));
 }
 		
 MIValue &MIValue::FindAdd(String const &key, String const &data)
@@ -793,7 +793,7 @@ MIValue &MIValue::Add(String const &data)
 {
 	MIValue v;
 	v.Set(data);
-	return Add(v);
+	return Add(pick(v));
 }
 
 // remove a tuple key

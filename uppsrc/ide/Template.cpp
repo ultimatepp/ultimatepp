@@ -319,7 +319,7 @@ void TemplateDlg::EnterTemplate()
 			}
 		}
 		Add(ctrl.Top());
-		ctrl.Top() << delay;
+		ctrl.Top() << ~delay;
 		ctrl.Top().LeftPos(pos.x, cx).TopPos(pos.y);
 		pos.y += ctrl.Top().GetMinSize().cy + 6;
 		ctrl.Top().ClearModify();
