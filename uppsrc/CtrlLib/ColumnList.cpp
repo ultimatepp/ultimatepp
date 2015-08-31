@@ -1053,7 +1053,7 @@ ColumnList::ColumnList() {
 	clickkill = false;
 	ncl = 1;
 	cx = 50;
-	cy = Draw::GetStdFontCy();
+	cy = max(DPI(18), Draw::GetStdFontCy());
 	cursor = -1;
 	ListMode();
 	AddFrame(sb);

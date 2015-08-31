@@ -370,7 +370,7 @@ void FileList::Sort(const Order& order)
 
 FileList::FileList() {
 	iconwidth = Zx(16);
-	ItemHeight(max(Draw::GetStdFontCy(), 16));
+	ItemHeight(max(Draw::GetStdFontCy(), DPI(18)));
 	Ctrl::Add(edit);
 	edit.Hide();
 	edit.SetFrame(BlackFrame());
