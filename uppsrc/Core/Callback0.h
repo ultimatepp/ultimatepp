@@ -57,13 +57,7 @@ struct CallbackForkAction : public CallbackAction {
 		 : cb1(cb1), cb2(cb2) {}
 };
 
-inline Callback Proxy(Callback& cb)
-{
-	return callback(&cb, &Callback::Execute);
-}
-
 Callback callback(Callback cb1, Callback cb2);
-Callback& operator<<(Callback& a, Callback b);
 
 //0 args to Callback1
 
@@ -128,25 +122,9 @@ struct Callback1ForkAction : public Callback1Action<P1> {
 };
 
 template <class P1>
-inline Callback1<P1> Proxy(Callback1<P1>& cb)
-{
-	return callback(&cb, &Callback1<P1>::Execute);
-}
-
-template <class P1>
 Callback1<P1> callback(Callback1<P1> cb1, Callback1<P1> cb2)
 {
 	return Callback1<P1>(new Callback1ForkAction <P1>(cb1, cb2));
-}
-
-template <class P1>
-Callback1<P1>& operator<<(Callback1<P1>& a, Callback1<P1> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 //0 args to Callback2
@@ -212,25 +190,9 @@ struct Callback2ForkAction : public Callback2Action<P1, P2> {
 };
 
 template <class P1, class P2>
-inline Callback2<P1, P2> Proxy(Callback2<P1, P2>& cb)
-{
-	return callback(&cb, &Callback2<P1, P2>::Execute);
-}
-
-template <class P1, class P2>
 Callback2<P1, P2> callback(Callback2<P1, P2> cb1, Callback2<P1, P2> cb2)
 {
 	return Callback2<P1, P2>(new Callback2ForkAction <P1, P2>(cb1, cb2));
-}
-
-template <class P1, class P2>
-Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, Callback2<P1, P2> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 //0 args to Callback3
@@ -296,25 +258,9 @@ struct Callback3ForkAction : public Callback3Action<P1, P2, P3> {
 };
 
 template <class P1, class P2, class P3>
-inline Callback3<P1, P2, P3> Proxy(Callback3<P1, P2, P3>& cb)
-{
-	return callback(&cb, &Callback3<P1, P2, P3>::Execute);
-}
-
-template <class P1, class P2, class P3>
 Callback3<P1, P2, P3> callback(Callback3<P1, P2, P3> cb1, Callback3<P1, P2, P3> cb2)
 {
 	return Callback3<P1, P2, P3>(new Callback3ForkAction <P1, P2, P3>(cb1, cb2));
-}
-
-template <class P1, class P2, class P3>
-Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, Callback3<P1, P2, P3> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 //0 args to Callback4
@@ -380,25 +326,9 @@ struct Callback4ForkAction : public Callback4Action<P1, P2, P3, P4> {
 };
 
 template <class P1, class P2, class P3, class P4>
-inline Callback4<P1, P2, P3, P4> Proxy(Callback4<P1, P2, P3, P4>& cb)
-{
-	return callback(&cb, &Callback4<P1, P2, P3, P4>::Execute);
-}
-
-template <class P1, class P2, class P3, class P4>
 Callback4<P1, P2, P3, P4> callback(Callback4<P1, P2, P3, P4> cb1, Callback4<P1, P2, P3, P4> cb2)
 {
 	return Callback4<P1, P2, P3, P4>(new Callback4ForkAction <P1, P2, P3, P4>(cb1, cb2));
-}
-
-template <class P1, class P2, class P3, class P4>
-Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, Callback4<P1, P2, P3, P4> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 // -----------------------------------------------------------
@@ -463,13 +393,7 @@ struct GateForkAction : public GateAction {
 		 : cb1(cb1), cb2(cb2) {}
 };
 
-inline Gate Proxy(Gate& cb)
-{
-	return callback(&cb, &Gate::Execute);
-}
-
 Gate callback(Gate cb1, Gate cb2);
-Gate& operator<<(Gate& a, Gate b);
 
 //0 args to Gate1
 
@@ -534,25 +458,9 @@ struct Gate1ForkAction : public Gate1Action<P1> {
 };
 
 template <class P1>
-inline Gate1<P1> Proxy(Gate1<P1>& cb)
-{
-	return callback(&cb, &Gate1<P1>::Execute);
-}
-
-template <class P1>
 Gate1<P1> callback(Gate1<P1> cb1, Gate1<P1> cb2)
 {
 	return Gate1<P1>(new Gate1ForkAction <P1>(cb1, cb2));
-}
-
-template <class P1>
-Gate1<P1>& operator<<(Gate1<P1>& a, Gate1<P1> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 //0 args to Gate2
@@ -618,25 +526,9 @@ struct Gate2ForkAction : public Gate2Action<P1, P2> {
 };
 
 template <class P1, class P2>
-inline Gate2<P1, P2> Proxy(Gate2<P1, P2>& cb)
-{
-	return callback(&cb, &Gate2<P1, P2>::Execute);
-}
-
-template <class P1, class P2>
 Gate2<P1, P2> callback(Gate2<P1, P2> cb1, Gate2<P1, P2> cb2)
 {
 	return Gate2<P1, P2>(new Gate2ForkAction <P1, P2>(cb1, cb2));
-}
-
-template <class P1, class P2>
-Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, Gate2<P1, P2> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 //0 args to Gate3
@@ -702,25 +594,9 @@ struct Gate3ForkAction : public Gate3Action<P1, P2, P3> {
 };
 
 template <class P1, class P2, class P3>
-inline Gate3<P1, P2, P3> Proxy(Gate3<P1, P2, P3>& cb)
-{
-	return callback(&cb, &Gate3<P1, P2, P3>::Execute);
-}
-
-template <class P1, class P2, class P3>
 Gate3<P1, P2, P3> callback(Gate3<P1, P2, P3> cb1, Gate3<P1, P2, P3> cb2)
 {
 	return Gate3<P1, P2, P3>(new Gate3ForkAction <P1, P2, P3>(cb1, cb2));
-}
-
-template <class P1, class P2, class P3>
-Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, Gate3<P1, P2, P3> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }
 
 //0 args to Gate4
@@ -786,23 +662,7 @@ struct Gate4ForkAction : public Gate4Action<P1, P2, P3, P4> {
 };
 
 template <class P1, class P2, class P3, class P4>
-inline Gate4<P1, P2, P3, P4> Proxy(Gate4<P1, P2, P3, P4>& cb)
-{
-	return callback(&cb, &Gate4<P1, P2, P3, P4>::Execute);
-}
-
-template <class P1, class P2, class P3, class P4>
 Gate4<P1, P2, P3, P4> callback(Gate4<P1, P2, P3, P4> cb1, Gate4<P1, P2, P3, P4> cb2)
 {
 	return Gate4<P1, P2, P3, P4>(new Gate4ForkAction <P1, P2, P3, P4>(cb1, cb2));
-}
-
-template <class P1, class P2, class P3, class P4>
-Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, Gate4<P1, P2, P3, P4> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
 }

@@ -54,9 +54,156 @@ public:
 	CallbackArgTarget()                 { result = Null; }
 };
 
+
+inline Callback Proxy(Callback& cb)
+{
+	return callback(&cb, &Callback::Execute);
+}
+
+template <class P1>
+inline Callback1<P1> Proxy(Callback1<P1>& cb)
+{
+	return callback(&cb, &Callback1<P1>::Execute);
+}
+
+template <class P1, class P2>
+inline Callback2<P1, P2> Proxy(Callback2<P1, P2>& cb)
+{
+	return callback(&cb, &Callback2<P1, P2>::Execute);
+}
+
+template <class P1, class P2, class P3>
+inline Callback3<P1, P2, P3> Proxy(Callback3<P1, P2, P3>& cb)
+{
+	return callback(&cb, &Callback3<P1, P2, P3>::Execute);
+}
+
+template <class P1, class P2, class P3, class P4>
+inline Callback4<P1, P2, P3, P4> Proxy(Callback4<P1, P2, P3, P4>& cb)
+{
+	return callback(&cb, &Callback4<P1, P2, P3, P4>::Execute);
+}
+
+inline Gate Proxy(Gate& cb)
+{
+	return callback(&cb, &Gate::Execute);
+}
+
+template <class P1>
+inline Gate1<P1> Proxy(Gate1<P1>& cb)
+{
+	return callback(&cb, &Gate1<P1>::Execute);
+}
+
+template <class P1, class P2>
+inline Gate2<P1, P2> Proxy(Gate2<P1, P2>& cb)
+{
+	return callback(&cb, &Gate2<P1, P2>::Execute);
+}
+
+template <class P1, class P2, class P3>
+inline Gate3<P1, P2, P3> Proxy(Gate3<P1, P2, P3>& cb)
+{
+	return callback(&cb, &Gate3<P1, P2, P3>::Execute);
+}
+
+template <class P1, class P2, class P3, class P4>
+inline Gate4<P1, P2, P3, P4> Proxy(Gate4<P1, P2, P3, P4>& cb)
+{
+	return callback(&cb, &Gate4<P1, P2, P3, P4>::Execute);
+}
+
+
+Callback& operator<<(Callback& a, Callback b);
+
+template <class P1>
+Callback1<P1>& operator<<(Callback1<P1>& a, Callback1<P1> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+template <class P1, class P2>
+Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, Callback2<P1, P2> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+template <class P1, class P2, class P3>
+Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, Callback3<P1, P2, P3> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+template <class P1, class P2, class P3, class P4>
+Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, Callback4<P1, P2, P3, P4> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+Gate& operator<<(Gate& a, Gate b);
+
+template <class P1>
+Gate1<P1>& operator<<(Gate1<P1>& a, Gate1<P1> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+template <class P1, class P2>
+Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, Gate2<P1, P2> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+template <class P1, class P2, class P3>
+Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, Gate3<P1, P2, P3> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
+template <class P1, class P2, class P3, class P4>
+Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, Gate4<P1, P2, P3, P4> b)
+{
+	if(a)
+		a = callback(a, b);
+	else
+		a = b;
+	return a;
+}
+
 #ifdef CPP_11
-inline
-Callback& operator<<(Callback& a, std::function<void ()> fn) { return a << Callback(lambda(fn)); };
+template <class L>
+Callback& operator<<(Callback& a, L b)
+{
+	return a << Callback(lambda(b));
+}
 
 template <class P1, class L>
 Callback1<P1>& operator<<(Callback1<P1>& a, L b)

@@ -2233,11 +2233,16 @@ can be assigned to several Ctrls in one statement.&]
 [s4;%- &]
 [s5;:Ctrl`:`:operator`<`<`(Callback`):%- [_^`:`:Callback^ Callback][@(0.0.255) `&]_[* opera
 tor<<]([_^`:`:Callback^ Callback]_[*@3 action])&]
-[s2;b17;a17; Same as WhenAction << action;&]
+[s5;:Upp`:`:Ctrl`:`:operator`<`<`(std`:`:function`<void`(`)`>`):%- [_^Upp`:`:Callback^ C
+allback][@(0.0.255) `&]_[* operator<<]([_^std`:`:function^ std`::function]<[@(0.0.255) voi
+d]_()>_[*@3 action])&]
+[s2;b17;a17; Same as WhenAction << action, second variant suitable 
+for C`+`+11 lambdas.&]
 [s7;i1120;a17; [%-*C@3 action]-|Callback that is to be added to callbacks 
 that are invoked when user changes value of Ctrl.&]
 [s7;i1120;a17; [*/ Return value]-|Reference to WhenAction.&]
 [s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:SetTimeCallback`(int`,Callback`,int`):%- [@(0.0.255) void]_[* SetTimeCallbac
 k]([@(0.0.255) int]_[*@3 delay`_ms], [_^`:`:Callback^ Callback]_[*@3 cb], 
