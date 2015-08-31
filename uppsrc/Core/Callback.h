@@ -53,3 +53,62 @@ public:
 
 	CallbackArgTarget()                 { result = Null; }
 };
+
+#ifdef CPP_11
+inline
+Callback& operator<<(Callback& a, std::function<void ()> fn) { return a << Callback(lambda(fn)); };
+
+template <class P1, class L>
+Callback1<P1>& operator<<(Callback1<P1>& a, L b)
+{
+	return a << Callback1<P1>(lambda(b));
+}
+
+template <class P1, class P2, class L>
+Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, L b)
+{
+	return a << Callback2<P1, P2>(lambda(b));
+}
+
+template <class P1, class P2, class P3, class L>
+Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, L b)
+{
+	return a << Callback3<P1, P2, P3>(lambda(b));
+}
+
+template <class P1, class P2, class P3, class P4, class L>
+Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, L b)
+{
+	return a << Callback4<P1, P2, P3, P4>(lambda(b));
+}
+
+template <class L>
+Gate& operator<<(Gate& a, L b)
+{
+	return a << Gate(lambda(b));
+};
+
+template <class P1, class L>
+Gate1<P1>& operator<<(Gate1<P1>& a, L b)
+{
+	return a << Gate1<P1>(lambda(b));
+}
+
+template <class P1, class P2, class L>
+Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, L b)
+{
+	return a << Gate2<P1, P2>(lambda(b));
+}
+
+template <class P1, class P2, class P3, class L>
+Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, L b)
+{
+	return a << Gate3<P1, P2, P3>(lambda(b));
+}
+
+template <class P1, class P2, class P3, class P4, class L>
+Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, L b)
+{
+	return a << Gate4<P1, P2, P3, P4>(lambda(b));
+}
+#endif
