@@ -162,7 +162,7 @@ public:
 	VectorMap()                                                       {}
 
 #ifdef CPP_11
-	VectorMap(std::initializer_list<std::pair<K, T>> init) : AMap(init) {}
+	VectorMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
 #endif
 
 	friend void    Swap(VectorMap& a, VectorMap& b)      { a.B::Swap(b); }
@@ -195,7 +195,7 @@ public:
 	ArrayMap() {}
 
 #ifdef CPP_11
-	ArrayMap(std::initializer_list<std::pair<K, T>> init) : AMap(init) {}
+	ArrayMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
 #endif
 
 	friend void    Swap(ArrayMap& a, ArrayMap& b)        { a.B::Swap(b); }
