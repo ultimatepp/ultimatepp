@@ -1,0 +1,12 @@
+description "Demostrates C++11 features\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	Cpp11.lay;
+
+mainconfig
+	"" = "GUI";
+

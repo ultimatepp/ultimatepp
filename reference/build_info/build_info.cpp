@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 #ifdef bmSVN_REVISION
 	LOG("Svn revision " << bmSVN_REVISION);
 #endif
-#ifdef bmSVN_REVISION
+#ifdef bmSVN_URL
 	LOG("Svn url " << bmSVN_URL);
 #endif
 }

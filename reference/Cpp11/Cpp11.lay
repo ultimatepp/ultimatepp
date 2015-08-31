@@ -1,0 +1,6 @@
+LAYOUT(MyAppLayout, 212, 196)
+	ITEM(ArrayCtrl, list, LeftPosZ(4, 96).TopPosZ(4, 188))
+	ITEM(EditInt, number, LeftPosZ(108, 96).TopPosZ(4, 19))
+	ITEM(Button, add, SetLabel(t_("Add")).LeftPosZ(148, 56).TopPosZ(28, 20))
+END_LAYOUT
+
