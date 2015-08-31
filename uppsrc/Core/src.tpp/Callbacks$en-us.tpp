@@ -16,7 +16,7 @@ pointers. Each Callback represents some kind of action (usually
 calling a certain function or a certain object method) that can 
 be invoked at any time.&]
 [s9; If you are happy enough to be able to use C`+`+11, you can also 
-assign C`+`+ lambda to Callback.&]
+assign C`+`+ lambda to Callback using operator << (see bellow).&]
 [s9; There are several basic callback types, depending on number 
 of parameters passed and return value. In order to keep description 
 of callbacks short, all these types are described in a single 
@@ -86,18 +86,21 @@ Callback takes over its ownership.&]
 [s0;:Callback1`:`:Callback1`(`):%- [%%*/@(128.0.255) CallbackType]()&]
 [s2; Creates an empty callback.&]
 [s3; &]
-[s4;%- &]
-[s5;:Callback1`:`:operator`=`(function`<void`(P1`)`>`):%- [_^Callback1^ Callback1][@(0.0.255) `&
-]_[* operator`=](std`::function<[@(0.0.255) void]_([%%*/@(128.0.255) arguments])>_[*@3 lam
-bda])&]
-[s6;%- Only in C`+`+ 11&]
-[s2; Assigns C`+`+11 lambda to callback.&]
-[s3; &]
 [s4; &]
 [s0;:Callback1`:`:Callback1`(const Callback1`&`):%- [%%*/@(128.0.255) CallbackType](con
 st_[%%*/@(128.0.255) CallbackType]`&_[*@3 c])&]
 [s2; Copy constructor. &]
 [s7; [%-*C@3 c]-|Source callback.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Callback`:`:Callback`(Upp`:`:AnyLambda`<T`>`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[%%*/@(128.0.255) CallbackType]([_^Upp`:`:AnyLambda^ AnyLambda]<[*@4 T]>_[*@3 l
+])&]
+[s2; Constructor from C`+`+11 lambda. Note that AnyLambda intermediate 
+type is necessarry as std`::function appears to have `"catch all`" 
+templated constructor, which creates overloading problems. Use 
+`'lambda`' helper function to convert lambda to AnyLambda (or 
+use operator<<).&]
 [s3; &]
 [s4; &]
 [s0;:`:`:Callback1`:`:`~Callback1`(`):%- `~[%%*/@(128.0.255) CallbackType]()&]
@@ -168,7 +171,7 @@ returns true.&]
 [s0;%- &]
 [s0;%- &]
 [s0;%- &]
-[ {{10000@(113.42.0) [s0; [*@7;4 Common functions creating callbacks]]}}&]
+[ {{10000@(113.42.0) [s0; [*@7;4 Common Callback/Gate functions]]}}&]
 [s3; &]
 [s0;:`:`:callback`(OBJECT`*`,void`(METHOD`:`:`*`)`(P1 p1`)`): template_<class 
 [*@4 OBJECT], class [*@4 METHOD][*@(128.0.255) ,][*@4  ][*/@(128.0.255) parameters]>&]
@@ -260,6 +263,14 @@ imitating callback insertion.&]
 that calls both the first and the second callback.&]
 [s7; [%-*C@3 b]-|Second callback.&]
 [s7; [*/ Return value]-|Reference to the first callback.&]
+[s3; &]
+[s4;%- &]
+[s0;:operator`<`<`(Callback1`<P1`>`&`,Callback1`<P1`>`): `[ template_<[*/@(128.0.255) p
+arameters]> `]&]
+[s0;%- [%%*/@(128.0.255) CallbackType][%% <][%%*/@(128.0.255) arguments][%% >]`&_[* operator<<](
+[%%*/@(128.0.255) CallbackType][%% <][%%*/@(128.0.255) arguments][%% > 
+]`&_[*@3 a], [%%*/@(128.0.255) C`+`+11Lambda]_[*@3 b])&]
+[s2; Variant of merging callbacks that can be used for C`+`+11 lambdas.&]
 [s3; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Special functions creating callbacks]]}}&]
@@ -544,4 +555,8 @@ output value.&]
 [s7; [%-*C@3 value]-|Value.&]
 [s7; [*/ Return value]-|Callback.&]
 [s3; &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Proxy]]}}&]
+[s0; &]
+[s0; Callback proxy can be used to create ca&]
 [s0; ]]
