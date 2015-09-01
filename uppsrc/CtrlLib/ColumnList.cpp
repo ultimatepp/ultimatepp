@@ -245,7 +245,7 @@ dword ColumnList::SwapKey(dword key)
 			return K_DOWN;
 		}
 	}
-	return key;	
+	return key;
 }
 
 bool ColumnList::Key(dword _key, int count) {
