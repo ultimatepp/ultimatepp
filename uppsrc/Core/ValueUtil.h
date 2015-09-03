@@ -231,7 +231,7 @@ public:
 	~ValueArray();
 
 #ifdef CPP_11
-	ValueArray(std::initializer_list<Value> init)    { Init0(); for(auto i : init) { DDUMP(i); Add(i); }}
+	ValueArray(std::initializer_list<Value> init)    { Init0(); for(auto i : init) { Add(i); }}
 #endif
 
 	ValueArray& operator=(const ValueArray& v);
