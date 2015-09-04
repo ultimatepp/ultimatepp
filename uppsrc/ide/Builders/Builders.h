@@ -195,37 +195,22 @@ public:
 protected:
 	bool MovePackageFileToAndroidProject(const String& src, const String& dest);
 	bool RealizePackageJavaSourcesDirectory(const String& packageName);
-	
 	bool RealizeLinkDirectories() const;
 	
 protected:
-	bool ValidateBuilderEnviorement();
-	void PutErrorOnConsole(const String& msg);
 	bool FileNeedsUpdate(const String& path, const String& data);
 	void UpdateFile(const String& path, const String& data);
 	void GenerateApplicationMakeFile();
 	void GenerateMakeFile();
 	bool GenerateRFile();
 	
-	bool AddSharedLibsToApk(const String& apkPath);
-	
-	bool PreprocessJava(const String& package, const String& file, const String& target);
-	
 protected:
-	String GetSandboxDir() const;
+	bool ValidateBuilderEnviorement();
+	void PutErrorOnConsole(const String& msg);
 	
-	String GetAndroidProjectDir() const;
-	String GetAndroidProjectJavaSourcesDir() const;
-	String GetAndroidProjectJniSourcesDir() const;
-	String GetAndroidProjectLibsDir() const;
-	String GetAndroidProjectResourcesDir() const;
-	String GetAndroidProjectBuildDir() const;
-	String GetAndroidProjectClassesDir() const;
-	String GetAndroidProjectBinDir() const;
-	
-	String GetAndroidProjectManifestPath() const;
-	String GetAndroidProjectJniMakeFilePath() const;
-	String GetAndroidProjectJniApplicationMakeFilePath() const;
+	void CreateApk();
+	bool AddSharedLibsToApk(const String& apkPath);
+	bool PreprocessJava(const String& package, const String& file, const String& target);
 	
 protected:
 	String GetFilePathInAndroidProject(const String& nestDir,
@@ -234,6 +219,13 @@ protected:
 	
 	String RemoveDirNameFromFileName(String fileName) const;
 	String NormalizeModuleName(String moduleName) const;
+	
+private:
+	void   InitProject();
+	String GetSandboxDir() const;
+	
+private:
+	AndroidProject project;
 };
 
 void DeletePCHFile(const String& pch_file);
