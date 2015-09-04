@@ -5,6 +5,33 @@
 
 NAMESPACE_UPP
 
+class AndroidProject {
+public:
+	AndroidProject();
+	AndroidProject(const String& dir);
+	virtual ~AndroidProject();
+	
+	String GetDir() const;
+	String GetJavaDir() const;
+	String GetJniDir() const;
+	String GetLibsDir() const;
+	String GetResDir() const;
+	String GetBuildDir() const;
+	String GetClassesDir() const;
+	String GetBinDir() const;
+	
+	String GetManifestPath() const;
+	String GetJniMakeFilePath() const;
+	String GetJniApplicationMakeFilePath() const;
+	
+	void SetDir(const String& dir);
+	
+	bool HasDir() const;
+	
+private:
+	String dir;
+};
+
 class AndroidApplicationMakeFile {
 public:
 	AndroidApplicationMakeFile();

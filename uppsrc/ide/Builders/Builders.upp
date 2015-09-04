@@ -22,6 +22,7 @@ file
 	ScriptBuilder.icpp,
 	Android readonly separator,
 	Android.h,
+	AndroidProject.cpp,
 	AndroidApplicationMakeFile.cpp,
 	AndroidMakeFile.cpp,
 	AndroidModuleMakeFile.cpp,
