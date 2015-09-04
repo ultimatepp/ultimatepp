@@ -328,7 +328,7 @@ void Ide::SetupBars()
 	menubar.Transparent();
 	if(toolbar_in_row) {
 		toolbar.SetFrame(NullFrame());
-		int tcy = max(mainconfiglist.GetStdSize().cy + VertLayoutZoom(2), toolbar.GetStdHeight());
+		int tcy = max(mainconfiglist.GetStdSize().cy + DPI(2), toolbar.GetStdHeight());
 		bararea.Add(menubar.LeftPos(0, l).VCenterPos(menubar.GetStdHeight()));
 		bararea.Add(toolbar.HSizePos(l, r).VCenterPos(tcy));
 		bararea.Add(display.RightPos(4, r).VSizePos(2, 3));
