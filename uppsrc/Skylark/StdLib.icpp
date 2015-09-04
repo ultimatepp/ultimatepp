@@ -89,7 +89,7 @@ INITBLOCK {
 	Compiler::Register("post_identity", PostIdentity);
 	Compiler::Register("js_identity", JsIdentity);
 	Compiler::Register("set", VariablesSet);
-    Compiler::Register("render", Render);
+	Compiler::Register("render", Render);
 };
 
 };
