@@ -219,12 +219,41 @@ static void AddPath(VectorMap<String, String>& out, String key, String path)
 	out.Add(key + "_UNIX", UnixPath(path));
 }
 
+void sGatherAllFiles(Vector<String>& files, const String& pp, const String& p)
+{
+	FindFile ff(pp + "/" + p + "/*.*");
+	while(ff) {
+		String n = pp + "/" + ff.GetName();
+		if(ff.IsFile())
+			files.Add(n);
+		else
+		if(ff.IsFolder())
+			sGatherAllFiles(files, pp, n);
+		ff.Next();
+	}
+}
+
 Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, bool& error)
 {
 	String package = Nvl(package_, mainpackage);
 	String path = (*pf == '.' && pf[1] != '.') ? target : SourcePath(package, pf);
 	String file = GetHostPath(path);
 	String ext = ToLower(GetFileExt(pf));
+	if(ext == ".ext") {
+		Vector<String> files;
+		sGatherAllFiles(files, GetFileFolder(path), "");
+		return files;
+/*		Index<String> out;
+		out <<= files;
+		String f = LoadFile(path);
+		try {
+			CParser p(f);
+			while(!p.IsEof()) {
+				if(p.Id("add"))
+					for(int i = 0; i < files.GetCount(); i++)
+			}
+		}
+*/	}
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Array< ::CustomStep >& mv = wspc.GetPackage(i).custom;
 		for(int j = 0; j < mv.GetCount(); j++) {

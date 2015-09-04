@@ -21,7 +21,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 	sepm = DPI(2);
 	stdwidth = FrameButtonWidth();
 	trivialsep = false;
-	margin = Rect(DPI(2), DPI(2), DPI(2), DPI(2));
+	margin = Rect(DPI(2), 2, DPI(2), 2);
 	usetrivial = false;
 	overpaint = loff = roff = 0;
 	error = Blend(LtRed(), Red());
@@ -461,10 +461,10 @@ void MultiButton::Paint(Draw& w)
 			cr = r;
 		}
 	}
-	cr.left++;
+	cr.left += DPI(1);
 	Rect clr = cr;
-	if(!IsNull(valuecy)) {
-		cr.top += (cr.GetHeight() - valuecy + 1) / 2;
+	if(!IsNull(valuecy) && cr.GetHeight() > valuecy) {
+		cr.top += (cr.GetHeight() - valuecy) / 2;
 		cr.bottom = cr.top + valuecy;
 	}
 	Value v = convert->Format(value);
