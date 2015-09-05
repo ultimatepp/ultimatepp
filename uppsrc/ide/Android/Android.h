@@ -112,9 +112,11 @@ public:
 	
 public:
 	String GetIncludeDir() const;
+	String GetCppIncludeDir(const String& cppRuntime) const;
 
 	String GetPlatformsDir() const  { return path + DIR_SEPS + "platforms"; }
 	String GetToolchainsDir() const { return path + DIR_SEPS + "toolchains"; }
+	String GetSourcesDir() const    { return path + DIR_SEPS + "sources"; }
 	
 	String GetNdkBuildPath() const  { return path + DIR_SEPS + "ndk-build" + Android::GetCmdExt(); }
 	String GetGdbPath() const       { return path + DIR_SEPS + "ndk-gdb"; }
@@ -123,10 +125,9 @@ public:
 	String GetPath() const { return this->path; }
 	
 	void SetPath(const String& path) { this->path = path; }
-	
+		
 private:
 	String path;
-	
 };
 
 class Apk {

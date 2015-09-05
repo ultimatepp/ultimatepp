@@ -117,4 +117,30 @@ String AndroidNDK::GetIncludeDir() const
 	return DirectoryExists(dir) ? dir : "";
 }
 
+String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
+{
+	String nest = GetSourcesDir() + DIR_SEPS + "cxx-stl" + DIR_SEPS;
+	if(cppRuntime == "system")
+		return nest + "system" + DIR_SEPS + "include";
+	else
+	if(cppRuntime.StartsWith("gabi++"))
+		return nest + "gabi++" + DIR_SEPS + "include";
+	else
+	if(cppRuntime.StartsWith("stlport"))
+		return nest + "stlport" + DIR_SEPS + "stlport";
+	else
+	if(cppRuntime.StartsWith("gnustl")) {
+		// TODO: implement selection of library version
+		String versionsDir = nest + "gnu-libstdc++";
+		
+		return nest + "gnu-libstdc++" + DIR_SEPS + "4.6" + DIR_SEPS + "include";
+	}
+	else
+	if(cppRuntime.StartsWith("c++")) {
+		return nest + "llvm-libc++" + DIR_SEPS + "libcxx" + DIR_SEPS + "include";
+	}
+	
+	return "";
+}
+
 END_UPP_NAMESPACE
