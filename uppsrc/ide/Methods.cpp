@@ -156,7 +156,7 @@ void AndroidBuilderSetup::OnCtrlLoad(const String& ctrlKey, const String& value)
 }
 
 void AndroidBuilderSetup::OnShow()
-{	
+{
 	OnSdkShow();
 	OnNdkShow();
 }
@@ -834,8 +834,13 @@ String Ide::GetIncludePath()
 #endif
 	if(findarg(bm.Get("BUILDER", ""), "ANDROID") >= 0) {
 		AndroidNDK ndk(bm.Get("NDK_PATH"));
-		if(ndk.Validate())
+		if(ndk.Validate()) {
 			MergeWith(include, ";", ndk.GetIncludeDir());
+			
+			String cppIncludeDir = ndk.GetCppIncludeDir(bm.Get("NDK_CPP_RUNTIME"));
+			if(!cppIncludeDir.IsEmpty())
+				MergeWith(include, ";", cppIncludeDir);
+		}
 	}
 	
 	const Workspace& wspc = GetIdeWorkspace();
