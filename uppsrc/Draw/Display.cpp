@@ -110,7 +110,6 @@ Size Display::GetStdSize(const Value& q) const
 	return Single<StdDisplayClass>().GetStdSize(q);
 }
 
-
 void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
                              Color ink, Color paper, dword s) const {
 	LLOG("StdDisplay::Paint0: " << q << " ink:" << ink << " paper:" << paper);
@@ -147,7 +146,7 @@ void StdDisplayClass::Paint0(Draw& w, const Rect& r, const Value& q,
 	if(a == ALIGN_CENTER)
 		x += (width - tsz.cx) / 2;
 	int tcy = GetTLTextHeight(txt, font);
-	int tt = r.top + (r.Height() - tcy) / 2;
+	int tt = r.top + (tcy < 4 * r.GetHeight() / 3 ?  (r.Height() - tcy) / 2 : 0); // allow negative tt if only slightly bigger
 	if(tsz.cx > width) {
 		Size isz = DrawImg::threedots().GetSize();
 		int wd = width - isz.cx;
