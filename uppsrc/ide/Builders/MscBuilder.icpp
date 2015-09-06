@@ -184,50 +184,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	bool is_shared = HasFlag("SO"),
 		is_clr = HasFlag("CLR");
 
-	String cc = CmdLine(package, pkg);
-	if(HasFlag("EVC")) {
-		if(!HasFlag("SH3") && !HasFlag("SH4"))
-			cc << " -Gs8192"; // disable stack checking
-		cc << " -GF" // read-only string pooling
-		      " -GX-"; // turn off exception handling
-	}
-	else
-	if(is_clr)
-		cc << " -EHac";
-	else
-	if(IsMsc89())
-		cc << " -EHsc";
-	else
-		cc << " -GX";
-//	String pdb = GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pdb"));
-//	String pch;
-//	if(!HasFlag("MSC8")) // MSC8 does not support automatic precompiled headers...
-//		pch << " -YX -Fp" << GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pch")) << ' ';
-//	cc << " -Gy -Fd" << pdb;
-//	if(HasFlag("SSE2") && !IsMsc64())
-//		cc << " /arch:SSE2";
-	if(HasFlag("DEBUG_MINIMAL"))
-		cc << " -Zd";
-	if(HasFlag("DEBUG_FULL"))
-		cc << " -Zi";
-	cc << ' ' << Gather(pkg.option, config.GetKeys());
-	cc << (HasFlag("SHARED") || is_shared || is_clr ? " -MD"
-	      : (HasFlag("MT") || IsMsc89()) ? " -MT" : " -ML");
-
-	String cc_size = cc;
-	String cc_speed = cc;
-	bool   release = false;
-
-	if(HasFlag("DEBUG"))
-		cc << "d " << debug_options;
-	else {
-		release = true;
-		cc << ' ' << release_size_options;
-		cc_speed << ' ' << release_options;
-		if(opt == R_SPEED || pkg.optimize_speed)
-			cc = cc_speed;
-	}
-	
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;
 	Vector<bool>   optimize, ioptimize;
@@ -239,6 +195,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Index<String> nopch, noblitz;
 
 	bool blitz = HasFlag("BLITZ");
+	bool release = !HasFlag("DEBUG");
 
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -289,6 +246,50 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			}
 		}
 	}
+
+	String cc = CmdLine(package, pkg);
+	if(HasFlag("EVC")) {
+		if(!HasFlag("SH3") && !HasFlag("SH4"))
+			cc << " -Gs8192"; // disable stack checking
+		cc << " -GF" // read-only string pooling
+		      " -GX-"; // turn off exception handling
+	}
+	else
+	if(is_clr)
+		cc << " -EHac";
+	else
+	if(IsMsc89())
+		cc << " -EHsc";
+	else
+		cc << " -GX";
+//	String pdb = GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pdb"));
+//	String pch;
+//	if(!HasFlag("MSC8")) // MSC8 does not support automatic precompiled headers...
+//		pch << " -YX -Fp" << GetHostPathQ(CatAnyPath(outdir, GetAnyFileName(package) + ".pch")) << ' ';
+//	cc << " -Gy -Fd" << pdb;
+//	if(HasFlag("SSE2") && !IsMsc64())
+//		cc << " /arch:SSE2";
+	if(HasFlag("DEBUG_MINIMAL"))
+		cc << " -Zd";
+	if(HasFlag("DEBUG_FULL"))
+		cc << " -Zi";
+	cc << ' ' << Gather(pkg.option, config.GetKeys());
+	cc << (HasFlag("SHARED") || is_shared || is_clr ? " -MD"
+	      : (HasFlag("MT") || IsMsc89()) ? " -MT" : " -ML");
+
+	String cc_size = cc;
+	String cc_speed = cc;
+
+	if(!release)
+		cc << "d " << debug_options;
+	else {
+		cc << ' ' << release_size_options;
+		cc_speed << ' ' << release_options;
+		if(opt == R_SPEED || pkg.optimize_speed)
+			cc = cc_speed;
+	}
+	
+	DDUMPC(sfile);
 	
 	int recompile = 0;
 	Blitz b;

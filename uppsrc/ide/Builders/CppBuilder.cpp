@@ -14,7 +14,7 @@ String CppBuilder::GetTargetExt() const
 		return HasFlag("DLL") ? ".dll" : ".exe";
 }
 
-// POSIX lib files has names in form of libXXXXXX.so.ver.minver(.rel)
+// POSIX lib files have names in form of libXXXXXX.so.ver.minver(.rel)
 // so we can't simply get file extension
 String CppBuilder::GetSrcType(String fn) const
 {
@@ -219,18 +219,48 @@ static void AddPath(VectorMap<String, String>& out, String key, String path)
 	out.Add(key + "_UNIX", UnixPath(path));
 }
 
-void sGatherAllFiles(Vector<String>& files, const String& pp, const String& p)
+void sGatherAllExt(Vector<String>& files, Vector<String>& dirs, const String& pp, const String& p)
 {
+	dirs.Add(p);
 	FindFile ff(pp + "/" + p + "/*.*");
 	while(ff) {
-		String n = pp + "/" + ff.GetName();
+		String n = Merge("/", p, ff.GetName());
 		if(ff.IsFile())
 			files.Add(n);
 		else
-		if(ff.IsFolder())
-			sGatherAllFiles(files, pp, n);
+		if(ff.IsFolder()) {
+			sGatherAllExt(files, dirs, pp, n);
+		}
 		ff.Next();
 	}
+}
+
+Vector<String> ReadPatterns(CParser& p)
+{
+	Vector<String> out;
+	while(!p.IsEof() && !p.Char(';')) {
+		out << ReadValue(p);
+		p.Char(',');
+	}
+	return out;
+}
+
+void ExtExclude(CParser& p, Index<String>& x)
+{
+	Vector<String> e = ReadPatterns(p);
+	Vector<int> remove;
+	for(int i = 0; i < x.GetCount(); i++)
+		for(int j = 0; j < e.GetCount(); j++) {
+			DDUMP(e[j]);
+			DDUMP(x[i]);
+			DDUMP(PatternMatch(e[j], x[i]));
+			if(PatternMatch(e[j], x[i])) {
+				remove.Add(i);
+				break;
+			}
+		}
+	DDUMP(remove);
+	x.Remove(remove);
 }
 
 Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, bool& error)
@@ -241,19 +271,84 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 	String ext = ToLower(GetFileExt(pf));
 	if(ext == ".ext") {
 		Vector<String> files;
-		sGatherAllFiles(files, GetFileFolder(path), "");
-		return files;
-/*		Index<String> out;
-		out <<= files;
+		Vector<String> dirs;
+		sGatherAllExt(files, dirs, GetFileFolder(path), "");
+		
+		DDUMPC(dirs);
+		
+		Index<String> pkg_files;
+		Package pkg;
+		pkg.Load(PackagePath(package));
+		for(int i = 0; i < pkg.GetCount(); i++)
+			pkg_files.Add(pkg[i]);
+		
+		DDUMPC(pkg_files);
+
+		Index<String> out;
+		Index<String> include_path;
 		String f = LoadFile(path);
 		try {
 			CParser p(f);
 			while(!p.IsEof()) {
-				if(p.Id("add"))
+				if(p.Id("files")) {
+					Vector<String> e = ReadPatterns(p);
 					for(int i = 0; i < files.GetCount(); i++)
+						for(int j = 0; j < e.GetCount(); j++) {
+							String f = files[i];
+							if(PatternMatch(e[j], f) && pkg_files.Find(f) < 0)
+								out.FindAdd(f);
+						}
+				}
+				if(p.Id("exclude") || p.Id("exclude_files")) {
+					ExtExclude(p, out);
+				}
+				if(p.Id("include_path")) {
+					Vector<String> e = ReadPatterns(p);
+					for(int j = 0; j < e.GetCount(); j++) {
+						String ee = e[j];
+						if(ee.Find('*') >= 0)
+							for(int i = 0; i < dirs.GetCount(); i++) {
+								String d = dirs[i];
+								if(PatternMatch(e[j], d)) {
+									include_path.FindAdd(d);
+								}
+							}
+						else
+							include_path.Add(ee);
+					}
+				}
+				if(p.Id("exclude_path")) {
+					ExtExclude(p, include_path);
+				}
+				if(p.Id("includes")) {
+					Vector<String> e = ReadPatterns(p);
+					for(int i = 0; i < files.GetCount(); i++)
+						for(int j = 0; j < e.GetCount(); j++) {
+							String f = files[i];
+							if(PatternMatch(e[j], f) && pkg_files.Find(f) < 0)
+								include_path.FindAdd(GetFileFolder(f));
+						}
+				}
 			}
 		}
-*/	}
+		catch(CParser::Error) {
+			PutConsole("Invalid .ext file");
+			error = true;
+			return Vector<String>();
+		}
+		
+		DDUMP(include_path);
+		DDUMP(GetFileFolder(path));
+		for(int i = 0; i < include_path.GetCount(); i++)
+			include.Add(NormalizePath(include_path[i], GetFileFolder(path)));
+		
+		DDUMPC(include);
+
+		Vector<String> o;
+		for(int i = 0; i < out.GetCount(); i++)
+			o.Add(SourcePath(package, out[i]));
+		return o;
+	}
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Array< ::CustomStep >& mv = wspc.GetPackage(i).custom;
 		for(int j = 0; j < mv.GetCount(); j++) {
