@@ -102,6 +102,10 @@ TOPIC("esc$en-us")
 #include "esc$en-us.tppi"
 END_TOPIC
 
+TOPIC("importext$en-us")
+#include "importext$en-us.tppi"
+END_TOPIC
+
 TOPIC("index$en-us")
 #include "index$en-us.tppi"
 END_TOPIC
