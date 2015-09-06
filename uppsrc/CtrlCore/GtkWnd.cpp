@@ -176,8 +176,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 
 void Ctrl::SyncCaret() {
 	GuiLock __;
-	DLOG("SyncCaret");
-	DDUMP(Name(FocusCtrl()));
+	LLOG("SyncCaret");
 	if(focusCtrl != caretCtrl) {
 		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
 		RefreshCaret();
