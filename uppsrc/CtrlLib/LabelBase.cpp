@@ -548,7 +548,8 @@ void DisplayPopup::Sync()
 					r.right = max(r.right, r.left + sz.cx + 2 * margin);
 					r.bottom = max(r.bottom, r.top + sz.cy);
 					r.Inflate(1, 1);
-					r.Offset(ctrl->GetScreenView().TopLeft());
+					Rect v = ctrl->GetScreenView();
+					r.Offset(v.TopLeft());
 
 					Rect wa = GetWorkArea(r.BottomLeft());
 					Size sz = r.GetSize();
@@ -567,8 +568,12 @@ void DisplayPopup::Sync()
 					}
 					else
 					if(r.bottom > wa.bottom) {
-						r.top = max(wa.top, wa.bottom - sz.cy);
-						r.bottom = wa.bottom;
+						if(wa.bottom - r.top < r.top - wa.top) { // there is more space upside
+							r.bottom = item.bottom + v.top;
+							r.top = max(wa.top, r.bottom - sz.cy);
+						}
+						else
+							r.bottom = wa.bottom;
 					}
 					
 					SetRect(r);
