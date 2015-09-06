@@ -86,13 +86,13 @@ void __LOGF__(const char *format, ...);
 #else
 
 #define DLOG(x)          @ // To clean logs after debugging, this produces error in release mode
-#define DDUMP(x)         @
-#define DDUMPC(x)        @
-#define DDUMPM(x)        @
-#define DTIMING(x)       @
-#define DLOGHEX(x)       @
-#define DDUMPHEX(nx)     @
-#define DTIMESTOP(x)     @
+#define DDUMP(x)         @ // To clean logs after debugging, this produces error in release mode
+#define DDUMPC(x)        @ // To clean logs after debugging, this produces error in release mode
+#define DDUMPM(x)        @ // To clean logs after debugging, this produces error in release mode
+#define DTIMING(x)       @ // To clean logs after debugging, this produces error in release mode
+#define DLOGHEX(x)       @ // To clean logs after debugging, this produces error in release mode
+#define DDUMPHEX(nx)     @ // To clean logs after debugging, this produces error in release mode
+#define DTIMESTOP(x)     @ // To clean logs after debugging, this produces error in release mode
 
 #define DEBUGCODE(x)     LOG_NOP
 

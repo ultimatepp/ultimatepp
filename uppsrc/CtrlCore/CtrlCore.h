@@ -1274,6 +1274,7 @@ void   GuiPlatformAfterMenuPopUp();
 inline int  Zx(int cx) { return Ctrl::HorzLayoutZoom(cx); }
 inline int  Zy(int cy) { return Ctrl::VertLayoutZoom(cy); }
 inline Size Zsz(int cx, int cy) { return Size(Zx(cx), Zy(cy)); }
+inline Size Zsz(Size sz) { return Zsz(sz.cx, sz.cy); }
 
 Font FontZ(int face, int height = 0);
 

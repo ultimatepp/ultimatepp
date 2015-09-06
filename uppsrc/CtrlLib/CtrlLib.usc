@@ -193,7 +193,7 @@ ctrl Label {
 	group "Static";
 
 	GetMinSize() { return XMinSize(); }
-	GetStdSize() { sz = GetTextSize("Label", .StdFont); sz.cy += 6; sz.cx *= 1.2; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cx *= 5; return sz; }
 
 	>TextCtrl;
 
