@@ -88,12 +88,12 @@ int Prompt(Callback1<const String&> WhenLink,
 	}
 	int nbtn = !!button1 + !!button2 + !!button3;
 	dlg.esc = okcancel && nbtn == 1;
-	cx = min(550, max(nbtn * bcx + (1 + nbtn) * fcy, cx));
+	cx = min(Zx(520), max(nbtn * bcx + (1 + nbtn) * fcy, cx));
 	int qcx = cx - 2 * fcy;
 	if(bsz.cx)
 		qcx -= bsz.cx + fcy;
 	int ccy = qtfctrl.GetHeight(qcx);
-	int qcy = min(400, ccy);
+	int qcy = min(Zy(400), ccy);
 	if(qcy <= ccy) {
 		qcx += ScrollBarSize() + fcy;
 		cx += ScrollBarSize() + fcy;
