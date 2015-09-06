@@ -207,9 +207,9 @@ void ChHostSkin()
 		po.x = GtkInt("child-displacement-x");
 		po.y = GtkInt("child-displacement-y");
 
-		s.ok = GtkImage("gtk-ok", DPI(16), DPI(16));
-		s.cancel = GtkImage("gtk-cancel", DPI(16), DPI(16));
-		s.exit = GtkImage("gtk-quit", DPI(16), DPI(16));
+		s.ok = GtkImage("gtk-ok", DPI(4), DPI(16));
+		s.cancel = GtkImage("gtk-cancel", DPI(4), DPI(16));
+		s.exit = GtkImage("gtk-quit", DPI(4), DPI(16));
 
 		ChGtkColor(s.textcolor, 0 * 5);
 		s.pressoffset = po;
