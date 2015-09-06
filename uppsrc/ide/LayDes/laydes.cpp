@@ -7,6 +7,7 @@ using namespace LayoutKeys;
 #include <Draw/iml_source.h>
 
 #define LTIMING(x) // TIMING(x)
+#define LLOG(x)
 
 #define MARGIN 8
 
@@ -321,7 +322,7 @@ Image LayDes::CursorImage(Point p, dword keyflags)
 	if(HasCapture())
 		hi = draghandle;
 	else
-	 	hi = FindHandle(Normalize(p));
+		hi = FindHandle(Normalize(p));
 	Image (*id[11])() = {
 		Image::SizeHorz, Image::SizeVert, Image::SizeBottomRight,
 		Image::SizeTopLeft, Image::SizeVert, Image::SizeTopRight,
@@ -719,7 +720,6 @@ void LayDes::CreateCtrl(const String& _type)
 {
 	if(IsNull(currentlayout))
 		return;
-	LOG("CreateCtrl");
 	LayoutData& l = CurrentLayout();
 	int c = l.item.GetCount();
 	if(cursor.GetCount())
@@ -747,13 +747,12 @@ void LayDes::CreateCtrl(const String& _type)
 			type.SetFocus();
 		else {
 			int q = m.FindProperty("SetLabel");
-			if(q >= 0)
-				m.property[q].SetFocus();
+			if(q >= 0 && findarg(_type, "Label", "LabelBox") >= 0)
+				m.property[q].PlaceFocus(0, 0);
 			else
 				variable.SetFocus();
 		}
 	}
-	LOG("Create " << ::Name(GetFocusCtrl()));
 }
 
 void LayDes::Group(Bar& bar, const String& group)
@@ -776,7 +775,6 @@ void LayDes::Group(Bar& bar, const String& group)
 		if((q++ + 2) % 16 == 0)
 			bar.Break();
 	}
-	LOG("End " << ::Name(GetFocusCtrl()));
 }
 
 void LayDes::TemplateGroup(Bar& bar, TempGroup tg)

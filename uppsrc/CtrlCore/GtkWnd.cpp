@@ -176,6 +176,8 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 
 void Ctrl::SyncCaret() {
 	GuiLock __;
+	DLOG("SyncCaret");
+	DDUMP(Name(FocusCtrl()));
 	if(focusCtrl != caretCtrl) {
 		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
 		RefreshCaret();
@@ -288,7 +290,7 @@ Rect Ctrl::GetVirtualScreenArea()
 	if(r.right == 0) {
 		gint x, y, width, height;
 		gdk_window_get_geometry(gdk_screen_get_root_window(gdk_screen_get_default()),
-	    	                    &x, &y, &width, &height, NULL);
+	                            &x, &y, &width, &height, NULL);
 	    r = RectC(x, y, width, height);
 	}
 	return r;
