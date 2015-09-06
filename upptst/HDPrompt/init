@@ -1,0 +1,4 @@
+#ifndef _HDPrompt_icpp_init_stub
+#define _HDPrompt_icpp_init_stub
+#include "CtrlLib/init"
+#endif
