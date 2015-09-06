@@ -48,54 +48,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	bool is_shared = HasFlag("SO");
 	String shared_ext = (HasFlag("WIN32") ? ".dll" : ".so");
 
-	String cc = CmdLine(package, pkg);
-	if(HasFlag("WIN32") && HasFlag("MT"))
-		cc << " -mthreads";
-	if(HasFlag("DEBUG_MINIMAL"))
-		cc << (HasFlag("WIN32") ? " -g1" : " -ggdb -g1");
-	if(HasFlag("DEBUG_FULL"))
-		cc << (HasFlag("WIN32") ? " -g2" : " -ggdb -g2");
-	String fuse_cxa_atexit;
-	if(is_shared /*&& !HasFlag("MAIN")*/) {
-		cc << " -shared -fPIC";
-		fuse_cxa_atexit = " -fuse-cxa-atexit";
-	}
-	if(!HasFlag("SHARED") && !is_shared)
-		cc << " -static ";
-//	else if(!HasFlag("WIN32")) // TRC 05/03/08: dynamic fPIC doesn't seem to work in MinGW
-//		cc << " -dynamic -fPIC "; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
-	cc << ' ' << Gather(pkg.option, config.GetKeys());
-	cc << " -fexceptions";
-
-	if (HasFlag("OSX11")) {
-	  if (HasFlag("POWERPC"))
-		cc << " -arch ppc";
-	  if (HasFlag("X86"))
-		cc << " -arch i386";
-	}
-
-//	if(HasFlag("SSE2")) {
-//		cc << " -msse2";
-//		if(!HasFlag("CLANG"))
-//			cc << " -mfpmath=sse";
-//	}
-
-	String cc_speed = cc;
-	bool   release = false;
-
-	if(HasFlag("DEBUG"))
-		cc << " -D_DEBUG " << debug_options;
-	else {
-		release = true;
-		cc << ' ' << release_size_options;
-		cc_speed << ' ' << release_options;
-		if(opt == R_SPEED || pkg.optimize_speed)
-			cc = cc_speed;
-	}
-
-	if(pkg.nowarnings)
-		cc << " -w";
-
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;
 	Vector<bool>   optimize, ioptimize;
@@ -106,6 +58,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Index<String> nopch, noblitz;
 
 	bool blitz = HasFlag("BLITZ");
+	bool release = !HasFlag("DEBUG");
 
 	for(i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
@@ -156,6 +109,52 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			}
 		}
 	}
+
+	String cc = CmdLine(package, pkg);
+	if(HasFlag("WIN32") && HasFlag("MT"))
+		cc << " -mthreads";
+	if(HasFlag("DEBUG_MINIMAL"))
+		cc << (HasFlag("WIN32") ? " -g1" : " -ggdb -g1");
+	if(HasFlag("DEBUG_FULL"))
+		cc << (HasFlag("WIN32") ? " -g2" : " -ggdb -g2");
+	String fuse_cxa_atexit;
+	if(is_shared /*&& !HasFlag("MAIN")*/) {
+		cc << " -shared -fPIC";
+		fuse_cxa_atexit = " -fuse-cxa-atexit";
+	}
+	if(!HasFlag("SHARED") && !is_shared)
+		cc << " -static ";
+//	else if(!HasFlag("WIN32")) // TRC 05/03/08: dynamic fPIC doesn't seem to work in MinGW
+//		cc << " -dynamic -fPIC "; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
+	cc << ' ' << Gather(pkg.option, config.GetKeys());
+	cc << " -fexceptions";
+
+	if (HasFlag("OSX11")) {
+	  if (HasFlag("POWERPC"))
+		cc << " -arch ppc";
+	  if (HasFlag("X86"))
+		cc << " -arch i386";
+	}
+
+//	if(HasFlag("SSE2")) {
+//		cc << " -msse2";
+//		if(!HasFlag("CLANG"))
+//			cc << " -mfpmath=sse";
+//	}
+
+	String cc_speed = cc;
+
+	if(!release)
+		cc << " -D_DEBUG " << debug_options;
+	else {
+		cc << ' ' << release_size_options;
+		cc_speed << ' ' << release_options;
+		if(opt == R_SPEED || pkg.optimize_speed)
+			cc = cc_speed;
+	}
+
+	if(pkg.nowarnings)
+		cc << " -w";
 
 	int recompile = 0;
 	Blitz b;

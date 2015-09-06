@@ -282,6 +282,8 @@ enum IdeCharsets {
 	CHARSET_UTF16_BE_BOM
 };
 
+String ReadValue(CParser& p);
+
 class Package {
 	void Reset();
 	void Option(bool& option, const char *name);
