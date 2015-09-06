@@ -142,8 +142,8 @@ void Ctrl::DoDeactivate(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl)
 	if(pfocusCtrl) {
 		Ptr<Ctrl> ptop = pfocusCtrl->GetTopCtrl();
 		Ctrl *ntop = nfocusCtrl ? nfocusCtrl->GetTopCtrl() : NULL;
-		LLOG("DoDeactivate " << UPP::Name(ptop) << " in favor of " << UPP::Name(ntop));
 		if(ntop != ptop && !ptop->destroying) {
+			LLOG("DoDeactivate " << UPP::Name(ptop) << " in favor of " << UPP::Name(ntop));
 			ptop->DeactivateBy(ntop);
 			ptop->Deactivate();
 			if(ptop)
@@ -186,6 +186,7 @@ void Ctrl::DoSetFocus(Ptr<Ctrl> pfocusCtrl, Ptr<Ctrl> nfocusCtrl, bool activate)
 	if(focusCtrl == nfocusCtrl && nfocusCtrl && nfocusCtrl->parent &&
 	   !nfocusCtrl->parent->destroying)
 		nfocusCtrl->parent->ChildGotFocus();
+	
 	SyncCaret();
 }
 
@@ -259,7 +260,6 @@ bool Ctrl::SetFocus0(bool activate)
 		lastActiveWnd = topwindow;
 	return true;
 }
-
 
 bool Ctrl::SetFocus()
 {

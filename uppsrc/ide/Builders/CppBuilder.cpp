@@ -251,15 +251,11 @@ void ExtExclude(CParser& p, Index<String>& x)
 	Vector<int> remove;
 	for(int i = 0; i < x.GetCount(); i++)
 		for(int j = 0; j < e.GetCount(); j++) {
-			DDUMP(e[j]);
-			DDUMP(x[i]);
-			DDUMP(PatternMatch(e[j], x[i]));
 			if(PatternMatch(e[j], x[i])) {
 				remove.Add(i);
 				break;
 			}
 		}
-	DDUMP(remove);
 	x.Remove(remove);
 }
 
@@ -274,16 +270,12 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 		Vector<String> dirs;
 		sGatherAllExt(files, dirs, GetFileFolder(path), "");
 		
-		DDUMPC(dirs);
-		
 		Index<String> pkg_files;
 		Package pkg;
 		pkg.Load(PackagePath(package));
 		for(int i = 0; i < pkg.GetCount(); i++)
 			pkg_files.Add(pkg[i]);
 		
-		DDUMPC(pkg_files);
-
 		Index<String> out;
 		Index<String> include_path;
 		String f = LoadFile(path);
@@ -337,13 +329,9 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 			return Vector<String>();
 		}
 		
-		DDUMP(include_path);
-		DDUMP(GetFileFolder(path));
 		for(int i = 0; i < include_path.GetCount(); i++)
 			include.Add(NormalizePath(include_path[i], GetFileFolder(path)));
 		
-		DDUMPC(include);
-
 		Vector<String> o;
 		for(int i = 0; i < out.GetCount(); i++)
 			o.Add(SourcePath(package, out[i]));

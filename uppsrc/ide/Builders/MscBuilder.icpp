@@ -289,8 +289,6 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			cc = cc_speed;
 	}
 	
-	DDUMPC(sfile);
-	
 	int recompile = 0;
 	Blitz b;
 	if(blitz) {

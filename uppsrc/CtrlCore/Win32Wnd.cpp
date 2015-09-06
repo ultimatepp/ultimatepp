@@ -917,7 +917,7 @@ void Ctrl::PaintCaret(SystemDraw& w)
 void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;
-	LLOG("SetCaret " << Name());
+	LLOG("SetCaret " << Name() << " " << RectC(x, y, cx, cy));
 	if(this == caretCtrl)
 		RefreshCaret();
 	caretx = x;
@@ -933,6 +933,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 
 void Ctrl::SyncCaret() {
 	GuiLock __;
+	LLOG("SyncCaret");
 	if(focusCtrl != caretCtrl) {
 		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
 		RefreshCaret();

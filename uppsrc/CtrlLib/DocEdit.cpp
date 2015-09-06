@@ -166,6 +166,7 @@ void DocEdit::SetSb()
 	cx = max(Draw::GetStdFontCy(), sz.cx - 2);
 	sb.SetPage(GetSize().cy);
 	sb.SetTotal(GetY(para.GetCount()) + 2);
+	PlaceCaret(false);
 }
 
 void DocEdit::Layout()
@@ -504,6 +505,7 @@ DocEdit::DocEdit()
 	sb.WhenScroll = THISBACK(Scroll);
 	InsertLines(0, 1);
 	eofline = true;
+	PlaceCaret(false);
 }
 
 DocEdit::~DocEdit() {}
