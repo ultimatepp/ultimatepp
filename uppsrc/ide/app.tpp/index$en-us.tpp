@@ -41,6 +41,7 @@ Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
 Find and Replace]&]
+[s0;l224;^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ &]
 [s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
 [s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]

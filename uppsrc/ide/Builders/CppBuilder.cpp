@@ -291,7 +291,7 @@ Vector<String> CppBuilder::CustomStep(const String& pf, const String& package_, 
 								out.FindAdd(f);
 						}
 				}
-				if(p.Id("exclude") || p.Id("exclude_files")) {
+				if(p.Id("exclude")) {
 					ExtExclude(p, out);
 				}
 				if(p.Id("include_path")) {
