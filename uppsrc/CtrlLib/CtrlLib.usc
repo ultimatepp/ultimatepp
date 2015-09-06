@@ -193,7 +193,7 @@ ctrl Label {
 	group "Static";
 
 	GetMinSize() { return XMinSize(); }
-	GetStdSize() { sz = GetMinSize(); sz.cx *= 5; return sz; }
+	GetStdSize() { sz = GetMinSize(); sz.cy += 6; sz.cx *= 5; return sz; }
 
 	>TextCtrl;
 

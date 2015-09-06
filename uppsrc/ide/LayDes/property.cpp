@@ -6,8 +6,8 @@ void ItemProperty::Paint(Draw& w)
 	w.DrawRect(sz, SColorLtFace);
 	w.DrawRect(0, GetHeight() - 1, sz.cx, 1, SColorText);
 	w.DrawText(2,
-	           (EditField::GetStdHeight() + 6 - GetTextSize(name, LayFont()).cy) / 2, name,
-	           GetData() == defval ? LayFont() : LayFont().Bold());
+	           (EditField::GetStdHeight() + 6 - GetTextSize(name, StdFont()).cy) / 2, name,
+	           GetData() == defval ? StdFont()() : StdFont().Bold());
 }
 
 int ItemProperty::GetHeight() const
