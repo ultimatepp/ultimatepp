@@ -16,7 +16,7 @@ MenuItemBase::MenuItemBase()
 	isenabled = true;
 	type = 0;
 	font = StdFont();
-	leftgap = Zx(16);
+	leftgap = DPI(16) + Zx(6);
 	textgap = Zy(6);
 	accesskey = 0;
 	NoWantFocus();
@@ -314,7 +314,7 @@ void MenuItem::Paint(Draw& w)
 //		li = CachedRescale(li, isz);
 	int iy = (sz.cy - isz.cy) / 2;
 	bool chk = false;
-	int x = Zx(2);
+	int x = Zx(3);
 	if(!licon.IsEmpty() && type) {
 		chk = type == CHECK1 || type == RADIO1;
 		if(GUI_GlobalStyle() >= GUISTYLE_XP) {
