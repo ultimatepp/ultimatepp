@@ -19,6 +19,9 @@
 #define KEYFILE      <ide/LayDes/laydes.key>
 #include             <CtrlLib/key_header.h>
 
+inline Font LayFont() { return Arial(Zy(11)); }
+inline Font LayFont2() { return Arial(Zy(14)); }
+
 class DiffPacker {
 	String master;
 	int         mapn;
@@ -144,7 +147,7 @@ struct RawProperty : public EditorProperty<EditString>
 	static ItemProperty *Create()            { return new RawProperty; }
 
 	RawProperty() {
-		Add(editor.HSizePos(100, 2).TopPos(2));
+		Add(editor.HSizePosZ(100, 2).TopPos(2));
 	}
 };
 

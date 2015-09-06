@@ -198,7 +198,7 @@ void FontProperty::Perform()
 
 FontProperty::FontProperty() {
 	editor.SetData(StdFont());
-	Add(editor.HSizePos(100, 2).TopPos(2));
+	Add(editor.HSizePosZ(100, 2).TopPos(2));
 	editor.SetDisplay(Single<FontDisplay>());
 	editor.WhenAction = THISBACK(Perform);
 	editor <<= StdFont();

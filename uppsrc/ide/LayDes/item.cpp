@@ -6,7 +6,7 @@ struct EnumProperty : public EditorProperty<DropList> {
 	virtual void     Read(CParser& p)          { SetData(ReadPropertyParam(p)); }
 
 	EnumProperty(VectorMap<String, String>& e) {
-		Add(editor.HSizePos(100, 2).TopPos(2));
+		Add(editor.HSizePosZ(100, 2).TopPos(2));
 		for(int i = 0; i < e.GetCount(); i++)
 			editor.Add(e.GetKey(i), e[i]);
 		SetData(defval = e.GetKey(0));
@@ -224,7 +224,7 @@ void LayoutItem::UnknownPaint(Draw& w)
 		DrawSmartText(w, 0, 0, csize.cx, ToUtf8((WString)~property[q]));
 	Size tsz = GetTextSize(type, Arial(11));
 	w.DrawRect(csize.cx - tsz.cx, csize.cy - tsz.cy, tsz.cx, tsz.cy, SColorShadow);
-	w.DrawText(csize.cx - tsz.cx, csize.cy - tsz.cy, type, Arial(11), SColorLight);
+	w.DrawText(csize.cx - tsz.cx, csize.cy - tsz.cy, type, LayFont(), SColorLight);
 }
 
 void LayoutItem::CreateMethods(EscValue& ctrl, const String& type, bool copy) const
@@ -343,7 +343,7 @@ void LayoutItem::Paint(Draw& w, Size sz, bool sample)
 				PutConsole(e);
 				DrawingDraw edw;
 				edw.DrawRect(0, 0, csize.cx, csize.cy, Red);
-				edw.DrawText(2, 2, e, Arial(11).Bold(), Yellow);
+				edw.DrawText(2, 2, e, LayFont().Bold(), Yellow);
 				cache = edw;
 			}
 		}
@@ -363,7 +363,7 @@ Image GetTypeIcon(const String& type, int cx, int cy, int i, Color bg)
 		p.iconsize[i] = Size(cx, cy);
 		LayoutItem m;
 		m.Create(type);
-		Size stdsize = m.GetStdSize();
+		Size stdsize = Zsz(m.GetStdSize());
 		if(stdsize.cx == 0 || stdsize.cy == 0)
 			return Null;
 
