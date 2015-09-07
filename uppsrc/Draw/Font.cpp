@@ -152,6 +152,7 @@ bool Font::std_font_override;
 
 void Font::SetDefaultFont(Font font)
 {
+	LLOG("SetDefaultFont " << font);
 	if(!std_font_override)
 		SetStdFont0(font);
 }
