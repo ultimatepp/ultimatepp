@@ -1,4 +1,4 @@
-topic "Copyright © 1999-2009 Ultimate++ team";
+topic "Copyright © 1999-2015 Ultimate++ team";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;*IGetLocalDir;+117 &]
