@@ -489,7 +489,7 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		limit.right -= fm.right;
 		limit.top += fm.top;
 		limit.bottom -= fm.bottom;
-		Size sz = min(rect.Size(), limit.Size());
+		Size sz = min(max(GetMinSize(), rect.Size()), limit.Size());
 		rect = RectC(
 			minmax(rect.left, limit.left, limit.right - sz.cx),
 			minmax(rect.top,  limit.top,  limit.bottom - sz.cy),
