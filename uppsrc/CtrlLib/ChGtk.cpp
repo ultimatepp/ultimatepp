@@ -111,7 +111,7 @@ void ChHostSkin()
 //	gtk_hintstyle = GtkStyleString("gtk-xft-hintstyle");
 	gtk_hintstyle = gtk_hinting? "hintfull" : "hintnone"; // Gtk does not seem to follow its own rules...
 	gtk_rgba = GtkStyleString("gtk-xft-rgba");
-
+	
 	const char *q = strrchr(font_name, ' ');
 	if(q) {
 		int h = atoi(q);
@@ -149,7 +149,7 @@ void ChHostSkin()
 			}
 		}
 	}
-
+	
 	Font::SetDefaultFont(Font(fontname, fround(fontheight * xdpi + 512*72.0) / (1024*72))
 	                     .Bold(bold).Italic(italic));
 

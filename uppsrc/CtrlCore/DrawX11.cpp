@@ -215,8 +215,6 @@ void InitX11Draw(XDisplay *display)
 		Xgetpixel = GetPseudoColorPixel;
 	}
 //	XFree(v);
-
-	Font::SetStdFont(ScreenSans(12));
 }
 
 void InitX11Draw(const char *dispname)
