@@ -2095,11 +2095,7 @@ rows&]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:IsSelected`(int`)const:%- [@(0.0.255) bool]_[* IsSelected]([@(0.0.255) in
 t]_[*@3 i])_[@(0.0.255) const]&]
-[s2; Checks whether a given row is selected. For tables without the 
-multiselection option, this is equal to the check [* GetCursor() 
-`=`= i].&]
-[s7; [%-*C@3 i]-|zero`-based row index to check for selection&]
-[s7; [*/ Return value]-|[* true] `= row is selected, [* false] `= not selected&]
+[s7; Checks whether a given row is selected.&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayCtrl`:`:IsSel`(int`)const:%- [@(0.0.255) bool]_[* IsSel]([@(0.0.255) int]_[*@3 i])_
