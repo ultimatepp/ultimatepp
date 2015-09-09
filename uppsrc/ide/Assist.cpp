@@ -363,7 +363,7 @@ bool AssistEditor::IncludeAssist()
 			dir.Cat(p.GetChar());
 		if(dir.GetCount() && (p.Char('/') || p.Char('\\'))) {
 			if(include_path.GetCount())
-				include_path << '/'; 
+				include_path << '/';
 			include_path << dir;
 		}
 		else
