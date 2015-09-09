@@ -28,7 +28,7 @@
 
 // Send a message:
 void SendTest(MAPIEx& mapi) {
-	puts("\nSend Message Test");
+	puts("\nSend Message Test"); 
 	MAPIFolder outbox;
 	if (!mapi.OpenOutbox(outbox))
 		return;
@@ -359,7 +359,6 @@ void FolderList(MAPIEx& mapi) {
 
 #include <mapi.h>
 #include <mapix.h>
-#include <mapiutil.h>
 
 
 CONSOLE_APP_MAIN {
