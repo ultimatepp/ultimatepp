@@ -13,7 +13,7 @@ void TargetMode::Serialize(Stream& s)
 	s % target_override % target;
 	if(ver < 3) {
 		int dummy;
-	 	s % dummy;
+		s % dummy;
 	}
 	if(ver < 1) {
 		String dummy;

@@ -53,10 +53,11 @@ String PreprocessLayFile(const char *fn)
 					p.PassChar('(');
 					if(p.IsId()) {
 						String type = p.ReadIdt();
-						if(strncmp(type, "dv___", 5)) {
+						p.PassChar(',');
+						String name = p.ReadId();
+						if(!name.StartsWith("dv___")) {
 							r << '\t' << type;
-							p.PassChar(',');
-							r << ' ' << p.ReadId() << ";";
+							r << ' ' << name << ";";
 						}
 					}
 				}
