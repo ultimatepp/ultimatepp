@@ -21,8 +21,8 @@
 
 #ifdef _WIN32_WCE
 #include <cemapi.h>
-#pragma comment(lib,"cemapi.lib")
-#pragma comment(lib,"pimstore.lib")
+#pragma comment(lib, "cemapi.lib")
+#pragma comment(lib, "pimstore.lib")
 #endif
 
 
@@ -43,6 +43,7 @@ MAPIFunctions &MF() {
 
 
 INITBLOCK {
+	MF();
 	if (!MAPIEx::Init())
 		MessageBox(::GetActiveWindow(),	"MAPI Error", "Impossible to initialize MAPI",
 	           MB_ICONSTOP|MB_OK|MB_APPLMODAL);
@@ -478,7 +479,7 @@ bool MAPIEx::Notify(LPNOTIFCALLBACK lpfnCallback, LPVOID lpvContext, ULONG ulEve
 		if(m_sink) 
 			m_pMsgStore->Unadvise(m_sink);
 		MAPISink* pAdviseSink = new MAPISink(lpfnCallback, lpvContext);
-		if(m_pMsgStore->Advise(0, NULL,ulEventMask, pAdviseSink, &m_sink) == S_OK) 
+		if(m_pMsgStore->Advise(0, NULL, ulEventMask, pAdviseSink, &m_sink) == S_OK) 
 			return true;
 		delete pAdviseSink;
 		m_sink = 0;

@@ -25,5 +25,5 @@ file
 	MAPISink.h,
 	srcdoc.tpp,
 	src.tpp,
-	License.txt;
+	Copying;
 

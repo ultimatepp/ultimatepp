@@ -27,7 +27,7 @@ const GUID CLSID_MailMessage = {0x00020D0B, 0x0000, 0x0000, 0xC0, 0x00, 0x00, 0x
 #include <MAPIGuid.h>
 #endif
 
-  					
+				
 /////////////////////////////////////////////////////////////
 // MAPIMessage
 
@@ -408,9 +408,9 @@ bool MAPIMessage::SetMessageStatus(int nMessageStatus) {
 int MAPIMessage::ShowForm(MAPIEx* pMAPI, MAPIFolder &folder) {
 	//MAPIFolder* pFolder=pMAPI->GetFolder();
 	IMAPISession* pSession = pMAPI->GetSession();
-	ULONG ulMessageToken;
+	ULONG_PTR2 ulMessageToken;
 
-	if(folder.IsOpened() && pSession && pSession->PrepareForm(NULL,Message(), &ulMessageToken) == S_OK) {
+	if(folder.IsOpened() && pSession && pSession->PrepareForm(NULL, Message(), &ulMessageToken) == S_OK) {
 		ULONG ulMessageStatus=GetPropertyValue(PR_MSG_STATUS, 0);
 		ULONG ulMessageFlags=GetMessageFlags();
 		ULONG ulAccess=GetPropertyValue(PR_ACCESS, 0);

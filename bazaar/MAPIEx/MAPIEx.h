@@ -63,6 +63,12 @@ using namespace Upp;
 #include "MAPIFolder.h"
 #include "MAPIAttachment.h"
 
+#if defined(COMPILER_MINGW)
+#define ULONG_PTR2 ULONG
+#else
+#define ULONG_PTR2 ULONG_PTR
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // MAPIEx
 
@@ -80,7 +86,7 @@ protected:
 	IMAPISession* m_pSession;
 	LPMDB m_pMsgStore;
 	ULONG m_ulMDBFlags;
-	ULONG m_sink;
+	ULONG_PTR2 m_sink;
 
 // Operations
 public:
