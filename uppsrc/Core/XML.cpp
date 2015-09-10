@@ -870,6 +870,14 @@ String XmlNode::GatherText() const
 	return r;
 }
 
+bool XmlNode::HasTags() const
+{
+	for(int i = 0; i < GetCount(); i++)
+		if(node[i].IsTag())
+			return true;
+	return false;
+}
+
 int  XmlNode::AttrInt(const char *id, int def) const
 {
 	String x = Attr(id);

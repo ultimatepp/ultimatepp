@@ -211,6 +211,7 @@ public:
 
 	String         GatherText() const;
 	String         operator~() const                          { return GatherText(); }
+	bool           HasTags() const;
 
 	int            GetAttrCount() const                       { return attr ? attr->GetCount() : 0; }
 	String         AttrId(int i) const                        { return attr->GetKey(i); }
