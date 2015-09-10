@@ -179,6 +179,10 @@ no such sub`-node, nothing happens.&]
 [s2;%% Concatenates all XML`_TEXT sub`-nodes in order of increasing 
 indicies.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:XmlNode`:`:HasTags`(`)const: [@(0.0.255) bool]_[* HasTags]()_[@(0.0.255) const]&]
+[s2;%% Returns true if the node has subtags.&]
+[s3; &]
 [s4;%% &]
 [s5;:XmlNode`:`:GetAttrCount`(`)const: [@(0.0.255) int]_[* GetAttrCount]()_[@(0.0.255) cons
 t]&]
