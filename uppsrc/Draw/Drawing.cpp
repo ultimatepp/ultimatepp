@@ -22,6 +22,7 @@ enum {
 	DRAWING_DRAWPOLYPOLYPOLYGON = 17,
 	DRAWING_DRAWDATA            = 18,
 	DRAWING_DRAWPAINTING        = 19,
+	DRAWING_ESCAPE              = 20,
 };
 
 
@@ -180,6 +181,12 @@ void DrawingDraw::DrawDataOp(int x, int y, int cx, int cy, const String& data, c
 {
 	String h = id;
 	DrawingOp(DRAWING_DRAWDATA) % x % y % cx % cy % h;
+	val.Add(data);
+}
+
+void DrawingDraw::Escape(const String& data)
+{
+	DrawingOp(DRAWING_ESCAPE);
 	val.Add(data);
 }
 
@@ -451,6 +458,9 @@ void Draw::DrawDrawingOp(const Rect& target, const Drawing& w) {
 					ps % data;
 				DrawData(ps(x, y, cx, cy), data, id);
 			}
+			break;
+		case DRAWING_ESCAPE:
+			Escape(w.val[vi++]);
 			break;
 		case DRAWING_DRAWDRAWING:
 			if(w.val.GetCount())

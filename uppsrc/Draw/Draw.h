@@ -466,6 +466,8 @@ public:
 	virtual void EndNative();
 
 	virtual int  GetCloffLevel() const;
+	
+	virtual void Escape(const String& data);
 
 	virtual ~Draw();
 
@@ -700,6 +702,8 @@ public:
 
 	virtual void DrawDrawingOp(const Rect& target, const Drawing& w);
 	virtual void DrawPaintingOp(const Rect& target, const Painting& w);
+	
+	virtual void Escape(const String& data);
 	
 private:
 	Size         size;

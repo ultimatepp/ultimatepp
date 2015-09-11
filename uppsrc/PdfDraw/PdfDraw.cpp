@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LDUMP(x) // DUMP(x)
 #define LLOG(x)  // DLOG(x)
 
-#define PDF_COMPRESS
+// #define PDF_COMPRESS
 
 dword PdfDraw::GetInfo() const
 {
@@ -27,6 +27,7 @@ void PdfDraw::Init(int pagecx, int pagecy, int _margin, bool _pdfa)
 	pgsz.cx = pagecx;
 	pgsz.cy = pagecy;
 	pgsz += margin;
+	current_offset = Point(0, 0);
 	StartPage();
 }
 
@@ -135,8 +136,21 @@ void PdfDraw::EndPage()
 	page.Clear();
 }
 
+void PdfDraw::PushOffset()
+{
+	offset_stack.Add(current_offset);
+}
+
+void PdfDraw::PopOffset()
+{
+	ASSERT(offset_stack.GetCount());
+	if(offset_stack.GetCount()) // be defensive
+		current_offset = offset_stack.Pop();
+}
+
 void PdfDraw::BeginOp()
 {
+	PushOffset();
 	page << "q\n";
 }
 
@@ -148,6 +162,7 @@ void PdfDraw::EndOp()
 	rgcolor = RGcolor = Null;
 	linewidth = -1;
 	page << "Q\n";
+	PopOffset();
 }
 
 void PdfDraw::OffsetOp(Point p)
@@ -155,6 +170,8 @@ void PdfDraw::OffsetOp(Point p)
 	page << "q ";
 	if(p.x || p.y)
 		page << "1 0 0 1 " << Pt(p.x) << ' ' << Pt(-p.y) << " cm\n";
+	PushOffset();
+	current_offset += p;
 }
 
 bool PdfDraw::ClipOp(const Rect& r)
@@ -162,6 +179,7 @@ bool PdfDraw::ClipOp(const Rect& r)
 	page << "q ";
 	PutRect(r);
 	page << "W* n\n";
+	PushOffset();
 	return true;
 }
 
@@ -172,6 +190,8 @@ bool PdfDraw::ClipoffOp(const Rect& r)
 	page << "W* n\n";
 	if(r.left || r.top)
 		page << "1 0 0 1 " << Pt(r.left) << ' ' << Pt(-r.top) << " cm\n";
+	PushOffset();
+	current_offset += r.TopLeft();
 	return true;
 }
 
@@ -334,18 +354,19 @@ void PdfDraw::DrawTextOp(int x, int y, int angle, const wchar *s, Font fnt,
 			prev = next;
 		}
 		page << "ET\n";
+
+		if(q == 0 && url.GetCount()) { // For now, only 'zero angle' text can have links
+			UrlInfo& u = page_url.At(offset.GetCount()).Add();
+			u.rect = RectC(x, y, posx, ff.GetCy()).Offseted(current_offset);
+			u.url = url;
+		}
 	}
-/*
-//	DrawRect(x + posx, y, 20, 20, Black()); _DBG_
-	if(fnt.IsUnderline()) {
-		int w = max(2, ff.GetAscent() / 25);
-		int dy = ff.GetAscent() + min(ff.GetDescent() - w, 2 * w);
-		DrawLine(fround(x + sina * dy),
-		         fround(y + cosa * dy),
-		         fround(x + cosa * posx + sina * dy),
-		         fround(y + cosa * dy - sina * posx), w, ink);
-	}
-*/
+}
+
+void PdfDraw::Escape(const String& data)
+{
+	if(data.StartsWith("url:"))
+		url = data.Mid(4);
 }
 
 Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy);
@@ -652,7 +673,7 @@ String PdfDraw::Finish()
 	for(int i = 0; i < patterns.GetCount(); i++) {
 		uint64 pat = patterns[i];
 		StringBuffer ptk;
-		ptk << 
+		ptk <<
 		"/Type /Pattern\n"
 		"/PatternType 1\n"
 		"/PaintType 2\n"
@@ -924,10 +945,10 @@ String PdfDraw::Finish()
 		out << ">>\n";
 	}
 	if(!patternobj.IsEmpty()) {
-		out << 
+		out <<
 		"/ColorSpace << /Cspat " << patcsobj << " 0 R >>\n"
 		"/Pattern << ";
-		for(int i = 0; i < patterns.GetCount(); i++) 
+		for(int i = 0; i < patterns.GetCount(); i++)
 			out << "/Pat" << (i + 1) << ' ' << patternobj[i] << " 0 R ";
 		out << ">>\n";
 	}
@@ -936,6 +957,22 @@ String PdfDraw::Finish()
 	}
 	out << ">>\n";
 	EndObj();
+	
+	Vector<String> url_ann;
+	for(int pi = 0; pi < min(page_url.GetCount(), pagecount); pi++) {
+		const Array<UrlInfo>& url = page_url[pi];
+		for(int i = 0; i < url.GetCount(); i++) {
+			const UrlInfo& u = url[i];
+			url_ann.At(pi) << ' ' << BeginObj() << " 0 R";
+			out << "<</Type/Annot/Subtype/Link/Border[0 0 0]/Rect["
+				<< Pt(u.rect.left) << ' ' << Pt(pgsz.cy - u.rect.bottom) << ' '
+				<< Pt(u.rect.right) << ' ' << Pt(pgsz.cy - u.rect.top)
+				<< "]/A<</Type/Action/S/URI/URI("
+				<< u.url
+				<< ")>>\n>>\n";
+			EndObj();
+		}
+	}
 
 	int pages = BeginObj();
 	out << "<< /Type /Pages\n"
@@ -952,7 +989,9 @@ String PdfDraw::Finish()
 		    << "/Parent " << pages << " 0 R\n"
 		    << "/MediaBox [0 0 " << Pt(pgsz.cx) << ' ' << Pt(pgsz.cy) << "]\n"
 		    << "/Contents " << i + 1 << " 0 R\n"
-		    << "/Resources " << resources << " 0 R \n";
+		    << "/Resources " << resources << " 0 R\n";
+		if(i < url_ann.GetCount() && url_ann[i].GetCount())
+			out << "/Annots[" << url_ann[i] << "]\n";
 		out << ">>\n";
 		EndObj();
 	}

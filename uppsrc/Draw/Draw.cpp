@@ -113,6 +113,8 @@ void Draw::EndNative() {}
 
 int Draw::GetCloffLevel() const { return 0; }
 
+void Draw::Escape(const String& data) {}
+
 // -------------------------------
 
 void Draw::SysDrawImageOp(int x, int y, const Image& img, Color color)
