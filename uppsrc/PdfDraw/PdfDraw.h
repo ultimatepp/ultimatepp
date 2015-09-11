@@ -258,6 +258,8 @@ public:
 	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
 		                    Color ink, int n, const int *dx);
 
+	virtual void Escape(const String& data);
+
 private:
 	struct CharPos : Moveable<CharPos>   { word fi, ci; };
 
@@ -266,12 +268,18 @@ private:
 		bool sitalic;
 		bool sbold;
 	};
+	
+	struct UrlInfo {
+		Rectf  rect;
+		String url;
+	};
 
 	VectorMap<Font, OutlineInfo>                outline_info;
 	VectorMap<Font, Vector<wchar> >             pdffont;
 	VectorMap<Font, VectorMap<wchar, CharPos> > fontchars;
 	Index<uint64>                               patterns;
 	VectorMap< Tuple2<int64, Rect>, Image>      images;
+	Array< Array<UrlInfo> >                     page_url;
 	
 	Vector<int>  offset;
 	StringBuffer out;
@@ -286,6 +294,9 @@ private:
 	uint64      patternid;
 	bool        pdfa;
 	bool        empty;
+	String      url;
+	Vector<Point> offset_stack;
+	Point       current_offset;
 
 	inline double Pt(double dot)        { return 0.12 * dot; }
 
@@ -303,6 +314,9 @@ private:
 	CharPos GetCharPos(Font fnt, wchar chr);
 	void    FlushText(int dx, int fi, int height, const String& txt);
 	static String PdfColor(Color c);
+
+	void PushOffset();
+	void PopOffset();
 
 	OutlineInfo GetOutlineInfo(Font fnt);
 
@@ -336,7 +350,7 @@ public:
 	String Finish();
 	void   Clear();
 	bool   IsEmpty() const                                   { return empty; }
-
+	
 	PdfDraw(int pagecx, int pagecy, bool pdfa = false)       { Init(pagecx, pagecy, 0, pdfa); }
 	PdfDraw(Size pgsz = Size(5100, 6600), bool pdfa = false) { Init(pgsz.cx, pgsz.cy, 0, pdfa); }
 };

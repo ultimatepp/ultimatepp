@@ -95,7 +95,7 @@ PageY RichTxt::GetNextPageY(int parti, const RichContext& rc) const
 				py.y += pp.cy;
 			else
 				for(int lni = 0; lni < pp.linecy.GetCount(); lni++) {
-			 		if(BreaksPage(py, pp, lni, rc.page)) {
+					if(BreaksPage(py, pp, lni, rc.page)) {
 						py.y = rc.page.top;
 						py.page++;
 					}

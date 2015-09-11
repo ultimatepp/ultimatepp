@@ -347,6 +347,13 @@ mode.&]
 [s2;%% Returns the number of elements in clip`&offset stack. Mostly 
 used for diagnostic purposes.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Draw`:`:Escape`(const Upp`:`:String`&`): [@(0.0.255) virtual 
+void]_[* Escape]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2;%% Passes additional information to Draw target instance. For 
+example, PdfDraw understands `"url:http://link.html`" escapes to 
+define text hyperlinks. Frontend to EscapeOp.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:Draw`:`:GetPixelsPerInch`(`)const: [_^Size^ Size]_[* GetPixelsPerInch]()_[@(0.0.255) c
 onst]&]

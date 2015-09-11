@@ -76,6 +76,8 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		}
 		x = zx0;
 		Vector< Tuple2<int, int> > bak;
+		if(f.link.GetCount())
+			draw.Escape("url:" + f.link);
 		for(int i = 0; i < len; i++) {
 			int w = wd[pos + i];
 			Image img;
@@ -113,6 +115,8 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		              text + pos, fnt, ink, len, wd + pos);
 		for(int i = 0; i < bak.GetCount(); i++)
 			text[bak[i].a] = bak[i].b;
+		if(f.link.GetCount())
+			draw.Escape("url:");
 	}
 }
 
@@ -168,7 +172,7 @@ void RichPara::DrawRuler(Draw& w, int x, int y, int cx, int cy, Color ink, int s
 	case RULER_DOT:
 		while(x < r) {
 			w.DrawRect(x, y, min(r - x, segment), cy, ink);
-			x += 2 * segment;			
+			x += 2 * segment;
 		}
 		break;
 	default:
