@@ -1,0 +1,11 @@
+uses
+	Core,
+	RichText,
+	PdfDraw;
+
+file
+	PdfUrl.cpp;
+
+mainconfig
+	"" = "";
+

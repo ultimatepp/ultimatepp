@@ -1,0 +1,5 @@
+#ifndef _PdfText_icpp_init_stub
+#define _PdfText_icpp_init_stub
+#include "Core/init"
+#include "PdfDraw/init"
+#endif
