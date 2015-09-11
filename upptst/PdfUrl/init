@@ -1,0 +1,6 @@
+#ifndef _PdfUrl_icpp_init_stub
+#define _PdfUrl_icpp_init_stub
+#include "Core/init"
+#include "RichText/init"
+#include "PdfDraw/init"
+#endif
