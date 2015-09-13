@@ -178,6 +178,25 @@ CONSOLE_APP_MAIN
 		mm.GetAdd(1).a.Add(12);
 		mm.GetAdd(1).a.Add(13);
 	}
+
+	XmlNode n;
+	n = ParseXML("<a>xxx</a><b>xxx</b>");
+	String r;
+	for(auto& i: n)
+		r << i.GetText() << ';';
+	ASSERT(r == "a;b;");
+
+	r.Clear();
+	ValueArray va = { 1, 2, 3, 4 };
+	for(auto i: va)
+		r << i << ";";
+	ASSERT(r == "1;2;3;4;");
 	
+	Value v = va;
+	r.Clear();
+	for(auto i: v)
+		r << i << ";";
+	ASSERT(r == "1;2;3;4;");
+
 	LOG("=========== OK");
 }
