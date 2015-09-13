@@ -610,6 +610,26 @@ const Value& Value::operator[](int i) const
 	return ErrorValue();
 }
 
+const Vector<Value>& Value::GetVA() const
+{
+	if(IsRef()) {
+		dword t = ptr()->GetType();
+		if(t == VALUEARRAY_V)
+			return ((ValueArray::Data *)ptr())->data;
+	}
+	return ValueArray::VoidData;
+}
+
+Value::ConstIterator Value::Begin() const
+{
+	return GetVA().Begin();
+}
+
+Value::ConstIterator Value::End() const
+{
+	return GetVA().End();
+}
+
 Vector<Value>& Value::CloneArray()
 {
 	ValueArray::Data *data = (ValueArray::Data *)ptr();

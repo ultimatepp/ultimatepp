@@ -112,6 +112,8 @@ String ValueArray::Data::AsString() const
 	return sAsString(data);
 }
 
+Vector<Value> ValueArray::VoidData;
+
 Vector<Value>& ValueArray::Create()
 {
 	data = new Data;

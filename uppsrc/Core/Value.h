@@ -177,6 +177,8 @@ protected:
 	int     PolyCompare(const Value& v) const;
 
 	Vector<Value>&  CloneArray();
+
+	const Vector<Value>& GetVA() const;
 	
 #if defined(_DEBUG) && defined(COMPILER_GCC)
 	uint32  magic[4];
@@ -274,6 +276,18 @@ public:
 	const Void *GetVoidPtr() const        { ASSERT(IsRef()); return ptr(); }
 
 	friend void Swap(Value& a, Value& b)  { Swap(a.data, b.data); }
+
+	typedef Vector<Value>::ConstIterator ConstIterator;
+	ConstIterator          Begin() const;
+	ConstIterator          End() const;
+
+	typedef Value          value_type;
+	typedef ConstIterator  const_iterator;
+	typedef const Value&   const_reference;
+	typedef int            size_type;
+	typedef int            difference_type;
+	const_iterator         begin() const                      { return Begin(); }
+	const_iterator         end() const                        { return End(); }
 };
 
 struct ValueTypeError : Exc {
