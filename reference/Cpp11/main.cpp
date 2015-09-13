@@ -5,6 +5,8 @@ using namespace Upp;
 #define LAYOUTFILE <Cpp11/Cpp11.lay>
 #include <CtrlCore/lay.h>
 
+#ifdef CPP_11
+
 GUI_APP_MAIN
 {
 	WithMyAppLayout<TopWindow> dlg;
@@ -22,3 +24,34 @@ GUI_APP_MAIN
 	};
 	dlg.Execute();
 }
+
+#else
+
+struct MyApp : WithMyAppLayout<TopWindow> {
+	typedef MyApp CLASSNAME;
+
+	void Add() {
+		if(list.Find(~number) < 0)
+			list.Add(~number);
+	}
+	void Sel() {
+		number <<= list.GetKey();
+	}
+	MyApp() {
+		CtrlLayout(*this, "C++ demo");
+		list.NoHeader().AddColumn();
+		Vector<int> x;
+		x << 1 << 2 << 12 << 34 << 15 << 11;
+		for(int i = 0; i < x.GetCount(); i++)
+			list.Add(x[i]);
+		add <<= THISBACK(Add);
+		list.WhenSel = THISBACK(Sel);
+	}
+};
+
+GUI_APP_MAIN
+{
+	MyApp().Execute();;
+}
+
+#endif
