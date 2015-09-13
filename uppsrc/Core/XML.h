@@ -230,8 +230,20 @@ public:
 	rval_default(XmlNode);
 
 	XmlNode(const XmlNode& n, int);
+	
+	XmlNode()                                                 { type = XML_DOC; }
 
-	XmlNode()                                 { type = XML_DOC; }
+	typedef Array<XmlNode>::ConstIterator ConstIterator;
+	ConstIterator          Begin() const                      { return node.Begin(); }
+	ConstIterator          End() const                        { return node.End(); }
+
+	typedef XmlNode        value_type;
+	typedef ConstIterator  const_iterator;
+	typedef const XmlNode& const_reference;
+	typedef int            size_type;
+	typedef int            difference_type;
+	const_iterator         begin() const                      { return Begin(); }
+	const_iterator         end() const                        { return End(); }
 };
 
 enum {

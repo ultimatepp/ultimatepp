@@ -214,6 +214,8 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 	};
 	struct NullData : Data {};
 	Data *data;
+	
+	static Vector<Value> VoidData;
 
 	Vector<Value>& Create();
 	Vector<Value>& Clone();
@@ -254,7 +256,7 @@ public:
 	void Set(int i, const Value& v);
 	const Value& Get(int i) const;
 	Value GetAndClear(int i);
-	const Vector<Value>& Get() const          { return data->data; }
+	const Vector<Value>& Get() const          { return data ? data->data : VoidData; }
 	Vector<Value> Pick();
 
 	void Remove(int i, int count = 1);
@@ -280,6 +282,18 @@ public:
 	bool     operator>=(const ValueArray& x) const { return Compare(x) >= 0; }
 	bool     operator<(const ValueArray& x) const  { return Compare(x) < 0; }
 	bool     operator>(const ValueArray& x) const  { return Compare(x) > 0; }
+
+	typedef Vector<Value>::ConstIterator ConstIterator;
+	ConstIterator          Begin() const                      { return Get().Begin(); }
+	ConstIterator          End() const                        { return Get().End(); }
+
+	typedef Value          value_type;
+	typedef ConstIterator  const_iterator;
+	typedef const Value&   const_reference;
+	typedef int            size_type;
+	typedef int            difference_type;
+	const_iterator         begin() const                      { return Begin(); }
+	const_iterator         end() const                        { return End(); }
 };
 
 template<>

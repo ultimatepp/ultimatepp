@@ -6,7 +6,7 @@ Value::Value(const Value& v)
 		SetLarge(v);
 	else
 		data.SetSmall(v.data);
- 	Magic(); 
+ 	Magic();
 }
 
 template<>
@@ -266,7 +266,7 @@ inline bool Value::Is() const
 		return IsVoid();
 	if(t == INT_V || t == INT64_V || t == DOUBLE_V || t == BOOL_V ||
 	   t == DATE_V || t == TIME_V)
-	   	return Is((byte)t);
+		return Is((byte)t);
 	return t < 255 && Is((byte)t) || IsRef() && ptr()->GetType() == t;
 }
 
@@ -358,7 +358,7 @@ inline T& CreateRawValue(Value& v) {
 	typedef RawValueRep<T> R;
 	R *r = new R;
 	v = Value(r);
-	return r->Get();	
+	return r->Get();
 }
 
 template <class T>
