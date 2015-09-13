@@ -565,6 +565,17 @@ void CodeEditor::LeftDouble(Point p, dword keyflags) {
 		SetSelection(l, h);
 	else
 		SetSelection(pos, pos + 1);
+	selkind = SEL_WORDS;
+	SetFocus();
+	SetCapture();
+}
+
+void CodeEditor::LeftTriple(Point p, dword keyflags)
+{
+	LineEdit::LeftTriple(p, keyflags);
+	selkind = SEL_LINES;
+	SetFocus();
+	SetCapture();
 }
 
 void CodeEditor::LeftDown(Point p, dword keyflags) {
@@ -575,6 +586,7 @@ void CodeEditor::LeftDown(Point p, dword keyflags) {
 	LineEdit::LeftDown(p, keyflags);
 	WhenLeftDown();
 	CloseFindReplace();
+	selkind = SEL_CHARS;
 }
 
 void CodeEditor::Tip::Paint(Draw& w)
@@ -610,11 +622,38 @@ void CodeEditor::SyncTip()
 		CloseTip();
 }
 
-void CodeEditor::MouseMove(Point p, dword f) {
-	LineEdit::MouseMove(p, f);
+bool CodeEditor::MouseSelSpecial(Point p, dword flags) {
+	if((flags & K_MOUSELEFT) && HasFocus() && HasCapture() && !(flags & K_ALT) && selkind != SEL_CHARS) {
+		int c = GetMousePos(p);
+		int l, h;
+		
+		if(selkind == SEL_LINES) {
+			l = c;
+			int i = GetLinePos(l);
+			l = c - l;
+			h = min(l + GetLineLength(i) + 1, GetLength() - 1);
+			c = c < anchor ? l : h;
+		}
+		else
+			c = iscidl(GetChar(c - 1)) && GetWordPos(c, l, h) ? c < anchor ? l : h : c;
+		PlaceCaret(c, mpos != c);
+		return true;
+	}
+	return false;
+}
+
+void CodeEditor::LeftRepeat(Point p, dword flags)
+{
+	if(!MouseSelSpecial(p, flags))
+		LineEdit::LeftRepeat(p, flags);
+}
+
+void CodeEditor::MouseMove(Point p, dword flags) {
+	if(!MouseSelSpecial(p, flags))
+		LineEdit::MouseMove(p, flags);
 	if(IsSelection()) return;
 	tippos = GetMousePos(p);
-	SyncTip();	
+	SyncTip();
 }
 
 Image CodeEditor::CursorImage(Point p, dword keyflags)
@@ -992,6 +1031,7 @@ CodeEditor::CodeEditor() {
 	mark_lines = true;
 	check_edited = false;
 	tippos = -1;
+	selkind = SEL_CHARS;
 }
 
 CodeEditor::~CodeEditor() {}
