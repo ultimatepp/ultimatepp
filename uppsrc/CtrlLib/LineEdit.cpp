@@ -154,7 +154,7 @@ int LineEdit::PasteRectSelection(const WString& s)
 	Rect rect = GetRectSelection();
 	int pos = cursor;
 	int n = 0;
-	for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) { 
+	for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) {
 		int l, h;
 		CacheLinePos(i);
 		GetRectSelection(rect, i + rect.top, l, h);

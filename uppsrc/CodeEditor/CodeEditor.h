@@ -185,6 +185,8 @@ public:
 	virtual bool  Key(dword code, int count);
 	virtual void  LeftDown(Point p, dword keyflags);
 	virtual void  LeftDouble(Point p, dword keyflags);
+	virtual void  LeftTriple(Point p, dword keyflags);
+	virtual void  LeftRepeat(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
 	virtual Image CursorImage(Point p, dword keyflags);
 	virtual void  Serialize(Stream& s);
@@ -259,6 +261,9 @@ protected:
 	bool   foundsel;
 	bool   found, notfoundfw, notfoundbk;
 	int    foundpos, foundsize;
+	
+	enum { SEL_CHARS, SEL_WORDS, SEL_LINES };
+	int    selkind;
 
 	WString selword;
 
@@ -282,6 +287,7 @@ protected:
 
 	struct HlSt;
 	
+	bool   MouseSelSpecial(Point p, dword flags);
 	void   InitFindReplace();
 	void   CancelBracketHighlight(int& pos);
 	void   FindPrevNext(bool prev);

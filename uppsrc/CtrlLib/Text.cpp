@@ -551,6 +551,8 @@ String TextCtrl::Get(int pos, int size, byte charset) const
 }
 
 int  TextCtrl::GetChar(int pos) const {
+	if(pos < 0 || pos >= GetLength())
+		return 0;
 	int i = GetLinePos(pos);
 	WString ln = line[i];
 	int c = ln.GetLength() == pos ? '\n' : ln[pos];

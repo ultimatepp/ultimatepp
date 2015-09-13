@@ -523,14 +523,20 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	if(e == LEFTDOUBLE) {
 		leftdbltime = GetTickCount();
 		leftdblpos = p;
+		UPP::SetTimeCallback(GetKbdDelay(), callback(&Ctrl::LRep), &mousepos);
+		repeatTopCtrl = this;
 	}
 	if(e == RIGHTDOUBLE) {
 		rightdbltime = GetTickCount();
 		rightdblpos = p;
+		UPP::SetTimeCallback(GetKbdDelay(), callback(&Ctrl::RRep), &mousepos);
+		repeatTopCtrl = this;
 	}
 	if(e == MIDDLEDOUBLE) {
 		middledbltime = GetTickCount();
 		middledblpos = p;
+		UPP::SetTimeCallback(GetKbdDelay(), callback(&Ctrl::MRep), &mousepos);
+		repeatTopCtrl = this;
 	}
 	if(e == LEFTDOWN) {
 		LLOG("Ctrl::DispatchMouse: init left repeat for " << UPP::Name(this) << " at " << p);
