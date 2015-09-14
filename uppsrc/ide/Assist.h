@@ -171,13 +171,15 @@ struct AssistEditor : CodeEditor, Navigator {
 	enum { PARAMN = 16 };
 	ParamInfo param[PARAMN];
 	int       parami;
-	
+
+	String    current_type;
+
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
 	void           Assist();
 	bool           IncludeAssist();
 	String         ReadIdBackPos(int& pos, bool include);
-	String         ReadIdBack(int q, bool include = false);
+	String         ReadIdBack(int q, bool include = false, bool *destructor = NULL);
 	void           SyncAssist();
 	void           AssistInsert();
 	bool           InCode();

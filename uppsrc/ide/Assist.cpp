@@ -26,7 +26,7 @@ Value AssistEditor::AssistItemConvert::Format(const Value& q) const
 	if(ii >= 0 && ii < editor->assist_item_ndx.GetCount()) {
 		ii = editor->assist_item_ndx[ii];
 		if(ii < editor->assist_item.GetCount())
-			return RawToValue(editor->assist_item[ii]);	
+			return RawToValue(editor->assist_item[ii]);
 	}
 	CppItemInfo empty;
 	return RawToValue(empty);
@@ -123,9 +123,18 @@ String AssistEditor::ReadIdBackPos(int& pos, bool include)
 	return id;
 }
 
-String AssistEditor::ReadIdBack(int q, bool include)
+String AssistEditor::ReadIdBack(int q, bool include, bool *destructor)
 {
-	return ReadIdBackPos(q, include );
+	String id = ReadIdBackPos(q, include);
+	if(destructor) {
+		int n = 0;
+		while(q > 0 && isspace(GetChar(q - 1)) && n < 100) {
+			q--;
+			n++;
+		}
+		*destructor = q > 0 && GetChar(q - 1) == '~';
+	}
+	return id;
 }
 
 void AssistEditor::DirtyFrom(int line)
@@ -308,7 +317,8 @@ Vector<String> AssistEditor::ReadBack(int q)
 void AssistEditor::SyncAssist()
 {
 	LTIMING("SyncAssist");
-	String name = ReadIdBack(GetCursor(), include_assist);
+	bool destructor;
+	String name = ReadIdBack(GetCursor(), include_assist, &destructor);
 	String uname = ToUpper(name);
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
@@ -319,7 +329,8 @@ void AssistEditor::SyncAssist()
 			const CppItemInfo& m = assist_item[i];
 			if(!found[i] &&
 			   (typei < 0 || m.typei == typei) &&
-			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name))) {
+			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) &&
+			   (!destructor || m.kind == DESTRUCTOR && m.scope == current_type + "::")) {
 					int q = include_assist ? -1 : over.Find(m.name);
 					if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
 						found[i] = true;
@@ -437,10 +448,11 @@ void AssistEditor::Assist()
 	Parser parser;
 	Context(parser, GetCursor());
 	Index<String> in_types;
-	while(iscid(Ch(q - 1)))
+	while(iscid(Ch(q - 1)) || Ch(q - 1) == '~')
 		q--;
 	SkipSpcBack(q);
 	thisback = false;
+	current_type.Clear();
 	LTIMING("Assist2");
 	if(Ch(q - 1) == '(') {
 		int qq = q - 1;
@@ -460,6 +472,7 @@ void AssistEditor::Assist()
 		Vector<String> tparam;
 		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q), parser.context.namespace_using), tparam);
 		GatherItems(scope, false, in_types, true);
+		current_type = scope;
 	}
 	else {
 		String tp;
@@ -469,7 +482,7 @@ void AssistEditor::Assist()
 			if(iscib(*xp[i])) {
 				isok = true;
 				break;
-			}	
+			}
 		if(xp.GetCount()) {
 			if(isok) { // Do nothing on pressing '.' when there is no identifier before
 				Index<String> typeset = EvaluateExpressionType(parser, xp);
@@ -517,8 +530,6 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	type.SetCursor(0);
 	if(!assist.GetCount())
 		return;
-//	int cy = min(300, lcy * max(type.GetCount(), assist.GetCount()));
-//	cy += 4;	
 	LTIMING("PopUpAssist2");
 	int cy = VertLayoutZoom(304);
 	cy += HeaderCtrl::GetStdHeight();
@@ -660,11 +671,11 @@ void AssistEditor::AssistInsert()
 			String h;
 			for(int i = 0; i < include_back; i++)
 				h << "../";
-			Paste(ToUnicode(String().Cat() << "#include " 
+			Paste(ToUnicode(String().Cat() << "#include "
 			                << (include_local ? "\"" : "<")
 			                << h << include_path
 			                << f.name
-			                << (f.kind == KIND_INCLUDEFOLDER ? "/" : 
+			                << (f.kind == KIND_INCLUDEFOLDER ? "/" :
 			                       include_local ? "\"" : ">")
 			                , CHARSET_WIN1250));
 			if(f.kind == KIND_INCLUDEFOLDER) {
@@ -710,6 +721,8 @@ void AssistEditor::AssistInsert()
 						break;
 					}
 				}
+			if(findarg(f.kind, CONSTRUCTOR, DESTRUCTOR) >= 0)
+				txt << "()";
 			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
 			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
 				SetCursor(GetCursor() - 1);
@@ -745,6 +758,11 @@ bool AssistEditor::InCode()
 	WString l = GetWLine(line);
 	st->ScanSyntax(l, ~l + pos, line, GetTabSize());
 	return st->CanAssist();
+}
+
+bool isaid(int c)
+{
+	return c == '~' || iscid(c);
 }
 
 bool AssistEditor::Key(dword key, int count)
@@ -785,7 +803,7 @@ bool AssistEditor::Key(dword key, int count)
 	if(b && search.HasFocus())
 		SetFocus();
 	if(assist.IsOpen()) {
-		bool (*test)(int c) = include_assist ? isincludefnchar : iscid;
+		bool (*test)(int c) = include_assist ? isincludefnchar : isaid;
 		if(!(*test)(key) &&
 		   !((*test)(cc) && (key == K_DELETE || key == K_RIGHT)) &&
 		   !((*test)(bcc) && (key == K_LEFT || key == K_BACKSPACE))) {
