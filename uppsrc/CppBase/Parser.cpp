@@ -324,12 +324,19 @@ inline void ScopeCat(String& scope, const String& s)
 
 void Parser::Context::operator<<=(const Context& t)
 {
+	ns = t.ns;
 	scope = t.scope;
 	typenames = clone(t.typenames);
 	tparam = clone(t.tparam);
 	access = t.access;
 	ctname = t.ctname;
 	namespace_using = t.namespace_using;
+}
+
+bool Parser::IsNamespace(const String& scope)
+{
+	int l = scope.GetCount();
+	return memcmp(~context.ns, ~scope, l) == 0 && findarg(context.ns[l], '\0', ':') >= 0;
 }
 
 Parser::Decla::Decla()
@@ -1273,6 +1280,7 @@ bool Parser::Scope(const String& tp, const String& tn) {
 		c0 <<= context;
 		int struct_level0 = struct_level;
 		ScopeCat(context.scope, name);
+		ScopeCat(context.ns, name);
 		AddNamespace(context.scope, name);
 		if(Key('{')) {
 			Context cc;
@@ -1374,12 +1382,12 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 		im.at = im.natural.GetLength();
 	}
 	im.natural << Purify(d.natural, d.name, nm);
-	im.kind = templ.GetCount() ? IsNull(scope) ? FUNCTIONTEMPLATE
+	im.kind = templ.GetCount() ? IsNamespace(scope) ? FUNCTIONTEMPLATE
 	                                           : d.s_static ? CLASSFUNCTIONTEMPLATE
 	                                                        : INSTANCEFUNCTIONTEMPLATE
 	                           : d.istructor ? (d.isdestructor ? DESTRUCTOR : CONSTRUCTOR)
 	                                         : d.isfriend ? INLINEFRIEND
-	                                                      : IsNull(scope) ? FUNCTION
+	                                                      : IsNamespace(scope) ? FUNCTION
 	                                                                      : d.s_static ? CLASSFUNCTION
 	                                                                                   : INSTANCEFUNCTION;
 	im.param = param;
@@ -1397,7 +1405,7 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	return im;
 }
 
-void Parser::Enum()
+void Parser::Enum(bool vars)
 {
 	String name;
 	if(lex.IsId())
@@ -1424,7 +1432,19 @@ void Parser::Enum()
 		}
 	}
 	while(!Key(';')) {
-		if(lex.IsId() || lex == ',' || lex == '*') // typedef name ignored here
+		if(lex.IsId()) {
+			if(vars) { // typedef name ignored here
+				String scope = context.scope;
+				String name = lex.GetId();
+				CppItem& im = Item(scope, context.namespace_using, name, name);
+				im.natural = "enum " + name;
+				im.access = context.access;
+				im.kind = IsNamespace(scope) ? VARIABLE : INSTANCEVARIABLE;
+			}
+			++lex;
+		}
+		else
+		if(lex == ',' || lex == '*')
 			++lex;
 		else
 			break;
@@ -1498,7 +1518,7 @@ void Parser::ClassEnum()
 	im.ptype.Clear();
 	im.pname.Clear();
 	im.param.Clear();
-	Enum();
+	Enum(true);
 	context = pick(cc);
 	SetScopeCurrent();
 }
@@ -1603,7 +1623,7 @@ void Parser::Do()
 	else
 	if(lex == tk_enum && IsEnum(1)) {
 		++lex;
-		Enum();
+		Enum(true);
 	}
 	else
 	if(lex == tk_enum && lex[1] == tk_class && IsEnum(2)) {
@@ -1615,7 +1635,7 @@ void Parser::Do()
 	if(lex == tk_typedef && lex[1] == tk_enum && IsEnum(2)) {
 		++lex;
 		++lex;
-		Enum();
+		Enum(false);
 	}
 	else
 	if(!Scope(String(), String())) {
@@ -1670,7 +1690,7 @@ void Parser::Do()
 						im.access = context.access;
 						im.kind = d.isfriend ? FRIENDCLASS :
 						          d.type_def ? TYPEDEF :
-						          IsNull(scope) ? VARIABLE :
+						          IsNamespace(scope) ? VARIABLE :
 						          member_type;
 						if(im.IsData())
 							im.isptr = d.isptr;
@@ -1729,7 +1749,7 @@ void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
 				context.access = PUBLIC;
 				context.typenames.Clear();
 				context.tparam.Clear();
-				context.scope = Join(namespace_stack, "::");
+				context.ns = context.scope = Join(namespace_stack, "::");
 				inbody = false;
 				struct_level = 0;
 				for(int i = 0; i < typenames.GetCount(); i++)
