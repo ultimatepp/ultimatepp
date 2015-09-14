@@ -243,8 +243,7 @@ bool Ide::SwapSIf(const char *cref)
 	if(q < 0)
 		return false;
 	const Array<CppItem>& nn = CodeBase()[q];
-//	String qitem = QualifyKey(CodeBase(), p.current_scope, p.current_key, p.context.namespace_using);
-	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref)
+	if(cref && MakeCodeRef(p.current_scope, p.current_key) != cref || IsNull(p.current_name))
 		return false;
 	Vector<const CppItem *> n;
 	bool destructor = p.current_key.Find('~') >= 0;

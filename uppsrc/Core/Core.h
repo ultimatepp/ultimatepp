@@ -80,7 +80,7 @@
 #endif //PLATFORM_POSIX
 
 #ifdef PLATFORM_POSIX
-#define	LOFF_T_      off_t
+#define LOFF_T_      off_t
 #define LSEEK64_     lseek
 #define FTRUNCATE64_ ftruncate
 #endif

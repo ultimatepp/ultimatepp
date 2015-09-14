@@ -66,7 +66,7 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 			if(s[0] == 'd' && s[1] == 'e' && s[2] == 'f' &&
 			   s[3] == 'i' && s[4] == 'n' && s[5] == 'e' && !iscid(s[6])) {
 				s += 6;
-				while(*s == ' ') s++;
+				while(*s == ' ' || *s == '\t') s++;
 				String macro;
 				while(iscid(*s))
 					macro.Cat(*s++);
