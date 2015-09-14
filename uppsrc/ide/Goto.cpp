@@ -239,7 +239,7 @@ bool Ide::SwapSIf(const char *cref)
 	Parser p;
 	editor.SwapSContext(p);
 	int q = CodeBase().Find(p.current_scope);
-	LLOG("SwapS scope: " << p.current_scope);
+	LLOG("SwapS scope: " << p.current_scope << ", name " << p.current_name << ", key " << p.current_key);
 	if(q < 0)
 		return false;
 	const Array<CppItem>& nn = CodeBase()[q];
@@ -249,13 +249,13 @@ bool Ide::SwapSIf(const char *cref)
 	bool destructor = p.current_key.Find('~') >= 0;
 	for(int i = 0; i < nn.GetCount(); i++) {
 		const CppItem& m = nn[i];
-		if(m.name == p.current_name && destructor == (m.kind == DESTRUCTOR) && !IsCppType(m.kind))
-			n.Add(&nn[i]);
+		if(m.name == p.current_name && destructor == (m.kind == DESTRUCTOR) && !m.IsType())
+			n.Add(&m);
 	}
 	if(!cref && n.GetCount() < 2)
 		for(int i = 0; i < n.GetCount(); i++)
-			if(nn[i].IsType()) {
-				GotoCpp(nn[i]);
+			if(n[i]->IsType()) {
+				GotoCpp(*n[i]);
 				return false;
 			}
 	if(n.GetCount() == 0 || IsNull(editfile))
@@ -265,7 +265,7 @@ bool Ide::SwapSIf(const char *cref)
 	LLOG("SwapS line: " << line);
 	int i;
 	for(i = 0; i < n.GetCount(); i++) {
-		LLOG("file: " << GetSourceFilePath(n[q + i].file) << ", line: " << n[q + i].line);
+		LLOG("file: " << GetSourceFilePath(n[i]->file) << ", line: " << n[i]->line);
 		if(n[i]->file == file && n[i]->line == line) {
 			i++;
 			break;
