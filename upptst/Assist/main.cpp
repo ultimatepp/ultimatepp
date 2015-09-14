@@ -331,11 +331,29 @@ void MYTabs::AddContact()
 	::AddContact(); // should jump to global namespace 'add contact'
 }
 
+// ----------------------------------------------------
+
 struct StaticVariableTest {
 	static int foo; // Alt+I here
 };
 
 int StaticVariableTest::foo; // Alt+I here
+
+
+// ----------------------------------------------------
+
+enum { SM_NONE, SM_SINGLE, SM_DOUBLE } enum_var1;
+
+String string;
+
+struct EnumTest {
+	enum { SM_NONE, SM_SINGLE, SM_DOUBLE } enum_var2;
+	
+	void Foo() {
+		enum_var1; // Test jump
+		enum_var2; // Test jump
+	}
+};
 
 #endif
 
