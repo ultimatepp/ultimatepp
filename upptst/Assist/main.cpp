@@ -331,6 +331,12 @@ void MYTabs::AddContact()
 	::AddContact(); // should jump to global namespace 'add contact'
 }
 
+struct StaticVariableTest {
+	static int foo; // Alt+I here
+};
+
+int StaticVariableTest::foo; // Alt+I here
+
 #endif
 
 GUI_APP_MAIN
