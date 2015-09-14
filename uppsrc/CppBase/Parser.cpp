@@ -1652,17 +1652,26 @@ void Parser::Do()
 						String scope = context.scope;
 						if(d.type_def)
 							ScopeCat(scope, d.name);
+						String name = d.name;
+						int member_type = d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
+						q = d.name.ReverseFind("::");
+						if(q >= 0) { // class variable definition like: int Ctrl::EventLoop;
+							ScopeCat(scope, d.name.Mid(0, q));
+							current_scope = scope; // temporary until ';'
+							name = d.name.Mid(q + 2);
+							member_type = CLASSVARIABLE;
+						}
 						CppItem& im = Item(scope, context.namespace_using,
 						                   d.isfriend ? "friend class"
 						                   : d.type_def ? "typedef"
-						                   : d.name, d.name);
+						                   : name, name);
 						im.natural = Purify(h);
 						im.type = d.type;
 						im.access = context.access;
 						im.kind = d.isfriend ? FRIENDCLASS :
 						          d.type_def ? TYPEDEF :
 						          IsNull(scope) ? VARIABLE :
-						          d.s_static ? CLASSVARIABLE : INSTANCEVARIABLE;
+						          member_type;
 						if(im.IsData())
 							im.isptr = d.isptr;
 					}
@@ -1678,8 +1687,9 @@ void Parser::Do()
 				                       lex.FinishStatCollection(), maxScopeDepth));
 				lex.StartStatCollection(); // start collection of orphan symbols
 			}
-			SetScopeCurrent();
 			Key(';');
+			if(lex != t_eof)
+				SetScopeCurrent(); // need to be after ';' to make class variable definitions work
 		}
 	}
 }
