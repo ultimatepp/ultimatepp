@@ -1,0 +1,12 @@
+namespace Ns {
+
+enum { SM_NONE, SM_SINGLE, SM_DOUBLE } var1;
+
+String string;
+
+struct Foo {
+	int x;
+	enum { SM_NONE, SM_SINGLE, SM_DOUBLE } var2;
+};
+
+};
