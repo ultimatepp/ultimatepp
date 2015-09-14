@@ -311,6 +311,8 @@ MYTabs::~MYTabs()
 {
 }
 
+MYTabs::~ // check destructor match
+
 void MYTabs::RenameFile(const WString &from, const WString &to, Image icon)
 {
 	local; // jump to member
