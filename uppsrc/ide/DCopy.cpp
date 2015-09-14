@@ -81,7 +81,7 @@ void AssistEditor::DCopy()
 		for(int i = 0; i < id.GetCount(); i++)
 			r << "\tvoid " << id[i] << "();\n";
 	}
-	else 
+	else
 		for(int i = 0; i < cpp.GetCount(); i++) {
 			const Array<CppItem>& n = cpp[i];
 			bool decl = decla;
