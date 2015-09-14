@@ -433,6 +433,7 @@ struct CppBase : ArrayMap<String, Array<CppItem> > {
 
 struct Parser {
 	struct Context {
+		String         ns;
 		String         scope;
 		String         ctname;
 		Vector<int>    tparam;
@@ -555,7 +556,7 @@ struct Parser {
 	void   Do();
 	String AnonymousName();
 	String StructDeclaration(const String& tp, const String& tn);
-	void   Enum();
+	void   Enum(bool vars);
 
 	CppItem& Item(const String& scope, const String& using_namespace, const String& item,
 	              const String& name, bool impl);
@@ -576,6 +577,7 @@ struct Parser {
 	void   Statement();
 	void   Locals(const String& type);
 	String Tparam(int& q);
+	bool   IsNamespace(const String& scope);
 	
 	friend class Lex; // Fix to make Lex::ThrowError
 

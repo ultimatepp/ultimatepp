@@ -66,7 +66,7 @@ void Ide::FindId(const String& id)
 	int pos = editor.GetCursor();
 	int h = min(editor.GetLength(), pos + 4000);
 	for(;;) {
-		if(pos >= h || findarg(editor[pos], ';', '{', '}') >= 0)
+		if(pos >= h || editor[pos] == ';')
 			break;
 		if(iscib(editor[pos])) {
 			int p0 = pos;
