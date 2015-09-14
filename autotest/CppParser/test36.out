@@ -1,0 +1,9 @@
+StaticVariableTest {
+	STRUCT, name: StaticVariableTest, qitem: struct, qtype: StaticVariableTest, qptype: , natural: struct StaticVariableTest, line 1, using 
+	CLASSVARIABLE, name: foo, qitem: foo, qtype: , qptype: , natural: static int foo, line 2, using 
+	CLASSVARIABLE, name: bar, qitem: bar, qtype: String, qptype: , natural: static String bar, line 3, using 
+	CLASSVARIABLE, name: foo, qitem: foo, qtype: , qptype: , natural: int StaticVariableTest::foo, line 6, using 
+	CLASSVARIABLE, name: bar, qitem: bar, qtype: String, qptype: , natural: String StaticVariableTest::bar, line 7, using 
+}
+<locals> {
+}
