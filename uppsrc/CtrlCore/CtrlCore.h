@@ -476,7 +476,6 @@ private:
 
 	bool         akv:1;
 	bool         destroying:1;
-	byte         hidpiaware:2;
 
 	static  Ptr<Ctrl> eventCtrl;
 	static  Ptr<Ctrl> mouseCtrl;
