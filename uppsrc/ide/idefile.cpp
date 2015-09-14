@@ -485,7 +485,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
 	bool candesigner = !astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
-	   && editastext.Find(path) < 0 && !IsNestReadOnly(editfile);
+	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile);
 	
 	if(candesigner) {
 		for(int i = 0; i < GetIdeModuleCount() && !designer; i++)
@@ -493,7 +493,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	}
 
 	if(!designer && editastext.Find(path) < 0 &&
-	   (charset == CHARSET_DEFAULT && FileIsBinary(path) || editashex.Find(path) >= 0))
+	   (findarg(GetFileExt(path), ".log") < 0 && FileIsBinary(path) || editashex.Find(path) >= 0))
 		designer.Create<FileHexView>().Open(path);
 
 	if(designer) {
@@ -635,8 +635,7 @@ bool Ide::IsDesignerFile(const String& path)
 
 void Ide::DoEditAsText(const String& path)
 {
-	if(IsDesignerFile(path))
-		editastext.FindAdd(path);
+	editastext.FindAdd(path);
 	editashex.RemoveKey(editfile);
 }
 

@@ -163,7 +163,7 @@ void Ide::SearchMenu(Bar& menu)
 		menu.Add(AK_FINDSTRING, THISBACK1(FindString, false))
 			.Help("Find any ordinary string constant (\"\" - delimited)");
 		menu.Add(AK_FINDSTRINGBACK, THISBACK1(FindString, true))
-			.Help("Find any ordinary string constant (\"\" - delimited) backwards");	
+			.Help("Find any ordinary string constant (\"\" - delimited) backwards");
 		menu.MenuSeparator();
 	}
 	menu.Add(AK_FINDINFILES, THISBACK1(FindInFiles, false))
@@ -205,41 +205,38 @@ void Ide::Edit(Bar& menu)
 			    .Help("Edit using the designer (not as text)");
 			menu.MenuSeparator();
 		}
-		Bar::Item& (Bar::*add)(const char *s, const Image& m, Callback cb) = &Bar::Add;
-		if(toolbar_in_row) add = &MenuBar::AddMenu;
-		(menu.*add)("Undo", CtrlImg::undo(), callback(&editor, &LineEdit::Undo))
+		menu.Add("Undo", CtrlImg::undo(), callback(&editor, &LineEdit::Undo))
 			.Key(K_CTRL_Z)
 			.Enable(editor.IsUndo())
 			.Help("Undo changes to text");
-		(menu.*add)("Redo", CtrlImg::redo(), callback(&editor, &LineEdit::Redo))
+		menu.Add("Redo", CtrlImg::redo(), callback(&editor, &LineEdit::Redo))
 			.Key(K_SHIFT|K_CTRL_Z)
 			.Enable(editor.IsRedo())
 			.Help("Redo undone changes");
-		if(!toolbar_in_row || menu.IsMenuBar())
-			menu.Separator();
-		(menu.*add)("Cut", CtrlImg::cut(), callback(&editor, &LineEdit::Cut))
+
+		menu.Separator();
+
+		menu.Add("Cut", CtrlImg::cut(), callback(&editor, &LineEdit::Cut))
 			.Key(K_CTRL_X)
 			.Enable(selection)
 			.Help("Cut selection and place it on the system clipboard");
-		(menu.*add)("Copy", CtrlImg::copy(), callback(&editor, &LineEdit::Copy))
+		menu.Add("Copy", CtrlImg::copy(), callback(&editor, &LineEdit::Copy))
 			.Key(K_CTRL_C)
 			.Enable(selection)
 			.Help("Copy current selection on the system clipboard");
-		(menu.*add)("Paste", CtrlImg::paste(), THISBACK(EditPaste))
+		menu.Add("Paste", CtrlImg::paste(), THISBACK(EditPaste))
 			.Key(K_CTRL_V)
 			.Help("Insert text from clipboard at cursor location");
 
-		if(!toolbar_in_row || menu.IsMenuBar())
-			menu.Separator();
+		menu.Separator();
 
-		(menu.*add)("Select all", CtrlImg::select_all(), callback(&editor, &LineEdit::SelectAll))
+		menu.Add("Select all", CtrlImg::select_all(), callback(&editor, &LineEdit::SelectAll))
 			.Key(K_CTRL_A);
 	}
 
 	menu.MenuSeparator();
 	
-	if(menu.IsMenuBar())
-		menu.Add("Find and Replace", THISBACK(SearchMenu));
+	menu.Add("Find and Replace", THISBACK(SearchMenu));
 
 	if(!designer && menu.IsMenuBar())
 		InsertAdvanced(menu);
@@ -663,17 +660,28 @@ void Ide::MainTool(Bar& bar)
 {
 	if(!IsEditorMode()) {
 		BrowseMenu(bar);
-		if(!toolbar_in_row)
-			bar.Separator();
+		bar.Separator();
 	}
+	bar.Add("Edit as text", IdeImg::EditText(), THISBACK(EditAsText))
+	   .Check(!designer)
+	   .Key(!designer ? 0 : K_CTRL_T);
+	bool b = designer && !designer.Is<FileHexView>();
+	bool d = IsDesignerFile(editfile);
+	bar.Add("Edit using designer", IdeImg::EditDesigner(), THISBACK(EditUsingDesigner))
+	   .Check(b)
+	   .Enable(d)
+	   .Key(b || !d ? 0 : K_CTRL_T);
+	bar.Add("View as hex", IdeImg::EditHex(), THISBACK(EditAsHex))
+	   .Check(designer.Is<FileHexView>())
+	   .Key(K_CTRL_B);
+	if(!designer)
+		bar.Separator();
 	Edit(bar);
 	if(debugger) {
 		if(!designer)
 			bar.Separator();
 		DebugMenu(bar);
 	}
-	if(!designer)
-		bar.Separator();
 	Project(bar);
 	BuildMenu(bar);
 	
