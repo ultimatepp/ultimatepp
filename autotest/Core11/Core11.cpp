@@ -179,6 +179,7 @@ CONSOLE_APP_MAIN
 		mm.GetAdd(1).a.Add(13);
 	}
 
+#ifdef CPP_11
 	XmlNode n;
 	n = ParseXML("<a>xxx</a><b>xxx</b>");
 	String r;
@@ -197,6 +198,7 @@ CONSOLE_APP_MAIN
 	for(auto i: v)
 		r << i << ";";
 	ASSERT(r == "1;2;3;4;");
+#endif
 
 	LOG("=========== OK");
 }
