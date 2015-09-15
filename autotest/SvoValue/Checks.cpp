@@ -112,6 +112,14 @@ void CheckValueMap()
 	ASSERT(va[0] == 123);
 	ASSERT(va[1] == Date(2001, 12, 1));
 	ASSERT(va[2] == "test");
+	
+	ValueMap m;
+	// 0         1         2         3         4
+	m("A", "a")("B", "b")("A", "a")("Z", "z")("B", "b");
+	ASSERT(m.Find("A") == 0);
+	ASSERT(m.FindNext(0) == 2);
+	ASSERT(m.Find("B") == 1);
+	ASSERT(m.FindNext(1) == 4);
 }
 
 void OtherChecks()
@@ -119,7 +127,7 @@ void OtherChecks()
 	Value c;
 	
 	ASSERT(c.IsVoid());
-	RDUMP(c.IsVoid());	
+	RDUMP(c.IsVoid());
 
 	Value x = "Ahoj";
 	String xx = x;
