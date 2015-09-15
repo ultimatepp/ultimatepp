@@ -135,6 +135,17 @@ etKey]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Returns value at index [%-*@3 i].&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:ValueMap`:`:Find`(const Upp`:`:Value`&`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) c
+onst]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 key])_[@(0.0.255) const]&]
+[s2; Returns the index of first [%-*@3 key] or `-1 if not present.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ValueMap`:`:FindNext`(int`)const:%- [@(0.0.255) int]_[* FindNext]([@(0.0.255) i
+nt]_[*@3 ii])_[@(0.0.255) const]&]
+[s2; Returns the index of next key with the same value as key at 
+index [%-*@3 ii] or `-1 if not present.&]
+[s3; &]
+[s4;%- &]
 [s5;:ValueMap`:`:Add`(const Value`&`,const Value`&`):%- [@(0.0.255) void]_[* Add]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[*@3 value])&]

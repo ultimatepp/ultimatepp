@@ -357,6 +357,8 @@ public:
 	bool IsEmpty() const                            { return data->value.IsEmpty(); }
 	const Value& GetKey(int i) const                { return data->key[i]; }
 	const Value& GetValue(int i) const              { return data->value[i]; }
+	int  Find(const Value& key) const               { return data ? data->key.Find(key) : -1; }
+	int  FindNext(int ii) const                     { return data ? data->key.FindNext(ii) : -1; }
 
 	void Add(const Value& key, const Value& value);
 	void Add(const String& key, const Value& value) { Add(Value(key), value); }
