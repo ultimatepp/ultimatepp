@@ -44,7 +44,7 @@ Serial::~Serial()
 bool Serial::Open(String const &port, dword speed, byte parity, byte bits, byte stopBits)
 {
 	// open the device
-	fd = CreateFile(port, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
+	fd = CreateFile("\\\\.\\" + port, GENERIC_READ | GENERIC_WRITE, 0, 0, OPEN_EXISTING, 0, 0);
 	if(fd == INVALID_HANDLE_VALUE)
 	{
 		isError = true;
