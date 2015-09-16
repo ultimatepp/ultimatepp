@@ -311,6 +311,7 @@ void IconDes::EditImage()
 	Slot& c = Current();
 	WithImageLayout<TopWindow> dlg;
 	PrepareImageDlg(dlg);
+	dlg.Title("Image");
 	dlg.Breaker(dlg.cx);
 	dlg.Breaker(dlg.cy);
 	Image img = c.image;
