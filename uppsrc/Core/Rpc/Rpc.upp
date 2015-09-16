@@ -1,10 +1,10 @@
 description "XML-RPC support package (both server and client stuff)\3770,128,128";
 
 file
-	Rpc.h options PCH,
-	legacy.h,
-	Value.cpp,
-	Xml.cpp,
-	Server.cpp,
-	Client.cpp;
+	Rpc.h options(BUILDER_OPTION) PCH,
+	imp\Value.cpp,
+	imp\Xml.cpp,
+	imp\Client.cpp,
+	imp\Server.cpp,
+	legacy.h;
 

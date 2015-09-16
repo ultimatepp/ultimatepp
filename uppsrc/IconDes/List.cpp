@@ -105,6 +105,13 @@ void IconDes::InsertRemoved(int q)
 	}
 }
 
+void SetRes(Image& m, int resolution)
+{
+	ImageBuffer ib(m);
+	ib.SetResolution(decode(resolution, 0, IMAGE_RESOLUTION_STANDARD, 1, IMAGE_RESOLUTION_UHD, IMAGE_RESOLUTION_NONE));
+	m = ib;
+}
+
 void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
 {
 	int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
@@ -118,17 +125,11 @@ void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
 	GoTo(ii);
 }
 
-void SetRes(Image& m, int resolution)
-{
-	ImageBuffer ib(m);
-	ib.SetResolution(decode(resolution, 0, IMAGE_RESOLUTION_STANDARD, 1, IMAGE_RESOLUTION_UHD, IMAGE_RESOLUTION_NONE));
-	m = ib;
-}
-
 void IconDes::InsertImage()
 {
 	WithImageLayout<TopWindow> dlg;
 	PrepareImageDlg(dlg);
+	dlg.resolution <<= IMAGE_RESOLUTION_STANDARD;
 	do {
 		if(dlg.Run() != IDOK)
 			return;
@@ -155,6 +156,7 @@ void IconDes::InsertPaste()
 		Exclamation("Clipboard does not contain an image.");
 		return;
 	}
+	SetRes(m, IMAGE_RESOLUTION_STANDARD);
 	ImageInsert("", m);
 	EditImage();
 }
@@ -198,7 +200,7 @@ struct ImgPreview : Display {
 static void sLoadImage(const String& path, Image& result)
 {
 	if(findarg(ToLower(GetFileExt(path)), ".png", ".gif", ".jpeg", ".jpg") < 0)
-		return;	
+		return;
 	FileIn in(path);
 	if(!in)
 		return;
@@ -243,6 +245,7 @@ void IconDes::InsertFile()
 		String id = Filter(GetFileTitle(fn), CharFilterImageId);
 		if(!IsAlpha(*id) && *id != '_')
 			id = '_' + id;
+		SetRes(m, IMAGE_RESOLUTION_STANDARD);
 		ImageInsert(id, m);
 	}
 }
@@ -250,7 +253,7 @@ void IconDes::InsertFile()
 void IconDes::ExportPngs()
 {
 	String dir = SelectDirectory();
-	if(!dir.IsEmpty()) 
+	if(!dir.IsEmpty())
 		for(int i = 0; i < GetCount(); i++)
 			PNGEncoder().SaveFile(AppendFileName(dir, GetName(i) + ".png"), GetImage(i));
 }
