@@ -9,16 +9,19 @@ void Ide::SetupEditor(int f, String hl, String path)
 		if(IsNull(hl) && IsNull(GetFileExt(path))) {
 			FileIn in(path);
 			String h = in.Get(4096);
-			CParser p(h);
-			while(!p.IsEof()) {
-				if(p.Char('#')) {
-					if(p.Id("define") || p.Id("ipathdef") || p.Id("ifdef") || p.Id("include") || p.Id("pragma")) {
-						hl = "cpp";
-						break;
+			try {
+				CParser p(h);
+				while(!p.IsEof()) {
+					if(p.Char('#')) {
+						if(p.Id("define") || p.Id("ipathdef") || p.Id("ifdef") || p.Id("include") || p.Id("pragma")) {
+							hl = "cpp";
+							break;
+						}
 					}
+					p.SkipTerm();
 				}
-				p.SkipTerm();
 			}
+			catch(CParser::Error) {}
 		}
 	}
 	switch(f) {
