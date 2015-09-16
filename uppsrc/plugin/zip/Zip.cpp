@@ -30,7 +30,7 @@ void Zip::FileHeader(const char *path, Time tm)
 	zip->Put32le(f.csize);
 	ASSERT((f.gpflag & 0x8) == 0 || f.usize == 0);
 	zip->Put32le(f.usize);
-	zip->Put16le(strlen(f.path));
+	zip->Put16le((word)strlen(f.path));
 	zip->Put16le(0);
 	zip->Put(f.path);
 	done += 5*2 + 5*4 + f.path.GetCount();
@@ -50,7 +50,7 @@ void Zip::BeginFile(const char *path, Time tm)
 	f.csize = 0;
 	f.usize = 0;
 	FileHeader(path, tm);
-	if (zip->IsError()) WhenError(); 
+	if (zip->IsError()) WhenError();
 }
 
 void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm)

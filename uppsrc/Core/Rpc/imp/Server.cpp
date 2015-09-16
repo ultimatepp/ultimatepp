@@ -1,3 +1,4 @@
+#include <Core/Core.h>
 #include <Core/Rpc/Rpc.h>
 
 #define LLOG(x)  //  DLOG(x)

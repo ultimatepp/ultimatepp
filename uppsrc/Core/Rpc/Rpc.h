@@ -1,7 +1,8 @@
+// NOTE: Because of clash with Windows rpc.h, Core/Core.h has to be included before this header
+// For the same reason implementation files are in 'imp' subdirectory
+
 #ifndef Rpc_Rpc_h
 #define Rpc_Rpc_h
-
-#include <Core/Core.h>
 
 NAMESPACE_UPP
 
