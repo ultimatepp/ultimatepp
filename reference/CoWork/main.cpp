@@ -57,8 +57,6 @@ void DoLine(RGBA *line, int phase, int y, Size sz)
 void App::Paint(Draw& w)
 {
 	Size sz = GetSize();
-	DLOG("----------------");
-	DDUMP(sz);
 	ImageBuffer ib(sz);
 	if(cowork) {
 		CoWork co;
