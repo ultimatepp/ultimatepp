@@ -33,12 +33,12 @@ class CoWork : NoCopy {
 public:
 	void     Do(Callback cb);
 #ifdef CPP_11
-	void     Do(std::function<void ()> lambda)        { Do(Callback(lambda(fn))); }
+	void     Do(std::function<void ()> fn)            { Do(Callback(lambda(fn))); }
 #endif
 
 	CoWork&  operator&(Callback cb)                   { Do(cb); return *this; }
 #ifdef CPP_11
-	CoWork&  operator&(std::function<void ()> lambda) { Do(Callback(lambda(fn))); return *this; }
+	CoWork&  operator&(std::function<void ()> fn)     { Do(Callback(lambda(fn))); return *this; }
 #endif
 
 	void Finish();
