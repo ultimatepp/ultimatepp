@@ -33,6 +33,9 @@ class CoWork : NoCopy {
 public:
 	void     Do(Callback cb);
 	CoWork&  operator&(Callback cb) { Do(cb); return *this; }
+	
+//	void     Do(std::function<void ()> fn)        { Do(lambda(fn)); }
+//	CoWork&  operator&(std::function<void ()> fn) { Do(lambda(fn)); return *this; }
 
 	void Finish();
 	
