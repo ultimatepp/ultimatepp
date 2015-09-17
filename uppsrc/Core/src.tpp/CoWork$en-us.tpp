@@ -33,12 +33,18 @@ submitted by Do in sequence.&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4;H0; &]
 [s5;:CoWork`:`:Do`(Callback`): [@(0.0.255) void]_[* Do]([_^Callback^ Callback]_[*@3 cb])&]
-[s2;%% Adds [%-*@3 cb] to be performed by any thread.&]
+[s5;:Upp`:`:CoWork`:`:Do`(std`:`:function`<void`(`)`>`): [@(0.0.255) void]_[* Do]([_^std`:`:function^ s
+td`::function]<[@(0.0.255) void]_()>_[*@3 lambda]) [*1 `[C`+`+ 11`]]&]
+[s2;%% Adds [%-*@3 cb] or [%-*@3 lambda] to be performed by any thread. 
+ .&]
 [s3;%% &]
 [s4; &]
 [s5;:CoWork`:`:operator`&`(Callback`): [_^CoWork^ CoWork][@(0.0.255) `&]_[* operator`&]([_^Callback^ C
 allback]_[*@3 cb])&]
-[s2;%% Same as Do([%-*@3 cb].); return `*this;&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(std`:`:function`<void`(`)`>`): [_^Upp`:`:CoWork^ CoWo
+rk][@(0.0.255) `&]_[* operator`&]([_^std`:`:function^ std`::function]<[@(0.0.255) void]_()
+>_) [*1 `[C`+`+ 11`]]&]
+[s2;%% Same as Do([%-*@3 cb ][/ or] [%-*@3 lambda]); return `*this;&]
 [s3;%% &]
 [s4; &]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
