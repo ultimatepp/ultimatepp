@@ -644,9 +644,11 @@ bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				link << " -subsystem:windowsce,4.20 /ARMPADCODE -NODEFAULTLIB:\"oldnames.lib\" ";
 			else
 			if(HasFlag("GUI") || IsMscArm())
-				link << (HasFlag("WIN32") ? " -subsystem:windows,5.01" : " -subsystem:windowsce"); //,5.01 needed to support WindowsXP
+				link << " -subsystem:windows";
 			else
-				link << " -subsystem:console,5.01"; //,5.01 needed to support WindowsXP
+				link << " -subsystem:console";
+			if(!IsMsc64())
+				link << ",5.01"; //,5.01 needed to support WindowsXP
 			if(createmap)
 				link << " -MAP";
 			if(HasFlag("DLL"))
