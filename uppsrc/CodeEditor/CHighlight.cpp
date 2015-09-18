@@ -108,6 +108,8 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		InitKeywords();
 	}
 	
+	bool include = false;
+	
 	int tabsize = editor ? editor->GetTabSize() : 4;
 	
 	LTIMING("HighlightLine");
@@ -156,16 +158,17 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			hls.Put(hl_style[INK_NORMAL]);
 		}
 		if(*p == '#' && findarg(highlight, HIGHLIGHT_JAVASCRIPT, HIGHLIGHT_CSS, HIGHLIGHT_JSON) < 0) {
-			static const char *pd[] = {
-				"define", "error", "if", "elif", "else", "endif",
-				"ifdef", "ifndef", "include", "line", "undef", "pragma",
-				// CLR
-				"using"
-			};
 			static Index<String> macro;
-			if(macro.GetCount() == 0)
+			ONCELOCK {
+				static const char *pd[] = {
+					"include", "define", "error", "if", "elif", "else", "endif",
+					"ifdef", "ifndef", "line", "undef", "pragma",
+					// CLR
+					"using"
+				};
 				for(int i = 0; i < __countof(pd); i++)
 					macro.Add(pd[i]);
+			}
 			const wchar *q = p + 1;
 			while(*q == ' ' || *q == '\t')
 				q++;
@@ -173,7 +176,10 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			while(IsAlpha(*q))
 				id.Cat(*q++);
 			cppid = id;
-			hls.Put(macro.Find(cppid) < 0 ? 1 : int(q - p), hl_style[INK_MACRO]);
+			int mq = macro.Find(cppid);
+			hls.Put(mq < 0 ? 1 : int(q - p), hl_style[INK_MACRO]);
+			if(mq == 0)
+				include = true;
 			p = q;
 		}
 	}
@@ -307,8 +313,8 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			if(highlight == HIGHLIGHT_SQL)
 				iid = ToUpper(iid);
 			int uq = kw_upp.Find(iid);
-			int nq;
-			hls.Put(int(q - p), (nq = keyword[highlight].Find(iid)) >= 0 ? hl_style[INK_KEYWORD] :
+			int nq = -1;
+			hls.Put(int(q - p), !include && (nq = keyword[highlight].Find(iid)) >= 0 ? hl_style[INK_KEYWORD] :
 			                    name[highlight].Find(iid) >= 0 ? hl_style[INK_UPP] :
 			                    uq >= 0 ? uq < kw_macros ? hl_style[INK_UPPMACROS] :
 			                              uq < kw_logs ? hl_style[INK_UPPLOGS] :
