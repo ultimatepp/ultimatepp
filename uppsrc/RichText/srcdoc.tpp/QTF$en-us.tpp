@@ -326,7 +326,9 @@ optimization, [*@(128.0.255) %`-] is equivalent to [@(128.0.255) %][@(0.0.255) 0
 ::^ [s0;%- [C@(128.0.255) k]]
 ::= [s0; Keep paragraph on single page.]
 ::^ [s0;%- [C@(128.0.255) K]]
-::= [s0; Keep paragraph on same page as next one.]
+::= [s0; Keep paragraph on same page as next one. Only works well for 
+binding two paragraphs (does not propagate further). If you need 
+to bind more, use organizing table [@(128.0.255) `{`{`*K ][/ text][@(128.0.255) `}`}]]
 ::^ [s0;%- [C@(128.0.255) Q]]
 ::= [s0; Orphan control.]
 ::^ [s0;%- [C@(128.0.255) n][/C@(0.0.255) text][C@(128.0.255) ;]]
@@ -600,6 +602,9 @@ Default is border: 0, margin: 15.]
 [s0; [C@(128.0.255) a][/C@(0.0.255) /number]]
 :: [s0; Sets all cell borders (first [/@(0.0.255) number]) and margins 
 in dots. If any of numbers is missing, sets only the one present.]
+:: [s0; [C@(128.0.255) `*]]
+:: [s0; Same as f0g0a0/0 `- sets everything to zero to use table as 
+organizing element.]
 :: [s0; [C@(128.0.255) o]]
 :: [s0; Sets round border.]
 :: [s0; [C@(128.0.255) `@][/C@(0.0.255) color]]
