@@ -1,3 +1,5 @@
+#include <Core/Core.h>
+// Note: Core.h needs to be included before Rpc.h because of Win32 rpc.h name clash problem
 #include <Core/Rpc/Rpc.h>
 
 using namespace Upp;
