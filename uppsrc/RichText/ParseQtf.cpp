@@ -435,6 +435,11 @@ void RichQtfParser::TableFormat(bool bw)
 			if(b >= 0)
 				t.format.margin.left = t.format.margin.right = t.format.margin.top = t.format.margin.bottom = b;
 			break; //!!cell all lines
+		case '*':
+			tab.format.frame = tab.format.grid =
+			t.format.border.left = t.format.border.right = t.format.border.top = t.format.border.bottom =
+			t.format.margin.left = t.format.margin.right = t.format.margin.top = t.format.margin.bottom = 0;
+			break;
 		case '-': t.hspan = GetNumber(); break;
 		case '+':
 		case '|': t.vspan = GetNumber(); break;
