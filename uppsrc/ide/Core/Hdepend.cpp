@@ -23,7 +23,6 @@ String FindIncludeFile(const char *s, const String& filedir, const Vector<String
 				}
 				for(int i = 0; i < incdir.GetCount(); i++) {
 					String fn = CatAnyPath(incdir[i], name);
-					DDUMP(fn);
 					if(FileExists(fn))
 						return fn;
 				}
