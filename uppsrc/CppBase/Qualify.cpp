@@ -201,6 +201,43 @@ void QualifyTypes(CppBase& base, const String& scope, CppItem& m)
 	m.qptype = QualifyIds(nf, m.ptype, m.using_namespaces, true);
 }
 
+void QualifyPass0(CppBase& base)
+{ // Move scopes - solve: namespace X { struct C { void Foo(); }; using namespace X; void C::Foo() {}
+	Vector<int> remove_scope;
+	for(int ni = 0; ni < base.GetCount(); ni++) {
+		Array<CppItem>& n = base[ni];
+		ScopeInfo nf(base);
+		String scope = base.GetKey(ni);
+		String usings;
+		int    toscopei = -1;
+		Vector<int> remove_item;
+		for(int i = 0; i < n.GetCount(); i++) {
+			CppItem& m = n[i];
+			if(m.qualify && m.impl) {
+				if(usings != m.using_namespaces) {
+					usings = m.using_namespaces;
+					toscopei = -1;
+					Vector<String> h = Split(m.using_namespaces, ';');
+					for(int i = 0; i < h.GetCount(); i++) {
+						String ns = h[i] + "::" + scope;
+						toscopei = base.Find(ns);
+						if(toscopei >= 0)
+							break;
+					}
+				}
+				if(toscopei >= 0 && toscopei != ni) {
+					base[toscopei].Add(m);
+					remove_item.Add(i);
+				}
+			}
+		}
+		n.Remove(remove_item);
+		if(scope.GetCount() && n.GetCount() == 0)
+			remove_scope.Add(ni);
+	}
+	base.Remove(remove_scope);
+}
+
 void QualifyPass1(CppBase& base)
 { // Qualify types
 	LTIMING("QualifyPass1");
@@ -267,6 +304,7 @@ void Qualify(CppBase& base)
 		}
 	}
 	base.namespaces.Clear();
+	QualifyPass0(base);
 	QualifyPass1(base);
 	QualifyPass2(base);
 }

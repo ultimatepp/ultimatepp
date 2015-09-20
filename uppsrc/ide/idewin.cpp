@@ -1090,7 +1090,7 @@ void AppMain___()
 		if(!FileExists(ppdefs))
 	#endif
 			SaveFile(ppdefs, GetStdDefs());
-		
+
 		SetPPDefs(LoadFile(ppdefs));
 		
 		ide.LoadLastMain();

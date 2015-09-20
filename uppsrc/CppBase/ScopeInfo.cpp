@@ -109,17 +109,17 @@ const Vector<String>& ScopeInfo::GetScopes(const String& usings_)
 		usings = usings_;
 		nvalid = true;
 		scopes.Clear();
-		if(scopei < 0)
-			return scopes;
-		String nn = base.GetKey(scopei);
-		while(nn.GetCount()) {
-			if(nn[0] == ':' && nn.GetCount() == 2) {
-				scopes.Add(nn);
-				return scopes;
+		if(scopei >= 0) {
+			String nn = base.GetKey(scopei);
+			while(nn.GetCount()) {
+				if(nn[0] == ':' && nn.GetCount() == 2) {
+					scopes.Add(nn);
+					return scopes;
+				}
+				scopes.Add(nn + "::");
+				int q = nn.ReverseFind(':');
+				nn.Trim(max(0, q - 1));
 			}
-			scopes.Add(nn + "::");
-			int q = nn.ReverseFind(':');
-			nn.Trim(max(0, q - 1));
 		}
 		scopes.Add("");
 		Vector<String> h = Split(usings, ';');

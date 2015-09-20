@@ -104,9 +104,10 @@ PPMacro *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti)
 	Index<int> undef;
 	PPMacro *r;
 
+	int best;
 	for(int pass = 0; pass < 2; pass++) {
 		r = NULL;
-		int best = segmenti;
+		best = segmenti;
 		int line = -1;
 		int q = sAllMacros.Find(id);
 		while(q >= 0) {
@@ -116,7 +117,7 @@ PPMacro *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti)
 					undef.FindAdd(m.segment_id); // cancel out undefined macro...
 			}
 			else
-			if(pass == 0 || undef.Find(m.undef_segment_id) < 0) {
+			if(pass == 0 || m.segment_id == 0 || undef.Find(m.undef_segment_id) < 0) {
 				int si = m.segment_id == 0 ? INT_MAX : segment_id.Find(m.segment_id); // defs macros always override
 				if(si > best || si >= 0 && si == best && m.line > line) {
 					best = si;
@@ -129,6 +130,7 @@ PPMacro *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti)
 		if(undef.GetCount() == 0)
 			break;
 	}
+	segmenti = best;
 	return r;
 }
 
@@ -194,7 +196,7 @@ void PPFile::Parse(Stream& in)
 						md5.Put("#", 1);
 						md5.Put(id);
 						md5.Put(0);
-						md5.Put(m.macro.md5, 16);						
+						md5.Put(m.macro.md5, 16);
 					}
 				}
 				else
@@ -206,7 +208,7 @@ void PPFile::Parse(Stream& in)
 						md5.Put(1);
 						int segmenti = -1;
 						PPMacro *um = FindPPMacro(id, local_segments, segmenti);
-						if(um) { // heuristic: only local undefs are allowed
+						if(um && segmenti) { // heuristic: only local undefs are allowed
 							PPItem& m = item.Add();
 							m.type = PP_DEFINES;
 							m.segment_id = ++sPPserial;

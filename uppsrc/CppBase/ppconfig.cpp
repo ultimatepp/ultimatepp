@@ -30,7 +30,8 @@ String GetStdDefs()
 	h = Split(ignore, ';');
 	for(int i = 0; i < h.GetCount(); i++)
 		defs << "#define " << h[i] << "\n";
-	defs << "#define NULL NULL";
+	defs << "#define NULL NULL\n";
+	defs << "#define DrawText DrawText\n"; // DrawTextA/DrawTextW fiasco...
 	return defs;
 }
 

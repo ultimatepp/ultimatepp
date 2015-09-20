@@ -214,7 +214,6 @@ void Ide::ContextGoto0(int pos)
 
 	Vector<String> scope;
 	Vector<bool> istype; // prefer type (e.g. struct Foo) over constructor (Foo::Foo())
-
 	for(int i = 0; i < type.GetCount(); i++) { // 'x.attr'
 		Index<String> done;
 		String r;

@@ -74,6 +74,7 @@ void CppItem::Dump(Stream& s) const
 	PUT(qptype);
 	PUT(tname);
 	PUT(ctname);
+	PUT(using_namespaces);
 #undef PUT
 }
 

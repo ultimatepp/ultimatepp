@@ -798,7 +798,7 @@ void Sort(I l, I h, const Less& less)
 				++iih;
 			if(pass > 5 || min(ii - l, h - iih) > (max(ii - l, h - iih) >> pass)) { // partition sizes ok or we have done max attempts
 				if(ii - l < h - iih - 1) {       // recurse on smaller partition, tail on larger
-					Sort(l, ii, less); 
+					Sort(l, ii, less);
 					l = iih + 1;
 				}
 				else {
