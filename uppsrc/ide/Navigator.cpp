@@ -194,7 +194,7 @@ void Navigator::GoToNavLine()
 
 bool Navigator::NavLine::operator<(const NavLine& b) const
 {
-	String p1 = GetSourceFilePath(file); // 
+	String p1 = GetSourceFilePath(file);
 	String p2 = GetSourceFilePath(b.file);
 	return CombineCompare/*(!impl, !b.impl)*/
 	                     (GetFileExt(p2), GetFileExt(p1)) // .h > .c
@@ -538,6 +538,7 @@ void Navigator::Search()
 		String usearch_name = ToUpper(search_name);
 		ArrayMap<String, NavItem> imap;
 		bool local = sorting && IsNull(s);
+		VectorMap<String, int> nest_pass;
 		for(int pass = -1; pass < 2; pass++) {
 			for(int i = 0; i < b.GetCount(); i++) {
 				String nest = b.GetKey(i);
@@ -558,7 +559,13 @@ void Navigator::Search()
 						                                    : m.name.StartsWith(search_name))
 						           || both && foundnest) {
 							String key = nest + '\1' + m.qitem;
-							int q = imap.Find(key);
+							int q = nest_pass.Find(nest);
+							int p = pass;
+							if(q < 0) // We do not want classes to be split based on pass
+								nest_pass.Add(nest, pass);
+							else
+								p = nest_pass[q];
+							q = imap.Find(key);
 							if(q < 0) {
 								NavItem& ni = imap.Add(key);
 								ni.Set(m);
@@ -566,7 +573,7 @@ void Navigator::Search()
 								ni.decl_line = ni.line;
 								ni.decl_file = ni.file;
 								ni.decl = !ni.impl;
-								ni.pass = pass;
+								ni.pass = p;
 								NavLine& l = ni.linefo.Add();
 								l.impl = m.impl;
 								l.file = m.file;
@@ -574,13 +581,13 @@ void Navigator::Search()
 							}
 							else {
 								NavItem& mm = imap[q];
-								String n = mm.natural;
 								if(!m.impl &&
 								  (!mm.decl
 								    || CombineCompare(mm.decl_file, m.file)(mm.decl_line, m.line) < 0)) {
 										mm.decl = true;
 										mm.decl_line = m.line;
 										mm.decl_file = m.file;
+										mm.natural = m.natural;
 								}
 								NavLine& l = mm.linefo.Add();
 								l.impl = m.impl;
