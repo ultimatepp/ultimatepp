@@ -381,53 +381,61 @@ void ScatterDraw::FitToData(bool vertical, double factor) {
 
 double ScatterDraw::GetXMin() {
 	double minx = -DOUBLE_NULL;
-	//double maxx = DOUBLE_NULL;
 	
 	for (int j = 0; j < series.GetCount(); j++) {
 		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 			continue;
-		minx = min(minx, series[j].PointsData()->MinX());
-		//maxx = max(maxx, series[j].PointsData()->MaxX());
+		double smin = series[j].PointsData()->MinX();
+		if (!IsNull(smin) && smin < minx)
+			minx = smin;
 	}
+	if (minx == -DOUBLE_NULL)
+		return Null;
 	return minx;
 }
 
 double ScatterDraw::GetXMax() {
-	//double minx = -DOUBLE_NULL;
 	double maxx = DOUBLE_NULL;
 	
 	for (int j = 0; j < series.GetCount(); j++) {
 		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 			continue;
-		//minx = min(minx, series[j].PointsData()->MinX());
-		maxx = max(maxx, series[j].PointsData()->MaxX());
+		double smax = series[j].PointsData()->MaxX();
+		if (!IsNull(smax) && smax > maxx)
+			maxx = smax;
 	}
+	if (maxx == DOUBLE_NULL)
+		return Null;
 	return maxx;
 }
 
 double ScatterDraw::GetYMin() {
 	double miny = -DOUBLE_NULL;
-	//double maxy = DOUBLE_NULL;
 	
 	for (int j = 0; j < series.GetCount(); j++) {
 		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 			continue;
-		miny = min(miny, series[j].PointsData()->MinY());
-		//maxy = max(maxy, series[j].PointsData()->MaxY());
+		double smin = series[j].PointsData()->MinY();
+		if (!IsNull(smin) && smin < miny)
+			miny = smin;
 	}
+	if (miny == -DOUBLE_NULL)
+		return Null;
 	return miny;
 }
 
 double ScatterDraw::GetYMax() {
-	//double miny = -DOUBLE_NULL;
 	double maxy = DOUBLE_NULL;
 	
 	for (int j = 0; j < series.GetCount(); j++) {
 		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 			continue;
-		//miny = min(miny, series[j].PointsData()->MinY());
-		maxy = max(maxy, series[j].PointsData()->MaxY());
+		double smax = series[j].PointsData()->MaxY();
+		if (!IsNull(smax) && smax > maxy)
+			maxy = smax;
 	}
+	if (maxy == DOUBLE_NULL)
+		return Null;
 	return maxy;
 }
 			
