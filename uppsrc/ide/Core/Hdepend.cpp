@@ -1,5 +1,40 @@
 #include "Core.h"
 
+const char *SkipSpc(const char *term) {
+	while(*term == '\t' || *term == ' ')
+		term++;
+	return term;
+}
+
+String FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdir)
+{
+	s = SkipSpc(s);
+	int type = *s;
+	if(type == '<' || type == '\"' || type == '?') {
+		s++;
+		String name;
+		if(type == '<') type = '>';
+		while(*s != '\r' && *s != '\n') {
+			if(*s == type) {
+				if(type == '\"') {
+					String fn = NormalizePath(name, filedir);
+					if(FileExists(fn))
+						return fn;
+				}
+				for(int i = 0; i < incdir.GetCount(); i++) {
+					String fn = CatAnyPath(incdir[i], name);
+					DDUMP(fn);
+					if(FileExists(fn))
+						return fn;
+				}
+				break;
+			}
+			name.Cat(*s++);
+		}
+	}
+	return String();
+}
+
 class Hdepend {
 	struct Info {
 		Time                      time;
@@ -39,7 +74,7 @@ public:
 
 	Time                  FileTime(const String& path);
 	bool                  BlitzApproved(const String& path);
-	String                FindIncludeFile(const char *s, const String& filedir);
+	String                FindIncludeFile(const char *s, const String& filedir) { return ::FindIncludeFile(s, filedir, incdir); }
 	const Vector<String>& GetDefines(const String& path);
 	Vector<String>        GetDependencies(const String& path);
 	const Vector<String>& GetAllFiles()                           { return map.GetKeys(); }
@@ -50,44 +85,10 @@ void Hdepend::AddDependency(const String& file, const String& dep)
 	depends.GetAdd(NormalizePath(file)).FindAdd(NormalizePath(dep));
 }
 
-const char *SkipSpc(const char *term) {
-	while(*term == '\t' || *term == ' ')
-		term++;
-	return term;
-}
-
 const char *RestOfLine(const char *term, String& val) {
 	while(*term && *term != '\r' && *term != '\n')
 		val.Cat(*term++);
 	return term;
-}
-
-String Hdepend::FindIncludeFile(const char *s, const String& filedir)
-{
-	s = SkipSpc(s);
-	int type = *s;
-	if(type == '<' || type == '\"' || type == '?') {
-		s++;
-		String name;
-		if(type == '<') type = '>';
-		while(*s != '\r' && *s != '\n') {
-			if(*s == type) {
-				if(type == '\"') {
-					String fn = NormalizePath(name, filedir);
-					if(FileExists(fn))
-						return fn;
-				}
-				for(int i = 0; i < incdir.GetCount(); i++) {
-					String fn = CatAnyPath(incdir[i], name);
-					if(FileExists(fn))
-						return fn;
-				}
-				break;
-			}
-			name.Cat(*s++);
-		}
-	}
-	return String();
 }
 
 void Hdepend::Include(const char *s, Hdepend::Info& info, const String& filedir, bool bydefine) {

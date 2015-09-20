@@ -155,7 +155,7 @@ void Ide::ContextGoto0(int pos)
 	}
 	CParser p(l);
 	if(p.Char('#') && p.Id("include")) {
-		String path = FindIncludeFile(p.GetPtr(), GetFileFolder(editfile));
+		String path = FindIncludeFile(p.GetPtr(), GetFileFolder(editfile), SplitDirs(GetIncludePath()));
 		if(!IsNull(path)) {
 			AddHistory();
 			EditFile(path);

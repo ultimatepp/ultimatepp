@@ -467,6 +467,8 @@ struct Builder {
 VectorMap<String, Builder *(*)()>& BuilderMap();
 void RegisterBuilder(const char *name, Builder *(*create)());
 
+String                FindIncludeFile(const char *s, const String& filedir, const Vector<String>& incdir);
+
 void                  HdependSetDirs(Vector<String> pick_ id);
 void                  HdependTimeDirty();
 void                  HdependClearDependencies();
