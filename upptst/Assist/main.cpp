@@ -264,6 +264,20 @@ void Autocomplete()
 	lvs[0].
 }
 
+struct DefParam {
+	void Bar(bool b = true);
+};
+
+void DefParam::Bar(bool b)
+{
+}
+
+void Autocomplete()
+{
+	DefParam x;
+	x. // should show variant with bool b = true (also in navigator)
+}
+
 void JumpTo()
 {
 	Point p;
