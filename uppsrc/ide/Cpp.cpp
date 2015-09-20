@@ -144,7 +144,7 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 
 bool OrderAssistItems(const CppItemInfo& a, const CppItemInfo& b)
 {
-	return CombineCompare(a.uname, b.uname)(a.typei, b.typei)(a.qitem, b.qitem)(b.filetype, a.filetype) < 0;
+	return CombineCompare(a.uname, b.uname)(a.typei, b.typei)(a.qitem, b.qitem)(a.impl, b.impl)(a.filetype, b.filetype)(a.line, b.line) < 0;
 }
 
 void AssistEditor::RemoveDuplicates()
