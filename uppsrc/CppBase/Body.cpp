@@ -248,29 +248,24 @@ void Parser::TryLambda()
 		}
 	}
 	if(lex[q] == '{') {
+		int n = local.GetCount();
 		lex.Get(params);
 		if(Key('(')) {
 			Decl d;
 			Line();
 			ParamList(d);
-			for(int i = 0; i < d.param.GetCount(); i++) {
-				const Decla& p = d.param[i];
-				if(dobody) {
-					Local& l = local.Add(p.name);
-					l.type = p.type;
-					l.isptr = p.isptr;
-					l.line = line + 1;
-				}
-			}
 		}
 		while(lex != '{' && lex != t_eof)
 			++lex;
 		Statement();
+		local.Trim(n);
 	}
 }
 
 bool Parser::EatBody()
 {
+	if(lex == t_eof)
+		return false;
 	if(lex != '{') {
 		local.Clear();
 		return false;
