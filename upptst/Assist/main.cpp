@@ -264,13 +264,21 @@ void Autocomplete()
 	lvs[0].
 }
 
+struct ParamInInitializer {
+	Rect rect;
+	ParamInInitializer(Rect r);
+};
+
+ParamInInitializer::ParamInInitializer(Rect r)
+:	rect(r. // test that parameter is known here
+)
+{}
+
 struct DefParam {
 	void Bar(bool b = true);
 };
 
-void DefParam::Bar(bool b)
-{
-}
+void DefParam::Bar(bool b) {}
 
 void Autocomplete()
 {
