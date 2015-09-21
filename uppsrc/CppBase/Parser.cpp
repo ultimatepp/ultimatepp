@@ -790,8 +790,16 @@ void Parser::ParamList(Decl& d) {
 			}
 			else {
 				Array<Parser::Decl> decl = Declaration(false, false, Null, Null);
-				if(decl.GetCount())
+				if(decl.GetCount()) {
 					d.param.Add() = pick(decl.Top());
+					if(dobody) { // put arguments to the list of local variables
+						Decl& p = d.param.Top();
+						Local& l = local.Add(p.name);
+						l.type = p.type;
+						l.isptr = p.isptr;
+						l.line = line + 1;
+					}
+				}
 			}
 			if(Key(t_elipsis)) {
 				Elipsis(d);
@@ -854,7 +862,7 @@ void Parser::EatInitializers()
 				lvl++;
 			if(lex == ')' || lex == '}')
 				lvl--;
-			++lex; 
+			++lex;
 		}
 	}
 }
@@ -1329,12 +1337,6 @@ CppItem& Parser::Fn(const Decl& d, const String& templ, bool body,
 	String ptype;
 	for(int i = 0; i < d.param.GetCount(); i++) {
 		const Decla& p = d.param[i];
-		if(dobody) { // put arguments to the list of local variables
-			Local& l = local.Add(p.name);
-			l.type = p.type;
-			l.isptr = p.isptr;
-			l.line = line + 1;
-		}
 		ScAdd(param, p.natural);
 		if(i)
 			ptype << ';';
