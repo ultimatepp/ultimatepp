@@ -222,7 +222,7 @@ void ExpressionTyper::ExpressionType(bool isptr, const String& ttype, int ii,
                                      Index<String>& visited_bases, int lvl)
 {
 	LLOG("--- ExpressionType " << scan_counter << ", lvl " << lvl << ", ttype " << ttype << ", isptr " << isptr
-	     << ", ii " << ii << ": " << ii << (ii < xp.GetCount() ? xp[ii] : "<end>"));
+	     << ", ii: " << ii << ", " << (ii < xp.GetCount() ? xp[ii] : "<end>"));
 	if(++scan_counter >= MAX_COUNT || lvl > 100) // sort of ugly limitation of parsing permutations
 		return;
 	LDUMP(can_shortcut_operator);
@@ -407,17 +407,24 @@ Index<String> ExpressionTyper::ExpressionType()
 		ExpressionType(parser.local[q].isptr, type, 1, !parser.local[q].isptr, 0);
 		return pick(typeset);
 	}
-	ExpressionType(false, context_type, 0, false, 0);
-	if(typeset.GetCount())
-		return pick(typeset);
-	if(xp.GetCount() >= 2 && xp[1] == "()") {
-		String qtype = Qualify(codebase, context_type, xp[0], parser.context.namespace_using);
-		Vector<String> tparam;
-		if(codebase.Find(ParseTemplatedType(qtype, tparam)) >= 0) {
-			LLOG("Is constructor " << qtype);
-			ExpressionType(false, qtype, 2, false, 0);
+	if(context_type.GetCount()) {
+		ExpressionType(false, context_type, 0, false, 0);
+		if(typeset.GetCount())
 			return pick(typeset);
+	}
+	if(xp.GetCount() >= 2 && xp[1] == "()") {
+		Vector<String> usings = Split(parser.context.namespace_using, ';');
+		usings.Add("");
+		for(int i = 0; i < usings.GetCount(); i++) {
+			String qtype = Qualify(codebase, context_type, Merge("::", usings[i], xp[0]), parser.context.namespace_using);
+			Vector<String> tparam;
+			if(codebase.Find(ParseTemplatedType(qtype, tparam)) >= 0) {
+				LLOG("Is constructor " << qtype);
+				ExpressionType(false, qtype, 2, false, 0);
+			}
 		}
+		if(typeset.GetCount())
+			return pick(typeset);
 	}
 	Vector<String> ns = parser.GetNamespaces();
 	for(int i = 0; i < ns.GetCount(); i++)
