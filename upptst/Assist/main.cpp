@@ -125,6 +125,13 @@ void Autocomplete()
 	type // check that there are not wrong items in the list for 'type'
 }
 
+Value Select();
+
+void Autocomplete()
+{
+	Select().
+}
+
 void Autocomplete()
 {
 	Select().From().LeftJoinRef().Where().OrderBy().Lim
@@ -246,9 +253,10 @@ void Autocomplete()
 
 void Autocomplete()
 {
-	map<string, int> m;
+	map<string, Point> m;
 	auto q = m.begin();
-	q.first.
+	q.first.  ;
+	q.second.
 }
 
 void Autocomplete()
