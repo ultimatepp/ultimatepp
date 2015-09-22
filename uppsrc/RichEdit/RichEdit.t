@@ -3139,7 +3139,7 @@ zhTW("\347\266\262\346\240\274")
 
 T_("Keep rows together")
 caES("Mantenir les files juntes")
-csCZ("Sv\303\241zat \305\231\303\241dky odstavce")
+csCZ("Sv\303\241zat \305\231\303\241dky")
 deDE("")
 esES("Mantener las filas juntas")
 fiFI("")
