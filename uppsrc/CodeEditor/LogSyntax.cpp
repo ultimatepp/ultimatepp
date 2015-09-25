@@ -12,6 +12,8 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	const HlStyle& ink = hl_style[INK_NORMAL];
 	HlStyle err = hl_style[INK_ERROR];
 	err.bold = true;
+	HlStyle stt = hl_style[INK_MACRO];
+	bool st_line = false;
 	bool hl_line = false;
 	bool sep_line = false;
 	while(s < end) {
@@ -41,17 +43,20 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 		}
 		else
 		if(IsAlpha(c) || c == '_') {
-			static Index<String> rws;
+			static Index<String> rws, sws;
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "failed" << "exit" << "fatal"
 				    << "failure" << "rejected";
+				sws << "ok" << "status" << "success";
 			}
 			String w;
 			while(s < end && IsAlNum(*s) || *s == '_')
 				w.Cat(ToLower(*s++));
 			bool hl = rws.Find(w) >= 0;
-			hls.Put(w.GetCount(), hl ? err : ink);
+			bool st = sws.Find(w) >= 0;
+			hls.Put(w.GetCount(), hl ? err : st ? stt : ink);
 			hl_line = hl_line || hl;
+			st_line = st_line || st;
 		}
 		else {
 			bool hl = findarg(c, '[', ']', '(', ')', ':', '-', '=', '{', '}', '/', '<', '>', '*',
@@ -66,6 +71,9 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 	else
 	if(sep_line)
 		hls.SetPaper(0, hls.GetCount(), hl_style[PAPER_IFDEF].color);
+	else
+	if(st_line)
+		hls.SetPaper(0, hls.GetCount(), hl_style[PAPER_BLOCK2].color);
 }
 
 END_UPP_NAMESPACE
