@@ -673,7 +673,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 			Vector<String> bi = SvnInfo(wspc[i]);
 			String svn_info;
 			for(int i = 0; i < bi.GetCount(); i++)
-				svn_info << "   echo '" << bi[i] << "' >> build_info.h\n";
+				svn_info << "	echo '" << bi[i] << "' >> build_info.h\n";
 			install << "\n"
 				"OutDir = " << tdir << "\n"
 				"OutFile = " << output << "\n"
@@ -684,12 +684,12 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				".PHONY: build_info\n"
 				"build_info:\n"
 				"	date '+#define bmYEAR    %y%n'\\\n"
-				"	'#define bmMONTH   %m%n'\\\n"
-				"	'#define bmDAY     %d%n'\\\n"
-				"	'#define bmHOUR    %H%n'\\\n"
-				"	'#define bmMINUTE  %M%n'\\\n"
-				"	'#define bmSECOND  %S%n'\\\n"
-				"	'#define bmTIME    Time(%y, %m, %d, %H, %M, %S)' > build_info.h\n"
+				"	'#define bmMONTH   %-m%n'\\\n"
+				"	'#define bmDAY     %-d%n'\\\n"
+				"	'#define bmHOUR    %-H%n'\\\n"
+				"	'#define bmMINUTE  %-M%n'\\\n"
+				"	'#define bmSECOND  %-S%n'\\\n"
+				"	'#define bmTIME    Time(%y, %-m, %-d, %-H, %-M, %-S)' > build_info.h\n"
 				"	echo '#define bmMACHINE \"'`hostname`'\"' >> build_info.h\n"
 				"	echo '#define bmUSER    \"'`whoami`'\"' >> build_info.h\n"
 				<< svn_info <<
