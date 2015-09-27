@@ -25,7 +25,6 @@ SvnSync::SvnSync()
 	list.ColumnWidths("220 500 100");
 	list.NoCursor().EvenRowColor();
 	list.SetLineCy(max(Draw::GetStdFontCy(), 20));
-	list.WhenLeftClick = THISBACK(Diff);
 	Sizeable().Zoomable();
 	setup <<= THISBACK(Setup);
 	BackPaint();
@@ -138,13 +137,6 @@ void SvnSync::DoDiff(int ii)
 	String f = list.Get(ii, 1);
 	if(!IsNull(f))
 		RunSvnDiff(f);
-}
-
-void SvnSync::Diff()
-{
-	int cr = list.GetClickRow();
-	if(cr >= 0)
-		DoDiff(cr);
 }
 
 #ifdef PLATFORM_WIN32

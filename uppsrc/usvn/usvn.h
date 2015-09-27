@@ -124,7 +124,6 @@ struct SvnSync : WithSvnSyncLayout<TopWindow> {
 	void SyncList();
 	void Setup();
 	void DoDiff(int ii);
-	void Diff();
 
 	typedef SvnSync CLASSNAME;
 
