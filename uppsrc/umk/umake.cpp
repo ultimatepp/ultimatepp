@@ -78,7 +78,7 @@ CONSOLE_APP_MAIN
 						SilentMode = true;
 					if(x[i] == 'v')
 						ide.console.verbosebuild = true;
-				}						
+				}
 			}
 		String v = GetUmkFile(arg[0] + ".var");
 		if(IsNull(v) || !FileExists(v)) {
@@ -239,10 +239,10 @@ CONSOLE_APP_MAIN
 			SetExitCode(1);
 	}
 	else
-		Puts("Usage: umk assembly main_package build_method -options [+flags] [output]\n"
+		Puts("Usage: umk assembly main_package build_method -options [+flags] [output]\n\n"
 		     "Examples: umk examples Bombs GCC -ab +GUI,SHARED ~/bombs\n"
-		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n"
-		     "See http://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");	
+		     "          umk examples,uppsrc Bombs ~/GCC.bm -rv +GUI,SHARED ~/bin\n\n"
+		     "See http://www.ultimatepp.org/app$ide$umk$en-us.html for details\n");
 }
 
 #endif
