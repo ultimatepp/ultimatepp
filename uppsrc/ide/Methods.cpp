@@ -139,7 +139,7 @@ void AndroidBuilderSetup::OnLoad()
 	String sdkPath = GetAndroidSDKPath();
 	sdk_path.SetData(sdkPath);
 	OnSdkPathChange(sdkPath);
-	
+
 	OnNdkPathChange();
 }
 
@@ -150,8 +150,9 @@ void AndroidBuilderSetup::OnCtrlLoad(const String& ctrlKey, const String& value)
 	
 	if(map.Find(ctrlKey) > -1) {
 		Ctrl* ctrl = map.Get(ctrlKey);
-		if(ctrl == &ndk_path)
+		if(ctrl == &ndk_path) {
 			OnNdkPathChange0(value);
+		}
 	}
 }
 
@@ -168,9 +169,9 @@ void AndroidBuilderSetup::OnSdkShow()
 		return;
 	}
 	
-	if(((String)sdk_platform_version.GetValue()).IsEmpty())
+	if(sdk_platform_version.GetValue().IsNull())
 		sdk_platform_version.SetData(sdk.FindDefaultPlatform());
-	if(((String)sdk_build_tools_release.GetValue()).IsEmpty())
+	if(sdk_build_tools_release.GetValue().IsNull())
 		sdk_build_tools_release.SetData(sdk.FindDefaultBuildToolsRelease());
 }
 
@@ -186,14 +187,12 @@ void AndroidBuilderSetup::OnSdkPathChange(const String& sdkPath)
 void AndroidBuilderSetup::OnNdkShow()
 {
 	AndroidNDK ndk(ndk_path.GetData());
-	if(ndk.Validate()) {
-		LoadToolchains(ndk);
-		LoadCppRuntimes(ndk);
-		
-		EnableNdkCtrls();
-	}
-	else
+	if(!ndk.Validate()) {
 		DisableNdkCtrls();
+		return;
+	}
+	
+	EnableNdkCtrls();
 }
 
 void AndroidBuilderSetup::OnNdkPathInsert()
@@ -217,6 +216,9 @@ void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
 {
 	AndroidNDK ndk(ndkPath);
 	if(ndk.Validate()) {
+		LoadToolchains(ndk);
+		LoadCppRuntimes(ndk);
+		
 		ndk_arch_armeabi.Set(1);
 		ndk_arch_armeabi_v7a.Set(1);
 		ndk_arch_arm64_v8a.Set(1);
@@ -228,7 +230,7 @@ void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
 
 void AndroidBuilderSetup::LoadPlatforms(const AndroidSDK& sdk)
 {
-	Vector<String> platforms = pick(sdk.FindPlatforms());
+	Vector<String> platforms = sdk.FindPlatforms();
 	Sort(platforms, StdGreater<String>());
 	
 	LoadDropList(sdk_platform_version,
@@ -238,7 +240,7 @@ void AndroidBuilderSetup::LoadPlatforms(const AndroidSDK& sdk)
 
 void AndroidBuilderSetup::LoadBuildTools(const AndroidSDK& sdk)
 {
-	Vector<String> releases = pick(sdk.FindBuildToolsReleases());
+	Vector<String> releases = sdk.FindBuildToolsReleases();
 	Sort(releases, StdGreater<String>());
 	
 	LoadDropList(sdk_build_tools_release,
@@ -248,7 +250,7 @@ void AndroidBuilderSetup::LoadBuildTools(const AndroidSDK& sdk)
 
 void AndroidBuilderSetup::LoadToolchains(const AndroidNDK& ndk)
 {
-	Vector<String> toolchains = pick(ndk.FindToolchains());
+	Vector<String> toolchains = ndk.FindToolchains();
 	Sort(toolchains, StdGreater<String>());
 	
 	LoadDropList(ndk_toolchain, toolchains, ndk.FindDefaultToolchain());
@@ -256,7 +258,7 @@ void AndroidBuilderSetup::LoadToolchains(const AndroidNDK& ndk)
 
 void AndroidBuilderSetup::LoadCppRuntimes(const AndroidNDK& ndk)
 {
-	Vector<String> runtimes = pick(ndk.FindCppRuntimes());
+	Vector<String> runtimes = ndk.FindCppRuntimes();
 	
 	LoadDropList(ndk_cpp_runtime, runtimes, ndk.FindDefaultCppRuntime());
 }
