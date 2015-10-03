@@ -79,7 +79,11 @@ file
 	test36.in,
 	test36.out,
 	test37.in,
-	test37.out;
+	test37.out,
+	test38.in,
+	test38.out,
+	test39.in,
+	test39.out;
 
 mainconfig
 	"" = "",

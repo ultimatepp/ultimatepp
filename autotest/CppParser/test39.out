@@ -1,0 +1,16 @@
+ERRORS: [63: Name expected]
+<globals> {
+	VARIABLE, name: cpp_file_mutex, qitem: cpp_file_mutex, qtype: StaticMutex, qptype: , natural: static StaticMutex cpp_file_mutex, line 10, using 
+	VARIABLE, name: cpp_file, qitem: cpp_file, qtype: Index<String>, qptype: , natural: static Index<String> cpp_file, line 11, using 
+	FUNCTION, name: GetCppFileIndex, qitem: GetCppFileIndex(const String&), qtype: , qptype: String, natural: int GetCppFileIndex(const String& path), line 13, using 
+	FUNCTION, name: GetCppFile, qitem: GetCppFile(int), qtype: String, qptype: , natural: const String& GetCppFile(int i), line 21, using 
+	FUNCTION, name: SLPos, qitem: SLPos(SrcFile&), qtype: , qptype: SrcFile, natural: void SLPos(SrcFile& res), line 51, using 
+	FUNCTION, name: Foo, qitem: Foo(int,const String&), qtype: , qptype: ;String, natural: void Foo(int x, const String& y), line 65, using 
+	FUNCTION, name: Foo, qitem: Foo(int,const String&), qtype: , qptype: ;String, natural: void Foo(int x, const String& y), line 67, using 
+	FUNCTION, name: PreProcess, qitem: PreProcess(Stream&), qtype: SrcFile, qptype: Stream, natural: SrcFile PreProcess(Stream& in), line 69, using 
+}
+SrcFile {
+	CONSTRUCTOR, name: SrcFile, qitem: SrcFile(), qtype: , qptype: , natural: SrcFile(), line 56, using 
+}
+<locals> {
+}
