@@ -1,0 +1,9 @@
+Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Foo, qptype: , natural: struct Foo, line 1, using 
+	INSTANCEVARIABLE, name: rect, qitem: rect, qtype: Rect, qptype: , natural: Rect rect, line 2, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(Rect), qtype: , qptype: Rect, natural: Foo(Rect r), line 3, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(Rect), qtype: , qptype: Rect, natural: Foo(Rect r), line 6, using 
+}
+<locals> {
+r Rect, line: 6
+}

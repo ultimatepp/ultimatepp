@@ -1,0 +1,7 @@
+struct Foo {
+	Rect rect;
+	Foo(Rect r);
+};
+
+Foo::Foo(Rect r)
+: rect(r.
