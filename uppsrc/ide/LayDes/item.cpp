@@ -222,7 +222,7 @@ void LayoutItem::UnknownPaint(Draw& w)
 	int q = FindProperty("SetLabel");
 	if(q >= 0 && IsString(~property[q]))
 		DrawSmartText(w, 0, 0, csize.cx, ToUtf8((WString)~property[q]));
-	Size tsz = GetTextSize(type, Arial(11));
+	Size tsz = GetTextSize(type, LayFont());
 	w.DrawRect(csize.cx - tsz.cx, csize.cy - tsz.cy, tsz.cx, tsz.cy, SColorShadow);
 	w.DrawText(csize.cx - tsz.cx, csize.cy - tsz.cy, type, LayFont(), SColorLight);
 }
