@@ -272,6 +272,23 @@ void Autocomplete()
 	lvs[0].
 }
 
+class ResourceCache {
+public:
+	ValueMap GetAttrs();
+
+	static ResourceCache& The();
+};
+
+void Autocomplate()
+{
+	ResourceCache::The().
+}
+
+void JumpTo()
+{
+	ResourceCache::The().GetAttrs();
+}
+
 struct ParamInInitializer {
 	Rect rect;
 	ParamInInitializer(Rect r);
@@ -386,6 +403,8 @@ struct EnumTest {
 		enum_var2; // Test jump
 	}
 };
+
+// ----------------------------------------------------
 
 #endif
 
