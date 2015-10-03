@@ -362,6 +362,20 @@ void ExpressionTyper::ExpressionType(bool isptr, const String& ttype, int ii,
 		}
 	}
 	
+	if(typeset.GetCount() == c0 && type.GetCount()) { // try to find id in type - Class::Method case
+		String type2 = ParseTemplatedType(type, tparam);
+		const Array<CppItem>& n = GetTypeItems(codebase, type2);
+		for(int i = 0; i < n.GetCount(); i++) {
+			const CppItem& m = n[i];
+			if(m.name == id) {
+				String t = AddTParams(ResolveReturnType(m, tparam), type);
+				bool skipfnpars = m.IsCode() && ii + 1 < xp.GetCount() && xp[ii + 1] == "()";
+				ExpressionType(m.isptr, ResolveTParam(codebase, t, tparam), ii + skipfnpars + 1,
+				               m.IsData() && !m.isptr, lvl + 1);
+			}
+		}
+	}
+
 	if(typeset.GetCount() != c0 || IsNull(type))
 		return;
 	Vector<String> base = GetTypeBases(type);
