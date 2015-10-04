@@ -57,9 +57,9 @@ String GetAndroidSDKPath()
 	return String();
 }
 
-#ifdef flagMAIN
+#ifdef flagMAIN	
 
-CONSOLE_APP_MAIN
+CONSOLE_APP_MAIN	
 {
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);
