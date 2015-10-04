@@ -817,7 +817,20 @@ void CodeEditor::SerializeFind(Stream& s)
 	findreplace.replace.SerializeList(s);
 }
 
-CodeEditor::FindReplaceData CodeEditor::GetFindReplaceData() const
+String ReadList(WithDropChoice<EditString>& e)
+{
+	StringStream ss;
+	e.SerializeList(ss);
+	return ss;
+}
+
+void WriteList(WithDropChoice<EditString>& e, const String& data)
+{
+	StringStream ss(data);
+	e.SerializeList(ss);
+}
+
+CodeEditor::FindReplaceData CodeEditor::GetFindReplaceData()
 {
 	FindReplaceData r;
 	r.find = ~findreplace.find;
@@ -827,6 +840,8 @@ CodeEditor::FindReplaceData CodeEditor::GetFindReplaceData() const
 	r.wildcards = ~findreplace.wildcards;
 	r.samecase = ~findreplace.samecase;
 	r.regexp = ~findreplace.regexp;
+	r.find_list = ReadList(findreplace.find);
+	r.replace_list = ReadList(findreplace.replace);
 	return r;
 }
 
@@ -840,6 +855,8 @@ void CodeEditor::SetFindReplaceData(const FindReplaceData& r)
 	findreplace.samecase <<= r.samecase;
 	findreplace.regexp <<= r.regexp;
 	findreplace.mode <<= 0;
+	WriteList(findreplace.find, r.find_list);
+	WriteList(findreplace.replace, r.replace_list);
 }
 
 void CodeEditor::FindPrevNext(bool prev)

@@ -243,20 +243,26 @@ void Ide::FindInFiles(bool replace) {
 	  (ff.wildcards, d.wildcards)
 	  (ff.regexp, d.regexp)
 	;
+	WriteList(ff.find, d.find_list);
+	WriteList(ff.replace, d.replace_list);
 	ff.Sync();
 	if(String(ff.folder).IsEmpty())
 		ff.folder <<= GetUppDir();
 	ff.style <<= STYLE_NO_REPLACE;
 	ff.Sync();
 	ff.itext = editor.GetI();
-	ff.Setup(replace);	
+	ff.Setup(replace);
 	
 	int c = ff.Execute();
 
+	ff.find.AddHistory();
+	ff.replace.AddHistory();
+
 	rf.Retrieve();
+	d.find_list = ReadList(ff.find);
+	d.replace_list = ReadList(ff.replace);
 	editor.SetFindReplaceData(d);
 	
-
 	if(c == IDOK) {
 		ffound.HeaderTab(2).SetText("Source line");
 		Renumber();
