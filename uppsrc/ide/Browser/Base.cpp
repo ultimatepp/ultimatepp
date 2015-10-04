@@ -8,10 +8,12 @@
 
 #define LDUMP(x)      // DDUMP(x)
 
-#ifdef _DEBUG
-#define CLOG(x)          // LOG(x)
+// #define HAS_CLOG
+
+#ifdef HAS_CLOG
+#define CLOG(x)          RLOG(x)
 #else
-#define CLOG(x)          // RLOG(x)
+#define CLOG(x)
 #endif
 
 #define CPP_CODEBASE_VERSION 314159
@@ -247,7 +249,9 @@ bool CheckFile(SourceFileInfo& f, const String& path)
 	pp.Preprocess(npath, in, GetMasterFile(npath), true);
 	String md5 = pp.GetDependeciesMd5(GetPPFile(path).keywords);
 	bool r = f.dependencies_md5sum == md5 && tmok;
+#ifdef HAS_CLOG
 	if(!r) CLOG(path << " " << f.dependencies_md5sum << " " << md5);
+#endif
 	f.depends.Clear();
 	f.dependencies_md5sum = md5;
 	for(int i = 0; i < pp.visited.GetCount(); i++)
@@ -281,9 +285,11 @@ void UpdateCodeBase2(Progress& pi)
 	Index<int>  parse_file;
 	CLOG("Gathered files: " << GetAllSourceMasters());
 	const Index<String>& src = GetAllSources();
+#ifdef HAS_CLOG
 	for(int i = 0; i < source_file.GetCount(); i++)
 		if(!source_file.IsUnlinked(i))
 			CLOG(i << " " << source_file.GetKey(i) << " " << source_file[i].dependencies_md5sum << " " << source_file[i].time);
+#endif
 	pi.SetTotal(src.GetCount());
 	for(int i = 0; i < src.GetCount(); i++) {
 		pi.Step();
