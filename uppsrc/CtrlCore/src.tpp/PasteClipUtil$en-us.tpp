@@ -134,5 +134,4 @@ s]_[*@4 T]>_[@(0.0.255) bool]_[* AcceptInternal]([_^PasteClip^ PasteClip][@(0.0.
 onst]_[*@4 T][@(0.0.255) `&]_[* GetInternal]([_^PasteClip^ PasteClip][@(0.0.255) `&]_[*@3 d])
 &]
 [s2;%% Returns a reference to variable of internal clip.&]
-[s3;%% &]
 [s0;%% ]]

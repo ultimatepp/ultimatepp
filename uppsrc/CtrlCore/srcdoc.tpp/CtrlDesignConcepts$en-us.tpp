@@ -83,10 +83,7 @@ both. If graphical data needs change as well, UpdateActionRefresh()
 is the chain to go, which will invoke an additional Paint(). 
 ClearModify() acts recursively on all children too.&]
 [s0; &]
-[s0; [* Accept / Reject]&]
-[s0; &]
-[s0; lorem ipsum :)&]
-[s0; &]
+[s0;* &]
 [s0; [* Refresh() strategies]&]
 [s0; &]
 [s0; Each U`+`+ Ctrl can be scheduled for Refresh() explicitly. This 
@@ -136,4 +133,4 @@ data without posting it to the Ctrl, and once every 200 ms, do
 your work..and let the Ctrl Refresh(), this still yields a good 
 look and keeps the GUI responsive.&]
 [s0; &]
-[s0; ]
+[s0; ]]

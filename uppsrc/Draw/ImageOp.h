@@ -195,11 +195,6 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, int filter = Null);
 Image CachedSetColorKeepAlpha(const Image& img, Color color);
 Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
 
-// Obsolete, replace with RescaleFilter!
-Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
-Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
-Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
-
 void SetUHDMode(bool b = true);
 bool IsUHDMode();
 void SyncUHDMode();
@@ -209,3 +204,8 @@ Image DPI(const Image& img, int expected);
 
 inline int   DPI(int a)   { return IsUHDMode() ? 2 * a : a; }
 inline Size  DPI(Size sz) { return IsUHDMode() ? 2 * sz : sz; }
+
+// Obsolete, replace with RescaleFilter!
+Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
+Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
+Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
