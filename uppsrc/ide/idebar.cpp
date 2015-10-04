@@ -664,15 +664,17 @@ void Ide::MainTool(Bar& bar)
 	}
 	bar.Add("Edit as text", IdeImg::EditText(), THISBACK(EditAsText))
 	   .Check(!designer)
+	   .Enable(!editfile_isfolder)
 	   .Key(!designer ? 0 : K_CTRL_T);
 	bool b = designer && !designer.Is<FileHexView>();
 	bool d = IsDesignerFile(editfile);
 	bar.Add("Edit using designer", IdeImg::EditDesigner(), THISBACK(EditUsingDesigner))
 	   .Check(b)
-	   .Enable(d)
+	   .Enable(d && !editfile_isfolder)
 	   .Key(b || !d ? 0 : K_CTRL_T);
 	bar.Add("View as hex", IdeImg::EditHex(), THISBACK(EditAsHex))
 	   .Check(designer.Is<FileHexView>())
+	   .Enable(!editfile_isfolder)
 	   .Key(K_CTRL_B);
 	if(!designer)
 		bar.Separator();
