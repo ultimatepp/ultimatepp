@@ -598,7 +598,7 @@ void ChSysInit()
 
 	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
 	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
-	if(SetProcessDPIAware && Ctrl::IsHiDPIEnabled())
+	if(SetProcessDPIAware && Ctrl::IsUHDEnabled())
 		(*SetProcessDPIAware)();
 	NONCLIENTMETRICS ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))

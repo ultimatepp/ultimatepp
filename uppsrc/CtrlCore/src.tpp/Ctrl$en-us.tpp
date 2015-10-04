@@ -2550,6 +2550,15 @@ ize]_[*@3 sz])&]
 [s2;b17;a17; Sets scaling factor to (1, 1). Same as SetZoomSize(Size(1, 
 1), Size(1, 1)).&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SetUHDEnabled`(bool`):%- [@(0.0.255) void]_[* SetUHDEnabled]([@(0.0.255) b
+ool]_[*@3 set])&]
+[s2; Informs host platform that application is UHD ready.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:IsUHDEnabled`(`):%- [@(0.0.255) bool]_[* IsUHDEnabled]()&]
+[s2; Returns the value set by SetUHDEnabled.&]
+[s3;%- &]
 [s4; &]
 [s5;K:Ctrl`:`:GetWorkArea`(`):%- [*^`:`:Rect^@(64) Rect][*@(64) _][* GetWorkArea][*@(64) ()]&]
 [s2; Returns OS specific working area for the widget `- this is rectangle 

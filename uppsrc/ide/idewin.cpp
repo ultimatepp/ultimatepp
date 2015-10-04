@@ -733,7 +733,7 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
-	Ctrl::SetHiDPIEnabled();
+	Ctrl::SetUHDEnabled();
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);

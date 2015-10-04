@@ -1205,8 +1205,8 @@ public:
 	static void NoLayoutZoom();
 	static void GetZoomRatio(Size& m, Size& d);
 	
-	static void SetHiDPIEnabled(bool set = true);
-	static bool IsHiDPIEnabled();
+	static void SetUHDEnabled(bool set = true);
+	static bool IsUHDEnabled();
 
 	static bool ClickFocus();
 	static void ClickFocus(bool cf);
@@ -1281,13 +1281,13 @@ Font StdFontZ(int height = 0);
 Font SansSerifZ(int height = 0);
 Font SerifZ(int height = 0);
 Font MonospaceZ(int height = 0);
-
-Font ScreenSansZ(int height = 0);
-Font ScreenSerifZ(int height = 0);
-Font ScreenFixedZ(int height = 0);
 Font RomanZ(int height = 0);
 Font ArialZ(int height = 0);
 Font CourierZ(int height = 0);
+
+Font ScreenSansZ(int height = 0); // deprecated
+Font ScreenSerifZ(int height = 0); // deprecated
+Font ScreenFixedZ(int height = 0); // deprecated
 
 int   EditFieldIsThin();
 Value TopSeparator1();
