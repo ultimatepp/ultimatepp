@@ -314,93 +314,29 @@ void Ide::SaveFile0(bool always)
 	if(!editor.IsDirty() && !always)
 		return;
 	TouchFile(editfile);
-#ifdef PLATFORM_POSIX
-	FindFile ff(editfile);
-	if(ff && !designer && (ff.GetUid() != getuid() || ff.IsSymLink())) {
-		for(;;) {
-			FileStream out;
-			if(out.Open(editfile, FileStream::READWRITE)) {
-				SaveEditorFile(out);
-				out.SetSize(out.GetPos());
-				if(!out.IsError())
-					break;
-			}
-			console.Flush();
-			Sleep(200);
-			int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
-				"Unable to save current file.&"
-				"Retry save, ignore it or save file to another location?",
-				"Save as...", "Retry", "Ignore");
-			if(art < 0)
-				break;
-			if(art && AnySourceFs().ExecuteSaveAs()) {
-				editfile = AnySourceFs();
-				MakeTitle();
-				PosSync();
-				break;
-			}
-		}
+	for(;;) {
+		FileOut out(editfile);
+		SaveEditorFile(out);
+		if(!out.IsError())
+			break;
+		int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
+			"Unable to save current file.&"
+			"Retry save, ignore it or save file to another location?",
+			"Save as...", "Retry", "Ignore");
+		if(art < 0)
+			break;
 		if(IsDeactivationSave())
 			return;
-	}
-	else
-#endif
-	{
-		String tmpfile = editfile + ".$tmp", outfile = editfile;
-		{
-			FileOut out(tmpfile);
-			if(!out.IsOpen()) {
-				if(IsDeactivationSave())
-					return;
-				Exclamation(NFormat("Error creating temporary file [* \1%s\1].", tmpfile));
-				return;
-			}
-			if(designer)
-				designer->Save();
-			else
-				SaveEditorFile(out);
-			out.Close();
-			if(out.IsError()) {
-				if(IsDeactivationSave())
-					return;
-				Exclamation(NFormat("Error writing temporary file [* \1%s\1].", tmpfile));
-				return;
-			}
+		if(art && AnySourceFs().ExecuteSaveAs()) {
+			editfile = AnySourceFs();
+			MakeTitle();
+			PosSync();
+			break;
 		}
-	
-		for(;;) {
-			if(editfile != outfile || !FileExists(tmpfile))
-				return;
-			FileDelete(outfile);
-			if(FileMove(tmpfile, outfile))
-				break;
-			if(IsDeactivationSave())
-				return;
-			console.Flush();
-			int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
-				"Unable to save current file.&"
-				"Retry save, ignore it or save file to another location?",
-				"Save as...", "Retry", "Ignore");
-			if(art < 0)
-				break;
-			if(art && AnySourceFs().ExecuteSaveAs()) {
-				outfile = editfile = AnySourceFs();
-				MakeTitle();
-				PosSync();
-				break;
-			}
-		}
-	
-	#ifdef PLATFORM_POSIX
-		if(ff)
-			chmod(editfile, ff.GetMode());
-	#endif
 	}
 
-	if(!designer) {
-		FindFile ff(editfile);
-		fd.filetime = edittime = ff.GetLastWriteTime();
-	}
+	FindFile ff(editfile);
+	fd.filetime = edittime = ff.GetLastWriteTime();
 
 	if(editor.IsDirty()) {
 		text_updated.Kill();
