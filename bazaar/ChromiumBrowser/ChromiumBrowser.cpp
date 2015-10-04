@@ -46,10 +46,10 @@ void ChromiumBrowser::ChildProcess()
 #endif
 	
 	int exit_code = CefExecuteProcess(main_args, app.get(), NULL);
-  	if (exit_code >= 0){
-    	RLOG("CefExecuteProcess error");
-    	exit(exit_code);
-  	}
+	if (exit_code >= 0){
+		RLOG("CefExecuteProcess error");
+		exit(exit_code);
+	}
 }
 
 

@@ -39,7 +39,7 @@ class.&]
 [s0; &]
 [s0;i150;O0; download CEF package for Linux from https://cefbuilds.com/. 
 Downloading stable release is recommended (not `"dev channel`").&]
-[s0;i150;O0; unpack archive to your `"work`" directory&]
+[s0;i150;O0; unpack the archive to your `"MyApps`" directory&]
 [s0;i150;O0; go to CEF directory and run following commands:&]
 [s0; -|[C1 cmake `-G `"Unix Makefiles`" `-DCMAKE`_BUILD`_TYPE`=Release]&]
 [s0; [C1 -|make `-j4 cefclient cefsimple]&]
@@ -59,30 +59,31 @@ to work]&]
 [s0;i150;O0; configure library paths in TheIDE, menu [* Setup ]/ [* Build 
 methods]:&]
 [s0; -|[* INCLUDE directories] `- add CEF library directory, for example:&]
-[s0; -|[C1 /home/USER`_NAME/MyApps/cef`_binary`_3.2272.2077`_linux64]&]
+[s0; -|[C1 /home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64]&]
 [s0; -|[* LIB directories] `- add CEF subdirectories containing libcef.so 
 and libcef`_dll`_wrapper.a, for example:&]
-[s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2272.2077`_linux64/out/Release/obj.tar
-get]&]
-[s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2272.2077`_linux64/out/Release]&]
+[s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64/Release]&]
+[s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64/libcef`_dl
+l]&]
 [s0;i150;O0; Open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
 [s0;i150;O0; Before you run compiled application, copy asset files 
-and libraries to output directory. Please check [C out/Release] 
-subdirectory from CEF to see the list of required files. It should 
-look like this:&]
+and libraries to output directory. Please check [C Release] and 
+[C Resources] subdirectories from CEF to see the list of required 
+files. It should look like this:&]
 [s0; &]
 [s0; -|-|ChromiumBrowserExample&]
 [s0; -|-|├── cef`_100`_percent.pak&]
 [s0; -|-|├── cef`_200`_percent.pak&]
 [s0; -|-|├── cef.pak&]
+[s0; -|-|├── cef`_extensions.pak&]
 [s0; -|-|├── chrome`-sandbox&]
 [s0; -|-|├── ChromiumBrowserExample&]
 [s0; -|-|├── devtools`_resources.pak&]
 [s0; -|-|├── icudtl.dat&]
 [s0; -|-|├── libcef.so&]
-[s0; -|-|├── libffmpegsumo.so&]
-[s0; -|-|├── libpdf.so&]
+[s0; -|-|├── natives`_blob.bin&]
+[s0; -|-|├── snapshot`_blob.bin&]
 [s0; -|-|└── locales&]
 [s0; -|-|    ├── am.pak&]
 [s0; -|-|    ├── ar.pak&]
