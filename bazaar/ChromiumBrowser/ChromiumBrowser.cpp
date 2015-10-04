@@ -81,11 +81,11 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 #endif
 	
 	int exit_code = CefExecuteProcess(main_args, app.get(), NULL);
-  	if (exit_code >= 0){
-    	RLOG("CefExecuteProcess error");
-    	exit(exit_code);
-  	}
-  	
+	if (exit_code >= 0){
+		RLOG("CefExecuteProcess error");
+		exit(exit_code);
+	}
+
 	CefSettings cef_settings;
 	//cef_settings.multi_threaded_message_loop = true;
 #ifdef _DEBUG
@@ -95,7 +95,7 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 #endif
 	tmp_dir = GetTempFileName();
 	CefString(&cef_settings.cache_path) = ~tmp_dir;
-  	CefInitialize(main_args, cef_settings, app.get(), NULL);
+	CefInitialize(main_args, cef_settings, app.get(), NULL);
 }
 
 
@@ -147,7 +147,7 @@ void ChromiumBrowser::AfterInit(bool Error)
     br_settings.file_access_from_file_urls = STATE_DISABLED;
     
 	Size sz = GetSize();
- 	CefWindowInfo info;
+	CefWindowInfo info;
 
 #ifdef PLATFORM_LINUX
 
@@ -160,7 +160,7 @@ void ChromiumBrowser::AfterInit(bool Error)
 	rect.right = sz.cx;
 	rect.bottom = sz.cy;
 	HWND hwnd = GetHWND();
-	info.SetAsChild(hwnd, rect); 
+	info.SetAsChild(hwnd, rect);
 
 #else
 
@@ -240,7 +240,7 @@ void ChromiumBrowser::SetFocus0(bool focus)
 	if (focus) DHCtrl::SetFocus();
 	else DHCtrl::LostFocus();
 	
-	if (handler && handler->GetBrowser()) 
+	if (handler && handler->GetBrowser())
 		handler->GetBrowser()->GetHost()->SendFocusEvent(focus);
 }
 
@@ -256,14 +256,14 @@ void ChromiumBrowser::Browse(const String & url)
 
 void ChromiumBrowser::ShowHTML(const String& html)
 {
-	if (handler && handler->GetBrowser()) 
+	if (handler && handler->GetBrowser())
 		handler->GetBrowser()->GetMainFrame()->LoadString(~html, "about:blank");
 }
 
 
 String ChromiumBrowser::GetLocation()
 {
-	if (handler && handler->GetBrowser()) 
+	if (handler && handler->GetBrowser())
 		return String(handler->GetBrowser()->GetMainFrame()->GetURL());
 	
 	return String::GetVoid();

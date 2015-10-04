@@ -22,52 +22,44 @@ class ClientHandler : public CefClient, public CefLifeSpanHandler, public CefDis
 {
 
 public:
-	ClientHandler(	Upp::Callback1<Upp::String> & wuc, 
-					Upp::Callback2<Upp::String, Upp::WithDeepCopy<Upp::Vector<Upp::Value> > > & wm,
+	typedef ClientHandler CLASSNAME;
+
+	ClientHandler(	Upp::Callback1<Upp::String> & wuc,
+					Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & wm,
 					Upp::Callback & tf,
 					Upp::Callback1<bool> & wk,
-					Upp::Callback3<Upp::String, int, Upp::String> & wcm): 
+					Upp::Callback3<Upp::String, int, Upp::String> & wcm):
 					browser(NULL), WhenUrlChange(wuc), WhenMessage(wm), WhenTakeFocus(tf),
 					WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
 
 	~ClientHandler() { }
 	
 	Upp::Callback1<Upp::String> & WhenUrlChange;
-	Upp::Callback2<Upp::String, Upp::WithDeepCopy<Upp::Vector<Upp::Value> > > & WhenMessage;
+	Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & WhenMessage;
 	Upp::Callback & WhenTakeFocus;
 	Upp::Callback1<bool> & WhenKeyboard;
 	Upp::Callback3<Upp::String, int, Upp::String> & WhenConsoleMessage;
+	
+	void WhenMessageWrapper(Upp::String name, Upp::Vector<Upp::Value> * par);
 
     virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE			{ return this; }
-   	virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE			{ return this; }
+	virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE			{ return this; }
 	virtual CefRefPtr<CefFocusHandler> GetFocusHandler() OVERRIDE				{ return this; }
 //	virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE					{ return this; }
 	virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE	{ return this; }
 	virtual CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() OVERRIDE			{ return this; }
 
-#if (CHROME_VERSION_BUILD >= 2357)
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
-                             CefRefPtr<CefFrame> frame,
-                             const CefString& target_url,
-                             const CefString& target_frame_name,
-                             WindowOpenDisposition target_disposition,
-                             bool user_gesture,
-                             const CefPopupFeatures& popupFeatures,
-                             CefWindowInfo& windowInfo,
-                             CefRefPtr<CefClient>& client,
-                             CefBrowserSettings& settings,
-                             bool* no_javascript_access) OVERRIDE; 
-#else
-	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
-                             CefRefPtr<CefFrame> frame,
-                             const CefString& target_url,
-                             const CefString& target_frame_name,
-                             const CefPopupFeatures& popupFeatures,
-                             CefWindowInfo& windowInfo,
-                             CefRefPtr<CefClient>& client,
-                             CefBrowserSettings& settings,
-                             bool* no_javascript_access) OVERRIDE;
-#endif
+								CefRefPtr<CefFrame> frame,
+								const CefString& target_url,
+								const CefString& target_frame_name,
+								WindowOpenDisposition target_disposition,
+								bool user_gesture,
+								const CefPopupFeatures& popupFeatures,
+								CefWindowInfo& windowInfo,
+								CefRefPtr<CefClient>& client,
+								CefBrowserSettings& settings,
+								bool* no_javascript_access) OVERRIDE;
 
     virtual void OnLoadError(CefRefPtr<CefBrowser> browser,
 							CefRefPtr<CefFrame> frame,
@@ -77,15 +69,14 @@ public:
 
     virtual void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
   
-	virtual void OnAddressChange(CefRefPtr<CefBrowser> browser,	
-							CefRefPtr<CefFrame> frame, 
+	virtual void OnAddressChange(CefRefPtr<CefBrowser> browser,
+							CefRefPtr<CefFrame> frame,
 							const CefString& url) OVERRIDE;
 	
-	virtual bool OnConsoleMessage(CefRefPtr<CefBrowser> browser, 
-							const CefString& message, 
-							const CefString& source, 
+	virtual bool OnConsoleMessage(CefRefPtr<CefBrowser> browser,
+							const CefString& message,
+							const CefString& source,
 							int line) OVERRIDE;
-
 
 	virtual bool OnProcessMessageReceived(CefRefPtr<CefBrowser> browser,
                                         CefProcessId source_process,
@@ -93,7 +84,7 @@ public:
 
 	virtual void OnTakeFocus( CefRefPtr<CefBrowser> browser, bool next ) OVERRIDE;
 
-	virtual void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,	
+	virtual void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                 CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model) OVERRIDE;
                 
     virtual bool OnJSDialog(CefRefPtr<CefBrowser> browser,

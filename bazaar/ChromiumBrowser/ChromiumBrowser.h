@@ -19,7 +19,7 @@ private:
 	virtual void GotFocus()						{SetFocus0(true);}
 	virtual void LostFocus()					{SetFocus0(false);}
 
-	void MessageLoop();	
+	void MessageLoop();
 #ifdef PLATFORM_WIN32
 	LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 #endif 
@@ -31,7 +31,7 @@ public:
 	~ChromiumBrowser();
 	
 	Callback1<String>								WhenUrlChange;
-	Callback2<String, WithDeepCopy<Vector<Value> > >	WhenMessage;
+	Callback2<String, const Vector<Value>&>			WhenMessage;
 	Callback										WhenTakeFocus;
 	Callback1<bool>									WhenKeyboard;
 	Callback3<Upp::String, int, Upp::String>		WhenConsoleMessage;

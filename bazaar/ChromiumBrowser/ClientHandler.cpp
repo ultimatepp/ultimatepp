@@ -23,7 +23,7 @@ bool ClientHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefStr
 	return true;
 }
 
-#if CHROME_VERSION_BUILD >= 2357
+
 bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefFrame> frame,
                              const CefString& target_url,
@@ -35,17 +35,6 @@ bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefClient>& client,
                              CefBrowserSettings& settings,
                              bool* no_javascript_access)
-#else
-bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
-                             CefRefPtr<CefFrame> frame,
-                             const CefString& target_url,
-                             const CefString& target_frame_name,
-                             const CefPopupFeatures& popupFeatures,
-                             CefWindowInfo& windowInfo,
-                             CefRefPtr<CefClient>& client,
-                             CefBrowserSettings& settings,
-                             bool* no_javascript_access)
-#endif
 {
     RLOG(Upp::Format("Popup canceled, frame name: '%s', url '%s'", target_frame_name.ToString().c_str(), target_url.ToString().c_str()));
 	// Cancel popups
@@ -57,9 +46,9 @@ void ClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                                 CefRefPtr<CefFrame> frame,
                                 ErrorCode errorCode,
                                 const CefString& errorText,
-                                const CefString& failedUrl) 
+								const CefString& failedUrl)
 {
-  	frame->LoadString("<html><head></head><body><center><h1>Page not found</h1></center></body><html>", failedUrl);
+	frame->LoadString("<html><head></head><body><center><h1>Page not found</h1></center></body><html>", failedUrl);
 }
 
 
@@ -73,40 +62,47 @@ bool ClientHandler::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefP
 		
 		PostCallback(callback1(WhenKeyboard, false));
 		
-	}else{ 
+	}else{
 
 		CefRefPtr<CefListValue> args = message->GetArgumentList();
-		Upp::Vector<Upp::Value> par;
+		Upp::Vector<Upp::Value> * par = new Upp::Vector<Upp::Value>;
 	
 		for (unsigned i = 0; i < args->GetSize(); i++){
 			CefValueType type = args->GetType(i);
 			switch(type){
 				
-				case VTYPE_BOOL: 
-					par.Add(args->GetBool(i));
+				case VTYPE_BOOL:
+					par->Add(args->GetBool(i));
 					break;
 				
 				case VTYPE_DOUBLE:
-					par.Add(args->GetDouble(i));
+					par->Add(args->GetDouble(i));
 					break;
 					
 				case VTYPE_INT:
-					par.Add(args->GetInt(i));
+					par->Add(args->GetInt(i));
 					break;
 					
 				case VTYPE_STRING:
-					par.Add(args->GetString(i).ToString().c_str());
+					par->Add(args->GetString(i).ToString().c_str());
 					break;
 				
 				default:
-					par.Add("OnProcessMessageReceived: unsupported parameter type");
-					break; 
+					par->Add("OnProcessMessageReceived: unsupported parameter type");
+					break;
 			}
 		}
 		
-		PostCallback(callback2(WhenMessage, message->GetName().ToString(), par));
+		PostCallback(THISBACK2(WhenMessageWrapper, message->GetName().ToString(), par));
 	}
 	return true;
+}
+
+
+void ClientHandler::WhenMessageWrapper(Upp::String name, Upp::Vector<Upp::Value> * par)
+{
+	WhenMessage(name, *par);
+	delete par;
 }
 
 
@@ -116,9 +112,9 @@ void ClientHandler::OnTakeFocus(CefRefPtr<CefBrowser> browser, bool next )
 }
 
 
-void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser, 
-										CefRefPtr<CefFrame> frame, 
-										CefRefPtr<CefContextMenuParams> params, 
+void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
+										CefRefPtr<CefFrame> frame,
+										CefRefPtr<CefContextMenuParams> params,
 										CefRefPtr<CefMenuModel> model)
 {
 #ifndef _DEBUG
@@ -128,9 +124,9 @@ void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
 }
 
 
-bool ClientHandler::OnJSDialog(CefRefPtr<CefBrowser> browser, const CefString& origin_url, 
-								const CefString& accept_lang, JSDialogType dialog_type, 
-								const CefString& message_text, const CefString& default_prompt_text, 
+bool ClientHandler::OnJSDialog(CefRefPtr<CefBrowser> browser, const CefString& origin_url,
+								const CefString& accept_lang, JSDialogType dialog_type,
+								const CefString& message_text, const CefString& default_prompt_text,
 								CefRefPtr<CefJSDialogCallback> callback, bool& suppress_message)
 {
 	RLOG(message_text.ToString().c_str());

@@ -141,12 +141,12 @@ look like this:&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Windows]]}}&]
 [s0; &]
-[s0;i150;O0; Required software: VS Express 2013 for Desktop, CMake 
-(http://www.cmake.org/download/)&]
+[s0;i150;O0; Required software: Visual Studio 2015, CMake (http://www.cmake.org/downloa
+d/)&]
 [s0;i150;O0; download CEF package for Windows from https://cefbuilds.com/&]
-[s0;i150;O0; unpack archive to your `"work`" directory&]
+[s0;i150;O0; unpack the archive to your `"MyApps`" directory&]
 [s0;i150;O0; go to CEF directory and run following command:&]
-[s0; -|[C cmake `-G `"Visual Studio 12`"]&]
+[s0; -|[C cmake `-G `"Visual Studio 14`"]&]
 [s0;i150;O0; Open cef.sln in Visual Studio&]
 [s0;i150;O0; Change active solution configuration to `"Release`" 
 (menu Build / Configuration Manager)&]
@@ -158,9 +158,10 @@ rebuild `"cefclient`"&]
 [s0;i150;O0; configure library paths in TheIDE, menu [* Setup ]/ [* Build 
 methods]:&]
 [s0; -|[* INCLUDE directories]: add CEF library directory, for example:&]
-[s0; -|[C c:`\MyApps`\cef`_binary`_3.2357.1267.g75b5dd4`_windows32]&]
+[s0; -|[C c:`\MyApps`\cef`_binary`_3.2454.1328.gc45b7de`_windows32]&]
 [s0; -|[* LIB directories]: the same path as above, for example&]
-[s0; [C1 -|][C C:`\MyApps`\cef`_binary`_3.2357.1267.g75b5dd4`_windows32]&]
+[s0; [C1 -|][C C:`\MyApps`\cef`_binary`_3.2454.1328.gc45b7de`_windows32 
+]&]
 [s0;i150;O0; Open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
 [s0;i150;O0; Before you run compiled application, copy asset files 
@@ -176,14 +177,12 @@ required files. Your application directory should look like this:&]
 [s0; -|-|│   d3dcompiler`_43.dll&]
 [s0; -|-|│   d3dcompiler`_47.dll&]
 [s0; -|-|│   devtools`_resources.pak&]
-[s0; -|-|│   ffmpegsumo.dll&]
 [s0; -|-|│   icudtl.dat&]
 [s0; -|-|│   libcef.dll&]
 [s0; -|-|│   libEGL.dll&]
 [s0; -|-|│   libGLESv2.dll&]
 [s0; -|-|│   natives`_blob.bin&]
 [s0; -|-|│   snapshot`_blob.bin&]
-[s0; -|-|│&]
 [s0; -|-|└───locales&]
 [s0; -|-|        am.pak&]
 [s0; -|-|        ar.pak&]
@@ -240,11 +239,11 @@ required files. Your application directory should look like this:&]
 [s0; -|-|        zh`-TW.pak&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Final remarks]]}}&]
-[s0;i150;O0; CEF is multiprocess and multithread library. Your application 
-binary file will be executed at least three times to open single 
-web page. It means that your have to plan carefully your `"main`" 
-function. Recommended way of starting an application looks like 
-this:&]
+[s0;i150;O0; CEF is multiprocess and multithreaded library. Your 
+application binary file will be executed at least three times 
+to open single web page. It means that your have to plan carefully 
+your `"main`" function. Recommended way of starting an application 
+looks like this:&]
 [s0; [C -|GUI`_APP`_MAIN]&]
 [s0; [C -|`{]&]
 [s0; [C -|-|SetLanguage(SetLNGCharset(GetSystemLNG(), CHARSET`_UTF8));]&]
@@ -257,8 +256,8 @@ this:&]
 [s0; -|This way you avoid initialization of your GUI class each time 
 new process is executed by CEF&]
 [s0; &]
-[s0;i150;O0; CEF uses UTF8 encoding. All urls, strings containing 
-javascript should use this encoding. &]
+[s0;i150;O0; CEF uses UTF8 encoding. All URLs, strings containing 
+JavaScript should use this encoding. &]
 [s0;* &]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
@@ -271,7 +270,7 @@ javascript should use this encoding. &]
 [s5;@(0.0.255)%- &]
 [s5;:ChromiumBrowser`:`:Browse`(const String`&`):%- [@(0.0.255) void]_[* Browse]([@(0.0.255) c
 onst]_[_^String^ String]_`&_[*@3 url])&]
-[s2; Load the specified [%-*@3 url] .&]
+[s2; Loads the specified [%-*@3 url] .&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:ChildProcess`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* ChildP
@@ -297,7 +296,7 @@ It could be used to return focus to an address bar.&]
 [s5;:ChromiumBrowser`:`:WhenKeyboard:%- [_^Callback1^ Callback1]<[@(0.0.255) bool]>_[* When
 Keyboard]&]
 [s2; Called when a new node in the the browser gets focus. Bool parameter 
-tells application wheter node is editable or not. It is usually 
+tells application whether node is editable or not. It is usually 
 used to show or hide on`-screen keyboard in devices with touch 
 screen&]
 [s2;  &]
@@ -305,8 +304,8 @@ screen&]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:WhenConsoleMessage:%- [_^Callback3^ Callback3]<[_^Upp^ String], 
 [@(0.0.255) int], [_^Upp^ String]>_[* WhenConsoleMessage]&]
-[s2; Called to pass a message from javascript functions (console.log, 
-console.debug). First parameter is url, second `- line number, 
+[s2; Called to pass a message from JavaScript functions (console.log, 
+console.debug). First parameter is URL, second `- line number, 
 third `- message itself&]
 [s2; &]
 [s3;%- &]
@@ -315,50 +314,52 @@ third `- message itself&]
 ildProcess]()&]
 [s2; This function should be called from the application GUI`_APP`_MAIN 
 function to check whether process is secondary one. Secondary 
-process is identyfied by `"`-`-type`=...`" command`-line paramater. 
+process is identified by `"`-`-type`=...`" command`-line parameter. 
 &]
 [s2; &]
 [s3;%- &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:StartPage`(const char`*`):%- [_^ChromiumBrowser^ ChromiumBrowse
 r]_`&_[* StartPage]([@(0.0.255) const]_[@(0.0.255) char]_`*_[*@3 url])&]
-[s2;  Set [%-*@3 url] of a page that is loaded right after browser 
+[s2;  Sets [%-*@3 url] of a page that is loaded right after browser 
 is started.&]
 [s2; &]
 [s3; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:ShowHTML`(const String`&`):%- [@(0.0.255) void]_[* ShowHTML]([@(0.0.255) c
 onst]_[_^String^ String][@(0.0.255) `&]_[*@3 html])&]
-[s2; Load the contents of [%-*@3 html] string (UTF`-8 encoded).&]
+[s2; Loads the contents of [%-*@3 html] string (UTF`-8 encoded).&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:GetLocation`(`):%- [_^String^ String]_[* GetLocation]()&]
-[s2; Return the URL of currently loaded page&]
+[s2; Returns the URL of currently loaded page&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:GoBack`(`):%- [@(0.0.255) void]_[* GoBack]()&]
-[s2; Navigate backwards&]
+[s2; Navigates backwards&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:GoForward`(`):%- [@(0.0.255) void]_[* GoForward]()&]
-[s2; Navigate forwards&]
+[s2; Navigates forwards&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:Stop`(`):%- [@(0.0.255) void]_[* Stop]()&]
-[s2; Stop loading the page&]
+[s2; Stops loading the page&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:RefreshPage`(`):%- [@(0.0.255) void]_[* RefreshPage]()&]
-[s2; Reload the current page&]
+[s2; Reloads the current page&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:GetVersion`(`):%- [_^String^ String]_[* GetVersion]()&]
-[s2; Return version of Chromium Embedded Framework and Chromium itself&]
+[s2; Returns version of Chromium Embedded Framework and Chromium 
+itself&]
 [s2; &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:ExecuteJavaScript`(const char`*`):%- [@(0.0.255) void]_[* Execute
 JavaScript]([@(0.0.255) const]_[@(0.0.255) char]_`*_[*@3 js])&]
-[s2; Execute a string of JavaScript code. String must be UTF`-8 encoded.&]
+[s2; Executes a string of JavaScript code. String must be UTF`-8 
+encoded.&]
 [s3; &]
 [s4;%- &]
 [s3; ]]

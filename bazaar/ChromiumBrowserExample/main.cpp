@@ -50,8 +50,8 @@ void ChromiumBrowserExample::OnJSTests()
 }
 
 
-void ChromiumBrowserExample::OnMessage(String name, WithDeepCopy<Vector<Value> > par)	
-{ 
+void ChromiumBrowserExample::OnMessage(String name, const Vector<Value>& par)
+{
 	String tmp = "Native function executed by JS:&[* " + name + "(";
 	for (int i = 0; i < par.GetCount(); i++){
 		if (i > 0) tmp += ',';
