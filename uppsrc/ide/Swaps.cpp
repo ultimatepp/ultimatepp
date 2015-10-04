@@ -1,6 +1,6 @@
 #include "ide.h"
 
-#define LLOG(x)  DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 void AssistEditor::SwapSContext(Parser& p)
 {

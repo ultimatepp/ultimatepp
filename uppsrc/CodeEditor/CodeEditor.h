@@ -491,10 +491,11 @@ public:
 
 	struct FindReplaceData {
 		String find, replace;
+		String find_list, replace_list;
 		bool   wholeword, wildcards, ignorecase, samecase, regexp;
 	};
 	
-	FindReplaceData GetFindReplaceData() const;
+	FindReplaceData GetFindReplaceData();
 	void            SetFindReplaceData(const FindReplaceData& d);
 
 	typedef CodeEditor CLASSNAME;
@@ -504,6 +505,9 @@ public:
 
 	static void InitKeywords();
 };
+
+String ReadList(WithDropChoice<EditString>& e);
+void   WriteList(WithDropChoice<EditString>& e, const String& data);
 
 END_UPP_NAMESPACE
 
