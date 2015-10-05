@@ -13,7 +13,8 @@ file
 	doinstall,
 	domake,
 	readme,
-	upp.spec;
+	upp.spec,
+	git-mirror;
 
 mainconfig
 	"" = "SCRIPTS";
