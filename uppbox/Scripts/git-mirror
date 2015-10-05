@@ -1,0 +1,16 @@
+Some of commands used to setup git-mirror:
+
+git svn clone svn://www.ultimatepp.org/upp/trunk
+
+git remote add origin https://github.com/ultimatepp/mirror.git
+
+ssh-keygen -t rsa -b 4096 -C "git-username@gmail.com"
+
+eval "$(ssh-agent -s)"
+
+ssh-add ~/.ssh/id_rsa
+
+ssh -T git@github.com
+
+git remote set-url origin git@github.com:ultimatepp/mirror.git
+
