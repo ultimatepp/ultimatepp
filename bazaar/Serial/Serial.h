@@ -71,15 +71,15 @@ class Serial
 		bool FlushAll(void);
 		
 		// read a single byte, block 'timeout' milliseconds
-		bool Read(byte &c, word timeout = 0);
-		bool Read(char &c, word timeout = 0);
+		bool Read(byte &c, uint32_t timeout = 0);
+		bool Read(char &c, uint32_t timeout = 0);
 		
 		// write a single byte
 		bool Write(char c);
 		
 		// read data, requested amount, blocks 'timeout' milliseconds
 		// if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
-		String Read(size_t reqSize = 0, word timeout = 0);
+		String Read(size_t reqSize = 0, uint32_t timeout = 0);
 		
 		// writes data
 		bool Write(String const &data);

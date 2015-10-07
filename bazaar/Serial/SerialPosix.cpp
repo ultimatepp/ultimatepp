@@ -239,16 +239,16 @@ bool Serial::FlushAll(void)
 }
 		
 // read a single byte, block 'timeout' milliseconds
-bool Serial::Read(byte &c, word timeout)
+bool Serial::Read(byte &c, uint32_t timeout)
 {
 	char buf[1];
 	
-	int tim = msecs() + timeout;
+	uint32_t tim = msecs() + timeout;
 	for(;;)
 	{
 		if(!read(fd, buf, 1))
 		{
-			if(msecs() > tim)
+			if((uint32_t)msecs() > tim)
 				return false;
 			continue;
 		}
@@ -257,16 +257,16 @@ bool Serial::Read(byte &c, word timeout)
 	}		
 }
 
-bool Serial::Read(char &c, word timeout)
+bool Serial::Read(char &c, uint32_t timeout)
 {
 	char buf[1];
 	
-	int tim = msecs() + timeout;
+	uint32_t tim = msecs() + timeout;
 	for(;;)
 	{
 		if(!read(fd, buf, 1))
 		{
-			if(msecs() > tim)
+			if((uint32_t)msecs() > tim)
 				return false;
 			continue;
 		}
@@ -283,14 +283,14 @@ bool Serial::Write(char c)
 		
 // read data, requested amount, blocks 'timeout' milliseconds
 // if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
-String Serial::Read(size_t reqSize, word timeout)
+String Serial::Read(size_t reqSize, uint32_t timeout)
 {
 	char buf[1001];
 	buf[1000] = 0;
 	String data;
 
 	size_t n;
-	int tim = msecs() + timeout;
+	uint32_t tim = msecs() + timeout;
 	if(reqSize)
 	{
 		n = min(reqSize, (size_t)1000);
@@ -299,7 +299,7 @@ String Serial::Read(size_t reqSize, word timeout)
 			n = read(fd, buf, n);
 			if(!n)
 			{
-				if(msecs() > tim)
+				if((uint32_t)msecs() > tim)
 					break;
 				n = min(reqSize, (size_t)1000);
 				continue;
@@ -320,7 +320,7 @@ String Serial::Read(size_t reqSize, word timeout)
 			n = read(fd, buf, 1000);
 			if(!n)
 			{
-				if(msecs() > tim)
+				if((uint32_t)msecs() > tim)
 					break;
 				continue;
 			}

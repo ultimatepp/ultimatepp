@@ -190,19 +190,19 @@ bool Serial::FlushAll(void)
 }
 
 // read a single byte, block 'timeout' milliseconds
-bool Serial::Read(byte &c, word timeout)
+bool Serial::Read(byte &c, uint32_t timeout)
 {
 	char buf[1];
 	unsigned long count = 0;
 	
-	int tim = msecs() + timeout;
+	uint32_t tim = (uint32_t)msecs() + timeout;
 	for(;;)
 	{
 		count = 0;
 		ReadFile(fd, buf, 1, &count, NULL);
 		if(!count)
 		{
-			if(msecs() > tim)
+			if((uint32_t)msecs() > tim)
 				return false;
 			continue;
 		}
@@ -211,19 +211,19 @@ bool Serial::Read(byte &c, word timeout)
 	}		
 }
 
-bool Serial::Read(char &c, word timeout)
+bool Serial::Read(char &c, uint32_t timeout)
 {
 	char buf[1];
 	unsigned long count = 0;
 	
-	int tim = msecs() + timeout;
+	uint32_t tim = (uint32_t)msecs() + timeout;
 	for(;;)
 	{
 		count = 0;
 		ReadFile(fd, buf, 1, &count, NULL);
 		if(!count)
 		{
-			if(msecs() > tim)
+			if((uint32_t)msecs() > tim)
 				return false;
 			continue;
 		}
@@ -243,14 +243,14 @@ bool Serial::Write(char c)
 
 // read data, requested amount, blocks 'timeout' milliseconds
 // if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
-String Serial::Read(size_t reqSize, word timeout)
+String Serial::Read(size_t reqSize, uint32_t timeout)
 {
 	char buf[1001];
 	String res;
 
 	unsigned long count = 0;
 	unsigned long n;
-	int tim = msecs() + timeout;
+	uint32_t tim = (uint32_t)msecs() + timeout;
 	if(reqSize)
 	{
 		n = min(reqSize, (size_t)1000);
@@ -260,11 +260,11 @@ String Serial::Read(size_t reqSize, word timeout)
 			ReadFile(fd, buf, n, &count, NULL);
 			if(!count)
 			{
-				if(msecs() > tim)
+				if((uint32_t)msecs() > tim)
 					break;
 				continue;
 			}
-			tim = msecs() + timeout;
+			tim = (uint32_t)msecs() + timeout;
 			if(count)
 			{
 				reqSize -= count;
@@ -285,7 +285,7 @@ String Serial::Read(size_t reqSize, word timeout)
 					break;
 				continue;
 			}
-			tim = msecs() + timeout;
+			tim = (uint32_t)msecs() + timeout;
 			if(count)
 				res.Cat(buf, count);
 		}
