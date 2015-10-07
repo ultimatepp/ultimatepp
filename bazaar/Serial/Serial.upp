@@ -1,8 +1,7 @@
 description "Cross-platform serial port handling\377";
 
 uses
-	Core,
-	Functions4U;
+	Core;
 
 file
 	Serial.h,

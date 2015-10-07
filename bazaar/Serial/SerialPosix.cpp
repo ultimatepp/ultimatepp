@@ -3,7 +3,6 @@
 #ifdef PLATFORM_POSIX
 
 #include <SysExec/SysExec.h>
-#include <Functions4U/Functions4U.h>
 
 #include <termios.h>
 #include <sys/ioctl.h>
@@ -11,11 +10,19 @@
 
 NAMESPACE_UPP
 
+static bool __IsSymLink(const char *path) 
+{
+	struct stat stf;
+	lstat(path, &stf);
+	return S_ISLNK(stf.st_mode);
+}	
+
+
 dword Serial::stdBauds[] = {
 	0, 50, 75, 110, 134, 150,
 	200, 300, 600, 1200, 1800,
 	2400, 4800, 9600, 19200,
-	38400, 57600, 115200, 230400
+	38400, 57600, 115200, 230400, 345600, 460800
 };
 
 int Serial::stdBaudsCount = sizeof(Serial::stdBauds) / sizeof(dword);
@@ -365,14 +372,14 @@ ArrayMap<String, String> Serial::GetSerialPorts(void)
 
 			// it must be a symlink....
 
-			if (IsSymLink(devPath))
+			if (__IsSymLink(devPath))
 			{
 				// get the driver path
 				String drvLink = AppendFileName(devPath, "driver");
 
 				// it must be a symlink too...
 
-				if (IsSymLink(drvLink))
+				if (__IsSymLink(drvLink))
 				{
 					// get link target
 					String drvName = GetFileName(GetSymLinkPath(drvLink));
