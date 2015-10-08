@@ -249,21 +249,21 @@ class ASBeautifier : protected ASResource
 		int  prevFinalLineSpaceTabCount;
 		int  prevFinalLineTabCount;
 		int  defineTabCount;
-		char quoteChar;
-		char prevNonSpaceCh;
-		char currentNonSpaceCh;
-		char currentNonLegalCh;
-		char prevNonLegalCh;
-		char peekNextChar(WString &line, int i);
+		wchar quoteChar;
+		wchar prevNonSpaceCh;
+		wchar currentNonSpaceCh;
+		wchar currentNonLegalCh;
+		wchar prevNonLegalCh;
+		wchar peekNextChar(WString &line, int i);
 
 	protected:    // inline functions
 		// check if a specific character can be used in a legal variable/method/class name
-		inline bool isLegalNameChar(char ch) const {
+		inline bool isLegalNameChar(wchar ch) const {
 			return (isalnum(ch) || ch == '.' || ch == '_' || (isJavaStyle && ch == '$') || (isCStyle && ch == '~'));
 		}
 
 		// check if a specific character is a whitespace character
-		inline bool isWhiteSpace(char ch) const {
+		inline bool isWhiteSpace(wchar ch) const {
 			return (ch == ' ' || ch == '\t');
 		}
 };
@@ -292,7 +292,7 @@ class ASEnhancer
 		int  lineNumber;
 		bool isInQuote;
 		bool isInComment;
-		char quoteChar;
+		wchar quoteChar;
 
 		// unindent variables
 		int  bracketCount;
@@ -325,12 +325,12 @@ class ASEnhancer
 
 	private:    // inline functions
 		// check if a specific character can be used in a legal variable/method/class name
-		inline bool isLegalNameCharX(char ch) const {
+		inline bool isLegalNameCharX(wchar ch) const {
 			return (isalnum(ch) || ch == '.' || ch == '_' || (isJavaStyle && ch == '$') || (isCStyle && ch == '~'));
 		}
 
 		// check if a specific character is a whitespace character
-		inline bool isWhiteSpaceX(char ch) const {
+		inline bool isWhiteSpaceX(wchar ch) const {
 			return (ch == ' ' || ch == '\t');
 		}
 };
@@ -364,7 +364,7 @@ class ASFormatter : public ASBeautifier, private ASEnhancer
 		void staticInit();
 		void goForward(int i);
 		void trimNewLine();
-		char peekNextChar() const;
+		wchar peekNextChar() const;
 		BracketType getBracketType() const;
 		bool getNextChar();
 		bool isBeforeComment() const;
@@ -374,8 +374,8 @@ class ASFormatter : public ASBeautifier, private ASEnhancer
 		bool isInExponent() const;
 		bool isOneLineBlockReached() const;
 //		bool isNextCharWhiteSpace() const;
-		bool lineBeginsWith(char charToCheck) const;
-		void appendChar(char ch, bool canBreakLine = true);
+		bool lineBeginsWith(wchar charToCheck) const;
+		void appendChar(wchar ch, bool canBreakLine = true);
 		void appendCharInsideComments();
 		void appendSequence(const WString &sequence, bool canBreakLine = true);
 		void appendSpacePad();
@@ -405,11 +405,11 @@ class ASFormatter : public ASBeautifier, private ASEnhancer
 		WString formattedLine;
 		const WString *currentHeader;
 		const WString *previousOperator;    // used ONLY by pad=oper
-		char currentChar;
-		char previousChar;
-		char previousNonWSChar;
-		char previousCommandChar;
-		char quoteChar;
+		wchar currentChar;
+		wchar previousChar;
+		wchar previousNonWSChar;
+		wchar previousCommandChar;
+		wchar quoteChar;
 		int  charNum;
 		int  spacePadNum;
 		int  templateDepth;

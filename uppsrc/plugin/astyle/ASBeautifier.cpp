@@ -663,14 +663,14 @@ WString ASBeautifier::beautify(const WString &originalLine)
 	bool isInSwitch = false;
 	bool isImmediatelyAfterConst = false;
 	bool isSpecialChar = false;
-	char ch = ' ';
-	char prevCh;
+	wchar ch = ' ';
+	wchar prevCh;
 	WString outBuffer; // the newly idented line is bufferd here
 	int tabCount = 0;
 	const WString *lastLineHeader = NULL;
 	bool closingBracketReached = false;
 	int spaceTabCount = 0;
-	char tempCh;
+	wchar tempCh;
 	int headerStackSize = headerStack->GetCount();
 	bool shouldIndentBrackettedLine = true;
 	int lineOpeningBlocksNum = 0;
@@ -683,7 +683,7 @@ WString ASBeautifier::beautify(const WString &originalLine)
 	blockCommentNoBeautify = blockCommentNoIndent;
 	previousLineProbationTab = false;
 	outLineNumber++;
-
+	
 	// handle and remove white spaces around the line:
 	// If not in comment, first find out size of white space before line,
 	// so that possible comments starting in the line continue in
@@ -1814,7 +1814,7 @@ int ASBeautifier::getNextProgramCharDistance(const WString &line, int i)
 	bool inComment = false;
 	int  remainingCharNum = line.GetCount() - i;
 	int  charDistance;
-	char ch;
+	wchar ch;
 
 	for (charDistance = 1; charDistance < remainingCharNum; charDistance++)
 	{
@@ -1870,9 +1870,9 @@ const WString *ASBeautifier::findHeader(const WString &line, int i, const Vector
 
 			int lineLength = line.GetCount();
 			int headerEnd = i + header->GetCount();
-			char startCh = (*header)[0];   // first char of header
-			char endCh = 0;                // char just after header
-			char prevCh = 0;               // char just before header
+			wchar startCh = (*header)[0];   // first char of header
+			wchar endCh = 0;                // char just after header
+			wchar prevCh = 0;               // char just before header
 
 			if (headerEnd < lineLength)
 			{
@@ -1960,9 +1960,9 @@ WString ASBeautifier::trim(const WString &str)
 * @param line   the line to check.
 * @param i      the current char position on the line.
 */
-char ASBeautifier::peekNextChar(WString &line, int i)
+wchar ASBeautifier::peekNextChar(WString &line, int i)
 {
-	char ch = ' ';
+	wchar ch = ' ';
 	int peekNum = ASString_Find_First_Not_Of(line, " \t", i + 1);
 
 	if (peekNum < 0)

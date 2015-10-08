@@ -123,7 +123,7 @@ void Ide::FormatCode()
 	if(sel)
 		Src = editor.GetSelectionW();
 	else
-	 	Src = editor.GetW();
+		Src = editor.GetW();
 
 	// Instantiate the formatter object
 	ASFormatter Formatter;
