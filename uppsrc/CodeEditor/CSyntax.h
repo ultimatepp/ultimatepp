@@ -39,7 +39,6 @@ protected:
 	
 	int         highlight;    // subtype (temporary) TODO
 
-	static int  LoadSyntax(const char *keywords[], const char *names[]);
 	static int  InitUpp(const char **q);
 	static void InitKeywords();
 	static const wchar *DoComment(HighlightOutput& hls, const wchar *p, const wchar *e);
@@ -63,6 +62,8 @@ protected:
 	bool CheckRightBracket(CodeEditor& e, int pos, int& bpos0, int& bpos);
 	
 public:
+	static int  LoadSyntax(const char *keywords[], const char *names[]);
+
 	enum HighlightType {
 		HIGHLIGHT_NONE = -1, HIGHLIGHT_CPP = 0, HIGHLIGHT_USC, HIGHLIGHT_JAVA, HIGHLIGHT_T,
 		HIGHLIGHT_CALC, HIGHLIGHT_LAY, HIGHLIGHT_SCH, HIGHLIGHT_SQL, HIGHLIGHT_CS,

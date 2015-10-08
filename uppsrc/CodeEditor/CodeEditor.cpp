@@ -866,6 +866,12 @@ bool CodeEditor::Key(dword code, int count) {
 	}
 	bool sel = code & K_SHIFT;
 	switch(code & ~K_SHIFT) {
+	case K_CTRL_F:
+		FindReplace(sel, true, false);
+		break;
+	case K_CTRL_H:
+		FindReplace(sel, true, true);
+		break;
 	case K_F3:
 		if(sel)
 			FindPrev();
@@ -999,6 +1005,21 @@ void CodeEditor::PutI(WithDropChoice<EditString>& edit)
 {
 	edit.AddButton().SetMonoImage(CodeEditorImg::I()).Tip(t_("Set word/selection (Ctrl+I)"))
 	    <<= THISBACK1(SetI, &edit);
+}
+
+void CodeEditor::MouseWheel(Point p, int zdelta, dword keyFlags) {
+	if(keyFlags & K_CTRL) {
+		Font f = GetFont();
+		int h = f.GetCy();
+		int q = f.GetHeight();
+		int d = sgn(zdelta);
+		while(f.GetCy() == h && (d < 0 ? f.GetCy() > 5 : f.GetCy() < 40))
+			f.Height(q += d);
+		SetFont(f);
+		EditorBarLayout();
+	}
+	else
+		LineEdit::MouseWheel(p, zdelta, keyFlags);
 }
 
 CodeEditor::CodeEditor() {

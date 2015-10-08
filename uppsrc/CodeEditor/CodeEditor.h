@@ -191,6 +191,7 @@ public:
 	virtual Image CursorImage(Point p, dword keyflags);
 	virtual void  Serialize(Stream& s);
 	virtual void  MouseLeave();
+	virtual void  MouseWheel(Point p, int zdelta, dword keyFlags);
 
 protected:
 	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int pos);
