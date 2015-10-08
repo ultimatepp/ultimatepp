@@ -193,7 +193,7 @@ void ASEnhancer::enhance(WString &line)
 
 	for (int i = 0; i < lineLength; i++)
 	{
-		char ch = line[i];
+		wchar ch = line[i];
 
 		// bypass whitespace
 		if (isWhiteSpaceX(ch))

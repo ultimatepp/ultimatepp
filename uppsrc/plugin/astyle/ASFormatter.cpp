@@ -913,7 +913,7 @@ WString ASFormatter::nextLine()
 				if (find(assignmentOperators.begin(), assignmentOperators.end(), newHeader)
 				        != assignmentOperators.end())
 				{
-					char peekedChar = peekNextChar();
+					wchar peekedChar = peekNextChar();
 					isInPotentialCalculation = (newHeader != &AS_RETURN
 					                            && !(newHeader == &AS_EQUAL && peekedChar == '*')
 					                            && !(newHeader == &AS_EQUAL && peekedChar == '&'));
@@ -1148,7 +1148,7 @@ void ASFormatter::goForward(int i)
 *
 * @return     the next unread character.
 */
-char ASFormatter::peekNextChar() const
+wchar ASFormatter::peekNextChar() const
 {
 	char ch = ' ';
 	int peekNum = ASString_Find_First_Not_Of(currentLine, " \t", charNum + 1);
@@ -1321,7 +1321,7 @@ void ASFormatter::trimNewLine()
  * @param ch               the character to append.
  * @param canBreakLine     if true, a registered line-break
  */
-void ASFormatter::appendChar(char ch, bool canBreakLine)
+void ASFormatter::appendChar(wchar ch, bool canBreakLine)
 {
 	if (canBreakLine && isInLineBreak)
 		breakLine();
@@ -1385,7 +1385,6 @@ void ASFormatter::breakLine()
 
 	// queue an empty line prepend request if one exists
 	prependEmptyLine = isPrependPostBlockEmptyLineRequested;
-
 	readyFormattedLine =  formattedLine;
 	if (isAppendPostBlockEmptyLineRequested)
 	{
@@ -1466,7 +1465,7 @@ bool ASFormatter::isPointerOrReference() const
 
 	if (!isPR)
 	{
-		char nextChar = peekNextChar();
+		wchar nextChar = peekNextChar();
 		isPR |= (!isWhiteSpace(nextChar)
 		         && nextChar != '-'
 		         && nextChar != '('
@@ -1608,7 +1607,7 @@ const WString *ASFormatter::findHeader(const Vector<const WString*> &headers, bo
  *
  * @return        true or false
  */
-bool ASFormatter::lineBeginsWith(char charToCheck) const
+bool ASFormatter::lineBeginsWith(wchar charToCheck) const
 {
 	bool beginsWith = false;
 	int i = ASString_Find_First_Not_Of(currentLine, " \t");
@@ -1866,7 +1865,7 @@ void ASFormatter::padParens(void)
 		}
 
 		// pad open paren outside
-		char peekedCharOutside = peekNextChar();
+		wchar peekedCharOutside = peekNextChar();
 		if (shouldPadParensOutside)
 			if (!(currentChar == '(' && peekedCharOutside == ')'))
 				appendSpacePad();
@@ -1889,7 +1888,7 @@ void ASFormatter::padParens(void)
 		}
 
 		// pad open paren inside
-		char peekedCharInside = peekNextChar();
+		wchar peekedCharInside = peekNextChar();
 		if (shouldPadParensInside)
 			if (!(currentChar == '(' && peekedCharInside == ')'))
 				appendSpaceAfter();
@@ -1943,7 +1942,7 @@ void ASFormatter::padParens(void)
 		}
 
 		// pad close paren outside
-		char peekedCharOutside = peekNextChar();
+		wchar peekedCharOutside = peekNextChar();
 		if (shouldPadParensOutside)
 			if (peekedCharOutside != ';'
 			        && peekedCharOutside != ','
@@ -2176,7 +2175,7 @@ void ASFormatter::formatArrayBrackets(BracketType bracketType, bool isOpeningArr
 			appendCurrentChar();	 // not the first opening bracket - don't change
 
 		// if an opening bracket ends the line there will be no inStatement indent
-		char nextChar = peekNextChar();
+		wchar nextChar = peekNextChar();
 		if (isWhiteSpace(nextChar)
 		        || isBeforeLineEndComment(charNum)
 		        || nextChar == '{')
