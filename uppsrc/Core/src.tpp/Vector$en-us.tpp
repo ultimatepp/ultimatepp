@@ -39,6 +39,11 @@ picked Vector is logic error with exception of&]
 [s0; &]
 [s0; Optional deep copy is implemented through DeepCopyOptionTemplate 
 macro.&]
+[s0; &]
+[s0; Vector provides access to internal C`-like vector of elementes 
+(either using Begin or even using direct cast operator) a can 
+be used as buffer for C`-like functions, although [^topic`:`/`/Core`/src`/Buffer`$en`-us^ B
+uffer] class might be more suitable in these cases.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
