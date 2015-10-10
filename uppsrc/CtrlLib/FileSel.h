@@ -157,6 +157,7 @@ String FormatFileSize(int64 n);
 class FileSel : public WithFileSelectorLayout<TopWindow> {
 public:
 	virtual bool Key(dword key, int count);
+	virtual void Activate();
 
 private:
 	SizeGrip    sizegrip;
@@ -201,6 +202,7 @@ protected:
 	bool        rdonly;
 	bool        bidname;
 	bool        appmodal;
+	bool        loaded;
 
 #ifdef _MULTITHREADED
 	static StaticMutex li_mutex;
@@ -229,6 +231,7 @@ protected:
 	void        Plus();
 	void        Minus();
 	void        Toggle();
+	void        Reload();
 	void        PlusMinus(const char *title, bool sel);
 	void        Update();
 	void        FileUpdate();

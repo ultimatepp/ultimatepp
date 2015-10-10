@@ -232,9 +232,17 @@ bool Ide::IsProjectFile(const String& f) const
 	return false;
 }
 
-void Ide::ScanFile()
+void Ide::ScanFile(bool check_includes)
 {
 	if(IsCppBaseFile()) {
+		if(check_includes) {
+			String imd5 = IncludesMD5();
+			if(editfile_includes != imd5) {
+				editfile_includes = imd5;
+				SaveFile(true);
+				return;
+			}
+		}
 		String s = ~editor;
 		StringStream ss(s);
 		CodeBaseScanFile(ss, editfile);
@@ -539,11 +547,28 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
 	editfile_svn = IsSvnDir(GetFileFolder(editfile));
+	editfile_includes = IncludesMD5();
+}
+
+String Ide::IncludesMD5()
+{ // keep track of includes for Assist++, so that we know when to save file and sync base
+	int n = min(editor.GetLineCount(), 1000); // ignore big files
+	Md5Stream md5;
+	for(int i = 0; i < n; i++) {
+		String l = editor.GetUtf8Line(i);
+		try {
+			CParser p(l);
+			if(p.Char('#') && p.Id("include"))
+				md5.Put(l);
+		}
+		catch(CParser::Error) {}
+	}
+	return md5.FinishString();
 }
 
 void Ide::EditFileAssistSync()
 {
-	ScanFile();
+	ScanFile(false);
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
 }

@@ -403,6 +403,7 @@ void InvalidateFileTimeCache()
 
 void InvalidateFileTimeCache(const String& path)
 {
+	LLOG("InvalidateFileTimeCache " << path);
 	sPathFileTime.UnlinkKey(path);
 }
 

@@ -39,7 +39,7 @@ void AssistEditor::Context(Parser& parser, int pos)
 	LTIMING("Context");
 	
 	
-	theide->ScanFile();
+	theide->ScanFile(true);
 	String s = Get(0, pos);
 	StringStream ss(s);
 
