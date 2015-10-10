@@ -126,6 +126,9 @@ public:
 
 	int     GetSbPos() const                           { return GetSbPos(GetSize()); }
 	void    SetSbPos(int y);
+	
+	int     GetScroll() const                          { return sb; }
+	void    ScrollTo(int a)                            { sb.Set(a); }
 
 	void    SetFrame(CtrlFrame& frame);
 

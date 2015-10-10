@@ -467,6 +467,7 @@ public:
 	int       editfile_line_endings;
 	bool      editfile_svn;
 	bool      editfile_isfolder;
+	String    editfile_includes;
 
 	String    editfile2;
 
@@ -713,6 +714,7 @@ public:
 	bool      CanToggleReadOnly();
 	void      ToggleReadOnly();
 	void      PosSync();
+	String    IncludesMD5();
 	void      EditFileAssistSync();
 	
 	TimeCallback text_updated;
@@ -902,7 +904,7 @@ public:
 		void  SearchCode();
 		void  Goto();
 		void  NavigatorDlg();
-		void  ScanFile();
+		void  ScanFile(bool check_includes);
 		bool  SwapSIf(const char *cref);
 		void  SwapS();
 		void  FindId(const String& id);

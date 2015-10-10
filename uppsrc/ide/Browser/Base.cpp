@@ -285,11 +285,6 @@ void UpdateCodeBase2(Progress& pi)
 	Index<int>  parse_file;
 	CLOG("Gathered files: " << GetAllSourceMasters());
 	const Index<String>& src = GetAllSources();
-#ifdef HAS_CLOG
-	for(int i = 0; i < source_file.GetCount(); i++)
-		if(!source_file.IsUnlinked(i))
-			CLOG(i << " " << source_file.GetKey(i) << " " << source_file[i].dependencies_md5sum << " " << source_file[i].time);
-#endif
 	pi.SetTotal(src.GetCount());
 	for(int i = 0; i < src.GetCount(); i++) {
 		pi.Step();
@@ -312,6 +307,12 @@ void UpdateCodeBase2(Progress& pi)
 	for(int i = 0; i < source_file.GetCount(); i++)
 		if(keep_file.Find(i) < 0 && parse_file.Find(i) < 0 && !source_file.IsUnlinked(i))
 			source_file.Unlink(i);
+
+#ifdef HAS_CLOG
+	for(int i = 0; i < source_file.GetCount(); i++)
+		if(!source_file.IsUnlinked(i))
+			CLOG(i << " " << source_file.GetKey(i) << " " << source_file[i].dependencies_md5sum << " " << source_file[i].time);
+#endif
 	
 	ParseFiles(pi, parse_file);
 }
@@ -381,11 +382,11 @@ void CodeBaseScanFile(Stream& in, const String& fn)
 void CodeBaseScanFile(const String& fn)
 {
 	LLOG("CodeBaseScanFile " << fn);
+	String md5sum = GetPPFile(fn).md5sum;
 	FileIn in(fn);
 	CodeBaseScanFile(in, fn);
 	int file = GetSourceFileIndex(fn);
 	SourceFileInfo& f = source_file[file];
-	String md5sum = GetPPFile(fn).md5sum;
 	CLOG("CodeBaseScanFile " << fn << ", " << md5sum << " " << f.md5sum);
 	if(md5sum != f.md5sum) {
 		SyncCodeBase();

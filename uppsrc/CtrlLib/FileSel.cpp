@@ -791,7 +791,7 @@ void FileSel::SelectNet()
 		if(p.GetCount())
 			SetDir(p);
 		else {
-			netstack.Add() = netnode[q];		
+			netstack.Add() = netnode[q];
 			netnode = netstack.Top().Enum();
 			LoadNet();
 		}
@@ -801,6 +801,7 @@ void FileSel::SelectNet()
 
 void FileSel::SearchLoad()
 {
+	loaded = true;
 	list.EndEdit();
 	list.Clear();
 	String d = GetDir();
@@ -1334,6 +1335,22 @@ void FileSel::Toggle() {
 			list.SelectOne(i, !list.IsSelected(i));
 }
 
+void FileSel::Reload()
+{
+	String fn = list.GetCurrentName();
+	int a = list.GetScroll();
+	SearchLoad();
+	list.ScrollTo(a);
+	list.FindSetCursor(fn);
+}
+
+void FileSel::Activate()
+{
+	if(loaded)
+		Reload();
+	TopWindow::Activate();
+}
+
 bool FileSel::Key(dword key, int count) {
 	switch(key) {
 	case '.':
@@ -1349,6 +1366,9 @@ bool FileSel::Key(dword key, int count) {
 		return true;
 	case '*':
 		toggle.PseudoPush();
+		return true;
+	case K_F5:
+		Reload();
 		return true;
 	case K_F6:
 		list.StartEdit();
@@ -2049,7 +2069,9 @@ struct DisplayPlace : Display {
 	}
 };
 
-FileSel::FileSel() {
+FileSel::FileSel()
+{
+	loaded = false;
 	filesystem = &StdFileSystemInfo();
 	CtrlLayout(*this);
 	ArrangeOKCancel(ok, cancel);

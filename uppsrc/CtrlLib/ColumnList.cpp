@@ -599,7 +599,7 @@ void ColumnList::SetCursor(int c)
 	SetCursor0(c, true);
 }
 
-int ColumnList::GetSbPos(const Size &sz) const
+int ColumnList::GetSbPos(const Size& sz) const
 {
 	switch (mode) {
 	case MODE_ROWS:
