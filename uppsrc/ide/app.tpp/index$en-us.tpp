@@ -62,4 +62,4 @@ Matt Ezell, Herbert Danler, Garry Everard, Jay Krell, mobilehunter,
 Michael Bzdega, Reza Fatahilah Shah, Keith Willis, Brian Rich, 
 Alex Nicolson, Jean`-François GUCHENS, Daryl Warder, Jeff Humphreys, 
 Neil Neilson, Timothy Reilly, James McNamara, Jeff L. Holcomb, 
-Martin Bartuska, Patryk Głowacz]]
+Martin Bartuska, Patryk Głowacz, Henk ten Hove]]
