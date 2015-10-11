@@ -1,0 +1,2 @@
+template<typename... _Args>
+bool _M_emplace_unique(_Args&&... __args);

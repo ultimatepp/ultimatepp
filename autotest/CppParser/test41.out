@@ -1,0 +1,5 @@
+<globals> {
+	FUNCTIONTEMPLATE, name: _M_emplace_unique, qitem: _M_emplace_unique(_Args&&...__args), qtype: , qptype: _Args;, natural: template <typename... _Args> bool _M_emplace_unique(_Args&&... __args), line 1, using 
+}
+<locals> {
+}
