@@ -3,7 +3,7 @@
 NAMESPACE_UPP
 
 #define LTIMING(x)  // RTIMING(x)
-#define LLOG(x)     // LOG(x)
+#define LLOG(x)     // DLOG(x)
 
 bool IsCPPFile(const String& path)
 {
@@ -429,6 +429,7 @@ String GetIncludePath(const String& s, const String& filedir)
 	LTIMING("GetIncludePath 2");
 	String p = GetIncludePath0(s, filedir);
 	sIncludePath.Add(key, p);
+	LLOG("GetIncludePath " << s << " " << filedir << ": " << p);
 	return p;
 }
 

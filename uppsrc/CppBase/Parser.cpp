@@ -10,6 +10,19 @@ NAMESPACE_UPP
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // TIMING(x)
 
+void Parser::ThrowError(const String& e)
+{
+	err(GetLine(lex.Pos()), e);
+#ifdef _DEBUG
+	int i = 0;
+	while(i < 40 && lex[i] != t_eof)
+		i++;
+	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
+	     ", code:  " << AsCString(String(lex.Pos(), lex.Pos(i))));
+#endif
+	throw Error();
+}
+
 inline const char *bew(const char *s, const char *t)
 {
 	while(*s)
@@ -379,19 +392,6 @@ void Parser::Line()
 		line++;
 }
 
-void Parser::ThrowError(const String& e)
-{
-	err(GetLine(lex.Pos()), e);
-#ifdef _DEBUG
-	int i = 0;
-	while(i < 40 && lex[i] != t_eof)
-		i++;
-	LLOG("ERROR: (" << GetLine(lex.Pos()) << ") " << e << ", scope: " << current_scope <<
-	     ", code:  " << AsCString(String(lex.Pos(), lex.Pos(i))));
-#endif
-	throw Error();
-}
-
 void Parser::Check(bool b, const char *err)
 {
 	if(!b) ThrowError(err);
@@ -644,12 +644,13 @@ String Parser::StructDeclaration(const String& tn, const String& tp)
 		bool c = false;
 		do {
 			String access = t == tk_class ? "private" : "public";
+			bool virt = Key(tk_virtual);
 			if(Key(tk_public)) access = "public";
 			else
 			if(Key(tk_protected)) access = "protected";
 			else
 			if(Key(tk_private)) access = "private";
-			if(Key(tk_virtual)) access << " virtual";
+			if(Key(tk_virtual) || virt) access << " virtual";
 			String h;
 			bool dummy;
 			String n = Name(h, dummy, dummy);
@@ -701,7 +702,7 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 		return Null;
 	}
 	if(Key(tk_int) || Key(tk_char) ||
-	   Key(tk___int8) || Key(tk___int16) || Key(tk___int32) || Key(tk___int64) ||
+	   Key(tk___int8) || Key(tk___int16) || Key(tk___int32) || Key(tk___int64) || Key(tk___int128) ||
 	   Key(tk_char16_t) || Key(tk_char32_t)) return Null;
 	if(sgn) return Null;
 	const char *p = lex.Pos();
@@ -758,10 +759,24 @@ void Parser::Qualifier(bool override_final)
 		if(Key(tk_const) || Key(tk_volatile) || Key(tk_constexpr) || Key(tk_thread_local) || VCAttribute())
 			;
 		else
+		if(Key(tk_noexcept)) {
+			if(Key('(')) {
+				int lvl = 0;
+				while(lex != t_eof && lex != ';' && !(lvl == 0 && Key(')')))
+					if(Key('('))
+						lvl++;
+					else
+					if(Key(')'))
+						lvl--;
+					else
+						++lex;
+			}
+		}
+		else
 		if(override_final && lex.IsId() && findarg(lex.Id(), "override", "final") >= 0)
 			++lex;
 		else
-		if(Key(tk_throw) || Key(tk_noexcept) || Key(tk_alignas)) {
+		if(Key(tk_throw) || Key(tk_alignas)) {
 			while(lex != t_eof && lex != ';' && !Key(')'))
 				++lex;
 		}
@@ -778,6 +793,8 @@ void Parser::Elipsis(Decl& d)
 {
 	Decl& q = d.param.Add();
 	q.name = "...";
+	if(lex.IsId()) // bool emplace(_Args&&... __args);
+		++lex;
 	CheckKey(')');
 }
 
@@ -847,6 +864,7 @@ void Parser::EatInitializers()
 			if(lex == t_eof)
 				break;
 			if(lvl == 0) {
+				Qualifier(false);
 				if(lex == '{')
 					break;
 				if(lex.IsId() && lex[1] == '{') { // : X{123} { case
