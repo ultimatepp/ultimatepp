@@ -404,57 +404,62 @@ void Parser::CheckKey(int c)
 
 String Parser::TemplateParams(String& param)
 {
-	const char *pos = lex.Pos();
-	CheckKey('<');
-	int level = 1;
-	String id;
-	bool gp = true;
-	while(lex != t_eof) {
-		if(lex.IsId() && gp)
-			id = lex.GetId();
-		else
-		if(Key(',')) {
-			ScAdd(param, id);
-			id.Clear();
-			gp = true;
-		}
-		else
-		if(Key('=')) {
-			if(!id.IsEmpty()) {
+	String r;
+	do {
+		const char *pos = lex.Pos();
+		CheckKey('<');
+		int level = 1;
+		String id;
+		bool gp = true;
+		while(lex != t_eof) {
+			if(lex.IsId() && gp)
+				id = lex.GetId();
+			else
+			if(Key(',')) {
 				ScAdd(param, id);
 				id.Clear();
+				gp = true;
 			}
-			gp = false;
-		}
-		else
-		if(Key('>')) {
-			level--;
-			if(level <= 0) {
-				ScAdd(param, id);
-				break;
+			else
+			if(Key('=')) {
+				if(!id.IsEmpty()) {
+					ScAdd(param, id);
+					id.Clear();
+				}
+				gp = false;
 			}
-		}
-		else
-		if(Key(t_shr) && level >= 2) {
-			level -= 2;
-			if(level <= 0) {
-				ScAdd(param, id);
-				break;
+			else
+			if(Key('>')) {
+				level--;
+				if(level <= 0) {
+					ScAdd(param, id);
+					break;
+				}
 			}
+			else
+			if(Key(t_shr) && level >= 2) {
+				level -= 2;
+				if(level <= 0) {
+					ScAdd(param, id);
+					break;
+				}
+			}
+			else
+			if(Key('<'))
+				level++;
+			else
+			if(Key('('))
+				level++;
+			else
+			if(Key(')'))
+				level--;
+			else
+				++lex;
 		}
-		else
-		if(Key('<'))
-			level++;
-		else
-		if(Key('('))
-			level++;
-		else
-		if(Key(')'))
-			level--;
-		else
-			++lex;
+		MergeWith(r, ",", String(pos, lex.Pos()));
 	}
-	return String(pos, lex.Pos());
+	while(Key(tk_template));
+	return r;
 }
 
 String Parser::TemplateParams()
@@ -1575,6 +1580,16 @@ void Parser::Do()
 	else
 	if(Key(';')) // 'empty' declaration, result of some ignores
 		;
+	else
+	if(lex == tk_extern && lex[1] == tk_template) { // skip 'extern template void Foo<char>();'
+		while(lex != t_eof) {
+			if(lex == ';') {
+				++lex;
+				break;
+			}
+			++lex;
+		}
+	}
 	else
 	if(Key(tk_extern) && lex == t_string) { // extern "C++" kind
 		++lex;

@@ -133,7 +133,20 @@ String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
 		// TODO: implement selection of library version
 		String versionsDir = nest + "gnu-libstdc++";
 		
-		return nest + "gnu-libstdc++" + DIR_SEPS + "4.9" + DIR_SEPS + "include";
+		FindFile ff(nest + "gnu-libstdc++/*.*");
+		String inc;
+		double ver = 0;
+		while(ff) {
+			if(ff.IsFolder()) {
+				double h = atof(ff.GetName());
+				if(h > ver) {
+					ver = h;
+					inc = ff.GetPath();
+				}
+			}
+			ff.Next();
+		}
+		return inc + '/' + "include";
 	}
 	else
 	if(cppRuntime.StartsWith("c++")) {
