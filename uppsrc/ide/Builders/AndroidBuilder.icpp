@@ -515,6 +515,12 @@ void AndroidBuilder::GenerateApplicationMakeFile()
 	makeFile.SetOptim(HasFlag("DEBUG") ? "debug" : "release");
 	makeFile.SetToolchain(ndkToolchain);
 	
+	PutVerbose("Architectures: " + AsString(ndkArchitectures));
+	PutVerbose("CppRuntime: " + ndkCppRuntime);
+	PutVerbose("CppFlags: " + ndkCppFlags);
+	PutVerbose("CFlags: " + ndkCFlags);
+	PutVerbose("Toolchain: " + ndkToolchain);
+	
 	UpdateFile(project.GetJniApplicationMakeFilePath(), makeFile.ToString());
 }
 
