@@ -836,7 +836,6 @@ String Ide::GetIncludePath()
 #endif
 	if(findarg(bm.Get("BUILDER", ""), "ANDROID") >= 0) {
 		AndroidNDK ndk(bm.Get("NDK_PATH"));
-		DDUMP(ndk.GetIncludeDir());
 		if(ndk.Validate()) {
 			MergeWith(include, ";", ndk.GetIncludeDir());
 			
@@ -852,7 +851,7 @@ String Ide::GetIncludePath()
 		for(int j = 0; j < pkg.include.GetCount(); j++)
 			MergeWith(include, ";", SourcePath(wspc[i], pkg.include[j].text));
 	}
-	
+
 	return include;
 }
 

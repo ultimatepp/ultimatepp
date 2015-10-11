@@ -13,6 +13,18 @@ String GetStdDefs()
                                  "__clrcall;__alignof(...);"
                                  
                                  "__asm__(...);__asm(...);__restrict;__inline;__typeof;"
+                                 "_GLIBCXX_VISIBILITY(...);_GLIBCXX_BEGIN_NAMESPACE_VERSION;"
+                                 "_GLIBCXX_END_NAMESPACE_VERSION;_GLIBCXX_CONSTEXPR;"
+                                 "_GLIBCXX_HAS_NESTED_TYPE(...);"
+                                 "__inline__;"
+                                 "_GLIBCXX_CONST;"
+                                 "_GLIBCXX_ABI_TAG_CXX11;"
+                                 "__attribute(...);"
+                                 "__glibcxx_class_requires(...);"
+                                 "__glibcxx_class_requires2(...);"
+                                 "__glibcxx_class_requires3(...);"
+                                 "__glibcxx_class_requires4(...);"
+                                 "__glibcxx_class_requires5(...);"
 	;
 	
 	String defs;
@@ -32,6 +44,7 @@ String GetStdDefs()
 		defs << "#define " << h[i] << "\n";
 	defs << "#define NULL NULL\n";
 	defs << "#define DrawText DrawText\n"; // DrawTextA/DrawTextW fiasco...
+	defs << "#define __typeof__ decltype\n";
 	return defs;
 }
 
