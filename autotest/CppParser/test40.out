@@ -1,0 +1,7 @@
+Foo {
+	STRUCT, name: Foo, qitem: struct, qtype: Foo, qptype: , natural: struct Foo, line 1, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo()noexcept, qtype: , qptype: , natural: Foo() noexcept, line 2, using 
+	CONSTRUCTOR, name: Foo, qitem: Foo(int)noexcept(noexcept(anything)), qtype: , qptype: , natural: Foo(int) noexcept(noexcept(anything)), line 3, using 
+}
+<locals> {
+}

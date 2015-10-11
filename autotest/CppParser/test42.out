@@ -1,0 +1,5 @@
+basic_istream {
+	STRUCT, name: basic_istream, qitem: class, qtype: basic_istream, qptype: basic_ios, natural: class basic_istream : public virtual basic_ios, line 1, using 
+}
+<locals> {
+}
