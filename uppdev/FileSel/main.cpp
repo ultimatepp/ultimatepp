@@ -4,7 +4,7 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
-	Ctrl::SetHiDPIEnabled();
+	Ctrl::SetUHDEnabled();
 
 	SetDefaultCharset(CHARSET_UTF8);
 	FileSel fs;
