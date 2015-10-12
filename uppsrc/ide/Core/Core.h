@@ -516,4 +516,7 @@ public:
 	VectorMap< String, ArrayMap<int, Block> > blocks;
 };
 
+void RegisterPCHFile(const String& pch_file);
+void DeletePCHFiles();
+
 #endif

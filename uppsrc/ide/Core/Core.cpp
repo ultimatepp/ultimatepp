@@ -594,3 +594,16 @@ String NormalizePathSeparator(String path)
 	
 	return path;
 }
+
+Index<String> pch_files;
+
+void RegisterPCHFile(const String& pch_file)
+{
+	pch_files.FindAdd(pch_file);
+}
+
+void DeletePCHFiles()
+{
+	for(int i = 0; i < pch_files.GetCount(); i++)
+		FileDelete(pch_files[i]);
+}
