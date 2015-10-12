@@ -478,6 +478,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs11, "Common7\\Ide") + ';' +
 							vc11_64 + ';' +
@@ -524,6 +526,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs11, "Common7\\Ide") + ';' +
 							AppendFileName(vc, "bin") + ';' +
@@ -574,6 +578,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs10, "Common7\\Ide") + ';' +
 							vc10_64 + ';' +
@@ -618,6 +624,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs10, "Common7\\Ide") + ';' +
 							AppendFileName(vc, "Bin") + ';' +
@@ -666,6 +674,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs9, "Common7\\Ide") + ';' +
 							vc9_64 + ';' +
@@ -710,6 +720,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs9, "Common7\\Ide") + ';' +
 							AppendFileName(vc, "Bin") + ';' +
@@ -755,6 +767,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs8, "Common7\\Ide") + ';' +
 							AppendFileName(vc, "Bin\\x64") + ';' +
@@ -797,6 +811,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                AppendFileName(vs8, "Common7\\Ide") + ';' +
 							AppendFileName(vc, "Bin") + ';' +
@@ -844,6 +860,8 @@ void AutoSetup()
 			"REMOTE_OS = \"\";\n"
 			"REMOTE_TRANSFER = \"\";\n"
 			"REMOTE_MAP = \"\";\n"
+			"DEBUG_LINK = \"/STACK:20000000\";\n"
+			"RELEASE_LINK = \"/STACK:20000000\";\n"
 			"PATH = " + AsCString(
 			                vs +
 							AppendFileName(vc7, "Bin") + ';' +

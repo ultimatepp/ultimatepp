@@ -87,6 +87,9 @@ String GetDesktopManager();
 
 String GetDesktopFolder();
 String GetProgramsFolder();
+#ifdef PLATFORM_WIN32
+String GetProgramsFolderX86();
+#endif
 String GetAppDataFolder();
 String GetMusicFolder();
 String GetPicturesFolder();

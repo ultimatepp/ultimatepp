@@ -533,14 +533,15 @@ String GetShellFolder(int clsid)
 	return Null;
 }
 
-String GetDesktopFolder()	{ return GetShellFolder(CSIDL_DESKTOP); }
-String GetProgramsFolder()	{ return GetShellFolder(CSIDL_PROGRAM_FILES); }
-String GetAppDataFolder()	{ return GetShellFolder(CSIDL_APPDATA);}
-String GetMusicFolder()		{ return GetShellFolder(CSIDL_MYMUSIC);}
-String GetPicturesFolder()	{ return GetShellFolder(CSIDL_MYPICTURES);}
-String GetVideoFolder()		{ return GetShellFolder(CSIDL_MYVIDEO);}
-String GetDocumentsFolder()	{ return GetShellFolder(/*CSIDL_MYDOCUMENTS*/0x0005);}
-String GetTemplatesFolder()	{ return GetShellFolder(CSIDL_TEMPLATES);}
+String GetDesktopFolder()	  { return GetShellFolder(CSIDL_DESKTOP); }
+String GetProgramsFolder()	  { return GetShellFolder(CSIDL_PROGRAM_FILES); }
+String GetProgramsFolderX86() { return GetShellFolder(0x2a); }
+String GetAppDataFolder()	  { return GetShellFolder(CSIDL_APPDATA);}
+String GetMusicFolder()		  { return GetShellFolder(CSIDL_MYMUSIC);}
+String GetPicturesFolder()	  { return GetShellFolder(CSIDL_MYPICTURES);}
+String GetVideoFolder()		  { return GetShellFolder(CSIDL_MYVIDEO);}
+String GetDocumentsFolder()	  { return GetShellFolder(/*CSIDL_MYDOCUMENTS*/0x0005);}
+String GetTemplatesFolder()	  { return GetShellFolder(CSIDL_TEMPLATES);}
 
 #define MY_DEFINE_KNOWN_FOLDER(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
 static const GUID name = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
