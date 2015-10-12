@@ -1152,6 +1152,7 @@ Array<Parser::Decl> Parser::Declaration(bool l0, bool more, const String& tname,
 		Array<Decl> r;
 		Decl& d = r.Add();
 		ReadType(d, tname, tparam);
+		while(Key('*') || Key(tk_volatile) || Key(tk_const));
 		d.name = name;
 		d.natural = String(b, lex.Pos());
 		d.type_def = true;

@@ -1113,6 +1113,7 @@ void AppMain___()
 	#endif
 		SaveCodeBase();
 		DelTemps();
+		DeletePCHFiles();
 		ReduceCache();
 #ifndef _DEBUG
 	}
