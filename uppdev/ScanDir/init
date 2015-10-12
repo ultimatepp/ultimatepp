@@ -1,0 +1,4 @@
+#ifndef _ScanDir_icpp_init_stub
+#define _ScanDir_icpp_init_stub
+#include "Core/init"
+#endif

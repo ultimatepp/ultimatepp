@@ -3,70 +3,20 @@
 
 using namespace Upp;
 
-#if 0
-
-bool   IsTheDir(const char *dir, const Vector<String>& files, const Vector<String>& subdirs)
-{
-	DDUMP(dir);
-	if(!DirectoryExists(dir)) {
-		DLOG("NODIR");
-		return false;
-	}
-	for(int i = 0; i < files.GetCount(); i++)
-		if(!FileExists(AppendFileName(dir, files[i]))) {
-			DDUMP(files[i]);
-			return false;
-		}
-	for(int i = 0; i < subdirs.GetCount(); i++)
-		if(!DirectoryExists(AppendFileName(dir, subdirs[i]))) {
-			DDUMP(subdirs[i]);
-			return false;
-		}
-	return true;
-}
-
-String ScanForDir(const char *path, const char *dir, const Vector<String>& files, const Vector<String>& subdirs)
-{
-	DLOG("Testing " << path << ", dir: " << dir);
-	String h = AppendFileName(path, dir);
-	if(IsTheDir(h, files, subdirs))
-		return h;
-	FindFile ff(AppendFileName(path, "*.*"));
-	while(ff) {
-		if(ff.IsFolder()) {
-			String h = ScanForDir(ff.GetPath(), dir, files, subdirs);
-			if(h.GetCount())
-				return h;
-		}
-		ff.Next();
-	}
-	return Null;
-}
-
-String ScanForDir(const char *tip,
-                  const char *start,
-                  const char *dir,
-                  const char *cfiles,
-                  const char *csubdirs)
-{
-	Vector<String> files = Split(cfiles, ';');
-	Vector<String> subdirs = Split(csubdirs, ';');
-	String h = AppendFileName(tip, dir);
-	if(IsTheDir(h, files, subdirs))
-		return h;
-	return ScanForDir(start, dir, files, subdirs);
-}
-
-#endif
-
-struct DirFinder {
+class DirFinder {
+	Vector<String> dirs;
 	VectorMap<String, bool> entry;
 	
 	static String Normz(const String& p);
 	
 	bool Has(const String& d, const Vector<String>& m, bool isfile);
+	bool Contains(const String& d, const Vector<String>& m);
 	void ScanDirs(const char *dir);
-	Vector<String> ScanForDir(const String& dir, const char *cfiles, const char *csubdirs);
+
+public:
+	void Dir(const String& d) { dirs.Add(d); }
+
+	String ScanForDir(const String& dir, const char *ccontains, const char *cfiles, const char *csubdirs);
 };
 
 String DirFinder::Normz(const String& p)
@@ -78,13 +28,17 @@ String DirFinder::Normz(const String& p)
 
 void DirFinder::ScanDirs(const char *dir)
 {
+	String h = Normz(dir);
+	if(entry.Find(h) >= 0)
+		return;
 	entry.GetAdd(Normz(dir)) = false;
 	for(FindFile ff(AppendFileName(dir, "*.*")); ff; ff.Next()) {
+		String p = ff.GetPath();
 		if(ff.IsFolder())
-			ScanDirs(ff.GetPath());
+			ScanDirs(p);
 		else
 		if(ff.IsFile())
-			entry.GetAdd(Normz(dir)) = true;
+			entry.GetAdd(Normz(p)) = true;
 	}
 }
 
@@ -93,33 +47,69 @@ bool DirFinder::Has(const String& d, const Vector<String>& m, bool isfile)
 	for(int i = 0; i < m.GetCount(); i++) {
 		String dd = d + '/' + m[i];
 		int q = entry.Find(dd);
-		DDUMP(dd);
-		DDUMP(q);
-		if(q >= 0)
-			DDUMP(entry[q]);
 		if(q < 0 || entry[q] != isfile)
 			return false;
 	}
 	return true;
 }
 
-Vector<String> DirFinder::ScanForDir(const String& dir, const char *cfiles, const char *csubdirs)
+int CharFilterNotDigit(int c)
 {
-	Vector<String> r;
-	Vector<String> files = Split(cfiles, ';');
-	Vector<String> subdirs = Split(csubdirs, ';');
-	for(int i = 0; i < entry.GetCount(); i++) {
-		String d = entry.GetKey(i);
-		if(entry.GetKey(i).EndsWith(dir) && Has(d, files, true) && Has(d, subdirs, false))
-			r.Add(entry.GetKey(i));
+	return IsDigit(c) ? 0 : c;
+}
+
+bool DirFinder::Contains(const String& d, const Vector<String>& m)
+{
+	for(int i = 0; i < m.GetCount(); i++)
+		if(d.Find(m[i]) < 0)
+			return false;
+	return true;
+}
+
+String DirFinder::ScanForDir(const String& dir, const char *ccontains, const char *cfiles, const char *csubdirs)
+{
+	for(;;) {
+		Vector<String> files = Split(cfiles, ';');
+		Vector<String> subdirs = Split(csubdirs, ';');
+		Vector<String> contains = Split(ccontains, ';');
+		Vector<int> max;
+		String r;
+		for(int i = 0; i < entry.GetCount(); i++) {
+			String d = entry.GetKey(i);
+			if(entry.GetKey(i).EndsWith(dir) && Has(d, files, true) && Has(d, subdirs, false) && Contains(d, contains)) {
+				Vector<String> m0 = Split(d, CharFilterNotDigit);
+				Vector<int> m;
+				for(int i = 0; i < m0.GetCount(); i++)
+					m.Add(atoi(m0[i]));
+				if(m > max) {
+					max = pick(m);
+					r = d;
+				}
+			}
+		}
+		if(r.GetCount() || dirs.GetCount() == 0)
+			return r;
+		DDUMP(dirs[0]);
+		ScanDirs(dirs[0]);
+		DDUMP(entry.GetCount());
+		dirs.Remove(0);
 	}
-	return r;
 }
 
 CONSOLE_APP_MAIN
 {
 	DirFinder df;
-	df.ScanDirs(GetProgramsFolderX86());
-	DDUMPM(df.entry);
-	DDUMP(df.ScanForDir("vc/bin", "link.exe;cl.exe;mspdb140.dll", "1033"));
+	String pf = GetProgramsFolderX86();
+	df.Dir(pf + "/microsoft visual studio 14.0/vc/bin");
+	df.Dir(pf + "/windows kits/10");
+	df.Dir(pf + "/windows kits");
+	df.Dir(pf + "/microsoft visual studio 14.0");
+	df.Dir(pf);
+//	DDUMPM(df.entry);
+	DDUMP(df.ScanForDir("/vc/bin", "", "link.exe;cl.exe;mspdb140.dll", "1033"));
+	DDUMP(df.ScanForDir("/vc/bin", "", "link.exe;cl.exe", "1033"));
+	DDUMP(df.ScanForDir("", "/windows kits/", "", "um;ucrt;shared"));
+//	h = "c:/program files (x86)/microsoft visual studio 14.0/vc/bin";
+//	DDUMP(h);
+//	DDUMP(Split(h, CharFilterNotDigit));
 }
