@@ -81,6 +81,7 @@ file
 	Methods.h,
 	Methods.cpp,
 	AutoSetup.cpp,
+	InstantSetup.cpp,
 	OutputMode.cpp,
 	Build.cpp,
 	Debug.cpp,
