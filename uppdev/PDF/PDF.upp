@@ -1,6 +1,7 @@
 uses
 	PdfDraw,
-	Painter;
+	Painter,
+	RichText;
 
 file
 	main.cpp,

@@ -31,96 +31,19 @@ struct MyApp : TopWindow {
 GUI_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
-//	ChClassicSkin();
-//	ChStdSkin();
-//	SetLanguage(LNG_('P','L','P','L'));
 
-	Ctrl::SetHiDPIEnabled();
-
-//	InstallCrashDump();
-	DUMP(GetStdFontCy());
-	DUMP(GUI_PopUpEffect());
-	
-//	String htxt;
-//	if(!EditText(htxt, "xxx", "xxxx"))
-//		return;
-	
-//	PromptOK("[H20L1 &&&");
-
-	DUMPM(Environment());
-	
 	RichEditWithToolBar e;
-	e << [] { PromptOK("OK!"); };
-	e.WhenBar << [](Bar&) { PromptOK("BAR!"); };
-//	e.SetPage(Size(6074, 3968));
-	Vector<int> h;
-	for(int i = 1; i < Font::GetFaceCount(); i++)
-		if((Font::GetFaceInfo(i) & Font::SCALEABLE) && !(Font::GetFaceInfo(i) & Font::SPECIAL))
-			h.Add(i);
-	e.FontFaces(h);
-
-//	GUI_PopUpEffect_Write(GUIEFFECT_NONE);
-
-	DUMP(ScrollBarSize());
-	
-	
-//	e.Pick(ParseRTF(LoadFile("C:/xxx/data.bin")));
-
 	e.Pick(ParseQTF(LoadFile(FileName())));
-//	e.SetQTF(LoadFile("U:\\xxx\\PainterBug.qtf"));
-//	e.ClipZoom(4, 1);
-//	Ctrl::ShowRepaint(50);
-//	RichEdit::PosInfo f;
-//	LoadFromFile(f, ConfigFile("pos"));
-//	e.SetPosInfo(f);
-//	e.Pick(ParseQTF(AsQTF(CreateImageObject(CtrlImg::exclamation)) + " hahahaha"));
+	e.SetPage(Size(4000, 600));
 	MyApp w;
-//	w.ToolWindow();
 	w.SetRect(0, 0, 700, 500);
 	w.Sizeable().Zoomable();
-//	e.SetReadOnly();
 	StaticRect r;
-#if 1
-	r.Add(e.SizePos());
-	w.Add(r.SizePos());
-#else
 	w.Add(e.SizePos());
-#endif
-
-	{
-		static const char styles[] =
-			"[ $$0,0#00000000000000000000000000000000:Default]"
-		;
-
-		DLOG("===================");
-		DDUMP(e.GetLength());
-
-		WString text = e.Get().GetPlainText();
-		DDUMP(text.GetLength());
-	    e.Select(0, e.GetLength());
-	    e.Cut();
-	    DDUMP(e.GetLength());
-	    e.PasteText(ParseQTF(String().Cat() << "[%CS-CZ " << styles << "[s0; \1" << text.ToString() << "\1"));
-	    DDUMP(e.GetLength());
-	    e.Select(0, e.GetLength());
-	    RichEdit h;
-	    e.ApplyFormatInfo(h.GetFormatInfo());
-	    DDUMP(e.GetLength());
-	    e.Select(0, 0);
-	}
 
 	w.Run();
-/*	
-	String strQTF = e.GetQTF(CHARSET_ISO8859_1);
-	e.SetQTF(strQTF);
-	w.Run();
-*/
-/*	String x = e.GetQTF();
+	String x = e.GetQTF();
 	SaveFile(FileName(), x);
-	f = e.GetPosInfo();
-	StoreToFile(f, ConfigFile("pos"));
-*/	
-//	SaveFile(GetHomeDirFile("test.rtf"), EncodeRTF(e.Get()));
 	
 	LOG("Exit");
 }
