@@ -692,7 +692,7 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 		d.type = StructDeclaration(tname, tparam);
 		return String();
 	}
-	Key(tk_typename) || Key(tk_struct) || Key(tk_class) || Key(tk_union) || Key(tk_enum);
+	Key(tk_typename) || Key(tk_struct) || Key(tk_class) || Key(tk_union) || Key(tk_enum) || Key(tk_template);
 	if(Key(tk_bool) || Key(tk_float) || Key(tk_double) || Key(tk_void))
 		return Null;
 	bool sgn = Key(tk_signed) || Key(tk_unsigned);
@@ -736,6 +736,7 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 	else {
 		if(Key(t_dblcolon))
 			d.type << "::";
+		Key(tk_typename) || Key(tk_template);
 		Check(lex.IsId(), "Name expected");
 		while(lex.IsId()) {
 			d.type << TType();
@@ -750,6 +751,7 @@ String Parser::ReadType(Decla& d, const String& tname, const String& tparam)
 				d.type << "::";
 				if(Key('~'))
 					cs = true;
+				Key(tk_typename) || Key(tk_template);
 			}
 			else
 				break;
