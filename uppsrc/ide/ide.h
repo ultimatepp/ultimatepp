@@ -166,6 +166,8 @@ bool Install();
 #define HELPNAME    "Help Topics"
 #define METAPACKAGE "<meta>"
 
+bool IsHelpName(const char *path);
+
 class TopicCtrl : public HelpWindow {
 public:
 	virtual Topic AcquireTopic(const String& topic);

@@ -669,8 +669,8 @@ void Ide::MainTool(Bar& bar)
 	bool b = designer && !designer.Is<FileHexView>();
 	bool d = IsDesignerFile(editfile);
 	bar.Add("Edit using designer", IdeImg::EditDesigner(), THISBACK(EditUsingDesigner))
-	   .Check(b)
-	   .Enable(d && !editfile_isfolder)
+	   .Check(b || editfile_isfolder)
+	   .Enable(d || editfile_isfolder)
 	   .Key(b || !d ? 0 : K_CTRL_T);
 	bar.Add("View as hex", IdeImg::EditHex(), THISBACK(EditAsHex))
 	   .Check(designer.Is<FileHexView>())
