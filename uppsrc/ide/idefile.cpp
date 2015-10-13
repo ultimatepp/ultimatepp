@@ -428,7 +428,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.SetCharset(charset);
 	AddLru();
 
-	editfile_isfolder = IsFolder(editfile);
+	editfile_isfolder = IsFolder(editfile) || IsHelpName(editfile);
 	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
 	bool candesigner = !astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
