@@ -1,7 +1,7 @@
 description "XML-RPC support package (both server and client stuff)\3770,128,128";
 
 file
-	Rpc.h options(BUILDER_OPTION) PCH,
+	Rpc.h,
 	imp\Value.cpp,
 	imp\Xml.cpp,
 	imp\Client.cpp,
