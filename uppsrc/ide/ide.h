@@ -1145,4 +1145,6 @@ public:
 
 inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
 
+void InstantSetup();
+
 #endif
