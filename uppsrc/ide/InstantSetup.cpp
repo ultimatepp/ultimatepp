@@ -115,6 +115,7 @@ String DirFinder::ScanForDir(const String& dir, const char *ccontains, const cha
 		}
 		if(r.GetCount() || dirs.GetCount() == 0)
 			return r;
+		pi.Title("Searching for compilers");
 		ScanDirs(dirs[0]);
 		dirs.Remove(0);
 	}
