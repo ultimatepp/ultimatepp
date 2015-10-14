@@ -288,7 +288,7 @@ void Vector<T>::Insert(int q, const Vector& x, int offset, int count) {
 template <class T>
 void Vector<T>::Insert(int i, std::initializer_list<T> init)
 {
-	RawInsert(i, init.size());
+	RawInsert(i, (int)init.size());
 	T *t = vector + i;
 	for(auto q : init)
 		DeepCopyConstruct(t++, q);

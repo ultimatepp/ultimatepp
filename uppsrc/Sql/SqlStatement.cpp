@@ -363,9 +363,15 @@ SqlStatement SqlCreateTable::As(const SqlSelect& select)
 {
 	String text = "create ";
 	if(!permanent)
-		text << "temporary ";
-	text << "table " << table.Quoted()
-	     << " as (" + SqlStatement(select).GetText() + ")";
+		text << SqlCode(ORACLE, "global temporary ")("temporary ");
+	text << "table " << table.Quoted();
+	if(!permanent){
+		if(transaction)
+			text << SqlCode(ORACLE | PGSQL, " on commit delete rows")("");
+		else
+			text << SqlCode(ORACLE | PGSQL, " on commit preserve rows")("");
+	}
+	text << " as (" + SqlStatement(select).GetText() + ")";
 	return SqlStatement(text);
 }
 
@@ -395,7 +401,7 @@ SqlInsert::operator SqlStatement() const {
 	String s = "insert into " + table.Quoted();
 	if(!set1.IsEmpty()) {
 		s << set1();
-		if(sel.IsValid()) 
+		if(sel.IsValid())
 			s << ' ' << SqlStatement(sel).GetText();
 		else
 		if(!set2.IsEmpty())

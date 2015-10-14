@@ -960,15 +960,13 @@ inline SqlWith WithRecursive(SqlId id) { SqlWith w; w.WithRecursive(id); return 
 struct SqlCreateTable {
 	SqlId  table;
 	bool   permanent;
-	
-	enum { TRANSACTION, SESSION, PERMANENT };
+	bool   transaction;
 
 public:
-	SqlCreateTable& Permanent()  { permanent = true; return *this; }
-
+	SqlCreateTable& Permanent()   { permanent = true; return *this; }
+	SqlCreateTable& Transaction() { transaction = true; return *this; }
 	SqlStatement As(const SqlSelect& select);
-	
-	SqlCreateTable(SqlId table) : table(table) { permanent = false; }
+	SqlCreateTable(SqlId table) : table(table) { permanent = false; transaction = false; }
 };
 
 inline SqlCreateTable Temporary(SqlId table)          { return SqlCreateTable(table); }
