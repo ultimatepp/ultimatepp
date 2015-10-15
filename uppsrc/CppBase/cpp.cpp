@@ -196,11 +196,9 @@ void Cpp::Do(const String& sourcefile, Stream& in, const String& currentfile, bo
 						LLOG("Include IN " << s);
 						md5.Put(s);
 						Do(sourcefile, in, s, get_macros);
-						RHITCOUNT("Include IN");
 					}
 					else {
 						LLOG("Include FLAT " << s);
-						RHITCOUNT("Include FLAT");
 						DoFlatInclude(s);
 					}
 				}
