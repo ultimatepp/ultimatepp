@@ -367,9 +367,9 @@ SqlStatement SqlCreateTable::As(const SqlSelect& select)
 	text << "table " << table.Quoted();
 	if(!permanent){
 		if(transaction)
-			text << SqlCode(ORACLE | PGSQL, " on commit delete rows")("");
+			text << SqlCode(ORACLE, " on commit delete rows")("");
 		else
-			text << SqlCode(ORACLE | PGSQL, " on commit preserve rows")("");
+			text << SqlCode(ORACLE, " on commit preserve rows")("");
 	}
 	text << " as (" + SqlStatement(select).GetText() + ")";
 	return SqlStatement(text);
