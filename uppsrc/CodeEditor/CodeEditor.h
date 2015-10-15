@@ -239,6 +239,7 @@ protected:
 	bool    check_edited;
 	bool    persistent_find_replace;
 	bool    do_ff_restore_pos;
+	bool    withfindreplace;
 
 	int     ff_start_pos;
 
@@ -459,6 +460,8 @@ public:
 	void     IndentSpaces(bool is)                    { indent_spaces = is; }
 	void     IndentAmount(int ia)                     { indent_amount = ia; }
 	void     NoParenthesisIndent(bool b)              { no_parenthesis_indent = b; }
+	
+	void     NoFindReplace()                          { withfindreplace = false; }
 
 	void     LineNumbers(bool b)                      { bar.LineNumbers(b); }
 	void     MarkLines(bool b)                        { mark_lines = b; }

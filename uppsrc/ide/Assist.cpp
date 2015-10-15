@@ -87,6 +87,8 @@ AssistEditor::AssistEditor()
 	param_info.NoSb();
 	
 	include_assist = false;
+	
+	NoFindReplace();
 }
 
 int CppItemInfoOrder(const Value& va, const Value& vb) {

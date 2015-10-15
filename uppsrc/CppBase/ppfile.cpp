@@ -83,9 +83,41 @@ static int                        sPPserial;
 
 void SweepPPFiles(const Index<String>& keep)
 {
+	Index<int> pp_segment_id;
+	int unlinked_count = 0;
 	for(int i = 0; i < sPPfile.GetCount(); i++)
-		if(keep.Find(sPPfile.GetKey(i)) < 0 && !sPPfile.IsUnlinked(i))
-			sPPfile.Unlink(i);
+		if(sPPfile.IsUnlinked(i))
+			unlinked_count++;
+		else
+			if(keep.Find(sPPfile.GetKey(i)) < 0) {
+				unlinked_count++;
+				sPPfile.Unlink(i);
+			}
+			else {
+				RTIMING("Sweep2");
+				const PPFile& p = sPPfile[i];
+				for(int j = 0; j < p.item.GetCount(); j++)
+					pp_segment_id.FindAdd(p.item[j].segment_id);
+			}
+	if(unlinked_count > sPPfile.GetCount() / 2) {
+		CleanPP();
+		return;
+	}
+	RTIMING("Sweep3");
+	unlinked_count = 0;
+	for(int i = 0; i < sAllMacros.GetCount(); i++) {
+		if(sAllMacros.IsUnlinked(i))
+			unlinked_count++;
+		else
+		if(pp_segment_id.Find(sAllMacros[i].segment_id) < 0) {
+			sAllMacros.Unlink(i);
+			unlinked_count++;
+		}
+		if(unlinked_count > sAllMacros.GetCount() / 2) {
+			CleanPP();
+			return;
+		}
+	}
 }
 
 String GetSegmentFile(int segment_id)
@@ -601,6 +633,33 @@ void SerializePPFiles(Stream& s)
 	s % sAllMacros % sPPfile % sPPserial;
 	if(s.IsLoading())
 		LoadPPConfig();
+
+#if 0
+	if(s.IsLoading()) { _DBG_
+		DDUMP(sPPfile.GetCount());
+		DDUMP(sAllMacros.GetCount());
+		DDUMP(sPPserial);
+		
+		Index<int> psegment;
+		for(int i = 0; i < sPPfile.GetCount(); i++) {
+			const PPFile& p = sPPfile[i];
+			for(int j = 0; j < p.item.GetCount(); j++)
+				psegment.FindAdd(p.item[j].segment_id);
+		}
+		DDUMP(psegment.GetCount());
+			
+		int n = 0; _DBG_
+		Index<int> msegment;
+		for(int i = 0; i < sAllMacros.GetCount(); i++) { _DBG_
+			if(sAllMacros.IsUnlinked(i))
+				n++;
+			else
+				msegment.FindAdd(sAllMacros[i].segment_id);
+		}
+		DLOG("UNLINKED " << n);
+		DLOG("Segments " << msegment.GetCount());
+	}
+#endif
 }
 
 END_UPP_NAMESPACE

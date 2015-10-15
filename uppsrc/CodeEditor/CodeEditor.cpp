@@ -867,10 +867,16 @@ bool CodeEditor::Key(dword code, int count) {
 	bool sel = code & K_SHIFT;
 	switch(code & ~K_SHIFT) {
 	case K_CTRL_F:
-		FindReplace(sel, true, false);
+		if(withfindreplace) {
+			FindReplace(sel, true, false);
+			return true;
+		}
 		break;
 	case K_CTRL_H:
-		FindReplace(sel, true, true);
+		if(withfindreplace) {
+			FindReplace(sel, true, true);
+			return true;
+		}
 		break;
 	case K_F3:
 		if(sel)
@@ -1053,6 +1059,7 @@ CodeEditor::CodeEditor() {
 	check_edited = false;
 	tippos = -1;
 	selkind = SEL_CHARS;
+	withfindreplace = true;
 }
 
 CodeEditor::~CodeEditor() {}
