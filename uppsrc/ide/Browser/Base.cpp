@@ -16,6 +16,8 @@
 #define CLOG(x)
 #endif
 
+#define MLOG(x)
+
 #define CPP_CODEBASE_VERSION 314159
 
 ArrayMap<String, SourceFileInfo> source_file;
@@ -92,9 +94,13 @@ void BrowserScanError(int line, const String& text, int file)
 
 void SerializeCodeBase(Stream& s)
 {
+	MLOG(s.IsLoading());
 	source_file.Serialize(s);
+	MLOG("source_file " << MemoryUsedKb());
 	SerializePPFiles(s);
+	MLOG("PP files " << MemoryUsedKb());
 	CodeBase().Serialize(s);
+	MLOG("codebase " << MemoryUsedKb());
 }
 
 void SaveCodeBase()
@@ -111,7 +117,7 @@ void SaveCodeBase()
 
 bool TryLoadCodeBase(const char *pattern)
 {
-	CLOG("+++ Trying to load " << pattern);
+	LLOG("+++ Trying to load " << pattern);
 	FindFile ff(pattern);
 	String path;
 	int64  len = -1;
@@ -125,8 +131,10 @@ bool TryLoadCodeBase(const char *pattern)
 	if(path.GetCount()) {
 		LTIMING("Load code base");
 		StringStream ss(LZ4Decompress(LoadFile(path)));
+		MLOG("Decompressed " << MemoryUsedKb());
 		if(Load(callback(SerializeCodeBase), ss, CPP_CODEBASE_VERSION)) {
 			CLOG("*** Loaded " << ff.GetPath() << ' ' << GetSysTime() << ", file count: " << source_file.GetCount() << ", codebase: " << CodeBase().GetCount());
+			MLOG("TryLoadCodeBase loaded: " << MemoryUsedKb());
 			return true;
 		}
 	}
@@ -135,6 +143,7 @@ bool TryLoadCodeBase(const char *pattern)
 
 void LoadCodeBase()
 {
+	MLOG("LoadCodeBase start: " << MemoryUsedKb());
 	TryLoadCodeBase(CodeBaseCacheFile()) ||
 	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*." + GetCurrentBuildMethod() + ".codebase")) ||
 	TryLoadCodeBase(AppendFileName(CodeBaseCacheDir(), GetVarsName() + ".*.codebase")) ||
