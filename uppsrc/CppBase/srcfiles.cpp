@@ -40,7 +40,6 @@ const VectorMap<String, String>& GetAllSourceMasters()
 
 void GatherSources(const String& master_path, const String& path_, Vector<int>& parents)
 {
-	RHITCOUNT("GatherSources");
 	String path = NormalizeSourcePath(path_);
 	if(sSrcFile.Find(path) >= 0)
 		return;

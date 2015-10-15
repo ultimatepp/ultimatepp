@@ -94,7 +94,6 @@ void SweepPPFiles(const Index<String>& keep)
 				sPPfile.Unlink(i);
 			}
 			else {
-				RTIMING("Sweep2");
 				const PPFile& p = sPPfile[i];
 				for(int j = 0; j < p.item.GetCount(); j++)
 					pp_segment_id.FindAdd(p.item[j].segment_id);
@@ -103,7 +102,6 @@ void SweepPPFiles(const Index<String>& keep)
 		CleanPP();
 		return;
 	}
-	RTIMING("Sweep3");
 	unlinked_count = 0;
 	for(int i = 0; i < sAllMacros.GetCount(); i++) {
 		if(sAllMacros.IsUnlinked(i))
