@@ -2228,7 +2228,7 @@
 		"create temporary table \"TT\" as (select \"NAME\", \"LASTNAME\" from \"TABLE1\" where \"COLUMN1\" = 12)"); // create temporary table "TT" as (select "NAME", "LASTNAME" from "TABLE1" where "COLUMN1" = 12)
 	TEST(ORACLE,
 		Temporary("TT").As(Select(NAME, LASTNAME).From(TABLE1).Where(COLUMN1 == 12)),
-		"create temporary table \"TT\" as (select \"NAME\", \"LASTNAME\" from \"TABLE1\" where \"COLUMN1\" = 12)"); // create temporary table "TT" as (select "NAME", "LASTNAME" from "TABLE1" where "COLUMN1" = 12)
+		"create global temporary table \"TT\" on commit preserve rows as (select \"NAME\", \"LASTNAME\" from \"TABLE1\" where \"COLUMN1\" = 12)"); // create global temporary table "TT" on commit preserve rows as (select "NAME", "LASTNAME" from "TABLE1" where "COLUMN1" = 12)
 	TEST(MSSQL,
 		Temporary("TT").As(Select(NAME, LASTNAME).From(TABLE1).Where(COLUMN1 == 12)),
 		"create temporary table \"TT\" as (select \"NAME\", \"LASTNAME\" from \"TABLE1\" where \"COLUMN1\" = 12)"); // create temporary table "TT" as (select "NAME", "LASTNAME" from "TABLE1" where "COLUMN1" = 12)
