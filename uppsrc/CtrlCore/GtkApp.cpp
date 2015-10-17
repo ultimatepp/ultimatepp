@@ -26,6 +26,8 @@ void _DBG_Ungrab(void)
 void Ctrl::PanicMsgBox(const char *title, const char *text)
 {
 	LLOG("PanicMsgBox " << title << ": " << text);
+	if(gdk_pointer_is_grabbed())
+		gdk_pointer_ungrab(CurrentTime);
 	if(system("which gxmessage") == 0)
 		IGNORE_RESULT(system(String().Cat() << "gxmessage -center \"" << title << "\n" << text << "\""));
 	else

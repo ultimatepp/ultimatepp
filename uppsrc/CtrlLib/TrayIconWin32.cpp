@@ -58,7 +58,7 @@ void TrayIcon::Notify(dword msg)
 		int len = min(stip.GetLength(), 125);
 		memcpy(nid.tip, stip, len);
 		nid.tip[len] = 0;
-		BOOL Status = Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid);		
+		BOOL Status = Shell_NotifyIcon(msg, (NOTIFYICONDATA *)&nid);
 		// To prevent from Shell_NotifyIcon bugs...
 		// discussed here : http://msdn.microsoft.com/en-us/library/bb762159(v=vs.85).aspx
 		// and here : http://issuetracker.delphi-jedi.org/bug_view_advanced_page.php?bug_id=3747

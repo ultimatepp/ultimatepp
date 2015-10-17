@@ -575,7 +575,6 @@ void DisplayPopup::Sync()
 						else
 							r.bottom = wa.bottom;
 					}
-					
 					SetRect(r);
 					if(!IsOpen())
 						Ctrl::PopUp(ctrl, true, false, false);

@@ -657,7 +657,7 @@ public:
 	ArrayCtrl& MultiSelect(bool b = true)              { multiselect = b; return *this; }
 	bool       IsMultiSelect() const                   { return multiselect; }
 	ArrayCtrl& NoBackground(bool b = true)             { nobg = b; Transparent(); Refresh(); return *this; }
-	ArrayCtrl& PopUpEx(bool b = true)                  { popupex = b; return *this; }
+	ArrayCtrl& PopUpEx(bool b = true)                  { popupex = b; SyncInfo(); return *this; }
 	ArrayCtrl& NoPopUpEx()                             { return PopUpEx(false); }
 	ArrayCtrl& NoFocusSetCursor()                      { focussetcursor = false; return *this; }
 	ArrayCtrl& MovingHeader(bool b)                    { header.Moving(b); return *this; }

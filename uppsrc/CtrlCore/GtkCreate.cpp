@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)    //  DLOG(x)
+#define LLOG(x)  //    DLOG(x)
 
 void Ctrl::Create(Ctrl *owner, bool popup)
 {
@@ -59,7 +59,7 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	top->im_context = gtk_im_multicontext_new();
 	gtk_im_context_set_client_window(top->im_context, gdk());
- 	gtk_im_context_set_use_preedit(top->im_context, false);
+	gtk_im_context_set_use_preedit(top->im_context, false);
 	g_signal_connect(top->im_context, "commit", G_CALLBACK(IMCommit), (gpointer)(uintptr_t)top->id);
 
 	WndShow(IsShown());
@@ -135,14 +135,13 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
 	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
 	popup = true;
-	if(activate) {
-		Ptr<Ctrl> _this = this;
+	if(activate)
 		SetFocus();
-		if(_this) {
-			activePopup.Add(this);
-			StartGrabPopup();
-			CheckMouseCtrl();
-		}
+	Ptr<Ctrl> _this = this;
+	if(_this) {
+		activePopup.Add(this);
+		StartGrabPopup();
+		CheckMouseCtrl();
 	}
 }
 
