@@ -84,7 +84,7 @@ Vector<ItemTextPart> ParseItemNatural(const String& name,
 		p.len = natural.GetLength();
 		p.type = ITEM_TEXT;
 		p.pari = -1;
- 		return part;
+		return part;
 	}
 	bool param = false;
 	int pari = -1;
