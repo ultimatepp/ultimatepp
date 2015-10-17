@@ -333,11 +333,16 @@ void MultiButton::Lay(Rect& r)
 
 void MultiButton::Paint(Draw& w)
 {
+	Paint0(w, false);
+}
+
+Rect MultiButton::Paint0(Draw& w, bool getcr)
+{
 	Size sz = GetSize();
 	int border, lx, rx;
 	bool frm = Metrics(border, lx, rx);
 	int mst = ChState(MAIN);
-	if(frm && !nobg)
+	if(frm && !nobg && !getcr)
 		ChPaint(w, sz, style->edge[style->activeedge ? mst : 0]);
 	bool left = false;
 	bool right = false;
@@ -346,6 +351,8 @@ void MultiButton::Paint(Draw& w)
 		int st = ChState(i);
 		int x = 0, cx = 0;
 		GetPos(b, lx, rx, x, cx);
+		if(getcr)
+			continue;
 		bool dopaint = true;
 		Value v = b.left ? left ? style->lmiddle[st] : style->left[st]
 		                 : right ? style->rmiddle[st] : style->right[st];
@@ -467,6 +474,8 @@ void MultiButton::Paint(Draw& w)
 		cr.top += (cr.GetHeight() - valuecy) / 2;
 		cr.bottom = cr.top + valuecy;
 	}
+	if(getcr)
+		return cr;
 	Value v = convert->Format(value);
 	bool f = HasFocus() && !push && frm;
 	if(cr.left < cr.right && display) {
@@ -482,6 +491,26 @@ void MultiButton::Paint(Draw& w)
 	}
 	if(!frm && HasFocus())
 		DrawFocus(w, r);
+	return cr;
+}
+
+void MultiButton::SyncInfo()
+{
+	if((HasMouse() || info.HasMouse()) && display &&
+	   (GetMouseFlags() & (K_MOUSELEFT|K_MOUSERIGHT|K_MOUSEMIDDLE)) == 0) {
+		Point p = GetMouseViewPos();
+		NilDraw nw;
+		Rect r = Paint0(nw, true);
+		if(r.Contains(p)) {
+			Value v = convert->Format(value);
+			int cm = DPI(2);
+			r.left -= cm;
+			r.right += cm;
+			info.Set(this, r, value, display, SColorText, SColorPaper, 0, DPI(2));
+			return;
+		}
+	}
+	info.Cancel();
 }
 
 void MultiButton::MouseMove(Point p, dword flags)
@@ -497,6 +526,7 @@ void MultiButton::MouseMove(Point p, dword flags)
 		push = b;
 		Refresh();
 	}
+	SyncInfo();
 }
 
 void MultiButton::LeftDown(Point p, dword flags)
@@ -521,6 +551,7 @@ void MultiButton::LeftDown(Point p, dword flags)
 		else
 			WhenPush();
 	}
+	SyncInfo();
 }
 
 void MultiButton::LeftUp(Point p, dword flags)
@@ -534,12 +565,16 @@ void MultiButton::LeftUp(Point p, dword flags)
 		else
 			WhenClick();
 	}
+	SyncInfo();
 }
 
 void MultiButton::MouseLeave()
 {
-	hl = Null;
-	Refresh();
+	if(!info.IsOpen()) {
+		hl = Null;
+		Refresh();
+		SyncInfo();
+	}
 }
 
 void MultiButton::CancelMode()
@@ -547,6 +582,7 @@ void MultiButton::CancelMode()
 	hl = Null;
 	push = false;
 	Refresh();
+	info.Cancel();
 }
 
 bool MultiButton::IsTrivial() const
@@ -621,6 +657,7 @@ void MultiButton::SetData(const Value& v)
 		value = v;
 		UpdateRefresh();
 	}
+	SyncInfo();
 }
 
 Value MultiButton::GetData() const
@@ -663,6 +700,7 @@ MultiButton::MultiButton()
 	push = false;
 	SetFrame(sNullFrame());
 	nobg = false;
+	
 }
 
 void MultiButtonFrame::FrameAdd(Ctrl& parent)

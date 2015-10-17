@@ -118,7 +118,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 			cmdh << ' ';
 			String argument = (*arg)[i];
 			if(argument.GetCount() && argument.FindFirstOf(" \t\n\v\"") < 0)
-	    		cmdh << argument;
+				cmdh << argument;
 			else {
 				cmdh << '\"';
 				const char *s = argument;
