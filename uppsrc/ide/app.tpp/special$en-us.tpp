@@ -4,7 +4,7 @@ topic "Special Features";
 [l192;i150;O2;2 $$2,2#37291126451403010472971723210990:point]
 [b42;a42;2 $$3,3#45413000475342174754091244180557:text]
 [{_}%EN-US 
-[s1; Specia features&]
+[s1; Special features&]
 [s3; Below is the list of TheIDE special features:&]
 [s2; Use Ctrl`+Tab to cycle throught files. This is perhaps the most 
 used key in theide!&]
