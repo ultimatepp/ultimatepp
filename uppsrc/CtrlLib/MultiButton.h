@@ -102,7 +102,9 @@ private:
 	Array<SubButton> button;
 	int              hl;
 
-	const Style *style;
+	const Style     *style;
+
+	DisplayPopup     info;
 
 	int  FindButton(int px);
 	void Margins(int& l, int& r);
@@ -115,6 +117,8 @@ private:
 	bool ComplexFrame();
 	bool Metrics(int& border, int& lx, int &rx, const Rect& r);
 	bool Metrics(int& border, int& lx, int &rx);
+	void SyncInfo();
+	Rect Paint0(Draw& w, bool getcr);
 
 	friend class SubButton;
 	friend class MultiButtonFrame;

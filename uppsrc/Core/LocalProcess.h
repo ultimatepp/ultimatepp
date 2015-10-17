@@ -45,6 +45,7 @@ private:
 	HANDLE       hOutputRead;
 	HANDLE       hErrorRead;
 	HANDLE       hInputWrite;
+	DWORD        dwProcessId;
 #endif
 #ifdef PLATFORM_POSIX
 	Buffer<char> cmd_buf;
@@ -75,7 +76,7 @@ public:
 #endif
 
 #ifdef PLATFORM_WIN32
-	HANDLE  GetProcessHandle()  const                                    { return hProcess; }
+	HANDLE  GetProcessHandle()  const                                 { return hProcess; }
 #endif
 
 	int  Finish(String& out);

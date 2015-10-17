@@ -195,8 +195,6 @@ void LayoutFrameRight(Rect& r, Ctrl *ctrl, int cx);
 void LayoutFrameTop(Rect& r, Ctrl *ctrl, int cy);
 void LayoutFrameBottom(Rect& r, Ctrl *ctrl, int cy);
 
-dword GetMouseFlags();
-
 Point GetMousePos();
 dword GetMouseFlags();
 
