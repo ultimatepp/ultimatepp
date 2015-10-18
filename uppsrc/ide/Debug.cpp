@@ -279,7 +279,7 @@ void Ide::BuildAndDebug(bool runto)
 		return;
 	if(!FileExists(target))
 		return;
-	if(designer)
+	if(designer && !editfile_isfolder)
 		EditAsText();
 	One<Host> host = CreateHostRunDir();
 	host->ChDir(Nvl(rundir, GetFileFolder(target)));
