@@ -431,7 +431,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editfile_isfolder = IsFolder(editfile) || IsHelpName(editfile);
 	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
-	bool candesigner = !astext && !(debugger && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
+	bool candesigner = !astext && !(debugger && !editfile_isfolder && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
 	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile);
 	
 	if(candesigner) {
@@ -606,6 +606,8 @@ void Ide::DoEditAsText(const String& path)
 void Ide::EditAsText()
 {
 	String path = editfile;
+	if(!FileExists(path))
+		return;
 	DoEditAsText(path);
 	byte cs = editor.GetCharset();
 	FlushFile();
