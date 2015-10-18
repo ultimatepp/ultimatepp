@@ -6,25 +6,25 @@
 
 namespace Upp{
 
-class ChromiumBrowser : public DHCtrl {
+class ChromiumBrowser : public Ctrl {
 private:
 	CefRefPtr<ClientHandler> handler;
 
-	String start_page;
-	String tmp_dir;
-	virtual void AfterInit(bool Error);
-	virtual void BeforeTerminate();
-	virtual void Layout();
-	virtual void SetFocus0(bool focus);
-	virtual void GotFocus()						{SetFocus0(true);}
-	virtual void LostFocus()					{SetFocus0(false);}
-
-	void MessageLoop();
-#ifdef PLATFORM_WIN32
-	LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
-#endif 
-
+	String		start_page;
+	String		tmp_dir;
+	Callback	WhenGotFocus;
 	
+	virtual void State(int reason);
+	virtual bool SetFocus();
+	virtual void GotFocus();
+	virtual void LostFocus();
+
+	void AfterInit();
+	void BeforeTerminate();
+	void Layout();
+	void MessageLoop();
+	void SetFocus2()								{ SetFocus(); }
+
 public:
 	typedef ChromiumBrowser CLASSNAME;
 	ChromiumBrowser();
@@ -39,7 +39,7 @@ public:
 	static void ChildProcess();
 	static bool IsChildProcess();
 	
-	ChromiumBrowser & StartPage(const char * url)			{start_page = url; return *this;}
+	ChromiumBrowser & StartPage(const char * url)	{start_page = url; return *this;}
 	
 	void Browse(const String & url);
 	void ShowHTML(const String& html);

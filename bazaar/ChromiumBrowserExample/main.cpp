@@ -34,12 +34,8 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
 	JSTests.WhenAction			= THISBACK(OnJSTests);
 
-#ifdef PLATFORM_WIN32
-	Maximize();
-#elif defined(PLATFORM_LINUX)
-	//Delayed maximization - workaround for linux backend
+	//Delayed maximization - workaround layout problem
 	SetTimeCallback(100, THISBACK1(Maximize, false));
-#endif
 }
 
 

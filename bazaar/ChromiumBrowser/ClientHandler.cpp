@@ -112,6 +112,12 @@ void ClientHandler::OnTakeFocus(CefRefPtr<CefBrowser> browser, bool next )
 }
 
 
+void ClientHandler::OnGotFocus(CefRefPtr<CefBrowser> browser)
+{
+	PostCallback(WhenGotFocus);
+}
+
+
 void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
 										CefRefPtr<CefFrame> frame,
 										CefRefPtr<CefContextMenuParams> params,

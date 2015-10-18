@@ -27,16 +27,18 @@ public:
 	ClientHandler(	Upp::Callback1<Upp::String> & wuc,
 					Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & wm,
 					Upp::Callback & tf,
+					Upp::Callback & gf,
 					Upp::Callback1<bool> & wk,
 					Upp::Callback3<Upp::String, int, Upp::String> & wcm):
 					browser(NULL), WhenUrlChange(wuc), WhenMessage(wm), WhenTakeFocus(tf),
-					WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
+					WhenGotFocus(gf), WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
 
 	~ClientHandler() { }
 	
 	Upp::Callback1<Upp::String> & WhenUrlChange;
 	Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & WhenMessage;
 	Upp::Callback & WhenTakeFocus;
+	Upp::Callback & WhenGotFocus;
 	Upp::Callback1<bool> & WhenKeyboard;
 	Upp::Callback3<Upp::String, int, Upp::String> & WhenConsoleMessage;
 	
@@ -83,6 +85,7 @@ public:
                                         CefRefPtr<CefProcessMessage> message) OVERRIDE;
 
 	virtual void OnTakeFocus( CefRefPtr<CefBrowser> browser, bool next ) OVERRIDE;
+	virtual void OnGotFocus(CefRefPtr<CefBrowser> browser) OVERRIDE;
 
 	virtual void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame,
                 CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model) OVERRIDE;

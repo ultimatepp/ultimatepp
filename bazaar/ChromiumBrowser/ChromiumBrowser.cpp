@@ -32,7 +32,6 @@ void ChromiumBrowser::ChildProcess()
 #ifdef PLATFORM_LINUX
 
 	Vector<char *> args = GetArgs();
-	RDUMP(args);
 	CefMainArgs main_args(args.GetCount(), &args[0]);
 
 #elif defined(PLATFORM_WIN32)
@@ -106,61 +105,57 @@ void ChromiumBrowser::MessageLoop()
 }
 
 
-#ifdef PLATFORM_WIN32
-LRESULT ChromiumBrowser::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+void ChromiumBrowser::State(int reason)
 {
-	switch (message) {
-		
-		case WM_SIZE:
-			Layout();
-			break;
+	switch(reason){
 
-		case WM_ERASEBKGND:
-			if (handler) {
-				// Dont erase the background if the browser window has been loaded
-				// (this avoids flashing)
-				return 0;
-			}
-			break;
-
-		case WM_CREATE:
-			AfterInit(false);
+		case FOCUS:
+		case ACTIVATE:
+		case DEACTIVATE:
+		case SHOW:
+		case ENABLE:
 			break;
 			
-		case WM_QUIT:
-			//TODO: explain why we do not get QUIT message
+		case OPEN:
+			AfterInit();
+			break;
+			
+		case CLOSE:
 			BeforeTerminate();
 			break;
+			
+		case LAYOUTPOS:
+		case POSITION:
+			Layout();
+			break;
 	}
-	
-	return DHCtrl::WindowProc(message, wParam, lParam);
 }
-#endif
 
 
-
-void ChromiumBrowser::AfterInit(bool Error)
+void ChromiumBrowser::AfterInit()
 {
-	handler = new ClientHandler(WhenUrlChange, WhenMessage, WhenTakeFocus, WhenKeyboard, WhenConsoleMessage);
+	WhenGotFocus = THISBACK(SetFocus2);
+	
+	handler = new ClientHandler(WhenUrlChange, WhenMessage, WhenTakeFocus, WhenGotFocus, WhenKeyboard, WhenConsoleMessage);
 
 	CefBrowserSettings br_settings;
     br_settings.file_access_from_file_urls = STATE_DISABLED;
     
-	Size sz = GetSize();
+	Rect r = GetRect();
 	CefWindowInfo info;
 
 #ifdef PLATFORM_LINUX
 
-    info.SetAsChild(hwnd, CefRect(0, 0, sz.cx, sz.cy));
+    info.SetAsChild(GetParentWindow(), CefRect(r.left, r.top, r.Width(), r.Height()));
 
 #elif defined(PLATFORM_WIN32)
 
 	RECT rect;
-	rect.left = rect.top = 0;
-	rect.right = sz.cx;
-	rect.bottom = sz.cy;
-	HWND hwnd = GetHWND();
-	info.SetAsChild(hwnd, rect);
+	rect.left = r.left;
+	rect.top = r.top;
+	rect.right = r.Width();
+	rect.bottom = r.Height();
+	info.SetAsChild(GetTopCtrl()->GetHWND(), rect);
 
 #else
 
@@ -170,13 +165,6 @@ void ChromiumBrowser::AfterInit(bool Error)
 
 	CefBrowserHost::CreateBrowser(info, handler.get(), ~start_page, br_settings, NULL);
 	SetTimeCallback(50, THISBACK(MessageLoop));
-
-#ifdef PLATFORM_WIN32
-
-	EnableWindow(hwnd, true);
-
-#endif
-
 }
 
 
@@ -188,12 +176,6 @@ void ChromiumBrowser::BeforeTerminate()
 		handler->GetBrowser()->GetHost()->CloseBrowser(false);
 	}
 
-#ifdef PLATFORM_WIN32
-
-	EnableWindow(GetHWND(), false);
-
-#endif
-
 	CefShutdown();
 	DeleteFolderDeep(tmp_dir);
 }
@@ -202,22 +184,23 @@ void ChromiumBrowser::BeforeTerminate()
 void ChromiumBrowser::Layout()
 {
 	if (handler && handler->GetBrowser()){
+
+		Rect r = GetRect();
+		
 #ifdef PLATFORM_LINUX
 
-		Size sz = GetSize();
 		XWindowChanges change = {0};
-		change.width = sz.cx;
-		change.height = sz.cy;
-		change.x = 0;
-		change.y = 0;
+		change.x = r.left;
+		change.y = r.top;
+		change.width = r.Width();
+		change.height = r.Height();
 		XConfigureWindow(Xdisplay, handler->GetBrowser()->GetHost()->GetWindowHandle(), CWHeight | CWWidth | CWY, &change);
 
 #elif defined(PLATFORM_WIN32)
 
 		CefWindowHandle hwnd = handler->GetBrowser()->GetHost()->GetWindowHandle();
 		HDWP hdwp = BeginDeferWindowPos(1);
-		Size sz = GetSize();
-		hdwp = DeferWindowPos(hdwp, hwnd, NULL, 0, 0, sz.cx, sz.cy, SWP_NOZORDER);
+		hdwp = DeferWindowPos(hdwp, hwnd, NULL, r.left, r.top, r.Width(), r.Height(), SWP_NOZORDER);
 		EndDeferWindowPos(hdwp);
 
 #else
@@ -235,13 +218,25 @@ ChromiumBrowser::~ChromiumBrowser()
 }
 
 
-void ChromiumBrowser::SetFocus0(bool focus)
+bool ChromiumBrowser::SetFocus()
 {
-	if (focus) DHCtrl::SetFocus();
-	else DHCtrl::LostFocus();
-	
 	if (handler && handler->GetBrowser())
-		handler->GetBrowser()->GetHost()->SendFocusEvent(focus);
+		handler->GetBrowser()->GetHost()->SendFocusEvent(true);
+	return true;
+}
+
+
+void ChromiumBrowser::GotFocus()
+{
+	if (handler && handler->GetBrowser())
+		handler->GetBrowser()->GetHost()->SendFocusEvent(true);
+}
+
+
+void ChromiumBrowser::LostFocus()
+{
+	if (handler && handler->GetBrowser())
+		handler->GetBrowser()->GetHost()->SendFocusEvent(false);
 }
 
 
