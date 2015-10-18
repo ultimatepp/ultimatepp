@@ -34,7 +34,7 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
 	JSTests.WhenAction			= THISBACK(OnJSTests);
 
-	//Delayed maximization - workaround layout problem
+	//Delayed maximization - workaround of layout problem
 	SetTimeCallback(100, THISBACK1(Maximize, false));
 }
 

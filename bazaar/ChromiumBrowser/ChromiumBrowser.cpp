@@ -4,11 +4,15 @@
 #include "include/cef_app.h"
 #include "include/cef_version.h"
 
+#if defined(GUI_GTK) && defined(GDK_WINDOWING_X11)
+#include <gdk/gdkx.h>
+#endif
+
 using namespace Upp;
 
 
 #ifdef PLATFORM_LINUX
-Vector<char*> GetArgs()
+static Vector<char*> GetArgs()
 {
 	const Vector<String>& cmdline = CommandLine();
 	static String app;
@@ -66,7 +70,6 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 #ifdef PLATFORM_LINUX
 
 	Vector<char *> args = GetArgs();
-	RDUMP(args);
 	CefMainArgs main_args(args.GetCount(), &args[0]);
 
 #elif defined(PLATFORM_WIN32)
@@ -144,11 +147,16 @@ void ChromiumBrowser::AfterInit()
 	Rect r = GetRect();
 	CefWindowInfo info;
 
-#ifdef PLATFORM_LINUX
+#ifdef GUI_X11
 
     info.SetAsChild(GetParentWindow(), CefRect(r.left, r.top, r.Width(), r.Height()));
 
-#elif defined(PLATFORM_WIN32)
+#elif defined(GUI_GTK) && defined(GDK_WINDOWING_X11)
+
+	info.SetAsChild(gdk_x11_drawable_get_xid(gtk_widget_get_window(GTK_WIDGET(GetTopCtrl()->gtk()))),
+					CefRect(r.left, r.top, r.Width(), r.Height()));
+
+#elif defined(GUI_WIN32)
 
 	RECT rect;
 	rect.left = r.left;
@@ -187,7 +195,7 @@ void ChromiumBrowser::Layout()
 
 		Rect r = GetRect();
 		
-#ifdef PLATFORM_LINUX
+#ifdef GUI_X11
 
 		XWindowChanges change = {0};
 		change.x = r.left;
@@ -196,7 +204,16 @@ void ChromiumBrowser::Layout()
 		change.height = r.Height();
 		XConfigureWindow(Xdisplay, handler->GetBrowser()->GetHost()->GetWindowHandle(), CWHeight | CWWidth | CWY, &change);
 
-#elif defined(PLATFORM_WIN32)
+#elif defined(GUI_GTK) && defined(GDK_WINDOWING_X11)
+
+		XWindowChanges change = {0};
+		change.x = r.left;
+		change.y = r.top;
+		change.width = r.Width();
+		change.height = r.Height();
+		XConfigureWindow(GDK_DISPLAY_XDISPLAY(gdk_display_get_default()), handler->GetBrowser()->GetHost()->GetWindowHandle(), CWHeight | CWWidth | CWY, &change);
+
+#elif defined(GUI_WIN32)
 
 		CefWindowHandle hwnd = handler->GetBrowser()->GetHost()->GetWindowHandle();
 		HDWP hdwp = BeginDeferWindowPos(1);

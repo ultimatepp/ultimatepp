@@ -25,5 +25,6 @@ file
 	main.cpp;
 
 mainconfig
-	"" = "GUI MT NOGTK USEMALLOC";
+	"" = "GUI MT NOGTK USEMALLOC",
+	"" = "GUI MT USEMALLOC";
 

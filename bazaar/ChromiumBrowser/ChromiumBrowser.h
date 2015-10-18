@@ -23,7 +23,7 @@ private:
 	void BeforeTerminate();
 	void Layout();
 	void MessageLoop();
-	void SetFocus2()								{ SetFocus(); }
+	void SetFocus2()								{ SetFocus();}
 
 public:
 	typedef ChromiumBrowser CLASSNAME;
