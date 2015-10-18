@@ -8,6 +8,16 @@ using namespace Upp;
 
 #include "files.brc"
 
+
+/* Table of Javascript functions that are forwarded to native code */
+const char * const Upp::ChromiumBrowserJSFunctions[]={
+	"JSExample1",
+	"JSExample2",
+	/* DO NOT forget nullptr at the end of the table */
+	nullptr
+};
+
+
 ChromiumBrowserExample::ChromiumBrowserExample()
 {
 	CtrlLayout(*this, "Embedded Chromium Example " + Browser.GetVersion());

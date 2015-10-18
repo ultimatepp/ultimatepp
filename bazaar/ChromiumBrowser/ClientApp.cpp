@@ -1,9 +1,5 @@
+#include "ChromiumBrowser.h"
 #include "ClientApp.h"
-
-
-static const char * const func_names[]={
-	"JSExample1"
-};
 
 
 ClientApp::ClientApp()
@@ -23,9 +19,9 @@ void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 {
 	//Register our JS functions
 	CefRefPtr<CefV8Value> object = context->GetGlobal();
-	for(int f = 0; f < __countof(func_names); f++){
-		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(func_names[f], this);
-		object->SetValue(func_names[f], func, V8_PROPERTY_ATTRIBUTE_NONE);
+	for(int f = 0; Upp::ChromiumBrowserJSFunctions[f] != nullptr; f++){
+		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(Upp::ChromiumBrowserJSFunctions[f], this);
+		object->SetValue(Upp::ChromiumBrowserJSFunctions[f], func, V8_PROPERTY_ATTRIBUTE_NONE);
 	}
 }
 

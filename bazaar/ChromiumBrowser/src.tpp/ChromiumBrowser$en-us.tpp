@@ -30,9 +30,8 @@ Framework) in Upp application. [* To run CEF you need to download
 and compile CEF library] (it is not included in ChromiumBrowser 
 package due to its size). &]
 [s0; &]
-[s0; Currently two platforms are supported: Linux/X11 and Windows. 
-Linux/GTK backend is not supported due to lack of working DHCtrl 
-class.&]
+[s0; Currently three GUI backends are supported: X11, GTK/X11 and 
+Windows.&]
 [s0;* &]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Linux]]}}&]

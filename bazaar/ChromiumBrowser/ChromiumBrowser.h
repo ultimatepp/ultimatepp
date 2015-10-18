@@ -6,6 +6,8 @@
 
 namespace Upp{
 
+extern const char * const ChromiumBrowserJSFunctions[];
+
 class ChromiumBrowser : public Ctrl {
 private:
 	CefRefPtr<ClientHandler> handler;
