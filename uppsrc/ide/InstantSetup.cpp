@@ -170,8 +170,6 @@ void InstantSetup()
 		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
 		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
 		
-		DDUMP(lib);
-	
 		if(vc.GetCount() * bin.GetCount() * inc.GetCount() * lib.GetCount()) {
 			bins.At(0) = vc + (x64 ? "/bin/amd64" : "/bin");
 			bins.At(1) = bin;
