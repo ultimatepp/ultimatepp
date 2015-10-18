@@ -236,7 +236,7 @@ bool Install()
 		InstallUninstall(exe, "Ultimate++");
 		DeleteFile(ipp);
 	}
-	AutoSetup();
+	InstantSetup();
 	PromptOK("Ultimate`+`+ setup was finished.&Press OK to launch TheIDE.&"
 	         "[* WARNING:] Do not put important files into the install directory as they "
 	         "would be [* deleted] during [* uninstall] or [* upgrade] process!");;

@@ -1,5 +1,7 @@
 #include "ide.h"
 
+// DEPRECATED
+
 extern FileSel& sSD();
 
 static void sSetFolder(EditField *f)

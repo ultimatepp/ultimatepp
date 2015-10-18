@@ -1,8 +1,8 @@
 #include "ide.h"
 
-#ifdef _DEBUG
 #ifdef PLATFORM_WIN32
 
+#if 0
 String GetWinRegStringWOW64(const char *value, const char *path, HKEY base_key  = HKEY_LOCAL_MACHINE) {
 	HKEY key = 0;
 	if(RegOpenKeyEx(base_key, path, 0, KEY_READ|KEY_WOW64_64KEY, &key) != ERROR_SUCCESS)
@@ -25,6 +25,7 @@ String GetWinRegStringWOW64(const char *value, const char *path, HKEY base_key  
 	RegCloseKey(key);
 	return raw_data;
 }
+#endif
 
 class DirFinder {
 	Vector<String> dirs;
@@ -148,12 +149,13 @@ void InstantSetup()
 	df.Dir(pf);
 	df.Dir(GetProgramsFolder());
 
+	for(int x64 = 0; x64 < 2; x64++) {
+		String method = x64 ? "MSC15x64" : "MSC15";
+	
+	#ifdef _DEBUG
+		method << "Test";
+	#endif
 
-	for(int pass = 0; pass < 2; pass++) {
-		String method = pass ? "MSC15x64" : "MSC15";
-		
-		_DBG_ method << "Test";
-		
 		String vc, bin, inc, lib;
 	
 		VectorMap<String, String> bm = GetMethodVars(method);
@@ -161,31 +163,40 @@ void InstantSetup()
 		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
 		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3))
-			return;
+			continue;
 		
 		vc = df.ScanForDir("/vc", "", "bin/link.exe;bin/cl.exe;bin/mspdb140.dll", "bin/1033");
-		bin = df.ScanForDir(pass ? "bin/x64" : "bin/x86", "/windows kits/", "makecat.exe;accevent.exe", "");
+		bin = df.ScanForDir(x64 ? "bin/x64" : "bin/x86", "/windows kits/", "makecat.exe;accevent.exe", "");
 		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
 		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
 		
 		DDUMP(lib);
 	
 		if(vc.GetCount() * bin.GetCount() * inc.GetCount() * lib.GetCount()) {
-			bins.At(0) = vc + (pass ? "/bin/amd64" : "/bin");
+			bins.At(0) = vc + (x64 ? "/bin/amd64" : "/bin");
 			bins.At(1) = bin;
+			String& sslbin = bins.At(2);
+			if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
+				sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win64" : "bin/OpenSSL-Win32");
 			
 			incs.At(0) = vc + "/include";
 			incs.At(1) = inc + "/um";
 			incs.At(2) = inc + "/ucrt";
 			incs.At(3) = inc + "/shared";
+			String& sslinc = incs.At(4);
+			if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
+				sslinc = GetExeDirFile(x64 ? "bin/OpenSSL-Win64/include" : "bin/OpenSSL-Win32/include");
 			
-			libs.At(0) = vc + (pass ? "/lib/amd64" : "/lib");
-			libs.At(1) = lib + (pass ? "/ucrt/x64" : "/ucrt/x86");
-			libs.At(2) = lib + (pass ? "/um/x64" : "/um/x86");
+			libs.At(0) = vc + (x64 ? "/lib/amd64" : "/lib");
+			libs.At(1) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
+			libs.At(2) = lib + (x64 ? "/um/x64" : "/um/x86");
+			String& ssllib = libs.At(3);
+			if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
+				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win64/lib/VC" : "bin/OpenSSL-Win64/lib/VC");
 		
-			bmSet(bm, "BUILDER", pass ? "MSC15X64" : "MSC15");
+			bmSet(bm, "BUILDER", x64 ? "MSC15X64" : "MSC15");
 			bmSet(bm, "COMPILER", "");
-			bmSet(bm, "COMMON_OPTIONS", pass ? "" : "/D_ATL_XP_TARGETING");
+			bmSet(bm, "COMMON_OPTIONS", x64 ? "" : "/D_ATL_XP_TARGETING");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_FLAGS", "");
@@ -210,7 +221,54 @@ void InstantSetup()
 			SaveVarFile(ConfigFile(method + ".bm"), bm);
 		}
 	}
+
+	{
+		String method = "MINGW32";
+	#ifdef _DEBUG
+		method << "Test";
+	#endif
+		VectorMap<String, String> bm = GetMethodVars(method);
+
+		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
+		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
+		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+		if(CheckDirs(bins, 1) && CheckDirs(incs, 1) && CheckDirs(libs, 1))
+			return;
+		
+		String bin = GetExeDirFile("bin");
+		
+		bmSet(bm, "BUILDER", "GCC");
+		bmSet(bm, "COMPILER", "");
+		bmSet(bm, "COMMON_OPTIONS", "-msse2");
+		bmSet(bm, "COMMON_CPP_OPTIONS", "");
+		bmSet(bm, "COMMON_C_OPTIONS", "");
+		bmSet(bm, "COMMON_FLAGS", "");
+		bmSet(bm, "DEBUG_INFO", "2");
+		bmSet(bm, "DEBUG_BLITZ", "1");
+		bmSet(bm, "DEBUG_LINKMODE", "0");
+		bmSet(bm, "DEBUG_OPTIONS", "-O0 -gstabs");
+		bmSet(bm, "DEBUG_FLAGS", "");
+		bmSet(bm, "DEBUG_LINK", "");
+		bmSet(bm, "RELEASE_BLITZ", "1");
+		bmSet(bm, "RELEASE_LINKMODE", "0");
+		bmSet(bm, "RELEASE_OPTIONS", "-O3 -ffunction-sections");
+		bmSet(bm, "RELEASE_SIZE_OPTIONS", "-Os -finline-limit=20 -ffunction-sections");
+		bmSet(bm, "RELEASE_FLAGS", "");
+		bmSet(bm, "RELEASE_LINK", "");
+		bmSet(bm, "DEBUGGER", "gdb");
+		bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
+//		bmSet(bm, "LINKMODE_LOCK", "0");
+
+		bins.At(0) = bin + "/mingw32\\bin";
+		incs.At(0) = bin + "/mingw32/i686-w64-mingw32/include";
+		libs.At(0) = bin + "/mingw32/i686-w64-mingw32/lib";
+
+		bm.GetAdd("PATH") = Join(bins, ";");
+		bm.GetAdd("INCLUDE") = Join(incs, ";");
+		bm.GetAdd("LIB") = Join(libs, ";");
+		
+		SaveVarFile(ConfigFile(method + ".bm"), bm);
+	}
 }
 
-#endif
 #endif

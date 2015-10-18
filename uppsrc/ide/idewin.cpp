@@ -780,12 +780,6 @@ void AppMain___()
 	}
 #endif
 
-#ifdef _DEBUG
-#ifdef PLATFORM_WIN32
-	InstantSetup();
-#endif
-#endif
-
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();
 
@@ -837,6 +831,12 @@ void AppMain___()
 		}
 	#endif
 	}
+
+#ifdef _DEBUG
+#ifdef PLATFORM_WIN32
+	InstantSetup();
+#endif
+#endif
 
 #ifndef _DEBUG
 	try {
