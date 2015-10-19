@@ -3,29 +3,29 @@ set -e
 #rm ~/upload/* || true
 
 #remove Win32 specific files
-rm ~/upp.tmp/u/*.exe || true
-rm ~/upp.tmp/u/*.map || true
-rm ~/upp.tmp/u/*.dll || true
-rm ~/upp.tmp/u/*.upp || true
-rm ~/upp.tmp/u/*.chk || true
+rm ~/upp.tmp/upp/*.exe || true
+rm ~/upp.tmp/upp/*.map || true
+rm ~/upp.tmp/upp/*.dll || true
+rm ~/upp.tmp/upp/*.upp || true
+rm ~/upp.tmp/upp/*.chk || true
 
 cp ~/Scripts/GCCMK.bm ~/.upp/theide
 
-~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/u/uppsrc
+~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/upp/uppsrc
 
-mv ~/upp.tmp/u/uppsrc/Makefile ~/upp.tmp/u/uppsrc/Makefile.in
+mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/Makefile.in
 
-cp ~/Scripts/Makefile ~/upp.tmp/u
-cp ~/Scripts/domake ~/upp.tmp/u
-cp ~/Scripts/doinstall ~/upp.tmp/u
-cp ~/Scripts/readme ~/upp.tmp/u
-cp ~/Scripts/upp.spec ~/upp.tmp/u
-cp ~/Scripts/debian ~/upp.tmp/u
+cp ~/Scripts/Makefile ~/upp.tmp/upp
+cp ~/Scripts/domake ~/upp.tmp/upp
+cp ~/Scripts/doinstall ~/upp.tmp/upp
+cp ~/Scripts/readme ~/upp.tmp/upp
+cp ~/Scripts/upp.spec ~/upp.tmp/upp
+cp ~/Scripts/debian ~/upp.tmp/upp
 
-cp ~/Scripts/GCCMK.bm ~/upp.tmp/u/GCC.bm.in
+cp ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
 
 cd ~/upp.tmp
-mv u upp-x11-src-`svnversion ~/upp.src`
+mv upp upp-x11-src-`svnversion ~/upp.src`
 tar -cvvzf ~/upload/upp-x11-src-`svnversion ~/upp.src`.tar.gz upp-x11-src-`svnversion ~/upp.src`
-#mv upp-x11-src-`svnversion ~/upp.src` u
+#mv upp-x11-src-`svnversion ~/upp.src` upp
 #~/bin/upload
