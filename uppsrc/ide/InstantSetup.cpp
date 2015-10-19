@@ -148,6 +148,8 @@ void InstantSetup()
 	df.Dir(pf + "/microsoft visual studio 14.0");
 	df.Dir(pf);
 	df.Dir(GetProgramsFolder());
+	
+	String default_method;
 
 	for(int x64 = 0; x64 < 2; x64++) {
 		String method = x64 ? "MSC15x64" : "MSC15";
@@ -162,8 +164,11 @@ void InstantSetup()
 		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3))
+		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
+			if(!x64)
+				default_method = "MSC15";
 			continue;
+		}
 		
 		vc = df.ScanForDir("/vc", "", "bin/link.exe;bin/cl.exe;bin/mspdb140.dll", "bin/1033");
 		bin = df.ScanForDir(x64 ? "bin/x64" : "bin/x86", "/windows kits/", "makecat.exe;accevent.exe", "");
@@ -217,10 +222,13 @@ void InstantSetup()
 			bm.GetAdd("LIB") = Join(libs, ";");
 			
 			SaveVarFile(ConfigFile(method + ".bm"), bm);
+
+			if(!x64)
+				default_method = "MSC15";
 		}
 	}
 
-	{
+	do {
 		String method = "MINGW32";
 	#ifdef _DEBUG
 		method << "Test";
@@ -230,8 +238,10 @@ void InstantSetup()
 		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-		if(CheckDirs(bins, 1) && CheckDirs(incs, 1) && CheckDirs(libs, 1))
-			return;
+		if(CheckDirs(bins, 1) && CheckDirs(incs, 1) && CheckDirs(libs, 1)) {
+			default_method = Nvl(default_method, method);
+			break;
+		}
 		
 		String bin = GetExeDirFile("bin");
 		
@@ -267,6 +277,73 @@ void InstantSetup()
 		
 		SaveVarFile(ConfigFile(method + ".bm"), bm);
 	}
+	while(0);
+
+	if(default_method.GetCount())
+		SaveFile(GetExeDirFile("default_method"), default_method);
+	
+	static Tuple2<const char *, const char *> ass[] = {
+		{ "uppsrc", "#/uppsrc" },
+		{ "reference", "#/reference;#/uppsrc" },
+		{ "examples", "#/examples;#/uppsrc" },
+		{ "tutorial", "#/tutorial;#/uppsrc" },
+		{ "examples-bazaar", "#/bazaar;#/uppsrc" },
+		{ "MyApps", "#/MyApps;#/uppsrc" },
+		{ "MyApps-bazaar", "#/MyApps;#/bazaar;#/uppsrc" },
+	};
+
+	String exe = GetExeFilePath();
+	String dir = GetFileFolder(exe);
+	String out = GetExeDirFile("out");
+	RealizeDirectory(out);
+
+	for(int i = 0; i < __countof(ass); i++) {
+		String vf = GetExeDirFile(String(ass[i].a) + ".var");
+		VectorMap<String, String> map;
+		bool ok = true;
+		if(LoadVarFile(vf, map)) {
+			Vector<String> dir = Split(map.Get("UPP", String()), ';');
+			if(dir.GetCount() == 0) {
+				ok = false;
+				break;
+			}
+			for(int j = 0; j < dir.GetCount(); j++) {
+				if(!DirectoryExists(dir[j])) {
+					ok = false;
+					break;
+				}
+			}
+		}
+		if(!ok) {
+			String b = ass[i].b;
+			b.Replace("#", dir);
+			SaveFile(vf,
+				"UPP = " + b + ";\r\n"
+				"OUTPUT = " + AsCString(out) + ";\r\n"
+			);
+		}
+	}
+}
+
+bool CheckLicense()
+{
+	if(!FileExists((GetExeDirFile("license.chk"))))
+		return true;
+	ShowSplash();
+	Ctrl::ProcessEvents();
+	Sleep(2000);
+	HideSplash();
+	Ctrl::ProcessEvents();
+	WithLicenseLayout<TopWindow> d;
+	CtrlLayoutOKCancel(d, "License agreement");
+	d.license = GetTopic("ide/app/BSD$en-us").text;
+	d.license.Margins(4);
+	d.license.SetZoom(Zoom(Zy(18), 100));
+	d.ActiveFocus(d.license);
+	if(d.Run() != IDOK)
+		return false;
+	DeleteFile(GetExeDirFile("license.chk"));
+	return true;
 }
 
 #endif

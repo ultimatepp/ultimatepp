@@ -769,14 +769,14 @@ void AppMain___()
 #ifdef PLATFORM_WIN32
 	if(!CheckLicense())
 		return;
-	firstinstall = !IsNull(LoadFile(GetExeDirFile("install.upp")));
-#ifdef flagTESTINSTALL
-	firstinstall = true;
+	String upp_dir = GetFileFolder(GetExeFilePath());
+	String cf = GetExeDirFile("setup-path");
+#ifndef _DEBUG
+	if(upp_dir != LoadFile(cf))
 #endif
-	if(firstinstall) {
-		if(!Install())
-			return;
-		SaveFile(ConfigFile("version"), IDE_VERSION);
+	{
+		InstantSetup();
+		SaveFile(upp_dir, cf);
 	}
 #endif
 
@@ -784,12 +784,12 @@ void AppMain___()
 		ResetBlitz();
 
 	for(int i = 0; i < arg.GetCount(); i++) {
-		if(arg[i] == "-uninstall") {
+/*		if(arg[i] == "-uninstall") {
 			Uninstall();
 			return;
 		}
 		if(!firstinstall && arg[i] == "-install" && !Install()) return;
-
+*/
 	#ifdef PLATFORM_WIN32
 		if(arg[i] == "!") {
 			String cmdline;
@@ -832,7 +832,7 @@ void AppMain___()
 	#endif
 	}
 
-#ifdef _DEBUG
+#ifdef _DEBUG0
 #ifdef PLATFORM_WIN32
 	InstantSetup();
 #endif
