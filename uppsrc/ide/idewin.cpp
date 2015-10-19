@@ -776,7 +776,7 @@ void AppMain___()
 #endif
 	{
 		InstantSetup();
-		SaveFile(cd, upp_dir);
+		SaveFile(cf, upp_dir);
 	}
 #endif
 
