@@ -300,19 +300,18 @@ void InstantSetup()
 	for(int i = 0; i < __countof(ass); i++) {
 		String vf = GetExeDirFile(String(ass[i].a) + ".var");
 		VectorMap<String, String> map;
-		bool ok = true;
-		if(LoadVarFile(vf, map)) {
+		bool ok = LoadVarFile(vf, map);
+		if(ok) {
 			Vector<String> dir = Split(map.Get("UPP", String()), ';');
 			if(dir.GetCount() == 0) {
 				ok = false;
-				break;
-			}
-			for(int j = 0; j < dir.GetCount(); j++) {
-				if(!DirectoryExists(dir[j])) {
-					ok = false;
-					break;
+			else
+				for(int j = 0; j < dir.GetCount(); j++) {
+					if(!DirectoryExists(dir[j])) {
+						ok = false;
+						break;
+					}
 				}
-			}
 		}
 		if(!ok) {
 			String b = ass[i].b;
