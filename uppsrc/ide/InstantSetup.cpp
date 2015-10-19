@@ -303,7 +303,7 @@ void InstantSetup()
 		bool ok = LoadVarFile(vf, map);
 		if(ok) {
 			Vector<String> dir = Split(map.Get("UPP", String()), ';');
-			if(dir.GetCount() == 0) {
+			if(dir.GetCount() == 0)
 				ok = false;
 			else
 				for(int j = 0; j < dir.GetCount(); j++) {
