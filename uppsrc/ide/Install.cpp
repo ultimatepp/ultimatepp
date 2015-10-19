@@ -3,6 +3,8 @@
 
 #ifdef PLATFORM_WIN32
 
+#if 0
+
 String GetShellFolder(const char *name, HKEY type)
 {
 	return GetWinRegString(name, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", type);
@@ -242,6 +244,8 @@ bool Install()
 	         "would be [* deleted] during [* uninstall] or [* upgrade] process!");;
 	return true;
 }
+
+#endif
 
 #else
 

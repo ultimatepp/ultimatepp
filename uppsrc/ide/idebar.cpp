@@ -341,8 +341,11 @@ void Ide::Setup(Bar& menu)
 	menu.Add("Build methods..", THISBACK(SetupBuildMethods))
 	    .Help("Setup build methods");
 #ifdef PLATFORM_WIN32
-	menu.Add("Automatic setup..", THISBACK(AutoSetup))
-	    .Help("Automatic setup of build methods..");
+	if(console.verbosebuild)
+		menu.Add("Automatic setup..", THISBACK(AutoSetup))
+		    .Help("Automatic setup of build methods..");
+	menu.Add("Instant setup..", callback(InstantSetup))
+	    .Help("Setups/fixes build methods and basic assemblies..");
 #endif
 #ifdef PLATFORM_POSIX
 	menu.Add("Source managment..", THISBACK(AutoSetup))
