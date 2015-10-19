@@ -64,7 +64,7 @@ void ReduceCodeBaseCache()
 		ff.Next();
 	}
 	Sort(file);
-	while(total > 120000000 && file.GetCount()) {
+	while(total > 256000000 && file.GetCount()) {
 		DeleteFile(file.Top().path);
 		total -= file.Top().length;
 		file.Drop();
