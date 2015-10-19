@@ -48,7 +48,7 @@ void ChromiumBrowser::ChildProcess()
 
 #endif
 	
-	int exit_code = CefExecuteProcess(main_args, app.get(), NULL);
+	int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
 	if (exit_code >= 0){
 		RLOG("CefExecuteProcess error");
 		exit(exit_code);
@@ -63,7 +63,7 @@ bool ChromiumBrowser::IsChildProcess()
 }
 
 
-ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
+ChromiumBrowser::ChromiumBrowser(): handler(nullptr), start_page("about:blank")
 {
 	CefRefPtr<ClientApp> app(new ClientApp);
 	
@@ -82,7 +82,7 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 
 #endif
 	
-	int exit_code = CefExecuteProcess(main_args, app.get(), NULL);
+	int exit_code = CefExecuteProcess(main_args, app.get(), nullptr);
 	if (exit_code >= 0){
 		RLOG("CefExecuteProcess error");
 		exit(exit_code);
@@ -97,7 +97,7 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 #endif
 	tmp_dir = GetTempFileName();
 	CefString(&cef_settings.cache_path) = ~tmp_dir;
-	CefInitialize(main_args, cef_settings, app.get(), NULL);
+	CefInitialize(main_args, cef_settings, app.get(), nullptr);
 }
 
 
@@ -171,7 +171,7 @@ void ChromiumBrowser::AfterInit()
 
 #endif
 
-	CefBrowserHost::CreateBrowser(info, handler.get(), ~start_page, br_settings, NULL);
+	CefBrowserHost::CreateBrowser(info, handler.get(), ~start_page, br_settings, nullptr);
 	SetTimeCallback(50, THISBACK(MessageLoop));
 }
 
@@ -217,7 +217,7 @@ void ChromiumBrowser::Layout()
 
 		CefWindowHandle hwnd = handler->GetBrowser()->GetHost()->GetWindowHandle();
 		HDWP hdwp = BeginDeferWindowPos(1);
-		hdwp = DeferWindowPos(hdwp, hwnd, NULL, r.left, r.top, r.Width(), r.Height(), SWP_NOZORDER);
+		hdwp = DeferWindowPos(hdwp, hwnd, nullptr, r.left, r.top, r.Width(), r.Height(), SWP_NOZORDER);
 		EndDeferWindowPos(hdwp);
 
 #else

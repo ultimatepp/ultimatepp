@@ -30,7 +30,7 @@ public:
 					Upp::Callback & gf,
 					Upp::Callback1<bool> & wk,
 					Upp::Callback3<Upp::String, int, Upp::String> & wcm):
-					browser(NULL), WhenUrlChange(wuc), WhenMessage(wm), WhenTakeFocus(tf),
+					browser(nullptr), WhenUrlChange(wuc), WhenMessage(wm), WhenTakeFocus(tf),
 					WhenGotFocus(gf), WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
 
 	~ClientHandler() { }

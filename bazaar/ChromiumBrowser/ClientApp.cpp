@@ -35,9 +35,9 @@ void ClientApp::OnContextCreated(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFra
 {
 	//Register our JS functions
 	CefRefPtr<CefV8Value> object = context->GetGlobal();
-	for(int f = 0; Upp::ChromiumBrowserJSFunctions[f] != nullptr; f++){
-		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(Upp::ChromiumBrowserJSFunctions[f], this);
-		object->SetValue(Upp::ChromiumBrowserJSFunctions[f], func, V8_PROPERTY_ATTRIBUTE_NONE);
+	for(int f = 0; Upp::ChromiumBrowser::JSFunctions[f] != nullptr; f++){
+		CefRefPtr<CefV8Value> func = CefV8Value::CreateFunction(Upp::ChromiumBrowser::JSFunctions[f], this);
+		object->SetValue(Upp::ChromiumBrowser::JSFunctions[f], func, V8_PROPERTY_ATTRIBUTE_NONE);
 	}
 }
 

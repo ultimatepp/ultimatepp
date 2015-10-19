@@ -10,10 +10,10 @@ using namespace Upp;
 
 
 /* Table of Javascript functions that are forwarded to native code */
-const char * const Upp::ChromiumBrowserJSFunctions[]={
+const char * const Upp::ChromiumBrowser::JSFunctions[]={
 	"JSExample1",
 	"JSExample2",
-	/* DO NOT forget nullptr at the end of the table */
+	/* DO NOT forget about nullptr at the end of the table */
 	nullptr
 };
 

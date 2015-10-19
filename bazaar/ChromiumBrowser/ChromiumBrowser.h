@@ -6,8 +6,6 @@
 
 namespace Upp{
 
-extern const char * const ChromiumBrowserJSFunctions[];
-
 class ChromiumBrowser : public Ctrl {
 private:
 	CefRefPtr<ClientHandler> handler;
@@ -31,7 +29,8 @@ public:
 	typedef ChromiumBrowser CLASSNAME;
 	ChromiumBrowser();
 	~ChromiumBrowser();
-	
+
+	static const char * const JSFunctions[];
 	Callback1<String>								WhenUrlChange;
 	Callback2<String, const Vector<Value>&>			WhenMessage;
 	Callback										WhenTakeFocus;
