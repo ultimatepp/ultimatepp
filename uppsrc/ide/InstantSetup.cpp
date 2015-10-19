@@ -317,7 +317,7 @@ void InstantSetup()
 			String b = ass[i].b;
 			b.Replace("#", dir);
 			SaveFile(vf,
-				"UPP = " + b + ";\r\n"
+				"UPP = " + AsCString(b) + ";\r\n"
 				"OUTPUT = " + AsCString(out) + ";\r\n"
 			);
 		}
