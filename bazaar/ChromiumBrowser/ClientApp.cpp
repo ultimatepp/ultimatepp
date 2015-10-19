@@ -12,6 +12,22 @@ void ClientApp::OnBeforeCommandLineProcessing(const CefString& process_type, Cef
 	//Extra command line switches
 	command_line->AppendSwitch("enable-media-stream");
 	command_line->AppendSwitch("no-sandbox");
+
+#ifdef PLATFORM_LINUX
+
+	Upp::String fp = Upp::GetExeDirFile("libpepflashplayer.so");
+
+#elif defined(PLATFORM_WIN32)
+	
+	Upp::String fp = Upp::GetExeDirFile("pepflashplayer.dll");
+
+#else
+
+	#error "Unsupported platform"
+
+#endif
+	if (Upp::FileExists(fp)) command_line->AppendSwitchWithValue("ppapi-flash-path", ~fp);
+
 }
 
 

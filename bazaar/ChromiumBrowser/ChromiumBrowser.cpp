@@ -33,7 +33,7 @@ void ChromiumBrowser::ChildProcess()
 {
 	CefRefPtr<ClientApp> app(new ClientApp);
 	
-#ifdef PLATFORM_LINUX
+#ifdef PLATFORM_POSIX
 
 	Vector<char *> args = GetArgs();
 	CefMainArgs main_args(args.GetCount(), &args[0]);
@@ -67,7 +67,7 @@ ChromiumBrowser::ChromiumBrowser(): handler(NULL), start_page("about:blank")
 {
 	CefRefPtr<ClientApp> app(new ClientApp);
 	
-#ifdef PLATFORM_LINUX
+#ifdef PLATFORM_POSIX
 
 	Vector<char *> args = GetArgs();
 	CefMainArgs main_args(args.GetCount(), &args[0]);

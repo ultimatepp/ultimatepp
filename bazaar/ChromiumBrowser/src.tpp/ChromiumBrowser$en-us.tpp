@@ -138,6 +138,9 @@ files. It should look like this:&]
 [s0; -|-|    ├── zh`-CN.pak&]
 [s0; -|-|    └── zh`-TW.pak&]
 [s0; &]
+[s0;i150;O0; if you need Flash plugin, install google chrome browser 
+and copy [C libpepflashplayer.so] from [C /opt/google/chrome/PepperFlash] 
+to the output directory&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Windows]]}}&]
 [s0; &]
@@ -237,7 +240,11 @@ required files. Your application directory should look like this:&]
 [s0; -|-|        vi.pak&]
 [s0; -|-|        zh`-CN.pak&]
 [s0; -|-|        zh`-TW.pak&]
-[s0;* &]
+[s0; &]
+[s0;i150;O0; if you need flash plugin, install google chrome browser 
+and copy [C pepflashplayer.dll] from `"[C c:`\Program Files (x86)`\Google`\Chrome`\App
+lication`\xxx`\PepperFlash]`" to the output directory&]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Final remarks]]}}&]
 [s0;i150;O0; CEF is multiprocess and multithreaded library. Your 
 application binary file will be executed at least three times 

@@ -35,19 +35,19 @@ public:
 
 	~ClientHandler() { }
 	
-	Upp::Callback1<Upp::String> & WhenUrlChange;
-	Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & WhenMessage;
-	Upp::Callback & WhenTakeFocus;
-	Upp::Callback & WhenGotFocus;
-	Upp::Callback1<bool> & WhenKeyboard;
-	Upp::Callback3<Upp::String, int, Upp::String> & WhenConsoleMessage;
+	const Upp::Callback1<Upp::String> & WhenUrlChange;
+	const Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & WhenMessage;
+	const Upp::Callback & WhenTakeFocus;
+	const Upp::Callback & WhenGotFocus;
+	const Upp::Callback1<bool> & WhenKeyboard;
+	const Upp::Callback3<Upp::String, int, Upp::String> & WhenConsoleMessage;
 	
 	void WhenMessageWrapper(Upp::String name, Upp::Vector<Upp::Value> * par);
 
     virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE			{ return this; }
 	virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE			{ return this; }
 	virtual CefRefPtr<CefFocusHandler> GetFocusHandler() OVERRIDE				{ return this; }
-//	virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE					{ return this; }
+	virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE					{ return this; }
 	virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE	{ return this; }
 	virtual CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() OVERRIDE			{ return this; }
 
