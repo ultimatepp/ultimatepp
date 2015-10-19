@@ -31,7 +31,7 @@ void Upp::ShowKeyboard(bool show)
 	}else{
 
 		const char * procname = "TabTip.exe";
-	    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, nullptr);
+	    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
 	    PROCESSENTRY32 pEntry;
 	    pEntry.dwSize = sizeof (pEntry);
 	    BOOL hRes = Process32First(hSnapShot, &pEntry);
