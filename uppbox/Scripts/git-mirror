@@ -1,6 +1,6 @@
 Some of commands used to setup git-mirror:
 
-git svn clone svn://www.ultimatepp.org/upp/trunk
+git svn clone --stdlayout svn://www.ultimatepp.org/upp/trunk
 
 git remote add origin https://github.com/ultimatepp/mirror.git
 
