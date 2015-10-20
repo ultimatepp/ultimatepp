@@ -192,7 +192,7 @@ void SelectAndroidDeviceDlg::LoadPhysicalDevices()
 
 void Ide::ExecuteApk()
 {
-	AndroidSDK sdk(androidSDKPath, true);
+	AndroidSDK sdk(GetAndroidSdkPath(), true);
 	if(!sdk.Validate())
 		return;
 	
@@ -213,8 +213,6 @@ void Ide::ExecuteApk()
 	
 	if(!packageName.IsEmpty() && !activityName.IsEmpty())
 		host->Execute(adb.MakeLaunchOnDeviceCmd(packageName, activityName));
-	
-	Cout() << "PID: " << adb.GetPid(packageName) << "\n";
 }
 
 void Ide::BuildAndDebug0(const String& srcfile)
