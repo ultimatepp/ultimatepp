@@ -8,6 +8,7 @@ rm ~/upp.tmp/upp/*.map || true
 rm ~/upp.tmp/upp/*.dll || true
 rm ~/upp.tmp/upp/*.upp || true
 rm ~/upp.tmp/upp/*.chk || true
+rm -R ~/upp.tmp/upp/bin || true
 
 cp ~/Scripts/GCCMK.bm ~/.upp/theide
 
