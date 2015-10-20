@@ -201,7 +201,6 @@ String GetCurrentBuildMethod();
 String GetCurrentMainPackage();
 
 int    GetHydraThreads();
-String GetAndroidSDKPath();
 
 String GetAnyFileName(const char *path);
 String GetAnyFileTitle(const char *path);

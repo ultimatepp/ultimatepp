@@ -368,7 +368,7 @@ void Ide::Setup(Bar& menu)
 
 void Ide::SetupMobilePlatforms(Bar& menu)
 {
-	AndroidSDK androidSDK(androidSDKPath);
+	AndroidSDK androidSDK(GetAndroidSdkPath());
 	
 	if(androidSDK.Validate()) {
 		menu.Separator();

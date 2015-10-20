@@ -81,6 +81,18 @@ AndroidBuilderSetup::AndroidBuilderSetup()
 {
 	CtrlLayout(*this);
 	
+	sdk_path <<= THISBACK(OnSdkPathChange);
+	
+	sdkDownload.SetImage(IdeImg::DownloadBlack());
+	sdkDownload.Tip("Download");
+	sdkDownload <<= callback1(LaunchWebBrowser, AndroidSDK::GetDownloadUrl());
+	sdk_path.AddFrame(sdkDownload);
+	
+	sdkBrowse.SetImage(CtrlImg::right_arrow());
+	sdkBrowse.Tip("Select directory");
+	sdkBrowse <<= THISBACK(OnSdkPathInsert);
+	sdk_path.AddFrame(sdkBrowse);
+	
 	ndk_path <<= THISBACK(OnNdkPathChange);
 	
 	ndkDownload.SetImage(IdeImg::DownloadBlack());
@@ -106,6 +118,7 @@ AndroidBuilderSetup::AndroidBuilderSetup()
 
 void AndroidBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 {
+	map.Add("SDK_PATH",                &sdk_path);
 	map.Add("NDK_PATH",                &ndk_path);
 	map.Add("JDK_PATH",                &jdk_path);
 	map.Add("SDK_PLATFORM_VERSION",    &sdk_platform_version);
@@ -136,10 +149,7 @@ void AndroidBuilderSetup::New(const String& builder)
 
 void AndroidBuilderSetup::OnLoad()
 {
-	String sdkPath = GetAndroidSDKPath();
-	sdk_path.SetData(sdkPath);
-	OnSdkPathChange(sdkPath);
-
+	OnSdkPathChange();
 	OnNdkPathChange();
 }
 
@@ -150,6 +160,10 @@ void AndroidBuilderSetup::OnCtrlLoad(const String& ctrlKey, const String& value)
 	
 	if(map.Find(ctrlKey) > -1) {
 		Ctrl* ctrl = map.Get(ctrlKey);
+		if(ctrl == &sdk_path) {
+			OnSdkPathChange0(value);
+		}
+		else
 		if(ctrl == &ndk_path) {
 			OnNdkPathChange0(value);
 		}
@@ -164,10 +178,12 @@ void AndroidBuilderSetup::OnShow()
 
 void AndroidBuilderSetup::OnSdkShow()
 {
-	AndroidSDK sdk(GetAndroidSDKPath(), true);
+	AndroidSDK sdk(sdk_path.GetData(), true);
 	if(!sdk.Validate()) {
+		DisableSdkCtrls();
 		return;
 	}
+	EnableSdkCtrls();
 	
 	if(sdk_platform_version.GetValue().IsNull())
 		sdk_platform_version.SetData(sdk.FindDefaultPlatform());
@@ -175,13 +191,32 @@ void AndroidBuilderSetup::OnSdkShow()
 		sdk_build_tools_release.SetData(sdk.FindDefaultBuildToolsRelease());
 }
 
-void AndroidBuilderSetup::OnSdkPathChange(const String& sdkPath)
+void AndroidBuilderSetup::OnSdkPathInsert()
+{
+	String currentPath = sdk_path.GetData();
+	
+	InsertPath(&sdk_path);
+	
+	String newPath = sdk_path.GetData();
+	if(currentPath != newPath)
+		OnSdkPathChange();
+}
+
+void AndroidBuilderSetup::OnSdkPathChange()
+{
+	OnSdkPathChange0(sdk_path.GetData());
+	OnSdkShow();
+}
+
+void AndroidBuilderSetup::OnSdkPathChange0(const String& sdkPath)
 {
 	AndroidSDK sdk(sdkPath, true);
 	if(sdk.Validate()) {
 		LoadPlatforms(sdk);
 		LoadBuildTools(sdk);
 	}
+	else
+		ClearSdkCtrls();
 }
 
 void AndroidBuilderSetup::OnNdkShow()
@@ -191,7 +226,6 @@ void AndroidBuilderSetup::OnNdkShow()
 		DisableNdkCtrls();
 		return;
 	}
-	
 	EnableNdkCtrls();
 }
 
@@ -277,6 +311,23 @@ void AndroidBuilderSetup::LoadDropList(DropList& dropList,
 		if(idx >= 0)
 			dropList.SetIndex(idx);
 	}
+}
+
+void AndroidBuilderSetup::EnableSdkCtrls(bool enable)
+{
+	sdk_platform_version.Enable(enable);
+	sdk_build_tools_release.Enable(enable);
+}
+
+void AndroidBuilderSetup::DisableSdkCtrls()
+{
+	EnableSdkCtrls(false);
+}
+
+void AndroidBuilderSetup::ClearSdkCtrls()
+{
+	sdk_platform_version.Clear();
+	sdk_build_tools_release.Clear();
 }
 
 void AndroidBuilderSetup::EnableNdkCtrls(bool enable)

@@ -615,8 +615,6 @@ public:
 	bool	astyle_TabSpaceConversionMode;
 	WString	astyle_TestBox;
 	
-	String androidSDKPath;
-	
 	// Formats a string of code with a given formatter
 	WString FormatCodeString(WString const &Src, astyle::ASFormatter &Formatter);
 
@@ -1127,7 +1125,9 @@ public:
 		void  MacroCloseFile(EscEscape& e);
 		void  MacroPackageFiles(EscEscape& e);
 		void  MacroAllPackages(EscEscape& e);
-
+	
+	String GetAndroidSdkPath();
+	
 	typedef   Ide CLASSNAME;
 
 	enum {

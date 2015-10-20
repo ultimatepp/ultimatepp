@@ -55,6 +55,8 @@ class AndroidBuilderSetup : public WithBuildMethodsAndroidBuilderSetupLayout<Bui
 	typedef AndroidBuilderSetup CLASSNAME;
 	
 public:
+	FrameRight<Button> sdkBrowse;
+	FrameRight<Button> sdkDownload;
 	FrameRight<Button> ndkBrowse;
 	FrameRight<Button> ndkDownload;
 	FrameRight<Button> jdkBrowse;
@@ -73,7 +75,9 @@ public:
 
 private:
 	void OnSdkShow();
-	void OnSdkPathChange(const String& sdkPath);
+	void OnSdkPathInsert();
+	void OnSdkPathChange();
+	void OnSdkPathChange0(const String& sdkPath);
 	void OnNdkShow();
 	void OnNdkPathInsert();
 	void OnNdkPathChange();
@@ -87,6 +91,10 @@ private:
 	void LoadDropList(DropList& dropList, const Vector<String>& values, const String& defaultKey = "");
 	
 private:
+	void EnableSdkCtrls(bool enable = true);
+	void DisableSdkCtrls();
+	void ClearSdkCtrls();
+	
 	void EnableNdkCtrls(bool enable = true);
 	void DisableNdkCtrls();
 	void ClearNdkCtrls();

@@ -140,6 +140,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	b->script = bm.Get("SCRIPT", "");
 	if(AndroidBuilder::GetBuildersNames().Find(builder) > -1) {
 		AndroidBuilder* ab = dynamic_cast<AndroidBuilder*>(b);
+		ab->androidSDK.SetPath((bm.Get("SDK_PATH", "")));
 		ab->androidNDK.SetPath((bm.Get("NDK_PATH", "")));
 		ab->jdk.SetPath((bm.Get("JDK_PATH", "")));
 		
