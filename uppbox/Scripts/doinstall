@@ -17,6 +17,8 @@ mkdir ~/.upp
 mkdir ~/.upp/theide
 
 cp GCC.bm ~/.upp/theide
+cp en-gb.scd ~/.upp/theide
+cp en-us.scd ~/.upp/theide
 
 echo UPP = \"$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/uppsrc.var
 echo UPP = \"$HOME/upp/examples\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/examples.var
