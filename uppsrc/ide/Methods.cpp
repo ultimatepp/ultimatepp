@@ -806,7 +806,7 @@ String Ide::GetIncludePath()
 		r.FindAdd("/usr/local/include");
 		sys_includes = Join(r.GetKeys(), ";");
 	}
-	if(findarg(bm.Get("BUILDER"), "GCC", "CLANG") >= 0)
+	if(findarg(bm.Get("BUILDER", ""), "GCC", "CLANG") >= 0)
 		MergeWith(include, ";", sys_includes);
 #endif
 #ifdef PLATFORM_WIN32
@@ -835,11 +835,11 @@ String Ide::GetIncludePath()
 	MergeWith(include, ";", mingw_include[q]);
 #endif
 	if(findarg(bm.Get("BUILDER", ""), "ANDROID") >= 0) {
-		AndroidNDK ndk(bm.Get("NDK_PATH"));
+		AndroidNDK ndk(bm.Get("NDK_PATH", ""));
 		if(ndk.Validate()) {
 			MergeWith(include, ";", ndk.GetIncludeDir());
 			
-			String cppIncludeDir = ndk.GetCppIncludeDir(bm.Get("NDK_CPP_RUNTIME"));
+			String cppIncludeDir = ndk.GetCppIncludeDir(bm.Get("NDK_CPP_RUNTIME", ""));
 			if(!cppIncludeDir.IsEmpty())
 				MergeWith(include, ";", cppIncludeDir);
 		}
