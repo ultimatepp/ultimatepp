@@ -505,8 +505,8 @@ Ide::Ide()
 
 	Icon(IdeImg::Package(), IdeImg::Package());
 
-	tfont = editorfont = font2 = CourierZ(13);
-	veditorfont = consolefont = font1 = CourierZ(11);
+	tfont = editorfont = font2 = CourierZ(12);
+	veditorfont = consolefont = font1 = CourierZ(10);
 	editortabsize = 4;
 	indent_amount = 4;
 	indent_spaces = false;
