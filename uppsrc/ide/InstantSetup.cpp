@@ -238,7 +238,7 @@ void InstantSetup()
 		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-		if(CheckDirs(bins, 1) && CheckDirs(incs, 1) && CheckDirs(libs, 1)) {
+		if(CheckDirs(bins, 2) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
 			default_method = Nvl(default_method, method);
 			break;
 		}
@@ -267,9 +267,12 @@ void InstantSetup()
 		bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 //		bmSet(bm, "LINKMODE_LOCK", "0");
 
-		bins.At(0) = bin + "/mingw32\\bin";
+		bins.At(0) = bin + "/mingw32/bin";
+		bins.At(1) = bin + "/OpenSSL-Win32";
 		incs.At(0) = bin + "/mingw32/i686-w64-mingw32/include";
+		incs.At(1) = bin + "/OpenSSL-Win32/include";
 		libs.At(0) = bin + "/mingw32/i686-w64-mingw32/lib";
+		libs.At(1) = bin + "/OpenSSL-Win32/lib/MinGW";
 
 		bm.GetAdd("PATH") = Join(bins, ";");
 		bm.GetAdd("INCLUDE") = Join(incs, ";");
