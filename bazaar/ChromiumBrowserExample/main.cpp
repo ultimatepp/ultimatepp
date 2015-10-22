@@ -30,29 +30,49 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Go.SetImage(IMG::go);
 	Stop.SetImage(IMG::stop);
 	
-	Browser.WhenUrlChange		= THISBACK(OnUrlChange);
-	Browser.WhenTakeFocus		= THISBACK(OnTakeFocus);
-	Browser.WhenKeyboard		= STDBACK(::ShowKeyboard);
-	Browser.WhenConsoleMessage	= THISBACK(OnConsoleMessage);
-	Browser.WhenMessage			= THISBACK(OnMessage);
+	MessagesLog.AddColumn("Time");
+	MessagesLog.AddColumn("URL");
+	MessagesLog.AddColumn("Line");
+	MessagesLog.AddColumn("Message");
+	MessagesLog.ColumnWidths("1 1 1 4");
+	MessagesLog.OddRowColor();
+	MessagesLog.EvenRowColor();
 	
-	Back.WhenAction				= callback(&Browser, &ChromiumBrowser::GoBack);
-	Forward.WhenAction			= callback(&Browser, &ChromiumBrowser::GoForward);
-	Refresh.WhenAction			= callback(&Browser, &ChromiumBrowser::RefreshPage);
-	Url.WhenEnter				= THISBACK(OnBrowse);
-	Go.WhenAction				= THISBACK(OnBrowse);
-	Stop.WhenAction				= callback(&Browser, &ChromiumBrowser::Stop);
-	JSTests.WhenAction			= THISBACK(OnJSTests);
+	Browser.WhenUrlChange			= LAMBDA(String url) { Url.SetData(url); Url.CancelSelection(); };
+	Browser.WhenStatus				= THISBACK(OnStatus);
+	Browser.WhenTakeFocus			= LAMBDA() { Url.SetFocus(); };
+	Browser.WhenKeyboard			= STDBACK(::ShowKeyboard);
+	Browser.WhenConsoleMessage		= THISBACK(OnConsoleMessage);
+	Browser.WhenMessage				= THISBACK(OnMessage);
+	
+	Back.WhenAction					= callback(&Browser, &ChromiumBrowser::GoBack);
+	Forward.WhenAction				= callback(&Browser, &ChromiumBrowser::GoForward);
+	Refresh.WhenAction				= callback(&Browser, &ChromiumBrowser::RefreshPage);
+	Url.WhenEnter = Go.WhenAction	= LAMBDA() { Browser.Browse(~Url); };
+	Stop.WhenAction					= callback(&Browser, &ChromiumBrowser::Stop);
+	JSTests.WhenAction				= LAMBDA() { Browser.ShowHTML(String(test_page, test_page_length)); };
 
 	//Delayed maximization - workaround of layout problem
 	SetTimeCallback(200, THISBACK1(Maximize, false));
 }
 
 
-
-void ChromiumBrowserExample::OnJSTests()
+void ChromiumBrowserExample::OnStatus(bool loading, bool back, bool forward)
 {
-	Browser.ShowHTML(String(test_page, test_page_length));
+	Back.Enable(back);
+	Forward.Enable(forward);
+	Url.SetEditable(!loading);
+	Go.Enable(!loading);
+	Stop.Enable(loading);
+	Refresh.Enable(loading);
+}
+
+
+void ChromiumBrowserExample::OnConsoleMessage(String url, int line, String msg)
+{
+	MessagesLog.Add(GetSysTime(), url, line, msg);
+	MessagesLog.ScrollEnd();
+	if (MessagesLog.GetCount() > 100) MessagesLog.Remove(0);
 }
 
 

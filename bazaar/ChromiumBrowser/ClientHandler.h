@@ -25,17 +25,19 @@ public:
 	typedef ClientHandler CLASSNAME;
 
 	ClientHandler(	Upp::Callback1<Upp::String> & wuc,
+					Upp::Callback3<bool, bool, bool> & wsc,
 					Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & wm,
 					Upp::Callback & tf,
 					Upp::Callback & gf,
 					Upp::Callback1<bool> & wk,
 					Upp::Callback3<Upp::String, int, Upp::String> & wcm):
-					browser(nullptr), WhenUrlChange(wuc), WhenMessage(wm), WhenTakeFocus(tf),
-					WhenGotFocus(gf), WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
+					browser(nullptr), WhenUrlChange(wuc), WhenStateChange(wsc), WhenMessage(wm),
+					WhenTakeFocus(tf), WhenGotFocus(gf), WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
 
 	~ClientHandler() { }
 	
 	const Upp::Callback1<Upp::String> & WhenUrlChange;
+	const Upp::Callback3<bool, bool, bool> & WhenStateChange;
 	const Upp::Callback2<Upp::String, const Upp::Vector<Upp::Value>&> & WhenMessage;
 	const Upp::Callback & WhenTakeFocus;
 	const Upp::Callback & WhenGotFocus;
@@ -75,6 +77,11 @@ public:
 							CefRefPtr<CefFrame> frame,
 							const CefString& url) OVERRIDE;
 	
+	virtual void OnLoadingStateChange(CefRefPtr<CefBrowser> browser,
+							bool isLoading,
+							bool canGoBack,
+							bool canGoForward) OVERRIDE;
+ 
 	virtual bool OnConsoleMessage(CefRefPtr<CefBrowser> browser,
 							const CefString& message,
 							const CefString& source,

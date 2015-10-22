@@ -16,6 +16,12 @@ void ClientHandler::OnAddressChange(CefRefPtr<CefBrowser> browser, CefRefPtr<Cef
 }
 
 
+void ClientHandler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser, bool isLoading, bool canGoBack, bool canGoForward)
+{
+	PostCallback(callback3(WhenStateChange, isLoading, canGoBack, canGoForward));
+}
+
+
 bool ClientHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefString& message, const CefString& source, int line)
 {
 	ASSERT(CefCurrentlyOn(TID_UI));

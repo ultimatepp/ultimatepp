@@ -15,12 +15,9 @@ class ChromiumBrowserExample : public WithChromiumBrowserExampleLayout<TopWindow
 private:
 
 	void Close()													{ Upp::ShowKeyboard(false); TopWindow::Close(); }
-	void OnUrlChange(String url)									{ Url.SetData(url); Url.CancelSelection(); }
-	void OnTakeFocus()												{ Url.SetFocus(); }
-	void OnConsoleMessage(String url, int line, String msg)			{ RLOG(Format("Console message: url=%s, line=%d, msg=%s", url, line, msg)); }
-	void OnBrowse()													{ Browser.Browse(~Url); }
 	void OnMessage(String name, const Vector<Value>& par);
-	void OnJSTests();
+	void OnStatus(bool loading, bool back, bool forward);
+	void OnConsoleMessage(String url, int line, String msg);
 
 public:
 	typedef ChromiumBrowserExample CLASSNAME;

@@ -139,7 +139,8 @@ void ChromiumBrowser::AfterInit()
 {
 	WhenGotFocus = THISBACK(SetFocus2);
 	
-	handler = new ClientHandler(WhenUrlChange, WhenMessage, WhenTakeFocus, WhenGotFocus, WhenKeyboard, WhenConsoleMessage);
+	handler = new ClientHandler(WhenUrlChange, WhenStatus, WhenMessage, WhenTakeFocus,
+								WhenGotFocus, WhenKeyboard, WhenConsoleMessage);
 
 	CefBrowserSettings br_settings;
     br_settings.file_access_from_file_urls = STATE_DISABLED;

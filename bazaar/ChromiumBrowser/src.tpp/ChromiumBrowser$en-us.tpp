@@ -11,8 +11,8 @@ topic "";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 ChromiumBrowser]]}}&]
-[s0;i448;a25;kKO9;%- [@(0.0.255)3 class][3 _][*3 ChromiumBrowser][3 _:_][@(0.0.255)3 public][3 _][*@3;3 D
-HCtrl]&]
+[s0;i448;a25;kKO9;%- [@(0.0.255)3 class][3 _][*3 ChromiumBrowser][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
+trl]&]
 [s0;* &]
 [ {{5000:5000f0;g0;h1; [s0;= View in layout designer]
 :: [s0;= View in working application]
@@ -64,11 +64,11 @@ and libcef`_dll`_wrapper.a, for example:&]
 [s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64/Release]&]
 [s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64/libcef`_dl
 l]&]
-[s0;i150;O0; Open ChromiumBrowserExample from Bazaar and try to compile 
+[s0;i150;O0; open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
-[s0;i150;O0; Before you run compiled application, copy asset files 
-and libraries to output directory. Please check [C Release] and 
-[C Resources] subdirectories from CEF to see the list of required 
+[s0;i150;O0; before you run compiled application, copy asset files 
+and libraries to the output directory. Please check [C Release] 
+and [C Resources] subdirectories from CEF to see the list of required 
 files. It should look like this:&]
 [s0; &]
 [s0; -|-|ChromiumBrowserExample&]
@@ -144,19 +144,19 @@ to the output directory&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Windows]]}}&]
 [s0; &]
-[s0;i150;O0; Required software: Visual Studio 2015, CMake (http://www.cmake.org/downloa
+[s0;i150;O0; required software: Visual Studio 2015, CMake (http://www.cmake.org/downloa
 d/)&]
 [s0;i150;O0; download CEF package for Windows from https://cefbuilds.com/&]
 [s0;i150;O0; unpack the archive to your `"MyApps`" directory&]
 [s0;i150;O0; go to CEF directory and run following command:&]
 [s0; -|[C cmake `-G `"Visual Studio 14`"]&]
-[s0;i150;O0; Open cef.sln in Visual Studio&]
-[s0;i150;O0; Change active solution configuration to `"Release`" 
+[s0;i150;O0; open cef.sln in Visual Studio&]
+[s0;i150;O0; change active solution configuration to `"Release`" 
 (menu Build / Configuration Manager)&]
 [s0;i150;O0; right click on `"cefclient`" in `"Solution Explorer`" 
 window and select `"Build`"&]
 [s0;i150;O0; run cefclient to check your build&]
-[s0;i150;O0; Change active solution configuration to `"Debug`" and 
+[s0;i150;O0; change active solution configuration to `"Debug`" and 
 rebuild `"cefclient`"&]
 [s0;i150;O0; configure library paths in TheIDE, menu [* Setup ]/ [* Build 
 methods]:&]
@@ -165,12 +165,13 @@ methods]:&]
 [s0; -|[* LIB directories]: the same path as above, for example&]
 [s0; [C1 -|][C C:`\MyApps`\cef`_binary`_3.2454.1328.gc45b7de`_windows32 
 ]&]
-[s0;i150;O0; Open ChromiumBrowserExample from Bazaar and try to compile 
+[s0;i150;O0; open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
-[s0;i150;O0; Before you run compiled application, copy asset files 
-and libraries to output directory. Please check [C Resources] and 
-[C Release] or [C Debug] subdirectory from CEF to see the list of 
-required files. Your application directory should look like this:&]
+[s0;i150;O0; before you run compiled application, copy asset files 
+and libraries to the output directory. Please check [C Resources] 
+and [C Release] or [C Debug] subdirectory from CEF to see the list 
+of required files. Your application directory should look like 
+this:&]
 [s0; &]
 [s0; -|-|ChromiumBrowserExample&]
 [s0; -|-|│   cef.pak&]
@@ -241,7 +242,7 @@ required files. Your application directory should look like this:&]
 [s0; -|-|        zh`-CN.pak&]
 [s0; -|-|        zh`-TW.pak&]
 [s0; &]
-[s0;i150;O0; if you need flash plugin, install google chrome browser 
+[s0;i150;O0; if you need Flash plugin, install google chrome browser 
 and copy [C pepflashplayer.dll] from `"[C c:`\Program Files (x86)`\Google`\Chrome`\App
 lication`\xxx`\PepperFlash]`" to the output directory&]
 [s0; &]
@@ -272,6 +273,14 @@ JavaScript should use this encoding. &]
 [s5;:ChromiumBrowser`:`:ChromiumBrowser`(`):%- [* ChromiumBrowser]()&]
 [s2; Initializes ChromiumBrowser.&]
 [s4;%- &]
+[s5;:Upp`:`:ChromiumBrowser`:`:JSFunctions:%- [@(0.0.255) static]_[@(0.0.255) const]_[@(0.0.255) c
+har]_`*_[@(0.0.255) const]_[* JSFunctions][@(0.0.255) `[`]]&]
+[s2; Table containing all names of javascript functions that should 
+be registered as a bridge between javascript engine and native 
+code. Last element must be [* nullptr]. See [^topic`:`/`/ChromiumBrowser`/src`/ChromiumBrowser`$en`-us`#Upp`:`:ChromiumBrowser`:`:WhenMessage^ W
+henMessage] for more details.&]
+[s3;%- &]
+[s4;%- &]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s5;@(0.0.255)%- &]
@@ -292,6 +301,21 @@ until secondary process is terminated &]
 enUrlChange]&]
 [s2;%- Callback used to update address bar of a browser&]
 [s2;%- &]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ChromiumBrowser`:`:WhenStatus:%- [_^Upp`:`:Callback3^ Callback3]<[@(0.0.255) b
+ool], [@(0.0.255) bool], [@(0.0.255) bool]>_[* WhenStatus]&]
+[s2; Callback used to show browser status. First parameter is true 
+when browser is loading page, second when back button is active 
+and third when forward button is active&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:ChromiumBrowser`:`:WhenMessage:%- [_^Upp`:`:Callback2^ Callback2]<[_^Upp`:`:String^ S
+tring], [@(0.0.255) const]_Vector<[_^Upp`:`:Value^ Value]>`&>_[* WhenMessage]&]
+[s2; Bridge between javascript and native code. Callback is executed 
+when registered JS function is called (see [^topic`:`/`/ChromiumBrowser`/src`/ChromiumBrowser`$en`-us`#Upp`:`:ChromiumBrowser`:`:JSFunctions^ J
+SFunctions]). First parameter is function name, second contains 
+function parameters.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:ChromiumBrowser`:`:WhenTakeFocus:%- [_^Callback^ Callback]_[* WhenTakeFocus]&]
