@@ -167,6 +167,7 @@ void InstantSetup()
 		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
 			if(!x64)
 				default_method = "MSC15";
+		
 			continue;
 		}
 		
@@ -228,8 +229,9 @@ void InstantSetup()
 		}
 	}
 
-	do {
-		String method = "MINGW32";
+	for(int x64 = 0; x64 < 2; x64++) {
+		String m = x64 ? "64" : "32";
+		String method = "MINGW" + m;
 	#ifdef _DEBUG
 		method << "Test";
 	#endif
@@ -239,11 +241,14 @@ void InstantSetup()
 		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
 		if(CheckDirs(bins, 2) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
-			default_method = Nvl(default_method, method);
-			break;
+			if(!x64)
+				default_method = Nvl(default_method, method);
+			continue;
 		}
 		
 		String bin = GetExeDirFile("bin");
+		if(!DirectoryExists(bin + "/mingw" + m))
+			break;
 		
 		bmSet(bm, "BUILDER", "GCC");
 		bmSet(bm, "COMPILER", "");
@@ -267,20 +272,22 @@ void InstantSetup()
 		bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 //		bmSet(bm, "LINKMODE_LOCK", "0");
 
-		bins.At(0) = bin + "/mingw32/bin";
-		bins.At(1) = bin + "/OpenSSL-Win32";
-		incs.At(0) = bin + "/mingw32/i686-w64-mingw32/include";
-		incs.At(1) = bin + "/OpenSSL-Win32/include";
-		libs.At(0) = bin + "/mingw32/i686-w64-mingw32/lib";
-		libs.At(1) = bin + "/OpenSSL-Win32/lib/MinGW";
+		bins.At(0) = bin + "/mingw" + m + "/bin";
+		bins.At(1) = bin + "/mingw" + m + "/opt/bin";
+		incs.At(0) = bin + "/mingw" + m + "/i686-w64-mingw32/include";
+		incs.At(1) = bin + "/mingw" + m + "/opt/include";
+		libs.At(0) = bin + "/mingw" + m + "/i686-w64-mingw32/lib";
+		libs.At(1) = bin + "/mingw" + m + "/opt/lib";
 
 		bm.GetAdd("PATH") = Join(bins, ";");
 		bm.GetAdd("INCLUDE") = Join(incs, ";");
 		bm.GetAdd("LIB") = Join(libs, ";");
 		
 		SaveVarFile(ConfigFile(method + ".bm"), bm);
+
+		if(!x64)
+			default_method = Nvl(default_method, method);
 	}
-	while(0);
 
 	if(default_method.GetCount())
 		SaveFile(GetExeDirFile("default_method"), default_method);

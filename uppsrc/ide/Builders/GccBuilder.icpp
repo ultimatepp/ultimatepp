@@ -519,8 +519,6 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX11") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
 			for(int pass = 0; pass < 2; pass++) {
-				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX11"))
-					lnk << " -Wl,--end-group";
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];
 					String ext = ToLower(GetFileExt(ln));
@@ -550,6 +548,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 								lnk << " -l" << ln;
 						}
 				}
+				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX11"))
+					lnk << " -Wl,--end-group";
 			}
 			PutConsole("Linking...");
 			bool error = false;
