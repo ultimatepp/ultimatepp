@@ -196,7 +196,7 @@ void InstantSetup()
 			libs.At(2) = lib + (x64 ? "/um/x64" : "/um/x86");
 			String& ssllib = libs.At(3);
 			if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win64/lib/VC" : "bin/OpenSSL-Win64/lib/VC");
+				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win64/lib/VC" : "bin/OpenSSL-Win32/lib/VC");
 		
 			bmSet(bm, "BUILDER", x64 ? "MSC15X64" : "MSC15");
 			bmSet(bm, "COMPILER", "");
