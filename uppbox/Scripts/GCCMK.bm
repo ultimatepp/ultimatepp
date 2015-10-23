@@ -1,4 +1,5 @@
 BUILDER = "GCC";
+COMMON_CPP_OPTIONS = "-std=c++0x";
 DEBUG_INFO = "2";
 DEBUG_BLITZ = "1";
 DEBUG_LINKMODE = "1";
