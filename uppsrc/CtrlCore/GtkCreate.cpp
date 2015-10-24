@@ -115,9 +115,15 @@ void Ctrl::WndDestroy()
 }
 
 Vector< Ptr<Ctrl> > Ctrl::activePopup;
+Vector< Ptr<Ctrl> > Ctrl::visiblePopup;
 
 void Ctrl::GuiPlatformRemove()
 {
+	for(int i = 0; i < visiblePopup.GetCount();)
+		if(visiblePopup[i] == this)
+			visiblePopup.Remove(i);
+		else
+			i++;
 	for(int i = 0; i < activePopup.GetCount();)
 		if(activePopup[i] == this) {
 			if(this == grabpopup && gdk_pointer_is_grabbed())
@@ -129,23 +135,6 @@ void Ctrl::GuiPlatformRemove()
 			i++;
 }
 
-/*
-void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
-{
-	GuiLock __;
-	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
-	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
-	popup = true;
-	if(activate)
-		SetFocus();
-	Ptr<Ctrl> _this = this;
-	if(_this) {
-		activePopup.Add(this);
-		StartGrabPopup();
-		CheckMouseCtrl();
-	}
-}
-*/
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
 	GuiLock __;
@@ -161,6 +150,8 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 			CheckMouseCtrl();
 		}
 	}
+	if(_this)
+		visiblePopup.Add(this);
 }
 
 

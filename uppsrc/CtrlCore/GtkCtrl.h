@@ -66,7 +66,8 @@ _DBG_
 	bool   SweepFocus(bool wait);
 
 	static BiVector<Event>     Events;
-	static Vector< Ptr<Ctrl> > activePopup;
+	static Vector< Ptr<Ctrl> > activePopup; // created with 'activate' flag - usually menu
+	static Vector< Ptr<Ctrl> > visiblePopup; // any popup visible on screen
 	static Vector<Win>         wins;
 	static int                 WndCaretTime;
 	static bool                WndCaretVisible;
