@@ -305,8 +305,8 @@ bool Ctrl::DispatchMouseIn(int act, int zd)
 void Ctrl::GtkMouseEvent(int action, int act, int zd)
 {
 	if(grabpopup && activePopup.GetCount()) {
-		for(int i = activePopup.GetCount(); --i >= 0;)
-			if(activePopup[i] && activePopup[i]->DispatchMouseIn(act, zd))
+		for(int i = visiblePopup.GetCount(); --i >= 0;)
+			if(visiblePopup[i] && visiblePopup[i]->DispatchMouseIn(act, zd))
 				return;
 		if(action == DOWN) { // Deactivate active popup(s) if clicked outside of active popups
 			IgnoreMouseUp();
