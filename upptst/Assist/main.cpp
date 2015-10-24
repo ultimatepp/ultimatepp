@@ -406,6 +406,21 @@ struct EnumTest {
 
 // ----------------------------------------------------
 
+struct MyClass {
+	
+};
+
+void MyClass::NewMethod() {} // Alt+I should go to MyClass
+
+// ----------------------------------------------------
+
+void Foo() {
+	String x;
+	x.Find(1, '\',', 0); // Check parameter positions
+	x.Find(1, ",", 0); // Check parameter positions
+	x.Find(1, 1, 0); // Check parameter positions
+}
+
 #endif
 
 GUI_APP_MAIN
