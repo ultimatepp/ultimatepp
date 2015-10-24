@@ -17,6 +17,8 @@ void AssistEditor::SyncParamInfo()
 				if(c >= i) {
 					int par = 0;
 					int pari = 0;
+					int str = 0;
+					bool esc = false;
 					for(;;) {
 						int ch = Ch(i++);
 						if(i > c) {
@@ -27,15 +29,21 @@ void AssistEditor::SyncParamInfo()
 							}
 							break;
 						}
-						if(ch == ')') {
+						if(findarg(ch, ')', ']', '}') >= 0) {
 							if(par <= 0)
 								break;
 							par--;
 						}
-						if(ch == '(')
+						else
+						if(findarg(ch, '(', '[', '{') >= 0)
 							par++;
-						if(ch == ',' && par == 0)
+						else
+						if(findarg(ch, '\"', '\'') >= 0 && !esc)
+							str = str ? 0 : ch;
+						else
+						if(ch == ',' && par == 0 && str == 0)
 							pari++;
+						esc = ch == '\\';
 					}
 				}
 			}
