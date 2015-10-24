@@ -129,6 +129,7 @@ void Ctrl::GuiPlatformRemove()
 			i++;
 }
 
+/*
 void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 {
 	GuiLock __;
@@ -144,6 +145,24 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 		CheckMouseCtrl();
 	}
 }
+*/
+void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
+{
+	GuiLock __;
+	LLOG("POPUP " << Name() << ", " << GetRect() << ", activate " << activate);
+	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), true);
+	popup = true;
+	Ptr<Ctrl> _this = this;
+	if(activate) {
+		SetFocus();
+		if(_this) {
+			activePopup.Add(this);
+			StartGrabPopup();
+			CheckMouseCtrl();
+		}
+	}
+}
+
 
 END_UPP_NAMESPACE
 
