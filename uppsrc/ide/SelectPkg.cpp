@@ -509,11 +509,12 @@ void SelectPackageDlg::Load()
 		String cache_path = CachePath(GetVarsName());
 		LoadFromFile(data, cache_path);
 		data.SetCount(upp.GetCount());
-		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (package candidates)
+		for(int i = 0; i < upp.GetCount(); i++) // Scan nest folders for subfolders (additional package candidates)
 			ScanFolder(upp[i], data[i], GetFileName(upp[i]), dir_exists, Null);
 		int update = msecs();
 		for(int i = 0; i < data.GetCount() && loading; i++) { // Now investigate individual sub folders
 			ArrayMap<String, PkData>& nest = data[i];
+			String nest_dir = NormalizePath(upp[i]);
 			for(int i = 0; i < nest.GetCount() && loading; i++) {
 				if(msecs(update) >= 100) { // each 100 ms update the list (and open select dialog after splash screen is closed)
 					if(!IsSplashOpen() && !IsOpen())
@@ -523,11 +524,10 @@ void SelectPackageDlg::Load()
 					update = msecs();
 				}
 				ProcessEvents(); // keep GUI running
-	
+
 				PkData& d = nest[i];
 				String path = nest.GetKey(i);
-				FindFile ff(path);
-				if(ff && ff.IsFolder()) {
+				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
 					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
 					LSLOW();
 					Time tm = FileGetTime(upp_path);
@@ -558,10 +558,10 @@ void SelectPackageDlg::Load()
 							d.itm = tm;
 						}
 					}
+					ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
 				}
 				else
-					nest.Unlink(i); // cached folder was deleted
-				ScanFolder(path, nest, d.nest, dir_exists, d.package + '/');
+					nest.Unlink(i); // cached folder was deleted or is not in nest dir
 			}
 			nest.Sweep();
 		}

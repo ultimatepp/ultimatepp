@@ -165,8 +165,6 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 		bool   ispackage;
 		Time   tm, itm;
 		
-		void   HeuristicGuess();
-		
 		void Serialize(Stream& s)  { s % package % description % nest % icon % main % ispackage % tm % itm; }
 		PkData()                   { tm = itm = Null; ispackage = true; }
 	};
