@@ -34,7 +34,7 @@ void Gdb::DebugBar(Bar& bar)
 	   .Key(K_F5);
 	bar.MenuSeparator();
 	bar.Add(b, "Quick watch", THISBACK(QuickWatch))
-	   	.Key(K_CTRL_Q);
+	   .Key(K_CTRL_Q);
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
@@ -104,7 +104,7 @@ void Gdb::SetDisas(const String& text)
 			while(IsSpace(*s))
 				s++;
 			args = s;
-			q = args.Find("0x");			
+			q = args.Find("0x");
 			if(q >= 0)
 				disas.AddT(ScanInt(~args + q + 2, NULL, 16));
 			disas.Add(adr, code, args);
