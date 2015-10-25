@@ -63,8 +63,8 @@ void ChromiumBrowserExample::OnStatus(bool loading, bool back, bool forward)
 	Forward.Enable(forward);
 	Url.SetEditable(!loading);
 	Go.Enable(!loading);
+	Refresh.Enable(!loading);
 	Stop.Enable(loading);
-	Refresh.Enable(loading);
 }
 
 

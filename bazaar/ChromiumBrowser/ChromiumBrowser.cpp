@@ -11,7 +11,15 @@
 using namespace Upp;
 
 
-#ifdef PLATFORM_LINUX
+#ifdef COMPILER_GCC
+const char * const __attribute__((weak)) Upp::ChromiumBrowser::JSFunctions[]={
+	/* DO NOT forget about nullptr at the end of the table */
+	nullptr
+};
+#endif
+
+
+#ifdef PLATFORM_POSIX
 static Vector<char*> GetArgs()
 {
 	const Vector<String>& cmdline = CommandLine();
