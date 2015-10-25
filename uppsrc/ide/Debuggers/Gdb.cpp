@@ -1,19 +1,5 @@
 #include "Debuggers.h"
 
-#define PROMPT "<wksuiherk" "bnuiohnsfoptmb>"
-
-bool Gdb::Result(String& result, const String& s)
-{
-	int l = result.GetLength();
-	result.Cat(s);
-	const char *q = FindTag(~result + max(l - 5, 0), PROMPT);
-	if(q) {
-		result.Trim((int)(q - ~result));
-		return true;
-	}
-	return false;
-}
-
 void Gdb::DebugBar(Bar& bar)
 {
 	bar.Add("Stop debugging", DbgImg::StopDebug(), THISBACK(Stop))
@@ -120,32 +106,6 @@ void Gdb::SyncDisas(bool fr)
 		SetDisas(FastCmd("disas"));
 	disas.SetCursor(addr);
 	disas.SetIp(addr, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr());
-	String s = FastCmd("info registers");
-	StringStream ss(s);
-	for(int i = 0; i < reglbl.GetCount(); i++)
-		reglbl[i]->SetInk(SColorText);
-	while(!ss.IsEof()) {
-		String ln = ss.GetLine();
-		CParser p(ln);
-		try {
-			String name;
-			if(p.IsId()) {
-				name = p.ReadId();
-				if(p.Char2('0', 'x')) {
-					String n = Sprintf("%08X", p.ReadNumber64(16));
-					for(int i = 0; i < reglbl.GetCount(); i++) {
-						if(regname[i] == name) {
-							if(reglbl[i]->GetText() != n) {
-								reglbl[i]->SetLabel(n);
-								reglbl[i]->SetInk(LtRed);
-							}
-						}
-					}
-				}
-			}
-		}
-		catch(CParser::Error) {}
-	}
 }
 
 String FormatFrame(const char *s)
@@ -226,7 +186,9 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 		               disas.HasFocus() ? fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr()
 		                                : Image(), 1);
 		SyncDisas(fr);
-		autoline = IdeGetLine(line - 2) + ' ' + IdeGetLine(line - 1) + ' ' + IdeGetLine(line);
+		autoline.Clear();
+		for(int i = -4; i <= 4; i++)
+			autoline << ' ' << IdeGetLine(line + i);
 	}
 	else {
 		file = Null;
@@ -240,8 +202,29 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 		SyncDisas(fr);
 	}
 	frame.Clear();
-	frame.Add(0, FormatFrame(Cmd("frame")));
+	frame.Add(0, FormatFrame(FastCmd("frame")));
 	frame <<= 0;
+	threads.Clear();
+	s = FastCmd("info threads");
+	StringStream ss(s);
+	int active_thread = -1;
+	while(!ss.IsEof()) {
+		String s = ss.GetLine();
+		CParser p(s);
+		try {
+			bool active = p.Char('*');
+			if(p.IsNumber()) {
+				int id = p.ReadInt();
+				threads.Add(id, String().Cat() << "Thread " << id);
+				if(active)
+					active_thread = id;
+			}
+			threads.GoBegin();
+		}
+		catch(CParser::Error) {}
+	}
+	if(active_thread >= 0)
+		threads <<= active_thread;
 	Data();
 	return s;
 }
@@ -318,192 +301,16 @@ void Gdb::DropFrames()
 	frame <<= q;
 }
 
-void Gdb::ShowFrame()
+void Gdb::SwitchFrame()
 {
 	int i = (int)~frame;
 	Cmdp(Sprintf("frame %d", i), i);
 }
 
-String DataClean(CParser& p)
+void Gdb::SwitchThread()
 {
-	String r;
-	if(p.Char('{')) {
-		while(!p.IsEof() && !p.Char('}')) {
-			p.Id("static");
-			if(p.Char('<')) {
-				int level = 1;
-				while(level > 0)
-					if(p.Char('<'))
-						level++;
-					else
-					if(p.Char('>'))
-						level--;
-					else
-						p.GetChar();
-				p.Spaces();
-				p.Char('=');
-				String q = DataClean(p);
-				if(!q.IsEmpty()) {
-					if(!r.IsEmpty())
-						r << ", ";
-					r << q;
-				}
-			}
-			else
-			if(p.IsId()) {
-				String id = p.ReadId();
-				p.Char('=');
-				String q = DataClean(p);
-				if(!q.IsEmpty()) {
-					if(!r.IsEmpty())
-						r << ", ";
-					r << id << "=" << q;
-				}
-			}
-			else {
-				p.GetChar();
-				p.Spaces();
-			}
-		}
-		if(!r.IsEmpty() && (*r != '{' || *r.Last() != '}'))
-
-			return '{' + r + '}';
-		return r;
-	}
-	p.Spaces();
-	for(;;) {
-		bool sp = p.Spaces();
-		if(p.IsChar('}') || p.IsChar(',') || p.IsEof())
-			break;
-		if(sp)
-			r << ' ';
-		if(p.IsString())
-			r << AsCString(p.ReadString());
-		else
-			r.Cat(p.GetChar());
-	}
-	return r;
-}
-
-String DataClean(const char *s)
-{
-	CParser p(s);
-	try {
-		return DataClean(p);
-	}
-	catch(CParser::Error) {}
-	return Null;
-}
-
-void Gdb::Locals()
-{
-	VectorMap<String, String> prev = DataMap(locals);
-	locals.Clear();
-	String s = FastCmd("info locals");
-	StringStream ss(s);
-	while(!ss.IsEof()) {
-		String ln = ss.GetLine();
-		const char *s = ln;
-		const char *q = strchr(s, '=');
-		if(!q) break;
-		const char *e = q;
-		while(e > s && e[-1] == ' ')
-			e--;
-		q++;
-		while(*q == ' ')
-			q++;
-		locals.Add(String(s, e), DataClean(q));
-	}
-	MarkChanged(prev, locals);
-}
-
-String Gdb::Print(const String& exp)
-{
-	String q = FastCmd("print " + exp);
-	StringStream ss(q);
-	String ln = ss.GetLine();
-	const char *s = strchr(ln, '=');
-	if(s) {
-		s++;
-		while(*s == ' ')
-			s++;
-		return DataClean(s);
-	}
-	else
-		return DataClean(ln);
-}
-
-void Gdb::Watches()
-{
-	VectorMap<String, String> prev = DataMap(watches);
-	for(int i = 0; i < watches.GetCount(); i++)
-		watches.Set(i, 1, Print(watches.Get(i, 0)));
-	MarkChanged(prev, watches);
-}
-
-void Gdb::Autos()
-{
-	VectorMap<String, String> prev = DataMap(autos);
-	autos.Clear();
-	CParser p(autoline);
-	try {
-		while(!p.IsEof()) {
-			if(p.IsId()) {
-				String exp = p.ReadId();
-				for(;;) {
-					if(p.Char('.') && p.IsId())
-						exp << '.';
-					else
-					if(p.Char2('-', '>') && p.IsId())
-						exp << "->";
-					else
-						break;
-					exp << p.ReadId();
-				}
-				if(autos.Find(exp) < 0) {
-					String val = Print(exp);
-					if(!IsNull(val) && val.Find('(') < 0)
-						autos.Add(exp, val);
-				}
-			}
-			p.SkipTerm();
-		}
-	}
-	catch(CParser::Error) {}
-	autos.Sort();
-	MarkChanged(prev, autos);
-}
-
-void Gdb::QuickWatch()
-{
-	for(;;) {
-		int q = quickwatch.Run();
-		if(q == IDCANCEL)
-			break;
-		FastCmd("set print pretty on");
-		String s = FastCmd("p " + (String)~quickwatch.expression);
-		const char *a = strchr(s, '=');
-		if(a) {
-			a++;
-			while(*a == ' ')
-				a++;
-			quickwatch.value <<= a;
-			quickwatch.expression.AddHistory();
-		}
-		else
-			quickwatch.value <<= s;
-		FastCmd("set print pretty off");
-	}
-	quickwatch.Close();
-}
-
-void Gdb::Data()
-{
-	switch(tab.Get()) {
-	case 0: Watches(); break;
-	case 1: Locals(); break;
-	case 2: Autos(); break;
-	}
+	int i = (int)~threads;
+	Cmdp(Sprintf("thread %d", i), i);
 }
 
 bool Gdb::Key(dword key, int count)
@@ -529,16 +336,17 @@ bool Gdb::Create(One<Host> rval_ _host, const String& exefile, const String& cmd
 	IdeSetBottom(*this);
 	IdeSetRight(disas);
 
-	disas.AddFrame(regs);
 	disas.WhenCursor = THISBACK(DisasCursor);
 	disas.WhenFocus = THISBACK(DisasFocus);
 	frame.WhenDrop = THISBACK(DropFrames);
-	frame <<= THISBACK(ShowFrame);
+	frame <<= THISBACK(SwitchFrame);
+	
+	threads <<= THISBACK(SwitchThread);
 
 	watches.WhenAcceptEdit = THISBACK(Data);
 	tab <<= THISBACK(Data);
 
-	Cmd("set prompt " PROMPT);
+	Cmd("set prompt " GDB_PROMPT);
 	Cmd("set disassembly-flavor intel");
 	Cmd("set exec-done-display off");
 	Cmd("set annotate 1");
@@ -571,6 +379,46 @@ void Gdb::Periodic()
 
 Gdb::Gdb()
 {
+	locals.NoHeader();
+	locals.AddColumn("", 1);
+	locals.AddColumn("", 6);
+	watches.NoHeader();
+	watches.AddColumn("", 1).Edit(watchedit);
+	watches.AddColumn("", 6);
+	watches.Inserting().Removing();
+	autos.NoHeader();
+	autos.AddColumn("", 1);
+	autos.AddColumn("", 6);
+	cpu.Columns(3);
+	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
+//	cpu.SetDisplay(Single<CpuRegisterDisplay>());
+
+	Add(tab.SizePos());
+	tab.Add(autos.SizePos(), "Autos");
+	tab.Add(locals.SizePos(), "Locals");
+	tab.Add(watches.SizePos(), "Watches");
+	tab.Add(cpu.SizePos(), "CPU");
+	Add(threads.LeftPosZ(300, 100).TopPos(2));
+	Add(frame.HSizePosZ(404, 0).TopPos(2));
+	
+	frame.Ctrl::Add(dlock.SizePos());
+	dlock = "  Running..";
+	dlock.SetFrame(BlackFrame());
+	dlock.SetInk(Red);
+	dlock.NoTransparent();
+	dlock.Hide();
+
+	CtrlLayoutOKCancel(quickwatch, "Quick watch");
+	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
+	quickwatch.value.SetReadOnly();
+	quickwatch.value.SetFont(CourierZ(12));
+	quickwatch.Sizeable().Zoomable();
+	quickwatch.NoCenter();
+	quickwatch.SetRect(0, 150, 300, 400);
+	quickwatch.Icon(DbgImg::QuickWatch());
+
+	Transparent();
+
 	periodic.Set(-50, THISBACK(Periodic));
 }
 

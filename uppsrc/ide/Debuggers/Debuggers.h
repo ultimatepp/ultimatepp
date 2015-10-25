@@ -78,46 +78,10 @@ public:
 	DbgDisas();
 };
 
-struct Dbg : Debugger, ParentCtrl {
+struct Dbg {
 	virtual void Stop();
 	virtual bool IsFinished();
 
-	One<Host>          host;
-	One<AProcess>  dbg;
-
-	FrameBottom<WithRegistersLayout<StaticRect> > regs;
-
-	Vector<String>     regname;
-	Vector<Label *>    reglbl;
-
-	DbgDisas           disas;
-
-	EditString         watchedit;
-	DropList           frame;
-	TabCtrl            tab;
-	ArrayCtrl          locals;
-	ArrayCtrl          watches;
-	ArrayCtrl          autos;
-	Label              dlock;
-
-	WithQuickwatchLayout<TopWindow> quickwatch;
-
-	String             file;
-	int                line;
-	adr_t              addr;
-
-	FileOut            log;
-
-	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
-
-	String    GetHostPath(const String& path)   { return host->GetHostPath(path); }
-	String    GetLocalPath(const String& path)  { return host->GetLocalPath(path); }
-
-	void      Lock();
-	void      Unlock();
-
-	String    Cmd(const char *command);
-	String    FastCmd(const char *command);
 
 	virtual bool      Result(String& result, const String& s) = 0;
 
@@ -137,13 +101,56 @@ const char *AfterHeading(const char *txt, const char *heading);
 VectorMap<String, String> DataMap(const ArrayCtrl& data);
 void MarkChanged(const VectorMap<String, String>& m, ArrayCtrl& data);
 
-struct Gdb : Dbg {
-	virtual bool Result(String& result, const String& s);
+#define GDB_PROMPT "<u++dbg-" "q98klwr835f427>"
+
+struct Gdb : Debugger, ParentCtrl {
 	virtual void DebugBar(Bar& bar);
 	virtual bool SetBreakpoint(const String& filename, int line, const String& bp);
 	virtual bool RunTo();
 	virtual void Run();
 	virtual bool Key(dword key, int count);
+	virtual void Stop();
+	virtual bool IsFinished();
+
+	One<Host>          host;
+	One<AProcess>  dbg;
+
+	Vector<String>     regname;
+	Vector<Label *>    reglbl;
+
+	DbgDisas           disas;
+
+	EditString         watchedit;
+	DropList           threads;
+	DropList           frame;
+	TabCtrl            tab;
+	ArrayCtrl          locals;
+	ArrayCtrl          watches;
+	ArrayCtrl          autos;
+	ArrayCtrl          self;
+	ColumnList         cpu;
+	Label              dlock;
+
+	WithQuickwatchLayout<TopWindow> quickwatch;
+
+	String             file;
+	int                line;
+	adr_t              addr;
+
+	FileOut            log;
+
+	bool Result(String& result, const String& s);
+
+	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
+
+	String    GetHostPath(const String& path)   { return host->GetHostPath(path); }
+	String    GetLocalPath(const String& path)  { return host->GetLocalPath(path); }
+
+	void      Lock();
+	void      Unlock();
+
+	String    Cmd(const char *command);
+	String    FastCmd(const char *command);
 
 	String          autoline;
 	bool            firstrun;
@@ -163,14 +170,18 @@ struct Gdb : Dbg {
 	void      DisasCursor();
 	void      DisasFocus();
 	void      DropFrames();
-	void      ShowFrame();
+
+	void      SwitchFrame();
+	void      SwitchThread();
 
 
 	String    Print(const String& exp);
 	void      Locals();
 	void      Watches();
+	void      TryAuto(Index<String>& tested, const String& exp);
 	void      Autos();
 	void      Data();
+	void      Cpu();
 	void      QuickWatch();
 
 	void      CopyStack();
