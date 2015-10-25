@@ -178,6 +178,7 @@ void Gdb::CheckEnd(const char *s)
 
 String Gdb::Cmdp(const char *cmdline, bool fr)
 {
+	expression_cache.Clear();
 	String s = Cmd(cmdline);
 	if(ParsePos(s, file, line, addr)) {
 		IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr()
@@ -382,21 +383,28 @@ Gdb::Gdb()
 	locals.NoHeader();
 	locals.AddColumn("", 1);
 	locals.AddColumn("", 6);
+	locals.EvenRowColor();
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6);
 	watches.Inserting().Removing();
+	watches.EvenRowColor();
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
+	autos.EvenRowColor();
+	self.NoHeader();
+	self.AddColumn("", 1);
+	self.AddColumn("", 6);
+	self.EvenRowColor();
 	cpu.Columns(3);
 	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
-//	cpu.SetDisplay(Single<CpuRegisterDisplay>());
 
 	Add(tab.SizePos());
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(locals.SizePos(), "Locals");
 	tab.Add(watches.SizePos(), "Watches");
+	tab.Add(self.SizePos(), "this");
 	tab.Add(cpu.SizePos(), "CPU");
 	Add(threads.LeftPosZ(300, 100).TopPos(2));
 	Add(frame.HSizePosZ(404, 0).TopPos(2));
