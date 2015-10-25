@@ -111,6 +111,7 @@ struct Gdb : Debugger, ParentCtrl {
 	virtual bool Key(dword key, int count);
 	virtual void Stop();
 	virtual bool IsFinished();
+	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
 
 	One<Host>          host;
 	One<AProcess>  dbg;
@@ -130,6 +131,8 @@ struct Gdb : Debugger, ParentCtrl {
 	ArrayCtrl          self;
 	ColumnList         cpu;
 	Label              dlock;
+	
+	VectorMap<String, String> expression_cache;
 
 	WithQuickwatchLayout<TopWindow> quickwatch;
 
@@ -174,13 +177,17 @@ struct Gdb : Debugger, ParentCtrl {
 	void      SwitchFrame();
 	void      SwitchThread();
 
+	static void ReadGdbValues(CParser& p, VectorMap<String, String>& val);
+	static void ReadGdbValues(const String& h, VectorMap<String, String>& val);
 
+	String    Print0(const String& exp);
 	String    Print(const String& exp);
 	void      Locals();
 	void      Watches();
 	void      TryAuto(Index<String>& tested, const String& exp);
 	void      Autos();
 	void      Data();
+	void      Self();
 	void      Cpu();
 	void      QuickWatch();
 

@@ -1,5 +1,6 @@
 #include "Debuggers.h"
 
+#if 0
 String DataClean(CParser& p)
 {
 	String r;
@@ -70,6 +71,13 @@ String DataClean(const char *s)
 	catch(CParser::Error) {}
 	return Null;
 }
+#endif
+
+String DataClean(const String& exp)
+{
+	int q = exp.Find('{');
+	return q >= 0 ? TrimBoth(exp.Mid(q)) : exp;
+}
 
 void Gdb::Locals()
 {
@@ -93,7 +101,7 @@ void Gdb::Locals()
 	MarkChanged(prev, locals);
 }
 
-String Gdb::Print(const String& exp)
+String Gdb::Print0(const String& exp)
 {
 	String q = FastCmd("print " + exp);
 	StringStream ss(q);
@@ -107,6 +115,16 @@ String Gdb::Print(const String& exp)
 	}
 	else
 		return DataClean(ln);
+}
+
+String Gdb::Print(const String& exp)
+{
+	int q = expression_cache.Find(exp);
+	if(q >= 0)
+		return expression_cache[q];
+	String r = Print0(exp);
+	expression_cache.Add(exp, r);
+	return r;
 }
 
 void Gdb::Watches()
@@ -158,6 +176,65 @@ void Gdb::Autos()
 	MarkChanged(prev, autos);
 }
 
+void Gdb::ReadGdbValues(CParser& p, VectorMap<String, String>& val)
+{
+	if(p.Char('{')) {
+		while(!p.Char('}') && !p.IsEof()) {
+			String id;
+			String value;
+			const char *b = p.GetPtr();
+			while(!p.IsEof())
+				if(p.IsChar('=')) {
+					id = TrimBoth(String(b, p.GetPtr()));
+					p.Char('=');
+					break;
+				}
+				else
+					p.SkipTerm();
+			b = p.GetPtr();
+			int lvl = 0;
+			while(!p.IsEof())
+				if(p.IsChar(',') && lvl == 0) {
+					String v = TrimBoth(String(b, p.GetPtr()));
+					if(*id == '<') // Base class
+						ReadGdbValues(v, val);
+					else
+						val.Add(id, v);
+					p.Char(',');
+					break;
+				}
+				else
+				if(p.Char('{'))
+					lvl++;
+				else
+				if(p.Char('}'))
+					lvl--;
+				else
+					p.SkipTerm();
+		}
+	}
+}
+
+void Gdb::ReadGdbValues(const String& h, VectorMap<String, String>& val)
+{
+	try {
+		CParser p(h);
+		ReadGdbValues(p, val);
+	}
+	catch(CParser::Error) {}
+}
+
+void Gdb::Self()
+{
+	VectorMap<String, String> prev = DataMap(locals);
+	self.Clear();
+	VectorMap<String, String> val;
+	ReadGdbValues(Print("*this"), val);
+	for(int i = 0; i < val.GetCount(); i++)
+		self.Add(val.GetKey(i), val[i]);
+	MarkChanged(prev, locals);
+}
+
 void Gdb::Cpu()
 {
 	String s = FastCmd("info registers");
@@ -180,7 +257,8 @@ void Gdb::Data()
 	case 0: Autos(); break;
 	case 1: Locals(); break;
 	case 2: Watches(); break;
-	case 3: Cpu(); break;
+	case 3: Self(); break;
+	case 4: Cpu(); break;
 	}
 }
 
@@ -205,4 +283,22 @@ void Gdb::QuickWatch()
 		FastCmd("set print pretty off");
 	}
 	quickwatch.Close();
+}
+
+bool Gdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
+{
+	if(IsNull(exp))
+		return false;
+	String val = Print(exp);
+	if(!IsNull(val) && !val.EndsWith(")}") && !IsAlpha(*val)) {
+		if(val.GetCount() > 100) {
+			val.Trim(100);
+			val << "...";
+		}
+		mt.display = &StdDisplay();
+		mt.value = val;
+		mt.sz = mt.display->GetStdSize(String(mt.value) + "X");
+		return true;
+	}
+	return false;
 }
