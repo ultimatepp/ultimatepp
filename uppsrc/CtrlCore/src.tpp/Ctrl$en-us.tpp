@@ -370,7 +370,8 @@ Ctrl and Alt keys.&]
 [s5;:Ctrl`:`:LeftDouble`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* LeftDo
 uble]([_^`:`:Point^ Point]_[*@3 p], [_^`:`:dword^ dword]_[*@3 keyflags])&]
 [s2;b17;a17; This method is called by default implementation of MouseEvent 
-when mouse left button is double`-clicked.&]
+when mouse left button is double`-clicked. Default implementation 
+calls LeftDown.&]
 [s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
 [s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
 Ctrl and Alt keys.&]
@@ -379,7 +380,8 @@ Ctrl and Alt keys.&]
 [s5;:Ctrl`:`:LeftTriple`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* LeftTr
 iple]([_^`:`:Point^ Point]_[*@3 p], [_^`:`:dword^ dword]_[*@3 keyflags])&]
 [s2;b17;a17; This method is called by default implementation of MouseEvent 
-when mouse left button is triple`-clicked.&]
+when mouse left button is triple`-clicked. Default implementation 
+calls LeftDown.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:LeftDrag`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* LeftDrag
@@ -427,7 +429,8 @@ Ctrl and Alt keys.&]
 [s5;:Ctrl`:`:RightDouble`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Right
 Double]([_^`:`:Point^ Point]_[*@3 p], [_^`:`:dword^ dword]_[*@3 keyflags])&]
 [s2;b17;a17; This method is called by default implementation of MouseEvent 
-when mouse right button is double`-clicked.&]
+when mouse right button is double`-clicked. Default implementation 
+calls RightDown.&]
 [s7;i1120;a17; [%-*C@3 p]-|Position of mouse cursor in view coordinates.&]
 [s7;i1120;a17; [%-*C@3 keyflags]-|Combination of key flags for Shift, 
 Ctrl and Alt keys.&]
@@ -436,7 +439,8 @@ Ctrl and Alt keys.&]
 [s5;:Ctrl`:`:RightTriple`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Right
 Triple]([_^`:`:Point^ Point]_[*@3 p], [_^`:`:dword^ dword]_[*@3 keyflags])&]
 [s2;b17;a17; This method is called by default implementation of MouseEvent 
-when mouse right button is triple`-clicked.&]
+when mouse right button is triple`-clicked. Default implementation 
+calls RightDown.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:RightDrag`(Point`,dword`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* RightDr
