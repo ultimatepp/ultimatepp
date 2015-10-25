@@ -72,7 +72,7 @@ void MarkChanged(const VectorMap<String, String>& m, ArrayCtrl& data)
 	}
 }
 
-void Dbg::Lock()
+void Gdb::Lock()
 {
 	IdeDebugLock();
 	watches.Disable();
@@ -81,7 +81,7 @@ void Dbg::Lock()
 	dlock.Show();
 }
 
-void Dbg::Unlock()
+void Gdb::Unlock()
 {
 	if(IdeDebugUnLock()) {
 		watches.Enable();
@@ -91,7 +91,19 @@ void Dbg::Unlock()
 	}
 }
 
-String Dbg::Cmd(const char *command)
+bool Gdb::Result(String& result, const String& s)
+{
+	result.Cat(s);
+	int l = result.GetLength();
+	int q = result.Find(GDB_PROMPT, max(0, l - 50));
+	if(q >= 0) {
+		result.Trim(q);
+		return true;
+	}
+	return false;
+}
+
+String Gdb::Cmd(const char *command)
 {
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
 #ifdef _DEBUG
@@ -107,36 +119,33 @@ String Dbg::Cmd(const char *command)
 	int ms0 = msecs();
 	while(dbg) {
 		String s;
-		LLOG("About to read");
 		if(!dbg->Read(s)) {
-			LLOG("Read: " << result);
 			PutVerbose(result);
 			PutVerbose("Debugger terminated");
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
-			LLOG("Processed " << result);
 			PutVerbose(result);
 			break;
 		}
-		LLOG("Unprocessed Result length: " << s);
-		GuiSleep(0);
 		if(ms0 != msecs()) {
 			ProcessEvents();
 			ms0 = msecs();
 		}
+		if(s.GetCount() == 0)
+			GuiSleep(0);
 		if(TTYQuit())
 			Stop();
 	}
 	Unlock();
 #ifdef _DEBUG
 	if(command)
-		LLOG("Time of `" << command <<"` " << ts);
+		LLOG("Cmd Time of `" << command <<"` " << ts);
 #endif
 	return result;
 }
 
-String Dbg::FastCmd(const char *command)
+String Gdb::FastCmd(const char *command)
 {
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
 	bool lock = false;
@@ -149,8 +158,6 @@ String Dbg::FastCmd(const char *command)
 	TimeStop ts;
 	while(dbg) {
 		String s;
-//		if(!lock)
-			Sleep(0);
 		if(TTYQuit())
 			Stop();
 		if(!dbg->Read(s)) {
@@ -166,12 +173,13 @@ String Dbg::FastCmd(const char *command)
 				PutVerbose(result);
 			break;
 		}
-		if(ts.Elapsed() > 4000) {
+		if(s.GetCount() == 0)
+			Sleep(0);
+		if(ts.Elapsed() > 500) {
 			if(!lock) {
 				lock = true;
 				Lock();
 			}
-//			Ctrl::GuiSleep()(20);
 			Ctrl::ProcessEvents();
 		}
 	}
@@ -179,68 +187,18 @@ String Dbg::FastCmd(const char *command)
 		Unlock();
 #ifdef _DEBUG
 	if(command)
-		LLOG("Time of `" << command <<"` " << ts);
+		LLOG("Fast cmd Time of `" << command <<"` " << ts);
 #endif
 	return result;
 }
 
-void Dbg::Stop()
+void Gdb::Stop()
 {
 	if(dbg && dbg->IsRunning())
 		dbg->Kill();
 }
 
-bool Dbg::IsFinished()
+bool Gdb::IsFinished()
 {
 	return !dbg->IsRunning() && !IdeIsDebugLock();
-}
-
-Dbg::Dbg()
-{
-	CtrlLayout(regs);
-	regs.Height(regs.GetLayoutSize().cy);
-	AddReg("eax", &regs.eax);
-	AddReg("ebx", &regs.ebx);
-	AddReg("ecx", &regs.ecx);
-	AddReg("edx", &regs.edx);
-	AddReg("esi", &regs.esi);
-	AddReg("edi", &regs.edi);
-	AddReg("ebp", &regs.ebp);
-	AddReg("esp", &regs.esp);
-	regs.Color(SColorLtFace);
-	regs.AddFrame(TopSeparatorFrame());
-	regs.AddFrame(RightSeparatorFrame());
-
-	locals.NoHeader();
-	locals.AddColumn("", 1);
-	locals.AddColumn("", 6);
-	watches.NoHeader();
-	watches.AddColumn("", 1).Edit(watchedit);
-	watches.AddColumn("", 6);
-	watches.Inserting().Removing();
-	autos.NoHeader();
-	autos.AddColumn("", 1);
-	autos.AddColumn("", 6);
-	Add(tab.SizePos());
-	tab.Add(watches.SizePos(), "Watches");
-	tab.Add(locals.SizePos(), "Locals");
-	tab.Add(autos.SizePos(), "Autos");
-	Add(frame.HSizePos(200, 0).TopPos(2, EditField::GetStdHeight()));
-	frame.Ctrl::Add(dlock.SizePos());
-	dlock = "  Running..";
-	dlock.SetFrame(BlackFrame());
-	dlock.SetInk(Red);
-	dlock.NoTransparent();
-	dlock.Hide();
-
-	CtrlLayoutOKCancel(quickwatch, "Quick watch");
-	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
-	quickwatch.value.SetReadOnly();
-	quickwatch.value.SetFont(CourierZ(12));
-	quickwatch.Sizeable().Zoomable();
-	quickwatch.NoCenter();
-	quickwatch.SetRect(0, 150, 300, 400);
-	quickwatch.Icon(DbgImg::QuickWatch());
-
-	Transparent();
 }
