@@ -62,6 +62,7 @@ file
 	Insert.cpp,
 	idetool.cpp,
 	Install.cpp,
+	Android.cpp,
 	idebar.cpp,
 	idewin.cpp,
 	About.cpp,
