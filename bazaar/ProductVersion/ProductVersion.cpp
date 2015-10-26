@@ -166,7 +166,7 @@ ProductVersions::ProductVersions()
 {
 }
 
-ProductVersions::ProductVersions(ProductVersions pick_ &vs) : Vector<ProductVersion>(vs)
+ProductVersions::ProductVersions(ProductVersions rval_ vs) : Vector<ProductVersion>(pick(vs))
 {
 }
 
@@ -190,9 +190,9 @@ ProductVersions::ProductVersions(String s)
 }
 
 // assignement
-ProductVersions &ProductVersions::operator=(pick_ ProductVersions &vs)
+ProductVersions &ProductVersions::operator=(ProductVersions rval_ vs)
 {
-	Vector<ProductVersion>::operator=(vs);
+	Vector<ProductVersion>::operator=(pick(vs));
 	return *this;
 }
 

@@ -3,7 +3,7 @@
 #include "Core/init"
 #include "Cypher/init"
 #include "ProductVersion/init"
-#define BLITZ_INDEX__ F8430d8a06de87be1b24a1104c83a82fc
+#define BLITZ_INDEX__ F997d6ce4bab42f9415979e578a0b84b0
 #include "ProtectTranslations.icpp"
 #undef BLITZ_INDEX__
 #endif

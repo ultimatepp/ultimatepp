@@ -74,12 +74,12 @@ class ProductVersions : public Vector<ProductVersion>
 	
 		// constructors
 		ProductVersions();
-		ProductVersions(ProductVersions pick_ &vs);
+		ProductVersions(ProductVersions rval_ vs);
 		ProductVersions(ProductVersions const &vs, int);
 		ProductVersions(String s);
 		
 		// assignement
-		ProductVersions &operator=(pick_ ProductVersions &vs);
+		ProductVersions &operator=(ProductVersions rval_ vs);
 		
 		// load/store to/from string
 		// one version per line, format MMMM.mmmm.dddddd
