@@ -16,6 +16,10 @@ cp ~/Scripts/GCCMK.bm ~/.upp/theide
 
 mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/Makefile.in
 
+~/bin/umk ~/upp.src/uppsrc umk ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/upp/uppsrc
+
+mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/uMakefile.in
+
 cp ~/Scripts/Makefile ~/upp.tmp/upp
 cp ~/Scripts/domake ~/upp.tmp/upp
 cp ~/Scripts/doinstall ~/upp.tmp/upp
