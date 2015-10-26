@@ -763,9 +763,7 @@ void AppMain___()
 		return;
 	String upp_dir = GetFileFolder(GetExeFilePath());
 	String cf = GetExeDirFile("setup-path");
-#ifndef _DEBUG
 	if(upp_dir != LoadFile(cf))
-#endif
 	{
 		InstantSetup();
 		SaveFile(cf, upp_dir);

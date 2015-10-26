@@ -39,6 +39,7 @@ file
 	Exp.cpp,
 	Visualise.cpp,
 	Data.cpp,
+	Tree.cpp,
 	Stack.cpp,
 	Code.cpp,
 	Pdb.cpp,

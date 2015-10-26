@@ -161,6 +161,12 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 			result.Cat(e, SColorDisabled);
 		}
 	}
+	BaseFields(result, t, val, expandptr, slen, cm, 0);
+	result.Cat(" }", SColorMark);
+}
+
+void Pdb::BaseFields(Visual& result, const Type& t, Pdb::Val val, int expandptr, int slen, bool& cm, int depth)
+{
 	for(int i = 0; i < t.base.GetCount(); i++) {
 		const Val& b = t.base[i];
 		if(b.type >= 0) {
@@ -170,7 +176,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 				if(cm)
 					result.Cat(", ");
 				cm = true;
-				if(result.length > maxlen) {
+				if(result.length > 300) {
 					result.Cat("..");
 					break;
 				}
@@ -185,9 +191,10 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 					result.Cat(e, SColorDisabled);
 				}
 			}
+			if(depth < 30)
+				BaseFields(result, t, val, expandptr, slen, cm, depth + 1);
 		}
 	}
-	result.Cat(" }", SColorMark);
 }
 
 Size Pdb::Visual::GetSize() const
@@ -205,8 +212,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
 	int h = 300;
 	for(int i = 0; i < 8; i++) {
 		int slen = (l + h) / 2;
-		result.length = 0;
-		result.part.Clear();
+		result.Clear();
 		Visualise(result, val, expandptr, slen);
 		int x = result.GetSize().cx;
 		if(x < cx)
@@ -215,7 +221,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
 			h = slen;
 		if(l + 1 >= h)
 			break;
-	}	
+	}
 }
 
 Pdb::Visual Pdb::Visualise(Val v)

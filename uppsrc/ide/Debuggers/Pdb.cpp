@@ -208,6 +208,7 @@ Pdb::Pdb()
 	locals.WhenEnterRow = THISBACK1(SetTreeA, &locals);
 	locals.WhenBar = THISBACK(LocalsMenu);
 	locals.WhenLeftDouble = THISBACK1(ExploreKey, &locals);
+	locals.EvenRowColor();
 
 	self.NoHeader();
 	self.AddColumn("", 1);
@@ -215,6 +216,7 @@ Pdb::Pdb()
 	self.WhenEnterRow = THISBACK1(SetTreeA, &self);
 	self.WhenBar = THISBACK(LocalsMenu);
 	self.WhenLeftDouble = THISBACK1(ExploreKey, &self);
+	self.EvenRowColor();
 
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
@@ -225,6 +227,7 @@ Pdb::Pdb()
 	watches.WhenLeftDouble = THISBACK1(ExploreKey, &watches);
 	watches.WhenAcceptEdit = THISBACK(Data);
 	watches.WhenDrop = THISBACK(DropWatch);
+	watches.EvenRowColor();
 
 	autos.NoHeader();
 	autos.AddColumn("", 1);
@@ -232,6 +235,7 @@ Pdb::Pdb()
 	autos.WhenEnterRow = THISBACK1(SetTreeA, &autos);
 	autos.WhenBar = THISBACK(AutosMenu);
 	autos.WhenLeftDouble = THISBACK1(ExploreKey, &autos);
+	autos.EvenRowColor();
 
 	int c = EditField::GetStdHeight();
 	explorer.AddColumn("", 1);
@@ -259,7 +263,7 @@ Pdb::Pdb()
 	tab.Add(explorer_pane.SizePos(), "Explorer");
 	tab.Add(cpu.SizePos(), "CPU");
 	tab.Add(memory.SizePos(), "Memory");
-	
+
 	cpu.Columns(4);
 	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
 	cpu.SetDisplay(Single<CpuRegisterDisplay>());
