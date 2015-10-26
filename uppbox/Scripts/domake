@@ -30,7 +30,7 @@ then
 	gmake -C uppsrc -f uMakefile
 else
 	make -C uppsrc
-	make -C uppsrc -uMakefile
+	make -C uppsrc -f uMakefile
 fi
 
 cp uppsrc/ide.out ./theide
