@@ -253,7 +253,7 @@ void InstantSetup()
 		bmSet(bm, "BUILDER", "GCC");
 		bmSet(bm, "COMPILER", "");
 		bmSet(bm, "COMMON_OPTIONS", "-msse2");
-		bmSet(bm, "COMMON_CPP_OPTIONS", "");
+		bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++11");
 		bmSet(bm, "COMMON_C_OPTIONS", "");
 		bmSet(bm, "COMMON_FLAGS", "");
 		bmSet(bm, "DEBUG_INFO", "2");
