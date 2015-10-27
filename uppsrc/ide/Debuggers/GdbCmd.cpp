@@ -111,7 +111,7 @@ String Gdb::Cmd(const char *command)
 #endif
 	Lock();
 	if(command) {
-		LLOG("Cmd: " << command);
+		LLOG("========= Cmd: " << command);
 		dbg->Write(String(command) + "\n");
 		PutVerbose(command);
 	}
@@ -125,6 +125,7 @@ String Gdb::Cmd(const char *command)
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
+			LLOG(result);
 			PutVerbose(result);
 			break;
 		}
@@ -132,7 +133,7 @@ String Gdb::Cmd(const char *command)
 			ProcessEvents();
 			ms0 = msecs();
 		}
-		if(s.GetCount() == 0)
+//		if(s.GetCount() == 0)
 			GuiSleep(0);
 		if(TTYQuit())
 			Stop();

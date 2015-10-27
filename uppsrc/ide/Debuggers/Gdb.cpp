@@ -226,6 +226,8 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 	}
 	if(active_thread >= 0)
 		threads <<= active_thread;
+	if(threads.GetCount() == 0)
+		Stop();
 	Data();
 	return s;
 }
@@ -355,6 +357,10 @@ bool Gdb::Create(One<Host> rval_ _host, const String& exefile, const String& cmd
 	Cmd("set width 0");
 	Cmd("set confirm off");
 	Cmd("set print asm-demangle");
+	Cmd("set print static-members off");
+	Cmd("set print vtbl off");
+	Cmd("set print repeat 0");
+	Cmd("set print null-stop");
 
 	if(!IsNull(cmdline))
 		Cmd("set args " + cmdline);

@@ -259,7 +259,7 @@ void InstantSetup()
 		bmSet(bm, "DEBUG_INFO", "2");
 		bmSet(bm, "DEBUG_BLITZ", "1");
 		bmSet(bm, "DEBUG_LINKMODE", "0");
-		bmSet(bm, "DEBUG_OPTIONS", "-O0 -gstabs");
+		bmSet(bm, "DEBUG_OPTIONS", "-O0 -ggdb");
 		bmSet(bm, "DEBUG_FLAGS", "");
 		bmSet(bm, "DEBUG_LINK", "");
 		bmSet(bm, "RELEASE_BLITZ", "1");
