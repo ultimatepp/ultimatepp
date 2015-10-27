@@ -40,6 +40,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	pkg.Load(uppManifestPath);
 	
 	Vector<String> javaSourceFiles;
+	Vector<String> nativeFiles;
 	Vector<String> nativeSourceFiles;
 	Vector<String> nativeSourceFilesInPackage;
 	Vector<String> nativeSourceFilesOptions;
@@ -53,8 +54,10 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	
 	bool isBlitz = HasFlag("BLITZ") || ndk_blitz;
 	
-	String javaSourcesDir = project.GetJavaDir();
-	String jniSourcesDir  = project.GetJniDir();
+	String javaSourcesDir    = project.GetJavaDir();
+	String jniSourcesDir     = project.GetJniDir();
+	String pkgJavaSourcesDir = javaSourcesDir + DIR_SEPS + package;
+	String pkgJniSourcesDir  = jniSourcesDir + DIR_SEPS + package;
 	for(int i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
 			return false;
@@ -100,6 +103,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 			                                                              packageFileDir,
 			                                                              fileName);
 			
+			nativeFiles.Add(filePathInAndroidProject);
 			nativeSourceFilesOptions.Add(globalOptions);
 			if(pkg[i].noblitz)
 				noBlitzNativeSourceFiles.Add(packageFile);
@@ -143,6 +147,12 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		PutConsole("Failed to find Android manifest file.");
 		return false;
 	}
+	
+	DeleteUnusedSourceFiles(pkgJavaSourcesDir, javaSourceFiles, ".java");
+	DeleteUnusedSourceFiles(pkgJniSourcesDir,
+	                        nativeFiles,
+	                        ".icpp, .cpp, .cxx, .c, .hpp, .hxx, .h",
+	                        "@blitz.cpp");
 	
 	if(!isResourcesPackage && !error && !javaSourceFiles.IsEmpty()) {
 		if(!RealizeDirectory(project.GetClassesDir()))
@@ -295,7 +305,6 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	
 	PutConsole("Creating apk file...");
 	String unsignedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".unsigned.apk";
-	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
 	DeleteFile(unsignedApkPath);
 	String apkCmd;
 	apkCmd << NormalizeExePath(androidSDK.AaptPath());
@@ -319,59 +328,16 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	}
 	
 	// In release mode we definitly shouldn't signing apk!!!
-	if(HasFlag("DEBUG")) {
-		String debugKeystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
-		if(!FileExists(debugKeystorePath)) {
-			PutConsole("Generating debug key...");
-			String keytoolCmd;
-			keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
-			keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android";
-			keytoolCmd << " -keystore " << debugKeystorePath;
-			keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\" -validity 100000";
-			//PutConsole(keytoolCmd);
-			if(Execute(keytoolCmd, ss) != 0) {
-				PutConsole(ss.GetResult());
-				return false;
-			}
-		}
-	
-		PutConsole("Signing apk file...");
-		DeleteFile(signedApkPath);
-		String jarsignerCmd;
-		jarsignerCmd << NormalizeExePath(jdk.GetJarsignerPath());
-		jarsignerCmd << " -keystore " + debugKeystorePath;
-		jarsignerCmd << " -storepass android";
-		jarsignerCmd << " -keypass android";
-		// TODO: not sure about below line. But I think for debug purpose we shouldn't use tsa.
-		// http://en.wikipedia.org/wiki/Trusted_timestamping
-		//jarsignerCmd << " -tsa https://timestamp.geotrust.com/tsa";
-		jarsignerCmd << " -signedjar " << signedApkPath;
-		jarsignerCmd << " " << unsignedApkPath;
-		jarsignerCmd << " androiddebugkey";
-		//PutConsole(jarsignerCmd);
-		if(Execute(jarsignerCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
-		
-		PutConsole("Aliging apk file...");
-		DeleteFile(target);
-		String zipalignCmd;
-		zipalignCmd << NormalizeExePath(androidSDK.ZipalignPath());
-		zipalignCmd << " -f 4 ";
-		zipalignCmd << (HasFlag("DEBUG") ? signedApkPath : unsignedApkPath) << " ";
-		zipalignCmd << target;
-		//PutConsole(zipalignCmd);
-		if(Execute(zipalignCmd, ss) != 0) {
-			PutConsole(ss.GetResult());
-			return false;
-		}
-	}
+	if(!SignApk(target, unsignedApkPath))
+		return false;
 	
 	return true;
 }
 
-bool AndroidBuilder::Preprocess(const String& package, const String& file, const String& target, bool asmout)
+bool AndroidBuilder::Preprocess(const String& package,
+                                const String& file,
+                                const String& target,
+                                bool asmout)
 {
 	InitProject();
 	
@@ -389,6 +355,47 @@ void AndroidBuilder::CleanPackage(const String& package)
 	String sandboxDir = GetSandboxDir();
 	if(DirectoryExists(sandboxDir))
 		DeleteFolderDeep(sandboxDir);
+}
+
+void AndroidBuilder::DeleteUnusedSourceFiles(const String& nest,
+                                             const Vector<String>& files,
+                                             String exts,
+                                             String excludedFiles)
+{
+	exts.Replace(" ", "");
+	excludedFiles.Replace(" ", "");
+	Index<String> extsIdx = Index<String>(Split(exts, ","));
+	Index<String> excludedFilesIdx = Index<String>(Split(excludedFiles, ","));
+	
+	Vector<String> dirs;
+	dirs.Add(nest);
+	for(int i = 0; i < dirs.GetCount(); i++) {
+		for(FindFile ff(AppendFileName(dirs[i], "*")); ff; ff.Next()) {
+			if(!ff.IsHidden()) {
+				String path = ff.GetPath();
+				String name = ff.GetName();
+				if(ff.IsFolder() && ff.IsSymLink())
+					dirs.Add(ff.GetPath());
+				else
+				if(extsIdx.Find(GetFileExt(path)) == -1)
+					continue;
+				else
+				if(excludedFilesIdx.Find(name) > -1)
+					continue;
+				else {
+					bool exists = false;
+					for(int j = 0; j < files.GetCount(); j++) {
+						if(files[j] == path) {
+							exists = true;
+							break;
+						}
+					}
+					if(!exists)
+						DeleteFile(path);
+				}
+			}
+		}
+	}
 }
 
 bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const String& dst)
@@ -417,6 +424,71 @@ bool AndroidBuilder::RealizeLinkDirectories() const
 	if(!RealizeDirectory(project.GetBinDir()))
 		return false;
 	
+	return true;
+}
+
+bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath)
+{
+	StringStream ss;
+	
+	String signedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".signed.apk";
+	if(HasFlag("DEBUG")) {
+		String keystorePath = GetSandboxDir() + DIR_SEPS + "debug.keystore";
+		if(!GenerateDebugKey(keystorePath))
+			return false;
+	
+		PutConsole("Signing apk file...");
+		DeleteFile(signedApkPath);
+		String jarsignerCmd;
+		jarsignerCmd << NormalizeExePath(jdk.GetJarsignerPath());
+		jarsignerCmd << " -keystore " + keystorePath;
+		jarsignerCmd << " -storepass android";
+		jarsignerCmd << " -keypass android";
+		// TODO: not sure about below line. But I think for debug purpose we shouldn't use tsa.
+		// http://en.wikipedia.org/wiki/Trusted_timestamping
+		//jarsignerCmd << " -tsa https://timestamp.geotrust.com/tsa";
+		jarsignerCmd << " -signedjar " << signedApkPath;
+		jarsignerCmd << " " << unsignedApkPath;
+		jarsignerCmd << " androiddebugkey";
+		//PutConsole(jarsignerCmd);
+		if(Execute(jarsignerCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+		
+		PutConsole("Aliging apk file...");
+		DeleteFile(target);
+		String zipalignCmd;
+		zipalignCmd << NormalizeExePath(androidSDK.ZipalignPath());
+		zipalignCmd << " -f 4 ";
+		zipalignCmd << (HasFlag("DEBUG") ? signedApkPath : unsignedApkPath) << " ";
+		zipalignCmd << target;
+		//PutConsole(zipalignCmd);
+		if(Execute(zipalignCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+	}
+}
+
+bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
+{
+	StringStream ss;
+	
+	if(!FileExists(keystorePath)) {
+		PutConsole("Generating debug key...");
+		
+		String keytoolCmd;
+		keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
+		keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android";
+		keytoolCmd << " -keystore " << keystorePath;
+		keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\" -validity 100000";
+		//PutConsole(keytoolCmd);
+		if(Execute(keytoolCmd, ss) != 0) {
+			PutConsole(ss.GetResult());
+			return false;
+		}
+	}
 	return true;
 }
 
