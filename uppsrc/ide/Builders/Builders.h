@@ -193,6 +193,10 @@ public:
 	virtual void CleanPackage(const String& package);
 	
 protected:
+	void DeleteUnusedSourceFiles(const String& nest,
+	                             const Vector<String>& files,
+	                             String exts,
+	                             String excludedFiles = "");
 	bool MovePackageFileToAndroidProject(const String& src, const String& dest);
 	bool RealizePackageJavaSourcesDirectory(const String& packageName);
 	bool RealizeLinkDirectories() const;
@@ -208,7 +212,9 @@ protected:
 	bool ValidateBuilderEnviorement();
 	void PutErrorOnConsole(const String& msg);
 	
-	void CreateApk();
+	bool SignApk(const String& target, const String& unsignedApkPath);
+	bool GenerateDebugKey(const String& keystorePath);
+	
 	bool AddSharedLibsToApk(const String& apkPath);
 	bool PreprocessJava(const String& package, const String& file, const String& target);
 	
