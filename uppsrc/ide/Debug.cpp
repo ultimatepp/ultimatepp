@@ -390,7 +390,7 @@ void Ide::ConditionalBreak()
 	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
 	                                  *CreateHost(true), *CreateBuilder(~CreateHostRunDir()));
 	if(cfg.Find("MSC") >= 0) {
-		if(EditPDBExpression("Conditional breakpoint", brk))
+		if(EditPDBExpression("Conditional breakpoint", brk, NULL))
 			editor.SetBreakpoint(ln, brk);
 	}
 	else
