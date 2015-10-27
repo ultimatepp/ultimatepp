@@ -137,10 +137,11 @@ void Gdb::Watches()
 
 void Gdb::TryAuto(Index<String>& tested, const String& exp)
 {
-	if(tested.Find(exp) < 0) {
+	if(tested.Find(exp) < 0 && findarg(exp, "true", "false") < 0) {
 		tested.Add(exp);
 		String val = Print(exp);
-		if(!IsNull(val) && !val.EndsWith(")}") && !IsAlpha(*val))
+		if(!IsNull(val) && !val.EndsWith(")}") && !val.EndsWith(")>") &&
+		   (!IsAlpha(*val) || findarg(val, "true", "false") >= 0))
 			autos.Add(exp, val);
 	}
 }
@@ -149,10 +150,10 @@ void Gdb::Autos()
 {
 	VectorMap<String, String> prev = DataMap(autos);
 	autos.Clear();
-	CParser p(autoline);
 	Index<String> tested;
 	try {
-		while(!p.IsEof()) {
+		CParser p(autoline);
+		while(!p.IsEof())
 			if(p.IsId()) {
 				String exp = p.ReadId();
 				TryAuto(tested, exp);
@@ -168,8 +169,8 @@ void Gdb::Autos()
 					TryAuto(tested, exp);
 				}
 			}
-			p.SkipTerm();
-		}
+			else
+				p.SkipTerm();
 	}
 	catch(CParser::Error) {}
 	autos.Sort();
@@ -240,8 +241,6 @@ void Gdb::Cpu()
 	String s = FastCmd("info registers");
 	StringStream ss(s);
 	cpu.Clear();
-//	for(int i = 0; i < reglbl.GetCount(); i++)
-//		reglbl[i]->SetInk(SColorText);
 	bool even = false;
 	while(!ss.IsEof()) {
 		String ln = ss.GetLine();

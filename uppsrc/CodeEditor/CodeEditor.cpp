@@ -675,14 +675,13 @@ WString CodeEditor::GetI()
 {
 	int l, h;
 	WString ft;
-	if(GetSelection(l, h) || GetWordPos(GetCursor(), l, h)) {
+	if((GetSelection(l, h) || GetWordPos(GetCursor(), l, h)) && h - l < 60)
 		while(l < h) {
 			int c = GetChar(l++);
 			if(c == '\n')
 				break;
 			ft.Cat(c);
 		}
-	}
 	return ft;
 }
 
