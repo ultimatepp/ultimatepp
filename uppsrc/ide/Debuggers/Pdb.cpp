@@ -356,8 +356,6 @@ One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const Strin
 	return dbg;
 }
 
-#endif
-
 #define LAYOUTFILE <ide/Debuggers/Pdb.lay>
 #include <CtrlCore/lay.h>
 
@@ -403,3 +401,5 @@ bool EditPDBExpression(const char *title, String& brk, Pdb *pdb)
 	brk = ~dlg.text;
 	return true;
 }
+
+#endif
