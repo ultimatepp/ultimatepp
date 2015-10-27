@@ -364,14 +364,40 @@ One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const Strin
 #define TOPICFILE <ide/Debuggers/app.tpp/all.i>
 #include <Core/topic_group.h>
 
-bool EditPDBExpression(const char *title, String& brk)
+struct PDBExpressionDlg : WithEditPDBExpressionLayout<TopWindow> {
+	Pdb *pdb;
+
+	void Sync();
+
+	typedef PDBExpressionDlg CLASSNAME;
+
+	PDBExpressionDlg(const char *title, String& brk, Pdb *pdb);
+};
+
+void PDBExpressionDlg::Sync()
 {
-	WithEditPDBExpressionLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, title);
-	dlg.help.SetQTF(GetTopic("ide/Debuggers/app/PDBExpressions$en-us"));
-	dlg.help.Background(White());
-	dlg.help.SetFrame(ViewFrame());
-	dlg.text <<= brk;
+	if(pdb)
+		value <<= RawPickToValue(pick(pdb->Visualise(~text)));
+}
+
+PDBExpressionDlg::PDBExpressionDlg(const char *title, String& brk, Pdb *pdb)
+:	pdb(pdb)
+{
+	CtrlLayoutOKCancel(*this, title);
+	help.SetQTF(GetTopic("ide/Debuggers/app/PDBExpressions$en-us"));
+	help.Background(White());
+	help.SetFrame(ViewFrame());
+	text <<= brk;
+	text <<= THISBACK(Sync);
+	value.SetDisplay(Single<Pdb::VisualDisplay>());
+	value.Show(pdb);
+	value_lbl.Show(pdb);
+	Sync();
+}
+
+bool EditPDBExpression(const char *title, String& brk, Pdb *pdb)
+{
+	PDBExpressionDlg dlg(title, brk, pdb);
 	if(dlg.Execute() != IDOK)
 		return false;
 	brk = ~dlg.text;

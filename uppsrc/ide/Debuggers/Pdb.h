@@ -166,39 +166,39 @@ struct Pdb : Debugger, ParentCtrl {
 		adr_t   sp;
 	};
 
-	int                      	lock;
-	bool                     	running;
-	bool                     	stop;
-	HANDLE                   	hProcess;
+	int                         lock;
+	bool                        running;
+	bool                        stop;
+	HANDLE                      hProcess;
 	HANDLE                      mainThread;
-	DWORD                    	processid;
+	DWORD                       processid;
 	DWORD                       mainThreadId;
 	ArrayMap<dword, Thread>     threads;
-	bool                     	terminated;
-	bool                     	refreshmodules;
-	Vector<ModuleInfo>       	module;
-	DEBUG_EVENT              	event;
+	bool                        terminated;
+	bool                        refreshmodules;
+	Vector<ModuleInfo>          module;
+	DEBUG_EVENT                 event;
 	DWORD                       debug_threadid;
-	HWND                     	hWnd;
+	HWND                        hWnd;
 	VectorMap<adr_t, byte>      bp_set; // breakpoints active for single RunToException
 
 	bool                        win64; // debugee is 64-bit, always false in 32-bit exe
 
 	Context                     context;
 
-	Index<adr_t>            	invalidpage;
-	VectorMap<adr_t, MemPg> 	mempage;
+	Index<adr_t>                invalidpage;
+	VectorMap<adr_t, MemPg>     mempage;
 
 	Index<adr_t>                breakpoint;
 	Vector<String>              breakpoint_cond;
 
-	ArrayMap<int, Type>     	type;
+	ArrayMap<int, Type>         type;
 
-	String                  	disas_name;
+	String                      disas_name;
 
-	Array<Frame>            	frame;
+	Array<Frame>                frame;
 	Frame                      *current_frame;
-	String                  	autotext;
+	String                      autotext;
 	
 	VectorMap<adr_t, FnInfo>    fninfo_cache;
 

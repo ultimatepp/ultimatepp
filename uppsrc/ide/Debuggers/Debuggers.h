@@ -212,6 +212,6 @@ struct Gdb : Debugger, ParentCtrl {
 #include "Pdb.h"
 #endif
 
-bool EditPDBExpression(const char *title, String& brk);
+bool EditPDBExpression(const char *title, String& brk, Pdb *pdb);
 
 #endif

@@ -210,7 +210,7 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr)
 	int cx = autos.HeaderObject().GetTabWidth(1);
 	int l = 30;
 	int h = 300;
-	for(int i = 0; i < 8; i++) {
+	for(int i = 0; i < 8; i++) { // try to reduce size of strings so that value fits better
 		int slen = (l + h) / 2;
 		result.Clear();
 		Visualise(result, val, expandptr, slen);

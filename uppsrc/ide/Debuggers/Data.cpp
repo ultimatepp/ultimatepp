@@ -383,7 +383,7 @@ void Pdb::LocalsMenu(Bar& bar)
 void Pdb::AddWatch()
 {
 	String s;
-	if(EditPDBExpression("Add watch", s)) {
+	if(EditPDBExpression("Add watch", s, this)) {
 		SetTab(3);
 		watches.Add(s);
 		Data();
@@ -393,7 +393,7 @@ void Pdb::AddWatch()
 void Pdb::EditWatch()
 {
 	String s = watches.GetKey();
-	if(EditPDBExpression("Edit watch", s)) {
+	if(EditPDBExpression("Edit watch", s, this)) {
 		SetTab(2);
 		watches.Set(0, s);
 		Data();
