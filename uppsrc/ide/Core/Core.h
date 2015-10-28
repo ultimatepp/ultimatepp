@@ -415,6 +415,7 @@ struct Builder {
 	String           debug_options;
 	String           release_options;
 	String           release_size_options;
+	String           common_link;
 	String           debug_link;
 	String           release_link;
 	String           version;

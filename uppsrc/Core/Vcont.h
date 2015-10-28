@@ -110,10 +110,6 @@ public:
 
 	Vector()                         { vector = NULL; items = alloc = 0; }
 	~Vector() {
-//		if(items >= 0 && (alloc - items) * sizeof(T) > 16)
-//			RLOG("~Vector, waste: " << (alloc - items) * sizeof(T)
-//			    << ", items: " << items << ", alloc: " << alloc << ", sizeof(T): " << sizeof(T)
-//			    << ", " << typeid(T).name()); //TODO remove
 		Free();
 		return; // Constraints:
 #ifdef CPP_11

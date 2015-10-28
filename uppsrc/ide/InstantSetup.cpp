@@ -150,6 +150,8 @@ void InstantSetup()
 	df.Dir(GetProgramsFolder());
 	
 	String default_method;
+	
+	bool dirty = false;
 
 	for(int x64 = 0; x64 < 2; x64++) {
 		String method = x64 ? "MSC15x64" : "MSC15";
@@ -223,71 +225,73 @@ void InstantSetup()
 			bm.GetAdd("LIB") = Join(libs, ";");
 			
 			SaveVarFile(ConfigFile(method + ".bm"), bm);
+			dirty = true;
 
 			if(!x64)
 				default_method = "MSC15";
 		}
 	}
 
-	for(int x64 = 0; x64 < 2; x64++) {
-		String m = x64 ? "64" : "32";
-		String method = "MINGW" + m;
-	#ifdef _DEBUG
-		method << "Test";
-	#endif
-		VectorMap<String, String> bm = GetMethodVars(method);
-
-		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
-		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
-		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-		if(CheckDirs(bins, 2) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
+	String bin = GetExeDirFile("bin");
+	if(DirectoryExists(bin + "/TDM64"))
+		for(int x64 = 0; x64 < 2; x64++) {
+			String method = x64 ? "MINGWx64" : "MINGW";
+		#ifdef _DEBUG
+			method << "Test";
+		#endif
+			VectorMap<String, String> bm = GetMethodVars(method);
+	
+			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
+			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
+			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+			if(CheckDirs(bins, 3) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
+				if(!x64)
+					default_method = Nvl(default_method, method);
+				continue;
+			}
+	
+			bmSet(bm, "BUILDER", "GCC");
+			bmSet(bm, "COMPILER", "");
+			bmSet(bm, "COMMON_OPTIONS", x64 ? "-msse2" : "-msse2 -m32");
+			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++11");
+			bmSet(bm, "COMMON_C_OPTIONS", "");
+			bmSet(bm, "COMMON_LINK", x64 ? "" : "-m32");
+			bmSet(bm, "COMMON_FLAGS", "");
+			bmSet(bm, "DEBUG_INFO", "2");
+			bmSet(bm, "DEBUG_BLITZ", "1");
+			bmSet(bm, "DEBUG_LINKMODE", "0");
+			bmSet(bm, "DEBUG_OPTIONS", "-O0 -ggdb");
+			bmSet(bm, "DEBUG_FLAGS", "");
+			bmSet(bm, "DEBUG_LINK", "");
+			bmSet(bm, "RELEASE_BLITZ", "");
+			bmSet(bm, "RELEASE_LINKMODE", "0");
+			bmSet(bm, "RELEASE_OPTIONS", "-O3 -ffunction-sections");
+			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-Os -finline-limit=20 -ffunction-sections");
+			bmSet(bm, "RELEASE_FLAGS", "");
+			bmSet(bm, "RELEASE_LINK", "");
+			bmSet(bm, "DEBUGGER", "gdb");
+			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
+	//		bmSet(bm, "LINKMODE_LOCK", "0");
+	
+			String m = x64 ? "" : "32";
+			bins.At(0) = bin + "/TDM64/bin";
+			bins.At(1) = bin + "/TDM64/opt/bin" + m;
+			bins.At(2) = bin + "/TDM64/gdb" + m + "/bin";
+			incs.At(0) = bin + "/TDM64/i686-w64-mingw32/include";
+			incs.At(1) = bin + "/TDM64/opt/include";
+			libs.At(0) = bin + "/TDM64/i686-w64-mingw32/lib" + m;
+			libs.At(1) = bin + "/TDM64/opt/lib" + m;
+	
+			bm.GetAdd("PATH") = Join(bins, ";");
+			bm.GetAdd("INCLUDE") = Join(incs, ";");
+			bm.GetAdd("LIB") = Join(libs, ";");
+			
+			SaveVarFile(ConfigFile(method + ".bm"), bm);
+			dirty = true;
+	
 			if(!x64)
 				default_method = Nvl(default_method, method);
-			continue;
 		}
-		
-		String bin = GetExeDirFile("bin");
-		if(!DirectoryExists(bin + "/mingw" + m))
-			break;
-		
-		bmSet(bm, "BUILDER", "GCC");
-		bmSet(bm, "COMPILER", "");
-		bmSet(bm, "COMMON_OPTIONS", "-msse2");
-		bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++11");
-		bmSet(bm, "COMMON_C_OPTIONS", "");
-		bmSet(bm, "COMMON_FLAGS", "");
-		bmSet(bm, "DEBUG_INFO", "2");
-		bmSet(bm, "DEBUG_BLITZ", "1");
-		bmSet(bm, "DEBUG_LINKMODE", "0");
-		bmSet(bm, "DEBUG_OPTIONS", "-O0 -ggdb");
-		bmSet(bm, "DEBUG_FLAGS", "");
-		bmSet(bm, "DEBUG_LINK", "");
-		bmSet(bm, "RELEASE_BLITZ", "");
-		bmSet(bm, "RELEASE_LINKMODE", "0");
-		bmSet(bm, "RELEASE_OPTIONS", "-O3 -ffunction-sections");
-		bmSet(bm, "RELEASE_SIZE_OPTIONS", "-Os -finline-limit=20 -ffunction-sections");
-		bmSet(bm, "RELEASE_FLAGS", "");
-		bmSet(bm, "RELEASE_LINK", "");
-		bmSet(bm, "DEBUGGER", "gdb");
-		bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
-//		bmSet(bm, "LINKMODE_LOCK", "0");
-
-		bins.At(0) = bin + "/mingw" + m + "/bin";
-		bins.At(1) = bin + "/mingw" + m + "/opt/bin";
-		incs.At(0) = bin + "/mingw" + m + "/i686-w64-mingw32/include";
-		incs.At(1) = bin + "/mingw" + m + "/opt/include";
-		libs.At(0) = bin + "/mingw" + m + "/i686-w64-mingw32/lib";
-		libs.At(1) = bin + "/mingw" + m + "/opt/lib";
-
-		bm.GetAdd("PATH") = Join(bins, ";");
-		bm.GetAdd("INCLUDE") = Join(incs, ";");
-		bm.GetAdd("LIB") = Join(libs, ";");
-		
-		SaveVarFile(ConfigFile(method + ".bm"), bm);
-
-		if(!x64)
-			default_method = Nvl(default_method, method);
-	}
 
 	if(default_method.GetCount())
 		SaveFile(GetExeDirFile("default_method"), default_method);
@@ -330,7 +334,15 @@ void InstantSetup()
 				"UPP = " + AsCString(b) + ";\r\n"
 				"OUTPUT = " + AsCString(out) + ";\r\n"
 			);
+			dirty = true;
 		}
+	}
+
+	Ide *ide = dynamic_cast<Ide *>(TheIde());
+	if(dirty && ide) {
+		ide->SyncBuildMode();
+		SyncCodeBase();
+		ide->SetBar();
 	}
 }
 
