@@ -1716,6 +1716,7 @@ void Parser::Do()
 						if(q >= 0) { // class variable definition like: int Ctrl::EventLoop;
 							ScopeCat(scope, d.name.Mid(0, q));
 							current_scope = scope; // temporary until ';'
+							LOG("Decl " << current_scope);
 							name = d.name.Mid(q + 2);
 							member_type = CLASSVARIABLE;
 						}
@@ -1745,8 +1746,7 @@ void Parser::Do()
 				                       lex.FinishStatCollection(), maxScopeDepth));
 				lex.StartStatCollection(); // start collection of orphan symbols
 			}
-			Key(';');
-			if(lex != t_eof)
+			if(Key(';'))
 				SetScopeCurrent(); // need to be after ';' to make class variable definitions work
 		}
 	}
