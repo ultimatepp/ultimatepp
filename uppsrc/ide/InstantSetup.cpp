@@ -183,7 +183,7 @@ void InstantSetup()
 			bins.At(1) = bin;
 			String& sslbin = bins.At(2);
 			if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
-				sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win64" : "bin/OpenSSL-Win32");
+				sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin" : "bin/OpenSSL-Win/bin32");
 			
 			incs.At(0) = vc + "/include";
 			incs.At(1) = inc + "/um";
@@ -191,14 +191,14 @@ void InstantSetup()
 			incs.At(3) = inc + "/shared";
 			String& sslinc = incs.At(4);
 			if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
-				sslinc = GetExeDirFile(x64 ? "bin/OpenSSL-Win64/include" : "bin/OpenSSL-Win32/include");
+				sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
 			
 			libs.At(0) = vc + (x64 ? "/lib/amd64" : "/lib");
 			libs.At(1) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
 			libs.At(2) = lib + (x64 ? "/um/x64" : "/um/x86");
 			String& ssllib = libs.At(3);
 			if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win64/lib/VC" : "bin/OpenSSL-Win32/lib/VC");
+				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib/VC" : "bin/OpenSSL-Win/lib32/VC");
 		
 			bmSet(bm, "BUILDER", x64 ? "MSC15X64" : "MSC15");
 			bmSet(bm, "COMPILER", "");
