@@ -469,6 +469,8 @@ bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath
 			return false;
 		}
 	}
+	
+	return true;
 }
 
 bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
