@@ -262,13 +262,33 @@ void Gdb::Data()
 	}
 }
 
+void Gdb::SetTab(int q)
+{
+	tab.Set(q);
+	Data();
+}
+
+void Gdb::ClearWatches()
+{
+	watches.Clear();
+	SetTab(2);
+}
+
 void Gdb::QuickWatch()
 {
+	quickwatch.expression <<= quickwatch.Breaker(999);
+	FastCmd("set print pretty on");
 	for(;;) {
 		int q = quickwatch.Run();
-		if(q == IDCANCEL)
-			break;
-		FastCmd("set print pretty on");
+		if(findarg(q, IDCANCEL, IDOK) >= 0) {
+			FastCmd("set print pretty off");
+			if(q == IDOK) {
+				watches.Add(~quickwatch.expression);
+				SetTab(2);
+			}
+			quickwatch.Close();
+			return;
+		}
 		String s = FastCmd("p " + (String)~quickwatch.expression);
 		const char *a = strchr(s, '=');
 		if(a) {
@@ -280,9 +300,7 @@ void Gdb::QuickWatch()
 		}
 		else
 			quickwatch.value <<= s;
-		FastCmd("set print pretty off");
 	}
-	quickwatch.Close();
 }
 
 bool Gdb::Tip(const String& exp, CodeEditor::MouseTip& mt)

@@ -6,21 +6,23 @@ void Gdb::DebugBar(Bar& bar)
 	   .Key(K_SHIFT_F5);
 	bar.Separator();
 	bool b = !IdeIsDebugLock();
-	bar.Add(b, "Step into", DbgImg::StepInto(), THISBACK1(Step, disas.HasFocus() ? "stepi"
-	                                                                             : "step"))
-	   .Key(K_F11);
-	bar.Add(b, "Step over", DbgImg::StepOver(), THISBACK1(Step, disas.HasFocus() ? "nexti"
-	                                                                             : "next"))
-	   .Key(K_F10);
-	bar.Add(b, "Step out", DbgImg::StepOut(), THISBACK1(Step, "finish"))
-	   .Key(K_SHIFT_F11);
-	bar.Add(b, "Run to", DbgImg::RunTo(), THISBACK(DoRunTo))
-	   .Key(K_CTRL_F10);
-	bar.Add(b, "Run", DbgImg::Run(), THISBACK(Run))
-	   .Key(K_F5);
+	bar.Add(b, AK_STEPINTO, DbgImg::StepInto(), THISBACK1(Step, disas.HasFocus() ? "stepi"
+	                                                                             : "step"));
+	bar.Add(b, AK_STEPOVER, DbgImg::StepOver(), THISBACK1(Step, disas.HasFocus() ? "nexti"
+	                                                                             : "next"));
+	bar.Add(b, AK_STEPOUT, DbgImg::StepOut(), THISBACK1(Step, "finish"));
+	bar.Add(b, AK_RUNTO, DbgImg::RunTo(), THISBACK(DoRunTo));
+	bar.Add(b, AK_RUN, DbgImg::Run(), THISBACK(Run));
+//	bar.Add(b, AK_SETIP, DbgImg::SetIp(), THISBACK(SetIp));
+//	bar.Add(!b, AK_STOP, DbgImg::Stop(), THISBACK(BreakRunning));
 	bar.MenuSeparator();
-	bar.Add(b, "Quick watch", THISBACK(QuickWatch))
-	   .Key(K_CTRL_Q);
+	bar.Add(b, AK_AUTOS, THISBACK1(SetTab, 0));
+	bar.Add(b, AK_LOCALS, THISBACK1(SetTab, 1));
+	bar.Add(b, AK_THISS, THISBACK1(SetTab, 2));
+	bar.Add(b, AK_WATCHES, THISBACK1(SetTab, 3));
+	bar.Add(b, AK_CLEARWATCHES, THISBACK(ClearWatches));
+	bar.Add(b, AK_ADDWATCH, THISBACK(QuickWatch));
+	bar.Add(b, AK_CPU, THISBACK1(SetTab, 4));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
@@ -422,14 +424,12 @@ Gdb::Gdb()
 	dlock.NoTransparent();
 	dlock.Hide();
 
-	CtrlLayoutOKCancel(quickwatch, "Quick watch");
+	CtrlLayoutOKCancel(quickwatch, "Watch");
 	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
 	quickwatch.value.SetReadOnly();
-	quickwatch.value.SetFont(CourierZ(12));
+	quickwatch.value.SetFont(CourierZ(11));
 	quickwatch.Sizeable().Zoomable();
-	quickwatch.NoCenter();
 	quickwatch.SetRect(0, 150, 300, 400);
-	quickwatch.Icon(DbgImg::QuickWatch());
 
 	Transparent();
 

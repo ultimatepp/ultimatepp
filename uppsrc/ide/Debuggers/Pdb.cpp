@@ -7,7 +7,7 @@
 
 #define LLOG(x) // LOG(x)
 
-#define KEYGROUPNAME "PdbDebugger"
+#define KEYGROUPNAME "Debugger"
 #define KEYNAMESPACE PdbKeys
 #define KEYFILE      <ide/Debuggers/Pdb.key>
 #include             <CtrlLib/key_source.h>
