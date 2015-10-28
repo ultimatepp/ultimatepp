@@ -391,6 +391,7 @@ void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 	map.Add("COMMON_OPTIONS",            &common_options);
 	map.Add("COMMON_CPP_OPTIONS",        &common_cpp_options);
 	map.Add("COMMON_C_OPTIONS",          &common_c_options);
+	map.Add("COMMON_LINK",               &common_link_options);
 	map.Add("COMMON_FLAGS",              &common_flags);
 	map.Add("DEBUG_INFO",                &debug_info);
 	map.Add("DEBUG_BLITZ",               &debug_blitz);

@@ -193,8 +193,10 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
 		b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
 		b->release_size_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_SIZE_OPTIONS", ""));
+		b->common_link = bm.Get("COMMON_LINK", "");
 		b->debug_link = bm.Get("DEBUG_LINK", "");
 		b->release_link = bm.Get("RELEASE_LINK", "");
+		
 		b->main_conf = !!main_conf.GetCount();
 		b->allow_pch = bm.Get("ALLOW_PRECOMPILED_HEADERS", "") == "1";
 		b->start_time = start_time;
@@ -511,7 +513,8 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 
 		String mainpackage = wspc[0];
 		Vector<String> linkfile, immfile;
-		String linkopt = GetMethodVars(method).Get(targetmode ? "RELEASE_LINK" : "DEBUG_LINK", Null);
+		String linkopt = Merge(" ", GetMethodVars(method).Get("COMMON_LINK", Null),
+		                       GetMethodVars(method).Get(targetmode ? "RELEASE_LINK" : "DEBUG_LINK", Null));
 		if(linkopt.GetCount())
 			linkopt << ' ';
 		ok = true;

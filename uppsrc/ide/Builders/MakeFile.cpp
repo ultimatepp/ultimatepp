@@ -88,7 +88,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		flags << ' ' << Gather(pkg.option, config.GetKeys());
 		makefile.config << "CFLAGS =" << flags << "\n"
 			"CXXFLAGS =" << flags << "\n"
-			"LDFLAGS = " << (HasFlag("DEBUG") ? debug_link : release_link) << " $(LINKOPTIONS)\n"
+			"LDFLAGS = " << Merge(" ", common_link, HasFlag("DEBUG") ? debug_link : release_link)
+			             << " $(LINKOPTIONS)\n"
 			"LIBPATH =";
 		for(int i = 0; i < libpath.GetCount(); i++)
 			makefile.config << " -L" << GetMakePath(AdjustMakePath(GetHostPathQ(libpath[i])));
