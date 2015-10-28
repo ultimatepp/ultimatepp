@@ -421,6 +421,14 @@ void Foo() {
 	x.Find(1, 1, 0); // Check parameter positions
 }
 
+// ----------------------------------------------------
+
+struct Foo {
+	typedef Foo CLASSNAME;
+	
+	void Bar(); // Check Alt+C here
+};
+
 #endif
 
 GUI_APP_MAIN
