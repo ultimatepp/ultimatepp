@@ -1,4 +1,5 @@
 cp ./theide ~/theide
+cp ./umk ~/umk
 
 mkdir ~/upp
 mkdir ~/upp.out
