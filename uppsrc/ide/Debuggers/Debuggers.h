@@ -189,7 +189,9 @@ struct Gdb : Debugger, ParentCtrl {
 	void      Data();
 	void      Self();
 	void      Cpu();
+	void      ClearWatches();
 	void      QuickWatch();
+	void      SetTab(int q);
 
 	void      CopyStack();
 	void      CopyDisas();
