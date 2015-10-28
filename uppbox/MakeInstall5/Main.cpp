@@ -94,7 +94,6 @@ CONSOLE_APP_MAIN
 
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
-	CopyFolder(upp + "/uppbox/win32-files", upptmp);
 	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
@@ -110,6 +109,9 @@ CONSOLE_APP_MAIN
 	
 	SaveFile("license.chk", "1");
 
-	Syx("7z a u:/upload/upp-win32-" + Filter(version, FilterVersion) + ".7z"
+	Syx("7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
+	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
+	DeleteFolderDeep(upptmp + "/bin/tdm64");
+	Syx("7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
 }
