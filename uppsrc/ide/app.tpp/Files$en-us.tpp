@@ -86,8 +86,8 @@ from these files and also use them to define structures and constants
 and variables needed for database interaction.]]
 :: [s0; [*2 .witz]]
 :: [s0; [2 Skylark HTML templates.]]
-:: [s0; [*2 COPYING]]
-:: [s0; [2 This file usually contains license info for package.]]
+:: [s0; [*2 Copying]]
+:: [s0; [2 This file contains license info for package.]]
 :: [s0; [*2 COPYING`-PLAIN]]
 :: [s0; [2 Contains license explanation.]]
 :: [s0; [*2 AUTHORS]]
@@ -132,7 +132,7 @@ in the Assembly setup dialog.]]
 ::= [s0; [2 A text file that contains the build settings associated with 
 a particular compiler/ linker (`"build method`")]]
 ::^ [s0; [*2 cfg folder]]
-::= [s0; [2 This folder holds cache files from theide (tdx,cache,pkg`_cache) 
-`+ cfg (per package settings `- opened files, cursor positions 
-etc.)]]}}&]
+::= [s0; [2 This folder holds cache files of theide (tdx,cache,pkg`_cache) 
+`+ and configuration files (per package settings `- opened files, 
+cursor positions etc.)]]}}&]
 [s0; ]]

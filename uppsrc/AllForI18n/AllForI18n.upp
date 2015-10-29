@@ -13,7 +13,6 @@ uses
 	Oracle,
 	usvn,
 	SqlCtrl,
-
 	plugin/astyle,
 	plugin/bmp,
 	plugin/box2d,
@@ -38,7 +37,6 @@ uses
 	plugin/wincert,
 	plugin/z,
 	plugin/zip;
-
 
 file
 	main.cpp;

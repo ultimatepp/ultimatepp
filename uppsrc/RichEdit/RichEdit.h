@@ -852,6 +852,8 @@ public:
 	RichEditWithToolBar();
 };
 
+void AppendClipboard(RichText rval_ txt);
+
 END_UPP_NAMESPACE
 
 #endif

@@ -190,6 +190,14 @@ void RichEdit::ZoomClip(RichText& text) const
 	text.ApplyZoom(clipzoom);
 }
 
+void AppendClipboard(RichText rval_ txt)
+{
+	AppendClipboardUnicodeText(txt.GetPlainText());
+	Value clip = RawPickToValue(pick(txt));
+	AppendClipboard("text/QTF", clip, sQTF);
+	AppendClipboard(RTFS, clip, sRTF);
+}
+
 void RichEdit::Copy()
 {
 	RichText txt;
@@ -203,10 +211,7 @@ void RichEdit::Copy()
 	}
 	ZoomClip(txt);
 	ClearClipboard();
-	AppendClipboardUnicodeText(txt.GetPlainText());
-	Value clip = RawPickToValue(pick(txt));
-	AppendClipboard("text/QTF", clip, sQTF);
-	AppendClipboard(RTFS, clip, sRTF);
+	AppendClipboard(pick(txt));
 	if(objectpos >= 0) {
 		RichObject o = GetObject();
 		Vector<String> v = Split(o.GetType().GetClipFmts(), ';');
