@@ -125,6 +125,12 @@ public:
 
 
 int Prompt(Callback1<const String&> WhenLink,
+           const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
+           const char *button1, const char *button2, const char *button3,
+		   int cx,
+		   Image im1, Image im2, Image im3);
+
+int Prompt(Callback1<const String&> WhenLink,
            const char *title, const Image& icon, const char *qtf, bool okcancel,
            const char *button1, const char *button2 = NULL, const char *button3 = NULL,
 		   int cx = 0);
@@ -142,6 +148,7 @@ int  PromptYesNoCancel(const char *qtf);
 int  PromptRetryCancel(const char *qtf);
 int  PromptAbortRetry(const char *qtf);
 int  PromptAbortRetryIgnore(const char *qtf);
+int  PromptSaveDontSaveCancel(const char *qtf);
 
 void Exclamation(const char *qtf);
 

@@ -278,4 +278,12 @@ int ErrorAbortRetryIgnore(const char *qtf) {
 	              AbortButtonImage(), RetryButtonImage(), Null);
 }
 
+int PromptSaveDontSaveCancel(const char *qtf) {
+	BeepQuestion();
+	return Prompt(callback(LaunchWebBrowser),
+	              Ctrl::GetAppName(), CtrlImg::question(), qtf, true,
+	              t_("&Save"), t_("&Don't Save"), t_("Cancel"), 0,
+	              CtrlImg::save(), NoButtonImage(), Null);
+}
+
 END_UPP_NAMESPACE
