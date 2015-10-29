@@ -169,14 +169,15 @@ void InstantSetup()
 		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
 			if(!x64)
 				default_method = "MSC15";
-		
+	#ifndef _DEBUG
 			continue;
+	#endif
 		}
 		
 		vc = df.ScanForDir("/vc", "", "bin/link.exe;bin/cl.exe;bin/mspdb140.dll", "bin/1033");
-		bin = df.ScanForDir(x64 ? "bin/x64" : "bin/x86", "/windows kits/", "makecat.exe;accevent.exe", "");
-		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
-		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
+		bin = df.ScanForDir(x64 ? "bin/x64" : "bin/x86", "/windows kits/", "ucrt/ucrtbased.dll", "");
+		inc = df.ScanForDir("", "/windows kits/", "ucrt/assert.h", "");
+		lib = df.ScanForDir("", "/windows kits/", "ucrt/x86/libucrt.lib", "");
 		
 		if(vc.GetCount() * bin.GetCount() * inc.GetCount() * lib.GetCount()) {
 			bins.At(0) = vc + (x64 ? "/bin/amd64" : "/bin");
