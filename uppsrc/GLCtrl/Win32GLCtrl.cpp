@@ -87,13 +87,16 @@ void GLCtrl::GLPane::State(int reason)
 
 LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if((message == WM_PAINT || message == WM_SIZE || message == WM_ERASEBKGND) && hDC && hRC) 
+	if((message == WM_PAINT || message == WM_SIZE || message == WM_ERASEBKGND) && hDC && hRC)
 	{
 		PAINTSTRUCT ps;
 		BeginPaint(GetHWND(), &ps);
 		ActivateContext();
 		ctrl->GLPaint();
-		ctrl->doubleBuffering ? SwapBuffers(hDC) : glFlush();
+		if(ctrl->doubleBuffering)
+			SwapBuffers(hDC);
+		else
+			glFlush();
 		EndPaint(GetHWND(), &ps);
 		return 0;
 	}
