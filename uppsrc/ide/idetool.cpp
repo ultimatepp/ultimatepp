@@ -182,6 +182,40 @@ void sPut(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileSta
 	qtf << "}}&&";
 }
 
+void Ide::Licenses()
+{
+	Progress pi;
+	const Workspace& wspc = IdeWorkspace();
+	pi.SetTotal(wspc.GetCount());
+	VectorMap<String, String> license_package;
+	for(int i = 0; i < wspc.GetCount(); i++) {
+		const Package& pk = wspc.GetPackage(i);
+		String n = wspc[i];
+		pi.SetText(n);
+		if(pi.StepCanceled()) return;
+		String l = LoadFile(SourcePath(n, "Copying"));
+		if(l.GetCount())
+			MergeWith(license_package.GetAdd(l), ", ", n);
+	}
+	if(license_package.GetCount() == 0) {
+		Exclamation("No license files ('Copying') have been found.");
+		return;
+	}
+	String qtf;
+	for(int i = 0; i < license_package.GetCount(); i++) {
+		bool m = license_package[i].Find(',') >= 0;
+		qtf << (m ? "Packages [* \1" : "Package [* \1")
+		    << license_package[i]
+		    << (m ? "\1] have" : "\1] has")
+		    << " following licence notice:&"
+		    << "{{@Y [C1 " << DeQtf(license_package.GetKey(i)) << "]}}&&";
+	}
+	WithStatLayout<TopWindow> dlg;
+	CtrlLayoutOK(dlg, "Licenses");
+	dlg.stat = qtf;
+	dlg.Sizeable().Zoomable();
+	dlg.Run();
+}
 
 void Ide::Statistics()
 {

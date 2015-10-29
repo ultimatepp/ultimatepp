@@ -760,6 +760,7 @@ public:
 		void   SwapPackagesFiles();
 		void   Times();
 		void   Statistics();
+		void   Licenses();
 		void   Exit();
 		String GetOpposite();
 		void   GoOpposite();
