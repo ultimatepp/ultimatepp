@@ -35,5 +35,6 @@ file
 	lib\sync.c,
 	lib\sync.h,
 	lib\version,
-	lib\version.h;
+	lib\version.h,
+	Copying;
 

@@ -9,5 +9,6 @@ file
 	util.cpp,
 	lib\lz4.c optimize_speed,
 	lib\lz4.h,
-	lib\LICENSE;
+	lib\LICENSE,
+	Copying;
 

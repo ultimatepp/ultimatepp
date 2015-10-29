@@ -79,5 +79,6 @@ file
 	b2RevoluteJoint.cpp,
 	b2RevoluteJoint.h,
 	b2WeldJoint.cpp,
-	b2WeldJoint.h;
+	b2WeldJoint.h,
+	Copying;
 

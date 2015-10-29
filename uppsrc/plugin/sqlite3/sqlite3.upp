@@ -15,5 +15,6 @@ file
 	Sqlite3upp.cpp,
 	"Original files" readonly separator,
 	lib\sqlite3.c,
-	lib\sqlite3.h;
+	lib\sqlite3.h,
+	Copying;
 

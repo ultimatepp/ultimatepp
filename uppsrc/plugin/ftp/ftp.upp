@@ -11,5 +11,6 @@ file
 	lib readonly separator,
 	lib\README.ftplib,
 	lib\ftplib.h,
-	lib\ftplib.cpp tabsize 4;
+	lib\ftplib.cpp tabsize 4,
+	Copying;
 
