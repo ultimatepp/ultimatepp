@@ -182,6 +182,20 @@ void sPut(String& qtf, ArrayMap<String, FileStat>& pfs, ArrayMap<String, FileSta
 	qtf << "}}&&";
 }
 
+
+void ShowQTF(const String& qtf, const char *title)
+{
+	RichText txt = ParseQTF(qtf);
+	ClearClipboard();
+	AppendClipboard(ParseQTF(qtf));
+
+	WithStatLayout<TopWindow> dlg;
+	CtrlLayoutOK(dlg, title);
+	dlg.stat = qtf;
+	dlg.Sizeable().Zoomable();
+	dlg.Run();
+}
+
 void Ide::Licenses()
 {
 	Progress pi;
@@ -210,11 +224,8 @@ void Ide::Licenses()
 		    << " following licence notice:&"
 		    << "{{@Y [C1 " << DeQtf(license_package.GetKey(i)) << "]}}&&";
 	}
-	WithStatLayout<TopWindow> dlg;
-	CtrlLayoutOK(dlg, "Licenses");
-	dlg.stat = qtf;
-	dlg.Sizeable().Zoomable();
-	dlg.Run();
+	
+	ShowQTF(qtf, "Licenses");
 }
 
 void Ide::Statistics()
@@ -260,11 +271,7 @@ void Ide::Statistics()
 	qtf << tab << "All packages" << hdr;
 	sPut(qtf, all, all);
 
-	WithStatLayout<TopWindow> dlg;
-	CtrlLayoutOK(dlg, "Statistics");
-	dlg.stat = qtf;
-	dlg.Sizeable().Zoomable();
-	dlg.Run();
+	ShowQTF(qtf, "Statistics");
 }
 
 String FormatElapsedTime(double run)
