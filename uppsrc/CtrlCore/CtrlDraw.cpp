@@ -35,7 +35,6 @@ void Ctrl::RefreshFrame(const Rect& r) {
 }
 
 void Ctrl::Refresh0(const Rect& area) {
-	RDUMP(&area);
 	RefreshFrame((area + GetView().TopLeft()) & GetView().Inflated(OverPaint()));
 }
 

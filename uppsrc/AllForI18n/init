@@ -11,4 +11,8 @@
 #include "Oracle/init"
 #include "usvn/init"
 #include "SqlCtrl/init"
+#include "plugin/box2d/init"
+#include "plugin/DroidFonts/init"
+#include "plugin/Eigen/init"
+#include "plugin/ftp/init"
 #endif

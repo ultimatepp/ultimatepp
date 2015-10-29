@@ -103,5 +103,6 @@ file
 	lib\wrppm.c,
 	lib\wrrle.c,
 	lib\wrtarga.c,
-	end readonly separator;
+	end readonly separator,
+	Copying;
 

@@ -34,5 +34,6 @@ file
 	lib\zutil.c,
 	lib\zutil.h,
 	lib\ChangeLog,
-	lib\README;
+	lib\README,
+	Copying;
 

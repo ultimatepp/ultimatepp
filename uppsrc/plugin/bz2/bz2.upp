@@ -14,5 +14,7 @@ file
 	bz2.h,
 	bz2upp.cpp,
 	bzlib.c,
-	src.tpp;
+	lib\LICENSE,
+	src.tpp,
+	Copying;
 

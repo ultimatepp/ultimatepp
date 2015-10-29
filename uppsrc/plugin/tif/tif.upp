@@ -89,5 +89,6 @@ file
 	lib\tiffiop.h,
 	lib\tiffvers.h,
 	lib\uvcode.h,
-	end readonly separator;
+	end readonly separator,
+	Copying;
 

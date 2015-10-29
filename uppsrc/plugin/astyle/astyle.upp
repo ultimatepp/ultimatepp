@@ -10,5 +10,6 @@ file
 	ASBeautifier.cpp,
 	ASEnhancer.cpp,
 	ASFormatter.cpp,
-	ASResource.cpp;
+	ASResource.cpp,
+	Copying;
 

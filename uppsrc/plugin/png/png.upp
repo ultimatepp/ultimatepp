@@ -60,6 +60,7 @@ options(MSC8ARM) "-D_WIN32_WCE -DARM -D_ARM_ -DUNDER_CE -DUNICODE -D_UNICODE";
 
 file
 	png.h,
+	lib\png.h,
 	pnglib.c,
 	pngupp.cpp,
 	pngreg.icpp,

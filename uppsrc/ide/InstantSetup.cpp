@@ -265,8 +265,8 @@ void InstantSetup()
 			bmSet(bm, "DEBUG_LINK", "");
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
-			bmSet(bm, "RELEASE_OPTIONS", "-O3 -ffunction-sections");
-			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-Os -finline-limit=20 -ffunction-sections");
+			bmSet(bm, "RELEASE_OPTIONS", "-O1 -ffunction-sections"); // -O3 after TDM is fixed
+			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-Os -O1 -finline-limit=20 -ffunction-sections"); // remove -O1 after TDM is fixed
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "");
 			bmSet(bm, "DEBUGGER", "gdb");

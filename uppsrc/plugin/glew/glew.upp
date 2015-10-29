@@ -4,5 +4,6 @@ file
 	glew.c,
 	glew.h,
 	glxew.h,
-	wglew.h;
+	wglew.h,
+	Copying;
 

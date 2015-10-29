@@ -12,7 +12,33 @@ uses
 	Web,
 	Oracle,
 	usvn,
-	SqlCtrl;
+	SqlCtrl,
+
+	plugin/astyle,
+	plugin/bmp,
+	plugin/box2d,
+	plugin/bz2,
+	plugin/dbf,
+	plugin/DroidFonts,
+	plugin/Eigen,
+	plugin/ftp,
+	plugin/FT_fontsys,
+	plugin/gif,
+	plugin/glew,
+	plugin/jpg,
+	plugin/lz4,
+	plugin/lzma,
+	plugin/ndisasm,
+	plugin/pcre,
+	plugin/pcx,
+	plugin/png,
+	plugin/ppm,
+	plugin/sqlite3,
+	plugin/tif,
+	plugin/wincert,
+	plugin/z,
+	plugin/zip;
+
 
 file
 	main.cpp;
