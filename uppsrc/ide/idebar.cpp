@@ -101,6 +101,7 @@ void Ide::File(Bar& menu)
 	menu.Add(AK_STATISTICS, THISBACK(Statistics))
 		.Help("Display various statistics");
 
+	menu.Add("Project licences..", THISBACK(Licenses));
 	menu.Add("Elapsed times..", THISBACK(Times));
 
 	menu.Add(AK_EXIT, THISBACK(Exit));
