@@ -172,6 +172,10 @@ void TrayIcon::BalloonTimeout()
 
 LRESULT TrayIcon::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if(message == WM_QUERYENDSESSION) {
+		ShutDown();
+		return true;
+	}
 	if(message == UM_TASKBAR_)
 		switch(lParam) {
 		case WM_LBUTTONDOWN:
