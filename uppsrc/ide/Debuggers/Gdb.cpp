@@ -2,6 +2,8 @@
 
 void Gdb::DebugBar(Bar& bar)
 {
+	using namespace PdbKeys;
+
 	bar.Add("Stop debugging", DbgImg::StopDebug(), THISBACK(Stop))
 	   .Key(K_SHIFT_F5);
 	bar.Separator();

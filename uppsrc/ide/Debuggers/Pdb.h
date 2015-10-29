@@ -5,11 +5,6 @@
 
 #include <plugin/ndisasm/ndisasm.h>
 
-#define KEYGROUPNAME "Pdb debugger"
-#define KEYNAMESPACE PdbKeys
-#define KEYFILE      <ide/Debuggers/Pdb.key>
-#include             <CtrlLib/key_header.h>
-
 using namespace PdbKeys;
 
 struct Pdb : Debugger, ParentCtrl {

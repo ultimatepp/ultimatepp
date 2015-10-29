@@ -210,6 +210,11 @@ struct Gdb : Debugger, ParentCtrl {
 
 #include "Gdb_MI2.h"
 
+#define KEYGROUPNAME "Debugger"
+#define KEYNAMESPACE PdbKeys
+#define KEYFILE      <ide/Debuggers/Pdb.key>
+#include             <CtrlLib/key_header.h>
+
 #ifdef COMPILER_MSC
 #include "Pdb.h"
 #endif

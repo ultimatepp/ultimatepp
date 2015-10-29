@@ -1,16 +1,16 @@
 #include "Debuggers.h"
 
+#define KEYGROUPNAME "Debugger"
+#define KEYNAMESPACE PdbKeys
+#define KEYFILE      <ide/Debuggers/Pdb.key>
+#include             <CtrlLib/key_source.h>
+
 #ifdef COMPILER_MSC
 
 #pragma comment(lib, "DbgHelp.lib")
 #pragma comment(lib, "psapi.lib")
 
 #define LLOG(x) // LOG(x)
-
-#define KEYGROUPNAME "Debugger"
-#define KEYNAMESPACE PdbKeys
-#define KEYFILE      <ide/Debuggers/Pdb.key>
-#include             <CtrlLib/key_source.h>
 
 using namespace PdbKeys;
 
