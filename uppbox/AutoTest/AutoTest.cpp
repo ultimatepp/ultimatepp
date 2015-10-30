@@ -30,9 +30,9 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 	bool first = true;
 	while(ff) {
 		String name = ff.GetName();
-		String upp = AppendFileName(ff.GetPath(), name + ".upp");
+		String upp = LoadFile(AppendFileName(ff.GetPath(), name + ".upp"));
 	    String h = String(nest) + "/" + name;
-		if(ff.IsFolder() && !ff.IsHidden() && FindIndex(exclude, h) < 0) {
+		if(ff.IsFolder() && !ff.IsHidden() && FindIndex(exclude, h) < 0 && upp.Find("mainconfig") >= 0) {
 			Packages++;
 		    String txt;
 		    txt << bm;
@@ -73,10 +73,9 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 					else {
 						Cout() << "RUN\n";
 						int timeout = 60000*3;
-						String h = LoadFile(upp);
-						int q = h.FindAfter("#WAIT:");
+						int q = upp.FindAfter("#WAIT:");
 						if(q >= 0) {
-							timeout = max(60 * 1000 * atoi(~h + q), timeout);
+							timeout = max(60 * 1000 * atoi(~upp + q), timeout);
 						}
 						int msecs0 = msecs();
 						for(;;) {
@@ -159,7 +158,7 @@ CONSOLE_APP_MAIN
 		if(r)
 			bm[i].Trim(bm[i].GetCount() - 3);
 		release.Add(r);
-	}		
+	}
 	
 	TimeStop tm;
 	infolog << "Started " << GetSysTime() << "\n";
@@ -187,23 +186,23 @@ CONSOLE_APP_MAIN
 	     << Passed << " OK\n"
 	     << "Total time to run tests: " << tm0 / 60 << ":" << Format("%02d", tm0 % 60) << "\n\n";
 	
-	if(errors.GetCount()) {
+	if(errors.GetCount())
 		body << "FAILED TESTS:\n" << errors << "\n---------------------------\n\n";
                SetExitCode(1);
-       }
-       body << "TEST LOG:\n" << infolog;
 
-       if (mode == "watchdog") {
-               Cout() << body
-                      << "\n@ok=" << Passed 
-                      << "\n@errors=" << (Error + Timeout)
-                      << "\n@failures=" << (Failed + NoRun)
-                      << "\n@skipped=" << exclude.GetCount() << "\n";
-               return;
-       }
-
-       if(IsNull(email["smtp_server"]))
-               return;
+	body << "TEST LOG:\n" << infolog;
+	
+	if (mode == "watchdog") {
+	       Cout() << body
+	              << "\n@ok=" << Passed
+	              << "\n@errors=" << (Error + Timeout)
+	              << "\n@failures=" << (Failed + NoRun)
+	              << "\n@skipped=" << exclude.GetCount() << "\n";
+	       return;
+	}
+	
+	if(IsNull(email["smtp_server"]))
+	       return;
 
 	Smtp smtp;
 	smtp.Trace();

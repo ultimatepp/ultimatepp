@@ -4,6 +4,7 @@ uses
 	Core/SSL;
 
 file
+	AutoTest.upp,
 	AutoTest.cpp;
 
 mainconfig
