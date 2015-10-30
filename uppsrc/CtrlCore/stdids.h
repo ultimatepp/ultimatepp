@@ -1,4 +1,4 @@
-enum {
+enum StandardDialogIds__ {
 	IDOK = 1,
 	IDCANCEL = 2,
 	IDABORT = 3,
