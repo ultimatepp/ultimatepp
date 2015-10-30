@@ -324,28 +324,41 @@ void Pdb::CopyDisas()
 	disas.WriteClipboard();
 }
 
+void Pdb::Stop()
+{
+	if(!terminated) {
+		terminated = true;
+		SaveTree();
+		String fn = ConfigFile("TreeTypes.txt");
+		FileOut out(fn);
+		for(int i = 0; i < treetype.GetCount(); i++)
+			out << treetype.GetKey(i) << "\r\n" << treetype[i] << "\r\n";
+		StringStream ss;
+		Store(callback(this, &Pdb::SerializeSession), ss);
+		WorkspaceConfigData("pdb-debugger") = ss;
+		if(hProcess != INVALID_HANDLE_VALUE) {
+			DebugActiveProcessStop(processid);
+			TerminateProcess(hProcess, 0);
+			while(threads.GetCount())
+				RemoveThread(threads.GetKey(0)); // To CloseHandle
+			UnloadModuleSymbols();
+			SymCleanup(hProcess);
+			CloseHandle(hProcess);
+		}
+		StoreToGlobal(*this, CONFIGNAME);
+		IdeRemoveBottom(*this);
+		IdeRemoveRight(disas);
+	}
+}
+
+bool Pdb::IsFinished()
+{
+	return terminated;
+}
+
 Pdb::~Pdb()
 {
-	SaveTree();
-	String fn = ConfigFile("TreeTypes.txt");
-	FileOut out(fn);
-	for(int i = 0; i < treetype.GetCount(); i++)
-		out << treetype.GetKey(i) << "\r\n" << treetype[i] << "\r\n";
-	StringStream ss;
-	Store(callback(this, &Pdb::SerializeSession), ss);
-	WorkspaceConfigData("pdb-debugger") = ss;
-	if(hProcess != INVALID_HANDLE_VALUE) {
-		DebugActiveProcessStop(processid);
-		TerminateProcess(hProcess, 0);
-		while(threads.GetCount())
-			RemoveThread(threads.GetKey(0)); // To CloseHandle
-		UnloadModuleSymbols();
-		SymCleanup(hProcess);
-		CloseHandle(hProcess);
-	}
-	StoreToGlobal(*this, CONFIGNAME);
-	IdeRemoveBottom(*this);
-	IdeRemoveRight(disas);
+	Stop();
 }
 
 One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline)

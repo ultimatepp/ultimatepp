@@ -47,8 +47,8 @@ void Pdb::Sync0(Thread& ctx, Frame *single_frame)
 	while(::StackWalk64(machineType, hProcess, ctx.hThread, &stackFrame, c,
 	      0, ::SymFunctionTableAccess64, ::SymGetModuleBase64, 0)) {
 	    if(stackFrame.AddrPC.Offset == 0 || lastFrame >= stackFrame.AddrFrame.Offset) {
-	    	LLOG("Invalid stack frame");
-	      	break;
+			LLOG("Invalid stack frame");
+			break;
 	    }
 		lastFrame = stackFrame.AddrFrame.Offset;
 		LLOG("PC: " << Hex(stackFrame.AddrPC.Offset));

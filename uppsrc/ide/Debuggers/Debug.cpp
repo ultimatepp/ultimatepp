@@ -546,14 +546,4 @@ void Pdb::BreakRunning() //TODO: Fix in wow64?
 	}
 }
 
-void Pdb::Stop()
-{
-	terminated = true;
-}
-
-bool Pdb::IsFinished()
-{
-	return terminated;
-}
-
 #endif
