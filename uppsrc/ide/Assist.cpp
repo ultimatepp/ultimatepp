@@ -333,12 +333,12 @@ void AssistEditor::SyncAssist()
 			   (typei < 0 || m.typei == typei) &&
 			   (pass ? m.uname.StartsWith(uname) : m.name.StartsWith(name)) &&
 			   (!destructor || m.kind == DESTRUCTOR && m.scope == current_type + "::")) {
-					int q = include_assist ? -1 : over.Find(m.name);
+					int q = include_assist ? -1 : over.Find(m.qitem);
 					if(q < 0 || over[q] == m.typei && m.scope.GetCount()) {
 						found[i] = true;
 						assist_item_ndx.Add(i);
 						if(q < 0)
-							over.Add(m.name, m.typei);
+							over.Add(m.qitem, m.typei);
 					}
 			}
 		}
