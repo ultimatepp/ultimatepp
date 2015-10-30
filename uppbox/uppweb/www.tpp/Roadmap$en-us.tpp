@@ -25,6 +25,61 @@ topic "Changelog";
 [s0; [*R6 Roadmap]&]
 [s0;*3 &]
 [s0; [*_3 Current release]&]
+[s0;*_3 &]
+[s0; [*_4 2015.2 (rev 9120)][*3  (Nov 2015)]&]
+[s0;3 &]
+[s0; [3 The main focus of this release was ][^topic`:`/`/ide`/app`/Assist`$en`-us^3 C`+`+
+ parser and Assist`+`+ features][3 . and ][^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^3 A
+ndroid applications builder][3  in TheIDE (library does not yet 
+support Android though).]&]
+[s0;3 &]
+[s0; [* Core]&]
+[s0;* &]
+[s0;i150;O0; Improved [* C`+`+11] support.&]
+[s0;i150;O0; Leap second of 2015 added to time routines.&]
+[s0; &]
+[s0; [* GUI programming `& graphics]&]
+[s0;* &]
+[s0;i150;O0; Improved support of UHD displays.&]
+[s0;i150;O0; New QTF command [*@5 `{`{`*] is shortcut for [*@5 `{`{`~0/0] 
+to simplify using invisible tables for organizing text.&]
+[s0;i150;O0; PdfDraw now supports urls (e.g. when converting QTF/RichText 
+to PDF).&]
+[s0;i150;O0; RichText/QTF now support round borders for table cells.&]
+[s0;i150;O0; ScatterCtrl: new features.&]
+[s0; &]
+[s0; [* TheIDE]&]
+[s0;* &]
+[s0;i150;O0; [* Assist`+`+] and C`+`+ parser now support C`+`+11 and 
+non`-project headers, parsing ability is generally improved.&]
+[s0;i150;O0; [* Android] builder.&]
+[s0;i150;O0; [* UTF16 ]support, [* UTF BOM] autodetection.&]
+[s0;i150;O0; [* Rename/Delete package] functions.&]
+[s0;i150;O0; [* Layout designer] has new code generation features and 
+can jump to C`+`+ using the layout.&]
+[s0;i150;O0; Editor now [* truncates ]files longer than[*  200MB / 1GB] 
+(32/64 bits ide) while loading, makes them read`-only.&]
+[s0;i150;O0; Editor now shows [* misplaced whitespaces] in source files.&]
+[s0;i150;O0; TheIDE now detects binary files and provides binary 
+viewer.&]
+[s0;i150;O0; Toolbar has new navigation icons and icons to switch 
+editation mode (text/designer/binary).&]
+[s0;i150;O0; Legacy [* GDB]`-backended [* debugger ]was refurbished and 
+became `'Standard`' debugger for GCC.&]
+[s0;i150;O0; Icon designer now shows images as files icons when inserting 
+image files.&]
+[s0;3 &]
+[s0; [* Win32 releases]&]
+[s0; &]
+[s0;i150;O0; Win32 now does not come as .exe installer, but simple 
+.7z archive, which acts as `"[* portable]`" installation. Nothing 
+is written to the registry, nothing needs to be installed, simply 
+running `"theide.exe`" setups everything needed. (theide.exe 
+is 64bit executable. For those unlucky to still run 32`-bit os, 
+there is theide32.exe).&]
+[s0;i150;O0; There is once again `'[* mingw]`' variant which is coupled 
+with TDM64 release of mingw`-w64.&]
+[s0; &]
 [s0;3 &]
 [s0; [*_4 2015.1 (rev 8227)][*3  (Mar 2015)]&]
 [s0;4 &]
