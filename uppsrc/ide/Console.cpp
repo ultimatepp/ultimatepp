@@ -324,8 +324,9 @@ bool Console::Wait()
 			ProcessEvents();
 			ms0 = msecs();
 		}
-		if(Flush() == -1)
+		if(Flush() == -1) {
 			return error_keys.IsEmpty();
+		}
 		Sleep(0);
 	}
 }

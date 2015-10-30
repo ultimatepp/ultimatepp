@@ -215,7 +215,6 @@ int GetHydraThreads()
 
 void Ide::IdeEndDebug()
 {
-	console.Kill();
 	debugger.Clear();
 	debuglock = 0;
 	MakeTitle();

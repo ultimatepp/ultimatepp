@@ -36,8 +36,8 @@ void Ide::BeginBuilding(bool sync_files, bool clear_console)
 	SetupDefaultMethod();
 	HdependTimeDirty();
 	Renumber();
-	ShowConsole();
 	StopDebug();
+	ShowConsole();
 	SaveFile();
 	SaveWorkspace();
 	SetIdeState(BUILDING);
