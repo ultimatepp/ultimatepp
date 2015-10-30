@@ -940,6 +940,7 @@ void ColumnList::RemoveSelection()
 	for(int i = GetCount() - 1; i >= 0; i--)
 		if(IsSel(i))
 			Remove(i);
+	selcount = 0;
 }
 
 int ColumnList::Find(const Value &key) const
