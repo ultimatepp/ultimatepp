@@ -25,6 +25,6 @@ echo UPP = \"$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/up
 echo UPP = \"$HOME/upp/examples\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/examples.var
 echo UPP = \"$HOME/upp/reference\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/reference.var
 echo UPP = \"$HOME/upp/tutorial\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/tutorial.var
-echo UPP = \"$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/bazaar.var
+echo UPP = \"$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/examples-bazaar.var
 echo UPP = \"$HOME/MyApps\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyApps.var
-echo UPP = \"$HOME/MyApps\;$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyAppsWBazaar.var
+echo UPP = \"$HOME/MyApps\;$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyApps-bazaar.var
