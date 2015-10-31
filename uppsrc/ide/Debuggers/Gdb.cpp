@@ -394,31 +394,40 @@ Gdb::Gdb()
 	locals.AddColumn("", 1);
 	locals.AddColumn("", 6);
 	locals.EvenRowColor();
+	locals.WhenSel = THISBACK1(SetTree, &locals);
 	watches.NoHeader();
 	watches.AddColumn("", 1).Edit(watchedit);
 	watches.AddColumn("", 6);
 	watches.Inserting().Removing();
 	watches.EvenRowColor();
+	watches.WhenSel = THISBACK1(SetTree, &watches);
 	autos.NoHeader();
 	autos.AddColumn("", 1);
 	autos.AddColumn("", 6);
 	autos.EvenRowColor();
+	autos.WhenSel = THISBACK1(SetTree, &autos);
 	self.NoHeader();
 	self.AddColumn("", 1);
 	self.AddColumn("", 6);
 	self.EvenRowColor();
+	self.WhenSel = THISBACK1(SetTree, &self);
 	cpu.Columns(3);
 	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
 
-	Add(tab.SizePos());
+	pane.Add(tab.SizePos());
 	tab.Add(autos.SizePos(), "Autos");
 	tab.Add(locals.SizePos(), "Locals");
 	tab.Add(watches.SizePos(), "Watches");
 	tab.Add(self.SizePos(), "this");
 	tab.Add(cpu.SizePos(), "CPU");
-	Add(threads.LeftPosZ(300, 100).TopPos(2));
-	Add(frame.HSizePosZ(404, 0).TopPos(2));
-	
+	pane.Add(threads.LeftPosZ(300, 100).TopPos(2));
+	pane.Add(frame.HSizePosZ(404, 0).TopPos(2));
+	split.Horz(pane, tree.SizePos());
+	split.SetPos(8000);
+	Add(split);
+
+	tree.WhenOpen = THISBACK(TreeExpand);
+
 	frame.Ctrl::Add(dlock.SizePos());
 	dlock = "  Running..";
 	dlock.SetFrame(BlackFrame());
