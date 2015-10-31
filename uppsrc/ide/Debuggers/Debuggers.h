@@ -131,6 +131,9 @@ struct Gdb : Debugger, ParentCtrl {
 	ArrayCtrl          self;
 	ColumnList         cpu;
 	Label              dlock;
+	StaticRect         pane;
+	Splitter           split;
+	TreeCtrl           tree;
 	
 	VectorMap<String, String> expression_cache;
 
@@ -192,6 +195,8 @@ struct Gdb : Debugger, ParentCtrl {
 	void      ClearWatches();
 	void      QuickWatch();
 	void      SetTab(int q);
+	void      SetTree(ArrayCtrl *a);
+	void      TreeExpand(int node);
 
 	void      CopyStack();
 	void      CopyDisas();

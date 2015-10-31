@@ -103,7 +103,8 @@ void Gdb::Locals()
 		q++;
 		while(*q == ' ')
 			q++;
-		locals.Add(String(s, e), DataClean(GdbData(q)));
+		String h = GdbData(q);
+		locals.Add(String(s, e), DataClean(h), h);
 	}
 	MarkChanged(prev, locals);
 }
@@ -137,8 +138,11 @@ String Gdb::Print(const String& exp)
 void Gdb::Watches()
 {
 	VectorMap<String, String> prev = DataMap(watches);
-	for(int i = 0; i < watches.GetCount(); i++)
-		watches.Set(i, 1, DataClean(Print(watches.Get(i, 0))));
+	for(int i = 0; i < watches.GetCount(); i++) {
+		String h = Print(watches.Get(i, 0));
+		watches.Set(i, 1, DataClean(h));
+		watches.Set(i, 2, h);
+	}
 	MarkChanged(prev, watches);
 }
 
@@ -149,7 +153,7 @@ void Gdb::TryAuto(Index<String>& tested, const String& exp)
 		String val = Print(exp);
 		if(!IsNull(val) && !val.EndsWith(")}") && !val.EndsWith(")>") &&
 		   (!IsAlpha(*val) || findarg(val, "true", "false") >= 0))
-			autos.Add(exp, DataClean(val));
+			autos.Add(exp, DataClean(val), val);
 	}
 }
 
@@ -188,6 +192,10 @@ void Gdb::ReadGdbValues(CParser& p, VectorMap<String, String>& val)
 {
 	if(p.Char('{')) {
 		while(!p.Char('}') && !p.IsEof()) {
+			if(p.IsChar('{')) {
+				ReadGdbValues(p, val);
+				continue;
+			}
 			String id;
 			String value;
 			const char *b = p.GetPtr();
@@ -239,7 +247,7 @@ void Gdb::Self()
 	VectorMap<String, String> val;
 	ReadGdbValues(Print("*this"), val);
 	for(int i = 0; i < val.GetCount(); i++)
-		self.Add(val.GetKey(i), DataClean(val[i]));
+		self.Add(val.GetKey(i), DataClean(val[i]), val[i]);
 	MarkChanged(prev, locals);
 }
 
@@ -326,4 +334,24 @@ bool Gdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 		return true;
 	}
 	return false;
+}
+
+void Gdb::SetTree(ArrayCtrl *a)
+{
+	tree.Clear();
+	if(a->IsCursor()) {
+		String h = a->Get(2);
+		tree.SetRoot(Null, h, String().Cat() << a->Get(0) << " = " << DataClean(h));
+		tree.Open(0);
+	}
+}
+
+void Gdb::TreeExpand(int node)
+{
+	if(tree.GetChildCount(node))
+		return;
+	VectorMap<String, String> val;
+	ReadGdbValues(tree.Get(node), val);
+	for(int i = 0; i < val.GetCount(); i++)
+		tree.Add(node, Null, val[i], val.GetKey(i) + " = " + DataClean(val[i]), *val[i] == '{');
 }
