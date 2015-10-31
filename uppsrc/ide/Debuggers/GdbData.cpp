@@ -1,6 +1,18 @@
 #include "Debuggers.h"
 
-#if 0
+void SkipGdbInfo(CParser& p)
+{
+	int level = 1;
+	while(level > 0)
+		if(p.Char('<'))
+			level++;
+		else
+		if(p.Char('>'))
+			level--;
+		else
+			p.GetChar();
+}
+
 String DataClean(CParser& p)
 {
 	String r;
@@ -8,16 +20,7 @@ String DataClean(CParser& p)
 		while(!p.IsEof() && !p.Char('}')) {
 			p.Id("static");
 			if(p.Char('<')) {
-				int level = 1;
-				while(level > 0)
-					if(p.Char('<'))
-						level++;
-					else
-					if(p.Char('>'))
-						level--;
-					else
-						p.GetChar();
-				p.Spaces();
+				SkipGdbInfo(p);
 				p.Char('=');
 				String q = DataClean(p);
 				if(!q.IsEmpty()) {
@@ -34,49 +37,53 @@ String DataClean(CParser& p)
 				if(!q.IsEmpty()) {
 					if(!r.IsEmpty())
 						r << ", ";
-					r << id << "=" << q;
+					r << id << " = " << q;
 				}
 			}
-			else {
+			else
 				p.GetChar();
-				p.Spaces();
-			}
 		}
 		if(!r.IsEmpty() && (*r != '{' || *r.Last() != '}'))
-
-			return '{' + r + '}';
+			return "{ " + r + " }";
 		return r;
 	}
-	p.Spaces();
+	int lvl = 0;
 	for(;;) {
 		bool sp = p.Spaces();
-		if(p.IsChar('}') || p.IsChar(',') || p.IsEof())
+		if(lvl == 0 && (p.IsChar('}') || p.IsChar(',')) || p.IsEof())
 			break;
 		if(sp)
 			r << ' ';
 		if(p.IsString())
 			r << AsCString(p.ReadString());
 		else
+		if(p.Char('<') && lvl == 0)
+			SkipGdbInfo(p);
+		else {
+			if(p.IsChar('('))
+				lvl++;
+			if(p.IsChar(')'))
+				lvl--;
 			r.Cat(p.GetChar());
+		}
 	}
 	return r;
 }
 
 String DataClean(const char *s)
 {
-	CParser p(s);
 	try {
+		CParser p(s);
 		return DataClean(p);
 	}
 	catch(CParser::Error) {}
 	return Null;
 }
-#endif
 
-String DataClean(const String& exp)
+String GdbData(const String& exp)
 {
 	int q = exp.Find('{');
-	return q >= 0 ? TrimBoth(exp.Mid(q)) : exp;
+	return q < 0 ? exp : TrimBoth(exp.Mid(q));
 }
 
 void Gdb::Locals()
@@ -96,7 +103,7 @@ void Gdb::Locals()
 		q++;
 		while(*q == ' ')
 			q++;
-		locals.Add(String(s, e), DataClean(q));
+		locals.Add(String(s, e), DataClean(GdbData(q)));
 	}
 	MarkChanged(prev, locals);
 }
@@ -111,10 +118,10 @@ String Gdb::Print0(const String& exp)
 		s++;
 		while(*s == ' ')
 			s++;
-		return DataClean(s);
+		return GdbData(s);
 	}
 	else
-		return DataClean(ln);
+		return GdbData(ln);
 }
 
 String Gdb::Print(const String& exp)
@@ -131,7 +138,7 @@ void Gdb::Watches()
 {
 	VectorMap<String, String> prev = DataMap(watches);
 	for(int i = 0; i < watches.GetCount(); i++)
-		watches.Set(i, 1, Print(watches.Get(i, 0)));
+		watches.Set(i, 1, DataClean(Print(watches.Get(i, 0))));
 	MarkChanged(prev, watches);
 }
 
@@ -142,7 +149,7 @@ void Gdb::TryAuto(Index<String>& tested, const String& exp)
 		String val = Print(exp);
 		if(!IsNull(val) && !val.EndsWith(")}") && !val.EndsWith(")>") &&
 		   (!IsAlpha(*val) || findarg(val, "true", "false") >= 0))
-			autos.Add(exp, val);
+			autos.Add(exp, DataClean(val));
 	}
 }
 
@@ -195,7 +202,7 @@ void Gdb::ReadGdbValues(CParser& p, VectorMap<String, String>& val)
 			b = p.GetPtr();
 			int lvl = 0;
 			while(!p.IsEof())
-				if(p.IsChar(',') && lvl == 0) {
+				if((p.IsChar(',') || p.IsChar('}')) && lvl == 0) {
 					String v = TrimBoth(String(b, p.GetPtr()));
 					if(*id == '<') // Base class
 						ReadGdbValues(v, val);
@@ -232,7 +239,7 @@ void Gdb::Self()
 	VectorMap<String, String> val;
 	ReadGdbValues(Print("*this"), val);
 	for(int i = 0; i < val.GetCount(); i++)
-		self.Add(val.GetKey(i), val[i]);
+		self.Add(val.GetKey(i), DataClean(val[i]));
 	MarkChanged(prev, locals);
 }
 
@@ -307,7 +314,7 @@ bool Gdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 {
 	if(IsNull(exp))
 		return false;
-	String val = Print(exp);
+	String val = DataClean(Print(exp));
 	if(!IsNull(val) && !val.EndsWith(")}") && !IsAlpha(*val)) {
 		if(val.GetCount() > 100) {
 			val.Trim(100);
