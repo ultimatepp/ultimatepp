@@ -124,7 +124,7 @@ public:
 	T v;
 
 	enum VPICK { PICK };
-	enum VDEEP { DEEP };	
+	enum VDEEP { DEEP };
 	
 	const T& Get() const                      { return v; }
 	T&       Get()                            { return v; }
