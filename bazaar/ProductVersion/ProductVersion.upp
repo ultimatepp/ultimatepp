@@ -1,5 +1,8 @@
 description "Small class to handle application versions\377";
 
+uses
+	Core;
+
 file
 	ProductVersion.h,
 	ProductVersion.cpp;

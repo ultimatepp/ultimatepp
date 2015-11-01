@@ -1,0 +1,10 @@
+uses
+	Core,
+	ProductVersion;
+
+file
+	ProductVersionTest.cpp;
+
+mainconfig
+	"" = "";
+

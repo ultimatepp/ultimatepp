@@ -416,7 +416,7 @@ void Scatter::Graduation_FormatY2(Formats fi)
 
 Scatter &Scatter::AddSeries(Vector<XY> & points,const String& legend,const bool& join, const class::Color& pcolor, const int& width, const int& thickness)
 {
-	vPointsData.AddPick(points);
+	vPointsData.AddPick(pick(points));
 	vJoin.Add(join);
 	vSmooth.Add(false);
 	vPColors.Add(pcolor);
@@ -851,7 +851,7 @@ void Scatter::RemoveAllSeries()
 void Scatter::PlotFunction(PlotFunc f, const String& legend, const class::Color& fcolor, const int& weight)
 {
 	Vector<XY> series;
-	vFunctionData.AddPick(series);
+	vFunctionData.AddPick(pick(series));
 	
 	vAdress.Add(f);
 	
@@ -874,7 +874,7 @@ void Scatter::PlotParaFunction(PlotParamFunc f, const String& legend, const clas
 	}
 	vFColors.Add(fcolor);
 	vFThickness.Add(weight);
-	vFunctionData.AddPick(series);
+	vFunctionData.AddPick(pick(series));
 	vFPrimaryY.Add(true);
 	vFPattern.Add(LINE_SOLID);
 	vFLegend.Add(legend);
@@ -1781,7 +1781,7 @@ Vector<XY> Scatter::Cubic(const Vector<XY>& DataSet, const int& fineness,double 
 			OutSet<<XY(b0*t*t*t+b1*t*t+b2*t+b3, a0*t*t*t+a1*t*t+a2*t+a3);
 		}
 	}
-	return Vector<XY>(OutSet);
+	return Vector<XY>(pick(OutSet));
 }
 
 void ParseTextMultiline(const String &text, Font fnt, Array <String> &texts, Array <Size> &sizes) {

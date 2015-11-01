@@ -142,7 +142,7 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		// gets a context menu by name -- NULL if none
 		MenuBar *GetContextMenu(String const &name);
 		
-		// xml support
+		// xml supportbin
 		void Xmlize(XmlIO xml);
 };
 

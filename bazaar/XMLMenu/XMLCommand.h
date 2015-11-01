@@ -66,19 +66,19 @@ class XMLCommand : DeepCopyOption<XMLCommand>
 // an array of available commands
 class XMLCommands : DeepCopyOption<XMLCommands>
 {
+
 	private:
 		ArrayMap<String, XMLCommand> commands;
 
 	public:
+		rval_default(XMLCommands);
+
 		// default constructor
 		XMLCommands() {}
 		
 		// copy constructor
 		XMLCommands(XMLCommands const &cmds, int dummy) : commands(cmds.commands, 0) {}
 		
-		// pick constructor
-		XMLCommands(XMLCommands rval_ cmds) : commands(pick(cmds.commands)) {}
-			
 		// adds a custom command
 		XMLCommands &Add(String const &id, String const &cmd);
 		

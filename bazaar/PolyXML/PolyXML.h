@@ -38,7 +38,7 @@ template<class T> class PolyXMLUnknown : public T
 			{
 				XmlNode node = ParseXML(rawXML);
 				xml.Add();
-				xml.Node() = node;
+				xml.Node() = pick(node);
 			}
 		}
 };
@@ -191,7 +191,7 @@ template<class K, class T> class PolyXMLArrayMapOne : public ArrayMap<K, One<T> 
 		// Xmlizer
 		void Xmlize(XmlIO &xml);
 		
-		One<T>& Add(const K &key, pick_ One<T> &data) { return ArrayMap<K, One<T> >::AddPick(key, data); }
+		One<T>& Add(const K &key, pick_ One<T> &data) { return ArrayMap<K, One<T> >::AddPick(key, pick(data)); }
 		
 		// progress callback
 		Callback2<int, int>Progress;

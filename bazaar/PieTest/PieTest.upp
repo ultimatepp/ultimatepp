@@ -1,4 +1,4 @@
-description "Bazaar: PieChart control test&demo by Andrei-Catalin";
+description "Bazaar: PieChart control test&demo by Andrei-Catalin\377";
 
 uses
 	CtrlLib,
@@ -7,11 +7,11 @@ uses
 	PdfDraw;
 
 file
-	PieTest.h,	
+	PieTest.h,
 	main.cpp,
 	PieTest.lay,
 	PieTest.iml,
-      app.tpp;
+	app.tpp;
 
 mainconfig
 	"" = "GUI";
