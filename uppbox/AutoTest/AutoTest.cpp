@@ -211,7 +211,8 @@ CONSOLE_APP_MAIN
 	    .SSL()
 		.Auth(email["smtp_user"], email["smtp_password"])
 		.From("autotest@ultimatepp.org")
-	    .Subject(String().Cat() << "U++ autotest: " << (errors.GetCount() ? "** FAILED **" : "OK"))
+	    .Subject(String().Cat() << Nvl((String)ini["subject"], (String)"U++ autotest")
+	             << ": " << (errors.GetCount() ? "** FAILED **" : "OK"))
 	    .Body(body)
 	;
 
