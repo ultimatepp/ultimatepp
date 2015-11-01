@@ -23,7 +23,8 @@ topic "Transfer semantics";
 [s3; Explicit pick/clone&]
 [s5; U`+`+ containers require the transfer mode (deep copy or move) 
 to be explicitly specified when transfering the content of the 
-container, except the case . This decision has the advantage 
+container (exception is the temporary value, which can be pick 
+assigned without explicit pick). This decision has the advantage 
 of not accidentally using costly deep copy semantics, when in 
 reality move is required in majority of case. Moreover, for the 
 increased safety, the source after moving is considered to be 
@@ -61,8 +62,8 @@ for this reason, is not tested very well in C`+`+03.&]
 [s3; Composition&]
 [s5; When class contains members with pick semantics, a lot of error`-prone 
 work is saved when compiler is able to generate pick constructor/operator`= 
-for the class. C`+`+11 is quite capable of doing so, but often 
-needs to explicitly activate it with default memebers:&]
+for the class. C`+`+11 is quite capable of doing so, but needs 
+to explicitly activate it with default memebers:&]
 [s7; Foo(Foo`&`&) `= default;&]
 [s7; Foo`& operator`=(Foo`&`&) `= default;&]
 [s5; Meanwhile, C`+`+03 does need these and does not recognize them. 
