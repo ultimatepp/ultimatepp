@@ -326,6 +326,12 @@ void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>
 {
 	LTIMING("MakeLink");
 	out.Cat("/");
+	Bits usedArgs;
+	for(int i = 0; i < part.GetCount(); i++) {
+		int q = (byte)*part[i];
+		if(q < 32)
+			usedArgs.Set(q);
+	}
 	for(int i = 0; i < part.GetCount(); i++) {
 		const String& p = part[i];
 		if(i)
@@ -334,6 +340,19 @@ void MakeLink(StringBuffer& out, const Vector<String>& part, const Vector<Value>
 		if(q < 32) {
 			if(q >= 0 && q < arg.GetCount())
 				sUrlEncode(out, AsString(arg[q]));
+		}
+		else
+		if(q == 255) {
+			bool first = true;
+			for(int j=0; j<arg.GetCount(); ++j) {
+				if (usedArgs.Get(j))
+					continue;
+				if(!first) {
+					out << '/';
+				}
+				first = false;
+				sUrlEncode(out, AsString(arg[j]));
+			}
 		}
 		else
 			sUrlEncode(out, p);

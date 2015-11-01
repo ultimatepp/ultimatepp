@@ -40,6 +40,8 @@ int CountLinkArgs(const Vector<String>& part)
 	int args = 0;
 	for(int i = 0; i < part.GetCount(); i++) {
 		int p = (byte)*part[i];
+		if(p == 255) // it's a ** node, we can supply unlimited number of arguments
+			return -1;
 		if(p >= 0 && p < 30)
 			args = max(args, p + 1);
 	}
