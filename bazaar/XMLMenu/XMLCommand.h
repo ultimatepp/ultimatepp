@@ -77,7 +77,7 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		XMLCommands(XMLCommands const &cmds, int dummy) : commands(cmds.commands, 0) {}
 		
 		// pick constructor
-		XMLCommands(XMLCommands rval_ cmds) : commands(cmds.commands) {}
+		XMLCommands(XMLCommands rval_ cmds) : commands(pick(cmds.commands)) {}
 			
 		// adds a custom command
 		XMLCommands &Add(String const &id, String const &cmd);

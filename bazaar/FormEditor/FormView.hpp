@@ -142,6 +142,7 @@ public:
 
 	void UpdateTools() { WhenMenuBar.Execute(_tools); }
 	void OpenObjectProperties(const Vector<int>& indexes) { WhenObjectProperties.Execute(indexes); }
+	void DoOpenObjectProperties() { OpenObjectProperties(GetSelected()); }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 // Filesystem / Работа с файловой системой
@@ -209,9 +210,9 @@ public:
 public:
 	enum { TOOL_NONE, TOOL_LEFT, TOOL_TOP, TOOL_RIGHT, TOOL_BOTTOM };
 
-	Callback1<const Vector<int>& > WhenObjectProperties;
-	Callback1<const Vector<int>& > WhenChildSelected;
-	Callback1<Vector<int> > WhenChildPos;
+	Callback1<const Vector<int>&> WhenObjectProperties;
+	Callback1<const Vector<int>&> WhenChildSelected;
+	Callback1<const Vector<int>&> WhenChildPos;
 	Callback1<int> WhenChildCount;
 	Callback1<Bar&> WhenMenuBar;
 	Callback WhenUpdateLayouts;
@@ -226,7 +227,7 @@ private:
 	PARAMETER(Font, Font);
 	PARAMETER(dword, HAlign);
 	PARAMETER(dword, VAlign);
-	PARAMETER(Vector<FormLayout>, Layouts);
+	PARAMETER(WithDeepCopy< Vector<FormLayout> >, Layouts);
 
 	Image _cursor;
 

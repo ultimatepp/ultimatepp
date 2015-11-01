@@ -1,10 +1,11 @@
 description "Abstract Data Types\377";
 
 uses
-	Core;
+	ADT;
 
 file
-	List.h,
-	ADT.h,
-	ADT.cpp;
+	main.cpp;
+
+mainconfig
+	"" = "";
 

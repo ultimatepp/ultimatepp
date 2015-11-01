@@ -120,11 +120,11 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		
 		// gets/sets commands, menu and toolbars
 		virtual XMLCommands const &GetCommands(void)	{ return commands; }
-		virtual void SetCommands(XMLCommands &cmds)		{ commands = cmds; RefreshBars(); }
+		virtual void SetCommands(XMLCommands &cmds)		{ commands = pick(cmds); RefreshBars(); }
 		virtual XMLToolBars const &GetMenuBars(void)	{ return menuBars; }
-		virtual void SetMenuBars(XMLToolBars &tb)		{ menuBars = tb; RefreshBars(); }
+		virtual void SetMenuBars(XMLToolBars &tb)		{ menuBars = pick(tb); RefreshBars(); }
 		virtual XMLToolBars const &GetToolBars(void)	{ SyncBars(); return toolBars; }
-		virtual void SetToolBars(XMLToolBars &tb)		{ toolBars = tb;   RefreshBars(); }
+		virtual void SetToolBars(XMLToolBars &tb)		{ toolBars = pick(tb);   RefreshBars(); }
 		
 		// controls docking and main menu behaviour
 		WithXMLMenu<T> &DockTop(bool b = true)		{ dockTop = b;		RefreshFrames(); return *this; } 

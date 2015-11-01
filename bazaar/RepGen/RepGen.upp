@@ -12,6 +12,3 @@ file
 	src.tpp,
 	srcdoc.tpp;
 
-mainconfig
-	"" = "GUI";
-

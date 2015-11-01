@@ -1,0 +1,4 @@
+#ifndef _ADTTest_icpp_init_stub
+#define _ADTTest_icpp_init_stub
+#include "ADT/init"
+#endif

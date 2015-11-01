@@ -508,7 +508,7 @@ void FormEdit::TestLayout()
 	DeleteFile(preview);
 }
 
-void FormEdit::UpdateChildPos(Vector<int> indexes)
+void FormEdit::UpdateChildPos(const Vector<int>& indexes)
 {
 	if (!_View.IsLayout())
 		return;

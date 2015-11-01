@@ -35,7 +35,7 @@ XMLToolBarItem::XMLToolBarItem(XMLToolBarItem rval_ item)
 	icon		= item.icon;
 	tooltip		= item.tooltip;
 	isSeparator	= item.isSeparator;
-	subMenu		= item.subMenu;
+	subMenu		= pick(item.subMenu);
 }
 
 #ifdef flagDEBUG
@@ -116,7 +116,7 @@ XMLToolBar::XMLToolBar()
 XMLToolBar::XMLToolBar(XMLToolBar pick_ &tb)
 {
 	name = tb.name;
-	items = tb.items;
+	items = pick(tb.items);
 	state = tb.state;
 	position = tb.position;
 }
@@ -135,7 +135,7 @@ XMLToolBar::XMLToolBar(XMLToolBar const &tb, int dummy)
 XMLToolBar &XMLToolBar::operator=(XMLToolBar pick_ &tb)
 {
 	name = tb.name;
-	items = tb.items;
+	items = pick(tb.items);
 	state = tb.state;
 	prevState = tb.prevState;
 	position = tb.position;
@@ -384,7 +384,7 @@ void XMLToolBar::Xmlize(XmlIO xml)
 // adds a new toolbar
 XMLToolBars &XMLToolBars::Add(String const &name, XMLToolBar pick_ &tb)
 {
-	ArrayMap<String, XMLToolBar>::AddPick(name, tb);
+	ArrayMap<String, XMLToolBar>::AddPick(name, pick(tb));
 	Top().SetName(name);
 	return *this;
 }

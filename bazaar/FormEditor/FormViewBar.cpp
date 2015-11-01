@@ -33,7 +33,7 @@ void FormView::CreateObjectMenu(Bar& bar, int id)
 	if (selCount >= 1)
 	{
 		bar.Separator();
-		bar.Add(t_("Properties"), THISBACK1(OpenObjectProperties, GetSelected()));
+		bar.Add(t_("Properties"), THISBACK(DoOpenObjectProperties));
 	}
 }
 

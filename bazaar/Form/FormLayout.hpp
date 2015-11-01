@@ -8,7 +8,7 @@ class FormLayout : public XMLConfig, public Moveable<FormLayout>
 	typedef FormLayout CLASSNAME;
 
 	PARAMETER(Rect, PageRect);
-	PARAMETER(Vector<FormObject>, Objects);
+	PARAMETER(WithDeepCopy< Vector<FormObject> >, Objects);
 
 public:
 	FormLayout();

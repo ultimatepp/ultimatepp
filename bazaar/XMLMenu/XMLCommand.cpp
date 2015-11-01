@@ -24,7 +24,7 @@ XMLCommand::XMLCommand(XMLCommand rval_ c)
 	ctrlSize				= c.ctrlSize;
 	callback				= c.callback;
 	menuCallback			= c.menuCallback;
-	menuTb					= c.menuTb;
+	menuTb					= pick(c.menuTb);
 	enabled					= c.enabled;
 	custom					= c.custom;
 	commandString			= c.commandString;
@@ -240,12 +240,12 @@ XMLCommands &XMLCommands::Sort(void)
 	{
 		if(commands[i].GetIsCustom())
 		{
-			custom.AddPick(commands[i]);
+			custom.AddPick(pick(commands[i]));
 			customIdx.Add(commands.GetKey(i));
 		}
 		else
 		{
-			builtIn.AddPick(commands[i]);
+			builtIn.AddPick(pick(commands[i]));
 			builtInIdx.Add(commands.GetKey(i));
 		}
 	}
@@ -253,9 +253,9 @@ XMLCommands &XMLCommands::Sort(void)
 	IndexSort(builtInIdx, builtIn, XMLCmdLess());
 	commands.Clear();
 	for(int i = 0; i < builtIn.GetCount(); i++)
-		commands.AddPick(builtInIdx[i], builtIn[i]);
+		commands.AddPick(builtInIdx[i], pick(builtIn[i]));
 	for(int i = 0; i < custom.GetCount(); i++)
-		commands.AddPick(customIdx[i], custom[i]);
+		commands.AddPick(customIdx[i], pick(custom[i]));
 	
 	return *this;
 }
@@ -278,7 +278,7 @@ void XMLCommands::Xmlize(XmlIO xml)
 		
 		// appends new commands to current list
 		for(int i = 0; i < newCmds.GetCount(); i++)
-			commands.AddPick(newCmds.GetKey(i), newCmds[i]);
+			commands.AddPick(newCmds.GetKey(i), pick(newCmds[i]));
 	}
 	else
 	{

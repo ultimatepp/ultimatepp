@@ -16,6 +16,3 @@ file
 	Container.hpp,
 	Macro.hpp;
 
-mainconfig
-	"" = "GUI";
-

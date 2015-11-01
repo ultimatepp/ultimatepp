@@ -13,6 +13,3 @@ file
 	MenuBarEx.cpp,
 	FormEditorCommon.h;
 
-mainconfig
-	"" = "GUI";
-

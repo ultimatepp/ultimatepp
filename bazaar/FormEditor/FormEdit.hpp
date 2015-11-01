@@ -101,7 +101,7 @@ public:
 
 	void OpenObjectProperties(const Vector<int>& indexes);
 	void UpdateChildProperties(const Vector<int>& indexes);
-	void UpdateChildPos(Vector<int> indexes);
+	void UpdateChildPos(const Vector<int>& indexes);
 	void UpdateChildCount(int count);
 	void UpdateChildAllPos();
 	void UpdateChildZ();

@@ -20,6 +20,3 @@ file
 	PropertyEdits.h,
 	PropertyEdits.cpp;
 
-mainconfig
-	"" = "GUI";
-
