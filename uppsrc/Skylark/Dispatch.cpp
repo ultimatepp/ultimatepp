@@ -138,15 +138,17 @@ void RegisterView0(void (*fn)(Http&), Callback1<Http&> cb, const char *id, Strin
 			if(IsDigit(s[1]))
 				linkargpos = argpos = minmax(atoi(~s + 1), 0, 30);
 			else
-			if(s[1] == '*')
+			if(s[1] == '*') {
 				argpos = DISPATCH_VARARGS;
+				linkargpos = 255;
+			}
 			q = DispatchMap.GetCount();
 			LLOG(" Adding arg " << argpos << ": " << q);
 			n.subnode.Add(Null, q);
 			DispatchMap.Add();
 			DispatchMap[q].argpos = argpos;
 			if(primary)
-				linkpart.Add(String(linkargpos++, 1));
+				linkpart.Add(String(min(linkargpos++,255), 1));
 		}
 		else {
 			if(primary)
