@@ -334,7 +334,7 @@ void InsertPath(EditString *es)
 
 void Ide::SetupFormat() {
 	FormatDlg dlg;
-	dlg.Title("Format setup");
+	dlg.Title("Environment");
 	WithSetupFontLayout<ParentCtrl> fnt;
 	WithSetupHlLayout<ParentCtrl> hlt;
 	WithSetupEditorLayout<ParentCtrl> edt;
