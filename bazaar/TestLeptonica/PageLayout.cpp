@@ -23,7 +23,6 @@ void TestLeptonica::onPageLayout()
 	))
 		return;
 	
-	fs.ReadOnlyOption();
 	if(fs.ExecuteOpen("Please select image for page layout analysis:"))
 	{
 		FileIn s;

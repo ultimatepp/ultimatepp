@@ -140,7 +140,7 @@ bool PixRasterBaseCtrl::PointToPage(Point const &srcPt, int &page, Point &destPt
 		}
 		top += pageHeight + gapSize;
 	}
-	
+	return false;
 } // END PixRasterBaseCtrl::PointToPage()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -522,7 +522,7 @@ void PixRasterBaseCtrl::PaintMarkers(Draw &d)
 						
 					default:
 						Vector<Point> pts = marker.GetPoints();
-						Point points[pts.GetCount()];
+						Buffer<Point> points(pts.GetCount());
 						for(int i = 0; i < pts.GetCount(); i++)
 						{
 							points[i].x = ScaleToView(pts[i].x) - left + hGap;

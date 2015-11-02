@@ -5,7 +5,6 @@ void RasterCtrlTestWindow::Menu_File_Open_cb()
 {
 	String fileName;
 	FileSelector fs;
-	fs.ReadOnlyOption();
 	if(fs.ExecuteOpen("Please select a graphic file to view:"))
 		rasterCtrl.Open(fs);
 

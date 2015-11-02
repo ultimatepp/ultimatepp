@@ -155,4 +155,5 @@ Image PlotCtrl::CursorImage(Point p, dword keyflags) {
 		case PC_ARROW: return Image::Arrow();
 		case PC_WAIT:  return Image::Wait();
 	}
+	return Image();
 }

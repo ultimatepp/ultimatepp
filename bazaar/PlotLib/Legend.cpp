@@ -43,6 +43,6 @@ unsigned Legend::GetHashValue()const{
 }
 
 Legend& Legend::SetPlot(Plot& plot){
-	p=plot;
+	p=pick(plot);
 	return *this;
 }

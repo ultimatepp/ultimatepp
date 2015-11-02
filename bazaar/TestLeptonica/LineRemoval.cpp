@@ -87,7 +87,6 @@ void TestLeptonica::onLineRemoval()
 	))
 		return;
 	
-	fs.ReadOnlyOption();
 	if(fs.ExecuteOpen("Please select image for line removal:"))
 	{
 		FileIn s;

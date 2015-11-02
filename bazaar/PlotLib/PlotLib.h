@@ -121,6 +121,8 @@ private:
 };
 class Plot{
 public:
+	rval_default(Plot);
+
 	Plot();
 	Vector<PlotData> data;
 

@@ -449,7 +449,7 @@ class PixRaster : public PixBase
 		bool Save(String fileName, int page = PIXRASTER_CURPAGE); // @@ to do - add compression and type handling
 		bool SaveAll(String fileName);
 		
-		
+		rval_default(PixRaster);
 }; // END class PixRaster
 
 END_UPP_NAMESPACE

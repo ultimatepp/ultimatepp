@@ -28,7 +28,7 @@ public:
 	static int            TypeIndex(const String& name) {return max(classMap().Find(name),0);}
 	static int            GetCount()                    {return classMap().GetCount();}
 	static PlotSymbol*    Create(int i)                 {return classMap()[i]();}
-	static Vector<String> GetTypes()                    {return VectorMap<String,String>(typeMap(),1).GetValues();}
+	static Vector<String> GetTypes()                    {return VectorMap<String,String>(typeMap(),1).PickValues();}
 	       int            GetType()const                {return typeMap().Find(typeid(*this).name());}
 	       PlotSymbol*    Copy()const;
 protected:

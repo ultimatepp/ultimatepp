@@ -309,7 +309,7 @@ void Marker::Drag(Point const &startPt, Point const &endPt, int minDist)
 		}
 		
 		case PolyMarker:
-			points = pts;
+			points = pick(pts);
 			break;
 			
 		default:

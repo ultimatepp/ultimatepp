@@ -500,7 +500,7 @@ Pix &Pix::operator=(Pix &_pix)
 {
 	Destroy();
 	if(!_pix)
-		return *this;
+		return _pix;
 	
 	pix = pixClone(_pix);
 	rasterFormat = NULL;
@@ -924,24 +924,22 @@ int PixRaster::getTruePage(int page)
 		NEVER();
 
 	// if empty raster, returns INVALID_PAGE
-	else
+	else {
 		if (IsEmpty() )
 			return 0;
 
 	// special value for current page
-		else
+		else {
 			if (page == PIXRASTER_CURPAGE)
 				return curPage;
 
 	// special value for last page
-			else
+			else {
 				if (page == PIXRASTER_LASTPAGE)
 					return pages.GetCount() - 1;
-
 	// negative values mean back offset from last page
-				else
-					if (page < 0)
-					{
+				else {
+					if (page < 0) {
 						page = pages.GetCount() - 1 + page;
 
 						if (page < 0)
@@ -949,12 +947,17 @@ int PixRaster::getTruePage(int page)
 
 						return page;
 					}
-
-					else
+					else {
 						if (page >= pages.GetCount())
 							return pages.GetCount() - 1;
 						else
 							return page;
+					}
+				}
+			}
+		}
+	}
+	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1343,13 +1346,13 @@ bool PixRaster::Load(String fileName, bool Append)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool PixRaster::Save(String fileName, int page) // @@ to do - add compression and type handling
 {
-
+	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool PixRaster::SaveAll(String fileName)
 {
-
+	return false;
 }
 
 END_UPP_NAMESPACE

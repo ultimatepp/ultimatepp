@@ -41,7 +41,6 @@ void TestLeptonica::onBaseLine()
 	))
 		return;
 	
-	fs.ReadOnlyOption();
 	if(fs.ExecuteOpen("Please select image for text baseline analysis:"))
 	{
 		FileIn s;
