@@ -1,4 +1,4 @@
-description "Bazaar: Rss 2.0 parser/composer class. Author: İsmail YILMAZ, (Oblivion)";
+description "Bazaar: Rss 2.0 parser/composer class. Author: İsmail YILMAZ, (Oblivion)\377";
 
 uses
 	Core;
@@ -7,7 +7,4 @@ file
 	Rss.h,
 	Rss.cpp charset "UTF-8",
 	Changelog.txt charset "UTF-8";
-
-mainconfig
-	"" = "GUI";
 

@@ -1,4 +1,4 @@
-description "Bazaar: Rss 2.0 multi-channel feed creation example using Rss class. Author: İsmail YILMAZ (Oblivion)";
+description "Bazaar: Rss 2.0 multi-channel feed creation example using Rss class. Author: İsmail YILMAZ (Oblivion)\377";
 
 uses
 	CtrlLib,

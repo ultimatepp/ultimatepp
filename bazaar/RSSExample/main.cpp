@@ -35,6 +35,7 @@ void RSSExample::ComposeRss()
 				));
 				
 	for(int i = 1; i < 5; i++) {
+		RssTag cat = RssCategory(Format("Item %d has a category", i));
 		channel1
 			.Item(
 				RssItem(
@@ -44,7 +45,7 @@ void RSSExample::ComposeRss()
 			 	Format("Item %d has an author", i),												// Item author
 			 	NULL,																			// Item comment
 			 	NULL,																			// Item publication date				 	
-			 	(i < 3 ? &RssCategory(Format("Item %d has a category", i)) : NULL)				// Item category
+			 	(i < 3 ? &cat : NULL)				// Item category
 			 	));																				
 	}
 

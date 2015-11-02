@@ -216,7 +216,7 @@ public:
 		Vector<Value> vv;
 		for(int i = 0; i < GetCount(); i++)
 			vv << Get(i, 0);
-		return ValueArray(vv);
+		return ValueArray(pick(vv));
 	}
 	virtual void SetData(const Value& v)
 	{
@@ -254,7 +254,7 @@ public:
 		{
 			k << Get(i, 0); vv << Get(i, 1);
 		}
-		return ValueMap(k, vv);
+		return ValueMap(k, pick(vv));
 	}
 
 	virtual void SetData(const Value& v)

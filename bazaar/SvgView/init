@@ -1,8 +1,0 @@
-#ifndef _SvgView_icpp_init_stub
-#define _SvgView_icpp_init_stub
-#include "CtrlLib/init"
-#include "plugin\tif/init"
-#include "plugin\jpg/init"
-#include "plugin\gif/init"
-#include "PainterSvg/init"
-#endif
