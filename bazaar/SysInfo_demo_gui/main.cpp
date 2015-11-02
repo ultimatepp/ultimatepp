@@ -22,7 +22,7 @@ GUI_APP_MAIN {
 
 void SpecialFolders::Fill() {
 	TextDesktop = GetDesktopFolder();
-	TextPrograms = GetProgramsFolder(); 
+	TextPrograms = GetProgramsFolder();
 	TextApplication = GetAppDataFolder();
 	TextMusic = GetMusicFolder();
 	TextPictures = GetPicturesFolder();

@@ -1,0 +1,5 @@
+#ifndef _UnitTestTest_icpp_init_stub
+#define _UnitTestTest_icpp_init_stub
+#include "Core/init"
+#include "UnitTest++/init"
+#endif
