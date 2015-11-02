@@ -110,7 +110,7 @@ public:
 
 		if (xml.IsStoring())
 		{
-			Vector<Point> keys = _mipMaps.GetKeys();
+			const Vector<Point>& keys = _mipMaps.GetKeys();
 			xml("mipmaps", keys);
 		}
 		else

@@ -7,6 +7,3 @@ file
 	MtAlt.cpp,
 	MtAlt.h;
 
-mainconfig
-	"" = "MT";
-

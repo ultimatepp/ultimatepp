@@ -79,7 +79,7 @@ public:
 	ExpandFrame& Right(Ctrl& c, int size = -1)  	{ return Set(c, (size < 0) ? c.GetMinSize().cx : HorzLayoutZoom(size), RIGHT); }
 	ExpandFrame& Bottom(Ctrl& c, int size = -1) 	{ return Set(c, (size < 0) ? c.GetMinSize().cy : VertLayoutZoom(size), BOTTOM); }
 	ExpandFrame& SetStyle(const Style *_style) 		{ handle.style = _style; SetChildPos(); UpdateButton(); RefreshParentLayout(); return *this; }
-	ExpandFrame& IgnoreFocus(bool ignore = true) 	{ ignorefocus = ignore; if (!childfocus) Refresh(); }
+	ExpandFrame& IgnoreFocus(bool ignore = true) 	{ ignorefocus = ignore; if (!childfocus) Refresh(); return *this; }
 
 	ExpandFrame& Expand(bool _expand = true);
 	ExpandFrame& Collapse()							{ return Expand(false); }

@@ -212,7 +212,7 @@ Rect MapLevel::ViewToScene(const Rect& rt)
 Array<Point> MapLevel::SceneToView(const Array<Point>& p)
 {
 	if (!GetZoomCount())
-		return p;
+		return clone(p);
 	Array<Point> res;
 	for (int i = 0; i < p.GetCount(); ++i)
 		res << SceneToView(p[i]);
@@ -232,7 +232,7 @@ Array<Point> MapLevel::ViewToScene(const Array<Point>& p)
 Vector<Point> MapLevel::SceneToView(const Vector<Point>& p)
 {
 	if (!GetZoomCount())
-		return p;
+		return clone(p);
 	Vector<Point> res;
 	for (int i = 0; i < p.GetCount(); ++i)
 		res << SceneToView(p[i]);
@@ -242,7 +242,7 @@ Vector<Point> MapLevel::SceneToView(const Vector<Point>& p)
 Vector<Point> MapLevel::ViewToScene(const Vector<Point>& p)
 {
 	if (!GetZoomCount())
-		return p;
+		return clone(p);
 	Vector<Point> res;
 	for (int i = 0; i < p.GetCount(); ++i)
 		res << ViewToScene(p[i]);

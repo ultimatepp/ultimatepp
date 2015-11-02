@@ -45,14 +45,14 @@ public:
 	virtual Point SceneToView(const Point& p) { return GetTopRender() ? GetTopRender()->SceneToView(p) : p; }
 	virtual Size  SceneToView(const Size& sz) { return GetTopRender() ? GetTopRender()->SceneToView(sz) : sz; }
 	virtual Rect  SceneToView(const Rect& rt) { return GetTopRender() ? GetTopRender()->SceneToView(rt) : rt; }
-	virtual Array<Point> SceneToView(const Array<Point>& p) { return GetTopRender() ? GetTopRender()->SceneToView(p) : p; }
-	virtual Vector<Point> SceneToView(const Vector<Point>& p) { return GetTopRender() ? GetTopRender()->SceneToView(p) : p; }
+	virtual Array<Point> SceneToView(const Array<Point>& p) { return GetTopRender() ? GetTopRender()->SceneToView(p) : clone(p); }
+	virtual Vector<Point> SceneToView(const Vector<Point>& p) { return GetTopRender() ? GetTopRender()->SceneToView(p) : clone(p); }
 
 	virtual Point ViewToScene(const Point& p) { return GetTopRender() ? GetTopRender()->ViewToScene(p) : p; }
 	virtual Size  ViewToScene(const Size& sz) { return GetTopRender() ? GetTopRender()->ViewToScene(sz) : sz; }
 	virtual Rect  ViewToScene(const Rect& rt) { return GetTopRender() ? GetTopRender()->ViewToScene(rt) : rt; }
-	virtual Array<Point> ViewToScene(const Array<Point>& p) { return GetTopRender() ? GetTopRender()->ViewToScene(p) : p; }
-	virtual Vector<Point> ViewToScene(const Vector<Point>& p) { return GetTopRender() ? GetTopRender()->ViewToScene(p) : p; }
+	virtual Array<Point> ViewToScene(const Array<Point>& p) { return GetTopRender() ? GetTopRender()->ViewToScene(p) : clone(p); }
+	virtual Vector<Point> ViewToScene(const Vector<Point>& p) { return GetTopRender() ? GetTopRender()->ViewToScene(p) : clone(p); }
 
 	virtual Rect  CurrentViewRect() { return GetTopRender() ? GetTopRender()->CurrentViewRect() : GetRect(); }
 	virtual Rect  CurrentViewSize() { return CurrentViewRect().GetSize(); }
@@ -98,15 +98,15 @@ protected:
 #define ZOOM_FUNCTIONS_DECLARE(Type) \
 inline Type ViewToScene(Ptr<IMapItem> item, const Type& p) \
 { \
-	if (!item) return p; \
-	if ( item->GetTopRender() == NULL) return p; \
-	return item->GetTopRender()->ViewToScene(p); \
+	if (!item) return clone(p); \
+	if ( item->GetTopRender() == NULL) return clone(p); \
+	return pick(item->GetTopRender()->ViewToScene(p)); \
 } \
 inline Type SceneToView(Ptr<IMapItem> item, const Type& p) \
 { \
-	if (!item) return p; \
-	if ( item->GetTopRender() == NULL) return p; \
-	return item->GetTopRender()->SceneToView(p); \
+	if (!item) return clone(p); \
+	if ( item->GetTopRender() == NULL) return clone(p); \
+	return pick(item->GetTopRender()->SceneToView(p)); \
 }
 
 ZOOM_FUNCTIONS_DECLARE(Point);
