@@ -119,7 +119,7 @@ _DBG_
 	static void            GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, gpointer user_data);
 	static void            AddFmt(GtkTargetList *list, const String& fmt, int info);
 	static GtkTargetList  *CreateTargetList(const VectorMap<String, ClipData>& target);
-	static String          GtkDataGet(GtkSelectionData *s); 
+	static String          GtkDataGet(GtkSelectionData *s);
 
 	       void DndInit();
 	       void DndExit();
@@ -174,7 +174,7 @@ public:
 	static void      PanicMsgBox(const char *title, const char *text);
 	
 	static Point     CurrentMousePos;
-	static guint     CurrentState; 
+	static guint     CurrentState;
 	static guint32   CurrentTime;
 	static Event     CurrentEvent;
 
