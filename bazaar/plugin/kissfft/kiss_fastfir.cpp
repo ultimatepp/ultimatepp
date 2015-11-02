@@ -331,7 +331,7 @@ void do_file_filter(
     n_samps_buf = 8*4096/sizeof(kffsamp_t); 
     n_samps_buf = nfft + 4*(nfft-n_imp_resp+1);
 
-    if (verbose) fprintf(stderr,"bufsize=%d\n",sizeof(kffsamp_t)*n_samps_buf );
+    if (verbose) fprintf(stderr,"bufsize=%d\n",int(sizeof(kffsamp_t)*n_samps_buf));
      
 
     /*allocate space and initialize pointers */

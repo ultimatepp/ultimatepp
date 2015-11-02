@@ -29,7 +29,7 @@ void BufferStream::Seek(int64 pos)
 void BufferStream::Open(Vector<byte> & d)
 {
 	if(&data != &d)
-		data = d; //pick
+		data = pick(d); //pick
 	MemStream::Create((byte*)data, data.GetCount());
 }
 
@@ -43,7 +43,7 @@ void BufferStream::Create()
 Vector<byte> BufferStream::GetResult()
 {
 	data.SetCount((int)GetPos());
-	Vector<byte> d = data; //pick
+	Vector<byte> d = pick(data); //pick
 	Create();
 	return d;
 }

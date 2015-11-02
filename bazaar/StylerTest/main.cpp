@@ -146,15 +146,15 @@ void StylerTest::InitDummys()
 	ed = 10.3;
 	
 	einn <<= 100;
-	ei64nn <<= 22342599399929;
+	ei64nn <<= (int64)22342599399929;
 	ednn <<= 10.3;
 
 	eis <<= 100;
-	ei64s <<= 22342599399929;
+	ei64s <<= (int64)22342599399929;
 	eds <<= 10.3;
 
 	einns <<= 100;
-	ei64nns <<= 22342599399929;
+	ei64nns <<= (int64)22342599399929;
 	ednns <<= 10.3;
 	
 	edt <<= GetSysDate();

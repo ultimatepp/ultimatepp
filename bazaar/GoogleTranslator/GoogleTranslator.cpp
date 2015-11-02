@@ -180,7 +180,7 @@ String GoogleTranslator::GetFormatedText(){
 				if(text_temp_pos1==-1)
 					text_temp_pos1= text_temp.GetLength();
 				
-				if(text_temp_pos,text_temp_pos1 - text_temp_pos >1){
+				if(text_temp_pos1 - text_temp_pos >1){
 					formatedText<<text_lf;
 					formatedText<<t_(text_temp.Mid(text_temp_pos,text_temp_pos1 - text_temp_pos))<<String(":").Cat();
 				}

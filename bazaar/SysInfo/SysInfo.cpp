@@ -571,6 +571,7 @@ bool GetProcessorInfo(int number, String &vendor, String &identifier, String &ar
 	architecture << " Family " << family << " Model " << model << " Stepping " << stepping;		// And 64 bits ?? uname -m
 	cpu.GoAfter_Init("cpu MHz", ":");
 	speed = cpu.GetInt();
+	return true;
 }
 
 static double GetCpuTemperatureACPI() {
@@ -582,11 +583,12 @@ static double GetCpuTemperatureACPI() {
 	int count = 0;
 	while (true) {
 		line = info.GetLine();
-		if (line.IsEmpty())
+		if (line.IsEmpty()) {
 			if (info.Eof())
 				break;
 			else
 				continue;
+		}
 		if (!line.GoAfter("Thermal", "ok,"))
 			continue;
 		double temp = line.GetDouble();
@@ -597,7 +599,7 @@ static double GetCpuTemperatureACPI() {
 	}
 	if (count == 0)
 		return Null;
-	return tempAcc/count;	
+	return tempAcc/count;
 }
 
 static double GetCpuTemperatureSensors() {

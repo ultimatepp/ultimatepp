@@ -15,14 +15,10 @@ class IPNServer : public ScgiServer
 		
 		String payServer;
 		int payPort;
-		
-	// 'VERIFIED' answer handler
-	Callback1<VectorMap<String, String> >onVerified;
-	
-	// 'INVALID' answer handler
-	Callback onInvalid;
 
 public:
+	Callback WhenVerified;
+	Callback WhenInvalid;
 
 	// constructor - defaults to port 8787
 	IPNServer(int port = 8787);
@@ -32,12 +28,13 @@ public:
 	IPNServer &SetPayPort(int p) { payPort = p; return *this; }
 	
 	// setting of handler
-	IPNServer &SetVerifiedHandler(Callback1<VectorMap<String, String> >handler) { onVerified = handler; return *this; }
-	IPNServer &SetInvalidHandler(Callback handler) { onInvalid = handler; return *this; }
+	IPNServer &SetVerifiedHandler(Callback handler) { WhenVerified = handler; return *this; }
+	IPNServer &SetInvalidHandler(Callback handler)  { WhenInvalid = handler; return *this; }
 	
 	// runs the server
 	void Run(void);
-	
+
+	VectorMap<String, String> GetVerified() const;
 };
 
 END_UPP_NAMESPACE

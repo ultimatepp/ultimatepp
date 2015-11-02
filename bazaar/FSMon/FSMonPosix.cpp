@@ -255,7 +255,7 @@ void FSMon::EventsSelector(uint32 mask, String const &path, String const &newPat
 							oldPth = newPath + oldPth.Mid(path.GetCount());
 						paths.Add(oldPth);
 					}
-					monitoredPaths = paths;
+					monitoredPaths = pick(paths);
 				}
 			}
 		}
@@ -513,7 +513,7 @@ Vector<FSMon::Info> FSMon::GetChanged(void)
 	Vector<Info> info;
 	INTERLOCKED_(fsmMutex)
 	{
-		info = changed;
+		info = pick(changed);
 		changed.Clear();
 	}
 	return info;
@@ -532,7 +532,7 @@ Index<String> FSMon::GetOpenedFiles(void)
 		
 VectorMap<String, int> FSMon::GetErrorMap(void)
 {
-	VectorMap<String, int> res = errMap;
+	VectorMap<String, int> res = pick(errMap);
 	errMap.Clear();
 	return res;
 }

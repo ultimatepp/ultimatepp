@@ -162,6 +162,7 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		// debugging stuff -- dumps bar content
 		void Dump(int level = 0);
 #endif
+		rval_default(XMLToolBar);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////

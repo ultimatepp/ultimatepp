@@ -55,14 +55,9 @@ void IPNServer::OnRequest()
 		// the rest is just HTTP headers and can be discarded
 		// in detail, the LAST part of req string must be "VERIFIED"
 		if(req.Right(8) == "VERIFIED")
-		{
-			VectorMap<String, String> data;
-			for(int i = 0; i < post.GetCount(); i++)
-				data.Add(ToUpper(post.GetKey(i)), post[i]);
-			onVerified(data);
-		}
+			WhenVerified();
 		else
-			onInvalid();
+			WhenInvalid();
 	}
 	else
 		Cout() << "No POST data on PayPal request\n";
@@ -71,6 +66,14 @@ void IPNServer::OnRequest()
 	// but paypal do check the http response along with reply packet
 	// on direct http access it'll show just a blank page
 	clientSock.Write("Content-Type: text/plain\r\n\r\n");
+}
+
+VectorMap<String, String> IPNServer::GetVerified() const
+{
+	VectorMap<String, String> data;
+	for(int i = 0; i < post.GetCount(); i++)
+		data.Add(ToUpper(post.GetKey(i)), post[i]);
+	return data;
 }
 
 void IPNServer::OnClosed()

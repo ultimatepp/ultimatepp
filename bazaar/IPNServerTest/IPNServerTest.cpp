@@ -50,8 +50,9 @@ static bool Daemonize(void)
 #endif
 #endif
 
-void OnVerified(VectorMap<String, String> data)
+void OnVerified(IPNServer *s)
 {
+	VectorMap<String, String> data = s->GetVerified();
 	Cout() << "DUMP OF TRANSACTION DATA:\n\n";
 	for(int i = 0; i < data.GetCount(); i++)
 		Cout() << data.GetKey(i) << "=" << data[i] << "\n";
@@ -88,7 +89,7 @@ CONSOLE_APP_MAIN
 	
 	// setup handlers for VERIFIED and INVALID paypal messages
 	server
-		.SetVerifiedHandler(STDBACK(OnVerified))
+		.SetVerifiedHandler(STDBACK1(OnVerified, &server))
 		.SetInvalidHandler(STDBACK(OnInvalid))
 	;
 	

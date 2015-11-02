@@ -7,6 +7,5 @@ file
 	kissfir.cpp;
 
 mainconfig
-	"" = "MT",
 	"" = "MT FAST_FILT_UTIL";
 

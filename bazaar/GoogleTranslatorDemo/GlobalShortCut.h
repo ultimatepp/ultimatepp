@@ -45,7 +45,8 @@ inline bool get_key_state(dword p_k){
 			
 		if((result)&&(p_k & K_CTRL))
 			result &= GetCtrl();
-	#elif PLATFORM_X11
+	#else
+	#ifdef PLATFORM_X11
 		result = true;
 		char key_map_stat[32];
 		XQueryKeymap(Xdisplay, key_map_stat);

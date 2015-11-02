@@ -28,7 +28,8 @@ internals.&]
 [s0; &]
 [s0; [@6 IMPORTANT]: Before compiling please check [*/ 2. Compiler support 
 and Requirements] in [^topic`:`/`/SysInfo`/srcimp`/SysInfo`$en`-us^ Implementation 
-details.]&]
+details.] In X11, SysInfo requires XTest extension (in debian 
+based system, you need to install libxtst`-dev package).&]
 [s0; &]
 [s0; It includes functions for:&]
 [s0; &]
