@@ -5,6 +5,8 @@
 
 using namespace Upp;
 
+void _SignalHandler(int sig, siginfo_t *info, void *v);
+
 class TSignals
 {
 	friend TSignals &Signals(void);

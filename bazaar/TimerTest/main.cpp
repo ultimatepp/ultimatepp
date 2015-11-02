@@ -12,16 +12,16 @@ TimerTest::TimerTest()
 	ASSERT(a==1); //preload, 1 means running demo mode, 2 means a cb is executing
 
 #ifdef REPEAT_TEST
-	t.SetTimeCallback(-TIMEOUT, THISBACK(Test), (int)this);
+	t.SetTimeCallback(-TIMEOUT, THISBACK(Test), (intptr_t)this);
 #else
-	t.SetTimeCallback(0, THISBACK(Test), (int)this);
+	t.SetTimeCallback(0, THISBACK(Test), (intptr_t)this);
 #endif
 }
 
 void TimerTest::Info(const String & s)
 {
 	info.Insert(info.GetLength(), s);
-	info.SetCursor(info.GetLength());	
+	info.SetCursor(info.GetLength());
 }
 
 void TimerTest::Test()
@@ -45,9 +45,9 @@ void TimerTest::Test()
 
 void TimerTest::Close()
 {
-	t.KillTimeCallback((int)this);
+	t.KillTimeCallback((intptr_t)this);
 	int a = AtomicDec(demo);
-	Thread::Start(THISBACK(Close0));	
+	Thread::Start(THISBACK(Close0));
 }
 
 void TimerTest::Close0()

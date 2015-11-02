@@ -1,4 +1,4 @@
-description "Package to handle Posix signala";
+description "Package to handle Posix signala\377";
 
 uses
 	CtrlCore;

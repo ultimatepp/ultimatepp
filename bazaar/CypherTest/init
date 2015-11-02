@@ -1,0 +1,6 @@
+#ifndef _CypherTest_icpp_init_stub
+#define _CypherTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Cypher/init"
+#include "Controls4U/init"
+#endif

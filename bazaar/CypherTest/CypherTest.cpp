@@ -69,11 +69,11 @@ void CypherTest::onGo()
 		return;
 	if(!FileExists(~sourceEdit))
 	{
-		PromptOK(String("File '") + sourceEdit + "' don't exists");
+		PromptOK(String().Cat() << "File '" << ~sourceEdit << "' doesn't exists");
 		return;
 	}
 	if(FileExists(~destEdit))
-		if(!PromptYesNo(String("File '") + destEdit + "' exists&[*= OVERWRITE ?]"))
+		if(!PromptYesNo(String().Cat() << "File '" << ~destEdit << "' exists&[*= OVERWRITE ?]"))
 			return;
 	
 	// load file to encode	

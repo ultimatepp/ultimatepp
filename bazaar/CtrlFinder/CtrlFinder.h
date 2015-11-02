@@ -39,7 +39,7 @@ public:
 	void ClearSource() { SetSource(NULL); }
 
 	void SetCtrl(Ctrl* c);
-	void SetCtrls(pick_ Vector<Ctrl*>& _ctrls) { ctrls = _ctrls; Update(); }
+	void SetCtrls(Vector<Ctrl*> rval_ _ctrls) { ctrls = pick(_ctrls); Update(); }
 
 	Ctrl* GetCtrl() const { return ctrls.IsEmpty() ? NULL : ctrls.Top(); }
 	Vector<Ctrl*> GetCtrls() const { return Vector<Ctrl*>(ctrls, 1); }
@@ -53,7 +53,7 @@ public:
 	void Multiselect(bool b = true) { multi = b; if(!b && ctrls.GetCount() > 1) { ctrls[0] = ctrls.Top(); ctrls.SetCount(1); Update(); } }
 	bool IsMultiselect() const { return multi; }
 	
-	static void StdCtrlFilter(Ctrl*& q, int& f);	
+	static void StdCtrlFilter(Ctrl*& q, int& f);
 
 	static Ctrl* ChildAtPoint(Ctrl& par, Point& pt, int& f, const CtrlFilterType& filt);
 	static Ctrl* GetCtrl(Ctrl& c, Point& p, int& f, const CtrlFilterType& filt);

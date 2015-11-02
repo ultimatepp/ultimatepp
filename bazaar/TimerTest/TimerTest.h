@@ -19,7 +19,7 @@ public:
 	void Close0();
 	virtual void Close();
 	
-	void Info(const String & s);	
+	void Info(const String & s);
 	void Test();
 private:
 	Timer t;

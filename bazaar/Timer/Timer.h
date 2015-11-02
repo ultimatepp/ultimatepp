@@ -15,12 +15,12 @@ public:
 	
 	//API just as in Ctrl
 public:
-	void    SetTimeCallback(int delay_ms, Callback cb, int id = 0);
-	void    KillTimeCallback(int id = 0);
-	void    KillSetTimeCallback(int delay_ms, Callback cb, int id);
-	bool    ExistsTimeCallback(int id = 0);
-	void    PostCallback(Callback cb, int id = 0);
-	void    KillPostCallback(Callback cb, int id);
+	void    SetTimeCallback(int delay_ms, Callback cb, intptr_t id = 0);
+	void    KillTimeCallback(intptr_t id = 0);
+	void    KillSetTimeCallback(int delay_ms, Callback cb, intptr_t id);
+	bool    ExistsTimeCallback(intptr_t id = 0);
+	void    PostCallback(Callback cb, intptr_t id = 0);
+	void    KillPostCallback(Callback cb, intptr_t id);
 
 	void  SetTimerGranularity(int ms);
 

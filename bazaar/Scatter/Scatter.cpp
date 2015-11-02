@@ -1111,6 +1111,7 @@ void Scatter::DoMouseAction(bool down, Point pt, MouseAction action, int value)
 	case CONTEXT_MENU:	if(showContextMenu)
 							MenuBar::Execute(THISBACK(ContextMenu));
 						break;
+	case NO_ACTION: break; // Silence CLANG11 warning
 	}
 }
 
@@ -1175,12 +1176,7 @@ void Scatter::Scrolling(bool down, Point &pt, bool isOut)
 			butDownY = pt.y;	
 			isScrolling = true;
 			INTERLOCKED { 
-#ifdef PLATFORM_WIN32
-				static Image img = Win32Cursor(IDC_SIZEALL);
-#else
-				static Image img = X11Cursor(XC_fleur);
-#endif
-				mouseImg = Ctrl::OverrideCursor(img);
+				mouseImg = Ctrl::OverrideCursor(Image::SizeAll());
 			}
 		}
 	} else {

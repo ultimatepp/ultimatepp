@@ -4,5 +4,4 @@
 #include "Scatter/init"
 #include "Report/init"
 #include "PdfDraw/init"
-#include "plugin\jpg/init"
 #endif

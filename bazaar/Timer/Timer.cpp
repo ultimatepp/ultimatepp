@@ -171,35 +171,35 @@ void Timer::TimerProc(dword time, int& leftsleep)
 #endif
 
 //SAME API AS IN Ctrl
-void  Timer::SetTimeCallback(int delay_ms, Callback cb, int id) {
+void  Timer::SetTimeCallback(int delay_ms, Callback cb, intptr_t id) {
 //	ASSERT(id >= 0 && (size_t)id < (int)sizeof(Timer));
 //	SetTimeCallback(delay_ms, cb, (byte *)this + id);
 	SetTimeCallback(delay_ms, cb, (byte *)id);
 }
 
-void  Timer::KillTimeCallback(int id) {
+void  Timer::KillTimeCallback(intptr_t id) {
 //	ASSERT(id >= 0 && (size_t)id < sizeof(Timer));
 //	KillTimeCallback((byte *)this + id);
 	KillTimeCallback((byte *)id);
 }
 
-void  Timer::KillSetTimeCallback(int delay_ms, Callback cb, int id)
+void  Timer::KillSetTimeCallback(int delay_ms, Callback cb, intptr_t id)
 {
 	KillTimeCallback(id);
 	SetTimeCallback(delay_ms, cb, id);
 }
 
-void  Timer::PostCallback(Callback cb, int id)
+void  Timer::PostCallback(Callback cb, intptr_t id)
 {
 	SetTimeCallback(0, cb, id);
 }
 
-void  Timer::KillPostCallback(Callback cb, int id)
+void  Timer::KillPostCallback(Callback cb, intptr_t id)
 {
 	KillSetTimeCallback(0, cb, id);
 }
 
-bool  Timer::ExistsTimeCallback(int id) {
+bool  Timer::ExistsTimeCallback(intptr_t id) {
 //	ASSERT(id >= 0 && (size_t)id < sizeof(Timer));
 //	return ExistsTimeCallback((byte *)this + id);
 	return ExistsTimeCallback((byte *)id);
