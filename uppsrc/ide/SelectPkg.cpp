@@ -9,6 +9,7 @@
 void SelectPackageDlg::PackageMenu(Bar& menu)
 {
 	bool b = GetCurrentName().GetCount();
+	menu.Add("New package..", THISBACK(OnNew));
 	menu.Add(b, "Rename package..", THISBACK(RenamePackage));
 	menu.Add(b, "Delete package", THISBACK(DeletePackage));
 }
