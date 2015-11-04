@@ -283,9 +283,11 @@ bool Perform(Report& r, const char *caption)
 	return ReportWindow().Perform(r, 100, caption);
 }
 
-bool QtfReport(const String& qtf, const char *name, bool pagenumbers)
+bool QtfReport0(const String& qtf, const char *name, bool pagenumbers, Size pagesize)
 {
 	Report r;
+	if(!IsNull(pagesize))
+		r.SetPageSize(pagesize);
 	if(pagenumbers) {
 		Report rr;
 		rr.Footer("[1> $$P]");
@@ -295,5 +297,16 @@ bool QtfReport(const String& qtf, const char *name, bool pagenumbers)
 	r << qtf;
 	return Perform(r, name);
 }
+
+bool QtfReport(const String& qtf, const char *name, bool pagenumbers)
+{
+	return QtfReport0(qtf, name, pagenumbers, Null);
+}
+
+bool QtfReport(Size pagesize, const String& qtf, const char *name, bool pagenumbers)
+{
+	return QtfReport0(qtf, name, pagenumbers, pagesize);
+}
+
 
 END_UPP_NAMESPACE
