@@ -238,6 +238,8 @@ void ExpressionTyper::ExpressionType(bool isptr, const String& ttype, int ii,
 	static Index<String> std_pair_container;
 	static Index<String> std_container_iterator;
 	static Index<String> std_pair_container_iterator;
+	static Index<String> upp_container;
+	static Index<String> upp_container_iterator;
 	static Index<String> upp_map_container;
 	static Index<String> upp_map_container_iterator;
 	static Index<String> upp_map_container_key_iterator;
@@ -253,12 +255,18 @@ void ExpressionTyper::ExpressionType(bool isptr, const String& ttype, int ii,
 			std_container.Add("std::" + a[i]);
 			std_pair_container_iterator.Add("std::" + a[i] + "::iterator");
 		}
-		a = Split("VectorMap;ArrayMap", ';');
+		a = Split("VectorMap;ArrayMap;SortedVectorMap;SortedArrayMap", ';');
 		for(int i = 0; i < a.GetCount(); i++) {
 			upp_map_container.Add("Upp::" + a[i]);
 			upp_map_container_iterator.Add("Upp::" + a[i] + "::iterator");
 			upp_map_container_iterator.Add("Upp::" + a[i] + "::Iterator");
 			upp_map_container_key_iterator.Add("Upp::" + a[i] + "::KeyIterator");
+		}
+		a = Split("Index;ArrayIndex;InVector;InArray;SortedIndex", ';');
+		for(int i = 0; i < a.GetCount(); i++) {
+			upp_container.Add("Upp::" + a[i]);
+			upp_container_iterator.Add("Upp::" + a[i] + "::iterator");
+			upp_container_iterator.Add("Upp::" + a[i] + "::Iterator");
 		}
 	}
 	if(tparam.GetCount() > 0 && std_container_iterator.Find(type) >= 0) {
@@ -273,6 +281,13 @@ void ExpressionTyper::ExpressionType(bool isptr, const String& ttype, int ii,
 		typeset.Clear();
 		ExpressionType(false, "std::pair<" + tparam[0] + "," + tparam[1] + ">",
 		               ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
+		scan_counter = MAX_COUNT;
+		return;
+	}
+	if(tparam.GetCount() > 0 && upp_container_iterator.Find(type) >= 0) {
+		LLOG("# Upp nasty iterator");
+		typeset.Clear();
+		ExpressionType(false, tparam[0], ii, variable, can_shortcut_operator, visited_bases, lvl + 1);
 		scan_counter = MAX_COUNT;
 		return;
 	}
@@ -313,15 +328,16 @@ void ExpressionTyper::ExpressionType(bool isptr, const String& ttype, int ii,
 		scan_counter = MAX_COUNT;
 		return;
 	}
-	if(findarg(id, "begin", "end", "Begin", "End") >= 0 && upp_map_container.Find(type) >= 0) {
+	if(findarg(id, "begin", "end", "Begin", "End") >= 0 &&
+	   (upp_map_container.Find(type) >= 0 || upp_container.Find(type) >= 0)) {
 		LLOG("# nasty Upp begin/end");
 		typeset.Clear();
 		ExpressionType(false, ttype + "::Iterator", ii + 1, variable, can_shortcut_operator, visited_bases, lvl + 1);
 		scan_counter = MAX_COUNT;
 		return;
 	}
-	if(findarg(id, "begin", "end", "KeyBegin", "KeyEnd") >= 0 && upp_map_container.Find(type) >= 0) {
-		LLOG("# nasty Upp begin/end");
+	if(findarg(id, "KeyBegin", "KeyEnd") >= 0 && upp_map_container.Find(type) >= 0) {
+		LLOG("# nasty Upp KeyBegin/KeyEnd");
 		typeset.Clear();
 		ExpressionType(false, ttype + "::KeyIterator", ii + 1, variable, can_shortcut_operator, visited_bases, lvl + 1);
 		scan_counter = MAX_COUNT;
