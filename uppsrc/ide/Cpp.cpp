@@ -92,6 +92,10 @@ void AssistEditor::GatherItems(const String& type, bool only_public, Index<Strin
 	Vector<String> tparam;
 	String ntp = ParseTemplatedType(ResolveTParam(type, tparam), tparam);
 	int q = CodeBase().Find(ntp);
+	if(q < 0) {
+		ntp.Replace("*", ""); // * can be part of type as result of template substitution
+		q = CodeBase().Find(ntp);
+	}
 	if(q >= 0) {
 		if(types) {
 			if(ntp.GetCount())
