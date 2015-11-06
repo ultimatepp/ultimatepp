@@ -21,7 +21,7 @@ void demo(Image &img) {
     cvShowImage("Source", src);
 
     cvNamedWindow("Hough", 1);
-    cvShowImage("Hough", color_dst);
+    cvShowImage("Hough", color_dst); 
 
     cvWaitKey(0);
     
