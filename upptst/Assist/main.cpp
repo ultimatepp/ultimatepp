@@ -211,6 +211,34 @@ void Autocomplete()
 
 void Autocomplete()
 {
+	InVector<String> v;
+	for(const auto& i : v)
+		i.
+}
+
+void Autocomplete()
+{
+	InArray<String> v;
+	for(const auto& i : v)
+		i.
+}
+
+void Autocomplete()
+{
+	Index<String> h;
+	for(const auto& i : h)
+		i.
+}
+
+void Autocomplete()
+{
+	ArrayIndex<String> h;
+	for(const auto& i : h)
+		i.
+}
+
+void Autocomplete()
+{
 	VectorMap<int, String> m;
 	for(auto i : m)
 		i.
@@ -419,6 +447,16 @@ void Foo() {
 	x.Find(1, '\',', 0); // Check parameter positions
 	x.Find(1, ",", 0); // Check parameter positions
 	x.Find(1, 1, 0); // Check parameter positions
+}
+
+// ----------------------------------------------------
+
+void Autocomplete() {
+	DBG; {
+		Vector<Ctrl *> h = Ctrl::GetTopCtrls();
+		for(int i = 0; i < h.GetCount(); i++)
+			h[i]->
+	}
 }
 
 // ----------------------------------------------------
