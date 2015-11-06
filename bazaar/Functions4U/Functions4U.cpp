@@ -2446,7 +2446,7 @@ Dl::Dl() {
 Dl::~Dl() {
 	if (hinstLib) 
 		if (FreeLibrary(hinstLib) == 0)
-			throw Exc(t_("Dl cannot be released"));
+			LOG(t_("Dl cannot be released"));
 }
 
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL

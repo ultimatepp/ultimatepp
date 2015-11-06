@@ -243,6 +243,8 @@ inline bool Between(const T& val, const T& min, const T& max) {
 	return val >= min && val <= max;
 }
 
+#define IsNan(a)	((a) != (a))
+
 template <class T> 
 T AngleAdd360(T ang, T val) {
 	ang += val;
@@ -637,12 +639,24 @@ private:
 template <class T>
 class ThreadSafe {
 public:
-	inline ThreadSafe() 		{val = Null;}
-	inline ThreadSafe(T v) 		{BarrierWrite(val, v);}
-	inline void operator=(T v) 	{BarrierWrite(val, v);}
-	inline operator T() 		{return ReadWithBarrier(val);}
+	inline ThreadSafe()    {val = Null;}
+	inline ThreadSafe(T v) {operator=(v);}
+	inline void operator=(T v) {
+		mutex.Enter();
+		val = v;
+		mutex.Leave();
+	}
+	inline operator T() {
+		T ret;
+		mutex.Enter();
+		ret = val;
+		mutex.Leave();
+		return ret;
+	}
 	inline ThreadSafe& operator++() {
-		BarrierWrite(val, ReadWithBarrier(val) + 1);
+		mutex.Enter();
+		val++;
+		mutex.Leave();
 		return *this;
 	}
    	inline ThreadSafe operator++(int) {
@@ -652,6 +666,7 @@ public:
 	}
    
 private:
+	Mutex mutex;
 	volatile T val;
 };
 

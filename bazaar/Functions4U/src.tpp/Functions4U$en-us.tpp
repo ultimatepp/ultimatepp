@@ -328,6 +328,7 @@ tring]_[* Tokenize2]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str],
 found token or until the end of the String if no token is found. 
 [%-*@3 pos] is updated to the next char after returned String, 
 or Null if there are not more chars available.&]
+[s2; It replaces old Tokenize function().&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Tokenize2`(const Upp`:`:String`&`,const Upp`:`:String`&`):%- [_^Upp`:`:String^ S
@@ -337,6 +338,7 @@ tring]_[* Tokenize2]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str],
 token identifier chars.&]
 [s2; Returns the String to the char after found token or until the 
 end of the String if no token is found.&]
+[s2; It replaces old Tokenize function().&]
 [s3; &]
 [s4;%- &]
 [s5;:ReadCSV`(const String`,char`,bool`,bool`):%- [_^Vector^ Vector]<[_^Vector^ Vector]_<
