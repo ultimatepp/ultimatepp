@@ -2,8 +2,8 @@
 #define _OpenCV_OpenCV_h_
 
 #include <CtrlLib/CtrlLib.h>
-#include <cv.h>
-#include <highgui.h>
+#include <opencv/cv.h>
+#include <opencv/highgui.h>
 
 using namespace Upp;
 
