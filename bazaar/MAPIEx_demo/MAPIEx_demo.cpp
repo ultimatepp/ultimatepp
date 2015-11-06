@@ -12,6 +12,8 @@
 
 // Ported to U++ Framework by Koldo. See License.txt file
 
+#ifdef _WIN32
+
 #include <MAPIEx/MAPIEx.h>
 #include <conio.h>
 
@@ -412,3 +414,17 @@ CONSOLE_APP_MAIN {
 
 	puts("\nPress a key to end...");		getchar();
 }
+
+#else
+
+#include <Core/Core.h>
+
+using namespace Upp;
+
+CONSOLE_APP_MAIN 
+{
+	puts("\nMAPIEx package only works in Windows");	
+	puts("\nPress a key to end...");		getchar();
+}
+
+#endif
