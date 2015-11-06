@@ -1,9 +1,12 @@
-#include <Core/Core.h>
+ #include <Core/Core.h>
 
 using namespace Upp;
 
 #include <Functions4U/Functions4U.h>
 #include <OfficeAutomation/OfficeAutomation.h>
+
+
+#ifdef _WIN32
 
 bool end = false;
 
@@ -207,3 +210,13 @@ CONSOLE_APP_MAIN
 	TestSheet();
 	TestDoc();
 }
+
+#else
+
+CONSOLE_APP_MAIN 
+{
+	puts("\nOfficeAutomation package only works in Windows");	
+	puts("\nPress a key to end...");		getchar();
+}
+
+#endif
