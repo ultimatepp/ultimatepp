@@ -51,7 +51,7 @@ void FileTabs::ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &f
 		Color c = (style == CTRL_HOT) ? extcolor : SColorDisabled();
 		if (extpos >= 0) {
 			tab.AddText(
-				txt.Right(txt.GetLength() - extpos - 1),
+				txt.Mid(extpos + 1),
 				font,
 				c
 			).Clickable();
@@ -59,16 +59,18 @@ void FileTabs::ComposeStackedTab(Tab& tab, const Tab& stacked_tab, const Font &f
 		else {
 			tab.AddText("-", font, c).Clickable();
 		}
-	}	
+	}
 }
 
 Size FileTabs::GetStackedSize(const Tab &t)
 {
 	if (stackedicons && t.HasIcon())
 		return min(t.img.GetSize(), Size(TB_ICON, TB_ICON)) + Size(TB_SPACEICON, 0) + 5;
-	String s = t.value;
-	s = GetFileExt(s);
-	return GetTextSize(s.ToWString(), GetStyle().font) + Size(TB_SPACEICON, 0);
+
+	WString txt = IsString(t.value) ? t.value : StdConvert().Format(t.value);
+	int extpos = txt.ReverseFind('.');
+	txt = extpos >= 0 ? txt.Mid(extpos + 1) : "-";
+	return GetTextSize(txt, GetStyle().font) + Size(TabBarImg::STSEP().GetSize().cx, 0);
 }
 
 void FileTabs::Serialize(Stream& s)

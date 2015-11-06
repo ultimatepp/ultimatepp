@@ -123,7 +123,7 @@ protected:
 		TB_SBSEPARATOR = 1,
 		TB_ICON = 16,
 		TB_SPACEICON = 3
-	};	
+	};
 public:
 	struct TabItem : Moveable<TabItem> {
 		int x;
@@ -188,7 +188,7 @@ public:
 		bool HasMouse(const Point& p) const;
 		bool HasMouseCross(const Point& p) const;
 		bool HasIcon() const						{ return !img.IsEmpty(); }
-		int  Right() const 							{ return pos.x + size.cx; }
+		int  Right() const                          { return pos.x + size.cx; }
 		
 		TabItem& AddItem();
 		void Clear();
@@ -203,10 +203,10 @@ public:
 	// Tab sorting structures
 	struct TabSort {
 		virtual bool operator()(const Tab& a, const Tab& b) const = 0;
-	};	
+	};
 	struct TabGroupSort : public TabSort {
 		virtual bool operator()(const Tab& a, const Tab& b) const { return a.group < b.group; }
-	};	
+	};
 protected:
 	struct Group : Moveable<Group> {
 		Group()	{}
@@ -228,13 +228,13 @@ protected:
 	struct TabKeySort : public TabSort {
 		virtual bool operator()(const Tab& a, const Tab& b) const { return (*vo)(a.key, b.key); }
 		const ValueOrder *vo;
-	};	
+	};
 	
 protected:
-	TabScrollBar 	sc;
+	TabScrollBar    sc;
 	
 	Array<Group>    groups;
-	Array<Tab> 	    tabs;
+	Array<Tab>      tabs;
 	Array<int>      separators;
 	int             active;
 	int             id;
@@ -248,7 +248,7 @@ protected:
 	bool isctrl;
 	bool isdrag;
 	bool grouping;
-	bool autoscrollhide;		
+	bool autoscrollhide;
 	bool nosel;
 	bool nohl;
 	bool inactivedisabled;
@@ -356,6 +356,8 @@ protected:
 	void SortTabs0();
 	void SortStack(int stackix);
 	void SortStack(int stackix, int head, int tail);
+
+	void CloseGroup();
 	
 	// Insertion without repos/refresh - for batch actions
 	int InsertKey0(int ix, const Value& key, const Value& value, Image icon = Null, String group = Null);
@@ -374,8 +376,6 @@ protected:
 	Point   GetImagePosition(int align, const Rect& r, int cx, int cy, int space, int side, int offset = 2) const;
 	bool	PaintIcons() 									{ return icons; }
 		
-	// Sub-class menu overrides
-	virtual void GroupMenu(Bar& bar, int n);
 	// Sorting/Stacking overriddes
 	virtual String 		GetStackId(const Tab& a)			{ return a.group; }
 	// For sub-classes to recieve cursor changes without using WhenAction

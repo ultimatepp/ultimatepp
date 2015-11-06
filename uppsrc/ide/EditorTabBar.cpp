@@ -30,7 +30,7 @@ void EditorTabBar::SetAddFile(const String& fn)
 		return;
 	if(FindSetFile(fn))
 		return;
-	AddFile(WString(fn), true);
+	AddFile(WString(fn), IdeFileImage(fn, false, false, false), true);
 }
 
 void EditorTabBar::RenameFile(const String& fn, const String& nn)
