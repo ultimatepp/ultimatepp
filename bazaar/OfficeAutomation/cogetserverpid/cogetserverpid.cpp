@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 /*******************************************************************************
 Copyright (c) 2012, Kim Gräsman
 All rights reserved.
@@ -83,3 +85,5 @@ assumptions about OBJREF wire format. */
 }
 
 #endif // INCLUDED_COGETSERVERPID_H__
+
+#endif

@@ -1,12 +1,10 @@
+#ifdef _WIN32
+
 #include <Core/Core.h>
 
 using namespace Upp;
 
 #include <Functions4U/Functions4U.h>
-
-#ifndef PLATFORM_WIN32
-#error Sorry: This platform is not supported!. Look for OfficeAutomation in Bazaar Upp Forum to search for info and new news
-#endif
 
 #include "OfficeAutomation.h"
 #include "OfficeAutomationBase.h"
@@ -284,3 +282,5 @@ bool OfficeSheet::RemoveTab(int index) {return (static_cast<SheetPlugin *>(GetDa
 
 int SheetPlugin::GetNumTabs() {return false;}
 int OfficeSheet::GetNumTabs() {return (static_cast<SheetPlugin *>(GetData()))->GetNumTabs();}
+
+#endif

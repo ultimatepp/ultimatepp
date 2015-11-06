@@ -1,12 +1,10 @@
+#ifdef _WIN32
+
 #include <Core/Core.h>
 
 using namespace Upp;
 
 #include <Functions4U/Functions4U.h>
-
-#ifndef PLATFORM_WIN32
-#error Sorry: This platform is not supported!. Look for OfficeAutomation in Bazaar Upp Forum to search for info and new news
-#endif
 
 #include "OfficeAutomation.h"
 #include "OfficeAutomationBase.h"
@@ -77,3 +75,5 @@ bool OfficeDoc::Quit() {return (static_cast<DocPlugin *>(GetData()))->Quit();}
 
 bool DocPlugin::SetSaved(bool saved) {return false;}
 bool OfficeDoc::SetSaved(bool saved) {return (static_cast<DocPlugin *>(GetData()))->SetSaved(saved);}
+
+#endif

@@ -1,10 +1,8 @@
+#ifdef _WIN32
+
 #include <Core/Core.h>
 
 using namespace Upp;
-
-#ifndef PLATFORM_WIN32
-#error Sorry: This platform is not supported!. Look for OfficeAutomation in Bazaar Upp Forum to search for info and new news
-#endif
 
 #include <winnls.h>
 
@@ -2594,3 +2592,5 @@ bool OPENDoc::Quit() {
 	}
 	return true;
 }
+
+#endif

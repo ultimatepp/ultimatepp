@@ -1,3 +1,5 @@
+#ifdef _WIN32
+
 #ifndef _OfficeAutomation_h
 #define _OfficeAutomation_h
 
@@ -55,5 +57,7 @@ public:
 	Doc_METHOD_LIST	
 };
 
+
+#endif
 
 #endif
