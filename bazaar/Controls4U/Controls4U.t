@@ -3,6 +3,30 @@
 #endif
 // Controls4U.cpp
 
+T_("Browse")
+caES("")
+esES("Explorar")
+euES("")
+frFR("")
+
+T_("Go to previous")
+caES("")
+esES("Ir al anterior")
+euES("")
+frFR("")
+
+T_("Go to next")
+caES("")
+esES("Ir al siguiente")
+euES("")
+frFR("")
+
+T_("Directory up")
+caES("")
+esES("Directorio arriba")
+euES("")
+frFR("")
+
 T_("Select file")
 caES("")
 esES("Seleccionar fichero")

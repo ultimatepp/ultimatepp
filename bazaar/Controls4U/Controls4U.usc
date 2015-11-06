@@ -123,12 +123,13 @@ fn FillCircle(w, cx, cy, R, color) {
 	FillEllipse(w, cx-R, cy-R, cx+R, cy+R, color);
 }
 
-fn DrawEditField(w, &r, cy, text, SetFrame, UseHistory, UseUp, UseBrowse, SetEditable, NotNull)
+fn DrawEditField(w, &r, cy, text, SetFrame, UseHistory, UseUp, UseBrowse, UseBrowseRight, UseGo, SetEditable, NotNull)
 {
 	DrawCtrlFrame(w, r, SetFrame);
 	w.DrawRect(r, :SWhite);
 	n = r.bottom - r.top;
 	leftPos = r.left;
+	rightPos = r.right;
 	if (UseHistory) {
 		DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
 		w.DrawImage((n - 7) / 2 + leftPos, (n - 8) / 2 + r.top, "CtrlImg::SmallLeft");	
@@ -144,13 +145,21 @@ fn DrawEditField(w, &r, cy, text, SetFrame, UseHistory, UseUp, UseBrowse, SetEdi
 	}
 	if (UseBrowse) {
 		DrawEdgeButton(w, RectC(leftPos, r.top, n, n));
-		w.DrawImage((n - 7) / 2 + leftPos, (n - 6) / 2 + r.top, "ClassicCtrlsImg::RA");
+		w.DrawImage(leftPos + 2, r.top, "CtrlImg::Dir");
 		leftPos += n;
 	}
-	DrawEdgeButton(w, RectC(r.right - n, r.top, n, n));
-	w.DrawImage((n - 7) / 2 + r.right - n, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");
-	w.DrawText(leftPos + 3, (cy - GetTextSize("", Arial(10)).cy) / 2,
-		(SetEditable ? "" : "R/O ")+ (NotNull ? "!" : "") + text, Arial(10), :SMagenta);	
+	if (UseGo) {
+		DrawEdgeButton(w, RectC(rightPos - n, r.top, n, n));
+		w.DrawImage((n - 7) / 2 + rightPos - n, (n - 8) / 2 + r.top, "CtrlImg::SmallRight");
+		rightPos -= n;
+	}
+	if (UseBrowseRight) {
+		DrawEdgeButton(w, RectC(rightPos - n, r.top, n, n));
+		w.DrawImage(rightPos - n + 2, r.top, "CtrlImg::Dir");
+		rightPos -= n;
+	}
+	//w.DrawText(leftPos + 3, (cy - GetTextSize("", Arial(10)).cy) / 2,
+	//	(SetEditable ? "" : "R/O ")+ (NotNull ? "!" : "") + text, Arial(10), :SMagenta);	
 }
 
 ctrl EditFile {
@@ -164,7 +173,9 @@ ctrl EditFile {
 	Font  SetFont = StdFont() @3;
 	bool  SetEditable = true @4 ? "Editable";
 	bool  UseUp = false;
-	bool  UseBrowse = true;
+	bool  UseGo = false;
+	bool  UseBrowse = false;
+	bool  UseBrowseRight = true;
 	bool  UseHistory = false;
 	Frame SetFrame = InsetFrame() @5;
 	Text  Tip @6;
@@ -173,7 +184,7 @@ ctrl EditFile {
 
 	Paint(w) {
 		r = GetRect();
-		DrawEditField(w, r, GetSize().cy, "File name", .SetFrame, .UseHistory, .UseUp, .UseBrowse, .SetEditable, .NotNull);
+		DrawEditField(w, r, GetSize().cy, "File name", .SetFrame, .UseHistory, .UseUp, .UseBrowse, .UseBrowseRight, .UseGo, .SetEditable, .NotNull);
 	}
 }
 
@@ -188,7 +199,9 @@ ctrl EditFolder {
 	Font  SetFont = StdFont() @3;
 	bool  SetEditable = true @4 ? "Editable";
 	bool  UseUp = false;
-	bool  UseBrowse = true;
+	bool  UseGo = false;
+	bool  UseBrowse = false;
+	bool  UseBrowseRight = true;
 	bool  UseHistory = false;
 	Frame SetFrame = InsetFrame() @5;
 	Text  Tip @6;
@@ -197,7 +210,7 @@ ctrl EditFolder {
 
 	Paint(w) {
 		r = GetRect();
-		DrawEditField(w, r, GetSize().cy, "Folder name", .SetFrame, .UseHistory, .UseUp, .UseBrowse, .SetEditable, .NotNull);
+		DrawEditField(w, r, GetSize().cy, "Folder name", .SetFrame, .UseHistory, .UseUp, .UseBrowse, .UseBrowseRight, .UseGo, .SetEditable, .NotNull);
 	}
 }
 

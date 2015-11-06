@@ -39,20 +39,28 @@ void PaintArc(Painter &w, double cx, double cy, double R, double ang0, double an
 }
 	
 void EditFileFolder::Init() {
-	EditString::AddFrame(butBrowse);
 	WhenEnter = THISBACK1(DoGo, true);
-	butBrowse.SetImage(Controls4UImg::Folder());
-	butBrowse <<= THISBACK(DoBrowse);
+	//EditString::AddFrame(butBrowseLeft);
+	butBrowseLeft.SetImage(Controls4UImg::Folder());
+	butBrowseLeft.Tip(t_("Browse"));
+	butBrowseLeft <<= THISBACK(DoBrowse);
+	EditString::AddFrame(butBrowseRight);
+	butBrowseRight.SetImage(Controls4UImg::Folder());
+	butBrowseRight <<= THISBACK(DoBrowse);
+	butBrowseRight.Tip(t_("Browse"));
 	butLeft.SetImage(CtrlImg::SmallLeft());
 	butLeft <<= THISBACK(DoLeft);
+	butRight.Tip(t_("Go to previous"));
 	butLeft.Enable(false);
 	butRight.SetImage(CtrlImg::SmallRight());
 	butRight <<= THISBACK(DoRight);
+	butRight.Tip(t_("Go to next"));
 	butRight.Enable(false);
 	butUp.SetImage(CtrlImg::DirUp());//SmallUp());
 	butUp <<= THISBACK(DoUp);
+	butUp.Tip(t_("Directory up"));
 	butUp.Enable(false);
-	EditString::AddFrame(butGo);
+	//EditString::AddFrame(butGo);
 	butGo.SetImage(CtrlImg::SmallRight()); 
 	butGo <<= THISBACK1(DoGo, true); 
 	isFile = isLoad = true;
@@ -98,14 +106,36 @@ EditFileFolder &EditFileFolder::UseUp(bool use) {
 
 EditFileFolder &EditFileFolder::UseBrowse(bool use) {
 	if (use) {
-		if (EditString::FindFrame(butBrowse) == -1) {
+		if (EditString::FindFrame(butBrowseLeft) == -1) {
 			int pos = EditString::FindFrame(butUp);
 			if (pos == -1) 
 				pos = EditString::FindFrame(butRight);
-			EditString::InsertFrame(pos+1, butBrowse);
+			EditString::InsertFrame(pos+1, butBrowseLeft);
 		}
 	} else 
-		EditString::RemoveFrame(butBrowse);	
+		EditString::RemoveFrame(butBrowseLeft);	
+	return *this;
+}
+
+EditFileFolder &EditFileFolder::UseBrowseRight(bool use) {
+	if (use) {
+		if (EditString::FindFrame(butBrowseRight) == -1) {
+			int pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(pos+1, butBrowseRight);
+		}
+	} else 
+		EditString::RemoveFrame(butBrowseRight);	
+	return *this;
+}
+
+EditFileFolder &EditFileFolder::UseGo(bool use) {
+	if (use) {
+		if (EditString::FindFrame(butGo) == -1) {
+			int pos = EditString::FindFrame(butRight);
+			EditString::InsertFrame(pos+1, butGo);
+		}
+	} else 
+		EditString::RemoveFrame(butGo);
 	return *this;
 }
 

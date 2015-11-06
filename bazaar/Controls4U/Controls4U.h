@@ -23,7 +23,8 @@ public:
 class EditFileFolder : public EditString {
 typedef EditFileFolder CLASSNAME;
 protected:
-	FrameLeft<Button> butBrowse, butLeft, butRight, butUp;
+	FrameLeft<Button> butBrowseLeft, butLeft, butRight, butUp;
+	FrameRight<Button> butBrowseRight;
 	FrameRight<Button> butGo;
 	
 	FileSel_ *pfs;
@@ -62,8 +63,9 @@ public:
 	EditFileFolder &UseHistory(bool use);
 	EditFileFolder &UseUp(bool use);
 	EditFileFolder &UseBrowse(bool use);
+	EditFileFolder &UseBrowseRight(bool use);
+	EditFileFolder &UseGo(bool use);
 	virtual void SetData(const Value& data);
-	//virtual void LostFocus()						{DoGo(true);}
 	
 	Callback WhenChange;
 };
@@ -723,7 +725,7 @@ public:
 	InfoCtrlBar &SetAlign(int a)             										{bar.SetAlign(a);					return *this;}
 	
 private:
-		BarDisplay bar;
+	BarDisplay bar;
 };
 
 class InfoCtrlText : public InfoCtrl {
