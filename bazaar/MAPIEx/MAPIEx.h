@@ -24,6 +24,7 @@ using namespace Upp;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Ported to U++ Framework by Koldo. See License.txt file
+#ifdef _WIN32
 
 #ifdef _WIN32_WCE
 #include <cemapi.h>
@@ -214,4 +215,6 @@ private:
 
 MAPIFunctions &MF();
 	
+#endif
+
 #endif
