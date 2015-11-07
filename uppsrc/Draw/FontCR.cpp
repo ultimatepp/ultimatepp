@@ -259,6 +259,10 @@ struct sRFace {
 	{ "FreeSans", 0xfff23d00, 0xfc00000f },
 	{ "FreeSerif", 0xfffd3938, 0xfc00080f },
 	{ "Symbol", 0xe4000000, 0x8800000f },
+	{ "NanumGothic", 0xe5800000, 0xae7ff7e1 },
+	{ "WenQuanYi Micro Hei Mono", 0xffe00008, 0xda7ff7e1 },
+	{ "NanumMyeongjo", 0xe5800000, 0x8a0007e1 },
+	{ "WenQuanYi Micro Hei", 0xffe00008, 0xda7ff7e1 },
 };
 
 struct sFontMetricsReplacement {
