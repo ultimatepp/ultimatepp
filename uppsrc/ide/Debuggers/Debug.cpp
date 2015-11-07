@@ -428,7 +428,7 @@ bool Pdb::RunToException()
 				LLOG("Exit process: " << event.dwProcessId);
 				if(locked)
 					Unlock();
-				terminated = true;
+				Stop();
 				return false;
 			case LOAD_DLL_DEBUG_EVENT: {
 				DR_LOG("LOAD_DLL_DEBUG_EVENT");
@@ -446,9 +446,9 @@ bool Pdb::RunToException()
 				DR_LOG("RIP_EVENT");
 				LLOG("RIP!");
 				Exclamation("Process being debugged died unexpectedly!");
-				terminated = true;
 				if(locked)
 					Unlock();
+				Stop();
 				return false;
 			}
 			DR_LOG("ContinueDebugEvent");
