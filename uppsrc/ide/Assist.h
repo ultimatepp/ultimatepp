@@ -222,10 +222,10 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SelParam();
 	int            Ch(int q);
 	int            ParsBack(int q);
-	Vector<String> ReadBack(int q);
+	Vector<String> ReadBack(int q, const Index<String>& locals);
 	void           SkipSpcBack(int& q);
 	String         IdBack(int& qq);
-	String         CompleteIdBack(int& q);
+	String         CompleteIdBack(int& q, const Index<String>& locals);
 
 	void           SwapSContext(Parser& p);
 	

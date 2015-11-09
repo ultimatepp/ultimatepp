@@ -10,7 +10,7 @@ topic "Layout functions";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;%- [*@3;4 Layout functions]&]
+[ {{10000@(113.42.0) [s0;%- [*@7;4 Layout functions]]}}&]
 [s3; &]
 [s0; &]
 [s5;:InitLayout`(Ctrl`&`,L`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 L]>_[@(0.0.255) v
@@ -85,4 +85,4 @@ by Enter).&]
 [s7; [%-*C@3 ctrl]-|Parent Ctrl.&]
 [s7; [%-*C@3 title]-|Window title.&]
 [s3; &]
-[s0; ]
+[s0; ]]

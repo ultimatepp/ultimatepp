@@ -107,7 +107,7 @@ void SweepPPFiles(const Index<String>& keep)
 		if(sAllMacros.IsUnlinked(i))
 			unlinked_count++;
 		else
-		if(pp_segment_id.Find(sAllMacros[i].segment_id) < 0) {
+		if(sAllMacros[i].segment_id && pp_segment_id.Find(sAllMacros[i].segment_id) < 0) {
 			sAllMacros.Unlink(i);
 			unlinked_count++;
 		}
@@ -133,7 +133,6 @@ PPMacro *FindPPMacro(const String& id, Index<int>& segment_id, int& segmenti)
 {
 	Index<int> undef;
 	PPMacro *r;
-
 	int best;
 	for(int pass = 0; pass < 2; pass++) {
 		r = NULL;
