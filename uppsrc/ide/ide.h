@@ -162,6 +162,7 @@ String                    GetDefaultMethod();
 
 bool CheckLicense();
 bool Install();
+void AutoInstantSetup();
 
 #define HELPNAME    "Help Topics"
 #define METAPACKAGE "<meta>"

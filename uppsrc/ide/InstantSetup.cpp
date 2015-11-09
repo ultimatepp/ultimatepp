@@ -2,31 +2,6 @@
 
 #ifdef PLATFORM_WIN32
 
-#if 0
-String GetWinRegStringWOW64(const char *value, const char *path, HKEY base_key  = HKEY_LOCAL_MACHINE) {
-	HKEY key = 0;
-	if(RegOpenKeyEx(base_key, path, 0, KEY_READ|KEY_WOW64_64KEY, &key) != ERROR_SUCCESS)
-		return String::GetVoid();
-	dword type, data;
-	if(RegQueryValueEx(key, value, 0, &type, NULL, &data) != ERROR_SUCCESS)
-	{
-		RegCloseKey(key);
-		return String::GetVoid();
-	}
-	StringBuffer raw_data(data);
-	if(RegQueryValueEx(key, value, 0, 0, (byte *)~raw_data, &data) != ERROR_SUCCESS)
-	{
-		RegCloseKey(key);
-		return String::GetVoid();
-	}
-	if(data > 0 && (type == REG_SZ || type == REG_EXPAND_SZ))
-		data--;
-	raw_data.SetLength(data);
-	RegCloseKey(key);
-	return raw_data;
-}
-#endif
-
 class DirFinder {
 	Vector<String> dirs;
 	VectorMap<String, bool> entry;
@@ -365,6 +340,42 @@ bool CheckLicense()
 		return false;
 	DeleteFile(GetExeDirFile("license.chk"));
 	return true;
+}
+
+String GetWinRegStringWOW64(const char *value, const char *path, HKEY base_key  = HKEY_LOCAL_MACHINE) {
+	HKEY key = 0;
+	if(RegOpenKeyEx(base_key, path, 0, KEY_READ|KEY_WOW64_64KEY, &key) != ERROR_SUCCESS)
+		return String::GetVoid();
+	dword type, data;
+	if(RegQueryValueEx(key, value, 0, &type, NULL, &data) != ERROR_SUCCESS)
+	{
+		RegCloseKey(key);
+		return String::GetVoid();
+	}
+	StringBuffer raw_data(data);
+	if(RegQueryValueEx(key, value, 0, 0, (byte *)~raw_data, &data) != ERROR_SUCCESS)
+	{
+		RegCloseKey(key);
+		return String::GetVoid();
+	}
+	if(data > 0 && (type == REG_SZ || type == REG_EXPAND_SZ))
+		data--;
+	raw_data.SetLength(data);
+	RegCloseKey(key);
+	return raw_data;
+}
+
+void AutoInstantSetup()
+{
+	String sgn = ToLower(GetFileFolder(GetExeFilePath()));
+	String cf = GetExeDirFile("setup-path") + "\n" +
+	            GetWinRegStringWOW64("MachineGuid", "SOFTWARE\\Microsoft\\Cryptography");
+	String sgn0 =  LoadFile(cf);
+	if(sgn != sgn0) {
+		InstantSetup();
+		SaveFile(cf, sgn);
+		SaveFile(cf + ".old", sgn0); // forensics
+	}
 }
 
 #endif

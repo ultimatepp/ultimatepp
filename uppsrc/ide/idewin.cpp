@@ -760,13 +760,7 @@ void AppMain___()
 #ifdef PLATFORM_WIN32
 	if(!CheckLicense())
 		return;
-	String upp_dir = GetFileFolder(GetExeFilePath());
-	String cf = GetExeDirFile("setup-path");
-	if(upp_dir != LoadFile(cf))
-	{
-		InstantSetup();
-		SaveFile(cf, upp_dir);
-	}
+	AutoInstantSetup();
 #endif
 
 	if(!FileExists(BlitzBaseFile()))
