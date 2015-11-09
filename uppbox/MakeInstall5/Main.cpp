@@ -94,6 +94,7 @@ CONSOLE_APP_MAIN
 
 	CopyFolder(bin, upptmp, false);
 	CopyFolder(bin + "/win32", upptmp + "/bin");
+	SaveFile(upptmp + "/README", LoadDataFile("README"));
 	
 	CopyFolders(uppsrc, ass, uppsrc + "/packages");
 	CopyFolders(uppsrc, ass, uppsrc + "/packages1", false);
