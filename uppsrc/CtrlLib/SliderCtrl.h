@@ -16,7 +16,7 @@ class SliderCtrl : public Ctrl {
 public:
 	typedef SliderCtrl CLASSNAME;
 
-	Callback 	  WhenSlideFinish;
+	Callback      WhenSlideFinish;
 	
 	SliderCtrl();
 	virtual ~SliderCtrl();
