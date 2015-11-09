@@ -30,10 +30,4 @@ topic "Uninstalling TheIDE";
 [/ `-uninstall]. This will revert anything done by the [^topic`:`/`/ide`/SrcUpdater`/app`/InstallWizard`$en`-us^ s
 etup wizard], that is only the user data. To remove the system`-wide 
 files, just remove the package using your package manager.&]
-[s0;*R+150 &]
-[s0; [*R+150 Windows systems:]&]
-[s0; &]
-[s0; The [/ `-uninstall] option on command line works here as well, 
-but the preferred way to uninstall TheIDE is using the standard 
-`"Add or remove programs`" dialog.&]
-[s0; ]
+[s0; ]]
