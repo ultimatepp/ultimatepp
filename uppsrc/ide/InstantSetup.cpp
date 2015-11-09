@@ -367,9 +367,9 @@ String GetWinRegStringWOW64(const char *value, const char *path, HKEY base_key  
 
 void AutoInstantSetup()
 {
-	String sgn = ToLower(GetFileFolder(GetExeFilePath()));
-	String cf = GetExeDirFile("setup-path") + "\n" +
-	            GetWinRegStringWOW64("MachineGuid", "SOFTWARE\\Microsoft\\Cryptography");
+	String sgn = ToLower(GetFileFolder(GetExeFilePath())) + "\n" +
+	             GetWinRegStringWOW64("MachineGuid", "SOFTWARE\\Microsoft\\Cryptography");
+	String cf = GetExeDirFile("setup-path");
 	String sgn0 =  LoadFile(cf);
 	if(sgn != sgn0) {
 		InstantSetup();
