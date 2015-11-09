@@ -4,6 +4,7 @@ set -e
 
 #remove Win32 specific files
 rm ~/upp.tmp/upp/*.exe || true
+rm ~/upp.tmp/upp/README || true
 rm ~/upp.tmp/upp/*.map || true
 rm ~/upp.tmp/upp/*.dll || true
 rm ~/upp.tmp/upp/*.upp || true
