@@ -1,0 +1,37 @@
+Ultimate++ Windows releases
+
+Windows release a simple archive .7z archive. Unpack to directory of your
+preference, then just run theide.exe (or theide32.exe if you have 32-bit
+windows). U++ does not write anything to registry or outside its directory.
+
+U++ comes in two variants:
+
+* upp-mingw   contains TMD64 compiler system for out of box operation
+* upp-win     comes without compiler/SDK,
+
+Both variants are able (on first install, when installation is moved or on
+demand - menu Setup/Instant setup) to detect and use SDK and C++ compiler
+from Microsoft Visual Studio 2015 (free community edition is fine).
+
+Note: While mingw/TDM64 is fine for light work, we really recommend using
+VS2015 C++ compiler for serious work. It significantly faster and better
+supported by 3rd party libraries.
+
+When installing Visual Studion 2015, please make sure these options are checked:
+
+* Programming languages / Visual C++
+* Universal Windows App Developemtnt Tools / Tools (#) and Windows SDK (#)
+
+(# is version number, theide should pickup any version you install)
+
+TheIDE can also be configured to work with external mingw or older Microsoft
+compilers and usually autosetup them (menu Setup/Legacy compilers automatic
+setup). However, as previous version of Visual C++ do not support parts of
+C++11 standard important for U++, we recommend using compiler from VS2015 (on
+the other hand, current U++ will work just fine in C++98 mode with previous
+Microsoft compiler)..
+
+Known issues:
+
+- shipped version of TDM64 has broken optimizer so the maximum working optimize
+  level is -O1
