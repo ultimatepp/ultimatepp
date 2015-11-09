@@ -15,8 +15,8 @@ String uppbox =    rootdir + "uppbox";
 String uppsrc =    rootdir + "uppsrc";
 String reference = rootdir + "reference";
 String examples =  rootdir + "examples";
-String targetdir = "d:\\devweb\\uppwww";
-String pdfdir    = "d:\\devweb\\pdf";
+String targetdir = "u:\\devweb\\uppwww";
+String pdfdir    = "u:\\devweb\\pdf";
 #else
 String rootdir = "/root/upp.src";
 String uppbox =    rootdir + "uppbox";
@@ -522,8 +522,8 @@ void ExportPage(int i)
 			strlang << arrLangs[i];
 		}
 	}	
-	if (!strlang.IsEmpty())
-		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
+//	if (!strlang.IsEmpty())
+//		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
 	if (tt[i].title.Find("How to contribute. Web page") < 0) {
 		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
