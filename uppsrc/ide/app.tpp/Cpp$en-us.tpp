@@ -22,8 +22,8 @@ to make the machinery fast and highly error resistant.&]
 [s10; Handling of source files, headers, macros and namespaces&]
 [s11; The main difference between C`+`+ compiler and theide C`+`+ 
 parser is that theide is handling any source file separately. 
-This is absolute performance requirement if global database is 
-to be maintained while editing files.&]
+This is an absolute performance requirement if global database 
+is to be maintained while editing files.&]
 [s11; For this reason, declaration and definition must be be in single 
 file. For example&]
 [s11; [* File1.h]&]
@@ -120,15 +120,15 @@ in Core.h as&]
 [s12; #define NAMESPACE`_UPP namespace Upp `{&]
 [s12; #define END`_UPP`_NAMESPACE `};&]
 [s12; &]
-[s11; Unfortunately, withing framework we have not found a fast way 
-how to detect and resolve this situation (we do not know meaning 
-of NAMESPACE`_UPP/END`_UPP`_NAMESPACE when extracting macros 
-from File.h). The solution is simple, putting those #defines 
+[s11; Unfortunately, withing parser logic we have not found a fast 
+way how to detect and resolve this situation (we do not know 
+meaning of NAMESPACE`_UPP/END`_UPP`_NAMESPACE when extracting 
+macros from File.h). The solution is simple, putting those #defines 
 into .defs file fixes the issue, as such macros are detected 
 by special code and used when handling File.h.&]
 [s10; Grounding heuristics&]
 [s11; It is a good idea to make parser highly resistant to bugs, including 
-code that it does not understand. For this means parser is using 
+code that it does not understand. For this reason parser is using 
 somewhat strange but very effective simple heuristics: If a line 
 starts (at character zero) with identifier which is not followed 
 by single `':`' character (to exclude labels), it is a definition 
