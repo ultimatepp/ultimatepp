@@ -205,7 +205,7 @@ String AssistEditor::IdBack(int& qq)
 	return r;
 }
 
-String AssistEditor::CompleteIdBack(int& q)
+String AssistEditor::CompleteIdBack(int& q, const Index<String>& locals)
 {
 	String id;
 	for(;;) {
@@ -235,13 +235,15 @@ String AssistEditor::CompleteIdBack(int& q)
 			String nid = IdBack(q);
 			if(IsNull(nid))
 				break;
+			if(locals.Find(nid) >= 0 && findarg(*id, '<', '>') >= 0)
+				return id.Mid(1);
 			id = nid + id;
 		}
 	}
 	return id;
 }
 
-Vector<String> AssistEditor::ReadBack(int q)
+Vector<String> AssistEditor::ReadBack(int q, const Index<String>& locals)
 {
 	Vector<String> r;
 	type.Clear();
@@ -256,7 +258,7 @@ Vector<String> AssistEditor::ReadBack(int q)
 		int c = Ch(q - 1);
 		if(c == '>' && !wasid) {
 			q--;
-			r.Add() = CompleteIdBack(q) + ">";
+			r.Add() = CompleteIdBack(q, locals) + ">";
 			wasid = true;
 			continue;
 		}
@@ -472,13 +474,16 @@ void AssistEditor::Assist()
 	if(Ch(q - 1) == ':' && Ch(q - 2) == ':') {
 		q -= 2;
 		Vector<String> tparam;
-		String scope = ParseTemplatedType(Qualify(parser.current_scope, CompleteIdBack(q), parser.context.namespace_using), tparam);
+		String scope = ParseTemplatedType(Qualify(parser.current_scope,
+		                                          CompleteIdBack(q, parser.local.GetIndex()),
+		                                          parser.context.namespace_using),
+		                                  tparam);
 		GatherItems(scope, false, in_types, true);
 		current_type = scope;
 	}
 	else {
 		String tp;
-		Vector<String> xp = ReadBack(q);
+		Vector<String> xp = ReadBack(q, parser.local.GetIndex());
 		bool isok = false;
 		for(int i = 0; i < xp.GetCount(); i++)
 			if(iscib(*xp[i])) {
