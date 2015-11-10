@@ -28,7 +28,8 @@ registry or outside its directory.&]
 [s0; &]
 [s0; U`+`+ comes in two variants:&]
 [s0; &]
-[s0; [* upp`-mingw] contains TMD64 compiler system for out of box operation&]
+[s0; [* upp`-mingw] contains TMD64 compiler system for out of the box 
+operation&]
 [s0; [* upp`-win] comes without compiler/SDK,&]
 [s0; &]
 [s0; Both variants are able (on first install, when installation 
