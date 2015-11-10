@@ -6,8 +6,8 @@ windows). U++ does not write anything to registry or outside its directory.
 
 U++ comes in two variants:
 
-* upp-mingw   contains TMD64 compiler system for out of box operation
-* upp-win     comes without compiler/SDK,
+* upp-mingw   contains TMD64 compiler system for out of the box operation
+* upp-win     comes without compiler/SDK
 
 Both variants are able (on first install, when installation is moved or on
 demand - menu Setup/Instant setup) to detect and use SDK and C++ compiler
