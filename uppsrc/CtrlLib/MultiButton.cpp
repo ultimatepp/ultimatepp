@@ -700,7 +700,6 @@ MultiButton::MultiButton()
 	push = false;
 	SetFrame(sNullFrame());
 	nobg = false;
-	
 }
 
 void MultiButtonFrame::FrameAdd(Ctrl& parent)
