@@ -74,7 +74,7 @@ public:
 
 	Callback      WhenDrop;
 
-	DropList&     Add(const Value& key, const Value& value);
+	DropList&     Add(const Value& key, const Value& value, bool enable = true);
 	DropList&     Add(const Value& value)         { return Add(value, value); }
 	void          Remove(int i);
 	void          ClearList();
@@ -118,6 +118,7 @@ public:
 	DropList&     SetConvert(const Convert& cv);
 	DropList&     SetDisplay(int i, const Display& d);
 	DropList&     SetDisplay(const Display& d);
+	DropList&     SetLineCy(int i, int lcy)             { list.SetLineCy(i, lcy); return *this; }
 	DropList&     SetLineCy(int lcy)                    { list.SetLineCy(lcy); return *this; }
 	DropList&     SetDisplay(const Display& d, int lcy);
 	DropList&     ValueDisplay(const Display& d);

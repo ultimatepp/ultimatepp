@@ -724,7 +724,7 @@ void  ArrayCtrl::SyncPageCtrls()
 	ctrl_high = 0;
 	p = NULL;
 	for(int i = min_visible_line; i <= min(max_visible_line, GetCount() - 1); i++)
-		p = SyncLineCtrls(i, p);	
+		p = SyncLineCtrls(i, p);
 }
 
 void  ArrayCtrl::SyncCtrls()
@@ -835,36 +835,37 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 				r.bottom = r.top + GetLineCy(i);
 				int x = xs;
 				dword st = 0;
-				for(int j = js; j < column.GetCount(); j++) {
-					int cw = header.GetTabWidth(j);
-					int jj = header.GetTabIndex(j);
-					int cm = column[jj].margin;
-					if(cm < 0)
-						cm = header.Tab(j).GetMargin();
-					if(x > size.cx) break;
-					r.left = x;
-					r.right = x + cw - vertgrid + (j == column.GetCount() - 1);
-					dword st;
-					Color fg, bg;
-					Value q;
-					const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
-					if(sample || w.IsPainting(r)) {
-						if(cw < 2 * cm || editmode && i == cursor && column[jj].edit)
-							d.PaintBackground(w, r, q, fg, bg, st);
-						else {
-							d.PaintBackground(w, RectC(r.left, r.top, cm, r.Height()), q, fg, bg, st);
-							r.left += cm;
-							r.right -= cm;
-							d.PaintBackground(w, RectC(r.right, r.top, cm, r.Height()), q, fg, bg, st);
-							w.Clip(r);
-							GetDisplay(i, jj).Paint(w, r, q, fg, bg, st);
-							w.End();
+				if(r.bottom > r.top)
+					for(int j = js; j < column.GetCount(); j++) {
+						int cw = header.GetTabWidth(j);
+						int jj = header.GetTabIndex(j);
+						int cm = column[jj].margin;
+						if(cm < 0)
+							cm = header.Tab(j).GetMargin();
+						if(x > size.cx) break;
+						r.left = x;
+						r.right = x + cw - vertgrid + (j == column.GetCount() - 1);
+						dword st;
+						Color fg, bg;
+						Value q;
+						const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
+						if(sample || w.IsPainting(r)) {
+							if(cw < 2 * cm || editmode && i == cursor && column[jj].edit)
+								d.PaintBackground(w, r, q, fg, bg, st);
+							else {
+								d.PaintBackground(w, RectC(r.left, r.top, cm, r.Height()), q, fg, bg, st);
+								r.left += cm;
+								r.right -= cm;
+								d.PaintBackground(w, RectC(r.right, r.top, cm, r.Height()), q, fg, bg, st);
+								w.Clip(r);
+								GetDisplay(i, jj).Paint(w, r, q, fg, bg, st);
+								w.End();
+							}
 						}
+						x += cw;
+						if(vertgrid)
+							w.DrawRect(x - 1, r.top, 1, r.Height(), gridcolor);
 					}
-					x += cw;
-					if(vertgrid)
-						w.DrawRect(x - 1, r.top, 1, r.Height(), gridcolor);
-				}
 				if(horzgrid)
 					w.DrawRect(0, r.bottom, size.cx, 1, gridcolor);
 				r.left = 0;

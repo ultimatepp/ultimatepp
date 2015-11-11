@@ -17,10 +17,7 @@ ultiButton][3 , ][@(0.0.255)3 public][3 _][*@3;3 Convert]&]
 [s0;%% &]
 [s2;%% 
 @@image:337&143
-€ƒ¶€—€€€ƒéÿ€€€€ø¯œí×Ï‰Â°Ş˜‡áìçÛàÕ™ÜÀ©¼ÎùÕŠ•ªÑ±©¨˜¼©•±˜‰Ä´ğÁ¨‰Ùâ×­ş‚˜ŞÚÃ’–úĞÃÿ
-¥èÜéÿÕÔè”õ‚Ì‘Şƒ›½ß—Êí­İ½ğ²çÂ„ôéêÎæÌ”ğ¢®óœ˜Â¡„³¤»ñ‰ğ¼ÑœŞŒŠıÌ³ùÙá“²¾ğúãÖ”¥œ­òªÖï
-çÚ¹¿ƒ”ÆË£³Éà¨Úú»âÀá°½Ñ–äÕÌ© ğ°¸ÚÂ¬Œª‚Š£ÜùÖÌòœı å°¿Û»™¿˜‰üö¦»ÎÁÀ÷Ê¤•§ Ò°–©§”°ü
-ï›²Ã—†˜Çü×ãçú€ãÖó±
+(AzYAFwAAAOn/AAAAAHic7dfPCcIwGIfh7OcOjuDVGdzAKbx51YqVKlGxqBg8qRWxGMQNNPBBKAniVy3+ghjeQ5IW+tBD/+hc6X9V1Gh1AswR3gMb3xfK7a3dPXAyZ0KEdGlO5kyUcKKunJhCIYSzpPGJcLzRnF4KfcyzeVlhsr5weuMeViUcrXKqVm/aub8DFMbLs8lgKFr6O0DhMD1RluTMKaBwsDjaLIwqHgIKo3lWzPKcfaCwP9s7GZ6/CXwe9qY7TsB3SiQVJ6AwliknlDD8b5uywxcGGPzX42d6AOPWczE=)
 &]
 [s0;%% &]
 [s9;%% This widget provides the selection of values from the drop`-down 
@@ -55,12 +52,15 @@ base class.&]
 code can (re)create the list in the callback.&]
 [s3; &]
 [s4; &]
-[s5;:DropList`:`:Add`(const Value`&`,const Value`&`): [_^DropList^ DropList][@(0.0.255) `&
-]_[* Add]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 key], 
-[@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 value])&]
+[s5;:Upp`:`:DropList`:`:Add`(const Upp`:`:Value`&`,const Upp`:`:Value`&`,bool`): [_^Upp`:`:DropList^ D
+ropList][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 k
+ey], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 value], 
+[@(0.0.255) bool]_[*@3 enable] `= [@(0.0.255) true])&]
 [s2;%% Adds a new item to the list, [%-*@3 key] determines the value 
 of item, [%-*@3 value] is displayed in the value area and in the 
-list.&]
+list. If [%-*@3 enable] is false, DropList can be assigned this 
+[%-*@3 key]and displays corresponding [%-*@3 value], but does not 
+include it in drop list popup.&]
 [s3; &]
 [s4; &]
 [s5;:DropList`:`:Add`(const Value`&`): [_^DropList^ DropList][@(0.0.255) `&]_[* Add]([@(0.0.255) c

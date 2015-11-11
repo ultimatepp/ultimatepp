@@ -118,10 +118,12 @@ void DropList::Clear() {
 	Update();
 }
 
-DropList& DropList::Add(const Value& _key, const Value& text)
+DropList& DropList::Add(const Value& _key, const Value& text, bool enable)
 {
 	key.Add(_key);
 	list.Add(text);
+	if(!enable)
+		list.SetLineCy(list.GetCount() - 1, 0);
 	list.Refresh();
 	EnableDrop();
 	Sync();
