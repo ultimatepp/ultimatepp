@@ -47,7 +47,7 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 			ONCELOCK {
 				rws << "error" << "errors" << "warning" << "warnings" << "failed" << "exit" << "fatal"
 				    << "failure" << "rejected";
-				sws << "ok" << "status" << "success";
+				sws << "ok" << "success";
 			}
 			String w;
 			while(s < end && IsAlNum(*s) || *s == '_')
