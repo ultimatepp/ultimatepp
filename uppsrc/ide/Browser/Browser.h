@@ -33,7 +33,7 @@ struct SourceFileInfo {
 void           NewCodeBase();
 void           ParseSrc(Stream& in, int file, Callback2<int, const String&> error);
 void           CodeBaseScanFile(Stream& in, const String& fn);
-void           CodeBaseScanFile(const String& fn);
+void           CodeBaseScanFile(const String& fn, bool auto_check);
 void           ClearCodeBase();
 // void           CheckCodeBase();
 void           RescanCodeBase();

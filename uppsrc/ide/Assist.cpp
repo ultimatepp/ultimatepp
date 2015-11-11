@@ -47,7 +47,7 @@ AssistEditor::AssistEditor()
 	type.NoWantFocus();
 	popup.Horz(type, assist);
 	popup.SetPos(2000);
-	auto_assist = true;
+	auto_assist = auto_check = true;
 	commentdp = false;
 
 	InsertFrame(1, navigatorframe);

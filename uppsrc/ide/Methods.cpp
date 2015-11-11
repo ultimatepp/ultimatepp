@@ -825,7 +825,7 @@ void Ide::SetupBuildMethods()
 			break;
 		}
 	}
-	SyncCodeBase();
+	CodeBaseSync();
 	SyncBuildMode();
 	SetBar();
 }

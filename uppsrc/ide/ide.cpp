@@ -149,7 +149,8 @@ void Ide::SetMain(const String& package)
 	SetBar();
 	HideBottom();
 	SyncUsc();
-	NewCodeBase();
+	if(auto_check)
+		NewCodeBase();
 	if(IsNull(e))
 		e = GetFirstFile();
 	EditFile(e);
@@ -301,10 +302,16 @@ void Ide::SyncUsc()
 	UscProcessDir(GetFileFolder(ConfigFile("x")));
 }
 
+void Ide::CodeBaseSync()
+{
+	if(auto_check)
+		SyncCodeBase();
+}
+
 void Ide::SyncWorkspace()
 {
 	SyncUsc();
-	SyncCodeBase();
+	CodeBaseSync();
 }
 
 bool IsTextFile(const String& file, int maxline) {

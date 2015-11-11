@@ -587,7 +587,8 @@ public:
 	Color     bordercolor;
 	bool      persistent_find_replace;
 	bool      find_replace_restore_pos;
-
+	bool      auto_rescan;
+	bool      auto_check;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
@@ -730,6 +731,7 @@ public:
 	void      UscProcessDir(const String& dir);
 	void      UscProcessDirDeep(const String& dir);
 	void      SyncUsc();
+	void      CodeBaseSync();
 
 	void      RefreshBrowser();
 
