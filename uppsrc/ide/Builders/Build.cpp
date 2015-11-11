@@ -570,24 +570,30 @@ void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 	One<Builder> builder = CreateBuilder(~host);
 	if(!builder)
 		return;
-	builder->outdir = OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
-	                         *host, *builder), wspc[package], GetMethodVars(method));
+	String outdir = OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
+	                       *host, *builder), wspc[package], GetMethodVars(method));
 	// TODO: almost perfect, but target will be detected after build. if build dosen't occure the target is empty :(
 	// How to make sure we know target? Target directory is where android project sandbox is.
 	builder->target = target;
-	builder->CleanPackage(wspc[package]);
-	// TODO: Each builder should call delete folder by itself.
-	// For example in CppBuilder DeleteFolderDeep(outdir).
-	host->DeleteFolderDeep(OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
-		*host, *builder), wspc[package], GetMethodVars(method)));
+	builder->CleanPackage(wspc[package], outdir);
 }
 
 void MakeBuild::Clean()
 {
 	ConsoleClear();
+
+	One<Host> host = CreateHost(false);
+	One<Builder> builder = CreateBuilder(~host);
+	if(!builder)
+		return;
+	builder->target = target;
+	
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
 		CleanPackage(wspc, i);
+	
+	builder->AfterClean();
+	
 	PutConsole("...done");
 }
 
