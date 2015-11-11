@@ -106,6 +106,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			SystemDraw w(gdk_cairo_create(p->gdk()), p->gdk());
 			painting = true;
 			Rect r = RectC(e->area.x, e->area.y, e->area.width, e->area.height);
+			w.SetInvalid(e->region);
 			w.Clip(r);
 			p->UpdateArea(w, r);
 			w.End();
@@ -115,7 +116,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 			painting = false;
 #ifdef LOG_EVENTS
 			LOG("* " << ev << " elapsed " << tm);
-#endif			
+#endif
 		}
 		return true;
 	case GDK_DELETE:

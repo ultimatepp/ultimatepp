@@ -115,7 +115,11 @@ bool SystemDraw::IntersectClipOp(const Rect& r)
 
 bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
-	return r.Offseted(GetOffset()).Intersects(GetClip());
+	Rect cr = r.Offseted(GetOffset());
+	cr.Intersect(GetClip());
+	if(cr.IsEmpty())
+		return false;
+	return !invalid || gdk_region_rect_in(invalid, GdkRect(cr)) != GDK_OVERLAP_RECTANGLE_OUT;
 }
 
 Rect SystemDraw::GetPaintRect() const
