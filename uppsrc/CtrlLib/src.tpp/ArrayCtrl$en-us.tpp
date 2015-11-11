@@ -2104,6 +2104,27 @@ t]_[*@3 i])_[@(0.0.255) const]&]
 is selected, otherwise returns true if cursor is at [%-*@3 i].&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:EnableLine`(int`,bool`):%- [@(0.0.255) void]_[* EnableLine]([@(0.0.255) i
+nt]_[*@3 i], [@(0.0.255) bool]_[*@3 e])&]
+[s2; Enables line to be selected by cursor. Lines are enabled by 
+default.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:DisableLine`(int`):%- [@(0.0.255) void]_[* DisableLine]([@(0.0.255) i
+nt]_[*@3 i])&]
+[s2; Same as EnableLine(false).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:IsLineEnabled`(int`)const:%- [@(0.0.255) bool]_[* IsLineEnabled](
+[@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s2; Returns true if line is enabled.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:IsLineDisabled`(int`)const:%- [@(0.0.255) bool]_[* IsLineDisable
+d]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
+[s2; Returns true if line is not enabled.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayCtrl`:`:ClearSelection`(`):%- [@(0.0.255) void]_[* ClearSelection]()&]
 [s2; Clears the current selection (unselects all selected rows).&]
 [s3; &]

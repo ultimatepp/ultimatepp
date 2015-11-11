@@ -572,7 +572,7 @@ LAYOUT(SetupEditorLayout, 544, 296)
 END_LAYOUT
 
 LAYOUT(SetupAssistLayout, 532, 212)
-	ITEM(Option, check, SetLabel(t_("Automatic checks of source files")).LeftPosZ(4, 252).TopPosZ(4, 16))
+	ITEM(Option, check, SetLabel(t_("Automatic scans of source files")).LeftPosZ(4, 252).TopPosZ(4, 16))
 	ITEM(Option, assist, SetLabel(t_("Automatic assist")).LeftPosZ(4, 252).TopPosZ(24, 16))
 	ITEM(Option, rescan, SetLabel(t_("Rescan file when editing")).LeftPosZ(4, 252).TopPosZ(44, 16))
 	ITEM(Option, commentdp, SetLabel(t_("Comment out default parameters")).Tip(t_("Comment out default parameters when converting declaration to definition instead of removing them")).LeftPosZ(4, 252).TopPosZ(64, 16))
