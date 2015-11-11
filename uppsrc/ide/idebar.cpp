@@ -333,7 +333,7 @@ void Ide::Setup(Bar& menu)
 	menu.Add("Be verbose", THISBACK(ToggleVerboseBuild))
 		.Check(console.verbosebuild)
 		.Help("Log detailed description of build and debug");
-	menu.Add("Environment..", THISBACK(SetupFormat))
+	menu.Add("Settings..", THISBACK(SetupFormat))
 		.Help("Fonts, tabs, indentation, status bar");
 	menu.Add("Abbreviations..", THISBACK(Abbreviations))
 		.Help("Edit abbreviation keywords and code");
@@ -606,7 +606,9 @@ void Ide::BrowseMenu(Bar& menu)
 		if(menu.IsMenuBar()) {
 			menu.MenuSeparator();
 			menu.Add("Check source files for changes", THISBACK(CheckCodeBase));
-			menu.Add("Reparse source files", THISBACK(RescanCode));
+			menu.Add("Rescan all source files", THISBACK(RescanCode));
+			if(!auto_rescan)
+				menu.Add("Rescan current file", THISBACK(EditFileAssistSync));
 			menu.MenuSeparator();
 		}
 		

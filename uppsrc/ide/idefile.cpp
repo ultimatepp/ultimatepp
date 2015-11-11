@@ -306,7 +306,7 @@ void Ide::SaveFile0(bool always)
 		if(tm != FileGetTime(fn))
 			TouchFile(fn);
 		if(IsProjectFile(fn) && ToUpper(GetFileExt(fn)) == ".LAY")
-			CodeBaseScanFile(fn);
+			CodeBaseScanFile(fn, auto_check);
 		return;
 	}
 
@@ -349,7 +349,7 @@ void Ide::SaveFile0(bool always)
 	if(editor.IsDirty()) {
 		text_updated.Kill();
 		if(IsCppBaseFile())
-			CodeBaseScanFile(editfile);
+			CodeBaseScanFile(editfile, auto_check);
 	}
 
 	editor.ClearDirty();
@@ -575,7 +575,7 @@ void Ide::EditFileAssistSync()
 
 void Ide::TriggerAssistSync()
 {
-	if(editor.GetLength() < 500000) // Sanity
+	if(auto_rescan && editor.GetLength() < 500000) // Sanity
 		text_updated.KillSet(1000, THISBACK(EditFileAssistSync));
 }
 
@@ -702,7 +702,7 @@ void Ide::CheckFileUpdate()
 		"Reload", "Keep")) return;
 
 	if(IsCppBaseFile())
-		CodeBaseScanFile(editfile);
+		CodeBaseScanFile(editfile, auto_check);
 	ReloadFile();
 }
 

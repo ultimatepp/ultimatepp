@@ -144,6 +144,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	
 	int            assist_cursor;
 	bool           auto_assist;
+	bool           auto_check;
 	bool           assist_active;
 	bool           commentdp;
 	bool           inbody;

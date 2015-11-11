@@ -316,7 +316,7 @@ void InstantSetup()
 	Ide *ide = dynamic_cast<Ide *>(TheIde());
 	if(dirty && ide) {
 		ide->SyncBuildMode();
-		SyncCodeBase();
+		ide->CodeBaseSync();
 		ide->SetBar();
 	}
 }

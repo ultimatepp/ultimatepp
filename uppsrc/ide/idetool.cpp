@@ -63,7 +63,7 @@ void Ide::GotoCpp(const CppItem& pos)
 void Ide::CheckCodeBase()
 {
 	InvalidateFileTimeCache();
-	SyncCodeBase();
+	CodeBaseSync();
 }
 
 void Ide::RescanCode()

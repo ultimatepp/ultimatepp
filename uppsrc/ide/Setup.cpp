@@ -438,6 +438,8 @@ void Ide::SetupFormat() {
 		(assist.mark_lines, mark_lines)
 		(assist.qtfsel, qtfsel)
 		(assist.assist, editor.auto_assist)
+		(assist.rescan, auto_rescan)
+		(assist.check, auto_check)
 
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)

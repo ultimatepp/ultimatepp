@@ -744,7 +744,7 @@ void WorkspaceWork::RenameFile()
 	filelist.SetSbPos(s);
 	filelist.SetCursor(i);
 	if(GetFileExt(spath) == ".iml" || GetFileExt(dpath) == ".iml")
-		SyncCodeBase();
+		SyncWorkspace();
 }
 
 void WorkspaceWork::MoveFile(int d)

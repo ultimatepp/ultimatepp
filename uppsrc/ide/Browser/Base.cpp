@@ -388,7 +388,7 @@ void CodeBaseScanFile(Stream& in, const String& fn)
 	FinishCodeBase();
 }
 
-void CodeBaseScanFile(const String& fn)
+void CodeBaseScanFile(const String& fn, bool auto_check)
 {
 	LLOG("CodeBaseScanFile " << fn);
 	String md5sum = GetPPFile(fn).md5sum;
@@ -398,7 +398,8 @@ void CodeBaseScanFile(const String& fn)
 	SourceFileInfo& f = source_file[file];
 	CLOG("CodeBaseScanFile " << fn << ", " << md5sum << " " << f.md5sum);
 	if(md5sum != f.md5sum) {
-		SyncCodeBase();
+		if(auto_check)
+			SyncCodeBase();
 		f.md5sum = md5sum;
 	}
 	else
