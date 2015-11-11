@@ -57,6 +57,16 @@ String AndroidProject::GetBinDir() const
 	return this->dir + DIR_SEPS + "bin";
 }
 
+String AndroidProject::GetObjDir() const
+{
+	return this->dir + DIR_SEPS + "obj";
+}
+
+String AndroidProject::GetObjLocalDir() const
+{
+	return GetObjDir() + DIR_SEPS + "local";
+}
+
 // -------------------------------------------------------------------
 
 String AndroidProject::GetManifestPath() const

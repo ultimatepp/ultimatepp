@@ -14,6 +14,11 @@ String CppBuilder::GetTargetExt() const
 		return HasFlag("DLL") ? ".dll" : ".exe";
 }
 
+void CppBuilder::CleanPackage(const String& package, const String& outdir)
+{
+	DeleteFolderDeep(outdir);
+}
+
 // POSIX lib files have names in form of libXXXXXX.so.ver.minver(.rel)
 // so we can't simply get file extension
 String CppBuilder::GetSrcType(String fn) const

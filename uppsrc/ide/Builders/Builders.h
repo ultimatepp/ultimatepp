@@ -19,7 +19,8 @@ Vector<String> SvnInfo(const String& package);
 
 struct CppBuilder : Builder {
 	virtual String GetTargetExt() const;
-
+	virtual void   CleanPackage(const String& package, const String& outdir);
+	
 	const Workspace& wspc;
 	Time             targettime;
 	
@@ -190,7 +191,8 @@ public:
 	                        const String& file,
 	                        const String& target,
 	                        bool asmout);
-	virtual void CleanPackage(const String& package);
+	virtual void CleanPackage(const String& package, const String& outdir);
+	virtual void AfterClean();
 	
 protected:
 	void DeleteUnusedSourceFiles(const String& nest,
@@ -232,6 +234,10 @@ private:
 	
 private:
 	AndroidProject project;
+	const Workspace& wspc;
+
+private:
+	static const String RES_PKG_FLAG;
 };
 
 void DeletePCHFile(const String& pch_file);

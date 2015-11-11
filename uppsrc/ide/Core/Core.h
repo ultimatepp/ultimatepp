@@ -435,7 +435,8 @@ struct Builder {
 	{ return false; }
 	virtual bool Preprocess(const String& package, const String& file, const String& result, bool asmout)
 	{ return false; }
-	virtual void CleanPackage(const String& package) {}
+	virtual void CleanPackage(const String& package, const String& outdir) {}
+	virtual void AfterClean() {}
 	virtual void   AddFlags(Index<String>& cfg) {}
 	virtual void   AddMakeFile(MakeFile& mfinfo, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,

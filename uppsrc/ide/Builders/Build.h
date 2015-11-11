@@ -84,8 +84,8 @@ struct MakeBuild {
 	bool Build(const Workspace& wspc, String mainparam, String outfile, bool clear_console = true);
 	bool Build();
 	void CleanPackage(const Workspace& wspc, int package);
-	void RebuildAll();
 	void Clean();
+	void RebuildAll();
 	void SaveMakeFile(const String& fn, bool exporting);
 	
 	MakeBuild();

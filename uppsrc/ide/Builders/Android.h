@@ -19,6 +19,8 @@ public:
 	String GetBuildDir() const;
 	String GetClassesDir() const;
 	String GetBinDir() const;
+	String GetObjDir() const;
+	String GetObjLocalDir() const;
 	
 	String GetManifestPath() const;
 	String GetJniMakeFilePath() const;

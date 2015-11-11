@@ -1,5 +1,7 @@
 #include "Builders.h"
 
+const String AndroidBuilder::RES_PKG_FLAG = "ANDROID_RESOURCES_PACKAGE";
+
 Index<String> AndroidBuilder::GetBuildersNames()
 {
 	Index<String> builders;
@@ -9,7 +11,8 @@ Index<String> AndroidBuilder::GetBuildersNames()
 	return builders;
 }
 
-AndroidBuilder::AndroidBuilder()
+AndroidBuilder::AndroidBuilder() :
+	wspc(GetIdeWorkspace())
 {
 }
 
@@ -29,7 +32,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		return false;
 	
 	const bool isMainPackage = HasFlag("MAIN");
-	const bool isResourcesPackage = HasFlag("ANDROID_RESOURCES_PACKAGE");
+	const bool isResourcesPackage = HasFlag(RES_PKG_FLAG);
 	String uppManifestPath = PackagePath(package);
 	String packageDir = GetFileFolder(uppManifestPath);
 	
@@ -52,7 +55,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	bool error = false;
 	String androidManifestPath;
 	
-	bool isBlitz = HasFlag("BLITZ") || ndk_blitz;
+	bool isBlitz = HasFlag("BLITZ") && ndk_blitz;
 	
 	String javaSourcesDir    = project.GetJavaDir();
 	String jniSourcesDir     = project.GetJniDir();
@@ -98,7 +101,8 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		else
 		if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
 		   fileExt == ".c"    ||
-		   fileExt == ".hpp"  || fileExt == ".hxx" || fileExt == ".h") {
+		   fileExt == ".hpp"  || fileExt == ".hxx" || fileExt == ".h"   ||
+		   fileExt == ".i"    || fileExt == ".t") {
 			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir,
 			                                                              packageFileDir,
 			                                                              fileName);
@@ -151,7 +155,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	DeleteUnusedSourceFiles(pkgJavaSourcesDir, javaSourceFiles, ".java");
 	DeleteUnusedSourceFiles(pkgJniSourcesDir,
 	                        nativeFiles,
-	                        ".icpp, .cpp, .cxx, .c, .hpp, .hxx, .h",
+	                        ".icpp, .cpp, .cxx, .c, .hpp, .hxx, .h, .i, .t",
 	                        "@blitz.cpp");
 	
 	if(!isResourcesPackage && !error && !javaSourceFiles.IsEmpty()) {
@@ -246,6 +250,8 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 		return false;
 	if(!RealizeLinkDirectories())
 		return false;
+	
+	
 	
 	// We need to compile java packages in this place, because we need to generate "R.java" file before...
 	// We don't know which packages contain resources.
@@ -347,11 +353,44 @@ bool AndroidBuilder::Preprocess(const String& package,
 	return false;
 }
 
-void AndroidBuilder::CleanPackage(const String& package)
+void AndroidBuilder::CleanPackage(const String& package, const String& outdir)
 {
 	InitProject();
 	
-	// TODO: Sandbox dir should be only deleted in main package!
+	Vector<String> pkgDirs;
+	Vector<String> pkgFiles;
+	if(HasFlag(RES_PKG_FLAG))
+		pkgDirs.Add(project.GetResDir());
+	else {
+		pkgDirs.Add(project.GetJniDir() + DIR_SEPS + package);
+		pkgDirs.Add(project.GetClassesDir()); //TODO: handle deletetion of valid classes
+		for(FindFile ff(AppendFileName(project.GetObjLocalDir(), "*")); ff; ff.Next()) {
+			if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder()) {
+				pkgFiles.Add(ff.GetPath() + DIR_SEPS + "lib" + package + ".so");
+				pkgDirs.Add(ff.GetPath() + DIR_SEPS + "objs" + DIR_SEPS + package);
+			}
+		}
+		for(FindFile ff(AppendFileName(project.GetLibsDir(), "*")); ff; ff.Next())
+			if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder())
+				pkgFiles.Add(ff.GetPath() + DIR_SEPS + "lib" + package + ".so");
+	}
+	
+	for(int i = 0; i < pkgDirs.GetCount(); i++) {
+		String dir = pkgDirs[i];
+		if(DirectoryExists(dir))
+			DeleteFolderDeep(dir);
+	}
+	for(int i = 0; i < pkgFiles.GetCount(); i++) {
+		String file = pkgFiles[i];
+		if(FileExists(file))
+			DeleteFile(file);
+	}
+}
+
+void AndroidBuilder::AfterClean()
+{
+	InitProject();
+	
 	String sandboxDir = GetSandboxDir();
 	if(DirectoryExists(sandboxDir))
 		DeleteFolderDeep(sandboxDir);
