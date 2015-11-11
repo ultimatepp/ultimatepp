@@ -32,7 +32,7 @@ void FontSysData::Init(Font font, int angle)
 	cairo_matrix_init_scale(font_matrix, font.GetHeight(), font.GetHeight());
 
 	if(font.IsItalic() && !(FTFace(font)->style_flags & FT_STYLE_FLAG_ITALIC)) {
-		cairo_matrix_t sheer[1];	
+		cairo_matrix_t sheer[1];
 		cairo_matrix_init_identity(sheer);
 		sheer->xy = -0.2;
 		cairo_matrix_multiply(font_matrix, font_matrix, sheer);
@@ -44,7 +44,7 @@ void FontSysData::Init(Font font, int angle)
 	scaled_font = cairo_scaled_font_create(font_face, font_matrix, ctm, opt);
 
 	cairo_font_options_destroy(opt);
- 	cairo_font_face_destroy(font_face);
+	cairo_font_face_destroy(font_face);
 }
 
 struct FontDataSysMaker : LRUCache<FontSysData, Tuple2<Font, int> >::Maker {
@@ -81,9 +81,9 @@ void SystemDraw::FlushText()
 	cairo_set_scaled_font(cr, sf.scaled_font);
 
 	SetColor(textink);
- 	cairo_show_glyphs(cr, gs, textcache.GetCount());
- 	
- 	cache.Shrink(64);
+	cairo_show_glyphs(cr, gs, textcache.GetCount());
+	
+	cache.Shrink(64);
 
 	textcache.Clear();
 }
@@ -111,7 +111,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		g.x = int(x + cosa * xpos + sina * ascent);
 		g.y = int(y + cosa * ascent - sina * xpos);
 		xpos += dx ? dx[i] : font[text[i]];
-	}	
+	}
 }
 
 END_UPP_NAMESPACE

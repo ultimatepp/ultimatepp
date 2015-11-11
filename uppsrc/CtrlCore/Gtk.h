@@ -63,6 +63,7 @@ private:
 
 	cairo_t      *cr;
 	GdkDrawable  *drawable;
+	GdkRegion    *invalid;
 	
 	struct TextGlyph : Moveable<TextGlyph> {
 		int x;
@@ -88,13 +89,14 @@ private:
 
 public:
 	void  SetColor(Color c);
-	operator cairo_t*()              { return cr; }
+	operator cairo_t*()               { return cr; }
 
+	void     SetInvalid(GdkRegion *r) { invalid = r; }
 	Point    GetOffset() const;
-	bool     CanSetSurface()         { return true; }
-	static void Flush()              {} // TODO?
+	bool     CanSetSurface()          { return true; }
+	static void Flush()               {} // TODO?
 
-	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; }
+	SystemDraw(cairo_t *cr, GdkDrawable *dw/* = NULL*/) : cr(cr), drawable(dw) { (void)drawable; invalid = NULL; }
 	~SystemDraw();
 };
 
