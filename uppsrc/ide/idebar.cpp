@@ -608,7 +608,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add("Check source files for changes", THISBACK(CheckCodeBase));
 			menu.Add("Rescan all source files", THISBACK(RescanCode));
 			if(!auto_rescan)
-				menu.Add("Rescan current file", THISBACK(EditFileAssistSync));
+				menu.Add(AK_RESCANCURRENTFILE, THISBACK(EditFileAssistSync));
 			menu.MenuSeparator();
 		}
 		
