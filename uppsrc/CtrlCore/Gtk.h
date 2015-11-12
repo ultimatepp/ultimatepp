@@ -112,7 +112,7 @@ class ImageDraw : public SystemDraw {
 	void FetchStraight(ImageBuffer& b) const;
 
 public:
-	Draw& Alpha();                       
+	Draw& Alpha();
 
 	operator Image() const;
 

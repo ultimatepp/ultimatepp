@@ -124,19 +124,6 @@ String GetIniFile()
 static VectorMap<String, String>& sIniKeys()
 {
 	static VectorMap<String, String> key;
-	return key;
-}
-
-VectorMap<String, String> GetIniKeys()
-{
-	Mutex::Lock __(sMtx);
-	return VectorMap<String, String>(sIniKeys(), 0);
-}
-
-String GetIniKey(const char *id, const String& def) {
-	ASSERT_(IsMainRunning(), "GetIniKey is allowed only after APP_MAIN has started");
-	Mutex::Lock __(sMtx);
-	VectorMap<String, String>& key = sIniKeys();
 	static int version;
 	if(version != ini_version__) {
 		version = ini_version__;
@@ -152,7 +139,19 @@ String GetIniKey(const char *id, const String& def) {
 			key = LoadIniFile(GetHomeDirFile("q.ini"));
 	#endif
 	}
-	return key.Get(id, def);
+	return key;
+}
+
+VectorMap<String, String> GetIniKeys()
+{
+	Mutex::Lock __(sMtx);
+	return clone(sIniKeys());
+}
+
+String GetIniKey(const char *id, const String& def) {
+	ASSERT_(IsMainRunning(), "GetIniKey is allowed only after APP_MAIN has started");
+	Mutex::Lock __(sMtx);
+	return sIniKeys().Get(id, def);
 }
 
 String GetIniKey(const char *id)
