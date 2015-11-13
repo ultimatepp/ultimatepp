@@ -195,6 +195,8 @@ public:
 	virtual void AfterClean();
 	
 protected:
+	void ManageProjectCohesion();
+	void DetectAndManageUnusedPackages(const String& nest, const Index<String>& packages);
 	void DeleteUnusedSourceFiles(const String& nest,
 	                             const Vector<String>& files,
 	                             String exts,
