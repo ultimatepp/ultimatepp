@@ -27,9 +27,19 @@ String AndroidProject::GetJavaDir() const
 	return this->dir + DIR_SEPS + "java";
 }
 
+String AndroidProject::GetJavaDir(const String& package) const
+{
+	return GetJavaDir() + DIR_SEPS + package;
+}
+
 String AndroidProject::GetJniDir() const
 {
 	return this->dir + DIR_SEPS + "jni";
+}
+
+String AndroidProject::GetJniDir(const String& package) const
+{
+	return GetJniDir() + DIR_SEPS + package;
 }
 
 String AndroidProject::GetLibsDir() const

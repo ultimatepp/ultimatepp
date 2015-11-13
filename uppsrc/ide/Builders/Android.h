@@ -13,7 +13,9 @@ public:
 	
 	String GetDir() const;
 	String GetJavaDir() const;
+	String GetJavaDir(const String& package) const;
 	String GetJniDir() const;
+	String GetJniDir(const String& package) const;
 	String GetLibsDir() const;
 	String GetResDir() const;
 	String GetBuildDir() const;

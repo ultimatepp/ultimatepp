@@ -244,14 +244,14 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	if(!ValidateBuilderEnviorement())
 		return false;
 	
+	ManageProjectCohesion();
+	
 	PutConsole("Building Android Project");
 	StringStream ss;
 	if(!GenerateRFile())
 		return false;
 	if(!RealizeLinkDirectories())
 		return false;
-	
-	
 	
 	// We need to compile java packages in this place, because we need to generate "R.java" file before...
 	// We don't know which packages contain resources.
@@ -362,8 +362,10 @@ void AndroidBuilder::CleanPackage(const String& package, const String& outdir)
 	if(HasFlag(RES_PKG_FLAG))
 		pkgDirs.Add(project.GetResDir());
 	else {
-		pkgDirs.Add(project.GetJniDir() + DIR_SEPS + package);
-		pkgDirs.Add(project.GetClassesDir()); //TODO: handle deletetion of valid classes
+		// TODO: handle deletetion of (.class)es
+		pkgDirs.Add(project.GetJavaDir(package));
+		PutConsole(project.GetJavaDir(package));
+		pkgDirs.Add(project.GetJniDir(package));
 		for(FindFile ff(AppendFileName(project.GetObjLocalDir(), "*")); ff; ff.Next()) {
 			if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder()) {
 				pkgFiles.Add(ff.GetPath() + DIR_SEPS + "lib" + package + ".so");
@@ -394,6 +396,28 @@ void AndroidBuilder::AfterClean()
 	String sandboxDir = GetSandboxDir();
 	if(DirectoryExists(sandboxDir))
 		DeleteFolderDeep(sandboxDir);
+}
+
+void AndroidBuilder::ManageProjectCohesion()
+{
+	Index<String> packages;
+	for(int i = 0; i < wspc.GetCount(); i++)
+		packages.Add(wspc[i]);
+	
+	DetectAndManageUnusedPackages(project.GetJavaDir(), packages);
+	DetectAndManageUnusedPackages(project.GetJniDir(), packages);
+}
+
+void AndroidBuilder::DetectAndManageUnusedPackages(const String& nest,
+                                                   const Index<String>& packages)
+{
+	for(FindFile ff(AppendFileName(nest, "*")); ff; ff.Next()) {
+		if(!ff.IsHidden() && ff.IsDirectory()) {
+			String name = ff.GetName();
+			if(packages.Find(name) == -1)
+				CleanPackage(name, "");
+		}
+	}
 }
 
 void AndroidBuilder::DeleteUnusedSourceFiles(const String& nest,
