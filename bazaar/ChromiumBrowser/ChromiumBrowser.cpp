@@ -145,7 +145,7 @@ void ChromiumBrowser::State(int reason)
 
 void ChromiumBrowser::AfterInit()
 {
-	WhenGotFocus = THISBACK(SetFocus2);
+	WhenGotFocus = LAMBDA(){ SetFocus(); };
 	
 	handler = new ClientHandler(WhenUrlChange, WhenStatus, WhenMessage, WhenTakeFocus,
 								WhenGotFocus, WhenKeyboard, WhenConsoleMessage);

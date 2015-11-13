@@ -24,7 +24,7 @@ class ClientApp:	public CefApp,
 {
 private:
 
-	CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler()	{ return this; }
+	CefRefPtr<CefRenderProcessHandler> GetRenderProcessHandler() OVERRIDE	{ return this; }
 	void V8ValueListToCefListValue(const CefV8ValueList& src, CefRefPtr<CefListValue> & dst);
 
 public:
@@ -32,11 +32,11 @@ public:
 	ClientApp();
 		
 	virtual void OnBeforeCommandLineProcessing(const CefString& process_type,
-												CefRefPtr<CefCommandLine> command_line);
+												CefRefPtr<CefCommandLine> command_line) OVERRIDE;
 												
 	virtual void OnContextCreated(CefRefPtr<CefBrowser> browser,
 									CefRefPtr<CefFrame> frame,
-									CefRefPtr<CefV8Context> context);
+									CefRefPtr<CefV8Context> context) OVERRIDE;
 
 	virtual void OnFocusedNodeChanged(CefRefPtr<CefBrowser> browser,
 										CefRefPtr<CefFrame> frame,
