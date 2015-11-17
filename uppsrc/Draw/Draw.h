@@ -205,7 +205,7 @@ public:
 
 
 //BW compatibility
-class FontInfo {
+class FontInfo { // Obsolete!
 	Font font;
 	friend class Font;
 public:
