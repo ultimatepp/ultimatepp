@@ -28,7 +28,7 @@ void DropList::Change(int q) {
 		i += q;
 		if(i >= key.GetCount()) i = key.GetCount() - 1;
 		if(i < 0) i = 0;
-		if(list.IsLineEnabled(i)) {
+		if(list.IsLineEnabled(i) && list.GetLineCy(i) > 0) {
 			if(value != key[i]) {
 				value = key[i];
 				Sync();
