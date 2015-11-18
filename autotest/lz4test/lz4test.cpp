@@ -43,7 +43,7 @@ void test_compress(FILE* outFp, FILE* inpFp)
     char inpBuf[2][BLOCK_BYTES];
     int  inpBufIndex = 0;
     
-   	Zero(inpBuf);
+	Zero(inpBuf);
 
     for(;;) {
         char* const inpPtr = inpBuf[inpBufIndex];
@@ -295,7 +295,7 @@ CONSOLE_APP_MAIN
         if(matchOffsetStat[i]) {
             LOG(i << " " << matchOffsetStat[i]);
             if(i > 1)
-            	over512 += matchOffsetStat[i];
+				over512 += matchOffsetStat[i];
         }
     DDUMP(over512);
     LOG("--------- MATCH LENGTH -----------");
