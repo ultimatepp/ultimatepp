@@ -1,5 +1,8 @@
 #include <RichText/RichText.h>
 
+// Note: .pdf depends on test platform, needs to be updated
+// It is in ~/autotest.qtf, needs to be copied (after checking) to autotest/Qtf
+
 using namespace Upp;
 
 CONSOLE_APP_MAIN
