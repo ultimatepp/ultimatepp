@@ -44,21 +44,11 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	v1 = h;
-	v1.HSizePosZ(220, 10).BottomPosZ(20, ArialZ(20).GetHeight() * 5);
-	v1.SetFont(ArialZ(10));
+	v1.HSizePos(DPI(220), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 5);
+	v1.SetFont(Arial(DPI(10)));
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
 	parent.Add(l.TopPos(0, isz.cy).LeftPos(0, isz.cx));
-#if 0
-	parent.Add(ctrl.Create<StaticRect>().Color(Blue).LeftPos(2, isz.cx - Zx(4)).TopPos(isz.cy, Zy(1)));
-	RichTextView& w = ctrl.Create<RichTextView>();
-	w.SetQTF(GetTopic("ide/app/Sponsor$en-us"));
-	w.PageWidth(2900);
-	w.NoSb();
-	w.SetFrame(NullFrame());
-	w.NoLazy();
-	parent.Add(w.TopPos(isz.cy + Zy(3), Zy(99)).LeftPos(0, isz.cx));
-#endif
 	return sz;
 }
 
