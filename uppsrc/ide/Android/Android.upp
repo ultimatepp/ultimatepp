@@ -18,5 +18,7 @@ file
 	LogCat.cpp,
 	NDKBuild.cpp,
 	Devices readonly separator,
-	Devices.h;
+	Devices.h,
+	Info readonly separator,
+	Copying;
 
