@@ -702,8 +702,10 @@ Value& Value::operator()(const Id& key)
 
 String Value::GetName() const
 {
-	if(IsRef())
-		return typeid(*ptr()).name();
+	if(IsRef()) {
+		Void *p = ptr(); // supress CLANG warning
+		return typeid(*p).name();
+	}
 	if(IsString())
 		return "String";
 	static Tuple2<byte, const char *> tp[] = {
