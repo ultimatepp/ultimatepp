@@ -70,7 +70,7 @@ RpcGet RpcRequest::Retry()
 
 Value JsonRpcData(const Value& v)
 {
-	if(IsDateTime(v))
+	if(IsDateTime(v) && !IsNull(v))
 		return FormatIso8601(v);
 	return v;
 }
@@ -128,7 +128,7 @@ RpcGet RpcRequest::Execute()
 	}
 	String response;
 	New();
-	if(shorted)	
+	if(shorted)
 		response = RpcExecute(request, "", "127.0.0.1");
 	else
 		response = Post(request).Execute();
