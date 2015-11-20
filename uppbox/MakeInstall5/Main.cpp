@@ -75,7 +75,7 @@ int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
 void Make(String pkg, String exe, String method = "MSC9")
 {
-	Syx("c:/upp/umk " + ass + " " + pkg + " c:/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
+	Syx("u:/upp/umk " + ass + " " + pkg + " u:/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
 }
 
