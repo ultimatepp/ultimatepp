@@ -92,9 +92,9 @@ struct AboutDlg : TopWindow {
 
 	AboutDlg() {
 		Size isz = MakeLogo(*this, ctrl);
-		int cx = min(Zx(1000), GetWorkArea().GetWidth());
+		int cx = min(isz.cx * 2, GetWorkArea().GetWidth());
 		SetRect(0, 0, cx, isz.cy);
-		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(Zy(130), 1024));
+		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(DPI(120), 1024));
 		about.SetZoom(Zoom(1, 1));
 		about.RightPos(0, cx - isz.cx).VSizePos();
 		about.HMargins(Zx(4));
