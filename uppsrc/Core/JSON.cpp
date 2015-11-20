@@ -46,7 +46,7 @@ Value ParseJSON(CParser& p)
 				break;
 			p.PassChar(',');
 		}
-		return va;		
+		return va;
 	}
 	p.ThrowError("Unrecognized JSON element");
 	return Null;
