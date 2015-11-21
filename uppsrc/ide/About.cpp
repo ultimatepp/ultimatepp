@@ -80,6 +80,7 @@ bool IsSplashOpen()
 
 struct AboutDlg : TopWindow {
 	Array<Ctrl>  ctrl;
+//	StaticRect   separator;
 	RichTextView about;
 
 	typedef AboutDlg CLASSNAME;
@@ -96,12 +97,14 @@ struct AboutDlg : TopWindow {
 		SetRect(0, 0, cx, isz.cy);
 		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(DPI(120), 1024));
 		about.SetZoom(Zoom(1, 1));
-		about.RightPos(0, cx - isz.cx).VSizePos();
+		about.RightPos(0, cx - isz.cx - DPI(1)).VSizePos();
 		about.HMargins(Zx(4));
 		about.SetFrame(NullFrame());
 		about.NoLazy();
 		Background(PaintRect(ColorDisplay(), SColorPaper()));
 		Add(about);
+//		separator.Color(Gray());
+//		Add(separator.RightPos(cx - isz.cx, DPI(1)).VSizePos());
 		Title("About TheIDE");
 	}
 };
