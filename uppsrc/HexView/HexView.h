@@ -59,6 +59,7 @@ private:
 	void      SetColumns(int x);
 	void      SetInfo(int m);
 	void      Goto();
+	void      RefreshInfo();
 
 public:
 	virtual int Byte(int64 adr);
