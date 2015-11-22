@@ -1,0 +1,6 @@
+#ifndef _DrawDragRect_icpp_init_stub
+#define _DrawDragRect_icpp_init_stub
+#include "CtrlLib/init"
+#include "Framebuffer/init"
+#include "WinFb/init"
+#endif

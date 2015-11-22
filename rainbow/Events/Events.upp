@@ -1,0 +1,29 @@
+description "Demonstration of basic input events";
+
+uses
+	CtrlLib;
+
+uses(SKELETON) Skeleton;
+
+uses(WINALT) WinAlt;
+
+uses(WINFB) WinFb;
+
+uses(LINUXFB) LinuxFb;
+
+uses(SDLFB) SDLFb;
+
+uses(WINGL) WinGl;
+
+file
+	Events.cpp;
+
+mainconfig
+	"" = "GUI SKELETON",
+	"" = "GUI WINALT",
+	"" = "GUI WINFB",
+	"" = "GUI LINUXFB",
+	"" = "GUI SDLFB",
+	"" = "GUI WINGL",
+	"" = "GUI";
+

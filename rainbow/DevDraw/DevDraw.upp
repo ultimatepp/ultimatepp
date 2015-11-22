@@ -1,0 +1,10 @@
+uses
+	Draw,
+	Gtk;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI GTK";
+

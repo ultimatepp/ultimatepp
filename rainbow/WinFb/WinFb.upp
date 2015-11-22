@@ -1,0 +1,10 @@
+uses
+	Framebuffer;
+
+file
+	WinFb.h,
+	Local.h,
+	Keys.h,
+	Win.cpp,
+	Proc.cpp;
+

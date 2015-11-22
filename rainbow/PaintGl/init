@@ -1,0 +1,10 @@
+#ifndef _PaintGl_icpp_init_stub
+#define _PaintGl_icpp_init_stub
+#include "CtrlLib/init"
+#include "Skeleton/init"
+#include "WinAlt/init"
+#include "WinFb/init"
+#include "LinuxFb/init"
+#include "SDLFb/init"
+#include "WinGl/init"
+#endif

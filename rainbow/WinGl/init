@@ -1,0 +1,4 @@
+#ifndef _WinGl_icpp_init_stub
+#define _WinGl_icpp_init_stub
+#include "CoreGl/init"
+#endif

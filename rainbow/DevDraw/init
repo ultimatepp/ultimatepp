@@ -1,0 +1,5 @@
+#ifndef _DevDraw_icpp_init_stub
+#define _DevDraw_icpp_init_stub
+#include "Draw/init"
+#include "Gtk/init"
+#endif
