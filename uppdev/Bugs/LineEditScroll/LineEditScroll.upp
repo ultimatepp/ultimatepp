@@ -1,9 +1,0 @@
-uses
-	CtrlLib;
-
-file
-	LineEditScroll.h,
-	main.cpp;
-
-mainconfig
-	"" = "GUI";

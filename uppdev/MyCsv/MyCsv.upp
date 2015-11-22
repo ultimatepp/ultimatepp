@@ -1,8 +1,0 @@
-uses
-	Core,
-	MySupport;
-
-file
-	csv.h,
-	csv.cpp;
-

@@ -1,3 +1,0 @@
-LAYOUT(AboutLayout, 400, 200)
-	ITEM(RichTextView, rtvAbout, LeftPosZ(4, 392).TopPosZ(4, 192))
-END_LAYOUT

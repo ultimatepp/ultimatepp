@@ -1,9 +1,0 @@
-uses
-	Core,
-	Web\SSL;
-
-file
-	main.cpp;
-
-mainconfig
-	"Normal" = "CONSOLE ST STATIC";

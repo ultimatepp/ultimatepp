@@ -1,3 +1,0 @@
-FN(int, Init, ())
-FN(void, UnInit, ())
-FN(int, IsInitted, ())

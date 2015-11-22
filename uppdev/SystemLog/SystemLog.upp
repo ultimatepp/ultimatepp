@@ -1,7 +1,0 @@
-uses
-	Core;
-
-file
-	SystemLog.cpp,
-	SystemLog.h;
-

@@ -1,7 +1,0 @@
-uses Core;
-
-file
-	"WString.cpp";
-
-mainconfig
-	"" = "CONSOLE ST";

@@ -1,4 +1,0 @@
-#ifndef _TreeRefresh_icpp_init_stub
-#define _TreeRefresh_icpp_init_stub
-#include "CtrlLib/init"
-#endif

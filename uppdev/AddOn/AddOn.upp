@@ -1,8 +1,0 @@
-uses
-	Core;
-
-file
-	AddOn.h,
-	AddOn.cpp,
-	AddOnLoader.h,
-	AddOnLoader.cpp;
