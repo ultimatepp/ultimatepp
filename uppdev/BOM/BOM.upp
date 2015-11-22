@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	BOM.cpp charset "UTF-8";
-
-mainconfig
-	"" = "";
-

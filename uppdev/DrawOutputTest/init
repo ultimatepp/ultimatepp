@@ -1,6 +1,0 @@
-#ifndef _DrawOutputTest_icpp_init_stub
-#define _DrawOutputTest_icpp_init_stub
-#include "CtrlLib/init"
-#include "Web/init"
-#include "plugin\cairo/init"
-#endif

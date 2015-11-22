@@ -1,4 +1,0 @@
-#ifndef _colorpopup_icpp_init_stub
-#define _colorpopup_icpp_init_stub
-#include "CtrlLib/init"
-#endif

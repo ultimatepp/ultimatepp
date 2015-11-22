@@ -1,9 +1,0 @@
-uses
-	CodeEditor;
-
-file
-	main.cpp;
-
-mainconfig
-	"" = "GUI";
-

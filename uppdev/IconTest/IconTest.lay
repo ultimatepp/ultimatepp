@@ -1,4 +1,0 @@
-LAYOUT(IconTestLayout, 200, 88)
-	ITEM(ImageCtrl, imgctrl, LeftPosZ(112, 84).TopPosZ(4, 80))
-END_LAYOUT
-

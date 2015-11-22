@@ -1,9 +1,0 @@
-uses
-	Core,
-	CtrlLib;
-
-file
-	KDESettings.cpp;
-
-mainconfig
-	"" = "GUI ST";

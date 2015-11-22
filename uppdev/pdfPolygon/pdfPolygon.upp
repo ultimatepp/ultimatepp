@@ -1,9 +1,0 @@
-uses
-	Core,
-	PdfDraw;
-
-file
-	pdfPolygon.cpp;
-
-mainconfig
-	"" = "";

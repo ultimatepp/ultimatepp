@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	CondVar.cpp;
-
-mainconfig
-	"" = "MT";
-

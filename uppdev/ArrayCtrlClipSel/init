@@ -1,5 +1,0 @@
-#ifndef _ArrayCtrlClipSel_icpp_init_stub
-#define _ArrayCtrlClipSel_icpp_init_stub
-#include "CtrlLib/init"
-#include "Report/init"
-#endif
