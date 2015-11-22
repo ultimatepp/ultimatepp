@@ -1,2 +1,0 @@
-FN(void, g_object_unref, (G_obj *object))
-FN(void, g_object_get, (G_obj *object, const char *first_property_name, ...))
