@@ -462,7 +462,7 @@ void ChHostSkin()
 				Win32Look(s.topitem[1], XP_MENU, 8 , 2 /*HOT*/);
 				Win32Look(s.topitem[2], XP_MENU, 8 , 3 /*HOT*/);
 				Win32Look(s.popupiconbar, XP_MENU, 13, 1);
-				s.leftgap = Zx(32);
+				s.leftgap = DPI(32);
 				s.textgap = Zx(6);
 				s.lsepm = Zx(32);
 				s.separator.l1 = Blend(SColorMenu(), SColorShadow());
