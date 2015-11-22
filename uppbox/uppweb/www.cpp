@@ -882,10 +882,8 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
 			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
-			DDUMP(di);
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
 			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
-			DDUMP(tt[di].text);
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
 
