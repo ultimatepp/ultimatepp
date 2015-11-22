@@ -1,0 +1,7 @@
+#ifndef _SDL20Uword_icpp_init_stub
+#define _SDL20Uword_icpp_init_stub
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#include "SDL20GL/init"
+#include "plugin/DroidFonts/init"
+#endif

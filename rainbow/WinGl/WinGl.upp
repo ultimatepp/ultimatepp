@@ -1,0 +1,12 @@
+uses
+	CoreGl;
+
+library(WIN32) "glu32 opengl32";
+
+file
+	WinGl.h,
+	Keys.h,
+	Win.cpp,
+	Proc.cpp,
+	After.h;
+

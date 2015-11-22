@@ -1,0 +1,31 @@
+description "SDL20 U++ backend\377";
+
+uses
+	Painter,
+	CtrlLib;
+
+library(POSIX) "SDL2 SDL2main";
+
+file
+	SDL20.h,
+	Keys.h,
+	After.h,
+	Local.h,
+	Window.cpp,
+	Draw.cpp,
+	Image.cpp,
+	Util.cpp,
+	FB.iml,
+	Ctrl.h,
+	Ctrl.cpp,
+	Wnd.cpp,
+	Event.cpp,
+	Top.h,
+	TopFrame.cpp,
+	Top.cpp,
+	Clip.cpp,
+	DnD.cpp,
+	ChSysInit.cpp,
+	SDL.cpp,
+	SDLProc.cpp;
+

@@ -1,0 +1,8 @@
+BINARY(alphaMagFrag, "AlphaMag.frag")
+BINARY(alphaMagVert, "AlphaMag.vert")
+BINARY(blurVert, "Blur.vert")
+BINARY(blurFrag, "Blur.frag")
+BINARY(tahomaNFontDef, "Fonts/TahomaN.fnt")
+BINARY_ARRAY(tahomaNFontImg, 0, "Fonts/TahomaN_0.png")
+BINARY(tahomaBFontDef, "Fonts/TahomaB.fnt")
+BINARY_ARRAY(tahomaBFontImg, 0, "Fonts/TahomaB_0.png")

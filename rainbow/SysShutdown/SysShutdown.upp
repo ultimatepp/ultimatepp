@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	WinFb;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI WINFB",
+	"" = "GUI";
+

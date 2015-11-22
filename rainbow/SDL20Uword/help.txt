@@ -1,0 +1,20 @@
+TIMING DoPaint paint  :  8.79 s  - 15.82 ms ( 8.79 s  / 556 ), min:  7.00 ms, max: 69.00 ms, nesting: 1 - 556
+
+--------------------------------------
+TIMING PutImage       : 678.78 ms -  8.67 us (681.00 ms / 78291 ), min:  0.00 ns, max:  4.00 ms, nesting: 1 - 78291
+TIMING CreateTexture  : 45.98 ms - 70.52 us (46.00 ms / 652 ), min:  0.00 ns, max:  6.00 ms, nesting: 1 - 652
+TIMING PutImage colored:  1.35 s  -  5.22 us ( 1.36 s  / 259617 ), min:  0.00 ns, max:  6.00 ms, nesting: 1 - 259617
+TIMING PutRect        :  1.43 s  - 26.50 us ( 1.43 s  / 53826 ), min:  0.00 ns, max: 21.00 ms, nesting: 1 - 53826
+TIMING DoPaint paint  :  4.35 s  - 17.27 ms ( 4.35 s  / 252 ), min:  9.00 ms, max: 71.00 ms, nesting: 1 - 252
+
+---------- COMB_OPT rect -------------
+TIMING PutImage       : 787.68 ms -  8.42 us (791.00 ms / 93549 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 93549
+TIMING PutImage colored:  1.50 s  -  4.80 us ( 1.51 s  / 311579 ), min:  0.00 ns, max:  6.00 ms, nesting: 1 - 311579
+TIMING FlushPutRect   :  1.58 s  - 120.22 us ( 1.58 s  / 13147 ), min:  0.00 ns, max: 16.00 ms, nesting: 1 - 13147
+TIMING PutRect        : 15.71 ms - 243.65 ns (18.00 ms / 64492 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 64492
+TIMING DoPaint paint  :  4.89 s  - 16.25 ms ( 4.89 s  / 301 ), min:  7.00 ms, max: 71.00 ms, nesting: 1 - 301
+
+---------- DIRECT --------------------
+TIMING PutImage       :  7.10 s  - 11.21 us ( 7.12 s  / 632969 ), min:  0.00 ns, max: 21.00 ms, nesting: 1 - 632969
+TIMING PutRect        : 65.20 ms - 642.58 ns (68.00 ms / 101472 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 101472
+TIMING DoPaint paint  :  8.75 s  - 18.35 ms ( 8.75 s  / 477 ), min:  9.00 ms, max: 61.00 ms, nesting: 1 - 477
