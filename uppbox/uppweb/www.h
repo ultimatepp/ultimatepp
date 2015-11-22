@@ -61,8 +61,8 @@ extern Vector<SvnLogRev> svnlog;
 
 String TopicFileName(const char *dir, const char *topic);
 String TopicFileNameHtml(const char *topic);
-String GatherTopics(VectorMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds);
-String GatherTopics(VectorMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds);
+String GatherTopics(ArrayMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds);
+String GatherTopics(ArrayMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds);
 
 String CppAsQtf(const String& s);
 

@@ -218,3 +218,7 @@ TOPIC("ubuntuinstall$en-us")
 #include "ubuntuinstall$en-us.tppi"
 END_TOPIC
 
+TOPIC("uppx11$en-us")
+#include "uppx11$en-us.tppi"
+END_TOPIC
+
