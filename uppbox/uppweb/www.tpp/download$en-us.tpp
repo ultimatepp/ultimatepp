@@ -18,7 +18,7 @@ topic "Ultimate++ download";
 :: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 win32 portable .7z 
 archive]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
-poratable .7z archive]]
+portable .7z archive]]
 :: [s0; [*2 Ubuntu]]
 :: [s0;=2 ]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 PPA][2 , 
