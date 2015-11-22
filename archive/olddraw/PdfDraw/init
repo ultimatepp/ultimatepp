@@ -1,7 +1,0 @@
-#ifndef _PdfDraw_icpp_init_stub
-#define _PdfDraw_icpp_init_stub
-#include "Draw/init"
-#define BLITZ_INDEX__ F5A36F1780A11422743BA5B19FDABB871
-#include "PdfReport.icpp"
-#undef BLITZ_INDEX__
-#endif
