@@ -265,7 +265,7 @@ void CreateRssFeed() {
 	SaveFile(AppendFileName(targetdir, "svnchanges.xml"), header + items + "</channel>\n</rss>\n");
 }
 
-VectorMap<String, Topic> tt;
+ArrayMap<String, Topic> tt;
 //Vector<String> ttFullTitles;
 Vector<int> ttId;
 Vector<String> ttFullIds;
@@ -371,7 +371,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		Topic& topic = tt.Add(link);
 		topic.title = name;
 		int q = tt.GetCount() - 1;
-		String fullIds = parentIds + "/" + FormatInt(q);	
+		String fullIds = parentIds + "/" + FormatInt(q);
 		ttFullIds.Add(fullIds);
 		
 		String fn = AppendFileName(
@@ -676,6 +676,10 @@ void ExportPage(int i)
 String Downloads()
 {
 	String r;
+	r << "{{1:1:1@L "
+	     "[^app$ide$install$en-us.html^ U`+`+ for Windows with TDM64 toolchain]:: "
+	     "[^app$ide$install$en-us.html^ U`+`+ for Windows without toolchain]:: "
+	     "[^www$uppweb$uppx11$en-us.html^ Posix/X11 tarball]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 	Vector<Time> tm;
 	Vector<String> fn;
@@ -689,11 +693,22 @@ String Downloads()
 		ff.Next();
 	}
 	IndexSort2(tm, fn, path, StdGreater<Time>());
-	for(int i = 0; i < fn.GetCount(); i++)
-		if(i < 40)
-			r << tm[i] << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]&";
-		else
-			DeleteFile(path[i]);
+	
+	for(int pass = 0; pass < 3; pass++) {
+		r << "::@W ";
+		bool next = false;
+		for(int i = 0; i < min(40, fn.GetCount()); i++)
+			if(fn[i].StartsWith(decode(pass, 0, "upp-mingw", 1, "upp-win", "upp-x11"))) {
+				if(next) r << "&";
+				next = true;
+				r << (int)tm[i].year << "-" << (int)tm[i].month << "-" << (int)tm[i].day
+				  << " " << (int)tm[i].hour << ":" << (int)tm[i].minute
+				  << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]";
+			}
+	}
+	r << "}}";
+	for(int i = 40; i < fn.GetCount(); i++)
+		DeleteFile(path[i]);
 	return r;
 }
 
@@ -864,11 +879,13 @@ CONSOLE_APP_MAIN
 		Www("contribweb", lang);
 	//	bi << BarLink("index.html", "Home", false);
 		bi << BarLink(Www("overview", lang), t_("Overview"), false);
-		bi << BarLink(Www("examples", lang), t_("Examples"));	
+		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
 			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
+			DDUMP(di);
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
 			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
+			DDUMP(tt[di].text);
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
 

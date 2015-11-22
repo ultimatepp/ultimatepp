@@ -28,8 +28,10 @@ in the [^http`:`/`/www`.ultimatepp`.org`/forum`/^ forum].&]
 [s0; &]
 [s0;*3 &]
 [s0; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation guide]&]
+[s0; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 Posix/X11 tarball 
+installation guide]&]
 [s0; [*^topic`:`/`/ide`/SrcUpdater`/app`/LinuxInstallGuide`$en`-us^3 POSIX 
-(Linux, BSD, ...) Installation]&]
+(Linux, BSD, ...) setup]&]
 [s0; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage and 
 development cycle guide]&]
 [s3; [4 TheIDE Documentation]&]
