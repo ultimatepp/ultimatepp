@@ -1044,16 +1044,16 @@ String Tokenize2(const String &str, const String &token) {
 	return Tokenize2(str, token, dummy);
 }
 
-Vector<String> Tokenize(const String &str, const String &token) {
+Vector<String> Tokenize(const String &str, const String &token, int pos) {
 	Vector<String> ret;
 	
-	Tokenize(str, token, ret);
+	Tokenize(str, token, ret, pos);
 	
 	return ret;
 }
 
-void Tokenize(const String &str, const String &token, Vector<String> &ret) {
-	for (int pos = 0; !IsNull(pos); ret << Tokenize2(str, token, pos))
+void Tokenize(const String &str, const String &token, Vector<String> &ret, int pos) {
+	for (int _pos = pos; !IsNull(_pos); ret << Tokenize2(str, token, _pos))
 		;
 	ret.Remove(ret.GetCount() - 1);
 }
@@ -1099,7 +1099,11 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 	int spos = str.Find('\"', pos);
 	if (spos < 0 || spos > npos) {
 		if (npos <= -1) {
-			sret = str.Mid(pos);
+			int lspos = str.Find('\"', spos + 1);
+			if (lspos < 0) 
+				sret = str.Mid(spos);
+			else
+				sret = str.Mid(spos + 1, lspos - spos - 1);
 			pos = -1;
 		} else {
 			sret = str.Mid(pos, npos - pos);
@@ -1166,8 +1170,8 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 	if (bycols) {
 		line = GetLine(strFile, posLine);
 		while (pos >= 0) {
-			Value name = GetField(line, pos, separator, decimalSign, onlyStrings);
-			if (pos >= 0 && !IsNull(name)) {
+			Value name = GetField(line, pos, separator, decimalSign, /*onlyStrings*/true);
+			if (/*pos >= 0 && */!IsNull(name)) {
 				Vector<Value> &data = result.Add();
 				data.Add(name);
 			}
