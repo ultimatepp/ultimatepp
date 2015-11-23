@@ -14,41 +14,35 @@ topic "Heap implementation";
 `- small, medium and big.&]
 [s0; &]
 [s6; Small blocks&]
-[s0; Blocks <`= 256 bytes. Such blocks are 16 bytes rounded, so there 
-is 16 possible sizes there. According to our research, blocks 
-<`= 256 represent the majority of blocks used in C`+`+/U`+`+ 
-applications (>98% of all blocks).&]
+[s0; Blocks <`= 576 bytes. According to our research, blocks <`= 
+576 represent the majority of blocks used in C`+`+/U`+`+ applications 
+(>98% of all blocks).&]
 [s0; &]
 [s0; Small blocks are allocated in 4KB pages. U`+`+ always expects 
 to get any memory from the system 4KB aligned (this is provided 
 by platform specific SysAllocRaw and SysFreeRaw functions).&]
 [s0; &]
-[s0; Each 4KB pages is dedicated to single block size. Therefore 
+[s0; There are 18 possible block sizes for small blocks (16, 32, 
+64, 96, 128, 160, 192, 224, 256, 288, 368, 448, 576). Sizes of 
+larger blocks are designed so that they are 16 bytes rounded 
+and will use the most memory in (4096 `- 32 `= 4064) page (see 
+bellow). E.g. 4064 / 7 `= 580, which is adjusted down to 576, 
+thus wasting just  4064 `- 576 `* 7 `= 32 bytes per 4KB page.&]
+[s0; &]
+[s0; Each 4KB pages is dedicated to a single block size. Therefore 
 there is no need to store any per`-block information; instead 
-informations about the whole block is stored in the 32 bytes 
-header at the beginning of 4KB page. This header stores pointer 
-to the list of free blocks in the page, double`-link pointers 
-for the block so that it can be stored in allocator structures, 
-total number of blocks in the 4KB page and number of free blocks 
+information about the whole block is stored in the 32 bytes header 
+at the beginning of 4KB page. This header stores pointer to the 
+list of free blocks in the page, double`-link pointers for the 
+block so that it can be stored in allocator structures, total 
+number of blocks in the 4KB page and a number of free blocks 
 in 4KB page.&]
 [s0; &]
-[s0; Allocator keeps the list of 4KB page is that are completely 
-used (no free blocks) in 16 element (one element per block size) 
-sFull array of lists, using double`-linked pointers. It stores 
-partially used pages in sWork 16 elements array of litst and 
-unused pages in sFree list.&]
-[s0; &]
-[s0; Allocator also uses per`-thread cache of small blocks. In this 
-cache, up to 32 blocks for each of 16 block sizes is cached (linked) 
-without being really deallocated (deallocation requires costly 
-serialization using critical section). If there is no block available 
-in the cache for allocation, 16 blocks are allocated and put 
-into the cache at once (means that serialization is only used 
-once per 16 allocations in the worst case). If block is deallocated 
-and there is already 32 blocks in the cache, 16 blocks from the 
-cache are deallocated within single serialization event (means 
-that serialization is only used once per 16 deallocations in 
-the worst case).&]
+[s0; Allocator keeps the list of 4KB pages that are completely used 
+(no free blocks) in 16 element (one element per block size) sFull 
+array of lists, using double`-linked pointers. It stores partially 
+used pages in sWork 16 elements array of lists and unused pages 
+in sFree list.&]
 [s0; &]
 [s0; Now the critical implementation detail is how, given the pointer 
 to the block in the Free, the header of 4KB page and that way 
@@ -62,11 +56,15 @@ small blocks are always 16 bytes aligned. That makes test simple
 we have small block and can look at the beginning of 4KB page 
 to get more info.&]
 [s0; &]
+[s0; Allocator uses cache of small blocks. In this cache, up to about 
+3.5KB of small blocks per small block size are stored on free, 
+without really invoking more complex deallocation routine.&]
+[s0; &]
 [s0; If allocation/deallocation runs out of cache, the real work 
 has to be done:&]
 [s0; &]
 [s0; When allocating small block, first sWork list is checked for 
-the block. If no available, sFree list is checked to get free 
+the block. If not available, sFree list is checked to get free 
 block, if even that is empty, new block is obtained from the 
 system (using SysAllocRaw). Note that allocator keeps the number 
 of free blocks in the header. Implementation detail: there are 

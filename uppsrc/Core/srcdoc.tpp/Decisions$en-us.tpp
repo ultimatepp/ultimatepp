@@ -31,7 +31,7 @@ mainly to improve build times in debug mode.&]
 or in 64`-bit mode with sizeof(int) >`= 4 (that is quite standard). 
 Currently tested CPU architectures are i386, AMD64, ARM and PowerPC.&]
 [s0;i150;b33;O0; CPU and compiler are supposed to support [^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ M
-oveable] (true for any gcc platform and MSVC`+`+ as well).&]
+oveable] (true for any gcc, clang and MSVC`+`+ as well).&]
 [s0;i150;b33;O0; We decided to ignore possibility of `"out`-of`-memory`" 
 exceptions and recovery. If U`+`+ application goes out of memory, 
 it simply prints the error message and terminates. This is quite 
@@ -41,8 +41,7 @@ tested. Also, most platforms with virtual memory will almost
 freeze long before out`-of`-memory problem due to intensive page 
 swapping. Related issue `- default and copy constructors are 
 not allowed to throw exceptions in U`+`+ (the common reason to 
-throw exception here was out`-of`-memory condition). This limitation 
-will be removed in future releases.&]
+throw exception here is out`-of`-memory condition).&]
 [s0;i150;b33;O0;%- [%% Maximum number of elements in any of U`+`+ containers 
 (including GUI elements, like number of rows in DropList) is 
 2][%%` 31 ][%% `- 1 `= ]2,147,483,647.&]

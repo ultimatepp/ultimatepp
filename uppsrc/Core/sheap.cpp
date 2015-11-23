@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+#include <Core/Core.h>
 //#BLITZ_APPROVE
 
 NAMESPACE_UPP
@@ -114,7 +115,7 @@ void *Heap::AllocK(int k)
 
 inline
 void *Heap::Allok(int k)
-{
+{ // Try to alloc from the front-cache first
 	FreeLink *ptr = cache[k];
 	if(ptr) {
 		cachen[k]++;
