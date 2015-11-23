@@ -809,7 +809,7 @@ Font FontZ(int face, int height)
 	return Font(face, Ctrl::VertLayoutZoom(height));
 }
 
-bool ApplicationUHDEnabled;
+bool ApplicationUHDEnabled = true;
 
 void Ctrl::SetUHDEnabled(bool set)
 {
