@@ -53,12 +53,12 @@ struct Pdb : Debugger, ParentCtrl {
 		char data[1024];
 	};
 
-	struct CdbHexView : HexView {
-		Pdb *cdb;
+	struct PdbHexView : HexView {
+		Pdb *pdb;
 
-		virtual int Byte(int64 addr)            { return cdb->Byte((adr_t)addr); }
+		virtual int Byte(int64 addr)            { return pdb ? pdb->Byte((adr_t)addr) : 0; }
 
-		CdbHexView()                            { SetTotal(0x80000000); }
+		PdbHexView()                            { pdb = NULL; SetTotal(0x80000000); }
 	}
 	memory;
 
