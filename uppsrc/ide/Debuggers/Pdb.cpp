@@ -268,7 +268,7 @@ Pdb::Pdb()
 	cpu.ItemHeight(Courier(Ctrl::HorzLayoutZoom(12)).GetCy());
 	cpu.SetDisplay(Single<CpuRegisterDisplay>());
 
-	memory.cdb = this;
+	memory.pdb = this;
 
 	dlock = "  Running..";
 	dlock.SetFrame(BlackFrame());
