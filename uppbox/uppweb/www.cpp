@@ -679,7 +679,7 @@ String Downloads()
 	r << "{{1:1:1@L "
 	     "[^app$ide$install$en-us.html^ U`+`+ for Windows with TDM64 toolchain]:: "
 	     "[^app$ide$install$en-us.html^ U`+`+ for Windows without toolchain]:: "
-	     "[^www$uppweb$uppx11$en-us.html^ Posix/X11 tarball]";
+	     "[^www$uppweb$uppx11$en-us.html^ POSIX/X11 tarball]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 	Vector<Time> tm;
 	Vector<String> fn;
@@ -728,7 +728,7 @@ struct ProgramData {
 			("diffdir", diffdir)
 			("pdfdir", pdfdir)
 			("ftpUpload", ftpUpload)
-			("outPdf", outPdf)			
+			("outPdf", outPdf)
 			("doSvn", doSvn)
 			("outHtml", outHtml)
 		;
