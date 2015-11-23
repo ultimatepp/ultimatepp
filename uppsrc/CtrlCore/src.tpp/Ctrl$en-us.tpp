@@ -2557,7 +2557,8 @@ ize]_[*@3 sz])&]
 [s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:SetUHDEnabled`(bool`):%- [@(0.0.255) void]_[* SetUHDEnabled]([@(0.0.255) b
 ool]_[*@3 set])&]
-[s2; Informs host platform that application is UHD ready.&]
+[s2; Informs host platform that application is UHD ready. Default 
+is true.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Ctrl`:`:IsUHDEnabled`(`):%- [@(0.0.255) bool]_[* IsUHDEnabled]()&]
