@@ -1,8 +1,9 @@
-topic "U++ Posix/X11 installation";
+topic "U++ POSIX/X11 installation";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s0;= [*+184 U`+`+ Posix/X11 installation]&]
-[s0; Standard Posix/X11 installation of U`+`+ comes as tarball that 
+[s0;= [*+184 U`+`+ POSIX/X11 installation]&]
+[s0; &]
+[s0; Standard POSIX/X11 installation of U`+`+ comes as tarball that 
 can be build using standard GNU tools.&]
 [s0; &]
 [s0; There are some prerequisites required to build and run U`+`+.&]
