@@ -701,8 +701,9 @@ String Downloads()
 			if(fn[i].StartsWith(decode(pass, 0, "upp-mingw", 1, "upp-win", "upp-x11"))) {
 				if(next) r << "&";
 				next = true;
-				r << (int)tm[i].year << "-" << (int)tm[i].month << "-" << (int)tm[i].day
-				  << " " << (int)tm[i].hour << ":" << (int)tm[i].minute
+				r << Format("%04d-%02d-%02d %02d:%02d",
+				            (int)tm[i].year, (int)tm[i].month, (int)tm[i].day,
+				            (int)tm[i].hour, (int)tm[i].minute)
 				  << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]";
 			}
 	}
