@@ -75,5 +75,5 @@ better approach for scaling things that are related to icons.&]
 specifically informed that the application is able to handle 
 UHD, otherwise they enter into mode when application is rendered 
 in standard resolution and upscaled by windows (which looks quite 
-terrible). Normally, U`+`+ is in this mode by default. You can 
-revert to ugly upscaling mode by calling Ctrl`::SetUHDEnabled(false).]]
+terrible). Normally, U`+`+ is in this `"HiDPI`" mode by default. 
+You can revert to ugly upscaling mode by calling Ctrl`::SetUHDEnabled(false).]]
