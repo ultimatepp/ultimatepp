@@ -676,7 +676,7 @@ void ExportPage(int i)
 String Downloads()
 {
 	String r;
-	r << "{{1:1:1@L "
+	r << "{{1:1:1^@L "
 	     "[^app$ide$install$en-us.html^ U`+`+ for Windows with TDM64 toolchain]:: "
 	     "[^app$ide$install$en-us.html^ U`+`+ for Windows without toolchain]:: "
 	     "[^www$uppweb$uppx11$en-us.html^ POSIX/X11 tarball]";
@@ -697,7 +697,7 @@ String Downloads()
 	for(int pass = 0; pass < 3; pass++) {
 		r << "::@W ";
 		bool next = false;
-		for(int i = 0; i < min(40, fn.GetCount()); i++)
+		for(int i = 0; i < min(39, fn.GetCount()); i++)
 			if(fn[i].StartsWith(decode(pass, 0, "upp-mingw", 1, "upp-win", "upp-x11"))) {
 				if(next) r << "&";
 				next = true;
@@ -707,7 +707,7 @@ String Downloads()
 			}
 	}
 	r << "}}";
-	for(int i = 40; i < fn.GetCount(); i++)
+	for(int i = 39; i < fn.GetCount(); i++)
 		DeleteFile(path[i]);
 	return r;
 }
