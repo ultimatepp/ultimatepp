@@ -187,9 +187,13 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 {
 	Zoom z = pi.zoom;
 	PageY opy = py;
-	if(pw.tracer)
-		pw.tracer->Paragraph(page, py, *this);
 	Lines pl = Begin(page, py, nbefore, nline);
+	if(pw.tracer) {
+		PageY h = py;
+		h.y -= format.before + format.ruler;
+		pw.tracer->Paragraph(page, h, *this);
+	}
+	
 	bool highlight = pi.highlightpara >= 0 && pi.highlightpara < pl.len;
 	int hy = py.y - format.before - format.ruler;
 	int phy = py.page;
