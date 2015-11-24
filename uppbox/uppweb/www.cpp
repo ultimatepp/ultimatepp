@@ -1,4 +1,5 @@
 #include "www.h"
+#include "www.h"
 #define IMAGECLASS WWW
 #define IMAGEFILE  <uppweb/www.iml>
 #include <Draw/iml.h>
@@ -684,11 +685,13 @@ String Downloads()
 	Vector<Time> tm;
 	Vector<String> fn;
 	Vector<String> path;
+	Vector<int64> len;
 	while(ff) {
 		if(ff.IsFile()) {
 			tm.Add(ff.GetLastWriteTime());
 			fn.Add(ff.GetName());
 			path.Add(ff.GetPath());
+			len.Add(ff.GetLength());
 		}
 		ff.Next();
 	}
@@ -699,12 +702,13 @@ String Downloads()
 		bool next = false;
 		for(int i = 0; i < min(39, fn.GetCount()); i++)
 			if(fn[i].StartsWith(decode(pass, 0, "upp-mingw", 1, "upp-win", "upp-x11"))) {
-				if(next) r << "&";
+				if(next) r << "&[A0 &]";
 				next = true;
 				r << Format("%04d-%02d-%02d %02d:%02d",
 				            (int)tm[i].year, (int)tm[i].month, (int)tm[i].day,
 				            (int)tm[i].hour, (int)tm[i].minute)
-				  << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]";
+				  << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]"
+				  << " (" << (len[i] >> 20) << " MB)";
 			}
 	}
 	r << "}}";
