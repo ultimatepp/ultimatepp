@@ -511,7 +511,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 			   (fi.is_directory || PatternMatchMulti(patterns, fi.filename)) &&
 			   MatchSearch(fi.filename, search) && show) {
 				Image img;
-			#ifdef PLATFORM_X11
+			#ifdef PLATFORM_POSIX
 				img = isdrive ? PosixGetDriveImage(fi.filename, false)
 				              : GetFileIcon(dir, fi.filename, fi.is_directory, fi.unix_mode & 0111, false);
 			#endif
