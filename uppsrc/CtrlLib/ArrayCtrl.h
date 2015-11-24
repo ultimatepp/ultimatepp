@@ -174,9 +174,10 @@ private:
 	struct Line : Moveable<Line> {
 		bool          select:1;
 		bool          enabled:1;
+		bool          visible:1;
 		Vector<Value> line;
 
-		Line() { select = false; enabled = true; }
+		Line() { select = false; enabled = true; visible = true; }
 	};
 
 	Vector<Line>               array;
@@ -327,6 +328,8 @@ private:
 	// These are listed here as private because name has changed to SetMap/AddMap
 	void       Set(int i, const ValueMap& m);
 	void       Add(const ValueMap& m);
+	
+	bool       IsLineVisible0(int i) const { return i < 0 ? false : i < array.GetCount() ? array[i].visible : true; }
 
 public: // temporary (TRC 06/07/28) // will be removed!
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl) { return SetCtrl(i, j, newctrl, true, true); }
@@ -354,6 +357,7 @@ public:
 	Callback          WhenHeaderLayout;
 
 	Callback2<int, bool&> WhenLineEnabled;
+	Callback2<int, bool&> WhenLineVisible;
 
 	Callback                        WhenDrag;
 	Callback3<int, int, PasteClip&> WhenDropCell;
@@ -446,6 +450,10 @@ public:
 	void       DisableLine(int i)                               { EnableLine(i, false); }
 	bool       IsLineEnabled(int i) const;
 	bool       IsLineDisabled(int i) const                      { return !IsLineEnabled(i); }
+
+	void       ShowLine(int i, bool e);
+	void       HideLine(int i)                                  { ShowLine(i, false); }
+	bool       IsLineVisible(int i) const;
 
 	Vector<Value> ReadRow(int i) const; // deprecated name
 	Vector<Value> GetLine(int i) const                          { return ReadRow(i); }
