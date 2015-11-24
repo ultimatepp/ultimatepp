@@ -695,7 +695,7 @@ String Downloads()
 		}
 		ff.Next();
 	}
-	IndexSort2(tm, fn, path, StdGreater<Time>());
+	IndexSort3(tm, fn, path, len, StdGreater<Time>());
 	
 	for(int pass = 0; pass < 3; pass++) {
 		r << "::@W ";
