@@ -341,6 +341,8 @@ protected:
 	void   ClearModify();
 
 public:
+	Callback          WhenSel; // the most usual ArrayCtrl callbak
+
 	Callback          WhenLeftDouble;
 	Callback1<Point>  WhenMouseMove;
 	Callback          WhenEnterKey;
@@ -352,7 +354,6 @@ public:
 	Callback          WhenStartEdit;
 	Callback          WhenAcceptEdit;
 	Callback          WhenCtrlsAction;
-	Callback          WhenSel;
 	Callback          WhenScroll;
 	Callback          WhenHeaderLayout;
 
