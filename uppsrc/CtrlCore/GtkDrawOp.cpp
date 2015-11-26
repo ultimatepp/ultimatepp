@@ -180,6 +180,8 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 {
 	if(IsNull(width) || IsNull(color))
 		return;
+	if(width == 0)
+		width = 1;
 	FlushText();
 	SetColor(color);
 	if(width == PEN_SOLID)
