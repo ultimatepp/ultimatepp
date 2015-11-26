@@ -47,7 +47,7 @@ void Scribble::Paint(Draw& w)
 		Point p1 = stroke[0] - pos;
 		for(int j = 1; j < stroke.GetCount(); j++) {
 			Point p2 = stroke[j] - pos;
-			w.DrawLine(p1, p2, 0);
+			w.DrawLine(p1, p2);
 			p1 = p2;
 		}
 		w.DrawRect(p1.x, p1.y, 1, 1, Black);
@@ -136,7 +136,7 @@ void Scribble::MainBar(Bar& bar)
 
 Scribble::Scribble()
 {
-	imagesize = Size(200, 200);
+	imagesize = Size(600, 400);
 	Title("Scribble").Zoomable().Sizeable();
 	AddFrame(menu);
 	AddFrame(InsetFrame());
