@@ -608,8 +608,7 @@ void AssistEditor::Complete()
 	}
 	for(int i = 0; i < id.GetCount(); i++) {
 		CppItemInfo& f = assist_item.Add();
-		f.name = id[i];
-		f.natural = id[i];
+		f.name = f.natural = f.qitem = id[i];
 		f.access = 0;
 		f.kind = 100;
 	}
