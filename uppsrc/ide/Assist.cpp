@@ -568,24 +568,28 @@ void AssistEditor::Complete()
 {
 	CloseAssist();
 
+	int c = GetCursor();
+	String q = IdBack(c);
+
 	Index<String> ids;
-	int l = GetCursorLine() - 1;
-	while(l >= 0) {
-		String x = GetUtf8Line(l);
+	int64 len = 0;
+	for(int i = 0; i < GetLineCount() && len < 1000000; i++) {
+		String x = GetUtf8Line(i);
+		len += x.GetLength();
 		CParser p(x);
 		while(!p.IsEof())
-			if(p.IsId())
-				ids.FindAdd(p.ReadId());
+			if(p.IsId()) {
+				String h = p.ReadId();
+				if(h != q)
+					ids.FindAdd(h);
+			}
 			else
 				p.SkipTerm();
-		l--;
 	}
 	
 	Vector<String> id = ids.PickKeys();
 	Upp::Sort(id, sILess);
 
-	int c = GetCursor();
-	String q = IdBack(c);
 	if(q.GetCount()) {
 		String h;
 		for(int i = 0; i < id.GetCount(); i++) {
