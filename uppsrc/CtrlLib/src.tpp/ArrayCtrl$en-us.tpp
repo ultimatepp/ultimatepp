@@ -1504,10 +1504,11 @@ nt]_[*@3 i], [@(0.0.255) int]_[*@3 col], [_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ctrl
 cell. Naturally, the same Ctrl object cannot be used as the editor 
 for multiple array cells. If the position of Ctrl is equivalent 
 to `'SetRect(0, 0, 0, 0)`', which is the default value, Ctrl 
-is resized to fit the ArrayCtrl cell accurately, otherwise the 
-position represents the position within the cell. If [*@3 value] 
-is true, then the Ctrl represents the value of the cell, otherwise 
-it is independent of it.&]
+is resized to fit the ArrayCtrl cell accurately, spanning the 
+whole width and using STDSIZE for height, otherwise the position 
+represents the position within the cell. If [*@3 value] is true, 
+then the Ctrl represents the value of the cell, otherwise it 
+is independent of it.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:GetCtrl`(int`,int`): [_^Ctrl^ Ctrl]_`*[* GetCtrl]([@(0.0.255) int]_[*@3 i],
@@ -1520,7 +1521,11 @@ it is independent of it.&]
 [@(0.0.255) int]_[*@3 col], [@(0.0.255) bool]_[*@3 value]_`=_[@(0.0.255) true])&]
 [s2; Creates an control (owned by ArrayCtrl) for a single array cell. 
 If [*@3 value] is true, then the Ctrl represents the value of the 
-cell, otherwise it is independent of it.&]
+cell, otherwise it is independent of it. If the position of Ctrl 
+is equivalent to `'SetRect(0, 0, 0, 0)`', which is the default 
+value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
+spanning the whole width and using STDSIZE for height, otherwise 
+the position represents the position within the cell. &]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:GetTotalCy`(`)const: [@(0.0.255) int]_[* GetTotalCy]()_[@(0.0.255) const]&]
@@ -2733,8 +2738,9 @@ of this function is a callback, which, upon execution, should
 allocate (normally using the [* new] operator) the desired editor 
 object and set it to its argument. If the position of Ctrl is 
 equivalent to `'SetRect(0, 0, 0, 0)`', which is the default value, 
-Ctrl is resized to fit the ArrayCtrl cell accurately, otherwise 
-the position represents the position within the cell.&]
+Ctrl is resized to fit the ArrayCtrl cell accurately, spanning 
+the whole width and using STDSIZE for height, otherwise the position 
+represents the position within the cell.&]
 [s7; [*C@3 factory]-|callback used for new control creation&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -2747,11 +2753,9 @@ a global function, is supposed to allocate a new editor control
 (normally using the [* new] operator) and set it to its argument. 
 If the position of Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', 
 which is the default value, Ctrl is resized to fit the ArrayCtrl 
-cell accurately, otherwise the position represents the position 
-within the cell. If the position of Ctrl is equivalent to `'SetRect(0, 
-0, 0, 0)`', which is the default value, Ctrl is resized to fit 
-the ArrayCtrl cell accurately, otherwise the position represents 
-the position within the cell.&]
+cell accurately, spanning the whole width and using STDSIZE for 
+height, otherwise the position represents the position within 
+the cell.&]
 [s7; [*C@3 factory]-|a global function used for editor control creation&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
@@ -2764,7 +2768,8 @@ to create a new editor control, an object of the type [* T] is
 created automatically (using the [* new] operator). If the position 
 of Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', which is the 
 default value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
-otherwise the position represents the position within the cell.&]
+spanning the whole width and using STDSIZE for height, otherwise 
+the position represents the position within the cell.&]
 [s7; [*C@4 T]-|the desired object editor type &]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
