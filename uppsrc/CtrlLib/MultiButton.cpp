@@ -635,7 +635,7 @@ MultiButton& MultiButton::Set(const Value& v)
 {
 	if(value != v) {
 		value = v;
-		Refresh();
+		UpdateRefresh();
 	}
 	return *this;
 }
