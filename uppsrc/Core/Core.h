@@ -317,10 +317,6 @@ class JsonIO;
 #include "InVector.hpp"
 #include "InMap.hpp"
 
-#if (defined(HEAPDBG) || defined(TESTLEAKS)) && defined(PLATFORM_POSIX)
-extern int sMemDiagInitCount;
-#endif
-
 #ifdef PLATFORM_WIN32
 NTL_MOVEABLE(POINT)
 NTL_MOVEABLE(SIZE)
@@ -329,14 +325,14 @@ NTL_MOVEABLE(RECT)
 
 END_UPP_NAMESPACE
 
-#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(PLATFORM_POSIX) && !defined(PLATFORM_OSX11) && defined(UPP_HEAP)
+#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
 
 //Place it to the begining of each file to be the first function called in whole executable...
-
+//This is now backup to init_priority attribute in heapdbg.cpp
 //$-
 struct MemDiagCls {
-	MemDiagCls() { if(!UPP::sMemDiagInitCount++) UPP::MemoryInitDiagnostics(); }
-	~MemDiagCls() { if(!--UPP::sMemDiagInitCount) UPP::MemoryDumpLeaks(); }
+	MemDiagCls();
+	~MemDiagCls();
 };
 static const MemDiagCls sMemDiagHelper__upp__;
 //$+
