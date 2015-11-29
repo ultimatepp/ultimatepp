@@ -483,10 +483,17 @@ void Ide::SetupDefaultMethod()
 	if(IsNull(method)) {
 		SetMethod(GetDefaultMethod());
 		if(IsNull(method)) {
-			FindFile ff(ConfigFile("*.bm"));
-			if(!ff)
-				return;
-			SetMethod(GetFileTitle(ff.GetName()));
+			if(FileExists(ConfigFile("MSC15.bm")))
+				SetMethod("MSC15");
+			else
+			if(FileExists(ConfigFile("GCC.bm")))
+				SetMethod("GCC");
+			else {
+				FindFile ff(ConfigFile("*.bm"));
+				if(!ff)
+					return;
+				SetMethod(GetFileTitle(ff.GetName()));
+			}
 		}
 		VectorMap<String, String> map = GetMethodVars(method);
 		debug.linkmode = atoi(map.Get("DEBUG_LINKMODE", "0"));
