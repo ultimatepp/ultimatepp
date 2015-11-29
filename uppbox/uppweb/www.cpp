@@ -940,7 +940,8 @@ CONSOLE_APP_MAIN
 		
 		bsearch << BarCaption(t_("Search on this site"));
 		bsearch << SearchBar("www.ultimatepp.org");
-	
+
+#if 0	
 		blang << BarCaption(t_("Language"));
 		blang << Htmls("<div id=\"langbox\" style=\"display:none;\">") + 
 		         BarItem(HtmlPackedTable().Width(-100)
@@ -951,6 +952,7 @@ CONSOLE_APP_MAIN
 		              "padding-left:6px; padding-right:0px;"
 		              "padding-top:4px; padding-bottom:4px;"
 		         ) + Htmls("</div>");
+#endif
 
 		
 		HtmlTag bf = HtmlPackedTable()
@@ -964,8 +966,8 @@ CONSOLE_APP_MAIN
 	//	      bf / bdoc + div +
 	//	      bf / bcom + div +
 	//	      bf / bcon + div +
-		      bf / bsearch + div +
-		      bf / blang + div;
+		      bf / bsearch + div;
+	//	      bf / blang + div;
 	}
 	SetLanguage(currentLang);
 
