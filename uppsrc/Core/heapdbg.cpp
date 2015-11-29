@@ -223,4 +223,25 @@ void MemoryInitDiagnostics()
 #endif
 #endif
 
+
 END_UPP_NAMESPACE
+
+#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
+
+int sMemDiagInitCount;
+
+MemDiagCls::MemDiagCls()
+{
+	if(sMemDiagInitCount++ == 0)
+		UPP::MemoryInitDiagnostics();
+}
+
+MemDiagCls::~MemDiagCls()
+{
+	if(--sMemDiagInitCount == 0)
+		UPP::MemoryDumpLeaks();
+}
+
+static const MemDiagCls sMemDiagHelper __attribute__ ((init_priority (101)));
+
+#endif
