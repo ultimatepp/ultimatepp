@@ -18,6 +18,7 @@ mkdir ~/.upp
 mkdir ~/.upp/theide
 
 cp GCC.bm ~/.upp/theide
+cp CLANG.bm ~/.upp/theide
 cp en-gb.scd ~/.upp/theide
 cp en-us.scd ~/.upp/theide
 

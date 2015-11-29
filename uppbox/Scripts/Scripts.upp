@@ -9,6 +9,7 @@ file
 	debian,
 	all,
 	GCCMK.bm,
+	CLANGMK.bm,
 	Makefile,
 	doinstall,
 	domake,

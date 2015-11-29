@@ -29,6 +29,7 @@ cp ~/Scripts/upp.spec ~/upp.tmp/upp
 cp ~/Scripts/debian ~/upp.tmp/upp
 
 cp ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
+cp ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
 
 cd ~/upp.tmp
 mv upp upp-x11-src-`svnversion ~/upp.src`
