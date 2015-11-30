@@ -90,7 +90,11 @@ void *MemoryAlloc(size_t size)
 #endif
 	static dword serial_number = 0;
 	DbgBlkHeader *p = (DbgBlkHeader *)MemoryAlloc_(sizeof(DbgBlkHeader) + size + sizeof(dword));
+#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
 	p->serial = sMemDiagInitCount == 0 || s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
+#else
+	p->serial = s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
+#endif
 	p->size = size;
 	if(s_allocbreakpoint && s_allocbreakpoint == serial_number)
 		__BREAK__;
