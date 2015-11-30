@@ -177,7 +177,7 @@ void InstantSetup()
 		
 			bmSet(bm, "BUILDER", x64 ? "MSC15X64" : "MSC15");
 			bmSet(bm, "COMPILER", "");
-			bmSet(bm, "COMMON_OPTIONS", x64 ? "" : "/D_ATL_XP_TARGETING");
+			bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
 			bmSet(bm, "COMMON_FLAGS", "");
