@@ -26,7 +26,7 @@ topic "Changelog";
 [s0;*3 &]
 [s0; [*_3 Current release]&]
 [s0;*_3 &]
-[s0; [*_4 2015.2 (rev 9120)][*3  (Nov 2015)]&]
+[s0; [*_4 2015.2 (rev 9251)][*3  (Dec 2015)]&]
 [s0;3 &]
 [s0; [3 The main focus of this release was ][^topic`:`/`/ide`/app`/Assist`$en`-us^3 C`+`+
  parser and Assist`+`+ features][3 . and ][^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^3 A
