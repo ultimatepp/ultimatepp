@@ -18,4 +18,4 @@ topic "AIndex";
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
-[s0; ]
+[s0; ]]
