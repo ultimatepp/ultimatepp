@@ -42,6 +42,7 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	else
 	if(ext == ".py" || ext == ".pyc" || ext == ".pyd" || ext == ".pyo")
 		img = IdeCommonImg::Python();
+	else
 	if(ext == ".usc")
 		img = IdeCommonImg::Script();
 	else
