@@ -40,6 +40,8 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".diff" || ext == ".patch")
 		img = IdeCommonImg::diff();
 	else
+	if(ext == ".py" || ext == ".pyc" || ext == ".pyd" || ext == ".pyo")
+	   img = IdeCommonImg::Python();
 	if(ext == ".usc")
 		img = IdeCommonImg::Script();
 	else
@@ -146,10 +148,11 @@ void SourceFs(FileSel& fs)
 	fs.Type("Json files (*.json)", "*.json");
 	fs.Type("Language files (*.lng)", "*.lng");
 	fs.Type("Layout files (*.lay)", "*.lay");
+	fs.Type("Python files (*.py *.pyc *.pyd *.pyo)", "*.py *.pyc *.pyd *.pyo");
 	fs.Type("Web development files (*.html *.js *.css *.witz)", "*.html *.js *.css *.witz");
 	fs.Type("Xml files (*.xml *.xsd)", "*.xml *.xsd");
 	fs.Type("Other special files (*.sch *.usc *.rc *.brc *.upt)", "*.sch *.usc *.rc *.brc *.upt");
-	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.iml *.java *.json *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz *.xml *.xsd *.qtf";
+	String mask = "*.cpp *.h *.hpp *.c *.C *.cc *.cxx *.icpp *.diff *.patch *.lay *.py *.pyc *.pyd *.pyo *.iml *.java *.json *.lng *.sch *.usc *.rc *.brc *.upt *.html *.js *.css *.witz *.xml *.xsd *.qtf";
 	fs.Type("All source files (" + mask + ")", mask);
 	IdeFs(fs);
 }
