@@ -747,32 +747,6 @@ void WorkspaceWork::RenameFile()
 		SyncWorkspace();
 }
 
-void WorkspaceWork::MoveFile(int d)
-{
-	int fi = filelist.GetCursor();
-	int s = filelist.GetSbPos();
-	if(fi < 0 || fi >= fileindex.GetCount())
-		return;
-	int a = fileindex[fi];
-	int b = fileindex[fi + d];
-	ShowFile(a);
-	ShowFile(b);
-	if(a < 0 || a >= actual.file.GetCount() || b < 0 || b >= actual.file.GetCount())
-		return;
-	Swap(actual.file[a], actual.file[b]);
-	ShowFile(a);
-	ShowFile(b);
-	SavePackage();
-	LoadActualPackage();
-	filelist.SetSbPos(s);
-	for(int i = 0; i < fileindex.GetCount(); i++)
-		if(fileindex[i] == b) {
-			filelist.SetCursor(i);
-			break;
-		}
-	filelist.Sync();
-}
-
 WorkspaceWork::Sepfo WorkspaceWork::GetActiveSepfo()
 {
 	return Sepfo(GetActivePackage(), GetActiveFileName());
@@ -1119,6 +1093,67 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 	}
 }
 
+void WorkspaceWork::MoveFile(int d)
+{
+	int fi = filelist.GetCursor();
+	int s = filelist.GetSbPos();
+	if(fi < 0 || fi >= fileindex.GetCount())
+		return;
+	int a = fileindex[fi];
+	int b = fileindex[fi + d];
+	if(a < 0 || a >= actual.file.GetCount() || b < 0 || b >= actual.file.GetCount())
+		return;
+	ShowFile(a);
+	ShowFile(b);
+	Swap(actual.file[a], actual.file[b]);
+	ShowFile(a);
+	ShowFile(b);
+	SavePackage();
+	LoadActualPackage();
+	filelist.SetSbPos(s);
+	for(int i = 0; i < fileindex.GetCount(); i++)
+		if(fileindex[i] == b) {
+			filelist.SetCursor(i);
+			break;
+		}
+	filelist.Sync();
+}
+
+void WorkspaceWork::DnDInsert(int line, PasteClip& d)
+{
+	if(IsAvailableInternal<UppList>(d, "package-file") &&
+	   &GetInternal<UppList>(d) == &filelist && d.Accept()) {
+		int fi = filelist.GetCursor();
+		int s = filelist.GetSbPos();
+		if(fi < 0 || fi > fileindex.GetCount() || line < 0 || line > fileindex.GetCount())
+			return;
+		int a = fileindex[fi];
+		int b = line < fileindex.GetCount() ? fileindex[line] : actual.file.GetCount();
+		if(a < 0 || a > actual.file.GetCount() || b < 0 || b > actual.file.GetCount() || a == b)
+			return;
+		ShowFile(a);
+		ShowFile(b);
+		actual.file.Move(a, b);
+		ShowFile(a);
+		ShowFile(b);
+		SavePackage();
+		LoadActualPackage();
+		filelist.SetSbPos(s);
+		for(int i = 0; i < fileindex.GetCount(); i++)
+			if(fileindex[i] == b) {
+				filelist.SetCursor(i);
+				break;
+			}
+		filelist.Sync();
+	}
+}
+
+void WorkspaceWork::Drag()
+{
+	filelist.DoDragAndDrop(InternalClip(filelist, "package-file"),
+	                       filelist.GetDragSample(), DND_MOVE);
+}
+
 WorkspaceWork::WorkspaceWork()
 {
 	package <<= THISBACK(PackageCursor);
@@ -1134,6 +1169,8 @@ WorkspaceWork::WorkspaceWork()
 	organizer = false;
 	package.BackPaintHint();
 	filelist.BackPaintHint();
+	filelist.WhenDrag = THISBACK(Drag);
+	filelist.WhenDropInsert = THISBACK(DnDInsert);
 	showtime = false;
 	sort = true;
 	svn_dirs = false;

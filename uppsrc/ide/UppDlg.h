@@ -340,6 +340,9 @@ struct WorkspaceWork {
 	void MoveFile(int d);
 	void Move(Vector<String>& v, FileList& ta, int d);
 
+	void DnDInsert(int line, PasteClip& d);
+	void Drag();
+
 	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, CONFIG_FILE, ANY_FILE };
 	void AddFile(ADDFILE type);
 	void AddItem(const String& name, bool separator, bool readonly);
