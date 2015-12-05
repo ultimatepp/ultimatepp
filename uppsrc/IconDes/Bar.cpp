@@ -299,6 +299,9 @@ IconDes::IconDes()
 	ilist.WhenCursor = THISBACK(ListCursor);
 	ilist.WhenLeftDouble = THISBACK(EditImage);
 	ilist.NoWantFocus();
+	
+	ilist.WhenDrag = THISBACK(Drag);
+	ilist.WhenDropInsert = THISBACK(DnDInsert);
 
 	search <<= THISBACK(Search);
 	search.SetFilter(CharFilterToUpper);
