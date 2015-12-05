@@ -121,17 +121,24 @@ to objects. [%-*@3 x] must exists as long as clip is available.&]
 [s5;:IsAvailableInternal`(PasteClip`&`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 T]>_[@(0.0.255) bool]_[* IsAvailableInternal]([_^PasteClip^ PasteClip][@(0.0.255) `&
 ]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id]_`=_`"`")&]
-[s2;%% Returns true if there is internal clip in [%-*@3 d].&]
+[s2;%% Returns true if there is internal clip  of required type and 
+[%-*@3 id ]in [%-*@3 d].&]
 [s3;%% &]
 [s4; &]
 [s5;:AcceptInternal`(PasteClip`&`,const char`*`): [@(0.0.255) template]_<[@(0.0.255) clas
 s]_[*@4 T]>_[@(0.0.255) bool]_[* AcceptInternal]([_^PasteClip^ PasteClip][@(0.0.255) `&]_[*@3 d
 ], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id]_`=_`"`")&]
-[s2;%% Accepts internal clip.&]
+[s2;%% Accepts internal clip of required type and [%-*@3 id].&]
 [s3;%% &]
 [s4; &]
 [s5;:GetInternal`(PasteClip`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) c
 onst]_[*@4 T][@(0.0.255) `&]_[* GetInternal]([_^PasteClip^ PasteClip][@(0.0.255) `&]_[*@3 d])
 &]
-[s2;%% Returns a reference to variable of internal clip.&]
-[s0;%% ]]
+[s2;%% Returns a reference to internal clip.&]
+[s4; &]
+[s5;:Upp`:`:GetInternalPtr`(Upp`:`:PasteClip`&`,const char`*`): [@(0.0.255) template]_<
+[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) const]_[*@4 T]_`*[* GetInternalPtr]([_^Upp`:`:PasteClip^ P
+asteClip][@(0.0.255) `&]_[*@3 d], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id]_`=_`"`")&]
+[s2;%% If internal clip of required type and [%-*@3 id ]is available, 
+returns a pointer to it, NULL otherwise.&]
+[s3;%% ]]
