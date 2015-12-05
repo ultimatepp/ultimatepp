@@ -405,6 +405,8 @@ private:
 	void        Duplicate();
 	void        MoveUp();
 	void        MoveDown();
+	void        DnDInsert(int line, PasteClip& d);
+	void        Drag();
 	void        SortItems();
 	void        SelectAll();
 
@@ -437,6 +439,8 @@ private:
 	void        NextLayout();
 	void        MoveLayoutUp();
 	void        MoveLayoutDown();
+	void        DnDInsertLayout(int line, PasteClip& d);
+	void        DragLayout();
 	void        LayoutMenu(Bar& bar);
 
 	void        EditBar(Bar& bar);

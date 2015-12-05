@@ -1251,6 +1251,41 @@ void LayDes::MoveDown()
 	ReloadItems();
 }
 
+void LayDes::DnDInsert(int line, PasteClip& d)
+{
+	if(GetInternalPtr<ArrayCtrl>(d, "layout-item") == &item && item.IsCursor() &&
+	   !IsNull(currentlayout) && cursor.GetCount() && d.Accept()) {
+		SaveState();
+		LayoutData& l = CurrentLayout();
+		Buffer<bool> sel(l.item.GetCount(), false);
+		int n = l.item.GetCount();
+		l.item.InsertN(n, n);
+		for(int i = 0; i < cursor.GetCount(); i++)
+			sel[cursor[i]] = true;
+		cursor.Clear();
+		int j = n;
+		for(int i = 0; i < line; i++)
+			if(!sel[i])
+				l.item.Swap(j++, i);
+		for(int i = 0; i < n; i++)
+			if(sel[i]) {
+				cursor.Add(j - n);
+				l.item.Swap(j++, i);
+			}
+		for(int i = line; i < n; i++)
+			if(!sel[i])
+				l.item.Swap(j++, i);
+		l.item.Remove(0, n);
+		ReloadItems();
+	}
+}
+
+void LayDes::Drag()
+{
+	item.DoDragAndDrop(InternalClip(item, "layout-item"), item.GetDragSample(), DND_MOVE);
+}
+
+
 bool RectLess(const Rect& a, const Rect& b)
 {
 	int d = min(a.bottom, b.bottom) - max(a.top, b.top);
@@ -1467,6 +1502,28 @@ void LayDes::MoveLayoutDown()
 		SyncLayoutList();
 		GoTo(q + 1);
 	}
+}
+
+void LayDes::DnDInsertLayout(int line, PasteClip& d)
+{
+	if(GetInternalPtr<ArrayCtrl>(d, "layout") == &list && list.IsCursor() &&
+	   line >= 0 && line <= layout.GetCount() && d.Accept()) {
+		if(!IsNull(search)) {
+			search <<= Null;
+			SyncLayoutList();
+		}
+		int c = list.GetKey();
+		layout.Move(c, line);
+		if(c <= line)
+			line--;
+		SyncLayoutList();
+		GoTo(line);
+	}
+}
+
+void LayDes::DragLayout()
+{
+	list.DoDragAndDrop(InternalClip(list, "layout"), list.GetDragSample(), DND_MOVE);
 }
 
 void LayDes::LayoutMenu(Bar& bar)
