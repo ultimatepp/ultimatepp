@@ -1121,8 +1121,9 @@ void WorkspaceWork::MoveFile(int d)
 
 void WorkspaceWork::DnDInsert(int line, PasteClip& d)
 {
-	if(IsAvailableInternal<UppList>(d, "package-file") &&
-	   &GetInternal<UppList>(d) == &filelist && d.Accept()) {
+	if(GetActivePackage() == METAPACKAGE)
+		return;
+	if(GetInternalPtr<UppList>(d, "package-file") == &filelist && d.Accept()) {
 		int fi = filelist.GetCursor();
 		int s = filelist.GetSbPos();
 		if(fi < 0 || fi > fileindex.GetCount() || line < 0 || line > fileindex.GetCount())
@@ -1134,6 +1135,8 @@ void WorkspaceWork::DnDInsert(int line, PasteClip& d)
 		ShowFile(a);
 		ShowFile(b);
 		actual.file.Move(a, b);
+		if(b >= a)
+			b--;
 		ShowFile(a);
 		ShowFile(b);
 		SavePackage();

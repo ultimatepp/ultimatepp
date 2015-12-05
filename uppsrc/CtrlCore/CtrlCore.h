@@ -342,6 +342,12 @@ const T& GetInternal(PasteClip& d)
 	return *(T *)GetInternalDropPtr__();
 }
 
+template <class T>
+const T *GetInternalPtr(PasteClip& d, const char *id = "")
+{
+	return IsAvailableInternal<T>(d, id) ? (T *)GetInternalDropPtr__() : NULL;
+}
+
 class Ctrl : public Pte<Ctrl> {
 public:
 	enum PlacementConstants {
