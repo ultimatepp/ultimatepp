@@ -322,6 +322,9 @@ LayDes::LayDes()
 	item.NoWantFocus();
 	item.WhenBar = THISBACK(MoveBar);
 
+	item.WhenDrag = THISBACK(Drag);
+	item.WhenDropInsert = THISBACK(DnDInsert);
+
 	SetFrame(toolbar);
 	AddFrame(InsetFrame());
 	AddFrame(sb);
@@ -335,6 +338,9 @@ LayDes::LayDes()
 	list.WhenBar = THISBACK(LayoutMenu);
 	list.WhenLeftDouble = THISBACK(RenameLayout);
 	list.NoWantFocus();
+	
+	list.WhenDrag = THISBACK(DragLayout);
+	list.WhenDropInsert = THISBACK(DnDInsertLayout);
 	
 	search.NullText("Search (Ctrl+F)");
 	search <<= THISBACK(Search);
