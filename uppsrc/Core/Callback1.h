@@ -4,17 +4,17 @@ template <class O, class M, class T>
 struct CallbackMethodActionArgPte : public CallbackAction {
 	Ptr<O>  object;
 	M       method;
-	T             arg;
+	T       arg;
 
 	void    Execute() { if(object) (object->*method)(arg); }
 
 	CallbackMethodActionArgPte(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class Q, class T>
 Callback pteback1(O *object, void (M::*method)(Q), T arg) {
-	return Callback(new CallbackMethodActionArgPte<O, void (M::*)(Q), T>(object, method, arg));
+	return Callback(new CallbackMethodActionArgPte<O, void (M::*)(Q), T>(object, method, pick(arg)));
 }
 
 template <class O, class M, class T>
@@ -26,13 +26,13 @@ struct CallbackMethodActionArg : public CallbackAction {
 	void    Execute() { (object->*method)(arg); }
 
 	CallbackMethodActionArg(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class Q, class T>
 Callback callback1(O *object, void (M::*method)(Q), T arg) {
 	return Callback(new CallbackMethodActionArg<O, void (M::*)(Q), T>
-	                    (object, method, arg));
+	                    (object, method, pick(arg)));
 }
 
 template <class O, class M, class Q, class T>
@@ -47,20 +47,20 @@ struct CallbackActionCallArg : public CallbackAction {
 	T         arg;
 	void    Execute() { fn(arg); }
 
-	CallbackActionCallArg(F fn, T arg) : fn(fn), arg(arg) {}
+	CallbackActionCallArg(F fn, T arg) : fn(fn), arg(pick(arg)) {}
 };
 
 template <class Q, class T>
 Callback callback1(void (*fn)(Q), T arg)
 {
-	return Callback(new CallbackActionCallArg<void (*)(Q), T, uintptr_t>(fn, arg));
+	return Callback(new CallbackActionCallArg<void (*)(Q), T, uintptr_t>(fn, pick(arg)));
 }
 
 //reduct
 template <class Q, class T>
 Callback callback1(Callback1<Q> cb, T arg)
 {
-	return Callback(new CallbackActionCallArg<Callback1<Q>, T>(cb, arg));
+	return Callback(new CallbackActionCallArg<Callback1<Q>, T>(cb, pick(arg)));
 }
 
 //1 arg to Callback1
@@ -69,85 +69,101 @@ template <class O, class M, class P1, class T>
 struct Callback1MethodActionArgPte : public Callback1Action<P1> {
 	Ptr<O>  object;
 	M       method;
-	T             arg;
+	T       arg;
 	void    Execute(P1 p1) { if(object) (object->*method)(p1, arg); }
 
 	Callback1MethodActionArgPte(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class P1, class Q, class T>
 Callback1<P1> pteback1(O *object, void (M::*method)(P1, Q), T arg) {
-	return Callback1<P1>(new Callback1MethodActionArgPte<O, void (M::*)(P1, Q), P1, T> (object, method, arg));
+	return Callback1<P1>(new Callback1MethodActionArgPte<O, void (M::*)(P1, Q), P1, T> (object, method, pick(arg)));
 }
 
 template <class O, class M, class P1, class T>
 struct Callback1MethodActionArg : public Callback1Action<P1> {
 	O  *object;
 	M   method;
-	T         arg;
+	T   arg;
 	void    Execute(P1 p1) { (object->*method)(p1, arg); }
 
 	Callback1MethodActionArg(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class P1, class Q, class T>
 Callback1<P1> callback1(O *object, void (M::*method)(P1, Q), T arg) {
 	return Callback1<P1>(new Callback1MethodActionArg<O, void (M::*)(P1, Q), P1, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class O, class M, class P1, class Q, class T>
 Callback1<P1> callback1(const O *object, void (M::*method)(P1, Q) const, T arg) {
 	return Callback1<P1>(new Callback1MethodActionArg<const O, void (M::*)(P1, Q) const, P1, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class F, class P1, class T, class HC = F>
 struct Callback1ActionCallArg : public Callback1Action<P1> {
 	F         fn;
 	T         arg;
-	void    Execute(P1 p1) { fn(p1, arg); }
+	void    Execute(P1 p1) { fn(p1, pick(arg)); }
 
-	Callback1ActionCallArg(F fn, T arg) : fn(fn), arg(arg) {}
+	Callback1ActionCallArg(F fn, T arg) : fn(fn), arg(pick(arg)) {}
 };
 
 template <class P1, class Q, class T>
 Callback1<P1> callback1(void (*fn)(P1, Q), T arg)
 {
-	return Callback1<P1>(new Callback1ActionCallArg<void (*)(P1, Q), P1, T, uintptr_t>(fn, arg));
+	return Callback1<P1>(new Callback1ActionCallArg<void (*)(P1, Q), P1, T, uintptr_t>(fn, pick(arg)));
 }
 
 //reduct
 template <class P1, class Q, class T>
 Callback1<P1> callback1(Callback2<P1, Q> cb, T arg) {
-	return Callback1<P1>(new Callback1ActionCallArg<Callback2<P1, Q>, P1, T>(cb, arg));
+	return Callback1<P1>(new Callback1ActionCallArg<Callback2<P1, Q>, P1, T>(cb, pick(arg)));
 }
 
 //1 arg to Callback2
 
 template <class O, class M, class P1, class P2, class T>
+struct Callback2MethodActionArgPte : public Callback2Action<P1, P2> {
+	Ptr<O>  object;
+	M       method;
+	T       arg;
+	void    Execute(P1 p1, P2 p2) { if(object) (object->*method)(p1, p2, arg); }
+
+	Callback2MethodActionArgPte(O *object, M method, T arg)
+	: object(object), method(method), arg(pick(arg)) {}
+};
+
+template <class O, class M, class P1, class P2, class Q, class T>
+Callback2<P1, P2> pteback1(O *object, void (M::*method)(P1, P2, Q), T arg) {
+	return Callback2<P1, P2>(new Callback2MethodActionArgPte<O, void (M::*)(P1, P2, Q), P1, P2, T> (object, method, pick(arg)));
+}
+
+template <class O, class M, class P1, class P2, class T>
 struct Callback2MethodActionArg : public Callback2Action<P1, P2> {
-	O  *object;
-	M   method;
-	T         arg;
+	O      *object;
+	M       method;
+	T       arg;
 	void    Execute(P1 p1, P2 p2) { (object->*method)(p1, p2, arg); }
 
 	Callback2MethodActionArg(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class P1, class P2, class Q, class T>
 Callback2<P1, P2> callback1(O *object, void (M::*method)(P1, P2, Q), T arg) {
 	return Callback2<P1, P2>(new Callback2MethodActionArg<O, void (M::*)(P1, P2, Q), P1, P2, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class O, class M, class P1, class P2, class Q, class T>
 Callback2<P1, P2> callback1(const O *object, void (M::*method)(P1, P2, Q) const, T arg) {
 	return Callback2<P1, P2>(new Callback2MethodActionArg<const O, void (M::*)(P1, P2, Q) const, P1, P2, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class F, class P1, class P2, class T, class HC = F>
@@ -156,22 +172,39 @@ struct Callback2ActionCallArg : Callback2Action<P1, P2> {
 	T         arg;
 	void    Execute(P1 p1, P2 p2) { fn(p1, p2, arg); }
 
-	Callback2ActionCallArg(F fn, T arg) : fn(fn), arg(arg) {}
+	Callback2ActionCallArg(F fn, T arg) : fn(fn), arg(pick(arg)) {}
 };
 
 template <class P1, class P2, class Q, class T>
 Callback2<P1, P2> callback1(void (*fn)(P1, P2, Q), T arg)
 {
-	return Callback2<P1, P2>(new Callback2ActionCallArg<void (*)(P1, P2, Q), P1, P2, T, uintptr_t>(fn, arg));
+	return Callback2<P1, P2>(new Callback2ActionCallArg<void (*)(P1, P2, Q), P1, P2, T, uintptr_t>(fn, pick(arg)));
 }
 
 //reduct
 template <class P1, class P2, class Q, class T>
 Callback2<P1, P2> callback1(Callback3<P1, P2, Q> cb, T arg) {
-	return Callback2<P1, P2>(new Callback2ActionCallArg<Callback3<P1, P2, Q>, P1, P2, T>(cb, arg));
+	return Callback2<P1, P2>(new Callback2ActionCallArg<Callback3<P1, P2, Q>, P1, P2, T>(cb, pick(arg)));
 }
 
 //1 arg to Callback3
+
+template <class O, class M, class P1, class P2, class P3, class T>
+struct Callback3MethodActionArgPte : public Callback3Action<P1, P2, P3> {
+	Ptr<O>  object;
+	M       method;
+	T       arg;
+	void    Execute(P1 p1, P2 p2, P3 p3) { if(object) (object->*method)(p1, p2, p3, arg); }
+
+	Callback3MethodActionArgPte(O *object, M method, T arg)
+	: object(object), method(method), arg(pick(arg)) {}
+};
+
+template <class O, class M, class P1, class P2, class P3, class Q, class T>
+Callback3<P1, P2, P3> pteback1(O *object, void (M::*method)(P1, P2, P3, Q), T arg) {
+	return Callback3<P1, P2, P3>(new Callback3MethodActionArgPte<O, void (M::*)(P1, P2, P3, Q), P1, P2, P3, T>
+	                         (object, method, pick(arg)));
+}
 
 template <class O, class M, class P1, class P2, class P3, class T>
 struct Callback3MethodActionArg : public Callback3Action<P1, P2, P3> {
@@ -181,19 +214,19 @@ struct Callback3MethodActionArg : public Callback3Action<P1, P2, P3> {
 	void    Execute(P1 p1, P2 p2, P3 p3) { (object->*method)(p1, p2, p3, arg); }
 
 	Callback3MethodActionArg(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class P1, class P2, class P3, class Q, class T>
 Callback3<P1, P2, P3> callback1(O *object, void (M::*method)(P1, P2, P3, Q), T arg) {
 	return Callback3<P1, P2, P3>(new Callback3MethodActionArg<O, void (M::*)(P1, P2, P3, Q), P1, P2, P3, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class O, class M, class P1, class P2, class P3, class Q, class T>
 Callback3<P1, P2, P3> callback1(const O *object, void (M::*method)(P1, P2, P3, Q) const, T arg) {
 	return Callback3<P1, P2, P3>(new Callback3MethodActionArg<const O, void (M::*)(P1, P2, P3, Q) const, P1, P2, P3, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class F, class P1, class P2, class P3, class T, class HC = F>
@@ -202,22 +235,39 @@ struct Callback3ActionCallArg : Callback3Action<P1, P2, P3> {
 	T         arg;
 	void    Execute(P1 p1, P2 p2, P3 p3) { fn(p1, p2, p3, arg); }
 
-	Callback3ActionCallArg(F fn, T arg) : fn(fn), arg(arg) {}
+	Callback3ActionCallArg(F fn, T arg) : fn(fn), arg(pick(arg)) {}
 };
 
 template <class P1, class P2, class P3, class Q, class T>
 Callback3<P1, P2, P3> callback1(void (*fn)(P1, P2, P3, Q), T arg)
 {
-	return Callback3<P1, P2, P3>(new Callback3ActionCallArg<void (*)(P1, P2, P3, Q), P1, P2, P3, T, uintptr_t>(fn, arg));
+	return Callback3<P1, P2, P3>(new Callback3ActionCallArg<void (*)(P1, P2, P3, Q), P1, P2, P3, T, uintptr_t>(fn, pick(arg)));
 }
 
 //reduct
 template <class P1, class P2, class P3, class Q, class T>
 Callback3<P1, P2, P3> callback1(Callback4<P1, P2, P3, Q> cb, T arg) {
-	return Callback3<P1, P2, P3>(new Callback3ActionCallArg<Callback4<P1, P2, P3, Q>, P1, P2, P3, T>(cb, arg));
+	return Callback3<P1, P2, P3>(new Callback3ActionCallArg<Callback4<P1, P2, P3, Q>, P1, P2, P3, T>(cb, pick(arg)));
 }
 
 //1 arg to Callback4
+
+template <class O, class M, class P1, class P2, class P3, class P4, class T>
+struct Callback4MethodActionArgPte : public Callback4Action<P1, P2, P3, P4> {
+	Ptr<O>  object;
+	M       method;
+	T       arg;
+	void    Execute(P1 p1, P2 p2, P3 p3, P4 p4) { if(object) (object->*method)(p1, p2, p3, p4, arg); }
+
+	Callback4MethodActionArgPte(O *object, M method, T arg)
+	: object(object), method(method), arg(pick(arg)) {}
+};
+
+template <class O, class M, class P1, class P2, class P3, class P4, class Q, class T>
+Callback4<P1, P2, P3, P4> pteback1(O *object, void (M::*method)(P1, P2, P3, P4, Q), T arg) {
+	return Callback4<P1, P2, P3, P4>(new Callback4MethodActionArgPte<O, void (M::*)(P1, P2, P3, P4, Q), P1, P2, P3, P4, T>
+	                         (object, method, pick(arg)));
+}
 
 template <class O, class M, class P1, class P2, class P3, class P4, class T>
 struct Callback4MethodActionArg : public Callback4Action<P1, P2, P3, P4> {
@@ -227,19 +277,19 @@ struct Callback4MethodActionArg : public Callback4Action<P1, P2, P3, P4> {
 	void    Execute(P1 p1, P2 p2, P3 p3, P4 p4) { (object->*method)(p1, p2, p3, p4, arg); }
 
 	Callback4MethodActionArg(O *object, M method, T arg)
-	: object(object), method(method), arg(arg) {}
+	: object(object), method(method), arg(pick(arg)) {}
 };
 
 template <class O, class M, class P1, class P2, class P3, class P4, class Q, class T>
 Callback4<P1, P2, P3, P4> callback1(O *object, void (M::*method)(P1, P2, P3, P4, Q), T arg) {
 	return Callback4<P1, P2, P3, P4>(new Callback4MethodActionArg<O, void (M::*)(P1, P2, P3, P4, Q), P1, P2, P3, P4, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class O, class M, class P1, class P2, class P3, class P4, class Q, class T>
 Callback4<P1, P2, P3, P4> callback1(const O *object, void (M::*method)(P1, P2, P3, P4, Q) const, T arg) {
 	return Callback4<P1, P2, P3, P4>(new Callback4MethodActionArg<const O, void (M::*)(P1, P2, P3, P4, Q) const, P1, P2, P3, P4, T>
-	                         (object, method, arg));
+	                         (object, method, pick(arg)));
 }
 
 template <class F, class P1, class P2, class P3, class P4, class T, class HC = F>
@@ -248,13 +298,13 @@ struct Callback4ActionCallArg : Callback4Action<P1, P2, P3, P4> {
 	T         arg;
 	void    Execute(P1 p1, P2 p2, P3 p3, P4 p4) { fn(p1, p2, p3, p4, arg); }
 
-	Callback4ActionCallArg(F fn, T arg) : fn(fn), arg(arg) {}
+	Callback4ActionCallArg(F fn, T arg) : fn(fn), arg(pick(arg)) {}
 };
 
 template <class P1, class P2, class P3, class P4, class Q, class T>
 Callback4<P1, P2, P3, P4> callback1(void (*fn)(P1, P2, P3, P4, Q), T arg)
 {
-	return Callback4<P1, P2, P3, P4>(new Callback4ActionCallArg<void (*)(P1, P2, P3, P4, Q), P1, P2, P3, P4, T, uintptr_t>(fn, arg));
+	return Callback4<P1, P2, P3, P4>(new Callback4ActionCallArg<void (*)(P1, P2, P3, P4, Q), P1, P2, P3, P4, T, uintptr_t>(fn, pick(arg)));
 }
 
 // -------------------------------------------------------
