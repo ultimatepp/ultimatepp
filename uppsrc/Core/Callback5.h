@@ -1,7 +1,27 @@
-template <class O, class M, class T1, class T2, class T3, class T4, class T5>
+template < class X, class T1, class T2, class T3, class T4, class T5, class HC = X >
+struct CallbackActionCallArg5 : public CallbackAction {
+	X         x;
+	T1        arg1;
+	T2        arg2;
+	T3        arg3;
+	T4        arg4;
+	T5        arg5;
+	void    Execute() { x ( arg1, arg2, arg3, arg4, arg5 ); }
 
-struct CallbackMethodActionArg5 : public CallbackAction
+	CallbackActionCallArg5 ( X x, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+	: x(x), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)), arg4(pick(arg4)), arg5(pick(arg5)) {}
+};
+
+
+template <class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Callback callback5 ( void ( *fn ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
 {
+	return Callback(new CallbackActionCallArg5 < void (*)( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5, uintptr_t >
+	               (fn, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5)));
+}
+
+template <class O, class M, class T1, class T2, class T3, class T4, class T5>
+struct CallbackMethodActionArg5 : public CallbackAction {
 	O  *object;
 	M   method;
 	T1        arg1;
@@ -16,28 +36,143 @@ struct CallbackMethodActionArg5 : public CallbackAction
 	}
 
 	CallbackMethodActionArg5 ( O *object, M method, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
-			: object ( object ), method ( method ), arg1 ( arg1 ), arg2 ( arg2 ), arg3 ( arg3 ), arg4 ( arg4 ) , arg5 ( arg5 ) {}
+	: object(object), method(method), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)), arg4(pick(arg4)), arg5(pick(arg5)) {}
 };
 
 
 template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
 Callback callback5 ( O *object, void ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
 {
-	return Callback (
-			   new CallbackMethodActionArg5 < O, void ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5 > ( object, method, arg1, arg2, arg3, arg4, arg5 ) );
+	return Callback(new CallbackMethodActionArg5 < O, void ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5 >
+	                 (object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5)));
 }
 
+template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Callback callback5 ( O *object, void ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Callback ( new CallbackMethodActionArg5 < O, void ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1, T2, T3, T4, T5 >
+	                 (object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5)));
+}
+
+template <class O, class M, class T1, class T2, class T3, class T4, class T5>
+struct CallbackMethodActionArg5Pte : public CallbackAction {
+	Ptr<O>  object;
+	M       method;
+	T1      arg1;
+	T2      arg2;
+	T3      arg3;
+	T4      arg4;
+	T5      arg5;
+
+	void    Execute()
+	{
+		( object->*method ) ( arg1, arg2, arg3, arg4, arg5 );
+	}
+
+	CallbackMethodActionArg5Pte ( O *object, M method, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+			: object ( object ), method ( method ), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)), arg4(pick(arg4)), arg5(pick(arg5)) {}
+};
+
+template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Callback pteback5 ( O *object, void ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Callback(new CallbackMethodActionArg5Pte < O, void ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5 >
+					(object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5) ) );
+}
+
+template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Callback pteback5 ( O *object, void ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Callback(new CallbackMethodActionArg5Pte < O, void ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1, T2, T3, T4, T5 >
+					(object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5) ) );
+}
+
+// -----------------------------------------------
+
+template < class X, class T1, class T2, class T3, class T4, class T5, class HC = X >
+struct GateActionCallArg5 : public GateAction {
+	X         x;
+	T1        arg1;
+	T2        arg2;
+	T3        arg3;
+	T4        arg4;
+	T5        arg5;
+	bool      Execute() { return x ? x ( arg1, arg2, arg3, arg4, arg5 ) : false; }
+
+	GateActionCallArg5 ( X x, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+	: x(x), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)), arg4(pick(arg4)), arg5(pick(arg5)) {}
+};
+
+
+template <class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Gate callback5 ( bool ( *fn ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Gate(new GateActionCallArg5 < bool (*)( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5, uintptr_t >
+	               (fn, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5)));
+}
+
+template <class O, class M, class T1, class T2, class T3, class T4, class T5>
+struct GateMethodActionArg5 : public GateAction {
+	O        *object;
+	M         method;
+	T1        arg1;
+	T2        arg2;
+	T3        arg3;
+	T4        arg4;
+	T5        arg5;
+	bool      Execute() { return object ? ( object->*method ) ( arg1, arg2, arg3, arg4, arg5 ) : false; }
+
+	GateMethodActionArg5 ( O *object, M method, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+	: object(object), method(method), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)), arg4(pick(arg4)), arg5(pick(arg5)) {}
+};
 
 
 template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
-Callback callback5 ( const O *object, void ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+Gate callback5 ( O *object, bool ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
 {
-	return Callback ( new CallbackMethodActionArg5 < const O, void ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1, T2, T3, T4, T5 >
-					  ( object, method, arg1, arg2, arg3, arg4, arg5 ) );
+	return Gate(new GateMethodActionArg5 < O, bool ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5 >
+	                 (object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5)));
 }
 
-template <class P1, class P2, class P3, class P4, class P5>
+template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Gate callback5 ( O *object, bool ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Gate ( new GateMethodActionArg5 < O, bool ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1, T2, T3, T4, T5 >
+	                 (object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5)));
+}
 
+template <class O, class M, class T1, class T2, class T3, class T4, class T5>
+struct GateMethodActionArg5Pte : public GateAction {
+	Ptr<O>  object;
+	M       method;
+	T1      arg1;
+	T2      arg2;
+	T3      arg3;
+	T4      arg4;
+	T5      arg5;
+	bool    Execute() { return object ? ( object->*method ) ( arg1, arg2, arg3, arg4, arg5 ) : false; }
+
+	GateMethodActionArg5Pte ( O *object, M method, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+			: object ( object ), method ( method ), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)), arg4(pick(arg4)), arg5(pick(arg5)) {}
+};
+
+template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Gate pteback5 ( O *object, bool ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Gate(new GateMethodActionArg5Pte < O, bool ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5 >
+					(object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5) ) );
+}
+
+template <class O, class M, class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
+Gate pteback5 ( O *object, bool ( M::*method ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
+{
+	return Gate(new GateMethodActionArg5Pte < O, bool ( M::* ) ( Q1, Q2, Q3, Q4, Q5 ) const, T1, T2, T3, T4, T5 >
+					(object, method, pick(arg1), pick(arg2), pick(arg3), pick(arg4), pick(arg5) ) );
+}
+
+// ----------------------------------------
+
+template <class P1, class P2, class P3, class P4, class P5>
 struct Callback5Action
 {
 	Atomic  count;
@@ -173,40 +308,4 @@ template <class P1, class P2, class P3, class P4, class P5>
 Callback5<P1, P2, P3, P4, P5>::~Callback5()
 {
 	Release();
-}
-
-
-
-template < class X, class T1, class T2, class T3, class T4, class T5, class HC = X >
-
-struct CallbackActionCallArg5 : public CallbackAction
-{
-	X         x;
-	T1        arg1;
-	T2        arg2;
-	T3        arg3;
-	T4        arg4;
-	T5        arg5;
-	void    Execute()
-	{
-		x ( arg1, arg2, arg3, arg4, arg5 );
-	}
-
-	CallbackActionCallArg5 ( X x, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
-			: x ( x ), arg1 ( arg1 ), arg2 ( arg2 ), arg3 ( arg3 ), arg4 ( arg4 ), arg5 ( arg5 ) {}
-};
-
-
-template <class Q1, class Q2, class Q3, class Q4, class Q5, class T1, class T2, class T3, class T4, class T5>
-Callback callback5 ( void ( *fn ) ( Q1, Q2, Q3, Q4, Q5 ), T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
-{
-	return Callback (
-			   new CallbackActionCallArg5 < void ( * ) ( Q1, Q2, Q3, Q4, Q5 ), T1, T2, T3, T4, T5, uintptr_t > ( fn, arg1, arg2, arg3, arg4, arg5 ) );
-}
-
-template <class Q1, class Q2, class Q3, class Q4,  class Q5, class T1, class T2, class T3, class T4, class T5>
-Callback callback5 ( Callback5<Q1, Q2, Q3, Q4, Q5> cb, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5 )
-{
-	return Callback (
-			   new CallbackActionCallArg5<Callback5<Q1, Q2, Q3, Q4, Q5>, T1, T2, T3, T4, T5> ( cb, arg1, arg2, arg3, arg4, arg5 ) );
 }
