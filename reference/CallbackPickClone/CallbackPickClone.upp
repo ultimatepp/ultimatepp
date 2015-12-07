@@ -1,0 +1,11 @@
+description "Passing containers to callbacks using pick / clone\377";
+
+uses
+	Core;
+
+file
+	CallbackPickClone.cpp;
+
+mainconfig
+	"" = "";
+
