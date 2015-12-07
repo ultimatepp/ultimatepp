@@ -21,6 +21,8 @@ assign C`+`+ lambda to Callback using operator << (see bellow).&]
 of parameters passed and return value. In order to keep description 
 of callbacks short, all these types are described in a single 
 `"parametrized`" description, with parameters [*/@(128.0.255) highlighted].&]
+[s9; Generally, callbacks are now defined for up to 5 parameters 
+of target (function, method, another callback).&]
 [s0; &]
 [s0; Callback types:&]
 [s3; &]
@@ -48,6 +50,10 @@ of callbacks short, all these types are described in a single
 :: [s0; [*/C+75 class P1, class P2, class P3, class P4]]
 :: [s0; [*/C+75 P1, P2, P3, P4]]
 :: [s0; [*/C+75 void]]
+:: [s0;:Callback5`:`:class: [*C+75 Callback5]]
+:: [s0; [*/C+75 class P1, ... , class P5]]
+:: [s0; [*/C+75 P1, ... , P5]]
+:: [s0; [*/C+75 void]]
 :: [s0;:Gate`:`:class: [*C+75 Gate]]
 :: [s0; [*/C@(0.0.255)+75 none]]
 :: [s0; [*/C@(0.0.255)+75 none]]
@@ -67,6 +73,10 @@ of callbacks short, all these types are described in a single
 :: [s0;:Gate4`:`:class: [*C+75 Gate4]]
 :: [s0; [*/C+75 class P1, class P2, class P3, class P4]]
 :: [s0; [*/C+75 P1, P2, P3, P4]]
+:: [s0; [*/C+75 bool]]
+:: [s0;:Gate5`:`:class: [*C+75 Gate5]]
+:: [s0; [*/C+75 class P1, ... , class P5]]
+:: [s0; [*/C+75 P1, ... , P5]]
 :: [s0; [*/C+75 bool]]}}&]
 [s0; &]
 [s0; `[ template_<[*/@(128.0.255) parameters]> `]&]
@@ -273,204 +283,51 @@ arameters]> `]&]
 [s2; Variant of merging callbacks that can be used for C`+`+11 lambdas.&]
 [s3; &]
 [s0; &]
-[ {{10000@(113.42.0) [s0; [*@7;4 Special functions creating callbacks]]}}&]
-[s3; &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Storing arguments in callback]]}}&]
+[s0; &]
+[s0; It is possible to store some arguments that are passed to target 
+(function or method) as parameters when creating. If simultaneously 
+passing other parameters in callback call, those passed on call 
+represent beginning arguments and those defined in callback creation 
+fill the rest of arguments.&]
+[s0; &]
+[s0; Again, all this is defined for up to 5 target parameters:&]
+[s0; &]
 [s0;:`:`:callback1`(Object`*`,void`(M`:`:`*`)`(P`)`,T`):%- template_<class_[*@4 Object],
- class_[*@4 M], class_[*@4 P], class_[*@4 T]>&]
-[s0;:`:`:callback1`(Object`*`,void`(M`:`:`*`)`(P`)`,T`):%- Callback_[* callback1]([*@4 Ob
-ject]_`*[*@3 object], void_([*@4 M]`::`*[*@3 method])([*@4 P]), [*@4 T]_[*@3 arg])&]
-[s2; Returns a no`-parameter callback for a method expecting a single 
-parameter. The parameter is supplied as [@3 arg] and stored in 
-the Callback.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg]-|Argument&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
+ class_[*@4 M], class_[*@4 P1], ..., class_[*@4 T1], ...>&]
+[s0;:`:`:callback1`(Object`*`,void`(M`:`:`*`)`(P`)`,T`):%- [%%*/@(128.0.255) CallbackTy
+pe][%% <][%%*/@(128.0.255) arguments][%% >]_[* callback1]([*@4 Object]_`*[*@3 object], 
+void_([*@4 M]`::`*[*@3 method])([*@4 P1], ...), [*@4 T1]_[*@3 arg1], ...)&]
+[s3;%- &]
 [s0;:`:`:callback1`(const Object`*`,void`(M`:`:`*`)`(P`)const`,T`):%- template_<class
-_[*@4 Object], class_[*@4 M], class_[*@4 P], class_[*@4 T]>&]
-[s0;:`:`:callback1`(const Object`*`,void`(M`:`:`*`)`(P`)const`,T`):%- Callback_[* callb
-ack1](const_[*@4 Object]_`*[*@3 object], void_([*@4 M]`::`*[*@3 method])([*@4 P])_const, 
-[*@4 T]_[*@3 arg])&]
-[s2; Constant variant of the previous callback1 routine.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg]-|Argument&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
+_[*@4 Object], class_[*@4 M], class_[*@4 P1], ..., class_[*@4 T1], ...>&]
+[s0;:`:`:callback1`(const Object`*`,void`(M`:`:`*`)`(P`)const`,T`):%- [%%*/@(128.0.255) C
+allbackType][%% <][%%*/@(128.0.255) arguments][%% >]_[* callback1]([*@4 Object]_`*[*@3 object
+], void_([*@4 M]`::`*[*@3 method])([*@4 P1], ...) const, [*@4 T1]_[*@3 arg1], 
+...)&]
+[s3;%- &]
 [s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P`)`,T`):%- template_<class_[*@4 Object],
- class_[*@4 M], class_[*@4 P], class_[*@4 T]>&]
-[s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P`)`,T`):%- Callback_[* pteback1]([*@4 Obje
-ct]_`*[*@3 object], void_([*@4 M]`::`*[*@3 method])([*@4 P]), [*@4 T]_[*@3 arg])&]
-[s2; Returns a no`-parameter callback for a method expecting a single 
-parameter. Parameter is supplied as [@3 arg] and stored in the 
-Callback. The created Callback object can be safely invoked even 
-after the object instance is destructed.&]
-[s7; [%-*C@3 object]-|Object. Must be an ancestor of [^topic`:`/`/Core`/src`/PtePtr`$en`-us`#`:`:Pte`:`:template `<class T`> class Pte^ P
-te].&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg]-|Argument&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback1`(void`(`*`)`(P`)`,T`):%- template_<class_[*@4 T], 
-class_[*@4 P]>&]
-[s0;:`:`:callback1`(void`(`*`)`(P`)`,T`):%- Callback_[* callback1](void_(`*[*@3 fn])([*@4 P
-]), [*@4 T]_[*@3 arg])&]
-[s2; Returns a no`-parameter callback for a non`-member function 
-expecting a single parameter. Parameter is supplied as [@3 arg] 
-and stored in the Callback.&]
-[s7; [%-*C@3 fn]-|Function.&]
-[s7; [%-*C@3 arg]-|Argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback1`(Object`*`,void`(M`:`:`*`)`(P1`,P`)`,T`):%- template_<class_[*@4 Obj
-ect], class_[*@4 M], class_[*@4 P1], class_[*@4 P], class_[*@4 T]>&]
-[s0;:`:`:callback1`(Object`*`,void`(M`:`:`*`)`(P1`,P`)`,T`):%- Callback1<[*@4 P1]>_[* cal
-lback1]([*@4 Object]_`*[*@3 object], void_([*@4 M]`::`*[*@3 method])([*@4 P1], 
-[*@4 P]), [*@4 T]_[*@3 arg])&]
-[s2; Returns a single`-parameter callback for a method expecting 
-two parameters. Additional parameter is supplied as [@3 arg] and 
-stored in the Callback.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg]-|Second argument to the method.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback1`(const Object`*`,void`(M`:`:`*`)`(P1`,P`)const`,T`):%- template_<c
-lass_[*@4 Object], class_[*@4 M], class_[*@4 P1], class_[*@4 P], class_[*@4 T]>&]
-[s0;:`:`:callback1`(const Object`*`,void`(M`:`:`*`)`(P1`,P`)const`,T`):%- Callback1<[*@4 P
-1]>_[* callback1](const_[*@4 Object]_`*[*@3 object], void_([*@4 M]`::`*[*@3 method])([*@4 P1],
- [*@4 P])_const, [*@4 T]_[*@3 arg])&]
-[s2; Constant variant of the previous callback.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg]-|Second argument to the method.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P1`,P`)`,T`):%- template_<class_[*@4 Obje
-ct], class_[*@4 M], class_[*@4 P1], class_[*@4 P], class_[*@4 T]>&]
-[s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P1`,P`)`,T`):%- Callback1<[*@4 P1]>_[* pteb
-ack1]([*@4 Object]_`*[*@3 object], void_([*@4 M]`::`*[*@3 method])([*@4 P1], 
-[*@4 P]), [*@4 T]_[*@3 arg])&]
-[s2; Returns a single`-parameter callback for a method expecting 
-two parameters. Additional parameter is supplied as [@3 arg] and 
-stored in the Callback. The created Callback can be safely invoked 
-even after the object instance is destructed.&]
-[s7; [%-*C@3 object]-|Object. Must be an ancestor of [^topic`:`/`/Core`/src`/PtePtr`$en`-us`#`:`:Pte`:`:template `<class T`> class Pte^ P
-te].&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg]-|Second argument to the method.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback1`(void`(`*`)`(P1`,P`)`,T`):%- template_<class_[*@4 T], 
-class_[*@4 P1], class_[*@4 P]>&]
-[s0;:`:`:callback1`(void`(`*`)`(P1`,P`)`,T`):%- Callback1<[*@4 P1]>_[* callback1](void_(`*
-[*@3 fn])([*@4 P1], [*@4 P]), [*@4 T]_[*@3 arg])&]
-[s2; Returns a single`-parameter callback for a non`-member function 
-expecting two parameters. Additional parameter is supplied as 
-[@3 arg] and stored in the Callback.&]
-[s7; [%-*C@3 fn]-|Function.&]
-[s7; [%-*C@3 arg]-|Method pointer.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:callback1`(Callback1`<P`>`,T`):%- template_<class_[*@4 T], class_[*@4 P]>&]
-[s0;:callback1`(Callback1`<P`>`,T`):%- Callback_[* callback1](Callback1<[*@4 P]>_[*@3 cb], 
-[*@4 T]_[*@3 arg])&]
-[s2; Combines a single`-parameter callback and an argument into a 
-no`-parameter callback.&]
-[s7; [%-*C@3 cb]-|Single`-parameter callback.&]
-[s7; [%-*C@3 arg]-|Argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:callback1`(Callback2`<P1`,P`>`,T`):%- template_<class_[*@4 T], 
-class_[*@4 P1], class_[*@4 P]>&]
-[s0;:callback1`(Callback2`<P1`,P`>`,T`):%- Callback1<[*@4 P1]>_[* callback1](Callback2<[*@4 P
-1], [*@4 P]>_[*@3 cb], [*@4 T]_[*@3 arg])&]
-[s2; Combines a double`-parameter callback and an argument into a 
-single parameter callback.&]
-[s7; [%-*C@3 cb]-|Double`-parameter callback.&]
-[s7; [%-*C@3 arg]-|Argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback2`(Object`*`,R`(O`:`:`*`)`(A`,B`)`,T1`,T2`):%- template_<class_[*@4 Ob
-ject], class_[*@4 R], class_[*@4 O], class_[*@4 A], class_[*@4 B], class_[*@4 T1], 
-class_[*@4 T2]>&]
-[s0;:`:`:callback2`(Object`*`,R`(O`:`:`*`)`(A`,B`)`,T1`,T2`):%- Callback_[* callback2](
-[*@4 Object]_`*[*@3 object], [*@4 R]_([*@4 O]`::`*[*@3 method])([*@4 A], [*@4 B]), 
-[*@4 T1]_[*@3 arg1], [*@4 T2]_[*@3 arg2])&]
-[s2; Returns a no`-parameter callback for a method taking two parameters. 
-Parameters are supplied as [@3 arg1] and [@3 arg2. ]They are stored 
-in the created callback object.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg1]-|First argument.&]
-[s7; [%-*C@3 arg2]-|Second argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback2`(const Object`*`,R`(O`:`:`*`)`(A`,B`)const`,T1`,T2`):%- template_<
-class_[*@4 Object], class_[*@4 R], class_[*@4 O], class_[*@4 A], class_[*@4 B], 
-class_[*@4 T1], class_[*@4 T2]>&]
-[s0;:`:`:callback2`(const Object`*`,R`(O`:`:`*`)`(A`,B`)const`,T1`,T2`):%- Callback_[* c
-allback2](const_[*@4 Object]_`*[*@3 object], [*@4 R]_([*@4 O]`::`*[*@3 method])([*@4 A], 
-[*@4 B])_const, [*@4 T1]_[*@3 arg1], [*@4 T2]_[*@3 arg2])&]
-[s2; Constant version of the previous callback.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method.&]
-[s7; [%-*C@3 arg1]-|First argument.&]
-[s7; [%-*C@3 arg2]-|Second argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:pteback2`(Object`*`,R`(O`:`:`*`)`(A`,B`)`,T1`,T2`):%- template_<class_[*@4 Obj
-ect], class_[*@4 R], class_[*@4 O], class_[*@4 A], class_[*@4 B], class_[*@4 T1], 
-class_[*@4 T2]>&]
-[s0;:`:`:pteback2`(Object`*`,R`(O`:`:`*`)`(A`,B`)`,T1`,T2`):%- Callback_[* pteback2]([*@4 O
-bject]_`*[*@3 object], [*@4 R]_([*@4 O]`::`*[*@3 method])([*@4 A], [*@4 B]), 
-[*@4 T1]_[*@3 arg1], [*@4 T2]_[*@3 arg2])&]
-[s2; Returns a no`-parameter callback for a method taking two parameters. 
-Parameter are supplied as [@3 arg1] and [@3 arg2. ]They are stored 
-in the created callback. The created Callback can be safely invoked 
-even after the object instance is destructed.&]
-[s7; [%-*C@3 object]-|Object.&]
-[s7; [%-*C@3 method]-|Method pointer.&]
-[s7; [%-*C@3 arg1]-|First argument.&]
-[s7; [%-*C@3 arg2]-|Second argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:`:`:callback2`(R`(`*`)`(A`,B`)`,T1`,T2`):%- template_<class_[*@4 R], 
-class_[*@4 A], class_[*@4 B], class_[*@4 T1], class_[*@4 T2]>&]
-[s0;:`:`:callback2`(R`(`*`)`(A`,B`)`,T1`,T2`):%- Callback_[* callback2]([*@4 R]_(`*[*@3 fn])
-([*@4 A], [*@4 B]), [*@4 T1]_[*@3 arg1], [*@4 T2]_[*@3 arg2])&]
-[s2; Returns a no`-parameter callback for a non`-member function 
-taking two parameters. Parameter are supplied as [@3 arg1] and 
-[@3 arg2. ]They are stored in the created callback.&]
-[s7; [%-*C@3 fn]-|Function pointer.&]
-[s7; [%-*C@3 arg1]-|First argument.&]
-[s7; [%-*C@3 arg2]-|Second argument.&]
-[s7; [*/ Return value]-|Created callback.&]
-[s3; &]
-[s4; &]
-[s0;:callback2`(Callback2`<A`,B`>`,T1`,T2`):%- template_<class_[*@4 A], 
-class_[*@4 B], class_[*@4 T1], class_[*@4 T2]>&]
-[s0;:callback2`(Callback2`<A`,B`>`,T1`,T2`):%- Callback_[* callback2](Callback2<[*@4 A], 
-[*@4 B]>_[*@3 cb], [*@4 T1]_[*@3 arg1], [*@4 T2]_[*@3 arg2])&]
-[s2; Combines a two`-parameter callback and two arguments into a 
-no`-parameter callback.&]
-[s7; [%-*C@3 cb]-|Two`-parameter callback.&]
-[s7; [%-*C@3 arg1]-|First argument.&]
-[s7; [%-*C@3 arg2]-|Second argument.&]
-[s7; [*/ Return value]-|Created callback.&]
+ class_[*@4 M], class_[*@4 P1], ..., class_[*@4 T1], ...>&]
+[s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P`)`,T`):%- [%%*/@(128.0.255) CallbackTyp
+e][%% <][%%*/@(128.0.255) arguments][%% >]_[* pteback1]([*@4 Object]_`*[*@3 object], 
+void_([*@4 M]`::`*[*@3 method])([*@4 P1], ...), [*@4 T1]_[*@3 arg1], ...)&]
+[s3;%- &]
+[s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P`)const`,T`):%- template_<class_[*@4 Obj
+ect], class_[*@4 M], class_[*@4 P1], ..., class_[*@4 T1], ...>&]
+[s0;:`:`:pteback1`(Object`*`,void`(M`:`:`*`)`(P`)const`,T`):%- [%%*/@(128.0.255) Callba
+ckType][%% <][%%*/@(128.0.255) arguments][%% >]_[* pteback1]([*@4 Object]_`*[*@3 object], 
+void_([*@4 M]`::`*[*@3 method])([*@4 P1], ...) const, [*@4 T1]_[*@3 arg1], 
+...)&]
+[s3;%- &]
+[s0;:`:`:callback1`(void`(`*`)`(P`)`,T`):%- template_<class_[*@4 P1], 
+..., class_[*@4 T1], ...>&]
+[s0;:`:`:callback1`(void`(`*`)`(P`)`,T`):%- [%%*/@(128.0.255) CallbackType][%% <][%%*/@(128.0.255) a
+rguments][%% >]_[* callback1](void_(`*[*@3 fn])([*@4 P1], ...), [*@4 T1]_[*@3 arg], 
+...)&]
+[s0;%- &]
+[s2; [%-*@4 P1] ([%-*@4 P2, P3 ][%- ...]) are arguments passed on method 
+invocation, [%-*@4 T1] ([%-*@4 T2, T3 ][%- ...]) are parameters stored 
+in Callback object.&]
 [s3; &]
 [s0; &]
 [s0;%- &]
@@ -555,8 +412,4 @@ output value.&]
 [s7; [%-*C@3 value]-|Value.&]
 [s7; [*/ Return value]-|Callback.&]
 [s3; &]
-[s0;%- &]
-[ {{10000@(113.42.0) [s0; [*@7;4 Proxy]]}}&]
-[s0; &]
-[s0; Callback proxy can be used to create ca&]
 [s0; ]]
