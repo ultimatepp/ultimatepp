@@ -258,9 +258,9 @@ struct Callback4FnActionArg3 : public Callback4Action<P1, P2, P3, P4> {
 	: fn(fn), arg1(pick(arg1)), arg2(pick(arg2)), arg3(pick(arg3)) {}
 };
 
-template <class X, class P1, class P2, class P3, class P4, class Q1, class Q2, class Q3, class T1, class T2, class T3>
+template <class P1, class P2, class P3, class P4, class Q1, class Q2, class Q3, class T1, class T2, class T3>
 Callback4<P1, P2, P3, P4> callback3(void (*fn)(P1, P2, P3, P4, Q1, Q2, Q3), T1 arg1, T2 arg2, T3 arg3) {
-	return Callback4<P1, P2, P3, P4>(new Callback4MethodActionArg3<O, void (*)(P1, P2, P3, P4, Q1, Q2, Q3), P1, P2, P3, P4, T1, T2, T3>
+	return Callback4<P1, P2, P3, P4>(new Callback4FnActionArg3<void (*)(P1, P2, P3, P4, Q1, Q2, Q3), P1, P2, P3, P4, T1, T2, T3>
 	                         (fn, pick(arg1), pick(arg2), pick(arg3)));
 }
 
