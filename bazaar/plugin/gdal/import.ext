@@ -1,0 +1,96 @@
+files *.cpp *.c;
+
+exclude
+	port/vsipreload.cpp
+	ogr/generate_encoding_table.c
+	alg/gdal_nrgcrs.c
+	*/sqlite/*
+	*/sqlite3/*
+	*/pg/*
+	*/sde/*
+	*/sosi/*
+	*/tiger/*
+	*/vfk/*
+	*/shape/*
+	*/libkml/*
+	*/dgn/*
+	*/arcobjects/*
+	*/dods/*
+	*/dwg/*
+	*/filegdb/*
+	*/fme/*
+	*/gpkg/*
+	*/grass/*
+	*/idb/*
+	*/ingres/*
+	*/ili/*
+	*/mdb/*
+	*/mysql/*
+	*/kml/*
+	*/nas/*
+	*/idrisi/*
+	*/xlsx/*
+	*/xls/*
+	*/oci/*
+	*/ogdi/*
+	*/ods/*
+	*/gpkg/*
+	*/osm/*
+	port/cpl_vsil_simple.cpp
+	port/cpl_win32ce_api.cpp
+	frmts/bgp/*
+	frmts/dds/*
+	frmts/ecw/*
+	frmts/epsilon/*
+	frmts/fits/*
+	frmts/georaster/*
+	frmts/gta/*
+	frmts/hdf4/*
+	frmts/hdf5/*
+	frmts/iso8211/*
+	frmts/jp2kak/*
+	frmts/jpipkak/*
+	frmts/jpeg2000/*
+	frmts/kea/*
+	frmts/jpegls/*
+	frmts/mrsid_lidar/*
+	frmts/msgn/*
+	frmts/mrsid/*
+	frmts/bpg/*
+	frmts/openjpeg/*
+	frmts/msg/*
+	frmts/netcdf/*
+	frmts/msg/*
+	frmts/pgchip/*
+	frmts/postgisraster/*
+	frmts/rasdaman/*
+	frmts/wms/*
+	frmts/webp/*
+	frmts/pdf/*
+	frmts/pcidsk/*
+
+	*/ogr_capi_test.c*
+	*/test_geo_utils.c*
+	*/s57dump.c*
+	*/ntfdump.c*
+	*/jp2dump.c*
+	*/sdts2shp.c*
+	*/nitfdump.c*
+	*/hfatest.c*
+	*/envisat_dump.c*
+	*/dumpgeo.c*
+	*/dted_test.c*
+	*/ceostest.c*
+	*/bsb2raw.c*
+	*/aitest.c*
+
+	*/cpl_recode_iconv.c*
+	*/ogrjmllayer.c*
+	*/ogrgeojsonreader.c*
+	*/ograpispy.c*
+	*/nitf_gcprpc.c*
+	*/gt_jpeg_copy.c*
+	*/gdalrasterfpolygonenumerator.c*
+;
+
+includes *.h *.hpp;
