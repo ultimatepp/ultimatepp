@@ -4,8 +4,8 @@
 #include <Draw/Draw.h>
 #include <Geom/Geom.h>
 
-#include <gdal/gcore/gdal_priv.h>
-#include <gdal/port/cpl_conv.h>
+#include <plugin/gdal/gcore/gdal_priv.h>
+#include <plugin/gdal/port/cpl_conv.h>
 
 class GDALDriver;
 class GDALDataset;
