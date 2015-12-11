@@ -113,7 +113,7 @@ description of small blocks).&]
 [s6; Big blocks&]
 [s0; For blocks bigger than 65504 bytes, allocator simply uses SysAllocRaw 
 to directly obtain virtual memory. It stores information about 
-the block in the header at the beginning of block, also makeing 
+the block in the header at the beginning of block, also making 
 block 16`-bytes unaligned in the process. Free then returns virtual 
 memory back to the system.&]
 [s0; ]]
