@@ -80,7 +80,7 @@ ame]_[_^ValueType^ T`::ValueType]_[* Sum]([@(0.0.255) const]_[*@4 T][@(0.0.255) 
 [s5;:FindMin`(const C`&`,int`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) i
 nt]_[* FindMin]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c], [@(0.0.255) int]_[*@3 pos], 
 [@(0.0.255) int]_[*@3 count])&]
-[s2; Finds the index of minumum value of [%-*@3 c], in [%-*@3 count ]elements 
+[s2; Finds the index of minimum value of [%-*@3 c], in [%-*@3 count ]elements 
 starting at [%-*@3 pos]. Elements must have operator< defined.&]
 [s3; &]
 [s4;%- &]
@@ -91,7 +91,7 @@ nt]_[* FindMin]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c])&]
 [s4;%- &]
 [s5;:Min`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) int]_
 [* Min]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c])&]
-[s2; Returns the minumum element of [%-*@3 c]. If [%-*@3 c] is empty, 
+[s2; Returns the minimum element of [%-*@3 c]. If [%-*@3 c] is empty, 
 behaviour is undefined (ASSERT in debug mode).&]
 [s3; &]
 [s4;%- &]
