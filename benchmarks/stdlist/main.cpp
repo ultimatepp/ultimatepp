@@ -5,15 +5,20 @@
 
 using namespace Upp;
 
+int sum = 0;
+
 CONSOLE_APP_MAIN
 {
 	const int N = 20000;
 	
-	std::list<int> l;
-	std::vector<int> v;
-	Vector<int> u;
+	
+	RDUMP(sizeof(std::string));
+	RDUMP(sizeof(std::wstring));
 
-	for(int j = 0; j < 1000; j++) {
+	for(int j = 0; j < 10000; j++) {
+		std::list<int> l;
+		std::vector<int> v;
+		Vector<int> u;
 		{
 			l.clear();
 			RTIMING("list::push_back");
@@ -32,36 +37,27 @@ CONSOLE_APP_MAIN
 			for(int i = 0; i < N; i++)
 				u.Add(i);
 		}
-	}
-	
-	for(int j = 0; j < 1000; j++) {
+
 		{
-			int sum = 0;
 			{
 				RTIMING("list iterate");
 				for(const auto& i : l)
 					sum += i;
 			}
-			RDUMP(sum);
 		}
 		{
-			int sum = 0;
 			{
 				RTIMING("vector iterate");
 				for(const auto& i : v)
 					sum += i;
 			}
-			RDUMP(sum);
 		}
 		{
-			int sum = 0;
 			{
 				RTIMING("Vector iterate");
 				for(const auto& i : u)
 					sum += i;
 			}
-			RDUMP(sum);
 		}
 	}
-	
 }
