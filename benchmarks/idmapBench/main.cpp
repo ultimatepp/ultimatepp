@@ -12,18 +12,7 @@
 #include <map>
 #include <deque>
 #include <string>
-
-#define TEST_HASHMAP
-
-#ifdef TEST_HASHMAP
-
-#ifdef COMPILER_GCC
-#include <tr1/unordered_map>
-#else
-#include <hash_map>
-#endif
-
-#endif
+#include <unordered_map>
 
 using namespace std;
 using namespace Upp;
@@ -64,6 +53,53 @@ void BenchNTL(const char *file) {
 	}
 
 	Vector<int> order = GetSortOrder(map.GetKeys());
+	
+#ifndef NO_OUTPUT
+	for(int i = 0; i < order.GetCount(); i++) {
+		std::cout << ~map.GetKey(order[i]) << ": ";
+		const Vector<int>& l = map[order[i]];
+		for(int i = 0; i < l.GetCount(); i++) {
+			if(i) std::cout << ", ";
+			std::cout << l[i];
+		}
+		std::cout << '\n';
+	}
+#endif
+}
+
+void BenchSortedVectorMap(const char *file) {
+	FileIn in(file);
+	if (!in) {
+		RLOG("Cannot open input file.");
+		return;
+	}
+
+	SortedVectorMap<String, Vector<int> > map;
+	int line = 1;
+
+	for(;;) {
+		int c = in.Get();
+		if(c < 0) break;
+		if(IsAlpha(c) || c == '_') {
+			String id;
+			id.Cat(c);
+			c = in.Get();
+			while(c >= 0 && (IsAlNum(c) || c == '_')) {
+				id.Cat(c);
+				c = in.Get();
+			}
+			map.GetAdd(id).Add(line);
+		}
+		else
+		if(IsDigit(c))
+			do c = in.Get();
+			while(c >= 0 && (IsAlNum(c) || c == '.'));
+		if(c == '\n')
+			++line;
+	}
+
+	Vector<int> order = GetSortOrder(map.GetKeys());
+	
 #ifndef NO_OUTPUT
 	for(int i = 0; i < order.GetCount(); i++) {
 		std::cout << ~map.GetKey(order[i]) << ": ";
@@ -103,13 +139,7 @@ void BenchValueMap(const char *file) {
 				id.Cat(c);
 				c = in.Get();
 			}
-#ifdef SVO_VALUE
-			ValueArray va = map.GetAndClear(id);
-#else
-			ValueArray va = map[id];
-#endif
-			va.Add(line);
-			map.Set(id, va);
+			map(id) << line;
 		}
 		else
 		if(IsDigit(c))
@@ -120,6 +150,7 @@ void BenchValueMap(const char *file) {
 	}
 
 	Vector<int> order = GetSortOrder(map.GetKeys(), SimpleValueOrder);
+
 #ifndef NO_OUTPUT
 	for(int i = 0; i < order.GetCount(); i++) {
 		std::cout << ~(String)(map.GetKeys()[order[i]]) << ": ";
@@ -184,13 +215,7 @@ void BenchMap(const char *file)
 #endif
 }
 
-#ifdef TEST_HASHMAP
-
-#ifdef COMPILER_GCC
-typedef std::tr1::unordered_map< string, vector<int> > HashMap;
-#else
-typedef stdext::hash_map< string, vector<int> > HashMap;
-#endif
+typedef std::unordered_map< string, vector<int> > HashMap;
 
 inline bool h_less(const HashMap::value_type *a, const HashMap::value_type *b)
 {
@@ -221,8 +246,6 @@ void BenchHashMap(const char *file)
 #endif
 }
 
-#endif
-
 #ifdef _DEBUG
 #define N 1
 #else
@@ -241,9 +264,14 @@ CONSOLE_APP_MAIN
 	else
 		fn = argv[0];
 
-	BenchNTL(fn); // first run to cache the file
+	LoadFile(fn); // cache the file
 
-#ifdef TEST_HASHMAP
+#ifdef UPP_HEAP
+	MemoryProfile f;
+//	RLOG(f);
+//	allocated_bytes0 = GetAllocatedBytes(f);
+#endif
+
 	{
 		BenchHashMap(fn);
 		TimeStop tm;
@@ -251,7 +279,6 @@ CONSOLE_APP_MAIN
 			BenchHashMap(fn);
 		RLOG("STL hash_map time: " << tm.Elapsed() << " ms");
 	}
-#endif
 
 	{
 		BenchMap(fn);
@@ -262,18 +289,24 @@ CONSOLE_APP_MAIN
 	}
 
 	{
-		BenchNTL(fn);
-		TimeStop tm;
-		for(int n = 0; n < N; n++)
-			BenchNTL(fn);
-		RLOG("NTL time: " << tm.Elapsed() << " ms");
-	}
-
-	{
 		BenchValueMap(fn);
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchValueMap(fn);
 		RLOG("ValueMap time: " << tm.Elapsed() << " ms");
+	}
+	{
+		BenchNTL(fn);
+		TimeStop tm;
+		for(int n = 0; n < N; n++)
+			BenchSortedVectorMap(fn);
+		RLOG("SortedVectorMap time: " << tm.Elapsed() << " ms");
+	}
+	{
+		BenchSortedVectorMap(fn);
+		TimeStop tm;
+		for(int n = 0; n < N; n++)
+			BenchNTL(fn);
+		RLOG("VectorMap time: " << tm.Elapsed() << " ms");
 	}
 }
