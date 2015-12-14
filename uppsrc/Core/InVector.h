@@ -186,7 +186,7 @@ class InVector<T>::ConstIterator {
 	void PrevBlk();		
 
 public:
-	force_inline int GetIndex() const              { return ptr - begin + offset; }
+	force_inline int GetIndex() const              { return int(ptr - begin) + offset; }
 
 	force_inline ConstIterator& operator++()       { ASSERT(ptr); if(++ptr == end) NextBlk(); return *this; }
 	force_inline ConstIterator& operator--()       { ASSERT(ptr); if(ptr == begin) PrevBlk(); --ptr; return *this; }
