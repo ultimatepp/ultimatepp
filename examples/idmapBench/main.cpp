@@ -12,7 +12,11 @@
 #include <map>
 #include <deque>
 #include <string>
+#ifdef CPP_11
 #include <unordered_map>
+#else
+#include <tr1/unordered_map>
+#endif
 
 using namespace std;
 using namespace Upp;
@@ -115,7 +119,11 @@ void BenchMap(const char *file)
 #endif
 }
 
+#ifdef CPP_11
 typedef std::unordered_map< string, vector<int> > HashMap;
+#else
+typedef std::tr1::unordered_map< string, vector<int> > HashMap;
+#endif
 
 inline bool h_less(const HashMap::value_type *a, const HashMap::value_type *b)
 {
