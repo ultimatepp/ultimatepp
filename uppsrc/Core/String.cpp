@@ -105,8 +105,11 @@ char *String0::Alloc(int count, char& kind)
 		return (char *)MemoryAlloc32();
 	}
 	size_t sz = sizeof(Rc) + count + 1;
-	Rc *rc = (Rc *)MemoryAlloc(sz);
-	rc->alloc = (int)sz - sizeof(Rc) - 1;
+	Rc *rc = (Rc *)MemoryAllocSz(sz);
+	if(count == INT_MAX)
+		rc->alloc = INT_MAX;
+	else
+		rc->alloc = (int)sz - sizeof(Rc) - 1;
 	rc->refcount = 1;
 	kind = min(rc->alloc, 255);
 	return (char *)(rc + 1);
@@ -117,6 +120,8 @@ char *String0::Insert(int pos, int count, const char *s)
 	ASSERT(pos >= 0 && count >= 0 && pos <= GetCount());
 	int len = GetCount();
 	int newlen = len + count;
+	if(newlen < len) // overflow, string >2GB
+		Panic("String is too big!");
 	char *str = (char *)Begin();
 	if(newlen < GetAlloc() && !IsSharedRef() && (!s || s < str || s > str + len)) {
 		if(pos < len)
@@ -132,7 +137,8 @@ char *String0::Insert(int pos, int count, const char *s)
 		return str + pos;
 	}
 	char kind;
-	char *p = Alloc(max(2 * len, newlen), kind);
+	char *p = Alloc(max(len >= int((int64)2 * INT_MAX / 3) ? INT_MAX : len + (len >> 1), newlen),
+	                kind);
 	if(pos > 0)
 		SVO_MEMCPY(p, str, pos);
 	if(pos < len)
@@ -315,7 +321,7 @@ WString String::ToWString() const
 
 int String::GetCharCount() const
 {
-	return GetDefaultCharset() == CHARSET_UTF8 ?  utf8len(Begin(), GetCount()) : GetCount();	
+	return GetDefaultCharset() == CHARSET_UTF8 ?  utf8len(Begin(), GetCount()) : GetCount();
 }
 
 String::String(StringBuffer& b)
