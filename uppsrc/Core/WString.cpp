@@ -9,9 +9,12 @@ wchar *WString0::Alloc(int& count)
 		wchar *p = (wchar *)MemoryAlloc48();
 		return p;
 	}
-	size_t sz = sizeof(Atomic) + (count + 1) * sizeof(wchar);
-	Atomic *rc = (Atomic *)MemoryAlloc(sz);
-	count = ((int)(sz - sizeof(Atomic)) >> 1) - 1;
+	size_t sz = sizeof(Atomic) + ((size_t)count + 1) * sizeof(wchar);
+	RDUMP(sz);
+	Atomic *rc = (Atomic *)MemoryAllocSz(sz);
+	if(count != INT_MAX)
+		count = int(((sz - sizeof(Atomic)) >> 1) - 1);
+	RDUMP(count);
 	*rc = 1;
 	return (wchar *)(rc + 1);
 }
@@ -42,6 +45,8 @@ wchar *WString0::Insert(int pos, int count, const wchar *s)
 {
 	ASSERT(pos >= 0 && count >= 0 && pos <= GetCount());
 	int newlen = length + count;
+	if(newlen < length)
+		Panic("WString is too big!");
 	if(newlen < alloc && !IsShared() && (!s || s < ptr || s > ptr + length)) {
 		if(pos < length)
 			memmove(ptr + pos + count, ptr + pos, (length - pos) * sizeof(wchar));
@@ -52,7 +57,10 @@ wchar *WString0::Insert(int pos, int count, const wchar *s)
 		Dsyn();
 		return ptr + pos;
 	}
-	int all = max(2 * length, newlen);
+	RDUMP(length);
+	RDUMP(length >= int((int64)2 * INT_MAX / 3));
+	RDUMP(length + (length >> 1));
+	int all = max(length >= int((int64)2 * INT_MAX / 3) ? INT_MAX : length + (length >> 1), newlen);
 	wchar *p = Alloc(all);
 	if(pos > 0)
 		memcpy(p, ptr, pos * sizeof(wchar));
