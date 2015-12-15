@@ -10,11 +10,9 @@ wchar *WString0::Alloc(int& count)
 		return p;
 	}
 	size_t sz = sizeof(Atomic) + ((size_t)count + 1) * sizeof(wchar);
-	RDUMP(sz);
 	Atomic *rc = (Atomic *)MemoryAllocSz(sz);
 	if(count != INT_MAX)
 		count = int(((sz - sizeof(Atomic)) >> 1) - 1);
-	RDUMP(count);
 	*rc = 1;
 	return (wchar *)(rc + 1);
 }
@@ -57,9 +55,6 @@ wchar *WString0::Insert(int pos, int count, const wchar *s)
 		Dsyn();
 		return ptr + pos;
 	}
-	RDUMP(length);
-	RDUMP(length >= int((int64)2 * INT_MAX / 3));
-	RDUMP(length + (length >> 1));
 	int all = max(length >= int((int64)2 * INT_MAX / 3) ? INT_MAX : length + (length >> 1), newlen);
 	wchar *p = Alloc(all);
 	if(pos > 0)
