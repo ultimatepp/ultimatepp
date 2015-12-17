@@ -13,14 +13,19 @@ void RegisterCSyntax(const char *id, int kind,
 	EditorSyntax::Register(id, callback1(CreateCSyntax, kind), exts, description);
 }
 
-void CreateTagSyntax(One<EditorSyntax>& e, bool html, bool witz)
-{
-	e.Create<TagSyntax>().Html(html).Witz(witz);
-}
-
 void CreateDiffSyntax(One<EditorSyntax>& e)
 {
 	e.Create<DiffSyntax>();
+}
+
+void CreatePythonSyntax(One<EditorSyntax>& e)
+{
+	e.Create<PythonSyntax>();
+}
+
+void CreateTagSyntax(One<EditorSyntax>& e, bool html, bool witz)
+{
+	e.Create<TagSyntax>().Html(html).Witz(witz);
 }
 
 void CreateLogSyntax(One<EditorSyntax>& e)
@@ -46,12 +51,14 @@ INITBLOCK
 	RegisterCSyntax("calc", CSyntax::HIGHLIGHT_CALC, "", "");
 	RegisterCSyntax("php", CSyntax::HIGHLIGHT_PHP, "*.php", "PHP");
 	
+	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
+	
+	EditorSyntax::Register("python", callback(CreatePythonSyntax), "*.py, *.pyc, *.pyd, *.pyo, *.pyw, *.pyz", "Python");
+	
 	EditorSyntax::Register("xml", callback2(CreateTagSyntax, false, false), "*.xml *.xsd", "XML (.xml)");
 	EditorSyntax::Register("html", callback2(CreateTagSyntax, true, false), "*.html *.htm", "HTML (.html)");
 	EditorSyntax::Register("witz", callback2(CreateTagSyntax, true, true), "*.witz", "Skylark templates (.witz)");
 	
-	EditorSyntax::Register("diff", callback(CreateDiffSyntax), "*.diff *.patch", "Diff");
-
 	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log", "Log (*.log)");
 }
 

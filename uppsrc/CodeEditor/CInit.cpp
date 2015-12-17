@@ -344,7 +344,7 @@ void CSyntax::InitKeywords()
 
 int CSyntax::LoadSyntax(const char *keywords[], const char *names[])	// Changed
 {
-	Index<String>& key = keyword.Add()	;
+	Index<String>& key = keyword.Add();
 	while(*keywords)
 		key.Add(*keywords++);
 	Index <String>& nam = name.Add();

@@ -175,6 +175,7 @@ struct FindReplaceDlg : FrameBottom< WithIDEFindReplaceLayout<TopWindow> > {
 #include "DiffSyntax.h"
 #include "TagSyntax.h"
 #include "LogSyntax.h"
+#include "PythonSyntax.h"
 
 class CodeEditor : public LineEdit,
 public HighlightSetup
