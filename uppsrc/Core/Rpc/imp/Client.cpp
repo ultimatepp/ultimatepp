@@ -196,7 +196,7 @@ RpcGet RpcRequest::Execute()
 	}
 	else {
 		XmlParser p(response);
-		try {	
+		try {
 			p.ReadPI();
 			p.PassTag("methodResponse");
 			if(p.Tag("fault")) {
