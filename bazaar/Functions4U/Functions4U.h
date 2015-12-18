@@ -15,6 +15,12 @@
 
 NAMESPACE_UPP
 
+#if defined(__MINGW32__)
+	#ifndef _atoi64
+	_CRTIMP __int64 __cdecl __MINGW_NOTHROW	_atoi64(const char *);
+	#endif
+#endif
+
 enum EXT_FILE_FLAGS {NO_FLAG = 0, 
 					 USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
@@ -644,6 +650,16 @@ public:
 		val = v;
 		mutex.Leave();
 	}
+	inline void operator+=(T v) {
+		mutex.Enter();
+		val += v;
+		mutex.Leave();
+	}
+	inline void operator-=(T v) {
+		mutex.Enter();
+		val -= v;
+		mutex.Leave();
+	}
 	inline operator T() {
 		T ret;
 		mutex.Enter();
@@ -665,7 +681,7 @@ public:
    
 private:
 	Mutex mutex;
-	volatile T val;
+	T val;
 };
 
 
