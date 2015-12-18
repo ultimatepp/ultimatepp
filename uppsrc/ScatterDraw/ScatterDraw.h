@@ -81,7 +81,7 @@ protected:
 		bool owns;
 	};
 
-	static Color GetNewColor(int index);
+	static Color GetNewColor(int index, int version = 1);
 	static String GetNewDash(int index);
 	static MarkPlot *GetNewMarkPlot(int index);
 	
@@ -156,22 +156,23 @@ public:
 		LEGEND_ANCHOR_LEFT_BOTTOM, 
 		LEGEND_ANCHOR_RIGHT_BOTTOM
 	};
-	ScatterDraw& SetLegendAnchor(int anchor) 		{legendAnchor = anchor;	return *this;}
-	int GetLegendAnchor() 							{return legendAnchor;}
+	ScatterDraw& SetLegendAnchor(int anchor) 				{legendAnchor = anchor;	return *this;}
+	int GetLegendAnchor() 									{return legendAnchor;}
 	ScatterDraw& SetLegendFillColor(const Color &color) 	{legendFillColor = color;	return *this;}
 	ScatterDraw& SetLegendBorderColor(const Color &color) 	{legendBorderColor = color;	return *this;}	
-	Color& GetLegendFillColor() 					{return legendFillColor;}
-	Color& GetLegendBorderColor() 					{return legendBorderColor;}
+	Color& GetLegendFillColor() 							{return legendFillColor;}
+	Color& GetLegendBorderColor() 							{return legendBorderColor;}
 	
-	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)	{mode = _mode; Refresh(); return *this;};
-	int GetMode()	{return mode;};
+	ScatterDraw& SetMode(int _mode = MD_ANTIALIASED)		{mode = _mode; Refresh(); return *this;};
+	int GetMode()											{return mode;};
 	
-	double GetXMax();
+	/*double GetXMax();
 	double GetXMin();
 	double GetYMax();
-	double GetYMin();
+	double GetYMin();*/
 	
-	void FitToData(bool Y = false, double factor = 0);
+	void FitToDatakk(bool vertical = false, double factor = 0);		// Deprecated
+	void ZoomToFit(bool horizontal = true, bool vertical = false, double factor = 0);
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
 	
@@ -192,6 +193,7 @@ public:
 	ScatterDraw& SetMinUnits(double ux, double uy);
 	double GetXMinUnit () const {return xMinUnit;}
 	double GetYMinUnit () const {return yMinUnit;}	
+	double GetYMinUnit2 () const {return yMinUnit2;}	
 	
 	ScatterDraw& SetXYMin(double xmin,double ymin,double ymin2 = 0);
 	ScatterDraw& SetXYMinLinked(double xmin,double ymin,double ymin2 = 0);
@@ -533,7 +535,7 @@ private:
 	static void ParseTextMultiline(const String &text, Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
 	
-	void DoFitToData(bool Y, double factor = 0);
+	void DoFitToData(bool horizontal, bool vertical, double factor = 0);
 	void DoZoom(double scale, bool hor, bool ver); 
 	void DoScroll(double factorX, double factorY);
 	

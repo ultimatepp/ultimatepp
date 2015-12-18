@@ -469,12 +469,6 @@ e]([@(0.0.255) int]_[*@3 `_mode]_`=_MD`_ANTIALIASED)&]
 [s3; Returns the drawing mode as documented in SetMode().&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:FitToData`(bool`):%- [@(0.0.255) void]_[* FitToData]([@(0.0.255) bool]_
-[*@3 Y]_`=_[@(0.0.255) false])&]
-[s3; Rescales the x axis (and y axis if [%-*@3 Y] is true) to show 
-all graphs data.on the control.&]
-[s1; &]
-[s6;%- &]
 [s5;:ScatterDraw`:`:Zoom`(double`,bool`,bool`):%- [@(0.0.255) void]_[* Zoom]([@(0.0.255) do
 uble]_[*@3 scale], [@(0.0.255) bool]_[*@3 hor]_`=_[@(0.0.255) true], 
 [@(0.0.255) bool]_[*@3 ver]_`=_[@(0.0.255) true])&]
@@ -580,11 +574,24 @@ onst]&]
 [s3; Returns the first Y axis grid line location.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:Upp`:`:ScatterDraw`:`:GetYMinUnit2`(`)const:%- [@(0.0.255) double]_[* GetYMinUnit2]_
+()_[@(0.0.255) const]&]
+[s3; Returns the first secondary Y axis grid line location.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:SetXYMin`(double`,double`,double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetXYMin]([@(0.0.255) double]_[*@3 xmin],[@(0.0.255) double]_[*@3 ymin],[@(0.0.255) doub
 le]_[*@3 ymin2]_`=_[@3 0])&]
 [s3; Sets with [%-*@3 xmin], [%-*@3 ymin] and [%-*@3 ymin2] the X, Y and 
 secondary Y axis origin.&]
+[s1; &]
+[s6;%- &]
+[s5;:Upp`:`:ScatterDraw`:`:ZoomToFit`(bool`,bool`,double`):%- [@(0.0.255) void]_[* ZoomTo
+Fit]([@(0.0.255) bool]_[*@3 horizontal]_`=_[@(0.0.255) true], [@(0.0.255) bool]_[*@3 vertic
+al]_`=_[@(0.0.255) false], [@(0.0.255) double]_[*@3 factor]_`=_[@3 0])&]
+[s3; Rescales the x axis if [%-*@3 horizontal ]is true and y axis if 
+[%-*@3 vertical] is true to show all graphs data.on the control. 
+[%-*@3 factor] indicates the fit factor (0 fills the control).&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetXMin`(`)const:%- [@(0.0.255) double]_[* GetXMin]_()_[@(0.0.255) cons
