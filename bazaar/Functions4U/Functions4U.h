@@ -15,12 +15,6 @@
 
 NAMESPACE_UPP
 
-#if defined(__MINGW32__)
-	#ifndef _atoi64
-	_CRTIMP __int64 __cdecl __MINGW_NOTHROW	_atoi64(const char *);
-	#endif
-#endif
-
 enum EXT_FILE_FLAGS {NO_FLAG = 0, 
 					 USE_TRASH_BIN = 1,
 					 BROWSE_LINKS = 2,
@@ -432,18 +426,11 @@ public:
 	double GetDouble(String separators = "")  	{return atof(GetText(separators));};
 	int GetInt(String separators = "")			{return atoi(GetText(separators));};
 	long GetLong(String separators = "")		{return atol(GetText(separators));};
-	uint64 GetUInt64(String separators = "")	
-#if defined(PLATFORM_WIN32) 
-	{return _atoi64(GetText(separators));};
-#endif
-#ifdef PLATFORM_POSIX
-	{return atoll(GetText(separators));};
-#endif
+	uint64 GetUInt64(String separators = "")	{return atoll(GetText(separators));};
 	
-	String Right() {return String::Mid(pos+1);}
-	int GetLastSeparator() {return lastSeparator;}
-	void MoveRel(int val)
-	{
+	String Right() 			{return String::Mid(pos+1);}
+	int GetLastSeparator() 	{return lastSeparator;}
+	void MoveRel(int val) {
 		pos += val;
 		if (pos < 0)
 			pos = 0;
