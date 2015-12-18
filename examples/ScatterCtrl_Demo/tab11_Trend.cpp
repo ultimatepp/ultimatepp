@@ -81,7 +81,7 @@ void Tab11_Trend::OnSeries() {
 		scatter.AddSeries(rational1).Legend(rational1.GetFullName()).NoMark().Stroke(2);
 	if (s_r2 > 0.5)	
 		scatter.AddSeries(sin).Legend(sin.GetFullName()).NoMark().Stroke(2);
-	scatter.FitToData(true);
+	scatter.ZoomToFit(true, true);
 	scatter.Refresh();
 	
 	grid.Add(linear.GetFullName(), 	linear.GetEquation(),  FormatDoubleFix(l_r2, 5));
