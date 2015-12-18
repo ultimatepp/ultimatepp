@@ -1,0 +1,22 @@
+description "Simple and useful math tools\377";
+
+uses
+	CtrlLib,
+	Report,
+	PdfDraw,
+	ScatterCtrl,
+	GridCtrl,
+	CodeEditor;
+
+file
+	main.cpp,
+	MathTools.h,
+	MathTools.lay,
+	MathTools.iml,
+	Calculator.cpp,
+	Regression.cpp,
+	rc.rc;
+
+mainconfig
+	"" = "GUI";
+

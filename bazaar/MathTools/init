@@ -1,0 +1,9 @@
+#ifndef _MathTools_icpp_init_stub
+#define _MathTools_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "PdfDraw/init"
+#include "ScatterCtrl/init"
+#include "GridCtrl/init"
+#include "CodeEditor/init"
+#endif
