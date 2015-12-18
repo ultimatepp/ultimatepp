@@ -1,4 +1,4 @@
-description "Simple and useful math tools\377";
+description "Simple and useful math tools for scientists and engineers\377";
 
 uses
 	CtrlLib,
