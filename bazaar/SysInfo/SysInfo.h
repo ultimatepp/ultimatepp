@@ -172,7 +172,7 @@ void SetDesktopWallPaper(const char *path);
 struct SystemSignature : DeepCopyOption<SystemSignature> {
 	String manufacturer, productName, version, mbSerial;
 	int numberOfProcessors;	
-	String hdserial;
+	String hdSerial;
 	String userName;
 	Array <NetAdapter> netAdapters;
 	
@@ -189,6 +189,7 @@ struct SystemSignature : DeepCopyOption<SystemSignature> {
 	void Serialize(Stream &stream);
 	bool operator==(const SystemSignature &other) const;
 	bool operator!=(const SystemSignature &other) const {return !(*this == other);}	
+	Vector<String> GetDiff(const SystemSignature &other) const;
 };
 
 struct SystemOverview : DeepCopyOption<SystemOverview> {

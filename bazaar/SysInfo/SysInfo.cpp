@@ -1981,7 +1981,7 @@ void SetDesktopWallPaper(const char *path)
 
 void SystemSignature::Load() {	
 	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
-	hdserial = GetHDSerial();
+	hdSerial = GetHDSerial();
 	userName = GetUserName();
 	netAdapters = GetAdapterInfo();	
 }
@@ -1989,9 +1989,20 @@ void SystemSignature::Load() {
 bool SystemSignature::operator==(const SystemSignature &other) const {
 	if (!(manufacturer == other.manufacturer && productName == other.productName && 
 		  version == other.version && mbSerial == other.mbSerial && 
-		  numberOfProcessors == other.numberOfProcessors && hdserial == other.hdserial && 
+		  numberOfProcessors == other.numberOfProcessors && 
 		  userName == other.userName))
 		return false;
+	
+	if (hdSerial != other.hdSerial) {	// Check error reported in at least Windows Vista and 7
+		if (Odd(hdSerial.GetCount()))		
+			return false;
+		String reOrderedHdSerial;
+		for (int i = 0; i < hdSerial.GetCount(); i += 2)
+			reOrderedHdSerial << char(hdSerial[i + 1]) << char(hdSerial[i]);
+		if (reOrderedHdSerial != other.hdSerial)
+			return false;	
+	}
+	
 	for (int i = 0; i < netAdapters.GetCount(); ++i) {
 		if (TrimBoth(netAdapters[i].mac).IsEmpty())
 			continue;
@@ -2002,13 +2013,44 @@ bool SystemSignature::operator==(const SystemSignature &other) const {
 	return false;
 }
 
+Vector<String> SystemSignature::GetDiff(const SystemSignature &other) const {
+	Vector<String> list;
+	
+	if (manufacturer != other.manufacturer)
+		list << Format("Manufacturer: %s != %s", manufacturer, other.manufacturer);
+	if (productName != other.productName)
+		list << Format("ProductName: %s != %s", productName, other.productName);
+	if (version != other.version)
+		list << Format("Version: %s != %s", version, other.version);
+	if (mbSerial != other.mbSerial)
+		list << Format("MBSerial: %s != %s", mbSerial, other.mbSerial);
+	if (numberOfProcessors != other.numberOfProcessors)
+		list << Format("NumberOfProcessors: %d != %d", numberOfProcessors, other.numberOfProcessors);
+	if (hdSerial != other.hdSerial)
+		list << Format("HDSerial: %s != %s", hdSerial, other.hdSerial);
+	bool sameNetworkAdapters = false;
+	for (int i = 0; i < netAdapters.GetCount(); ++i) {
+		if (TrimBoth(netAdapters[i].mac).IsEmpty())
+			continue;
+		for (int j = 0; j < other.netAdapters.GetCount(); ++j) {
+			if(netAdapters[i].mac == other.netAdapters[j].mac) {
+				sameNetworkAdapters = true;
+				break;
+			}
+		}
+	}
+	if (!sameNetworkAdapters)
+		list << "Network adapters do not match";
+	return list;
+}
+
 void SystemSignature::Copy(const SystemSignature& src) {
 	manufacturer <<= src.manufacturer;
 	productName <<= src.productName;
 	version <<= src.version;
 	mbSerial <<= src.mbSerial;
 	numberOfProcessors = src.numberOfProcessors;
-	hdserial <<= src.hdserial;
+	hdSerial <<= src.hdSerial;
 	userName <<= src.userName;
 	netAdapters.SetCount(src.netAdapters.GetCount());
 	for (int i = 0; i < src.netAdapters.GetCount(); ++i)
@@ -2018,7 +2060,7 @@ void SystemSignature::Copy(const SystemSignature& src) {
 void SystemSignature::Xmlize(XmlIO &xml) {
 	xml
 		("manufacturer", manufacturer)("productName", productName)("version", version)    
-		("numberOfProcessors", numberOfProcessors)("mbSerial", mbSerial)("hdserial", hdserial)
+		("numberOfProcessors", numberOfProcessors)("mbSerial", mbSerial)("hdserial", hdSerial)
 		("userName", userName)("netAdapters", netAdapters)
 	;
 }
@@ -2026,13 +2068,13 @@ void SystemSignature::Xmlize(XmlIO &xml) {
 void SystemSignature::Jsonize(JsonIO& json) {
 	json
 		("manufacturer", manufacturer)("productName", productName)("version", version)    
-		("numberOfProcessors", numberOfProcessors)("mbSerial", mbSerial)("hdserial", hdserial)
+		("numberOfProcessors", numberOfProcessors)("mbSerial", mbSerial)("hdserial", hdSerial)
 		("userName", userName)("netAdapters", netAdapters)
 	;	
 }
 
 void SystemSignature::Serialize(Stream& stream) {
-	stream % manufacturer % productName % version % numberOfProcessors % mbSerial % hdserial
+	stream % manufacturer % productName % version % numberOfProcessors % mbSerial % hdSerial
 		   % userName % netAdapters;
 }
 
