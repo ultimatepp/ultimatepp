@@ -63,7 +63,7 @@ void Heap::FreeRemoteRaw()
 void Heap::FreeRemote()
 {
 	LLOG("FreeRemote");
-	Mutex::Lock __(mutex); // TODO: Go lockless!
+	Mutex::Lock __(mutex);
 	FreeRemoteRaw();
 }
 

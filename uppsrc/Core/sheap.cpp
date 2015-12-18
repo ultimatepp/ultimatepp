@@ -27,14 +27,14 @@ inline void Heap::Page::Format(int k)
 	freelist = l;
 }
 
-Heap::Page *Heap::WorkPage(int k) // get a new empty workpage
+Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 {
 	LLOG("AllocK - next work not available " << k << " empty: " << (void *)empty[k]);
 	Page *page = empty[k]; // hot empty page of the same klass
 	empty[k] = NULL;
 	if(!page) { // try to reacquire pages freed remotely
 		LLOG("AllocK - trying FreeRemote");
-		FreeRemote();
+		FreeRemote(); // TODO: precheck remote_free without mutex
 		if(work[k]->freelist) { // partially free page found
 			LLOG("AllocK - work available after FreeRemote " << k);
 			return work[k];
@@ -74,7 +74,7 @@ Heap::Page *Heap::WorkPage(int k) // get a new empty workpage
 					LLOG("AllocK - empty aux page available for reformatting " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 					break;
 				}
-		if(!page) { // Not free memory was found, ask system for the new page
+		if(!page) { // No free memory was found, ask system for the new page
 			page = (Page *)AllocRaw4KB(Ksz(k));
 			LLOG("AllocK - allocated new system page " << (void *)page << " " << k);
 			page->Format(k);
