@@ -20,7 +20,7 @@ void TabRangePlot::Init()
 		   .MarkStyle<RangePlot>(RangePlot::MIN_AVG_MAX);//.NoPlot();
 	
 	scatter.SetLabelY("Size").SetLabelX("time [seg]");
-	scatter.FitToData(true, 0.2);
+	scatter.ZoomToFit(true, true, 0.2);
 }
 
 ScatterDemo *Construct15()
