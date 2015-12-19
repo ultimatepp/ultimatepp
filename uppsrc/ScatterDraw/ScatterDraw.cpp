@@ -368,7 +368,7 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 }
 
 // Deprecated
-void ScatterDraw::FitToDatakk(bool vertical, double factor) {
+void ScatterDraw::FitToData(bool vertical, double factor) {
 	ZoomToFit(true, vertical, factor);
 }
 

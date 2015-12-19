@@ -171,7 +171,7 @@ public:
 	double GetYMax();
 	double GetYMin();*/
 	
-	void FitToDatakk(bool vertical = false, double factor = 0);		// Deprecated
+	void FitToData(bool vertical = false, double factor = 0);		// Deprecated
 	void ZoomToFit(bool horizontal = true, bool vertical = false, double factor = 0);
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
