@@ -37,5 +37,7 @@ file
 	StarIndicator.h,
 	StarIndicator.iml,
 	StarIndicator.usc,
+	SplitterButton.cpp,
+	SplitterButton.h,
 	Copying;
 
