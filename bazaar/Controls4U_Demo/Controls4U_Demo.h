@@ -72,6 +72,17 @@ public:
 	StaticImageSet_Demo();
 };
 
+class SplitterButton_Demo : public StaticRect {
+public:
+	typedef SplitterButton_Demo CLASSNAME;
+	SplitterButton_Demo();
+
+private:
+	SplitterButton splitterH, splitterV;
+	ArrayCtrl left, top, bottom;
+};
+
+
 class Controls4U_Demo : public WithMain<TopWindow> {
 public:
 	typedef Controls4U_Demo CLASSNAME;
@@ -87,6 +98,7 @@ public:
 	Functions4U_Demo functions4U_Demo;
 	PainterCanvas_Demo painterCanvas_Demo;
 	StaticImageSet_Demo staticImageSet_Demo;
+	SplitterButton_Demo splitterButton_Demo;
 	AboutUpp aboutDlg;
 #if defined(PLATFORM_WIN32) 
 	Firefox_Demo firefox_Demo;
