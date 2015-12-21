@@ -21,12 +21,59 @@ using namespace Upp;
 #define NO_OUTPUT // for benchmark purposes, output is omitted
 #endif
 
+#ifdef flagMEMORYTEST
+
+#include <new>
+
+int64 alloc_len;
+
+void *TestAlloc(size_t size)
+{
+	alloc_len += size;
+	int64 *ptr = (int64 *)malloc(size + sizeof(int64));
+	*ptr = size;
+	return ptr + 1;
+}
+
+void TestFree(void *ptr)
+{
+	if(ptr) {
+		int64 *p = (int64 *)ptr - 1;
+		alloc_len -= *p;
+		free(p);
+	}
+}
+
+void *operator new(size_t size) throw(std::bad_alloc) { void *ptr = TestAlloc(size); return ptr; }
+void operator  delete(void *ptr) throw()              { TestFree(ptr); }
+
+void *operator new[](size_t size) throw(std::bad_alloc) { void *ptr = TestAlloc(size); return ptr; }
+void operator  delete[](void *ptr) throw()              { TestFree(ptr); }
+
+void *operator new(size_t size, const std::nothrow_t&) throw() { void *ptr = TestAlloc(size); return ptr; }
+void operator  delete(void *ptr, const std::nothrow_t&) throw() { TestFree(ptr); }
+
+void *operator new[](size_t size, const std::nothrow_t&) throw() { void *ptr = TestAlloc(size); return ptr; }
+void operator  delete[](void *ptr, const std::nothrow_t&) throw() { TestFree(ptr); }
+
+void InitMemoryTest() { RLOG("------"); alloc_len = 0; }
+void PrintMemoryTest(const char *s) { RLOG(s << " " << alloc_len); }
+
+#else
+
+inline void InitMemoryTest() {}
+inline void PrintMemoryTest(const char *) {}
+
+#endif
+
 void BenchNTL(const char *file) {
 	FileIn in(file);
 	if (!in) {
 		RLOG("Cannot open input file.");
 		return;
 	}
+
+	InitMemoryTest();
 
 	VectorMap<String, Vector<int> > map;
 	int line = 1;
@@ -54,6 +101,8 @@ void BenchNTL(const char *file) {
 
 	Vector<int> order = GetSortOrder(map.GetKeys());
 	
+	PrintMemoryTest("VectorMap");
+
 #ifndef NO_OUTPUT
 	for(int i = 0; i < order.GetCount(); i++) {
 		std::cout << ~map.GetKey(order[i]) << ": ";
@@ -73,6 +122,8 @@ void BenchSortedVectorMap(const char *file) {
 		RLOG("Cannot open input file.");
 		return;
 	}
+
+	InitMemoryTest();
 
 	SortedVectorMap<String, Vector<int> > map;
 	int line = 1;
@@ -99,6 +150,7 @@ void BenchSortedVectorMap(const char *file) {
 	}
 
 	Vector<int> order = GetSortOrder(map.GetKeys());
+	PrintMemoryTest("SortedVectorMap");
 	
 #ifndef NO_OUTPUT
 	for(int i = 0; i < order.GetCount(); i++) {
@@ -125,6 +177,8 @@ void BenchValueMap(const char *file) {
 		return;
 	}
 
+	InitMemoryTest();
+
 	ValueMap map;
 	int line = 1;
 
@@ -150,6 +204,7 @@ void BenchValueMap(const char *file) {
 	}
 
 	Vector<int> order = GetSortOrder(map.GetKeys(), SimpleValueOrder);
+	PrintMemoryTest("ValueMap");
 
 #ifndef NO_OUTPUT
 	for(int i = 0; i < order.GetCount(); i++) {
@@ -171,6 +226,8 @@ void BenchSTL(Container& imap, const char *file) {
 		RLOG("Cannot open input file.");
 		return;
 	}
+
+	InitMemoryTest();
 
 	int line = 1;
 
@@ -200,6 +257,7 @@ void BenchMap(const char *file)
 {
 	map< string, vector<int> > imap;
 	BenchSTL(imap, file);
+	PrintMemoryTest("std::map");
 #ifndef NO_OUTPUT
 	map< std::string, vector<int> >::const_iterator e = imap.end();
 	for(map< std::string, vector<int> >::const_iterator i = imap.begin(); i != e; i++) {
@@ -230,6 +288,7 @@ void BenchHashMap(const char *file)
 	for(HashMap::const_iterator i = imap.begin(); i != imap.end(); i++)
 		order.push_back(&*i);
 	sort(order.begin(), order.end(), h_less);
+	PrintMemoryTest("std::unordered_map");
 
 #ifndef NO_OUTPUT
 	vector< const HashMap::value_type * >::const_iterator e = order.end();
@@ -246,7 +305,7 @@ void BenchHashMap(const char *file)
 #endif
 }
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(flagMEMORYTEST)
 #define N 1
 #else
 #define N 10000
@@ -273,7 +332,6 @@ CONSOLE_APP_MAIN
 #endif
 
 	{
-		BenchHashMap(fn);
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchHashMap(fn);
@@ -281,7 +339,6 @@ CONSOLE_APP_MAIN
 	}
 
 	{
-		BenchMap(fn);
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchMap(fn);
@@ -289,21 +346,18 @@ CONSOLE_APP_MAIN
 	}
 
 	{
-		BenchValueMap(fn);
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchValueMap(fn);
 		RLOG("ValueMap time: " << tm.Elapsed() << " ms");
 	}
 	{
-		BenchNTL(fn);
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchSortedVectorMap(fn);
 		RLOG("SortedVectorMap time: " << tm.Elapsed() << " ms");
 	}
 	{
-		BenchSortedVectorMap(fn);
 		TimeStop tm;
 		for(int n = 0; n < N; n++)
 			BenchNTL(fn);
