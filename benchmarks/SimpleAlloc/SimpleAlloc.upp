@@ -1,0 +1,12 @@
+description "Test growth speed of allocator\377";
+
+uses
+	Core;
+
+file
+	SimpleAlloc.cpp;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC";
+
