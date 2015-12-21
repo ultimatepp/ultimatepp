@@ -7,6 +7,6 @@ file
 	SimpleAlloc.cpp;
 
 mainconfig
-	"" = "",
-	"" = "USEMALLOC";
+	"" = "MT",
+	"" = "USEMALLOC MT";
 
