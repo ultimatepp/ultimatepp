@@ -16,6 +16,9 @@ CONSOLE_APP_MAIN
 		sdata[i] = data[i].ToStd();
 	}
 	
+	RDUMP(sizeof(std::string));
+	RDUMP(sizeof(String));
+	
 	for(int j = 0; j < N; j++) {
 		{
 			RTIMING("vector<string>::push_back");
