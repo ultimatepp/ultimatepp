@@ -103,6 +103,10 @@ void BenchNTL(const char *file) {
 	
 	PrintMemoryTest("VectorMap");
 
+#ifdef flagMEMORYTEST
+	RLOG(order.GetCount());
+#endif
+
 #ifndef NO_OUTPUT
 	for(int i = 0; i < order.GetCount(); i++) {
 		std::cout << ~map.GetKey(order[i]) << ": ";
