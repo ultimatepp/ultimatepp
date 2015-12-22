@@ -116,4 +116,16 @@ to directly obtain virtual memory. It stores information about
 the block in the header at the beginning of block, also making 
 block 16`-bytes unaligned in the process. Free then returns virtual 
 memory back to the system.&]
+[s0; &]
+[s0; &]
+[s6; Multithreading&]
+[s0; Each thread has its own heap (implemented using TLS) and there 
+is also `'aux`' heap, which is basically used to keep track of 
+completely free blocks, both 4KB pages for small blocks and 64KB 
+pages for medium blocks.&]
+[s0; Most small and medium block allocations are lockless, unless 
+a there is no free space in existing working blocks, freeing 
+is lockless as long as memory was allocated in the same thread 
+(belongs to the same heap). Also, if free&]
+[s0; &]
 [s0; ]]
