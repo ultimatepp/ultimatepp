@@ -1987,8 +1987,10 @@ void SystemSignature::Load() {
 }
 
 bool SystemSignature::operator==(const SystemSignature &other) const {
-	if (!(manufacturer == other.manufacturer && productName == other.productName && 
-		  version == other.version && mbSerial == other.mbSerial && 
+//	if (!(manufacturer == other.manufacturer && productName == other.productName))
+//		return false;		// Manufacturers do change manufacturer name and product name...
+
+	if (!(mbSerial == other.mbSerial && 
 		  numberOfProcessors == other.numberOfProcessors && 
 		  userName == other.userName))
 		return false;
