@@ -50,6 +50,10 @@ TOPIC("SliderCtrlX$fr-fr")
 #include "SliderCtrlX$fr-fr.tppi"
 END_TOPIC
 
+TOPIC("SplitterButton$en-us")
+#include "SplitterButton$en-us.tppi"
+END_TOPIC
+
 TOPIC("StarIndicator$en-us")
 #include "StarIndicator$en-us.tppi"
 END_TOPIC
