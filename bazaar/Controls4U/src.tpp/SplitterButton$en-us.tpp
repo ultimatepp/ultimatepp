@@ -12,11 +12,10 @@ topic "";
 [s2;:Upp`:`:SplitterButton`:`:class:%- [@(0.0.255) class]_[* SplitterButton]_:_[@(0.0.255) p
 ublic]_[*@3 StaticRect]&]
 [s0;*@3%- &]
-[s4; SplitterButton is similar to Splitter, but the separator line 
-has a thin button on the separator line with predefined locations, 
-so when the user clicks on the button, the splitter jumps to 
-every location, indicating with a triangle the direction of the 
-movement.&]
+[s4; SplitterButton widget is similar to Splitter, but the separator 
+line has a thin button with predefined locations, so when the 
+user clicks on the button, the splitter jumps to every location, 
+indicating with a triangle the direction of the movement.&]
 [s4; It holds two child widgets, either vertically or horizontally.&]
 [s4; &]
 [s4; General widget view with horizontal separator line in two position 
