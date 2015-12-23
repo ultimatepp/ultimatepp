@@ -26,12 +26,12 @@ struct Heap {
 		FreeLink *next;
 	};
 
-	struct Page {
-		byte         klass;
-		byte         active;
-		Heap        *heap;
-		FreeLink    *freelist;
-		Page        *next;
+	struct Page { // small block Page
+		byte         klass;    // size class
+		byte         active;   // number of used (active) blocks in this page
+		Heap        *heap;     // pointer to Heap
+		FreeLink    *freelist; // single linked list of free blocks in Page
+		Page        *next;     // Pages are in free/full/empty lists
 		Page        *prev;
 
 		void         LinkSelf()            { Dbl_Self(this); }
@@ -58,7 +58,7 @@ struct Heap {
 		Header      *GetHeader()           { return (Header *)this - 1; }
 	};
 
-	struct Header {
+	struct Header { // Large block header
 		byte    free;
 		byte    filler1, filler2, filler3;
 		word    size;
@@ -78,12 +78,13 @@ struct Heap {
 	};
 
 	enum {
-		NKLASS = 18,
-		LBINS = 113,
-		LARGEHDRSZ = 24,
-		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ,
-		BIGHDRSZ = 56,
+		NKLASS = 18, // number of small size classes
+		LBINS = 113, // number of large size bins
+		LARGEHDRSZ = 24, // size of large block header
+		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
+		BIGHDRSZ = 56, // size of huge block header
 	};
+
 	static StaticMutex mutex;
 
 	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
@@ -105,7 +106,7 @@ struct Heap {
 
 	FreeLink *remote_free;
 
-	static DLink big[1];
+	static DLink big[1];        // List of all big blocks
 	static Heap  aux;           // Single global auxiliary heap to store orphans and global list of free pages
 
 #ifdef HEAPDBG

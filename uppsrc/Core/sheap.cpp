@@ -34,7 +34,7 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 	empty[k] = NULL;
 	if(!page) { // try to reacquire pages freed remotely
 		LLOG("AllocK - trying FreeRemote");
-		FreeRemote(); // TODO: precheck remote_free without mutex
+		FreeRemote();
 		if(work[k]->freelist) { // partially free page found
 			LLOG("AllocK - work available after FreeRemote " << k);
 			return work[k];
