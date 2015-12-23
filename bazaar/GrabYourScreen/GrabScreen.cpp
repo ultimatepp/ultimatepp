@@ -1,5 +1,7 @@
 #include "GrabYourScreen.h"
 
+#include <plugin/jpg/jpg.h>
+
 GrabScreen::GrabScreen() {
 	CtrlLayout(*this);
 }
@@ -7,6 +9,7 @@ GrabScreen::GrabScreen() {
 void GrabScreen::Init(GrabYourScreen &_program) {
 	program = &_program;
 	editFileNameGrab <<= AppendFileName(GetDesktopFolder(), "ScreenGrab.avi");
+	editFileNameGrab.Type(t_("Video file"), ".avi");
 	editTime <<= 5;
 	editFrameRate <<= 1; 
 	opGrabMouse <<= true;
@@ -37,24 +40,27 @@ void GrabScreen::Init(GrabYourScreen &_program) {
 	height.Hide();
 #endif
 	
+	editLeft <<= 100;
+	editWidth <<= 1000;
+	editTop <<= 100;
+	editHeight <<= 900;
+	
 	String extension;
-#if defined(PLATFORM_WIN32) 
-	extension = "bmp";
-#else
-	extension = "xwd";
-#endif
-	editFileNameSnap <<= AppendFileName(GetDesktopFolder(), "ScreenSnap." + extension);
+	editFileNameSnap <<= AppendFileName(GetDesktopFolder(), "ScreenSnap.jpg");
+	editFileNameSnap.Type(t_("Image file"), ".jpg");
 	butSnap.WhenPush = THISBACK(ButSnap_Push);
 	
 	Array<int64> hWnd, processId;
 	Array<String> name, fileName, caption;
-	GetWindowsList(hWnd, processId, name, fileName, caption);
+	GetWindowsList(hWnd, processId, name, fileName, caption, false);
 	Sort(caption);
 	for (int i = 0; i < caption.GetCount(); ++i) {
 		if (!Trim(caption[i]).IsEmpty())
 			editWindowTitle.Add(caption[i]);
 	}
 	editWindowTitle.SetData(editWindowTitle.GetValue(0));
+	
+	SetTimeCallback(-1000, THISBACK(Timer));
 }
 
 void GrabScreen::SwGrabMode_Action() {
@@ -102,41 +108,49 @@ void GrabScreen::ButGrab_Push() {
 }
 
 void GrabScreen::ButSnap_Push() {
-	program->Minimize();
+/*	program->Minimize();
 	
 	TopWindow win;
 	Button b;
 	b.SetLabel("CLOSE");
 	b <<= win.Breaker();
-	StaticImage image;
-	image.Set(Snap_Desktop());
-	win.Add(image.SizePos());
+	StaticImage desktop;
+	desktop.Set(Snap_Desktop());
+	win.Add(desktop.SizePos());
 	win.Add(b.LeftPos(10, 100).TopPos(10, 30));
 	
 	win.FullScreen().Run();
 	
 	program->Overlap();
-	return;
+*/	
+	String fileName = ~editFileNameSnap;
+	FileDelete(fileName);
 	
+	String ext = GetFileExt(fileName);
 	
-	
-	FileDelete(editFileNameSnap.GetData().ToString());
-
-	if (swGrabMode.GetData() == 0) 
-		Snap_Desktop(editFileNameSnap);
-	else if (swGrabMode.GetData() == 1) 
-		Snap_Window(editFileNameSnap, GetWindowIdFromCaption(~editWindowTitle, false));
-	else if (swGrabMode.GetData() == 2) 
-		Snap_DesktopRectangle(editFileNameSnap, editLeft, editTop, editWidth, editHeight);
-	else
-		throw Exc("Unexpected value");
+	if (ext == ".png") {
+		PNGEncoder encoder;
+		if (!encoder.SaveFile(fileName, canvasImage))
+			Exclamation(Format(t_("Impossible to save %s"), fileName));
+	} else if (ext == ".jpg") {	
+		JPGEncoder encoder(90);
+		if (!encoder.SaveFile(fileName, canvasImage))
+			Exclamation(Format(t_("Impossible to save %s"), fileName));
+	} else
+		Exclamation(Format(t_("File format \"%s\" not found"), ext));
 }
 
-/*
-A añadir:
-- Listado de ventanas en Window Title
-- Pantalla completa para seleccionar. Meterlo en Controls4U
-- Jsonize para todos
-- Que deje salir si un campo está vacio
-- Ficheros con EditFile
-*/
+void GrabScreen::Timer() {
+	NON_REENTRANT_V;
+	
+	switch(int(~swGrabMode)) {
+	case 0: 	canvasImage = Snap_Desktop();
+				break;
+	case 1:		canvasImage = Snap_Window(GetWindowIdFromCaption(~editWindowTitle, false));
+				break;
+	case 2:		canvasImage = Snap_DesktopRectangle(editLeft, editTop, editWidth, editHeight);
+				break;
+	}
+	
+	canvas.SetBackground(canvasImage);
+}

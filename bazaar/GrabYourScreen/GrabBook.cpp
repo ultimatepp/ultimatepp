@@ -13,7 +13,7 @@ void GrabBook::Init() {
 	down <<= 900;
 	split = true;
 	
-	folder = AppendFileName(GetDesktopFolder(), "Libro");
+	folder = AppendFileName(GetDesktopFolder(), t_("Book"));
 	                                                   
 	canvas.SetShowWindow(false);
 	
@@ -47,7 +47,7 @@ void GrabBook::OnCapture() {
 	Rect screenRect;
 	::GetWindowRect(GetHWND(), screenRect);
 	if (rPdf.Intersects(screenRect)) {
-		Exclamation("Ventana del programa interfiere con imagen a tomar");
+		Exclamation(t_("Program window interferes with image"));
 		return;
 	}
 	
@@ -56,8 +56,8 @@ void GrabBook::OnCapture() {
 	if (!DirectoryExists(folder))
 		RealizeDirectory(folder);
 	Image img = ::GetRect(canvas.GetBackground(), Rect(left, up, right, down));
-	if (!SaveImage(img, 100, AppendFileName(folder, Format("Pag%04d.jpg", int(actualPage))), ".jpg"))
-		Exclamation("Error saving image");
+	if (!SaveImage(img, 100, AppendFileName(folder, Format("%s.jpg", Format(t_("Pag%04d"), int(actualPage)))))) 
+		Exclamation(t_("Error saving image"));
 	actualPage = actualPage + 1;
 }
 
@@ -80,7 +80,7 @@ void GrabBook::OnSavePDF() {
 	FileSel fs;
 	
 	fs.ActiveDir(GetDesktopFolder());
-	fs.Type("Ficheros PDF", ".pdf");
+	fs.Type(t_("PDF files"), ".pdf");
 	
 	if (fs.ExecuteSaveAs(t_("Saving file"))) 
 		fileName = ~fs;
@@ -96,7 +96,7 @@ void GrabBook::OnSavePDF() {
 		if (i > 0)
 			r.NewPage();
 
-		String fileName = AppendFileName(folder, Format("Pag%04d.jpg", i));
+		String fileName = AppendFileName(folder, Format("%s.jpg", Format(t_("Pag%04d"), i)));
 		Image img = StreamRaster::LoadFileAny(fileName);
 		Image imgIzq, imgDer;
 		if (split) {

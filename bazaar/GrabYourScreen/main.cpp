@@ -14,10 +14,13 @@ void GrabYourScreen::Init() {
 	Title("GrabYourScreen");
 	
 	Add(mainTab.SizePos());
-	grabBook.Init();
-	mainTab.Add(grabBook.SizePos(), "Book");
+	
 	grabScreen.Init(*this);
-	mainTab.Add(grabScreen.SizePos(), "Screen");
+	mainTab.Add(grabScreen.SizePos(), t_("Screen"));
+	grabBook.Init();
+	mainTab.Add(grabBook.SizePos(), t_("Book"));
+	Rect rect = GetRect();
+	SetRect(rect.left, rect.top, 500, 500);
 }
 
 void GrabYourScreen::Exit()  {
@@ -25,8 +28,12 @@ void GrabYourScreen::Exit()  {
 }
 
 GUI_APP_MAIN {
-	GrabYourScreen program;
-	program.Open();
-	program.Init();
-	program.Run();
+	try {
+		GrabYourScreen program;
+		program.Open();
+		program.Init();
+		program.Run();
+	} catch(Exc error) {
+		Exclamation(Format(t_("Error %s"), error));
+	}
 }

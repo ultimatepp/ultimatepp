@@ -20,12 +20,15 @@ public:
 	GrabScreen();
 	
 	void Init(GrabYourScreen &program);
+	
+private:
 	void ButGrab_Push();
 	void ButSnap_Push();
 	void SwGrabMode_Action();
-
-private:
+	void Timer();
+	
 	GrabYourScreen *program;
+	Image canvasImage;
 };
 
 class GrabBook : public WithBook<StaticRect> {
@@ -33,8 +36,10 @@ public:
 	typedef GrabBook CLASSNAME;
 	GrabBook();
 	~GrabBook();
-	
+
 	void Init();
+	
+private:	
 	void OnPaint(Painter &painter);
 	void OnReset();
 	void OnCapture();
@@ -49,7 +54,10 @@ class GrabYourScreen : public TopWindow {
 public:
 	typedef GrabYourScreen CLASSNAME;
 	GrabYourScreen();
+	
 	void Init();
+	
+private:
 	void Exit();
 		
 	TabCtrl mainTab;
