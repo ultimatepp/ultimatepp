@@ -25,18 +25,25 @@ void MixTest()
 		delete[] mix[i];
 }
 
-Mutex          mtx;
-bool           finished;
-Vector<void *> pass;
+Mutex         mtx;
+bool          finished;
+Vector<int *> pass;
+int           sum;
+int           count;
 
 void Consumer()
 {
 	for(;;) {
 		Mutex::Lock __(mtx);
-		if(finished)
-			break;
-		for(int i = 0; i < pass.GetCount(); i++)
+		for(int i = 0; i < pass.GetCount(); i++) {
+			if(!pass[i]) {
+				pass.Clear();
+				return;
+			}
+			count++;
+			sum += *pass[i];
 			delete[] pass[i];
+		}
 		pass.Clear();
 	}
 }
@@ -77,18 +84,61 @@ CONSOLE_APP_MAIN
 		}
 	}
 #endif
+	if(0) {
+		TimeStop tm;
+		for(int i = 0; i < NPASS; i++) {
+			for(int i = 0; i < 10; i++) {
+				int *p = new int;
+				pass.Add(p);
+				*p = i;
+			}
+			for(int i = 0; i < pass.GetCount(); i++) {
+				sum += *pass[i];
+				delete[] pass[i];
+			}
+			pass.Clear();
+		}
+		RLOG("Ref " << tm);
+		RDUMP(sum);
+	}
+	if(0) {
+		sum = 0;
+		TimeStop tm;
+		for(int i = 0; i < NPASS; i++) {
+			for(int i = 0; i < 10; i++) {
+				int *p = new int;
+				pass.Add(p);
+				*p = i;
+			}
+			for(int i = 0; i < pass.GetCount(); i++) {
+				sum += *pass[i];
+				delete[] pass[i];
+			}
+			pass.Clear();
+		}
+		RLOG("Ref2 " << tm);
+		RDUMP(sum);
+	}
 	if(1) {
+		sum = 0;
 		TimeStop tm;
 		Thread t;
 		t.Run(callback(Consumer));
 		for(int i = 0; i < NPASS; i++) {
 			Mutex::Lock __(mtx);
-			if(pass.GetCount() == 0)
-				for(int i = 0; i < 10; i++)
-					pass.Add(new byte[32]);
+			for(int i = 0; i < 10; i++) {
+				int *p = new int;
+				pass.Add(p);
+				*p = i;
+			}
 		}
-		finished = true;
+		{
+			Mutex::Lock __(mtx);
+			pass.Add(NULL);
+		}
 		t.Wait();
 		RLOG("Pass " << tm);
+		RDUMP(sum);
+		RDUMP(count);
 	}
 }
