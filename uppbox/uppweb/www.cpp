@@ -1,4 +1,5 @@
 #include "www.h"
+#include "www.h"
 #define IMAGECLASS WWW
 #define IMAGEFILE  <uppweb/www.iml>
 #include <Draw/iml.h>
@@ -265,7 +266,7 @@ void CreateRssFeed() {
 	SaveFile(AppendFileName(targetdir, "svnchanges.xml"), header + items + "</channel>\n</rss>\n");
 }
 
-VectorMap<String, Topic> tt;
+ArrayMap<String, Topic> tt;
 //Vector<String> ttFullTitles;
 Vector<int> ttId;
 Vector<String> ttFullIds;
@@ -371,7 +372,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		Topic& topic = tt.Add(link);
 		topic.title = name;
 		int q = tt.GetCount() - 1;
-		String fullIds = parentIds + "/" + FormatInt(q);	
+		String fullIds = parentIds + "/" + FormatInt(q);
 		ttFullIds.Add(fullIds);
 		
 		String fn = AppendFileName(
@@ -676,24 +677,43 @@ void ExportPage(int i)
 String Downloads()
 {
 	String r;
+	r << "{{1:1:1^@L "
+	     "[^app$ide$install$en-us.html^ U`+`+ for Windows with TDM64 toolchain]:: "
+	     "[^app$ide$install$en-us.html^ U`+`+ for Windows without toolchain]:: "
+	     "[^www$uppweb$uppx11$en-us.html^ POSIX/X11 tarball]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));
 	Vector<Time> tm;
 	Vector<String> fn;
 	Vector<String> path;
+	Vector<int64> len;
 	while(ff) {
 		if(ff.IsFile()) {
 			tm.Add(ff.GetLastWriteTime());
 			fn.Add(ff.GetName());
 			path.Add(ff.GetPath());
+			len.Add(ff.GetLength());
 		}
 		ff.Next();
 	}
-	IndexSort2(tm, fn, path, StdGreater<Time>());
-	for(int i = 0; i < fn.GetCount(); i++)
-		if(i < 40)
-			r << tm[i] << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]&";
-		else
-			DeleteFile(path[i]);
+	IndexSort3(tm, fn, path, len, StdGreater<Time>());
+	
+	for(int pass = 0; pass < 3; pass++) {
+		r << "::@W ";
+		bool next = false;
+		for(int i = 0; i < min(39, fn.GetCount()); i++)
+			if(fn[i].StartsWith(decode(pass, 0, "upp-mingw", 1, "upp-win", "upp-x11"))) {
+				if(next) r << "&[A0 &]";
+				next = true;
+				r << Format("%04d-%02d-%02d %02d:%02d",
+				            (int)tm[i].year, (int)tm[i].month, (int)tm[i].day,
+				            (int)tm[i].hour, (int)tm[i].minute)
+				  << " [^downloads/" << fn[i] << "^ \1" << fn[i] << "\1]"
+				  << " (" << (len[i] >> 20) << " MB)";
+			}
+	}
+	r << "}}";
+	for(int i = 39; i < fn.GetCount(); i++)
+		DeleteFile(path[i]);
 	return r;
 }
 
@@ -713,7 +733,7 @@ struct ProgramData {
 			("diffdir", diffdir)
 			("pdfdir", pdfdir)
 			("ftpUpload", ftpUpload)
-			("outPdf", outPdf)			
+			("outPdf", outPdf)
 			("doSvn", doSvn)
 			("outHtml", outHtml)
 		;
@@ -816,7 +836,7 @@ CONSOLE_APP_MAIN
 	if (outHtml)
 		SaveFile(AppendFileName(targetdir, "sdj.gif"), LoadFile(GetRcFile("sdj.gif")));
 	
-	String release = "8227"; 
+	String release = "9251";
 	escape.Add("RELEASE", release);
 	escape.Add("RELEASET", release);
 	escape.Add("UPDATETIME", Format("%`", GetUtcTime()));
@@ -864,7 +884,7 @@ CONSOLE_APP_MAIN
 		Www("contribweb", lang);
 	//	bi << BarLink("index.html", "Home", false);
 		bi << BarLink(Www("overview", lang), t_("Overview"), false);
-		bi << BarLink(Www("examples", lang), t_("Examples"));	
+		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
 			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
@@ -920,7 +940,8 @@ CONSOLE_APP_MAIN
 		
 		bsearch << BarCaption(t_("Search on this site"));
 		bsearch << SearchBar("www.ultimatepp.org");
-	
+
+#if 0	
 		blang << BarCaption(t_("Language"));
 		blang << Htmls("<div id=\"langbox\" style=\"display:none;\">") + 
 		         BarItem(HtmlPackedTable().Width(-100)
@@ -931,6 +952,7 @@ CONSOLE_APP_MAIN
 		              "padding-left:6px; padding-right:0px;"
 		              "padding-top:4px; padding-bottom:4px;"
 		         ) + Htmls("</div>");
+#endif
 
 		
 		HtmlTag bf = HtmlPackedTable()
@@ -944,8 +966,8 @@ CONSOLE_APP_MAIN
 	//	      bf / bdoc + div +
 	//	      bf / bcom + div +
 	//	      bf / bcon + div +
-		      bf / bsearch + div +
-		      bf / blang + div;
+		      bf / bsearch + div;
+	//	      bf / blang + div;
 	}
 	SetLanguage(currentLang);
 

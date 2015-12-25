@@ -233,6 +233,8 @@ void HexView::SetTotal(int64 _total)
 	total = _total;
 	Layout();
 	SetSb();
+	Refresh();
+	RefreshInfo();
 }
 
 void HexView::SetSc(int64 address)
@@ -250,6 +252,13 @@ void HexView::Scroll()
 	else
 		sc = (q - 1) * columns + sc % columns;
 	Refresh();
+}
+
+void HexView::RefreshInfo()
+{
+	info.SetPos(cursor, IsLongMode());
+	for(int i = 0; i < 80; i++)
+		info.Set(i, Byte(cursor + i));
 }
 
 void HexView::SetCursor(int64 _cursor)
@@ -273,9 +282,7 @@ void HexView::SetCursor(int64 _cursor)
 		sc = 0;
 	SetSb();
 	Refresh();
-	info.SetPos(cursor, IsLongMode());
-	for(int i = 0; i < 80; i++)
-		info.Set(i, Byte(cursor + i));
+	RefreshInfo();
 }
 
 void HexView::LeftDown(Point p, dword)

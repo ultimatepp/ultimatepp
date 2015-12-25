@@ -414,7 +414,7 @@ void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 
 void DefaultBuilderSetup::New(const String& builder)
 {
-	bool gcc = builder == "GCC" || builder == "GCC32" || builder == "GCC_ARM";
+	bool gcc = findarg(builder, "GCC", "CLANG") >= 0;
 	if(IsNull(speed_options)) {
 		if(gcc)
 			speed_options <<= "-O3 -ffunction-sections -fdata-sections";

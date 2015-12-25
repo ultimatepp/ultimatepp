@@ -30,7 +30,7 @@ void TabUserEquation::OnUpdate()
 	scatter.AddSeries(userEquation).Legend(userEquation.GetFullName()).NoMark().Stroke(2);
 	scatter.SetXYMin(fromX, fromY);
 	scatter.SetRange(toX - fromX, toY - fromY);
-	scatter.FitToData(true);
+	scatter.ZoomToFit(true, true);
 }
 
 ScatterDemo *ConstructUserEquation()

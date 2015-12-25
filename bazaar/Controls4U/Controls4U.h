@@ -10,8 +10,9 @@
 #include "Controls4U/PainterCanvas.h"
 #include "Controls4U/SliderCtrlX.h"
 #include "Controls4U/StarIndicator.h"
+#include "Controls4U/SplitterButton.h"
 
-NAMESPACE_UPP;
+NAMESPACE_UPP
 
 double AngAdd(double ang, double val);
 

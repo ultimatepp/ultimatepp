@@ -378,7 +378,7 @@ bool ScatterCtrl::Key(dword key, int count)
 		else if (key == K_CTRL_D)
 			DoShowData();
 		else if (key == K_CTRL_C)
-			SaveToClipboard(false);
+			SaveToClipboard(true);
 		else if (key == K_CTRL_S)
 			SaveToFile(Null);
 		else
@@ -536,7 +536,7 @@ ScatterCtrl &ScatterCtrl::SetMouseHandling(bool valx, bool valy)
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
-		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK2(FitToData, mouseHandlingY, 0));
+		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0));
 		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
 		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY));
 	}
@@ -560,7 +560,7 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);		
 		bar.Separator();
 	}
-	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C);
+	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, true)).Key(K_CTRL_C);
 	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
 }
 

@@ -1,4 +1,0 @@
-LAYOUT(testcrashLayout, 344, 292)
-	ITEM(ArrayCtrl, mList, HSizePosZ(4, 4).VSizePosZ(4, 4))
-END_LAYOUT
-

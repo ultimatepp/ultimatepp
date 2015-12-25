@@ -1,9 +1,0 @@
-uses
-	VectorDesA;
-
-file
-	IdeVectorDes.iml,
-	ArisVectorDes.cpp;
-
-mainconfig
-	"" = "GUI";

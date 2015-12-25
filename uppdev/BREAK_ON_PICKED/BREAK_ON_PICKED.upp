@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	BREAK_ON_PICKED.cpp;
-
-mainconfig
-	"" = "";
-

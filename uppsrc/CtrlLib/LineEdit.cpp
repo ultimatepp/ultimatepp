@@ -3,6 +3,7 @@
 NAMESPACE_UPP
 
 #define LLOG(x) //  LOG(x)
+#define LTIMING(x) // RTIMING(x)
 
 LineEdit::LineEdit() {
 	isdrag = false;
@@ -117,7 +118,7 @@ int LineEdit::RemoveRectSelection()
 		CacheLinePos(i);
 		GetRectSelection(rect, i, l, h);
 		WString s = GetWLine(i);
-		s.Remove(l - GetPos(i), h - l); 
+		s.Remove(l - GetPos(i), h - l);
 		txt.Cat(s);
 		txt.Cat('\n');
 	}
@@ -241,6 +242,98 @@ void LineEdit::Sort()
 	Insert(sell, Join(ln, "\n"));
 }
 
+class sOptimizedRectRenderer {
+	Draw& w;
+	Rect  cr;
+	Color color;
+
+public:
+	void DrawRect(const Rect& r, Color color);
+	void DrawRect(int x, int y, int cx, int cy, Color color) { DrawRect(RectC(x, y, cx, cy), color); }
+	void Flush();
+
+	sOptimizedRectRenderer(Draw& w) : w(w) { cr = Null; color = Null; }
+	~sOptimizedRectRenderer()              { Flush(); }
+};
+
+void sOptimizedRectRenderer::Flush()
+{
+	LTIMING("RectFlush");
+	if(!IsNull(cr)) {
+		w.DrawRect(cr, color);
+		cr = Null;
+	}
+}
+
+void sOptimizedRectRenderer::DrawRect(const Rect& r, Color c)
+{
+	LTIMING("DrawRect");
+	if(cr.top == r.top && cr.bottom == r.bottom && cr.right == r.left && c == color) {
+		cr.right = r.right;
+		return;
+	}
+	Flush();
+	cr = r;
+	color = c;
+}
+
+#if 1 // This is a more ambitious approach combining non-continual chunks of text, it is a bit faster...
+class sOptimizedTextRenderer {
+	Draw&       w;
+	int         y;
+	struct Chrs : Moveable<Chrs> {
+		Vector<int> x;
+		WString     text;
+	};
+	VectorMap< Tuple2<Font, Color>, Chrs > cache;
+
+public:
+	void DrawChar(int x, int y, int chr, int width, Font afont, Color acolor);
+	void Flush();
+
+	sOptimizedTextRenderer(Draw& w) : w(w) { y = Null; }
+	~sOptimizedTextRenderer()              { Flush(); }
+};
+
+void sOptimizedTextRenderer::Flush()
+{
+	if(cache.GetCount() == 0)
+		return;
+	LTIMING("Flush");
+	for(int i = 0; i < cache.GetCount(); i++) {
+		Chrs& c = cache[i];
+		if(c.x.GetCount()) {
+			Tuple2<Font, Color> fc = cache.GetKey(i);
+			int x = c.x[0];
+			for(int i = 0; i < c.x.GetCount() - 1; i++)
+				c.x[i] = c.x[i + 1] - c.x[i];
+			c.x.Top() = 0;
+			w.DrawText(x, y, c.text, fc.a, fc.b, c.x);
+		}
+	}
+	cache.Clear();
+}
+
+void sOptimizedTextRenderer::DrawChar(int x, int _y, int chr, int width, Font font, Color color)
+{
+	LTIMING("DrawChar");
+	if(y != _y) {
+		Flush();
+		y = _y;
+	}
+	Chrs *c;
+	{
+		LTIMING("Map");
+		c = &cache.GetAdd(MakeTuple(font, color));
+	}
+	if(c->x.GetCount() && c->x.Top() > x) {
+		Flush();
+		c = &cache.GetAdd(MakeTuple(font, color));
+	}
+	c->text.Cat(chr);
+	c->x.Add(x);
+}
+#else
 class sOptimizedTextRenderer {
 	Draw&       w;
 	int         x, y;
@@ -262,6 +355,7 @@ void sOptimizedTextRenderer::Flush()
 {
 	if(text.GetCount() == 0)
 		return;
+	LTIMING("Flush");
 	w.DrawText(x, y, text, font, color, dx);
 	y = Null;
 	text.Clear();
@@ -270,9 +364,11 @@ void sOptimizedTextRenderer::Flush()
 
 void sOptimizedTextRenderer::DrawChar(int _x, int _y, int chr, int width, Font _font, Color _color)
 {
+	LTIMING("DrawChar");
 	if(y == _y && font == _font && color == _color && dx.GetCount() && _x >= xpos - dx.Top())
 		dx.Top() += _x - xpos;
 	else {
+		LTIMING("DrawChar flush");
 		Flush();
 		x = _x;
 		y = _y;
@@ -283,8 +379,10 @@ void sOptimizedTextRenderer::DrawChar(int _x, int _y, int chr, int width, Font _
 	text.Cat(chr);
 	xpos = _x + width;
 }
+#endif
 
 void   LineEdit::Paint0(Draw& w) {
+	LTIMING("LineEdit::Paint0");
 	int sell, selh;
 	GetSelection(sell, selh);
 	if(!IsEnabled())
@@ -349,12 +447,14 @@ void   LineEdit::Paint0(Draw& w) {
 		bool do_highlight = tx.GetCount() < 100000;
 		int len = tx.GetLength();
 		if(w.IsPainting(0, y, sz.cx, fsz.cy)) {
+			LTIMING("PaintLine");
 			Vector<Highlight> hl;
 			int ln;
 			if(do_highlight) {
 				hl.SetCount(len + 1, ih);
 				for(int q = 0; q < tx.GetCount(); q++)
 					hl[q].chr = tx[q];
+				LTIMING("HighlightLine");
 				HighlightLine(i, hl, pos);
 				ln = hl.GetCount() - 1;
 			}
@@ -364,6 +464,7 @@ void   LineEdit::Paint0(Draw& w) {
 			for(int pass = 0; pass < 2; pass++) {
 				int gp = 0;
 				int scx = fsz.cx * sc.x;
+				sOptimizedRectRenderer rw(w);
 				if(ln >= 0) {
 					int q = 0;
 					int x = 0;
@@ -407,14 +508,14 @@ void   LineEdit::Paint0(Draw& w) {
 							int l = ngp - gp;
 							LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
 							if(pass == 0 && x >= -fsz.cy * tabsize) {
-								w.DrawRect(x, y, fsz.cx * l, fsz.cy, h.paper);
+								rw.DrawRect(x, y, fsz.cx * l, fsz.cy, h.paper);
 								if((showtabs || warn_whitespace) &&
 								   h.paper != SColorHighlight && q < tx.GetLength()) {
-									w.DrawRect(x + 2, y + fsz.cy / 2, l * fsz.cx - 4, 1, showcolor);
-									w.DrawRect(ngp * fsz.cx - scx - 3, y + 3, 1, fsz.cy - 6, showcolor);
+									rw.DrawRect(x + 2, y + fsz.cy / 2, l * fsz.cx - 4, 1, showcolor);
+									rw.DrawRect(ngp * fsz.cx - scx - 3, y + 3, 1, fsz.cy - 6, showcolor);
 								}
 								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
-									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+									rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 							}
 							q++;
 							gp = ngp;
@@ -423,14 +524,14 @@ void   LineEdit::Paint0(Draw& w) {
 						if(h.chr == ' ') {
 							LLOG("Highlight -> space[" << q << "] paper = " << h.paper);
 							if(pass == 0 && x >= -fsz.cy) {
-								w.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
+								rw.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
 								if((showspaces || warn_whitespace)
 								   && h.paper != SColorHighlight && q < tx.GetLength()) {
 									int n = fsz.cy / 10 + 1;
-									w.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, n, n, showcolor);
+									rw.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, n, n, showcolor);
 								}
 								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
-									w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+									rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 							}
 							q++;
 							gp++;
@@ -441,9 +542,9 @@ void   LineEdit::Paint0(Draw& w) {
 							int xx = x + (gp + 1 + cjk) * fsz.cx;
 							if(max(x, 0) < min(xx, sz.cx) && fsz.cx >= -fsz.cy) {
 								if(pass == 0) {
-									w.DrawRect(x, y, (cjk + 1) * fsz.cx, fsz.cy, h.paper);
+									rw.DrawRect(x, y, (cjk + 1) * fsz.cx, fsz.cy, h.paper);
 									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1 + cjk)
-										w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+										rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
 								else
 									tw.DrawChar(x + (h.flags & SHIFT_L ? -fsz.cx / 6 : h.flags & SHIFT_R ? fsz.cx / 6 : 0),
@@ -459,28 +560,28 @@ void   LineEdit::Paint0(Draw& w) {
 				}
 				if(pass == 0) {
 					int gpx = gp * fsz.cx - scx;
-					w.DrawRect(gpx, y, sz.cx - gpx, fsz.cy,
-					           !rectsel && sell <= len && len < selh ? color[PAPER_SELECTED]
-					           : (do_highlight ? hl.Top() : ih).paper);
+					rw.DrawRect(gpx, y, sz.cx - gpx, fsz.cy,
+					            !rectsel && sell <= len && len < selh ? color[PAPER_SELECTED]
+					            : (do_highlight ? hl.Top() : ih).paper);
 					if(bordercolumn > 0 && bordercolumn >= gp)
-						w.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+						rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 				}
 				if(pass == 0 && (showlines || warn_whitespace)) {
 					int yy = 2 * fsz.cy / 3;
 					int x = (lgp >= 0 ? lgp : gp) * fsz.cx - scx;
-					w.DrawRect(x, y + yy, fsz.cx / 2, 1, showcolor);
+					rw.DrawRect(x, y + yy, fsz.cx / 2, 1, showcolor);
 					if(fsz.cx > 2)
-						w.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
+						rw.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
 					if(fsz.cx > 5)
-						w.DrawRect(x + 2, y + yy - 2, 1, 5, showcolor);
-					w.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
+						rw.DrawRect(x + 2, y + yy - 2, 1, 5, showcolor);
+					rw.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
 				}
 				if(pass == 0 && !IsNull(hline) && sell == selh && i == cursorline) {
-					w.DrawRect(0, y, sz.cx, 1, hline);
-					w.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
+					rw.DrawRect(0, y, sz.cx, 1, hline);
+					rw.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
 				}
 				if(pass == 0 && rectsel && rect.left == rect.right && i >= rect.top && i <= rect.bottom)
-					w.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
+					rw.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
 			}
 		}
 		y += fsz.cy;

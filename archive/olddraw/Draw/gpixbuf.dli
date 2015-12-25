@@ -1,6 +1,0 @@
-FN(int, gdk_pixbuf_get_width, (const G_obj *pixbuf))
-FN(int, gdk_pixbuf_get_height, (const G_obj *pixbuf))
-FN(int, gdk_pixbuf_get_has_alpha, (const G_obj *pixbuf))
-FN(int, gdk_pixbuf_get_bits_per_sample, (const G_obj *pixbuf))
-FN(int, gdk_pixbuf_get_n_channels, (const G_obj *pixbuf))
-FN(byte *, gdk_pixbuf_get_pixels, (const G_obj *pixbuf))

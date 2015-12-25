@@ -1,9 +1,0 @@
-uses
-	CtrlLib,
-	RichText;
-
-file
-	main.cpp;
-
-mainconfig
-	"" = "GUI ST";

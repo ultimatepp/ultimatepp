@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	Kpoly.cpp;
-
-mainconfig
-	"" = "";
-

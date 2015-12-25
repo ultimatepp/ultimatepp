@@ -337,8 +337,11 @@ struct WorkspaceWork {
 	void SaveLoadPackageNS(bool sel = true);
 	void TouchFile(const String& path);
 
+	void DoMove(int b, bool drag);
 	void MoveFile(int d);
-	void Move(Vector<String>& v, FileList& ta, int d);
+
+	void DnDInsert(int line, PasteClip& d);
+	void Drag();
 
 	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, CONFIG_FILE, ANY_FILE };
 	void AddFile(ADDFILE type);

@@ -97,6 +97,8 @@
 #endif
 
 #ifdef flagWIN32
+#if _MSC_VER < 1900 // MSC from VS2015 error if snprintf redefined
 #define snprintf _snprintf
+#endif
 //#define vsnprintf _vsnprintf
 #endif

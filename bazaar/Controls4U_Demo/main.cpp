@@ -29,6 +29,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	controls.Add(&staticCtrlsTest_Demo);grid.Add("Static Controls Test");
 	//tab.Add(painterCanvas_Demo);		grid.Add("PainterCanvas (experimental)");
 	controls.Add(&functions4U_Demo);	grid.Add("Functions4U samples");
+	controls.Add(&splitterButton_Demo);	grid.Add("SplitterButton");
 #if defined(PLATFORM_WIN32) 	
 	controls.Add(&vlc_Demo);			grid.Add("VLC ActiveX");
 	controls.Add(&firefox_Demo);		grid.Add("Firefox ActiveX");
@@ -40,7 +41,7 @@ Controls4U_Demo::Controls4U_Demo() {
 		rect.Add(controls[i]->SizePos());
 	
 	grid.WhenSel << THISBACK (OnGridSel);
-	grid.SetCursor(2);
+	grid.SetCursor(9);
 	OnGridSel();
 	
 	timerOn = false;
@@ -265,6 +266,24 @@ StaticImageSet_Demo::StaticImageSet_Demo() {
 	imageSet.Add(Images::paper());
 	imageSet.Add(Images::ClockImage());
 }
+
+SplitterButton_Demo::SplitterButton_Demo() {
+	Add(splitterH.SizePos());
+	
+	splitterV.Vert(top.SizePos(), bottom.SizePos()).SetPositions(1000, 5000, 9000).SetInitialPositionId(1);
+	splitterH.Horz(left.SizePos(), splitterV.SizePos()).SetPositions(1000, 5000, 9000).SetInitialPositionId(1);
+	
+	top.AddColumn("Column");
+	bottom.AddColumn("Column");
+	left.AddColumn("Column");
+	for (int i = 0; i < 200; ++i) {
+		String str = Format("Data %d", i);
+		top.Add(str);
+		bottom.Add(str);
+		left.Add(str);
+	}
+}
+
 
 void Controls4U_Demo::OnGridSel() {
 	int row = grid.GetCursor();

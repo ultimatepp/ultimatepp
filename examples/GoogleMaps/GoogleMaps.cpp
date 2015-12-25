@@ -106,7 +106,7 @@ String FormatDegree(double d, int decimals)
 	char sign = (d < 0 ? '-' : '+');
 	if(d < 0) d = -d;
 	int deg = ffloor(d);
-	String cd = ToCharset(CHARSET_DEFAULT, "%c%d°", CHARSET_UTF8);
+	String cd = ToCharset(CHARSET_DEFAULT, "%c%dÂ°", CHARSET_UTF8);
 	if(decimals <= -2)
 		return NFormat(cd, sign, deg);
 	d = (d - deg) * 60;

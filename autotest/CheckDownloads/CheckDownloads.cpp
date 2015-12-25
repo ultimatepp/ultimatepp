@@ -14,11 +14,11 @@ CONSOLE_APP_MAIN
 	CParser p(~downloads + q + 1);
 
 	try {
-		d.month = p.ReadInt();
-		p.PassChar('/');
-		d.day = p.ReadInt();
-		p.PassChar('/');
 		d.year = p.ReadInt();
+		p.PassChar('-');
+		d.month = p.ReadInt();
+		p.PassChar('-');
+		d.day = p.ReadInt();
 	}
 	catch(...) {
 		NEVER();

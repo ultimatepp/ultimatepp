@@ -203,7 +203,6 @@ void Ide::Licenses()
 	pi.SetTotal(wspc.GetCount());
 	VectorMap<String, String> license_package;
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& pk = wspc.GetPackage(i);
 		String n = wspc[i];
 		pi.SetText(n);
 		if(pi.StepCanceled()) return;

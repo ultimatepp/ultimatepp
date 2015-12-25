@@ -1,0 +1,17 @@
+noblitz;
+
+options(BUILDER_OPTION) NOWARNINGS;
+
+include
+	gcore,
+	port,
+	ogr,
+	..;
+
+file
+	gdal.h,
+	gdal.cpp,
+	import.ext,
+	cpl_config.h,
+	port\cpl_port.h;
+

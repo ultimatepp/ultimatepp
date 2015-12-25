@@ -574,19 +574,29 @@ void ArrayCtrl::Layout() {
 
 void ArrayCtrl::Reline(int i, int y)
 {
-	while(i < ln.GetCount()) {
-		Ln& p = ln[i];
-		p.y = y;
-		y += Nvl(p.cy, linecy) + horzgrid;
-		i++;
-	}
+	if(WhenLineVisible)
+		while(i < ln.GetCount()) {
+			Ln& p = ln[i];
+			p.y = y;
+			if(IsLineVisible(i))
+				y += Nvl(p.cy, linecy) + horzgrid;
+			i++;
+		}
+	else
+		while(i < ln.GetCount()) {
+			Ln& p = ln[i];
+			p.y = y;
+			if(IsLineVisible0(i))
+				y += Nvl(p.cy, linecy) + horzgrid;
+			i++;
+		}
 	SetSb();
 }
 
 int  ArrayCtrl::GetLineY(int i) const
 {
 	return i < ln.GetCount() ? ln[i].y
-	                         : (ln.GetCount() ? ln.Top().y + Nvl(ln.Top().cy, linecy) + horzgrid : 0)
+	                         : (ln.GetCount() ? ln.Top().y + IsLineVisible(ln.GetCount() - 1) * (Nvl(ln.Top().cy, linecy) + horzgrid) : 0)
 	                           + (linecy + horzgrid) * (i - ln.GetCount());
 }
 
@@ -828,7 +838,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 	int sy = 0;
 	if(!IsNull(i))
 		while(i < GetCount()) {
-			if(!sample || i == cursor || i < array.GetCount() && array[i].select) {
+			if((!sample || i == cursor || i < array.GetCount() && array[i].select) && IsLineVisible(i)) {
 				r.top = sample ? sy : GetLineY(i) - sb;
 				if(r.top > size.cy)
 					break;
@@ -1441,6 +1451,24 @@ bool ArrayCtrl::IsLineEnabled(int i) const
 {
 	bool b = i < 0 ? false : i < array.GetCount() ? array[i].enabled : true;
 	WhenLineEnabled(i, b);
+	return b;
+}
+
+void ArrayCtrl::ShowLine(int i, bool e)
+{
+	int q = ln.GetCount();
+	array.At(i).visible = e;
+	ln.At(i);
+	if(q > 0)
+		Reline(q - 1, ln[q - 1].y);
+	else
+		Reline(0, 0);
+}
+
+bool ArrayCtrl::IsLineVisible(int i) const
+{
+	bool b = IsLineVisible0(i);
+	WhenLineVisible(i, b);
 	return b;
 }
 
@@ -2707,7 +2735,8 @@ void ArrayCtrl::RefreshSel()
 		while(y < sz.cy && i < array.GetCount()) {
 			if(IsSelected(i))
 				RefreshRow(i);
-			y += GetLineCy(i++);
+			if(IsLineVisible(i))
+				y += GetLineCy(i++);
 		}
 	}
 }

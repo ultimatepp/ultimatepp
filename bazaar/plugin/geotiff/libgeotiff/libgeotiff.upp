@@ -116,7 +116,6 @@ file
 	gcore\makefile.vc,
 	gcore\overview.cpp,
 	gcore\rasterio.cpp,
-	gcore\Version.rc,
 	ogr readonly separator,
 	ogr\gml2ogrgeometry.cpp,
 	ogr\ogr2gmlgeometry.cpp,

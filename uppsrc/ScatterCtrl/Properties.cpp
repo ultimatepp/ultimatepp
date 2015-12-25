@@ -25,12 +25,13 @@ void MeasuresTab::Init(ScatterCtrl& scatter) {
 	
 	pscatter = &scatter;
 	
-	xMin <<= scatter.GetXMin();
-	xMax <<= scatter.GetXRange() + scatter.GetXMin();
-	yMin <<= scatter.GetYMin();
-	yMax <<= scatter.GetYRange() + scatter.GetYMin();
-	yMin2 <<= scatter.GetYMin2();
-	yMax2 <<= scatter.GetY2Range() + scatter.GetYMin2();
+	double kkxMin = xMin <<= scatter.GetXMin();
+	double kkxMax = xMax <<= scatter.GetXRange() + scatter.GetXMin();
+	
+	double kkyMin = yMin <<= scatter.GetYMin();
+	double kkyMax = yMax <<= scatter.GetYRange() + scatter.GetYMin();
+	double kkyMin2 = yMin2 <<= scatter.GetYMin2();
+	double kkyMax2 = yMax2 <<= scatter.GetY2Range() + scatter.GetYMin2();
 	
 	butUpdate.WhenAction = THISBACK(Change);
 	
@@ -41,7 +42,7 @@ void MeasuresTab::Change() {
 	ScatterCtrl &scatter = *pscatter;
 	
     scatter.SetXYMin(xMin, yMin, yMin2);
-    scatter.SetMinUnits(xMin, yMin);
+    //scatter.SetMinUnits(xMin, yMin);
 	scatter.SetRange(xMax - xMin, yMax - yMin, yMax2 - yMin2);
 
 	scatter.SetModify();

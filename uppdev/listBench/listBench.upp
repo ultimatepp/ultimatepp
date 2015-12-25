@@ -1,7 +1,0 @@
-uses Core;
-
-file
-	"listBench.cpp";
-
-mainconfig
-	"" = "";

@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	system.cpp;
-
-mainconfig
-	"" = "";
-

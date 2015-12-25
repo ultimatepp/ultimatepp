@@ -326,6 +326,21 @@ String AsString(const MemoryProfile& mem)
 	return text;
 }
 
+int64 GetAllocatedBytes(const MemoryProfile& mem)
+{
+	int64 asize = 0;
+#ifdef UPP_HEAP
+	for(int i = 0; i < 1024; i++)
+		if(mem.allocated[i]) {
+			int sz = 4 * i;
+			asize += mem.allocated[i] * sz;
+		}
+	asize += mem.large_total;
+	asize += mem.big_size;
+#endif
+	return asize;
+}
+
 #ifdef flagCHECKINIT
 
 void InitBlockBegin__(const char *fn, int line) {

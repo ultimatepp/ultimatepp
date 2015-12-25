@@ -9,15 +9,16 @@ topic "Ultimate++ download";
 :: [s0;= [+92 Source]]
 :: [s0;= [+92 Nightly builds]]
 :: [s0;= [+92 Stable releases]]
-::@2 [s0; [*2 Any]]
+::@2 [s0; [*2 POSIX/X11]]
 :: [s0;= [^https`:`/`/github`.com`/ultimatepp`/mirror^2 GIT]]
 :: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 tarball]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 tarball]]
 :: [s0; [*2 MS Windows]]
-:: [s0;=2 ]
-:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 win32 installer]]
+:: [s0;= [^https`:`/`/github`.com`/ultimatepp`/mirror^2 GIT]]
+:: [s0;= [^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 win32 portable .7z 
+archive]]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 win32 
-installer]]
+portable .7z archive]]
 :: [s0; [*2 Ubuntu]]
 :: [s0;=2 ]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`-nightly^2 PPA][2 , 
@@ -61,8 +62,8 @@ build and install the packages automatically.]&]
 [s0;2 &]
 [s0; [2 Every night there is automatic release published ][%DE-DE^topic`:`/`/uppweb`/www`/nightly`$en`-us^2 t
 opic://uppweb/www/nightly`$en`-us][2 . Here you can find windows 
-installer (upp`-win32`-NNNN.exe) and source tarball (upp`-x11`-src`-NNNN.tar.gz).
- ]&]
+installer (upp`-win`-NNNN.exe, upp`-mingw`-NNNN.exe) and source 
+tarball (upp`-x11`-src`-NNNN.tar.gz). ]&]
 [s0;2 &]
 [s0; [2 If you are using Ubuntu based GNU/Linux distribution, you can 
 find deb packages (and also dsc source packages) of nightly builds 

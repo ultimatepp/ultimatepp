@@ -5,7 +5,7 @@ using namespace Upp;
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
-	const int64 sz = (int64)5 * 1000 * 1000 * 1000;
+	const int64 sz = (int64)2 * 1000 * 1000 * 1000;
 	String path = GetHomeDirFile("test.bin");
 	{
 		Buffer<byte> big(sz);

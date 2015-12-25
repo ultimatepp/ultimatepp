@@ -2,9 +2,13 @@
 
 // #define LOGAF
 
-NAMESPACE_UPP
+#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
 
-int sMemDiagInitCount = 0;
+int sMemDiagInitCount;
+
+#endif
+
+NAMESPACE_UPP
 
 #if defined(UPP_HEAP)
 
@@ -86,7 +90,11 @@ void *MemoryAlloc(size_t size)
 #endif
 	static dword serial_number = 0;
 	DbgBlkHeader *p = (DbgBlkHeader *)MemoryAlloc_(sizeof(DbgBlkHeader) + size + sizeof(dword));
+#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
+	p->serial = sMemDiagInitCount == 0 || s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
+#else
 	p->serial = s_ignoreleaks ? 0 : ~ ++serial_number ^ (dword)(uintptr_t) p;
+#endif
 	p->size = size;
 	if(s_allocbreakpoint && s_allocbreakpoint == serial_number)
 		__BREAK__;
@@ -223,4 +231,23 @@ void MemoryInitDiagnostics()
 #endif
 #endif
 
+
 END_UPP_NAMESPACE
+
+#if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
+
+MemDiagCls::MemDiagCls()
+{
+	if(sMemDiagInitCount++ == 0)
+		UPP::MemoryInitDiagnostics();
+}
+
+MemDiagCls::~MemDiagCls()
+{
+	if(--sMemDiagInitCount == 0)
+		UPP::MemoryDumpLeaks();
+}
+
+static const MemDiagCls sMemDiagHelper __attribute__ ((init_priority (101)));
+
+#endif

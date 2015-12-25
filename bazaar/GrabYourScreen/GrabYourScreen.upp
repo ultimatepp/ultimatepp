@@ -1,0 +1,21 @@
+description "If you can watch it, you can get it!\377";
+
+uses
+	CtrlLib,
+	Controls4U,
+	SysInfo,
+	Report;
+
+file
+	main.cpp,
+	GrabBook.cpp,
+	GrabScreen.cpp,
+	GrabYourScreen.h,
+	GrabYourScreen.lay,
+	iml.iml,
+	rc.rc,
+	srcdoc.tpp;
+
+mainconfig
+	"" = "GUI SSE2";
+

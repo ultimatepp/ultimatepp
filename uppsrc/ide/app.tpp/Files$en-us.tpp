@@ -24,7 +24,7 @@ topic "TheIDE and Ultimate++ File Types";
 [s0;2 &]
 [s0; [*2 File types recognized by TheIDE][2 :]&]
 [s0;2 &]
-[ {{2413:7587<64;^ [s0; [*2 .cpp, .cc, .cxx, .c, .m, .mm]&]
+[ {{2413:7587^ [s0; [*2 .cpp, .cc, .cxx, .c, .m, .mm]&]
 [s0;*2 ]
 :: [s0; [2 Files with these extensions are recognized as source files 
 by TheIDE C`+`+ builders. ]]
@@ -68,7 +68,10 @@ edits them using icon designer.]]
 [s0; [*2 .bmp]]
 :: [s0; [2 TheIDE displays images.]]
 :: [s0; [*2 .qtf]]
-:: [s0; [2 U`+`+ rich text format.]]}}&]
+:: [s0; [2 U`+`+ rich text format.]]
+:: [s0; [*2 import.ext]]
+:: [s0; [2 This file contains description of ][^topic`:`/`/ide`/app`/importext`$en`-us^2 imp
+orting][2  3rd party source files contained in package.]]}}&]
 [s0;2 &]
 [s0;2 &]
 [s0; [*2 Other text files you might encounter in packages (TheIDE might 

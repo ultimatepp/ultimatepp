@@ -367,18 +367,25 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 	return *this;
 }
 
+// Deprecated
 void ScatterDraw::FitToData(bool vertical, double factor) {
+	ZoomToFit(true, vertical, factor);
+}
+
+void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	if (linkedMaster) {
-		linkedMaster->FitToData(vertical);
+		linkedMaster->ZoomToFit(horizontal, vertical);
 		return;
 	}
-	DoFitToData(vertical, factor);
+	DoFitToData(horizontal, vertical, factor);
 	if (!linkedCtrls.IsEmpty()) {
 		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
-	    	linkedCtrls[i]->DoFitToData(vertical);
+	    	linkedCtrls[i]->DoFitToData(horizontal, vertical, factor);
 	}
 }
 
+
+/*
 double ScatterDraw::GetXMin() {
 	double minx = -DOUBLE_NULL;
 	
@@ -438,23 +445,25 @@ double ScatterDraw::GetYMax() {
 		return Null;
 	return maxy;
 }
-			
-void ScatterDraw::DoFitToData(bool vertical, double factor) {
+*/			
+void ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
 	double minx, maxx, miny, miny2, maxy, maxy2;
 	minx = miny = miny2 = -DOUBLE_NULL;
 	maxx = maxy = maxy2 = DOUBLE_NULL;
 	
 	try {
-		for (int j = 0; j < series.GetCount(); j++) {
-			if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-				continue;
-			minx = min(minx, series[j].PointsData()->MinX());
-			maxx = max(maxx, series[j].PointsData()->MaxX());
-		}
-		if (minx != -DOUBLE_NULL) {
-			double deltaX = (maxx - minx)*factor;
-			minx -= deltaX;
-			maxx += deltaX;
+		if (horizontal) {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+					continue;
+				minx = min(minx, series[j].PointsData()->MinX());
+				maxx = max(maxx, series[j].PointsData()->MaxX());
+			}
+			if (minx != -DOUBLE_NULL) {
+				double deltaX = (maxx - minx)*factor;
+				minx -= deltaX;
+				maxx += deltaX;
+			}
 		}
 		if (vertical) {
 			for (int j = 0; j < series.GetCount(); j++) {
@@ -488,20 +497,22 @@ void ScatterDraw::DoFitToData(bool vertical, double factor) {
 				maxy2 += deltaY2;		
 			}
 		}
-		if (minx != -DOUBLE_NULL) {
-			if (maxx == minx) {
-				if (maxx == 0) {
-					xRange = 2;
-					xMin = -1;
+		if (horizontal) {
+			if (minx != -DOUBLE_NULL) {
+				if (maxx == minx) {
+					if (maxx == 0) {
+						xRange = 2;
+						xMin = -1;
+					} else	
+						xRange = 2*maxx;
 				} else	
-					xRange = 2*maxx;
-			} else	
-				xRange = maxx - minx;
-			double deltaX = xMin - minx;
-			xMin -= deltaX;
-			xMinUnit += deltaX;
-			xMajorUnit = xRange/10;
-			AdjustMinUnitX();
+					xRange = maxx - minx;
+				double deltaX = xMin - minx;
+				xMin -= deltaX;
+				xMinUnit += deltaX;
+				xMajorUnit = xRange/10;
+				AdjustMinUnitX();
+			}
 		}
 		if (vertical) {
 			if (miny != -DOUBLE_NULL) {
@@ -580,30 +591,21 @@ String ScatterDraw::VariableFormat(double range, double d) {
 	} else return FormatDoubleExp(d, 2);
 }
 
-Color ScatterDraw::GetNewColor(int index) {
-	switch(index) {
-	case 0:		return LtBlue();
-	case 1:		return LtRed();
-	case 2:		return LtGreen();
-	case 3:		return Black();
-	case 4:		return LtGray();
-	case 5:		return Brown();
-	case 6:		return Blue();
-	case 7:		return Red();
-	case 8:		return Green();
-	case 9:		return Gray();
-	case 10:	return LtBlue();
-	case 11:	return LtRed();
-	case 12:	return LtGreen();
-	case 13:	return Black();
-	case 14:	return LtGray();
-	case 15:	return Brown();
-	case 16:	return Blue();
-	case 17:	return Red();
-	case 18:	return Green();
-	case 19:	return Gray();
-	}
-	return Color(Random(), Random(), Random());
+Color ScatterDraw::GetNewColor(int index, int version) {
+	Color old[20] = {LtBlue(), LtRed(), LtGreen(), Black(), LtGray(), Brown(), Blue(), Red(), Green(), Gray(), 
+					 LtBlue(), LtRed(), LtGreen(), Black(), LtGray(), Brown(), Blue(), Red(), Green(), Gray()};
+	// Colors from http://tools.medialab.sciences-po.fr/iwanthue/
+	Color nwc[20] = {Color(197,127,117), Color(115,214,74), Color(205,80,212), Color(124,193,215), Color(85,82,139),
+					 Color(63,72,41), Color(109,212,161), Color(207,72,48), Color(209,206,59), Color(194,134,55),
+					 Color(201,63,109), Color(193,192,158), Color(91,134,56), Color(105,48,38), Color(201,170,200),
+					 Color(86,117,119), Color(188,91,165), Color(124,120,216), Color(195,208,119), Color(79,46,75)};
+	if (index < 20) {
+		if (version == 0) 
+			return old[index];
+		else
+			return nwc[index];
+	} else
+		return Color(Random(), Random(), Random());
 }
 	
 String ScatterDraw::GetNewDash(int index) {
@@ -1525,7 +1527,7 @@ void ScatterDraw::Unlinked() {
 	
 ScatterDraw::ScatterDraw() {
 	mode = MD_ANTIALIASED;
-	size = Size(800, 600);
+	size = Size(800, 400);
 	titleColor = SColorText();
 	graphColor = White();
 	titleFont = Roman(20);

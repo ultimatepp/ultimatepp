@@ -238,7 +238,7 @@ void GeoTIFF::Band::LoadBlock(int column, int row) const
 	Point block_offset(block_size.cx * column, block_size.cy * row);
 	One<Block> new_block = new Block(block_size, type, pixel_bytes);
 	band->ReadBlock(column, row, new_block->bytes);
-	blocks[block_index] = new_block;
+	blocks[block_index] = pick(new_block);
 }
 
 void GeoTIFF::Band::CalcStatistics() const

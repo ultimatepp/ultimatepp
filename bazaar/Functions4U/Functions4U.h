@@ -39,8 +39,8 @@ inline String Trim(const String& s) {return TrimBoth(s);};
 
 String FitFileName(String fileName, int len);
 
-Vector<String> Tokenize(const String &str, const String &token);
-void Tokenize(const String &str, const String &token, Vector<String> &ret);
+Vector<String> Tokenize(const String &str, const String &token, int pos = 0);
+void Tokenize(const String &str, const String &token, Vector<String> &ret, int pos = 0);
 String Tokenize2(const String &str, const String &token, int &pos);
 String Tokenize2(const String &str, const String &token);
 //String Tokenize(const String &str, const String &token, int &pos);
@@ -426,18 +426,11 @@ public:
 	double GetDouble(String separators = "")  	{return atof(GetText(separators));};
 	int GetInt(String separators = "")			{return atoi(GetText(separators));};
 	long GetLong(String separators = "")		{return atol(GetText(separators));};
-	uint64 GetUInt64(String separators = "")	
-#if defined(PLATFORM_WIN32) 
-	{return _atoi64(GetText(separators));};
-#endif
-#ifdef PLATFORM_POSIX
-	{return atoll(GetText(separators));};
-#endif
+	uint64 GetUInt64(String separators = "")	{return atoll(GetText(separators));};
 	
-	String Right() {return String::Mid(pos+1);}
-	int GetLastSeparator() {return lastSeparator;}
-	void MoveRel(int val)
-	{
+	String Right() 			{return String::Mid(pos+1);}
+	int GetLastSeparator() 	{return lastSeparator;}
+	void MoveRel(int val) {
 		pos += val;
 		if (pos < 0)
 			pos = 0;
@@ -561,8 +554,6 @@ private:
 								return v
 
 
-
-
 class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
@@ -646,6 +637,16 @@ public:
 		val = v;
 		mutex.Leave();
 	}
+	inline void operator+=(T v) {
+		mutex.Enter();
+		val += v;
+		mutex.Leave();
+	}
+	inline void operator-=(T v) {
+		mutex.Enter();
+		val -= v;
+		mutex.Leave();
+	}
 	inline operator T() {
 		T ret;
 		mutex.Enter();
@@ -667,7 +668,7 @@ public:
    
 private:
 	Mutex mutex;
-	volatile T val;
+	T val;
 };
 
 

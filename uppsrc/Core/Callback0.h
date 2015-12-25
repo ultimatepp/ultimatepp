@@ -17,6 +17,11 @@ Callback pteback(O *object, void (M::*method)()) {
 }
 
 template <class O, class M>
+Callback pteback(O *object, void (M::*method)() const) {
+	return Callback(new CallbackMethodActionPte<O, void (M::*)() const>(object, method));
+}
+
+template <class O, class M>
 struct CallbackMethodAction : public CallbackAction {
 	O  *object;
 	M   method;
@@ -75,6 +80,11 @@ struct Callback1MethodActionPte : public Callback1Action<P1> {
 template <class O, class M, class P1>
 Callback1<P1> pteback(O *object, void (M::*method)(P1 p1)) {
 	return Callback1<P1>(new Callback1MethodActionPte<O, void (M::*)(P1 p1), P1>(object, method));
+}
+
+template <class O, class M, class P1>
+Callback1<P1> pteback(O *object, void (M::*method)(P1 p1) const) {
+	return Callback1<P1>(new Callback1MethodActionPte<O, void (M::*)(P1 p1) const, P1>(object, method));
 }
 
 template <class O, class M, class P1>
@@ -146,6 +156,11 @@ Callback2<P1, P2> pteback(O *object, void (M::*method)(P1 p1, P2 p2)) {
 }
 
 template <class O, class M, class P1, class P2>
+Callback2<P1, P2> pteback(O *object, void (M::*method)(P1 p1, P2 p2) const) {
+	return Callback2<P1, P2>(new Callback2MethodActionPte<O, void (M::*)(P1 p1, P2 p2) const, P1, P2>(object, method));
+}
+
+template <class O, class M, class P1, class P2>
 struct Callback2MethodAction : public Callback2Action<P1, P2> {
 	O  *object;
 	M   method;
@@ -214,6 +229,11 @@ Callback3<P1, P2, P3> pteback(O *object, void (M::*method)(P1 p1, P2 p2, P3 p3))
 }
 
 template <class O, class M, class P1, class P2, class P3>
+Callback3<P1, P2, P3> pteback(O *object, void (M::*method)(P1 p1, P2 p2, P3 p3) const) {
+	return Callback3<P1, P2, P3>(new Callback3MethodActionPte<O, void (M::*)(P1 p1, P2 p2, P3 p3) const, P1, P2, P3>(object, method));
+}
+
+template <class O, class M, class P1, class P2, class P3>
 struct Callback3MethodAction : public Callback3Action<P1, P2, P3> {
 	O  *object;
 	M   method;
@@ -279,6 +299,11 @@ struct Callback4MethodActionPte : public Callback4Action<P1, P2, P3, P4> {
 template <class O, class M, class P1, class P2, class P3, class P4>
 Callback4<P1, P2, P3, P4> pteback(O *object, void (M::*method)(P1 p1, P2 p2, P3 p3, P4 p4)) {
 	return Callback4<P1, P2, P3, P4>(new Callback4MethodActionPte<O, void (M::*)(P1 p1, P2 p2, P3 p3, P4 p4), P1, P2, P3, P4>(object, method));
+}
+
+template <class O, class M, class P1, class P2, class P3, class P4>
+Callback4<P1, P2, P3, P4> pteback(O *object, void (M::*method)(P1 p1, P2 p2, P3 p3, P4 p4) const) {
+	return Callback4<P1, P2, P3, P4>(new Callback4MethodActionPte<O, void (M::*)(P1 p1, P2 p2, P3 p3, P4 p4) const, P1, P2, P3, P4>(object, method));
 }
 
 template <class O, class M, class P1, class P2, class P3, class P4>
@@ -371,6 +396,11 @@ Gate pteback(O *object, bool (M::*method)()) {
 }
 
 template <class O, class M>
+Gate pteback(O *object, bool (M::*method)() const) {
+	return Gate(new GateMethodActionPte<O, bool (M::*)() const>(object, method));
+}
+
+template <class O, class M>
 Gate callback(O *object, bool (M::*method)()) {
 	return Gate(new GateMethodAction<O, bool (M::*)()>(object, method));
 }
@@ -411,6 +441,11 @@ struct Gate1MethodActionPte : public Gate1Action<P1> {
 template <class O, class M, class P1>
 Gate1<P1> pteback(O *object, bool (M::*method)(P1 p1)) {
 	return Gate1<P1>(new Gate1MethodActionPte<O, bool (M::*)(P1 p1), P1>(object, method));
+}
+
+template <class O, class M, class P1>
+Gate1<P1> pteback(O *object, bool (M::*method)(P1 p1) const) {
+	return Gate1<P1>(new Gate1MethodActionPte<O, bool (M::*)(P1 p1) const, P1>(object, method));
 }
 
 template <class O, class M, class P1>
@@ -482,6 +517,11 @@ Gate2<P1, P2> pteback(O *object, bool (M::*method)(P1 p1, P2 p2)) {
 }
 
 template <class O, class M, class P1, class P2>
+Gate2<P1, P2> pteback(O *object, bool (M::*method)(P1 p1, P2 p2) const) {
+	return Gate2<P1, P2>(new Gate2MethodActionPte<O, bool (M::*)(P1 p1, P2 p2) const, P1, P2>(object, method));
+}
+
+template <class O, class M, class P1, class P2>
 struct Gate2MethodAction : public Gate2Action<P1, P2> {
 	O  *object;
 	M   method;
@@ -550,6 +590,11 @@ Gate3<P1, P2, P3> pteback(O *object, bool (M::*method)(P1 p1, P2 p2, P3 p3)) {
 }
 
 template <class O, class M, class P1, class P2, class P3>
+Gate3<P1, P2, P3> pteback(O *object, bool (M::*method)(P1 p1, P2 p2, P3 p3) const) {
+	return Gate3<P1, P2, P3>(new Gate3MethodActionPte<O, bool (M::*)(P1 p1, P2 p2, P3 p3) const, P1, P2, P3>(object, method));
+}
+
+template <class O, class M, class P1, class P2, class P3>
 struct Gate3MethodAction : public Gate3Action<P1, P2, P3> {
 	O  *object;
 	M   method;
@@ -615,6 +660,11 @@ struct Gate4MethodActionPte : public Gate4Action<P1, P2, P3, P4> {
 template <class O, class M, class P1, class P2, class P3, class P4>
 Gate4<P1, P2, P3, P4> pteback(O *object, bool (M::*method)(P1 p1, P2 p2, P3 p3, P4 p4)) {
 	return Gate4<P1, P2, P3, P4>(new Gate4MethodActionPte<O, bool (M::*)(P1 p1, P2 p2, P3 p3, P4 p4), P1, P2, P3, P4>(object, method));
+}
+
+template <class O, class M, class P1, class P2, class P3, class P4>
+Gate4<P1, P2, P3, P4> pteback(O *object, bool (M::*method)(P1 p1, P2 p2, P3 p3, P4 p4) const) {
+	return Gate4<P1, P2, P3, P4>(new Gate4MethodActionPte<O, bool (M::*)(P1 p1, P2 p2, P3 p3, P4 p4) const, P1, P2, P3, P4>(object, method));
 }
 
 template <class O, class M, class P1, class P2, class P3, class P4>

@@ -107,15 +107,17 @@ void PressKeyVK(int keyVK, bool hold = false, bool release = false, bool compati
         keybd_event((BYTE)keyVK, (BYTE)nScan, KEYEVENTF_KEYUP | nExtended, 0);
 }
 
-/*
+
 #if defined(__MINGW32__)
-	#define	MAPVK_VK_TO_VSC		0
-	#define	MAPVK_VSC_TO_VK   	1
-	#define	MAPVK_VK_TO_CHAR  	2
-	#define	MAPVK_VSC_TO_VK_EX 	3
+//	#define	MAPVK_VK_TO_VSC		0
+//	#define	MAPVK_VSC_TO_VK   	1
+	#ifndef MAPVK_VK_TO_CHAR
+		#define	MAPVK_VK_TO_CHAR  	2
+	#endif
+//	#define	MAPVK_VSC_TO_VK_EX 	3
 #endif
-#define	MAPVK_VK_TO_VSC_EX 	4
-*/
+//#define	MAPVK_VK_TO_VSC_EX 	4
+
 
 // This is less nice but more compatible for Notepad and MSWord for example
 void PressKey(wchar key, bool hold = false, bool release = false) {

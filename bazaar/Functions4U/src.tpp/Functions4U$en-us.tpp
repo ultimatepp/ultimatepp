@@ -305,18 +305,20 @@ ng][@(0.0.255) `&]_[*@3 s])&]
 Spaces are chars like, `' `', `'`\t`', `'`\n`', ...&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Tokenize`(const Upp`:`:String`&`,const Upp`:`:String`&`):%- [_^Upp`:`:Vector^ V
-ector]<String>_[* Tokenize]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str], 
-[@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 token])&]
-[s2; Returns all substrings in [%-*@3 str] that are between [%-*@3 token].&]
+[s5;:Upp`:`:Tokenize`(const Upp`:`:String`&`,const Upp`:`:String`&`,int`):%- [^Upp`:`:Vector^ V
+ector]<String>_[* Tokenize]([@(0.0.255) const]_[^Upp`:`:String^ String]_`&[*@3 str], 
+[@(0.0.255) const]_[^Upp`:`:String^ String]_`&[*@3 token, ][@(0.0.255) int 
+][*@3 pos] `= 0)&]
+[s2; Returns all substrings in [%-*@3 str] beginning from [%-*@3 pos][%-  
+]that are between [%-*@3 token].&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Tokenize`(const Upp`:`:String`&`,const Upp`:`:String`&`,Upp`:`:Vector`<Upp`:`:String`>`&`):%- [@(0.0.255) v
+[s5;:Upp`:`:Tokenize`(const Upp`:`:String`&`,const Upp`:`:String`&`,Upp`:`:Vector`<Upp`:`:String`>`&`,int`):%- [@(0.0.255) v
 oid]_[* Tokenize]([@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 str], 
 [@(0.0.255) const]_[_^Upp`:`:String^ String]_`&[*@3 token], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:String^ S
-tring]>_`&[*@3 ret])&]
-[s2; Sets in [%-*@3 ret] all substrings in [%-*@3 str] that are between 
-[%-*@3 token].&]
+tring]>_`&[*@3 ret, ][@(0.0.255) int ][*@3 pos] `= 0)&]
+[s2; Sets in [%-*@3 ret] all substrings in [%-*@3 str] beginning from 
+[%-*@3 pos][%-  ]that are between [%-*@3 token].&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Tokenize2`(const Upp`:`:String`&`,const Upp`:`:String`&`,int`&`):%- [_^Upp`:`:String^ S
@@ -372,12 +374,14 @@ tring][@(0.0.255) `&]_[*@3 toFind], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
 [s2; Returns the long number [%-*@3 a ]converted into a String.&]
 [s3; &]
 [s4;%- &]
-[s5;:SecondsToString`(double`,bool`):%- [_^String^ String]_[* SecondsToString]([@(0.0.255) d
-ouble]_[*@3 seconds], [@(0.0.255) bool]_[*@3 units]_`=_[@(0.0.255) false])&]
+[s5;:Upp`:`:SecondsToString`(double`,bool`,bool`):%- [_^String^ String]_[* SecondsToStrin
+g]([@(0.0.255) double]_[*@3 seconds], [@(0.0.255) bool]_[*@3 units]_`=_[@(0.0.255) false], 
+[@(0.0.255) bool ][*@3 dec]_`=_[@(0.0.255) true])&]
 [s2; Converts an amount of [%-*@3 seconds] to a String formatted as 
 HH:MM:SS.&]
 [s0; -|If [%-*@3 units ]is true the units (hours, mins, seconds) will 
 be part of the text.&]
+[s0; -|If [%-*@3 dec ]is true it will show seconds decimals.&]
 [s0; -|It is opposite to StringToSeconds()&]
 [s3; &]
 [s4;%- &]

@@ -20,7 +20,7 @@ CONSOLE_APP_MAIN
 	scatter.AddSeries(x, y, 5).Units("ºC", "seg").Legend("Series 2").Stroke(5, Null)
 		   .Dash(LINE_DASHED).MarkStyle<SquareMarkPlot>().MarkWidth(12);
 	
-	scatter.FitToData();
+	scatter.ZoomToFit();
 	
 	scatter.SetTitle("ScatterDraw_Demo").SetTitleFont(SansSerif(14).Bold());
 	scatter.SetLabelY("Temperature").SetLabelX("Time").SetLabelsFont(SansSerif(12));

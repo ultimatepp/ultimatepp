@@ -33,8 +33,8 @@ void VectorReAlloc_(void *v_, int newalloc, int sizeofT)
 	size_t sz0 = (size_t)newalloc * sizeofT;
 	size_t sz = sz0;
 	void *newvector = newalloc ? MemoryAllocSz(sz) : NULL;
-//	v->alloc = /*(sz - sz0) / sizeofT + */newalloc; //Benchmark...
-	v->alloc = (int)((sz - sz0) / sizeofT + newalloc); //Benchmark...
+	v->alloc = newalloc == INT_MAX ? INT_MAX // maximum alloc reached
+	           : (int)((sz - sz0) / sizeofT + newalloc); // adjust alloc to real memory size
 	if(v->vector)
 		memcpy(newvector, v->vector, (size_t)v->items * sizeofT);
 	v->vector = newvector;
@@ -51,12 +51,12 @@ void VectorReAllocF_(void *v_, int newalloc, int sizeofT)
 void VectorGrow_(void *v_, int sizeofT)
 {
 	Vector_ *v = (Vector_*)v_;
+	if(v->alloc == INT_MAX)
+		Panic("Too many items in container!");
 #ifdef _DEBUG
-	VectorReAlloc_(v, max(v->alloc + 1, 2 * v->alloc), sizeofT);
+	VectorReAlloc_(v, max(v->alloc + 1, v->alloc >= INT_MAX / 2 ? INT_MAX : 2 * v->alloc), sizeofT);
 #else
-	VectorReAlloc_(v, max(v->alloc + 1, int(v->alloc + ((unsigned)v->alloc >> 1))), sizeofT);
-//	VectorReAlloc_(v, max(v->alloc + 1, max(2 * v->alloc, 16 / sizeofT)), sizeofT);
-//	VectorReAlloc_(v, max(v->alloc + 1, 2 * v->alloc), sizeofT);
+	VectorReAlloc_(v, max(v->alloc + 1, v->alloc >= int((int64)2 * INT_MAX / 3) ? INT_MAX : v->alloc + (v->alloc >> 1)), sizeofT);
 #endif
 }
 

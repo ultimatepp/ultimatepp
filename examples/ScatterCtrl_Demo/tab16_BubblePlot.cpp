@@ -18,7 +18,7 @@ void TabBubblePlot::Init()
 		   .NoPlot().MarkColor(Green()).MarkBorderColor(LtRed()).MarkBorderWidth(3);
 	
 	scatter.SetLabelY("Size");
-	scatter.FitToData(true, 0.2);
+	scatter.ZoomToFit(true, true, 0.2);
 }
 
 ScatterDemo *Construct16()

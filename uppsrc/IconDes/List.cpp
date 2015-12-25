@@ -365,20 +365,6 @@ void IconDes::RemoveImage()
 		ilist.GoEnd();
 }
 
-void IconDes::MoveSlot(int d)
-{
-	if(!IsCurrent())
-		return;
-	int c = ilist.GetKey();
-	d = c + d;
-	if(d >= 0 && d < slot.GetCount()) {
-		slot.Swap(c, d);
-		search <<= Null;
-		SyncList();
-		GoTo(d);
-	}
-}
-
 void IconDes::ChangeSlot(int d)
 {
 	if(!IsCurrent())
@@ -481,6 +467,39 @@ String IconDes::GetCurrentName() const
 bool IconDes::GetExport(int ii) const
 {
 	return slot[ii].exp;
+}
+
+void IconDes::MoveSlot(int d)
+{
+	if(!IsCurrent())
+		return;
+	int c = ilist.GetKey();
+	d = c + d;
+	if(d >= 0 && d < slot.GetCount()) {
+		slot.Swap(c, d);
+		search <<= Null;
+		SyncList();
+		GoTo(d);
+	}
+}
+
+void IconDes::DnDInsert(int line, PasteClip& d)
+{
+	if(GetInternalPtr<ArrayCtrl>(d, "icondes-icon") == &ilist && IsCurrent() &&
+	   line >= 0 && line <= slot.GetCount() && d.Accept()) {
+		int c = ilist.GetKey();
+		slot.Move(c, line);
+		if(c <= line)
+			line--;
+		search <<= Null;
+		SyncList();
+		GoTo(line);
+	}
+}
+
+void IconDes::Drag()
+{
+	ilist.DoDragAndDrop(InternalClip(ilist, "icondes-icon"), ilist.GetDragSample(), DND_MOVE);
 }
 
 END_UPP_NAMESPACE

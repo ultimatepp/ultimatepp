@@ -53,6 +53,13 @@ void AttrText::Jsonize(JsonIO& jio)
 	;
 }
 
+bool AttrText::operator==(const AttrText& f) const
+{
+	return text == f.text && value == f.value && font == f.font && ink == f.ink &&
+	       normalink == f.normalink && paper == f.paper && normalpaper == f.normalpaper &&
+	       align == f.align && img == f.img && imgspc == f.imgspc;
+}
+
 void AttrText::Xmlize(XmlIO& xio)
 {
 	XmlizeByJsonize(xio, *this);

@@ -1,7 +1,0 @@
-uses Core;
-
-file
-	"Genetic.cpp";
-
-mainconfig
-	"" = "CONSOLE ST";

@@ -511,6 +511,9 @@ Vector<String> GetCsvLine(Stream& s, int separator, byte charset)
 	byte dcs = GetDefaultCharset();
 	for(;;) {
 		int c = s.Get();
+		if(c == '\n' && instring)
+			val.Cat(c);
+		else
 		if(c == '\n' || c < 0) {
 			if(val.GetCount())
 				r.Add(ToCharset(dcs, val, charset));

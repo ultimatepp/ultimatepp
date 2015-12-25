@@ -1,0 +1,4 @@
+#ifndef _CallbackPick_icpp_init_stub
+#define _CallbackPick_icpp_init_stub
+#include "Core/init"
+#endif

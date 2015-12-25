@@ -17,30 +17,14 @@ topic "StaticLine";
 [s0;2 &]
 [s3; 
 @@image:487&456
-€ƒÎ€É€€€€€€€€€€ø§œíÛÝîÃ Ü„à‹ôÚ½•ï¼ö˜¹Éªö•Õ²€ÃÂÎî¬ÄÉÈ¯þËÝ¯öì¶ÉŸõÏ§Þ£ÏôøöùÃé£–¯
-·ïŸ´Ô÷¾Ê¤Êéùó¸¤é’¹¶×Þ¡ÙËÃéœ¥ÝÃÒ¾ƒ»§´ìÖ£šÍØ¥ÕÖ§ë¤ÙÔ»É¯˜®óÒóêÖÒ†àóÚúìùüÝÓ–å†ÃÚÌ
-è´íüü¿€´•ŒÞºÌ§´‚üµ«¬–¦Î²®¿ô‰ÖÈ„ŽÃš•“ø®âªç‚¤ÅŠì°“¼©â±£ÌÎÐ¥ˆÂÎ°Á–ÂãÂ ™…’»Í„ÆŠ
-ŽÖÃ„ÌŠ¶ÇÖÉ„ÒŠžÖãÏ„ØŠ†–Â±„ÞŠŸ–ÅÄ…ˆ”³Ø¢“ÑŠÒŒã¹Ì„ÊÆ±‚¥³‘«…¢«à¢ÜŠžæÖÄÄŠ©®± º¦–ÉÑÃÊ
-¹™Ø§…ÆâÂâ©”£ØÏ•Ó¬Õ¥Òè¯Úö£ûŸÓÏüçúìþºž¼Ì†Ž÷Þ€¦¶øÛžÆ°±ú÷¤Î›ŸÓàçèµ÷Õà¿åÚ´—¾÷ŽžÁº¶
-ùþ½‡û…ÊÅ–†¿´úú¤êâÕÒÿí‡…•ÊÙ÷×ŠÖø§å±ËÙì£·ª­ê¾—ñ³‰Ë¹ÇÇÂ£Õö°Ë™ÇÇÒ¥Øºæ¹ÿÐÀ®šÔÍ¬«ØÇ‘
-¥±Ì²–ñˆÄËšÉ¬«ÚŽÍ§Èã™Ù×–÷ùýÒÕÌ¬±úî•€©ÓÒ«±–Çúõú®éèªæÖÞ£â´´­¶¥ÄËÖ·ÝºóÒãµÊ¡¥Ûºé×Ÿ
-»ž§¼’Š¬‘Ý´ú˜•æË¤Õª”˜òÕ‰êÝªåØÒí‡ª«•›Ì©»¢°Ê£€£É°¬œéÐ÷ƒÉÚÍœ›½Ò¨ÆçÒºÞÆ·þ¯Ì«Ÿéíó‘Þ¯Ÿ
-·éýò‹þüÉ…
+(A04ASQAAAAAAAAAAAHic7dtdbsMgEATgi/Rave889hi5SSoV1bIAw8LOLMTJyC/+gd2vduw2SZ/PJ94jz4/0dnlD6aOWr++ftFT3vkpKaflzOKRpObZXD94hWcPpHKVdQ9IDu6e07NYjTdgNpdVWJ6TZVLtJr5hz0vPqVtIGc1p6bHn83ZblBkPaTI80bXz8P4C0jF66TKc0HXy1KywWJk4uv3QJ1sgEQ5qVk3guYmeCJMUK7BATPClisaNMUKWIwk4wwZZCj51jQiCFEjvNhEYKDdbDhEwKNtbJhFIKHtbPhFgKBpbChF4KH5bFRIgUs1giE1FSjGO5TARKMYKlMxErhQ2rYCJcih5WxMQKKa6xOiYWSVHDSplYJ4WNxmJiqRQjWE+VrNUlUugv2iP7n1PP/Ods/jqdnrzMDvfeACY2eJ7GMLH6d6Qbn9PgZ2i11eC/Zdq0l773jp5BOjb+PQf7hcrFBr+PNPp6JGLVUv9th4WVSll3VwpWJ2Uxy9nso6qt6j6X8TPLOUfHQiNVMMuZR8fSpTpmOf/QQK5UzSyr2EcRpTHMspZxCEsaySwrWo6nSOOZWVeW+f3SVcyssW6VAKnT0o2xlkf6dfou6Cpm1l6j4rQ0rbalREs33bpz0mO1IaVbumlXn5CeJ7ySiizdNHoYlWZLVSqUGHLVCV2qZdhS7YcrlRvMKbsiSiMAI8mwLGlQ94PJWk0bPdKoxmdSXsY3/q/MK+nt85HeLx/p/fIL/vxJhQ==)
 &]
 [s0;2 &]
 [s0; [2 As seen in program:]&]
 [s0;2 &]
 [s0;l288; [2 
 @@image:475&450
-€ƒÌ€È€€€€€€€€€€ø§œíÛ½ÊÄÀü”€à‹Øˆ•Ó÷ð€¶‚¶žØÀ„Ûëí–ô´†î±‡ÑÒÕ®Ù¶°ðˆŠûšˆŸ¬„˜Ìæ÷Þ¼ÿÙ„×„
-¹¼â¾òòæ§¾äûõ±ýÆ÷âéåý¾Ü¸ Ã•øü¹ºÔ¸ûž­°ÌÈ£¼ºÛÿÿú¾Š¸‹¢“’Ëºä¦˜ƒ †¥Ù·Æç¦ÅÛæÀ˜™™î
-òâª…õÆ“›§×ÈÌ¢îÂ’ÎÞ¸ûøí»ª±™œàŸãâ†ƒ¨€Ì¦ðàƒ„ËèÌ¾ðì¢ŒÅ”¦Á•˜ÒÀ©£»ÓÂ˜±º²å‚ù£‹ÓœØ´
-¨š³µ€˜£™ÄÓ‰ˆ´š°õ…€ø£ªÓ•ØÀåÔâêƒëÑâÌƒ Á¨È´ÒŒ¢Ì³† ÙÈäÚ‚¹”Æ²Ó˜È´’û˜öÀ¾±Šé‚”±¢™ÞÀ
-Œ©ã‘éˆ”´Ææ˜¾ÀÙã’Óù¸ò†Š›Ç—ÌÃóÉÐéÃ¸æú‚•ŒôÐ¢‘ž ž§Ñ½Éè›£ÃÅÅ ”°”‰±¥ÐÖØ„¦Á—‡™±ÏÐ
-¹‹©âÄ¼ƒÐ‘¢ÞŸ—øÆüß“ñú¸À´ÖÐöÑ—¦ÇÈ›†¦ì™ä£çžü´æÒŒü‰ÞÑ’É°Ê­äÌ»˜µÆÙ¥š³Ê¨±–µà‹âú‹íí¦
-Ò¨½›ÐåâÅŒ¶Û¥½æÑâè¹ŸÔâæáö›ÞæÆèƒµ£—çÎ™ýÉ¬ä™Éã„˜³™ÁæØ˜’¨Ëœ˜ã€…Ñ™ýã´ ”³Œ³Þß¯ƒ‚Å
-Ï˜ñè¢¨ÍÏœÿß‘È„äÂ‰¶¤³öáðÁË”Ïœ„¯ó…šÈã¯žÞ¾µ…œâ†æ’“½§¸ð»ÌÄœÔô¥ÍÎ€ûÌªßÙÛ’‚Ò‚ÚÐþƒ
-Ñ÷©þ€âáº€•
+(A0wASAAAAAAAAAAAAHic7ds9SsRAFADgi9iIlffwADaCNp5ABFvr7Rb0Bm6xB9HSVVm2sPAIinsInyyEmExm3rz/WYTXhLxiPvLy5idk+/Wx/Y9G4unlfb7cuA9DFXh8uTo4e54tsEzIvLpbf3/6D74KuIsiExK65CaYAyCG2TfGZyaBRebAGJmZAe5iqgV1xpOb18jMIhDuQk7eOHv4bTsxmRzgH+NiA6iATCZwYITLaEw+cGwMxRQBJo1BmFLAKaM7UxCYMToyZYF5owtTHFg0GjM1gBijGVMJiDQaMPWAeKMqUxVYZVRiagNrjeJMAyDBKMi0AdKMIkwzINnIZFoCOUYy0xjINBKY9kC+sYrpAhQxIpleQCljkekIFDRmmL5AWWOS+bhyBoobx8zD80mdDVDDOGb6ApWMEFCiEZ6gntG9yWgbowHFjUUgFDCUsSVQ1lgEJpcHDRkxT9CLKWLEvINQol4fF/hGfJPx+rjANNZ2URcmx0ibJuyZZCNnHjRm0oz8id6SSTBKrWTMmLVG2aWaDbPKqLEWNWDijXqLbW0m0qi9m1BlYow22yU9ZtFouR9UYuaN9hteDWbG6LWjF2dOGX2PLGSZSWOEMxlB5tgYASjLHBjjAAWZfWM0oBSzM17frwMCRZid8egiKJDPHP/fERDIZEKJNgEkM2HwwUuUz5wvc4UaEEhjnt6+tQWcYmaSkz0nOHDMxBzU9KVNAPvMql9Z2wLSAlrQfgP3KX4A4mG6FQ==)
 ]&]
 [s0;2 &]
 [s4; StaticLine shows a line.&]
@@ -71,23 +55,7 @@ are `"`|`", `"`\`\`", `"`-`" and [* `"/`"]&]
 [s1; &]
 [s0;= 
 @@image:2177&669
-Šƒ³†€€€€€€€€€€ø‡œíÛËî›Á˜Œ…ÀßÿÔºÂÚ€ˆ±Œ©’¸¥ÍóšŸªÕ—Õô£ùŒ¯‚ü¹€€€€€ÿôôõ×î¯€õÔÞ¼‘×Ô†
-úÑÂó¯ßÈ×Â¿±ŸÄ¼ó„ö§ÞíºÝØƒº¡Â£ŸµœîúìÀ„á¿Žôý›î¬ÎøàÞ½ñæÓ¥™µÜØÕéº±®¿ƒƒŸÖ¶™îÎ¬ÊÔàÛÄ
-ïéÆŠŒŒ®âˆšÌ·–ãÞð«‰ï®ÝØ‹áÁ¹­¥›‹±š©†»³¯ôãÖ•ÆÄäç·•Œî¬ÁŒ˜ë×îÇéÆüŒˆ™§ö¶“îÌÎô­˜éûæïÿ€
-áž°†Ê²ö¤É¾ƒûÆÃ´ÜùþÍó¥ÜØ°—ÆÉÖÅÙã¾‡«ÃáŽœž­”ó«†³‘·†ÈÜ¿™¿íú¦ãà‚üÍ“áÿ‹Ç±‹Ú«ÉÒ¹Õ¾ó‚ƒ
-£ ·ÚíÓëë°›³…š«Ø³æ•¿¹Ÿ£ «ùºÓ÷ËÛø¿­Õï–êßÞßðé§Ç«ñôøÅÑ’§™ìÎýÒé­µˆ¥ÎúµÉ¿—¹• óÚèÚ¡
-þÝß•™Àé¡Ä÷ûôþÝÂÒë¦‰½±áÞùˆšêæ´ÆÃœ—î§çÊ›ýÖ•ÓÞ»‹Ñ©ëæËÌüõ±É¤ÌÑ“ûáÇòÛÏ¡ÞªÒàŒ’ˆ¥ÛÊÑ
-ˆ‰×òˆ£Øê¡Ñ†¿É£ˆÔ˜©ÄÜ“É„…‘Ò…†øÄ²·ËÉ“’ÜþóùòÙË˜äçêŒß¡¥…¤ÉòËîýõ²ÚÅŒ®äæÒß¥±¥äÈÚîü³ò
-ü»Î€ääºóÞÁÅÓûâ·©Ýó¹ªÍÃ¤¶’à‘•Ó»é¹äªÚ½¢£‚ú¼â»±þÌÀôäã§×éóÃƒòüò£•·Ã¼–¼¿£´òÚðÅ‘¤ú‰
-¯‘„û£Û÷ƒ‰‹ŒÜî´‰Ñ¿ÅÖìçæÏ¶¡ç×‰Š½ÜÏë™¤ý¢©±™‘»½ŸÌß¡Ø¢öñ¡»Èþò×òá‹·¹—ÓüŸ“Žçó•¶™˜Â“’áä
-‰î±³øÄ¬ÃœÉ¥æã¢ÿˆ¥“Îã†ó²©—û‚áœ®¯Æ³Ó¹¡Îà›îò³£ŸÄÁÈ´—×…Éý“¦ƒ¡ÜÚ­æõ¼¥„â¸²ŠÌóí¢˜‰ã¾ê
-î²»áÏ§ˆËåªîø„§¿º ÃïªÉóêœûð‚Ì¾¦²þÆÎóæ«‰Ö²öŽš›¹ÓÙÏ¦ÈÌ‹šºààä§½— ¨ƒïç”éóõõØ‚Ì»š™
-ˆÆÍùÎË‰²­êÞ†›³ë¡­Ï¤ÈœËáê›ÈÄ§¼‘ Ãòî„›“æÞþÅ„™ð¼Òæþú½ßÇöÖ÷Á¯úïÀãÍ§‘ÇÚðé½Æ†ŸÆ»Ã
-Ÿ·®ËÐõÝ„óéý‹”ïêº°­ŸÅ®×ùÀ‘­·¢ß‹êˆÒòÿÙ¢ß î´ûŽÁúí˜¾ëµÛÎïÌ¡È³§È§Ô½éó‚ôÚÞö¢µÙ–ž¯
-” È›½ç´½¦ö¦Á“ˆÒãùÃ¹ßƒÍ©þ™ý„é°ÛìÔÀýÿÊÿ¼Áªøïµ™”Þ¢ºœßÎÒûÌªÌõ÷©èç“¤õî¦“ÓÑª³øÍ„©ºÃ¤
-Œ×ñ¯Êý°Áðªî¯Õ”Û®ˆÚßËòûË€¹–Œ€€€€€€€€€€€€Ø€€ØåúÇ‹•ßÿºøóÿßÒøÄ£ˆÄ÷·±ûèþþÈêÿõ¨®Ç‘ò
-ˆâü˜âÜÎÄ±ž¤˜×ÑŒìŸÓŒË©Æƒ°”ãñ‘‡íÒ¼èÑ·ò®éÃ‘‡í¼È±®ö¢½Ïüý³û¬ÃÚ‘çÁŠñŽ•é‘‡í¼Èò±®¢½ò°
-”‡©ÆÕ¤Ç’øÖñ‰Ý¸„èÒÈÂª®¡˜—ÉØÅ¥”€£€€€€€€ˆ€€€À“ÿ€‚óÝ„º
+(A7MBhgAAAAAAAAAAAHic7dtLbhtBDAVA3/9UOlqACDEMKZIlTXOan6pVkNX0I/kML3y5AAAAAAD09PXX7q+A1F68EdfUhlHCc6/fyNc/sR9EPHOEJ97tOt3YgyHCI5+1nG5swAThv470m26szvjg3vFm042lmR3cWNVpurEug4Of1raZbizK1OBbRI/pxoqMDK7iGkw3lmNecInvLt1Yi2HBOa2lGwsxKYY7s690YxXGxGTnN5VuLMGMGGtXR+nG/AyImfa2k25MznSYafvmb/8AnjAdBkqy9kk+g3tGwzR5fo3N8yXcMBdGydZF2b6HK0NhjpwtlPOrhjMRhsjcP5m/bSbjYIL8zZP/C0cxC9qr0jlVvnMCg6C3Wm1T62sbMwUaq9gzFb+5HyOgq7oNU/fL25A/LVXvlurfX53w6adHq/R4RVGSp5lOfdLpLbWInU76NUm/F5Ugc9ro2iFd35WZwOmhd3v0fl1C0qaBCb0x4Y15iJrq5jTGnJduJ2dKm9YV0967i5Cpa2ZLzHz1ySRMUZP7YfLbzyFeKtIMEgglW8rRCVdyiCNYatEGP0kjiFQpRA/ck0kEkVKFBnhEMsvJkxLc/nPyWUuY5OfqXyGlhSRJcu79dbJaRYxk5tLfJbElZEhabvwzcjtOgOTkuo+Q3kFF0/viqd3zOarNQzYS4BEV0zu5ZCraPaKjerxiOzF+THRkYydXafOD8nxyIxW3vJY8PyM08nDFEaT6AYmRhPuNI9t3iYsMXG40Cb9FVmznZs8h59cJir1c65mk/SIpsZE7PZ/MXyEidnGhu0j+V/JhC7e5l/yfEw7nc5UZmMITkuFk7jEPs3hELJzJJWZjIv8lE07jBnMyl3sC4RyuLzPTuSENTuDu8jOjn0RBNBdXhUl9kwOh3Fot5nUlBOK4sopM7aIYCeO+6jK74c8niMuqbvgEJ7+dIMNvqo3Jcxz7cIJMvqZ+xk5z5qsJMvaOGps504FPJsjMC5pg4GSnvZcgA29nlGnzHfVYgky7mplGTXnOSwky6l6GmzPrIc8kyJxL4WrIxCe8kSBDboQbE+be/oEEmXAdPNJ++r1fR5D2d8Gveu9A46cRx9pwab0GjZ9GEDvDt67L0PVdBOn9CxTv6roPLR9FkK5XwBEtt6LfiwjScv9Zot9uNHsOQfptPms125BObyFIs50nSKc9afMQgnTadqK12ZYeryBImz3nND12psETCNJjwzlfg82p/v0EabDbbFR9f0p/PEGqbzUZlN6iul9OkNL7TCp1d6noZxOk7iaTU9GNqvjNBCm6wyRXca/KfTBBKm4vVZTbrlpfS5Bye0s5FgwAAAAAAAAAAAAAAAAAWOX6R4vff7p48w9/0vjEo4hE97H76H7+j0h/9SiuR5HyiGL8mGJcTjEepBhXUYwfU4zLKcaDFGMQcZGHbTzoUTfyLumRh208SDGuIr3PfP2z+0NakedBinEV6ZGHbTxIMa4iPfKwjQcpxlWkRxJWcQnduIToSMIqLqEYlxAdSVjFJRQjAAAAAAAAAAAAwBN/AHPdBDo=)
 &]
 [s6;%- &]
 [s5;:StaticLine`:`:SetOrientation`(int`):%- [_^StaticLine^ StaticLine][@(0.0.255) `&]_[* Se
@@ -95,4 +63,4 @@ tOrientation]([@(0.0.255) int]_[*@3 o])&]
 [s3; Sets the line orientation [%-*@3 o]. Valid orientation values 
 are OrVert, OrHor, OrNW`_SE, OrSW`_NE.&]
 [s1; &]
-[s0; ]
+[s0; ]]

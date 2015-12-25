@@ -1,4 +1,5 @@
 #include <Core/Core.h>
+#include <Core/Core.h>
 //#BLITZ_APPROVE
 
 NAMESPACE_UPP
@@ -26,7 +27,7 @@ inline void Heap::Page::Format(int k)
 	freelist = l;
 }
 
-Heap::Page *Heap::WorkPage(int k) // get a new empty workpage
+Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 {
 	LLOG("AllocK - next work not available " << k << " empty: " << (void *)empty[k]);
 	Page *page = empty[k]; // hot empty page of the same klass
@@ -73,7 +74,7 @@ Heap::Page *Heap::WorkPage(int k) // get a new empty workpage
 					LLOG("AllocK - empty aux page available for reformatting " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 					break;
 				}
-		if(!page) { // Not free memory was found, ask system for the new page
+		if(!page) { // No free memory was found, ask system for the new page
 			page = (Page *)AllocRaw4KB(Ksz(k));
 			LLOG("AllocK - allocated new system page " << (void *)page << " " << k);
 			page->Format(k);
@@ -114,7 +115,7 @@ void *Heap::AllocK(int k)
 
 inline
 void *Heap::Allok(int k)
-{
+{ // Try to alloc from the front-cache first
 	FreeLink *ptr = cache[k];
 	if(ptr) {
 		cachen[k]++;

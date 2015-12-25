@@ -747,32 +747,6 @@ void WorkspaceWork::RenameFile()
 		SyncWorkspace();
 }
 
-void WorkspaceWork::MoveFile(int d)
-{
-	int fi = filelist.GetCursor();
-	int s = filelist.GetSbPos();
-	if(fi < 0 || fi >= fileindex.GetCount())
-		return;
-	int a = fileindex[fi];
-	int b = fileindex[fi + d];
-	ShowFile(a);
-	ShowFile(b);
-	if(a < 0 || a >= actual.file.GetCount() || b < 0 || b >= actual.file.GetCount())
-		return;
-	Swap(actual.file[a], actual.file[b]);
-	ShowFile(a);
-	ShowFile(b);
-	SavePackage();
-	LoadActualPackage();
-	filelist.SetSbPos(s);
-	for(int i = 0; i < fileindex.GetCount(); i++)
-		if(fileindex[i] == b) {
-			filelist.SetCursor(i);
-			break;
-		}
-	filelist.Sync();
-}
-
 WorkspaceWork::Sepfo WorkspaceWork::GetActiveSepfo()
 {
 	return Sepfo(GetActivePackage(), GetActiveFileName());
@@ -985,15 +959,6 @@ void WorkspaceWork::AddNormalUses()
 	SaveLoadPackage();
 }
 
-void WorkspaceWork::Move(Vector<String>& v, FileList& ta, int d)
-{
-	int i = ta.GetCursor();
-	if(i < 0 || i + d < 0 || i + d > v.GetCount() - 1) return;
-	Swap(v[i], v[i + d]);
-	SaveLoadPackage();
-	ta.SetCursor(i + d);
-}
-
 void WorkspaceWork::RemovePackageMenu(Bar& bar)
 {
 	if(bar.IsScanKeys() || bar.IsScanHelp() || !bar.IsMenuBar())
@@ -1119,6 +1084,60 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 	}
 }
 
+void WorkspaceWork::DoMove(int b, bool drag)
+{
+	int fi = filelist.GetCursor();
+	if(fi < 0 || fi >= fileindex.GetCount())
+		return;
+	int a = fileindex[fi];
+	if(a < 0 || b < 0 || a >= actual.file.GetCount() ||
+	   (drag ? b > actual.file.GetCount() : b >= actual.file.GetCount()))
+		return;
+	int s = filelist.GetSbPos();
+	ShowFile(a);
+	ShowFile(b);
+	if(drag) {
+		actual.file.Move(a, b);
+		if(b >= a)
+			b--;
+	}
+	else
+		Swap(actual.file[a], actual.file[b]);
+	ShowFile(a);
+	ShowFile(b);
+	SavePackage();
+	LoadActualPackage();
+	filelist.SetSbPos(s);
+	for(int i = 0; i < fileindex.GetCount(); i++)
+		if(fileindex[i] == b) {
+			filelist.SetCursor(i);
+			break;
+		}
+	filelist.Sync();
+}
+
+void WorkspaceWork::MoveFile(int d)
+{
+	int bi = filelist.GetCursor() + d;
+	if(bi < 0 || bi >= fileindex.GetCount())
+		return;
+	DoMove(fileindex[bi], false);
+}
+
+void WorkspaceWork::DnDInsert(int line, PasteClip& d)
+{
+	if(GetActivePackage() == METAPACKAGE)
+		return;
+	if(GetInternalPtr<UppList>(d, "package-file") == &filelist && d.Accept())
+		DoMove(line < fileindex.GetCount() ? fileindex[line] : actual.file.GetCount(), true);
+}
+
+void WorkspaceWork::Drag()
+{
+	filelist.DoDragAndDrop(InternalClip(filelist, "package-file"),
+	                       filelist.GetDragSample(), DND_MOVE);
+}
+
 WorkspaceWork::WorkspaceWork()
 {
 	package <<= THISBACK(PackageCursor);
@@ -1134,6 +1153,8 @@ WorkspaceWork::WorkspaceWork()
 	organizer = false;
 	package.BackPaintHint();
 	filelist.BackPaintHint();
+	filelist.WhenDrag = THISBACK(Drag);
+	filelist.WhenDropInsert = THISBACK(DnDInsert);
 	showtime = false;
 	sort = true;
 	svn_dirs = false;

@@ -1,8 +1,0 @@
-uses
-	Core;
-
-file
-	vdest.cpp;
-
-mainconfig
-	"" = "";

@@ -3,6 +3,5 @@
 #include "CtrlLib/init"
 #include "Functions4U/init"
 #include "ClassFactory/init"
-#include "PolyXML/init"
 #include "Painter/init"
 #endif

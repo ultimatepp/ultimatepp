@@ -31,9 +31,9 @@ JsonView::JsonView()
 {
 	Title("JSON view");
 	Sizeable().Zoomable();
-	Icon(IdeCommonImg::xml());
+	Icon(IdeCommonImg::json());
 	
-	Add(tree.SizePos()); 	
+	Add(tree.SizePos());
 	Add(view.SizePos());
 	
 	error.SetFont(Arial(20)).SetInk(Red);

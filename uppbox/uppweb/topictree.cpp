@@ -118,7 +118,7 @@ String TopicFileNameHtml(const char *topic)
 	return tl.group + "$" + tl.package+ "$" + tl.topic + ".html";
 }
 
-static void sGatherTopics(VectorMap<String, Topic> *map, Vector<String> *ttFullIds, const char *topic, String parentIds)
+static void sGatherTopics(ArrayMap<String, Topic> *map, Vector<String> *ttFullIds, const char *topic, String parentIds)
 {
 	GatherTopics(*map, *ttFullIds, topic, parentIds);
 }
@@ -126,7 +126,7 @@ static void sGatherTopics(VectorMap<String, Topic> *map, Vector<String> *ttFullI
 String ChangeTopicLanguage(const String &topic, int lang);
 String GetTopicLanguage(const String &topic);
 
-String GatherTopics(VectorMap<String, Topic>& tt, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds)
+String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, const char *topic, String& title, String parentIds)
 {
 	static StaticCriticalSection mapl;
 	LLOG("Gather topics: " << topic);
@@ -177,7 +177,7 @@ String GatherTopics(VectorMap<String, Topic>& tt, Vector<String>& ttFullIds, con
 	return TopicFileNameHtml(topic);
 }
 
-String GatherTopics(VectorMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds)
+String GatherTopics(ArrayMap<String, Topic>& map, Vector<String>& ttFullIds, const char *topic, String parentIds)
 {
 	String dummy;
 	return GatherTopics(map, ttFullIds, topic, dummy, parentIds);

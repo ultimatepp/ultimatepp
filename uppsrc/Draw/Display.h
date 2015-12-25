@@ -59,7 +59,7 @@ struct AttrText : public ValueType<AttrText, 151, Moveable<AttrText> > {
 	void  Jsonize(JsonIO& jio);
 	void  Xmlize(XmlIO& xio);
 
-	bool  operator==(const AttrText& f) const       { return value == f.value; }
+	bool  operator==(const AttrText& f) const;
 	bool  operator!=(const AttrText& f) const       { return !operator==(f); }
 
 	dword GetHashValue() const                      { return CombineHash(text, font, ink, paper); }

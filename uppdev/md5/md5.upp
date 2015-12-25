@@ -1,9 +1,0 @@
-uses
-	Core,
-	Web;
-
-file
-	md5.cpp;
-
-mainconfig
-	"" = "";

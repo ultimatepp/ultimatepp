@@ -180,20 +180,22 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 {
 	if(IsNull(width) || IsNull(color))
 		return;
+	if(width == 0)
+		width = 1;
 	FlushText();
 	SetColor(color);
 	if(width == PEN_SOLID)
 		width = 1;
 	if(y1 == y2 && width >= 0)
-		DrawRect(x1, y1, x2 - x1, width, color);
+		DrawRect(x1, y1 - width / 2, x2 - x1, width, color);
 	else
 	if(x1 == x2 && width >= 0)
-		DrawRect(x1, y1, width, y2 - y1, color);
+		DrawRect(x1 - width / 2, y1, width, y2 - y1, color);
 	else {
 		int w = width < 0 ? 1 : width;
 		double d = w / 2.0;
 		if(y1 == y2) {
-			cairo_move_to(cr, min(x1, x1) + 0.5, y1 + d);
+			cairo_move_to(cr, min(x1, x2) + 0.5, y1 + d);
 			cairo_line_to(cr, max(x1, x2) - 0.5, y1 + d);
 		}
 		else

@@ -44,21 +44,11 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	v1 = h;
-	v1.HSizePosZ(220, 10).BottomPosZ(20, ArialZ(20).GetHeight() * 5);
-	v1.SetFont(ArialZ(10));
+	v1.HSizePos(DPI(220), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 5);
+	v1.SetFont(Arial(DPI(10)));
 	l.Add(v1);
 	parent.Add(ctrl.Create<StaticRect>().Color(White).SizePos());
 	parent.Add(l.TopPos(0, isz.cy).LeftPos(0, isz.cx));
-#if 0
-	parent.Add(ctrl.Create<StaticRect>().Color(Blue).LeftPos(2, isz.cx - Zx(4)).TopPos(isz.cy, Zy(1)));
-	RichTextView& w = ctrl.Create<RichTextView>();
-	w.SetQTF(GetTopic("ide/app/Sponsor$en-us"));
-	w.PageWidth(2900);
-	w.NoSb();
-	w.SetFrame(NullFrame());
-	w.NoLazy();
-	parent.Add(w.TopPos(isz.cy + Zy(3), Zy(99)).LeftPos(0, isz.cx));
-#endif
 	return sz;
 }
 
@@ -90,6 +80,7 @@ bool IsSplashOpen()
 
 struct AboutDlg : TopWindow {
 	Array<Ctrl>  ctrl;
+//	StaticRect   separator;
 	RichTextView about;
 
 	typedef AboutDlg CLASSNAME;
@@ -102,16 +93,18 @@ struct AboutDlg : TopWindow {
 
 	AboutDlg() {
 		Size isz = MakeLogo(*this, ctrl);
-		int cx = min(Zx(1000), GetWorkArea().GetWidth());
+		int cx = min(isz.cx * 2, GetWorkArea().GetWidth());
 		SetRect(0, 0, cx, isz.cy);
-		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(Zy(130), 1024));
+		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(DPI(120), 1024));
 		about.SetZoom(Zoom(1, 1));
-		about.RightPos(0, cx - isz.cx).VSizePos();
+		about.RightPos(0, cx - isz.cx - DPI(1)).VSizePos();
 		about.HMargins(Zx(4));
 		about.SetFrame(NullFrame());
 		about.NoLazy();
 		Background(PaintRect(ColorDisplay(), SColorPaper()));
 		Add(about);
+//		separator.Color(Gray());
+//		Add(separator.RightPos(cx - isz.cx, DPI(1)).VSizePos());
 		Title("About TheIDE");
 	}
 };

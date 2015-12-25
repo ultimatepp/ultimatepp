@@ -1,0 +1,7 @@
+#ifndef _GrabYourScreen_icpp_init_stub
+#define _GrabYourScreen_icpp_init_stub
+#include "CtrlLib/init"
+#include "Controls4U/init"
+#include "SysInfo/init"
+#include "Report/init"
+#endif

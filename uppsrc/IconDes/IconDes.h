@@ -333,6 +333,8 @@ private:
 	void  InsertIml();
 	void  MoveSlot(int d);
 	void  ChangeSlot(int d);
+	void  DnDInsert(int line, PasteClip& d);
+	void  Drag();
 
 	static FileSel& ImgFile();
 
