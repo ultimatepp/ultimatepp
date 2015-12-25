@@ -15,7 +15,8 @@ file
 	MathTools.iml,
 	Calculator.cpp,
 	Regression.cpp,
-	rc.rc;
+	rc.rc,
+	srcdoc.tpp;
 
 mainconfig
 	"" = "GUI";
