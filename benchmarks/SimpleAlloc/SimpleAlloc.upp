@@ -1,4 +1,4 @@
-description "Test growth speed of allocator\377";
+description "Simple allocator benchmarks\377";
 
 uses
 	Core;
