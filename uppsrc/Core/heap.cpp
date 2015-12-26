@@ -38,34 +38,66 @@ void Heap::Init()
 		aux.Init();
 	}
 	initialized = true;
+	out_ptr = out;
 	PROFILEMT(mutex);
 }
 
-void Heap::RemoteFree(void *ptr)
+void Heap::RemoteFree(Heap *heap, void *ptr, int size)
 {
-	LLOG("RemoteFree " << ptr);
-	Mutex::Lock __(mutex);
-	FreeLink *f = (FreeLink *)ptr;
-	f->next = remote_free;
-	remote_free = f;
+	if(!initialized)
+		Init();
+	Out *o = out_ptr++;
+	o->heap = heap;
+	o->ptr = ptr;
+	out_size += size;
+	if(out_size >= REMOTE_OUT_SZ)
+		RemoteFlush();
 }
 
-void Heap::FreeRemoteRaw()
+void Heap::RemoteFlush()
 {
-	while(remote_free) {
-		FreeLink *f = remote_free;
-		remote_free = remote_free->next;
+	if(!initialized)
+		Init();
+	Mutex::Lock __(mutex);
+	for(Out *o = out; o < out_ptr; o++) {
+		FreeLink *f = (FreeLink *)o->ptr;
+		f->next = o->heap->remote_list;
+		o->heap->remote_list = f;
+	}
+	out_size = 0;
+	out_ptr = out;
+}
+
+void Heap::FreeRemoteRaw(FreeLink *list)
+{
+	while(list) {
+		FreeLink *f = list;
+		list = list->next;
 		LLOG("FreeRemote " << (void *)f);
 		FreeDirect(f);
 	}
 }
 
+void Heap::FreeRemoteRaw()
+{
+	LLOG("FreeRemoteRaw");
+	if(remote_list) {
+		FreeRemoteRaw(remote_list);
+		remote_list = NULL;
+	}
+}
+
+
 void Heap::FreeRemote()
 {
-	LLOG("FreeRemote");
-	if(remote_free) { // avoid mutex if likely nothing to free
-		Mutex::Lock __(mutex);
-		FreeRemoteRaw();
+	while(remote_list) { // avoid mutex if likely nothing to free
+		FreeLink *list;
+		{ // only pick values in mutex, resolve later
+			Mutex::Lock __(mutex);
+			list = remote_list;
+			remote_list = NULL;
+		}
+		FreeRemoteRaw(list);
 	}
 }
 
@@ -74,6 +106,7 @@ void Heap::Shutdown()
 	LLOG("Shutdown");
 	Mutex::Lock __(mutex);
 	Init();
+	RemoteFlush();
 	FreeRemoteRaw();
 	for(int i = 0; i < NKLASS; i++) {
 		LLOG("Free cache " << i);

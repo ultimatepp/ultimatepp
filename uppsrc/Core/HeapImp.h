@@ -16,8 +16,6 @@ void  FreeRaw64KB(void *ptr);
 #endif
 
 struct Heap {
-	enum { CACHE = 16 };
-
 	static int Ksz(int k) {
 		return k < 14 ? (k + 1) << 4 : k == 17 ? 576 : k == 16 ? 448 : k == 15 ? 368 : 288;
 	}
@@ -83,6 +81,7 @@ struct Heap {
 		LARGEHDRSZ = 24, // size of large block header
 		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
 		BIGHDRSZ = 56, // size of huge block header
+		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
 
 	static StaticMutex mutex;
@@ -104,7 +103,16 @@ struct Heap {
 	DLink  freebin[LBINS][1];
 	static DLink lempty[1];
 
-	FreeLink *remote_free;
+	struct Out {
+		Heap *heap;
+		void *ptr;
+	};
+	Out       out[REMOTE_OUT_SZ / 16 + 1];
+	Out      *out_ptr;
+	int       out_size;
+
+	byte      filler1[128]; // make next variable is in distinct cacheline
+	FreeLink *remote_list; // single linked list of remotely released pointers
 
 	static DLink big[1];        // List of all big blocks
 	static Heap  aux;           // Single global auxiliary heap to store orphans and global list of free pages
@@ -128,6 +136,7 @@ struct Heap {
 #endif
 
 	void  FreeRemoteRaw();
+	void  FreeRemoteRaw(FreeLink *list);
 	void  FreeRemote();
 
 	void  Init();
@@ -162,7 +171,8 @@ struct Heap {
 
 	static void Shrink();
 
-	void RemoteFree(void *ptr);
+	void RemoteFree(Heap *heap, void *ptr, int size);
+	void RemoteFlush();
 	void Shutdown();
 	static void AuxFinalCheck();
 
