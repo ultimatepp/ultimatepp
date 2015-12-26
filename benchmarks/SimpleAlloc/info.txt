@@ -1,0 +1,85 @@
+===== alloc2
+
+Alloc 1.109
+Free 0.438
+Mix 1.516
+1 threads Mix 1.562
+2 threads Mix 1.594
+3 threads Mix 1.719
+4 threads Mix 1.859
+5 threads Mix 2.063
+6 threads Mix 2.250
+7 threads Mix 2.453
+8 threads Mix 2.937
+16 threads Mix 5.547
+Pass Ref 1.766
+sum = 450000000
+Pass 4.594
+sum = 450000000
+count = 100000000
+MemoryUsedKb() = 1587668
+
+
+===== alloc3
+
+Alloc 1.016
+Free 0.437
+Mix 1.547
+1 threads Mix 1.484
+2 threads Mix 1.532
+3 threads Mix 1.640
+4 threads Mix 1.781
+5 threads Mix 1.938
+6 threads Mix 2.078
+7 threads Mix 2.328
+8 threads Mix 2.641
+16 threads Mix 4.953
+Pass Ref 1.781
+sum = 450000000
+Pass 4.516
+sum = 450000000
+count = 100000000
+MemoryUsedKb() = 1587668
+
+
+===== Core
+
+Alloc 1.078
+Free 0.453
+Mix 1.515
+1 threads Mix 1.453
+2 threads Mix 1.563
+3 threads Mix 1.734
+4 threads Mix 1.813
+5 threads Mix 1.922
+6 threads Mix 2.078
+7 threads Mix 2.265
+8 threads Mix 2.532
+16 threads Mix 5.125
+Pass Ref 1.671
+sum = 450000000
+Pass 6.531
+sum = 450000000
+count = 100000000
+MemoryUsedKb() = 1587668
+
+===== MSC
+
+Alloc 2.797
+Free 2.875
+Mix 6.047
+1 threads Mix 6.172
+2 threads Mix 9.406
+3 threads Mix 10.703
+4 threads Mix 11.828
+5 threads Mix 12.922
+6 threads Mix 14.843
+7 threads Mix 17.016
+8 threads Mix 19.359
+16 threads Mix 37.141
+Pass Ref 11.406
+sum = 450000000
+Pass 8.985
+sum = 450000000
+count = 100000000
+MemoryUsedKb() = 0

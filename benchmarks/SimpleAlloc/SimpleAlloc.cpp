@@ -52,35 +52,32 @@ void Consumer()
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-#if 0
-	if(1) {
+#if 1
+	if(0) {
 		TimeStop tm;
 		for(int i = 0; i < N; i++)
 			ptr[i] = new byte[32];
 		RLOG("Alloc " << tm);
 	}
-	if(1) {
+	if(0) {
 		TimeStop tm;
 		for(int i = 0; i < N; i++)
 			delete[] ptr[i];
 		RLOG("Free " << tm);
 	}
 	if(1) {
-		for(int i = 0; i < NMIX; i++)
-			len[i] = Random(500);
-		TimeStop tm;
-		MixTest();
-		RLOG("Mix " << tm);
-	}
-	if(1) {
-		for(auto n : { 1, 2, 3, 4, 5, 6, 7, 8, 16 }) {
-			TimeStop tm;
-			Buffer<Thread> t(n);
-			for(int i = 0; i < n; i++)
-				t[i].Run(callback(MixTest));
-			for(int i = 0; i < n; i++)
-				t[i].Wait();
-			RLOG(n << " threads Mix " << tm);
+		for(auto m : { 50, 200, 500, 5000 }) {
+			for(int i = 0; i < NMIX; i++)
+				len[i] = Random(m);
+			for(auto n : { 1, 2, 3, 4, 8, 16 }) {
+				TimeStop tm;
+				Buffer<Thread> t(n);
+				for(int i = 0; i < n; i++)
+					t[i].Run(callback(MixTest));
+				for(int i = 0; i < n; i++)
+					t[i].Wait();
+				RLOG(n << " threads Mix " << m << ": " << tm);
+			}
 		}
 	}
 #endif
