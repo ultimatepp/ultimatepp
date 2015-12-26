@@ -9,6 +9,9 @@ NAMESPACE_UPP
 
 bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
 {
+	if ((width <= 0 && width != -1) || (height <= 0 && height != -1))
+		return false;
+		
 	Image img = Window_SaveCapture(windowId, left, top, width, height);
 	if (IsNull(img))
 		return false;
@@ -47,6 +50,9 @@ Rect GetDesktopRect() {
 }
 
 Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height) {
+	if ((width <= 0 && width != -1) || (height <= 0 && height != -1))
+		return Null;
+		
 	HWND wH = reinterpret_cast<HWND>(windowId);
 	if (wH == 0)
 		wH = GetDesktopWindow();
@@ -507,6 +513,9 @@ Rect GetDesktopRect() {
 
 Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height)
 {
+	if ((width <= 0 && width != -1) || (height <= 0 && height != -1))
+		return Null
+		
 	SetSysInfoX11ErrorHandler();
 	
 	_XDisplay *dpy = XOpenDisplay (NULL);
@@ -540,7 +549,7 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 		width	= rc.width;
 	if (height == -1)
 		height	= rc.height;
-	
+		
 	XImage *image = XGetImage(dpy, windowId, left, top, width, height, XAllPlanes(), ZPixmap);
 	if (image == NULL) {
 		XCloseDisplay(dpy);

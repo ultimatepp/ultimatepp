@@ -1048,7 +1048,7 @@ BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam)
 	return TRUE;
 }
 
-void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption)
+void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption, bool getAll)
 {
 	HANDLE hProcess;
 	DWORD dwThreadId, dwProcessId;
@@ -1058,6 +1058,11 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 	
 	EnumWindows(EnumGetWindowsList, (LPARAM)&hWnd);	
 	for (int i = 0; i < hWnd.GetCount(); ++i) {
+		if (!getAll) {
+			int style = GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWL_STYLE);
+			if (style & WS_ICONIC || style & WS_MINIMIZE)
+				continue;
+		}
 		String sstr;
 		hInstance = (HINSTANCE)GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWLP_HINSTANCE);
 		dwThreadId = GetWindowThreadProcessId(reinterpret_cast<HWND>(hWnd[i]), &dwProcessId);
@@ -1281,7 +1286,7 @@ Array<int64> GetWindowsList()
 	return ret;
 }
 
-void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &nameL, Array<String> &fileName, Array<String> &caption)
+void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &nameL, Array<String> &fileName, Array<String> &caption, bool getAll)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);

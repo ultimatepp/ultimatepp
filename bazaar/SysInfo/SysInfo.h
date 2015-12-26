@@ -56,7 +56,7 @@ bool GetMemoryInfo(int &memoryLoad, uint64 &totalPhys, uint64 &freePhys, uint64 
 // fileName: Window process program file name
 // title: Window title (caption)
 void GetWindowsList(Upp::Array<int64> &wid, Upp::Array<int64> &pid, Upp::Array<String> &name, 
-					Upp::Array<String> &fileName, Upp::Array<String> &title);
+					Upp::Array<String> &fileName, Upp::Array<String> &title, bool getAll = true);
 Upp::Array<int64> GetWindowsList();
 
 Rect GetDesktopRect();

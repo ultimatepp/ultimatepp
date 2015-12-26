@@ -19,6 +19,7 @@ file
 	SysInfo_in.h,
 	SysInfo.h,
 	os.cpp,
+	srcdoc.tpp,
 	screengrab.cpp,
 	mousekey.cpp,
 	cpuspeed.cpp,
