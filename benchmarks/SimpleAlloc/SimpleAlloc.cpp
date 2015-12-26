@@ -84,42 +84,24 @@ CONSOLE_APP_MAIN
 		}
 	}
 #endif
-	if(0) {
-		TimeStop tm;
-		for(int i = 0; i < NPASS; i++) {
-			for(int i = 0; i < 10; i++) {
-				int *p = new int;
-				pass.Add(p);
-				*p = i;
-			}
-			for(int i = 0; i < pass.GetCount(); i++) {
-				sum += *pass[i];
-				delete[] pass[i];
-			}
-			pass.Clear();
-		}
-		RLOG("Ref " << tm);
-		RDUMP(sum);
-	}
-	if(0) {
-		sum = 0;
-		TimeStop tm;
-		for(int i = 0; i < NPASS; i++) {
-			for(int i = 0; i < 10; i++) {
-				int *p = new int;
-				pass.Add(p);
-				*p = i;
-			}
-			for(int i = 0; i < pass.GetCount(); i++) {
-				sum += *pass[i];
-				delete[] pass[i];
-			}
-			pass.Clear();
-		}
-		RLOG("Ref2 " << tm);
-		RDUMP(sum);
-	}
 	if(1) {
+		TimeStop tm;
+		for(int i = 0; i < NPASS; i++) {
+			for(int i = 0; i < 10; i++) {
+				int *p = new int;
+				pass.Add(p);
+				*p = i;
+			}
+			for(int i = 0; i < pass.GetCount(); i++) {
+				sum += *pass[i];
+				delete[] pass[i];
+			}
+			pass.Clear();
+		}
+		RLOG("Pass Ref " << tm);
+		RDUMP(sum);
+	}
+	if(0) {
 		sum = 0;
 		TimeStop tm;
 		Thread t;
