@@ -34,7 +34,8 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 	empty[k] = NULL;
 	if(!page) { // try to reacquire pages freed remotely
 		LLOG("AllocK - trying FreeRemote");
-		FreeRemote();
+		if(remote_list)
+			FreeRemote();
 		if(work[k]->freelist) { // partially free page found
 			LLOG("AllocK - work available after FreeRemote " << k);
 			return work[k];
@@ -43,12 +44,12 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 		empty[k] = NULL;
 	}
 	if(!page)
-		for(int i = 0; i < NKLASS; i++) // Try hot local page of different klass
+		for(int i = 0; i < NKLASS; i++) // Try hot empty page of different klass
 			if(empty[i]) {
 				LLOG("AllocK - free page available for reformatting " << k);
 				page = empty[i];
 				empty[i] = NULL;
-				page->Format(k);
+				page->Format(k); // reformat the page for the required class
 				break;
 			}
 	if(!page) { // Attempt to find page in global storage of free pages
@@ -211,7 +212,8 @@ void Heap::Free(void *ptr)
 		ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
 #ifdef _MULTITHREADED
 		if(page->heap != this) { // freeing page allocated in different thread
-			page->heap->RemoteFree(ptr); // add to original heap's list of free pages to be properly freed later
+//			page->heap->RemoteFree(page->heap, ptr, Ksz(k)); // add to original heap's list of free pages to be properly freed later
+			RemoteFree(page->heap, ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
 			return;
 		}
 #endif
@@ -283,7 +285,7 @@ void Heap::Free32(void *ptr)
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(1) == 0);
 #ifdef _MULTITHREADED
 	if(page->heap != this) {
-		page->heap->RemoteFree(ptr);
+		RemoteFree(page->heap, ptr, 32);
 		return;
 	}
 #endif
@@ -313,7 +315,7 @@ void Heap::Free48(void *ptr)
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(2) == 0);
 #ifdef _MULTITHREADED
 	if(page->heap != this) {
-		page->heap->RemoteFree(ptr);
+		RemoteFree(page->heap, ptr, 32);
 		return;
 	}
 #endif
