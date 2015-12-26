@@ -3,8 +3,7 @@ topic "General description";
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
 [{_}%EN-US 
 [s1; [+184 GrabYourScreen]&]
-[s0; [2 This U`+`+ package includes simple utilities to take screenshots 
-for different purposes.]&]
+[s0; [2 Simple utilities to take screenshots for different purposes.]&]
 [s0;2 &]
 [s0; [2 Actual utilities are:]&]
 [s0;i150;O0; [2 Screen]&]
