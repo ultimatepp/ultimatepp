@@ -25,26 +25,31 @@ void MixTest()
 		delete[] mix[i];
 }
 
-Mutex         mtx;
-bool          finished;
-Vector<int *> pass;
-int           sum;
-int           count;
+Mutex           mtx;
+bool            finished;
+BiVector<int *> pass;
+int             sum;
+int             count;
+
+int             max_count;
 
 void Consumer()
 {
 	for(;;) {
-		Mutex::Lock __(mtx);
-		for(int i = 0; i < pass.GetCount(); i++) {
-			if(!pass[i]) {
-				pass.Clear();
-				return;
-			}
-			count++;
-			sum += *pass[i];
-			delete[] pass[i];
+		int *ptr;
+		{
+			Mutex::Lock __(mtx);
+			max_count = max(max_count, pass.GetCount());
+			if(!pass.GetCount())
+				continue;
+			ptr = pass.Tail();
+			pass.DropTail();
 		}
-		pass.Clear();
+		if(!ptr)
+			break;
+		count++;
+		sum += *ptr;
+		delete ptr;
 	}
 }
 
@@ -52,19 +57,7 @@ void Consumer()
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-#if 1
-	if(0) {
-		TimeStop tm;
-		for(int i = 0; i < N; i++)
-			ptr[i] = new byte[32];
-		RLOG("Alloc " << tm);
-	}
-	if(0) {
-		TimeStop tm;
-		for(int i = 0; i < N; i++)
-			delete[] ptr[i];
-		RLOG("Free " << tm);
-	}
+#if 0
 	if(1) {
 		for(auto m : { 50, 200, 500, 5000 }) {
 			for(int i = 0; i < NMIX; i++)
@@ -86,16 +79,17 @@ CONSOLE_APP_MAIN
 		for(int i = 0; i < NPASS; i++) {
 			for(int i = 0; i < 10; i++) {
 				int *p = new int;
-				pass.Add(p);
+				pass.AddHead(p);
 				*p = i;
 			}
 			for(int i = 0; i < pass.GetCount(); i++) {
-				sum += *pass[i];
+				sum += *pass.Tail();
+				pass.DropTail();
 				delete[] pass[i];
 			}
 			pass.Clear();
 		}
-		RLOG("Pass Ref " << tm);
+		RLOG("Pass0 " << tm);
 		RDUMP(sum);
 	}
 	if(1) {
@@ -104,21 +98,34 @@ CONSOLE_APP_MAIN
 		Thread t;
 		t.Run(callback(Consumer));
 		for(int i = 0; i < NPASS; i++) {
-			Mutex::Lock __(mtx);
 			for(int i = 0; i < 10; i++) {
 				int *p = new int;
-				pass.Add(p);
 				*p = i;
+				Mutex::Lock __(mtx);
+				pass.AddHead(p);
 			}
 		}
 		{
 			Mutex::Lock __(mtx);
-			pass.Add(NULL);
+			pass.AddHead(NULL);
 		}
 		t.Wait();
 		RLOG("Pass " << tm);
 		RDUMP(sum);
 		RDUMP(count);
 		RDUMP(MemoryUsedKb());
+		RDUMP(max_count);
+	}
+	if(0) {
+		TimeStop tm;
+		for(int i = 0; i < N; i++)
+			ptr[i] = new byte[32];
+		RLOG("Quick expand " << tm);
+	}
+	if(0) {
+		TimeStop tm;
+		for(int i = 0; i < N; i++)
+			delete[] ptr[i];
+		RLOG("Massive free " << tm);
 	}
 }
