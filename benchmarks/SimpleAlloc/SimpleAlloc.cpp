@@ -101,7 +101,7 @@ CONSOLE_APP_MAIN
 		RLOG("Pass Ref " << tm);
 		RDUMP(sum);
 	}
-	if(0) {
+	if(1) {
 		sum = 0;
 		TimeStop tm;
 		Thread t;
@@ -122,5 +122,6 @@ CONSOLE_APP_MAIN
 		RLOG("Pass " << tm);
 		RDUMP(sum);
 		RDUMP(count);
+		RDUMP(MemoryUsedKb());
 	}
 }
