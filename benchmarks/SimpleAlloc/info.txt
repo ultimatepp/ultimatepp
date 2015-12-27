@@ -83,3 +83,71 @@ Pass 8.985
 sum = 450000000
 count = 100000000
 MemoryUsedKb() = 0
+
+===================================
+
+****** msc
+
+1 threads Mix 50: 5.906
+2 threads Mix 50: 7.437
+3 threads Mix 50: 8.328
+4 threads Mix 50: 9.672
+8 threads Mix 50: 15.703
+16 threads Mix 50: 32.000
+1 threads Mix 200: 6.281
+2 threads Mix 200: 7.734
+3 threads Mix 200: 8.844
+4 threads Mix 200: 10.171
+8 threads Mix 200: 16.969
+16 threads Mix 200: 33.984
+1 threads Mix 500: 6.359
+2 threads Mix 500: 9.203
+3 threads Mix 500: 10.172
+4 threads Mix 500: 11.406
+8 threads Mix 500: 18.172
+16 threads Mix 500: 36.047
+1 threads Mix 5000: 9.156
+2 threads Mix 5000: 15.453
+3 threads Mix 5000: 17.484
+4 threads Mix 5000: 19.422
+8 threads Mix 5000: 29.969
+16 threads Mix 5000: 47.594
+Pass Ref 11.265
+sum = 450000000
+Pass 8.204
+sum = 450000000
+count = 100000000
+MemoryUsedKb() = 0
+
+* upp
+
+1 threads Mix 50: 0.781
+2 threads Mix 50: 0.844
+3 threads Mix 50: 0.984
+4 threads Mix 50: 1.031
+8 threads Mix 50: 1.656
+16 threads Mix 50: 2.954
+1 threads Mix 200: 0.875
+2 threads Mix 200: 0.938
+3 threads Mix 200: 1.000
+4 threads Mix 200: 1.062
+8 threads Mix 200: 1.641
+16 threads Mix 200: 3.438
+1 threads Mix 500: 1.343
+2 threads Mix 500: 1.406
+3 threads Mix 500: 1.610
+4 threads Mix 500: 1.671
+8 threads Mix 500: 2.594
+16 threads Mix 500: 5.110
+1 threads Mix 5000: 4.203
+2 threads Mix 5000: 4.141
+3 threads Mix 5000: 4.422
+4 threads Mix 5000: 4.703
+8 threads Mix 5000: 7.156
+16 threads Mix 5000: 14.078
+Pass Ref 1.672
+sum = 450000000
+Pass 4.391
+sum = 450000000
+count = 100000000
+MemoryUsedKb() = 17344
