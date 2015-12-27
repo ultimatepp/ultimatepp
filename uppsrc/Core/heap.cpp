@@ -42,30 +42,46 @@ void Heap::Init()
 	PROFILEMT(mutex);
 }
 
-void Heap::RemoteFree(Heap *heap, void *ptr, int size)
+void Heap::RemoteFree(void *ptr, int size)
 {
 	if(!initialized)
 		Init();
-	Out *o = out_ptr++;
-	o->heap = heap;
-	o->ptr = ptr;
+	ASSERT(out_ptr <= out + REMOTE_OUT_SZ / 16 + 1);
+	*out_ptr++ = ptr;
 	out_size += size;
 	if(out_size >= REMOTE_OUT_SZ)
 		RemoteFlush();
 }
 
-void Heap::RemoteFlush()
+void Heap::RemoteFlushRaw()
 {
 	if(!initialized)
 		Init();
-	Mutex::Lock __(mutex);
-	for(Out *o = out; o < out_ptr; o++) {
-		FreeLink *f = (FreeLink *)o->ptr;
-		f->next = o->heap->remote_list;
-		o->heap->remote_list = f;
+	for(void **o = out; o < out_ptr; o++) {
+		FreeLink *f = (FreeLink *)*o;
+		Heap *heap = ((Page *)((uintptr_t)f & ~(uintptr_t)4095))->heap;
+		f->next = heap->remote_list;
+		heap->remote_list = f;
 	}
 	out_size = 0;
 	out_ptr = out;
+}
+
+void Heap::RemoteFreeL(void *ptr)
+{
+	Mutex::Lock __(mutex);
+	RemoteFlushRaw();
+	DLink  *b = (DLink *)ptr;
+	Header *bh = b->GetHeader();
+	FreeLink *f = (FreeLink *)ptr;
+	f->next = bh->heap->remote_list;
+	bh->heap->remote_list = f;
+}
+
+void Heap::RemoteFlush()
+{
+	Mutex::Lock __(mutex);
+	RemoteFlushRaw();
 }
 
 void Heap::FreeRemoteRaw(FreeLink *list)

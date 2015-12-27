@@ -222,7 +222,7 @@ void Heap::LFree(void *ptr) {
 	}
 	if(bh->heap != this) {
 		LLOG("Remote large, heap " << (void *)bh->heap);
-		RemoteFree(bh->heap, ptr, REMOTE_OUT_SZ); 
+		RemoteFreeL(ptr);
 		return;
 	}
 	LLOG("--- LFree " << asString(bh->size));

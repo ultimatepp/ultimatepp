@@ -25,11 +25,11 @@ struct Heap {
 	};
 
 	struct Page { // small block Page
+		Heap        *heap;     // pointer to Heap
 		byte         klass;    // size class
 		byte         active;   // number of used (active) blocks in this page
-		Heap        *heap;     // pointer to Heap
 		FreeLink    *freelist; // single linked list of free blocks in Page
-		Page        *next;     // Pages are in free/full/empty lists
+		Page        *next;     // Pages are in work/full/empty lists
 		Page        *prev;
 
 		void         LinkSelf()            { Dbl_Self(this); }
@@ -107,8 +107,8 @@ struct Heap {
 		Heap *heap;
 		void *ptr;
 	};
-	Out       out[REMOTE_OUT_SZ / 16 + 1];
-	Out      *out_ptr;
+	void     *out[REMOTE_OUT_SZ / 16 + 1];
+	void    **out_ptr;
 	int       out_size;
 
 	byte      filler1[128]; // make next variable is in distinct cacheline
@@ -171,8 +171,10 @@ struct Heap {
 
 	static void Shrink();
 
-	void RemoteFree(Heap *heap, void *ptr, int size);
+	void RemoteFree(void *ptr, int size);
+	void RemoteFreeL(void *ptr);
 	void RemoteFlush();
+	void RemoteFlushRaw();
 	void Shutdown();
 	static void AuxFinalCheck();
 
