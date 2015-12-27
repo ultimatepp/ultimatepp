@@ -14,6 +14,7 @@ void TabCalculator::Init() {
 	
 	gridConstants.AddColumn(t_("Name"));
 	gridConstants.AddColumn(t_("Value"));
+	gridConstants.WhenLeftDouble = THISBACK(OnConstant);
 	
 	gridVariables.AddColumn(t_("Name"));
 	gridVariables.AddColumn(t_("Value"));
@@ -75,6 +76,15 @@ void TabCalculator::OnFunction() {
 	code.SetFocus();
 }
 
+void TabCalculator::OnConstant() {
+	int left, right;
+	code.GetSelection(left, right);
+	code.Remove(left, right - left);
+	String constant = gridConstants.Get(0);
+	code.Insert(left, constant);
+	code.SetCursor(left + constant.GetCount());
+	code.SetFocus();	
+}
 
 Tool *Construct2()
 {

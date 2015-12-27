@@ -98,6 +98,7 @@ public:
 	
 	void OnEnter();
 	void OnFunction();
+	void OnConstant();
 	void UpdateVars();
 		
 	void Jsonize(JsonIO& json) {
