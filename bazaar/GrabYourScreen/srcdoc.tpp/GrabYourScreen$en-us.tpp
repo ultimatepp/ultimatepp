@@ -30,4 +30,7 @@ defined window or a rectangle, and saves it in a .pdf file.]&]
 [s0;i150;O0; [2 Controls4U]&]
 [s0;i150;O0; [2 Functions4U]&]
 [s0;i150;O0; [2 SysInfo]&]
+[s0;2 &]
+[s0; [2 If anybody may want to add new features, all of them an even 
+new applications related with the subject will be acknowledged.]&]
 [s0;2 ]]
