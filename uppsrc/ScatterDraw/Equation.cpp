@@ -122,13 +122,15 @@ String FourierEquation::GetEquation(int numDigits) {
 	return ret;
 }
 
+static double degToRad(double deg) {return M_PI/180.;}
 
 EvalExpr::EvalExpr() {
 	noCase = false;
 	
 	constants.Add("PI", M_PI);
 	constants.Add("M_PI", M_PI);
-	constants.Add("e", exp(1.0));
+	constants.Add("e", M_E);
+	
 	functions.Add("abs", fabs);
 	functions.Add("ceil", ceil);
 	functions.Add("floor", floor);
@@ -142,6 +144,7 @@ EvalExpr::EvalExpr() {
 	functions.Add("sinh", sinh);
 	functions.Add("cosh", cosh);
 	functions.Add("tanh", tanh);
+	functions.Add("degToRad", degToRad);
 }
 
 double EvalExpr::Term(CParser& p) {
