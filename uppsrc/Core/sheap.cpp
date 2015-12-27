@@ -212,8 +212,7 @@ void Heap::Free(void *ptr)
 		ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
 #ifdef _MULTITHREADED
 		if(page->heap != this) { // freeing page allocated in different thread
-//			page->heap->RemoteFree(page->heap, ptr, Ksz(k)); // add to original heap's list of free pages to be properly freed later
-			RemoteFree(page->heap, ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
+			RemoteFree(ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
 			return;
 		}
 #endif
@@ -285,7 +284,7 @@ void Heap::Free32(void *ptr)
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(1) == 0);
 #ifdef _MULTITHREADED
 	if(page->heap != this) {
-		RemoteFree(page->heap, ptr, 32);
+		RemoteFree(ptr, 32);
 		return;
 	}
 #endif
@@ -315,7 +314,7 @@ void Heap::Free48(void *ptr)
 	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(2) == 0);
 #ifdef _MULTITHREADED
 	if(page->heap != this) {
-		RemoteFree(page->heap, ptr, 32);
+		RemoteFree(ptr, 48);
 		return;
 	}
 #endif
