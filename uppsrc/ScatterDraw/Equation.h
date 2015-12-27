@@ -234,6 +234,9 @@ public:
 	void GetVariable(int id, String &name, double &value)	{name = variables.GetKey(id); value = variables[id];}
 	int GetVariablesCount() 								{return variables.GetCount();}
 
+	VectorMap<String, double> constants;
+	VectorMap<String, double (*)(double)> functions;
+	
 private:
 	void *Functions_Get(CParser& p);
 	double Term(CParser& p);
@@ -245,10 +248,8 @@ private:
 	String MulStr(CParser& p, int numDigits);
 	String ExpStr(CParser& p, int numDigits);
 	bool noCase;
-	
-	VectorMap<String, double> constants;
+		
 	VectorMap<String, double> variables;
-	VectorMap<String, double (*)(double)> functions;
 };
 
 class UserEquation : public ExplicitEquation {
