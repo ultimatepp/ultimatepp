@@ -1,0 +1,23 @@
+uses
+	Core;
+
+library(AF_CPU) afCPU;
+
+library(AF_OPEN_CL) afOpenCL;
+
+library(AF_CUDA) afCUDA;
+
+options
+	;
+
+file
+	ArrayFire_demo.cpp,
+	matrix.cpp,
+	pi.cpp,
+	vectorize.cpp,
+	demo.cpp,
+	srcdoc.tpp;
+
+mainconfig
+	"" = "AF_CUDA";
+

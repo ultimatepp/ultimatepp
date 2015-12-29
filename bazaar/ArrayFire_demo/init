@@ -1,0 +1,4 @@
+#ifndef _ArrayFire_demo_icpp_init_stub
+#define _ArrayFire_demo_icpp_init_stub
+#include "Core/init"
+#endif

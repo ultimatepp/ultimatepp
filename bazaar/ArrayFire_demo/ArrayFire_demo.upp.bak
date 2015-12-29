@@ -1,0 +1,20 @@
+uses
+	Core;
+
+library(AF_CPU) afCPU;
+
+library(AF_CL) afOpenCL;
+
+options
+	;
+
+file
+	ArrayFire_demo.cpp,
+	pi.cpp,
+	progress.h,
+	vectorize.cpp,
+	helloworld.cpp;
+
+mainconfig
+	"" = "";
+
