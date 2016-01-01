@@ -35,5 +35,5 @@ else
 	make -C uppsrc -f uMakefile
 fi
 
-makcp uppsrc/ide.out ./theide
+cp uppsrc/ide.out ./theide
 cp uppsrc/umk.out ./umk
