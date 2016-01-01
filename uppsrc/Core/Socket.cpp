@@ -17,7 +17,7 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG("TCP " << x)
 
-IpAddrInfo::Entry IpAddrInfo::pool[COUNT];
+IpAddrInfo::Entry IpAddrInfo::pool[IpAddrInfo::COUNT];
 
 AuxMutex IpAddrInfoPoolMutex;
 

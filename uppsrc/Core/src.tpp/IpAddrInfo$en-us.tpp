@@ -14,17 +14,17 @@ topic "IpAddrInfo";
 [s3; &]
 [s1;:IpAddrInfo`:`:class: [@(0.0.255)3 class][3 _][*3 IpAddrInfo]&]
 [s2;%% This class encapsulates [^http`:`/`/en`.wikipedia`.org`/wiki`/Getaddrinfo^ getad
-drinfo] API, also providing optional non`-blocking behaviour 
-(using auxiliary threads). Note that there is currently no synchronization 
-available for this non`-blocking behaviour (it is not possible 
+drinfo] API, also providing optional non`-blocking behavior (using 
+auxiliary threads). Note that there is currently no synchronization 
+available for this non`-blocking behavior (it is not possible 
 to e.g. select on IpAddrInfo). Also note that IpAddrInfo has 
-some maximum number (currently 32) of slots used to resolve hosts 
-similtaneously, however when this number is exceeded, it only 
-means that InProgress tries to put the request to the slot (and 
-returns true if non available or if request is not resolved yet), 
-so from the client view, this limit has little impact. It also 
-means that client should release the slot as soon as possible, 
-using Clear method or by destructing IpAddrInfo.&]
+some maximum number (currently 256) of slots used to resolve 
+hosts simultaneously, however when this number is exceeded, it 
+only means that InProgress tries to put the request to the slot 
+(and returns true if non available or if request is not resolved 
+yet), so from the client view, this limit has little impact. 
+It also means that client should release the slot as soon as 
+possible, using Clear method or by destructing IpAddrInfo.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
