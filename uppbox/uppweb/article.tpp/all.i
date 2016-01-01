@@ -10,6 +10,10 @@ TOPIC("CallbackExample$en-us")
 #include "CallbackExample$en-us.tppi"
 END_TOPIC
 
+TOPIC("Core$en-us")
+#include "Core$en-us.tppi"
+END_TOPIC
+
 TOPIC("IDE$en-us")
 #include "IDE$en-us.tppi"
 END_TOPIC
@@ -36,6 +40,10 @@ END_TOPIC
 
 TOPIC("blitz$en-us")
 #include "blitz$en-us.tppi"
+END_TOPIC
+
+TOPIC("crawler$en-us")
+#include "crawler$en-us.tppi"
 END_TOPIC
 
 TOPIC("daniel$en-us")
