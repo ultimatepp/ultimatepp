@@ -32,7 +32,7 @@ String FileExtToMIME(const String& ext);
 String MIMEToFileExt(const String& mime);
 
 class IpAddrInfo {
-	enum { COUNT = 32 };
+	enum { COUNT = 128 };
 	struct Entry {
 		const char *host;
 		const char *port;
