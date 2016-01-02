@@ -312,7 +312,7 @@ void BenchHashMap(const char *file)
 #if defined(_DEBUG) || defined(flagMEMORYTEST)
 #define N 1
 #else
-#define N 10000
+#define N 1000
 #endif
 
 CONSOLE_APP_MAIN
@@ -323,7 +323,7 @@ CONSOLE_APP_MAIN
 	int argc = CommandLine().GetCount();
 	const Vector<String>& argv = CommandLine();
 	if(argc < 1)
-		fn = GetDataFile("main.cpp");
+		fn = GetDataFile("alice30.txt");
 	else
 		fn = argv[0];
 
