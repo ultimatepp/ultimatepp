@@ -61,7 +61,7 @@ void Heap::LinkFree(DLink *b, int size)
 }
 
 Heap::DLink *Heap::AddChunk(int reqsize)
-{
+{ // gets a free chunk 
 	DLink *ml;
 	if(lempty->next != lempty) {
 		ml = lempty->next;
@@ -159,34 +159,32 @@ void *Heap::TryLAlloc(int ii, size_t size)
 	return NULL;
 }
 
-int sBig__;
-
-void *Heap::LAlloc(size_t& size) {
+void *Heap::LAlloc(size_t& size)
+{ // allocate large or big block
 	LLOG("+++ LAlloc " << size);
 	ASSERT(size > 256);
 	if(!initialized)
 		Init();
-	if(size > MAXBLOCK) {
+	if(size > MAXBLOCK) { // big block allocation
 		Mutex::Lock __(mutex);
 		BigHdr *h = (BigHdr *)SysAllocRaw(size + BIGHDRSZ, size);
 		h->Link(big);
 		h->size = size = ((size + BIGHDRSZ + 4095) & ~4095) - BIGHDRSZ;
 		Header *b = (Header *)((byte *)h + BIGHDRSZ - sizeof(Header));
-		b->size = 0;
+		b->size = 0; // header contains large header with size = 0, to detect big during free
 		b->free = false;
-		sBig__++;
 		LLOG("Big alloc " << (void *)b->GetBlock());
 		return b->GetBlock();
 	}
-	int bini = SizeToBin((int)size);
-	size = BinSz[bini];
+	int bini = SizeToBin((int)size); // get the bin
+	size = BinSz[bini]; // get the real bin size
 	LLOG("Binned size " << asString(size));
-	void *ptr = TryLAlloc(bini, size);
+	void *ptr = TryLAlloc(bini, size); // try current working blocks first
 	if(ptr)
 		return ptr;
-	if(remote_list) {
-		FreeRemote();
-		ptr = TryLAlloc(bini, size);
+	if(remote_list) { // there might be blocks freed in other threads
+		FreeRemote(); // free them
+		ptr = TryLAlloc(bini, size); // try again
 		if(ptr) return ptr;
 	}
 	Mutex::Lock __(mutex);
@@ -207,7 +205,8 @@ void *Heap::LAlloc(size_t& size) {
 	return ptr;
 }
 
-void Heap::LFree(void *ptr) {
+void Heap::LFree(void *ptr)
+{ // free large or big block
 	DLink  *b = (DLink *)ptr;
 	Header *bh = b->GetHeader();
 	if(bh->size == 0) {
@@ -217,7 +216,6 @@ void Heap::LFree(void *ptr) {
 		h->Unlink();
 		LLOG("Big free " << (void *) ptr << " size " << h->size);
 		SysFreeRaw(h, h->size);
-		sBig__--;
 		return;
 	}
 	if(bh->heap != this) {
