@@ -88,34 +88,30 @@ struct Heap {
 
 	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
 	Page      full[NKLASS][1];   // circular list of pages that contain NO empty blocks
-	Page     *empty[NKLASS];     // last fully freed page per klass (hot) or global list of empty pages in aux
+	Page     *empty[NKLASS];     // last fully freed page per klass (hot reserve); shared global list of empty pages in aux
 	FreeLink *cache[NKLASS];     // hot frontend cache of small blocks
 	int       cachen[NKLASS];    // counter of small blocks that are allowed to be stored in cache
 
 	bool      initialized;
 
-	static word  BinSz[LBINS];
-	static byte  SzBin[MAXBLOCK / 8 + 1];
-	static byte  BlBin[MAXBLOCK / 8 + 1];
+	static word  BinSz[LBINS];   // block size for bin
+	static byte  SzBin[MAXBLOCK / 8 + 1]; // maps size/8 to bin
+	static byte  BlBin[MAXBLOCK / 8 + 1]; // Largest bin less or equal to size/8 (free -> bin)
 
-	DLink  large[1];
-	int    lcount;
-	DLink  freebin[LBINS][1];
-	static DLink lempty[1];
+	DLink  large[1]; // all large chunks that belong to this heap
+	int    lcount; // count of large chunks
+	DLink  freebin[LBINS][1]; // all free blocks by bin
+	static DLink lempty[1]; // shared global list of all empty large blocks
 
-	struct Out {
-		Heap *heap;
-		void *ptr;
-	};
 	void     *out[REMOTE_OUT_SZ / 16 + 1];
 	void    **out_ptr;
 	int       out_size;
 
-	byte      filler1[128]; // make next variable is in distinct cacheline
+	byte      filler1[128]; // make sure the next variable is in distinct cacheline
 	FreeLink *remote_list; // single linked list of remotely released pointers
 
-	static DLink big[1];        // List of all big blocks
-	static Heap  aux;           // Single global auxiliary heap to store orphans and global list of free pages
+	static DLink big[1]; // List of all big blocks
+	static Heap  aux;    // Single global auxiliary heap to store orphans and global list of free pages
 
 #ifdef HEAPDBG
 	static void  DbgFreeFill(void *ptr, size_t size);
