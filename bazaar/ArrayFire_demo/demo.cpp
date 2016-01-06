@@ -12,6 +12,8 @@
 using namespace af; 
  
 void Demo()  { 
+	printf("\n\nBasic operations in ArrayFire");
+	
     printf("Create a 5-by-3 matrix of random floats on the GPU\n");
     array A = randu(5,3, f32);
     af_print(A);
