@@ -17,11 +17,11 @@ CONSOLE_APP_MAIN
 		int device = 0;
         setDevice(device);
         info();
-
+        
+		Demo();
 		Pi_Bench();
 		MatMult_Bench();
 		Vectorize_Bench();
-		Demo();
     } catch (af::exception& e) {
         printf("\nError: %s\n", e.what());
     } catch (...) {
