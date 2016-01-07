@@ -16,10 +16,11 @@ topic "SpinLock";
 oveable][3 <][*3 SpinLock][3 >_]&]
 [s2;%% Lightweight busywaiting synchronization lock. Unlike Mutex, 
 SpinLock waits in a loop until resource becomes available, thus 
-avoiding costs of system call at the price of active wating. 
-SpinLock methods are also usually inlined (and trivial). SpinLock 
-is [* not] reentrant and also [* not] fair (if more threads are waiting 
-on the same SpinLock, the order of acquiring it is not specified).&]
+avoiding costs of contention system context switch at the price 
+of active waiting. SpinLock methods are also usually inlined 
+(and trivial). SpinLock is [* not] reentrant and also [* not] fair 
+(if more threads are waiting on the same SpinLock, the order 
+of acquiring it is not specified).&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
