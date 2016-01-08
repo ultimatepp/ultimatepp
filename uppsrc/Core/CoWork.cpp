@@ -45,13 +45,16 @@ bool CoWork::Pool::DoJob()
 		LLOG("Quit thread");
 		return true;
 	}
+#ifdef CPP_11
 	std::function<void ()> fn = std::move(job.fn);
 	if(fn) {
 		p.scheduled--;
 		p.lock.Leave();
 		fn();
 	}
-	else {
+	else
+#endif
+	{
 		Callback cb = job.cb;
 		p.scheduled--;
 		p.lock.Leave();
@@ -91,7 +94,11 @@ void CoWork::Pool::ThreadRun(int tno)
 	LLOG("CoWork thread #" << tno << " finished");
 }
 
+#ifdef CPP_11
 void CoWork::Do(const Callback *cb, const std::function<void ()> *fn)
+#else
+void CoWork::Do(const Callback *cb, void *)
+#endif
 {
 	LHITCOUNT("CoWork: Sheduling callback");
 #ifdef _MULTITHREADED
@@ -101,17 +108,21 @@ void CoWork::Do(const Callback *cb, const std::function<void ()> *fn)
 		LLOG("Stack full: running in the originating thread");
 		LHITCOUNT("CoWork: Stack full: Running in originating thread");
 		p.lock.Leave();
+#ifdef CPP_11
 		if(fn)
 			(*fn)();
 		else
+#endif
 			(*cb)();
 		return;
 	}
 	MJob& job = p.jobs[p.scheduled++];
 	job.work = this;
+#ifdef CPP_11
 	if(fn)
 		job.fn = std::move(*fn);
 	else
+#endif
 		job.cb = *cb;
 	todo++;
 	LLOG("Adding job; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
