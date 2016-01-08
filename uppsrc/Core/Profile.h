@@ -42,15 +42,14 @@ public:
 	HitCountInspector(const char *name, int hitcount = 0) : name(name), hitcount(hitcount) {}
 	~HitCountInspector();
 
-	void Step()              { Mutex::Lock __(mutex); hitcount++; }
-	void Add(int i)          { 	Mutex::Lock __(mutex); hitcount += i; }
+	void Step()              { hitcount++; }
+	void Add(int i)          { hitcount += i; }
 	void operator ++ ()      { Step(); }
 	void operator += (int i) { Add(i); }
 
 private:
 	const char *name;
 	int         hitcount;
-	Mutex       mutex;
 };
 
 #define RTIMING(x) \

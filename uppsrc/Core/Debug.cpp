@@ -123,7 +123,6 @@ String TimingInspector::Dump() {
 
 HitCountInspector::~HitCountInspector()
 {
-	Mutex::Lock __(mutex);
 	RLOG("HITCOUNT " << name << ": hit count = " << hitcount);
 }
 

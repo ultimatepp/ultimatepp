@@ -81,12 +81,16 @@ is running so far).&]
 [s4; &]
 [s5;:Thread`:`:ShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownThread
 s]()&]
-[s2;%% Sets the `"Shutdown`" flag on.&]
+[s2;%% Sets the `"Shutdown`" flag on, waits before all threads terminate, 
+then sets flag off again. It is meant to be used together with 
+IsShutdownThreads to terminate long running secondary service 
+threads. Main thread calls ShutdownThreads, secondary threads 
+test IsShutdownThreads and if true, exit.&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:IsShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh
 reads]()&]
-[s2;%% True if ShutdownThreads was called.&]
+[s2;%% True if ShutdownThreads is active.&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:AtExit: [@(0.0.255) static]_[@(0.0.255) void]_(`*[* AtExit]([@(0.0.255) void]_
