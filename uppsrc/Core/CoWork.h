@@ -4,12 +4,16 @@ class CoWork : NoCopy {
 	typedef StaticCriticalSection Lock;
 
 	struct MJob : Moveable<MJob> {
-		Callback cb;
-		CoWork  *work;
+		std::function<void ()> fn;
+		Callback               cb;
+		CoWork                *work;
 	};
+	
+	enum { SCHEDULED_MAX = 2048 };
 
 	struct Pool {
-		Vector<MJob>    jobs;
+		int             scheduled;
+		MJob            jobs[SCHEDULED_MAX];
 		int             waiting_threads;
 		Array<Thread>   threads;
 
@@ -30,15 +34,17 @@ class CoWork : NoCopy {
 	Semaphore waitforfinish;
 	int       todo;
 
+	void Do(const Callback *cb, const std::function<void ()> *fn);
+	
 public:
-	void     Do(Callback cb);
+	void     Do(const Callback& cb)                       { Do(&cb, NULL); }
 #ifdef CPP_11
-	void     Do(std::function<void ()> fn)            { Do(Callback(lambda(fn))); }
+	void     Do(const std::function<void ()>& fn)         { Do(NULL, &fn); }
 #endif
 
-	CoWork&  operator&(Callback cb)                   { Do(cb); return *this; }
+	CoWork&  operator&(const Callback& cb)                { Do(&cb, NULL); return *this; }
 #ifdef CPP_11
-	CoWork&  operator&(std::function<void ()> fn)     { Do(Callback(lambda(fn))); return *this; }
+	CoWork&  operator&(const std::function<void ()>& fn)  { Do(NULL, &fn); return *this; }
 #endif
 
 	void Finish();
