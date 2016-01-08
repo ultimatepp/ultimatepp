@@ -4,7 +4,9 @@ class CoWork : NoCopy {
 	typedef StaticCriticalSection Lock;
 
 	struct MJob : Moveable<MJob> {
+	#ifdef CPP_11
 		std::function<void ()> fn;
+	#endif
 		Callback               cb;
 		CoWork                *work;
 	};
@@ -34,7 +36,11 @@ class CoWork : NoCopy {
 	Semaphore waitforfinish;
 	int       todo;
 
+#ifdef CPP_11
 	void Do(const Callback *cb, const std::function<void ()> *fn);
+#else
+	void Do(const Callback *cb, void *);
+#endif
 	
 public:
 	void     Do(const Callback& cb)                       { Do(&cb, NULL); }
