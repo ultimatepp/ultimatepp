@@ -43,14 +43,14 @@ class CoWork : NoCopy {
 #endif
 	
 public:
-	void     Do(const Callback& cb)                       { Do(&cb, NULL); }
+	void     Do(const Callback& cb)                           { Do(&cb, NULL); }
 #ifdef CPP_11
-	void     Do(const std::function<void ()>& fn)         { Do(NULL, &fn); }
+	void     Do(const std::function<void ()>& lambda)         { Do(NULL, &lambda); }
 #endif
 
-	CoWork&  operator&(const Callback& cb)                { Do(&cb, NULL); return *this; }
+	CoWork&  operator&(const Callback& cb)                    { Do(&cb, NULL); return *this; }
 #ifdef CPP_11
-	CoWork&  operator&(const std::function<void ()>& fn)  { Do(NULL, &fn); return *this; }
+	CoWork&  operator&(const std::function<void ()>& lambda)  { Do(NULL, &lambda); return *this; }
 #endif
 
 	void Finish();
