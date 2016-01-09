@@ -31,25 +31,30 @@ submitted by Do in sequence.&]
 [s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s4;H0; &]
-[s5;:CoWork`:`:Do`(Callback`): [@(0.0.255) void]_[* Do]([_^Callback^ Callback]_[*@3 cb])&]
-[s5;:Upp`:`:CoWork`:`:Do`(std`:`:function`<void`(`)`>`): [@(0.0.255) void]_[* Do]([_^std`:`:function^ s
-td`::function]<[@(0.0.255) void]_()>_[*@3 lambda]) [*1 `[C`+`+ 11`]]&]
-[s2;%% Adds [%-*@3 cb] or [%-*@3 lambda] to be performed by any thread. 
- .&]
+[s3; &]
+[s5;:Upp`:`:CoWork`:`:Do`(const Upp`:`:Callback`&`): [@(0.0.255) void]_[* Do]([@(0.0.255) c
+onst]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 cb])&]
+[s5;:Upp`:`:CoWork`:`:Do`(const std`:`:function`<void`(`)`>`&`): [@(0.0.255) void]_[* Do](
+[@(0.0.255) const]_[_^std`:`:function^ std`::function]<[@(0.0.255) void]_()>`&_[*@3 lambda
+])&]
+[s2;%% Schedules [%-*@3 cb] or [%-*@3 lambda] to be executed. All changes 
+to data done before Do are visible in the scheduled code. The 
+order of execution or whether the code is execute in another 
+or calling thread is not specified.&]
 [s3;%% &]
 [s4; &]
-[s5;:CoWork`:`:operator`&`(Callback`): [_^CoWork^ CoWork][@(0.0.255) `&]_[* operator`&]([_^Callback^ C
-allback]_[*@3 cb])&]
-[s5;:Upp`:`:CoWork`:`:operator`&`(std`:`:function`<void`(`)`>`): [_^Upp`:`:CoWork^ CoWo
-rk][@(0.0.255) `&]_[* operator`&]([_^std`:`:function^ std`::function]<[@(0.0.255) void]_()
->_) [*1 `[C`+`+ 11`]]&]
-[s2;%% Same as Do([%-*@3 cb ][/ or] [%-*@3 lambda]); return `*this;&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Callback`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
+]_[* operator`&]([@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 cb])&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(const std`:`:function`<void`(`)`>`&`): [_^Upp`:`:CoWork^ C
+oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^std`:`:function^ std`::function
+]<[@(0.0.255) void]_()>`&_[*@3 lambda])&]
+[s2;%% Same as Do([%-*@3 cb ][/ or] [%-*@3 lambda]); returns `*this;&]
 [s3;%% &]
 [s4; &]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
-[s2;%% Waits until all jobs submitted using Do (or operator`&) are 
-finished.&]
+[s2;%% Waits until all jobs scheduled using Do (or operator`&) are 
+finished. All changes to data performed by scheduled threads 
+are visible after Finish.&]
 [s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Destructor detail]]}}&]
