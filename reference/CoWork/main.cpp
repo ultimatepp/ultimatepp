@@ -62,8 +62,8 @@ void App::Paint(Draw& w)
 		CoWork co;
 		for(int y = 0; y < sz.cy; y++) {
 		#ifdef CPP_11
-			RGBA *line = ib[y];
-			co & [=] {
+			co & [=, &ib] {
+				RGBA *line = ib[y];
 				Point c = sz / 2;
 				c = Point(int(sin((double)phase / 131) * c.x + c.x), int(sin((double)phase / 127) * c.y + c.y));
 				int yy = (y - c.y) * (y - c.y);

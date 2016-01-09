@@ -118,7 +118,7 @@ void WebCrawler::ShowPath()
 	for(;;) {
 		p.Add(url.GetKey(i));
 		if(i == 0)
-			break;   
+			break;
 		i = url[i];
 	}
 	for(int i = p.GetCount() - 1; i >= 0; i--)
