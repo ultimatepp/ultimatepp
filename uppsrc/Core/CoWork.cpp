@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LLOG(x)     // DLOG(x)
 #define LDUMP(x)    // DDUMP(x)
 
-#define LHITCOUNT(x) // RHITCOUNT(x)
+#define LHITCOUNT(x) RHITCOUNT(x)
 
 CoWork::Pool& CoWork::pool()
 {
@@ -37,6 +37,14 @@ CoWork::Pool::~Pool()
 	LLOG("Quit ended");
 }
 
+thread__ bool CoWork::Pool::finlock;
+
+void CoWork::FinLock()
+{
+	Pool::finlock = true;
+	pool().lock.Enter();
+}
+
 bool CoWork::Pool::DoJob()
 {
 	Pool& p = pool();
@@ -45,6 +53,7 @@ bool CoWork::Pool::DoJob()
 		LLOG("Quit thread");
 		return true;
 	}
+	finlock = false;
 #ifdef CPP_11
 	std::function<void ()> fn = std::move(job.fn);
 	if(fn) {
@@ -60,7 +69,8 @@ bool CoWork::Pool::DoJob()
 		p.lock.Leave();
 		cb();
 	}
-	p.lock.Enter();
+	if(!finlock)
+		p.lock.Enter();
 	if(--job.work->todo == 0) {
 		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(job.work) << ")");
 		job.work->waitforfinish.Release();
@@ -114,6 +124,8 @@ void CoWork::Do(const Callback *cb, void *)
 		else
 #endif
 			(*cb)();
+		if(Pool::finlock)
+			p.lock.Leave();
 		return;
 	}
 	MJob& job = p.jobs[p.scheduled++];

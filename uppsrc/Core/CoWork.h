@@ -19,11 +19,13 @@ class CoWork : NoCopy {
 		int             waiting_threads;
 		Array<Thread>   threads;
 
-		CriticalSection lock;
+		Mutex           lock;
 		Semaphore       waitforjob;
 
 		Pool();
 		~Pool();
+		
+		static thread__ bool finlock;
 
 		static bool DoJob();
 		static void ThreadRun(int tno);
@@ -52,6 +54,8 @@ public:
 #ifdef CPP_11
 	CoWork&  operator&(const std::function<void ()>& lambda)  { Do(NULL, &lambda); return *this; }
 #endif
+
+	static void FinLock();
 
 	void Finish();
 	
