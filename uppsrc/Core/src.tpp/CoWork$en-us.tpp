@@ -41,7 +41,7 @@ onst]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 cb])&]
 to data done before Do are visible in the scheduled code. The 
 order of execution or whether the code is execute in another 
 or calling thread is not specified.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Callback`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
 ]_[* operator`&]([@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 cb])&]
@@ -49,6 +49,15 @@ or calling thread is not specified.&]
 oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^std`:`:function^ std`::function
 ]<[@(0.0.255) void]_()>`&_[*@3 lambda])&]
 [s2;%% Same as Do([%-*@3 cb ][/ or] [%-*@3 lambda]); returns `*this;&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:FinLock`(`): [@(0.0.255) static] [@(0.0.255) void]_[* FinLock]()&]
+[s2;%% This functions is to be called in scheduled routine. Its purpose 
+is to serialize access to shared data at the end of the routine. 
+The rationale is that CoWork has to lock some mutex anyway after 
+scheduled code finishes, so FinLock can lock this mutex a bit 
+earlier, joining two mutex locks into single one. Of course, 
+as with all locks, execution of locked code should be short.&]
 [s3;%% &]
 [s4; &]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
