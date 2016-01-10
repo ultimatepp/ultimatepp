@@ -7,7 +7,7 @@ NAMESPACE_UPP
 #define LLOG(x)     // DLOG(x)
 #define LDUMP(x)    // DDUMP(x)
 
-#define LHITCOUNT(x) RHITCOUNT(x)
+#define LHITCOUNT(x) // RHITCOUNT(x)
 
 CoWork::Pool& CoWork::pool()
 {
