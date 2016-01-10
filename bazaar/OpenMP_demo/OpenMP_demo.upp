@@ -1,0 +1,20 @@
+uses
+	Core;
+
+options(MSC) /openmp;
+
+options(GCC) -fopenmp;
+
+link(GCC) -fopenmp;
+
+file
+	OpenMP_demo.cpp,
+	OpenMP_demo.h,
+	pi.cpp,
+	matrix.cpp,
+	miscellaneous.cpp,
+	srcdoc.tpp;
+
+mainconfig
+	"" = "MT SSE2";
+

@@ -1,0 +1,4 @@
+#ifndef _OpenMP_demo_icpp_init_stub
+#define _OpenMP_demo_icpp_init_stub
+#include "Core/init"
+#endif
