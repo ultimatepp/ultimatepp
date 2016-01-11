@@ -27,13 +27,10 @@ static StaticCriticalSection sPteLock;
 
 PteBase::Prec *PteBase::PtrAdd()
 {
-	sPteLock.Enter();
-	if(prec) {
+	CriticalSection::Lock __(sPteLock);
+	if(prec)
 		++prec->n;
-		sPteLock.Leave();
-	}
 	else {
-		sPteLock.Leave();
 		prec = new Prec;
 		prec->n = 1;
 		prec->ptr = this;
