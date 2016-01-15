@@ -168,6 +168,9 @@ void MenuItemBase::DrawMenuText(Draw& w, int x, int y, const String& s, Font f, 
 
 void MenuItemBase::PaintTopItem(Draw& w, int state) {
 	Size sz = GetSize();
+	String text = GetText();
+	Size isz = GetTextSize(text, StdFont());
+	Point tp = (sz - isz) / 2;
 	if(GUI_GlobalStyle() >= GUISTYLE_XP) {
 		bool opaque = InOpaqueBar();
 		bool opaque2 = opaque || state;
@@ -177,8 +180,6 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 		else
 		if(opaque)
 			w.DrawRect(0, 0, sz.cx, sz.cy, bg);
-		String text = GetText();
-		Size isz = GetTextSize(text, StdFont());
 		Color txt = opaque ? style->topitemtext[0] : GetLabelTextColor(this);
 		Color hltxt = opaque2 ? style->topitemtext[state] : GetLabelTextColor(this);
 		if(!opaque && state != 2) { // Fix issues when text color is not compatible with transparent background (e.g. Ubuntu Ambience)]
@@ -190,16 +191,14 @@ void MenuItemBase::PaintTopItem(Draw& w, int state) {
 			if(abs(g - Grayscale(hltxt)) < 70)
 				hltxt = dark ? White() : Black();
 		}
-		DrawMenuText(w, 6, (sz.cy - isz.cy) / 2, text, GetFont(), IsItemEnabled(), state,
+		DrawMenuText(w, tp.x, tp.y, text, GetFont(), IsItemEnabled(), state,
 		             txt, hltxt);
 	}
 	else {
 		w.DrawRect(sz, SColorFace);
 		static const ColorF b0[] = { (ColorF)1, SColorLight, SColorLight, SColorShadow, SColorShadow, };
 		static const ColorF b1[] = { (ColorF)1, SColorShadow, SColorShadow, SColorLight, SColorLight, };
-		String text = GetText();
-		Size isz = GetTextSize(text, StdFont());
-		DrawMenuText(w, 6, (sz.cy - isz.cy) / 2, text, GetFont(), IsItemEnabled(), false,
+		DrawMenuText(w, tp.x, tp.y, text, GetFont(), IsItemEnabled(), false,
 		             SColorMenuText, SColorHighlightText);
 		if(state)
 			DrawBorder(w, 0, 0, sz.cx, sz.cy, state == 2 ? b1 : b0);
@@ -496,7 +495,9 @@ bool SubMenuItem::HotKey(dword key)
 
 Size TopSubMenuItem::GetMinSize() const
 {
-	return AddFrameSize(GetTextSize(text, font) + Zsz(10, 5));
+	Size sz = Zsz(10, 5);
+	sz.cx = (sz.cx + 1) & 0xfffffffe; // We need even number, otherwise it looks asymmetric
+	return AddFrameSize(GetTextSize(text, font) + sz);
 }
 
 int  TopSubMenuItem::GetState()
