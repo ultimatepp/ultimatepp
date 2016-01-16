@@ -90,12 +90,8 @@ int String0::LCompare(const String0& s) const
 	int la = GetLength();
 	const char *b = s.Begin();
 	int lb = s.GetLength();
-	int l = min(la, lb);
-	for(int i = 0; i < l; i++) {
-		int q = (byte)a[i] - (byte)b[i];
-		if(q) return q;
-	}
-	return la - lb;
+	int q = fast_memcmp(a, b, min(la, lb));
+	return q ? q : la < lb ? -1 : 1;
 }
 
 char *String0::Alloc(int count, char& kind)
