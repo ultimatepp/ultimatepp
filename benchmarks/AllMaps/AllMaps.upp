@@ -2,6 +2,7 @@ uses
 	Core;
 
 file
+	test.txt,
 	AllMaps.cpp optimize_speed;
 
 mainconfig
