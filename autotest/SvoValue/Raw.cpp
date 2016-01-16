@@ -26,7 +26,7 @@ void CheckRawPickValue()
 	ASSERT(x2.GetCount() == 1);
 	ASSERT(x2[0] == 321);
 	ASSERT(x.GetCount() == 1);
-	ASSERT(x[0] == 321);	
+	ASSERT(x[0] == 321);
 }
 
 void CheckCreateRawValue()

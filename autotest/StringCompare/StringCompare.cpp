@@ -1,14 +1,21 @@
 #include <Core/Core.h>
 
-#define LDUMP(x)
-#define LLOGHEXDUMP(a, b)
+#define LDUMP(x)          // DUMP(x)
+#define LLOGHEXDUMP(a, b) // LOGHEXDUMP(a, b)
 
 using namespace Upp;
 
 #define N 10000000
 
+int RandomChar()
+{
+	return '0' + Random(64);
+}
+
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	for(int q = 0; q < N; q++) {
 		LDUMP(q);
 		if(q % 10000 == 0)
@@ -18,14 +25,16 @@ CONSOLE_APP_MAIN
 		int l2 = rand() % 40;
 		String a, b;
 		for(int i = 0; i < eq; i++)
-			a.Cat(rand() % 254 + 1);
+			a.Cat(RandomChar());
 		b = a;
 		ASSERT(a.Compare(b) == 0);
 		for(int i = 0; i < l1; i++)
-			a.Cat(rand() % 254 + 1);
+			a.Cat(RandomChar());
 		for(int i = 0; i < l2; i++)
-			b.Cat(rand() % 254 + 1);
+			b.Cat(RandomChar());
 		int l = min(l1, l2) + eq;
+		LDUMP(a);
+		LDUMP(b);
 		LLOGHEXDUMP(a, a.GetLength());
 		LLOGHEXDUMP(b, b.GetLength());
 		LDUMP(a.Compare(b));
@@ -35,4 +44,6 @@ CONSOLE_APP_MAIN
 		ASSERT(a.Compare(a) == 0);
 		ASSERT(b.Compare(b) == 0);
 	}
+
+	LOG("------------ OK");
 }
