@@ -1,9 +1,5 @@
 class Nuller;
 
-#if defined(CPU_X86) && (defined(COMPILER_MSC) || defined(COMPILER_GCC))
-#define FAST_STRING_COMPARE
-#endif
-
 int wstrlen(const wchar *s);
 
 #ifdef PLATFORM_POSIX
