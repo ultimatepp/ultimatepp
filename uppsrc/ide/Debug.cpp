@@ -424,6 +424,12 @@ String Ide::GetLogPath()
 void Ide::OpenLog()
 {
 	String p = GetLogPath();
+	String path = NormalizePath(p);
+	if(!designer && path == editfile) {
+		History(-1);
+		return;
+	}
+	AddHistory();
 	if(FileExists(p))
 		EditFile(p);
 }
