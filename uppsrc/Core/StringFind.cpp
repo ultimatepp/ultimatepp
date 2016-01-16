@@ -37,7 +37,7 @@ int t_find(const char *ptr, int slen, const char *p, int len, int from)
 	const char *e = s + l;
 	if(len <= 8) {
 		if(len > 4) {
-			len -= 4; 
+			len -= 4;
 			int32 p0 = Peek32le(p);
 			int32 p1 = Peek32le(p + len);
 			while(s <= e) {
