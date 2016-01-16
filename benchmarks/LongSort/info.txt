@@ -1,0 +1,12 @@
+TIMING std::sort      : 542.00 ms - 542.00 ms (542.00 ms / 1 ), min: 542.00 ms, max: 542.00 ms, nesting: 1 - 1
+TIMING Sort           : 443.00 ms - 443.00 ms (443.00 ms / 1 ), min: 443.00 ms, max: 443.00 ms, nesting: 1 - 1
+
+TIMING std::sort      : 534.00 ms - 534.00 ms (534.00 ms / 1 ), min: 534.00 ms, max: 534.00 ms, nesting: 1 - 1
+TIMING Sort           : 384.00 ms - 384.00 ms (384.00 ms / 1 ), min: 384.00 ms, max: 384.00 ms, nesting: 1 - 1
+
+-------------------------------
+TIMING std::sort      : 481.00 ms - 481.00 ms (481.00 ms / 1 ), min: 481.00 ms, max: 481.00 ms, nesting: 1 - 1
+TIMING Sort           : 296.00 ms - 296.00 ms (296.00 ms / 1 ), min: 296.00 ms, max: 296.00 ms, nesting: 1 - 1
+
+TIMING std::sort      : 443.00 ms - 443.00 ms (443.00 ms / 1 ), min: 443.00 ms, max: 443.00 ms, nesting: 1 - 1
+TIMING Sort           : 394.00 ms - 394.00 ms (394.00 ms / 1 ), min: 394.00 ms, max: 394.00 ms, nesting: 1 - 1
