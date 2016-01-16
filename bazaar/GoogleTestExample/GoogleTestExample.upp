@@ -1,0 +1,16 @@
+description "Example of usage Google Test\377";
+
+uses
+	plugin/gtest,
+	Core;
+
+file
+	Tests readonly separator,
+	StringTest.h,
+	StringTest.cpp,
+	Init readonly separator,
+	main.cpp;
+
+mainconfig
+	"" = "";
+
