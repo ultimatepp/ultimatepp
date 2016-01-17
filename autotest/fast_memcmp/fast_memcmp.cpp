@@ -13,12 +13,16 @@ CONSOLE_APP_MAIN
 			LOG(i);
 		String a('x', Random(10));
 		String b('x', Random(10));
-		a << AsString(Random());
-		b << AsString(Random());
+		a << FormatIntBase(Random(), 2) << FormatIntBase(Random(), 2) << FormatIntBase(Random(), 2);
+		b << FormatIntBase(Random(), 2) << FormatIntBase(Random(), 2) << FormatIntBase(Random(), 2);
 		
 		int n = min(a.GetLength(), b.GetLength());
 		
-		ASSERT(sgn(fast_memcmp((byte *)~a, (byte *)~b, n)) == sgn(memcmp((byte *)~a, (byte *)~b, n)));
+		ASSERT(sgn(fast_memcmp(~a, ~b, n)) == sgn(memcmp(~a, ~b, n)));
+
+		ASSERT(sgn(a.Compare(b)) == sgn(strcmp(~a, ~b)));
+
+		ASSERT(sgn(a.Compare(a)) == 0);
 	}
 	
 	LOG("------------ OK");
