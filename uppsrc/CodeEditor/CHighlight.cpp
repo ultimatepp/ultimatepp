@@ -157,7 +157,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 			hls.Put(hl_style[INK_NORMAL]);
 		}
-		if(*p == '#' && findarg(highlight, HIGHLIGHT_JAVASCRIPT, HIGHLIGHT_CSS, HIGHLIGHT_JSON) < 0) {
+		if(*p == '#' && findarg(highlight, HIGHLIGHT_CPP, HIGHLIGHT_CS) >= 0) {
 			static Index<String> macro;
 			ONCELOCK {
 				static const char *pd[] = {
@@ -191,7 +191,8 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
 		if(linecomment && linecont || pair == MAKELONG('/', '/') &&
-		   highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON) {
+		   highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON ||
+		   highlight == HIGHLIGHT_PHP && *p == '#') {
 			while(p < e)
 				p = DoComment(hls, p, e);
 			is_comment = true;
