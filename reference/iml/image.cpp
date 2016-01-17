@@ -12,7 +12,9 @@ struct App : TopWindow {
 		Size sz = GetSize();
 		w.DrawRect(sz, SGray);
 		Size isz = MyImg::Smiley().GetSize();
-		w.DrawImage((sz.cx - isz.cx) / 2, (sz.cy - isz.cy) / 2, MyImg::Smiley());
+		w.DrawImage(0, 0, MyImg::Smiley());
+		w.DrawImage(isz.cx, 0, MyImg::Get("Smiley"));
+		w.DrawImage(0, isz.cy, GetImlImage("MyImg:Smiley"));
 	}
 
 	App()
