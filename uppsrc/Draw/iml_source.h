@@ -95,6 +95,11 @@ UPP::Image IMAGECLASS::Get(const char *s)
 	return Iml().Get(Find(s));
 }
 
+UPP::Image IMAGECLASS::Get(const UPP::String& s)
+{
+	return Iml().Get(Find(s));
+}
+
 int   IMAGECLASS::Find(const UPP::String& s)
 {
 	return Iml().Find(s);
