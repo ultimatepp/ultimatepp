@@ -91,7 +91,7 @@ int String0::LCompare(const String0& s) const
 	const char *b = s.Begin();
 	int lb = s.GetLength();
 	int q = fast_memcmp(a, b, min(la, lb));
-	return q ? q : la < lb ? -1 : 1;
+	return q ? q : SgnCompare(la, lb);
 }
 
 char *String0::Alloc(int count, char& kind)
