@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#define N 100000000
+#define N 10000000
 
 CONSOLE_APP_MAIN
 {
