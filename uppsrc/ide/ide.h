@@ -985,6 +985,8 @@ public:
 	void      ConsoleLine(const String& line, bool assist = false);
 	void      ConsoleRunEnd();
 	void      SyncErrorsMessage();
+	void      CopyError(bool all);
+	void      ErrorMenu(Bar& bar);
 	void      ShowError();
 	void      ShowFound();
 	void      CopyFound(bool all);
