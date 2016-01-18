@@ -419,6 +419,7 @@ Ide::Ide()
 	SetupError(error, "Message");
 	error.AddIndex("NOTES");
 	error.ColumnWidths("207 41 834");
+	error.WhenBar = THISBACK(ErrorMenu);
 
 	SetupError(ffound, "Source");
 	ffound.ColumnWidths("207 41 834");

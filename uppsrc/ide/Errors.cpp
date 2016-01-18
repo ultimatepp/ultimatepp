@@ -592,6 +592,25 @@ void Ide::FFoundMenu(Bar& bar)
 	bar.Add("Copy all", THISBACK1(CopyFound, true));
 }
 
+void Ide::CopyError(bool all)
+{
+	int c = error.GetCursor();
+	if(!all && c < 0)
+		return;
+	String txt;
+	int h = all ? error.GetCount() : error.GetCursor() + 1;
+	for(int i = all ? 0 : c; i < h; i++)
+		txt << error.Get(i, 0) << " (" << error.Get(i, 1) << "): "
+		    << error.Get(i, 2).To<AttrText>().ToString() << "\r\n";
+	WriteClipboardText(txt);
+}
+
+void Ide::ErrorMenu(Bar& bar)
+{
+	bar.Add(error.IsCursor(), "Copy", THISBACK1(CopyError, false));
+	bar.Add("Copy all", THISBACK1(CopyError, true));
+}
+
 void Ide::SelError()
 {
 	if(removing_notes)
