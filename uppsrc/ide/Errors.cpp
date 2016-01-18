@@ -2,8 +2,12 @@
 
 bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& f)
 {
-	VectorMap<String, String> bm = GetMethodVars(method);
-	bool is_java = (bm.Get("BUILDER", Null) == "JDK");
+	if(!cache.init) {
+		VectorMap<String, String> bm = GetMethodVars(method);
+		cache.is_java = (bm.Get("BUILDER", Null) == "JDK");
+		cache.upp = GetUppDir();
+		cache.init = true;
+	}
 	const char *s = ln;
 	while(*s == ' ' || *s == '\t')
 		s++;
@@ -25,44 +29,44 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				e--;
 			file.Trim(e);
 			file = TrimLeft(file);
-			String upp = GetUppDir();
-		#ifdef PLATFORM_WIN32
-			if(file[0] == '\\' || file[0] == '/')
-				file = String(upp[0], 1) + ':' + file;
-		#endif
-			if(!IsFullPath(file) && *file != '\\' && *file != '/') {
-				if(cache.wspc_paths.IsEmpty()) {
-					::Workspace  wspc;
-					wspc.Scan(main);
-					for(int i = 0; i < wspc.GetCount(); i++)
-						cache.wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
-				}
-				for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
-					String path = AppendFileName(cache.wspc_paths[i], file);
-					int q = cache.ff.Find(path);
-					if(q >= 0) {
-						if(cache.ff[q]) {
-							file = path;
-							break;
-						}
+
+			int q = cache.file.Find(file);
+			if(q < 0) {
+				String file0 = file;
+			#ifdef PLATFORM_WIN32
+				if(file[0] == '\\' || file[0] == '/')
+					file = String(cache.upp[0], 1) + ':' + file;
+			#endif
+				bool exists = false;
+				if(!IsFullPath(file) && *file != '\\' && *file != '/') {
+					if(cache.wspc_paths.IsEmpty()) {
+						::Workspace  wspc;
+						wspc.Scan(main);
+						for(int i = 0; i < wspc.GetCount(); i++)
+							cache.wspc_paths.Add(GetFileDirectory(PackagePath(wspc[i])));
 					}
-					else {
+					for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
+						String path = AppendFileName(cache.wspc_paths[i], file);
 						bool b = false;
 						String ext = ToLower(GetFileExt(path));
 						if(findarg(ext, ".obj", ".lib", ".o", ".so", ".a", ".", "") < 0) {
 							FindFile ff;
-							b = ff.Search(path) && ff.IsFile();
-						}
-						cache.ff.Add(path, b);
-						if(b) {
-							file = path;
-							break;
+							if(ff.Search(path) && ff.IsFile()) {
+								file = path;
+								exists = true;
+								break;
+							}
 						}
 					}
 				}
+				file = FollowCygwinSymlink(file);
+				if(!IsFullPath(file) || !exists && !FileExists(file) || !IsTextFile(file))
+					file = Null;
+				cache.file.Add(file0, file);
 			}
-			file = FollowCygwinSymlink(file);
-			if(IsFullPath(file) && FileExists(file) && IsTextFile(file)) {
+			else
+				file = cache.file[q];
+			if(file.GetCount()) {
 				f.file = file;
 				while(*s && !IsDigit(*s)) {
 					if(*s == '/' || IsAlpha(*s))
@@ -92,7 +96,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				Vector<String> conf = SplitFlags(mainconfigparam, true);
 				String uppout = GetVar("OUTPUT");
 				int upplen = uppout.GetLength();
-				if(is_java && f.file.GetLength() > upplen
+				if(cache.is_java && f.file.GetLength() > upplen
 				&& !MemICmp(f.file, uppout, upplen) && f.file[upplen] == DIR_SEP) { // check for preprocessed file
 					FileIn fi(f.file);
 					if(fi.IsOpen()) {
@@ -145,6 +149,9 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				}
 				return f.lineno > 0;
 			}
+			else
+			if(*s == ':' || !strchr(s, '/') && strchr(s, '\\')) // safe to say this is final
+				return false;
 			else
 				f.file.Cat(*s); // File is not complete, e.g.: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Vc\Include\string.h(186)
 		}
