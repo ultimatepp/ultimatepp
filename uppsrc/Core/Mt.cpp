@@ -415,6 +415,7 @@ void WriteMemoryBarrier() {
 
 #else
 
+#ifndef COMPILER_GCC
 void ReadMemoryBarrier()
 {
 	static Atomic x;
@@ -424,6 +425,7 @@ void ReadMemoryBarrier()
 void WriteMemoryBarrier() {
 	ReadMemoryBarrier();
 }
+#endif
 
 #endif
 

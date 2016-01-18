@@ -5,8 +5,15 @@ using namespace Upp;
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+
 #ifdef CPU_64
 	RLOG("CPU_64");
+#endif
+#ifdef CPU_UNALIGNED
+	RLOG("CPU_UNALIGNED");
+#endif
+#ifdef CPU_LE
+	RLOG("CPU_LE");
 #endif
 #ifdef CPP_11
 	RLOG("CPP_11");
