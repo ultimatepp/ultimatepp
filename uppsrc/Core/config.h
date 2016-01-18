@@ -81,9 +81,18 @@
 	#elif __arm__
 		#define CPU_32 1
 		#define CPU_ARM 1
-		#define CPU_LE 1
-		#define CPU_LITTLE_ENDIAN 1
-		#define CPU_ALIGNED 1
+		#ifdef __ARM_BIG_ENDIAN
+			#define CPU_BE 1
+			#define CPU_BIG_ENDIAN 1
+		#else
+			#define CPU_LE 1
+			#define CPU_LITTLE_ENDIAN 1
+		#endif
+		#ifdef __ARM_FEATURE_UNALIGNED
+			#define CPU_UNALIGNED 1
+		#else
+			#define CPU_ALIGNED 1
+		#endif
 	#elif __bfin
 		#define CPU_32 1
 		#define CPU_BLACKFIN
