@@ -602,7 +602,7 @@ void Ide::SelError()
 			int sc = error.GetScroll();
 			removing_notes = true;
 			for(int i = error.GetCount() - 1; i >= 0; i--)
-				if(error.Get(i, "NOTES") == "0") 
+				if(error.Get(i, "NOTES") == "0")
 					error.Remove(i);
 			removing_notes = false;
 			error.ScrollTo(sc);
@@ -627,7 +627,7 @@ void Ide::SelError()
 			}
 		}
 		GoToError(error);
-	}	
+	}
 }
 
 void Ide::ShowError()
