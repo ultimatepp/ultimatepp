@@ -961,10 +961,13 @@ public:
 //	Console&  GetConsole();
 
 	struct FindLineErrorCache {
-		VectorMap<String, bool> ff;
-		Vector<String>          wspc_paths;
+		VectorMap<String, String> file;
+		Vector<String>            wspc_paths;
+		String                    upp;
+		bool                      is_java;
+		bool                      init;
 		
-		void Clear()            { ff.Clear(); wspc_paths.Clear(); }
+		void Clear()            { init = false; file.Clear(); wspc_paths.Clear(); }
 	};
 
 	struct ErrorInfo {

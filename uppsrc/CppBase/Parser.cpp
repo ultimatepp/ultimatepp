@@ -1716,7 +1716,6 @@ void Parser::Do()
 						if(q >= 0) { // class variable definition like: int Ctrl::EventLoop;
 							ScopeCat(scope, d.name.Mid(0, q));
 							current_scope = scope; // temporary until ';'
-							LOG("Decl " << current_scope);
 							name = d.name.Mid(q + 2);
 							member_type = CLASSVARIABLE;
 						}
