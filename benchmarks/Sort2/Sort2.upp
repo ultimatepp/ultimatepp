@@ -1,0 +1,11 @@
+description "Benchmarking ugly sort cases\377";
+
+uses
+	Core;
+
+file
+	Sort2.cpp;
+
+mainconfig
+	"" = "";
+
