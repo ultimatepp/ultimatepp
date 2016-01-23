@@ -1,5 +1,8 @@
 description "Google C++ unite test framework\377";
 
+uses
+	Core;
+
 library(POSIX) pthread;
 
 file

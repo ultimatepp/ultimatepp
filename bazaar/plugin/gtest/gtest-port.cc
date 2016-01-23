@@ -31,6 +31,8 @@
 
 #include "internal/gtest-port.h"
 
+#include <Core/Core.h>
+
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -289,7 +291,14 @@ void Mutex::ThreadSafeLazyInit() {
         // If critical_section_init_phase_ was 0 before the exchange, we
         // are the first to test it and need to perform the initialization.
         owner_thread_id_ = 0;
+        
+        // ----------------------------------------------------------
+        // TODO FIXME: UPP leak ignoring
+        Upp::MemoryIgnoreLeaksBegin();
         critical_section_ = new CRITICAL_SECTION;
+        Upp::MemoryIgnoreLeaksEnd();
+        // ----------------------------------------------------------
+        
         ::InitializeCriticalSection(critical_section_);
         // Updates the critical_section_init_phase_ to 2 to signal
         // initialization complete.
@@ -531,8 +540,8 @@ class ThreadLocalRegistryImpl {
   // Returns map of thread local instances.
   static ThreadIdToThreadLocals* GetThreadLocalsMapLocked() {
     mutex_.AssertHeld();
-    static ThreadIdToThreadLocals* map = new ThreadIdToThreadLocals;
-    return map;
+    static ThreadIdToThreadLocals map;
+    return &map;
   }
 
   // Protects access to GetThreadLocalsMapLocked() and its return value.
