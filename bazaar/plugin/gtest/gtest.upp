@@ -1,4 +1,4 @@
-description "Google C++ unite test framework\377";
+description "Google C++ unite test framework\3770,128,128";
 
 uses
 	Core;

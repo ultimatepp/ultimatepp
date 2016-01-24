@@ -1,0 +1,28 @@
+template "Unit test package with Google Test" main;
+
+option "Main package" mainPackage = 1;
+
+@@<:PACKAGE:>.cpp
+??mainPackage
+#include <plugin/gtest/gtest.h>
+
+int main(int argc, char *argv[])
+{
+	testing::InitGoogleTest(&argc, argv);
+	
+	return RUN_ALL_TESTS();
+}<:.:>
+
+@@<:PACKAGE:>.upp
+uses
+	plugin/gtest;
+
+file
+	Tests readonly separator<:?mainPackage == 0:>;<:.:><:?mainPackage:>,
+	Init readonly separator,
+	<:PACKAGE:>.cpp
+
+
+mainconfig
+	"" = "";
+<:.:>

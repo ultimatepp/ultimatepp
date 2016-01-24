@@ -1,4 +1,4 @@
-description "Example of usage Google Test\377";
+description "Unit test package that shows how Google Test works with U++\377";
 
 uses
 	plugin/gtest,
