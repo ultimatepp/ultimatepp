@@ -11,6 +11,5 @@ file
 	UWord.iml;
 
 mainconfig
-	"" = "GUI",
-	"" = "GUI .NOGTK";
+	"" = "GUI";
 

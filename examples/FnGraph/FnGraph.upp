@@ -1,0 +1,12 @@
+description "Drawing a graph of text expression\377";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
