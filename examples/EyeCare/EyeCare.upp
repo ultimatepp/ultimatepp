@@ -1,4 +1,4 @@
-description "Tray application that reminds user to take care about his eyes";
+description "Tray application that reminds user to take care about his eyes\377";
 
 uses
 	CtrlLib;

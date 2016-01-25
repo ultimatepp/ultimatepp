@@ -5,7 +5,7 @@
 #include <vector>
 
 /**
- * Java simply memory manager.
+ * Java simple memory manager.
  */
 template <class T>
 class MemoryManager {
