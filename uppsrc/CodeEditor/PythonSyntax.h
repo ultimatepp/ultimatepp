@@ -4,7 +4,7 @@ private:
 		enum Type {
 			Tab = 0,
 			Space,
-			None
+			Unknown
 		};
 	};
 

@@ -166,7 +166,7 @@ int PythonSyntax::CalculateLineIndetations(const WString& line, Identation::Type
 
 PythonSyntax::Identation::Type PythonSyntax::FindIdentationType(CodeEditor& editor, const WString& line)
 {
-	Identation::Type type = Identation::None;
+	Identation::Type type = Identation::Unknown;
 	if(line.StartsWith("\t"))
 		type = Identation::Tab;
 	else
