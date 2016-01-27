@@ -182,4 +182,5 @@ DbgDisas::DbgDisas()
 	sb.WhenScroll = THISBACK(Scroll);
 	low = high = 0;
 	mode64 = false;
+	Clear();
 }
