@@ -109,7 +109,7 @@ void AutoSetup()
 		owc.dir <<= owcdir;
 
 	owc.method <<= "OWC";
-	owc.create <<= !IsNull(owc.dir)  && !FileExists(AppendFileName(dir, "OWC.bm"));	
+	owc.create <<= !IsNull(owc.dir)  && !FileExists(AppendFileName(dir, "OWC.bm"));
 
 
 	String vs = GetWinRegString("ProductDir", "SOFTWARE\\Microsoft\\VisualStudio\\7.1\\Setup\\VC");
