@@ -23,7 +23,7 @@ double ExpressionEvaluator::Expression()
 		if(p.Char('-'))
 			y = y - Term(); // subtract another term
 		else
-			return x; // no more + - operators
+			return y; // no more + - operators
 }
 
 double ExpressionEvaluator::Term()
@@ -104,9 +104,13 @@ double Evaluate(const char *s, double x)
 
 struct FnGraph : public TopWindow {
 	virtual void Paint(Draw& w);
-
+	
 	EditString expression; // function to display
-
+	
+	void RefreshExpression() { Refresh(); }
+	
+	typedef FnGraph CLASSNAME;
+	
 	FnGraph();
 };
 
@@ -114,7 +118,7 @@ FnGraph::FnGraph()
 {
 	Title("Graph of a function");
 	Add(expression.TopPos(0).HSizePos()); // place widget to the top, horizontally fill the window
-	expression << [&] { Refresh(); }; // when expression changes, repaint the graph
+	expression << THISBACK(RefreshExpression); // when expression changes, repaint the graph
 	Sizeable().Zoomable(); // make the window resizable
 }
 
