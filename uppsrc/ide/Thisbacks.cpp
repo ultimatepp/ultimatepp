@@ -4,6 +4,8 @@ bool IsCb(String t) {
 	int q = t.Find('<');
 	if(q >= 0)
 		t.Trim(q);
+	if(t.StartsWith("Upp::"))
+		t = t.Mid(5);
 	return  t == "Callback" || t == "Callback1" || t == "Callback2" || t == "Callback3" ||
 	        t == "Gate" || t == "Gate1" || t == "Gate2";
 }
@@ -56,6 +58,7 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 	const Array<CppItem>& n = CodeBase()[q];
 	for(int i = 0; i < n.GetCount(); i++)
 		nname.FindAdd(n[i].name);
+	DDUMP(nname);
 	Index<String> done;
 	GatherCallbacks("", done, scope, PRIVATE);
 }

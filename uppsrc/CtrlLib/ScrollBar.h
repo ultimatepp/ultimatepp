@@ -166,6 +166,8 @@ public:
 protected:
 	Ctrl      *box;
 	ParentCtrl the_box;
+	
+	
 	StaticRect box_bg;
 	int        box_type;
 	SizeGrip   grip;
