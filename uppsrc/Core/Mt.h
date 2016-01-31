@@ -149,6 +149,7 @@ inline void WriteMemoryBarrier() {
 #endif
 }
 #elif defined(COMPILER_GCC)
+#ifndef PLATFORM_WIN32
 inline void ReadMemoryBarrier()
 {
 	__sync_synchronize();
@@ -158,6 +159,7 @@ inline void WriteMemoryBarrier()
 {
 	__sync_synchronize();
 }
+#endif
 #endif
 
 #ifdef CPU_BLACKFIN
