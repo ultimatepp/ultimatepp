@@ -183,6 +183,7 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 	int plotLeft, plotTop, rectWidth, rectHeight;	
 	int loclegendRowSpacing;
 	if (legendAnchor == LEGEND_TOP) {
+		plotLeft = plotTop = 0;
 		plotW = (size.cx - hPlotLeft - hPlotRight)*scale;
 		plotH = scale*(vPlotTop - 1) + titleHeight;		
 		rowIncSign = -1;
