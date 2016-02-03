@@ -58,7 +58,6 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 	const Array<CppItem>& n = CodeBase()[q];
 	for(int i = 0; i < n.GetCount(); i++)
 		nname.FindAdd(n[i].name);
-	DDUMP(nname);
 	Index<String> done;
 	GatherCallbacks("", done, scope, PRIVATE);
 }
