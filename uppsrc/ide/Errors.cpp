@@ -75,10 +75,13 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				}
 				f.lineno = f.linepos = 0;
 				CParser p(s);
-				if(p.IsInt())
-					f.lineno = p.ReadInt();
-				if(p.Char(':') && p.IsInt())
-					f.linepos = p.ReadInt();
+				try {
+					if(p.IsInt())
+						f.lineno = p.ReadInt();
+					if(p.Char(':') && p.IsInt())
+						f.linepos = p.ReadInt();
+				}
+				catch(CParser::Error) {}
 				const char *ms = p.GetPtr();
 				f.kind = 3;
 				if(ln.Find("warning") >= 0)

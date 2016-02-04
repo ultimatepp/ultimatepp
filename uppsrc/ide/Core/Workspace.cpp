@@ -79,21 +79,24 @@ bool LoadVarFile(const char *name, VectorMap<String, String>& _var)
 	try {
 		VectorMap<String, String> var;
 		String env = LoadFile(name);
-		CParser p(env);
-		while(!p.IsEof()) {
-			String v = p.ReadId();
-			p.Char('=');
-			if(p.IsString())
-				var.GetAdd(v) = p.ReadString();
-			else {
-				String ln;
-				while(p.PeekChar() != '\r' && p.PeekChar() != '\n' && p.PeekChar() != ';')
-					ln.Cat(p.GetChar());
-				var.GetAdd(v) = ln;
-				p.Spaces();
+		try {
+			CParser p(env);
+			while(!p.IsEof()) {
+				String v = p.ReadId();
+				p.Char('=');
+				if(p.IsString())
+					var.GetAdd(v) = p.ReadString();
+				else {
+					String ln;
+					while(p.PeekChar() != '\r' && p.PeekChar() != '\n' && p.PeekChar() != ';')
+						ln.Cat(p.GetChar());
+					var.GetAdd(v) = ln;
+					p.Spaces();
+				}
+				p.Char(';');
 			}
-			p.Char(';');
 		}
+		catch(CParser::Error) {}
 		_var = pick(var);
 		return true;
 	}
@@ -332,18 +335,21 @@ bool HasFlag(const Vector<String>& conf, const char *flag) {
 
 Vector<String> Combine(const Vector<String>& conf, const char *flags) {
 	Vector<String> cfg(conf, 1);
-	CParser p(flags);
-	while(!p.IsEof()) {
-		bool isnot = p.Char('!');
-		if(!p.IsId()) break;
-		String flg = p.ReadId();
-		int i = FindIndex(cfg, flg);
-		if(isnot) {
-			if(i >= 0) cfg.Remove(i);
+	try {
+		CParser p(flags);
+		while(!p.IsEof()) {
+			bool isnot = p.Char('!');
+			if(!p.IsId()) break;
+			String flg = p.ReadId();
+			int i = FindIndex(cfg, flg);
+			if(isnot) {
+				if(i >= 0) cfg.Remove(i);
+			}
+			else
+				if(i < 0) cfg.Add(flg);
 		}
-		else
-			if(i < 0) cfg.Add(flg);
 	}
+	catch(CParser::Error) {}
 	return cfg;
 }
 

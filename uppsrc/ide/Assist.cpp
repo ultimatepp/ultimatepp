@@ -354,35 +354,40 @@ bool AssistEditor::IncludeAssist()
 	Vector<String> include;
 	String ln = GetUtf8Line(GetCursorLine());
 	CParser p(ln);
-	if(!p.Char('#') || !p.Id("include"))
+	try {
+		if(!p.Char('#') || !p.Id("include"))
+			return false;
+		if(p.Char('\"')) {
+			include.Add(GetFileFolder(theide->editfile));
+			include_local = true;
+		}
+		else {
+			p.Char('<');
+			include = SplitDirs(theide->GetIncludePath());
+			include_local = false;
+		}
+		include_path.Clear();
+		include_back = 0;
+		if(include_local)
+			while(p.Char3('.', '.', '/') || p.Char3('.', '.', '\\')) {
+				include.Top() = GetFileFolder(include.Top());
+				include_back++;
+			}
+		for(;;) {
+			String dir;
+			while(isincludefnchar(p.PeekChar()))
+				dir.Cat(p.GetChar());
+			if(dir.GetCount() && (p.Char('/') || p.Char('\\'))) {
+				if(include_path.GetCount())
+					include_path << '/';
+				include_path << dir;
+			}
+			else
+				break;
+		}
+	}
+	catch(CParser::Error) {
 		return false;
-	if(p.Char('\"')) {
-		include.Add(GetFileFolder(theide->editfile));
-		include_local = true;
-	}
-	else {
-		p.Char('<');
-		include = SplitDirs(theide->GetIncludePath());
-		include_local = false;
-	}
-	include_path.Clear();
-	include_back = 0;
-	if(include_local)
-		while(p.Char3('.', '.', '/') || p.Char3('.', '.', '\\')) {
-			include.Top() = GetFileFolder(include.Top());
-			include_back++;
-		}
-	for(;;) {
-		String dir;
-		while(isincludefnchar(p.PeekChar()))
-			dir.Cat(p.GetChar());
-		if(dir.GetCount() && (p.Char('/') || p.Char('\\'))) {
-			if(include_path.GetCount())
-				include_path << '/';
-			include_path << dir;
-		}
-		else
-			break;
 	}
 	Vector<String> folder, upper_folder, file, upper_file;
 	for(int i = 0; i < include.GetCount(); i++) {
@@ -577,14 +582,19 @@ void AssistEditor::Complete()
 		String x = GetUtf8Line(i);
 		len += x.GetLength();
 		CParser p(x);
-		while(!p.IsEof())
-			if(p.IsId()) {
-				String h = p.ReadId();
-				if(h != q)
-					ids.FindAdd(h);
-			}
-			else
-				p.SkipTerm();
+		try {
+			while(!p.IsEof())
+				if(p.IsId()) {
+					String h = p.ReadId();
+					if(h != q)
+						ids.FindAdd(h);
+				}
+				else
+					p.SkipTerm();
+		}
+		catch(CParser::Error) {
+			return;
+		}
 	}
 	
 	Vector<String> id = ids.PickKeys();
@@ -890,8 +900,11 @@ String AssistEditor::RemoveDefPar(const char *s)
 				if(!dp && commentdp)
 					r.Cat("*/");
 				r.Cat(')');
-				if(CParser(s).Char('='))
-					break;
+				try {
+					if(CParser(s).Char('='))
+						break;
+				}
+				catch(CParser::Error) {}
 				r.Cat(s);
 				break;
 			}
@@ -914,33 +927,36 @@ String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 {
 	String n = TrimLeft(_n);
 	CParser p(n);
-	bool dest = false;
-	const char *beg = n;
-	while(!p.IsEof()) {
-		const char *b = p.GetPtr();
-		if(p.Id("operator"))
-			return cls.GetCount() ? NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + b)
-			                      : NormalizeSpaces(String(beg, b) + ' ' + b);
-		if(p.Char('~')) {
-			beg = p.GetPtr();
-			dest = true;
-		}
-		else
-		if(p.IsId()) {
-			String id = p.ReadId();
-			if(p.Char('(')) {
-				String rp = RemoveDefPar(p.GetPtr());
-				if(cls.GetCount() == 0)
-					return NormalizeSpaces(String(beg, b) + ' ' + id + '(' + rp);
-				if(dest)
-					return NormalizeSpaces(String(beg, b) + cls + "::~" + id + '(' + rp);
-				else
-					return NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + id + '(' + rp);
+	try {
+		bool dest = false;
+		const char *beg = n;
+		while(!p.IsEof()) {
+			const char *b = p.GetPtr();
+			if(p.Id("operator"))
+				return cls.GetCount() ? NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + b)
+				                      : NormalizeSpaces(String(beg, b) + ' ' + b);
+			if(p.Char('~')) {
+				beg = p.GetPtr();
+				dest = true;
 			}
+			else
+			if(p.IsId()) {
+				String id = p.ReadId();
+				if(p.Char('(')) {
+					String rp = RemoveDefPar(p.GetPtr());
+					if(cls.GetCount() == 0)
+						return NormalizeSpaces(String(beg, b) + ' ' + id + '(' + rp);
+					if(dest)
+						return NormalizeSpaces(String(beg, b) + cls + "::~" + id + '(' + rp);
+					else
+						return NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + id + '(' + rp);
+				}
+			}
+			else
+				p.SkipTerm();
 		}
-		else
-			p.SkipTerm();
 	}
+	catch(CParser::Error) {}
 	return n;
 }
 

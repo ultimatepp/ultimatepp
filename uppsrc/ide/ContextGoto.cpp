@@ -153,17 +153,20 @@ void Ide::ContextGoto0(int pos)
 			return;
 		}
 	}
-	CParser p(l);
-	if(p.Char('#') && p.Id("include")) {
-		String path = FindIncludeFile(p.GetPtr(), GetFileFolder(editfile), SplitDirs(GetIncludePath()));
-		if(!IsNull(path)) {
-			AddHistory();
-			EditFile(path);
-			editor.SetCursor(0);
-			AddHistory();
+	try {
+		CParser p(l);
+		if(p.Char('#') && p.Id("include")) {
+			String path = FindIncludeFile(p.GetPtr(), GetFileFolder(editfile), SplitDirs(GetIncludePath()));
+			if(!IsNull(path)) {
+				AddHistory();
+				EditFile(path);
+				editor.SetCursor(0);
+				AddHistory();
+			}
+			return;
 		}
-		return;
 	}
+	catch(CParser::Error) {}
 	int q = pos;
 	while(iscid(editor.Ch(q - 1)))
 		q--;

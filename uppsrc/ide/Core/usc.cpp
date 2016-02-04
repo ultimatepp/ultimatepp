@@ -67,19 +67,22 @@ void UscSetReadMacro(void (*ReadMacro)(CParser& p))
 void ParseUscFile(const char *filename) throw(CParser::Error)
 {
 	String d = LoadFile(filename);
-	CParser p(d, filename);
-	while(!p.IsEof()) {
-		if(p.Id("fn")) {
-			EscValue& v = UscGlobal().GetPut(p.ReadId());
-			v = ReadLambda(p);
-		}
-		else
-		if(p.Id("macro") && sReadMacro)
-			sReadMacro(p);
-		else
-		if(!sIdeModuleUsc || !sIdeModuleUsc(p)) {
-			EscValue& v = UscGlobal().GetPut(p.ReadId());
-			v = ReadLambda(p);
+	try {
+		CParser p(d, filename);
+		while(!p.IsEof()) {
+			if(p.Id("fn")) {
+				EscValue& v = UscGlobal().GetPut(p.ReadId());
+				v = ReadLambda(p);
+			}
+			else
+			if(p.Id("macro") && sReadMacro)
+				sReadMacro(p);
+			else
+			if(!sIdeModuleUsc || !sIdeModuleUsc(p)) {
+				EscValue& v = UscGlobal().GetPut(p.ReadId());
+				v = ReadLambda(p);
+			}
 		}
 	}
+	catch(CParser::Error) {}
 }

@@ -225,23 +225,26 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 Point CppBuilder::ExtractVersion() const
 {
 	Point v = Point(Null, Null);
-	CParser p(version);
-	while(!p.IsEof()) {
-		if(p.IsNumber()) {
-			v.x = p.ReadNumber();
-			break;
+	try {
+		CParser p(version);
+		while(!p.IsEof()) {
+			if(p.IsNumber()) {
+				v.x = p.ReadNumber();
+				break;
+			}
+			p.GetChar();
+			p.Spaces();
 		}
-		p.GetChar();
-		p.Spaces();
-	}
-	while(!p.IsEof()) {
-		if(p.IsNumber()) {
-			v.y = p.ReadNumber();
-			break;
+		while(!p.IsEof()) {
+			if(p.IsNumber()) {
+				v.y = p.ReadNumber();
+				break;
+			}
+			p.GetChar();
+			p.Spaces();
 		}
-		p.GetChar();
-		p.Spaces();
 	}
+	catch(CParser::Error) {}
 	return v;
 }
 

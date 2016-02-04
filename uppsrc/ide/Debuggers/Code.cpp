@@ -20,15 +20,18 @@ int Pdb::Disassemble(adr_t ip)
 	if(sz > i)
 		return -1;
 	disas.Add(ip, out, Null, String(code, sz));
-	CParser p(out);
-	while(!p.IsEof()) {
-		try {
-			if(p.Char2('0', 'x'))
-				disas.AddT((adr_t)p.ReadNumber64(16));
+	try {
+		CParser p(out);
+		while(!p.IsEof()) {
+			try {
+				if(p.Char2('0', 'x'))
+					disas.AddT((adr_t)p.ReadNumber64(16));
+			}
+			catch(CParser::Error) {}
+			p.SkipTerm();
 		}
-		catch(CParser::Error) {}
-		p.SkipTerm();
 	}
+	catch(CParser::Error) {}
 	return sz;
 }
 
