@@ -119,30 +119,33 @@ void Pdb::Autos()
 	VectorMap<String, Value> prev = DataMap(autos);
 	autos.Clear();
 	autotext.Replace("//", "");
-	CParser p(autotext);
-	TryAuto("this", prev);
-	while(!p.IsEof())
-		if(p.IsId()) {
-			String exp = p.ReadId();
-			TryAuto(exp, prev);
-			for(;;) {
-				if(p.Char('.') && p.IsId())
-					exp << '.';
-				else
-				if(p.Char2('-', '>') && p.IsId())
-					exp << "->";
-				else
-				if(p.Char2(':', ':') && p.IsId())
-					exp << "::";
-				else
-					break;
-				exp << p.ReadId();
+	try {
+		CParser p(autotext);
+		TryAuto("this", prev);
+		while(!p.IsEof())
+			if(p.IsId()) {
+				String exp = p.ReadId();
 				TryAuto(exp, prev);
+				for(;;) {
+					if(p.Char('.') && p.IsId())
+						exp << '.';
+					else
+					if(p.Char2('-', '>') && p.IsId())
+						exp << "->";
+					else
+					if(p.Char2(':', ':') && p.IsId())
+						exp << "::";
+					else
+						break;
+					exp << p.ReadId();
+					TryAuto(exp, prev);
+				}
 			}
-		}
-		else
-			p.SkipTerm();
-	autos.Sort();
+			else
+				p.SkipTerm();
+		autos.Sort();
+	}
+	catch(CParser::Error) {}
 }
 
 void Pdb::Watches()
@@ -311,8 +314,8 @@ void Pdb::Data()
 
 void Pdb::MemoryGoto(const String& exp)
 {
-	CParser p(exp);
 	try {
+		CParser p(exp);
 		Val v = Exp(p);
 		adr_t adr = 0;
 		if(v.ref > 0)
@@ -336,8 +339,8 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 {
 	if(bar.IsScanKeys())
 		return;
-	CParser p(exp);
 	try {
+		CParser p(exp);
 		Val v = Exp(p);
 		bool sep = true;
 		if(v.ref > 0) {

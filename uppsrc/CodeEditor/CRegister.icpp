@@ -59,7 +59,7 @@ INITBLOCK
 	EditorSyntax::Register("html", callback2(CreateTagSyntax, true, false), "*.html *.htm", "HTML (.html)");
 	EditorSyntax::Register("witz", callback2(CreateTagSyntax, true, true), "*.witz", "Skylark templates (.witz)");
 	
-	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log", "Log (*.log)");
+	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log *.info", "Log (*.log)");
 }
 
 END_UPP_NAMESPACE

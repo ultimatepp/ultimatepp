@@ -152,8 +152,8 @@ bool ParsePos(const String& s, String& fn, int& line, adr_t & adr)
 	p.SetCount(5);
 	fn = String(q, q + 2) + p[0];
 	line = atoi(p[1]);
-	CParser pa(p[4]);
 	try {
+		CParser pa(p[4]);
 		pa.Char2('0', 'x');
 		if(pa.IsNumber(16))
 			adr = (adr_t)pa.ReadNumber64(16);
@@ -197,8 +197,8 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 	}
 	else {
 		file = Null;
-		CParser pa(s);
 		try {
+			CParser pa(s);
 			pa.Char2('0', 'x');
 			if(pa.IsNumber(16))
 				addr = (adr_t)pa.ReadNumber64(16);

@@ -149,12 +149,15 @@ void Hdepend::ScanFile(const String& path, int map_index) {
 		else
 		if(term[0] == '/' && term[1] == '/') {
 			if(term[2] == '#') {
-				CParser p(term + 3);
-				if(p.Id("BLITZ_APPROVE") || p.Id("once"))
-					info.guarded = true;
-				else
-				if(p.Id("BLITZ_PROHIBIT"))
-					info.blitzprohibit = true;
+				try {
+					CParser p(term + 3);
+					if(p.Id("BLITZ_APPROVE") || p.Id("once"))
+						info.guarded = true;
+					else
+					if(p.Id("BLITZ_PROHIBIT"))
+						info.blitzprohibit = true;
+				}
+				catch(CParser::Error) {}
 			}
 			while(*term) {
 				if(*term == '\n') break;
@@ -183,33 +186,42 @@ void Hdepend::ScanFile(const String& path, int map_index) {
 				   term[3] == 'd' && term[4] == 'e' && term[5] == 'f' &&
 				   (term[6] == ' ' || term[6] == '\t')) {
 					testg = false;
-					CParser p(term + 6);
-					if(p.IsId()) {
-						String id = p.ReadId();
-						if(p.Char('#') && p.Id("define") && p.IsId() && id == p.ReadId())
-							info.guarded = true;
+					try {
+						CParser p(term + 6);
+						if(p.IsId()) {
+							String id = p.ReadId();
+							if(p.Char('#') && p.Id("define") && p.IsId() && id == p.ReadId())
+								info.guarded = true;
+						}
 					}
+					catch(CParser::Error) {}
 				}
 				else
 				if(defines && term[0] == 'd' && term[1] == 'e' && term[2] == 'f' &&
 				   term[3] == 'i' && term[4] == 'n' && term[5] == 'e' &&
 				   (term[6] == ' ' || term[6] == '\t')) {
-				       CParser p(term + 6);
-				       if(p.IsId())
-				          info.define.Add(p.ReadId());
-				       term = p.GetPtr();
+				       try {
+					       CParser p(term + 6);
+					       if(p.IsId())
+					          info.define.Add(p.ReadId());
+					       term = p.GetPtr();
+				       }
+				       catch(CParser::Error) {}
 				}
 				else
 				if(term[0] == 'p' && term[1] == 'r' && term[2] == 'a' &&
 				   term[3] == 'g' && term[4] == 'm' && term[5] == 'a' &&
 				   (term[6] == ' ' || term[6] == '\t')) {
-					CParser p(term + 6);
-					if(p.Id("BLITZ_APPROVE") || p.Id("once"))
-						info.guarded = true;
-					else
-					if(p.Id("BLITZ_PROHIBIT"))
-						info.blitzprohibit = true;
-					term = p.GetPtr();
+				    try {
+						CParser p(term + 6);
+						if(p.Id("BLITZ_APPROVE") || p.Id("once"))
+							info.guarded = true;
+						else
+						if(p.Id("BLITZ_PROHIBIT"))
+							info.blitzprohibit = true;
+						term = p.GetPtr();
+				    }
+				    catch(CParser::Error) {}
 				}
 			}
 			else if(IsAlpha(*term) || *term == '_') {
