@@ -15,7 +15,8 @@ file
 	domake,
 	readme,
 	upp.spec,
-	git-mirror;
+	git-mirror,
+	upp.xml;
 
 mainconfig
 	"" = "SCRIPTS";

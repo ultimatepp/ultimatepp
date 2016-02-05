@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XML_DIZ_INFO>
+	<MASTER_PAD_VERSION_INFO>
+		<MASTER_PAD_VERSION>2.02</MASTER_PAD_VERSION>
+		<MASTER_PAD_EDITOR>PADGen 2.0.2.30 http://www.padgen.org</MASTER_PAD_EDITOR>
+		<MASTER_PAD_INFO>Portable Application Description, or PAD for short, is a data set that is used by shareware authors to disseminate information to anyone interested in their software products. To find out more go to http://www.asp-shareware.org/pad</MASTER_PAD_INFO>
+	</MASTER_PAD_VERSION_INFO>
+	<Company_Info>
+		<Company_Name>U++ team</Company_Name>
+		<Address_1>K Horomericum 633/16</Address_1>
+		<Address_2/>
+		<City_Town>Praha 6 Suchdol</City_Town>
+		<State_Province>Prague</State_Province>
+		<Zip_Postal_Code>16500</Zip_Postal_Code>
+		<Country>Czech Republic</Country>
+		<Company_WebSite_URL>http://www.ultimatepp.org/</Company_WebSite_URL>
+		<Contact_Info>
+			<Author_First_Name>Miroslav</Author_First_Name>
+			<Author_Last_Name>Fidler</Author_Last_Name>
+			<Author_Email>mirek.fidler@ntllib.org</Author_Email>
+			<Contact_First_Name>Mirek</Contact_First_Name>
+			<Contact_Last_Name>Fidler</Contact_Last_Name>
+			<Contact_Email>cxl@ntllib.org</Contact_Email>
+		</Contact_Info>
+		<Support_Info>
+			<Sales_Email>upp@ntllib.org</Sales_Email>
+			<Support_Email>upp@ntllib.org</Support_Email>
+			<General_Email>upp@ntllib.org</General_Email>
+			<Sales_Phone>+420220922650</Sales_Phone>
+			<Support_Phone>+420220922650</Support_Phone>
+			<General_Phone>+420220922650</General_Phone>
+			<Fax_Phone/>
+		</Support_Info>
+	</Company_Info>
+	<Program_Info>
+		<Program_Name>Ultimate++</Program_Name>
+		<Program_Version>605</Program_Version>
+		<Program_Release_Month>06</Program_Release_Month>
+		<Program_Release_Day>01</Program_Release_Day>
+		<Program_Release_Year>2006</Program_Release_Year>
+		<Program_Cost_Dollars>0</Program_Cost_Dollars>
+		<Program_Cost_Other_Code/>
+		<Program_Cost_Other/>
+		<Program_Type>Freeware</Program_Type>
+		<Program_Release_Status>New Release</Program_Release_Status>
+		<Program_Install_Support>Install and Uninstall</Program_Install_Support>
+		<Program_OS_Support>Win95,Win98,WinME,WinNT 4.x,Windows2000,WinXP,Windows2003,Windows Vista Starter,Windows Vista Home Basic,Windows Vista Home Premium,Windows Vista Business,Windows Vista Enterprise,Windows Vista Ultimate,Windows Vista Home Basic x64,Windows Vista Home Premium x64,Windows Vista Business x64,Windows Vista Enterprise x64,Windows Vista Ultimate x64,Linux,Linux Open Source</Program_OS_Support>
+		<Program_Language>English</Program_Language>
+		<Program_Change_Info/>
+		<Program_Specific_Category>Development Tools</Program_Specific_Category>
+		<Program_Category_Class>Development::C / C++ / C#</Program_Category_Class>
+		<Program_System_Requirements/>
+		<File_Info>
+			<File_Size_Bytes>13213696</File_Size_Bytes>
+			<File_Size_K>12904</File_Size_K>
+			<File_Size_MB>12.60</File_Size_MB>
+		</File_Info>
+		<Expire_Info>
+			<Has_Expire_Info>N</Has_Expire_Info>
+			<Expire_Count/>
+			<Expire_Based_On>Days</Expire_Based_On>
+			<Expire_Other_Info/>
+			<Expire_Month/>
+			<Expire_Day/>
+			<Expire_Year/>
+		</Expire_Info>
+	</Program_Info>
+	<Program_Descriptions>
+		<English>
+			<Keywords>C++, GUI toolkit, cross-platform, RAD, IDE</Keywords>
+			<Char_Desc_45>Ultimate++ is a C++ cross-platform RAD tool.</Char_Desc_45>
+			<Char_Desc_80>Ultimate++ is a C++ cross-platform rapid application development suite.</Char_Desc_80>
+			<Char_Desc_250>Ultimate++ is a C++ cross-platform rapid application development suite. It includes a set of libraries (GUI, SQL, etc..), and an integrated development environment. Rapid development is achieved by the smart and aggressive use of C++.</Char_Desc_250>
+			<Char_Desc_450>Ultimate++ is a C++ cross-platform rapid application development suite. It includes a set of libraries (GUI, SQL, etc..), and an integrated development environment. Rapid development is achieved by the smart and aggressive use of C++ rather than through fancy code generators. In this respect, U++ competes with popular scripting languages while preserving C/C++ runtime characteristics.</Char_Desc_450>
+			<Char_Desc_2000>Ultimate++ is a C++ cross-platform rapid application development suite. It includes a set of libraries (GUI, SQL, etc..), and an integrated development environment.
+
+Rapid development is achieved by the smart and aggressive use of C++ rather than through fancy code generators. In this respect, U++ competes with popular scripting languages while preserving C/C++ runtime characteristics.
+ 
+The U++ integrated development environment, TheIDE, introduces modular concepts to C++ programming. It features BLITZ-build technology to speedup C++ rebuilds up to 4 times, Visual designers for U++ libraries, Topic++ system for documenting code and creating rich text resources for applications (like help and code documentation) and Assist++ - a powerful C++ code analyzer that provides features like code completion, navigation and transformation.
+
+TheIDE can work with GCC, MinGW and Visual C++ 7.1 or 8.0 compilers (including free Visual C++ Toolkit 2003 and Visual C++ 2005 Express Edition) and contains a full featured debugger. TheIDE can also be used to develop non-U++ applications.
+
+U++ distributions combine U++ with 3rd party tools like MinGW compiler or SDL library to provide an instant development platform.
+
+What you can get with the Ultimate++ download in plain English
+
+Very effective C++ library for cross-platform development in source form.
+A good integrated development environment, designed for developing large C++ applications.
+You can use both, or you can use whichever you need.
+</Char_Desc_2000>
+		</English>
+	</Program_Descriptions>
+	<Web_Info>
+		<Application_URLs>
+			<Application_Info_URL>http://www.ultimatepp.org/</Application_Info_URL>
+			<Application_Order_URL>http://www.ultimatepp.org/</Application_Order_URL>
+			<Application_Screenshot_URL>http://www.ultimatepp.org/pad/upp.png</Application_Screenshot_URL>
+			<Application_Icon_URL>http://www.ultimatepp.org/pad/icon.png</Application_Icon_URL>
+			<Application_XML_File_URL>http://www.ultimatepp.org/pad/upp.xml</Application_XML_File_URL>
+		</Application_URLs>
+		<Download_URLs>
+			<Primary_Download_URL>http://www.ultimatepp.org/pad/upp-mingw-605.exe</Primary_Download_URL>
+			<Secondary_Download_URL/>
+			<Additional_Download_URL_1/>
+			<Additional_Download_URL_2/>
+		</Download_URLs>
+	</Web_Info>
+	<Permissions>
+		<Distribution_Permissions>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies of the Software and its Copyright notices. In addition publicly documented acknowledgment must be given that this software has been used if no source code of this software is made available publicly. This includes acknowledgments in either Copyright notices, Manuals, Publicity and Marketing documents or any documentation provided with any product containing this software. This License does not apply to any software that links to the libraries provided by this software (statically or dynamically), but only to the software provided.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</Distribution_Permissions>
+		<EULA>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies of the Software and its Copyright notices. In addition publicly documented acknowledgment must be given that this software has been used if no source code of this software is made available publicly. This includes acknowledgments in either Copyright notices, Manuals, Publicity and Marketing documents or any documentation provided with any product containing this software. This License does not apply to any software that links to the libraries provided by this software (statically or dynamically), but only to the software provided.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</EULA>
+	</Permissions>
+</XML_DIZ_INFO>
