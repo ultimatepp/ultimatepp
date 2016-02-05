@@ -33,6 +33,10 @@ CONSOLE_APP_MAIN
 
 	DUMP(Format("%n", 1234567.89));
 	DUMP(Format("%,n", 1234567.89));
+	DUMP(Format("%+n", 1234567.89));
+	DUMP(Format("%2,n", 123.456));
+	DUMP(Format("%2,n", 123));
+	DUMP(Format("%2!,n", 123));
 	DUMP(Format("%ne", 1234567.89));
 	DUMP(Format("%nf", 1234567.89e30));
 	DUMP(Format("%nl", 1234567.89));
