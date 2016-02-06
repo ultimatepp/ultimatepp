@@ -63,7 +63,7 @@ public:
 	String GetGZipName() const             { return gzip_name; }
 	String GetGZipComment() const          { return gzip_comment; }
 	
-	Zlib& GZip(bool gzip_ = true)          { gzip = gzip_; return *this; } 
+	Zlib& GZip(bool gzip_ = true)          { gzip = gzip_; return *this; }
 	Zlib& Header(bool hdr_ = true)         { hdr = hdr_; return *this; }
 	Zlib& NoHeader()                       { return Header(false); }
 	Zlib& CRC(bool b = true)               { docrc = b; return *this; }
@@ -107,6 +107,7 @@ bool   GZDecompressFile(const char *srcfile, Gate2<int64, int64> progress = fals
 
 Gate2<int64, int64> AsGate64(Gate2<int, int> gate);
 
+/*
 inline int ZCompress(Stream& out, Stream& in, Gate2<int, int> progress)        { return (int)ZCompress(out, in, AsGate64(progress)); }
 inline String ZCompress(const void *data, int len, Gate2<int, int> progress)   { return ZCompress(data, len, AsGate64(progress)); }
 inline String ZCompress(const String& s, Gate2<int, int> progress)             { return ZCompress(s, AsGate64(progress)); }
@@ -124,3 +125,4 @@ inline int    GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> pr
 inline int    GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress)           { return (int)GZDecompress(out, in, AsGate64(progress)); }
 inline String GZDecompress(const void *data, int len, Gate2<int, int> progress)         { return GZDecompress(data, len, AsGate64(progress)); }
 inline String GZDecompress(const String& s, Gate2<int, int> progress)                   { return GZDecompress(s, AsGate64(progress)); }
+*/

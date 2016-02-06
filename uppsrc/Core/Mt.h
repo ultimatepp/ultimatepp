@@ -43,8 +43,6 @@ struct MtInspector {
 
 #endif
 
-class Callback;
-
 class Thread : NoCopy {
 #ifdef PLATFORM_WIN32
 	HANDLE     handle;
@@ -54,7 +52,7 @@ class Thread : NoCopy {
 	pthread_t  handle;
 #endif
 public:
-	bool       Run(Callback cb);
+	bool       Run(Function<void ()> cb);
 
 	void       Detach();
 	int        Wait();
@@ -78,7 +76,7 @@ public:
 	
 	bool        Priority(int percent); // 0 = lowest, 100 = normal
 
-	static void Start(Callback cb);
+	static void Start(Function<void ()> cb);
 
 	static void Sleep(int ms);
 

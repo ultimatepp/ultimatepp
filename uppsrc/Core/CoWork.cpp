@@ -20,7 +20,7 @@ CoWork::Pool::Pool()
 	LLOG("CoWork INIT pool: " << CPU_Cores() + 2);
 	scheduled = 0;
 	for(int i = 0; i < CPU_Cores() + 2; i++)
-		threads.Add().Run(callback1(&ThreadRun, i));
+		threads.Add().Run([=] { ThreadRun(i); });
 }
 
 CoWork::Pool::~Pool()

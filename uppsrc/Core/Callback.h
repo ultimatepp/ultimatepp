@@ -1,15 +1,215 @@
-enum _CNULL { CNULL };
+template<typename Res, typename... ArgTypes>
+class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
+	struct WrapperBase {
+		Atomic  refcount;
 
-template <class D, class S>
-inline D brutal_cast(const S& source) { return *(D *)&source; }
+		virtual Res Execute(ArgTypes... args) = 0;
+		
+		WrapperBase() { refcount = 1; }
+		virtual ~WrapperBase() {}
+	};
 
-#include "Cbgen.h"
-#include "Callback0.h"
-#include "Callback1.h"
-#include "Callback2.h"
-#include "Callback3.h"
-#include "Callback4.h"
-#include "Callback5.h"
+	template <class F>
+	struct Wrapper : WrapperBase {
+		F fn;
+		virtual Res Execute(ArgTypes... args) { return fn(args...); }
+
+		Wrapper(F&& fn) : fn(pick(fn)) {}
+	};
+
+	template <class F>
+	struct Wrapper2 : WrapperBase {
+		Function l;
+		F        fn;
+
+		virtual Res Execute(ArgTypes... args) { l(args...); return fn(args...); }
+
+		Wrapper2(const Function& l, F&& fn) : l(l), fn(pick(fn)) {}
+	};
+
+	WrapperBase *ptr;
+	
+	static void Free(WrapperBase *ptr) {
+		if(ptr && AtomicDec(ptr->refcount) == 0)
+			delete ptr;
+	}
+	
+	void Copy(const Function& a) {
+		ptr = a.ptr;
+		if(ptr)
+			AtomicInc(ptr->refcount);
+	}
+
+public:
+	Function() { ptr = NULL; }
+	Function(const Function& a) { Copy(a); }
+	
+	Function& operator=(const Function& other) { WrapperBase *b = ptr; Copy(other); Free(b); return *this; }
+	
+	template <class F> Function(F fn) { ptr = new Wrapper<F>(pick(fn)); }
+	
+	template <class F>
+	Function& operator<<(F fn) {
+		WrapperBase *b = ptr;
+		ptr = new Wrapper2<F>(*this, pick(fn));
+		Free(ptr);
+		return *this;
+	}
+	
+	Res operator()(ArgTypes... args) const { return ptr ? ptr->Execute(args...) : Res(); }
+	
+	operator bool() const { return ptr; }
+	void Clear()          { Free(ptr); ptr = NULL; }
+
+	~Function()           { Free(ptr); }
+};
+
+typedef Function<void ()> Callback;
+
+inline Callback callback(void (*fn)()) { return [=] { (*fn)(); }; }
+
+template <class O, class M>
+Callback callback(O *object, void (M::*method)())
+{ return [=] { (object->*method)(); }; }
+
+template <class O, class M>
+Callback callback(O *object, void (M::*method)() const)
+{ return [=] { (object->*method)(); }; }
+
+template <class O, class M>
+Callback pteback(O *object, void (M::*method)())
+{ Ptr<O> ptr = object; return [=] { if(ptr) (ptr->*method)(); }; }
+
+template <class O, class M>
+Callback pteback(O *object, void (M::*method)() const)
+{ Ptr<O> ptr = object; return [=] { if(ptr) (ptr->*method)(); } }
+
+inline Callback callback(Callback cb1, Callback cb2)   { cb1 << cb2; return cb1; }
+
+// Callback1 ----------------------------------------------------------------
+
+template <class P1>
+using Callback1 = Function<void (P1)>;
+
+template <class P1>
+Callback1<P1> callback(void (*fn)(P1)) { return [=](P1 p) { (*fn)(p); }; }
+
+template <class O, class M, class P1>
+Callback1<P1> callback(O *object, void (M::*method)(P1))
+{ return [=](P1 p) { (object->*method)(p); }; }
+
+template <class O, class M, class P1>
+Callback1<P1> callback(O *object, void (M::*method)(P1) const)
+{ return [=](P1 p) { (object->*method)(p); }; }
+
+template <class O, class M, class P1>
+Callback1<P1> pteback(O *object, void (M::*method)(P1))
+{ Ptr<O> ptr = object; return [=](P1 p) { if(ptr) (ptr->*method)(p); }; }
+
+template <class O, class M, class P1>
+Callback1<P1> pteback(O *object, void (M::*method)(P1) const)
+{ Ptr<O> ptr = object; return [=](P1 p) { if(ptr) (ptr->*method)(p); } }
+
+template <class P1>
+Callback1<P1> callback(Callback1<P1> cb1, Callback1<P1> cb2)   { cb1 << cb2; return cb1; }
+
+// Callback2 ----------------------------------------------------------------
+
+template <class P1, class P2>
+using Callback2 = Function<void (P1, P2)>;
+
+template <class P1, class P2>
+Callback2<P1, P2> callback(void (*fn)(P1, P2)) { return [=](P1 p1, P2 p2) { (*fn)(p1, p2); }; }
+
+template <class O, class M, class P1, class P2>
+Callback2<P1, P2> callback(O *object, void (M::*method)(P1, P2))
+{ return [=](P1 p1, P2 p2) { (object->*method)(p1, p2); }; }
+
+template <class O, class M, class P1, class P2>
+Callback2<P1, P2> callback(O *object, void (M::*method)(P1, P2) const)
+{ return [=](P1 p1, P2 p2) { (object->*method)(p1, p2); }; }
+
+template <class O, class M, class P1, class P2>
+Callback2<P1, P2> pteback(O *object, void (M::*method)(P1, P2))
+{ Ptr<O> ptr = object; return [=](P1 p1, P2 p2) { if(ptr) (ptr->*method)(p1, p2); }; }
+
+template <class O, class M, class P1, class P2>
+Callback2<P1, P2> pteback(O *object, void (M::*method)(P1, P2) const)
+{ Ptr<O> ptr = object; return [=](P1 p1, P2 p2) { if(ptr) (ptr->*method)(p1, p2); } }
+
+template <class P1, class P2>
+Callback2<P1, P2> callback(Callback2<P1, P2> cb1, Callback2<P1, P2> cb2)   { cb1 << cb2; return cb1; }
+
+// Callback3 ----------------------------------------------------------------
+
+template <class P1, class P2, class P3>
+using Callback3 = Function<void (P1, P2, P3)>;
+
+template <class P1, class P2, class P3, class P4>
+using Callback4 = Function<void (P1, P2, P3, P4)>;
+
+typedef Function<bool ()> Gate;
+
+template <class P1>
+using Gate1 = Function<bool (P1)>;
+
+template <class P1, class P2>
+struct Gate2 : Function<bool (P1, P2)> {
+	typedef Function<bool (P1, P2)> B;
+	template <class F> Gate2(F fn) : B(fn) {}
+	template <class F> Gate2& operator<<(F fn) { operator<<(fn); return *this; }
+	
+	Gate2(bool b) : B([=](P1, P2){ return b; }) {} // Optimize?
+};
+
+template <class P1, class P2, class P3>
+using Gate3 = Function<bool (P1, P2, P3)>;
+
+template <class P1, class P2, class P3, class P4>
+using Gate4 = Function<bool (P1, P2, P3, P4)>;
+
+// ----
+
+template <class F, class... Args, class... BindArgs>
+auto LastArgs(F fn, BindArgs... bind_args)
+{
+	return [=](Args... args) { return fn(args..., bind_args...); };
+}
+
+// ----
+
+template <class... Args, class P1>
+auto callback1(void (*fn)(Args...), P1 p1) { return LastArgs(fn, p1); }
+
+template <class... Args, class P1, class P2>
+auto callback2(void (*fn)(Args...), P1 p1, P2 p2) { return LastArgs(fn, p1, p2); }
+
+template <class... Args, class P1, class P2, class P3>
+auto callback3(void (*fn)(Args...), P1 p1, P2 p2, P3 p3) { return LastArgs(fn, p1, p2, p3); }
+
+template <class... Args, class P1, class P2, class P3, class P4>
+auto callback4(void (*fn)(Args...), P1 p1, P2 p2, P3 p3, P4 p4) { return LastArgs(fn, p1, p2, p3, p4); }
+
+template <class... Args, class P1, class P2, class P3, class P4, class P5>
+auto callback5(void (*fn)(Args...), P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) { return LastArgs(fn, p1, p2, p3, p4, p5); }
+
+// ----
+
+template <class O, class M, class... Args, class P1>
+auto callback1(assassfkat.cr
+, P1 p1) { return LastArgs(fn, p1); }
+
+template <class O, class M, class... Args, class P1, class P2>
+auto callback2(void (*fn)(Args...), P1 p1, P2 p2) { return LastArgs(fn, p1, p2); }
+
+template <class O, class M, class... Args, class P1, class P2, class P3>
+auto callback3(void (*fn)(Args...), P1 p1, P2 p2, P3 p3) { return LastArgs(fn, p1, p2, p3); }
+
+template <class O, class M, class... Args, class P1, class P2, class P3, class P4>
+auto callback4(void (*fn)(Args...), P1 p1, P2 p2, P3 p3, P4 p4) { return LastArgs(fn, p1, p2, p3, p4); }
+
+template <class O, class M, class... Args, class P1, class P2, class P3, class P4, class P5>
+auto callback5(void (*fn)(Args...), P1 p1, P2 p2, P3 p3, P4 p4, P5 p5) { return LastArgs(fn, p1, p2, p3, p4, p5); }
 
 #define THISBACK(x)                  callback(this, &CLASSNAME::x)
 #define THISBACK1(x, arg)            callback1(this, &CLASSNAME::x, arg)
@@ -57,7 +257,7 @@ public:
 
 inline Callback Proxy(Callback& cb)
 {
-	return callback(&cb, &Callback::Execute);
+	return [&] { cb(); };
 }
 
 template <class P1>
@@ -86,7 +286,7 @@ inline Callback4<P1, P2, P3, P4> Proxy(Callback4<P1, P2, P3, P4>& cb)
 
 inline Gate Proxy(Gate& cb)
 {
-	return callback(&cb, &Gate::Execute);
+	return [&] { return cb(); };
 }
 
 template <class P1>
@@ -113,149 +313,6 @@ inline Gate4<P1, P2, P3, P4> Proxy(Gate4<P1, P2, P3, P4>& cb)
 	return callback(&cb, &Gate4<P1, P2, P3, P4>::Execute);
 }
 
+//----- bw
 
-Callback& operator<<(Callback& a, Callback b);
-
-template <class P1>
-Callback1<P1>& operator<<(Callback1<P1>& a, Callback1<P1> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2>
-Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, Callback2<P1, P2> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3>
-Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, Callback3<P1, P2, P3> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3, class P4>
-Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, Callback4<P1, P2, P3, P4> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-Gate& operator<<(Gate& a, Gate b);
-
-template <class P1>
-Gate1<P1>& operator<<(Gate1<P1>& a, Gate1<P1> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2>
-Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, Gate2<P1, P2> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3>
-Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, Gate3<P1, P2, P3> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3, class P4>
-Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, Gate4<P1, P2, P3, P4> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-#ifdef CPP_11
-template <class L>
-Callback& operator<<(Callback& a, L b)
-{
-	return a << Callback(lambda(b));
-}
-
-template <class P1, class L>
-Callback1<P1>& operator<<(Callback1<P1>& a, L b)
-{
-	return a << Callback1<P1>(lambda(b));
-}
-
-template <class P1, class P2, class L>
-Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, L b)
-{
-	return a << Callback2<P1, P2>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class L>
-Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, L b)
-{
-	return a << Callback3<P1, P2, P3>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class P4, class L>
-Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, L b)
-{
-	return a << Callback4<P1, P2, P3, P4>(lambda(b));
-}
-
-template <class L>
-Gate& operator<<(Gate& a, L b)
-{
-	return a << Gate(lambda(b));
-};
-
-template <class P1, class L>
-Gate1<P1>& operator<<(Gate1<P1>& a, L b)
-{
-	return a << Gate1<P1>(lambda(b));
-}
-
-template <class P1, class P2, class L>
-Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, L b)
-{
-	return a << Gate2<P1, P2>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class L>
-Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, L b)
-{
-	return a << Gate3<P1, P2, P3>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class P4, class L>
-Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, L b)
-{
-	return a << Gate4<P1, P2, P3, P4>(lambda(b));
-}
-#endif
+const nullptr_t CNULL = 0;

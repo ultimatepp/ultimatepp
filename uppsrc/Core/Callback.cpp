@@ -1,5 +1,7 @@
 #include "Core.h"
 
+#if 0
+
 NAMESPACE_UPP
 
 void Callback::Execute() const
@@ -81,3 +83,5 @@ Gate& operator<<(Gate& a, Gate b)
 }
 
 END_UPP_NAMESPACE
+
+#endif

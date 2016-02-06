@@ -393,6 +393,8 @@ T clone(const T& x) { T c(x, 1); return c; }
 template <typename T>
 auto pick(T&& x) noexcept -> decltype(std::move(x)) { return std::move(x); }
 
+template<class T> class Function;
+
 #else
 
 template <class T>
