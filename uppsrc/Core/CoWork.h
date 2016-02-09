@@ -38,6 +38,9 @@ class CoWork : NoCopy {
 	Semaphore waitforfinish;
 	int       todo;
 
+	Mutex stepmutex;
+	Vector< BiVector<Callback> > step;
+
 #ifdef CPP_11
 	void Do(const Callback *cb, const std::function<void ()> *fn);
 #else
@@ -54,6 +57,8 @@ public:
 #ifdef CPP_11
 	CoWork&  operator&(const std::function<void ()>& lambda)  { Do(NULL, &lambda); return *this; }
 #endif
+
+	void Step(int stepi, const Callback& cb);
 
 	static void FinLock();
 

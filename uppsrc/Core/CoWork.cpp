@@ -174,6 +174,31 @@ void CoWork::Finish() {
 #endif
 }
 
+void CoWork::Pipe(int stepi, const Callback& cb)
+{
+	Mutex::Lock __(stepmutex);
+	step.At(stepi).AddHead(cb);
+	if(step.GetCount() == 1) {
+		*this & [=]() {
+			bool second = false;
+			for(;;) {
+				Callback cb;
+				{
+					Mutex::Lock __(stepmutex);
+					BiVector<Callback>& q = step[stepi];
+					if(second)
+						q.DropTail();
+					if(q.GetCount() == 0)
+						return;
+					cb = pick(q.Tail());
+					second = true;
+				}
+				cb();
+			}
+		}
+	}
+}
+
 bool CoWork::IsFinished()
 {
 	Pool& p = pool();
