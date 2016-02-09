@@ -219,6 +219,7 @@ typedef int SOCKET;
 #include <algorithm>
 #include <string>
 #include <complex>
+#include <type_traits>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
@@ -248,10 +249,9 @@ NAMESPACE_UPP
 class XmlIO;
 class JsonIO;
 
-#include "Mt.h"
+#include "Atomic.h"
 #include "Global.h"
 #include "Topt.h"
-#include "Profile.h"
 #include "String.h"
 
 #include "CharSet.h"
@@ -265,12 +265,17 @@ class JsonIO;
 #include "Index.h"
 #include "Map.h"
 #include "Tuple.h"
-#include "Other.h"
 #include "Algo.h"
 #include "FixedMap.h"
 #include "InVector.h"
 
 #include "SplitMerge.h"
+
+#include "Callback.h"
+
+#include "Mt.h"
+
+#include "Other.h"
 
 #include "Value.h"
 #include "ValueUtil.h"
@@ -279,10 +284,12 @@ class JsonIO;
 #include "Complex.h"
 
 #include "Uuid.h"
+
 #include "Ptr.h"
 
-#include "Callback.h"
 #include "Util.h"
+
+#include "Profile.h"
 
 #include "FilterStream.h"
 

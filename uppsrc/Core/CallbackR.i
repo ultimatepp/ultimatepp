@@ -41,3 +41,4 @@
 #include "CallbackN.i"
 
 #undef Res
+#undef Cb_

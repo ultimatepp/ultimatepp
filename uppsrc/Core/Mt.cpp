@@ -107,7 +107,6 @@ Mutex vm; //a common access synchronizer
 //otherwise no child threads could run. they are created by main.
 //now each thread, having any Thread instace can start a first Run()
 
-
 bool Thread::Run(Callback _cb)
 {
 	LLOG("Thread::Run");

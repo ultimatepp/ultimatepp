@@ -52,7 +52,7 @@ class Thread : NoCopy {
 	pthread_t  handle;
 #endif
 public:
-	bool       Run(Function<void ()> cb);
+	bool       Run(Callback cb);
 
 	void       Detach();
 	int        Wait();
@@ -76,7 +76,7 @@ public:
 	
 	bool        Priority(int percent); // 0 = lowest, 100 = normal
 
-	static void Start(Function<void ()> cb);
+	static void Start(Callback cb);
 
 	static void Sleep(int ms);
 
@@ -109,76 +109,6 @@ private:
 #ifdef _DEBUG
 inline void AssertST() { ASSERT(Thread::IsST()); }
 #endif
-
-void ReadMemoryBarrier();
-void WriteMemoryBarrier();
-
-#ifdef CPU_SSE2
-inline void ReadMemoryBarrier()
-{
-#ifdef CPU_AMD64
-	#ifdef COMPILER_MSC
-		_mm_lfence();
-	#else
-		__asm__("lfence");
-	#endif
-#else	
-	#ifdef COMPILER_MSC
-		__asm lfence;
-	#else
-		__asm__("lfence");
-	#endif
-#endif
-}
-
-inline void WriteMemoryBarrier() {
-#ifdef CPU_AMD64
-	#ifdef COMPILER_MSC
-		_mm_sfence();
-	#else
-		__asm__("sfence");
-	#endif
-#else	
-	#ifdef COMPILER_MSC
-		__asm sfence;
-	#else
-		__asm__("sfence");
-	#endif
-#endif
-}
-#elif defined(COMPILER_GCC)
-#ifndef PLATFORM_WIN32
-inline void ReadMemoryBarrier()
-{
-	__sync_synchronize();
-}
-
-inline void WriteMemoryBarrier()
-{
-	__sync_synchronize();
-}
-#endif
-#endif
-
-#ifdef CPU_BLACKFIN
-inline void ReadMemoryBarrier() {} //placing in Mt.cpp somehow yields 'undefined reference'
-inline void WriteMemoryBarrier() {}
-#endif
-
-template <class U>
-inline U ReadWithBarrier(const volatile U& b)
-{
-	/*volatile*/ U tmp = b;
-	ReadMemoryBarrier();
-	return tmp;
-}
-
-template <class U, class V>
-inline void BarrierWrite(volatile U& dest, V data)
-{
-	WriteMemoryBarrier();
-	dest = data;
-}
 
 class Semaphore : NoCopy {
 #ifdef PLATFORM_WIN32
@@ -214,12 +144,6 @@ public:
 struct MtInspector;
 
 #ifdef PLATFORM_WIN32
-
-typedef LONG Atomic;
-
-inline int  AtomicInc(volatile Atomic& t)             { return InterlockedIncrement((Atomic *)&t); }
-inline int  AtomicDec(volatile Atomic& t)             { return InterlockedDecrement((Atomic *)&t); }
-inline int  AtomicXAdd(volatile Atomic& t, int incr)  { return InterlockedExchangeAdd((Atomic *)&t, incr); }
 
 class Mutex : NoCopy {
 protected:
@@ -288,25 +212,6 @@ public:
 
 #ifdef PLATFORM_POSIX
 
-#if !(defined(PLATFORM_BSD) && defined(__clang__))
-typedef _Atomic_word Atomic;
-#else
-typedef int Atomic;
-#endif
-
-inline int  AtomicXAdd(volatile Atomic& t, int incr)
-{
-#if !(defined(PLATFORM_BSD) && defined(__clang__))
-	using namespace __gnu_cxx;
-	return __exchange_and_add(&t, incr);
-#else
-	return __sync_fetch_and_add(&t, incr);
-#endif
-}
-
-inline int  AtomicInc(volatile Atomic& t)             { return AtomicXAdd(t, +1) + 1; }
-inline int  AtomicDec(volatile Atomic& t)             { return AtomicXAdd(t, -1) - 1; }
-
 class Mutex : NoCopy {
 	pthread_mutex_t  mutex[1];
 #ifdef flagPROFILEMT
@@ -361,9 +266,6 @@ public:
 };
 
 #endif
-
-inline int  AtomicRead(const volatile Atomic& t)      { return ReadWithBarrier(t); }
-inline void AtomicWrite(volatile Atomic& t, int val)  { BarrierWrite(t, val); }
 
 class Mutex::Lock : NoCopy {
 	Mutex& s;
@@ -437,6 +339,49 @@ public:
 	void Broadcast()     { Get().Broadcast(); }
 };
 
+class LazyUpdate {
+	mutable Mutex mutex;
+	mutable bool  dirty;
+
+public:
+	void Invalidate();
+	bool BeginUpdate() const;
+	void EndUpdate() const;
+
+	LazyUpdate();
+};
+
+inline bool IsMainThread() { return Thread::IsMain(); }
+
+struct SpinLock : Moveable<SpinLock> {
+#ifdef PLATFORM_WIN32
+	volatile LONG locked;
+	
+	bool TryEnter() { return InterlockedExchange(&locked, 1) == 0; }
+	void Leave()    { InterlockedExchange(&locked, 0); }
+#endif
+#ifdef PLATFORM_POSIX
+	volatile int locked;
+	
+	bool TryEnter() { return __sync_lock_test_and_set(&locked, 1) == 0; }
+	void Leave()    { __sync_lock_release(&locked); }
+#endif
+	
+	void Enter()    { while(!TryEnter()); }
+	
+	class Lock;
+
+	SpinLock()      { locked = 0; }
+};
+
+class SpinLock::Lock : NoCopy {
+	SpinLock& s;
+
+public:
+	Lock(SpinLock& s) : s(s) { s.Enter(); }
+	~Lock()                  { s.Leave(); }
+};
+
 #define INTERLOCKED \
 for(bool i_b_ = true; i_b_;) \
 	for(static UPP::StaticMutex i_ss_; i_b_;) \
@@ -470,50 +415,6 @@ if(!ReadWithBarrier(ptr)) { \
 	cs.Leave(); \
 }
 
-class LazyUpdate {
-	mutable Mutex mutex;
-	mutable bool  dirty;
-
-public:
-	void Invalidate();
-	bool BeginUpdate() const;
-	void EndUpdate() const;
-
-	LazyUpdate();
-};
-
-inline bool IsMainThread() { return Thread::IsMain(); }
-
-struct SpinLock {
-#ifdef PLATFORM_WIN32
-	volatile LONG locked;
-	
-	bool TryEnter() { return InterlockedExchange(&locked, 1) == 0; }
-	void Leave()    { InterlockedExchange(&locked, 0); }
-#endif
-#ifdef PLATFORM_POSIX
-	volatile int locked;
-	
-	bool TryEnter() { return __sync_lock_test_and_set(&locked, 1) == 0; }
-	void Leave()    { __sync_lock_release(&locked); }
-#endif
-	
-	void Enter()    { while(!TryEnter()); }
-	
-	class Lock;
-
-	SpinLock()      { locked = 0; }
-};
-
-class SpinLock::Lock : NoCopy {
-	SpinLock& s;
-
-public:
-	Lock(SpinLock& s) : s(s) { s.Enter(); }
-	~Lock()                  { s.Leave(); }
-};
-
-
 #else
 
 inline bool IsMainThread() { return true; }
@@ -522,28 +423,6 @@ inline bool IsMainThread() { return true; }
 
 #define PROFILEMT(mutex)
 #define PROFILEMT_(mutex, id)
-
-typedef int Atomic;
-
-template <class U>
-inline U ReadWithBarrier(const U& b)
-{
-	/*volatile*/ U tmp = b;
-	return tmp;
-}
-
-template <class U, class V>
-inline void BarrierWrite(U& dest, V data)
-{
-	dest = data;
-}
-
-inline int  AtomicRead(const volatile Atomic& t)      { return t; }
-inline void AtomicWrite(volatile Atomic& t, int data) { t = data; }
-
-inline int  AtomicInc(volatile Atomic& t)             { ++t; return t; }
-inline int  AtomicDec(volatile Atomic& t)             { --t; return t; }
-inline int  AtomicXAdd(volatile Atomic& t, int incr)  { Atomic x = t; t += incr; return x; }
 
 class Mutex : NoCopy {
 public:
@@ -615,6 +494,10 @@ public:
 	~Lock()           {}
 };
 
+#ifdef _DEBUG
+inline void AssertST() {}
+#endif
+
 #define INTERLOCKED
 #define INTERLOCKED_(x) { x.Enter(); }
 
@@ -629,10 +512,6 @@ if(!ptr) ptr = init;
 
 inline void ReadMemoryBarrier() {}
 inline void WriteMemoryBarrier() {}
-
-#ifdef _DEBUG
-inline void AssertST() {}
-#endif
 
 #endif
 

@@ -41,65 +41,105 @@ class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 	}
 
 public:
-	Function() { ptr = NULL; }
-	Function(const Function& a) { Copy(a); }
+	Function()                                 { ptr = NULL; }
 	
-	Function(const bool &) {} _DBG_
+	template <class F> Function(F fn)          { ptr = new Wrapper<F>(pick(fn)); }
 	
+	Function(const Function& a)                { Copy(a); }
 	Function& operator=(const Function& other) { WrapperBase *b = ptr; Copy(other); Free(b); return *this; }
 	
-	template <class F> Function(F fn) { ptr = new Wrapper<F>(pick(fn)); }
-	
-	template <class F>
-	Function& operator<<(F fn) {
-		WrapperBase *b = ptr;
-		ptr = new Wrapper2<F>(*this, pick(fn));
-		Free(ptr);
-		return *this;
-	}
-	
-	Function Proxy() {
-		return [=] (ArgTypes... args) { return (*this)(args...); };
-	}
-	
-	Res operator()(ArgTypes... args) const { return ptr ? ptr->Execute(args...) : Res(); }
-	
-	operator bool() const { return ptr; }
-	void Clear()          { Free(ptr); ptr = NULL; }
+	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
 
-	~Function()           { Free(ptr); }
+	template <class F>
+	Function& operator<<(F fn)                 { WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
+
+	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
+	
+	operator bool() const                      { return ptr; }
+	void Clear()                               { Free(ptr); ptr = NULL; }
+
+	~Function()                                { Free(ptr); }
 };
 
-template<typename Res, typename... ArgTypes>
-Function<Res (ArgTypes...)> Proxy(const Function<Res (ArgTypes...)>& target)
-{
-	return target.Proxy();
-}
+enum CNULLer { CNULL };
 
-using Callback = Function<void ()>;
+// we need "isolation level" to avoid overloading issues
+template <class... ArgTypes>
+class CallbackN : Moveable<CallbackN<ArgTypes...>> {
+	typedef Function<void (ArgTypes...)> Fn;
 
-template <class... Args> using CallbackN = Function<void (Args...)>;
+	Fn fn;
 
+public:
+	CallbackN() {}
+	CallbackN(CNULLer)                         {}
+	CallbackN(const CallbackN& a) : fn(a.fn)   {}
+	CallbackN(const Fn& a) : fn(a)             {}
+	CallbackN& operator=(const CallbackN& a)   { fn = a.fn; return *this; }
+	CallbackN& operator=(CNULLer)              { fn.Clear(); return *this; }
+	CallbackN Proxy() const                    { return fn.Proxy(); }
+
+	CallbackN& operator<<(const CallbackN& b)  { fn << b.fn; return *this; }
+	CallbackN& operator<<(const Fn& b)         { fn << b; return *this; }
+	
+	void operator()(ArgTypes... args) const    { return fn(args...); }
+
+	operator Fn() const                        { return fn; }
+	operator bool() const                      { return fn; }
+	void Clear()                               { fn.Clear(); }
+	
+	friend CallbackN Proxy(const CallbackN& a) { return a.Proxy(); }
+};
+
+typedef CallbackN<> Callback;
 template <class P1> using Callback1 = CallbackN<P1>;
 template <class P1, class P2> using Callback2 = CallbackN<P1, P2>;
 template <class P1, class P2, class P3> using Callback3 = CallbackN<P1, P2, P3>;
 template <class P1, class P2, class P3, class P4> using Callback4 = CallbackN<P1, P2, P3, P4>;
 template <class P1, class P2, class P3, class P4, class P5> using Callback5 = CallbackN<P1, P2, P3, P4, P5>;
 
-using Gate = Function<bool ()>;
+#define  Res void
+#define  Cb_ CallbackN
+#include "CallbackR.i"
 
-template <class... Args> using GateN = Function<bool (Args...)>;
+// we need "isolation level" to avoid overloading issues
+template <class... ArgTypes>
+class GateN : Moveable<GateN<ArgTypes...>> {
+	typedef Function<bool (ArgTypes...)> Fn;
 
+	Fn fn;
+	
+	void Set(bool b) { if(b) fn = [](ArgTypes...) { return true; }; else fn.Clear(); }
+
+public:
+	GateN()                                {}
+	GateN(bool b)                          { Set(b); }
+	GateN(CNULLer)                         {}
+	GateN(const GateN& a) : fn(a.fn)       {}
+	GateN(const Fn& a) : fn(a)             {}
+	GateN& operator=(const GateN& a)       { fn = a.fn; return *this; }
+	GateN& operator=(CNULLer)              { fn.Clear(); return *this; }
+	GateN& operator=(bool b)               { Set(b); return *this; }
+	GateN Proxy() const                    { return fn.Proxy(); }
+	
+	bool operator()(ArgTypes... args) const { return fn(args...); }
+
+	operator Fn() const                    { return fn; }
+	operator bool() const                  { return fn; }
+	void Clear()                           { fn.Clear(); }
+
+	friend GateN Proxy(const GateN& a)     { return a.Proxy(); }
+};
+
+using Gate = GateN<>;
 template <class P1> using Gate1 = GateN<P1>;
 template <class P1, class P2> using Gate2 = GateN<P1, P2>;
 template <class P1, class P2, class P3> using Gate3 = GateN<P1, P2, P3>;
 template <class P1, class P2, class P3, class P4> using Gate4 = GateN<P1, P2, P3, P4>;
 template <class P1, class P2, class P3, class P4, class P5> using Gate5 = GateN<P1, P2, P3, P4, P5>;
 
-#define  Res void
-#include "CallbackR.i"
-
 #define  Res bool
+#define  Cb_ GateN
 #include "CallbackR.i"
 
 #define THISBACK(x)                  callback(this, &CLASSNAME::x)
