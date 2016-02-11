@@ -1724,7 +1724,7 @@ void Gdb_MI2::CopyDisas()
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // create GDB process and initializes it
-bool Gdb_MI2::Create(One<Host> rval_ _host, const String& exefile, const String& cmdline, bool console)
+bool Gdb_MI2::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = pick(_host);
 	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile) + " --interpreter=mi2" /*" -q"*/);
@@ -1802,7 +1802,7 @@ bool Gdb_MI2::Create(One<Host> rval_ _host, const String& exefile, const String&
 	return true;
 }
 
-One<Debugger> Gdb_MI2Create(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console)
+One<Debugger> Gdb_MI2Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
 {
 	Gdb_MI2 *dbg = new Gdb_MI2;
 	if(!dbg->Create(pick(host), exefile, cmdline, console)) {

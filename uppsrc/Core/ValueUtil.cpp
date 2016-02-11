@@ -33,29 +33,17 @@ bool ValueArray::Data::IsNull() const
 
 void ValueArray::Data::Serialize(Stream& s)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	s % data;
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::Data::Jsonize(JsonIO& jio)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Upp::Jsonize(jio, data);
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::Data::Xmlize(XmlIO& io)
 {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
 	Upp::Xmlize(io, data);
-#else
-	throw 0;
-#endif
 }
 
 unsigned ValueArray::Data::GetHashValue() const
@@ -123,7 +111,7 @@ Vector<Value>& ValueArray::Create()
 Vector<Value>& ValueArray::Clone() {
 	if(data->GetRefCount() != 1) {
 		Data *d = new Data;
-		d->data <<= data->data;
+		d->data = clone(data->data);
 		data->Release();
 		data = d;
 	}
@@ -141,7 +129,7 @@ ValueArray::ValueArray(const ValueArray& v) {
 	data->Retain();
 }
 
-ValueArray::ValueArray(Vector<Value> rval_ v)
+ValueArray::ValueArray(Vector<Value>&& v)
 {
 	Create() = pick(v);
 }
@@ -452,14 +440,14 @@ ValueMap::ValueMap(const ValueMap& v)
 	data->Retain();
 }
 
-ValueMap::ValueMap(Index<Value> rval_ k, Vector<Value> rval_ v)
+ValueMap::ValueMap(Index<Value>&& k, Vector<Value>&& v)
 {
 	Data& d = Create();
 	d.key = pick(k);
 	d.value = ValueArray(pick(v));
 }
 
-ValueMap::ValueMap(VectorMap<Value, Value> rval_ m)
+ValueMap::ValueMap(VectorMap<Value, Value>&& m)
 {
 	Data& d = Create();
 	d.key = m.PickKeys();

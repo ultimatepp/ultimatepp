@@ -1,0 +1,17 @@
+Create like emplace everywhere
+
+Remove CPP_11
+
+oportunity &&
+
+Remove IsPicked
+
+Remove AddPick (keep as synonym)
+
+Mitor?!
+
+RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
+
+void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
+
+Fix Value::Void::Retain

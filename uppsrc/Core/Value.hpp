@@ -130,7 +130,7 @@ public:
 	T&       Get()                            { return v; }
 	
 	RawValueRep(const T& v) : v(v)             {}
-	RawValueRep(T rval_ v, VPICK) : v(pick(v)) {}
+	RawValueRep(T&& v, VPICK) : v(pick(v))     {}
 	RawValueRep(const T& v, VDEEP) : v(v, 1)   {}
 	RawValueRep()                              {}
 };
@@ -340,7 +340,7 @@ inline Value RawToValue(const T& data)
 }
 
 template <class T>
-inline Value RawPickToValue(T rval_ data)
+inline Value RawPickToValue(T&& data)
 {
 	typedef RawValueRep<T> R;
 	return Value(new R(pick(data), R::PICK));

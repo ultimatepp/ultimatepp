@@ -100,7 +100,7 @@ void AIndex<T, V, HashFn>::Hash() {
 }
 
 template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator=(V rval_ s) {
+AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator=(V&& s) {
 	key = pick(s);
 	hash.Clear();
 	Hash();
@@ -116,7 +116,7 @@ AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator<<=(const V& s) {
 }
 
 template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>::AIndex(V rval_ s) : key(pick(s)) {
+AIndex<T, V, HashFn>::AIndex(V&& s) : key(pick(s)) {
 	Hash();
 }
 
@@ -405,7 +405,7 @@ int AMap<K, T, V, HashFn>::FindAdd(const K& k, const T& x) {
 }
 
 template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindAddPick(const K& k, T rval_ x) {
+int AMap<K, T, V, HashFn>::FindAddPick(const K& k, T&& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i < 0) {
@@ -445,7 +445,7 @@ int AMap<K, T, V, HashFn>::PutDefault(const K& k)
 }
 
 template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::PutPick(const K& k, T rval_ x)
+int AMap<K, T, V, HashFn>::PutPick(const K& k, T&& x)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount())
@@ -499,7 +499,7 @@ int AMap<K, T, V, HashFn>::FindPut(const K& k, const T& init)
 }
 
 template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindPutPick(const K& k, T rval_ init)
+int AMap<K, T, V, HashFn>::FindPutPick(const K& k, T&& init)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
@@ -531,7 +531,7 @@ T&  AMap<K, T, V, HashFn>::GetAdd(const K& k, const T& x) {
 }
 
 template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, T rval_ x) {
+T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, T&& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i >= 0) return value[i];
@@ -551,7 +551,7 @@ T&  AMap<K, T, V, HashFn>::GetPut(const K& k, const T& x) {
 }
 
 template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetPutPick(const K& k, T rval_ x) {
+T&  AMap<K, T, V, HashFn>::GetPutPick(const K& k, T&& x) {
 	return value[FindPutPick(k, x)];
 }
 

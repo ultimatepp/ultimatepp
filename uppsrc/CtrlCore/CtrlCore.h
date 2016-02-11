@@ -1141,7 +1141,7 @@ public:
 
 	Callback&    operator<<(Callback action)                { return WhenAction << action; }
 #ifdef CPP_11
-	Callback&    operator<<(std::function<void ()> action)  { return WhenAction << action; }
+//	Callback&    operator<<(std::function<void ()> action)  { return WhenAction << action; }
 #endif
 
 	void    SetTimeCallback(int delay_ms, Callback cb, int id = 0);

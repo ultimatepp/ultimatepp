@@ -54,8 +54,8 @@ public:
 	Callback1<int>           WhenMouseMove;
 
 	void            Clear();
-	void            Pick(RichText rval_ t);
-	void            Pick(RichText rval_ txt, Zoom z);
+	void            Pick(RichText&& t);
+	void            Pick(RichText&& txt, Zoom z);
 	void            SetQTF(const char *qtf, Zoom z = Zoom(1, 1));
 	const RichText& Get() const                               { return text; }
 	String          GetQTF(byte cs = CHARSET_UTF8) const      { return AsQTF(text, cs); }

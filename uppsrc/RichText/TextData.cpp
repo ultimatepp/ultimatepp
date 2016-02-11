@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-void  RichText::CatPick(RichText rval_ p)
+void  RichText::CatPick(RichText&& p)
 {
 	MergeStyles(p);
 	int c = part.GetCount();
@@ -332,7 +332,7 @@ RichText::RichText(const RichText& x, int)
 	nolinks = x.nolinks;
 }
 
-RichText::RichText(RichTxt rval_ x, RichStyles rval_ st)
+RichText::RichText(RichTxt&& x, RichStyles&& st)
    : RichTxt(pick(x)), style(pick(st))
 {
 	nolinks = false;

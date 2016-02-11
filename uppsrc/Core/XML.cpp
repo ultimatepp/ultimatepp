@@ -893,7 +893,7 @@ XmlNode& XmlNode::SetAttr(const char *id, const String& text)
 	return *this;
 }
 
-void XmlNode::SetAttrsPick(VectorMap<String, String> rval_ a)
+void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
 {
 	if(a.GetCount() == 0)
 		attr.Clear();

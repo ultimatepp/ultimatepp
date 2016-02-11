@@ -176,7 +176,7 @@ Date Value::GetOtherDate() const
 Time Value::GetOtherTime() const
 {
 	if(IsNull()) return Null;
-	return ToTime(GetSmall<Date>());	
+	return ToTime(GetSmall<Date>());
 }
 
 String Value::GetOtherString() const
@@ -632,10 +632,12 @@ Value::ConstIterator Value::End() const
 
 Vector<Value>& Value::CloneArray()
 {
+	RTIMING("CloneArray");
 	ValueArray::Data *data = (ValueArray::Data *)ptr();
 	if(data->GetRefCount() != 1) {
+		RTIMING("CloneArray2");
 		ValueArray::Data *d = new ValueArray::Data;
-		d->data <<= data->data;
+		d->data = clone(data->data);
 		data->Release();
 		ptr() = d;
 		data = d;
@@ -660,8 +662,14 @@ Value& Value::At(int i)
 
 void Value::Add(const Value& s)
 {
-	if(IsNull())
-		*this = ValueArray();
+	if(IsNull()) {
+		RTIMING("First add");
+		Vector<Value> v;
+		v.Add(s);
+		*this = ValueArray(pick(v));
+		return;
+	}
+	RTIMING("Second add");
 	ASSERT(IsRef() && ptr()->GetType() == VALUEARRAY_V);
 	CloneArray().Add(s);
 }
@@ -670,13 +678,17 @@ const Value& Value::operator[](const String& key) const
 {
 	if(IsRef() && ptr()->GetType() == VALUEMAP_V)
 		return ((ValueMap::Data *)ptr())->Get(key);
-	return ErrorValue();	
+	return ErrorValue();
 }
 
 Value& Value::GetAdd(const Value& key)
 {
-	if(IsNull())
-		*this = ValueMap();
+	if(IsNull()) {
+		VectorMap<Value, Value> m;
+		Value& h = m.Add(key);
+		*this = ValueMap(pick(m));
+		return h;
+	}
 	if(GetType() == VALUEARRAY_V) {
 		ValueMap m = *this;
 		*this = m;

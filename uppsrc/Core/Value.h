@@ -84,7 +84,7 @@ public:
 	public:
 		void               Retain()                    { AtomicInc(refcount); }
 		void               Release()                   { if(AtomicDec(refcount) == 0) delete this; }
-		int                GetRefCount() const         { return AtomicRead(refcount); }
+		int                GetRefCount() const         { return refcount; }
 
 		virtual dword      GetType() const             { return VOID_V; }
 		virtual bool       IsNull() const              { return true; }
@@ -303,7 +303,7 @@ template <class T> Value SvoToValue(const T& x)            { return Value(x, Val
 template <class T> Value RichToValue(const T& data);
 
 template <class T> Value RawToValue(const T& data);
-template <class T> Value RawPickToValue(T rval_ data);
+template <class T> Value RawPickToValue(T&& data);
 template <class T> Value RawDeepToValue(const T& data);
 template <class T> T&    CreateRawValue(Value& v);
 

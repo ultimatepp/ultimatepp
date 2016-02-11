@@ -63,8 +63,8 @@ public:
 	HashBase();
 	~HashBase();
 
-	HashBase(HashBase rval_ b);
-	void operator=(HashBase rval_ b);
+	HashBase(HashBase&& b);
+	void operator=(HashBase&& b);
 	HashBase(const HashBase& b, int);
 	void operator<<=(const HashBase& b);
 
@@ -182,9 +182,8 @@ public:
 
 // Pick assignment & copy. Picked source can only Clear(), ~AIndex(), operator=, operator<<=
 
-	AIndex& operator=(V rval_ s);
-//	AIndex& operator=(AIndex rval_ s) = default;
-	AIndex& operator<<=(const V& s);
+	AIndex& operator=(V&& s);
+	AIndex& operator<<=(const V& s); // deprecated
 
 // Standard container interface
 	typedef T                ValueType;
@@ -196,17 +195,13 @@ public:
 
 	void Swap(AIndex& b)                                  { UPP::Swap(hash, b.hash);
 	                                                        UPP::Swap(key, b.key); }
-// Optimalizations
-	friend int  GetCount(const AIndex& v)                 { return v.GetCount(); }
 
 protected:
-	AIndex(V rval_ s);
+	AIndex(V&& s);
 	AIndex(const V& s, int);
 	AIndex() {}
 	AIndex(const AIndex& s, int);
-#ifdef CPP_11
 	AIndex(std::initializer_list<T> init);
-#endif
 };
 
 template <class T, class HashFn = StdHash<T> >
@@ -217,22 +212,20 @@ public:
 	T        Pop()                           { T x = B::Top(); B::Drop(); return x; }
 
 	Index() {}
-	Index(Index rval_ s) : B(pick(s))        {}
+	Index(Index&& s) : B(pick(s))        {}
 	Index(const Index& s, int) : B(s, 1)     {}
-	explicit Index(Vector<T> rval_ s) : B(pick(s)) {}
+	explicit Index(Vector<T>&& s) : B(pick(s)) {}
 	Index(const Vector<T>& s, int) : B(s, 1) {}
 
-	Index& operator=(Vector<T> rval_ x)      { B::operator=(pick(x)); return *this; }
-	Index& operator=(Index<T> rval_ x)       { B::operator=(pick(x)); return *this; }
+	Index& operator=(Vector<T>&& x)          { B::operator=(pick(x)); return *this; }
+	Index& operator=(Index<T>&& x)           { B::operator=(pick(x)); return *this; }
 
 	friend void Swap(Index& a, Index& b)     { a.B::Swap(b); }
 
 	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
 	STL_INDEX_COMPATIBILITY(Index<T _cm_ HashFn>)
 
-#ifdef CPP_11
 	Index(std::initializer_list<T> init) : B(init) {}
-#endif
 };
 
 template <class T, class HashFn = StdHash<T> >
@@ -254,20 +247,18 @@ public:
 	T       *Detach(int i)                          { B::hash.Remove(i); return B::key.Detach(i); }
 
 	ArrayIndex() {}
-	ArrayIndex(ArrayIndex rval_ s) : B(pick(s))          {}
+	ArrayIndex(ArrayIndex&& s) : B(pick(s))              {}
 	ArrayIndex(const ArrayIndex& s, int) : B(s, 1)       {}
-	explicit ArrayIndex(Array<T> rval_ s) : B(pick(s))   {}
+	explicit ArrayIndex(Array<T>&& s) : B(pick(s))       {}
 	ArrayIndex(const Array<T>& s, int) : B(s, 1)         {}
 
-	ArrayIndex& operator=(Array<T> rval_ x)              { B::operator=(pick(x)); return *this; }
-	ArrayIndex& operator=(ArrayIndex<T> rval_ x)         { B::operator=(pick(x)); return *this; }
+	ArrayIndex& operator=(Array<T>&& x)                  { B::operator=(pick(x)); return *this; }
+	ArrayIndex& operator=(ArrayIndex<T>&& x)             { B::operator=(pick(x)); return *this; }
 
 	friend void Swap(ArrayIndex& a, ArrayIndex& b)       { a.B::Swap(b); }
 
 	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
 	STL_INDEX_COMPATIBILITY(ArrayIndex<T _cm_ HashFn>)
 
-#ifdef CPP_11
 	ArrayIndex(std::initializer_list<T> init) : B(init) {}
-#endif
 };

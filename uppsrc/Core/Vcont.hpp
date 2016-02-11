@@ -38,7 +38,7 @@ void Vector<T>::GrowF()
 }
 
 template <class T>
-void Vector<T>::Pick(Vector<T> rval_ v)
+void Vector<T>::Pick(Vector<T>&& v)
 {
 	vector = v.vector;
 	items = v.items;
@@ -99,7 +99,7 @@ T& Vector<T>::GrowAdd(const T& x) {
 }
 
 template <class T>
-T& Vector<T>::GrowAddPick(T rval_ x) {
+T& Vector<T>::GrowAddPick(T&& x) {
 	T *prev = vector;
 	Grow();
 	T *q = Rdd();
@@ -268,7 +268,7 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
-T& Vector<T>::InsertPick(int q, T rval_ x)
+T& Vector<T>::InsertPick(int q, T&& x)
 {
 	ASSERT(&x < vector || &x > vector + items);
 	RawInsert(q, 1);
@@ -302,7 +302,7 @@ void Vector<T>::Insert(int q, const Vector& x) {
 }
 
 template <class T>
-void Vector<T>::InsertPick(int i, Vector<T> rval_ v) {
+void Vector<T>::InsertPick(int i, Vector<T>&& v) {
 	Chk();
 	v.Chk();
 	ASSERT(!vector || v.vector != vector);
@@ -504,7 +504,7 @@ void Array<T>::Insert(int i, const T& x, int count) {
 }
 
 template <class T>
-T& Array<T>::InsertPick(int i, T rval_ x)
+T& Array<T>::InsertPick(int i, T&& x)
 {
 	vector.InsertN(i, 1);
 	vector[i] = new T(pick(x));
@@ -560,137 +560,6 @@ String Array<T>::ToString() const
 }
 
 #endif
-
-// ------------------
-
-template <class T, int NBLK>
-Segtor<T, NBLK>::Segtor(const Segtor& s, int) {
-	items = s.items;
-	block.SetCount((items + NBLK - 1) / NBLK);
-	int q = items / NBLK;
-	int r = items % NBLK;
-	int i;
-	for(i = 0; i < q; i++) {
-		T *a = (T *) s.block[i].item;
-		DeepCopyConstructArray((T *) block[i].item, a, a + NBLK);
-	}
-	if(r) {
-		T *a = (T *) s.block[q].item;
-		DeepCopyConstructArray((T *) block[i].item, a, a + r);
-	}
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Free() {
-	int q = items / NBLK;
-	int r = items % NBLK;
-	int i;
-	for(i = 0; i < q; i++) {
-		T *a = (T *) block[i].item;
-		DestroyArray(a, a + NBLK);
-	}
-	if(r) {
-		T *a = (T *) block[i].item;
-		DestroyArray(a, a + r);
-	}
-}
-
-template <class T, int NBLK>
-Segtor<T, NBLK>::~Segtor() {
-	if(IsPicked()) return;
-	Free();
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::DoRange(unsigned beg, unsigned end, void (*fn)(T*, const T*)) {
-	ASSERT(beg <= end);
-	int bblk = beg / NBLK, bidx = beg % NBLK;
-	int eblk = end / NBLK, eidx = end % NBLK;
-	if(eblk == block.GetCount()) {
-		ASSERT(eidx == 0);
-		eblk--;
-		eidx = NBLK;
-	}
-	ASSERT(eblk < block.GetCount());
-	T *tp = (T *)block[bblk].item;
-	if(bblk != eblk) {
-		(*fn)(tp + bidx, tp + NBLK);
-		while(++bblk < eblk) {
-			tp = (T *)block[bblk].item;
-			(*fn)(tp, tp + NBLK);
-		}
-		tp = (T *)block[bblk].item;
-		(*fn)(tp, tp + eidx);
-	}
-	else
-		(*fn)(tp + bidx, tp + eidx);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Fill(unsigned beg, unsigned end, const T& x) {
-	ASSERT(beg <= end);
-	int bblk = beg / NBLK, bidx = beg % NBLK;
-	int eblk = end / NBLK, eidx = end % NBLK;
-	if(eblk == block.GetCount()) {
-		ASSERT(eidx == 0);
-		eblk--;
-		eidx = NBLK;
-	}
-	ASSERT(eblk < block.GetCount());
-	T *tp = (T *)block[bblk].item;
-	if(bblk != eblk) {
-		DeepCopyConstructFill(tp + bidx, tp + NBLK, x);
-		while(++bblk < eblk) {
-			tp = (T *)block[bblk].item;
-			DeepCopyConstructFill(tp, tp + NBLK, x);
-		}
-		tp = (T *)block[bblk].item;
-		DeepCopyConstructFill(tp, tp + eidx, x);
-	}
-	else
-		DeepCopyConstructFill(tp + bidx, tp + eidx, x);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::SetCount(int n) {
-	Del(n);
-	block.SetCount((n + NBLK - 1) / NBLK);
-	Init(n);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::SetCount(int n, const T& init) {
-	Del(n);
-	block.SetCount((n + NBLK - 1) / NBLK);
-	Init(n, init);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Clear() {
-	if(!IsPicked())
-		Free();
-	items = 0;
-	block.Clear();
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Set(int i, const T& x, int count) {
-	ASSERT(i >= 0 && count >= 0);
-	DoIndex(i + count - 1);
-	Iterator q(*this, i);
-	while(count--)
-		*q++ = x;
-}
-
-template <class T, int NBLK>
-int Segtor<T, NBLK>::GetIndex(const T& item) const {
-	for(int i = 0; i < block.GetCount(); i++) {
-		T *q = (T *) block[i].item;
-		if(&item >= q && &item < q + NBLK)
-			return &item - q + NBLK * i;
-	}
-	return -1;
-}
 
 // ------------------
 

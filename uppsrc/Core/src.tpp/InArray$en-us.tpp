@@ -215,6 +215,16 @@ nt]_[*@3 pos])&]
 [s5;:InArray`:`:InArray`(`):%- [* InArray]()&]
 [s2; Default constructor.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:InArray`:`:InArray`(Upp`:`:InArray`&`&`):%- [* InArray]([* InArray][@(0.0.255) `&
+`&]_[*@3 v])&]
+[s2; Pick constructor.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:InArray`:`:operator`=`(Upp`:`:InArray`&`&`):%- [_^Upp`:`:InArray^ InArray][@(0.0.255) `&
+]_[* operator`=]([_^Upp`:`:InArray^ InArray][@(0.0.255) `&`&]_[*@3 v])&]
+[s2; Pick assignment.&]
+[s3; &]
 [s4; &]
 [s5;:InArray`:`:InArray`(const InArray`&`,int`):%- [* InArray]([@(0.0.255) const]_[* InArra
 y][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]

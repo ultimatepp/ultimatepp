@@ -212,7 +212,7 @@ void ArrayCtrl::CellInfo::Set(Ctrl *ctrl, bool owned, bool value)
 	ptr.Set1(cc);
 }
 
-ArrayCtrl::CellInfo::CellInfo(CellInfo rval_ s)
+ArrayCtrl::CellInfo::CellInfo(CellInfo&& s)
 {
 	ptr = s.ptr;
 	const_cast<CellInfo&>(s).ptr.SetPtr(NULL);

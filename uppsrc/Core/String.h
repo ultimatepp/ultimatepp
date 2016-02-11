@@ -160,8 +160,6 @@ class String0 : Moveable<String0> {
 		int    alloc;
 
 		char *GetPtr() const  { return (char*)(this + 1); }
-		void  Release();
-		void  Retain();
 	};
 
 	union {

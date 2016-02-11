@@ -57,7 +57,7 @@ HashBase::HashBase()
 	mcount = 0;
 }
 
-HashBase::HashBase(HashBase rval_ b)
+HashBase::HashBase(HashBase&& b)
 : hash(pick(b.hash)),
   link(pick(b.link))
 {
@@ -67,7 +67,7 @@ HashBase::HashBase(HashBase rval_ b)
 	const_cast<HashBase &>(b).map = NULL;
 }
 
-void HashBase::operator=(HashBase rval_ b)
+void HashBase::operator=(HashBase&& b)
 {
 	hash = pick(b.hash);
 	link = pick(b.link);

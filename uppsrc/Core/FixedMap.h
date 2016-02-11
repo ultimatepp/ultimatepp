@@ -6,7 +6,7 @@ protected:
 
 public:
 	T&       Add(const K& k, const T& x)       { key.Add(k); return value.Add(x); }
-	T&       AddPick(const K& k, T rval_ x)    { key.Add(k); return value.AddPick(x); }
+	T&       AddPick(const K& k, T&& x)        { key.Add(k); return value.AddPick(x); }
 	T&       Add(const K& k)                   { key.Add(k); return value.Add(); }
 	
 	void     Finish()                          { IndexSort(key, value, Less()); Shrink(); }
@@ -54,7 +54,7 @@ public:
 
 	FixedAMap()                                         {}
 	FixedAMap(const FixedAMap& s, int) : key(s.key, 0), value(s.value, 0) {}
-	FixedAMap(Vector<K> rval_  key, V rval_ val) : key(key), value(val) {}
+	FixedAMap(Vector<K>&& key, V&& val) : key(key), value(val) {}
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
@@ -83,7 +83,7 @@ class FixedVectorMap : public MoveableAndDeepCopyOption<FixedVectorMap<K, T, Les
     typedef FixedAMap< K, T, Vector<T>, Less > B;
 public:
 	FixedVectorMap(const FixedVectorMap& s, int) : FixedAMap<K, T, Vector<T>, Less>(s, 1) {}
-	FixedVectorMap(Vector<K> rval_  key, Vector<T> rval_ val) : FixedAMap<K, T, Vector<T>, Less>(key, val) {}
+	FixedVectorMap(Vector<K>&& key, Vector<T>&& val) : FixedAMap<K, T, Vector<T>, Less>(key, val) {}
 	FixedVectorMap()                                                       {}
 
 	friend void    Swap(FixedVectorMap& a, FixedVectorMap& b)      { a.B::Swap(b); }
@@ -104,7 +104,7 @@ public:
 	template <class TT> TT& Create(const K& k)     { TT *q = new TT; B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
 
 	FixedArrayMap(const FixedArrayMap& s, int) : FixedAMap<K, T, Array<T>, Less>(s, 1) {}
-	FixedArrayMap(Vector<K> rval_ ndx, Array<T> rval_ val) : FixedAMap<K, T, Array<T>, Less>(ndx, val) {}
+	FixedArrayMap(Vector<K>&& ndx, Array<T>&& val) : FixedAMap<K, T, Array<T>, Less>(ndx, val) {}
 	FixedArrayMap() {}
 
 	friend void    Swap(FixedArrayMap& a, FixedArrayMap& b)        { a.B::Swap(b); }

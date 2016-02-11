@@ -221,7 +221,7 @@ public:
 	int            AttrInt(const char *id, int def = Null) const;
 	XmlNode&       SetAttr(const char *id, int val);
 
-	void           SetAttrsPick(VectorMap<String, String> rval_ a);
+	void           SetAttrsPick(VectorMap<String, String>&& a);
 	
 	void           Shrink();
 	

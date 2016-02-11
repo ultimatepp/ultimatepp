@@ -381,10 +381,7 @@ inline bool IsFin(double d)        { return !IsNaN(d) && !IsInf(d); }
 template <typename T>
 T clone(const T& x) { T c(x, 1); return c; }
 
-#ifdef CPP_11
-
 #define pick_
-#define rval_ &&
 #define rval_default(T) T(T&&) = default; T& operator=(T&&) = default;
 
 //template <typename T>
@@ -394,26 +391,6 @@ template <typename T>
 auto pick(T&& x) noexcept -> decltype(std::move(x)) { return std::move(x); }
 
 template<class T> class Function;
-
-#else
-
-template <class T>
-T& pick(T& x) { return x; }
-
-#ifdef COMPILER_MSC
-#define pick_
-#define rval_ &
-#else
-#define pick_ const
-#define rval_ const &
-#endif
-
-#define rval_default(T)
-
-template <typename T>
-T& pick(const T& x) { return const_cast<T&>(x); }
-
-#endif
 
 #define init_
 

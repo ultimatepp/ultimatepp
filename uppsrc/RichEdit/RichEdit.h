@@ -510,7 +510,7 @@ private:
 	void       SetPaper();
 	void       SetLanguage();
 	void       Language();
-	void       SetupLanguage(Vector<int> rval_ lng);
+	void       SetupLanguage(Vector<int>&& lng);
 
 	void       SetBullet(int bullet);
 
@@ -852,7 +852,7 @@ public:
 	RichEditWithToolBar();
 };
 
-void AppendClipboard(RichText rval_ txt);
+void AppendClipboard(RichText&& txt);
 
 END_UPP_NAMESPACE
 

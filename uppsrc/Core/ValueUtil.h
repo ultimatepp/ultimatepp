@@ -207,7 +207,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 		virtual String       AsString() const;
 		virtual int          Compare(const Value::Void *p);
 
-		int GetRefCount() const     { return AtomicRead(refcount); }
+		int GetRefCount() const     { return refcount; }
 		Vector<Value>& Clone();
 
 		Vector<Value> data;
@@ -228,7 +228,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 public:
 	ValueArray()                              { Init0(); }
 	ValueArray(const ValueArray& v);
-	ValueArray(Vector<Value> rval_ values);
+	ValueArray(Vector<Value>&& values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
 	~ValueArray();
 
@@ -237,7 +237,7 @@ public:
 #endif
 
 	ValueArray& operator=(const ValueArray& v);
-	ValueArray& operator=(Vector<Value> rval_ values) { *this = ValueArray(pick(values)); return *this; }
+	ValueArray& operator=(Vector<Value>&& values) { *this = ValueArray(pick(values)); return *this; }
 
 	operator Value() const;
 	ValueArray(const Value& src);
@@ -333,8 +333,8 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 public:
 	ValueMap()                                      { Init0(); }
 	ValueMap(const ValueMap& v);
-	ValueMap(Index<Value> rval_ k, Vector<Value> rval_ v);
-	ValueMap(VectorMap<Value, Value> rval_ m);
+	ValueMap(Index<Value>&& k, Vector<Value>&& v);
+	ValueMap(VectorMap<Value, Value>&& m);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
 	ValueMap(const VectorMap<Value, Value>& m, int deep);
 	~ValueMap();
@@ -344,7 +344,7 @@ public:
 #endif
 
 	ValueMap& operator=(const ValueMap& v);
-	ValueMap& operator=(VectorMap<Value, Value> rval_ m) { *this = ValueMap(pick(m)); return *this; }
+	ValueMap& operator=(VectorMap<Value, Value>&& m) { *this = ValueMap(pick(m)); return *this; }
 
 	operator Value() const;
 	ValueMap(const Value& src);

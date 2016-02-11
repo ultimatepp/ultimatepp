@@ -353,18 +353,24 @@ size_t GetMemoryBlockSize_(void *ptr)
 }
 
 #else
+
+#define LTIMING(x)
+
 void *MemoryAlloc(size_t sz)
 {
+	LTIMING("MemoryAlloc");
 	return heap.Alloc(sz);
 }
 
 void *MemoryAllocSz(size_t& sz)
 {
+	LTIMING("MemoryAllocSz");
 	return heap.AllocSz(sz);
 }
 
 void  MemoryFree(void *ptr)
 {
+	LTIMING("MemoryFree");
 	heap.Free(ptr);
 }
 
@@ -380,21 +386,25 @@ bool   TryRealloc(void *ptr, size_t size)
 
 void *MemoryAlloc32()
 {
+	LTIMING("MemoryAlloc32");
 	return heap.Alloc32();
 }
 
 void  MemoryFree32(void *ptr)
 {
+	LTIMING("MemoryFree32");
 	heap.Free32(ptr);
 }
 
 void *MemoryAlloc48()
 {
+	LTIMING("MemoryAlloc48");
 	return heap.Alloc48();
 }
 
 void  MemoryFree48(void *ptr)
 {
+	LTIMING("MemoryFree48");
 	heap.Free48(ptr);
 }
 

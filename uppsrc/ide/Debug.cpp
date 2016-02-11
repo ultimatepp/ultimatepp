@@ -255,11 +255,11 @@ void Ide::BuildAndExtDebugFile()
 	BuildAndDebug0(editfile);
 }
 
-One<Debugger> GdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console);
-One<Debugger> Gdb_MI2Create(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console);
+One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
+One<Debugger> Gdb_MI2Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
 #ifdef PLATFORM_WIN32
-One<Debugger> CdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline);
-One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline);
+One<Debugger> CdbCreate(One<Host>&& host, const String& exefile, const String& cmdline);
+One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline);
 #endif
 
 void Ide::BuildAndDebug(bool runto)

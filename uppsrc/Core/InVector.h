@@ -360,15 +360,13 @@ public:
 	bool IsPicked() const                           { return iv.IsPicked(); }
 
 	InArray() {}
-	InArray(InArray rval_ v) : iv(pick(v.iv))       {}
-	InArray& operator=(InArray rval_ v)             { Free(); iv.operator=(pick(v.iv)); return *this; }
+	InArray(InArray&& v) : iv(pick(v.iv))           {}
+	InArray& operator=(InArray&& v)                 { Free(); iv.operator=(pick(v.iv)); return *this; }
 	InArray(const InArray& v, int);
 
 	~InArray()                                      { Free(); }
 
-#ifdef CPP_11
 	InArray(std::initializer_list<T> init)          { for(auto i : init) Add(i); }
-#endif
 
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
@@ -637,8 +635,8 @@ public:
 	SortedVectorMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 
 	SortedVectorMap()                               { B::SetSlave(); }
-	SortedVectorMap(SortedVectorMap rval_);
-	SortedVectorMap& operator=(SortedVectorMap rval_);
+	SortedVectorMap(SortedVectorMap&&);
+	SortedVectorMap& operator=(SortedVectorMap&&);
 	SortedVectorMap(const SortedVectorMap& s, int);
 	
 #ifdef CPP_11
@@ -720,8 +718,8 @@ public:
 	SortedArrayMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 
 	SortedArrayMap()                              { B::SetSlave(); }
-	SortedArrayMap(SortedArrayMap rval_);
-	SortedArrayMap& operator=(SortedArrayMap rval_);
+	SortedArrayMap(SortedArrayMap&&);
+	SortedArrayMap& operator=(SortedArrayMap&&);
 	SortedArrayMap(const SortedArrayMap& s, int);
 
 #ifdef CPP_11

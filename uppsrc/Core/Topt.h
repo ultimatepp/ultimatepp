@@ -271,8 +271,8 @@ public:
 	WithDeepCopy(const T& a, int) : T(a, 1)        {}
 	WithDeepCopy(const WithDeepCopy& a) : T(a, 1)  {}
 	WithDeepCopy& operator=(const WithDeepCopy& a) { (T&)*this <<= a; return *this; }
-	WithDeepCopy(int, T rval_ a) : T(a)            {}
-	WithDeepCopy& operator^=(T rval_ a)            { (T&)*this = pick(a); return *this; }
+	WithDeepCopy(int, T&& a) : T(pick(a))          {}
+	WithDeepCopy& operator^=(T&& a)                { (T&)*this = pick(a); return *this; }
 	WithDeepCopy()                                 {}
 };
 
@@ -292,7 +292,7 @@ public:
 };
 
 template <class T>
-WithPick<T> AsPick(T rval_ src)
+WithPick<T> AsPick(T&& src)
 {
 	return WithPick<T>(src);
 }

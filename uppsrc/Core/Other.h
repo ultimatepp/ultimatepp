@@ -26,7 +26,7 @@ class One : MoveableAndDeepCopyOption< One<T> > {
 	void        Free()                     { if(ptr && ptr != (T*)1) delete ptr; }
 	void        Chk() const                { ASSERT(ptr != (T*)1); }
 	void        ChkP() const               { Chk(); ASSERT(ptr); }
-	void        Pick(One<T> rval_ data)    { T *p = data.ptr; data.ptr = (T*)1; ptr = p; }
+	void        Pick(One<T>&& data)        { T *p = data.ptr; data.ptr = (T*)1; ptr = p; }
 
 public:
 	void        Attach(T *data)            { Free(); ptr = data; }
@@ -35,7 +35,7 @@ public:
 	void        Clear()                    { Free(); ptr = NULL; }
 
 	void        operator=(T *data)         { Attach(data); }
-	void        operator=(One<T> rval_  d) { Free(); Pick(pick(d)); }
+	void        operator=(One<T>&& d)      { Free(); Pick(pick(d)); }
 
 	const T    *operator->() const         { ChkP(); return ptr; }
 	T          *operator->()               { ChkP(); return ptr; }
@@ -60,7 +60,7 @@ public:
 
 	One()                                  { ptr = NULL; }
 	One(T *newt)                           { ptr = newt; }
-	One(One<T> rval_ p)                    { Pick(pick(p)); }
+	One(One<T>&& p)                        { Pick(pick(p)); }
 	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : DeepCopyNew(*p); }
 	~One()                                 { Free(); }
 };
@@ -82,7 +82,7 @@ class Any : Moveable<Any> {
 	BaseData *ptr;
 
 	void Chk() const                              { ASSERT(ptr != (void *)1); }
-	void Pick(Any rval_ s)                        { ptr = s.ptr; const_cast<Any&>(s).ptr = (BaseData *)1; }
+	void Pick(Any&& s)                            { ptr = s.ptr; const_cast<Any&>(s).ptr = (BaseData *)1; }
 
 public:
 	template <class T> T& Create()                { Clear(); Data<T> *x = new Data<T>; ptr = x; return x->data; }
@@ -95,8 +95,8 @@ public:
 	bool IsEmpty() const                          { return ptr == NULL; }
 	bool IsPicked() const                         { return ptr == (void *)1; }
 
-	void operator=(Any rval_ s)                   { Clear(); Pick(pick(s)); }
-	Any(Any rval_ s)                              { Pick(pick(s)); }
+	void operator=(Any&& s)                       { Clear(); Pick(pick(s)); }
+	Any(Any&& s)                                  { Pick(pick(s)); }
 
 	Any()                                         { ptr = NULL; }
 	~Any()                                        { Clear(); }
@@ -122,15 +122,13 @@ public:
 	Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
 	~Buffer()                            { if(ptr) delete[] ptr; }
 
-	void operator=(Buffer rval_ v)      { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
-	Buffer(Buffer rval_ v)              { ptr = v.ptr; v.ptr = NULL; }
+	void operator=(Buffer&& v)           { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
+	Buffer(Buffer&& v)                   { ptr = v.ptr; v.ptr = NULL; }
 
-#ifdef CPP_11
 	Buffer(size_t size, std::initializer_list<T> init) : Buffer(size) {
 		T *t = ptr; for(auto i : init) DeepCopyConstruct(t++, i);
 	}
 	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
-#endif
 };
 
 class Bits : Moveable<Bits> {
@@ -148,8 +146,8 @@ public:
 	Bits()                         { bp = NULL; alloc = 0; }
 	~Bits()                        { Clear(); }
 
-	Bits(Bits rval_ b)            { alloc = b.alloc; bp = b.bp; b.alloc = -1; }
-	void operator=(Bits rval_ b)  { Clear(); alloc = b.alloc; bp = b.bp; b.alloc = -1; }
+	Bits(Bits&& b)                 { alloc = b.alloc; bp = b.bp; b.alloc = -1; }
+	void operator=(Bits&& b)        { Clear(); alloc = b.alloc; bp = b.bp; b.alloc = -1; }
 };
 
 //# System dependent
@@ -162,7 +160,7 @@ class Mitor : Moveable< Mitor<T> > {
 	byte elem0[sizeof(T)];
 
 	T&        Get(int i) const;
-	void      Pick(Mitor rval_ m);
+	void      Pick(Mitor&& m);
 	void      Copy(const Mitor& m);
 	void      Chk() const               { ASSERT(count != 2); }
 
@@ -175,11 +173,11 @@ public:
 	void      Clear();
 	void      Shrink();
 
-	Mitor(Mitor rval_ m)               { Pick(m); }
-	void operator=(Mitor rval_ m)      { Clear(); Pick(pick(m)); }
+	Mitor(Mitor&& m)                    { Pick(m); }
+	void operator=(Mitor&& m)           { Clear(); Pick(pick(m)); }
 
 	Mitor(Mitor& m, int)                { Copy(m); }
-	void operator<<=(const Mitor& m)    { Clear(); Copy(pick(m)); }
+	void operator<<=(const Mitor& m)    { Clear(); Copy(m); }
 
 	Mitor()                             { count = 0; }
 	~Mitor()                            { Clear(); }
@@ -193,7 +191,7 @@ T& Mitor<T>::Get(int i) const
 }
 
 template <class T>
-void Mitor<T>::Pick(Mitor rval_ m)
+void Mitor<T>::Pick(Mitor&& m)
 {
 	m.Chk();
 	vector = m.vector;

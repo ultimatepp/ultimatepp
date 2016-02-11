@@ -190,7 +190,7 @@ void RichEdit::ZoomClip(RichText& text) const
 	text.ApplyZoom(clipzoom);
 }
 
-void AppendClipboard(RichText rval_ txt)
+void AppendClipboard(RichText&& txt)
 {
 	AppendClipboardUnicodeText(txt.GetPlainText());
 	Value clip = RawPickToValue(pick(txt));
