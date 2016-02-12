@@ -479,6 +479,13 @@ inline String& operator<<(String& s, const T& x)
 	return s;
 }
 
+template <class T>
+inline String& operator<<(String&& s, const T& x)
+{
+	s.Cat(AsString(x));
+	return s;
+}
+
 template<>
 inline String& operator<<(String& s, const char * const &x)
 {

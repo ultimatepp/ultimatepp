@@ -43,7 +43,7 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 public:
 	T&       Add()                   { Chk(); if(items >= alloc) GrowF(); return *(::new(vector + items++) T); }
 	T&       Add(const T& x)         { Chk(); return items < alloc ? DeepCopyConstruct(Rdd(), x) : GrowAdd(x); }
-	T&       AddPick(T&& x)          { Chk(); return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	T&       Add(T&& x)              { Chk(); return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
 	void     AddN(int n);
 	const T& operator[](int i) const { return Get(i); }
 	T&       operator[](int i)       { return Get(i); }
@@ -72,15 +72,14 @@ public:
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
 	void     Insert(int i, const T& x, int count);
 	T&       Insert(int i, const T& x)  { Insert(i, x, 1); return Get(i); }
-	T&       InsertPick(int i, T&& x);
+	T&       Insert(int i, T&& x);
 	void     Insert(int i, const Vector& x);
 	void     Insert(int i, const Vector& x, int offset, int count);
-	void     InsertPick(int i, Vector&& x);
+	void     Insert(int i, Vector&& x);
 	void     InsertSplit(int i, Vector<T>& v, int from);
 	void     Append(const Vector& x)               { Insert(GetCount(), x); }
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
-	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
-	int      GetIndex(const T& item) const; //deprecated
+	void     Append(Vector&& x)                    { InsertPick(GetCount(), pick(x)); }
 	void     Swap(int i1, int i2)    { UPP::Swap(Get(i1), Get(i2)); }
 
 	void     Drop(int n = 1)         { ASSERT(n <= GetCount()); Trim(items - n); }
@@ -122,7 +121,6 @@ public:
 // Pick assignment & copy. Picked source can only do Clear(), ~Vector(), operator=, operator <<=
 	Vector(Vector&& v)               { Pick(pick(v)); }
 	void operator=(Vector&& v)       { Free(); Pick(pick(v)); }
-	bool IsPicked() const            { return items < 0; }
 
 #ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
@@ -152,6 +150,12 @@ public:
 //deprecated
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
+	T&       AddPick(T&& x)          { Chk(); return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	int      GetIndex(const T& item) const; //deprecated
+	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
+	bool     IsPicked() const            { return items < 0; }
+	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
+	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
 
 	STL_VECTOR_COMPATIBILITY(Vector<T>)
 };
@@ -182,7 +186,8 @@ protected:
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
 	T&       Add(const T& x)            { T *q = DeepCopyNew(x); vector.Add(q); return *q; }
-	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; }
+	T&       Add(T&& x)                 { T *q = new T(pick(x)); vector.Add(q); return *q; }
+	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; } // deprecated
 	T&       Add(T *newt)               { vector.Add(newt); return *newt; }
 	template<class TT> TT& Create()     { TT *q = new TT; Add(q); return *q; }
 	const T& operator[](int i) const    { return Get(i); }

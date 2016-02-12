@@ -104,10 +104,10 @@ element.&]
 [s7; [*/ Return value]-|Reference to new element in Array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Array`:`:AddPick`(T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([*@4 T][@(0.0.255) `&
-`&]_[*@3 x])&]
+[s5;:Upp`:`:Array`:`:Add`(T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T][@(0.0.255) `&`&]_[*@3 x
+])&]
 [s2; Adds new element to the Array and picks value of parameter to 
-it. &]
+it.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Add`(T`*`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T]_`*[*@3 newt])&]

@@ -15,3 +15,13 @@ RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
 void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
 
 Fix Value::Void::Retain
+
+Generic Tuple
+
+inline String& operator<<(String&& s, const T& x)
+
+Range
+
+for(auto i: map)
+
+Index::FindAddFirst

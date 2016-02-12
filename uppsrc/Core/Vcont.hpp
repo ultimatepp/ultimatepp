@@ -268,11 +268,11 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
-T& Vector<T>::InsertPick(int q, T&& x)
+T& Vector<T>::Insert(int q, T&& x)
 {
 	ASSERT(&x < vector || &x > vector + items);
 	RawInsert(q, 1);
-	::new(vector[q]) T(x);
+	::new(vector + q) T(pick(x));
 	return Get(q);
 }
 
@@ -302,7 +302,7 @@ void Vector<T>::Insert(int q, const Vector& x) {
 }
 
 template <class T>
-void Vector<T>::InsertPick(int i, Vector<T>&& v) {
+void Vector<T>::Insert(int i, Vector<T>&& v) {
 	Chk();
 	v.Chk();
 	ASSERT(!vector || v.vector != vector);

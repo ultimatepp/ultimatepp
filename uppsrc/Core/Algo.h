@@ -47,10 +47,15 @@ void Sum(V& sum, T ptr, T end)
 		sum += *ptr++;
 }
 
-template <class T>
-typename T::ValueType Sum(const T& c, const typename T::ValueType& zero)
+template <class Range>
+struct RangeValueType {
+	typedef typename std::remove_reference<decltype(*((Range *)0)->begin())>::type type;
+};
+
+template <class T, class Z>
+typename RangeValueType<T>::type Sum(const T& c, const Z& zero)
 {
-	typename T::ValueType sum = zero;
+	Z sum = zero;
 	Sum(sum, c.Begin(), c.End());
 	return sum;
 }
