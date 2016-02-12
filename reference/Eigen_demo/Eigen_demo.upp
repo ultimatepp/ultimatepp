@@ -6,7 +6,8 @@ uses
 
 file
 	eigen_demo.cpp,
-	non-linear.cpp;
+	non-linear.cpp,
+	fft.cpp;
 
 mainconfig
 	"" = "";

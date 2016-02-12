@@ -7,6 +7,7 @@ using namespace Upp;
 using namespace Eigen;
 
 void NonLinearTests();
+void FFTTests();
 
 struct SerialTest {
 	MatrixXd m;
@@ -30,6 +31,10 @@ struct SerialTest {
 		
 CONSOLE_APP_MAIN
 {	
+	FFTTests();
+	
+	Cout() << "\nFin";
+	getchar();
 	// http://eigen.tuxfamily.org/dox/TutorialMatrixClass.html
 	Cout() << "\n\nTutorial page 1 - The Matrix class";
 	
@@ -694,6 +699,11 @@ CONSOLE_APP_MAIN
 	ReadStdIn();
 		
 	NonLinearTests();
+	
+	Cout() << "\nPress enter to continue\n";
+	ReadStdIn();
+	
+	FFTTests();
 	
 	Cout() << "\nPress enter to end";
 	ReadStdIn();
