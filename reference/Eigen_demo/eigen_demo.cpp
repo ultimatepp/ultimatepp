@@ -31,10 +31,6 @@ struct SerialTest {
 		
 CONSOLE_APP_MAIN
 {	
-	FFTTests();
-	
-	Cout() << "\nFin";
-	getchar();
 	// http://eigen.tuxfamily.org/dox/TutorialMatrixClass.html
 	Cout() << "\n\nTutorial page 1 - The Matrix class";
 	
@@ -705,7 +701,7 @@ CONSOLE_APP_MAIN
 	
 	FFTTests();
 	
-	Cout() << "\nPress enter to end";
+	Cout() << "\n\nPress enter to end";
 	ReadStdIn();
 }
 
