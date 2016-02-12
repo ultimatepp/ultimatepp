@@ -13,7 +13,7 @@ using namespace Eigen;
 
 void FFTTests()
 {
-	Cout() << "\n\nFFT sample\nGets the FFT of equation"
+	Cout() << "\nFFT sample\nGets the FFT of equation"
 			  "\n f(t) = 2*sin(2*PI*t/50 - PI/3) + 5*sin(2*PI*t/30 - PI/2) + 30*sin(2*PI*t/10 - PI/5)"
 			  "\nsampled with a frequency of 14 samples/second";
 	
