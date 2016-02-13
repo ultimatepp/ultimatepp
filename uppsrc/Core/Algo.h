@@ -52,18 +52,18 @@ struct RangeValueType {
 	typedef typename std::remove_reference<decltype(*((Range *)0)->begin())>::type type;
 };
 
-template <class T, class Z>
-typename RangeValueType<T>::type Sum(const T& c, const Z& zero)
+template <class T>
+typename RangeValueType<T>::type Sum(const T& c, const typename RangeValueType<T>::type& zero)
 {
-	Z sum = zero;
+	typename RangeValueType<T>::type sum = zero;
 	Sum(sum, c.Begin(), c.End());
 	return sum;
 }
 
 template <class T>
-typename T::ValueType Sum(const T& c)
+typename RangeValueType<T>::type Sum(const T& c)
 {
-	return Sum(c, 0);
+	return Sum(c, (typename RangeValueType<T>::type)0);
 }
 
 template <class C, class Pred>

@@ -174,6 +174,7 @@ void CoWork::Finish() {
 #endif
 }
 
+/*
 void CoWork::Pipe(int stepi, const Callback& cb)
 {
 	Mutex::Lock __(stepmutex);
@@ -198,6 +199,7 @@ void CoWork::Pipe(int stepi, const Callback& cb)
 		}
 	}
 }
+*/
 
 bool CoWork::IsFinished()
 {

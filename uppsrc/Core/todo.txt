@@ -25,3 +25,14 @@ Range
 for(auto i: map)
 
 Index::FindAddFirst
+
+CoWork limits, pipe, logical thread not working
+
+Function/Callback &&, Swap
+
+Remove commented out code
+
+-----------------------
+DONE
+
+String() <<
