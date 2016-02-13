@@ -113,8 +113,6 @@ public:
 	V&               GetValues()                   { return value; }
 	V                PickValues()                  { return pick(value); }
 	
-	bool             IsPicked() const              { return value.IsPicked() || key.IsPicked(); }
-
 	AMap& operator()(const K& k, const T& v)       { Add(k, v); return *this; }
 
 	AMap()                                         {}
@@ -123,7 +121,7 @@ public:
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	
 #ifdef CPP_11
-	AMap(std::initializer_list<std::pair<K, T>> init) { for(auto i : init) Add(i.first, i.second); }
+	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, i.second); }
 #endif
 
 	typedef Vector<K> KeyContainer;

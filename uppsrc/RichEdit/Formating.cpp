@@ -351,7 +351,7 @@ void RichEdit::IndexEntry()
 	String s0 = s;
 	WhenIndexEntry(s);
 	if(s != s0) {
-		formatinfo.indexentry <<= s.ToWString();
+		formatinfo.indexentry = s.ToWString();
 		ApplyFormat(RichText::INDEXENTRY);
 		NextUndo();
 		SetFocus();

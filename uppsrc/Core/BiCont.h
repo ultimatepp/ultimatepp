@@ -56,8 +56,6 @@ public:
 	bool     operator>(const BiVector<T>& x) const  { return Compare(x) > 0; }
 #endif
 
-	bool     IsPicked() const                   { return items < 0; }
-
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
 	BiVector(BiVector&& src)                    { Pick(pick(src)); }
 	void operator=(BiVector&& src)              { Free(); Pick(pick(src)); }
@@ -138,8 +136,6 @@ public:
 	bool     operator<(const BiArray<T>& x) const  { return Compare(x) < 0; }
 	bool     operator>(const BiArray<T>& x) const  { return Compare(x) > 0; }
 #endif
-
-	bool     IsPicked() const                { return bv.IsPicked(); }
 
 	BiArray(const BiArray& v, int)           { DeepCopy0(v); }
 

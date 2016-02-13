@@ -225,8 +225,6 @@ public:
 	
 	void           Shrink();
 	
-	bool           IsPicked() const                           { return node.IsPicked(); }
-
 	rval_default(XmlNode);
 
 	XmlNode(const XmlNode& n, int);

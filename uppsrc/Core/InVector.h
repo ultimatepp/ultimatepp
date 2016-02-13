@@ -70,8 +70,6 @@ private:
 	void SetBegin(ConstIterator& it) const;
 	void SetEnd(ConstIterator& it) const;
 
-	void     Chk() const                            { ASSERT_(!IsPicked(), "Broken rval_ semantics"); }
-	
 	void     Init();
 
 #ifdef flagIVTEST
@@ -91,7 +89,7 @@ public:
 	T&       Add(const T& x)                        { return Insert(GetCount(), x); }
 	void     AddN(int n)                            { InsertN(GetCount(), n); }
 	
-	int      GetCount() const                       { Chk(); return count; }
+	int      GetCount() const                       { return count; }
 	bool     IsEmpty() const                        { return GetCount() == 0; }
 
 	void     Trim(int n)                            { Remove(n, GetCount() - n); }
@@ -139,12 +137,11 @@ public:
 	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
 
 	InVector();
-	bool IsPicked() const                           { return data.IsPicked(); }
 
 	InVector(const InVector& v, int);
 
 #ifdef CPP_11
-	InVector(std::initializer_list<T> init)         { Init(); for(auto i : init) Add(i); }
+	InVector(std::initializer_list<T> init)         { Init(); for(const auto& i : init) Add(i); }
 #endif
 
 	void Swap(InVector& b);
@@ -272,7 +269,7 @@ private:
 	void     Delete(IVIter i, int count);
 	void     Delete(int i, int count);
 	void     Init(int i, int count);
-	void     Free()                 { if(!IsPicked()) Delete(iv.Begin(), GetCount()); }
+	void     Free()                 { Delete(iv.Begin(), GetCount()); }
 
 	void     SetIter(ConstIterator& it, int ii) const;
 	void     SetBegin(ConstIterator& it) const;
@@ -357,8 +354,6 @@ public:
 	Iterator         End()                          { Iterator it; SetEnd(it); return it; }
 	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
 
-	bool IsPicked() const                           { return iv.IsPicked(); }
-
 	InArray() {}
 	InArray(InArray&& v) : iv(pick(v.iv))           {}
 	InArray& operator=(InArray&& v)                 { Free(); iv.operator=(pick(v.iv)); return *this; }
@@ -366,7 +361,7 @@ public:
 
 	~InArray()                                      { Free(); }
 
-	InArray(std::initializer_list<T> init)          { for(auto i : init) Add(i); }
+	InArray(std::initializer_list<T> init)          { for(const auto& i : init) Add(i); }
 
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
@@ -509,8 +504,6 @@ public:
 	SortedIndex()                                        {}
 	SortedIndex(const SortedIndex& s, int) : iv(s.iv, 1) {}
 	
-	bool IsPicked() const                            { return iv.IsPicked(); }
-
 	void Swap(SortedIndex& a)                        { iv.Swap(a.iv); }
 
 #ifdef UPP
@@ -574,8 +567,6 @@ public:
 	const SortedIndex<K>& GetIndex() const          { return key; }
 	const InVector<K>& GetKeys() const              { return key.GetKeys(); }
 
-	bool     IsPicked() const                       { return value.data.IsPicked() || key.IsPicked(); }
-	
 	String   ToString() const;
 	bool     operator==(const SortedAMap& b) const  { return IsEqualMap(*this, b); }
 	bool     operator!=(const SortedAMap& b) const  { return !operator==(b); }
@@ -640,7 +631,7 @@ public:
 	SortedVectorMap(const SortedVectorMap& s, int);
 	
 #ifdef CPP_11
-	SortedVectorMap(std::initializer_list<std::pair<K, T>> init) : SortedVectorMap() { for(auto i : init) Add(i.first, i.second); }
+	SortedVectorMap(std::initializer_list<std::pair<K, T>> init) : SortedVectorMap() { for(const auto& i : init) Add(i.first, i.second); }
 #endif
 
 	void     Swap(SortedVectorMap& x);
@@ -723,7 +714,7 @@ public:
 	SortedArrayMap(const SortedArrayMap& s, int);
 
 #ifdef CPP_11
-	SortedArrayMap(std::initializer_list<std::pair<K, T>> init) : SortedArrayMap() { for(auto i : init) Add(i.first, i.second); }
+	SortedArrayMap(std::initializer_list<std::pair<K, T>> init) : SortedArrayMap() { for(const auto& i : init) Add(i.first, i.second); }
 #endif
 
 #ifdef UPP

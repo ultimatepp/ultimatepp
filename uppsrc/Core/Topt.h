@@ -130,6 +130,7 @@ inline void Fill(unsigned char *t, const unsigned char *lim, const unsigned char
 inline void Copy(unsigned char *dst, const unsigned char *src, const unsigned char *lim)
 { memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
 
+/*
 template <class T>
 inline T& DeepCopyConstruct(void *p, const T& x) {
 	return *(::new(p) T(x));
@@ -140,31 +141,8 @@ inline T *DeepCopyNew(const T& x) {
 	return new T(x);
 }
 
-template <class T>
-inline void ConstructArray(T *t, const T *lim) {
-	while(t < lim)
-		::new(t++) T;
-}
+*/
 
-template <class T>
-inline void DestroyArray(T *t, const T *lim) {
-	while(t < lim) {
-		t->T::~T();
-		t++;
-	}
-}
-
-template <class T>
-inline void DeepCopyConstructArray(T *t, const T *s, const T *lim) {
-	while(s < lim)
-		DeepCopyConstruct(t++, *s++);
-}
-
-template <class T>
-inline void DeepCopyConstructFill(T *t, const T *lim, const T& x) {
-	while(t < lim)
-		DeepCopyConstruct(t++, x);
-}
 
 #ifdef NO_MOVEABLE_CHECK
 
@@ -238,30 +216,17 @@ NTL_MOVEABLE(wchar_t);
 template <class T, class B = EmptyClass>
 class DeepCopyOption : public B {
 public:
-	friend T& operator<<=(T& dest, const T& src)
+	friend T& operator<<=(T& dest, const T& src)  // obsolete
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
-	friend T& DeepCopyConstruct(void *dest, const T& src)
-	{ return *(::new (dest) T(src, 0)); }
-	friend T *DeepCopyNew(const T& src)
-	{ return ::new T(src, 0); }
+	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
 template <class T>
 class MoveableAndDeepCopyOption {
 	friend void AssertMoveable0(T *) {}
-	friend T& operator<<=(T& dest, const T& src)
+	friend T& operator<<=(T& dest, const T& src) // obsolete
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
-	friend T& DeepCopyConstruct(void *dest, const T& src)
-	{ return *(::new (dest) T(src, 0)); }
-	friend T *DeepCopyNew(const T& src)
-	{ return ::new T(src, 0); }
-};
-
-template <class T, class B = EmptyClass>
-class PolyDeepCopyNew : public B
-{
-public:
-	friend T *DeepCopyNew(const T& t)              { return t.Copy(); }
+	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
 template <class T>

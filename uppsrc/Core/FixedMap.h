@@ -48,8 +48,6 @@ public:
 	V&               GetValues()               { return value; }
 	V                PickValues()              { return pick(value); }
 	
-	bool             IsPicked() const          { return value.IsPicked() || key.IsPicked(); }
-
 	FixedAMap& operator()(const K& k, const T& v)       { Add(k, v); return *this; }
 
 	FixedAMap()                                         {}

@@ -233,7 +233,7 @@ public:
 	~ValueArray();
 
 #ifdef CPP_11
-	ValueArray(std::initializer_list<Value> init)    { Init0(); for(auto i : init) { Add(i); }}
+	ValueArray(std::initializer_list<Value> init)    { Init0(); for(const auto& i : init) { Add(i); }}
 #endif
 
 	ValueArray& operator=(const ValueArray& v);
@@ -340,7 +340,7 @@ public:
 	~ValueMap();
 
 #ifdef CPP_11
-	ValueMap(std::initializer_list<std::pair<Value, Value>> init) { Init0(); for(auto i : init) { Add(i.first, i.second); }}
+	ValueMap(std::initializer_list<std::pair<Value, Value>> init) { Init0(); for(const auto& i : init) { Add(i.first, i.second); }}
 #endif
 
 	ValueMap& operator=(const ValueMap& v);

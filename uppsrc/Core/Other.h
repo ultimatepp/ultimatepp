@@ -26,7 +26,7 @@ class One : MoveableAndDeepCopyOption< One<T> > {
 	void        Free()                     { if(ptr && ptr != (T*)1) delete ptr; }
 	void        Chk() const                { ASSERT(ptr != (T*)1); }
 	void        ChkP() const               { Chk(); ASSERT(ptr); }
-	void        Pick(One<T>&& data)        { T *p = data.ptr; data.ptr = (T*)1; ptr = p; }
+	void        Pick(One<T>&& data)        { T *p = data.ptr; data.ptr = NULL; ptr = p; }
 
 public:
 	void        Attach(T *data)            { Free(); ptr = data; }
@@ -51,7 +51,6 @@ public:
 	template <class TT>
 	bool        Is() const                 { return dynamic_cast<const TT *>(ptr); }
 
-	bool        IsPicked() const           { return ptr == (T*)1; }
 	bool        IsEmpty() const            { Chk(); return !ptr; }
 
 	operator bool() const                  { return ptr; }
@@ -82,7 +81,7 @@ class Any : Moveable<Any> {
 	BaseData *ptr;
 
 	void Chk() const                              { ASSERT(ptr != (void *)1); }
-	void Pick(Any&& s)                            { ptr = s.ptr; const_cast<Any&>(s).ptr = (BaseData *)1; }
+	void Pick(Any&& s)                            { ptr = s.ptr; const_cast<Any&>(s).ptr = NULL; }
 
 public:
 	template <class T> T& Create()                { Clear(); Data<T> *x = new Data<T>; ptr = x; return x->data; }
@@ -90,45 +89,15 @@ public:
 	template <class T> T& Get()                   { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
 	template <class T> const T& Get() const       { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
 
-	void Clear()                                  { if(ptr && !IsPicked()) delete ptr; ptr = NULL; }
+	void Clear()                                  { if(ptr) delete ptr; ptr = NULL; }
 
 	bool IsEmpty() const                          { return ptr == NULL; }
-	bool IsPicked() const                         { return ptr == (void *)1; }
 
 	void operator=(Any&& s)                       { Clear(); Pick(pick(s)); }
 	Any(Any&& s)                                  { Pick(pick(s)); }
 
 	Any()                                         { ptr = NULL; }
 	~Any()                                        { Clear(); }
-};
-
-template <class T>
-class Buffer : Moveable< Buffer<T> > {
-	mutable T *ptr;
-
-public:
-	operator T*()                        { return ptr; }
-	operator const T*() const            { return ptr; }
-	T *operator~()                       { return ptr; }
-	const T *operator~() const           { return ptr; }
-
-	void Alloc(size_t size)              { Clear(); ptr = new T[size]; }
-	void Alloc(size_t size, const T& in) { Clear(); ptr = new T[size]; Fill(ptr, ptr + size, in); }
-
-	void Clear()                         { if(ptr) delete[] ptr; ptr = NULL; }
-
-	Buffer()                             { ptr = NULL; }
-	Buffer(size_t size)                  { ptr = new T[size]; }
-	Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
-	~Buffer()                            { if(ptr) delete[] ptr; }
-
-	void operator=(Buffer&& v)           { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
-	Buffer(Buffer&& v)                   { ptr = v.ptr; v.ptr = NULL; }
-
-	Buffer(size_t size, std::initializer_list<T> init) : Buffer(size) {
-		T *t = ptr; for(auto i : init) DeepCopyConstruct(t++, i);
-	}
-	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
 };
 
 class Bits : Moveable<Bits> {

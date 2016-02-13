@@ -32,6 +32,13 @@ Function/Callback &&, Swap
 
 Remove commented out code
 
+MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
+
+::Insert Range
+
+InVector<T>::Insert list
+
+Vector/Array/Index/Map :: RemoveIf
 -----------------------
 DONE
 

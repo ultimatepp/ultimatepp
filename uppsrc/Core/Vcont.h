@@ -10,6 +10,62 @@ void BREAK_WHEN_PICKED(T& x)
 #endif
 
 template <class T>
+inline void DeepCopyConstructFill(T *t, const T *end, const T& x) {
+	while(t != end)
+		new(t++) T(clone(x));
+}
+
+template <class T>
+inline void Construct(T *t, const T *lim) {
+	while(t < lim)
+		new(t++) T;
+}
+
+template <class T>
+inline void Destroy(T *t, const T *end)
+{
+	while(t != end) {
+		t->T::~T();
+		t++;
+	}
+}
+
+template <class T>
+inline void DeepCopyConstruct(T *t, const T *s, const T *end) {
+	while(s != end)
+		new (t++) T(clone(*s++));
+}
+
+template <class T>
+class Buffer : Moveable< Buffer<T> > {
+	mutable T *ptr;
+
+public:
+	operator T*()                        { return ptr; }
+	operator const T*() const            { return ptr; }
+	T *operator~()                       { return ptr; }
+	const T *operator~() const           { return ptr; }
+
+	void Alloc(size_t size)              { Clear(); ptr = new T[size]; }
+	void Alloc(size_t size, const T& in) { Clear(); ptr = new T[size]; Fill(ptr, ptr + size, in); }
+
+	void Clear()                         { if(ptr) delete[] ptr; ptr = NULL; }
+
+	Buffer()                             { ptr = NULL; }
+	Buffer(size_t size)                  { ptr = new T[size]; }
+	Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
+	~Buffer()                            { if(ptr) delete[] ptr; }
+
+	void operator=(Buffer&& v)           { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
+	Buffer(Buffer&& v)                   { ptr = v.ptr; v.ptr = NULL; }
+
+	Buffer(size_t size, std::initializer_list<T> init) : Buffer(size) {
+		T *t = ptr; for(const auto& i : init) new (t++) T(i);
+	}
+	Buffer(std::initializer_list<T> init) : Buffer(init.size(), init) {}
+};
+
+template <class T>
 class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	T       *vector;
 	int      items;
@@ -18,12 +74,7 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	static void    RawFree(T *ptr)            { if(ptr) MemoryFree(ptr); }
 	static T      *RawAlloc(int& n);
 
-#ifdef _DEBUG
-	static Vector& SetPicked(Vector&& v)  { BreakWhenPicked((void *)&v); Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
-#else
-	static Vector& SetPicked(Vector&& v)  { Vector& p = (Vector&)(v); p.items = -1; p.vector = NULL; return p; }
-#endif
-
+	void     Zero()                          { vector = NULL; items = alloc = 0; }
 	void     Pick(Vector<T>&& v);
 
 	T       *Rdd()                           { return vector + items++; }
@@ -31,7 +82,6 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	void     Free();
 	void     __DeepCopy(const Vector& src);
 	T&       Get(int i) const        { ASSERT(i >= 0 && i < items); return vector[i]; }
-	void     Chk() const             { ASSERT_(items >= 0, "Broken rval_ semantics"); }
 	void     ReAlloc(int alloc);
 	void     ReAllocF(int alloc);
 	void     Grow();
@@ -41,14 +91,14 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	void     RawInsert(int q, int count);
 
 public:
-	T&       Add()                   { Chk(); if(items >= alloc) GrowF(); return *(::new(vector + items++) T); }
-	T&       Add(const T& x)         { Chk(); return items < alloc ? DeepCopyConstruct(Rdd(), x) : GrowAdd(x); }
-	T&       Add(T&& x)              { Chk(); return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	T&       Add()                   { if(items >= alloc) GrowF(); return *(::new(Rdd()) T); }
+	T&       Add(const T& x)         { return items < alloc ? *(new(Rdd()) T(clone(x))) : GrowAdd(x); }
+	T&       Add(T&& x)              { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
 	void     AddN(int n);
 	const T& operator[](int i) const { return Get(i); }
 	T&       operator[](int i)       { return Get(i); }
-	int      GetCount() const        { Chk(); return items; }
-	bool     IsEmpty() const         { Chk(); return items == 0; }
+	int      GetCount() const        { return items; }
+	bool     IsEmpty() const         { return items == 0; }
 	void     Trim(int n);
 	void     SetCount(int n);
 	void     SetCount(int n, const T& init);
@@ -106,7 +156,7 @@ public:
 	bool     operator>(const Vector<T>& x) const  { return Compare(x) > 0; }
 #endif
 
-	Vector()                         { vector = NULL; items = alloc = 0; }
+	Vector()                         { Zero(); }
 	~Vector() {
 		Free();
 		return; // Constraints:
@@ -150,10 +200,9 @@ public:
 //deprecated
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
-	T&       AddPick(T&& x)          { Chk(); return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	T&       AddPick(T&& x)             { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
 	int      GetIndex(const T& item) const; //deprecated
 	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
-	bool     IsPicked() const            { return items < 0; }
 	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
 	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
 
@@ -176,16 +225,16 @@ protected:
 #ifdef _DEBUG
 	void     Del(T **ptr, T **lim)                      { while(ptr < lim) delete (T *) *ptr++; }
 	void     Init(T **ptr, T **lim)                     { while(ptr < lim) *ptr++ = new T; }
-	void     Init(T **ptr, T **lim, const T& x)         { while(ptr < lim) *ptr++ = DeepCopyNew(x); }
+	void     Init(T **ptr, T **lim, const T& x)         { while(ptr < lim) *ptr++ = new T(clone(x)); }
 #else
 	void     Del(void **ptr, void **lim)                { while(ptr < lim) delete (T *) *ptr++; }
 	void     Init(void **ptr, void **lim)               { while(ptr < lim) *ptr++ = new T; }
-	void     Init(void **ptr, void **lim, const T& x)   { while(ptr < lim) *ptr++ = DeepCopyNew(x); }
+	void     Init(void **ptr, void **lim, const T& x)   { while(ptr < lim) *ptr++ = new T(clone(x)); }
 #endif
 
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
-	T&       Add(const T& x)            { T *q = DeepCopyNew(x); vector.Add(q); return *q; }
+	T&       Add(const T& x)            { T *q = new T(clone(x)); vector.Add(q); return *q; }
 	T&       Add(T&& x)                 { T *q = new T(pick(x)); vector.Add(q); return *q; }
 	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; } // deprecated
 	T&       Add(T *newt)               { vector.Add(newt); return *newt; }
@@ -243,8 +292,6 @@ public:
 
 	Array& operator<<(const T& x)       { Add(x); return *this; }
 	Array& operator<<(T *newt)          { Add(newt); return *this; }
-
-	bool     IsPicked() const           { return vector.IsPicked(); }
 
 #ifdef UPP
 	void     Serialize(Stream& s)       { StreamContainer(s, *this); }

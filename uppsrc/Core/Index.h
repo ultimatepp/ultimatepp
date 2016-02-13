@@ -68,8 +68,6 @@ public:
 	HashBase(const HashBase& b, int);
 	void operator<<=(const HashBase& b);
 
-	bool  IsPicked() const                  { return hash.IsPicked(); }
-
 	const unsigned *Begin() const           { return hash.Begin(); }
 	const unsigned *End() const             { return hash.End(); }
 
@@ -178,7 +176,6 @@ public:
 
 	V        PickKeys() pick_                  { return pick(key); }
 	const V& GetKeys() const                   { return key; }
-	bool     IsPicked(void) const              { return key.IsPicked(); }
 
 // Pick assignment & copy. Picked source can only Clear(), ~AIndex(), operator=, operator<<=
 

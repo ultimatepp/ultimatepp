@@ -60,7 +60,6 @@ force_inline void InVector<T>::ClearCache() const
 template <class T>
 force_inline int InVector<T>::FindBlock(int& pos, int& off) const
 {
-	Chk();
 	if(invector_cache_serial_ == serial && pos >= invector_cache_offset_ &&
 	   pos < invector_cache_end_) {
 		LLOG("Found in cache, serial: " << invector_cache_serial_ << ", offset: " << invector_cache_offset_ << ", end: " << invector_cache_end_);

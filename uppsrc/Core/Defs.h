@@ -379,7 +379,7 @@ inline bool IsFin(double d)        { return !IsNaN(d) && !IsInf(d); }
 #define OFFSETOF(clss, mbr) ((int)(uintptr_t)&(((clss *)1)->mbr) - 1)
 
 template <typename T>
-T clone(const T& x) { T c(x, 1); return c; }
+const T& clone(const T& x) { return x; }
 
 #define pick_
 #define rval_default(T) T(T&&) = default; T& operator=(T&&) = default;

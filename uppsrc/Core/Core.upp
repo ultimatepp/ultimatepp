@@ -101,6 +101,7 @@ file
 	InMap.hpp,
 	Tuple.h,
 	Other.h,
+	Single.h,
 	Callbacks readonly separator,
 	CallbackNP.i highlight cpp,
 	CallbackN.i highlight cpp,

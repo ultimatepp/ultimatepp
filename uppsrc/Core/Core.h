@@ -271,21 +271,23 @@ class JsonIO;
 
 #include "SplitMerge.h"
 
+#include "Uuid.h"
+
+#include "Ptr.h"
+
 #include "Callback.h"
 
 #include "Mt.h"
 
 #include "Other.h"
 
+#include "Single.h"
+
 #include "Value.h"
 #include "ValueUtil.h"
 
 #include "Color.h"
 #include "Complex.h"
-
-#include "Uuid.h"
-
-#include "Ptr.h"
 
 #include "Util.h"
 

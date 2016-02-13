@@ -438,8 +438,8 @@ int AMap<K, T, V, HashFn>::PutDefault(const K& k)
 		value.Add();
 	}
 	else {
-		DestroyArray(&value[i], &value[i] + 1);
-		ConstructArray(&value[i], &value[i] + 1);
+		Destroy(&value[i], &value[i] + 1);
+		Construct(&value[i], &value[i] + 1);
 	}
 	return i;
 }
@@ -462,8 +462,8 @@ T&  AMap<K, T, V, HashFn>::Put(const K& k)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount()) {
-		DestroyArray(&value[i], &value[i] + 1);
-		ConstructArray(&value[i], &value[i] + 1);
+		Destroy(&value[i], &value[i] + 1);
+		Construct(&value[i], &value[i] + 1);
 		return value[i];
 	}
 	else {

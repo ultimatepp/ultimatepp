@@ -25,7 +25,7 @@ RichPara::RichPara()
 
 RichPara::~RichPara()
 {
-	if(cacheid && !part.IsPicked() && !incache) {
+	if(cacheid && part.GetCount() && !incache) {
 		Mutex::Lock __(cache_lock);
 		Array<RichPara>& cache = Cache();
 		incache = true;
