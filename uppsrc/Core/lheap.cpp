@@ -61,7 +61,7 @@ void Heap::LinkFree(DLink *b, int size)
 }
 
 Heap::DLink *Heap::AddChunk(int reqsize)
-{ // gets a free chunk 
+{ // gets a free chunk
 	DLink *ml;
 	if(lempty->next != lempty) {
 		ml = lempty->next;
@@ -151,7 +151,7 @@ void *Heap::TryLAlloc(int ii, size_t size)
 		if(freebin[ii] != freebin[ii]->next) {
 			void *ptr = DivideBlock(freebin[ii]->next, (int)size);
 			LLOG("TryLAlloc succeeded " << (void *)ptr);
-			ASSERT((size_t)ptr & 8);
+			ASSERT((size_t)ptr & 16);
 			return ptr;
 		}
 		ii++;
@@ -201,7 +201,7 @@ void *Heap::LAlloc(size_t& size)
 		Panic("Out of memory!");
 	ptr = DivideBlock(n, (int)size);
 	LLOG("LAlloc via AddChunk " << (void *)ptr);
-	ASSERT((size_t)ptr & 8);
+	ASSERT((size_t)ptr & 16);
 	return ptr;
 }
 

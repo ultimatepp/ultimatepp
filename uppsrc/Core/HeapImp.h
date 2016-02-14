@@ -17,9 +17,19 @@ void  FreeRaw64KB(void *ptr);
 
 struct Heap {
 	static int Ksz(int k) {
-		return k < 14 ? (k + 1) << 4 : k == 17 ? 576 : k == 16 ? 448 : k == 15 ? 368 : 288;
+		static int sz[] = {
+			32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384,
+			448, 576, 672, 800, 992, 8, 16, 24, 40, 48, 56
+		//  12   13   14   15   16  17  18  19  20  21  22
+		};
+		return sz[k];
 	}
-
+	
+	enum {
+		KLASS_32 = 0,
+		KLASS_48 = 21,
+	};
+	
 	struct FreeLink {
 		FreeLink *next;
 	};
@@ -27,7 +37,7 @@ struct Heap {
 	struct Page { // small block Page, <= 32 bytes
 		Heap        *heap;     // pointer to Heap
 		byte         klass;    // size class
-		byte         active;   // number of used (active) blocks in this page
+		word         active;   // number of used (active) blocks in this page
 		FreeLink    *freelist; // single linked list of free blocks in Page
 		Page        *next;     // Pages are in work/full/empty lists
 		Page        *prev;
@@ -76,9 +86,9 @@ struct Heap {
 	};
 
 	enum {
-		NKLASS = 18, // number of small size classes
+		NKLASS = 23, // number of small size classes
 		LBINS = 113, // number of large size bins
-		LARGEHDRSZ = 16, // size of large block header
+		LARGEHDRSZ = 32, // size of large block header, causes 16 byte disalignment
 		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
 		BIGHDRSZ = 48, // size of huge block header
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
@@ -147,7 +157,8 @@ struct Heap {
 	void *AllocK(int k);
 	void  FreeK(void *ptr, Page *page, int k);
 	void *Allok(int k);
-	void  Freek(void *ptr, int k);
+	void  Free(void *ptr, Page *page, int k);
+	void  Free(void *ptr, int k);
 	void  FreeDirect(void *ptr);
 	void  MoveLarge(Heap *dest, DLink *l);
 	void  MoveToEmpty(DLink *l, Header *bh);
@@ -174,7 +185,6 @@ struct Heap {
 	void Shutdown();
 	static void AuxFinalCheck();
 
-	void  *Alloc(size_t sz);
 	void  *AllocSz(size_t& sz);
 	void   Free(void *ptr);
 	size_t GetBlockSize(void *ptr);

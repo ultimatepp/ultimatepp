@@ -126,47 +126,41 @@ void *Heap::Allok(int k)
 	return DbgFreeCheckK(AllocK(k), k);
 }
 
-inline
-void *Heap::Alloc(size_t sz)
-{
-	Stat(sz);
-	if(sz <= 224) {
-		if(sz == 0) sz = 1;
-		return Allok(((int)sz - 1) >> 4);
-	}
-	if(sz <= 576)
-		return Allok(sz <= 368 ? sz <= 288 ? 14 : 15 : sz <= 448 ? 16 : 17);
-	return LAlloc(sz);
-}
-
-inline
+force_inline
 void *Heap::AllocSz(size_t& sz)
 {
 	Stat(sz);
-	if(sz <= 224) {
-		if(sz == 0) sz = 1;
-		int k = ((int)sz - 1) >> 4;
-		sz = (k + 1) << 4;
+	if(sz <= 384) {
+		if(sz == 0)
+			sz = 1;
+		int k = ((int)sz - 1) >> 5;
+		sz = (k + 1) << 5;
 		return Allok(k);
 	}
-	if(sz <= 576) {
-		int k;
-		if(sz <= 368)
-			if(sz <= 288)
-				sz = 288, k = 14;
-			else
-				sz = 368, k = 15;
-		else
-			if(sz <= 448)
-				sz = 448, k = 16;
-			else
-				sz = 576, k = 17;
-		return Allok(k);
+	if(sz <= 992) {
+		if(sz <= 448) {
+			sz = 448;
+			return Allok(12);
+		}
+		if(sz <= 576) {
+			sz = 576;
+			return Allok(13);
+		}
+		if(sz <= 672) {
+			sz = 672;
+			return Allok(14);
+		}
+		if(sz <= 800) {
+			sz = 800;
+			return Allok(15);
+		}
+		sz = 992;
+		return Allok(16);
 	}
 	return LAlloc(sz);
 }
 
-inline
+force_inline
 void Heap::FreeK(void *ptr, Page *page, int k)
 {
 	if(page->freelist) {
@@ -201,6 +195,29 @@ void Heap::FreeK(void *ptr, Page *page, int k)
 	}
 }
 
+force_inline
+void Heap::Free(void *ptr, Page *page, int k)
+{
+	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
+	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
+#ifdef _MULTITHREADED
+	if(page->heap != this) { // freeing page allocated in different thread
+		RemoteFree(ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
+		return;
+	}
+#endif
+	DbgFreeFillK(ptr, k);
+	if(cachen[k]) {
+		cachen[k]--;
+		FreeLink *l = (FreeLink *)ptr;
+		l->next = cache[k];
+		cache[k] = l;
+		return;
+	}
+	FreeK(ptr, page, k);
+}
+
+force_inline
 void Heap::Free(void *ptr)
 {
 	if(!ptr) return;
@@ -208,23 +225,6 @@ void Heap::Free(void *ptr)
 	if((((dword)(uintptr_t)ptr) & 16) == 0) {
 		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
 		int k = page->klass;
-		LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
-		ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
-#ifdef _MULTITHREADED
-		if(page->heap != this) { // freeing page allocated in different thread
-			RemoteFree(ptr, Ksz(k)); // add to originating heap's list of free pages to be properly freed later
-			return;
-		}
-#endif
-		DbgFreeFillK(ptr, k);
-		if(cachen[k]) {
-			cachen[k]--;
-			FreeLink *l = (FreeLink *)ptr;
-			l->next = cache[k];
-			cache[k] = l;
-			return;
-		}
-		FreeK(ptr, page, k);
 	}
 	else
 		LFree(ptr);
@@ -269,64 +269,36 @@ void Heap::FreeDirect(void *ptr)
 		LFree(ptr);
 }
 
-inline
+force_inline
 void *Heap::Alloc32()
 {
 	Stat(32);
-	return Allok(1);
+	return Allok(KLASS_32);
 }
 
-inline
+force_inline
+void Heap::Free(void *ptr, int k)
+{
+	Free(ptr, (Page *)((uintptr_t)ptr & ~(uintptr_t)4095), KLASS_32);
+}
+
+force_inline
 void Heap::Free32(void *ptr)
 {
-	Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
-	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
-	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(1) == 0);
-#ifdef _MULTITHREADED
-	if(page->heap != this) {
-		RemoteFree(ptr, 32);
-		return;
-	}
-#endif
-	DbgFreeFillK(ptr, 1);
-	if(cachen[1]) {
-		cachen[1]--;
-		FreeLink *l = (FreeLink *)ptr;
-		l->next = cache[1];
-		cache[1] = l;
-		return;
-	}
-	FreeK(ptr, page, 1);
+	Free(ptr, KLASS_32);
 }
 
 inline
 void *Heap::Alloc48()
 {
 	Stat(48);
-	return Allok(2);
+	return Allok(KLASS_48);
 }
 
 inline
 void Heap::Free48(void *ptr)
 {
-	Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
-	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
-	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(2) == 0);
-#ifdef _MULTITHREADED
-	if(page->heap != this) {
-		RemoteFree(ptr, 48);
-		return;
-	}
-#endif
-	DbgFreeFillK(ptr, 2);
-	if(cachen[2]) {
-		cachen[2]--;
-		FreeLink *l = (FreeLink *)ptr;
-		l->next = cache[2];
-		cache[2] = l;
-		return;
-	}
-	FreeK(ptr, page, 2);
+	Free(ptr, KLASS_48);
 }
 
 Heap::Page    dummy;
@@ -339,7 +311,7 @@ thread__ Heap heap = {
 #if defined(HEAPDBG)
 void *MemoryAlloc_(size_t sz)
 {
-	return heap.Alloc(sz);
+	return heap.AllocSz(sz);
 }
 
 void  MemoryFree_(void *ptr)
