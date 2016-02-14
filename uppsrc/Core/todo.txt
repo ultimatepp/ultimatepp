@@ -4,27 +4,19 @@ Remove CPP_11
 
 oportunity &&
 
-Remove IsPicked
-
-Remove AddPick (keep as synonym)
-
 Mitor?!
 
 RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
-
-void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
 
 Fix Value::Void::Retain
 
 Generic Tuple
 
-inline String& operator<<(String&& s, const T& x)
-
 Range
 
 for(auto i: map)
 
-Index::FindAddFirst
+Index::FirstFind
 
 CoWork limits, pipe, logical thread not working
 
@@ -39,7 +31,31 @@ MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 InVector<T>::Insert list
 
 Vector/Array/Index/Map :: RemoveIf
+
+Use m128!
+
+nanoalloc
+
+Remove ArrayIndex
+
+Range in containers
+
+ConditionVariable
+
+rename Function
+
 -----------------------
 DONE
 
 String() <<
+
+String &&
+
+Remove IsPicked
+
+Remove AddPick (keep as synonym)
+
+void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
+
+
+inline String& operator<<(String&& s, const T& x)

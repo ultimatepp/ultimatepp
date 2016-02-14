@@ -252,6 +252,7 @@ class JsonIO;
 #include "Atomic.h"
 #include "Global.h"
 #include "Topt.h"
+#include "Mt.h"
 #include "String.h"
 
 #include "CharSet.h"
@@ -271,20 +272,17 @@ class JsonIO;
 
 #include "SplitMerge.h"
 
-#include "Uuid.h"
-
-#include "Ptr.h"
-
-#include "Callback.h"
-
-#include "Mt.h"
-
 #include "Other.h"
 
 #include "Single.h"
 
 #include "Value.h"
 #include "ValueUtil.h"
+
+#include "Uuid.h"
+#include "Ptr.h"
+
+#include "Callback.h"
 
 #include "Color.h"
 #include "Complex.h"

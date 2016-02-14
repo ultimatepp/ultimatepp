@@ -140,9 +140,7 @@ public:
 
 	InVector(const InVector& v, int);
 
-#ifdef CPP_11
 	InVector(std::initializer_list<T> init)         { Init(); for(const auto& i : init) Add(i); }
-#endif
 
 	void Swap(InVector& b);
 
@@ -180,7 +178,7 @@ class InVector<T>::ConstIterator {
 	friend class InVector<T>::Iterator;
 
 	void NextBlk();
-	void PrevBlk();		
+	void PrevBlk();
 
 public:
 	force_inline int GetIndex() const              { return int(ptr - begin) + offset; }

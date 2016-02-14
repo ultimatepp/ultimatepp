@@ -49,7 +49,6 @@ void Vector<T>::Pick(Vector<T>&& v)
 template <class T>
 int  Vector<T>::GetIndex(const T& item) const
 {
-	Chk();
 	if(vector == NULL) return -1;
 	int n = &item - vector;
 	return n >= 0 && n < items ? n : -1;

@@ -107,7 +107,7 @@ Mutex vm; //a common access synchronizer
 //otherwise no child threads could run. they are created by main.
 //now each thread, having any Thread instace can start a first Run()
 
-bool Thread::Run(Callback _cb)
+bool Thread::Run(Function<void ()> _cb)
 {
 	LLOG("Thread::Run");
 	AtomicInc(sThreadCount);
@@ -342,7 +342,7 @@ bool Thread::Priority(int percent)
 #endif
 }
 
-void Thread::Start(Callback cb)
+void Thread::Start(Function<void ()> cb)
 {
 	Thread t;
 	t.Run(cb);

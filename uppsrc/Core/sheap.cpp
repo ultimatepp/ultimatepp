@@ -205,7 +205,7 @@ void Heap::Free(void *ptr)
 {
 	if(!ptr) return;
 	LLOG("Free " << ptr);
-	if((((dword)(uintptr_t)ptr) & 8) == 0) {
+	if((((dword)(uintptr_t)ptr) & 16) == 0) {
 		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
 		int k = page->klass;
 		LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));

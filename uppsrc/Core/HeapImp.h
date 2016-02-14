@@ -24,7 +24,7 @@ struct Heap {
 		FreeLink *next;
 	};
 
-	struct Page { // small block Page
+	struct Page { // small block Page, <= 32 bytes
 		Heap        *heap;     // pointer to Heap
 		byte         klass;    // size class
 		byte         active;   // number of used (active) blocks in this page
@@ -78,9 +78,9 @@ struct Heap {
 	enum {
 		NKLASS = 18, // number of small size classes
 		LBINS = 113, // number of large size bins
-		LARGEHDRSZ = 24, // size of large block header
+		LARGEHDRSZ = 16, // size of large block header
 		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
-		BIGHDRSZ = 56, // size of huge block header
+		BIGHDRSZ = 48, // size of huge block header
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
 

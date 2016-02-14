@@ -51,7 +51,8 @@ public:
 	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
 
 	template <class F>
-	Function& operator<<(F fn)                 { WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
+	Function& operator<<(F fn)                 { if(!ptr) { Copy(fn); return *this; }
+	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
 
 	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
 	
@@ -75,12 +76,17 @@ public:
 	CallbackN(CNULLer)                         {}
 	CallbackN(const CallbackN& a) : fn(a.fn)   {}
 	CallbackN(const Fn& a) : fn(a)             {}
+	CallbackN(Fn&& a) : fn(a)                  {}
+	CallbackN& operator=(const Fn& a)          { fn = a.fn; return *this; }
 	CallbackN& operator=(const CallbackN& a)   { fn = a.fn; return *this; }
 	CallbackN& operator=(CNULLer)              { fn.Clear(); return *this; }
 	CallbackN Proxy() const                    { return fn.Proxy(); }
 
 	CallbackN& operator<<(const CallbackN& b)  { fn << b.fn; return *this; }
 	CallbackN& operator<<(const Fn& b)         { fn << b; return *this; }
+	
+	template <class F>
+	CallbackN& operator<<(F f)                 { fn << f; }
 	
 	void operator()(ArgTypes... args) const    { return fn(args...); }
 
@@ -121,6 +127,9 @@ public:
 	GateN& operator=(CNULLer)              { fn.Clear(); return *this; }
 	GateN& operator=(bool b)               { Set(b); return *this; }
 	GateN Proxy() const                    { return fn.Proxy(); }
+
+	template <class F>
+	GateN& operator<<(F f)                 { fn << f; }
 	
 	bool operator()(ArgTypes... args) const { return fn(args...); }
 
