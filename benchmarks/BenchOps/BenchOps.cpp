@@ -6,11 +6,13 @@ Atomic val;
 
 struct Data {
 	int64 val[4];
+	
+	void Zero() { val[0] = val[1] = val[2] = val[3] = 0; }
 };
 
 Data src[16], dst[16];
 
-#define N 100000000
+#define N 10000000
 
 CONSOLE_APP_MAIN
 {
@@ -67,9 +69,28 @@ CONSOLE_APP_MAIN
 		}
 	}
 	{
+		RTIMING("Zero32");
+		for(int i = 0; i < N; i++) {
+			dst[i & 15].Zero();
+		}
+	}
+	{
 		RTIMING("Copy32");
 		for(int i = 0; i < N; i++) {
 			dst[i & 15] = src[i & 15];
+		}
+	}
+	int cnt = max((int)Random(10), 32);
+	{
+		RTIMING("memcpy variable 32");
+		for(int i = 0; i < N; i++) {
+			memcpy(&dst[i & 15], &src[i & 15], cnt);
+		}
+	}
+	{
+		RTIMING("memcpy fixed 32");
+		for(int i = 0; i < N; i++) {
+			memcpy(&dst[i & 15], &src[i & 15], 32);
 		}
 	}
 	{
