@@ -14,6 +14,19 @@ Data src[16], dst[16];
 
 #define N 10000000
 
+int count;
+
+force_inline void SSEZero16(void *t)
+{
+	_mm_storeu_si128((__m128i*)t, _mm_setzero_si128());
+}
+
+force_inline void SSEZero32(void *t)
+{
+	_mm_storeu_si128((__m128i*)t, _mm_setzero_si128());
+	_mm_storeu_si128((__m128i*)t + 1, _mm_setzero_si128());
+}
+
 CONSOLE_APP_MAIN
 {
 	{
@@ -21,6 +34,17 @@ CONSOLE_APP_MAIN
 		for(int i = 0; i < N; i++) {
 			AtomicInc(val);
 			AtomicDec(val);
+		}
+	}
+	{
+		RTIMING("Atomic and test");
+		for(int i = 0; i < N; i++) {
+			if(i & 1) {
+				AtomicInc(val);
+				AtomicInc(val);
+			}
+			if(AtomicDec(val))
+				count++;
 		}
 	}
 	{
@@ -51,6 +75,12 @@ CONSOLE_APP_MAIN
 		}
 	}
 	{
+		RTIMING("Alloc32/Free32");
+		for(int i = 0; i < N; i++) {
+			MemoryFree32(MemoryAlloc32());
+		}
+	}
+	{
 		RTIMING("Alloc/Free large");
 		for(int i = 0; i < N; i++) {
 			delete[] new byte[3000];
@@ -72,6 +102,18 @@ CONSOLE_APP_MAIN
 		RTIMING("Zero32");
 		for(int i = 0; i < N; i++) {
 			dst[i & 15].Zero();
+		}
+	}
+	{
+		RTIMING("SSEZero32");
+		for(int i = 0; i < N; i++) {
+			SSEZero32(&dst[i & 15]);
+		}
+	}
+	{
+		RTIMING("SSEZero16");
+		for(int i = 0; i < N; i++) {
+			SSEZero16(&dst[i & 15]);
 		}
 	}
 	{

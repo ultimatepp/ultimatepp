@@ -2,7 +2,7 @@ uses
 	Core;
 
 file
-	BenchOps.cpp;
+	BenchOps.cpp optimize_speed;
 
 mainconfig
 	"" = "MT";
