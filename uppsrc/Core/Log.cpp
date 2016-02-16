@@ -186,7 +186,7 @@ void LogOut::Line(const char *s, int len, int depth)
 			return;
 		p += ll;
 	}
-	char *beg = p; 
+	char *beg = p;
 	for(int q = min(depth, 99); q--;)
 		*p++ = '\t';
 	line_begin = len && s[len - 1] == '\n';

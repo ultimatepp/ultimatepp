@@ -1,6 +1,4 @@
 #include <Core/Core.h>
-#include <Core/Core.h>
-//#BLITZ_APPROVE
 
 NAMESPACE_UPP
 
@@ -34,8 +32,7 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 	empty[k] = NULL;
 	if(!page) { // try to reacquire pages freed remotely
 		LLOG("AllocK - trying FreeRemote");
-		if(remote_list)
-			FreeRemote();
+		SmallFreeRemote();
 		if(work[k]->freelist) { // partially free page found
 			LLOG("AllocK - work available after FreeRemote " << k);
 			return work[k];
@@ -49,16 +46,15 @@ Heap::Page *Heap::WorkPage(int k) // get a new workpage with empty blocks
 				LLOG("AllocK - free page available for reformatting " << k);
 				page = empty[i];
 				empty[i] = NULL;
-				page->Format(k); // reformat the page for the required class
+				page->Format(k); // reformat the page for the required klass
 				break;
 			}
 	if(!page) { // Attempt to find page in global storage of free pages
 		Mutex::Lock __(mutex);
-		aux.FreeRemoteRaw();
+		aux.SmallFreeRemoteRaw();
 		if(aux.work[k]->next != aux.work[k]) { // Try page of the same klass first
 			page = aux.work[k]->next;
 			page->Unlink();
-			page->heap = this;
 			LLOG("AllocK - adopting aux page " << k << " page: " << (void *)page << ", free " << (void *)page->freelist);
 		}
 		if(!page && aux.empty[k]) { // Try hot empty page of the same klass
@@ -222,9 +218,9 @@ void Heap::Free(void *ptr)
 {
 	if(!ptr) return;
 	LLOG("Free " << ptr);
-	if((((dword)(uintptr_t)ptr) & 16) == 0) {
-		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
-		int k = page->klass;
+	if(IsSmall(ptr)) {
+		Page *page = GetPage(ptr);
+		Free(ptr, page, page->klass);
 	}
 	else
 		LFree(ptr);
@@ -234,8 +230,8 @@ size_t Heap::GetBlockSize(void *ptr)
 {
 	if(!ptr) return 0;
 	LLOG("GetBlockSize " << ptr);
-	if((((dword)(uintptr_t)ptr) & 8) == 0) {
-		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
+	if(IsSmall(ptr)) {
+		Page *page = GetPage(ptr);
 		int k = page->klass;
 		return Ksz(k);
 	}
@@ -246,27 +242,24 @@ bool Heap::TryRealloc(void *ptr, size_t newsize)
 {
 	if(!ptr) return 0;
 	LLOG("GetBlockSize " << ptr);
-	if((((dword)(uintptr_t)ptr) & 8) == 0) {
-		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
+	if(IsSmall(ptr)) {
+		Page *page = GetPage(ptr);
 		int k = page->klass;
 		return newsize <= (size_t)Ksz(k);
 	}
 	return LTryRealloc(ptr, newsize);
 }
 
-void Heap::FreeDirect(void *ptr)
-{
+void Heap::SmallFreeDirect(void *ptr)
+{ // does not need to check for target heap or small vs large
 	LLOG("Free Direct " << ptr);
-	if((((dword)(uintptr_t)ptr) & 8) == 0) {
-		Page *page = (Page *)((uintptr_t)ptr & ~(uintptr_t)4095);
-		int k = page->klass;
-		LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
-		ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
-		DbgFreeFillK(ptr, k);
-		FreeK(ptr, page, k);
-	}
-	else
-		LFree(ptr);
+	Page *page = GetPage(ptr);
+	ASSERT(page->heap == this);
+	int k = page->klass;
+	LLOG("Small free page: " << (void *)page << ", k: " << k << ", ksz: " << Ksz(k));
+	ASSERT((4096 - ((uintptr_t)ptr & (uintptr_t)4095)) % Ksz(k) == 0);
+	DbgFreeFillK(ptr, k);
+	FreeK(ptr, page, k);
 }
 
 force_inline
@@ -279,7 +272,7 @@ void *Heap::Alloc32()
 force_inline
 void Heap::Free(void *ptr, int k)
 {
-	Free(ptr, (Page *)((uintptr_t)ptr & ~(uintptr_t)4095), KLASS_32);
+	Free(ptr, GetPage(ptr), k);
 }
 
 force_inline
@@ -288,25 +281,29 @@ void Heap::Free32(void *ptr)
 	Free(ptr, KLASS_32);
 }
 
-inline
+force_inline
 void *Heap::Alloc48()
 {
 	Stat(48);
 	return Allok(KLASS_48);
 }
 
-inline
+force_inline
 void Heap::Free48(void *ptr)
 {
 	Free(ptr, KLASS_48);
 }
 
+/*
 Heap::Page    dummy;
 #define DI    { { 0, 0, 0, 0, &dummy, &dummy } }
-
-thread__ Heap heap = {
-	{ DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI }
+*/
+thread__ Heap heap;
+/*
+ = {
+	{ DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI }
 };
+*/
 
 #if defined(HEAPDBG)
 void *MemoryAlloc_(size_t sz)
@@ -331,7 +328,7 @@ size_t GetMemoryBlockSize_(void *ptr)
 void *MemoryAlloc(size_t sz)
 {
 	LTIMING("MemoryAlloc");
-	return heap.Alloc(sz);
+	return heap.AllocSz(sz);
 }
 
 void *MemoryAllocSz(size_t& sz)

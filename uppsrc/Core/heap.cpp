@@ -17,6 +17,7 @@ void Heap::Init()
 	if(initialized)
 		return;
 	LLOG("Init heap " << (void *)this);
+
 	for(int i = 0; i < NKLASS; i++) {
 		empty[i] = NULL;
 		full[i]->LinkSelf();
@@ -25,112 +26,42 @@ void Heap::Init()
 		work[i]->klass = i;
 		cachen[i] = 3500 / Ksz(i);
 	}
-	ASSERT(sizeof(Header) == 16);
-	ASSERT(sizeof(DLink) <= 16);
-	ASSERT(sizeof(BigHdr) + sizeof(Header) < BIGHDRSZ);
 	GlobalLInit();
 	for(int i = 0; i < LBINS; i++)
 		freebin[i]->LinkSelf();
 	large->LinkSelf();
 	lcount = 0;
-	if(this != &aux && !aux.work[0]->next) {
+	if(this != &aux && !aux.initialized) {
 		Mutex::Lock __(mutex);
 		aux.Init();
 	}
 	initialized = true;
 	out_ptr = out;
-	PROFILEMT(mutex);
-}
-
-void Heap::RemoteFree(void *ptr, int size)
-{
-	if(!initialized)
-		Init();
-	ASSERT(out_ptr <= out + REMOTE_OUT_SZ / 16 + 1);
-	*out_ptr++ = ptr;
-	out_size += size;
-	if(out_size >= REMOTE_OUT_SZ)
-		RemoteFlush();
-}
-
-void Heap::RemoteFlushRaw()
-{
-	if(!initialized)
-		Init();
-	for(void **o = out; o < out_ptr; o++) {
-		FreeLink *f = (FreeLink *)*o;
-		Heap *heap = ((Page *)((uintptr_t)f & ~(uintptr_t)4095))->heap;
-		f->next = heap->remote_list;
-		heap->remote_list = f;
-	}
 	out_size = 0;
-	out_ptr = out;
-}
-
-void Heap::RemoteFreeL(void *ptr)
-{
-	Mutex::Lock __(mutex);
-	RemoteFlushRaw();
-	DLink  *b = (DLink *)ptr;
-	Header *bh = b->GetHeader();
-	FreeLink *f = (FreeLink *)ptr;
-	f->next = bh->heap->remote_list;
-	bh->heap->remote_list = f;
-}
-
-void Heap::RemoteFlush()
-{
-	Mutex::Lock __(mutex);
-	RemoteFlushRaw();
-}
-
-void Heap::FreeRemoteRaw(FreeLink *list)
-{
-	while(list) {
-		FreeLink *f = list;
-		list = list->next;
-		LLOG("FreeRemote " << (void *)f);
-		FreeDirect(f);
-	}
+	PROFILEMT(mutex);
 }
 
 void Heap::FreeRemoteRaw()
 {
 	LLOG("FreeRemoteRaw");
-	if(remote_list) {
-		FreeRemoteRaw(remote_list);
-		remote_list = NULL;
-	}
-}
-
-
-void Heap::FreeRemote()
-{
-	while(remote_list) { // avoid mutex if likely nothing to free
-		FreeLink *list;
-		{ // only pick values in mutex, resolve later
-			Mutex::Lock __(mutex);
-			list = remote_list;
-			remote_list = NULL;
-		}
-		FreeRemoteRaw(list);
-	}
+	SmallFreeRemoteRaw();
+	LargeFreeRemoteRaw();
 }
 
 void Heap::Shutdown()
-{ // Move all pages to global aux heap
+{ // Move all active blocks, "orphans", to global aux heap
 	LLOG("Shutdown");
 	Mutex::Lock __(mutex);
 	Init();
-	RemoteFlush();
-	FreeRemoteRaw();
+	RemoteFlushRaw(); // Move remote blocks to originating heaps
+	FreeRemoteRaw(); // Free all remotely freed blocks
 	for(int i = 0; i < NKLASS; i++) {
 		LLOG("Free cache " << i);
 		FreeLink *l = cache[i];
 		while(l) {
 			FreeLink *h = l;
 			l = l->next;
-			FreeDirect(h);
+			SmallFreeDirect(h);
 		}
 		while(full[i]->next != full[i]) {
 			Page *p = full[i]->next;
@@ -182,7 +113,7 @@ void Heap::DblCheck(Page *p)
 	while(p != l);
 }
 
-int Heap::CheckPageFree(FreeLink *l, int k)
+int Heap::CheckFree(FreeLink *l, int k)
 {
 	int n = 0;
 	while(l) {
@@ -204,7 +135,7 @@ void Heap::Check() {
 		Page *p = work[i]->next;
 		while(p != work[i]) {
 			Assert(p->heap == this);
-			Assert(CheckPageFree(p->freelist, p->klass) == p->Count() - p->active);
+			Assert(CheckFree(p->freelist, p->klass) + p->active == p->Count());
 			p = p->next;
 		}
 		p = full[i]->next;
@@ -215,24 +146,16 @@ void Heap::Check() {
 			p = p->next;
 		}
 		p = empty[i];
-		if(p) {
-			for(;;) {
-				Assert(p->heap == this);
-				Assert(p->active == 0);
-				Assert(p->klass == i);
-				Assert(CheckPageFree(p->freelist, i) == p->Count());
-				if(this != &aux)
-					break;
-				p = p->next;
-				if(!p)
-					break;
-			}
+		while(p) {
+			Assert(p->heap == this);
+			Assert(p->active == 0);
+			Assert(p->klass == i);
+			Assert(CheckFree(p->freelist, i) == p->Count());
+			if(this != &aux)
+				break;
+			p = p->next;
 		}
-		FreeLink *l = cache[i];
-		while(l) {
-			DbgFreeCheckK(l, i);
-			l = l->next;
-		}
+		CheckFree(cache[i], i);
 	}
 	DLink *l = large->next;
 	while(l != large) {
@@ -270,15 +193,11 @@ void Heap::AuxFinalCheck()
 		AssertLeaks(aux.work[i] == aux.work[i]->next);
 		AssertLeaks(aux.full[i] == aux.full[i]->next);
 		Page *p = aux.empty[i];
-		if(p) {
-			for(;;) {
-				Assert(p->heap == &aux);
-				Assert(p->active == 0);
-				Assert(CheckPageFree(p->freelist, p->klass) == p->Count());
-				p = p->next;
-				if(!p)
-					break;
-			}
+		while(p) {
+			Assert(p->heap == &aux);
+			Assert(p->active == 0);
+			Assert(CheckFree(p->freelist, p->klass) == p->Count());
+			p = p->next;
 		}
 	}
 	AssertLeaks(aux.large == aux.large->next);

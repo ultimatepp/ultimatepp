@@ -16,12 +16,18 @@ void  FreeRaw64KB(void *ptr);
 #endif
 
 struct Heap {
+	enum {
+		NKLASS = 23, // number of small size classes
+	};
+
 	static int Ksz(int k) {
 		static int sz[] = {
+		//  0   1   2   3    4    5    6    7    8    9    10   11
 			32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384,
 			448, 576, 672, 800, 992, 8, 16, 24, 40, 48, 56
 		//  12   13   14   15   16  17  18  19  20  21  22
 		};
+		static_assert(__countof(sz) == 23, "NKLASS mismatch");
 		return sz[k];
 	}
 	
@@ -80,25 +86,28 @@ struct Heap {
 		Header     *Next()                 { return (Header *)((byte *)this + size) + 1; }
 		Header     *Prev()                 { return (Header *)((byte *)this - prev) - 1; }
 	};
-
+	
 	struct BigHdr : DLink {
 		size_t       size;
 	};
 
 	enum {
-		NKLASS = 23, // number of small size classes
-		LBINS = 113, // number of large size bins
+		LBINS = 77, // number of large size bins
 		LARGEHDRSZ = 32, // size of large block header, causes 16 byte disalignment
 		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
 		BIGHDRSZ = 48, // size of huge block header
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 	};
 
+	static_assert(sizeof(Header) == 16, "Wrong sizeof(Header)");
+	static_assert(sizeof(DLink) <= 16, "Wrong sizeof(DLink)");
+	static_assert(sizeof(BigHdr) + sizeof(Header) < BIGHDRSZ, "Big header sizeof issue");
+
 	static StaticMutex mutex;
 
 	Page      work[NKLASS][1];   // circular list of pages that contain some empty blocks
 	Page      full[NKLASS][1];   // circular list of pages that contain NO empty blocks
-	Page     *empty[NKLASS];     // last fully freed page per klass (hot reserve); shared global list of empty pages in aux
+	Page     *empty[NKLASS];     // last fully freed page per klass (hot reserve) / shared global list of empty pages in aux
 	FreeLink *cache[NKLASS];     // hot frontend cache of small blocks
 	int       cachen[NKLASS];    // counter of small blocks that are allowed to be stored in cache
 
@@ -112,13 +121,15 @@ struct Heap {
 	int    lcount; // count of large chunks
 	DLink  freebin[LBINS][1]; // all free blocks by bin
 	static DLink lempty[1]; // shared global list of all empty large blocks
-
-	void     *out[REMOTE_OUT_SZ / 16 + 1];
+	
+	void     *out[REMOTE_OUT_SZ / 8 + 1];
 	void    **out_ptr;
 	int       out_size;
 
-	byte      filler1[128]; // make sure the next variable is in distinct cacheline
-	FreeLink *remote_list; // single linked list of remotely released pointers
+	byte      filler1[64]; // make sure the next variable is in distinct cacheline
+
+	FreeLink *small_remote_list; // list of remotely freed small blocks for lazy reclamation
+	FreeLink *large_remote_list; // list of remotely freed large blocks for lazy reclamation
 
 	static DLink big[1]; // List of all big blocks
 	static Heap  aux;    // Single global auxiliary heap to store orphans and global list of free pages
@@ -141,17 +152,16 @@ struct Heap {
 	static void  Stat(size_t sz) {}
 #endif
 
-	void  FreeRemoteRaw();
-	void  FreeRemoteRaw(FreeLink *list);
-	void  FreeRemote();
-
 	void  Init();
 
-	static int   CheckPageFree(FreeLink *l, int k);
+	static int   CheckFree(FreeLink *l, int k);
 	void  Check();
 	static void  Assert(bool b);
 	static void  DblCheck(Page *p);
 	static void  AssertLeaks(bool b);
+	
+	static bool  IsSmall(void *ptr) { return (((dword)(uintptr_t)ptr) & 16) == 0; }
+	static Page *GetPage(void *ptr) { return (Page *)((uintptr_t)ptr & ~(uintptr_t)4095); }
 
 	Page *WorkPage(int k);
 	void *AllocK(int k);
@@ -159,7 +169,6 @@ struct Heap {
 	void *Allok(int k);
 	void  Free(void *ptr, Page *page, int k);
 	void  Free(void *ptr, int k);
-	void  FreeDirect(void *ptr);
 	void  MoveLarge(Heap *dest, DLink *l);
 	void  MoveToEmpty(DLink *l, Header *bh);
 
@@ -178,10 +187,19 @@ struct Heap {
 
 	static void Shrink();
 
-	void RemoteFree(void *ptr, int size);
-	void RemoteFreeL(void *ptr);
-	void RemoteFlush();
+	void SmallFreeDirect(void *ptr);
+
 	void RemoteFlushRaw();
+	void RemoteFlush();
+	void RemoteFree(void *ptr, int size);
+	void SmallFreeRemoteRaw(FreeLink *list);
+	void SmallFreeRemoteRaw() { SmallFreeRemoteRaw(small_remote_list); small_remote_list = NULL; }
+	void SmallFreeRemote();
+	void LargeFreeRemoteRaw(FreeLink *list);
+	void LargeFreeRemoteRaw() { LargeFreeRemoteRaw(large_remote_list); large_remote_list = NULL; }
+	void LargeFreeRemote();
+	void FreeRemoteRaw();
+
 	void Shutdown();
 	static void AuxFinalCheck();
 
@@ -197,3 +215,80 @@ struct Heap {
 };
 
 extern thread__ Heap heap;
+
+force_inline
+void Heap::RemoteFlushRaw()
+{ // transfer all buffered freed remote blocks to target heaps, no locking
+	if(!initialized)
+		Init();
+	for(void **o = out; o < out_ptr; o++) {
+		FreeLink *f = (FreeLink *)*o;
+		Heap *heap = GetPage(f)->heap;
+		f->next = heap->small_remote_list;
+		heap->small_remote_list = f;
+	}
+	out_ptr = out;
+	out_size = 0;
+}
+
+force_inline
+void Heap::RemoteFree(void *ptr, int size)
+{ // buffer freed remote block until REMOTE_OUT_SZ is reached
+	if(!initialized)
+		Init();
+	ASSERT(out_ptr <= out + REMOTE_OUT_SZ / 8 + 1);
+	*out_ptr++ = ptr;
+	out_size += size;
+	if(out_size >= REMOTE_OUT_SZ) {
+		Mutex::Lock __(mutex);
+		RemoteFlushRaw();
+	}
+}
+
+force_inline
+void Heap::SmallFreeRemoteRaw(FreeLink *list)
+{
+	while(list) {
+		FreeLink *f = list;
+		list = list->next;
+		SmallFreeDirect(f);
+	}
+}
+
+force_inline
+void Heap::SmallFreeRemote()
+{
+	while(small_remote_list) { // avoid mutex if likely nothing to free
+		FreeLink *list;
+		{ // only pick values in mutex, resolve later
+			Mutex::Lock __(mutex);
+			list = small_remote_list;
+			small_remote_list = NULL;
+		}
+		SmallFreeRemoteRaw(list);
+	}
+}
+
+force_inline
+void Heap::LargeFreeRemoteRaw(FreeLink *list)
+{
+	while(list) {
+		FreeLink *f = list;
+		list = list->next;
+		LFree(f);
+	}
+}
+
+force_inline
+void Heap::LargeFreeRemote()
+{
+	while(large_remote_list) { // avoid mutex if likely nothing to free
+		FreeLink *list;
+		{ // only pick values in mutex, resolve later
+			Mutex::Lock __(mutex);
+			list = large_remote_list;
+			large_remote_list = NULL;
+		}
+		LargeFreeRemoteRaw(list);
+	}
+}

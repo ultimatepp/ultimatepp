@@ -223,7 +223,7 @@ void Heap::DbgFreeCheck(void *p, size_t size)
 
 void *Heap::DbgFreeCheckK(void *p, int k)
 {
-	Page *page = (Page *)((uintptr_t)p & ~(uintptr_t)4095);
+	Page *page = GetPage(p);
 	ASSERT((byte *)page + sizeof(Page) <= (byte *)p && (byte *)p < (byte *)page + 4096);
 	ASSERT((4096 - ((uintptr_t)p & (uintptr_t)4095)) % Ksz(k) == 0);
 	ASSERT(page->klass == k);

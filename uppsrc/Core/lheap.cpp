@@ -26,11 +26,11 @@ const char *asString(int i)
 void Heap::GlobalLInit()
 {
 	ONCELOCK {
-		int p = 32;
+		int p = 64;
 		int bi = 0;
 		while(p < MAXBLOCK) {
-			BinSz[bi++] = p;
-			int add = minmax(6 * p / 100 / 32 * 32, 32, 2048);
+			BinSz[bi++] = p - 16;
+			int add = minmax(8 * p / 100 / 64 * 64, 64, INT_MAX);
 			p += add;
 		}
 		ASSERT(bi == LBINS - 1);
@@ -61,7 +61,7 @@ void Heap::LinkFree(DLink *b, int size)
 }
 
 Heap::DLink *Heap::AddChunk(int reqsize)
-{ // gets a free chunk
+{ // gets a free chunk, returns pointer to heap block
 	DLink *ml;
 	if(lempty->next != lempty) {
 		ml = lempty->next;
@@ -94,13 +94,13 @@ Heap::DLink *Heap::AddChunk(int reqsize)
 
 inline
 void *Heap::DivideBlock(DLink *b, int size)
-{
+{ // unlink from free and truncate block, move truncated part back to free blocks
 	b->Unlink();
 	Header *bh = b->GetHeader();
 	ASSERT(bh->size >= size && size > 0);
 	bh->free = false;
 	int sz2 = bh->size - size - sizeof(Header);
-	if(sz2 >= 32) {
+	if(sz2 >= 48) {
 		Header *bh2 = (Header *)((byte *)b + size);
 		bh2->prev = size;
 		bh2->free = true;
@@ -114,7 +114,7 @@ void *Heap::DivideBlock(DLink *b, int size)
 }
 
 void Heap::MoveLarge(Heap *dest, DLink *l)
-{
+{ // move large block page (64KB) current heap (aux) to dest
 	dest->lcount++;
 	LLOG("Moving large " << (void *)l << " to " << (void *)dest << " lcount " << dest->lcount);
 	Mutex::Lock __(mutex);
@@ -182,13 +182,13 @@ void *Heap::LAlloc(size_t& size)
 	void *ptr = TryLAlloc(bini, size); // try current working blocks first
 	if(ptr)
 		return ptr;
-	if(remote_list) { // there might be blocks freed in other threads
-		FreeRemote(); // free them
+	if(large_remote_list) { // there might be blocks freed in other threads
+		LargeFreeRemote(); // free them
 		ptr = TryLAlloc(bini, size); // try again
 		if(ptr) return ptr;
 	}
 	Mutex::Lock __(mutex);
-	aux.FreeRemoteRaw();
+	aux.LargeFreeRemoteRaw();
 	while(aux.large->next != aux.large) {
 		LLOG("Adopting large block " << (void *)aux.large->next);
 		MoveLarge(this, aux.large->next);
@@ -220,23 +220,26 @@ void Heap::LFree(void *ptr)
 	}
 	if(bh->heap != this) {
 		LLOG("Remote large, heap " << (void *)bh->heap);
-		RemoteFreeL(ptr);
+		Mutex::Lock __(mutex); // TODO: Replace with SpinLock
+		FreeLink *f = (FreeLink *)ptr;
+		f->next = bh->heap->large_remote_list;
+		bh->heap->large_remote_list = f;
 		return;
 	}
 	LLOG("--- LFree " << asString(bh->size));
-	if(bh->prev) {
+	if(bh->prev) { // there is previous block
 		Header *p = bh->Prev();
-		if(p->free) {
+		if(p->free) { // previous block is free, join
 			b = p->GetBlock();
-			b->Unlink();
+			b->Unlink(); // remove previous block from free list
 			p->size += bh->size + sizeof(Header);
 			p->Next()->prev = p->size;
 			bh = p;
 		}
 	}
 	Header *n = bh->Next();
-	if(n->free) {
-		n->GetBlock()->Unlink();
+	if(n->free) { // next block block is free, join
+		n->GetBlock()->Unlink(); // remove next block from free list
 		bh->size += n->size + sizeof(Header);
 		n->Next()->prev = bh->size;
 	}

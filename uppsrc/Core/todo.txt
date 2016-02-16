@@ -16,7 +16,7 @@ Range
 
 for(auto i: map)
 
-Index::FirstFind
+Index::FirstAdd
 
 CoWork limits, pipe, logical thread not working
 
@@ -44,6 +44,14 @@ ConditionVariable
 
 rename Function
 
+idmapBencmark ValueMap optimize
+
+spinlock for heap freeremote?
+
+Global.h ?
+
+BiVector/Array/BiArray Pop
+
 -----------------------
 DONE
 
@@ -56,6 +64,5 @@ Remove IsPicked
 Remove AddPick (keep as synonym)
 
 void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
-
 
 inline String& operator<<(String&& s, const T& x)
