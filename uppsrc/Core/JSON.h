@@ -310,14 +310,14 @@ void JsonizeStringMap(JsonIO& io, T& map)
 	}
 }
 
-template <class K, class V, class H>
-void StringMap(JsonIO& io, VectorMap<K, V, H>& map)
+template <class K, class V>
+void StringMap(JsonIO& io, VectorMap<K, V>& map)
 {
 	JsonizeStringMap<VectorMap<K, V, H>, K, V>(io, map);
 }
 
-template <class K, class V, class H>
-void StringMap(JsonIO& io, ArrayMap<K, V, H>& map)
+template <class K, class V>
+void StringMap(JsonIO& io, ArrayMap<K, V>& map)
 {
 	JsonizeStringMap<ArrayMap<K, V, H>, K, V>(io, map);
 }

@@ -74,16 +74,7 @@ public:
 	void Swap(HashBase& b);
 };
 
-template <class T>
-struct StdHash {
-	unsigned operator()(const T& x) const    { return GetHashValue(x); }
-};
-
-struct PtrHash {
-	unsigned operator()(const void *x) const { return GetHashValue((unsigned)(uintptr_t)x); }
-};
-
-template <class T, class V, class HashFn>
+template <class T, class V>
 class AIndex {
 protected:
 	V         key;
@@ -97,59 +88,48 @@ protected:
 		while(i >= 0 && !(x == key[i])) i = hash.FindPrev(i);
 		return i;
 	}
+
 	void     Hash();
 
-public:
-	unsigned hashfn(const T& x) const             { return HashFn()(x); }
+	int Find(const T& x, unsigned h) const;
+	T&  Add(const T& x, unsigned h);
 
-	T&       Add(const T& x, unsigned _hash);
+
+public:
 	T&       Add(const T& x);
-	int      FindAdd(const T& key, unsigned _hash);
 	int      FindAdd(const T& key);
 	AIndex&  operator<<(const T& x)          { Add(x); return *this; }
 
-	int      Put(const T& x, unsigned _hash);
 	int      Put(const T& x);
-	int      FindPut(const T& key, unsigned _hash);
 	int      FindPut(const T& key);
 
-	int      Find(const T& x, unsigned _hash) const;
 	int      Find(const T& x) const;
 	int      FindNext(int i) const;
-	int      FindLast(const T& x, unsigned _hash) const;
 	int      FindLast(const T& x) const;
 	int      FindPrev(int i) const;
 
-	T&       Set(int i, const T& x, unsigned _hash);
 	T&       Set(int i, const T& x);
 
 	const T& operator[](int i) const         { return key[i]; }
 	int      GetCount() const                { return key.GetCount(); }
 	bool     IsEmpty() const                 { return key.IsEmpty(); }
 	
-	unsigned GetHash(int i) const            { return hash[i]; }
-
 	void     Clear()                         { hash.Clear(); key.Clear(); }
 
 	void     ClearIndex()                    { hash.ClearIndex(); }
-	void     Reindex(int n)                  { hash.Reindex(n); }
-	void     Reindex()                       { hash.Reindex(); }
 
 	void     Unlink(int i)                   { hash.Unlink(i); }
-	int      UnlinkKey(const T& k, unsigned h);
 	int      UnlinkKey(const T& k);
 	bool     IsUnlinked(int i) const         { return hash.IsUnlinked(i); }
 	Vector<int> GetUnlinked() const          { return hash.GetUnlinked(); }
 	void     Sweep();
 	bool     HasUnlinked() const             { return hash.HasUnlinked(); }
 
-	T&       Insert(int i, const T& k, unsigned h);
 	T&       Insert(int i, const T& k);
 	void     Remove(int i);
 	void     Remove(int i, int count);
 	void     Remove(const int *sorted_list, int count);
 	void     Remove(const Vector<int>& sorted_list);
-	int      RemoveKey(const T& k, unsigned h);
 	int      RemoveKey(const T& k);
 
 	void     Trim(int n)                     { key.SetCount(n); hash.Trim(n); }
@@ -201,10 +181,9 @@ protected:
 	AIndex(std::initializer_list<T> init);
 };
 
-template <class T, class HashFn = StdHash<T> >
-class Index : MoveableAndDeepCopyOption< Index<T, HashFn > >,
-              public AIndex<T, Vector<T>, HashFn> {
-	typedef AIndex< T, Vector<T>, HashFn > B;
+template <class T>
+class Index : public MoveableAndDeepCopyOption<Index<T>>, public AIndex<T, Vector<T>> {
+	typedef AIndex< T, Vector<T>> B;
 public:
 	T        Pop()                           { T x = B::Top(); B::Drop(); return x; }
 
@@ -220,15 +199,16 @@ public:
 	friend void Swap(Index& a, Index& b)     { a.B::Swap(b); }
 
 	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
-	STL_INDEX_COMPATIBILITY(Index<T _cm_ HashFn>)
+	STL_INDEX_COMPATIBILITY(Index<T>)
 
 	Index(std::initializer_list<T> init) : B(init) {}
 };
 
-template <class T, class HashFn = StdHash<T> >
-class ArrayIndex : MoveableAndDeepCopyOption< ArrayIndex<T, HashFn > >,
-                   public AIndex<T, Array<T>, HashFn> {
-	typedef AIndex< T, Array<T>, HashFn > B;
+template <class T>
+class ArrayIndex : MoveableAndDeepCopyOption< ArrayIndex<T> >,
+                   public AIndex<T, Array<T>> {
+	typedef AIndex< T, Array<T>> B;
+
 public:
 	T&       Add(const T& x, unsigned _hash)        { return B::Add(x, _hash); }
 	T&       Add(const T& x)                        { return B::Add(x); }

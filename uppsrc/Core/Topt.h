@@ -221,8 +221,8 @@ public:
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
-template <class T>
-class MoveableAndDeepCopyOption {
+template <class T, class B = EmptyClass>
+class MoveableAndDeepCopyOption : public B {
 	friend void AssertMoveable0(T *) {}
 	friend T& operator<<=(T& dest, const T& src) // obsolete
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }

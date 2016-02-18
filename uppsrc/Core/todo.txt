@@ -14,9 +14,9 @@ Generic Tuple
 
 Range
 
-for(auto i: map)
-
 Index::FirstAdd
+
+kw.Get(r["keywordId"], String())
 
 CoWork limits, pipe, logical thread not working
 
@@ -28,7 +28,7 @@ MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 
 ::Insert Range
 
-InVector<T>::Insert list
+InVector<T>::Insert range
 
 Vector/Array/Index/Map :: RemoveIf
 
@@ -38,7 +38,7 @@ nanoalloc
 
 Remove ArrayIndex
 
-Range in containers
+Range Insert/Append in containers
 
 ConditionVariable
 
@@ -51,6 +51,8 @@ spinlock for heap freeremote?
 Global.h ?
 
 BiVector/Array/BiArray Pop
+
+Optimize Index::Hash
 
 -----------------------
 DONE
@@ -66,3 +68,9 @@ Remove AddPick (keep as synonym)
 void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
 
 inline String& operator<<(String&& s, const T& x)
+
+Remove HashFn
+
+for(auto i: ~map)
+
+Remove precomputed hash
