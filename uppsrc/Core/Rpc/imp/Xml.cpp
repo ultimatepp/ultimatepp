@@ -42,7 +42,7 @@ Value ParseXmlRpcValue(XmlParser& p)
 		String s = TrimBoth(p.ReadText());
 		// 19980717T14:08:55
 		// 01234567890123456
-		if(s.GetCount() != 17 || s[8] != 'T' || s[11] != ':' || s[14] != ':')
+		if(s.GetCount() < 17 || s[8] != 'T' || s[11] != ':' || s[14] != ':') // <17 to allow zone ignored zone info
 			throw XmlError("invalid dateTime format");
 		Time tm;
 		tm.year = atoi(s.Mid(0, 4));
@@ -67,9 +67,9 @@ Value ParseXmlRpcValue(XmlParser& p)
 		while(p.Tag("member")) {
 			p.PassTag("name");
 			String name = p.ReadText();
-			p.PassEnd();
+			p.PassEnd(); // name
 			vm.Add((Value)name, ParseXmlRpcValue(p));
-			p.PassEnd();
+			p.PassEnd(); // member
 		}
 		r = vm;
 	}
