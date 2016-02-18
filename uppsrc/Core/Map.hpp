@@ -88,65 +88,65 @@ inline void HashBase::Unlink(int i)
 	}
 }
 
-template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>::AIndex(const AIndex& s, int)
+template <class T, class V>
+AIndex<T, V>::AIndex(const AIndex& s, int)
 :	key(s.key, 0),
 	hash(s.hash, 0) {}
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Hash() {
+template <class T, class V>
+void AIndex<T, V>::Hash() {
 	for(int i = 0; i < key.GetCount(); i++)
 		hash.Add(hashfn(key[i]));
 }
 
-template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator=(V&& s) {
+template <class T, class V>
+AIndex<T, V>& AIndex<T, V>::operator=(V&& s) {
 	key = pick(s);
 	hash.Clear();
 	Hash();
 	return *this;
 }
 
-template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>& AIndex<T, V, HashFn>::operator<<=(const V& s) {
+template <class T, class V>
+AIndex<T, V>& AIndex<T, V>::operator<<=(const V& s) {
 	key <<= s;
 	hash.Clear();
 	Hash();
 	return *this;
 }
 
-template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>::AIndex(V&& s) : key(pick(s)) {
+template <class T, class V>
+AIndex<T, V>::AIndex(V&& s) : key(pick(s)) {
 	Hash();
 }
 
-template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>::AIndex(const V& s, int) : key(s, 1) {
+template <class T, class V>
+AIndex<T, V>::AIndex(const V& s, int) : key(s, 1) {
 	Hash();
 }
 
 #ifdef CPP_11
-template <class T, class V, class HashFn>
-AIndex<T, V, HashFn>::AIndex(std::initializer_list<T> init) : key(init)
+template <class T, class V>
+AIndex<T, V>::AIndex(std::initializer_list<T> init) : key(init)
 {
 	Hash();
 }
 #endif
 
-template <class T, class V, class HashFn>
-T& AIndex<T, V, HashFn>::Add(const T& x, unsigned _hash) {
+template <class T, class V>
+T& AIndex<T, V>::Add(const T& x, unsigned _hash) {
 	T& t = key.Add(x);
 	hash.Add(_hash);
 	return t;
 }
 
-template <class T, class V, class HashFn>
-T& AIndex<T, V, HashFn>::Add(const T& x) {
+template <class T, class V>
+T& AIndex<T, V>::Add(const T& x) {
 	return Add(x, hashfn(x));
 }
 
-template <class T, class V, class HashFn>
-int  AIndex<T, V, HashFn>::FindAdd(const T& _key, unsigned _hash) {
+template <class T, class V>
+int  AIndex<T, V>::FindAdd(const T& _key, unsigned _hash) {
 	int i = Find(_key, _hash);
 	if(i >= 0) return i;
 	i = key.GetCount();
@@ -154,8 +154,8 @@ int  AIndex<T, V, HashFn>::FindAdd(const T& _key, unsigned _hash) {
 	return i;
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::Put(const T& x, unsigned _hash)
+template <class T, class V>
+int AIndex<T, V>::Put(const T& x, unsigned _hash)
 {
 	int q = hash.Put(_hash);
 	if(q < 0) {
@@ -167,104 +167,104 @@ int AIndex<T, V, HashFn>::Put(const T& x, unsigned _hash)
 	return q;
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::Put(const T& x)
+template <class T, class V>
+int AIndex<T, V>::Put(const T& x)
 {
 	return Put(x, hashfn(x));
 }
 
-template <class T, class V, class HashFn>
-int  AIndex<T, V, HashFn>::FindPut(const T& _key, unsigned _hash)
+template <class T, class V>
+int  AIndex<T, V>::FindPut(const T& _key, unsigned _hash)
 {
 	int i = Find(_key, _hash);
 	if(i >= 0) return i;
 	return Put(_key, _hash);
 }
 
-template <class T, class V, class HashFn>
-int  AIndex<T, V, HashFn>::FindPut(const T& key)
+template <class T, class V>
+int  AIndex<T, V>::FindPut(const T& key)
 {
 	return FindPut(key, hashfn(key));
 }
 
-template <class T, class V, class HashFn>
-inline int AIndex<T, V, HashFn>::Find(const T& x, unsigned _hash) const {
+template <class T, class V>
+inline int AIndex<T, V>::Find(const T& x, unsigned _hash) const {
 	return Find0(x, hash.Find(_hash));
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::Find(const T& x) const {
+template <class T, class V>
+int AIndex<T, V>::Find(const T& x) const {
 	return Find(x, hashfn(x));
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::FindNext(int i) const {
+template <class T, class V>
+int AIndex<T, V>::FindNext(int i) const {
 	return Find0(key[i], hash.FindNext(i));
 }
 
-template <class T, class V, class HashFn>
-inline int AIndex<T, V, HashFn>::FindLast(const T& x, unsigned _hash) const {
+template <class T, class V>
+inline int AIndex<T, V>::FindLast(const T& x, unsigned _hash) const {
 	return FindB(x, hash.FindLast(_hash));
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::FindLast(const T& x) const {
+template <class T, class V>
+int AIndex<T, V>::FindLast(const T& x) const {
 	return FindLast(x, hashfn(x));
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::FindPrev(int i) const {
+template <class T, class V>
+int AIndex<T, V>::FindPrev(int i) const {
 	return FindB(key[i], hash.FindPrev(i));
 }
 
-template <class T, class V, class HashFn>
-int  AIndex<T, V, HashFn>::FindAdd(const T& key) {
+template <class T, class V>
+int  AIndex<T, V>::FindAdd(const T& key) {
 	return FindAdd(key, hashfn(key));
 }
 
-template <class T, class V, class HashFn>
-T&  AIndex<T, V, HashFn>::Set(int i, const T& x, unsigned _hash) {
+template <class T, class V>
+T&  AIndex<T, V>::Set(int i, const T& x, unsigned _hash) {
 	T& t = key[i];
 	t = x;
 	hash.Set(i, _hash);
 	return t;
 }
 
-template <class T, class V, class HashFn>
-T&  AIndex<T, V, HashFn>::Set(int i, const T& x) {
+template <class T, class V>
+T&  AIndex<T, V>::Set(int i, const T& x) {
 	return Set(i, x, hashfn(x));
 }
 
 #ifdef UPP
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Serialize(Stream& s) {
+template <class T, class V>
+void AIndex<T, V>::Serialize(Stream& s) {
 	if(s.IsLoading()) ClearIndex();
 	key.Serialize(s);
 	hash.Serialize(s);
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Xmlize(XmlIO& xio, const char *itemtag)
+template <class T, class V>
+void AIndex<T, V>::Xmlize(XmlIO& xio, const char *itemtag)
 {
-	XmlizeIndex<T, AIndex<T, V, HashFn> >(xio, itemtag, *this);
+	XmlizeIndex<T, AIndex<T, V> >(xio, itemtag, *this);
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Jsonize(JsonIO& jio)
+template <class T, class V>
+void AIndex<T, V>::Jsonize(JsonIO& jio)
 {
-	JsonizeIndex<AIndex<T, V, HashFn>, T>(jio, *this);
+	JsonizeIndex<AIndex<T, V>, T>(jio, *this);
 }
 
-template <class T, class V, class HashFn>
-String AIndex<T, V, HashFn>::ToString() const
+template <class T, class V>
+String AIndex<T, V>::ToString() const
 {
 	return AsStringArray(*this);
 }
 
 #endif
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::UnlinkKey(const T& k, unsigned h)
+template <class T, class V>
+int AIndex<T, V>::UnlinkKey(const T& k, unsigned h)
 {
 	int n = 0;
 	int q = hash.Find(h);
@@ -279,63 +279,63 @@ int AIndex<T, V, HashFn>::UnlinkKey(const T& k, unsigned h)
 	return n;
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::UnlinkKey(const T& k)
+template <class T, class V>
+int AIndex<T, V>::UnlinkKey(const T& k)
 {
 	return UnlinkKey(k, hashfn(k));
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Sweep()
+template <class T, class V>
+void AIndex<T, V>::Sweep()
 {
 	Vector<int> b = hash.GetUnlinked();
 	Sort(b);
 	Remove(b);
 }
 
-template <class T, class V, class HashFn>
-T& AIndex<T, V, HashFn>::Insert(int i, const T& k, unsigned h) {
+template <class T, class V>
+T& AIndex<T, V>::Insert(int i, const T& k, unsigned h) {
 	key.Insert(i, k);
 	hash.Insert(i, h);
 	return key[i];
 }
 
-template <class T, class V, class HashFn>
-T& AIndex<T, V, HashFn>::Insert(int i, const T& k) {
+template <class T, class V>
+T& AIndex<T, V>::Insert(int i, const T& k) {
 	key.Insert(i, k);
 	hash.Insert(i, hashfn(k));
 	return key[i];
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Remove(int i)
+template <class T, class V>
+void AIndex<T, V>::Remove(int i)
 {
 	key.Remove(i);
 	hash.Remove(i);
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Remove(int i, int count)
+template <class T, class V>
+void AIndex<T, V>::Remove(int i, int count)
 {
 	key.Remove(i, count);
 	hash.Remove(i, count);
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Remove(const int *sorted_list, int count)
+template <class T, class V>
+void AIndex<T, V>::Remove(const int *sorted_list, int count)
 {
 	key.Remove(sorted_list, count);
 	hash.Remove(sorted_list, count);
 }
 
-template <class T, class V, class HashFn>
-void AIndex<T, V, HashFn>::Remove(const Vector<int>& sl)
+template <class T, class V>
+void AIndex<T, V>::Remove(const Vector<int>& sl)
 {
 	Remove(sl, sl.GetCount());
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::RemoveKey(const T& k, unsigned h)
+template <class T, class V>
+int AIndex<T, V>::RemoveKey(const T& k, unsigned h)
 {
 	Vector<int> rk;
 	int q = Find(k, h);
@@ -347,41 +347,43 @@ int AIndex<T, V, HashFn>::RemoveKey(const T& k, unsigned h)
 	return rk.GetCount();
 }
 
-template <class T, class V, class HashFn>
-int AIndex<T, V, HashFn>::RemoveKey(const T& k)
+template <class T, class V>
+int AIndex<T, V>::RemoveKey(const T& k)
 {
 	return RemoveKey(k, hashfn(k));
 }
 
 // ------------------
 
-template <class T, class HashFn>
-T& ArrayIndex<T, HashFn>::Add(T *newt, unsigned _hash) {
+/*
+template <class T>
+T& ArrayIndex<T>::Add(T *newt, unsigned _hash) {
 	B::hash.Add(_hash);
 	return B::key.Add(newt);
 }
 
-template <class T, class HashFn>
-T& ArrayIndex<T, HashFn>::Add(T *newt) {
+template <class T>
+T& ArrayIndex<T>::Add(T *newt) {
 	return Add(newt, B::hashfn(*newt));
 }
 
-template <class T, class HashFn>
-T& ArrayIndex<T, HashFn>::Set(int i, T *newt, unsigned _hash) {
+template <class T>
+T& ArrayIndex<T>::Set(int i, T *newt, unsigned _hash) {
 	T& t = B::key.Set(i, newt);
 	B::hash.Set(i, _hash);
 	return t;
 }
 
-template <class T, class HashFn>
-T& ArrayIndex<T, HashFn>::Set(int i, T *newt) {
+template <class T>
+T& ArrayIndex<T>::Set(int i, T *newt) {
 	return Set(i, newt, B::hashfn(*newt));
 }
+*/
 
 // --------------------
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindAdd(const K& k) {
+template <class K, class T, class V>
+int AMap<K, T, V>::FindAdd(const K& k) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i < 0) {
@@ -392,8 +394,8 @@ int AMap<K, T, V, HashFn>::FindAdd(const K& k) {
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindAdd(const K& k, const T& x) {
+template <class K, class T, class V>
+int AMap<K, T, V>::FindAdd(const K& k, const T& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i < 0) {
@@ -404,8 +406,8 @@ int AMap<K, T, V, HashFn>::FindAdd(const K& k, const T& x) {
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindAddPick(const K& k, T&& x) {
+template <class K, class T, class V>
+int AMap<K, T, V>::FindAddPick(const K& k, T&& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i < 0) {
@@ -416,8 +418,8 @@ int AMap<K, T, V, HashFn>::FindAddPick(const K& k, T&& x) {
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::Put(const K& k, const T& x)
+template <class K, class T, class V>
+int AMap<K, T, V>::Put(const K& k, const T& x)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount())
@@ -429,8 +431,8 @@ int AMap<K, T, V, HashFn>::Put(const K& k, const T& x)
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::PutDefault(const K& k)
+template <class K, class T, class V>
+int AMap<K, T, V>::PutDefault(const K& k)
 {
 	int i = key.Put(k);
 	if(i >= value.GetCount()) {
@@ -444,8 +446,8 @@ int AMap<K, T, V, HashFn>::PutDefault(const K& k)
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::PutPick(const K& k, T&& x)
+template <class K, class T, class V>
+int AMap<K, T, V>::PutPick(const K& k, T&& x)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount())
@@ -457,8 +459,8 @@ int AMap<K, T, V, HashFn>::PutPick(const K& k, T&& x)
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::Put(const K& k)
+template <class K, class T, class V>
+T&  AMap<K, T, V>::Put(const K& k)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount()) {
@@ -472,16 +474,16 @@ T&  AMap<K, T, V, HashFn>::Put(const K& k)
 	}
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindPut(const K& k)
+template <class K, class T, class V>
+int AMap<K, T, V>::FindPut(const K& k)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	return i < 0 ? PutDefault(k) : i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindPut(const K& k, const T& init)
+template <class K, class T, class V>
+int AMap<K, T, V>::FindPut(const K& k, const T& init)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
@@ -498,8 +500,8 @@ int AMap<K, T, V, HashFn>::FindPut(const K& k, const T& init)
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::FindPutPick(const K& k, T&& init)
+template <class K, class T, class V>
+int AMap<K, T, V>::FindPutPick(const K& k, T&& init)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
@@ -510,8 +512,8 @@ int AMap<K, T, V, HashFn>::FindPutPick(const K& k, T&& init)
 	return i;
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetAdd(const K& k) {
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetAdd(const K& k) {
 	unsigned hash = key.hashfn(k);
 	int i = key.Find(k, hash);
 	if(i >= 0)
@@ -520,8 +522,8 @@ T&  AMap<K, T, V, HashFn>::GetAdd(const K& k) {
 	return value.Add();
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetAdd(const K& k, const T& x) {
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetAdd(const K& k, const T& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i >= 0) return value[i];
@@ -530,8 +532,8 @@ T&  AMap<K, T, V, HashFn>::GetAdd(const K& k, const T& x) {
 	return value.Top();
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, T&& x) {
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetAddPick(const K& k, T&& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i >= 0) return value[i];
@@ -540,42 +542,42 @@ T&  AMap<K, T, V, HashFn>::GetAddPick(const K& k, T&& x) {
 	return value.Top();
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetPut(const K& k) {
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetPut(const K& k) {
 	return value[FindPut(k)];
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetPut(const K& k, const T& x) {
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetPut(const K& k, const T& x) {
 	return value[FindPut(k, x)];
 }
 
-template <class K, class T, class V, class HashFn>
-T&  AMap<K, T, V, HashFn>::GetPutPick(const K& k, T&& x) {
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetPutPick(const K& k, T&& x) {
 	return value[FindPutPick(k, x)];
 }
 
 #ifdef UPP
-template <class K, class T, class V, class HashFn>
-void AMap<K, T, V, HashFn>::Serialize(Stream& s) {
+template <class K, class T, class V>
+void AMap<K, T, V>::Serialize(Stream& s) {
 	int version = 0;
 	s / version % key % value;
 }
 
-template <class K, class T, class V, class HashFn>
-void AMap<K, T, V, HashFn>::Xmlize(XmlIO& xio)
+template <class K, class T, class V>
+void AMap<K, T, V>::Xmlize(XmlIO& xio)
 {
-	XmlizeMap<K, T, AMap<K, T, V, HashFn> >(xio, "key", "value", *this);
+	XmlizeMap<K, T, AMap<K, T, V> >(xio, "key", "value", *this);
 }
 
-template <class K, class T, class V, class HashFn>
-void AMap<K, T, V, HashFn>::Jsonize(JsonIO& jio)
+template <class K, class T, class V>
+void AMap<K, T, V>::Jsonize(JsonIO& jio)
 {
-	JsonizeMap<AMap<K, T, V, HashFn>, K, T>(jio, *this, "key", "value");
+	JsonizeMap<AMap<K, T, V>, K, T>(jio, *this, "key", "value");
 }
 
-template <class K, class T, class V, class HashFn>
-String AMap<K, T, V, HashFn>::ToString() const
+template <class K, class T, class V>
+String AMap<K, T, V>::ToString() const
 {
 	String r;
 	r = "{";
@@ -592,8 +594,8 @@ String AMap<K, T, V, HashFn>::ToString() const
 
 #endif
 
-template <class K, class T, class V, class HashFn>
-int AMap<K, T, V, HashFn>::RemoveKey(const K& k)
+template <class K, class T, class V>
+int AMap<K, T, V>::RemoveKey(const K& k)
 {
 	Vector<int> rk;
 	int q = Find(k);
@@ -605,8 +607,8 @@ int AMap<K, T, V, HashFn>::RemoveKey(const K& k)
 	return rk.GetCount();
 }
 
-template <class K, class T, class V, class HashFn>
-void AMap<K, T, V, HashFn>::Sweep()
+template <class K, class T, class V>
+void AMap<K, T, V>::Sweep()
 {
 	Vector<int> b = key.GetUnlinked();
 	Sort(b);

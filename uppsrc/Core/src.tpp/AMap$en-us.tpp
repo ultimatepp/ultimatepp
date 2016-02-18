@@ -749,6 +749,16 @@ by picking.&]
 [s7; [*/ Return value]-|Basic random access container of values.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:AMap`:`:operator`~`(`):%- [_^Upp`:`:MapKVRange^ MapKVRange]<[_^Upp`:`:AMap^ A
+Map]<[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [*@4 T]>_[* operator`~]()&]
+[s5;:Upp`:`:AMap`:`:operator`~`(`)const:%- [_^Upp`:`:MapKVRange^ MapKVRange]<[_^Upp`:`:AMap^ A
+Map]<[@(0.0.255) const]_[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [@(0.0.255) const]_[*@4 T]>_[* opera
+tor`~]()_[@(0.0.255) const]&]
+[s2; Returns a special range object that can be used in C`+`+11 range 
+for to iterate over key/value pairs. Unlinked objects are automatically 
+skipped.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:AMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^AMap^ AMap][@(0.0.255) `&]_[* opera
 tor()]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 v])&]
