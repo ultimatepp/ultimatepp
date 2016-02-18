@@ -6,38 +6,13 @@ void WriteMemoryBarrier();
 #ifdef CPU_SSE2
 inline void ReadMemoryBarrier()
 {
-#ifdef CPU_AMD64
-	#ifdef COMPILER_MSC
-		_mm_lfence();
-	#else
-		__asm__("lfence");
-	#endif
-#else	
-	#ifdef COMPILER_MSC
-		__asm lfence;
-	#else
-		__asm__("lfence");
-	#endif
-#endif
+	_mm_lfence();
 }
 
 inline void WriteMemoryBarrier() {
-#ifdef CPU_AMD64
-	#ifdef COMPILER_MSC
-		_mm_sfence();
-	#else
-		__asm__("sfence");
-	#endif
-#else	
-	#ifdef COMPILER_MSC
-		__asm sfence;
-	#else
-		__asm__("sfence");
-	#endif
-#endif
+	_mm_sfence();
 }
-#elif defined(COMPILER_GCC)
-#ifndef PLATFORM_WIN32
+#elif
 inline void ReadMemoryBarrier()
 {
 	__sync_synchronize();
@@ -47,7 +22,6 @@ inline void WriteMemoryBarrier()
 {
 	__sync_synchronize();
 }
-#endif
 #endif
 
 #ifdef CPU_BLACKFIN

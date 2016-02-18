@@ -630,18 +630,22 @@ Value::ConstIterator Value::End() const
 	return GetVA().End();
 }
 
-Vector<Value>& Value::CloneArray()
+void Value::CloneArray()
 {
-	RTIMING("CloneArray");
 	ValueArray::Data *data = (ValueArray::Data *)ptr();
-	if(data->GetRefCount() != 1) {
-		RTIMING("CloneArray2");
-		ValueArray::Data *d = new ValueArray::Data;
-		d->data = clone(data->data);
-		data->Release();
-		ptr() = d;
-		data = d;
-	}
+	ValueArray::Data *d = new ValueArray::Data;
+	d->data = clone(data->data);
+	data->Release();
+	ptr() = d;
+	data = d;
+}
+
+force_inline
+Vector<Value>& Value::UnShareArray()
+{
+	ValueArray::Data *data = (ValueArray::Data *)ptr();
+	if(data->GetRefCount() != 1)
+		CloneArray();
 	return data->data;
 }
 
@@ -652,26 +656,26 @@ Value& Value::At(int i)
 	ASSERT(i >= 0 && IsRef());
 	dword t = ptr()->GetType();
 	if(t == VALUEMAP_V) {
-		ValueArray& va = ValueMap::Clone((ValueMap::Data*&)ptr()).value;
+		ValueArray& va = ValueMap::UnShare((ValueMap::Data*&)ptr()).value;
 		ASSERT(i < va.GetCount());
 		return va.At(i);
 	}
 	ASSERT(t == VALUEARRAY_V);
-	return CloneArray().At(i);
+	return UnShareArray().At(i);
 }
 
 void Value::Add(const Value& s)
 {
 	if(IsNull()) {
-		RTIMING("First add");
-		Vector<Value> v;
-		v.Add(s);
-		*this = ValueArray(pick(v));
+		if(IsRef()) RefRelease();
+		ValueArray::Data *d = new ValueArray::Data;
+		d->data.Add(s);
+		InitRef(d);
+		Magic();
 		return;
 	}
-	RTIMING("Second add");
 	ASSERT(IsRef() && ptr()->GetType() == VALUEARRAY_V);
-	CloneArray().Add(s);
+	UnShareArray().Add(s);
 }
 
 const Value& Value::operator[](const String& key) const
@@ -684,9 +688,11 @@ const Value& Value::operator[](const String& key) const
 Value& Value::GetAdd(const Value& key)
 {
 	if(IsNull()) {
-		VectorMap<Value, Value> m;
-		Value& h = m.Add(key);
-		*this = ValueMap(pick(m));
+		if(IsRef()) RefRelease();
+		ValueMap::Data *d = new ValueMap::Data;
+		Value& h = d->GetAdd(key);
+		InitRef(d);
+		Magic();
 		return h;
 	}
 	if(GetType() == VALUEARRAY_V) {
@@ -694,7 +700,7 @@ Value& Value::GetAdd(const Value& key)
 		*this = m;
 	}
 	ASSERT(GetType() == VALUEMAP_V);
-	return ValueMap::Clone((ValueMap::Data*&)ptr()).GetAdd(key);
+	return ValueMap::UnShare((ValueMap::Data*&)ptr()).GetAdd(key);
 }
 
 Value& Value::operator()(const String& key)

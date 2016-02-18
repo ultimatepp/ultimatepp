@@ -54,6 +54,8 @@ BiVector/Array/BiArray Pop
 
 Optimize Index::Hash
 
+Remove StringC
+
 -----------------------
 DONE
 

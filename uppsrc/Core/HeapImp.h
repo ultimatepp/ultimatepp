@@ -31,11 +31,6 @@ struct Heap {
 		return sz[k];
 	}
 	
-	enum {
-		KLASS_32 = 0,
-		KLASS_48 = 21,
-	};
-	
 	struct FreeLink {
 		FreeLink *next;
 	};

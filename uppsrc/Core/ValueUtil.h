@@ -228,6 +228,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 public:
 	ValueArray()                              { Init0(); }
 	ValueArray(const ValueArray& v);
+	ValueArray(ValueArray&& v);
 	ValueArray(Vector<Value>&& values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
 	~ValueArray();
@@ -311,9 +312,23 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual String     AsString() const;
 		virtual int        Compare(const Value::Void *p);
 
-		const Value& Get(const Value& key) const;
-		Value& GetAdd(const Value& key);
-		Value& At(int i);
+		const Value& Get(const Value& k) const {
+			int q = key.Find(k);
+			return q >= 0 ? value[q] : ErrorValue();
+		}
+		Value& GetAdd(const Value& k) {
+			int i = key.Find(k);
+			if(i < 0) {
+				i = value.GetCount();
+				key.Add(k);
+			}
+			return value.At(i);
+		}
+		Value& At(int i) {
+			ASSERT(i < value.GetCount());
+			return value.At(i);
+		}
+
 
 		Index<Value> key;
 		ValueArray   value;
@@ -323,8 +338,10 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	Data *data;
 
 	Data& Create();
-	static Data& Clone(Data *&ptr);
-	Data& Clone();
+	static void Clone(Data *&ptr);
+	force_inline
+	static ValueMap::Data& ValueMap::UnShare(ValueMap::Data *&ptr) { if(ptr->GetRefCount() != 1) Clone(ptr); return *ptr; }
+	Data& UnShare() { return UnShare(data); }
 	void  Init0();
 
 	friend Value::Void *ValueMapDataCreate();
@@ -399,19 +416,19 @@ public:
 	
 	VectorMap<Value, Value> Pick();
 
-	const Value& operator[](const Value& key) const;
+	const Value& operator[](const Value& key) const  { return data->Get(key); }
 	const Value& operator[](const String& key) const { return operator[](Value(key)); }
 	const Value& operator[](const char *key) const   { return operator[](Value(key)); }
 	const Value& operator[](const int key) const     { return operator[](Value(key)); }
 	const Value& operator[](const Id& key) const     { return operator[](Value(key.ToString())); }
 
-	Value& GetAdd(const Value& key);
+	Value& GetAdd(const Value& key)                  { return UnShare().GetAdd(key); }
 	Value& operator()(const Value& key)              { return GetAdd(key); }
 	Value& operator()(const String& key)             { return operator()(Value(key)); }
 	Value& operator()(const char *key)               { return operator()(Value(key)); }
 	Value& operator()(const int key)                 { return operator()(Value(key)); }
 	Value& operator()(const Id& key)                 { return operator()(Value(key.ToString())); }
-	Value& At(int i);
+	Value& At(int i)                                 { return UnShare().At(i); }
 	
 	Value GetAndClear(const Value& key);
 

@@ -129,6 +129,11 @@ ValueArray::ValueArray(const ValueArray& v) {
 	data->Retain();
 }
 
+ValueArray::ValueArray(ValueArray&& v) {
+	data = v.data;
+	v.Init0();
+}
+
 ValueArray::ValueArray(Vector<Value>&& v)
 {
 	Create() = pick(v);
@@ -209,12 +214,9 @@ ValueArray& ValueArray::operator=(const ValueArray& v) {
 	return *this;
 }
 
-void ValueArray::SetCount(int n) {
-#if !defined(_MSC_VER) || _MSC_VER > 1310
+void ValueArray::SetCount(int n)
+{
 	Clone().SetCount(n);
-#else
-	throw 0;
-#endif
 }
 
 void ValueArray::SetCount(int n, const Value& v)
@@ -406,26 +408,13 @@ ValueMap::Data& ValueMap::Create()
 	return *data;
 }
 
-const Value& ValueMap::Data::Get(const Value& k) const
+void ValueMap::Clone(Data *&ptr)
 {
-	int q = key.Find(k);
-	return q >= 0 ? value[q] : ErrorValue();
-}
-
-ValueMap::Data& ValueMap::Clone(Data *&ptr)
-{
-	if(ptr->GetRefCount() != 1) {
-		Data *d = new Data;
-		d->key <<= ptr->key;
-		d->value = ptr->value;
-		ptr->Release();
-		ptr = d;
-	}
-	return *ptr;
-}
-
-ValueMap::Data& ValueMap::Clone() {
-	return Clone(data);
+	Data *d = new Data;
+	d->key <<= ptr->key;
+	d->value = ptr->value;
+	ptr->Release();
+	ptr = d;
 }
 
 void ValueMap::Init0()
@@ -470,7 +459,7 @@ ValueMap::ValueMap(const VectorMap<Value, Value>& m, int deep)
 
 VectorMap<Value, Value> ValueMap::Pick()
 {
-	Data& d = Clone();
+	Data& d = UnShare();
 	VectorMap<Value, Value> m(d.key.PickKeys(), d.value.Pick());
 	d.key.Clear();
 	return m;
@@ -479,32 +468,6 @@ VectorMap<Value, Value> ValueMap::Pick()
 ValueMap::operator Value() const {
 	data->Retain();
 	return Value(data);
-}
-
-Value& ValueMap::Data::GetAdd(const Value& k)
-{
-	int i = key.Find(k);
-	if(i < 0) {
-		i = value.GetCount();
-		key.Add(k);
-	}
-	return value.At(i);
-}
-
-Value& ValueMap::Data::At(int i)
-{
-	ASSERT(i < value.GetCount());
-	return value.At(i);
-}
-
-Value& ValueMap::GetAdd(const Value& key)
-{
-	return Clone().GetAdd(key);
-}
-
-Value& ValueMap::At(int i)
-{
-	return Clone().At(i);
 }
 
 ValueMap::ValueMap(const Value& src)
@@ -574,14 +537,14 @@ void ValueMap::Clear() {
 }
 
 void ValueMap::Add(const Value& key, const Value& value) {
-	Data& d = Clone();
+	Data& d = UnShare();
 	d.key.Add(key);
 	d.value.Add(value);
 }
 
 void ValueMap::Set(const Value& key, const Value& value)
 {
-	Data& d = Clone();
+	Data& d = UnShare();
 	int i = d.key.Find(key);
 	if(i >= 0)
 		d.value.Set(i, value);
@@ -592,16 +555,16 @@ void ValueMap::Set(const Value& key, const Value& value)
 }
 
 void ValueMap::SetAt(int i, const Value& v) {
-	Clone().value.Set(i, v);
+	UnShare().value.Set(i, v);
 }
 
 void ValueMap::SetKey(int i, const Value& k) {
-	Clone().key.Set(i, k);
+	UnShare().key.Set(i, k);
 }
 
 int ValueMap::RemoveKey(const Value& key)
 {
-	Data& d = Clone();
+	Data& d = UnShare();
 	Vector<int> rk;
 	int q = d.key.Find(key);
 	while(q >= 0) {
@@ -618,19 +581,14 @@ int ValueMap::RemoveKey(const Value& key)
 
 void ValueMap::Remove(int i)
 {
-	Data& d = Clone();
+	Data& d = UnShare();
 	d.key.Remove(i);
 	d.value.Remove(i);
 }
 
-const Value& ValueMap::operator[](const Value& key) const
-{
-	return data->Get(key);
-}
-
 Value ValueMap::GetAndClear(const Value& key)
 {
-	Data& d = Clone();
+	Data& d = UnShare();
 	int q = d.key.Find(key);
 	return q < 0 ? ErrorValue() : d.value.GetAndClear(q);
 }

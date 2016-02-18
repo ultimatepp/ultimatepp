@@ -400,9 +400,9 @@ Ide::Ide()
 	idestate = EDITING;
 	debuglock = 0;
 
-	menubar.WhenHelp = statusbar;
+	menubar.WhenHelp = ~statusbar;
 	menubar.AreaLook(1);
-	toolbar.WhenHelp = statusbar;
+	toolbar.WhenHelp = ~statusbar;
 	toolbar.AreaLook(1);
 	toolbar_in_row = false;
 	SetupBars();

@@ -42,6 +42,7 @@ file
 	Mt.cpp,
 	OL_Set.cpp,
 	Global.h,
+	Heap.h,
 	HeapImp.h,
 	heaputil.cpp optimize_speed,
 	sheap.cpp optimize_speed,

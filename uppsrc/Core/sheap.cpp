@@ -294,6 +294,16 @@ void Heap::Free48(void *ptr)
 	Free(ptr, KLASS_48);
 }
 
+void *MemoryAllok__(int klass)
+{
+	return heap.Allok(klass);
+}
+
+void MemoryFreek__(int klass, void *ptr)
+{
+	heap.Free(ptr, klass);
+}
+
 /*
 Heap::Page    dummy;
 #define DI    { { 0, 0, 0, 0, &dummy, &dummy } }
