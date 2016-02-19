@@ -1,6 +1,6 @@
-template <class T>
-T& Single() {
-	static T o;
+template <class T, class... Args>
+T& Single(Args... args) {
+	static T o(args...);
 	return o;
 }
 
@@ -24,7 +24,6 @@ class One : MoveableAndDeepCopyOption< One<T> > {
 public:
 	void        Attach(T *data)            { Free(); ptr = data; }
 	T          *Detach()                   { ChkP(); T *t = ptr; ptr = NULL; return t; }
-	T          *operator-()                { return Detach(); }
 	void        Clear()                    { Free(); ptr = NULL; }
 
 	void        operator=(T *data)         { Attach(data); }
@@ -37,8 +36,8 @@ public:
 	const T&    operator*() const          { ChkP(); return *ptr; }
 	T&          operator*()                { ChkP(); return *ptr; }
 
-	template <class TT>
-	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
+	template <class TT, class... Args>
+	TT&         Create(Args... args)       { TT *q = new TT(args...); Attach(q); return *q; }
 	T&          Create()                   { T *q = new T; Attach(q); return *q; }
 
 	template <class TT>
@@ -68,7 +67,8 @@ class Any : Moveable<Any> {
 	struct Data : BaseData {
 		T        data;
 
-		Data()                                    { typeno = StaticTypeNo<T>(); }
+		template <class... Args>
+		Data(Args... args) : data(args...)        { typeno = StaticTypeNo<T>(); }
 	};
 
 	BaseData *ptr;
@@ -77,7 +77,7 @@ class Any : Moveable<Any> {
 	void Pick(Any&& s)                            { ptr = s.ptr; const_cast<Any&>(s).ptr = NULL; }
 
 public:
-	template <class T> T& Create()                { Clear(); Data<T> *x = new Data<T>; ptr = x; return x->data; }
+	template <class T, class... Args> T& Create(Args... args) { Clear(); Data<T> *x = new Data<T>(args...); ptr = x; return x->data; }
 	template <class T> bool Is() const            { return ptr && ptr->typeno == StaticTypeNo<T>(); }
 	template <class T> T& Get()                   { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
 	template <class T> const T& Get() const       { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }

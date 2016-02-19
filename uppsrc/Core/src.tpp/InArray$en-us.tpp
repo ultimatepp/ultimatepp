@@ -46,11 +46,13 @@ iterators.&]
 ]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Inserts a copy of [%-*@3 x] at [%-*@3 i]. Invalidates iterators.&]
 [s3; &]
-[s4; &]
-[s5;:InArray`:`:InsertCreate`(int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>_
-[*@4 TT][@(0.0.255) `&]_[* InsertCreate]([@(0.0.255) int]_[*@3 i])&]
-[s2; Creates a default constructed element of type [%-*@4 TT] and inserts 
-it at [%-*@3 i]. Invalidates iterators.&]
+[s4;%- &]
+[s5;:Upp`:`:InArray`:`:InsertCreate`(int`,Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* InsertCreate]([@(0.0.255) i
+nt]_[*@3 i], [*@4 Args][@(0.0.255) ...]_args)&]
+[s2; Creates a in`-place constructed element (with args as constructor 
+parameters) of type [%-*@4 TT] and inserts it at [%-*@3 i]. Invalidates 
+iterators.&]
 [s3; &]
 [s4; &]
 [s5;:InArray`:`:InsertN`(int`,int`):%- [@(0.0.255) void]_[* InsertN]([@(0.0.255) int]_[*@3 i],
@@ -88,10 +90,12 @@ t]_[*@3 i])&]
 [s5;:InArray`:`:Add`(T`*`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T]_`*[*@3 newt])&]
 [s2; Same as Insert(GetCount(), [%-*@3 newt]). Invalidates iterators.&]
 [s3; &]
-[s4; &]
-[s5;:InArray`:`:Create`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>_[*@4 TT][@(0.0.255) `&
-]_[* Create]()&]
-[s2; Same as InsertCreate<[%-*@4 TT]>(GetCount()). Invalidates iterators.&]
+[s4;%- &]
+[s5;:Upp`:`:InArray`:`:Create`(Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) cla
+ss]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) .
+..]_args)&]
+[s2; Same as InsertCreate<[%-*@4 TT]>(GetCount(), args...). Invalidates 
+iterators.&]
 [s3; &]
 [s4; &]
 [s5;:InArray`:`:GetCount`(`)const:%- [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]

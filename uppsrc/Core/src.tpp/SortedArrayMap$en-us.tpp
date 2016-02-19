@@ -45,12 +45,14 @@ nst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T]_`*[*@3 newt])&]
 [s2; Inserts the key at upper bound key position and sets key to 
 [%-*@3 newt] `- SortedArrayMap takes ownership. Returns [%- `*][%-*@3 newt].&]
 [s3; &]
-[s4; &]
-[s5;:SortedArrayMap`:`:Create`(const K`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
-T]>_[*@4 TT][@(0.0.255) `&]_[* Create]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k])&]
+[s4;%- &]
+[s5;:Upp`:`:SortedArrayMap`:`:Create`(const K`&`,Args`.`.`.args`):%- [@(0.0.255) templa
+te]_<[@(0.0.255) class]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* C
+reate]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 Args][@(0.0.255) ...]_args)&]
 [s2; Inserts the key at upper bound key position and creates a new 
-value of type [%-*@4 TT]. [%-*@4 TT] has to be derived from [%-*@4 T]. 
-Returns a reference to this newly creaeted value.&]
+value of type [%-*@4 TT] using args as constructor parameters. 
+[%-*@4 TT] has to be derived from [%-*@4 T]. Returns a reference 
+to this newly created value.&]
 [s3; &]
 [s4; &]
 [s5;:SortedArrayMap`:`:FindAdd`(const K`&`):%- [@(0.0.255) int]_[* FindAdd]([@(0.0.255) con

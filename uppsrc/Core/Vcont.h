@@ -94,6 +94,8 @@ public:
 	T&       Add()                   { if(items >= alloc) GrowF(); return *(::new(Rdd()) T); }
 	T&       Add(const T& x)         { return items < alloc ? *(new(Rdd()) T(clone(x))) : GrowAdd(x); }
 	T&       Add(T&& x)              { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	template <class... Args>
+	T&       Create(Args... args)    { if(items >= alloc) GrowF(); return *(::new(Rdd()) T(args...)); }
 	void     AddN(int n);
 	const T& operator[](int i) const { return Get(i); }
 	T&       operator[](int i)       { return Get(i); }
@@ -238,7 +240,8 @@ public:
 	T&       Add(T&& x)                 { T *q = new T(pick(x)); vector.Add(q); return *q; }
 	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; } // deprecated
 	T&       Add(T *newt)               { vector.Add(newt); return *newt; }
-	template<class TT> TT& Create()     { TT *q = new TT; Add(q); return *q; }
+	template<class TT, class... Args>
+	TT& Create(Args... args)            { TT *q = new TT(args...); Add(q); return *q; }
 	const T& operator[](int i) const    { return Get(i); }
 	T&       operator[](int i)          { return Get(i); }
 	int      GetCount() const           { return vector.GetCount(); }

@@ -42,10 +42,8 @@ of this this object. &]
 [s7;%% [%-*@3 newt]-|Object to be added.&]
 [s3;%% &]
 [s4; &]
-[s5;:One`:`:One`(pick`_ One`<T`>`&`): [* One]([@(0.128.128) pick`_]_[* One][@(0.0.255) <][*@4 T
-][@(0.0.255) >`&]_[*@3 p])&]
-[s2;%% Pick constructor. Transfers source [* One] [%-*@3 p ]in low constant 
-time, but destroys it by picking.&]
+[s5;:Upp`:`:One`:`:One`(Upp`:`:One`<T`>`&`&`): [* One]([* One]<[*@4 T]>`&`&_[*@3 p])&]
+[s2;%% Pick constructor.&]
 [s3;%% &]
 [s4; &]
 [s5;:One`:`:One`(const One`<T`>`&`,int`): [* One]([@(0.0.255) const]_[* One][@(0.0.255) <][*@4 T
@@ -76,14 +74,9 @@ calling this function, it is destroyed).&]
 new.&]
 [s3; &]
 [s4; &]
-[s5;:One`:`:Detach`(`)pick`_: [*@4 T]_`*[* Detach]()_[@(0.128.128) pick`_]&]
+[s5;:Upp`:`:One`:`:Detach`(`): [*@4 T]_`*[* Detach]()&]
 [s2;%% Removes content giving up ownership. Client is responsible 
 for deletion of content.&]
-[s7;%% [*/ Return value]-|Pointer to the content allocated on the heap.&]
-[s3; &]
-[s4; &]
-[s5;:One`:`:operator`-`(`)pick`_: [*@4 T]_`*[* operator`-]()_[@(0.128.128) pick`_]&]
-[s2;%% Same as Detach() (operator version).&]
 [s7;%% [*/ Return value]-|Pointer to the content allocated on the heap.&]
 [s3; &]
 [s4; &]
@@ -93,11 +86,9 @@ for deletion of content.&]
 new.&]
 [s3; &]
 [s4; &]
-[s5;:One`:`:operator`=`(pick`_ One`<T`>`&`): [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
-ick`_]_[_^One^ One][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 d])&]
-[s2;%% Pick operator. Transfers source One in low constant time, 
-but destroys it by picking.&]
-[s7;%% [%-*C@3 d]-|Source One.&]
+[s5;:Upp`:`:One`:`:operator`=`(Upp`:`:One`<T`>`&`&`): [@(0.0.255) void]_[* operator`=]([_^Upp`:`:One^ O
+ne]<[*@4 T]>`&`&_[*@3 d])&]
+[s2;%% Pick assignment.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`-`>`(`)const: [@(0.0.255) const]_[*@4 T]_`*[* operator`->]()_[@(0.0.255) c
@@ -136,13 +127,16 @@ content.&]
 [s7;%% [*/ Return value]-|Reference to content.&]
 [s3; &]
 [s4; &]
-[s5;:One`:`:Create`(`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT][@(0.0.255) >]_[*@4 T
-T][@(0.0.255) `&]_[* Create]()&]
-[s2;%% Creates content in One. (Note: if there is content in One while 
-calling this function, it is destroyed).&]
-[s7;%% [*C@4 TT]-|Type of content. Must be equal to T or derived from 
-it.&]
-[s7;%% [*/ Return value]-|Reference to actual content (of type TT).&]
+[s5;:Upp`:`:One`:`:Create`(Args`.`.`.args`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
+T], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) .
+..]_args)&]
+[s2;%% Creates [%-*@4 TT] content in One. If there is content in One 
+while calling this function, it is destroyed. Additional arguments 
+can be specified for [%-*@4 TT ]constructor.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:One`:`:Create`(`): [*@4 T][@(0.0.255) `&]_[* Create]()&]
+[s2;%% Creates [%-*@4 T] content in One (default constructed).&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:Is`(`)const: [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>_[@(0.0.255) bool

@@ -290,7 +290,8 @@ public:
 	T&       Insert(int i, T *newt)                 { iv.Insert(i, newt); return *newt; }
 	T&       Insert(int i)                          { return Insert(i, new T); }
 	T&       Insert(int i, const T& x)              { return Insert(i, new T(x)); }
-	template<class TT> TT& InsertCreate(int i)      { TT *q = new TT; Insert(i, q); return *q; }
+	template<class TT, class... Args>
+	TT&      InsertCreate(int i, Args... args)      { TT *q = new TT(args...); Insert(i, q); return *q; }
 
 	void     InsertN(int i, int count);
 	void     Remove(int i, int count = 1);
@@ -301,8 +302,9 @@ public:
 	T&       Add()                                  { return Insert(GetCount()); }
 	T&       Add(const T& x)                        { return Insert(GetCount(), x); }
 	void     AddN(int n)                            { InsertN(GetCount(), n); }
-	T&       Add(T *newt)                           { Insert(GetCount(), newt); }
-	template<class TT> TT& Create()                 { TT *q = new TT; Add(q); return *q; }
+	T&       Add(T *newt)                           { Insert(GetCount(), newt); return *newt; }
+	template<class TT, class... Args>
+	TT&      Create(Args... args)                   { TT *q = new TT(args...); Add(q); return *q; }
 	
 	int      GetCount() const                       { return iv.GetCount(); }
 	bool     IsEmpty() const                        { return GetCount() == 0; }
@@ -691,7 +693,8 @@ public:
 	T&       Add(const K& k, const T& x)          { B::value.res = DeepCopyNew(x); B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k)                      { B::value.res = NULL; B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k, T *newt)             { B::value.res = newt; B::key.Add(k); return *newt; }
-	template <class TT> TT& Create(const K& k)    { TT *q = new TT(); B::value.res = q; B::key.Add(k); return *q; }
+	template <class TT, class... Args>
+	TT&      Create(const K& k, Args... args)     { TT *q = new TT(args...); B::value.res = q; B::key.Add(k); return *q; }
 
 	int      FindAdd(const K& k)                  { B::value.res = NULL; return B::key.FindAdd(k); }
 	int      FindAdd(const K& k, const T& init);

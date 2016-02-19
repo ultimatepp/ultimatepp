@@ -99,7 +99,8 @@ public:
 	T&        Add(const K& k, const T& x)          { return B::Add(k, x); }
 	T&        Add(const K& k)                      { return B::Add(k); }
 	T&        Add(const K& k, T *newt)             { B::key.Add(k); return B::value.Add(newt); }
-	template <class TT> TT& Create(const K& k)     { TT *q = new TT; B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
+	template <class TT, class... Args>
+	TT&       Create(const K& k, Args... args)     { TT *q = new TT(args...); B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
 
 	FixedArrayMap(const FixedArrayMap& s, int) : FixedAMap<K, T, Array<T>, Less>(s, 1) {}
 	FixedArrayMap(Vector<K>&& ndx, Array<T>&& val) : FixedAMap<K, T, Array<T>, Less>(ndx, val) {}
