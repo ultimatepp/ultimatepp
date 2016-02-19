@@ -340,7 +340,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	Data& Create();
 	static void Clone(Data *&ptr);
 	force_inline
-	static ValueMap::Data& ValueMap::UnShare(ValueMap::Data *&ptr) { if(ptr->GetRefCount() != 1) Clone(ptr); return *ptr; }
+	static ValueMap::Data& UnShare(ValueMap::Data *&ptr) { if(ptr->GetRefCount() != 1) Clone(ptr); return *ptr; }
 	Data& UnShare() { return UnShare(data); }
 	void  Init0();
 
@@ -457,3 +457,4 @@ public:
 
 
 #include "Value.hpp"
+#include "ValueUtil.hpp"

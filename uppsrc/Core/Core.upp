@@ -115,6 +115,7 @@ file
 	Value.hpp,
 	Value.cpp optimize_speed,
 	ValueUtil.h,
+	ValueUtil.hpp,
 	ValueUtil.cpp optimize_speed,
 	Complex.h,
 	Format.h,

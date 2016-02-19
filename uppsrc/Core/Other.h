@@ -1,21 +1,14 @@
 template <class T>
 T& Single() {
-	static T *p;
-	ONCELOCK {
-		static T o;
-		p = &o;
-	}
-	return *p;
+	static T o;
+	return o;
 }
 
 int RegisterTypeNo__(const char *type);
 
 template <class T>
 int StaticTypeNo() {
-	static int typeno;
-	ONCELOCK {
-		typeno = RegisterTypeNo__(typeid(T).name());
-	}
+	static int typeno = RegisterTypeNo__(typeid(T).name());
 	return typeno;
 }
 

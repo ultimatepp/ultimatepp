@@ -536,12 +536,6 @@ void ValueMap::Clear() {
 	Init0();
 }
 
-void ValueMap::Add(const Value& key, const Value& value) {
-	Data& d = UnShare();
-	d.key.Add(key);
-	d.value.Add(value);
-}
-
 void ValueMap::Set(const Value& key, const Value& value)
 {
 	Data& d = UnShare();

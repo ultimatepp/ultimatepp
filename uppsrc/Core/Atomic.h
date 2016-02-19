@@ -12,7 +12,7 @@ inline void ReadMemoryBarrier()
 inline void WriteMemoryBarrier() {
 	_mm_sfence();
 }
-#elif
+#else
 inline void ReadMemoryBarrier()
 {
 	__sync_synchronize();
