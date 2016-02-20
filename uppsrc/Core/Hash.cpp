@@ -334,7 +334,7 @@ unsigned GetHashValue0(const double& d)
 
 void Bits::Clear()
 {
-	if(bp && alloc >= 0)
+	if(bp)
 		delete[] bp;
 	alloc = 0;
 	bp = NULL;

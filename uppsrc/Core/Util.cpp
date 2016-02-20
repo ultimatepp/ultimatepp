@@ -284,44 +284,6 @@ bool InScList(const char *s, const char *list)
 	return InScListIndex(s, list) >= 0;
 }
 
-void StringC::Free() {
-	if(IsString()) delete (String *) bap.GetPtr();
-}
-
-StringC::~StringC() {
-	Free();
-}
-
-StringC::operator const char *() const {
-	if(IsEmpty()) return NULL;
-	if(IsString()) return *(String *) bap.GetPtr();
-	return (const char *)bap.GetPtr();
-}
-
-StringC::operator String() const {
-	if(IsEmpty()) return (const char *)NULL;
-	if(IsString()) return *(String *) bap.GetPtr();
-	return (const char *)bap.GetPtr();
-}
-
-bool StringC::IsEmpty() const {
-	if(IsString()) return (*(String *) bap.GetPtr()).IsEmpty();
-	if(!bap.GetPtr()) return true;
-	return !*(const char *)bap.GetPtr();
-}
-
-void StringC::SetString(const String& s) {
-	Free();
-	String *ptr = new String;
-	*ptr = s;
-	bap.Set1(ptr);
-}
-
-void StringC::SetCharPtr(const char *s) {
-	Free();
-	bap.Set0((void *)s);
-}
-
 String timeFormat(double s) {
 	if(s < 0.000001) return Sprintf("%5.2f ns", s * 1.0e9);
 	if(s < 0.001) return Sprintf("%5.2f us", s * 1.0e6);

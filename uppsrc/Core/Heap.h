@@ -1,14 +1,3 @@
-/*
-#if defined(flagMT)
-	#if defined(PLATFORM_WIN32) && defined(COMPILER_GCC)
-		#define flagUSEMALLOC //MINGW does not support
-	#endif
-#endif
-*/
-#ifndef  flagUSEMALLOC
-#define UPP_HEAP
-#endif
-
 #ifdef UPP_HEAP
 
 void *MemoryAllocPermanent(size_t size);

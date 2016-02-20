@@ -101,9 +101,11 @@ void AIndex<T, V>::Hash() {
 
 template <class T, class V>
 AIndex<T, V>& AIndex<T, V>::operator=(V&& s) {
-	key = pick(s);
-	hash.Clear();
-	Hash();
+	if(&key != &s) {
+		key = pick(s);
+		hash.Clear();
+		Hash();
+	}
 	return *this;
 }
 

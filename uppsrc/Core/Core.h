@@ -244,13 +244,13 @@ namespace Upp {};
 
 NAMESPACE_UPP
 
-#include <Core/Defs.h>
+#include "Defs.h"
 
 class XmlIO;
 class JsonIO;
 
+#include "Ops.h"
 #include "Atomic.h"
-#include "Global.h"
 #include "Topt.h"
 #include "Mt.h"
 #include "String.h"

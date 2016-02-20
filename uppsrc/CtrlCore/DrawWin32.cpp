@@ -63,7 +63,10 @@ HPALETTE GetQlibPalette()
 }
 #endif
 
-SystemDraw& GLOBAL_VP(ScreenDraw, ScreenInfo, (true))
+SystemDraw& ScreenInfo()
+{
+	return Single<ScreenDraw>(true);
+}
 
 HDC ScreenHDC()
 {

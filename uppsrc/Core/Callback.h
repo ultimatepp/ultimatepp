@@ -45,8 +45,11 @@ public:
 	
 	template <class F> Function(F fn)          { ptr = new Wrapper<F>(pick(fn)); }
 	
-	Function(const Function& a)                { Copy(a); }
-	Function& operator=(const Function& other) { WrapperBase *b = ptr; Copy(other); Free(b); return *this; }
+	Function(const Function& src)              { Copy(src); }
+	Function& operator=(const Function& src)   { auto b = ptr; Copy(src); Free(b); return *this; }
+
+	Function(Function&& src)                   { ptr = src.ptr; src.ptr = NULL; }
+	Function& operator=(Function&& src)        { if(&src != this) { Free(ptr); ptr = src.ptr; src.ptr = NULL; } return *this; }
 	
 	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
 

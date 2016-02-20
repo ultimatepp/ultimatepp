@@ -72,10 +72,17 @@ bool SaveChangedFileFinish(const String& filename, const String& data)
 	return SaveFileFinish(filename, data);
 }
 
-typedef VectorMap<String, String> sStringMap;
+VectorMap<String, String>& sWorkspaceCfg()
+{
+	static VectorMap<String, String> h;
+	return h;
+}
 
-GLOBAL_VAR(sStringMap,  sWorkspaceCfg)
-GLOBAL_VAR(Vector<Callback>, sWorkspaceCfgFlush)
+Vector<Callback>& sWorkspaceCfgFlush()
+{
+	static Vector<Callback> h;
+	return h;
+}
 
 void    RegisterWorkspaceConfig(const char *name)
 {

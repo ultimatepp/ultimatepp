@@ -238,7 +238,7 @@ public:
 #endif
 
 	ValueArray& operator=(const ValueArray& v);
-	ValueArray& operator=(Vector<Value>&& values) { *this = ValueArray(pick(values)); return *this; }
+	ValueArray& operator=(Vector<Value>&& values)  { *this = ValueArray(pick(values)); return *this; }
 
 	operator Value() const;
 	ValueArray(const Value& src);

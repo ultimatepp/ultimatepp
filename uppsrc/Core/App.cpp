@@ -178,12 +178,16 @@ String  ConfigFile() {
 	return ConfigFile(GetExeTitle() + ".cfg");
 }
 
-GLOBAL_VAR(Vector<WString>, coreCmdLine__)
+Vector<WString>& coreCmdLine__()
+{
+	static Vector<WString> h;
+	return h;
+}
 
 const Vector<String>& CommandLine()
 {
 	Vector<String> *ptr;
-	INTERLOCKED { 
+	INTERLOCKED {
 		static ArrayMap< byte, Vector<String> > charset_cmd;
 		byte cs = GetDefaultCharset();
 		int f = charset_cmd.Find(cs);

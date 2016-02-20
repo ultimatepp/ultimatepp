@@ -1074,7 +1074,11 @@ FileSystemInfo::FileInfo::FileInfo()
 	, is_temporary(false), root_style(ROOT_NO_ROOT_DIR)
 {}
 
-GLOBAL_VAR(FileSystemInfo, StdFileSystemInfo)
+FileSystemInfo& StdFileSystemInfo()
+{
+	static FileSystemInfo h;
+	return h;
+}
 
 int FileSystemInfo::GetStyle() const
 {

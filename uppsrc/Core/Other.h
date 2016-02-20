@@ -27,7 +27,7 @@ public:
 	void        Clear()                    { Free(); ptr = NULL; }
 
 	void        operator=(T *data)         { Attach(data); }
-	void        operator=(One<T>&& d)      { Free(); Pick(pick(d)); }
+	void        operator=(One<T>&& d)      { if(this != &d) { Free(); Pick(pick(d)); }}
 
 	const T    *operator->() const         { ChkP(); return ptr; }
 	T          *operator->()               { ChkP(); return ptr; }
@@ -86,7 +86,7 @@ public:
 
 	bool IsEmpty() const                          { return ptr == NULL; }
 
-	void operator=(Any&& s)                       { Clear(); Pick(pick(s)); }
+	void operator=(Any&& s)                       { if(this != &s) { Clear(); Pick(pick(s)); } }
 	Any(Any&& s)                                  { Pick(pick(s)); }
 
 	Any()                                         { ptr = NULL; }
@@ -108,8 +108,8 @@ public:
 	Bits()                         { bp = NULL; alloc = 0; }
 	~Bits()                        { Clear(); }
 
-	Bits(Bits&& b)                 { alloc = b.alloc; bp = b.bp; b.alloc = -1; }
-	void operator=(Bits&& b)        { Clear(); alloc = b.alloc; bp = b.bp; b.alloc = -1; }
+	Bits(Bits&& b)                 { alloc = b.alloc; bp = b.bp; b.bp = NULL; }
+	void operator=(Bits&& b)       { if(this != &b) { Clear(); alloc = b.alloc; bp = b.bp; b.bp = NULL; } }
 };
 
 //# System dependent
@@ -136,10 +136,9 @@ public:
 	void      Shrink();
 
 	Mitor(Mitor&& m)                    { Pick(m); }
-	void operator=(Mitor&& m)           { Clear(); Pick(pick(m)); }
+	void operator=(Mitor&& m)           { if(this != &m) { Clear(); Pick(pick(m)); } }
 
 	Mitor(Mitor& m, int)                { Copy(m); }
-	void operator<<=(const Mitor& m)    { Clear(); Copy(m); }
 
 	Mitor()                             { count = 0; }
 	~Mitor()                            { Clear(); }

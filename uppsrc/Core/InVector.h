@@ -356,7 +356,7 @@ public:
 
 	InArray() {}
 	InArray(InArray&& v) : iv(pick(v.iv))           {}
-	InArray& operator=(InArray&& v)                 { Free(); iv.operator=(pick(v.iv)); return *this; }
+	InArray& operator=(InArray&& v)                 { if(this != &v) { Free(); iv.operator=(pick(v.iv)); } return *this; }
 	InArray(const InArray& v, int);
 
 	~InArray()                                      { Free(); }

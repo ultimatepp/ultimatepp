@@ -56,7 +56,7 @@ public:
 	Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
 	~Buffer()                            { if(ptr) delete[] ptr; }
 
-	void operator=(Buffer&& v)           { if(ptr) delete[] ptr; ptr = v.ptr; v.ptr = NULL; }
+	void operator=(Buffer&& v)           { if(&v != this) { Clear(); ptr = v.ptr; v.ptr = NULL; } }
 	Buffer(Buffer&& v)                   { ptr = v.ptr; v.ptr = NULL; }
 
 	Buffer(size_t size, std::initializer_list<T> init) : Buffer(size) {
@@ -172,7 +172,7 @@ public:
 
 // Pick assignment & copy. Picked source can only do Clear(), ~Vector(), operator=, operator <<=
 	Vector(Vector&& v)               { Pick(pick(v)); }
-	void operator=(Vector&& v)       { Free(); Pick(pick(v)); }
+	void operator=(Vector&& v)       { if(this != &v) { Free(); Pick(pick(v)); } }
 
 #ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
@@ -315,7 +315,7 @@ public:
 
 // Pick assignment & copy. Picked source can only Clear(), ~Vector(), operator=, operator<<=
 	Array(Array&& v) : vector(pick(v.vector))  {}
-	void operator=(Array&& v)                  { Free(); vector = pick(v.vector); }
+	void operator=(Array&& v)           { if(this != &v) { Free(); vector = pick(v.vector); } }
 
 // Deep copy
 	Array(const Array& v, int)          { __DeepCopy(v); }

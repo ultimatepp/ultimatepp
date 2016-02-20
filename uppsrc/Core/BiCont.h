@@ -58,7 +58,7 @@ public:
 
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
 	BiVector(BiVector&& src)                    { Pick(pick(src)); }
-	void operator=(BiVector&& src)              { Free(); Pick(pick(src)); }
+	void operator=(BiVector&& src)              { if(this != &src) { Free(); Pick(pick(src)); } }
 	BiVector()                                  { start = items = alloc = 0; vector = NULL; }
 	~BiVector()                                 { Free(); } // gcc4.0 workaround!!
 
@@ -138,7 +138,7 @@ public:
 	BiArray(const BiArray& v, int)           { DeepCopy0(v); }
 
 	BiArray(BiArray&& src) : bv(pick(src.bv)){}
-	void operator=(BiArray&& src)            { Free(); bv = pick(src.bv); }
+	void operator=(BiArray&& src)            { if(this != &src) { Free(); bv = pick(src.bv); } }
 	BiArray()                                {}
 	~BiArray()                               { Free(); }
 

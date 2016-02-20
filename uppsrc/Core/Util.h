@@ -373,40 +373,10 @@ public:
 	AbortExc();
 };
 
-// --------------
-
-/*
-template <class T>
-va_list va_ptr(const T& obj)
-{
-	va_list temp;
-	va_start(temp, obj);
-	return temp;
-}
-*/
-
 // ---------------
 
 int  InScListIndex(const char *s, const char *list);
 bool InScList(const char *s, const char *list);
-
-class StringC {
-	BitAndPtr bap;
-
-	bool     IsString() const                  { return bap.GetBit(); }
-	void     Free();
-
-public:
-	void     SetString(const String& s);
-	void     SetCharPtr(const char *s);
-
-	bool     IsEmpty() const;
-
-	operator const char *() const;
-	operator String() const;
-
-	~StringC();
-};
 
 // ------------------- Linux style text settings -------------
 

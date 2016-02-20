@@ -229,9 +229,11 @@ class String0 : Moveable<String0> {
 	friend class Value;
 
 protected:
-	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
+//	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
+//	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
+	void Zero()                     { fast_zero128(q); Dsyn(); }
+	void SetSmall(const String0& s) { fast_copy128(q, s.q); }
 	void Free()                     { if(IsLarge()) LFree(); }
-	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
 	void Pick0(String0&& s) {
 		SetSmall(s);
 		s.Zero();
@@ -263,13 +265,7 @@ protected:
 
 public:
 	bool IsEqual(const String0& s) const {
-		return (chr[KIND] | s.chr[KIND] ? LEqual(s) :
-		#ifdef CPU_64
-		        ((q[0] ^ s.q[0]) | (q[1] ^ s.q[1]))
-		#else
-		        ((w[0] ^ s.w[0]) | (w[1] ^ s.w[1]) | (w[2] ^ s.w[2]) | (w[3] ^ s.w[3]))
-		#endif
-		       ) == 0;
+		return (chr[KIND] | s.chr[KIND] ? LEqual(s) : fast_equal128(q, s.q)) == 0;
 	}
 
 	int    Compare(const String0& s) const;
