@@ -197,7 +197,6 @@ public:
 
 // Optimizations
 	friend void Swap(Vector& a, Vector& b)  { UPP::Swap(a.items, b.items); UPP::Swap(a.alloc, b.alloc); UPP::Swap(a.vector, b.vector); }
-	friend void Append(Vector& dst, const Vector& src)         { dst.Append(src); }
 
 //deprecated
 	T&       DoIndex(int i)             { return At(i); }
@@ -207,6 +206,7 @@ public:
 	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
 	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
 	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
+	friend void Append(Vector& dst, const Vector& src)         { dst.Append(src); }
 
 	STL_VECTOR_COMPATIBILITY(Vector<T>)
 };

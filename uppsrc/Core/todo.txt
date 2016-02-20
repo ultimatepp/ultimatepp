@@ -68,13 +68,10 @@ Remove HashFn
 for(auto i: ~map)
 
 Remove precomputed hash
-<<<<<<< .mine
 
 Remove StringC
-=======
 
 Create like emplace everywhere
->>>>>>> .r9498
 
 Global.h ?
 

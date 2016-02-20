@@ -62,6 +62,8 @@ public:
 	operator bool() const                      { return ptr; }
 	void Clear()                               { Free(ptr); ptr = NULL; }
 
+	friend void Swap(Function& a, Function& b) { UPP::Swap(a.ptr, b.ptr); }
+
 	~Function()                                { Free(ptr); }
 };
 
@@ -76,17 +78,22 @@ class CallbackN : Moveable<CallbackN<ArgTypes...>> {
 
 public:
 	CallbackN() {}
-	CallbackN(CNULLer)                         {}
-	CallbackN(const CallbackN& a) : fn(a.fn)   {}
-	CallbackN(const Fn& a) : fn(a)             {}
-	CallbackN(Fn&& a) : fn(a)                  {}
-	CallbackN& operator=(const Fn& a)          { fn = a.fn; return *this; }
-	CallbackN& operator=(const CallbackN& a)   { fn = a.fn; return *this; }
-	CallbackN& operator=(CNULLer)              { fn.Clear(); return *this; }
-	CallbackN Proxy() const                    { return fn.Proxy(); }
+	CallbackN(CNULLer)                                    {}
+	CallbackN(const CallbackN& src) : fn(src.fn)          {}
+	CallbackN(CallbackN&& src) : fn(pick(src.fn))         {}
+	CallbackN(const Fn& src) : fn(src)                    {}
+	CallbackN(Fn&& src) : fn(src)                         {}
+	CallbackN& operator=(const Fn& src)                   { fn = src.fn; return *this; }
+	CallbackN& operator=(const CallbackN& src)            { fn = src.fn; return *this; }
+	CallbackN& operator=(CallbackN&& src)                 { fn = pick(src.fn); return *this; }
+	CallbackN& operator=(CNULLer)                         { fn.Clear(); return *this; }
+	CallbackN Proxy() const                               { return fn.Proxy(); }
 
 	CallbackN& operator<<(const CallbackN& b)  { fn << b.fn; return *this; }
 	CallbackN& operator<<(const Fn& b)         { fn << b; return *this; }
+
+	CallbackN& operator<<(CallbackN&& b)       { fn << pick(b.fn); return *this; }
+	CallbackN& operator<<(Fn&& b)              { fn << pick(b); return *this; }
 	
 	template <class F>
 	CallbackN& operator<<(F f)                 { fn << f; }
@@ -97,7 +104,8 @@ public:
 	operator bool() const                      { return fn; }
 	void Clear()                               { fn.Clear(); }
 	
-	friend CallbackN Proxy(const CallbackN& a) { return a.Proxy(); }
+	friend CallbackN Proxy(const CallbackN& a)   { return a.Proxy(); }
+	friend void Swap(CallbackN& a, CallbackN& b) { UPP::Swap(a.fn, b.fn); }
 };
 
 typedef CallbackN<> Callback;
@@ -125,11 +133,19 @@ public:
 	GateN(bool b)                          { Set(b); }
 	GateN(CNULLer)                         {}
 	GateN(const GateN& a) : fn(a.fn)       {}
+	GateN(GateN&& a) : fn(pick(a.fn))      {}
 	GateN(const Fn& a) : fn(a)             {}
 	GateN& operator=(const GateN& a)       { fn = a.fn; return *this; }
+	GateN& operator=(GateN&& a)            { fn = pick(a.fn); return *this; }
 	GateN& operator=(CNULLer)              { fn.Clear(); return *this; }
 	GateN& operator=(bool b)               { Set(b); return *this; }
 	GateN Proxy() const                    { return fn.Proxy(); }
+
+	GateN& operator<<(const GateN& b)      { fn << b.fn; return *this; }
+	GateN& operator<<(const Fn& b)         { fn << b; return *this; }
+
+	GateN& operator<<(GateN&& b)           { fn << pick(b.fn); return *this; }
+	GateN& operator<<(Fn&& b)              { fn << pick(b); return *this; }
 
 	template <class F>
 	GateN& operator<<(F f)                 { fn << f; }
@@ -141,6 +157,7 @@ public:
 	void Clear()                           { fn.Clear(); }
 
 	friend GateN Proxy(const GateN& a)     { return a.Proxy(); }
+	friend void Swap(GateN& a, GateN& b)   { UPP::Swap(a.fn, b.fn); }
 };
 
 using Gate = GateN<>;
