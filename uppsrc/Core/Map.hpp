@@ -1,3 +1,18 @@
+inline int& HashBase::Maph(unsigned _hash) const
+{
+	unsigned h = _hash & ~UNSIGNED_HIBIT;
+#ifdef FOLDHASH
+	return map[(mcount - 1) & (((h >> 23) - (h >> 15) - (h >> 7) - h))];
+#else
+	return map[h % mcount];
+#endif
+}
+
+inline int& HashBase::Mapi(int i) const
+{
+	return Maph(hash[i]);
+}
+
 inline void HashBase::LinkTo(int i, Link& l, int& m)
 {
 	if(m >= 0) {
@@ -9,6 +24,18 @@ inline void HashBase::LinkTo(int i, Link& l, int& m)
 	}
 	else
 		m = l.prev = l.next = i;
+}
+
+inline
+void HashBase::Add(unsigned _hash)
+{
+	ASSERT(hash.GetCount() == link.GetCount());
+	int i = hash.GetCount();
+	hash.Add(_hash & ~UNSIGNED_HIBIT);
+	if(hash.GetCount() < mcount)
+		LinkTo(i, link.Add(), Maph(_hash));
+	else
+		Reindex();
 }
 
 inline void HashBase::Unlink(int i, Link& l, int& m)
@@ -27,21 +54,6 @@ inline void HashBase::Unlink(int i, Link& l, int& m)
 inline void HashBase::Unlink(int i, Link& l)
 {
 	Unlink(i, l, hash[i] & UNSIGNED_HIBIT ? unlinked : Mapi(i));
-}
-
-inline int& HashBase::Mapi(int i) const
-{
-	return Maph(hash[i]);
-}
-
-inline int& HashBase::Maph(unsigned _hash) const
-{
-	unsigned h = _hash & ~UNSIGNED_HIBIT;
-#ifdef FOLDHASH
-	return map[(mcount - 1) & (((h >> 23) - (h >> 15) - (h >> 7) - h))];
-#else
-	return map[h % mcount];
-#endif
 }
 
 inline void HashBase::DoIndex()

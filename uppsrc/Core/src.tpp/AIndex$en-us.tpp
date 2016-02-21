@@ -97,9 +97,8 @@ constructor.&]
 ]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element [%-*@3 x] with a precomputed hash value [%-*@3 `_hash]. 
 The performance benefit of this variant is that sometimes you 
-can compute hash`-value as the part of an other process, like 
-fetching strings from an input stream. Returns a reference to 
-the element.&]
+can compute hash`-value as the part of other process, like fetching 
+strings from an input stream. Returns a reference to the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]

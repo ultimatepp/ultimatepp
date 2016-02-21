@@ -146,11 +146,13 @@ void HashBase::Reindex()
 	Reindex(hash.GetCount());
 }
 
+/*
 void HashBase::Add(unsigned _hash)
 {
 	hash.Add(_hash & ~UNSIGNED_HIBIT);
 	DoIndex();
 }
+*/
 
 void  HashBase::SetUn(int i, unsigned _hash)
 {
