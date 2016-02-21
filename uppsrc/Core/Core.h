@@ -220,6 +220,7 @@ typedef int SOCKET;
 #include <string>
 #include <complex>
 #include <type_traits>
+#include <atomic>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC

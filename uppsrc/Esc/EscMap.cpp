@@ -8,7 +8,7 @@ VectorMap<EscValue, EscValue>& EscValue::CloneMap()
 {
 	LTIMING("CloneMap");
 	ASSERT(IsMap());
-	if(AtomicRead(map->refcount) != 1) {
+	if(map->refcount != 1) {
 		EscMap *c = new EscMap;
 		c->map <<= map->map;
 		map->Release();

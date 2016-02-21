@@ -7,13 +7,9 @@ NAMESPACE_UPP
 #ifdef _MULTITHREADED
 
 static Mutex& sMutexLock()
-{
-	static Mutex *section;
-	if(!section) {
-		static byte b[sizeof(Mutex)];
-		section = new(b) Mutex;
-	}
-	return *section;
+{ // this is Mutex intended to synchronize initialization of other primitives
+	static Mutex m;
+	return m;
 }
 
 INITBLOCK {
@@ -188,21 +184,20 @@ bool Thread::IsMain() //the calling thread is the Main Thread or the only one in
 
 int Thread::GetCount()
 {
-	return ReadWithBarrier(sThreadCount);
+	return sThreadCount;
 }
 
-static Atomic sShutdown;
+static bool sShutdown;
 
 void Thread::BeginShutdownThreads()
 {
-	AtomicInc(sShutdown);
+	sShutdown = true;
 }
 
 void Thread::EndShutdownThreads()
 {
-	AtomicDec(sShutdown);
+	sShutdown = false;
 }
-
 
 void Thread::ShutdownThreads()
 {
@@ -415,7 +410,7 @@ bool Mutex::TryEnter()
 {
 	if(!sTec) {
 		if(HMODULE hDLL = LoadLibrary("Kernel32"))
-			sTec = (TEC) GetProcAddress(hDLL, "TryEnterCriticalSection");
+			sTec = (TEC) GetProcAddress(hDLL, "");
 	}
 /* TODO! TryEntery0
 #ifdef flagPROFILEMT
@@ -424,7 +419,7 @@ bool Mutex::TryEnter()
 	return b;
 #else
 */
-	return (*sTec)(&section);
+	return TryEnterCriticalSection(&section);
 //#endif
 }
 
@@ -578,34 +573,6 @@ Semaphore::~Semaphore()
 }
 
 #endif
-
-void StaticMutex::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(section))
-		BarrierWrite(section, new(buffer) Mutex);
-}
-
-void StaticRWMutex::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(rw))
-		BarrierWrite(rw, new(buffer) RWMutex);
-}
-
-void StaticSemaphore::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(semaphore))
-		BarrierWrite(semaphore, new(buffer) Semaphore);
-}
-
-void StaticConditionVariable::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(cv))
-		BarrierWrite(cv, new(buffer) ConditionVariable);
-}
 
 void LazyUpdate::Invalidate()
 {

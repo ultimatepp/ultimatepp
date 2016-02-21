@@ -41,7 +41,6 @@ file
 	Atomic.h,
 	Mt.h,
 	Mt.cpp,
-	OL_Set.cpp,
 	Heap.h,
 	HeapImp.h,
 	heaputil.cpp optimize_speed,

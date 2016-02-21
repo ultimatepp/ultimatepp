@@ -45,43 +45,22 @@ inline void BarrierWrite(volatile U& dest, V data)
 }
 
 struct MtInspector;
-
-#ifdef PLATFORM_WIN32
-
+/*
 typedef LONG Atomic;
 
 inline int  AtomicInc(volatile Atomic& t)             { return InterlockedIncrement((Atomic *)&t); }
 inline int  AtomicDec(volatile Atomic& t)             { return InterlockedDecrement((Atomic *)&t); }
 inline int  AtomicXAdd(volatile Atomic& t, int incr)  { return InterlockedExchangeAdd((Atomic *)&t, incr); }
+*/
 
-#endif
+typedef std::atomic<int> Atomic;
 
-#ifdef PLATFORM_POSIX
-
-#if !(defined(PLATFORM_BSD) && defined(__clang__))
-typedef _Atomic_word Atomic;
-#else
-typedef int Atomic;
-#endif
-
-inline int  AtomicXAdd(volatile Atomic& t, int incr)
-{
-#if !(defined(PLATFORM_BSD) && defined(__clang__))
-	using namespace __gnu_cxx;
-	return __exchange_and_add(&t, incr);
-#else
-	return __sync_fetch_and_add(&t, incr);
-#endif
-}
-
-inline int  AtomicInc(volatile Atomic& t)             { return AtomicXAdd(t, +1) + 1; }
-inline int  AtomicDec(volatile Atomic& t)             { return AtomicXAdd(t, -1) - 1; }
-
-#endif
-
+inline int  AtomicInc(volatile Atomic& t)             { return ++t; }
+inline int  AtomicDec(volatile Atomic& t)             { return --t; }
+/*
 inline int  AtomicRead(const volatile Atomic& t)      { return ReadWithBarrier(t); }
 inline void AtomicWrite(volatile Atomic& t, int val)  { BarrierWrite(t, val); }
-
+*/
 #else
 
 typedef int Atomic;

@@ -30,7 +30,7 @@ InVector<T>::Insert range
 
 Vector/Array/Index/Map :: RemoveIf
 
-Use m128!
+Use m128! ?
 
 Remove ArrayIndex
 
@@ -76,3 +76,5 @@ Create like emplace everywhere
 Global.h ?
 
 nanoalloc
+
+ONCELOCK_PTR removed

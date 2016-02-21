@@ -417,20 +417,13 @@ void SetVppLogNoDeleteOnStartup()  { sLog.options |= LOG_APPEND; }
 LogStream& StdLogStream()
 {
 	static LogStream *s;
-	ReadMemoryBarrier();
-	if(!s) {
-		static StaticCriticalSection lock;
-		lock.Enter();
-		if(!s) {
-			static byte lb[sizeof(LogStream)];
-			LogStream *strm = new(lb) LogStream;
-			if(*sLog.filepath == '\0')
-				sLogFile(sLog.filepath);
-			sLog.Create();
-			WriteMemoryBarrier();
-			s = strm;
-		}
-		lock.Leave();
+	ONCELOCK {
+		static byte lb[sizeof(LogStream)];
+		LogStream *strm = new(lb) LogStream;
+		if(*sLog.filepath == '\0')
+			sLogFile(sLog.filepath);
+		sLog.Create();
+		s = strm;
 	}
 	return *s;
 }

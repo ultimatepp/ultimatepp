@@ -131,19 +131,6 @@ public:
 	~Semaphore();
 };
 
-class StaticSemaphore : NoCopy {
-	volatile Semaphore *semaphore;
-	byte                buffer[sizeof(Semaphore)];
-
-	void Initialize();
-
-public:
-	Semaphore& Get()             { if(!ReadWithBarrier(semaphore)) Initialize(); return *const_cast<Semaphore *>(semaphore); }
-	operator Semaphore&()        { return Get(); }
-	void Wait()                  { Get().Wait(); }
-	void Release()               { Get().Release(); }
-};
-
 struct MtInspector;
 
 #ifdef PLATFORM_WIN32
@@ -270,6 +257,16 @@ public:
 
 #endif
 
+typedef std::atomic<bool> OnceFlag;
+
+#define ONCELOCK_(o_b_) \
+for(static Mutex o_ss_; !o_b_.load(std::memory_order_acquire);) \
+	for(Mutex::Lock o_ss_lock__(o_ss_); !o_b_.load(std::memory_order_acquire); o_b_.store(true, std::memory_order_release))
+
+#define ONCELOCK \
+for(static OnceFlag o_b_; !o_b_.load(std::memory_order_acquire);) ONCELOCK_(o_b_)
+
+
 class Mutex::Lock : NoCopy {
 	Mutex& s;
 
@@ -294,14 +291,20 @@ public:
 	~WriteLock()                 { s.LeaveWrite(); }
 };
 
-class StaticMutex : NoCopy {
-	volatile Mutex *section;
-	byte            buffer[sizeof(Mutex)];
-
-	void Initialize();
+template <class Primitive>
+class StaticPrimitive_ : NoCopy {
+	Primitive *primitive;
+	byte       buffer[sizeof(Primitive)];
+	OnceFlag   once;
+	
+	void Initialize() { primitive = new(buffer) Primitive; }
 
 public:
-	Mutex& Get()               { if(!ReadWithBarrier(section)) Initialize(); return *const_cast<Mutex *>(section); }
+	Primitive& Get()  { ONCELOCK_(once) Initialize(); return *primitive; }
+};
+
+class StaticMutex : StaticPrimitive_<Mutex> {
+public:
 	operator Mutex&()          { return Get(); }
 	bool TryEnter()            { return Get().TryEnter();}
 	void Enter()               { Get().Enter();}
@@ -311,14 +314,15 @@ public:
 #endif
 };
 
-class StaticRWMutex : NoCopy {
-	volatile RWMutex *rw;
-	byte              buffer[sizeof(RWMutex)];
-
-	void Initialize();
-
+class StaticSemaphore : StaticPrimitive_<Semaphore> {
 public:
-	RWMutex& Get()       { if(!ReadWithBarrier(rw)) Initialize(); return *const_cast<RWMutex *>(rw); }
+	operator Semaphore&()        { return Get(); }
+	void Wait()                  { Get().Wait(); }
+	void Release()               { Get().Release(); }
+};
+
+class StaticRWMutex : StaticPrimitive_<RWMutex> {
+public:
 	operator RWMutex&()  { return Get(); }
 	void EnterRead()     { Get().EnterRead();}
 	void LeaveRead()     { Get().LeaveRead(); }
@@ -326,18 +330,10 @@ public:
 	void LeaveWrite()    { Get().LeaveWrite(); }
 };
 
-class StaticConditionVariable : NoCopy {
-	volatile ConditionVariable *cv;
-	byte                        buffer[sizeof(ConditionVariable)];
-	
-	void Initialize();
-
+class StaticConditionVariable : StaticPrimitive_<ConditionVariable> {
 public:
-	ConditionVariable& Get()      { if(!ReadWithBarrier(cv)) Initialize(); return *const_cast<ConditionVariable *>(cv); }
 	operator ConditionVariable&() { return Get(); }
-
 	void Wait(Mutex& m)  { Get().Wait(m); }
-
 	void Signal()        { Get().Signal(); }
 	void Broadcast()     { Get().Broadcast(); }
 };
@@ -397,27 +393,7 @@ struct H_l_ : Mutex::Lock {
 
 #define INTERLOCKED_(cs) \
 for(UPP::H_l_ i_ss_lock__(cs); i_ss_lock__.b; i_ss_lock__.b = false)
-
-void Set__(volatile bool& b);
-
-#define ONCELOCK \
-for(static volatile bool o_b_; !ReadWithBarrier(o_b_);) \
-	for(static StaticMutex o_ss_; !o_b_;) \
-		for(Mutex::Lock o_ss_lock__(o_ss_); !o_b_; BarrierWrite(o_b_, true))
-
-#define ONCELOCK_(o_b_) \
-for(static StaticMutex o_ss_; !ReadWithBarrier(o_b_);) \
-	for(Mutex::Lock o_ss_lock__(o_ss_); !o_b_; BarrierWrite(o_b_, true))
-
-#define ONCELOCK_PTR(ptr, init) \
-if(!ReadWithBarrier(ptr)) { \
-	static StaticMutex cs; \
-	cs.Enter(); \
-	if(!ptr) \
-		BarrierWrite(ptr, init); \
-	cs.Leave(); \
-}
-
+	
 #else
 
 inline bool IsMainThread() { return true; }

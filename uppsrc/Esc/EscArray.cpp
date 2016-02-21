@@ -8,7 +8,7 @@ Vector<EscValue>& EscValue::CloneArray()
 {
 	LTIMING("CloneArray");
 	ASSERT(IsArray());
-	if(AtomicRead(array->refcount) != 1) {
+	if(array->refcount != 1) {
 		EscArray *c = new EscArray;
 		c->array <<= array->array;
 		array->Release();
