@@ -148,7 +148,6 @@ void HashBase::Reindex()
 
 void HashBase::Add(unsigned _hash)
 {
-	RTIMING("Add");
 	hash.Add(_hash & ~UNSIGNED_HIBIT);
 	DoIndex();
 }

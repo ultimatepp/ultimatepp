@@ -142,6 +142,8 @@ protected:
 
 	Mutex(int)         {}
 
+	friend class ConditionVariable;
+
 public:
 	bool  TryEnter();
 	void  Leave()                { LeaveCriticalSection(&section); }
@@ -184,10 +186,19 @@ public:
 };
 
 class ConditionVariable {
-	Mutex                 mutex;
-	friend struct sCVWaiter_;
+	static VOID (WINAPI *InitializeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+	static VOID (WINAPI *WakeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+	static VOID (WINAPI *WakeAllConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+	static BOOL (WINAPI *SleepConditionVariableCS)(PCONDITION_VARIABLE ConditionVariable, PCRITICAL_SECTION CriticalSection, DWORD dwMilliseconds);
 	
-	struct sCVWaiter_ *head, *tail;
+	CONDITION_VARIABLE cv[1];
+
+	struct WaitingThread { // Windows XP does not provide ConditionVariable, implement using Semaphores
+		Semaphore      sem;
+		WaitingThread *next;
+	};
+	Mutex          mutex;
+	WaitingThread *head, *tail;
 	
 public:
 	void Wait(Mutex& m);
@@ -260,8 +271,8 @@ public:
 typedef std::atomic<bool> OnceFlag;
 
 #define ONCELOCK_(o_b_) \
-for(static Mutex o_ss_; !o_b_.load(std::memory_order_acquire);) \
-	for(Mutex::Lock o_ss_lock__(o_ss_); !o_b_.load(std::memory_order_acquire); o_b_.store(true, std::memory_order_release))
+for(static UPP::Mutex o_ss_; !o_b_.load(std::memory_order_acquire);) \
+	for(UPP::Mutex::Lock o_ss_lock__(o_ss_); !o_b_.load(std::memory_order_acquire); o_b_.store(true, std::memory_order_release))
 
 #define ONCELOCK \
 for(static OnceFlag o_b_; !o_b_.load(std::memory_order_acquire);) ONCELOCK_(o_b_)
@@ -339,8 +350,8 @@ public:
 };
 
 class LazyUpdate {
-	mutable Mutex mutex;
-	mutable bool  dirty;
+	mutable Mutex              mutex;
+	mutable std::atomic<bool>  dirty;
 
 public:
 	void Invalidate();
@@ -383,7 +394,7 @@ public:
 
 #define INTERLOCKED \
 for(bool i_b_ = true; i_b_;) \
-	for(static UPP::StaticMutex i_ss_; i_b_;) \
+	for(static UPP::Mutex i_ss_; i_b_;) \
 		for(UPP::Mutex::Lock i_ss_lock__(i_ss_); i_b_; i_b_ = false)
 
 struct H_l_ : Mutex::Lock {

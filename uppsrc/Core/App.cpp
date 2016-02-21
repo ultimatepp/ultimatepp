@@ -443,7 +443,7 @@ void LaunchWebBrowser(const String& url)
 		char *curl = (char *)malloc(l);
 		memcpy(curl, wurl, l);
 		StartAuxThread(sShellExecuteOpen, curl);
-	} 
+	}
 }
 #endif
 

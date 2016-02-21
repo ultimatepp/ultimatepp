@@ -401,26 +401,9 @@ Semaphore::~Semaphore()
 
 Mutex& sMutexLock();
 
-
-typedef BOOL (WINAPI *TEC)(LPCRITICAL_SECTION lpCriticalSection);
-
-static TEC sTec;
-
 bool Mutex::TryEnter()
 {
-	if(!sTec) {
-		if(HMODULE hDLL = LoadLibrary("Kernel32"))
-			sTec = (TEC) GetProcAddress(hDLL, "");
-	}
-/* TODO! TryEntery0
-#ifdef flagPROFILEMT
-	bool b = (*sTec)(&section);
-	mti->blocked += b;
-	return b;
-#else
-*/
 	return TryEnterCriticalSection(&section);
-//#endif
 }
 
 /* Win32 RWMutex implementation by Chris Thomasson, cristom@comcast.net */
@@ -473,53 +456,76 @@ RWMutex::~RWMutex()
 	CloseHandle ( m_wrwset );
 }
 
-struct sCVWaiter_ {
-	Semaphore   sem;
-	sCVWaiter_ *next;
-};
-	
-static thread__ byte sCVbuffer[sizeof(sCVWaiter_)];
-static thread__ sCVWaiter_ *sCV;
+VOID (WINAPI *ConditionVariable::InitializeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+VOID (WINAPI *ConditionVariable::WakeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+VOID (WINAPI *ConditionVariable::WakeAllConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+BOOL (WINAPI *ConditionVariable::SleepConditionVariableCS)(PCONDITION_VARIABLE ConditionVariable, PCRITICAL_SECTION CriticalSection, DWORD dwMilliseconds);
 
 void ConditionVariable::Wait(Mutex& m)
 {
-	{
-		Mutex::Lock __(mutex);
-		if(!sCV)
-			sCV = new(sCVbuffer) sCVWaiter_;
-		sCV->next = NULL;
-		if(head)
-			tail->next = sCV;
-		else
-			head = sCV;
-		tail = sCV;
+	if(InitializeConditionVariable)
+		SleepConditionVariableCS(cv, &m.section, INFINITE);
+	else {
+		static thread__ byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
+		WaitingThread *w = new(buffer) WaitingThread;
+		{
+			Mutex::Lock __(mutex);
+			w->next = NULL;
+			if(head)
+				tail->next = w;
+			else
+				head = w;
+			tail = w;
+		}
+		m.Leave();
+		w->sem.Wait();
+		m.Enter();
+		w->WaitingThread::~WaitingThread();
 	}
-	m.Leave();
-	sCV->sem.Wait();
-	m.Enter();
 }
 
 void ConditionVariable::Signal()
 {
-	Mutex::Lock __(mutex);
-	if(head) {
-		head->sem.Release();
-		head = head->next;
+	if(InitializeConditionVariable)
+		WakeConditionVariable(cv);
+	else {
+		Mutex::Lock __(mutex);
+		if(head) {
+			head->sem.Release();
+			head = head->next;
+		}
 	}
 }
 
 void ConditionVariable::Broadcast()
 {
-	Mutex::Lock __(mutex);
-	while(head) {
-		head->sem.Release();
-		head = head->next;
+	if(InitializeConditionVariable)
+		WakeAllConditionVariable(cv);
+	else {
+		Mutex::Lock __(mutex);
+		while(head) {
+			head->sem.Release();
+			head = head->next;
+		}
 	}
 }
 
 ConditionVariable::ConditionVariable()
 {
-	head = tail = NULL;
+#ifndef flagTESTXPCV
+	ONCELOCK {
+		if(IsWinVista()) {
+			DllFn(InitializeConditionVariable, "kernel32", "InitializeConditionVariable");
+			DllFn(WakeConditionVariable, "kernel32", "WakeConditionVariable");
+			DllFn(WakeAllConditionVariable, "kernel32", "WakeAllConditionVariable");
+			DllFn(SleepConditionVariableCS, "kernel32", "SleepConditionVariableCS");
+		}
+	}
+#endif
+	if(InitializeConditionVariable)
+		InitializeConditionVariable(cv);
+	else
+		head = tail = NULL;
 }
 
 ConditionVariable::~ConditionVariable()
@@ -576,14 +582,13 @@ Semaphore::~Semaphore()
 
 void LazyUpdate::Invalidate()
 {
-	WriteMemoryBarrier();
+	dirty.store(true, std::memory_order_release);
 	dirty = true;
 }
 
 bool LazyUpdate::BeginUpdate() const
 {
-	bool b = dirty;
-	ReadMemoryBarrier();
+	bool b = dirty.load(std::memory_order_acquire);
 	if(b) {
 		mutex.Enter();
 		if(dirty) return true;
@@ -594,8 +599,7 @@ bool LazyUpdate::BeginUpdate() const
 
 void LazyUpdate::EndUpdate() const
 {
-	WriteMemoryBarrier();
-	dirty = false;
+	dirty.store(false, std::memory_order_release);
 	mutex.Leave();
 }
 

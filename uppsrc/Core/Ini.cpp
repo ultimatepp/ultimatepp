@@ -106,13 +106,13 @@ void SetIniFile(const char *name) {
 
 void IniSet__(int& version)
 {
-	BarrierWrite(version, ini_version__);
+	version = ini_version__;
 }
 
 #ifdef flagSO
 bool IniChanged__(int version)
 {
-	return version != ReadWithBarrier(ini_version__);
+	return version != ini_version__;
 }
 #endif
 
@@ -235,7 +235,6 @@ int IniInt::Load() {
 
 int IniInt::operator=(int b) {
 	Mutex::Lock __(sMtx);
-	BarrierWrite(version, -1);
 	value = b;
 	IniSet__(version);
 	return b;
@@ -287,7 +286,6 @@ double IniDouble::Load()
 double IniDouble::operator=(double b)
 {
 	Mutex::Lock __(sMtx);
-	BarrierWrite(version, -1);
 	value = b;
 	IniSet__(version);
 	return b;
@@ -313,7 +311,6 @@ bool IniBool::Load() {
 
 bool IniBool::operator=(bool b) {
 	Mutex::Lock __(sMtx);
-	BarrierWrite(version, -1);
 	value = b;
 	IniSet__(version);
 	return b;

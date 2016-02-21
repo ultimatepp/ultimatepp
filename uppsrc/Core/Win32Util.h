@@ -38,7 +38,6 @@ void   DllFn(T& x, const char *dll, const char *fn)
 	x = (T)GetDllFn(dll, fn);
 }
 
-
 #ifndef PLATFORM_WINCE
 String GetSystemDirectory();
 String GetWindowsDirectory();

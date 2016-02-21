@@ -24,47 +24,12 @@ routines are best performed before any multi`-threading starts.
 AssertST can be used to assure this as runtime check.&]
 [s3;%% &]
 [s4; &]
-[s5;:ReadMemoryBarrier`(`): [@(0.0.255) void]_[* ReadMemoryBarrier]()&]
-[s2;%% Read memory barrier. CPU and compiler is instructed not to 
-do any loads ahead of ReadMemoryBarrier (which normally happens 
-in out`-of`-order CPUs and can also be a result of compiler optimizations). 
-See [^http`:`/`/www`.linuxjournal`.com`/article`/8211^ this] or 
-[^http`:`/`/en`.wikipedia`.org`/wiki`/Memory`_barrier^ this] for 
-more detailed description of problem.&]
-[s3; &]
-[s4; &]
-[s5;:WriteMemoryBarrier`(`): [@(0.0.255) void]_[* WriteMemoryBarrier]()&]
-[s2;%% Write memory barrier. CPU and compiler is instructed not to 
-do any writes ahead of WriteMemoryBarrier (which normally happens 
-in out`-of`-order CPUs and can also be a result of compiler optimizations). 
-See [^http`:`/`/www`.linuxjournal`.com`/article`/8211^ this] or 
-[^http`:`/`/en`.wikipedia`.org`/wiki`/Memory`_barrier^ this] for 
-more detailed description of problem.&]
-[s3; &]
-[s4; &]
-[s5;:ReadWithBarrier`(const volatile U`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 U
-][@(0.0.255) >]_[*@4 U]_[* ReadWithBarrier]([@(0.0.255) const]_[@(0.0.255) volatile]_[*@4 U][@(0.0.255) `&
-]_[*@3 b])&]
-[s2;%% This template reads the value of [%-*@3 b ](to temporary variable) 
-and then invokes ReadMemoryBarrier. The value is returned. This 
-assures that the value read is not affected by compiler or CPU 
-load reorders. In other words, no read that is after the point 
-of the function call can be performed before calling it.&]
-[s3; &]
-[s4; &]
-[s5;:BarrierWrite`(volatile U`&`,V`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 U], 
-[@(0.0.255) class]_[*@4 V][@(0.0.255) >]_[@(0.0.255) void]_[* BarrierWrite]([@(0.0.255) volat
-ile]_[*@4 U][@(0.0.255) `&]_[*@3 dest], [*@4 V]_[*@3 data])&]
-[s2;%% Invokes WriteMemoryBarier and then writes [%-*@3 data].to [%-*@3 dest]. 
-This assures that write is not affected by compiler or CPU reorders. 
- In other words, no write that is after the point of the function 
-call can be performed before calling it.&]
-[s3;%% &]
-[s4; &]
 [s5;:Atomic`:`:typedef: [@(0.0.255) typedef]_[/ integer`_type]_[* Atomic]&]
-[s2;%% This is the integer type that can be used as argument of AtomicXAdd 
+[s2;%% This is the integer type that can be used as argument of AtomicInc/AtomicDec 
 function. It is compatible with `'int`' `- it has the same value 
-range and it can be converted to `'int`'.&]
+range and it can be converted to `'int`'. Since C`+`+11, it is 
+in fact implemented using std`::atomic<int> and kept only because 
+of backward compatibility.&]
 [s3; &]
 [s4; &]
 [s5;:AtomicInc`(volatile Atomic`&`): [@(0.0.255) int]_[* AtomicInc]([@(0.0.255) volatile]_[_^Atomic^ A
@@ -85,7 +50,7 @@ tomic][@(0.0.255) `&]_[*@3 t])&]
 [s2;%% [C1 -|-|-|Foo();]&]
 [s2;%% [C1 -|-|`}]&]
 [s2;%% -|is equivalent to&]
-[s2;%% [C1 -|-|`{-|static StaticMutex ][/C1 uniquename][C1 ;]&]
+[s2;%% [C1 -|-|`{-|static Mutex ][/C1 uniquename][C1 ;]&]
 [s2;%% [C1 -|-|-|][/C1 uniquename][C1 .Enter();]&]
 [s2;%% [C1 -|-|-|Foo();]&]
 [s2;%% [C1 -|-|-|][/C1 uniquename][C1 .Leave();]&]
