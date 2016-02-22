@@ -80,6 +80,16 @@ void Autocomplete()
 
 void Autocomplete()
 {
+	Vector<String>::
+}
+
+void Autocomplete()
+{
+	for(int i = 0; i < Font::
+}
+
+void Autocomplete()
+{
 	Point p;
 	p.
 }
@@ -255,7 +265,7 @@ void Autocomplete()
 {
 	VectorMap<Point, String> m;
 	auto i = m.KeyBegin();
-	i.
+	i->
 }
 
 void Autocomplete()
