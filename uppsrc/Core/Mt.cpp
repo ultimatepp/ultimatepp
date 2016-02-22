@@ -465,7 +465,7 @@ void ConditionVariable::Wait(Mutex& m)
 {
 	if(InitializeConditionVariable)
 		SleepConditionVariableCS(cv, &m.section, INFINITE);
-	else {
+	else { // WindowsXP implementation
 		static thread__ byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
 		WaitingThread *w = new(buffer) WaitingThread;
 		{
@@ -488,7 +488,7 @@ void ConditionVariable::Signal()
 {
 	if(InitializeConditionVariable)
 		WakeConditionVariable(cv);
-	else {
+	else { // WindowsXP implementation
 		Mutex::Lock __(mutex);
 		if(head) {
 			head->sem.Release();
@@ -501,7 +501,7 @@ void ConditionVariable::Broadcast()
 {
 	if(InitializeConditionVariable)
 		WakeAllConditionVariable(cv);
-	else {
+	else { // WindowsXP implementation
 		Mutex::Lock __(mutex);
 		while(head) {
 			head->sem.Release();

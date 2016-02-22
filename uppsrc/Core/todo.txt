@@ -28,25 +28,19 @@ MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 
 InVector<T>::Insert range
 
+Range Insert/Append in containers
+
 Vector/Array/Index/Map :: RemoveIf
 
 Use m128! ?
 
 Remove ArrayIndex
 
-Range Insert/Append in containers
-
-ConditionVariable
-
 rename Function
-
-idmapBencmark ValueMap optimize
 
 spinlock for heap freeremote?
 
 BiVector/Array/BiArray Pop
-
-Optimize Index::Hash
 
 -----------------------
 DONE
@@ -80,3 +74,9 @@ nanoalloc
 ONCELOCK_PTR removed
 
 Atomic->std::atomic, Barriers removed
+
+Optimize Index::Hash
+
+ConditionVariable
+
+idmapBencmark ValueMap optimize

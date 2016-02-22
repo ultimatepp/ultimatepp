@@ -47,7 +47,7 @@ void CSyntax::InitKeywords()
 		"xor_eq", "not", "not_eq",
 		"char16_t", "char32_t", "constexpr", "decltype",
 		"noexcept", "nullptr", "static_assert",
-		"override", "final",
+		"override", "final", "thread_local"
 		NULL
 	};
 	static const char *cs[] = {
