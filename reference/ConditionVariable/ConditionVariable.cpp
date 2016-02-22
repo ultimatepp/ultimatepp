@@ -18,7 +18,7 @@ ConditionVariable ItemBufferNotEmpty;
 ConditionVariable ItemBufferNotFull;
 Mutex ItemBufferLock;
 
-BOOL StopRequested;
+bool StopRequested;
 
 void ProducerThread()
 {
@@ -61,7 +61,7 @@ void ConsumerThread(int id)
             if(StopRequested && QueueSize == 0)
                 break;
 
-			LONG Item = ItemBuffer[QueueStartOffset];
+			int Item = ItemBuffer[QueueStartOffset];
 			QueueSize--;
 			QueueStartOffset++;
 			TotalItemsConsumed++;
@@ -91,7 +91,7 @@ CONSOLE_APP_MAIN
 	LOG("Press enter to stop...");
     ReadStdIn();
 
-    StopRequested = TRUE;
+    StopRequested = true;
 
 	ItemBufferNotFull.Broadcast();
 	ItemBufferNotEmpty.Broadcast();
