@@ -147,3 +147,7 @@
 #if _MSC_VER >= 1900 // MSC from VS2015 is good enough C++11 compiler...
 #define CPP_11
 #endif
+
+#ifndef CPP_11
+#error This version of U++ REQUIRED C++11
+#endif

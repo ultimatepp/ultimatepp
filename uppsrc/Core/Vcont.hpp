@@ -511,7 +511,6 @@ void Array<T>::Insert(int i, const Array& x, int offset, int count) {
 		vector[q + i] = new T(x[q + offset]);
 }
 
-#ifdef CPP_11
 template <class T>
 void Array<T>::Insert(int i, std::initializer_list<T> init)
 {
@@ -519,7 +518,6 @@ void Array<T>::Insert(int i, std::initializer_list<T> init)
 	for(auto q : init)
 		vector[i++] = DeepCopyNew(q);
 }
-#endif
 
 #ifdef UPP
 template <class T>
@@ -647,7 +645,6 @@ String BiVector<T>::ToString() const
 
 #endif
 
-#ifdef CPP_11
 template <class T>
 BiVector<T>::BiVector(std::initializer_list<T> init)
 {
@@ -664,7 +661,6 @@ BiVector<T>::BiVector(std::initializer_list<T> init)
 	for(const auto& q : init)
 		DeepCopyConstruct(t++, q);
 }
-#endif
 
 // ------------------
 
@@ -704,13 +700,11 @@ String BiArray<T>::ToString() const
 	return AsStringArray(*this);
 }
 
-#ifdef CPP_11
 template <class T>
 BiArray<T>::BiArray(std::initializer_list<T> init)
 {
 	for(const auto& q : init)
 		AddTail(q);
 }
-#endif
 
 #endif

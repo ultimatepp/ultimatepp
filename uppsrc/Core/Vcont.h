@@ -162,23 +162,16 @@ public:
 	~Vector() {
 		Free();
 		return; // Constraints:
-#ifdef CPP_11
 		AssertMoveable((T *)0);  // T must be moveable
-#else
-		T t(pick(*vector));      // T must have transfer constructor (also GCC 4.0 bug workaround)
-		AssertMoveable(&t);      // T must be moveable
-#endif
 	}
 
 // Pick assignment & copy. Picked source can only do Clear(), ~Vector(), operator=, operator <<=
 	Vector(Vector&& v)               { Pick(pick(v)); }
 	void operator=(Vector&& v)       { if(this != &v) { Free(); Pick(pick(v)); } }
 
-#ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
 	void     Append(int i, std::initializer_list<T> init) { Insert(GetCount(), init); }
 	Vector(std::initializer_list<T> init) { vector = NULL; items = alloc = 0; Insert(0, init); }
-#endif
 
 // Deep copy
 	Vector(const Vector& v, int)     { __DeepCopy(v); }
@@ -320,11 +313,9 @@ public:
 // Deep copy
 	Array(const Array& v, int)          { __DeepCopy(v); }
 
-#ifdef CPP_11
 	void     Insert(int i, std::initializer_list<T> init);
 	void     Append(std::initializer_list<T> init) { Insert(GetCount(), init); }
 	Array(std::initializer_list<T> init) { Insert(0, init); }
-#endif
 
 	class Iterator;
 

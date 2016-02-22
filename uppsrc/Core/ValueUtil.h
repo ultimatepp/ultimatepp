@@ -231,11 +231,8 @@ public:
 	ValueArray(ValueArray&& v);
 	ValueArray(Vector<Value>&& values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
-	~ValueArray();
-
-#ifdef CPP_11
 	ValueArray(std::initializer_list<Value> init)    { Init0(); for(const auto& i : init) { Add(i); }}
-#endif
+	~ValueArray();
 
 	ValueArray& operator=(const ValueArray& v);
 	ValueArray& operator=(Vector<Value>&& values)  { *this = ValueArray(pick(values)); return *this; }
@@ -354,11 +351,8 @@ public:
 	ValueMap(VectorMap<Value, Value>&& m);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
 	ValueMap(const VectorMap<Value, Value>& m, int deep);
-	~ValueMap();
-
-#ifdef CPP_11
 	ValueMap(std::initializer_list<std::pair<Value, Value>> init) { Init0(); for(const auto& i : init) { Add(i.first, i.second); }}
-#endif
+	~ValueMap();
 
 	ValueMap& operator=(const ValueMap& v);
 	ValueMap& operator=(VectorMap<Value, Value>&& m) { *this = ValueMap(pick(m)); return *this; }

@@ -1140,9 +1140,7 @@ public:
 	Callback     operator<<=(Callback action)  { WhenAction = action; return action; }
 
 	Callback&    operator<<(Callback action)                { return WhenAction << action; }
-#ifdef CPP_11
-//	Callback&    operator<<(std::function<void ()> action)  { return WhenAction << action; }
-#endif
+	Callback&    operator<<(Upp::Function<void ()> action)  { return WhenAction << action; }
 
 	void    SetTimeCallback(int delay_ms, Callback cb, int id = 0);
 	void    KillTimeCallback(int id = 0);

@@ -139,13 +139,11 @@ AIndex<T, V>::AIndex(const V& s, int) : key(s, 1) {
 	Hash();
 }
 
-#ifdef CPP_11
 template <class T, class V>
 AIndex<T, V>::AIndex(std::initializer_list<T> init) : key(init)
 {
 	Hash();
 }
-#endif
 
 template <class T, class V>
 T& AIndex<T, V>::Add(const T& x, unsigned _hash) {

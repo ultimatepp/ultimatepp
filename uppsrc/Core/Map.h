@@ -153,10 +153,7 @@ public:
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
 	AMap(Index<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
-	
-#ifdef CPP_11
 	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, i.second); }
-#endif
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
@@ -192,10 +189,7 @@ public:
 	VectorMap(Index<K>&& ndx, Vector<T>&& val) : AMap<K, T, Vector<T>>(pick(ndx), pick(val)) {}
 	VectorMap(Vector<K>&& ndx, Vector<T>&& val) : AMap<K, T, Vector<T>>(pick(ndx), pick(val)) {}
 	VectorMap()                                                       {}
-
-#ifdef CPP_11
 	VectorMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
-#endif
 
 	friend void    Swap(VectorMap& a, VectorMap& b)      { a.B::Swap(b); }
 

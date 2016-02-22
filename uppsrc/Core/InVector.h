@@ -630,9 +630,7 @@ public:
 	SortedVectorMap& operator=(SortedVectorMap&&);
 	SortedVectorMap(const SortedVectorMap& s, int);
 	
-#ifdef CPP_11
 	SortedVectorMap(std::initializer_list<std::pair<K, T>> init) : SortedVectorMap() { for(const auto& i : init) Add(i.first, i.second); }
-#endif
 
 	void     Swap(SortedVectorMap& x);
 
@@ -713,10 +711,7 @@ public:
 	SortedArrayMap(SortedArrayMap&&);
 	SortedArrayMap& operator=(SortedArrayMap&&);
 	SortedArrayMap(const SortedArrayMap& s, int);
-
-#ifdef CPP_11
 	SortedArrayMap(std::initializer_list<std::pair<K, T>> init) : SortedArrayMap() { for(const auto& i : init) Add(i.first, i.second); }
-#endif
 
 #ifdef UPP
 	void     Serialize(Stream& s);
