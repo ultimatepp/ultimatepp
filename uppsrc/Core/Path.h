@@ -51,13 +51,11 @@ struct FileTime : FILETIME, CompareRelOps<const FileTime&, &Compare_FileTime> {
 };
 
 class  FindFile : NoCopy {
-	WIN32_FIND_DATA  *a;
-	WIN32_FIND_DATAW *w;
+	WIN32_FIND_DATAW  data[1];
 	HANDLE            handle;
 	String            pattern;
 	String            path;
 
-	void        Init();
 	bool        Next0();
 	void        Close();
 
@@ -65,28 +63,28 @@ public:
 	bool        Search(const char *path);
 	bool        Next();
 
-	dword       GetAttributes() const;
+	dword       GetAttributes() const      { return data->dwFileAttributes; }
 	String      GetName() const;
 	String      GetPath() const;
 	int64       GetLength() const;
-	FileTime    GetCreationTime() const;
-	FileTime    GetLastAccessTime() const;
-	FileTime    GetLastWriteTime() const;
+	FileTime    GetCreationTime() const    { return data->ftCreationTime; }
+	FileTime    GetLastAccessTime() const  { return data->ftLastAccessTime; }
+	FileTime    GetLastWriteTime() const   { return data->ftLastWriteTime; }
 
-	bool        IsDirectory() const;
+	bool        IsDirectory() const        { return GetAttributes() & FILE_ATTRIBUTE_DIRECTORY; }
 	bool        IsFolder() const;
-	bool        IsFile() const           { return !IsDirectory(); }
+	bool        IsFile() const             { return !IsDirectory(); }
 	bool        IsSymLink() const;
 	bool        IsExecutable() const;
 
-	bool        IsArchive() const;
-	bool        IsCompressed() const;
-	bool        IsHidden() const;
-	bool        IsReadOnly() const;
-	bool        IsSystem() const;
-	bool        IsTemporary() const;
+	bool        IsArchive() const          { return GetAttributes() & FILE_ATTRIBUTE_ARCHIVE; }
+	bool        IsCompressed() const       { return GetAttributes() & FILE_ATTRIBUTE_COMPRESSED; }
+	bool        IsHidden() const           { return GetAttributes() & FILE_ATTRIBUTE_HIDDEN; }
+	bool        IsReadOnly() const         { return GetAttributes() & FILE_ATTRIBUTE_READONLY; }
+	bool        IsSystem() const           { return GetAttributes() & FILE_ATTRIBUTE_SYSTEM; }
+	bool        IsTemporary() const        { return GetAttributes() & FILE_ATTRIBUTE_TEMPORARY; }
 
-	operator    bool() const             { return handle != INVALID_HANDLE_VALUE; }
+	operator    bool() const               { return handle != INVALID_HANDLE_VALUE; }
 
 	FindFile();
 	FindFile(const char *name);

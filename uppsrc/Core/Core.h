@@ -371,18 +371,6 @@ void      FreeDll__(DLLHANDLE dllhandle);
 using Upp::byte; // Dirty solution to Windows.h typedef byte...
 #endif
 
-#ifdef PLATFORM_WIN32
-#define DLLFILENAME "Kernel32.dll"
-#define DLIMODULE   UnicodeWin32
-#define DLIHEADER   <Core/Kernel32W.dli>
-#include <Core/dli_header.h>
-
-#define DLLFILENAME "Mpr.dll"
-#define DLIMODULE   UnicodeWin32Net
-#define DLIHEADER   <Core/Mpr32W.dli>
-#include <Core/dli_header.h>
-#endif
-
 #ifdef MAIN_CONF
 #include <main.conf.h>
 #endif

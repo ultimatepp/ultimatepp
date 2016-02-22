@@ -1,4 +1,5 @@
 #include "Core.h"
+#include "Core.h"
 //#BLITZ_APPROVE
 
 #ifdef PLATFORM_POSIX
@@ -7,15 +8,6 @@
 #endif//PLATFORM_POSIX
 
 #ifdef PLATFORM_WIN32
-#define DLLFILENAME "Kernel32.dll"
-#define DLIMODULE   UnicodeWin32
-#define DLIHEADER   <Core/Kernel32W.dli>
-#include <Core/dli_source.h>
-
-#define DLLFILENAME "Mpr.dll"
-#define DLIMODULE   UnicodeWin32Net
-#define DLIHEADER   <Core/Mpr32W.dli>
-#include <Core/dli_source.h>
 
 #define Ptr Ptr_
 #define byte byte_
@@ -195,16 +187,9 @@ bool   PathIsEqual(const char *p1, const char *p2)
 #ifndef PLATFORM_WINCE
 String GetCurrentDirectory() {
 #if defined(PLATFORM_WIN32)
-	if(IsWinNT()) {
-		wchar h[MAX_PATH];
-		UnicodeWin32().GetCurrentDirectoryW(MAX_PATH, h);
-		return FromSystemCharsetW(h);
-	}
-	else {
-		char h[MAX_PATH];
-		::GetCurrentDirectory(MAX_PATH, h);
-		return FromSystemCharset(h);
-	}
+	wchar h[MAX_PATH];
+	GetCurrentDirectoryW(MAX_PATH, h);
+	return FromSystemCharsetW(h);
 #elif defined(PLATFORM_POSIX)
 	char h[1024];
 	return getcwd(h, 1024) ? FromSystemCharset(h) : String();
@@ -226,16 +211,9 @@ bool SetCurrentDirectory(const char *path)
 
 String GetTempPath()
 {
-	if(IsWinNT()) {
-		wchar h[MAX_PATH];
-		UnicodeWin32().GetTempPathW(MAX_PATH, h);
-		return FromSystemCharsetW(h);
-	}
-	else {
-		char h[MAX_PATH];
-		::GetTempPath(MAX_PATH, h);
-		return FromSystemCharset(h);
-	}
+	wchar h[MAX_PATH];
+	GetTempPathW(MAX_PATH, h);
+	return FromSystemCharsetW(h);
 }
 
 #endif
@@ -272,26 +250,16 @@ String ToUnixName(const char* fn, const char* stop = NULL) {
 	return s;
 }
 
-#ifndef PLATFORM_WINCE
 String GetFullPath(const char *file) {
 #ifdef PLATFORM_WIN32
-	if(IsWinNT()) {
-		String ufn = FromUnixName(file);
-		wchar h[MAX_PATH];
-		UnicodeWin32().GetFullPathNameW(ToSystemCharsetW(ufn), MAX_PATH, h, 0);
-		return FromSystemCharsetW(h);
-	}
-	else {
-		String ufn = FromUnixName(file);
-		char h[MAX_PATH];
-		GetFullPathName(ToSystemCharset(ufn), MAX_PATH, h, 0);
-		return FromSystemCharset(h);
-	}
+	String ufn = FromUnixName(file);
+	wchar h[MAX_PATH];
+	GetFullPathNameW(ToSystemCharsetW(ufn), MAX_PATH, h, 0);
+	return FromSystemCharsetW(h);
 #else
 	return NormalizePath(file);
 #endif
 }
-#endif
 
 String GetFileOnPath(const char* file, const char* paths, bool current, const char *curdir) {
 	String ufn = NativePath(file);
@@ -370,33 +338,17 @@ String ForceExt(const char* fn, const char* ext) {
 
 #ifdef PLATFORM_WIN32
 
-void FindFile::Init()
-{
-	if(IsWinNT()) {
-		w = new WIN32_FIND_DATAW;
-		a = NULL;
-	}
-	else {
-		a = new WIN32_FIND_DATA;
-		w = NULL;
-	}
-}
-
 FindFile::~FindFile()
 {
 	Close();
-	delete a;
-	delete w;
 }
 
 FindFile::FindFile()
 {
-	Init();
 	handle = INVALID_HANDLE_VALUE;
 }
 
 FindFile::FindFile(const char *name) {
-	Init();
 	handle = INVALID_HANDLE_VALUE;
 	Search(name);
 }
@@ -405,10 +357,7 @@ bool FindFile::Search(const char *name) {
 	pattern = GetFileName(name);
 	path = NormalizePath(GetFileDirectory(name));
 	Close();
-	if(w)
-		handle = UnicodeWin32().FindFirstFileW(ToSystemCharsetW(name), w);
-	else
-		handle = FindFirstFile(ToSystemCharset(name), a);
+	handle = FindFirstFileW(ToSystemCharsetW(name), data);
 	if(handle == INVALID_HANDLE_VALUE)
 		return false;
 	if(!PatternMatch(pattern, GetName()))
@@ -432,7 +381,7 @@ static bool sGetSymLinkPath0(const char *linkpath, String *path)
 			if(SUCCEEDED(hres))
 				if(path) {
 					char fileW[_MAX_PATH] = {0};
-					psl->GetPath(fileW, _MAX_PATH, NULL, 0); 
+					psl->GetPath(fileW, _MAX_PATH, NULL, 0);
 					*path = FromSystemCharset(fileW);
 				}
 				else
@@ -464,17 +413,9 @@ void FindFile::Close() {
 }
 
 bool FindFile::Next0() {
-	if(w) {
-		if(!UnicodeWin32().FindNextFileW(handle, w)) {
-			Close();
-			return false;
-		}
-	}
-	else {
-		if(!FindNextFile(handle, a)) {
-			Close();
-			return false;
-		}
+	if(!FindNextFileW(handle, data)) {
+		Close();
+		return false;
 	}
 	return true;
 }
@@ -489,91 +430,19 @@ bool FindFile::Next()
 	}
 }
 
-dword FindFile::GetAttributes() const
-{
-	return w ? w->dwFileAttributes : a->dwFileAttributes;
-}
-
 String FindFile::GetName() const
 {
-	return w ? FromSystemCharsetW(w->cFileName) : FromSystemCharset(a->cFileName);
+	return FromSystemCharsetW(data->cFileName);
 }
 
 int64 FindFile::GetLength() const
 {
-	if(w)
-		return (int64)w->nFileSizeLow | ((int64)w->nFileSizeHigh << 32);
-	else
-		return (int64)a->nFileSizeLow | ((int64)a->nFileSizeHigh << 32);
+	return (int64)data->nFileSizeLow | ((int64)data->nFileSizeHigh << 32);
 }
-
-FileTime FindFile::GetCreationTime() const
-{
-	return w ? w->ftCreationTime : a->ftCreationTime;
-}
-
-FileTime FindFile::GetLastAccessTime() const
-{
-	return w ? w->ftLastAccessTime : a->ftLastAccessTime;
-}
-
-FileTime FindFile::GetLastWriteTime() const
-{
-	return w ? w->ftLastWriteTime : a->ftLastWriteTime;
-}
-
-bool FindFile::IsDirectory() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
-}
-
 
 bool FindFile::IsFolder() const {
-	if(w)
-		return IsDirectory()
-			&& !(w->cFileName[0] == '.' && w->cFileName[1] == 0)
-			&& !(w->cFileName[0] == '.' && w->cFileName[1] == '.' && w->cFileName[2] == 0);
-	else
-		return IsDirectory()
-			&& !(a->cFileName[0] == '.' && a->cFileName[1] == 0)
-			&& !(a->cFileName[0] == '.' && a->cFileName[1] == '.' && a->cFileName[2] == 0);
-}
-
-bool FindFile::IsArchive() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE;
-}
-
-bool FindFile::IsCompressed() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED;
-}
-
-bool FindFile::IsHidden() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_HIDDEN
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_HIDDEN;
-}
-
-bool FindFile::IsReadOnly() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_READONLY
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_READONLY;
-}
-
-bool FindFile::IsSystem() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_SYSTEM
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_SYSTEM;
-}
-
-bool FindFile::IsTemporary() const
-{
-	return w ? w->dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY
-	         : a->dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY;
+	auto h = data->cFileName;
+	return IsDirectory() && !(h[0] == '.' && h[1] == 0) && !(h[0] == '.' && h[1] == '.' && h[2] == 0);
 }
 
 String NormalizePath(const char *path, const char *currdir)
@@ -791,10 +660,7 @@ String NormalizePath(const char *path) {
 bool FileCopy(const char *oldname, const char *newname)
 {
 #if defined(PLATFORM_WIN32)
-	if(IsWinNT())
-		return UnicodeWin32().CopyFileW(ToSystemCharsetW(oldname), ToSystemCharsetW(newname), false);
-	else
-		return CopyFile(ToSystemCharset(oldname), ToSystemCharset(newname), false);
+	return CopyFileW(ToSystemCharsetW(oldname), ToSystemCharsetW(newname), false);
 #elif defined(PLATFORM_POSIX)
 	FileIn fi(oldname);
 	if(!fi.IsOpen())
@@ -820,10 +686,7 @@ bool FileCopy(const char *oldname, const char *newname)
 bool FileMove(const char *oldname, const char *newname)
 {
 #if defined(PLATFORM_WIN32)
-	if(IsWinNT())
-		return !!UnicodeWin32().MoveFileW(ToSystemCharsetW(oldname), ToSystemCharsetW(newname));
-	else
-		return !!MoveFile(ToSystemCharset(oldname), ToSystemCharset(newname));
+	return !!MoveFileW(ToSystemCharsetW(oldname), ToSystemCharsetW(newname));
 #elif defined(PLATFORM_POSIX)
 	return !rename(ToSystemCharset(oldname), ToSystemCharset(newname));
 #else
@@ -834,29 +697,25 @@ bool FileMove(const char *oldname, const char *newname)
 bool FileDelete(const char *filename)
 {
 #if defined(PLATFORM_WIN32)
-	if(IsWinNT())
-		return !!UnicodeWin32().DeleteFileW(ToSystemCharsetW(filename));
-	else
-		return !!DeleteFile(ToSystemCharset(filename));
+	return !!DeleteFileW(ToSystemCharsetW(filename));
 #elif defined(PLATFORM_POSIX)
 	return !unlink(ToSystemCharset(filename));
 #else
 	#error
 #endif//PLATFORM
+	return false;
 }
 
 bool DirectoryDelete(const char *dirname)
 {
 #if defined(PLATFORM_WIN32)
-	if(IsWinNT())
-		return !!UnicodeWin32().RemoveDirectoryW(ToSystemCharsetW(dirname));
-	else
-		return !!RemoveDirectory(ToSystemCharset(dirname));
+	!!RemoveDirectoryW(ToSystemCharsetW(dirname));
 #elif defined(PLATFORM_POSIX)
 	return !rmdir(ToSystemCharset(dirname));
 #else
 	#error
 #endif//PLATFORM
+	return false;
 }
 
 #ifdef PLATFORM_WIN32
@@ -870,12 +729,8 @@ Time FileGetTime(const char *filename)
 {
 #if defined(PLATFORM_WIN32)
 	HANDLE handle;
-	if(IsWinNT())
-		handle = UnicodeWin32().CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
-		                    FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
-	else
-		handle = CreateFile(ToSystemCharset(filename), GENERIC_READ,
-		                    FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	handle = CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
+	                     FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	if(handle == INVALID_HANDLE_VALUE)
 		return Null;
 	FileTime ft;
@@ -896,12 +751,8 @@ FileTime GetFileTime(const char *filename)
 {
 #if defined(PLATFORM_WIN32)
 	HANDLE handle;
-	if(IsWinNT())
-		handle = UnicodeWin32().CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
-		                    FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
-	else
-		handle = CreateFile(ToSystemCharset(filename), GENERIC_READ,
-		                    FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	handle = CreateFileW(ToSystemCharsetW(filename), GENERIC_READ,
+	                     FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	FileTime ft0;
 	memset(&ft0, 0, sizeof(ft0));
 	if(handle == INVALID_HANDLE_VALUE)
@@ -924,14 +775,8 @@ bool SetFileTime(const char *filename, FileTime ft)
 {
 #if defined(PLATFORM_WIN32)
 	HANDLE handle;
-	if(IsWinNT())
-		handle = UnicodeWin32().CreateFileW(ToSystemCharsetW(filename), GENERIC_READ | GENERIC_WRITE,
-			FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
-			OPEN_EXISTING, 0, NULL);
-	else
-		handle = CreateFile(ToSystemCharset(filename), GENERIC_READ | GENERIC_WRITE,
-			FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
-			OPEN_EXISTING, 0, NULL);
+	handle = CreateFileW(ToSystemCharsetW(filename), GENERIC_READ | GENERIC_WRITE,
+		                 FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	if(handle == INVALID_HANDLE_VALUE)
 		return false;
 	bool res = SetFileTime(handle, 0, 0, &ft);
@@ -992,10 +837,7 @@ bool RealizePath(const String& file, int mode)
 #else
 bool DirectoryCreate(const char *path)
 {
-	if(IsWinNT())
-		return !!UnicodeWin32().CreateDirectoryW(ToSystemCharsetW(path), 0);
-	else
-		return !!CreateDirectory(ToSystemCharset(path), 0);
+	return !!CreateDirectoryW(ToSystemCharsetW(path), 0);
 }
 
 bool RealizePath(const String& file)
