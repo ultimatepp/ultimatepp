@@ -2,8 +2,7 @@ acceptflags
 	NOPOSTGRESQL;
 
 uses
-	Sql,
-	Web;
+	Sql;
 
 library(WIN32 !NOPOSTGRESQL MSC) libpq;
 
