@@ -44,6 +44,10 @@ BiVector/Array/BiArray Pop
 
 FromSystemCharset
 
+Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
+
+String  MD5Digest(const void *data, int length);
+
 -----------------------
 DONE
 

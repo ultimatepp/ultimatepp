@@ -69,7 +69,7 @@ void *
 sThreadRoutine(void *arg)
 {
 	LLOG("sThreadRoutine");
-	Callback *cb = (Callback *)arg;
+	auto cb = (Function<void ()> *)arg;
 	try {
 		(*cb)();
 	}
@@ -128,7 +128,7 @@ bool Thread::Run(Function<void ()> _cb)
 	}
 #endif
 	Detach();
-	Callback *cb = new Callback(_cb);
+	auto cb = new Function<void()>(_cb);
 #ifdef PLATFORM_WIN32
 	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, cb, 0, ((unsigned int *)(&thread_id)));
 #endif

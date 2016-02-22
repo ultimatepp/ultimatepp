@@ -709,7 +709,7 @@ bool FileDelete(const char *filename)
 bool DirectoryDelete(const char *dirname)
 {
 #if defined(PLATFORM_WIN32)
-	!!RemoveDirectoryW(ToSystemCharsetW(dirname));
+	return !!RemoveDirectoryW(ToSystemCharsetW(dirname));
 #elif defined(PLATFORM_POSIX)
 	return !rmdir(ToSystemCharset(dirname));
 #else

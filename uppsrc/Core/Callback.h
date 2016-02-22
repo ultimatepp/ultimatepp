@@ -81,13 +81,15 @@ public:
 	CallbackN(CNULLer)                                    {}
 	CallbackN(const CallbackN& src) : fn(src.fn)          {}
 	CallbackN(CallbackN&& src) : fn(pick(src.fn))         {}
-	CallbackN(const Fn& src) : fn(src)                    {}
-	CallbackN(Fn&& src) : fn(src)                         {}
-	CallbackN& operator=(const Fn& src)                   { fn = src.fn; return *this; }
+	CallbackN(Fn&& src, int) : fn(src)                    {}
+	template <class F>
+	CallbackN(F src, int) : fn(src)                       {}
+//	CallbackN(Fn&& src) : fn(src)                         {}
+//	CallbackN& operator=(const Fn& src)                   { fn = src.fn; return *this; }
 	CallbackN& operator=(const CallbackN& src)            { fn = src.fn; return *this; }
 	CallbackN& operator=(CallbackN&& src)                 { fn = pick(src.fn); return *this; }
 	CallbackN& operator=(CNULLer)                         { fn.Clear(); return *this; }
-	CallbackN Proxy() const                               { return fn.Proxy(); }
+	CallbackN Proxy() const                               { return CallbackN(fn.Proxy(), 1); }
 
 	CallbackN& operator<<(const CallbackN& b)  { fn << b.fn; return *this; }
 	CallbackN& operator<<(const Fn& b)         { fn << b; return *this; }
@@ -133,8 +135,8 @@ public:
 	GateN(bool b)                          { Set(b); }
 	GateN(CNULLer)                         {}
 	GateN(const GateN& a) : fn(a.fn)       {}
-	GateN(GateN&& a) : fn(pick(a.fn))      {}
-	GateN(const Fn& a) : fn(a)             {}
+//	GateN(GateN&& a) : fn(pick(a.fn))      {}
+	GateN(Fn&& src, int) : fn(src)         {}
 	GateN& operator=(const GateN& a)       { fn = a.fn; return *this; }
 	GateN& operator=(GateN&& a)            { fn = pick(a.fn); return *this; }
 	GateN& operator=(CNULLer)              { fn.Clear(); return *this; }

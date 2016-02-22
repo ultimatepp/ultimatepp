@@ -30,8 +30,8 @@ inline void Destroy(T *t, const T *end)
 	}
 }
 
-template <class T>
-inline void DeepCopyConstruct(T *t, const T *s, const T *end) {
+template <class T, class S>
+inline void DeepCopyConstruct(T *t, const S *s, const S *end) {
 	while(s != end)
 		new (t++) T(clone(*s++));
 }
@@ -129,6 +129,8 @@ public:
 	void     Insert(int i, const Vector& x, int offset, int count);
 	void     Insert(int i, Vector&& x);
 	void     InsertSplit(int i, Vector<T>& v, int from);
+	template <class Range>
+	void     Insert(int i, Range r);
 	void     Append(const Vector& x)               { Insert(GetCount(), x); }
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Vector&& x)                    { InsertPick(GetCount(), pick(x)); }

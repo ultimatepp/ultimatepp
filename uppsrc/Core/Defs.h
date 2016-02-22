@@ -388,8 +388,8 @@ const T& clone(const T& x) { return x; }
 #define pick_
 #define rval_default(T) T(T&&) = default; T& operator=(T&&) = default;
 
-//template <typename T>
-//T&& pick(T& x) { return static_cast<T&&>(x); }
+// deprecated
+#define rval_ &&
 
 template <typename T>
 auto pick(T&& x) noexcept -> decltype(std::move(x)) { return std::move(x); }
