@@ -44,6 +44,7 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Browser.WhenKeyboard			= STDBACK(::ShowKeyboard);
 	Browser.WhenConsoleMessage		= THISBACK(OnConsoleMessage);
 	Browser.WhenMessage				= THISBACK(OnMessage);
+	Browser.WhenCertificateError	= THISBACK(OnCertificateError);
 	
 	Back.WhenAction					= callback(&Browser, &ChromiumBrowser::GoBack);
 	Forward.WhenAction				= callback(&Browser, &ChromiumBrowser::GoForward);
@@ -87,6 +88,13 @@ void ChromiumBrowserExample::OnMessage(String name, const Vector<Value>& par)
 	PromptOK(tmp);
 	
 	Browser.ExecuteJavaScript(Format("CallbackExample(%d);", (int)Random()));
+}
+
+
+bool ChromiumBrowserExample::OnCertificateError(String url)
+{
+	//return true to load page with invalid certificate
+	return PromptOKCancel(Format(t_("Connection to '%s' is untrusted&Load page anyway?"), DeQtfLf(url)));
 }
 
 
