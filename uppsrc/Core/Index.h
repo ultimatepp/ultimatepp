@@ -10,7 +10,7 @@ class HashBase : Moveable<HashBase> {
 	Vector<unsigned> hash;
 	Vector<Link>     link;
 	int             *map;
-	int              mcount;
+	int              mask;
 	int              unlinked;
 
 	void  LinkBefore(int i, Link& l, int bi);
@@ -20,7 +20,7 @@ class HashBase : Moveable<HashBase> {
 	int&  Maph(unsigned _hash) const;
 	int&  Mapi(int i) const;
 	void  FinishIndex();
-	void  DoIndex();
+	void  Zero();
 	void  Free();
 
 public:
@@ -33,6 +33,8 @@ public:
 	void  SetUn(int i, unsigned hash);
 	unsigned operator [] (int i) const      { return hash[i]; }
 	int   Find(unsigned hash) const;
+	int   GetNext(int i) const              { return link[i].next; }
+	int   FindNext(int i, int first) const;
 	int   FindNext(int i) const;
 	int   FindLast(unsigned hash) const;
 	int   FindPrev(int i) const;
@@ -184,8 +186,9 @@ public:
 	                                                        UPP::Swap(key, b.key); }
 
 #ifdef DEPRECATED
-	AIndex& operator<<=(const V& s)
+	AIndex& operator<<=(const V& s);
 #endif
+
 protected:
 	AIndex(V&& s);
 	AIndex(const V& s, int);

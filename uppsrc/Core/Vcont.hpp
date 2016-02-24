@@ -516,7 +516,7 @@ void Array<T>::Insert(int i, std::initializer_list<T> init)
 {
 	vector.InsertN(i, init.size());
 	for(auto q : init)
-		vector[i++] = DeepCopyNew(q);
+		vector[i++] = new T(q);
 }
 
 #ifdef UPP
@@ -659,7 +659,7 @@ BiVector<T>::BiVector(std::initializer_list<T> init)
 	vector = (T *) new byte[alloc * sizeof(T)];
 	T *t = vector;
 	for(const auto& q : init)
-		DeepCopyConstruct(t++, q);
+		new (t++) T(q);
 }
 
 // ------------------

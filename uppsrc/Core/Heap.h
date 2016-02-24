@@ -108,19 +108,6 @@ void TinyFree(int size, void *ptr)
 		MemoryFreek__(k, ptr);
 }
 
-template <class T, class... Args>
-T *tiny_new(Args... args)
-{
-	return new(TinyAlloc(sizeof(T))) T(args...);
-}
-
-template <class T>
-void tiny_delete(T *ptr)
-{
-	ptr->T::~T();
-	TinyFree(sizeof(T), ptr);
-}
-
 #else
 
 inline void  *MemoryAllocPermanent(size_t size)                { return malloc(size); }
@@ -148,6 +135,10 @@ struct MemoryProfile {
 
 inline MemoryProfile *PeakMemoryProfile() { return NULL; }
 
+inline void *TinyAlloc(int size) { return MemoryAlloc(size); }
+
+inline void TinyFree(int, void *ptr) { return MemoryFree(ptr); }
+
 #endif
 
 struct MemoryIgnoreLeaksBlock {
@@ -155,3 +146,15 @@ struct MemoryIgnoreLeaksBlock {
 	~MemoryIgnoreLeaksBlock() { MemoryIgnoreLeaksEnd(); }
 };
 
+template <class T, class... Args>
+T *tiny_new(Args... args)
+{
+	return new(TinyAlloc(sizeof(T))) T(args...);
+}
+
+template <class T>
+void tiny_delete(T *ptr)
+{
+	ptr->T::~T();
+	TinyFree(sizeof(T), ptr);
+}

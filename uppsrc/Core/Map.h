@@ -37,7 +37,7 @@ protected:
 
 public:
 	T&       Add(const K& k, const T& x)            { key.Add(k); return value.Add(x); }
-	T&       AddPick(const K& k, T&& x)             { key.Add(k); return value.AddPick(pick(x)); }
+	T&       Add(const K& k, T&& x)                 { key.Add(k); return value.Add(pick(x)); }
 	T&       Add(const K& k)                        { key.Add(k); return value.Add(); }
 
 	int      Find(const K& k, unsigned h) const     { return key.Find(k, h); }
@@ -49,16 +49,16 @@ public:
 
 	int      FindAdd(const K& k);
 	int      FindAdd(const K& k, const T& init);
-	int      FindAddPick(const K& k, T&& init);
+	int      FindAdd(const K& k, T&& init);
 
 	int      Put(const K& k, const T& x);
 	int      PutDefault(const K& k);
-	int      PutPick(const K& k, T&& x);
+	int      Put(const K& k, T&& x);
 	T&       Put(const K& k);
 
 	int      FindPut(const K& k);
 	int      FindPut(const K& k, const T& init);
-	int      FindPutPick(const K& k, T&& init);
+	int      FindPut(const K& k, T&& init);
 
 	T&       Get(const K& k)                     { return value[Find(k)]; }
 	const T& Get(const K& k) const               { return value[Find(k)]; }
@@ -67,7 +67,7 @@ public:
 	T&       GetAdd(const K& k);
 
 	T&       GetAdd(const K& k, const T& x);
-	T&       GetAddPick(const K& k, T&& x);
+	T&       GetAdd(const K& k, T&& x);
 
 	T&       GetPut(const K& k);
 
@@ -175,7 +175,14 @@ public:
 	ConstIterator    End() const                                  { return value.End(); }
 	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
 
+#ifdef DEPRECATED
 	friend int     GetCount(const AMap& v)                        { return v.GetCount(); }
+	int      PutPick(const K& k, T&& x)                           { return Put(k, pick(x)); }
+	T&       AddPick(const K& k, T&& x)                           { return Add(k, pick(x)); }
+	int      FindAddPick(const K& k, T&& init)                    { return FindAddPick(k, pick(init)); }
+	int      FindPutPick(const K& k, T&& init)                    { return FindPutPick(k, pick(init)); }
+	T&       GetAddPick(const K& k, T&& x)                        { return GetAddPick(k, pick(x)); }
+#endif
 };
 
 template <class K, class T>

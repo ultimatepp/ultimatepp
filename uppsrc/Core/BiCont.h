@@ -14,6 +14,7 @@ protected:
 	void     DeepCopy0(const BiVector& src);
 	T       *AddHead0()              { AssertMoveable<T>(); Add0(); return &vector[start = Ix(alloc - 1)/*(start + alloc - 1) % alloc*/]; }
 	T       *AddTail0()              { AssertMoveable<T>(); Add0(); return &vector[EI()]; }
+	void     Zero()                  { start = items = alloc = 0; vector = NULL; }
 	void     Free();
 	void     Pick(BiVector&& x)      { vector = pick(x.vector); start = x.start; items = x.items;
 	                                   alloc = x.alloc; ((BiVector&)x).items = -1; }
@@ -28,14 +29,16 @@ public:
 	T&       AddTail()               { return *new(AddTail0()) T; }
 	void     AddHead(const T& x)     { new(AddHead0()) T(x); }
 	void     AddTail(const T& x)     { new(AddTail0()) T(x); }
-	void     AddHeadPick(T&& x)      { new(AddHead0()) T(x); }
-	void     AddTailPick(T&& x)      { new(AddTail0()) T(x); }
+	void     AddHead(T&& x)          { new(AddHead0()) T(x); }
+	void     AddTail(T&& x)          { new(AddTail0()) T(x); }
 	T&       Head()                  { ASSERT(items > 0); return vector[start]; }
 	T&       Tail()                  { ASSERT(items > 0); return vector[EI()]; }
 	const T& Head() const            { ASSERT(items > 0); return vector[start]; }
 	const T& Tail() const            { ASSERT(items > 0); return vector[EI()]; }
 	void     DropHead()              { (&Head())->T::~T(); items--; start = Ix(1); }
 	void     DropTail()              { (&Tail())->T::~T(); items--; }
+	T        PopHead()               { T x = Head(); DropHead(); return x; }
+	T        PopTail()               { T x = Tail(); DropTail(); return x; }
 	void     DropHead(int n)         { while(n-- > 0) BiVector<T>::DropHead(); }
 	void     DropTail(int n)         { while(n-- > 0) BiVector<T>::DropTail(); }
 	const T& operator[](int i) const { ASSERT(i >= 0 && i < items); return vector[Ix(i)]; }
@@ -59,7 +62,7 @@ public:
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
 	BiVector(BiVector&& src)                    { Pick(pick(src)); }
 	void operator=(BiVector&& src)              { if(this != &src) { Free(); Pick(pick(src)); } }
-	BiVector()                                  { start = items = alloc = 0; vector = NULL; }
+	BiVector()                                  { Zero(); }
 	~BiVector()                                 { Free(); } // gcc4.0 workaround!!
 
 	BiVector(std::initializer_list<T> init);
@@ -82,6 +85,11 @@ public:
 	                                              UPP::Swap(a.alloc, b.alloc); }
 
 	STL_BI_COMPATIBILITY(BiVector<T>)
+
+#ifdef DEPRECATED
+	void     AddHeadPick(T&& x)      { new(AddHead0()) T(x); }
+	void     AddTailPick(T&& x)      { new(AddTail0()) T(x); }
+#endif
 };
 
 template <class T>
@@ -99,10 +107,8 @@ public:
 
 	T&       AddHead()                     { T *q = new T; bv.AddHead(q); return *q; }
 	T&       AddTail()                     { T *q = new T; bv.AddTail(q); return *q; }
-	void     AddHead(const T& x)           { bv.AddHead(DeepCopyNew(x)); }
-	void     AddTail(const T& x)           { bv.AddTail(DeepCopyNew(x)); }
-	void     AddHeadPick(T&& x)            { bv.AddHead(new T(x)); }
-	void     AddTailPick(T&& x)            { bv.AddTail(new T(x)); }
+	void     AddHead(const T& x)           { bv.AddHead(new T(x)); }
+	void     AddTail(const T& x)           { bv.AddTail(new T(x)); }
 	T&       AddHead(T *newt)              { bv.AddHead(newt); return *newt; }
 	T&       AddTail(T *newt)              { bv.AddTail(newt); return *newt; }
 	template <class TT> TT& CreateHead()   { TT *q = new TT; bv.AddHead(q); return *q; }
@@ -113,6 +119,8 @@ public:
 	const T& Tail() const                  { return *(const T *) bv.Tail(); }
 	void     DropHead()                    { delete (T*) bv.Head(); bv.DropHead(); }
 	void     DropTail()                    { delete (T*) bv.Tail(); bv.DropTail(); }
+	T        PopHead()                     { T x = Head(); DropHead(); return x; }
+	T        PopTail()                     { T x = Tail(); DropTail(); return x; }
 	T       *DetachHead()                  { T *q = (T*) bv.Head(); bv.DropHead(); return q; }
 	T       *DetachTail()                  { T *q = (T*) bv.Tail(); bv.DropTail(); return q; }
 
@@ -159,4 +167,9 @@ public:
 	friend void Swap(BiArray& a, BiArray& b)    { UPP::Swap(a.bv, b.bv); }
 
 	STL_BI_COMPATIBILITY(BiArray<T>)
+
+#ifdef DEPRECATED
+	void     AddHeadPick(T&& x)            { bv.AddHead(new T(x)); }
+	void     AddTailPick(T&& x)            { bv.AddTail(new T(x)); }
+#endif
 };

@@ -245,6 +245,10 @@ namespace Upp {};
 
 NAMESPACE_UPP
 
+#ifndef flagNODEPRECATED
+#define DEPRECATED
+#endif
+
 #include "Defs.h"
 
 class XmlIO;
@@ -373,10 +377,6 @@ using Upp::byte; // Dirty solution to Windows.h typedef byte...
 
 #ifdef MAIN_CONF
 #include <main.conf.h>
-#endif
-
-#ifndef flagNODEPRECATED
-#define DEPRECATED
 #endif
 
 #endif //CORE_H

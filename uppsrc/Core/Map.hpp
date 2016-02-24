@@ -2,7 +2,8 @@ inline int& HashBase::Maph(unsigned _hash) const
 {
 	unsigned h = _hash & ~UNSIGNED_HIBIT;
 #ifdef FOLDHASH
-	return map[(mcount - 1) & (((h >> 23) - (h >> 15) - (h >> 7) - h))];
+	return map[mask & (h - SwapEndian32((dword)h))];
+//	return map[(mcount - 1) & (((h >> 23) - (h >> 15) - (h >> 7) - h))];
 #else
 	return map[h % mcount];
 #endif
@@ -32,7 +33,7 @@ void HashBase::Add(unsigned _hash)
 	ASSERT(hash.GetCount() == link.GetCount());
 	int i = hash.GetCount();
 	hash.Add(_hash & ~UNSIGNED_HIBIT);
-	if(hash.GetCount() < mcount)
+	if(hash.GetCount() <= mask)
 		LinkTo(i, link.Add(), Maph(_hash));
 	else
 		Reindex();
@@ -56,17 +57,8 @@ inline void HashBase::Unlink(int i, Link& l)
 	Unlink(i, l, hash[i] & UNSIGNED_HIBIT ? unlinked : Mapi(i));
 }
 
-inline void HashBase::DoIndex()
-{
-	if(hash.GetCount() < mcount)
-		FinishIndex();
-	else
-		Reindex();
-}
-
 inline int HashBase::Find(unsigned _hash) const
 {
-	if(hash.GetCount() == 0) return -1;
 	return Maph(_hash);
 }
 
@@ -200,8 +192,18 @@ int  AIndex<T, V>::FindPut(const T& key)
 }
 
 template <class T, class V>
-inline int AIndex<T, V>::Find(const T& x, unsigned _hash) const {
-	return Find0(x, hash.Find(_hash));
+inline
+int AIndex<T, V>::Find(const T& x, unsigned hash_) const {
+	int i0 = hash.Find(hash_);
+	if(i0 >= 0) {
+		int i = i0;
+		do {
+			if(x == key[i]) return i;
+			i = hash.GetNext(i);
+		}
+		while(i0 != i);
+	}
+	return -1;
 }
 
 template <class T, class V>
@@ -419,7 +421,7 @@ int AMap<K, T, V>::FindAdd(const K& k, const T& x) {
 }
 
 template <class K, class T, class V>
-int AMap<K, T, V>::FindAddPick(const K& k, T&& x) {
+int AMap<K, T, V>::FindAdd(const K& k, T&& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i < 0) {
@@ -459,7 +461,7 @@ int AMap<K, T, V>::PutDefault(const K& k)
 }
 
 template <class K, class T, class V>
-int AMap<K, T, V>::PutPick(const K& k, T&& x)
+int AMap<K, T, V>::Put(const K& k, T&& x)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount())
@@ -513,7 +515,7 @@ int AMap<K, T, V>::FindPut(const K& k, const T& init)
 }
 
 template <class K, class T, class V>
-int AMap<K, T, V>::FindPutPick(const K& k, T&& init)
+int AMap<K, T, V>::FindPut(const K& k, T&& init)
 {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
@@ -545,12 +547,12 @@ T&  AMap<K, T, V>::GetAdd(const K& k, const T& x) {
 }
 
 template <class K, class T, class V>
-T&  AMap<K, T, V>::GetAddPick(const K& k, T&& x) {
+T&  AMap<K, T, V>::GetAdd(const K& k, T&& x) {
 	unsigned hash = key.hashfn(k);
 	int i = Find(k, hash);
 	if(i >= 0) return value[i];
 	key.Add(k, hash);
-	value.AddPick(x);
+	value.AddPick(pick(x));
 	return value.Top();
 }
 

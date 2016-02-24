@@ -10,7 +10,7 @@ struct Complex : std::complex<double>
 	Complex(const C& c) : C(c)              {}
 
 	Complex(const Nuller&) : C(DOUBLE_NULL, DOUBLE_NULL) {}
-	operator Value() const                  { return RichValue<Complex>(*this); } 
+	operator Value() const                  { return RichValue<Complex>(*this); }
 	Complex(const Value& v) : C(IsNumber(v) ? Complex((double)v) : RichValue<Complex>::Extract(v)) {}
 
 	operator Ref()                          { return AsRef(*this); }
@@ -20,7 +20,7 @@ struct Complex : std::complex<double>
 	
 	int  Compare(const Complex& c) const    { NEVER(); return 0; }
 
-	void Serialize(Stream& s);	
+	void Serialize(Stream& s);
 	void Xmlize(XmlIO& xio);
 	void Jsonize(JsonIO& jio);
 };

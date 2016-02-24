@@ -218,8 +218,8 @@ class DeepCopyOption : public B {
 public:
 #ifdef DEPRECATED
 	friend T& operator<<=(T& dest, const T& src)
-#endif
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
+#endif
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 

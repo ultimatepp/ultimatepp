@@ -1,6 +1,6 @@
-template <class T, class... Args>
-T& Single(Args... args) {
-	static T o(args...);
+template <class T/*, class... Args*/>
+T& Single(/*Args... args*/) {
+	static T o/*(args...)*/;
 	return o;
 }
 
