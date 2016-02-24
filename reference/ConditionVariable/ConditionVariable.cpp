@@ -79,7 +79,6 @@ void ConsumerThread(int id)
 	LOG("Consumer exiting");
 }
 
-
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
