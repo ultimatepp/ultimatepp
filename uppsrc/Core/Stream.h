@@ -236,7 +236,7 @@ public:
 	void      Pack(bool& a, bool& b, bool& c);
 	void      Pack(bool& a, bool& b);
 
-//* deprecated
+#ifdef DEPRECATED
 	int       GetW()                 { return Get16(); }
 	int       GetL()                 { return Get32(); }
 	int       GetIW()                { return Get16le(); }
@@ -249,7 +249,7 @@ public:
 	void      PutIL(int c)           { Put32le(c); }
 	void      PutMW(int c)           { Put16be(c); }
 	void      PutML(int c)           { Put32be(c); }
-//*/
+#endif
 private: // No copy
 	Stream(const Stream& s);
 	void operator=(const Stream& s);
@@ -358,11 +358,12 @@ public:
 		READ, CREATE, APPEND, READWRITE,
 
 		NOWRITESHARE = 0x10,
-		DELETESHARE = 0x20, // deprecated
-		NOREADSHARE = 0x40, // deprecated
 		SHAREMASK = 0x70,
+#ifdef DEPRECATED
+		DELETESHARE = 0x20,
+		NOREADSHARE = 0x40,
+#endif
 	};
-//	typedef int OpenMode; // obsolete, use dword
 
 	dword     GetBufferSize() const           { return pagesize; }
 	void      SetBufferSize(dword newsize);

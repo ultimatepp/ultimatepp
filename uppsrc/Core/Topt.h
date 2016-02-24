@@ -216,7 +216,9 @@ NTL_MOVEABLE(wchar_t);
 template <class T, class B = EmptyClass>
 class DeepCopyOption : public B {
 public:
-	friend T& operator<<=(T& dest, const T& src)  // obsolete
+#ifdef DEPRECATED
+	friend T& operator<<=(T& dest, const T& src)
+#endif
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
@@ -224,8 +226,10 @@ public:
 template <class T, class B = EmptyClass>
 class MoveableAndDeepCopyOption : public B {
 	friend void AssertMoveable0(T *) {}
-	friend T& operator<<=(T& dest, const T& src) // obsolete
+#ifdef DEPRECATED
+	friend T& operator<<=(T& dest, const T& src)
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
+#endif
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 

@@ -48,6 +48,8 @@ Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, 
 
 String  MD5Digest(const void *data, int length);
 
+AuxMutex, MT: Remove!
+
 -----------------------
 DONE
 

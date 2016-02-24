@@ -190,9 +190,11 @@ protected:
 	void    ClearMagic()          {}
 #endif
 
-public:
-	static  void Register(dword w, Void* (*c)(), const char *name = NULL) init_; // Direct use deprecated
+#ifndef DEPRECATED
+	static  void Register(dword w, Void* (*c)(), const char *name = NULL);
+#endif
 
+public:
 	template <class T>
 	static  void Register(const char *name = NULL);
 	template <class T>
@@ -289,6 +291,10 @@ public:
 	typedef int            difference_type;
 	const_iterator         begin() const                      { return Begin(); }
 	const_iterator         end() const                        { return End(); }
+
+#ifdef DEPRECATED
+	static  void Register(dword w, Void* (*c)(), const char *name = NULL);
+#endif
 };
 
 struct ValueTypeError : Exc {

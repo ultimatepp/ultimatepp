@@ -367,29 +367,31 @@ inline Value RichToValue(const T& data)
 	return Value(new RichValueRep<T>(data));
 }
 
-template <class T> // Deprecated, use Value::Is
+#ifdef DEPRECATED
+template <class T> // use Value::Is
 bool IsTypeRaw(const Value& value, T * = 0)                { return value.Is<T>(); }
 
-template <class T> // deprecated, use Value::Is
+template <class T> // use Value::Is
 bool IsType(const Value& x, T* = 0)                        { return x.Is<T>(); }
 
 template <class T>
-struct RawValue : public Value { // Deprecated, use RawToValue and Value::To
+struct RawValue : public Value { // use RawToValue and Value::To
 	RawValue(const T& x) : Value(RawToValue(x))            {}
 	static const T& Extract(const Value& v)                { return v.To<T>(); }
 	static const T& Extract(const Value& v, const T& dflt) { return v.Is<T>() ? v.To<T>() : dflt; }
 };
 
 template <class T>
-struct RichValue : public Value { // Deprecated, use RichToValue and Value::To
+struct RichValue : public Value { // use RichToValue and Value::To
 public:
 	RichValue(const T& x) : Value(RichToValue<T>(x))       {}
 	static void Register() init_                           { Value::Register<T>(); }
 	static const T& Extract(const Value& v)                { return v.Get<T>(); }
 };
 
-template <class T> // Deprecated, use Value::To
+template <class T> // use Value::To
 inline const T& ValueTo(const Value& v)                    { return v.To<T>(); }
 
-template <class T> // Deprecated, use Value::To
+template <class T> // use Value::To
 inline const T& ValueTo(const Value& v, const T& dflt)     { return v.Is<T>() ? v.To<T>() : dflt; }
+#endif

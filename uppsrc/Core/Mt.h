@@ -505,8 +505,10 @@ inline void WriteMemoryBarrier() {}
 
 #endif
 
-typedef Mutex CriticalSection; // deprecated
-typedef StaticMutex StaticCriticalSection; // deprecated
+#ifdef DEPRECATED
+typedef Mutex CriticalSection;
+typedef StaticMutex StaticCriticalSection;
+#endif
 
 // Auxiliary multithreading intended for use even in single-threaded applications
 // to resolve some host platform issues. Raw threads cannot use U++ heap (nor indirectly)

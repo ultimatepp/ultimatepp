@@ -44,7 +44,7 @@ String GetWindowsDirectory();
 #endif
 String GetModuleFileName(HINSTANCE instance = AppGetHandle());
 
-//deprecated
+#ifdef DEPRECATED
 class SyncObject {
 protected:
 	HANDLE     handle;
@@ -59,12 +59,12 @@ public:
 	~SyncObject();
 };
 
-//deprecated
 class Event : public SyncObject {
 public:
 	void       Set();
 
 	Event();
 };
+#endif
 
 #endif

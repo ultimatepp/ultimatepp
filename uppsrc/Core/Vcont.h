@@ -193,17 +193,18 @@ public:
 // Optimizations
 	friend void Swap(Vector& a, Vector& b)  { UPP::Swap(a.items, b.items); UPP::Swap(a.alloc, b.alloc); UPP::Swap(a.vector, b.vector); }
 
-//deprecated
+	STL_VECTOR_COMPATIBILITY(Vector<T>)
+
+#ifdef DEPRECATED
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
 	T&       AddPick(T&& x)             { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
-	int      GetIndex(const T& item) const; //deprecated
+	int      GetIndex(const T& item) const;
 	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
 	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
 	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
 	friend void Append(Vector& dst, const Vector& src)         { dst.Append(src); }
-
-	STL_VECTOR_COMPATIBILITY(Vector<T>)
+#endif
 };
 
 template <class T>
@@ -233,7 +234,6 @@ public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
 	T&       Add(const T& x)            { T *q = new T(clone(x)); vector.Add(q); return *q; }
 	T&       Add(T&& x)                 { T *q = new T(pick(x)); vector.Add(q); return *q; }
-	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; } // deprecated
 	T&       Add(T *newt)               { vector.Add(newt); return *newt; }
 	template<class TT, class... Args>
 	TT& Create(Args... args)            { TT *q = new TT(args...); Add(q); return *q; }
@@ -413,9 +413,10 @@ private:
 public:
 	friend void IterSwap(Iterator a, Iterator b)           { Array<T>::IterSwap0(a, b); }
 
-//obsolete names
+#ifdef DEPRECATED
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
-
+	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; }
+#endif
 	STL_VECTOR_COMPATIBILITY(Array<T>)
 };

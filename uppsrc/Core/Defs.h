@@ -182,11 +182,6 @@ struct Callexit {
 };
 
 
-// deprecated, use INITBLOCK
-#define INITCODE(x) \
-static void COMBINE(MK__s, _fn)() { x } static UPP::Callinit MK__s(COMBINE(MK__s, _fn), __FILE__, __LINE__);
-
-
 #define INITBLOCK \
 static void COMBINE(MK__s, _fn)(); static UPP::Callinit MK__s(COMBINE(MK__s, _fn), __FILE__, __LINE__); \
 static void COMBINE(MK__s, _fn)()
@@ -196,11 +191,6 @@ static void COMBINE(x, _fn)(); static UPP::Callinit x(COMBINE(x, _fn), __FILE__,
 static void COMBINE(x, _fn)()
 
 
-// deprecated, use EXITBLOCK
-#define EXITCODE(x) \
-static void COMBINE(MK__s, _fn)() { x } static UPP::Callexit MK__s(COMBINE(MK__s, _fn));
-
-
 #define EXITBLOCK \
 static void COMBINE(MK__s, _fn)(); static UPP::Callexit MK__s(COMBINE(MK__s, _fn)); \
 static void COMBINE(MK__s, _fn)()
@@ -208,6 +198,15 @@ static void COMBINE(MK__s, _fn)()
 #define EXITBLOCK_(x) \
 static void COMBINE(x, _fn)(); static UPP::Callexit x(COMBINE(x, _fn)); \
 static void COMBINE(x, _fn)()
+
+
+#ifdef DEPRECATED
+#define INITCODE(x) \
+static void COMBINE(MK__s, _fn)() { x } static UPP::Callinit MK__s(COMBINE(MK__s, _fn), __FILE__, __LINE__);
+
+#define EXITCODE(x) \
+static void COMBINE(MK__s, _fn)() { x } static UPP::Callexit MK__s(COMBINE(MK__s, _fn));
+#endif
 
 #ifdef min
 #undef min
@@ -388,15 +387,15 @@ const T& clone(const T& x) { return x; }
 #define pick_
 #define rval_default(T) T(T&&) = default; T& operator=(T&&) = default;
 
-// deprecated
-#define rval_ &&
-
 template <typename T>
 auto pick(T&& x) noexcept -> decltype(std::move(x)) { return std::move(x); }
 
 template<class T> class Function;
 
+#ifdef DEPRECATED
+#define rval_ &&
 #define init_
+#endif
 
 #ifdef COMPILER_MSC
 #define force_inline __forceinline

@@ -375,4 +375,8 @@ using Upp::byte; // Dirty solution to Windows.h typedef byte...
 #include <main.conf.h>
 #endif
 
+#ifndef flagNODEPRECATED
+#define DEPRECATED
+#endif
+
 #endif //CORE_H

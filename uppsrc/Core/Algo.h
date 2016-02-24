@@ -41,7 +41,6 @@ void Reverse(C& container)
 
 template <class T, class V>
 void Sum(V& sum, T ptr, T end)
-
 {
 	while(ptr != end)
 		sum += *ptr++;
@@ -1636,12 +1635,14 @@ void StableSortIndex(Index& index)
 	StableSortIndex(index, StdLess<typename Index::ValueType>());
 }
 
-// OLD DEPRECATED NAMES:
-template <class C> // Deprecated
+
+#ifdef DEPRECATED
+template <class C>
 int MinIndex(const C& c) { return FindMin(c); }
 
-template <class C> // Deprecated
+template <class C>
 int MaxIndex(const C& c) { return FindMax(c); }
 
-template <class C> // Deprecated
+template <class C>
 typename C::ValueType Sum0(const C& c) { return Sum(c); }
+#endif

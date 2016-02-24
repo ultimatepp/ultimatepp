@@ -363,10 +363,4 @@ void Bits::Set(int i, bool b)
 	bp[q] = (bp[q] & ~(1 << i)) | (b << i);
 }
 
-void Bits::Set(int i, bool b, int count)
-{
-	while(count--)
-		Set(i++, b);
-}
-
 END_UPP_NAMESPACE

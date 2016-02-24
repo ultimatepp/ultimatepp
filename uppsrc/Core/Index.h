@@ -171,7 +171,6 @@ public:
 // Pick assignment & copy. Picked source can only Clear(), ~AIndex(), operator=, operator<<=
 
 	AIndex& operator=(V&& s);
-	AIndex& operator<<=(const V& s); // deprecated
 
 // Standard container interface
 	typedef T                ValueType;
@@ -184,6 +183,9 @@ public:
 	void Swap(AIndex& b)                                  { UPP::Swap(hash, b.hash);
 	                                                        UPP::Swap(key, b.key); }
 
+#ifdef DEPRECATED
+	AIndex& operator<<=(const V& s)
+#endif
 protected:
 	AIndex(V&& s);
 	AIndex(const V& s, int);
