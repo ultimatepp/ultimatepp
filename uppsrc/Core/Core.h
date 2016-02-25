@@ -266,12 +266,17 @@ class JsonIO;
 #include "Stream.h"
 #include "Diag.h"
 
+#include "Range.h"
+
 #include "Vcont.h"
 #include "BiCont.h"
 #include "Index.h"
 #include "Map.h"
 #include "Tuple.h"
 #include "Algo.h"
+#include "Sorted.h"
+#include "Sort.h"
+#include "Obsolete.h"
 #include "FixedMap.h"
 #include "InVector.h"
 

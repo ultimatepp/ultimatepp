@@ -36,11 +36,9 @@ Use m128! ?
 
 Remove ArrayIndex
 
-rename Function
+rename Function (Functor, Event, EventGate)
 
 spinlock for heap freeremote?
-
-BiVector/Array/BiArray Pop
 
 FromSystemCharset
 
@@ -49,6 +47,8 @@ Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, 
 String  MD5Digest(const void *data, int length);
 
 AuxMutex, MT: Remove!
+
+fast - decide
 
 -----------------------
 DONE
@@ -88,3 +88,6 @@ Optimize Index::Hash
 ConditionVariable
 
 idmapBencmark ValueMap optimize
+
+BiVector/Array/BiArray Pop
+

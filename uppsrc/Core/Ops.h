@@ -206,7 +206,7 @@ force_inline bool svo_memeq(const tchar *a, const tchar *b, int len)
 	return true;
 }
 
-#ifdef CPU_SSE2
+#if 0
 
 force_inline dword fast_equal128(const void *a, const void *b)
 {
@@ -232,7 +232,7 @@ force_inline bool fast_equal128(const void *a, const void *b)
 {
 	uint64 *aa = (uint64 *)a;
 	uint64 *bb = (uint64 *)b;
-	return (aa[0] ^ bb[0]) | (aa[1] ^ bb[1]) == 0;
+	return ((aa[0] ^ bb[0]) | (aa[1] ^ bb[1])) == 0;
 }
 
 force_inline void fast_zero128(void *t)
@@ -255,7 +255,7 @@ force_inline bool fast_equal128(const void *a, const void *b)
 {
 	uint32 *aa = (uint32 *)a;
 	uint32 *bb = (uint32 *)b;
-	return (aa[0] ^ bb[0]) | (aa[1] ^ bb[1]) | (aa[2] ^ bb[2]) | (aa[3] ^ bb[3]) == 0;
+	return ((aa[0] ^ bb[0]) | (aa[1] ^ bb[1]) | (aa[2] ^ bb[2]) | (aa[3] ^ bb[3])) == 0;
 }
 
 force_inline void fast_zero128(void *t)

@@ -265,7 +265,17 @@ protected:
 
 public:
 	bool IsEqual(const String0& s) const {
+#if 0
 		return (chr[KIND] | s.chr[KIND] ? LEqual(s) : fast_equal128(q, s.q)) == 0;
+#else
+		return (chr[KIND] | s.chr[KIND] ? LEqual(s) :
+		#ifdef CPU_64
+		        ((q[0] ^ s.q[0]) | (q[1] ^ s.q[1]))
+		#else
+		        ((w[0] ^ s.w[0]) | (w[1] ^ s.w[1]) | (w[2] ^ s.w[2]) | (w[3] ^ s.w[3]))
+		#endif
+		       ) == 0;
+#endif
 	}
 
 	int    Compare(const String0& s) const;
