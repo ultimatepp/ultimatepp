@@ -69,7 +69,13 @@ bool RichEdit::Key(dword key, int count)
 				return false;
 			if(!RemoveSelection() && InsertLineSpecial())
 				return true;
-			
+			RichPos p = text.GetRichPos(cursor);
+			if(p.format.bullet != RichPara::BULLET_NONE && p.paralen == 0) {
+				Style();
+				formatinfo.bullet = RichPara::BULLET_NONE;
+				ApplyFormat(0, RichText::BULLET);
+				return true;
+			}
 			RichText::FormatInfo f = formatinfo;
 			InsertLine();
 			formatinfo = f;
