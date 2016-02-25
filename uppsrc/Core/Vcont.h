@@ -283,7 +283,7 @@ public:
 	void     Drop(int n = 1)            { Trim(GetCount() - n); }
 	T&       Top()                      { return Get(GetCount() - 1); }
 	const T& Top() const                { return Get(GetCount() - 1); }
-	T        Pop()                      { T h = Top(); Drop(); return h; }
+//	T        Pop()                      { T h = Top(); Drop(); return h; } // GCC bug, for some reason wants to instatiate this even if not used
 	T       *PopDetach()                { return (T *) vector.Pop(); }
 
 	void     Swap(Array& b)             { Swap(vector, b.vector); }

@@ -8,7 +8,7 @@ public:
 
 	int GetCount() const { return count; }
 	
-	RangeRef& operator~()               { return *this; }
+	operator RangeRef&() const          { return *this; }
 
 	value_type& operator[](int i) const { ASSERT(i >= 0 && i < count); return l[i]; }
 	I  begin() const { return l; }

@@ -1,27 +1,3 @@
-#ifdef UPP
-template <class T>
-void StreamContainer(Stream& s, T& cont)
-{
-	int n = cont.GetCount();
-	s / n;
-	if(n < 0) {
-		s.LoadError();
-		return;
-	}
-	if(s.IsLoading())
-	{
-		cont.Clear();
-		while(n--)
-			s % cont.Add();
-	}
-	else
-	{
-		for(typename T::Iterator ptr = cont.Begin(); n--; ++ptr)
-			s % *ptr;
-	}
-}
-#endif
-
 template <class I, class Less>
 void ForwardSort(I begin, I end, const Less& less)
 {
@@ -139,7 +115,14 @@ void Sort(T& c, const Less& less)
 template <class T>
 void Sort(T& c)
 {
-	typedef typename T::ValueType VT;
+	typedef typename RangeValueType<T>::type VT;
+	Sort(c.Begin(), c.End(), std::less<VT>());
+}
+
+template <class T>
+void Sort(const T& c)
+{
+	typedef typename RangeValueType<T>::type VT;
 	Sort(c.Begin(), c.End(), std::less<VT>());
 }
 

@@ -334,11 +334,34 @@ int FindBinary(const C& v, const T& val)
 }
 
 template <class C, class T>
-void LruAdd(C& lru, T value, int limit = 10) {
+void LruAdd(C& lru, T value, int limit = 10)
+{
 	int q = FindIndex(lru, value);
 	if(q >= 0)
 		lru.Remove(q);
 	lru.Insert(0, value);
 	if(lru.GetCount() > limit)
 		lru.SetCount(limit);
+}
+
+template <class T>
+void StreamContainer(Stream& s, T& cont)
+{
+	int n = cont.GetCount();
+	s / n;
+	if(n < 0) {
+		s.LoadError();
+		return;
+	}
+	if(s.IsLoading())
+	{
+		cont.Clear();
+		while(n--)
+			s % cont.Add();
+	}
+	else
+	{
+		for(typename T::Iterator ptr = cont.Begin(); n--; ++ptr)
+			s % *ptr;
+	}
 }

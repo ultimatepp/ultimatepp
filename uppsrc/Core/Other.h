@@ -1,6 +1,6 @@
 template <class T/*, class... Args*/>
 T& Single(/*Args... args*/) {
-	static T o/*(args...)*/;
+	static T o/*(args...)*/; // GCC 4.x bug - wants to do std::move here if args specified
 	return o;
 }
 

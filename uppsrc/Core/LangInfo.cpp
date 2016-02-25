@@ -187,6 +187,8 @@ int CSCZLanguageCompare(const wchar *a, int a_length, const wchar *b, int b_leng
 	return a_length != b_length ? cmp(a_length, b_length) : sgn(middle ? middle : little);
 }
 
+#ifdef PLATFORM_WIN32
+
 String GetLocaleInfoA(LCID lcid, LCTYPE lctype)
 {
 	wchar cbuf[1000];
@@ -202,6 +204,8 @@ WString GetLocaleInfoW(LCID lcid, LCTYPE lctype)
 		return wbuf;
 	return Null;
 }
+
+#endif
 
 static dword sGetLanguageDetails(int language, String *english_name, String *native_name)
 {
