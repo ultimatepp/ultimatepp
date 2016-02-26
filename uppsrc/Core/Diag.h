@@ -186,7 +186,7 @@ void DumpContainer(Stream& s, T ptr, T end) {
 
 template <class C>
 void DumpContainer(Stream& s, const C& c) {
-	DumpContainer(s, c.Begin(), c.End());
+	DumpContainer(s, c.begin(), c.end());
 }
 
 template <class T>
@@ -195,7 +195,7 @@ void DumpContainer2(Stream& s, T ptr, T end) {
 	s << LOG_BEGIN;
 	while(ptr != end) {
 		s << '[' << i++ << "] =" << EOL;
-		DumpContainer(s, (*ptr).Begin(), (*ptr).End());
+		DumpContainer(s, (*ptr).begin(), (*ptr).end());
 		ptr++;
 	}
 	s << LOG_END;
@@ -203,7 +203,7 @@ void DumpContainer2(Stream& s, T ptr, T end) {
 
 template <class C>
 void DumpContainer2(Stream& s, const C& c) {
-	DumpContainer2(s, c.Begin(), c.End());
+	DumpContainer2(s, c.begin(), c.end());
 }
 
 template <class T>
@@ -212,7 +212,7 @@ void DumpContainer3(Stream& s, T ptr, T end) {
 	s << LOG_BEGIN;
 	while(ptr != end) {
 		s << '[' << i++ << "] =" << EOL;
-		DumpContainer2(s, (*ptr).Begin(), (*ptr).End());
+		DumpContainer2(s, (*ptr).begin(), (*ptr).end());
 		ptr++;
 	}
 	s << LOG_END;
@@ -220,7 +220,7 @@ void DumpContainer3(Stream& s, T ptr, T end) {
 
 template <class C>
 void DumpContainer3(Stream& s, const C& c) {
-	DumpContainer3(s, c.Begin(), c.End());
+	DumpContainer3(s, c.begin(), c.end());
 }
 
 template <class T>

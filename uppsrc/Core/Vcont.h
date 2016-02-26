@@ -179,21 +179,13 @@ public:
 	Vector(const Vector& v, int)     { __DeepCopy(v); }
 
 // Standard container interface
-	typedef T        ValueType;
-	typedef T       *Iterator;
-	typedef const T *ConstIterator;
-
-	ConstIterator    Begin() const          { return (T*)vector; }
-	ConstIterator    End() const            { return (T*)vector + items; }
-	ConstIterator    GetIter(int i) const   { ASSERT(i >= 0 && i <= items); return Begin() + i; }
-	Iterator         Begin()                { return (T*)vector; }
-	Iterator         End()                  { return (T*)vector + items; }
-	Iterator         GetIter(int i)         { ASSERT(i >= 0 && i <= items); return Begin() + i; }
+	const T         *begin() const          { return (T*)vector; }
+	const T         *end() const            { return (T*)vector + items; }
+	T               *begin()                { return (T*)vector; }
+	T               *end()                  { return (T*)vector + items; }
 
 // Optimizations
 	friend void Swap(Vector& a, Vector& b)  { UPP::Swap(a.items, b.items); UPP::Swap(a.alloc, b.alloc); UPP::Swap(a.vector, b.vector); }
-
-	STL_VECTOR_COMPATIBILITY(Vector<T>)
 
 #ifdef DEPRECATED
 	T&       DoIndex(int i)             { return At(i); }
@@ -203,7 +195,14 @@ public:
 	T&       InsertPick(int i, T&& x)   { Insert(i, pick(x)); }
 	void     InsertPick(int i, Vector&& x) { Insert(i, pick(x)); }
 	void     AppendPick(Vector&& x)                { InsertPick(GetCount(), pick(x)); }
+	typedef T       *Iterator;
+	typedef const T *ConstIterator;
+	ConstIterator    GetIter(int i) const   { ASSERT(i >= 0 && i <= items); return begin() + i; }
+	Iterator         GetIter(int i)         { ASSERT(i >= 0 && i <= items); return begin() + i; }
+	typedef T        ValueType;
 	friend void Append(Vector& dst, const Vector& src)         { dst.Append(src); }
+
+	STL_VECTOR_COMPATIBILITY(Vector<T>)
 #endif
 };
 
@@ -397,13 +396,10 @@ public:
 	};
 
 // Standard container interface
-	typedef T        ValueType;
-	Iterator         Begin()                    { return (T **)vector.Begin(); }
-	Iterator         End()                      { return (T **)vector.End(); }
-	Iterator         GetIter(int pos)           { return (T **)vector.GetIter(pos); }
-	ConstIterator    Begin() const              { return (T **)vector.Begin(); }
-	ConstIterator    End() const                { return (T **)vector.End(); }
-	ConstIterator    GetIter(int pos) const     { return (T **)vector.GetIter(pos); }
+	Iterator         begin()                    { return (T **)vector.Begin(); }
+	Iterator         end()                      { return (T **)vector.End(); }
+	ConstIterator    begin() const              { return (T **)vector.Begin(); }
+	ConstIterator    end() const                { return (T **)vector.End(); }
 
 // Optimalization
 	friend void Swap(Array& a, Array& b)                   { UPP::Swap(a.vector, b.vector); }
@@ -417,6 +413,9 @@ public:
 	T&       DoIndex(int i)             { return At(i); }
 	T&       DoIndex(int i, const T& x) { return At(i, x); }
 	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; }
+	typedef T        ValueType;
+	Iterator         GetIter(int pos)           { return (T **)vector.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const     { return (T **)vector.GetIter(pos); }
 #endif
 	STL_VECTOR_COMPATIBILITY(Array<T>)
 };

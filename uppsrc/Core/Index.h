@@ -174,19 +174,20 @@ public:
 
 	AIndex& operator=(V&& s);
 
+	typedef decltype(((const V *)&key)->begin()) ConstIterator;
+
 // Standard container interface
-	typedef T                ValueType;
-	typedef V                ValueContainer;
-	typedef typename V::ConstIterator ConstIterator;
-	ConstIterator  Begin() const                          { return key.Begin(); }
-	ConstIterator  End() const                            { return key.End(); }
-	ConstIterator  GetIter(int pos) const                 { return key.GetIter(pos); }
+	ConstIterator begin() const                           { return key.Begin(); }
+	ConstIterator end() const                             { return key.End(); }
 
 	void Swap(AIndex& b)                                  { UPP::Swap(hash, b.hash);
 	                                                        UPP::Swap(key, b.key); }
 
 #ifdef DEPRECATED
 	AIndex& operator<<=(const V& s);
+	typedef T                ValueType;
+	typedef V                ValueContainer;
+	ConstIterator  GetIter(int pos) const                 { return key.GetIter(pos); }
 #endif
 
 protected:

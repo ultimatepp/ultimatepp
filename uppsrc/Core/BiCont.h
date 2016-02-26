@@ -70,25 +70,23 @@ public:
 	typedef ConstIIterator<BiVector> ConstIterator;
 	typedef IIterator<BiVector>      Iterator;
 
-	typedef T        ValueType;
-
-	ConstIterator    Begin() const              { return ConstIterator(*this, 0); }
-	ConstIterator    End() const                { return ConstIterator(*this, GetCount()); }
-	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
-	Iterator         Begin()                    { return Iterator(*this, 0); }
-	Iterator         End()                      { return Iterator(*this, GetCount()); }
-	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	ConstIterator    begin() const              { return ConstIterator(*this, 0); }
+	ConstIterator    end() const                { return ConstIterator(*this, GetCount()); }
+	Iterator         begin()                    { return Iterator(*this, 0); }
+	Iterator         end()                      { return Iterator(*this, GetCount()); }
 
 	friend void Swap(BiVector& a, BiVector& b)  { UPP::Swap(a.vector, b.vector);
 	                                              UPP::Swap(a.start, b.start);
 	                                              UPP::Swap(a.items, b.items);
 	                                              UPP::Swap(a.alloc, b.alloc); }
 
-	STL_BI_COMPATIBILITY(BiVector<T>)
-
 #ifdef DEPRECATED
 	void     AddHeadPick(T&& x)      { new(AddHead0()) T(x); }
 	void     AddTailPick(T&& x)      { new(AddTail0()) T(x); }
+	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
+	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	typedef T        ValueType;
+	STL_BI_COMPATIBILITY(BiVector<T>)
 #endif
 };
 
@@ -155,21 +153,19 @@ public:
 	typedef ConstIIterator<BiArray> ConstIterator;
 	typedef IIterator<BiArray>      Iterator;
 
-	typedef T        ValueType;
-
-	ConstIterator    Begin() const              { return ConstIterator(*this, 0); }
-	ConstIterator    End() const                { return ConstIterator(*this, GetCount()); }
-	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
-	Iterator         Begin()                    { return Iterator(*this, 0); }
-	Iterator         End()                      { return Iterator(*this, GetCount()); }
-	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	ConstIterator    begin() const              { return ConstIterator(*this, 0); }
+	ConstIterator    end() const                { return ConstIterator(*this, GetCount()); }
+	Iterator         begin()                    { return Iterator(*this, 0); }
+	Iterator         end()                      { return Iterator(*this, GetCount()); }
 
 	friend void Swap(BiArray& a, BiArray& b)    { UPP::Swap(a.bv, b.bv); }
-
-	STL_BI_COMPATIBILITY(BiArray<T>)
 
 #ifdef DEPRECATED
 	void     AddHeadPick(T&& x)            { bv.AddHead(new T(x)); }
 	void     AddTailPick(T&& x)            { bv.AddTail(new T(x)); }
+	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
+	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	typedef T        ValueType;
+	STL_BI_COMPATIBILITY(BiArray<T>)
 #endif
 };

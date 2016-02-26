@@ -54,6 +54,18 @@ public:
 	FixedAMap(const FixedAMap& s, int) : key(s.key, 0), value(s.value, 0) {}
 	FixedAMap(Vector<K>&& key, V&& val) : key(key), value(val) {}
 
+	typedef typename V::ConstIterator  ConstIterator;
+	typedef typename V::Iterator       Iterator;
+
+	Iterator         begin()                                      { return value.begin(); }
+	Iterator         end()                                        { return value.end(); }
+	ConstIterator    begin() const                                { return value.begin(); }
+	ConstIterator    end() const                                  { return value.end(); }
+
+#ifdef DEPRECATED
+	typedef V                          ValueContainer;
+	typedef T                          ValueType;
+
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
 	typedef typename Vector<K>::ConstIterator KeyConstIterator;
@@ -62,17 +74,9 @@ public:
 	KeyConstIterator KeyEnd() const                               { return key.End(); }
 	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
 
-	typedef V                          ValueContainer;
-	typedef T                          ValueType;
-	typedef typename V::ConstIterator  ConstIterator;
-	typedef typename V::Iterator       Iterator;
-
-	Iterator         Begin()                                      { return value.Begin(); }
-	Iterator         End()                                        { return value.End(); }
 	Iterator         GetIter(int pos)                             { return value.GetIter(pos); }
-	ConstIterator    Begin() const                                { return value.Begin(); }
-	ConstIterator    End() const                                  { return value.End(); }
 	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
+#endif
 };
 
 template <class K, class T, class Less = StdLess<K> >

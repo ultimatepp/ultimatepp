@@ -281,8 +281,8 @@ WithPick<T> AsPick(T&& src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return B::Begin(); } \
-	const_iterator        end() const            { return B::End(); } \
+	const_iterator        Begin() const          { return B::begin(); } \
+	const_iterator        End() const            { return B::end(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size()                 { return B::GetCount(); } \
 	bool                  empty() const          { return B::IsEmpty(); } \
@@ -293,8 +293,8 @@ WithPick<T> AsPick(T&& src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { Clear(); } \
 	size_type             size()                 { return GetCount(); } \
 	bool                  empty() const          { return IsEmpty(); } \
@@ -305,15 +305,15 @@ WithPick<T> AsPick(T&& src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { Clear(); } \
 	size_type             size() const           { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return IsEmpty(); } \
-	iterator              begin()                { return Begin(); } \
-	iterator              end()                  { return End(); } \
+	iterator              Begin()                { return begin(); } \
+	iterator              End()                  { return end(); } \
 
 #define STL_MAP_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -321,15 +321,15 @@ WithPick<T> AsPick(T&& src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return B::Begin(); } \
-	const_iterator        end() const            { return B::End(); } \
+	const_iterator        Begin() const          { return B::begin(); } \
+	const_iterator        End() const            { return B::end(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size() const           { return B::GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return B::IsEmpty(); } \
-	iterator              begin()                { return B::Begin(); } \
-	iterator              end()                  { return B::End(); } \
+	iterator              Begin()                { return B::begin(); } \
+	iterator              End()                  { return B::end(); } \
 
 #define STL_SORTED_MAP_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -337,15 +337,15 @@ WithPick<T> AsPick(T&& src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size() const           { return B::GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return B::GetCount() == 0; } \
-	iterator              begin()                { return Begin(); } \
-	iterator              end()                  { return End(); } \
+	iterator              Begin()                { return begin(); } \
+	iterator              End()                  { return end(); } \
 
 #define STL_VECTOR_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -353,14 +353,14 @@ WithPick<T> AsPick(T&& src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { Clear(); } \
 	size_type             size() const           { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
-	iterator              begin()                { return Begin(); } \
-	iterator              end()                  { return End(); } \
+	iterator              Begin()                { return begin(); } \
+	iterator              End()                  { return end(); } \
 	reference             front()                { return (*this)[0]; } \
 	const_reference       front() const          { return (*this)[0]; } \
 	reference             back()                 { return Top(); } \

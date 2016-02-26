@@ -128,13 +128,11 @@ public:
 
 	typedef T        ValueType;
 
-	ConstIterator    Begin() const                  { ConstIterator it; SetBegin(it); return it; }
-	ConstIterator    End() const                    { ConstIterator it; SetEnd(it); return it; }
-	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
+	ConstIterator    begin() const                  { ConstIterator it; Setbegin(it); return it; }
+	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
 
-	Iterator         Begin()                        { Iterator it; SetBegin(it); return it; }
-	Iterator         End()                          { Iterator it; SetEnd(it); return it; }
-	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+	Iterator         begin()                        { Iterator it; Setbegin(it); return it; }
+	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
 
 	InVector();
 
@@ -144,7 +142,6 @@ public:
 
 	void Swap(InVector& b);
 
-#ifdef UPP
 	void     Serialize(Stream& s)                             { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
@@ -156,13 +153,16 @@ public:
 	bool     operator>=(const InVector<T>& x) const { return Compare(x) >= 0; }
 	bool     operator<(const InVector<T>& x) const  { return Compare(x) < 0; }
 	bool     operator>(const InVector<T>& x) const  { return Compare(x) > 0; }
-#endif
 
 	friend void Swap(InVector& a, InVector& b)      { a.Swap(b); }
 	
 	STL_VECTOR_COMPATIBILITY(InVector<T>)
 
 	void DumpIndex() const;
+#ifdef DEPRECATED
+	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
+	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+#endif
 };
 
 template <class T>
@@ -267,7 +267,7 @@ private:
 	void     Delete(IVIter i, int count);
 	void     Delete(int i, int count);
 	void     Init(int i, int count);
-	void     Free()                 { Delete(iv.Begin(), GetCount()); }
+	void     Free()                 { Delete(iv.begin(), GetCount()); }
 
 	void     SetIter(ConstIterator& it, int ii) const;
 	void     SetBegin(ConstIterator& it) const;
@@ -344,15 +344,11 @@ public:
 	int Find(const T& val, const L& less) const            { return iv.Find((T*)&val, ALess<L>(less)); }
 	int Find(const T& val) const                           { return Find(val, StdLess<T>()); }
 
-	typedef T        ValueType;
+	ConstIterator    begin() const                  { ConstIterator it; SetBegin(it); return it; }
+	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
 
-	ConstIterator    Begin() const                  { ConstIterator it; SetBegin(it); return it; }
-	ConstIterator    End() const                    { ConstIterator it; SetEnd(it); return it; }
-	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
-
-	Iterator         Begin()                        { Iterator it; SetBegin(it); return it; }
-	Iterator         End()                          { Iterator it; SetEnd(it); return it; }
-	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+	Iterator         begin()                        { Iterator it; SetBegin(it); return it; }
+	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
 
 	InArray() {}
 	InArray(InArray&& v) : iv(pick(v.iv))           {}
@@ -385,6 +381,12 @@ public:
 
 #ifdef _DEBUG
 	void DumpIndex();
+#endif
+
+#ifdef DEPRECATED
+	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
+	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+	typedef T        ValueType;
 #endif
 };
 
@@ -492,12 +494,9 @@ public:
 	void          Shrink()                         { iv.Shrink(); }
 	
 	typedef typename InVector<T>::ConstIterator ConstIterator;
-	
-	typedef T        ValueType;
 
-	ConstIterator    Begin() const                  { return iv.Begin(); }
-	ConstIterator    End() const                    { return iv.End(); }
-	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
+	ConstIterator    begin() const                  { return iv.begin(); }
+	ConstIterator    end() const                    { return iv.end(); }
 	
 	const InVector<T>& GetKeys()  const             { return iv; }
 
@@ -506,7 +505,6 @@ public:
 	
 	void Swap(SortedIndex& a)                        { iv.Swap(a.iv); }
 
-#ifdef UPP
 	void     Serialize(Stream& s)                               { iv.Serialize(s); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key")    { iv.Xmlize(xio, itemtag); }
 	void     Jsonize(JsonIO& jio)                               { iv.Jsonize(jio); }
@@ -518,11 +516,16 @@ public:
 	bool     operator>=(const SortedIndex& x) const { return Compare(x) >= 0; }
 	bool     operator<(const SortedIndex& x) const  { return Compare(x) < 0; }
 	bool     operator>(const SortedIndex& x) const  { return Compare(x) > 0; }
-#endif
 
 	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
 
 	STL_SINDEX_COMPATIBILITY(SortedIndex<T _cm_ Less>)
+
+#ifdef DEPRECATED
+	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
+	
+	typedef T        ValueType;
+#endif
 };
 
 template <class K, class T, class Less, class Data>
@@ -576,13 +579,15 @@ public:
 	bool     operator<(const SortedAMap& x) const   { return Compare(x) < 0; }
 	bool     operator>(const SortedAMap& x) const   { return Compare(x) > 0; }
 
+#ifdef DEPRECATED
 	typedef K        KeyType;
 
 	typedef typename SortedIndex<K, Less>::ConstIterator KeyConstIterator;
 
-	KeyConstIterator KeyBegin() const                             { return key.Begin(); }
-	KeyConstIterator KeyEnd() const                               { return key.End(); }
+	KeyConstIterator KeyBegin() const                             { return key.begin(); }
+	KeyConstIterator KeyEnd() const                               { return key.end(); }
 	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
+#endif
 };
 
 template <class T>
@@ -644,18 +649,21 @@ public:
 
 	friend void    Swap(SortedVectorMap& a, SortedVectorMap& b) { a.Swap(b); }
 
-	typedef T                                   ValueType;
 	typedef typename Data::Type::ConstIterator  ConstIterator;
 	typedef typename Data::Type::Iterator       Iterator;
 
-	Iterator         Begin()                        { return B::value.data.Begin(); }
-	Iterator         End()                          { return B::value.data.End(); }
-	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
-	ConstIterator    Begin() const                  { return B::value.data.Begin(); }
-	ConstIterator    End() const                    { return B::value.data.End(); }
-	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+	Iterator         begin()                        { return B::value.data.begin(); }
+	Iterator         end()                          { return B::value.data.end(); }
+	ConstIterator    begin() const                  { return B::value.data.begin(); }
+	ConstIterator    end() const                    { return B::value.data.end(); }
 
 	STL_SORTED_MAP_COMPATIBILITY(SortedVectorMap<K _cm_ T _cm_ Less>)
+
+#ifdef DEPRECATED
+	typedef T                                       ValueType;
+	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+#endif
 };
 
 template <class T>
@@ -723,17 +731,20 @@ public:
 
 	friend void    Swap(SortedArrayMap& a, SortedArrayMap& b) { a.Swap(b); }
 
-	typedef T                                   ValueType;
 	typedef typename Data::Type::ConstIterator  ConstIterator;
 	typedef typename Data::Type::Iterator       Iterator;
 
-	Iterator         Begin()                        { return B::value.data.Begin(); }
-	Iterator         End()                          { return B::value.data.End(); }
-	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
-	ConstIterator    Begin() const                  { return B::value.data.Begin(); }
-	ConstIterator    End() const                    { return B::value.data.End(); }
-	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+	Iterator         begin()                        { return B::value.data.begin(); }
+	Iterator         end()                          { return B::value.data.end(); }
+	ConstIterator    begin() const                  { return B::value.data.begin(); }
+	ConstIterator    end() const                    { return B::value.data.end(); }
 
 	STL_SORTED_MAP_COMPATIBILITY(SortedArrayMap<K _cm_ T _cm_ HashFn>)
-};
 
+#ifdef DEPRECATED
+	typedef T                                   ValueType;
+
+	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+#endif
+};

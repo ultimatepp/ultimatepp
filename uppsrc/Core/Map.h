@@ -134,8 +134,8 @@ public:
 
 	void     Swap(AMap& x)                         { UPP::Swap(value, x.value);
 	                                                 UPP::Swap(key, x.key); }
-	const Index<K>&  GetIndex() const      { return key; }
-	Index<K>         PickIndex()           { return pick(key); }
+	const Index<K>&  GetIndex() const              { return key; }
+	Index<K>         PickIndex()                   { return pick(key); }
 
 	const Vector<K>& GetKeys() const               { return key.GetKeys(); }
 	Vector<K>        PickKeys()                    { return key.PickKeys(); }
@@ -155,33 +155,34 @@ public:
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, i.second); }
 
+	typedef typename V::ConstIterator        ConstIterator;
+	typedef typename V::Iterator             Iterator;
+
+	Iterator         begin()                                      { return value.begin(); }
+	Iterator         end()                                        { return value.end(); }
+	ConstIterator    begin() const                                { return value.begin(); }
+	ConstIterator    end() const                                  { return value.end(); }
+
+#ifdef DEPRECATED
+	typedef V                          ValueContainer;
+	typedef T                          ValueType;
+
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
 	typedef typename Index<K>::ConstIterator KeyConstIterator;
 
-	KeyConstIterator KeyBegin() const                             { return key.Begin(); }
-	KeyConstIterator KeyEnd() const                               { return key.End(); }
-	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
-
-	typedef V                          ValueContainer;
-	typedef T                          ValueType;
-	typedef typename V::ConstIterator  ConstIterator;
-	typedef typename V::Iterator       Iterator;
-
-	Iterator         Begin()                                      { return value.Begin(); }
-	Iterator         End()                                        { return value.End(); }
-	Iterator         GetIter(int pos)                             { return value.GetIter(pos); }
-	ConstIterator    Begin() const                                { return value.Begin(); }
-	ConstIterator    End() const                                  { return value.End(); }
-	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
-
-#ifdef DEPRECATED
 	friend int     GetCount(const AMap& v)                        { return v.GetCount(); }
 	int      PutPick(const K& k, T&& x)                           { return Put(k, pick(x)); }
 	T&       AddPick(const K& k, T&& x)                           { return Add(k, pick(x)); }
 	int      FindAddPick(const K& k, T&& init)                    { return FindAddPick(k, pick(init)); }
 	int      FindPutPick(const K& k, T&& init)                    { return FindPutPick(k, pick(init)); }
 	T&       GetAddPick(const K& k, T&& x)                        { return GetAddPick(k, pick(x)); }
+	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
+	Iterator         GetIter(int pos)                             { return value.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
+
+	KeyConstIterator KeyBegin() const                             { return key.begin(); }
+	KeyConstIterator KeyEnd() const                               { return key.end(); }
 #endif
 };
 

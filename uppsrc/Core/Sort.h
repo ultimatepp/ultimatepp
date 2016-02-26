@@ -41,14 +41,14 @@ void ForwardSort(I begin, I end, const Less& less)
 template <class T, class Less>
 void ForwardSort(T& c, const Less& less)
 {
-	ForwardSort(c.Begin(), c.End(), less);
+	ForwardSort(c.begin(), c.end(), less);
 }
 
 template <class T>
 void ForwardSort(T& c)
 {
 	typedef typename T::ValueType VT;
-	ForwardSort(c.Begin(), c.End(), std::less<VT>());
+	ForwardSort(c.begin(), c.end(), std::less<VT>());
 }
 
 template <class I, class Less>
@@ -109,21 +109,14 @@ void Sort(I l, I h, const Less& less)
 template <class T, class Less>
 void Sort(T& c, const Less& less)
 {
-	Sort(c.Begin(), c.End(), less);
+	Sort(c.begin(), c.end(), less);
 }
 
 template <class T>
 void Sort(T& c)
 {
 	typedef typename RangeValueType<T>::type VT;
-	Sort(c.Begin(), c.End(), std::less<VT>());
-}
-
-template <class T>
-void Sort(const T& c)
-{
-	typedef typename RangeValueType<T>::type VT;
-	Sort(c.Begin(), c.End(), std::less<VT>());
+	Sort(c.begin(), c.end(), std::less<VT>());
 }
 
 template <class T>
@@ -191,13 +184,13 @@ void StableSort(I begin, I end, const Less& less)
 template <class T, class Less>
 void StableSort(T& c, const Less& less)
 {
-	StableSort(c.Begin(), c.End(), less);
+	StableSort(c.begin(), c.end(), less);
 }
 
 template <class T>
 void StableSort(T& c)
 {
-	StableSort(c.Begin(), c.End(), std::less<typename T::ValueType>());
+	StableSort(c.begin(), c.end(), std::less<typename T::ValueType>());
 }
 
 template <class T, class Cmp>
@@ -233,7 +226,7 @@ void StableSortCmp(I begin, I end, const Cmp& cmp)
 template <class T, class Cmp>
 void StableSortCmp(T& c, const Cmp& cmp)
 {
-	StableSortCmp(c.Begin(), c.End(), cmp);
+	StableSortCmp(c.begin(), c.end(), cmp);
 }
 
 template <class T>
@@ -246,7 +239,7 @@ struct StdCmp {
 template <class T>
 void StableSortCmp(T& c)
 {
-	StableSortCmp(c.Begin(), c.End(), StdCmp<typename T::ValueType>());
+	StableSortCmp(c.begin(), c.end(), StdCmp<typename T::ValueType>());
 }
 
 template <class II, class VI, class K>
@@ -292,7 +285,7 @@ inline void IndexSort(KC& keys, VC& values, const Less& less)
 	typedef typename KC::ValueType KT;
 	ASSERT(keys.GetCount() == values.GetCount());
 	if(keys.GetCount() >= 2)
-		__IndexSort(keys.Begin(), keys.End(), values.Begin(), less, (KT *)0);
+		__IndexSort(keys.begin(), keys.end(), values.begin(), less, (KT *)0);
 }
 
 template <class KC, class VC>
@@ -300,7 +293,7 @@ inline void IndexSort(KC& keys, VC& values)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__IndexSort(keys.Begin(), keys.End(), values.Begin(), std::less<KT>(), (KT *)0);
+		__IndexSort(keys.begin(), keys.end(), values.begin(), std::less<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class K, class Less>
@@ -324,7 +317,7 @@ inline void StableIndexSort(KC& keys, VC& values, const Less& less)
 	typedef typename KC::ValueType KT;
 	ASSERT(keys.GetCount() == values.GetCount());
 	if(keys.GetCount() >= 2)
-		__StableIndexSort(keys.Begin(), keys.End(), values.Begin(), less, (KT *)0);
+		__StableIndexSort(keys.begin(), keys.end(), values.begin(), less, (KT *)0);
 }
 
 template <class KC, class VC>
@@ -332,7 +325,7 @@ inline void StableIndexSort(KC& keys, VC& values)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__StableIndexSort(keys.Begin(), keys.End(), values.Begin(), std::less<KT>(), (KT *)0);
+		__StableIndexSort(keys.begin(), keys.end(), values.begin(), std::less<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class K, class Cmp>
@@ -356,7 +349,7 @@ inline void StableIndexSortCmp(KC& keys, VC& values, const Cmp& cmp)
 	typedef typename KC::ValueType KT;
 	ASSERT(keys.GetCount() == values.GetCount());
 	if(keys.GetCount() >= 2)
-		__StableIndexSortCmp(keys.Begin(), keys.End(), values.Begin(), cmp, (KT *)0);
+		__StableIndexSortCmp(keys.begin(), keys.end(), values.begin(), cmp, (KT *)0);
 }
 
 template <class KC, class VC>
@@ -364,7 +357,7 @@ inline void StableIndexSortCmp(KC& keys, VC& values)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__StableIndexSortCmp(keys.Begin(), keys.End(), values.Begin(), StdCmp<KT>(), (KT *)0);
+		__StableIndexSortCmp(keys.begin(), keys.end(), values.begin(), StdCmp<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class WI, class K>
@@ -412,7 +405,7 @@ inline void IndexSort2(KC& keys, VC& values1, WC& values2, const Less& less)
 	typedef typename KC::ValueType KT;
 	ASSERT(keys.GetCount() == values1.GetCount() && keys.GetCount() == values2.GetCount());
 	if(keys.GetCount() >= 2)
-		__IndexSort2(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), less, (KT *)0);
+		__IndexSort2(keys.begin(), keys.end(), values1.begin(), values2.begin(), less, (KT *)0);
 }
 
 template <class KC, class VC, class WC>
@@ -420,7 +413,7 @@ inline void IndexSort2(KC& keys, VC& values1, WC& values2)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__IndexSort2(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), std::less<KT>(), (KT *)0);
+		__IndexSort2(keys.begin(), keys.end(), values1.begin(), values2.begin(), std::less<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class WI, class K, class Less>
@@ -445,7 +438,7 @@ inline void StableIndexSort2(KC& keys, VC& values1, WC& values2, const Less& les
 	typedef typename KC::ValueType KT;
 	ASSERT(keys.GetCount() == values1.GetCount() && keys.GetCount() == values2.GetCount());
 	if(keys.GetCount() >= 2)
-		__StableIndexSort2(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), less, (KT *)0);
+		__StableIndexSort2(keys.begin(), keys.end(), values1.begin(), values2.begin(), less, (KT *)0);
 }
 
 template <class KC, class VC, class WC>
@@ -453,7 +446,7 @@ inline void StableIndexSort2(KC& keys, VC& values1, WC& values2)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__StableIndexSort2(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), std::less<KT>(), (KT *)0);
+		__StableIndexSort2(keys.begin(), keys.end(), values1.begin(), values2.begin(), std::less<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class WI, class K, class Cmp>
@@ -478,7 +471,7 @@ inline void StableIndexSort2Cmp(KC& keys, VC& values1, WC& values2, const Cmp& c
 	typedef typename KC::ValueType KT;
 	ASSERT(keys.GetCount() == values1.GetCount() && keys.GetCount() == values2.GetCount());
 	if(keys.GetCount() >= 2)
-		__StableIndexSort2Cmp(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), cmp, (KT *)0);
+		__StableIndexSort2Cmp(keys.begin(), keys.end(), values1.begin(), values2.begin(), cmp, (KT *)0);
 }
 
 template <class KC, class VC, class WC>
@@ -486,7 +479,7 @@ inline void StableIndexSort2Cmp(KC& keys, VC& values1, WC& values2)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__StableIndexSort2Cmp(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), StdCmp<KT>(), (KT *)0);
+		__StableIndexSort2Cmp(keys.begin(), keys.end(), values1.begin(), values2.begin(), StdCmp<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class WI, class XI, class K>
@@ -536,7 +529,7 @@ inline void IndexSort3(KC& keys, VC& values1, WC& values2, XC& values3, const Le
 	ASSERT(keys.GetCount() == values1.GetCount() && keys.GetCount() == values2.GetCount()
 		&& keys.GetCount() == values3.GetCount());
 	if(keys.GetCount() >= 2)
-		__IndexSort3(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), values3.Begin(), less, (KT *)0);
+		__IndexSort3(keys.begin(), keys.end(), values1.begin(), values2.begin(), values3.begin(), less, (KT *)0);
 }
 
 template <class KC, class VC, class WC, class XC>
@@ -544,7 +537,7 @@ inline void IndexSort3(KC& keys, VC& values1, WC& values2, XC& values3)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__IndexSort3(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), values3.Begin(), std::less<KT>(), (KT *)0);
+		__IndexSort3(keys.begin(), keys.end(), values1.begin(), values2.begin(), values3.begin(), std::less<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class WI, class XI, class K, class Less>
@@ -570,7 +563,7 @@ inline void StableIndexSort3(KC& keys, VC& values1, WC& values2, XC& values3, co
 	ASSERT(keys.GetCount() == values1.GetCount() && keys.GetCount() == values2.GetCount()
 		&& keys.GetCount() == values3.GetCount());
 	if(keys.GetCount() >= 2)
-		__StableIndexSort3(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), values3.Begin(), less, (KT *)0);
+		__StableIndexSort3(keys.begin(), keys.end(), values1.begin(), values2.begin(), values3.begin(), less, (KT *)0);
 }
 
 template <class KC, class VC, class WC, class XC>
@@ -578,7 +571,7 @@ inline void StableIndexSort3(KC& keys, VC& values1, WC& values2, XC& values3)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__StableIndexSort3(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), values3.Begin(), std::less<KT>(), (KT *)0);
+		__StableIndexSort3(keys.begin(), keys.end(), values1.begin(), values2.begin(), values3.begin(), std::less<KT>(), (KT *)0);
 }
 
 template <class II, class VI, class WI, class XI, class K, class Cmp>
@@ -604,7 +597,7 @@ inline void StableIndexSort3Cmp(KC& keys, VC& values1, WC& values2, XC& values3,
 	ASSERT(keys.GetCount() == values1.GetCount() && keys.GetCount() == values2.GetCount()
 		&& keys.GetCount() == values3.GetCount());
 	if(keys.GetCount() >= 2)
-		__StableIndexSort3Cmp(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), values3.Begin(), cmp, (KT *)0);
+		__StableIndexSort3Cmp(keys.begin(), keys.end(), values1.begin(), values2.begin(), values3.begin(), cmp, (KT *)0);
 }
 
 template <class KC, class VC, class WC, class XC>
@@ -612,7 +605,7 @@ inline void StableIndexSort3Cmp(KC& keys, VC& values1, WC& values2, XC& values3)
 {
 	typedef typename KC::ValueType KT;
 	if(keys.GetCount() >= 2)
-		__StableIndexSort3Cmp(keys.Begin(), keys.End(), values1.Begin(), values2.Begin(), values3.Begin(), StdCmp<KT>(), (KT *)0);
+		__StableIndexSort3Cmp(keys.begin(), keys.end(), values1.begin(), values2.begin(), values3.begin(), StdCmp<KT>(), (KT *)0);
 }
 
 
@@ -652,21 +645,21 @@ inline Vector<int> GetSortOrder(I begin, I end, const Less& less)
 	for(int i = index.GetCount(); --i >= 0; index[i] = i)
 		;
 	if(begin != end)
-		__SortOrder(index.Begin(), index.End(), begin, less, &*begin);
+		__SortOrder(index.begin(), index.end(), begin, less, &*begin);
 	return index;
 }
 
 template <class C, class Less>
 inline Vector<int> GetSortOrder(const C& container, const Less& less)
 {
-	return GetSortOrder(container.Begin(), container.End(), less);
+	return GetSortOrder(container.begin(), container.end(), less);
 }
 
 template <class C>
 inline Vector<int> GetSortOrder(const C& container)
 {
 	typedef typename C::ValueType V;
-	return GetSortOrder(container.Begin(), container.End(), std::less<V>());
+	return GetSortOrder(container.begin(), container.end(), std::less<V>());
 }
 
 template <class I, class T>
@@ -708,21 +701,21 @@ inline Vector<int> GetStableSortOrder(I begin, I end, const Less& less)
 	for(int i = index.GetCount(); --i >= 0; index[i] = i)
 		;
 	if(begin != end)
-		__StableSortOrder(index.Begin(), index.End(), begin, less, &*begin);
+		__StableSortOrder(index.begin(), index.end(), begin, less, &*begin);
 	return index;
 }
 
 template <class C, class Less>
 inline Vector<int> GetStableSortOrder(const C& container, const Less& less)
 {
-	return GetStableSortOrder(container.Begin(), container.End(), less);
+	return GetStableSortOrder(container.begin(), container.end(), less);
 }
 
 template <class C>
 inline Vector<int> GetStableSortOrder(const C& container)
 {
 	typedef typename C::ValueType V;
-	return GetStableSortOrder(container.Begin(), container.End(), std::less<V>());
+	return GetStableSortOrder(container.begin(), container.end(), std::less<V>());
 }
 
 template <class I, class T, class Cmp>
@@ -741,21 +734,21 @@ inline Vector<int> GetStableSortOrderCmp(I begin, I end, const Cmp& cmp)
 	for(int i = index.GetCount(); --i >= 0; index[i] = i)
 		;
 	if(begin != end)
-		__StableSortOrderCmp(index.Begin(), index.End(), begin, cmp, &*begin);
+		__StableSortOrderCmp(index.begin(), index.end(), begin, cmp, &*begin);
 	return index;
 }
 
 template <class C, class Cmp>
 inline Vector<int> GetStableSortOrderCmp(const C& container, const Cmp& cmp)
 {
-	return GetStableSortOrderCmp(container.Begin(), container.End(), cmp);
+	return GetStableSortOrderCmp(container.begin(), container.end(), cmp);
 }
 
 template <class C>
 inline Vector<int> GetStableSortOrderCmp(const C& container)
 {
 	typedef typename C::ValueType V;
-	return GetStableSortOrderCmp(container.Begin(), container.End(), StdCmp<V>());
+	return GetStableSortOrderCmp(container.begin(), container.end(), StdCmp<V>());
 }
 
 template <class O, class T, class R>

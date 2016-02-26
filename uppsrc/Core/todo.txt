@@ -50,6 +50,10 @@ AuxMutex, MT: Remove!
 
 fast - decide
 
+
+IIterator	typedef        typename V::ValueType T;
+
+
 -----------------------
 DONE
 

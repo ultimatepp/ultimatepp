@@ -266,9 +266,8 @@ class JsonIO;
 #include "Stream.h"
 #include "Diag.h"
 
-#include "Range.h"
-
 #include "Vcont.h"
+#include "Range.h"
 #include "BiCont.h"
 #include "Index.h"
 #include "Map.h"
