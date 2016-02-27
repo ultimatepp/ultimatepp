@@ -279,7 +279,17 @@ void Vector<T>::Insert(int i, std::initializer_list<T> init)
 	RawInsert(i, (int)init.size());
 	T *t = vector + i;
 	for(auto q : init)
-		new(t++) T(q);
+		new(t++) T(clone(q));
+}
+
+template <class T>
+template <class Range>
+void Vector<T>::Insert(int i, const Range& r)
+{
+	RawInsert(i, r.GetCount());
+	T *t = vector + i;
+	for(auto q : r)
+		new(t++) T(clone(q));
 }
 
 template <class T>
@@ -324,6 +334,19 @@ void Vector<T>::Set(int i, const T& x, int count) {
 		At(i + count - 1);
 		Fill(vector + i, vector + i + count, x);
 	}
+}
+
+template <class T>
+template <class Range>
+void Vector<T>::Set(int i, const Range& r)
+{
+	int count = r.GetCount();
+	ASSERT(i >= 0 && count >= 0);
+	if(count == 0) return;
+	At(i + count - 1);
+	count += i;
+	for(; i < count; i++)
+		vector[i] = clone(r[i]);
 }
 
 #ifdef UPP

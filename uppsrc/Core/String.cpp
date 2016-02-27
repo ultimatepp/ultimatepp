@@ -11,7 +11,7 @@ void String0::Dsyn()
 }
 #endif
 
-String0::Rc String0::voidptr[2] = { { 2, 0 }, { 0, 0 } };
+String0::Rc String0::voidptr[2];
 
 void String0::LSet(const String0& s)
 {

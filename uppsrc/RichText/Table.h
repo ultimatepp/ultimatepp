@@ -41,6 +41,8 @@ private:
 	friend class RichText;
 
 public:
+	rval_default(RichCell);
+
 	RichCell(const RichCell& src, int);
 	RichCell();
 };

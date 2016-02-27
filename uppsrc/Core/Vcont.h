@@ -117,9 +117,13 @@ public:
 
 	void     Set(int i, const T& x, int count);
 	T&       Set(int i, const T& x)     { Set(i, x, 1); return Get(i); }
+	template <class Range>
+	void     Set(int i, const Range& r);
+
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
 	void     Remove(const Vector<int>& sorted_list);
+
 	void     InsertN(int i, int count = 1);
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
 	void     Insert(int i, const T& x, int count);
@@ -128,12 +132,14 @@ public:
 	void     Insert(int i, const Vector& x);
 	void     Insert(int i, const Vector& x, int offset, int count);
 	void     Insert(int i, Vector&& x);
-	void     InsertSplit(int i, Vector<T>& v, int from);
 	template <class Range>
-	void     Insert(int i, Range r);
+	void     Insert(int i, const Range& r);
 	void     Append(const Vector& x)               { Insert(GetCount(), x); }
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
-	void     Append(Vector&& x)                    { InsertPick(GetCount(), pick(x)); }
+	void     Append(Vector&& x)                    { Insert(GetCount(), pick(x)); }
+
+	void     InsertSplit(int i, Vector<T>& v, int from);
+
 	void     Swap(int i1, int i2)    { UPP::Swap(Get(i1), Get(i2)); }
 
 	void     Drop(int n = 1)         { ASSERT(n <= GetCount()); Trim(items - n); }

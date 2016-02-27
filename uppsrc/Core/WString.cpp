@@ -239,7 +239,7 @@ String WString::ToString() const
 	return FromUnicode(*this, CHARSET_DEFAULT);
 }
 
-Atomic WString0::voidptr[2] = { 0, 0 };
+Atomic WString0::voidptr[2];
 
 WString WString::GetVoid()
 {
