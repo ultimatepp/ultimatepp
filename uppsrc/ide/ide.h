@@ -896,6 +896,7 @@ public:
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
 		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
+		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 	
 	void      BrowseMenu(Bar& menu);
 		void  CheckCodeBase();
