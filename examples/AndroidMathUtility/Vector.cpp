@@ -7,6 +7,7 @@ namespace AndroidMathUtility {
 Vector::Vector()
 {
 	this->size = 0;
+	this->data = NULL;
 }
 
 Vector::Vector(int size)
@@ -27,11 +28,16 @@ Vector::Vector(const Vector& vec)
 			data[i] = vec.data[i];
 		}
 	}
+	else {
+		this->size = 0;
+		this->data = NULL;
+	}
 }
 
 Vector::~Vector()
 {
-	delete[] data;
+	if(data != NULL)
+		delete[] data;
 }
 
 float Vector::Get(int id) const
