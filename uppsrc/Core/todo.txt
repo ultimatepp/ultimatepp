@@ -10,25 +10,15 @@ Fix Value::Void::Retain
 
 Generic Tuple
 
-Range
-
 Index::FirstAdd
 
 kw.Get(r["keywordId"], String())
 
 CoWork limits, pipe, logical thread not working
 
-Function/Callback &&, Swap
-
 Remove commented out code
 
 MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
-
-::Insert Range
-
-InVector<T>::Insert range
-
-Range Insert/Append in containers
 
 Vector/Array/Index/Map :: RemoveIf
 
@@ -50,10 +40,9 @@ AuxMutex, MT: Remove!
 
 fast - decide
 
-
 IIterator	typedef        typename V::ValueType T;
 
-
+InVector::InsertN possibly incorrect (can create small blocks)
 -----------------------
 DONE
 
@@ -95,3 +84,8 @@ idmapBencmark ValueMap optimize
 
 BiVector/Array/BiArray Pop
 
+Range Insert/Append in containers
+
+Function/Callback &&, Swap
+
+Range

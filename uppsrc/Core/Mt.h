@@ -4,14 +4,8 @@ inline void AssertST() {}
 
 #ifdef _MULTITHREADED
 
-#ifdef COMPILER_MSC
-	#ifdef flagDLL
-	#define thread__
-	#else
-	#define thread__ __declspec(thread)
-	#endif
-#else
-#define thread__ __thread
+#ifndef DEPRECATED
+#define thread__ thread_local
 #endif
 
 #ifdef flagPROFILEMT

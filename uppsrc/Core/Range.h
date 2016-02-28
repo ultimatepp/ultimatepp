@@ -1,5 +1,5 @@
 template <class I>
-class RangeRef {
+class SubRangeClass {
 	I   l;
 	int count;
 
@@ -8,30 +8,39 @@ public:
 
 	int GetCount() const { return count; }
 	
-	RangeRef& Write()                   { return *this; }
+	SubRangeClass& Write()                   { return *this; }
 
 	value_type& operator[](int i) const { ASSERT(i >= 0 && i < count); return l[i]; }
 	I  begin() const { return l; }
 	I  end() const { return l + count; }
 
-	RangeRef(I begin, int count) : l(begin), count(count) {}
-	RangeRef(I begin, I end)                              { l = begin; count = end - begin; }
+	String   ToString() const                            { return AsStringArray(*this); }
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
+
+	SubRangeClass(I begin, int count) : l(begin), count(count) {}
+	SubRangeClass(I begin, I end)                              { l = begin; count = end - begin; }
 };
 
 template <class I>
-RangeRef<I> Range(I l, I h)
+SubRangeClass<I> SubRange(I l, I h)
 {
-	return RangeRef<I>(l, h);
+	return SubRangeClass<I>(l, h);
 }
 
 template <class I>
-RangeRef<I> Range(I l, int count)
+SubRangeClass<I> SubRange(I l, int count)
 {
-	return RangeRef<I>(l, count);
+	return SubRangeClass<I>(l, count);
 }
 
 template <class C>
-auto Range(C& c, int pos, int count) -> decltype(Range(c.begin() + pos, count))
+auto SubRange(C& c, int pos, int count) -> decltype(Range(c.begin() + pos, count))
 {
 	return Range(c.begin() + pos, count);
 }
@@ -52,16 +61,29 @@ struct ConstRangeClass {
 	Iterator begin() const { return Iterator(*this, 0); }
 	Iterator end() const { return Iterator(*this, count); }
 
-	Iterator Begin() const { return Iterator(*this, 0); }
-	Iterator End() const { return Iterator(*this, count); }
+	String   ToString() const                            { return AsStringArray(*this); }
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	ConstRangeClass(const T& value, int count) : value(value), count(count) {}
+	ConstRangeClass(int count) : count(count) {}
 };
 
 template <class T>
 ConstRangeClass<T> ConstRange(const T& value, int count)
 {
 	return ConstRangeClass<T>(value, count);
+}
+
+template <class T>
+ConstRangeClass<T> ConstRange(int count)
+{
+	return ConstRangeClass<T>(count);
 }
 
 template <class BaseRange>
@@ -86,6 +108,15 @@ struct FilterRangeRef {
 	
 	Iterator begin() { return Iterator(*this, 0); }
 	Iterator end()   { return Iterator(*this, ndx.GetCount()); }
+
+	String   ToString() const                            { return AsStringArray(*this); }
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	FilterRangeRef(BaseRange& r, Vector<int>&& ndx) : r(&r), ndx(pick(ndx)) {}
 };

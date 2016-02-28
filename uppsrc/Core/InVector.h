@@ -72,15 +72,21 @@ private:
 
 	void     Init();
 
+	template <class Range>
+	void     Insert_(int ii, const Range& r, bool def);
+
 #ifdef flagIVTEST
 	void Check(int blki, int offset) const;
 #endif
-
 public:
 	T&       Insert(int i)                          { return *Insert0(i, NULL); }
 	T&       Insert(int i, const T& x)              { return *Insert0(i, &x); }
-	void     InsertN(int i, int count);
+	template <class Range>
+	void     Insert(int i, const Range& r)          { Insert_(i, r, false); }
+	void     InsertN(int i, int count)              { Insert_(i, ConstRange<T>(count), true); }
 	void     Remove(int i, int count = 1);
+	template <class Range>
+	void     Append(const Range& r)                 { Insert(GetCount(), r); }
 
 	const T& operator[](int i) const;
 	T&       operator[](int i);
@@ -128,10 +134,10 @@ public:
 
 	typedef T        ValueType;
 
-	ConstIterator    begin() const                  { ConstIterator it; Setbegin(it); return it; }
+	ConstIterator    begin() const                  { ConstIterator it; SetBegin(it); return it; }
 	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
 
-	Iterator         begin()                        { Iterator it; Setbegin(it); return it; }
+	Iterator         begin()                        { Iterator it; SetBegin(it); return it; }
 	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
 
 	InVector();
@@ -146,13 +152,13 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const InVector<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const InVector<T>& b) const { return !operator==(b); }
-	int      Compare(const InVector<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const InVector<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const InVector<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const InVector<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const InVector<T>& x) const  { return Compare(x) > 0; }
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	friend void Swap(InVector& a, InVector& b)      { a.Swap(b); }
 	
@@ -294,7 +300,12 @@ public:
 	TT&      InsertCreate(int i, Args... args)      { TT *q = new TT(args...); Insert(i, q); return *q; }
 
 	void     InsertN(int i, int count);
+	template <class Range>
+	void     Insert(int i, const Range& r);
 	void     Remove(int i, int count = 1);
+	
+	template <class Range>
+	void     Append(const Range& r)                 { Insert(GetCount(), r); }
 
 	const T& operator[](int i) const                { return Get(i); }
 	T&       operator[](int i)                      { return Get(i); }
@@ -361,19 +372,17 @@ public:
 
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
-#ifdef UPP
 	void     Serialize(Stream& s)                   { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const InArray<T>& b) const  { return IsEqualArray(*this, b); }
-	bool     operator!=(const InArray<T>& b) const  { return !operator==(b); }
-	int      Compare(const InArray<T>& b) const     { return CompareArray(*this, b); }
-	bool     operator<=(const InArray<T>& x) const  { return Compare(x) <= 0; }
-	bool     operator>=(const InArray<T>& x) const  { return Compare(x) >= 0; }
-	bool     operator<(const InArray<T>& x) const   { return Compare(x) < 0; }
-	bool     operator>(const InArray<T>& x) const   { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	friend void Swap(InArray& a, InArray& b)        { a.Swap(b); }
 	
@@ -509,13 +518,13 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key")    { iv.Xmlize(xio, itemtag); }
 	void     Jsonize(JsonIO& jio)                               { iv.Jsonize(jio); }
 	String   ToString() const;
-	bool     operator==(const SortedIndex& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const SortedIndex& b) const { return !operator==(b); }
-	int      Compare(const SortedIndex& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const SortedIndex& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const SortedIndex& x) const { return Compare(x) >= 0; }
-	bool     operator<(const SortedIndex& x) const  { return Compare(x) < 0; }
-	bool     operator>(const SortedIndex& x) const  { return Compare(x) > 0; }
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
 

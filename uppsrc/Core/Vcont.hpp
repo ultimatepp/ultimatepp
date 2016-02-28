@@ -508,7 +508,17 @@ void Array<T>::Insert(int i, const T& x, int count) {
 }
 
 template <class T>
-T& Array<T>::InsertPick(int i, T&& x)
+template <class Range>
+void Array<T>::Insert(int i, const Range& r)
+{
+	vector.InsertN(i, r.GetCount());
+	T **t = GetPtr(i);
+	for(const auto& x : r)
+		*t++ = new T(clone(x));
+}
+
+template <class T>
+T& Array<T>::Insert(int i, T&& x)
 {
 	vector.InsertN(i, 1);
 	vector[i] = new T(pick(x));

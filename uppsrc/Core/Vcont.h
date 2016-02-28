@@ -137,6 +137,8 @@ public:
 	void     Append(const Vector& x)               { Insert(GetCount(), x); }
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Vector&& x)                    { Insert(GetCount(), pick(x)); }
+	template <class Range>
+	void     Append(const Range& r)                { Insert(GetCount(), r); }
 
 	void     InsertSplit(int i, Vector<T>& v, int from);
 
@@ -157,13 +159,13 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const Vector<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const Vector<T>& b) const { return !operator==(b); }
-	int      Compare(const Vector<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const Vector<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const Vector<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const Vector<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const Vector<T>& x) const  { return Compare(x) > 0; }
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 #endif
 
 	Vector()                         { Zero(); }
@@ -225,15 +227,11 @@ protected:
 	void     Free();
 	void     __DeepCopy(const Array& v);
 	T&       Get(int i) const                           { return *(T *)vector[i]; }
-#ifdef _DEBUG
+	T      **GetPtr(int i) const                        { return (T **)vector.begin() + i; }
+
 	void     Del(T **ptr, T **lim)                      { while(ptr < lim) delete (T *) *ptr++; }
 	void     Init(T **ptr, T **lim)                     { while(ptr < lim) *ptr++ = new T; }
 	void     Init(T **ptr, T **lim, const T& x)         { while(ptr < lim) *ptr++ = new T(clone(x)); }
-#else
-	void     Del(void **ptr, void **lim)                { while(ptr < lim) delete (T *) *ptr++; }
-	void     Init(void **ptr, void **lim)               { while(ptr < lim) *ptr++ = new T; }
-	void     Init(void **ptr, void **lim, const T& x)   { while(ptr < lim) *ptr++ = new T(clone(x)); }
-#endif
 
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
@@ -269,15 +267,19 @@ public:
 	T&       Insert(int i)              { InsertN(i); return Get(i); }
 	void     Insert(int i, const T& x, int count);
 	T&       Insert(int i, const T& x)  { Insert(i, x, 1); return Get(i); }
-	T&       InsertPick(int i, T&& x);
+	T&       Insert(int i, T&& x);
 	void     Insert(int i, const Array& x);
 	void     Insert(int i, const Array& x, int offset, int count);
+	template <class Range>
+	void     Insert(int i, const Range& r);
+	void     Insert(int i, Array&& x)             { vector.InsertPick(i, pick(x.vector)); }
 	void     Append(const Array& x)               { Insert(GetCount(), x); }
 	void     Append(const Array& x, int o, int c) { Insert(GetCount(), x, o, c); }
-	void     InsertPick(int i, Array&& x)         { vector.InsertPick(i, pick(x.vector)); }
-	void     AppendPick(Array&& x)                { InsertPick(GetCount(), pick(x)); }
-	int      GetIndex(const T& item) const;
-	void     Swap(int i1, int i2)       { UPP::Swap(vector[i1], vector[i2]); }
+	void     Append(Array&& x)                    { InsertPick(GetCount(), pick(x)); }
+	template <class Range>
+	void     Append(const Range& r)               { Insert(GetCount(), r); }
+
+	void     Swap(int i1, int i2)                 { UPP::Swap(vector[i1], vector[i2]); }
 	void     Move(int i1, int i2);
 
 	T       *Detach(int i)              { T *t = &Get(i); vector.Remove(i); return t; }
@@ -296,19 +298,18 @@ public:
 	Array& operator<<(const T& x)       { Add(x); return *this; }
 	Array& operator<<(T *newt)          { Add(newt); return *this; }
 
-#ifdef UPP
 	void     Serialize(Stream& s)       { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const Array<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const Array<T>& b) const { return !operator==(b); }
-	int      Compare(const Array<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const Array<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const Array<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const Array<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const Array<T>& x) const  { return Compare(x) > 0; }
-#endif
+	
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	Array()                             {}
 	~Array()                            { Free(); }
@@ -416,9 +417,13 @@ public:
 	friend void IterSwap(Iterator a, Iterator b)           { Array<T>::IterSwap0(a, b); }
 
 #ifdef DEPRECATED
-	T&       DoIndex(int i)             { return At(i); }
-	T&       DoIndex(int i, const T& x) { return At(i, x); }
-	T&       AddPick(T&& x)             { T *q = new T(pick(x)); vector.Add(q); return *q; }
+	int      GetIndex(const T& item) const;
+	void     InsertPick(int i, Array&& x)       { vector.InsertPick(i, pick(x.vector)); }
+	void     AppendPick(Array&& x)              { InsertPick(GetCount(), pick(x)); }
+	T&       DoIndex(int i)                     { return At(i); }
+	T&       DoIndex(int i, const T& x)         { return At(i, x); }
+	T&       AddPick(T&& x)                     { T *q = new T(pick(x)); vector.Add(q); return *q; }
+	T&       InsertPick(int i, T&& x)           { return Insert(i, pick(x)); }
 	typedef T        ValueType;
 	Iterator         GetIter(int pos)           { return (T **)vector.GetIter(pos); }
 	ConstIterator    GetIter(int pos) const     { return (T **)vector.GetIter(pos); }

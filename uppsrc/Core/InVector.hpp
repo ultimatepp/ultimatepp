@@ -251,18 +251,32 @@ T *InVector<T>::Insert0(int ii, const T *val)
 }
 
 template <class T>
-void InVector<T>::InsertN(int ii, int n)
+template <class Range>
+void InVector<T>::Insert_(int ii, const Range& r, bool def)
 {
+	int n = r.GetCount();
+
 	ASSERT(ii >= 0 && ii <= GetCount() && n >= 0 && !slave);
 
-	if(n == 0)
+	if(n <= 0)
 		return;
+	
+	auto s = r.begin();
 
-	if(data.GetCount() == 0 && n > 0) {
-		count++;
-		data.Add().Add();
-		if(--n == 0)
-			return;
+	if(data.GetCount() == 0) {
+		int m = (blk_high + blk_low) / 2;
+		count = n;
+		while(n > 0) {
+			int n1 = min(m, n);
+			if(def)
+				data.Add().SetCount(n1);
+			else
+				data.Add().Append(SubRange(s, n1));
+			s += n1;
+			n -= n1;
+		}
+		Reindex();
+		return;
 	}
 
 	int pos = ii;
@@ -272,25 +286,31 @@ void InVector<T>::InsertN(int ii, int n)
 	
 	count += n;
 
-	if(bc + n < blk_high) {
-		data[blki].InsertN(pos, n);
+	if(bc + n < blk_high) { // block will not be bigger than threshold after insert
+		if(def)
+			data[blki].InsertN(pos, n);
+		else
+			data[blki].Insert(pos, SubRange(s, n));
 		Index(blki, n);
 		SetCache(blki, off);
 	}
 	else
-	if(bc - pos + n < blk_high) {
+	if(bc - pos + n < blk_high) { // splitting into 2 blocks is enough
 		Vector<T>& t = data.Insert(blki + 1);
-		t.InsertN(0, n);
+		if(def)
+			t.InsertN(0, n);
+		else
+			t.Insert(0, SubRange(s, n));
 		t.InsertSplit(n, data[blki], pos);
 		data[blki].Shrink();
 		Reindex();
 	}
-	else {
+	else { // need to insert several blocks
 		int m = (blk_high + blk_low) / 2;
 		int bn = (n + m - 1) / m;
 		int ti;
-		if(pos) {
-			ti = blki + 1;
+		if(pos) { // need to split first block
+			ti = blki + 1; // TODO should add some of data to splitted blocks
 			data.InsertN(ti, bn + 1);
 			data[ti + bn].InsertSplit(0, data[blki], pos);
 			data[blki].Shrink();
@@ -301,7 +321,11 @@ void InVector<T>::InsertN(int ii, int n)
 		}
 		for(int i = 0; i < bn; i++) {
 			int q = min(m, n);
-			data[ti + i].SetCount(q);
+			if(def)
+				data[ti + i].SetCount(q);
+			else
+				data[ti + i].Append(SubRange(s, q));
+			s += q;
 			n -= q;
 		}
 		ASSERT(n == 0);
@@ -740,6 +764,18 @@ void InArray<T>::InsertN(int i, int count)
 {
 	iv.InsertN(i, count);
 	Init(i, count);
+}
+
+template <class T>
+template <class Range>
+void InArray<T>::Insert(int i, const Range& r)
+{
+	int count = r.GetCount();
+	iv.InsertN(i, count);
+	IVIter it = iv.begin() + i;
+	auto s = r.begin();
+	while(count--)
+		*it++ = new T(*s++);
 }
 
 template <class T>

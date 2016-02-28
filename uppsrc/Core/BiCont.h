@@ -47,17 +47,15 @@ public:
 	void     Reserve(int n);
 	int      GetAlloc() const        { return alloc; }
 
-#ifdef UPP
 	void     Serialize(Stream& s);
 	String   ToString() const;
-	bool     operator==(const BiVector<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const BiVector<T>& b) const { return !operator==(b); }
-	int      Compare(const BiVector<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const BiVector<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const BiVector<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const BiVector<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const BiVector<T>& x) const  { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
 	BiVector(BiVector&& src)                    { Pick(pick(src)); }
@@ -129,17 +127,15 @@ public:
 	void     Reserve(int n)                { bv.Reserve(n); }
 	int      GetAlloc() const              { return bv.GetAlloc(); }
 
-#ifdef UPP
 	void     Serialize(Stream& s);
 	String   ToString() const;
-	bool     operator==(const BiArray<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const BiArray<T>& b) const { return !operator==(b); }
-	int      Compare(const BiArray<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const BiArray<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const BiArray<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const BiArray<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const BiArray<T>& x) const  { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	BiArray(const BiArray& v, int)           { DeepCopy0(v); }
 

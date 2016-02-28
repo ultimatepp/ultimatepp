@@ -153,19 +153,17 @@ public:
 	void     Shrink()                        { key.Shrink(); hash.Shrink(); }
 	int      GetAlloc() const                { return key.GetAlloc(); }
 
-#ifdef UPP
 	void     Serialize(Stream& s);
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const AIndex& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const AIndex& b) const { return !operator==(b); }
-	int      Compare(const AIndex& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const AIndex& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const AIndex& x) const { return Compare(x) >= 0; }
-	bool     operator<(const AIndex& x) const  { return Compare(x) < 0; }
-	bool     operator>(const AIndex& x) const  { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	V        PickKeys() pick_                  { return pick(key); }
 	const V& GetKeys() const                   { return key; }
