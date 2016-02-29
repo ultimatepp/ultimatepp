@@ -331,4 +331,113 @@ void Sum(V& sum, T ptr, T end)
 		sum += *ptr++;
 }
 
+// -----------------------------------------------------------
+
+#if 0
+
+template <class I, class Less>
+void StableSort(I begin, I end, const Less& less)
+{
+	if(begin != end)
+		StableSort__(begin, end, less, &*begin);
+}
+
+template <class T, class Cmp>
+struct StableSortLessCmp_ {
+	const Cmp& cmp;
+	bool operator()(const StableSortItem<T>& a, const StableSortItem<T>& b) const {
+		int q = cmp(a.value, b.value);
+		return q ? q < 0 : a.index < b.index;
+	}
+
+	StableSortLessCmp_(const Cmp& cmp) : cmp(cmp) {}
+};
+
+template <class I, class Cmp, class T>
+void StableSortCmp_(I begin, I end, const Cmp& cmp, const T *)
+{
+	int count = end - begin;
+	Buffer<int> h(count);
+	for(int i = 0; i < count; i++)
+		h[i] = i;
+	Sort(StableSortIterator<I, T>(begin, ~h),
+	     StableSortIterator<I, T>(end, ~h + count),
+	     StableSortLessCmp_<T, Cmp>(cmp));
+}
+
+template <class I, class Cmp>
+void StableSortCmp(I begin, I end, const Cmp& cmp)
+{
+	if(begin != end)
+		StableSortCmp_(begin, end, cmp, &*begin);
+}
+
+template <class T, class Cmp>
+void StableSortCmp(T& c, const Cmp& cmp)
+{
+	StableSortCmp(c.begin(), c.end(), cmp);
+}
+
+template <class T>
+struct StdCmp {
+	int operator()(const T& a, const T& b) const {
+		return SgnCompare(a, b);
+	}
+};
+
+template <class T>
+void StableSortCmp(T& c)
+{
+	StableSortCmp(c.begin(), c.end(), StdCmp<typename T::ValueType>());
+}
+
+
+template <class I, class T, class Cmp>
+inline void __StableSortOrderCmp(int *ibegin, int *iend, I data, const Cmp& cmp, const T *)
+{
+	Sort(StableSortOrderIterator<I, T>(ibegin, data),
+	     StableSortOrderIterator<I, T>(iend, data),
+	     StableSortLessCmp_<T, Cmp>(cmp));
+}
+
+template <class I, class Cmp>
+inline Vector<int> GetStableSortOrderCmp(I begin, I end, const Cmp& cmp)
+{
+	Vector<int> index;
+	index.SetCount((int)(end - begin));
+	for(int i = index.GetCount(); --i >= 0; index[i] = i)
+		;
+	if(begin != end)
+		__StableSortOrderCmp(index.begin(), index.end(), begin, cmp, &*begin);
+	return index;
+}
+
+template <class C, class Cmp>
+inline Vector<int> GetStableSortOrderCmp(const C& container, const Cmp& cmp)
+{
+	return GetStableSortOrderCmp(container.begin(), container.end(), cmp);
+}
+
+template <class C>
+inline Vector<int> GetStableSortOrderCmp(const C& container)
+{
+	typedef typename C::ValueType V;
+	return GetStableSortOrderCmp(container.begin(), container.end(), StdCmp<V>());
+}
+#endif
+
+template <class O, class T, class R>
+class FieldRelationCls {
+	O        T::*member;
+	const R& relation;
+
+public:
+	FieldRelationCls(O (T::*member), const R& relation) : member(member), relation(relation) {}
+	bool operator () (const T& t1, const T& t2) const { return relation(t1.*member, t2.*member); }
+};
+
+template <class O, class T, class R>
+inline FieldRelationCls<O, T, R> FieldRelation(O (T::*member), const R& relation)
+{ return FieldRelationCls<O, T, R>(member, relation); }
+
 #endif

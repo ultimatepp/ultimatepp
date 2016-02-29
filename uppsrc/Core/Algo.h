@@ -26,11 +26,6 @@ void Accumulate(const Range& r, Accumulator& a)
 }
 
 template <class Range>
-struct RangeValueType {
-	typedef typename std::remove_reference<decltype(*((Range *)0)->begin())>::type type;
-};
-
-template <class Range>
 using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
 
 template <class Range>
@@ -71,13 +66,13 @@ int FindMin(const Range& r)
 }
 
 template <class Range>
-const typename RangeValueType<Range>::type& Min(const Range& r)
+const ValueTypeOf<Range>& Min(const Range& r)
 {
 	return r[FindMin(r)];
 }
 
 template <class Range>
-const typename RangeValueType<Range>::type& Min(const Range& r, const typename RangeValueType<Range>::type& def)
+const ValueTypeOf<Range>& Min(const Range& r, const ValueTypeOf<Range>& def)
 {
 	int q = FindMin(r);
 	return q < 0 ? def : r[q];
@@ -87,17 +82,17 @@ const typename RangeValueType<Range>::type& Min(const Range& r, const typename R
 template <class Range>
 int FindMax(const Range& r)
 {
-	return FindBest(r, std::greater<typename RangeValueType<Range>::type>());
+	return FindBest(r, std::greater<ValueTypeOf<Range>>());
 }
 
 template <class Range>
-const typename RangeValueType<Range>::type& Max(const Range& r)
+const ValueTypeOf<Range>& Max(const Range& r)
 {
 	return r[FindMax(r)];
 }
 
 template <class Range>
-const typename RangeValueType<Range>::type& Max(const Range& r, const typename RangeValueType<Range>::type& def)
+const ValueTypeOf<Range>& Max(const Range& r, const ValueTypeOf<Range>& def)
 {
 	int q = FindMax(r);
 	return q < 0 ? def : r[q];

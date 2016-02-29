@@ -23,8 +23,8 @@ public:
 	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
 	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
-	SubRangeClass(I begin, int count) : l(begin), count(count) {}
-	SubRangeClass(I begin, I end)                              { l = begin; count = end - begin; }
+	SubRangeClass(I begin, int count) : l(begin), count(count)   {}
+	SubRangeClass(I begin, I end) : l(begin), count(int(end - begin)) {}
 };
 
 template <class I>
@@ -87,7 +87,7 @@ ConstRangeClass<T> ConstRange(int count)
 }
 
 template <class BaseRange>
-struct FilterRangeRef {
+struct ViewRangeClass {
 	BaseRange  *r;
 	Vector<int> ndx;
 	
@@ -98,10 +98,10 @@ struct FilterRangeRef {
 	value_type& operator[](int i)             { return (*r)[ndx[i]]; }
 	int GetCount() const                      { return ndx.GetCount(); }
 	
-	typedef IIterator<FilterRangeRef> Iterator;
-	typedef ConstIIterator<FilterRangeRef> ConstIterator;
+	typedef IIterator<ViewRangeClass> Iterator;
+	typedef ConstIIterator<ViewRangeClass> ConstIterator;
 
-	FilterRangeRef& Write()                   { return *this; }
+	ViewRangeClass& Write()                   { return *this; }
 
 	ConstIterator begin() const { return ConstIterator(*this, 0); }
 	ConstIterator end() const  { return ConstIterator(*this, ndx.GetCount()); }
@@ -118,13 +118,13 @@ struct FilterRangeRef {
 	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
 	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
-	FilterRangeRef(BaseRange& r, Vector<int>&& ndx) : r(&r), ndx(pick(ndx)) {}
+	ViewRangeClass(BaseRange& r, Vector<int>&& ndx) : r(&r), ndx(pick(ndx)) {}
 };
 
 template <class BaseRange>
-FilterRangeRef<BaseRange> FilterRange(BaseRange& r, Vector<int>&& ndx)
+ViewRangeClass<BaseRange> ViewRange(BaseRange& r, Vector<int>&& ndx)
 {
-	return FilterRangeRef<BaseRange>(r, pick(ndx));
+	return ViewRangeClass<BaseRange>(r, pick(ndx));
 }
 
 template <class Range, class Predicate>
@@ -138,7 +138,7 @@ Vector<int> FindAll(const Range& r, Predicate p)
 }
 
 template <class BaseRange, class Predicate>
-FilterRangeRef<BaseRange> FilterRange(BaseRange& r, Predicate p)
+ViewRangeClass<BaseRange> FilterRange(BaseRange& r, Predicate p)
 {
 	return FilterRange(r, FindAll(r, p));
 }
