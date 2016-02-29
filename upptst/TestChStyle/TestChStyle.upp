@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	TestChStyle.h,
+	main.cpp,
+	TestChStyle.lay;
+
+mainconfig
+	"" = "GUI";
+

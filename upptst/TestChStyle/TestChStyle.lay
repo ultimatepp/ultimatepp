@@ -1,0 +1,9 @@
+LAYOUT(TestChStyleLayout, 236, 164)
+	ITEM(EditString, normal, LeftPosZ(8, 216).TopPosZ(8, 19))
+	ITEM(EditString, readonly, SetEditable(false).LeftPosZ(8, 216).TopPosZ(32, 19))
+	ITEM(EditString, disabled, LeftPosZ(8, 216).TopPosZ(56, 19))
+	ITEM(DropList, dl_normal, LeftPosZ(8, 216).TopPosZ(88, 19))
+	ITEM(DropList, dl_readonly, SetEditable(false).LeftPosZ(8, 216).TopPosZ(112, 19))
+	ITEM(DropList, dl_disabled, LeftPosZ(8, 216).TopPosZ(136, 19))
+END_LAYOUT
+
