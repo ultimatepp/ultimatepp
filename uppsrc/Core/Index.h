@@ -172,7 +172,7 @@ public:
 
 	AIndex& operator=(V&& s);
 
-	typedef decltype(((const V *)&key)->begin()) ConstIterator;
+	typedef decltype(((const V *)0)->begin()) ConstIterator;
 
 // Standard container interface
 	ConstIterator begin() const                           { return key.Begin(); }
