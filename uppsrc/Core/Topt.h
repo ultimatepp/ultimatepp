@@ -531,29 +531,6 @@ struct Data_S_ : Moveable< Data_S_<size> >
 	byte filler[size];
 };
 
-template <class Range1, class Range2>
-bool IsEqualArray(const Range1& a, const Range2& b)
-{
-	if(a.GetCount() != b.GetCount())
-		return false;
-	for(int i = 0; i < a.GetCount(); i++)
-		if(!(a[i] == b[i]))
-			return false;
-	return true;
-}
-
-template <class Range1, class Range2>
-int CompareArray(const Range1& a, const Range2& b)
-{
-	int n = min(a.GetCount(), b.GetCount());
-	for(int i = 0; i < n; i++) {
-		int q = SgnCompare(a[i], b[i]);
-		if(q)
-			return q;
-	}
-	return SgnCompare(a.GetCount(), b.GetCount());
-}
-
 template <class C>
 bool IsEqualMap(const C& a, const C& b)
 {

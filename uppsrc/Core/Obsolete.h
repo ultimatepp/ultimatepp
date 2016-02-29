@@ -170,4 +170,165 @@ void GetFieldContainer(DC& dest, const SC& src, F field)
 { GetFieldContainer<DC, typename SC::ConstIterator, F>(dest, src.Begin(), src.End(), field); }
 
 
+template <class C>
+int FindMin(const C& c, int pos, int count)
+{
+	return FindMin(SubRange(c, pos, count));
+}
+
+template <class T, class C>
+bool IsEqual(T ptr1, T end1, T ptr2, T end2, const C& equal)
+{
+	for(; ptr1 != end1 && ptr2 != end2; ++ptr1, ++ptr2)
+		if(!equal(*ptr1, *ptr2)) return false;
+	return ptr1 == end1 && ptr2 == end2;
+}
+
+template <class T, class C>
+bool IsEqual(const T& c1, const T& c2, const C& equal)
+{
+	return IsEqual(c1.Begin(), c1.End(), c2.Begin(), c2.End(), equal);
+}
+
+template <class T>
+bool IsEqual(const T& c1, const T& c2)
+{
+	typedef typename T::ValueType VT;
+	return IsEqual(c1, c2, std::equal<VT>());
+}
+
+template <class T, class V, class C>
+T Find(T ptr, T end, const V& value, const C& equal)
+{
+	while(ptr != end) {
+		if(equal(*ptr, value)) return ptr;
+		ptr++;
+	}
+	return NULL;
+}
+
+template <class T, class V>
+T Find(T ptr, T end, const V& value)
+{
+	return Find(ptr, end, value, std::equal<V>());
+}
+
+template <class I, class K, class L>
+int BinFindIndex(I begin, I end, const K& key, const L& less)
+{
+	if(begin == end)
+		return 0;
+	int min = 0;
+	int max = end - begin;
+
+	while(min < max)
+	{
+		int mid = (max + min) >> 1;
+		if(less(*(begin + mid), key))
+			min = mid + 1;
+		else
+			max = mid;
+	}
+	return min;
+}
+
+template <class C, class K, class L>
+inline int BinFindIndex(const C& container, const K& key, const L& less)
+{
+	return BinFindIndex(container.Begin(), container.End(), key, less);
+}
+
+template <class C, class K>
+inline int BinFindIndex(const C& container, const K& key)
+{
+	typedef typename C::ValueType VT;
+	return BinFindIndex(container, key, std::less<VT>());
+}
+
+template <class I, class K, class L>
+inline I BinFind(I begin, I end, const K& key, const L& less)
+{
+	return begin + BinFindIndex(begin, end, key, less);
+}
+
+template <class C, class K, class L>
+inline typename C::ConstIterator BinFind(const C& container, const K& key, const L& less)
+{
+	return BinFind(container.Begin(), container.End(), key, less);
+}
+
+template <class C, class K>
+inline typename C::ConstIterator BinFind(const C& container, const K& key)
+{
+	typedef typename C::ValueType VT;
+	return BinFind(container, key, std::less<VT>());
+}
+
+template <class C, class T, class L>
+int FindLowerBound(const C& v, int pos, int count, const T& val, const L& less)
+{
+	return pos + FindLowerBound(SubRange(v, pos, count), val, less);
+}
+
+template <class I, class T, class L>
+I FindLowerBoundIter(I begin, I end, const T& val, const L& less)
+{
+	return begin + FindLowerBound(SubRange(begin, end), val, less);
+}
+
+template <class I, class T>
+I FindLowerBoundIter(I begin, I end, const T& val)
+{
+	return begin + FindLowerBound(SubRange(begin, end), val, std::less<T>());
+}
+
+template <class C, class T, class L>
+int FindUpperBound(const C& v, int pos, int count, const T& val, const L& less)
+{
+	return pos + FindUpperBound(SubRange(v, pos, count), val, less);
+}
+
+template <class I, class T, class L>
+I FindUpperBoundIter(I begin, I end, const T& val, const L& less)
+{
+	return begin + FindUpperBound(SubRange(begin, end), val, less);
+}
+
+template <class I, class T>
+I FindUpperBoundIter(I begin, I end, const T& val)
+{
+	return begin + FindUpperBound(SubRange(begin, end), val, std::less<T>());
+}
+
+template <class C, class T, class L>
+int FindBinary(const C& v, const T& val, int pos, int count, const L& less)
+{
+	return pos + FindBinary(SubRange(v, pos, count), val, less);
+}
+
+template <class I, class T, class L>
+I FindBinaryIter(I begin, I end, const T& val, const L& less)
+{
+	return begin + FindBinary(SubRange(begin, end), val, less);
+}
+
+template <class C, class T>
+int FindBinary(const C& v, const T& val, int pos, int count)
+{
+	return pos + FindBinary(SubRange(v, pos, count), val, std::less<T>());
+}
+
+template <class I, class T>
+I FindBinaryIter(I begin, I end, const T& val)
+{
+	return begin + FindBinary(SubRange(begin, end), val, std::less<T>());
+}
+
+template <class T, class V>
+void Sum(V& sum, T ptr, T end)
+{
+	while(ptr != end)
+		sum += *ptr++;
+}
+
 #endif

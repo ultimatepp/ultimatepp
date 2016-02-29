@@ -7,26 +7,22 @@ inline T tabs(T a) { return (a >= 0 ? a : -a); }
 template <class T>
 inline int cmp(const T& a, const T& b) { return a > b ? 1 : a < b ? -1 : 0; }
 
-template <class I>
-void Reverse(I start, I end)
+template <class Range>
+void Reverse(Range& r)
 {
+	auto start = r.begin();
+	auto end = r.end();
 	if(start != end && --end != start)
 		do
 			IterSwap(start, end);
 		while(++start != end && --end != start);
 }
 
-template <class C>
-void Reverse(C& container)
+template <class Range, class Accumulator>
+void Accumulate(const Range& r, Accumulator& a)
 {
-	Reverse(container.Begin(), container.End());
-}
-
-template <class T, class V>
-void Sum(V& sum, T ptr, T end)
-{
-	while(ptr != end)
-		sum += *ptr++;
+	for(const auto& e : r)
+		a(e);
 }
 
 template <class Range>
@@ -34,129 +30,107 @@ struct RangeValueType {
 	typedef typename std::remove_reference<decltype(*((Range *)0)->begin())>::type type;
 };
 
-template <class T>
-typename RangeValueType<T>::type Sum(const T& c, const typename RangeValueType<T>::type& zero)
+template <class Range>
+using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
+
+template <class Range>
+ValueTypeOf<Range> Sum(const Range& r, const ValueTypeOf<Range>& zero)
 {
-	typename RangeValueType<T>::type sum = zero;
-	Sum(sum, c.Begin(), c.End());
+	ValueTypeOf<Range> sum = zero;
+	for(const auto& e : r)
+		sum += e;
 	return sum;
 }
 
 template <class T>
-typename RangeValueType<T>::type Sum(const T& c)
+ValueTypeOf<T> Sum(const T& c)
 {
-	return Sum(c, (typename RangeValueType<T>::type)0);
+	return Sum(c, (ValueTypeOf<T>)0);
 }
 
-template <class C, class Pred>
-int FindBest(const C& c, int pos, int count, const Pred& pred)
+template <class Range, class Pred>
+int FindBest(const Range& r, const Pred& pred)
 {
+	int count = r.GetCount();
 	if(count == 0)
 		return -1;
-	const typename C::ValueType *m = &c[pos];
-	int mi = pos;
-	for(int i = 1; i < count; i++) {
-		int p = i + pos;
-		if(pred(c[p], *m)) {
-			m = &c[p];
-			mi = p;
+	auto *m = &r[0];
+	int mi = 0;
+	for(int i = 1; i < count; i++)
+		if(pred(r[i], *m)) {
+			m = &r[i];
+			mi = i;
 		}
-	}
 	return mi;
 }
 
-template <class C>
-int FindMin(const C& c, int pos, int count)
+template <class Range>
+int FindMin(const Range& r)
 {
-	return FindBest(c, pos, count, std::less<typename C::ValueType>());
+	return FindBest(r, std::less<ValueTypeOf<Range>>());
 }
 
-template <class C>
-int FindMin(const C& c)
+template <class Range>
+const typename RangeValueType<Range>::type& Min(const Range& r)
 {
-	return FindMin(c, 0, c.GetCount());
+	return r[FindMin(r)];
 }
 
-template <class C>
-const typename C::ValueType& Min(const C& c)
+template <class Range>
+const typename RangeValueType<Range>::type& Min(const Range& r, const typename RangeValueType<Range>::type& def)
 {
-	return c[FindMin(c)];
+	int q = FindMin(r);
+	return q < 0 ? def : r[q];
 }
 
-template <class C>
-const typename C::ValueType& Min(const C& c, const typename C::ValueType& def)
+
+template <class Range>
+int FindMax(const Range& r)
 {
-	int q = FindMin(c);
-	return q < 0 ? def : c[q];
+	return FindBest(r, std::greater<typename RangeValueType<Range>::type>());
 }
 
-template <class C>
-int FindMax(const C& c, int pos, int count)
+template <class Range>
+const typename RangeValueType<Range>::type& Max(const Range& r)
 {
-	return FindBest(c, pos, count, std::greater<typename C::ValueType>());
+	return r[FindMax(r)];
 }
 
-template <class C>
-int FindMax(const C& c)
+template <class Range>
+const typename RangeValueType<Range>::type& Max(const Range& r, const typename RangeValueType<Range>::type& def)
 {
-	return FindMax(c, 0, c.GetCount());
+	int q = FindMax(r);
+	return q < 0 ? def : r[q];
 }
 
-template <class C>
-const typename C::ValueType& Max(const C& c)
+template <class Range1, class Range2>
+bool IsEqualRange(const Range1& a, const Range2& b)
 {
-	return c[FindMax(c)];
+	if(a.GetCount() != b.GetCount())
+		return false;
+	for(int i = 0; i < a.GetCount(); i++)
+		if(!(a[i] == b[i]))
+			return false;
+	return true;
 }
 
-template <class C>
-const typename C::ValueType& Max(const C& c, const typename C::ValueType& def)
+template <class Range1, class Range2>
+int CompareRanges(const Range1& a, const Range2& b)
 {
-	int q = FindMax(c);
-	return q < 0 ? def : c[q];
-}
-
-template <class T, class C>
-bool IsEqual(T ptr1, T end1, T ptr2, T end2, const C& equal)
-{
-	for(; ptr1 != end1 && ptr2 != end2; ++ptr1, ++ptr2)
-		if(!equal(*ptr1, *ptr2)) return false;
-	return ptr1 == end1 && ptr2 == end2;
-}
-
-template <class T, class C>
-bool IsEqual(const T& c1, const T& c2, const C& equal)
-{
-	return IsEqual(c1.Begin(), c1.End(), c2.Begin(), c2.End(), equal);
-}
-
-template <class T>
-bool IsEqual(const T& c1, const T& c2)
-{
-	typedef typename T::ValueType VT;
-	return IsEqual(c1, c2, std::equal<VT>());
-}
-
-template <class T, class V, class C>
-T Find(T ptr, T end, const V& value, const C& equal)
-{
-	while(ptr != end) {
-		if(equal(*ptr, value)) return ptr;
-		ptr++;
+	int n = min(a.GetCount(), b.GetCount());
+	for(int i = 0; i < n; i++) {
+		int q = SgnCompare(a[i], b[i]);
+		if(q)
+			return q;
 	}
-	return NULL;
-}
-
-template <class T, class V>
-T Find(T ptr, T end, const V& value)
-{
-	return Find(ptr, end, value, std::equal<V>());
+	return SgnCompare(a.GetCount(), b.GetCount());
 }
 
 template <class T, class V, class C>
-int FindIndex(const T& cont, const V& value, const C& equal, int from = 0)
+int FindMatch(const T& cont, const C& match, int from = 0)
 {
 	for(int i = from; i < cont.GetCount(); i++)
-		if(equal(cont[i], value)) return i;
+		if(match(cont[i])) return i;
 	return -1;
 }
 
@@ -168,62 +142,11 @@ int FindIndex(const T& cont, const V& value, int from = 0)
 	return -1;
 }
 
-template <class I, class K, class L>
-int BinFindIndex(I begin, I end, const K& key, const L& less)
+template <class Range, class T, class Less>
+int FindLowerBound(const Range& v, const T& val, const Less& less = std::less<T>())
 {
-	if(begin == end)
-		return 0;
-	int min = 0;
-	int max = end - begin;
-
-	while(min < max)
-	{
-		int mid = (max + min) >> 1;
-		if(less(*(begin + mid), key))
-			min = mid + 1;
-		else
-			max = mid;
-	}
-	return min;
-}
-
-template <class C, class K, class L>
-inline int BinFindIndex(const C& container, const K& key, const L& less)
-{
-	return BinFindIndex(container.Begin(), container.End(), key, less);
-}
-
-template <class C, class K>
-inline int BinFindIndex(const C& container, const K& key)
-{
-	typedef typename C::ValueType VT;
-	return BinFindIndex(container, key, std::less<VT>());
-}
-
-template <class I, class K, class L>
-inline I BinFind(I begin, I end, const K& key, const L& less)
-{
-	return begin + BinFindIndex(begin, end, key, less);
-}
-
-template <class C, class K, class L>
-inline typename C::ConstIterator BinFind(const C& container, const K& key, const L& less)
-{
-	return BinFind(container.Begin(), container.End(), key, less);
-}
-
-template <class C, class K>
-inline typename C::ConstIterator BinFind(const C& container, const K& key)
-{
-	typedef typename C::ValueType VT;
-	return BinFind(container, key, std::less<VT>());
-}
-
-// -------------------------------------------------------------------
-
-template <class C, class T, class L>
-int FindLowerBound(const C& v, int pos, int count, const T& val, const L& less)
-{
+	int pos = 0;
+	int count = v.GetCount();
 	while(count > 0) {
 		int half = count >> 1;
 		int m = pos + half;
@@ -237,33 +160,17 @@ int FindLowerBound(const C& v, int pos, int count, const T& val, const L& less)
 	return pos;
 }
 
-template <class I, class T, class L>
-I FindLowerBoundIter(I begin, I end, const T& val, const L& less)
+template <class Range, class T>
+int FindLowerBound(const Range& v, const T& val)
 {
-	return begin + FindLowerBound(begin, 0, end - begin, val, less);
+	return FindLowerBound(v, val, std::less<T>());
 }
 
-template <class I, class T>
-I FindLowerBoundIter(I begin, I end, const T& val)
+template <class Range, class T, class L>
+int FindUpperBound(const Range& v, const T& val, const L& less = std::less<T>())
 {
-	return begin + FindLowerBound(begin, 0, end - begin, val, std::less<T>());
-}
-
-template <class C, class T, class L>
-int FindLowerBound(const C& v, const T& val, const L& less)
-{
-	return FindLowerBound(v, 0, v.GetCount(), val, less);
-}
-
-template <class C, class T>
-int FindLowerBound(const C& v, const T& val)
-{
-	return FindLowerBound(v, val, std::less<typename C::ValueType>());
-}
-
-template <class C, class T, class L>
-int FindUpperBound(const C& v, int pos, int count, const T& val, const L& less)
-{
+	int pos = 0;
+	int count = v.GetCount();
 	while(count > 0) {
 		int half = count >> 1;
 		int m = pos + half;
@@ -277,60 +184,23 @@ int FindUpperBound(const C& v, int pos, int count, const T& val, const L& less)
 	return pos;
 }
 
-template <class I, class T, class L>
-I FindUpperBoundIter(I begin, I end, const T& val, const L& less)
+template <class Range, class T>
+int FindUpperBound(const Range& v, const T& val)
 {
-	return begin + FindUpperBound(begin, 0, end - begin, val, less);
-}
-
-template <class I, class T>
-I FindUpperBoundIter(I begin, I end, const T& val)
-{
-	return begin + FindUpperBound(begin, 0, (int)(end - begin), val, std::less<T>());
-}
-
-template <class C, class T, class L>
-int FindUpperBound(const C& v, const T& val, const L& less)
-{
-	return FindUpperBound(v, 0, v.GetCount(), val, less);
-}
-
-template <class C, class T>
-int FindUpperBound(const C& v, const T& val)
-{
-	return FindUpperBound(v, val, std::less<typename C::ValueType>());
-}
-
-template <class C, class T, class L>
-int FindBinary(const C& v, const T& val, int pos, int count, const L& less)
-{
-	int i = FindLowerBound(v, pos, count, val, less);
-	return i < count && !less(val, v[i]) ? i : -1;
-}
-
-template <class I, class T, class L>
-I FindBinaryIter(I begin, I end, const T& val, const L& less)
-{
-	int q = FindBinary(begin, val, 0, end - begin, less);
-	return q < 0 ? NULL : begin + q;
-}
-
-template <class I, class T>
-I FindBinaryIter(I begin, I end, const T& val)
-{
-	return FindBinaryIter(begin, end, val, std::less<T>());
+	return FindUpperBound(v, val, std::less<T>());
 }
 
 template <class C, class T, class L>
 int FindBinary(const C& v, const T& val, const L& less)
 {
-	return FindBinary(v, val, 0, v.GetCount(), less);
+	int i = FindLowerBound(v, val, less);
+	return i < v.GetCount() && !less(val, v[i]) ? i : -1;
 }
 
 template <class C, class T>
 int FindBinary(const C& v, const T& val)
 {
-	return FindBinary(v, val, std::less<typename C::ValueType>());
+	return FindBinary(v, val, std::less<T>());
 }
 
 template <class C, class T>
@@ -342,26 +212,4 @@ void LruAdd(C& lru, T value, int limit = 10)
 	lru.Insert(0, value);
 	if(lru.GetCount() > limit)
 		lru.SetCount(limit);
-}
-
-template <class T>
-void StreamContainer(Stream& s, T& cont)
-{
-	int n = cont.GetCount();
-	s / n;
-	if(n < 0) {
-		s.LoadError();
-		return;
-	}
-	if(s.IsLoading())
-	{
-		cont.Clear();
-		while(n--)
-			s % cont.Add();
-	}
-	else
-	{
-		for(typename T::Iterator ptr = cont.Begin(); n--; ++ptr)
-			s % *ptr;
-	}
 }

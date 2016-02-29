@@ -15,9 +15,9 @@ public:
 	I  end() const { return l + count; }
 
 	String   ToString() const                            { return AsStringArray(*this); }
-	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
-	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
 	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
 	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
 	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
@@ -40,9 +40,9 @@ SubRangeClass<I> SubRange(I l, int count)
 }
 
 template <class C>
-auto SubRange(C& c, int pos, int count) -> decltype(Range(c.begin() + pos, count))
+auto SubRange(C& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
 {
-	return Range(c.begin() + pos, count);
+	return SubRange(c.begin() + pos, count);
 }
 
 template <class T>
@@ -62,9 +62,9 @@ struct ConstRangeClass {
 	Iterator end() const { return Iterator(*this, count); }
 
 	String   ToString() const                            { return AsStringArray(*this); }
-	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
-	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
 	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
 	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
 	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
@@ -110,9 +110,9 @@ struct FilterRangeRef {
 	Iterator end()   { return Iterator(*this, ndx.GetCount()); }
 
 	String   ToString() const                            { return AsStringArray(*this); }
-	template <class B> bool operator==(const B& b) const { return IsEqualArray(*this, b); }
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
-	template <class B> int  Compare(const B& b) const    { return CompareArray(*this, b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
 	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
 	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
 	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }

@@ -4,7 +4,7 @@ inline void AssertST() {}
 
 #ifdef _MULTITHREADED
 
-#ifndef DEPRECATED
+#ifdef DEPRECATED
 #define thread__ thread_local
 #endif
 

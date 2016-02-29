@@ -1,3 +1,26 @@
+template <class T>
+void StreamContainer(Stream& s, T& cont)
+{
+	int n = cont.GetCount();
+	s / n;
+	if(n < 0) {
+		s.LoadError();
+		return;
+	}
+	if(s.IsLoading())
+	{
+		cont.Clear();
+		cont.Reserve(n);
+		while(n--)
+			s % cont.Add();
+	}
+	else
+	{
+		for(auto ptr = cont.begin(); n--; ++ptr)
+			s % *ptr;
+	}
+}
+
 void VectorReAlloc_(void *vector_, int newalloc, int sizeofT);
 void VectorReAllocF_(void *vector_, int newalloc, int sizeofT);
 void VectorGrow_(void *vector_, int sizeofT);

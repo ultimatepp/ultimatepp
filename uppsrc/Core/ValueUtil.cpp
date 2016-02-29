@@ -54,33 +54,24 @@ unsigned ValueArray::Data::GetHashValue() const
 	return w;
 }
 
-static bool sCmp(const Vector<Value>& a, const Vector<Value>& b)
-{
-	if(&a == &b) return true;
-	if(a.GetCount() != b.GetCount()) return false;
-	for(int i = 0; i < a.GetCount(); i++)
-		if(a[i] != b[i]) return false;
-	return true;
-}
-
 bool ValueArray::Data::IsEqual(const Value::Void *p)
 {
-	return sCmp(((Data *)p)->data, data);
+	return ((Data *)p)->data == data;
 }
 
 int ValueArray::Data::Compare(const Value::Void *p)
 {
-	return CompareArray(data, ((Data *)p)->data);
+	return data.Compare(((Data *)p)->data);
 }
 
 bool ValueArray::operator==(const ValueArray& v) const
 {
-	return sCmp(data->data, v.data->data);
+	return v.data->data == data->data;
 }
 
 int ValueArray::Compare(const ValueArray& b) const
 {
-	return CompareArray(data->data, b.data->data);
+	return data->data.Compare(b.data->data);
 }
 
 static String sAsString(const Vector<Value>& v)
