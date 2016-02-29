@@ -6,8 +6,9 @@ class Crc32Stream : public OutStream {
 public:
 	dword  Finish()            { Flush(); return crc; }
 	operator dword()           { return Finish(); }
+	void   Clear();
 	
-	Crc32Stream();
+	Crc32Stream()              { Clear(); }
 };
 
 dword CRC32(const void *ptr, dword count);
@@ -63,7 +64,7 @@ public:
 	String GetGZipName() const             { return gzip_name; }
 	String GetGZipComment() const          { return gzip_comment; }
 	
-	Zlib& GZip(bool gzip_ = true)          { gzip = gzip_; return *this; } 
+	Zlib& GZip(bool gzip_ = true)          { gzip = gzip_; return *this; }
 	Zlib& Header(bool hdr_ = true)         { hdr = hdr_; return *this; }
 	Zlib& NoHeader()                       { return Header(false); }
 	Zlib& CRC(bool b = true)               { docrc = b; return *this; }
