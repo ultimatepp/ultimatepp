@@ -130,20 +130,6 @@ inline void Fill(unsigned char *t, const unsigned char *lim, const unsigned char
 inline void Copy(unsigned char *dst, const unsigned char *src, const unsigned char *lim)
 { memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
 
-/*
-template <class T>
-inline T& DeepCopyConstruct(void *p, const T& x) {
-	return *(::new(p) T(x));
-}
-
-template <class T>
-inline T *DeepCopyNew(const T& x) {
-	return new T(x);
-}
-
-*/
-
-
 #ifdef NO_MOVEABLE_CHECK
 
 template <class T>
@@ -369,12 +355,16 @@ WithPick<T> AsPick(T&& src)
 	void                  push_back(const T& x)  { Add(x); } \
 	void                  pop_back()             { Drop(); } \
 
+
+template <class Range>
+using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
+
 template <class V>
 class ConstIIterator {
 protected:
 	const V       *cont;
 	int            ii;
-	typedef        typename V::ValueType T;
+	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
@@ -416,7 +406,7 @@ class IIterator {
 protected:
 	V             *cont;
 	int            ii;
-	typedef        typename V::ValueType T;
+	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:

@@ -26,9 +26,6 @@ void Accumulate(const Range& r, Accumulator& a)
 }
 
 template <class Range>
-using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
-
-template <class Range>
 ValueTypeOf<Range> Sum(const Range& r, const ValueTypeOf<Range>& zero)
 {
 	ValueTypeOf<Range> sum = zero;
