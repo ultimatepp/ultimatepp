@@ -54,18 +54,10 @@ bool CoWork::Pool::DoJob()
 		return true;
 	}
 	finlock = false;
-	std::function<void ()> fn = std::move(job.fn);
-	if(fn) {
-		p.scheduled--;
-		p.lock.Leave();
-		fn();
-	}
-	else {
-		Callback cb = job.cb;
-		p.scheduled--;
-		p.lock.Leave();
-		cb();
-	}
+	Function<void ()> fn = pick(job.fn);
+	p.scheduled--;
+	p.lock.Leave();
+	fn();
 	if(!finlock)
 		p.lock.Enter();
 	if(--job.work->todo == 0) {
@@ -101,30 +93,23 @@ void CoWork::Pool::ThreadRun(int tno)
 	LLOG("CoWork thread #" << tno << " finished");
 }
 
-void CoWork::Do(const Callback *cb, const std::function<void ()> *fn)
+void CoWork::Do(Function<void ()>&& fn)
 {
 	LHITCOUNT("CoWork: Sheduling callback");
-#ifdef _MULTITHREADED
 	Pool& p = pool();
 	p.lock.Enter();
 	if(p.scheduled >= SCHEDULED_MAX) {
 		LLOG("Stack full: running in the originating thread");
 		LHITCOUNT("CoWork: Stack full: Running in originating thread");
 		p.lock.Leave();
-		if(fn)
-			(*fn)();
-		else
-			(*cb)();
+		fn();
 		if(Pool::finlock)
 			p.lock.Leave();
 		return;
 	}
 	MJob& job = p.jobs[p.scheduled++];
 	job.work = this;
-	if(fn)
-		job.fn = std::move(*fn);
-	else
-		job.cb = *cb;
+	job.fn = pick(fn);
 	todo++;
 	LLOG("Adding job; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
 	if(p.waiting_threads) {
@@ -133,16 +118,9 @@ void CoWork::Do(const Callback *cb, const std::function<void ()> *fn)
 		p.waitforjob.Release();
 	}
 	p.lock.Leave();
-#else
-	if(fn)
-		(*fn)();
-	else
-		(*cb)();
-#endif
 }
 
 void CoWork::Finish() {
-#ifdef _MULTITHREADED
 	Pool& p = pool();
 	p.lock.Enter();
 	while(todo) {
@@ -160,7 +138,6 @@ void CoWork::Finish() {
 	}
 	p.lock.Leave();
 	LLOG("CoWork finished");
-#endif
 }
 
 /*

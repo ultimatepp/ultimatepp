@@ -204,13 +204,13 @@ struct IndexSortIterator__
 	VI          vi;
 };
 
-template <class OrderRange, class Range2, class Less>
-void IndexSort(OrderRange& r, Range2& r2, const Less& less)
+template <class MasterRange, class Range2, class Less>
+void IndexSort(MasterRange& r, Range2& r2, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	typedef decltype(r.begin()) I;
 	typedef decltype(r2.begin()) I2;
-	typedef ValueTypeOf<OrderRange> VT;
+	typedef ValueTypeOf<MasterRange> VT;
 	if(r.GetCount() == 0)
 		return;
 	Sort__(IndexSortIterator__<I, I2, VT>(r.begin(), r2.begin()),
@@ -218,19 +218,19 @@ void IndexSort(OrderRange& r, Range2& r2, const Less& less)
 		   less);
 }
 
-template <class OrderRange, class Range2>
-void IndexSort(OrderRange& r, Range2& r2)
+template <class MasterRange, class Range2>
+void IndexSort(MasterRange& r, Range2& r2)
 {
-	IndexSort(r, r2, std::less<ValueTypeOf<OrderRange>>());
+	IndexSort(r, r2, std::less<ValueTypeOf<MasterRange>>());
 }
 
-template <class OrderRange, class Range2, class Less>
-void StableIndexSort(OrderRange& r, Range2& r2, const Less& less)
+template <class MasterRange, class Range2, class Less>
+void StableIndexSort(MasterRange& r, Range2& r2, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	typedef decltype(r.begin()) I;
 	typedef decltype(r2.begin()) I2;
-	typedef ValueTypeOf<OrderRange> VT;
+	typedef ValueTypeOf<MasterRange> VT;
 	if(r.GetCount() == 0)
 		return;
 	StableSort(SubRange(IndexSortIterator__<I, I2, VT>(r.begin(), r2.begin()),
@@ -238,10 +238,10 @@ void StableIndexSort(OrderRange& r, Range2& r2, const Less& less)
 	           less);
 }
 
-template <class OrderRange, class Range2>
-void StableIndexSort(OrderRange& r, Range2& r2)
+template <class MasterRange, class Range2>
+void StableIndexSort(MasterRange& r, Range2& r2)
 {
-	StableIndexSort(r, r2, std::less<ValueTypeOf<OrderRange>>());
+	StableIndexSort(r, r2, std::less<ValueTypeOf<MasterRange>>());
 }
 
 template <class II, class VI, class WI, class K>
@@ -267,8 +267,8 @@ struct IndexSort2Iterator__
 	WI          wi;
 };
 
-template <class OrderRange, class Range2, class Range3, class Less>
-void IndexSort2(OrderRange& r, Range2& r2, Range3& r3, const Less& less)
+template <class MasterRange, class Range2, class Range3, class Less>
+void IndexSort2(MasterRange& r, Range2& r2, Range3& r3, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	ASSERT(r.GetCount() == r3.GetCount());
@@ -277,20 +277,20 @@ void IndexSort2(OrderRange& r, Range2& r2, Range3& r3, const Less& less)
 	typedef decltype(r.begin()) I;
 	typedef decltype(r2.begin()) I2;
 	typedef decltype(r3.begin()) I3;
-	typedef ValueTypeOf<OrderRange> VT;
+	typedef ValueTypeOf<MasterRange> VT;
 	Sort__(IndexSort2Iterator__<I, I2, I3, VT>(r.begin(), r2.begin(), r3.begin()),
 	       IndexSort2Iterator__<I, I2, I3, VT>(r.end(), r2.end(), r3.end()),
 		   less);
 }
 
-template <class OrderRange, class Range2, class Range3>
-void IndexSort2(OrderRange& r, Range2& r2, Range3& r3)
+template <class MasterRange, class Range2, class Range3>
+void IndexSort2(MasterRange& r, Range2& r2, Range3& r3)
 {
-	IndexSort2(r, r2, r3, std::less<ValueTypeOf<OrderRange>>());
+	IndexSort2(r, r2, r3, std::less<ValueTypeOf<MasterRange>>());
 }
 
-template <class OrderRange, class Range2, class Range3, class Less>
-void StableIndexSort2(OrderRange& r, Range2& r2, Range3& r3, const Less& less)
+template <class MasterRange, class Range2, class Range3, class Less>
+void StableIndexSort2(MasterRange& r, Range2& r2, Range3& r3, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	ASSERT(r.GetCount() == r3.GetCount());
@@ -299,16 +299,16 @@ void StableIndexSort2(OrderRange& r, Range2& r2, Range3& r3, const Less& less)
 	typedef decltype(r.begin()) I;
 	typedef decltype(r2.begin()) I2;
 	typedef decltype(r3.begin()) I3;
-	typedef ValueTypeOf<OrderRange> VT;
+	typedef ValueTypeOf<MasterRange> VT;
 	StableSort(SubRange(IndexSort2Iterator__<I, I2, I3, VT>(r.begin(), r2.begin(), r3.begin()),
 	                    IndexSort2Iterator__<I, I2, I3, VT>(r.end(), r2.end(), r3.end())).Write(),
 		       less);
 }
 
-template <class OrderRange, class Range2, class Range3>
-inline void StableIndexSort2(OrderRange& r, Range2& r2, Range3& r3)
+template <class MasterRange, class Range2, class Range3>
+inline void StableIndexSort2(MasterRange& r, Range2& r2, Range3& r3)
 {
-	StableIndexSort2(r, r2, r3, std::less<ValueTypeOf<OrderRange>>());
+	StableIndexSort2(r, r2, r3, std::less<ValueTypeOf<MasterRange>>());
 }
 
 template <class II, class VI, class WI, class XI, class K>
@@ -335,8 +335,8 @@ struct IndexSort3Iterator__
 	XI          xi;
 };
 
-template <class OrderRange, class Range2, class Range3, class Range4, class Less>
-void IndexSort3(OrderRange& r, Range2& r2, Range3& r3, Range4& r4, const Less& less)
+template <class MasterRange, class Range2, class Range3, class Range4, class Less>
+void IndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	ASSERT(r.GetCount() == r3.GetCount());
@@ -347,20 +347,20 @@ void IndexSort3(OrderRange& r, Range2& r2, Range3& r3, Range4& r4, const Less& l
 	typedef decltype(r2.begin()) I2;
 	typedef decltype(r3.begin()) I3;
 	typedef decltype(r4.begin()) I4;
-	typedef ValueTypeOf<OrderRange> VT;
+	typedef ValueTypeOf<MasterRange> VT;
 	Sort__(IndexSort3Iterator__<I, I2, I3, I4, VT>(r.begin(), r2.begin(), r3.begin(), r4.begin()),
 	       IndexSort3Iterator__<I, I2, I3, I4, VT>(r.end(), r2.end(), r3.end(), r4.end()),
 		   less);
 }
 
-template <class OrderRange, class Range2, class Range3, class Range4>
-void IndexSort3(OrderRange& r, Range2& r2, Range3& r3, Range4& r4)
+template <class MasterRange, class Range2, class Range3, class Range4>
+void IndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4)
 {
-	IndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<OrderRange>>());
+	IndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<MasterRange>>());
 }
 
-template <class OrderRange, class Range2, class Range3, class Range4, class Less>
-void StableIndexSort3(OrderRange& r, Range2& r2, Range3& r3, Range4& r4, const Less& less)
+template <class MasterRange, class Range2, class Range3, class Range4, class Less>
+void StableIndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	ASSERT(r.GetCount() == r3.GetCount());
@@ -371,16 +371,16 @@ void StableIndexSort3(OrderRange& r, Range2& r2, Range3& r3, Range4& r4, const L
 	typedef decltype(r2.begin()) I2;
 	typedef decltype(r3.begin()) I3;
 	typedef decltype(r4.begin()) I4;
-	typedef ValueTypeOf<OrderRange> VT;
+	typedef ValueTypeOf<MasterRange> VT;
 	StableSort(SubRange(IndexSort3Iterator__<I, I2, I3, I4, VT>(r.begin(), r2.begin(), r3.begin(), r4.begin()),
 	                    IndexSort3Iterator__<I, I2, I3, I4, VT>(r.end(), r2.end(), r3.end(), r4.end())).Write(),
 		       less);
 }
 
-template <class OrderRange, class Range2, class Range3, class Range4>
-inline void StableIndexSort3(OrderRange& r, Range2& r2, Range4& r4, Range3& r3)
+template <class MasterRange, class Range2, class Range3, class Range4>
+inline void StableIndexSort3(MasterRange& r, Range2& r2, Range4& r4, Range3& r3)
 {
-	StableIndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<OrderRange>>());
+	StableIndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<MasterRange>>());
 }
 
 

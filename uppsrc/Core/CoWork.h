@@ -4,9 +4,8 @@ class CoWork : NoCopy {
 	typedef StaticCriticalSection Lock;
 
 	struct MJob : Moveable<MJob> {
-		std::function<void ()> fn; // TODO: Rework!
-		Callback               cb;
-		CoWork                *work;
+		Function<void ()> fn;
+		CoWork           *work;
 	};
 	
 	enum { SCHEDULED_MAX = 2048 };
@@ -39,14 +38,15 @@ class CoWork : NoCopy {
 	Mutex stepmutex;
 	Vector< BiVector<Callback> > step;
 
-	void Do(const Callback *cb, const std::function<void ()> *fn);
 	
 public:
-	void     Do(const Callback& cb)                           { Do(&cb, NULL); }
-	void     Do(const std::function<void ()>& lambda)         { Do(NULL, &lambda); }
+	void     Do(Function<void ()>&& fn);
+	void     Do(const Callback& cb)                           { Do(clone(cb)); }
+	void     Do(const Function<void ()>& lambda)              { Do(clone(lambda)); }
 
-	CoWork&  operator&(const Callback& cb)                    { Do(&cb, NULL); return *this; }
-	CoWork&  operator&(const std::function<void ()>& lambda)  { Do(NULL, &lambda); return *this; }
+	CoWork&  operator&(const Callback& cb)                    { Do(cb); return *this; }
+	CoWork&  operator&(const Function<void ()>& lambda)       { Do(lambda); return *this; }
+	CoWork&  operator&(Function<void ()>&& lambda)            { Do(lambda); return *this; }
 
 	void Step(int stepi, const Callback& cb);
 

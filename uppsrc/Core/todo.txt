@@ -42,7 +42,11 @@ fast - decide
 
 IIterator	typedef        typename V::ValueType T;
 
+Remove ValueType uses
+
 InVector::InsertN possibly incorrect (can create small blocks)
+
+Fix CoWork
 -----------------------
 DONE
 
