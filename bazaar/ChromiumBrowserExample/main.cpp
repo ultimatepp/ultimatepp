@@ -38,9 +38,9 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	MessagesLog.OddRowColor();
 	MessagesLog.EvenRowColor();
 	
-	Browser.WhenUrlChange			= LAMBDA(String url) { Url.SetData(url); Url.CancelSelection(); };
+	Browser.WhenUrlChange			<< [this](String url) { Url.SetData(url); Url.CancelSelection(); };
 	Browser.WhenStatus				= THISBACK(OnStatus);
-	Browser.WhenTakeFocus			= LAMBDA() { Url.SetFocus(); };
+	Browser.WhenTakeFocus			<< [this]() { Url.SetFocus(); };
 	Browser.WhenKeyboard			= STDBACK(::ShowKeyboard);
 	Browser.WhenConsoleMessage		= THISBACK(OnConsoleMessage);
 	Browser.WhenMessage				= THISBACK(OnMessage);
@@ -49,9 +49,9 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Back.WhenAction					= callback(&Browser, &ChromiumBrowser::GoBack);
 	Forward.WhenAction				= callback(&Browser, &ChromiumBrowser::GoForward);
 	Refresh.WhenAction				= callback(&Browser, &ChromiumBrowser::RefreshPage);
-	Url.WhenEnter = Go.WhenAction	= LAMBDA() { Browser.Browse(~Url); };
+	Url.WhenEnter = Go.WhenAction	<< [this]() { Browser.Browse(~Url); };
 	Stop.WhenAction					= callback(&Browser, &ChromiumBrowser::Stop);
-	JSTests.WhenAction				= LAMBDA() { Browser.ShowHTML(String(test_page, test_page_length)); };
+	JSTests.WhenAction				<< [this]() { Browser.ShowHTML(String(test_page, test_page_length)); };
 
 	//Delayed maximization - workaround of layout problem
 	SetTimeCallback(200, THISBACK1(Maximize, false));
