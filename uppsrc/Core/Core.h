@@ -320,6 +320,7 @@ class JsonIO;
 
 #include "CoWork.h"
 
+#include "CoAlgo.h"
 #include "CoSort.h"
 
 #include "LocalProcess.h"

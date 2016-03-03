@@ -21,7 +21,6 @@ void String0::LSet(const String0& s)
 		ptr = s.ptr;
 		if(ptr != (char *)(voidptr + 1))
 			AtomicInc(s.Ref()->refcount);
-		HITCOUNT("Ref copy");
 	}
 	else {
 		ptr = (char *)MemoryAlloc32();
@@ -30,7 +29,6 @@ void String0::LSet(const String0& s)
 //		d[0] = q[0]; d[1] = q[1]; d[2] = q[2]; d[3] = q[3];
 		fast_copy128(ptr, s.ptr);
 		fast_copy128(ptr + 16, s.ptr + 16);
-		HITCOUNT("Copy 32");
 	}
 }
 
