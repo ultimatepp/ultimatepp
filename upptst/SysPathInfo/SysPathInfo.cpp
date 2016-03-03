@@ -4,8 +4,6 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	DUMP(GetWindowsDirectory());
-	DUMP(GetModuleFileName(LoadLibrary("kernel32")));
 	DUMP(GetTempPath());
 	DUMP(GetCurrentDirectory());
 	
@@ -15,9 +13,6 @@ CONSOLE_APP_MAIN
 	
 	DUMP(GetDesktopFolder());
 	DUMP(GetProgramsFolder());
-#ifdef PLATFORM_WIN32
-	DUMP(GetProgramsFolderX86());
-#endif
 	DUMP(GetAppDataFolder());
 	DUMP(GetMusicFolder());
 	DUMP(GetPicturesFolder());
@@ -36,4 +31,10 @@ CONSOLE_APP_MAIN
 		DUMP(ff.GetLength());
 		DUMP(ff.IsFolder());
 	}
+
+#ifdef PLATFORM_WIN32
+	DUMP(GetProgramsFolderX86());
+	DUMP(GetWindowsDirectory());
+	DUMP(GetModuleFileName(LoadLibrary("kernel32")));
+#endif
 }
