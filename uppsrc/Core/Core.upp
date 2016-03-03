@@ -87,7 +87,6 @@ file
 	Algo.h,
 	Sorted.h,
 	Sort.h,
-	CoSort.h,
 	Obsolete.h,
 	Topt.h,
 	Vcont.h,

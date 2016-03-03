@@ -54,8 +54,8 @@ public:
 	FixedAMap(const FixedAMap& s, int) : key(s.key, 0), value(s.value, 0) {}
 	FixedAMap(Vector<K>&& key, V&& val) : key(key), value(val) {}
 
-	typedef typename V::ConstIterator  ConstIterator;
-	typedef typename V::Iterator       Iterator;
+	typedef ConstIteratorOf<V>  ConstIterator;
+	typedef IteratorOf<V>       Iterator;
 
 	Iterator         begin()                                      { return value.begin(); }
 	Iterator         end()                                        { return value.end(); }
@@ -68,7 +68,7 @@ public:
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
-	typedef typename Vector<K>::ConstIterator KeyConstIterator;
+	typedef ConstIteratorOf<Vector<K>> KeyConstIterator;
 
 	KeyConstIterator KeyBegin() const                             { return key.Begin(); }
 	KeyConstIterator KeyEnd() const                               { return key.End(); }

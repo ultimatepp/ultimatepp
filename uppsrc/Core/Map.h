@@ -155,8 +155,8 @@ public:
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, i.second); }
 
-	typedef typename V::ConstIterator        ConstIterator;
-	typedef typename V::Iterator             Iterator;
+	typedef IteratorOf<V>           ConstIterator;
+	typedef ConstIteratorOf<V>      Iterator;
 
 	Iterator         begin()                                      { return value.begin(); }
 	Iterator         end()                                        { return value.end(); }
@@ -169,7 +169,7 @@ public:
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
-	typedef typename Index<K>::ConstIterator KeyConstIterator;
+	typedef ConstIteratorOf<Index<K>> KeyConstIterator;
 
 	friend int     GetCount(const AMap& v)                        { return v.GetCount(); }
 	int      PutPick(const K& k, T&& x)                           { return Put(k, pick(x)); }
