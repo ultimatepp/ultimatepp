@@ -38,6 +38,8 @@ String  GetFullPath(const char *path);
 String  GetCurrentDirectory();
 #endif
 
+bool SetCurrentDirectory(const char *path);
+
 struct FileTime;
 
 int Compare_FileTime(const FileTime& fa, const FileTime& fb);
