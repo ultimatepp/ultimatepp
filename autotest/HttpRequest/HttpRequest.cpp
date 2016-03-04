@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 		{ "www.idnes.cz", "</html>" },
 		{ "www.google.com", "</script>" },
 		{ "http://wattsupwiththat.com/", "</html>" },
-		{ "http://www.rcalbum.com", "</html>" },
+		{ "http://www.rcalbum.cz", "</html>" },
 		{ "www.cekas.cz", "<meta http-equiv" },
 	};
 	for(int nd = 0; nd < 1; nd++)
