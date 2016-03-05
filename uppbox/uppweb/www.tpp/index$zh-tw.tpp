@@ -70,7 +70,7 @@ SDK][+92 )來做為底層的編譯器,同時您可以直接使用][2 TheIDE][+92
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^+92 相關應用]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^+92 常見問題][^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 (
 FAQ)]&]
-[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^+92 論壇]]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forums^+92 論壇]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]

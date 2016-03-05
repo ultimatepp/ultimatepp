@@ -69,7 +69,7 @@ Tutoriál]&]
 :: [s0;%- ]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$cs`-cz^2 FAQ `- Často 
 kladené dotazy]&]
-[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Forum]]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forums^2 Forum]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]

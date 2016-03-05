@@ -75,7 +75,7 @@ General]&]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Aplicacions]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 Preguntes 
 més freqüents (FAQ)]&]
-[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 Fòrums]]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forums^2 Fòrums]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]

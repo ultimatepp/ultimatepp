@@ -61,7 +61,7 @@ indows Vista SDK][2 中的免费的Visual C`+`+ 9.0协同工作，而且有一�
 :: [s0;%- ]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 应用]&]
 [s0;i150;a17;O0; [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^2 常见问题]&]
-[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forum^2 论坛]]
+[s0;i150;O0; [^http`:`/`/www`.ultimatepp`.org`/forums^2 论坛]]
 ::l0/25r0/25t0/15b0/15R0 [s0;%- ]
 ::t8/25b8/25R(165)-1 [s0;*+34 ]
 ::t0/15b0/15R0 [s0;%- ]
