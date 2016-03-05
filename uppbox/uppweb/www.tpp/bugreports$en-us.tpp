@@ -26,13 +26,13 @@ topic "Bug reports and patch submision";
 [s0; If you feel that something does not work as it should, the most 
 effective way how to proceed is to post a message in the [^http`:`/`/ultimatepp`.org`/forums^ f
 orum]. The usual ethics apply here the same way as on most of 
-the forums all over the Internet: Before posting, [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=search`&^ c
+the forums all over the Internet: Before posting, [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=search`&^ c
 heck] if the problem isn`'t already reported. Please, make sure 
 that you are posting to the correct forum section. If you experience 
-problem with library, make sure to post to [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=index`&cat`=16`&^ U
+problem with library, make sure to post to [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=index`&cat`=16`&^ U
 `+`+ Library support]. Problems with TheIDE should be reported 
-to [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=index`&cat`=10`&^ U`+`+ 
-TheIDE]. Note that some sections have sticky posts, please read 
+to [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=index`&cat`=10`&^ U`+`+
+ TheIDE]. Note that some sections have sticky posts, please read 
 them before posting, they usually contain important information.&]
 [s0; &]
 [s0; You should always provide the information about your system, 

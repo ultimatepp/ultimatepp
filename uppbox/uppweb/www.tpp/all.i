@@ -86,8 +86,20 @@ TOPIC("comparison$fr-fr")
 #include "comparison$fr-fr.tppi"
 END_TOPIC
 
+TOPIC("contribweb$ca-es")
+#include "contribweb$ca-es.tppi"
+END_TOPIC
+
+TOPIC("contribweb$en-us")
+#include "contribweb$en-us.tppi"
+END_TOPIC
+
 TOPIC("cookie$en-us")
 #include "cookie$en-us.tppi"
+END_TOPIC
+
+TOPIC("currenttopics$en-us")
+#include "currenttopics$en-us.tppi"
 END_TOPIC
 
 TOPIC("devmovie$en-us")
@@ -216,6 +228,10 @@ END_TOPIC
 
 TOPIC("ss$en-us")
 #include "ss$en-us.tppi"
+END_TOPIC
+
+TOPIC("svnInstall$en-us")
+#include "svnInstall$en-us.tppi"
 END_TOPIC
 
 TOPIC("ubuntuinstall$en-us")

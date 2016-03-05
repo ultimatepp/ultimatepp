@@ -15,7 +15,7 @@ complete and translated.]&]
 `+`+][2  you still can help.]&]
 [s0;2 &]
 [s0; [2 Post your translations, fixes and patches or propose new pages 
-in U`+`+ ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 . 
+in U`+`+ ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 . 
 Be sure they will be acknowledged and somebody will upload them 
 for you.]&]
 [s0;2 &]
@@ -59,7 +59,7 @@ T`+`+ help system into .html web pages.]&]
 [s0; [*2 If nothing works]&]
 [s0;2 &]
 [s0; [2 If nothing works or you do not feel comfortable in doing this 
-you can send a post to ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2  
-asking for help or just send ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 m
+you can send a post to ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2  
+asking for help or just send ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=648`&^2 m
 e][2  a post. I will do it for you.]&]
-[s0; ]
+[s0; ]]
