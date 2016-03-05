@@ -39,7 +39,7 @@ Frederico Rodrigues, Ruben Proost, Willem Kroes]&]
 :: [s0; [^http`:`/`/www`.arilect`.com`/upp`/forum^ http://][^http`:`/`/upp`.sf`.net^ www.ulti
 matepp.org]]
 :: [s0; Ultimate`+`+ forum]
-:: [s0; [^http`:`/`/www`.ultimatepp`.org`/forum^ http://www.ultimatepp.org/forum]]}}&]
+:: [s0; [^http`:`/`/www`.ultimatepp`.org`/forums^ http://www.ultimatepp.org/forums]]}}&]
 [s0;+108 &]
 [s0;+92 &]
 [s0; [+92 Ultimate`+`+ includes sources of following libraries and 
