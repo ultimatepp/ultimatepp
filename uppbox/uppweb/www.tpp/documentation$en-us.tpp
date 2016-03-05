@@ -24,7 +24,7 @@ topic "Documentation";
 not everything is documented yet.&]
 [s0; &]
 [s0; Ultimate`+`+ community is ready to provide an excellent support 
-in the [^http`:`/`/www`.ultimatepp`.org`/forum`/^ forum].&]
+in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 [s0; &]
 [s0;*3 &]
 [s0; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation guide]&]
