@@ -53,7 +53,7 @@ C& AppendSorted(C& dest, const C& src, const L& less)
 template <class C>
 C& AppendSorted(C& dest, const C& src)
 {
-	typedef typename C::ValueType VT;
+	typedef ValueTypeOf<C> VT;
 	return AppendSorted(dest, src, std::less<VT>());
 }
 
@@ -128,7 +128,7 @@ C& UnionSorted(C& dest, const C& src, const L& less)
 template <class C>
 C& UnionSorted(C& dest, const C& src)
 {
-	typedef typename C::ValueType VT;
+	typedef ValueTypeOf<C> VT;
 	return UnionSorted(dest, src, std::less<VT>());
 }
 
@@ -170,7 +170,7 @@ C& RemoveSorted(C& from, const C& what, const L& less)
 		}
 		else
 		{
-			const typename C::ValueType& value = *fp;
+			const ValueTypeOf<C>& value = *fp;
 			while(!less(value, *fp))
 				if(++fp == fe)
 				{
@@ -193,7 +193,7 @@ C& RemoveSorted(C& from, const C& what, const L& less)
 template <class C>
 C& RemoveSorted(C& from, const C& what)
 {
-	typedef typename C::ValueType VT;
+	typedef ValueTypeOf<C> VT;
 	return RemoveSorted(from, what, std::less<VT>());
 }
 
@@ -247,6 +247,6 @@ D& IntersectSorted(D& dest, const S& src, const L& less)
 template <class D, class S>
 D& IntersectSorted(D& dest, const S& src)
 {
-	typedef typename D::ValueType VT;
+	typedef ValueTypeOf<D> VT;
 	return IntersectSorted(dest, src, std::less<VT>());
 }

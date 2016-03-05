@@ -495,7 +495,7 @@ void SortByValue(Map& map, const Less& less)
 template <class Map>
 void SortByValue(Map& map)
 {
-	SortByValue(map, std::less<typename Map::ValueType>());
+	SortByValue(map, std::less<ValueTypeOf<Map>>());
 }
 
 template <class Map, class Less>
@@ -525,7 +525,7 @@ void StableSortByValue(Map& map, const Less& less)
 template <class Map>
 void StableSortByValue(Map& map)
 {
-	StableSortByValue(map, std::less<typename Map::ValueType>());
+	StableSortByValue(map, std::less<ValueTypeOf<Map>>());
 }
 
 template <class Index, class Less>
@@ -539,7 +539,7 @@ void SortIndex(Index& index, const Less& less)
 template <class Index>
 void SortIndex(Index& index)
 {
-	SortIndex(index, std::less<typename Index::ValueType>());
+	SortIndex(index, std::less<ValueTypeOf<Index>>());
 }
 
 template <class Index, class Less>
@@ -553,5 +553,5 @@ void StableSortIndex(Index& index, const Less& less)
 template <class Index>
 void StableSortIndex(Index& index)
 {
-	StableSortIndex(index, std::less<typename Index::ValueType>());
+	StableSortIndex(index, std::less<ValueTypeOf<Index>>());
 }

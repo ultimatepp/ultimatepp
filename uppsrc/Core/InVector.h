@@ -132,8 +132,6 @@ public:
 	int Find(const T& val, const L& less) const;
 	int Find(const T& val) const                          { return Find(val, StdLess<T>()); }
 
-	typedef T        ValueType;
-
 	ConstIterator    begin() const                  { ConstIterator it; SetBegin(it); return it; }
 	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
 
@@ -166,6 +164,7 @@ public:
 
 	void DumpIndex() const;
 #ifdef DEPRECATED
+	typedef T        ValueType;
 	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
 	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
 #endif

@@ -289,7 +289,7 @@ void CoSortByValue(Map& map, const Less& less)
 template <class Map>
 void CoSortByValue(Map& map)
 {
-	CoSortByValue(map, std::less<typename Map::ValueType>());
+	CoSortByValue(map, std::less<ValueTypeOf<Map>>());
 }
 
 template <class Map, class Less>
@@ -319,7 +319,7 @@ void CoStableSortByValue(Map& map, const Less& less)
 template <class Map>
 void CoStableSortByValue(Map& map)
 {
-	CoStableSortByValue(map, std::less<typename Map::ValueType>());
+	CoStableSortByValue(map, std::less<ValueTypeOf<Map>>());
 }
 
 template <class Index, class Less>
@@ -333,7 +333,7 @@ void CoSortIndex(Index& index, const Less& less)
 template <class Index>
 void CoSortIndex(Index& index)
 {
-	CoSortIndex(index, std::less<typename Index::ValueType>());
+	CoSortIndex(index, std::less<ValueTypeOf<Index>>());
 }
 
 template <class Index, class Less>
@@ -347,5 +347,5 @@ void CoStableSortIndex(Index& index, const Less& less)
 template <class Index>
 void CoStableSortIndex(Index& index)
 {
-	CoStableSortIndex(index, std::less<typename Index::ValueType>());
+	CoStableSortIndex(index, std::less<ValueTypeOf<Index>>());
 }
