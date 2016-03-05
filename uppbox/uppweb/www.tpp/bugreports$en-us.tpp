@@ -24,7 +24,7 @@ topic "Bug reports and patch submision";
 [{_}%EN-US 
 [s2; Reporting bugs&]
 [s0; If you feel that something does not work as it should, the most 
-effective way how to proceed is to post a message in the [^http`:`/`/ultimatepp`.org`/forum^ f
+effective way how to proceed is to post a message in the [^http`:`/`/ultimatepp`.org`/forums^ f
 orum]. The usual ethics apply here the same way as on most of 
 the forums all over the Internet: Before posting, [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=search`&^ c
 heck] if the problem isn`'t already reported. Please, make sure 
