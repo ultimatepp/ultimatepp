@@ -197,12 +197,12 @@ SyncObject::~SyncObject()
 	if(handle) CloseHandle(handle);
 }
 
-Event::Event()
+Win32Event::Win32Event()
 {
 	handle = CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
-void Event::Set()
+void Win32Event::Set()
 {
 	SetEvent(handle);
 }

@@ -282,15 +282,15 @@ public:
 	void     Swap(int i1, int i2)                 { UPP::Swap(vector[i1], vector[i2]); }
 	void     Move(int i1, int i2);
 
-	T       *Detach(int i)              { T *t = &Get(i); vector.Remove(i); return t; }
-	T       *Swap(int i, T *newt)       { T *tmp = (T*)vector[i]; vector[i] = newt; return tmp; }
 	T&       Set(int i, T *newt)        { delete (T *)vector[i]; vector[i] = newt; return *newt; }
 	T&       Insert(int i, T *newt);
 
 	void     Drop(int n = 1)            { Trim(GetCount() - n); }
 	T&       Top()                      { return Get(GetCount() - 1); }
 	const T& Top() const                { return Get(GetCount() - 1); }
-//	T        Pop()                      { T h = Top(); Drop(); return h; } // GCC bug, for some reason wants to instatiate this even if not used
+
+	T       *Detach(int i)              { T *t = &Get(i); vector.Remove(i); return t; }
+	T       *Swap(int i, T *newt)       { T *tmp = (T*)vector[i]; vector[i] = newt; return tmp; }
 	T       *PopDetach()                { return (T *) vector.Pop(); }
 
 	void     Swap(Array& b)             { Swap(vector, b.vector); }

@@ -115,8 +115,6 @@ public:
 	const T& Tail() const                  { return *(const T *) bv.Tail(); }
 	void     DropHead()                    { delete (T*) bv.Head(); bv.DropHead(); }
 	void     DropTail()                    { delete (T*) bv.Tail(); bv.DropTail(); }
-	T        PopHead()                     { T x = Head(); DropHead(); return x; }
-	T        PopTail()                     { T x = Tail(); DropTail(); return x; }
 	T       *DetachHead()                  { T *q = (T*) bv.Head(); bv.DropHead(); return q; }
 	T       *DetachTail()                  { T *q = (T*) bv.Tail(); bv.DropTail(); return q; }
 

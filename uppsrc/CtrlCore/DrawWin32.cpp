@@ -65,7 +65,8 @@ HPALETTE GetQlibPalette()
 
 SystemDraw& ScreenInfo()
 {
-	return Single<ScreenDraw>(true);
+	static ScreenDraw sd(true);
+	return sd;
 }
 
 HDC ScreenHDC()

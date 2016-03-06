@@ -87,8 +87,8 @@ HINSTANCE Ctrl::hInstance;
 HANDLE    Ctrl::OverwatchThread;
 HWND      Ctrl::OverwatchHWND;
 
-Event Ctrl::OverwatchEndSession;
-Event Ctrl::ExitLoopEvent;
+Win32Event Ctrl::OverwatchEndSession;
+Win32Event Ctrl::ExitLoopEvent;
 #endif
 #endif
 

@@ -59,11 +59,11 @@ public:
 	~SyncObject();
 };
 
-class Event : public SyncObject {
+class Win32Event : public SyncObject {
 public:
 	void       Set();
 
-	Event();
+	Win32Event();
 };
 #endif
 
