@@ -3,12 +3,6 @@
 #include "ndisasm.h"
 
 extern "C" {
-#undef INT64_MIN
-#undef INT64_MAX
-#undef UINT64_MAX
-
-#include "lib/compiler.h"
-#include "lib/inttypes.h"
 #include "lib/disasm.h"
 }
 
@@ -23,17 +17,5 @@ int NDisassemble(char *output, const byte *data, uint64 offset, bool x64)// retu
 	}
 	return len;
 }
-
-#ifdef flagMAIN
-CONSOLE_APP_MAIN
-{
-	long start = 0x4012f8, end = start + 256;
-	while(start < end) {
-		char line[NDISASM_OUTBUF_SIZE];
-		start += NDisassemble(line, (const byte *)start, start);
-		puts(line);
-	}
-}
-#endif
 
 END_UPP_NAMESPACE

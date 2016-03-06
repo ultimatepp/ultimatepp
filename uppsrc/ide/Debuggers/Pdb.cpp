@@ -5,7 +5,7 @@
 #define KEYFILE      <ide/Debuggers/Pdb.key>
 #include             <CtrlLib/key_source.h>
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 
 #pragma comment(lib, "DbgHelp.lib")
 #pragma comment(lib, "psapi.lib")
