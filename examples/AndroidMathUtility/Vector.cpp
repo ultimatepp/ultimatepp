@@ -36,7 +36,7 @@ Vector::Vector(const Vector& vec)
 
 Vector::~Vector()
 {
-	//delete[] data;
+	delete[] data;
 }
 
 float Vector::Get(int id) const
