@@ -777,9 +777,10 @@ LAYOUT(JumpLayout, 692, 496)
 END_LAYOUT
 
 LAYOUT(SelectAndroidDeviceLayout, 432, 228)
-	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(4, 24))
+	ITEM(Button, refresh, SetLabel(t_("Refresh")).LeftPosZ(4, 64).BottomPosZ(4, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
 	ITEM(ArrayCtrl, devicesArray, AutoHideSb(true).HSizePosZ(4, 4).TopPosZ(4, 192))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
 LAYOUT(RenamePackageLayout, 228, 100)

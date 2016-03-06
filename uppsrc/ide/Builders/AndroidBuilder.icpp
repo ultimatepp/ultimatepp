@@ -504,6 +504,12 @@ bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath
 		DeleteFile(signedApkPath);
 		String jarsignerCmd;
 		jarsignerCmd << NormalizeExePath(jdk.GetJarsignerPath());
+		
+		// Up to Java 6.0 below alogirms was by default
+		// (In Java 7.0 and above we need to manually specific this algorithms)
+		jarsignerCmd << " -sigalg SHA1withRSA";
+		jarsignerCmd << " -digestalg SHA1";
+		
 		jarsignerCmd << " -keystore " + keystorePath;
 		jarsignerCmd << " -storepass android";
 		jarsignerCmd << " -keypass android";
@@ -547,7 +553,9 @@ bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
 		keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
 		keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android";
 		keytoolCmd << " -keystore " << keystorePath;
-		keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\" -validity 100000";
+		keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\"";
+		keytoolCmd << " -keyalg RSA";
+		keytoolCmd << " -validity 100000";
 		//PutConsole(keytoolCmd);
 		if(Execute(keytoolCmd, ss) != 0) {
 			PutConsole(ss.GetResult());
