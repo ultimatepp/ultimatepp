@@ -62,8 +62,12 @@ public class AndroidMathActivity extends Activity
 	
 	static {
 		// For Android version less than 5.0 we need to specific standard library
+		// If you have a crash uncomment library that you specific in your Android Builder
+		// specification.
+		
+		// System.loadLibrary("stlport_shared");
 		// System.loadLibrary("gnustl_shared");
-		System.loadLibrary("c++_shared");
+		// System.loadLibrary("c++_shared");
 		
 		// In this place we are loading native libraries (In revers dependency order).
 		// IMPORTANT: Native library always has upp package name!!!
