@@ -22,10 +22,10 @@ Vector::Vector(int size)
 Vector::Vector(const Vector& vec)
 {
 	if(vec.GetSize() > 0) {
-		size = vec.GetSize();
-		data = new float[size];
+		this->size = vec.GetSize();
+		this->data = new float[size];
 		for(int i = 0; i < size; i++) {
-			data[i] = vec.data[i];
+			this->data[i] = vec.data[i];
 		}
 	}
 	else {
@@ -36,8 +36,7 @@ Vector::Vector(const Vector& vec)
 
 Vector::~Vector()
 {
-	if(data != NULL)
-		delete[] data;
+	//delete[] data;
 }
 
 float Vector::Get(int id) const

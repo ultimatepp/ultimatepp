@@ -17,7 +17,7 @@ extern "C" {
 
 using AndroidMathUtility::Vector;
 
-MemoryManager<Vector> mm;
+static MemoryManager<Vector> mm;
 
 /*
  * Class:     org_upp_AndroidMath_Vector
@@ -27,7 +27,7 @@ MemoryManager<Vector> mm;
 JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_construct
   (JNIEnv *env, jobject obj, jint size)
 {
-	mm.Insert(env, obj, Vector(size));
+	mm.Insert(env, obj, new Vector(size));
 }
 
 /*
@@ -36,9 +36,9 @@ JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_construct
  * Signature: (Lorg/upp/AndroidMath/Vector;)V
  */
 JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_copyConstruct
-  (JNIEnv *env, jobject objSrc, jobject objDst)
+  (JNIEnv *env, jobject jobjThis, jobject jobjThat)
 {
-	mm.MakeCopy(env, objSrc, objDst);
+	mm.MakeCopy(env, jobjThis, jobjThat);
 }
 
 /*
@@ -46,7 +46,7 @@ JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_copyConstruct
  * Method:    destruct
  * Signature: ()V
  */
-JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_destroy
+JNIEXPORT void JNICALL Java_org_upp_AndroidMath_Vector_nativeFinalize
   (JNIEnv *env, jobject obj)
 {
 	mm.Erase(env, obj);
