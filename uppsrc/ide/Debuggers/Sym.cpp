@@ -1,11 +1,11 @@
 #include "Debuggers.h"
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 
 #define LLOG(x)  // DLOG(x)
 
 #ifdef _DEBUG
-char * SymTagAsString( DWORD symTag )
+const char * SymTagAsString( DWORD symTag )
 {
 	switch( symTag )
 	{
@@ -26,7 +26,7 @@ char * SymTagAsString( DWORD symTag )
 	}
 }
 
-char * BaseTypeAsString( DWORD baseType )
+const char * BaseTypeAsString( DWORD baseType )
 {
 	switch ( baseType )
 	{
@@ -65,7 +65,7 @@ adr_t Pdb::GetAddress(FilePos p)
 		return ln.Address;
 	}
 	LLOG("GetAddress " << p.path << "(" << p.line << "): ??");
-	return NULL;
+	return 0;
 }
 
 Pdb::FilePos Pdb::GetFilePos(adr_t address)
@@ -84,17 +84,17 @@ Pdb::FilePos Pdb::GetFilePos(adr_t address)
 	return fp;
 }
 
-#define MAX_SYM_NAME 1024
+#define MAX_SYMB_NAME 1024
 
 Pdb::FnInfo Pdb::GetFnInfo0(adr_t address)
 {
 	DWORD64 h;
 
-	ULONG64 buffer[(sizeof(SYMBOL_INFO) + MAX_SYM_NAME + sizeof(ULONG64) - 1) / sizeof(ULONG64)];
+	ULONG64 buffer[(sizeof(SYMBOL_INFO) + MAX_SYMB_NAME + sizeof(ULONG64) - 1) / sizeof(ULONG64)];
 	SYMBOL_INFO *f = (SYMBOL_INFO*)buffer;
 
 	f->SizeOfStruct = sizeof(SYMBOL_INFO);
-	f->MaxNameLen = MAX_SYM_NAME;
+	f->MaxNameLen = MAX_SYMB_NAME;
 
 	FnInfo fn;
 	if(SymFromAddr(hProcess, address, &h, f)) {

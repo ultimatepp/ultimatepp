@@ -5,6 +5,8 @@ uses
 	plugin\ndisasm,
 	HexView;
 
+library(WIN32 GCC) "dbghelp psapi";
+
 file
 	Debuggers.h options(BUILDER_OPTION) PCH,
 	Debuggers.iml,

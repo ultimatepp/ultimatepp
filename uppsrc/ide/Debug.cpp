@@ -295,7 +295,7 @@ void Ide::BuildAndDebug(bool runto)
 	editor.Disable();
 
 	bool console = ShouldHaveConsole();
-#ifdef COMPILER_MSC
+
 	if(builder == "GCC")
 		if(gdbSelector)
 			debugger = Gdb_MI2Create(pick(host), target, runarg, console);
@@ -303,12 +303,7 @@ void Ide::BuildAndDebug(bool runto)
 			debugger = GdbCreate(pick(host), target, runarg, console);
 	else
 		debugger = PdbCreate(pick(host), target, runarg);
-#else
-	if(gdbSelector)
-		debugger = Gdb_MI2Create(pick(host), target, runarg, console);
-	else
-		debugger = GdbCreate(pick(host), target, runarg, console);
-#endif
+
 	if(!debugger) {
 		IdeEndDebug();
 		SetBar();
@@ -399,13 +394,11 @@ void Ide::ConditionalBreak()
 
 	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
 	                                  *CreateHost(true), *CreateBuilder(~CreateHostRunDir()));
-#ifdef COMPILER_MSC
 	if(cfg.Find("MSC") >= 0) {
 		if(EditPDBExpression("Conditional breakpoint", brk, NULL))
 			editor.SetBreakpoint(ln, brk);
 	}
 	else
-#endif
 	if(EditText(brk, "Conditional breakpoint", "Condition"))
 		editor.SetBreakpoint(ln, brk);
 	editor.RefreshFrame();
