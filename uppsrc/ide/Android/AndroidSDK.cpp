@@ -101,20 +101,21 @@ Vector<AndroidDevice> AndroidSDK::FindDevices() const
 			
 			Vector<String> elements = Split(lines[i], " ");
 			for(int j = 0; j < elements.GetCount(); j++) {
-				if(j == 0) {
+				if(j == 0)
 					device.SetSerial(elements[j]);
-					continue;
-				}
-				
-				Vector<String> element = Split(elements[j], ":");
-				if(element.GetCount() == 2) {
-					String tag  = element[0];
-					String data = element[1];
-					if(tag == "usb")
-						device.SetUsb(data);
-					else
-					if(tag == "model")
-						device.SetModel(data);
+				else if(j == 1)
+					device.SetState(elements[j]);
+				else {
+					Vector<String> element = Split(elements[j], ":");
+					if(element.GetCount() == 2) {
+						String tag  = element[0];
+						String data = element[1];
+						if(tag == "usb")
+							device.SetUsb(data);
+						else
+						if(tag == "model")
+							device.SetModel(data);
+					}
 				}
 			}
 			devices.Add(device);
