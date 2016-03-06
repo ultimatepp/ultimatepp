@@ -59,4 +59,15 @@ public class AndroidMathActivity extends Activity
 		
 		tv.append(text);
 	}
+	
+	static {
+		// For Android version less than 5.0 we need to specific standard library
+		// System.loadLibrary("gnustl_shared");
+		System.loadLibrary("c++_shared");
+		
+		// In this place we are loading native libraries (In revers dependency order).
+		// IMPORTANT: Native library always has upp package name!!!
+		System.loadLibrary("AndroidMathUtility");
+		System.loadLibrary("AndroidMath");
+	}
 }
