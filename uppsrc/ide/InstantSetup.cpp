@@ -219,23 +219,25 @@ void InstantSetup()
 			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+		#ifndef _DEBUG
 			if(CheckDirs(bins, 3) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
 				if(!x64)
 					default_method = Nvl(default_method, method);
 				continue;
 			}
+		#endif
 	
 			bmSet(bm, "BUILDER", "GCC");
 			bmSet(bm, "COMPILER", "");
 			bmSet(bm, "COMMON_OPTIONS", "-msse2 -D__CRT__NO_INLINE");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++14");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
-			bmSet(bm, "COMMON_LINK", x64 ? "" : "-m32");
+			bmSet(bm, "COMMON_LINK", "");
 			bmSet(bm, "COMMON_FLAGS", "");
 			bmSet(bm, "DEBUG_INFO", "2");
-			bmSet(bm, "DEBUG_BLITZ", "1");
+			bmSet(bm, "DEBUG_BLITZ", "");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
-			bmSet(bm, "DEBUG_OPTIONS", "-O0 -ggdb");
+			bmSet(bm, "DEBUG_OPTIONS", "-Os");
 			bmSet(bm, "DEBUG_FLAGS", "");
 			bmSet(bm, "DEBUG_LINK", "");
 			bmSet(bm, "RELEASE_BLITZ", "");

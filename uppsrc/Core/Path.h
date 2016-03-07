@@ -38,7 +38,9 @@ String  GetFullPath(const char *path);
 String  GetCurrentDirectory();
 #endif
 
+#ifdef PLATFORM_POSIX
 bool SetCurrentDirectory(const char *path);
+#endif
 
 struct FileTime;
 
