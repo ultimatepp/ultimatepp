@@ -209,7 +209,7 @@ void Thread::ShutdownThreads()
 {
 	BeginShutdownThreads();
 	while(GetCount())
-		Sleep(100);
+		Sleep(10);
 	EndShutdownThreads();
 }
 
