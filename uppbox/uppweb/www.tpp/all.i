@@ -82,10 +82,6 @@ TOPIC("comparison$en-us")
 #include "comparison$en-us.tppi"
 END_TOPIC
 
-TOPIC("comparison$fr-fr")
-#include "comparison$fr-fr.tppi"
-END_TOPIC
-
 TOPIC("contribweb$ca-es")
 #include "contribweb$ca-es.tppi"
 END_TOPIC
