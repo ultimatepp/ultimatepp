@@ -112,7 +112,7 @@ CONSOLE_APP_MAIN
 
 	Syx("7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
-	DeleteFolderDeep(upptmp + "/bin/tdm64");
+	DeleteFolderDeep(upptmp + "/bin/mingw64");
 	Syx("7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
 }
