@@ -1,7 +1,7 @@
 package org.upp.AndroidMath;
 
 /**
- * Class which whole funtional implementaiton is native.
+ * Math vector class which whole implementaiton is native (c/c++).
  */
 public class Vector
 {
@@ -13,7 +13,9 @@ public class Vector
 	private long nativeAdress = 0;
 	
 	/**
-	 * We override finalize method, beacuse we need to destroy native c++ object.
+	 * We override finalize method, because we need to destroy native c++ object when
+	 * there is not more reference to Java object. This method is called by default
+	 * by garbage collector.
 	 */
 	@Override
 	protected void finalize() throws Throwable

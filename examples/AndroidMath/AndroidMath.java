@@ -1,5 +1,8 @@
 package org.upp.AndroidMath;
 
+/**
+ * Native math functions from package AndroidMathUtility.
+ */
 public class AndroidMath
 {
 	private AndroidMath() {}

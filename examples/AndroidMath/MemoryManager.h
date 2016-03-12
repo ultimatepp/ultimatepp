@@ -1,8 +1,6 @@
 #ifndef _JniMath_MemoryManager_h_
 #define _JniMath_MemoryManager_h_
 
-#include <android/log.h>
-
 #include <jni.h>
 #include <vector>
 #include <string>
