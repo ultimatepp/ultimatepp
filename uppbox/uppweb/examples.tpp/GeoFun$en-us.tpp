@@ -4,7 +4,10 @@ topic "GeoFun";
 [b83;*4 $$2,0#07864147445237544204411237157677:title]
 [{_}%EN-US 
 [s2; Introduction&]
-[s1; Application is for exploring `"Sprirographs`".&]
+[s1; Application that main goal is to provide GUI interface for exploring 
+`"Sprirographs`".&]
+[s1; You can find more information about Spriographs on [^https`:`/`/en`.wikipedia`.org`/wiki`/Spirograph^ W
+ikipedia].&]
 [s2; Result&]
 [s0;= 
 @@rawimage:2214&1592
