@@ -10,6 +10,10 @@ TOPIC("AndroidMath$en-us")
 #include "AndroidMath$en-us.tppi"
 END_TOPIC
 
+TOPIC("AndroidMathUtility$en-us")
+#include "AndroidMathUtility$en-us.tppi"
+END_TOPIC
+
 TOPIC("AnimatedHello$en-us")
 #include "AnimatedHello$en-us.tppi"
 END_TOPIC
@@ -20,6 +24,10 @@ END_TOPIC
 
 TOPIC("Bombs$en-us")
 #include "Bombs$en-us.tppi"
+END_TOPIC
+
+TOPIC("Box2DExample$en-us")
+#include "Box2DExample$en-us.tppi"
 END_TOPIC
 
 TOPIC("Button$en-us")
@@ -52,6 +60,10 @@ END_TOPIC
 
 TOPIC("EyeCare$en-us")
 #include "EyeCare$en-us.tppi"
+END_TOPIC
+
+TOPIC("GeoFun$en-us")
+#include "GeoFun$en-us.tppi"
 END_TOPIC
 
 TOPIC("HelloWorld$en-us")
