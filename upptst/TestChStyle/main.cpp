@@ -7,10 +7,19 @@ void Dl(DropList& dl)
 	dl <<= "Case1";
 }
 
+void Dc(WithDropChoice<EditString>& dc)
+{
+	dc.AddList("Case1");
+	dc.AddList("Case2");
+	dc <<= "Case1";
+}
+
+
 TestChStyle::TestChStyle()
 {
 	CtrlLayout(*this, "Window title");
 	
+	normal.NullText("Normal");
 	readonly <<= "Read only";
 	disabled <<= "Disabled";
 	disabled.Disable();
@@ -19,11 +28,18 @@ TestChStyle::TestChStyle()
 	Dl(dl_readonly);
 	Dl(dl_disabled);
 	dl_disabled.Disable();
+
+	Dc(dc_normal);
+	Dc(dc_readonly);
+	Dc(dc_disabled);
+	dc_disabled.Disable();
+	
+	standard << [] { Ctrl::SetSkin(ChStdSkin); };
+	classic << [] { Ctrl::SetSkin(ChClassicSkin); };
+	host << [] { Ctrl::SetSkin(ChHostSkin); };
 }
 
 GUI_APP_MAIN
 {
-//	Ctrl::SetSkin(ChStdSkin);
-	Ctrl::SetSkin(ChClassicSkin);
 	TestChStyle().Run();
 }
