@@ -83,18 +83,20 @@ public:
 
 public:
 	void AddSourceFile(const String& path);
+	void AddInclude(const String& includePath);
 	void AddCppFlag(const String& name, const String& value = "");
 	void AddLdLibrary(const String& ldLibrary);
 	void AddStaticLibrary(const String& staticLibrary);
 	void AddStaticModuleLibrary(const String& staticModuleLibrary);
 	void AddSharedLibrary(const String& sharedLibrary);
 	
-	String GetName() const { return this->name; }
+	String GetName() const             { return this->name; }
 	void   SetName(const String& name) { this->name = name; }
 	
 protected:
 	void AppendName(String& makeFile) const;
 	void AppendSourceFiles(String& makeFile) const;
+	void AppendIncludes(String& makeFile) const;
 	void AppendCppFlags(String& makeFile) const;
 	void AppendLdLibraries(String& makeFile) const;
 	void AppendStaticLibraries(String& makeFile) const;
@@ -104,6 +106,7 @@ protected:
 private:
 	String name;
 	Vector<String> sourceFiles;
+	Vector<String> includes;
 	VectorMap<String, String> cppFlags;
 	Vector<String> ldLibraries;
 	Vector<String> staticLibraries;
