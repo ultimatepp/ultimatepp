@@ -3,10 +3,10 @@ topic "Introduction";
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
 [b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
-[s1; Introduction&]
+[s1; Description&]
 [s2; The example shows how to use SVG files (ang. Scalable Vector 
 Graphics) within U`+`+ framework.&]
-[s2; More information about SVG files you can find on [^https`:`/`/en`.wikipedia`.org`/wiki`/Scalable`_Vector`_Graphics^ W
+[s2; More information about SVG files you can be found on [^https`:`/`/en`.wikipedia`.org`/wiki`/Scalable`_Vector`_Graphics^ W
 ikipedia].&]
 [s1; Result&]
 [s0;= 

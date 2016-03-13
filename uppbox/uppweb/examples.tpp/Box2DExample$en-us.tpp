@@ -3,7 +3,7 @@ topic "Introduction";
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
 [b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
-[s1; Introduction&]
+[s1; Description&]
 [s2; Example of usage [^http`:`/`/box2d`.org`/^ Box2D] a 2D physics 
 engine with U`+`+.&]
 [s1; Result&]

@@ -3,9 +3,9 @@ topic "Introduction";
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
 [b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
-[s1; Introduction&]
+[s1; Description&]
 [s2; The example shows the usage of SDL library inside TheIDE.&]
-[s2; More information about SDL you can find on the library [^https`:`/`/www`.libsdl`.org`/^ o
+[s2; More information about SDL can be found on the library [^https`:`/`/www`.libsdl`.org`/^ o
 fficial site].&]
 [s1; Result&]
 [s0;= 
