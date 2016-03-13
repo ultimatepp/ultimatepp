@@ -144,7 +144,7 @@ CH_STYLE(EditField, Style, StyleDefault)
 	selected0 = SColorDkShadow();
 	selectedtext0 = SColorHighlightText();
 	for(int i = 0; i < 4; i++)
-		edge[i] = i == CTRL_DISABLED ? CtrlsImg::EFEd() : CtrlsImg::EFE();
+		edge[i] = CtrlsImg::EFE();
 	activeedge = false;
 	vfm = 2;
 }
