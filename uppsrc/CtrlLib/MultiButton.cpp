@@ -8,7 +8,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 		simple[i] = left[i] = right[i] = lmiddle[i] = rmiddle[i]
 			= Button::StyleEdge().look[i];
 		monocolor[i] = Button::StyleEdge().monocolor[i];
-		fmonocolor[i] = i == 3 ? SColorDisabled() : SColorText();
+		fmonocolor[i] = i == CTRL_DISABLED ? SColorDisabled() : SColorText();
 		look[i] = trivial[i] = ChLookWith(simple[i], CtrlsImg::DA(), monocolor[i]);
 		edge[i] = EditFieldEdge();
 	}
@@ -269,7 +269,7 @@ int MultiButton::ChState(int i)
 		int q = 0;
 		Ctrl *p = GetParent();
 		if(p)
-			q = !p->IsEnabled() || !IsEnabled() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
+			q = !p->IsEnabled() || !IsEnabled() || IsReadOnly() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
 			    : p->HasFocus() || push ? CTRL_PRESSED
 			    : p->HasMouse() || hl >= 0 ? CTRL_HOT
 			    : CTRL_NORMAL;
@@ -277,7 +277,7 @@ int MultiButton::ChState(int i)
 	}
 	if(IsTrivial() && !Frame())
 		i = 0;
-	if(!IsShowEnabled() || i >= 0 && !button[i].enabled)
+	if(!IsShowEnabled() || IsReadOnly() || i >= 0 && !button[i].enabled)
 		return CTRL_DISABLED;
 	return hl == i ? push ? CTRL_PRESSED
 	                      : CTRL_HOT
