@@ -3,7 +3,7 @@ topic "Painter";
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
 [b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
-[s1; Introduction&]
+[s1; Description&]
 [s2; The below example shows the full potential of U`+`+ Painter 
 package.&]
 [s1; Result&]

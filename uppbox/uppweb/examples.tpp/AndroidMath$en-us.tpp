@@ -3,7 +3,7 @@ topic "Android Math";
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
 [b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
-[s1; Introduction&]
+[s1; Description&]
 [s2; The main goal of this example is to show major capabilities 
 of [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Android Builder]. 
 We draw the attention on mixing Java and C/C`+`+ code in one 

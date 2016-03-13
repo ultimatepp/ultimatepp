@@ -3,10 +3,10 @@ topic "GeoFun";
 [b42;a42;2 $$1,1#45413000475342174754091244180557:text]
 [b83;*4 $$2,0#07864147445237544204411237157677:title]
 [{_}%EN-US 
-[s2; Introduction&]
+[s2; Description&]
 [s1; Application that main goal is to provide GUI interface for exploring 
 `"Sprirographs`".&]
-[s1; You can find more information about Spriographs on [^https`:`/`/en`.wikipedia`.org`/wiki`/Spirograph^ W
+[s1; More information about Spriographs can be found on [^https`:`/`/en`.wikipedia`.org`/wiki`/Spirograph^ W
 ikipedia].&]
 [s2; Result&]
 [s0;= 
