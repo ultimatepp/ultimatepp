@@ -23,6 +23,7 @@ TestChStyle::TestChStyle()
 
 GUI_APP_MAIN
 {
-	Ctrl::SetSkin(ChStdSkin);
+//	Ctrl::SetSkin(ChStdSkin);
+	Ctrl::SetSkin(ChClassicSkin);
 	TestChStyle().Run();
 }
