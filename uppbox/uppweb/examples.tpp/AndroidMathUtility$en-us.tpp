@@ -4,8 +4,8 @@ topic "AndroidMathUtility";
 [b42;a42;2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
 [s1; Description&]
-[s2; This is the second part of [^topic`:`/`/uppweb`/examples`/AndroidMath`$en`-us^ And
-roidMath ]example.&]
+[s2; This is the second part of [^http`:`/`/www`.ultimatepp`.org`/examples`$AndroidMath`$en`-us`.html^ A
+ndroidMath ]example.&]
 [s2; On this page we are showing the sources of AndroidMathUtility 
 package. The code from this package is called from AndroidMath.&]
 [s2; The package contains simply math utility. The class Vector represents 
