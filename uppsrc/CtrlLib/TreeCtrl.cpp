@@ -71,6 +71,7 @@ TreeCtrl::TreeCtrl()
 	SetFrame(ViewFrame());
 	AddFrame(sb);
 	sb.WhenScroll = THISBACK(Scroll);
+	sb.Box(sb_box);
 	WhenLeftDouble = THISBACK(StdLeftDouble);
 	chldlck = false;
 	highlight_ctrl = false;
@@ -390,6 +391,7 @@ void   TreeCtrl::Clear()
 	selectcount = 0;
 	Dirty();
 	cursor = anchor = -1;
+	sb.Set(0, 0);
 }
 
 void TreeCtrl::RemoveCtrls(int itemi)
