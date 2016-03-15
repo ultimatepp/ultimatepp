@@ -9,10 +9,11 @@ topic "External links";
 [s0;i150;a17;O0; [^http`:`/`/freshmeat`.net`/projects`/upp^2 FreshMeat]&]
 [s0;i150;a17;O0; [^http`:`/`/code`.google`.com`/p`/upp`-mirror`/^2 Google 
 Code]&]
+[s0;i150;a17;O0; [^https`:`/`/github`.com`/ultimatepp^2 GitHub]&]
 [s0;i150;a17;O0; [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/^2 LaunchPa
 d]&]
 [s0;i150;a17;O0; [^http`:`/`/en`.wikipedia`.org`/wiki`/Ultimate`%2B`%2B^2 Wikipedia]&]
-[s0;i150;a17;O0; [^https`:`/`/www`.ohloh`.net`/p`/upp^2 Ohloh]&]
+[s0;i150;a17;O0; [^https`:`/`/www`.openhub`.net`/p`/upp^2 Open HUB]&]
 [s0; &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Articles in the media]]}}&]
 [s0;2 &]
@@ -54,6 +55,11 @@ xWidgets Compared To Other Toolkits]&]
 eyIndex and KeyValueIndex templates][2 . They propose a new associative 
 array implementation for D language based on the ideas of U`+`+ 
 Index container.]&]
+[s0; &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Social Media]]}}&]
+[s0;2 &]
+[s0;i150;O0; [^https`:`/`/www`.facebook`.com`/pages`/Upp`-Framework`/262346610476027`?sk`=wall^2 F
+acebook]&]
 [s0;2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Just a joke :`-)]]}}&]
 [s0;2 &]
