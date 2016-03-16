@@ -15,7 +15,7 @@ class DirFinder {
 	void ScanDirs(const char *dir);
 
 public:
-	void Dir(const String& d) { dirs.Add(d); DDUMP(d); }
+	void Dir(const String& d) { dirs.Add(d); }
 
 	String ScanForDir(const String& dir, const char *ccontains, const char *cfiles, const char *csubdirs);
 };
