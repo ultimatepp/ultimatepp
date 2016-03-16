@@ -15,7 +15,7 @@ class DirFinder {
 	void ScanDirs(const char *dir);
 
 public:
-	void Dir(const String& d) { dirs.Add(d); }
+	void Dir(const String& d) { dirs.Add(d); DDUMP(d); }
 
 	String ScanForDir(const String& dir, const char *ccontains, const char *cfiles, const char *csubdirs);
 };
@@ -116,13 +116,26 @@ void bmSet(VectorMap<String, String>& bm, const char *id, const String& val)
 void InstantSetup()
 {
 	DirFinder df;
-	String pf = GetProgramsFolderX86();
-	df.Dir(pf + "/microsoft visual studio 14.0/vc/bin");
-	df.Dir(pf + "/windows kits/10");
-	df.Dir(pf + "/windows kits");
-	df.Dir(pf + "/microsoft visual studio 14.0");
-	df.Dir(pf);
-	df.Dir(GetProgramsFolder());
+
+	Array<FileSystemInfo::FileInfo> root = StdFileSystemInfo().Find(Null);
+	for(int i = 0; i < root.GetCount(); i++) {
+		if(root[i].root_style == FileSystemInfo::ROOT_FIXED) {
+			int drive = *root[i].filename;
+			String pf = GetProgramsFolderX86();
+			pf.Set(0, drive);
+			df.Dir(pf + "/microsoft visual studio 14.0/vc/bin");
+			df.Dir(pf + "/windows kits/10");
+			df.Dir(pf + "/windows kits");
+			df.Dir(pf + "/microsoft visual studio 14.0");
+			df.Dir(pf);
+			pf = GetProgramsFolder();
+			pf.Set(0, drive);
+			df.Dir(pf);
+		}
+	}
+	for(int i = 0; i < root.GetCount(); i++)
+		if(root[i].root_style == FileSystemInfo::ROOT_FIXED)
+			df.Dir(root[i].filename);
 	
 	String default_method;
 	
