@@ -2386,6 +2386,16 @@ void ArrayCtrl::SortB(const Vector<int>& o)
 	}
 }
 
+void ArrayCtrl::ReArrange(const Vector<int>& order)
+{
+	CHECK(KillCursor());
+	ClearCache();
+	SortA();
+	SortB(order);
+	Refresh();
+	SyncInfo();
+}
+
 void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
 	CHECK(KillCursor());
 	ClearCache();
@@ -2430,6 +2440,17 @@ void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order)
 	Sort(from, count, THISBACK1(OrderPred, &order));
 }
 
+struct sAC_ColumnSort : public ValueOrder {
+	bool              descending;
+	const ValueOrder *order;
+	int             (*cmp)(const Value& a, const Value& b);
+
+	virtual bool operator()(const Value& a, const Value& b) const {
+		return descending ? cmp ? (*cmp)(b, a) < 0 : (*order)(b, a)
+		                  : cmp ? (*cmp)(a, b) < 0 : (*order)(a, b);
+	}
+};
+
 bool ArrayCtrl::ColumnSortPred(int i1, int i2, int column, const ValueOrder *o)
 {
 	return (*o)(GetConvertedColumn(i1, column), GetConvertedColumn(i2, column));
@@ -2451,6 +2472,17 @@ void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
 	ColumnSort(column, THISBACK2(ColumnSortPred, column, &order));
 }
 
+void ArrayCtrl::ColumnSort(int column, int (*compare)(const Value& a, const Value& b))
+{
+	sAC_ColumnSort cs;
+	cs.descending = false;
+	cs.order = NULL;
+	cs.cmp = compare;
+	if(!cs.cmp)
+		cs.cmp = StdValueCompare;
+	ColumnSort(column, cs);
+}
+
 void ArrayCtrl::SetSortColumn(int ii, bool desc)
 {
 	sortcolumn = ii;
@@ -2468,17 +2500,6 @@ void ArrayCtrl::ToggleSortColumn(int ii)
 	}
 	DoColumnSort();
 }
-
-struct sAC_ColumnSort : public ValueOrder {
-	bool              descending;
-	const ValueOrder *order;
-	int             (*cmp)(const Value& a, const Value& b);
-
-	virtual bool operator()(const Value& a, const Value& b) const {
-		return descending ? cmp ? (*cmp)(b, a) < 0 : (*order)(b, a)
-		                  : cmp ? (*cmp)(a, b) < 0 : (*order)(a, b);
-	}
-};
 
 void ArrayCtrl::DoColumnSort()
 {
@@ -2855,8 +2876,11 @@ void ArrayCtrl::InsertDrop(int line, const Vector< Vector<Value> >& data, PasteC
 				}
 			}
 		else
-		if(IsCursor())
+		if(IsCursor()) {
+			if(GetCursor() < line)
+				line--;
 			Remove(GetCursor());
+		}
 		KillCursor();
 		d.SetAction(DND_COPY);
 	}

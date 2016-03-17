@@ -1891,6 +1891,16 @@ moving it up.&]
 [s2; Exchanges the cursor row with following row, effectively moving 
 it down.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:ReArrange`(const Upp`:`:Vector`<int`>`&`):%- [@(0.0.255) void]_
+[* ReArrange]([@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 order])
+&]
+[s2; Rearranges lines of array by [%-*@3 order] of former line indices. 
+The count of items in [%-*@3 order] must be the same as GetCount 
+of ArrayCtrl and it must contain all indices from zero to GetCount() 
+`- 1. [%-*@3 order] establishes a new order expressed in former 
+indices of lines.&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Sort`(Gate2`<int`,int`>`): [@(0.0.255) void]_[* Sort]([_^Gate2^ Gate2]<[@(0.0.255) i
 nt], [@(0.0.255) int]>_[*@3 order])&]
@@ -1986,6 +1996,14 @@ ColumnSortSecondary and ColumnSortFindKey flags.&]
 [s5;:ArrayCtrl`:`:ColumnSort`(int`,const ValueOrder`&`): [@(0.0.255) void]_[* ColumnSort](
 [@(0.0.255) int]_[*@3 column], [@(0.0.255) const]_[_^ValueOrder^ ValueOrder][@(0.0.255) `&]_
 [*@3 order])&]
+[s2; Sorts by the column. Note that this is different from Sort, 
+because the final converted value of column is used (which can 
+even be combination of more indexes).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:ColumnSort`(int`,int`(`*`)`(const Valua`&a`,const Upp`:`:Value`&b`)`):%- [@(0.0.255) v
+oid]_[* ColumnSort]([@(0.0.255) int]_[*@3 column], [@(0.0.255) int]_(`*[*@3 compare])([@(0.0.255) c
+onst]_Valua[@(0.0.255) `&]_a, [@(0.0.255) const]_Value[@(0.0.255) `&]_b))&]
 [s2; Sorts by the column. Note that this is different from Sort, 
 because the final converted value of column is used (which can 
 even be combination of more indexes).&]
