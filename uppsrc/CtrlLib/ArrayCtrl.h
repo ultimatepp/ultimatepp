@@ -528,6 +528,8 @@ public:
 	bool       FindSetCursor(const Value& val, int ii = 0, int from = 0);
 	bool       FindSetCursor(const Value& val, const Id& id, int from = 0);
 
+	void       ReArrange(const Vector<int>& order);
+
 	void       Sort(Gate2<int, int> order);
 	void       Sort(int from, int count, Gate2<int, int> order);
 	void       Sort(const ArrayCtrl::Order& order);
@@ -543,6 +545,7 @@ public:
 
 	void       ColumnSort(int column, Gate2<int, int> order);
 	void       ColumnSort(int column, const ValueOrder& order);
+	void       ColumnSort(int column, int (*compare)(const Value& a, const Value& b) = StdValueCompare);
 
 	void       SetSortColumn(int ii, bool descending = false);
 	void       ToggleSortColumn(int ii);
