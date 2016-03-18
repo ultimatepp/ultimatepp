@@ -2388,7 +2388,8 @@ void ArrayCtrl::SortB(const Vector<int>& o)
 
 void ArrayCtrl::ReArrange(const Vector<int>& order)
 {
-	CHECK(KillCursor());
+	KillCursor();
+	ClearSelection();
 	ClearCache();
 	SortA();
 	SortB(order);
@@ -2397,7 +2398,8 @@ void ArrayCtrl::ReArrange(const Vector<int>& order)
 }
 
 void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
-	CHECK(KillCursor());
+	KillCursor();
+	ClearSelection();
 	ClearCache();
 	SortPredicate sp;
 	sp.order = &order;
@@ -2413,7 +2415,8 @@ void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
 
 void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
 {
-	CHECK(KillCursor());
+	KillCursor();
+	ClearSelection();
 	ClearCache();
 	Vector<int> h;
 	for(int i = 0; i < array.GetCount(); i++)
