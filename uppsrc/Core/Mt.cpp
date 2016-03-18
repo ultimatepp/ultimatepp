@@ -363,59 +363,7 @@ void Thread::Sleep(int msec)
 #endif
 }
 
-#ifdef CPU_X86
-
-#ifndef CPU_SSE2
-
-static bool sSSE2 = CpuSSE2();
-
-void ReadMemoryBarrier()
-{
-#ifdef CPU_AMD64
-	#ifdef COMPILER_MSC
-		_mm_lfence();
-	#else
-		__asm__("lfence");
-	#endif
-#else
-	if(sSSE2)
-	#ifdef COMPILER_MSC
-		__asm lfence;
-	#else
-		__asm__("lfence");
-	#endif
-	else {
-		static Atomic x;
-		AtomicInc(x);
-	}
-#endif
-}
-
-void WriteMemoryBarrier() {
-#ifdef CPU_AMD64
-	#ifdef COMPILER_MSC
-		_mm_sfence();
-	#else
-		__asm__("sfence");
-	#endif
-#else
-	if(sSSE2)
-	#ifdef COMPILER_MSC
-		__asm sfence;
-	#else
-		__asm__("sfence");
-	#endif
-	else {
-		static Atomic x;
-		AtomicInc(x);
-	}
-#endif
-}
-#endif
-
-#else
-
-#ifndef COMPILER_GCC
+#if !defined(CPU_SSE2) && !defined(COMPILER_GCC)
 void ReadMemoryBarrier()
 {
 	static Atomic x;
@@ -425,8 +373,6 @@ void ReadMemoryBarrier()
 void WriteMemoryBarrier() {
 	ReadMemoryBarrier();
 }
-#endif
-
 #endif
 
 #ifdef flagPROFILEMT
