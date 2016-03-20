@@ -425,7 +425,7 @@ void Ctrl::Proc()
 				{ GDKEY(KP_Insert), K_INSERT },
 				{ GDKEY(KP_Delete), K_DELETE },
 			};
-			
+
 			if(kv > 256) { // Non-latin keyboard layout should still produce accelerators like Ctrl+C etc...
 				static VectorMap<int, int> hwkv; // convert hw keycode to Latin GTK keyval
 				ONCELOCK {
@@ -433,8 +433,9 @@ void Ctrl::Proc()
 						GdkKeymapKey *keys;
 						gint n_keys;
 						if(gdk_keymap_get_entries_for_keyval(NULL, i, &keys, &n_keys)) {
-							if(n_keys)
-								hwkv.Add(keys[0].keycode, i);
+							for(int j = 0; j < n_keys; j++)
+								if(keys[j].group == 0)
+									hwkv.Add(keys[j].keycode, i);
 							g_free(keys);
 						}
 					}
