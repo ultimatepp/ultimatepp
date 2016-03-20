@@ -157,7 +157,7 @@ public:
 		String group;
 		
 		String  stackid;
-		int 	stack;
+		int     stack;
 
 		bool visible;
 
@@ -297,6 +297,7 @@ protected:
 	void 	DoStacking();
 	void 	DoUnstacking();
 	void 	InsertIntoStack(Tab& t, int ix);
+	int  	GetStackCount(int stackix) const;
 	int  	FindStackHead(int stackix) const;
 	int  	FindStackTail(int stackix) const;
 	bool 	IsStackHead(int n) const;
@@ -314,8 +315,26 @@ protected:
 
 	using Ctrl::GetStdSize;
 	using Ctrl::Close;
+public:
+	enum class JumpDir { Left, Right };
+	struct JumpStack : Moveable< JumpStack > {
+		int        All;
+		int        Rest;
+		JumpDir jump_direct;
+
+		void Reset()                          { All = 0; Rest = 0; jump_direct = JumpDir::Left; }
+		bool IsReset() const                  { return ( All == 0 ); }
+		bool IsFull() const                   { return ( All == Rest ); }
+		void Activate( int N, JumpDir jd ) { All = N; Rest = N; jump_direct = jd; }
+
+		JumpStack() { Reset(); }
+	};
+	JumpStack jump_stack;
+	int  GetTabLR( JumpDir jd );
+	int  GetTabStackLR( JumpDir jd );
+	int  GetLR( int c, JumpDir jd );
 	
-protected:	
+protected:
 	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point p, dword keysflags);
 	virtual void LeftUp(Point p, dword keysflags);

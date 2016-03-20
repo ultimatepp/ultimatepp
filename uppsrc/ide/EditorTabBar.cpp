@@ -103,13 +103,26 @@ void Ide::CloseRest(EditorTabBar *tabs)
 	tabs->FindSetFile(cfn);
 }
 
-void Ide::TabsLR(int d)
+void Ide::TabsLR(TabBar::JumpDir jd)
 {
-	int c = tabs.GetCursor();
-	if(c < 0 || tabs.GetCount() <= 1)
-		return;
-	c = minmax(c + d, 0, tabs.GetCount() - 1);
-	EditFile(tabs.GetFile(c));
+	TabBar::JumpStack js;
+	int tc = tabs.GetCount();
+	
+	int n = tabs.GetTabLR( jd );
+	if ( n >= 0 && n < tc ) {
+		js = tabs.jump_stack;
+		EditFile( tabs.GetFile( n ) );
+		tabs.jump_stack = js;
+	}
+}
+
+void Ide::TabsStackLR(TabBar::JumpDir jd)
+{
+	int tc = tabs.GetCount();
+  
+	int n = tabs.GetTabStackLR( jd );
+	if ( n >= 0 && n < tc )
+		EditFile( tabs.GetFile( n ) );
 }
 
 void Ide::FileSelected()
