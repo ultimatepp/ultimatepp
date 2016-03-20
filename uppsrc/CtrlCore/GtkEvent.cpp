@@ -157,7 +157,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		pressed = true;
 	case GDK_KEY_RELEASE:
 		key = (GdkEventKey *)event;
-		value = (int) key->keyval;
+		value << (int) key->keyval << (int) key->hardware_keycode;
 		if(pressed) {
 			p = GetTopCtrlFromId(user_data);
 			if(p && gtk_im_context_filter_keypress(p->top->im_context, key))
@@ -349,7 +349,7 @@ void Ctrl::Proc()
 		return;
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
-	int  kv;
+	int  kv, hw;
 	static int clicktime = msecs() - 100000;
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY: {
@@ -386,7 +386,8 @@ void Ctrl::Proc()
 	case GDK_KEY_PRESS:
 		pressed = true;
 	case GDK_KEY_RELEASE:
-		kv = CurrentEvent.value;
+		kv = CurrentEvent.value[0];
+		hw = CurrentEvent.value[1];
 		if(kv >= 0 && kv < 65536) {
 			LLOG("keyval " << FormatIntHex(kv) << ' ' << (char)kv);
 			if(kv >= 'a' && kv <= 'z')
@@ -423,63 +424,24 @@ void Ctrl::Proc()
 				{ GDKEY(KP_Begin), K_HOME },
 				{ GDKEY(KP_Insert), K_INSERT },
 				{ GDKEY(KP_Delete), K_DELETE },
-
-				// Russian keyboard in GTK behaves very strange, producing cyrillic keyvals
-				// Convert them back to get combos like Ctrl+C etc.. working
-				{ 0x044f, K_Q },
-				{ 0x0432, K_W },
-				{ 0x0435, K_E },
-				{ 0x0440, K_R },
-				{ 0x0442, K_T },
-				{ 0x044b, K_Y },
-				{ 0x0443, K_U },
-				{ 0x0438, K_I },
-				{ 0x043e, K_O },
-				{ 0x043f, K_P },
-				{ 0x0430, K_A },
-				{ 0x0441, K_S },
-				{ 0x0434, K_D },
-				{ 0x0444, K_F },
-				{ 0x0433, K_G },
-				{ 0x0445, K_H },
-				{ 0x0439, K_J },
-				{ 0x043a, K_K },
-				{ 0x043b, K_L },
-				{ 0x0437, K_Z },
-				{ 0x044c, K_X },
-				{ 0x0446, K_C },
-				{ 0x0436, K_V },
-				{ 0x0431, K_B },
-				{ 0x043d, K_N },
-				{ 0x043c, K_M },
-
-				{ 0x06d1, K_Q },
-				{ 0x06d7, K_W },
-				{ 0x06c5, K_E },
-				{ 0x06d2, K_R },
-				{ 0x06d4, K_T },
-				{ 0x06d9, K_Y },
-				{ 0x06d5, K_U },
-				{ 0x06c9, K_I },
-				{ 0x06cf, K_O },
-				{ 0x06d0, K_P },
-				{ 0x06c1, K_A },
-				{ 0x06d3, K_S },
-				{ 0x06c4, K_D },
-				{ 0x06c6, K_F },
-				{ 0x06c7, K_G },
-				{ 0x06c8, K_H },
-				{ 0x06ca, K_J },
-				{ 0x06cb, K_K },
-				{ 0x06cc, K_L },
-				{ 0x06da, K_Z },
-				{ 0x06d8, K_X },
-				{ 0x06c3, K_C },
-				{ 0x06d6, K_V },
-				{ 0x06c2, K_B },
-				{ 0x06ce, K_N },
-				{ 0x06cd, K_M },
 			};
+			
+			if(kv > 256) { // Non-latin keyboard layout should still produce accelerators like Ctrl+C etc...
+				static VectorMap<int, int> hwkv; // convert hw keycode to Latin GTK keyval
+				ONCELOCK {
+					for(int i = 0; i < 256; i++) { // Latin keyvals are in 0..255 range
+						GdkKeymapKey *keys;
+						gint n_keys;
+						if(gdk_keymap_get_entries_for_keyval(NULL, i, &keys, &n_keys)) {
+							if(n_keys)
+								hwkv.Add(keys[0].keycode, i);
+							g_free(keys);
+						}
+					}
+				}
+				kv = hwkv.Get(hw, kv);
+			}
+
 			Tuple2<int, int> *x = FindTuple(cv, __countof(cv), kv);
 			if(x)
 				kv = x->b;
