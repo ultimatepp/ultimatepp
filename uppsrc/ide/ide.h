@@ -1049,8 +1049,8 @@ public:
 	void      ClearTab();
 	void      ClearTabs();
 	void      CloseRest(EditorTabBar *tabs);
-	void      TabsLR( TabBar::JumpDir jd );
-	void      TabsStackLR( TabBar::JumpDir jd );
+	void      TabsLR( int jd );
+	void      TabsStackLR( int jd );
 
 	void      RefreshFrame(bool auto_disasm);
 	void      RefreshLine(int frame, bool auto_disasm);

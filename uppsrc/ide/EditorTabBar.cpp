@@ -103,7 +103,7 @@ void Ide::CloseRest(EditorTabBar *tabs)
 	tabs->FindSetFile(cfn);
 }
 
-void Ide::TabsLR(TabBar::JumpDir jd)
+void Ide::TabsLR(int jd)
 {
 	TabBar::JumpStack js;
 	int tc = tabs.GetCount();
@@ -116,7 +116,7 @@ void Ide::TabsLR(TabBar::JumpDir jd)
 	}
 }
 
-void Ide::TabsStackLR(TabBar::JumpDir jd)
+void Ide::TabsStackLR(int jd)
 {
 	int tc = tabs.GetCount();
   

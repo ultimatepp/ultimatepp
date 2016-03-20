@@ -329,17 +329,17 @@ TabBar::TabBar()
 	BackPaint();
 }
 
-int TabBar::GetLR( int c, JumpDir jd )
+int TabBar::GetLR( int c, int jd )
 {
 	int new_tab;
-	if ( jd == JumpDir::Left )
+	if ( jd == JumpDirLeft )
 		new_tab = GetPrev( c );
 	else
 		new_tab = GetNext( c );
 	return new_tab;
 }
 
-int TabBar::GetTabStackLR( JumpDir jd )
+int TabBar::GetTabStackLR( int jd )
 {
 	int nt = -1;
 	if ( HasCursor() ) {
@@ -348,7 +348,7 @@ int TabBar::GetTabStackLR( JumpDir jd )
     
 		if ( IsStacking() ) {
 			int c_stack = tabs[ c ].stack;
-			if ( jd == JumpDir::Left )
+			if ( jd == JumpDirLeft )
 				nt = FindStackTail( c_stack );
 			else
 				nt = c + 1;
@@ -357,7 +357,7 @@ int TabBar::GetTabStackLR( JumpDir jd )
 	return nt;
 }
 
-int TabBar::GetTabLR( JumpDir jd )
+int TabBar::GetTabLR( int jd )
 {
 	int lt = -1;
 	bool js_NeedReset = true;
@@ -369,7 +369,7 @@ int TabBar::GetTabLR( JumpDir jd )
 		if ( IsStacking() ) {
 			int c_stack = tabs[ c ].stack;
 
-			if ( jd == JumpDir::Right && jump_stack.IsReset() ) {
+			if ( jd == JumpDirRight && jump_stack.IsReset() ) {
         
 				int c_stack_count = GetStackCount( c_stack );
 

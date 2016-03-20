@@ -404,16 +404,16 @@ bool Ide::Key(dword key, int count) {
 	case K_ALT_PAGEDOWN:
 		return package.Key(K_DOWN, 0);
 	case K_CTRL|K_ALT_LEFT:
-		TabsLR( TabBar::JumpDir::Left );
+		TabsLR( TabBar::JumpDirLeft );
 		return true;
 	case K_CTRL|K_ALT_RIGHT:
-		TabsLR( TabBar::JumpDir::Right );
+		TabsLR( TabBar::JumpDirRight );
 		return true;
 	case K_CTRL|K_ALT_B:
-		TabsStackLR( TabBar::JumpDir::Left );
+		TabsStackLR( TabBar::JumpDirLeft );
 		return true;
 	case K_CTRL|K_ALT_N:
-		TabsStackLR( TabBar::JumpDir::Right );
+		TabsStackLR( TabBar::JumpDirRight );
 		return true;
 	case K_SHIFT|K_CTRL_O:
 		AddFile(WorkspaceWork::ANY_FILE);
