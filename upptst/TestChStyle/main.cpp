@@ -33,10 +33,12 @@ TestChStyle::TestChStyle()
 	Dc(dc_readonly);
 	Dc(dc_disabled);
 	dc_disabled.Disable();
-	
+
+#ifdef CPP_11
 	standard << [] { Ctrl::SetSkin(ChStdSkin); };
 	classic << [] { Ctrl::SetSkin(ChClassicSkin); };
 	host << [] { Ctrl::SetSkin(ChHostSkin); };
+#endif
 }
 
 GUI_APP_MAIN
