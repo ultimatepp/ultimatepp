@@ -50,7 +50,7 @@ options are checked &]
 [s0; &]
 [s0; As can be seen on the above image, [* Visual C`+`+] option from 
 `"Programming Languages`" category needs to be selected. Moreover, 
-In `"Windows and Web Development`" we choose [* Universal Windows 
+in `"Windows and Web Development`" we choose [* Universal Windows 
 App Development Tools] &]
 [s0;* &]
 [s0; TheIDE can also be configured to work with external mingw or 
