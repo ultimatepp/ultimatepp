@@ -195,7 +195,7 @@ void Vector<T>::SetCountR(int n, const T& init) {
 	else
 		if(n > alloc) {
 			T *prev = vector;
-			ReAlloc(alloc + ntl_max(alloc, n - items));
+			ReAlloc(alloc + max(alloc, n - items));
 			DeepCopyConstructFill(vector + items, vector + n, init);
 			RawFree(prev);
 		}
@@ -645,7 +645,7 @@ template <class T>
 void BiVector<T>::Add0() {
 	ASSERT(items >= 0);
 	if(items >= alloc)
-		ReAlloc(ntl_max(2 * items, 4));
+		ReAlloc(max(2 * items, 4));
 	items++;
 }
 
