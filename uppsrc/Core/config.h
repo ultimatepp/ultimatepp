@@ -149,5 +149,5 @@
 #endif
 
 #ifndef CPP_11
-#error This version of U++ REQUIRED C++11
+#error This version of U++ REQUIREDS C++11
 #endif

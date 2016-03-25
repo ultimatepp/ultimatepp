@@ -182,7 +182,7 @@ void Vector<T>::SetCount(int n, const T& init) {
 template <class T>
 void Vector<T>::SetCountR(int n) {
 	if(n > alloc)
-		ReAllocF(alloc + ntl_max(alloc, n - items));
+		ReAllocF(alloc + max(alloc, n - items));
 	SetCount(n);
 }
 

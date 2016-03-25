@@ -504,8 +504,8 @@ typedef Mutex CriticalSection;
 typedef StaticMutex StaticCriticalSection;
 #endif
 
-// Auxiliary multithreading intended for use even in single-threaded applications
-// to resolve some host platform issues. Raw threads cannot use U++ heap (nor indirectly)
+// Auxiliary multithreading - this is not using/cannot use U++ heap, so does not need cleanup.
+// Used to resolve some host platform issues.
 
 #ifdef PLATFORM_WIN32
 #define auxthread_t DWORD
@@ -513,35 +513,6 @@ typedef StaticMutex StaticCriticalSection;
 #else
 #define auxthread_t void *
 #define auxthread__
-#endif
-
-#ifdef PLATFORM_WIN32
-struct AuxMutex {
-	CRITICAL_SECTION cs;
-	
-	void Enter() { EnterCriticalSection(&cs); }
-	void Leave() { LeaveCriticalSection(&cs); }
-	
-	AuxMutex()   { InitializeCriticalSection(&cs); }
-	~AuxMutex()  { DeleteCriticalSection(&cs); }
-};
-#endif
-
-#ifdef PLATFORM_POSIX
-struct AuxMutex {
-	pthread_mutex_t  mutex[1];
-	
-	void Enter() { pthread_mutex_lock(mutex); }
-	void Leave() { pthread_mutex_unlock(mutex); }
-	
-	AuxMutex()   {
-		pthread_mutexattr_t mutex_attr[1];
-		pthread_mutexattr_init(mutex_attr);
-		pthread_mutexattr_settype(mutex_attr, PTHREAD_MUTEX_RECURSIVE);
-		pthread_mutex_init(mutex, mutex_attr);
- 	}
-	~AuxMutex()  { pthread_mutex_destroy(mutex); }
-};
 #endif
 
 bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr);

@@ -1,5 +1,3 @@
-Remove CPP_11
-
 oportunity &&
 
 Mitor?!
@@ -15,8 +13,6 @@ Index::FirstAdd
 kw.Get(r["keywordId"], String())
 
 CoWork limits, pipe, logical thread not working
-
-Remove commented out code
 
 MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 
@@ -36,8 +32,6 @@ Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, 
 
 String  MD5Digest(const void *data, int length);
 
-AuxMutex, MT: Remove!
-
 fast - decide
 
 IIterator	typedef        typename V::ValueType T;
@@ -46,7 +40,13 @@ Remove ValueType uses
 
 InVector::InsertN possibly incorrect (can create small blocks)
 
+ExitThread (or Thread::Exit), Sleep(10)
+
 Fix CoWork
+
+Fix StringStream 2GB limit, StringBuffer 2GB limit
+Stream SizeLimit
+
 -----------------------
 DONE
 
@@ -93,3 +93,17 @@ Range Insert/Append in containers
 Function/Callback &&, Swap
 
 Range
+
+Remove:
+WithDeepCopy<T> DeepClone(const T& src)
+class WithPick : public T {
+WithPick<T> AsPick(T&& src)
+
+
+WithDeepCopy should implement &&
+
+Remove CPP_11
+
+Remove commented out code
+
+AuxMutex, MT: Remove!

@@ -222,37 +222,22 @@ class MoveableAndDeepCopyOption : public B {
 template <class T>
 class WithDeepCopy : public T {
 public:
-	WithDeepCopy(const T& a) : T(a, 1)             {}
-	WithDeepCopy(const T& a, int) : T(a, 1)        {}
-	WithDeepCopy(const WithDeepCopy& a) : T(a, 1)  {}
-	WithDeepCopy& operator=(const WithDeepCopy& a) { (T&)*this <<= a; return *this; }
-	WithDeepCopy(int, T&& a) : T(pick(a))          {}
-	WithDeepCopy& operator^=(T&& a)                { (T&)*this = pick(a); return *this; }
-	WithDeepCopy()                                 {}
+	WithDeepCopy(const T& a) : T(clone(a))             {}
+	WithDeepCopy(const T& a, int) : T(clone(a))        {}
+
+	WithDeepCopy(const WithDeepCopy& a) : T(clone(a))  {}
+	WithDeepCopy& operator=(const WithDeepCopy& a)     { (T&)*this <<= a; return *this; }
+
+	WithDeepCopy(T&& a) : T(pick(a))                   {}
+	WithDeepCopy(WithDeepCopy&& a) : T(pick(a))        {}
+
+	WithDeepCopy& operator=(T&& a)                     { (T&)*this = pick(a); return *this; }
+	WithDeepCopy& operator=(WithDeepCopy&& a)          { (T&)*this = pick(a); return *this; }
+
+	WithDeepCopy()                                     {}
 };
 
-template <class T>
-WithDeepCopy<T> DeepClone(const T& src)
-{
-	return WithDeepCopy<T>(src);
-}
-
-template <class T>
-class WithPick : public T {
-public:
-	WithPick(const T& a) : T(pick(a))            {}
-	WithPick(const WithPick& a) : T(pick(a))     {}
-	WithPick& operator=(const WithPick& a)       { (T&)*this = pick(a); return *this; }
-	WithPick& operator=(const T& a)              { (T&)*this = pick(a); return *this; }
-};
-
-template <class T>
-WithPick<T> AsPick(T&& src)
-{
-	return WithPick<T>(src);
-}
-
-// STL compatibility hacks
+// compatibility hacks
 
 #define STL_ITERATOR_COMPATIBILITY \
 	typedef ptrdiff_t                        difference_type; \
@@ -512,14 +497,8 @@ inline unsigned GetPtrHashValue(const void *a)                   { return (int)a
 inline unsigned GetPtrHashValue(const void *a)                   { return CombineHash((unsigned)(uintptr_t)a); }
 #endif
 
-//* Is it time to activate this?
 template <class T>
 inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
-//*/
-
-// workaround for broken standard libraries...
-
-template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > b ? a : b; }
 
 template <int size>
 struct Data_S_ : Moveable< Data_S_<size> >

@@ -544,7 +544,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 }
 
 #ifdef GUI_WIN
-static AuxMutex   sExeMutex;
+static Mutex      sExeMutex;
 static char       sExePath[1025];
 static bool       sExeRunning;
 static SHFILEINFO sExeInfo;

@@ -19,7 +19,7 @@ NAMESPACE_UPP
 
 IpAddrInfo::Entry IpAddrInfo::pool[IpAddrInfo::COUNT];
 
-AuxMutex IpAddrInfoPoolMutex;
+Mutex IpAddrInfoPoolMutex;
 
 void IpAddrInfo::EnterPool()
 {

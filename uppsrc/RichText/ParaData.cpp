@@ -275,7 +275,7 @@ void RichPara::Cat(Id field, const String& param, const RichPara::CharFormat& f)
 	VectorMap<String, Value> dummy;
 	FieldType *ft = fieldtype().Get(field, NULL);
 	if(ft)
-		p.fieldpart ^= ft->Evaluate(param, dummy, f);
+		p.fieldpart = pick(ft->Evaluate(param, dummy, f));
 }
 
 struct TabLess {
@@ -662,7 +662,7 @@ bool RichPara::EvaluateFields(VectorMap<String, Value>& vars)
 		if(p.field) {
 			FieldType *f = fieldtype().Get(p.field, NULL);
 			if(f) {
-				p.fieldpart ^= f->Evaluate(p.fieldparam, vars, p.format);
+				p.fieldpart = pick(f->Evaluate(p.fieldparam, vars, p.format));
 				b = true;
 			}
 		}

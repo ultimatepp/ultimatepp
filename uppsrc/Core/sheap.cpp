@@ -304,16 +304,7 @@ void MemoryFreek__(int klass, void *ptr)
 	heap.Free(ptr, klass);
 }
 
-/*
-Heap::Page    dummy;
-#define DI    { { 0, 0, 0, 0, &dummy, &dummy } }
-*/
 thread__ Heap heap;
-/*
- = {
-	{ DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI, DI }
-};
-*/
 
 #if defined(HEAPDBG)
 void *MemoryAlloc_(size_t sz)
