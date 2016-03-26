@@ -55,16 +55,22 @@ void (*Thread::AtExit(void (*exitfn)()))()
 	return prev;
 }
 
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
+struct sThreadExitExc__ {};
+
+void Thread::Exit()
+{
+	throw sThreadExitExc__();
+}
+
 static
 #ifdef PLATFORM_WIN32
-#ifdef CPU_64
-unsigned int
+	#ifdef CPU_64
+		unsigned int
+	#else
+		uintptr_t __stdcall
+	#endif
 #else
-uintptr_t __stdcall
-#endif
-#else
-void *
+	void *
 #endif
 sThreadRoutine(void *arg)
 {
@@ -76,7 +82,8 @@ sThreadRoutine(void *arg)
 	catch(Exc e) {
 		Panic(e);
 	}
-	catch(ExitExc) {}
+	catch(sThreadExitExc__) {}
+	catch(Upp::ExitExc) {}
 	AtomicDec(sThreadCount);
 	delete cb;
 	if(sExit)
@@ -86,7 +93,6 @@ sThreadRoutine(void *arg)
 #endif
 	return 0;
 }
-#endif
 
 static bool threadr; //indicates if *any* Thread instance is running (having called its Run()), upon first call of Run
 #ifndef CPU_BLACKFIN
