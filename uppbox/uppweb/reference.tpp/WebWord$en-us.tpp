@@ -8,6 +8,9 @@ topic "WebWord";
 client to U`+`+ based GUI server application. The page is by 
 default available on following address: 127.0.0.1:8088. Of course 
 firstly you need to compile the project and execute it.&]
+[s2; WebWord can be launch in any browser that supports HTML5 and 
+implements WebSocket protocol. The simplest examples of such 
+browser are the latest versions of Firefox or Chrom.&]
 [s1; Result&]
 [s0; &]
 [s0;= 
