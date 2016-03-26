@@ -73,7 +73,7 @@ String bin = "u:/upp.bin";
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
-void Make(String pkg, String exe, String method = "MSC9")
+void Make(String pkg, String exe, String method = "MINGW")
 {
 	Syx("u:/Win32/upp/umk " + ass + " " + pkg + " u:/Win32/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
@@ -103,7 +103,7 @@ CONSOLE_APP_MAIN
 	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
 	Make("ide", "theide32.exe");
-	Make("ide", "theide.exe", "MSC9X64");
+	Make("ide", "theide.exe", "MINGWx64");
 	Make("umk", "umk.exe");
 
 	SetCurrentDirectory(upptmp);
