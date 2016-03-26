@@ -66,6 +66,10 @@ TOPIC("EyeCare$en-us")
 #include "EyeCare$en-us.tppi"
 END_TOPIC
 
+TOPIC("FnGraph$en-us")
+#include "FnGraph$en-us.tppi"
+END_TOPIC
+
 TOPIC("GeoFun$en-us")
 #include "GeoFun$en-us.tppi"
 END_TOPIC
