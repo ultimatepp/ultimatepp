@@ -255,8 +255,9 @@ void InstantSetup()
 			bmSet(bm, "DEBUG_LINK", "");
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
-			bmSet(bm, "RELEASE_OPTIONS", "-O3 -ffunction-sections");
-			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-O3 -Os -finline-limit=20 -ffunction-sections");
+			String olevel = x64 ? "-O3 " : "-Os ";
+			bmSet(bm, "RELEASE_OPTIONS", olevel + "-ffunction-sections");
+			bmSet(bm, "RELEASE_SIZE_OPTIONS", olevel + "-finline-limit=20 -ffunction-sections");
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "");
 			bmSet(bm, "DEBUGGER", "gdb");
