@@ -158,6 +158,10 @@ TOPIC("VirtualArray$en-us")
 #include "VirtualArray$en-us.tppi"
 END_TOPIC
 
+TOPIC("WebWord$en-us")
+#include "WebWord$en-us.tppi"
+END_TOPIC
+
 TOPIC("XML$en-us")
 #include "XML$en-us.tppi"
 END_TOPIC
