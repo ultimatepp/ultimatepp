@@ -81,7 +81,7 @@ void Make(String pkg, String exe, String method = "MINGW")
 
 CONSOLE_APP_MAIN
 {
-	Vector<String> s = Split(Syx("svnversion " + uppsrc), NoDigit);
+	Vector<String> s = Split(Syx("c:/upp/SlikSvn/bin/svnversion " + uppsrc), NoDigit);
 	if(s.GetCount() == 0)
 		Error("Invalid version");
 	String version = s.Top();
@@ -110,9 +110,9 @@ CONSOLE_APP_MAIN
 	
 	SaveFile("license.chk", "1");
 
-	Syx("7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
+	Syx("c:/upp/7-zip/7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
 	DeleteFolderDeep(upptmp + "/bin/mingw64");
-	Syx("7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
+	Syx("c:/upp/7-zip/7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
 }
