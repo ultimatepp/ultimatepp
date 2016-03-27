@@ -71,34 +71,34 @@ enum CNULLer { CNULL };
 
 // we need "isolation level" to avoid overloading issues
 template <class... ArgTypes>
-class CallbackN : Moveable<CallbackN<ArgTypes...>> {
+class Event : Moveable<Event<ArgTypes...>> {
 	typedef Function<void (ArgTypes...)> Fn;
 
 	Fn fn;
 
 public:
-	CallbackN() {}
-	CallbackN(CNULLer)                                    {}
-	CallbackN(const CallbackN& src) : fn(src.fn)          {}
-	CallbackN(CallbackN&& src) : fn(pick(src.fn))         {}
-	CallbackN(Fn&& src, int) : fn(src)                    {}
+	Event() {}
+	Event(CNULLer)                                    {}
+	Event(const Event& src) : fn(src.fn)          {}
+	Event(Event&& src) : fn(pick(src.fn))         {}
+	Event(Fn&& src, int) : fn(src)                    {}
 	template <class F>
-	CallbackN(F src, int) : fn(src)                       {}
-//	CallbackN(Fn&& src) : fn(src)                         {}
-//	CallbackN& operator=(const Fn& src)                   { fn = src.fn; return *this; }
-	CallbackN& operator=(const CallbackN& src)            { fn = src.fn; return *this; }
-	CallbackN& operator=(CallbackN&& src)                 { fn = pick(src.fn); return *this; }
-	CallbackN& operator=(CNULLer)                         { fn.Clear(); return *this; }
-	CallbackN Proxy() const                               { return CallbackN(fn.Proxy(), 1); }
+	Event(F src, int) : fn(src)                       {}
+//	Event(Fn&& src) : fn(src)                         {}
+//	Event& operator=(const Fn& src)                   { fn = src.fn; return *this; }
+	Event& operator=(const Event& src)            { fn = src.fn; return *this; }
+	Event& operator=(Event&& src)                 { fn = pick(src.fn); return *this; }
+	Event& operator=(CNULLer)                         { fn.Clear(); return *this; }
+	Event Proxy() const                               { return Event(fn.Proxy(), 1); }
 
-	CallbackN& operator<<(const CallbackN& b)  { fn << b.fn; return *this; }
-	CallbackN& operator<<(const Fn& b)         { fn << b; return *this; }
+	Event& operator<<(const Event& b)  { fn << b.fn; return *this; }
+	Event& operator<<(const Fn& b)         { fn << b; return *this; }
 
-	CallbackN& operator<<(CallbackN&& b)       { fn << pick(b.fn); return *this; }
-	CallbackN& operator<<(Fn&& b)              { fn << pick(b); return *this; }
+	Event& operator<<(Event&& b)       { fn << pick(b.fn); return *this; }
+	Event& operator<<(Fn&& b)              { fn << pick(b); return *this; }
 	
 	template <class F>
-	CallbackN& operator<<(F f)                 { fn << f; }
+	Event& operator<<(F f)                 { fn << f; }
 	
 	void operator()(ArgTypes... args) const    { return fn(args...); }
 
@@ -106,24 +106,13 @@ public:
 	operator bool() const                      { return fn; }
 	void Clear()                               { fn.Clear(); }
 	
-	friend CallbackN Proxy(const CallbackN& a)   { return a.Proxy(); }
-	friend void Swap(CallbackN& a, CallbackN& b) { UPP::Swap(a.fn, b.fn); }
+	friend Event Proxy(const Event& a)   { return a.Proxy(); }
+	friend void Swap(Event& a, Event& b) { UPP::Swap(a.fn, b.fn); }
 };
-
-typedef CallbackN<> Callback;
-template <class P1> using Callback1 = CallbackN<P1>;
-template <class P1, class P2> using Callback2 = CallbackN<P1, P2>;
-template <class P1, class P2, class P3> using Callback3 = CallbackN<P1, P2, P3>;
-template <class P1, class P2, class P3, class P4> using Callback4 = CallbackN<P1, P2, P3, P4>;
-template <class P1, class P2, class P3, class P4, class P5> using Callback5 = CallbackN<P1, P2, P3, P4, P5>;
-
-#define  Res void
-#define  Cb_ CallbackN
-#include "CallbackR.i"
 
 // we need "isolation level" to avoid overloading issues
 template <class... ArgTypes>
-class GateN : Moveable<GateN<ArgTypes...>> {
+class EventGate : Moveable<EventGate<ArgTypes...>> {
 	typedef Function<bool (ArgTypes...)> Fn;
 
 	Fn fn;
@@ -131,26 +120,26 @@ class GateN : Moveable<GateN<ArgTypes...>> {
 	void Set(bool b) { if(b) fn = [](ArgTypes...) { return true; }; else fn.Clear(); }
 
 public:
-	GateN()                                {}
-	GateN(bool b)                          { Set(b); }
-	GateN(CNULLer)                         {}
-	GateN(const GateN& a) : fn(a.fn)       {}
-//	GateN(GateN&& a) : fn(pick(a.fn))      {}
-	GateN(Fn&& src, int) : fn(src)         {}
-	GateN& operator=(const GateN& a)       { fn = a.fn; return *this; }
-	GateN& operator=(GateN&& a)            { fn = pick(a.fn); return *this; }
-	GateN& operator=(CNULLer)              { fn.Clear(); return *this; }
-	GateN& operator=(bool b)               { Set(b); return *this; }
-	GateN Proxy() const                    { return fn.Proxy(); }
+	EventGate()                                {}
+	EventGate(bool b)                          { Set(b); }
+	EventGate(CNULLer)                         {}
+	EventGate(const EventGate& a) : fn(a.fn)       {}
+//	EventGate(EventGate&& a) : fn(pick(a.fn))      {}
+	EventGate(Fn&& src, int) : fn(src)         {}
+	EventGate& operator=(const EventGate& a)       { fn = a.fn; return *this; }
+	EventGate& operator=(EventGate&& a)            { fn = pick(a.fn); return *this; }
+	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
+	EventGate& operator=(bool b)               { Set(b); return *this; }
+	EventGate Proxy() const                    { return fn.Proxy(); }
 
-	GateN& operator<<(const GateN& b)      { fn << b.fn; return *this; }
-	GateN& operator<<(const Fn& b)         { fn << b; return *this; }
+	EventGate& operator<<(const EventGate& b)      { fn << b.fn; return *this; }
+	EventGate& operator<<(const Fn& b)         { fn << b; return *this; }
 
-	GateN& operator<<(GateN&& b)           { fn << pick(b.fn); return *this; }
-	GateN& operator<<(Fn&& b)              { fn << pick(b); return *this; }
+	EventGate& operator<<(EventGate&& b)           { fn << pick(b.fn); return *this; }
+	EventGate& operator<<(Fn&& b)              { fn << pick(b); return *this; }
 
 	template <class F>
-	GateN& operator<<(F f)                 { fn << f; }
+	EventGate& operator<<(F f)                 { fn << f; }
 	
 	bool operator()(ArgTypes... args) const { return fn(args...); }
 
@@ -158,19 +147,31 @@ public:
 	operator bool() const                  { return fn; }
 	void Clear()                           { fn.Clear(); }
 
-	friend GateN Proxy(const GateN& a)     { return a.Proxy(); }
-	friend void Swap(GateN& a, GateN& b)   { UPP::Swap(a.fn, b.fn); }
+	friend EventGate Proxy(const EventGate& a)     { return a.Proxy(); }
+	friend void Swap(EventGate& a, EventGate& b)   { UPP::Swap(a.fn, b.fn); }
 };
 
-using Gate = GateN<>;
-template <class P1> using Gate1 = GateN<P1>;
-template <class P1, class P2> using Gate2 = GateN<P1, P2>;
-template <class P1, class P2, class P3> using Gate3 = GateN<P1, P2, P3>;
-template <class P1, class P2, class P3, class P4> using Gate4 = GateN<P1, P2, P3, P4>;
-template <class P1, class P2, class P3, class P4, class P5> using Gate5 = GateN<P1, P2, P3, P4, P5>;
+// backward compatibility
+typedef Event<> Callback;
+template <class P1> using Callback1 = Event<P1>;
+template <class P1, class P2> using Callback2 = Event<P1, P2>;
+template <class P1, class P2, class P3> using Callback3 = Event<P1, P2, P3>;
+template <class P1, class P2, class P3, class P4> using Callback4 = Event<P1, P2, P3, P4>;
+template <class P1, class P2, class P3, class P4, class P5> using Callback5 = Event<P1, P2, P3, P4, P5>;
+
+#define  Res void
+#define  Cb_ Event
+#include "CallbackR.i"
+
+using Gate = EventGate<>;
+template <class P1> using Gate1 = EventGate<P1>;
+template <class P1, class P2> using Gate2 = EventGate<P1, P2>;
+template <class P1, class P2, class P3> using Gate3 = EventGate<P1, P2, P3>;
+template <class P1, class P2, class P3, class P4> using Gate4 = EventGate<P1, P2, P3, P4>;
+template <class P1, class P2, class P3, class P4, class P5> using Gate5 = EventGate<P1, P2, P3, P4, P5>;
 
 #define  Res bool
-#define  Cb_ GateN
+#define  Cb_ EventGate
 #include "CallbackR.i"
 
 #define THISBACK(x)                  callback(this, &CLASSNAME::x)
@@ -193,6 +194,7 @@ template <class P1, class P2, class P3, class P4, class P5> using Gate5 = GateN<
 #define STDBACK3(m, a, b, c)         callback3(&m, a, b, c)
 #define STDBACK4(m, a, b, c, d)      callback4(&m, a, b, c, d)
 #define STDBACK5(m, a, b, c, d, e)   callback5(&m, a, b, c, d, e)
+
 
 template <class T>
 class CallbackArgTarget
