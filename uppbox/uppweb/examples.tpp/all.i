@@ -38,10 +38,6 @@ TOPIC("Button$en-us")
 #include "Button$en-us.tppi"
 END_TOPIC
 
-TOPIC("Clock$en-us")
-#include "Clock$en-us.tppi"
-END_TOPIC
-
 TOPIC("CodeMetric$en-us")
 #include "CodeMetric$en-us.tppi"
 END_TOPIC
