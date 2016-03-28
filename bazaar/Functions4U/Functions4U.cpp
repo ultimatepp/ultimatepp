@@ -274,30 +274,30 @@ bool IsFolder(const char *fileName) {
 	return false;
 }
 
-String GetRelativePath(String &from, String &path) {
-	String ret;
+bool GetRelativePath(String& from, String& path, String& ret) {
+	ret.Clear();
 	int pos_from = 0, pos_path = 0;
 	bool first = true;
 	while (!IsNull(pos_from)) {
 		String f_from = Tokenize2(from, DIR_SEPS, pos_from);
 		String f_path = Tokenize2(path, DIR_SEPS, pos_path);
-		if (f_from != f_path) {
+		if (ToLower(f_from) != ToLower(f_path)) {
 			if (first) 
-				return Null;
+				return false;
+			ret << f_path;	
 			String fileName = path.Mid(pos_path);
-			if (fileName.IsEmpty()) 
-				ret << ".." << DIR_SEPS << f_path;	
-			else
-				ret << ".." << DIR_SEPS << f_path << DIR_SEPS << fileName;	
+			if (!fileName.IsEmpty()) 
+				ret << DIR_SEPS << fileName;	
 			while (!IsNull(pos_from)) {
 				ret.Insert(0, String("..") + DIR_SEPS);
 				Tokenize2(from, DIR_SEPS, pos_from);		
 			}
-			return ret;
+			return true;
 		}
 		first = false;
 	}
-	return path.Mid(pos_path);
+	ret = path.Mid(pos_path);
+	return true;
 }
 
 bool SetReadOnly(const char *path, bool readOnly) {
@@ -1031,7 +1031,7 @@ String Tokenize2(const String &str, const String &token, int &pos) {
 	}
 	int oldpos = pos;
 	if (npos < 0) {
-		pos = str.GetCount();
+		pos = Null;
 		return str.Mid(oldpos);
 	} else {
 		pos = npos + token.GetCount();
@@ -1055,7 +1055,7 @@ Vector<String> Tokenize(const String &str, const String &token, int pos) {
 void Tokenize(const String &str, const String &token, Vector<String> &ret, int pos) {
 	for (int _pos = pos; !IsNull(_pos); ret << Tokenize2(str, token, _pos))
 		;
-	ret.Remove(ret.GetCount() - 1);
+	//ret.Remove(ret.GetCount() - 1);
 }
 /*
 String Tokenize(const String &str, const String &token, int &pos) {

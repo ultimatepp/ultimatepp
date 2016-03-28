@@ -73,16 +73,6 @@ onst]_[_^String^ String]_`&[*@3 folderName])&]
 [s2; Returns the folder over [%-*@3 folderName].&]
 [s3; &]
 [s4;%- &]
-[s5;:GetRelativePath`(String`&`,String`&`):%- [_^String^ String]_[* GetRelativePath]([_^String^ S
-tring]_`&[*@3 from], [_^String^ String]_`&[*@3 path])&]
-[s2; Returns the relative path to go from [%-*@3 from] to [%-*@3 path].&]
-[s0;l288; For example, if:&]
-[s0;l288;i150;O0; [%-*@3 from] `= `"/books/technology/computers`"&]
-[s0;l288;i150;O0; [%-*@3 path ]`= `"/books/biology/mammals`"&]
-[s0;l288; GetRelativePath() would return `"../../biology/mammals`".&]
-[s0;l288; If there is no match between both paths it returns Null.&]
-[s3; &]
-[s4;%- &]
 [s5;:FileRealName`(const char`*`):%- [_^String^ String]_[* FileRealName]([@(0.0.255) const]_
 [@(0.0.255) char]_`*[*@3 path])&]
 [s2; Returns the real name of [%-*@3 path].(directory or file) with 
@@ -189,6 +179,21 @@ ar]_`*[*@3 fileName])&]
 [s5;:IsFolder`(const char`*`):%- [@(0.0.255) bool]_[* IsFolder]([@(0.0.255) const]_[@(0.0.255) c
 har]_`*[*@3 fileName])&]
 [s2; Returns true id [%-*@3 fileName] is a folder.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:GetRelativePath`(Upp`:`:String`&`,Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) b
+ool]_[* GetRelativePath]([_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 from], 
+[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], [_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 ret])&]
+[s2; Returns the relative path to go from [%-*@3 from] to [%-*@3 path 
+]in[%-*@3  ret] and returns true.&]
+[s0;l288; For example, if:&]
+[s0;l288;i150;O0; [%-*@3 from] `= `"/books/technology/computers`"&]
+[s0;l288;i150;O0; [%-*@3 path ]`= `"/books/biology/mammals`"&]
+[s0;l288; GetRelativePath() would return `"../../biology/mammals`".&]
+[s2; If there is no match between both paths it returns false.&]
+[s2; This is a changed version from original function as IsNull() 
+cannot distinguish String(`"`") and String(Null).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SearchFile`(Upp`:`:String`,Upp`:`:String`,Upp`:`:String`,Upp`:`:Vector`<Upp`:`:String`>`&`):%- [_^Upp`:`:Vector^ V

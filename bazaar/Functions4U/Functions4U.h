@@ -66,7 +66,7 @@ String GetNextFolder(const String &folder, const String &lastFolder);
 String FileRealName(const char *fileName);
 bool IsFile(const char *fileName);
 bool IsFolder(const char *fileName);
-String GetRelativePath(String &from, String &path);
+bool GetRelativePath(String& from, String& path, String& ret);
 	
 bool IsSymLink(const char *path);
 
@@ -557,6 +557,7 @@ private:
 class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
+	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
@@ -618,9 +619,8 @@ public:
 	bool IsRunning() {return status > 0;}
 	Gate4<double, String&, bool, bool&> WhenTimer;
 
-//private:
-	LocalProcess2 p;
 private:
+	LocalProcess2 p;
 	TimeStop timeElapsed, timeToTimeout;
 	ProcessStatus status;
 	double timeOut;

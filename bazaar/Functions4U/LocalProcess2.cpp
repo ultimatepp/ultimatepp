@@ -70,14 +70,13 @@ static void sNoBlock(int fd)
 }
 #endif
 
-bool LocalProcess2::DoStart(const char *command, const Vector<String> *arg, bool spliterr, const char *envptr, const char *dir)
+bool LocalProcess2::DoStart(const char *_command, const Vector<String> *arg, bool spliterr, const char *envptr, const char *dir)
 {
 	LLOG("LocalProcess2::Start(\"" << command << "\")");
 
 	Kill();
 
-	while(*command && (byte)*command <= ' ')
-		command++;
+	String command = TrimBoth(_command);
 
 #ifdef PLATFORM_WIN32
 	HANDLE hOutputReadTmp, hOutputWrite;
@@ -103,12 +102,11 @@ bool LocalProcess2::DoStart(const char *command, const Vector<String> *arg, bool
 		CreatePipe(&hErrorReadTmp, &hErrorWrite, &sa, 0);
 		DuplicateHandle(hp, hErrorReadTmp, hp, &hErrorRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
 		CloseHandle(hErrorReadTmp);
-	}
-	else
+	} else
 		DuplicateHandle(hp, hOutputWrite, hp, &hErrorWrite, 0, TRUE, DUPLICATE_SAME_ACCESS);
 
 	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
+	STARTUPINFOW si;
 	ZeroMemory(&si, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
 	si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
@@ -116,16 +114,14 @@ bool LocalProcess2::DoStart(const char *command, const Vector<String> *arg, bool
 	si.hStdInput  = hInputRead;
 	si.hStdOutput = hOutputWrite;
 	si.hStdError  = hErrorWrite;
-	String cmdh;
 	if(arg) {
-		cmdh = command;
 		for(int i = 0; i < arg->GetCount(); i++) {
-			cmdh << ' ';
+			command << ' ';
 			String argument = (*arg)[i];
 			if(argument.GetCount() && argument.FindFirstOf(" \t\n\v\"") < 0)
-	    		cmdh << argument;
+	    		command << argument;
 			else {
-				cmdh << '\"';
+				command << '\"';
 				const char *s = argument;
 				for(;;) {
 					int num_backslashes = 0;
@@ -134,30 +130,32 @@ bool LocalProcess2::DoStart(const char *command, const Vector<String> *arg, bool
 						num_backslashes++;
 					}
 					if(*s == '\0') {
-						cmdh.Cat('\\', 2 * num_backslashes);
+						command.Cat('\\', 2 * num_backslashes);
 						break;
 					}
 					else
 					if(*s == '\"') {
-						cmdh.Cat('\\', 2 * num_backslashes + 1);
-						cmdh << '\"';
+						command.Cat('\\', 2 * num_backslashes + 1);
+						command << '\"';
 					}
 					else {
-						cmdh.Cat('\\', num_backslashes);
-						cmdh.Cat(*s);
+						command.Cat('\\', num_backslashes);
+						command.Cat(*s);
 					}
 					s++;
 				}
-				cmdh << '\"';
+				command << '\"';
 			}
 	    }
-		command = cmdh;
 	}
-	int n = (int)strlen(command) + 1;
-	Buffer<char> cmd(n);
-	memcpy(cmd, command, n);
-	bool h = CreateProcess(NULL, cmd, &sa, &sa, TRUE,
-	                       NORMAL_PRIORITY_CLASS, (void *)envptr, dir, &si, &pi);
+	WStringBuffer wscmd(ToSystemCharsetW(command));
+	WString wsdir(ToSystemCharsetW(dir));
+	const wchar *wdir;
+	if (dir == 0)
+		wdir = 0;
+	else 
+		wdir = wsdir;
+	bool h = CreateProcessW(NULL, wscmd, &sa, &sa, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr, wdir, &si, &pi);
 	LLOG("CreateProcess " << (h ? "succeeded" : "failed"));
 	CloseHandle(hErrorWrite);
 	CloseHandle(hInputRead);
@@ -166,8 +164,7 @@ bool LocalProcess2::DoStart(const char *command, const Vector<String> *arg, bool
 		hProcess = pi.hProcess;
 		dwProcessId = pi.dwProcessId;
 		CloseHandle(pi.hThread);
-	}
-	else {
+	} else {
 		Free();
 		return false;
 	}
