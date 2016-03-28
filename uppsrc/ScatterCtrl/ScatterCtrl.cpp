@@ -557,7 +557,18 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 #endif	
 	{
 		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P);		
-		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);		
+		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);	
+	}
+#ifndef _DEBUG
+	if (showProcessDlg)
+#endif
+	{
+		bar.Add(t_("Process"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P);	
+	}
+#ifndef _DEBUG
+	if (showPropDlg || showProcessDlg)
+#endif
+	{
 		bar.Separator();
 	}
 	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, true)).Key(K_CTRL_C);
@@ -620,6 +631,7 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	popLT = popRB = Null;
 	showContextMenu = false;
 	showPropDlg = false;
+	showProcessDlg = false;
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        
