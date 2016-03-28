@@ -27,7 +27,7 @@ void Tab8_Secondary::Init()
 	       .SetLabelY2("Pressure")
 		   .SetMarkWidth(1, 4);
 	scatter.ShowInfo()
-		   .ShowContextMenu();	
+		   .ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();	
 }
 
 ScatterDemo *Construct8()

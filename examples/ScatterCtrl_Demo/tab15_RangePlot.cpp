@@ -6,7 +6,7 @@ void TabRangePlot::Init()
 	CtrlLayout(*this);	
 	SizePos();
 	
-	scatter.SetMouseHandling(true, true).ShowContextMenu();
+	scatter.SetMouseHandling(true, true).ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
 
 	for (double time = 0; time <= 10; time += 2.) {
 		Vector<double> &data = s1.Add();
@@ -17,7 +17,7 @@ void TabRangePlot::Init()
 	idsRange << 1 << 2 << 3 << 4;
 	static Vector<int> idVoid;
 	scatter.AddSeries(s1, 0, Null, idVoid, idsRange, idVoid).Legend("Size").Units("m")
-		   .MarkStyle<RangePlot>(RangePlot::MIN_AVG_MAX);//.NoPlot();
+		   .MarkStyle<RangePlot>(RangePlot::MIN_AVG_MAX);
 	
 	scatter.SetLabelY("Size").SetLabelX("time [seg]");
 	scatter.ZoomToFit(true, true, 0.2);

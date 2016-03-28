@@ -65,7 +65,7 @@ void Tab10_User::Init()
 	scatter.AddSeries(sx, sy, 5).Legend("Series").PlotStyle<MyPlot>().MarkStyle<MyMark>().Stroke(3, LtGreen()).Fill(LtGray());
 	
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
-	scatter.ShowInfo().ShowContextMenu();
+	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
 }
 
 ScatterDemo *Construct10()
