@@ -21,7 +21,7 @@ void TabRegression::Init() {
 		coefficients = 0;
 	}
 
-	scatter.SetMouseHandling(true, true).ShowContextMenu();
+	scatter.SetMouseHandling(true, true).ShowContextMenu().ShowPropertiesDlg();
 
 	const int totalCols = 50;
 	
@@ -63,8 +63,8 @@ void TabRegression::Init() {
 	firstCellIsName.WhenAction = THISBACK(OnButtons);
 	     
 	calc.WhenPush = THISBACK(Calculate);
-	clear.WhenPush = THISBACK(OnClear);
-	autoset.WhenPush = THISBACK(OnAutoset);
+	butClear.WhenPush = THISBACK(OnClear);
+	butAutoset.WhenPush = THISBACK(OnAutoset);
 }
 
 void TabRegression::End() {
@@ -72,11 +72,10 @@ void TabRegression::End() {
 }
 
 void TabRegression::OnClear() {
-	for (int r = 0; r < grid.GetRowCount(); ++r)
-		for (int c = 0; c < grid.GetColumnCount(); ++c)	
-			grid.Set(r, c, Null);
-	grid.SetCursor(0);
-	grid.GoBegin();
+	int nRows = grid.GetRowCount();
+	grid.SetRowCount(0);
+	grid.SetRowCount(nRows);
+	grid.SetCursor(Point(0, 0));
 	gridDef.Clear();
 	scatter.RemoveAllSeries();
 	gridTrend.Clear();
@@ -123,7 +122,13 @@ void TabRegression::OnAutoset() {
 	}
 	
 	scatter.RemoveAllSeries();
-	scatter.AddSeries(ds).Legend("Series").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
+	int idX = gridDef.Get(0, 0);
+	int idY = gridDef.Get(0, 3);
+	bool useCols = switchColsRows == 0;
+	int beginData = gridDef.Get(0, 1);
+	int numData = int(gridDef.Get(0, 2)) - beginData + 1;
+	ds.Init(grid, idY, idX, useCols, beginData, numData);
+	scatter.AddSeries(ds).Legend("Series").NoMark();
 	gridTrend.Clear();
 	scatter.ZoomToFit(true, true);
 }
@@ -162,7 +167,7 @@ void TabRegression::Calculate() {
 		equationTypes[i].Fit(ds, r2[i]);
 	}
 	scatter.RemoveAllSeries();
-	scatter.AddSeries(ds).Legend("Series").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
+	scatter.AddSeries(ds).Legend("Series").NoMark();
 	for (int i = 0; i < equationTypes.GetCount(); ++i) {
 		double kk = r2[i];
 		if (r2[i] >= minR2)
