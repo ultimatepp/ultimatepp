@@ -207,6 +207,7 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "/STACK:20000000");
 			bmSet(bm, "DEBUGGER", "msdev");
+			bmSet(bm, "DISABLE_BLITZ", "");
 		
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
@@ -262,6 +263,7 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_LINK", "");
 			bmSet(bm, "DEBUGGER", "gdb");
 			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
+			bmSet(bm, "DISABLE_BLITZ", "1");
 	//		bmSet(bm, "LINKMODE_LOCK", "0");
 	
 			String m = x64 ? "64" : "32";

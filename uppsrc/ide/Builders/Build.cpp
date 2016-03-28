@@ -46,7 +46,7 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 		case 1:  cfg.FindAdd("DEBUG_MINIMAL"); break;
 		case 2:  cfg.FindAdd("DEBUG_FULL"); break;
 		}
-		if(!pkg.noblitz && (p.blitz >= 0 ? p.blitz : m.def.blitz))
+		if(!pkg.noblitz && (p.blitz >= 0 ? p.blitz : m.def.blitz) && bm.Get("DISABLE_BLITZ", "") != "1")
 			cfg.FindAdd("BLITZ");
 	}
 	else {
@@ -54,7 +54,7 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 		case 1:  cfg.FindAdd("DEBUG_MINIMAL"); break;
 		case 2:  cfg.FindAdd("DEBUG_FULL"); break;
 		}
-		if(!pkg.noblitz && m.def.blitz)
+		if(!pkg.noblitz && m.def.blitz && bm.Get("DISABLE_BLITZ", "") != "1")
 			cfg.FindAdd("BLITZ");
 	}
 	host.AddFlags(cfg);
