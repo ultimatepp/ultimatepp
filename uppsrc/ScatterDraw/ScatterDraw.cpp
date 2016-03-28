@@ -369,9 +369,9 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 }
 
 // Deprecated
-void ScatterDraw::FitToData(bool vertical, double factor) {
+/*void ScatterDraw::FitToData(bool vertical, double factor) {
 	ZoomToFit(true, vertical, factor);
-}
+}*/
 
 void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	if (linkedMaster) {
@@ -689,6 +689,10 @@ ScatterDraw &ScatterDraw::AddSeries(DataSource &data) {
 	return *this;	
 }
 
+DataSource &ScatterDraw::GetSeries(int index) {
+	return series[index].GetDataSource();
+}
+
 ScatterDraw &ScatterDraw::_AddSeries(DataSource *data) {
 	ScatterSeries &s = series.Add();
 	s.Init(series.GetCount()-1);
@@ -963,10 +967,11 @@ const String ScatterDraw::GetUnitsY(int index) {
 	return series[index].unitsY;
 }
 
-void ScatterDraw::SetDataColor(int index, const Color& color) {
+ScatterDraw& ScatterDraw::SetDataColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].color = color;
 	Refresh();
+	return *this;
 }
 
 Color ScatterDraw::GetDataColor(int index) const {
@@ -974,10 +979,11 @@ Color ScatterDraw::GetDataColor(int index) const {
 	return series[index].color;
 }
 
-void ScatterDraw::SetDataThickness(int index, double thickness) {
+ScatterDraw& ScatterDraw::SetDataThickness(int index, double thickness) {
 	ASSERT(IsValid(index));
 	series[index].thickness = thickness;
 	Refresh();
+	return *this;
 }
 
 double ScatterDraw::GetDataThickness(int index) const {
@@ -985,10 +991,11 @@ double ScatterDraw::GetDataThickness(int index) const {
 	return series[index].thickness;
 }
 
-void ScatterDraw::SetFillColor(int index, const Color& color) {
+ScatterDraw& ScatterDraw::SetFillColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].fillColor = color;
 	Refresh();
+	return *this;
 }
 
 Color ScatterDraw::GetFillColor(int index) const {
@@ -1066,6 +1073,15 @@ void ScatterDraw::SetSequentialX(int index, bool sequential) {
 ScatterDraw &ScatterDraw::SetSequentialX(bool sequential) {
 	SetSequentialX(series.GetCount()-1, sequential);
 	return *this;
+}
+
+bool ScatterDraw::GetSequentialX(int index) {
+	ASSERT(IsValid(index));
+	return series[index].sequential;
+}
+
+bool ScatterDraw::GetSequentialX() {
+	return GetSequentialX(series.GetCount()-1);
 }
 
 ScatterDraw &ScatterDraw::SetSequentialXAll(bool sequential) {
@@ -1558,6 +1574,7 @@ ScatterDraw::ScatterDraw() {
 	lastyRange = yRange;
 	highlight_0 = Null;
 	labelsChanged = false;
+	legendAnchor = LEGEND_ANCHOR_RIGHT_TOP;
 	legendPos = Point(5, 5);
 	legendNumCols = 1;
 	legendAnchor = LEGEND_TOP;

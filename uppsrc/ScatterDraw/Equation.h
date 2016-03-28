@@ -72,6 +72,20 @@ protected:
 	static VectorMap<String, CreateFunc>& classMap() {static VectorMap<String, CreateFunc> cMap; return cMap;}
 };
 
+class AvgEquation : public ExplicitEquation {
+public:
+	AvgEquation() 						{SetCoeff(0);}
+	AvgEquation(double c0)				{SetCoeff(c0);}
+	double f(double x) 					{return coeff[0];}
+	virtual String GetName() 			{return t_("Average");}
+	virtual String GetEquation(int numDigits = 3) {	
+		String ret = Format("%s", FormatCoeff(0, numDigits));
+		return ret;
+	}
+	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &series)	{coeff[0] = series.AvgY();}
+};
+
 class LinearEquation : public ExplicitEquation {
 public:
 	LinearEquation() 					{SetCoeff(0, 0);}

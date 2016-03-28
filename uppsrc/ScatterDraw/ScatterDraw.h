@@ -74,6 +74,7 @@ protected:
 	public:
 		ScatterSeries()	{pD = 0;}
 		void SetDataSource(DataSource *pointsData, bool ownsData = true) {pD = pointsData; owns = ownsData;}
+		DataSource &GetDataSource() {return *pD;}
 		inline DataSource *PointsData()	{ASSERT_(!pD->IsDeleted(), "DataSource in ScatterCtrl/Draw has been deleted.\nIt has been probably declared in a function.");	return pD;}
 		~ScatterSeries()	{if(pD && owns) delete pD;}
 	private:
@@ -156,8 +157,8 @@ public:
 		LEGEND_ANCHOR_LEFT_BOTTOM, 
 		LEGEND_ANCHOR_RIGHT_BOTTOM
 	};
-	ScatterDraw& SetLegendAnchor(int anchor) 				{legendAnchor = anchor;	return *this;}
-	int GetLegendAnchor() 									{return legendAnchor;}
+	ScatterDraw& SetLegendAnchor(LEGEND_POS anchor) 		{legendAnchor = anchor;	return *this;}
+	LEGEND_POS GetLegendAnchor() 							{return legendAnchor;}
 	ScatterDraw& SetLegendFillColor(const Color &color) 	{legendFillColor = color;	return *this;}
 	ScatterDraw& SetLegendBorderColor(const Color &color) 	{legendBorderColor = color;	return *this;}	
 	Color& GetLegendFillColor() 							{return legendFillColor;}
@@ -171,7 +172,7 @@ public:
 	double GetYMax();
 	double GetYMin();*/
 	
-	void FitToData(bool vertical = false, double factor = 0);		// Deprecated
+	//void FitToData(bool vertical = false, double factor = 0);		// Deprecated
 	void ZoomToFit(bool horizontal = true, bool vertical = false, double factor = 0);
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
@@ -181,6 +182,9 @@ public:
 	ScatterDraw &SetZoomStyleY(ZoomStyle style = TO_CENTER) {zoomStyleY = style; return *this;}
 
 	ScatterDraw& SetRange(double rx, double ry, double ry2 = 100);
+	double GetRangeX() {return xRange;}
+	double GetRangeY() {return yRange;}
+	double GetRangeY2() {return yRange2;}
 	ScatterDraw& SetRangeLinked(double rx, double ry, double ry2 = 100);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
@@ -190,6 +194,7 @@ public:
 	ScatterDraw &SetMaxMajorUnits(int maxX, int maxY)	{maxMajorUnitsX = maxX; maxMajorUnitsY = maxY; return *this;}
 	double GetMajorUnitsX() {return xMajorUnit;}
 	double GetMajorUnitsY() {return yMajorUnit;}
+	double GetMajorUnitsY2() {return yMajorUnit2;}
 	ScatterDraw& SetMinUnits(double ux, double uy);
 	double GetXMinUnit () const {return xMinUnit;}
 	double GetYMinUnit () const {return yMinUnit;}	
@@ -272,6 +277,8 @@ public:
 	template <class X, class Y>
 	ScatterDraw &AddSeries(ArrayMap<X, Y> &data)	{return _AddSeries(new ArrayMapXY<X, Y>(data));}
 	
+	DataSource &GetSeries(int index);
+		
 	ScatterDraw &InsertSeries(int index, double *yData, int numData, double x0 = 0, double deltaX = 1);
 	ScatterDraw &InsertSeries(int index, double *xData, double *yData, int numData);
 	ScatterDraw &InsertSeries(int index, Vector<double> &xData, Vector<double> &yData);
@@ -375,11 +382,14 @@ public:
 	ScatterDraw& SetDrawYReticle(bool set = true);
 	ScatterDraw& SetDrawY2Reticle(bool set = true);
 	
-	void SetDataColor(int index, const Color& pcolor);
+	ScatterDraw &SetDataColor(int index, const Color& pcolor);
+	ScatterDraw &SetDataColor(const Color& pcolor) {return SetDataColor(series.GetCount() - 1, pcolor);}
 	Color GetDataColor (int index) const;
-	void SetDataThickness(int index, double thick);
+	ScatterDraw &SetDataThickness(int index, double thick);
+	ScatterDraw &SetDataThickness(double thick) {return SetDataThickness(series.GetCount() - 1, thick);}
 	double GetDataThickness(int index) const;
-	void SetFillColor(int index, const Color& color);
+	ScatterDraw &SetFillColor(int index, const Color& color);
+	ScatterDraw &SetFillColor(const Color& color) {return SetDataColor(series.GetCount() - 1, color);}
 	Color GetFillColor(int index) const;
 
 	ScatterDraw &SetMarkWidth(int index, double width);
@@ -400,7 +410,9 @@ public:
 	void SetSequentialX(int index, bool sequential = true);
 	ScatterDraw &SetSequentialX(bool sequential = true);
 	ScatterDraw &SetSequentialXAll(bool sequential = true);
-	
+	bool GetSequentialX(int index);
+	bool GetSequentialX();
+		
 	void Show(int index, bool show = true);
 	bool IsVisible(int index);
 	ScatterDraw &ShowAll(bool show = true);
@@ -430,6 +442,7 @@ public:
 	ScatterDraw& SetMaxYmax(double val)					{maxYmax = val; return *this;}
 
 	ScatterDraw& SetFastViewX(bool set = true) 			{fastViewX = set;	return *this;}
+	bool GetFastViewX() 								{return fastViewX;}
 	
 	double GetXByPoint(double x);
 	double GetYByPoint(double y);
@@ -497,7 +510,7 @@ protected:
 	
 	Point legendPos;
 	int legendNumCols;
-	int legendAnchor;
+	LEGEND_POS legendAnchor;
 	int legendRowSpacing;
 	Color legendFillColor;
 	Color legendBorderColor;
@@ -811,16 +824,16 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 					int64 imin, imax;
 					if (series[j].sequential) {
 						imin = imax = Null;
-						for (int64 i = 1; i < series[j].PointsData()->GetCount() - 1; ++i) {
+						for (int64 i = 0/*1*/; i < series[j].PointsData()->GetCount()/* - 1*/; ++i) {
 							double xx = series[j].PointsData()->x(i);
 							if (IsNull(xx))
 								continue;
 							if (IsNull(imin)) {
 								if (xx >= xMin)
-									imin = i - 1;
+									imin = i;// - 1;
 							} else if (IsNull(imax)) {
 								if (xx >= xMin + xRange) 
-									imax = i + 1;
+									imax = i;// + 1;
 							}
 						}
 						if (IsNull(imin))
@@ -829,21 +842,23 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 						    imax = series[j].PointsData()->GetCount() - 1;
 					} else {
 						imin = 0;
-						imax = series[j].PointsData()->GetCount();
+						imax = series[j].PointsData()->GetCount() - 1;
 					}
 					double dxpix;
 					if (fastViewX) 
 						dxpix = (series[j].PointsData()->x(imax) - series[j].PointsData()->x(imin))/plotW;			
 					int npix = 1;
-					for (int64 i = imin; i < imax; ) {
+					for (int64 i = imin; i <= imax; ) {
 						double xx, yy;
 						if (fastViewX) {					
 							yy = series[j].PointsData()->y(i);
-							if (IsNull(yy))
+							if (IsNull(yy)) {
+								++i;
 								continue;
+							}
 							int64 ii;
 							double maxv = dxpix*npix;
-							for (ii = 1; series[j].PointsData()->x(i + ii) < maxv && i + ii < imax; ++ii) {
+							for (ii = 1; i + ii < imax && series[j].PointsData()->x(i + ii) < maxv; ++ii) {
 								double dd = series[j].PointsData()->y(i + ii);
 								if (IsNull(dd))
 									continue;
@@ -851,16 +866,20 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 							}
 							yy /= double(ii);
 							xx = series[j].PointsData()->x(i);
-							if (IsNull(xx))
+							if (IsNull(xx)) {
+								++i;
 								continue;
+							}
 							i += ii;
 							npix++;
 						} else {
 							xx = series[j].PointsData()->x(i);
 							yy = series[j].PointsData()->y(i);
 							++i;
-							if (IsNull(xx) || IsNull(yy))
+							if (IsNull(xx) || IsNull(yy)) {
+								//++i;
 								continue;
+							}
 						}
 						int ix = fround(plotW*(xx - xMin)/xRange);
 						int iy;
