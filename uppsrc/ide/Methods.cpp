@@ -407,6 +407,7 @@ void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 	map.Add("RELEASE_LINK",              &release_link);
 	map.Add("DEBUGGER",                  &debugger);
 	map.Add("ALLOW_PRECOMPILED_HEADERS", &allow_pch);
+	map.Add("DISABLE_BLITZ",             &disable_blitz);
 	map.Add("PATH",                      &path);
 	map.Add("INCLUDE",                   &include);
 	map.Add("LIB",                       &lib);

@@ -33,6 +33,15 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 		h << " (64 bit)";
 	else
 		h << " (32 bit)";
+#ifdef _MSC_VER
+	h << " (MSC)";
+#endif
+#if __GNUC__
+	h << " (GCC)";
+#endif
+#if __cplusplus >= 201100
+	h << " (C++11)";
+#endif
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif

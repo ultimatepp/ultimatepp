@@ -266,7 +266,8 @@ LAYOUT(BuildMethodsDefaultBuilderSetupLayout, 648, 500)
 	ITEM(EditString, release_link, HSizePosZ(132, 0).TopPosZ(348, 19))
 	ITEM(TabCtrl, paths, HSizePosZ(0, 0).VSizePosZ(392, 0))
 	ITEM(TextOption, allow_pch, SetLabel(t_("Allow precompiled headers")).LeftPosZ(0, 212).TopPosZ(372, 16))
-	ITEM(LabelBox, dv___38, SetLabel(t_("Debug mode defaults")).HSizePosZ(0, 0).TopPosZ(144, 36))
+	ITEM(TextOption, disable_blitz, SetLabel(t_("Disable BLITZ")).LeftPosZ(164, 212).TopPosZ(372, 16))
+	ITEM(LabelBox, dv___39, SetLabel(t_("Debug mode defaults")).HSizePosZ(0, 0).TopPosZ(144, 36))
 END_LAYOUT
 
 LAYOUT(ModePaneLayout, 320, 460)
