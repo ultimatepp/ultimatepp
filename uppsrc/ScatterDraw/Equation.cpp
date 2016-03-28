@@ -64,10 +64,13 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 	double mean = series.AvgY();
 	double sse = 0, sst = 0;
 	for (int64 i = 0; i < series.GetCount(); ++i) {
-		double res = series.y(i) - f(series.x(i));
-		sse += res*res;
-		double d = series.y(i) - mean;
-		sst += d*d;
+		double y = series.y(i);
+		if (!IsNull(y)) {
+			double res = y - f(series.x(i));
+			sse += res*res;
+			double d = y - mean;
+			sst += d*d;
+		}
 	}
 	r2 = 1 - sse/sst;
 
