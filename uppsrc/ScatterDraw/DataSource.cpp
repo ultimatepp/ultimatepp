@@ -335,7 +335,8 @@ bool Spline::IsInputSane(Vector<double>& xdata, Vector<double>& ydata)
 
     bool first = true;
     double xold;
-    for(double x : xdata) {
+    for(int i = 0; i < xdata.GetCount(); ++i) {
+        double x = xdata[i];
         if(first) 
             xold = x;
         else {
