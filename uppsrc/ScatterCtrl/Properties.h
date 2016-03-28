@@ -99,4 +99,61 @@ private:
 };
 
 
+class ProcessingTab : public WithProcessingTab<StaticRect> {
+public:
+	typedef ProcessingTab CLASSNAME;
+
+	ProcessingTab();
+	void Init(ScatterCtrl& scatter) {pscatter = &scatter;}
+	void UpdateField(const String name, int id);
+	void OnFFT();
+	void OnOp();
+	void OnShowEquation();
+	void UpdateEquations();
+	void OnFromTo();
+	void OnOperation();
+	void OnSet();
+	void OnUpdateSensitivity();
+		
+private:
+	ScatterCtrl* pscatter;
+	int id;
+	
+	WithProcessingTabFit<StaticRect> tabFit;	
+	WithProcessingTabFrequency<StaticRect> tabFreq;
+	WithProcessingTabOp<StaticRect> tabOp;
+	
+	bool avgFirst, linearFirst, cuadraticFirst, cubicFirst, sinusFirst;
+	double r2Linear, r2Cuadratic, r2Cubic, r2Sinus;
+	bool tabFreqFirst, tabOpFirst;
+	
+	Vector<Pointf> fft;
+	Vector<double> resampledSeries;
+	AvgEquation average;
+	LinearEquation linear;
+	PolynomialEquation2 cuadratic;
+	PolynomialEquation3 cubic;
+	SinEquation sinus;
+	Vector<Pointf> upperEnvelope, lowerEnvelope;
+	Vector<Pointf> movAvg;
+	DataSetCond dataSetCond;
+	bool exclamationOpened;
+};
+
+class ProcessingDlg : public WithProcessing<TopWindow> {
+public:
+	typedef ProcessingDlg CLASSNAME;
+
+	ProcessingDlg(ScatterCtrl& scatter);
+	void OnClose();
+	
+private:
+	ScatterCtrl& scatter;	
+	Array<ProcessingTab> tabs;
+	
+	void UpdateFields();
+};
+
+
+
 #endif

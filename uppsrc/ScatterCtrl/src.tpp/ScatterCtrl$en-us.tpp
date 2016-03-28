@@ -112,10 +112,20 @@ clicking by default).&]
 [s5;:ScatterCtrl`:`:ShowPropertiesDlg`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* ShowPropertiesDlg]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 show] is true, the context menu will have a `"Properties`" 
+and `"Data`" dialogs.&]
+[s3; In DEBUG mode both dialogs will always appear.&]
+[s3; [^topic`:`/`/ScatterCtrl`/srcdoc`/Properties`$en`-us^ Here] the 
+`"Properties`" and [^topic`:`/`/ScatterCtrl`/srcdoc`/Data`$en`-us^ here] 
+the `"Data`" dialog details are described.&]
+[s1; &]
+[s6;%- &]
+[s5;:Upp`:`:ScatterCtrl`:`:ShowProcessDlg`(bool`):%- [_^Upp`:`:ScatterCtrl^ ScatterCtrl
+][@(0.0.255) `&]_[* ShowProcessDlg]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3; If [%-*@3 show] is true, the context menu will have a `"Process`" 
 dialog.&]
-[s3; In DEBUG mode the `"Properties`" menu will always appear.&]
-[s3; [^topic`:`/`/ScatterCtrl`/srcdoc`/Properties`$en`-us^ Here ]the 
-Properties dialog details are described.&]
+[s3; In DEBUG mode the `"Process`" menu will always appear.&]
+[s3; [^topic`:`/`/ScatterCtrl`/srcdoc`/Process`$en`-us^ Here] the `"Process`" 
+dialog details are described.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:ShowInfo`(bool`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* ShowInfo]([@(0.0.255) b
