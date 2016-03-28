@@ -549,7 +549,7 @@ void ProcessingTab::OnOp()
 	tabFit.scatter.ScatterDraw::Show(5, tabFit.opSinus);
 	tabFit.scatter.ScatterDraw::Show(6, tabFit.opMax);
 	tabFit.scatter.ScatterDraw::Show(7, tabFit.opMin);
-	tabFit.scatter.ScatterDraw::Show(7, tabFit.opMovAvg);
+	tabFit.scatter.ScatterDraw::Show(8, tabFit.opMovAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
