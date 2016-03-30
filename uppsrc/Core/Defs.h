@@ -477,12 +477,6 @@ template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
 template<> inline bool  IsNull(const double& r)  { return r < DOUBLE_NULL_LIM; }
 template<> inline bool  IsNull(const bool& r  )  { return false; }
 
-#if defined(flagMT)
-	#if defined(PLATFORM_WIN32) && defined(COMPILER_GCC)
-		#define flagUSEMALLOC //MINGW does not support
-	#endif
-#endif
-
 #ifndef  flagUSEMALLOC
 #define UPP_HEAP
 #endif
