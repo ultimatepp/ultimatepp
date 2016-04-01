@@ -123,7 +123,7 @@ private:
 	WithProcessingTabFrequency<StaticRect> tabFreq;
 	WithProcessingTabOp<StaticRect> tabOp;
 	
-	bool avgFirst, linearFirst, cuadraticFirst, cubicFirst, sinusFirst;
+	bool avgFirst, linearFirst, cuadraticFirst, cubicFirst, sinusFirst, splineFirst;
 	double r2Linear, r2Cuadratic, r2Cubic, r2Sinus;
 	bool tabFreqFirst, tabOpFirst;
 	
@@ -134,10 +134,12 @@ private:
 	PolynomialEquation2 cuadratic;
 	PolynomialEquation3 cubic;
 	SinEquation sinus;
+	SplineEquation spline;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
 	Vector<Pointf> movAvg;
 	DataSetCond dataSetCond;
 	bool exclamationOpened;
+	double newWidthMax, newWidthMin, newWidthMovAvg;
 };
 
 class ProcessingDlg : public WithProcessing<TopWindow> {

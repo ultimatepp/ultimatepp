@@ -312,15 +312,15 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
-	void SetDrawing(T& w, const Size &size, int scale);	
+	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = true);	
 	void TimerCallback();	
 	
 	FileSel fileToSave;
 };
 
 template <class T>
-void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
-	ScatterDraw::SetDrawing(w, size, scale, true);
+void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale, bool ctrl) {
+	ScatterDraw::SetDrawing(w, size, scale, ctrl);
 	if (!IsNull(popLT) && popLT != popRB) {
 		if (isZoomWindow) {
 			DrawLine(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, SColorHighlight());

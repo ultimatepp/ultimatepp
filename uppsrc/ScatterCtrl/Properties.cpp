@@ -33,13 +33,13 @@ void MeasuresTab::Init(ScatterCtrl& scatter)
 	
 	pscatter = &scatter;
 	
-	double kkxMin = xMin <<= scatter.GetXMin();
-	double kkxMax = xMax <<= scatter.GetXRange() + scatter.GetXMin();
+	xMin <<= scatter.GetXMin();
+	xMax <<= scatter.GetXRange() + scatter.GetXMin();
 	
-	double kkyMin = yMin <<= scatter.GetYMin();
-	double kkyMax = yMax <<= scatter.GetYRange() + scatter.GetYMin();
-	double kkyMin2 = yMin2 <<= scatter.GetYMin2();
-	double kkyMax2 = yMax2 <<= scatter.GetY2Range() + scatter.GetYMin2();
+	yMin <<= scatter.GetYMin();
+	yMax <<= scatter.GetYRange() + scatter.GetYMin();
+	yMin2 <<= scatter.GetYMin2();
+	yMax2 <<= scatter.GetY2Range() + scatter.GetYMin2();
 	
 	butUpdate.WhenAction = THISBACK(Change);
 	
@@ -489,6 +489,7 @@ ProcessingTab::ProcessingTab()
 	tabFit.opCuadratic.WhenAction = THISBACK(OnOp);
 	tabFit.opCubic.WhenAction = THISBACK(OnOp);
 	tabFit.opSinus.WhenAction = THISBACK(OnOp);
+	tabFit.opSpline.WhenAction = THISBACK(OnOp);
 	tabFit.opMax.WhenAction = THISBACK(OnOp);
 	tabFit.opMin.WhenAction = THISBACK(OnOp);
 	tabFit.opMovAvg.WhenAction = THISBACK(OnOp);
@@ -503,9 +504,10 @@ ProcessingTab::ProcessingTab()
 	tabOp.xLower.WhenLostFocus = THISBACK(OnOperation);
 	
 	tabFreqFirst = tabOpFirst = true;
-	avgFirst = linearFirst = cuadraticFirst = cubicFirst = sinusFirst = true;
+	avgFirst = linearFirst = cuadraticFirst = cubicFirst = sinusFirst = splineFirst = true;
 	
 	exclamationOpened = false;
+	newWidthMax = newWidthMin = newWidthMovAvg-1;
 }
 
 void ProcessingTab::OnOp() 
@@ -521,23 +523,42 @@ void ProcessingTab::OnOp()
 		avgFirst = false;
 	}
 	if (tabFit.opLinear && linearFirst) {	
-		linear.Fit(data, r2Linear);
-		linearFirst = false;
+		if (linear.Fit(data, r2Linear) < 0) {
+			tabFit.opLinear = false;
+			tabFit.opLinear.Enable(false);
+		} else
+			linearFirst = false;
 	}
 	if (tabFit.opCuadratic && cuadraticFirst) {		
 		cuadratic.GuessCoeff(data);
-		cuadratic.Fit(data, r2Cuadratic);
-		cuadraticFirst = false;
+		if (cuadratic.Fit(data, r2Cuadratic) < 0) {
+			tabFit.opCuadratic = false;
+			tabFit.opCuadratic.Enable(false);
+		} else
+			cuadraticFirst = false;
 	}
 	if (tabFit.opCubic && cubicFirst) {		
 		cubic.GuessCoeff(data);
-		cubic.Fit(data, r2Cubic);
-		cubicFirst = false;
+		if (cubic.Fit(data, r2Cubic) < 0) {
+			tabFit.opCubic = false;
+			tabFit.opCubic.Enable(false);
+		} else
+			cubicFirst = false;
 	}
 	if (tabFit.opSinus && sinusFirst) {		
 		sinus.GuessCoeff(data);
-		sinus.Fit(data, r2Sinus);
-		sinusFirst = false;
+		if (sinus.Fit(data, r2Sinus) < 0) {
+			tabFit.opSinus = false;
+			tabFit.opSinus.Enable(false);
+		} else
+			sinusFirst = false;
+	}
+	if (tabFit.opSpline && splineFirst) {		
+		if (spline.Fit(data) < 0) {
+			tabFit.opSpline = false;
+			tabFit.opSpline.Enable(false);
+		} else
+			splineFirst = false;
 	}
 	OnUpdateSensitivity();
 	
@@ -547,9 +568,10 @@ void ProcessingTab::OnOp()
 	tabFit.scatter.ScatterDraw::Show(3, tabFit.opCuadratic);
 	tabFit.scatter.ScatterDraw::Show(4, tabFit.opCubic);
 	tabFit.scatter.ScatterDraw::Show(5, tabFit.opSinus);
-	tabFit.scatter.ScatterDraw::Show(6, tabFit.opMax);
-	tabFit.scatter.ScatterDraw::Show(7, tabFit.opMin);
-	tabFit.scatter.ScatterDraw::Show(8, tabFit.opMovAvg);
+	tabFit.scatter.ScatterDraw::Show(6, tabFit.opSpline);
+	tabFit.scatter.ScatterDraw::Show(7, tabFit.opMax);
+	tabFit.scatter.ScatterDraw::Show(8, tabFit.opMin);
+	tabFit.scatter.ScatterDraw::Show(9, tabFit.opMovAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
@@ -618,16 +640,17 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFit.width <<= pscatter->GetRangeX()/15.;
 		tabFit.width.SetInc(pscatter->GetRangeX()/15./2.);
 		
-		tabFit.scatter.AddSeries(average).NoMark();
-		tabFit.scatter.AddSeries(linear).NoMark();
-		tabFit.scatter.AddSeries(cuadratic).NoMark();
-		tabFit.scatter.AddSeries(cubic).NoMark();		
-		tabFit.scatter.AddSeries(sinus).NoMark();		
-		tabFit.scatter.AddSeries(upperEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Upper"))
+		tabFit.scatter.AddSeries(average).NoMark().SetDataThickness(1.5);
+		tabFit.scatter.AddSeries(linear).NoMark().SetDataThickness(1.5);
+		tabFit.scatter.AddSeries(cuadratic).NoMark().SetDataThickness(1.5);
+		tabFit.scatter.AddSeries(cubic).NoMark().SetDataThickness(1.5);		
+		tabFit.scatter.AddSeries(sinus).NoMark().SetDataThickness(1.5);
+		tabFit.scatter.AddSeries(spline).NoMark().Dash(LINE_SOLID).SetDataThickness(1.5);
+		tabFit.scatter.AddSeries(upperEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Max"))
+						.NoMark().Dash(LINE_DASHED).SetDataThickness(1.5).SetSequentialX(true);
+		tabFit.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Min"))
 						.NoMark().Dash(LINE_DASHED).SetSequentialX(true);
-		tabFit.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Lower"))
-						.NoMark().Dash(LINE_DASHED).SetSequentialX(true);
-		tabFit.scatter.AddSeries(movAvg).Legend(pscatter->GetLegend(id) + String("-") + t_("MovAvg")).NoMark();		
+		tabFit.scatter.AddSeries(movAvg).SetDataThickness(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("MovAvg")).NoMark();		
 					
 		OnOp();
 	} else {
@@ -637,6 +660,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFit.opCuadratic.Enable(false);
 		tabFit.opCubic.Enable(false);
 		tabFit.opSinus.Enable(false);
+		tabFit.opSpline.Enable(false);
 		tabFit.opMax.Enable(false);
 		tabFit.opMin.Enable(false);
 		tabFit.opMovAvg.Enable(false);
@@ -649,22 +673,33 @@ void ProcessingTab::OnUpdateSensitivity()
 {
 	DataSource &data = tabFit.scatter.GetSeries(0);
 	
-	if (tabFit.opMax) {	
+	bool refresh = false;
+	if (tabFit.opMax && newWidthMax != tabFit.width) {
+		newWidthMax = tabFit.width;
+		
 		upperEnvelope.Clear();
 		Vector<int64> idsUpper = data.UpperEnvelopeY(tabFit.width);
 		for (int i = 0; i < idsUpper.GetCount(); ++i) 
 			upperEnvelope << Pointf(data.x(idsUpper[i]), data.y(idsUpper[i]));
+		refresh = true;
 	}
-	if (tabFit.opMin) {	
+	if (tabFit.opMin && newWidthMin != tabFit.width) {
+		newWidthMin = tabFit.width;
+		
 		lowerEnvelope.Clear();
 		Vector<int64> idsLower = data.LowerEnvelopeY(tabFit.width);
 		for (int i = 0; i < idsLower.GetCount(); ++i) 
 			lowerEnvelope << Pointf(data.x(idsLower[i]), data.y(idsLower[i]));
+		refresh = true;
 	}
-	if (tabFit.opMovAvg) 	
+	if (tabFit.opMovAvg && newWidthMovAvg != tabFit.width) {
+		newWidthMovAvg = tabFit.width;
+		
 		movAvg = data.MovingAverageY(tabFit.width);
+		refresh = true;
+	}
 	
-	if (tabFit.opMax || tabFit.opMin || tabFit.opMovAvg)
+	if (refresh)
 		tabFit.scatter.Refresh();
 }
 
@@ -754,12 +789,9 @@ void ProcessingTab::OnShowEquation()
 						(show && tabFit.opCubic ? cubic.GetEquation(tabFit.numDecimals) : String(t_("Cubic"))));
 	tabFit.scatter.Legend(5, pscatter->GetLegend(id) + String("-") + 
 						(show && tabFit.opSinus ? sinus.GetEquation(tabFit.numDecimals) : String(t_("Sinusoidal"))));
+	tabFit.scatter.Legend(6, pscatter->GetLegend(id) + String("-") + String(t_("Spline")));
 	tabFit.scatter.Refresh();
 }
-
-struct PointLess {
-	bool operator () (const Pointf& a, const Pointf& b) const { return a.x < b.x; }
-};
 
 void ProcessingTab::OnFFT() 
 {
@@ -781,7 +813,7 @@ void ProcessingTab::OnFFT()
 	//if (orderedSeries.GetCount() != data.GetCount())
 	//	errText << Format(t_("Removed %d Null points."), data.GetCount() - orderedSeries.GetCount());
 	
-	PointLess less;
+	PointfLess less;
 	Sort(orderedSeries, less);								
 	
 	resampledSeries.Clear();
