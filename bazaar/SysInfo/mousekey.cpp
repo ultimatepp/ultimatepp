@@ -228,7 +228,7 @@ bool Mouse_GetPos(long &x, long &y) {
 	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
-		return false; ::GetKeyboardState() :GetKey()
+		return false; 
 	}   
 	bool ret = false;
 	Window root, child;
