@@ -18,7 +18,7 @@ public:
 		ImproperInputParameters = -3,
 		TooManyFunctionEvaluation = -4
 	};
-	FitError Fit(DataSource &series, double &r2);
+	virtual FitError Fit(DataSource &series, double &r2);
 	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
 	virtual void GuessCoeff(DataSource &series)	= 0;
 
@@ -223,6 +223,23 @@ public:
 	}			
 	virtual void GuessCoeff(DataSource &series) {}
 	void SetDegree(int num)				{NEVER();}
+};
+
+class SplineEquation : public ExplicitEquation {
+public:
+	SplineEquation() 					{}
+	double f(double x);
+	virtual String GetName() 			{return t_("Spline");}
+	void SetDegree(int num)				{NEVER();}
+	void GuessCoeff(DataSource &series)	{NEVER();}
+	String GetEquation(int)				{return t_("Spline");}
+	FitError Fit(DataSource &series, double &r2);
+	FitError Fit(DataSource &series)	{double dummy; return Fit(series, dummy);}
+		
+private:
+	struct Coeff{double a, b, c, d, x;};
+    Buffer<Coeff> coeff;
+    int ncoeff;
 };
 
 

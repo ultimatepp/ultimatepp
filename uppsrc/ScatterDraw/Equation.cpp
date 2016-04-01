@@ -334,6 +334,89 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 	}
 }
 
+
+ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
+{	
+	Vector<Pointf> seriesRaw;
+	for (int64 i = 0; i < data.GetCount(); ++i) {		// Remove Nulls	
+		if (!IsNull(data.x(i)) && !IsNull(data.y(i)))
+			seriesRaw << Pointf(data.x(i), data.y(i));
+	}
+
+	if(seriesRaw.IsEmpty())
+        return InadequateDataSource;
+        	
+	PointfLess less;
+	Sort(seriesRaw, less);								// Sort
+	
+	Vector<Pointf> series;
+	for (int i = 1; i < seriesRaw.GetCount(); ++i) {	// Remove points with duplicate x
+		if (seriesRaw[i].x != seriesRaw[i - 1].x)
+			series << seriesRaw[i];	
+	}
+
+	r2 = 0;
+	
+    int n = int(series.GetCount()) - 1;
+    
+    Buffer<double> h(n);
+    for(int i = 0; i < n; ++i)
+        h[i] = (series[i+1].x - series[i].x);
+
+    Buffer<double> alpha(n);
+    for(int i = 1; i < n; ++i)
+        alpha[i] = (3.*(series[i+1].y - series[i].y)/h[i] - 3*(series[i].y - series[i-1].y)/h[i-1]);
+
+    Buffer<double> c(n+1), l(n+1), mu(n+1), z(n+1);
+    l[0] = 1;
+    mu[0] = 0;
+    z[0] = 0;
+
+    for(int i = 1; i < n; ++i) {
+        l[i] = 2.*(series[i+1].x - series[i-1].x) - h[i-1]*mu[i-1];
+        mu[i] = h[i]/l[i];
+        z[i] = (alpha[i] - h[i-1]*z[i-1])/l[i];
+    }
+
+    l[n] = 1.;
+    z[n] = 0;
+    c[n] = 0;
+
+	Buffer<double> b(n), d(n);
+    for(int i = n-1; i >= 0; --i) {
+        c[i] = z[i] - mu[i] * c[i+1];
+        b[i] = (series[i+1].y - series[i].y)/h[i] - h[i]*(c[i+1] + 2*c[i])/3.;
+        d[i] = (c[i+1] - c[i])/3./h[i];
+    }
+
+	ncoeff = n;
+    coeff.Alloc(ncoeff);
+    for(int i = 0; i < n; ++i) {
+        coeff[i].x = series[i].x;
+        coeff[i].a = series[i].y;
+        coeff[i].b = b[i];
+        coeff[i].c = c[i];
+        coeff[i].d = d[i];
+    }
+    return NoError;
+}
+
+double SplineEquation::f(double x)
+{
+    int j;
+    for (j = 0; j < ncoeff; j++) {
+        if(coeff[j].x > x) {
+            if(j == 0)
+                j++;
+            break;
+        }
+    }
+    j--;
+
+    double dx = x - coeff[j].x;
+    return coeff[j].a + coeff[j].b*dx + coeff[j].c*dx*dx + coeff[j].d*dx*dx*dx;
+}
+
 INITBLOCK {
 	ExplicitEquation::Register<LinearEquation>("LinearEquation");
 	ExplicitEquation::Register<PolynomialEquation2>("PolynomialEquation2");

@@ -3,19 +3,6 @@
 
 NAMESPACE_UPP
 
-template <class T>
-bool IsSorted(T& data) {
-	int num = data.GetCount();
-	if (num == 0)
-		return false;
-	if (num == 1)
-		return 1;
-	for (int i = 1; i < num; ++i) {
-		if (data[i] < data[i - 1])
-			return false;
-	}
-	return true;
-}
 
 class DataSource {
 public:
@@ -33,6 +20,7 @@ public:
 	virtual double f(double x)				{NEVER();	return Null;}
 	virtual double f(Vector<double> zn)		{NEVER();	return Null;}
 	virtual int64 GetCount()			{NEVER();	return Null;}
+	bool IsEmpty()						{return GetCount() == 0;}
 	virtual int GetznxCount(int64 id)	{return 0;}
 	virtual int GetznyCount(int64 id)	{return 0;}
 	virtual int GetznFixedCount()		{return 0;}
@@ -50,6 +38,9 @@ public:
 	virtual double MaxX(int64& id) 		{return Max(&DataSource::x, id);}	
 	virtual double MaxX() 				{int64 dummy;	return Max(&DataSource::x, dummy);}	
 	
+	virtual double IsSortedY() 			{return IsSorted(&DataSource::y);}		
+	virtual double IsSortedX() 			{return IsSorted(&DataSource::x);}	
+	
 	virtual double AvgY() 				{return Avg(&DataSource::y);}		
 	virtual double AvgX() 				{return Avg(&DataSource::x);}		
 	virtual double StdDevY(double avg = Null) 	{return StdDev(&DataSource::y, avg);}	
@@ -63,6 +54,7 @@ public:
 	double Min(Getdatafun getdata, int64& id);
 	double Max(Getdatafun getdata, int64& id);
 	double Avg(Getdatafun getdata);
+	double IsSorted(Getdatafun getdata);
 	double StdDev(Getdatafun getdata, double avg = Null);
 	double Variance(Getdatafun getdata, double avg = Null);
 	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
@@ -402,17 +394,10 @@ public:
 	virtual inline int64 GetCount()	{return numPoints;}
 };	
 
-class Spline {
-public:
-    bool Load(Vector<double>& xdata, Vector<double>& ydata);
-    double GetY(double x);
-
-private:
-    struct Coeff{double a, b, c, d, x;};
-    Vector<Coeff> coeff;
-    
-    bool IsInputSane(Vector<double>& xdata, Vector<double>& ydata);
+struct PointfLess {
+	bool operator () (const Pointf& a, const Pointf& b) const { return a.x < b.x; }
 };
+
 
 END_UPP_NAMESPACE
 

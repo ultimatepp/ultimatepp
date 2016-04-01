@@ -51,6 +51,19 @@ double DataSource::Avg(Getdatafun getdata) {
 	return ret/count;
 }
 
+double DataSource::IsSorted(Getdatafun getdata) {
+	int64 num = GetCount();
+	if (num == 0)
+		return false;
+	if (num == 1)
+		return 1;
+	for (int i = 1; i < num; ++i) {
+		if (Membercall(getdata)(i) < Membercall(getdata)(i - 1))
+			return false;
+	}
+	return true;
+}
+
 double DataSource::Variance(Getdatafun getdata, double avg) {
 	if (IsNull(avg))
 		avg = Avg(getdata);
@@ -111,17 +124,23 @@ Vector<int64> DataSource::Envelope(Getdatafun getdataY, Getdatafun getdataX, dou
 		}
 		if (IsNull(numComparisons))
 			continue;
-		if (numComparisons > 2)
-			ret << i;
+		if (numComparisons > 2) {
+			if (!ret.IsEmpty()) {
+				int64 prev_i = ret[ret.GetCount() - 1];
+				if (Membercall(getdataX)(prev_i) != x)
+					ret << i;
+			} else 
+				ret << i;
+		}
 	}
 	return ret;
 }
 
-bool GreaterThan(double a, double b) {return a > b;}
-bool LowerThan(double a, double b) {return a < b;}
+bool GreaterEqualThan(double a, double b) {return a >= b;}
+bool LowerEqualThan(double a, double b) {return a <= b;}
 
-Vector<int64> DataSource::UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, GreaterThan);}
-Vector<int64> DataSource::LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, LowerThan);}
+Vector<int64> DataSource::UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, GreaterEqualThan);}
+Vector<int64> DataSource::LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width) {return Envelope(getdataY, getdataX, width, LowerEqualThan);}
 
 Vector<Pointf> DataSource::MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width) {
 	Vector<Pointf> ret;
@@ -204,6 +223,8 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 			lastZero = zero;
 		}
 	}
+	if (T == 0 || numT == 0)
+		return false;
 	T = 2*T/numT;
 	frequency = 2*M_PI/T;			
 	phase = -frequency*firstZero;
@@ -252,101 +273,5 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample) {
     return res;
 }
 
-
-bool Spline::Load(Vector<double>& xdata, Vector<double>& ydata)
-{
-    if(!IsInputSane(xdata, ydata))
-        return false;
-
-    int n = xdata.GetCount() - 1;
-    
-    Vector<double> h;
-    for(int i = 0; i < n; ++i)
-        h << (xdata[i+1] - xdata[i]);
-
-    Vector<double> alpha;
-    for(int i = 0; i < n; ++i)
-        alpha << (3.*(ydata[i+1] - ydata[i])/h[i] - 3*(ydata[i]-ydata[i-1])/h[i-1]);
-
-    Vector<double> l, mu, z;
-    l.SetCount(n+1);
-    mu.SetCount(n+1);
-    z.SetCount(n+1);
-    l[0] = 1;
-    mu[0] = 0;
-    z[0] = 0;
-
-    for(int i = 1; i < n; ++i) {
-        l[i] = 2.*(xdata[i+1] - xdata[i-1]) - h[i-1]*mu[i-1];
-        mu[i] = h[i]/l[i];
-        z[i] = (alpha[i] - h[i-1]*z[i-1])/l[i];
-    }
-
-    l[n] = 1.;
-    z[n] = 0;
-    
-    Vector<double> c;
-    c.SetCount(n+1);
-    c[n] = 0;
-
-	Vector<double> b, d;
-	b.SetCount(n);
-	d.SetCount(n);
-    for(int j = n-1; j >= 0; --j) {
-        c[j] = z[j] - mu[j] * c[j+1];
-        b[j] = (ydata[j+1] - ydata[j])/h[j] - h[j]*(c[j+1] + 2*c[j])/3.;
-        d[j] = (c[j+1] - c[j])/3./h[j];
-    }
-
-    coeff.SetCount(n);
-    for(int i = 0; i < n; ++i) {
-        coeff[i].a = ydata[i];
-        coeff[i].b = b[i];
-        coeff[i].c = c[i];
-        coeff[i].d = d[i];
-        coeff[i].x = xdata[i];
-    }
-    return true;
-}
-
-double Spline::GetY(double x)
-{
-    int j;
-    for (j = 0; j < coeff.size(); j++) {
-        if(coeff[j].x > x) {
-            if(j == 0)
-                j++;
-            break;
-        }
-    }
-    j--;
-
-    double dx = x - coeff[j].x;
-    return coeff[j].a + coeff[j].b*dx + coeff[j].c*dx*dx + coeff[j].d*dx*dx*dx;
-}
-
-bool Spline::IsInputSane(Vector<double>& xdata, Vector<double>& ydata)
-{
-    if(xdata.IsEmpty() || ydata.IsEmpty())
-        return false;
-    
-    if(!IsSorted(xdata))
-        return false;
-
-    bool first = true;
-    double xold;
-    for(int i = 0; i < xdata.GetCount(); ++i) {
-        double x = xdata[i];
-        if(first) 
-            xold = x;
-        else {
-	        first = false;
-	        if( fabs(x - xold) < 1) 
-	            return false;
-	        xold = x;
-        }
-    }
-    return true;
-}
 
 END_UPP_NAMESPACE
