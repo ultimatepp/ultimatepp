@@ -751,6 +751,8 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 	if (drawVGrid) {
 		if (!isPolar) {
 			double x0 = plotW*xMinUnit/xRange;
+			if ((xRange - xMinUnit)/xMajorUnit > 20)
+				xMajorUnit = (xRange - xMinUnit)/20.;
 			for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
 				int xg = fround(x0 + i*plotW/d1);
 				if (xg > 2*gridWidth && xg < plotW - 2*gridWidth)
@@ -767,6 +769,8 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 	if (drawHGrid) {
 		if (!isPolar) {
 			double y0 = -plotH*yMinUnit/yRange + plotH;
+			if ((yRange - yMinUnit)/yMajorUnit > 20)
+				yMajorUnit = (yRange - yMinUnit)/20.;
 			for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
 				int yg = fround(y0 - i*plotH/d2);
 				if (yg > 2*gridWidth && yg < plotH - 2*gridWidth) 
