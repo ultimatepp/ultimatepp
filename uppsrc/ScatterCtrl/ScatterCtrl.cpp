@@ -25,8 +25,8 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 	GuiLock __;
 	if (saveAsMetafile) {
 		WinMetaFileDraw wmfd;	
-		wmfd.Create(copyRatio*ScatterDraw::GetSize().cx, copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart");
-		SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), copyRatio);	
+		wmfd.Create(8*copyRatio*ScatterDraw::GetSize().cx, 8*copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart");
+		SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), 8*copyRatio, false);	
 		WinMetaFile wmf = wmfd.Close();	 
 		wmf.WriteClipboard();
 	} else {
@@ -579,7 +579,10 @@ void ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
 	if (IsNull(fileName)) {
-		fileToSave.Set(ForceExt(GetTitle(), ".jpg"));
+		String name = GetTitle();
+		if (name.IsEmpty())
+			name = t_("Scatter plot");
+		fileToSave.Set(ForceExt(name, ".jpg"));
 		fileToSave.ClearTypes();
 		fileToSave.Type(Format(t_("%s file"), "JPEG"), "*.jpg");
 		fileToSave.Type(Format(t_("%s file"), "PNG"), "*.png");
