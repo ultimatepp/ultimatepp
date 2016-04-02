@@ -251,14 +251,13 @@ void InstantSetup()
 			bmSet(bm, "DEBUG_INFO", "2");
 			bmSet(bm, "DEBUG_BLITZ", "");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
-			bmSet(bm, "DEBUG_OPTIONS", "-Os");
+			bmSet(bm, "DEBUG_OPTIONS", "-O0");
 			bmSet(bm, "DEBUG_FLAGS", "");
 			bmSet(bm, "DEBUG_LINK", "");
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
-			String olevel = x64 ? "-O3 " : "-Os ";
-			bmSet(bm, "RELEASE_OPTIONS", olevel + "-ffunction-sections");
-			bmSet(bm, "RELEASE_SIZE_OPTIONS", olevel + "-finline-limit=20 -ffunction-sections");
+			bmSet(bm, "RELEASE_OPTIONS", "-O2 -ffunction-sections");
+			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-O2 -finline-limit=20 -ffunction-sections");
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "");
 			bmSet(bm, "DEBUGGER", "gdb");
