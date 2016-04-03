@@ -390,6 +390,7 @@ bool IsLayFile(const char *path)
 }
 
 struct LayDesModule : public IdeModule {
+	virtual String       GetID() { return "LayDesModule"; }
 	virtual void CleanUsc() {
 		LayUscClean();
 	}

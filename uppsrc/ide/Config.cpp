@@ -2,7 +2,7 @@
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 14;
+	int version = 15;
 	s / version;
 	s.Magic(0x12354);
 	if(s.IsStoring()) {
@@ -82,8 +82,21 @@ void Ide::SerializeWorkspace(Stream& s) {
 	s % recentoutput;
 	s % recentflags;
 	s / editortabsize / indent_amount % indent_spaces;
-	for(int j = 0; j < GetIdeModuleCount(); j++)
-		GetIdeModule(j).Serialize(s); // -> Workspace
+	if(version < 15)
+		for(int j = 0; j < GetIdeModuleCount(); j++)
+			GetIdeModule(j).Serialize(s);
+	else {
+		VectorMap<String, String> module_cfg;
+		for(int j = 0; j < GetIdeModuleCount(); j++) {
+			IdeModule& m = GetIdeModule(j);
+			module_cfg.Add(m.GetID(), StoreAsString(m));
+		}
+		s % module_cfg;
+		for(int j = 0; j < GetIdeModuleCount(); j++) {
+			IdeModule& m = GetIdeModule(j);
+			LoadFromString(m, module_cfg.Get(m.GetID(), String()));
+		}
+	}
 	SerializeWorkspaceConfigs(s);
 	SerializeOutputMode(s);
 	SerializeClosed(s);
