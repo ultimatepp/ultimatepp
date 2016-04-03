@@ -6,9 +6,9 @@
 #include <string>
 #include <sstream>
 
-#define FIELD_NATIVE_ADRESS "nativeAdress"
+static const char* FieldNativeAddress = "nativeAdress";
 
-#define LONG_SIG "J"
+static const char* LongSig = "J";
 
 /**
  * Java simple memory manager.
@@ -88,7 +88,7 @@ private:
 	
 	jfieldID GetNativeAdressField(JNIEnv* env, jclass clazz)
 	{
-		return env->GetFieldID(clazz, FIELD_NATIVE_ADRESS, LONG_SIG);
+		return env->GetFieldID(clazz, FieldNativeAddress, LongSig);
 	}
 	
 private:
