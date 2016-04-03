@@ -582,8 +582,10 @@ void Ide::TriggerAssistSync()
 void Ide::EditAsHex()
 {
 	String path = editfile;
-	editastext.RemoveKey(editfile);
-	editashex.FindPut(editfile);
+    if(editashex.Find(path) >= 0)
+        return;
+	editastext.RemoveKey(path);
+	editashex.FindPut(path);
 	byte cs = editor.GetCharset();
 	FlushFile();
 	EditFile0(path, cs);
