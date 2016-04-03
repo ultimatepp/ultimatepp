@@ -6,6 +6,8 @@ bool IsTopicGroup(const char *path)
 }
 
 struct TopicModule : public IdeModule {
+	virtual String       GetID() { return "TopicModule"; }
+
 	virtual Image FileIcon(const char *path) {
 		return IsTopicGroup(path) ? TopicImg::Group() : Null;
 	}
