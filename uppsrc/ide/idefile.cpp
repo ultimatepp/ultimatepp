@@ -582,10 +582,10 @@ void Ide::TriggerAssistSync()
 void Ide::EditAsHex()
 {
 	String path = editfile;
-    if(editashex.Find(path) >= 0)
-        return;
-	editastext.RemoveKey(path);
-	editashex.FindPut(path);
+	if(editashex.Find(path) >= 0)
+		return;
+	editastext.RemoveKey(editfile);
+	editashex.FindPut(editfile);
 	byte cs = editor.GetCharset();
 	FlushFile();
 	EditFile0(path, cs);
@@ -608,6 +608,8 @@ void Ide::DoEditAsText(const String& path)
 void Ide::EditAsText()
 {
 	String path = editfile;
+	if(editastext.Find(path) >= 0)
+		return;
 	if(!FileExists(path))
 		return;
 	DoEditAsText(path);
@@ -619,6 +621,8 @@ void Ide::EditAsText()
 void Ide::EditUsingDesigner()
 {
 	String path = editfile;
+	if (editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
+		return;
 	editashex.RemoveKey(editfile);
 	editastext.RemoveKey(editfile);
 	byte cs = editor.GetCharset();
