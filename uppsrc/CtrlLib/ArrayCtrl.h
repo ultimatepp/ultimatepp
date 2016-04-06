@@ -239,6 +239,7 @@ private:
 	bool  nobg:1;
 	bool  focussetcursor:1;
 	bool  allsorting:1;
+	bool  spanwidecells:1;
 
 	mutable bool  selectiondirty:1;
 
@@ -299,6 +300,7 @@ private:
 	const Display& GetCellInfo(int i, int j, bool f0, Value& v, Color& fg, Color& bg, dword& st);
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl, bool owned, bool value);
 	Size   DoPaint(Draw& w, bool sample);
+	void   SpanWideCell(const Display& d, const Value& q, int cm, int& cw, Rect& r, int i, int& j);
 
 	bool   TestKey(int i, int key);
 
@@ -687,6 +689,8 @@ public:
 
 	ArrayCtrl& CursorOverride(const Image& arrow)             { cursor_override = arrow; return *this; }
 	ArrayCtrl& NoCursorOverride()                             { return CursorOverride(Null); }
+	
+	ArrayCtrl& SpanWideCells(bool b = true)                   { spanwidecells = b; Refresh(); return *this; }
 
 	void Reset();
 
