@@ -1,0 +1,11 @@
+description "Demontrates 'SpanWideCells' mode of ArrayCtrl\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
