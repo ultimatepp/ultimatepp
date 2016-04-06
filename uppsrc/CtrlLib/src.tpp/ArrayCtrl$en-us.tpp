@@ -1042,14 +1042,21 @@ blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".&]
 Override]()&]
 [s2; Same as CursorOverride(Null).&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:SpanWideCells`(bool`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
+]_[* SpanWideCells]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; In this mode, if cell content (as defined by Display`::GetStdSize) 
+is wider than cell width and next cell is Null (empty), the cell 
+width is extended to span over the next cell (just like in common 
+spreadsheet applications). ArrayCtrl header must no be in Moving 
+mode for correct operation. Returns `*this.&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:RowFormat`(const char`*`): [_^String^ String]_[* RowFormat]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Formats a text by substituting [* %s] with the array`-specific 
 term for `'row`' (as set by the [* RowName] property). This is 
-used for array local menu items.&]
-[s7; [*C@3 s]-|[* Format]`-like string to substitute.&]
-[s7; [*/ Return value]-|&]
+used for array local menu items. Returns `*this.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:RowName`(const char`*`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* RowNa
