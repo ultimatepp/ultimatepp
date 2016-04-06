@@ -819,6 +819,19 @@ const Display& ArrayCtrl::GetCellInfo(int i, int j, bool f0,
 	return GetDisplay(i, j);
 }
 
+void ArrayCtrl::SpanWideCell(const Display& d, const Value& q, int cm, int& cw, Rect& r, int i, int& j)
+{
+	int cx = d.GetStdSize(q).cx;
+	while(cx > r.Width() - 2 * cm && j + 1 < column.GetCount()) {
+		Value v = GetConvertedColumn(i, j + 1);
+		if(!IsNull(v))
+			break;
+		j++;
+		cw += header.GetTabWidth(j);
+		r.right = r.left + cw - vertgrid + (j == column.GetCount() - 1);
+	}
+}
+
 Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 	LTIMING("Paint");
 	SyncColumnsPos();
@@ -854,12 +867,15 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 							cm = header.Tab(j).GetMargin();
 						if(x > size.cx) break;
 						r.left = x;
-						r.right = x + cw - vertgrid + (j == column.GetCount() - 1);
+						r.right = x + cw - vertgrid + (jj == column.GetCount() - 1);
 						dword st;
 						Color fg, bg;
 						Value q;
 						const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
 						if(sample || w.IsPainting(r)) {
+							if(spanwidecells)
+								SpanWideCell(d, q, cm, cw, r, i, j);
+							
 							if(cw < 2 * cm || editmode && i == cursor && column[jj].edit)
 								d.PaintBackground(w, r, q, fg, bg, st);
 							else {
@@ -868,7 +884,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 								r.right -= cm;
 								d.PaintBackground(w, RectC(r.right, r.top, cm, r.Height()), q, fg, bg, st);
 								w.Clip(r);
-								GetDisplay(i, jj).Paint(w, r, q, fg, bg, st);
+								d.Paint(w, r, q, fg, bg, st);
 								w.End();
 							}
 						}
@@ -1665,20 +1681,21 @@ void ArrayCtrl::SyncInfo()
 		c.y = GetLineAt(p.y + sb);
 		if(c.y >= 0) {
 			for(c.x = 0; c.x < column.GetCount(); c.x++) {
-				Rect r = GetCellRect(c.y, c.x);
-				if(r.Contains(p)) {
-					if(!IsCtrl(c.y, c.x)) {
-						int cm = column[c.x].margin;
-						if(cm < 0)
-							cm = header.Tab(header.FindIndex(c.x)).GetMargin();
-						dword st;
-						Color fg, bg;
-						Value q;
-						const Display& d = GetCellInfo(c.y, c.x, HasFocusDeep(), q, fg, bg, st);
+				if(!IsCtrl(c.y, c.x)) {
+					Rect r = GetCellRect(c.y, c.x);
+					int cm = column[c.x].margin;
+					if(cm < 0)
+						cm = header.Tab(header.FindIndex(c.x)).GetMargin();
+					dword st;
+					Color fg, bg;
+					Value q;
+					const Display& d = GetCellInfo(c.y, c.x, HasFocusDeep(), q, fg, bg, st);
+					int cw = r.Width();
+					SpanWideCell(d, q, cm, cw, r, c.y, c.x);
+					if(r.Contains(p)) {
 						info.Set(this, r, q, &d, fg, bg, st, cm);
 						return;
 					}
-					break;
 				}
 			}
 		}
@@ -2663,6 +2680,7 @@ void ArrayCtrl::Reset() {
 	allsorting = false;
 	acceptingrow = 0;
 	columnsortfindkey = false;
+	spanwidecells = false;
 	linecy = Draw::GetStdFontCy();
 	Clear();
 	sb.SetLine(linecy);
