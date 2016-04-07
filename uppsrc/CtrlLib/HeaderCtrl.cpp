@@ -443,7 +443,7 @@ void HeaderCtrl::Paint(Draw& w) {
 	}
 	Column h;
 	h.header = this;
-	h.Paint(first, w, x, 0, 99999, sz.cy, false, false, false);
+	h.Paint(first, w, x, 0, sz.cx - x, sz.cy, false, false, false);
 	if(isdrag) {
 		w.DrawImage(dragx + dragd, 0, dragtab);
 		DrawVertDrop(w, IsNull(dx) ? sz.cx - 2 : dx - (dx > 0), 0, sz.cy);
