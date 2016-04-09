@@ -47,6 +47,8 @@ Fix CoWork
 Fix StringStream 2GB limit, StringBuffer 2GB limit
 Stream SizeLimit
 
+Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = i + 1; Pack(w); i = w - 1; return *this; }
+
 -----------------------
 DONE
 
