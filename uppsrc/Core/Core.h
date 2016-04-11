@@ -271,7 +271,6 @@ class JsonIO;
 #include "BiCont.h"
 #include "Index.h"
 #include "Map.h"
-#include "Tuple.h"
 #include "Algo.h"
 #include "Sorted.h"
 #include "Sort.h"
@@ -285,6 +284,8 @@ class JsonIO;
 
 #include "Value.h"
 #include "ValueUtil.h"
+
+#include "Tuple.h"
 
 #include "Uuid.h"
 #include "Ptr.h"

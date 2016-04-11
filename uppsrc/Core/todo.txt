@@ -49,6 +49,8 @@ Stream SizeLimit
 
 Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = i + 1; Pack(w); i = w - 1; return *this; }
 
+Remove NanoStrings
+
 -----------------------
 DONE
 

@@ -255,7 +255,7 @@ public:
 };
 
 class SocketWaitEvent {
-	Vector< Tuple2<int, dword> > socket;
+	Vector<Tuple<int, dword>> socket;
 	fd_set read[1], write[1], exception[1];
 	SocketWaitEvent(const SocketWaitEvent &);
 

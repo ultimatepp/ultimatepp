@@ -495,11 +495,11 @@ class NanoStrings {
 		page_mask = (1 << page_shift) - 1,
 	};
 
-	Tuple2<const char *, int> Get2s(dword ws);
+	Tuple<const char *, int>  Get2s(dword ws);
 
 public:
 	dword                     Add(const String& s);
-	Tuple2<const char *, int> Get2(dword ws);
+	Tuple<const char *, int>  Get2(dword ws);
 	String                    Get(dword ws);
 	const char *              GetPtr(dword ws)           { return Get2(ws).a; }
 	

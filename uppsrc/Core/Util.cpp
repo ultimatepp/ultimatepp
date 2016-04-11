@@ -854,20 +854,20 @@ dword NanoStrings::Add(const String& s)
 }
 
 inline
-Tuple2<const char *, int> NanoStrings::Get2s(dword ws)
+Tuple<const char *, int> NanoStrings::Get2s(dword ws)
 {
 	int len = ws >> 26;
 	int lenz = len + zs;
 	ws = ws & 0x3ffffff;
-	Tuple2<const char *, int> r;
+	Tuple<const char *, int> r;
 	r.a = data[len].data[ws >> page_shift] + (ws & page_mask) * lenz;
 	r.b = len;
 	return r;
 }
 
-Tuple2<const char *, int> NanoStrings::Get2(dword ws)
+Tuple<const char *, int> NanoStrings::Get2(dword ws)
 {
-	Tuple2<const char *, int> r;
+	Tuple<const char *, int> r;
 	if((ws & 0xc0000000) == 0xc0000000) {
 		const String& h = over[ws & 0x3ffffff];
 		r.a = ~h;
@@ -883,7 +883,7 @@ String NanoStrings::Get(dword ws)
 	if((ws & 0xc0000000) == 0xc0000000)
 		return over[ws & 0x3ffffff];
 	else {
-		Tuple2<const char *, int> r = Get2s(ws);
+		Tuple<const char *, int> r = Get2s(ws);
 		return String(r.a, r.b);
 	}
 }

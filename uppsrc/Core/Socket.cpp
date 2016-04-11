@@ -185,7 +185,7 @@ int TcpSocket::GetErrorCode()
 
 const char *TcpSocketErrorDesc(int code)
 {
-	static Tuple2<int, const char *> err[] = {
+	static Tuple<int, const char *> err[] = {
 		{ WSAEINTR,                 "Interrupted function call." },
 		{ WSAEACCES,                "Permission denied." },
 		{ WSAEFAULT,                "Bad address." },
@@ -231,7 +231,7 @@ const char *TcpSocketErrorDesc(int code)
 		{ WSANO_DATA,               "Valid name, no data record of requested type." },
 		{ WSASYSCALLFAILURE,        "System call failure." },
 	};
-	const Tuple2<int, const char *> *x = FindTuple(err, __countof(err), code);
+	const Tuple<int, const char *> *x = FindTuple(err, __countof(err), code);
 	return x ? x->b : "Unknown error code.";
 }
 
@@ -976,9 +976,9 @@ int SocketWaitEvent::Wait(int timeout)
 	FD_ZERO(exception);
 	int maxindex = -1;
 	for(int i = 0; i < socket.GetCount(); i++) {
-		const Tuple2<int, dword>& s = socket[i];
+		const Tuple<int, dword>& s = socket[i];
 		if(s.a >= 0) {
-			const Tuple2<int, dword>& s = socket[i];
+			const Tuple<int, dword>& s = socket[i];
 			if(s.b & WAIT_READ)
 				FD_SET(s.a, read);
 			if(s.b & WAIT_WRITE)

@@ -675,7 +675,7 @@ int ScanTimeZone(const char *s)
 
 int GetLeapSeconds(Date dt)
 {
-	static Tuple2<int, int> sLeapSeconds[] = {
+	static Tuple<int, int> sLeapSeconds[] = {
 		{ 1972,6 }, { 1972,12 }, { 1973,12 }, { 1974,12 }, { 1975,12 }, { 1976,12 }, { 1977,12 },
 		{ 1978,12 }, { 1979,12 }, { 1981,6 }, { 1982,6 }, { 1983,6 }, { 1985,6 }, { 1987,12 },
 		{ 1989,12 }, { 1990,12 }, { 1992,6 }, { 1993,6 }, { 1994,6 }, { 1995,12 }, { 1997,6 },

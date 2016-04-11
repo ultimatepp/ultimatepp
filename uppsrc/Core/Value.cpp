@@ -726,16 +726,16 @@ String Value::GetName() const
 	}
 	if(IsString())
 		return "String";
-	static Tuple2<byte, const char *> tp[] = {
-		{ INT_V, "int" },
-		{ DOUBLE_V, "double" },
-		{ VOIDV, "void" },
-		{ DATE_V, "Date" },
-		{ TIME_V, "Time" },
-		{ INT64_V, "int64" },
-		{ BOOL_V, "bool" },
+	static Tuple<byte, const char *> tp[] = {
+		{ (byte)INT_V, "int" },
+		{ (byte)DOUBLE_V, "double" },
+		{ (byte)VOIDV, "void" },
+		{ (byte)DATE_V, "Date" },
+		{ (byte)TIME_V, "Time" },
+		{ (byte)INT64_V, "int64" },
+		{ (byte)BOOL_V, "bool" },
 	};
-	Tuple2<byte, const char *> *x = FindTuple(tp, __countof(tp), data.GetSpecial());
+	Tuple<byte, const char *> *x = FindTuple(tp, __countof(tp), data.GetSpecial());
 	return x ? String(x->b) : AsString(GetType());
 }
 

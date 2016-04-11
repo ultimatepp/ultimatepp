@@ -304,9 +304,10 @@ void MemoryFreek__(int klass, void *ptr)
 	heap.Free(ptr, klass);
 }
 
-thread__ Heap heap;
+thread_local Heap heap;
 
 #if defined(HEAPDBG)
+
 void *MemoryAlloc_(size_t sz)
 {
 	return heap.AllocSz(sz);

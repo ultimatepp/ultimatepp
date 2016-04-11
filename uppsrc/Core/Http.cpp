@@ -563,7 +563,7 @@ void HttpRequest::StartRequest()
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
-		     << "Connection: " << (keep_alive ? "keep-alive\r\n" : "close\r\n") 
+		     << "Connection: " << (keep_alive ? "keep-alive\r\n" : "close\r\n")
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
 		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
@@ -573,11 +573,11 @@ void HttpRequest::StartRequest()
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
-	VectorMap<String, Tuple2<String, int> > cms;
+	VectorMap<String, Tuple<String, int>> cms;
 	for(int i = 0; i < cookies.GetCount(); i++) {
 		const HttpCookie& c = cookies[i];
 		if(host.EndsWith(c.domain) && path.StartsWith(c.path)) {
-			Tuple2<String, int>& m = cms.GetAdd(c.id, MakeTuple(String(), -1));
+			Tuple<String, int>& m = cms.GetAdd(c.id, MakeTuple(String(), -1));
 			if(c.path.GetLength() > m.b) {
 				m.a = c.value;
 				m.b = c.path.GetLength();
