@@ -9,5 +9,5 @@
 #include "plugin/tif/init"
 #include "plugin/bmp/init"
 #include "plugin/lz4/init"
-#include "ide/Browser/init"
+#include "PdfDraw/init"
 #endif

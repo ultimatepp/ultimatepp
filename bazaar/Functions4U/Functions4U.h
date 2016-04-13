@@ -204,8 +204,8 @@ Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes, bool units = true);
 
-String SecondsToString(double seconds, bool units = false, bool dec = true);
-String HMSToString(int hour, int min, double seconds, bool units = false, bool dec = true); 
+String SecondsToString(double seconds, bool units = false, int dec = 2);
+String HMSToString(int hour, int min, double seconds, bool units = false, int dec = 2); 
 double StringToSeconds(String str);		// The opposite
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 

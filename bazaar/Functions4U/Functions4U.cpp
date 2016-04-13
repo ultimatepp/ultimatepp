@@ -790,7 +790,7 @@ Date StrToDate(const char *s) {
 
 void StringToHMS(String durat, int &hour, int &min, double &seconds) {
 	StringParse duration(durat);
-	String s1, s2, s3;
+	String s1, s2, s3; 
 	s1 = duration.GetText(":");
 	s2 = duration.GetText(":");
 	s3 = duration.GetText();
@@ -816,7 +816,7 @@ double StringToSeconds(String duration) {
 	return 3600.*hour + 60.*min + secs;
 }
 
-String formatSeconds(double seconds, bool fill) {
+String formatSeconds(double seconds, int dec, bool fill) {
 	int iseconds = int(seconds);
 	String ret;
 	if (fill)
@@ -824,12 +824,12 @@ String formatSeconds(double seconds, bool fill) {
 	else
 		ret = FormatInt(iseconds);
 	double decs = seconds - iseconds;
-	if (decs > 0) 
-		ret << "." << FormatIntDec((int)(decs*100), 2, '0');
+	if (decs > 0 && dec > 0) 
+		ret << "." << FormatIntDec((int)(decs*pow(10, dec)), dec, '0');
 	return ret;
 }
 
-String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
+String HMSToString(int hour, int min, double seconds, bool units, int dec) {
 	String sunits;
 	if (units) {
 		if (hour >= 1)
@@ -848,16 +848,14 @@ String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
 		ret << hour << ":";
 	if (min > 0 || hour > 0) 
 	    ret << (ret.IsEmpty() ? FormatInt(min) : FormatIntDec(min, 2, '0')) << ":";
-	if (!dec)
-		seconds = int(seconds);
 	
-	ret << formatSeconds(seconds, min > 0 || hour > 0);
+	ret << formatSeconds(seconds, dec, min > 0 || hour > 0);
 	if (units)
 		ret << " " << sunits;
 	return ret;
 }
 
-String SecondsToString(double seconds, bool units, bool dec) {
+String SecondsToString(double seconds, bool units, int dec) {
 	int hour, min;
 	hour = (int)(seconds/3600.);
 	seconds -= hour*3600;
