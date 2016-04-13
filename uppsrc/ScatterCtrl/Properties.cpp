@@ -620,7 +620,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	tabFit.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 	tabFit.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 	
-	tabFit.scatter.SetMouseHandling(true, true).ShowInfo();
+	tabFit.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();
 	
 	DataSource &data = tabFit.scatter.GetSeries(0);
 	
@@ -759,7 +759,7 @@ void ProcessingTab::OnSet()
 		tabOp.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 		tabOp.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
-		tabOp.scatter.SetMouseHandling(true, true).ShowInfo();	
+		tabOp.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();	
 	}
 }
 
@@ -845,7 +845,7 @@ void ProcessingTab::OnFFT()
 	
 	String legend = tabFit.scatter.GetLegend(0) + String("-") + t_("FFT");
 	tabFreq.scatter.AddSeries(fft).Legend(legend);
-	tabFreq.scatter.SetMouseHandling(true, true).ShowInfo();
+	tabFreq.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();
 	tabFreq.scatter.SetLabelX(t_("Period [sec]"));
 	tabFreq.scatter.SetLabelY(legend);
 	tabFreq.scatter.ZoomToFit(true, true);
