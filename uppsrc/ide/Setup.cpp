@@ -502,11 +502,15 @@ void Ide::SetupFormat() {
 	uscBrowse.SetImage(CtrlImg::right_arrow());
 	uscBrowse <<= callback1(AddPath, &ide.uscpath);
 	ide.uscpath.AddFrame(uscBrowse);
-	ide.uscpath <<= LoadFile(GetHomeDirFile("usc.path"));
+	String usc_path = GetHomeDirFile("usc.path");
+	ide.uscpath <<= LoadFile(usc_path);
 	
 	for(;;) {
 		int c = dlg.Run();
-		Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);
+		if(IsNull(ide.uscpath))
+			FileDelete(usc_path);
+		else
+			Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);
 		editorfont = ed.Get();
 		tfont = tf.Get();
 		veditorfont = vf.Get();
