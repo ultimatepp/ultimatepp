@@ -379,7 +379,6 @@ void Ide::FlushFile() {
 	editor.Clear();
 	editor.Disable();
 	editorsplit.Ctrl::Remove();
-	editor.SetFrame(NullFrame());
 	designer.Clear();
 	SetBar();
 }

@@ -50,7 +50,6 @@ AssistEditor::AssistEditor()
 	auto_assist = auto_check = true;
 	commentdp = false;
 
-	InsertFrame(1, navigatorframe);
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
 	navigating = false;
 
