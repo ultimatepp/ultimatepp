@@ -115,7 +115,7 @@ String XmlView::Load0(XmlParser& p) {
 	}
 	
 	if(!parsingError.GetCount() && !xml.GetChildCount(0))
-	 	parsingError = "Not found any XML tags";
+		parsingError = "Not found any XML tags";
 	
 	return parsingError;
 }
