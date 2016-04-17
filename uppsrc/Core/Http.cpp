@@ -383,7 +383,7 @@ bool HttpRequest::Do()
 		StartPhase(CHUNK_HEADER);
 		break;
 	case TRAILER:
-		if(ReadingHeader())
+		if(ReadingTrailer())
 			break;
 		header.ParseAdd(data);
 		Finish();
@@ -660,6 +660,23 @@ bool HttpRequest::ReadingHeader()
 		}
 		if(data.GetCount() > max_header_size) {
 			HttpError("HTTP header exceeded " + AsString(max_header_size));
+			return true;
+		}
+	}
+}
+
+bool HttpRequest::ReadingTrailer()
+{
+	for(;;) {
+		int c = TcpSocket::Get();
+		if(c < 0)
+			return !IsEof();
+		else
+			data.Cat(c);
+		if(data.GetCount() == 2) {
+			if(data[0] == '\r' && data[1] == '\n')
+				return false;
+			HttpError("Invalid chunk trailer");
 			return true;
 		}
 	}
