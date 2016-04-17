@@ -489,6 +489,8 @@ void AssistEditor::Assist()
 		String tp;
 		Vector<String> xp = ReadBack(q, parser.local.GetIndex());
 		bool isok = false;
+		if(xp.GetCount() && xp[0].StartsWith("::")) // ::Foo().
+			xp[0] = xp[0].Mid(2);
 		for(int i = 0; i < xp.GetCount(); i++)
 			if(iscib(*xp[i])) {
 				isok = true;
