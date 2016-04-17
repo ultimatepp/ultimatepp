@@ -400,6 +400,7 @@ class HttpRequest : public TcpSocket {
 	bool         SendingData(bool request = false);
 
 	bool         ReadingHeader();
+	bool         ReadingTrailer();
 	void         StartBody();
 	bool         ReadingBody();
 	void         ReadingChunkHeader();
