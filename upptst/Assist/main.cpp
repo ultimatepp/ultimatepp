@@ -33,6 +33,11 @@ void Autocomplete()
 	Upp::String
 }
 
+void Autocomplete()
+{
+	Upp::TrimBoth().
+}
+
 using namespace Upp;
 
 void Autocomplete()
@@ -94,7 +99,28 @@ void Autocomplete()
 	p.
 }
 
+struct FooBar {
+	int x;
+};
+
+void Autocomplete()
+{
+	FooBar b;
+	b.
+}
+
+void Autocomplete()
+{
+	::FooBar b;
+	b.
+}
+
 Index<String>& Tags();
+
+void Autocomplete() // TODO
+{
+	::Tags().
+}
 
 void Autocomplete()
 {
