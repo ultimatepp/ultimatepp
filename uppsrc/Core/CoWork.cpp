@@ -49,7 +49,8 @@ bool CoWork::Pool::DoJob()
 {
 	Pool& p = pool();
 	MJob& job = p.jobs[p.scheduled - 1];
-	if(job.work == NULL) {
+	CoWork *work = job.work;
+	if(work == NULL) {
 		LLOG("Quit thread");
 		return true;
 	}
@@ -71,11 +72,11 @@ bool CoWork::Pool::DoJob()
 	}
 	if(!finlock)
 		p.lock.Enter();
-	if(--job.work->todo == 0) {
-		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(job.work) << ")");
-		job.work->waitforfinish.Release();
+	if(--work->todo == 0) {
+		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
+		work->waitforfinish.Release();
 	}
-	LLOG("Finished, remaining todo " << job.work->todo << " (CoWork " << FormatIntHex(job.work) << ")");
+	LLOG("Finished, remaining todo " << work->todo << " (CoWork " << FormatIntHex(work) << ")");
 	return false;
 }
 
