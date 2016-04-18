@@ -35,8 +35,8 @@ class CoWork : NoCopy {
 	Semaphore waitforfinish;
 	int       todo;
 
-	Mutex stepmutex;
-	Vector< BiVector<Callback> > step;
+//	Mutex stepmutex;
+//	Vector< BiVector<Callback> > step;
 
 	
 public:
@@ -48,7 +48,7 @@ public:
 	CoWork&  operator&(const Function<void ()>& lambda)       { Do(lambda); return *this; }
 	CoWork&  operator&(Function<void ()>&& lambda)            { Do(lambda); return *this; }
 
-	void Step(int stepi, const Callback& cb);
+//	void Step(int stepi, const Callback& cb);
 
 	static void FinLock();
 

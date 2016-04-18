@@ -6,10 +6,9 @@ RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
 
 Fix Value::Void::Retain
 
-Generic Tuple
-
 Index::FirstAdd
 
+Fix CoWork
 kw.Get(r["keywordId"], String())
 
 CoWork limits, pipe, logical thread not working
@@ -21,8 +20,6 @@ Vector/Array/Index/Map :: RemoveIf
 Use m128! ?
 
 Remove ArrayIndex
-
-rename Function (Functor, Event, EventGate)
 
 spinlock for heap freeremote?
 
@@ -40,10 +37,6 @@ Remove ValueType uses
 
 InVector::InsertN possibly incorrect (can create small blocks)
 
-ExitThread (or Thread::Exit), Sleep(10)
-
-Fix CoWork
-
 Fix StringStream 2GB limit, StringBuffer 2GB limit
 Stream SizeLimit
 
@@ -53,6 +46,12 @@ Remove NanoStrings
 
 -----------------------
 DONE
+
+rename Function (Functor, Event, EventGate)
+
+ExitThread (or Thread::Exit), Sleep(10)
+
+Generic Tuple
 
 String() <<
 

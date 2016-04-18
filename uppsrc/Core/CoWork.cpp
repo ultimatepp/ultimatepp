@@ -4,8 +4,8 @@ NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)     // DLOG(x)
-#define LDUMP(x)    // DDUMP(x)
+#define LLOG(x)      // DLOG(x)
+#define LDUMP(x)     // DDUMP(x)
 
 #define LHITCOUNT(x) // RHITCOUNT(x)
 
@@ -53,18 +53,22 @@ bool CoWork::Pool::DoJob()
 		LLOG("Quit thread");
 		return true;
 	}
+	LLOG("DoJob " << p.scheduled - 1 << ", todo: " << job.work->todo << " (CoWork " << FormatIntHex(job.work) << ")");
 	finlock = false;
 	Function<void ()> fn = pick(job.fn);
+	CoWork *work = job.work;
 	p.scheduled--;
 	p.lock.Leave();
 	fn();
 	if(!finlock)
 		p.lock.Enter();
-	if(--job.work->todo == 0) {
-		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(job.work) << ")");
-		job.work->waitforfinish.Release();
+	if(--work->todo == 0) {
+		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
+		work->waitforfinish.Release();
 	}
-	LLOG("Finished, remaining todo " << job.work->todo << " (CoWork " << FormatIntHex(job.work) << ")");
+	LLOG("DoJobA " << p.scheduled << ", todo: " << work->todo << " (CoWork " << FormatIntHex(work) << ")");
+	ASSERT(work->todo >= 0);
+	LLOG("Finished, remaining todo " << work->todo);
 	return false;
 }
 
@@ -111,7 +115,7 @@ void CoWork::Do(Function<void ()>&& fn)
 	job.work = this;
 	job.fn = pick(fn);
 	todo++;
-	LLOG("Adding job; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
+	LLOG("Adding job " << p.scheduled - 1 << "; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
 	if(p.waiting_threads) {
 		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
 		p.waiting_threads--;
@@ -137,7 +141,7 @@ void CoWork::Finish() {
 		}
 	}
 	p.lock.Leave();
-	LLOG("CoWork finished");
+	LLOG("CoWork " << FormatIntHex(this) << " finished");
 }
 
 /*
@@ -185,6 +189,7 @@ CoWork::CoWork()
 CoWork::~CoWork()
 {
 	Finish();
+	LLOG("~CoWork " << FormatIntHex(this));
 }
 
 #endif
