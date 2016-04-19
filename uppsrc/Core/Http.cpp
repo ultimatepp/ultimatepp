@@ -383,7 +383,7 @@ bool HttpRequest::Do()
 		StartPhase(CHUNK_HEADER);
 		break;
 	case TRAILER:
-		if(ReadingTrailer())
+		if(ReadingHeader())
 			break;
 		header.ParseAdd(data);
 		Finish();
@@ -653,30 +653,15 @@ bool HttpRequest::ReadingHeader()
 			return !IsEof();
 		else
 			data.Cat(c);
-		if(data.GetCount() > 3) {
+		if(data.GetCount() == 2 && data[0] == '\r' && data[1] == '\n') // header is empty
+			return false;
+		if(data.GetCount() >= 3) {
 			const char *h = data.Last();
-			if(h[0] == '\n' && (h[-1] == '\r' && h[-2] == '\n' || h[-1] == '\n'))
+			if(h[0] == '\n' && h[-1] == '\r' && h[-2] == '\n') // empty line after non-empty header
 				return false;
 		}
 		if(data.GetCount() > max_header_size) {
 			HttpError("HTTP header exceeded " + AsString(max_header_size));
-			return true;
-		}
-	}
-}
-
-bool HttpRequest::ReadingTrailer()
-{
-	for(;;) {
-		int c = TcpSocket::Get();
-		if(c < 0)
-			return !IsEof();
-		else
-			data.Cat(c);
-		if(data.GetCount() == 2) {
-			if(data[0] == '\r' && data[1] == '\n')
-				return false;
-			HttpError("Invalid chunk trailer");
 			return true;
 		}
 	}
