@@ -55,5 +55,19 @@ CONSOLE_APP_MAIN
 		DUMP(h.GetContent());
 		ASSERT(h.GetContent().EndsWith(".</m:message></m:error>"));
 	}
+	{
+		HttpRequest r("http://httpbin.org/basic-auth/user/passw0rd");
+		r.User("user", "passw0rd");
+		String h = r.Execute();
+		DUMP(h);
+		ASSERT(h.Find("\"authenticated\": true") >= 0);
+	}
+	{
+		HttpRequest r("http://httpbin.org/digest-auth/auth/usr/pwd");
+		r.User("usr", "pwd");
+		String h = r.Execute();
+		DUMP(h);
+		ASSERT(h.Find("\"authenticated\": true") >= 0);
+	}
 	LLOG("*********** Everything is OK");
 }
