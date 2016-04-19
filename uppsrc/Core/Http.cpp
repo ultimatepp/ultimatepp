@@ -58,6 +58,7 @@ void HttpRequest::Init()
 	retry_count = 0;
 	gzip = false;
 	WhenContent = callback(this, &HttpRequest::ContentOut);
+	WhenAuthenticate = callback(this, &HttpRequest::ResolveDigestAuthentication);
 	chunk = 4096;
 	timeout = 120000;
 	ssl = false;
@@ -315,7 +316,7 @@ void HttpRequest::NewRequest()
 	host = proxy_host = proxy_username = proxy_password = ssl_proxy_host =
 	ssl_proxy_username = ssl_proxy_password = path =
 	custom_method = accept = agent = contenttype = username = password =
-	digest = request_headers = postdata = multipart = Null;
+	authorization = request_headers = postdata = multipart = Null;
 }
 
 void HttpRequest::Clear()
@@ -594,8 +595,8 @@ void HttpRequest::StartRequest()
 		data << "Cookie: " << cs << "\r\n";
 	if(!IsNull(proxy_host) && !IsNull(proxy_username))
 		 data << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
-	if(!IsNull(digest))
-		data << "Authorization: Digest " << digest << "\r\n";
+	if(!IsNull(authorization))
+		data << "Authorization: " << authorization << "\r\n";
 	else
 	if(!force_digest && (!IsNull(username) || !IsNull(password)))
 		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
@@ -657,7 +658,7 @@ bool HttpRequest::ReadingHeader()
 			return false;
 		if(data.GetCount() >= 3) {
 			const char *h = data.Last();
-			if(h[0] == '\n' && h[-1] == '\r' && h[-2] == '\n') // empty line after non-empty header
+			if(h[0] == '\n' && h[-1] == '\r' && h[-2] == '\n') // empty ending line after non-empty header
 				return false;
 		}
 		if(data.GetCount() > max_header_size) {
@@ -794,6 +795,16 @@ void HttpRequest::CopyCookies()
 	CopyCookies(*this);
 }
 
+bool HttpRequest::ResolveDigestAuthentication()
+{
+	String authenticate = header["www-authenticate"];
+	if(authenticate.StartsWith("Digest")) {
+		Digest(CalculateDigest(authenticate));
+		return true;
+	}
+	return false;
+}
+
 void HttpRequest::Finish()
 {
 	if(gzip) {
@@ -815,14 +826,12 @@ void HttpRequest::Finish()
 	}
 	Close();
 	CopyCookies();
-	if(status_code == 401 && !IsNull(username)) {
-		String authenticate = header["www-authenticate"];
-		if(authenticate.GetCount() && redirect_count++ < max_redirects) {
-			LLOG("HTTP auth digest");
-			Digest(CalculateDigest(authenticate));
+	if(status_code == 401 && redirect_count++ < max_redirects && WhenAuthenticate()) {
+		if(keep_alive)
+			StartRequest();
+		else
 			Start();
-			return;
-		}
+		return;
 	}
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();

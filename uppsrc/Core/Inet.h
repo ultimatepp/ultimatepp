@@ -364,7 +364,7 @@ class HttpRequest : public TcpSocket {
 	String       contenttype;
 	String       username;
 	String       password;
-	String       digest;
+	String       authorization;
 	String       request_headers;
 	String       postdata;
 	String       multipart;
@@ -381,7 +381,7 @@ class HttpRequest : public TcpSocket {
 	int          chunk;
 
 	IpAddrInfo   addrinfo;
-	bool         gzip;	
+	bool         gzip;
 	Zlib         z;
 
 	Stream      *poststream;
@@ -430,6 +430,7 @@ public:
 	Callback2<const void *, int> WhenContent;
 	Callback                     WhenStart;
 	Callback                     WhenDo;
+	Gate                         WhenAuthenticate;
 
 	HttpRequest&  MaxHeaderSize(int m)                   { max_header_size = m; return *this; }
 	HttpRequest&  MaxContentSize(int m)                  { max_content_size = m; return *this; }
@@ -453,15 +454,18 @@ public:
 	HttpRequest&  Port(int p)                            { port = p; return *this; }
 	HttpRequest&  SSL(bool b = true)                     { ssl = b; return *this; }
 	HttpRequest&  Path(const String& p)                  { path = p; return *this; }
+	HttpRequest&  Authorization(const String& h)         { authorization = h; return *this; }
 	HttpRequest&  User(const String& u, const String& p) { username = u; password = p; return *this; }
 	HttpRequest&  Digest()                               { force_digest = true; return *this; }
-	HttpRequest&  Digest(const String& d)                { digest = d; return *this; }
+	HttpRequest&  Digest(const String& d)                { return Authorization("Digest " + d); return *this; }
 	HttpRequest&  Url(const char *url);
 	HttpRequest&  UrlVar(const char *id, const String& data);
 	HttpRequest&  operator()(const char *id, const String& data) { return UrlVar(id, data); }
 	HttpRequest&  PostData(const String& pd)              { postdata = pd; poststream = NULL; return *this; }
 	HttpRequest&  PostStream(Stream& s, int64 len = Null);
-	
+
+	bool          ResolveDigestAuthentication();
+
 	HttpRequest&  PostUData(const String& pd)             { return PostData(UrlEncode(pd)); }
 	HttpRequest&  Post(const String& data)                { POST(); return PostData(data); }
 	HttpRequest&  Post(const char *id, const String& data);
