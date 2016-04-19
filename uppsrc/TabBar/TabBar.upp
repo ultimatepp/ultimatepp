@@ -4,12 +4,12 @@ uses
 	CtrlLib;
 
 file
-	TabBar.t,
 	TabBar.h,
 	TabBar.cpp,
 	FileTabs.h,
 	FileTabs.cpp,
 	TabBar.iml,
 	TabBarCtrl.h,
-	TabBarCtrl.cpp;
+	TabBarCtrl.cpp,
+	TabBar.t;
 

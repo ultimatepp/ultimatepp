@@ -38,6 +38,14 @@ void EditorTabBar::RenameFile(const String& fn, const String& nn)
 	FileTabs::RenameFile(WString(fn), WString(nn));
 }
 
+void EditorTabBar::FixIcons()
+{
+	for(int i = 0; i < tabs.GetCount(); i++)
+		tabs[i].img = IdeFileImage(GetFile(i), false, false, false);
+	Repos();
+	Refresh();
+}
+
 void EditorTabBar::SetSplitColor(const String& fn, const Color& c)
 {
 	int n = -1;
