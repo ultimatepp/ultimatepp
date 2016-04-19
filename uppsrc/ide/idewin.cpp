@@ -460,6 +460,7 @@ Ide::Ide()
 	tabs <<= THISBACK(TabFile);
 //	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
 //	editor2.SetFrame(NullFrame());
+	editor2.theide = this;
 	editor2.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);

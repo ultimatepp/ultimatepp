@@ -873,6 +873,7 @@ void Ide::PassEditor()
 	editor2.CheckEdited();
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
+	editor2.Annotate(editfile2);
 }
 
 void Ide::ClearEditedFile()
@@ -900,7 +901,7 @@ void Ide::SplitEditor(bool horz)
 {
 	if(editorsplit.GetZoom() < 0)
 		CloseSplit();
-	
+
 	if(horz)
 		editorsplit.Horz(editor2, editor);
 	else

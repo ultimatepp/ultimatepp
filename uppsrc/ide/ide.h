@@ -429,7 +429,7 @@ public:
 
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
-	CodeEditor       editor2;
+	AssistEditor     editor2; // no edits happen in editor2, just view
 	EditorTabBar     tabs;
 	EscValue         macro_api;
 #ifdef PLATFORM_POSIX
