@@ -46,5 +46,14 @@ CONSOLE_APP_MAIN
 		ASSERT(h.IsError());
 		LDUMP(h.GetError());
 	}
+	{
+		HttpRequest h("http://dev.alt.cloudappsportal.com/_api/web/lists");
+		h.KeepAlive();
+		h.Execute();
+		ASSERT(h.GetStatusCode() == 401);
+		DUMP(h.GetReasonPhrase());
+		DUMP(h.GetContent());
+		ASSERT(h.GetContent().EndsWith(".</m:message></m:error>"));
+	}
 	LLOG("*********** Everything is OK");
 }
