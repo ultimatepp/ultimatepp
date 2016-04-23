@@ -10,6 +10,7 @@ class CoWork : NoCopy {
 	
 	enum { SCHEDULED_MAX = 2048 };
 
+public:
 	struct Pool {
 		int             scheduled;
 		MJob            jobs[SCHEDULED_MAX];
@@ -19,7 +20,7 @@ class CoWork : NoCopy {
 		Mutex           lock;
 		Semaphore       waitforjob;
 
-		Pool();
+		Pool(int nthreads);
 		~Pool();
 		
 		static thread__ bool finlock;
@@ -30,7 +31,11 @@ class CoWork : NoCopy {
 	
 	friend struct Pool;
 
-	static Pool& pool();
+	static Pool& GetPool(int n);
+	static Pool& GetPool();
+
+	static thread_local bool is_worker;
+	static thread_local Pool *pool;
 
 	Semaphore waitforfinish;
 	int       todo;
@@ -55,6 +60,10 @@ public:
 	void Finish();
 	
 	bool IsFinished();
+
+	static bool IsWorker()                                    { return is_worker; }
+	static void StartPool(int n);
+	static void ShutdownPool();
 
 	CoWork();
 	~CoWork();
