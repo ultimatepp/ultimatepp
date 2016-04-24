@@ -329,20 +329,25 @@ typedef long long unsigned uint64;
 
 typedef uint64             qword;
 
-#ifdef PLATFORM_WIN32
-#ifdef COMPILER_MINGW
-inline bool IsNaN(double d)        { return std::isnan(d); }
-inline bool IsInf(double d)        { return std::isinf(d); }
+#ifdef CPP_11
+	inline bool IsNaN(double d)        { return std::isnan(d); }
+	inline bool IsInf(double d)        { return std::isinf(d); }
 #else
-inline bool IsNaN(double d)        { return _isnan(d); }
-inline bool IsInf(double d)        { return !_finite(d) && !_isnan(d); }
-#endif
-#elif __APPLE__ || __DragonFly__ || (PLATFORM_BSD && GCC_VERSION >= 40700)
-inline bool IsNaN(double d)        { return std::isnan(d); }
-inline bool IsInf(double d)        { return std::isinf(d); }
-#else
-inline bool IsNaN(double d)        { return isnan(d); }
-inline bool IsInf(double d)        { return isinf(d); }
+	#ifdef PLATFORM_WIN32
+	#ifdef COMPILER_MINGW
+	inline bool IsNaN(double d)        { return std::isnan(d); }
+	inline bool IsInf(double d)        { return std::isinf(d); }
+	#else
+	inline bool IsNaN(double d)        { return _isnan(d); }
+	inline bool IsInf(double d)        { return !_finite(d) && !_isnan(d); }
+	#endif
+	#elif __APPLE__ || __DragonFly__ || (PLATFORM_BSD && GCC_VERSION >= 40700)
+	inline bool IsNaN(double d)        { return std::isnan(d); }
+	inline bool IsInf(double d)        { return std::isinf(d); }
+	#else
+	inline bool IsNaN(double d)        { return isnan(d); }
+	inline bool IsInf(double d)        { return isinf(d); }
+	#endif
 #endif
 
 inline bool IsFin(double d)        { return !IsNaN(d) && !IsInf(d); }

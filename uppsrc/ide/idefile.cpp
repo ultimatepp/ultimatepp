@@ -450,6 +450,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		MakeTitle();
 		SetBar();
 		designer->SetFocus();
+		editor.SyncNavigatorShow();
 		return;
 	}
 
@@ -541,6 +542,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.SetFocus();
 	MakeTitle();
 	SetBar();
+	editor.SyncNavigatorShow();
 	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
