@@ -8,8 +8,6 @@ Index::FirstAdd
 
 kw.Get(r["keywordId"], String())
 
-CoWork pipe
-
 MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 
 Vector/Array/Index/Map :: RemoveIf
@@ -35,8 +33,12 @@ Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = 
 
 Remove NanoStrings
 
+CoWork pipe max_queue
+
 -----------------------
 DONE
+
+CoWork pipe
 
 CoWork limits, logical thread not working
 
