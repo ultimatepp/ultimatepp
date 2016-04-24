@@ -40,8 +40,8 @@ public:
 	Semaphore waitforfinish;
 	int       todo;
 
-//	Mutex stepmutex;
-//	Vector< BiVector<Callback> > step;
+	Mutex stepmutex;
+	Array<BiVector<Function<void ()>>> step;
 
 	
 public:
@@ -53,7 +53,7 @@ public:
 	CoWork&  operator&(const Function<void ()>& lambda)       { Do(lambda); return *this; }
 	CoWork&  operator&(Function<void ()>&& lambda)            { Do(lambda); return *this; }
 
-//	void Step(int stepi, const Callback& cb);
+	void Step(int stepi, Function<void ()>&& lambda);
 
 	static void FinLock();
 

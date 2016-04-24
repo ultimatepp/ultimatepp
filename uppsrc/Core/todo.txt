@@ -1,35 +1,26 @@
 oportunity &&
 
-Mitor?!
-
 RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
 
 Fix Value::Void::Retain
 
 Index::FirstAdd
 
-Fix CoWork
 kw.Get(r["keywordId"], String())
 
-CoWork limits, pipe, logical thread not working
+CoWork pipe
 
 MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 
 Vector/Array/Index/Map :: RemoveIf
 
-Use m128! ?
-
 Remove ArrayIndex
-
-spinlock for heap freeremote?
 
 FromSystemCharset
 
 Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, init); }
 
 String  MD5Digest(const void *data, int length);
-
-fast - decide
 
 IIterator	typedef        typename V::ValueType T;
 
@@ -46,6 +37,8 @@ Remove NanoStrings
 
 -----------------------
 DONE
+
+CoWork limits, logical thread not working
 
 rename Function (Functor, Event, EventGate)
 

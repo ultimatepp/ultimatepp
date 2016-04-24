@@ -4,8 +4,8 @@ NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)      // DLOG(x)
-#define LDUMP(x)     // DDUMP(x)
+#define LLOG(x)      DLOG(x)
+#define LDUMP(x)     DDUMP(x)
 
 #define LHITCOUNT(x) // RHITCOUNT(x)
 
@@ -170,32 +170,28 @@ void CoWork::Finish() {
 	LLOG("CoWork " << FormatIntHex(this) << " finished");
 }
 
-/*
-void CoWork::Pipe(int stepi, const Callback& cb)
+void CoWork::Step(int stepi, Function<void ()>&& fn)
 {
+	LLOG("Step " << stepi);
 	Mutex::Lock __(stepmutex);
-	step.At(stepi).AddHead(cb);
-	if(step.GetCount() == 1) {
+	step.At(stepi).AddHead(pick(fn));
+	if(step.GetCount() == 1)
 		*this & [=]() {
-			bool second = false;
 			for(;;) {
-				Callback cb;
+				Function<void ()> f;
 				{
 					Mutex::Lock __(stepmutex);
-					BiVector<Callback>& q = step[stepi];
-					if(second)
-						q.DropTail();
+					BiVector<Function<void ()>>& q = step[stepi];
+					LLOG("StepWork " << stepi << ", todo:" << q.GetCount());
 					if(q.GetCount() == 0)
 						return;
-					cb = pick(q.Tail());
-					second = true;
+					f = pick(q.Tail());
+					q.DropTail();
 				}
-				cb();
+				f();
 			}
-		}
-	}
+		};
 }
-*/
 
 bool CoWork::IsFinished()
 {
