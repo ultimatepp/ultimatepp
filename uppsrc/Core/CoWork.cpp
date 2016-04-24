@@ -4,8 +4,8 @@ NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)      DLOG(x)
-#define LDUMP(x)     DDUMP(x)
+#define LLOG(x)      // DLOG(x)
+#define LDUMP(x)     // DDUMP(x)
 
 #define LHITCOUNT(x) // RHITCOUNT(x)
 
@@ -44,7 +44,7 @@ void CoWork::ShutdownPool()
 CoWork::Pool::Pool(int nthreads)
 {
 	ASSERT(!is_worker);
-	DLOG("CoWork INIT pool: " << nthreads);
+	LLOG("CoWork INIT pool: " << nthreads);
 	scheduled = 0;
 	for(int i = 0; i < nthreads; i++)
 		threads.Add().Run([=] { is_worker = true; pool = this; ThreadRun(i); });
@@ -150,6 +150,36 @@ void CoWork::Do(Function<void ()>&& fn)
 	p.lock.Leave();
 }
 
+void CoWork::Step(int stepi, Function<void ()>&& fn)
+{
+	Mutex::Lock __(stepmutex);
+	auto& q = step.At(stepi);
+	LLOG("Step " << stepi << ", count: " << q.GetCount() << ", running: " << steprunning.GetCount());
+	q.AddHead(pick(fn));
+	if(!steprunning.At(stepi, false)) {
+		steprunning.At(stepi) = true;
+		*this & [=]() {
+			LLOG("Starting step " << stepi << " processor");
+			stepmutex.Enter();
+			for(;;) {
+				Function<void ()> f;
+				auto& q = step[stepi];
+				LLOG("StepWork " << stepi << ", todo:" << q.GetCount());
+				if(q.GetCount() == 0)
+					break;
+				f = pick(q.Tail());
+				q.DropTail();
+				stepmutex.Leave();
+				f();
+				stepmutex.Enter();
+			}
+			steprunning.At(stepi) = false;
+			stepmutex.Leave();
+			LLOG("Exiting step " << stepi << " processor");
+		};
+	}
+}
+
 void CoWork::Finish() {
 	Pool& p = GetPool();
 	p.lock.Enter();
@@ -168,29 +198,6 @@ void CoWork::Finish() {
 	}
 	p.lock.Leave();
 	LLOG("CoWork " << FormatIntHex(this) << " finished");
-}
-
-void CoWork::Step(int stepi, Function<void ()>&& fn)
-{
-	LLOG("Step " << stepi);
-	Mutex::Lock __(stepmutex);
-	step.At(stepi).AddHead(pick(fn));
-	if(step.GetCount() == 1)
-		*this & [=]() {
-			for(;;) {
-				Function<void ()> f;
-				{
-					Mutex::Lock __(stepmutex);
-					BiVector<Function<void ()>>& q = step[stepi];
-					LLOG("StepWork " << stepi << ", todo:" << q.GetCount());
-					if(q.GetCount() == 0)
-						return;
-					f = pick(q.Tail());
-					q.DropTail();
-				}
-				f();
-			}
-		};
 }
 
 bool CoWork::IsFinished()

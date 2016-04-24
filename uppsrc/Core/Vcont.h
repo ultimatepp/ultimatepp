@@ -229,9 +229,9 @@ protected:
 	T&       Get(int i) const                           { return *(T *)vector[i]; }
 	T      **GetPtr(int i) const                        { return (T **)vector.begin() + i; }
 
-	void     Del(T **ptr, T **lim)                      { while(ptr < lim) delete (T *) *ptr++; }
-	void     Init(T **ptr, T **lim)                     { while(ptr < lim) *ptr++ = new T; }
-	void     Init(T **ptr, T **lim, const T& x)         { while(ptr < lim) *ptr++ = new T(clone(x)); }
+	void     Del(void **ptr, void **lim)                { while(ptr < lim) delete (T *) *ptr++; }
+	void     Init(void **ptr, void **lim)               { while(ptr < lim) *ptr++ = new T; }
+	void     Init(void **ptr, void **lim, const T& x)   { while(ptr < lim) *ptr++ = DeepCopyNew(x); }
 
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }

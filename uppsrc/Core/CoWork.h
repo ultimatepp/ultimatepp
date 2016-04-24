@@ -42,7 +42,7 @@ public:
 
 	Mutex stepmutex;
 	Array<BiVector<Function<void ()>>> step;
-
+	Vector<bool> steprunning;
 	
 public:
 	void     Do(Function<void ()>&& fn);
