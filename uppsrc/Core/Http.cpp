@@ -771,10 +771,7 @@ void HttpRequest::Out(const void *ptr, int size)
 bool HttpRequest::ReadingBody()
 {
 	LLOG("HTTP reading body " << count);
-	int n = chunk;
-	if(count > 0)
-		n = (int)min((int64)n, count);
-	String s = TcpSocket::Get(n);
+	String s = TcpSocket::Get((int)min((int64)chunk, count));
 	if(s.GetCount() == 0)
 		return !IsEof() && count;
 #ifndef ENDZIP
@@ -824,7 +821,6 @@ void HttpRequest::Finish()
 		}
 	#endif
 	}
-	Close();
 	CopyCookies();
 	if(status_code == 401 && redirect_count++ < max_redirects && WhenAuthenticate()) {
 		if(keep_alive)
@@ -833,6 +829,7 @@ void HttpRequest::Finish()
 			Start();
 		return;
 	}
+	Close();
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();
 		GET();
