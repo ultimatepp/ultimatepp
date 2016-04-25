@@ -69,5 +69,10 @@ CONSOLE_APP_MAIN
 		DUMP(h);
 		ASSERT(h.Find("\"authenticated\": true") >= 0);
 	}
+	{
+		HttpRequest r("https://httpbin.org/bytes/0");
+		ASSERT(r.Execute().GetCount() == 0);
+		ASSERT(r.IsSuccess());
+	}
 	LLOG("*********** Everything is OK");
 }
