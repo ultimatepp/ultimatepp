@@ -133,6 +133,9 @@ Vector<String> PreprocessSchFile(const char *fn)
 			if(p.Id("BOOL_ARRAY") || p.Id("BOOL_ARRAY_") || p.Id("BIT_ARRAY") || p.Id("BIT_ARRAY_"))
 				r << "\tbool " << ReadId(p, rr) << "[1];";
 			else
+			if(p.Id("STRING_ARRAY") || p.Id("STRING_ARRAY_"))
+				r << "\tbool " << ReadId(p, rr) << "[1];";
+			else
 			if(p.Id("SEQUENCE") || p.Id("SEQUENCE_"))
 				ReadId(p, rr);
 			else
