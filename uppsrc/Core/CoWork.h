@@ -22,8 +22,10 @@ class CoWork : NoCopy {
 		Mutex           lock;
 		Semaphore       waitforjob;
 
-		Pool();
-		~Pool();
+		void Start();
+		void Shutdown();
+
+		~Pool()         { Shutdown(); }
 		
 		static thread__ bool finlock;
 
@@ -63,6 +65,8 @@ public:
 
 	CoWork();
 	~CoWork();
+	
+	static void Shutdown()          { pool().Shutdown(); }
 };
 
 #else

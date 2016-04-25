@@ -207,10 +207,16 @@ void Thread::EndShutdownThreads()
 
 void Thread::ShutdownThreads()
 {
+	DLOG("S 1");
 	BeginShutdownThreads();
-	while(GetCount())
+	CoWork::Shutdown();
+	DLOG("S 2");
+	while(GetCount()) {
+		DDUMP(GetCount());
 		Sleep(10);
+	}
 	EndShutdownThreads();
+	DLOG("S 3");
 }
 
 bool Thread::IsShutdownThreads()

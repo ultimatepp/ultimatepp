@@ -12,10 +12,12 @@ NAMESPACE_UPP
 CoWork::Pool& CoWork::pool()
 {
 	static Pool pool;
+	if(pool.threads.GetCount() == 0)
+		pool.Start();
 	return pool;
 }
 
-CoWork::Pool::Pool()
+void CoWork::Pool::Start()
 {
 	LLOG("CoWork INIT pool: " << CPU_Cores() + 2);
 	scheduled = 0;
@@ -23,9 +25,9 @@ CoWork::Pool::Pool()
 		threads.Add().Run(callback1(&ThreadRun, i));
 }
 
-CoWork::Pool::~Pool()
+void CoWork::Pool::Shutdown()
 {
-	LLOG("Quit");
+	LLOG("Shutdown");
 	lock.Enter();
 	jobs[0].work = NULL;
 	scheduled = 1;
@@ -34,7 +36,8 @@ CoWork::Pool::~Pool()
 		waitforjob.Release();
 	for(int i = 0; i < threads.GetCount(); i++)
 		threads[i].Wait();
-	LLOG("Quit ended");
+	threads.Clear();
+	LLOG("Shuutdown ended");
 }
 
 thread__ bool CoWork::Pool::finlock;

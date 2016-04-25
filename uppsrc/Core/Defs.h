@@ -479,7 +479,7 @@ template <class T> bool IsNull(const T& x)       { return x.IsNullInstance(); }
 
 template<> inline bool  IsNull(const int& i)     { return i == INT_NULL; }
 template<> inline bool  IsNull(const int64& i)   { return i == INT64_NULL; }
-template<> inline bool  IsNull(const double& r)  { return r < DOUBLE_NULL_LIM; }
+template<> inline bool  IsNull(const double& r)  { return r < DOUBLE_NULL_LIM || IsNaN(r); }
 template<> inline bool  IsNull(const bool& r  )  { return false; }
 
 #ifndef  flagUSEMALLOC
