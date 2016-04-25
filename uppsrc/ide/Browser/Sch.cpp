@@ -100,8 +100,11 @@ Vector<String> PreprocessSchFile(const char *fn)
 			   p.Id("STRING_") || p.Id("STRING") || p.Id("CLOB") || p.Id("CLOB_"))
 				r << "\tString " << ReadId(p, rr) << ";";
 			else
-			if(p.Id("INT") || p.Id("INT_") || p.Id("SERIAL") || p.Id("ISERIAL"))
+			if(p.Id("INT") || p.Id("INT_") || p.Id("ISERIAL"))
 				r << "\tint " << ReadId(p, rr) << ";";
+			else
+			if(p.Id("INT64") || p.Id("INT64_") || p.Id("SERIAL") || p.Id("BIGSERIAL"))
+				r << "\tint64 " << ReadId(p, rr) << ";";
 			else
 			if(p.Id("DOUBLE") || p.Id("DOUBLE_"))
 				r << "\tdouble " << ReadId(p, rr) << ";";
