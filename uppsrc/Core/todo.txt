@@ -35,6 +35,8 @@ Remove NanoStrings
 
 CoWork pipe max_queue
 
+SerializeRaw - int64!
+
 -----------------------
 DONE
 

@@ -274,6 +274,7 @@ protected:
 	String         data;
 	StringBuffer   wdata;
 	dword          size;
+	int            limit = INT_MAX;
 
 	void           InitReadMode();
 	void           SetWriteBuffer();
@@ -286,7 +287,11 @@ public:
 	void        Reserve(int n);
 
 	String      GetResult();
-	operator    String()                     { return GetResult(); }
+	operator    String()                              { return GetResult(); }
+	
+	void        Limit(int sz)                         { limit = sz; }
+	
+	struct LimitExc : public StreamError {};
 
 	StringStream()                           { Create(); }
 	StringStream(const String& data)         { Open(data); }
