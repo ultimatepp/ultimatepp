@@ -75,6 +75,8 @@ private:
 		jclass objectClass = env->GetObjectClass(jobj);
 		
 		jfieldID adressField = GetNativeAdressField(env, objectClass);
+		
+		env->DeleteLocalRef(objectClass);
 		return (T*)env->GetLongField(jobj, adressField);
 	}
 	
@@ -84,6 +86,8 @@ private:
 		
 		jfieldID adressField = GetNativeAdressField(env, objectClass);
 		env->SetLongField(jobj, adressField, (jlong)obj);
+		
+		env->DeleteLocalRef(objectClass);
 	}
 	
 	jfieldID GetNativeAdressField(JNIEnv* env, jclass clazz)
