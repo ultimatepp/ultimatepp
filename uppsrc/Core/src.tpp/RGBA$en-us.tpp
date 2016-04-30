@@ -1,0 +1,23 @@
+topic "struct RGBA : public Moveable<RGBA> ";
+[ $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9; $$1,0#37138531426314131252341829483380:structitem]
+[l288;2 $$2,0#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[i448;a25;kKO9;2 $$4,0#37138531426314131252341829483370:item]
+[H6;0 $$5,0#05600065144404261032431302351956:begin]
+[{_} 
+[ {{10000@(113.42.0) [s0;%% [*@7;4 RGBA]]}}&]
+[s1;O_; &]
+[s1;:Upp`:`:RGBA`:`:struct: [@(0.0.255) struct]_[* RGBA]_:_[@(0.0.255) public]_[*@3 Moveable]<
+[* RGBA]>_&]
+[s2;%% Structure that represents RGBA (Red, Green, Blue, Alpha) color&]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s4;_^dword^ &]
+[s4;:Ref`:`:GetType`(`)const: [@(0.0.255) byte ]r&]
+[s2;%% Red color.&]
+[s3; &]
+[s5; &]
+[s4;:Ref`:`:IsNull`(`)const: [@(0.0.255) bool]_[* IsNull]()_[@(0.0.255) const]&]
+[s2;%% Returns true if referenced variable contains Null.&]
+[s0;%% ]]
