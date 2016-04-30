@@ -74,8 +74,8 @@ to specify this point.&]
 [s2;%% Returns the reference point.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:Set2ndSpot`(Point`): [*@(0.0.255) void][* _Set2ndSpot]([_^Point^ Point]_
-[*@3 p])&]
+[s5;:ImageBuffer`:`:Set2ndSpot`(Point`): [*@(0.0.255) void][* _Set2ndSpot]([_^topic`:`/`/Core`/src`/Point`$en`-us^ P
+oint]_[*@3 p])&]
 [s2;%% Sets secondary reference point. Iml designer has the ability 
 to specify this point.&]
 [s3;%% &]
@@ -96,7 +96,8 @@ tDots()_][*@(0.0.255) const]&]
 0).&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:SetDPI`(Size`): [@(0.0.255) void]_[* SetDPI]([_^Size^ Size]_[*@3 sz])&]
+[s5;:ImageBuffer`:`:SetDPI`(Size`): [@(0.0.255) void]_[* SetDPI]([_^topic`:`/`/Core`/src`/Size`$en`-us^ S
+ize]_[*@3 sz])&]
 [s2;%% Sets the image resolution in dpi (dots per inch).&]
 [s2;%% As the dpi are not directly stored, if SetDots() is called 
 or image is resized, the dpi could change.&]

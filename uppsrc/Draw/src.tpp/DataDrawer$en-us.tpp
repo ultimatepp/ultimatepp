@@ -29,15 +29,16 @@ plugin/jpg.&]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:DataDrawer`:`:Open`(const String`&`,int`,int`):%- [*@(0.0.255) virtual][*  
-][*@(0.0.255) void][* _Open]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 data],
- [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])_`=_[@3 0]&]
+][*@(0.0.255) void][* _Open]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`$en`-us^ S
+tring][@(0.0.255) `&]_[*@3 data], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy])_`=_[@3 0
+]&]
 [s2; Called to open [%-*@3 data] for processing, the output size being 
 [%-*@3 cx], [%-*@3 cy].&]
 [s3; &]
 [s4; &]
 [s5;:DataDrawer`:`:Render`(ImageBuffer`&`):%- [*@(0.0.255) virtual][*  
-][*@(0.0.255) void][* _Render]([_^ImageBuffer^ ImageBuffer][@(0.0.255) `&]_[*@3 ib])_`=_[@3 0
-]&]
+][*@(0.0.255) void][* _Render]([_^topic`:`/`/Draw`/src`/ImageBuffer`$en`-us^ ImageBuffe
+r][@(0.0.255) `&]_[*@3 ib])_`=_[@3 0]&]
 [s2; Called to render the part (or all) of the result into [%-*@3 ib]. 
 The width of [%-*@3 ib] is the same as  specified in Open, the 
 height is the required height of band to render.&]
@@ -48,8 +49,8 @@ height is the required height of band to render.&]
 [s3; &]
 [s4; &]
 [s5;:DataDrawer`:`:Create`(const String`&`):%- [*@(0.0.255) static][*  
-][*_^One^ One][* <][*_^DataDrawer^ DataDrawer][* >_Create(][*@(0.0.255) const][* _][*_^String^ S
-tring][*@(0.0.255) `&][* _][*@3 id][* )]&]
+][*_^topic`:`/`/Core`/src`/One`$en`-us^ One][* <][*_^DataDrawer^ DataDrawer][* >_Create(][*@(0.0.255) c
+onst][* _][*_^topic`:`/`/Core`/src`/String`$en`-us^ String][*@(0.0.255) `&][* _][*@3 id][* )]&]
 [s2; Creates a derived DataDrawer with type [%-*@3 id].&]
 [s3; &]
 [s4; &]
@@ -59,4 +60,4 @@ tring][*@(0.0.255) `&][* _][*@3 id][* )]&]
 [s2; This method registers specific DataDrawer derived class as renderer 
 for type [%-*@3 id].&]
 [s3; &]
-[s0; ]
+[s0; ]]
