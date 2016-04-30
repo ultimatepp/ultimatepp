@@ -69,8 +69,8 @@ when Image is used as mouse pointer. Iml designer has the ability
 to specify this point.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:GetHotSpot`(`)const: [*_^Point^ Point][* _GetHotSpot()_][*@(0.0.255) co
-nst]&]
+[s5;:ImageBuffer`:`:GetHotSpot`(`)const: [*_^topic`:`/`/Core`/src`/Point`$en`-us^ Point
+][* _GetHotSpot()_][*@(0.0.255) const]&]
 [s2;%% Returns the reference point.&]
 [s3; &]
 [s4; &]
@@ -80,8 +80,8 @@ nst]&]
 to specify this point.&]
 [s3;%% &]
 [s4; &]
-[s5;:ImageBuffer`:`:Get2ndSpot`(`)const: [*_^Point^ Point][* _Get2ndSpot]()_[@(0.0.255) con
-st]&]
+[s5;:ImageBuffer`:`:Get2ndSpot`(`)const: [*_^topic`:`/`/Core`/src`/Point`$en`-us^ Point
+][* _Get2ndSpot]()_[@(0.0.255) const]&]
 [s2;%% Reads secondary reference point.&]
 [s3; &]
 [s4; &]
@@ -90,7 +90,8 @@ st]&]
 [s2;%% Sets the optional physical size in dots.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:GetDots`(`)const: [*_^Size^ Size][* _GetDots()_][*@(0.0.255) const]&]
+[s5;:ImageBuffer`:`:GetDots`(`)const: [*_^topic`:`/`/Core`/src`/Size`$en`-us^ Size][* _Ge
+tDots()_][*@(0.0.255) const]&]
 [s2;%% Returns the optional physical size. Default value is Size(0, 
 0).&]
 [s3; &]
@@ -101,13 +102,15 @@ st]&]
 or image is resized, the dpi could change.&]
 [s3;%% &]
 [s4; &]
-[s5;:ImageBuffer`:`:GetDPI`(`): [_^Size^ Size]_[* GetDPI]()&]
+[s5;:ImageBuffer`:`:GetDPI`(`): [_^topic`:`/`/Core`/src`/Size`$en`-us^ Size]_[* GetDPI]()
+&]
 [s2;%% Returns the image resolution in dpi (dots per inch).&]
 [s2;%% As the dpi are not directly stored, if SetDots() is called 
 or image is resized, the dpi could change.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:GetSize`(`)const: [*_^Size^ Size][* _GetSize()_][*@(0.0.255) const]&]
+[s5;:ImageBuffer`:`:GetSize`(`)const: [*_^topic`:`/`/Core`/src`/Size`$en`-us^ Size][* _Ge
+tSize()_][*@(0.0.255) const]&]
 [s2;%% Returns the dimensions of image.&]
 [s3; &]
 [s4; &]
@@ -144,8 +147,8 @@ onst]&]
 [s4; &]
 [s5;:ImageBuffer`:`:Create`(int`,int`): [*@(0.0.255) void][* _Create(][*@(0.0.255) int][* _][*@3 c
 x][* , ][*@(0.0.255) int][* _][*@3 cy][* )]&]
-[s5;:ImageBuffer`:`:Create`(Size`): [*@(0.0.255) void][* _Create(][*_^Size^ Size][* _][*@3 sz][* )
-]&]
+[s5;:ImageBuffer`:`:Create`(Size`): [*@(0.0.255) void][* _Create(][*_^topic`:`/`/Core`/src`/Size`$en`-us^ S
+ize][* _][*@3 sz][* )]&]
 [s2;%% Creates a new image of specified size. Value of pixels is 
 undefined. Previous content of ImageBuffer is lost.&]
 [s3; &]
@@ -176,7 +179,8 @@ time operation.&]
 [s4; &]
 [s5;:ImageBuffer`:`:ImageBuffer`(int`,int`): [* ImageBuffer(][*@(0.0.255) int][* _][*@3 cx][* ,
  ][*@(0.0.255) int][* _][*@3 cy][* )]&]
-[s5;:ImageBuffer`:`:ImageBuffer`(Size`): [* ImageBuffer(][*_^Size^ Size][* _][*@3 sz][* )]&]
+[s5;:ImageBuffer`:`:ImageBuffer`(Size`): [* ImageBuffer(][*_^topic`:`/`/Core`/src`/Size`$en`-us^ S
+ize][* _][*@3 sz][* )]&]
 [s2;%% Constructs ImageBuffer of specified size. Value of pixels 
 is undefined.&]
 [s3; &]
@@ -189,4 +193,4 @@ is undefined.&]
 and empty after this operation, price paid for low`-cost constant 
 time operation.&]
 [s3; &]
-[s0; ]
+[s0; ]]
