@@ -152,9 +152,7 @@ public:
 	String GetSelectedSerial() const;
 	
 private:
-	void LoadDevices();
-	
-	void OnRefresh();
+	void LoadPhysicalDevices();
 	
 private:
 	AndroidSDK* sdk;
@@ -165,39 +163,31 @@ SelectAndroidDeviceDlg::SelectAndroidDeviceDlg(AndroidSDK* sdk) :
 {
 	CtrlLayoutOKCancel(*this, "Android device selection");
 	
-	devicesArray.AddColumn("Serial Number");
-	devicesArray.AddColumn("State");
+	devicesArray.AddColumn("Device/Model");
+	devicesArray.AddColumn("Serial");
 	
-	refresh <<= THISBACK(OnRefresh);
-	
-	LoadDevices();
+	LoadPhysicalDevices();
 }
 
 String SelectAndroidDeviceDlg::GetSelectedSerial() const
 {
 	int row = devicesArray.IsCursor() ? devicesArray.GetCursor() : 0;
-	return devicesArray.GetCount() ? devicesArray.Get(row, 0) : "";
+	return devicesArray.GetCount() ? devicesArray.Get(row, 1) : "";
 }
 
-void SelectAndroidDeviceDlg::LoadDevices()
+void SelectAndroidDeviceDlg::LoadPhysicalDevices()
 {
 	Vector<AndroidDevice> devices = sdk->FindDevices();
 	for(int i = 0; i < devices.GetCount(); i++) {
-		devicesArray.Add(devices[i].GetSerial(), devices[i].GetState());
+		if(devices[i].IsPhysicalDevice()) {
+			devicesArray.Add(devices[i].GetModel(), devices[i].GetSerial());
+		}
 	}
 	
-	if(devicesArray.GetCount()) {
-		devicesArray.GoBegin();
-		ok.Enable();
-	}
+	if(devicesArray.GetCount())
+		devicesArray.Select(0);
 	else
 		ok.Disable();
-}
-
-void SelectAndroidDeviceDlg::OnRefresh()
-{
-	devicesArray.Clear();
-	LoadDevices();
 }
 
 void Ide::ExecuteApk()
@@ -265,11 +255,11 @@ void Ide::BuildAndExtDebugFile()
 	BuildAndDebug0(editfile);
 }
 
-One<Debugger> GdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console);
-One<Debugger> Gdb_MI2Create(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console);
+One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
+One<Debugger> Gdb_MI2Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
 #ifdef PLATFORM_WIN32
-One<Debugger> CdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline);
-One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline);
+One<Debugger> CdbCreate(One<Host>&& host, const String& exefile, const String& cmdline);
+One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline);
 #endif
 
 void Ide::BuildAndDebug(bool runto)
@@ -295,17 +285,20 @@ void Ide::BuildAndDebug(bool runto)
 	editor.Disable();
 
 	bool console = ShouldHaveConsole();
-
-	if(findarg(builder, "GCC", "CLANG") >= 0)
+#ifdef COMPILER_MSC
+	if(builder == "GCC")
 		if(gdbSelector)
 			debugger = Gdb_MI2Create(pick(host), target, runarg, console);
 		else
 			debugger = GdbCreate(pick(host), target, runarg, console);
-#ifdef PLATFORM_WIN32
 	else
 		debugger = PdbCreate(pick(host), target, runarg);
+#else
+	if(gdbSelector)
+		debugger = Gdb_MI2Create(pick(host), target, runarg, console);
+	else
+		debugger = GdbCreate(pick(host), target, runarg, console);
 #endif
-
 	if(!debugger) {
 		IdeEndDebug();
 		SetBar();
@@ -396,7 +389,7 @@ void Ide::ConditionalBreak()
 
 	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
 	                                  *CreateHost(true), *CreateBuilder(~CreateHostRunDir()));
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 	if(cfg.Find("MSC") >= 0) {
 		if(EditPDBExpression("Conditional breakpoint", brk, NULL))
 			editor.SetBreakpoint(ln, brk);

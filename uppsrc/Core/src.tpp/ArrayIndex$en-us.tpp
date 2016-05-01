@@ -34,18 +34,16 @@ operator is inherited from AIndex class. Pick operator is implicitly
 defined by composition.&]
 [s3; &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Constructor Detail]]}}&]
+[ {{10000F(128)G(128)@1 [s0;%% [* Constructor and Assignment Detail]]}}&]
 [s3; &]
 [s5;:ArrayIndex`:`:ArrayIndex`(`): [* ArrayIndex]()&]
 [s2;%% Constructor. Constructs an empty ArrayIndex.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:ArrayIndex`(pick`_ ArrayIndex`&`): [* ArrayIndex]([@(0.128.128) pick`_
-]_[* ArrayIndex][@(0.0.255) `&]_[*@3 s])&]
-[s2;%% Pick constructor. Transfers source Index in low constant time, 
-but destroys it by picking.&]
-[s7;%% [*C@3 s]-|Source ArrayIndex.&]
-[s3; &]
+[s5;:Upp`:`:ArrayIndex`:`:ArrayIndex`(Upp`:`:ArrayIndex`&`&`): [* ArrayIndex]([* ArrayInd
+ex][@(0.0.255) `&`&]_[*@3 s])&]
+[s2;%% Pick constructor.&]
+[s3;%% &]
 [s4; &]
 [s5;:ArrayIndex`:`:ArrayIndex`(const ArrayIndex`&`,int`): [* ArrayIndex]([@(0.0.255) cons
 t]_[* ArrayIndex][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
@@ -55,11 +53,9 @@ copy constructor.&]
 [s7;%% [*C@3 s]-|Source ArrayIndex.&]
 [s3; &]
 [s4; &]
-[s5;:ArrayIndex`:`:ArrayIndex`(pick`_ Array`<T`>`&`): [* ArrayIndex]([@(0.128.128) pick`_
-]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s])&]
-[s2;%% Pick`-constructs ArrayIndex from an Array. Transfers source 
-container in low constant time, but destroys it by picking.&]
-[s7;%% [*C@3 s]-|Source Array.&]
+[s5;:Upp`:`:ArrayIndex`:`:ArrayIndex`(Upp`:`:Array`<T`>`&`&`): [@(0.0.255) explicit]_[* A
+rrayIndex]([_^Upp`:`:Array^ Array]<[*@4 T]>`&`&_[*@3 s])&]
+[s2;%% Pick constructor from Array.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayIndex`:`:ArrayIndex`(const Array`<T`>`&`,int`): [* ArrayIndex]([@(0.0.255) cons
@@ -68,6 +64,17 @@ t]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s], [@(0.0.255) in
 [s6;%% Requires T to have deep copy constructor or optional deep 
 copy constructor.&]
 [s7;%% [*C@3 s]-|Source Vector.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ArrayIndex`:`:operator`=`(Upp`:`:Array`<T`>`&`&`): [_^Upp`:`:ArrayIndex^ Ar
+rayIndex][@(0.0.255) `&]_[* operator`=]([_^Upp`:`:Array^ Array]<[*@4 T]>`&`&_[*@3 x])&]
+[s2;%% Pick assignment from Array.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:ArrayIndex`:`:operator`=`(Upp`:`:ArrayIndex`<T`>`&`&`): [_^Upp`:`:ArrayIndex^ A
+rrayIndex][@(0.0.255) `&]_[* operator`=]([_^Upp`:`:ArrayIndex^ ArrayIndex]<[*@4 T]>`&`&_[*@3 x
+])&]
+[s2;%% Pick assignment.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:ArrayIndex`:`:ArrayIndex`(std`:`:initializer`_list`<T`>`): [* ArrayIndex]([_^std`:`:initializer`_list^ s
@@ -174,13 +181,4 @@ of the element. Returns a reference to the element.&]
 [s7;%% [*C@3 i]-|Position.&]
 [s7;%% [*C@3 newt]-|New element created on heap.&]
 [s7;%% [*/ Return value]-|&]
-[s3; &]
-[s4; &]
-[s5;:ArrayIndex`:`:operator`=`(pick`_ Array`<T`>`&`): [_^ArrayIndex^ ArrayIndex][@(0.0.255) `&
-]_[* operator`=]([@(0.128.128) pick`_]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_
-[*@3 x])&]
-[s2;%% Pick operator. Transfers source Array to the ArrayIndex, but 
-destroys it by picking.&]
-[s7;%% [*C@3 x]-|Source Array.&]
-[s3;%% &]
 [s0; ]]

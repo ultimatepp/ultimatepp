@@ -36,22 +36,16 @@ void Zip::FileHeader(const char *path, Time tm)
 	done += 5*2 + 5*4 + f.path.GetCount();
 }
 
-void Zip::BeginFile(const char *path, Time tm, bool deflate)
+void Zip::BeginFile(const char *path, Time tm)
 {
 	ASSERT(!IsFileOpened());
-	if(deflate) {
-		pipeZLib.Create();
-		pipeZLib->WhenOut = THISBACK(PutCompressed);
-		pipeZLib->GZip(false).CRC().NoHeader().Compress();
-	}
-	else {
-		crc32.Clear();
-		uncompressed = true;
-	}
+	pipeZLib.Create();
+	pipeZLib->WhenOut = THISBACK(PutCompressed);
+	pipeZLib->GZip(false).CRC().NoHeader().Compress();
 	File& f = file.Add();
 	f.version = 21;
 	f.gpflag = 0x8;
-	f.method = deflate ? 8 : 0;
+	f.method = 8;
 	f.crc = 0;
 	f.csize = 0;
 	f.usize = 0;
@@ -59,9 +53,9 @@ void Zip::BeginFile(const char *path, Time tm, bool deflate)
 	if (zip->IsError()) WhenError();
 }
 
-void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm, bool deflate)
+void Zip::BeginFile(OutFilterStream& oz, const char *path, Time tm)
 {
-	BeginFile(path, tm, deflate);
+	BeginFile(path, tm);
 	oz.Filter = THISBACK(Put);
 	oz.End = THISBACK(EndFile);
 }
@@ -70,12 +64,7 @@ void Zip::Put(const void *ptr, int size)
 {
 	ASSERT(IsFileOpened());
 	File& f = file.Top();
-	if(f.method == 0) {
-		PutCompressed(ptr, size);
-		crc32.Put(ptr, size);
-	}
-	else
-		pipeZLib->Put(ptr, size);
+	pipeZLib->Put(ptr, size);
 	f.usize += size;
 }
 
@@ -85,50 +74,27 @@ void Zip::EndFile()
 		return;
 	File& f = file.Top();
 	ASSERT(f.gpflag & 0x8);
-	if(f.method == 0)
-		zip->Put32le(f.crc = crc32);
-	else {
-		pipeZLib->End();
-		zip->Put32le(f.crc = pipeZLib->GetCRC());
-	}
+	pipeZLib->End();
+	zip->Put32le(f.crc = pipeZLib->GetCRC());
 	zip->Put32le(f.csize);
 	zip->Put32le(f.usize);
 	done += 3*4;
 	pipeZLib.Clear();
-	uncompressed = false;
-	if(zip->IsError()) WhenError();
+	if (zip->IsError()) WhenError(); 
 }
 
 void Zip::PutCompressed(const void *ptr, int size)
 {
 	ASSERT(IsFileOpened());
 	zip->Put(ptr, size);
-	if (zip->IsError()) WhenError();
+	if (zip->IsError()) WhenError(); 
 	done += size;
 	file.Top().csize += size;
 }
 
-void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm, bool deflate)
+void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm)
 {
 	ASSERT(!IsFileOpened());
-	if(!deflate) {
-		BeginFile(path, tm, deflate);
-		int done = 0;
-		while(done < size) {
-			if(progress(done, size))
-				return;
-			int chunk = min(size - done, 65536);
-			Put((byte *)ptr + done, chunk);
-			if(zip->IsError()) {
-				WhenError();
-				return;
-			}
-			done += chunk;
-		}
-		EndFile();
-		return;
-	}
-	// following code could be implemented using BeginFile/Put/EndFile, but be conservative, keep proven code
 	File& f = file.Add();
 	StringStream ss;
 	MemReadStream ms(ptr, size);
@@ -152,12 +118,12 @@ void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int>
 	FileHeader(path, tm);
 	zip->Put(r, f.csize);
 	done += f.csize;
-	if (zip->IsError()) WhenError();
+	if (zip->IsError()) WhenError(); 
 }
 
-void Zip::WriteFile(const String& s, const char *path, Gate2<int, int> progress, Time tm, bool deflate)
+void Zip::WriteFile(const String& s, const char *path, Gate2<int, int> progress, Time tm)
 {
-	WriteFile(~s, s.GetCount(), path, progress, tm, deflate);
+	WriteFile(~s, s.GetCount(), path, progress, tm);
 }
 
 void Zip::Create(Stream& out)
@@ -211,14 +177,12 @@ Zip::Zip()
 {
 	done = 0;
 	zip = NULL;
-	uncompressed = false;
 }
 
 Zip::Zip(Stream& out)
 {
 	done = 0;
 	zip = NULL;
-	uncompressed = false;
 	Create(out);
 }
 

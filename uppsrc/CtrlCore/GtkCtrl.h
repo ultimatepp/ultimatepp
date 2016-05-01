@@ -46,7 +46,7 @@ _DBG_
 		GdkEvent  *event;
 
 		void Free();
-		void Set(const Event& e);
+		void Set(const Event& e);		
 		Event(const Event& e);
 		void operator=(const Event& e);
 

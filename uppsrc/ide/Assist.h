@@ -242,7 +242,6 @@ struct AssistEditor : CodeEditor, Navigator {
 	
 	bool           IsNavigator() const                             { return navigator; }
 	void           Navigator(bool navigator);
-	void           SyncNavigatorShow();
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
 	

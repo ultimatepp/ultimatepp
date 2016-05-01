@@ -4,15 +4,13 @@ class CoWork : NoCopy {
 	typedef StaticCriticalSection Lock;
 
 	struct MJob : Moveable<MJob> {
-	#ifdef CPP_11
-		std::function<void ()> fn;
-	#endif
-		Callback               cb;
-		CoWork                *work;
+		Function<void ()> fn;
+		CoWork           *work;
 	};
 	
 	enum { SCHEDULED_MAX = 2048 };
 
+public:
 	struct Pool {
 		int             scheduled;
 		MJob            jobs[SCHEDULED_MAX];
@@ -22,10 +20,8 @@ class CoWork : NoCopy {
 		Mutex           lock;
 		Semaphore       waitforjob;
 
-		void Start();
-		void Shutdown();
-
-		~Pool()         { Shutdown(); }
+		Pool(int nthreads);
+		~Pool();
 		
 		static thread__ bool finlock;
 
@@ -35,27 +31,29 @@ class CoWork : NoCopy {
 	
 	friend struct Pool;
 
-	static Pool& pool();
+	static Pool& GetPool(int n);
+	static Pool& GetPool();
+
+	static thread_local bool is_worker;
+	static thread_local Pool *pool;
 
 	Semaphore waitforfinish;
 	int       todo;
 
-#ifdef CPP_11
-	void Do(const Callback *cb, const std::function<void ()> *fn);
-#else
-	void Do(const Callback *cb, void *);
-#endif
+	Mutex stepmutex;
+	Array<BiVector<Function<void ()>>> step;
+	Vector<bool> steprunning;
 	
 public:
-	void     Do(const Callback& cb)                           { Do(&cb, NULL); }
-#ifdef CPP_11
-	void     Do(const std::function<void ()>& lambda)         { Do(NULL, &lambda); }
-#endif
+	void     Do(Function<void ()>&& fn);
+	void     Do(const Callback& cb)                           { Do(clone(cb)); }
+	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }
 
-	CoWork&  operator&(const Callback& cb)                    { Do(&cb, NULL); return *this; }
-#ifdef CPP_11
-	CoWork&  operator&(const std::function<void ()>& lambda)  { Do(NULL, &lambda); return *this; }
-#endif
+	CoWork&  operator&(const Callback& cb)                    { Do(cb); return *this; }
+	CoWork&  operator&(const Function<void ()>& fn)           { Do(fn); return *this; }
+	CoWork&  operator&(Function<void ()>&& fn)                { Do(fn); return *this; }
+
+	void Pipe(int stepi, Function<void ()>&& lambda);
 
 	static void FinLock();
 
@@ -63,10 +61,12 @@ public:
 	
 	bool IsFinished();
 
+	static bool IsWorker()                                    { return is_worker; }
+	static void StartPool(int n);
+	static void ShutdownPool();
+
 	CoWork();
 	~CoWork();
-	
-	static void Shutdown()          { pool().Shutdown(); }
 };
 
 #else

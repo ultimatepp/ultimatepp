@@ -289,7 +289,7 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 			llayout      = SystemImage("applications-development", true);
 			
 			fileImage    = SystemImage("application-x-egon");
-		}
+		} 
 		else {
 			file         = GnomeImage("fs-regular");
 			lfile        = GnomeImage("fs-regular", true);
@@ -316,7 +316,7 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 			translation  = SystemImage("preferences-desktop-locale");
 			ltranslation = SystemImage("preferences-desktop-locale", true);
 			layout       = SystemImage("applications-development");
-			llayout      = SystemImage("applications-development", true);
+			llayout      = SystemImage("applications-development", true);			
 
 			fileImage    = SystemImage("image-x-generic");
 		}
@@ -324,13 +324,13 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 		init = true;
 	}
 	if (filename == "Help Topics")
-		return large ? lhelp : help;
+		return large ? lhelp : help; 
 	if(isdir) {
 		Image img = dir;
 		if(AppendFileName(folder, filename) == GetHomeDirectory())
 			return large ? lhome : home;
 		else
-		if(AppendFileName(folder, filename) ==  GetDesktopFolder ())
+		if(AppendFileName(folder, filename) ==  GetDesktopFolder ()) 
 			return large ? ldesktop : desktop;
 		else
 		if(AppendFileName(folder, filename) == GetMusicFolder ())
@@ -369,14 +369,14 @@ Image GetFileIcon(const String& folder, const String& filename, bool isdir, bool
 	// Binary - files extensions (It seems that KDE has problem with multimedia MIME icons handling)
 	if (KDE) {
 		if (m.ext == ".bmp" || m.ext == ".dib" ||
-			m.ext == ".gif" ||
-			m.ext == ".jpg" || m.ext == ".jpeg" || m.ext == ".jpe" ||
-			m.ext == ".png" ||
-			m.ext == ".tif" || m.ext == ".tiff" ||
-			m.ext == ".svg" ||
-			m.ext == ".ico" ||
-			m.ext == ".xcf")
-			return fileImage;
+	    	m.ext == ".gif" ||
+	    	m.ext == ".jpg" || m.ext == ".jpeg" || m.ext == ".jpe" ||
+	    	m.ext == ".png" ||
+	    	m.ext == ".tif" || m.ext == ".tiff" ||
+	    	m.ext == ".svg" ||
+	    	m.ext == ".ico" ||
+	    	m.ext == ".xcf")
+	    	return fileImage;
 		if (m.ext == ".aac" || m.ext == ".ogg" || m.ext == ".mp3")  return fileMusic;
 	}
 
@@ -544,7 +544,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 }
 
 #ifdef GUI_WIN
-static AuxMutex   sExeMutex;
+static Mutex      sExeMutex;
 static char       sExePath[1025];
 static bool       sExeRunning;
 static SHFILEINFO sExeInfo;

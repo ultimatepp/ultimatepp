@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 
 #define LLOG(x) // LOG(x)
 
@@ -12,8 +12,7 @@ VectorMap<String, Value> Pdb::DataMap(const ArrayCtrl& a)
 	return r;
 }
 
-Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, Visual rval_ vis,
-               bool& ch)
+Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, Visual&& vis, bool& ch)
 {
 	int q = prev.Find(key);
 	ch = false;
@@ -29,8 +28,7 @@ Value Pdb::Vis(const String& key, const VectorMap<String, Value>& prev, Visual r
 	return RawPickToValue(pick(vis));
 }
 
-void Pdb::Vis(ArrayCtrl& a, const String& key, const VectorMap<String, Value>& prev,
-              Visual rval_ vis)
+void Pdb::Vis(ArrayCtrl& a, const String& key, const VectorMap<String, Value>& prev, Visual&& vis)
 {
 	bool ch;
 	a.Add(key, Vis(key, prev, pick(vis), ch));

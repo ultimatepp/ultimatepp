@@ -58,7 +58,6 @@ void HttpRequest::Init()
 	retry_count = 0;
 	gzip = false;
 	WhenContent = callback(this, &HttpRequest::ContentOut);
-	WhenAuthenticate = callback(this, &HttpRequest::ResolveDigestAuthentication);
 	chunk = 4096;
 	timeout = 120000;
 	ssl = false;
@@ -316,7 +315,7 @@ void HttpRequest::NewRequest()
 	host = proxy_host = proxy_username = proxy_password = ssl_proxy_host =
 	ssl_proxy_username = ssl_proxy_password = path =
 	custom_method = accept = agent = contenttype = username = password =
-	authorization = request_headers = postdata = multipart = Null;
+	digest = request_headers = postdata = multipart = Null;
 }
 
 void HttpRequest::Clear()
@@ -564,7 +563,7 @@ void HttpRequest::StartRequest()
 	if(std_headers) {
 		data << "URL: " << url << "\r\n"
 		     << "Host: " << host_port << "\r\n"
-		     << "Connection: " << (keep_alive ? "keep-alive\r\n" : "close\r\n") 
+		     << "Connection: " << (keep_alive ? "keep-alive\r\n" : "close\r\n")
 		     << "Accept: " << Nvl(accept, "*/*") << "\r\n"
 		     << "Accept-Encoding: gzip\r\n"
 		     << "User-Agent: " << Nvl(agent, "U++ HTTP request") << "\r\n";
@@ -574,11 +573,11 @@ void HttpRequest::StartRequest()
 		if(ctype.GetCount())
 			data << "Content-Type: " << ctype << "\r\n";
 	}
-	VectorMap<String, Tuple2<String, int> > cms;
+	VectorMap<String, Tuple<String, int>> cms;
 	for(int i = 0; i < cookies.GetCount(); i++) {
 		const HttpCookie& c = cookies[i];
 		if(host.EndsWith(c.domain) && path.StartsWith(c.path)) {
-			Tuple2<String, int>& m = cms.GetAdd(c.id, MakeTuple(String(), -1));
+			Tuple<String, int>& m = cms.GetAdd(c.id, MakeTuple(String(), -1));
 			if(c.path.GetLength() > m.b) {
 				m.a = c.value;
 				m.b = c.path.GetLength();
@@ -595,8 +594,8 @@ void HttpRequest::StartRequest()
 		data << "Cookie: " << cs << "\r\n";
 	if(!IsNull(proxy_host) && !IsNull(proxy_username))
 		 data << "Proxy-Authorization: Basic " << Base64Encode(proxy_username + ':' + proxy_password) << "\r\n";
-	if(!IsNull(authorization))
-		data << "Authorization: " << authorization << "\r\n";
+	if(!IsNull(digest))
+		data << "Authorization: Digest " << digest << "\r\n";
 	else
 	if(!force_digest && (!IsNull(username) || !IsNull(password)))
 		data << "Authorization: Basic " << Base64Encode(username + ":" + password) << "\r\n";
@@ -654,11 +653,9 @@ bool HttpRequest::ReadingHeader()
 			return !IsEof();
 		else
 			data.Cat(c);
-		if(data.GetCount() == 2 && data[0] == '\r' && data[1] == '\n') // header is empty
-			return false;
-		if(data.GetCount() >= 3) {
+		if(data.GetCount() > 3) {
 			const char *h = data.Last();
-			if(h[0] == '\n' && h[-1] == '\r' && h[-2] == '\n') // empty ending line after non-empty header
+			if(h[0] == '\n' && (h[-1] == '\r' && h[-2] == '\n' || h[-1] == '\n'))
 				return false;
 		}
 		if(data.GetCount() > max_header_size) {
@@ -771,7 +768,10 @@ void HttpRequest::Out(const void *ptr, int size)
 bool HttpRequest::ReadingBody()
 {
 	LLOG("HTTP reading body " << count);
-	String s = TcpSocket::Get((int)min((int64)chunk, count));
+	int n = chunk;
+	if(count > 0)
+		n = (int)min((int64)n, count);
+	String s = TcpSocket::Get(n);
 	if(s.GetCount() == 0)
 		return !IsEof() && count;
 #ifndef ENDZIP
@@ -790,16 +790,6 @@ bool HttpRequest::ReadingBody()
 void HttpRequest::CopyCookies()
 {
 	CopyCookies(*this);
-}
-
-bool HttpRequest::ResolveDigestAuthentication()
-{
-	String authenticate = header["www-authenticate"];
-	if(authenticate.StartsWith("Digest")) {
-		Digest(CalculateDigest(authenticate));
-		return true;
-	}
-	return false;
 }
 
 void HttpRequest::Finish()
@@ -821,15 +811,17 @@ void HttpRequest::Finish()
 		}
 	#endif
 	}
-	CopyCookies();
-	if(status_code == 401 && redirect_count++ < max_redirects && WhenAuthenticate()) {
-		if(keep_alive)
-			StartRequest();
-		else
-			Start();
-		return;
-	}
 	Close();
+	CopyCookies();
+	if(status_code == 401 && !IsNull(username)) {
+		String authenticate = header["www-authenticate"];
+		if(authenticate.GetCount() && redirect_count++ < max_redirects) {
+			LLOG("HTTP auth digest");
+			Digest(CalculateDigest(authenticate));
+			Start();
+			return;
+		}
+	}
 	if(status_code >= 300 && status_code < 400) {
 		String url = GetRedirectUrl();
 		GET();

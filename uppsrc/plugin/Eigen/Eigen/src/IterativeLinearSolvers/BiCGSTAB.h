@@ -186,8 +186,7 @@ public:
     * this class becomes invalid. Call compute() to update it with the new
     * matrix A, or modify a copy of A.
     */
-  template<typename MatrixDerived>
-  explicit BiCGSTAB(const EigenBase<MatrixDerived>& A) : Base(A.derived()) {}
+  BiCGSTAB(const MatrixType& A) : Base(A) {}
 
   ~BiCGSTAB() {}
   

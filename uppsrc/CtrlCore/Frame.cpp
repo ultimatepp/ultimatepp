@@ -16,7 +16,7 @@ void NullFrameClass::FrameLayout(Rect& r) {}
 void NullFrameClass::FramePaint(Draw& draw, const Rect& r) {}
 void NullFrameClass::FrameAddSize(Size& sz) {}
 
-CtrlFrame& GLOBAL_V(NullFrameClass, NullFrame);
+CtrlFrame& NullFrame() { return Single<NullFrameClass>(); }
 
 #ifdef flagSO
 BorderFrame::BorderFrame(const ColorF *border) : border(border) {}
@@ -44,13 +44,13 @@ void BorderFrame::FramePaint(Draw& draw, const Rect& r)
 		DrawBorder(draw, r.left, r.top, r.Width(), r.Height(), border);
 }
 
-CtrlFrame& GLOBAL_VP(BorderFrame, InsetFrame, (InsetBorder()));
-CtrlFrame& GLOBAL_VP(BorderFrame, ThinInsetFrame, (ThinInsetBorder()));
-CtrlFrame& GLOBAL_VP(BorderFrame, ButtonFrame, (ButtonBorder()));
-CtrlFrame& GLOBAL_VP(BorderFrame, BlackFrame, (BlackBorder()));
-CtrlFrame& GLOBAL_VP(BorderFrame, WhiteFrame, (WhiteBorder()));
-CtrlFrame& GLOBAL_VP(BorderFrame, OutsetFrame, (OutsetBorder()));
-CtrlFrame& GLOBAL_VP(BorderFrame, ThinOutsetFrame, (ThinOutsetBorder()));
+CtrlFrame& InsetFrame() { static BorderFrame h(InsetBorder()); return h; }
+CtrlFrame& ThinInsetFrame() { static BorderFrame h(ThinInsetBorder()); return h; }
+CtrlFrame& ButtonFrame() { static BorderFrame h(ButtonBorder()); return h; }
+CtrlFrame& BlackFrame() { static BorderFrame h(BlackBorder()); return h; }
+CtrlFrame& WhiteFrame() { static BorderFrame h(WhiteBorder()); return h; }
+CtrlFrame& OutsetFrame() { static BorderFrame h(OutsetBorder()); return h; }
+CtrlFrame& ThinOutsetFrame() { static BorderFrame h(ThinOutsetBorder()); return h; }
 
 CH_COLOR(FieldFrameColor, Blend(SColorHighlight, SColorShadow));
 

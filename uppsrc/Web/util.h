@@ -54,7 +54,7 @@ public:
 	}
 
 	void           AddRef() const      { if(this) AtomicInc(refcount); }
-	int            GetRefCount() const { return AtomicXAdd(refcount, 0); }
+	int            GetRefCount() const { return refcount; }
 	void           Release() const     { if(this && !AtomicDec(refcount)) delete this; }
 #ifdef REF_DEBUG
 	int            GetAllocIndex() const { return allocindex; }

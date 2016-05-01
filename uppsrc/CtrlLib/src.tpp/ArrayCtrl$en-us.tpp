@@ -1042,21 +1042,14 @@ blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".&]
 Override]()&]
 [s2; Same as CursorOverride(Null).&]
 [s3; &]
-[s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:SpanWideCells`(bool`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
-]_[* SpanWideCells]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2; In this mode, if cell content (as defined by Display`::GetStdSize) 
-is wider than cell width and next cell is Null (empty), the cell 
-width is extended to span over the next cell (just like in common 
-spreadsheet applications). ArrayCtrl header must no be in Moving 
-mode for correct operation. Returns `*this.&]
-[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:RowFormat`(const char`*`): [_^String^ String]_[* RowFormat]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2; Formats a text by substituting [* %s] with the array`-specific 
 term for `'row`' (as set by the [* RowName] property). This is 
-used for array local menu items. Returns `*this.&]
+used for array local menu items.&]
+[s7; [*C@3 s]-|[* Format]`-like string to substitute.&]
+[s7; [*/ Return value]-|&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:RowName`(const char`*`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* RowNa
@@ -1898,16 +1891,6 @@ moving it up.&]
 [s2; Exchanges the cursor row with following row, effectively moving 
 it down.&]
 [s3; &]
-[s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:ReArrange`(const Upp`:`:Vector`<int`>`&`):%- [@(0.0.255) void]_
-[* ReArrange]([@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 order])
-&]
-[s2; Rearranges lines of array by [%-*@3 order] of former line indices. 
-The count of items in [%-*@3 order] must be the same as GetCount 
-of ArrayCtrl and it must contain all indices from zero to GetCount() 
-`- 1. [%-*@3 order] establishes a new order expressed in former 
-indices of lines.&]
-[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Sort`(Gate2`<int`,int`>`): [@(0.0.255) void]_[* Sort]([_^Gate2^ Gate2]<[@(0.0.255) i
 nt], [@(0.0.255) int]>_[*@3 order])&]
@@ -2003,14 +1986,6 @@ ColumnSortSecondary and ColumnSortFindKey flags.&]
 [s5;:ArrayCtrl`:`:ColumnSort`(int`,const ValueOrder`&`): [@(0.0.255) void]_[* ColumnSort](
 [@(0.0.255) int]_[*@3 column], [@(0.0.255) const]_[_^ValueOrder^ ValueOrder][@(0.0.255) `&]_
 [*@3 order])&]
-[s2; Sorts by the column. Note that this is different from Sort, 
-because the final converted value of column is used (which can 
-even be combination of more indexes).&]
-[s3; &]
-[s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:ColumnSort`(int`,int`(`*`)`(const Valua`&a`,const Upp`:`:Value`&b`)`):%- [@(0.0.255) v
-oid]_[* ColumnSort]([@(0.0.255) int]_[*@3 column], [@(0.0.255) int]_(`*[*@3 compare])([@(0.0.255) c
-onst]_Valua[@(0.0.255) `&]_a, [@(0.0.255) const]_Value[@(0.0.255) `&]_b))&]
 [s2; Sorts by the column. Note that this is different from Sort, 
 because the final converted value of column is used (which can 
 even be combination of more indexes).&]

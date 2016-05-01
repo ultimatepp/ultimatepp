@@ -46,14 +46,9 @@ bool FileMapping::Open(const char *file, bool delete_share)
 	Close();
 	write = false;
 #ifdef PLATFORM_WIN32
-	if(IsWinNT())
-		hfile = UnicodeWin32().CreateFileW(ToSystemCharsetW(file), GENERIC_READ,
-			FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share && IsWinNT() ? FILE_SHARE_DELETE : 0),
-			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
-	else
-		hfile = CreateFile(ToSystemCharset(file), GENERIC_READ,
-			FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share && IsWinNT() ? FILE_SHARE_DELETE : 0),
-			NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ,
+		FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share && IsWinNT() ? FILE_SHARE_DELETE : 0),
+		NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 	if(hfile == INVALID_HANDLE_VALUE)
 		return false;
 	filesize = ::GetFileSize(hfile, NULL);
@@ -81,14 +76,9 @@ bool FileMapping::Create(const char *file, int64 filesize_, bool delete_share)
 	Close();
 	write = true;
 #ifdef PLATFORM_WIN32
-	if(IsWinNT())
-		hfile = UnicodeWin32().CreateFileW(ToSystemCharsetW(file), GENERIC_READ | GENERIC_WRITE,
-			FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share ? FILE_SHARE_DELETE : 0),
-			NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	else
-		hfile = CreateFile(ToSystemCharset(file), GENERIC_READ | GENERIC_WRITE,
-			FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share ? FILE_SHARE_DELETE : 0),
-			NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	hfile = CreateFileW(ToSystemCharsetW(file), GENERIC_READ | GENERIC_WRITE,
+		FILE_SHARE_READ | FILE_SHARE_WRITE | (delete_share ? FILE_SHARE_DELETE : 0),
+		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	if(hfile == INVALID_HANDLE_VALUE)
 		return false;
 	long lo = (dword)filesize_, hi = (dword)(filesize_ >> 32);

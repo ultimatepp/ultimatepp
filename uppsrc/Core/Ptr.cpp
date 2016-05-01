@@ -31,7 +31,7 @@ PteBase::Prec *PteBase::PtrAdd()
 	if(prec)
 		++prec->n;
 	else {
-		prec = new Prec;
+		prec = tiny_new<Prec>();
 		prec->n = 1;
 		prec->ptr = this;
 	}
@@ -44,7 +44,7 @@ void PteBase::PtrRelease(Prec *prec)
 	if(prec && --prec->n == 0) {
 		if(prec->ptr)
 			prec->ptr->prec = NULL;
-		delete prec;
+		tiny_delete(prec);
 	}
 }
 

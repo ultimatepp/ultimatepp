@@ -46,7 +46,7 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 		case 1:  cfg.FindAdd("DEBUG_MINIMAL"); break;
 		case 2:  cfg.FindAdd("DEBUG_FULL"); break;
 		}
-		if(!pkg.noblitz && (p.blitz >= 0 ? p.blitz : m.def.blitz) && bm.Get("DISABLE_BLITZ", "") != "1")
+		if(!pkg.noblitz && (p.blitz >= 0 ? p.blitz : m.def.blitz))
 			cfg.FindAdd("BLITZ");
 	}
 	else {
@@ -54,7 +54,7 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 		case 1:  cfg.FindAdd("DEBUG_MINIMAL"); break;
 		case 2:  cfg.FindAdd("DEBUG_FULL"); break;
 		}
-		if(!pkg.noblitz && m.def.blitz && bm.Get("DISABLE_BLITZ", "") != "1")
+		if(!pkg.noblitz && m.def.blitz)
 			cfg.FindAdd("BLITZ");
 	}
 	host.AddFlags(cfg);
@@ -97,10 +97,10 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 	VectorMap<String, String> bm = GetMethodVars(method);
 	One<Host> outhost;
 	{
-		One<LocalHost> host = new LocalHost;
+		auto& host = outhost.Create<LocalHost>();
 		VectorMap<String, String> env(Environment(), 1);
-		host->exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
-		env.GetAdd("PATH") = Join(host->exedirs, ";");
+		host.exedirs = SplitDirs(bm.Get("PATH", "") + ';' + env.Get("PATH", ""));
+		env.GetAdd("PATH") = Join(host.exedirs, ";");
 		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
 		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
 		
@@ -115,11 +115,10 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 		for(int i = 0; i < env.GetCount(); i++) {
 			LDUMP(env.GetKey(i));
 			LDUMP(env[i]);
-			host->environment << env.GetKey(i) << '=' << env[i] << '\0';
+			host.environment << env.GetKey(i) << '=' << env[i] << '\0';
 		}
-		host->environment.Cat(0);
-		host->cmdout = &cmdout;
-		outhost = -host;
+		host.environment.Cat(0);
+		host.cmdout = &cmdout;
 	}
 	return outhost;
 }

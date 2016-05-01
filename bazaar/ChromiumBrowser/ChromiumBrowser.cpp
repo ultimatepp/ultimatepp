@@ -145,10 +145,10 @@ void ChromiumBrowser::State(int reason)
 
 void ChromiumBrowser::AfterInit()
 {
-	WhenGotFocus << [this](){ SetFocus(); };
+	WhenGotFocus = LAMBDA(){ SetFocus(); };
 	
 	handler = new ClientHandler(WhenUrlChange, WhenStatus, WhenMessage, WhenTakeFocus,
-								WhenGotFocus, WhenKeyboard, WhenConsoleMessage, WhenCertificateError);
+								WhenGotFocus, WhenKeyboard, WhenConsoleMessage);
 
 	CefBrowserSettings br_settings;
     br_settings.file_access_from_file_urls = STATE_DISABLED;

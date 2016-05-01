@@ -163,7 +163,7 @@ EIGEN_MAKE_ALIGNED_OPERATOR_NEW_IF_VECTORIZABLE_FIXED_SIZE(_Scalar,_AmbientDim)
    * a uniform distribution */
   inline VectorType sample() const
   {
-    VectorType r(dim());
+    VectorType r;
     for(Index d=0; d<dim(); ++d)
     {
       if(!ScalarTraits::IsInteger)

@@ -4,7 +4,7 @@
 
 #include <cairo/cairo-ft.h>
 
-// #include <freetype2/freetype/ftoutln.h>
+#include <plugin/FT_fontsys/ftoutln.h>
 
 NAMESPACE_UPP
 

@@ -12,8 +12,6 @@ library(WIN32 MSC SHARED DEBUG) "libeay32MDd ssleay32MDd";
 
 library(WIN32 GCC) "ssl crypto";
 
-library(WIN32) gdi32;
-
 link(WIN32 MSC SO) /nodefaultlib:libc;
 
 file

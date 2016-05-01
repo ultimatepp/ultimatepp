@@ -3,8 +3,6 @@ description "Template library for linear algebra\377";
 uses
 	Core;
 
-options(MSC) /bigobj;
-
 include
 	../Eigen;
 

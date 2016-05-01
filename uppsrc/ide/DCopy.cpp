@@ -68,14 +68,15 @@ void AssistEditor::DCopy()
 	if(cpp.GetCount() == 0) { // scan for THISBACKs
 		Index<String> id;
 		CParser p(txt);
-		try {
-			while(!p.IsEof()) {
-				if(p.Id("THISBACK") && p.Char('('))
+		while(!p.IsEof()) {
+			try {
+				if(p.Id("THISBACK") && p.Char('(')) {
 					id.FindAdd(p.ReadId());
-				p.SkipTerm();
+				}
 			}
-		}
-		catch(CParser::Error) {
+			catch(CParser::Error) {
+			}
+			p.SkipTerm();
 		}
 		for(int i = 0; i < id.GetCount(); i++)
 			r << "\tvoid " << id[i] << "();\n";

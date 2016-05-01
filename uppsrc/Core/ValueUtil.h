@@ -207,7 +207,7 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 		virtual String       AsString() const;
 		virtual int          Compare(const Value::Void *p);
 
-		int GetRefCount() const     { return AtomicRead(refcount); }
+		int GetRefCount() const     { return refcount; }
 		Vector<Value>& Clone();
 
 		Vector<Value> data;
@@ -228,16 +228,14 @@ class ValueArray : public ValueType<ValueArray, VALUEARRAY_V, Moveable<ValueArra
 public:
 	ValueArray()                              { Init0(); }
 	ValueArray(const ValueArray& v);
-	ValueArray(Vector<Value> rval_ values);
+	ValueArray(ValueArray&& v);
+	ValueArray(Vector<Value>&& values);
 	explicit ValueArray(const Vector<Value>& values, int deep);
+	ValueArray(std::initializer_list<Value> init)    { Init0(); for(const auto& i : init) { Add(i); }}
 	~ValueArray();
 
-#ifdef CPP_11
-	ValueArray(std::initializer_list<Value> init)    { Init0(); for(auto i : init) { Add(i); }}
-#endif
-
 	ValueArray& operator=(const ValueArray& v);
-	ValueArray& operator=(Vector<Value> rval_ values) { *this = ValueArray(pick(values)); return *this; }
+	ValueArray& operator=(Vector<Value>&& values)  { *this = ValueArray(pick(values)); return *this; }
 
 	operator Value() const;
 	ValueArray(const Value& src);
@@ -311,9 +309,23 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 		virtual String     AsString() const;
 		virtual int        Compare(const Value::Void *p);
 
-		const Value& Get(const Value& key) const;
-		Value& GetAdd(const Value& key);
-		Value& At(int i);
+		const Value& Get(const Value& k) const {
+			int q = key.Find(k);
+			return q >= 0 ? value[q] : ErrorValue();
+		}
+		Value& GetAdd(const Value& k) {
+			int i = key.Find(k);
+			if(i < 0) {
+				i = value.GetCount();
+				key.Add(k);
+			}
+			return value.At(i);
+		}
+		Value& At(int i) {
+			ASSERT(i < value.GetCount());
+			return value.At(i);
+		}
+
 
 		Index<Value> key;
 		ValueArray   value;
@@ -323,8 +335,10 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	Data *data;
 
 	Data& Create();
-	static Data& Clone(Data *&ptr);
-	Data& Clone();
+	static void Clone(Data *&ptr);
+	force_inline
+	static ValueMap::Data& UnShare(ValueMap::Data *&ptr) { if(ptr->GetRefCount() != 1) Clone(ptr); return *ptr; }
+	Data& UnShare() { return UnShare(data); }
 	void  Init0();
 
 	friend Value::Void *ValueMapDataCreate();
@@ -333,18 +347,15 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 public:
 	ValueMap()                                      { Init0(); }
 	ValueMap(const ValueMap& v);
-	ValueMap(Index<Value> rval_ k, Vector<Value> rval_ v);
-	ValueMap(VectorMap<Value, Value> rval_ m);
+	ValueMap(Index<Value>&& k, Vector<Value>&& v);
+	ValueMap(VectorMap<Value, Value>&& m);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
 	ValueMap(const VectorMap<Value, Value>& m, int deep);
+	ValueMap(std::initializer_list<std::pair<Value, Value>> init) { Init0(); for(const auto& i : init) { Add(i.first, i.second); }}
 	~ValueMap();
 
-#ifdef CPP_11
-	ValueMap(std::initializer_list<std::pair<Value, Value>> init) { Init0(); for(auto i : init) { Add(i.first, i.second); }}
-#endif
-
 	ValueMap& operator=(const ValueMap& v);
-	ValueMap& operator=(VectorMap<Value, Value> rval_ m) { *this = ValueMap(pick(m)); return *this; }
+	ValueMap& operator=(VectorMap<Value, Value>&& m) { *this = ValueMap(pick(m)); return *this; }
 
 	operator Value() const;
 	ValueMap(const Value& src);
@@ -399,19 +410,19 @@ public:
 	
 	VectorMap<Value, Value> Pick();
 
-	const Value& operator[](const Value& key) const;
+	const Value& operator[](const Value& key) const  { return data->Get(key); }
 	const Value& operator[](const String& key) const { return operator[](Value(key)); }
 	const Value& operator[](const char *key) const   { return operator[](Value(key)); }
 	const Value& operator[](const int key) const     { return operator[](Value(key)); }
 	const Value& operator[](const Id& key) const     { return operator[](Value(key.ToString())); }
 
-	Value& GetAdd(const Value& key);
+	Value& GetAdd(const Value& key)                  { return UnShare().GetAdd(key); }
 	Value& operator()(const Value& key)              { return GetAdd(key); }
 	Value& operator()(const String& key)             { return operator()(Value(key)); }
 	Value& operator()(const char *key)               { return operator()(Value(key)); }
 	Value& operator()(const int key)                 { return operator()(Value(key)); }
 	Value& operator()(const Id& key)                 { return operator()(Value(key.ToString())); }
-	Value& At(int i);
+	Value& At(int i)                                 { return UnShare().At(i); }
 	
 	Value GetAndClear(const Value& key);
 
@@ -440,3 +451,4 @@ public:
 
 
 #include "Value.hpp"
+#include "ValueUtil.hpp"

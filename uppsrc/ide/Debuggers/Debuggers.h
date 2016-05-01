@@ -201,7 +201,7 @@ struct Gdb : Debugger, ParentCtrl {
 	void      CopyStack();
 	void      CopyDisas();
 
-	bool      Create(One<Host> rval_ host, const String& exefile, const String& cmdline, bool console);
+	bool      Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
 
 	// Period check for killed console
 	TimeCallback periodic;
@@ -220,7 +220,7 @@ struct Gdb : Debugger, ParentCtrl {
 #define KEYFILE      <ide/Debuggers/Pdb.key>
 #include             <CtrlLib/key_header.h>
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 #include "Pdb.h"
 #endif
 

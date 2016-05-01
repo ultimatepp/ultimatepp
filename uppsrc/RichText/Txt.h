@@ -216,8 +216,8 @@ public:
 
 	void                  ClearSpelling();
 
-	void                  SetPick(int parti, RichTable rval_ table);
-	void                  CatPick(RichTable rval_ table)              { SetPick(GetPartCount(), pick(table)); }
+	void                  SetPick(int parti, RichTable&& table);
+	void                  CatPick(RichTable&& table)                  { SetPick(GetPartCount(), pick(table)); }
 	void                  Set(int parai, const RichPara& p, const RichStyles& s);
 	void                  Insert(int parai, const RichPara& p, const RichStyles& s);
 	void                  Cat(const RichPara& p, const RichStyles& s) { Set(GetPartCount(), p, s); }

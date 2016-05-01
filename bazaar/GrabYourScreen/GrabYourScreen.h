@@ -2,7 +2,7 @@
 #define _GrabYourScreen_GrabYourScreen_h
 
 #include <CtrlLib/CtrlLib.h>
-//#include <RichEdit/RichEdit.h>
+#include <RichEdit/RichEdit.h>
 #include <Report/Report.h>
 #include <Controls4U/Controls4U.h>
 #include <SysInfo/SysInfo.h>

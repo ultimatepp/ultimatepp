@@ -1059,7 +1059,7 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 	EnumWindows(EnumGetWindowsList, (LPARAM)&hWnd);	
 	for (int i = 0; i < hWnd.GetCount(); ++i) {
 		if (!getAll) {
-			LONG_PTR style = GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWL_STYLE);
+			int style = GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWL_STYLE);
 			if (style & WS_ICONIC || style & WS_MINIMIZE)
 				continue;
 		}

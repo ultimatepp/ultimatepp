@@ -285,8 +285,7 @@ public:
     * this class becomes invalid. Call compute() to update it with the new
     * matrix A, or modify a copy of A.
     */
-  template<typename MatrixDerived>
-  explicit GMRES(const EigenBase<MatrixDerived>& A) : Base(A.derived()), m_restart(30) {}
+  GMRES(const MatrixType& A) : Base(A), m_restart(30) {}
 
   ~GMRES() {}
   

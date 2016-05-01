@@ -1,4 +1,5 @@
 #ifndef _PostgreSQL_icpp_init_stub
 #define _PostgreSQL_icpp_init_stub
 #include "Sql/init"
+#include "Web/init"
 #endif

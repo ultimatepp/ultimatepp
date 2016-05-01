@@ -64,4 +64,4 @@ el conjunt del sistema d`'ajuda T`+`+ en pàgines web .html.]&]
 un missatge al ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Fòrum][2  
 demanant ajuda o ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 e
 nvia`'m][2  un missatge. Jo ho faré per tu.]&]
-[s0; ]]
+[s0; ]

@@ -35,55 +35,59 @@ inline unsigned HashBound(unsigned i) { return Pow2Bound(i); }
 inline unsigned HashBound(unsigned i) { return PrimeBound(i); }
 #endif
 
+static int _EmptyHashBase = -1;
+
+inline
+void HashBase::Zero()
+{
+	map = &_EmptyHashBase;
+	mask = 0;
+	unlinked = -1;
+}
+
 void HashBase::Free()
 {
-	if(map)
+	if(map != &_EmptyHashBase)
 		delete [](byte *)map;
-	map = NULL;
-	mcount = 0;
+	Zero();
 }
 
 void HashBase::ClearIndex()
 {
 	link.Clear();
-	unlinked = -1;
 	Free();
 }
 
 HashBase::HashBase()
 {
-	unlinked = -1;
-	map = NULL;
-	mcount = 0;
+	Zero();
 }
 
-HashBase::HashBase(HashBase rval_ b)
+HashBase::HashBase(HashBase&& b)
 : hash(pick(b.hash)),
   link(pick(b.link))
 {
 	map = b.map;
-	mcount = b.mcount;
+	mask = b.mask;
 	unlinked = b.unlinked;
-	const_cast<HashBase &>(b).map = NULL;
+	b.Zero();
 }
 
-void HashBase::operator=(HashBase rval_ b)
+void HashBase::operator=(HashBase&& b)
 {
 	hash = pick(b.hash);
 	link = pick(b.link);
 	Free();
 	map = b.map;
-	mcount = b.mcount;
+	mask = b.mask;
 	unlinked = b.unlinked;
-	const_cast<HashBase &>(b).map = NULL;
+	b.Zero();
 }
 
 HashBase::HashBase(const HashBase& b, int)
 : hash(b.hash, 0)
 {
-	unlinked = -1;
-	mcount = 0;
-	map = NULL;
+	Zero();
 	Reindex();
 }
 
@@ -99,7 +103,8 @@ HashBase::~HashBase()
 	Free();
 }
 
-force_inline void HashBase::LinkBefore(int i, Link& l, int bi)
+force_inline
+void HashBase::LinkBefore(int i, Link& l, int bi)
 {
 	Link& bl = link[bi];
 	l.next = bi;
@@ -135,7 +140,8 @@ void HashBase::Reindex(int n)
 {
 	ClearIndex();
 	Free();
-	mcount = n = HashBound(n);
+	n = HashBound(n);
+	mask = n - 1;
 	map = (int *)new byte[n * sizeof(int)];
 	Fill(map, map + n, -1);
 	FinishIndex();
@@ -144,12 +150,6 @@ void HashBase::Reindex(int n)
 void HashBase::Reindex()
 {
 	Reindex(hash.GetCount());
-}
-
-void HashBase::Add(unsigned _hash)
-{
-	hash.Add(_hash & ~UNSIGNED_HIBIT);
-	DoIndex();
 }
 
 void  HashBase::SetUn(int i, unsigned _hash)
@@ -229,9 +229,8 @@ void HashBase::Set(int i, unsigned _hash) {
 
 void HashBase::Shrink() {
 	hash.Shrink();
-	if((int)HashBound(hash.GetCount()) < mcount) {
-		ClearIndex();
-		DoIndex();
+	if((int)HashBound(hash.GetCount()) <= mask) {
+		Reindex(hash.GetCount());
 	}
 	else
 		link.Shrink();
@@ -241,7 +240,7 @@ void HashBase::Reserve(int n)
 {
 	hash.Reserve(n);
 	link.Reserve(n);
-	if((int)HashBound(n) > mcount)
+	if((int)HashBound(n) > mask)
 		Reindex(n);
 }
 
@@ -287,7 +286,7 @@ void HashBase::Swap(HashBase& b) {
 	UPP::Swap(hash, b.hash);
 	UPP::Swap(link, b.link);
 	UPP::Swap(map, b.map);
-	UPP::Swap(mcount, b.mcount);
+	UPP::Swap(mask, b.mask);
 	UPP::Swap(unlinked, b.unlinked);
 }
 
@@ -334,7 +333,7 @@ unsigned GetHashValue0(const double& d)
 
 void Bits::Clear()
 {
-	if(bp && alloc >= 0)
+	if(bp)
 		delete[] bp;
 	alloc = 0;
 	bp = NULL;
@@ -358,12 +357,6 @@ void Bits::Set(int i, bool b)
 	i &= 31;
 	ASSERT(q < alloc);
 	bp[q] = (bp[q] & ~(1 << i)) | (b << i);
-}
-
-void Bits::Set(int i, bool b, int count)
-{
-	while(count--)
-		Set(i++, b);
 }
 
 END_UPP_NAMESPACE

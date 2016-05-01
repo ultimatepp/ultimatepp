@@ -291,7 +291,6 @@ void ImageSysData::Paint(SystemDraw& w, int x, int y, const Rect& src, Color c)
 			LTIMING("Image Alpha create");
 			BitmapInfo32__ bi(sz.cx, sz.cy);
 			himg = CreateDIBSection(ScreenHDC(), bi, DIB_RGB_COLORS, (void **)&section, NULL, 0);
-			if(!himg) return; // Return on release.
 			Copy(section, ~img, img.GetLength());
 		}
 		LTIMING("Image Alpha blit");

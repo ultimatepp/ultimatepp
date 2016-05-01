@@ -18,7 +18,7 @@ struct Esc;
 class EscValue : Moveable<EscValue> {
 	struct RefCount {
 		Atomic   refcount;
-		RefCount()              { AtomicWrite(refcount, 1); }
+		RefCount()              { refcount = 1; }
 	};
 
 	int              type;
@@ -137,8 +137,8 @@ struct EscHandle {
 	void       Retain()        { AtomicInc(refcount); }
 	void       Release()       { if(AtomicDec(refcount) == 0) delete this; }
 
-	EscHandle()              { AtomicWrite(refcount, 0); }
-	virtual ~EscHandle()     {}
+	EscHandle()                { refcount = 0; }
+	virtual ~EscHandle()       {}
 };
 
 class EscLambda {
@@ -147,7 +147,7 @@ class EscLambda {
 	void     Retain()        { AtomicInc(refcount); }
 	void     Release()       { if(AtomicDec(refcount) == 0) delete this; }
 
-	EscLambda()                 { AtomicWrite(refcount, 1); varargs = false; handle = NULL; }
+	EscLambda()                 { refcount = 1; varargs = false; handle = NULL; }
 	~EscLambda()                { if(handle) handle->Release(); }
 
 	friend class EscValue;

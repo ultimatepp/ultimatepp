@@ -3,9 +3,6 @@ description "Android builder juicy example\377";
 uses
 	AndroidMathUtility;
 
-library
-	log;
-
 file
 	MemoryManager readonly separator,
 	MemoryManager.h,

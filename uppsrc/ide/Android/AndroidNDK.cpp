@@ -73,10 +73,8 @@ Vector<String> AndroidNDK::FindToolchains() const
 	for(FindFile ff(AppendFileName(GetToolchainsDir(), "*")); ff; ff.Next()) {
 		if(!ff.IsHidden() && ff.IsFolder()) {
 			String name = ff.GetName();
-			if(name.StartsWith("llvm")) {
-				toolchains.Add("clang");
+			if(name.StartsWith("llvm"))
 				continue;
-			}
 			
 			Vector<String> nameParts = Split(name, "-");
 			if(nameParts.GetCount() > 1) {

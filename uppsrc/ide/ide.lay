@@ -266,8 +266,7 @@ LAYOUT(BuildMethodsDefaultBuilderSetupLayout, 648, 500)
 	ITEM(EditString, release_link, HSizePosZ(132, 0).TopPosZ(348, 19))
 	ITEM(TabCtrl, paths, HSizePosZ(0, 0).VSizePosZ(392, 0))
 	ITEM(TextOption, allow_pch, SetLabel(t_("Allow precompiled headers")).LeftPosZ(0, 212).TopPosZ(372, 16))
-	ITEM(TextOption, disable_blitz, SetLabel(t_("Disable BLITZ")).LeftPosZ(164, 212).TopPosZ(372, 16))
-	ITEM(LabelBox, dv___39, SetLabel(t_("Debug mode defaults")).HSizePosZ(0, 0).TopPosZ(144, 36))
+	ITEM(LabelBox, dv___38, SetLabel(t_("Debug mode defaults")).HSizePosZ(0, 0).TopPosZ(144, 36))
 END_LAYOUT
 
 LAYOUT(ModePaneLayout, 320, 460)
@@ -778,10 +777,9 @@ LAYOUT(JumpLayout, 692, 496)
 END_LAYOUT
 
 LAYOUT(SelectAndroidDeviceLayout, 432, 228)
-	ITEM(Button, refresh, SetLabel(t_("Refresh")).LeftPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(4, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(4, 24))
 	ITEM(ArrayCtrl, devicesArray, AutoHideSb(true).HSizePosZ(4, 4).TopPosZ(4, 192))
-	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(72, 64).BottomPosZ(4, 24))
 END_LAYOUT
 
 LAYOUT(RenamePackageLayout, 228, 100)

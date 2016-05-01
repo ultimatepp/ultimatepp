@@ -7,7 +7,6 @@ namespace AndroidMathUtility {
 Vector::Vector()
 {
 	this->size = 0;
-	this->data = NULL;
 }
 
 Vector::Vector(int size)
@@ -22,15 +21,11 @@ Vector::Vector(int size)
 Vector::Vector(const Vector& vec)
 {
 	if(vec.GetSize() > 0) {
-		this->size = vec.GetSize();
-		this->data = new float[size];
+		size = vec.GetSize();
+		data = new float[size];
 		for(int i = 0; i < size; i++) {
-			this->data[i] = vec.data[i];
+			data[i] = vec.data[i];
 		}
-	}
-	else {
-		this->size = 0;
-		this->data = NULL;
 	}
 }
 

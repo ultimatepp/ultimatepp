@@ -9,7 +9,7 @@ void Tab11_Trend::Init()
 	seriesList = "Series 1";
 	seriesList.WhenAction = THISBACK(OnSeries);
 	
-	scatter.SetMouseHandling(true, true).ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
+	scatter.SetMouseHandling(true, true).ShowContextMenu();
 	
 	grid.AddColumn("Type", 10);
 	grid.AddColumn("Equation", 40);

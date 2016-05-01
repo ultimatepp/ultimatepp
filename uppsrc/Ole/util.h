@@ -41,6 +41,7 @@ inline void           Serialize(Stream& stream, GUID& guid) { stream.SerializeRa
 String                GetInterfaceName(const GUID& guid);
 String                GetCoClassName(const GUID& guid);
 String                GetDisplayName(const GUID& guid);
+template <> bool      IsNull(const GUID& guid);
 GUID                  GetCoClassGUID(const char *name, bool prog_id = true);
 
 class Guid : public ValueType<Guid, 70, Moveable<Guid> >
@@ -60,8 +61,8 @@ public:
 
 	Guid&    operator = (const GUID& _guid)  { guid = _guid; return *this; }
 
-	bool     IsNullInstance() const;
-	bool     IsEmpty() const                 { return IsNullInstance(); }
+	bool     IsNullInstance() const          { return UPP::IsNull(guid); }
+	bool     IsEmpty() const                 { return IsNull(guid); }
 	void     Clear()                         { Zero(guid); }
 
 	operator String () const                 { return UPP::Format(guid); }

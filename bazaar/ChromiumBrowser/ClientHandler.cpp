@@ -34,7 +34,7 @@ bool ClientHandler::OnBeforePopup(CefRefPtr<CefBrowser> browser,
                              CefRefPtr<CefFrame> frame,
                              const CefString& target_url,
                              const CefString& target_frame_name,
-                             CefLifeSpanHandler::WindowOpenDisposition target_disposition,
+                             WindowOpenDisposition target_disposition,
                              bool user_gesture,
                              const CefPopupFeatures& popupFeatures,
                              CefWindowInfo& windowInfo,
@@ -54,7 +54,7 @@ void ClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                                 const CefString& errorText,
 								const CefString& failedUrl)
 {
-	frame->LoadString("<html><head></head><body><center><h1>Page not found</h1></center></body></html>", failedUrl);
+	frame->LoadString("<html><head></head><body><center><h1>Page not found</h1></center></body><html>", failedUrl);
 }
 
 
@@ -143,58 +143,4 @@ bool ClientHandler::OnJSDialog(CefRefPtr<CefBrowser> browser, const CefString& o
 {
 	RLOG(message_text.ToString().c_str());
 	return false;
-}
-
-
-static Upp::String GetCefTimeString(const CefTime& v) {
-	if (v.GetTimeT() == 0) return "Unspecified";
-
-	Upp::Time t;
-	t.year	= v.year;
-	t.month	= v.month;
-	t.day	= v.day_of_month;
-	t.hour	= v.hour;
-	t.minute= v.minute;
-	t.second= v.second;
-
-	return Upp::FormatTime(t, "YYYY-MM-DD hh:mm:ss");
-}
-
-
-bool ClientHandler::OnCertificateError(CefRefPtr<CefBrowser> browser, ErrorCode cert_error,
-										const CefString& request_url, CefRefPtr<CefSSLInfo> ssl_info,
-										CefRefPtr<CefRequestCallback> callback)
-{
-	ASSERT(CefCurrentlyOn(TID_UI));
-
-	bool cont = WhenCertificateError(request_url.ToString());
-
-	if (!cont){
-		CefRefPtr<CefSSLCertPrincipal> subject = ssl_info->GetSubject();
-		CefRefPtr<CefSSLCertPrincipal> issuer = ssl_info->GetIssuer();
-	
-		// Build a table showing certificate information.
-		Upp::String ss;
-		ss << "<html><head></head><body>"
-			"<center><h1>Page certificate is not trusted</h1></center>"
-			"<br/>Certificate Information:"
-	        "<table border=1><tr><th>Field</th><th>Value</th></tr>"
-	        "<tr><td>Subject</td><td>" <<
-	            (subject.get() ? subject->GetDisplayName().ToString().c_str() : "&nbsp;") <<
-	            "</td></tr>"
-	        "<tr><td>Issuer</td><td>" <<
-	            (issuer.get() ? issuer->GetDisplayName().ToString().c_str() : "&nbsp;") <<
-	            "</td></tr>"
-	        "<tr><td>Valid Start</td><td>" <<
-	            GetCefTimeString(ssl_info->GetValidStart()) << "</td></tr>"
-	        "<tr><td>Valid Expiry</td><td>" <<
-	            GetCefTimeString(ssl_info->GetValidExpiry()) << "</td></tr>"
-	        "</table>"
-	        "</body></html>";
-	
-		browser->GetMainFrame()->LoadString(~ss, request_url);
-	}
-	
-	callback->Continue(cont);
-	return cont;
 }

@@ -74,6 +74,8 @@ public:
 
 	operator Callback1<const String&>()       { return pteback(this, &StatusBar::SetText); }
 
+	Callback1<const String&> operator~()      { return pteback(this, &StatusBar::SetText); }
+
 	StatusBar&  Height(int _cy);
 	StatusBar&  NoSizeGrip()                  { RemoveFrame(grip); return *this; }
 

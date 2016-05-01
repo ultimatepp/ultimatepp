@@ -32,8 +32,8 @@ dsc]]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
 :: [s0; [*2 Gentoo]]
-::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 ebuil
-d]]
+::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 ebuild
+]]
 ::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
 ::l8/25r8/25t8/15b8/15R(128) [s0; [*2 Arch Linux]]
@@ -54,7 +54,7 @@ rapport au dépôt officiel.]&]
 [s0; [2 Pour les utilisateurs de Gentoo, un ebuild récupérant la 
 dernière version sur le miroir SVN Google Code est en cours 
 de développpent. Si vous êtes intéressé, vous pouvez lire 
-le sujet correspondant sur le ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 f
+le sujet correspondant sur le ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 f
 orum][2 .]&]
 [s0;2 &]
 [s0; [2 Les utilisateurs d`'Arch Linux peuvent télécharger des paquets 

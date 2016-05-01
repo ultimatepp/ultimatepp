@@ -2,31 +2,6 @@
 
 NAMESPACE_UPP
 
-bool HasNumbering(const RichPara::Format& f)
-{
-	if(f.after_number.GetCount() || f.before_number.GetCount())
-		return true;
-	for(int i = 0; i < 8; i++)
-		if(f.number[i] != RichPara::NUMBER_NONE)
-			return true;
-	return false;
-}
-
-bool RichEdit::RemoveBullet(bool backspace)
-{
-	RichPos p = text.GetRichPos(cursor);
-	if((backspace ? p.posinpara : p.paralen) == 0 &&
-	   (p.format.bullet != RichPara::BULLET_NONE || HasNumbering(p.format))) {
-	    Style();
-		RichText::FormatInfo nobullet;
-		nobullet.paravalid = RichText::NUMBERING|RichText::BULLET;
-		nobullet.charvalid = 0;
-		ApplyFormatInfo(nobullet);
-		return true;
-	}
-	return false;
-}
-
 bool RichEdit::Key(dword key, int count)
 {
 	useraction = true;
@@ -52,18 +27,10 @@ bool RichEdit::Key(dword key, int count)
 	case K_BACKSPACE:
 	case K_SHIFT_BACKSPACE:
 		if(RemoveSelection(true)) return true;
-		if(RemoveBullet(true)) break;
 		if(cursor <= 0 || RemoveSpecial(cursor, cursor - 1, true))
 			return true;
 		anchor = --cursor;
 		begtabsel = false;
-		if(cursor > 0) {
-			RichPos p = text.GetRichPos(cursor - 1);
-			if(p.format.bullet != RichPara::BULLET_NONE || HasNumbering(p.format)) {
-				Remove(cursor, 1, true);
-				break;
-			}
-		}
 		Remove(cursor, 1);
 		break;
 	case K_DELETE:
@@ -102,8 +69,7 @@ bool RichEdit::Key(dword key, int count)
 				return false;
 			if(!RemoveSelection() && InsertLineSpecial())
 				return true;
-			if(RemoveBullet(false))
-				break;
+			
 			RichText::FormatInfo f = formatinfo;
 			InsertLine();
 			formatinfo = f;

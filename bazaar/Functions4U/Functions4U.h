@@ -66,7 +66,7 @@ String GetNextFolder(const String &folder, const String &lastFolder);
 String FileRealName(const char *fileName);
 bool IsFile(const char *fileName);
 bool IsFolder(const char *fileName);
-bool GetRelativePath(String& from, String& path, String& ret);
+String GetRelativePath(String &from, String &path);
 	
 bool IsSymLink(const char *path);
 
@@ -204,8 +204,8 @@ Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes, bool units = true);
 
-String SecondsToString(double seconds, bool units = false, int dec = 2);
-String HMSToString(int hour, int min, double seconds, bool units = false, int dec = 2); 
+String SecondsToString(double seconds, bool units = false, bool dec = true);
+String HMSToString(int hour, int min, double seconds, bool units = false, bool dec = true); 
 double StringToSeconds(String str);		// The opposite
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
@@ -557,7 +557,6 @@ private:
 class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK) {}
-	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
@@ -619,8 +618,9 @@ public:
 	bool IsRunning() {return status > 0;}
 	Gate4<double, String&, bool, bool&> WhenTimer;
 
-private:
+//private:
 	LocalProcess2 p;
+private:
 	TimeStop timeElapsed, timeToTimeout;
 	ProcessStatus status;
 	double timeOut;

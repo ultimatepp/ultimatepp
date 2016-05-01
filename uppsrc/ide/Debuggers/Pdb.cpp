@@ -5,7 +5,7 @@
 #define KEYFILE      <ide/Debuggers/Pdb.key>
 #include             <CtrlLib/key_source.h>
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 
 #pragma comment(lib, "DbgHelp.lib")
 #pragma comment(lib, "psapi.lib")
@@ -361,7 +361,7 @@ Pdb::~Pdb()
 	Stop();
 }
 
-One<Debugger> PdbCreate(One<Host> rval_ host, const String& exefile, const String& cmdline)
+One<Debugger> PdbCreate(One<Host>&& host, const String& exefile, const String& cmdline)
 {
 	One<Debugger> dbg;
 	if(!dbg.Create<Pdb>().Create(pick(host), exefile, cmdline))

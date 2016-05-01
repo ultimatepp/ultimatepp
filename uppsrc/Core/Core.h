@@ -219,6 +219,8 @@ typedef int SOCKET;
 #include <algorithm>
 #include <string>
 #include <complex>
+#include <type_traits>
+#include <atomic>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
@@ -243,15 +245,19 @@ namespace Upp {};
 
 NAMESPACE_UPP
 
-#include <Core/Defs.h>
+#ifndef flagNODEPRECATED
+#define DEPRECATED
+#endif
+
+#include "Defs.h"
 
 class XmlIO;
 class JsonIO;
 
-#include "Mt.h"
-#include "Global.h"
+#include "Ops.h"
+#include "Atomic.h"
 #include "Topt.h"
-#include "Profile.h"
+#include "Mt.h"
 #include "String.h"
 
 #include "CharSet.h"
@@ -261,28 +267,37 @@ class JsonIO;
 #include "Diag.h"
 
 #include "Vcont.h"
+#include "Range.h"
 #include "BiCont.h"
 #include "Index.h"
 #include "Map.h"
-#include "Tuple.h"
-#include "Other.h"
 #include "Algo.h"
+#include "Sorted.h"
+#include "Sort.h"
+#include "Obsolete.h"
 #include "FixedMap.h"
 #include "InVector.h"
 
 #include "SplitMerge.h"
 
+#include "Other.h"
+
 #include "Value.h"
 #include "ValueUtil.h"
 
-#include "Color.h"
-#include "Complex.h"
+#include "Tuple.h"
 
 #include "Uuid.h"
 #include "Ptr.h"
 
 #include "Callback.h"
+
+#include "Color.h"
+#include "Complex.h"
+
 #include "Util.h"
+
+#include "Profile.h"
 
 #include "FilterStream.h"
 
@@ -305,6 +320,9 @@ class JsonIO;
 #include "App.h"
 
 #include "CoWork.h"
+
+#include "CoAlgo.h"
+#include "CoSort.h"
 
 #include "LocalProcess.h"
 
@@ -363,18 +381,6 @@ void      FreeDll__(DLLHANDLE dllhandle);
 
 #ifndef flagNONAMESPACE
 using Upp::byte; // Dirty solution to Windows.h typedef byte...
-#endif
-
-#ifdef PLATFORM_WIN32
-#define DLLFILENAME "Kernel32.dll"
-#define DLIMODULE   UnicodeWin32
-#define DLIHEADER   <Core/Kernel32W.dli>
-#include <Core/dli_header.h>
-
-#define DLLFILENAME "Mpr.dll"
-#define DLIMODULE   UnicodeWin32Net
-#define DLIHEADER   <Core/Mpr32W.dli>
-#include <Core/dli_header.h>
 #endif
 
 #ifdef MAIN_CONF

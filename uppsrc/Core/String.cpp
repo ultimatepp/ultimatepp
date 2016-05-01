@@ -11,7 +11,7 @@ void String0::Dsyn()
 }
 #endif
 
-String0::Rc String0::voidptr[2] = { { 2, 0 }, { 0, 0 } };
+String0::Rc String0::voidptr[2];
 
 void String0::LSet(const String0& s)
 {
@@ -24,9 +24,11 @@ void String0::LSet(const String0& s)
 	}
 	else {
 		ptr = (char *)MemoryAlloc32();
-		qword *d = qptr;
-		const qword *q = s.qptr;
-		d[0] = q[0]; d[1] = q[1]; d[2] = q[2]; d[3] = q[3];
+//		qword *d = qptr;
+//		const qword *q = s.qptr;
+//		d[0] = q[0]; d[1] = q[1]; d[2] = q[2]; d[3] = q[3];
+		fast_copy128(ptr, s.ptr);
+		fast_copy128(ptr + 16, s.ptr + 16);
 	}
 }
 
@@ -360,7 +362,7 @@ char *StringBuffer::Alloc(int count, int& alloc)
 	else {
 		size_t sz = sizeof(Rc) + count + 1;
 		Rc *rc = (Rc *)MemoryAlloc(sz);
-		alloc = rc->alloc = (int)sz - sizeof(Rc) - 1;
+		alloc = rc->alloc = (int)min((size_t)INT_MAX, sz - sizeof(Rc) - 1);
 		rc->refcount = 1;
 		return (char *)(rc + 1);
 	}
@@ -377,13 +379,17 @@ void StringBuffer::Free()
 		MemoryFree((Rc *)begin - 1);
 }
 
-void StringBuffer::Realloc(int n, const char *cat, int l)
+void StringBuffer::Realloc(dword n, const char *cat, int l)
 {
 	int al;
-	int ep = (int)(end - begin);
+	size_t ep = end - begin;
+	if(n > INT_MAX)
+		n = INT_MAX;
 	char *p = Alloc(n, al);
-	memcpy(p, begin, min(GetLength(), n));
+	memcpy(p, begin, min((dword)GetLength(), n));
 	if(cat) {
+		if(ep + l > INT_MAX)
+			Panic("StringBuffer is too big!");
 		memcpy(p + ep, cat, l);
 		ep += l;
 	}
@@ -396,6 +402,8 @@ void StringBuffer::Realloc(int n, const char *cat, int l)
 void StringBuffer::Expand()
 {
 	Realloc(GetLength() * 2);
+	if(end == limit)
+		Panic("StringBuffer is too big!");
 }
 
 void StringBuffer::SetLength(int l)

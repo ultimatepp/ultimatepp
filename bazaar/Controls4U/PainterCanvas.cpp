@@ -946,16 +946,14 @@ void PainterCanvas::SaveToFile(String fileName) {
 		if (!PromptOKCancel(Format(t_("File \"%s\" found.&Do you want to overwrite it?"), DeQtf(fileName))))
 			return;
 	}
-	
-	String ext = GetFileExt(fileName);
-	if (ext == ".png") {
+	if (GetFileExt(fileName) == ".png") {
 		PNGEncoder encoder;
 		encoder.SaveFile(fileName, GetBackground());
-	} else if (ext == ".jpg") {	
+	} else if (GetFileExt(fileName) == ".jpg") {	
 		JPGEncoder encoder(90);
 		encoder.SaveFile(fileName, GetBackground());		
 	} else
-		Exclamation(Format(t_("File format \"%s\" not found"), ext));
+		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }      
                           
 Image PainterCanvas::CursorImage(Point p, dword keyflags) {

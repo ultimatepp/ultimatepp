@@ -86,6 +86,11 @@ td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 element.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Vector`:`:Create`(Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) clas
+s...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) ...]_args)&]
+[s2; Adds new element to Vector using args as constructor parameters.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:Vector`:`:Add`(const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x])&]
 [s2; Adds new element with specified value to Vector.&]
@@ -95,15 +100,11 @@ element.&]
 [s7; [*/ Return value]-|Reference to new element in Vector.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Vector`:`:AddPick`(pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.128.128) pick
-`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Vector`:`:Add`(T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T][@(0.0.255) `&`&]_[*@3 x
+])&]
 [s2; Adds new element to Vector and picks value of parameter to it. 
 &]
-[s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators and references to Vector.&]
-[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
-[s7; [*/ Return value]-|Reference to new element in Vector&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Vector`:`:AddN`(int`):%- [@(0.0.255) void]_[* AddN]([@(0.0.255) int]_[*@3 n])&]
 [s2; Adds specified number of default constructed elements to Vector.&]
@@ -324,12 +325,10 @@ value.&]
 and returns a reference to it.&]
 [s3; &]
 [s4;%- &]
-[s5;:Vector`:`:InsertPick`(int`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* InsertPick]([@(0.0.255) i
-nt]_[*@3 i], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Vector`:`:Insert`(int`,T`&`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
+]>_[*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) int]_[*@3 q], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Inserts an element at [%-*@3 i] picking the content of [%-*@3 x] 
 and returns a reference to this new element.&]
-[s6;~~~.992; Requires T to have pick constructor.&]
-[s6;~~~.992; Invalidates iterators and references to Vector.&]
 [s3; &]
 [s4;%- &]
 [s5;:Vector`:`:Insert`(int`,const Vector`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) in
@@ -354,6 +353,13 @@ inserted.&]
 [s7; [*C@3 count]-|Number of elements to insert.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Vector`:`:Insert`(int`,Upp`:`:Vector`&`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
+nt]_[*@3 i], [_^Upp`:`:Vector^ Vector][@(0.0.255) `&`&]_[*@3 x])&]
+[s2; Inserts source Vector at specified position using pick transfer 
+semantics. It is faster than deep copy insert, does not use deep 
+copy constructor for T, but destroys source Vector.&]
+[s3; &]
+[s4;%- &]
 [s5;:Upp`:`:Vector`:`:Insert`(int`,std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_
 [* Insert]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
 [*@4 T]>_[*@3 init])&]
@@ -364,16 +370,6 @@ inserted.&]
 [* Append]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
 [*@4 T]>_[*@3 init])&]
 [s2; Appends C`+`+11 style initialization list.&]
-[s3; &]
-[s4;%- &]
-[s5;:Vector`:`:InsertPick`(int`,pick`_ Vector`&`):%- [@(0.0.255) void]_[* InsertPick]([@(0.0.255) i
-nt]_[*@3 i], [@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) `&]_[*@3 x])&]
-[s2; Inserts source Vector at specified position using pick transfer 
-semantics. It is faster than deep copy insert, does not use deep 
-copy constructor for T, but destroys source Vector.&]
-[s6; Invalidates iterators and references to Vector.&]
-[s7; [*C@3 i]-|Insertion position.&]
-[s7; [*C@3 x]-|Source Vector.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Vector`:`:InsertSplit`(int`,Vector`<T`>`&`,int`):%- [@(0.0.255) void]_[* InsertSplit
@@ -403,13 +399,11 @@ onst]_[_^Vector^ Vector][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 o],
 [s7; [*C@3 c]-|Number of elements to insert.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Vector`:`:AppendPick`(pick`_ Vector`&`):%- [@(0.0.255) void]_[* AppendPick]([@(0.128.128) p
-ick`_]_[_^Vector^ Vector][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Vector`:`:Append`(Upp`:`:Vector`&`&`):%- [@(0.0.255) void]_[* Append]([_^Upp`:`:Vector^ V
+ector][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Appends source Vector using pick transfer semantics. It is faster 
 than deep copy insert, does not use deep copy constructor for 
 T, but destroys source Vector by picking.&]
-[s6; Invalidates iterators and references to Vector.&]
-[s7; [*C@3 x]-|Source Vector.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Vector`:`:Swap`(int`,int`):%- [@(0.0.255) void]_[* Swap]([@(0.0.255) int]_[*@3 i1], 

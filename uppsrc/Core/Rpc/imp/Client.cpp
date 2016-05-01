@@ -116,7 +116,7 @@ RpcGet RpcRequest::Execute()
 		request = ~json;
 	}
 	else {
-		ContentType("text/xml");
+		ContentType("application/xml");
 		request = XmlHeader();
 		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
 	}

@@ -302,12 +302,9 @@ EIGEN_DONT_INLINE void triangular_solve_matrix<Scalar,Index,OnTheRight,Mode,Conj
                 for (Index i=0; i<actual_mc; ++i)
                   r[i] -= a[i] * b;
               }
-              if((Mode & UnitDiag)==0)
-              {
-                Scalar b = conj(rhs(j,j));
-                for (Index i=0; i<actual_mc; ++i)
-                  r[i] /= b;
-              }
+              Scalar b = (Mode & UnitDiag) ? Scalar(1) : Scalar(1)/conj(rhs(j,j));
+              for (Index i=0; i<actual_mc; ++i)
+                r[i] *= b;
             }
 
             // pack the just computed part of lhs to A

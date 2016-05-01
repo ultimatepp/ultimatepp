@@ -43,8 +43,7 @@ String PreprocessLayFile(const char *fn)
 			line = p.GetLine();
 			p.PassId("LAYOUT");
 			p.PassChar('(');
-			String id = p.ReadId();
-			r << "void SetLayout_" + id + "(); template <class T> struct With" << id << " : public T {"
+			r << "template <class T> struct With" << p.ReadId() << " : public T {"
 			  << "\tstatic Size GetLayoutSize();";
 			LaySkipRest(p);
 			WriteLines(r, p.GetLine() - line);

@@ -274,30 +274,30 @@ bool IsFolder(const char *fileName) {
 	return false;
 }
 
-bool GetRelativePath(String& from, String& path, String& ret) {
-	ret.Clear();
+String GetRelativePath(String &from, String &path) {
+	String ret;
 	int pos_from = 0, pos_path = 0;
 	bool first = true;
 	while (!IsNull(pos_from)) {
 		String f_from = Tokenize2(from, DIR_SEPS, pos_from);
 		String f_path = Tokenize2(path, DIR_SEPS, pos_path);
-		if (ToLower(f_from) != ToLower(f_path)) {
+		if (f_from != f_path) {
 			if (first) 
-				return false;
-			ret << f_path;	
+				return Null;
 			String fileName = path.Mid(pos_path);
-			if (!fileName.IsEmpty()) 
-				ret << DIR_SEPS << fileName;	
+			if (fileName.IsEmpty()) 
+				ret << ".." << DIR_SEPS << f_path;	
+			else
+				ret << ".." << DIR_SEPS << f_path << DIR_SEPS << fileName;	
 			while (!IsNull(pos_from)) {
 				ret.Insert(0, String("..") + DIR_SEPS);
 				Tokenize2(from, DIR_SEPS, pos_from);		
 			}
-			return true;
+			return ret;
 		}
 		first = false;
 	}
-	ret = path.Mid(pos_path);
-	return true;
+	return path.Mid(pos_path);
 }
 
 bool SetReadOnly(const char *path, bool readOnly) {
@@ -790,7 +790,7 @@ Date StrToDate(const char *s) {
 
 void StringToHMS(String durat, int &hour, int &min, double &seconds) {
 	StringParse duration(durat);
-	String s1, s2, s3; 
+	String s1, s2, s3;
 	s1 = duration.GetText(":");
 	s2 = duration.GetText(":");
 	s3 = duration.GetText();
@@ -816,7 +816,7 @@ double StringToSeconds(String duration) {
 	return 3600.*hour + 60.*min + secs;
 }
 
-String formatSeconds(double seconds, int dec, bool fill) {
+String formatSeconds(double seconds, bool fill) {
 	int iseconds = int(seconds);
 	String ret;
 	if (fill)
@@ -824,12 +824,12 @@ String formatSeconds(double seconds, int dec, bool fill) {
 	else
 		ret = FormatInt(iseconds);
 	double decs = seconds - iseconds;
-	if (decs > 0 && dec > 0) 
-		ret << "." << FormatIntDec((int)(decs*pow(10, dec)), dec, '0');
+	if (decs > 0) 
+		ret << "." << FormatIntDec((int)(decs*100), 2, '0');
 	return ret;
 }
 
-String HMSToString(int hour, int min, double seconds, bool units, int dec) {
+String HMSToString(int hour, int min, double seconds, bool units, bool dec) {
 	String sunits;
 	if (units) {
 		if (hour >= 1)
@@ -848,14 +848,16 @@ String HMSToString(int hour, int min, double seconds, bool units, int dec) {
 		ret << hour << ":";
 	if (min > 0 || hour > 0) 
 	    ret << (ret.IsEmpty() ? FormatInt(min) : FormatIntDec(min, 2, '0')) << ":";
+	if (!dec)
+		seconds = int(seconds);
 	
-	ret << formatSeconds(seconds, dec, min > 0 || hour > 0);
+	ret << formatSeconds(seconds, min > 0 || hour > 0);
 	if (units)
 		ret << " " << sunits;
 	return ret;
 }
 
-String SecondsToString(double seconds, bool units, int dec) {
+String SecondsToString(double seconds, bool units, bool dec) {
 	int hour, min;
 	hour = (int)(seconds/3600.);
 	seconds -= hour*3600;
@@ -1029,7 +1031,7 @@ String Tokenize2(const String &str, const String &token, int &pos) {
 	}
 	int oldpos = pos;
 	if (npos < 0) {
-		pos = Null;
+		pos = str.GetCount();
 		return str.Mid(oldpos);
 	} else {
 		pos = npos + token.GetCount();
@@ -1053,7 +1055,7 @@ Vector<String> Tokenize(const String &str, const String &token, int pos) {
 void Tokenize(const String &str, const String &token, Vector<String> &ret, int pos) {
 	for (int _pos = pos; !IsNull(_pos); ret << Tokenize2(str, token, _pos))
 		;
-	//ret.Remove(ret.GetCount() - 1);
+	ret.Remove(ret.GetCount() - 1);
 }
 /*
 String Tokenize(const String &str, const String &token, int &pos) {
@@ -2532,7 +2534,7 @@ double tmGetTimeX() {
 	timespec t;
 	if (0 != clock_gettime(CLOCK_REALTIME, &t))
 		return Null;
-	return t.tv_sec + (double)t.tv_nsec/1000000000.;
+	return t.tv_sec + t.tv_nsec/1000.;
 #elif defined(_WIN32) || defined(WIN32)
 	LARGE_INTEGER clock;
 	LARGE_INTEGER freq;

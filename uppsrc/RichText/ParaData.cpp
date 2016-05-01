@@ -25,7 +25,7 @@ RichPara::RichPara()
 
 RichPara::~RichPara()
 {
-	if(cacheid && !part.IsPicked() && !incache) {
+	if(cacheid && part.GetCount() && !incache) {
 		Mutex::Lock __(cache_lock);
 		Array<RichPara>& cache = Cache();
 		incache = true;
@@ -275,7 +275,7 @@ void RichPara::Cat(Id field, const String& param, const RichPara::CharFormat& f)
 	VectorMap<String, Value> dummy;
 	FieldType *ft = fieldtype().Get(field, NULL);
 	if(ft)
-		p.fieldpart ^= ft->Evaluate(param, dummy, f);
+		p.fieldpart = pick(ft->Evaluate(param, dummy, f));
 }
 
 struct TabLess {
@@ -642,15 +642,13 @@ WString RichPara::GetText() const
 	return r;
 }
 
-typedef VectorMap<Id, RichPara::FieldType *> FieldTypeMap;
-GLOBAL_VAR(FieldTypeMap, fieldtype0)
-
-const VectorMap<Id, RichPara::FieldType *>& RichPara::fieldtype()
+VectorMap<Id, RichPara::FieldType *>& RichPara::fieldtype0()
 {
-	return fieldtype0();
+	static VectorMap<Id, RichPara::FieldType *> h;
+	return h;
 }
 
-void RichPara::Register(Id id, FieldType& ft) init_
+void RichPara::Register(Id id, FieldType& ft)
 {
 	AssertST();
 	fieldtype0().GetAdd(id, &ft);
@@ -664,7 +662,7 @@ bool RichPara::EvaluateFields(VectorMap<String, Value>& vars)
 		if(p.field) {
 			FieldType *f = fieldtype().Get(p.field, NULL);
 			if(f) {
-				p.fieldpart ^= f->Evaluate(p.fieldparam, vars, p.format);
+				p.fieldpart = pick(f->Evaluate(p.fieldparam, vars, p.format));
 				b = true;
 			}
 		}

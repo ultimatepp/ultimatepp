@@ -400,9 +400,9 @@ Ide::Ide()
 	idestate = EDITING;
 	debuglock = 0;
 
-	menubar.WhenHelp = statusbar;
+	menubar.WhenHelp = ~statusbar;
 	menubar.AreaLook(1);
-	toolbar.WhenHelp = statusbar;
+	toolbar.WhenHelp = ~statusbar;
 	toolbar.AreaLook(1);
 	toolbar_in_row = false;
 	SetupBars();
@@ -412,8 +412,6 @@ Ide::Ide()
 	editorsplit.Vert(editor, editor2);
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
-	
-	editpane.AddFrame(editor.navigatorframe);
 
 	right_split.Horz(editpane, right);
 	right_split.Zoom(0);
@@ -459,8 +457,7 @@ Ide::Ide()
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	tabs <<= THISBACK(TabFile);
 //	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
-//	editor2.SetFrame(NullFrame());
-	editor2.theide = this;
+	editor2.SetFrame(NullFrame());
 	editor2.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);
@@ -903,7 +900,7 @@ void AppMain___()
 					SetExitCode(3);
 					return;
 				}
-				ide.method <<= m;
+				ide.method = m;
 				ide.debug.def.blitz = ide.release.def.blitz = 0;
 				ide.debug.def.debug = 2;
 				ide.release.def.debug = 0;

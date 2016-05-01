@@ -42,7 +42,7 @@ LAYOUT(Tab6Logarithmic, 400, 280)
 END_LAYOUT
 
 LAYOUT(Tab7Operations, 388, 300)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Operations")).SetPlotAreaLeftMargin(45).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(35).SetLabelX(t_("[x]")).SetLabelY(t_("[y]")).SetTitleFont(MonospaceZ(16).Bold()).SetLegendAnchor(2).HSizePosZ(12, 12).VSizePosZ(12, 36))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Operations")).SetPlotAreaLeftMargin(45).SetPlotAreaTopMargin(20).SetLabelX(t_("[x]")).SetLabelY(t_("[y]")).SetTitleFont(MonospaceZ(16).Bold()).SetLegendAnchor(2).HSizePosZ(12, 12).VSizePosZ(12, 36))
 	ITEM(Button, bAddSeries, SetLabel(t_("AddSeries")).LeftPosZ(12, 60).BottomPosZ(4, 20))
 	ITEM(Button, bRemoveLastSeries, SetLabel(t_("RemoveLastSeries")).LeftPosZ(76, 104).BottomPosZ(4, 20))
 	ITEM(Button, bRemoveFirstSeries, SetLabel(t_("RemoveFirstSeries")).LeftPosZ(184, 100).BottomPosZ(4, 20))

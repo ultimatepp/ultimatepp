@@ -100,11 +100,8 @@ Vector<String> PreprocessSchFile(const char *fn)
 			   p.Id("STRING_") || p.Id("STRING") || p.Id("CLOB") || p.Id("CLOB_"))
 				r << "\tString " << ReadId(p, rr) << ";";
 			else
-			if(p.Id("INT") || p.Id("INT_") || p.Id("ISERIAL"))
+			if(p.Id("INT") || p.Id("INT_") || p.Id("SERIAL") || p.Id("ISERIAL"))
 				r << "\tint " << ReadId(p, rr) << ";";
-			else
-			if(p.Id("INT64") || p.Id("INT64_") || p.Id("SERIAL") || p.Id("BIGSERIAL"))
-				r << "\tint64 " << ReadId(p, rr) << ";";
 			else
 			if(p.Id("DOUBLE") || p.Id("DOUBLE_"))
 				r << "\tdouble " << ReadId(p, rr) << ";";
@@ -131,9 +128,6 @@ Vector<String> PreprocessSchFile(const char *fn)
 				r << "\tDate " << ReadId(p, rr) << "[1];";
 			else
 			if(p.Id("BOOL_ARRAY") || p.Id("BOOL_ARRAY_") || p.Id("BIT_ARRAY") || p.Id("BIT_ARRAY_"))
-				r << "\tbool " << ReadId(p, rr) << "[1];";
-			else
-			if(p.Id("STRING_ARRAY") || p.Id("STRING_ARRAY_"))
 				r << "\tbool " << ReadId(p, rr) << "[1];";
 			else
 			if(p.Id("SEQUENCE") || p.Id("SEQUENCE_"))

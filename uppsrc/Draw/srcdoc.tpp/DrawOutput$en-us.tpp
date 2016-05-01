@@ -157,4 +157,4 @@ is vice versa). Therefore, as soon as you have an Image (or an
 AlphaArray), you can Save it in any format you like. Similarly, 
 you can take an image file in one of the standard formats and 
 read it into an AlphaArray or an Image.&]
-[s0; ]]
+[s0; ]

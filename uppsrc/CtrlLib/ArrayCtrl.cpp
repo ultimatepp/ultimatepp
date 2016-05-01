@@ -212,7 +212,7 @@ void ArrayCtrl::CellInfo::Set(Ctrl *ctrl, bool owned, bool value)
 	ptr.Set1(cc);
 }
 
-ArrayCtrl::CellInfo::CellInfo(CellInfo rval_ s)
+ArrayCtrl::CellInfo::CellInfo(CellInfo&& s)
 {
 	ptr = s.ptr;
 	const_cast<CellInfo&>(s).ptr.SetPtr(NULL);
@@ -819,19 +819,6 @@ const Display& ArrayCtrl::GetCellInfo(int i, int j, bool f0,
 	return GetDisplay(i, j);
 }
 
-void ArrayCtrl::SpanWideCell(const Display& d, const Value& q, int cm, int& cw, Rect& r, int i, int& j)
-{
-	int cx = d.GetStdSize(q).cx;
-	while(cx > r.Width() - 2 * cm && j + 1 < column.GetCount()) {
-		Value v = GetConvertedColumn(i, j + 1);
-		if(!IsNull(v))
-			break;
-		j++;
-		cw += header.GetTabWidth(j);
-		r.right = r.left + cw - vertgrid + (j == column.GetCount() - 1);
-	}
-}
-
 Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 	LTIMING("Paint");
 	SyncColumnsPos();
@@ -867,15 +854,12 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 							cm = header.Tab(j).GetMargin();
 						if(x > size.cx) break;
 						r.left = x;
-						r.right = x + cw - vertgrid + (jj == column.GetCount() - 1);
+						r.right = x + cw - vertgrid + (j == column.GetCount() - 1);
 						dword st;
 						Color fg, bg;
 						Value q;
 						const Display& d = GetCellInfo(i, jj, hasfocus0, q, fg, bg, st);
 						if(sample || w.IsPainting(r)) {
-							if(spanwidecells)
-								SpanWideCell(d, q, cm, cw, r, i, j);
-							
 							if(cw < 2 * cm || editmode && i == cursor && column[jj].edit)
 								d.PaintBackground(w, r, q, fg, bg, st);
 							else {
@@ -884,7 +868,7 @@ Size  ArrayCtrl::DoPaint(Draw& w, bool sample) {
 								r.right -= cm;
 								d.PaintBackground(w, RectC(r.right, r.top, cm, r.Height()), q, fg, bg, st);
 								w.Clip(r);
-								d.Paint(w, r, q, fg, bg, st);
+								GetDisplay(i, jj).Paint(w, r, q, fg, bg, st);
 								w.End();
 							}
 						}
@@ -1681,21 +1665,20 @@ void ArrayCtrl::SyncInfo()
 		c.y = GetLineAt(p.y + sb);
 		if(c.y >= 0) {
 			for(c.x = 0; c.x < column.GetCount(); c.x++) {
-				if(!IsCtrl(c.y, c.x)) {
-					Rect r = GetCellRect(c.y, c.x);
-					int cm = column[c.x].margin;
-					if(cm < 0)
-						cm = header.Tab(header.FindIndex(c.x)).GetMargin();
-					dword st;
-					Color fg, bg;
-					Value q;
-					const Display& d = GetCellInfo(c.y, c.x, HasFocusDeep(), q, fg, bg, st);
-					int cw = r.Width();
-					SpanWideCell(d, q, cm, cw, r, c.y, c.x);
-					if(r.Contains(p)) {
+				Rect r = GetCellRect(c.y, c.x);
+				if(r.Contains(p)) {
+					if(!IsCtrl(c.y, c.x)) {
+						int cm = column[c.x].margin;
+						if(cm < 0)
+							cm = header.Tab(header.FindIndex(c.x)).GetMargin();
+						dword st;
+						Color fg, bg;
+						Value q;
+						const Display& d = GetCellInfo(c.y, c.x, HasFocusDeep(), q, fg, bg, st);
 						info.Set(this, r, q, &d, fg, bg, st, cm);
 						return;
 					}
+					break;
 				}
 			}
 		}
@@ -2403,20 +2386,8 @@ void ArrayCtrl::SortB(const Vector<int>& o)
 	}
 }
 
-void ArrayCtrl::ReArrange(const Vector<int>& order)
-{
-	KillCursor();
-	ClearSelection();
-	ClearCache();
-	SortA();
-	SortB(order);
-	Refresh();
-	SyncInfo();
-}
-
 void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
-	KillCursor();
-	ClearSelection();
+	CHECK(KillCursor());
 	ClearCache();
 	SortPredicate sp;
 	sp.order = &order;
@@ -2432,14 +2403,13 @@ void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
 
 void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
 {
-	KillCursor();
-	ClearSelection();
+	CHECK(KillCursor());
 	ClearCache();
 	Vector<int> h;
 	for(int i = 0; i < array.GetCount(); i++)
 		h.Add(i);
 	SortA();
-	StableSort(h.GetIter(from), h.GetIter(from + count), order);
+	StableSort(SubRange(h, from, count).Write(), order);
 	SortB(h);
 	Refresh();
 	SyncInfo();
@@ -2459,17 +2429,6 @@ void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order)
 {
 	Sort(from, count, THISBACK1(OrderPred, &order));
 }
-
-struct sAC_ColumnSort : public ValueOrder {
-	bool              descending;
-	const ValueOrder *order;
-	int             (*cmp)(const Value& a, const Value& b);
-
-	virtual bool operator()(const Value& a, const Value& b) const {
-		return descending ? cmp ? (*cmp)(b, a) < 0 : (*order)(b, a)
-		                  : cmp ? (*cmp)(a, b) < 0 : (*order)(a, b);
-	}
-};
 
 bool ArrayCtrl::ColumnSortPred(int i1, int i2, int column, const ValueOrder *o)
 {
@@ -2492,17 +2451,6 @@ void ArrayCtrl::ColumnSort(int column, const ValueOrder& order)
 	ColumnSort(column, THISBACK2(ColumnSortPred, column, &order));
 }
 
-void ArrayCtrl::ColumnSort(int column, int (*compare)(const Value& a, const Value& b))
-{
-	sAC_ColumnSort cs;
-	cs.descending = false;
-	cs.order = NULL;
-	cs.cmp = compare;
-	if(!cs.cmp)
-		cs.cmp = StdValueCompare;
-	ColumnSort(column, cs);
-}
-
 void ArrayCtrl::SetSortColumn(int ii, bool desc)
 {
 	sortcolumn = ii;
@@ -2520,6 +2468,17 @@ void ArrayCtrl::ToggleSortColumn(int ii)
 	}
 	DoColumnSort();
 }
+
+struct sAC_ColumnSort : public ValueOrder {
+	bool              descending;
+	const ValueOrder *order;
+	int             (*cmp)(const Value& a, const Value& b);
+
+	virtual bool operator()(const Value& a, const Value& b) const {
+		return descending ? cmp ? (*cmp)(b, a) < 0 : (*order)(b, a)
+		                  : cmp ? (*cmp)(a, b) < 0 : (*order)(a, b);
+	}
+};
 
 void ArrayCtrl::DoColumnSort()
 {
@@ -2680,7 +2639,6 @@ void ArrayCtrl::Reset() {
 	allsorting = false;
 	acceptingrow = 0;
 	columnsortfindkey = false;
-	spanwidecells = false;
 	linecy = Draw::GetStdFontCy();
 	Clear();
 	sb.SetLine(linecy);
@@ -2897,11 +2855,8 @@ void ArrayCtrl::InsertDrop(int line, const Vector< Vector<Value> >& data, PasteC
 				}
 			}
 		else
-		if(IsCursor()) {
-			if(GetCursor() < line)
-				line--;
+		if(IsCursor())
 			Remove(GetCursor());
-		}
 		KillCursor();
 		d.SetAction(DND_COPY);
 	}

@@ -1,4 +1,0 @@
-#ifndef _TestChStyle_icpp_init_stub
-#define _TestChStyle_icpp_init_stub
-#include "CtrlLib/init"
-#endif

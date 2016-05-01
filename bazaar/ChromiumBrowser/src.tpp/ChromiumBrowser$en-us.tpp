@@ -341,12 +341,6 @@ third `- message itself&]
 [s2; &]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:ChromiumBrowser`:`:WhenCertificateError:%- [_^Upp`:`:Gate1^ Gate1]<[_^Upp`:`:String^ S
-tring]>_[* WhenCertificateError]&]
-[s2; Called when server certificate is not trusted. Gate should return 
-true if you want to ignore the warning and load the page&]
-[s3;%- &]
-[s4;%- &]
 [s5;:ChromiumBrowser`:`:IsChildProcess`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsCh
 ildProcess]()&]
 [s2; This function should be called from the application GUI`_APP`_MAIN 

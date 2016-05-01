@@ -23,7 +23,7 @@ topic "Dokumentation";
 [s0; Das Dokumentieren von Ultimate`+`+ ist ein permanenter Arbeitsprozess, 
 bis jetzt ist noch nicht alles dokumentiert.&]
 [s0; &]
-[s0; Die Gemeinschaft um Ultimate`+`+ steht bereit, um im [^http`:`/`/www`.ultimatepp`.org`/forums`/^ F
+[s0; Die Gemeinschaft um Ultimate`+`+ steht bereit, um im [^http`:`/`/www`.ultimatepp`.org`/forum`/^ F
 orum] exzellente Unterstützung zu bieten.&]
 [s0; &]
 [s0;*3 &]
@@ -85,4 +85,4 @@ kannst]&]
 [s0;i256; [^topic`:`/`/uppweb`/www`/svnInstall`$de`-de^ SVN Zugriff]&]
 [s0;i256; [^topic`:`/`/uppweb`/www`/codestyle`$de`-de^ Code `- Style]&]
 [s0;i256; &]
-[s0; [*+117 Pakete]]]
+[s0; [*+117 Pakete]]

@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	HeapMT2.cpp;
-
-mainconfig
-	"" = "MT";
-

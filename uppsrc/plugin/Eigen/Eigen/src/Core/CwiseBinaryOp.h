@@ -81,8 +81,7 @@ struct traits<CwiseBinaryOp<BinaryOp, Lhs, Rhs> >
         )
      ),
     Flags = (Flags0 & ~RowMajorBit) | (LhsFlags & RowMajorBit),
-    Cost0 = EIGEN_ADD_COST(LhsCoeffReadCost,RhsCoeffReadCost),
-    CoeffReadCost = EIGEN_ADD_COST(Cost0,functor_traits<BinaryOp>::Cost)
+    CoeffReadCost = LhsCoeffReadCost + RhsCoeffReadCost + functor_traits<BinaryOp>::Cost
   };
 };
 } // end namespace internal

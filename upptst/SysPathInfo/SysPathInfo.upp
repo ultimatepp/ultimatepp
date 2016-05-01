@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	SysPathInfo.cpp;
-
-mainconfig
-	"" = "";
-

@@ -3,7 +3,7 @@
 
 using namespace Upp;
 
-#define N 10000000
+#define N 1000000
 
 CONSOLE_APP_MAIN
 {
@@ -28,20 +28,10 @@ CONSOLE_APP_MAIN
 		}
 	}
 	{
-		Vector<String> b = clone(a);
-		RTIMING("StableSort");
-		StableSort(b);
-	}
-	{
 		std::vector<std::string> d = c;
 		{
 			RTIMING("std::sort");
 			std::sort(d.begin(), d.end());
 		}
-	}
-	{
-		std::vector<std::string> d = c;
-		RTIMING("std::stable_sort");
-		std::stable_sort(d.begin(), d.end());
 	}
 }

@@ -426,7 +426,7 @@ bool LocalProcess::IsRunning() {
 		return false;
 	}
 	int status = 0, wp;
-	if(!( (wp = waitpid(pid, &status, WNOHANG | WUNTRACED)) == pid &&
+	if(!( (wp = waitpid(pid, &status, WNOHANG | WUNTRACED)) == pid && 
 	      DecodeExitCode(status) ))
 		return true;
 	LLOG("IsRunning() -> no, just exited, exit code = " << exit_code);

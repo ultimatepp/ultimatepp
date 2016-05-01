@@ -184,8 +184,6 @@ String QualifyIds(ScopeInfo& nf, const String& k, const String& usings, bool all
 
 String Qualify(const CppBase& base, const String& scope, const String& type, const String& usings)
 {
-	if(type.StartsWith("::"))
-		return type.Mid(2);
 	ScopeInfo nf(base, scope);
 	return QualifyIds(nf, type, usings, true);
 }

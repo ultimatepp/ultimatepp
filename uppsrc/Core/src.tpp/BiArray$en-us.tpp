@@ -129,23 +129,17 @@ The new element will be at position GetCount() `- 1.&]
 [s7; [*C@3 x]-|The value that is copied to the newly created element.&]
 [s3; &]
 [s4;%- &]
-[s5;:BiArray`:`:AddHeadPick`(pick`_ T`&`):%- [@(0.0.255) void]_[* AddHeadPick]([@(0.128.128) p
-ick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:BiArray`:`:AddHeadPick`(T`&`&`):%- [@(0.0.255) void]_[* AddHeadPick]([*@4 T][@(0.0.255) `&
+`&]_[*@3 x])&]
 [s2; Adds a new element at the head of BiArray and picks value of 
 the parameter. The new element will be at position 0.&]
-[s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators to the BiArray.&]
-[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
 [s3; &]
 [s4;%- &]
-[s5;:BiArray`:`:AddTailPick`(pick`_ T`&`):%- [@(0.0.255) void]_[* AddTailPick]([@(0.128.128) p
-ick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:BiArray`:`:AddTailPick`(T`&`&`):%- [@(0.0.255) void]_[* AddTailPick]([*@4 T][@(0.0.255) `&
+`&]_[*@3 x])&]
 [s2; Adds a new element at the tail of BiArray and picks the value 
 of the parameter. The new element will be at position GetCount() 
 `- 1.&]
-[s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators to the BiArray.&]
-[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
 [s3; &]
 [s4;%- &]
 [s5;:BiArray`:`:AddHead`(T`*`):%- [*@4 T][@(0.0.255) `&]_[* AddHead]([*@4 T]_`*[*@3 newt])&]
@@ -171,6 +165,16 @@ be at position GetCount() `- 1.&]
 [s7; [*C@3 newt]-|The object to be added.&]
 [s7; [*/ Return value]-|Reference to the object `- [* `*newt].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:CreateHead`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>
+_[*@4 TT][@(0.0.255) `&]_[* CreateHead]()&]
+[s2; Creates a new element of type [%-*@4 TT] at the head.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:CreateTail`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT]>
+_[*@4 TT][@(0.0.255) `&]_[* CreateTail]()&]
+[s2; Creates a new element of type [%-*@4 TT] at the tail.&]
+[s3;%- &]
 [s4;%- &]
 [s5;:BiArray`:`:Head`(`):%- [*@4 T][@(0.0.255) `&]_[* Head]()&]
 [s2; Returns reference to the head of the BiArray. Same as operator`[`](0).&]
@@ -303,11 +307,19 @@ only if NTL is used as part of UPP.&]
 otherwise.&]
 [s3; &]
 [s4;%- &]
-[s5;:BiArray`:`:operator`=`(pick`_ BiArray`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
-ick`_]_[_^BiArray^ BiArray][@(0.0.255) `&]_[*@3 src])&]
-[s2; Pick operator. Transfers source Array in low constant time, 
-but destroys it by picking.&]
-[s7; [*C@3 v]-|Source Array.&]
+[s5;:Upp`:`:BiArray`:`:BiArray`(const Upp`:`:BiArray`&`,int`):%- [* BiArray]([@(0.0.255) c
+onst]_[* BiArray][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]
+[s2; Optional deep copy constructor.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:BiArray`(Upp`:`:BiArray`&`&`):%- [* BiArray]([* BiArray][@(0.0.255) `&
+`&]_[*@3 src])&]
+[s2; Pick constructor.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:BiArray`:`:operator`=`(Upp`:`:BiArray`&`&`):%- [@(0.0.255) void]_[* operator`=
+]([_^Upp`:`:BiArray^ BiArray][@(0.0.255) `&`&]_[*@3 src])&]
+[s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
 [s5;:BiArray`:`:ValueType`:`:typedef:%- [@(0.0.255) typedef]_T_[* ValueType]&]

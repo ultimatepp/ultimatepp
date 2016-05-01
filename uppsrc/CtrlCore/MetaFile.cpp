@@ -47,7 +47,7 @@ void WinMetaFile::WriteClipboard() const {
 }
 
 void WinMetaFile::Clear() {
-	if(hemf/* && !IsPicked()*/) //TODO
+	if(hemf)
 		::DeleteEnhMetaFile(hemf);
 	hemf = NULL;
 }

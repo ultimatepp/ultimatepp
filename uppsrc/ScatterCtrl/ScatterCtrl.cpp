@@ -25,8 +25,8 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 	GuiLock __;
 	if (saveAsMetafile) {
 		WinMetaFileDraw wmfd;	
-		wmfd.Create(8*copyRatio*ScatterDraw::GetSize().cx, 8*copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart");
-		SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), 8*copyRatio, false);	
+		wmfd.Create(copyRatio*ScatterDraw::GetSize().cx, copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart");
+		SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), copyRatio);	
 		WinMetaFile wmf = wmfd.Close();	 
 		wmf.WriteClipboard();
 	} else {
@@ -557,18 +557,7 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 #endif	
 	{
 		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P);		
-		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);	
-	}
-#ifndef _DEBUG
-	if (showProcessDlg)
-#endif
-	{
-		bar.Add(t_("Process"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P);	
-	}
-#ifndef _DEBUG
-	if (showPropDlg || showProcessDlg)
-#endif
-	{
+		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);		
 		bar.Separator();
 	}
 	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, true)).Key(K_CTRL_C);
@@ -579,10 +568,7 @@ void ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
 	if (IsNull(fileName)) {
-		String name = GetTitle();
-		if (name.IsEmpty())
-			name = t_("Scatter plot");
-		fileToSave.Set(ForceExt(name, ".jpg"));
+		fileToSave.Set(ForceExt(GetTitle(), ".jpg"));
 		fileToSave.ClearTypes();
 		fileToSave.Type(Format(t_("%s file"), "JPEG"), "*.jpg");
 		fileToSave.Type(Format(t_("%s file"), "PNG"), "*.png");
@@ -634,7 +620,6 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	popLT = popRB = Null;
 	showContextMenu = false;
 	showPropDlg = false;
-	showProcessDlg = false;
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        

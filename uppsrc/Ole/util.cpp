@@ -41,32 +41,30 @@ String CFormat(const GUID& guid) {
 }
 
 String GetInterfaceName(const GUID& guid) {
-	if(IsNull(Guid(guid)))
+	if(IsNull(guid))
 		return Null;
 	String goo = Format(guid);
 	return Nvl(GetWinRegString(NULL, "Interface\\" + goo, HKEY_CLASSES_ROOT), goo);
 }
 
 String GetCoClassName(const GUID& guid) {
-	if(IsNull(Guid(guid)))
+	if(IsNull(guid))
 		return Null;
 	String goo = Format(guid);
 	return Nvl(GetWinRegString(NULL, "CLSID\\" + goo + "\\ProgID", HKEY_CLASSES_ROOT), goo);
 }
 
 String GetDisplayName(const GUID& guid) {
-	if(IsNull(Guid(guid)))
+	if(IsNull(guid))
 		return Null;
 	String goo = Format(guid);
 	return Nvl(GetWinRegString(NULL, "CLSID\\" + goo, HKEY_CLASSES_ROOT), goo);
 }
 
-bool Guid::IsNullInstance() const
-{
+bool IsNull(const GUID& guid) {
 	const dword *p = reinterpret_cast<const dword *>(&guid);
 	return (p[0] | p[1] | p[2] | p[3]) == 0;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 // VARIANT
@@ -239,7 +237,7 @@ static ValueArray SAFEARRAYToValueArrayPart(SAFEARRAY *array, long *indices, int
 			}
 		}
 	}
-	return ValueArray(pick(dim_array));
+	return ValueArray(dim_array);
 }
 
 ValueArray SAFEARRAYToValueArray(SAFEARRAY *array)

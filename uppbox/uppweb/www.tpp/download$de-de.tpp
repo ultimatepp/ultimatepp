@@ -32,8 +32,8 @@ dsc]]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
 :: [s0; [*2 Gentoo]]
-::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 ebuil
-d]]
+::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 ebuild
+]]
 ::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
 ::l8/25r8/25t8/15b8/15R(128) [s0; [*2 Arch Linux]]
@@ -45,7 +45,7 @@ d]]
 [s1;#b0; Quellcode&]
 [s0;2 &]
 [s0; [2 Für die Gentoo Benutzer, ein E`-Build, welcher den Subversion 
-Checkout nutzt, ist in Arbeit. Schau in den betreffenden ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 F
+Checkout nutzt, ist in Arbeit. Schau in den betreffenden ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 F
 orums Thread][2  wenn du dich dafür interessierst.]&]
 [s0;2 &]
 [s0; [2 Arch Linux Benutzer können die Quellpakete in ][^http`:`/`/aur`.archlinux`.org`/packages`.php`?K`=u`%2B`%2B^2 A

@@ -18,12 +18,15 @@ effective programming we would be happy if you come with us.]&]
 them! However you can ask for additional information and we would 
 also like to hear your ideas.]&]
 [s0;2 &]
-[s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 F
-orum][2 , discuss with the community these ideas and your proposals 
+[s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Fo
+rum][2 , discuss with the community these ideas and your proposals 
 adding your personal touches. You can also contact the ][^topic`:`/`/uppweb`/gsoc`/mentor2014`$en`-us^2 m
 entors][2  whose skills can match with your project ideas. This 
 way you can do your own proposals with more possibilities to 
 be approved.]&]
+[s0;2 &]
+[s0; [2 This list is a work`-in`-progress. You can follow discussions 
+in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Project Ideas]]}}&]
@@ -31,7 +34,7 @@ be approved.]&]
 [s0; [* U`+`+ Independent Audio Module]&]
 [s0;2 &]
 [s0; [*2 Proposed by]&]
-[s0; [2 Zbigniew Rębacz (Student)]&]
+[s0; [2 Zbigniew Rêbacz (Student)]&]
 [s0;2 &]
 [s0; [*2 Difficulty]&]
 [s0; [2 Hard]&]
@@ -53,7 +56,7 @@ To achieve this you will need to use low level API for each operating
 system which U`+`+ supports such as WinAPI or ALSA.]&]
 [s0;2 &]
 [s0; [*2 Mentor]&]
-[s0; [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+[s0; [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
 Dolinár]&]
 [s0;2 &]
 [s0; [*2 Roadmap]&]
@@ -67,8 +70,8 @@ which Ultimate`+`+ supports.]&]
 [s0;# [* Android SDK/NDK TheIDE builder]&]
 [s0;#2 &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 Medium]&]
@@ -90,8 +93,8 @@ and builders targeting general POSIX/X11/Gtk desktops.]&]
 Android platform.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;#2 &]
 [s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Investigate Android building techniques]&]
@@ -103,8 +106,8 @@ provided ANT based scripts?)]&]
 [s0;# [* Android U`+`+ support]&]
 [s0;#2 &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 Hard]&]
@@ -123,8 +126,8 @@ easy adaptable to various platforms. The aim of this proposal
 is to create a backend for Android platform.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;#2 &]
 [s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Investigate Android SDK]&]
@@ -136,8 +139,8 @@ SDL, or just use JNI to interface with Java API).]&]
 [s0;# [* TheIDE (P)NaCl builder]&]
 [s0;#2 &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 Medium]&]
@@ -159,8 +162,8 @@ and builders targeting general POSIX/X11/Gtk desktops.]&]
 (P)NaCl platform.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;#2 &]
 [s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Investigate (P)NaCl building techniques]&]
@@ -171,8 +174,8 @@ lav Fídler]&]
 [s0;# [* (P)NaCl U`+`+ support]&]
 [s0;#2 &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 Hard]&]
@@ -191,8 +194,8 @@ easy adaptable to various platforms. The aim of this proposal
 is to create a backend for (P)NaCl platform.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;#2 &]
 [s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Investigate Pepper API]&]
@@ -203,8 +206,8 @@ lav Fídler]&]
 [s0;# [* Touch support]&]
 [s0;#2 &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 Medium]&]
@@ -226,8 +229,8 @@ Once the touch API is implemented, it would be possible to add
 relevant behaviour to U`+`+ widgets.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&`&id`=3^2 Miros
-lav Fídler]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&`&id`=3^2 Mirosl
+av Fídler]&]
 [s0;#2 &]
 [s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Investigate touch based inputs, make a list of getures 
@@ -242,8 +245,8 @@ HTML5 touchstart, touchmove, touchend interfaces) for TURTLE
 [s0;# [* Web Browser Control]&]
 [s0;# &]
 [s0;# [*2 Proposed by]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan
- Dolinár]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
 [s0;# &]
 [s0;# [*2 Difficulty]&]
 [s0;# [2 High]&]
@@ -259,8 +262,8 @@ written in C`+`+ and actively developed by large community, but
 other engines might be used as well.]&]
 [s0;#2 &]
 [s0;# [*2 Mentors]&]
-[s0;# [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan
- Dolinár]&]
+[s0;# [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=647`&^2 Jan 
+Dolinár]&]
 [s0;#2 &]
 [s0;# [*2 Roadmap]&]
 [s0;#i150;O0; [2 Explore possibility to use libwebkit]&]
@@ -293,7 +296,7 @@ works on Android platform`".]&]
 [s0;# [2 Short project description. Explanation can posses link to 
 additional resources like forum discussion about topic. ]&]
 [s0;# [2 Remember that you as student can propose your own projects. 
-We advice you to read our ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2  
+We advice you to read our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2  
 and contact the ][^topic`:`/`/uppweb`/gsoc`/mentor2014`$en`-us^2 mentors][2  
 that can match with your project.]&]
 [s0;#2 &]

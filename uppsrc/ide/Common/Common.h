@@ -56,7 +56,6 @@ struct IdeDesigner  {
 };
 
 struct IdeModule {
-	virtual String       GetID() = 0;
 	virtual void         CleanUsc() {}
 	virtual bool         ParseUsc(CParser&)                                       { return false; }
 	virtual Image        FileIcon(const char *filename)                           { return Null; }

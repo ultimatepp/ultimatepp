@@ -1,15 +1,178 @@
-enum _CNULL { CNULL };
+template<typename Res, typename... ArgTypes>
+class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
+	struct WrapperBase {
+		Atomic  refcount;
 
-template <class D, class S>
-inline D brutal_cast(const S& source) { return *(D *)&source; }
+		virtual Res Execute(ArgTypes... args) = 0;
+		
+		WrapperBase() { refcount = 1; }
+		virtual ~WrapperBase() {}
+	};
 
-#include "Cbgen.h"
-#include "Callback0.h"
-#include "Callback1.h"
-#include "Callback2.h"
-#include "Callback3.h"
-#include "Callback4.h"
-#include "Callback5.h"
+	template <class F>
+	struct Wrapper : WrapperBase {
+		F fn;
+		virtual Res Execute(ArgTypes... args) { return fn(args...); }
+
+		Wrapper(F&& fn) : fn(pick(fn)) {}
+	};
+
+	template <class F>
+	struct Wrapper2 : WrapperBase {
+		Function l;
+		F        fn;
+
+		virtual Res Execute(ArgTypes... args) { l(args...); return fn(args...); }
+
+		Wrapper2(const Function& l, F&& fn) : l(l), fn(pick(fn)) {}
+	};
+
+	WrapperBase *ptr;
+	
+	static void Free(WrapperBase *ptr) {
+		if(ptr && AtomicDec(ptr->refcount) == 0)
+			delete ptr;
+	}
+	
+	void Copy(const Function& a) {
+		ptr = a.ptr;
+		if(ptr)
+			AtomicInc(ptr->refcount);
+	}
+
+public:
+	Function()                                 { ptr = NULL; }
+	
+	template <class F> Function(F fn)          { ptr = new Wrapper<F>(pick(fn)); }
+	
+	Function(const Function& src)              { Copy(src); }
+	Function& operator=(const Function& src)   { auto b = ptr; Copy(src); Free(b); return *this; }
+
+	Function(Function&& src)                   { ptr = src.ptr; src.ptr = NULL; }
+	Function& operator=(Function&& src)        { if(&src != this) { Free(ptr); ptr = src.ptr; src.ptr = NULL; } return *this; }
+	
+	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
+
+	template <class F>
+	Function& operator<<(F fn)                 { if(!ptr) { Copy(fn); return *this; }
+	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
+
+	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
+	
+	operator bool() const                      { return ptr; }
+	void Clear()                               { Free(ptr); ptr = NULL; }
+
+	friend void Swap(Function& a, Function& b) { UPP::Swap(a.ptr, b.ptr); }
+
+	~Function()                                { Free(ptr); }
+};
+
+enum CNULLer { CNULL };
+
+// we need "isolation level" to avoid overloading issues
+template <class... ArgTypes>
+class Event : Moveable<Event<ArgTypes...>> {
+	typedef Function<void (ArgTypes...)> Fn;
+
+	Fn fn;
+
+public:
+	Event() {}
+	Event(CNULLer)                                    {}
+	Event(const Event& src) : fn(src.fn)          {}
+	Event(Event&& src) : fn(pick(src.fn))         {}
+	Event(Fn&& src, int) : fn(src)                    {}
+	template <class F>
+	Event(F src, int) : fn(src)                       {}
+//	Event(Fn&& src) : fn(src)                         {}
+//	Event& operator=(const Fn& src)                   { fn = src.fn; return *this; }
+	Event& operator=(const Event& src)            { fn = src.fn; return *this; }
+	Event& operator=(Event&& src)                 { fn = pick(src.fn); return *this; }
+	Event& operator=(CNULLer)                         { fn.Clear(); return *this; }
+	Event Proxy() const                               { return Event(fn.Proxy(), 1); }
+
+	Event& operator<<(const Event& b)  { fn << b.fn; return *this; }
+	Event& operator<<(const Fn& b)         { fn << b; return *this; }
+
+	Event& operator<<(Event&& b)       { fn << pick(b.fn); return *this; }
+	Event& operator<<(Fn&& b)              { fn << pick(b); return *this; }
+	
+	template <class F>
+	Event& operator<<(F f)                 { fn << f; }
+	
+	void operator()(ArgTypes... args) const    { return fn(args...); }
+
+	operator Fn() const                        { return fn; }
+	operator bool() const                      { return fn; }
+	void Clear()                               { fn.Clear(); }
+	
+	friend Event Proxy(const Event& a)   { return a.Proxy(); }
+	friend void Swap(Event& a, Event& b) { UPP::Swap(a.fn, b.fn); }
+};
+
+// we need "isolation level" to avoid overloading issues
+template <class... ArgTypes>
+class EventGate : Moveable<EventGate<ArgTypes...>> {
+	typedef Function<bool (ArgTypes...)> Fn;
+
+	Fn fn;
+	
+	void Set(bool b) { if(b) fn = [](ArgTypes...) { return true; }; else fn.Clear(); }
+
+public:
+	EventGate()                                {}
+	EventGate(bool b)                          { Set(b); }
+	EventGate(CNULLer)                         {}
+	EventGate(const EventGate& a) : fn(a.fn)       {}
+//	EventGate(EventGate&& a) : fn(pick(a.fn))      {}
+	EventGate(Fn&& src, int) : fn(src)         {}
+	EventGate& operator=(const EventGate& a)       { fn = a.fn; return *this; }
+	EventGate& operator=(EventGate&& a)            { fn = pick(a.fn); return *this; }
+	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
+	EventGate& operator=(bool b)               { Set(b); return *this; }
+	EventGate Proxy() const                    { return fn.Proxy(); }
+
+	EventGate& operator<<(const EventGate& b)      { fn << b.fn; return *this; }
+	EventGate& operator<<(const Fn& b)         { fn << b; return *this; }
+
+	EventGate& operator<<(EventGate&& b)           { fn << pick(b.fn); return *this; }
+	EventGate& operator<<(Fn&& b)              { fn << pick(b); return *this; }
+
+	template <class F>
+	EventGate& operator<<(F f)                 { fn << f; }
+	
+	bool operator()(ArgTypes... args) const { return fn(args...); }
+
+	operator Fn() const                    { return fn; }
+	operator bool() const                  { return fn; }
+	void Clear()                           { fn.Clear(); }
+
+	friend EventGate Proxy(const EventGate& a)     { return a.Proxy(); }
+	friend void Swap(EventGate& a, EventGate& b)   { UPP::Swap(a.fn, b.fn); }
+};
+
+// backward compatibility
+typedef Event<> Callback;
+template <class P1> using Callback1 = Event<P1>;
+template <class P1, class P2> using Callback2 = Event<P1, P2>;
+template <class P1, class P2, class P3> using Callback3 = Event<P1, P2, P3>;
+template <class P1, class P2, class P3, class P4> using Callback4 = Event<P1, P2, P3, P4>;
+template <class P1, class P2, class P3, class P4, class P5> using Callback5 = Event<P1, P2, P3, P4, P5>;
+
+#define  Res void
+#define  Cb_ Event
+#include "CallbackR.i"
+
+using Gate = EventGate<>;
+template <class P1> using Gate1 = EventGate<P1>;
+template <class P1, class P2> using Gate2 = EventGate<P1, P2>;
+template <class P1, class P2, class P3> using Gate3 = EventGate<P1, P2, P3>;
+template <class P1, class P2, class P3, class P4> using Gate4 = EventGate<P1, P2, P3, P4>;
+template <class P1, class P2, class P3, class P4, class P5> using Gate5 = EventGate<P1, P2, P3, P4, P5>;
+
+#define  Res bool
+#define  Cb_ EventGate
+#include "CallbackR.i"
 
 #define THISBACK(x)                  callback(this, &CLASSNAME::x)
 #define THISBACK1(x, arg)            callback1(this, &CLASSNAME::x, arg)
@@ -17,7 +180,6 @@ inline D brutal_cast(const S& source) { return *(D *)&source; }
 #define THISBACK3(m, a, b, c)        callback3(this, &CLASSNAME::m, a, b, c)
 #define THISBACK4(m, a, b, c, d)     callback4(this, &CLASSNAME::m, a, b, c, d)
 #define THISBACK5(m, a, b, c, d, e)  callback5(this, &CLASSNAME::m, a, b, c, d,e)
-
 
 #define PTEBACK(x)                   pteback(this, &CLASSNAME::x)
 #define PTEBACK1(x, arg)             pteback1(this, &CLASSNAME::x, arg)
@@ -32,6 +194,7 @@ inline D brutal_cast(const S& source) { return *(D *)&source; }
 #define STDBACK3(m, a, b, c)         callback3(&m, a, b, c)
 #define STDBACK4(m, a, b, c, d)      callback4(&m, a, b, c, d)
 #define STDBACK5(m, a, b, c, d, e)   callback5(&m, a, b, c, d, e)
+
 
 template <class T>
 class CallbackArgTarget
@@ -53,209 +216,3 @@ public:
 
 	CallbackArgTarget()                 { result = Null; }
 };
-
-
-inline Callback Proxy(Callback& cb)
-{
-	return callback(&cb, &Callback::Execute);
-}
-
-template <class P1>
-inline Callback1<P1> Proxy(Callback1<P1>& cb)
-{
-	return callback(&cb, &Callback1<P1>::Execute);
-}
-
-template <class P1, class P2>
-inline Callback2<P1, P2> Proxy(Callback2<P1, P2>& cb)
-{
-	return callback(&cb, &Callback2<P1, P2>::Execute);
-}
-
-template <class P1, class P2, class P3>
-inline Callback3<P1, P2, P3> Proxy(Callback3<P1, P2, P3>& cb)
-{
-	return callback(&cb, &Callback3<P1, P2, P3>::Execute);
-}
-
-template <class P1, class P2, class P3, class P4>
-inline Callback4<P1, P2, P3, P4> Proxy(Callback4<P1, P2, P3, P4>& cb)
-{
-	return callback(&cb, &Callback4<P1, P2, P3, P4>::Execute);
-}
-
-inline Gate Proxy(Gate& cb)
-{
-	return callback(&cb, &Gate::Execute);
-}
-
-template <class P1>
-inline Gate1<P1> Proxy(Gate1<P1>& cb)
-{
-	return callback(&cb, &Gate1<P1>::Execute);
-}
-
-template <class P1, class P2>
-inline Gate2<P1, P2> Proxy(Gate2<P1, P2>& cb)
-{
-	return callback(&cb, &Gate2<P1, P2>::Execute);
-}
-
-template <class P1, class P2, class P3>
-inline Gate3<P1, P2, P3> Proxy(Gate3<P1, P2, P3>& cb)
-{
-	return callback(&cb, &Gate3<P1, P2, P3>::Execute);
-}
-
-template <class P1, class P2, class P3, class P4>
-inline Gate4<P1, P2, P3, P4> Proxy(Gate4<P1, P2, P3, P4>& cb)
-{
-	return callback(&cb, &Gate4<P1, P2, P3, P4>::Execute);
-}
-
-
-Callback& operator<<(Callback& a, Callback b);
-
-template <class P1>
-Callback1<P1>& operator<<(Callback1<P1>& a, Callback1<P1> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2>
-Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, Callback2<P1, P2> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3>
-Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, Callback3<P1, P2, P3> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3, class P4>
-Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, Callback4<P1, P2, P3, P4> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-Gate& operator<<(Gate& a, Gate b);
-
-template <class P1>
-Gate1<P1>& operator<<(Gate1<P1>& a, Gate1<P1> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2>
-Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, Gate2<P1, P2> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3>
-Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, Gate3<P1, P2, P3> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-template <class P1, class P2, class P3, class P4>
-Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, Gate4<P1, P2, P3, P4> b)
-{
-	if(a)
-		a = callback(a, b);
-	else
-		a = b;
-	return a;
-}
-
-#ifdef CPP_11
-template <class L>
-Callback& operator<<(Callback& a, L b)
-{
-	return a << Callback(lambda(b));
-}
-
-template <class P1, class L>
-Callback1<P1>& operator<<(Callback1<P1>& a, L b)
-{
-	return a << Callback1<P1>(lambda(b));
-}
-
-template <class P1, class P2, class L>
-Callback2<P1, P2>& operator<<(Callback2<P1, P2>& a, L b)
-{
-	return a << Callback2<P1, P2>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class L>
-Callback3<P1, P2, P3>& operator<<(Callback3<P1, P2, P3>& a, L b)
-{
-	return a << Callback3<P1, P2, P3>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class P4, class L>
-Callback4<P1, P2, P3, P4>& operator<<(Callback4<P1, P2, P3, P4>& a, L b)
-{
-	return a << Callback4<P1, P2, P3, P4>(lambda(b));
-}
-
-template <class L>
-Gate& operator<<(Gate& a, L b)
-{
-	return a << Gate(lambda(b));
-};
-
-template <class P1, class L>
-Gate1<P1>& operator<<(Gate1<P1>& a, L b)
-{
-	return a << Gate1<P1>(lambda(b));
-}
-
-template <class P1, class P2, class L>
-Gate2<P1, P2>& operator<<(Gate2<P1, P2>& a, L b)
-{
-	return a << Gate2<P1, P2>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class L>
-Gate3<P1, P2, P3>& operator<<(Gate3<P1, P2, P3>& a, L b)
-{
-	return a << Gate3<P1, P2, P3>(lambda(b));
-}
-
-template <class P1, class P2, class P3, class P4, class L>
-Gate4<P1, P2, P3, P4>& operator<<(Gate4<P1, P2, P3, P4>& a, L b)
-{
-	return a << Gate4<P1, P2, P3, P4>(lambda(b));
-}
-#endif

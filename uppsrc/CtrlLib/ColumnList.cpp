@@ -70,8 +70,7 @@ int ColumnList::GetItem(Point p)
 	return i >= 0 && i < GetCount() ? i : -1;
 }
 
-void ColumnList::PointDown(Point p)
-{
+void ColumnList::PointDown(Point p) {
 	int i = GetItem(p);
 	if(i >= 0 && i < GetCount())
 		SetCursor0(i, false);
@@ -146,8 +145,8 @@ void ColumnList::LeftDrag(Point p, dword keyflags)
 
 void ColumnList::RightDown(Point p, dword flags) {
 	int i = GetItem(p);
-	if(!(i >= 0 && multi && IsSel(i))) // Do not change selection if clicking on it
-		DoClick(p, 0);
+	if(!(i >= 0 && i < GetCount() && multi && IsSel(i)))
+		PointDown(p);
 	MenuBar::Execute(WhenBar);
 }
 
@@ -394,7 +393,7 @@ void ColumnList::Paint(Draw& w) {
 	if(!GetColumnCx(0) || !cy) return;
 	if (mode == MODE_ROWS)
 		return PaintRows(w, sz);
-	else {
+	else {	
 		int x = 0;
 		int i = GetSbPos(sz);
 		int coli = 0;

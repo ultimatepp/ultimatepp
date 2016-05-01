@@ -69,9 +69,7 @@
 		#define CPU_X86 1
 		#define CPU_32 1
 		#define CPU_IA32 1
-		#ifdef flagSSE2
-			#define CPU_SSE2 1
-		#endif
+		#define CPU_SSE2 1
 	#elif __sparc  // ToDo!
 		#define CPU_32 1
 		#define CPU_SPARC 1
@@ -134,9 +132,7 @@
 	#else
 		#define CPU_32 1
 		#define CPU_IA32 1
-		#ifdef flagSSE2
-			#define CPU_SSE2 1
-		#endif
+		#define CPU_SSE2 1
 	#endif			
 #endif
 
@@ -150,4 +146,8 @@
 
 #if _MSC_VER >= 1900 // MSC from VS2015 is good enough C++11 compiler...
 #define CPP_11
+#endif
+
+#ifndef CPP_11
+#error This version of U++ REQUIREDS C++11
 #endif

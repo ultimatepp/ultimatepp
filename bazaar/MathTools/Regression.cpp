@@ -4,54 +4,51 @@
 int r2Compare(const Vector<Value>& v1, const Vector<Value>& v2) {return double(v1[2]) > double(v2[2]);}
 	
 void TabRegression::Init() {
-	CtrlLayout(up);
-	CtrlLayout(down);
-	Add(splitter.SizePos());
-	splitter.Vert(up.SizePos(), down.SizePos());
+	CtrlLayout(*this);	
 	HSizePos().VSizePos();
 
-	down.gridDef.Clipboard().Editing().Appending().Removing().Sorting(false).ResizeColMode(0);
-	down.gridDef.AddColumn("", 40).Edit(xCell);
-	down.gridDef.AddColumn("", 40).Edit(xFrom);
-	down.gridDef.AddColumn("", 40).Edit(xTo);
-	down.gridDef.AddColumn("", 40).Edit(yCell);
+	gridDef.Clipboard().Editing().Appending().Removing().Sorting(false).ResizeColMode(0);
+	gridDef.AddColumn("", 40).Edit(xCell);
+	gridDef.AddColumn("", 40).Edit(xFrom);
+	gridDef.AddColumn("", 40).Edit(xTo);
+	gridDef.AddColumn("", 40).Edit(yCell);
 	
 	if (!LoadFromJsonFile(*this) || !notFirstTime) {
-		down.yBesideX = true;
-		down.firstCellIsName = false;
+		yBesideX = true;
+		firstCellIsName = false;
 		notFirstTime = true;
-		down.minR2 = 0;
-		down.coefficients = 0;
+		minR2 = 0;
+		coefficients = 0;
 	}
 
-	up.scatter.SetMouseHandling(true, true).ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
+	scatter.SetMouseHandling(true, true).ShowContextMenu();
 
 	const int totalCols = 50;
 	
 	editGrid.SetCount(totalCols);
 	for(int i = 0; i < totalCols; i++) {
 		String name = Format("Column %d", i);
-		down.grid.AddColumn(name).Width(70).Edit(editGrid[i]);
+		grid.AddColumn(name).Width(70).Edit(editGrid[i]);
 	}
 		
-	down.grid.SelectRow(false);
-	down.grid.SetRowCount(200);
-	down.grid.ResizePaintMode(1);
-	down.grid.Absolute().Clipboard().Editing().Sorting(false);
-	down.grid.WhenPaste = THISBACK(OnAutoset);
+	grid.SelectRow(false);
+	grid.SetRowCount(200);
+	grid.ResizePaintMode(1);
+	grid.Absolute().Clipboard().Editing().Sorting(false);
+	grid.WhenPaste = THISBACK(OnAutoset);
 	
-	if (down.gridDef.GetRowCount() == 0) 
-		down.gridDef.SetRowCount(1);
+	if (gridDef.GetRowCount() == 0) 
+		gridDef.SetRowCount(1);
 	
-	down.switchColsRows = 0;
+	switchColsRows = 0;
 	OnButtons();
 			
-	down.gridTrend.AddColumn("Type", 10);
-	down.gridTrend.AddColumn("Equation", 40);
-	down.gridTrend.AddColumn("R2", 5);
-	down.gridTrend.SetLineCy(EditField::GetStdHeight()).MultiSelect();
-	down.gridTrend.WhenBar = THISBACK(OnArrayBar);
-	down.gridTrend.Sort(r2Compare);
+	gridTrend.AddColumn("Type", 10);
+	gridTrend.AddColumn("Equation", 40);
+	gridTrend.AddColumn("R2", 5);
+	gridTrend.SetLineCy(EditField::GetStdHeight()).MultiSelect();
+	gridTrend.WhenBar = THISBACK(OnArrayBar);
+	gridTrend.Sort(r2Compare);
 	     
 	for (int i = 0; i < ExplicitEquation::GetEquationCount(); ++i) {
 		ExplicitEquation &equation = equationTypes.Add(ExplicitEquation::Create(i));
@@ -61,14 +58,13 @@ void TabRegression::Init() {
 	userEquation = new UserEquation;
 	equationTypes.Add(userEquation);
 	
-	down.switchColsRows.WhenAction = THISBACK(OnButtons);
-	down.yBesideX.WhenAction = THISBACK(OnButtons);
-	down.firstCellIsName.WhenAction = THISBACK(OnButtons);
+	switchColsRows.WhenAction = THISBACK(OnButtons);
+	yBesideX.WhenAction = THISBACK(OnButtons);
+	firstCellIsName.WhenAction = THISBACK(OnButtons);
 	     
-	down.butFit.WhenPush = THISBACK(Fit);
-	down.butClear.WhenPush = THISBACK(OnClear);
-	down.butAutoset.WhenPush = THISBACK(OnAutoset);
-	down.butUpdate.WhenPush = THISBACK(OnUpdate);
+	calc.WhenPush = THISBACK(Calculate);
+	clear.WhenPush = THISBACK(OnClear);
+	autoset.WhenPush = THISBACK(OnAutoset);
 }
 
 void TabRegression::End() {
@@ -76,13 +72,14 @@ void TabRegression::End() {
 }
 
 void TabRegression::OnClear() {
-	int nRows = down.grid.GetRowCount();
-	down.grid.SetRowCount(0);
-	down.grid.SetRowCount(nRows);
-	down.grid.SetCursor(Point(0, 0));
-	down.gridDef.Clear();
-	up.scatter.RemoveAllSeries();
-	down.gridTrend.Clear();
+	for (int r = 0; r < grid.GetRowCount(); ++r)
+		for (int c = 0; c < grid.GetColumnCount(); ++c)	
+			grid.Set(r, c, Null);
+	grid.SetCursor(0);
+	grid.GoBegin();
+	gridDef.Clear();
+	scatter.RemoveAllSeries();
+	gridTrend.Clear();
 }
 
 bool IsNumber2(const Value &val) {
@@ -99,73 +96,63 @@ bool IsNumber2(const Value &val) {
 }
 
 void TabRegression::OnAutoset() {
-	if (down.switchColsRows == 0) {		// Columnas
-		int fRow = down.firstCellIsName ? 1 : 0;
+	if (switchColsRows == 0) {		// Columnas
+		int fRow = firstCellIsName ? 1 : 0;
 		
 		int c;
-		for (c = 0; c < down.grid.GetColumnCount(); ++c) {
-			if (IsNumber2(down.grid.Get(fRow, c))) {
-				down.gridDef.Set(0, 0, c);
-				down.gridDef.Set(0, 3, c + 1);
-				down.gridDef.Set(0, 1, fRow);
+		for (c = 0; c < grid.GetColumnCount(); ++c) {
+			if (IsNumber2(grid.Get(fRow, c))) {
+				gridDef.Set(0, 0, c);
+				gridDef.Set(0, 3, c + 1);
+				gridDef.Set(0, 1, fRow);
 				break;
 			}
 		}
-		if (c == down.grid.GetColumnCount()) {
+		if (c == grid.GetColumnCount()) {
 			Exclamation(t_("Problem in Autoset"));
 			return;
 		}
 		int r;
-		for (r = fRow; r < down.grid.GetRowCount(); ++r) {
-			if (!IsNumber2(down.grid.Get(r, c)))
+		for (r = fRow; r < grid.GetRowCount(); ++r) {
+			if (!IsNumber2(grid.Get(r, c)))
 				break;
 		}
-		down.gridDef.Set(0, 2, r - 1);
+		gridDef.Set(0, 2, r - 1);
 	} else {
-		Exclamation("Not implemented");
+		Exclamation("No implementado");
 	}
 	
-	OnUpdate();
-}
-
-void TabRegression::OnUpdate() {
-	up.scatter.RemoveAllSeries();
-	int idX = down.gridDef.Get(0, 0);
-	int idY = down.gridDef.Get(0, 3);
-	bool useCols = down.switchColsRows == 0;
-	int beginData = down.gridDef.Get(0, 1);
-	int numData = int(down.gridDef.Get(0, 2)) - beginData + 1;
-	ds.Init(down.grid, idY, idX, useCols, beginData, numData);
-	up.scatter.AddSeries(ds).Legend("Series").NoMark();
-	down.gridTrend.Clear();
-	up.scatter.ZoomToFit(true, true);
+	scatter.RemoveAllSeries();
+	scatter.AddSeries(ds).Legend("Series").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
+	gridTrend.Clear();
+	scatter.ZoomToFit(true, true);
 }
 
 void TabRegression::OnButtons() {
-	if (down.switchColsRows == 0) {
-		down.gridDef.GetColumn(0).Name("X Col");
-		down.gridDef.GetColumn(1).Name("Row From");
-		down.gridDef.GetColumn(2).Name("Row To");
-		down.gridDef.GetColumn(3).Name("Y Col");
+	if (switchColsRows == 0) {
+		gridDef.GetColumn(0).Name("X Col");
+		gridDef.GetColumn(1).Name("Row From");
+		gridDef.GetColumn(2).Name("Row To");
+		gridDef.GetColumn(3).Name("Y Col");
 	} else {
-		down.gridDef.GetColumn(0).Name("X Row");
-		down.gridDef.GetColumn(1).Name("Col From");
-		down.gridDef.GetColumn(2).Name("Col To");	
-		down.gridDef.GetColumn(3).Name("Y Row");
+		gridDef.GetColumn(0).Name("X Row");
+		gridDef.GetColumn(1).Name("Col From");
+		gridDef.GetColumn(2).Name("Col To");	
+		gridDef.GetColumn(3).Name("Y Row");
 	}
-	down.gridDef.GetColumn(3).Width(down.yBesideX ? 0 : 40);
-	down.gridDef.Refresh();
+	gridDef.GetColumn(3).Width(yBesideX ? 0 : 40);
+	gridDef.Refresh();
 }
 
-void TabRegression::Fit() {
-	int idX = down.gridDef.Get(0, 0);
-	int idY = down.gridDef.Get(0, 3);
-	bool useCols = down.switchColsRows == 0;
-	int beginData = down.gridDef.Get(0, 1);
-	int numData = int(down.gridDef.Get(0, 2)) - beginData + 1;
-	ds.Init(down.grid, idY, idX, useCols, beginData, numData);
+void TabRegression::Calculate() {
+	int idX = gridDef.Get(0, 0);
+	int idY = gridDef.Get(0, 3);
+	bool useCols = switchColsRows == 0;
+	int beginData = gridDef.Get(0, 1);
+	int numData = int(gridDef.Get(0, 2)) - beginData + 1;
+	ds.Init(grid, idY, idX, useCols, beginData, numData);
 	
-	userEquation->Init("User", down.formula);
+	userEquation->Init("User", formula);
 	
 	Array<double> r2;
 	r2.SetCount(equationTypes.GetCount());
@@ -174,33 +161,33 @@ void TabRegression::Fit() {
 		equationTypes[i].GuessCoeff(ds);
 		equationTypes[i].Fit(ds, r2[i]);
 	}
-	up.scatter.RemoveAllSeries();
-	up.scatter.AddSeries(ds).Legend("Series").NoMark();
+	scatter.RemoveAllSeries();
+	scatter.AddSeries(ds).Legend("Series").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
 	for (int i = 0; i < equationTypes.GetCount(); ++i) {
 		double kk = r2[i];
-		if (r2[i] >= down.minR2)
-			up.scatter.AddSeries(equationTypes[i]).Legend(equationTypes[i].GetFullName()).NoMark().Stroke(2);
+		if (r2[i] >= minR2)
+			scatter.AddSeries(equationTypes[i]).Legend(equationTypes[i].GetFullName()).NoMark().Stroke(2);
 	}
-	up.scatter.ZoomToFit(true, true);
+	scatter.ZoomToFit(true, true);
 	
 	int numDecimals = 3;
-	switch (down.coefficients) {
+	switch (coefficients) {
 	case 1:	numDecimals = 40;	break;
 	case 2:	numDecimals = Null;	break;
 	}
-	down.gridTrend.Clear();
+	gridTrend.Clear();
 	for (int i = 0; i < equationTypes.GetCount(); ++i) 
-		down.gridTrend.Add(equationTypes[i].GetFullName(), equationTypes[i].GetEquation(numDecimals), r2[i]);
-	down.gridTrend.SetSortColumn(2, true);
+		gridTrend.Add(equationTypes[i].GetFullName(), equationTypes[i].GetEquation(numDecimals), r2[i]);
+	gridTrend.SetSortColumn(2, true);
 }
 
 
 void TabRegression::ArrayCopy() {
-	down.gridTrend.SetClipboard(true, true);
+	gridTrend.SetClipboard(true, true);
 }
 
 void TabRegression::ArraySelect() {
-	down.gridTrend.Select(0, down.gridTrend.GetCount(), true);
+	gridTrend.Select(0, gridTrend.GetCount(), true);
 }
 
 void TabRegression::OnArrayBar(Bar &menu) {

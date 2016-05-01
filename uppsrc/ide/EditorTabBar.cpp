@@ -38,14 +38,6 @@ void EditorTabBar::RenameFile(const String& fn, const String& nn)
 	FileTabs::RenameFile(WString(fn), WString(nn));
 }
 
-void EditorTabBar::FixIcons()
-{
-	for(int i = 0; i < tabs.GetCount(); i++)
-		tabs[i].img = IdeFileImage(GetFile(i), false, false, false);
-	Repos();
-	Refresh();
-}
-
 void EditorTabBar::SetSplitColor(const String& fn, const Color& c)
 {
 	int n = -1;
@@ -111,26 +103,13 @@ void Ide::CloseRest(EditorTabBar *tabs)
 	tabs->FindSetFile(cfn);
 }
 
-void Ide::TabsLR(int jd)
+void Ide::TabsLR(int d)
 {
-	TabBar::JumpStack js;
-	int tc = tabs.GetCount();
-	
-	int n = tabs.GetTabLR( jd );
-	if ( n >= 0 && n < tc ) {
-		js = tabs.jump_stack;
-		EditFile( tabs.GetFile( n ) );
-		tabs.jump_stack = js;
-	}
-}
-
-void Ide::TabsStackLR(int jd)
-{
-	int tc = tabs.GetCount();
-  
-	int n = tabs.GetTabStackLR( jd );
-	if ( n >= 0 && n < tc )
-		EditFile( tabs.GetFile( n ) );
+	int c = tabs.GetCursor();
+	if(c < 0 || tabs.GetCount() <= 1)
+		return;
+	c = minmax(c + d, 0, tabs.GetCount() - 1);
+	EditFile(tabs.GetFile(c));
 }
 
 void Ide::FileSelected()

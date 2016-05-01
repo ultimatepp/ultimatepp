@@ -105,8 +105,6 @@ class Zip {
 	dword   done;
 
 	One<Zlib> pipeZLib;
-	Crc32Stream crc32; // for uncompressed files
-	bool        uncompressed;
 
 	void WriteFile0(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm, int method);
 
@@ -119,15 +117,15 @@ class Zip {
 public:
 	Callback WhenError;
 
-	void BeginFile(const char *path, Time tm = GetSysTime(), bool deflate = true);
-	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime(), bool deflate = true);
+	void BeginFile(const char *path, Time tm = GetSysTime());
+	void BeginFile(OutFilterStream& oz, const char *path, Time tm = GetSysTime());
 	void Put(const void *data, int size);
 	void EndFile();
-	bool IsFileOpened() const                 { return pipeZLib || uncompressed; }
+	bool IsFileOpened() const                 { return pipeZLib; }
 
 	void WriteFolder(const char *path, Time tm);
-	void WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime(), bool deflate = true);
-	void WriteFile(const String& s, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime(), bool deflate = true);
+	void WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime());
+	void WriteFile(const String& s, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime());
 
 	void Create(Stream& out);
 	void Finish();

@@ -78,7 +78,7 @@ String SortedAMap<K, T, Less, Data>::ToString() const
 }
 
 template <class K, class T, class Less>
-SortedVectorMap<K, T, Less>::SortedVectorMap(SortedVectorMap rval_ s)
+SortedVectorMap<K, T, Less>::SortedVectorMap(SortedVectorMap&& s)
 {
 	B::key = pick(s.key);
 	B::value.data = pick(s.value.data);
@@ -86,7 +86,7 @@ SortedVectorMap<K, T, Less>::SortedVectorMap(SortedVectorMap rval_ s)
 }
 
 template <class K, class T, class Less>
-SortedVectorMap<K, T, Less>& SortedVectorMap<K, T, Less>::operator=(SortedVectorMap rval_ s)
+SortedVectorMap<K, T, Less>& SortedVectorMap<K, T, Less>::operator=(SortedVectorMap&& s)
 {
 	B::key = pick(s.key);
 	B::value.data = pick(s.value.data);
@@ -165,7 +165,7 @@ int SortedArrayMap<K, T, Less>::FindAdd(const K& k, const T& init)
 }
 
 template <class K, class T, class Less>
-SortedArrayMap<K, T, Less>::SortedArrayMap(SortedArrayMap rval_ s)
+SortedArrayMap<K, T, Less>::SortedArrayMap(SortedArrayMap&& s)
 {
 	B::key = pick(s.key);
 	B::value.data = pick(s.value.data);
@@ -173,7 +173,7 @@ SortedArrayMap<K, T, Less>::SortedArrayMap(SortedArrayMap rval_ s)
 }
 
 template <class K, class T, class Less>
-SortedArrayMap<K, T, Less>& SortedArrayMap<K, T, Less>::operator=(SortedArrayMap rval_ s)
+SortedArrayMap<K, T, Less>& SortedArrayMap<K, T, Less>::operator=(SortedArrayMap&& s)
 {
 	B::key = pick(s.key);
 	B::value.data = pick(s.value.data);

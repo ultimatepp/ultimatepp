@@ -5,7 +5,6 @@ using namespace Upp;
 
 #ifdef PLATFORM_LINUX
 
-#define NO_PREF "gsettings set org.onboard.lockdown disable-preferences true"
 #define DOCK	"gsettings set org.onboard.window docking-enabled true"
 #define BOTTOM	"gsettings set org.onboard.window docking-edge 'bottom'"
 
@@ -13,7 +12,7 @@ void Upp::ShowKeyboard(bool show)
 {
 	if (show){
 		Size sz = GetScreenSize();
-		int e = system(Format(NO_PREF ";" DOCK ";" BOTTOM ";onboard -l Phone -x %d -y %d -s %d`x%d &", 0, sz.cy - sz.cy / 4, sz.cx, sz.cy / 4));
+		int e = system(Format(DOCK ";" BOTTOM ";onboard -l Phone -x %d -y %d -s %d`x%d &", 0, sz.cy - sz.cy / 4, sz.cx, sz.cy / 4));
 	}else{
 		Sys("killall onboard");
 	}

@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 
 uint32 Pdb::GetRegister32(const Context& ctx, int sym)
 {

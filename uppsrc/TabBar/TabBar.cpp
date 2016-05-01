@@ -329,96 +329,6 @@ TabBar::TabBar()
 	BackPaint();
 }
 
-int TabBar::GetLR( int c, int jd )
-{
-	int new_tab;
-	if ( jd == JumpDirLeft )
-		new_tab = GetPrev( c );
-	else
-		new_tab = GetNext( c );
-	return new_tab;
-}
-
-int TabBar::GetTabStackLR( int jd )
-{
-	int nt = -1;
-	if ( HasCursor() ) {
-		int c = GetCursor();
-		int tc = GetCount();
-    
-		if ( IsStacking() ) {
-			int c_stack = tabs[ c ].stack;
-			if ( jd == JumpDirLeft )
-				nt = FindStackTail( c_stack );
-			else
-				nt = c + 1;
-		}
-	}
-	return nt;
-}
-
-int TabBar::GetTabLR( int jd )
-{
-	int lt = -1;
-	bool js_NeedReset = true;
-
-	if ( HasCursor() ) {
-	    int c = GetCursor();
-	    int tc = GetCount();
-    
-		if ( IsStacking() ) {
-			int c_stack = tabs[ c ].stack;
-
-			if ( jd == JumpDirRight && jump_stack.IsReset() ) {
-        
-				int c_stack_count = GetStackCount( c_stack );
-
-		        if ( c_stack_count > 1 ) {
-					jump_stack.Activate( c_stack_count - 1, jd );
-					js_NeedReset = false;
-				}
-			}
-      
-			if ( jump_stack.IsReset() || ( jump_stack.Rest == 0 ) ) {
-				lt = GetLR( c, jd );
-				if ( ( lt >= 0 ) && ( lt < tc ) ) {
-        
-					int lt_stack = tabs[ lt ].stack;
-					int lt_stack_count = GetStackCount( lt_stack );
-					
-					if ( lt_stack_count > 1 ) {
-						lt = FindStackHead( lt_stack );
-						jump_stack.Activate( lt_stack_count - 1, jd );
-						js_NeedReset = false;
-					}
-				}
-			} else {
-				if ( jump_stack.Rest > 0 ) {
-					if ( jd == jump_stack.jump_direct ) {
-						lt = c + 1;
-						--jump_stack.Rest;
-						js_NeedReset = false;
-					} else  {
-						if ( jump_stack.IsFull() ) {
-							lt = GetLR( c, jd );
-						} else {
-							lt = FindStackTail( c_stack );
-							++jump_stack.Rest;
-							js_NeedReset = false;
-						}
-					}
-				}
-			}
-		} else /* !IsStacking() */ {
-			lt = GetLR( c, jd );
-		}
-	}
-
-	if ( js_NeedReset )
-		jump_stack.Reset();
-	return lt;
-}
-
 void TabBar::Set(const TabBar& t)
 {
 	CopyBaseSettings(t);
@@ -663,7 +573,7 @@ void TabBar::SortStack(int stackix, int head, int tail)
 	if (!stacksort) return;
 	
 	int headid = tabs[head].id;
-	StableSort(tabs.GetIter(head), tabs.GetIter(tail), *stacksorter);
+	StableSort(SubRange(tabs, head, tail - head).Write(), *stacksorter);
 	while (tabs[head].id != headid)
 		CycleTabStack(head, stackix);
 }
@@ -1621,7 +1531,6 @@ void TabBar::Clear()
 	NewGroup(t_("TabBarGroupAll\aAll"));
 	group = 0;
 	Refresh();
-	jump_stack.Reset();
 }
 
 TabBar& TabBar::Crosses(bool b, int side)
@@ -1925,22 +1834,10 @@ bool TabBar::IsStackTail(int n) const
 		|| (n < tabs.GetCount() && tabs[n + 1].stack != tabs[n].stack);
 }
 
-int TabBar::GetStackCount(int stackix) const
-{
-	int tc = tabs.GetCount();
-	int L = 0;
-
-	for ( int i = 0; i < tc; ++i ) 
-		if ( tabs[ i ].stack == stackix )
-		  ++L;
-
-	return L;
-}
-
 int TabBar::FindStackHead(int stackix) const
 {
 	int i = 0;
-	while (tabs[i].stack != stackix)
+	while (tabs[i].stack != stackix) 
 		i++;
 	return i;
 }
@@ -1948,7 +1845,7 @@ int TabBar::FindStackHead(int stackix) const
 int TabBar::FindStackTail(int stackix) const
 {
 	int i = tabs.GetCount() - 1;
-	while (tabs[i].stack != stackix)
+	while (tabs[i].stack != stackix) 
 		i--;
 	return i;
 }

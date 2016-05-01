@@ -7,7 +7,6 @@ using namespace Upp;
 using namespace Eigen;
 
 void NonLinearTests();
-void FFTTests();
 
 struct SerialTest {
 	MatrixXd m;
@@ -696,12 +695,7 @@ CONSOLE_APP_MAIN
 		
 	NonLinearTests();
 	
-	Cout() << "\nPress enter to continue\n";
-	ReadStdIn();
-	
-	FFTTests();
-	
-	Cout() << "\n\nPress enter to end";
+	Cout() << "\nPress enter to end";
 	ReadStdIn();
 }
 

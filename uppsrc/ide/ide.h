@@ -272,16 +272,16 @@ public:
 	RightTabs();
 };
 
-struct EditorTabBar : public FileTabs {
+class EditorTabBar : public FileTabs
+{
+public:
 	EditorTabBar();
-
 	String GetFile(int n) const;
-	bool   FindSetFile(const String& fn);
-	void   SetAddFile(const String& fn);
-	void   RenameFile(const String& fn, const String& nn);
-	void   SetSplitColor(const String& fn, const Color& c);
-	void   ClearSplitColor();
-	void   FixIcons();
+	bool FindSetFile(const String& fn);
+	void SetAddFile(const String& fn);
+	void RenameFile(const String& fn, const String& nn);
+	void SetSplitColor(const String& fn, const Color& c);
+	void ClearSplitColor();
 
 	typedef EditorTabBar CLASSNAME;
 };
@@ -429,7 +429,7 @@ public:
 
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
-	AssistEditor     editor2; // no edits happen in editor2, just view
+	CodeEditor       editor2;
 	EditorTabBar     tabs;
 	EscValue         macro_api;
 #ifdef PLATFORM_POSIX
@@ -896,7 +896,6 @@ public:
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
 		void  LaunchAndroidSDKManager(const AndroidSDK& androidSDK);
 		void  LaunchAndroidAVDManager(const AndroidSDK& androidSDK);
-		void  LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK);
 	
 	void      BrowseMenu(Bar& menu);
 		void  CheckCodeBase();
@@ -1049,8 +1048,7 @@ public:
 	void      ClearTab();
 	void      ClearTabs();
 	void      CloseRest(EditorTabBar *tabs);
-	void      TabsLR( int jd );
-	void      TabsStackLR( int jd );
+	void      TabsLR(int d);
 
 	void      RefreshFrame(bool auto_disasm);
 	void      RefreshLine(int frame, bool auto_disasm);

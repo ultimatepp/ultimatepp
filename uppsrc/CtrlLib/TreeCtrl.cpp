@@ -71,7 +71,6 @@ TreeCtrl::TreeCtrl()
 	SetFrame(ViewFrame());
 	AddFrame(sb);
 	sb.WhenScroll = THISBACK(Scroll);
-	sb.Box(sb_box);
 	WhenLeftDouble = THISBACK(StdLeftDouble);
 	chldlck = false;
 	highlight_ctrl = false;
@@ -391,7 +390,6 @@ void   TreeCtrl::Clear()
 	selectcount = 0;
 	Dirty();
 	cursor = anchor = -1;
-	sb.Set(0, 0);
 }
 
 void TreeCtrl::RemoveCtrls(int itemi)
@@ -1046,10 +1044,9 @@ void TreeCtrl::Paint(Draw& w)
 				x += csz.cx;
 			if(x < sz.cx) {
 				const Display *d = GetStyle(i, fg, bg, st);
-				int ctx = highlight_ctrl * csz.cx;
-				Rect br = RectC(x, y, vsz.cx + 2 * m.margin + ctx, msz.cy);
 				if(!IsNull(m.value) || m.ctrl && highlight_ctrl) {
-					w.DrawRect(br, bg);
+					int ctx = highlight_ctrl * csz.cx;
+					w.DrawRect(x, y, vsz.cx + 2 * m.margin + ctx, msz.cy, bg);
 					Rect r = RectC(x + ctx + m.margin, y + (msz.cy - vsz.cy) / 2, vsz.cx, vsz.cy);
 					w.Clip(r);
 					d->Paint(w, r, m.value, fg, bg, st);
@@ -1057,7 +1054,7 @@ void TreeCtrl::Paint(Draw& w)
 				}
 				if(i == cursor && !nocursor && multiselect && GetSelectCount() != 1 && HasFocus()
 				   && !IsDragAndDropTarget())
-					DrawFocus(w, br, st & Display::SELECT ? SColorPaper() : SColorText());
+					DrawFocus(w, fr, st & Display::SELECT ? SColorPaper() : SColorText());
 			}
 		}
 	}

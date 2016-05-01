@@ -678,9 +678,9 @@ Ctrl::~Ctrl() {
 	KillTimeCallbacks(this, (byte *) this + sizeof(Ctrl));
 }
 
-GLOBAL_VAR(Vector<Ctrl::MouseHook>, Ctrl::mousehook);
-GLOBAL_VAR(Vector<Ctrl::KeyHook>,   Ctrl::keyhook);
-GLOBAL_VAR(Vector<Ctrl::StateHook>, Ctrl::statehook);
+Vector<Ctrl::MouseHook>& Ctrl::mousehook() { static Vector<Ctrl::MouseHook> h; return h; }
+Vector<Ctrl::KeyHook>&   Ctrl::keyhook() { static Vector<Ctrl::KeyHook> h; return h; }
+Vector<Ctrl::StateHook>& Ctrl::statehook() { static Vector<Ctrl::StateHook> h; return h; }
 
 void Ctrl::InstallMouseHook(MouseHook hook)
 {

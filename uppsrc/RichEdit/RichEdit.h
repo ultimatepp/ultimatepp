@@ -473,7 +473,6 @@ private:
 	int        GetHotSpot(Point p) const;
 	Rect       GetObjectRect(int pos) const;
 	void       FixObjectRect();
-	bool       RemoveBullet(bool backspace);
 
 	void       SetObjectPos(int pos);
 	void       AdjustObjectSize();
@@ -511,7 +510,7 @@ private:
 	void       SetPaper();
 	void       SetLanguage();
 	void       Language();
-	void       SetupLanguage(Vector<int> rval_ lng);
+	void       SetupLanguage(Vector<int>&& lng);
 
 	void       SetBullet(int bullet);
 
@@ -853,7 +852,7 @@ public:
 	RichEditWithToolBar();
 };
 
-void AppendClipboard(RichText rval_ txt);
+void AppendClipboard(RichText&& txt);
 
 END_UPP_NAMESPACE
 

@@ -22,7 +22,7 @@ Kovalev Sergey, Martin Schut, Ion Lupascu, Frank De prins, Jeff
 Humphreys, Lucas Harsze, Martin Schut, ][*^http`:`/`/www`.mimuw`.edu`.pl`/`~pan`/^ J
 akub Pawlewicz][* , Navin Vidhani, Steffen Brummer, Luis Rodriguez, 
 Zbigniew Rębacz, Rakibul Islam, Nahar Pengatteeri, Ralph Klautke, 
-Victor Picheev, Navadvipa Chandra das]&]
+Victor Picheev]&]
 [s0;i704;O9; Translators:-|[* Mauro_Bottizzo, Miklós_Somogyi, Arlen_Albert, 
 Ivica_Puljic, Richard_Gill, Werner_Wenzel, Tom Olá, Sergey Nikitin, 
 Koldo Ramirez, Gabriel Schmotzer, Andrei Catalin, Massimo Del 
@@ -39,7 +39,7 @@ Frederico Rodrigues, Ruben Proost, Willem Kroes]&]
 :: [s0; [^http`:`/`/www`.arilect`.com`/upp`/forum^ http://][^http`:`/`/upp`.sf`.net^ www.ulti
 matepp.org]]
 :: [s0; Ultimate`+`+ forum]
-:: [s0; [^http`:`/`/www`.ultimatepp`.org`/forums^ http://www.ultimatepp.org/forums]]}}&]
+:: [s0; [^http`:`/`/www`.ultimatepp`.org`/forum^ http://www.ultimatepp.org/forum]]}}&]
 [s0;+108 &]
 [s0;+92 &]
 [s0; [+92 Ultimate`+`+ includes sources of following libraries and 

@@ -27,15 +27,9 @@ frFR("")
 
 // Equation.h
 
-T_("Average")
-caES("")
-esES("Promedio")
-euES("")
-frFR("")
-
 T_("Linear")
 caES("Recta")
-esES("Lineal")
+esES("Recta")
 euES("Zuzen")
 frFR("Droite")
 
@@ -66,11 +60,5 @@ frFR("")
 T_("Rational_1")
 caES("Racional_1")
 esES("Racional_1")
-euES("")
-frFR("")
-
-T_("Spline")
-caES("")
-esES("")
 euES("")
 frFR("")

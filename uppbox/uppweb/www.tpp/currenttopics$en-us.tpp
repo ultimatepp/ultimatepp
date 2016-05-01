@@ -13,7 +13,7 @@ Google Summer of Code page][2 , here we show some of the areas
 we are interested in.]&]
 [s0;2 &]
 [s0; [2 This list is a work`-in`-progress. You can follow discussions 
-in ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 .]&]
+in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
 [s0;2 &]
 [s1; New developments&]
 [s0;#2 &]
@@ -24,8 +24,8 @@ there is an important number of people using other systems and
 cannot enjoy U`+`+. Some efforts are being done nowadays:]&]
 [s0;#2 &]
 [s0;#i150;O0; [*2 About OSX]&]
-[s0;# [2 You can follow posts in Forum in ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=90`&^2 D
-eveloping U`+`+>>Mac OSX][2 . The efforts are leaded by ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=761`&^2 R
+[s0;# [2 You can follow posts in Forum in ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=90`&^2 D
+eveloping U`+`+>>Mac OSX][2 . The efforts are leaded by ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=761`&^2 R
 eini]&]
 [s0;#2 &]
 [s0;#i150;O0; [*2 About mobile devices]&]
@@ -37,8 +37,8 @@ orum][2 .]&]
 [s0;# [* Serial devices]&]
 [s0;#* &]
 [s0;# [2 There is a strong interest in including a complete and portable 
-serial port support. Follow the advances in ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 F
-orum ][2 mainly in this ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&th`=1124`&start`=0`&^2 t
+serial port support. Follow the advances in ][^http`:`/`/www`.ultimatepp`.org`/forum^2 F
+orum ][2 mainly in this ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&th`=1124`&start`=0`&^2 t
 hread][2 .]&]
 [s0;#2 &]
 [s0;#2 &]
@@ -85,4 +85,4 @@ is not in the Layout Designer is like it would not exist.]&]
 bearer. However U`+`+ new users sometimes found difficulties 
 in using this powerful tool. Because it TheIDE usability has 
 to be studied and improved.]&]
-[s0; ]]
+[s0; ]

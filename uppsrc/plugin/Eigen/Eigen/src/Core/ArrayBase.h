@@ -46,6 +46,9 @@ template<typename Derived> class ArrayBase
 
     typedef ArrayBase Eigen_BaseClassForSpecializationOfGlobalMathFuncImpl;
 
+    using internal::special_scalar_op_base<Derived,typename internal::traits<Derived>::Scalar,
+                typename NumTraits<typename internal::traits<Derived>::Scalar>::Real>::operator*;
+
     typedef typename internal::traits<Derived>::StorageKind StorageKind;
     typedef typename internal::traits<Derived>::Index Index;
     typedef typename internal::traits<Derived>::Scalar Scalar;
@@ -53,7 +56,6 @@ template<typename Derived> class ArrayBase
     typedef typename NumTraits<Scalar>::Real RealScalar;
 
     typedef DenseBase<Derived> Base;
-    using Base::operator*;
     using Base::RowsAtCompileTime;
     using Base::ColsAtCompileTime;
     using Base::SizeAtCompileTime;

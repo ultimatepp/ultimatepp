@@ -36,8 +36,8 @@ dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
 :: [s0; [*2 Gentoo]]
-::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 ebuil
-d]]
+::-2 [s0;= [^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 ebuild
+]]
 ::l0/25r0/25t0/15b0/15R0-1 [s0;%- ]
 :: [s0;%- ]
 ::l8/25r8/25t8/15b8/15R(128) [s0; [*2 Arch Linux]]
@@ -49,7 +49,7 @@ d]]
 [s1;#b0; Source code&]
 [s0;2 &]
 [s0; [2 For Gentoo users, an ebuild using subversion checkout is under 
-construction. Have a look at the corresponding ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=msg`&goto`=21343^2 f
+construction. Have a look at the corresponding ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=msg`&goto`=21343^2 f
 orum thread][2  if you are interested.]&]
 [s0;2 &]
 [s0; [2 Arch Linux users can download source packages in ][^http`:`/`/aur`.archlinux`.org`/packages`.php`?K`=u`%2B`%2B^2 A

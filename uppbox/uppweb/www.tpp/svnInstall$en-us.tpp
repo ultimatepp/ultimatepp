@@ -32,7 +32,7 @@ my`-upp`-mirror]&]
 explain as much details as possible about your project and ask 
 for permission to upload it to Bazaar. ]&]
 [s0;2 &]
-[s0; [2 If the project is accepted (as usual), ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=3`&^2 U
+[s0; [2 If the project is accepted (as usual), ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=3`&^2 U
 pp administrator][2  will contact you and give you the address 
 where you have to upload your new package, username (your Upp 
 Forum nick) and password.]&]
@@ -63,4 +63,4 @@ your first release is done!]&]
 [s0;2 &]
 [s0; [2 And do not put many different features into single commit. 
 It is better to separate them if they do different things.]&]
-[s0; ]]
+[s0; ]

@@ -21,7 +21,6 @@ void AndroidModuleMakeFile::Clear()
 {
 	name.Clear();
 	sourceFiles.Clear();
-	includes.Clear();
 	cppFlags.Clear();
 	ldLibraries.Clear();
 	staticLibraries.Clear();
@@ -35,7 +34,6 @@ String AndroidModuleMakeFile::ToString() const
 	makeFile << "include $(CLEAR_VARS)\n";
 	AppendName(makeFile);
 	AppendSourceFiles(makeFile);
-	AppendIncludes(makeFile);
 	AppendCppFlags(makeFile);
 	AppendLdLibraries(makeFile);
 	AppendStaticLibraries(makeFile);
@@ -49,11 +47,6 @@ String AndroidModuleMakeFile::ToString() const
 void AndroidModuleMakeFile::AddSourceFile(const String& path)
 {
 	sourceFiles.Add(path);
-}
-
-void AndroidModuleMakeFile::AddInclude(const String& includePath)
-{
-	includes.Add(includePath);
 }
 
 void AndroidModuleMakeFile::AddCppFlag(const String& name, const String& value)
@@ -89,11 +82,6 @@ void AndroidModuleMakeFile::AppendName(String& makeFile) const
 void AndroidModuleMakeFile::AppendSourceFiles(String& makeFile) const
 {
 	AndroidMakeFile::AppendStringVector(makeFile, sourceFiles, "LOCAL_SRC_FILES");
-}
-
-void AndroidModuleMakeFile::AppendIncludes(String& makeFile) const
-{
-	AndroidMakeFile::AppendStringVector(makeFile, includes, "LOCAL_C_INCLUDES");
 }
 
 void AndroidModuleMakeFile::AppendCppFlags(String& makeFile) const

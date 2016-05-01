@@ -87,8 +87,8 @@ HINSTANCE Ctrl::hInstance;
 HANDLE    Ctrl::OverwatchThread;
 HWND      Ctrl::OverwatchHWND;
 
-Event Ctrl::OverwatchEndSession;
-Event Ctrl::ExitLoopEvent;
+Win32Event Ctrl::OverwatchEndSession;
+Win32Event Ctrl::ExitLoopEvent;
 #endif
 #endif
 
@@ -132,7 +132,7 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		if(ShutdownBlockReasonDestroy)
 			ShutdownBlockReasonDestroy(hwnd);
 		ELOGW("WM_QUERYENDSESSION 2");
-		return TRUE;		
+		return TRUE;
 	}
 	if(msg == WM_ENDSESSION) {
 		EndSession();

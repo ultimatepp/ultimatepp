@@ -319,7 +319,11 @@ int    Convert::Filter(int chr) const {
 	return chr;
 }
 
-GLOBAL_VAR_INIT(const Convert, StdConvert);
+const Convert& StdConvert()
+{
+	static Convert h;
+	return h;
+}
 
 String StdFormat(const Value& q) {
 	return StdConvert().Format(q);
@@ -503,17 +507,20 @@ Value ConvertString::Scan(const Value& text) const {
 	return ErrorValue(UPP::Format(t_("Please enter no more than %d characters."), maxlen));
 }
 
-GLOBAL_VAR_INIT(const ConvertInt, StdConvertInt)
-GLOBAL_VARP_INIT(const ConvertInt, StdConvertIntNotNull, (-INT_MAX, INT_MAX, true))
-GLOBAL_VAR_INIT(const ConvertDouble, StdConvertDouble)
-GLOBAL_VARP_INIT(const ConvertDouble, StdConvertDoubleNotNull,
-            (DOUBLE_NULL_LIM, -DOUBLE_NULL_LIM, true))
-GLOBAL_VAR_INIT(const ConvertDate, StdConvertDate)
-GLOBAL_VARP_INIT(const ConvertDate, StdConvertDateNotNull, (Date(0, 0, 0), Date(3000, 12, 31), true))
-GLOBAL_VAR_INIT(const ConvertTime, StdConvertTime)
-GLOBAL_VARP_INIT(const ConvertTime, StdConvertTimeNotNull, (Null, Null, true))
-GLOBAL_VAR_INIT(const ConvertString, StdConvertString);
-GLOBAL_VARP_INIT(const ConvertString, StdConvertStringNotNull, (INT_MAX, true))
+const ConvertInt& StdConvertInt() { static ConvertInt h; return h; }
+const ConvertInt& StdConvertIntNotNull() { static ConvertInt h(-INT_MAX, INT_MAX, true); return h; }
+
+const ConvertDouble& StdConvertDouble() { static ConvertDouble h; return h; }
+const ConvertDouble& StdConvertDoubleNotNull() { static ConvertDouble h(DOUBLE_NULL_LIM, -DOUBLE_NULL_LIM, true); return h; }
+
+const ConvertDate& StdConvertDate() { static ConvertDate h; return h; }
+const ConvertDate& StdConvertDateNotNull() { static ConvertDate h(Date(0, 0, 0), Date(3000, 12, 31), true); return h; }
+
+const ConvertTime& StdConvertTime() { static ConvertTime h; return h; }
+const ConvertTime& StdConvertTimeNotNull() { static ConvertTime h(Null, Null, true); return h; }
+
+const ConvertString& StdConvertString() { static ConvertString h; return h; }
+const ConvertString& StdConvertStringNotNull() { static ConvertString h(INT_MAX, true); return h; }
 
 Value  MapConvert::Format(const Value& q) const {
 	return map.Get(q, default_value);
@@ -525,7 +532,9 @@ Value NoConvertClass::Format(const Value& q) const {
 	return q;
 }
 
-GLOBAL_VAR_INIT(const NoConvertClass, NoConvert)
+const NoConvertClass& NoConvert() {
+	return Single<NoConvertClass>();
+}
 
 Value ErrorConvertClass::Scan(const Value& v) const
 {

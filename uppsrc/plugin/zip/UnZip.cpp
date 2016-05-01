@@ -29,7 +29,7 @@ void UnZip::ReadDir()
 			offset = zip->Get32le(); //offset of start of central directory with respect to the starting disk number
 			int commentlen = zip->Get16le();
 			if(zip->GetPos() + commentlen == zipsize)
-				break;
+				break;			
 		}
 		pos--;
 	}

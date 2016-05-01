@@ -1,12 +1,43 @@
-template <class K, class T, class V, class HashFn>
+template <class K, class V>
+struct KeyValueRef {
+	const K& key;
+	V&       value;
+	
+	KeyValueRef(const K& key, V& value) : key(key), value(value) {}
+};
+
+template <class Map, class K, class V>
+struct MapKVRange {
+	Map& map;
+	
+	struct Iterator {
+		Map& map;
+		int  ii;
+		
+		void SkipUnlinked()               { while(ii < map.GetCount() && map.IsUnlinked(ii)) ii++; }
+		
+		void operator++()                 { ++ii; SkipUnlinked(); }
+		KeyValueRef<K, V> operator*()     { return KeyValueRef<K, V>(map.GetKey(ii), map[ii]); }
+		bool operator!=(Iterator b) const { return ii != b.ii; }
+		
+		Iterator(Map& map, int ii) : map(map), ii(ii) { SkipUnlinked(); }
+	};
+
+	Iterator begin() const             { return Iterator(map, 0); }
+	Iterator end() const               { return Iterator(map, map.GetCount()); }
+	
+	MapKVRange(Map& map) : map(map) {}
+};
+
+template <class K, class T, class V>
 class AMap {
 protected:
-	Index<K, HashFn> key;
-	V                value;
+	Index<K> key;
+	V        value;
 
 public:
 	T&       Add(const K& k, const T& x)            { key.Add(k); return value.Add(x); }
-	T&       AddPick(const K& k, T rval_ x)         { key.Add(k); return value.AddPick(pick(x)); }
+	T&       Add(const K& k, T&& x)                 { key.Add(k); return value.Add(pick(x)); }
 	T&       Add(const K& k)                        { key.Add(k); return value.Add(); }
 
 	int      Find(const K& k, unsigned h) const     { return key.Find(k, h); }
@@ -18,16 +49,16 @@ public:
 
 	int      FindAdd(const K& k);
 	int      FindAdd(const K& k, const T& init);
-	int      FindAddPick(const K& k, T rval_ init);
+	int      FindAdd(const K& k, T&& init);
 
 	int      Put(const K& k, const T& x);
 	int      PutDefault(const K& k);
-	int      PutPick(const K& k, T rval_ x);
+	int      Put(const K& k, T&& x);
 	T&       Put(const K& k);
 
 	int      FindPut(const K& k);
 	int      FindPut(const K& k, const T& init);
-	int      FindPutPick(const K& k, T rval_ init);
+	int      FindPut(const K& k, T&& init);
 
 	T&       Get(const K& k)                     { return value[Find(k)]; }
 	const T& Get(const K& k) const               { return value[Find(k)]; }
@@ -36,12 +67,12 @@ public:
 	T&       GetAdd(const K& k);
 
 	T&       GetAdd(const K& k, const T& x);
-	T&       GetAddPick(const K& k, T rval_ x);
+	T&       GetAdd(const K& k, T&& x);
 
 	T&       GetPut(const K& k);
 
 	T&       GetPut(const K& k, const T& x);
-	T&       GetPutPick(const K& k, T rval_ x);
+	T&       GetPutPick(const K& k, T&& x);
 
 	void     SetKey(int i, const K& k)           { key.Set(i, k); }
 
@@ -103,121 +134,106 @@ public:
 
 	void     Swap(AMap& x)                         { UPP::Swap(value, x.value);
 	                                                 UPP::Swap(key, x.key); }
-	const Index<K, HashFn>&  GetIndex() const      { return key; }
-	Index<K, HashFn>         PickIndex()           { return pick(key); }
+	const Index<K>&  GetIndex() const              { return key; }
+	Index<K>         PickIndex()                   { return pick(key); }
 
 	const Vector<K>& GetKeys() const               { return key.GetKeys(); }
-	Vector<K>        PickKeys() pick_              { return key.PickKeys(); }
+	Vector<K>        PickKeys()                    { return key.PickKeys(); }
 
 	const V&         GetValues() const             { return value; }
 	V&               GetValues()                   { return value; }
-	V                PickValues() pick_            { return pick(value); }
+	V                PickValues()                  { return pick(value); }
 	
-	bool             IsPicked() const              { return value.IsPicked() || key.IsPicked(); }
-
+	MapKVRange<AMap, K, T> operator~()             { return MapKVRange<AMap, K, T>(*this); }
+	MapKVRange<const AMap, K, const T> operator~() const { return MapKVRange<const AMap, K, const T>(*this); }
+	
 	AMap& operator()(const K& k, const T& v)       { Add(k, v); return *this; }
 
 	AMap()                                         {}
 	AMap(const AMap& s, int) : key(s.key, 0), value(s.value, 0) {}
-	AMap(Index<K, HashFn> rval_ ndx, V rval_ val) : key(pick(ndx)), value(pick(val)) {}
-	AMap(Vector<K> rval_ ndx, V rval_ val) : key(pick(ndx)), value(pick(val)) {}
-	
-#ifdef CPP_11
-	AMap(std::initializer_list<std::pair<K, T>> init) { for(auto i : init) Add(i.first, i.second); }
-#endif
+	AMap(Index<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
+	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
+	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, i.second); }
+
+	typedef IteratorOf<V>           ConstIterator;
+	typedef ConstIteratorOf<V>      Iterator;
+
+	Iterator         begin()                                      { return value.begin(); }
+	Iterator         end()                                        { return value.end(); }
+	ConstIterator    begin() const                                { return value.begin(); }
+	ConstIterator    end() const                                  { return value.end(); }
+
+#ifdef DEPRECATED
+	typedef V                          ValueContainer;
+	typedef T                          ValueType;
 
 	typedef Vector<K> KeyContainer;
 	typedef K         KeyType;
-	typedef typename Index<K, HashFn>::ConstIterator KeyConstIterator;
-
-	KeyConstIterator KeyBegin() const                             { return key.Begin(); }
-	KeyConstIterator KeyEnd() const                               { return key.End(); }
-	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
-
-	typedef V                          ValueContainer;
-	typedef T                          ValueType;
-	typedef typename V::ConstIterator  ConstIterator;
-	typedef typename V::Iterator       Iterator;
-
-	Iterator         Begin()                                      { return value.Begin(); }
-	Iterator         End()                                        { return value.End(); }
-	Iterator         GetIter(int pos)                             { return value.GetIter(pos); }
-	ConstIterator    Begin() const                                { return value.Begin(); }
-	ConstIterator    End() const                                  { return value.End(); }
-	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
+	typedef ConstIteratorOf<Index<K>> KeyConstIterator;
 
 	friend int     GetCount(const AMap& v)                        { return v.GetCount(); }
+	int      PutPick(const K& k, T&& x)                           { return Put(k, pick(x)); }
+	T&       AddPick(const K& k, T&& x)                           { return Add(k, pick(x)); }
+	int      FindAddPick(const K& k, T&& init)                    { return FindAddPick(k, pick(init)); }
+	int      FindPutPick(const K& k, T&& init)                    { return FindPutPick(k, pick(init)); }
+	T&       GetAddPick(const K& k, T&& x)                        { return GetAddPick(k, pick(x)); }
+	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
+	Iterator         GetIter(int pos)                             { return value.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
+
+	KeyConstIterator KeyBegin() const                             { return key.begin(); }
+	KeyConstIterator KeyEnd() const                               { return key.end(); }
+#endif
 };
 
-template <class K, class T, class HashFn = StdHash<K> >
-class VectorMap : public MoveableAndDeepCopyOption<VectorMap<K, T, HashFn> >,
-                  public AMap< K, T, Vector<T>, HashFn > {
-    typedef AMap< K, T, Vector<T>, HashFn > B;
+template <class K, class T>
+class VectorMap : public MoveableAndDeepCopyOption<VectorMap<K, T>>,
+                  public AMap<K, T, Vector<T>> {
+    typedef AMap<K, T, Vector<T>> B;
 public:
 	T        Pop()                            { T h = B::Top(); B::Drop(); return h; }
 
-	VectorMap(const VectorMap& s, int) : AMap<K, T, Vector<T>, HashFn>(s, 1) {}
-	VectorMap(Index<K, HashFn> rval_  ndx, Vector<T> rval_ val) : AMap<K, T, Vector<T>, HashFn>(pick(ndx), pick(val)) {}
-	VectorMap(Vector<K> rval_ ndx, Vector<T> rval_ val) : AMap<K, T, Vector<T>, HashFn>(pick(ndx), pick(val)) {}
+	VectorMap(const VectorMap& s, int) : AMap<K, T, Vector<T>>(s, 1) {}
+	VectorMap(Index<K>&& ndx, Vector<T>&& val) : AMap<K, T, Vector<T>>(pick(ndx), pick(val)) {}
+	VectorMap(Vector<K>&& ndx, Vector<T>&& val) : AMap<K, T, Vector<T>>(pick(ndx), pick(val)) {}
 	VectorMap()                                                       {}
-
-#ifdef CPP_11
 	VectorMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
-#endif
 
 	friend void    Swap(VectorMap& a, VectorMap& b)      { a.B::Swap(b); }
 
-	typedef typename AMap< K, T, Vector<T>, HashFn >::ConstIterator ConstIterator; // GCC bug (?)
-	typedef typename AMap< K, T, Vector<T>, HashFn >::Iterator      Iterator; // GCC bug (?)
+	typedef typename AMap< K, T, Vector<T>>::ConstIterator ConstIterator;
+	typedef typename AMap< K, T, Vector<T>>::Iterator      Iterator;
 	STL_MAP_COMPATIBILITY(VectorMap<K _cm_ T _cm_ HashFn>)
 };
 
-template <class K, class T, class HashFn = StdHash<K> >
-class ArrayMap : public MoveableAndDeepCopyOption< ArrayMap<K, T, HashFn> >,
-                 public AMap< K, T, Array<T>, HashFn > {
-	typedef AMap< K, T, Array<T>, HashFn > B;
+template <class K, class T>
+class ArrayMap : public MoveableAndDeepCopyOption<ArrayMap<K, T>>,
+                 public AMap<K, T, Array<T>> {
+	typedef AMap<K, T, Array<T>> B;
 public:
 	T&        Add(const K& k, const T& x)          { return B::Add(k, x); }
 	T&        Add(const K& k)                      { return B::Add(k); }
 	T&        Add(const K& k, T *newt)             { B::key.Add(k); return B::value.Add(newt); }
 	T&        Insert(int i, const K& k, T *newt)   { B::key.Insert(i, k); return B::value.Insert(i, newt); }
 	using B::Insert;
-	template <class TT> TT& Create(const K& k)     { TT *q = new TT; B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
+	template <class TT, class... Args>
+	TT& Create(const K& k, Args... args)           { TT *q = new TT(args...); B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
 
 	T&        Set(int i, T *ptr)                   { return B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }
 	T        *Detach(int i)                        { B::key.Remove(i); return B::value.Detach(i); }
 	T        *Swap(int i, T *newt)                 { return B::value.Swap(i, newt); }
 
-	ArrayMap(const ArrayMap& s, int) : AMap<K, T, Array<T>, HashFn>(s, 1) {}
-	ArrayMap(Index<K, HashFn> rval_ ndx, Array<T> rval_ val) : AMap<K, T, Array<T>, HashFn>(pick(ndx), pick(val)) {}
-	ArrayMap(Vector<K> rval_ ndx, Array<T> rval_  val) : AMap<K, T, Array<T>, HashFn>(pick(ndx), pick(val)) {}
+	ArrayMap(const ArrayMap& s, int) : AMap<K, T, Array<T>>(s, 1) {}
+	ArrayMap(Index<K>&& ndx, Array<T>&& val) : AMap<K, T, Array<T>>(pick(ndx), pick(val)) {}
+	ArrayMap(Vector<K>&& ndx, Array<T>&& val) : AMap<K, T, Array<T>>(pick(ndx), pick(val)) {}
 	ArrayMap() {}
 
-#ifdef CPP_11
 	ArrayMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
-#endif
 
 	friend void    Swap(ArrayMap& a, ArrayMap& b)        { a.B::Swap(b); }
 
-	typedef typename AMap< K, T, Array<T>, HashFn >::ConstIterator ConstIterator; // GCC bug (?)
-	typedef typename AMap< K, T, Array<T>, HashFn >::Iterator      Iterator; // GCC bug (?)
+	typedef typename AMap< K, T, Array<T>>::ConstIterator ConstIterator;
+	typedef typename AMap< K, T, Array<T>>::Iterator      Iterator;
 	STL_MAP_COMPATIBILITY(ArrayMap<K _cm_ T _cm_ HashFn>)
-};
-
-template <class K, class T, int NBLK = 16, class HashFn = StdHash<K> >
-class SegtorMap : public MoveableAndDeepCopyOption< SegtorMap<K, T, NBLK, HashFn > >,
-                  public AMap< K, T, Segtor<T, NBLK>, HashFn > {
-	typedef AMap< K, T, Segtor<T, NBLK>, HashFn > B;
-public:
-	SegtorMap(const SegtorMap& s, int) : AMap<K, T, Segtor<T, NBLK>, HashFn>(s, 1) {}
-	SegtorMap(Index<K, HashFn> rval_ ndx, Segtor<T> rval_ val) : AMap<K, T, Segtor<T, NBLK>, HashFn>(pick(ndx), pick(val)) {}
-	SegtorMap(Vector<K> rval_ ndx, Segtor<T> rval_ val) : AMap<K, T, Segtor<T, NBLK>, HashFn>(pick(ndx), pick(val)) {}
-	SegtorMap()                                              {}
-
-	friend void Swap(SegtorMap& a, SegtorMap& b)             { a.B::Swap(b); }
-
-	typedef typename B::ConstIterator ConstIterator; // GCC bug (?)
-	typedef typename B::Iterator      Iterator; // GCC bug (?)
-	STL_MAP_COMPATIBILITY(SegtorMap<K _cm_ T _cm_ NBLK _cm_ HashFn>)
 };

@@ -366,17 +366,17 @@ struct dense_xpr_base<Derived, ArrayXpr>
 
 /** \internal Helper base class to add a scalar multiple operator
   * overloads for complex types */
-template<typename Derived, typename Scalar, typename OtherScalar, typename BaseType,
+template<typename Derived,typename Scalar,typename OtherScalar,
          bool EnableIt = !is_same<Scalar,OtherScalar>::value >
-struct special_scalar_op_base : public BaseType
+struct special_scalar_op_base : public DenseCoeffsBase<Derived>
 {
   // dummy operator* so that the
   // "using special_scalar_op_base::operator*" compiles
   void operator*() const;
 };
 
-template<typename Derived,typename Scalar,typename OtherScalar, typename BaseType>
-struct special_scalar_op_base<Derived,Scalar,OtherScalar,BaseType,true>  : public BaseType
+template<typename Derived,typename Scalar,typename OtherScalar>
+struct special_scalar_op_base<Derived,Scalar,OtherScalar,true>  : public DenseCoeffsBase<Derived>
 {
   const CwiseUnaryOp<scalar_multiple2_op<Scalar,OtherScalar>, Derived>
   operator*(const OtherScalar& scalar) const

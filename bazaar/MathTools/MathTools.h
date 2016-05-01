@@ -51,7 +51,7 @@ private:
 	Vector<StaticRect *> examplesRects;
 };
 
-class TabRegression : public Tool {
+class TabRegression : public WithTabRegression<Tool> {
 public:
 	typedef TabRegression CLASSNAME;
 
@@ -59,16 +59,16 @@ public:
 	//virtual ScatterCtrl &Scatter()	{return scatter;};
 	void Jsonize(JsonIO& json) {
 		json
-			("scatter", up.scatter)
-			("gridTrend", down.gridTrend)
+			("scatter", scatter)
+			("gridTrend", gridTrend)
 			//("gridDef", gridDef)
 			//("grid", grid)
-			("minR2", down.minR2)
-			("switchColsRows", down.switchColsRows)
-			("yBesideX", down.yBesideX)
-			("firstCellIsName", down.firstCellIsName)
-			("coefficients", down.coefficients)
+			("minR2", minR2)
+			("switchColsRows", switchColsRows)
+			("yBesideX", yBesideX)
+			("firstCellIsName", firstCellIsName)
 			("notFirstTime", notFirstTime)
+			("coefficients", coefficients)
 		;
 	}
 	UserEquation *userEquation;
@@ -76,18 +76,13 @@ public:
 private:
 	void Init();
 	void End();
-	void Fit();
+	void Calculate();
 	void OnButtons();
 	void OnClear();
 	void OnAutoset();
-	void OnUpdate();
 	void ArrayCopy();
 	void ArraySelect();
 	void OnArrayBar(Bar &menu);
-	
-	Splitter splitter;
-	WithTabRegression_Up<StaticRect> up;
-	WithTabRegression_Down<StaticRect> down;
 	
 	Array<ExplicitEquation> equationTypes;
 

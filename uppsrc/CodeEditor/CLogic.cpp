@@ -189,7 +189,7 @@ void CSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 {
 	for(const wchar *s = text; *s; s++) {
 		if(*s == '{' || *s == '(' || *s == '[' || *s == '/' || *s == '*' ||
-		   *s == '}' || *s == ')' || *s == ']' || *s == '\\' || *s == ':') {
+		   *s == '}' || *s == ')' || *s == ']' || *s == '\\') {
 			e.Refresh();
 			break;
 		}

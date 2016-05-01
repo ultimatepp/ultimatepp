@@ -50,6 +50,7 @@ AssistEditor::AssistEditor()
 	auto_assist = auto_check = true;
 	commentdp = false;
 
+	InsertFrame(1, navigatorframe);
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
 	navigating = false;
 
@@ -489,8 +490,6 @@ void AssistEditor::Assist()
 		String tp;
 		Vector<String> xp = ReadBack(q, parser.local.GetIndex());
 		bool isok = false;
-		if(xp.GetCount() && xp[0].StartsWith("::")) // ::Foo().
-			xp[0] = xp[0].Mid(2);
 		for(int i = 0; i < xp.GetCount(); i++)
 			if(iscib(*xp[i])) {
 				isok = true;
@@ -992,15 +991,11 @@ bool AssistEditor::Esc()
 	return r;
 }
 
-void AssistEditor::SyncNavigatorShow()
-{
-	navigatorframe.Show(navigator && theide && !theide->designer && !theide->IsEditorMode());
-}
 
 void AssistEditor::Navigator(bool nav)
 {
 	navigator = nav;
-	SyncNavigatorShow();
+	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
 	if(IsNavigator())
 		SetFocus();
 	SyncNavigator();

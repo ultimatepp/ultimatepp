@@ -924,12 +924,13 @@ void  StringStream::_Put(const void *d, dword sz)
 {
 	SetWriteMode();
 	if(ptr + sz >= wrlim) {
-		intptr_t p = ptr - buffer;
-	#ifdef _DEBUG
-		wdata.SetLength(max(1, max(2 * (int)GetSize(), (int)GetSize() + (int)sz)));
-	#else
-		wdata.SetLength(max(128, max(2 * (int)GetSize(), (int)GetSize() + (int)sz)));
-	#endif
+		size_t p = ptr - buffer;
+		if(p + sz >= INT_MAX)
+			Panic("2GB StringStream limit exceeded");
+		if(p + sz > (size_t)limit)
+			throw LimitExc();
+		int len = (int32)max((int64)128, min((int64)limit, max(2 * GetSize(), GetSize() + sz)));
+		wdata.SetLength(len);
 		SetWriteBuffer();
 		ptr = buffer + p;
 	}

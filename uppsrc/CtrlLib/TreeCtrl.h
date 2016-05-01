@@ -112,7 +112,6 @@ private:
 	Point        itemclickpos;
 
 	ScrollBars   sb;
-	StaticRect   sb_box;
 	Scroller     scroller;
 
 	DisplayPopup info;

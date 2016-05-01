@@ -228,8 +228,7 @@ namespace Eigen {
          * this class becomes invalid. Call compute() to update it with the new
          * matrix A, or modify a copy of A.
          */
-        template<typename MatrixDerived>
-        explicit MINRES(const EigenBase<MatrixDerived>& A) : Base(A.derived()) {}
+        MINRES(const MatrixType& A) : Base(A) {}
         
         /** Destructor. */
         ~MINRES(){}
