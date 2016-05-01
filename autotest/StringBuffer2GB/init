@@ -1,0 +1,4 @@
+#ifndef _StringBuffer2GB_icpp_init_stub
+#define _StringBuffer2GB_icpp_init_stub
+#include "Core/init"
+#endif

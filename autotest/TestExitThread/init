@@ -1,0 +1,4 @@
+#ifndef _TestExitThread_icpp_init_stub
+#define _TestExitThread_icpp_init_stub
+#include "Core/init"
+#endif
