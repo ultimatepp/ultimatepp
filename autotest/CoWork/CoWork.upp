@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	CoWork.cpp;
+
+mainconfig
+	"" = "MT";
+

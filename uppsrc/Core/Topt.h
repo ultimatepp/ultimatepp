@@ -130,42 +130,6 @@ inline void Fill(unsigned char *t, const unsigned char *lim, const unsigned char
 inline void Copy(unsigned char *dst, const unsigned char *src, const unsigned char *lim)
 { memcpy(dst, src, size_t((byte *)lim - (byte *)src)); }
 
-template <class T>
-inline T& DeepCopyConstruct(void *p, const T& x) {
-	return *(::new(p) T(x));
-}
-
-template <class T>
-inline T *DeepCopyNew(const T& x) {
-	return new T(x);
-}
-
-template <class T>
-inline void ConstructArray(T *t, const T *lim) {
-	while(t < lim)
-		::new(t++) T;
-}
-
-template <class T>
-inline void DestroyArray(T *t, const T *lim) {
-	while(t < lim) {
-		t->T::~T();
-		t++;
-	}
-}
-
-template <class T>
-inline void DeepCopyConstructArray(T *t, const T *s, const T *lim) {
-	while(s < lim)
-		DeepCopyConstruct(t++, *s++);
-}
-
-template <class T>
-inline void DeepCopyConstructFill(T *t, const T *lim, const T& x) {
-	while(t < lim)
-		DeepCopyConstruct(t++, x);
-}
-
 #ifdef NO_MOVEABLE_CHECK
 
 template <class T>
@@ -230,7 +194,6 @@ NTL_MOVEABLE(float);
 NTL_MOVEABLE(double);
 NTL_MOVEABLE(void *);
 NTL_MOVEABLE(const void *);
-NTL_MOVEABLE(SpinLock);
 
 #if defined(_NATIVE_WCHAR_T_DEFINED) || defined(COMPILER_GCC)
 NTL_MOVEABLE(wchar_t);
@@ -239,66 +202,42 @@ NTL_MOVEABLE(wchar_t);
 template <class T, class B = EmptyClass>
 class DeepCopyOption : public B {
 public:
+#ifdef DEPRECATED
 	friend T& operator<<=(T& dest, const T& src)
 	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
-	friend T& DeepCopyConstruct(void *dest, const T& src)
-	{ return *(::new (dest) T(src, 0)); }
-	friend T *DeepCopyNew(const T& src)
-	{ return ::new T(src, 0); }
-};
-
-template <class T>
-class MoveableAndDeepCopyOption {
-	friend void AssertMoveable0(T *) {}
-	friend T& operator<<=(T& dest, const T& src)
-	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
-	friend T& DeepCopyConstruct(void *dest, const T& src)
-	{ return *(::new (dest) T(src, 0)); }
-	friend T *DeepCopyNew(const T& src)
-	{ return ::new T(src, 0); }
+#endif
+	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
 template <class T, class B = EmptyClass>
-class PolyDeepCopyNew : public B
-{
-public:
-	friend T *DeepCopyNew(const T& t)              { return t.Copy(); }
+class MoveableAndDeepCopyOption : public B {
+	friend void AssertMoveable0(T *) {}
+#ifdef DEPRECATED
+	friend T& operator<<=(T& dest, const T& src)
+	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
+#endif
+	friend T  clone(const T& src) { T c(src, 1); return c; }
 };
 
 template <class T>
 class WithDeepCopy : public T {
 public:
-	WithDeepCopy(const T& a) : T(a, 1)             {}
-	WithDeepCopy(const T& a, int) : T(a, 1)        {}
-	WithDeepCopy(const WithDeepCopy& a) : T(a, 1)  {}
-	WithDeepCopy& operator=(const WithDeepCopy& a) { (T&)*this <<= a; return *this; }
-	WithDeepCopy(int, T rval_ a) : T(a)            {}
-	WithDeepCopy& operator^=(T rval_ a)            { (T&)*this = pick(a); return *this; }
-	WithDeepCopy()                                 {}
+	WithDeepCopy(const T& a) : T(clone(a))             {}
+	WithDeepCopy(const T& a, int) : T(clone(a))        {}
+
+	WithDeepCopy(const WithDeepCopy& a) : T(clone(a))  {}
+	WithDeepCopy& operator=(const WithDeepCopy& a)     { (T&)*this <<= a; return *this; }
+
+	WithDeepCopy(T&& a) : T(pick(a))                   {}
+	WithDeepCopy(WithDeepCopy&& a) : T(pick(a))        {}
+
+	WithDeepCopy& operator=(T&& a)                     { (T&)*this = pick(a); return *this; }
+	WithDeepCopy& operator=(WithDeepCopy&& a)          { (T&)*this = pick(a); return *this; }
+
+	WithDeepCopy()                                     {}
 };
 
-template <class T>
-WithDeepCopy<T> DeepClone(const T& src)
-{
-	return WithDeepCopy<T>(src);
-}
-
-template <class T>
-class WithPick : public T {
-public:
-	WithPick(const T& a) : T(pick(a))            {}
-	WithPick(const WithPick& a) : T(pick(a))     {}
-	WithPick& operator=(const WithPick& a)       { (T&)*this = pick(a); return *this; }
-	WithPick& operator=(const T& a)              { (T&)*this = pick(a); return *this; }
-};
-
-template <class T>
-WithPick<T> AsPick(T rval_ src)
-{
-	return WithPick<T>(src);
-}
-
-// STL compatibility hacks
+// compatibility hacks
 
 #define STL_ITERATOR_COMPATIBILITY \
 	typedef ptrdiff_t                        difference_type; \
@@ -313,8 +252,8 @@ WithPick<T> AsPick(T rval_ src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return B::Begin(); } \
-	const_iterator        end() const            { return B::End(); } \
+	const_iterator        Begin() const          { return B::begin(); } \
+	const_iterator        End() const            { return B::end(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size()                 { return B::GetCount(); } \
 	bool                  empty() const          { return B::IsEmpty(); } \
@@ -325,8 +264,8 @@ WithPick<T> AsPick(T rval_ src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { Clear(); } \
 	size_type             size()                 { return GetCount(); } \
 	bool                  empty() const          { return IsEmpty(); } \
@@ -337,15 +276,15 @@ WithPick<T> AsPick(T rval_ src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { Clear(); } \
 	size_type             size() const           { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return IsEmpty(); } \
-	iterator              begin()                { return Begin(); } \
-	iterator              end()                  { return End(); } \
+	iterator              Begin()                { return begin(); } \
+	iterator              End()                  { return end(); } \
 
 #define STL_MAP_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -353,15 +292,15 @@ WithPick<T> AsPick(T rval_ src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return B::Begin(); } \
-	const_iterator        end() const            { return B::End(); } \
+	const_iterator        Begin() const          { return B::begin(); } \
+	const_iterator        End() const            { return B::end(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size() const           { return B::GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return B::IsEmpty(); } \
-	iterator              begin()                { return B::Begin(); } \
-	iterator              end()                  { return B::End(); } \
+	iterator              Begin()                { return B::begin(); } \
+	iterator              End()                  { return B::end(); } \
 
 #define STL_SORTED_MAP_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -369,15 +308,15 @@ WithPick<T> AsPick(T rval_ src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { B::Clear(); } \
 	size_type             size() const           { return B::GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
 	bool                  empty() const          { return B::GetCount() == 0; } \
-	iterator              begin()                { return Begin(); } \
-	iterator              end()                  { return End(); } \
+	iterator              Begin()                { return begin(); } \
+	iterator              End()                  { return end(); } \
 
 #define STL_VECTOR_COMPATIBILITY(C) \
 	typedef T             value_type; \
@@ -385,14 +324,14 @@ WithPick<T> AsPick(T rval_ src)
 	typedef const T&      const_reference; \
 	typedef int           size_type; \
 	typedef int           difference_type; \
-	const_iterator        begin() const          { return Begin(); } \
-	const_iterator        end() const            { return End(); } \
+	const_iterator        Begin() const          { return begin(); } \
+	const_iterator        End() const            { return end(); } \
 	void                  clear()                { Clear(); } \
 	size_type             size() const           { return GetCount(); } \
 	typedef Iterator      iterator; \
 	typedef T&            reference; \
-	iterator              begin()                { return Begin(); } \
-	iterator              end()                  { return End(); } \
+	iterator              Begin()                { return begin(); } \
+	iterator              End()                  { return end(); } \
 	reference             front()                { return (*this)[0]; } \
 	const_reference       front() const          { return (*this)[0]; } \
 	reference             back()                 { return Top(); } \
@@ -401,12 +340,23 @@ WithPick<T> AsPick(T rval_ src)
 	void                  push_back(const T& x)  { Add(x); } \
 	void                  pop_back()             { Drop(); } \
 
+
+template <class Range>
+using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
+
+template <class Range>
+using IteratorOf = decltype(((Range *)0)->begin());
+
+template <class Range>
+using ConstIteratorOf = decltype(((const Range *)0)->begin());
+
 template <class V>
 class ConstIIterator {
 protected:
 	const V       *cont;
 	int            ii;
 	typedef        typename V::ValueType T;
+//	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
@@ -448,7 +398,8 @@ class IIterator {
 protected:
 	V             *cont;
 	int            ii;
-	typedef        typename V::ValueType T;
+	typedef        typename V::ValueType T; // TODO!
+	// typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
@@ -548,43 +499,14 @@ inline unsigned GetPtrHashValue(const void *a)                   { return (int)a
 inline unsigned GetPtrHashValue(const void *a)                   { return CombineHash((unsigned)(uintptr_t)a); }
 #endif
 
-//* Is it time to activate this?
 template <class T>
 inline unsigned GetHashValue(T *ptr)                             { return GetPtrHashValue(reinterpret_cast<const void *>(ptr)); }
-//*/
-
-// workaround for broken standard libraries...
-
-template <class T> inline const T& ntl_max(const T& a, const T& b) { return a > b ? a : b; }
 
 template <int size>
 struct Data_S_ : Moveable< Data_S_<size> >
 {
 	byte filler[size];
 };
-
-template <class C>
-bool IsEqualArray(const C& a, const C& b)
-{
-	if(a.GetCount() != b.GetCount())
-		return false;
-	for(int i = 0; i < a.GetCount(); i++)
-		if(!(a[i] == b[i]))
-			return false;
-	return true;
-}
-
-template <class C>
-int CompareArray(const C& a, const C& b)
-{
-	int n = min(a.GetCount(), b.GetCount());
-	for(int i = 0; i < n; i++) {
-		int q = SgnCompare(a[i], b[i]);
-		if(q)
-			return q;
-	}
-	return SgnCompare(a.GetCount(), b.GetCount());
-}
 
 template <class C>
 bool IsEqualMap(const C& a, const C& b)

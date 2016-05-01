@@ -38,8 +38,8 @@ alueArray][@(0.0.255) `&]_[*@3 v])&]
 [s2;%% Copy constructor.&]
 [s3;%% &]
 [s4; &]
-[s5;:ValueArray`:`:ValueArray`(Vector`<Value`>rval`_`): [@(0.0.255) explicit]_[* ValueArr
-ay]([_^Vector^ Vector]<[_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 values])&]
+[s5;:Upp`:`:ValueArray`:`:ValueArray`(Upp`:`:Vector`<Upp`:`:Value`>`&`&`): [* ValueArra
+y]([_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 values])&]
 [s2;%% Creates ValueArray by picking [%-*@3 values] `- source is destroyed.&]
 [s3;%% &]
 [s4; &]

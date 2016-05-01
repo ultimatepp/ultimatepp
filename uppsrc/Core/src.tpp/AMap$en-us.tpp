@@ -80,18 +80,12 @@ the element.&]
 [s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:AddPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:AMap`:`:AddPick`(const K`&`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Adds a key and value pair to the AMap. Value is transfered by 
 pick constructor in low constant time, but the source value is 
 destroyed. Returns a reference to the element.&]
-[s6; T must have pick constructor.&]
-[s6; Invalidates iterators to AMap.&]
-[s6; Invalidates references to keys.&]
-[s6; Invalidates references to VectorMap values.&]
-[s7; [*C@3 k]-|Key.&]
-[s7; [*C@3 x]-|-|Value.&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:AMap`:`:Add`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
@@ -229,21 +223,14 @@ not exist in AMap, adds new element, deep copy constructed from
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:FindPutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* FindPutPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s5;:Upp`:`:AMap`:`:FindAddPick`(const K`&`,T`&`&`):%- [@(0.0.255) int]_[* FindAddPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 init])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. If multi`-key ordering is not broken and more than one 
 element with the same value exists in AMap, the lowest position 
 is retrieved. Unlinked elements are ignored. If the element does 
 not exist in AMap, adds new element, pick constructed from [*/ init], 
 at the end of AMap and returns its position.&]
-[s6; T must have pick constructor.&]
-[s6; Invalidates iterators to AMap.&]
-[s6; Invalidates references to keys.&]
-[s6; Invalidates references to VectorMap values.&]
-[s7; [*C@3 k]-|Key to find.&]
-[s7; [*C@3 init]-|Value to add if key is not in AMap yet.&]
-[s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:Unlink`(int`):%- [@(0.0.255) void]_[* Unlink]([@(0.0.255) int]_[*@3 i])&]
@@ -277,19 +264,12 @@ Value is transfered using deep copy constructor.&]
 [s6; Invalidates references to VectorMap values.&]
 [s3; &]
 [s4;%- &]
-[s5;:AMap`:`:PutPick`(const K`&`,T rval`_`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) con
-st]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T]_[@(0.0.255) rval`_]_[*@3 x])&]
+[s5;:Upp`:`:AMap`:`:PutPick`(const K`&`,T`&`&`):%- [@(0.0.255) int]_[* PutPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; If there are any unlinked elements in AMap, one of them is replaced 
 by the specified key/value pair. If there is no unlinked element, 
 the key/value pair is added at the end of AIndex using [* Add]. 
 Value is transfered using pick constructor.&]
-[s6; T must have pick constructor.&]
-[s6; Invalidates multi`-key ordering.&]
-[s6; Invalidates iterators to AMap.&]
-[s6; Invalidates references to keys.&]
-[s6; Invalidates references to VectorMap values.&]
-[s7; [*C@3 k]-|Key.&]
-[s7; [*C@3 x]-|Value.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:Put`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Put]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
@@ -337,19 +317,12 @@ using [* Put] and returns its position. &]
 [s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:FindPutPick`(const K`&`,pick`_ T`&`):%- [@(0.0.255) int]_[* FindPutPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 init])&]
+[s5;:Upp`:`:AMap`:`:FindPutPick`(const K`&`,T`&`&`):%- [@(0.0.255) int]_[* FindPutPick]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 init])&]
 [s2; Retrieves the position of first element with the specified key 
 in AMap. Unlinked elements are ignored. If the element does not 
 exist in AMap, puts new element, pick constructed from [* init], 
 using [* Put] and returns its position. &]
-[s6; T must have deep copy constructor.&]
-[s6; Invalidates iterators to AMap.&]
-[s6; Invalidates references to keys.&]
-[s6; Invalidates references to VectorMap values.&]
-[s7; [*C@3 k]-|Key to find.&]
-[s7; [*C@3 init]-|Value to add if key is not in AMap yet.&]
-[s7; [*/ Return value]-|Position of element (either found or added).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:Get`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
@@ -423,21 +396,14 @@ to it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:GetAddPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAddPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:AMap`:`:GetAddPick`(const K`&`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* GetAddPick](
+[@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Retrieves a constant reference to the first element with the 
 specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, the lowest 
 position element is retrieved. Unlinked elements are ignored. 
 If required key is not in the AMap, adds new element, pick constructed 
 from [* x],[*  ]at the end of AMap and returns a reference to it.&]
-[s6; T must have pick constructor.&]
-[s6; Invalidates iterators to AMap.&]
-[s6; Invalidates references to keys.&]
-[s6; Invalidates references to VectorMap values.&]
-[s7; [*C@3 k]-|Key to find.&]
-[s7; [*C@3 x]-|Value to add if key is not in AMap.&]
-[s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:GetPut`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPut]([@(0.0.255) const]_[*@4 K
@@ -475,21 +441,14 @@ to it.&]
 [s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:GetPutPick`(const K`&`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPutPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:AMap`:`:GetPutPick`(const K`&`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* GetPutPick](
+[@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Retrieves a constant reference value of the first element with 
 the specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, lowest position 
 element is retrieved. Unlinked elements are ignored. If required 
 key is not in the AMap, puts new element, pick constructed from 
 [* x], into the AMap using [* Put] and returns a reference to it.&]
-[s6; T must have pick constructor.&]
-[s6; Invalidates iterators to AMap.&]
-[s6; Invalidates references to keys.&]
-[s6; Invalidates references to VectorMap values.&]
-[s7; [*C@3 k]-|Key to find.&]
-[s7; [*C@3 x]-|Value to add if key is not in AMap.&]
-[s7; [*/ Return value]-|Reference to corresponding value.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:SetKey`(int`,const K`&`):%- [@(0.0.255) void]_[* SetKey]([@(0.0.255) int]_[*@3 i
@@ -756,8 +715,8 @@ NTL is used as part of UPP.&]
 [s7; [*/ Return value]-|Constant reference to the Index of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:PickIndex`(`)pick`_:%- Index[@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >]_[* P
-ickIndex]()_[@(0.128.128) pick`_]&]
+[s5;:Upp`:`:AMap`:`:PickIndex`(`):%- [_^Upp`:`:Index^ Index]<[*@4 K], 
+[*@4 HashFn]>_[* PickIndex]()&]
 [s2; Returns Index of keys. Destroys AMap by picking.&]
 [s7; [*/ Return value]-|Index of keys.&]
 [s3;%- &]
@@ -768,8 +727,7 @@ ickIndex]()_[@(0.128.128) pick`_]&]
 [s7; [*/ Return value]-|Constant reference to the Vector of keys.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:PickKeys`(`)pick`_:%- Vector[@(0.0.255) <][*@4 K][@(0.0.255) >]_[* PickKeys]()_[@(0.128.128) p
-ick`_]&]
+[s5;:Upp`:`:AMap`:`:PickKeys`(`):%- [_^Upp`:`:Vector^ Vector]<[*@4 K]>_[* PickKeys]()&]
 [s2; Returns Vector of keys. Destroys AMap by picking.&]
 [s7; [*/ Return value]-|Vector of keys.&]
 [s3;%- &]
@@ -785,10 +743,20 @@ of values.&]
 of values. Destroys AIndex by picking.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AMap`:`:PickValues`(`)pick`_:%- [*@4 V]_[* PickValues]()_[@(0.128.128) pick`_]&]
+[s5;:Upp`:`:AMap`:`:PickValues`(`):%- [*@4 V]_[* PickValues]()&]
 [s2; Returns basic random access container of values. Destroys AIndex 
 by picking.&]
 [s7; [*/ Return value]-|Basic random access container of values.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:AMap`:`:operator`~`(`):%- [_^Upp`:`:MapKVRange^ MapKVRange]<[_^Upp`:`:AMap^ A
+Map]<[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [*@4 T]>_[* operator`~]()&]
+[s5;:Upp`:`:AMap`:`:operator`~`(`)const:%- [_^Upp`:`:MapKVRange^ MapKVRange]<[_^Upp`:`:AMap^ A
+Map]<[@(0.0.255) const]_[*@4 K], [*@4 T], [*@4 V]>, [*@4 K], [@(0.0.255) const]_[*@4 T]>_[* opera
+tor`~]()_[@(0.0.255) const]&]
+[s2; Returns a special range object that can be used in C`+`+11 range 
+for to iterate over key/value pairs. Unlinked objects are automatically 
+skipped.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AMap`:`:operator`(`)`(const K`&`,const T`&`):%- [_^AMap^ AMap][@(0.0.255) `&]_[* opera

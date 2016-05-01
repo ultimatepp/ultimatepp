@@ -379,7 +379,7 @@ Htmls operator+(const HtmlTag& tag1, const HtmlTag& tag2)
 	h.Cat(tag2);
 	return h;
 }
-
+/*
 Htmls operator+(const String& s, const HtmlTag& tag)
 {
 	Htmls h;
@@ -395,6 +395,7 @@ Htmls operator+(const HtmlTag& tag, const String& s)
 	h.Cat(s);
 	return h;
 }
+*/
 
 Htmls operator+(const char *s, const HtmlTag& tag) {
 	Htmls h;

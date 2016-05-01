@@ -38,14 +38,13 @@ void   DllFn(T& x, const char *dll, const char *fn)
 	x = (T)GetDllFn(dll, fn);
 }
 
-
 #ifndef PLATFORM_WINCE
 String GetSystemDirectory();
 String GetWindowsDirectory();
 #endif
 String GetModuleFileName(HINSTANCE instance = AppGetHandle());
 
-//deprecated
+#ifdef DEPRECATED
 class SyncObject {
 protected:
 	HANDLE     handle;
@@ -60,12 +59,12 @@ public:
 	~SyncObject();
 };
 
-//deprecated
-class Event : public SyncObject {
+class Win32Event : public SyncObject {
 public:
 	void       Set();
 
-	Event();
+	Win32Event();
 };
+#endif
 
 #endif

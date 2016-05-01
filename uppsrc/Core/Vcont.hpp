@@ -1,3 +1,26 @@
+template <class T>
+void StreamContainer(Stream& s, T& cont)
+{
+	int n = cont.GetCount();
+	s / n;
+	if(n < 0) {
+		s.LoadError();
+		return;
+	}
+	if(s.IsLoading())
+	{
+		cont.Clear();
+		cont.Reserve(n);
+		while(n--)
+			s % cont.Add();
+	}
+	else
+	{
+		for(auto ptr = cont.begin(); n--; ++ptr)
+			s % *ptr;
+	}
+}
+
 void VectorReAlloc_(void *vector_, int newalloc, int sizeofT);
 void VectorReAllocF_(void *vector_, int newalloc, int sizeofT);
 void VectorGrow_(void *vector_, int sizeofT);
@@ -38,18 +61,17 @@ void Vector<T>::GrowF()
 }
 
 template <class T>
-void Vector<T>::Pick(Vector<T> rval_ v)
+void Vector<T>::Pick(Vector<T>&& v)
 {
 	vector = v.vector;
 	items = v.items;
 	alloc = v.alloc;
-	SetPicked(pick(v));
+	v.Zero();
 }
 
 template <class T>
 int  Vector<T>::GetIndex(const T& item) const
 {
-	Chk();
 	if(vector == NULL) return -1;
 	int n = &item - vector;
 	return n >= 0 && n < items ? n : -1;
@@ -65,7 +87,7 @@ void Vector<T>::Reserve(int n)
 template <class T>
 void Vector<T>::Free() {
 	if(vector && items >= 0)
-		DestroyArray((T *)vector, (T *)vector + items);
+		Destroy((T *)vector, (T *)vector + items);
 	RawFree(vector);
 }
 
@@ -78,11 +100,10 @@ void Vector<T>::Clear() {
 
 template <class T>
 void Vector<T>::__DeepCopy(const Vector& src) {
-	src.Chk();
 	items = alloc = src.items;
 	if(src.vector) {
 		vector = RawAlloc(alloc);
-		DeepCopyConstructArray(vector, src.vector, src.vector + items);
+		DeepCopyConstruct(vector, src.vector, src.vector + items);
 	}
 	else
 		vector = NULL;
@@ -92,18 +113,16 @@ template <class T>
 T& Vector<T>::GrowAdd(const T& x) {
 	T *prev = vector;
 	Grow();
-	T *q = Rdd();
-	DeepCopyConstruct(q, x);
+	T *q = new(Rdd()) T(clone(x));
 	RawFree(prev);
 	return *q;
 }
 
 template <class T>
-T& Vector<T>::GrowAddPick(T rval_ x) {
+T& Vector<T>::GrowAddPick(T&& x) {
 	T *prev = vector;
 	Grow();
-	T *q = Rdd();
-	::new(q) T(pick(x));
+	T *q = ::new(Rdd()) T(pick(x));
 	RawFree(prev);
 	return *q;
 }
@@ -111,10 +130,9 @@ T& Vector<T>::GrowAddPick(T rval_ x) {
 template <class T> inline
 void Vector<T>::AddN(int n)
 {
-	Chk();
 	ASSERT(n >= 0);
 	if(items + n <= alloc) {
-		ConstructArray(vector + items, vector + items + n);
+		Construct(vector + items, vector + items + n);
 		items += n;
 	}
 	else
@@ -125,31 +143,29 @@ template <class T>
 void Vector<T>::Trim(int n)
 {
 	ASSERT(n >= 0 && n <= items);
-	DestroyArray(vector + n, vector + items);
+	Destroy(vector + n, vector + items);
 	items = n;
 }
 
 template <class T>
 void Vector<T>::SetCount(int n) {
-	Chk();
 	ASSERT(n >= 0);
 	if(n == items) return;
 	if(n < items)
 		Trim(n);
 	else {
 		if(n > alloc) ReAllocF(n);
-		ConstructArray(vector + items, vector + n);
+		Construct(vector + items, vector + n);
 		items = n;
 	}
 }
 
 template <class T>
 void Vector<T>::SetCount(int n, const T& init) {
-	Chk();
 	ASSERT(n >= 0);
 	if(n == items) return;
 	if(n < items)
-		DestroyArray(vector + n, vector + items);
+		Destroy(vector + n, vector + items);
 	else {
 		if(n > alloc) {
 			T *prev = vector;
@@ -165,23 +181,21 @@ void Vector<T>::SetCount(int n, const T& init) {
 
 template <class T>
 void Vector<T>::SetCountR(int n) {
-	Chk();
 	if(n > alloc)
-		ReAllocF(alloc + ntl_max(alloc, n - items));
+		ReAllocF(alloc + max(alloc, n - items));
 	SetCount(n);
 }
 
 template <class T>
 void Vector<T>::SetCountR(int n, const T& init) {
-	Chk();
 	ASSERT(n >= 0);
 	if(n == items) return;
 	if(n < items)
-		DestroyArray(vector + n, vector + items);
+		Destroy(vector + n, vector + items);
 	else
 		if(n > alloc) {
 			T *prev = vector;
-			ReAlloc(alloc + ntl_max(alloc, n - items));
+			ReAlloc(alloc + max(alloc, n - items));
 			DeepCopyConstructFill(vector + items, vector + n, init);
 			RawFree(prev);
 		}
@@ -192,10 +206,9 @@ void Vector<T>::SetCountR(int n, const T& init) {
 
 template <class T>
 void Vector<T>::Remove(int q, int count) {
-	Chk();
 	ASSERT(q >= 0 && q <= items - count && count >= 0);
 	if(count == 0) return;
-	DestroyArray(vector + q, vector + q + count);
+	Destroy(vector + q, vector + q + count);
 	memmove(vector + q, vector + q + count, (items - q - count) * sizeof(T));
 	items -= count;
 }
@@ -203,7 +216,6 @@ void Vector<T>::Remove(int q, int count) {
 template <class T>
 void Vector<T>::Remove(const int *sorted_list, int n)
 {
-	Chk();
 	if(!n) return;
 	int pos = *sorted_list;
 	int npos = pos;
@@ -256,7 +268,7 @@ void Vector<T>::InsertN(int q, int count) {
 	ASSERT(count >= 0);
 	ASSERT(q >= 0 && q <= items);
 	RawInsert(q, count);
-	ConstructArray(vector + q, vector + q + count);
+	Construct(vector + q, vector + q + count);
 }
 
 template <class T>
@@ -268,11 +280,11 @@ void Vector<T>::Insert(int q, const T& x, int count) {
 }
 
 template <class T>
-T& Vector<T>::InsertPick(int q, T rval_ x)
+T& Vector<T>::Insert(int q, T&& x)
 {
 	ASSERT(&x < vector || &x > vector + items);
 	RawInsert(q, 1);
-	::new(vector[q]) T(x);
+	::new(vector + q) T(pick(x));
 	return Get(q);
 }
 
@@ -281,19 +293,27 @@ void Vector<T>::Insert(int q, const Vector& x, int offset, int count) {
 	ASSERT(offset >= 0 && count >= 0 && offset + count <= x.GetCount());
 	ASSERT(!vector || x.vector != vector);
 	RawInsert(q, count);
-	DeepCopyConstructArray(vector + q, x.vector + offset, x.vector + offset + count);
+	DeepCopyConstruct(vector + q, x.vector + offset, x.vector + offset + count);
 }
 
-#ifdef CPP_11
 template <class T>
 void Vector<T>::Insert(int i, std::initializer_list<T> init)
 {
 	RawInsert(i, (int)init.size());
 	T *t = vector + i;
 	for(auto q : init)
-		DeepCopyConstruct(t++, q);
+		new(t++) T(clone(q));
 }
-#endif
+
+template <class T>
+template <class Range>
+void Vector<T>::Insert(int i, const Range& r)
+{
+	RawInsert(i, r.GetCount());
+	T *t = vector + i;
+	for(auto q : r)
+		new(t++) T(clone(q));
+}
 
 template <class T>
 void Vector<T>::Insert(int q, const Vector& x) {
@@ -302,23 +322,19 @@ void Vector<T>::Insert(int q, const Vector& x) {
 }
 
 template <class T>
-void Vector<T>::InsertPick(int i, Vector<T> rval_ v) {
-	Chk();
-	v.Chk();
+void Vector<T>::Insert(int i, Vector<T>&& v) {
 	ASSERT(!vector || v.vector != vector);
 	if(v.items) {
 		RawInsert(i, v.items);
 		memcpy(vector + i, v.vector, sizeof(T) * v.items);
 	}
 	RawFree(v.vector);
-	SetPicked(pick(v));
+	v.Zero();
 }
 
 template <class T>
 void Vector<T>::InsertSplit(int i, Vector<T>& v, int from)
 {
-	Chk();
-	v.Chk();
 	ASSERT(!vector || v.vector != vector && from <= v.GetCount());
 	int n = v.GetCount() - from;
 	if(n) {
@@ -330,7 +346,6 @@ void Vector<T>::InsertSplit(int i, Vector<T>& v, int from)
 
 template <class T>
 void Vector<T>::Set(int i, const T& x, int count) {
-	Chk();
 	ASSERT(i >= 0 && count >= 0);
 	if(count == 0) return;
 	if(&x >= vector && &x < vector + items) {
@@ -342,6 +357,19 @@ void Vector<T>::Set(int i, const T& x, int count) {
 		At(i + count - 1);
 		Fill(vector + i, vector + i + count, x);
 	}
+}
+
+template <class T>
+template <class Range>
+void Vector<T>::Set(int i, const Range& r)
+{
+	int count = r.GetCount();
+	ASSERT(i >= 0 && count >= 0);
+	if(count == 0) return;
+	At(i + count - 1);
+	count += i;
+	for(; i < count; i++)
+		vector[i] = clone(r[i]);
 }
 
 #ifdef UPP
@@ -383,7 +411,6 @@ String Vector<T>::ToString() const
 
 template <class T>
 void Array<T>::Free() {
-	if(IsPicked()) return;
 	for(int i = 0; i < vector.GetCount(); i++)
 		delete (T *) vector[i];
 }
@@ -393,7 +420,7 @@ void Array<T>::__DeepCopy(const Array<T>& v) {
 	int n = v.GetCount();
 	vector.SetCount(n);
 	for(int i = 0; i < n; i++)
-		vector[i] = DeepCopyNew(v[i]);
+		vector[i] = new T(clone(v[i]));
 }
 
 template <class T>
@@ -504,7 +531,17 @@ void Array<T>::Insert(int i, const T& x, int count) {
 }
 
 template <class T>
-T& Array<T>::InsertPick(int i, T rval_ x)
+template <class Range>
+void Array<T>::Insert(int i, const Range& r)
+{
+	vector.InsertN(i, r.GetCount());
+	T **t = GetPtr(i);
+	for(const auto& x : r)
+		*t++ = new T(clone(x));
+}
+
+template <class T>
+T& Array<T>::Insert(int i, T&& x)
 {
 	vector.InsertN(i, 1);
 	vector[i] = new T(pick(x));
@@ -527,18 +564,16 @@ template <class T>
 void Array<T>::Insert(int i, const Array& x, int offset, int count) {
 	vector.InsertN(i, count);
 	for(int q = 0; q < count; q++)
-		vector[q + i] = DeepCopyNew(x[q + offset]);
+		vector[q + i] = new T(x[q + offset]);
 }
 
-#ifdef CPP_11
 template <class T>
 void Array<T>::Insert(int i, std::initializer_list<T> init)
 {
 	vector.InsertN(i, init.size());
 	for(auto q : init)
-		vector[i++] = DeepCopyNew(q);
+		vector[i++] = new T(q);
 }
-#endif
 
 #ifdef UPP
 template <class T>
@@ -560,137 +595,6 @@ String Array<T>::ToString() const
 }
 
 #endif
-
-// ------------------
-
-template <class T, int NBLK>
-Segtor<T, NBLK>::Segtor(const Segtor& s, int) {
-	items = s.items;
-	block.SetCount((items + NBLK - 1) / NBLK);
-	int q = items / NBLK;
-	int r = items % NBLK;
-	int i;
-	for(i = 0; i < q; i++) {
-		T *a = (T *) s.block[i].item;
-		DeepCopyConstructArray((T *) block[i].item, a, a + NBLK);
-	}
-	if(r) {
-		T *a = (T *) s.block[q].item;
-		DeepCopyConstructArray((T *) block[i].item, a, a + r);
-	}
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Free() {
-	int q = items / NBLK;
-	int r = items % NBLK;
-	int i;
-	for(i = 0; i < q; i++) {
-		T *a = (T *) block[i].item;
-		DestroyArray(a, a + NBLK);
-	}
-	if(r) {
-		T *a = (T *) block[i].item;
-		DestroyArray(a, a + r);
-	}
-}
-
-template <class T, int NBLK>
-Segtor<T, NBLK>::~Segtor() {
-	if(IsPicked()) return;
-	Free();
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::DoRange(unsigned beg, unsigned end, void (*fn)(T*, const T*)) {
-	ASSERT(beg <= end);
-	int bblk = beg / NBLK, bidx = beg % NBLK;
-	int eblk = end / NBLK, eidx = end % NBLK;
-	if(eblk == block.GetCount()) {
-		ASSERT(eidx == 0);
-		eblk--;
-		eidx = NBLK;
-	}
-	ASSERT(eblk < block.GetCount());
-	T *tp = (T *)block[bblk].item;
-	if(bblk != eblk) {
-		(*fn)(tp + bidx, tp + NBLK);
-		while(++bblk < eblk) {
-			tp = (T *)block[bblk].item;
-			(*fn)(tp, tp + NBLK);
-		}
-		tp = (T *)block[bblk].item;
-		(*fn)(tp, tp + eidx);
-	}
-	else
-		(*fn)(tp + bidx, tp + eidx);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Fill(unsigned beg, unsigned end, const T& x) {
-	ASSERT(beg <= end);
-	int bblk = beg / NBLK, bidx = beg % NBLK;
-	int eblk = end / NBLK, eidx = end % NBLK;
-	if(eblk == block.GetCount()) {
-		ASSERT(eidx == 0);
-		eblk--;
-		eidx = NBLK;
-	}
-	ASSERT(eblk < block.GetCount());
-	T *tp = (T *)block[bblk].item;
-	if(bblk != eblk) {
-		DeepCopyConstructFill(tp + bidx, tp + NBLK, x);
-		while(++bblk < eblk) {
-			tp = (T *)block[bblk].item;
-			DeepCopyConstructFill(tp, tp + NBLK, x);
-		}
-		tp = (T *)block[bblk].item;
-		DeepCopyConstructFill(tp, tp + eidx, x);
-	}
-	else
-		DeepCopyConstructFill(tp + bidx, tp + eidx, x);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::SetCount(int n) {
-	Del(n);
-	block.SetCount((n + NBLK - 1) / NBLK);
-	Init(n);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::SetCount(int n, const T& init) {
-	Del(n);
-	block.SetCount((n + NBLK - 1) / NBLK);
-	Init(n, init);
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Clear() {
-	if(!IsPicked())
-		Free();
-	items = 0;
-	block.Clear();
-}
-
-template <class T, int NBLK>
-void Segtor<T, NBLK>::Set(int i, const T& x, int count) {
-	ASSERT(i >= 0 && count >= 0);
-	DoIndex(i + count - 1);
-	Iterator q(*this, i);
-	while(count--)
-		*q++ = x;
-}
-
-template <class T, int NBLK>
-int Segtor<T, NBLK>::GetIndex(const T& item) const {
-	for(int i = 0; i < block.GetCount(); i++) {
-		T *q = (T *) block[i].item;
-		if(&item >= q && &item < q + NBLK)
-			return &item - q + NBLK * i;
-	}
-	return -1;
-}
 
 // ------------------
 
@@ -741,7 +645,7 @@ template <class T>
 void BiVector<T>::Add0() {
 	ASSERT(items >= 0);
 	if(items >= alloc)
-		ReAlloc(ntl_max(2 * items, 4));
+		ReAlloc(max(2 * items, 4));
 	items++;
 }
 
@@ -765,10 +669,10 @@ void BiVector<T>::Free() {
 	if(vector && items >= 0) {
 		int end = start + items;
 		if(end <= alloc)
-			DestroyArray(vector + start, vector + end);
+			Destroy(vector + start, vector + end);
 		else {
-			DestroyArray(vector + start, vector + alloc);
-			DestroyArray(vector, vector + end - alloc);
+			Destroy(vector + start, vector + alloc);
+			Destroy(vector, vector + end - alloc);
 		}
 		delete[] (byte *)vector;
 	}
@@ -797,7 +701,6 @@ String BiVector<T>::ToString() const
 
 #endif
 
-#ifdef CPP_11
 template <class T>
 BiVector<T>::BiVector(std::initializer_list<T> init)
 {
@@ -811,18 +714,16 @@ BiVector<T>::BiVector(std::initializer_list<T> init)
 	}
 	vector = (T *) new byte[alloc * sizeof(T)];
 	T *t = vector;
-	for(auto q : init)
-		DeepCopyConstruct(t++, q);
+	for(const auto& q : init)
+		new (t++) T(q);
 }
-#endif
 
 // ------------------
 
 template <class T>
 void BiArray<T>::Free() {
-	if(!bv.IsPicked())
-		for(int i = 0; i < GetCount(); i++)
-			delete (T *) bv[i];
+	for(int i = 0; i < GetCount(); i++)
+		delete (T *) bv[i];
 }
 
 template <class T>
@@ -855,13 +756,11 @@ String BiArray<T>::ToString() const
 	return AsStringArray(*this);
 }
 
-#ifdef CPP_11
 template <class T>
 BiArray<T>::BiArray(std::initializer_list<T> init)
 {
-	for(auto q : init)
+	for(const auto& q : init)
 		AddTail(q);
 }
-#endif
 
 #endif

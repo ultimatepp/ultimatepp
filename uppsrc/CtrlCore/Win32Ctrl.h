@@ -15,16 +15,18 @@ private:
 
 	static  bool GetMsg(MSG& msg);
 
+	static  bool DumpMessage(Ctrl *w, UINT message, WPARAM wParam, LPARAM lParam);
+
 	static LRESULT CALLBACK UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static void RenderFormat(int format);
 	static void RenderAllFormats();
 	static void DestroyClipboard();
 
 public:
-	static Event     ExitLoopEvent;
-	static bool      endsession;
-	static void      EndSession();
-	static HINSTANCE hInstance;
+	static Win32Event ExitLoopEvent;
+	static bool       endsession;
+	static void       EndSession();
+	static HINSTANCE  hInstance;
 
 protected:
 	static HCURSOR   hCursor;
@@ -32,9 +34,9 @@ protected:
 	static VectorMap< HWND, Ptr<Ctrl> >& Windows();
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	static Event  OverwatchEndSession;
-	static HWND   OverwatchHWND;
-	static HANDLE OverwatchThread;
+	static Win32Event OverwatchEndSession;
+	static HWND       OverwatchHWND;
+	static HANDLE     OverwatchThread;
 
 	static LRESULT CALLBACK OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	static DWORD WINAPI Win32OverwatchThread(LPVOID);

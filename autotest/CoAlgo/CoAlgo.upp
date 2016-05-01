@@ -1,0 +1,12 @@
+optimize_speed;
+
+uses
+	Core,
+	Core/SSL;
+
+file
+	CoAlgo.cpp optimize_speed;
+
+mainconfig
+	"" = "MT";
+

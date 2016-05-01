@@ -46,15 +46,16 @@ p][@(0.0.255) `&]_[*@3 v])&]
 [s2; Copy constructor.&]
 [s3; &]
 [s4;%- &]
-[s5;:ValueMap`:`:ValueMap`(Index`<Value`>rval`_`,Vector`<Value`>rval`_`):%- [* ValueMap
-]([_^Index^ Index]<[_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 k], [_^Vector^ Vector]<[_^Value^ V
-alue]>_[@(0.0.255) rval`_]_[*@3 v])&]
+[s5;:Upp`:`:ValueMap`:`:ValueMap`(Upp`:`:Index`<Upp`:`:Value`>`&`&`,Upp`:`:Vector`<Upp`:`:Value`>`&`&`):%- [* V
+alueMap]([_^Upp`:`:Index^ Index]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 k], 
+[_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 v])&]
 [s2; Creates ValueMap by picking Index a Vector of Values (efficient 
 but sources are destroyed).&]
 [s3; &]
 [s4;%- &]
-[s5;:ValueMap`:`:ValueMap`(VectorMap`<Value`,Value`>rval`_`):%- [* ValueMap]([_^VectorMap^ V
-ectorMap]<[_^Value^ Value], [_^Value^ Value]>_[@(0.0.255) rval`_]_[*@3 m])&]
+[s5;:Upp`:`:ValueMap`:`:ValueMap`(Upp`:`:VectorMap`<Upp`:`:Value`,Upp`:`:Value`>`&`&`):%- [* V
+alueMap]([_^Upp`:`:VectorMap^ VectorMap]<[_^Upp`:`:Value^ Value], 
+[_^Upp`:`:Value^ Value]>`&`&_[*@3 m])&]
 [s2; Creates ValueMap by picking VectorMap (efficient but source 
 is destroyed).&]
 [s3; &]

@@ -5,7 +5,11 @@
 
 #ifdef PLATFORM_POSIX
 
-GLOBAL_VAR(UpdaterConfig,UpdaterCfg);
+UpdaterConfig& UpdaterCfg()
+{
+	static UpdaterConfig s;
+	return s;
+}
 
 void Ide::CheckUpdates(bool verbose){
 	LLOG("CheckUpdates, verbose="<<verbose);

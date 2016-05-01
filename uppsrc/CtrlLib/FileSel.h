@@ -137,7 +137,7 @@ class LazyExeFileIcons {
 	Vector<int>  ndx;
 	Callback3<bool, const String&, Image&> WhenIcon;
 
-	AuxMutex     mutex;
+	Mutex  mutex;
 
 	void   Do();
 	void   Restart(int delay)                 { tm.KillSet(delay, callback(this, &LazyExeFileIcons::Do)); }

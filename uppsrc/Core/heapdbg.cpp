@@ -21,7 +21,7 @@ void HeapPanic(const char *text, void *pos, int size);
 
 static StaticCriticalSection sHeapLock2;
 
-struct DbgBlkHeader {
+struct alignas(16) DbgBlkHeader {
 	size_t        size;
 	DbgBlkHeader *prev;
 	DbgBlkHeader *next;

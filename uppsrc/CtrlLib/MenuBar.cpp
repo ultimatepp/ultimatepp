@@ -16,7 +16,11 @@ static ColorF xpmenuborder[] = {
 	&SColorMenu, &SColorMenu, &SColorMenu, &SColorMenu,
 };
 
-GLOBAL_VARP(BorderFrame, XPMenuFrame, (xpmenuborder));
+BorderFrame& XPMenuFrame()
+{
+	static BorderFrame h(xpmenuborder);
+	return h;
+}
 
 CtrlFrame& MenuFrame()
 {

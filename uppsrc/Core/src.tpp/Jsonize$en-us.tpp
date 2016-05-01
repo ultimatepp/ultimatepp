@@ -145,14 +145,12 @@ data type.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Special Jsonize variants]]}}&]
 [s3; &]
-[s5;:StringMap`(JsonIO`&`,VectorMap`<K`,V`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) cl
-ass]_[*@4 K], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Stri
-ngMap]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], [_^VectorMap^ VectorMap]<[*@4 K], 
-[*@4 V], [*@4 H]>`&_[*@3 map])&]
-[s5;:StringMap`(JsonIO`&`,ArrayMap`<K`,V`,H`>`&`): [@(0.0.255) template]_<[@(0.0.255) cla
-ss]_[*@4 K], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 H]>_[@(0.0.255) void]_[* Strin
-gMap]([_^JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], [_^ArrayMap^ ArrayMap]<[*@4 K], 
-[*@4 V], [*@4 H]>`&_[*@3 map])&]
+[s5;:StringMap`(JsonIO`&`,VectorMap`<K`,V`>`&`): [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 K], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) void]_[* StringMap]([_^JsonIO^ JsonIO][@(0.0.255) `&
+]_[*@3 io], [_^VectorMap^ VectorMap]<[*@4 K], [*@4 V], [*@4 H]>`&_[*@3 map])&]
+[s5;:StringMap`(JsonIO`&`,ArrayMap`<K`,V`>`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 K], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) void]_[* StringMap]([_^JsonIO^ JsonIO][@(0.0.255) `&
+]_[*@3 io], [_^ArrayMap^ ArrayMap]<[*@4 K], [*@4 V], [*@4 H]>`&_[*@3 map])&]
 [s2;%% The default Jsonize for Maps has to encode any type as key, 
 which leads to somewhat unnatural results when key [%-*@4 K] is 
 String or WString. [%-* StringMap ]alternative variant encodes 

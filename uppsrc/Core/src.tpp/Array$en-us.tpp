@@ -104,14 +104,10 @@ element.&]
 [s7; [*/ Return value]-|Reference to new element in Array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:AddPick`(pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.128.128) pick`_
-]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Array`:`:Add`(T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T][@(0.0.255) `&`&]_[*@3 x
+])&]
 [s2; Adds new element to the Array and picks value of parameter to 
-it. &]
-[s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators to the Array.&]
-[s7; [*C@3 x]-|Source instance of T that is to be picked.&]
-[s7; [*/ Return value]-|Reference to new element in Array.&]
+it.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Add`(T`*`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 T]_`*[*@3 newt])&]
@@ -349,12 +345,10 @@ value.&]
 a reference to it.&]
 [s3; &]
 [s4;%- &]
-[s5;:Array`:`:InsertPick`(int`,pick`_ T`&`):%- [*@4 T][@(0.0.255) `&]_[* InsertPick]([@(0.0.255) i
-nt]_[*@3 i], [@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Array`:`:InsertPick`(int`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* InsertPick]([@(0.0.255) i
+nt]_[*@3 i], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Inserts an element at [%-*@3 i] picking the content of [%-*@3 x] 
 and returns a reference to it.&]
-[s6;~~~.992; Requires T to have pick constructor.&]
-[s6;~~~.992; Invalidates iterators to the Array.&]
 [s3; &]
 [s4;%- &]
 [s5;:Array`:`:Insert`(int`,const Array`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int]_
@@ -409,24 +403,19 @@ onst]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 o],
 [s7; [*C@3 c]-|Number of elements to insert.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:InsertPick`(int`,pick`_ Array`&`):%- [@(0.0.255) void]_[* InsertPick]([@(0.0.255) i
-nt]_[*@3 i], [@(0.128.128) pick`_]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Array`:`:InsertPick`(int`,Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* InsertPi
+ck]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Array^ Array][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Inserts the source Array at the specified position using pick 
 transfer semantics. It is faster than deep copy insert, does 
 not use deep copy constructor for T, but destroys the source 
 Array by picking.&]
-[s6; Invalidates iterators to the Array.&]
-[s7; [*C@3 i]-|Insertion position.&]
-[s7; [*C@3 x]-|Source Array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:AppendPick`(pick`_ Array`&`):%- [@(0.0.255) void]_[* AppendPick]([@(0.128.128) p
-ick`_]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:Array`:`:AppendPick`(Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* AppendPick]([_^Upp`:`:Array^ A
+rray][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Appends source Array using pick transfer semantics. It is faster 
 than deep copy insert, does not use deep copy constructor for 
 T, but destroys the source Array by picking.&]
-[s6; Invalidates iterators to the Array.&]
-[s7; [*C@3 x]-|Source Array.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Swap`(int`,int`):%- [@(0.0.255) void]_[* Swap]([@(0.0.255) int]_[*@3 i1], 

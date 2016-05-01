@@ -47,7 +47,7 @@ VectorMap<String, String> GetIniKeys();
 bool IniChanged__(int version);
 #else
 extern int  ini_version__;
-inline bool IniChanged__(int version) { return version != ReadWithBarrier(ini_version__); }
+inline bool IniChanged__(int version) { return version != ini_version__; }
 #endif
 
 struct IniString {
@@ -373,40 +373,10 @@ public:
 	AbortExc();
 };
 
-// --------------
-
-/*
-template <class T>
-va_list va_ptr(const T& obj)
-{
-	va_list temp;
-	va_start(temp, obj);
-	return temp;
-}
-*/
-
 // ---------------
 
 int  InScListIndex(const char *s, const char *list);
 bool InScList(const char *s, const char *list);
-
-class StringC {
-	BitAndPtr bap;
-
-	bool     IsString() const                  { return bap.GetBit(); }
-	void     Free();
-
-public:
-	void     SetString(const String& s);
-	void     SetCharPtr(const char *s);
-
-	bool     IsEmpty() const;
-
-	operator const char *() const;
-	operator String() const;
-
-	~StringC();
-};
 
 // ------------------- Linux style text settings -------------
 
@@ -510,38 +480,6 @@ void SerializeGlobalConfigs(Stream& s);
 #ifdef PLATFORM_WINCE
 inline void abort() { TerminateProcess(NULL, -1); }
 #endif
-
-class NanoStrings {
-	struct Data {
-		int                    count;
-		Vector< Buffer<char> > data;
-	};
-	Data           data[48];
-	Vector<String> over;
-	bool           zs;
-
-	enum {
-		page_shift = 7,
-		page_mask = (1 << page_shift) - 1,
-	};
-
-	Tuple2<const char *, int> Get2s(dword ws);
-
-public:
-	dword                     Add(const String& s);
-	Tuple2<const char *, int> Get2(dword ws);
-	String                    Get(dword ws);
-	const char *              GetPtr(dword ws)           { return Get2(ws).a; }
-	
-	void Clear();
-	void Shrink();
-
-	void ZeroTerminated(bool b = true)                   { zs = b; }
-	
-	NanoStrings();
-	
-	void DumpProfile();
-};
 
 String  Replace(const String& s, const Vector<String>& find, const Vector<String>& replace);
 String  Replace(const String& s, const VectorMap<String, String>& fr);

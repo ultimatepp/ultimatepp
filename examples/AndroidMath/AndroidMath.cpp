@@ -11,7 +11,7 @@ extern "C" {
 		jint number,
 		jint n)
 	{
-	      return AndroidMathUtility::Power(number, n);
+	    return AndroidMathUtility::Power(number, n);
 	}
 
 } // extern "C"

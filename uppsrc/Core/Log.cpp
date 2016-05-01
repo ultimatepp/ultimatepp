@@ -174,6 +174,8 @@ void LogOut::Close()
 void LogOut::Line(const char *s, int len, int depth)
 {
 	Mutex::Lock __(log_mutex);
+	
+	ASSERT(len < 600);
 
 	char h[600];
 	char *p = h;
@@ -186,7 +188,7 @@ void LogOut::Line(const char *s, int len, int depth)
 			return;
 		p += ll;
 	}
-	char *beg = p; 
+	char *beg = p;
 	for(int q = min(depth, 99); q--;)
 		*p++ = '\t';
 	line_begin = len && s[len - 1] == '\n';
@@ -417,20 +419,13 @@ void SetVppLogNoDeleteOnStartup()  { sLog.options |= LOG_APPEND; }
 LogStream& StdLogStream()
 {
 	static LogStream *s;
-	ReadMemoryBarrier();
-	if(!s) {
-		static StaticCriticalSection lock;
-		lock.Enter();
-		if(!s) {
-			static byte lb[sizeof(LogStream)];
-			LogStream *strm = new(lb) LogStream;
-			if(*sLog.filepath == '\0')
-				sLogFile(sLog.filepath);
-			sLog.Create();
-			WriteMemoryBarrier();
-			s = strm;
-		}
-		lock.Leave();
+	ONCELOCK {
+		static byte lb[sizeof(LogStream)];
+		LogStream *strm = new(lb) LogStream;
+		if(*sLog.filepath == '\0')
+			sLogFile(sLog.filepath);
+		sLog.Create();
+		s = strm;
 	}
 	return *s;
 }

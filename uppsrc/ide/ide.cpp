@@ -136,6 +136,7 @@ void Ide::SetMain(const String& package)
 	mainconfigparam.Clear();
 	ScanWorkspace();
 	LoadFromFile(THISBACK(SerializeWorkspace), WorkspaceFile());
+	tabs.FixIcons();
 	editorsplit.Zoom(0);
 	UpdateFormat();
 	String e = editfile;

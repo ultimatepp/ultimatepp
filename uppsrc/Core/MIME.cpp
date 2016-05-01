@@ -2,7 +2,7 @@
 
 NAMESPACE_UPP
 
-static Tuple2<const char *, const char *> sEXT_MIME[] = {
+static Tuple<const char *, const char *> sEXT_MIME[] = {
 	{ "txt", "text/plain" },
 	{ "html", "text/html" },
 	{ "jpeg", "image/jpeg" },

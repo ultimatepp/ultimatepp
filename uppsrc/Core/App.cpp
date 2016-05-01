@@ -178,12 +178,16 @@ String  ConfigFile() {
 	return ConfigFile(GetExeTitle() + ".cfg");
 }
 
-GLOBAL_VAR(Vector<WString>, coreCmdLine__)
+Vector<WString>& coreCmdLine__()
+{
+	static Vector<WString> h;
+	return h;
+}
 
 const Vector<String>& CommandLine()
 {
 	Vector<String> *ptr;
-	INTERLOCKED { 
+	INTERLOCKED {
 		static ArrayMap< byte, Vector<String> > charset_cmd;
 		byte cs = GetDefaultCharset();
 		int f = charset_cmd.Find(cs);
@@ -406,6 +410,9 @@ void AppInit__(int argc, const char **argv)
 
 void AppExit__()
 {
+#ifdef _MULTITHREADED
+	Thread::ShutdownThreads();
+#endif
 	sMainRunning = false;
 #ifdef PLATFORM_POSIX
 	MemoryIgnoreLeaksBegin(); // Qt leaks on app exit...
@@ -439,7 +446,7 @@ void LaunchWebBrowser(const String& url)
 		char *curl = (char *)malloc(l);
 		memcpy(curl, wurl, l);
 		StartAuxThread(sShellExecuteOpen, curl);
-	} 
+	}
 }
 #endif
 

@@ -893,7 +893,7 @@ XmlNode& XmlNode::SetAttr(const char *id, const String& text)
 	return *this;
 }
 
-void XmlNode::SetAttrsPick(VectorMap<String, String> rval_ a)
+void XmlNode::SetAttrs(VectorMap<String, String>&& a)
 {
 	if(a.GetCount() == 0)
 		attr.Clear();
@@ -950,7 +950,7 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		String tag = p.ReadTag();
 		if(!filter || filter->DoTag(tag)) {
 			m.CreateTag(tag);
-			m.SetAttrsPick(p.PickAttrs());
+			m.SetAttrs(p.PickAttrs());
 			while(!p.End())
 				if(!Ignore(p, style)) {
 					XmlNode n = sReadXmlNode(p, filter, style);

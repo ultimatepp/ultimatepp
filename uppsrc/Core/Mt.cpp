@@ -7,13 +7,9 @@ NAMESPACE_UPP
 #ifdef _MULTITHREADED
 
 static Mutex& sMutexLock()
-{
-	static Mutex *section;
-	if(!section) {
-		static byte b[sizeof(Mutex)];
-		section = new(b) Mutex;
-	}
-	return *section;
+{ // this is Mutex intended to synchronize initialization of other primitives
+	static Mutex m;
+	return m;
 }
 
 INITBLOCK {
@@ -59,38 +55,45 @@ void (*Thread::AtExit(void (*exitfn)()))()
 	return prev;
 }
 
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_POSIX)
+struct sThreadExitExc__ {};
+
+void Thread::Exit()
+{
+	throw sThreadExitExc__();
+}
+
 static
 #ifdef PLATFORM_WIN32
-#ifdef CPU_64
-unsigned int
+	#ifdef CPU_64
+		unsigned int
+	#else
+		uintptr_t __stdcall
+	#endif
 #else
-uintptr_t __stdcall
-#endif
-#else
-void *
+	void *
 #endif
 sThreadRoutine(void *arg)
 {
 	LLOG("sThreadRoutine");
-	Callback *cb = (Callback *)arg;
+	auto cb = (Function<void ()> *)arg;
 	try {
 		(*cb)();
 	}
 	catch(Exc e) {
 		Panic(e);
 	}
-	catch(ExitExc) {}
+	catch(sThreadExitExc__) {}
+	catch(Upp::ExitExc) {}
 	AtomicDec(sThreadCount);
 	delete cb;
 	if(sExit)
 		(*sExit)();
+	CoWork::ShutdownPool();
 #ifdef UPP_HEAP
 	MemoryFreeThread();
 #endif
 	return 0;
 }
-#endif
 
 static bool threadr; //indicates if *any* Thread instance is running (having called its Run()), upon first call of Run
 #ifndef CPU_BLACKFIN
@@ -105,10 +108,9 @@ Mutex vm; //a common access synchronizer
 //to sMain: an Application can start more than one thread, without having *any* one of them called Run() of any Thread instace
 //when Run() is called *anytime*, it means, the term of *MainThread* has to be running anyway,
 //otherwise no child threads could run. they are created by main.
-//now each thread, having any Thread instace can start a first Run()
+//now each thread, having any Thread instance can start a first Run()
 
-
-bool Thread::Run(Callback _cb)
+bool Thread::Run(Function<void ()> _cb)
 {
 	LLOG("Thread::Run");
 	AtomicInc(sThreadCount);
@@ -133,7 +135,7 @@ bool Thread::Run(Callback _cb)
 	}
 #endif
 	Detach();
-	Callback *cb = new Callback(_cb);
+	auto cb = new Function<void()>(_cb);
 #ifdef PLATFORM_WIN32
 	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, cb, 0, ((unsigned int *)(&thread_id)));
 #endif
@@ -189,27 +191,27 @@ bool Thread::IsMain() //the calling thread is the Main Thread or the only one in
 
 int Thread::GetCount()
 {
-	return ReadWithBarrier(sThreadCount);
+	return sThreadCount;
 }
 
-static Atomic sShutdown;
+static bool sShutdown;
 
 void Thread::BeginShutdownThreads()
 {
-	AtomicInc(sShutdown);
+	sShutdown = true;
 }
 
 void Thread::EndShutdownThreads()
 {
-	AtomicDec(sShutdown);
+	sShutdown = false;
 }
-
 
 void Thread::ShutdownThreads()
 {
+	CoWork::ShutdownPool();
 	BeginShutdownThreads();
 	while(GetCount())
-		Sleep(10);
+		Sleep(100);
 	EndShutdownThreads();
 }
 
@@ -343,7 +345,7 @@ bool Thread::Priority(int percent)
 #endif
 }
 
-void Thread::Start(Callback cb)
+void Thread::Start(Function<void ()> cb)
 {
 	Thread t;
 	t.Run(cb);
@@ -362,18 +364,6 @@ void Thread::Sleep(int msec)
 	nanosleep(&tval, NULL);
 #endif
 }
-
-#if !defined(CPU_SSE2) && !defined(COMPILER_GCC)
-void ReadMemoryBarrier()
-{
-	static Atomic x;
-	AtomicInc(x); // Atomic increment provides full memory barrier on most CPUs
-}
-
-void WriteMemoryBarrier() {
-	ReadMemoryBarrier();
-}
-#endif
 
 #ifdef flagPROFILEMT
 MtInspector *MtInspector::Dumi()
@@ -419,26 +409,9 @@ Semaphore::~Semaphore()
 
 Mutex& sMutexLock();
 
-
-typedef BOOL (WINAPI *TEC)(LPCRITICAL_SECTION lpCriticalSection);
-
-static TEC sTec;
-
 bool Mutex::TryEnter()
 {
-	if(!sTec) {
-		if(HMODULE hDLL = LoadLibrary("Kernel32"))
-			sTec = (TEC) GetProcAddress(hDLL, "TryEnterCriticalSection");
-	}
-/* TODO! TryEntery0
-#ifdef flagPROFILEMT
-	bool b = (*sTec)(&section);
-	mti->blocked += b;
-	return b;
-#else
-*/
-	return (*sTec)(&section);
-//#endif
+	return TryEnterCriticalSection(&section);
 }
 
 /* Win32 RWMutex implementation by Chris Thomasson, cristom@comcast.net */
@@ -491,53 +464,76 @@ RWMutex::~RWMutex()
 	CloseHandle ( m_wrwset );
 }
 
-struct sCVWaiter_ {
-	Semaphore   sem;
-	sCVWaiter_ *next;
-};
-	
-static thread__ byte sCVbuffer[sizeof(sCVWaiter_)];
-static thread__ sCVWaiter_ *sCV;
+VOID (WINAPI *ConditionVariable::InitializeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+VOID (WINAPI *ConditionVariable::WakeConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+VOID (WINAPI *ConditionVariable::WakeAllConditionVariable)(PCONDITION_VARIABLE ConditionVariable);
+BOOL (WINAPI *ConditionVariable::SleepConditionVariableCS)(PCONDITION_VARIABLE ConditionVariable, PCRITICAL_SECTION CriticalSection, DWORD dwMilliseconds);
 
 void ConditionVariable::Wait(Mutex& m)
 {
-	{
-		Mutex::Lock __(mutex);
-		if(!sCV)
-			sCV = new(sCVbuffer) sCVWaiter_;
-		sCV->next = NULL;
-		if(head)
-			tail->next = sCV;
-		else
-			head = sCV;
-		tail = sCV;
+	if(InitializeConditionVariable)
+		SleepConditionVariableCS(cv, &m.section, INFINITE);
+	else { // WindowsXP implementation
+		static thread__ byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
+		WaitingThread *w = new(buffer) WaitingThread;
+		{
+			Mutex::Lock __(mutex);
+			w->next = NULL;
+			if(head)
+				tail->next = w;
+			else
+				head = w;
+			tail = w;
+		}
+		m.Leave();
+		w->sem.Wait();
+		m.Enter();
+		w->WaitingThread::~WaitingThread();
 	}
-	m.Leave();
-	sCV->sem.Wait();
-	m.Enter();
 }
 
 void ConditionVariable::Signal()
 {
-	Mutex::Lock __(mutex);
-	if(head) {
-		head->sem.Release();
-		head = head->next;
+	if(InitializeConditionVariable)
+		WakeConditionVariable(cv);
+	else { // WindowsXP implementation
+		Mutex::Lock __(mutex);
+		if(head) {
+			head->sem.Release();
+			head = head->next;
+		}
 	}
 }
 
 void ConditionVariable::Broadcast()
 {
-	Mutex::Lock __(mutex);
-	while(head) {
-		head->sem.Release();
-		head = head->next;
+	if(InitializeConditionVariable)
+		WakeAllConditionVariable(cv);
+	else { // WindowsXP implementation
+		Mutex::Lock __(mutex);
+		while(head) {
+			head->sem.Release();
+			head = head->next;
+		}
 	}
 }
 
 ConditionVariable::ConditionVariable()
 {
-	head = tail = NULL;
+#ifndef flagTESTXPCV
+	ONCELOCK {
+		if(IsWinVista()) {
+			DllFn(InitializeConditionVariable, "kernel32", "InitializeConditionVariable");
+			DllFn(WakeConditionVariable, "kernel32", "WakeConditionVariable");
+			DllFn(WakeAllConditionVariable, "kernel32", "WakeAllConditionVariable");
+			DllFn(SleepConditionVariableCS, "kernel32", "SleepConditionVariableCS");
+		}
+	}
+#endif
+	if(InitializeConditionVariable)
+		InitializeConditionVariable(cv);
+	else
+		head = tail = NULL;
 }
 
 ConditionVariable::~ConditionVariable()
@@ -592,44 +588,15 @@ Semaphore::~Semaphore()
 
 #endif
 
-void StaticMutex::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(section))
-		BarrierWrite(section, new(buffer) Mutex);
-}
-
-void StaticRWMutex::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(rw))
-		BarrierWrite(rw, new(buffer) RWMutex);
-}
-
-void StaticSemaphore::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(semaphore))
-		BarrierWrite(semaphore, new(buffer) Semaphore);
-}
-
-void StaticConditionVariable::Initialize()
-{
-	Mutex::Lock __(sMutexLock());
-	if(!ReadWithBarrier(cv))
-		BarrierWrite(cv, new(buffer) ConditionVariable);
-}
-
 void LazyUpdate::Invalidate()
 {
-	WriteMemoryBarrier();
+	dirty.store(true, std::memory_order_release);
 	dirty = true;
 }
 
 bool LazyUpdate::BeginUpdate() const
 {
-	bool b = dirty;
-	ReadMemoryBarrier();
+	bool b = dirty.load(std::memory_order_acquire);
 	if(b) {
 		mutex.Enter();
 		if(dirty) return true;
@@ -640,8 +607,7 @@ bool LazyUpdate::BeginUpdate() const
 
 void LazyUpdate::EndUpdate() const
 {
-	WriteMemoryBarrier();
-	dirty = false;
+	dirty.store(false, std::memory_order_release);
 	mutex.Leave();
 }
 

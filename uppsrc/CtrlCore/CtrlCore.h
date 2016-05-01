@@ -599,6 +599,7 @@ private:
 	bool    PaintOpaqueAreas(SystemDraw& w, const Rect& r, const Rect& clip, bool nochild = false);
 	void    GatherTransparentAreas(Vector<Rect>& area, SystemDraw& w, Rect r, const Rect& clip);
 	Ctrl   *FindBestOpaque(const Rect& clip);
+	void    ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip);
 	void    UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint);
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
 	Ctrl   *GetTopRect(Rect& r, bool inframe, bool clip = true);
@@ -1140,9 +1141,7 @@ public:
 	Callback     operator<<=(Callback action)  { WhenAction = action; return action; }
 
 	Callback&    operator<<(Callback action)                { return WhenAction << action; }
-#ifdef CPP_11
-	Callback&    operator<<(std::function<void ()> action)  { return WhenAction << action; }
-#endif
+	Callback&    operator<<(Upp::Function<void ()> action)  { return WhenAction << action; }
 
 	void    SetTimeCallback(int delay_ms, Callback cb, int id = 0);
 	void    KillTimeCallback(int id = 0);

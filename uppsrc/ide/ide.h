@@ -272,16 +272,16 @@ public:
 	RightTabs();
 };
 
-class EditorTabBar : public FileTabs
-{
-public:
+struct EditorTabBar : public FileTabs {
 	EditorTabBar();
+
 	String GetFile(int n) const;
-	bool FindSetFile(const String& fn);
-	void SetAddFile(const String& fn);
-	void RenameFile(const String& fn, const String& nn);
-	void SetSplitColor(const String& fn, const Color& c);
-	void ClearSplitColor();
+	bool   FindSetFile(const String& fn);
+	void   SetAddFile(const String& fn);
+	void   RenameFile(const String& fn, const String& nn);
+	void   SetSplitColor(const String& fn, const Color& c);
+	void   ClearSplitColor();
+	void   FixIcons();
 
 	typedef EditorTabBar CLASSNAME;
 };
@@ -429,7 +429,7 @@ public:
 
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
-	CodeEditor       editor2;
+	AssistEditor     editor2; // no edits happen in editor2, just view
 	EditorTabBar     tabs;
 	EscValue         macro_api;
 #ifdef PLATFORM_POSIX

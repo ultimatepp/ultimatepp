@@ -266,7 +266,7 @@ void RichTable::AddColumn(int cx)
 	format.column.Add(cx);
 }
 
-void RichTable::SetPick(int i, int j, RichTxt rval_ text)
+void RichTable::SetPick(int i, int j, RichTxt&& text)
 {
 	cell.At(i).At(j).text = pick(text);
 }

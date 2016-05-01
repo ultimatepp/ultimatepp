@@ -212,7 +212,7 @@ void ArrayCtrl::CellInfo::Set(Ctrl *ctrl, bool owned, bool value)
 	ptr.Set1(cc);
 }
 
-ArrayCtrl::CellInfo::CellInfo(CellInfo rval_ s)
+ArrayCtrl::CellInfo::CellInfo(CellInfo&& s)
 {
 	ptr = s.ptr;
 	const_cast<CellInfo&>(s).ptr.SetPtr(NULL);
@@ -2439,7 +2439,7 @@ void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
 	for(int i = 0; i < array.GetCount(); i++)
 		h.Add(i);
 	SortA();
-	StableSort(h.GetIter(from), h.GetIter(from + count), order);
+	StableSort(SubRange(h, from, count).Write(), order);
 	SortB(h);
 	Refresh();
 	SyncInfo();

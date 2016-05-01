@@ -54,11 +54,9 @@ Vector<T>, HashFn>]&]
 [s2; Constructs empty Index.&]
 [s3; &]
 [s4;%- &]
-[s5;:Index`:`:Index`(pick`_ Index`&`):%- [* Index]([@(0.128.128) pick`_]_[* Index][@(0.0.255) `&
-]_[*@3 s])&]
-[s2; Pick constructor. Transfers source Index in low constant time, 
-but destroys it by picking.&]
-[s7; [*C@3 s]-|Source Index.&]
+[s5;:Upp`:`:Index`:`:Index`(Upp`:`:Index`&`&`):%- [* Index]([* Index][@(0.0.255) `&`&]_[*@3 s
+])&]
+[s2; Pick constructor.&]
 [s3; &]
 [s4;%- &]
 [s5;:Index`:`:Index`(pick`_ Vector`<T`>`&`):%- [* Index]([@(0.128.128) pick`_]_[_^Vector^ V
@@ -76,12 +74,27 @@ constructor.&]
 [s7; [*C@3 s]-|Source Index.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:Index`:`:Index`(Upp`:`:Vector`<T`>`&`&`):%- [@(0.0.255) explicit]_[* Index]([_^Upp`:`:Vector^ V
+ector]<[*@4 T]>`&`&_[*@3 s])&]
+[s2; Pick constructs Index from Vector.&]
+[s3; &]
+[s4;%- &]
 [s5;:Index`:`:Index`(const Vector`<T`>`&`,int`):%- [* Index]([@(0.0.255) const]_[_^Vector^ V
 ector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Deep`-copy constructs Index from Vector.&]
 [s6; Requires T to have deep copy constructor or optional deep copy 
 constructor.&]
 [s7; [*@3 s]-|Source Vector.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Index`:`:operator`=`(Upp`:`:Vector`<T`>`&`&`):%- [_^Upp`:`:Index^ Index][@(0.0.255) `&
+]_[* operator`=]([_^Upp`:`:Vector^ Vector]<[*@4 T]>`&`&_[*@3 x])&]
+[s2; Pick assignment from Vector.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Index`:`:operator`=`(Upp`:`:Index`<T`>`&`&`):%- [_^Upp`:`:Index^ Index][@(0.0.255) `&
+]_[* operator`=]([_^Upp`:`:Index^ Index]<[*@4 T]>`&`&_[*@3 x])&]
+[s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Index`:`:Index`(std`:`:initializer`_list`<T`>`):%- [* Index]([_^std`:`:initializer`_list^ s
@@ -94,13 +107,5 @@ td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; Drops last element of the Index and returns its value.&]
 [s6; Requires T to have deep copy constructor.&]
 [s7; [*/ Return value]-|Value of the dropped element.&]
-[s3; &]
-[s4;%- &]
-[s5;:Index`:`:operator`=`(pick`_ Vector`<T`>`&`):%- [_^Index^ Index][@(0.0.255) `&]_[* oper
-ator`=]([@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 x])
-&]
-[s2; Pick operator. Transfers source Vector to Index in low constant 
-time, but destroys it by picking.&]
-[s7; [*@3 x]-|Source Vector.&]
 [s3; &]
 [s0; ]]

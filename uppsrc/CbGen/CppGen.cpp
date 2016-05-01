@@ -7,12 +7,6 @@ String If(String s, String txt)
 	return IsNull(s) ? String() : txt;
 }
 
-/*
-#ifdef CPP_11
-	Callback& operator=(const std::function<void ()>& fn) { Release(); action = new LambdaCallbackAction(fn); return *this; }
-#endif
-*/
-
 void CallbackGen(String name, String rettype, int n, String extension, String atest = Null)
 {
 	LOG("// -----------------------------------------------------------");

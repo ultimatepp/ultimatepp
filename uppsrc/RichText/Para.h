@@ -227,9 +227,9 @@ struct RichPara {
 		friend struct RichPara;
 	};
 
-	static const VectorMap<Id, FieldType *>& fieldtype();
-	static void  Register(Id id, FieldType& ft) init_;
-	template <class T> static void Register(Id id) init_  { static T x; Register(id, x); }
+	static const VectorMap<Id, FieldType *>& fieldtype() { return fieldtype0(); }
+	static void  Register(Id id, FieldType& ft);
+	template <class T> static void Register(Id id)       { static T x; Register(id, x); }
 
 	int64       cacheid;
 	bool        incache;
@@ -313,6 +313,8 @@ private:
 
 	static StaticMutex      cache_lock;
 	static Array<RichPara>& Cache();
+
+	static VectorMap<Id, FieldType *>& fieldtype0();
 
 	struct StorePart;
 };

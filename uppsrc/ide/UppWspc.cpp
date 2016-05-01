@@ -121,7 +121,9 @@ void WorkspaceWork::ScanWorkspace() {
 	if(sort && wspc.GetCount()) {
 		PackageOrder po;
 		po.mainpath = PackagePath(pks[0]);
-		IndexSort(pks.Begin() + 1, pks.End(), speed.Begin() + 1, po);
+		IndexSort(SubRange(pks.Begin() + 1, pks.End()).Write(),
+		          SubRange(speed.Begin() + 1, speed.End()).Write(),
+		          po);
 	}
 	for(int i = 0; i < wspc.package.GetCount(); i++) {
 		String pk = pks[i];

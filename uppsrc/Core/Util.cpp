@@ -284,44 +284,6 @@ bool InScList(const char *s, const char *list)
 	return InScListIndex(s, list) >= 0;
 }
 
-void StringC::Free() {
-	if(IsString()) delete (String *) bap.GetPtr();
-}
-
-StringC::~StringC() {
-	Free();
-}
-
-StringC::operator const char *() const {
-	if(IsEmpty()) return NULL;
-	if(IsString()) return *(String *) bap.GetPtr();
-	return (const char *)bap.GetPtr();
-}
-
-StringC::operator String() const {
-	if(IsEmpty()) return (const char *)NULL;
-	if(IsString()) return *(String *) bap.GetPtr();
-	return (const char *)bap.GetPtr();
-}
-
-bool StringC::IsEmpty() const {
-	if(IsString()) return (*(String *) bap.GetPtr()).IsEmpty();
-	if(!bap.GetPtr()) return true;
-	return !*(const char *)bap.GetPtr();
-}
-
-void StringC::SetString(const String& s) {
-	Free();
-	String *ptr = new String;
-	*ptr = s;
-	bap.Set1(ptr);
-}
-
-void StringC::SetCharPtr(const char *s) {
-	Free();
-	bap.Set0((void *)s);
-}
-
 String timeFormat(double s) {
 	if(s < 0.000001) return Sprintf("%5.2f ns", s * 1.0e9);
 	if(s < 0.001) return Sprintf("%5.2f us", s * 1.0e6);
@@ -859,94 +821,6 @@ extern "C" long _ftol2( double dblSource ) { return _ftol( dblSource ); }
 int errno; // missing and zlib needs it
 #endif
 
-
-NanoStrings::NanoStrings()
-{
-	zs = false;
-	for(int i = 0; i < 48; i++)
-		data[i].count = 0;
-}
-
-dword NanoStrings::Add(const String& s)
-{
-	int len = s.GetCount();
-	if(len < 48) {
-		int lenz = len + zs;
-		Data& d = data[len];
-		if(d.count < 0x4000000) {
-			int page = d.count >> page_shift;
-			if(page >= d.data.GetCount())
-				d.data.Add().Alloc(lenz << page_shift);
-			memcpy(d.data[page] + (d.count & page_mask) * lenz, s, lenz);
-			dword ws = (len << 26) | d.count;
-			d.count++;
-			return ws;
-		}
-	}
-	
-	if(over.GetCount() >= 0x70000000)
-		Panic("NanoStrings: Out of addressing space");
-	dword ws = 0xc0000000 | over.GetCount();
-	over.Add(s).Shrink();
-	return ws;
-}
-
-inline
-Tuple2<const char *, int> NanoStrings::Get2s(dword ws)
-{
-	int len = ws >> 26;
-	int lenz = len + zs;
-	ws = ws & 0x3ffffff;
-	Tuple2<const char *, int> r;
-	r.a = data[len].data[ws >> page_shift] + (ws & page_mask) * lenz;
-	r.b = len;
-	return r;
-}
-
-Tuple2<const char *, int> NanoStrings::Get2(dword ws)
-{
-	Tuple2<const char *, int> r;
-	if((ws & 0xc0000000) == 0xc0000000) {
-		const String& h = over[ws & 0x3ffffff];
-		r.a = ~h;
-		r.b = h.GetLength();
-	}
-	else
-		r = Get2s(ws);
-	return r;
-}
-
-String NanoStrings::Get(dword ws)
-{
-	if((ws & 0xc0000000) == 0xc0000000)
-		return over[ws & 0x3ffffff];
-	else {
-		Tuple2<const char *, int> r = Get2s(ws);
-		return String(r.a, r.b);
-	}
-}
-
-void NanoStrings::Clear()
-{
-	over.Clear();
-	for(int i = 0; i < 48; i++)
-		data[i].data.Clear();
-}
-
-void NanoStrings::Shrink()
-{
-	over.Shrink();
-	for(int i = 0; i < 48; i++)
-		data[i].data.Shrink();
-}
-
-void NanoStrings::DumpProfile()
-{
-	for(int i = 0; i < 48; i++) {
-		Data& d = data[i];
-		RLOG(i << ": "  << d.count << ", pages: " << d.data.GetCount());
-	}
-}
 
 template <class CHR, class T>
 T Replace__(const T& s, const Vector<T>& find, const Vector<T>& replace)

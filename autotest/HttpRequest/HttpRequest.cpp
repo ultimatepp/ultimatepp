@@ -46,5 +46,33 @@ CONSOLE_APP_MAIN
 		ASSERT(h.IsError());
 		LDUMP(h.GetError());
 	}
+	{
+		HttpRequest h("http://dev.alt.cloudappsportal.com/_api/web/lists");
+		h.KeepAlive();
+		h.Execute();
+		ASSERT(h.GetStatusCode() == 401);
+		DUMP(h.GetReasonPhrase());
+		DUMP(h.GetContent());
+		ASSERT(h.GetContent().EndsWith(".</m:message></m:error>"));
+	}
+	{
+		HttpRequest r("http://httpbin.org/basic-auth/user/passw0rd");
+		r.User("user", "passw0rd");
+		String h = r.Execute();
+		DUMP(h);
+		ASSERT(h.Find("\"authenticated\": true") >= 0);
+	}
+	{
+		HttpRequest r("http://httpbin.org/digest-auth/auth/usr/pwd");
+		r.User("usr", "pwd");
+		String h = r.Execute();
+		DUMP(h);
+		ASSERT(h.Find("\"authenticated\": true") >= 0);
+	}
+	{
+		HttpRequest r("https://httpbin.org/bytes/0");
+		ASSERT(r.Execute().GetCount() == 0);
+		ASSERT(r.IsSuccess());
+	}
 	LLOG("*********** Everything is OK");
 }
