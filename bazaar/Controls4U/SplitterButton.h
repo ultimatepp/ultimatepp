@@ -17,12 +17,20 @@ public:
 	SplitterButton &SetPositions(int pos1, int pos2, int pos3);
 	
 	SplitterButton &SetInitialPositionId(int id);
+	
+	SplitterButton &SetButtonNumber(int _buttonNumber) {
+		ASSERT(_buttonNumber > 0 && _buttonNumber <= 2);
+		buttonNumber = _buttonNumber;
+		button2.Show(buttonNumber > 1);
+		return *this;
+	}
 		
 private:
 	bool movingRight;		
 	int buttonWidth;
 	Vector<int> positions;
 	int positionId;
+	int buttonNumber;
 	
 	struct SplitterLay : Splitter {
 		Callback1<int> WhenLayout;
@@ -34,10 +42,10 @@ private:
 	};
 	
 	SplitterLay splitter;
-	Button button;
+	Button button1, button2;
 	
 	void OnLayout(int pos);
-	void OnButton();
+	void OnButton(int id);
 	void SetArrows();
 };
 

@@ -33,6 +33,11 @@ void Autocomplete()
 	Upp::String
 }
 
+void Autocomplete()
+{
+	Upp::TrimBoth().
+}
+
 using namespace Upp;
 
 void Autocomplete()
@@ -80,11 +85,42 @@ void Autocomplete()
 
 void Autocomplete()
 {
+	Vector<String>::
+}
+
+void Autocomplete()
+{
+	for(int i = 0; i < Font::
+}
+
+void Autocomplete()
+{
 	Point p;
 	p.
 }
 
+struct FooBar {
+	int x;
+};
+
+void Autocomplete()
+{
+	FooBar b;
+	b.
+}
+
+void Autocomplete()
+{
+	::FooBar b;
+	b.
+}
+
 Index<String>& Tags();
+
+void Autocomplete() // TODO
+{
+	::Tags().
+}
 
 void Autocomplete()
 {
@@ -255,7 +291,7 @@ void Autocomplete()
 {
 	VectorMap<Point, String> m;
 	auto i = m.KeyBegin();
-	i.
+	i->
 }
 
 void Autocomplete()

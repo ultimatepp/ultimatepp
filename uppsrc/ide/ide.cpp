@@ -136,6 +136,7 @@ void Ide::SetMain(const String& package)
 	mainconfigparam.Clear();
 	ScanWorkspace();
 	LoadFromFile(THISBACK(SerializeWorkspace), WorkspaceFile());
+	tabs.FixIcons();
 	editorsplit.Zoom(0);
 	UpdateFormat();
 	String e = editfile;
@@ -404,10 +405,16 @@ bool Ide::Key(dword key, int count) {
 	case K_ALT_PAGEDOWN:
 		return package.Key(K_DOWN, 0);
 	case K_CTRL|K_ALT_LEFT:
-		TabsLR(-1);
+		TabsLR( TabBar::JumpDirLeft );
 		return true;
 	case K_CTRL|K_ALT_RIGHT:
-		TabsLR(1);
+		TabsLR( TabBar::JumpDirRight );
+		return true;
+	case K_CTRL|K_ALT_B:
+		TabsStackLR( TabBar::JumpDirLeft );
+		return true;
+	case K_CTRL|K_ALT_N:
+		TabsStackLR( TabBar::JumpDirRight );
 		return true;
 	case K_SHIFT|K_CTRL_O:
 		AddFile(WorkspaceWork::ANY_FILE);

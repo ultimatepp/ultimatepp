@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	HttpChunked.cpp;
+
+mainconfig
+	"" = "MT";
+

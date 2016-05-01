@@ -26,7 +26,7 @@ topic "Documentation";
 [s0; &]
 [s0; Сообщество Ultimate`+`+ всегда готово 
 обеспечить превосходую поддержку 
-в [^http`:`/`/www`.ultimatepp`.org`/forum`/^ форуме].&]
+в [^http`:`/`/www`.ultimatepp`.org`/forums`/^ форуме].&]
 [s0; &]
 [s0;* &]
 [s0; [*^topic`:`/`/ide`/app`/install`$ru`-ru^ Установка на 
@@ -95,4 +95,4 @@ TheIDE в качестве инструмента кросс`-платформе
 [s0;i256; [^topic`:`/`/uppweb`/www`/codestyle`$ru`-ru^ Стиль написания 
 кода]&]
 [s0;i256; &]
-[s0; [*+117 Пакеты]]
+[s0; [*+117 Пакеты]]]

@@ -8,7 +8,7 @@ CH_STYLE(MultiButton, Style, StyleDefault)
 		simple[i] = left[i] = right[i] = lmiddle[i] = rmiddle[i]
 			= Button::StyleEdge().look[i];
 		monocolor[i] = Button::StyleEdge().monocolor[i];
-		fmonocolor[i] = i == 3 ? SColorDisabled() : SColorText();
+		fmonocolor[i] = i == CTRL_DISABLED ? SColorDisabled() : SColorText();
 		look[i] = trivial[i] = ChLookWith(simple[i], CtrlsImg::DA(), monocolor[i]);
 		edge[i] = EditFieldEdge();
 	}
@@ -265,19 +265,20 @@ void MultiButton::GetPos(int ii, int& x, int& cx)
 
 int MultiButton::ChState(int i)
 {
-	if(i == MAIN && Frame() && style->activeedge) {
+	bool frm = Frame();
+	Ctrl *p = GetParent();
+	if(i == MAIN && frm && style->activeedge) {
 		int q = 0;
-		Ctrl *p = GetParent();
 		if(p)
-			q = !p->IsEnabled() || !IsEnabled() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
+			q = !p->IsEnabled() || !IsEnabled() || IsReadOnly() || i >= 0 && !button[i].enabled ? CTRL_DISABLED
 			    : p->HasFocus() || push ? CTRL_PRESSED
 			    : p->HasMouse() || hl >= 0 ? CTRL_HOT
 			    : CTRL_NORMAL;
 		return q;
 	}
-	if(IsTrivial() && !Frame())
+	if(IsTrivial() && !frm)
 		i = 0;
-	if(!IsShowEnabled() || i >= 0 && !button[i].enabled)
+	if(!IsShowEnabled() || IsReadOnly() || frm && p && p->IsReadOnly() || i >= 0 && !button[i].enabled)
 		return CTRL_DISABLED;
 	return hl == i ? push ? CTRL_PRESSED
 	                      : CTRL_HOT
@@ -370,7 +371,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 				w.Clip(x, 0, cx, sz.cy);
 				ChPaint(w, sz, style->look[Frame() ? mst : st]);
 				if(IsNull(v) || !Frame()) {
-					if((!IsTrivial() || style->trivialsep) && IsEnabled()) {
+					if((!IsTrivial() || style->trivialsep) && IsEnabled() && IsEditable()) {
 						if(b.left) {
 							if(left)
 								ChPaint(w, x, style->sepm, 1, sz.cy - 2 * style->sepm, style->sep1);
@@ -443,7 +444,7 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 				text = SColorHighlightText();
 			}
 			else
-				paper = SColorPaper();
+				paper = IsEnabled() && IsEditable() ? SColorPaper() : SColorFace();
 			w.DrawRect(r, paper);
 			cr = r;
 		}
@@ -455,11 +456,11 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			if(!IsTrivial() || style->trivialsep) {
 				if(left) {
 					r.left++;
-					if(IsEnabled())
+					if(IsEnabled() && IsEditable())
 						ChPaint(w, lx, style->sepm, 1, sz.cy - 2 * style->sepm, style->sep1);
 				}
 				if(right) {
-					if(IsEnabled())
+					if(IsEnabled() && IsEditable())
 						ChPaint(w, rx - 1, style->sepm, 1, sz.cy - 2 * style->sepm, style->sep2);
 					r.right--;
 				}

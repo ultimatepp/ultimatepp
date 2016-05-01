@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 
 #define LLOG(x) // LOG(x)
 

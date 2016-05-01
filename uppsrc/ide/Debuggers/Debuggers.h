@@ -220,7 +220,7 @@ struct Gdb : Debugger, ParentCtrl {
 #define KEYFILE      <ide/Debuggers/Pdb.key>
 #include             <CtrlLib/key_header.h>
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 #include "Pdb.h"
 #endif
 

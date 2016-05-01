@@ -12,6 +12,7 @@ void ClientApp::OnBeforeCommandLineProcessing(const CefString& process_type, Cef
 	//Extra command line switches
 	command_line->AppendSwitch("enable-media-stream");
 	command_line->AppendSwitch("no-sandbox");
+	command_line->AppendSwitch("disable-pinch");
 
 #ifdef PLATFORM_LINUX
 	Upp::String fp = Upp::GetExeDirFile("libpepflashplayer.so");

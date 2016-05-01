@@ -6,8 +6,9 @@ class Crc32Stream : public OutStream {
 public:
 	dword  Finish()            { Flush(); return crc; }
 	operator dword()           { return Finish(); }
+	void   Clear();
 	
-	Crc32Stream();
+	Crc32Stream()              { Clear(); }
 };
 
 dword CRC32(const void *ptr, dword count);

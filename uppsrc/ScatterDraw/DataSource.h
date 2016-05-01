@@ -3,6 +3,7 @@
 
 NAMESPACE_UPP
 
+
 class DataSource {
 public:
 	typedef double (DataSource::*Getdatafun)(int64 id);
@@ -19,6 +20,7 @@ public:
 	virtual double f(double x)				{NEVER();	return Null;}
 	virtual double f(Vector<double> zn)		{NEVER();	return Null;}
 	virtual int64 GetCount()			{NEVER();	return Null;}
+	bool IsEmpty()						{return GetCount() == 0;}
 	virtual int GetznxCount(int64 id)	{return 0;}
 	virtual int GetznyCount(int64 id)	{return 0;}
 	virtual int GetznFixedCount()		{return 0;}
@@ -26,29 +28,83 @@ public:
 	bool IsExplicit()					{return isExplicit;}
 	bool IsDeleted()					{return key != 111111;}
 
-	virtual double MinY() 		{return Min(&DataSource::y);}	
-	virtual double MinX() 		{return Min(&DataSource::x);}	
+	virtual double MinY(int64& id) 		{return Min(&DataSource::y, id);}
+	virtual double MinY() 				{int64 dummy;	return Min(&DataSource::y, dummy);}
+	virtual double MinX(int64& id) 		{return Min(&DataSource::x, id);}	
+	virtual double MinX() 				{int64 dummy;	return Min(&DataSource::x, dummy);}
 
-	virtual double MaxY() 		{return Max(&DataSource::y);}	
-	virtual double MaxX() 		{return Max(&DataSource::x);}	
+	virtual double MaxY(int64& id) 		{return Max(&DataSource::y, id);}
+	virtual double MaxY() 				{int64 dummy;	return Max(&DataSource::y, dummy);}
+	virtual double MaxX(int64& id) 		{return Max(&DataSource::x, id);}	
+	virtual double MaxX() 				{int64 dummy;	return Max(&DataSource::x, dummy);}	
 	
-	virtual double AvgY() 		{return Avg(&DataSource::y);}		
+	virtual double IsSortedY() 			{return IsSorted(&DataSource::y);}		
+	virtual double IsSortedX() 			{return IsSorted(&DataSource::x);}	
+	
+	virtual double AvgY() 				{return Avg(&DataSource::y);}		
+	virtual double AvgX() 				{return Avg(&DataSource::x);}		
 	virtual double StdDevY(double avg = Null) 	{return StdDev(&DataSource::y, avg);}	
 	virtual double VarianceY(double avg = Null) {return Variance(&DataSource::y, avg);}	
+	virtual Vector<int64> UpperEnvelopeY(double width) 	{return UpperEnvelope(&DataSource::y, &DataSource::x, width);}	
+	virtual Vector<int64> LowerEnvelopeY(double width) 	{return LowerEnvelope(&DataSource::y, &DataSource::x, width);}	
+	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}	
+	
+	Upp::Vector<Pointf> FFTY(double tSample) 	{return FFT(&DataSource::y, tSample);}
 
-	double Min(Getdatafun getdata);
-	double Max(Getdatafun getdata);
+	double Min(Getdatafun getdata, int64& id);
+	double Max(Getdatafun getdata, int64& id);
 	double Avg(Getdatafun getdata);
+	double IsSorted(Getdatafun getdata);
 	double StdDev(Getdatafun getdata, double avg = Null);
 	double Variance(Getdatafun getdata, double avg = Null);
+	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
+	Vector<int64> LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
+	Vector<Pointf> MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	double SinEstim_Amplitude(double avg = Null);
 	bool SinEstim_FreqPhase(double &frequency, double &phase, double avg = Null);
+	Vector<Pointf> FFT(Getdatafun getdata, double tSample);
 		
 protected:
 	bool isParam, isExplicit;
 
 private:
 	int key;
+	
+	Vector<int64> Envelope(Getdatafun getdataY, Getdatafun getdataX, double width, bool (*fun)(double a, double b));
+};
+
+class DataSetCond : public DataSource {
+private:
+	DataSource *data;
+	double xGreater, xLower;
+
+public:
+	DataSetCond() {data = 0;}
+	DataSetCond(DataSource &_data, double _xGreater, double _xLower) {Init(_data, _xGreater, _xLower);}
+	void Init(DataSource &_data, double _xGreater, double _xLower) {
+		data = &_data;
+		xGreater = _xGreater;
+		xLower = _xLower;
+	}
+	bool Check(int64 id) {
+		double x = data->x(id);
+		if (!IsNull(xGreater) && xGreater > x)
+			return false;
+		if (!IsNull(xLower) && xLower < x)
+			return false;
+		return true;
+	}
+	virtual inline double y(int64 id)	{return Check(id) ? data->y(id) : Null;}
+	virtual inline double x(int64 id) 	{return Check(id) ? data->x(id) : Null;}
+	virtual inline double x(double t) {
+		double x = data->x(t);
+		if (!IsNull(xGreater) && xGreater > x)
+			return Null;
+		if (!IsNull(xLower) && xLower < x)
+			return Null;
+		return x;
+	}
+	virtual inline int64 GetCount()		{return data->GetCount();}
 };
 
 class CArray : public DataSource {
@@ -337,6 +393,11 @@ public:
 	}
 	virtual inline int64 GetCount()	{return numPoints;}
 };	
+
+struct PointfLess {
+	bool operator () (const Pointf& a, const Pointf& b) const { return a.x < b.x; }
+};
+
 
 END_UPP_NAMESPACE
 

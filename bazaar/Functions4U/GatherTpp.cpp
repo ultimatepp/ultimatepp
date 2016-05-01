@@ -1,12 +1,58 @@
 #ifdef flagGUI
 #include <CtrlLib/CtrlLib.h>
-#include <ide/Browser/Browser.h>
+#include <PdfDraw/PdfDraw.h>
+//#include <ide/Browser/Browser.h>
 
 #include <Functions4U/Functions4U.h>
 #include "GatherTpp.h"
 #include <Functions4U/Html/htmld.h>
 
 NAMESPACE_UPP
+
+static Topic ReadTopic(const char *text)
+{
+	Topic topic;
+	CParser p(text);
+	try {
+		if(p.Id("topic")) {
+			topic.title = p.ReadString();
+			p.Char(';');
+			topic.text = p.GetPtr();
+			return topic;
+		}
+		while(!p.IsEof()) {
+			if(p.Id("TITLE")) {
+				p.PassChar('(');
+				topic.title = p.ReadString();
+				p.PassChar(')');
+			} else if(p.Id("REF")) {
+				p.PassChar('(');
+				p.ReadString();
+				p.PassChar(')');
+			} else if(p.Id("TOPIC_TEXT")) {
+				p.PassChar('(');
+				topic.text << p.ReadString();
+				p.PassChar(')');
+			} else if(p.Id("COMPRESSED")) {
+				StringBuffer b;
+				b.Reserve(1024);
+				while(p.IsInt()) {
+					b.Cat(p.ReadInt());
+					p.PassChar(',');
+				}
+				topic.text = ZDecompress(~b, b.GetLength());
+			} else {
+				topic.text << p.GetPtr();
+				break;
+			}
+		}
+	}
+	catch(CParser::Error e) {
+		topic.text = String::GetVoid();
+		topic.title = e;
+	}
+	return topic;
+}
 
 struct ScanTopicIterator : RichText::Iterator {
 	VectorMap<String, String> *reflink;

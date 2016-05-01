@@ -66,6 +66,7 @@ public:
 
 	int             GetSb() const                             { return sb; }
 	void            SetSb(int i)                              { sb = i; }
+	void            ScrollInto(int pos)                       { sb.ScrollInto(pos); }
 	int             GetSbTotal() const                        { return sb.GetTotal(); }
 	Zoom            GetZoom() const;
 	Rect            GetPage() const;

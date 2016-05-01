@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 
 #define STATUS_WX86_CONTINUE             0x4000001D
 #define STATUS_WX86_SINGLE_STEP          0x4000001E
@@ -184,9 +184,12 @@ Pdb::Context Pdb::ReadContext(HANDLE hThread)
 		memcpy(&r.context64, &ctx, sizeof(CONTEXT));
 	}
 	else {
+		static BOOL (WINAPI *Wow64GetThreadContext)(HANDLE hThread, PWOW64_CONTEXT lpContext);
+		DllFn(Wow64GetThreadContext, "Kernel32.dll", "Wow64GetThreadContext");
+		
 		WOW64_CONTEXT ctx;
 		ctx.ContextFlags = WOW64_CONTEXT_FULL;
-		if(!Wow64GetThreadContext(hThread, &ctx))
+		if(!Wow64GetThreadContext || !Wow64GetThreadContext(hThread, &ctx))
 			Error("Wow64GetThreadContext failed");
 		memcpy(&r.context32, &ctx, sizeof(WOW64_CONTEXT));
 	}
@@ -212,10 +215,13 @@ void Pdb::WriteContext(HANDLE hThread, Context& context)
 			Error("SetThreadContext failed");
 	}
 	else {
+		static BOOL (WINAPI *Wow64SetThreadContext)(HANDLE hThread, PWOW64_CONTEXT lpContext);
+		DllFn(Wow64SetThreadContext, "Kernel32.dll", "Wow64SetThreadContext");
+
 		WOW64_CONTEXT ctx;
 		memcpy(&ctx, &context.context32, sizeof(WOW64_CONTEXT));
 		ctx.ContextFlags = CONTEXT_CONTROL;
-		if(!Wow64SetThreadContext(hThread, &ctx))
+		if(!Wow64SetThreadContext || !Wow64SetThreadContext(hThread, &ctx))
 			Error("Wow64SetThreadContext failed");
 	}
 #else

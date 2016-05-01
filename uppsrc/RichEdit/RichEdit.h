@@ -473,6 +473,7 @@ private:
 	int        GetHotSpot(Point p) const;
 	Rect       GetObjectRect(int pos) const;
 	void       FixObjectRect();
+	bool       RemoveBullet(bool backspace);
 
 	void       SetObjectPos(int pos);
 	void       AdjustObjectSize();

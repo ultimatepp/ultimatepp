@@ -231,7 +231,7 @@ protected:
 
 	void     Del(PointerType *ptr, PointerType *lim)              { while(ptr < lim) delete (T *) *ptr++; }
 	void     Init(PointerType *ptr, PointerType *lim)             { while(ptr < lim) *ptr++ = new T; }
-	void     Init(PointerType *ptr, PointerType *lim, const T& x) { while(ptr < lim) *ptr++ = DeepCopyNew(x); }
+	void     Init(PointerType *ptr, PointerType *lim, const T& x) { while(ptr < lim) *ptr++ = new T(clone(x)); }
 
 public:
 	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }

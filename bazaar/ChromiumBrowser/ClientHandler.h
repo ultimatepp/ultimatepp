@@ -18,7 +18,7 @@
 
 class ClientHandler : public CefClient, public CefLifeSpanHandler, public CefDisplayHandler,
 					public CefLoadHandler, public CefFocusHandler, public CefContextMenuHandler,
-					public CefJSDialogHandler
+					public CefJSDialogHandler, public CefRequestHandler
 {
 
 public:
@@ -30,9 +30,11 @@ public:
 					Upp::Callback & tf,
 					Upp::Callback & gf,
 					Upp::Callback1<bool> & wk,
-					Upp::Callback3<Upp::String, int, Upp::String> & wcm):
+					Upp::Callback3<Upp::String, int, Upp::String> & wcm,
+					Upp::Gate1<Upp::String> & wce):
 					browser(nullptr), WhenUrlChange(wuc), WhenStateChange(wsc), WhenMessage(wm),
-					WhenTakeFocus(tf), WhenGotFocus(gf), WhenKeyboard(wk), WhenConsoleMessage(wcm) { }
+					WhenTakeFocus(tf), WhenGotFocus(gf), WhenKeyboard(wk), WhenConsoleMessage(wcm),
+					WhenCertificateError(wce) { }
 
 	~ClientHandler() { }
 	
@@ -43,6 +45,7 @@ public:
 	const Upp::Callback & WhenGotFocus;
 	const Upp::Callback1<bool> & WhenKeyboard;
 	const Upp::Callback3<Upp::String, int, Upp::String> & WhenConsoleMessage;
+	const Upp::Gate1<Upp::String> & WhenCertificateError;
 	
 	void WhenMessageWrapper(Upp::String name, Upp::Vector<Upp::Value> * par);
 
@@ -52,12 +55,13 @@ public:
 	virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE					{ return this; }
 	virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE	{ return this; }
 	virtual CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() OVERRIDE			{ return this; }
+	virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE			{ return this; }
 
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
 								CefRefPtr<CefFrame> frame,
 								const CefString& target_url,
 								const CefString& target_frame_name,
-								WindowOpenDisposition target_disposition,
+								CefLifeSpanHandler::WindowOpenDisposition target_disposition,
 								bool user_gesture,
 								const CefPopupFeatures& popupFeatures,
 								CefWindowInfo& windowInfo,
@@ -105,6 +109,13 @@ public:
                           const CefString& default_prompt_text,
                           CefRefPtr<CefJSDialogCallback> callback,
                           bool& suppress_message) OVERRIDE;
+
+    virtual bool OnCertificateError(CefRefPtr<CefBrowser> browser,
+									ErrorCode cert_error,
+									const CefString& request_url,
+									CefRefPtr<CefSSLInfo> ssl_info,
+									CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+
 
 	CefRefPtr<CefBrowser> GetBrowser() { return browser; }
 

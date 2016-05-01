@@ -1,5 +1,5 @@
-#ifndef _Controls4U_Demo_icpp_init_stub
-#define _Controls4U_Demo_icpp_init_stub
+#ifndef _zLibs_Controls4U_Demo_icpp_init_stub
+#define _zLibs_Controls4U_Demo_icpp_init_stub
 #include "CtrlLib/init"
 #include "Controls4U/init"
 #include "plugin\gif/init"

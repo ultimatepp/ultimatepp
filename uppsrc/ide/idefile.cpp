@@ -379,7 +379,6 @@ void Ide::FlushFile() {
 	editor.Clear();
 	editor.Disable();
 	editorsplit.Ctrl::Remove();
-	editor.SetFrame(NullFrame());
 	designer.Clear();
 	SetBar();
 }
@@ -451,6 +450,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 		MakeTitle();
 		SetBar();
 		designer->SetFocus();
+		editor.SyncNavigatorShow();
 		return;
 	}
 
@@ -542,6 +542,7 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 	editor.SetFocus();
 	MakeTitle();
 	SetBar();
+	editor.SyncNavigatorShow();
 	editor.assist_active = IsProjectFile(editfile) && IsCppBaseFile();
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
@@ -582,6 +583,8 @@ void Ide::TriggerAssistSync()
 void Ide::EditAsHex()
 {
 	String path = editfile;
+	if(editashex.Find(path) >= 0)
+		return;
 	editastext.RemoveKey(editfile);
 	editashex.FindPut(editfile);
 	byte cs = editor.GetCharset();
@@ -606,6 +609,8 @@ void Ide::DoEditAsText(const String& path)
 void Ide::EditAsText()
 {
 	String path = editfile;
+	if(editastext.Find(path) >= 0)
+		return;
 	if(!FileExists(path))
 		return;
 	DoEditAsText(path);
@@ -617,6 +622,8 @@ void Ide::EditAsText()
 void Ide::EditUsingDesigner()
 {
 	String path = editfile;
+	if (editastext.Find(editfile) < 0 && editashex.Find(editfile) < 0)
+		return;
 	editashex.RemoveKey(editfile);
 	editastext.RemoveKey(editfile);
 	byte cs = editor.GetCharset();
@@ -868,6 +875,7 @@ void Ide::PassEditor()
 	editor2.CheckEdited();
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
+	editor2.Annotate(editfile2);
 }
 
 void Ide::ClearEditedFile()
@@ -895,7 +903,7 @@ void Ide::SplitEditor(bool horz)
 {
 	if(editorsplit.GetZoom() < 0)
 		CloseSplit();
-	
+
 	if(horz)
 		editorsplit.Horz(editor2, editor);
 	else

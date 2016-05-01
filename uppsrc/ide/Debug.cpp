@@ -152,7 +152,9 @@ public:
 	String GetSelectedSerial() const;
 	
 private:
-	void LoadPhysicalDevices();
+	void LoadDevices();
+	
+	void OnRefresh();
 	
 private:
 	AndroidSDK* sdk;
@@ -163,31 +165,39 @@ SelectAndroidDeviceDlg::SelectAndroidDeviceDlg(AndroidSDK* sdk) :
 {
 	CtrlLayoutOKCancel(*this, "Android device selection");
 	
-	devicesArray.AddColumn("Device/Model");
-	devicesArray.AddColumn("Serial");
+	devicesArray.AddColumn("Serial Number");
+	devicesArray.AddColumn("State");
 	
-	LoadPhysicalDevices();
+	refresh <<= THISBACK(OnRefresh);
+	
+	LoadDevices();
 }
 
 String SelectAndroidDeviceDlg::GetSelectedSerial() const
 {
 	int row = devicesArray.IsCursor() ? devicesArray.GetCursor() : 0;
-	return devicesArray.GetCount() ? devicesArray.Get(row, 1) : "";
+	return devicesArray.GetCount() ? devicesArray.Get(row, 0) : "";
 }
 
-void SelectAndroidDeviceDlg::LoadPhysicalDevices()
+void SelectAndroidDeviceDlg::LoadDevices()
 {
 	Vector<AndroidDevice> devices = sdk->FindDevices();
 	for(int i = 0; i < devices.GetCount(); i++) {
-		if(devices[i].IsPhysicalDevice()) {
-			devicesArray.Add(devices[i].GetModel(), devices[i].GetSerial());
-		}
+		devicesArray.Add(devices[i].GetSerial(), devices[i].GetState());
 	}
 	
-	if(devicesArray.GetCount())
-		devicesArray.Select(0);
+	if(devicesArray.GetCount()) {
+		devicesArray.GoBegin();
+		ok.Enable();
+	}
 	else
 		ok.Disable();
+}
+
+void SelectAndroidDeviceDlg::OnRefresh()
+{
+	devicesArray.Clear();
+	LoadDevices();
 }
 
 void Ide::ExecuteApk()
@@ -285,20 +295,17 @@ void Ide::BuildAndDebug(bool runto)
 	editor.Disable();
 
 	bool console = ShouldHaveConsole();
-#ifdef COMPILER_MSC
-	if(builder == "GCC")
+
+	if(findarg(builder, "GCC", "CLANG") >= 0)
 		if(gdbSelector)
 			debugger = Gdb_MI2Create(pick(host), target, runarg, console);
 		else
 			debugger = GdbCreate(pick(host), target, runarg, console);
+#ifdef PLATFORM_WIN32
 	else
 		debugger = PdbCreate(pick(host), target, runarg);
-#else
-	if(gdbSelector)
-		debugger = Gdb_MI2Create(pick(host), target, runarg, console);
-	else
-		debugger = GdbCreate(pick(host), target, runarg, console);
 #endif
+
 	if(!debugger) {
 		IdeEndDebug();
 		SetBar();
@@ -389,7 +396,7 @@ void Ide::ConditionalBreak()
 
 	Index<String> cfg = PackageConfig(IdeWorkspace(), 0, GetMethodVars(method), mainconfigparam,
 	                                  *CreateHost(true), *CreateBuilder(~CreateHostRunDir()));
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 	if(cfg.Find("MSC") >= 0) {
 		if(EditPDBExpression("Conditional breakpoint", brk, NULL))
 			editor.SetBreakpoint(ln, brk);

@@ -412,6 +412,8 @@ Ide::Ide()
 	editorsplit.Vert(editor, editor2);
 	editorsplit.Zoom(0);
 	SyncEditorSplit();
+	
+	editpane.AddFrame(editor.navigatorframe);
 
 	right_split.Horz(editpane, right);
 	right_split.Zoom(0);
@@ -457,7 +459,8 @@ Ide::Ide()
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	tabs <<= THISBACK(TabFile);
 //	tabs.WhenCloseRest = THISBACK1(CloseRest, &tabs);
-	editor2.SetFrame(NullFrame());
+//	editor2.SetFrame(NullFrame());
+	editor2.theide = this;
 	editor2.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor2.topsbbutton1.ScrollStyle().NoWantFocus().Show();
 	editor2.WhenLeftDown = THISBACK(SwapEditors);

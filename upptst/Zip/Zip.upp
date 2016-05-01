@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/zip;
+
+file
+	Zip.cpp;
+
+mainconfig
+	"" = "";
+

@@ -41,6 +41,47 @@ void PluginDemo() {
 }
 
 void FilesDemo() {
+	{
+		String from = "/books/technology/computers"; 
+		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
+		String path = "/books/biology/mammals";
+		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
+		String ret;
+		if (!GetRelativePath(from, path, ret))
+			ret = "Null";
+		Cout() << "\nGetRelativePath(\"" << from << "\", \"" << path << "\")\n= \"" << ret << "\" (should be: \"../../biology/mammals\")";
+	}
+	{
+		String from = "/books/technology/computers";
+		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
+		String path = "/books/technology/computers";
+		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
+		String ret;
+		if (!GetRelativePath(from, path, ret))
+			ret = "Null";
+		Cout() << "\nGetRelativePath(\"" << from << "\", \"" << path << "\")\n= \"" << ret << "\" (should be: \"\")";
+	}
+	{
+		String from = "/books/technology/computers";
+		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
+		String path = "/books2/biology/mammals";
+		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
+		String ret;
+		if (!GetRelativePath(from, path, ret))
+			ret = "Null";
+		Cout() << "\nGetRelativePath(\"" << from << "\", \"" << path << "\")\n= \"" << ret << "\" (should be: \"../../../books2/biology/mammals\")";
+	}
+	{
+		String from = "c:/books/technology/computers";
+		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
+		String path = "y:/books2/biology/mammals";
+		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
+		String ret;
+		if (!GetRelativePath(from, path, ret))
+			ret = "Null";
+		Cout() << "\nGetRelativePath(\"" << from << "\", \"" << path << "\")\n= \"" << ret << "\" (should be: Null)";
+	}
+	
 	String filename1 = AppendFileName(GetDesktopFolder(), "Demo", "file1.txt");
 	RealizePath(filename1);
 	String str1 = "This is the First string";

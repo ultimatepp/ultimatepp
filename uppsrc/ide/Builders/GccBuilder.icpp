@@ -91,7 +91,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				if(ext == ".a" || ext == ".so")
 					linkfile.Add(fn);
 				else
-				if(IsHeaderExt(ext) && pkg[i].pch && allow_pch && release && !HasAnyDebug() && !blitz) {
+				if(IsHeaderExt(ext) && pkg[i].pch && allow_pch && !blitz) {
 					if(pch_header.GetCount())
 						PutConsole(GetFileName(fn) + ": multiple PCHs are not allowed. Check your package configuration");
 					else
@@ -473,7 +473,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			lnk << " -o " << GetHostPathQ(target);
 			if(createmap)
 				lnk << " -Wl,-Map," << GetHostPathQ(GetFileDirectory(target) + GetFileTitle(target) + ".map");
-			if(HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
+			if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
 				lnk << " -ggdb";
 			else
 				lnk << (!HasFlag("OSX11") ? " -Wl,-s" : "");

@@ -13,7 +13,7 @@ void TabUserEquation::Init()
 	toY <<= 50;
 	
 	update.WhenAction = THISBACK(OnUpdate);
-	scatter.SetMouseHandling(true, true);
+	scatter.SetMouseHandling(true, true).ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
 	OnUpdate();
 }
 

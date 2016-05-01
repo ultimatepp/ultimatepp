@@ -73,15 +73,15 @@ String bin = "u:/upp.bin";
 int NoDigit(int c) { return IsDigit(c) ? 0 : c; }
 int FilterVersion(int c) { return c == ':' ? '_' : c; }
 
-void Make(String pkg, String exe, String method = "MSC9")
+void Make(String pkg, String exe, String method = "MINGW")
 {
-	Syx("u:/Win32/upp/umk " + ass + " " + pkg + " u:/Win32/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
+	Syx("c:/upp/umk " + ass + " " + pkg + " c:/upp/" + method + ".bm -arv " + upptmp + "/" + exe);
 	FileDelete(upptmp + "/" + ForceExt(exe, ".map"));
 }
 
 CONSOLE_APP_MAIN
 {
-	Vector<String> s = Split(Syx("svnversion " + uppsrc), NoDigit);
+	Vector<String> s = Split(Syx("c:/upp/SlikSvn/bin/svnversion " + uppsrc), NoDigit);
 	if(s.GetCount() == 0)
 		Error("Invalid version");
 	String version = s.Top();
@@ -103,16 +103,16 @@ CONSOLE_APP_MAIN
 	SaveFile(upptmp + "/uppsrc/uppconfig.h", LoadFile(uppsrc + "/uppconfig.h"));
 	SaveFile(upptmp + "/uppsrc/ide/version.h", "#define IDE_VERSION \"" + version + "\"\r\n");
 	Make("ide", "theide32.exe");
-	Make("ide", "theide.exe", "MSC9X64");
+	Make("ide", "theide.exe", "MINGWx64");
 	Make("umk", "umk.exe");
 
 	SetCurrentDirectory(upptmp);
 	
 	SaveFile("license.chk", "1");
 
-	Syx("7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
+	Syx("c:/upp/7-zip/7z a u:/upload/upp-mingw-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
-	DeleteFolderDeep(upptmp + "/bin/tdm64");
-	Syx("7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
+	DeleteFolderDeep(upptmp + "/bin/mingw64");
+	Syx("c:/upp/7-zip/7z a u:/upload/upp-win-" + Filter(version, FilterVersion) + ".7z"
 	    " " + upptmp + " -r -mx -m0fb=255 -mf=off");
 }
