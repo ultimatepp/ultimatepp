@@ -16,7 +16,7 @@ euES("Desktop image ezin da aldatu")
 frFR("Impossible de changer bitmap de bureau")
 
 
-// screengrab.cpp
+// ScreenGrab.cpp
 
 T_("Unknown grab mode")
 caES("Mode de gravaci\363 desconegut")

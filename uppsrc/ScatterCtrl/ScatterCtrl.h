@@ -8,6 +8,18 @@
 
 NAMESPACE_UPP
 
+class EditDoubleLostFocus : public EditDouble {
+public:
+	Callback WhenLostFocus;
+	
+	virtual void LostFocus() {
+		WhenLostFocus();
+		EditDouble::LostFocus();
+	}
+};
+
+typedef WithSpin<double, EditDoubleLostFocus> EditDoubleLostFocusSpin;
+
 class ArrayCtrlSource : public DataSource {
 private:
 	ArrayCtrl *data;
@@ -160,6 +172,8 @@ public:
 	
 	ScatterCtrl& ShowContextMenu(bool show = true) 			{showContextMenu = show; return *this;}
 	ScatterCtrl& ShowPropertiesDlg(bool show = true)		{showPropDlg = show; 	 return *this;}
+	ScatterCtrl& ShowProcessDlg(bool show = true)			{showProcessDlg = show;  return *this;}
+	
 	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
 															{popTextX = x; popTextY = y1; popTextY2 = y2; return *this;}
 	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
@@ -216,7 +230,7 @@ public:
 	int GetLegendNumCols() 										{return ScatterDraw::GetLegendNumCols();}
 	ScatterCtrl& SetLegendRowSpacing(int num) 					{ScatterDraw::SetLegendRowSpacing(num);		return *this;}
 	int GetLegendRowSpacing() 									{return ScatterDraw::GetLegendRowSpacing();}
-	ScatterCtrl& SetLegendAnchor(int anchor) 					{ScatterDraw::SetLegendAnchor(anchor);		return *this;}
+	ScatterCtrl& SetLegendAnchor(int anchor) 					{ScatterDraw::SetLegendAnchor((LEGEND_POS)anchor);	return *this;}
 	int GetLegendAnchor() 										{return ScatterDraw::GetLegendAnchor();}
 	ScatterCtrl& SetLegendFillColor(const Upp::Color &fill)		{ScatterDraw::SetLegendFillColor(fill);		return *this;}
 	ScatterCtrl& SetLegendBorderColor(const Upp::Color &border)	{ScatterDraw::SetLegendBorderColor(border);	return *this;}
@@ -253,6 +267,7 @@ private:
 	bool mouseHandlingX, mouseHandlingY;
 	bool showContextMenu;
 	bool showPropDlg;
+	bool showProcessDlg;
 	
 	int lastRefresh_ms;
 	dword lastRefresh0_ms;
@@ -292,19 +307,20 @@ private:
 	void ContextMenu(Bar& bar);
 	void DoShowEditDlg(int itab);
 	void DoShowData();
+	void DoProcessing();
 	
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
-	void SetDrawing(T& w, const Size &size, int scale);	
+	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = true);	
 	void TimerCallback();	
 	
 	FileSel fileToSave;
 };
 
 template <class T>
-void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale) {
-	ScatterDraw::SetDrawing(w, size, scale, true);
+void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale, bool ctrl) {
+	ScatterDraw::SetDrawing(w, size, scale, ctrl);
 	if (!IsNull(popLT) && popLT != popRB) {
 		if (isZoomWindow) {
 			DrawLine(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, SColorHighlight());

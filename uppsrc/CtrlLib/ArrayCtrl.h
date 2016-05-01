@@ -239,6 +239,7 @@ private:
 	bool  nobg:1;
 	bool  focussetcursor:1;
 	bool  allsorting:1;
+	bool  spanwidecells:1;
 
 	mutable bool  selectiondirty:1;
 
@@ -299,6 +300,7 @@ private:
 	const Display& GetCellInfo(int i, int j, bool f0, Value& v, Color& fg, Color& bg, dword& st);
 	Ctrl&  SetCtrl(int i, int j, Ctrl *newctrl, bool owned, bool value);
 	Size   DoPaint(Draw& w, bool sample);
+	void   SpanWideCell(const Display& d, const Value& q, int cm, int& cw, Rect& r, int i, int& j);
 
 	bool   TestKey(int i, int key);
 
@@ -528,6 +530,8 @@ public:
 	bool       FindSetCursor(const Value& val, int ii = 0, int from = 0);
 	bool       FindSetCursor(const Value& val, const Id& id, int from = 0);
 
+	void       ReArrange(const Vector<int>& order);
+
 	void       Sort(Gate2<int, int> order);
 	void       Sort(int from, int count, Gate2<int, int> order);
 	void       Sort(const ArrayCtrl::Order& order);
@@ -543,6 +547,7 @@ public:
 
 	void       ColumnSort(int column, Gate2<int, int> order);
 	void       ColumnSort(int column, const ValueOrder& order);
+	void       ColumnSort(int column, int (*compare)(const Value& a, const Value& b) = StdValueCompare);
 
 	void       SetSortColumn(int ii, bool descending = false);
 	void       ToggleSortColumn(int ii);
@@ -684,6 +689,8 @@ public:
 
 	ArrayCtrl& CursorOverride(const Image& arrow)             { cursor_override = arrow; return *this; }
 	ArrayCtrl& NoCursorOverride()                             { return CursorOverride(Null); }
+	
+	ArrayCtrl& SpanWideCells(bool b = true)                   { spanwidecells = b; Refresh(); return *this; }
 
 	void Reset();
 

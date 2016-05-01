@@ -40,7 +40,7 @@ public:
 	AlignedFrame& SetLeft()		{ return SetAlign(LEFT); }
 	AlignedFrame& SetTop()		{ return SetAlign(TOP); }
 	AlignedFrame& SetRight()	{ return SetAlign(RIGHT); }
-	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }	
+	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }
 	AlignedFrame& SetFrameSize(int sz, bool refresh = true);
 		
 	int 		  GetAlign() const		{ return layout; }
@@ -99,12 +99,12 @@ class TabScrollBar : public AlignedFrame
 class TabBar : public AlignedFrame
 {
 public:
-	struct Style : public TabCtrl::Style 
+	struct Style : public TabCtrl::Style
 	{
 		Image crosses[3];
 		Value group_separators[2];
 		
-		Style &	Write() const 				{ return *static_cast<Style *>(&TabCtrl::Style::Write()); }
+		Style &	Write() const               { return *static_cast<Style *>(&TabCtrl::Style::Write()); }
 		
 		Style&  DefaultCrosses();
 		Style&  Variant1Crosses();
@@ -157,7 +157,7 @@ public:
 		String group;
 		
 		String  stackid;
-		int 	stack;
+		int     stack;
 
 		bool visible;
 
@@ -297,6 +297,7 @@ protected:
 	void 	DoStacking();
 	void 	DoUnstacking();
 	void 	InsertIntoStack(Tab& t, int ix);
+	int  	GetStackCount(int stackix) const;
 	int  	FindStackHead(int stackix) const;
 	int  	FindStackTail(int stackix) const;
 	bool 	IsStackHead(int n) const;
@@ -314,8 +315,28 @@ protected:
 
 	using Ctrl::GetStdSize;
 	using Ctrl::Close;
+public:
+	enum { JumpDirLeft, JumpDirRight };
+
+	struct JumpStack : Moveable< JumpStack > {
+		int        All;
+		int        Rest;
+		int        jump_direct;
+
+		void Reset()                          { All = 0; Rest = 0; jump_direct = JumpDirLeft; }
+		bool IsReset() const                  { return ( All == 0 ); }
+		bool IsFull() const                   { return ( All == Rest ); }
+		void Activate( int N, int jd )        { All = N; Rest = N; jump_direct = jd; }
+
+		JumpStack() { Reset(); }
+	};
+
+	JumpStack jump_stack;
+	int  GetTabLR( int jd );
+	int  GetTabStackLR( int jd );
+	int  GetLR( int c, int jd );
 	
-protected:	
+protected:
 	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point p, dword keysflags);
 	virtual void LeftUp(Point p, dword keysflags);

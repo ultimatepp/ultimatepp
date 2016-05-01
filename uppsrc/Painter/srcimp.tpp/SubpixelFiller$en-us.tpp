@@ -26,4 +26,4 @@ in single pass (6 is just enough needed for Render optimizations).
 Case variants are created by adding shifted Render filtering 
 procedures.&]
 [s4; &]
-[s0; ]
+[s0; ]]

@@ -18,6 +18,7 @@ private:
 	void OnMessage(String name, const Vector<Value>& par);
 	void OnStatus(bool loading, bool back, bool forward);
 	void OnConsoleMessage(String url, int line, String msg);
+	bool OnCertificateError(String url);
 
 public:
 	typedef ChromiumBrowserExample CLASSNAME;

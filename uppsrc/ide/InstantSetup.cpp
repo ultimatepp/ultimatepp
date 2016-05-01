@@ -116,13 +116,26 @@ void bmSet(VectorMap<String, String>& bm, const char *id, const String& val)
 void InstantSetup()
 {
 	DirFinder df;
-	String pf = GetProgramsFolderX86();
-	df.Dir(pf + "/microsoft visual studio 14.0/vc/bin");
-	df.Dir(pf + "/windows kits/10");
-	df.Dir(pf + "/windows kits");
-	df.Dir(pf + "/microsoft visual studio 14.0");
-	df.Dir(pf);
-	df.Dir(GetProgramsFolder());
+
+	Array<FileSystemInfo::FileInfo> root = StdFileSystemInfo().Find(Null);
+	for(int i = 0; i < root.GetCount(); i++) {
+		if(root[i].root_style == FileSystemInfo::ROOT_FIXED) {
+			int drive = *root[i].filename;
+			String pf = GetProgramsFolderX86();
+			pf.Set(0, drive);
+			df.Dir(pf + "/microsoft visual studio 14.0/vc/bin");
+			df.Dir(pf + "/windows kits/10");
+			df.Dir(pf + "/windows kits");
+			df.Dir(pf + "/microsoft visual studio 14.0");
+			df.Dir(pf);
+			pf = GetProgramsFolder();
+			pf.Set(0, drive);
+			df.Dir(pf);
+		}
+	}
+	for(int i = 0; i < root.GetCount(); i++)
+		if(root[i].root_style == FileSystemInfo::ROOT_FIXED)
+			df.Dir(root[i].filename);
 	
 	String default_method;
 	
@@ -194,6 +207,7 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "/STACK:20000000");
 			bmSet(bm, "DEBUGGER", "msdev");
+			bmSet(bm, "DISABLE_BLITZ", "");
 		
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
@@ -208,7 +222,7 @@ void InstantSetup()
 	}
 
 	String bin = GetExeDirFile("bin");
-	if(DirectoryExists(bin + "/TDM64"))
+	if(DirectoryExists(bin + "/mingw64"))
 		for(int x64 = 0; x64 < 2; x64++) {
 			String method = x64 ? "MINGWx64" : "MINGW";
 		#ifdef _DEBUG
@@ -219,43 +233,50 @@ void InstantSetup()
 			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+		#ifndef _DEBUG
 			if(CheckDirs(bins, 3) && CheckDirs(incs, 2) && CheckDirs(libs, 2)) {
 				if(!x64)
 					default_method = Nvl(default_method, method);
 				continue;
 			}
+		#endif
 	
 			bmSet(bm, "BUILDER", "GCC");
 			bmSet(bm, "COMPILER", "");
-			bmSet(bm, "COMMON_OPTIONS", x64 ? "-msse2" : "-msse2 -m32");
-			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++11");
+			bmSet(bm, "COMMON_OPTIONS", "-msse2 -D__CRT__NO_INLINE");
+			bmSet(bm, "COMMON_CPP_OPTIONS", "-std=c++14");
 			bmSet(bm, "COMMON_C_OPTIONS", "");
-			bmSet(bm, "COMMON_LINK", x64 ? "" : "-m32");
+			bmSet(bm, "COMMON_LINK", "");
 			bmSet(bm, "COMMON_FLAGS", "");
 			bmSet(bm, "DEBUG_INFO", "2");
-			bmSet(bm, "DEBUG_BLITZ", "1");
+			bmSet(bm, "DEBUG_BLITZ", "");
 			bmSet(bm, "DEBUG_LINKMODE", "0");
-			bmSet(bm, "DEBUG_OPTIONS", "-O0 -ggdb");
+			bmSet(bm, "DEBUG_OPTIONS", "-O0");
 			bmSet(bm, "DEBUG_FLAGS", "");
 			bmSet(bm, "DEBUG_LINK", "");
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
-			bmSet(bm, "RELEASE_OPTIONS", "-O1 -ffunction-sections"); // -O3 after TDM is fixed
-			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-Os -O1 -finline-limit=20 -ffunction-sections"); // remove -O1 after TDM is fixed
+			bmSet(bm, "RELEASE_OPTIONS", "-O2 -ffunction-sections");
+			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-O2 -finline-limit=20 -ffunction-sections");
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "");
 			bmSet(bm, "DEBUGGER", "gdb");
 			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
+			bmSet(bm, "DISABLE_BLITZ", "1");
 	//		bmSet(bm, "LINKMODE_LOCK", "0");
 	
-			String m = x64 ? "" : "32";
-			bins.At(0) = bin + "/TDM64/bin";
-			bins.At(1) = bin + "/TDM64/opt/bin" + m;
-			bins.At(2) = bin + "/TDM64/gdb" + m + "/bin";
-			incs.At(0) = bin + "/TDM64/i686-w64-mingw32/include";
-			incs.At(1) = bin + "/TDM64/opt/include";
-			libs.At(0) = bin + "/TDM64/i686-w64-mingw32/lib" + m;
-			libs.At(1) = bin + "/TDM64/opt/lib" + m;
+			String m = x64 ? "64" : "32";
+			String binx = bin + (x64 ? "/mingw64/64" : "/mingw64/32");
+			String mingw = binx + (x64 ? "/x86_64-w64-mingw32" : "/i686-w64-mingw32");
+			bins.At(0) = binx + "/bin";
+			bins.At(1) = binx + "/opt/bin";
+			bins.At(2) = binx + "/gdb/bin";
+
+			incs.At(0) = mingw + "/include";
+			incs.At(1) = binx + "/opt/include";
+
+			libs.At(0) = mingw + "/lib";
+			libs.At(1) = binx + "/opt/lib";
 	
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");

@@ -30,12 +30,13 @@ public:
 	~ChromiumBrowser();
 
 	static const char * const JSFunctions[];
-	Callback1<String>								WhenUrlChange;
-	Callback3<bool, bool, bool>						WhenStatus;
-	Callback2<String, const Vector<Value>&>			WhenMessage;
-	Callback										WhenTakeFocus;
-	Callback1<bool>									WhenKeyboard;
-	Callback3<Upp::String, int, Upp::String>		WhenConsoleMessage;
+	Callback1<String>						WhenUrlChange;
+	Callback3<bool, bool, bool>				WhenStatus;
+	Callback2<String, const Vector<Value>&>	WhenMessage;
+	Callback								WhenTakeFocus;
+	Callback1<bool>							WhenKeyboard;
+	Callback3<String, int, String>			WhenConsoleMessage;
+	Gate1<String>							WhenCertificateError;
 	
 	static void ChildProcess();
 	static bool IsChildProcess();

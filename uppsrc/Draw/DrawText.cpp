@@ -113,7 +113,7 @@ void Draw::DrawText(int x, int y, int angle, const wchar *text, Font font,
 		posx += dx ? *dx++ : gi.width;
 	}
 
- 	if((GetInfo() & DRAWTEXTLINES) && (font0.IsUnderline() || font0.IsStrikeout())) {
+	if((GetInfo() & DRAWTEXTLINES) && (font0.IsUnderline() || font0.IsStrikeout())) {
 		int hg = abs(font0.GetCy());
 		if(hg == 0) hg = 10;
 		int thickness = max(hg / 20, 1);

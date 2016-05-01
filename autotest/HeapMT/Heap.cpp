@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 
-#define N 1000 * 100
+int N;
 
 #define THREADS 5
 
@@ -12,11 +12,14 @@ BiVector<int *> queue;
 
 void ProducerThread()
 {
+	LOG("Producer start");
 	for(int i = 0; i < N; i++) {
 		if(i % 1000 == 0)
 			LOG(i);
 		mutex.Enter();
-		queue.AddHead() = new int;
+		int *x = new int;
+		*x = i;
+		queue.AddHead() = x;
 		mutex.Leave();
 		todo.Release();
 		MemoryCheckDebug();
@@ -26,6 +29,7 @@ void ProducerThread()
 
 void ConsumerThread()
 {
+	LOG("Consumer start");
 	for(;;) {
 		todo.Wait();
 		Mutex::Lock __(mutex);
@@ -38,10 +42,11 @@ void ConsumerThread()
 		MemoryCheckDebug();
 	}
 	LOG("Consumer shutdown");
+	DUMP(queue.GetCount());
 }
 
-CONSOLE_APP_MAIN {
-	StdLogSetup(LOG_COUT);
+void DoTest()
+{
 	Thread producer[THREADS];
 	Thread consumer[THREADS];
 	for(int i = 0; i < THREADS; i++) {
@@ -62,6 +67,21 @@ CONSOLE_APP_MAIN {
 		LOG("Consumer #" << i << " terminated");
 	}
 	MemoryCheckDebug();
-	LOG("App shutdown");
-	LOG("Passed");
+	queue.Clear();
+	LOG("Round shutdown");
+	DUMP(MemoryUsedKb());
+}
+
+CONSOLE_APP_MAIN
+{
+	StdLogSetup(LOG_FILE|LOG_COUT);
+
+	N = 1000;
+	
+	for(int i = 0; i < 100; i++)
+		DoTest();
+	
+	N = 100 * 1000;
+	DoTest();
+	LOG("----------------- OK");
 }

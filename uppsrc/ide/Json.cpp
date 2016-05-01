@@ -117,11 +117,12 @@ String JsonView::Load0(const String& json)
 {
 	String parsingError;
 	
+	CParser p(json);
 	try {
-		tree.Open(AddNode(0, Null, "JSON", ParseJSON(json)));
+		tree.Open(AddNode(0, Null, "JSON", ParseJSON(p)));
 	}
-	catch(const Exc& e) {
-		parsingError = e;
+	catch(const CParser::Error& e) {
+		parsingError << e;
 	}
 	
 	return parsingError;

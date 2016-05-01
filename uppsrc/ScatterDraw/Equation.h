@@ -18,7 +18,7 @@ public:
 		ImproperInputParameters = -3,
 		TooManyFunctionEvaluation = -4
 	};
-	FitError Fit(DataSource &series, double &r2);
+	virtual FitError Fit(DataSource &series, double &r2);
 	FitError Fit(DataSource &series)		{double dummy; return Fit(series, dummy);}
 	virtual void GuessCoeff(DataSource &series)	= 0;
 
@@ -70,6 +70,20 @@ protected:
 	template<class T>	
 	static ExplicitEquation*                      __Create() {return new T;}
 	static VectorMap<String, CreateFunc>& classMap() {static VectorMap<String, CreateFunc> cMap; return cMap;}
+};
+
+class AvgEquation : public ExplicitEquation {
+public:
+	AvgEquation() 						{SetCoeff(0);}
+	AvgEquation(double c0)				{SetCoeff(c0);}
+	double f(double x) 					{return coeff[0];}
+	virtual String GetName() 			{return t_("Average");}
+	virtual String GetEquation(int numDigits = 3) {	
+		String ret = Format("%s", FormatCoeff(0, numDigits));
+		return ret;
+	}
+	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &series)	{coeff[0] = series.AvgY();}
 };
 
 class LinearEquation : public ExplicitEquation {
@@ -209,6 +223,23 @@ public:
 	}			
 	virtual void GuessCoeff(DataSource &series) {}
 	void SetDegree(int num)				{NEVER();}
+};
+
+class SplineEquation : public ExplicitEquation {
+public:
+	SplineEquation() 					{}
+	double f(double x);
+	virtual String GetName() 			{return t_("Spline");}
+	void SetDegree(int num)				{NEVER();}
+	void GuessCoeff(DataSource &series)	{NEVER();}
+	String GetEquation(int)				{return t_("Spline");}
+	FitError Fit(DataSource &series, double &r2);
+	FitError Fit(DataSource &series)	{double dummy; return Fit(series, dummy);}
+		
+private:
+	struct Coeff{double a, b, c, d, x;};
+    Buffer<Coeff> coeff;
+    int ncoeff;
 };
 
 

@@ -157,7 +157,7 @@ gboolean Ctrl::GtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 		pressed = true;
 	case GDK_KEY_RELEASE:
 		key = (GdkEventKey *)event;
-		value = (int) key->keyval;
+		value << (int) key->keyval << (int) key->hardware_keycode;
 		if(pressed) {
 			p = GetTopCtrlFromId(user_data);
 			if(p && gtk_im_context_filter_keypress(p->top->im_context, key))
@@ -349,7 +349,7 @@ void Ctrl::Proc()
 		return;
 	Ptr<Ctrl> _this = this;
 	bool pressed = false;
-	int  kv;
+	int  kv, hw;
 	static int clicktime = msecs() - 100000;
 	switch(CurrentEvent.type) {
 	case GDK_MOTION_NOTIFY: {
@@ -386,7 +386,8 @@ void Ctrl::Proc()
 	case GDK_KEY_PRESS:
 		pressed = true;
 	case GDK_KEY_RELEASE:
-		kv = CurrentEvent.value;
+		kv = CurrentEvent.value[0];
+		hw = CurrentEvent.value[1];
 		if(kv >= 0 && kv < 65536) {
 			LLOG("keyval " << FormatIntHex(kv) << ' ' << (char)kv);
 			if(kv >= 'a' && kv <= 'z')
@@ -424,6 +425,24 @@ void Ctrl::Proc()
 				{ GDKEY(KP_Insert), K_INSERT },
 				{ GDKEY(KP_Delete), K_DELETE },
 			};
+
+			if(kv > 256) { // Non-latin keyboard layout should still produce accelerators like Ctrl+C etc...
+				static VectorMap<int, int> hwkv; // convert hw keycode to Latin GTK keyval
+				ONCELOCK {
+					for(int i = 0; i < 256; i++) { // Latin keyvals are in 0..255 range
+						GdkKeymapKey *keys;
+						gint n_keys;
+						if(gdk_keymap_get_entries_for_keyval(NULL, i, &keys, &n_keys)) {
+							for(int j = 0; j < n_keys; j++)
+								if(keys[j].group == 0)
+									hwkv.Add(keys[j].keycode, i);
+							g_free(keys);
+						}
+					}
+				}
+				kv = hwkv.Get(hw, kv);
+			}
+
 			Tuple2<int, int> *x = FindTuple(cv, __countof(cv), kv);
 			if(x)
 				kv = x->b;

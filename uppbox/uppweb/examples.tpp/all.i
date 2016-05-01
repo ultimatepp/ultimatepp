@@ -6,8 +6,16 @@ TOPIC("AddressBook$ru-ru")
 #include "AddressBook$ru-ru.tppi"
 END_TOPIC
 
+TOPIC("AddressBookWeb$en-us")
+#include "AddressBookWeb$en-us.tppi"
+END_TOPIC
+
 TOPIC("AndroidMath$en-us")
 #include "AndroidMath$en-us.tppi"
+END_TOPIC
+
+TOPIC("AndroidMathUtility$en-us")
+#include "AndroidMathUtility$en-us.tppi"
 END_TOPIC
 
 TOPIC("AnimatedHello$en-us")
@@ -20,6 +28,10 @@ END_TOPIC
 
 TOPIC("Bombs$en-us")
 #include "Bombs$en-us.tppi"
+END_TOPIC
+
+TOPIC("Box2DExample$en-us")
+#include "Box2DExample$en-us.tppi"
 END_TOPIC
 
 TOPIC("Button$en-us")
@@ -54,6 +66,18 @@ TOPIC("EyeCare$en-us")
 #include "EyeCare$en-us.tppi"
 END_TOPIC
 
+TOPIC("FnGraph$en-us")
+#include "FnGraph$en-us.tppi"
+END_TOPIC
+
+TOPIC("GeoFun$en-us")
+#include "GeoFun$en-us.tppi"
+END_TOPIC
+
+TOPIC("GoogleMaps$en-us")
+#include "GoogleMaps$en-us.tppi"
+END_TOPIC
+
 TOPIC("HelloWorld$en-us")
 #include "HelloWorld$en-us.tppi"
 END_TOPIC
@@ -70,12 +94,24 @@ TOPIC("ImageView$en-us")
 #include "ImageView$en-us.tppi"
 END_TOPIC
 
+TOPIC("PainterExamples$en-us")
+#include "PainterExamples$en-us.tppi"
+END_TOPIC
+
 TOPIC("Puzzle$en-us")
 #include "Puzzle$en-us.tppi"
 END_TOPIC
 
+TOPIC("SDLExample$en-us")
+#include "SDLExample$en-us.tppi"
+END_TOPIC
+
 TOPIC("SQLApp$en-us")
 #include "SQLApp$en-us.tppi"
+END_TOPIC
+
+TOPIC("SVGView$en-us")
+#include "SVGView$en-us.tppi"
 END_TOPIC
 
 TOPIC("ScatterCtrl_Demo$en-us")

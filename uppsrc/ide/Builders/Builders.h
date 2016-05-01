@@ -233,6 +233,7 @@ protected:
 private:
 	void   InitProject();
 	String GetSandboxDir() const;
+	String GetAssemblyDir(const String& packageDir, const String& package);
 	
 private:
 	AndroidProject project;

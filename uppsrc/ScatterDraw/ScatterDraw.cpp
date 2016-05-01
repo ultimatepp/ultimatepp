@@ -241,18 +241,19 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 	}
 	Font italic = scaledFont;
 	italic.Italic();
+	scaledFont.Bold();
 	for(int row = 0, start = 0; row <= nrows; row++) {
 		for(int i = start; i < min(start + nlr, nlab); i++) {
 			int lx = rect.left + (i - start)*legendWidth + xWidth;
 			int ly = (rowIncSign >= 0 ? rect.top : rect.bottom) +
 					 rowIncSign*int(rowHeight*(row + 0.6) + loclegendRowSpacing*(row + 0.5));
-			Vector <Point> vp;
-			vp << Point(lx, ly) << Point(lx + lineLen, ly);
+			Vector <Point> line;
+			line << Point(lx, ly) << Point(lx + lineLen, ly);
 			if (series[i].opacity > 0 && series[i].seriesPlot)
-				DrawPolylineOpa(w, vp, scale, 1, scale*series[i].thickness, series[i].color, series[i].dash);
-			Point p(lx + scale*7, ly);
+				DrawPolylineOpa(w, line, scale, 1, series[i].thickness, series[i].color, series[i].dash);
+			Point mark_p(lx + scale*7, ly);
 			if (series[i].markWidth >= 1 && series[i].markPlot)
-				series[i].markPlot->Paint(w, scale, p, series[i].markWidth, series[i].markColor, 
+				series[i].markPlot->Paint(w, scale, mark_p, series[i].markWidth, series[i].markColor, 
 					series[i].markBorderWidth, series[i].markBorderColor);   
 			Font &font = series[i].primaryY ? scaledFont : italic;
 			DrawText(w, lx + lineLen + xWidth, ly - scale*6, 0, legends[i], font, series[i].color);                   
@@ -369,9 +370,9 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 }
 
 // Deprecated
-void ScatterDraw::FitToData(bool vertical, double factor) {
+/*void ScatterDraw::FitToData(bool vertical, double factor) {
 	ZoomToFit(true, vertical, factor);
-}
+}*/
 
 void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	if (linkedMaster) {
@@ -689,6 +690,10 @@ ScatterDraw &ScatterDraw::AddSeries(DataSource &data) {
 	return *this;	
 }
 
+DataSource &ScatterDraw::GetSeries(int index) {
+	return series[index].GetDataSource();
+}
+
 ScatterDraw &ScatterDraw::_AddSeries(DataSource *data) {
 	ScatterSeries &s = series.Add();
 	s.Init(series.GetCount()-1);
@@ -963,10 +968,11 @@ const String ScatterDraw::GetUnitsY(int index) {
 	return series[index].unitsY;
 }
 
-void ScatterDraw::SetDataColor(int index, const Color& color) {
+ScatterDraw& ScatterDraw::SetDataColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].color = color;
 	Refresh();
+	return *this;
 }
 
 Color ScatterDraw::GetDataColor(int index) const {
@@ -974,10 +980,11 @@ Color ScatterDraw::GetDataColor(int index) const {
 	return series[index].color;
 }
 
-void ScatterDraw::SetDataThickness(int index, double thickness) {
+ScatterDraw& ScatterDraw::SetDataThickness(int index, double thickness) {
 	ASSERT(IsValid(index));
 	series[index].thickness = thickness;
 	Refresh();
+	return *this;
 }
 
 double ScatterDraw::GetDataThickness(int index) const {
@@ -985,10 +992,11 @@ double ScatterDraw::GetDataThickness(int index) const {
 	return series[index].thickness;
 }
 
-void ScatterDraw::SetFillColor(int index, const Color& color) {
+ScatterDraw& ScatterDraw::SetFillColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].fillColor = color;
 	Refresh();
+	return *this;
 }
 
 Color ScatterDraw::GetFillColor(int index) const {
@@ -1066,6 +1074,15 @@ void ScatterDraw::SetSequentialX(int index, bool sequential) {
 ScatterDraw &ScatterDraw::SetSequentialX(bool sequential) {
 	SetSequentialX(series.GetCount()-1, sequential);
 	return *this;
+}
+
+bool ScatterDraw::GetSequentialX(int index) {
+	ASSERT(IsValid(index));
+	return series[index].sequential;
+}
+
+bool ScatterDraw::GetSequentialX() {
+	return GetSequentialX(series.GetCount()-1);
 }
 
 ScatterDraw &ScatterDraw::SetSequentialXAll(bool sequential) {
@@ -1558,6 +1575,7 @@ ScatterDraw::ScatterDraw() {
 	lastyRange = yRange;
 	highlight_0 = Null;
 	labelsChanged = false;
+	legendAnchor = LEGEND_ANCHOR_RIGHT_TOP;
 	legendPos = Point(5, 5);
 	legendNumCols = 1;
 	legendAnchor = LEGEND_TOP;
@@ -1732,7 +1750,7 @@ void DrawPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity,
 	ASSERT(!p.IsEmpty());
 	Color color = GetOpaqueColor(_color, background, opacity) ;
 	if (dash == LINE_SOLID) 
-		w.DrawPolyline(p, fround(thick), color);
+		w.DrawPolyline(p, fround(thick*scale), color);
 	else {
 		Vector <double> &pat = GetDashedArray(dash);
 		if (pat.IsEmpty())
@@ -1752,7 +1770,7 @@ void DrawPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity,
 				++i;
 			}
 			if (Even(iPat)) 
-				w.DrawLine(begin, end, fround(thick), color);
+				w.DrawLine(begin, end, fround(thick*scale), color);
 			if (d >= len) {
 				iPat++;
 				if (iPat == pat.GetCount())

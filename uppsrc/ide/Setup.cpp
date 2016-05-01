@@ -143,7 +143,7 @@ void Ide::UpdateFormat(CodeEditor& editor)
 }
 
 void Ide::UpdateFormat() {
-	SetupEditor();	
+	SetupEditor();
 	UpdateFormat(editor);
 	UpdateFormat(editor2);
 	console.SetFont(consolefont);
@@ -151,19 +151,18 @@ void Ide::UpdateFormat() {
 	statusbar.Show(show_status_bar);
 	SetupBars();
 	
-	if(!designer) {
+	if(!designer)
 		if(filetabs >=0) {
 			tabs.SetAlign(filetabs);
 			editpane.SetFrame(tabs);
-		} else {
-			editpane.SetFrame(ViewFrame());
 		}
-	}
+		else
+			editpane.SetFrame(NullFrame());
 	
 	tabs.Grouping(tabs_grouping);
 	tabs.Stacking(tabs_stacking);
 	tabs.FileIcons(tabs_icons, false);
-	tabs.Crosses(tabs_crosses >= 0, tabs_crosses);	
+	tabs.Crosses(tabs_crosses >= 0, tabs_crosses);
 }
 
 void Ide::EditorFontScroll(int d)
@@ -502,11 +501,15 @@ void Ide::SetupFormat() {
 	uscBrowse.SetImage(CtrlImg::right_arrow());
 	uscBrowse <<= callback1(AddPath, &ide.uscpath);
 	ide.uscpath.AddFrame(uscBrowse);
-	ide.uscpath <<= LoadFile(GetHomeDirFile("usc.path"));
+	String usc_path = GetHomeDirFile("usc.path");
+	ide.uscpath <<= LoadFile(usc_path);
 	
 	for(;;) {
 		int c = dlg.Run();
-		Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);
+		if(IsNull(ide.uscpath))
+			FileDelete(usc_path);
+		else
+			Upp::SaveFile(GetHomeDirFile("usc.path"), ~ide.uscpath);
 		editorfont = ed.Get();
 		tfont = tf.Get();
 		veditorfont = vf.Get();

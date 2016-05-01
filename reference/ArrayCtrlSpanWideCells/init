@@ -1,0 +1,4 @@
+#ifndef _ArrayCtrlSpanWideCells_icpp_init_stub
+#define _ArrayCtrlSpanWideCells_icpp_init_stub
+#include "CtrlLib/init"
+#endif

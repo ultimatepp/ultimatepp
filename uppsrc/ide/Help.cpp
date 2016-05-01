@@ -565,6 +565,7 @@ bool IsHelpName(const char *path)
 }
 
 struct HelpModule : public IdeModule {
+	virtual String       GetID() { return "HelpModule"; }
 	virtual Image FileIcon(const char *path) {
 		return IsHelpName(path) ? IdeImg::help() : Null;
 	}

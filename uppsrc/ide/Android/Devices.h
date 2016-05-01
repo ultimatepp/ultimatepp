@@ -12,19 +12,22 @@ public:
 	
 public:
 	String GetSerial() const { return serial; }
+	String GetState() const  { return state; }
 	String GetUsb() const    { return usb; }
 	String GetModel() const  { return model; }
 	
 	void SetSerial(const String& serial) { this->serial = serial; }
+	void SetState(const String& state)   { this->state = state; }
 	void SetUsb(const String& usb)       { this->usb = usb; }
 	void SetModel(const String& model)   { this->model = model; }
 	
 public:
-	bool IsEmulator() const       { return model.IsEmpty(); }
+	bool IsEmulator() const       { return !usb.IsEmpty(); }
 	bool IsPhysicalDevice() const { return !IsEmulator(); }
 	
 private:
 	String serial;
+	String state;
 	String usb;
 	String model;
 };

@@ -35,6 +35,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	const bool isResourcesPackage = HasFlag(RES_PKG_FLAG);
 	String uppManifestPath = PackagePath(package);
 	String packageDir = GetFileFolder(uppManifestPath);
+	String assemblyDir = GetAssemblyDir(packageDir, package);
 	
 	ChDir(packageDir);
 	PutVerbose("cd " + packageDir);
@@ -215,6 +216,8 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		AndroidModuleMakeFile pkgMakeFile(NormalizeModuleName(package));
 		for(int i = 0; i < nativeSourceFilesInPackage.GetCount(); i++)
 			pkgMakeFile.AddSourceFile(nativeSourceFilesInPackage[i]);
+		
+		pkgMakeFile.AddInclude(assemblyDir);
 		
 		for(int i = 0; i < pkg.flag.GetCount(); i++)
 			pkgMakeFile.AddCppFlag(pkg.flag[i].text);
@@ -504,6 +507,12 @@ bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath
 		DeleteFile(signedApkPath);
 		String jarsignerCmd;
 		jarsignerCmd << NormalizeExePath(jdk.GetJarsignerPath());
+		
+		// Up to Java 6.0 below alogirms was by default
+		// (In Java 7.0 and above we need to manually specific this algorithms)
+		jarsignerCmd << " -sigalg SHA1withRSA";
+		jarsignerCmd << " -digestalg SHA1";
+		
 		jarsignerCmd << " -keystore " + keystorePath;
 		jarsignerCmd << " -storepass android";
 		jarsignerCmd << " -keypass android";
@@ -547,7 +556,9 @@ bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
 		keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
 		keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android";
 		keytoolCmd << " -keystore " << keystorePath;
-		keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\" -validity 100000";
+		keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\"";
+		keytoolCmd << " -keyalg RSA";
+		keytoolCmd << " -validity 100000";
 		//PutConsole(keytoolCmd);
 		if(Execute(keytoolCmd, ss) != 0) {
 			PutConsole(ss.GetResult());
@@ -812,6 +823,17 @@ String AndroidBuilder::GetSandboxDir() const
 	String mainPackageName = GetFileName(target);
 	mainPackageName.Remove(mainPackageName.GetCount() - targetExtLen, targetExtLen);
 	return GetFileFolder(target) + DIR_SEPS + "Sandbox" + DIR_SEPS + mainPackageName;
+}
+
+String AndroidBuilder::GetAssemblyDir(const String& packageDir, const String& package)
+{
+	String assemblyDir = packageDir;
+	
+	int pos = packageDir.GetCount() - package.GetCount() - 1;
+	if (pos >= 0 && pos < assemblyDir.GetCount())
+		assemblyDir.Trim(pos);
+	
+	return assemblyDir != packageDir ? assemblyDir : "";
 }
 
 // -------------------------------------------------------------------

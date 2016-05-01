@@ -416,6 +416,7 @@ bool Gdal::Open(const char *fn)
 		inverse_transform = Matrixf_1();
 	else
 		inverse_transform = MatrixfInverse(transform);
+	filename = fn;
 	return true;
 }
 

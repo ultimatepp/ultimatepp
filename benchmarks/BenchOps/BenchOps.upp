@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	BenchOps.cpp optimize_speed;
+
+mainconfig
+	"" = "MT";
+

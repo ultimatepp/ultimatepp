@@ -9,9 +9,8 @@ uses
 	plugin\png,
 	plugin/tif,
 	plugin/bmp,
-	plugin/lz4;
-
-uses(GUI) ide/Browser;
+	plugin/lz4,
+	PdfDraw;
 
 library(WIN32) oleaut32;
 

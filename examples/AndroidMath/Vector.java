@@ -1,10 +1,29 @@
 package org.upp.AndroidMath;
 
 /**
- * Class which whole funtional implementaiton is native.
+ * Math vector class which whole implementaiton is native (c/c++).
  */
 public class Vector
 {
+	/**
+	 * Field use by MemoryManager to stroe pointer to c++ object.
+	 * If you want to use MemoryManager with your class make usre you have this field
+	 * in your class.
+	 */
+	private long nativeAdress = 0;
+	
+	/**
+	 * We override finalize method, because we need to destroy native c++ object when
+	 * there is not more reference to Java object. This method is called by default
+	 * by garbage collector.
+	 */
+	@Override
+	protected void finalize() throws Throwable
+	{
+		nativeFinalize();
+		super.finalize();
+	}
+	
 	public Vector(int size)
 	{
 		construct(size);
@@ -13,16 +32,6 @@ public class Vector
 	public Vector(Vector vec)
 	{
 		copyConstruct(vec);
-	}
-	
-	/**
-	 * We override finalize method due to possibilite of memory leaks.
-	 */
-	@Override
-	protected void finalize() throws Throwable
-	{
-		destroy();
-		super.finalize();
 	}
 	
 	// Native stuff - C/C++
@@ -37,11 +46,5 @@ public class Vector
 	
 	private native void construct(int size);
 	private native void copyConstruct(Vector vec);
-	private native void destroy();
-	
-	static {
-		// In this place we are loading native libraries.
-		// Native library always has upp package name!
-		System.loadLibrary("AndroidMath");
-	}
+	private native void nativeFinalize();
 }

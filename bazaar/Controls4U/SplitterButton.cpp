@@ -5,13 +5,17 @@ NAMESPACE_UPP
 
 SplitterButton::SplitterButton() {
 	Add(splitter.SizePos());
-	Add(button.LeftPosZ(80, 10).TopPosZ(30, 40));
+	Add(button1.LeftPosZ(80, 10).TopPosZ(30, 40));
+	Add(button2.LeftPosZ(80, 10).TopPosZ(30, 40));
 	
 	splitter.WhenLayout = THISBACK(OnLayout);
-	button.WhenAction = THISBACK(OnButton);
+	button1.WhenAction = THISBACK1(OnButton, 0);
+	button2.WhenAction = THISBACK1(OnButton, 1);
 	
 	movingRight = true;
 	buttonWidth = int(2.5*splitter.GetSplitWidth());
+	positionId = 0;
+	SetButtonNumber(2);
 	
 	splitter.SetPos(5000);
 }
@@ -34,27 +38,28 @@ SplitterButton& SplitterButton::Vert(Ctrl& top, Ctrl& bottom) {
 
 SplitterButton &SplitterButton::SetPositions(Vector<int> &_positions) {
 	ASSERT(_positions.GetCount() > 1);
-	positions = pick(_positions);
+	positions = clone(_positions);
 	Sort(positions);
-	if (positionId >= positions.GetCount())
+	if (positionId >= positions.GetCount() || positionId < 0)
 		positionId = 0;
-	splitter.SetPos( positions[positionId]);
+
+	splitter.SetPos(positions[positionId]);
 	return *this;
 }
 
 SplitterButton &SplitterButton::SetPositions(int pos1, int pos2) {
-	Vector<int> positions;
+	Vector<int> pos;
 	
-	positions << pos1 << pos2;
-	SetPositions(positions);
+	pos << pos1 << pos2;
+	SetPositions(pos);
 	return *this;
 }
 
 SplitterButton &SplitterButton::SetPositions(int pos1, int pos2, int pos3) {
-	Vector<int> positions;
+	Vector<int> pos;
 	
-	positions << pos1 << pos2 << pos3;
-	SetPositions(positions);
+	pos << pos1 << pos2 << pos3;
+	SetPositions(pos);
 	return *this;
 }
 
@@ -81,15 +86,30 @@ void SplitterButton::OnLayout(int pos) {
 	int posx = max(0, pos - buttonWidth/2);
 	posx = min(cwidth - buttonWidth, posx);
 	int posy = (2*cheight)/5;	
-	int widthy = cheight/5;
-	
-	if (splitter.IsVert()) 
-		button.SetPos(PosLeft(posy, widthy), PosTop(posx, buttonWidth));
+	int widthy;
+	if (buttonNumber == 1)
+		widthy = cheight/5;
 	else
-		button.SetPos(PosLeft(posx, buttonWidth), PosTop(posy, widthy));
+		widthy = cheight/8;
+	
+	if (splitter.IsVert()) {
+		if (buttonNumber == 1)
+			button1.SetPos(PosLeft(posy, widthy), PosTop(posx, buttonWidth));
+		else {
+			button1.SetPos(PosLeft(posy - widthy/2, widthy), PosTop(posx, buttonWidth));
+			button2.SetPos(PosLeft(posy + widthy/2, widthy), PosTop(posx, buttonWidth));
+		}
+	} else {
+		if (buttonNumber == 1)
+			button1.SetPos(PosLeft(posx, buttonWidth), PosTop(posy, widthy));
+		else {
+			button1.SetPos(PosLeft(posx, buttonWidth), PosTop(posy - widthy/2, widthy));
+			button2.SetPos(PosLeft(posx, buttonWidth), PosTop(posy + widthy/2, widthy));
+		}
+	}
 }
 
-void SplitterButton::OnButton() {
+void SplitterButton::OnButton(int id) {
 	ASSERT(positions.GetCount() > 1);
 	
 	int pos = splitter.GetPos();
@@ -102,36 +122,28 @@ void SplitterButton::OnButton() {
 			closerPositionId = i;
 		}
 	
-	bool arrowRight;
-	if (movingRight) {
-		if (closerPositionId == (positions.GetCount() - 1)) {
-			movingRight = false;
-			positionId = positions.GetCount() - 2;
-			if (positionId == 0)
-				arrowRight = true;
-			else	
-				arrowRight = false;
+	//bool arrowRight;
+	if (buttonNumber == 1) {
+		if (movingRight) {
+			if (closerPositionId == (positions.GetCount() - 1)) {
+				movingRight = false;
+				positionId = positions.GetCount() - 2;
+			} else 
+				positionId = closerPositionId + 1;
 		} else {
-			positionId = closerPositionId + 1;
-			if (positionId == (positions.GetCount() - 1)) 
-				arrowRight = false;
-			else
-				arrowRight = true;
+			if (closerPositionId == 0) {
+				movingRight = true;
+				positionId = 1;
+			} else 
+				positionId = closerPositionId - 1;
 		}
 	} else {
-		if (closerPositionId == 0) {
-			movingRight = true;
-			positionId = 1;
-			if (positionId == (positions.GetCount() - 1)) 
-				arrowRight = false;
-			else	
-				arrowRight = true;
+		if (id == 1) {
+			if (positionId < positions.GetCount() - 1)
+				positionId++;
 		} else {
-			positionId = closerPositionId - 1;
-			if (positionId == 0) 
-				arrowRight = true;
-			else
-				arrowRight = false;
+			if (positionId > 0)
+				positionId--;
 		}
 	}
 	splitter.SetPos(positions[positionId]);
@@ -139,16 +151,21 @@ void SplitterButton::OnButton() {
 }
 
 void SplitterButton::SetArrows() {
-	bool arrowRight = movingRight;
-	if (positionId == (positions.GetCount() - 1))
-		arrowRight = false;
-	if (positionId == 0)
-		arrowRight = true;
-	
-	if (arrowRight)
-		button.SetImage(splitter.IsVert() ? CtrlImg::smalldown() : CtrlImg::smallright());
-	else
-		button.SetImage(splitter.IsVert() ? CtrlImg::smallup() : CtrlImg::smallleft());
+	if (buttonNumber == 1) {
+		bool arrowRight = movingRight;
+		if (positionId == (positions.GetCount() - 1))
+			arrowRight = false;
+		if (positionId == 0)
+			arrowRight = true;
+		
+		if (arrowRight)
+			button1.SetImage(splitter.IsVert() ? CtrlImg::smalldown() : CtrlImg::smallright());
+		else
+			button1.SetImage(splitter.IsVert() ? CtrlImg::smallup() : CtrlImg::smallleft());
+	} else {
+		button1.SetImage(splitter.IsVert() ? CtrlImg::smallup() : CtrlImg::smallleft());
+		button2.SetImage(splitter.IsVert() ? CtrlImg::smalldown() : CtrlImg::smallright());
+	}
 }
 		
 END_UPP_NAMESPACE

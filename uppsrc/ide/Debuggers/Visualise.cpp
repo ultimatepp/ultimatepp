@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#ifdef COMPILER_MSC
+#ifdef PLATFORM_WIN32
 
 void Pdb::Visual::Cat(const String& text, Color ink)
 {

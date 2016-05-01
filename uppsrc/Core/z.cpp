@@ -45,7 +45,7 @@ void Crc32Stream::Out(const void *ptr, dword count)
 	crc = crc32(crc, (byte *)ptr, count);
 }
 
-Crc32Stream::Crc32Stream()
+void Crc32Stream::Clear()
 {
 	crc = crc32(0, NULL, 0);
 }

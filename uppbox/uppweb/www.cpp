@@ -678,7 +678,7 @@ String Downloads()
 {
 	String r;
 	r << "{{1:1:1^@L "
-	     "[^app$ide$install$en-us.html^ U`+`+ for Windows with TDM64 toolchain]:: "
+	     "[^app$ide$install$en-us.html^ U`+`+ for Windows with MinGW-w64 toolchain]:: "
 	     "[^app$ide$install$en-us.html^ U`+`+ for Windows without toolchain]:: "
 	     "[^www$uppweb$uppx11$en-us.html^ POSIX/X11 tarball]";
 	FindFile ff(AppendFileName(targetdir, "downloads/*.*"));

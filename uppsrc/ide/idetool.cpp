@@ -514,3 +514,9 @@ void Ide::LaunchAndroidAVDManager(const AndroidSDK& androidSDK)
 	One<Host> host = CreateHost(false);
 	IGNORE_RESULT(host->Execute(androidSDK.GetLauchAVDManagerCmd()));
 }
+
+void Ide::LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK)
+{
+	One<Host> host = CreateHost(false);
+	IGNORE_RESULT(host->Execute(androidSDK.MonitorPath()));
+}
