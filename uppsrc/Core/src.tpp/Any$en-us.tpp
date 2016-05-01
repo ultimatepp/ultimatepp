@@ -39,11 +39,11 @@ while destroying its content by picking..&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:Any`:`:Create`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[*@4 T
-][@(0.0.255) `&]_[* Create]()&]
-[s2; Creates content of type T inside Any.&]
-[s7; [*C@4 T]-|Type of content.&]
-[s7; [*/ Return value]-|Reference to the newly created content.&]
+[s5;:Upp`:`:Any`:`:Create`(Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 T], [@(0.0.255) class...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) .
+..]_args)&]
+[s2; Creates content of type T inside Any. Additional parameters 
+to constructor can be specified.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Any`:`:Is`(`)const:%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) b
@@ -77,13 +77,11 @@ this operation is illegal.&]
 [s7; [*/ Return value]-|true if there is no content.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Any`:`:IsPicked`(`)const:%- [@(0.0.255) bool]_[* IsPicked]()_[@(0.0.255) const]&]
-[s7; [*/ Return value]-|true if Any is picked.&]
-[s3;%- &]
+[s5;:Upp`:`:Any`:`:operator`=`(Upp`:`:Any`&`&`):%- [@(0.0.255) void]_[* operator`=]([_^Upp`:`:Any^ A
+ny][@(0.0.255) `&`&]_[*@3 s])&]
+[s2; Pick assignment.&]
+[s3; &]
 [s4;%- &]
-[s5;:Any`:`:operator`=`(pick`_ Any`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) pi
-ck`_]_Any[@(0.0.255) `&]_[*@3 s])&]
-[s2; Pick operator. Transfers content while destroying source.&]
-[s7; [%-*C@3 s]-|Source Any.&]
-[s3;%- &]
-[s0; ]
+[s5;:Upp`:`:Any`:`:Any`(Upp`:`:Any`&`&`):%- [* Any]([* Any][@(0.0.255) `&`&]_[*@3 s])&]
+[s2; Pick constructor.&]
+[s0; ]]

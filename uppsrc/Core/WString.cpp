@@ -239,7 +239,7 @@ String WString::ToString() const
 	return FromUnicode(*this, CHARSET_DEFAULT);
 }
 
-Atomic WString0::voidptr[2] = { 0, 0 };
+Atomic WString0::voidptr[2];
 
 WString WString::GetVoid()
 {
@@ -291,9 +291,10 @@ wchar *WStringBuffer::Alloc(int count, int& alloc)
 		return s;
 	}
 	else {
-		size_t sz = sizeof(Atomic) + (count + 1) * sizeof(wchar);
+		size_t sz = sizeof(Atomic) + ((size_t)count + 1) * sizeof(wchar);
 		Atomic *rc = (Atomic *)MemoryAlloc(sz);
-		alloc = ((int)(sz - sizeof(Atomic)) >> 1) - 1;
+		alloc = (int)min((size_t)INT_MAX, ((sz - sizeof(Atomic)) >> 1) - 1);
+		ASSERT(alloc >= 0);
 		*rc = 1;
 		return (wchar *)(rc + 1);
 	}
@@ -308,13 +309,17 @@ void WStringBuffer::Free()
 		MemoryFree((Atomic *)begin - 1);
 }
 
-void WStringBuffer::Expand(int n, const wchar *cat, int l)
+void WStringBuffer::Expand(dword n, const wchar *cat, int l)
 {
 	int al;
-	int ep = (int)(end - begin);
+	size_t ep = end - begin;
+	if(n > INT_MAX)
+		n = INT_MAX;
 	wchar *p = Alloc(n, al);
 	memcpy(p, begin, GetLength() * sizeof(wchar));
 	if(cat) {
+		if(ep + l > INT_MAX)
+			Panic("WStringBuffer is too big!");
 		memcpy(p + ep, cat, l * sizeof(wchar));
 		ep += l;
 	}
@@ -327,6 +332,8 @@ void WStringBuffer::Expand(int n, const wchar *cat, int l)
 void WStringBuffer::Expand()
 {
 	Expand(GetLength() * 2);
+	if(end == limit)
+		Panic("WStringBuffer is too big!");
 }
 
 void WStringBuffer::SetLength(int l)

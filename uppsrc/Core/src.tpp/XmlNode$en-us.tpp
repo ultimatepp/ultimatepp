@@ -223,6 +223,12 @@ If no such attribute exists, returns [%-*@3 def].&]
 r]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], [@(0.0.255) int]_[*@3 val])&]
 [s2;%% Sets the attribute [%-*@3 id] to have integer value [%-*@3 val].&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:XmlNode`:`:SetAttrs`(Upp`:`:VectorMap`<Upp`:`:String`,Upp`:`:String`>`&`&`): [@(0.0.255) v
+oid]_[* SetAttrs]([_^Upp`:`:VectorMap^ VectorMap]<[_^Upp`:`:String^ String], 
+[_^Upp`:`:String^ String]>`&`&_[*@3 a])&]
+[s2;%% Replaces all attributes with picked [%-*@3 a].&]
+[s3;%% &]
 [s4;%% &]
 [s5;:XmlNode`:`:SetAttrsPick`(pick`_ VectorMap`<String`,String`>`&`): [@(0.0.255) void]_
 [* SetAttrsPick]([@(0.128.128) pick`_]_[_^VectorMap^ VectorMap]<[_^String^ String], 

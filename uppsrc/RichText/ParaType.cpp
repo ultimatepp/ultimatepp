@@ -214,7 +214,7 @@ Array<RichPara::Lines>& RichPara::Lines::Cache()
 
 RichPara::Lines::~Lines()
 {
-	if(cacheid && !line.IsPicked() && !incache) {
+	if(cacheid && line.GetCount() && !incache) {
 		Mutex::Lock __(cache_lock);
 		Array<Lines>& cache = Cache();
 		incache = true;

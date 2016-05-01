@@ -204,8 +204,8 @@ const Display& StdDisplay()
 	return Single<StdDisplayClass>();
 }
 
-const Display& GLOBAL_VP_INIT(StdDisplayClass, StdCenterDisplay, (ALIGN_CENTER))
-const Display& GLOBAL_VP_INIT(StdDisplayClass, StdRightDisplay, (ALIGN_RIGHT))
+const Display& StdCenterDisplay() { static StdDisplayClass h(ALIGN_CENTER); return h; }
+const Display& StdRightDisplay() { static StdDisplayClass h(ALIGN_RIGHT); return h; }
 
 #ifdef flagSO
 ColorDisplayNull::ColorDisplayNull(String nulltext) : nulltext(nulltext) {}

@@ -97,9 +97,8 @@ constructor.&]
 ]_[*@4 T][@(0.0.255) `&]_[*@3 x], [@(0.0.255) unsigned]_[*@3 `_hash])&]
 [s2; Adds a new element [%-*@3 x] with a precomputed hash value [%-*@3 `_hash]. 
 The performance benefit of this variant is that sometimes you 
-can compute hash`-value as the part of an other process, like 
-fetching strings from an input stream. Returns a reference to 
-the element.&]
+can compute hash`-value as the part of other process, like fetching 
+strings from an input stream. Returns a reference to the element.&]
 [s6; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to AIndex.&]
 [s6; Invalidates references to Index.&]
@@ -486,17 +485,10 @@ onst]&]
 of elements.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:AIndex`:`:operator`=`(pick`_ V`&`):%- [_^AIndex^ AIndex][@(0.0.255) `&]_[* operator`=](
-[@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Upp`:`:AIndex`:`:operator`=`(V`&`&`):%- [_^Upp`:`:AIndex^ AIndex][@(0.0.255) `&]_[* op
+erator`=]([*@4 V][@(0.0.255) `&`&]_[*@3 s])&]
 [s2; Assigns basic random access container to AIndex. Transfers the 
 source container in short constant time, but destroys it by picking.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:AIndex`:`:operator`<`<`=`(const V`&`):%- [_^AIndex^ AIndex][@(0.0.255) `&]_[* operator
-<<`=]([@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 s])&]
-[s2; Assigns the basic random access container to AIndex, while preserving 
-the value of the source container.&]
-[s6; Requires T to have deep copy constructor or optional deep copy.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:AIndex`:`:Begin`(`)const:%- [_^AIndex`:`:ConstIterator^ ConstIterator]_[* Begin]()_[@(0.0.255) c

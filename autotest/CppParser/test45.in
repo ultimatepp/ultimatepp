@@ -1,0 +1,7 @@
+struct FooBar {
+	int x;
+};
+
+void Autocomplete()
+{
+	::FooBar b;

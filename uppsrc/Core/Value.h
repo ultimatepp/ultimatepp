@@ -84,7 +84,7 @@ public:
 	public:
 		void               Retain()                    { AtomicInc(refcount); }
 		void               Release()                   { if(AtomicDec(refcount) == 0) delete this; }
-		int                GetRefCount() const         { return AtomicRead(refcount); }
+		int                GetRefCount() const         { return refcount; }
 
 		virtual dword      GetType() const             { return VOID_V; }
 		virtual bool       IsNull() const              { return true; }
@@ -176,7 +176,8 @@ protected:
 	
 	int     PolyCompare(const Value& v) const;
 
-	Vector<Value>&  CloneArray();
+	void            CloneArray();
+	Vector<Value>&  UnShareArray();
 
 	const Vector<Value>& GetVA() const;
 	
@@ -189,9 +190,11 @@ protected:
 	void    ClearMagic()          {}
 #endif
 
-public:
-	static  void Register(dword w, Void* (*c)(), const char *name = NULL) init_; // Direct use deprecated
+#ifndef DEPRECATED
+	static  void Register(dword w, Void* (*c)(), const char *name = NULL);
+#endif
 
+public:
 	template <class T>
 	static  void Register(const char *name = NULL);
 	template <class T>
@@ -288,6 +291,10 @@ public:
 	typedef int            difference_type;
 	const_iterator         begin() const                      { return Begin(); }
 	const_iterator         end() const                        { return End(); }
+
+#ifdef DEPRECATED
+	static  void Register(dword w, Void* (*c)(), const char *name = NULL);
+#endif
 };
 
 struct ValueTypeError : Exc {
@@ -303,7 +310,7 @@ template <class T> Value SvoToValue(const T& x)            { return Value(x, Val
 template <class T> Value RichToValue(const T& data);
 
 template <class T> Value RawToValue(const T& data);
-template <class T> Value RawPickToValue(T rval_ data);
+template <class T> Value RawPickToValue(T&& data);
 template <class T> Value RawDeepToValue(const T& data);
 template <class T> T&    CreateRawValue(Value& v);
 

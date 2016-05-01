@@ -127,6 +127,14 @@ from T as well. No constructor is applied.&]
 [s7; [%-*@3 newt]-|Value.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:ArrayMap`:`:Create`(const K`&`,Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 Args][@(0.0.255) ...]_args)&]
+[s2;%- [%% Adds a new key ][*@3 k][%%  with value element of type ][*@4 TT][%%  
+(must be derived from ][*@4 T]). Value is constructd in`-place, 
+with args as constructor parameters.&]
+[s3; &]
+[s4;%- &]
 [s5;:ArrayMap`:`:Set`(int`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i], 
 [*@4 T]_`*[*@3 ptr])&]
 [s2; Sets value at specified index. Value is specified by a pointer 

@@ -31,8 +31,8 @@ is much better.&]
 [s3;%- &]
 [s5;:FixedAMap`:`:Add`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s5;:FixedAMap`:`:AddPick`(const K`&`,T rval`_`):%- [*@4 T][@(0.0.255) `&]_[* AddPick]([@(0.0.255) c
-onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T]_[@(0.0.255) rval`_]_[*@3 x])&]
+[s5;:Upp`:`:FixedAMap`:`:AddPick`(const K`&`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* AddPick](
+[@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s5;:FixedAMap`:`:Add`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
 [s2; Adds new key`-value pair to the map, returns a reference to 
@@ -173,10 +173,9 @@ for creating maps.&]
 [* FixedAMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) int])&]
 [s2; Deep copy constructor.&]
 [s3; &]
-[s4; &]
-[s5;:FixedAMap`:`:FixedAMap`(pick`_ Vector`<K`>`&`,pick`_ V`&`):%- [* FixedAMap]([@(0.128.128) p
-ick`_]_[_^Vector^ Vector]<[*@4 K]>`&_[*@3 key], [@(0.128.128) pick`_]_[*@4 V][@(0.0.255) `&]_
-[*@3 val])&]
+[s4;%- &]
+[s5;:Upp`:`:FixedAMap`:`:FixedAMap`(Upp`:`:Vector`<K`>`&`&`,V`&`&`):%- [* FixedAMap]([_^Upp`:`:Vector^ V
+ector]<[*@4 K]>`&`&_[*@3 key], [*@4 V][@(0.0.255) `&`&]_[*@3 val])&]
 [s2; Constructor from containers (which are picked).&]
 [s3; &]
 [s4; &]

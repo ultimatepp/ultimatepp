@@ -145,7 +145,7 @@ void Ide::LoadLastMain()
 	bool editor = IsEditorMode();
 	LoadFromFile(THISBACK(SerializeLastMain), ConfigFile("lastmain.cfg"));
 	if(editor)
-		main <<= Null;
+		main = Null;
 }
 
 void Sentinel(Stream& s, const char *txt)

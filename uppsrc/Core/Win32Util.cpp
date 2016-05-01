@@ -70,7 +70,6 @@ String AsString(const wchar_t *buffer, const wchar_t *end) {
 	return AsString(buffer, (int)(end - buffer));
 }
 
-#ifndef PLATFORM_WINCE
 String GetWinRegString(const char *value, const char *path, HKEY base_key) {
 	HKEY key = 0;
 	if(RegOpenKeyEx(base_key, path, 0, KEY_READ, &key) != ERROR_SUCCESS)
@@ -159,20 +158,11 @@ String GetSystemDirectory() {
 }
 
 String GetWindowsDirectory() {
-	if(IsWinNT()) {
-		wchar temp[MAX_PATH];
-		*temp = 0;
-		UnicodeWin32().GetWindowsDirectoryW(temp, sizeof(temp));
-		return FromSystemCharsetW(temp);
-	}
-	else {
-		char temp[MAX_PATH];
-		*temp = 0;
-		::GetWindowsDirectory(temp, sizeof(temp));
-		return FromSystemCharset(temp);
-	}
+	wchar temp[MAX_PATH];
+	*temp = 0;
+	GetWindowsDirectoryW(temp, sizeof(temp));
+	return FromSystemCharsetW(temp);
 }
-#endif
 
 void *GetDllFn(const char *dll, const char *fn)
 {
@@ -182,22 +172,9 @@ void *GetDllFn(const char *dll, const char *fn)
 }
 
 String GetModuleFileName(HINSTANCE instance) {
-#ifdef PLATFORM_WINCE
 	wchar h[_MAX_PATH];
-	GetModuleFileName(instance, h, _MAX_PATH);
-	return FromSystemCharset(h);
-#else
-	if(IsWinNT()) {
-		wchar h[_MAX_PATH];
-		UnicodeWin32().GetModuleFileNameW(instance, h, _MAX_PATH);
-		return FromSystemCharsetW(h);
-	}
-	else {
-		char h[_MAX_PATH];
-		GetModuleFileName(instance, h, _MAX_PATH);
-		return FromSystemCharset(h);
-	}
-#endif
+	GetModuleFileNameW(instance, h, _MAX_PATH);
+	return FromSystemCharsetW(h);
 }
 
 bool SyncObject::Wait(int ms)
@@ -220,12 +197,12 @@ SyncObject::~SyncObject()
 	if(handle) CloseHandle(handle);
 }
 
-Event::Event()
+Win32Event::Win32Event()
 {
 	handle = CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
-void Event::Set()
+void Win32Event::Set()
 {
 	SetEvent(handle);
 }

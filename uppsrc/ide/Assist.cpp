@@ -992,11 +992,15 @@ bool AssistEditor::Esc()
 	return r;
 }
 
+void AssistEditor::SyncNavigatorShow()
+{
+	navigatorframe.Show(navigator && theide && !theide->designer && !theide->IsEditorMode());
+}
 
 void AssistEditor::Navigator(bool nav)
 {
 	navigator = nav;
-	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
+	SyncNavigatorShow();
 	if(IsNavigator())
 		SetFocus();
 	SyncNavigator();

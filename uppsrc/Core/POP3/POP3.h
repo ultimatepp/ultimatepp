@@ -16,7 +16,7 @@ class Pop3 : public TcpSocket
 	String       user;
 	String       pass;
 	String       error;
-	String       data;	
+	String       data;
 	int          port;
 	bool         ssl;
 	bool         online;
@@ -49,7 +49,7 @@ public:
 	bool         Noop();
 	
 	bool         Login();
-	bool         Logout(); 	
+	bool         Logout();
 	
 	bool         IsOnline() const                         { return online; }
 

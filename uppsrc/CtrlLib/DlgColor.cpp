@@ -839,7 +839,7 @@ private:
 	void          OnSizeCustom();
 	void          UpdateColorIndex();
 
-	static Index<PalCtrl *, PtrHash>& GetActive();
+	static Index<PalCtrl *>& GetActive();
 
 public:
 	enum
@@ -904,7 +904,7 @@ PalCtrl::Config& PalCtrl::GlobalConfig()
 	return x;
 }
 
-typedef Index<PalCtrl *, PtrHash> PalCtrlIndex;
+typedef Index<PalCtrl *> PalCtrlIndex;
 
 PalCtrlIndex& PalCtrl::GetActive()
 {

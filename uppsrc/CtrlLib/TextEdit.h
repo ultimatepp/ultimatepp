@@ -178,7 +178,7 @@ public:
 	void      ClearRedo()                     { redo.Clear(); }
 	bool      IsUndoOp() const                { return undo_op; }
 	UndoData  PickUndoData();
-	void      SetPickUndoData(UndoData rval_ data);
+	void      SetPickUndoData(UndoData&& data);
 
 	void      Cut();
 	void      Copy();

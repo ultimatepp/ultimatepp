@@ -14,9 +14,10 @@ protected:
 	void     DeepCopy0(const BiVector& src);
 	T       *AddHead0()              { AssertMoveable<T>(); Add0(); return &vector[start = Ix(alloc - 1)/*(start + alloc - 1) % alloc*/]; }
 	T       *AddTail0()              { AssertMoveable<T>(); Add0(); return &vector[EI()]; }
+	void     Zero()                  { start = items = alloc = 0; vector = NULL; }
 	void     Free();
-	void     Pick(BiVector rval_ x) { vector = pick(x.vector); start = x.start; items = x.items;
-	                                  alloc = x.alloc; ((BiVector&)x).items = -1; }
+	void     Pick(BiVector&& x)      { vector = pick(x.vector); start = x.start; items = x.items;
+	                                   alloc = x.alloc; ((BiVector&)x).items = -1; }
 	void     Copy(T *dst, int start, int count) const;
 
 public:
@@ -28,14 +29,16 @@ public:
 	T&       AddTail()               { return *new(AddTail0()) T; }
 	void     AddHead(const T& x)     { new(AddHead0()) T(x); }
 	void     AddTail(const T& x)     { new(AddTail0()) T(x); }
-	void     AddHeadPick(T rval_ x) { new(AddHead0()) T(x); }
-	void     AddTailPick(T rval_ x) { new(AddTail0()) T(x); }
+	void     AddHead(T&& x)          { new(AddHead0()) T(x); }
+	void     AddTail(T&& x)          { new(AddTail0()) T(x); }
 	T&       Head()                  { ASSERT(items > 0); return vector[start]; }
 	T&       Tail()                  { ASSERT(items > 0); return vector[EI()]; }
 	const T& Head() const            { ASSERT(items > 0); return vector[start]; }
 	const T& Tail() const            { ASSERT(items > 0); return vector[EI()]; }
 	void     DropHead()              { (&Head())->T::~T(); items--; start = Ix(1); }
 	void     DropTail()              { (&Tail())->T::~T(); items--; }
+	T        PopHead()               { T x = Head(); DropHead(); return x; }
+	T        PopTail()               { T x = Tail(); DropTail(); return x; }
 	void     DropHead(int n)         { while(n-- > 0) BiVector<T>::DropHead(); }
 	void     DropTail(int n)         { while(n-- > 0) BiVector<T>::DropTail(); }
 	const T& operator[](int i) const { ASSERT(i >= 0 && i < items); return vector[Ix(i)]; }
@@ -44,48 +47,45 @@ public:
 	void     Reserve(int n);
 	int      GetAlloc() const        { return alloc; }
 
-#ifdef UPP
 	void     Serialize(Stream& s);
 	String   ToString() const;
-	bool     operator==(const BiVector<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const BiVector<T>& b) const { return !operator==(b); }
-	int      Compare(const BiVector<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const BiVector<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const BiVector<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const BiVector<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const BiVector<T>& x) const  { return Compare(x) > 0; }
-#endif
-
-	bool     IsPicked() const                   { return items < 0; }
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	BiVector(const BiVector& src, int)          { DeepCopy0(src); }
-	BiVector(BiVector rval_ src)                { Pick(pick(src)); }
-	void operator=(BiVector rval_ src)          { Free(); Pick(pick(src)); }
-	BiVector()                                  { start = items = alloc = 0; vector = NULL; }
+	BiVector(BiVector&& src)                    { Pick(pick(src)); }
+	void operator=(BiVector&& src)              { if(this != &src) { Free(); Pick(pick(src)); } }
+	BiVector()                                  { Zero(); }
 	~BiVector()                                 { Free(); } // gcc4.0 workaround!!
 
-#ifdef CPP_11
 	BiVector(std::initializer_list<T> init);
-#endif
 
 	typedef ConstIIterator<BiVector> ConstIterator;
 	typedef IIterator<BiVector>      Iterator;
 
-	typedef T        ValueType;
-
-	ConstIterator    Begin() const              { return ConstIterator(*this, 0); }
-	ConstIterator    End() const                { return ConstIterator(*this, GetCount()); }
-	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
-	Iterator         Begin()                    { return Iterator(*this, 0); }
-	Iterator         End()                      { return Iterator(*this, GetCount()); }
-	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	ConstIterator    begin() const              { return ConstIterator(*this, 0); }
+	ConstIterator    end() const                { return ConstIterator(*this, GetCount()); }
+	Iterator         begin()                    { return Iterator(*this, 0); }
+	Iterator         end()                      { return Iterator(*this, GetCount()); }
 
 	friend void Swap(BiVector& a, BiVector& b)  { UPP::Swap(a.vector, b.vector);
 	                                              UPP::Swap(a.start, b.start);
 	                                              UPP::Swap(a.items, b.items);
 	                                              UPP::Swap(a.alloc, b.alloc); }
 
+#ifdef DEPRECATED
+	void     AddHeadPick(T&& x)      { new(AddHead0()) T(x); }
+	void     AddTailPick(T&& x)      { new(AddTail0()) T(x); }
+	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
+	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	typedef T        ValueType;
 	STL_BI_COMPATIBILITY(BiVector<T>)
+#endif
 };
 
 template <class T>
@@ -103,10 +103,8 @@ public:
 
 	T&       AddHead()                     { T *q = new T; bv.AddHead(q); return *q; }
 	T&       AddTail()                     { T *q = new T; bv.AddTail(q); return *q; }
-	void     AddHead(const T& x)           { bv.AddHead(DeepCopyNew(x)); }
-	void     AddTail(const T& x)           { bv.AddTail(DeepCopyNew(x)); }
-	void     AddHeadPick(T rval_ x)       { bv.AddHead(new T(x)); }
-	void     AddTailPick(T rval_ x)       { bv.AddTail(new T(x)); }
+	void     AddHead(const T& x)           { bv.AddHead(new T(x)); }
+	void     AddTail(const T& x)           { bv.AddTail(new T(x)); }
 	T&       AddHead(T *newt)              { bv.AddHead(newt); return *newt; }
 	T&       AddTail(T *newt)              { bv.AddTail(newt); return *newt; }
 	template <class TT> TT& CreateHead()   { TT *q = new TT; bv.AddHead(q); return *q; }
@@ -127,44 +125,41 @@ public:
 	void     Reserve(int n)                { bv.Reserve(n); }
 	int      GetAlloc() const              { return bv.GetAlloc(); }
 
-#ifdef UPP
 	void     Serialize(Stream& s);
 	String   ToString() const;
-	bool     operator==(const BiArray<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const BiArray<T>& b) const { return !operator==(b); }
-	int      Compare(const BiArray<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const BiArray<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const BiArray<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const BiArray<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const BiArray<T>& x) const  { return Compare(x) > 0; }
-#endif
-
-	bool     IsPicked() const                { return bv.IsPicked(); }
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	BiArray(const BiArray& v, int)           { DeepCopy0(v); }
 
-	BiArray(BiArray rval_ src) : bv(pick(src.bv))  {}
-	void operator=(BiArray rval_ src)        { Free(); bv = pick(src.bv); }
+	BiArray(BiArray&& src) : bv(pick(src.bv)){}
+	void operator=(BiArray&& src)            { if(this != &src) { Free(); bv = pick(src.bv); } }
 	BiArray()                                {}
 	~BiArray()                               { Free(); }
 
-#ifdef CPP_11
 	BiArray(std::initializer_list<T> init);
-#endif
 
 	typedef ConstIIterator<BiArray> ConstIterator;
 	typedef IIterator<BiArray>      Iterator;
 
-	typedef T        ValueType;
-
-	ConstIterator    Begin() const              { return ConstIterator(*this, 0); }
-	ConstIterator    End() const                { return ConstIterator(*this, GetCount()); }
-	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
-	Iterator         Begin()                    { return Iterator(*this, 0); }
-	Iterator         End()                      { return Iterator(*this, GetCount()); }
-	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	ConstIterator    begin() const              { return ConstIterator(*this, 0); }
+	ConstIterator    end() const                { return ConstIterator(*this, GetCount()); }
+	Iterator         begin()                    { return Iterator(*this, 0); }
+	Iterator         end()                      { return Iterator(*this, GetCount()); }
 
 	friend void Swap(BiArray& a, BiArray& b)    { UPP::Swap(a.bv, b.bv); }
 
+#ifdef DEPRECATED
+	void     AddHeadPick(T&& x)            { bv.AddHead(new T(x)); }
+	void     AddTailPick(T&& x)            { bv.AddTail(new T(x)); }
+	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
+	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
+	typedef T        ValueType;
 	STL_BI_COMPATIBILITY(BiArray<T>)
+#endif
 };

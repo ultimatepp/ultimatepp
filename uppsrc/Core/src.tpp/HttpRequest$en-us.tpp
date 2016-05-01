@@ -37,6 +37,14 @@ delete partially downloaded file.&]
 or allow abortions in GUI.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:HttpRequest`:`:WhenAuthenticate: [_^Upp`:`:Gate^ Gate]_[* WhenAuthenticate]&]
+[s2;%% Invoked when request returns 401 code (unauthorized). Callback 
+should check returned headers and if possible, provide authorization 
+header (through Authorization). In that case, it should return 
+true to indicate that authorization was (hopefully) resolved 
+`- HttpRequest will then try to repeat the query.&]
+[s3; &]
+[s4; &]
 [s5;:HttpRequest`:`:MaxHeaderSize`(int`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_[* Ma
 xHeaderSize]([@(0.0.255) int]_[*@3 m])&]
 [s2;%% Specifies the maximum size of response header (default is 
@@ -143,6 +151,14 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 ath]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 p])&]
 [s2;%% Sets request path. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:Authorization`(const Upp`:`:String`&`): [_^Upp`:`:HttpRequest^ H
+ttpRequest][@(0.0.255) `&]_[* Authorization]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 h])&]
+[s2;%% Sets authorization header (text between `"Authorization: `" 
+and `"`\r`\n`" in header). It is intended to be used in WhenAuthenticate 
+callback to provide login info.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:User`(const String`&`,const String`&`): [_^HttpRequest^ HttpRequest
 ][@(0.0.255) `&]_[* User]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 u], 
@@ -193,6 +209,12 @@ l)&]
 number of bytes to be sent from the stream, if Null, all remaining 
 data from the stream are sent. Returns `*this.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:ResolveDigestAuthentication`(`): [@(0.0.255) bool]_[* ResolveD
+igestAuthentication]()&]
+[s2;%% This method is assigned to WhenAuthenticate by default. Provides 
+standard HTTP digest authentication.&]
+[s3; &]
 [s4;%% &]
 [s5;:HttpRequest`:`:PostUData`(const String`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
 ]_[* PostUData]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 pd])&]

@@ -315,7 +315,7 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 			w.Clip(overpaint ? oview : view);
 		w.Offset(view.left, view.top);
 		Paint(w);
-		PaintCaret(w);		
+		PaintCaret(w);
 		w.End();
 		
 		if(hasviewctrls && !view.IsEmpty()) {
@@ -570,17 +570,36 @@ Ctrl *Ctrl::FindBestOpaque(const Rect& clip)
 	return w;
 }
 
+void Ctrl::ExcludeDHCtrls(SystemDraw& w, const Rect& r, const Rect& clip)
+{
+	GuiLock __;
+	LTIMING("PaintOpaqueAreas");
+	if(!IsShown() || r.IsEmpty() || !r.Intersects(clip) || !w.IsPainting(r))
+		return;
+	Point off = r.TopLeft();
+	Point viewpos = off + GetView().TopLeft();
+	if(dynamic_cast<DHCtrl *>(this)) {
+		w.ExcludeClip(r);
+		return;
+	}
+	Rect cview = clip & (GetView() + off);
+	for(Ctrl *q = lastchild; q; q = q->prev)
+		q->ExcludeDHCtrls(w, q->GetRect() + (q->InView() ? viewpos : off),
+		                  q->InView() ? cview : clip);
+}
+
 void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 {
 	GuiLock __;
 	LTIMING("UpdateArea");
 	LLOG("========== UPDATE AREA " << UPP::Name(this) << " ==========");
+	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
 	if(globalbackbuffer) {
 		CtrlPaint(draw, clip);
 		LLOG("========== END (TARGET IS BACKBUFFER)");
 		return;
 	}
-	if(backpaint == FULLBACKPAINT || globalbackpaint && !hasdhctrl && !dynamic_cast<DHCtrl *>(this)) {
+	if(backpaint == FULLBACKPAINT || globalbackpaint/* && !hasdhctrl && !dynamic_cast<DHCtrl *>(this)*/) {
 		ShowRepaintRect(draw, clip, LtRed());
 		BackDraw bw;
 		bw.Create(draw, clip.GetSize());

@@ -70,19 +70,23 @@ private:
 	void SetBegin(ConstIterator& it) const;
 	void SetEnd(ConstIterator& it) const;
 
-	void     Chk() const                            { ASSERT_(!IsPicked(), "Broken rval_ semantics"); }
-	
 	void     Init();
+
+	template <class Range>
+	void     Insert_(int ii, const Range& r, bool def);
 
 #ifdef flagIVTEST
 	void Check(int blki, int offset) const;
 #endif
-
 public:
 	T&       Insert(int i)                          { return *Insert0(i, NULL); }
 	T&       Insert(int i, const T& x)              { return *Insert0(i, &x); }
-	void     InsertN(int i, int count);
+	template <class Range>
+	void     Insert(int i, const Range& r)          { Insert_(i, r, false); }
+	void     InsertN(int i, int count)              { Insert_(i, ConstRange<T>(count), true); }
 	void     Remove(int i, int count = 1);
+	template <class Range>
+	void     Append(const Range& r)                 { Insert(GetCount(), r); }
 
 	const T& operator[](int i) const;
 	T&       operator[](int i);
@@ -91,7 +95,7 @@ public:
 	T&       Add(const T& x)                        { return Insert(GetCount(), x); }
 	void     AddN(int n)                            { InsertN(GetCount(), n); }
 	
-	int      GetCount() const                       { Chk(); return count; }
+	int      GetCount() const                       { return count; }
 	bool     IsEmpty() const                        { return GetCount() == 0; }
 
 	void     Trim(int n)                            { Remove(n, GetCount() - n); }
@@ -128,46 +132,42 @@ public:
 	int Find(const T& val, const L& less) const;
 	int Find(const T& val) const                          { return Find(val, StdLess<T>()); }
 
-	typedef T        ValueType;
+	ConstIterator    begin() const                  { ConstIterator it; SetBegin(it); return it; }
+	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
 
-	ConstIterator    Begin() const                  { ConstIterator it; SetBegin(it); return it; }
-	ConstIterator    End() const                    { ConstIterator it; SetEnd(it); return it; }
-	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
-
-	Iterator         Begin()                        { Iterator it; SetBegin(it); return it; }
-	Iterator         End()                          { Iterator it; SetEnd(it); return it; }
-	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+	Iterator         begin()                        { Iterator it; SetBegin(it); return it; }
+	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
 
 	InVector();
-	bool IsPicked() const                           { return data.IsPicked(); }
 
 	InVector(const InVector& v, int);
 
-#ifdef CPP_11
-	InVector(std::initializer_list<T> init)         { Init(); for(auto i : init) Add(i); }
-#endif
+	InVector(std::initializer_list<T> init)         { Init(); for(const auto& i : init) Add(i); }
 
 	void Swap(InVector& b);
 
-#ifdef UPP
 	void     Serialize(Stream& s)                             { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const InVector<T>& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const InVector<T>& b) const { return !operator==(b); }
-	int      Compare(const InVector<T>& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const InVector<T>& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const InVector<T>& x) const { return Compare(x) >= 0; }
-	bool     operator<(const InVector<T>& x) const  { return Compare(x) < 0; }
-	bool     operator>(const InVector<T>& x) const  { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	friend void Swap(InVector& a, InVector& b)      { a.Swap(b); }
 	
 	STL_VECTOR_COMPATIBILITY(InVector<T>)
 
 	void DumpIndex() const;
+#ifdef DEPRECATED
+	typedef T        ValueType;
+	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
+	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+#endif
 };
 
 template <class T>
@@ -183,7 +183,7 @@ class InVector<T>::ConstIterator {
 	friend class InVector<T>::Iterator;
 
 	void NextBlk();
-	void PrevBlk();		
+	void PrevBlk();
 
 public:
 	force_inline int GetIndex() const              { return int(ptr - begin) + offset; }
@@ -272,7 +272,7 @@ private:
 	void     Delete(IVIter i, int count);
 	void     Delete(int i, int count);
 	void     Init(int i, int count);
-	void     Free()                 { if(!IsPicked()) Delete(iv.Begin(), GetCount()); }
+	void     Free()                 { Delete(iv.begin(), GetCount()); }
 
 	void     SetIter(ConstIterator& it, int ii) const;
 	void     SetBegin(ConstIterator& it) const;
@@ -295,10 +295,16 @@ public:
 	T&       Insert(int i, T *newt)                 { iv.Insert(i, newt); return *newt; }
 	T&       Insert(int i)                          { return Insert(i, new T); }
 	T&       Insert(int i, const T& x)              { return Insert(i, new T(x)); }
-	template<class TT> TT& InsertCreate(int i)      { TT *q = new TT; Insert(i, q); return *q; }
+	template<class TT, class... Args>
+	TT&      InsertCreate(int i, Args... args)      { TT *q = new TT(args...); Insert(i, q); return *q; }
 
 	void     InsertN(int i, int count);
+	template <class Range>
+	void     Insert(int i, const Range& r);
 	void     Remove(int i, int count = 1);
+	
+	template <class Range>
+	void     Append(const Range& r)                 { Insert(GetCount(), r); }
 
 	const T& operator[](int i) const                { return Get(i); }
 	T&       operator[](int i)                      { return Get(i); }
@@ -306,8 +312,9 @@ public:
 	T&       Add()                                  { return Insert(GetCount()); }
 	T&       Add(const T& x)                        { return Insert(GetCount(), x); }
 	void     AddN(int n)                            { InsertN(GetCount(), n); }
-	T&       Add(T *newt)                           { Insert(GetCount(), newt); }
-	template<class TT> TT& Create()                 { TT *q = new TT; Add(q); return *q; }
+	T&       Add(T *newt)                           { Insert(GetCount(), newt); return *newt; }
+	template<class TT, class... Args>
+	TT&      Create(Args... args)                   { TT *q = new TT(args...); Add(q); return *q; }
 	
 	int      GetCount() const                       { return iv.GetCount(); }
 	bool     IsEmpty() const                        { return GetCount() == 0; }
@@ -347,44 +354,34 @@ public:
 	int Find(const T& val, const L& less) const            { return iv.Find((T*)&val, ALess<L>(less)); }
 	int Find(const T& val) const                           { return Find(val, StdLess<T>()); }
 
-	typedef T        ValueType;
+	ConstIterator    begin() const                  { ConstIterator it; SetBegin(it); return it; }
+	ConstIterator    end() const                    { ConstIterator it; SetEnd(it); return it; }
 
-	ConstIterator    Begin() const                  { ConstIterator it; SetBegin(it); return it; }
-	ConstIterator    End() const                    { ConstIterator it; SetEnd(it); return it; }
-	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
-
-	Iterator         Begin()                        { Iterator it; SetBegin(it); return it; }
-	Iterator         End()                          { Iterator it; SetEnd(it); return it; }
-	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
-
-	bool IsPicked() const                           { return iv.IsPicked(); }
+	Iterator         begin()                        { Iterator it; SetBegin(it); return it; }
+	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
 
 	InArray() {}
-	InArray(InArray rval_ v) : iv(pick(v.iv))       {}
-	InArray& operator=(InArray rval_ v)             { Free(); iv.operator=(pick(v.iv)); return *this; }
+	InArray(InArray&& v) : iv(pick(v.iv))           {}
+	InArray& operator=(InArray&& v)                 { if(this != &v) { Free(); iv.operator=(pick(v.iv)); } return *this; }
 	InArray(const InArray& v, int);
 
 	~InArray()                                      { Free(); }
 
-#ifdef CPP_11
-	InArray(std::initializer_list<T> init)          { for(auto i : init) Add(i); }
-#endif
+	InArray(std::initializer_list<T> init)          { for(const auto& i : init) Add(i); }
 
 	void Swap(InArray& b)                           { iv.Swap(b.iv); }
 	
-#ifdef UPP
 	void     Serialize(Stream& s)                   { StreamContainer(s, *this); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	bool     operator==(const InArray<T>& b) const  { return IsEqualArray(*this, b); }
-	bool     operator!=(const InArray<T>& b) const  { return !operator==(b); }
-	int      Compare(const InArray<T>& b) const     { return CompareArray(*this, b); }
-	bool     operator<=(const InArray<T>& x) const  { return Compare(x) <= 0; }
-	bool     operator>=(const InArray<T>& x) const  { return Compare(x) >= 0; }
-	bool     operator<(const InArray<T>& x) const   { return Compare(x) < 0; }
-	bool     operator>(const InArray<T>& x) const   { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	friend void Swap(InArray& a, InArray& b)        { a.Swap(b); }
 	
@@ -392,6 +389,12 @@ public:
 
 #ifdef _DEBUG
 	void DumpIndex();
+#endif
+
+#ifdef DEPRECATED
+	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
+	Iterator         GetIter(int pos)               { Iterator it; SetIter(it, pos); return it; }
+	typedef T        ValueType;
 #endif
 };
 
@@ -499,39 +502,38 @@ public:
 	void          Shrink()                         { iv.Shrink(); }
 	
 	typedef typename InVector<T>::ConstIterator ConstIterator;
-	
-	typedef T        ValueType;
 
-	ConstIterator    Begin() const                  { return iv.Begin(); }
-	ConstIterator    End() const                    { return iv.End(); }
-	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
+	ConstIterator    begin() const                  { return iv.begin(); }
+	ConstIterator    end() const                    { return iv.end(); }
 	
 	const InVector<T>& GetKeys()  const             { return iv; }
 
 	SortedIndex()                                        {}
 	SortedIndex(const SortedIndex& s, int) : iv(s.iv, 1) {}
 	
-	bool IsPicked() const                            { return iv.IsPicked(); }
-
 	void Swap(SortedIndex& a)                        { iv.Swap(a.iv); }
 
-#ifdef UPP
 	void     Serialize(Stream& s)                               { iv.Serialize(s); }
 	void     Xmlize(XmlIO& xio, const char *itemtag = "key")    { iv.Xmlize(xio, itemtag); }
 	void     Jsonize(JsonIO& jio)                               { iv.Jsonize(jio); }
 	String   ToString() const;
-	bool     operator==(const SortedIndex& b) const { return IsEqualArray(*this, b); }
-	bool     operator!=(const SortedIndex& b) const { return !operator==(b); }
-	int      Compare(const SortedIndex& b) const    { return CompareArray(*this, b); }
-	bool     operator<=(const SortedIndex& x) const { return Compare(x) <= 0; }
-	bool     operator>=(const SortedIndex& x) const { return Compare(x) >= 0; }
-	bool     operator<(const SortedIndex& x) const  { return Compare(x) < 0; }
-	bool     operator>(const SortedIndex& x) const  { return Compare(x) > 0; }
-#endif
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
 
 	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
 
 	STL_SINDEX_COMPATIBILITY(SortedIndex<T _cm_ Less>)
+
+#ifdef DEPRECATED
+	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
+	
+	typedef T        ValueType;
+#endif
 };
 
 template <class K, class T, class Less, class Data>
@@ -576,8 +578,6 @@ public:
 	const SortedIndex<K>& GetIndex() const          { return key; }
 	const InVector<K>& GetKeys() const              { return key.GetKeys(); }
 
-	bool     IsPicked() const                       { return value.data.IsPicked() || key.IsPicked(); }
-	
 	String   ToString() const;
 	bool     operator==(const SortedAMap& b) const  { return IsEqualMap(*this, b); }
 	bool     operator!=(const SortedAMap& b) const  { return !operator==(b); }
@@ -587,13 +587,15 @@ public:
 	bool     operator<(const SortedAMap& x) const   { return Compare(x) < 0; }
 	bool     operator>(const SortedAMap& x) const   { return Compare(x) > 0; }
 
+#ifdef DEPRECATED
 	typedef K        KeyType;
 
 	typedef typename SortedIndex<K, Less>::ConstIterator KeyConstIterator;
 
-	KeyConstIterator KeyBegin() const                             { return key.Begin(); }
-	KeyConstIterator KeyEnd() const                               { return key.End(); }
+	KeyConstIterator KeyBegin() const                             { return key.begin(); }
+	KeyConstIterator KeyEnd() const                               { return key.end(); }
 	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
+#endif
 };
 
 template <class T>
@@ -637,13 +639,11 @@ public:
 	SortedVectorMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 
 	SortedVectorMap()                               { B::SetSlave(); }
-	SortedVectorMap(SortedVectorMap rval_);
-	SortedVectorMap& operator=(SortedVectorMap rval_);
+	SortedVectorMap(SortedVectorMap&&);
+	SortedVectorMap& operator=(SortedVectorMap&&);
 	SortedVectorMap(const SortedVectorMap& s, int);
 	
-#ifdef CPP_11
-	SortedVectorMap(std::initializer_list<std::pair<K, T>> init) : SortedVectorMap() { for(auto i : init) Add(i.first, i.second); }
-#endif
+	SortedVectorMap(std::initializer_list<std::pair<K, T>> init) : SortedVectorMap() { for(const auto& i : init) Add(i.first, i.second); }
 
 	void     Swap(SortedVectorMap& x);
 
@@ -657,18 +657,21 @@ public:
 
 	friend void    Swap(SortedVectorMap& a, SortedVectorMap& b) { a.Swap(b); }
 
-	typedef T                                   ValueType;
 	typedef typename Data::Type::ConstIterator  ConstIterator;
 	typedef typename Data::Type::Iterator       Iterator;
 
-	Iterator         Begin()                        { return B::value.data.Begin(); }
-	Iterator         End()                          { return B::value.data.End(); }
-	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
-	ConstIterator    Begin() const                  { return B::value.data.Begin(); }
-	ConstIterator    End() const                    { return B::value.data.End(); }
-	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+	Iterator         begin()                        { return B::value.data.begin(); }
+	Iterator         end()                          { return B::value.data.end(); }
+	ConstIterator    begin() const                  { return B::value.data.begin(); }
+	ConstIterator    end() const                    { return B::value.data.end(); }
 
 	STL_SORTED_MAP_COMPATIBILITY(SortedVectorMap<K _cm_ T _cm_ Less>)
+
+#ifdef DEPRECATED
+	typedef T                                       ValueType;
+	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+#endif
 };
 
 template <class T>
@@ -704,7 +707,8 @@ public:
 	T&       Add(const K& k, const T& x)          { B::value.res = DeepCopyNew(x); B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k)                      { B::value.res = NULL; B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k, T *newt)             { B::value.res = newt; B::key.Add(k); return *newt; }
-	template <class TT> TT& Create(const K& k)    { TT *q = new TT(); B::value.res = q; B::key.Add(k); return *q; }
+	template <class TT, class... Args>
+	TT&      Create(const K& k, Args... args)     { TT *q = new TT(args...); B::value.res = q; B::key.Add(k); return *q; }
 
 	int      FindAdd(const K& k)                  { B::value.res = NULL; return B::key.FindAdd(k); }
 	int      FindAdd(const K& k, const T& init);
@@ -720,13 +724,10 @@ public:
 	SortedArrayMap& operator()(const K& k, const T& v) { Add(k, v); return *this; }
 
 	SortedArrayMap()                              { B::SetSlave(); }
-	SortedArrayMap(SortedArrayMap rval_);
-	SortedArrayMap& operator=(SortedArrayMap rval_);
+	SortedArrayMap(SortedArrayMap&&);
+	SortedArrayMap& operator=(SortedArrayMap&&);
 	SortedArrayMap(const SortedArrayMap& s, int);
-
-#ifdef CPP_11
-	SortedArrayMap(std::initializer_list<std::pair<K, T>> init) : SortedArrayMap() { for(auto i : init) Add(i.first, i.second); }
-#endif
+	SortedArrayMap(std::initializer_list<std::pair<K, T>> init) : SortedArrayMap() { for(const auto& i : init) Add(i.first, i.second); }
 
 #ifdef UPP
 	void     Serialize(Stream& s);
@@ -738,17 +739,20 @@ public:
 
 	friend void    Swap(SortedArrayMap& a, SortedArrayMap& b) { a.Swap(b); }
 
-	typedef T                                   ValueType;
 	typedef typename Data::Type::ConstIterator  ConstIterator;
 	typedef typename Data::Type::Iterator       Iterator;
 
-	Iterator         Begin()                        { return B::value.data.Begin(); }
-	Iterator         End()                          { return B::value.data.End(); }
-	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
-	ConstIterator    Begin() const                  { return B::value.data.Begin(); }
-	ConstIterator    End() const                    { return B::value.data.End(); }
-	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+	Iterator         begin()                        { return B::value.data.begin(); }
+	Iterator         end()                          { return B::value.data.end(); }
+	ConstIterator    begin() const                  { return B::value.data.begin(); }
+	ConstIterator    end() const                    { return B::value.data.end(); }
 
 	STL_SORTED_MAP_COMPATIBILITY(SortedArrayMap<K _cm_ T _cm_ HashFn>)
-};
 
+#ifdef DEPRECATED
+	typedef T                                   ValueType;
+
+	Iterator         GetIter(int pos)               { return B::value.data.GetIter(pos); }
+	ConstIterator    GetIter(int pos) const         { return B::value.data.GetIter(pos); }
+#endif
+};

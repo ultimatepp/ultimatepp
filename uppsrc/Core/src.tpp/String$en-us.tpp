@@ -41,6 +41,11 @@ the AString interface.&]
 [s2; Default copy constructor.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:String`:`:String`(Upp`:`:String`&`&`):%- [* String]([* String][@(0.0.255) `&`&]_
+[*@3 s])&]
+[s2; Pick constructor.&]
+[s3; &]
+[s4;%- &]
 [s5;:String`:`:String`(const char`*`):%- [* String]([@(0.0.255) const]_[@(0.0.255) char]_`*
 [*@3 s])&]
 [s2; Creates a copy of zero terminated string [%-*@3 s].&]
@@ -218,6 +223,11 @@ operations.&]
 r`=]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 [s2; Assigns another string [%-*@3 s]. This operations is relatively 
 fast and does not depend on the length of string.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:String`:`:operator`=`(Upp`:`:String`&`&`):%- [_^Upp`:`:String^ String][@(0.0.255) `&
+]_[* operator`=]([_^Upp`:`:String^ String][@(0.0.255) `&`&]_[*@3 s])&]
+[s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
 [s5;:String`:`:operator`=`(const char`*`):%- [_^String^ String][@(0.0.255) `&]_[* operator`=

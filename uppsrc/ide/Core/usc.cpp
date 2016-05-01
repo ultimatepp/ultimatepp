@@ -11,7 +11,11 @@ IdeMacro::IdeMacro()
 	hotkey = 0;
 }
 
-GLOBAL_VAR(Array<IdeMacro>, UscMacros)
+Array<IdeMacro>& UscMacros()
+{
+	static Array<IdeMacro> h;
+	return h;
+}
 
 void ESC_cout(EscEscape& e)
 {

@@ -663,7 +663,7 @@ void TabBar::SortStack(int stackix, int head, int tail)
 	if (!stacksort) return;
 	
 	int headid = tabs[head].id;
-	StableSort(tabs.GetIter(head), tabs.GetIter(tail), *stacksorter);
+	StableSort(SubRange(tabs, head, tail - head).Write(), *stacksorter);
 	while (tabs[head].id != headid)
 		CycleTabStack(head, stackix);
 }

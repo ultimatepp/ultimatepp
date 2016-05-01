@@ -188,45 +188,23 @@ int CSCZLanguageCompare(const wchar *a, int a_length, const wchar *b, int b_leng
 }
 
 #ifdef PLATFORM_WIN32
-#ifdef PLATFORM_WINCE //TODO?
+
 String GetLocaleInfoA(LCID lcid, LCTYPE lctype)
 {
 	wchar cbuf[1000];
 	::GetLocaleInfoW(lcid, lctype, cbuf, __countof(cbuf));
-	return FromSystemCharset(cbuf);
+	return FromSystemCharsetW(cbuf);
 }
-#else
-String GetLocaleInfoA(LCID lcid, LCTYPE lctype)
-{
-	if(IsWinNT()) {
-		wchar cbuf[1000];
-		UnicodeWin32().GetLocaleInfoW(lcid, lctype, cbuf, __countof(cbuf));
-		return FromSystemCharsetW(cbuf);
-	}
-	else {
-		char cbuf[1000];
-		::GetLocaleInfoA(lcid, lctype, cbuf, __countof(cbuf));
-		return FromSystemCharset(cbuf);
-	}
-}
-#endif
 
 WString GetLocaleInfoW(LCID lcid, LCTYPE lctype)
 {
-	union {
-		wchar wbuf[1000];
-		char abuf[1000];
-	};
+	wchar wbuf[1000];
 	Zero(wbuf);
 	if(::GetLocaleInfoW(lcid, lctype, (WCHAR *)wbuf, __countof(wbuf)))
 		return wbuf;
-#ifdef PLATFORM_WINCE
 	return Null;
-#else
-	::GetLocaleInfoA(lcid, lctype, abuf, __countof(abuf));
-	return ToUnicode(abuf, CHARSET_DEFAULT);
-#endif
 }
+
 #endif
 
 static dword sGetLanguageDetails(int language, String *english_name, String *native_name)

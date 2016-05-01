@@ -62,14 +62,14 @@ void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo
 	}
 }
 
-void RichText::PickHeader(RichText rval_ txt)
+void RichText::PickHeader(RichText&& txt)
 {
 	RichText b = pick(txt);
 	b.ClearHeader();
 	header.Create() = pick(b);
 }
 
-void RichText::PickFooter(RichText rval_ txt)
+void RichText::PickFooter(RichText&& txt)
 {
 	RichText b = pick(txt);
 	b.ClearFooter();

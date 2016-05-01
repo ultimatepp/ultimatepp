@@ -226,10 +226,16 @@ inline Htmls& operator<<(Htmls& s, const char *v)      { s.Cat(v); return s; }
 inline Htmls& operator+=(Htmls& s, const HtmlTag& tag) { s.Cat(tag); return s; }
 
 Htmls operator+(const HtmlTag& tag1, const HtmlTag& tag2);
+/*
 Htmls operator+(const String& s, const HtmlTag& tag);
 Htmls operator+(const HtmlTag& tag, const String& s);
+*/
 Htmls operator+(const char *s, const HtmlTag& tag);
 Htmls operator+(const HtmlTag& tag, const char *s);
+/*
+Htmls operator+(const Htmls& s, const HtmlTag& tag);
+Htmls operator+(const HtmlTag& tag, const Htmls& s);
+*/
 
 HtmlTag operator/(const HtmlTag& t1, const HtmlTag& t2);
 HtmlTag& operator/=(HtmlTag& tag, const HtmlTag& s);

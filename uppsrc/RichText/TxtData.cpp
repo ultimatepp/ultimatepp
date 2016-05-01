@@ -159,7 +159,7 @@ void RichTxt::RemovePart(int parti)
 	Invalidate();
 }
 
-void RichTxt::SetPick(int i, RichTable rval_ p)
+void RichTxt::SetPick(int i, RichTable&& p)
 {
 	const_cast<RichTable&>(p).Normalize();
 	part.At(i).Create<RichTable>() = pick(p);
@@ -219,20 +219,20 @@ int RichTxt::ComputeLength() const
 }
 
 int RichTxt::GetLength() const
-{
-	if(ReadWithBarrier(length) < 0)
-		BarrierWrite(length, ComputeLength());
+{ // expects int to be atomic, worst 'race' is that it gets computed more times...
+	if(length < 0)
+		length = ComputeLength();
 	return length;
 }
 
 int  RichTxt::GetTableCount() const
-{
-	if(ReadWithBarrier(tabcount) < 0) {
+{ // expects int to be atomic, worst 'race' is that it gets computed more times...
+	if(tabcount < 0) {
 		int n = 0;
 		for(int i = 0; i < part.GetCount(); i++)
 			if(IsTable(i))
 				n += GetTable(i).GetTableCount() + 1;
-		BarrierWrite(tabcount, n);
+		tabcount = n;
 	}
 	return tabcount;
 }

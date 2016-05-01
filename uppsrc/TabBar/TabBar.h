@@ -40,7 +40,7 @@ public:
 	AlignedFrame& SetLeft()		{ return SetAlign(LEFT); }
 	AlignedFrame& SetTop()		{ return SetAlign(TOP); }
 	AlignedFrame& SetRight()	{ return SetAlign(RIGHT); }
-	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }	
+	AlignedFrame& SetBottom()	{ return SetAlign(BOTTOM); }
 	AlignedFrame& SetFrameSize(int sz, bool refresh = true);
 		
 	int 		  GetAlign() const		{ return layout; }
@@ -99,12 +99,12 @@ class TabScrollBar : public AlignedFrame
 class TabBar : public AlignedFrame
 {
 public:
-	struct Style : public TabCtrl::Style 
+	struct Style : public TabCtrl::Style
 	{
 		Image crosses[3];
 		Value group_separators[2];
 		
-		Style &	Write() const 				{ return *static_cast<Style *>(&TabCtrl::Style::Write()); }
+		Style &	Write() const               { return *static_cast<Style *>(&TabCtrl::Style::Write()); }
 		
 		Style&  DefaultCrosses();
 		Style&  Variant1Crosses();

@@ -377,6 +377,9 @@ bool Ide::GotoDesignerFile(const String& path, const String& scope, const String
 		if(l) {
 			if(scope.StartsWith("With"))
 				l->FindLayout(scope.Mid(4), name);
+			else
+			if(name.StartsWith("SetLayout_"))
+				l->FindLayout(name.Mid(10), Null);
 		}
 		else {
 			editor.SetCursor(editor.GetPos(line - 1));

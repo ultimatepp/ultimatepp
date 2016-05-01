@@ -1,0 +1,91 @@
+Intel® Pentium(R) CPU G620 @ 2.60GHz (2 cores, 2 threads)
+Ubuntu Linux
+gcc (Ubuntu 5.2.1-22ubuntu2) 5.2.1 20151010, 64-bit
+
+N = 1000
+TIMING std::sort      :  2.42 s  - 241.82 us ( 2.42 s  / 10000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10000
+TIMING CoSort         : 531.25 ms - 53.12 us (532.00 ms / 10000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10000
+TIMING Sort           : 632.25 ms - 63.22 us (633.00 ms / 10000 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 10000
+
+N = 10000
+TIMING std::sort      :  3.18 s  -  3.18 ms ( 3.18 s  / 1000 ), min:  3.00 ms, max:  5.00 ms, nesting: 1 - 1000
+TIMING CoSort         : 603.93 ms - 603.93 us (604.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1000
+TIMING Sort           : 968.93 ms - 968.93 us (969.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1000
+
+N = 100000
+TIMING std::sort      :  3.83 s  - 38.32 ms ( 3.83 s  / 100 ), min: 36.00 ms, max: 49.00 ms, nesting: 1 - 100
+TIMING CoSort         : 657.99 ms -  6.58 ms (658.00 ms / 100 ), min:  6.00 ms, max: 10.00 ms, nesting: 1 - 100
+TIMING Sort           :  1.15 s  - 11.50 ms ( 1.15 s  / 100 ), min: 11.00 ms, max: 13.00 ms, nesting: 1 - 100
+
+N = 1000000
+TIMING std::sort      :  4.28 s  - 427.70 ms ( 4.28 s  / 10 ), min: 426.00 ms, max: 430.00 ms, nesting: 1 - 10
+TIMING CoSort         : 770.00 ms - 77.00 ms (770.00 ms / 10 ), min: 75.00 ms, max: 81.00 ms, nesting: 1 - 10
+TIMING Sort           :  1.37 s  - 137.20 ms ( 1.37 s  / 10 ), min: 137.00 ms, max: 138.00 ms, nesting: 1 - 10
+
+N = 10000000
+TIMING std::sort      :  4.85 s  -  4.85 s  ( 4.85 s  / 1 ), min:  4.85 s , max:  4.85 s , nesting: 1 - 1
+TIMING CoSort         : 894.00 ms - 894.00 ms (894.00 ms / 1 ), min: 894.00 ms, max: 894.00 ms, nesting: 1 - 1
+TIMING Sort           :  1.63 s  -  1.63 s  ( 1.63 s  / 1 ), min:  1.63 s , max:  1.63 s , nesting: 1 - 1
+
+-----------------------------------
+Intel® Pentium(R) Core i7-4771 @ 3.5GHz (4 cores, 8 threads)
+Windows 10
+Visual C++ 2014 64-bit
+
+N = 100000000
+TIMING std::sort      : 49.08 s  - 49.08 s  (49.08 s  / 1 ), min: 49.08 s , max: 49.08 s , nesting: 1 - 1
+TIMING CoSort         :  3.69 s  -  3.69 s  ( 3.69 s  / 1 ), min:  3.69 s , max:  3.69 s , nesting: 1 - 1
+TIMING Sort           : 13.63 s  - 13.63 s  (13.63 s  / 1 ), min: 13.63 s , max: 13.63 s , nesting: 1 - 1
+
+N = 10000000
+TIMING std::sort      :  4.20 s  -  4.20 s  ( 4.20 s  / 1 ), min:  4.20 s , max:  4.20 s , nesting: 1 - 1
+TIMING CoSort         : 296.00 ms - 296.00 ms (296.00 ms / 1 ), min: 296.00 ms, max: 296.00 ms, nesting: 1 - 1
+TIMING Sort           :  1.16 s  -  1.16 s  ( 1.16 s  / 1 ), min:  1.16 s , max:  1.16 s , nesting: 1 - 1
+
+N = 1000000
+TIMING std::sort      :  3.82 s  - 381.60 ms ( 3.82 s  / 10 ), min: 377.00 ms, max: 388.00 ms, nesting: 1 - 10
+TIMING CoSort         : 285.00 ms - 28.50 ms (285.00 ms / 10 ), min: 25.00 ms, max: 30.00 ms, nesting: 1 - 10
+TIMING Sort           : 959.00 ms - 95.90 ms (959.00 ms / 10 ), min: 94.00 ms, max: 100.00 ms, nesting: 1 - 10
+
+N = 100000
+TIMING std::sort      :  3.13 s  - 31.32 ms ( 3.13 s  / 100 ), min: 30.00 ms, max: 32.00 ms, nesting: 1 - 100
+TIMING CoSort         : 262.00 ms -  2.62 ms (262.00 ms / 100 ), min:  1.00 ms, max:  4.00 ms, nesting: 1 - 100
+TIMING Sort           : 796.00 ms -  7.96 ms (796.00 ms / 100 ), min:  7.00 ms, max:  9.00 ms, nesting: 1 - 100
+
+N = 10000
+TIMING std::sort      :  2.49 s  -  2.49 ms ( 2.50 s  / 1000 ), min:  2.00 ms, max:  4.00 ms, nesting: 1 - 1000
+TIMING CoSort         : 301.97 ms - 301.97 us (302.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1000
+TIMING Sort           : 642.97 ms - 642.97 us (643.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1000
+
+N = 1000
+TIMING std::sort      :  1.93 s  - 193.37 us ( 1.93 s  / 10000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 10000
+TIMING CoSort         : 442.66 ms - 44.27 us (443.00 ms / 10000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 10000
+TIMING Sort           : 478.66 ms - 47.87 us (479.00 ms / 10000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 10000
+
+
+===================
+Raspberry Pi 2
+Broadcom BCM2836 ARM Cortex-A7 900 MHz, 4 cores, 4 threads
+Ubuntu Linux
+gcc (Ubuntu 5.2.1-22ubuntu2) 5.2.1 20151010, 32-bit
+
+N = 1000
+TIMING std::sort      : 14.70 s  -  1.47 ms (14.71 s  / 10000 ), min:  1.00 ms, max:  9.00 ms, nesting: 1 - 10000
+TIMING CoSort         :  2.92 s  - 291.77 us ( 2.93 s  / 10000 ), min:  0.00 ns, max:  6.00 ms, nesting: 1 - 10000
+TIMING Sort           :  3.06 s  - 305.87 us ( 3.07 s  / 10000 ), min:  0.00 ns, max:  3.00 ms, nesting: 1 - 10000
+
+N = 10000
+TIMING std::sort      : 20.00 s  - 20.00 ms (20.01 s  / 1000 ), min: 19.00 ms, max: 32.00 ms, nesting: 1 - 1000
+TIMING CoSort         :  2.32 s  -  2.32 ms ( 2.32 s  / 1000 ), min:  1.00 ms, max: 12.00 ms, nesting: 1 - 1000
+TIMING Sort           :  4.58 s  -  4.58 ms ( 4.58 s  / 1000 ), min:  4.00 ms, max:  9.00 ms, nesting: 1 - 1000
+
+N = 100000
+TIMING std::sort      : 25.05 s  - 250.48 ms (25.05 s  / 100 ), min: 246.00 ms, max: 268.00 ms, nesting: 1 - 100
+TIMING CoSort         :  3.36 s  - 33.64 ms ( 3.36 s  / 100 ), min: 27.00 ms, max: 43.00 ms, nesting: 1 - 100
+TIMING Sort           :  6.90 s  - 69.05 ms ( 6.91 s  / 100 ), min: 67.00 ms, max: 73.00 ms, nesting: 1 - 100
+
+N = 1000000
+TIMING std::sort      : 31.43 s  -  3.14 s  (31.43 s  / 10 ), min:  3.11 s , max:  3.19 s , nesting: 1 - 10
+TIMING CoSort         :  4.90 s  - 489.90 ms ( 4.90 s  / 10 ), min: 479.00 ms, max: 516.00 ms, nesting: 1 - 10
+TIMING Sort           : 10.22 s  -  1.02 s  (10.22 s  / 10 ), min:  1.01 s , max:  1.04 s , nesting: 1 - 10
+

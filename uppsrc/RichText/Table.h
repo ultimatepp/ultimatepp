@@ -41,6 +41,8 @@ private:
 	friend class RichText;
 
 public:
+	rval_default(RichCell);
+
 	RichCell(const RichCell& src, int);
 	RichCell();
 };
@@ -205,7 +207,7 @@ private:
 
 public:
 	void                    AddColumn(int cx);
-	void                    SetPick(int i, int j, RichTxt rval_ text);
+	void                    SetPick(int i, int j, RichTxt&& text);
 	RichTxt                 GetPick(int i, int j);
 	const RichTxt&          Get(int i, int j) const                { return cell[i][j].text; }
 	void                    SetQTF(int i, int j, const char *qtf);

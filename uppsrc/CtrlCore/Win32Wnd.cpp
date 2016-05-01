@@ -87,8 +87,8 @@ HINSTANCE Ctrl::hInstance;
 HANDLE    Ctrl::OverwatchThread;
 HWND      Ctrl::OverwatchHWND;
 
-Event Ctrl::OverwatchEndSession;
-Event Ctrl::ExitLoopEvent;
+Win32Event Ctrl::OverwatchEndSession;
+Win32Event Ctrl::ExitLoopEvent;
 #endif
 #endif
 
@@ -132,7 +132,7 @@ LRESULT CALLBACK Ctrl::OverwatchWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		if(ShutdownBlockReasonDestroy)
 			ShutdownBlockReasonDestroy(hwnd);
 		ELOGW("WM_QUERYENDSESSION 2");
-		return TRUE;		
+		return TRUE;
 	}
 	if(msg == WM_ENDSESSION) {
 		EndSession();
@@ -611,6 +611,26 @@ void Ctrl::NcDestroy()
 		WndFree();
 }
 
+bool Ctrl::DumpMessage(Ctrl *w, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	if(message != WM_SETCURSOR && message != WM_CTLCOLORBTN && message != WM_TIMER &&
+#ifndef PLATFORM_WINCE
+	   message != WM_NCHITTEST  &&  message != WM_ENTERIDLE &&
+#endif
+	   message != WM_CTLCOLORDLG && message != WM_CTLCOLOREDIT && message != WM_CTLCOLORLISTBOX &&
+	   message != WM_CTLCOLORMSGBOX && message != WM_CTLCOLORSCROLLBAR &&
+	   message != WM_CTLCOLORSTATIC && message != WM_CANCELMODE &&
+	   message != 0x0118)
+		for(WinMsg *m = sWinMsg; m->ID; m++)
+			if(m->ID == message) {
+				RLOG(m->name << ' ' << UPP::Name(w) <<
+					Sprintf(", wParam = %d (0x%x), lParam = %d (0x%x)",
+					       wParam, wParam, lParam, lParam));
+				return true;
+			}
+	return false;
+}
+
 LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	GuiLock __;
@@ -647,24 +667,9 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			Windows().SetKey(i, NULL);
 	}
 #if LOGMESSAGES
-	bool logblk = false;
-	if(message != WM_SETCURSOR && message != WM_CTLCOLORBTN && message != WM_TIMER &&
-#ifndef PLATFORM_WINCE
-	   message != WM_NCHITTEST  &&  message != WM_ENTERIDLE &&
-#endif
-	   message != WM_CTLCOLORDLG && message != WM_CTLCOLOREDIT && message != WM_CTLCOLORLISTBOX &&
-	   message != WM_CTLCOLORMSGBOX && message != WM_CTLCOLORSCROLLBAR &&
-	   message != WM_CTLCOLORSTATIC && message != WM_CANCELMODE &&
-	   message != 0x0118)
-		for(WinMsg *m = sWinMsg; m->ID; m++)
-			if(m->ID == message) {
-				RLOG(m->name << ' ' << UPP::Name(w) <<
-					Sprintf(", wParam = %d (0x%x), lParam = %d (0x%x)",
-					       wParam, wParam, lParam, lParam));
-				VppLog() << LOG_BEGIN;
-				logblk = true;
-				break;
-			}
+	bool logblk = DumpMessage(w, message, wParam, lParam);
+	if(logblk)
+		VppLog() << LOG_BEGIN;
 #endif
 	LRESULT l = 0;
 	if(w) {

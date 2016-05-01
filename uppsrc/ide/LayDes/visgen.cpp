@@ -40,10 +40,12 @@ void VisGenDlg::Refresh()
 	label1.Enable(q >= 3);
 	toupper1.Enable(q >= 3);
 	name1.Enable(q >= 3);
+	dname1.Enable(q >= 3);
 	quotes1.Enable(q >= 3 && !label1);
 	label2.Enable(q >= 4);
 	toupper2.Enable(q >= 4);
 	name2.Enable(q >= 4);
+	dname2.Enable(q >= 4);
 	quotes2.Enable(q >= 4 && !label2);
 	String oce = "\tCtrlLayout";
 	bool ok = false;
@@ -131,7 +133,7 @@ void VisGenDlg::Refresh()
 			if(label2)
 				id2 = lbl;
 			if(!IsNull(id1) || (q == 4 && !IsNull(id2))) {
-				if((pars || brackets) && !(name1 || name2))
+				if((pars || brackets) && !(name1 || name2 || dname1 || dname2))
 					s << ~name;
 				if(pars)
 					s << '(';
@@ -144,6 +146,8 @@ void VisGenDlg::Refresh()
 					ss << id1;
 				if(quotes1 && !label1)
 					ss = AsCString(ss);
+				if(dname1 && !IsNull(~name))
+					ss << '.' << ~name;
 				if(brackets)
 					s << '[';
 				s << ss;
@@ -160,6 +164,8 @@ void VisGenDlg::Refresh()
 						ss << id2;
 					if(quotes2 && !label2)
 						ss = AsCString(ss);
+					if(dname2 && !IsNull(~name))
+						ss << '.' << ~name;
 					if(brackets)
 						s << '[';
 					s << ss;
@@ -206,10 +212,12 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	toupper1 <<=
 	quotes1 <<=
 	name1 <<=
+	dname1 <<=
 	label2 <<=
 	toupper2 <<=
 	quotes2 <<=
 	name2 <<=
+	dname2 <<=
 	buttons <<= THISBACK(Refresh);
 	Refresh();
 	view.Highlight("cpp");

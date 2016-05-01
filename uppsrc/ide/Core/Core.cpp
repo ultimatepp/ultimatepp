@@ -1,7 +1,10 @@
 #include "Core.h"
 
-typedef VectorMap<String, Builder *(*)()> BuilderMapType;
-GLOBAL_VAR(BuilderMapType, BuilderMap)
+VectorMap<String, Builder *(*)()>& BuilderMap()
+{
+	static VectorMap<String, Builder *(*)()> h;
+	return h;
+}
 
 void RegisterBuilder(const char *name, Builder *(*create)())
 {

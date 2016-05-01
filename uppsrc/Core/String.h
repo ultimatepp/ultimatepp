@@ -140,8 +140,11 @@ public:
 
 	friend String operator+(const String& a, const String& b)  { String c(a); c += b; return c; }
 	friend String operator+(const String& a, const tchar *b)   { String c(a); c += b; return c; }
-	friend String operator+(const tchar *a, const String& b)   { String c(a); c += b; return c; }
 	friend String operator+(const String& a, tchar b)          { String c(a); c += b; return c; }
+	friend String operator+(String&& a, const String& b)       { String c(pick(a)); c += b; return c; }
+	friend String operator+(String&& a, const tchar *b)        { String c(pick(a)); c += b; return c; }
+	friend String operator+(String&& a, tchar b)               { String c(pick(a)); c += b; return c; }
+	friend String operator+(const tchar *a, const String& b)   { String c(a); c += b; return c; }
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
 
 // Avoid common error of adding offset to String (NoCopy to produce compiler error)
@@ -160,8 +163,6 @@ class String0 : Moveable<String0> {
 		int    alloc;
 
 		char *GetPtr() const  { return (char*)(this + 1); }
-		void  Release();
-		void  Retain();
 	};
 
 	union {
@@ -228,9 +229,15 @@ class String0 : Moveable<String0> {
 	friend class Value;
 
 protected:
-	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
+//	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }
+//	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
+	void Zero()                     { fast_zero128(q); Dsyn(); }
+	void SetSmall(const String0& s) { fast_copy128(q, s.q); }
 	void Free()                     { if(IsLarge()) LFree(); }
-	void SetSmall(const String0& s) { q[0] = s.q[0]; q[1] = s.q[1]; }
+	void Pick0(String0&& s) {
+		SetSmall(s);
+		s.Zero();
+	}
 	void Set0(const String0& s) {
 		if(s.IsSmall()) SetSmall(s); else LSet(s);
 		Dsyn();
@@ -251,7 +258,6 @@ protected:
 	void  SetL(const char *s, int len);
 	char *Insert(int pos, int count, const char *str);
 
-public: // should be protected, bug in gcc 3.4
 	typedef char         tchar;
 	typedef byte         bchar;
 	typedef StringBuffer Buffer;
@@ -259,6 +265,9 @@ public: // should be protected, bug in gcc 3.4
 
 public:
 	bool IsEqual(const String0& s) const {
+#if 0
+		return (chr[KIND] | s.chr[KIND] ? LEqual(s) : fast_equal128(q, s.q)) == 0;
+#else
 		return (chr[KIND] | s.chr[KIND] ? LEqual(s) :
 		#ifdef CPU_64
 		        ((q[0] ^ s.q[0]) | (q[1] ^ s.q[1]))
@@ -266,6 +275,7 @@ public:
 		        ((w[0] ^ s.w[0]) | (w[1] ^ s.w[1]) | (w[2] ^ s.w[2]) | (w[3] ^ s.w[3]))
 		#endif
 		       ) == 0;
+#endif
 	}
 
 	int    Compare(const String0& s) const;
@@ -305,7 +315,7 @@ public:
 
 	void Reserve(int r);
 
-	String0& operator=(const String0& s) { Free(); Set0(s); return *this; }
+//	String0& operator=(const String0& s) { Free(); Set0(s); return *this; }
 
 	String0()                   {}
 	~String0()                  { Free(); }
@@ -342,8 +352,9 @@ public:
 
 	String& operator=(const char *s);
 	String& operator=(const String& s)                     { String0::Assign(s); return *this; }
+	String& operator=(String&& s)                          { if(this != &s) { Free(); Pick0(pick(s)); } return *this; }
 	String& operator=(StringBuffer& b)                     { *this = String(b); return *this; }
-	String& operator<<=(const String& s)                   { if(this != &s) { String0::Free(); String0::Set0(s, s.GetCount()); } return *this; }
+//	String& operator<<=(const String& s)                   { if(this != &s) { String0::Free(); String0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                        { *this = String(Begin(), GetLength()); }
 	int    GetCharCount() const;
@@ -351,6 +362,7 @@ public:
 	String()                                               { Zero(); }
 	String(const Nuller&)                                  { Zero(); }
 	String(const String& s)                                { String0::Set0(s); }
+	String(String&& s)                                     { String0::Pick0(pick(s)); }
 	String(const char *s);
 	String(const String& s, int n)                         { ASSERT(n >= 0 && n <= s.GetLength()); String0::Set0(~s, n); }
 	String(const char *s, int n)                           { String0::Set0(s, n); }
@@ -384,7 +396,7 @@ class StringBuffer : NoCopy {
 	typedef String0::Rc Rc;
 
 	char *Alloc(int len, int& alloc);
-	void  Realloc(int n, const char *cat = NULL, int l = 0);
+	void  Realloc(dword n, const char *cat = NULL, int l = 0);
 	void  Expand();
 	void  Zero()                    { begin = end = buffer; limit = begin + 255; }
 	void  Free();
@@ -497,6 +509,72 @@ inline String& operator<<(String& s, const String &x)
 
 template<>
 inline String& operator<<(String& s, const char& x)
+{
+	s.Cat(x);
+	return s;
+}
+
+//---- &&
+
+force_inline String& operator<<(String&& s, const char *x)
+{
+	s.Cat(x, strlen__(x));
+	return s;
+}
+
+force_inline String& operator<<(String&& s, char *x)
+{
+	s.Cat(x);
+	return s;
+}
+
+inline String& operator<<(String&& s, const String &x)
+{
+	s.Cat(x);
+	return s;
+}
+
+inline String& operator<<(String&& s, char x)
+{
+	s.Cat((int) x);
+	return s;
+}
+
+inline String& operator<<(String&& s, const void *x)
+{
+	s << FormatPtr(x);
+	return s;
+}
+
+inline String& operator<<(String&& s, void *x)
+{
+	s << FormatPtr(x);
+	return s;
+}
+
+template <class T>
+inline String& operator<<(String&& s, const T& x)
+{
+	s.Cat(AsString(x));
+	return s;
+}
+
+template<>
+inline String& operator<<(String&& s, const char * const &x)
+{
+	s.Cat(x);
+	return s;
+}
+
+template<>
+inline String& operator<<(String&& s, const String &x)
+{
+	s.Cat(x);
+	return s;
+}
+
+template<>
+inline String& operator<<(String&& s, const char& x)
 {
 	s.Cat(x);
 	return s;
@@ -633,17 +711,18 @@ class WString0 {
 	friend class WStringBuffer;
 	friend class WString;
 
-public: // should be protected, bug in GCC 3.4
+protected:
 	typedef wchar         tchar;
 	typedef int16         bchar;
 	typedef WStringBuffer Buffer;
 	typedef WString       String;
 
-protected:
 	void    Zero()                       { static wchar e[2]; length = alloc = 0; ptr = e; Dsyn(); ASSERT(*ptr == 0); }
 	void    Set0(const wchar *s, int length);
 	void    Set0(const WString0& s);
+	void    Pick0(WString0&& s)          { ptr = s.ptr; length = s.length; alloc = s.alloc; s.Zero(); Dsyn(); }
 	void    Free();
+	void    FFree()                      { if(alloc > 0) Free(); }
 	void    Swap(WString0& b)            { Upp::Swap(ptr, b.ptr); Upp::Swap(length, b.length); Upp::Swap(alloc, b.alloc); Dsyn(); b.Dsyn(); }
 	wchar  *Insert(int pos, int count, const wchar *data);
 
@@ -677,7 +756,7 @@ public:
 	WString0()                           { Zero(); }
 	~WString0()                          { Free(); }
 
-	WString0& operator=(const WString0& s) { Free(); Set0(s); return *this; }
+//	WString0& operator=(const WString0& s) { Free(); Set0(s); return *this; }
 };
 
 class WString : public Moveable<WString, AString<WString0> >
@@ -702,15 +781,17 @@ public:
 	WString& operator<<(const wchar *s)                     { Cat(s); return *this; }
 
 	WString& operator=(const wchar *s);
-	WString& operator=(const WString& s)                    { if(this != &s) { WString0::Free(); WString0::Set0(s); } return *this; }
+	WString& operator=(const WString& s)                    { if(this != &s) { WString0::FFree(); WString0::Set0(s); } return *this; }
+	WString& operator=(WString&& s)                         { if(this != &s) { WString0::FFree(); WString0::Pick0(pick(s)); } return *this; }
 	WString& operator=(WStringBuffer& b)                    { *this = WString(b); return *this; }
-	WString& operator<<=(const WString& s)                  { if(this != &s) { WString0::Free(); WString0::Set0(s, s.GetCount()); } return *this; }
+//	WString& operator<<=(const WString& s)                  { if(this != &s) { WString0::Free(); WString0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                         { *this = WString(Begin(), GetLength()); }
 
 	WString()                                               {}
 	WString(const Nuller&)                                  {}
 	WString(const WString& s)                               { WString0::Set0(s); }
+	WString(WString&& s)                                    { WString0::Pick0(pick(s)); }
 	WString(const wchar *s)                                 { WString0::Set0(s, strlen__(s)); }
 	WString(const WString& s, int n)                        { ASSERT(n >= 0 && n <= s.GetLength()); WString0::Set0(~s, n); }
 	WString(const wchar *s, int n)                          { WString0::Set0(s, n); }
@@ -727,6 +808,7 @@ public:
 
 	friend void Swap(WString& a, WString& b)                { a.Swap(b); }
 	friend WString operator+(const WString& a, char b)      { WString c(a); c += b; return c; }
+	friend WString operator+(WString&& a, char b)           { WString c(pick(a)); c += b; return c; }
 	friend WString operator+(char a, const WString& b)      { WString c(a, 1); c += b; return c; }
 
 #ifndef _HAVE_NO_STDWSTRING
@@ -749,7 +831,7 @@ class WStringBuffer : NoCopy {
 	friend class WString;
 
 	wchar *Alloc(int len, int& alloc);
-	void   Expand(int n, const wchar *cat = NULL, int l = 0);
+	void   Expand(dword n, const wchar *cat = NULL, int l = 0);
 	void   Expand();
 	void   Zero();
 	void   Free();

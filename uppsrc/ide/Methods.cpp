@@ -256,7 +256,7 @@ void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
 		ndk_arch_armeabi.Set(1);
 		ndk_arch_armeabi_v7a.Set(1);
 		ndk_arch_arm64_v8a.Set(1);
-		ndk_common_cpp_options.SetData("-fexceptions -frtti");
+		ndk_common_cpp_options.SetData("-std=c++11 -fexceptions -frtti");
 	}
 	else
 		ClearNdkCtrls();

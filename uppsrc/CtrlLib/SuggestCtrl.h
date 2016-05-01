@@ -27,7 +27,7 @@ public:
 	void AddList(const String& s)                     { data.Add(s.ToWString()); }
 	void AddList(const char *s)                       { data.Add(s); }
 
-	void Pick(Vector<WString> rval_ list)             { data = pick(list); }
+	void Pick(Vector<WString>&& list)                 { data = pick(list); }
 	
 	SuggestCtrl& SetDropLines(int n)                  { droplines = n; return *this; }
 	SuggestCtrl& Delimiter(int chr)                   { delimiter_char = chr; return *this; }

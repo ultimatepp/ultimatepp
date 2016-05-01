@@ -2532,7 +2532,7 @@ double tmGetTimeX() {
 	timespec t;
 	if (0 != clock_gettime(CLOCK_REALTIME, &t))
 		return Null;
-	return t.tv_sec + t.tv_nsec/1000.;
+	return t.tv_sec + (double)t.tv_nsec/1000000000.;
 #elif defined(_WIN32) || defined(WIN32)
 	LARGE_INTEGER clock;
 	LARGE_INTEGER freq;

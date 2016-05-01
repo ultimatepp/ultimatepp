@@ -1,0 +1,5 @@
+#ifndef _CoAlgo_icpp_init_stub
+#define _CoAlgo_icpp_init_stub
+#include "Core/init"
+#include "Core/SSL/init"
+#endif

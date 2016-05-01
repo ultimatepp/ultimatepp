@@ -43,16 +43,22 @@ macro.&]
 [s2; Default constructor. Creates an empty [* BiVector].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:BiVector`:`:BiVector`(pick`_ BiVector`&`):%- [* BiVector]([@(0.128.128) pick`_]_[* BiV
-ector][@(0.0.255) `&]_[*@3 src])&]
+[s5;:Upp`:`:BiVector`:`:BiVector`(Upp`:`:BiVector`&`&`):%- [* BiVector]([* BiVector][@(0.0.255) `&
+`&]_[*@3 src])&]
 [s2; Pick constructor. Transfers source [* BiVector ][%-*@3 src ]in low 
+constant time, but destroys it by picking.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:BiVector`:`:operator`=`(Upp`:`:BiVector`&`&`):%- [@(0.0.255) void]_[* operato
+r`=]([_^Upp`:`:BiVector^ BiVector][@(0.0.255) `&`&]_[*@3 src])&]
+[s2; Pick assignment. Transfers source [* BiVector ][%-*@3 src ]in low 
 constant time, but destroys it by picking.&]
 [s3; &]
 [s4;%- &]
 [s5;:BiVector`:`:BiVector`(const BiVector`&`,int`):%- [* BiVector]([@(0.0.255) const]_[* Bi
 Vector][@(0.0.255) `&]_[*@3 src], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor. Creates a deep copy of [%-*@3 src].&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Upp`:`:BiVector`:`:BiVector`(std`:`:initializer`_list`<T`>`):%- [* BiVector]([_^std`:`:initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
@@ -99,22 +105,22 @@ of the [* BiVector]. The new element will be at position [* GetCount]()
 [s6; Invalidates iterators and references to the BiVector.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:BiVector`:`:AddHeadPick`(pick`_ T`&`):%- [@(0.0.255) void]_[* AddHeadPick]([@(0.128.128) p
-ick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:BiVector`:`:AddHeadPick`(T`&`&`):%- [@(0.0.255) void]_[* AddHeadPick]([*@4 T][@(0.0.255) `&
+`&]_[*@3 x])&]
 [s2; Adds a new element at the head of the [* BiVector] and picks value 
 of the parameter [%-*@3 x]. The new element will be at position 
 0.&]
 [s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators and references to the BiVector.&]
-[s3;%- &]
+[s2; Invalidates iterators and references to the BiVector.&]
+[s3; &]
 [s4;%- &]
-[s5;:BiVector`:`:AddTailPick`(pick`_ T`&`):%- [@(0.0.255) void]_[* AddTailPick]([@(0.128.128) p
-ick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:BiVector`:`:AddTailPick`(T`&`&`):%- [@(0.0.255) void]_[* AddTailPick]([*@4 T][@(0.0.255) `&
+`&]_[*@3 x])&]
 [s2; Adds a new element at the tail of the [* BiVector] and picks value 
 of the parameter [%-*@3 x]. The new element will be at position 
 [* GetCount]() `- 1.&]
 [s6; Requires T to have pick constructor.&]
-[s6; Invalidates iterators and references to the BiVector.&]
+[s2; Invalidates iterators and references to the BiVector.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:BiVector`:`:Head`(`):%- [*@4 T][@(0.0.255) `&]_[* Head]()&]

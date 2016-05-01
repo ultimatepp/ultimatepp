@@ -130,7 +130,7 @@ public:
 	T&       Get()                            { return v; }
 	
 	RawValueRep(const T& v) : v(v)             {}
-	RawValueRep(T rval_ v, VPICK) : v(pick(v)) {}
+	RawValueRep(T&& v, VPICK) : v(pick(v))     {}
 	RawValueRep(const T& v, VDEEP) : v(v, 1)   {}
 	RawValueRep()                              {}
 };
@@ -340,7 +340,7 @@ inline Value RawToValue(const T& data)
 }
 
 template <class T>
-inline Value RawPickToValue(T rval_ data)
+inline Value RawPickToValue(T&& data)
 {
 	typedef RawValueRep<T> R;
 	return Value(new R(pick(data), R::PICK));
@@ -367,56 +367,31 @@ inline Value RichToValue(const T& data)
 	return Value(new RichValueRep<T>(data));
 }
 
-template <class T> // Deprecated, use Value::Is
+#ifdef DEPRECATED
+template <class T> // use Value::Is
 bool IsTypeRaw(const Value& value, T * = 0)                { return value.Is<T>(); }
 
-template <class T> // deprecated, use Value::Is
+template <class T> // use Value::Is
 bool IsType(const Value& x, T* = 0)                        { return x.Is<T>(); }
 
 template <class T>
-struct RawValue : public Value { // Deprecated, use RawToValue and Value::To
+struct RawValue : public Value { // use RawToValue and Value::To
 	RawValue(const T& x) : Value(RawToValue(x))            {}
 	static const T& Extract(const Value& v)                { return v.To<T>(); }
 	static const T& Extract(const Value& v, const T& dflt) { return v.Is<T>() ? v.To<T>() : dflt; }
 };
 
 template <class T>
-struct RichValue : public Value { // Deprecated, use RichToValue and Value::To
+struct RichValue : public Value { // use RichToValue and Value::To
 public:
 	RichValue(const T& x) : Value(RichToValue<T>(x))       {}
 	static void Register() init_                           { Value::Register<T>(); }
 	static const T& Extract(const Value& v)                { return v.Get<T>(); }
 };
 
-template <class T> // Deprecated, use Value::To
+template <class T> // use Value::To
 inline const T& ValueTo(const Value& v)                    { return v.To<T>(); }
 
-template <class T> // Deprecated, use Value::To
+template <class T> // use Value::To
 inline const T& ValueTo(const Value& v, const T& dflt)     { return v.Is<T>() ? v.To<T>() : dflt; }
-
-
-template <class T> // Deprecated (?)
-struct RawRef : public RefManager {
-	virtual void  SetValue(void *p, const Value& v)       { *(T *) p = RawValue<T>::Extract(v); }
-	virtual Value GetValue(const void *p)                 { return RawValue<T>(*(const T *) p); }
-	virtual int   GetType()                               { return GetValueTypeNo<T>(); }
-	virtual ~RawRef() {}
-};
-
-template <class T>
-Ref RawAsRef(T& x) { // Deprecated (?)
-	return Ref(&x, &Single< RawRef<T> >());
-}
-
-template <class T> // Deprecated
-struct RichRef : public RawRef<T> {
-	virtual Value GetValue(const void *p)                 { return RichValue<T>(*(T *) p); }
-	virtual bool  IsNull(const void *p)                   { return UPP::IsNull(*(T *) p); }
-	virtual void  SetValue(void *p, const Value& v)       { *(T *) p = T(v); }
-	virtual void  SetNull(void *p)                        { UPP::SetNull(*(T *)p); }
-};
-
-template <class T> // Deprecated
-Ref RichAsRef(T& x) {
-	return Ref(&x, &Single< RichRef<T> >());
-}
+#endif
