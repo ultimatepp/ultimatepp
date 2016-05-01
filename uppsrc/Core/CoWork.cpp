@@ -150,7 +150,7 @@ void CoWork::Do(Function<void ()>&& fn)
 	p.lock.Leave();
 }
 
-void CoWork::Step(int stepi, Function<void ()>&& fn)
+void CoWork::Pipe(int stepi, Function<void ()>&& fn)
 {
 	Mutex::Lock __(stepmutex);
 	auto& q = step.At(stepi);
@@ -181,7 +181,8 @@ void CoWork::Step(int stepi, Function<void ()>&& fn)
 }
 
 void CoWork::Finish() {
-	Pool& p = GetPool();
+	if(!pool) return;
+	Pool& p = *pool;
 	p.lock.Enter();
 	while(todo) {
 		LLOG("Finish: todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
