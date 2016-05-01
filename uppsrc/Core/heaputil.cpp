@@ -46,7 +46,7 @@ MemoryProfile *PeakMemoryProfile()
 void DoPeakProfile()
 {
 	if(sPeak)
-		heap.Make(*sPeak);
+		heap->Make(*sPeak);
 }
 
 void OutOfMemoryPanic(size_t size)
@@ -301,7 +301,7 @@ void Heap::Make(MemoryProfile& f)
 
 MemoryProfile::MemoryProfile()
 {
-	heap.Make(*this);
+	heap->Make(*this);
 }
 
 #ifdef flagHEAPSTAT

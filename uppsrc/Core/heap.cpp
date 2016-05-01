@@ -237,12 +237,12 @@ void MemoryShrink()
 
 void MemoryFreeThread()
 {
-	heap.Shutdown();
+	heap->Shutdown();
 }
 
 void MemoryCheck()
 {
-	heap.Check();
+	heap->Check();
 }
 
 #endif
