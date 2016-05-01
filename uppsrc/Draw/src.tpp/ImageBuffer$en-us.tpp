@@ -130,17 +130,18 @@ t]&]
 `* GetSize().cy.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:operator`[`]`(int`): [*_^RGBA^ RGBA][* _`*operator`[`](][*@(0.0.255) in
-t][* _][*@3 i][* )]&]
-[s5;:ImageBuffer`:`:operator`[`]`(int`)const: [*@(0.0.255) const][* _][*_^RGBA^ RGBA][* _`*op
-erator`[`](][*@(0.0.255) int][* _][*@3 i][* )_][*@(0.0.255) const]&]
+[s5;:ImageBuffer`:`:operator`[`]`(int`): [*_^topic`:`/`/Core`/src`/RGBA`$en`-us^ RGBA][* _
+`*operator`[`](][*@(0.0.255) int][* _][*@3 i][* )]&]
+[s5;:ImageBuffer`:`:operator`[`]`(int`)const: [*@(0.0.255) const][* _][*_^topic`:`/`/Core`/src`/RGBA`$en`-us^ R
+GBA][* _`*operator`[`](][*@(0.0.255) int][* _][*@3 i][* )_][*@(0.0.255) const]&]
 [s2;%% Returns a pointer to the first pixel in the line [%-*@3 i].&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:operator`~`(`): [*_^RGBA^ RGBA][* _`*operator`~()]&]
+[s5;:ImageBuffer`:`:operator`~`(`): [*_^topic`:`/`/Core`/src`/RGBA`$en`-us^ RGBA][* _`*op
+erator`~()]&]
 [s5;:ImageBuffer`:`:operator RGBA`*`(`): [* operator_RGBA`*()]&]
-[s5;:ImageBuffer`:`:operator`~`(`)const: [*@(0.0.255) const][* _][*_^RGBA^ RGBA][* _`*operato
-r`~()_][*@(0.0.255) const]&]
+[s5;:ImageBuffer`:`:operator`~`(`)const: [*@(0.0.255) const][* _][*_^topic`:`/`/Core`/src`/RGBA`$en`-us^ R
+GBA][* _`*operator`~()_][*@(0.0.255) const]&]
 [s5;:ImageBuffer`:`:operator const RGBA`*`(`)const: [* operator_const_RGBA`*()_][*@(0.0.255) c
 onst]&]
 [s2;%% Returns a pointer to the first pixel of the image.  &]
@@ -186,8 +187,8 @@ ize][* _][*@3 sz][* )]&]
 is undefined.&]
 [s3; &]
 [s4; &]
-[s5;:ImageBuffer`:`:ImageBuffer`(Image`&`): [* ImageBuffer]([_^Image^ Image][@(0.0.255) `&]_
-[*@3 img])&]
+[s5;:ImageBuffer`:`:ImageBuffer`(Image`&`): [* ImageBuffer]([*_^Image^ Image][@(0.0.255) `&
+]_[*@3 img])&]
 [s5;:ImageBuffer`:`:ImageBuffer`(ImageBuffer`&`): [* ImageBuffer]([* ImageBuffer][@(0.0.255) `&
 ]_[*@3 img])&]
 [s2;%% Assigns pixels of [%-*@3 img] to ImageBuffer. [%-*@3 img] is cleared 
