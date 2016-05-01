@@ -209,7 +209,7 @@ struct Heap {
 	bool   TryRealloc(void *ptr, size_t newsize);
 };
 
-extern thread_local Heap heap;
+extern thread_local Heap *heap;
 
 force_inline
 void Heap::RemoteFlushRaw()

@@ -294,33 +294,38 @@ void Heap::Free48(void *ptr)
 	Free(ptr, KLASS_48);
 }
 
-void *MemoryAllok__(int klass)
-{
-	return heap.Allok(klass);
-}
+thread_local byte sHeap[sizeof(Heap)]; // Mingw has issues with class thread_local
+
+thread_local Heap *heap = (Heap *)sHeap;
 
 void MemoryFreek__(int klass, void *ptr)
 {
-	heap.Free(ptr, klass);
+	heap->Free((void *)ptr, klass);
 }
 
-thread_local Heap heap;
+void *MemoryAllok__(int klass)
+{
+	return heap->Allok(klass);
+}
+
 
 #if defined(HEAPDBG)
 
 void *MemoryAlloc_(size_t sz)
 {
-	return heap.AllocSz(sz);
+	if(!heap)
+		heap = (Heap *)sHeap;
+	return heap->AllocSz(sz);
 }
 
 void  MemoryFree_(void *ptr)
 {
-	heap.Free(ptr);
+	heap->Free(ptr);
 }
 
 size_t GetMemoryBlockSize_(void *ptr)
 {
-	return heap.GetBlockSize(ptr);
+	return heap->GetBlockSize(ptr);
 }
 
 #else
@@ -330,53 +335,55 @@ size_t GetMemoryBlockSize_(void *ptr)
 void *MemoryAlloc(size_t sz)
 {
 	LTIMING("MemoryAlloc");
-	return heap.AllocSz(sz);
+	if(!heap)
+		heap = (Heap *)sHeap;
+	return heap->AllocSz(sz);
 }
 
 void *MemoryAllocSz(size_t& sz)
 {
 	LTIMING("MemoryAllocSz");
-	return heap.AllocSz(sz);
+	return heap->AllocSz(sz);
 }
 
 void  MemoryFree(void *ptr)
 {
 	LTIMING("MemoryFree");
-	heap.Free(ptr);
+	heap->Free(ptr);
 }
 
 size_t GetMemoryBlockSize(void *ptr)
 {
-	return heap.GetBlockSize(ptr);
+	return heap->GetBlockSize(ptr);
 }
 
 bool   TryRealloc(void *ptr, size_t size)
 {
-	return heap.TryRealloc(ptr, size);
+	return heap->TryRealloc(ptr, size);
 }
 
 void *MemoryAlloc32()
 {
 	LTIMING("MemoryAlloc32");
-	return heap.Alloc32();
+	return heap->Alloc32();
 }
 
 void  MemoryFree32(void *ptr)
 {
 	LTIMING("MemoryFree32");
-	heap.Free32(ptr);
+	heap->Free32(ptr);
 }
 
 void *MemoryAlloc48()
 {
 	LTIMING("MemoryAlloc48");
-	return heap.Alloc48();
+	return heap->Alloc48();
 }
 
 void  MemoryFree48(void *ptr)
 {
 	LTIMING("MemoryFree48");
-	heap.Free48(ptr);
+	heap->Free48(ptr);
 }
 
 #endif
