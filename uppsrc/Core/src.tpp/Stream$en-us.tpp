@@ -967,7 +967,8 @@ l`&]_[*@3 a], [@(0.0.255) bool`&]_[*@3 b], [@(0.0.255) bool`&]_[*@3 c])&]
 [s3; &]
 [s1;:StringStream`:`:class:%- [@(0.0.255)3 class][3 _][*3 StringStream][3 _:_][@(0.0.255)3 publi
 c][3 _][*@3;3 Stream]&]
-[s9; StringStream is stream that uses String as storage medium.&]
+[s9; StringStream is stream that uses String as storage medium. The 
+maximum output size is limited to 2GB (maximum String size limit).&]
 [s2; &]
 [s0;%- [%%/ Derived from][%%  ][^topic`:`/`/Core`/src`/Stream`$en`-us`#`:`:Stream`:`:class Stream^ S
 tream]&]
@@ -994,6 +995,12 @@ serialization mode (like [* Open]).&]
 [s2;%- Sets the content of stream to specified String and sets it 
 into the Loading serialization mode.&]
 [s7; [%-*C@3 data]-|Content of stream.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:StringStream`:`:Limit`(int`):%- [@(0.0.255) void]_[* Limit]([@(0.0.255) int]_[*@3 s
+z])&]
+[s2; Sets the output size limit. Exception StringStream`::LimitExc 
+is thrown if this the output size reaches this limit.&]
 [s3; &]
 [s4;%- &]
 [s5;:StringStream`:`:Create`(`):%- [@(0.0.255) void]_[* Create]()&]

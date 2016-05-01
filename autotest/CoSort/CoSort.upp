@@ -1,0 +1,14 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	CoSort.cpp optimize_speed,
+	srcdoc.tpp,
+	info.txt;
+
+mainconfig
+	"" = "MT",
+	"" = "MT USEMALLOC";
+

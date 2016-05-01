@@ -174,6 +174,8 @@ void LogOut::Close()
 void LogOut::Line(const char *s, int len, int depth)
 {
 	Mutex::Lock __(log_mutex);
+	
+	ASSERT(len < 600);
 
 	char h[600];
 	char *p = h;

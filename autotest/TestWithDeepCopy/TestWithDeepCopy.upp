@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	TestWithDeepCopy.cpp;
+
+mainconfig
+	"" = "";
+

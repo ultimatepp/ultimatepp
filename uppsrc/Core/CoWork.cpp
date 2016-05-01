@@ -4,27 +4,55 @@ NAMESPACE_UPP
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)     // DLOG(x)
-#define LDUMP(x)    // DDUMP(x)
+#define LLOG(x)      // DLOG(x)
+#define LDUMP(x)     // DDUMP(x)
 
 #define LHITCOUNT(x) // RHITCOUNT(x)
 
-CoWork::Pool& CoWork::pool()
+thread_local bool CoWork::Pool::finlock;
+thread_local bool CoWork::is_worker;
+thread_local CoWork::Pool *CoWork::pool;
+
+CoWork::Pool& CoWork::GetPool()
 {
-	static Pool pool;
-	return pool;
+	return GetPool(CPU_Cores() + 2);
 }
 
-CoWork::Pool::Pool()
+CoWork::Pool& CoWork::GetPool(int nthreads)
 {
-	LLOG("CoWork INIT pool: " << CPU_Cores() + 2);
+	if(!pool)
+		pool = new Pool(nthreads);
+	return *pool;
+}
+
+void CoWork::StartPool(int n)
+{
+	if(!is_worker) {
+		ShutdownPool();
+		GetPool(n);
+	}
+}
+
+void CoWork::ShutdownPool()
+{
+	if(!is_worker && pool) {
+		delete pool;
+		pool = NULL;
+	}
+}
+
+CoWork::Pool::Pool(int nthreads)
+{
+	ASSERT(!is_worker);
+	LLOG("CoWork INIT pool: " << nthreads);
 	scheduled = 0;
-	for(int i = 0; i < CPU_Cores() + 2; i++)
-		threads.Add().Run([=] { ThreadRun(i); });
+	for(int i = 0; i < nthreads; i++)
+		threads.Add().Run([=] { is_worker = true; pool = this; ThreadRun(i); });
 }
 
 CoWork::Pool::~Pool()
 {
+	ASSERT(!IsWorker());
 	LLOG("Quit");
 	lock.Enter();
 	jobs[0].work = NULL;
@@ -37,41 +65,43 @@ CoWork::Pool::~Pool()
 	LLOG("Quit ended");
 }
 
-thread__ bool CoWork::Pool::finlock;
-
 void CoWork::FinLock()
 {
 	Pool::finlock = true;
-	pool().lock.Enter();
+	GetPool().lock.Enter();
 }
 
 bool CoWork::Pool::DoJob()
 {
-	Pool& p = pool();
+	Pool& p = GetPool();
 	MJob& job = p.jobs[p.scheduled - 1];
 	if(job.work == NULL) {
 		LLOG("Quit thread");
 		return true;
 	}
+	LLOG("DoJob " << p.scheduled - 1 << ", todo: " << job.work->todo << " (CoWork " << FormatIntHex(job.work) << ")");
 	finlock = false;
 	Function<void ()> fn = pick(job.fn);
+	CoWork *work = job.work;
 	p.scheduled--;
 	p.lock.Leave();
 	fn();
 	if(!finlock)
 		p.lock.Enter();
-	if(--job.work->todo == 0) {
-		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(job.work) << ")");
-		job.work->waitforfinish.Release();
+	if(--work->todo == 0) {
+		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
+		work->waitforfinish.Release();
 	}
-	LLOG("Finished, remaining todo " << job.work->todo << " (CoWork " << FormatIntHex(job.work) << ")");
+	LLOG("DoJobA " << p.scheduled << ", todo: " << work->todo << " (CoWork " << FormatIntHex(work) << ")");
+	ASSERT(work->todo >= 0);
+	LLOG("Finished, remaining todo " << work->todo);
 	return false;
 }
 
 void CoWork::Pool::ThreadRun(int tno)
 {
 	LLOG("CoWork thread #" << tno << " started");
-	Pool& p = pool();
+	Pool& p = GetPool();
 	p.lock.Enter();
 	for(;;) {
 		while(p.scheduled == 0) {
@@ -96,7 +126,7 @@ void CoWork::Pool::ThreadRun(int tno)
 void CoWork::Do(Function<void ()>&& fn)
 {
 	LHITCOUNT("CoWork: Sheduling callback");
-	Pool& p = pool();
+	Pool& p = GetPool();
 	p.lock.Enter();
 	if(p.scheduled >= SCHEDULED_MAX) {
 		LLOG("Stack full: running in the originating thread");
@@ -111,7 +141,7 @@ void CoWork::Do(Function<void ()>&& fn)
 	job.work = this;
 	job.fn = pick(fn);
 	todo++;
-	LLOG("Adding job; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
+	LLOG("Adding job " << p.scheduled - 1 << "; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
 	if(p.waiting_threads) {
 		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
 		p.waiting_threads--;
@@ -120,8 +150,39 @@ void CoWork::Do(Function<void ()>&& fn)
 	p.lock.Leave();
 }
 
+void CoWork::Pipe(int stepi, Function<void ()>&& fn)
+{
+	Mutex::Lock __(stepmutex);
+	auto& q = step.At(stepi);
+	LLOG("Step " << stepi << ", count: " << q.GetCount() << ", running: " << steprunning.GetCount());
+	q.AddHead(pick(fn));
+	if(!steprunning.At(stepi, false)) {
+		steprunning.At(stepi) = true;
+		*this & [=]() {
+			LLOG("Starting step " << stepi << " processor");
+			stepmutex.Enter();
+			for(;;) {
+				Function<void ()> f;
+				auto& q = step[stepi];
+				LLOG("StepWork " << stepi << ", todo:" << q.GetCount());
+				if(q.GetCount() == 0)
+					break;
+				f = pick(q.Tail());
+				q.DropTail();
+				stepmutex.Leave();
+				f();
+				stepmutex.Enter();
+			}
+			steprunning.At(stepi) = false;
+			stepmutex.Leave();
+			LLOG("Exiting step " << stepi << " processor");
+		};
+	}
+}
+
 void CoWork::Finish() {
-	Pool& p = pool();
+	if(!pool) return;
+	Pool& p = *pool;
 	p.lock.Enter();
 	while(todo) {
 		LLOG("Finish: todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
@@ -137,39 +198,12 @@ void CoWork::Finish() {
 		}
 	}
 	p.lock.Leave();
-	LLOG("CoWork finished");
+	LLOG("CoWork " << FormatIntHex(this) << " finished");
 }
-
-/*
-void CoWork::Pipe(int stepi, const Callback& cb)
-{
-	Mutex::Lock __(stepmutex);
-	step.At(stepi).AddHead(cb);
-	if(step.GetCount() == 1) {
-		*this & [=]() {
-			bool second = false;
-			for(;;) {
-				Callback cb;
-				{
-					Mutex::Lock __(stepmutex);
-					BiVector<Callback>& q = step[stepi];
-					if(second)
-						q.DropTail();
-					if(q.GetCount() == 0)
-						return;
-					cb = pick(q.Tail());
-					second = true;
-				}
-				cb();
-			}
-		}
-	}
-}
-*/
 
 bool CoWork::IsFinished()
 {
-	Pool& p = pool();
+	Pool& p = GetPool();
 	p.lock.Enter();
 	bool b = todo == 0;
 	p.lock.Leave();
@@ -185,6 +219,7 @@ CoWork::CoWork()
 CoWork::~CoWork()
 {
 	Finish();
+	LLOG("~CoWork " << FormatIntHex(this));
 }
 
 #endif

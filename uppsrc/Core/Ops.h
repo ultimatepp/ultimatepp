@@ -206,51 +206,6 @@ force_inline bool svo_memeq(const tchar *a, const tchar *b, int len)
 	return true;
 }
 
-#if 0
-
-force_inline dword fast_equal128(const void *a, const void *b)
-{
-	__m128i xmm0 = _mm_loadu_si128((__m128i*)(a));
-	__m128i xmm1 = _mm_loadu_si128((__m128i*)(b));
-	xmm0 = _mm_cmpeq_epi8(xmm0, xmm1);
-	return _mm_movemask_epi8(xmm0) ^ 0xffff;
-}
-
-force_inline void fast_zero128(void *t)
-{
-	_mm_storeu_si128((__m128i*)t, _mm_setzero_si128());
-}
-
-force_inline void fast_copy128(void *t, const void *s)
-{
-	_mm_storeu_si128((__m128i*)t, _mm_loadu_si128((__m128i*)s));
-}
-
-#elif defined(CPU_64)
-
-force_inline bool fast_equal128(const void *a, const void *b)
-{
-	uint64 *aa = (uint64 *)a;
-	uint64 *bb = (uint64 *)b;
-	return ((aa[0] ^ bb[0]) | (aa[1] ^ bb[1])) == 0;
-}
-
-force_inline void fast_zero128(void *t)
-{
-	uint64 *tt = (uint64 *)t;
-	tt[0] = tt[1] = 0;
-}
-
-force_inline void fast_copy128(void *t, const void *s)
-{
-	uint64 *tt = (uint64 *)t;
-	uint64 *ss = (uint64 *)s;
-	tt[0] = ss[0];
-	tt[1] = ss[1];
-}
-
-#else
-
 force_inline bool fast_equal128(const void *a, const void *b)
 {
 	uint32 *aa = (uint32 *)a;
@@ -273,8 +228,6 @@ force_inline void fast_copy128(void *t, const void *s)
 	tt[2] = ss[2];
 	tt[3] = ss[3];
 }
-
-#endif
 
 #if defined(CPU_UNALIGNED) && defined(CPU_LE) && (defined(COMPILER_MSC) || defined(COMPILER_GCC))
 #define FAST_STRING_COMPARE

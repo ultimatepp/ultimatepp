@@ -10,6 +10,7 @@ class CoWork : NoCopy {
 	
 	enum { SCHEDULED_MAX = 2048 };
 
+public:
 	struct Pool {
 		int             scheduled;
 		MJob            jobs[SCHEDULED_MAX];
@@ -19,7 +20,7 @@ class CoWork : NoCopy {
 		Mutex           lock;
 		Semaphore       waitforjob;
 
-		Pool();
+		Pool(int nthreads);
 		~Pool();
 		
 		static thread__ bool finlock;
@@ -30,31 +31,39 @@ class CoWork : NoCopy {
 	
 	friend struct Pool;
 
-	static Pool& pool();
+	static Pool& GetPool(int n);
+	static Pool& GetPool();
+
+	static thread_local bool is_worker;
+	static thread_local Pool *pool;
 
 	Semaphore waitforfinish;
 	int       todo;
 
 	Mutex stepmutex;
-	Vector< BiVector<Callback> > step;
-
+	Array<BiVector<Function<void ()>>> step;
+	Vector<bool> steprunning;
 	
 public:
 	void     Do(Function<void ()>&& fn);
 	void     Do(const Callback& cb)                           { Do(clone(cb)); }
-	void     Do(const Function<void ()>& lambda)              { Do(clone(lambda)); }
+	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }
 
 	CoWork&  operator&(const Callback& cb)                    { Do(cb); return *this; }
-	CoWork&  operator&(const Function<void ()>& lambda)       { Do(lambda); return *this; }
-	CoWork&  operator&(Function<void ()>&& lambda)            { Do(lambda); return *this; }
+	CoWork&  operator&(const Function<void ()>& fn)           { Do(fn); return *this; }
+	CoWork&  operator&(Function<void ()>&& fn)                { Do(fn); return *this; }
 
-	void Step(int stepi, const Callback& cb);
+	void Pipe(int stepi, Function<void ()>&& lambda);
 
 	static void FinLock();
 
 	void Finish();
 	
 	bool IsFinished();
+
+	static bool IsWorker()                                    { return is_worker; }
+	static void StartPool(int n);
+	static void ShutdownPool();
 
 	CoWork();
 	~CoWork();

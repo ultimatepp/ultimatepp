@@ -15,6 +15,8 @@ private:
 
 	static  bool GetMsg(MSG& msg);
 
+	static  bool DumpMessage(Ctrl *w, UINT message, WPARAM wParam, LPARAM lParam);
+
 	static LRESULT CALLBACK UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static void RenderFormat(int format);
 	static void RenderAllFormats();

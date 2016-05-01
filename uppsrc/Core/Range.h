@@ -140,5 +140,5 @@ Vector<int> FindAll(const Range& r, Predicate p)
 template <class BaseRange, class Predicate>
 ViewRangeClass<BaseRange> FilterRange(BaseRange& r, Predicate p)
 {
-	return FilterRange(r, FindAll(r, p));
+	return ViewRangeClass<BaseRange>(r, FindAll(r, p));
 }

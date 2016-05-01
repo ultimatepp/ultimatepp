@@ -88,6 +88,7 @@ sThreadRoutine(void *arg)
 	delete cb;
 	if(sExit)
 		(*sExit)();
+	CoWork::ShutdownPool();
 #ifdef UPP_HEAP
 	MemoryFreeThread();
 #endif
@@ -107,7 +108,7 @@ Mutex vm; //a common access synchronizer
 //to sMain: an Application can start more than one thread, without having *any* one of them called Run() of any Thread instace
 //when Run() is called *anytime*, it means, the term of *MainThread* has to be running anyway,
 //otherwise no child threads could run. they are created by main.
-//now each thread, having any Thread instace can start a first Run()
+//now each thread, having any Thread instance can start a first Run()
 
 bool Thread::Run(Function<void ()> _cb)
 {
@@ -207,6 +208,7 @@ void Thread::EndShutdownThreads()
 
 void Thread::ShutdownThreads()
 {
+	CoWork::ShutdownPool();
 	BeginShutdownThreads();
 	while(GetCount())
 		Sleep(100);

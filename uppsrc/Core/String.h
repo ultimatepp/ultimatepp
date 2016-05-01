@@ -396,7 +396,7 @@ class StringBuffer : NoCopy {
 	typedef String0::Rc Rc;
 
 	char *Alloc(int len, int& alloc);
-	void  Realloc(int n, const char *cat = NULL, int l = 0);
+	void  Realloc(dword n, const char *cat = NULL, int l = 0);
 	void  Expand();
 	void  Zero()                    { begin = end = buffer; limit = begin + 255; }
 	void  Free();
@@ -831,7 +831,7 @@ class WStringBuffer : NoCopy {
 	friend class WString;
 
 	wchar *Alloc(int len, int& alloc);
-	void   Expand(int n, const wchar *cat = NULL, int l = 0);
+	void   Expand(dword n, const wchar *cat = NULL, int l = 0);
 	void   Expand();
 	void   Zero();
 	void   Free();

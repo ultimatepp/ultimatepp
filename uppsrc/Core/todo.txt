@@ -1,30 +1,18 @@
 oportunity &&
 
-Mitor?!
-
 RawValueRep - PICK DEEP no more necessary, RawDeepToValue?
 
 Fix Value::Void::Retain
-
-Generic Tuple
 
 Index::FirstAdd
 
 kw.Get(r["keywordId"], String())
 
-CoWork limits, pipe, logical thread not working
-
 MoveableAndDeepCopyOption -  with base should improve VectorMap sizeof
 
 Vector/Array/Index/Map :: RemoveIf
 
-Use m128! ?
-
 Remove ArrayIndex
-
-rename Function (Functor, Event, EventGate)
-
-spinlock for heap freeremote?
 
 FromSystemCharset
 
@@ -32,27 +20,36 @@ Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, 
 
 String  MD5Digest(const void *data, int length);
 
-fast - decide
-
 IIterator	typedef        typename V::ValueType T;
-
 Remove ValueType uses
 
 InVector::InsertN possibly incorrect (can create small blocks)
 
-ExitThread (or Thread::Exit), Sleep(10)
-
-Fix CoWork
-
-Fix StringStream 2GB limit, StringBuffer 2GB limit
-Stream SizeLimit
-
 Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = i + 1; Pack(w); i = w - 1; return *this; }
 
-Remove NanoStrings
+CoWork pipe max_queue
+
+SerializeRaw - int64!
 
 -----------------------
 DONE
+
+StringBuffer 2GB limit
+
+Remove NanoStrings
+
+Fix StringStream 2GB limit, 
+Stream SizeLimit
+
+CoWork pipe
+
+CoWork limits, logical thread not working
+
+rename Function (Functor, Event, EventGate)
+
+ExitThread (or Thread::Exit), Sleep(10)
+
+Generic Tuple
 
 String() <<
 

@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	Cv.cpp;
+
+mainconfig
+	"" = "MT",
+	"" = "MT TESTXPCV";
+

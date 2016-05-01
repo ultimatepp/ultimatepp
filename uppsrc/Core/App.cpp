@@ -410,6 +410,9 @@ void AppInit__(int argc, const char **argv)
 
 void AppExit__()
 {
+#ifdef _MULTITHREADED
+	Thread::ShutdownThreads();
+#endif
 	sMainRunning = false;
 #ifdef PLATFORM_POSIX
 	MemoryIgnoreLeaksBegin(); // Qt leaks on app exit...
