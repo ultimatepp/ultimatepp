@@ -47,11 +47,11 @@ public:
 public:
 	void     Do(Function<void ()>&& fn);
 	void     Do(const Callback& cb)                           { Do(clone(cb)); }
-	void     Do(const Function<void ()>& lambda)              { Do(clone(lambda)); }
+	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }
 
 	CoWork&  operator&(const Callback& cb)                    { Do(cb); return *this; }
-	CoWork&  operator&(const Function<void ()>& lambda)       { Do(lambda); return *this; }
-	CoWork&  operator&(Function<void ()>&& lambda)            { Do(lambda); return *this; }
+	CoWork&  operator&(const Function<void ()>& fn)           { Do(fn); return *this; }
+	CoWork&  operator&(Function<void ()>&& fn)                { Do(fn); return *this; }
 
 	void Step(int stepi, Function<void ()>&& lambda);
 

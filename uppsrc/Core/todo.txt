@@ -21,17 +21,11 @@ Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, 
 String  MD5Digest(const void *data, int length);
 
 IIterator	typedef        typename V::ValueType T;
-
 Remove ValueType uses
 
 InVector::InsertN possibly incorrect (can create small blocks)
 
-Fix StringStream 2GB limit, StringBuffer 2GB limit
-Stream SizeLimit
-
 Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = i + 1; Pack(w); i = w - 1; return *this; }
-
-Remove NanoStrings
 
 CoWork pipe max_queue
 
@@ -39,6 +33,13 @@ SerializeRaw - int64!
 
 -----------------------
 DONE
+
+StringBuffer 2GB limit
+
+Remove NanoStrings
+
+Fix StringStream 2GB limit, 
+Stream SizeLimit
 
 CoWork pipe
 
