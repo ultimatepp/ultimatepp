@@ -6,13 +6,14 @@ template <class T>
 void TestTransfer()
 {
 	T a, b;
+	b.Add(ValueTypeOf<T>());
 	a = pick(b);
-	ASSERT(b.IsPicked());
-	ASSERT(!a.IsPicked());
+	ASSERT(b.GetCount() == 0);
+	ASSERT(a.GetCount());
 
 	b = clone(a);
-	ASSERT(!b.IsPicked());
-	ASSERT(!a.IsPicked());
+	ASSERT(a.GetCount());
+	ASSERT(b.GetCount());
 
 	T c = pick(b);
 	T d = clone(c);
@@ -26,18 +27,17 @@ void TestTransfers()
 	TestTransfer< Vector<T> >();
 	TestTransfer< Array<T> >();
 	TestTransfer< Index<T> >();
-	TestTransfer< ArrayIndex<T> >();
-	TestTransfer< VectorMap<int, T> >();
-	TestTransfer< ArrayMap<int, T> >();
+	TestTransfer< VectorMap<T, T> >();
+	TestTransfer< ArrayMap<T, T> >();
 
-	TestTransfer< FixedVectorMap<int, T> >();
-	TestTransfer< FixedArrayMap<int, T> >();
+	TestTransfer< FixedVectorMap<T, T> >();
+	TestTransfer< FixedArrayMap<T, T> >();
 
 	TestTransfer< InVector<T> >();
 	TestTransfer< InArray<T> >();
-	TestTransfer< SortedIndex<int> >();
-	TestTransfer< SortedVectorMap<int, T> >();
-	TestTransfer< SortedArrayMap<int, T> >();
+	TestTransfer< SortedIndex<T> >();
+	TestTransfer< SortedVectorMap<T, T> >();
+	TestTransfer< SortedArrayMap<T, T> >();
 }
 
 template <class InMap, class Val>
@@ -99,12 +99,12 @@ void TestInMap()
 	ASSERT(vv[7] == "seven");
 	
 	InMap mm = pick(m);
-	ASSERT(m.IsPicked());
-	ASSERT(!mm.IsPicked());
+	ASSERT(m.GetCount() == 0);
+	ASSERT(mm.GetCount());
 
 	m = clone(mm);
-	ASSERT(!m.IsPicked());
-	ASSERT(!mm.IsPicked());
+	ASSERT(m.GetCount());
+	ASSERT(mm.GetCount());
 
 	mm = pick(m);
 	m = pick(mm);
@@ -115,8 +115,8 @@ void TestInMap()
 	
 	ASSERT(mm.IsEmpty());
 	ASSERT(mm.GetCount() == 0);
-	ASSERT(!m.IsPicked());
-	ASSERT(!mm.IsPicked());
+	ASSERT(m.GetCount());
+	ASSERT(mm.GetCount());
 	
 	ASSERT(m.FindLowerBound(6) == 6);
 	ASSERT(m.FindUpperBound(6) == 7);
@@ -138,17 +138,6 @@ void TestInMap()
 	ASSERT(m.GetCount() == 4);
 }
 
-struct HasClone : MoveableAndDeepCopyOption<HasClone> {
-	Vector<int> a;
-	
-#ifdef CPP_11
-	HasClone(HasClone rval_ x) = default;
-	HasClone& operator=(HasClone rval_ x) = default;
-#endif
-	HasClone(const HasClone& x, int) : a(x.a, 0) {}
-	HasClone() {}
-};
-
 struct NoClone : Moveable<NoClone> {
 	Vector<int> a;
 };
@@ -159,7 +148,6 @@ CONSOLE_APP_MAIN
 	
 	TestTransfers<int>();
 	TestTransfers<String>();
-	TestTransfers<HasClone>();
 	
 	TestInMap< SortedVectorMap<int, String>, InVector<String> >();
 	TestInMap< SortedArrayMap<int, String>, InArray<String> >();
@@ -169,12 +157,6 @@ CONSOLE_APP_MAIN
 
 	{
 		SortedVectorMap<int, NoClone> mm;
-		mm.GetAdd(1).a.Add(12);
-		mm.GetAdd(1).a.Add(13);
-	}
-
-	{
-		SortedVectorMap<int, HasClone> mm;
 		mm.GetAdd(1).a.Add(12);
 		mm.GetAdd(1).a.Add(13);
 	}
