@@ -835,7 +835,7 @@ InArray<T>::InArray(const InArray& v, int)
 	ConstIterator s = v.Begin();
 	IVIter it = iv.Begin();
 	while(n--)
-		*it++ = DeepCopyNew(*s++);
+		*it++ = new T(clone(*s++));
 }
 
 #ifdef UPP
