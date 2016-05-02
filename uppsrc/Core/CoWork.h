@@ -46,7 +46,7 @@ public:
 	
 public:
 	void     Do(Function<void ()>&& fn);
-	void     Do(const Callback& cb)                           { Do(clone(cb)); }
+	void     Do(const Callback& cb)                           { Do(Function<void ()>(clone(cb))); }
 	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }
 
 	CoWork&  operator&(const Callback& cb)                    { Do(cb); return *this; }

@@ -308,7 +308,6 @@ void *MemoryAllok__(int klass)
 	return heap->Allok(klass);
 }
 
-
 #if defined(HEAPDBG)
 
 void *MemoryAlloc_(size_t sz)
