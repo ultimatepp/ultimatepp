@@ -704,7 +704,7 @@ class SortedArrayMap : public MoveableAndDeepCopyOption<SortedArrayMap<K, T, Les
     typedef SortedAMap<K, T, Less, Data> B;
 
 public:
-	T&       Add(const K& k, const T& x)          { B::value.res = DeepCopyNew(x); B::key.Add(k); return *(T*)B::value.res; }
+	T&       Add(const K& k, const T& x)          { B::value.res = new T(clone(x)); B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k)                      { B::value.res = NULL; B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k, T *newt)             { B::value.res = newt; B::key.Add(k); return *newt; }
 	template <class TT, class... Args>
