@@ -248,7 +248,7 @@ public:
 };
 
 template <class T>
-class InArray : public MoveableAndDeepCopyOption< InVector<T> > {
+class InArray : public MoveableAndDeepCopyOption< InArray<T> > {
 //	template <class K, class TT, class Less, class Data> friend class SortedAMap;
 	template <class TT> friend struct Slaved_InArray__;
 

@@ -624,11 +624,11 @@ void BiVector<T>::DeepCopy0(const BiVector& src) {
 	if(items) {
 		int end = src.start + src.items;
 		if(end <= src.alloc)
-			DeepCopyConstructArray(vector, src.vector + src.start, src.vector + end);
+			DeepCopyConstruct(vector, src.vector + src.start, src.vector + end);
 		else {
-			DeepCopyConstructArray(vector, src.vector + src.start, src.vector + src.alloc);
-			DeepCopyConstructArray(vector + src.alloc - src.start, src.vector,
-				                   src.vector + end - src.alloc);
+			DeepCopyConstruct(vector, src.vector + src.start, src.vector + src.alloc);
+			DeepCopyConstruct(vector + src.alloc - src.start, src.vector,
+				              src.vector + end - src.alloc);
 		}
 	}
 	start = 0;
@@ -732,7 +732,7 @@ void BiArray<T>::DeepCopy0(const BiArray<T>& v) {
 	bv.Clear();
 	bv.Reserve(v.GetCount());
 	for(int i = 0; i < n; i++)
-		bv.AddTail() = DeepCopyNew(v[i]);
+		bv.AddTail() = new T(clone(v[i]));
 }
 
 #ifdef UPP
