@@ -77,6 +77,12 @@ public:
 	CoWork&  operator&(Callback cb) { cb(); return *this; }
 	void     Finish()               {}
 	bool     IsFinished()           { return true; }
+
+	static void FinLock()           {}
+
+	static bool IsWorker()          { return false; }
+	static void StartPool(int n)    {}
+	static void ShutdownPool()      {}
 };
 
 #endif
