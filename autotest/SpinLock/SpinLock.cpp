@@ -13,6 +13,8 @@ void AddData()
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	RTIMING("Test");
 	{
 		CoWork co;
