@@ -521,7 +521,7 @@ struct ::tiff *TIFFFileStreamOpen(const char *filename, const char *mode)
 	}
 	if(!fs->Open(filename, fmode))
 		return NULL;
-	return TIFFStreamOpen(filename, mode, -fs, true);
+	return TIFFStreamOpen(filename, mode, fs.Detach(), true);
 }
 /*
 

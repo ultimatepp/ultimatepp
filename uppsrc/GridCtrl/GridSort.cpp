@@ -97,9 +97,9 @@ void GridCtrl::GSort(int col, int order, int from, int count)
 		ite = its + count;
 
 	if(order < 2)
-		Upp::Sort(its, ite, StdLess<ItemRect>());
+		Upp::Sort(SubRange(its, ite).Write(), StdLess<ItemRect>());
 	else
-		Upp::Sort(its, ite, StdGreater<ItemRect>());
+		Upp::Sort(SubRange(its, ite).Write(), StdGreater<ItemRect>());
 }
 
 

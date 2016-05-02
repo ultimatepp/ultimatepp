@@ -8,7 +8,12 @@ NAMESPACE_UPP
 #include <Draw/iml_source.h>
 #include "GridUtils.h"
 
-GLOBAL_VAR(GridDisplay, StdGridDisplay)
+
+GridDisplay& StdGridDisplay()
+{
+	static GridDisplay h;
+	return h;
+}
 
 static Image (*vhdr[])() =
 {

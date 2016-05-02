@@ -29,7 +29,7 @@ public:
 	HttpServer&   GetServer()                              { return server; }
 	Socket&       GetSocket()                              { return socket; }
 #ifdef PLATFORM_WIN32
-	Event&        GetEvent()                               { return event; }
+	Win32Event&   GetEvent()                               { return event; }
 #endif
 	HttpQuery     GetQuery() const                         { return query; }
 
@@ -68,8 +68,8 @@ public:
 	Socket&            GetSocket()                    { return socket; }
 	Socket&            GetConnSocket()                { return connection; }
 #ifdef PLATFORM_WIN32
-	Event&             GetEvent()                     { return sock_event; }
-	Event&             GetConnEvent()                 { return conn_event; }
+	Win32Event&        GetEvent()                     { return sock_event; }
+	Win32Event&        GetConnEvent()                 { return conn_event; }
 #endif
 
 	void               Logging(const char *log = NULL, int max_log_size = 500000);
@@ -84,7 +84,7 @@ public:
 	void               GetReadSockets(Vector<Socket *>& sockets);
 	void               GetWriteSockets(Vector<Socket *>& sockets);
 #ifdef PLATFORM_WIN32
-	void               GetWaitEvents(Vector<Event *>& events);
+	void               GetWaitEvents(Vector<Win32Event *>& events);
 #endif
 	One<HttpServerRequest>   GetRequest();
 

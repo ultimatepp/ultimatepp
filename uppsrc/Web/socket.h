@@ -155,7 +155,7 @@ private:
 };
 
 #ifdef PLATFORM_WIN32
-class SocketEvent : public Event {
+class SocketEvent : public Win32Event {
 public:
 	SocketEvent() {}
 

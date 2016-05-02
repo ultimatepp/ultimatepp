@@ -133,7 +133,7 @@ CONSOLE_APP_MAIN
 			SetExitCode(3);
 			return;
 		}
-		ide.method <<= m;
+		ide.method = m;
 		ide.debug.def.blitz = ide.release.def.blitz = 0;
 		ide.debug.def.debug = 2;
 		ide.release.def.debug = 0;
