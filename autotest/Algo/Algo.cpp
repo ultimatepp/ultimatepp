@@ -6,20 +6,24 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
 	Vector<int> x;
 	x << 1 << 5 << 4 << 3 << 2 << 10;
 	//   0    1    2    3    4    5
-	Check(FindMin(x, 0, 2), 0);
-	Check(FindMax(x, 0, 3), 1);
-	Check(FindMax(x, 2, 3), 2);
-	Check(FindMax(x, 2, 4), 5);
-	Check(FindMin(x, 2, 4), 4);
+	Check(FindMin(SubRange(x, 0, 2)), 0);
+	Check(FindMax(SubRange(x, 0, 3)), 1);
+	Check(FindMax(SubRange(x, 2, 3)) + 2, 2);
+	Check(FindMax(SubRange(x, 2, 4)) + 2, 5);
+	Check(FindMin(SubRange(x, 2, 4)) + 2, 4);
 	
 	Sort(x);
-	Check(FindBinaryIter(x.Begin(), x.End(), 1) - x.Begin(), 0);
-	Check(FindBinaryIter(x.Begin(), x.End(), 2) - x.Begin(), 1);
-	Check(FindBinaryIter(x.Begin(), x.End(), 7), NULL);
-	Check(FindBinaryIter(x.Begin(), x.End(), 0), NULL);
-	Check(FindBinaryIter(x.Begin(), x.End(), 11), NULL);
-	Check(FindBinaryIter(x.Begin(), x.End(), 10) - x.Begin(), 5);
+	Check(FindBinary(x, 1), 0);
+	Check(FindBinary(x, 2), 1);
+	Check(FindBinary(x, 7), -1);
+	Check(FindBinary(x, 0), -1);
+	Check(FindBinary(x, 11), -1);
+	Check(FindBinary(x, 10), 5);
+	
+	LOG("================ OK");
 }

@@ -18,13 +18,13 @@ CONSOLE_APP_MAIN
 		Vector<Value> v;
 		v << 5 << 1 << 3;
 		ValueArray va = pick(v);
-		ASSERT(v.IsPicked());
+		ASSERT(v.GetCount() == 0);
 		TEST(va, "[5, 1, 3]");
 		Vector<Value> v2 = va.Pick();
 		TEST(v2, "[5, 1, 3]");
 		Sort(v2);
 		va = pick(v2);
-		ASSERT(v2.IsPicked());
+		ASSERT(v2.GetCount() == 0);
 		TEST(va, "[1, 3, 5]");
 	}
 	{
