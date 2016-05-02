@@ -94,7 +94,6 @@ CONSOLE_APP_MAIN
 	CompareBiArray< BiArray<int> >();
 
 	CompareIndex< Index<int> >();
-	CompareIndex< ArrayIndex<int> >();
 	CompareIndex< SortedIndex<int> >();
 	
 	CompareMap<VectorMap<int, int> >();
