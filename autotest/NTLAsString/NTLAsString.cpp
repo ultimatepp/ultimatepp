@@ -64,7 +64,6 @@ CONSOLE_APP_MAIN
 	ArrayTest< InVector<int> > ();
 	ArrayTest< InArray<int> > ();
 	ArrayTest< Index<int> > ();
-	ArrayTest< ArrayIndex<int> > ();
 	ArrayTest< SortedIndex<int> > ();
 
 	BiArrayTest< BiVector<int> > ();

@@ -48,11 +48,11 @@ CONSOLE_APP_MAIN
 		{
 			Vector<int> data = GetIntData();
 			LOG("int " << data.GetCount());
-			StableSortCmp(data);
+			StableSort(data);
 			CheckSorted(data);
 			Vector<String> sdata = GetStringData();
 			LOG("String " << sdata.GetCount());
-			StableSortCmp(sdata);
+			StableSort(sdata);
 			CheckSorted(sdata);
 		}
 	}

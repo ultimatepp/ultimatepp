@@ -47,7 +47,6 @@ CONSOLE_APP_MAIN
 
 	Test2<InVector<int>>();
 	Test2<Index<int>>();
-	Test2<ArrayIndex<int>>();
 	Test2<BiVector<int>>();
 	Test2<BiArray<int>>();
 	
