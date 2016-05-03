@@ -29,8 +29,8 @@ CONSOLE_APP_MAIN{
 	DUMP(Min(empty, -99999));
 
 	DUMP(Sum(data));
-	DUMP(FindMax(data, 3, 2));
 	DUMP(FindMax(data));
+	DUMP(FindMax(SubRange(data, 3, 2)));
 	DUMP(Max(data));
 //	DUMP(Max(empty)); // This is undefined (fails in ASSERT)
 	DUMP(Max(empty, 99999));
