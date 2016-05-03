@@ -7,9 +7,11 @@ String      ToHtmlD(const char *s);
 
 class HtmlTagD;
 
-class HtmlsD : public String, Moveable<HtmlsD> {
+class HtmlsD : Moveable<HtmlsD> {
+	String text;
+
 public:
-	bool   IsNullInstance() const { return IsEmpty(); }
+	bool   IsNullInstance() const { return text.IsEmpty(); }
 
 	HtmlsD& Text(const char *s);
 	HtmlsD& Quote(const char *text);
@@ -34,19 +36,22 @@ public:
 	HtmlsD& Tag(const char *tag);
 	HtmlsD& Gat();
 
+	HtmlsD& Cat(String s)              { text.Cat(s); return *this; }
+	HtmlsD& Cat(const char *s)         { text.Cat(s); return *this; }
+	HtmlsD& Cat(char c)                { text.Cat(c); return *this; }
+	HtmlsD& Cat(const char *s, int n)  { text.Cat(s, n); return *this; }
+	HtmlsD& Cat(const HtmlsD& s)       { return Cat(~s); }
 	HtmlsD& Cat(const HtmlTagD& tag);
-	HtmlsD& Cat(String s)              { String::Cat(s); return *this; }
-	HtmlsD& Cat(const char *s)         { String::Cat(s); return *this; }
-	HtmlsD& Cat(char c)                { String::Cat(c); return *this; }
-	HtmlsD& Cat(const char *s, int n)  { String::Cat(s, n); return *this; }
 
 	HtmlsD& Nbsp();
 	HtmlsD& Br();
 	HtmlsD& Hr();
 	HtmlsD& Lf();
+	
+	String operator~() const           { return text; }
 
-	HtmlsD(const char *s) : String(s) {}
-	HtmlsD(const String& s) : String(s) {}
+	HtmlsD(const char *s) : text(s) {}
+	HtmlsD(const String& s) : text(s) {}
 	HtmlsD() {}
 	HtmlsD(const Nuller&) {}
 };
@@ -172,8 +177,8 @@ public:
 
 	HtmlTagD       operator()() const                         { return *this; }
 	HtmlsD         operator~() const                          { return ApplyTo(Null); }
-	operator      HtmlsD() const                              { return ApplyTo(Null); }
-	String        ToString() const                           { return ApplyTo(Null); }
+	operator       HtmlsD() const                             { return ApplyTo(Null); }
+	String         ToString() const                           { return ~ApplyTo(Null); }
 
 	const HtmlsD&  Tag() const                                { return tag; }
 	HtmlsD&        Tag()                                      { return tag; }
@@ -181,7 +186,7 @@ public:
 	const String& End() const                                { return end; }
 	String&       End()                                      { return end; }
 
-	bool          IsEmpty() const                            { return tag.IsEmpty(); }
+	bool          IsEmpty() const                            { return IsNull(tag); }
 
 	HtmlTagD(const char *s);
 	HtmlTagD() {}
@@ -229,11 +234,20 @@ HtmlsD operator+(const HtmlTagD& tag, const String& s);
 HtmlsD operator+(const char *s, const HtmlTagD& tag);
 HtmlsD operator+(const HtmlTagD& tag, const char *s);
 
+HtmlsD operator+(const HtmlsD& s, const HtmlTagD& tag);
+HtmlsD operator+(const HtmlTagD& tag, const HtmlsD& s);
+HtmlsD operator+(const HtmlsD& a, const char *b);
+HtmlsD operator+(const char *a, const HtmlsD& b);
+HtmlsD operator+(const HtmlsD& a, const String& b);
+HtmlsD operator+(const String& a, const HtmlsD& b);
+HtmlsD operator+(const HtmlsD& a, const HtmlsD& b);
+
 HtmlTagD operator/(const HtmlTagD& t1, const HtmlTagD& t2);
 HtmlTagD& operator/=(HtmlTagD& tag, const HtmlTagD& s);
 
-inline HtmlsD operator/(const HtmlTagD& tag, String s)         	{ return tag.ApplyTo(s); }
-inline HtmlsD operator/(const HtmlTagD& tag, const char *s)    	{ return tag.ApplyTo(s); }
+inline HtmlsD operator/(const HtmlTagD& tag, const HtmlsD& s)   { return tag.ApplyTo(~s); }
+inline HtmlsD operator/(const HtmlTagD& tag, String s)          { return tag.ApplyTo(s); }
+inline HtmlsD operator/(const HtmlTagD& tag, const char *s)     { return tag.ApplyTo(s); }
 
 //////////////////////////////////////////////////////////////////////
 // from htmlutil

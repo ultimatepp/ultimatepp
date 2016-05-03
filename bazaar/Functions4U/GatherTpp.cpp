@@ -253,7 +253,7 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 	    .BgColor(bg)
 	    .Alink(Red).Link(Black).Vlink(Blue)
 	    / html;
-	SaveFile(AppendFileName(htmlFolder, links[i]), content);
+	SaveFile(AppendFileName(htmlFolder, links[i]), ~content);
 }
 
 String GatherTpp::TopicFileName(const char *topic)
