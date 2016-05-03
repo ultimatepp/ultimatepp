@@ -157,11 +157,11 @@ void PokeI64(void *ptr, int64 value) {
 #endif
 #define ENDIAN_SWAP { while(count--) { EndianSwap(*v++); } }
 
-void EndianSwap(word *v, int count) ENDIAN_SWAP
-void EndianSwap(int16 *v, int count) ENDIAN_SWAP
-void EndianSwap(dword *v, int count) ENDIAN_SWAP
-void EndianSwap(int *v, int count) ENDIAN_SWAP
-void EndianSwap(int64 *v, int count) ENDIAN_SWAP
-void EndianSwap(uint64 *v, int count) ENDIAN_SWAP
+void EndianSwap(word *v, size_t count) ENDIAN_SWAP
+void EndianSwap(int16 *v, size_t count) ENDIAN_SWAP
+void EndianSwap(dword *v, size_t count) ENDIAN_SWAP
+void EndianSwap(int *v, size_t count) ENDIAN_SWAP
+void EndianSwap(int64 *v, size_t count) ENDIAN_SWAP
+void EndianSwap(uint64 *v, size_t count) ENDIAN_SWAP
 
 END_UPP_NAMESPACE

@@ -191,10 +191,10 @@ public:
 	bool      IsLoading() const            { return style & STRM_LOADING; }
 	bool      IsStoring() const            { return !IsLoading(); }
 
-	void      SerializeRaw(byte *data, int count);
-	void      SerializeRaw(word *data, int count);
-	void      SerializeRaw(dword *data, int count);
-	void      SerializeRaw(uint64 *data, int count);
+	void      SerializeRaw(byte *data, int64 count);
+	void      SerializeRaw(word *data, int64 count);
+	void      SerializeRaw(dword *data, int64 count);
+	void      SerializeRaw(uint64 *data, int64 count);
 
 	String    GetAllRLE(int size);
 	void      SerializeRLE(byte *data, int count);
