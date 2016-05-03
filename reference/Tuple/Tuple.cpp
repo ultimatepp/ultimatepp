@@ -6,19 +6,16 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	Tuple2<int, String> x = Tuple(12, (const char *)"hello");
+	Tuple<int, String> x = MakeTuple(12, (const char *)"hello");
 	
 	DUMP(x.a);
 	DUMP(x.b);
 	DUMP(x);
 	
-	x.SetA(1);
-	DUMP(x);
-	
 	x.Set(0, "bar");
 	DUMP(x);
 	
-	Tuple2<int, String> y = Tuple<int, String>(13, "hello");
+	Tuple<int, String> y = MakeTuple<int, String>(13, "hello");
 	
 	DUMP(x == y);
 	y = x;

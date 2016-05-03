@@ -1,8 +1,7 @@
 description "Example of using client Socket - its counterpart is SocketServer\377";
 
 uses
-	Core,
-	Web;
+	Core;
 
 file
 	SocketClient.cpp;
