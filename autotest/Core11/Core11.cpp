@@ -7,6 +7,7 @@ void TestTransfer()
 {
 	T a, b;
 	b.Add(ValueTypeOf<T>());
+
 	a = pick(b);
 	ASSERT(b.GetCount() == 0);
 	ASSERT(a.GetCount());
@@ -19,6 +20,10 @@ void TestTransfer()
 	T d = clone(c);
 	
 	Swap(c, d);
+	
+	ASSERT(b.GetCount() == 0);
+	ASSERT(c.GetCount());
+	ASSERT(d.GetCount());
 }
 
 template <class T>
@@ -116,8 +121,8 @@ void TestInMap()
 	ASSERT(mm.IsEmpty());
 	ASSERT(mm.GetCount() == 0);
 	ASSERT(m.GetCount());
-	ASSERT(mm.GetCount());
-	
+	ASSERT(mm.GetCount() == 0);
+
 	ASSERT(m.FindLowerBound(6) == 6);
 	ASSERT(m.FindUpperBound(6) == 7);
 	ASSERT(m.Find(6) == 6);
@@ -161,7 +166,6 @@ CONSOLE_APP_MAIN
 		mm.GetAdd(1).a.Add(13);
 	}
 
-#ifdef CPP_11
 	XmlNode n;
 	n = ParseXML("<a>xxx</a><b>xxx</b>");
 	String r;
@@ -180,7 +184,6 @@ CONSOLE_APP_MAIN
 	for(auto i: v)
 		r << i << ";";
 	ASSERT(r == "1;2;3;4;");
-#endif
 
 	LOG("=========== OK");
 }
