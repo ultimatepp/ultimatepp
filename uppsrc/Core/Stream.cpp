@@ -540,16 +540,18 @@ void Stream::SerializeRLE(byte *data, int size)
 		}
 }
 
-void Stream::SerializeRaw(byte *data, int size) {
+void Stream::SerializeRaw(byte *data, int64 size)
+{
 	ASSERT(size >= 0);
 	if(IsError()) return;
 	if(IsLoading())
-		GetAll(data, size);
+		GetAll64(data, size);
 	else
-		Put(data, size);
+		Put64(data, size);
 }
 
-void Stream::SerializeRaw(word *data, int count) {
+void Stream::SerializeRaw(word *data, int64 count)
+{
 	ASSERT(count >= 0);
 #ifdef CPU_BE
 	EndianSwap(data, count);
@@ -560,7 +562,8 @@ void Stream::SerializeRaw(word *data, int count) {
 #endif
 }
 
-void Stream::SerializeRaw(dword *data, int count) {
+void Stream::SerializeRaw(dword *data, int64 count)
+{
 	ASSERT(count >= 0);
 #ifdef CPU_BE
 	EndianSwap(data, count);
@@ -571,7 +574,8 @@ void Stream::SerializeRaw(dword *data, int count) {
 #endif
 }
 
-void Stream::SerializeRaw(uint64 *data, int count) {
+void Stream::SerializeRaw(uint64 *data, int64 count)
+{
 	ASSERT(count >= 0);
 #ifdef CPU_BE
 	EndianSwap(data, count);

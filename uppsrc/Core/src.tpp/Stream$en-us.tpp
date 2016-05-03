@@ -729,40 +729,34 @@ the end is written.&]
 [s2; Returns true if stream is in storing mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^byte^ b
-yte]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:byte`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
+[* SerializeRaw]([_^Upp`:`:byte^ byte]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 count])&]
 [s2; Serializes raw 8`-bit data. Might invoke LoadError if there 
-is not enough data to load.&]
-[s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
-data.&]
-[s7; [%-*C@3 count]-|Number of bytes to load/store.&]
+is not enough data to load. Data are always stored in little`-endian 
+mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(word`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^word^ w
-ord]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:word`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
+[* SerializeRaw]([_^Upp`:`:word^ word]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 count])&]
 [s2; Serializes raw 16`-bit data. Might invoke LoadError if there 
-is not enough data to load.&]
-[s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
-data.&]
-[s7; [%-*C@3 count]-|Number of values to load/store.&]
+is not enough data to load. Data are always stored in little`-endian 
+mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(dword`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^dword^ d
-word]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:dword`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
+[* SerializeRaw]([_^Upp`:`:dword^ dword]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 count])
+&]
 [s2; Serializes raw 32`-bit data. Might invoke LoadError if there 
-is not enough data to load.&]
-[s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
-data.&]
-[s7; [%-*C@3 count]-|Number of values to load/store.&]
+is not enough data to load. Data are always stored in little`-endian 
+mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRaw`(uint64`*`,int`):%- [@(0.0.255) void]_[* SerializeRaw]([_^uint64^ u
-int64]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
+[s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:uint64`*`,Upp`:`:int64`):%- [@(0.0.255) void
+]_[* SerializeRaw]([_^Upp`:`:uint64^ uint64]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 cou
+nt])&]
 [s2; Serializes raw 64`-bit data. Might invoke LoadError if there 
-is not enough data to load.&]
-[s7; [%-*C@3 data]-|Pointer to data to store or buffer to receive loaded 
-data.&]
-[s7; [%-*C@3 count]-|Number of values to load/store.&]
+is not enough data to load. Data are always stored in little`-endian 
+mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:SerializeRLE`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRLE]([_^byte^ b
