@@ -222,16 +222,16 @@ class MoveableAndDeepCopyOption : public B {
 template <class T>
 class WithDeepCopy : public T {
 public:
-	WithDeepCopy(const T& a) : T(clone(a))             {}
-	WithDeepCopy(const T& a, int) : T(clone(a))        {}
+	WithDeepCopy(const T& a) : T(a, 1)                 {}
+	WithDeepCopy(const T& a, int) : T(a, 1)            {}
 
-	WithDeepCopy(const WithDeepCopy& a) : T(clone(a))  {}
-	WithDeepCopy& operator=(const WithDeepCopy& a)     { (T&)*this <<= a; return *this; }
+	WithDeepCopy(const WithDeepCopy& a) : T(a, 1)      {}
+	WithDeepCopy& operator=(const WithDeepCopy& a)     { (T&)*this = pick(T(a, 1)); return *this; }
 
 	WithDeepCopy(T&& a) : T(pick(a))                   {}
-	WithDeepCopy(WithDeepCopy&& a) : T(pick(a))        {}
-
 	WithDeepCopy& operator=(T&& a)                     { (T&)*this = pick(a); return *this; }
+
+	WithDeepCopy(WithDeepCopy&& a) : T(pick(a))        {}
 	WithDeepCopy& operator=(WithDeepCopy&& a)          { (T&)*this = pick(a); return *this; }
 
 	WithDeepCopy()                                     {}
