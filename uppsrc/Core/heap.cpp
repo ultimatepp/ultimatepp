@@ -235,16 +235,6 @@ void MemoryShrink()
 }
 #endif
 
-void MemoryFreeThread()
-{
-	heap->Shutdown();
-}
-
-void MemoryCheck()
-{
-	heap->Check();
-}
-
 #endif
 
 END_UPP_NAMESPACE

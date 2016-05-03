@@ -209,8 +209,6 @@ struct Heap {
 	bool   TryRealloc(void *ptr, size_t newsize);
 };
 
-extern thread_local Heap *heap;
-
 force_inline
 void Heap::RemoteFlushRaw()
 { // transfer all buffered freed remote blocks to target heaps, no locking
