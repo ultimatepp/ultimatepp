@@ -34,10 +34,10 @@ Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = 
 
 CoWork pipe max_queue
 
-SerializeRaw - int64!
-
 -----------------------
 DONE
+
+SerializeRaw - int64!
 
 StringBuffer 2GB limit
 
