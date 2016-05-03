@@ -2,8 +2,6 @@
 
 using namespace Upp;
 
-#ifdef CPP_11
-
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
@@ -133,13 +131,3 @@ CONSOLE_APP_MAIN
 
 	DLOG("----- Everything OK");
 }
-
-#else
-
-CONSOLE_APP_MAIN
-{
-	StdLogSetup(LOG_COUT|LOG_FILE);
-	DLOG("----- Not a C++11 compiler, test omitted");
-}
-
-#endif
