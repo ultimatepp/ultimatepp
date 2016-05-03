@@ -176,7 +176,6 @@ protected:
 	
 	int     PolyCompare(const Value& v) const;
 
-	void            CloneArray();
 	Vector<Value>&  UnShareArray();
 
 	const Vector<Value>& GetVA() const;

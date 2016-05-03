@@ -6,7 +6,6 @@ CLANG11 autotest/StringBuffer2GB : ERROR
 CLANG11 autotest/CheckDownloads : FAILED
 CLANG11 autotest/Core11 : FAILED
 CLANG11 autotest/CompareContainer : FAILED
-CLANG11 autotest/CallbackPick : ERROR
 CLANG11 reference/SocketServer : ERROR
 CLANG11 reference/Cv : ERROR
 CLANG11 reference/CallbackPickClone : ERROR
@@ -20,6 +19,9 @@ CLANG11 reference/NanoStrings : ERROR
 CLANG11 upptst/idetest : ERROR
 CLANG11 upptst/Zip : ERROR
 CLANG11 tutorial/Ntl10 : ERROR
+
+
+CLANG11 autotest/CallbackPick : ERROR
 
 oportunity &&
 

@@ -630,22 +630,17 @@ Value::ConstIterator Value::End() const
 	return GetVA().End();
 }
 
-void Value::CloneArray()
-{
-	ValueArray::Data *data = (ValueArray::Data *)ptr();
-	ValueArray::Data *d = new ValueArray::Data;
-	d->data = clone(data->data);
-	data->Release();
-	ptr() = d;
-	data = d;
-}
-
 force_inline
 Vector<Value>& Value::UnShareArray()
 {
 	ValueArray::Data *data = (ValueArray::Data *)ptr();
-	if(data->GetRefCount() != 1)
-		CloneArray();
+	if(data->GetRefCount() != 1) {
+		ValueArray::Data *d = new ValueArray::Data;
+		d->data = clone(data->data);
+		data->Release();
+		ptr() = d;
+		data = d;
+	}
 	return data->data;
 }
 
