@@ -48,14 +48,14 @@ template <class O, class M classAPc>
 Cb_<A_> ptebackn(O *object, Res (M::*method)(AMP_) P_p_)
 {
 	Ptr<O> ptr = object;
-	return Cb_<A_>([=](A_a_) { if(ptr) return (ptr->*method)(ap_); }, 0);
+	return Cb_<A_>([=](A_a_) { if(ptr) return (ptr->*method)(ap_); return Res(); }, 0);
 }
 
 template <class O, class M classAPc>
 Cb_<A_> ptebackn(O *object, Res (M::*method)(AMP_) const P_p_)
 {
 	Ptr<O> ptr = object;
-	return Cb_<A_>([=](A_a_) { if(ptr) return (object->*method)(ap_); }, 0);
+	return Cb_<A_>([=](A_a_) { if(ptr) return (object->*method)(ap_); return Res(); }, 0);
 }
 
 #ifdef classP
