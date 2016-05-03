@@ -31,7 +31,7 @@ struct IUppInStream {
 			*size = 0;
 			return SZ_ERROR_READ;
 		}
-		*size = h;
+		*size = (size_t)h;
 		return SZ_OK;
 	}
 

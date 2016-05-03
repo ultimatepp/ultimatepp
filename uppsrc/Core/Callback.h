@@ -126,20 +126,20 @@ public:
 	EventGate(const EventGate& a) : fn(a.fn)       {}
 //	EventGate(EventGate&& a) : fn(pick(a.fn))      {}
 	EventGate(Fn&& src, int) : fn(src)         {}
-	EventGate& operator=(const EventGate& a)       { fn = a.fn; return *this; }
-	EventGate& operator=(EventGate&& a)            { fn = pick(a.fn); return *this; }
+	EventGate& operator=(const EventGate& a)   { fn = a.fn; return *this; }
+	EventGate& operator=(EventGate&& a)        { fn = pick(a.fn); return *this; }
 	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
 	EventGate& operator=(bool b)               { Set(b); return *this; }
 	EventGate Proxy() const                    { return fn.Proxy(); }
 
-	EventGate& operator<<(const EventGate& b)      { fn << b.fn; return *this; }
+	EventGate& operator<<(const EventGate& b)  { fn << b.fn; return *this; }
 	EventGate& operator<<(const Fn& b)         { fn << b; return *this; }
 
-	EventGate& operator<<(EventGate&& b)           { fn << pick(b.fn); return *this; }
+	EventGate& operator<<(EventGate&& b)       { fn << pick(b.fn); return *this; }
 	EventGate& operator<<(Fn&& b)              { fn << pick(b); return *this; }
 
 	template <class F>
-	EventGate& operator<<(F f)                 { fn << f; }
+	EventGate& operator<<(F f)                 { fn << f; return *this; }
 	
 	bool operator()(ArgTypes... args) const { return fn(args...); }
 
