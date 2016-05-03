@@ -78,27 +78,27 @@ class Event : Moveable<Event<ArgTypes...>> {
 
 public:
 	Event() {}
-	Event(CNULLer)                                    {}
-	Event(const Event& src) : fn(src.fn)          {}
-	Event(Event&& src) : fn(pick(src.fn))         {}
-	Event(Fn&& src, int) : fn(src)                    {}
+	Event(CNULLer)                             {}
+	Event(const Event& src) : fn(src.fn)       {}
+	Event(Event&& src) : fn(pick(src.fn))      {}
+	Event(Fn&& src, int) : fn(src)             {}
 	template <class F>
-	Event(F src, int) : fn(src)                       {}
-//	Event(Fn&& src) : fn(src)                         {}
+	Event(F src, int) : fn(src)                {}
+//	Event(Fn&& src) : fn(src)                  {}
 //	Event& operator=(const Fn& src)                   { fn = src.fn; return *this; }
-	Event& operator=(const Event& src)            { fn = src.fn; return *this; }
-	Event& operator=(Event&& src)                 { fn = pick(src.fn); return *this; }
-	Event& operator=(CNULLer)                         { fn.Clear(); return *this; }
-	Event Proxy() const                               { return Event(fn.Proxy(), 1); }
+	Event& operator=(const Event& src)         { fn = src.fn; return *this; }
+	Event& operator=(Event&& src)              { fn = pick(src.fn); return *this; }
+	Event& operator=(CNULLer)                  { fn.Clear(); return *this; }
+	Event Proxy() const                        { return Event(fn.Proxy(), 1); }
 
-	Event& operator<<(const Event& b)  { fn << b.fn; return *this; }
-	Event& operator<<(const Fn& b)         { fn << b; return *this; }
+	Event& operator<<(const Event& b)          { fn << b.fn; return *this; }
+	Event& operator<<(const Fn& b)             { fn << b; return *this; }
 
-	Event& operator<<(Event&& b)       { fn << pick(b.fn); return *this; }
-	Event& operator<<(Fn&& b)              { fn << pick(b); return *this; }
+	Event& operator<<(Event&& b)               { fn << pick(b.fn); return *this; }
+	Event& operator<<(Fn&& b)                  { fn << pick(b); return *this; }
 	
 	template <class F>
-	Event& operator<<(F f)                 { fn << f; }
+	Event& operator<<(F f)                     { fn << f; return *this; }
 	
 	void operator()(ArgTypes... args) const    { return fn(args...); }
 
