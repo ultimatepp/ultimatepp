@@ -118,7 +118,7 @@ public:
 	void     Set(int i, const T& x, int count);
 	T&       Set(int i, const T& x)     { Set(i, x, 1); return Get(i); }
 	template <class Range>
-	void     Set(int i, const Range& r);
+	void     SetRange(int i, const Range& r);
 
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
@@ -133,12 +133,12 @@ public:
 	void     Insert(int i, const Vector& x, int offset, int count);
 	void     Insert(int i, Vector&& x);
 	template <class Range>
-	void     Insert(int i, const Range& r);
+	void     InsertRange(int i, const Range& r);
 	void     Append(const Vector& x)               { Insert(GetCount(), x); }
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Vector&& x)                    { Insert(GetCount(), pick(x)); }
 	template <class Range>
-	void     Append(const Range& r)                { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)           { Insert(GetCount(), r); }
 
 	void     InsertSplit(int i, Vector<T>& v, int from);
 
@@ -271,13 +271,13 @@ public:
 	void     Insert(int i, const Array& x);
 	void     Insert(int i, const Array& x, int offset, int count);
 	template <class Range>
-	void     Insert(int i, const Range& r);
+	void     InsertRange(int i, const Range& r);
 	void     Insert(int i, Array&& x)             { vector.InsertPick(i, pick(x.vector)); }
 	void     Append(const Array& x)               { Insert(GetCount(), x); }
 	void     Append(const Array& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Array&& x)                    { InsertPick(GetCount(), pick(x)); }
 	template <class Range>
-	void     Append(const Range& r)               { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)               { Insert(GetCount(), r); }
 
 	void     Swap(int i1, int i2)                 { UPP::Swap(vector[i1], vector[i2]); }
 	void     Move(int i1, int i2);

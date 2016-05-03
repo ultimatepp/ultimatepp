@@ -84,11 +84,11 @@ public:
 	T&       Insert(int i)                          { return *Insert0(i, NULL); }
 	T&       Insert(int i, const T& x)              { return *Insert0(i, &x); }
 	template <class Range>
-	void     Insert(int i, const Range& r)          { Insert_(i, r, false); }
+	void     InsertRange(int i, const Range& r)     { Insert_(i, r, false); }
 	void     InsertN(int i, int count)              { Insert_(i, ConstRange<T>(count), true); }
 	void     Remove(int i, int count = 1);
 	template <class Range>
-	void     Append(const Range& r)                 { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)            { Insert(GetCount(), r); }
 
 	const T& operator[](int i) const;
 	T&       operator[](int i);
@@ -304,11 +304,11 @@ public:
 
 	void     InsertN(int i, int count);
 	template <class Range>
-	void     Insert(int i, const Range& r);
+	void     InsertRange(int i, const Range& r);
 	void     Remove(int i, int count = 1);
 	
 	template <class Range>
-	void     Append(const Range& r)                 { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)                 { Insert(GetCount(), r); }
 
 	const T& operator[](int i) const                { return Get(i); }
 	T&       operator[](int i)                      { return Get(i); }

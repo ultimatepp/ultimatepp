@@ -307,7 +307,7 @@ void Vector<T>::Insert(int i, std::initializer_list<T> init)
 
 template <class T>
 template <class Range>
-void Vector<T>::Insert(int i, const Range& r)
+void Vector<T>::InsertRange(int i, const Range& r)
 {
 	RawInsert(i, r.GetCount());
 	T *t = vector + i;
@@ -361,7 +361,7 @@ void Vector<T>::Set(int i, const T& x, int count) {
 
 template <class T>
 template <class Range>
-void Vector<T>::Set(int i, const Range& r)
+void Vector<T>::SetRange(int i, const Range& r)
 {
 	int count = r.GetCount();
 	ASSERT(i >= 0 && count >= 0);
@@ -532,7 +532,7 @@ void Array<T>::Insert(int i, const T& x, int count) {
 
 template <class T>
 template <class Range>
-void Array<T>::Insert(int i, const Range& r)
+void Array<T>::InsertRange(int i, const Range& r)
 {
 	vector.InsertN(i, r.GetCount());
 	T **t = GetPtr(i);
