@@ -2,7 +2,6 @@ CLANG11 autotest/ValueRef : FAILED
 CLANG11 autotest/RangeInsertTest : TIMEOUT
 CLANG11 autotest/LambdaCallback : FAILED
 CLANG11 autotest/Qtf : FAILED
-CLANG11 autotest/CallbackLambda : ERROR
 CLANG11 autotest/StringBuffer2GB : ERROR
 CLANG11 autotest/CheckDownloads : FAILED
 CLANG11 autotest/Core11 : FAILED
