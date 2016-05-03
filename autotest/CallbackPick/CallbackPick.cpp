@@ -39,7 +39,7 @@ struct Test : Pte<Test> {
 	bool Bool5C(V p1, V p2, V p3, V p4, V p5) const { Check(p1); Check(p2); Check(p3); Check(p4); ; Check(p5); return false; }
 };
 
-void Function() {}
+void Function0() {}
 void Function1(V p1) { Check(p1); }
 void Function2(V p1, V p2) { Check(p1); Check(p2); }
 void Function3(V p1, V p2, V p3) { Check(p1); Check(p2); Check(p3); }
@@ -68,7 +68,7 @@ CONSOLE_APP_MAIN
 	callback(&x, &Test::Method)();
 	pteback(&x, &Test::MethodC)();
 	callback(&x, &Test::MethodC)();
-	callback(Function)();
+	callback(Function0)();
 	
 	pteback(&x, &Test::Method1)(clone(h));
 	callback(&x, &Test::Method1)(clone(h));
@@ -126,8 +126,8 @@ CONSOLE_APP_MAIN
 	callback(&x, &Test::Bool4C)(clone(h), clone(h), clone(h), clone(h));
 	callback(BoolFn4)(clone(h), clone(h), clone(h), clone(h));
 	
-	// Arg1 callbacks
-	
+	// Arg1 callbacks - does not work anymore
+/*	
 	pteback1(&x, &Test::Method1, clone(h))();
 	callback1(&x, &Test::Method1, clone(h))();
 	pteback1(&x, &Test::Method1C, clone(h))();
@@ -325,6 +325,6 @@ CONSOLE_APP_MAIN
 	pteback5(&x, &Test::Bool5C, clone(h), clone(h), clone(h), clone(h), clone(h))();
 	callback5(&x, &Test::Bool5C, clone(h), clone(h), clone(h), clone(h), clone(h))();
 	callback5(BoolFn5, clone(h), clone(h), clone(h), clone(h), clone(h))();
-	
+*/	
 	LOG("--------------- OK");
 }

@@ -8,8 +8,7 @@ bool OK;
 String val = AsString(x); \
 bool ok = val == ref; \
 LOG("CHECK(" << #x << ", " << AsCString(val) << ");"); \
-if(!ok)	LOG("#FAILED"); \
-OK = OK && ok; }
+ASSERT(ok); }
 
 CONSOLE_APP_MAIN
 {
@@ -22,7 +21,7 @@ CONSOLE_APP_MAIN
 	m("key2", "value2");
 	
 	Value vm = m;
-	Value vm2 = m;	
+	Value vm2 = m;
 	vm.At(1) = "123";
 	
 	CHECK(vm, "{ key1: value1, key2: 123 }");
@@ -53,7 +52,7 @@ CONSOLE_APP_MAIN
 	CHECK(v2, "[1, 2]");
 	CHECK(v3, "[1]");
 
-	{	
+	{
 		Value va;
 		CHECK(va, "");
 		va << 1;
