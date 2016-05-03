@@ -6,6 +6,7 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+#ifdef PLATFORM_WIN32 // Not enough memory in linux machine to run this test (TODO)
 	{
 		StringBuffer sb;
 		
@@ -19,6 +20,7 @@ CONSOLE_APP_MAIN
 			ASSERT((byte)sb[i] == i % 37);
 		}
 	}
+	DUMP(MemoryUsedKb());
 
 	{
 		StringBuffer sb2;
@@ -34,6 +36,7 @@ CONSOLE_APP_MAIN
 			ASSERT((byte)sb2[i] == i % 43);
 		}
 	}
+	DUMP(MemoryUsedKb());
 
 	{
 		WStringBuffer wb;
@@ -48,6 +51,7 @@ CONSOLE_APP_MAIN
 			ASSERT(wb[i] == i % 37777);
 		}
 	}
+	DUMP(MemoryUsedKb());
 
 	{
 		WStringBuffer wb2;
@@ -63,6 +67,8 @@ CONSOLE_APP_MAIN
 			ASSERT(wb2[i] == i % 37771);
 		}
 	}
+	DUMP(MemoryUsedKb());
+#endif
 
 	LOG("=========== Everything OK!");
 }
