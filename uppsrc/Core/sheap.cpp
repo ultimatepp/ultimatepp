@@ -409,6 +409,8 @@ void  MemoryFree48(void *ptr)
 	heap->Free48(ptr);
 }
 
+#endif
+
 void MemoryFreeThread()
 {
 	if(!heap)
@@ -448,8 +450,6 @@ MemoryProfile *PeakMemoryProfile()
 	memset(sPeak, 0, sizeof(MemoryProfile));
 	return NULL;
 }
-
-#endif
 
 #endif
 
