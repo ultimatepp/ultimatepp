@@ -4,7 +4,7 @@ using namespace Upp;
 
 template <class T>
 void Test(T& data)
-{	
+{
 	LOG("-----------------");
 	T data2;
 	String bin = StoreAsString(data);
@@ -80,9 +80,6 @@ CONSOLE_APP_MAIN
 	Test< Index<String> >();
 	Test< WithDeepCopy< Index<String> > >();
 
-	Test< ArrayIndex<String> >();
-	Test< WithDeepCopy< ArrayIndex<String> > >();
-	
 	Test< InVector<String> >();
 	Test< WithDeepCopy<InVector<String> > >();
 
