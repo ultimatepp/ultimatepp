@@ -1,15 +1,6 @@
-CLANG11 autotest/ValueRef : FAILED
-CLANG11 autotest/RangeInsertTest : TIMEOUT
-CLANG11 autotest/LambdaCallback : FAILED
 CLANG11 autotest/Qtf : FAILED
 CLANG11 autotest/StringBuffer2GB : ERROR
 CLANG11 autotest/CheckDownloads : FAILED
-CLANG11 autotest/Core11 : FAILED
-CLANG11 autotest/CompareContainer : FAILED
-CLANG11 reference/SocketServer : ERROR
-CLANG11 reference/Cv : ERROR
-CLANG11 reference/CallbackPickClone : ERROR
-CLANG11 reference/BasicAlgo : ERROR
 CLANG11 reference/Log : ERROR
 CLANG11 reference/Tuple : ERROR
 CLANG11 reference/SocketClient : ERROR
@@ -20,7 +11,10 @@ CLANG11 upptst/idetest : ERROR
 CLANG11 upptst/Zip : ERROR
 CLANG11 tutorial/Ntl10 : ERROR
 
+uppbox
 
+
+CLANG11 reference/CallbackPickClone : ERROR
 CLANG11 autotest/CallbackPick : ERROR
 
 oportunity &&
