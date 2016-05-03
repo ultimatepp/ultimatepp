@@ -21,7 +21,6 @@ CONSOLE_APP_MAIN
 	Check< BiArray<int> > ();
 
 	Check< Index<int> > ();
-	Check< ArrayIndex<int> > ();
 	Check< VectorMap<int, int> > ();
 	Check< ArrayMap<int, int> > ();
 
