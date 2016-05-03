@@ -13,7 +13,7 @@ CONSOLE_APP_MAIN
 	InVector<int> iv;
 	InArray<int> av;
 	
-	for(int i = 0; i < 100000; i++) {
+	for(int i = 0; i < 10000; i++) {
 		if(v.GetCount() > 100000) {
 			int pos = Random(v.GetCount() + 1);
 			int count = Random(v.GetCount() - pos);
