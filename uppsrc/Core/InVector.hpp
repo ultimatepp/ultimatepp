@@ -467,6 +467,22 @@ InVector<T>::InVector(const InVector<T>& v, int)
 }
 
 template <class T>
+void InVector<T>::Pick(InVector&& v)
+{
+	data = pick(v.data);
+	index = pick(v.index);
+	count = v.count;
+	hcount = v.hcount;
+	blk_high = v.blk_high;
+	blk_low = v.blk_low;
+	serial = v.serial;
+	slave = v.slave;
+
+	v.Init();
+}
+
+
+template <class T>
 template <class L>
 int InVector<T>::FindUpperBound(const T& val, const L& less, int& off, int& pos) const
 {

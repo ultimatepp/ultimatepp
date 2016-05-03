@@ -39,6 +39,8 @@ private:
 	uint16 blk_low;
 	uint16 slave;
 
+	void Pick(InVector&& b);
+
 	InVectorSlave__ *Slave()          { return (InVectorSlave__ *)((byte *)this + slave); }
 	void SetSlave(InVectorSlave__ *s) { slave = (uint16)((byte *)s - (byte *)this); }
 
@@ -48,7 +50,7 @@ private:
 	int  FindBlock(int& pos, int& off) const;
 	int  FindBlock(int& pos) const;
 	void SetBlkPar();
-
+	
 	template <class L>
 	int  FindUpperBound(const T& val, const L& less, int& off, int& pos) const;
 
@@ -139,9 +141,9 @@ public:
 	Iterator         end()                          { Iterator it; SetEnd(it); return it; }
 
 	InVector();
-
+	InVector(InVector&& v)                          { Pick(pick(v)); }
+	void operator=(InVector&& v)                    { Pick(pick(v)); }
 	InVector(const InVector& v, int);
-
 	InVector(std::initializer_list<T> init)         { Init(); for(const auto& i : init) Add(i); }
 
 	void Swap(InVector& b);
