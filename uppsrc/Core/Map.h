@@ -155,8 +155,8 @@ public:
 	AMap(Vector<K>&& ndx, V&& val) : key(pick(ndx)), value(pick(val)) {}
 	AMap(std::initializer_list<std::pair<K, T>> init) { for(const auto& i : init) Add(i.first, i.second); }
 
-	typedef IteratorOf<V>           ConstIterator;
-	typedef ConstIteratorOf<V>      Iterator;
+	typedef IteratorOf<V>           Iterator;
+	typedef ConstIteratorOf<V>      ConstIterator;
 
 	Iterator         begin()                                      { return value.begin(); }
 	Iterator         end()                                        { return value.end(); }
