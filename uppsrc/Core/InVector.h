@@ -163,6 +163,8 @@ public:
 	STL_VECTOR_COMPATIBILITY(InVector<T>)
 
 	void DumpIndex() const;
+	
+	void Reserve(int) {} // Does nothing, but needed for unified interface (e.g. StreamContainer)
 #ifdef DEPRECATED
 	typedef T        ValueType;
 	ConstIterator    GetIter(int pos) const         { ConstIterator it; SetIter(it, pos); return it; }
@@ -386,6 +388,8 @@ public:
 	friend void Swap(InArray& a, InArray& b)        { a.Swap(b); }
 	
 	STL_VECTOR_COMPATIBILITY(InArray<T>)
+
+	void Reserve(int) {} // Does nothing, but needed for unified interface (e.g. StreamContainer)
 
 #ifdef _DEBUG
 	void DumpIndex();
