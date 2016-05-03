@@ -1,11 +1,3 @@
-CLANG11 autotest/Qtf : FAILED
-CLANG11 autotest/StringBuffer2GB : ERROR
-CLANG11 autotest/CheckDownloads : FAILED
-CLANG11 reference/Log : ERROR
-CLANG11 reference/Zip : ERROR
-CLANG11 upptst/idetest : ERROR
-CLANG11 upptst/Zip : ERROR
-
 uppbox
 
 CLANG11 reference/CallbackPickClone : ERROR
