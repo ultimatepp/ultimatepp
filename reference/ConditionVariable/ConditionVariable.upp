@@ -1,9 +1,14 @@
+description "ConditionVariable synchronization primitive\377";
+
 uses
+	Core,
 	Core;
 
 file
 	ConditionVariable.cpp;
 
 mainconfig
+	"" = "MT",
+	"" = "MT TESTXPCV",
 	"" = "MT";
 
