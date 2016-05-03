@@ -784,7 +784,7 @@ void InArray<T>::InsertN(int i, int count)
 
 template <class T>
 template <class Range>
-void InArray<T>::Insert(int i, const Range& r)
+void InArray<T>::InsertRange(int i, const Range& r)
 {
 	int count = r.GetCount();
 	iv.InsertN(i, count);
