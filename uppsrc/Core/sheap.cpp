@@ -300,11 +300,15 @@ thread_local Heap *heap = (Heap *)sHeap;
 
 void MemoryFreek__(int klass, void *ptr)
 {
+	if(!heap)
+		heap = (Heap *)sHeap;
 	heap->Free((void *)ptr, klass);
 }
 
 void *MemoryAllok__(int klass)
 {
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->Allok(klass);
 }
 
@@ -319,11 +323,15 @@ void *MemoryAlloc_(size_t sz)
 
 void  MemoryFree_(void *ptr)
 {
+	if(!heap)
+		heap = (Heap *)sHeap;
 	heap->Free(ptr);
 }
 
 size_t GetMemoryBlockSize_(void *ptr)
 {
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->GetBlockSize(ptr);
 }
 
@@ -342,47 +350,103 @@ void *MemoryAlloc(size_t sz)
 void *MemoryAllocSz(size_t& sz)
 {
 	LTIMING("MemoryAllocSz");
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->AllocSz(sz);
 }
 
 void  MemoryFree(void *ptr)
 {
 	LTIMING("MemoryFree");
+	if(!heap)
+		heap = (Heap *)sHeap;
 	heap->Free(ptr);
 }
 
 size_t GetMemoryBlockSize(void *ptr)
 {
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->GetBlockSize(ptr);
 }
 
 bool   TryRealloc(void *ptr, size_t size)
 {
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->TryRealloc(ptr, size);
 }
 
 void *MemoryAlloc32()
 {
 	LTIMING("MemoryAlloc32");
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->Alloc32();
 }
 
 void  MemoryFree32(void *ptr)
 {
 	LTIMING("MemoryFree32");
+	if(!heap)
+		heap = (Heap *)sHeap;
 	heap->Free32(ptr);
 }
 
 void *MemoryAlloc48()
 {
 	LTIMING("MemoryAlloc48");
+	if(!heap)
+		heap = (Heap *)sHeap;
 	return heap->Alloc48();
 }
 
 void  MemoryFree48(void *ptr)
 {
 	LTIMING("MemoryFree48");
+	if(!heap)
+		heap = (Heap *)sHeap;
 	heap->Free48(ptr);
+}
+
+void MemoryFreeThread()
+{
+	if(!heap)
+		heap = (Heap *)sHeap;
+	heap->Shutdown();
+}
+
+void MemoryCheck()
+{
+	if(!heap)
+		heap = (Heap *)sHeap;
+	heap->Check();
+}
+
+MemoryProfile::MemoryProfile()
+{
+	if(!heap)
+		heap = (Heap *)sHeap;
+	heap->Make(*this);
+}
+
+static MemoryProfile *sPeak;
+
+void DoPeakProfile()
+{
+	if(!heap)
+		heap = (Heap *)sHeap;
+	if(sPeak)
+		heap->Make(*sPeak);
+}
+
+MemoryProfile *PeakMemoryProfile()
+{
+	if(sPeak)
+		return sPeak;
+	sPeak = (MemoryProfile *)MemoryAllocPermanent(sizeof(MemoryProfile));
+	memset(sPeak, 0, sizeof(MemoryProfile));
+	return NULL;
 }
 
 #endif

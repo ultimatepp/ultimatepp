@@ -120,12 +120,12 @@ inline uint64 SwapEndian64(uint64 v)  { EndianSwap(v); return v; }
 #endif
 #endif
 
-void EndianSwap(word *v, int count);
-void EndianSwap(int16 *v, int count);
-void EndianSwap(dword *v, int count);
-void EndianSwap(int *v, int count);
-void EndianSwap(int64 *v, int count);
-void EndianSwap(uint64 *v, int count);
+void EndianSwap(word *v, size_t count);
+void EndianSwap(int16 *v, size_t count);
+void EndianSwap(dword *v, size_t count);
+void EndianSwap(int *v, size_t count);
+void EndianSwap(int64 *v, size_t count);
+void EndianSwap(uint64 *v, size_t count);
 
 class Fail__ {}; // Used as return value for function that are not to be called
 
