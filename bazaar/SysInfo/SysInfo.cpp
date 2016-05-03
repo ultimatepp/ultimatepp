@@ -459,10 +459,10 @@ double GetCpuTemperature() {
 
 
 void NetAdapter::Copy(const NetAdapter& src) {
-	description <<= src.description;
-	fullname <<= src.fullname;
-	mac <<= src.mac;
-	type <<= src.type;
+	description = src.description;
+	fullname = src.fullname;
+	mac = src.mac;
+	type = src.type;
 }
 
 void NetAdapter::Xmlize(XmlIO &xml) {
@@ -2052,16 +2052,16 @@ Vector<String> SystemSignature::GetDiff(const SystemSignature &other) const {
 }
 
 void SystemSignature::Copy(const SystemSignature& src) {
-	manufacturer <<= src.manufacturer;
-	productName <<= src.productName;
-	version <<= src.version;
-	mbSerial <<= src.mbSerial;
+	manufacturer = src.manufacturer;
+	productName = src.productName;
+	version = src.version;
+	mbSerial = src.mbSerial;
 	numberOfProcessors = src.numberOfProcessors;
-	hdSerial <<= src.hdSerial;
-	userName <<= src.userName;
+	hdSerial = src.hdSerial;
+	userName = src.userName;
 	netAdapters.SetCount(src.netAdapters.GetCount());
 	for (int i = 0; i < src.netAdapters.GetCount(); ++i)
-		netAdapters[i] <<= src.netAdapters[i];
+		netAdapters[i] = src.netAdapters[i];
 }
 
 void SystemSignature::Xmlize(XmlIO &xml) {
@@ -2095,22 +2095,22 @@ void SystemOverview::Load() {
 }
 
 void SystemOverview::Copy(const SystemOverview& src) {
-	signature <<= src.signature;
-	biosVersion <<= src.biosVersion;
-	biosSerial <<= src.biosSerial;
+	signature.Copy(src.signature);
+	biosVersion = src.biosVersion;
+	biosSerial = src.biosSerial;
 	biosReleaseDate = src.biosReleaseDate;
-	computerName <<= src.computerName;
-	kernel <<= src.kernel;
-	kerVersion <<= src.kerVersion;
-	kerArchitecture <<= src.kerArchitecture;
-	distro <<= src.distro;
-	distVersion <<= src.distVersion;
-	desktop <<= src.desktop;
-	deskVersion <<= src.deskVersion;
-	compilerName <<= src.compilerName;
+	computerName = src.computerName;
+	kernel = src.kernel;
+	kerVersion = src.kerVersion;
+	kerArchitecture = src.kerArchitecture;
+	distro = src.distro;
+	distVersion = src.distVersion;
+	desktop = src.desktop;
+	deskVersion = src.deskVersion;
+	compilerName = src.compilerName;
 	compilerVersion = src.compilerVersion;
 	compilerTime = src.compilerTime;
-	compilerMode <<= src.compilerMode;	
+	compilerMode = src.compilerMode;	
 }
 
 void SystemOverview::Xmlize(XmlIO &xml) {

@@ -188,7 +188,7 @@ HtmlTagD& HtmlTagD::Background(const char *s) { return Attr("BACKGROUND", s); }
 HtmlTagD& HtmlTagD::OnClick(const char *s)    { return Atth("onClick", s); }
 
 HtmlsD HtmlTagD::GetTag() const {
-	return tag.IsEmpty() ? (String&)tag : tag + '>';
+	return IsNull(tag) ? ~tag : ~tag + ">";
 }
 
 HtmlsD HtmlTagD::GetEndTag() const {
@@ -198,8 +198,8 @@ HtmlsD HtmlTagD::GetEndTag() const {
 void  HtmlTagD::Combine(const HtmlTagD& tag2)
 {
 	if(tag2.IsEmpty()) return;
-	if(tag.GetLength()) {
-		tag = tag + '>' + tag2.tag;
+	if(!IsNull(tag)) {
+		tag = tag + ">" + tag2.tag;
 		end = tag2.end + end;
 	}
 	else {
@@ -344,15 +344,15 @@ HtmlsD HtmlBlockD(HtmlsD html, double width, double left, double top, double rig
 	if(top)
 		h = HtmlRowD() / HtmlCellD().Height(top) / "";
 	if(left || right || align != ALIGN_LEFT)
-		h += HtmlRowD() / (
+		h << HtmlRowD() / (
 				HtmlCellD().Width(left) +
 				HtmlCellD().Align(align).Width(width) / html +
 				HtmlCellD().Width(right)
 			 );
 	if(bottom)
-		h += HtmlRowD() / HtmlCellD().Height(bottom) / "";
-	return h.GetLength() ? HtmlTableD().Border(0).Width(-100).CellSpacing(0).CellPadding(0) / h
-		                 : html;
+		h << HtmlRowD() / HtmlCellD().Height(bottom) / "";
+	return !IsNull(h) ? HtmlTableD().Border(0).Width(-100).CellSpacing(0).CellPadding(0) / h
+		              : html;
 }
 
 HtmlTagD HtmlHeaderD(const char *title, String css, const char *other)
@@ -371,6 +371,43 @@ HtmlTagD HtmlHeaderD(const char *title, String css, const char *other)
 		h << other;
 	h << "</HEAD";
 	return HtmlSingleTagD(h) / HtmlTagD("BODY");
+}
+
+HtmlsD operator+(const HtmlsD& a, const HtmlsD& b)
+{
+	return ~a + ~b;
+}
+
+HtmlsD operator+(const HtmlsD& s, const HtmlTagD& tag)
+{
+	HtmlsD h;
+	h.Cat(s);
+	h.Cat(tag);
+	return h;
+}
+
+HtmlsD operator+(const HtmlTagD& tag, const HtmlsD& s)
+{
+	HtmlsD h;
+	h.Cat(tag);
+	h.Cat(s);
+	return h;
+}
+
+HtmlsD operator+(const HtmlsD& a, const char *b)
+{
+	HtmlsD h;
+	h.Cat(a);
+	h.Cat(b);
+	return h;
+}
+
+HtmlsD operator+(const char *a, const HtmlsD& b)
+{
+	HtmlsD h;
+	h.Cat(a);
+	h.Cat(b);
+	return h;
 }
 
 HtmlsD operator+(const HtmlTagD& tag1, const HtmlTagD& tag2)
@@ -434,9 +471,9 @@ HtmlTagD& operator/=(HtmlTagD& tag, const HtmlTagD& s)
 
 HtmlTagD operator % (const HtmlTagD& t1, const HtmlTagD& t2)
 {
-	if(t1.Tag().IsEmpty())
+	if(IsNull(t1.Tag()))
 		return t2;
-	else if(t2.Tag().IsEmpty())
+	else if(IsNull(t2.Tag()))
 		return t1;
 	else
 	{
@@ -554,16 +591,16 @@ HtmlTagD HtmlDialogD(int width)
 HtmlsD HtmlHeadD(String title, const char *charset)
 {
 	HtmlsD head;
-	head << HtmlTagD("TITLE") / title << '\n'
-		<< HtmlSingleTagD("META")
+	head << HtmlTagD("TITLE") / title << "\n"
+		 << HtmlSingleTagD("META")
 			.Attr("HTTP-EQUIV", "Content-Type")
 			.Attr("CONTENT", String("text/html; charset=") + charset);
-	return HtmlTagD("HEAD") % head + "\n\n";
+	return HtmlTagD("HEAD") % ~head + "\n\n";
 }
 
 HtmlsD HtmlPageD(String title, const HtmlsD& body, Color bgcolor, const char *charset)
 {
-	return HtmlTagD("HTML") % (HtmlHeadD(title, charset) + HtmlTagD("BODY").BgColor(bgcolor) % body);
+	return HtmlTagD("HTML") % ~(HtmlHeadD(title, charset) + HtmlTagD("BODY").BgColor(bgcolor) % ~body);
 }
 
 HtmlsD HtmlTitlePageD(String title, const HtmlsD& body, Color bgcolor, const char *charset)
