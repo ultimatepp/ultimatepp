@@ -465,7 +465,7 @@ Vector<int> GetStableSortOrder(Range& r, const Less& less)
 template <class Range>
 inline Vector<int> GetStableSortOrder(const Range& r)
 {
-	return GetSortOrder(r, std::less<ValueTypeOf<Range>>());
+	return GetStableSortOrder(r, std::less<ValueTypeOf<Range>>());
 }
 
 template <class Map, class Less>
