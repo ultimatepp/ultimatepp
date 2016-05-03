@@ -10,8 +10,6 @@ NAMESPACE_UPP
 
 #include "HeapImp.h"
 
-static MemoryProfile *sPeak;
-
 void *MemoryAllocPermanentRaw(size_t size)
 {
 	if(size >= 256)
@@ -34,21 +32,6 @@ void *MemoryAllocPermanent(size_t size)
 	return MemoryAllocPermanentRaw(size);
 }
 
-MemoryProfile *PeakMemoryProfile()
-{
-	if(sPeak)
-		return sPeak;
-	sPeak = (MemoryProfile *)MemoryAllocPermanent(sizeof(MemoryProfile));
-	memset(sPeak, 0, sizeof(MemoryProfile));
-	return NULL;
-}
-
-void DoPeakProfile()
-{
-	if(sPeak)
-		heap->Make(*sPeak);
-}
-
 void OutOfMemoryPanic(size_t size)
 {
 	char h[200];
@@ -67,6 +50,8 @@ void  MemoryLimitKb(int kb)
 {
 	sKBLimit = kb;
 }
+
+void DoPeakProfile();
 
 void *SysAllocRaw(size_t size, size_t reqsize)
 {
@@ -297,11 +282,6 @@ void Heap::Make(MemoryProfile& f)
 		f.large_empty++;
 		m = m->next;
 	}
-}
-
-MemoryProfile::MemoryProfile()
-{
-	heap->Make(*this);
 }
 
 #ifdef flagHEAPSTAT
