@@ -295,7 +295,6 @@ void Heap::Free48(void *ptr)
 }
 
 thread_local byte sHeap[sizeof(Heap)]; // Mingw has issues with class thread_local
-
 thread_local Heap *heap = (Heap *)sHeap;
 
 void MemoryFreek__(int klass, void *ptr)
