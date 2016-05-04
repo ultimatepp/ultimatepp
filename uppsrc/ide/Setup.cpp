@@ -151,14 +151,15 @@ void Ide::UpdateFormat() {
 	statusbar.Show(show_status_bar);
 	SetupBars();
 	
-	if(!designer)
+	if(!designer) {
 		if(filetabs >=0) {
 			tabs.SetAlign(filetabs);
 			editpane.SetFrame(tabs);
 		}
 		else
 			editpane.SetFrame(NullFrame());
-	
+	}
+
 	tabs.Grouping(tabs_grouping);
 	tabs.Stacking(tabs_stacking);
 	tabs.FileIcons(tabs_icons, false);

@@ -296,11 +296,12 @@ void Ide::BuildAndDebug(bool runto)
 
 	bool console = ShouldHaveConsole();
 
-	if(findarg(builder, "GCC", "CLANG") >= 0)
+	if(findarg(builder, "GCC", "CLANG") >= 0) {
 		if(gdbSelector)
 			debugger = Gdb_MI2Create(pick(host), target, runarg, console);
 		else
 			debugger = GdbCreate(pick(host), target, runarg, console);
+	}
 #ifdef PLATFORM_WIN32
 	else
 		debugger = PdbCreate(pick(host), target, runarg);
