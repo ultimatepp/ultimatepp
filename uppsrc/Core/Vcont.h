@@ -138,7 +138,7 @@ public:
 	void     Append(const Vector& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Vector&& x)                    { Insert(GetCount(), pick(x)); }
 	template <class Range>
-	void     AppendRange(const Range& r)           { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)           { InsertRange(GetCount(), r); }
 
 	void     InsertSplit(int i, Vector<T>& v, int from);
 
@@ -277,7 +277,7 @@ public:
 	void     Append(const Array& x, int o, int c) { Insert(GetCount(), x, o, c); }
 	void     Append(Array&& x)                    { InsertPick(GetCount(), pick(x)); }
 	template <class Range>
-	void     AppendRange(const Range& r)               { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)          { InsertRange(GetCount(), r); }
 
 	void     Swap(int i1, int i2)                 { UPP::Swap(vector[i1], vector[i2]); }
 	void     Move(int i1, int i2);

@@ -1,3 +1,7 @@
+CLANG11 autotest/RangeInsertTest : ERROR
+CLANG11 reference/CallbackPickClone : ERROR
+CLANG11 upptst/idetest : ERROR
+
 uppbox
 
 CLANG11 reference/CallbackPickClone : ERROR
