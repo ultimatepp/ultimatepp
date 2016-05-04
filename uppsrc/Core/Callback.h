@@ -87,15 +87,21 @@ class Event : Moveable<Event<ArgTypes...>> {
 
 public:
 	Event() {}
-	Event(CNULLer)                             {}
 	Event(const Event& src) : fn(src.fn)       {}
-	Event(Event&& src) : fn(pick(src.fn))      {}
+	Event& operator=(const Event& src)         { fn = src.fn; return *this; }
+
 	Event(Fn&& src, int) : fn(src)             {}
 	template <class F>
 	Event(F src, int) : fn(src)                {}
-	Event& operator=(const Event& src)         { fn = src.fn; return *this; }
+	
+	explicit Event(Fn&& fn) : fn(pick(fn))     {}
+
+	Event(Event&& src) : fn(pick(src.fn))      {}
 	Event& operator=(Event&& src)              { fn = pick(src.fn); return *this; }
+
+	Event(CNULLer)                             {}
 	Event& operator=(CNULLer)                  { fn.Clear(); return *this; }
+
 	Event Proxy() const                        { return Event(fn.Proxy(), 1); }
 
 	template <class F>
@@ -125,23 +131,23 @@ class EventGate : Moveable<EventGate<ArgTypes...>> {
 
 public:
 	EventGate()                                {}
-	EventGate(bool b)                          { Set(b); }
-	EventGate(CNULLer)                         {}
-	EventGate(const EventGate& a) : fn(a.fn)       {}
-//	EventGate(EventGate&& a) : fn(pick(a.fn))      {}
-	EventGate(Fn&& src, int) : fn(src)         {}
-	EventGate& operator=(const EventGate& a)   { fn = a.fn; return *this; }
-	EventGate& operator=(EventGate&& a)        { fn = pick(a.fn); return *this; }
-	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
-	EventGate& operator=(bool b)               { Set(b); return *this; }
-	EventGate Proxy() const                    { return fn.Proxy(); }
-/*
-	EventGate& operator<<(const EventGate& b)  { fn << b.fn; return *this; }
-	EventGate& operator<<(const Fn& b)         { fn << b; return *this; }
 
-	EventGate& operator<<(EventGate&& b)       { fn << pick(b.fn); return *this; }
-	EventGate& operator<<(Fn&& b)              { fn << pick(b); return *this; }
-*/
+	EventGate(bool b)                          { Set(b); }
+	EventGate& operator=(bool b)               { Set(b); return *this; }
+
+	EventGate(const EventGate& a) : fn(a.fn)   {}
+	EventGate& operator=(const EventGate& a)   { fn = a.fn; return *this; }
+
+	explicit EventGate(Fn&& fn) : fn(pick(fn)) {}
+
+	EventGate(Fn&& src, int) : fn(src)         {}
+	EventGate& operator=(EventGate&& a)        { fn = pick(a.fn); return *this; }
+
+	EventGate(CNULLer)                         {}
+	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
+
+	EventGate Proxy() const                    { return fn.Proxy(); }
+
 	template <class F>
 	EventGate& operator<<(const F& f)          { fn << f; return *this; }
 
@@ -204,7 +210,7 @@ template <class P1, class P2, class P3, class P4, class P5> using Gate5 = EventG
 
 
 template <class T>
-class CallbackArgTarget
+class EventArgTarget
 {
 	T result;
 
@@ -212,7 +218,7 @@ class CallbackArgTarget
 	void Set(T value)                   { result = value; }
 
 public:
-	typedef CallbackArgTarget CLASSNAME;
+	typedef EventArgTarget CLASSNAME;
 
 	operator const T&() const           { return result; }
 	bool IsNullInstance() const         { return IsNull(result); }
@@ -221,5 +227,8 @@ public:
 	operator Callback1<const T&>()      { return THISBACK(SetResult); }
 	operator Callback1<T>()             { return THISBACK(Set); }
 
-	CallbackArgTarget()                 { result = Null; }
+	EventArgTarget()                    { result = Null; }
 };
+
+template <class T>
+using CallbackArgTarget = EventArgTarget<T>;
