@@ -271,7 +271,7 @@ void InVector<T>::Insert_(int ii, const Range& r, bool def)
 			if(def)
 				data.Add().SetCount(n1);
 			else
-				data.Add().Append(SubRange(s, n1));
+				data.Add().AppendRange(SubRange(s, n1));
 			s += n1;
 			n -= n1;
 		}
@@ -290,7 +290,7 @@ void InVector<T>::Insert_(int ii, const Range& r, bool def)
 		if(def)
 			data[blki].InsertN(pos, n);
 		else
-			data[blki].Insert(pos, SubRange(s, n));
+			data[blki].InsertRange(pos, SubRange(s, n));
 		Index(blki, n);
 		SetCache(blki, off);
 	}
@@ -300,7 +300,7 @@ void InVector<T>::Insert_(int ii, const Range& r, bool def)
 		if(def)
 			t.InsertN(0, n);
 		else
-			t.Insert(0, SubRange(s, n));
+			t.InsertRange(0, SubRange(s, n));
 		t.InsertSplit(n, data[blki], pos);
 		data[blki].Shrink();
 		Reindex();
@@ -324,7 +324,7 @@ void InVector<T>::Insert_(int ii, const Range& r, bool def)
 			if(def)
 				data[ti + i].SetCount(q);
 			else
-				data[ti + i].Append(SubRange(s, q));
+				data[ti + i].AppendRange(SubRange(s, q));
 			s += q;
 			n -= q;
 		}
