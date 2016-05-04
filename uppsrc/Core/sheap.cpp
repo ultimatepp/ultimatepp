@@ -294,44 +294,46 @@ void Heap::Free48(void *ptr)
 	Free(ptr, KLASS_48);
 }
 
-thread_local byte sHeap[sizeof(Heap)]; // Mingw has issues with class thread_local
-thread_local Heap *heap = (Heap *)sHeap;
+force_inline
+Heap *ThreadHeap()
+{
+#if defined(COMPILER_GCC) && defined(PLATFORM_WIN32)  // Workaround for MINGW bug
+	thread_local byte sHeap[sizeof(Heap)];
+	thread_local Heap *heap;
+	if(!heap)
+		heap = (Heap *)sHeap;
+	return heap;
+#else
+	thread_local Heap heap[1];
+	return heap;
+#endif
+}
 
 void MemoryFreek__(int klass, void *ptr)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Free((void *)ptr, klass);
+	ThreadHeap()->Free((void *)ptr, klass);
 }
 
 void *MemoryAllok__(int klass)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->Allok(klass);
+	return ThreadHeap()->Allok(klass);
 }
 
 #if defined(HEAPDBG)
 
 void *MemoryAlloc_(size_t sz)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->AllocSz(sz);
+	return ThreadHeap()->AllocSz(sz);
 }
 
 void  MemoryFree_(void *ptr)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Free(ptr);
+	ThreadHeap()->Free(ptr);
 }
 
 size_t GetMemoryBlockSize_(void *ptr)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->GetBlockSize(ptr);
+	return ThreadHeap()->GetBlockSize(ptr);
 }
 
 #else
@@ -341,104 +343,78 @@ size_t GetMemoryBlockSize_(void *ptr)
 void *MemoryAlloc(size_t sz)
 {
 	LTIMING("MemoryAlloc");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->AllocSz(sz);
+	return ThreadHeap()->AllocSz(sz);
 }
 
 void *MemoryAllocSz(size_t& sz)
 {
 	LTIMING("MemoryAllocSz");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->AllocSz(sz);
+	return ThreadHeap()->AllocSz(sz);
 }
 
 void  MemoryFree(void *ptr)
 {
 	LTIMING("MemoryFree");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Free(ptr);
+	ThreadHeap()->Free(ptr);
 }
 
 size_t GetMemoryBlockSize(void *ptr)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->GetBlockSize(ptr);
+	return ThreadHeap()->GetBlockSize(ptr);
 }
 
 bool   TryRealloc(void *ptr, size_t size)
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->TryRealloc(ptr, size);
+	return ThreadHeap()->TryRealloc(ptr, size);
 }
 
 void *MemoryAlloc32()
 {
 	LTIMING("MemoryAlloc32");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->Alloc32();
+	return ThreadHeap()->Alloc32();
 }
 
 void  MemoryFree32(void *ptr)
 {
 	LTIMING("MemoryFree32");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Free32(ptr);
+	ThreadHeap()->Free32(ptr);
 }
 
 void *MemoryAlloc48()
 {
 	LTIMING("MemoryAlloc48");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	return heap->Alloc48();
+	return ThreadHeap()->Alloc48();
 }
 
 void  MemoryFree48(void *ptr)
 {
 	LTIMING("MemoryFree48");
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Free48(ptr);
+	ThreadHeap()->Free48(ptr);
 }
 
 #endif
 
 void MemoryFreeThread()
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Shutdown();
+	ThreadHeap()->Shutdown();
 }
 
 void MemoryCheck()
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Check();
+	ThreadHeap()->Check();
 }
 
 MemoryProfile::MemoryProfile()
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
-	heap->Make(*this);
+	ThreadHeap()->Make(*this);
 }
 
 static MemoryProfile *sPeak;
 
 void DoPeakProfile()
 {
-	if(!heap)
-		heap = (Heap *)sHeap;
 	if(sPeak)
-		heap->Make(*sPeak);
+		ThreadHeap()->Make(*sPeak);
 }
 
 MemoryProfile *PeakMemoryProfile()

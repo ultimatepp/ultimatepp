@@ -39,6 +39,11 @@ class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 		if(ptr)
 			AtomicInc(ptr->refcount);
 	}
+	
+	void Pick(Function&& src) {
+		ptr = src.ptr;
+		src.ptr = NULL;
+	}
 
 public:
 	Function()                                 { ptr = NULL; }
@@ -48,13 +53,17 @@ public:
 	Function(const Function& src)              { Copy(src); }
 	Function& operator=(const Function& src)   { auto b = ptr; Copy(src); Free(b); return *this; }
 
-	Function(Function&& src)                   { ptr = src.ptr; src.ptr = NULL; }
+	Function(Function&& src)                   { Pick(pick(src)); }
 	Function& operator=(Function&& src)        { if(&src != this) { Free(ptr); ptr = src.ptr; src.ptr = NULL; } return *this; }
 	
 	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
 
 	template <class F>
-	Function& operator<<(F fn)                 { if(!ptr) { Copy(fn); return *this; }
+	Function& operator<<(const F& fn)          { if(!ptr) { Copy(fn); return *this; }
+	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
+
+	template <class F>
+	Function& operator<<(F&& fn)               { if(!ptr) { Pick(pick(fn)); return *this; }
 	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
 
 	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
@@ -90,15 +99,18 @@ public:
 	Event& operator=(Event&& src)              { fn = pick(src.fn); return *this; }
 	Event& operator=(CNULLer)                  { fn.Clear(); return *this; }
 	Event Proxy() const                        { return Event(fn.Proxy(), 1); }
-
+/*
 	Event& operator<<(const Event& b)          { fn << b.fn; return *this; }
 	Event& operator<<(const Fn& b)             { fn << b; return *this; }
 
 	Event& operator<<(Event&& b)               { fn << pick(b.fn); return *this; }
 	Event& operator<<(Fn&& b)                  { fn << pick(b); return *this; }
-	
+*/	
 	template <class F>
-	Event& operator<<(F f)                     { fn << f; return *this; }
+	Event& operator<<(const F& f)              { fn << f; return *this; }
+
+	template <class F>
+	Event& operator<<(F&& f)                   { fn << pick(f); return *this; }
 	
 	void operator()(ArgTypes... args) const    { return fn(args...); }
 
@@ -131,21 +143,24 @@ public:
 	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
 	EventGate& operator=(bool b)               { Set(b); return *this; }
 	EventGate Proxy() const                    { return fn.Proxy(); }
-
+/*
 	EventGate& operator<<(const EventGate& b)  { fn << b.fn; return *this; }
 	EventGate& operator<<(const Fn& b)         { fn << b; return *this; }
 
 	EventGate& operator<<(EventGate&& b)       { fn << pick(b.fn); return *this; }
 	EventGate& operator<<(Fn&& b)              { fn << pick(b); return *this; }
+*/
+	template <class F>
+	EventGate& operator<<(const F& f)          { fn << f; return *this; }
 
 	template <class F>
-	EventGate& operator<<(F f)                 { fn << f; return *this; }
+	EventGate& operator<<(F&& f)               { fn << pick(f); return *this; }
 	
-	bool operator()(ArgTypes... args) const { return fn(args...); }
+	bool operator()(ArgTypes... args) const    { return fn(args...); }
 
-	operator Fn() const                    { return fn; }
-	operator bool() const                  { return fn; }
-	void Clear()                           { fn.Clear(); }
+	operator Fn() const                        { return fn; }
+	operator bool() const                      { return fn; }
+	void Clear()                               { fn.Clear(); }
 
 	friend EventGate Proxy(const EventGate& a)     { return a.Proxy(); }
 	friend void Swap(EventGate& a, EventGate& b)   { UPP::Swap(a.fn, b.fn); }
