@@ -30,8 +30,8 @@ CONSOLE_APP_MAIN
 				h << Random();
 			int pos = Random(v.GetCount() + 1);
 			LOG(i << ": inserting " << pos << ", " << h.GetCount());
-			v.Insert(pos, h);
-			a.Insert(pos, h);
+			v.InsertRange(pos, h);
+			a.InsertRange(pos, h);
 			iv.InsertRange(pos, h);
 			av.InsertRange(pos, h);
 		}
