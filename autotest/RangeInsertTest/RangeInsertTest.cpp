@@ -32,8 +32,8 @@ CONSOLE_APP_MAIN
 			LOG(i << ": inserting " << pos << ", " << h.GetCount());
 			v.Insert(pos, h);
 			a.Insert(pos, h);
-			iv.Insert(pos, h);
-			av.Insert(pos, h);
+			iv.InsertRange(pos, h);
+			av.InsertRange(pos, h);
 		}
 		ASSERT(v == a);
 		ASSERT(v == iv);
