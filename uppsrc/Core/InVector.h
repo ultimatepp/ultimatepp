@@ -88,7 +88,7 @@ public:
 	void     InsertN(int i, int count)              { Insert_(i, ConstRange<T>(count), true); }
 	void     Remove(int i, int count = 1);
 	template <class Range>
-	void     AppendRange(const Range& r)            { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)            { InsertRange(GetCount(), r); }
 
 	const T& operator[](int i) const;
 	T&       operator[](int i);
@@ -308,7 +308,7 @@ public:
 	void     Remove(int i, int count = 1);
 	
 	template <class Range>
-	void     AppendRange(const Range& r)                 { Insert(GetCount(), r); }
+	void     AppendRange(const Range& r)            { InsertRange(GetCount(), r); }
 
 	const T& operator[](int i) const                { return Get(i); }
 	T&       operator[](int i)                      { return Get(i); }
