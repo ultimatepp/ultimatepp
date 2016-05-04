@@ -1,0 +1,11 @@
+description "Callback to Callback";
+
+uses
+	Core;
+
+file
+	CallbackProxy.cpp;
+
+mainconfig
+	"" = "";
+

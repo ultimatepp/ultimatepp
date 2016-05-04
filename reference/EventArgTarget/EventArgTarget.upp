@@ -1,0 +1,11 @@
+description "\"value\" return callback for local MenuBar\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
