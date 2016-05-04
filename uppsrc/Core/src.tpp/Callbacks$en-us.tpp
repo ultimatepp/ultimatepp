@@ -376,10 +376,10 @@ pointer.&]
 [s0; &]
 [s0;%- &]
 [s0;%- &]
-[ {{10000@(113.42.0) [s0; [*@7;4 CallbackArgTarget]]}}&]
+[ {{10000@(113.42.0) [s0; [*@7;4 EventArgTarget]]}}&]
 [s3;%- &]
 [s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
-[s1;:CallbackArgTarget`:`:class:%- [@(0.0.255) class]_[* CallbackArgTarget]&]
+[s1;:EventArgTarget`:`:class:%- [@(0.0.255) class]_[* CallbackArgTarget]&]
 [s9; This helper class is useful in a situation when a set of callbacks 
 define some output value. Example is pop`-up menu that provides 
 selection of one character `- in that case, CallbackArgTarget 
@@ -390,23 +390,23 @@ selection.&]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3; &]
-[s5;:CallbackArgTarget`:`:CallbackArgTarget`(`):%- [* CallbackArgTarget]()&]
+[s5;:EventArgTarget`:`:EventArgTarget`(`):%- [* CallbackArgTarget]()&]
 [s2; Assigns Null to the output value.&]
 [s3; &]
 [s4; &]
-[s5;:CallbackArgTarget`:`:operator const T`&`(`)const:%- [* operator_const_T`&]()_[@(0.0.255) c
+[s5;:EventArgTarget`:`:operator const T`&`(`)const:%- [* operator_const_T`&]()_[@(0.0.255) c
 onst]&]
 [s7; [*/ Return value]-|The result. If no CallbackArgTarget was invoked, 
 returns Null.&]
 [s3; &]
 [s4;%- &]
-[s5;:CallbackArgTarget`:`:IsNullInstance`(`)const:%- [@(0.0.255) bool]_[* IsNullInstance](
-)_[@(0.0.255) const]&]
+[s5;:EventArgTarget`:`:IsNullInstance`(`)const:%- [@(0.0.255) bool]_[* IsNullInstance]()_
+[@(0.0.255) const]&]
 [s7; [*/ Return value]-|True if there is not Null in output value.&]
 [s3; &]
 [s4;%- &]
-[s5;:CallbackArgTarget`:`:operator`[`]`(const T`&`):%- [_^Callback^ Callback]_[* operator
-`[`]]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 value])&]
+[s5;:EventArgTarget`:`:operator`[`]`(const T`&`):%- [_^Callback^ Callback]_[* operator`[`]
+]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 value])&]
 [s2; Returns a Callback that, when invoked, assigns [@3 value] to the 
 output value.&]
 [s7; [%-*C@3 value]-|Value.&]
