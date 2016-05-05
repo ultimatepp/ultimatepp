@@ -1,0 +1,4 @@
+#ifndef _EventArgTarget_icpp_init_stub
+#define _EventArgTarget_icpp_init_stub
+#include "CtrlLib/init"
+#endif
