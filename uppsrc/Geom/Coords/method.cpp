@@ -603,7 +603,7 @@ GisCoords GisCoordsAzimuthal::DeepCopy() const
 	One<GisCoordsAzimuthal> out = new GisCoordsAzimuthal(pole, scale, offset);
 	out->ellipsoid = ellipsoid;
 	out->SyncArgs();
-	return GisCoords(-out);
+	return GisCoords(out.Detach());
 }
 
 int GisCoordsAzimuthal::GetBranchCount() const
