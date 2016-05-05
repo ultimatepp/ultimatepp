@@ -14,7 +14,7 @@ void Bar()
 
 CONSOLE_APP_MAIN
 {
-	Callback a, b;
+	Event<> a, b;
 	a = Proxy(b);
 	b = callback(Foo);
 	a();

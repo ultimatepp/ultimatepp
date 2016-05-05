@@ -4,7 +4,7 @@ using namespace Upp;
 
 struct MyApp : TopWindow {
 	virtual void RightDown(Point p, dword keyflags) {
-		CallbackArgTarget<int> result;
+		EventArgTarget<int> result;
 		MenuBar menu;
 		for(int i = 0; i < 10; i++)
 			menu.Add(AsString(i), result[i]);
