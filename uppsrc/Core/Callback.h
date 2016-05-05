@@ -90,12 +90,10 @@ public:
 	Event(const Event& src) : fn(src.fn)       {}
 	Event& operator=(const Event& src)         { fn = src.fn; return *this; }
 
-	Event(Fn&& src, int) : fn(src)             {}
+	Event(Fn&& src, int) : fn(src)             {} // Helper for callback compatibility code
 	template <class F>
-	Event(F src, int) : fn(src)                {}
+	Event(F src, int) : fn(src)                {} // Helper for callback compatibility code
 	
-	explicit Event(Fn&& fn) : fn(pick(fn))     {}
-
 	Event(Event&& src) : fn(pick(src.fn))      {}
 	Event& operator=(Event&& src)              { fn = pick(src.fn); return *this; }
 
@@ -137,8 +135,6 @@ public:
 
 	EventGate(const EventGate& a) : fn(a.fn)   {}
 	EventGate& operator=(const EventGate& a)   { fn = a.fn; return *this; }
-
-	explicit EventGate(Fn&& fn) : fn(pick(fn)) {}
 
 	EventGate(Fn&& src, int) : fn(src)         {}
 	EventGate& operator=(EventGate&& a)        { fn = pick(a.fn); return *this; }
