@@ -37,14 +37,13 @@ CONSOLE_APP_MAIN
 {
 	Foo a(10);
 
-	Event<> ev1, ev2;
+	Event<> ev1, ev2, ev4;
 	Event<int> ev3;
 
 	ev1 << [&] { a.Action(); };
 	ev2 << [] { Fn(); };
 	ev3 << [&](int x) { a.ActionWithParam(x); };
-	
-	Event<> ev4([&] { a.ActionWithParam(30); });
+	ev4 << [&] { a.ActionWithParam(30); };
 
 	ev1();
 	ev2();
