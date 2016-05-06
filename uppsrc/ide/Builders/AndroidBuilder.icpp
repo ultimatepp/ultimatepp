@@ -219,6 +219,8 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 		// TODO: Check for path with space?
 		pkgMakeFile.AddInclude(assemblyDir);
 		pkgMakeFile.AddInclude(packageDir);
+		for (int i = 0; i < pkg.uses.GetCount(); i++)
+			pkgMakeFile.AddInclude(GetAssemblyDir(pkg.uses[i].text));
 		
 		for(int i = 0; i < pkg.flag.GetCount(); i++)
 			pkgMakeFile.AddCppFlag(pkg.flag[i].text);
@@ -824,6 +826,14 @@ String AndroidBuilder::GetSandboxDir() const
 	String mainPackageName = GetFileName(target);
 	mainPackageName.Remove(mainPackageName.GetCount() - targetExtLen, targetExtLen);
 	return GetFileFolder(target) + DIR_SEPS + "Sandbox" + DIR_SEPS + mainPackageName;
+}
+
+String AndroidBuilder::GetAssemblyDir(const String& package)
+{
+	String packageManifest = PackagePath(package);
+	String packageDir = GetFileFolder(packageManifest);
+	
+	return GetAssemblyDir(packageDir, package);
 }
 
 String AndroidBuilder::GetAssemblyDir(const String& packageDir, const String& package)
