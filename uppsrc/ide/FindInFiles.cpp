@@ -208,11 +208,9 @@ void Ide::FindFileName() {
 		for(int p = 0; p < wspc.GetCount(); p++) {
 			String packname = wspc[p];
 			const Package& pack = wspc.GetPackage(p);
-			for(int f = 0; f < pack.file.GetCount(); f++) {
-				String fn = pack.file[f];
-				if(ToUpper(packname).Find(mask) >= 0 || ToUpper(fn).Find(mask) >= 0)
-					ffdlg.list.Add(packname, pack.file[f]);
-			}
+			for(const auto& file : pack.file)
+				if(!file.separator && (ToUpper(packname).Find(mask) >= 0 || ToUpper(file).Find(mask) >= 0))
+					ffdlg.list.Add(packname, file);
 		}
 		if(ffdlg.list.GetCount() > 0)
 			ffdlg.list.SetCursor(0);
