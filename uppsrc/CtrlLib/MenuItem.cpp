@@ -308,17 +308,14 @@ void MenuItem::Paint(Draw& w)
 		}
 	}
 	Size isz = li.GetSize();
-//	Size isz = min(maxiconsize, imsz);
-//	if(isz != imsz)
-//		li = CachedRescale(li, isz);
 	int iy = (sz.cy - isz.cy) / 2;
 	bool chk = false;
-	int x = Zx(3);
+	int x = max(Zx(3), (leftgap + textgap - isz.cx) / 2);
 	if(!licon.IsEmpty() && type) {
 		chk = type == CHECK1 || type == RADIO1;
 		if(GUI_GlobalStyle() >= GUISTYLE_XP) {
 			if(chk && !hl)
-				DrawXPButton(w, RectC(0, iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4)),
+				DrawXPButton(w, RectC(x - Zx(2), iy - Zy(2), isz.cx + Zx(4), isz.cy + Zy(4)),
 				             BUTTON_EDGE|BUTTON_CHECKED);
 		}
 		else {
@@ -332,7 +329,7 @@ void MenuItem::Paint(Draw& w)
 		DrawHighlightImage(w, x, iy, li, hl || chk, true);
 	else
 		w.DrawImage(x, iy, DisabledImage(li));
-	x = max(isz.cx, leftgap) + textgap;
+	x = max(isz.cx + Zx(3), leftgap) + textgap;
 	isz = GetTextSize(text, StdFont());
 	DrawMenuText(w, x, (sz.cy - isz.cy) / 2, txt, font, isenabled, hl, style->menutext,
 	             style->itemtext);
