@@ -86,8 +86,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		if(is_shared && !win32)
 			flags << " -fPIC ";
 		flags << ' ' << Gather(pkg.option, config.GetKeys());
-		makefile.config << "CFLAGS =" << flags << "\n"
-			"CXXFLAGS =" << flags << "\n"
+		makefile.config << "CFLAGS =" << Merge(" ", flags, c_options) << "\n"
+			"CXXFLAGS =" << Merge(" ", flags, cpp_options) << "\n"
 			"LDFLAGS = " << Merge(" ", common_link, HasFlag("DEBUG") ? debug_link : release_link)
 			             << " $(LINKOPTIONS)\n"
 			"LIBPATH =";
