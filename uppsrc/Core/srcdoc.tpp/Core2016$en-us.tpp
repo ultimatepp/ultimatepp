@@ -79,20 +79,45 @@ number of parameters is resolved by C`+`+11 template varargs.
 For backward compatibility [* Callback`[N`]] are aliased as [* Event] 
 variants.&]
 [s0; &]
-[s0; Similarly, [* EventGate] is equivalent of [* Gate].&]
+[s0; Similarly, [* EventGate] is a new equivalent of [* Gate].&]
 [s0; &]
 [s3; Algorithms and Containers&]
 [s0; &]
-[s0; Range&]
+[s0; The set of algorithms provided by U`+`+ is now streamlined by 
+introduction of [/ Range] concept. Range is entity that provides 
+begin/end/GetCount/operator`[`] methods. All U`+`+ algorithms 
+expect Range as input. All U`+`+ containers satisfy Range concept. 
+In addition there are&]
 [s0; &]
-[s0; idmapBencmark ValueMap optimize&]
+[s0; [* SubRangeClass] `- represents subrange of container, or just 
+begin/end pair.&]
 [s0; &]
-[s0; BiVector/Array/BiArray Pop&]
+[s0; [* ConstRangeClass] `- trivial single`-value range&]
 [s0; &]
-[s0; Range Insert/Append in containers&]
+[s0; [* ViewRangeClass] `- is basically a list of indicies inside another 
+range. [* FilterRange] function can create [* ViewRangeClass] based 
+on predicate.&]
 [s0; &]
+[s0; U`+`+ containers now support [* InsertRange]/[* AppendRange ]template 
+methods.&]
+[s0; &]
+[s0; New, parallel algorithms are introduced: [* CoLoop], [* CoAccumulate], 
+[* CoSum], [* CoFindBest], [* CoFindMin], [* CoMin], [* CoFindMax], [* CoMax], 
+[* CoFindMatch], [* CoFindIndex], [* CoSort],[*  CoStableSort],[*  CoIndexSort], 
+[* CoStableIndexSort], [* CoIndexSort2], [* CoStableIndexSort2], [* CoIndexSort3], 
+[* CoStableIndexSort3], [* CoGetSortOrder], [* CoGetStableSortOrder], 
+[* CoSortByKey], [* CoSortByValue], [* CoStableSortByKey], [* CoStableSortByValue], 
+[* CoSortIndex], [* CoStableSortIndex].&]
 [s5; &]
 [s3; Tuple&]
+[s5; Tuple now does not require the specific template type based 
+on number of elements (instead of Tuple3<int, int, String> it 
+can be used just Tuple<int, int, String>). Tuple now has methods 
+for retrieving the number of elements and index based access 
+of elements via Value and also C`+`+11 like access via template 
+methods (index based or type based):&]
+[s5; &]
+[s5; &]
 [s5; &]
 [s3; Changes in r`-value and pick&]
 [s0; Generic Tuple&]
