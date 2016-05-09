@@ -24,15 +24,16 @@ topic "New features of U++ Core 2016";
 [{_}%EN-US 
 [s2; New features of U`+`+ Core 2016&]
 [s3; Allocator&]
-[s5; U`+`+ allocator now always returns 16`-byte aligned blocks. 
+[s0; &]
+[s0; U`+`+ allocator now always returns 16`-byte aligned blocks. 
 This is to simplify SSE requirements, at the price of smallest 
 possible allocation being 32`-bytes (request for smaller blocks 
 are rounded up to 32`-bytes).&]
-[s5; In situation where allocating a lot of blocks smaller than 32 
+[s0; In situation where allocating a lot of blocks smaller than 32 
 bytes (typical is controlling reference counter block in shared`_ptr 
 like class), new [* TinyAlloc] / [* TinyFree] functions can be used, 
 or templated `"new/delete`" like functions [* tiny`_new] / [* tiny`_delete].&]
-[s5; &]
+[s0; &]
 [s3; Multithreading&]
 [s0; &]
 [s0; One of biggest advances of C`+`+11 is support for multithreading 
@@ -52,7 +53,7 @@ API isThread`::Exitmissing).&]
 similar to [* Exit] to exit the whole program. It throws exception, 
 which is caught at the end of thread routine.&]
 [s0; &]
-[s0; [* CoWork] was optimized and also changes so that each `"master 
+[s0; [* CoWork] was optimized and also changed so that each `"master 
 thread`" has private thread pool. This is important to avoid 
 stealing of work between master threads, which can lead to problems 
 (e.g. delays in the GUI).&]
@@ -63,7 +64,7 @@ to avoid additional mutex lock for e.g. storing results.&]
 [s0; [* CoWork] now also has pipeline support, where thread performs 
 one specific task and eventually passes results to another thread 
 to continue processing.&]
-[s5; &]
+[s0; &]
 [s3; Callback changes&]
 [s0; &]
 [s0; Callbacks are refactored with C`+`+11 lambdas and varargs templates. 
@@ -108,32 +109,47 @@ methods.&]
 [* CoStableIndexSort3], [* CoGetSortOrder], [* CoGetStableSortOrder], 
 [* CoSortByKey], [* CoSortByValue], [* CoStableSortByKey], [* CoStableSortByValue], 
 [* CoSortIndex], [* CoStableSortIndex].&]
-[s5; &]
+[s0; &]
 [s3; Tuple&]
 [s5; Tuple now does not require the specific template type based 
 on number of elements (instead of Tuple3<int, int, String> it 
-can be used just Tuple<int, int, String>). Tuple now has methods 
-for retrieving the number of elements and index based access 
-of elements via Value and also C`+`+11 like access via template 
-methods (index based or type based):&]
-[s5; &]
-[s5; &]
-[s5; &]
+can now be used just Tuple<int, int, String>). Tuple now has 
+methods for retrieving the number of elements and index based 
+access of elements via Value and also C`+`+11 like access via 
+template methods (index based or type based):&]
+[s7; -|Tuple<int, String> x `= MakeTuple(12, (const char `*)`"hello`");&]
+[s7; -|&]
+[s7; -|DUMP(x.a);&]
+[s7; -|DUMP(x.b);&]
+[s7; -|DUMP(x);&]
+[s7; &]
+[s7; -|DUMP(x.[* GetCount]());&]
+[s7; -|DUMP(x.[* Get](0));&]
+[s7; -|DUMP(x.[* Get](1));&]
+[s7; -|DUMP(x.[* GetArray]());&]
+[s7; -|DUMP(x.[* Get<0>]());&]
+[s7; -|DUMP(x.[* Get<String>]());&]
+[s7; -|&]
+[s7; -|x.Set(1, `"bar`");&]
+[s7; -|DUMP(x);&]
+[s7; -|ValueArray va `{ 22, `"world`" `};&]
+[s7; -|x.[* SetArray](va);&]
+[s7; -|DUMP(x);&]
+[s5; Unfortunately, as `'Tuple`' id now represents template class, 
+`'Tuple`' function had to be removed. Use MakeTuple instead.&]
 [s3; Changes in r`-value and pick&]
-[s0; Generic Tuple&]
-[s0; String() <<&]
 [s0; &]
-[s0; String `&`&&]
+[s0; All features required for compatibility with C`+`+99 (pick`_ 
+etc...) were removed in favor of using r`-value references. `"picked`" 
+state was removed, picking now simply clears the source to `"empty`" 
+state. AddPick methods in containers are deprecated, use Add(pick(x)) 
+instead. `'pick`' is kept as synonym to std`::move.&]
 [s0; &]
-[s0; Remove IsPicked&]
+[s0; Throughout library, `"opportunity`" r`-value constructors/assignments 
+are added. That has perhaps the most optimizing effect with chaining 
+String operator`+: String a; ... String x `= a`+ `" foo `" `+ 
+`"bar`" does not perform any unnecessary copies now.&]
 [s0; &]
-[s0; Remove AddPick (keep as synonym)&]
-[s0; &]
-[s0; void XmlNode`::SetAttrsPick(VectorMap<String, String>`&`& a)&]
-[s0; &]
-[s0; inline String`& operator<<(String`&`& s, const T`& x)&]
-[s0; &]
-[s5; &]
 [s0;* &]
 [s3; Smaller issues&]
 [s5; Stream`::SerializeRaw count is now int64 (instead of 32`-bit 
@@ -143,10 +159,8 @@ StringStream.&]
 [s5; StringStream now has SizeLimit option, if breached (when storing 
 data to StringStream), exception is thrown.&]
 [s5; NanoStrings class is removed.&]
-[s0; Remove HashFn&]
 [s0; &]
-[s0; Remove precomputed hash&]
+[s0; Remove HashFn/ precomputed hash options in Index/Maps are removed.&]
 [s0; &]
-[s0; Create like emplace everywhere&]
-[s0; Optimize Index`::Hash&]
+[s0; Index/Maps are further optimized (about 5% gain in benchmarks).&]
 [s0; ]]
