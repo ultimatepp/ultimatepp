@@ -11,8 +11,18 @@ CONSOLE_APP_MAIN
 	DUMP(x.a);
 	DUMP(x.b);
 	DUMP(x);
+
+	DUMP(x.GetCount());
+	DUMP(x.Get(0));
+	DUMP(x.Get(1));
+	DUMP(x.GetArray());
+	DUMP(x.Get<0>());
+	DUMP(x.Get<String>());
 	
-	x.Set(0, "bar");
+	x.Set(1, "bar");
+	DUMP(x);
+	ValueArray va { 22, "world" };
+	x.SetArray(va);
 	DUMP(x);
 	
 	Tuple<int, String> y = MakeTuple<int, String>(13, "hello");
