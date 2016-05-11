@@ -13,7 +13,6 @@ struct Tuple;
 template <typename A>
 struct TupleN<1, A>
 {
-public:
 	A a;
 
 	bool  operator==(const TupleN& x) const   { return a == x.a; }
