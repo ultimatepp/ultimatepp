@@ -39,33 +39,35 @@ and use what language/standard library provides `- [* Atomic ]is
 now reimplemented using [* std`::atomic<int>], thread local variables 
 are language standard. OTOH, beyond memory model, U`+`+ [* Thread 
 ]class and [* CoWork ]class are still basis of multithreading.&]
-[s5; ConditionVariable is now recommended over Semaphore. We keep 
-U`+`+ class for this one, because in Win32 ConditionVariable 
-requires Windows 7 and we still want to keep WinXP support (U`+`+ 
-ConditionVariable contains internal implementation when system 
-API isThread`::Exitmissing).&]
-[s5; Thread`::Exit can be used to exit the thread (from within), similar 
-to Exit to exit the whole program. It throws exception, which 
-is caught at the end of thread routine.&]
-[s5; CoWork was optimized and also changed so that each `"master 
+[s5; [* ConditionVariable ]is now recommended over [* Semaphore]. We 
+keep U`+`+ class for this one, because in Win32 [* ConditionVariable 
+]requires Windows 7 and we still want to keep WinXP support (U`+`+ 
+[* ConditionVariable ]contains internal implementation when system 
+API is missing).&]
+[s5; [* Thread`::Exit] can be used to exit the thread (from within), 
+similar to [* Exit ]to exit the whole program. It throws exception, 
+which is caught at the end of thread routine.&]
+[s5; [* CoWork ]was optimized and also changed so that each `"master 
 thread`" has private thread pool. This is important to avoid 
 stealing of work between master threads, which can lead to problems 
 (e.g. delays in the GUI).&]
-[s5; CoWork`::FinLock now provides `'finalization lock`', useful to 
-avoid additional mutex lock for e.g. storing results.&]
-[s5; CoWork now also has pipeline support, where thread performs 
+[s5; [* CoWork`::FinLock] now provides `'finalization lock`', useful 
+to avoid additional mutex lock for e.g. storing results.&]
+[s5; [* CoWork ]now also has pipeline support, where thread performs 
 one specific task and eventually passes results to another thread 
 to continue processing.&]
 [s3; Callback changes&]
 [s5; Callbacks are refactored with C`+`+11 lambdas and varargs templates. 
 There are now 3 classes:&]
-[s5; Function is similar to std`::function, generic callable with 
+[s5; [* Function ]is similar to [* std`::function], generic callable with 
 any number of parameters and any return value in addition it 
-has ability to `'add`' functions using operator<<.&]
-[s5; Event is equivalent of Callback `- unlike Callback, it is not 
-necessary to have Callback, Callback1, Callback2, number of parameters 
-is resolved by C`+`+11 template varargs. For backward compatibility 
-Callback`[N`] are aliased as Event variants.&]
+has ability to `'add`' functions using operator<<. Also, unlike 
+[* std`::function], calling empty Function is no operation, not 
+exception.&]
+[s5; [* Event ]is equivalent of Callback `- unlike Callback, it is 
+not necessary to have Callback, Callback1, Callback2, number 
+of parameters is resolved by C`+`+11 template varargs. For backward 
+compatibility Callback`[N`] are aliased as Event variants.&]
 [s5; Similarly, [* EventGate] is a new equivalent of [* Gate].&]
 [s3; Algorithms and Containers&]
 [s5; The set of algorithms provided by U`+`+ is now streamlined by 
