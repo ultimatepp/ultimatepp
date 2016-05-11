@@ -18,6 +18,12 @@ void Reverse(Range& r)
 		while(++start != end && --end != start);
 }
 
+template <class Range>
+void Reverse(Range&& r)
+{
+	Reverse(r);
+}
+
 template <class Range, class Accumulator>
 void Accumulate(const Range& r, Accumulator& a)
 {
