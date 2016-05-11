@@ -112,11 +112,17 @@ void Sort(Range& c, const Less& less)
 	Sort__(c.begin(), c.end(), less);
 }
 
+template <class Range, class Less>
+void Sort(Range&& c, const Less& less) { Sort(c, less); }
+
 template <class Range>
 void Sort(Range& c)
 {
 	Sort__(c.begin(), c.end(), std::less<ValueTypeOf<Range>>());
 }
+
+template <class Range>
+void Sort(Range&& c) { Sort(c); }
 
 template <class T>
 struct StableSortItem__ {
@@ -176,11 +182,17 @@ void StableSort(Range& r, const Less& less)
 	       StableSortLess__<VT, Less>(less));
 }
 
+template <class Range, class Less>
+void StableSort(Range&& r, const Less& less) { StableSort(r, less); }
+
 template <class Range>
 void StableSort(Range& r)
 {
 	StableSort(r, std::less<ValueTypeOf<Range>>());
 }
+
+template <class Range>
+void StableSort(Range&& r) { StableSort(r); }
 
 template <class II, class VI, class K>
 struct IndexSortIterator__
@@ -218,11 +230,17 @@ void IndexSort(MasterRange& r, Range2& r2, const Less& less)
 		   less);
 }
 
+template <class MasterRange, class Range2, class Less>
+void IndexSort(MasterRange&& r, Range2&& r2, const Less& less) { IndexSort(r, r2, less); }
+
 template <class MasterRange, class Range2>
 void IndexSort(MasterRange& r, Range2& r2)
 {
 	IndexSort(r, r2, std::less<ValueTypeOf<MasterRange>>());
 }
+
+template <class MasterRange, class Range2>
+void IndexSort(MasterRange&& r, Range2&& r2) { IndexSort(r, r2); }
 
 template <class MasterRange, class Range2, class Less>
 void StableIndexSort(MasterRange& r, Range2& r2, const Less& less)
@@ -238,11 +256,17 @@ void StableIndexSort(MasterRange& r, Range2& r2, const Less& less)
 	           less);
 }
 
+template <class MasterRange, class Range2, class Less>
+void StableIndexSort(MasterRange&& r, Range2&& r2, const Less& less) { StableIndexSort(r, r2, less); }
+
 template <class MasterRange, class Range2>
 void StableIndexSort(MasterRange& r, Range2& r2)
 {
 	StableIndexSort(r, r2, std::less<ValueTypeOf<MasterRange>>());
 }
+
+template <class MasterRange, class Range2>
+void StableIndexSort(MasterRange&& r, Range2&& r2) { StableIndexSort(r, r2); }
 
 template <class II, class VI, class WI, class K>
 struct IndexSort2Iterator__
@@ -283,11 +307,19 @@ void IndexSort2(MasterRange& r, Range2& r2, Range3& r3, const Less& less)
 		   less);
 }
 
+template <class MasterRange, class Range2, class Range3, class Less>
+void IndexSort2(MasterRange&& r, Range2&& r2, Range3&& r3, const Less& less) { IndexSort2(r, r2, r3, less); }
+
+
 template <class MasterRange, class Range2, class Range3>
 void IndexSort2(MasterRange& r, Range2& r2, Range3& r3)
 {
 	IndexSort2(r, r2, r3, std::less<ValueTypeOf<MasterRange>>());
 }
+
+template <class MasterRange, class Range2, class Range3>
+void IndexSort2(MasterRange&& r, Range2&& r2, Range3&& r3) { IndexSort2(r, r2, r3); }
+
 
 template <class MasterRange, class Range2, class Range3, class Less>
 void StableIndexSort2(MasterRange& r, Range2& r2, Range3& r3, const Less& less)
@@ -305,11 +337,19 @@ void StableIndexSort2(MasterRange& r, Range2& r2, Range3& r3, const Less& less)
 		       less);
 }
 
+template <class MasterRange, class Range2, class Range3, class Less>
+void StableIndexSort2(MasterRange&& r, Range2&& r2, Range3&& r3, const Less& less)
+{ StableIndexSort2(r, r2, r3, less); }
+
 template <class MasterRange, class Range2, class Range3>
-inline void StableIndexSort2(MasterRange& r, Range2& r2, Range3& r3)
+void StableIndexSort2(MasterRange& r, Range2& r2, Range3& r3)
 {
 	StableIndexSort2(r, r2, r3, std::less<ValueTypeOf<MasterRange>>());
 }
+
+template <class MasterRange, class Range2, class Range3>
+void StableIndexSort2(MasterRange&& r, Range2&& r2, Range3&& r3)
+{ StableIndexSort2(r, r2, r3); }
 
 template <class II, class VI, class WI, class XI, class K>
 struct IndexSort3Iterator__
@@ -353,10 +393,22 @@ void IndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4, const Less& 
 		   less);
 }
 
+template <class MasterRange, class Range2, class Range3, class Range4, class Less>
+void IndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4&& r4, const Less& less)
+{
+	IndexSort3(r, r2, r3, r4, less);
+}
+
 template <class MasterRange, class Range2, class Range3, class Range4>
 void IndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4)
 {
 	IndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<MasterRange>>());
+}
+
+template <class MasterRange, class Range2, class Range3, class Range4>
+void IndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4&& r4)
+{
+	IndexSort3(r, r2, r3, r4);
 }
 
 template <class MasterRange, class Range2, class Range3, class Range4, class Less>
@@ -377,12 +429,23 @@ void StableIndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4, const 
 		       less);
 }
 
+template <class MasterRange, class Range2, class Range3, class Range4, class Less>
+void StableIndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4&& r4, const Less& less)
+{
+	StableIndexSort3(r, r2, r3, r4, less);
+}
+
 template <class MasterRange, class Range2, class Range3, class Range4>
-inline void StableIndexSort3(MasterRange& r, Range2& r2, Range4& r4, Range3& r3)
+void StableIndexSort3(MasterRange& r, Range2& r2, Range3& r3, Range4& r4)
 {
 	StableIndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<MasterRange>>());
 }
 
+template <class MasterRange, class Range2, class Range3, class Range4>
+void StableIndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4&& r4)
+{
+	StableIndexSort3(r, r2, r3, r4);
+}
 
 template <class I, class V>
 struct SortOrderIterator__ : PostfixOps< SortOrderIterator__<I, V> >
@@ -407,7 +470,7 @@ struct SortOrderIterator__ : PostfixOps< SortOrderIterator__<I, V> >
 };
 
 template <class Range, class Less>
-Vector<int> GetSortOrder(Range& r, const Less& less)
+Vector<int> GetSortOrder(const Range& r, const Less& less)
 {
 	auto begin = r.begin();
 	Vector<int> index;
@@ -449,7 +512,7 @@ struct StableSortOrderIterator__ : PostfixOps< StableSortOrderIterator__<I, T> >
 };
 
 template <class Range, class Less>
-Vector<int> GetStableSortOrder(Range& r, const Less& less)
+Vector<int> GetStableSortOrder(const Range& r, const Less& less)
 {
 	Vector<int> index;
 	index.SetCount(r.GetCount());
@@ -465,7 +528,7 @@ Vector<int> GetStableSortOrder(Range& r, const Less& less)
 template <class Range>
 inline Vector<int> GetStableSortOrder(const Range& r)
 {
-	return GetStableSortOrder(r, std::less<ValueTypeOf<Range>>());
+	return GetSortOrder(r, std::less<ValueTypeOf<Range>>());
 }
 
 template <class Map, class Less>
