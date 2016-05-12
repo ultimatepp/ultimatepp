@@ -214,6 +214,7 @@ struct RpcData {
 	ValueMap   out_map;
 
 	int      GetRemainingCount() const  { return in.GetCount() - ii; }
+	bool     HasMore() const            { return GetRemainingCount() > 0; }
 
 	Value Get()                         { if(ii >= in.GetCount()) return Value(); return in[ii++]; }
 	
