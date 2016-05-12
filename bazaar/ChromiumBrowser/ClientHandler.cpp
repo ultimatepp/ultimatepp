@@ -137,7 +137,10 @@ void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
 
 
 bool ClientHandler::OnJSDialog(CefRefPtr<CefBrowser> browser, const CefString& origin_url,
-								const CefString& accept_lang, JSDialogType dialog_type,
+								#if CHROME_VERSION_BUILD < 2704
+								const CefString& accept_lang,
+								#endif
+								JSDialogType dialog_type,
 								const CefString& message_text, const CefString& default_prompt_text,
 								CefRefPtr<CefJSDialogCallback> callback, bool& suppress_message)
 {
