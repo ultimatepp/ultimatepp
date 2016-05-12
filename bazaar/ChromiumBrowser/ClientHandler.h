@@ -103,7 +103,9 @@ public:
                 
     virtual bool OnJSDialog(CefRefPtr<CefBrowser> browser,
                           const CefString& origin_url,
+#if CHROME_VERSION_BUILD < 2704
                           const CefString& accept_lang,
+#endif
                           JSDialogType dialog_type,
                           const CefString& message_text,
                           const CefString& default_prompt_text,
