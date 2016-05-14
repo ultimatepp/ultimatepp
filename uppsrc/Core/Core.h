@@ -361,11 +361,11 @@ static const MemDiagCls sMemDiagHelper__upp__;
 //some global definitions
 
 #if !defined(STLPORT) && _MSC_VER < 1600
-inline UPP::int64  abs(UPP::int64 x)          { return x < 0 ? -x : x; }
+//inline UPP::int64  abs(UPP::int64 x)          { return x < 0 ? -x : x; }
 #endif
 
 #ifdef COMPILER_GCC
-inline double abs(double x)                   { return fabs(x); }
+//inline double abs(double x)                   { return fabs(x); }
 #endif
 
 void      RegisterTopic__(const char *topicfile, const char *topic, const char *title, const UPP::byte *data, int len);
