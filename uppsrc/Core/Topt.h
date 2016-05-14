@@ -355,8 +355,7 @@ class ConstIIterator {
 protected:
 	const V       *cont;
 	int            ii;
-	typedef        typename V::ValueType T;
-//	typedef        ValueTypeOf<V> T;
+	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
@@ -398,8 +397,7 @@ class IIterator {
 protected:
 	V             *cont;
 	int            ii;
-	typedef        typename V::ValueType T; // TODO!
-	// typedef        ValueTypeOf<V> T;
+	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
