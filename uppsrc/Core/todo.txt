@@ -24,7 +24,6 @@ Buffer(size_t size, const T& init)   { ptr = new T[size]; Fill(ptr, ptr + size, 
 
 String  MD5Digest(const void *data, int length);
 
-IIterator	typedef        typename V::ValueType T;
 Remove ValueType uses
 
 InVector::InsertN possibly incorrect (can create small blocks)
@@ -35,6 +34,8 @@ CoWork pipe max_queue
 
 -----------------------
 DONE
+
+IIterator	typedef        typename V::ValueType T;
 
 SerializeRaw - int64!
 
