@@ -345,6 +345,9 @@ template <class Range>
 using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
 
 template <class Range>
+using ValueTypeOfArray = typename std::remove_reference<decltype((*((Range *)0))[0])>::type;
+
+template <class Range>
 using IteratorOf = decltype(((Range *)0)->begin());
 
 template <class Range>
@@ -352,10 +355,10 @@ using ConstIteratorOf = decltype(((const Range *)0)->begin());
 
 template <class V>
 class ConstIIterator {
-protected:
+	typedef ValueTypeOfArray<V> T;
+
 	const V       *cont;
 	int            ii;
-	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
@@ -394,10 +397,10 @@ public:
 
 template <class V>
 class IIterator {
-protected:
+	typedef ValueTypeOfArray<V> T;
+
 	V             *cont;
 	int            ii;
-	typedef        ValueTypeOf<V> T;
 	struct NP { int dummy; };
 
 public:
