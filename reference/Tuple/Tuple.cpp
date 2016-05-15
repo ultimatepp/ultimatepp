@@ -36,7 +36,7 @@ CONSOLE_APP_MAIN
 	DUMP(i);
 	DUMP(s);
 	
-	Index< Tuple2<int, String> > ndx;
+	Index< Tuple<int, String> > ndx;
 	ndx.Add(x);
 	ndx.Add(y);
 	
