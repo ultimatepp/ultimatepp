@@ -154,8 +154,9 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual void           SetErrorEditor();
 	virtual String         GetMain();
 
-	virtual String         GetDefaultMethod();
+	virtual String                    GetDefaultMethod();
 	virtual VectorMap<String, String> GetMethodVars(const String& method);
+	virtual String                    GetMethodName(const String& method);
 
 	virtual bool IsPersistentFindReplace() { return false; }
 

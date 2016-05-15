@@ -83,8 +83,9 @@ public:
 	virtual String    IdeGetNestFolder() = 0;
 	virtual String    IdeGetIncludePath() = 0;
 
-	virtual String GetDefaultMethod();
+	virtual String                    GetDefaultMethod();
 	virtual VectorMap<String, String> GetMethodVars(const String& method);
+	virtual String                    GetMethodName(const String& method);
 	
 	virtual bool      IsPersistentFindReplace() = 0;
 
@@ -118,6 +119,7 @@ void             IdeGotoCodeRef(String s);
 
 String GetDefaultMethod();
 VectorMap<String, String> GetMethodVars(const String& method);
+String GetMethodPath(const String& method);
 
 bool      IdeIsDebug();
 void      IdeEndDebug();
