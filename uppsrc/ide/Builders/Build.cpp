@@ -292,7 +292,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	const Package& pkg = wspc.package[pkindex];
 	VectorMap<String, String> bm = GetMethodVars(method);
 	if(bm.GetCount() == 0) {
-		PutConsole("Invalid build method");
+		PutConsole(GetInvalidBuildMethodError(method));
 		ConsoleShow();
 		return false;
 	}
@@ -547,7 +547,7 @@ bool MakeBuild::Build()
 {
 	VectorMap<String, String> bm = GetMethodVars(method);
 	if(bm.GetCount() == 0) {
-		PutConsole("Invalid build method");
+		PutConsole(GetInvalidBuildMethodError(method));
 		ConsoleShow();
 		return false;
 	}
@@ -732,4 +732,9 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 			PutConsole(NFormat("%s: error writing makefile", fn));
 	}
 	EndBuilding(true);
+}
+
+String MakeBuild::GetInvalidBuildMethodError(const String& method)
+{
+	return "Invalid build method " + method + " (" + GetMethodPath(method) + ").";
 }

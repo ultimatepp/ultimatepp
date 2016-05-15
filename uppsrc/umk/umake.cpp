@@ -27,8 +27,13 @@ String Ide::GetDefaultMethod()
 VectorMap<String, String> Ide::GetMethodVars(const String& method)
 {
 	VectorMap<String, String> map;
-	LoadVarFile(GetBuildMethodPath(method), map);
+	LoadVarFile(GetMethodName(method), map);
 	return map;
+}
+
+String Ide::GetMethodName(const String& method)
+{
+	return GetBuildMethodPath(method);
 }
 
 void Puts(const char *s)
@@ -57,9 +62,9 @@ String GetAndroidSDKPath()
 	return String();
 }
 
-#ifdef flagMAIN	
+#ifdef flagMAIN
 
-CONSOLE_APP_MAIN	
+CONSOLE_APP_MAIN
 {
 #ifdef PLATFORM_POSIX
 	setlinebuf(stdout);

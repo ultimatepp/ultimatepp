@@ -27,7 +27,8 @@ int CharFilterSlash(int c);
 String GetDefaultMethod();
 VectorMap<String, String> GetMethodVars(const String& method);
 
-struct MakeBuild {
+class MakeBuild {
+public:
 	virtual void ConsoleShow() = 0; //		ShowConsole();	console.Sync();
 	virtual void ConsoleSync() = 0; // console.Sync()
 	virtual void ConsoleClear() = 0;
@@ -89,6 +90,9 @@ struct MakeBuild {
 	void SaveMakeFile(const String& fn, bool exporting);
 	
 	MakeBuild();
+	
+private:
+	static String GetInvalidBuildMethodError(const String& method);
 };
 
 extern bool output_per_assembly;
