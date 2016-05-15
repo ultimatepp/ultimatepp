@@ -1,0 +1,63 @@
+#include <Core/Core.h>
+
+using namespace Upp;
+
+#define PRINT(x) LOG("\tURLCHECK(" << #x << ", " << AsCString(AsString(x)) << ");");
+
+#define URLCHECK(x, y) DUMP(x); ASSERT(AsString(x) == y);
+
+CONSOLE_APP_MAIN
+{
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
+	UrlInfo f("http://username:password@hostname:9090/path?arg=value&aarg[]=item1&aarg[]=item2#anchor");
+
+	URLCHECK(f.url, "http://username:password@hostname:9090/path?arg=value&aarg[]=item1&aarg[]=item2#anchor");
+	URLCHECK(f.scheme, "http");
+	URLCHECK(f.host, "hostname");
+	URLCHECK(f.port, "9090");
+	URLCHECK(f.user, "username");
+	URLCHECK(f.password, "password");
+	URLCHECK(f.path, "/path");
+	URLCHECK(f.query, "arg=value&aarg[]=item1&aarg[]=item2");
+	URLCHECK(f.fragment, "anchor");
+	URLCHECK(f.parameters, "{arg: value}");
+	URLCHECK(f.array_parameters, "{aarg: [item1, item2]}");
+	
+	ASSERT(f["arg"] == "value");
+	ASSERT(IsNull(f["aarg"]));
+	ASSERT(f.GetArray("arg").GetCount() == 0);
+	ASSERT(f.GetArray("aarg").GetCount() == 2);
+	ASSERT(f.GetArray("aarg")[0] == "item1");
+	ASSERT(f.GetArray("aarg")[1] == "item2");
+
+	f.Parse("//www.example.com/path?googleguy=googley");
+
+	URLCHECK(f.url, "//www.example.com/path?googleguy=googley");
+	URLCHECK(f.scheme, "");
+	URLCHECK(f.host, "www.example.com");
+	URLCHECK(f.port, "");
+	URLCHECK(f.user, "");
+	URLCHECK(f.password, "");
+	URLCHECK(f.path, "/path");
+	URLCHECK(f.query, "googleguy=googley");
+	URLCHECK(f.fragment, "");
+	URLCHECK(f.parameters, "{googleguy: googley}");
+	URLCHECK(f.array_parameters, "{}");
+
+#if 0
+	PRINT(f.url);
+	PRINT(f.scheme);
+	PRINT(f.host);
+	PRINT(f.port);
+	PRINT(f.user);
+	PRINT(f.password);
+	PRINT(f.path);
+	PRINT(f.query);
+	PRINT(f.fragment);
+	PRINT(f.parameters);
+	PRINT(f.array_parameters);
+#endif
+
+	LOG("============================= OK");
+}
