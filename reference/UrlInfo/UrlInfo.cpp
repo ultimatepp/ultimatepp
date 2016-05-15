@@ -12,7 +12,7 @@ CONSOLE_APP_MAIN
 	DUMP(f.scheme);
 	DUMP(f.host);
 	DUMP(f.port);
-	DUMP(f.user);
+	DUMP(f.username);
 	DUMP(f.password);
 	DUMP(f.path);
 	DUMP(f.query);
