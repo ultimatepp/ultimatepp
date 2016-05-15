@@ -45,6 +45,20 @@ CONSOLE_APP_MAIN
 	URLCHECK(f.parameters, "{googleguy: googley}");
 	URLCHECK(f.array_parameters, "{}");
 
+	f.Parse("http://najisto.centrum.cz/?what=%C4%8Desk%C3%A9+sklo");
+
+	URLCHECK(f.url, "http://najisto.centrum.cz/?what=%C4%8Desk%C3%A9+sklo");
+	URLCHECK(f.scheme, "http");
+	URLCHECK(f.host, "najisto.centrum.cz");
+	URLCHECK(f.port, "");
+	URLCHECK(f.user, "");
+	URLCHECK(f.password, "");
+	URLCHECK(f.path, "/");
+	URLCHECK(f.query, "what=české sklo");
+	URLCHECK(f.fragment, "");
+	URLCHECK(f.parameters, "{what: české sklo}");
+	URLCHECK(f.array_parameters, "{}");
+
 #if 0
 	PRINT(f.url);
 	PRINT(f.scheme);
