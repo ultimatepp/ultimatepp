@@ -270,6 +270,31 @@ public:
 	SocketWaitEvent();
 };
 
+struct UrlInfo {
+	String                            url;
+
+	String                            scheme;
+	String                            host;
+	String                            port;
+	String                            user;
+	String                            password;
+	String                            path;
+	String                            query;
+	String                            fragment;
+
+	VectorMap<String, String>         parameters;
+	VectorMap<String, Vector<String>> array_parameters;
+
+	void Clear()                      { *this = UrlInfo(); }
+	void Parse(const String& url);
+
+	String operator[](const char *id) const;
+	const Vector<String>& GetArray(const char *id) const;
+	
+	UrlInfo() {}
+	UrlInfo(const String& url)        { Parse(url); }
+};
+
 struct HttpCookie : Moveable<HttpCookie> {
 	String id;
 	String value;
