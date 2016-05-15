@@ -16,7 +16,7 @@ topic "HttpRequest";
 ][*@3;3 TcpSocket]&]
 [s2;%% This class performs synchronous or asynchronous HTTP requests.&]
 [s3;%% &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
 [s5;:HttpRequest`:`:WhenContent: [_^Callback2^ Callback2]<[@(0.0.255) const]_[@(0.0.255) vo
 id]_`*, [@(0.0.255) int]>_[* WhenContent]&]
