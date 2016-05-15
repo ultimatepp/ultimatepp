@@ -682,12 +682,12 @@ void UrlInfo::Parse(const String& url_)
 		
 	q = h.Find('@');
 	if(q >= 0) {
-		user = h.Mid(0, q);
+		username = h.Mid(0, q);
 		h = h.Mid(q + 1);
-		q = user.Find(':');
+		q = username.Find(':');
 		if(q >= 0) {
-			password = user.Mid(q + 1);
-			user.Trim(q);
+			password = username.Mid(q + 1);
+			username.Trim(q);
 		}
 	}
 	q = h.Find('/');

@@ -39,7 +39,7 @@ topic "UrlInfo";
 [s2;%% Port: [@3 9090]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:user: [_^Upp`:`:String^ String]_[* username]&]
+[s5;:Upp`:`:UrlInfo`:`:username: [_^Upp`:`:String^ String]_[* username]&]
 [s2;%% Authentication username: [@3 username]&]
 [s3; &]
 [s4; &]
