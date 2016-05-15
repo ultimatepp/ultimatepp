@@ -276,7 +276,7 @@ struct UrlInfo {
 	String                            scheme;
 	String                            host;
 	String                            port;
-	String                            user;
+	String                            username;
 	String                            password;
 	String                            path;
 	String                            query;
