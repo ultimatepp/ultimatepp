@@ -16,7 +16,7 @@ CONSOLE_APP_MAIN
 	URLCHECK(f.scheme, "http");
 	URLCHECK(f.host, "hostname");
 	URLCHECK(f.port, "9090");
-	URLCHECK(f.user, "username");
+	URLCHECK(f.username, "username");
 	URLCHECK(f.password, "password");
 	URLCHECK(f.path, "/path");
 	URLCHECK(f.query, "arg=value&aarg[]=item1&aarg[]=item2");
@@ -37,7 +37,7 @@ CONSOLE_APP_MAIN
 	URLCHECK(f.scheme, "");
 	URLCHECK(f.host, "www.example.com");
 	URLCHECK(f.port, "");
-	URLCHECK(f.user, "");
+	URLCHECK(f.username, "");
 	URLCHECK(f.password, "");
 	URLCHECK(f.path, "/path");
 	URLCHECK(f.query, "googleguy=googley");
@@ -51,7 +51,7 @@ CONSOLE_APP_MAIN
 	URLCHECK(f.scheme, "http");
 	URLCHECK(f.host, "najisto.centrum.cz");
 	URLCHECK(f.port, "");
-	URLCHECK(f.user, "");
+	URLCHECK(f.username, "");
 	URLCHECK(f.password, "");
 	URLCHECK(f.path, "/");
 	URLCHECK(f.query, "what=české sklo");
@@ -64,7 +64,7 @@ CONSOLE_APP_MAIN
 	PRINT(f.scheme);
 	PRINT(f.host);
 	PRINT(f.port);
-	PRINT(f.user);
+	PRINT(f.username);
 	PRINT(f.password);
 	PRINT(f.path);
 	PRINT(f.query);
