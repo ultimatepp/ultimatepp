@@ -80,6 +80,8 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		return false;
 	}
 	
+	//// CFLAG /////
+
 	int idx = GetStandardBaudRates().Find(lSpeed);
 	dword speed;
 	if(idx < 0)
@@ -99,61 +101,6 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		cfsetispeed(&tty, speed);
 	}
 
-	// set data size
-	switch(bits)
-	{
-		case 5:
-			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS5;
-			break;
-		case 6:
-			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS6;
-			break;
-		case 7:
-			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS7;
-			break;
-		case 8:
-			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
-			break;
-		default:
-			Close();
-			isError = true;
-			errCode = InvalidSize;
-			return false;
-	}
-	
-	// disable IGNBRK for mismatched speed tests; otherwise receive break as \000 chars
-	// disable break processing
-	tty.c_iflag &= ~IGNBRK;
-
-	// DO NOT ignore carriage returns
-	tty.c_iflag &= ~IGNCR;
-	
-	// DO NOT translate cr/lf
-	tty.c_iflag &= ~ICRNL;
-	
-	// DO NOT translate cr
-	tty.c_iflag &= ~INLCR;
-	
-	// no signaling chars, no echo, no canonical mode
-	tty.c_lflag = 0;	
-	
-	// no canonical processing
-	
-	// no remapping, no delays
-	tty.c_oflag = 0;
-	
-	// read doesn't block
-	tty.c_cc[VMIN]  = 0;
-	
-	// 0.5 seconds read timeout
-	tty.c_cc[VTIME] = 0;
-	
-	// shut off xon/xoff ctrl
-	tty.c_iflag &= ~(IXON | IXOFF | IXANY);
-	
-	// ignore modem controls, enable reading
-	tty.c_cflag |= (CLOCAL | CREAD);
-	
 	// parity
 	tty.c_cflag &= ~(PARENB | PARODD);
 	switch(parity)
@@ -179,6 +126,29 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 			return false;
 	}
 	
+	// set data size
+	switch(bits)
+	{
+		case 5:
+			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS5;
+			break;
+		case 6:
+			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS6;
+			break;
+		case 7:
+			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS7;
+			break;
+		case 8:
+			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS8;
+			break;
+		default:
+			Close();
+			isError = true;
+			errCode = InvalidSize;
+			return false;
+	}
+	
+	// stop bits
 	if(stopBits == 1)
 		tty.c_cflag &= ~CSTOPB;
 	else if(stopBits == 2)
@@ -190,10 +160,55 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		errCode = InvalidStopBits;
 		return false;
 	}
+
+	// ignore modem controls, enable reading
+	tty.c_cflag |= (CLOCAL | CREAD);
 	
 	// no rts/cts
 	tty.c_cflag &= ~CRTSCTS;
+
+	//// LFLAG /////
+
+	// no signaling chars, no echo, no canonical mode
+	tty.c_lflag = 0;	
+//	tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);	
+
+	//// IFLAG /////
+
+	// disable IGNBRK for mismatched speed tests; otherwise receive break as \000 chars
+	// disable break processing
+	tty.c_iflag &= ~IGNBRK;
+//	tty.c_iflag |= IGNBRK;
+
+	// DO NOT ignore carriage returns
+	tty.c_iflag &= ~IGNCR;
 	
+	// DO NOT translate cr/lf
+	tty.c_iflag &= ~ICRNL;
+	
+	// DO NOT translate cr
+	tty.c_iflag &= ~INLCR;
+	
+	// shut off xon/xoff ctrl
+	tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+	
+	//// OFLAG /////
+
+	// no remapping, no delays
+	tty.c_oflag = 0;
+	
+	//// CONTROL CHARACTERS /////
+
+	// read doesn't block
+	tty.c_cc[VMIN]  = 0;
+	
+	// 0.5 seconds read timeout
+	tty.c_cc[VTIME] = 0;
+	
+	RLOG("CFLAGS : " << tty.c_cflag);
+	RLOG("LFLAGS : " << tty.c_lflag);
+	RLOG("IFLAGS : " << tty.c_iflag);
+	RLOG("OFLAGS : " << tty.c_oflag);
 	
 	if (tcsetattr(fd, TCSANOW, &tty) != 0)
 	{
@@ -276,9 +291,21 @@ bool Serial::Read(char &c, uint32_t timeout)
 }
 
 // write a single byte
-bool Serial::Write(char c)
+bool Serial::Write(char c, uint32_t timeout)
 {
-	return (write(fd, &c, 1) >= 0);
+	if(!timeout)
+		return write(fd, &c, 1);
+
+	uint32_t tim = msecs() + timeout;
+	for(;;)
+	{
+		if(write(fd, &c, 1) == 1)
+			return true;
+		if((uint32_t)msecs() > tim)
+			break;
+	}
+	
+	return false;
 }
 		
 // read data, requested amount, blocks 'timeout' milliseconds
@@ -333,9 +360,29 @@ String Serial::Read(size_t reqSize, uint32_t timeout)
 }
 
 // writes data
-bool Serial::Write(String const &data)
+bool Serial::Write(String const &data, uint32_t timeout)
 {
-	return (write(fd, ~data, data.GetCount()) >= 0);
+	int dLen = data.GetCount();
+	if(!timeout)
+		return (write(fd, ~data, data.GetCount()) == dLen);
+
+	uint32_t tim = msecs() + timeout;
+	const char *dPos = ~data;
+	for(;;)
+	{
+		int written = write(fd, dPos, dLen);
+		if(written == dLen)
+			return true;
+		if(written >= 0)
+		{
+			dPos += written;
+			dLen -= written;
+			continue;
+		}
+		if((uint32_t)msecs() >= tim)
+			break;
+	}
+	return false;
 }
 
 // check if opened
