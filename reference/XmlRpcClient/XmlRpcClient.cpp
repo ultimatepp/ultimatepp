@@ -26,4 +26,8 @@ CONSOLE_APP_MAIN
 	Compute(12, "*", 12);
 	Compute(12, "+56", 12);
 	Compute(12, "/", 0);
+	
+	String res;
+	JsonRpcRequest("127.0.0.1:1234")("end_test") >> res;
+	Cout() << res << '\n';
 }
