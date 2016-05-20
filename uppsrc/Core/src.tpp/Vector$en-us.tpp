@@ -366,9 +366,8 @@ copy constructor for T, but destroys source Vector.&]
 [s2; Inserts C`+`+11 style initialization list.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Vector`:`:Append`(int`,std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_
-[* Append]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
-[*@4 T]>_[*@3 init])&]
+[s5;:Upp`:`:Vector`:`:Append`(std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_[* App
+end](std`::initializer`_list<[*@4 T]>_[*@3 init])&]
 [s2; Appends C`+`+11 style initialization list.&]
 [s3;%- &]
 [s4;%- &]
