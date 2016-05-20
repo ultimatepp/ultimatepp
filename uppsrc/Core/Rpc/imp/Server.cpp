@@ -93,38 +93,69 @@ bool CallRpcMethod(RpcData& data, const char *group, String methodname, const St
 	return true;
 }
 
-String DoXmlRpc(const String& request, const char *group, const char *peeraddr, String& methodname)
+struct XmlRpcDo {
+	TcpSocket& http;
+	RpcData    data;
+	String     request;
+	String     group;
+	String     methodname;
+	Value      id;
+	bool       json;
+
+	String XmlResult();
+	String DoXmlRpc();
+	String JsonRpcError(int code, const char *text, const Value& id);
+	String JsonResult();
+	String ProcessJsonRpc(const Value& v);
+	String DoJsonRpc();
+	String RpcExecute();
+	void   RpcResponse(const String& r);
+	void   EndRpc();
+	bool   Perform();
+	
+	XmlRpcDo(TcpSocket& http, const char *group);
+};
+
+XmlRpcDo::XmlRpcDo(TcpSocket& http, const char *group)
+:	http(http), group(group)
+{
+	data.rpc = this;
+}
+
+String XmlRpcDo::XmlResult()
+{
+	String r = XmlHeader();
+	r << "<methodResponse>\r\n";
+	if(IsValueArray(data.out)) {
+		ValueArray va = data.out;
+		if(va.GetCount() && IsError(va[0])) {
+			LLOG("ProcessingError");
+			String e = GetErrorText(data.out[0]);
+			if(rpc_trace)
+				*rpc_trace << "Processing error: " << e << '\n';
+			return FormatXmlRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e);
+		}
+		r << FormatXmlRpcParams(data.out);
+	}
+	r << "\r\n</methodResponse>\r\n";
+	return r;
+}
+
+String XmlRpcDo::DoXmlRpc()
 {
 	XmlParser p(request);
-	RpcData data;
 	try {
-		String r = XmlHeader();
-		r << "<methodResponse>\r\n";
 		p.ReadPI();
 		p.PassTag("methodCall");
 		p.PassTag("methodName");
 		methodname = p.ReadText();
 		p.PassEnd();
-		data.peeraddr = peeraddr;
 		data.in = ParseXmlRpcParams(p);
-		if(CallRpcMethod(data, group, methodname, request)) {
-			if(IsValueArray(data.out)) {
-				ValueArray va = data.out;
-				if(va.GetCount() && IsError(va[0])) {
-					LLOG("ProcessingError");
-					String e = GetErrorText(data.out[0]);
-					if(rpc_trace)
-						*rpc_trace << "Processing error: " << e << '\n';
-					return FormatXmlRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e);
-				}
-				r << FormatXmlRpcParams(data.out);
-			}
-			r << "\r\n</methodResponse>\r\n";
-		}
-		else
+		if(!CallRpcMethod(data, group, methodname, request))
 			return FormatXmlRpcError(RPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
-		p.PassEnd();
-		return r;
+		if(!data.rpc)
+			return Null;
+		return XmlResult();
 	}
 	catch(RpcError e) {
 		LLOG("Processing error: " << e.text);
@@ -147,7 +178,7 @@ String DoXmlRpc(const String& request, const char *group, const char *peeraddr, 
 	return Null;
 }
 
-String JsonRpcError(int code, const char *text, const Value& id)
+String XmlRpcDo::JsonRpcError(int code, const char *text, const Value& id)
 {
 	Json m;
 	m("jsonrpc", "2.0");
@@ -159,42 +190,48 @@ String JsonRpcError(int code, const char *text, const Value& id)
 	return m;
 }
 
-String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr, const String& request, String& methodname)
+String XmlRpcDo::JsonResult()
+{
+	if(IsValueArray(data.out)) {
+		ValueArray va = data.out;
+		Value result = Null;
+		if(va.GetCount()) {
+			if(IsError(va[0])) {
+				LLOG("ProcessingError");
+				String e = GetErrorText(data.out[0]);
+				if(rpc_trace)
+					*rpc_trace << "Processing error: " << e << '\n';
+				return JsonRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e, id);
+			}
+			result = JsonRpcData(va[0]);
+		}
+		Json json;
+		json("jsonrpc", "2.0");
+		if(result.Is<RawJsonText>())
+			json.CatRaw("result", result.To<RawJsonText>().json);
+		else
+			json("result", result);
+		json("id", id);
+		return json;
+	}
+	return JsonRpcError(RPC_UNKNOWN_METHOD_ERROR, "Method not found", id);
+}
+
+String XmlRpcDo::ProcessJsonRpc(const Value& v)
 {
 	LLOG("Parsed JSON request: " << v);
-	Value id = v["id"];
+	id = v["id"];
 	methodname = AsString(v["method"]);
 	Value param = v["params"];
-	RpcData data;
-	data.peeraddr = peeraddr;
 	if(param.Is<ValueMap>())
 		data.in_map = param;
 	else
 		data.in = param;
 	try {
 		if(CallRpcMethod(data, group, methodname, request)) {
-			if(IsValueArray(data.out)) {
-				ValueArray va = data.out;
-				Value result = Null;
-				if(va.GetCount()) {
-					if(IsError(va[0])) {
-						LLOG("ProcessingError");
-						String e = GetErrorText(data.out[0]);
-						if(rpc_trace)
-							*rpc_trace << "Processing error: " << e << '\n';
-						return JsonRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e, id);
-					}
-					result = JsonRpcData(va[0]);
-				}
-				Json json;
-				json("jsonrpc", "2.0");
-				if(result.Is<RawJsonText>())
-					json.CatRaw("result", result.To<RawJsonText>().json);
-				else
-					json("result", result);
-				json("id", id);
-				return json;
-			}
+			if(!data.rpc)
+				return Null;
+			return JsonResult();
 		}
 		return JsonRpcError(RPC_UNKNOWN_METHOD_ERROR, "Method not found", id);
 	}
@@ -212,16 +249,16 @@ String ProcessJsonRpc(const Value& v, const char *group, const char *peeraddr, c
 	}
 }
 
-String DoJsonRpc(const String& request, const char *group, const char *peeraddr, String& methodname)
+String XmlRpcDo::DoJsonRpc()
 {
 	try {
 		Value v = ParseJSON(request);
 		if(v.Is<ValueMap>())
-			return ProcessJsonRpc(v, group, peeraddr, request, methodname);
+			return ProcessJsonRpc(v);
 		if(v.Is<ValueArray>()) {
 			JsonArray a;
 			for(int i = 0; i < v.GetCount(); i++)
-				a.CatRaw(ProcessJsonRpc(v[i], group, peeraddr, request, methodname));
+				a.CatRaw(ProcessJsonRpc(v[i]));
 			return v.GetCount() ? ~a : String();
 		}
 	}
@@ -229,17 +266,23 @@ String DoJsonRpc(const String& request, const char *group, const char *peeraddr,
 	return AsJSON(JsonRpcError(RPC_SERVER_JSON_ERROR, "Parse error", Null));
 }
 
-String RpcExecute(const String& request, const char *group, const char *peeraddr, bool& json)
+String XmlRpcDo::RpcExecute()
 {
-	CParser p(request);
+	json = false;
+	try {
+		CParser p(request);
+		json = p.Char('{') || p.Char('[');
+	}
+	catch(CParser::Error) {}
+
 	String r;
-	json = p.Char('{') || p.Char('[');
 	String mn;
 	TimeStop tm;
 	if(json)
-		r = DoJsonRpc(request, group, peeraddr, mn);
+		r = DoJsonRpc();
 	else
-	    r = DoXmlRpc(request, group, peeraddr, mn);
+	    r = DoXmlRpc();
+
 	if(rpc_trace) {
 		mn << " (" << tm.Elapsed() << " ms)";
 		if(rpc_trace_level == 0)
@@ -259,41 +302,70 @@ String RpcExecute(const String& request, const char *group, const char *peeraddr
 	return r;
 }
 
-String RpcExecute(const String& request, const char *group, const char *peeraddr)
+void XmlRpcDo::RpcResponse(const String& r)
 {
-	bool dummy;
-	return RpcExecute(request, group, peeraddr, dummy);
+	LLOG("--------- Server response:\n" << r << "=============");
+	String response;
+	String ts = WwwFormat(GetUtcTime());
+	response <<
+		"HTTP/1.0 200 OK\r\n"
+		"Date: " << ts << "\r\n"
+		"Server: U++ RPC server\r\n"
+		"Content-Length: " << r.GetCount() << "\r\n"
+		"Connection: close\r\n"
+		"Content-Type: application/" << (json ? "json" : "xml") << "\r\n\r\n"
+		<< r;
+	LLOG(response);
+	if(r.GetCount())
+		http.Put(response);
 }
 
-bool RpcPerform(TcpSocket& http, const char *group)
+void XmlRpcDo::EndRpc()
+{
+	RpcResponse(json ? JsonResult() : XmlResult());
+}
+
+void RpcData::EndRpc()
+{
+	if(rpc) {
+		rpc->EndRpc();
+		rpc = NULL;
+	}
+}
+
+bool XmlRpcDo::Perform()
 {
 	LLOG("=== Accepted connection ===================================================");
 	HttpHeader hdr;
 	if(hdr.Read(http) && hdr.GetMethod() == "POST") {
 		int len = atoi(hdr["content-length"]);
 		if(len > 0 && len < 1024 * 1024 * 1024) {
-			bool json;
-			String r = RpcExecute(http.GetAll(len), group, http.GetPeerAddr(), json);
-			LLOG("--------- Server response:\n" << r << "=============");
-			String response;
-			String ts = WwwFormat(GetUtcTime());
-			response <<
-				"HTTP/1.0 200 OK\r\n"
-				"Date: " << ts << "\r\n"
-				"Server: U++ RPC server\r\n"
-				"Content-Length: " << r.GetCount() << "\r\n"
-				"Connection: close\r\n"
-				"Content-Type: application/" << (json ? "json" : "xml") << "\r\n\r\n"
-				<< r;
-			LLOG(response);
-			if(r.GetCount())
-				http.Put(response);
+			request = http.GetAll(len);
+			data.peeraddr = http.GetPeerAddr();
+			data.rpc = this;
+			String r = RpcExecute();
+			if(data.rpc)
+				RpcResponse(r);
 			return true;
 		}
 	}
 	http.Put("HTTP/1.0 400 Bad request\r\n"
 	         "Server: U++\r\n\r\n");
 	return false;
+}
+
+bool RpcPerform(TcpSocket& http, const char *group)
+{
+	return XmlRpcDo(http, group).Perform();
+}
+
+String RpcExecute(const String& request_)
+{
+	HttpRequest dummy;
+	XmlRpcDo h(dummy, "");
+	h.request = request_;
+	h.data.peeraddr = "127.0.0.1";
+	return h.RpcExecute();
 }
 
 bool RpcServerLoop(int port, const char *group)

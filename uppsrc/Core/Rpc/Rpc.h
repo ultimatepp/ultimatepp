@@ -205,6 +205,8 @@ struct RpcGet {
 	String ToString() const { return v.ToString(); }
 };
 
+struct XmlRpcDo;
+
 struct RpcData {
 	String     peeraddr;
 	ValueArray in;
@@ -235,8 +237,15 @@ struct RpcData {
 	void operator=(const T& x)          { out.Clear(); operator<<(x); }
 
 	void        Reset()                 { in.Clear(); out.Clear(); ii = 0; }
+	
+	void        EndRpc();
 
-	RpcData() { ii = 0; }
+	RpcData() { ii = 0; rpc = NULL; }
+
+private:
+	friend struct XmlRpcDo;
+
+	XmlRpcDo *rpc;
 };
 
 String FormatXmlRpcValue(const Value& value);
@@ -256,7 +265,6 @@ struct RpcError {
 };
 
 void   SetRpcMethodFilter(String (*filter)(const String& methodname));
-String RpcExecute(const String& request, const char *group, const char *peeraddr);
 bool   RpcPerform(TcpSocket& http, const char *group);
 bool   RpcServerLoop(int port, const char *group = NULL);
 
