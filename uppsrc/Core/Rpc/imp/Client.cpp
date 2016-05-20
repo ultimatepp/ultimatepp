@@ -75,6 +75,8 @@ Value JsonRpcData(const Value& v)
 	return v;
 }
 
+String RpcExecute(const String& request_);
+
 RpcGet RpcRequest::Execute()
 {
 	if(!shouldExecute)
@@ -129,7 +131,7 @@ RpcGet RpcRequest::Execute()
 	String response;
 	New();
 	if(shorted)
-		response = RpcExecute(request, "", "127.0.0.1");
+		response = RpcExecute(request);
 	else
 		response = Post(request).Execute();
 	if(sLogRpcCalls) {
