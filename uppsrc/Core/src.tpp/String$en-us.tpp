@@ -520,6 +520,12 @@ rt]([@(0.0.255) int]_[*@3 pos], [@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`
 times).&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:AString`:`:TrimLast`(int`):%- [@(0.0.255) void]_[* TrimLast]([@(0.0.255) int]_[*@3 c
+ount]_`=_[@3 1])&]
+[s2; Removes [%-*@3 count] characters from the end of String. Same 
+as Remove(GetCount() `- count).&]
+[s3; &]
+[s4;%- &]
 [s5;:AString`:`:Mid`(int`,int`)const:%- [_^AString`:`:String^ String]_[* Mid]([@(0.0.255) i
 nt]_[*@3 pos], [@(0.0.255) int]_[*@3 length])_[@(0.0.255) const]&]
 [s2; Returns a substring that begins from [%-*@3 pos] and with [%-*@3 length 
@@ -564,6 +570,10 @@ substring found. In other words, if not found returns `-1, if
 found, returns Find([%-*@3 s][%- , ][%-*@3 from]) `+ strlen([%-*@3 s]).&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:AString`:`:Replace`(const Upp`:`:AString`:`:tchar`*`,int`,const Upp`:`:AString`:`:tchar`*`,int`):%- [@(0.0.255) v
+oid]_[* Replace]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 find], 
+[@(0.0.255) int]_[*@3 findlen], [@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 r
+eplace], [@(0.0.255) int]_[*@3 replacelen])&]
 [s5;:AString`:`:Replace`(const AString`:`:String`&`,const AString`:`:String`&`):%- [@(0.0.255) v
 oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 find],
  [@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 replace])&]
@@ -578,4 +588,53 @@ oid]_[* Replace]([@(0.0.255) const]_[_^AString`:`:tchar^ tchar]_`*[*@3 find],
 [@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 replace])&]
 [s2; Replaces substring [%-*@3 find] with [%-*@3 replace ]string for 
 all times [%-*@3 find] string appears.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:StartsWith`(const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) b
+ool]_[* StartsWith]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 len])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:StartsWith`(const Upp`:`:AString`:`:tchar`*`)const:%- [@(0.0.255) b
+ool]_[* StartsWith]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s])_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:AString`:`:StartsWith`(const Upp`:`:AString`:`:String`&`)const:%- [@(0.0.255) b
+ool]_[* StartsWith]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&
+]_[*@3 s])_[@(0.0.255) const]&]
+[s2; Returns true if string starts with [%-*@3 s].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:TrimStart`(const Upp`:`:AString`:`:tchar`*`,int`):%- [@(0.0.255) b
+ool]_[* TrimStart]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 len])&]
+[s5;:Upp`:`:AString`:`:TrimStart`(const Upp`:`:AString`:`:tchar`*`):%- [@(0.0.255) bool
+]_[* TrimStart]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s])&]
+[s5;:Upp`:`:AString`:`:TrimStart`(const Upp`:`:AString`:`:String`&`):%- [@(0.0.255) boo
+l]_[* TrimStart]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&]_[*@3 s
+])&]
+[s2; If string ends with [%-*@3 s]., trims the end to remove it and 
+returns true.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:EndsWith`(const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) b
+ool]_[* EndsWith]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 len])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:EndsWith`(const Upp`:`:AString`:`:tchar`*`)const:%- [@(0.0.255) b
+ool]_[* EndsWith]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s])_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:AString`:`:EndsWith`(const Upp`:`:AString`:`:String`&`)const:%- [@(0.0.255) b
+ool]_[* EndsWith]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&]_
+[*@3 s])_[@(0.0.255) const]&]
+[s2; Returns true if string ends with [%-*@3 s].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:TrimEnd`(const Upp`:`:AString`:`:tchar`*`,int`):%- [@(0.0.255) b
+ool]_[* TrimEnd]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 len])&]
+[s5;:Upp`:`:AString`:`:TrimEnd`(const Upp`:`:AString`:`:tchar`*`):%- [@(0.0.255) bool]_
+[* TrimEnd]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s])&]
+[s5;:Upp`:`:AString`:`:TrimEnd`(const Upp`:`:AString`:`:String`&`):%- [@(0.0.255) bool]_
+[* TrimEnd]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&]_[*@3 s])
+&]
+[s2; If string ends with [%-*@3 s]., trims the end to remove it and 
+returns true.&]
+[s3; &]
 [s3; ]]

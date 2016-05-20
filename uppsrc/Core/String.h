@@ -57,6 +57,8 @@ public:
 	void Insert(int pos, const tchar *s, int count)           { B::Insert(pos, count, s); }
 	void Insert(int pos, const String& s)                     { Insert(pos, s, s.GetCount()); }
 	void Insert(int pos, const char *s);
+	
+	void TrimLast(int count = 1)                              { B::Trim(B::GetCount() - count); }
 
 	void  Cat(int c)                                          { B::Cat(c); }
 	void  Cat(const tchar *s, int len)                        { B::Cat(s, len); }
@@ -107,9 +109,17 @@ public:
 	bool   StartsWith(const tchar *s) const;
 	bool   StartsWith(const String& s) const                  { return StartsWith(~s, s.GetLength()); }
 
+	bool   TrimStart(const tchar *s, int len)                 { if(!StartsWith(s, len)) return false; Remove(0, len); return true; }
+	bool   TrimStart(const tchar *s)                          { return TrimStart(s, strlen__(s)); }
+	bool   TrimStart(const String& s)                         { return TrimStart(~s, s.GetLength()); }
+
 	bool   EndsWith(const tchar *s, int len) const;
 	bool   EndsWith(const tchar *s) const;
 	bool   EndsWith(const String& s) const                    { return EndsWith(~s, s.GetLength()); }
+	
+	bool   TrimEnd(const tchar *s, int len)                   { if(!EndsWith(s, len)) return false; TrimLast(len); return true; }
+	bool   TrimEnd(const tchar *s)                            { return TrimEnd(s, strlen__(s)); }
+	bool   TrimEnd(const String& s)                           { return TrimEnd(~s, s.GetLength()); }
 
 	int    FindFirstOf(int len, const tchar *s, int from) const;
 	int    FindFirstOf(const tchar *s, int from = 0) const;
@@ -147,7 +157,7 @@ public:
 	friend String operator+(const tchar *a, const String& b)   { String c(a); c += b; return c; }
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
 
-// Avoid common error of adding offset to String (NoCopy to produce compiler error)
+// Avoid common error of adding offset to String (Fail__ to produce compiler error)
 	friend Fail__ operator+(int, const String&) { return Fail__(); }
 	friend Fail__ operator+(const String&, int) { return Fail__();}
 	friend Fail__ operator+(size_t, const String&) { return Fail__(); }
