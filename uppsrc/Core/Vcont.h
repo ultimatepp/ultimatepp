@@ -180,7 +180,7 @@ public:
 	void operator=(Vector&& v)       { if(this != &v) { Free(); Pick(pick(v)); } }
 
 	void     Insert(int i, std::initializer_list<T> init);
-	void     Append(int i, std::initializer_list<T> init) { Insert(GetCount(), init); }
+	void     Append(std::initializer_list<T> init) { Insert(GetCount(), init); }
 	Vector(std::initializer_list<T> init) { vector = NULL; items = alloc = 0; Insert(0, init); }
 
 // Deep copy
