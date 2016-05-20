@@ -1,0 +1,11 @@
+description "Demonstrates String\377";
+
+uses
+	Core;
+
+file
+	Strings.cpp;
+
+mainconfig
+	"" = "";
+
