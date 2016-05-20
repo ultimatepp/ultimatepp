@@ -65,4 +65,11 @@ CONSOLE_APP_MAIN
 	
 	s = ws.ToString();
 	DUMP(s);
+	
+	StringBuffer sb = s;
+	DUMP(s);
+	char *h = sb;
+	*h = 'C';
+	s = sb;
+	DUMP(s);
 }
