@@ -36,6 +36,15 @@ RPC_METHOD(ping)
 	rpc << GetSysTime();
 }
 
+RPC_METHOD(end_test)
+{
+	rpc << "OK";
+	Cout() << "Immediate reply\n";
+	rpc.EndRpc();
+	Sleep(2000);
+	Cout() << "Method ended now\n";
+}
+
 CONSOLE_APP_MAIN
 {
 	Cout() << "Server..\n";
