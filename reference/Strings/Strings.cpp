@@ -72,4 +72,7 @@ CONSOLE_APP_MAIN
 	*h = 'C';
 	s = sb;
 	DUMP(s);
+	
+	String z(0, 10);
+	DUMPHEX(z);
 }
