@@ -1,5 +1,5 @@
-#include <WinVer.h>
-#include <DbgHelp.h>
+#include <winver.h>
+#include <dbghelp.h>
 #include <psapi.h>
 #include "cvconst.h"
 

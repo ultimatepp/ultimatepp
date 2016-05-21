@@ -5,7 +5,7 @@
 
 #include <commdlg.h>
 #include <cderr.h>
-#include <ShellApi.h>
+#include <shellapi.h>
 
 #endif
 #endif
