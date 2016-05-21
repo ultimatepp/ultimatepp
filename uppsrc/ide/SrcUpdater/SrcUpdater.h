@@ -5,7 +5,7 @@
 #include <usvn/usvn.h>
 #include <ide/version.h>
 
-#ifndef PLATFORM_POSIX
+#if !defined(PLATFORM_POSIX) && !defined(flagWIN32)
 #error Updater is only implemented for POSIX compliant platforms
 #endif
 

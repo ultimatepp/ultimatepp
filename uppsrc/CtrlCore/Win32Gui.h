@@ -355,7 +355,7 @@ END_UPP_NAMESPACE
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE
 
-#include <ShellAPI.h>
+#include <shellapi.h>
 
 #endif
 #endif

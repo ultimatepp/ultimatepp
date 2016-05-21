@@ -668,7 +668,7 @@ void Uninstall();
 bool SilentMode;
 
 #ifdef PLATFORM_WIN32
-#include <Wincon.h>
+#include <wincon.h>
 
 void Puts(const char *s)
 {
