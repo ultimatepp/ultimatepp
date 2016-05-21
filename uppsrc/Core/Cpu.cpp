@@ -106,7 +106,11 @@ int CPU_Cores()
 
 int CPU_Cores()
 {
-	return minmax(get_nprocs(), 1, 256);
+	#ifdef PLATFORM_ANDROID
+		return 1;
+	#else
+		return minmax(get_nprocs(), 1, 256);
+	#endif
 }
 #else
 int CPU_Cores()

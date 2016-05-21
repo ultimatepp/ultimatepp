@@ -6,7 +6,9 @@
 #endif
 #ifdef PLATFORM_POSIX
 #include <locale.h>
-#include <langinfo.h>
+	#ifndef PLATFORM_ANDROID
+	#include <langinfo.h>
+	#endif
 #endif
 
 namespace Upp {
@@ -295,7 +297,7 @@ void LanguageInfo::Set(int lang_)
 	}
 #endif
 
-#ifdef PLATFORM_POSIX
+#if defined(PLATFORM_POSIX) && !defined(PLATFORM_ANDROID)
 	String langtext = LNGAsText(language);
 	char ltext[6];
 	ltext[0] = ToLower(langtext[0]);

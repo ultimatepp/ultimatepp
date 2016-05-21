@@ -6,7 +6,9 @@
 #endif
 #ifdef PLATFORM_POSIX
 #include <locale.h>
-#include <langinfo.h>
+	#ifndef PLATFORM_ANDROID
+	#include <langinfo.h>
+	#endif
 #endif
 
 NAMESPACE_UPP
