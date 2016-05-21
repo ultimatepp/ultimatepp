@@ -166,12 +166,6 @@ CONSOLE_APP_MAIN
 					case 'r':
 						ide.targetmode = 1;
 						break;
-					case '1':
-						ide.targetmode = 2;
-						break;
-					case '2':
-						ide.targetmode = 3;
-						break;
 					case 'm':
 						ide.release.createmap = ide.debug.createmap = true;
 						break;
