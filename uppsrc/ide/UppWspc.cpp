@@ -81,15 +81,13 @@ void WorkspaceWork::SyncErrorPackages()
 {
 	for(int i = 0; i < package.GetCount(); i++) {
 		FileList::File f = package.Get(i);
-		if(!IsAux(f.name) && i < speed.GetCount()) {
+		if(!IsAux(f.name)) {
 			FileList::File ff = f;
 			String path = GetFileFolder(PackagePath(f.name));
 		#ifdef PLATFORM_WIN32
 			path = ToLower(path);
 		#endif
 			ff.icon = i ? IdeImg::Package() : IdeImg::MainPackage();
-			if(speed[i])
-				ff.icon = ImageOver(ff.icon, IdeImg::FastPackage());
 			ff.underline = Null;
 			for(int q = 0; q < errorfiles.GetCount(); q++) {
 				if(errorfiles[q].StartsWith(path)) {
@@ -113,17 +111,12 @@ void WorkspaceWork::ScanWorkspace() {
 	filelist.Clear();
 	package.Clear();
 	Vector<String> pks;
-	speed.Clear();
-	for(int i = 0; i < wspc.package.GetCount(); i++) {
+	for(int i = 0; i < wspc.package.GetCount(); i++)
 		pks.Add(wspc.package.GetKey(i));
-		speed.Add(wspc.GetPackage(i).optimize_speed);
-	}
 	if(sort && wspc.GetCount()) {
 		PackageOrder po;
 		po.mainpath = PackagePath(pks[0]);
-		IndexSort(SubRange(pks.Begin() + 1, pks.End()).Write(),
-		          SubRange(speed.Begin() + 1, speed.End()).Write(),
-		          po);
+		Sort(SubRange(pks, 1, pks.GetCount() - 1), po);
 	}
 	for(int i = 0; i < wspc.package.GetCount(); i++) {
 		String pk = pks[i];
@@ -262,7 +255,7 @@ void WorkspaceWork::LoadActualPackage()
 					}
 				}
 			}
-			Image m = IdeFileImage(f, f.optimize_speed, false, f.pch);
+			Image m = IdeFileImage(f, false, f.pch);
 			if(GetFileExt(p) == ".tpp" && IsFolder(p)) {
 				if(FileExists(AppendFileName(p, "all.i")))
 					m = TopicImg::IGroup();
@@ -917,22 +910,12 @@ void WorkspaceWork::FileMenu(Bar& menu)
 				menu.Add("Svn Synchronize " + p, THISBACK1(SyncSvnDir, p));
 		}
 		else {
-			menu.Add("Optimize for speed", THISBACK(ToggleFileSpeed))
-			    .Check(ActiveFile().optimize_speed);
 			if(IsHeaderExt(ext))
 				menu.Add("Precompile header", THISBACK(TogglePCH))
 				    .Check(ActiveFile().pch);
 		}
 	}
 	FilePropertiesMenu(menu);
-}
-
-void WorkspaceWork::ToggleFileSpeed()
-{
-	if(IsActiveFile()) {
-		ActiveFile().optimize_speed = !ActiveFile().optimize_speed;
-		SaveLoadPackageNS();
-	}
 }
 
 void WorkspaceWork::TogglePCH()
@@ -1023,7 +1006,6 @@ void WorkspaceWork::TogglePackageSpeed()
 {
 	if(!package.IsCursor())
 		return;
-	actual.optimize_speed = !actual.optimize_speed;
 	SaveLoadPackageNS();
 }
 
@@ -1076,9 +1058,6 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 		if(menu.IsMenuBar()) {
 			menu.Add(cando, "Rename package..", THISBACK(RenamePackage));
 			menu.Add(cando, "Delete package", THISBACK(DeletePackage));
-			menu.Separator();
-			menu.Add(cando, "Optimize for speed", THISBACK(TogglePackageSpeed))
-			    .Check(actual.optimize_speed);
 			menu.Separator();
 			BuildPackageMenu(menu);
 			menu.Add("Open Package Directory",THISBACK(OpenPackageFolder));

@@ -250,7 +250,6 @@ struct WorkspaceWork {
 	static    Font ListFont();
 
 	FileList     package;
-	Vector<bool> speed;
 	UppList      filelist;
 	Vector<int>  fileindex;
 
@@ -356,7 +355,6 @@ struct WorkspaceWork {
 	void RemoveFile();
 	void DelFile();
 	void RenameFile();
-	void ToggleFileSpeed();
 	void TogglePCH();
 	void ToggleIncludeable();
 

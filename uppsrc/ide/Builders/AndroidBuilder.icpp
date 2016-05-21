@@ -49,7 +49,6 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	Vector<String> nativeSourceFilesInPackage;
 	Vector<String> nativeSourceFilesOptions;
 	Vector<String> nativeObjects;
-	Vector<bool>   optimizeNativeSourceFiles;
 	
 	Index<String> noBlitzNativeSourceFiles;
 	
@@ -111,7 +110,6 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 			nativeSourceFilesOptions.Add(globalOptions);
 			if(pkg[i].noblitz)
 				noBlitzNativeSourceFiles.Add(packageFile);
-			optimizeNativeSourceFiles.Add(pkg[i].optimize_speed); // TODO: seems android makefile dosen't support this
 			
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
 				return false;
@@ -188,7 +186,6 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 			                               nativeObjects,
 			                               immfile,
 			                               ".o",
-			                               optimizeNativeSourceFiles,
 			                               noBlitzNativeSourceFiles);
 			
 			String destinationFileName = GetFileName(blitz.path);
