@@ -2,7 +2,7 @@
 
 #ifdef PLATFORM_WIN32
 #include <winsock2.h>
-#include <Ws2tcpip.h>
+#include <ws2tcpip.h>
 #endif
 
 #ifdef PLATFORM_POSIX
