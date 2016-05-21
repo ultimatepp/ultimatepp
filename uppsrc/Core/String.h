@@ -109,7 +109,7 @@ public:
 	bool   StartsWith(const tchar *s) const;
 	bool   StartsWith(const String& s) const                  { return StartsWith(~s, s.GetLength()); }
 
-	bool   TrimStart(const tchar *s, int len)                 { if(!StartsWith(s, len)) return false; Remove(0, len); return true; }
+	bool   TrimStart(const tchar *s, int len)                 { if(!StartsWith(s, len)) return false; B::Remove(0, len); return true; }
 	bool   TrimStart(const tchar *s)                          { return TrimStart(s, strlen__(s)); }
 	bool   TrimStart(const String& s)                         { return TrimStart(~s, s.GetLength()); }
 
