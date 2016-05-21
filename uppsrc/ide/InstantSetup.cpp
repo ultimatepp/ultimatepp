@@ -203,7 +203,6 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_BLITZ", "0");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
 			bmSet(bm, "RELEASE_OPTIONS", "-O2");
-			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-O1");
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "/STACK:20000000");
 			bmSet(bm, "DEBUGGER", "msdev");
@@ -257,7 +256,6 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
 			bmSet(bm, "RELEASE_OPTIONS", "-O2 -ffunction-sections");
-			bmSet(bm, "RELEASE_SIZE_OPTIONS", "-O2 -finline-limit=20 -ffunction-sections");
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "");
 			bmSet(bm, "DEBUGGER", "gdb");

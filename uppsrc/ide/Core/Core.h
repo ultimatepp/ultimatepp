@@ -299,12 +299,11 @@ public:
 		byte           charset;
 		int            font;
 		String         highlight;
-		int            optimize_speed;
 		bool           pch, nopch, noblitz;
 
 		void operator=(const String& s)   { String::operator=(s); readonly = separator = false; }
 		void Init()  { readonly = separator = false; tabsize = Null; charset = 0; font = 0;
-		               optimize_speed = false; pch = nopch = noblitz = false; }
+		               pch = nopch = noblitz = false; }
 
 		File()                            { Init(); }
 		File(const String& s) : String(s) { Init(); }
@@ -315,7 +314,6 @@ public:
 		String param;
 	};
 	byte                     charset;
-	bool                     optimize_speed;
 	bool                     noblitz;
 	bool                     nowarnings;
 	String                   description;
@@ -390,12 +388,6 @@ struct MakeFile {
 String GetMakePath(String fn, bool win32);
 String AdjustMakePath(const char *fn);
 
-enum {
-	R_OPTIMAL,
-	R_SPEED,
-	R_SIZE
-};
-
 String Join(const String& a, const String& b, const char *sep = " ");
 
 String GetExeExt();
@@ -416,7 +408,6 @@ struct Builder {
 	String           c_options;
 	String           debug_options;
 	String           release_options;
-	String           release_size_options;
 	String           common_link;
 	String           debug_link;
 	String           release_link;

@@ -402,7 +402,6 @@ void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 	map.Add("RELEASE_BLITZ",             &release_blitz);
 	map.Add("RELEASE_LINKMODE",          &release_linkmode);
 	map.Add("RELEASE_OPTIONS",           &speed_options);
-	map.Add("RELEASE_SIZE_OPTIONS",      &size_options);
 	map.Add("RELEASE_FLAGS",             &release_flags);
 	map.Add("RELEASE_LINK",              &release_link);
 	map.Add("DEBUGGER",                  &debugger);
@@ -421,12 +420,6 @@ void DefaultBuilderSetup::New(const String& builder)
 			speed_options <<= "-O3 -ffunction-sections -fdata-sections";
 		else
 			speed_options <<= "-O2";
-	}
-	if(IsNull(size_options)) {
-		if(gcc)
-			size_options <<= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
-		else
-			size_options <<= "-O1";
 	}
 	if(IsNull(debug_options)) {
 		if(gcc)

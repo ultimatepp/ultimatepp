@@ -34,7 +34,7 @@ struct DependsDisplay : Display {
 		WString txt = q;
 		w.DrawRect(r, paper);
 		w.Clipoff(r.left + 10, r.top, r.Width() - 20, r.Height());
-		Image img = IdeFileImage(q, false, false, false);
+		Image img = IdeFileImage(q, false, false);
 		Size isz = img.GetSize();
 		w.DrawImage(0, (r.Height() - isz.cy) / 2, img);
 		int tcy = GetTLTextHeight(txt, StdFont());
@@ -91,12 +91,10 @@ void PackageEditor::SaveOptions() {
 		actual.italic = ~italic;
 		actual.charset = (byte)(int)~charset;
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
-		actual.optimize_speed = optimize_speed;
 		actual.noblitz = noblitz;
 		actual.nowarnings = nowarnings;
 		if(IsActiveFile()) {
 			Package::File& f = ActiveFile();
-			f.optimize_speed = optimize_speed_file;
 			f.pch = pch_file;
 			f.nopch = nopch_file;
 			f.noblitz = noblitz_file;
@@ -124,7 +122,6 @@ void PackageEditor::Empty()
 	ink.Disable();
 	italic.Disable();
 	bold.Disable();
-	optimize_speed.Disable();
 	filelist.Clear();
 	filelist.Disable();
 	option.Clear();
@@ -135,8 +132,6 @@ void PackageEditor::FileEmpty()
 {
 	fileoption.Clear();
 	fileoption.Disable();
-	optimize_speed_file = false;
-	optimize_speed_file.Disable();
 	pch_file = false;
 	pch_file.Disable();
 	nopch_file = false;
@@ -179,7 +174,6 @@ void PackageEditor::PackageCursor()
 		bold <<= actual.bold;
 		italic <<= actual.italic;
 		charset <<= (int)actual.charset;
-		optimize_speed = actual.optimize_speed;
 		noblitz = actual.noblitz;
 		nowarnings = actual.nowarnings;
 		String s;
@@ -195,7 +189,6 @@ void PackageEditor::PackageCursor()
 		charset.Enable();
 		noblitz.Enable();
 		nowarnings.Enable();
-		optimize_speed.Enable();
 		accepts.Enable();
 		option.Enable();
 		option.Clear();
@@ -378,8 +371,6 @@ void PackageEditor::FileCursor()
 			String ext = ToLower(GetFileExt(p));
 			bool tpp = ext == ".tpp" && IsFolder(p);
 			bool hdr = IsHeaderExt(ext) && !tpp;
-			optimize_speed_file.Enable(!tpp);
-			optimize_speed_file <<= f.optimize_speed;
 			pch_file.Enable(hdr);
 			pch_file <<= f.pch;
 			nopch_file.Enable(!hdr);
@@ -590,15 +581,12 @@ PackageEditor::PackageEditor()
 	description <<= THISBACK(Description);
 	DlCharsetD(charset);
 	charset.Disable();
-	optimize_speed.Disable();
 	filelist.Disable();
 	accepts.SetFilter(FlagFilter);
 	accepts <<=
 	charset <<= THISBACK(SaveOptions);
 	noblitz <<=
 	nowarnings <<=
-	optimize_speed <<=
-	optimize_speed_file <<=
 	pch_file <<=
 	nopch_file <<=
 	noblitz_file <<= THISBACK(SaveOptionsLoad);
