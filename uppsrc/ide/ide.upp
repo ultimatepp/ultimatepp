@@ -37,7 +37,7 @@ file
 	Template.cpp,
 	ide.key,
 	Console.cpp,
-	FindInFiles.cpp optimize_speed,
+	FindInFiles.cpp,
 	Config.cpp,
 	ide.cpp,
 	idefile.cpp charset "iso8859-1",

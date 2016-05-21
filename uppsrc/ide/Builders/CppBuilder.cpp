@@ -458,16 +458,11 @@ Vector<String> SvnInfo(const String& package)
 	return info;
 }
 
-String CppBuilder::DefinesTargetTime(const char *sep, const String& package, const Package& pkg)
+void CppBuilder::SaveBuildInfo(const String& package)
 {
-	String cc;
-	for(int i = 0; i < config.GetCount(); i++)
-		cc << sep << "flag" << config[i];
-	if(main_conf)
-		cc << sep << "MAIN_CONF";
-	targettime = GetFileTime(target);
-
-	FileOut info(AppendFileName(outdir, "build_info.h"));
+	String path = AppendFileName(outdir, "build_info.h");
+	RealizePath(path);
+	FileOut info(path);
 	Time t = GetSysTime();
 	info << "#define bmYEAR   " << (int)t.year << "\r\n";
 	info << "#define bmMONTH  " << (int)t.month << "\r\n";
@@ -479,10 +474,20 @@ String CppBuilder::DefinesTargetTime(const char *sep, const String& package, con
 	        (int)t.year, (int)t.month, (int)t.day, (int)t.hour, (int)t.minute, (int)t.second);
 	info << "#define bmMACHINE " << AsCString(GetComputerName()) << "\r\n";
 	info << "#define bmUSER    " << AsCString(GetUserName()) << "\r\n";
-	
+
 	if(package == mainpackage)
 		info << Join(SvnInfo(package), "\r\n");
+}
 
+String CppBuilder::DefinesTargetTime(const char *sep, const String& package, const Package& pkg)
+{
+	String cc;
+	for(int i = 0; i < config.GetCount(); i++)
+		cc << sep << "flag" << config[i];
+	if(main_conf)
+		cc << sep << "MAIN_CONF";
+	targettime = GetFileTime(target);
+	
 	return cc;
 }
 

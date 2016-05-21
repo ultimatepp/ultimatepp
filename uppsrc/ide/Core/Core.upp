@@ -8,7 +8,7 @@ file
 	Core.h options(BUILDER_OPTION) PCH,
 	Core.cpp,
 	Builder.cpp,
-	Hdepend.cpp optimize_speed,
+	Hdepend.cpp,
 	Package.cpp,
 	Workspace.cpp,
 	usc.cpp,
