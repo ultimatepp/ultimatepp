@@ -429,13 +429,7 @@ void Ide::SyncBuildMode()
 	methodlist.Clear();
 	Append(methodlist, bmlist);
 	String h = method + ' ';
-	switch(targetmode) {
-	case 1: h << "Optimal"; break;
-	case 2: h << "Speed"; break;
-	case 3: h << "Size"; break;
-	default:
-		h << "Debug";
-	}
+	h << (targetmode ? "Release" : "Debug");
 	buildmode <<= h;
 }
 
