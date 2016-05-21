@@ -171,6 +171,8 @@ void DeletePCHFile(const String& pch_file)
 bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, Vector<String>& immfile,
     String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries, int opt)
 {
+	SaveBuildInfo(package);
+
 	int i;
 	String packagepath = PackagePath(package);
 	Package pkg;

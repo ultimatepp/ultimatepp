@@ -38,6 +38,7 @@ struct CppBuilder : Builder {
 
 	String                 Includes(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesShort(const char *sep, const String& package, const Package& pkg);
+	void                   SaveBuildInfo(const String& package);
 	String                 DefinesTargetTime(const char *sep, const String& package, const Package& pkg);
 	String                 IncludesDefinesTargetTime(const String& package, const Package& pkg);
 	bool                   HasAnyDebug() const;
