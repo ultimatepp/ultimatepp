@@ -113,12 +113,10 @@ Image ImageOver(const Image& back, const Image& over)
 	return MakeImage(h);
 }
 
-Image IdeFileImage(const String& filename, bool fast, bool include_path, bool pch)
+Image IdeFileImage(const String& filename, bool include_path, bool pch)
 {
 	Image img = CtrlImg::File();
 	IdeFileIcon0(false, filename, img);
-	if(fast)
-		img = ImageOver(img, IdeCommonImg::Fast());
 	if(include_path)
 		img = ImageOver(img, IdeCommonImg::IncludePath());
 	if(pch)

@@ -35,10 +35,6 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	case 1:
 		cfg.FindAdd("SHARED");
 	}
-	if(targetmode == 2)
-		cfg.FindAdd("FORCE_SPEED");
-	if(targetmode == 3)
-		cfg.FindAdd("FORCE_SIZE");
 	int q = m.package.Find(wspc[package]);
 	if(q >= 0) {
 		const PackageMode& p = m.package[q];
@@ -191,7 +187,6 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		b->c_options = bm.Get("COMMON_C_OPTIONS", "");
 		b->debug_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("DEBUG_OPTIONS", ""));
 		b->release_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_OPTIONS", ""));
-		b->release_size_options = Join(bm.Get("COMMON_OPTIONS", ""), bm.Get("RELEASE_SIZE_OPTIONS", ""));
 		b->common_link = bm.Get("COMMON_LINK", "");
 		b->debug_link = bm.Get("DEBUG_LINK", "");
 		b->release_link = bm.Get("RELEASE_LINK", "");

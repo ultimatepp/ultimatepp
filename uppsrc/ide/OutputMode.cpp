@@ -155,7 +155,7 @@ void OutMode::Load()
 		ff.Next();
 	}
 	method <<= ide.method;
-	mode <<= ide.targetmode;
+	mode <<= clamp(ide.targetmode, 0, 1);
 	export_dir <<= ide.export_dir;
 	debug.Load(ide.debug);
 	LoadFromWorkspace(debug, "outputmode-debug");
@@ -343,6 +343,7 @@ void Ide::SerializeOutputMode(Stream& s)
 	s / version;
 	s % method;
 	s / targetmode;
+	targetmode = clamp(targetmode, 0, 1);
 	s % debug;
 	s % release;
 	s % recent_buildmode;

@@ -30,7 +30,7 @@ void EditorTabBar::SetAddFile(const String& fn)
 		return;
 	if(FindSetFile(fn))
 		return;
-	AddFile(WString(fn), IdeFileImage(fn, false, false, false), true);
+	AddFile(WString(fn), IdeFileImage(fn, false, false), true);
 }
 
 void EditorTabBar::RenameFile(const String& fn, const String& nn)
@@ -41,7 +41,7 @@ void EditorTabBar::RenameFile(const String& fn, const String& nn)
 void EditorTabBar::FixIcons()
 {
 	for(int i = 0; i < tabs.GetCount(); i++)
-		tabs[i].img = IdeFileImage(GetFile(i), false, false, false);
+		tabs[i].img = IdeFileImage(GetFile(i), false, false);
 	Repos();
 	Refresh();
 }

@@ -76,13 +76,11 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				   ext == ".rc" && HasFlag("WIN32")) {
 					sfile.Add(fn);
 					soptions.Add(gop);
-					optimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
 				}
 				else
 				if(ext == ".icpp") {
 					isfile.Add(fn);
 					isoptions.Add(gop);
-					ioptimize.Add(release && pkg[i].optimize_speed && opt == R_OPTIMAL);
 				}
 				else
 				if(ext == ".o")
@@ -142,16 +140,10 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 //			cc << " -mfpmath=sse";
 //	}
 
-	String cc_speed = cc;
-
 	if(!release)
 		cc << " -D_DEBUG " << debug_options;
-	else {
-		cc << ' ' << release_size_options;
-		cc_speed << ' ' << release_options;
-		if(opt == R_SPEED || pkg.optimize_speed)
-			cc = cc_speed;
-	}
+	else
+		cc << ' ' << release_options;
 
 	if(pkg.nowarnings)
 		cc << " -w";
@@ -160,7 +152,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	Blitz b;
 	if(blitz) {
 		BlitzBuilderComponent bc(this);
-		b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".o", optimize, noblitz);
+		b = bc.MakeBlitzStep(sfile, soptions, obj, immfile, ".o", noblitz);
 		recompile = b.build;
 	}
 
@@ -246,7 +238,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				}
 			}
 			else {
-				String exec = optimize[i] ? cc_speed : cc;
+				String exec = cc;
 				if(ext == ".c")
 					exec << Join(" -x c", c_options) << ' ';
 				else if(ext == ".s" || ext == ".S")

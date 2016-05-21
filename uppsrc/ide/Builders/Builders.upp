@@ -16,7 +16,6 @@ file
 	Builders readonly separator,
 	GccBuilder.icpp,
 	MscBuilder.icpp,
-	OwcBuilder.icpp,
 	JavaBuilder.icpp,
 	AndroidBuilder.icpp,
 	ScriptBuilder.icpp,

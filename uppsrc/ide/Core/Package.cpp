@@ -160,7 +160,6 @@ bool LoadFOpt(CParser& p, const char *key, Array<OptItem>& v) {
 void Package::Reset()
 {
 	charset = 0;
-	optimize_speed = false;
 	noblitz = nowarnings = false;
 	bold = italic = false;
 	ink = Null;
@@ -275,10 +274,10 @@ bool Package::Load(const char *path)
 					   noblitz = true;
 					else
 					if(p.Id("optimize_speed"))
-						optimize_speed = true;
+						; // Legacy option ignored
 					else
 					if(p.Id("optimize_size"))
-						optimize_speed = false;
+						; // Legacy option ignored
 					else
 					if(p.Id("file")) {
 						do {
@@ -289,10 +288,10 @@ bool Package::Load(const char *path)
 								if(!LoadFOpt(p, "options", f.option) &&
 								   !LoadFOpt(p, "depends", f.depends)) {
 									if(p.Id("optimize_speed"))
-										f.optimize_speed = true;
+										; // Legacy option ignored
 									else
 									if(p.Id("optimize_size"))
-										f.optimize_speed = false;
+										; // Legacy option ignored
 									else
 									if(p.Id("pch"))
 										f.pch = true;
@@ -438,8 +437,6 @@ bool Package::Save(const char *path) const {
 	}
 	if(charset > 0)
 		out << "charset " << AsCString(IdeCharsetName(charset)) << ";\n\n";
-	if(optimize_speed)
-		out << "optimize_speed;\n\n";
 	if(noblitz)
 		out << "noblitz;\n\n";
 	if(nowarnings)
@@ -468,8 +465,6 @@ bool Package::Save(const char *path) const {
 				out << " tabsize " << f.tabsize;
 			if(f.font > 0)
 				out << " font " << f.font;
-			if(f.optimize_speed)
-				out << " optimize_speed";
 			if(f.pch)
 				out << " options(BUILDER_OPTION) PCH";
 			if(f.nopch)

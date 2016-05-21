@@ -36,8 +36,7 @@ void InitBlitz()
 
 Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>& soptions,
                                            Vector<String>& obj, Vector<String>& immfile,
-                                           const char *objext, Vector<bool>& optimize,
-                                           const Index<String>& noblitz)
+                                           const char *objext, const Index<String>& noblitz)
 {
 	Blitz b;
 	b.count = 0;
@@ -48,7 +47,6 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
 	
 	Vector<String> excluded;
 	Vector<String> excludedoptions;
-	Vector<bool>   excludedoptimize;
 	b.object = CatAnyPath(builder->outdir, "$blitz" + String(objext));
 	Time blitztime = GetFileTime(b.object);
 	String blitz;
@@ -60,7 +58,7 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
 		String objfile = CatAnyPath(builder->outdir, GetFileTitle(fn) + objext);
 		Time fntime = GetFileTime(fn);
 		if((ext == ".cpp" || ext == ".cc" || ext == ".cxx" || ext == ".icpp")
-		   && HdependBlitzApproved(fn) && IsNull(soptions[i]) && !optimize[i]
+		   && HdependBlitzApproved(fn) && IsNull(soptions[i])
 		   && fntime < blitz_base_time
 		   && noblitz.Find(fn) < 0) {
 			if(HdependFileTime(fn) > blitztime)
@@ -80,7 +78,6 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
 		else {
 			excluded.Add(fn);
 			excludedoptions.Add(soptions[i]);
-			excludedoptimize.Add(optimize[i]);
 		}
 	}
 	
@@ -88,7 +85,6 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
 	if(b.count > 1) {
 		sfile = pick(excluded);
 		soptions = pick(excludedoptions);
-		optimize = pick(excludedoptimize);
 		if(builder->LoadFile(b.path) != blitz) {
 			builder->SaveFile(b.path, blitz);
 			b.build = true;

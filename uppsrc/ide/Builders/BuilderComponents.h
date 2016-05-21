@@ -36,9 +36,7 @@ public:
 	
 	Blitz MakeBlitzStep(Vector<String>& sfile, Vector<String>& soptions,
 	                    Vector<String>& obj, Vector<String>& immfile,
-	                    const char *objext, Vector<bool>& optimize,
-	                    const Index<String>& noblitz);
-	
+	                    const char *objext, const Index<String>& noblitz);
 };
 
 END_UPP_NAMESPACE
