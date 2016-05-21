@@ -4,7 +4,7 @@
 #	include <winnls.h>
 #endif
 
-#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC)
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID)
 #	include <execinfo.h>
 #	include <cxxabi.h>
 #endif
@@ -38,7 +38,7 @@ void PanicMessageBox(const char *title, const char *text)
 }
 
 
-#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC)
+#if defined(PLATFORM_POSIX) && defined(COMPILER_GCC) && !defined(PLATFORM_ANDROID)
 void AddStackTrace(char * str, int len)
 {
 	const size_t max_depth = 100;

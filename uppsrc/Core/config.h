@@ -18,9 +18,12 @@
 
 	#if __unix || __unix__ || __APPLE__
 		#define PLATFORM_POSIX 1
-	
+		
 		#if __linux
 			#define PLATFORM_LINUX 1
+			#if __ANDROID__
+				#define PLATFORM_ANDROID 1
+			#endif
 		// zvzv add
 		// __linux is undef on APPLE MACOSX, MACOSX has BSD stuff
 		#elif __APPLE__
@@ -76,6 +79,12 @@
 		#define CPU_BE 1
 		#define CPU_BIG_ENDIAN 1
 		#define CPU_ALIGNED 1
+	#elif __aarch64__
+		#define CPU_64 1
+		#define CPU_ARM 1
+		#define CPU_LE 1
+		#define CPU_LITTLE_ENDIAN 1
+		#define CPU_UNALIGNED 1
 	#elif __arm__
 		#define CPU_32 1
 		#define CPU_ARM 1

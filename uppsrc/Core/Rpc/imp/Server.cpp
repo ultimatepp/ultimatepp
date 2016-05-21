@@ -119,7 +119,6 @@ struct XmlRpcDo {
 XmlRpcDo::XmlRpcDo(TcpSocket& http, const char *group)
 :	http(http), group(group)
 {
-	data.rpc = this;
 }
 
 String XmlRpcDo::XmlResult()
