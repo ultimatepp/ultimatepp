@@ -183,6 +183,34 @@ Vector<Pointf> DataSource::MovingAverage(Getdatafun getdataY, Getdatafun getdata
 	return ret;	
 }
 
+void DataSource::ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool ascending, bool descending, 
+							  Vector<double> &zeros, Vector<int64> &ids) {
+	zeros.Clear();
+	ids.Clear();
+	
+	double y_prev, x_prev;
+	int i0;
+	for (i0 = 0; i0 < GetCount(); ++i0) {
+		y_prev = Membercall(getdataY)(i0);
+		x_prev = Membercall(getdataX)(i0);
+		if (!IsNull(x_prev) && !IsNull(y_prev))
+			break;
+	}
+	for (int i = i0; i < GetCount(); ++i) {
+		double y = Membercall(getdataY)(i);
+		double x = Membercall(getdataX)(i);
+		if (IsNull(x) || IsNull(y))
+			continue;
+		
+		if (((y >= 0 && y_prev < 0) && ascending) || ((y <= 0 && y_prev > 0) && descending)) {
+			ids << i;
+			zeros << (x_prev - (x - x_prev)*y_prev/(y - y_prev));
+		}
+		x_prev = x;
+		y_prev = y;
+	}
+}
+
 double DataSource::StdDev(Getdatafun getdata, double avg) {
 	double var = Variance(getdata, avg);
 	return IsNull(var) ? Null : sqrt(var);
@@ -232,7 +260,7 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 		phase += M_PI;
 	return true;
 }
-	
+
 	
 double CArray::znFixed(int n, int64 id) {
 	if (n == 0)
@@ -242,7 +270,7 @@ double CArray::znFixed(int n, int64 id) {
 }
 
 
-Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample) {
+Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequency, bool phase) {
 	int numData = int(GetCount());
     VectorXd timebuf(numData);
     int num = 0;
@@ -266,9 +294,17 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample) {
     } catch(...) {
         return res;
     }
-    for (int i = 1; i < freqbuf.size(); ++i) {
-        double T = (tSample*numData)/i;
-        res << Pointf(T, 2*std::abs(freqbuf[i])/numData);
+    int i = frequency ? 0 : 1;
+    for (; i < freqbuf.size(); ++i) {
+        double xdata;
+		if (!frequency)        
+ 			xdata = (tSample*numData)/i;
+		else
+			xdata = i/(tSample*numData);
+		if (phase)
+			res << Pointf(xdata, std::arg(freqbuf[i]));	
+		else
+        	res << Pointf(xdata, 2*std::abs(freqbuf[i])/numData);	
     }
     return res;
 }

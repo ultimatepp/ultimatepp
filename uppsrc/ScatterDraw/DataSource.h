@@ -48,8 +48,11 @@ public:
 	virtual Vector<int64> UpperEnvelopeY(double width) 	{return UpperEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<int64> LowerEnvelopeY(double width) 	{return LowerEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}	
+	virtual void ZeroCrossingY(bool ascending, bool descending, Vector<double> &zeros, Vector<int64> &ids) {
+		return ZeroCrossing(&DataSource::y, &DataSource::x, ascending, descending, zeros, ids);}	
 	
-	Upp::Vector<Pointf> FFTY(double tSample) 	{return FFT(&DataSource::y, tSample);}
+	Upp::Vector<Pointf> FFTY(double tSample, bool frequency = false, bool phase = false) {
+		return FFT(&DataSource::y, tSample, frequency, phase);}
 
 	double Min(Getdatafun getdata, int64& id);
 	double Max(Getdatafun getdata, int64& id);
@@ -60,9 +63,11 @@ public:
 	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<int64> LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
+	void ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool ascending, bool descending,
+							  Vector<double> &zeros, Vector<int64> &ids);
 	double SinEstim_Amplitude(double avg = Null);
 	bool SinEstim_FreqPhase(double &frequency, double &phase, double avg = Null);
-	Vector<Pointf> FFT(Getdatafun getdata, double tSample);
+	Vector<Pointf> FFT(Getdatafun getdata, double tSample, bool frequency = false, bool phase = false);
 		
 protected:
 	bool isParam, isExplicit;
