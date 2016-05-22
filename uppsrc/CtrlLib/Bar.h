@@ -379,6 +379,7 @@ public:
 	virtual void   LeftUp(Point, dword);
 	virtual bool   HotKey(dword key);
 	virtual String GetDesc() const;
+	virtual int    OverPaint() const;
 
 	virtual Bar::Item& Text(const char *text);
 	virtual Bar::Item& Key(dword key);
@@ -401,6 +402,7 @@ public:
 		bool   light[6];
 		int    contrast[6];
 		Point  offset[6];
+		int    overpaint;
 	};
 
 protected:

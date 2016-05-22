@@ -203,7 +203,7 @@ void ChHostSkin()
 		Button::Style& s = Button::StyleNormal().Write();
 		s.overpaint = 3 + 2 * Qt;
 		static GtkWidget *button = gtk_button_new();
-		ChGtkNew(button, "button", GTK_BOX|GTK_MARGIN3|GTK_INFLATE2);
+		ChGtkNew(button, "button", GTK_BOX|GTK_MARGIN3|(Qt * GTK_INFLATE2));
 		GtkChButton(s.look);
 
 		po.x = GtkInt("child-displacement-x");
@@ -222,6 +222,7 @@ void ChHostSkin()
 		s.monocolor[3] = Gray();
 
 		ToolBar::Style& ts = ToolBar::StyleDefault().Write();
+		ts.buttonstyle.overpaint = 3 + 2 * Qt;
 		GtkChButton(ts.buttonstyle.look);
 		ts.buttonstyle.look[CTRL_NORMAL] = Null;
 		ts.buttonstyle.look[CTRL_DISABLED] = Null;
@@ -252,7 +253,7 @@ void ChHostSkin()
 			Setup(def_button);
 			gtk_widget_set(def_button, "can-default", true, NULL);
 			gtk_window_set_default(GTK_WINDOW(gtk__parent()), def_button);
-			ChGtkNew(def_button, "button", GTK_BOX|GTK_MARGIN3|GTK_INFLATE2);
+			ChGtkNew(def_button, "button", GTK_BOX|GTK_MARGIN3|(Qt * GTK_INFLATE2));
 		}
 		GtkChButton(s.look);
 	}
