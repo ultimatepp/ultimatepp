@@ -11,6 +11,9 @@ CONSOLE_APP_MAIN
 	for(int i = 0; i < v.GetCount(); i++)
 		LOG(v[i]);
 	LOG("..and now iterators..");
-	for(Vector<int>::Iterator q = v.Begin(), e = v.End(); q != e; q++)
+	for(auto q = v.begin(), e = v.end(); q != e; q++)
 		LOG(*q);
+	LOG("..and now range-for..");
+	for(const auto& q : v)
+		LOG(q);
 }

@@ -60,6 +60,9 @@ CONSOLE_APP_MAIN
 
 	for(int i = 0; i < m.GetCount(); i++)
 		LOG(m.GetKey(i) << ": " << m[i]);
+	
+	for(auto r : ~m)
+		LOG(r.key << ": " << r.value);
 
 	DUMP(m.Find("2"));
 	DUMP(m.Get("2"));
