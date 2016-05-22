@@ -223,7 +223,7 @@ public:
 		threads <<= hydra1_threads;
 		threads.NotNull(false);
 		cmdAssembly = GetVarsName();
-		cmdBuildMode = (targetmode == 1 ? "r" : targetmode == 2 ? "1" : targetmode == 3 ? "2" : "d");
+		cmdBuildMode = (targetmode == 1 ? "r" : "d");
 		if (mainconfigparam.GetCount()) {
 			cmdMainConfig = mainconfigparam;
 			cmdMainConfig.Replace(" ", ",");
@@ -288,7 +288,7 @@ public:
 	virtual void Serialize(Stream& s)
 	{
 		s % rebuild % msgonfail % silent % verbose % makefile % savetargetdir % exportproject
-			% threads % outoption % umk ;
+		  % threads % outoption % umk;
 	}
 
 	virtual bool Key(dword key, int count)
