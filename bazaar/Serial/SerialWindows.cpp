@@ -233,11 +233,27 @@ bool Serial::Read(char &c, uint32_t timeout)
 }
 
 // write a single byte
-bool Serial::Write(char c)
+bool Serial::Write(char c, uint32_t timeout)
 {
 	unsigned long count = 0;
-	WriteFile(fd, &c, 1, &count, NULL);
-	return count == 1;
+	if(!timeout)
+	{
+		WriteFile(fd, &c, 1, &count, NULL);
+		return count == 1;
+	}
+	else
+	{
+		uint32_t tim = msecs() + timeout;
+		for(;;)
+		{
+			WriteFile(fd, &c, 1, &count, NULL);
+			if(count == 1)
+				return true;
+			if((uint32_t)msecs() > tim)
+				break;
+		}
+		return false;
+	}
 }
 		
 
@@ -281,7 +297,7 @@ String Serial::Read(size_t reqSize, uint32_t timeout)
 			ReadFile(fd, buf, 1000, &count, NULL);
 			if(!count)
 			{
-				if(msecs() > tim)
+				if((uint32_t)msecs() > tim)
 					break;
 				continue;
 			}
@@ -294,11 +310,35 @@ String Serial::Read(size_t reqSize, uint32_t timeout)
 }
 
 // writes data
-bool Serial::Write(String const &data)
+bool Serial::Write(String const &data, uint32_t timeout)
 {
 	unsigned long count = 0;
-	WriteFile(fd, ~data, data.GetCount(), &count, NULL);
-	return count == data.GetCount();
+
+	int dLen = data.GetCount();
+	if(!timeout)
+	{
+		WriteFile(fd, ~data, dLen, &count, NULL);
+		return count == dLen;
+	}
+
+	uint32_t tim = msecs() + timeout;
+	const char *dPos = ~data;
+	for(;;)
+	{
+		WriteFile(fd, dPos, dLen, &count, NULL);
+		if(count == dLen)
+			return true;
+		if(count > 0)
+		{
+			dPos += count;
+			dLen -= count;
+			continue;
+		}
+		if((uint32_t)msecs() >= tim)
+			break;
+	}
+	return false;
+
 }
 
 // check if opened
