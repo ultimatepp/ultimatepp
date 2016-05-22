@@ -154,13 +154,16 @@ LAYOUT(ProcessingTabFit, 580, 368)
 	ITEM(LabelBox, dv___34, SetLabel(t_("Statistical data")).RightPosZ(4, 200).TopPosZ(244, 24))
 END_LAYOUT
 
-LAYOUT(ProcessingTabFrequency, 512, 276)
-	ITEM(ScatterCtrl, scatter, SetPlotAreaLeftMargin(60).SetPlotAreaBottomMargin(40).HSizePosZ(0, 96).VSizePosZ(0, 20))
+LAYOUT(ProcessingTabFrequency, 524, 276)
+	ITEM(ScatterCtrl, scatter, SetPlotAreaLeftMargin(60).SetPlotAreaBottomMargin(40).HSizePosZ(0, 100).VSizePosZ(0, 20))
 	ITEM(Label, dv___1, SetLabel(t_("sec")).RightPosZ(4, 28).TopPosZ(20, 19))
 	ITEM(EditDouble, samplingTime, RightPosZ(36, 56).TopPosZ(20, 19))
 	ITEM(Button, butFFT, SetLabel(t_("FFT")).RightPosZ(4, 88).TopPosZ(48, 20))
 	ITEM(Label, dv___4, SetLabel(t_("Sampling time:")).RightPosZ(4, 88).TopPosZ(0, 19))
 	ITEM(Label, comments, HSizePosZ(0, 0).BottomPosZ(1, 19))
+	ITEM(Switch, opXAxis, SetLabel(t_("Time\nFrequency")).RightPosZ(12, 76).TopPosZ(92, 32))
+	ITEM(LabelBox, dv___7, SetLabel(t_("X Axis")).RightPosZ(4, 92).TopPosZ(76, 52))
+	ITEM(Option, opPhase, SetLabel(t_("Show phase")).RightPosZ(4, 92).TopPosZ(132, 16))
 END_LAYOUT
 
 LAYOUT(ProcessingTabOp, 544, 328)
