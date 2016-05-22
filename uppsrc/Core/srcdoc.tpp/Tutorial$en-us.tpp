@@ -34,20 +34,13 @@ method&]
 [s5; To iterate Vector you can use indices&]
 [s7; -|for(int i `= 0; i < v.[* GetCount](); i`+`+)&]
 [s7; -|-|LOG(v[* `[]i[* `]]);&]
-[s16;  1&]
-[s16;  2&]
-[s16;  3&]
-[s5; Alternative, U`+`+ also provides iterators&]
-[s7; -|for(Vector<int>`::[* Iterator] q `= v.[* Begin](), e `= v.[* End](); 
-q !`= e; q`+`+)&]
+[s5; Alternative, U`+`+ also provides standard C`+`+ begin/end interface&]
+[s7; -|for(auto q `= v.[* begin](), e `= v.[* end](); q !`= e; q`+`+)&]
 [s7; -|-|LOG([* `*]q);&]
-[s16;  1&]
-[s16;  2&]
-[s16;  3&]
-[s5; however the use of iterators is usually reserved for special 
-opportunities in U`+`+ (like implementing algorithm code) and 
-generally deprecated. We suggest you to use indices unless you 
-have a really good reason to do otherwise.&]
+[s5; or with C`+`+11 range`-for syntax:&]
+[s7; -|for(const auto`& q : v)&]
+[s7; -|-|LOG(q);&]
+[s5;/ &]
 [s5; [/ Note: LOG is diagnostics macro that outputs its argument to 
 the .log file in debug mode. Another similar macros we will use 
 in this tutorial are DUMP (similar to the LOG, but dumps the 
@@ -84,10 +77,10 @@ unknown maximal value&]
 [s3; 3. Transfer issues&]
 [s5; Often you need to pass content of one container to another of 
 the same type. NTL containers always support [^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ p
-ick semantics], and, depending on type stored, also might support 
-[^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ clone sematics]. When 
-transfering the value, you have to explicitly specify which one 
-to use:&]
+ick semantics] (equivalent of std`::move), and, depending on type 
+stored, also might support [^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ clone 
+sematics]. When transfering the value, you have to explicitly 
+specify which one to use:&]
 [s7; -|Vector<int> v;&]
 [s7; -|v.Add(1);&]
 [s7; -|v.Add(2);&]

@@ -32,6 +32,8 @@ Stream& Stream::operator/(int& i)            { dword w = 0; if(IsStoring()) w = 
 
 CoWork pipe max_queue
 
+CoWork remove Semaphore
+
 -----------------------
 DONE
 
