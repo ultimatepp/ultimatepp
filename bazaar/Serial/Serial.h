@@ -26,7 +26,7 @@ class Serial
 		// default baud rates
 		static dword stdBauds[];
 		static int stdBaudsCount;
-
+		
 	protected:
 	
 	public:
