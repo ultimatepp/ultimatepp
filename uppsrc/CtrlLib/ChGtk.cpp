@@ -164,22 +164,24 @@ void ChHostSkin()
 	ChGtkIs().Clear();
 	GtkWidget *w = Setup(gtk_radio_button_new(NULL));
 	int is = DPI(GtkInt(w, "indicator-size")) + 2;
+	int mxs = StdFont().GetCy() + 2;
+
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = false;
-	GtkIml(CtrlsImg::I_S0, w, 2, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is);
+	GtkIml(CtrlsImg::I_S0, w, 2, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is, Null, mxs, mxs);
 	GTK_TOGGLE_BUTTON(w)->active = true;
-	GtkIml(CtrlsImg::I_S1, w, 1, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is);
+	GtkIml(CtrlsImg::I_S1, w, 1, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is, Null, mxs, mxs);
 	gtk_widget_destroy(w);
 
 	w = Setup(gtk_check_button_new());
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = false;
-	GtkIml(CtrlsImg::I_O0, w, 2, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is);
+	GtkIml(CtrlsImg::I_O0, w, 2, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null, mxs, mxs);
 	GTK_TOGGLE_BUTTON(w)->active = true;
-	GtkIml(CtrlsImg::I_O1, w, 1, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is);
+	GtkIml(CtrlsImg::I_O1, w, 1, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null, mxs, mxs);
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = true;
-	GtkIml(CtrlsImg::I_O2, w, 3, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is);
+	GtkIml(CtrlsImg::I_O2, w, 3, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null, mxs, mxs);
 	gtk_widget_destroy(w);
 
 	if(Qt) {
@@ -199,9 +201,9 @@ void ChHostSkin()
 	
 	{
 		Button::Style& s = Button::StyleNormal().Write();
-		s.overpaint = 3;
+		s.overpaint = 3 + 2 * Qt;
 		static GtkWidget *button = gtk_button_new();
-		ChGtkNew(button, "button", GTK_BOX|GTK_MARGIN3);
+		ChGtkNew(button, "button", GTK_BOX|GTK_MARGIN3|GTK_INFLATE2);
 		GtkChButton(s.look);
 
 		po.x = GtkInt("child-displacement-x");
@@ -250,7 +252,7 @@ void ChHostSkin()
 			Setup(def_button);
 			gtk_widget_set(def_button, "can-default", true, NULL);
 			gtk_window_set_default(GTK_WINDOW(gtk__parent()), def_button);
-			ChGtkNew(def_button, "button", GTK_BOX|GTK_MARGIN3);
+			ChGtkNew(def_button, "button", GTK_BOX|GTK_MARGIN3|GTK_INFLATE2);
 		}
 		GtkChButton(s.look);
 	}
@@ -486,7 +488,7 @@ void ChHostSkin()
 	}
 
 	int efm = 0;
-	if(engine.Find("oxygen") < 0)
+	if(engine.Find("oxygen") < 0 && !Qt)
 	{
 		EditField::Style& s = EditField::StyleDefault().Write();
 		Image img;
@@ -510,7 +512,7 @@ void ChHostSkin()
 		}
 	}
 
-	{
+	if(!Qt) {
 		MultiButton::Style& s = MultiButton::StyleDefault().Write();
 		s.usetrivial = true;
 		s.trivialsep = true;
@@ -525,7 +527,7 @@ void ChHostSkin()
 		s.sep2 = SColorShadow();
 		s.sep1 = SColorLight();
 		s.sepm = 4;
-		if(engine.Find("oxygen") < 0)
+		if(engine.Find("oxygen") < 0 && !Qt)
 		{
 			MultiButton::Style& s = MultiButton::StyleFrame().Write();
 			for(int i = 0; i < 4; i++)
@@ -585,6 +587,8 @@ void ChHostSkin()
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
 		s.pullshift.y = 0;
 		int m = ImageMargin(mimg, 4, 5);
+		if(Qt)
+			m = max(m, DPI(4));
 		s.popupframe = WithHotSpot(mimg, m, m);
 		s.popupbody = Crop(mimg, m, m, 32 - 2 * m, 32 - 2 * m);
 		s.leftgap = DPI(16) + Zx(6);;
