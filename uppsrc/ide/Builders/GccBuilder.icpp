@@ -52,7 +52,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 	Vector<String> sfile, isfile;
 	Vector<String> soptions, isoptions;
-	Vector<bool>   optimize, ioptimize;
 	bool           error = false;
 
 	String pch_header;
@@ -161,8 +160,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	for(i = 0; i < sfile.GetCount(); i++) {
 		String fn = sfile[i];
 		String ext = ToLower(GetFileExt(fn));
-		if(findarg(ext, ".rc", ".brc", ".c") < 0 && HdependFileTime(sfile[i]) > GetFileTime(CatAnyPath(outdir, GetFileTitle(fn) + ".o"))
-		   && !optimize[i])
+		if(findarg(ext, ".rc", ".brc", ".c") < 0 && HdependFileTime(sfile[i]) > GetFileTime(CatAnyPath(outdir, GetFileTitle(fn) + ".o")))
 			recompile++;
 	}
 
@@ -199,7 +197,6 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	int first_ifile = sfile.GetCount();
 	sfile.AppendPick(pick(isfile));
 	soptions.AppendPick(pick(isoptions));
-	optimize.AppendPick(pick(ioptimize));
 
 	int ccount = 0;
 	for(i = 0; i < sfile.GetCount(); i++) {
@@ -249,8 +246,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					exec << fuse_cxa_atexit << " -x objective-c++ ";
 				else {
 					exec << fuse_cxa_atexit << Join(" -x c++", cpp_options) << ' ';
-					if(!optimize[i]) // GCC does not like different options for PCH
-						 exec << pch_use;
+					exec << pch_use;
 				}
 				exec << GetHostPathQ(fn)  << " " << soptions[i] << " -o " << GetHostPathQ(objfile);
 				PutVerbose(exec);
