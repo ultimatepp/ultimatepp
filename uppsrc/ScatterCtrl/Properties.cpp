@@ -481,6 +481,9 @@ ProcessingTab::ProcessingTab()
 	tab.WhenSet = THISBACK(OnSet);
 	
 	tabFreq.butFFT.WhenAction = THISBACK(OnFFT);
+	tabFreq.opXAxis = 0;
+	tabFreq.opXAxis.WhenAction = THISBACK(OnFFT);
+	tabFreq.opPhase.WhenAction = THISBACK(OnFFT);
 	
 	tabFit.opSeries = true;
 	tabFit.opSeries.WhenAction = THISBACK(OnOp);
@@ -727,13 +730,11 @@ void ProcessingTab::OnSet()
 					maxdT = max(delta, maxdT);
 				}
 			}
-			if ((maxdT - mindT)/maxdT > 0.00001) {
-				tabFreq.comments.SetText(Format(t_("Impossible to set sampling time. It changes from %f to %f"), mindT, maxdT));
-				tabFreq.samplingTime = Null;
-			} else {
+			if ((maxdT - mindT)/maxdT > 0.00001) 
+				tabFreq.comments.SetText(Format(t_("Sampling time changes from %f to %f"), mindT, maxdT));
+			else 
 				tabFreq.comments.SetText("");
-				tabFreq.samplingTime = (maxdT + mindT)/2.;
-			}
+			tabFreq.samplingTime = (maxdT + mindT)/2.;
 		}
 	} else if (tabOpFirst && tab.Get() == 2) {
 		tabOpFirst = false; 
@@ -802,51 +803,54 @@ void ProcessingTab::OnFFT()
 		Exclamation(t_("Incorrect sampling time"));
 		return;
 	}
+	{
+		WaitCursor waitcursor;
+		
+		DataSource &data = tabFit.scatter.GetSeries(0);
+		
+		Vector<Pointf> orderedSeries;
+		for (int64 i = 0; i < data.GetCount(); ++i) {		// Clean Nulls
+			if (!IsNull(data.x(i)) && !IsNull(data.y(i)))
+				orderedSeries << Pointf(data.x(i), data.y(i));
+		}
+		//if (orderedSeries.GetCount() != data.GetCount())
+		//	errText << Format(t_("Removed %d Null points."), data.GetCount() - orderedSeries.GetCount());
+		
+		PointfLess less;
+		Sort(orderedSeries, less);								
+		
+		resampledSeries.Clear();
+		resampledSeries << orderedSeries[0].y;
+		double nextSample = orderedSeries[0].x + samplingTime;
+		for (int i = 0; i < orderedSeries.GetCount() - 1;) {
+			double x0 = orderedSeries[i].x;
+			double x1 = orderedSeries[i + 1].x;
+			if (orderedSeries[i].x == nextSample) {
+				resampledSeries << orderedSeries[i].y;
+				nextSample += samplingTime;
+			} else if (orderedSeries[i].x < nextSample && orderedSeries[i + 1].x > nextSample) {	// Linear interpolation
+				resampledSeries << (orderedSeries[i].y + (orderedSeries[i + 1].y - orderedSeries[i].y)*
+								   (nextSample - orderedSeries[i].x)/(orderedSeries[i + 1].x - orderedSeries[i].x));
+				nextSample += samplingTime;
+			} else
+				++i;
+		}
+		if (orderedSeries[orderedSeries.GetCount() - 1].x == nextSample) 
+			resampledSeries << orderedSeries[orderedSeries.GetCount() - 1].y;
 	
-	DataSource &data = tabFit.scatter.GetSeries(0);
-	
-	Vector<Pointf> orderedSeries;
-	for (int64 i = 0; i < data.GetCount(); ++i) {		// Clean Nulls
-		if (!IsNull(data.x(i)) && !IsNull(data.y(i)))
-			orderedSeries << Pointf(data.x(i), data.y(i));
+		VectorY<double> series(resampledSeries, 0, samplingTime);
+		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.opPhase);
 	}
-	//if (orderedSeries.GetCount() != data.GetCount())
-	//	errText << Format(t_("Removed %d Null points."), data.GetCount() - orderedSeries.GetCount());
-	
-	PointfLess less;
-	Sort(orderedSeries, less);								
-	
-	resampledSeries.Clear();
-	resampledSeries << orderedSeries[0].y;
-	double nextSample = orderedSeries[0].x + samplingTime;
-	for (int i = 0; i < orderedSeries.GetCount() - 1;) {
-		double x0 = orderedSeries[i].x;
-		double x1 = orderedSeries[i + 1].x;
-		if (orderedSeries[i].x == nextSample) {
-			resampledSeries << orderedSeries[i].y;
-			nextSample += samplingTime;
-		} else if (orderedSeries[i].x < nextSample && orderedSeries[i + 1].x > nextSample) {	// Linear interpolation
-			resampledSeries << (orderedSeries[i].y + (orderedSeries[i + 1].y - orderedSeries[i].y)*
-							   (nextSample - orderedSeries[i].x)/(orderedSeries[i + 1].x - orderedSeries[i].x));
-			nextSample += samplingTime;
-		} else
-			++i;
-	}
-	if (orderedSeries[orderedSeries.GetCount() - 1].x == nextSample) 
-		resampledSeries << orderedSeries[orderedSeries.GetCount() - 1].y;
-
-	VectorY<double> series(resampledSeries, 0, samplingTime);
-	fft = series.FFTY(samplingTime);
 	if (fft.IsEmpty()) {
 		tabFreq.comments.SetText(errText);
 		Exclamation(t_("Error obtaining FFT"));
 		return;
 	}
 	
-	String legend = tabFit.scatter.GetLegend(0) + String("-") + t_("FFT");
+	String legend = tabFit.scatter.GetLegend(0) + String("-") + (tabFreq.opPhase ? t_("FFT-phase [rad]") : t_("FFT"));
 	tabFreq.scatter.AddSeries(fft).Legend(legend);
 	tabFreq.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();
-	tabFreq.scatter.SetLabelX(t_("Period [sec]"));
+	tabFreq.scatter.SetLabelX(tabFreq.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
 	tabFreq.scatter.SetLabelY(legend);
 	tabFreq.scatter.ZoomToFit(true, true);
 	tabFreq.comments.SetText(errText);
