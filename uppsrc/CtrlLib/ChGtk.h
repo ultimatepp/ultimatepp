@@ -52,11 +52,14 @@ enum {
 	GTK_DEFLATE2 = 0x20000,
 	GTK_DEFLATE3 = 0x30000,
 	GTK_DEFLATE4 = 0x40000,
-
+	
 	GTK_RANGEA =  0x100000,
 	GTK_RANGEB =  0x200000,
 	GTK_RANGEC =  0x400000,
 	GTK_RANGED =  0x800000,
+
+	GTK_INFLATE2 = 0x2000000,
+
 
 	GTKELEMENT_TABFLAG = 0x40,
 	GTK_BOTTOMLINE = 0x100
@@ -128,8 +131,8 @@ void GtkChButtonWith(Value *look, const Image& img);
 void GtkChArrow(Value *look, const Image& img, Point offset = Point(0, 0));
 int GtkInt(GtkWidget *widget, const char *id);
 int GtkInt(const char *id);
-void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy, const Rect& rect = Null);
-void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy, const Rect& rect = Null);
+void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy, const Rect& rect = Null, int maxcx = INT_MAX, int maxcy = INT_MAX);
+void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy, const Rect& rect = Null, int maxcx = INT_MAX, int maxcy = INT_MAX);
 Color ChGtkColor(int ii, GtkWidget *widget);
 void ChGtkColor(Color& c, int ii);
 void ChGtkColor(Color *c, int ii);
