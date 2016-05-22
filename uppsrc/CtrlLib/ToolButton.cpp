@@ -17,6 +17,7 @@ CH_STYLE(ToolButton, Style, StyleDefault)
 		contrast[i] = 0;
 	}
 	light[CTRL_PRESSED] = light[CTRL_HOT] = light[CTRL_HOTCHECKED] = true;
+	overpaint = 0;
 }
 
 CH_STYLE(ToolButton, Style, StyleSolid)
@@ -345,6 +346,11 @@ void ToolButton::FinalSync()
 String ToolButton::GetDesc() const
 {
 	return tiptext;
+}
+
+int ToolButton::OverPaint() const
+{
+	return style->overpaint;
 }
 
 END_UPP_NAMESPACE

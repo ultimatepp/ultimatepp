@@ -105,8 +105,6 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 		rect.top = ht == GTK_VCENTER ? cy : ht == GTK_BOTTOM ? 2 * cy : 0;
 		rect.left = ht == GTK_HCENTER ? cx : ht == GTK_RIGHT ? 2 * cx : 0;
 		rect.SetSize(cx, cy);
-		if(type & GTK_INFLATE2)
-			rect.Inflate(DPI(2));
 		rcx = max(rect.GetWidth() - 2 * margin, 0);
 		rcy = max(rect.GetHeight() - 2 * margin, 0);
 		crop = rect.Inflated(margin);
@@ -306,8 +304,9 @@ struct GtkImageMaker : ImageMaker {
 	}
 };
 
-Value GtkLookFn(Draw& w, const Rect& rect, const Value& v, int op)
+Value GtkLookFn(Draw& w, const Rect& rect_, const Value& v, int op)
 {
+	Rect rect = rect_;
 	if(IsTypeRaw<GtkElement>(v)) {
 		const GtkElement& e = ValueTo<GtkElement>(v);
 		ChGtkI& eg = ChGtkIs()[e.gtki];
@@ -318,6 +317,8 @@ Value GtkLookFn(Draw& w, const Rect& rect, const Value& v, int op)
 			return false;
 		}
 		if(op == LOOK_PAINT || op == LOOK_PAINTEDGE) {
+			if(eg.type & GTK_INFLATE2)
+				rect.Inflate(DPI(2));
 			Rect r = rect.Inflated(eg.type & GTK_XMARGIN ? 0 : (eg.type >> 4) & 7);
 			r.Deflate((eg.type >> 16) & 15);
 			if(r.IsEmpty()) return 1;
