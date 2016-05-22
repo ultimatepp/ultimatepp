@@ -105,6 +105,8 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 		rect.top = ht == GTK_VCENTER ? cy : ht == GTK_BOTTOM ? 2 * cy : 0;
 		rect.left = ht == GTK_HCENTER ? cx : ht == GTK_RIGHT ? 2 * cx : 0;
 		rect.SetSize(cx, cy);
+		if(type & GTK_INFLATE2)
+			rect.Inflate(DPI(2));
 		rcx = max(rect.GetWidth() - 2 * margin, 0);
 		rcy = max(rect.GetHeight() - 2 * margin, 0);
 		crop = rect.Inflated(margin);
@@ -431,18 +433,22 @@ int  GtkInt(const char *id)
 }
 
 void GtkIml(int uii, GtkWidget *w, int shadow, int state, const char *detail, int type, int cx, int cy,
-            const Rect& rect)
+            const Rect& rect, int maxcx, int maxcy)
 {
-	CtrlsImg::Set(uii, GetGTK(w, state, shadow, detail, type, cx, cy, rect));
+	Image m = GetGTK(w, state, shadow, detail, type, cx, cy, rect);
+	Size isz = m.GetSize();
+	if(isz.cx > maxcx || isz.cy > maxcy)
+		m = Rescale(m, maxcx, maxcy);
+	CtrlsImg::Set(uii, m);
 }
 
 void GtkIml(int uii, GtkWidget *w, int shadow, const char *detail, int type, int cx, int cy,
-            const Rect& rect)
+            const Rect& rect, int maxcx, int maxcy)
 {
-	GtkIml(uii + 0, w, shadow, 0, detail, type, cx, cy, rect);
-	GtkIml(uii + 1, w, shadow, 2, detail, type, cx, cy, rect);
-	GtkIml(uii + 2, w, shadow, 1, detail, type, cx, cy, rect);
-	GtkIml(uii + 3, w, shadow, 4, detail, type, cx, cy, rect);
+	GtkIml(uii + 0, w, shadow, 0, detail, type, cx, cy, rect, maxcx, maxcy);
+	GtkIml(uii + 1, w, shadow, 2, detail, type, cx, cy, rect, maxcx, maxcy);
+	GtkIml(uii + 2, w, shadow, 1, detail, type, cx, cy, rect, maxcx, maxcy);
+	GtkIml(uii + 3, w, shadow, 4, detail, type, cx, cy, rect, maxcx, maxcy);
 }
 
 Color ChGtkColor(int ii, GtkWidget *widget)
