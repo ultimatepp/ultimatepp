@@ -101,6 +101,7 @@ struct XmlRpcDo {
 	String     methodname;
 	Value      id;
 	bool       json;
+	bool       shorted;
 
 	String XmlResult();
 	String DoXmlRpc();
@@ -119,6 +120,7 @@ struct XmlRpcDo {
 XmlRpcDo::XmlRpcDo(TcpSocket& http, const char *group)
 :	http(http), group(group)
 {
+	shorted = false;
 }
 
 String XmlRpcDo::XmlResult()
@@ -152,7 +154,7 @@ String XmlRpcDo::DoXmlRpc()
 		data.in = ParseXmlRpcParams(p);
 		if(!CallRpcMethod(data, group, methodname, request))
 			return FormatXmlRpcError(RPC_UNKNOWN_METHOD_ERROR, "\'" + methodname + "\' method is unknown");
-		if(!data.rpc)
+		if(!data.rpc && !shorted)
 			return Null;
 		return XmlResult();
 	}
@@ -228,7 +230,7 @@ String XmlRpcDo::ProcessJsonRpc(const Value& v)
 		data.in = param;
 	try {
 		if(CallRpcMethod(data, group, methodname, request)) {
-			if(!data.rpc)
+			if(!data.rpc && !shorted)
 				return Null;
 			return JsonResult();
 		}
@@ -358,11 +360,12 @@ bool RpcPerform(TcpSocket& http, const char *group)
 	return XmlRpcDo(http, group).Perform();
 }
 
-String RpcExecute(const String& request_)
+String RpcExecuteShorted(const String& request_)
 {
 	HttpRequest dummy;
 	XmlRpcDo h(dummy, "");
 	h.request = request_;
+	h.shorted = true;
 	h.data.peeraddr = "127.0.0.1";
 	return h.RpcExecute();
 }
