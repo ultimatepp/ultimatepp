@@ -65,6 +65,7 @@ void HttpRequest::Init()
 	poststream = NULL;
 	postlen = Null;
 	has_content_length = false;
+	chunked_encoding = false;
 }
 
 HttpRequest::HttpRequest()
@@ -738,6 +739,7 @@ void HttpRequest::StartBody()
 	else
 	if(header["transfer-encoding"] == "chunked") {
 		count = 0;
+		chunked_encoding = true;
 		StartPhase(CHUNK_HEADER);
 	}
 	else
@@ -769,10 +771,12 @@ void HttpRequest::Out(const void *ptr, int size)
 	WhenContent(ptr, size);
 }
 
+
 bool HttpRequest::ReadingBody()
 {
 	LLOG("HTTP reading body " << count);
-	String s = TcpSocket::Get(has_content_length ? (int)min((int64)chunk, count) : chunk);
+	String s = TcpSocket::Get(has_content_length || chunked_encoding ? (int)min((int64)chunk, count)
+	                                                                 : chunk);
 	if(s.GetCount()) {
 	#ifndef ENDZIP
 		if(gzip)
@@ -787,6 +791,26 @@ bool HttpRequest::ReadingBody()
 	}
 	return !IsEof();
 }
+/*
+bool HttpRequest::ReadingBody()
+{
+	LLOG("HTTP reading body " << count);
+	String s = TcpSocket::Get((int)min((int64)chunk, count));
+	if(s.GetCount() == 0)
+		return !IsEof() && count;
+#ifndef ENDZIP
+	if(gzip)
+		z.Put(~s, s.GetCount());
+	else
+#endif
+		Out(~s, s.GetCount());
+	if(count > 0) {
+		count -= s.GetCount();
+		return !IsEof() && count > 0;
+	}
+	return !IsEof();
+}
+*/
 
 void HttpRequest::CopyCookies()
 {
