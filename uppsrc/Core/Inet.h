@@ -352,6 +352,7 @@ class HttpRequest : public TcpSocket {
 
 	String       error;
 	String       body;
+	bool         has_content_length;
 
 	enum {
 		DEFAULT_HTTP_PORT        = 80,
