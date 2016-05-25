@@ -41,6 +41,7 @@ CONSOLE_APP_MAIN
 	LOG("---------------");
 
 	a.Run(callback1(Server, chunked_without_trailer));
+	Sleep(200);
 	HttpRequest r1("localhost:4000");
 	ASSERT(r1.GET().Execute() == "This is the data in the first chunk\r\n6and this is the second one\r\nconsequence");
 	a.Wait();
