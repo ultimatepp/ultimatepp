@@ -75,7 +75,7 @@ Value JsonRpcData(const Value& v)
 	return v;
 }
 
-String RpcExecute(const String& request_);
+String RpcExecuteShorted(const String& request_);
 
 RpcGet RpcRequest::Execute()
 {
@@ -131,7 +131,7 @@ RpcGet RpcRequest::Execute()
 	String response;
 	New();
 	if(shorted)
-		response = RpcExecute(request);
+		response = RpcExecuteShorted(request);
 	else
 		response = Post(request).Execute();
 	if(sLogRpcCalls) {
