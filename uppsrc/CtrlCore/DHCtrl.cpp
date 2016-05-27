@@ -6,14 +6,41 @@ NAMESPACE_UPP
 
 #ifndef PLATFORM_WINCE
 
+Vector<DHCtrl *> DHCtrl::all_active;
+
+void DHCtrl::RemoveActive()
+{
+	for(;;) {
+		int q = FindIndex(all_active, this);
+		if(q < 0)
+			return;
+		all_active.Remove(q);
+	}
+}
+
+bool DHCtrl::PreprocessMessageAll(MSG& msg)
+{
+	for(auto q : all_active)
+		if(q->PreprocessMessage(msg))
+			return true;
+	return false;
+}
+
+bool DHCtrl::PreprocessMessage(MSG& msg)
+{
+	return false;
+}
+
 void DHCtrl::NcCreate(HWND _hwnd)
 {
 	hwnd = _hwnd;
+	all_active.Add(this);
 }
 
 void DHCtrl::NcDestroy()
 {
 	hwnd = NULL;
+	RemoveActive();
 }
 
 LRESULT DHCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -28,6 +55,7 @@ void DHCtrl::CloseHWND()
 	if(hwnd) {
 		DestroyWindow(hwnd);
 		hwnd = NULL;
+		RemoveActive();
 	}
 }
 
@@ -80,6 +108,7 @@ DHCtrl::~DHCtrl()
 {
 	CloseHWND();
 	BackPaint(EXCLUDEPAINT);
+	RemoveActive();
 }
 
 #endif
