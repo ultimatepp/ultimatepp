@@ -611,6 +611,11 @@ void Ctrl::NcDestroy()
 		WndFree();
 }
 
+bool Ctrl::PreprocessMessage(MSG& msg)
+{
+	return false;
+}
+
 LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	GuiLock __;
@@ -747,9 +752,11 @@ void Ctrl::sProcessMSG(MSG& msg)
 			Ctrl::hotkey[(int)msg.wParam]();
 		return;
 	}
-	if(msg.message != WM_SYSKEYDOWN && msg.message != WM_SYSKEYUP
-	|| PassWindowsKey((dword)msg.wParam) || msg.wParam == VK_MENU) //17.11 Mirek - fix to get windows menu invoked on Alt+Space
-		TranslateMessage(&msg); // 04/09/07: TRC fix to make barcode reader going better
+	
+	if(!DHCtrl::PreprocessMessageAll(msg))
+		if(msg.message != WM_SYSKEYDOWN && msg.message != WM_SYSKEYUP
+		|| PassWindowsKey((dword)msg.wParam) || msg.wParam == VK_MENU) //17.11 Mirek - fix to get windows menu invoked on Alt+Space
+			TranslateMessage(&msg); // 04/09/07: TRC fix to make barcode reader going better
 
 #if 0
 	DDUMP(msg.hwnd);

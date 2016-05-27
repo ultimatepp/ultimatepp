@@ -79,11 +79,20 @@ public:
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	virtual void    NcCreate(HWND hwnd);
 	virtual void    NcDestroy();
+	virtual bool    PreprocessMessage(MSG& msg);
 
 private:
 	void OpenHWND();
 	void SyncHWND();
 	
+	void RemoveActive();
+
+	static Vector<DHCtrl *> all_active;
+
+	static bool PreprocessMessageAll(MSG& msg);
+	
+	friend class Ctrl;
+
 protected:
 	void CloseHWND();
 	HWND   hwnd;
