@@ -57,6 +57,7 @@ public:
 	virtual void    NcDestroy();
 	virtual void    PreDestroy();
 	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual bool    PreprocessMessage(MSG& msg);
 
 	HWND  GetHWND() const              { return parent ? NULL : top ? top->hwnd : NULL; }
 	HWND  GetOwnerHWND() const;
