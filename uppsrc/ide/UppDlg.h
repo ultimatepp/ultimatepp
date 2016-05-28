@@ -341,7 +341,9 @@ struct WorkspaceWork {
 
 	void DnDInsert(int line, PasteClip& d);
 	void Drag();
-
+	
+	void NewPackageFile();
+	
 	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, CONFIG_FILE, ANY_FILE };
 	void AddFile(ADDFILE type);
 	void AddItem(const String& name, bool separator, bool readonly);
@@ -375,6 +377,7 @@ struct WorkspaceWork {
 
 	void PackageMenu(Bar& bar);
 	void FileMenu(Bar& bar);
+	void NewMenu(Bar& bar);
 	void SpecialFileMenu(Bar& bar);
 	void InsertSpecialMenu(Bar& menu);
 

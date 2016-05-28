@@ -33,6 +33,7 @@ file
 	BaseDlg.cpp,
 	SelectPkg.cpp,
 	UppWspc.cpp,
+	NewPackageFile.cpp,
 	UppDlg.cpp,
 	Template.cpp,
 	ide.key,
