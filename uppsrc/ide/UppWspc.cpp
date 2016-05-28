@@ -421,7 +421,7 @@ void WorkspaceWork::AddSeparator()
 	String active = GetActivePackage();
 	if(active.IsEmpty()) return;
 	String name;
-	if(!EditText(name, "Insert separator", "Name"))
+	if(!EditText(name, "Add separator", "Name"))
 		return;
 	AddItem(~name, true, true);
 }
@@ -858,6 +858,10 @@ void WorkspaceWork::OpenPackageFolder()
 void WorkspaceWork::FileMenu(Bar& menu)
 {
 	bool sel = filelist.IsCursor() && filelist[filelist.GetCursor()].isdir;
+	
+	menu.Add("New", THISBACK(NewMenu));
+	menu.Separator();
+	
 	bool isaux = IsAux();
 	if(isaux)
 		InsertSpecialMenu(menu);
@@ -868,8 +872,6 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		menu.Add("Special", THISBACK(SpecialFileMenu))
 		    .Help("Less frequently used methods of adding files to the package");
 	}
-	menu.Add("Insert separator", THISBACK(AddSeparator))
-		.Help("Insert text separator line");
 	menu.Separator();
 	if(!organizer) {
 		if(sel)
@@ -916,6 +918,13 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		}
 	}
 	FilePropertiesMenu(menu);
+}
+
+void WorkspaceWork::NewMenu(Bar& bar)
+{
+	bar.Add("File", CtrlImg::File(), THISBACK(NewPackageFile));
+	bar.Add("Separator", THISBACK(AddSeparator))
+		.Help("Add text separator line");
 }
 
 void WorkspaceWork::TogglePCH()
