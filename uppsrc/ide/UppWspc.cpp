@@ -922,9 +922,20 @@ void WorkspaceWork::FileMenu(Bar& menu)
 
 void WorkspaceWork::NewMenu(Bar& bar)
 {
-	bar.Add("File", CtrlImg::File(), THISBACK(NewPackageFile));
+	bar.Add("File", CtrlImg::File(), THISBACK2(NewPackageFile, "New file", ""));
 	bar.Add("Separator", THISBACK(AddSeparator))
 		.Help("Add text separator line");
+	
+	bar.Separator();
+	for (int i = 0; i < categories.GetCount(); i++) {
+		Callback1<Bar&> barCallback;
+		barCallback << [&, i](Bar& subBar) {
+			for (FileType& fileType : categories[i])
+				subBar.Add(fileType.GetName(), THISBACK2(NewPackageFile, "New " + fileType.GetName(), fileType.GetExtension()));
+		};
+		
+		bar.Add(categories.GetKey(i), barCallback);
+	}
 }
 
 void WorkspaceWork::TogglePCH()
@@ -1128,6 +1139,35 @@ void WorkspaceWork::Drag()
 	                       filelist.GetDragSample(), DND_MOVE);
 }
 
+void WorkspaceWork::LoadCategories()
+{
+	// TODO: Can be pass as config file.
+	Vector<FileType> cppFiles;
+	cppFiles.Add(FileType("C++ source file", "cpp", NULL));
+	cppFiles.Add(FileType("C++ header file", "h", NULL));
+	categories.Add("C/C++", cppFiles);
+	
+	Vector<FileType> uppFiles;
+	uppFiles.Add(FileType("Layout file", "lay", NULL));
+	uppFiles.Add(FileType("Image file", "iml", NULL));
+	uppFiles.Add(FileType("Escape script file", "usc", NULL));
+	uppFiles.Add(FileType("Skylark template file", "witz", NULL));
+	categories.Add("U++", uppFiles);
+	
+	Vector<FileType> javaFiles;
+	javaFiles.Add(FileType("Java source file", "java", NULL));
+	categories.Add("Java", javaFiles);
+	
+	Vector<FileType> webFiles;
+	webFiles.Add(FileType("JSON file", "json", NULL));
+	webFiles.Add(FileType("XML file", "xml", NULL));
+	categories.Add("Web", webFiles);
+	
+	Vector<FileType> otherFiles;
+	otherFiles.Add(FileType("Text file", "txt", NULL));
+	categories.Add("Other", otherFiles);
+}
+
 WorkspaceWork::WorkspaceWork()
 {
 	package <<= THISBACK(PackageCursor);
@@ -1148,6 +1188,8 @@ WorkspaceWork::WorkspaceWork()
 	showtime = false;
 	sort = true;
 	svn_dirs = false;
+	
+	LoadCategories();
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)
