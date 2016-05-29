@@ -930,8 +930,12 @@ void WorkspaceWork::NewMenu(Bar& bar)
 	for (int i = 0; i < categories.GetCount(); i++) {
 		Callback1<Bar&> barCallback;
 		barCallback << [&, i](Bar& subBar) {
-			for (FileType& fileType : categories[i])
-				subBar.Add(fileType.GetName(), THISBACK2(NewPackageFile, "New " + fileType.GetName(), fileType.GetExtension()));
+			for (FileType& fileType : categories[i]) {
+				String name = fileType.GetName();
+				String extension = fileType.GetExtension();
+				
+				subBar.Add(name, fileType.GetImage(), THISBACK2(NewPackageFile, "New " + name, extension));
+			}
 		};
 		
 		bar.Add(categories.GetKey(i), barCallback);
@@ -1142,32 +1146,41 @@ void WorkspaceWork::Drag()
 void WorkspaceWork::LoadCategories()
 {
 	Vector<FileType> cppFiles;
-	cppFiles.Add(FileType("C++ source file", "cpp", NULL));
-	cppFiles.Add(FileType("C++ header file", "h", NULL));
+	cppFiles.Add(FileType("C++ source file", "cpp"));
+	cppFiles.Add(FileType("C++ header file", "h"));
 	categories.Add("C/C++", cppFiles);
 	
 	Vector<FileType> uppFiles;
-	uppFiles.Add(FileType("Layout file", "lay", NULL));
-	uppFiles.Add(FileType("Image file", "iml", NULL));
-	uppFiles.Add(FileType("Escape script file", "usc", NULL));
-	uppFiles.Add(FileType("Skylark template file", "witz", NULL));
+	uppFiles.Add(FileType("Layout file", "lay"));
+	uppFiles.Add(FileType("Image file", "iml"));
+	uppFiles.Add(FileType("Escape script file", "usc"));
+	uppFiles.Add(FileType("Skylark template file", "witz"));
 	categories.Add("U++", uppFiles);
 	
 	Vector<FileType> javaFiles;
-	javaFiles.Add(FileType("Java source file", "java", NULL));
+	javaFiles.Add(FileType("Java source file", "java"));
 	categories.Add("Java", javaFiles);
 	
 	Vector<FileType> webFiles;
-	webFiles.Add(FileType("HTML source file", "html", NULL));
-	webFiles.Add(FileType("CSS source file", "css", NULL));
-	webFiles.Add(FileType("JavaScript source file", "js", NULL));
-	webFiles.Add(FileType("JSON file", "json", NULL));
-	webFiles.Add(FileType("XML file", "xml", NULL));
+	webFiles.Add(FileType("HTML source file", "html"));
+	webFiles.Add(FileType("CSS source file", "css"));
+	webFiles.Add(FileType("JavaScript source file", "js"));
+	webFiles.Add(FileType("JSON file", "json"));
+	webFiles.Add(FileType("XML file", "xml"));
 	categories.Add("Web", webFiles);
 	
 	Vector<FileType> otherFiles;
-	otherFiles.Add(FileType("Text file", "txt", NULL));
+	otherFiles.Add(FileType("Text file", "txt"));
 	categories.Add("Other", otherFiles);
+}
+
+void WorkspaceWork::LoadCategoriesImages()
+{
+	for (int i = 0; i < categories.GetCount(); i++) {
+		for (FileType& type : categories[i]) {
+			type.SetImage(IdeFileImage("." + type.GetExtension(), false, false));
+		}
+	}
 }
 
 WorkspaceWork::WorkspaceWork()
@@ -1192,6 +1205,7 @@ WorkspaceWork::WorkspaceWork()
 	svn_dirs = false;
 	
 	LoadCategories();
+	LoadCategoriesImages();
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)

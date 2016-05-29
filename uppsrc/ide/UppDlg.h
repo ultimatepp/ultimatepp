@@ -283,20 +283,21 @@ struct WorkspaceWork {
 	
 	class FileType : public Moveable<FileType> {
 	public:
-		FileType(const String& name, const String& extension, Image* img)
+		FileType(const String& name, const String& extension)
 			: name(name)
 			, extension(extension)
-			, img(img)
 		{}
 		
-		String GetName() const      { return name; }
-		String GetExtension() const { return extension; }
-		Image* GetImage() const     { return img; }
+		String       GetName() const      { return name; }
+		String       GetExtension() const { return extension; }
+		const Image& GetImage() const     { return img; }
+		
+		void SetImage(const Image& image) { img = image; }
 		
 	private:
 		String name;
 		String extension;
-		Image* img;
+		Image  img;
 	};
 	
 	VectorMap<String, Vector<FileType>> categories;
@@ -363,6 +364,7 @@ struct WorkspaceWork {
 	void Drag();
 	
 	void LoadCategories();
+	void LoadCategoriesImages();
 	void NewPackageFile(const String& title, const String& extension);
 	
 	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, CONFIG_FILE, ANY_FILE };
