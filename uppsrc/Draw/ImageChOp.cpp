@@ -225,6 +225,32 @@ int ImageMarginV(const Image& _m, int p, int dist)
 	return d + 1;
 }
 
+Rect GetImageMargins(const Image& m, RGBA margin_color)
+{
+	Rect r;
+	Size isz = m.GetSize();
+	for(int pass = 0; pass < 2; pass++) {
+		int& y = pass ? r.bottom : r.top;
+		for(int y = 0; y < isz.cy; y++) {
+			const RGBA *s = m[pass ? r.bottom - y - 1 : y];
+			for(int x = 0; x < isz.cx; x++)
+				if(*s++ != margin_color)
+					goto foundy;
+		}
+	foundy:
+		int& x = pass ? r.right : r.left;
+		for(int x = 0; x < isz.cx; x++) {
+			const RGBA *s = m[0] + (pass ? r.right - x - 1 : x);
+			for(int y = 0; y < isz.cy; y++) {
+				if(*s != margin_color)
+					goto foundx;
+				s += isz.cx;
+			}
+		}
+	foundx:;
+	}
+}
+
 ChPartMaker::ChPartMaker(const Image& m)
 {
 	image = m;
