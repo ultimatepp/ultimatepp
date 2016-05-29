@@ -1141,7 +1141,6 @@ void WorkspaceWork::Drag()
 
 void WorkspaceWork::LoadCategories()
 {
-	// TODO: Can be pass as config file.
 	Vector<FileType> cppFiles;
 	cppFiles.Add(FileType("C++ source file", "cpp", NULL));
 	cppFiles.Add(FileType("C++ header file", "h", NULL));
@@ -1159,6 +1158,9 @@ void WorkspaceWork::LoadCategories()
 	categories.Add("Java", javaFiles);
 	
 	Vector<FileType> webFiles;
+	webFiles.Add(FileType("HTML source file", "html", NULL));
+	webFiles.Add(FileType("CSS source file", "css", NULL));
+	webFiles.Add(FileType("JavaScript source file", "js", NULL));
 	webFiles.Add(FileType("JSON file", "json", NULL));
 	webFiles.Add(FileType("XML file", "xml", NULL));
 	categories.Add("Web", webFiles);
