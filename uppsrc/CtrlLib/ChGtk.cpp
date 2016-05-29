@@ -165,23 +165,25 @@ void ChHostSkin()
 	GtkWidget *w = Setup(gtk_radio_button_new(NULL));
 	int is = DPI(GtkInt(w, "indicator-size")) + 2;
 	int mxs = StdFont().GetCy() + 2;
+	
+	mxs = INT_MAX;
 
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = false;
-	GtkIml(CtrlsImg::I_S0, w, 2, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is, Null, mxs, mxs);
+	GtkIml(CtrlsImg::I_S0, w, 2, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is, Null);
 	GTK_TOGGLE_BUTTON(w)->active = true;
-	GtkIml(CtrlsImg::I_S1, w, 1, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is, Null, mxs, mxs);
+	GtkIml(CtrlsImg::I_S1, w, 1, "radiobutton", GTK_OPTION|GTK_MARGIN1, is, is, Null);
 	gtk_widget_destroy(w);
 
 	w = Setup(gtk_check_button_new());
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = false;
-	GtkIml(CtrlsImg::I_O0, w, 2, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null, mxs, mxs);
+	GtkIml(CtrlsImg::I_O0, w, 2, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null);
 	GTK_TOGGLE_BUTTON(w)->active = true;
-	GtkIml(CtrlsImg::I_O1, w, 1, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null, mxs, mxs);
+	GtkIml(CtrlsImg::I_O1, w, 1, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null);
 	GTK_TOGGLE_BUTTON(w)->active = false;
 	GTK_TOGGLE_BUTTON(w)->inconsistent = true;
-	GtkIml(CtrlsImg::I_O2, w, 3, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null, mxs, mxs);
+	GtkIml(CtrlsImg::I_O2, w, 3, "checkbutton", GTK_CHECK|GTK_MARGIN1, is, is, Null);
 	gtk_widget_destroy(w);
 
 	if(Qt) {
@@ -203,7 +205,7 @@ void ChHostSkin()
 		Button::Style& s = Button::StyleNormal().Write();
 		s.overpaint = 3 + 2 * Qt;
 		static GtkWidget *button = gtk_button_new();
-		ChGtkNew(button, "button", GTK_BOX|GTK_MARGIN3|(Qt * GTK_INFLATE2));
+		ChGtkNew(button, "button", GTK_BOX|GTK_MARGIN3|GTK_INFLATE2);
 		GtkChButton(s.look);
 
 		po.x = GtkInt("child-displacement-x");
@@ -254,7 +256,7 @@ void ChHostSkin()
 			gtk_widget_set(def_button, "can-default", true, NULL);
 			gtk_window_set_default(GTK_WINDOW(gtk__parent()), def_button);
 		}
-		ChGtkNew(def_button, "button", GTK_BOX|GTK_MARGIN3|(Qt * GTK_INFLATE2));
+		ChGtkNew(def_button, "button", GTK_BOX|GTK_MARGIN3|GTK_INFLATE2);
 		GtkChButton(s.look);
 	}
 
