@@ -280,7 +280,27 @@ struct WorkspaceWork {
 	};
 
 	ArrayMap<String, Backup> backup;
-
+	
+	class FileType : public Moveable<FileType> {
+	public:
+		FileType(const String& name, const String& extension, Image* img)
+			: name(name)
+			, extension(extension)
+			, img(img)
+		{}
+		
+		String GetName() const      { return name; }
+		String GetExtension() const { return extension; }
+		Image* GetImage() const     { return img; }
+		
+	private:
+		String name;
+		String extension;
+		Image* img;
+	};
+	
+	VectorMap<String, Vector<FileType>> categories;
+	
 	bool         organizer;
 	bool         showtime;
 	bool         sort;
@@ -342,7 +362,8 @@ struct WorkspaceWork {
 	void DnDInsert(int line, PasteClip& d);
 	void Drag();
 	
-	void NewPackageFile();
+	void LoadCategories();
+	void NewPackageFile(const String& title, const String& extension);
 	
 	enum ADDFILE { PACKAGE_FILE, OUTPUT_FILE, HOME_FILE, LOCAL_FILE, CONFIG_FILE, ANY_FILE };
 	void AddFile(ADDFILE type);

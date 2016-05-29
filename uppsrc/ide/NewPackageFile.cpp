@@ -4,37 +4,62 @@ class NewPackageFileWindow : public WithNewPackageFileLayout<TopWindow> {
 	typedef NewPackageFileWindow CLASSNAME;
 	
 public:
-	NewPackageFileWindow(const String& packageDir);
+	NewPackageFileWindow(const String& packageDir, const String& extension);
+	
 	
 	String GetFileName() const;
 	
 private:
+	void OnFileNameChanged();
+
 	void CheckFilePath();
 	
 private:
 	String packageDir;
+	String extension;
 };
 
-NewPackageFileWindow::NewPackageFileWindow(const String& packageDir)
+NewPackageFileWindow::NewPackageFileWindow(const String& packageDir, const String& extension)
 	: packageDir(packageDir)
+	, extension(extension)
 {
-	CtrlLayoutOKCancel(*this, "New package file");
+	CtrlLayoutOKCancel(*this, "");
 	
-	fileName <<= THISBACK(CheckFilePath);
+	fileName <<= THISBACK(OnFileNameChanged);
 	
-	ok.Disable();
+	fullFileName.Disable();
+	if (extension.IsEmpty()) {
+		fullFileNameLabel.Hide();
+		fullFileName.Hide();
+		
+		info.VSizePosZ(28, 36);
+	}
+	
+	OnFileNameChanged();
+}
+
+void NewPackageFileWindow::OnFileNameChanged()
+{
+	String name = fileName.GetData();
+	if (!extension.IsEmpty())
+		fullFileName.SetData(name + "." + extension);
+	else
+		fullFileName.SetData(name);
+	
+	CheckFilePath();
 }
 
 void NewPackageFileWindow::CheckFilePath()
 {
-	String file = fileName.GetData();
+	String name = fileName.GetData();
+	String fullName = fullFileName.GetData();
 	
 	info.Clear();
-	if (file.IsEmpty()) {
+	if (name.IsEmpty()) {
 		ok.Disable();
 	}
 	else
-	if (FileExists(packageDir + DIR_SEPS + file)) {
+	if (FileExists(packageDir + DIR_SEPS + fullName)) {
 		ok.Disable();
 		info.SetData("[ [ [@(170.42.0) File already exists.]]]");
 	}
@@ -45,12 +70,14 @@ void NewPackageFileWindow::CheckFilePath()
 
 String NewPackageFileWindow::GetFileName() const
 {
-	return fileName.GetData();
+	return fullFileName.GetData();
 }
 
-void WorkspaceWork::NewPackageFile()
+void WorkspaceWork::NewPackageFile(const String& title, const String& extension)
 {
-	NewPackageFileWindow dlg(GetFileFolder(GetActivePackagePath()));
+	NewPackageFileWindow dlg(GetFileFolder(GetActivePackagePath()), extension);
+	dlg.Title(title);
+	
 	if (dlg.ExecuteOK())
 		AddItem(dlg.GetFileName(), false, false);
 }
