@@ -124,6 +124,7 @@ int    ClassifyContent(const Image& m, const Rect& rect);
 Image  RecreateAlpha(const Image& overwhite, const Image& overblack);
 int    ImageMargin(const Image& m, int p, int dist);
 int    ImageMarginV(const Image& _m, int p, int dist);
+Rect   GetImageMargins(const Image& m, RGBA margin_color);
 
 struct ChPartMaker {
 	Image image;

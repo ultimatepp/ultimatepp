@@ -32,6 +32,7 @@ CH_STYLE(ScrollBar, Style, StyleDefault)
 	Sb(right, CtrlsImg::RA());
 	Sb(right2, CtrlsImg::RA());
 	isup2 = isdown2 = isleft2 = isright2 = false;
+	thumbwidth = Null;
 }
 
 ScrollBar::ScrollBar() {
@@ -124,6 +125,8 @@ Rect ScrollBar::GetPartRect(int p) const {
 		HV(h.left, h.top) = thumbpos + ts / 2 + sbo + off;
 		break;
 	case 2:
+		if(!IsNull(style->thumbwidth))
+			h.Deflate((style->barsize - style->thumbwidth) / 2);
 		HV(h.left, h.top) = thumbpos - sbo + off;
 		HV(h.right, h.bottom) = thumbpos + ts + sbo + off;
 		break;
