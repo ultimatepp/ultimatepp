@@ -429,7 +429,7 @@ void Ctrl::Proc()
 			if(kv > 256) { // Non-latin keyboard layout should still produce accelerators like Ctrl+C etc...
 				static VectorMap<int, int> hwkv; // convert hw keycode to Latin GTK keyval
 				ONCELOCK {
-					for(int i = 0; i < 256; i++) { // Latin keyvals are in 0..255 range
+					for(int i = 1; i < 256; i++) { // Latin keyvals are in 0..255 range
 						GdkKeymapKey *keys;
 						gint n_keys;
 						if(gdk_keymap_get_entries_for_keyval(NULL, i, &keys, &n_keys)) {
