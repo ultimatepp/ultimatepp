@@ -91,9 +91,10 @@ void Pusher::KeyPush() {
 
 bool Pusher::FinishPush()
 {
-	if(!IsPush())
-		return false;
+	bool b = IsPush();
 	EndPush();
+	if(!b)
+		return false;
 	if(IsReadOnly())
 		return false;
 	PerformAction();
@@ -128,9 +129,8 @@ void Pusher::PseudoPush() {
 }
 
 void Pusher::EndPush() {
-	if(push || keypush)
-		RefreshPush();
 	keypush = push = false;
+	RefreshPush();
 }
 
 Pusher&  Pusher::SetFont(Font fnt) {

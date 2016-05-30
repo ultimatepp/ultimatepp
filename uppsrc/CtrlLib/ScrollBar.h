@@ -17,7 +17,7 @@ public:
 
 public:
 	struct Style : ChStyle<Style> {
-		int barsize, arrowsize, thumbmin, overthumb;
+		int barsize, arrowsize, thumbmin, overthumb, thumbwidth;
 		bool through;
 		Value vupper[4], vthumb[4], vlower[4];
 		Value hupper[4], hthumb[4], hlower[4];

@@ -74,8 +74,7 @@ INITBLOCK { // This is required to avoid animation related problems with Oxygen-
 	setenv("OXYGEN_APPLICATION_NAME_OVERRIDE", "firefox", 1);
 }
 
-Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy,
-             Rect rect)
+Image GetGTK0(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy, Rect rect)
 {
 	MemoryIgnoreLeaksBlock __;
 	GdkPixbuf *icon = NULL;
@@ -234,10 +233,30 @@ Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int t
 	if(type == GTK_ICON)
 		g_object_unref(icon);
 	sLastImage = RecreateAlpha(m[0], m[1]);
+	if(type & GTK_CROPM) {
+		Rect m = GetImageMargins(sLastImage, RGBAZero());
+		int cm = min(m.left, m.right, m.top, m.bottom);
+		Size isz = sLastImage.GetSize();
+		if(cm > 0 && cm < isz.cx && cm < isz.cy)
+			sLastImage = Crop(sLastImage, Rect(cm, cm, isz.cx - cm, isz.cy - cm));
+	}
+
 	if(chgtkspy__)
 		chgtkspy__(G_OBJECT_TYPE_NAME(widget), state, shadow, detail, type, cx, cy, sLastImage);
 	return sLastImage;
 }
+
+Image GetGTK(GtkWidget *widget, int state, int shadow, const char *detail, int type, int cx, int cy, Rect rect)
+{
+	if(type & GTK_TRYBIGGER) {
+		Image m1 = GetGTK0(widget, state, shadow, detail, type|GTK_CROPM, cx + DPI(20), cy + DPI(20), rect);
+		Image m2 = GetGTK0(widget, state, shadow, detail, type|GTK_CROPM, cx + DPI(24), cy + DPI(24), rect);
+		if(m1 == m2)
+			return m1;
+	}
+	return GetGTK0(widget, state, shadow, detail, type, cx, cy, rect);
+}
+
 
 Vector<ChGtkI>& ChGtkIs()
 {
