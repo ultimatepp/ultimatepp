@@ -338,7 +338,7 @@ size_t GetMemoryBlockSize_(void *ptr)
 
 #else
 
-#define LTIMING(x)
+#define LTIMING(x) // RTIMING(x)
 
 void *MemoryAlloc(size_t sz)
 {
