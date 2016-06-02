@@ -613,17 +613,6 @@ String PdfDraw::Finish()
 			                    << "/Type /XObject /Subtype /Image" << wh
 				                << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ");
 		}
-		data.Clear();
-		for(int y = sr.top; y < sr.bottom; y++) {
-			const RGBA *p = m[y] + sr.left;
-			const RGBA *e = m[y] + sr.right;
-			while(p < e) {
-				data.Cat(p->r);
-				data.Cat(p->g);
-				data.Cat(p->b);
-				p++;
-			}
-		}
 		String imgobj;
 		data = GetMonoPdfImage(m, sr);
 		if(data.GetCount())
@@ -1076,6 +1065,7 @@ String PdfDraw::Finish()
 	    << "startxref\r\n"
 	    << startxref << "\r\n"
 	    << "%%EOF\r\n";
+	   
 	return out;
 }
 
