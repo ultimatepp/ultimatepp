@@ -227,9 +227,14 @@ void RichRawImage::Paint(const Value& data, Draw& w, Size sz, void *) const
 	StringStream ss(s);
 	One<StreamRaster> r = StreamRaster::OpenAny(ss);
 	if(r) {
-		ImageEncoder m;
-		Rescale(m, sz, *r, r->GetSize());
-		w.DrawImage(0, 0, sz.cx, sz.cy, m);
+		Size isz = r->GetSize();
+		if(isz.cx * isz.cy > sz.cx * sz.cy) { // conserve memory by scaling down from source
+			ImageEncoder m;
+			Rescale(m, sz, *r, r->GetSize());
+			w.DrawImage(0, 0, sz.cx, sz.cy, m);
+		}
+		else
+			w.DrawImage(0, 0, sz.cx, sz.cy, r->GetImage()); // scale up by Draw to give e.g. PDF chance to store unscaled
 	}
 }
 
