@@ -7,7 +7,7 @@ static double pi_device() {
 	long count = 0, i;
 	
 	// Parallel loop with reduction for calculating PI  
-	#pragma omp parallel for private(i, x, y) shared (samples) reduction(+:count) 
+	#pragma omp parallel for private(i, x, y) shared(samples) reduction(+:count) 
     for (i = 0; i < samples; ++i) {
         x = Random(1000000)/1000000.;
         y = Random(1000000)/1000000.;
@@ -15,7 +15,6 @@ static double pi_device() {
             count++;
     }
     return 4.0 * count / samples;
-    
 }
 
 static double pi_host() {
