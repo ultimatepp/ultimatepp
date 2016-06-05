@@ -14,6 +14,8 @@ void Demo();
 CONSOLE_APP_MAIN
 {
     try {
+        Cout() << "\nArrayFire library demo\n\n";
+        
 		int device = 0;
         setDevice(device);
         info();
@@ -23,14 +25,18 @@ CONSOLE_APP_MAIN
 		MatMult_Bench();
 		Vectorize_Bench();
     } catch (af::exception& e) {
-        printf("\nError: %s\n", e.what());
-    } catch (...) {
-        printf("\nUnknown error\n");
-    }
-    printf("\nEnd");
-	#ifdef WIN32 // pause in Windows
-        printf(". Hit enter...");
-        fflush(stdout);
-        getchar();
-    #endif
+        Cout() << t_("Internal error:") + String(" ") + e.what() + String("\n") + t_("Program ended");
+	} catch (Exc e) {
+		Cout() << t_("Internal error:") + String(" ") + e + String("\n") + t_("Program ended");
+	} catch(const char *cad) {
+		Cout() << t_("Internal error:") + String(" ") + cad + String("\n") + t_("Program ended");
+	} catch(const std::string &e) {
+		Cout() << t_("Internal error:") + String(" ") + e.c_str() + String("\n") + t_("Program ended");	
+	} catch (const std::exception &e) {
+		Cout() << t_("Internal error:") + String(" ") + e.what() + String("\n") + t_("Program ended");
+	} catch(...) {
+		Cout() << t_("Internal error:") + String(" ") + t_("Unknown error") + String("\n") + t_("Program ended");
+	}
+	Cout() << "\nEnd";
+	ReadStdIn();
 }
