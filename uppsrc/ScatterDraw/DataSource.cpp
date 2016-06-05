@@ -294,17 +294,24 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     } catch(...) {
         return res;
     }
-    int i = frequency ? 0 : 1;
-    for (; i < freqbuf.size(); ++i) {
-        double xdata;
-		if (!frequency)        
- 			xdata = (tSample*numData)/i;
-		else
-			xdata = i/(tSample*numData);
-		if (phase)
-			res << Pointf(xdata, std::arg(freqbuf[i]));	
-		else
-        	res << Pointf(xdata, 2*std::abs(freqbuf[i])/numData);	
+    if (frequency) {
+    	for (int i = 0; i < int(freqbuf.size()); ++i) {    
+    		double xdata = i/(tSample*numData);
+		
+			if (phase)
+				res << Pointf(xdata, std::arg(freqbuf[i]));	
+			else
+        		res << Pointf(xdata, 2*std::abs(freqbuf[i])/numData);
+    	}
+    } else {
+        for (int i = int(freqbuf.size()); i > 0; --i) {    
+    		double xdata = (tSample*numData)/i;
+		
+			if (phase)
+				res << Pointf(xdata, std::arg(freqbuf[i]));	
+			else
+        		res << Pointf(xdata, 2*std::abs(freqbuf[i])/numData);
+    	}
     }
     return res;
 }
