@@ -15,7 +15,7 @@ static void MatMult_device() {
 	#pragma omp parallel shared(hsize, chunk) private(row, col, inner)
 	{
 		// Do matrix multiply sharing iterations on outer loop 
-		#pragma omp for schedule (static, chunk)
+		#pragma omp for schedule(static, chunk)
 		for (row = 0; row < hsize; ++row) {
 			for (col = 0; col < hsize; ++col) {
 				float sum = 0;      
