@@ -10,34 +10,28 @@ struct App : public TopWindow {
 		Close();
 	}
 
-	void EnableNumbers()
-	{
-		numbers_enabled = !numbers_enabled;
-	}
-
-	void ShowNumber(int n)
-	{
-		PromptOK(AsString(n));
-	}
-
 	void SubMenu(Bar& bar)
 	{
 		for(int i = 0; i < 10; i++)
-			bar.Add(AsString(i), THISBACK1(ShowNumber, i));
+			bar.Add(~AsString(i), [=] { PromptOK(AsString(i)); });
 	}
 
 	void Menu(Bar& bar)
 	{
-		bar.Add("Enable numbers", THISBACK(EnableNumbers))
+		bar.Add("Enable numbers", [=] { numbers_enabled = !numbers_enabled; })
 		   .Check(numbers_enabled);
 		bar.Add(numbers_enabled, "Numbers", THISBACK(SubMenu));
-		bar.Add("Exit", THISBACK(Exit))
+		bar.Add("Exit", [=] { Exit(); })
 		   .Key(K_CTRL_E);
 	}
 
 	void MainBar(Bar& bar)
 	{
-		bar.Add("Menu", THISBACK(Menu));
+		bar.Add("Numbers", THISBACK(Menu));
+		bar.Sub("Items", [=](Bar& bar) {
+			bar.Add("Item 1", [&] { Exclamation("Item 1 invoked"); });
+			bar.Add("Item 2", [&] { Exclamation("Item 2 invoked"); });
+		});
 	}
 
 	MenuBar menu;
