@@ -87,61 +87,120 @@ GetMinSize() for [%-*@3 ctrl] is used. Enable([%-*@3 en]) is called
 for the widget to enable or disable it.&]
 [s3; &]
 [s4;%- &]
-[s5;:Bar`:`:Add`(bool`,const char`*`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
-[@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 image], 
-[_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:Add`(bool`,KeyInfo`&`(`*`)`(`)`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ I
-tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^KeyInfo^ KeyInfo][@(0.0.255) `&
-]_(`*[*@3 key])(), [@(0.0.255) const]_UPP`::Image[@(0.0.255) `&]_[*@3 image], 
-Callback_[*@3 callback])&]
-[s5;:Bar`:`:Add`(const char`*`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [@(0.0.255) const]_[_^Image^ UPP
-`::Image][@(0.0.255) `&]_[*@3 image], [_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:Add`(const String`&`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* Add]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 text], 
-[@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 image], 
-[_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:Add`(KeyInfo`&`(`*`)`(`)`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item
-][@(0.0.255) `&]_[* Add]([_^KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
-[@(0.0.255) const]_UPP`::Image[@(0.0.255) `&]_[*@3 image], Callback_[*@3 callback])&]
-[s5;:Bar`:`:Add`(bool`,const char`*`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&]_[* A
-dd]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
-[_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:Add`(const char`*`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&]_[* Add]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 text], [_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:Add`(const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&]_[* Add](
-[@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 image], 
-[_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:Add`(bool`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&]_
-[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&
-]_[*@3 image], [_^Callback^ Callback]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image
+], [@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&
+]_(`*[*@3 key])(), [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_Callback[@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(const Upp`:`:String`&`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 t
+ext], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
+[@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], [@(0.0.255) const]_Callback[@(0.0.255) `&
+]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,const char`*`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 call
+back])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&
+]_(`*[*@3 key])(), [@(0.0.255) const]_Callback[@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
+[@(0.0.255) const]_Callback[@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image
+], [@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&
+]_(`*[*@3 key])(), [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_Function<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(const Upp`:`:String`&`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 t
+ext], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
+[@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], [@(0.0.255) const]_Function<[@(0.0.255) v
+oid]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,const char`*`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
+_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&
+]_(`*[*@3 key])(), [@(0.0.255) const]_Function<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:Add`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
+[@(0.0.255) const]_Function<[@(0.0.255) void]_()>`&_[*@3 fn])&]
 [s2; Adds an item to menu or toolbar. If [%-*@3 text] is present, item 
 is added to menu; if [%-*@3 image] is present, it is added to toolbar. 
 If both are present, [%-*@3 image] is used as icon in menu too 
 and [%-*@3 text] is used as toolbar button tooltip. When menu item 
-is selected or toolbar button pushed, [%-*@3 cb] is invoked. [%-*@3 enable] 
-sets the item status and [%-*@3 key] is an accelerator key or adjustable 
-accelerator info. All variants return a reference to Item which 
-can be used to further adjust the item.&]
+is selected or toolbar button pushed, [%-*@3 callback] or [%-*@3 fn] 
+is invoked. [%-*@3 enable] sets the item status and [%-*@3 key] is 
+an accelerator key or adjustable accelerator info. All variants 
+return a reference to Item which can be used to further adjust 
+the item.&]
 [s3; &]
 [s4;%- &]
-[s5;:Bar`:`:Add`(bool`,const char`*`,Callback1`<Bar`&`>`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
-[_^Callback1^ Callback1][@(0.0.255) <]Bar[@(0.0.255) `&>]_[*@3 proc])&]
-[s5;:Bar`:`:Add`(const char`*`,Callback1`<Bar`&`>`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [_^Callback1^ Callback1][@(0.0.255) <
-]Bar[@(0.0.255) `&>]_[*@3 proc])&]
-[s5;:Bar`:`:Add`(bool`,const char`*`,const Image`&`,Callback1`<Bar`&`>`):%- [_^Bar`:`:Item^ I
+[s5;:Upp`:`:Bar`:`:Add`(bool`,const char`*`,const Upp`:`:Event`<Upp`:`:Bar`&`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
 tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
-ar]_`*[*@3 text], [@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 image], 
-[_^Callback1^ Callback1][@(0.0.255) <]Bar[@(0.0.255) `&>]_[*@3 proc])&]
-[s5;:Bar`:`:Add`(const char`*`,const Image`&`,Callback1`<Bar`&`>`):%- [_^Bar`:`:Item^ I
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>`&_[*@3 pro
+c])&]
+[s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Event`<Upp`:`:Bar`&`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
 tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
-[@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 image], 
-[_^Callback1^ Callback1][@(0.0.255) <]Bar[@(0.0.255) `&>]_[*@3 proc])&]
-[s2; Adds a submenu. For toolbar, simply adds all items of [%-*@3 proc]. 
-[%-*@3 enable] sets the item status.&]
+[@(0.0.255) const]_[_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>`&_[*@3 proc])&]
+[s5;:Upp`:`:Bar`:`:Add`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Event`<Upp`:`:Bar`&`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image
+], [@(0.0.255) const]_[_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>`&_[*@3 proc])&]
+[s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Event`<Upp`:`:Bar`&`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Event^ Event]<Bar[@(0.0.255) `&]>`&_[*@3 proc])&]
+[s5;:Upp`:`:Bar`:`:Sub`(bool`,const char`*`,const Upp`:`:Function`<void`(Upp`:`:Bar`&`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Sub]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_(Bar
+[@(0.0.255) `&])>`&_[*@3 submenu])&]
+[s5;:Upp`:`:Bar`:`:Sub`(const char`*`,const Upp`:`:Function`<void`(Upp`:`:Bar`&`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Sub]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_(Bar[@(0.0.255) `&])>`&
+_[*@3 submenu])&]
+[s5;:Upp`:`:Bar`:`:Sub`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(Upp`:`:Bar`&`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Sub]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image
+], [@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_(Bar[@(0.0.255) `&])
+>`&_[*@3 submenu])&]
+[s5;:Upp`:`:Bar`:`:Sub`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(Upp`:`:Bar`&`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* Sub]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_(Bar[@(0.0.255) `&])>`&
+_[*@3 submenu])&]
+[s2; Adds a submenu. For toolbar, simply adds all items of [%-*@3 submenu]. 
+[%-*@3 enable] sets the item status. Note that lambda variants 
+(with Function) have to be named differently because of overloading 
+issues.&]
 [s3; &]
 [s4;%- &]
 [s5;:Bar`:`:MenuSeparator`(`):%- [@(0.0.255) void]_[* MenuSeparator]()&]
@@ -155,24 +214,46 @@ tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text],
 ]_[*@3 ctrl], [_^Size^ Size]_[*@3 sz])&]
 [s5;:Bar`:`:AddMenu`(Ctrl`&`,int`,int`):%- [@(0.0.255) void]_[* AddMenu]([_^Ctrl^ Ctrl][@(0.0.255) `&
 ]_[*@3 ctrl], [@(0.0.255) int]_[*@3 cx], [@(0.0.255) int]_[*@3 cy]_`=_[@3 0])&]
-[s5;:Bar`:`:AddMenu`(bool`,const char`*`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ I
+[s5;:Upp`:`:Bar`:`:AddMenu`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
 tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 text], [@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 image], 
-[_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:AddMenu`(bool`,KeyInfo`&`(`*`)`(`)`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ I
-tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) bool]_[*@3 enable], [_^KeyInfo^ KeyInfo][@(0.0.255) `&
-]_(`*[*@3 key])(), [@(0.0.255) const]_UPP`::Image[@(0.0.255) `&]_[*@3 image], 
-Callback_[*@3 callback])&]
-[s5;:Bar`:`:AddMenu`(const char`*`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* AddMenu]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], [@(0.0.255) const]_[_^Image^ U
-PP`::Image][@(0.0.255) `&]_[*@3 image], [_^Callback^ Callback]_[*@3 callback])&]
-[s5;:Bar`:`:AddMenu`(const String`&`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ Item][@(0.0.255) `&
-]_[* AddMenu]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 t], 
-[@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 m], [_^Callback^ Callback]_[*@3 c
-])&]
-[s5;:Bar`:`:AddMenu`(KeyInfo`&`(`*`)`(`)`,const Image`&`,Callback`):%- [_^Bar`:`:Item^ I
-tem][@(0.0.255) `&]_[* AddMenu]([_^KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
-[@(0.0.255) const]_UPP`::Image[@(0.0.255) `&]_[*@3 m], Callback_[*@3 c])&]
+har]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 imag
+e], [@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(bool`,Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&
+]_(`*[*@3 key])(), [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_Callback[@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(const Upp`:`:String`&`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_
+[*@3 t], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 m], 
+[@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 c])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(),
+ [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 m], [@(0.0.255) const]_Callback[@(0.0.255) `&
+]_[*@3 c])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(bool`,const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) bool]_[*@3 enable], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 text], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 imag
+e], [@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(bool`,Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&
+]_(`*[*@3 key])(), [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_Function<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
+[@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(const Upp`:`:String`&`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_
+[*@3 t], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 m], 
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:Bar`:`:AddMenu`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
+tem][@(0.0.255) `&]_[* AddMenu]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(),
+ [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 m], [@(0.0.255) const]_Function<[@(0.0.255) v
+oid]_()>`&_[*@3 fn])&]
 [s2; These methods are equivalents to methods without [* Menu][*/  ]in 
 the name, but perform respective operations only if Bar is menu.&]
 [s3; &]

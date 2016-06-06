@@ -274,12 +274,12 @@ void Bar::AddNC(Ctrl& ctrl)
 	AddCtrl(&ctrl, (int)Null);
 }
 
-Bar::Item&  Bar::Add(bool enable, const char *text, const UPP::Image& image, Callback cb)
+Bar::Item&  Bar::Add(bool enable, const char *text, const UPP::Image& image, const Callback& callback)
 {
-	return AddItem(cb).Text(text).Image(image).Enable(enable);
+	return AddItem(callback).Text(text).Image(image).Enable(enable);
 }
 
-Bar::Item&  Bar::Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback)
 {
 	const char *text = (*key)().name;
 	if(*text == '\3')
@@ -287,17 +287,17 @@ Bar::Item&  Bar::Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, Ca
 	return Add(enable, text, image, callback).Key(key);
 }
 
-Bar::Item&  Bar::Add(const char *text, const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::Add(const char *text, const UPP::Image& image, const Callback& callback)
 {
 	return AddItem(callback).Text(text).Image(image);
 }
 
-Bar::Item& Bar::Add(const String& text, const UPP::Image& image, Callback callback)
+Bar::Item& Bar::Add(const String& text, const UPP::Image& image, const Callback& callback)
 {
 	return Add(~text, image, callback);
 }
 
-Bar::Item&  Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback)
 {
 	const char *text = (*key)().name;
 	if(*text == '\3')
@@ -305,17 +305,62 @@ Bar::Item&  Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, Callback callba
 	return Add(text, image, callback).Key(key);
 }
 
-Bar::Item&  Bar::Add(bool enable, const char *text, Callback callback)
+Bar::Item&  Bar::Add(bool enable, const char *text, const Callback& callback)
 { return IsMenuBar() ? Add(enable, text, Image(), callback) : NilItem(); }
 
-Bar::Item&  Bar::Add(const char *text, Callback callback)
+Bar::Item&  Bar::Add(const char *text, const Callback& callback)
 { return IsMenuBar() ? Add(true, text, Image(), callback) : NilItem(); }
 
-Bar::Item&  Bar::Add(bool enable, KeyInfo& (*key)(), Callback callback)
+Bar::Item&  Bar::Add(bool enable, KeyInfo& (*key)(), const Callback& callback)
 { return IsMenuBar() ? Add(enable, key, Image(), callback) : NilItem(); }
 
-Bar::Item&  Bar::Add(KeyInfo& (*key)(), Callback callback)
+Bar::Item&  Bar::Add(KeyInfo& (*key)(), const Callback& callback)
 { return IsMenuBar() ? Add(true, key, Image(), callback) : NilItem(); }
+
+Bar::Item& Bar::Add(bool enable, const char *text, const UPP::Image& image, const UPP::Function<void ()>& fn)
+{
+	return Add(enable, text, image, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn)
+{
+	return Add(enable, key, image, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(const char *text, const UPP::Image& image, const Function<void ()>& fn)
+{
+	return Add(text, image, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(const String& text, const UPP::Image& image, const Function<void ()>& fn)
+{
+	return Add(text, image, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn)
+{
+	return Add(key, image, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(bool enable, const char *text, const Function<void ()>& fn)
+{
+	return Add(enable, text, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(bool enable, KeyInfo& (*key)(), const Function<void ()>& fn)
+{
+	return Add(enable, key, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(const char *text, const Function<void ()>& fn)
+{
+	return Add(text, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(KeyInfo& (*key)(), const Function<void ()>& fn)
+{
+	return Add(key, Callback() << fn);
+}
 
 void Bar::Break()
 {
@@ -333,29 +378,75 @@ void   Bar::MenuGap(int size)            { if(IsMenuBar()) Gap(size); }
 void   Bar::AddMenu(Ctrl& ctrl)          { if(IsMenuBar()) Add(ctrl); }
 void   Bar::AddMenu(Ctrl& ctrl, Size sz) { if(IsMenuBar()) Add(ctrl, sz); }
 
-Bar::Item&  Bar::AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback)
 { return IsMenuBar() ? Add(enable, key, image, callback) : NilItem(); }
 
-Bar::Item&  Bar::AddMenu(KeyInfo& (*key)(), const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::AddMenu(KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback)
 { return IsMenuBar() ? Add(key, image, callback) : NilItem(); }
 
-Bar::Item&  Bar::AddMenu(bool enable, const char *text, const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::AddMenu(bool enable, const char *text, const UPP::Image& image, const Callback& callback)
 { return IsMenuBar() ? Add(enable, text, image, callback) : NilItem(); }
 
-Bar::Item&  Bar::AddMenu(const char *text, const UPP::Image& image, Callback callback)
+Bar::Item&  Bar::AddMenu(const char *text, const UPP::Image& image, const Callback& callback)
 { return IsMenuBar() ? Add(text, image, callback) : NilItem(); }
 
-Bar::Item& Bar::Add(bool enable, const char *text, Callback1<Bar&> proc)
+
+Bar::Item& Bar::AddMenu(bool enable, const char *text, const UPP::Image& image, const Function<void ()>& fn)
+{
+	return AddMenu(enable, text, image, Callback() << fn);
+}
+
+Bar::Item& Bar::AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn)
+{
+	return AddMenu(enable, key, image, Callback() << fn);
+}
+
+Bar::Item& Bar::AddMenu(const char *text, const UPP::Image& image, const Function<void ()>& fn)
+{
+	return AddMenu(text, image, Callback() << fn);
+}
+
+Bar::Item& Bar::AddMenu(const String& t, const UPP::Image& m, const Function<void ()>& fn)
+{
+	return AddMenu(t, m, Callback() << fn);
+}
+
+Bar::Item& Bar::AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Function<void ()>& fn)
+{
+	return AddMenu(key, m, Callback() << fn);
+}
+
+Bar::Item& Bar::Add(bool enable, const char *text, const Event<Bar&>& proc)
 { return AddSubMenu(proc).Text(text).Enable(enable); }
 
-Bar::Item& Bar::Add(const char *text, Callback1<Bar&> proc)
+Bar::Item& Bar::Add(const char *text, const Event<Bar&>& proc)
 { return Add(true, text, proc); }
 
-Bar::Item& Bar::Add(bool enable, const char *text, const UPP::Image& image, Callback1<Bar&> proc)
+Bar::Item& Bar::Add(bool enable, const char *text, const UPP::Image& image, const Event<Bar&>& proc)
 { return Add(enable, text, proc).Image(image); }
 
-Bar::Item& Bar::Add(const char *text, const UPP::Image& image, Callback1<Bar&> proc)
+Bar::Item& Bar::Add(const char *text, const UPP::Image& image, const Event<Bar&>& proc)
 { return Add(text, proc).Image(image); }
+
+Bar::Item& Bar::Sub(bool enable, const char *text, const Function<void (Bar&)>& submenu)
+{
+	return Add(enable, text, Event<Bar&>() << submenu);
+}
+
+Bar::Item& Bar::Sub(const char *text, const Function<void (Bar&)>& submenu)
+{
+	return Add(text, Event<Bar&>() << submenu);
+}
+
+Bar::Item& Bar::Sub(bool enable, const char *text, const UPP::Image& image, const Function<void (Bar&)>& submenu)
+{
+	return Add(enable, text, image, Event<Bar&>() << submenu);
+}
+
+Bar::Item& Bar::Sub(const char *text, const UPP::Image& image, const Function<void (Bar&)>& submenu)
+{
+	return Add(text, image, Event<Bar&>() << submenu);
+}
 
 void   Bar::ToolSeparator()                { if(IsToolBar()) Separator(); }
 void   Bar::ToolBreak()                    { if(IsToolBar()) Break(); }

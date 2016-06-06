@@ -469,7 +469,7 @@ void MenuBar::KillDelayedClose()
 	KillTimeCallback(TIMEID_STOP);
 }
 
-void MenuBar::Set(Callback1<Bar&> menu)
+void MenuBar::Set(const Callback1<Bar&> menu)
 {
 	if(lock) return;
 	Clear();
