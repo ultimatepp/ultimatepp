@@ -761,6 +761,8 @@ void AppMain___()
 //	Ctrl::ShowRepaint(20); _DBG_
 #endif
 
+	// _DBG_ InstantSetup(); return;
+
 #ifdef PLATFORM_WIN32
 	if(!CheckLicense())
 		return;

@@ -75,6 +75,7 @@ String DirFinder::ScanForDir(const String& dir, const char *ccontains, const cha
 		Vector<String> subdirs = Split(csubdirs, ';');
 		Vector<String> contains = Split(ccontains, ';');
 		Vector<int> max;
+		int min = INT_MAX;
 		String r;
 		for(int i = 0; i < entry.GetCount(); i++) {
 			String d = entry.GetKey(i);
@@ -83,7 +84,12 @@ String DirFinder::ScanForDir(const String& dir, const char *ccontains, const cha
 				Vector<int> m;
 				for(int i = 0; i < m0.GetCount(); i++)
 					m.Add(atoi(m0[i]));
-				if(m > max) {
+				int n = 0;
+				for(const char *s = d; *s; s++)
+					if(*s == '/')
+						n++;
+				if(n < min || n == min && m > max) {
+					min = n;
 					max = pick(m);
 					r = d;
 				}
@@ -125,6 +131,7 @@ void InstantSetup()
 			pf.Set(0, drive);
 			df.Dir(pf + "/microsoft visual studio 14.0/vc/bin");
 			df.Dir(pf + "/windows kits/10");
+			df.Dir(pf + "/windows kits/8.1");
 			df.Dir(pf + "/windows kits");
 			df.Dir(pf + "/microsoft visual studio 14.0");
 			df.Dir(pf);
@@ -148,25 +155,43 @@ void InstantSetup()
 		method << "Test";
 	#endif
 
-		String vc, bin, inc, lib;
+		String vc, bin, inc, lib, kit81;
 	
 		VectorMap<String, String> bm = GetMethodVars(method);
 		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
 		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
 		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+	#ifndef _DEBUG
 		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
 			if(!x64)
 				default_method = "MSC15";
 		
 			continue;
 		}
+	#endif
 		
 		vc = df.ScanForDir("/vc", "", "bin/link.exe;bin/cl.exe;bin/mspdb140.dll", "bin/1033");
 		bin = df.ScanForDir(x64 ? "bin/x64" : "bin/x86", "/windows kits/", "makecat.exe;accevent.exe", "");
 		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
 		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
+
+		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
+		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
 		
-		if(vc.GetCount() * bin.GetCount() * inc.GetCount() * lib.GetCount()) {
+		if(inc.GetCount() == 0 || lib.GetCount() == 0) { // workaround for situation when 8.1 is present, but 10 just partially
+			kit81 = df.ScanForDir("", "/windows kits/8.1", "", "include");
+			inc = df.ScanForDir("", "/windows kits/10/include", "", "um");
+			lib = df.ScanForDir("", "/windows kits/10/lib", "", "ucrt");
+		}
+		
+		LOG("=============");
+		DUMP(vc);
+		DUMP(bin);
+		DUMP(inc);
+		DUMP(kit81);
+		DUMP(lib);
+
+		if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
 			bins.At(0) = vc + (x64 ? "/bin/amd64" : "/bin");
 			bins.At(1) = bin;
 			String& sslbin = bins.At(2);
@@ -174,16 +199,31 @@ void InstantSetup()
 				sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin" : "bin/OpenSSL-Win/bin32");
 			
 			incs.At(0) = vc + "/include";
-			incs.At(1) = inc + "/um";
-			incs.At(2) = inc + "/ucrt";
-			incs.At(3) = inc + "/shared";
+			int ii = 1;
+			if(inc.GetCount()) {
+				incs.At(ii++) = inc + "/um";
+				incs.At(ii++) = inc + "/ucrt";
+				incs.At(ii++) = inc + "/shared";
+			}
+			if(kit81.GetCount()) {
+				incs.At(ii++) = kit81 + "/include/um";
+				incs.At(ii++) = kit81 + "/include/ucrt";
+				incs.At(ii++) = kit81 + "/include/shared";
+			}
+
 			String& sslinc = incs.At(4);
 			if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
 				sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
 			
 			libs.At(0) = vc + (x64 ? "/lib/amd64" : "/lib");
-			libs.At(1) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
-			libs.At(2) = lib + (x64 ? "/um/x64" : "/um/x86");
+			ii = 1;
+			if(lib.GetCount()) {
+				libs.At(ii++) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
+				libs.At(ii++) = lib + (x64 ? "/um/x64" : "/um/x86");
+			}
+			if(kit81.GetCount()) {
+				libs.At(ii++) = kit81 + (x64 ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
+			}
 			String& ssllib = libs.At(3);
 			if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
 				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib/VC" : "bin/OpenSSL-Win/lib32/VC");
@@ -217,6 +257,9 @@ void InstantSetup()
 
 			if(!x64)
 				default_method = "MSC15";
+
+			DUMPC(incs);
+			DUMPC(libs);
 		}
 	}
 
