@@ -1,4 +1,4 @@
-description "Using MenuBar";
+description "Using MenuBar\377";
 
 uses
 	CtrlLib;
