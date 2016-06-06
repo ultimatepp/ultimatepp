@@ -25,6 +25,7 @@ class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 		virtual Res Execute(ArgTypes... args) { l(args...); return fn(args...); }
 
 		Wrapper2(const Function& l, F&& fn) : l(l), fn(pick(fn)) {}
+		Wrapper2(const Function& l, const F& fn) : l(l), fn(fn) {}
 	};
 
 	WrapperBase *ptr;
@@ -60,7 +61,7 @@ public:
 
 	template <class F>
 	Function& operator<<(const F& fn)          { if(!ptr) { Copy(fn); return *this; }
-	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
+	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, fn); Free(b); return *this; }
 
 	template <class F>
 	Function& operator<<(F&& fn)               { if(!ptr) { Pick(pick(fn)); return *this; }

@@ -101,17 +101,27 @@ public:
 	void   Add(bool en, Ctrl& ctrl, Size sz)            { Add(ctrl, sz); ctrl.Enable(en); }
 	void   Add(bool en, Ctrl& ctrl, int cx, int cy = 0) { Add(ctrl, cx, cy); ctrl.Enable(en); }
 
+	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Callback& callback);
+	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
+	Item&  Add(const char *text, const UPP::Image& image, const Callback& callback);
+	Item&  Add(const String& text, const UPP::Image& image, const Callback& callback);
+	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
 
-	Item&  Add(bool enable, const char *text, const UPP::Image& image, Callback callback);
-	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, Callback callback);
-	Item&  Add(const char *text, const UPP::Image& image, Callback callback);
-	Item&  Add(const String& text, const UPP::Image& image, Callback callback);
-	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, Callback callback);
+	Item&  Add(bool enable, const char *text, const Callback& callback);
+	Item&  Add(bool enable, KeyInfo& (*key)(), const Callback& callback);
+	Item&  Add(const char *text, const Callback& callback);
+	Item&  Add(KeyInfo& (*key)(), const Callback& callback);
 
-	Item&  Add(bool enable, const char *text, Callback callback);
-	Item&  Add(bool enable, KeyInfo& (*key)(), Callback callback);
-	Item&  Add(const char *text, Callback callback);
-	Item&  Add(KeyInfo& (*key)(), Callback callback);
+	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
+	Item&  Add(const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  Add(const String& text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
+
+	Item&  Add(bool enable, const char *text, const Function<void ()>& fn);
+	Item&  Add(bool enable, KeyInfo& (*key)(), const Function<void ()>& fn);
+	Item&  Add(const char *text, const Function<void ()>& fn);
+	Item&  Add(KeyInfo& (*key)(), const Function<void ()>& fn);
 
 	void   MenuSeparator();
 	void   MenuBreak();
@@ -122,16 +132,26 @@ public:
 	void   AddMenu(Ctrl& ctrl, Size sz);
 	void   AddMenu(Ctrl& ctrl, int cx, int cy = 0)  { AddMenu(ctrl, Size(cx, cy)); }
 
-	Item&  AddMenu(bool enable, const char *text, const UPP::Image& image, Callback callback);
-	Item&  AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, Callback callback);
-	Item&  AddMenu(const char *text, const UPP::Image& image, Callback callback);
-	Item&  AddMenu(const String& t, const UPP::Image& m, Callback c) { return AddMenu(t, m, c); }
-	Item&  AddMenu(KeyInfo& (*key)(), const UPP::Image& m, Callback c);
+	Item&  AddMenu(bool enable, const char *text, const UPP::Image& image, const Callback& callback);
+	Item&  AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
+	Item&  AddMenu(const char *text, const UPP::Image& image, const Callback& callback);
+	Item&  AddMenu(const String& t, const UPP::Image& m, const Callback& c) { return AddMenu(~t, m, c); }
+	Item&  AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Callback& c);
 
-	Item&  Add(bool enable, const char *text, Callback1<Bar&> proc);
-	Item&  Add(const char *text, Callback1<Bar&> proc);
-	Item&  Add(bool enable, const char *text, const UPP::Image& image, Callback1<Bar&> proc);
-	Item&  Add(const char *text, const UPP::Image& image, Callback1<Bar&> proc);
+	Item&  AddMenu(bool enable, const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
+	Item&  AddMenu(const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  AddMenu(const String& t, const UPP::Image& m, const Function<void ()>& fn);
+	Item&  AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Function<void ()>& fn);
+
+	Item&  Add(bool enable, const char *text, const Event<Bar&>& proc);
+	Item&  Add(const char *text, const Event<Bar&>& proc);
+	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Event<Bar&>& proc);
+	Item&  Add(const char *text, const UPP::Image& image, const Event<Bar&>& proc);
+	Item&  Sub(bool enable, const char *text, const Function<void (Bar&)>& submenu);
+	Item&  Sub(const char *text, const Function<void (Bar&)>& submenu);
+	Item&  Sub(bool enable, const char *text, const UPP::Image& image, const Function<void (Bar&)>& submenu);
+	Item&  Sub(const char *text, const UPP::Image& image, const Function<void (Bar&)>& submenu);
 
 	void   ToolSeparator();
 	void   ToolBreak();
