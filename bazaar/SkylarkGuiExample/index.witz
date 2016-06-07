@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en-us">
+<head>
+	<meta charset="utf-8" />
+	<title>Skylark + GUI example - $Time</title>
+	<meta http-equiv="refresh" content="10" />
+</head>
+<body>
+
+<form action=$PostSomeData method="post" accept-charset="utf-8" enctype="multipart/form-data">
+	<input type="text" maxlength="50" size="50" name="SharedVariable" value="$SharedVariable"/>
+	<input type="submit" value="Send data to GUI"/>
+</form>
+
+</body>
+</html>

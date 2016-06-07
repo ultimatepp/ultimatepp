@@ -1,0 +1,28 @@
+#include "WebInterface.h"
+
+using namespace Upp;
+
+MTObj<String> WebInterface::SharedVariable;
+Callback1<String> WebInterface::MessageFromWeb;
+
+
+SKYLARK(HomePage, "")
+{
+	http
+		("SharedVariable",	WebInterface::SharedVariable.Get())
+		("Time",			FormatTime(GetSysTime(), "YYYY/MM/DD hh:mm:ss"))
+	.RenderResult("SkylarkGuiExample/index");
+}
+
+
+SKYLARK(PostSomeData, "PostSomeData:POST")
+{
+	WebInterface::MessageFromWeb(http["SharedVariable"]);
+	http.Redirect(HomePage);
+}
+
+SKYLARK(CatchAll, "**")
+{
+	http.Redirect(HomePage);
+}
+
