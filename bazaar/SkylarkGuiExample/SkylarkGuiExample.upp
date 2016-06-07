@@ -1,0 +1,27 @@
+description "Simple application combining web server and gui\377";
+
+charset "UTF-8";
+
+noblitz;
+
+uses
+	CtrlLib,
+	Skylark;
+
+file
+	Configuration readonly separator,
+	Config.h,
+	Config.cpp,
+	Skylark readonly separator,
+	index.witz,
+	Handlers.icpp,
+	WebInterface.h,
+	WebInterface.cpp,
+	GUI readonly separator,
+	SkylarkGuiExample.lay,
+	SkylarkGuiExample.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+
