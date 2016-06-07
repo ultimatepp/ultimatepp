@@ -407,7 +407,7 @@ bool Ctrl::SweepConfigure(bool wait)
 	bool r = false;
 	FetchEvents(wait);
 	for(int i = 0; i < Events.GetCount() && this_; i++) {
-		Event& e = Events[i];
+		GEvent& e = Events[i];
 		if(e.type == GDK_CONFIGURE && this_ && top->id == e.windowid) {
 			Rect rect = e.value;
 			LLOG("SweepConfigure " << rect);

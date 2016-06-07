@@ -7,12 +7,12 @@ NAMESPACE_UPP
 #define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
 //_DBG_ #define LOG_EVENTS
 
-BiVector<Ctrl::Event> Ctrl::Events;
+BiVector<Ctrl::GEvent> Ctrl::Events;
 
 Point         Ctrl::CurrentMousePos;
 guint         Ctrl::CurrentState;
 guint32       Ctrl::CurrentTime;
-Ctrl::Event   Ctrl::CurrentEvent;
+Ctrl::GEvent  Ctrl::CurrentEvent;
 
 bool  GetShift() { return Ctrl::CurrentState & GDK_SHIFT_MASK; }
 bool  GetCtrl() { return Ctrl::CurrentState & GDK_CONTROL_MASK; }
@@ -194,12 +194,12 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 	return Null;
 }
 
-Ctrl::Event::Event()
+Ctrl::GEvent::GEvent()
 {
 	event = NULL;
 }
 
-void Ctrl::Event::Free()
+void Ctrl::GEvent::Free()
 {
 	if(event) {
 		gdk_event_free(event);
@@ -207,23 +207,23 @@ void Ctrl::Event::Free()
 	}
 }
 
-void Ctrl::Event::Set(const Event& e)
+void Ctrl::GEvent::Set(const GEvent& e)
 {
-	*(Event0 *)this = e;
+	*(GEvent0 *)this = e;
 	event = e.event ? gdk_event_copy(e.event) : NULL;
 }
 
-Ctrl::Event::~Event()
+Ctrl::GEvent::~GEvent()
 {
 	Free();
 }
 
-Ctrl::Event::Event(const Event& e)
+Ctrl::GEvent::GEvent(const GEvent& e)
 {
 	Set(e);
 }
 
-void Ctrl::Event::operator=(const Event& e)
+void Ctrl::GEvent::operator=(const GEvent& e)
 {
 	if(this == &e)
 		return;
@@ -235,7 +235,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 {
 	if(Events.GetCount() > 50000)
 		return;
-	Event& e = Events.AddTail();
+	GEvent& e = Events.AddTail();
 	e.windowid = (uint32)(uintptr_t)user_data;
 	e.type = type;
 	e.value = value;
@@ -502,9 +502,9 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 	ASSERT(IsMainThread());
 	bool r = false;
 	if(IsWaitingEvent0(fetch)) {
-		while(Events.GetCount() > 1) { // Event compression (coalesce autorepeat, mouse moves/wheel, configure)
-			Event& a = Events[0];
-			Event& b = Events[1];
+		while(Events.GetCount() > 1) { // GEvent compression (coalesce autorepeat, mouse moves/wheel, configure)
+			GEvent& a = Events[0];
+			GEvent& b = Events[1];
 			if(b.type == a.type && a.windowid == b.windowid && a.state == b.state) {
 				if(a.type == GDK_KEY_PRESS && a.value == b.value)
 					b.count += a.count;
@@ -520,7 +520,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 				break;
 			FocusSync();
 		}
-		Event& e = Events.Head();
+		GEvent& e = Events.Head();
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
 		CurrentState = e.state;
