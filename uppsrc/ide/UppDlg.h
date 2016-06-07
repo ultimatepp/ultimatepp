@@ -283,10 +283,17 @@ struct WorkspaceWork {
 	
 	class FileType : public Moveable<FileType> {
 	public:
+		FileType()
+			: separator(true)
+		{}
+	
 		FileType(const String& name, const String& extension)
-			: name(name)
+			: separator(false)
+			, name(name)
 			, extension(extension)
 		{}
+		
+		bool         IsSeparator() const  { return separator; }
 		
 		String       GetName() const      { return name; }
 		String       GetExtension() const { return extension; }
@@ -295,6 +302,8 @@ struct WorkspaceWork {
 		void SetImage(const Image& image) { img = image; }
 		
 	private:
+		bool separator;
+	
 		String name;
 		String extension;
 		Image  img;

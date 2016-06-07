@@ -934,7 +934,10 @@ void WorkspaceWork::NewMenu(Bar& bar)
 				String name = fileType.GetName();
 				String extension = fileType.GetExtension();
 				
-				subBar.Add(name, fileType.GetImage(), THISBACK2(NewPackageFile, "New " + name, extension));
+				if (fileType.IsSeparator())
+					subBar.Separator();
+				else
+					subBar.Add(name, fileType.GetImage(), THISBACK2(NewPackageFile, "New " + name, extension));
 			}
 		};
 		
@@ -1155,6 +1158,8 @@ void WorkspaceWork::LoadCategories()
 	uppFiles.Add(FileType("Image file", "iml"));
 	uppFiles.Add(FileType("Escape script file", "usc"));
 	uppFiles.Add(FileType("Skylark template file", "witz"));
+	uppFiles.Add(FileType());
+	uppFiles.Add(FileType("C++ initialization source file", "icpp"));
 	categories.Add("U++", uppFiles);
 	
 	Vector<FileType> javaFiles;
@@ -1176,11 +1181,9 @@ void WorkspaceWork::LoadCategories()
 
 void WorkspaceWork::LoadCategoriesImages()
 {
-	for (int i = 0; i < categories.GetCount(); i++) {
-		for (FileType& type : categories[i]) {
+	for (int i = 0; i < categories.GetCount(); i++)
+		for (FileType& type : categories[i])
 			type.SetImage(IdeFileImage("." + type.GetExtension(), false, false));
-		}
-	}
 }
 
 WorkspaceWork::WorkspaceWork()
