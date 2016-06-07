@@ -32,7 +32,7 @@ _DBG_
 		EVENT_TEXT,
 	};
 	
-	struct Event0 {
+	struct GEvent0 {
 		int        time;
 		int        windowid;
 		int        type;
@@ -42,16 +42,16 @@ _DBG_
 		int        count;
 	};
 	
-	struct Event : Moveable<Event, Event0> {
+	struct GEvent : Moveable<GEvent, GEvent0> {
 		GdkEvent  *event;
 
 		void Free();
-		void Set(const Event& e);
-		Event(const Event& e);
-		void operator=(const Event& e);
+		void Set(const GEvent& e);
+		GEvent(const GEvent& e);
+		void operator=(const GEvent& e);
 
-		Event();
-		~Event();
+		GEvent();
+		~GEvent();
 	};
 	
 	struct Win : Moveable<Win> {
@@ -65,7 +65,7 @@ _DBG_
 	bool   SweepConfigure(bool wait);
 	bool   SweepFocus(bool wait);
 
-	static BiVector<Event>     Events;
+	static BiVector<GEvent>    Events;
 	static Vector< Ptr<Ctrl> > activePopup; // created with 'activate' flag - usually menu
 	static Vector< Ptr<Ctrl> > visiblePopup; // any popup visible on screen
 	static Vector<Win>         wins;
@@ -176,7 +176,7 @@ public:
 	static Point     CurrentMousePos;
 	static guint     CurrentState;
 	static guint32   CurrentTime;
-	static Event     CurrentEvent;
+	static GEvent    CurrentEvent;
 
 	GdkWindow *gdk() const { return top ? top->window->window : NULL; }
 	GtkWindow *gtk() const { return top ? (GtkWindow *)top->window : NULL; }
