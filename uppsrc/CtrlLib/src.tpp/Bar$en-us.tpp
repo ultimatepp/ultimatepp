@@ -99,10 +99,6 @@ tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ K
 tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
 [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
 [@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
-[s5;:Upp`:`:Bar`:`:Add`(const Upp`:`:String`&`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
-tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 t
-ext], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
-[@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 callback])&]
 [s5;:Upp`:`:Bar`:`:Add`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Callback`&`):%- [_^Upp`:`:Bar`:`:Item^ I
 tem][@(0.0.255) `&]_[* Add]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 
 [@(0.0.255) const]_Upp`::Image[@(0.0.255) `&]_[*@3 image], [@(0.0.255) const]_Callback[@(0.0.255) `&
@@ -131,10 +127,6 @@ tem][@(0.0.255) `&]_[* Add]([@(0.0.255) bool]_[*@3 enable], [_^Upp`:`:KeyInfo^ K
 [s5;:Upp`:`:Bar`:`:Add`(const char`*`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
 tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text], 
 [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
-[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
-[s5;:Upp`:`:Bar`:`:Add`(const Upp`:`:String`&`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
-tem][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 t
-ext], [@(0.0.255) const]_[_^Upp`:`:Image^ Upp`::Image][@(0.0.255) `&]_[*@3 image], 
 [@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
 [s5;:Upp`:`:Bar`:`:Add`(Upp`:`:KeyInfo`&`(`*`)`(`)`,const Upp`:`:Image`&`,const Upp`:`:Function`<void`(`)`>`&`):%- [_^Upp`:`:Bar`:`:Item^ I
 tem][@(0.0.255) `&]_[* Add]([_^Upp`:`:KeyInfo^ KeyInfo][@(0.0.255) `&]_(`*[*@3 key])(), 

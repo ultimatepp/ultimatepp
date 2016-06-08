@@ -104,7 +104,7 @@ public:
 	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Callback& callback);
 	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
 	Item&  Add(const char *text, const UPP::Image& image, const Callback& callback);
-	Item&  Add(const String& text, const UPP::Image& image, const Callback& callback);
+//	Item&  Add(const String& text, const UPP::Image& image, const Callback& callback);
 	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
 
 	Item&  Add(bool enable, const char *text, const Callback& callback);
@@ -115,7 +115,7 @@ public:
 	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Function<void ()>& fn);
 	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
 	Item&  Add(const char *text, const UPP::Image& image, const Function<void ()>& fn);
-	Item&  Add(const String& text, const UPP::Image& image, const Function<void ()>& fn);
+//	Item&  Add(const String& text, const UPP::Image& image, const Function<void ()>& fn);
 	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
 
 	Item&  Add(bool enable, const char *text, const Function<void ()>& fn);
