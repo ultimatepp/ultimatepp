@@ -21,11 +21,10 @@ is usually done by installer.]&]
 [s0; [*+117 Upload Permissions]&]
 [s0;*2 &]
 [s0; [2 Well. You have svn installed so that you could get the latest 
-source code from Google Code mirror with just this command line: 
+source code from official repository with just this command line: 
 ]&]
 [s0;2 &]
-[s0;l256; [C$7;2 svn checkout http://upp`-mirror.googlecode.com/svn/trunk/ 
-my`-upp`-mirror]&]
+[s0;l256; [C$7;2 svn checkout svn://www.ultimatepp.org/upp/trunk/ my`-upp`-mirror]&]
 [s0;2 &]
 [s0;2 &]
 [s0; [2 To get upload permissions you will have to send a post to Forum/Bazaar, 
