@@ -291,12 +291,12 @@ Bar::Item&  Bar::Add(const char *text, const UPP::Image& image, const Callback& 
 {
 	return AddItem(callback).Text(text).Image(image);
 }
-
+/*
 Bar::Item& Bar::Add(const String& text, const UPP::Image& image, const Callback& callback)
 {
 	return Add(~text, image, callback);
 }
-
+*/
 Bar::Item&  Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback)
 {
 	const char *text = (*key)().name;
@@ -332,10 +332,12 @@ Bar::Item& Bar::Add(const char *text, const UPP::Image& image, const Function<vo
 	return Add(text, image, Callback() << fn);
 }
 
+/*
 Bar::Item& Bar::Add(const String& text, const UPP::Image& image, const Function<void ()>& fn)
 {
 	return Add(text, image, Callback() << fn);
 }
+*/
 
 Bar::Item& Bar::Add(KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn)
 {
