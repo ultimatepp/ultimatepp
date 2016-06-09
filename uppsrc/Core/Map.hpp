@@ -427,7 +427,7 @@ int AMap<K, T, V>::FindAdd(const K& k, T&& x) {
 	if(i < 0) {
 		i = GetCount();
 		key.Add(k, hash);
-		value.Add(x);
+		value.Add(pick(x));
 	}
 	return i;
 }
@@ -468,7 +468,7 @@ int AMap<K, T, V>::Put(const K& k, T&& x)
 		value[i] = x;
 	else {
 		ASSERT(i == value.GetCount());
-		value.AddPick(pick(x));
+		value.Add(pick(x));
 	}
 	return i;
 }
@@ -521,7 +521,7 @@ int AMap<K, T, V>::FindPut(const K& k, T&& init)
 	int i = Find(k, hash);
 	if(i < 0) {
 		i = key.Put(k, hash);
-		value.At(i) = init;
+		value.At(i) = pick(init);
 	}
 	return i;
 }
@@ -552,7 +552,7 @@ T&  AMap<K, T, V>::GetAdd(const K& k, T&& x) {
 	int i = Find(k, hash);
 	if(i >= 0) return value[i];
 	key.Add(k, hash);
-	value.AddPick(pick(x));
+	value.Add(pick(x));
 	return value.Top();
 }
 
@@ -567,8 +567,8 @@ T&  AMap<K, T, V>::GetPut(const K& k, const T& x) {
 }
 
 template <class K, class T, class V>
-T&  AMap<K, T, V>::GetPutPick(const K& k, T&& x) {
-	return value[FindPutPick(k, x)];
+T&  AMap<K, T, V>::GetPut(const K& k, T&& x) {
+	return value[FindPut(k, pick(x))];
 }
 
 #ifdef UPP
