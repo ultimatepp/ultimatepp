@@ -408,11 +408,6 @@ Bar::Item& Bar::AddMenu(const char *text, const UPP::Image& image, const Functio
 	return AddMenu(text, image, Callback() << fn);
 }
 
-Bar::Item& Bar::AddMenu(const String& t, const UPP::Image& m, const Function<void ()>& fn)
-{
-	return AddMenu(t, m, Callback() << fn);
-}
-
 Bar::Item& Bar::AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Function<void ()>& fn)
 {
 	return AddMenu(key, m, Callback() << fn);
