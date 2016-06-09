@@ -72,7 +72,7 @@ public:
 	T&       GetPut(const K& k);
 
 	T&       GetPut(const K& k, const T& x);
-	T&       GetPutPick(const K& k, T&& x);
+	T&       GetPut(const K& k, T&& x);
 
 	void     SetKey(int i, const K& k)           { key.Set(i, k); }
 
@@ -174,9 +174,11 @@ public:
 	friend int     GetCount(const AMap& v)                        { return v.GetCount(); }
 	int      PutPick(const K& k, T&& x)                           { return Put(k, pick(x)); }
 	T&       AddPick(const K& k, T&& x)                           { return Add(k, pick(x)); }
-	int      FindAddPick(const K& k, T&& init)                    { return FindAddPick(k, pick(init)); }
-	int      FindPutPick(const K& k, T&& init)                    { return FindPutPick(k, pick(init)); }
-	T&       GetAddPick(const K& k, T&& x)                        { return GetAddPick(k, pick(x)); }
+	int      FindAddPick(const K& k, T&& init)                    { return FindAdd(k, pick(init)); }
+	int      FindPutPick(const K& k, T&& init)                    { return FindPut(k, pick(init)); }
+	T&       GetAddPick(const K& k, T&& x)                        { return GetAdd(k, pick(x)); }
+	T&       GetPutPick(const K& k, T&& x)                        { return GetPut(k, pick(x)); }
+
 	KeyConstIterator KeyGetIter(int pos) const                    { return key.GetIter(pos); }
 	Iterator         GetIter(int pos)                             { return value.GetIter(pos); }
 	ConstIterator    GetIter(int pos) const                       { return value.GetIter(pos); }
