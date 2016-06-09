@@ -102,25 +102,32 @@ public:
 	void   Add(bool en, Ctrl& ctrl, int cx, int cy = 0) { Add(ctrl, cx, cy); ctrl.Enable(en); }
 
 	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Callback& callback);
+	Item&  Add(bool enable, const String& text, const UPP::Image& image, const Callback& callback) { return Add(enable, ~text, image, callback); }
 	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
 	Item&  Add(const char *text, const UPP::Image& image, const Callback& callback);
-//	Item&  Add(const String& text, const UPP::Image& image, const Callback& callback);
+	Item&  Add(const String& text, const UPP::Image& image, const Callback& callback) { return Add(~text, image, callback); }
 	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
 
 	Item&  Add(bool enable, const char *text, const Callback& callback);
+	Item&  Add(bool enable, const String& text, const Callback& callback) { return Add(enable, ~text, callback); }
 	Item&  Add(bool enable, KeyInfo& (*key)(), const Callback& callback);
 	Item&  Add(const char *text, const Callback& callback);
+	Item&  Add(const String& text, const Callback& callback) { return Add(~text, callback); }
 	Item&  Add(KeyInfo& (*key)(), const Callback& callback);
 
 	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  Add(bool enable, const String& text, const UPP::Image& image, const Function<void ()>& fn) { return Add(enable, ~text, image, fn); }
 	Item&  Add(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
 	Item&  Add(const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  Add(const String& text, const UPP::Image& image, const Function<void ()>& fn) { return Add(~text, image, fn); }
 //	Item&  Add(const String& text, const UPP::Image& image, const Function<void ()>& fn);
 	Item&  Add(KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
 
 	Item&  Add(bool enable, const char *text, const Function<void ()>& fn);
+	Item&  Add(bool enable, const String& text, const Function<void ()>& fn) { return Add(enable, ~text, fn); }
 	Item&  Add(bool enable, KeyInfo& (*key)(), const Function<void ()>& fn);
 	Item&  Add(const char *text, const Function<void ()>& fn);
+	Item&  Add(const String& text, const Function<void ()>& fn) { return Add(~text, fn); }
 	Item&  Add(KeyInfo& (*key)(), const Function<void ()>& fn);
 
 	void   MenuSeparator();
@@ -133,25 +140,35 @@ public:
 	void   AddMenu(Ctrl& ctrl, int cx, int cy = 0)  { AddMenu(ctrl, Size(cx, cy)); }
 
 	Item&  AddMenu(bool enable, const char *text, const UPP::Image& image, const Callback& callback);
+	Item&  AddMenu(bool enable, const String& text, const UPP::Image& image, const Callback& callback) { return AddMenu(enable, ~text, image, callback); }
 	Item&  AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Callback& callback);
 	Item&  AddMenu(const char *text, const UPP::Image& image, const Callback& callback);
-	Item&  AddMenu(const String& t, const UPP::Image& m, const Callback& c) { return AddMenu(~t, m, c); }
+	Item&  AddMenu(const String& text, const UPP::Image& m, const Callback& c) { return AddMenu(~text, m, c); }
 	Item&  AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Callback& c);
 
 	Item&  AddMenu(bool enable, const char *text, const UPP::Image& image, const Function<void ()>& fn);
+	Item&  AddMenu(bool enable, const String& text, const UPP::Image& image, const Function<void ()>& fn) { return AddMenu(enable, ~text, image, fn); }
 	Item&  AddMenu(bool enable, KeyInfo& (*key)(), const UPP::Image& image, const Function<void ()>& fn);
 	Item&  AddMenu(const char *text, const UPP::Image& image, const Function<void ()>& fn);
-	Item&  AddMenu(const String& t, const UPP::Image& m, const Function<void ()>& fn);
+	Item&  AddMenu(const String& text, const UPP::Image& m, const Function<void ()>& fn) { return AddMenu(~text, m, fn); }
 	Item&  AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Function<void ()>& fn);
 
 	Item&  Add(bool enable, const char *text, const Event<Bar&>& proc);
+	Item&  Add(bool enable, const String& text, const Event<Bar&>& proc) { return Add(enable, ~text, proc); }
 	Item&  Add(const char *text, const Event<Bar&>& proc);
+	Item&  Add(const String& text, const Event<Bar&>& proc) { return Add(~text, proc); }
 	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Event<Bar&>& proc);
+	Item&  Add(bool enable, const String& text, const UPP::Image& image, const Event<Bar&>& proc) { return Add(enable, ~text, proc); }
 	Item&  Add(const char *text, const UPP::Image& image, const Event<Bar&>& proc);
+	Item&  Add(const String& text, const UPP::Image& image, const Event<Bar&>& proc) { return Add(~text, image, proc); }
 	Item&  Sub(bool enable, const char *text, const Function<void (Bar&)>& submenu);
+	Item&  Sub(bool enable, const String& text, const Function<void (Bar&)>& submenu) { return Sub(enable, ~text, submenu); }
 	Item&  Sub(const char *text, const Function<void (Bar&)>& submenu);
+	Item&  Sub(const String& text, const Function<void (Bar&)>& submenu) { return Sub(~text, submenu); }
 	Item&  Sub(bool enable, const char *text, const UPP::Image& image, const Function<void (Bar&)>& submenu);
+	Item&  Sub(bool enable, const String& text, const UPP::Image& image, const Function<void (Bar&)>& submenu) { return Sub(enable, ~text, image, submenu); }
 	Item&  Sub(const char *text, const UPP::Image& image, const Function<void (Bar&)>& submenu);
+	Item&  Sub(const String& text, const UPP::Image& image, const Function<void (Bar&)>& submenu) { return Sub(~text, image, submenu); }
 
 	void   ToolSeparator();
 	void   ToolBreak();
