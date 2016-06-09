@@ -62,7 +62,8 @@ If you are beginner we highly recommended to download stable
 releases. It is mostly safer and more polished that nightly builds.&]
 [s0; &]
 [s0; Sounds interesting? You can move to site where we explain step 
-by step how to create the easiest program in C/C`+`+ with TheIDE.&]
+by step how to create the easiest program in C/C`+`+ with TheIDE. 
+Good luck!&]
 [s0; &]
 [s0; [*+117 University students]&]
 [s0;*+117 &]
