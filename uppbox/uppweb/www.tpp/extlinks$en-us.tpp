@@ -60,6 +60,8 @@ Index container.]&]
 [s0;2 &]
 [s0;i150;O0; [^https`:`/`/www`.facebook`.com`/pages`/Upp`-Framework`/262346610476027`?sk`=wall^2 F
 acebook]&]
+[s0;i150;O0; [^https`:`/`/www`.linkedin`.com`/groups`/8542229`/profile^2 Linkedin 
+`- User group]&]
 [s0;2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Just a joke :`-)]]}}&]
 [s0;2 &]
