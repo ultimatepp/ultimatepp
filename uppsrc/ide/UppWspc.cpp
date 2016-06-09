@@ -1159,7 +1159,7 @@ void WorkspaceWork::LoadCategories()
 	uppFiles.Add(FileType("Escape script file", "usc"));
 	uppFiles.Add(FileType("Skylark template file", "witz"));
 	uppFiles.Add(FileType());
-	uppFiles.Add(FileType("C++ initialization source file", "icpp"));
+	uppFiles.Add(FileType("Initialization C++ source file", "icpp"));
 	categories.Add("U++", uppFiles);
 	
 	Vector<FileType> javaFiles;
