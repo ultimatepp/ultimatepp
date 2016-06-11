@@ -71,7 +71,7 @@ bool BaseSetupDlg::Run(String& vars)
 		Vector<String> paths = SplitDirs(upp.GetText().ToString());
 		for(int i = 0; i < paths.GetCount(); i++)
 			RealizeDirectory(paths[i]);
-		RealizeDirectory(output);
+		RealizeDirectory(~output);
 		vars = varname;
 		return true;
 	}
