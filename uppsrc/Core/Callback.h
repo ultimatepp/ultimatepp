@@ -91,7 +91,7 @@ public:
 	Event(const Event& src) : fn(src.fn)       {}
 	Event& operator=(const Event& src)         { fn = src.fn; return *this; }
 
-	Event(Fn&& src, int) : fn(src)             {} // Helper for callback compatibility code
+	Event(Fn&& src, int) : fn(pick(src))       {} // Helper for callback compatibility code
 	template <class F>
 	Event(F src, int) : fn(src)                {} // Helper for callback compatibility code
 	
@@ -137,7 +137,7 @@ public:
 	EventGate(const EventGate& a) : fn(a.fn)   {}
 	EventGate& operator=(const EventGate& a)   { fn = a.fn; return *this; }
 
-	EventGate(Fn&& src, int) : fn(src)         {}
+	EventGate(Fn&& src, int) : fn(pick(src))   {}
 	EventGate& operator=(EventGate&& a)        { fn = pick(a.fn); return *this; }
 
 	EventGate(CNULLer)                         {}

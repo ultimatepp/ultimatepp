@@ -29,8 +29,8 @@ public:
 	T&       AddTail()               { return *new(AddTail0()) T; }
 	void     AddHead(const T& x)     { new(AddHead0()) T(x); }
 	void     AddTail(const T& x)     { new(AddTail0()) T(x); }
-	void     AddHead(T&& x)          { new(AddHead0()) T(x); }
-	void     AddTail(T&& x)          { new(AddTail0()) T(x); }
+	void     AddHead(T&& x)          { new(AddHead0()) T(pick(x)); }
+	void     AddTail(T&& x)          { new(AddTail0()) T(pick(x)); }
 	T&       Head()                  { ASSERT(items > 0); return vector[start]; }
 	T&       Tail()                  { ASSERT(items > 0); return vector[EI()]; }
 	const T& Head() const            { ASSERT(items > 0); return vector[start]; }
@@ -79,8 +79,8 @@ public:
 	                                              UPP::Swap(a.alloc, b.alloc); }
 
 #ifdef DEPRECATED
-	void     AddHeadPick(T&& x)      { new(AddHead0()) T(x); }
-	void     AddTailPick(T&& x)      { new(AddTail0()) T(x); }
+	void     AddHeadPick(T&& x)      { new(AddHead0()) T(pick(x)); }
+	void     AddTailPick(T&& x)      { new(AddTail0()) T(pick(x)); }
 	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
 	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
 	typedef T        ValueType;
@@ -155,8 +155,8 @@ public:
 	friend void Swap(BiArray& a, BiArray& b)    { UPP::Swap(a.bv, b.bv); }
 
 #ifdef DEPRECATED
-	void     AddHeadPick(T&& x)            { bv.AddHead(new T(x)); }
-	void     AddTailPick(T&& x)            { bv.AddTail(new T(x)); }
+	void     AddHeadPick(T&& x)            { bv.AddHead(new T(pick(x))); }
+	void     AddTailPick(T&& x)            { bv.AddTail(new T(pick(x))); }
 	ConstIterator    GetIter(int pos) const     { return ConstIterator(*this, pos); }
 	Iterator         GetIter(int pos)           { return Iterator(*this, pos); }
 	typedef T        ValueType;

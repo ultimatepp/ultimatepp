@@ -595,7 +595,7 @@ void MainConfigDlg::FlagDlg()
 	WithConfLayout<TopWindow> cfg;
 	CtrlLayoutOKCancel(cfg, "Configuration flags");
 	cfg.Sizeable().MaximizeBox();
-	Vector<String> flg = SplitFlags0(String(fe));
+	Vector<String> flg = SplitFlags0(~~fe);
 	Vector<String> accepts = wspc.GetAllAccepts(0);
 	Sort(accepts, GetLanguageInfo());
 	enum { CC_SET, CC_NAME, CC_PACKAGES, CC_COUNT };

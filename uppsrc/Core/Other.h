@@ -138,7 +138,7 @@ public:
 	void      Clear();
 	void      Shrink();
 
-	Mitor(Mitor&& m)                    { Pick(m); }
+	Mitor(Mitor&& m)                    { Pick(pick(m)); }
 	void operator=(Mitor&& m)           { if(this != &m) { Clear(); Pick(pick(m)); } }
 
 	Mitor(Mitor& m, int)                { Copy(m); }
