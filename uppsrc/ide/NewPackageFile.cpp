@@ -1,8 +1,6 @@
 #include "ide.h"
 
 class NewPackageFileWindow : public WithNewPackageFileLayout<TopWindow> {
-	typedef NewPackageFileWindow CLASSNAME;
-	
 public:
 	NewPackageFileWindow(const String& packageDir, const String& extension);
 	
@@ -25,7 +23,7 @@ NewPackageFileWindow::NewPackageFileWindow(const String& packageDir, const Strin
 {
 	CtrlLayoutOKCancel(*this, "");
 	
-	fileName <<= THISBACK(OnFileNameChanged);
+	fileName.WhenAction << [=] { OnFileNameChanged(); };
 	
 	fullFileName.Disable();
 	if (extension.IsEmpty()) {
