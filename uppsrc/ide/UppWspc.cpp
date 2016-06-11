@@ -922,14 +922,13 @@ void WorkspaceWork::FileMenu(Bar& menu)
 
 void WorkspaceWork::NewMenu(Bar& bar)
 {
-	bar.Add("File", CtrlImg::File(), THISBACK2(NewPackageFile, "New file", ""));
-	bar.Add("Separator", THISBACK(AddSeparator))
+	bar.Add("File", CtrlImg::File(), [=] { NewPackageFile("New file", ""); });
+	bar.Add("Separator", [=] { AddSeparator(); })
 		.Help("Add text separator line");
 	
 	bar.Separator();
 	for (int i = 0; i < categories.GetCount(); i++) {
-		Callback1<Bar&> barCallback;
-		barCallback << [&, i](Bar& subBar) {
+		bar.Sub(categories.GetKey(i), [=](Bar& subBar) {
 			for (FileType& fileType : categories[i]) {
 				String name = fileType.GetName();
 				String extension = fileType.GetExtension();
@@ -937,11 +936,9 @@ void WorkspaceWork::NewMenu(Bar& bar)
 				if (fileType.IsSeparator())
 					subBar.Separator();
 				else
-					subBar.Add(name, fileType.GetImage(), THISBACK2(NewPackageFile, "New " + name, extension));
+					subBar.Add(name, fileType.GetImage(), [=] { NewPackageFile("New " + name, extension); });
 			}
-		};
-		
-		bar.Add(categories.GetKey(i), barCallback);
+		});
 	}
 }
 
