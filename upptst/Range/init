@@ -1,0 +1,4 @@
+#ifndef _Range_icpp_init_stub
+#define _Range_icpp_init_stub
+#include "Core/init"
+#endif

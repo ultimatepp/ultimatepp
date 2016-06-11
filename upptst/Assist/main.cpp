@@ -497,6 +497,15 @@ void Autocomplete() {
 
 // ----------------------------------------------------
 
+void JumpToLayout()
+{
+	WithPrinterLayout<TopWindow> h;
+	
+	SetLayout_PrinterLayout(h);
+}
+
+// ----------------------------------------------------
+
 struct Foo {
 	typedef Foo CLASSNAME;
 	
