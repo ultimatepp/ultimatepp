@@ -244,7 +244,7 @@ void Ide::FindInFiles(bool replace) {
 	WriteList(ff.find, d.find_list);
 	WriteList(ff.replace, d.replace_list);
 	ff.Sync();
-	if(String(ff.folder).IsEmpty())
+	if(IsNull(~ff.folder))
 		ff.folder <<= GetUppDir();
 	ff.style <<= STYLE_NO_REPLACE;
 	ff.Sync();
@@ -278,8 +278,7 @@ void Ide::FindInFiles(bool replace) {
 					           ~ff.files, ~ff.readonly, pi);
 		}
 		else
-			SearchForFiles(files, NormalizePath((String)ff.folder, GetUppDir()),
-				           ~ff.files, ~ff.readonly, pi);
+			SearchForFiles(files, NormalizePath(~~ff.folder, GetUppDir()), ~ff.files, ~ff.readonly, pi);
 		if(!pi.Canceled()) {
 			String pattern;
 			RegExp rx, *regexp = NULL;

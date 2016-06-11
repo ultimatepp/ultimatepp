@@ -46,7 +46,7 @@ void Ide::RunArgs() {
 		dlg.utf8.Enable(rm != RUN_WINDOW);
 		switch(dlg.Run()) {
 		case IDOK:
-			rundir  = dlg.dir;
+			rundir  = ~dlg.dir;
 			runarg  = ~dlg.arg;
 			runmode = ~dlg.runmode;
 			runexternal = dlg.external;
