@@ -50,6 +50,10 @@ name of the file&]
 [s2;%% Returns the title of the application.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:GetExeFolder`(`): [_^Upp`:`:String^ String]_[* GetExeFolder]()&]
+[s2;%% Return the directory of application executable.&]
+[s3; &]
+[s4; &]
 [s5;:UseHomeDirectoryConfig`(bool`): [@(0.0.255) void]_[* UseHomeDirectoryConfig]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Sets the search path for configuration to either the current 

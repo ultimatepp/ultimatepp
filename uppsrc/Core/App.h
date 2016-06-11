@@ -1,6 +1,8 @@
 String  GetEnv(const char *id);
 
 String  GetExeFilePath();
+String  GetExeTitle();
+String  GetExeFolder();
 String  GetExeDirFile(const char *fp);
 
 String  GetHomeDirFile(const char *fp);
@@ -11,8 +13,6 @@ String  GetHomeDirectory();
 void    SetHomeDirectory(const char *dir);
 
 #endif
-
-String  GetExeTitle();
 
 void    UseHomeDirectoryConfig(bool b = true);
 

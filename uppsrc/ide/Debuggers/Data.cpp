@@ -206,7 +206,7 @@ void Pdb::Explorer()
 void Pdb::Explore(const String& exp)
 {
 	exprev.Add(~expexp);
-	expexp = exp;
+	expexp <<= exp;
 	Explorer();
 	DoExplorer();
 }
@@ -215,7 +215,7 @@ String Pdb::GetExpExp()
 {
 	String w;
 	if(explorer.IsCursor()) {
-		w = expexp;
+		w = ~expexp;
 		for(const char *s = w; *s; s++)
 			if(strchr("*/+-", *s)) {
 				w = '(' + w + ')';

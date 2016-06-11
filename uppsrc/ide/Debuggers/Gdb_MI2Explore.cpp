@@ -23,7 +23,7 @@ void Gdb_MI2::SyncExplorer()
 			String expr;
 			{
 				GuiLock __;
-				expr = explorerExprEdit;
+				expr = ~explorerExprEdit;
 			}
 			
 			// create a vari object and evaluate '*this' expression
@@ -153,7 +153,7 @@ void Gdb_MI2::SyncExplorer(const Vector<VarItem>& children_)
 void Gdb_MI2::doExplore(String const &expr, bool appendHistory)
 {
 	// set the expression inside expression editor
-	explorerExprEdit = expr;
+	explorerExprEdit <<= expr;
 
 	// update the history : trim it from past current position
 	// and append it at end

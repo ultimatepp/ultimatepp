@@ -1501,7 +1501,7 @@ void FileSel::FileUpdate() {
 		ok.Enable(!IsNull(~dir));
 		return;
 	}
-	bool b = list.IsCursor() || !String(file).IsEmpty();
+	bool b = list.IsCursor() || !String(~file).IsEmpty();
 	ok.Enable(b);
 	if(mode != SAVEAS || list.IsCursor() && list[list.GetCursor()].isdir)
 		ok.SetLabel(t_("Open"));

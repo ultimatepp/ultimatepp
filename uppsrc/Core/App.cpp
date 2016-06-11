@@ -108,6 +108,11 @@ String GetExeDirFile(const char *filename)
 	return AppendFileName(GetFileFolder(GetExeFilePath()), filename);
 }
 
+String GetExeFolder()
+{
+	return GetFileFolder(GetExeFilePath());
+}
+
 String GetExeTitle()
 {
 	return GetFileTitle(GetExeFilePath());
