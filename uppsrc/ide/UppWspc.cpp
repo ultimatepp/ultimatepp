@@ -935,8 +935,11 @@ void WorkspaceWork::NewMenu(Bar& bar)
 				
 				if (fileType.IsSeparator())
 					subBar.Separator();
-				else
-					subBar.Add(name, fileType.GetImage(), [=] { NewPackageFile("New " + name, extension); });
+				else {
+					subBar.Add(name, fileType.GetImage(), [=] {
+						NewPackageFile("New " + name, extension);
+					});
+				}
 			}
 		});
 	}
