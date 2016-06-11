@@ -181,7 +181,7 @@ void PackageEditor::PackageCursor()
 			if(i) s << ' ';
 			s << actual.accepts[i];
 		}
-		accepts = s.ToWString();
+		accepts <<= s.ToWString();
 		description.Enable();
 		ink.Enable();
 		bold.Enable();
@@ -502,8 +502,8 @@ void PackageEditor::EditFileOption()
 	dlg.text <<= m.text;
 	if(dlg.Run() != IDOK)
 		return;
-	m.when = dlg.when;
-	m.text = dlg.text;
+	m.when = ~dlg.when;
+	m.text = ~dlg.text;
 	SaveLoadPackage();
 	FindOpt(fileoption, FILEOPTION, ~dlg.when, ~dlg.text);
 }

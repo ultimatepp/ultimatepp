@@ -5,9 +5,9 @@ NAMESPACE_UPP
 RichPara::NumberFormat ParaFormatting::GetNumbering()
 {
 	RichPara::NumberFormat f;
-	f.before_number = before_number;
-	f.after_number = after_number;
-	f.reset_number = reset_number;
+	f.before_number = ~before_number;
+	f.after_number = ~after_number;
+	f.reset_number = ~reset_number;
 	for(int i = 0; i < 8; i++)
 		f.number[i] = Nvl((int)~n[i]);
 	return f;
@@ -121,9 +121,9 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo)
 	else
 		linespacing <<= Null;
 	if(RichText::NUMBERING & formatinfo.paravalid) {
-		before_number = formatinfo.before_number.ToWString();
-		after_number = formatinfo.after_number.ToWString();
-		reset_number = formatinfo.reset_number;
+		before_number <<= formatinfo.before_number.ToWString();
+		after_number <<= formatinfo.after_number.ToWString();
+		reset_number <<= formatinfo.reset_number;
 		for(int i = 0; i < 8; i++)
 			n[i] = formatinfo.number[i];
 	}

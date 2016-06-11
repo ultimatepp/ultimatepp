@@ -188,14 +188,7 @@ charset.&]
 [s4; &]
 [s5;:EditField`:`:GetText`(`)const: [@(0.0.255) const]_[_^WString^ WString][@(0.0.255) `&]_
 [* GetText]()_[@(0.0.255) const]&]
-[s5;:EditField`:`:operator const WString`&`(`)const: [* operator_const_WString`&]()_[@(0.0.255) c
-onst]&]
 [s2; Returns the text.&]
-[s3; &]
-[s4; &]
-[s5;:EditField`:`:operator String`(`)const: [* operator_String]()_[@(0.0.255) const]&]
-[s2;%% [%- Returns the text. ]Text is converted to unicode using the 
-default charset.&]
 [s3; &]
 [s4; &]
 [s5;:EditField`:`:GetLength`(`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetLength]()

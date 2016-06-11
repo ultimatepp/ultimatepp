@@ -157,7 +157,7 @@ void FileList::StartEdit() {
 	r.bottom = r.top + fcy + 2;
 	edit.SetRect(r);
 	edit.SetFont(cf.font);
-	edit = cf.name.ToWString();
+	edit <<= cf.name.ToWString();
 	edit.Show();
 	edit.SetFocus();
 	int pos = int(GetFileExtPos(cf.name) - ~cf.name);

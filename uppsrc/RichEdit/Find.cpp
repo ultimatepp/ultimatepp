@@ -3,9 +3,9 @@
 NAMESPACE_UPP
 
 void RichEdit::FindReplaceAddHistory() {
-	if(!String(findreplace.find).IsEmpty())
+	if(!String(~findreplace.find).IsEmpty())
 		findreplace.find.AddHistory();
-	if(!String(findreplace.replace).IsEmpty())
+	if(!String(~findreplace.replace).IsEmpty())
 		findreplace.replace.AddHistory();
 }
 
