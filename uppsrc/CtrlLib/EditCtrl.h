@@ -210,8 +210,7 @@ public:
 	void           SetText(const char *t)    { SetText(WString(t)); }
 	const WString& GetText() const           { return text; }
 
-	operator const WString&() const          { return text; }
-	operator String() const                  { return text.ToString(); }
+	operator const WString&() const          { return text; } // Deprecated, use ~
 	void operator=(const WString& s)         { SetText(s); } // Deprecated, use operator<<=
 	int     GetLength() const                { return text.GetLength(); }
 	int     GetChar(int i) const             { return text[i]; }
@@ -267,7 +266,7 @@ template <class DataType, class Cv>
 class EditValue : public EditField, public Cv {
 public:
 	EditValue& operator=(const DataType& t)  { EditField::SetData(t); return *this; }  // Deprecated, use operator<<=
-	operator DataType() const                { return EditField::GetData(); }
+	operator DataType() const                { return EditField::GetData(); } // Deprecated, use ~
 
 	EditValue()                              { SetConvert(*this); }
 };
@@ -313,7 +312,7 @@ typedef EditMinMaxNotNull<Time, EditTime>        EditTimeNotNull;
 
 class EditString : public EditValue<WString, ConvertString> {
 public:
-	operator const WString&() const                  { return GetText(); }
+	operator const WString&() const                  { return GetText(); }  // Deprecated, use ~
 
 	EditString& operator=(const WString& data)       { SetData(data); return *this; } // Deprecated, use operator<<=
 	EditString& operator=(const String& data)        { SetData(data); return *this; } // Deprecated, use operator<<=

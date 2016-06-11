@@ -35,16 +35,7 @@ available without using further glue code.&]
 [s2; Constructor assigns [^`:`:Convert^ Convert] class (in fact, `*this) 
 as the EditField converter.&]
 [s3; &]
-[s0;%- &]
-[ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s3;%- &]
-[s5;:EditValue`:`:operator DataType`(`)const:%- [* operator_DataType]()_[@(0.0.255) const
-]&]
-[s2; This helper operator allows direct retrieval of value type from 
-the editor.&]
 [s3; &]
-[s0; &]
-[s0; &]
 [s0;%- &]
 [ {{10000@3 [s0;%- [*@(229)4 EditMinMax]]}}&]
 [s3; &]
@@ -197,12 +188,6 @@ text.&]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:EditString`:`:operator const WString`&`(`)const:%- [* operator_const_WString`&]()_
-[@(0.0.255) const]&]
-[s2; This helper operator allows direct retrieval of value type from 
-the editor.&]
-[s3; &]
-[s4;%- &]
 [s5;:EditString`:`:MaxLen`(int`):%- [_^EditString^ EditString][@(0.0.255) `&]_[* MaxLen]([@(0.0.255) i
 nt]_[*@3 maxlen])&]
 [s2; Sets [%-*@3 maxlen] as maximum length of contained text.[%-*@3 maxlen] 

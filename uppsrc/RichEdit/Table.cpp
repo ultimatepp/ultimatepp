@@ -25,7 +25,7 @@ void RichEdit::InsertTable()
 	if(dlg.Run() != IDOK)
 		return;
 	RichTable::Format fmt;
-	int nx = minmax((int)dlg.columns, 1, 20);
+	int nx = minmax((int)~dlg.columns, 1, 20);
 	for(int q = nx; q--;)
 		fmt.column.Add(1);
 	if(dlg.header)

@@ -524,8 +524,6 @@ inline String& operator<<(String& s, const char& x)
 	return s;
 }
 
-//---- &&
-
 force_inline String& operator<<(String&& s, const char *x)
 {
 	s.Cat(x, strlen__(x));

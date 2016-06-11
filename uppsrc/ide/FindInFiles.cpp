@@ -219,7 +219,7 @@ void Ide::FindFileName() {
 			return;
 		case IDOK:
 			if(ffdlg.list.IsCursor()) {
-				find_file_search_string = ffdlg.mask;
+				find_file_search_string = ~ffdlg.mask;
 				EditFile(SourcePath(ffdlg.list.Get(0),  ffdlg.list.Get(1)));
 				return;
 			}

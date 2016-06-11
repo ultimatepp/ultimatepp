@@ -19,7 +19,7 @@ file
 	ParaFormat.cpp,
 	TableUndo.cpp,
 	Table.cpp,
-	Find.cpp optimize_speed,
+	Find.cpp,
 	Tool.cpp,
 	Clip.cpp,
 	StyleKeys.cpp,

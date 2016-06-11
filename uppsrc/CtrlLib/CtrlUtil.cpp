@@ -144,7 +144,7 @@ bool EditText(String& s, const char *title, const char *label, int (*f)(int), in
 	WithEditStringLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, title);
 	dlg.lbl = label;
-	dlg.text = s.ToWString();
+	dlg.text <<= s.ToWString();
 	dlg.text.NotNull(notnull);
 	dlg.text.SetFilter(f);
 	if(maxlen) {
@@ -153,7 +153,7 @@ bool EditText(String& s, const char *title, const char *label, int (*f)(int), in
 		dlg.text.WhenAction();
 	}
 	if(dlg.Execute() == IDOK) {
-		s = dlg.text;
+		s = ~dlg.text;
 		return true;
 	}
 	return false;
