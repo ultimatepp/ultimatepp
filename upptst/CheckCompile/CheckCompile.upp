@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	RichEdit;
+
+file
+	CheckCompile.h,
+	main.cpp,
+	CheckCompile.lay;
+
+mainconfig
+	"" = "GUI";
+
