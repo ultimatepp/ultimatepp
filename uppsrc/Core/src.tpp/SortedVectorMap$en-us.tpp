@@ -87,8 +87,8 @@ torMap]([@(0.0.255) const]_[* SortedVectorMap][@(0.0.255) `&]_[*@3 s],
 [s2; Deep copy constructor.&]
 [s4;%- &]
 [s5;:Upp`:`:SortedVectorMap`:`:SortedVectorMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* S
-ortedVectorMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ s
-td`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+ortedVectorMap]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
+td`::initializer`_list]<[_^std`:`:pair^ std`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
 [s0; ]]

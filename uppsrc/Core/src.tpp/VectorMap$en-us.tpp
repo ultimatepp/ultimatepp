@@ -56,8 +56,8 @@ operator is implicitly defined by composition.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:VectorMap`:`:VectorMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* V
-ectorMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ std`::p
-air]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+ectorMap]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
+td`::initializer`_list]<[_^std`:`:pair^ std`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
 [s4;%- &]

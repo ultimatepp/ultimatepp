@@ -60,7 +60,7 @@ Vector][@(0.0.255) `&]_[*@3 src], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor. Creates a deep copy of [%-*@3 src].&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:BiVector`:`:BiVector`(std`:`:initializer`_list`<T`>`):%- [* BiVector]([_^std`:`:initializer`_list^ s
+[s5;:Upp`:`:BiVector`:`:BiVector`(std`:`:initializer`_list`<T`>`):%- [* BiVector]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; C`+`+11 initialization.&]
 [s3; &]

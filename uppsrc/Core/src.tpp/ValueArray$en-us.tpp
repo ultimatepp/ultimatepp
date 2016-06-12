@@ -56,8 +56,8 @@ version).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:ValueArray`:`:ValueArray`(std`:`:initializer`_list`<Upp`:`:Value`>`): [* Va
-lueArray]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^Upp`:`:Value^ Value
-]>_[*@3 init])&]
+lueArray]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
+td`::initializer`_list]<[_^Upp`:`:Value^ Value]>_[*@3 init])&]
 [s2;%% C`+`+11 initialization.&]
 [s3;%% &]
 [s4; &]
