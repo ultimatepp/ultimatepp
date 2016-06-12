@@ -28,10 +28,10 @@ CONSOLE_APP_MAIN
 
 	DDUMPC(ConstRange(12, 5));
 	
-	h.Set(5, ConstRange(123, 3));
+	h.SetRange(5, ConstRange(123, 3));
 	DDUMP(h);
 	
-	h.Insert(5, ConstRange(10, 5));
+	h.InsertRange(5, ConstRange(10, 5));
 	DDUMP(h);
 	
 	String vs = String::GetVoid();
@@ -40,9 +40,9 @@ CONSOLE_APP_MAIN
 	DDUMP(vs.IsVoid());
 	
 	Array<int> ah;
-	ah.Append(h);
+	ah.AppendRange(h);
 	DDUMP(ah);
-	ah.Insert(4, ConstRange(54321, 2));
+	ah.InsertRange(4, ConstRange(54321, 2));
 	DDUMP(ah);
 	
 	Sort(h);
