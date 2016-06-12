@@ -8,7 +8,7 @@ CONSOLE_APP_MAIN
 	for(int i = 0; i < 20; i++)
 		h("key" + AsString(i), "value" + AsString(i));
 	
-	for(auto& kv : ~h) {
+	for(auto kv : ~h) {
 		DDUMP(kv.key);
 		DDUMP(kv.value);
 	}
@@ -17,7 +17,7 @@ CONSOLE_APP_MAIN
 	
 	h.Unlink(11);
 
-	for(auto& kv : ~h) {
+	for(auto kv : ~h) {
 		DDUMP(kv.key);
 		DDUMP(kv.value);
 		kv.value = "123";
@@ -26,7 +26,7 @@ CONSOLE_APP_MAIN
 	DLOG("=========");
 
 	const VectorMap<String, String>& ch = h;
-	for(auto& kv : ~ch) {
+	for(auto kv : ~ch) {
 		DDUMP(kv.key);
 		DDUMP(kv.value);
 	}
@@ -36,7 +36,7 @@ CONSOLE_APP_MAIN
 		if(!h.IsUnlinked(i))
 			h.Unlink(i);
 
-	for(auto& kv : ~h) {
+	for(auto kv : ~h) {
 		DDUMP(kv.key);
 		DDUMP(kv.value);
 	}
