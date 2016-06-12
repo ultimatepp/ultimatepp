@@ -55,11 +55,10 @@ to enter a comment following this format:]&]
 bug Z`"]&]
 [s0;2%- &]
 [s0;2%- &]
-[s0;%- [2 The ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 http://code.g
-oogle.com/p/upp`-mirror/source/list][2  will mirror it within an 
-hour. Then you will see your new release in Bazaar, congratulations, 
-your first release is done!]&]
-[s0;2 &]
+[s0;%- [2 You can monitor that your changes is correctly commited by 
+observing following site: ][^https`:`/`/github`.com`/ultimatepp`/mirror`/commits`/master^2 h
+ttps://github.com/ultimatepp/mirror/commits/master][2 .]&]
+[s0;2%- &]
 [s0; [2 And do not put many different features into single commit. 
 It is better to separate them if they do different things.]&]
 [s0; &]
