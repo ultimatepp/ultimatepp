@@ -622,15 +622,18 @@ nt64]_[*@3 q])&]
 [s2; Writes 64`-bit value [%-*@3 q ]in little`-endian mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put16be`(word`):%- [@(0.0.255) void]_[* Put16be]([_^word^ word]_[*@3 q])&]
+[s5;:Stream`:`:Put16be`(word`):%- [@(0.0.255) void]_[* Put16be]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:word`:`:typedef^ w
+ord]_[*@3 q])&]
 [s2; Writes 16`-bit value [%-*@3 q ]in big`-endian mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put32be`(dword`):%- [@(0.0.255) void]_[* Put32be]([_^dword^ dword]_[*@3 q])&]
+[s5;:Stream`:`:Put32be`(dword`):%- [@(0.0.255) void]_[* Put32be]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dowrd`:`:typedef^ d
+word]_[*@3 q])&]
 [s2; Writes 32`-bit value [%-*@3 q ]in big`-endian mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put64be`(int64`):%- [@(0.0.255) void]_[* Put64be]([_^int64^ int64]_[*@3 q])&]
+[s5;:Stream`:`:Put64be`(int64`):%- [@(0.0.255) void]_[* Put64be]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 q])&]
 [s2; Writes 64`-bit value [%-*@3 q ]in big`-endian mode.&]
 [s3; &]
 [s4;%- &]
@@ -666,7 +669,8 @@ as 0 is considered as NULL pointer too...&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:PutW`(const wchar`*`,int`):%- [@(0.0.255) void]_[* PutW]([@(0.0.255) const]_
-[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:wchar`:`:typedef^ wchar
+]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
 [s2; Writes a specified number of wchars (16`-bit character values) 
 to the stream in platform specific format (little`-endian or 
 big`-endian).&]
@@ -674,8 +678,9 @@ big`-endian).&]
 [s7; [%-*C@3 count]-|Length of string.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetW`(wchar`*`,int`):%- [_^dword^ dword]_[* GetW]([_^wchar^ wchar]_`*[*@3 s], 
-[@(0.0.255) int]_[*@3 count])&]
+[s5;:Stream`:`:GetW`(wchar`*`,int`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[* GetW]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:wchar`:`:typedef^ w
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
 [s2; Reads a specified number of wchars (16`-bit character values) 
 from the stream in platform specific format.&]
 [s7; [%-*C@3 s]-|Pointer to buffer to receive wchars.&]
@@ -683,8 +688,8 @@ from the stream in platform specific format.&]
 [s7; [*/ Return value]-|Number of wchars actually read.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetAllW`(wchar`*`,int`):%- [@(0.0.255) bool]_[* GetAllW]([_^wchar^ wchar]_`*
-[*@3 s], [@(0.0.255) int]_[*@3 count])&]
+[s5;:Stream`:`:GetAllW`(wchar`*`,int`):%- [@(0.0.255) bool]_[* GetAllW]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:wchar`:`:typedef^ w
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 count])&]
 [s2; Reads a specified number of wchars (16`-bit character values) 
 from the stream in platform specific format. If there is not 
 enough data in the stream, LoadError is invoked (that in turn 
@@ -723,8 +728,9 @@ in the chain of << operators.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:Put`(Stream`&`,int64`,dword`):%- [@(0.0.255) void]_[* Put]([_^Stream^ Stream
-][@(0.0.255) `&]_[*@3 s], [_^int64^ int64]_[*@3 size]_`=_INT64`_MAX, 
-[_^dword^ dword]_[*@3 click]_`=_[@3 4096])&]
+][@(0.0.255) `&]_[*@3 s], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 size]_`=_INT64`_MAX, [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 click]_`=_[@3 4096])&]
 [s2; Writes a content of specified stream to the stream.&]
 [s7; [%-*C@3 s]-|Input stream.&]
 [s7; [%-*C@3 size]-|Maximum number of bytes to write. Default value 
@@ -752,36 +758,42 @@ the end is written.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:byte`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
-[* SerializeRaw]([_^Upp`:`:byte^ byte]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 count])&]
+[* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 count])&]
 [s2; Serializes raw 8`-bit data. Might invoke LoadError if there 
 is not enough data to load. Data are always stored in little`-endian 
 mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:word`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
-[* SerializeRaw]([_^Upp`:`:word^ word]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 count])&]
+[* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:word`:`:typedef^ w
+ord]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 count])&]
 [s2; Serializes raw 16`-bit data. Might invoke LoadError if there 
 is not enough data to load. Data are always stored in little`-endian 
 mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:dword`*`,Upp`:`:int64`):%- [@(0.0.255) void]_
-[* SerializeRaw]([_^Upp`:`:dword^ dword]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 count])
-&]
+[* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 count])&]
 [s2; Serializes raw 32`-bit data. Might invoke LoadError if there 
 is not enough data to load. Data are always stored in little`-endian 
 mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Stream`:`:SerializeRaw`(Upp`:`:uint64`*`,Upp`:`:int64`):%- [@(0.0.255) void
-]_[* SerializeRaw]([_^Upp`:`:uint64^ uint64]_`*[*@3 data], [_^Upp`:`:int64^ int64]_[*@3 cou
-nt])&]
+]_[* SerializeRaw]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:uint64`:`:typedef^ u
+int64]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 count])&]
 [s2; Serializes raw 64`-bit data. Might invoke LoadError if there 
 is not enough data to load. Data are always stored in little`-endian 
 mode (conversion performed on BE systems as necessary).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SerializeRLE`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRLE]([_^byte^ b
+[s5;:Stream`:`:SerializeRLE`(byte`*`,int`):%- [@(0.0.255) void]_[* SerializeRLE]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
 yte]_`*[*@3 data], [@(0.0.255) int]_[*@3 count])&]
 [s2; Serializes raw data, using simple RLE compression.&]
 [s3; &]
@@ -858,13 +870,13 @@ ouble`&]_[*@3 d])&]
 there is not enough data to load. Returns [* `*this] for chaining.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:operator`%`(int64`&`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* operator%]([_^int64^ i
+[s5;:Stream`:`:operator`%`(int64`&`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* operator%]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64][@(0.0.255) `&]_[*@3 d])&]
 [s2; Serializes int64 variable [%-*@3 d]. Might invoke LoadError if 
 there is not enough data to load. Returns [* `*this] for chaining.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:operator`%`(uint64`&`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* operator%]([_^uint64^ u
+[s5;:Stream`:`:operator`%`(uint64`&`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* operator%]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:uint64`:`:typedef^ u
 int64][@(0.0.255) `&]_[*@3 d])&]
 [s2; Serializes uint64 variable [%-*@3 d]. Might invoke LoadError if 
 there is not enough data to load. Returns [* `*this] for chaining.&]
@@ -900,8 +912,8 @@ data to load or input data are invalid. Returns [* `*this] for
 chaining.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Pack`(dword`&`):%- [@(0.0.255) void]_[* Pack]([_^dword^ dword][@(0.0.255) `&]_
-[*@3 i])&]
+[s5;:Stream`:`:Pack`(dword`&`):%- [@(0.0.255) void]_[* Pack]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word][@(0.0.255) `&]_[*@3 i])&]
 [s2; Serializes dword value using format optimized for storing small 
 values. Values 0..254 are stored as serializes as single byte, 
 other values result in 5 bytes. Might invoke LoadError if there 
@@ -927,8 +939,8 @@ to load or input data are invalid.&]
 [s7; [*/ Return value]-|`*this for chaining.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Magic`(dword`):%- [@(0.0.255) void]_[* Magic]([_^dword^ dword]_[*@3 magic]_`=_
-[@3 0]x7d674d7b)&]
+[s5;:Stream`:`:Magic`(dword`):%- [@(0.0.255) void]_[* Magic]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 magic]_`=_[@3 0]x7d674d7b)&]
 [s2; Serializes `"magic value`" to ensure stream integrity. When 
 loading, this value is loaded and checked `- mismatch results 
 in invoking LoadError.&]
@@ -1120,22 +1132,24 @@ streams to delete the stream.&]
 subsequent streams to read the stream.&]
 [s3; &]
 [s4;%- &]
-[s5;:BlockStream`:`:SetBufferSize`(dword`):%- [@(0.0.255) void]_[* SetBufferSize]([_^dword^ d
+[s5;:BlockStream`:`:SetBufferSize`(dword`):%- [@(0.0.255) void]_[* SetBufferSize]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
 word]_[*@3 newsize])&]
 [s2; Sets a new size of internal buffer.&]
 [s7; [%-*C@3 newsize]-|The new size of buffer.&]
 [s3; &]
 [s4;%- &]
-[s5;:BlockStream`:`:GetBufferSize`(`)const:%- [_^dword^ dword]_[* GetBufferSize]()_[@(0.0.255) c
-onst]&]
+[s5;:BlockStream`:`:GetBufferSize`(`)const:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[* GetBufferSize]()_[@(0.0.255) const]&]
 [s2; [*/ Return value]-|Size of buffer.&]
 [s3;%- &]
 [s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Protected Member List]]}}&]
 [s3; &]
 [s5;:BlockStream`:`:Read`(int64`,void`*`,dword`):%- [@(0.0.255) virtual] 
-[_^dword^ dword]_[* Read]([_^int64^ int64]_[*@3 at], [@(0.0.255) void]_`*[*@3 ptr], 
-[_^dword^ dword]_[*@3 size])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ dword
+]_[* Read]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 at], [@(0.0.255) void]_`*[*@3 ptr], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 size])&]
 [s2; Implementation of this virtual method in derived class should 
 read a block of data at specified position in media.&]
 [s7; [%-*C@3 at]-|Position in media.&]
@@ -1145,8 +1159,9 @@ read a block of data at specified position in media.&]
 [s3; &]
 [s4;%- &]
 [s5;:BlockStream`:`:Write`(int64`,const void`*`,dword`):%- [@(0.0.255) virtual] 
-[@(0.0.255) void]_[* Write]([_^int64^ int64]_[*@3 at], [@(0.0.255) const]_[@(0.0.255) void]_`*
-[*@3 data], [_^dword^ dword]_[*@3 size])&]
+[@(0.0.255) void]_[* Write]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 at], [@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 size])&]
 [s2; Implementation of this virtual method in derived method should 
 write a block of data at specified position in media.&]
 [s7; [%-*C@3 at]-|Position in media.&]
@@ -1155,22 +1170,24 @@ write a block of data at specified position in media.&]
 [s3; &]
 [s4;%- &]
 [s5;:BlockStream`:`:SetStreamSize`(int64`):%- [@(0.0.255) virtual] 
-[@(0.0.255) void]_[* SetStreamSize]([_^int64^ int64]_[*@3 size])&]
+[@(0.0.255) void]_[* SetStreamSize]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 size])&]
 [s2; Implementation of this virtual method in derived class should 
 adjust the size of media.&]
 [s7; [%-*C@3 size]-|Requested new size of media.&]
 [s3; &]
 [s4;%- &]
-[s5;:BlockStream`:`:GetStreamSize`(`)const:%- [_^int64^ int64]_[* GetStreamSize]()_[@(0.0.255) c
-onst]&]
+[s5;:BlockStream`:`:GetStreamSize`(`)const:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* GetStreamSize]()_[@(0.0.255) const]&]
 [s2; Returns current media size. Note that this might be different 
 from current GetSize() `- media size adjustment can be deffered 
 to flushing the buffer.&]
 [s7; [*/ Return value]-|Current media size.&]
 [s3; &]
 [s4;%- &]
-[s5;:BlockStream`:`:OpenInit`(dword`,int64`):%- [@(0.0.255) void]_[* OpenInit]([_^dword^ dw
-ord]_[*@3 mode], [_^int64^ int64]_[*@3 file`_size])&]
+[s5;:BlockStream`:`:OpenInit`(dword`,int64`):%- [@(0.0.255) void]_[* OpenInit]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 mode], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 file`_size])&]
 [s2; Initializes the BlockStream to specified mode and actual media 
 size.&]
 [s7; [%-*C@3 mode]-|Mode.&]
@@ -1192,15 +1209,16 @@ lockStream]&]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
 [s3;%- &]
 [s5;:FileStream`:`:FileStream`(const char`*`,dword`):%- [* FileStream]([@(0.0.255) const]_
-[@(0.0.255) char]_`*[*@3 filename], [_^dword^ dword]_[*@3 mode])&]
+[@(0.0.255) char]_`*[*@3 filename], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 mode])&]
 [s2; Opens file stream in specified mode (as defined in BlockStream).&]
 [s7; [%-*C@3 filename]-|The name of the file.&]
 [s7; [%-*C@3 mode]-|Open mode.&]
 [s3; &]
 [s4;%- &]
 [s5;:FileStream`:`:FileStream`(const char`*`,dword`,mode`_t`):%- [* FileStream]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 filename], [_^dword^ dword]_[*@3 mode], 
-mode`_t_[*@3 acm]_`=_[@3 0644])&]
+onst]_[@(0.0.255) char]_`*[*@3 filename], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 mode], mode`_t_[*@3 acm]_`=_[@3 0644])&]
 [s6;%- Posix specific.&]
 [s2; Opens file stream in specified mode (as defined in BlockStream) 
 and specific POSIX access rights.&]
