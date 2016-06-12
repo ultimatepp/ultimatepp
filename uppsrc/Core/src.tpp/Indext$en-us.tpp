@@ -97,7 +97,7 @@ constructor.&]
 [s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Index`:`:Index`(std`:`:initializer`_list`<T`>`):%- [* Index]([_^std`:`:initializer`_list^ s
+[s5;:Upp`:`:Index`:`:Index`(std`:`:initializer`_list`<T`>`):%- [* Index]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2;%- C`+`+ 11 initialization.&]
 [s0; &]

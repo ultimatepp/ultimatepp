@@ -205,7 +205,7 @@ Vector][@(0.0.255) `&]_[*@3 v], [@(0.0.255) int])&]
 [s2; Optional deep copy constructor.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:InVector`:`:InVector`(std`:`:initializer`_list`<T`>`):%- [* InVector]([_^std`:`:initializer`_list^ s
+[s5;:Upp`:`:InVector`:`:InVector`(std`:`:initializer`_list`<T`>`):%- [* InVector]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
