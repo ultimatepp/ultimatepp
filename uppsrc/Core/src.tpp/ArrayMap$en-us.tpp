@@ -54,8 +54,8 @@ T, Array<T>, HashFn >]&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayMap`:`:ArrayMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* A
-rrayMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ std`::pa
-ir]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+rrayMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/pair^ s
+td`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
 [s4;%- &]

@@ -79,8 +79,8 @@ onst]_[_^VectorMap^ VectorMap]<[_^Value^ Value], [_^Value^ Value]>`&_[*@3 m],
 [s4;%- &]
 [s5;:Upp`:`:ValueMap`:`:ValueMap`(std`:`:initializer`_list`<std`:`:pair`<Upp`:`:Value`,Upp`:`:Value`>`>`):%- [* V
 alueMap]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ st
-d`::initializer`_list]<[_^std`:`:pair^ std`::pair]<[_^Upp`:`:Value^ Value], 
-[_^Upp`:`:Value^ Value]>>_[*@3 init])&]
+d`::initializer`_list]<[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/pair^ st
+d`::pair]<[_^Upp`:`:Value^ Value], [_^Upp`:`:Value^ Value]>>_[*@3 init])&]
 [s2; C`+`+11 initialization.&]
 [s3; &]
 [s4;%- &]
