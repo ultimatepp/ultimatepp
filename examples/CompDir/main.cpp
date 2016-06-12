@@ -109,9 +109,9 @@ void DlgCompareDir::Serialize(Stream& stream)
 
 void DlgCompareDir::CmdRefresh()
 {
-	pa = path_a;
-	pb = path_b;
-	fm = file_mask;
+	pa = ~path_a;
+	pb = ~path_b;
+	fm = ~file_mask;
 	tree.Clear();
 	Image icon;
 	switch(Refresh(Null, 0)) {
@@ -204,7 +204,7 @@ String DlgCompareDir::GetTreePath() const
 	int f = s.Find(':');
 	if(f >= 0)
 		s.Trim(f);
-	while(i = tree.GetParent(i))
+	while((i = tree.GetParent(i)) != 0)
 		s = AppendFileName(String(tree.Get(i)), s);
 	return s;
 }
@@ -216,7 +216,7 @@ void DlgCompareDir::DoTreeCursor()
 		return;
 	String fa = AppendFileName(pa, s), fb = AppendFileName(pb, s);
 	String da = LoadFile(fa), db = LoadFile(fb);
-	if(!IsNull(da) || !IsNull(db))
+	if(!IsNull(da) || !IsNull(db)) {
 		if(IsNull(da) || IsNull(db)) {
 			qtf.Hide();
 			lineedit.Show();
@@ -261,6 +261,7 @@ void DlgCompareDir::DoTreeCursor()
 			}
 			qtf.SetQTF(comptext);
 		}
+	}
 }
 
 void DlgCompareDir::DoBrowse(Ctrl *field)
