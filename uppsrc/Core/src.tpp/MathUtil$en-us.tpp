@@ -79,7 +79,8 @@ topic "Math utility";
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s3; &]
-[s5;:Random`(`): [_^dword^ dword]_[* Random]()&]
+[s5;:Random`(`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[* Random]()&]
 [s2;%% Returns the next random generated number. MT safe and efficient 
 variant of Merssene twister MT19937 by Takuji Nishimura and Makoto 
 Matsumoto is used to get random numbers, with the seed obtained 
@@ -87,13 +88,13 @@ from host platform specific resources (`'/dev/urandom`' in Posix
 systems, GUID generator in Win32).&]
 [s3;%% &]
 [s4; &]
-[s5;:SeedRandom`(dword`*`,int`): [@(0.0.255) void]_[* SeedRandom]([_^dword^ dword]_`*[*@3 see
-d],[@(0.0.255) int]_[*@3 len])&]
+[s5;:SeedRandom`(dword`*`,int`): [@(0.0.255) void]_[* SeedRandom]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_`*[*@3 seed],[@(0.0.255) int]_[*@3 len])&]
 [s2;%% Seeds random with buffer.&]
 [s3;%% &]
 [s4; &]
-[s5;:SeedRandom`(dword`): [@(0.0.255) void]_[* SeedRandom]([_^dword^ dword]_[*@3 seed]_`=_[@3 0
-])&]
+[s5;:SeedRandom`(dword`): [@(0.0.255) void]_[* SeedRandom]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 seed]_`=_[@3 0])&]
 [s2;%% Seeds random with single value [%-*@3 seed]. This is good to 
 get always the same sequence of numbers (for the same seed).&]
 [s3;%% &]
@@ -102,15 +103,20 @@ get always the same sequence of numbers (for the same seed).&]
 [s2;%% Fills C array [%-*@3 x] with zeros.&]
 [s3;%% &]
 [s4; &]
-[s5;:Random`(dword`): [_^dword^ dword]_[* Random]([_^dword^ dword]_[*@3 n])&]
+[s5;:Random`(dword`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[* Random]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 n])&]
 [s2; Returns the next random generated number smaller than [*@3 n].&]
 [s3;%% &]
 [s4; &]
-[s5;:Random64`(`): [_^qword^ qword]_[* Random64]()&]
+[s5;:Random64`(`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
+word]_[* Random64]()&]
 [s2;%% Returns the 64bit random number.&]
 [s3; &]
 [s4; &]
-[s5;:Random64`(qword`): [_^qword^ qword]_[* Random64]([_^qword^ qword]_[*@3 n])&]
+[s5;:Random64`(qword`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
+word]_[* Random64]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:qword`:`:typedef^ q
+word]_[*@3 n])&]
 [s2; [%% Returns the 64bit random number] smaller than [*@3 n].&]
 [s3;%% &]
 [s4; &]
@@ -185,16 +191,19 @@ Checks integer limits.&]
 Checks integer limits.&]
 [s3;%% &]
 [s4; &]
-[s5;:fround64`(double`): [_^int64^ int64]_[* fround64]([@(0.0.255) double]_[*@3 x])&]
+[s5;:fround64`(double`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* fround64]([@(0.0.255) double]_[*@3 x])&]
 [s2; Converts double [*@3 x ]to nearest integer. Checks integer limits.&]
 [s3;%% &]
 [s4; &]
-[s5;:ffloor64`(double`): [_^int64^ int64]_[* ffloor64]([@(0.0.255) double]_[*@3 x])&]
+[s5;:ffloor64`(double`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* ffloor64]([@(0.0.255) double]_[*@3 x])&]
 [s2; Converts double [*@3 x ]to integer rounding towards negative infinity. 
 Checks integer limits.&]
 [s3;%% &]
 [s4; &]
-[s5;:fceil64`(double`): [_^int64^ int64]_[* fceil64]([@(0.0.255) double]_[*@3 x])&]
+[s5;:fceil64`(double`): [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* fceil64]([@(0.0.255) double]_[*@3 x])&]
 [s2; Converts double [*@3 x ]to integer rounding towards `+infinity. 
 Checks integer limits.&]
 [s3;%% &]
@@ -238,8 +247,8 @@ numerator:&]
 [s2;%%  [%-*@3 d] [%-*@3 digits].&]
 [s3;%% &]
 [s4; &]
-[s5;:AsString`(double`,int`): [_^String^ String]_[* AsString]([@(0.0.255) double]_[*@3 x], 
-[@(0.0.255) int]_[*@3 nDigits])&]
+[s5;:AsString`(double`,int`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* AsString]([@(0.0.255) double]_[*@3 x], [@(0.0.255) int]_[*@3 nDigits])&]
 [s2;%% [%- Returns the string representation of ][%-*@3 x][%-  with] [%-*@3 nDigits][%-  
 precision].&]
 [s3; &]
