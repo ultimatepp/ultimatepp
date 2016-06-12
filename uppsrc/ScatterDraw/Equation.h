@@ -301,7 +301,7 @@ public:
 			eval.SetVariable(i, coeff[i]);
 		return eval.Eval(strEquation);
 	}
-	String SetName(String _name) 					{name = _name;}
+	void SetName(String _name) 					     {name = _name;}
 	virtual String GetName() 						{return name;}
 	virtual String GetEquation(int numDigits = 3)	{return eval.EvalStr(strEquation, numDigits);}
 	virtual void GuessCoeff(DataSource &series) 	{}
