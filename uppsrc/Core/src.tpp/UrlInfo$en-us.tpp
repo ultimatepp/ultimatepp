@@ -23,50 +23,56 @@ topic "UrlInfo";
 `]`=item2#anchor]&]
 [s0;%% &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:url: [_^Upp`:`:String^ String]_[* url]&]
+[s5;:Upp`:`:UrlInfo`:`:url: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* url]&]
 [s2;%% Original url.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:scheme: [_^Upp`:`:String^ String]_[* scheme]&]
+[s5;:Upp`:`:UrlInfo`:`:scheme: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* scheme
+]&]
 [s2;%% URL scheme: [@3 http]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:host: [_^Upp`:`:String^ String]_[* host]&]
+[s5;:Upp`:`:UrlInfo`:`:host: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* host]&]
 [s2;%% Host: [@3 hostname]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:port: [_^Upp`:`:String^ String]_[* port]&]
+[s5;:Upp`:`:UrlInfo`:`:port: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* port]&]
 [s2;%% Port: [@3 9090]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:username: [_^Upp`:`:String^ String]_[* username]&]
+[s5;:Upp`:`:UrlInfo`:`:username: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* user
+name]&]
 [s2;%% Authentication username: [@3 username]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:password: [_^Upp`:`:String^ String]_[* password]&]
+[s5;:Upp`:`:UrlInfo`:`:password: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* pass
+word]&]
 [s2;%% Authentication password: [@3 password]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:path: [_^Upp`:`:String^ String]_[* path]&]
+[s5;:Upp`:`:UrlInfo`:`:path: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* path]&]
 [s2;%% Path: [@3 /path]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:query: [_^Upp`:`:String^ String]_[* query]&]
+[s5;:Upp`:`:UrlInfo`:`:query: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* query]&]
 [s2;%% Query: [@3 arg`=value`&aarg`[`]`=item1`&aarg`[`]`=item2]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:fragment: [_^Upp`:`:String^ String]_[* fragment]&]
+[s5;:Upp`:`:UrlInfo`:`:fragment: [_^topic`:`/`/Core`/src`/String`$en`-us^ String]_[* frag
+ment]&]
 [s2;%% Fragment: [@3 anchor]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:parameters: [_^Upp`:`:VectorMap^ VectorMap]<[_^Upp`:`:String^ Stri
-ng], [_^Upp`:`:String^ String]>_[* parameters]&]
+[s5;:Upp`:`:UrlInfo`:`:parameters: [_^topic`:`/`/Core`/src`/VectorMap`$en`-us^ VectorMa
+p]<[_^topic`:`/`/Core`/src`/String`$en`-us^ String], [_^topic`:`/`/Core`/src`/String`$en`-us^ S
+tring]>_[* parameters]&]
 [s2;%% Scalar query parameters: [@(0.0.255) `{`"][@3 arg][@(0.0.255) `": 
 `"][@3 value][@(0.0.255) `"`}]&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:array`_parameters: [_^Upp`:`:VectorMap^ VectorMap]<[_^Upp`:`:String^ S
-tring], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:String^ String]>>_[* array`_parameters]&]
+[s5;:Upp`:`:UrlInfo`:`:array`_parameters: [_^topic`:`/`/Core`/src`/VectorMap`$en`-us^ V
+ectorMap]<[_^topic`:`/`/Core`/src`/String`$en`-us^ String], [_^topic`:`/`/Core`/src`/Vector`$en`-us^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us^ String]>>_[* array`_parameters]&]
 [s2;%% Array query parameters: [@(0.0.255) `{`"][@3 aarg][@(0.0.255) `": 
 `[`"][@3 item1][@(0.0.255) `", `"][@3 item2][@(0.0.255) `"`]`}]&]
 [s3; &]
@@ -76,23 +82,23 @@ tring], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:String^ String]>>_[* array`_paramete
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:UrlInfo`:`:Parse`(const Upp`:`:String`&`): [@(0.0.255) void]_[* Parse]([@(0.0.255) c
-onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 url])&]
+onst]_[_^String^ String][@(0.0.255) `&]_[*@3 url])&]
 [s2;%% Parses [%-*@3 url].&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:operator`[`]`(const char`*`)const: [_^Upp`:`:String^ String]_[* op
-erator`[`]]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
+[s5;:Upp`:`:UrlInfo`:`:operator`[`]`(const char`*`)const: [_^topic`:`/`/Core`/src`/String`$en`-us^ S
+tring]_[* operator`[`]]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
 [s2;%% Returns value of scalar parameter or empty string if not present.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:GetArray`(const char`*`)const: [@(0.0.255) const]_[_^Upp`:`:Vector^ V
-ector]<[_^Upp`:`:String^ String]>`&_[* GetArray]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 i
-d])_[@(0.0.255) const]&]
+[s5;:Upp`:`:UrlInfo`:`:GetArray`(const char`*`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us^ String]>`&_[* GetArray]([@(0.0.255) con
+st]_[@(0.0.255) char]_`*[*@3 id])_[@(0.0.255) const]&]
 [s2;%% Returns reference to array parameter or reference to empty 
 array if not present.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:UrlInfo`:`:UrlInfo`(const Upp`:`:String`&`): [* UrlInfo]([@(0.0.255) const]_[_^Upp`:`:String^ S
+[s5;:Upp`:`:UrlInfo`:`:UrlInfo`(const Upp`:`:String`&`): [* UrlInfo]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`$en`-us^ S
 tring][@(0.0.255) `&]_[*@3 url])&]
 [s2;%% Constructs UrlInfo by parsing [%-*@3 url].&]
 [s3;%% &]
