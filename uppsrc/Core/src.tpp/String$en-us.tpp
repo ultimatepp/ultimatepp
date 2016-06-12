@@ -94,8 +94,8 @@ assigning [* Null ]to [* String ](which is same as assigning the
 empty [* String]).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:String`:`:String`(const string`&`):%- [* String]([@(0.0.255) const]_std`::string[@(0.0.255) `&
-]_[*@3 s])&]
+[s5;:String`:`:String`(const string`&`):%- [* String]([@(0.0.255) const]_[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/string`/basic`_string^ s
+td`::string][@(0.0.255) `&]_[*@3 s])&]
 [s2; Constructor to achieve minimal STL compatibility.&]
 [s3; &]
 [s0; &]
@@ -248,7 +248,8 @@ followed by [* Shrink ]operation (in other words, internal buffer
 gets reallocated to the exact size of source).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:String`:`:ToStd`(`)const:%- [* std`::string]_[* ToStd]()_[@(0.0.255) const]&]
+[s5;:String`:`:ToStd`(`)const:%- [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/string`/basic`_string^ s
+td`::string]_[* ToStd]()_[@(0.0.255) const]&]
 [s2; Converts String to std`::string.&]
 [s3;%- &]
 [s4;%- &]
@@ -449,7 +450,8 @@ nt]_[*@3 pos], [@(0.0.255) const]_[_^wchar^ wchar]_`*[*@3 s], [@(0.0.255) int]_[
 [s2; Sets the number of characters (length) to [%-*@3 pos].&]
 [s3;%- &]
 [s4;%- &]
-[s5;:WString`:`:ToStd`(`)const:%- std`::wstring_[* ToStd]()_[@(0.0.255) const]&]
+[s5;:WString`:`:ToStd`(`)const:%- [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/string`/basic`_string^ s
+td`::wstring]_[* ToStd]()_[@(0.0.255) const]&]
 [s2; Converts WString to std`::string.&]
 [s0;%- &]
 [s0;%- &]
