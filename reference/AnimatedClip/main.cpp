@@ -31,13 +31,13 @@ AnimatedClip::AnimatedClip() {
 void AnimatedClip::Browse() {
 	FileSel fs;
 	
-	fs.PreSelect(fileName);
+	fs.PreSelect(~fileName);
 	fs.Type("Animation type", "*.gif, *.tif, *.tiff");
 	
 	if (fs.ExecuteOpen("Choose animation file"))
 		fileName <<= ~fs;
 
-	if (!clip.Load(fileName)) {
+	if (!clip.Load(~fileName)) {
 		Exclamation("Invalid input");
 		return;
 	}
