@@ -188,28 +188,33 @@ a part of interface definition:&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Protected members]]}}&]
 [s3;%- &]
-[s5;:Stream`:`:pos:%- [_^int64^ int64]_[* pos]&]
+[s5;:Stream`:`:pos:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* pos]&]
 [s6;%- Protected.&]
 [s2; Position of buffer in the stream.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:buffer:%- [_^byte^ byte]_`*[* buffer]&]
+[s5;:Stream`:`:buffer:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* buffer]&]
 [s6; Protected.&]
 [s2; Pointer to beginning of buffer.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:ptr:%- [_^byte^ byte]_`*[* ptr]&]
+[s5;:Stream`:`:ptr:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* ptr]&]
 [s6; Protected.&]
 [s2; Pointer to current input/output byte.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:rdlim:%- [_^byte^ byte]_`*[* rdlim]&]
+[s5;:Stream`:`:rdlim:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* rdlim]&]
 [s6; Protected.&]
 [s2; Read limit. [* Get] method returns values from buffer as long 
 as [* ptr < rdlim].&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:wrlim:%- [_^byte^ byte]_`*[* wrlim]&]
+[s5;:Stream`:`:wrlim:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* wrlim]&]
 [s6; Protected.&]
 [s2; Write limit. [* Put] method returns values from buffer as long 
 as [* ptr < wrlim].&]
@@ -240,14 +245,16 @@ should adjust [* buffer], [* ptr] and [* rdlim].&]
 [s4;%- &]
 [s5;:Stream`:`:`_Put`(const void`*`,dword`):%- [@(0.0.255) virtual] 
 [@(0.0.255) void]_[* `_Put]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], 
-[_^dword^ dword]_[*@3 size])&]
+[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ dword
+]_[*@3 size])&]
 [s2; Directly called by [* Put] method. Writes a block of binary data.&]
 [s7; [%-*C@3 data]-|Pointer to data.&]
 [s7; [%-*C@3 size]-|Size.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:`_Get`(void`*`,dword`):%- [@(0.0.255) virtual] [_^dword^ dword]_[* `_Get]([@(0.0.255) v
-oid]_`*[*@3 data], [_^dword^ dword]_[*@3 size])&]
+[s5;:Stream`:`:`_Get`(void`*`,dword`):%- [@(0.0.255) virtual] [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[* `_Get]([@(0.0.255) void]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 size])&]
 [s2; Directly called by [* Get] method. &]
 [s7; [%-*C@3 data]-|&]
 [s7; [%-*C@3 size]-|&]
@@ -273,18 +280,18 @@ set to 0 / NULL.&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List: Raw Operations]]}}&]
 [s3;%- &]
-[s5;:Stream`:`:Seek`(int64`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Seek]([_^int64^ int
-64]_[*@3 pos])&]
+[s5;:Stream`:`:Seek`(int64`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* Seek]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 pos])&]
 [s2; Seeks to given position.&]
 [s7; [%-*C@3 pos]-|Position.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetSize`(`)const:%- [@(0.0.255) virtual] [_^int64^ int64]_[* GetSize]()_[@(0.0.255) c
-onst]&]
+[s5;:Stream`:`:GetSize`(`)const:%- [@(0.0.255) virtual] [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* GetSize]()_[@(0.0.255) const]&]
 [s7; [* Return value]-|Size of stream.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SetSize`(int64`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SetSize]([_^int64^ i
+[s5;:Stream`:`:SetSize`(int64`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SetSize]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
 nt64]_[*@3 size])&]
 [s2; Alters the size of the stream.&]
 [s7; [%-*C@3 size]-|New size.&]
@@ -333,23 +340,26 @@ can be interpreted by GetErrorMessage function.&]
 [s2; Clears error code.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetPos`(`)const:%- [_^int64^ int64]_[* GetPos]()_[@(0.0.255) const]&]
+[s5;:Stream`:`:GetPos`(`)const:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* GetPos]()_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|Current position in the stream.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetLeft`(`)const:%- [_^int64^ int64]_[* GetLeft]()_[@(0.0.255) const]&]
+[s5;:Stream`:`:GetLeft`(`)const:%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* GetLeft]()_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|Bytes between current position and the end of 
 stream `- equivalent to GetSize() `- GetPos().&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SeekEnd`(int64`):%- [@(0.0.255) void]_[* SeekEnd]([_^int64^ int64]_[*@3 rel]_`=
-_[@3 0])&]
+[s5;:Stream`:`:SeekEnd`(int64`):%- [@(0.0.255) void]_[* SeekEnd]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 rel]_`=_[@3 0])&]
 [s2; Sets current position in the stream relative to the end of stream. 
 Same as Seek(GetSize() `+ rel).&]
 [s7; [%-*C@3 rel]-|Position `- should be less or equal to zero.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:SeekCur`(int64`):%- [@(0.0.255) void]_[* SeekCur]([_^int64^ int64]_[*@3 rel])&]
+[s5;:Stream`:`:SeekCur`(int64`):%- [@(0.0.255) void]_[* SeekCur]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 rel])&]
 [s2; Sets current position in the stream relative to the current 
 position. Same as Seek(GetPos() `+ rel).&]
 [s7; [%-*C@3 rel]-|Relative offset.&]
@@ -379,8 +389,8 @@ negative value is returned.&]
 [s7; [*/ Return value]-|Byte read from input stream.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:PeekPtr`(int`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* PeekPtr]([@(0.0.255) i
-nt]_[*@3 size]_`=_[@3 1])&]
+[s5;:Stream`:`:PeekPtr`(int`):%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* PeekPtr]([@(0.0.255) int]_[*@3 size]_`=_[@3 1])&]
 [s2; This is a special optimization method; it might return a pointer 
 to data of [%-*@3 size] bytes at current position in the stream, 
 but it is allowed to return NULL `- in that case you need to 
@@ -388,24 +398,24 @@ use Get to load data. PeekPtr does not move the position forward,
 you need to use some of Seek methods to do that.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetPtr`(int`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* GetPtr]([@(0.0.255) in
-t]_[*@3 size]_`=_[@3 1])&]
+[s5;:Stream`:`:GetPtr`(int`):%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* GetPtr]([@(0.0.255) int]_[*@3 size]_`=_[@3 1])&]
 [s2; This is a special optimization method; it might return a pointer 
 to data of [%-*@3 size] bytes at current position in the stream, 
 but it is allowed to return NULL `- in that case you need to 
 use Get to load data. Unlike PeekPtr, it advances stream by [%-*@3 size].&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:PutPtr`(int`):%- [_^byte^ byte]_`*[* PutPtr]([@(0.0.255) int]_[*@3 size]_`=_[@3 1
-])&]
+[s5;:Stream`:`:PutPtr`(int`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* PutPtr]([@(0.0.255) int]_[*@3 size]_`=_[@3 1])&]
 [s2; This is a special optimization method; it might return a writable 
 pointer where you can write output data of [%-*@3 size] bytes, 
 but it is allowed to return NULL `- in that case you need to 
 output data using Put. Advances stream by [%-*@3 size].&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:GetSzPtr`(int`&`):%- [@(0.0.255) const]_[_^byte^ byte]_`*[* GetSzPtr]([@(0.0.255) i
-nt`&]_[*@3 size])&]
+[s5;:Stream`:`:GetSzPtr`(int`&`):%- [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:byte`:`:typedef^ b
+yte]_`*[* GetSzPtr]([@(0.0.255) int`&]_[*@3 size])&]
 [s2; This is a special optimization method, it returns a pointer 
 to data at current position of stream, sets [%-*@3 size] to the 
 maximal possible amount of bytes that can be read from this pointer 
@@ -448,21 +458,24 @@ number of bytes was read.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Stream`:`:Put64`(const void`*`,int64`):%- [@(0.0.255) void]_[* Put64]([@(0.0.255) cons
-t]_[@(0.0.255) void]_`*[*@3 data], [_^int64^ int64]_[*@3 size])&]
+t]_[@(0.0.255) void]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 size])&]
 [s2; Writes a block of raw binary data to the output stream, unlike 
 regular Put, block size can be greater than 2GB, if CPU is 64 
 bit.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Get64`(void`*`,int64`):%- [_^int64^ int64]_[* Get64]([@(0.0.255) void]_`*[*@3 d
-ata], [_^int64^ int64]_[*@3 size])&]
+[s5;:Stream`:`:Get64`(void`*`,int64`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* Get64]([@(0.0.255) void]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 size])&]
 [s2; Reads at most [%-*@3 size] bytes from the stream to [%-*@3 data]. 
 Returns the number of bytes actually read. Unlike regular Get, 
 block size can be greater than 2GB, if CPU is 64 bit.&]
 [s3; &]
 [s4;%- &]
 [s5;:Stream`:`:GetAll64`(void`*`,int64`):%- [@(0.0.255) bool]_[* GetAll64]([@(0.0.255) void
-]_`*[*@3 data], [_^int64^ int64]_[*@3 size])&]
+]_`*[*@3 data], [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 size])&]
 [s2; Reads [%-*@3 size] bytes from the stream to memory at [%-*@3 data]. 
 If there is not enough data in the stream, LoadError is invoked 
 (that in turn might throw an exception). Returns true if required 
@@ -506,7 +519,8 @@ value as well).&]
 [s7; [*/ Return value]-|32`-bit value.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Get64`(`):%- [_^int64^ int64]_[* Get64]()&]
+[s5;:Stream`:`:Get64`(`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* Get64]()&]
 [s2; Reads 64`-bit value from the stream in platform specific format 
 (either little`-endian or big`-endian). If there is not enough 
 data in the stream, LoadError is invoked (that in turn might 
@@ -530,7 +544,8 @@ that is a valid return value as well).&]
 [s7; [*/ Return value]-|32`-bit value.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Get64le`(`):%- [_^int64^ int64]_[* Get64le]()&]
+[s5;:Stream`:`:Get64le`(`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* Get64le]()&]
 [s2; Reads 64`-bit value from the stream in the little`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
 (that in turn might throw an exception) and `-1 returned (but 
@@ -553,7 +568,8 @@ that is a valid value return as well).&]
 [s7; [*/ Return value]-|32`-bit value.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Get64be`(`):%- [_^int64^ int64]_[* Get64be]()&]
+[s5;:Stream`:`:Get64be`(`):%- [_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[* Get64be]()&]
 [s2; Reads 64`-bit value from the stream in the big`-endian mode. 
 If there is not enough data in the stream, LoadError is invoked 
 (that in turn might throw an exception) and `-1 returned (but 
@@ -573,30 +589,36 @@ ignored.&]
 [s7; [*/ Return value]-|Utf`-8 value.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put16`(word`):%- [@(0.0.255) void]_[* Put16]([_^word^ word]_[*@3 q])&]
+[s5;:Stream`:`:Put16`(word`):%- [@(0.0.255) void]_[* Put16]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:word`:`:typedef^ w
+ord]_[*@3 q])&]
 [s2; Writes 16`-bit value [%-*@3 q ]in platform specific format (either 
 little`-endian or big`-endian).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put32`(dword`):%- [@(0.0.255) void]_[* Put32]([_^dword^ dword]_[*@3 q])&]
+[s5;:Stream`:`:Put32`(dword`):%- [@(0.0.255) void]_[* Put32]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 q])&]
 [s2; Writes 32`-bit value [%-*@3 q ]in platform specific format (either 
 little`-endian or big`-endian).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put64`(int64`):%- [@(0.0.255) void]_[* Put64]([_^int64^ int64]_[*@3 q])&]
+[s5;:Stream`:`:Put64`(int64`):%- [@(0.0.255) void]_[* Put64]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 q])&]
 [s2; Writes 64`-bit value [%-*@3 q ]in platform specific format (either 
 little`-endian or big`-endian).&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put16le`(word`):%- [@(0.0.255) void]_[* Put16le]([_^word^ word]_[*@3 q])&]
+[s5;:Stream`:`:Put16le`(word`):%- [@(0.0.255) void]_[* Put16le]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:word`:`:typedef^ w
+ord]_[*@3 q])&]
 [s2; Writes 16`-bit value [%-*@3 q ]in little`-endian mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put32le`(dword`):%- [@(0.0.255) void]_[* Put32le]([_^dword^ dword]_[*@3 q])&]
+[s5;:Stream`:`:Put32le`(dword`):%- [@(0.0.255) void]_[* Put32le]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 q])&]
 [s2; Writes 32`-bit value [%-*@3 q ]in little`-endian mode.&]
 [s3; &]
 [s4;%- &]
-[s5;:Stream`:`:Put64le`(int64`):%- [@(0.0.255) void]_[* Put64le]([_^int64^ int64]_[*@3 q])&]
+[s5;:Stream`:`:Put64le`(int64`):%- [@(0.0.255) void]_[* Put64le]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:int64`:`:typedef^ i
+nt64]_[*@3 q])&]
 [s2; Writes 64`-bit value [%-*@3 q ]in little`-endian mode.&]
 [s3; &]
 [s4;%- &]
