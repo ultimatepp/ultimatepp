@@ -101,8 +101,8 @@ void TextsTab::Change()
 {
 	ScatterCtrl &scatter = *pscatter;
 	
-	scatter.SetTitle(title);
-    scatter.SetLabels(xLabel, yLabel, yLabel2);
+	scatter.SetTitle(~title);
+    scatter.SetLabels(~xLabel, ~yLabel, ~yLabel2);
 	scatter.SetPlotAreaMargin(~leftMargin, ~rightMargin, ~topMargin, ~bottomMargin);
 
 	scatter.SetModify();
