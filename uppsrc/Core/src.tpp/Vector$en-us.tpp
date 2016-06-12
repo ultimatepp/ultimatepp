@@ -71,7 +71,7 @@ constructor.&]
 [s2; Destructor. Calls destructors of all elements in Vector.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Vector`:`:Vector`(std`:`:initializer`_list`<T`>`):%- [* Vector]([_^std`:`:initializer`_list^ s
+[s5;:Upp`:`:Vector`:`:Vector`(std`:`:initializer`_list`<T`>`):%- [* Vector]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]

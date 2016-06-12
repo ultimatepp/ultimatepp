@@ -104,8 +104,8 @@ ap]([@(0.0.255) const]_[* SortedArrayMap][@(0.0.255) `&]_[*@3 s], [@(0.0.255) in
 [s2; Deep copy constructor.&]
 [s4;%- &]
 [s5;:Upp`:`:SortedArrayMap`:`:SortedArrayMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* S
-ortedArrayMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^std`:`:pair^ s
-td`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+ortedArrayMap]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
+td`::initializer`_list]<[_^std`:`:pair^ std`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
 [s0; ]]

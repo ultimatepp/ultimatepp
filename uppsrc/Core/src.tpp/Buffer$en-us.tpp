@@ -62,9 +62,9 @@ the specified value [%-@3 init].&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Buffer`:`:Buffer`(size`_t`,std`:`:initializer`_list`<T`>`):%- [* Buffer]([_^size`_t^ s
-ize`_t]_[*@3 size], [_^std`:`:initializer`_list^ std`::initializer`_list]<[*@4 T]>_[*@3 in
-it])&]
-[s5;:Upp`:`:Buffer`:`:Buffer`(std`:`:initializer`_list`<T`>`):%- [* Buffer]([_^std`:`:initializer`_list^ s
+ize`_t]_[*@3 size], [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+[s5;:Upp`:`:Buffer`:`:Buffer`(std`:`:initializer`_list`<T`>`):%- [* Buffer]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
