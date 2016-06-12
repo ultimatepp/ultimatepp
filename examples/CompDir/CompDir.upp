@@ -1,4 +1,4 @@
-description "Compares directory contents";
+description "Compares directory contents\377";
 
 uses
 	CtrlLib;

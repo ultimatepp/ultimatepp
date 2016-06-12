@@ -1,5 +1,3 @@
-#ifdef LAYOUTFILE
-
 LAYOUT(CompareDirLayout, 496, 492)
 	ITEM(Label, dv___0, SetLabel(t_("Folder &A:")).LeftPosZ(4, 52).TopPosZ(4, 19))
 	ITEM(EditField, path_a, HSizePosZ(56, 4).TopPosZ(4, 19))
@@ -10,6 +8,4 @@ LAYOUT(CompareDirLayout, 496, 492)
 	ITEM(Button, refresh, SetLabel(t_("&Refresh")).RightPosZ(4, 60).TopPosZ(48, 18))
 	ITEM(Splitter, splitter, HSizePosZ(4, 4).VSizePosZ(70, 4))
 END_LAYOUT
-
-#endif
 

@@ -24,7 +24,7 @@ void TabUserEquation::OnUpdate()
 		return;	
 	}
 	
-	userEquation.Init("User equation", equation);
+	userEquation.Init("User equation", ~equation);
 	
 	scatter.RemoveAllSeries();
 	scatter.AddSeries(userEquation).Legend(userEquation.GetFullName()).NoMark().Stroke(2);
