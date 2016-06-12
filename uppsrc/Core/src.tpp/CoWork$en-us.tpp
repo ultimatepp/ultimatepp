@@ -33,7 +33,8 @@ submitted by Do in sequence.&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:CoWork`:`:Do`(const Upp`:`:Callback`&`): [@(0.0.255) void]_[* Do]([@(0.0.255) c
-onst]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 cb])&]
+onst]_[_^topic`:`/`/Core`/src`/Callbacks`$en`-us`#Callback`:`:class^ Callback][@(0.0.255) `&
+]_[*@3 cb])&]
 [s5;:Upp`:`:CoWork`:`:Do`(const std`:`:function`<void`(`)`>`&`): [@(0.0.255) void]_[* Do](
 [@(0.0.255) const]_[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/functional`/function^ s
 td`::function]<[@(0.0.255) void]_()>`&_[*@3 lambda])&]
@@ -43,9 +44,10 @@ order of execution or whether the code is execute in another
 or calling thread is not specified.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Callback`&`): [_^Upp`:`:CoWork^ CoWork][@(0.0.255) `&
-]_[* operator`&]([@(0.0.255) const]_[_^Upp`:`:Callback^ Callback][@(0.0.255) `&]_[*@3 cb])&]
-[s5;:Upp`:`:CoWork`:`:operator`&`(const std`:`:function`<void`(`)`>`&`): [_^Upp`:`:CoWork^ C
+[s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Callback`&`): [_^topic`:`/`/Core`/src`/CoWork`$en`-us^ C
+oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Callbacks`$en`-us`#Callback`:`:class^ C
+allback][@(0.0.255) `&]_[*@3 cb])&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(const std`:`:function`<void`(`)`>`&`): [_^topic`:`/`/Core`/src`/CoWork`$en`-us^ C
 oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/functional`/function^ s
 td`::function]<[@(0.0.255) void]_()>`&_[*@3 lambda])&]
 [s2;%% Same as Do([%-*@3 cb ][/ or] [%-*@3 lambda]); returns `*this;&]
