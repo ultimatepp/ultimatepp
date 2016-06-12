@@ -62,4 +62,22 @@ your first release is done!]&]
 [s0;2 &]
 [s0; [2 And do not put many different features into single commit. 
 It is better to separate them if they do different things.]&]
-[s0; ]]
+[s0; &]
+[s0; &]
+[s0; [*+117 Generating patch]&]
+[s0;* &]
+[s0; [2 Sometimes you need to deliver patch for the whole library, 
+but you don`'t have permission to commit. In this case it is 
+good to consider generating a diff file that can be easily applied 
+by U`+`+ developer. ]&]
+[s0;2 &]
+[s0; [2 At the beginning, we need to move to the directory that holds 
+U`+`+ sources tracked by subversion. Next, we will generate the 
+diff file. At command line described history looks like this:]&]
+[s0;2 &]
+[s0;l256; [C$7;2 cd `~/upp/uppsrc]&]
+[s0;l256; [C$7;2 svn diff > ../MyAwsomeUppPath.diff]&]
+[s0;2 &]
+[s0; [2 In the above scenario the diff file will be stored in `~/upp 
+directory. Now, all you need to do is post your patch.]&]
+[s0;2 ]]
