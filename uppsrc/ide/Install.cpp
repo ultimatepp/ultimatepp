@@ -322,7 +322,7 @@ public:
 
 void XInstallDlg::FindInstFolder() {
 	FileSel *fs = &OutputFs();
-	fs->Set(path);
+	fs->Set(~path);
 	if(! fs->ExecuteSelectDir("Select output directory ..."))
 		return;
 	path <<= ~(*fs);
