@@ -42,6 +42,7 @@ public:
 	bool IsEmpty() const                                      { return B::GetCount() == 0; }
 
 	const tchar *End() const                                  { return B::Begin() + GetLength(); }
+	const tchar *end() const                                  { return End(); }
 	const tchar *Last() const                                 { return End() - !!B::GetCount(); }
 	const tchar *GetIter(int i) const                         { ASSERT(i >= 0 && i <= B::GetCount()); return B::Begin() + i; }
 
@@ -309,7 +310,9 @@ public:
 	void Trim(int pos);
 
 	const char *Begin() const   { return IsSmall() ? chr : ptr; }
+	const char *begin() const   { return Begin(); }
 	const char *End() const     { return Begin() + GetLength(); }
+	const char *end() const     { return End(); }
 
 	int operator[](int i) const { ASSERT(i >= 0 && i <= GetCount()); return Begin()[i]; }
 
@@ -737,6 +740,8 @@ protected:
 public:
 	const wchar *Begin() const           { return ptr; }
 	const wchar *End() const             { return Begin() + GetLength(); }
+	const wchar *begin() const           { return Begin(); }
+	const wchar *end() const             { return End(); }
 	int   operator[](int i) const        { return ptr[i]; }
 
 	operator const wchar *() const       { return Begin(); }
