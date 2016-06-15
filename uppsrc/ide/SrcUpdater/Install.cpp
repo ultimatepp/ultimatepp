@@ -111,8 +111,8 @@ void InstallWizard::RestoreAsm(){
 	                           "U++ infrastructure (web, packaging)",
 	                           "Place for users own packages"};
 	VectorMap<String,String> map;
-	map.Add(s3.srcpath,"$(SRC)");
-	map.Add(s3.outpath,"$(OUT)");
+	map.Add(~s3.srcpath,"$(SRC)");
+	map.Add(~s3.outpath,"$(OUT)");
 	for(FindFile ff(ConfigFile("*.var")); ff; ff.Next())
 		if(ff.IsFile()){
 			VectorMap<String,String> var;
@@ -261,7 +261,7 @@ void InstallWizard::Perform(){
 	}else{
 		UpdaterCfg().period=bool(s1.startup)?0:int(Null);
 	}
-	UpdaterCfg().localsrc=s3.srcpath;
+	UpdaterCfg().localsrc=~s3.srcpath;
 	if(s2.server==0){
 		//defualt SVN server
 		UpdaterCfg().svnserver="http://upp-mirror.googlecode.com/svn/trunk/";
@@ -270,10 +270,10 @@ void InstallWizard::Perform(){
 		UpdaterCfg().svnreadonly=true;
 	}else{
 		//custom SVN server
-		UpdaterCfg().svnserver=svndlg.url;
-		UpdaterCfg().svnuser=svndlg.usr;
-		UpdaterCfg().svnpass=svndlg.pwd;
-		UpdaterCfg().svnreadonly=svndlg.readonly;
+		UpdaterCfg().svnserver=~svndlg.url;
+		UpdaterCfg().svnuser=~svndlg.usr;
+		UpdaterCfg().svnpass=~svndlg.pwd;
+		UpdaterCfg().svnreadonly=~svndlg.readonly;
 	}
 	switch(UpdaterCfg().method) {
 		case 0:{
@@ -300,9 +300,9 @@ void InstallWizard::Perform(){
 			String cmd="svn checkout --non-interactive --force ";
 			if(!UpdaterCfg().svnuser.IsEmpty()){cmd+="--username \""+UpdaterCfg().svnuser+"\" ";}
 			if(!UpdaterCfg().svnpass.IsEmpty()){cmd+="--password \""+UpdaterCfg().svnpass+"\" ";}
-			cmd+=String(svndlg.url);
+			cmd+=String(~svndlg.url);
 			if(UpdaterCfg().sync==1){cmd+="@"+IntStr(ScanInt(IDE_VERSION));}
-			cmd+=" "+String(s3.srcpath);
+			cmd+=" "+String(~s3.srcpath);
 			LocalProcess svn(cmd);
 			int count=0;
 			while(svn.IsRunning()){
@@ -318,7 +318,7 @@ void InstallWizard::Perform(){
 				p.SetText(Format("%i files downloaded",count));
 			}
 			String err;
-			SaveFile(AppendFileName(s3.srcpath,"uppsrc/ide/version.h"),"#define IDE_VERSION    \""+GetSvnVersion(UpdaterCfg().localsrc,false,err)+"\"\n");
+			SaveFile(AppendFileName(~s3.srcpath,"uppsrc/ide/version.h"),"#define IDE_VERSION    \""+GetSvnVersion(UpdaterCfg().localsrc,false,err)+"\"\n");
 			break;
 		}
 		case 3:
@@ -327,8 +327,8 @@ void InstallWizard::Perform(){
 	}
 	for(int i=0;i<s3.asmbls.GetCount();i++){
 		VectorMap<String,String> map;
-		map.Add("$(SRC)",s3.srcpath);
-		map.Add("$(OUT)",s3.outpath);
+		map.Add("$(SRC)",~s3.srcpath);
+		map.Add("$(OUT)",~s3.outpath);
 		String cfg="UPP = " + AsCString(ReplaceVars(s3.asmbls.Get(i,1),map)) + "\n";
 		cfg+="OUTPUT = " + AsCString(ReplaceVars(s3.asmbls.Get(i,2),map));
 		SaveFile(ConfigFile(AsString(s3.asmbls.Get(i,0))+".var"),cfg);
