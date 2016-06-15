@@ -2224,33 +2224,18 @@ trl])&]
 [s2;b17;a17; Same as SetData(v).&]
 [s7;i1120;a17; [%-*C@3 v]-|New Value of Ctrl.&]
 [s7;i1120;a17; [*/ Return value]-|Reference to v.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:operator`<`<`=`(Callback`):%- [_^`:`:Callback^ Callback]_[* operator<<`=]([_^`:`:Callback^ C
-allback]_[*@3 action])&]
-[s2;b17;a17; Same as WhenAction `= action;&]
-[s7;i1120;a17; [%-*C@3 action]-|Callback that is invoked when user changes 
-value of Ctrl.&]
-[s7;i1120;a17; [*/ Return value]-|The value of callback, so that it 
-can be assigned to several Ctrls in one statement.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Ctrl`:`:operator`<`<`(Callback`):%- [_^`:`:Callback^ Callback][@(0.0.255) `&]_[* opera
-tor<<]([_^`:`:Callback^ Callback]_[*@3 action])&]
-[s5;:Upp`:`:Ctrl`:`:operator`<`<`(std`:`:function`<void`(`)`>`):%- [_^Upp`:`:Callback^ C
-allback][@(0.0.255) `&]_[* operator<<]([_^std`:`:function^ std`::function]<[@(0.0.255) voi
-d]_()>_[*@3 action])&]
-[s2;b17;a17; Same as WhenAction << action, second variant suitable 
-for C`+`+11 lambdas.&]
-[s7;i1120;a17; [%-*C@3 action]-|Callback that is to be added to callbacks 
-that are invoked when user changes value of Ctrl.&]
-[s7;i1120;a17; [*/ Return value]-|Reference to WhenAction.&]
-[s3;%- &]
 [s3; &]
 [s4;%- &]
-[s5;:Ctrl`:`:SetTimeCallback`(int`,Callback`,int`):%- [@(0.0.255) void]_[* SetTimeCallbac
-k]([@(0.0.255) int]_[*@3 delay`_ms], [_^`:`:Callback^ Callback]_[*@3 cb], 
-[@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
+[s5;:Upp`:`:Ctrl`:`:operator`<`<`(Upp`:`:Function`<void`(`)`>`):%- [_^Upp`:`:Callback^ C
+allback][@(0.0.255) `&]_[* operator<<]([_^Upp`:`:Function^ Upp`::Function]<[@(0.0.255) voi
+d]_()>_[*@3 action])&]
+[s2; Same as WhenAction << action, can be used both with lambdas 
+and Events (former Callbacks)..&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:SetTimeCallback`(int`,Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) v
+oid]_[* SetTimeCallback]([@(0.0.255) int]_[*@3 delay`_ms], [_^Upp`:`:Function^ Function]<
+[@(0.0.255) void]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
 [s2;b17;a17; Puts delayed callback to the timer queue. As an identifier 
 of callback, which is void `* in timer queue, [* this] `+ [* id] 
 is used. When Ctrl is destroyed, all callbacks with [* id] in range 
@@ -2277,6 +2262,12 @@ nt]_[*@3 id]_`=_[@3 0])&]
 [s7;i1120;a17; [%-*C@3 id]-|Id of callback.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:KillSetTimeCallback`(int`,Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) v
+oid]_[* KillSetTimeCallback]([@(0.0.255) int]_[*@3 delay`_ms], [_^Upp`:`:Function^ Functi
+on]<[@(0.0.255) void]_()>_[*@3 cb], [@(0.0.255) int]_[*@3 id])&]
+[s2; Removes callback with [%-*@3 id] and sets it again.&]
+[s3; &]
+[s4;%- &]
 [s5;:Ctrl`:`:ExistsTimeCallback`(int`)const:%- [@(0.0.255) bool]_[* ExistsTimeCallback]([@(0.0.255) i
 nt]_[*@3 id]_`=_[@3 0])_[@(0.0.255) const]&]
 [s2;b17;a17; Tests whether Ctrl has associated callback in timer 
@@ -2284,6 +2275,20 @@ queue.&]
 [s7;i1120;a17; [%-*C@3 id]-|Id of callback.&]
 [s7;i1120;a17; [*/ Return value]-|true when id is found in timer queue.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:PostCallback`(Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) voi
+d]_[* PostCallback]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], 
+[@(0.0.255) int]_[*@3 id]_`=_[@3 0])&]
+[s2; Posts callback to be executed immediately (but in the main loop 
+after all current GUI events).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:KillPostCallback`(Upp`:`:Function`<void`(`)`>`,int`):%- [@(0.0.255) v
+oid]_[* KillPostCallback]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], 
+[@(0.0.255) int]_[*@3 id])&]
+[s2; Similar to PostCallback, but removes callback(s) with the same 
+id from the queue first.&]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetActiveCtrl`(`):%- [@(0.0.255) static] [_^`:`:Ctrl^ Ctrl]_`*[* GetActiveCtrl
 ]()&]
