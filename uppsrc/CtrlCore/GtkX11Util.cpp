@@ -106,7 +106,7 @@ dword X11mods(dword key)
 	return mod;
 }
 
-int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
+int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
 	GuiLock __;
 	ASSERT(key >= K_DELTA);
@@ -128,7 +128,7 @@ int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 			q = i;
 			break;
 		}
-	hotkey.At(q) = cb;
+	hotkey.At(q) = Callback() << cb;
 	keyhot.At(q) = k;
 	modhot.At(q) = mod;
 	return q;
