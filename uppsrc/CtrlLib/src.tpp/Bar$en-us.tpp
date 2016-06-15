@@ -307,6 +307,9 @@ mage]([@(0.0.255) const]_[_^Image^ UPP`::Image][@(0.0.255) `&]_[*@3 img])&]
 [s4;%- &]
 [s5;:Bar`:`:Item`:`:Text`(const char`*`):%- [@(0.0.255) virtual] [_^Bar`:`:Item^ Item][@(0.0.255) `&
 ]_[* Text]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 text])&]
+[s5;:Upp`:`:Bar`:`:Item`:`:Text`(const Upp`:`:String`&`):%- [@(0.0.255) virtual] 
+[_^Upp`:`:Bar`:`:Item^ Item][@(0.0.255) `&]_[* Text]([@(0.0.255) const]_[_^Upp`:`:String^ S
+tring][@(0.0.255) `&]_[*@3 text])&]
 [s2; Sets the [%-*@3 text] of item.&]
 [s3; &]
 [s4;%- &]

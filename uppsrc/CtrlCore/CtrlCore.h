@@ -99,24 +99,24 @@ enum {
 	DELAY_MINIMAL = 0
 };
 
-void  SetTimeCallback(int delay_ms, Callback cb, void *id = NULL); // delay_ms < 0 -> periodic
+void  SetTimeCallback(int delay_ms, Function<void ()> cb, void *id = NULL); // delay_ms < 0 -> periodic
 void  KillTimeCallback(void *id);
 bool  ExistsTimeCallback(void *id);
 dword GetTimeClick();
 
 inline
-void  PostCallback(Callback cb, void *id = NULL)                { SetTimeCallback(1, cb, id); }
+void  PostCallback(Function<void ()> cb, void *id = NULL)  { SetTimeCallback(1, cb, id); }
 
 class TimeCallback
 {
 public:
-	~TimeCallback()                      { Kill(); (void)dummy; }
+	~TimeCallback()                               { Kill(); (void)dummy; }
 
-	void Set(int delay, Callback cb)     { UPP::SetTimeCallback(delay, cb, this); }
-	void Post(Callback cb)               { UPP::PostCallback(cb, this); }
-	void Kill()                          { UPP::KillTimeCallback(this); }
-	void KillSet(int delay, Callback cb) { Kill(); Set(delay, cb); }
-	void KillPost(Callback cb)           { Kill(); Post(cb); }
+	void Set(int delay, Function<void ()> cb)     { UPP::SetTimeCallback(delay, cb, this); }
+	void Post(Function<void ()> cb)               { UPP::PostCallback(cb, this); }
+	void Kill()                                   { UPP::KillTimeCallback(this); }
+	void KillSet(int delay, Function<void ()> cb) { Kill(); Set(delay, cb); }
+	void KillPost(Function<void ()> cb)           { Kill(); Post(cb); }
 
 private:
 	byte dummy;
@@ -780,7 +780,7 @@ public:
 	static  void   InstallStateHook(StateHook hook);
 	static  void   DeinstallStateHook(StateHook hook);
 	
-	static  int    RegisterSystemHotKey(dword key, Callback cb);
+	static  int    RegisterSystemHotKey(dword key, Function<void ()> cb);
 	static  void   UnregisterSystemHotKey(int id);
 
 	virtual bool   Accept();
@@ -1140,15 +1140,14 @@ public:
 
 	Callback     operator<<=(Callback action)  { WhenAction = action; return action; }
 
-	Callback&    operator<<(Callback action)                { return WhenAction << action; }
-	Callback&    operator<<(Upp::Function<void ()> action)  { return WhenAction << action; }
+	Callback&    operator<<(Function<void ()> action)  { return WhenAction << action; }
 
-	void    SetTimeCallback(int delay_ms, Callback cb, int id = 0);
+	void    SetTimeCallback(int delay_ms, Function<void ()> cb, int id = 0);
 	void    KillTimeCallback(int id = 0);
-	void    KillSetTimeCallback(int delay_ms, Callback cb, int id);
+	void    KillSetTimeCallback(int delay_ms, Function<void ()> cb, int id);
 	bool    ExistsTimeCallback(int id = 0) const;
-	void    PostCallback(Callback cb, int id = 0);
-	void    KillPostCallback(Callback cb, int id);
+	void    PostCallback(Function<void ()> cb, int id = 0);
+	void    KillPostCallback(Function<void ()> cb, int id);
 	
 	enum { TIMEID_COUNT = 1 };
 

@@ -716,7 +716,7 @@ bool PassWindowsKey(int wParam)
 
 Vector<Callback> Ctrl::hotkey;
 
-int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
+int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
 	ASSERT(key >= K_DELTA);
 	int q = hotkey.GetCount();
@@ -725,7 +725,7 @@ int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
 			q = i;
 			break;
 		}
-	hotkey.At(q) = cb;
+	hotkey.At(q) = Callback() << cb;
 	dword mod = 0;
 	if(key & K_ALT)
 		mod |= MOD_ALT;
