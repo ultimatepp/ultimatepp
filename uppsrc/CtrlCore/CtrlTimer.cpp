@@ -39,11 +39,11 @@ static void sTimeCallback(dword time, int delay, Callback cb, void *id) {
 	LLOG("sTimeCalllback " << ne->time << " " << ne->delay << " " << ne->id);
 }
 
-void SetTimeCallback(int delay_ms, Callback cb, void *id) {
+void SetTimeCallback(int delay_ms, Function<void ()> cb, void *id) {
 	Mutex::Lock __(sTimerLock);
 	ASSERT(abs(delay_ms) < 0x40000000);
 	LLOG("SetTimeCallback " << delay_ms << " " << id);
-	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, cb, id);
+	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, Callback() << cb, id);
 }
 
 void KillTimeCallbacks(void *id, void *idlim) {
@@ -145,7 +145,7 @@ void  Ctrl::InitTimer()
 	tevents();
 }
 
-void  Ctrl::SetTimeCallback(int delay_ms, Callback cb, int id) {
+void  Ctrl::SetTimeCallback(int delay_ms, Function<void ()> cb, int id) {
 	ASSERT(id >= 0 && (size_t)id < (int)sizeof(Ctrl));
 	UPP::SetTimeCallback(delay_ms, cb, (byte *)this + id);
 }
@@ -155,18 +155,18 @@ void  Ctrl::KillTimeCallback(int id) {
 	UPP::KillTimeCallback((byte *)this + id);
 }
 
-void  Ctrl::KillSetTimeCallback(int delay_ms, Callback cb, int id)
+void  Ctrl::KillSetTimeCallback(int delay_ms, Function<void ()> cb, int id)
 {
 	KillTimeCallback(id);
 	SetTimeCallback(delay_ms, cb, id);
 }
 
-void  Ctrl::PostCallback(Callback cb, int id)
+void  Ctrl::PostCallback(Function<void ()> cb, int id)
 {
 	SetTimeCallback(0, cb, id);
 }
 
-void  Ctrl::KillPostCallback(Callback cb, int id)
+void  Ctrl::KillPostCallback(Function<void ()> cb, int id)
 {
 	KillSetTimeCallback(0, cb, id);
 }
