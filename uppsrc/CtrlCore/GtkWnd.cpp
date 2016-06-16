@@ -128,7 +128,7 @@ Ctrl *Ctrl::GetActiveCtrl()
 
 // There is no generic support in GTK for HotKey
 
-int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
+int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
 	return -1;
 }

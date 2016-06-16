@@ -177,7 +177,7 @@ Vector<Callback> Ctrl::hotkey;
 Vector<dword> Ctrl::keyhot;
 Vector<dword> Ctrl::modhot;
 
-int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
+int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
 	GuiLock __;
 	ASSERT(key >= K_DELTA);
