@@ -23,12 +23,12 @@ String AsString(const wchar_t *buffer);
 String AsString(const wchar_t *buffer, int count);
 String AsString(const wchar_t *buffer, const wchar_t *end);
 
-String GetWinRegString(const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE);
-int    GetWinRegInt(const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE);
-bool   SetWinRegString(const String& string, const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE);
-bool   SetWinRegExpandString(const String& string, const char *value, const char *path, HKEY base_key);
-bool   SetWinRegInt(int data, const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE);
-void   DeleteWinReg(const String& key, HKEY base = HKEY_LOCAL_MACHINE);
+String GetWinRegString(const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE, dword wow = 0);
+int    GetWinRegInt(const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE, dword wow = 0);
+bool   SetWinRegString(const String& string, const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE, dword wow = 0);
+bool   SetWinRegExpandString(const String& string, const char *value, const char *path, HKEY base_key, dword wow = 0);
+bool   SetWinRegInt(int data, const char *value, const char *path, HKEY base_key = HKEY_LOCAL_MACHINE, dword wow = 0);
+void   DeleteWinReg(const String& key, HKEY base = HKEY_LOCAL_MACHINE, dword wow = 0);
 
 void  *GetDllFn(const char *dll, const char *fn);
 
