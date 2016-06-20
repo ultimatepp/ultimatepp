@@ -70,32 +70,32 @@ String AsString(const wchar_t *buffer, const wchar_t *end) {
 	return AsString(buffer, (int)(end - buffer));
 }
 
-String GetWinRegString(const char *value, const char *path, HKEY base_key) {
+String GetWinRegString(const char *value, const char *path, HKEY base_key, dword wow) {
 	HKEY key = 0;
-	if(RegOpenKeyEx(base_key, path, 0, KEY_READ, &key) != ERROR_SUCCESS)
+	if(RegOpenKeyEx(base_key, path, 0, KEY_READ|wow, &key) != ERROR_SUCCESS)
 		return String::GetVoid();
-	dword type, data;
-	if(RegQueryValueEx(key, value, 0, &type, NULL, &data) != ERROR_SUCCESS)
+	dword type, len;
+	if(RegQueryValueEx(key, value, 0, &type, NULL, &len) != ERROR_SUCCESS)
 	{
 		RegCloseKey(key);
 		return String::GetVoid();
 	}
-	StringBuffer raw_data(data);
-	if(RegQueryValueEx(key, value, 0, 0, (byte *)~raw_data, &data) != ERROR_SUCCESS)
+	StringBuffer raw_len(len);
+	if(RegQueryValueEx(key, value, 0, 0, (byte *)~raw_len, &len) != ERROR_SUCCESS)
 	{
 		RegCloseKey(key);
 		return String::GetVoid();
 	}
-	if(data > 0 && (type == REG_SZ || type == REG_EXPAND_SZ))
-		data--;
-	raw_data.SetLength(data);
+	if(len > 0 && (type == REG_SZ || type == REG_EXPAND_SZ))
+		len--;
+	raw_len.SetLength(len);
 	RegCloseKey(key);
-	return raw_data;
+	return raw_len;
 }
 
-int GetWinRegInt(const char *value, const char *path, HKEY base_key) {
+int GetWinRegInt(const char *value, const char *path, HKEY base_key, dword wow) {
 	HKEY key = 0;
-	if(RegOpenKeyEx(base_key, path, 0, KEY_READ, &key) != ERROR_SUCCESS)
+	if(RegOpenKeyEx(base_key, path, 0, KEY_READ|wow, &key) != ERROR_SUCCESS)
 		return Null;
 	int data;
 	dword type, length = sizeof(data);
@@ -105,39 +105,39 @@ int GetWinRegInt(const char *value, const char *path, HKEY base_key) {
 	return data;
 }
 
-bool SetWinRegString(const String& string, const char *value, const char *path, HKEY base_key) {
+bool SetWinRegString(const String& string, const char *value, const char *path, HKEY base_key, dword wow) {
 	HKEY key = 0;
 	if(RegCreateKeyEx(base_key, path, 0, NULL, REG_OPTION_NON_VOLATILE,
-		KEY_ALL_ACCESS, NULL, &key, NULL) != ERROR_SUCCESS)
+		KEY_ALL_ACCESS|wow, NULL, &key, NULL) != ERROR_SUCCESS)
 		return false;
 	bool ok = (RegSetValueEx(key, value, 0,	REG_SZ, string, string.GetLength() + 1) == ERROR_SUCCESS);
 	RegCloseKey(key);
 	return ok;
 }
 
-bool SetWinRegExpandString(const String& string, const char *value, const char *path, HKEY base_key) {
+bool SetWinRegExpandString(const String& string, const char *value, const char *path, HKEY base_key, dword wow) {
 	HKEY key = 0;
 	if(RegCreateKeyEx(base_key, path, 0, NULL, REG_OPTION_NON_VOLATILE,
-		KEY_ALL_ACCESS, NULL, &key, NULL) != ERROR_SUCCESS)
+		KEY_ALL_ACCESS|wow, NULL, &key, NULL) != ERROR_SUCCESS)
 		return false;
 	bool ok = (RegSetValueEx(key, value, 0,	REG_EXPAND_SZ, string, string.GetLength() + 1) == ERROR_SUCCESS);
 	RegCloseKey(key);
 	return ok;
 }
 
-bool SetWinRegInt(int data, const char *value, const char *path, HKEY base_key)
+bool SetWinRegInt(int data, const char *value, const char *path, HKEY base_key, dword wow)
 {
 	HKEY key = 0;
-	if(RegCreateKeyEx(base_key, path, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &key, NULL) != ERROR_SUCCESS)
+	if(RegCreateKeyEx(base_key, path, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS|wow, NULL, &key, NULL) != ERROR_SUCCESS)
 		return false;
 	bool ok = (RegSetValueEx(key, value, 0, REG_DWORD, (const byte *)&data, sizeof(data)) == ERROR_SUCCESS);
 	RegCloseKey(key);
 	return ok;
 }
 
-void DeleteWinReg(const String& key, HKEY base) {
+void DeleteWinReg(const String& key, HKEY base, dword wow) {
 	HKEY hkey;
-	if(RegOpenKeyEx(base, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS)
+	if(RegOpenKeyEx(base, key, 0, KEY_READ|wow, &hkey) != ERROR_SUCCESS)
 		return;
 	Vector<String> subkeys;
 	char temp[_MAX_PATH];
@@ -147,7 +147,10 @@ void DeleteWinReg(const String& key, HKEY base) {
 	RegCloseKey(hkey);
 	while(!subkeys.IsEmpty())
 		DeleteWinReg(key + '\\' + subkeys.Pop(), base);
-	RegDeleteKey(base, key);
+	if(wow)
+		RegDeleteKeyEx(base, key, wow, 0);
+	else
+		RegDeleteKey(base, key);
 }
 
 String GetSystemDirectory() {
