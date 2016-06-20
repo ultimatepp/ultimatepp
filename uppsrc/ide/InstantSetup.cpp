@@ -404,33 +404,10 @@ bool CheckLicense()
 	return true;
 }
 
-String GetWinRegStringWOW64(const char *value, const char *path, HKEY base_key  = HKEY_LOCAL_MACHINE) {
-	HKEY key = 0;
-	if(RegOpenKeyEx(base_key, path, 0, KEY_READ|KEY_WOW64_64KEY, &key) != ERROR_SUCCESS)
-		return String::GetVoid();
-	dword type, data;
-	if(RegQueryValueEx(key, value, 0, &type, NULL, &data) != ERROR_SUCCESS)
-	{
-		RegCloseKey(key);
-		return String::GetVoid();
-	}
-	StringBuffer raw_data(data);
-	if(RegQueryValueEx(key, value, 0, 0, (byte *)~raw_data, &data) != ERROR_SUCCESS)
-	{
-		RegCloseKey(key);
-		return String::GetVoid();
-	}
-	if(data > 0 && (type == REG_SZ || type == REG_EXPAND_SZ))
-		data--;
-	raw_data.SetLength(data);
-	RegCloseKey(key);
-	return raw_data;
-}
-
 void AutoInstantSetup()
 {
 	String sgn = ToLower(GetFileFolder(GetExeFilePath())) + "\n" +
-	             GetWinRegStringWOW64("MachineGuid", "SOFTWARE\\Microsoft\\Cryptography");
+	             GetWinRegString("MachineGuid", "SOFTWARE\\Microsoft\\Cryptography", HKEY_LOCAL_MACHINE, KEY_WOW64_64KEY);
 	String cf = GetExeDirFile("setup-path");
 	String sgn0 =  LoadFile(cf);
 	if(sgn != sgn0) {
