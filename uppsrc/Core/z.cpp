@@ -473,4 +473,27 @@ Gate2<int64, int64> AsGate64(Gate2<int, int> gate)
 	return a;
 }
 
+#include "lib/lz4.h"
+
+String FastCompress(const void *s, int sz)
+{
+	size_t maxsize = LZ4_compressBound(sz);
+	if(maxsize + sizeof(int) >= INT_MAX)
+		Panic("Compress result is too big!");
+	StringBuffer b((int)maxsize + sizeof(int));
+	*(int *)~b = sz;
+	int clen = LZ4_compress((const char *)s, ~b + sizeof(int), sz);
+	b.SetCount(clen + sizeof(int));
+	b.Shrink();
+	return b;
+}
+
+String FastDecompress(const String& data)
+{
+	int sz = *(int *)~data;
+	StringBuffer b(sz);
+	LZ4_decompress_safe(~data + sizeof(int), b, data.GetCount() - sizeof(int), sz);
+	return b;
+}
+
 END_UPP_NAMESPACE
