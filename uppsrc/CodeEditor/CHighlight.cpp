@@ -266,7 +266,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 		}
 		else
-		if(highlight == HIGHLIGHT_CSS ? *p == '#' : pair == MAKELONG('0', 'x') || pair == MAKELONG('0', 'X')) {
+		if(highlight == HIGHLIGHT_CSS ? *p == '#' : findarg(pair, MAKELONG('0', 'x'), MAKELONG('0', 'X'), MAKELONG('0', 'b'), MAKELONG('0', 'B')) >= 0) {
 			int pn = 1 + (highlight != HIGHLIGHT_CSS);
 			hls.Put(pn, hl_style[INK_CONST_HEX]);
 			p += pn;

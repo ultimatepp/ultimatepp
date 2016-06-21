@@ -1,7 +1,5 @@
 description "The source files edit, derived from CtrlLib's LineEdit\377";
 
-optimize_speed;
-
 uses
 	CtrlLib,
 	plugin/pcre;

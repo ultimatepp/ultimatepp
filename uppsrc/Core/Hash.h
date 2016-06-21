@@ -57,4 +57,18 @@ String  SHA1String(const String& data);
 String  SHA1StringS(const void *data, dword size);
 String  SHA1StringS(const String& data);
 
+class xxHashStream : public OutStream {
+	byte context[8 * 8];
+	
+	virtual  void  Out(const void *data, dword size);
+
+public:
+	int Finish();
+	
+	xxHashStream(dword seed = 0);
+};
+
+int xxHash(const void *data, size_t len);
+int xxHash(const String& s);
+
 #endif
