@@ -125,3 +125,6 @@ inline int    GZDecompress(Stream& out, Stream& in, int size, Gate2<int, int> pr
 inline int    GZDecompress(Stream& out, Stream& in, Gate2<int, int> progress)           { return (int)GZDecompress(out, in, AsGate64(progress)); }
 inline String GZDecompress(const void *data, int len, Gate2<int, int> progress)         { return GZDecompress(data, len, AsGate64(progress)); }
 inline String GZDecompress(const String& s, Gate2<int, int> progress)                   { return GZDecompress(s, AsGate64(progress)); }
+
+String FastCompress(const void *s, int sz);
+String FastDecompress(const String& data);

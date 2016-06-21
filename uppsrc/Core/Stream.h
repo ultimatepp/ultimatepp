@@ -93,7 +93,7 @@ public:
 
 	void      Put(const String& s)   { Put((const char *) s, s.GetLength()); }
 	String    Get(int size);
-	String GetAll(int size);
+	String    GetAll(int size);
 
 	void      LoadThrowing()         { style |= STRM_THROW; }
 	void      LoadError();

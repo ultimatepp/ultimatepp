@@ -413,6 +413,14 @@ void StringBuffer::SetLength(int l)
 	end = begin + l;
 }
 
+void StringBuffer::Shrink()
+{
+	int l = GetLength();
+	if(l < GetAlloc() && l > 14)
+		Realloc(l);
+	end = begin + l;
+}
+
 void StringBuffer::Cat(const char *s, int l)
 {
 	if(end + l > limit)

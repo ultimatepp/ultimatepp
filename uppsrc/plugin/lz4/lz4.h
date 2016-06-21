@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-#include "lib/lz4.h"
+#include <Core/lib/lz4.h>
 
 namespace Upp {
 

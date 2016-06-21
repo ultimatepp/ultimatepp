@@ -429,6 +429,7 @@ public:
 	void Strlen();
 	void Clear()                    { Free(); Zero(); }
 	void Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
+	void Shrink();
 
 	void Cat(int c)                        { if(end >= limit) Expand(); *end++ = c; }
 	void Cat(int c, int count);
