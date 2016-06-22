@@ -8,19 +8,24 @@
 namespace Upp {
 
 class Lz4 {
-	enum { BLOCK_BYTES = 64 * 1024 };
-	char        *block[2];
 	Buffer<char> buffer;
+	Buffer<char> outbuf;
 	int8         compress;
 	bool         error;
 	
-	int          cbi;
+	enum { BLOCK_BYTES = 1024 * 1024 };
+	
+	xxHashStream xxh;
+	int          maxblock;
 	int          pos;
+	int          blockchksumsz;
+	bool         header;
+	byte         lz4hdr;
+	String       header_data;
 
-    LZ4_stream_t        lz4Stream[1];
-    LZ4_streamDecode_t  lz4StreamDecode[1];
-    
     String       out;
+    
+    void          TryHeader();
 
 	void          Init();
 	void          FlushOut();

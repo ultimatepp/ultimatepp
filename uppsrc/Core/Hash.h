@@ -17,6 +17,7 @@ public:
 	void   Finish(byte *hash16);
 	String FinishString();
 	String FinishStringS();
+	void   Reset();
 	
 	Md5Stream();
 	~Md5Stream();
@@ -44,7 +45,8 @@ public:
 	String FinishString();
 	String FinishStringS();
 
-	void   New();
+	void   Reset();
+	void   New()                         { Reset(); }
 	
 	Sha1Stream(); 
 	~Sha1Stream();
@@ -64,6 +66,8 @@ class xxHashStream : public OutStream {
 
 public:
 	int Finish();
+	
+	void Reset(dword seed = 0);
 	
 	xxHashStream(dword seed = 0);
 };

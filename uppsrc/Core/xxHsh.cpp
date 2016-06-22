@@ -7,6 +7,11 @@ namespace Upp {
 xxHashStream::xxHashStream(dword seed)
 {
 	STATIC_ASSERT(sizeof(context) >= sizeof(XXH32_state_t));
+	Reset(seed);
+}
+
+void xxHashStream::Reset(dword seed)
+{
 	XXH32_reset((XXH32_state_t *)context, seed);
 }
 
