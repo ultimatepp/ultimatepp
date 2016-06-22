@@ -23,6 +23,7 @@ topic "Learn C/C++ with Ultimate++ and TheIDE";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; Learn C/C`+`+ with TheIDE&]
+[s5; [*0 Author: ][*/0 Zbigniew Rębacz][*0 ; Date: 22.06.2016;]&]
 [s0; [*+117 Introduction]&]
 [s0;*+117 &]
 [s0; If you want to begin your journey with C/C`+`+ or even start 
@@ -67,7 +68,35 @@ Good luck!&]
 [s0; &]
 [s0; [*+117 University students]&]
 [s0;*+117 &]
-[s0; If your are student &]
+[s0; If you are computer science student or you study similar direction 
+that looking for gaining experience in open source word. You 
+can start your profession software development career directly 
+with U`+`+ and TheIDE. We are open to new people that can support 
+us with their skills and bring fresh ideas to our framework.&]
 [s0; &]
-[s0; [*+117 Education institution]&]
-[s0;* ]]
+[s0; Why experience in open source is so important? First of all, 
+it allows you to obtaining several critical skills that will 
+be need in your further carer. In this case you will learn how 
+to work with big code base. In meanwhile, you understand how 
+tools that supports development works. In this group there are 
+two critical things that everyone should know `- version control 
+applications (such as GIT `& SVN) and project management system 
+(Redmine).&]
+[s0; &]
+[s0; Work with the best people in the industry. Nothing can boost 
+your programing skill that watching how experience developers 
+work and write their code. We are aware that at the beginning 
+not everything is clear and transparent. Therefore, we strongly 
+believe that communication is the key. Ask and we certainly find 
+solution for your problem.&]
+[s0; &]
+[s0; The easiest way to start journey with open source is to find 
+a bug and deliver appropriate patch. It should come naturally 
+when you work daily with Ultimate`+`+ and TheIDE. Later you can 
+implement your own features. If you are looking for inspiration, 
+please visit our Google Summer of Code site.&]
+[s0; &]
+[s0; [*+117 Education institutions]&]
+[s0;* &]
+[s0; This part of article is adressed to people representing education 
+institutions.]]
