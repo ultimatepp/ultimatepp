@@ -15,7 +15,7 @@ int64 lz4Press(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress
 			lz4.Decompress();
 		if(CopyStream(outs, in, size, progress) >= 0) {
 			outs.Close();
-			if(!out.IsError() && !outs.IsError())
+			if(!out.IsError() && !outs.IsError() && !lz4.IsError())
 				r = outs.GetCount();
 		}
 	}
