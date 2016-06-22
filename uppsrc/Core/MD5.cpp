@@ -339,9 +339,14 @@ String Md5Stream::FinishStringS()
 	return HexString(hash, 16, 4);
 }
 
-Md5Stream::Md5Stream()
+void Md5Stream::Reset()
 {
 	MD5Init (&context);
+}
+
+Md5Stream::Md5Stream()
+{
+	Reset();
 }
 
 Md5Stream::~Md5Stream()

@@ -158,7 +158,7 @@ String Sha1Stream::FinishStringS()
 	return HexString(hash, 20, 4);
 }
 
-void Sha1Stream::New() {
+void Sha1Stream::Reset() {
 	SHA1Init(state);
 	pos = 0;
 	size = 0;
@@ -166,7 +166,7 @@ void Sha1Stream::New() {
 
 Sha1Stream::Sha1Stream()
 {
-	New();
+	Reset();
 }
 
 Sha1Stream::~Sha1Stream()
