@@ -1935,10 +1935,9 @@ void FileBrowser::FilesWhenSel() {
 		WhenSelected();
 }
 
-void FileBrowser::FileNameWhenChanged() {
-	String kk = fileNameSelected;		// Nombre viejo path completo
-	String koko = textFileName;			// Nombre nuevo (solo nombre)
-	int de = 34;
+void FileBrowser::FileNameWhenChanged() { 
+//	fileNameSelected;		// Old name full path
+//	textFileName;			// New name just name
 }
 
 void FileBrowser::FoldersWhenOpen(int id) {
