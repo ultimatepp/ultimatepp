@@ -26,21 +26,21 @@ topic "Using theIDE as a Cross Development Tool";
 [s0;3 &]
 [s0; By turning off many of the features of TheIDE it can be used 
 as a cross development tool which uses pre`-defined external 
-makefiles.  This is especially useful when moving applications 
+makefiles. This is especially useful when moving applications 
 previously developed under other IDE`'s to TheIDE.&]
 [s0; &]
 [s0; What follows is a description of how to use TheIDE with such 
-external makefiles without having to edit such files.  There 
-may be other ways of achieving such tasks and it may be possible 
+external makefiles without having to edit such files. There may 
+be other ways of achieving such tasks and it may be possible 
 to utilities the existing comprehensive build features of TheIDE. 
- However the aim was to minimize the effort of conversion in 
-order to get a valid compilation.&]
+However the aim was to minimize the effort of conversion in order 
+to get a valid compilation.&]
 [s0; &]
 [s0; It should be noted that the following will only work with versions 
 of TheIDE from 602 onwards. This is because it requires additional 
 standard library functions not implemented in previous versions.&]
 [s0;3 &]
-[s3; 1. Create an empty package within myapps&]
+[s3; 1. Create an empty package within MyApps&]
 [s0;3 &]
 [s0; Start TheIDE and create a new package.  Define the <name> of 
 the package and select an `'empty`' package.  Immediately the 
@@ -52,18 +52,18 @@ the lines:&]
 [s0; [3      `"`"`=`"`";]]}}&]
 [s0;3 &]
 [s0; Close and reopen the package.  This tests that the <name> package 
-can be found and that the <name>.upp file is recognised and has 
+can be found and that the <name>.upp file is recognized and has 
 the correct syntax.  Without the two lines above TheIDE will 
 not find the package.&]
 [s0;3 &]
 [s3; 2. Create a macro file for the <name> package&]
 [s0; &]
 [s0; With the <name> package open under TheIDE create a new file 
-with the extension usc... I suggest macro.usc.  This will be 
-the macro file where all the work will be done.  Create appropriate 
-macros in this file  in the form of the examples below.  This 
-is using the ESC scripting language.  Note the `'Execute`' standard 
-library function is required.  This is only available in versions 
+with the extension usc... I suggest macro.usc. This will be the 
+macro file where all the work will be done. Create appropriate 
+macros in this file  in the form of the examples below. This 
+is using the ESC scripting language. Note the `'Execute`' standard 
+library function is required. This is only available in versions 
 602 onwards of theIDE.&]
 [s0;3 &]
 [ {{10000 [s0; macro `"MakeA`" Alt`+A `{&]
@@ -77,39 +77,39 @@ library function is required.  This is only available in versions
 [s0; `}]}}&]
 [s0; &]
 [s0; The first macro named `'MakeA`' can be invoked by the `'Alt`+A`' 
-keystrokes or by clicking the macro name.  When invoked it calls 
+keystrokes or by clicking the macro name. When invoked it calls 
 the Execute standard function.  The parameter within this function 
 is the full path name with its parameters for a command line 
-application execution.  You will need to incorporate your own 
+application execution. You will need to incorporate your own 
 command lines as appropriate for your cross development environment.&]
 [s0; &]
 [s0; The above example is for the AVR cross development package WINAVR. 
- This utilises the mingw GCC compiler and other packages along 
+ This utilities the mingw GCC compiler and other packages along 
 with the mingw32`-make utility.&]
 [s0; &]
 [s0; Note that an explicit makefile has been defined and that an 
 explicit directory has been named.  The reasons for this are 
-twofold. Firstly, the IDE has as its `'root`' directory `'myapps`' 
+twofold. Firstly, the IDE has as its `'root`' directory `'MyApps`' 
 rather than the package directory when the command is executed. 
  Secondly the explicit directory naming results in the makefile 
 not having to be edited.&]
 [s0; &]
 [s0; Also for some of the above `'applications; to be found the `'autoexec.bat`' 
 file path and other environmental variable names have been set 
-from the previous cross development application.  This is not 
+from the previous cross development application. This is not 
 part of the function of TheIDE.&]
 [s0; &]
 [s3; 3. Running the Cross`-Compile&]
 [s0; &]
 [s0; The `'macro`' menu item will appear sometime on the menu bar. 
- You may have to close and reopen the package for it to appear 
-for the first time.   Click on `'macro`' and then the required 
-macro name to run it.  Alternatively use the quick key, Alt`+M 
-in this case, if it has been defined.  When selected the macro 
+You may have to close and reopen the package for it to appear 
+for the first time. Click on `'macro`' and then the required 
+macro name to run it. Alternatively use the quick key, Alt`+M 
+in this case, if it has been defined. When selected the macro 
 body will be executed which will in this case invoke the application 
-make facility.  Errors will be displayed in the bottom window. 
- Any errors can be located by clicking the left mouse button 
-on the error line as with the normal theIDE operation.&]
+make facility. Errors will be displayed in the bottom window. 
+Any errors can be located by clicking the left mouse button on 
+the error line as with the normal TheIDE operation.&]
 [s0; &]
 [s3; 4. Adding Files and Spacers&]
 [s0; &]
