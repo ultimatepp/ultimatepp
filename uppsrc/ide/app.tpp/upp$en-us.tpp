@@ -22,7 +22,7 @@ topic "U++ package file format";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2;  U`+`+ package file format&]
+[s2; U`+`+ package file format&]
 [s0; All the information about packages is stored in a text file 
 with the same name as the package and .upp extension. This file 
 stores list of files that belong into the package and also all 
