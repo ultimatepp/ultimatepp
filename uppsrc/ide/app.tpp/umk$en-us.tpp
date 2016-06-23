@@ -30,7 +30,7 @@ which is in Win32 in directory where is located umk.exe or in
 POSIX systems in directories [@3 `~], [@3 `~/.upp/umk], [@3 `~/.upp/theide] 
 or [@3 `~/.upp/theide]. Alternatively, it is a direct set of directories 
 that represent U`+`+ assembly separated by `',`'.&]
-[s11; [*@(0.0.255) package ]is the main package (a program to build)&]
+[s11; [*@(0.0.255) package ]is the main package (a program to build).&]
 [s11; [*@(0.0.255) build`_method] is build method that is to be used 
 to build the resulting executable, specified either as name of 
 build method (which is then searched for in [@3 `~], [@3 `~/.upp/umk], 
@@ -77,6 +77,7 @@ used.]]
 ::^ [s0;%- [*C@4;3 H][*/C@3;3 n]]
 ::= [s0; [3 Number of threads used for building (single digit). Default 
 is number of logical cores available.]]}}&]
+[s12; &]
 [s12; 2. Examples&]
 [s0;*C@5+92 &]
 [s0; [*C@5+92 umk uppsrc ide GCC `-br `+GUI,SSE2,SHARED `~/theide]&]
