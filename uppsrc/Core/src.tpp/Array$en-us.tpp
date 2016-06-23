@@ -81,7 +81,7 @@ of type derived from T.&]
 [s2; Destructor. Invokes the destructor of every element in the Array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Array`:`:Array`(std`:`:initializer`_list`<T`>`):%- [* Array]([_^std`:`:initializer`_list^ s
+[s5;:Upp`:`:Array`:`:Array`(std`:`:initializer`_list`<T`>`):%- [* Array]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; C`+`+11 initialization.&]
 [s0; &]
@@ -352,7 +352,8 @@ and returns a reference to it.&]
 [s3; &]
 [s4;%- &]
 [s5;:Array`:`:Insert`(int`,const Array`&`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) int]_
-[*@3 i], [@(0.0.255) const]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x])&]
+[*@3 i], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Arr
+ay][@(0.0.255) `&]_[*@3 x])&]
 [s2; Inserts all elements from another Array.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to the Array.&]
@@ -361,8 +362,8 @@ and returns a reference to it.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Insert`(int`,const Array`&`,int`,int`):%- [@(0.0.255) void]_[* Insert]([@(0.0.255) i
-nt]_[*@3 i], [@(0.0.255) const]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x], 
-[@(0.0.255) int]_[*@3 offset], [@(0.0.255) int]_[*@3 count])&]
+nt]_[*@3 i], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 offset], [@(0.0.255) int]_[*@3 count])&]
 [s2; Inserts a range of elements from another Array.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to the Array.&]
@@ -374,17 +375,18 @@ inserted.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Array`:`:Insert`(int`,std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_
-[* Insert]([@(0.0.255) int]_[*@3 i], [_^std`:`:initializer`_list^ std`::initializer`_list]<
-[*@4 T]>_[*@3 init])&]
+[* Insert]([@(0.0.255) int]_[*@3 i], [_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
+td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; Inserts C`+`+11 style initializer list.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Array`:`:Append`(std`:`:initializer`_list`<T`>`):%- [@(0.0.255) void]_[* Appe
-nd]([_^std`:`:initializer`_list^ std`::initializer`_list]<[*@4 T]>_[*@3 init])&]
+nd]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ std`::in
+itializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; Appends C`+`+11 style initializer list.&]
 [s3; &]
 [s4;%- &]
-[s5;:Array`:`:Append`(const Array`&`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) const]_[_^Array^ A
+[s5;:Array`:`:Append`(const Array`&`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&]_[*@3 x])&]
 [s2; Appends all elements of source Array.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
@@ -393,8 +395,8 @@ rray][@(0.0.255) `&]_[*@3 x])&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:Append`(const Array`&`,int`,int`):%- [@(0.0.255) void]_[* Append]([@(0.0.255) c
-onst]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 o], 
-[@(0.0.255) int]_[*@3 c])&]
+onst]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) `&]_[*@3 x
+], [@(0.0.255) int]_[*@3 o], [@(0.0.255) int]_[*@3 c])&]
 [s2; Appends a range of elements from source Array.&]
 [s6;~~~.992; Requires T to have deep copy constructor.&]
 [s6; Invalidates iterators to the Array.&]
@@ -404,14 +406,15 @@ onst]_[_^Array^ Array][@(0.0.255) `&]_[*@3 x], [@(0.0.255) int]_[*@3 o],
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:Array`:`:InsertPick`(int`,Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* InsertPi
-ck]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Array^ Array][@(0.0.255) `&`&]_[*@3 x])&]
+ck]([@(0.0.255) int]_[*@3 i], [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Inserts the source Array at the specified position using pick 
 transfer semantics. It is faster than deep copy insert, does 
 not use deep copy constructor for T, but destroys the source 
 Array by picking.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Array`:`:AppendPick`(Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* AppendPick]([_^Upp`:`:Array^ A
+[s5;:Upp`:`:Array`:`:AppendPick`(Upp`:`:Array`&`&`):%- [@(0.0.255) void]_[* AppendPick]([_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
 rray][@(0.0.255) `&`&]_[*@3 x])&]
 [s2; Appends source Array using pick transfer semantics. It is faster 
 than deep copy insert, does not use deep copy constructor for 
@@ -493,14 +496,14 @@ of element.&]
 [s7; [*/ Return value]-|Pointer to element allocated on the heap.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Swap`(Array`&`):%- [@(0.0.255) void]_[* Swap]([_^Array^ Array][@(0.0.255) `&]_[*@3 b
-])&]
+[s5;:Array`:`:Swap`(Array`&`):%- [@(0.0.255) void]_[* Swap]([_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&]_[*@3 b])&]
 [s2; Swaps content of Array with another array in constant time operation.&]
 [s7; [*C@3 b]-|Target array.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:operator`<`<`(const T`&`):%- [_^Array^ Array][@(0.0.255) `&]_[* operator<<]([@(0.0.255) c
-onst]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Array`:`:operator`<`<`(const T`&`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&]_[* operator<<]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Operator replacement of [* void Add(const T`&x)]. By returning 
 a reference to the Array it allows adding more elements in a 
 single expression, thus e.g. allowing to construct a temporary 
@@ -512,8 +515,8 @@ Array as part of an expression like Foo((Array<int>() << 1 <<
 [s7; [*/ Return value]-|Reference to the Array (`*this).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:operator`<`<`(T`*`):%- [_^Array^ Array][@(0.0.255) `&]_[* operator<<]([*@4 T]_`*
-[*@3 newt])&]
+[s5;:Array`:`:operator`<`<`(T`*`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&]_[* operator<<]([*@4 T]_`*[*@3 newt])&]
 [s2; Operator replacement of [* void Add(T `*x)]. By returning a reference 
 to the Array it allows adding more elements in a single expression, 
 thus e.g. allowing to construct a temporary Array as part of 
@@ -523,8 +526,8 @@ an expression like Foo((Array<Bar>() << new Bar << new DerivedFromBar)).&]
 [s7; [*/ Return value]-|Reference to the Array (`*this).&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:operator`|`(pick`_ T`&`):%- [_^Array^ Array][@(0.0.255) `&]_[* operator`|]([@(0.128.128) p
-ick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Array`:`:operator`|`(pick`_ T`&`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) `&]_[* operator`|]([@(0.128.128) pick`_]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Operator replacement of [* void AddPick(pick`_ T`&x)]. By returning 
 a reference to the Array it allows adding more elements in a 
 single expression, thus e.g. allowing to construct a temporary 
@@ -541,8 +544,8 @@ Array as part of an expression.&]
 otherwise.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^Stream^ Stream][@(0.0.255) `&
-]_[*@3 s])&]
+[s5;:Array`:`:Serialize`(Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^topic`:`/`/Core`/src`/Stream`$en`-us`#Stream`:`:class^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
 [s2; Serializes the content of the Array to/from the Stream. Works 
 only if NTL is used as part of UPP. Does not work with polymorphic 
 Arrays (those storing objects derived from T).&]
@@ -551,7 +554,8 @@ Arrays (those storing objects derived from T).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:operator`=`(pick`_ Array`&`):%- [@(0.0.255) void]_[* operator`=]([@(0.128.128) p
-ick`_]_[_^Array^ Array][@(0.0.255) `&]_[*@3 v])&]
+ick`_]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) `&]_
+[*@3 v])&]
 [s2; Pick operator. Transfers the source Array in low constant time, 
 but destroys it by picking.&]
 [s7; [*C@3 v]-|Source Array.&]
@@ -566,24 +570,26 @@ onstIterator]&]
 [s2; Iterator type.&]
 [s3;%- &]
 [s4;%- &]
-[s5;%- [@(0.0.255) class][@(64) _]ConstIterator&]
+[s1;:Upp`:`:Array`:`:ConstIterator`:`:class:%- [@(0.0.255) class]_[* ConstIterator]&]
 [s2; Constant iterator type.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Begin`(`):%- [_^Array`:`:Iterator^ Iterator]_[* Begin]()&]
+[s5;:Array`:`:Begin`(`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:Iterator`:`:class^ I
+terator]_[* Begin]()&]
 [s2; Returns a non`-constant iterator to the first element in the 
 Array. &]
 [s7; [*/ Return value]-|Iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:End`(`):%- [_^Array`:`:Iterator^ Iterator]_[* End]()&]
+[s5;:Array`:`:End`(`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:Iterator`:`:class^ I
+terator]_[* End]()&]
 [s2; Returns a non`-constant iterator to the position just beyond 
 the last element in Array.&]
 [s7; [*/ Return value]-|Iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:GetIter`(int`):%- [_^Array`:`:Iterator^ Iterator]_[* GetIter]([@(0.0.255) int
-]_[*@3 pos])&]
+[s5;:Array`:`:GetIter`(int`):%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:Iterator`:`:class^ I
+terator]_[* GetIter]([@(0.0.255) int]_[*@3 pos])&]
 [s2; Returns a non`-constant iterator to the element at the specified 
 position. Same as [* Begin() `+ pos]. The benefit of this method 
 is that [* pos] is range checked in debug mode.&]
@@ -591,21 +597,21 @@ is that [* pos] is range checked in debug mode.&]
 [s7; [*/ Return value]-|Iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:Begin`(`)const:%- [_^Array`:`:ConstIterator^ ConstIterator]_[* Begin]()_[@(0.0.255) c
-onst]&]
+[s5;:Array`:`:Begin`(`)const:%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Upp`:`:Array`:`:ConstIterator`:`:class^ C
+onstIterator]_[* Begin]()_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the first element in Array. &]
 [s7; [*/ Return value]-|Iterator.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:End`(`)const:%- [_^Array`:`:ConstIterator^ ConstIterator]_[* End]()_[@(0.0.255) c
-onst]&]
+[s5;:Array`:`:End`(`)const:%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Upp`:`:Array`:`:ConstIterator`:`:class^ C
+onstIterator]_[* End]()_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the position just beyond the 
 last element in Array.&]
 [s7; [*/ Return value]-|Iterator.-|&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Array`:`:GetIter`(int`)const:%- [_^Array`:`:ConstIterator^ ConstIterator]_[* GetIter
-]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Array`:`:GetIter`(int`)const:%- [_^topic`:`/`/Core`/src`/Array`$en`-us`#Upp`:`:Array`:`:ConstIterator`:`:class^ C
+onstIterator]_[* GetIter]([@(0.0.255) int]_[*@3 pos])_[@(0.0.255) const]&]
 [s2; Returns a constant iterator to the element at the specified 
 position. Same as [* Begin() `+ pos]. The benefit of this method 
 is that [* pos] is range checked in debug mode..&]
@@ -613,15 +619,17 @@ is that [* pos] is range checked in debug mode..&]
 [s7; [*/ Return value]-|Iterator.&]
 [s3; &]
 [s4;%- &]
-[s5;%- friend_[@(0.0.255) void][@(64) _]Swap[@(64) (][_^`:`:Array^ Array][@(64) `&_][@3 a][@(64) , 
-][_^`:`:Array^ Array][@(64) `&_][@3 b][@(64) )]&]
+[s5;%- friend_[@(0.0.255) void][@(64) _]Swap[@(64) (][_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(64) `&_][@3 a][@(64) , ][_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(64) `&_][@3 b][@(64) )]&]
 [s2; Specialization of the generic [* Swap] for Array. Swaps the arrays 
 in simple constant time operation.&]
 [s7; [*C@3 a]-|First Array to swap.&]
 [s7; [*C@3 b]-|Second Array to swap.&]
 [s4;%- &]
-[s5;%- friend_[@(0.0.255) void][@(64) _]IterSwap[@(64) (][_^`:`:Array`:`:Iterator^ Iterator][@(64) _
-][@3 a][@(64) , ][_^`:`:Array`:`:Iterator^ Iterator][@(64) _][@3 b][@(64) )]&]
+[s5;%- friend_[@(0.0.255) void][@(64) _]IterSwap[@(64) (][_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:Iterator`:`:class^ I
+terator][@(64) _][@3 a][@(64) , ][_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:Iterator`:`:class^ I
+terator][@(64) _][@3 b][@(64) )]&]
 [s2; Specialization of the generic [* IterSwap] for Array. Swaps the 
 elements in an Array without any requirements for T.&]
 [s7; [*C@3 a]-|Iterator to first element.&]
