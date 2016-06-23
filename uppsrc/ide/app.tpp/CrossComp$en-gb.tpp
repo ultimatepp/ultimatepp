@@ -23,85 +23,75 @@ topic "Using theIDE as a Cross Development Tool";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; Using TheIDE as a Cross Development Tool&]
-[s0;3 &]
-[s0; By turning off many of the features of TheIDE it can be used 
+[s5; By turning off many of the features of TheIDE it can be used 
 as a cross development tool which uses pre`-defined external 
 makefiles. This is especially useful when moving applications 
 previously developed under other IDE`'s to TheIDE.&]
-[s0; &]
-[s0; What follows is a description of how to use TheIDE with such 
+[s5; What follows is a description of how to use TheIDE with such 
 external makefiles without having to edit such files. There may 
 be other ways of achieving such tasks and it may be possible 
 to utilities the existing comprehensive build features of TheIDE. 
 However the aim was to minimize the effort of conversion in order 
 to get a valid compilation.&]
-[s0; &]
-[s0; It should be noted that the following will only work with versions 
+[s5; It should be noted that the following will only work with versions 
 of TheIDE from 602 onwards. This is because it requires additional 
 standard library functions not implemented in previous versions.&]
-[s0;3 &]
 [s3; 1. Create an empty package within MyApps&]
-[s0;3 &]
-[s0; Start TheIDE and create a new package.  Define the <name> of 
+[s5; Start TheIDE and create a new package.  Define the <name> of 
 the package and select an `'empty`' package.  Immediately the 
 package has been created load and edit the <name>.upp file in 
 the <name> directory using TheIDE.  If not already present add 
 the lines:&]
-[s0; [3  ]&]
-[ {{10000<544;>2176; [s0; [3 mainconfig]&]
-[s0; [3      `"`"`=`"`";]]}}&]
-[s0;3 &]
-[s0; Close and reopen the package.  This tests that the <name> package 
+[s5;  &]
+[ {{10000<544;>2176; [s5; mainconfig&]
+[s5;      `"`"`=`"`";]}}&]
+[s5; &]
+[s5; Close and reopen the package.  This tests that the <name> package 
 can be found and that the <name>.upp file is recognized and has 
 the correct syntax.  Without the two lines above TheIDE will 
 not find the package.&]
 [s0;3 &]
 [s3; 2. Create a macro file for the <name> package&]
 [s0; &]
-[s0; With the <name> package open under TheIDE create a new file 
+[s5; With the <name> package open under TheIDE create a new file 
 with the extension usc... I suggest macro.usc. This will be the 
 macro file where all the work will be done. Create appropriate 
 macros in this file  in the form of the examples below. This 
 is using the ESC scripting language. Note the `'Execute`' standard 
 library function is required. This is only available in versions 
 602 onwards of theIDE.&]
-[s0;3 &]
-[ {{10000 [s0; macro `"MakeA`" Alt`+A `{&]
-[s0; -|Execute(`"c:/mingw/bin/mingw32`-make.exe `-C d:/myapps/control 
+[s5; &]
+[ {{10000 [s5; macro `"MakeA`" Alt`+A `{&]
+[s5; -|Execute(`"c:/mingw/bin/mingw32`-make.exe `-C d:/myapps/control 
 `-f d:/myapps/control/makealarm all`");&]
-[s0; `}&]
-[s0; &]
-[s0; macro `"CopyLibs`" Alt`+0 `{&]
-[s0; -|Execute (`"cp.exe d:/myapps/edrtoslib/libed8515.a d:/myapps/control/`");&]
-[s0; -|Execute(`"cp d:/myapps/edrtoslib/libed8535.a d:/myapps/control/`");&]
-[s0; `}]}}&]
-[s0; &]
-[s0; The first macro named `'MakeA`' can be invoked by the `'Alt`+A`' 
+[s5; `}&]
+[s5; &]
+[s5; macro `"CopyLibs`" Alt`+0 `{&]
+[s5; -|Execute (`"cp.exe d:/myapps/edrtoslib/libed8515.a d:/myapps/control/`");&]
+[s5; -|Execute(`"cp d:/myapps/edrtoslib/libed8535.a d:/myapps/control/`");&]
+[s5; `}]}}&]
+[s5; &]
+[s5; The first macro named `'MakeA`' can be invoked by the `'Alt`+A`' 
 keystrokes or by clicking the macro name. When invoked it calls 
 the Execute standard function.  The parameter within this function 
 is the full path name with its parameters for a command line 
 application execution. You will need to incorporate your own 
 command lines as appropriate for your cross development environment.&]
-[s0; &]
-[s0; The above example is for the AVR cross development package WINAVR. 
+[s5; The above example is for the AVR cross development package WINAVR. 
  This utilities the mingw GCC compiler and other packages along 
 with the mingw32`-make utility.&]
-[s0; &]
-[s0; Note that an explicit makefile has been defined and that an 
+[s5; Note that an explicit makefile has been defined and that an 
 explicit directory has been named.  The reasons for this are 
 twofold. Firstly, the IDE has as its `'root`' directory `'MyApps`' 
 rather than the package directory when the command is executed. 
  Secondly the explicit directory naming results in the makefile 
 not having to be edited.&]
-[s0; &]
 [s0; Also for some of the above `'applications; to be found the `'autoexec.bat`' 
 file path and other environmental variable names have been set 
 from the previous cross development application. This is not 
 part of the function of TheIDE.&]
-[s0; &]
 [s3; 3. Running the Cross`-Compile&]
-[s0; &]
-[s0; The `'macro`' menu item will appear sometime on the menu bar. 
+[s5; The `'macro`' menu item will appear sometime on the menu bar. 
 You may have to close and reopen the package for it to appear 
 for the first time. Click on `'macro`' and then the required 
 macro name to run it. Alternatively use the quick key, Alt`+M 
@@ -110,26 +100,20 @@ body will be executed which will in this case invoke the application
 make facility. Errors will be displayed in the bottom window. 
 Any errors can be located by clicking the left mouse button on 
 the error line as with the normal TheIDE operation.&]
-[s0; &]
 [s3; 4. Adding Files and Spacers&]
-[s0; &]
-[s0; Files and spacers can be added in the normal way by clicking 
+[s5; Files and spacers can be added in the normal way by clicking 
 the right mouse button in the files window at the left side of 
 the screen. These however will have no association with the external 
 makefiles.&]
-[s0; &]
 [s3; 5. Open File  or Open Edited Files Warning.&]
-[s0; &]
-[s0; I am unsure of what will happen with open / edited files with 
+[s5; I am unsure of what will happen with open / edited files with 
 the external makefiles. When the inbuilt `'build`' is executed 
 any open files are updated so that the changed will be compiled. 
 This does not appear to be the case when the external makefile 
 is used.  It is recommended that all edited files are written 
 back prior to invoking the macro.&]
-[s0; &]
 [s3; 6. Incorporation into TheIDE&]
-[s0; &]
-[s0; When more knowledge of TheIDE is known it may be possible to 
+[s5; When more knowledge of TheIDE is known it may be possible to 
 incorporate such external make facilities such as WINAVR into 
 its standard build features. There are mechanisms to select other 
 compiler builds but the extensive windows library will need to 
