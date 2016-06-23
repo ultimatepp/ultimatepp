@@ -102,16 +102,22 @@ int CPU_Cores()
 #else
 
 #ifdef PLATFORM_LINUX
-#include <sys/sysinfo.h>
-
-int CPU_Cores()
-{
 	#ifdef PLATFORM_ANDROID
-		return 1;
+	#include <cpu-features.h>
+	
+	int CPU_Cores()
+	{
+		return android_getCpuCount();
+	}
+	
 	#else
+	#include <sys/sysinfo.h>
+
+	int CPU_Cores()
+	{
 		return minmax(get_nprocs(), 1, 256);
+	}
 	#endif
-}
 #else
 int CPU_Cores()
 {

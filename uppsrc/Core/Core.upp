@@ -23,6 +23,8 @@ library(MSC8ARM WIN32) "coredll.lib corelibc.lib ole32.lib oleaut32.lib uuid.lib
 
 library(!WIN32) z;
 
+static_library(ANDROID) cpufeatures;
+
 options(XGNU) -O0;
 
 options(XGNU) -ffunction-sections;
