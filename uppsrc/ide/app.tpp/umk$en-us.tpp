@@ -15,7 +15,7 @@ topic "umk";
 [{_}%EN-US 
 [s10; [+184 UMK `- command line builder]&]
 [s12; 1. Introduction&]
-[s11; [* UMK] (U`+`+ MaKe) is command line utility to build the U`+`+ 
+[s11; [* UMK] (U`+`+ MaKe) is a command line utility to build the U`+`+ 
 program, with U`+`+ assembly/package/build method system.&]
 [s0; &]
 [s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package build`_method][*C@4;3  
