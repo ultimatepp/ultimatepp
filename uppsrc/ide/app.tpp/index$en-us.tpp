@@ -44,7 +44,7 @@ Find and Replace]&]
 [s0;l224; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
 libraries]&]
 [s0;l224; &]
-[s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
+[s0;l224; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
 [s0;l224; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
 [s0;l224; &]
 [s0;l224; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 

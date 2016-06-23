@@ -10,12 +10,14 @@ topic "umk";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [a83;*R6 $$10,0#31310162474203024125188417583966:caption]
+[b42;a42;2 $$11,11#45413000475342174754091244180557:text]
+[b83;*4 $$12,11#07864147445237544204411237157677:title]
 [{_}%EN-US 
-[s10; [+184 umk]&]
-[s0;3 &]
-[s0; [3 Umk is commandline utility to build the U`+`+ program, with 
-U`+`+ assembly/package/build method system.]&]
-[s0;3 &]
+[s10; [+184 UMK `- command line builder]&]
+[s12; 1. Introduction&]
+[s11; [* UMK] (U`+`+ MaKe) is command line utility to build the U`+`+ 
+program, with U`+`+ assembly/package/build method system.&]
+[s0; &]
 [s0;i224;O9; [*C3 umk ][*C@(0.0.255)3 assembly package build`_method][*C@4;3  
 ][*C3 `[`-`[][*C@4;3 a][*C3 `]`[][*C@4;3 b][*C3 `]`[][*C@4;3 e][*C3 `]`[][*C@4;3 r][*C3 `]`[][*C@4;3 s
 ][*C3 `]`[][*C@4;3 S][*C3 `]`[][*C@4;3 v][*C3 `]`[][*C@4;3 m][*C3 `]`[][*C@4;3 d][*C3 `]`[][*C@4;3 M][*C3 `]
@@ -23,27 +25,21 @@ U`+`+ assembly/package/build method system.]&]
 ][*C3 `[`+][*C@(0.0.255)3 FLAG][*C3 `[,][*C@(0.0.255)3 FLAG][*C3 `]...`]][*C@4;3  
 ][*C3 `[][*C@(0.0.255)3 out][*C3 `]]&]
 [s0;3 &]
-[s0;3 &]
-[s0; [*C@(0.0.255)3 assembly][3  can be a predefined assembly (in .var 
-file) which is in Win32 in directory where is located umk.exe 
-or in POSIX systems in directories ][@3;3 `~][3 , ][@3;3 `~/.upp/umk][3 , 
-][@3;3 `~/.upp/theide][3  or ][@3;3 `~/.upp/theide][3 . Alternatively, 
-it is a direct set of directories that represent U`+`+ assembly 
-separated by `',`'.]&]
-[s0;3 &]
-[s0; [*C@(0.0.255)3 package][3  is the main package (a program to build)]&]
-[s0;3 &]
-[s0; [*C@(0.0.255)3 build`_method][3  is build method that is to be used 
+[s11; [*@(0.0.255) assembly] can be a predefined assembly (in .var file) 
+which is in Win32 in directory where is located umk.exe or in 
+POSIX systems in directories [@3 `~], [@3 `~/.upp/umk], [@3 `~/.upp/theide] 
+or [@3 `~/.upp/theide]. Alternatively, it is a direct set of directories 
+that represent U`+`+ assembly separated by `',`'.&]
+[s11; [*@(0.0.255) package ]is the main package (a program to build)&]
+[s11; [*@(0.0.255) build`_method] is build method that is to be used 
 to build the resulting executable, specified either as name of 
-build method (which is then searched for in ][@3;3 `~][3 , ][@3;3 `~/.upp/umk][3 , 
-][@3;3 `~/.upp/theide][3  ][@3;3 `~/.upp/theide][3  directories) or it 
-is a direct path to the .bm file.]&]
-[s0;*C@4;3 &]
-[s0; [*C@(0.0.255)3 FLAG][3 s are ][^topic`:`/`/ide`/app`/Flags`$en`-us^3 compilation 
-flags][3 . If flags are not specified, the first main configuration 
-entry in .upp file is used.]&]
-[s0;3 &]
-[s0; [*C@(0.0.255)3 out][3  is output file or directory]&]
+build method (which is then searched for in [@3 `~], [@3 `~/.upp/umk], 
+[@3 `~/.upp/theide] [@3 `~/.upp/theide] directories) or it is a direct 
+path to the .bm file.&]
+[s11; [*@(0.0.255) FLAG][* s] are [^topic`:`/`/ide`/app`/Flags`$en`-us^ compilation 
+flags]. If flags are not specified, the first main configuration 
+entry in .upp file is used.&]
+[s11; [*@(0.0.255) out] is output file or directory.&]
 [s0;*C@4;3 &]
 [ {{1089:8911h1;@1 [s0; [3 Option]]
 :: [s0; [3 Description]]
@@ -81,10 +77,8 @@ used.]]
 ::^ [s0;%- [*C@4;3 H][*/C@3;3 n]]
 ::= [s0; [3 Number of threads used for building (single digit). Default 
 is number of logical cores available.]]}}&]
-[s0;3 &]
-[s0;3 &]
-[s0; [3 Examples:]&]
-[s0;3 &]
+[s12; 2. Examples&]
+[s0;*C@5+92 &]
 [s0; [*C@5+92 umk uppsrc ide GCC `-br `+GUI,SSE2,SHARED `~/theide]&]
 [s0; [*C@5+92 umk uppsrc ide /usr/share/upp/GCC.bm `-br `+GUI,SSE2,SHARED 
 `~/theide]&]
@@ -92,5 +86,4 @@ is number of logical cores available.]]}}&]
 [s0; [*C@5+92 umk examples Bombs GCC `-ab `+GUI,SHARED `~/bombs]&]
 [s0; [*C@5+92 umk upp/examples,upp/uppsrc Bombs `~/GCC.bm `-rv `+GUI,SHARED 
 `~/bin]&]
-[s0; &]
 [s0; ]]
