@@ -32,12 +32,12 @@ choose to e.g. represent a process on remote system.&]
 [s2;%% Returns true if process is running.&]
 [s3; &]
 [s4; &]
-[s5;:AProcess`:`:Write`(String`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Write]([_^String^ S
+[s5;:AProcess`:`:Write`(String`): [@(0.0.255) virtual] [@(0.0.255) void]_[* Write]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring]_[*@3 s])_`=_[@3 0]&]
 [s2;%% Sends a text to standard input of process.&]
 [s3;%% &]
 [s4; &]
-[s5;:AProcess`:`:Read`(String`&`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Read]([_^String^ S
+[s5;:AProcess`:`:Read`(String`&`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Read]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 s])_`=_[@3 0]&]
 [s2;%% Reads data from standard output combined with standard error 
 output. Returns true if there process was running or there are 
@@ -45,8 +45,9 @@ more data to be read.&]
 [s3;%% &]
 [s4; &]
 [s5;:AProcess`:`:Read2`(String`&`,String`&`): [@(0.0.255) virtual] 
-[@(0.0.255) bool]_[* Read2]([_^String^ String][@(0.0.255) `&]_[*@3 os], 
-[_^String^ String][@(0.0.255) `&]_[*@3 es])&]
+[@(0.0.255) bool]_[* Read2]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 os], [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 es])&]
 [s2;%% Reads data separately from standard output combined and from 
 standard error output. Returns true if there process was running 
 or there are more data to be read. Usually, implementing class 
@@ -59,8 +60,8 @@ _[@3 0]&]
 [s2;%% Returns an exit code of terminated process.&]
 [s3; &]
 [s4; &]
-[s5;:AProcess`:`:GetExitMessage`(`): [@(0.0.255) virtual] [_^String^ String]_[* GetExitMess
-age]()&]
+[s5;:AProcess`:`:GetExitMessage`(`): [@(0.0.255) virtual] [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetExitMessage]()&]
 [s2;%% In case of error, might return its text description.&]
 [s3; &]
 [s4; &]
@@ -82,7 +83,8 @@ zombies in POSIX here (e.g. use DoubleFork or appropriate SIGCHLD
 handler).&]
 [s3; &]
 [s4; &]
-[s5;:AProcess`:`:Get`(`): [_^String^ String]_[* Get]()&]
+[s5;:AProcess`:`:Get`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ Str
+ing]_[* Get]()&]
 [s2;%% This utility inline function calls Read and returns the standard 
 output of process. If anything went wrong, returns String`::GetVoid().&]
 [s3; &]
@@ -117,9 +119,9 @@ are read separately using Read2 method.&]
 [s3;%% &]
 [s4; &]
 [s5;:LocalProcess`:`:Start`(const char`*`,const Vector`<String`>`&`,const char`*`): [@(0.0.255) b
-ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ V
-ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_
-`=_NULL)&]
+ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
 envptr ]can provide a new environment for the process, if NULL, 
 then the new process inherits caller`'s environment. This variant 
@@ -129,9 +131,9 @@ execv, without parsing the commandline.&]
 [s3;%% &]
 [s4; &]
 [s5;:LocalProcess`:`:Start2`(const char`*`,const Vector`<String`>`&`,const char`*`): [@(0.0.255) b
-ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ V
-ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_
-`=_NULL)&]
+ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
 envptr ]can provide a new environment for the process, if NULL, 
 then the new process inherits caller`'s environment. This variant 
@@ -142,23 +144,24 @@ arguments are in POSIX passed directly to execv, without parsing
 the commandline.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:LocalProcess`:`:Finish`(Upp`:`:String`&`): [@(0.0.255) int]_[* Finish]([_^Upp`:`:String^ S
+[s5;:Upp`:`:LocalProcess`:`:Finish`(Upp`:`:String`&`): [@(0.0.255) int]_[* Finish]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 out])&]
 [s2;%% Runs the started process until it exits. Returns standard 
 output in [%-*@3 out] and exit code as return value.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:LocalProcess`:`:DoubleFork`(bool`): [_^Upp`:`:LocalProcess^ LocalProcess][@(0.0.255) `&
-]_[* DoubleFork]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:LocalProcess`:`:DoubleFork`(bool`): [_^topic`:`/`/Core`/src`/AProcess`$en`-us`#LocalProcess`:`:class^ L
+ocalProcess][@(0.0.255) `&]_[* DoubleFork]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s6; `[POSIX`]&]
 [s2;%% Activates double`-fork mode to avoid zombies. Use this in 
 POSIX if you want to Detach the process.&]
 [s3;%% &]
 [s4; &]
-[s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&
-]_[* ConvertCharset]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s5;:LocalProcess`:`:NoConvertCharset`(`): [_^LocalProcess^ LocalProcess][@(0.0.255) `&]_
-[* NoConvertCharset]()&]
+[s5;:LocalProcess`:`:ConvertCharset`(bool`): [_^topic`:`/`/Core`/src`/AProcess`$en`-us`#LocalProcess`:`:class^ L
+ocalProcess][@(0.0.255) `&]_[* ConvertCharset]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) tru
+e])&]
+[s5;:LocalProcess`:`:NoConvertCharset`(`): [_^topic`:`/`/Core`/src`/AProcess`$en`-us`#LocalProcess`:`:class^ L
+ocalProcess][@(0.0.255) `&]_[* NoConvertCharset]()&]
 [s2;%% Determines LocalProcess should convert encoding from system 
 to application one. Default setting is true.&]
 [s3;%% &]
@@ -176,25 +179,26 @@ onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*
 [s3;%% &]
 [s4; &]
 [s5;:LocalProcess`:`:LocalProcess`(const char`*`,const Vector`<String`>`&`,const char`*`): [* L
-ocalProcess]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ V
-ector]<[_^String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_
-`=_NULL)&]
+ocalProcess]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL)&]
 [s2;%% Equivalent of default constructor and then invoking Start([%-*@3 cmd][%- , 
 ][%-*@3 arg][%- , ][%-*@3 envptr]).&]
 [s3; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Global functions related to LocalProcess]]}}&]
 [s3;%% &]
 [s5;:Sys`(const char`*`,String`&`,bool`): [@(0.0.255) int]_[* Sys]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 cmd], [_^String^ String][@(0.0.255) `&]_[*@3 out], [@(0.0.255) bool]_[*@3 convert
-charset]_`=_[@(0.0.255) true])&]
+har]_`*[*@3 cmd], [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&
+]_[*@3 out], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line, returns its 
 standard output in [%-*@3 out].and its exit code as return value. 
 If there was error invoking [%-*@3 cmd], returns `-1. If [%-*@3 convertcharset] 
 is true, output is converted from system character encoding to 
 application encoding.&]
 [s4; &]
-[s5;:Sys`(const char`*`,bool`): [_^String^ String]_[* Sys]([@(0.0.255) const]_[@(0.0.255) cha
-r]_`*[*@3 cmd], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
+[s5;:Sys`(const char`*`,bool`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* Sys]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) bool]_[*@3 conve
+rtcharset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] command line. If [%-*@3 cmd] 
 was executed successfully and returned zero exit code, returns 
 its standard output, otherwise returns String`::GetVoid(). If 
@@ -203,9 +207,10 @@ character encoding to application encoding.&]
 [s3; &]
 [s4; &]
 [s5;:Sys`(const char`*`,const Vector`<String`>`&`,String`&`,bool`): [@(0.0.255) int]_[* S
-ys]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ Vector]<
-[_^String^ String]>`&_[*@3 arg], [_^String^ String][@(0.0.255) `&]_[*@3 out], 
-[@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
+ys]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&]_[*@3 o
+ut], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] [%-*@3 arg] command line, 
 returns its standard output in [%-*@3 output].and its exit code 
 as return value. If there was error invoking [%-*@3 cmd], returns 
@@ -213,9 +218,10 @@ as return value. If there was error invoking [%-*@3 cmd], returns
 system character encoding to application encoding.&]
 [s3;%% &]
 [s4; &]
-[s5;:Sys`(const char`*`,const Vector`<String`>`&`,bool`): [_^String^ String]_[* Sys]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Vector^ Vector]<[_^String^ Strin
-g]>`&_[*@3 arg], [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
+[s5;:Sys`(const char`*`,const Vector`<String`>`&`,bool`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* Sys]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
+ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
+ [@(0.0.255) bool]_[*@3 convertcharset]_`=_[@(0.0.255) true])&]
 [s2;%% Runs process defined by [%-*@3 cmd] [%-*@3 arg] command line. 
 If [%-*@3 cmd] was executed successfully and returned zero exit 
 code, returns its standard output, otherwise returns String`::GetVoid(). 
