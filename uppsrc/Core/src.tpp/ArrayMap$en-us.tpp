@@ -18,7 +18,8 @@ topic "ArrayMap";
 [s1;:ArrayMap`:`:class:%- [@(0.0.255) class]_[* ArrayMap]_:_[@(0.0.255) public]_[*@3 MoveableA
 ndDeepCopyOption][@(0.0.255) <]_[* ArrayMap][@(0.0.255) <][*@4 K], [*@4 T], 
 [*@4 HashFn][@(0.0.255) >]_>, [@(0.0.255) public]_[*@3 AMap][@(0.0.255) <]_[*@4 K], 
-[*@4 T], [_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >], [*@4 HashFn]_>_&]
+[*@4 T], [_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) <][*@4 T
+][@(0.0.255) >], [*@4 HashFn]_>_&]
 [s8; [*@4 K]-|Type of keys. K must have deep copy constructor, be [/^dpp`:`/`/SourceDoc`/Containers`/Moveable^ m
 oveable] and must have operator`=`= defined.&]
 [s8; [*@4 T]-|Type or base class of the values stored in ArrayMap. There 
@@ -54,8 +55,9 @@ T, Array<T>, HashFn >]&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayMap`:`:ArrayMap`(std`:`:initializer`_list`<std`:`:pair`<K`,T`>`>`):%- [* A
-rrayMap]([_^std`:`:initializer`_list^ std`::initializer`_list]<[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/pair^ s
-td`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
+rrayMap]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ st
+d`::initializer`_list]<[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/pair^ st
+d`::pair]<[*@4 K], [*@4 T]>>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3; &]
 [s4;%- &]
@@ -70,9 +72,9 @@ of type derived from T.&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayMap`:`:ArrayMap`(pick`_ Index`<K`,HashFn`>`&`,pick`_ Array`<T`>`&`):%- [* Arr
-ayMap]([@(0.128.128) pick`_]_[_^Index^ Index][@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >
-`&]_[*@3 ndx], [@(0.128.128) pick`_]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 v
-al])&]
+ayMap]([@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Indext`$en`-us`#Index`:`:class^ I
+ndex][@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
 [s2; Pick`-constructs ArrayMap from Index of keys and Array of values. 
 The source containers should have equal number of elements.&]
 [s7; [*C@3 ndx]-|Source Index.&]
@@ -80,8 +82,9 @@ The source containers should have equal number of elements.&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayMap`:`:ArrayMap`(pick`_ Vector`<K`>`&`,pick`_ Array`<T`>`&`):%- [* ArrayMap](
-[@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], 
-[@(0.128.128) pick`_]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
+[@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ Vecto
+r][@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
 [s2; Pick`-constructs ArrayMap from Vector of keys and Array of values. 
 The source containers should have equal number of elements.&]
 [s7; [*C@3 ndx]-|Source Index.&]
