@@ -27,8 +27,8 @@ type.&]
 [s2; Constructs an empty Any.&]
 [s3; &]
 [s4;%- &]
-[s5;:Any`:`:Any`(pick`_ Any`&`):%- [* Any]([@(0.128.128) pick`_]_[* Any][@(0.0.255) `&]_[*@3 s])
-&]
+[s5;:Any`:`:Any`(pick`_ Any`&`):%- [* Any]([@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Any`$en`-us`#Any`:`:class^ A
+ny][@(0.0.255) `&]_[*@3 s])&]
 [s2; Pick constructor. Transfers content of source [* Any] [%-*@3 s] 
 while destroying its content by picking..&]
 [s3; &]
@@ -77,11 +77,12 @@ this operation is illegal.&]
 [s7; [*/ Return value]-|true if there is no content.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:Upp`:`:Any`:`:operator`=`(Upp`:`:Any`&`&`):%- [@(0.0.255) void]_[* operator`=]([_^Upp`:`:Any^ A
+[s5;:Upp`:`:Any`:`:operator`=`(Upp`:`:Any`&`&`):%- [@(0.0.255) void]_[* operator`=]([_^topic`:`/`/Core`/src`/Any`$en`-us`#Any`:`:class^ A
 ny][@(0.0.255) `&`&]_[*@3 s])&]
 [s2; Pick assignment.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Any`:`:Any`(Upp`:`:Any`&`&`):%- [* Any]([* Any][@(0.0.255) `&`&]_[*@3 s])&]
+[s5;:Upp`:`:Any`:`:Any`(Upp`:`:Any`&`&`):%- [* Any]([_^topic`:`/`/Core`/src`/Any`$en`-us`#Any`:`:class^ A
+ny][@(0.0.255) `&`&]_[*@3 s])&]
 [s2; Pick constructor.&]
 [s0; ]]

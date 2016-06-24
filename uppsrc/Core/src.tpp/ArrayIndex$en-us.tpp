@@ -17,7 +17,8 @@ topic "ArrayIndex";
 [s1;:ArrayIndex`:`:class: [@(0.0.255) class]_[* ArrayIndex]_:_[@(0.0.255) private]_[*@3 Moveab
 leAndDeepCopyOption][@(0.0.255) <]_[* ArrayIndex][@(0.0.255) <][*@4 T], 
 [*@4 HashFn]_>_>, [@(0.0.255) public]_[*@3 AIndex][@(0.0.255) <][*@4 T], 
-[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >], [*@4 HashFn][@(0.0.255) >]_&]
+[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >
+], [*@4 HashFn][@(0.0.255) >]_&]
 [s8;%% [*@4 T]-|Type or base class of elements stored in Array. There 
 is no common requirement for T.&]
 [s8;%% [*@4 HashFn]-|Hashing class. Must have defined unsigned operator()(const 
@@ -54,30 +55,33 @@ copy constructor.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:ArrayIndex`:`:ArrayIndex`(Upp`:`:Array`<T`>`&`&`): [@(0.0.255) explicit]_[* A
-rrayIndex]([_^Upp`:`:Array^ Array]<[*@4 T]>`&`&_[*@3 s])&]
+rrayIndex]([_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array]<[*@4 T]>`&`&
+_[*@3 s])&]
 [s2;%% Pick constructor from Array.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayIndex`:`:ArrayIndex`(const Array`<T`>`&`,int`): [* ArrayIndex]([@(0.0.255) cons
-t]_[_^Array^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 s], [@(0.0.255) int])&]
+t]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ Array][@(0.0.255) <][*@4 T][@(0.0.255) >
+`&]_[*@3 s], [@(0.0.255) int])&]
 [s2;%% Deep`-copy constructs ArrayIndex from Array.&]
 [s6;%% Requires T to have deep copy constructor or optional deep 
 copy constructor.&]
 [s7;%% [*C@3 s]-|Source Vector.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ArrayIndex`:`:operator`=`(Upp`:`:Array`<T`>`&`&`): [_^Upp`:`:ArrayIndex^ Ar
-rayIndex][@(0.0.255) `&]_[* operator`=]([_^Upp`:`:Array^ Array]<[*@4 T]>`&`&_[*@3 x])&]
+[s5;:Upp`:`:ArrayIndex`:`:operator`=`(Upp`:`:Array`<T`>`&`&`): [_^topic`:`/`/Core`/src`/ArrayIndex`$en`-us`#ArrayIndex`:`:class^ A
+rrayIndex][@(0.0.255) `&]_[* operator`=]([_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
+rray]<[*@4 T]>`&`&_[*@3 x])&]
 [s2;%% Pick assignment from Array.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ArrayIndex`:`:operator`=`(Upp`:`:ArrayIndex`<T`>`&`&`): [_^Upp`:`:ArrayIndex^ A
-rrayIndex][@(0.0.255) `&]_[* operator`=]([_^Upp`:`:ArrayIndex^ ArrayIndex]<[*@4 T]>`&`&_[*@3 x
-])&]
+[s5;:Upp`:`:ArrayIndex`:`:operator`=`(Upp`:`:ArrayIndex`<T`>`&`&`): [_^topic`:`/`/Core`/src`/ArrayIndex`$en`-us`#ArrayIndex`:`:class^ A
+rrayIndex][@(0.0.255) `&]_[* operator`=]([_^topic`:`/`/Core`/src`/ArrayIndex`$en`-us`#ArrayIndex`:`:class^ A
+rrayIndex]<[*@4 T]>`&`&_[*@3 x])&]
 [s2;%% Pick assignment.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:ArrayIndex`:`:ArrayIndex`(std`:`:initializer`_list`<T`>`): [* ArrayIndex]([_^std`:`:initializer`_list^ s
+[s5;:Upp`:`:ArrayIndex`:`:ArrayIndex`(std`:`:initializer`_list`<T`>`): [* ArrayIndex]([_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/initializer`_list^ s
 td`::initializer`_list]<[*@4 T]>_[*@3 init])&]
 [s2; C`+`+ 11 initialization.&]
 [s3;%% &]
