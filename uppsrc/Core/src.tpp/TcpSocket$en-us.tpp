@@ -19,14 +19,15 @@ operations.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:TcpSocket`:`:WhenWait: [_^Callback^ Callback]_[* WhenWait]&]
+[s5;:TcpSocket`:`:WhenWait: [_^topic`:`/`/Core`/src`/Callbacks`$en`-us`#Callback`:`:class^ C
+allback]_[* WhenWait]&]
 [s2;%% If this callback is defined, it is invoked periodically while 
 TcpSocket performs any operations, with the frequency 50Hz. This 
 is intended to give user feedback in interactive applications.&]
 [s3; &]
 [s4; &]
-[s5;:TcpSocket`:`:GetHostName`(`): [@(0.0.255) static] [_^String^ String]_[* GetHostName]()
-&]
+[s5;:TcpSocket`:`:GetHostName`(`): [@(0.0.255) static] [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetHostName]()&]
 [s2;%% Returns the name of computer.&]
 [s3; &]
 [s4; &]
@@ -59,8 +60,8 @@ that case, all subsequent request are ignored.&]
 API or it can be `-1 for other errors.&]
 [s3; &]
 [s4; &]
-[s5;:TcpSocket`:`:GetErrorDesc`(`)const: [_^String^ String]_[* GetErrorDesc]()_[@(0.0.255) c
-onst]&]
+[s5;:TcpSocket`:`:GetErrorDesc`(`)const: [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetErrorDesc]()_[@(0.0.255) const]&]
 [s2;%% Returns description of error.&]
 [s3; &]
 [s4; &]
@@ -86,8 +87,8 @@ request are ignored. Intended to be called from WhenWait routine.&]
 non`-blocking from host OS perspective.&]
 [s3; &]
 [s4; &]
-[s5;:TcpSocket`:`:GetPeerAddr`(`)const: [_^String^ String]_[* GetPeerAddr]()_[@(0.0.255) co
-nst]&]
+[s5;:TcpSocket`:`:GetPeerAddr`(`)const: [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetPeerAddr]()_[@(0.0.255) const]&]
 [s2;%% Returns the peer address.&]
 [s3; &]
 [s4; &]
@@ -104,8 +105,8 @@ is blocking with respect to resolving host name. Returns true
 when connection process is successfully started.&]
 [s3; &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Connect`(IpAddrInfo`&`): [@(0.0.255) bool]_[* Connect]([_^IpAddrInfo^ IpA
-ddrInfo][@(0.0.255) `&]_[*@3 info])&]
+[s5;:TcpSocket`:`:Connect`(IpAddrInfo`&`): [@(0.0.255) bool]_[* Connect]([_^topic`:`/`/Core`/src`/IpAddrInfo`$en`-us`#IpAddrInfo`:`:class^ I
+pAddrInfo][@(0.0.255) `&]_[*@3 info])&]
 [s2;%% Connects socket to server found at [%-*@3 info]. Non`-blocking.&]
 [s3;%% &]
 [s4; &]
@@ -120,10 +121,10 @@ nt]_[*@3 port], [@(0.0.255) int]_[*@3 listen`_count]_`=_[@3 5], [@(0.0.255) bool
 `=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 reuse]_`=_[@(0.0.255) true], 
 [@(0.0.255) void`*]_[*@3 addr]_`=_NULL)&]
 [s5;:TcpSocket`:`:Listen`(const IpAddrInfo`&`,int`,int`,bool`,bool`): [@(0.0.255) bool]_
-[* Listen]([@(0.0.255) const]_[_^IpAddrInfo^ IpAddrInfo][@(0.0.255) `&]_[*@3 addr], 
-[@(0.0.255) int]_[*@3 port], [@(0.0.255) int]_[*@3 listen`_count]_`=_[@3 5], 
-[@(0.0.255) bool]_[*@3 ipv6]_`=_[@(0.0.255) false], [@(0.0.255) bool]_[*@3 reuse]_`=_[@(0.0.255) t
-rue])&]
+[* Listen]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/IpAddrInfo`$en`-us`#IpAddrInfo`:`:class^ I
+pAddrInfo][@(0.0.255) `&]_[*@3 addr], [@(0.0.255) int]_[*@3 port], [@(0.0.255) int]_[*@3 list
+en`_count]_`=_[@3 5], [@(0.0.255) bool]_[*@3 ipv6]_`=_[@(0.0.255) false], 
+[@(0.0.255) bool]_[*@3 reuse]_`=_[@(0.0.255) true])&]
 [s2;%% Starts a listening server socket at [%-*@3 port] with input 
 queue [%-*@3 listen`_count]. [%-*@3 ipv6] sets the socket to IPv6 
 mode, [%-*@3 reuse] sets [^http`:`/`/www`.kernel`.org`/doc`/man`-pages`/online`/pages`/man7`/socket`.7`.html^ S
@@ -135,8 +136,8 @@ to be dereferenced and assigned to sockaddr`_in6`::sin6`_addr
 for ipv6`=`=true.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Accept`(TcpSocket`&`): [@(0.0.255) bool]_[* Accept]([_^TcpSocket^ TcpSock
-et][@(0.0.255) `&]_[*@3 listen`_socket])&]
+[s5;:TcpSocket`:`:Accept`(TcpSocket`&`): [@(0.0.255) bool]_[* Accept]([_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
+cpSocket][@(0.0.255) `&]_[*@3 listen`_socket])&]
 [s2;%% Accepts a connection from [%-*@3 listen`_socket].&]
 [s3;%% &]
 [s4;%% &]
@@ -161,7 +162,8 @@ switches SO`_LINGER off.&]
 [s2;%% Same as Linger(Null).&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Wait`(dword`): [@(0.0.255) bool]_[* Wait]([_^dword^ dword]_[*@3 events])&]
+[s5;:TcpSocket`:`:Wait`(dword`): [@(0.0.255) bool]_[* Wait]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
+word]_[*@3 events])&]
 [s2;%% Waits for at most timeout for [%-*@3 events], which can be a 
 combination of WAIT`_READ (wait for more input bytes available), 
 WAIT`_WRITE (wait till it is possible to write something to socket). 
@@ -197,7 +199,8 @@ do so at most for specified timeout. Returns the number of bytes
 actually read.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Get`(int`): [_^String^ String]_[* Get]([@(0.0.255) int]_[*@3 len])&]
+[s5;:TcpSocket`:`:Get`(int`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* Get]([@(0.0.255) int]_[*@3 len])&]
 [s2;%% Reads at most [%-*@3 len] bytes, trying to do so at most for 
 specified timeout. Returns a String with read data.&]
 [s3;%% &]
@@ -209,7 +212,7 @@ do so at most for specified timeout. Returns the number of bytes
 actually written.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Put`(const String`&`): [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[_^String^ S
+[s5;:TcpSocket`:`:Put`(const String`&`): [@(0.0.255) int]_[* Put]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Writes [%-*@3 s], trying to do so at most for specified timeout. 
 Returns the number of bytes actually written.&]
@@ -222,14 +225,15 @@ of bytes cannot be read until timeout, returns false and sets
 timeout error for TcpSocket.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:GetAll`(int`): [_^String^ String]_[* GetAll]([@(0.0.255) int]_[*@3 len])&]
+[s5;:TcpSocket`:`:GetAll`(int`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetAll]([@(0.0.255) int]_[*@3 len])&]
 [s2;%% Reads exactly [%-*@3 len] bytes. If such number of bytes cannot 
 be read until timeout, returns String`::GetVoid() and sets timeout 
 error for TcpSocket.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:GetLine`(int`): [_^String^ String]_[* GetLine]([@(0.0.255) int]_[*@3 maxlen
-]_`=_[@3 65536])&]
+[s5;:TcpSocket`:`:GetLine`(int`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetLine]([@(0.0.255) int]_[*@3 maxlen]_`=_[@3 65536])&]
 [s2;%% Reads single line (ended with `'`\n`', `'`\r`' is ignored). 
 If the whole line cannot be read within timeout or line length 
 is longer than [%-*@3 maxlen] sets error and returns String`::GetVoid().&]
@@ -243,7 +247,8 @@ false.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:PutAll`(const String`&`): [@(0.0.255) bool]_[* PutAll]([@(0.0.255) const]_
-[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
+[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&]_[*@3 s
+])&]
 [s2;%% Outputs the whole String. If such number of bytes cannot be 
 written in time specified by timeout, sets error and returns 
 false.&]
@@ -266,23 +271,23 @@ period. Returns true if SSL handshake is (still) in progress.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:SSLCertificate`(const String`&`,const String`&`,bool`): [@(0.0.255) v
-oid]_[* SSLCertificate]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 cert], 
-[@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 pkey], [@(0.0.255) bool]_[*@3 asn1])
-&]
+oid]_[* SSLCertificate]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 cert], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring][@(0.0.255) `&]_[*@3 pkey], [@(0.0.255) bool]_[*@3 asn1])&]
 [s2;%% Sets the SSL certificate. Must be called before StartSSL. 
 (Note that clients usually do not need certificates, this is 
 usually used on accepting sockets.)&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:GetSSLInfo`(`)const: [@(0.0.255) const]_[_^SSLInfo^ SSLInfo]_`*[* GetSSLI
-nfo]()_[@(0.0.255) const]&]
+[s5;:TcpSocket`:`:GetSSLInfo`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#SSLInfo`:`:struct^ S
+SLInfo]_`*[* GetSSLInfo]()_[@(0.0.255) const]&]
 [s2;%% Returns information about established (after handshake) SSL 
 connection or NULL if such information is not available.&]
 [s2;%% &]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Timeout`(int`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* Timeout]([@(0.0.255) i
-nt]_[*@3 ms])&]
+[s5;:TcpSocket`:`:Timeout`(int`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
+cpSocket][@(0.0.255) `&]_[* Timeout]([@(0.0.255) int]_[*@3 ms])&]
 [s2;%% Sets timeout for all operations. Zero means that all operations 
 return immediately (in that case it is usually a good idea to 
 perform some sort of external blocking on socket or socket group 
@@ -297,8 +302,8 @@ to adjust timeout before any single TcpSocket operation. Returns
 [s2;%% Returns current timeout.&]
 [s3;%% &]
 [s4; &]
-[s5;:TcpSocket`:`:GlobalTimeout`(int`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* GlobalTi
-meout]([@(0.0.255) int]_[*@3 ms])&]
+[s5;:TcpSocket`:`:GlobalTimeout`(int`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
+cpSocket][@(0.0.255) `&]_[* GlobalTimeout]([@(0.0.255) int]_[*@3 ms])&]
 [s2;%% Sets the `"global timeout`". This timeout is in effect over 
 a whole range of operations, until it is canceled by calling 
 this method with Null parameter. If global timeout is exceeded, 
@@ -306,17 +311,18 @@ operation during which it happened fails and socket error code
 is set to ERROR`_GLOBAL`_TIMEOUT.&]
 [s3;%% &]
 [s4; &]
-[s5;:TcpSocket`:`:NoGlobalTimeout`(`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* NoGlobalT
-imeout]()&]
+[s5;:TcpSocket`:`:NoGlobalTimeout`(`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
+cpSocket][@(0.0.255) `&]_[* NoGlobalTimeout]()&]
 [s2;%% Same as GlobalTimeout(Null).&]
 [s3; &]
 [s4;%% &]
-[s5;:TcpSocket`:`:Blocking`(`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* Blocking]()&]
+[s5;:TcpSocket`:`:Blocking`(`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
+cpSocket][@(0.0.255) `&]_[* Blocking]()&]
 [s2;%% Same as Timeout(Null). Returns `*this.&]
 [s3;%% &]
 [s4; &]
-[s5;:TcpSocket`:`:WaitStep`(int`): [_^TcpSocket^ TcpSocket][@(0.0.255) `&]_[* WaitStep]([@(0.0.255) i
-nt]_[*@3 ms])&]
+[s5;:TcpSocket`:`:WaitStep`(int`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
+cpSocket][@(0.0.255) `&]_[* WaitStep]([@(0.0.255) int]_[*@3 ms])&]
 [s2;%% Sets the periodicity of calling WhenWait in millisecond between 
 calls. Default is 10ms (100hz).&]
 [s3;%% &]
@@ -338,7 +344,8 @@ t]&]
 SSL connection.&]
 [s3; &]
 [s4; &]
-[s5;:SSLInfo`:`:cipher: [_^String^ String]_[* cipher]&]
+[s5;:SSLInfo`:`:cipher: [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ Strin
+g]_[* cipher]&]
 [s2;%% Cipher used.&]
 [s3; &]
 [s4; &]
@@ -346,19 +353,23 @@ SSL connection.&]
 [s2;%% Certificate is available.&]
 [s3; &]
 [s4; &]
-[s5;:SSLInfo`:`:cert`_subject: [_^String^ String]_[* cert`_subject]&]
+[s5;:SSLInfo`:`:cert`_subject: [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* cert`_subject]&]
 [s2;%% Subject name.&]
 [s3; &]
 [s4; &]
-[s5;:SSLInfo`:`:cert`_issuer: [_^String^ String]_[* cert`_issuer]&]
+[s5;:SSLInfo`:`:cert`_issuer: [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* cert`_issuer]&]
 [s2;%% Issuer name.&]
 [s3; &]
 [s4; &]
-[s5;:SSLInfo`:`:cert`_notbefore: [_^Date^ Date]_[* cert`_notbefore]&]
+[s5;:SSLInfo`:`:cert`_notbefore: [_^topic`:`/`/Core`/src`/DateTime`$en`-us`#Date`:`:struct^ D
+ate]_[* cert`_notbefore]&]
 [s2;%% Certificate is not valid before this date.&]
 [s3; &]
 [s4; &]
-[s5;:SSLInfo`:`:cert`_notafter: [_^Date^ Date]_[* cert`_notafter]&]
+[s5;:SSLInfo`:`:cert`_notafter: [_^topic`:`/`/Core`/src`/DateTime`$en`-us`#Date`:`:struct^ D
+ate]_[* cert`_notafter]&]
 [s2;%% Certificate is not valid after this date.&]
 [s3; &]
 [s4; &]
@@ -366,6 +377,7 @@ SSL connection.&]
 [s2;%% Version of certificate.&]
 [s3; &]
 [s4; &]
-[s5;:SSLInfo`:`:cert`_serial: [_^String^ String]_[* cert`_serial]&]
+[s5;:SSLInfo`:`:cert`_serial: [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* cert`_serial]&]
 [s2;%% Serial number of certificate.&]
 [s3; ]]

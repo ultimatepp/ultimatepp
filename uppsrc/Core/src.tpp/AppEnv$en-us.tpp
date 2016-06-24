@@ -17,40 +17,44 @@ your application and system environment.&]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Function List]]}}&]
 [s3; &]
-[s5;:GetExeFilePath`(`): [_^String^ String]_[* GetExeFilePath]()&]
+[s5;:GetExeFilePath`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ Stri
+ng]_[* GetExeFilePath]()&]
 [s2;%% Returns the absolute path towards the application`'s binary.&]
 [s3; &]
 [s4; &]
-[s5;:GetEnv`(const char`*`): [_^String^ String]_[* GetEnv]([@(0.0.255) const]_[@(0.0.255) cha
-r]_`*[*@3 id])&]
+[s5;:GetEnv`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetEnv]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id])&]
 [s2;%% Returns the value of the environment variable [*@3 id].&]
 [s3;%% &]
 [s4; &]
-[s5;:GetExeDirFile`(const char`*`): [_^String^ String]_[* GetExeDirFile]([@(0.0.255) const]_
-[@(0.0.255) char]_`*[*@3 fp])&]
+[s5;:GetExeDirFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetExeDirFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fp])&]
 [s2;%% Returns the absolute path of a file that is found in the folder 
 where you application`'s binary resides.&]
 [s2;%% [*@(129.0.0) fp][@(129.0.0) ..................................................]the
  name of the file&]
 [s3; &]
 [s4; &]
-[s5;:GetHomeDirectory`(`): [_^String^ String]_[* GetHomeDirectory]()&]
+[s5;:GetHomeDirectory`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ St
+ring]_[* GetHomeDirectory]()&]
 [s2;%% Returns the absolute path of current user`'s home folder.&]
 [s3; &]
 [s4; &]
-[s5;:GetHomeDirFile`(const char`*`): [_^String^ String]_[* GetHomeDirFile]([@(0.0.255) cons
-t]_[@(0.0.255) char]_`*[*@3 fp])&]
+[s5;:GetHomeDirFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetHomeDirFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 fp])&]
 [s2;%% Returns the absolute path of a file that is found in the current 
 user`'s home folder.&]
 [s7;%% [*@3 fp]..................................................the 
 name of the file&]
 [s3; &]
 [s4; &]
-[s5;:GetExeTitle`(`): [_^String^ String]_[* GetExeTitle]()&]
+[s5;:GetExeTitle`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]_
+[* GetExeTitle]()&]
 [s2;%% Returns the title of the application.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:GetExeFolder`(`): [_^Upp`:`:String^ String]_[* GetExeFolder]()&]
+[s5;:Upp`:`:GetExeFolder`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetExeFolder]()&]
 [s2;%% Return the directory of application executable.&]
 [s3; &]
 [s4; &]
@@ -63,27 +67,31 @@ binary resides.&]
 home folder (true) or application folder (false)&]
 [s3; &]
 [s4; &]
-[s5;:ConfigFile`(const char`*`): [_^String^ String]_[* ConfigFile]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 file])&]
+[s5;:ConfigFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* ConfigFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 file])&]
 [s2;%% Returns the absolute path of a configuration file found in 
 the configuration files search path.&]
 [s2;%% [*@(129.0.0) file]...............................................the 
 name of the file&]
 [s3; &]
 [s4; &]
-[s5;:ConfigFile`(`): [_^String^ String]_[* ConfigFile]()&]
+[s5;:ConfigFile`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]_
+[* ConfigFile]()&]
 [s2;%% Returns the default configuration file from the configuration 
 files search path. The default configuration file is called [*/ `[application 
 title`]][* .cfg].&]
 [s3; &]
 [s4; &]
-[s5;:CommandLine`(`): [@(0.0.255) const]_[_^Vector^ Vector][@(0.0.255) <][_^String^ String][@(0.0.255) >
+[s5;:CommandLine`(`): [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
+ector][@(0.0.255) <][_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) >
 `&]_[* CommandLine]()&]
 [s2;%% Return a vector of strings containing the command line parameters.&]
 [s3; &]
 [s4; &]
-[s5;:Environment`(`): [@(0.0.255) const]_[_^VectorMap^ VectorMap][@(0.0.255) <][_^String^ Str
-ing], [_^String^ String][@(0.0.255) >`&]_[* Environment]()&]
+[s5;:Environment`(`): [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/VectorMap`$en`-us`#VectorMap`:`:class^ V
+ectorMap][@(0.0.255) <][_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ Stri
+ng], [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) >`&
+]_[* Environment]()&]
 [s2;%% Returns a vector of strings with system environment variables.&]
 [s3; &]
 [s4; &]
@@ -102,8 +110,8 @@ exit code&]
 not yet exited the main function.&]
 [s3; &]
 [s4; &]
-[s5;:GetDataFile`(const char`*`): [_^String^ String]_[* GetDataFile]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 filename])&]
+[s5;:GetDataFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetDataFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 filename])&]
 [s2;%% This function is designed to retrieve the path of file that 
 contains application specific data. Behaviour depends on whether 
 application was started from `'theide`' `- in that case theide 
@@ -114,8 +122,8 @@ to GetExeDirFile. Alternatively, application can call SetDataPath
 to define the directory.&]
 [s3; &]
 [s4; &]
-[s5;:LoadDataFile`(const char`*`): [_^String^ String]_[* LoadDataFile]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 filename])&]
+[s5;:LoadDataFile`(const char`*`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* LoadDataFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 filename])&]
 [s2;%% Same as LoadFile(GetDataFile([%-*@3 filename])).&]
 [s3;%% &]
 [s4; &]
@@ -124,22 +132,26 @@ har]_`*[*@3 path])&]
 [s2;%% Defines explicit directory to be used with GetDataFile.&]
 [s3;%% &]
 [s4; &]
-[s5;:GetComputerName`(`): [_^String^ String]_[* GetComputerName]()&]
+[s5;:GetComputerName`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ Str
+ing]_[* GetComputerName]()&]
 [s2;%% Returns the name of computer.&]
 [s3; &]
 [s4; &]
-[s5;:GetUserName`(`): [_^String^ String]_[* GetUserName]()&]
+[s5;:GetUserName`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]_
+[* GetUserName]()&]
 [s2;%% Returns current user.&]
 [s3; &]
 [s4; &]
-[s5;:GetDesktopManager`(`): [_^String^ String]_[* GetDesktopManager]()&]
+[s5;:GetDesktopManager`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
+tring]_[* GetDesktopManager]()&]
 [s2;%% Returns current GUI identifier. Predefined values are `"windows`", 
 `"gnome`", `"kde`". If X11 desktop manager is not in this list, 
 the value of `"DESKTOP`_SESSION`" environment variable is returned.&]
 [s3; &]
 [s4; &]
 [s5;:LaunchWebBrowser`(const String`&`): [@(0.0.255) void]_[* LaunchWebBrowser]([@(0.0.255) c
-onst]_[_^String^ String][@(0.0.255) `&]_[*@3 url])&]
+onst]_[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String][@(0.0.255) `&
+]_[*@3 url])&]
 [s2;%% Opens an URL in the default Web Browser.&]
 [s2;%% [*@(129.0.0) url]................................................the 
 URL that will be opened in the browser&]
