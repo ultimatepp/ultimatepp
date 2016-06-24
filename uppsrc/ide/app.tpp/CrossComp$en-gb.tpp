@@ -61,15 +61,15 @@ is using the ESC scripting language. Note the `'Execute`' standard
 library function is required. This is only available in versions 
 602 onwards of TheIDE.&]
 [s5; &]
-[ {{10000 [s5; macro `"MakeA`" Alt`+A `{&]
-[s5; -|Execute(`"c:/mingw/bin/mingw32`-make.exe `-C d:/myapps/control 
+[ {{10000@(255.255.150) [s0; [* macro ]`"MakeA`" Alt`+A `{&]
+[s0; -|Execute(`"c:/mingw/bin/mingw32`-make.exe `-C d:/myapps/control 
 `-f d:/myapps/control/makealarm all`");&]
-[s5; `}&]
-[s5; &]
-[s5; macro `"CopyLibs`" Alt`+0 `{&]
-[s5; -|Execute (`"cp.exe d:/myapps/edrtoslib/libed8515.a d:/myapps/control/`");&]
-[s5; -|Execute(`"cp d:/myapps/edrtoslib/libed8535.a d:/myapps/control/`");&]
-[s5; `}]}}&]
+[s0; `}&]
+[s0; &]
+[s0; [* macro ]`"CopyLibs`" Alt`+0 `{&]
+[s0; -|Execute (`"cp.exe d:/myapps/edrtoslib/libed8515.a d:/myapps/control/`");&]
+[s0; -|Execute(`"cp d:/myapps/edrtoslib/libed8535.a d:/myapps/control/`");&]
+[s0; `}]}}&]
 [s5; &]
 [s5; The first macro named `'MakeA`' can be invoked by the `'Alt`+A`' 
 keystrokes or by clicking the macro name. When invoked it calls 
