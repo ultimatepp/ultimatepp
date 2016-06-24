@@ -59,7 +59,7 @@ macro file where all the work will be done. Create appropriate
 macros in this file  in the form of the examples below. This 
 is using the ESC scripting language. Note the `'Execute`' standard 
 library function is required. This is only available in versions 
-602 onwards of theIDE.&]
+602 onwards of TheIDE.&]
 [s5; &]
 [ {{10000 [s5; macro `"MakeA`" Alt`+A `{&]
 [s5; -|Execute(`"c:/mingw/bin/mingw32`-make.exe `-C d:/myapps/control 
