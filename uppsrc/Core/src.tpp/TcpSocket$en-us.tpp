@@ -82,7 +82,7 @@ request are ignored. Intended to be called from WhenWait routine.&]
 [s2;%% Returns true if the last operation time`-outed.&]
 [s3; &]
 [s4; &]
-[s5;:TcpSocket`:`:GetSOCKET`(`)const: [_^SOCKET^ SOCKET]_[* GetSOCKET]()_[@(0.0.255) const]&]
+[s5;:TcpSocket`:`:GetSOCKET`(`)const: SOCKET_[* GetSOCKET]()_[@(0.0.255) const]&]
 [s2;%% Returns socket handle. Note that all TcpSocket sockets are 
 non`-blocking from host OS perspective.&]
 [s3; &]
@@ -92,8 +92,7 @@ tring]_[* GetPeerAddr]()_[@(0.0.255) const]&]
 [s2;%% Returns the peer address.&]
 [s3; &]
 [s4; &]
-[s5;:TcpSocket`:`:Attach`(SOCKET`): [@(0.0.255) void]_[* Attach]([_^SOCKET^ SOCKET]_[*@3 sock
-et])&]
+[s5;:TcpSocket`:`:Attach`(SOCKET`): [@(0.0.255) void]_[* Attach](SOCKET_[*@3 socket])&]
 [s2;%% Attaches [%-*@3 socket] to TcpSocket. [%-*@3 socket] must be in 
 non`-blocking state.&]
 [s3;%% &]
