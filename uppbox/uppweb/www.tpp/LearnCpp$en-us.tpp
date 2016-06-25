@@ -30,61 +30,62 @@ topic "Learn C/C++ with TheIDE";
 [s3; Introduction&]
 [s5; If you want to begin your journey with C/C`+`+ or even start 
 learning programing TheIDE is what you are looking for. It runs 
-on most moder operating system and allows to develop applications 
-according to the latest standards. Moreover TheIDE code base 
+on most modern operating system and allows to develop applications 
+according to the latest standards. Moreover, TheIDE code base 
 allows to launch it on different kind of architecture like ARM. 
-In Ultimate`+`+ foundation we strongly believe that cheap ARM 
+In Ultimate`+`+ foundation, we strongly believe that cheap ARM 
 computers like [^https`:`/`/www`.raspberrypi`.org`/^ Raspberry 
 Pi] is a key to learn programing among young people.&]
 [s5; TheIDE is not only intended to be only IDE for Ultimate`+`+ 
-purpose. It works well with standardize C`+`+. Currently with 
-embed compiler on Microsoft Windows TheIDE fully supports C`+`+11 
-and C11. On GNU/Linux the capability is similar due to usage 
-of operating system bundled compiler. Please notice that projects 
-created on one system can be easily move to other without any 
-modification. If you don`'t know what is compiler I hasten to 
-explain. It is program that translate your code into format that 
-is understandable by your computer.&]
-[s5; One of the biggest advantage of TheIDE, that it is open source 
-project. For the long term perspective it contributed to the 
-maturity and stability. It was also created by people from different 
-cultures that had got their own ideas to improve IDE.&]
-[s5; Open source is not only the factor that improve product. It 
-is also good source of knowledge.You can freely study and change 
-code From my own experience it is a big thing, because it allows 
-you to learn faster. On the occasion, you absorb good coding 
-style and learn how big code base works and individual elements 
-interacts with each other. This knowledge is very important for 
-further programmers.&]
+purpose. It works well with standardized C`+`+. Currently with 
+ embedded compiler on Microsoft Windows TheIDE fully supports 
+C`+`+11 and C11. On GNU/Linux the capability is similar due to 
+usage of operating system bundled compiler. Please notice that 
+projects created on one system can be easily moved to another 
+without any modification. If you don`'t know what is compiler 
+I hasten to explain. It is a program that translates your code 
+into a format that is understandable by your computer.&]
+[s5; One of the biggest advantage of TheIDE is that it is an open 
+source project. For the long term perspective, it contributed 
+to the maturity and stability. It was also created by people 
+from different cultures that had got their own ideas to improve 
+IDE.&]
+[s5; Open source is not only the factor that improves productivity. 
+It is also a good source of knowledge.You can freely study and 
+change the code From my own experience it is a big thing, because 
+it allows you to learn faster. On the occasion, you absorb good 
+coding style and learn how big code base works and individual 
+element interacts with each other. This knowledge is very important 
+for further programmers.&]
 [s5; You can download TheIDE completely for free from our [^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$download`$en`-us`.html^ w
-ebsite]. If you are beginner we highly recommended to download 
+ebsite]. If you are beginner, we highly recommended to download 
 stable releases. It is mostly safer and more polished that nightly 
 builds.&]
 [s5; Sounds interesting? You can move to site where we explain step 
 by step how to create the easiest program in C/C`+`+ with TheIDE 
 (Work in progress). Good luck!&]
 [s3; University students&]
-[s5; If you are computer science student or you study similar direction 
-that looking for gaining experience in open source word. You 
-can start your profession software development career directly 
+[s5; If you are a computer science student or you study similar direction 
+that`'s looking for gaining experience in open source word. You 
+can start your professional software development, career directly 
 with U`+`+ and TheIDE. We are open to new people that can support 
 us with their skills and bring fresh ideas to our framework.&]
 [s5; Why experience in open source is so important? First of all, 
-it allows you to obtaining several critical skills that will 
-be need in your further carer. In this case you will learn how 
+it allows you to obtain several critical skills that will be 
+needed in your further carer. In this case you will learn how 
 to work with big code base. In meanwhile, you understand how 
-tools that supports development works. In this group there are 
+tools that support development works. In this group there are 
 two critical things that everyone should know `- version control 
 applications (such as GIT `& SVN) and [^http`:`/`/www`.ultimatepp`.org`/redmine`/projects`/upp^ p
 roject management system] (Redmine).&]
 [s5; Work with the best people in the industry. Nothing can boost 
-your programing skill that watching how experience developers 
+your programing skill that watches how experience developers 
 work and write their code. We are aware that at the beginning 
 not everything is clear and transparent. Therefore, we strongly 
 believe that communication is the key. Ask and we certainly find 
-solution for your problem.&]
-[s5; The easiest way to start journey with open source is to find 
-a bug and deliver appropriate patch. It should come naturally 
+a solution for your problem.&]
+[s5; The easiest way to start a journey with open source is to find 
+a bug and deliver an appropriate patch. It should come naturally 
 when you work daily with Ultimate`+`+ and TheIDE. Later you can 
 implement your own features. If you are looking for inspiration, 
 please visit our [^http`:`/`/www`.ultimatepp`.org`/gsoc`$uppweb`$gsoc2014`$en`-us`.html^ G
@@ -92,17 +93,16 @@ oogle Summer of Code] site.&]
 [s5; It is also possible to write your thesis based on and within 
 U`+`+ framework.&]
 [s5; For further qualifications, contact us via our official [^http`:`/`/www`.ultimatepp`.org`/forums`/^ f
-][^topic`:`/`/uppweb`/www`/LearnCpp`$en`-us^ o][^http`:`/`/www`.ultimatepp`.org`/forums`/^ r
-um] and let us know that you want to work with us. To demonstrate 
-your skills you can post simply patch that repairs bug.&]
+orum] and let us know that you want to work with us. To demonstrate 
+your skills you can post simply, patch that repair bug.&]
 [s3; Education institutions&]
-[s5; This part of article is addressed to people representing education 
-institutions. If your school or university is interested to use 
-TheIDE as a learning resource. Fell free to use it and install 
-it in the computer lab.&]
+[s5; This part of the article is addressed to people representing 
+education institutions. If your school or university is interested 
+to use TheIDE as a learning resource. Fell free to use it and 
+install it in the computer lab.&]
 [s5; Currently we don`'t provide fully professional commercial support, 
 but if you have any troubles with TheIDE you can ask questions 
-on our official [^topic`:`/`/uppweb`/www`/LearnCpp`$en`-us^ forum].&]
+on our official [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 [s5; &]
 [s3; Bibliography&]
 [s5; Images:&]
