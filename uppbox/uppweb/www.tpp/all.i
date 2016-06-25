@@ -30,6 +30,10 @@ TOPIC("LearnCppFirstApp$en-us")
 #include "LearnCppFirstApp$en-us.tppi"
 END_TOPIC
 
+TOPIC("PortStatus$en-us")
+#include "PortStatus$en-us.tppi"
+END_TOPIC
+
 TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC
