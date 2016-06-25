@@ -138,7 +138,9 @@ atest svn][2 : ][ILATESTSVN;2 latestsvn]]
 ::l8/25t8/25b8/25@(240)R(165) [s0;%% [*2 Supporting U`+`+]]
 ::l0/25r8/25 [s0;>%% [@(114)2 Sometimes more than code is needed...]]
 ::l8/25@2-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/gsoc`/gsoc2014`$en`-us^2 Google 
-Summer of Code resources]]
+Summer of Code resources]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/LearnCpp`$en`-us^2 Learn 
+C/C`+`+ with TheIDE]]
 ::l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/extlinks`$en`-us^2 External 
