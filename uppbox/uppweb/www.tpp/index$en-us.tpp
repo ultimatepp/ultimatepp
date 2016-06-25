@@ -112,7 +112,9 @@ ideas]]
 :: [s0; ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazaar]&]
 [s0;i150;a17;O0;%% [^topic`:`/`/ide`/app`/About`$en`-us^2 Authors `& 
-License]]
+License]&]
+[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^2 Supported 
+platforms]]
 ::=l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Download]&]
