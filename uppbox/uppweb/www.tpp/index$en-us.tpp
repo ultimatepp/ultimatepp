@@ -71,7 +71,9 @@ Plan]]
 ::t8/25b8/25-2 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/documentation`$en`-us^2 Documentation]&]
 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/examples`$en`-us^2 Examples]&]
 [s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^2 Video 
-Tutorials]]
+Tutorials]&]
+[s0;i150;O0;%% [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^2 Supported 
+platforms]]
 ::r0/25t0/15b0/15R0-1 [s0; ]
 :: [s0; ]
 ::l8/25r8/0t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/apps`$en`-us^2 Applications]&]
@@ -112,9 +114,7 @@ ideas]]
 :: [s0; ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^2 Bazaar]&]
 [s0;i150;a17;O0;%% [^topic`:`/`/ide`/app`/About`$en`-us^2 Authors `& 
-License]&]
-[s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^2 Supported 
-platforms]]
+License]]
 ::=l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s0;i150;a17;O0;%% [^topic`:`/`/uppweb`/www`/download`$en`-us^2 Download]&]
