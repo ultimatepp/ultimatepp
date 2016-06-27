@@ -14,6 +14,15 @@ void AnythingEnd()
 	LOG("----- STREAM CLOSED");
 }
 
+struct ProgressFilter { // Simple filter example just prints amount of data processed
+	Callback2<const void *, int> WhenOut;
+	void Put(const void *ptr, int size) {
+		DLOG("#### Loaded " << size << " bytes");
+		WhenOut(ptr, size);
+	}
+	void End() {}
+};
+
 CONSOLE_APP_MAIN
 {
 	String path = GetHomeDirFile("test.gz");
@@ -33,6 +42,16 @@ CONSOLE_APP_MAIN
 		zlib.GZip().Decompress();
 		LOG(in.GetLine());
 	}
+	
+	{
+		FileIn fin(GetDataFile("FilterStream.cpp"));
+		ProgressFilter pf;
+		InFilterStream in(fin, pf);
+		in.SetBufferSize(64); // Set it small to demonstrate the example
+		LOG("==================================");
+		while(!in.IsEof())
+			LOG(in.GetLine());
+	}
 
 	{ // In this case we are using InFilterStream without input stream to represent HttpRequest as input stream
 		HttpRequest http("www.ultimatepp.org");
@@ -40,6 +59,7 @@ CONSOLE_APP_MAIN
 		http.WhenContent = callback(&in, &InFilterStream::Out);
 		in.More = callback(&http, &HttpRequest::Do);
 		http.Blocking();
+		LOG("==================================");
 		while(!in.IsEof())
 			LOG(in.GetLine());
 	}
