@@ -6,7 +6,8 @@ NAMESPACE_UPP
 #define LDUMP(x)          // DUMP(x)
 #define LLOGHEXDUMP(x, s) // LOGHEXDUMP(x, s)
 
-void BlockStream::SetBufferSize(dword size) {
+void BlockStream::SetBufferSize(dword size)
+{
 	int64 p = 0;
 	if(IsOpen()) {
 		p = GetPos();

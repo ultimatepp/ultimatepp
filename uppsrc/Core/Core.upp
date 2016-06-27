@@ -154,8 +154,6 @@ file
 	Ptr.cpp,
 	z.h,
 	z.cpp,
-	FastCompress.h,
-	FastCompress.cpp,
 	lib\lz4.c,
 	Topic.h,
 	topic_group.h,
