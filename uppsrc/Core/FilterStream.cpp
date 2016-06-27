@@ -83,15 +83,16 @@ void InFilterStream::Fetch(int size)
 	if(More)
 		while(buffer.GetCount() < size && More());
 	else {
-		Buffer<byte> b(4096);
+		if(!inbuffer)
+			inbuffer.Alloc(buffersize);
 		while(buffer.GetCount() < size) {
-			int n = in->Get(~b, 4096);
+			int n = in->Get(~inbuffer, buffersize);
 			if(n == 0) {
 				End();
 				eof = true;
 				break;
 			}
-			Filter(~b, n);
+			Filter(~inbuffer, n);
 		}
 	}
 	Stream::buffer = buffer;

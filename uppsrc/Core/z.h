@@ -127,4 +127,5 @@ inline String GZDecompress(const void *data, int len, Gate2<int, int> progress) 
 inline String GZDecompress(const String& s, Gate2<int, int> progress)                   { return GZDecompress(s, AsGate64(progress)); }
 
 String FastCompress(const void *s, int sz);
+String FastCompress(const String& s);
 String FastDecompress(const String& data);
