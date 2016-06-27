@@ -488,6 +488,11 @@ String FastCompress(const void *s, int sz)
 	return b;
 }
 
+String FastCompress(const String& s)
+{
+	return FastCompress(~s, s.GetCount());
+}
+
 String FastDecompress(const String& data)
 {
 	int sz = *(int *)~data;

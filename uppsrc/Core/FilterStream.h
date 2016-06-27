@@ -11,6 +11,8 @@ protected:
 	Vector<byte> buffer;
 	bool         eof;
 	int64        size;
+	int          buffersize = 4096;
+	Buffer<int>  inbuffer;
 
 	void   Init();
 	void   Fetch(int size);
@@ -31,6 +33,8 @@ public:
 		Filter = callback<F, F, const void *, int>(&filter, &F::Put);
 		End = callback(&filter, &F::End);
 	}
+	
+	void SetBufferSize(int size) { buffersize = size; inbuffer.Clear(); }
 	
 	void SetSize(int64 size_)    { size = size_; }
 	

@@ -29,7 +29,7 @@ int xxHashStream::Finish()
 int xxHash(const void *data, size_t len)
 {
 	xxHashStream h;
-	h.Put(data, len);
+	h.Put64(data, len);
 	return h.Finish();
 }
 
