@@ -470,19 +470,16 @@ protected:
 	virtual void  _Put(const void *data, dword size);
 
 public:
-	virtual void  Seek(int64 pos);
 	virtual int64 GetSize() const;
-	virtual void  SetSize(int64 size);
 	virtual bool  IsOpen() const;
 
 protected:
-	int64   size;
 	byte    h[128];
 
 public:
 	operator int64() const            { return GetSize(); }
 
-	void     Open()                   { ptr = buffer; size = 0; ClearError(); }
+	void     Open()                   { ptr = buffer; ClearError(); }
 
 	SizeStream();
 };
@@ -504,7 +501,7 @@ private:
 	Stream  *stream;
 	bool     equal;
 	int64    size;
-	byte     h[128];
+	byte     h[256];
 
 	void     Compare(int64 pos, const void *data, int size);
 
