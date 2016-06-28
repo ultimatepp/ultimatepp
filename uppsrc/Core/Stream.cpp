@@ -982,7 +982,7 @@ int64 SizeStream::GetSize() const
 
 void SizeStream::_Put(const void *, dword sz)
 {
-	wrlim = buffer + 256;
+	wrlim = buffer + sizeof(h);
 	pos += ptr - buffer + sz;
 	ptr = buffer;
 }
@@ -1373,7 +1373,10 @@ bool LoadFromFile(Callback1<Stream&> serialize, const char *file, int version) {
 
 bool StoreToFile(Callback1<Stream&> serialize, const char *file, int version) {
 	FileOut f(Cfgname(file));
-	return f ? Store(serialize, f, version) : false;
+	if(!Store(serialize, f, version))
+		return false;
+	f.Close();
+	return !f.IsError();
 }
 
 Stream& Pack16(Stream& s, int& i) {
