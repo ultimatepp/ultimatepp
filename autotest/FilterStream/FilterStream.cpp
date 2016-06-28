@@ -17,8 +17,23 @@ CONSOLE_APP_MAIN
 		h = in.GetLine();
 		ASSERT(h.StartsWith("<!DOCTYPE"));
 		while(!in.IsEof())
-			h = in.GetLine();
+			h << in.GetLine();
 		ASSERT(h.EndsWith("BODY>"));
+	}
+	{
+		HttpRequest http("www.ultimatepp.org");
+		InFilterStream in;
+		http.WhenContent = callback(&in, &InFilterStream::Out);
+		in.More = callback(&http, &HttpRequest::Do);
+		http.Blocking();
+		ASSERT(!in.IsEof());
+		String h;
+		h = in.GetLine();
+		ASSERT(h.StartsWith("<!DOCTYPE"));
+		while(!in.IsEof())
+			h << in.GetLine();
+		ASSERT(h.EndsWith("BODY>"));
+		ASSERT(Filter(HttpRequest("www.ultimatepp.org").Execute(), [](int c) { return c == '\n' || c == '\r' ? 0 : c; }) == h);
 	}
 	String path = GetHomeDirFile("test.gz");
 	{
@@ -55,7 +70,7 @@ CONSOLE_APP_MAIN
 				ASSERT(h == data.Mid(i, n));
 			}
 		ASSERT(in.Get() < 0);
-		ASSERT(in.IsEof());	
+		ASSERT(in.IsEof());
 	}
 
 	{	
@@ -121,7 +136,6 @@ CONSOLE_APP_MAIN
 			Zlib zlib;
 			InFilterStream in(fin, zlib);
 			zlib.Decompress();
-			in.SetSize(sz);
 			in % data2;
 		}
 		
