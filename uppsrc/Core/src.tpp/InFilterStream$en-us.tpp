@@ -30,18 +30,27 @@ to be filtered.&]
 [s3; &]
 [s4; &]
 [s5;:InFilterStream`:`:End: [_^Callback^ Callback]_[* End]&]
-[s2;%% Callback to filter finalization.&]
+[s2;%% Callback to filter finalization. This is invoked by InFilterStream 
+when it reaches the end of input stream. It gives chance to the 
+filter to flush any remaining data (to Out).&]
 [s3; &]
 [s4; &]
 [s5;:InFilterStream`:`:More: [_^Gate^ Gate]_[* More]&]
 [s2;%% Callback used for alternate mode of operation where instead 
-of input stream and filter only single data source is used.&]
+of input stream and filter only single data source is used. It 
+should return true if source of data is still active, false when 
+it reaches the end. False is then interpreted as EOF of InFilterStream.&]
 [s3; &]
 [s4; &]
 [s5;:InFilterStream`:`:Out`(const void`*`,int`): [@(0.0.255) void]_[* Out]([@(0.0.255) cons
 t]_[@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
 [s2;%% Method serving as filter output.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:InFilterStream`:`:WhenOut: [_^Upp`:`:Callback^ Callback]_[* WhenOut]&]
+[s2;%% This callback is called whenever Out method is invoked. It 
+is intended for load progress indicators.&]
+[s3; &]
 [s4;%% &]
 [s5;:InFilterStream`:`:Set`(Stream`&`,F`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 F
 ]>_[@(0.0.255) void]_[* Set]([_^Stream^ Stream][@(0.0.255) `&]_[*@3 in`_], 
@@ -51,12 +60,10 @@ callback which is connected to Out method and Put and End methods
 that are connected to Filter and End callbacks.&]
 [s3;%% &]
 [s4; &]
-[s5;:InFilterStream`:`:SetSize`(int64`): [@(0.0.255) void]_[* SetSize]([_^int64^ int64]_[*@3 s
-ize])&]
-[s2;%% Sets the [%-*@3 size] of Stream that then reported by GetSize 
-method. This is important in situations where code requires to 
-know the size if input stream (e.g. serialization) but it is 
-not known because filter does not provide such information.&]
+[s5;:Upp`:`:InFilterStream`:`:SetBufferSize`(int`): [@(0.0.255) void]_[* SetBufferSize]([@(0.0.255) i
+nt]_[*@3 size])&]
+[s2;%% Sets the [%-*@3 size] of internal buffer used to store input 
+data before being filtered.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:InFilterStream`:`:InFilterStream`(`): [* InFilterStream]()&]

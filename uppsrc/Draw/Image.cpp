@@ -230,27 +230,19 @@ void Image::Serialize(Stream& s)
 	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
 	if(s.IsLoading())
 		if(len) {
-			if(s.GetPos() + len > s.GetSize()) {
-				s.SetError();
-				return;
-			}
+//			if(s.GetPos() + len > s.GetSize()) {
+//				s.SetError();
+//				return;
+//			}
+			// TODO: Add invalid stream protection
+
 			ImageBuffer b(sz);
 			
-			int64 offset = 0;
-			const byte* ptr = (byte*)~b;
-			
-			while(len>INT_MAX)
-			{
-				if(!s.GetAll((void*)(ptr+offset), INT_MAX))
-				{
-					s.SetError();
-					return;
-				}
-				len -= INT_MAX;
-				offset += INT_MAX;
+			if(!s.GetAll64(~b, len)) {
+				s.LoadError();
+				Clear();
+				return;
 			}
-			if(!s.GetAll((void*)(ptr+offset), (int)len))
-				s.SetError();
 			
 			b.SetDots(dots);
 			b.SetHotSpot(p);
