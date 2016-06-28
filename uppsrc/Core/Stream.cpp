@@ -975,45 +975,32 @@ MemReadStream::MemReadStream() {}
 
 // --------------------------- Size stream -----------------------
 
-void SizeStream::Seek(int64 apos) {
-	if(ptr - buffer + pos > size)
-		size = ptr - buffer + pos;
-	pos = apos;
-	if(pos > GetSize())
-		pos = GetSize();
-	ptr = buffer;
+int64 SizeStream::GetSize() const
+{
+	return int64(ptr - buffer + pos);
 }
 
-int64 SizeStream::GetSize() const {
-	return max(int64(ptr - buffer + pos), size);
-}
-
-void SizeStream::SetSize(int64 asize) {
-	size = asize;
-	if(ptr - buffer + pos > size) {
-		ptr = buffer;
-		pos = size;
-	}
-}
-
-void SizeStream::_Put(const void *, dword sz) {
-	wrlim = buffer + 128;
+void SizeStream::_Put(const void *, dword sz)
+{
+	wrlim = buffer + 256;
 	pos += ptr - buffer + sz;
 	ptr = buffer;
 }
 
-void SizeStream::_Put(int w) {
+void SizeStream::_Put(int w)
+{
 	_Put(NULL, 1);
 }
 
-bool SizeStream::IsOpen() const {
+bool SizeStream::IsOpen() const
+{
 	return true;
 }
 
-SizeStream::SizeStream() {
-	size = 0;
-	style = STRM_WRITE|STRM_SEEK;
-	buffer = h;
+SizeStream::SizeStream()
+{
+	style = STRM_WRITE;
+	buffer = ptr = h;
 }
 
 // ------------------------------ Compare stream ----------------------------
