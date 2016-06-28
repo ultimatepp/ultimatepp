@@ -474,7 +474,7 @@ public:
 	virtual bool  IsOpen() const;
 
 protected:
-	byte    h[128];
+	byte    h[256];
 
 public:
 	operator int64() const            { return GetSize(); }
@@ -501,7 +501,7 @@ private:
 	Stream  *stream;
 	bool     equal;
 	int64    size;
-	byte     h[256];
+	byte     h[128];
 
 	void     Compare(int64 pos, const void *data, int size);
 
