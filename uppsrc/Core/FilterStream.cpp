@@ -16,16 +16,8 @@ void InFilterStream::Init()
 	SetLoading();
 	buffer.Clear();
 	ptr = rdlim = Stream::buffer = NULL;
-}
-
-dword InFilterStream::Avail()
-{
-	return dword(rdlim - ptr);
-}
-
-int64 InFilterStream::GetSize() const
-{
-	return size;
+	todo = 0;
+	t = NULL;
 }
 
 bool InFilterStream::IsOpen() const
@@ -35,70 +27,76 @@ bool InFilterStream::IsOpen() const
 
 int InFilterStream::_Term()
 {
-	if(ptr == rdlim)
-		Fetch(1);
+	while(ptr == rdlim && !eof)
+		Fetch();
 	return ptr == rdlim ? -1 : *ptr;
 }
 
 int InFilterStream::_Get()
 {
-	if(ptr == rdlim)
-		Fetch(1);
+	while(ptr == rdlim && !eof)
+		Fetch();
 	return ptr == rdlim ? -1 : *ptr++;
 }
 
 dword InFilterStream::_Get(void *data, dword size)
 {
-	byte *p = (byte *)data;
-	int nn = 0;
-	for(int pass = 0; size && pass < 2; pass++) {
-		int n = min(size, Avail());
-		memcpy(p, ptr, n);
-		size -= n;
-		p += n;
-		ptr += n;
-		nn += n;
-		if(size)
-			Fetch(size);
+	t = (byte *)data;
+	dword sz0 = min(dword(rdlim - ptr), size);
+	memcpy(t, ptr, sz0);
+	t += sz0;
+	ptr += sz0;
+	todo = size - sz0;
+	while(todo && !eof)
+		Fetch();
+	return size - todo;
+}
+
+void InFilterStream::Out(const void *p, int size)
+{
+	const byte *s = (byte *)p;
+	if(todo) {
+		dword sz = min(todo, (dword)size);
+		memcpy(t, s, sz);
+		t += sz;
+		s += sz;
+		todo -= sz;
+		size -= sz;
+		pos += sz;
 	}
-	return nn;
+	if(size) {
+		int l = buffer.GetCount();
+		buffer.SetCountR(l + size);
+		memcpy(buffer.begin() + l, s, size);
+	}
+	WhenOut();
 }
 
-void InFilterStream::Out(const void *ptr, int size)
+void InFilterStream::Fetch()
 {
-	int l = buffer.GetCount();
-	buffer.SetCount(l + size);
-	memcpy(buffer.Begin() + l, ptr, size);
-}
-
-void InFilterStream::Fetch(int size)
-{
+	ASSERT(ptr == rdlim);
 	pos += buffer.GetCount();
-	buffer.Clear();
-	if(eof) {
-		static byte h[1];
-		ptr = rdlim = h;
-		return;
-	}
-	if(More)
-		while(buffer.GetCount() < size && More());
-	else {
-		if(!inbuffer)
-			inbuffer.Alloc(buffersize);
-		while(buffer.GetCount() < size) {
+	buffer.SetCount(0); // SetCount instead of Clear to maintain capacity
+	if(!eof) {
+		if(More)
+			eof = !More();
+		else {
+			if(!inbuffer)
+				inbuffer.Alloc(buffersize);
 			int n = in->Get(~inbuffer, buffersize);
 			if(n == 0) {
 				End();
 				eof = true;
-				break;
 			}
-			Filter(~inbuffer, n);
+			else
+				Filter(~inbuffer, n);
 		}
 	}
-	Stream::buffer = buffer;
-	ptr = buffer.Begin();
-	rdlim = buffer.End();
+	Stream::buffer = ptr = buffer.begin();
+	rdlim = buffer.end();
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 OutFilterStream::OutFilterStream()
 {

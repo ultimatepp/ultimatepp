@@ -137,10 +137,12 @@ String Stream::GetAll(int size)
 {
 	String result;
 	while(size > 0) { // read in chunks to avoid out-of-memory in case of invalid size info in the stream
-		int n = min(size, 4 * 1024 * 1024);
+		int n = min(size, 256 * 1024);
 		String h = Get(n);
-		if(h.GetCount() != n)
+		if(h.GetCount() != n) {
+			LoadError();
 			return String::GetVoid();
+		}
 		size -= n;
 		result.Cat(h);
 	}
@@ -663,97 +665,6 @@ void  Stream::Pack(bool& a, bool& b) {
 	bool h = false; Pack(a, b, h, h, h, h, h, h);
 }
 
-Stream& Stream::operator%(bool& d)
-{
-	SerializeRaw((byte *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(char& d)
-{
-	SerializeRaw((byte *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(signed char& d)
-{
-	SerializeRaw((byte *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned char& d)
-{
-	SerializeRaw((byte *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(short& d)
-{
-	SerializeRaw((word *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned short& d)
-{
-	SerializeRaw((word *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(int& d)
-{
-	SerializeRaw((dword *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned int& d)
-{
-	SerializeRaw((dword *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(long& d)
-{
-	uint32 x = (uint32)d;
-	SerializeRaw(&x, 1);
-	if(IsLoading())
-		d = (long)x;
-	return *this;
-}
-
-Stream& Stream::operator%(unsigned long& d)
-{
-	uint32 x = (uint32)d;
-	SerializeRaw(&x, 1);
-	if(IsLoading())
-		d = (unsigned long)x;
-	return *this;
-}
-
-Stream& Stream::operator%(float& d)
-{
-	SerializeRaw((dword *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(double& d)
-{
-	SerializeRaw((uint64 *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(int64& d)
-{
-	SerializeRaw((uint64 *)&d, 1);
-	return *this;
-}
-
-Stream& Stream::operator%(uint64& d)
-{
-	SerializeRaw((uint64 *)&d, 1);
-	return *this;
-}
-
-
 Stream& Stream::operator%(String& s) {
 	if(IsError()) return *this;
 	if(IsLoading()) {
@@ -772,13 +683,9 @@ Stream& Stream::operator%(String& s) {
 				Get(); // reserved for future use... or removal
 			}
 		}
-		if(IsError() || len + GetPos() > GetSize())
+		s = GetAll(len);
+		if(s.IsVoid())
 			LoadError();
-		else {
-			s = GetAll(len);
-			if(s.IsVoid())
-				LoadError();
-		}
 	}
 	else {
 		dword len = s.GetLength();
@@ -812,19 +719,20 @@ Stream& Stream::operator%(WString& s) {
 	if(IsLoading()) {
 		dword len;
 		Pack(len);
-		if(IsError() || len + GetPos() > GetSize())
-			LoadError();
-		else {
+		if(len < 256 * 1024) {
 			WStringBuffer sb(len);
-			if(len < 2 * 1024 * 1024)
-				SerializeRaw((byte*)~sb, len * sizeof(wchar));
-			else {
-				String h = GetAll(len * sizeof(wchar));
-				if(h.IsVoid())
-					LoadError();
-				memcpy(~sb, ~h, len * sizeof(wchar));
-			}
+			SerializeRaw((byte*)~sb, len * sizeof(wchar));
 			s = sb;
+		}
+		else {
+			String h = GetAll(len * sizeof(wchar));
+			if(h.IsVoid())
+				LoadError();
+			else {
+				WStringBuffer sb(len);
+				memcpy(~sb, ~h, len * sizeof(wchar));
+				s = sb;
+			}
 		}
 	}
 	else {
