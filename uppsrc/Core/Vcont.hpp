@@ -10,7 +10,7 @@ void StreamContainer(Stream& s, T& cont)
 	if(s.IsLoading())
 	{
 		cont.Clear();
-		cont.Reserve(n);
+		cont.Reserve(min(n, int(256*1024 / sizeof(T)))); // protect against invalid streams...
 		while(n--)
 			s % cont.Add();
 	}

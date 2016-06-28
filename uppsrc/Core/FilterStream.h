@@ -1,7 +1,6 @@
 class InFilterStream : public Stream {
 public:
 	virtual   bool  IsOpen() const;
-	virtual   int64 GetSize() const;
 
 protected:
 	virtual   int   _Term();
@@ -10,13 +9,17 @@ protected:
 
 	Vector<byte> buffer;
 	bool         eof;
-	int64        size;
 	int          buffersize = 4096;
 	Buffer<int>  inbuffer;
+	byte        *t; // target pointer for block _Get
+	dword        todo; // target count
 
 	void   Init();
-	void   Fetch(int size);
-	dword  Avail();
+	void   Fetch();
+
+private:
+	void   SetSize(int64 size)  { NEVER(); } // removed
+	int64  GetSize() const      { NEVER(); return 0; }
 
 public:
 	Stream                      *in;
@@ -24,6 +27,8 @@ public:
 	Callback                     End;
 	Gate                         More;
 	void                         Out(const void *ptr, int size);
+	
+	Callback                     WhenOut;
 	
 	template <class F>
 	void Set(Stream& in_, F& filter) {
@@ -35,8 +40,6 @@ public:
 	}
 	
 	void SetBufferSize(int size) { buffersize = size; inbuffer.Clear(); }
-	
-	void SetSize(int64 size_)    { size = size_; }
 	
 	InFilterStream();
 	template <class F> InFilterStream(Stream& in, F& filter) { Set(in, filter); }

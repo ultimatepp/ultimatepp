@@ -198,21 +198,26 @@ public:
 
 	String    GetAllRLE(int size);
 	void      SerializeRLE(byte *data, int count);
+	
+	Stream&   SerializeRaw(byte *data)     { if(IsLoading()) *data = Get(); else Put(*data); return *this; }
+	Stream&   SerializeRaw(word *data)     { if(IsLoading()) *data = Get16le(); else Put16le(*data); return *this; }
+	Stream&   SerializeRaw(dword *data)    { if(IsLoading()) *data = Get32le(); else Put32le(*data); return *this; }
+	Stream&   SerializeRaw(uint64 *data)   { if(IsLoading()) *data = Get64le(); else Put64le(*data); return *this; }
 
-	Stream&   operator%(bool& d);
-	Stream&   operator%(char& d);
-	Stream&   operator%(signed char& d);
-	Stream&   operator%(unsigned char& d);
-	Stream&   operator%(short& d);
-	Stream&   operator%(unsigned short& d);
-	Stream&   operator%(int& d);
-	Stream&   operator%(unsigned int& d);
-	Stream&   operator%(long& d);
-	Stream&   operator%(unsigned long& d);
-	Stream&   operator%(float& d);
-	Stream&   operator%(double& d);
-	Stream&   operator%(int64& d);
-	Stream&   operator%(uint64& d);
+	Stream&   operator%(bool& d)           { return SerializeRaw((byte *)&d); }
+	Stream&   operator%(char& d)           { return SerializeRaw((byte *)&d); }
+	Stream&   operator%(signed char& d)    { return SerializeRaw((byte *)&d); }
+	Stream&   operator%(unsigned char& d)  { return SerializeRaw((byte *)&d); }
+	Stream&   operator%(short& d)          { return SerializeRaw((word *)&d); }
+	Stream&   operator%(unsigned short& d) { return SerializeRaw((word *)&d); }
+	Stream&   operator%(int& d)            { return SerializeRaw((dword *)&d); }
+	Stream&   operator%(unsigned int& d)   { return SerializeRaw((dword *)&d); }
+	Stream&   operator%(long& d)           { return SerializeRaw((dword *)&d); }
+	Stream&   operator%(unsigned long& d)  { return SerializeRaw((dword *)&d); }
+	Stream&   operator%(float& d)          { return SerializeRaw((dword *)&d); }
+	Stream&   operator%(double& d)         { return SerializeRaw((uint64 *)&d); }
+	Stream&   operator%(int64& d)          { return SerializeRaw((uint64 *)&d); }
+	Stream&   operator%(uint64& d)         { return SerializeRaw((uint64 *)&d); }
 
 	Stream&   operator%(String& s);
 	Stream&   operator/(String& s);
