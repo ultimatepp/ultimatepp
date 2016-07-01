@@ -8,138 +8,35 @@ topic "Translating U++";
 [*+117 $$6,6#14700283458701402223321329925657:header]
 [l416;2 $$7,7#55548704457842300043401641954952:nested`-desc]
 [l288;i448;a25;kO9;*2 $$8,8#64691275497409617375831514634295:nested`-class]
+[b42;a42;ph2 $$9,9#45413000475342174754091244180557:text]
+[#b83;*4 $$10,9#07864147445237544204411237157677:title]
 [{_}%EN-US 
-[s0; [*R+150 HOWTO: Submit translations to the U`+`+ project]&]
-[s0; &]
-[s0; Before starting the translation work, get to know TheIDE and 
+[s3; HOWTO: Submit translations to the U`+`+ project&]
+[s9; Before starting the translation work, get to know TheIDE and 
 pay attention to the context of the terminology used. Try to 
 use already established computer terminology in your language 
 instead of inventing new terms.&]
-[s0; &]
-[s0; &]
-[s0; [*+117 1. Export .tr file]&]
-[s0; &]
-[s0; Run the latest theide and load the uppsrc AllForI18n. This package 
+[s10; 1. Export .tr file&]
+[s9; Run the latest TheIDE and load the uppsrc AllForI18n. This package 
 uses all other uppsrc packages that need translating.&]
-[s0; &]
-[s0; Choose Project / Export runtime translation file (`*.tr):&]
+[s9; Choose Project / Export runtime translation file (`*.tr):&]
 [s0; &]
 [s0;= 
 @@image:2106&775
-€ƒÑü€€€€€€€€€€ø‡œí‰ô”ÅãÞÀ»ä¥°û·ôÛ•Ýž® ­¢¢ˆÇ’¼–Œ¢œ’‚„ˆ‚ðè––‘ð–äõ½ÖçÞó½öé®þâ
-õý°®û­«Ô× Â‘®Ã„Ü·’òÍßûš„™‰óóý«ëÒÓÓÓûÓ™«Ìõ¯÷àûÃÍÍÍ§ªéºþÝÕ½Ý…ùÙì“¸è¼°’ù…€·û‚á
-æî………µÜ¢òÚî¹…— ¦á¯áëôÜ‚–üûÎÍ­Ð’È…Š¾–µ ö´Ô£ââµˆâŒŽãÛ…â©Êòš­æ£Ê¾œ‚ïù”èúî“–‚€‘òÖÍ
-íÒçé¸§‹ÍðŽ‚µýðºÎÏˆ­½ÃÞµÿßòÏ„»ÞµÛýØœù‘¹òÆ³óäÏ‰ÑŸŽ“žüÂ¡´ƒÌ¢Ä¦¹Â–Ÿùï”¿Ä¾‰¨–ñìÕ‘ÄÐÛ
-áÀÜ€Äž¼Ñº„Öó‘çìýÒŸ´Ò‹¾Ú­Ø–±íšääëÖþŸ€âßÃ÷‰•¸‚Ð„‰ˆ‚¸¨Æþ‘¾¥æÒ‘——šÈ€ÄáÛêÂ«ƒªŒÄìî
-Ò…¸åÜ”ëÚðÏ½•Í­¨ã–ÝŠËì€‘¸õÍ”Ð¿ü„Ó×øæƒœ„»¸—ûÃ·šŠš‡×–È£´Æñð–ë°É ø¹‘Ä†°×”¡´Í¨ÓÔ
-ô¨ÊØ†Ã Ä×«áë»Ã“ÛñÂÖ÷ñ«Ú¹ÿçø×åíðÖ¿’²ºÙÂŠÆ¡òŠ©ñºË™ú¤€‹ë¹éè¥ÜÔ¥ÕùèÆ¼î¹ê«ðÂ©¾ÖËõ‡ñ©
-¨Äÿ‡Ï¡ÈÃŒÄ¶„Á¼å½ùÆÂš†°µöº˜„ƒäÒÙ€²•¡ÎéÜ¥¦¬ª¥¬¨ùÂâª¹¹•ä¤’œ»¢‡¾¿¯–ÃÝòƒñý”â†ù””ßô
-çÉ‚Àú¦¾…óß´Ûá‰ëšÄÈžáñ†‘£ÖÅþ£ÅðÈöÏ¨¿ø¦Ý¥ÓßëèÂœå£€ßš¾¯ˆû‹Ê¥¾ƒéÀÀ¯öØ¢Ïå“««ôŽ”çˆ´
-¬§©ÞºÏ–”™žˆ„ ñž¶Þ‹‡ï¢¸ãÞÐƒæšÀê«›¾üÙûíÚêõ–¸Õ†®˜å¯ç¨Ö¼©­øþ†âÕÔÕ þÅ” îÉÂÃ„Å“êâÆ
-òÕÎœÕ¸èá‹–Šâø®—ù±Ž¸¾¾…»çŒ·ÑþîÿÉ©‹¯Ôžé®°öÝÍÿì§¶‘³ÍºÑì‹À‘ÍÄ‘ûØûçð¾Ã¬Æë»ÆÿßòÝ§
-¿­ÿú¬ù«÷¼›¾þî½Í÷º·×ëßüµñöÏëµ¯¬Ò¯¼’ ùÝ¼úíë’Õ¦…ÊõÏ¨Ö¿Ù“·µ±ðÖÝ‡£§¿ÀÜÀ¢üÇ«ˆì·½ŽÓû
-Ñò¶ª÷ÐÌ±ÙòÄê°Û¶ÐþÄ‹ïÂ©ˆý±ÁŠÁäð¹Ùðþˆ¹“¯ë“ÿ½Ž˜ƒòÚà·“Û÷ýÑ¶×û«æïßïü÷ôÕ†·êÞ¬ýÉûöúÍ›
-Ý‰à½öµµš–¿¬Ôì‹×íæÞ¨Ü°ÏñüÿôÚøÇŠçŽËûÏÃ¿ §ï÷ üýÙöÊ“ÍÓüæ»í¸ÉÚ‡³¨ÕÑäÞÕçÃªŸâó¿üŸûåïØ
-ˆ´—ÒÃÅ“ÀÆÛÍ¶å ûËçÎ›¾ÿ³á…ƒ­º÷¶èßìÿÁóÇ„õËÏñêÍ‹Õ¯Å²ª×Ç«×Ï¥öÓýÕÏÖ¯˜ÞÜ³äáâùã€÷¿ú‹ÑžÎ
-õäÁù»²¬Ê­ÃÁàÉâË­êö°¯ÀßŽ³§þ„Ç«ÿÐéå¡…ÞÚ”·¢Ÿåý®—‚„Ò¨±Ê›ßãêŒ‰ýÊ«·¯ì¿üô•Æ¿ÿ‰ÆüïÎ½ÅÒ¶
-“Æ«ßÚ¤ÜŸ©£øá–âÕÓÛõË§×ÇÏ‚·ôŽ£ûêâ¢Ñ«—Í¨™ÿÿ»žÉ£‰Â–ÆÛ”‡óùÐþç—éä °¥˜¦Ü·‡Ãüéƒ«òœï¼Çý
-Ï·ÄÍÜÛï½Ì…‘ë¯†‚åðÅ—ŒýßŒ®å“ÖÔ¥Ï©Ñ¼Šñø¥‘šëÞÔáòùñ‚…‡ØÄÔöÛáåÕ›âšÞÛ‡ÔðÁïáüçîþñ¾ÏÖ¬š
-æ†¾×­ù˜¥é×­ü úáƒ˜¥±öÊÓÑž—”‡”éüùŸ‹ù«…ñš‰ïåÍÒÊ“ë­¸·‰Û”ÿñ­ùï°†¨Ã¼·“¯½ÒíôîÎÐàûÚ§”ÿÒ
-ùÂýÐòˆ»ÿ”›üÏ­ÖÂ„¢¾¢Õ›ºâ¯Ã¾—…‰Êä•Œ×¦Î‚³÷²±Ÿÿ£Ñó‡„êæ·âÍôÅÊË¨úåÚýŸú¿¶îÁøšØ™ûËâÆïùü
-…„Åùû‹íÆòù¦ü¬ÿ§í›‚Å÷ñÉ¼—ç¾²‘Âæø¼ÍõÌùîŸú¿‡†ŒúÄ‹¹°Ùæ¨ÿØœ¢µš‚¾‹•¿ŽðÕÃÂš¡òÑâ¶ÊëÞÝ­ù
-­ÓÚòºí¹úµÓâæ¸œ¹Ûîý¹»®úÎ£º˜±µ‹î­÷ïÞÇï£ÑÊ¿Ò¡­¼œ®¾ÀäœŸâÏ˜Š‚ÕžëÓÞù˜®Ð¾‘ÜÚ¾ç£¼Ž²ë¬
-Ñ™§Ïÿ»…âÑðŠñÈ¸ÍÚ‰ã¯¼¦•õ¿°üÛÓôô£ûˆ°Ä–Â×ÒºÛó‡ŒöÜ¹Å›’É¬ùÈÅÚµÉÂ¢ˆð—àãý´š‰šÏ¼Þù„æÛ
-º¼¹¬ÿû•ðî–¯Ú¼Èùâ²ü³íÐÄŽÕØ¼û×ý¼»êÆãî¬ýöÌÙõÜ±ûž»Õ¢Ü¼èÇ§å³ÁýÉ•ä™»¾²Äó÷åÚ©Œ¯¼™·Ñþõ
-ã›Èú›ëúžÇû«ªëïîÑÿß¼°°©£·êÒÙÖŒ¾ÿ‡ŸÌ ÿ¼ŠÇ‘¯ÿýò¾Ë·¿‹âËÿ—ô¹·î»ˆ¼ÿä¿—è–èæåâ¯ü°ûÝÆ
-»¾á©–ó‡¡Ù‡×Å¹í·¡ÕïæÑüûÑ·âûú¿çÒÂ¾þµ»ªÿ‡çÎýÞ‘À¡¶éÁ–²è“åãôŸÓ¿”«ÙºªÔóò¼úËÒ¿Õ¦…ä†œõ
-»³™îÊ¥÷«¦—Ý£Üð§²ùæöåÌ¨ºù÷£ËŸ™½ï‘áÄÄÉ—­ƒ®½ŒòÃ¾´Ñ·žÞ„¯­¼ÙàÚùžî¹¹É¥ŸÛÖ¬Ô†·ñ…¼™½ñ­
-Ý¬àÏÙ±äÅŽÏ…¹éœŽ˜‰·Äîã‚ðÍŒÿºÛ’øÒÈ²°³¤šìÝ¤úº¼¢œ“ö›ò¦³°îþ­äÔÓ¬ä¾âÿüœ‰‚âÚÍ¬ˆÄ‡îÖ·
-öø¢ò·Ñêß°®ÖïÙ¢ùíµœúóÂÕÆ˜ÝÑ¨¯Ž»Ç½Êð´êþˆÕÌÓˆúù£Êç¯ØÿÐÍÄù©¼µÄù»ÊÉ¨¶Êªæ¢ª³‰òñÖå¼
-ù™ß£§Ç¢ùž£Ø¡‡í¾¶§ë¿áùÇ®¹ÍŽ©„”áÎšŸºÅâýÉÄÑæŠé£¿ä¨§ü¸—å²³¸Ù®¹ÐÂ¢®±¬ƒÊñˆÕüÖ€ú
-îØí³÷©žŸñ¡úñ¾È®Þ•¼Èµ©ÖêúÔâ”ÜëêÓ¤¬ž­Ùð›ºæ–ÅÜÛ®¼Ê½üÀäÿ‘å«§Õ’ëŸ¬¤‡ÊÿâïÄùøÖË”×‘ß×µ
-Ì“ì¯Ø‹ÏæýÙ•ûðõä™Ê¾òØŸÀüæì…ý¬òç¶´®Ö¼±óÓè¡¢°§«…ƒ±¨°Ñò³’ÿÐÈ’ÑÎù¯ÊÀäæñÖÈ¡ò†å ÇÃ„ñ–
-ÞÛñ¡¿ÕÄõ©ÏˆÒ®›£ÙÚ¸ßõÒ‚«ÇïëŸÖ§¾¡”Ùë½â¯Ýðµ«æÞðÅìá´•Ïþ´éŸÎ“ŸÒðÓêç¬ÊÃðÏ”çÈÏ¢øßÉ—å
-ú§ðïñë›ÇÙÓÉ¼Ëœ¼µÑ„Ö³ñÃÞœ Ø‡ÅÕ×™ë•ÚÞÐäòÌý¯Ááªê¦°À¥ÚÈä¹“ÿ…×àæ§€ÃÇ²üðÞ²¹š‡ú§Ú´ñ£¿
-ñÄáæ¶Í¦µŽëöÿˆ’óé¥—ð”Ó²„žŒÑ§Â·ì»³¿ßÅŠùÚ»‘éÐÈÈ„²Ë îŠÁÜã…€à¦þÜ§€ý­–úæíõËžÕ™¬ýÚ¹î™æ
-õ·êýÌõº§™Ô¯ÌÑ¬ýÄ¿—ð€Õú¹¿þÓÍ¸ñÂ”ŸŠ¤Ý·˜¨öâÓë§æØ•ÒÖ“Ù½ï»Œ“×ö³ûëùýîßˆØÜ›¾ÉÄ¼èÃµ ìƒ
-êà’Å÷ÁÄÁàûÉ“Äâð·œšºòƒ¸»Èõï¯¿¯àæ‡‡¸‚Àë²×ÉšÐé†ÇôÀú×ûëèžÇïÿŸ’¤Î˜¹¢¼’Ðƒ‹ž÷…ý‰‘
-î¹Õ½¹¥ºˆù±ßÉæ´ß”žÑ§Â·³¾ú²À¡ëÅ—“î¡þÊöªˆ“½ò«»ïü¥”­¤â’Üê“ˆâ‹õßäó„ÿˆïá–‘ß¼í®Ì»¥¶öÁ
-ýú•“Áú®ŒþÃÄ÷ÄéªÄ±§Ô¯Ä©×ÎÒ¬ž¨Ý±Þè—ÿ·¤÷§îÇÔÎ¹É¹íè‰…ÇïØ¿öÀÑþö‹Ñþ’÷ŽÜã™Ø×Ï‘•ñ–µÓå
-‘ù¥¸Œá¯šÊ²ð–í ëµáìí¼åšš…¬‡è²žÔ†ÿÑŒ—Ò†Ï¾Ê†Èæ—ÂÔœÞÉ•ûÉÉóÌ¦¡÷þ¦Ð¯³ü¤±ªí¥²­±è¦
-ŽÄ‰”ˆñßƒùŽòºú–ä§ïÂ·á‹«áÀÃõ£çò¡þÃ›ŒÓ§åß“Õäèëˆ£àÙ€ÀœÂŽƒ¼±øäðùâç°ã·¯ÝœÙ¿üÈñÅÂ”âÕ”
-”¢áŠ²áñåíÂãª•“ÕË“ï×¬£Ý¼”Šæõ°Äëæ¡üÄ‘õÃùÃ‡ƒöÝ“æÑž†úÐ¾òœÑÃþ—…ÌùºÄ¢³å‡ï¶ÀÐºÎÕ†Íéâ×
-¦Œ‹òìé£ÍÎÖœÙãÌùŸÉ÷½„ñŸ¤Åð‡Óªž»éò™ô‘ÕóÆÝÙßø«ê¸‡ê– ¾Ü“—Ù³¤Í²öÉƒõñã¦•‹Æ¨–ŒÒ£Î»Õ¹ç˜ò
-ÏúŠ©‘µ“¼†•ýŠûÏÝ³ä¢œ·¯ƒØþÊÓ‰½­ò‰Ôúú’ŽÃ¼ìÝ«øî§¼ß¼õýÂ”÷éŒÛŠÏ»’’úÀØÛß©ïÍØûæÜî¤á¹
-¨Óï«˜±ºàßö˜‚Ù÷”ÌËº»ðöÝÅ³ÜÆ—Ï¼½ìæ íåÏ¯Ÿ¶ý¬¬ê¦òÇ‡–½ò£¢‰áƒ§Æó¿¼±Ê·¬ü°…ÊóçËÛÙÀÏÇú
-ÝÁ›®ŠÅ—ÌÑê¥ý÷¾êò€“ì„‰Á¤ç­ø‡Ï´´——êžš±îß÷Ýí¸ûÂÏþˆ¼¾ù×ÄŸïšðŸóî‰ÃöÌœ¶·ò§É“îž¼ðà“Ÿ˜
-ñ’´þðÒ¸ð³ä±áûïæö€¿±Ê×ÚÀÖ›Å‘Ð¾†©Ïüß­÷Øá¾±Ó¢¾å£‰Â«ÏôÅÐ²Ó™¼‚¢Ä÷ç†È‘ àó©Ïò‘æïøšö°×ì
-¦â€¹Ùûî¦é³õÜÞ¤üêŒ¿ðå¥‹ª†¶º®õ½Í­áš¶ëôª±½¨ðßÅØ®Ä„Ï¯†û¡ò¾ß©þÆŠ««–ëõñ½–ß¯è–ê¹åÝ„
-óˆÄõò±–Ø×šáÄ¶òóªÚÈ«ý”ÆôÆº¬‹©¿…°ßÿ£ª—›Þ”¶£ðÐÌ‚ûß©Ââª©¬ä˜úëÓãüöËùˆŸûÃ™æÕ ¶
-ç‡æœ´ËôæÊòà›ÕÇýÔË–·Óú Š©ðºù¢áÒ·…åÖúˆÀ«Üˆ®©üô‚¢À¼ï½“ß’š÷Àò‹¾ˆˆÅ ‹ˆ‰Ãìê˜À†§·Üò
-’×ì£ž¾´üžÃó¸ªÆíÊ…‚ ÁŠ·å ’·ú—·ì£€ÔžÁÂÔž˜ÁÂŠ¦üÐÔ žÁÂ€ò­ïäŽÔžÁÂ„àÔžÁÂŠ¦ü¯È‹¨¼‚„
-Ú½¨¼‚„”¯«ü›ßžñ¡ýþÓ†àÃ·­ š´¸êÞ¦üèÄäÅÀ©ïêÅó…ÞŠïŠ”É÷ù™‚Ÿ¶¶êÐ„þ”¿½³Ô•×µ›ŠêÚú³«®ž©é
-ä¾ÑØƒœËïöÎËíÌÍÑ§¸ä÷‡²ºÔæöí»ÛÙ©±ºêž˜åÝ®žÃðÊÛ‡¯€öÔž‚´æ÷­îÚ¥ÕµÒ¦ÚÒ°Àá•©ùÿòïöÅÞ¬
-ØŠ£ð¶ÜôªÇÄ”žï¸ò¾ÙÃ¼°Ê»Ý†Íàƒ•·Þì‚ž¨¼„¸øÂüãÖÔ›Š®ôŒÂ³Ò–¼ßáÀºÛæºÛÂ€ÑÆ¼ÞÈÚ“Ž·«æÑÞí²
-¬„Ÿ¨¼ýðâÕ÷Àå¡Àä‰´ž¼ó®› ™à©ÙåÆèÃ£óù½ŒèÏôÜíšåÝ®ƒ¿ýÁñœÿìÙ ´‰ÞìžòÊûÓ¾û†ŽÖ±ì±þÇ³‹°Œ
-Ãòí‰çÆäšºÔÅÏ“ÊŒ†èÃ´¼“ð¤ÙÏÈ£Ž”—ý²‰öÖÔ°¨—ƒç†Šƒ×¶èáÏ‘ïÕÇ»ÛÔÎÎ¶ûá „¯ö¦üÑÀÖÞÔ¾®
-Èªÿ¬¿›Žž›ôø™³æÝúŽˆ…Æ„æ„ Ò¥…ïÒÀ¥å²Ýêïî—Á«ñ†ú‘¯ŽòŽ‚Ž¤²ñç¾ßÄàÅîÁÍ­ÅäÆîôÞùÑð ¹Àˆ’Å
-ÀŸÉîÇòÓòîÃ¼òæÛ¡âÖ¾½ÓóôÐÛ€Ù•½Ðô”áŒ’£ð¸ßÈäÒè“ºº—÷œÜù·ËàõÃÿå÷©“»½Öº³£Ñùþƒ¾—»‡«Ê‹¾
-ï²×Ù™”÷¶‚£Ó±Øà©æ£·”—µ©‹ÃÿÃº¡¼Ù•é‹¥ÛåðÜùûÍåö…Ë»Ý¿Ýêžò’ý÷ÀÉ–ˆàÅ—îÁ”÷òÜÞ½òàî†¼Îì
-¨Çþ¸è÷”·Ì»½Ú¦ä÷±ñ“£á³²Æ´ô€“§œ×ÎåäåÒ¼Õ†Ï•‘—É‰”ååÚì»¸¬÷â÷àß¢ª¸ÛÕÞ¢½Á½Ïñ©ã˜Ý×¾¹ËÏ
-ªþìÀšóØ›‰ñØ‰¥½Ñå™Ž¹øÝÞ†óåÝ®ƒªŸÊŠÊû±û„„­òîòæ»ËÂù’¡©Óÿª½Äô¶ÜÊé²€²ýÊ«µ¨Ä°²’òŒ‡³
-»ºÌƒ£¼Ûå‚ÀåÃÁù¯öÎ¦¼£óùÑÕÔÚ”¢¹‡û—ý–«©ýöŒüá°»®üžÓúã…äæ†ÂÙ™•èÏ”’ÂíÁ¢Ó¾¼ã¾öœÃ¬‡·â
-‹ˆÊ ™²åùðÜù—ö©£äÝ£¹‘§»‡™£½«Ó†ÜÿÌÒ»ßò‘¼ÑØ½„ÏÒùÿØÖœÇûÔ«ß³òâ›Ðžéžùäæ¥Œâòàïƒ…¦ËÐ’
-Ç‡‹Œ€œ¿¡ž½÷œ¿šôîÕ îÅñ»Œõ‹³Êã Á‹ÑÝÃÞùû¡ÀåÉÝéÒþ÷¾åÅŽñÃÆç–ÊÎÕ£ùÆòáóÒŸÇŠÈÅáƒ¼°ß‚Æ
-ßÜ›Õ½ÿì»Ôùà”÷»Œž¶ûçÞÞöü¯âÞ‡½›´Á‹½Ý£ Ÿ—÷ÖÌûÞ®ïÉ¹×½–ú¾ýÈùŽŽ†¼…Ó¢ŠÌ×–àà‰ù±°Þïž˜åÝ®
-žÃðÊÛ‡¯ìöÁÝ÷¡«Û¼«Ÿ—Öà½›´¡Ø•÷ú¡þÓ†àÃ·Á­š´¸êÞë€ãµ“ƒÌù„ÞÁÜ€ÿ‘Ž•ÒÇÐ•Çã‚©¿¿Ë
-”£ˆâïÈ¿¯é È‘¸Ê·ûüŠ¨‚ø­±Î¨Ÿðçòï‡â¯·˜°È…ØÔžƒ†Àª„æÓÎ¥ÃæÙÿÏ©âî“…Ý½Ç‹ºÓóôéù¹ÝôùúÃç
-¿õÉ™úƒ™ÝÒ‡ÎÙÖ°·£Áò˜°„ò€ßð¯ªÌåµ¦¢¶«¦‚Ê²üÝ½ÎÅ²ðÝ¹²›ÓÙÒã™Òã¶Æ‰éÄ‘éøñ¡åñŒ³ÓÊ®‡â¹¼ï÷…
-´†Œ×¡ÀøÞ¨Öçªª¶åßâ¶åÞ²åó¾’ç–›³ŠÍ§‰‹Ì§è£õ…Û¦ôüãÑÜçó”ŸÚ©ó¼¼æ¿ƒÊãˆ…²ÑÔÝøÅ”×›ÉËþÁÈñÜ
-ºÖ¹‘Æ÷ôüÁÓÑþ•ëÆºö·”—ü¦Ò™ç«‡â‘ÌÔÀžÃ¨„¸ùÏ÷¯„Óùþÿª÷à•‡ðºÄ˜çÖ·ŠõªÿÊû–³¶» ¼Ä¿¹¼‡¦£ò˜
-¸°ø˜Òóºáœ¾ÏÏßÏß°ý±¡˜ÊžÂ“ßÊãúÄ¾ŸåÙÛÉ•Ž¤§¸ƒ¬Åô©ýÛÕûöû Àåò±„Â¸’£Ï’¦ËÙÛþÓª£áÄ›ä¿ÌÃ
-ÑÅÏ›øåÅÎ÷Úçé÷¶àÌÑ¦ÐùŒ¡œÈªòÖ—Œ°¾çß•“«ôÖÑž†ßÂš®äÍñ·öŠ½ç£¼èÉÔ–Žë®©ïè¯ ò˜Â¼´œºßõ®Ìˆ
-éœ­³ž®µœƒËŸ¨±ž©¤Ù¤”Ø—³ÎÉï¾®Ê‹·‹ÊŽãÀàð Ó¤ÿÆ°ü½¹ö€×æºÙêÊ«‚¶¦–™•˜Ó“ó‰‡óŒÉ¯üÚ¶æ¸ü
-¾§¯¼ç£¼³Ç¾£ò˜Â¤ìÂ¿§¿Ýê‚ëÞ©§ùµ¬ÁùáÔ’ãòÑßò¯õùÆ¤¼Ëò½Öæ•—¼®¤§©µý¶ûË’öŽ¾Âå±à™ŒûÏèÏ–
-å›Î•˜Ïñÿ¹ïäÆ‰‰Üîˆ×ê„å—›å“‹É…ÆýÛùÆý¹†ƒ™¤ÞÐÞ§¸ã»¢ª¡Ä‚ýÏ€«Î–™Ï–›¸Ï”™É½µÅƒÆôâãÊ±Ù
-Ë¾ž¨ŸÏÖ°ëß›ë «Ø›ý½·ÊÛã¨À¼†ŒƒöŸ…êºšï¼Þè€¼Ñè¸Þà¼¸†”šòÿÝÛÅ¡ÂãÁ‚Ã‘þ¼ƒŒñûóÀŒô…ûó€Ž
-ÍòÎ‚Êãˆ…ÜÀÖ°Ï²ÙÁâžâ©ÙÖåéë³»„«Ø›€ÑùŒ˜Â¬„Ë±òˆ‚È’”©Ê£ˆâ†¨¼ë‚„”¨¼‚„†”ÜÔªî¤ª¥ ¡‚ª 
-ˆ¡…ª ¡…Ó¿Ü¥ª ¡„‚ª ¡…Ó”¾‚•Ç€Í•Ç¼‚ÖÝ¦ÿ¨Î¯­Ê®©ð¼¿Ô–Ÿò´–ì›ÐÚº«€¹Ðì¨üð×ÈÇˆªø…è
-ÎéªÚÂ×¿ÿ÷˜¥ïðÏìü‹ˆ†Ç¼±îÈ¯»´Šâ ¸©«£„•Ç¼‚¹Œ¯ ÈØ˜÷ÇóÕæ€‚ŠüŸÚç»ì‡ÅÚï¸×ÿñ² ËÊ×ÏÉ¸›Ê
-±ªµÐàÉêˆŸá¢ª¸‘»ÐŠùÄÃÀ‘˜ÅÓËõ‡”»ÈÉ÷É²º§òÒ«¯…Òè½‘„ÿÙ²ºÂÐù­Ä«À‰¤Ì­­ÓÊºÒÊô¦†’ŒþÏÚ±©
-Ü­”»¥©Ú²Æº½½¦ Ðªøã´šôí’Õ‘‚Ê£Þå†Åèì©…µ©Å†ÃÕÀí §µ¨«µ°Ž‹ŠÝÚÜ£Ùàƒ‰¾¯§³ÇÕéêìïíÖ
- ÉÖÇˆÑþö”Ôžñ”êÈò¾ÞÇ¡üŽžžÿ½ÿÓÝÝ•œˆÏÊ«£üÏÏ·ÏËéüõº‡Úš›ôªÔžÑ¹¾ÐÇ’òÚþ½¾Ãÿéê¨¢ÅÍÊí—Ñ
-žÞ¯ïäñå¹Ê¹Žó²ºí­ÄšºÔž¹è¾ÐÇöäµîÝÉìÓëÛ½‡ò­¯ªÌ‘Œ»øÇ××ÛžÌÖßÝ™­²ÊÓ¡ÜÜ®³çÅóµÍ¦Ð¶ÖÝƒ
-û¦¶ÿåÉóòµ¨¼â©Ô‘ÝÔçÛþý®•ºóŸ‡À¿·ÛœÇ¼¡³³•Êâ‹Èªªµ»ØÑæ¯âäæ¡²º­­Úº†õ•Ç®Ô‘ïÖ³šþùª‰º
-‘Ÿ§À§—Ì‘á¾úÎÇÇË÷×§›¿¿Õ¬£®¼³É²³ôØšÄï…ùåÇ‘ß²ýõÚšµÚ•ªÜ§É¨£»Ž·‚Ð‘ý¼º¹äŠî•ÁÃ³ÚÛ
-Ñ›÷žïÚù¼ÑÆùæ“›åˆöÔ…™”ç²­ÈÔ§¹É­Ñ¤Ö»¡ü•ÞýÑ‡øŽªï¨œ…§•—ùŠªÛøÔ‘ïŽ³ê¾Íïèèè­ö„¾“Ë¤ˆ
-üß½§½½éÛ¥£ßœíÕ¹¾…ð¯Ì¢ÄÓûÂËÖÇÑÝÓ©Îó“Ê£¿¼â¼òø¼¼ýâ‰Ô‘í©º‹í©Úèþž‚ãýÜ¾îŸñ„÷¶¶Æ¯ùÒÊ
-ò¨ÏìòµÌŽÌê¡ŸâÌ†™±ê´µªÕŠªß§”çï¾Ãåì‘Ï Žü–¬ÿùì ¦­­É–óØäÖ˜¢™þ÷ÖÖÆÏ“Žµ€Œò°Û†‘Ü¨³«ž¨Å
-²ŠŽ¾âÒÍ…¡ºÊÕ½ÒªÜ§¨£Ÿâ¦©¿ÍÒÁˆïãÿ´¶¶ÐÒ¡Êªï™ÀýŸ‰¨ÎãƒÂÕß×é¼ò‘‘•¨ú¼â¶Ô‘¿îêÓýõ¯’ºŸ
-¿ÿÓÒ¢…Òþé¼Ï©£¼³É÷ÿê´èê•¾õ—¸ûŽ½–¯Ê£îÃÅùð‚èíÕ‰ù¿­ÍšÒÚ¿‹òµ’Õáí¹òýÑ¬ŽÎŽÓ«¨»¨Ù
-ª¡¨¼â•¨£ÃïïÑ€Ê–Æ‚Êï’êŽµµ´´ä´ï—®“¬ŽÍ™¨µÕÑÔÝª©ª§•¬ŽÜá–åñŠõ×ò‡Çá¼Á¥Š¬ ØøíªÉêœÈ
-·Ì®«®¯¹Ò„Úû¥Œ¢þ‹þ”¯º²øò…¼ÃÇŽÉÖÇ’ˆ¯¼Þ¾Ã¼¸ÅÙÛðë÷öóŒù·æõŒ§ßü¹¹Ð€‚¦ïøðŸÝÿ’Õ™»åïß
-áíÍ®¯¼ëçÅ”•ž©«¸™”òøÎ¦Ï¤é«£„•Ç¼‚ØÖÕŠ¯¯ÿù£ŸÀÚŸòãÇïÿììÔõë›³ƒ»ºÂ˜ò‘¨“ÑùÄýšôí—Úšª»ÚÔ
-Çú®¦îýËŸ¾µ§Û›˜Œèúï¡ØìûÕÿžöžî¶–¦â«ÁÝ¡ä±®šþÿ¤Ãå‘È¤”Àå‘¤¤îàÊã¹¼‚„„‚øùŽÁÂŠ€ÔžÁÂŠÔž
-ˆÁÂŠ¢¼¾É¡‡ ¡ƒª ¸¡…Óž»µ€»¬¿ù¡’ŠŸƒñ¬Î’îÎ›õ‚ ŠøþÀþñ‹òÃ÷’“þúÂÎ¾ˆ«ì®ô€ë›šéºÅ®îÊáé÷º
-¥ó•‡ÿý§´•î´£ÌÝÄ“®åýÅüÚ…¼¹©·ºË°«­ïÞ‹»õ±Ç¾£‘Û¾î¦ÊÿüËòŠØ Èèðÿ…Ôë½
+(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)
 &]
 [s0; &]
-[s0; Choose the language and eventually the encoding (prefer UTF`-8), 
+[s9; Choose the language and eventually the encoding (prefer UTF`-8), 
 choose the output directory and hit OK.&]
-[s0; &]
-[s0; As a result, a translation template file (e.g. [/ fr`-fr.UTF`-8.tr]) 
-will be created in the output directory and opened in theide.&]
-[s0; &]
-[s0; &]
-[s0; [*+117 2. Translate .tr file]&]
-[s0; &]
-[s0; Translate the resulting file using theide or a text editor that 
+[s9; As a result, a translation template file (e.g. [/ fr`-fr.UTF`-8.tr]) 
+will be created in the output directory and opened in TheIDE.&]
+[s10; 2. Translate .tr file&]
+[s9; Translate the resulting file using TheIDE or a text editor that 
 supports the character set you have selected.  You simply need 
 to fill in the texts in your language corresponding to the English 
 expressions where the translation is missing `- the text is empty 
 string.&]
-[s0; &]
-[s0; Example [/ fr`-fr.UTF`-8.tr] file being translated:&]
+[s9; Example [/ fr`-fr.UTF`-8.tr] file being translated:&]
 [s0; &]
 [ {{10000 [s0; [*C@5+75 LANGUAGE `"FR`-FR UTF`-8`";]&]
 [s0; [*C@5+75 // CtrlLib/CtrlLib.t]&]
@@ -156,55 +53,44 @@ string.&]
 [s0; [*C@5+75 -|][*C@3+75 `"`"][*C@5+75 ;]&]
 [s0; ......]}}&]
 [s0; &]
-[s0; We recommend simply searching for empty strings `- [@3 `"`"].&]
-[s0; &]
-[s0; Important: characters `'[@(0.0.255) `\v]`' and `'[@(0.0.255) `\a]`' 
+[s9; We recommend simply searching for empty strings `- [@3 `"`"].&]
+[s9; Important: characters `'[@(0.0.255) `\v]`' and `'[@(0.0.255) `\a]`' 
 are prefix separators `- you are not supposed to translate prefix 
 or copy it to the translation.&]
+[s9; Example:&]
 [s0; &]
-[s0; Example:&]
-[s0; &]
-[s0; T`_(`"date[@(0.0.255) `\v]May`")&]
+[ {{10000 [s0; T`_(`"date[@(0.0.255) `\v]May`")&]
 [s0; &]
 [s0; // csCZ(`"datum[@(0.0.255) `\v]KvÄ›ten`")  Wrong: Do not translate 
 `"date`" prefix!&]
 [s0; // csCZ(`"date[@(0.0.255) `\v]KvÄ›ten`")  Wrong: Do not copy `"date`" 
 prefix!&]
 [s0; &]
-[s0; csCZ(`"KvÄ›ten`") // Correct&]
+[s0; csCZ(`"KvÄ›ten`") // Correct]}}&]
+[s10; 3. Date formatting&]
+[s9; There are 3 texts in Core.t that are used to represent default 
+localized. Date formatting and scanning:&]
 [s0; &]
-[s0; [*3 Date formatting]&]
-[s0; &]
-[s0; There are 3 texts in Core.t that are used to represent default 
-localized Date formatting and scanning:&]
-[s0; &]
-[s0; T`_(`"date`-format[@(0.0.255) `\a]%2:02d/%3:02d/%1:4d`")&]
+[ {{10000 [s0; T`_(`"date`-format[@(0.0.255) `\a]%2:02d/%3:02d/%1:4d`")&]
 [s0; &]
 [s0; T`_(`"date`-scan[@(0.0.255) `\a]mdy`")&]
 [s0; &]
-[s0; T`_(`"date`-filter[@(0.0.255) `\a]A/[@(0.0.255) `\r] .`-`")&]
+[s0; T`_(`"date`-filter[@(0.0.255) `\a]A/[@(0.0.255) `\r] .`-`")]}}&]
 [s0; &]
-[s0; The format of these strings is described in [^topic`:`/`/Core`/src`/DateFmt`$en`-us^ D
+[s9; The format of these strings is described in [^topic`:`/`/Core`/src`/DateFmt`$en`-us^ D
 ate formatting and scanning].&]
-[s0; &]
-[s0; &]
-[s0; [*+117 3. Submit the translation]&]
-[s0; &]
-[s0; Submit the translated .tr file to the Ultimate`+`+ project forum 
+[s10; 4. Submit the translation&]
+[s9; Submit the translated .tr file to the Ultimate`+`+ project forum 
 for peer review and to be merged in source.&]
-[s0; Use:&]
-[s0; &]
-[s0; [_^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) U
+[s9; Use:&]
+[s0; [_^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) U
 ltimate`+`+ forum: Home Â»]&]
-[s0; [@(0.0.255) -|][_^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) U
+[s0; [@(0.0.255) -|][_^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) U
 `+`+ Library support Â»]&]
-[s0; [@(0.0.255) -|-|][_^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) U
+[s0; [@(0.0.255) -|-|][_^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) U
 `+`+ Libraries and TheIDE: i18n, Unicode and Internationalization]&]
-[s0; &]
-[s0; &]
-[s0; [*+117 4. Repeat!]&]
-[s0; &]
-[s0; U`+`+ is evolving framework and the set of text literals is 
+[s0;_^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=74`&^@(0.0.255) &]
+[s10; 5. Repeat!&]
+[s9; U`+`+ is evolving framework and the set of text literals is 
 growing and changing. Therefore you are welcome to check from 
-time to time for new texts to be translated.&]
-[s0; ]
+time to time for new texts to be translated.]]
