@@ -18,7 +18,7 @@ file
 	fontprop.cpp,
 	propane.cpp,
 	item.cpp,
-	layout.cpp optimize_speed,
+	layout.cpp,
 	visgen.cpp,
 	laydes.cpp,
 	layfile.cpp,
