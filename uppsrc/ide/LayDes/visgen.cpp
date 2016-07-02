@@ -31,22 +31,35 @@ String VisGenDlg::GetName()
 	return n + "Dlg";
 }
 
+String IdInitCaps(const String& src)
+{
+	String h = InitCaps(src);
+	h.Replace("_", "");
+	return h;
+}
+
 void VisGenDlg::Refresh()
 {
 	String s;
 	int q = ~type;
-	pars.Enable(q >= 3);
-	brackets.Enable(q >= 3);
-	label1.Enable(q >= 3);
-	toupper1.Enable(q >= 3);
-	name1.Enable(q >= 3);
-	dname1.Enable(q >= 3);
-	quotes1.Enable(q >= 3 && !label1);
-	label2.Enable(q >= 4);
-	toupper2.Enable(q >= 4);
-	name2.Enable(q >= 4);
-	dname2.Enable(q >= 4);
-	quotes2.Enable(q >= 4 && !label2);
+	bool b = q >= 3 && q <= 4;
+	pars.Enable(b);
+	brackets.Enable(b);
+	label1.Enable(b);
+	toupper1.Enable(b);
+	tolower1.Enable(b);
+	initcaps1.Enable(b);
+	name1.Enable(b);
+	dname1.Enable(b);
+	quotes1.Enable(b && !label1);
+	b = q == 4;
+	label2.Enable(b);
+	toupper2.Enable(b);
+	tolower2.Enable(b);
+	initcaps2.Enable(b);
+	name2.Enable(b);
+	dname2.Enable(b);
+	quotes2.Enable(b && !label2);
 	String oce = "\tCtrlLayout";
 	bool ok = false;
 	if(HasItem("ok")) {
@@ -66,13 +79,13 @@ void VisGenDlg::Refresh()
 		for(int i = 0; i < layout.item.GetCount(); i++) {
 			String bn = layout.item[i].variable;
 			if(layout.item[i].type == "Button" && findarg(bn, "cancel", "ok", "exit") < 0) {
-				String mn = InitCaps(bn);
+				String mn = IdInitCaps(bn);
 				mn.Replace("_", "");
 				if(b1.GetCount() == 0)
 					b1 = b2 = "\n";
 				b1 << '\t' << "void " << mn << "();\n";
-				b2 << '\t' << bn << " <<= THISBACK(" << mn << ");\n";
-				b3 << '\n' << "void " << n << "::" << mn << "()\n{\n}\n";	
+				b2 << '\t' << bn << " << [=] { " << mn << "};\n";
+				b3 << '\n' << "void " << n << "::" << mn << "()\n{\n}\n";
 			}
 		}
 	}
@@ -128,11 +141,23 @@ void VisGenDlg::Refresh()
 			String lbl;
 			if(w >= 0 && IsString(~layout.item[sel[i]].property[w]))
 				lbl = AsCString(ToUtf8((WString)~layout.item[sel[i]].property[w]));
-			if(label1)
-				id1 = lbl;
-			if(label2)
-				id2 = lbl;
-			if(!IsNull(id1) || (q == 4 && !IsNull(id2))) {
+			if(q <= 4) {
+				if(label1)
+					id1 = lbl;
+				if(label2)
+					id2 = lbl;
+			}
+			if(IsNull(id1) && (q != 4 || IsNull(id2)))
+				continue;
+			if(q == 5)
+				s << "\t" << id1 << " << [=] { };\n";
+			else
+			if(q == 6)
+				s << "\t" << IdInitCaps(id1) << "();\n";
+			else
+			if(q == 7)
+				s << "\t" << id1 << " << [=] { " << IdInitCaps(id1) << "(); };\n";
+			else {
 				if((pars || brackets) && !(name1 || name2 || dname1 || dname2))
 					s << ~name;
 				if(pars)
@@ -142,6 +167,12 @@ void VisGenDlg::Refresh()
 					s << ~name << '.';
 				if(toupper1)
 					ss << ToUpper(id1);
+				else
+				if(tolower1)
+					ss << ToLower(id1);
+				else
+				if(initcaps1)
+					ss << IdInitCaps(id1);
 				else
 					ss << id1;
 				if(quotes1 && !label1)
@@ -160,6 +191,11 @@ void VisGenDlg::Refresh()
 						ss << ~name << '.';
 					if(toupper2)
 						ss << ToUpper(id2);
+					if(tolower2)
+						ss << ToLower(id2);
+					else
+					if(initcaps2)
+						ss << IdInitCaps(id2);
 					else
 						ss << id2;
 					if(quotes2 && !label2)
@@ -205,20 +241,23 @@ VisGenDlg::VisGenDlg(LayoutData& layout, const Vector<int>& cursor)
 	type <<= 0;
 	CtrlLayoutOKCancel(*this, "Code generator");
 	type <<= THISBACK(Type);
-	name <<=
-	pars <<=
-	brackets <<=
-	label1 <<=
-	toupper1 <<=
-	quotes1 <<=
-	name1 <<=
-	dname1 <<=
-	label2 <<=
-	toupper2 <<=
-	quotes2 <<=
-	name2 <<=
-	dname2 <<=
-	buttons <<= THISBACK(Refresh);
+
+	// needs to be before Refresh to maintain the proper order of action
+	toupper1 << [=] { tolower1 <<= false; initcaps1 <<= false; };
+	tolower1 << [=] { toupper1 <<= false; initcaps1 <<= false; };
+	initcaps1 << [=] { toupper1 <<= false; tolower1 <<= false; };
+
+	toupper2 << [=] { tolower2 <<= false; initcaps2 <<= false; };
+	tolower2 << [=] { toupper2 <<= false; initcaps2 <<= false; };
+	initcaps2 << [=] { toupper2 <<= false; tolower2 <<= false; };
+
+	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
+		if(dynamic_cast<Option *>(q))
+			*q << [=] { Refresh(); };
+			
+	name << [=] { Refresh(); };
+	
+
 	Refresh();
 	view.Highlight("cpp");
 	view.HideBar();
