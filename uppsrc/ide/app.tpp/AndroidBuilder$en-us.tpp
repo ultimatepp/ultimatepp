@@ -1,10 +1,11 @@
 topic "Android builder";
 [# $$0,0#00000000000000000000000000000000:Default]
 [#a83;*R6 $$1,0#31310162474203024125188417583966:caption]
-[#b42;a42;2 $$2,2#45413000475342174754091244180557:text]
+[#b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [#b83;*4 $$3,2#07864147445237544204411237157677:title]
 [=b83;*R6 $$4,4#6A74CB453EB7CE8DFD488A3B779BFC66:Image]
 [=b42;a67;1 $$5,5#F40424D1E3D034230FCED72E1FBFF1B7:Image description]
+[#b42;a42;ph2 $$6,6#2B3312EDFCF5DDA907D8823BB2222FBD:TextEnumaration]
 [{_}%EN-US 
 [s1; Working with Android builder&]
 [s3; 1. Introduction&]
@@ -14,11 +15,9 @@ its development tools inside TheIDE.&]
 [s2; We will use abbreviations and terms that may be unknown for 
 beginners and new users. Below is the list with the most important 
 ones:&]
-[s0;l160;i150;a33;O0;~~~0; [2 Android SDK `- Android software development 
-kit]&]
-[s0;l160;i150;a33;O0; [2 Android NDK `- Android native development 
-kit]&]
-[s0;l160;i150;a33;O0; [2 JDK `- Java development kit]&]
+[s6;l160;i150;O0; Android SDK `- Android software development kit&]
+[s6;l160;i150;O0; Android NDK `- Android native development kit&]
+[s6;l160;i150;O0; JDK `- Java development kit&]
 [s2; This tutorial is divided into nine chapters. The second and 
 third chapters describe things related to Android SDK. Fourth 
 chapter shows how to create Android builder. Next chapter is 
@@ -153,60 +152,59 @@ Below is a list with all options grouped in two categories. The
 first group described options related to Android SDK. The second 
 one is related to Android NDK.&]
 [s2; Android SDK settings:&]
-[s0;l160;i150;a33;O0; [2 Platform version `- select android platform 
-version]&]
-[s0;l160;i150;a33;O0; [2 Build tools version `- select android build 
-tools version]&]
+[s6;l160;i150;O0; Platform version `- select android platform version&]
+[s6;l160;i150;O0; Build tools version `- select android build tools 
+version&]
 [s2; Android NDK settings:&]
-[s0;l160;i150;a33;O0; [2 BLITZ `- turn on/off BLITZ technology.]&]
-[s0;l160;i150;a33;O0; [2 Target architectures `- specify which architecture 
-binaries will be built]&]
-[s0;l160;i150;a33;O0; [2 Toolchain `- specify compiler which will be 
-used to compile source files `- entries without text refer to 
-GCC]&]
-[s0;l160;i150;a33;O0; [2 C`+`+ runtime `- specify runtime library `- 
-please notice that this flag can turn on/off language specific 
-features like availability of standard library or exception handling]&]
-[s0;l160;i150;a33;O0; [2 Common C`+`+ options `- compilation flags 
-used with C`+`+ source files]&]
-[s0;l160;i150;a33;O0; [2 Common C options `- compilation flags used 
-with C source files]&]
+[s6;l160;i150;O0;~~~32; BLITZ `- turn on/off BLITZ technology.&]
+[s6;l160;i150;O0;~~~32; Target architectures `- specify which architecture 
+binaries will be built&]
+[s6;l160;i150;O0;~~~32; Toolchain `- specify compiler which will 
+be used to compile source files `- entries without text refer 
+to GCC&]
+[s6;l160;i150;O0;~~~32; C`+`+ runtime `- specify runtime library 
+`- please notice that this flag can turn on/off language specific 
+features like availability of standard library or exception handling&]
+[s6;l160;i150;O0;~~~32; Common C`+`+ options `- compilation flags 
+used with C`+`+ source files&]
+[s6;l160;i150;O0;~~~32; Common C options `- compilation flags used 
+with C source files&]
 [s3; 7. Tips and tricks&]
 [s2; Sometimes you can simplify many things or do things that are 
 not described in the documentation. Below is a list with the 
 most useful:&]
-[s0;l160;i127;a33;O0; [2 You can add resources to your pure Android 
-SDK/NDK application by defining following package flag: `"ANDROID`_RESOURCES`_PACK
-AGE`". The package define in that way should be in line with 
-directory structure described in ][^http`:`/`/developer`.android`.com`/guide`/topics`/resources`/providing`-resources`.html^2 h
-ttp://developer.android.com/guide/topics/resources/providing`-resources.html][2 .]&]
-[s0;l160;i127;a33;O0; [2 You can use download button to launch a web 
-browser with the download site.]&]
-[s0;l160;i127;a33;O0; [2 You don`'t need to specific path manually 
-`- use select directory button instead.]&]
-[s0;l160;i127;a33;O0; [2 On Debian/Ubuntu directories containing JDKs 
-are located in `"/usr/lib/jvm/`".]&]
-[s0;l160;i127;a33;O0; [2 Use preprocess IDE option on Java files to 
-generate C/C`+`+ stubs.]&]
-[s0;l160;i127;a33;O0; [2 You can launch Android SDK manager from TheIDE 
-by selecting following option from TheIDE menu bar: ][/2 Setup `-> 
-Android `-> SDK Manager][2 .]&]
-[s0;l160;i127;a33;O0; [2 The second application you can start directly 
-from TheIDE is AVD Manager. It is available from following TheIDE 
-menubar entry: ][/2 Setup `-> Android `-> AVD Manager][2 .]&]
+[s6;l160;i150;O0; You can add resources to your pure Android SDK/NDK 
+application by defining following package flag: `"ANDROID`_RESOURCES`_PACKAGE`". 
+The package define in that way should be in line with directory 
+structure described in [^http`:`/`/developer`.android`.com`/guide`/topics`/resources`/providing`-resources`.html^ h
+ttp://developer.android.com/guide/topics/resources/providing`-resources.html].&]
+[s6;l160;i150;O0; You can use download button to launch a web browser 
+with the download site.&]
+[s6;l160;i150;O0; You don`'t need to specific path manually `- use 
+select directory button instead.&]
+[s6;l160;i150;O0; On Debian/Ubuntu directories containing JDKs are 
+located in `"/usr/lib/jvm/`".&]
+[s6;l160;i150;O0; Use preprocess IDE option on Java files to generate 
+C/C`+`+ stubs.&]
+[s6;l160;i150;O0; You can launch Android SDK manager from TheIDE 
+by selecting following option from TheIDE menu bar: [/ Setup `-> 
+Android `-> SDK Manager].&]
+[s6;l160;i150;O0; The second application you can start directly from 
+TheIDE is AVD Manager. It is available from following TheIDE 
+menubar entry: [/ Setup `-> Android `-> AVD Manager].&]
 [s3; 8. Known issues&]
 [s2; The android builder code is not fully complete. Sometimes there 
 are also errors in the code. If you found something disturbing 
 please let us know about it. You can do this by posting the topic 
 on the official Ultimate`+`+ forum.&]
-[s0;l160;i150;a33;O0; [2 Debugging doesn`'t work `- functionality is 
-not implemented.]&]
-[s0;l160;i150;a33;O0; [2 Graphical interface for signing applications 
-in release mode `- you need to do this manually using command 
-line interface.]&]
-[s0;l160;i150;a33;O0; [2 Disk space consumption `- to achieve Android 
-project compatibility we make copy of project files.]&]
-[s0;l160;i150;a33;O0; [2 Java sources compile in single thread.]&]
+[s6;l160;i150;O0; Debugging doesn`'t work `- functionality is not 
+implemented.&]
+[s6;l160;i150;O0; Graphical interface for signing applications in 
+release mode `- you need to do this manually using command line 
+interface.&]
+[s6;l160;i150;O0; Disk space consumption `- to achieve Android project 
+compatibility we make copy of project files.&]
+[s6;l160;i150;O0; Java sources compile in single thread.&]
 [s3; 9. Appendix&]
 [s2; In the near future we plan to port the whole Ultimate`+`+ library 
 to Android.]]
