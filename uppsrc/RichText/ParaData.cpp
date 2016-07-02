@@ -37,7 +37,6 @@ RichPara::~RichPara()
 				cache.SetCount(i);
 				break;
 			}
-			i++;
 		}
 	}
 }
