@@ -201,6 +201,8 @@ public:
 	VectorMap()                                                       {}
 	VectorMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
 
+	VectorMap& operator()(const K& k, const T& v)        { Add(k, v); return *this; }
+
 	friend void    Swap(VectorMap& a, VectorMap& b)      { a.B::Swap(b); }
 
 	typedef typename AMap< K, T, Vector<T>>::ConstIterator ConstIterator;
@@ -232,6 +234,8 @@ public:
 	ArrayMap() {}
 
 	ArrayMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
+
+	ArrayMap& operator()(const K& k, const T& v)         { Add(k, v); return *this; }
 
 	friend void    Swap(ArrayMap& a, ArrayMap& b)        { a.B::Swap(b); }
 
