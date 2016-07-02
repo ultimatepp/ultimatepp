@@ -324,19 +324,19 @@ int String::GetCharCount() const
 
 String::String(StringBuffer& b)
 {
-	if(b.begin == b.buffer) {
-		String0::Set0(b.begin, (int)(uintptr_t)(b.end - b.begin));
+	if(b.pbegin == b.buffer) {
+		String0::Set0(b.pbegin, (int)(uintptr_t)(b.pend - b.pbegin));
 		return;
 	}
 	int l = b.GetLength();
 	if(l <= 14) {
 		Zero();
-		memcpy(chr, b.begin, l);
+		memcpy(chr, b.pbegin, l);
 		SLen() = l;
 		b.Free();
 	}
 	else {
-		ptr = b.begin;
+		ptr = b.pbegin;
 		ptr[l] = 0;
 		SLen() = 15;
 		LLen() = l;
@@ -370,23 +370,23 @@ char *StringBuffer::Alloc(int count, int& alloc)
 
 void StringBuffer::Free()
 {
-	if(begin == buffer)
+	if(pbegin == buffer)
 		return;
-	int all = (int)(limit - begin);
+	int all = (int)(limit - pbegin);
 	if(all == 31)
-		MemoryFree32(begin);
+		MemoryFree32(pbegin);
 	if(all > 31)
-		MemoryFree((Rc *)begin - 1);
+		MemoryFree((Rc *)pbegin - 1);
 }
 
 void StringBuffer::Realloc(dword n, const char *cat, int l)
 {
 	int al;
-	size_t ep = end - begin;
+	size_t ep = pend - pbegin;
 	if(n > INT_MAX)
 		n = INT_MAX;
 	char *p = Alloc(n, al);
-	memcpy(p, begin, min((dword)GetLength(), n));
+	memcpy(p, pbegin, min((dword)GetLength(), n));
 	if(cat) {
 		if(ep + l > INT_MAX)
 			Panic("StringBuffer is too big!");
@@ -394,15 +394,15 @@ void StringBuffer::Realloc(dword n, const char *cat, int l)
 		ep += l;
 	}
 	Free();
-	begin = p;
-	end = begin + ep;
-	limit = begin + al;
+	pbegin = p;
+	pend = pbegin + ep;
+	limit = pbegin + al;
 }
 
 void StringBuffer::Expand()
 {
 	Realloc(GetLength() * 2);
-	if(end == limit)
+	if(pend == limit)
 		Panic("StringBuffer is too big!");
 }
 
@@ -410,7 +410,7 @@ void StringBuffer::SetLength(int l)
 {
 	if(l > GetAlloc())
 		Realloc(l);
-	end = begin + l;
+	pend = pbegin + l;
 }
 
 void StringBuffer::Shrink()
@@ -418,25 +418,25 @@ void StringBuffer::Shrink()
 	int l = GetLength();
 	if(l < GetAlloc() && l > 14)
 		Realloc(l);
-	end = begin + l;
+	pend = pbegin + l;
 }
 
 void StringBuffer::Cat(const char *s, int l)
 {
-	if(end + l > limit)
+	if(pend + l > limit)
 		Realloc(max(GetLength(), l) + GetLength(), s, l);
 	else {
-		SVO_MEMCPY(end, s, l);
-		end += l;
+		SVO_MEMCPY(pend, s, l);
+		pend += l;
 	}
 }
 
 void StringBuffer::Cat(int c, int l)
 {
-	if(end + l > limit)
+	if(pend + l > limit)
 		Realloc(max(GetLength(), l) + GetLength(), NULL, l);
-	memset(end, c, l);
-	end += l;
+	memset(pend, c, l);
+	pend += l;
 }
 
 void StringBuffer::Set(String& s)
@@ -444,15 +444,15 @@ void StringBuffer::Set(String& s)
 	s.UnShare();
 	int l = s.GetLength();
 	if(s.GetAlloc() == 14) {
-		begin = (char *)MemoryAlloc32();
-		limit = begin + 31;
-		memcpy(begin, s.Begin(), l);
-		end = begin + l;
+		pbegin = (char *)MemoryAlloc32();
+		limit = pbegin + 31;
+		memcpy(pbegin, s.Begin(), l);
+		pend = pbegin + l;
 	}
 	else {
-		begin = s.ptr;
-		end = begin + l;
-		limit = begin + s.GetAlloc();
+		pbegin = s.ptr;
+		pend = pbegin + l;
+		limit = pbegin + s.GetAlloc();
 	}
 	s.Zero();
 }

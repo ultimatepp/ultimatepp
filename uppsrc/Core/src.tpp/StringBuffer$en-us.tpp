@@ -41,13 +41,17 @@ to and from [* String].&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:StringBuffer`:`:Begin`(`): [@(0.0.255) char]_`*[* Begin]()&]
+[s5;:Upp`:`:StringBuffer`:`:begin`(`): [@(0.0.255) char]_`*[* begin]()&]
 [s2;%% Returns a pointer to the buffer of characters. Mutating operations 
-invalidate this pointer.&]
+invalidate this pointer. Note that this is non`-const operation 
+and writes terminating zero at `*end().&]
 [s3; &]
 [s4; &]
 [s5;:StringBuffer`:`:End`(`): [@(0.0.255) char]_`*[* End]()&]
-[s2;%% Returns Begin() `+ GetCount(). Mutating operations invalidate 
-this pointer.&]
+[s5;:Upp`:`:StringBuffer`:`:end`(`): [@(0.0.255) char]_`*[* end]()&]
+[s2;%% Returns begin() `+ GetCount(). Mutating operations invalidate 
+this pointer. Note that this is non`-const operation and writes 
+terminating zero at `*end().&]
 [s3; &]
 [s4; &]
 [s5;:StringBuffer`:`:Cat`(int`): [@(0.0.255) void]_[* Cat]([@(0.0.255) int]_[*@3 c])&]
@@ -157,13 +161,17 @@ assignment to and from [* WString].&]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:WStringBuffer`:`:Begin`(`): [_^wchar^ wchar]_`*[* Begin]()&]
+[s5;:Upp`:`:WStringBuffer`:`:begin`(`): [_^Upp`:`:wchar^ wchar]_`*[* begin]()&]
 [s2;%% Returns a pointer to the buffer of characters. Mutating operations 
-invalidate this pointer.&]
+invalidate this pointer. Note that this is non`-const operation 
+and writes terminating zero at `*end().&]
 [s3; &]
 [s4; &]
 [s5;:WStringBuffer`:`:End`(`): [_^wchar^ wchar]_`*[* End]()&]
-[s2;%% Returns Begin() `+ GetCount(). Mutating operations invalidate 
-this pointer.&]
+[s5;:Upp`:`:WStringBuffer`:`:end`(`): [_^Upp`:`:wchar^ wchar]_`*[* end]()&]
+[s2;%% Returns begin() `+ GetCount(). Mutating operations invalidate 
+this pointer. Note that this is non`-const operation and writes 
+terminating zero at `*end().&]
 [s3; &]
 [s4; &]
 [s5;:WStringBuffer`:`:Cat`(int`): [@(0.0.255) void]_[* Cat]([@(0.0.255) int]_[*@3 c])&]

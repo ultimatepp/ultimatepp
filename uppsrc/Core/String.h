@@ -399,8 +399,8 @@ public:
 inline std::string to_string(const String& s)              { return std::string(s.Begin(), s.End()); }
 
 class StringBuffer : NoCopy {
-	char   *begin;
-	char   *end;
+	char   *pbegin;
+	char   *pend;
 	char   *limit;
 	char    buffer[256];
 
@@ -411,41 +411,43 @@ class StringBuffer : NoCopy {
 	char *Alloc(int len, int& alloc);
 	void  Realloc(dword n, const char *cat = NULL, int l = 0);
 	void  Expand();
-	void  Zero()                    { begin = end = buffer; limit = begin + 255; }
+	void  Zero()                    { pbegin = pend = buffer; limit = pbegin + 255; }
 	void  Free();
 	void  Set(String& s);
 
 public:
-	char *Begin()                   { *end = '\0'; return begin; }
-	char *End()                     { *end = '\0'; return end; }
+	char *Begin()                   { *pend = '\0'; return pbegin; }
+	char *begin()                   { return Begin(); }
+	char *End()                     { *pend = '\0'; return pend; }
+	char *end()                     { return End(); }
 
 	operator char*()                { return Begin(); }
 	char *operator~()               { return Begin(); }
 
 	void SetLength(int l);
 	void SetCount(int l)            { SetLength(l); }
-	int  GetLength() const          { return (int)(end - begin); }
+	int  GetLength() const          { return (int)(pend - pbegin); }
 	int  GetCount() const           { return GetLength(); }
 	void Strlen();
 	void Clear()                    { Free(); Zero(); }
 	void Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 	void Shrink();
 
-	void Cat(int c)                        { if(end >= limit) Expand(); *end++ = c; }
+	void Cat(int c)                        { if(pend >= limit) Expand(); *pend++ = c; }
 	void Cat(int c, int count);
 	void Cat(const char *s, int l);
 	void Cat(const char *s, const char *e) { Cat(s, int(e - s)); }
 	void Cat(const char *s);
 	void Cat(const String& s)              { Cat(s, s.GetLength()); }
 
-	int  GetAlloc() const           { return (int)(limit - begin); }
+	int  GetAlloc() const           { return (int)(limit - pbegin); }
 
 	void operator=(String& s)       { Free(); Set(s); }
 
 	StringBuffer()                  { Zero(); }
 	StringBuffer(String& s)         { Set(s); }
 	StringBuffer(int len)           { Zero(); SetLength(len); }
-	~StringBuffer()                 { if(begin != buffer) Free(); }
+	~StringBuffer()                 { if(pbegin != buffer) Free(); }
 };
 
 inline bool  IsEmpty(const String& s)      { return s.IsEmpty(); }
@@ -838,8 +840,8 @@ inline std::wstring to_string(const WString& s)             { return std::wstrin
 #endif
 
 class WStringBuffer : NoCopy {
-	wchar   *begin;
-	wchar   *end;
+	wchar   *pbegin;
+	wchar   *pend;
 	wchar   *limit;
 
 	friend class WString;
@@ -852,21 +854,23 @@ class WStringBuffer : NoCopy {
 	void   Set(WString& s);
 
 public:
-	wchar *Begin()                   { *end = '\0'; return begin; }
-	wchar *End()                     { *end = '\0'; return end; }
+	wchar *Begin()                   { *pend = '\0'; return pbegin; }
+	wchar *begin()                   { return Begin(); }
+	wchar *End()                     { *pend = '\0'; return pend; }
+	wchar *end()                     { return End(); }
 
 	operator wchar*()                { return Begin(); }
 	wchar *operator~()               { return Begin(); }
 
 	void  SetLength(int l);
 	void  SetCount(int l)            { SetLength(l); }
-	int   GetLength() const          { return (int)(end - begin); }
+	int   GetLength() const          { return (int)(pend - pbegin); }
 	int   GetCount() const           { return GetLength(); }
-	void  Strlen()                   { SetLength(wstrlen(begin)); }
+	void  Strlen()                   { SetLength(wstrlen(pbegin)); }
 	void  Clear()                    { Free(); Zero(); }
 	void  Reserve(int r)             { int l = GetLength(); SetLength(l + r); SetLength(l); }
 
-	void  Cat(int c)                          { if(end >= limit) Expand(); *end++ = c; }
+	void  Cat(int c)                          { if(pend >= limit) Expand(); *pend++ = c; }
 	void  Cat(int c, int count);
 	void  Cat(const wchar *s, int l);
 	void  Cat(const wchar *s, const wchar *e) { Cat(s, int(e - s)); }
@@ -874,7 +878,7 @@ public:
 	void  Cat(const WString& s)               { Cat(s, s.GetLength()); }
 	void  Cat(const char *s)                  { Cat(WString(s)); }
 
-	int   GetAlloc() const           { return (int)(limit - begin); }
+	int   GetAlloc() const           { return (int)(limit - pbegin); }
 
 	void operator=(WString& s)       { Free(); Set(s); }
 
