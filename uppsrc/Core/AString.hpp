@@ -308,7 +308,7 @@ String::String(const char *s)
 force_inline
 void StringBuffer::Strlen()
 {
-	SetLength((int)strlen__(begin));
+	SetLength((int)strlen__(pbegin));
 }
 
 force_inline

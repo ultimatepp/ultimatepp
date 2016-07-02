@@ -210,7 +210,7 @@ WString& WString::operator=(const wchar *s)
 WString::WString(WStringBuffer& b)
 {
 	length = b.GetLength();
-	ptr = b.begin;
+	ptr = b.pbegin;
 	ptr[length] = 0;
 	alloc = b.GetAlloc();
 	if(GetAlloc() > 4 * GetLength() / 3)
@@ -280,7 +280,7 @@ WString::operator std::wstring() const
 void WStringBuffer::Zero()
 {
 	static wchar h[2];
-	begin = end = limit = h;
+	pbegin = pend = limit = h;
 }
 
 wchar *WStringBuffer::Alloc(int count, int& alloc)
@@ -302,21 +302,21 @@ wchar *WStringBuffer::Alloc(int count, int& alloc)
 
 void WStringBuffer::Free()
 {
-	int all = (int)(limit - begin);
+	int all = (int)(limit - pbegin);
 	if(all == WString0::SMALL)
-		MemoryFree48(begin);
+		MemoryFree48(pbegin);
 	if(all > WString0::SMALL)
-		MemoryFree((Atomic *)begin - 1);
+		MemoryFree((Atomic *)pbegin - 1);
 }
 
 void WStringBuffer::Expand(dword n, const wchar *cat, int l)
 {
 	int al;
-	size_t ep = end - begin;
+	size_t ep = pend - pbegin;
 	if(n > INT_MAX)
 		n = INT_MAX;
 	wchar *p = Alloc(n, al);
-	memcpy(p, begin, GetLength() * sizeof(wchar));
+	memcpy(p, pbegin, GetLength() * sizeof(wchar));
 	if(cat) {
 		if(ep + l > INT_MAX)
 			Panic("WStringBuffer is too big!");
@@ -324,50 +324,50 @@ void WStringBuffer::Expand(dword n, const wchar *cat, int l)
 		ep += l;
 	}
 	Free();
-	begin = p;
-	end = begin + ep;
-	limit = begin + al;
+	pbegin = p;
+	pend = pbegin + ep;
+	limit = pbegin + al;
 }
 
 void WStringBuffer::Expand()
 {
 	Expand(GetLength() * 2);
-	if(end == limit)
+	if(pend == limit)
 		Panic("WStringBuffer is too big!");
 }
 
 void WStringBuffer::SetLength(int l)
 {
-	if(l > (limit - begin))
+	if(l > (limit - pbegin))
 		Expand(l);
-	end = begin + l;
+	pend = pbegin + l;
 }
 
 void WStringBuffer::Cat(const wchar *s, int l)
 {
-	if(end + l > limit)
+	if(pend + l > limit)
 		Expand(max(GetLength(), l) + GetLength(), s, l);
 	else {
-		memcpy(end, s, l * sizeof(wchar));
-		end += l;
+		memcpy(pend, s, l * sizeof(wchar));
+		pend += l;
 	}
 }
 
 void WStringBuffer::Cat(int c, int l)
 {
-	if(end + l > limit)
+	if(pend + l > limit)
 		Expand(max(GetLength(), l) + GetLength(), NULL, l);
-	memsetw(end, c, l);
-	end += l;
+	memsetw(pend, c, l);
+	pend += l;
 }
 
 void WStringBuffer::Set(WString& s)
 {
 	s.UnShare();
 	int l = s.GetLength();
-	begin = s.ptr;
-	end = begin + l;
-	limit = begin + s.GetAlloc();
+	pbegin = s.ptr;
+	pend = pbegin + l;
+	limit = pbegin + s.GetAlloc();
 	s.Zero();
 }
 
