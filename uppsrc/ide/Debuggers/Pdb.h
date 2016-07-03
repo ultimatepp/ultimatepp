@@ -58,7 +58,7 @@ struct Pdb : Debugger, ParentCtrl {
 
 		virtual int Byte(int64 addr)            { return pdb ? pdb->Byte((adr_t)addr) : 0; }
 
-		PdbHexView()                            { pdb = NULL; SetTotal(0x80000000); }
+		PdbHexView()                            { pdb = NULL; }
 	}
 	memory;
 

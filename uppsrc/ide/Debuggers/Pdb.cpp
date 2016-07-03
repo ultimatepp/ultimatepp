@@ -125,6 +125,11 @@ bool Pdb::Create(One<Host> local, const String& exefile, const String& cmdline)
 #else
 	win64 = false;
 #endif
+
+	if(win64)
+		memory.SetTotal(I64(0xffffffffffff));
+	else
+		memory.SetTotal(0x80000000);
 	
 	CloseHandle(pi.hThread);
 
