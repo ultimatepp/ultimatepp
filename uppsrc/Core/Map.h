@@ -201,7 +201,7 @@ public:
 	VectorMap()                                                       {}
 	VectorMap(std::initializer_list<std::pair<K, T>> init) : B::AMap(init) {}
 
-	VectorMap& operator()(const K& k, const T& v)        { Add(k, v); return *this; }
+	VectorMap& operator()(const K& k, const T& v)        { B::Add(k, v); return *this; }
 
 	friend void    Swap(VectorMap& a, VectorMap& b)      { a.B::Swap(b); }
 
