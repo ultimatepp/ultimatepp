@@ -59,7 +59,9 @@ void CheckType(const T& x, bool checkhash = false)
 	Value tt = x;
 	bool isvoid = tt.IsVoid();
 	if(!isvoid) {
-		fn = ConfigFile(AsString(tt.GetType()) + ":" + AsString(x));
+		fn = ConfigFile(AsString(tt.GetType()) + "#"
+		                + Filter(AsString(x), [](int c) { return IsAlNum(c) ? c : 0; }));
+		DDUMP(fn);
 		if(FileExists(fn)) {
 			LoadFromFile(vf, fn);
 			if(IsValueMap(tt)) {
