@@ -67,6 +67,8 @@ file
 	NetNode.cpp,
 	App.h,
 	App.cpp,
+	Huge.h,
+	Huge.cpp,
 	Stream.h,
 	Stream.cpp,
 	BlockStream.cpp,

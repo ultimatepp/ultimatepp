@@ -235,14 +235,26 @@ void Image::Serialize(Stream& s)
 //				return;
 //			}
 			// TODO: Add invalid stream protection
-
-			ImageBuffer b(sz);
-			
-			if(!s.GetAll64(~b, len)) {
-				s.LoadError();
-				Clear();
-				return;
+			ImageBuffer b;
+			if(len < 6 * 1024 * 1024) {
+				b.Create(sz);
+				if(!s.GetAll(~b, (int)len)) {
+					s.LoadError();
+					Clear();
+					return;
+				}
 			}
+			else {
+				Huge h;
+				if(!s.GetAll(h, len)) {
+					s.LoadError();
+					Clear();
+					return;
+				}
+				b.Create(sz);
+				h.Get(~b);
+			}
+			
 			
 			b.SetDots(dots);
 			b.SetHotSpot(p);
@@ -251,18 +263,7 @@ void Image::Serialize(Stream& s)
 		else
 			Clear();
 	else
-	{
-		int64 offset = 0;
-		const byte* ptr = (byte*)~*this;
-				
-		while(len>INT_MAX)
-		{
-			s.Put(ptr+offset, INT_MAX);
-			len -= INT_MAX;
-			offset += INT_MAX;
-		}
-		s.Put(ptr+offset, (int)len);
-	}
+		s.Put64(~*this, len);
 }
 INITBLOCK {
 	Value::Register<Image>("Image");

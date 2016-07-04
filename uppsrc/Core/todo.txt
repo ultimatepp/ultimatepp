@@ -1,5 +1,3 @@
-CLANG11 upptst/idetest : ERROR
-
 uppbox
 
 oportunity &&

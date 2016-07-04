@@ -235,12 +235,6 @@ int AString<B>::FindFirstOf(int len, const tchar *s, int from) const
 	return -1;
 }
 
-template <class B>
-int AString<B>::FindFirstOf(const tchar *s, int from) const
-{
-	return FindFirstOf(strlen__(s), s, from);
-}
-
 inline int String0::Compare(const String0& s) const
 {
 #ifdef FAST_STRING_COMPARE

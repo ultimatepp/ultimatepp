@@ -335,6 +335,8 @@ class JsonIO;
 #include "InVector.hpp"
 #include "InMap.hpp"
 
+#include "Huge.h"
+
 #ifdef PLATFORM_WIN32
 NTL_MOVEABLE(POINT)
 NTL_MOVEABLE(SIZE)
