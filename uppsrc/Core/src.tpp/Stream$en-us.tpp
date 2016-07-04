@@ -483,6 +483,18 @@ number of bytes was read. Unlike regular Get, block size can
 be greater than 2GB, if CPU is 64 bit.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:Stream`:`:Get`(Upp`:`:Huge`&`,size`_t`):%- [_^size`_t^ size`_t]_[* Get]([_^Upp`:`:Huge^ H
+uge][@(0.0.255) `&]_[*@3 h], [_^size`_t^ size`_t]_[*@3 size])&]
+[s2; Reads data into [%-*@3 h], returns the size read.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Stream`:`:GetAll`(Upp`:`:Huge`&`,size`_t`):%- [@(0.0.255) bool]_[* GetAll]([_^Upp`:`:Huge^ H
+uge][@(0.0.255) `&]_[*@3 h], [_^size`_t^ size`_t]_[*@3 size])&]
+[s2; Reads data into [%-*@3 h], returns the size read. If there is 
+not enough data in the stream, LoadError is invoked (that in 
+turn might throw an exception).&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:LoadThrowing`(`):%- [@(0.0.255) void]_[* LoadThrowing]()&]
 [s2; Sets stream into the mode that throws LoadingError exception 
 when LoadError is invoked. This mode is typical for serialization 

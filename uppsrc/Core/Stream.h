@@ -19,6 +19,8 @@ struct LoadingError : StreamError {};
 
 enum EOLenum { EOL };
 
+class Huge;
+
 class Stream {
 protected:
 	int64  pos;
@@ -94,7 +96,7 @@ public:
 	void      Put(const String& s)   { Put((const char *) s, s.GetLength()); }
 	String    Get(int size);
 	String    GetAll(int size);
-
+	
 	void      LoadThrowing()         { style |= STRM_THROW; }
 	void      LoadError();
 
@@ -103,6 +105,9 @@ public:
 	void      Put64(const void *data, int64 size);
 	int64     Get64(void *data, int64 size);
 	bool      GetAll64(void *data, int64 size);
+
+	size_t    Get(Huge& h, size_t size);
+	bool      GetAll(Huge& h, size_t size);
 
 	int       Get8()                 { return ptr < rdlim ? *ptr++ : _Get8(); }
 #ifdef CPU_X86

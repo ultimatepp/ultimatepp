@@ -123,28 +123,50 @@ bool Stream::GetAll64(void *data, int64 size)
 	return true;
 }
 
+size_t Stream::Get(Huge& h, size_t size)
+{
+	while(h.GetSize() < size) {
+		int len = Get(h.AddChunk(), (int)min((size_t)h.CHUNK, size - h.GetSize()));
+		if(len < h.CHUNK) {
+			h.Finish(len);
+			break;
+		}
+	}
+	return h.GetSize();
+}
+
+bool Stream::GetAll(Huge& h, size_t size)
+{
+	if(Get(h, size) != size) {
+		LoadError();
+		return false;
+	}
+	return true;
+}
+
 String Stream::Get(int size)
 {
-	StringBuffer b(size);
-	int n = Get(~b, size);
-	b.SetCount(n);
-	String s = b;
-	s.Trim(n);
-	return s;
+	if(size < 1024*1024) {
+		StringBuffer b(size);
+		int n = Get(~b, size);
+		b.SetCount(n);
+		String s = b;
+		s.Trim(n);
+		return s;
+	}
+	else {
+		Huge h;
+		Get(h, size);
+		return h.Get();
+	}
 }
 
 String Stream::GetAll(int size)
 {
-	String result;
-	while(size > 0) { // read in chunks to avoid out-of-memory in case of invalid size info in the stream
-		int n = min(size, 256 * 1024);
-		String h = Get(n);
-		if(h.GetCount() != n) {
-			LoadError();
-			return String::GetVoid();
-		}
-		size -= n;
-		result.Cat(h);
+	String result = Get(size);
+	if(result.GetCount() != size) {
+		LoadError();
+		result = String::GetVoid();
 	}
 	return result;
 }

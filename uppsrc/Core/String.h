@@ -122,9 +122,9 @@ public:
 	bool   TrimEnd(const tchar *s)                            { return TrimEnd(s, strlen__(s)); }
 	bool   TrimEnd(const String& s)                           { return TrimEnd(~s, s.GetLength()); }
 
-	int    FindFirstOf(int len, const tchar *s, int from) const;
-	int    FindFirstOf(const tchar *s, int from = 0) const;
-	int    FindFirstOf(const String& s, int from = 0) const   { return FindFirstOf(s.GetCount(), ~s, from); }
+	int    FindFirstOf(int len, const tchar *set, int from = 0) const;
+	int    FindFirstOf(const tchar *set, int from = 0) const  { return FindFirstOf(strlen__(set), set, from); }
+	int    FindFirstOf(const String& set, int from = 0) const { return FindFirstOf(s.GetCount(), ~set, from); }
 	
 	friend bool operator<(const String& a, const String& b)   { return a.Compare(b) < 0; }
 	friend bool operator<(const String& a, const tchar *b)    { return a.Compare(b) < 0; }
