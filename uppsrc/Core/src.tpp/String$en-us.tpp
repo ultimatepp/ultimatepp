@@ -639,4 +639,27 @@ ool]_[* TrimEnd]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s]
 [s2; If string ends with [%-*@3 s]., trims the end to remove it and 
 returns true.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:FindFirstOf`(int`,const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* FindFirstOf]([@(0.0.255) int]_[*@3 len], [@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ t
+char]_`*[*@3 set], [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s2; Returns the first position of any character from [%-*@3 set] starting 
+at [%-*@3 from]. The number of characters in [%-*@3 set] is [%-*@3 len]. 
+Returns `-1 if not found.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:FindFirstOf`(const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* FindFirstOf]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 set], 
+[@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
+[s2; Returns the first position of any character from zero terminated 
+[%-*@3 set] starting at [%-*@3 from]. Returns `-1 if not found.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:FindFirstOf`(const Upp`:`:AString`:`:String`&`,int`)const:%- [@(0.0.255) i
+nt]_[* FindFirstOf]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&
+]_[*@3 set], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
+[s2; Returns the first position of any character from [%-*@3 set] starting 
+at [%-*@3 from]. Returns `-1 if not found.&]
+[s2; &]
+[s3; &]
 [s3; ]]
