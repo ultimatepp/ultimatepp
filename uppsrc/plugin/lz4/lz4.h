@@ -61,6 +61,8 @@ String LZ4Compress(const String& s, Gate2<int64, int64> progress = false);
 String LZ4Decompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String LZ4Decompress(const String& s, Gate2<int64, int64> progress = false);
 
+bool IsLZ4(Stream& s);
+
 };
 
 #endif

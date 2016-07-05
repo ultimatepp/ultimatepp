@@ -66,7 +66,11 @@ void Lz4::FlushOut()
 	if(!pos)
 		return;
 
-	int clen = LZ4_compress(buffer, ~outbuf + 4, pos);
+	int clen;
+	{
+		RTIMING("Compress");
+		clen = LZ4_compress(buffer, ~outbuf + 4, pos);
+	}
 	if(clen < 0) {
 		error = true;
 		return;
@@ -211,7 +215,11 @@ void Lz4::Put(const void *ptr_, int size)
 							xxh.Put(src, len);
 						}
 						else {
-							int sz = LZ4_decompress_safe(src, outbuf, len, maxblock);
+							int sz;
+							{
+								RTIMING("Decompress");
+								sz = LZ4_decompress_safe(src, outbuf, len, maxblock);
+							}
 							if(sz < 0) {
 								error = true;
 								return;
@@ -243,6 +251,14 @@ Lz4::Lz4()
 
 Lz4::~Lz4()
 {
+}
+
+bool IsLZ4(Stream& s)
+{
+	int64 pos = s.GetPos();
+	bool b = s.Get32le() == LZ4F_MAGIC;
+	s.Seek(pos);
+	return b;
 }
 
 };

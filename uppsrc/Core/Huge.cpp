@@ -20,8 +20,6 @@ void Huge::Finish(int last_chunk_size)
 
 void Huge::Get(void *t_, size_t pos, size_t sz) const
 {
-	DTIMING("Get");
-
 	ASSERT(pos + sz <= size);
 	int blki = int(pos / CHUNK);
 	size_t blkpos = pos & (CHUNK - 1);

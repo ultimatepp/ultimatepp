@@ -68,6 +68,8 @@ public:
 	void                         Out(const void *ptr, int size);
 	
 	int64                        GetCount() const             { return count; }
+	
+	Event<int64>                 WhenPos;
 
 	template <class F>
 	void Set(Stream& out_, F& filter) {

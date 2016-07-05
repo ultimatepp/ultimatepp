@@ -159,6 +159,7 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
+	dword    GetHashValue() const    { return HashBySerialize(*this); }
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
@@ -302,7 +303,8 @@ public:
 	void     Xmlize(XmlIO& xio, const char *itemtag = "item");
 	void     Jsonize(JsonIO& jio);
 	String   ToString() const;
-	
+	dword    GetHashValue() const    { return HashBySerialize(*this); }
+
 	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
 	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
 	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
