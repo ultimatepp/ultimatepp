@@ -124,7 +124,7 @@ public:
 
 	int    FindFirstOf(int len, const tchar *set, int from = 0) const;
 	int    FindFirstOf(const tchar *set, int from = 0) const  { return FindFirstOf(strlen__(set), set, from); }
-	int    FindFirstOf(const String& set, int from = 0) const { return FindFirstOf(s.GetCount(), ~set, from); }
+	int    FindFirstOf(const String& set, int from = 0) const { return FindFirstOf(set.GetCount(), ~set, from); }
 	
 	friend bool operator<(const String& a, const String& b)   { return a.Compare(b) < 0; }
 	friend bool operator<(const String& a, const tchar *b)    { return a.Compare(b) < 0; }
