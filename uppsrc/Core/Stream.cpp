@@ -1103,14 +1103,14 @@ void CompareStream::Flush() {
 }
 
 void CompareStream::_Put(const void *data, dword size) {
-	wrlim = buffer + 128;
+	wrlim = buffer + sizeof(h);
 	ASSERT(ptr <= wrlim);
 	Flush();
 	pos += ptr - buffer;
 	ptr = buffer;
 	byte *b = (byte *) data;
 	while(size && equal) {
-		int sz = min<int>(size, 128);
+		int sz = min<int>(size, sizeof(h));
 		Compare(pos, b, sz);
 		pos += sz;
 		b += sz;
