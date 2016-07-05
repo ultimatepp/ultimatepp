@@ -24,18 +24,15 @@ void StreamContainer(Stream& s, T& cont)
 template <class T>
 dword HashBySerialize(const T& cont)
 {
-	RTIMING("HashBySerialize");
 	TimeStop tm;
 	xxHashStream xxh;
 	const_cast<T&>(cont).Serialize(xxh);
-	RLOG("Hash by serialize: " << typeid(T).name() << " " << tm);
 	return xxh.Finish();
 }
 
 template <class T>
 bool IsEqualBySerialize(const T& a, const T& b)
 {
-	RTIMING("IsEqualBySerialize");
 	StringStream sa, sb;
 	const_cast<T&>(a).Serialize(sa);
 	const_cast<T&>(b).Serialize(sb);
