@@ -53,8 +53,8 @@ template<> inline dword ValueTypeNo(const Value*)   { return VALUE_V; }
 template <class T, dword type = UNKNOWN_V, class B = EmptyClass>
 class ValueType : public B {
 public:
-	static dword ValueTypeNo(const T*)              { return type == UNKNOWN_V ? StaticTypeNo<T>() + 0x8000000 : type; }
-	friend dword ValueTypeNo(const T*)              { return T::ValueTypeNo(NULL); }
+	static dword ValueTypeNo()                      { return type == UNKNOWN_V ? StaticTypeNo<T>() + 0x8000000 : type; }
+	friend dword ValueTypeNo(const T*)              { return T::ValueTypeNo(); }
 	
 	bool     IsNullInstance() const                 { return false; }
 	void     Serialize(Stream& s)                   { NEVER(); }
