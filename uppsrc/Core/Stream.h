@@ -521,7 +521,7 @@ public:
 };
 
 class OutStream : public Stream {
-	byte     h[128];
+	byte     h[512];
 protected:
 	virtual  void  _Put(int w);
 	virtual  void  _Put(const void *data, dword size);
