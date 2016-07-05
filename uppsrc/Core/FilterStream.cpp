@@ -134,6 +134,7 @@ void OutFilterStream::FlushOut()
 	if(ptr != ~buffer) {
 		int sz = (int)(ptr - ~buffer);
 		pos += sz;
+		WhenPos(pos);
 		Filter(~buffer, sz);
 		ptr = ~buffer;
 	}
