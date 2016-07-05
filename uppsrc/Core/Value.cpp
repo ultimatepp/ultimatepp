@@ -348,6 +348,7 @@ void Value::Serialize(Stream& s) {
 	dword type;
 	if(s.IsLoading()) {
 		s / type;
+		ASSERT(type < 0x8000000); // only Values with assigned real type ID can be serialized
 		Free();
 		int st = type == VOID_V ? VOIDV : type == STRING_V ? STRING : type;
 		if(st < 0)
@@ -378,6 +379,7 @@ void Value::Serialize(Stream& s) {
 	}
 	else {
 		type = GetType();
+		ASSERT(type < 0x8000000); // only Values with assigned real type ID can be serialized
 		s / type;
 		int st = data.GetSpecial();
 		ASSERT_(!type || type == ERROR_V || type == UNKNOWN_V || st == STRING ||

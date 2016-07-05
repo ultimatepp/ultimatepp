@@ -41,6 +41,13 @@ needs to output a chunk of buffered data.&]
 [s2;%% Callback to filter finalization. Called on closing the stream.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:OutFilterStream`:`:WhenPos: [_^Upp`:`:Event^ Event]<[_^Upp`:`:int64^ int64]>_
+[* WhenPos]&]
+[s2;%% This is invoked when OutFilterStream passes data to the filter. 
+Parameter is number of unfiltered bytes so far. Useful for progress 
+indicators.&]
+[s3; &]
+[s4; &]
 [s5;:OutFilterStream`:`:Out`(const void`*`,int`): [@(0.0.255) void]_[* Out]([@(0.0.255) con
 st]_[@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
 [s2;%% Method serving as filter output. Basically performs out`->Put(ptr, 

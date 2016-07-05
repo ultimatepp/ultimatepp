@@ -50,10 +50,11 @@ template<> inline dword ValueTypeNo(const Date*)    { return DATE_V; }
 template<> inline dword ValueTypeNo(const Time*)    { return TIME_V; }
 template<> inline dword ValueTypeNo(const Value*)   { return VALUE_V; }
 
-template <class T, dword type, class B = EmptyClass>
+template <class T, dword type = UNKNOWN_V, class B = EmptyClass>
 class ValueType : public B {
 public:
-	friend dword ValueTypeNo(const T*)              { return type; }
+	static dword ValueTypeNo(const T*)              { return type == UNKNOWN_V ? StaticTypeNo<T>() + 0x8000000 : type; }
+	friend dword ValueTypeNo(const T*)              { return T::ValueTypeNo(NULL); }
 	
 	bool     IsNullInstance() const                 { return false; }
 	void     Serialize(Stream& s)                   { NEVER(); }
@@ -64,7 +65,6 @@ public:
 	String   ToString() const                       { return typeid(T).name(); }
 	int      Compare(const T&) const                { NEVER(); return 0; }
 	int      PolyCompare(const Value&) const        { NEVER(); return 0; }
-
 	
 	operator ValueTypeRef();
 };
