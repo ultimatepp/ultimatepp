@@ -35,8 +35,8 @@ icrosoft Visual Studio 2015][*  ](free community edition is fine).
 Note: While mingw/TDM64 is fine for light work, we really recommend 
 using VS2015 C`+`+ compiler for serious work. It significantly 
 faster and better supported by 3rd party libraries.&]
-[s5; When installing Visual Studion 2015, please make sure these 
-options are checked &]
+[s5; When installing Visual Studio 2015, please make sure these options 
+are checked &]
 [s0; &]
 [s0;= 
 @@rawimage:1437&2012
