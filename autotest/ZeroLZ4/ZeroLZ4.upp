@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/lz4;
+
+file
+	ZeroLZ4.cpp;
+
+mainconfig
+	"" = "";
+
