@@ -126,7 +126,8 @@ bool Stream::GetAll64(void *data, int64 size)
 size_t Stream::Get(Huge& h, size_t size)
 {
 	while(h.GetSize() < size) {
-		int len = Get(h.AddChunk(), (int)min((size_t)h.CHUNK, size - h.GetSize()));
+		int sz = (int)min((size_t)h.CHUNK, size - h.GetSize());
+		int len = Get(h.AddChunk(), sz);
 		if(len < h.CHUNK) {
 			h.Finish(len);
 			break;
