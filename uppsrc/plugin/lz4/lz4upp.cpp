@@ -189,10 +189,11 @@ void Lz4::Put(const void *ptr_, int size)
 			else {
 				int count = Peek32le(~buffer);
 				int len = count & 0x7fffffff;
-				if(len > maxblock)
+				if(len > maxblock) {
 					error = true;
-				else
-				if(count == 0) {
+					break;
+				}
+				if(count == 0) { // reached the end
 					int need = 4 - pos + 4;
 					if(size >= need) { // we have enough data for final checksum
 						memcpy(~buffer + pos, ptr, need);
@@ -203,6 +204,7 @@ void Lz4::Put(const void *ptr_, int size)
 						size -= need;
 						ptr += need;
 						pos = 0;
+						return; // decompression completed
 					}
 				}
 				else {
@@ -230,13 +232,12 @@ void Lz4::Put(const void *ptr_, int size)
 						ptr += need;
 						size -= need;
 						pos = 0;
-					}
-					else {
-						memcpy(~buffer + pos, ptr, size);
-						pos += size;
-						break;
+						continue;
 					}
 				}
+				memcpy(~buffer + pos, ptr, size);
+				pos += size;
+				break;
 			}
 		}
 	}
