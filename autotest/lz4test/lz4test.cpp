@@ -49,7 +49,7 @@ CONSOLE_APP_MAIN
 		    String lz4 = AppendFileName(outdir, ff.GetName() + ".lz4");
 		    String dec = AppendFileName(outdir, ff.GetName());
 
-			RLOG("***************** " << file);
+			RLOG("***************** " << file << ": " << (ff.GetLength() >> 10) << " KB");
 		
 		    {
 				RLOG("=== U++ compress small blocks ===========================================");
@@ -148,29 +148,4 @@ CONSOLE_APP_MAIN
 	DeleteFolderDeep(outdir);
 	
 	ASSERT(total_sz > 1024 * 1024 * 1024);
-
-#if 0 
-    LOG("--------- MATCH OFFSET HIBYTE -----------");
-    int over512 = 0;
-    for(int i = 0; i < 256; i++)
-        if(matchOffsetStat[i]) {
-            LOG(i << " " << matchOffsetStat[i]);
-            if(i > 1)
-				over512 += matchOffsetStat[i];
-        }
-    DDUMP(over512);
-    LOG("--------- MATCH LENGTH -----------");
-    int  saved = 0;
-    int  count = 0;
-    for(int i = 0; i < 256; i++)
-        if(matchLengthStat[i]) {
-            LOG(i + 4 << " " << matchLengthStat[i] << ", bytes " << (i + 4) * matchLengthStat[i]);
-            saved += (i + 4) * matchLengthStat[i];
-            count += matchLengthStat[i];
-        }
-    DDUMP(count);
-    DDUMP(saved);
-    LOG("COST: " << count * 3);
-    DDUMP(matchLengthBig);
-#endif
 }
