@@ -246,7 +246,7 @@ void Image::Serialize(Stream& s)
 			}
 			else {
 				Huge h;
-				if(!s.GetAll(h, len)) {
+				if(!s.GetAll(h, (size_t)len)) {
 					s.LoadError();
 					Clear();
 					return;
