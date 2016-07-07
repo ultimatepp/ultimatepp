@@ -20,15 +20,14 @@ topic "Documentation";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [{_}%EN-US 
 [s2; Documentation&]
-[s0; Documentation of Ultimate`+`+ is a permanent work of progress, 
+[s5; Documentation of Ultimate`+`+ is a permanent work of progress, 
 not everything is documented yet.&]
-[s0; &]
-[s0; Ultimate`+`+ community is ready to provide an excellent support 
+[s5; Ultimate`+`+ community is ready to provide an excellent support 
 in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
 [s0; &]
-[s0;*3 &]
+[s0; &]
 [s0; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation guide]&]
-[s0; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 Posix/X11 tarball 
+[s0; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 POSIX/X11 tarball 
 installation guide]&]
 [s0; [*^topic`:`/`/ide`/SrcUpdater`/app`/LinuxInstallGuide`$en`-us^3 POSIX 
 (Linux, BSD, ...) setup]&]
@@ -57,7 +56,7 @@ Project Templates]&]
 [s0; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
 libraries]&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/umk`$en`-us^ umk commandline builder]&]
+[s0; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
 [s0; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
 [s0; &]
 [s0; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as a Cross 
