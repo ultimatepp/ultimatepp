@@ -1,19 +1,19 @@
 topic "AddressBookWeb";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
-[b42;a42;2 $$2,2#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
 [s1; Description&]
-[s2; This example shows usage of SKYLARK technology to develope web 
+[s2; This example shows usage of SKYLARK technology to develop web 
 application. More information about SKYLARK is available in U`+`+ 
 official [^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$documentation`$en`-us`.html^ d
 ocumentation]. If you would like to start playing with it, we 
 recommended to begin with the [^http`:`/`/www`.ultimatepp`.org`/srcdoc`$Skylark`$Tutorial`$en`-us`.html^ t
-utorial]. The app uses SQLite as a database engine. So, you don`'t 
-need to install any SQL server to launch this example.&]
-[s2; The app by default runs on following address: 127.0.0.1:8008 (localhost 
-port 8008). If you want to see this page, just type above address 
-in your browser.&]
+utorial]. The application uses SQLite as a database engine. So, 
+you don`'t need to install any SQL server to launch this example.&]
+[s2; The application by default runs on following address: 127.0.0.1:8008 
+(localhost port 8008). If you want to see this page, just type 
+above address in your browser.&]
 [s1; Result (Web pages)&]
 [s0;0 &]
 [s0;= [0 
