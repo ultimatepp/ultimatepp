@@ -1,7 +1,7 @@
 topic "Android Math";
 [ $$0,0#00000000000000000000000000000000:Default]
 [b83;*4 $$1,0#07864147445237544204411237157677:title]
-[b42;a42;2 $$2,2#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [{_}%EN-US 
 [s1; Description&]
 [s2; The main goal of this example is to show major capabilities 
@@ -11,7 +11,7 @@ project. Moreover we show how to use supportive package ([^http`:`/`/www`.ultima
 ndroidMathUtility]). It is really important, because whole U`+`+ 
 architecture is highly modular.&]
 [s2; Please notice that you can generate JNI stubs by clicking on 
-preprocess button inside TheIDE during editing Java files. Befor 
+preprocess button inside TheIDE during editing Java files. Before 
 doing this make sure you have selected AndroidBuilder base build 
 method.&]
 [s1; Result&]
