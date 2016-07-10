@@ -2,7 +2,7 @@ topic "Ultimate++ FAQ";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[b167;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -22,7 +22,7 @@ topic "Ultimate++ FAQ";
 [t4167;C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [l127;b42;a42;ph2 $$22,22#15420321421851854042230329115330:answer]
-[b25;a42;ph*2 $$23,23#AB7631167E16382768E93725BC9AFE82:question]
+[b83;a42;ph*$7;2 $$23,23#AB7631167E16382768E93725BC9AFE82:question]
 [{_}%EN-US 
 [s2; Ultimate`+`+ FAQ&]
 [s3; Installation (MS Windows)&]
@@ -142,9 +142,11 @@ your reaction if `"Speed optimized`" code is significantly faster
 than `"Optimal`" should be to identify more files or packages 
 to have `"F`" flag and to get the performance on par.&]
 [s23; Could someone point me to a detailed, step by step, description 
-how to build the IDE from the fresh SVN sources? (I do have theide 
+how to build the IDE from the fresh SVN sources? (I do have TheIDE 
 installed.)&]
-[s22; Get fresh sources from [/$(191) svn://www.ultimatepp.org/upp/trunk/][/ .]&]
+[s22; Get fresh sources from [/$(191) svn://www.ultimatepp.org/upp/trunk/][/ .] 
+If you don`'t know how to do that `- please firstly read our 
+documentation site about [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ SVN].&]
 [s22; `"trunk/uppsrc`" contains U`+`+ library and TheIDE.&]
 [s22; Start TheIDE.&]
 [s22; Now click on the left `"Assembly`" pane. Right click, choose 
