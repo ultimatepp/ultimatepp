@@ -2667,17 +2667,18 @@ is available. [*/ This method can only be invoked in the main thread.]&]
 [s7;i1120;a17; [%-*@3 ms]-|Time to sleep.&]
 [s3; &]
 [s4;%- &]
-[s5;:Ctrl`:`:Call`(Callback`):%- [@(0.0.255) static] [@(0.0.255) void]_[* Call]([_^Callback^ C
-allback]_[*@3 cb])&]
+[s5;:Upp`:`:Ctrl`:`:Call`(Upp`:`:Function`<void`(`)`>`):%- [@(0.0.255) static] 
+[@(0.0.255) void]_[* Call]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb])&]
 [s2; Executes a callback in the main thread (the one responsible 
 for GUI). It works by posting callback into timer queue (with 
 zero delay), then waits its completion using Semaphore. Main 
 GUI thread has to run timer queue management for callback to 
 be executed (by running event`-loop (TopWindow`::Run) or ProcessEvents). 
-Warning: Call unlocks GuiLock so that the main thread can run 
-on GUI, this is possible source of race`-conditions. Be prepared 
-that some other code can run on GUI between call to Call and 
-cb being executed!&]
+Warning: Call temporarily unlocks GuiLock (if locked) so that 
+the main thread can run on GUI, this is possible source of race`-conditions 
+(GuiLock is relocked after call completes). Be prepared that 
+some other code can run on GUI between call to Call and cb being 
+executed!&]
 [s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:IsShutdownThreads`(`):%- [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh
