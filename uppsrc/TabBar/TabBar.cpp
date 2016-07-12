@@ -633,7 +633,7 @@ void TabBar::DoStacking()
 	Repos();
 }
 
-void TabBar::DoUnstacking() 
+void TabBar::DoUnstacking()
 {
 	stackcount = 0;
 	for (int i = 0; i < tabs.GetCount(); i++)
@@ -670,6 +670,10 @@ void TabBar::SortStack(int stackix, int head, int tail)
 
 void TabBar::MakeGroups()
 {
+	for(const auto& tab : tabs)
+		if(FindGroup(tab.group) < 0)
+			NewGroup(tab.group);
+	
 	groups[0].count = tabs.GetCount();
 	groups[0].first = 0;
 	groups[0].last = tabs.GetCount() - 1;
