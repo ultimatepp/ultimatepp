@@ -69,13 +69,13 @@ void Ctrl::PerformCall(Ctrl::CallBox *cbox)
 	cbox->sem.Release();
 }
 
-void Ctrl::Call(Callback cb)
+void Ctrl::Call(Function<void ()> cb)
 {
 	if(IsMainThread())
 		cb();
 	else {
 		CallBox cbox;
-		cbox.cb = cb;
+		cbox.cb << cb;
 		UPP::PostCallback(callback1(PerformCall, &cbox));
 		WakeUpGuiThread();
 		int level = LeaveGuiMutexAll(); // Unlock GUI to give main thread chance to handle Call

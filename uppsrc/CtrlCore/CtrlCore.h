@@ -1252,7 +1252,7 @@ public:
 
 	static void SetTimerGranularity(int ms);
 
-	static void Call(Callback cb);
+	static void Call(Function<void ()> cb);
 
 #ifdef _MULTITHREADED
 	static bool IsShutdownThreads()                     { return Thread::IsShutdownThreads(); }

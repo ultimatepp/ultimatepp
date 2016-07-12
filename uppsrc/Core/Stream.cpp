@@ -147,7 +147,7 @@ bool Stream::GetAll(Huge& h, size_t size)
 
 String Stream::Get(int size)
 {
-	if(size < 1024*1024) {
+	if(size < 32 * 1024*1024) {
 		StringBuffer b(size);
 		int n = Get(~b, size);
 		b.SetCount(n);
@@ -1126,8 +1126,15 @@ void CompareStream::_Put(int w) {
 
 OutStream::OutStream()
 {
+	const int bsz = 64 * 1024;
+	h = new byte[bsz];
 	buffer = ptr = h;
-	wrlim = h + sizeof(h);
+	wrlim = h + bsz;
+}
+
+OutStream::~OutStream()
+{
+	delete[] h;
 }
 
 void OutStream::_Put(int w)

@@ -66,11 +66,7 @@ void Lz4::FlushOut()
 	if(!pos)
 		return;
 
-	int clen;
-	{
-		RTIMING("Compress");
-		clen = LZ4_compress(buffer, ~outbuf + 4, pos);
-	}
+	int clen = LZ4_compress(buffer, ~outbuf + 4, pos);
 	if(clen < 0) {
 		error = true;
 		return;
