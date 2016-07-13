@@ -660,7 +660,7 @@ void ExportPage(int i)
 			"\">"
 	        "<META name=\"robots\" content=\"index,follow\">\n"
             "<LINK rel=\"alternate\" type=\"application/rss+xml\" title=\"SVN changes\" href=\"svnchanges.xml\">\n"
-            "<LINK rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\" />\n"
+            "<LINK rel=\"shortcut icon\" type=\"image/png\" href=\"favicon.png\">\n"
 		)
 
 
