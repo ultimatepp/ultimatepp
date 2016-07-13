@@ -96,7 +96,7 @@ void Ctrl::ShutdownThreads()
 
 #else
 
-void Ctrl::Call(Callback cb)
+void Ctrl::Call(Function<void ()> cb)
 {
 	cb();
 }
