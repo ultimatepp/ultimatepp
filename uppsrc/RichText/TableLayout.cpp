@@ -13,7 +13,6 @@ bool RichTable::Reduce(RichContext& rc) const
 	return !rc.page.IsEmpty();
 }
 
-
 const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
 {
 	if(rc.py != cpy || rc.page != cpage) {
