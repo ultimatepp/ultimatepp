@@ -529,8 +529,8 @@ void ExportPage(int i)
 		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
 		if (googleFile != "")
-			qtflangs += ". [^http`:`/`/upp`-mirror.googlecode.com`/svn`/trunk" + DeQtf(googleFile) + "^/1 " + "T`+`+" + "]";
-	}	
+			qtflangs += ". [^https`:`/`/raw`.githubusercontent`.com`/ultimatepp`/mirror`/master" + DeQtf(UrlEncode(googleFile)) + "^/1 " + "T`+`+" + "]";
+	}
 
 	String langs = QtfAsHtml(qtflangs, css, links, labels, targetdir, links[i]);
 	String page = tt[i];
