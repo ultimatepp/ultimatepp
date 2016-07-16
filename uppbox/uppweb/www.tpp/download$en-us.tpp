@@ -100,5 +100,4 @@ on the stable, testing and unstable releases of Debian.&]
 are going to use it for development of commercial applications. 
 However, if you like this platform, please consider [^topic`:`/`/uppweb`/www`/Funding`$en`-us^ d
 onating]; even small contributions will help fund its continued 
-development.&]
-[s0; ]]
+development.]]
