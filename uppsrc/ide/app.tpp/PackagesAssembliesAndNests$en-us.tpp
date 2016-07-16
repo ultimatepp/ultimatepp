@@ -28,14 +28,16 @@ an assembly nest or in the sub`-folders of a nest (see [/ Package`-locations
 [s5; The package definition file is maintained by TheIDE and you 
 should never need to manipulate it manually.  The package definition 
 file is updated at various times by TheIDE, including :&]
-[s3;l160;i150;O0; When you add/remove source files to/from a package&]
-[s3;l160;i150;O0; When you add/remove packages used by the package&]
-[s3;l160;i150;O0; When you change package build settings using the 
-[/ package`-organizer]&]
-[s3;l160;i150;O0; When you change the package build configurations 
-using [/ main`-package`-configuration]&]
-[s3;l160;i150;O0; When you change/assign custom build steps for the 
+[s3;l288;i150;O0;~~~160; When you add/remove source files to/from 
+a package&]
+[s3;l288;i150;O0;~~~160; When you add/remove packages used by the 
 package&]
+[s3;l288;i150;O0;~~~160; When you change package build settings using 
+the [/ package`-organizer]&]
+[s3;l288;i150;O0;~~~160; When you change the package build configurations 
+using [/ main`-package`-configuration]&]
+[s3;l288;i150;O0;~~~160; When you change/assign custom build steps 
+for the package&]
 [s5; For more detail on configuring packages and assemblies, [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ s
 ee this].&]
 [s5; When a package is built, the compiler will be invoked for each 
