@@ -30,10 +30,6 @@ eb, dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
 dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
-:: [s0; [*2 Debian]]
-:: [s0;=2 ]
-:: [s0;= [^http`:`/`/upp`.invothink`.com`/nightly`/^2 repository]]
-:: [s0;= [^http`:`/`/upp`.invothink`.com`/release`/^2 repository]]
 :: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
 :: [s0;=2 ]
 :: [s0;=2 ]
@@ -71,11 +67,6 @@ way is to add the archive to your sources and install package
 all necessary dependencies. In case you are not familiar with 
 installing software from PPA, you can follow [^topic`:`/`/uppweb`/www`/ubuntuinstall`$en`-us^ t
 his step`-by`-step guide].&]
-[s4; Debian users can use add a U`+`+ [^http`:`/`/upp`.invothink`.com`/nightly`/^ repos
-itory] by following the simple instructions in this [^http`:`/`/upp`.invothink`.com`/nightly`/README^ R
-EADME file]. This repository contains packages for i386 and amd64 
-architectures on the stable, testing and unstable releases of 
-Debian.&]
 [s4; Note that latest builds are generally considered the most stable. 
 That means that nightly builds are usually more stable than stable 
 releases, because bugfixes are not backported to stable releases.&]
