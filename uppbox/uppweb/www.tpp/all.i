@@ -106,6 +106,10 @@ TOPIC("cookie$en-us")
 #include "cookie$en-us.tppi"
 END_TOPIC
 
+TOPIC("currenttopics$en-us")
+#include "currenttopics$en-us.tppi"
+END_TOPIC
+
 TOPIC("devmovie$en-us")
 #include "devmovie$en-us.tppi"
 END_TOPIC
