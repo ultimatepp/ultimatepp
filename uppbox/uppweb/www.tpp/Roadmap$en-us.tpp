@@ -829,8 +829,6 @@ hull calculation (ConvexHullOrder)&]
 now capable of headless drawing operations&]
 [s0; (e.g. drawing graphics and text into .png files in console applications, 
 without X11)&]
-[s0; (example: [^http`:`/`/www`.ultimatepp`.org`/reference`$ConsoleDraw`.html^ http://www
-.ultimatepp.org/reference`$ConsoleDraw.html])&]
 [s0; &]
 [s0; Minor improvements:&]
 [s0; &]
@@ -838,13 +836,10 @@ without X11)&]
 [s0;* &]
 [s0;i150;O0; RegExp fixed to work with mingw, added GetMatchPos method&]
 [s0;i150;O0; SetSurface functions for optimized raw output of RGBA 
-data to screen (example: [^http`:`/`/www`.ultimatepp`.org`/reference`$SetSurface`.html^ h
-ttp://www.ultimatepp.org/reference`$SetSurface.html])&]
+data to screen&]
 [s0;i150;O0; Added Blackfin CPU support into Core&]
 [s0;i150;O0; EditField`::NullText method now can provide an icon&]
-[s0;i150;O0; RichText, Report: RichTextLayoutTracer ability (example: 
-[^http`:`/`/www`.ultimatepp`.org`/reference`$RichTextLayoutTracer`.html^ http://www.
-ultimatepp.org/reference`$RichTextLayoutTracer.html])&]
+[s0;i150;O0; RichText, Report: RichTextLayoutTracer ability&]
 [s0;i150;O0; Core: Added StringStream`::Reserve&]
 [s0; &]
 [s0; [* TheIDE]&]
