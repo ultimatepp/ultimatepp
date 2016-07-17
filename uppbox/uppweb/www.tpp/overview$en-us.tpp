@@ -284,27 +284,27 @@ us than the general principles, partly due to the fact that creating
 new widget classes is often a trivial task in U`+`+, any description 
 of toolkit would be incomplete without it.&]
 [s5; So here follows an incomplete but representative list:&]
-[s5;l288;i150;O0; [* Label], [* Button] and [* Option] are basic well known 
+[s5;l128;i150;O0; [* Label], [* Button] and [* Option] are basic well known 
 widgets.&]
-[s5;l288;i150;O0; [* Switch] is something usually called `"a group 
+[s5;l128;i150;O0; [* Switch] is something usually called `"a group 
 of radio`-buttons`", anyway in the U`+`+ this is a single widget 
 (this way, reading the Value of a switch is much more consistent).&]
-[s5;l288;i150;O0; [* EditField], [* EditInt], [* EditDouble], [* EditIntSpin], 
+[s5;l128;i150;O0; [* EditField], [* EditInt], [* EditDouble], [* EditIntSpin], 
 [* EditDate], [* EditString] are basic input fields. Note that U`+`+ 
 provides distinct types of input fields for specific value types.&]
-[s5;l288;i150;O0; [* LineEdit] and [* DocEdit] are two kinds of plain 
+[s5;l128;i150;O0; [* LineEdit] and [* DocEdit] are two kinds of plain 
 text editors. [* LineEdit] works with lines while [* DocEdit] works 
 with paragraphs.&]
-[s5;l288;i150;O0; [* ScrollBar] and [* ScrollBars]. While their names 
+[s5;l128;i150;O0; [* ScrollBar] and [* ScrollBars]. While their names 
 are self`-explaining (ScrollBars is just pair a consisting of 
 a vertical and horizontal ScrollBar), it is worth noting that 
 the U`+`+ ScrollBar also provides all calculations for position 
 of view area.&]
-[s5;l288;i150;O0; [* Slider ]is an `"analog`" input widget whose value 
+[s5;l128;i150;O0; [* Slider ]is an `"analog`" input widget whose value 
 is determined by position of `"thumb`".&]
-[s5;l288;i150;O0; [* HeaderCtrl ]represents headers of various tables, 
+[s5;l128;i150;O0; [* HeaderCtrl ]represents headers of various tables, 
 namely ArrayCtrl&]
-[s5;l288;i150;O0; [* ArrayCtrl ]is perhaps the most complex and complicated 
+[s5;l128;i150;O0; [* ArrayCtrl ]is perhaps the most complex and complicated 
 widget in U`+`+. It is basically a table widget used to operate 
 on Value matrices. It can combine Values to be displayed (using 
 Display class) as columns (yes, several Values in row can be 
@@ -320,15 +320,15 @@ line).&]
 &]
 [s20;= [*1 Option, EditString, DropList, Switch and ArrayCtrl in action.]&]
 [s5; &]
-[s5;l288;i150;O0; [* SqlArray ]is derived from ArrayCtrl and adds abilities 
+[s5;l160;i150;O0; [* SqlArray ]is derived from ArrayCtrl and adds abilities 
 to act as SQL table editor, including master`-detail capabilities.&]
-[s5;l288;i150;O0; [* Splitter ]is used to implement split view widgets 
+[s5;l160;i150;O0; [* Splitter ]is used to implement split view widgets 
 with an adjustable bar.&]
-[s5;l288;i150;O0; [* ProgressIndicator ]can be used to indicate progress 
+[s5;l160;i150;O0; [* ProgressIndicator ]can be used to indicate progress 
 of lengthy operations.&]
-[s5;l288;i150;O0; [* TabCtrl ]is used for dialogs with tabs.&]
-[s5;l288;i150;O0; [* TreeCtrl ]is used to display arbitrary tree hierarchies.&]
-[s5;l288;i150;O0; [* ColorSelector], [* ColorPusher ]and [* ColorButton 
+[s5;l160;i150;O0; [* TabCtrl ]is used for dialogs with tabs.&]
+[s5;l160;i150;O0; [* TreeCtrl ]is used to display arbitrary tree hierarchies.&]
+[s5;l160;i150;O0; [* ColorSelector], [* ColorPusher ]and [* ColorButton 
 ]are widgets for graphical user color selection.&]
 [s5; &]
 [s20;= 
@@ -337,27 +337,27 @@ of lengthy operations.&]
 &]
 [s20;= [*1 ColorButton]&]
 [s5; &]
-[s5;l288;i150;O0; [* MenuBar ]and [* ToolBar ]handling is a little unorthodox 
-in Ultimate`+`+, as the menu actions, represented as Callbacks, 
-are passed to the methods constructing the corresponding Bar. 
-This has some serious advantages `- state and presence of individual 
-buttons or menu bar items can be easily adjusted according to 
-the current application state. It is also often possible to have 
-a single method for construction of both ToolBar and MenuBar.&]
-[s5;l288;i150;O0; [* ColumnList ]displays values in user`-adjustable 
+[s5;l128;i150;O0;~~~128; [* MenuBar ]and [* ToolBar ]handling is a little 
+unorthodox in Ultimate`+`+, as the menu actions, represented 
+as Callbacks, are passed to the methods constructing the corresponding 
+Bar. This has some serious advantages `- state and presence of 
+individual buttons or menu bar items can be easily adjusted according 
+to the current application state. It is also often possible to 
+have a single method for construction of both ToolBar and MenuBar.&]
+[s5;l128;i150;O0;~~~128; [* ColumnList ]displays values in user`-adjustable 
 number of columns.&]
-[s5;l288;i150;O0; [* FileList ]is variant of ColumnList for displaying 
-lists of files.&]
-[s5;l288;i150;O0; Finally, Ultimate`+`+ has tools to deal with advanced 
-text formatting:&]
-[s5;l288;i150;O0; [* RichText ]is a class that provides storage of 
-complex text documents, including font and paragraph formatting 
+[s5;l128;i150;O0;~~~128; [* FileList ]is variant of ColumnList for 
+displaying lists of files.&]
+[s5;l128;i150;O0;~~~128; Finally, Ultimate`+`+ has tools to deal 
+with advanced text formatting:&]
+[s5;l128;i150;O0;~~~128; [* RichText ]is a class that provides storage 
+of complex text documents, including font and paragraph formatting 
 and even nested tables support.&]
-[s5;l288;i150;O0; [* RichTextView ]is a widget for viewing RichText 
+[s5;l128;i150;O0;~~~128; [* RichTextView ]is a widget for viewing RichText 
 texts.&]
-[s5;l288;i150;O0; [* RichEdit ]is a full`-featured RichText word`-processor 
-(including spell`-checker) in standard widget package, readily 
-available to any U`+`+ application.&]
+[s5;l128;i150;O0;~~~128; [* RichEdit ]is a full`-featured RichText 
+word`-processor (including spell`-checker) in standard widget 
+package, readily available to any U`+`+ application.&]
 [s5; &]
 [s0;= 
 @@image:2415&2606
