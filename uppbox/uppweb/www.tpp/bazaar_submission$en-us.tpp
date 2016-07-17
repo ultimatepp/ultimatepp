@@ -21,7 +21,7 @@ ubversion][2 . This is an Open Source version control system.]&]
 [s0;2 &]
 [s0; [2 So first of all you will have to install a Subversion (Svn) 
 client like ][^http`:`/`/tortoisesvn`.net`/downloads`.html^2 TortoiseSVN][2 , 
-][^http`:`/`/www`.syntevo`.com`/smartsvn`/^2 SmartSVN][2 , ][^http`:`/`/www`.sliksvn`.com`/en`/download`/^2 S
+][^http`:`/`/www`.smartsvn`.com`/^2 SmartSVN][2 , ][^http`:`/`/www`.sliksvn`.com`/en`/download`/^2 S
 likSVN][2 , ][^http`:`/`/kdesvn`.alwins`-world`.de`/^2 kdesvn ][2 or 
 just a]&]
 [s0;2 &]
@@ -246,4 +246,4 @@ Maintained`". This will let other people the opportunity to help
 you or to get your relay run baton.]&]
 [s0;2 &]
 [s0; [2 And the community will acknowledge it.]&]
-[s0; ]
+[s0; ]]
