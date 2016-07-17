@@ -617,7 +617,7 @@ void ExportPage(int i)
 					footer
 				)
 			)
-		) + Htmls("<script>var a={"+jslang+"};"
+		) + Htmls("<script type=\"text/javascript\">var a={"+jslang+"};"
 				"var p=window.location.pathname.split(\"/\");p=p[p.length-1];"
 				"var s='<select id=\"lang\" onchange=\"window.location=document.getElementById(\\'lang\\').value;\">';"
 				"for(l in a){if(p==l){d=\" selected=1\"}else{d=\"\"}s+='<option value=\"'+l+'\"'+d+'>'+a[l]+'</option>'}"
