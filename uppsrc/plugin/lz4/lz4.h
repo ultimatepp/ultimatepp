@@ -24,6 +24,10 @@ class Lz4 {
 	String       header_data;
 
     String       out;
+
+	
+	bool         co;
+	
     
     void          TryHeader();
 
@@ -47,6 +51,8 @@ public:
 
 	void Compress();
 	void Decompress();
+	
+	void Co(bool b)                        { co = b; }
 
 	bool   IsError() const                 { return error; }
 

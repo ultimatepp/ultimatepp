@@ -17,8 +17,8 @@ public:
 		int             waiting_threads;
 		Array<Thread>   threads;
 
-		Mutex           lock;
-		Semaphore       waitforjob;
+		Mutex             lock;
+		ConditionVariable waitforjob;
 
 		Pool(int nthreads);
 		~Pool();
@@ -37,8 +37,8 @@ public:
 	static thread_local bool is_worker;
 	static thread_local Pool *pool;
 
-	Semaphore waitforfinish;
-	int       todo;
+	ConditionVariable waitforfinish;
+	int               todo;
 
 	Mutex stepmutex;
 	Array<BiVector<Function<void ()>>> step;

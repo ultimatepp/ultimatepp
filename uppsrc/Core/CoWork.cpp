@@ -58,8 +58,7 @@ CoWork::Pool::~Pool()
 	jobs[0].work = NULL;
 	scheduled = 1;
 	lock.Leave();
-	for(int i = 0; i < threads.GetCount(); i++)
-		waitforjob.Release();
+	waitforjob.Broadcast();
 	for(int i = 0; i < threads.GetCount(); i++)
 		threads[i].Wait();
 	LLOG("Quit ended");
@@ -90,7 +89,7 @@ bool CoWork::Pool::DoJob()
 		p.lock.Enter();
 	if(--work->todo == 0) {
 		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
-		work->waitforfinish.Release();
+		work->waitforfinish.Signal();
 	}
 	LLOG("DoJobA " << p.scheduled << ", todo: " << work->todo << " (CoWork " << FormatIntHex(work) << ")");
 	ASSERT(work->todo >= 0);
@@ -107,11 +106,9 @@ void CoWork::Pool::ThreadRun(int tno)
 		while(p.scheduled == 0) {
 			LHITCOUNT("CoWork: Parking thread to Wait");
 			p.waiting_threads++;
-			p.lock.Leave();
 			LLOG("#" << tno << " Waiting for job");
-			p.waitforjob.Wait();
+			p.waitforjob.Wait(p.lock);
 			LLOG("#" << tno << " Waiting ended");
-			p.lock.Enter();
 		}
 		LLOG("#" << tno << " Job acquired");
 		LHITCOUNT("CoWork: Running new job");
@@ -145,7 +142,7 @@ void CoWork::Do(Function<void ()>&& fn)
 	if(p.waiting_threads) {
 		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
 		p.waiting_threads--;
-		p.waitforjob.Release();
+		p.waitforjob.Signal();
 	}
 	p.lock.Leave();
 }
@@ -191,10 +188,8 @@ void CoWork::Finish() {
 		if(p.scheduled)
 			Pool::DoJob();
 		else {
-			p.lock.Leave();
 			LLOG("WaitForFinish (CoWork " << FormatIntHex(this) << ")");
-			waitforfinish.Wait();
-			p.lock.Enter();
+			waitforfinish.Wait(p.lock);
 		}
 	}
 	p.lock.Leave();
