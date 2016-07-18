@@ -17,7 +17,7 @@ Office.]&]
 ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=922`&^2 Ratah
 ][2 .]&]
 [s0;2 &]
-[s0; [^http`:`/`/www`.kontrollbehov`.com`/articles`/cogetserverpid`/^2 CoGetServerPID][2  
+[s0; [^https`:`/`/github`.com`/kimgr`/cogetserverpid^2 CoGetServerPID][2  
 code is included thanks to Kim Gräsman and Jon Robertson. Please 
 see the new BSD LICENSE file.]&]
 [s0;2 &]
