@@ -243,13 +243,28 @@ bool FolderDeleteX(const char *path, EXT_FILE_FLAGS flags) {
 	}
 }
 
+
+bool DirectoryExistsX_Each(const char *name) {
+#if defined(PLATFORM_WIN32)
+	if(name[0] && name[1] == ':' && name[2] == '\\' && name[3] == 0 &&
+	   GetDriveType(name) != DRIVE_NO_ROOT_DIR) 
+	    return true;
+	DWORD dwAttrib = GetFileAttributes(ToSystemCharset(name));
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
+           (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));	
+#else
+	FindFile ff(name);
+	return ff && ff.IsDirectory();
+#endif
+}
+
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags) {
 	String spath = path;
 	if (spath.EndsWith(DIR_SEPS))
 		spath = spath.Left(spath.GetCount() - 1);
 	if (!(flags & BROWSE_LINKS))
-		return  DirectoryExists(spath);
-	if (DirectoryExists(spath))
+		return DirectoryExistsX_Each(spath);
+	if (DirectoryExistsX_Each(spath))
 		return true;
 	if (!IsSymLink(spath))
 		return false;
@@ -257,7 +272,7 @@ bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags) {
 	filePath = GetSymLinkPath(spath);
 	if (filePath.IsEmpty())
 		return false;
-	return DirectoryExists(filePath); 
+	return DirectoryExistsX_Each(filePath); 
 }
 
 bool IsFile(const char *fileName) {
@@ -1099,7 +1114,7 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 		if (npos <= -1) {
 			int lspos = str.Find('\"', spos + 1);
 			if (lspos < 0) 
-				sret = str.Mid(spos);
+				sret = str.Mid(max(pos, spos));
 			else
 				sret = str.Mid(spos + 1, lspos - spos - 1);
 			pos = -1;
@@ -1159,11 +1174,17 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 	}
 }
 
-Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycols, bool removeRepeated, char decimalSign, bool onlyStrings) {
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycols, bool removeRepeated, char decimalSign, bool onlyStrings, int fromRow) {
 	Vector<Vector<Value> > result;
 
-	String line;
+	if (strFile.IsEmpty())
+		return result;
+	
 	int posLine = 0;
+	for (int i = 0; i < fromRow; ++i)
+		GetLine(strFile, posLine);
+	
+	String line;
 	int pos = 0;
 	if (bycols) {
 		line = GetLine(strFile, posLine);
@@ -1226,11 +1247,11 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 	return result;
 }
 
-Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator, bool bycols, bool removeRepeated, char decimalSign, bool onlyStrings) {
-	return ReadCSV(LoadFile(fileName), separator, bycols, removeRepeated,  decimalSign, onlyStrings);
+Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator, bool bycols, bool removeRepeated, char decimalSign, bool onlyStrings, int fromRow) {
+	return ReadCSV(LoadFile(fileName), separator, bycols, removeRepeated,  decimalSign, onlyStrings, fromRow);
 }
 
-bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator, char decimalSign, bool onlyStrings) {
+bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator, char decimalSign, bool onlyStrings, int fromRow) {
 	Vector<Value> result;
 
 	FindFile ff(fileName);
@@ -1239,6 +1260,9 @@ bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow
 	
 	FileIn in(fileName);
 	in.ClearError();
+	
+	for (int i = 0; i < fromRow; ++i)
+		in.GetLine();
 	
 	for (int row = 0; true; row++) {
 		String line = in.GetLine();
@@ -1571,27 +1595,50 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 	return true;
 }
 
-bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath)
+bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, bool replaceOnlyNew)
 {
 	String dirPath = AppendFileName(dir, relPath);
 	String newPath = AppendFileName(newPlace, relPath);
 	FindFile ff(AppendFileName(dirPath, "*.*"));
 	while(ff) {
 		if(ff.IsFile()) {
-			if (!FileCopy(AppendFileName(dirPath, ff.GetName()), AppendFileName(newPath, ff.GetName())))
+			String newFullPath = AppendFileName(newPath, ff.GetName());
+			bool copy = !replaceOnlyNew;
+			if (replaceOnlyNew) {
+				Time newPathTime = FileGetTime(newFullPath);
+				if (IsNull(newPathTime) || (newPathTime > Time(ff.GetLastWriteTime())))
+					copy = true;
+			}
+			if (copy) {
+				if (!FileCopy(ff.GetPath(), newFullPath))
 				return false;
-		} else if(ff.IsFolder()) {
+			} 
+		} else if (ff.IsFolder()) {
 			DirectoryCreate(AppendFileName(newPath, ff.GetName()));
-			if(!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName())))
+			if (!FolderIsEmpty(ff.GetPath())) {
+				if (!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName()), replaceOnlyNew))
 				return false;
+		}
 		}
 		ff.Next();
 	}
 	return true;
 }
 
-bool DirectoryCopyX(const char *dir, const char *newPlace) {
-	return DirectoryCopy_Each(dir, newPlace, "");
+bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew) {
+	if (!DirectoryExists(dir))
+		return false;
+	return DirectoryCopy_Each(dir, newPlace, "", replaceOnlyNew);
+}
+
+bool FolderIsEmpty(const char *path) {
+	FindFile ff(AppendFileName(path, "*.*"));
+	while(ff) {
+		if(ff.IsFile() || ff.IsFolder())
+			return false;
+		ff.Next();
+	}
+	return true;
 }
 
 #if defined(__MINGW32__)
