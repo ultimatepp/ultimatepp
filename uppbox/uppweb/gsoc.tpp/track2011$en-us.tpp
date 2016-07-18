@@ -59,4 +59,4 @@ be plenty of useful information.]]
 It will help to broad U`+`+ user and developer base and let more 
 people know why we like U`+`+ smart C`+`+ and why you all U`+`+ 
 supporters are great!.]]}}&]
-[s0; ]
+[s0; ]]

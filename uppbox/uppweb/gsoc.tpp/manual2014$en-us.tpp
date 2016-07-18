@@ -15,13 +15,7 @@ SoC 2014 Main page]&]
 [s0;i150;O0; [^http`:`/`/www`.google`-melange`.com`/gsoc`/document`/show`/gsoc`_program`/google`/gsoc2014`/help`_page^2 G
 SoC 2014 FAQ]&]
 [s0;2 &]
-[s0;i150;O0; [^http`:`/`/www`.google`-melange`.com`/gsoc`/events`/google`/gsoc2014^2 GS
-oC Events `& Timeline]&]
-[s0;2 &]
-[s0;i150;O0; [^http`:`/`/www`.google`-melange`.com`/document`/show`/gsoc`_program`/google`/gsoc2014`/help`_page`#1`.`_What`_is`_a`_mentoring`_organization^2 M
-entoring Organisations]&]
 [s0;^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforMentors^2 &]
 [s0;^http`:`/`/code`.google`.com`/p`/google`-summer`-of`-code`/wiki`/AdviceforMentors^2 &]
 [s0;> [^topic`:`/`/uppweb`/gsoc`/gsoc2014`$en`-us^+75 Return to GSoC 
-2014 Home page]&]
-[s0; ]]
+2014 Home page]]]
