@@ -195,7 +195,7 @@ ool]_[* GetRelativePath]([_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 from],
 [s2; This is a changed version from original function as IsNull() 
 cannot distinguish String(`"`") and String(Null).&]
 [s3; &]
-[s4; &]
+[s4;%- &]
 [s5;:Upp`:`:SearchFile`(Upp`:`:String`,Upp`:`:String`,Upp`:`:String`,Upp`:`:Vector`<Upp`:`:String`>`&`):%- [_^Upp`:`:Vector^ V
 ector]<[_^Upp`:`:String^ String]>_[* SearchFile]([_^Upp`:`:String^ String]_[*@3 dir], 
 [_^Upp`:`:String^ String]_[*@3 condFile], [_^Upp`:`:String^ String]_[*@3 text], 

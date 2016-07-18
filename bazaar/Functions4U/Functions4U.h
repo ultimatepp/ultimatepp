@@ -48,7 +48,7 @@ String Tokenize2(const String &str, const String &token);
 	
 /////////
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG); 
-bool DirectoryCopyX(const char *dir, const char *newPlace);
+bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew = false);
 bool DirectoryMove(const char *dir, const char *newPlace);
 bool DeleteDeepWildcardsX(const char *path, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -56,6 +56,7 @@ bool DeleteFolderDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG
 bool DeleteFileDeepWildcardsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteFolderDeepX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
 bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newname, bool forfile, bool forfolder, EXT_FILE_FLAGS flags = NO_FLAG);
+bool FolderIsEmpty(const char *path);
 
 bool FileMoveX(const char *oldpath, const char *newpath, EXT_FILE_FLAGS flags = NO_FLAG);
 bool FileDeleteX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -278,9 +279,9 @@ inline const double Angle(const Point_<T>& p1, const Point_<T>& p2)  {
 }
 
 
-Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false);
-Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false);
-bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator = ',', char decimalSign = '.', bool onlyStrings = false);
+Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
+Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
+bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator = ',', char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
 String WriteCSV(Vector<Vector <Value> > &data, char separator = ',', bool bycols = true, char decimalSign = '.');
 bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char separator = ',', bool bycols = true, char decimalSign = '.');
 
@@ -571,7 +572,7 @@ public:
 	
 #ifdef CTRLLIB_H
 		if (refreshTime > 0)
-			SetTimeCallback(-int(refreshTime/1000), callback(this, &LocalProcessX::Perform), this);
+			SetTimeCallback(-int(refreshTime*1000), callback(this, &LocalProcessX::Perform), this);
 #endif
 		return true;
 	}
