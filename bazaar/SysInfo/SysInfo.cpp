@@ -2189,4 +2189,35 @@ int GetAvailableSocketPort(int from) {
   	return from;
 }
 
+bool IsPortFree(int port) {
+#ifdef PLATFORM_WIN32
+    WSADATA wsaData;
+
+	int res = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (res != NO_ERROR) 
+        return false;
+#endif
+    
+    SOCKET socket_desc = socket(AF_INET, SOCK_STREAM, 0);
+    if (socket_desc == -1)
+        return false;
+    
+    sockaddr_in service;
+    service.sin_family = AF_INET;
+    service.sin_addr.s_addr = INADDR_ANY;
+    service.sin_port = htons(port);
+    
+    bool ret = true;
+    if(bind(socket_desc,(struct sockaddr *)&service , sizeof(service)) < 0) 
+        ret = false;
+    
+ 	closesocket(socket_desc);
+
+#ifdef PLATFORM_WIN32    
+    WSACleanup();
+#endif
+
+    return ret;
+}
+
 END_UPP_NAMESPACE
