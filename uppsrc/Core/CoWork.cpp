@@ -83,6 +83,10 @@ bool CoWork::Pool::DoJob()
 	Function<void ()> fn = pick(job.fn);
 	CoWork *work = job.work;
 	p.scheduled--;
+	if(job.started) {
+		*job.started = true;
+		p.waitforstart.Broadcast();
+	}
 	p.lock.Leave();
 	fn();
 	if(!finlock)
@@ -120,6 +124,37 @@ void CoWork::Pool::ThreadRun(int tno)
 	LLOG("CoWork thread #" << tno << " finished");
 }
 
+void CoWork::Start(Function<void ()>&& fn)
+{
+	bool started = false;
+	Pool& p = GetPool();
+	Mutex::Lock __(p.lock);
+	while(p.scheduled >= SCHEDULED_MAX) { // this is quite unlikely, so we can be ugly here
+		p.lock.Leave();
+		Sleep(0);
+		p.lock.Enter();
+	}
+	PushJob(pick(fn)).started = &started;
+	while(!started)
+		p.waitforstart.Wait(p.lock);
+}
+
+CoWork::MJob& CoWork::PushJob(Function<void ()>&& fn)
+{
+	Pool& p = GetPool();
+	MJob& job = p.jobs[p.scheduled++];
+	job.work = this;
+	job.fn = pick(fn);
+	todo++;
+	LLOG("Adding job " << p.scheduled - 1 << "; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
+	if(p.waiting_threads) {
+		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
+		p.waiting_threads--;
+		p.waitforjob.Signal();
+	}
+	return job;
+}
+
 void CoWork::Do(Function<void ()>&& fn)
 {
 	LHITCOUNT("CoWork: Sheduling callback");
@@ -134,16 +169,7 @@ void CoWork::Do(Function<void ()>&& fn)
 			p.lock.Leave();
 		return;
 	}
-	MJob& job = p.jobs[p.scheduled++];
-	job.work = this;
-	job.fn = pick(fn);
-	todo++;
-	LLOG("Adding job " << p.scheduled - 1 << "; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
-	if(p.waiting_threads) {
-		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
-		p.waiting_threads--;
-		p.waitforjob.Signal();
-	}
+	PushJob(pick(fn));
 	p.lock.Leave();
 }
 
