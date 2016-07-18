@@ -8,8 +8,7 @@
 namespace Upp {
 
 class Lz4 {
-	Buffer<char> buffer;
-	Buffer<char> outbuf;
+	StringBuffer buffer; // to be able to pass as String
 	int8         compress;
 	bool         error;
 	
@@ -24,14 +23,18 @@ class Lz4 {
 	String       header_data;
 
     String       out;
-
 	
-	bool         co;
-	
+	bool         parallel;
+	CoWork       co;
+	Mutex        lock;
+	ConditionVariable cond;
+	int          outblock;
+	int          inblock;
     
     void          TryHeader();
 
 	void          Init();
+	void          FinishBlock(char *outbuf, int clen, const char *origdata, int origsize);
 	void          FlushOut();
 
 	void          PutOut(const void *ptr, int size);
@@ -52,7 +55,7 @@ public:
 	void Compress();
 	void Decompress();
 	
-	void Co(bool b)                        { co = b; }
+	void Parallel(bool b = true)           { parallel = b; }
 
 	bool   IsError() const                 { return error; }
 
@@ -66,6 +69,13 @@ String LZ4Compress(const void *data, int64 len, Gate2<int64, int64> progress = f
 String LZ4Compress(const String& s, Gate2<int64, int64> progress = false);
 String LZ4Decompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String LZ4Decompress(const String& s, Gate2<int64, int64> progress = false);
+
+int64  CoLZ4Compress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
+int64  CoLZ4Decompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
+String CoLZ4Compress(const void *data, int64 len, Gate2<int64, int64> progress = false);
+String CoLZ4Compress(const String& s, Gate2<int64, int64> progress = false);
+String CoLZ4Decompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
+String CoLZ4Decompress(const String& s, Gate2<int64, int64> progress = false);
 
 bool IsLZ4(Stream& s);
 
