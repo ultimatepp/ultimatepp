@@ -34,7 +34,6 @@ link(SOLARIS) "-Wl,-R -Wl,/usr/local/lib";
 link(GCC POSIX STACKTRACE) -rdynamic;
 
 file
-	todo.txt,
 	Core.h options(BUILDER_OPTION) PCH,
 	config.h,
 	Defs.h,

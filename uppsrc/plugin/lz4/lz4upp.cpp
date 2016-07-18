@@ -27,12 +27,13 @@ void Lz4::Init()
 	pos = 0;
 	header = false;
 	xxh.Reset();
+	outblock = inblock = 0;
 }
 
 void Lz4::Compress()
 {
 	compress = 1;
-	buffer.Alloc(BLOCK_BYTES);
+	buffer.SetCount(BLOCK_BYTES);
 	Init();
 }
 
@@ -49,6 +50,26 @@ void Lz4::PutOut(const void *ptr, int size)
 	out.Cat((const char *)ptr, (int)size);
 }
 
+void Lz4::FinishBlock(char *outbuf, int clen, const char *origdata, int origsize)
+{
+	RTIMING("FinishBlock");
+	if(error)
+		return;
+	if(clen < 0) {
+		error = true;
+		return;
+	}
+	if(clen >= origsize) {
+		Poke32le(outbuf, 0x80000000 | origsize);
+		memcpy(outbuf + 4, origdata, origsize);
+		WhenOut(outbuf, origsize + 4);
+	}
+	else {
+		Poke32le(outbuf, clen);
+		WhenOut(outbuf, clen + 4);
+	}
+}
+
 void Lz4::FlushOut()
 {
 	if(!header) {
@@ -60,28 +81,50 @@ void Lz4::FlushOut()
 		WhenOut(h, 7);
 		header = true;
 		maxblock = BLOCK_BYTES;
-		outbuf.Alloc(4 + LZ4_compressBound(maxblock));
 	}
 	
 	if(!pos)
 		return;
 
-	int clen = LZ4_compress(buffer, ~outbuf + 4, pos);
-	if(clen < 0) {
-		error = true;
-		return;
-	}
-	xxh.Put(buffer, pos);
-	if(clen >= pos) {
-		Poke32le(~outbuf, 0x80000000 | pos);
-		memcpy(~outbuf + 4, buffer, pos);
-		WhenOut(~outbuf, pos + 4);
+	int origsize = pos;
+
+	pos = 0;
+	
+	if(parallel) {
+		String bs = buffer;
+		int    inblk = inblock++;
+//		DLOG("Scheduling " << inblk);
+		co.Start([=] {
+			Buffer<char> outbuf(4 + LZ4_compressBound(maxblock));
+			int clen = LZ4_compress(~bs, ~outbuf + 4, origsize);
+			Mutex::Lock __(lock);
+			{ RTIMING("Waiting for order");
+			while(outblock != inblk)
+				cond.Wait(lock);
+			}
+			FinishBlock(outbuf, clen, ~bs, origsize);
+			outblock++;
+			cond.Broadcast();
+		});
+		RTIMING("xxh");
+		xxh.Put(~bs, origsize);
+		buffer.SetCount(BLOCK_BYTES);
 	}
 	else {
-		Poke32le(~outbuf, clen);
-		WhenOut(~outbuf, clen + 4);
+		Buffer<char> outbuf(4 + LZ4_compressBound(maxblock));
+		xxh.Put(~buffer, origsize);
+		int clen = LZ4_compress(~buffer, ~outbuf + 4, origsize);
+		FinishBlock(outbuf, clen, buffer, origsize);
 	}
-	pos = 0;
+}
+
+void Lz4::SyncInOut()
+{
+	if(parallel) {
+		Mutex::Lock __(lock);
+		while(outblock != inblock)
+			cond.Wait(lock);
+	}
 }
 
 void Lz4::End()
@@ -89,6 +132,7 @@ void Lz4::End()
 	ASSERT(compress >= 0);
 	if(compress) {
 		FlushOut();
+		SyncInOut();
 		byte h[8];
 		Poke32le(h, 0);
 		Poke32le(h + 4, xxh.Finish());
@@ -134,8 +178,7 @@ void Lz4::TryHeader()
 
 	header = true;
 	blockchksumsz = 4 * !!(lz4hdr & LZ4F_BLOCKCHECKSUM);
-	buffer.Alloc(maxblock + 4 + blockchksumsz);
-	outbuf.Alloc(maxblock);
+	buffer.SetCount(maxblock + 4 + blockchksumsz);
 }
 
 void Lz4::Put(const void *ptr_, int size)
@@ -193,6 +236,7 @@ void Lz4::Put(const void *ptr_, int size)
 					int need = 4 - pos + 4;
 					if(size >= need) { // we have enough data for final checksum
 						memcpy(~buffer + pos, ptr, need);
+						SyncInOut();
 						if(Peek32le(~buffer + 4) != xxh.Finish()) {
 							error = true;
 							return;
@@ -214,10 +258,8 @@ void Lz4::Put(const void *ptr_, int size)
 						}
 						else {
 							int sz;
-							{
-								RTIMING("Decompress");
-								sz = LZ4_decompress_safe(src, outbuf, len, maxblock);
-							}
+							Buffer<char> outbuf(maxblock);
+							sz = LZ4_decompress_safe(src, outbuf, len, maxblock);
 							if(sz < 0) {
 								error = true;
 								return;
@@ -242,6 +284,7 @@ void Lz4::Put(const void *ptr_, int size)
 Lz4::Lz4()
 {
 	compress = -1;
+	parallel = false;
 	
 	WhenOut = callback(this, &Lz4::PutOut);
 }

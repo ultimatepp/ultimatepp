@@ -6,6 +6,7 @@ class CoWork : NoCopy {
 	struct MJob : Moveable<MJob> {
 		Function<void ()> fn;
 		CoWork           *work;
+		bool             *started = NULL;
 	};
 	
 	enum { SCHEDULED_MAX = 2048 };
@@ -19,6 +20,7 @@ public:
 
 		Mutex             lock;
 		ConditionVariable waitforjob;
+		ConditionVariable waitforstart;
 
 		Pool(int nthreads);
 		~Pool();
@@ -40,11 +42,15 @@ public:
 	ConditionVariable waitforfinish;
 	int               todo;
 
+	MJob& PushJob(Function<void ()>&& fn);
+
 	Mutex stepmutex;
 	Array<BiVector<Function<void ()>>> step;
 	Vector<bool> steprunning;
 	
 public:
+	void     Start(Function<void ()>&& fn);
+
 	void     Do(Function<void ()>&& fn);
 	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }
 
