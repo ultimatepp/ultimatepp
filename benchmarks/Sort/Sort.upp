@@ -2,7 +2,7 @@ uses
 	Core;
 
 file
-	Sort.cpp optimize_speed;
+	Sort.cpp;
 
 mainconfig
 	"" = "";
