@@ -81,11 +81,6 @@ nightly PPA, there is stable releases PPA, [^https`:`/`/launchpad`.net`/`~dolik`
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp]. To install Ultimate`+`+ 
 from this archive, use the same procedure as described for nightly 
 builds, just drop the `"`-nightly`" suffix.&]
-[s4; Debian users who prefer to use only the stable [^http`:`/`/upp`.invothink`.com`/release`/^ r
-epository] should follow this [^http`:`/`/upp`.invothink`.com`/release`/README^ REA
-DME file], which is very similar to the nightly version. Again, 
-the stable repository contains packages for i386 and amd64 architectures 
-on the stable, testing and unstable releases of Debian.&]
 [s3; Price&]
 [s4; You do not have to pay anything for Ultimate`+`+, even if you 
 are going to use it for development of commercial applications. 
