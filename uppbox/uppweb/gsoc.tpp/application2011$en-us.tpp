@@ -9,7 +9,7 @@ Application Form]&]
 [s1;#b0;2 &]
 [s0;# [2 This a preview of the Form to be submitted to Google. It is 
 of course a work in process until final application. Please send 
-all fixes and proposals to ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
+all fixes and proposals to ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 .]&]
 [s0;2 &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Application Form]]}}&]

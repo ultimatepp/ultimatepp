@@ -18,8 +18,8 @@ effective programming we would be happy if you come with us.]&]
 them! However you can ask for additional information and we would 
 also like to hear your ideas.]&]
 [s0;2 &]
-[s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Fo
-rum][2 , discuss with the community these ideas and your proposals 
+[s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 F
+orum][2 , discuss with the community these ideas and your proposals 
 adding your personal touches.]&]
 [s0;2 &]
 [s0; [2 To prepare your proposal it is worth referencing a nice link 
@@ -27,7 +27,7 @@ in ][^http`:`/`/gcc`.gnu`.org`/wiki`/SummerOfCode^2 Gcc][2  from
 a how`-to in ][^http`:`/`/drupal`.org`/node`/59037^2 Drupal][2  project.]&]
 [s0;2 &]
 [s0; [2 This list is a work`-in`-progress. You can follow discussions 
-in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
+in ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 .]&]
 [s0;2 &]
 [s1; Project Ideas&]
 [s0;# &]
@@ -173,4 +173,4 @@ in OSX.]&]
 [s0;# [2 Ultimate`+`+ project is proud of its BSD license so we would 
 really prefer that all external libraries to be linked with U`+`+ 
 code would be BSD licensed or similar.]&]
-[s0; ]
+[s0; ]]
