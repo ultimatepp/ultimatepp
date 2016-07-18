@@ -20,7 +20,7 @@ tudent Guide][*2  or ][*^http`:`/`/www`.di`.ens`.fr`/`~baghdadi`/TXT`_blog`/5`_a
 and others will be less easy.]&]
 [s0;#2 &]
 [s0;# [2 To apply, try to answer all these subjects and post them in 
-your proposal to our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 . 
+your proposal to our ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 . 
 following the ][^topic`:`/`/uppweb`/gsoc`/student`_application2014`$en`-us^2 Applic
 ation Template][2 .]&]
 [s2;2 &]
@@ -40,7 +40,7 @@ time to work with us.]&]
 [s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Who are you?]]}}&]
 [s0; &]
-[s0; [2 We want to know you, so introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 F
+[s0; [2 We want to know you, so introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 F
 orum][2 .]&]
 [s0;2 &]
 [s0; [2 In addition, if we know you and we see you are involved in 
@@ -62,7 +62,7 @@ e][2  and take your time.]&]
 page][2  and read the shown ideas. You have two possibilities:]&]
 [s0; &]
 [s2;#i150;O0; [*2 You like some idea]&]
-[s2;#l160; [2 That is perfect. Study it and help us in ][^topic`:`/`/uppweb`/gsoc`/student2011`$en`-us^2 F
+[s2;#l160; [2 That is perfect. Study it and help us in ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 F
 orum][2  to develop more that idea. Contact the ideas proponents. 
 Try to follow the ideas format as it will be easier for us to 
 include it. ]&]

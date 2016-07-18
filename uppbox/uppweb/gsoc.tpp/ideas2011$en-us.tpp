@@ -19,15 +19,15 @@ effective programming we would be happy if you come with us.]&]
 them! However you can ask for additional information and we would 
 also like to hear your ideas.]&]
 [s0;2 &]
-[s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Fo
-rum][2 , discuss with the community these ideas and your proposals 
+[s0; [2 You can introduce yourself in our ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 F
+orum][2 , discuss with the community these ideas and your proposals 
 adding your personal touches. You can also contact the ][^topic`:`/`/uppweb`/gsoc`/mentor2011`$en`-us^2 m
 entors][2  whose skills can match with your project ideas. This 
 way you can do your own proposals with more possibilities to 
 be approved.]&]
 [s0;2 &]
 [s0; [2 This list is a work`-in`-progress. You can follow discussions 
-in ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 .]&]
+in ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 .]&]
 [s0;2 &]
 [s0;%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Project Ideas]]}}&]

@@ -8,7 +8,7 @@ Student Application Template]&]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Introduction]]}}&]
 [s1;#b0; &]
 [s0; [2 If you are an student, fill this template following the fields 
-and post it to our ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=thread`&frm`_id`=89`&^2 F
+and post it to our ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=thread`&frm`_id`=89`&^2 F
 orum in Newbie Corner][2 .]&]
 [s0;2 &]
 [s0;2 &]
