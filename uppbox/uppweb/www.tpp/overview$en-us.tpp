@@ -265,6 +265,7 @@ this important feature, see the following code snippet:&]
 [s21;%- `{&]
 [s21;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
 [s21;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
+[s21;%- `}&]
 [s20; &]
 [s5; In this snippet, we have two buttons and one integer input field. 
 Pressing the first or second button sets the input field to the 
