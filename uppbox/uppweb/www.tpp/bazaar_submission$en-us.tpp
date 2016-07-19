@@ -34,18 +34,16 @@ environment variable although this is usually done by installer.]&]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 2. Upload Permissions]]}}&]
 [s0;2%- &]
 [s0; [2 Well. You have svn installed so that you could get the latest 
-source code from Google Code mirror with just this command line: 
-]&]
+source code from our official repository:]&]
 [s0;2 &]
-[s0;l256; [C$7;2 svn checkout http://upp`-mirror.googlecode.com/svn/trunk/ 
-my`-upp`-mirror]&]
+[s0;l256; [C$7;2 svn checkout svn://www.ultimatepp.org/upp/trunk/ my`-upp`-mirror]&]
 [s0;2 &]
 [s0;2 &]
 [s0; [2 To get upload permissions you will have to send a post to Forum/Bazaar, 
 explain as much details as possible about your project and ask 
 for permission to upload it to Bazaar. ]&]
 [s0;2 &]
-[s0; [2 If the project is accepted (as usual), ][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=3`&^2 U
+[s0; [2 If the project is accepted (as usual), ][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=3`&^2 U
 pp administrator][2  will contact you and give you the address 
 where you have to upload your new package, username (your Upp 
 Forum nick) and password.]&]
@@ -70,11 +68,6 @@ to enter a comment following this format:]&]
 bug Z`"]&]
 [s0;2%- &]
 [s0;2%- &]
-[s0;%- [2 The ][^http`:`/`/code`.google`.com`/p`/upp`-mirror`/source`/list^2 http://code.g
-oogle.com/p/upp`-mirror/source/list][2  will mirror it within an 
-hour. Then you will see your new release in Bazaar, congratulations, 
-your first release is done!]&]
-[s0;2 &]
 [s0; [2 All Bazaar folders are open so take care not modifying directly 
 contents in folders that you do not manage. If you want to change 
 something follow ][^topic`:`/`/uppweb`/www`/bazaar`_support`$en`-us^2 Bazaar 
@@ -89,7 +82,7 @@ It is better to separate them if they do different things.]&]
 [s0; [*2 3.1 Introduction]&]
 [s0;2 &]
 [s0; [2 You are proud with your new package, you have informed all 
-in Forum/Bazaar and you have uploaded it to svn so that anybody 
+in Forum/Bazaar and you have uploaded it to SVN so that anybody 
 can make use of it.]&]
 [s0;2 &]
 [s0; [2 Now it is time to have your own page showing everybody what 
@@ -100,7 +93,7 @@ is your package for, technology used, examples and reference.]&]
 [s0;2 &]
 [s0; [*2 3.2 Upp web editing]&]
 [s0;2 &]
-[s0;i150;O0; [2 First get the latest svn source. It is important as 
+[s0;i150;O0; [2 First get the latest SVN source. It is important as 
 you are going to edit the web page.]&]
 [s0;2 &]
 [s0;i150;O0; [2 Open uppbox/uppweb package, choose www.tpp and bazaar`$en`-us 
@@ -177,7 +170,7 @@ help system into .html web pages.]&]
 [s0;2 &]
 [s0; [2 If nothing works or you do not feel comfortable in doing this 
 you can send a post to Bazaar Forum asking for help or just send 
-][^http`:`/`/www`.ultimatepp`.org`/forum`/index`.php`?t`=usrinfo`&id`=648`&^2 me][2  
+][^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=648`&^2 me][2  
 a post. I will do it for you.]&]
 [s0;2 &]
 [s0;2%- &]
