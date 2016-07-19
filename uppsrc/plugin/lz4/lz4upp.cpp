@@ -118,21 +118,16 @@ void Lz4::FlushOut()
 	}
 }
 
-void Lz4::SyncInOut()
-{
-	if(parallel) {
-		Mutex::Lock __(lock);
-		while(outblock != inblock)
-			cond.Wait(lock);
-	}
-}
-
 void Lz4::End()
 {
 	ASSERT(compress >= 0);
 	if(compress) {
 		FlushOut();
-		SyncInOut();
+		Mutex::Lock __(lock);
+		{ RTIMING("Waiting for order");
+			while(outblock != inblock)
+				cond.Wait(lock);
+		}
 		byte h[8];
 		Poke32le(h, 0);
 		Poke32le(h + 4, xxh.Finish());
@@ -236,7 +231,6 @@ void Lz4::Put(const void *ptr_, int size)
 					int need = 4 - pos + 4;
 					if(size >= need) { // we have enough data for final checksum
 						memcpy(~buffer + pos, ptr, need);
-						SyncInOut();
 						if(Peek32le(~buffer + 4) != xxh.Finish()) {
 							error = true;
 							return;
