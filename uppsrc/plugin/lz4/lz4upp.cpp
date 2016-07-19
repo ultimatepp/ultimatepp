@@ -4,23 +4,6 @@
 
 namespace Upp {
 
-enum {
-	LZ4F_MAGIC       = 0x184D2204,
-
-	LZ4F_VERSIONMASK = 0b11000000,
-	LZ4F_VERSION     = 0b01000000,
-	LZ4F_BLOCKINDEPENDENCE = (1 << 5),
-	LZ4F_BLOCKCHECKSUM     = (1 << 4),
-	LZ4F_CONTENTSIZE       = (1 << 3),
-	LZ4F_CONTENTCHECKSUM   = (1 << 2),
-	
-	LZ4F_MAXSIZEMASK      = 0x70,
-    LZ4F_MAXSIZE_64KB     = 0x40,
-    LZ4F_MAXSIZE_256KB    = 0x50,
-    LZ4F_MAXSIZE_1024KB   = 0x60,
-    LZ4F_MAXSIZE_4096KB   = 0x70,
-};
-
 void Lz4::Init()
 {
 	error = false;
