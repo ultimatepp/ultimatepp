@@ -5,7 +5,7 @@ class CoWork : NoCopy {
 
 	struct MJob : Moveable<MJob> {
 		Function<void ()> fn;
-		CoWork           *work;
+		CoWork           *work = NULL;
 		bool             *started = NULL;
 	};
 	
@@ -42,14 +42,14 @@ public:
 	ConditionVariable waitforfinish;
 	int               todo;
 
-	MJob& PushJob(Function<void ()>&& fn);
+	static MJob& PushJob(Function<void ()>&& fn);
 
 	Mutex stepmutex;
 	Array<BiVector<Function<void ()>>> step;
 	Vector<bool> steprunning;
 	
 public:
-	void     Start(Function<void ()>&& fn);
+	static void Start(Function<void ()>&& fn);
 
 	void     Do(Function<void ()>&& fn);
 	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }

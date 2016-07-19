@@ -14,20 +14,6 @@ void LZ4CompressStream::Init()
 	SetupBuffer();
 }
 
-void LZ4CompressStream::Clear()
-{
-	Init();
-}
-
-void LZ4CompressStream::PutOut(const void *ptr, int size)
-{
-	LLOG("LZ4 PutOut " << out.GetCount());
-	if(out)
-		out->Put(ptr, size);
-	else
-		sout.Cat((const char *)ptr, (int)size);
-}
-
 void LZ4CompressStream::FinishBlock(char *outbuf, int clen, const char *origdata, int origsize)
 {
 	RTIMING("FinishBlock");
@@ -40,11 +26,11 @@ void LZ4CompressStream::FinishBlock(char *outbuf, int clen, const char *origdata
 	if(clen >= origsize) {
 		Poke32le(outbuf, 0x80000000 | origsize);
 		memcpy(outbuf + 4, origdata, origsize);
-		PutOut(outbuf, origsize + 4);
+		out->Put(outbuf, origsize + 4);
 	}
 	else {
 		Poke32le(outbuf, clen);
-		PutOut(outbuf, clen + 4);
+		out->Put(outbuf, clen + 4);
 	}
 }
 
@@ -63,9 +49,8 @@ void LZ4CompressStream::FlushOut()
 		h[4] = LZ4F_VERSION | LZ4F_BLOCKINDEPENDENCE | LZ4F_CONTENTCHECKSUM;
 		h[5] = LZ4F_MAXSIZE_1024KB;
 		h[6] = xxHash(h + 4, 2) >> 8;
-		PutOut(h, 7);
+		out->Put(h, 7);
 		header = true;
-		maxblock = BLOCK_BYTES;
 	}
 	
 	if(ptr == (byte *)~buffer)
@@ -77,11 +62,11 @@ void LZ4CompressStream::FlushOut()
 	
 	WhenPos(pos);
 	
-	if(parallel) {
+	if(co) {
 		String bs = buffer;
 		int    inblk = inblock++;
-		co.Start([=] {
-			Buffer<char> outbuf(4 + LZ4_compressBound(maxblock));
+		CoWork::Start([=] {
+			Buffer<char> outbuf(4 + LZ4_compressBound(BLOCK_BYTES));
 			int clen = LZ4_compress(~bs, ~outbuf + 4, origsize);
 			Mutex::Lock __(lock);
 			while(outblock != inblk)
@@ -94,7 +79,7 @@ void LZ4CompressStream::FlushOut()
 		SetupBuffer();
 	}
 	else {
-		Buffer<char> outbuf(4 + LZ4_compressBound(maxblock));
+		Buffer<char> outbuf(4 + LZ4_compressBound(BLOCK_BYTES));
 		xxh.Put(~buffer, origsize);
 		int clen = LZ4_compress(~buffer, ~outbuf + 4, origsize);
 		FinishBlock(outbuf, clen, buffer, origsize);
@@ -106,7 +91,7 @@ void LZ4CompressStream::Close()
 {
 	ASSERT(compress >= 0);
 	FlushOut();
-	if(parallel) {
+	if(co) {
 		Mutex::Lock __(lock);
 		while(outblock != inblock)
 			cond.Wait(lock);
@@ -114,8 +99,7 @@ void LZ4CompressStream::Close()
 	byte h[8];
 	Poke32le(h, 0);
 	Poke32le(h + 4, xxh.Finish());
-	PutOut(h, 8);
-	Clear();
+	out->Put(h, 8);
 	buffer.Clear();
 }
 
@@ -155,13 +139,11 @@ void LZ4CompressStream::_Put(const void *data, dword size)
 			break;
 		}
 	}
-	
-	DDUMP(pos);
 }
 
 LZ4CompressStream::LZ4CompressStream()
 {
-	parallel = false;
+	co = false;
 	out = NULL;
 	Init();
 }

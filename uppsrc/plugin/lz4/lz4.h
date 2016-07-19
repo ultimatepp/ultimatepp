@@ -96,16 +96,12 @@ protected:
 	enum { BLOCK_BYTES = 1024 * 1024 };
 	
 	xxHashStream xxh;
-	int          maxblock;
 	int          blockchksumsz;
 	bool         header;
 	byte         lz4hdr;
 	String       header_data;
 
-    String       sout;
-	
-	bool              parallel;
-	CoWork            co;
+	bool              co;
 	Mutex             lock;
 	ConditionVariable cond;
 	int               outblock;
@@ -116,24 +112,64 @@ protected:
 	void          FinishBlock(char *outbuf, int clen, const char *origdata, int origsize);
 	void          FlushOut();
 
-	void          PutOut(const void *ptr, int size);
-
 public:
 	Event<int64>                 WhenPos;
 
-	void Clear();
-	
-	const String& Get() const              { return sout; }
-	operator const String&() const         { return sout; }
-	const String& operator~() const        { return sout; }
-	void   ClearOut()                      { sout.Clear(); }
-
-	void Parallel(bool b = true)           { parallel = b; }
-	void Out(Stream& o)                    { out = &o; }
+	void Concurrent(bool b = true)         { co = b; }
+	void Open(Stream& out_)                { Init(); out = &out_; }
 
 	LZ4CompressStream();
+	LZ4CompressStream(Stream& out) : LZ4CompressStream() { Open(out); }
 	~LZ4CompressStream();
 };
+
+class LZ4DecompressStream : public Stream {
+public:
+	virtual   bool  IsOpen() const;
+
+protected:
+	virtual   int   _Term();
+	virtual   int   _Get();
+	virtual   dword _Get(void *data, dword size);
+
+private:
+	Stream      *in;
+	String       buffer;
+	
+	enum { BLOCK_BYTES = 1024 * 1024 };
+	
+	xxHashStream xxh;
+	int          maxblock;
+	int          blockchksumsz;
+	byte         lz4hdr;
+	bool         eof;
+
+	bool         parallel;
+	CoWork       co;
+	Mutex        lock;
+	ConditionVariable cond;
+	int          outblock;
+	int          inblock;
+    
+    void          TryHeader();
+
+	void          Init();
+	int           Fetch(char *t, int size);
+	String        Fetch();
+	void          CheckEof();
+	void          NewBuffer(const String& s);
+
+public:	
+	Callback2<const void *, int> WhenOut;
+
+	bool Open(Stream& in);
+
+	void Parallel(bool b = true)           { parallel = b; }
+
+	LZ4DecompressStream();
+	~LZ4DecompressStream();
+};
+
 
 int64  LZ4Compress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
 int64  LZ4Decompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
