@@ -7,6 +7,7 @@ file
 	lz4.h,
 	lz4upp.cpp,
 	Compress.cpp,
+	Decompress.cpp,
 	util.cpp,
 	lib\LICENSE,
 	Copying;

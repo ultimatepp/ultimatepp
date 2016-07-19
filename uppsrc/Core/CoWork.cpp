@@ -56,6 +56,7 @@ CoWork::Pool::~Pool()
 	LLOG("Quit");
 	lock.Enter();
 	jobs[0].work = NULL;
+	jobs[0].started = NULL;
 	scheduled = 1;
 	lock.Leave();
 	waitforjob.Broadcast();
@@ -74,7 +75,7 @@ bool CoWork::Pool::DoJob()
 {
 	Pool& p = GetPool();
 	MJob& job = p.jobs[p.scheduled - 1];
-	if(job.work == NULL) {
+	if(job.work == NULL && job.started == NULL) {
 		LLOG("Quit thread");
 		return true;
 	}
@@ -91,6 +92,8 @@ bool CoWork::Pool::DoJob()
 	fn();
 	if(!finlock)
 		p.lock.Enter();
+	if(!work)
+		return false;
 	if(--work->todo == 0) {
 		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
 		work->waitforfinish.Signal();
@@ -143,9 +146,7 @@ CoWork::MJob& CoWork::PushJob(Function<void ()>&& fn)
 {
 	Pool& p = GetPool();
 	MJob& job = p.jobs[p.scheduled++];
-	job.work = this;
 	job.fn = pick(fn);
-	todo++;
 	LLOG("Adding job " << p.scheduled - 1 << "; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
 	if(p.waiting_threads) {
 		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
@@ -169,7 +170,8 @@ void CoWork::Do(Function<void ()>&& fn)
 			p.lock.Leave();
 		return;
 	}
-	PushJob(pick(fn));
+	PushJob(pick(fn)).work = this;
+	todo++;
 	p.lock.Leave();
 }
 
