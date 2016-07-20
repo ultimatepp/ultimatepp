@@ -1,37 +1,54 @@
 #include "lz4.h"
 
 namespace Upp {
-
-int64 lz4Press(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool compress, bool co = false)
-{
-	Lz4 lz4;
 	
-	int64 r = -1;
-	{
-		OutFilterStream outs(out, lz4);
-		if(co)
-			lz4.Parallel();
-		if(compress)
-			lz4.Compress();
-		else
-			lz4.Decompress();
-		if(CopyStream(outs, in, size, progress) >= 0) {
-			outs.Close();
-			if(!out.IsError() && !outs.IsError() && !lz4.IsError())
-				r = outs.GetCount();
+static void sCopy(Stream& out, Stream& in, Gate2<int64, int64> progress)
+{
+	while(!in.IsEof()) { // TODO: progress!!!
+		String h;
+		{
+			RTIMING("sCopy GET");
+			h = in.Get(4 * 1024*1024);
+		}
+		{
+			RTIMING("sCopy PUT");
+			out.Put(h);
 		}
 	}
-	return r;
+}
+
+static int64 sLZ4Compress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool co)
+{
+	LZ4CompressStream outs(out);
+	if(co)
+		outs.Concurrent();
+	sCopy(outs, in, progress);
+	outs.Close();
+	if(!out.IsError() && !outs.IsError())
+		return out.GetSize();
+	return -1;
+}
+
+static int64 sLZ4Decompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool co)
+{
+	LZ4DecompressStream ins(in);
+	if(co)
+		ins.Concurrent();
+	sCopy(out, ins, progress);
+	ins.Close();
+	if(!out.IsError() && !ins.IsError())
+		return out.GetSize();
+	return -1;
 }
 
 int64 LZ4Compress(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
-	return lz4Press(out, in, in.GetLeft(), progress, true);
+	return sLZ4Compress(out, in, in.GetLeft(), progress, false);
 }
 
 int64 LZ4Decompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
-	return lz4Press(out, in, in.GetLeft(), progress, false);
+	return sLZ4Decompress(out, in, in.GetLeft(), progress, false);
 }
 
 String LZ4Compress(const void *data, int64 len, Gate2<int64, int64> progress)
@@ -60,12 +77,12 @@ String LZ4Decompress(const String& s, Gate2<int64, int64> progress)
 
 int64 CoLZ4Compress(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
-	return lz4Press(out, in, in.GetLeft(), progress, true, true);
+	return sLZ4Compress(out, in, in.GetLeft(), progress, true);
 }
 
 int64 CoLZ4Decompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
-	return lz4Press(out, in, in.GetLeft(), progress, false, true);
+	return sLZ4Decompress(out, in, in.GetLeft(), progress, true);
 }
 
 String CoLZ4Compress(const void *data, int64 len, Gate2<int64, int64> progress)

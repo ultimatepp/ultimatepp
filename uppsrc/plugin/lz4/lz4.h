@@ -24,7 +24,7 @@ enum {
     LZ4F_MAXSIZE_4096KB   = 0x70,
 };
 
-class Lz4 {
+class Lz4 { // Filter is deprecated, use Streams instead, will be removed soon
 	StringBuffer buffer; // to be able to pass as String
 	int8         compress;
 	bool         error;
@@ -133,10 +133,11 @@ protected:
 	virtual   dword _Get(void *data, dword size);
 
 private:
-	Stream      *in;
-	String       buffer;
+	Stream        *in;
+	String         buffer;
+	Vector<String> ahead;
 	
-	enum { BLOCK_BYTES = 1024 * 1024 };
+	enum { BLOCK_BYTES = 1024*1024 };
 	
 	xxHashStream xxh;
 	int          maxblock;
@@ -144,8 +145,7 @@ private:
 	byte         lz4hdr;
 	bool         eof;
 
-	bool         parallel;
-	CoWork       co;
+	bool         co;
 	Mutex        lock;
 	ConditionVariable cond;
 	int          outblock;
@@ -154,7 +154,7 @@ private:
     void          TryHeader();
 
 	void          Init();
-	int           Fetch(char *t, int size);
+	String        Read(int& blksz);
 	String        Fetch();
 	void          CheckEof();
 	void          NewBuffer(const String& s);
@@ -164,9 +164,10 @@ public:
 
 	bool Open(Stream& in);
 
-	void Parallel(bool b = true)           { parallel = b; }
+	void Concurrent(bool b = true)           { co = b; }
 
 	LZ4DecompressStream();
+	LZ4DecompressStream(Stream& in) : LZ4DecompressStream() { Open(in); }
 	~LZ4DecompressStream();
 };
 
