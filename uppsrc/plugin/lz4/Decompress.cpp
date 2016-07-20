@@ -9,6 +9,7 @@ void LZ4DecompressStream::Init()
 	pos = 0;
 	eof = false;
 	buffer.Clear();
+	ptr = rdlim = (byte *)~buffer;
 	xxh.Reset();
 	outblock = inblock = 0;
 	ClearError();
@@ -16,6 +17,8 @@ void LZ4DecompressStream::Init()
 
 bool LZ4DecompressStream::Open(Stream& in_)
 {
+	Init();
+
 	in = &in_;
 	String header_data = in->Get(7);
 	if(header_data.GetCount() < 7) {
@@ -56,44 +59,41 @@ bool LZ4DecompressStream::Open(Stream& in_)
 	return true;
 }
 
-int LZ4DecompressStream::Fetch(char *t, int size)
+String LZ4DecompressStream::Read(int& blksz)
 {
 	if(IsError() || in->IsError())
-		return 0;
-	int blksz = in->Get32le();
+		return Null;
+	blksz = in->Get32le();
 	if(blksz == 0) // This is EOF
-		return 0;
+		return Null;
 	int len = blksz & 0x7fffffff;
-	if(len > maxblock || len > size) {
+	if(len > maxblock) {
 		SetError();
-		return 0;
+		return Null;
 	}
-	if(blksz & 0x80000000) {
-		if(in->Get(t, len) != len) {
-			SetError();
-			return 0;
-		}
-		return len;
-	}
-	String data = in->Get(len);
-	if(data.GetCount() != len) {
+	String data = in->GetAll(len);
+	if(IsNull(data)) {
 		SetError();
-		return 0;
-	}
-	int sz = LZ4_decompress_safe(~data, t, len, maxblock);
-	if(sz < 0) {
-		SetError();
-		return 0;
+		return Null;
 	}
 	if(lz4hdr & LZ4F_BLOCKCHECKSUM)
 		in->Get32le();
-	return sz;
+	return data;
 }
 
 String LZ4DecompressStream::Fetch()
 {
+	RTIMING("Fetch");
+	int blksz;
+	String data = Read(blksz);
+	if((blksz & 0x80000000) || IsNull(data))
+		return data;
 	StringBuffer b(maxblock);
-	int sz = Fetch(~b, maxblock);
+	int sz = LZ4_decompress_safe(~data, ~b, data.GetCount(), maxblock);
+	if(sz < 0) {
+		SetError();
+		return 0;
+	}
 	if(sz <= 0)
 		return Null;
 	b.SetLength(sz);
@@ -116,11 +116,13 @@ void LZ4DecompressStream::CheckEof()
 
 void LZ4DecompressStream::NewBuffer(const String& s)
 {
+	RTIMING("NewBuffer");
 	pos += buffer.GetCount();
 	buffer = s;
 	ptr = (byte *)buffer.begin();
 	rdlim = (byte *)buffer.end();
-	xxh.Put(s, s.GetCount());
+	{ RTIMING("XXH");
+	xxh.Put(s, s.GetCount()); }
 	if(ptr == rdlim)
 		CheckEof();
 }
@@ -141,45 +143,39 @@ int LZ4DecompressStream::_Get()
 	return ptr == rdlim ? -1 : *ptr++;
 }
 
+int64 copied;
+EXITBLOCK { RDUMP(copied); }
+
 dword LZ4DecompressStream::_Get(void *data, dword size)
 {
+	RTIMING("_Get");
 	byte *t = (byte *)data;
 	while(size) {
 		if(IsError() || in->IsError() || IsEof())
 			break;
 		dword n = dword(rdlim - ptr);
 		if(size < n) {
-			memcpy(t, ptr, size);
+			{ RTIMING("memcpy1");
+			memcpy(t, ptr, size); }
 			t += size;
 			ptr += size;
 			break;
 		}
 		else {
-			memcpy(t, ptr, n);
+			{ RTIMING("memcpy2"); copied += n;
+			memcpy(t, ptr, n); }
 			t += n;
 			size -= n;
-			if(size > (dword)maxblock) {
-				pos += buffer.GetCount();
-				buffer.Clear();
-				int sz = Fetch((char *)t, size);
-				xxh.Put(t, sz);
-				if(sz == 0)
-					CheckEof();
-				size -= sz;
-				pos += sz;
-				t += sz;
-			}
-			else
-				NewBuffer(Fetch());
+			NewBuffer(Fetch());
 		}
 	}
 	
-	return t - (byte *)data;
+	return dword(t - (byte *)data);
 }
 
 LZ4DecompressStream::LZ4DecompressStream()
 {
-	parallel = false;
+	co = false;
 	in = NULL;
 }
 
