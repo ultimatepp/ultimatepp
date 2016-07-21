@@ -10,7 +10,7 @@ RichTable::Format::Format()
 	framecolor = Black;
 	before = after = lm = rm = 0;
 	header = 0;
-	keep = false;
+	keep = newpage = newhdrftr = false;
 }
 
 #include "RichText.h"
@@ -28,7 +28,7 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
                           int i, int ny, const Rect& pg, VectorMap<int, Rect>& frr,
                           PaintInfo& pi, int pd, bool sel) const
 {
-	RichContext rc(st);
+	RichContext rc(st, NULL);
 	const Array<RichCell>& row = cell[i];
 	const PaintRow& pr = tab[i];
 	rc.py = pr.py;
@@ -134,7 +134,7 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 		int ny = cell.GetCount();
 		VectorMap<int, Rect> frr;
 		for(int i = 0; i < ny; i++)
-			if(RowPaint(pw, rc.styles, tab, i, ny, pg, frr, pi, 0, sel))
+			if(RowPaint(pw, *rc.styles, tab, i, ny, pg, frr, pi, 0, sel))
 				break;
 	
 		Color gc = format.gridcolor;
@@ -157,7 +157,7 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
 			Draw& w = pw.Page(pgi);
 			if(pgi > tab.page0 && tab.hasheader)
 				for(int i = 0; i < hy; i++) {
-					RowPaint(pw, rc.styles, tab.header, i, hy, hpg, frr, pi, pgi, false);
+					RowPaint(pw, *rc.styles, tab.header, i, hy, hpg, frr, pi, pgi, false);
 					w.DrawRect(pg.left, hpg.bottom, pg.Width(), gridln, format.gridcolor);
 				}
 			Rect r = frr[i].Inflated(frameln);

@@ -2,16 +2,6 @@
 
 NAMESPACE_UPP
 
-RichContext RichText::Context(const Rect& page, PageY py) const
-{
-	RichContext c(style);
-	c.page = GetPageMinusHeaderFooter(page);
-	c.py = py;
-	if(py.y < c.page.top)
-		c.py.y = c.page.top;
-	return c;
-}
-
 PageY RichText::GetHeight(const Rect& page) const
 {
 	return RichTxt::GetHeight(Context(page, PageY(0, 0)));
@@ -114,13 +104,23 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 		bottom = GetHeight(page);
 		return true;
 	}
+#if 0
 	RichContext rc = Context(page, PageY(0, 0));
 	if(rtype == SPARA) {
 		rc.py = top = GetPartPageY(spi, rc);
 	   	bottom = GetNextPageY(spi, rc);
 	   	return true;
 	}
-	rc.py = top = GetPartPageY(r_parti, rc);
+#endif
+	RichContext begin;
+	if(rtype == SPARA) { // selection changed within single paragraph
+		RichContext rc = GetPartContext(spi, Context(page));
+		top = rc.py;
+		bottom = GetAdvanced(spi, rc, begin).py;
+		return true;
+	}
+	RichContext rc = GetPartContext(r_parti, Context(page));
+	top = rc.py;
 	if(rtype == PARA) {
 		if(IsTable(r_parti))
 			switch(GetTable(r_parti).GetInvalid(top, bottom, rc)) {
@@ -135,11 +135,11 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 			const Para& pp = part[r_parti].Get<Para>();
 			if(r_paraocx == pp.ccx &&
 			   r_paraocy == Sum(pp.linecy, 0) + pp.ruler + pp.before + pp.after &&
-	 		   r_keep == pp.keep &&
-	 		   r_keepnext == pp.keepnext &&
+			   r_keep == pp.keep &&
+			   r_keepnext == pp.keepnext &&
 			   r_newpage == pp.newpage) {
-			   	bottom = GetNextPageY(r_parti, rc);
-			   	return true;
+				bottom = GetAdvanced(r_parti, rc, begin).py;
+				return true;
 			}
 		}
 	}

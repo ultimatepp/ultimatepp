@@ -2,13 +2,10 @@ class RichText : public RichTxt, public DeepCopyOption<RichText> {
 	RichStyles style;
 	String     footer_hack; // ugly hack
 
-	mutable One<RichText> header, footer;
-
 	bool       nolinks;
 
 	void       Init();
 
-	Rect       GetPageMinusHeaderFooter(const Rect& page) const;
 	void       PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo& pi,
 	                             int from_page, int to_page) const;
 
@@ -42,7 +39,9 @@ public:
 	void                  CatPick(RichText&& p);
 	using                 RichTxt::CatPick;
 
-	RichContext           Context(const Rect& page, PageY py) const;
+	RichContext           Context(const Rect& page, PageY py, const String& header_qtf, const String& footer_qtf) const;
+	RichContext           Context(const Rect& page, PageY py) const { return Context(page, py, header_qtf, footer_qtf); }
+	RichContext           Context(const Rect& page) const { return Context(page, PageY(0, 0)); }
 
 	RichPos               GetRichPos(int pos, int maxlevel = INT_MAX) const;
 	int                   operator[](int pos) const            { return GetRichPos(pos).chr; }
@@ -132,17 +131,6 @@ public:
 
 	static void           Register(ClipboardType& type);
 	
-	void                  PickHeader(RichText&& txt);
-	void                  PickFooter(RichText&& txt);
-	void                  SetHeaderQtf(const char *qtf);
-	void                  SetFooterQtf(const char *qtf);
-	void                  ClearHeader()                                       { header.Clear(); }
-	void                  ClearFooter()                                       { footer.Clear(); }
-	String                GetHeaderQtf(byte charset = CHARSET_UTF8, dword options = QTF_ALL) const;
-	String                GetFooterQtf(byte charset = CHARSET_UTF8, dword options = QTF_ALL) const;
-	const RichText       *GetHeaderPtr() const                                { return ~header; }
-	const RichText       *GetFooterPtr() const                                { return ~footer; }
-
 	//Ugly hacks
 	void                  SetFooter(const String& s)                          { footer_hack = s; }
 	String                GetFooter() const                                   { return footer_hack; }
