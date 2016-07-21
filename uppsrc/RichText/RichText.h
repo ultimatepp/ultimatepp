@@ -243,9 +243,9 @@ enum {
 	RICHHOT_RM = -2,
 };
 
-struct RichHotPos {
+struct RichHotPos { // used for resizing table dimensions by mouse
 	int table;
-	int column;
+	int column; // can be RICHHOT_LM or RICHHOT_RM or columns index
 	int delta;
 	int left, cx;
 	int textleft, textcx;
@@ -360,14 +360,21 @@ typedef ArrayMap<Uuid, RichStyle> RichStyles;
 const RichStyle& GetStyle(const RichStyles& s, const Uuid& id);
 int   FindStyleWithName(const RichStyles& style, const String& name);
 
+class RichText;
+
 struct RichContext {
-	const RichStyles& styles;
+	const RichText   *text;
+	const RichStyles *styles;
+	String            header_qtf, footer_qtf;
+	int               header_cy, footer_cy;
 	Rect              page;
 	PageY             py;
 
+	void              NewHeaderFooter(const String& header_qtf, const String& footer_qtf);
 	void              Page() { py.page++; py.y = page.top; }
 
-	RichContext(const RichStyles& styles) : styles(styles) {}
+	RichContext(const RichStyles& styles, const RichText *text) : styles(&styles), text(text) { header_cy = footer_cy = 0; }
+	RichContext() {}
 };
 
 struct RichCellPos;

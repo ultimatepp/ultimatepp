@@ -6,9 +6,10 @@ NAMESPACE_UPP
 #define IMAGEFILE <RichText/RichText.iml>
 #include <Draw/iml.h>
 
-RichPara::Lines RichPara::Begin(const Rect& page, PageY& py, int nbefore, int nline) const
+RichPara::Lines RichPara::Begin(const Rect& page, PageY& py) const
 {
 	Lines pl = FormatLines(page.Width());
+#if 0 // pagination logic moved to RichTxt
 	int cy = format.ruler + format.before;
 	if(format.keep || format.keepnext)
 		cy += pl.BodyHeight();
@@ -18,11 +19,12 @@ RichPara::Lines RichPara::Begin(const Rect& page, PageY& py, int nbefore, int nl
 	if(!format.keepnext)
 		nbefore = nline = after = 0;
 	if(page.Height() < 32000 &&
-	   (format.newpage || py.y + cy + after + nbefore + nline > page.bottom &&
-	    cy < page.Height())) {
+	   (format.newpage || py.y + cy + after + nbefore + nline > page.bottom && cy < page.Height() ||
+	    format.header_qtf.GetCount() + format.footer_qtf.GetCount()/* && rc.level == 0*/)) {
 		py.page++;
 		py.y = page.top;
 	}
+#endif
 	py.y += format.before + format.ruler;
 	pl.Justify(format);
 	return pl;
@@ -182,12 +184,11 @@ void RichPara::DrawRuler(Draw& w, int x, int y, int cx, int cy, Color ink, int s
 }
 
 void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& pi,
-                     const Number& n, const Bits& spellerror,
-                     int nbefore, int nline) const
+                     const Number& n, const Bits& spellerror, bool baselevel) const
 {
 	Zoom z = pi.zoom;
 	PageY opy = py;
-	Lines pl = Begin(page, py, nbefore, nline);
+	Lines pl = Begin(page, py);
 	if(pw.tracer) {
 		PageY h = py;
 		h.y -= format.before + format.ruler;
@@ -401,7 +402,7 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		pw.Page(py.page).DrawImage(z * x, z * y0 - sz.cy,
 		                           RichTextImg::EndParaChar(),
 		                           format.indexentry.GetCount() ? pi.indexentry : pi.showcodes);
-	if(format.newpage && !IsNull(pi.showcodes)) {
+	if((format.newpage || format.newhdrftr) && !IsNull(pi.showcodes) && baselevel) {
 		Draw& w = pw.Page(opy.page);
 		int wd = z * page.right - z * page.left;
 		int step = w.Pixels() ? 8 : 50;
@@ -444,9 +445,9 @@ void RichPara::GetRichPos(RichPos& rp, int pos) const
 		rp.chr = '\n';
 }
 
-RichCaret RichPara::GetCaret(int pos, const Rect& page, PageY py, int nbefore, int nline) const
+RichCaret RichPara::GetCaret(int pos, const Rect& page, PageY py) const
 {
-	Lines pl = Begin(page, py, nbefore, nline);
+	Lines pl = Begin(page, py);
 	RichCaret pr;
 	FontInfo fi = format.Info();
 	pr.caretascent = fi.GetAscent();
@@ -513,9 +514,9 @@ int RichPara::PosInLine(int x, const Rect& page, const Lines& pl, int lni) const
 	return pos < pl.clen ? pl.pos[pos] : pl.len;
 }
 
-int RichPara::GetPos(int x, PageY y, const Rect& page, PageY py, int nbefore, int nline) const
+int RichPara::GetPos(int x, PageY y, const Rect& page, PageY py) const
 {
-	Lines pl = Begin(page, py, nbefore, nline);
+	Lines pl = Begin(page, py);
 	if(pl.len)
 		for(int lni = 0; lni < pl.GetCount(); lni++) {
 			const Line& li = pl[lni];
@@ -550,10 +551,9 @@ int RichPara::GetVertMove(int pos, int gx, const Rect& page, int dir) const
 	return PosInLine(gx, page, pl, lni);
 }
 
-void  RichPara::GatherLabels(Vector<RichValPos>& info, const Rect& page, PageY py,
-                             int pos, int nbefore, int nline) const
+void  RichPara::GatherLabels(Vector<RichValPos>& info, const Rect& page, PageY py, int pos) const
 {
-	Lines pl = Begin(page, py, nbefore, nline);
+	Lines pl = Begin(page, py);
 	WString ie;
 	if(!pl.GetCount())
 		return;
@@ -569,10 +569,9 @@ void  RichPara::GatherLabels(Vector<RichValPos>& info, const Rect& page, PageY p
 	f.data = format.label.ToWString();
 }
 
-void  RichPara::GatherIndexes(Vector<RichValPos>& info, const Rect& page, PageY py,
-                              int pos, int nbefore, int nline) const
+void  RichPara::GatherIndexes(Vector<RichValPos>& info, const Rect& page, PageY py, int pos) const
 {
-	Lines pl = Begin(page, py, nbefore, nline);
+	Lines pl = Begin(page, py);
 	WString ie;
 	for(int lni = 0; lni < pl.GetCount(); lni++) {
 		Line& li = pl[lni];

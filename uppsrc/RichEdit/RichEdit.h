@@ -123,6 +123,8 @@ struct FontHeight : public WithDropChoice<EditDouble> {
 #define LAYOUTFILE <RichEdit/RichEdit.lay>
 #include <CtrlCore/lay.h>
 
+bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf);
+
 class ParaFormatting : public WithParaLayout<StaticRect> {
 public:
 	DropList n[8];
@@ -134,6 +136,7 @@ private:
 	bool     keepindent;
 	Font     font;
 	bool     modified;
+	String   header_qtf, footer_qtf;
 
 	RichPara::NumberFormat GetNumbering();
 	bool                   IsNumbering();
@@ -143,12 +146,15 @@ private:
 	typedef ParaFormatting CLASSNAME;
 
 public:
-	void  Set(int unit, const RichText::FormatInfo& formatinfo);
+	void  Set(int unit, const RichText::FormatInfo& formatinfo, bool baselevel = false);
 	dword Get(RichText::FormatInfo& formatinfo);
 	void  SetFont(Font fnt)                          { font = fnt; }
 	bool  IsChanged() const                          { return IsModified() || modified; }
 	void  EnableNumbering();
 	void  SetupIndent();
+	void  EditHdrFtr();
+	void  NewHdrFtr();
+	void  SyncHdrFtr();
 
 	ParaFormatting();
 };
@@ -617,6 +623,7 @@ private:
 	void     ApplyStyleKey(int i);
 	
 	void     HeaderFooter();
+	bool     EditHeaderFooter(String& header_qtf, String& footer_qtf);
 
 	bool     BegSelTabFix();
 	void     BegSelTabFixEnd(bool fix);
