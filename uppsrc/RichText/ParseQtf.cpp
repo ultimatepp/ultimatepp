@@ -425,9 +425,15 @@ void RichQtfParser::TableFormat(bool bw)
 		case '@': t.format.color = GetColor(); break;
 		case 'R': t.format.bordercolor = GetColor(); break;
 		case '!': t.format = RichCell::Format(); break;
-		case 'k': t.format.keep = true;
-		case 'o': t.format.round = true;
-		case 'K': tab.format.keep = true;
+		case 'o': t.format.round = true; break;
+		case 'k': t.format.keep = true; break;
+		case 'K': tab.format.keep = true; break;
+		case 'P': tab.format.newpage = true; break;
+		case 'T':
+			tab.format.newhdrftr = true;
+			tab.format.header_qtf = GetText2('^', '^');
+			tab.format.footer_qtf = GetText2('^', '^');
+			break;
 		case 'a':
 			Number2(a, b);
 			if(a >= 0)
@@ -774,7 +780,14 @@ void RichQtfParser::Parse(const char *qtf, int _accesskey)
 						}
 						break;
 					case 't':
-						if(IsDigit(*term)) //temporary fix... :(
+						if(*term == 'P') {
+							term++;
+							format.newhdrftr = true;
+							format.header_qtf = GetText2('^', '^');
+							format.footer_qtf = GetText2('^', '^');
+						}
+						else
+						if(IsDigit(*term))
 							format.tabsize = ReadNumber();
 						break;
 					case '~': {

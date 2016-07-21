@@ -65,8 +65,29 @@ void ParaFormatting::SetupIndent()
 	indent.ClearModify();
 }
 
-void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo)
+void ParaFormatting::EditHdrFtr()
 {
+	if(EditRichHeaderFooter(header_qtf, footer_qtf))
+		modified = true;
+}
+
+void ParaFormatting::NewHdrFtr()
+{
+	SyncHdrFtr();
+	if(newhdrftr)
+		EditHdrFtr();
+}
+
+void ParaFormatting::SyncHdrFtr()
+{
+	hdrftr.Enable(newhdrftr && newhdrftr.IsEnabled());
+}
+
+void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo, bool baselevel)
+{
+	page.Enable(baselevel);
+	newhdrftr.Enable(baselevel);
+	hdrftr.Enable(baselevel);
 	font = formatinfo;
 	ruler.Set(unit, RichText::RULER & formatinfo.paravalid ? formatinfo.ruler : Null);
 	before.Set(unit, RichText::BEFORE & formatinfo.paravalid ? formatinfo.before : Null);
@@ -79,6 +100,15 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo)
 		          formatinfo.align == ALIGN_CENTER  ? 1 :
 		          formatinfo.align == ALIGN_RIGHT   ? 2 :
 		                                            3;
+	if(RichText::NEWHDRFTR & formatinfo.paravalid) {
+		newhdrftr = formatinfo.newhdrftr;
+		header_qtf = formatinfo.header_qtf;
+		footer_qtf = formatinfo.footer_qtf;
+	}
+	else {
+		newhdrftr = Null;
+		newhdrftr.ThreeState();
+	}
 	if(RichText::NEWPAGE & formatinfo.paravalid)
 		page = formatinfo.newpage;
 	else {
@@ -143,6 +173,7 @@ void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo)
 	keepindent = formatinfo.indent != ComputeIndent();
 	SetupIndent();
 	ClearModify();
+	SyncHdrFtr();
 	modified = false;
 }
 
@@ -177,6 +208,16 @@ dword ParaFormatting::Get(RichText::FormatInfo& formatinfo)
 	if(!IsNull(page)) {
 		formatinfo.newpage = page;
 		v |= RichText::NEWPAGE;
+	}
+	if(!IsNull(newhdrftr)) {
+		formatinfo.newhdrftr = newhdrftr;
+		v |= RichText::NEWHDRFTR;
+		if(formatinfo.newhdrftr) {
+			formatinfo.header_qtf = header_qtf;
+			formatinfo.footer_qtf = footer_qtf;
+		}
+		else
+			formatinfo.header_qtf = formatinfo.footer_qtf = Null;
 	}
 	if(!IsNull(keep)) {
 		formatinfo.keep = keep;
@@ -284,6 +325,11 @@ ParaFormatting::ParaFormatting()
 	after_number <<=
 	reset_number <<=
 	bullet <<= THISBACK(SetupIndent);
+	
+	newhdrftr <<= THISBACK(NewHdrFtr);
+	hdrftr <<= THISBACK(EditHdrFtr);
+	SyncHdrFtr();
+	
 	EnableNumbering();
 	rulerink.NullText("---");
 	rulerstyle.SetDisplay(Single<RulerStyleDisplay>());

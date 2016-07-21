@@ -50,14 +50,15 @@ public:
 class RichTable : DeepCopyOption<RichTable> {
 public:
 	struct Format {
-		int   before, lm, rm, after;
-		int   frame;
-		Color framecolor;
-		int   grid;
-		Color gridcolor;
+		int    before, lm, rm, after;
+		int    frame;
+		Color  framecolor;
+		int    grid;
+		Color  gridcolor;
 		WithDeepCopy< Vector<int> > column;
-		int   header;
-		bool  keep;
+		int    header;
+		bool   keep, newpage, newhdrftr;
+		String header_qtf, footer_qtf;
 
 		Format();
 	};
@@ -118,12 +119,12 @@ private:
 		TabLayout() {}
 	};
 
-	mutable TabLayout clayout;
+	mutable TabLayout clayout; // TODO: MT?
 	mutable Rect      cpage;
 	mutable PageY     cpy;
 
 	Buffer< Buffer<CellInfo> > ci;
-	int              r_row, r_column;
+	int              r_row, r_column; // r_ - refresh info
 	Rect             r_page;
 	PageY            r_py, r_pyy;
 

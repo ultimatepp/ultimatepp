@@ -14,10 +14,11 @@ bool RichTable::Reduce(RichContext& rc) const
 }
 
 const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
-{
+{ // Create page layout with header
 	if(rc.py != cpy || rc.page != cpage) {
 		rc.py.y += format.before;
 		if(rc.py.y > rc.page.bottom) {
+			// TODO: header/footer adjustment here
 			rc.py.y = rc.page.top;
 			rc.py.page++;
 		}
@@ -32,15 +33,16 @@ const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
 			RichContext nrc = rc;
 			nrc.py.page = 0;
 			nrc.py.y = clayout.page.top;
-			clayout.header = Realize(nrc, hy);
-			if(clayout.header[0].py.page == clayout.header[hy - 1].pyy.page) {
+			clayout.header = Realize(nrc, hy); // realize header as if first on page
+			if(clayout.header[0].py.page == clayout.header[hy - 1].pyy.page) { // header fits single page
 				Layout x = Realize(rc, cell.GetCount());
-				if(cell.GetCount() > hy && rc.py.page != x[hy].py.page) {
+				if(cell.GetCount() > hy && rc.py.page != x[hy].py.page) { // first header would break the end of page
+					// TODO: header/footer adjustment here
 					rc.py.page++;
 					rc.py.y = rc.page.top;
 				}
-				clayout.hasheader = true;
-				rc.page.top = clayout.page.top = clayout.header[hy - 1].pyy.y + format.grid;
+				clayout.hasheader = true; // if it fits, we repeat header on each new page
+				rc.page.top = clayout.page.top = clayout.header[hy - 1].pyy.y + format.grid; // so have to reduce the page size for nonheader rows
 			}
 		}
 		clayout.page0 = rc.py.page;
@@ -58,7 +60,7 @@ const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
 }
 
 RichTable::Layout RichTable::Realize(RichContext rc, int ny) const
-{
+{ // create layout for first ny rows
 	Layout tab;
 
 	int nx = format.column.GetCount();

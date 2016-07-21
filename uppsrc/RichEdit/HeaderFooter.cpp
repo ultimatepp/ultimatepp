@@ -72,6 +72,8 @@ struct HeaderFooterDlg : WithHeaderFooterLayout<TopWindow> {
 	RichEditHdrFtr header_editor, footer_editor;
 	
 	void Sync();
+	void Set(const String& header_qtf, const String& footer_qtf);
+	void Get(String& header_qtf, String& footer_qtf);
 	void Load(const RichText& text);
 	void Save(RichText& text);
 
@@ -91,19 +93,28 @@ HeaderFooterDlg::HeaderFooterDlg()
 	Sync();
 }
 
-void HeaderFooterDlg::Load(const RichText& text)
+void HeaderFooterDlg::Set(const String& header_qtf, const String& footer_qtf)
 {
-	String h = text.GetHeaderQtf();
-	use_header = !IsNull(h);
+	use_header = !IsNull(header_qtf);
 	if(use_header)
-		header_editor.SetQTF(h);
+		header_editor.SetQTF(header_qtf);
 	header_editor.EvaluateFields();
-	h = text.GetFooterQtf();
-	use_footer = !IsNull(h);
+	use_footer = !IsNull(footer_qtf);
 	if(use_footer)
-		footer_editor.SetQTF(h);
+		footer_editor.SetQTF(footer_qtf);
 	footer_editor.EvaluateFields();
 	Sync();
+}
+
+void HeaderFooterDlg::Get(String& header_qtf, String& footer_qtf)
+{
+	header_qtf = use_header ? header_editor.GetQTF() : String();
+	footer_qtf = use_footer ? footer_editor.GetQTF() : String();
+}
+
+void HeaderFooterDlg::Load(const RichText& text)
+{
+	Set(text.GetHeaderQtf(), text.GetFooterQtf());
 }
 
 void HeaderFooterDlg::Save(RichText& text)
@@ -128,6 +139,17 @@ void RichEdit::HeaderFooter()
 		Refresh();
 		Finish();
 	}
+}
+
+bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf)
+{
+	HeaderFooterDlg dlg;
+	dlg.Set(header_qtf, footer_qtf);
+	if(dlg.Execute() == IDOK) {
+		dlg.Get(header_qtf, footer_qtf);
+		return true;
+	}
+	return false;
 }
 
 END_UPP_NAMESPACE
