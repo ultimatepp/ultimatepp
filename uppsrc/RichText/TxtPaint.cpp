@@ -126,8 +126,11 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 			if(rc.py.y > rc.page.bottom)
 				rc.Page();
 		}
-		else
-			rc.py.y += pp.before + pp.cy + pp.after + pp.ruler;
+		else {
+			rc.py.y += pp.before;
+			begin = rc;
+			rc.py.y += pp.cy + pp.after + pp.ruler;
+		}
 	}
 }
 
@@ -187,6 +190,7 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 			}
 			RichContext begin;
 			RichContext next = GetAdvanced(parti, rc, begin);
+			DDUMP(rc.py);
 			if(next.py >= pi.top) {
 				RichPara p = Get(parti, *rc.styles, true);
 				if(pi.spellingchecker) {
