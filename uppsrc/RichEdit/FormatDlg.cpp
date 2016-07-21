@@ -85,7 +85,6 @@ void ParaFormatting::SyncHdrFtr()
 
 void ParaFormatting::Set(int unit, const RichText::FormatInfo& formatinfo, bool baselevel)
 {
-	page.Enable(baselevel);
 	newhdrftr.Enable(baselevel);
 	hdrftr.Enable(baselevel);
 	font = formatinfo;

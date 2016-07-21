@@ -76,15 +76,13 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 {
 	if(part[parti].Is<RichTable>()) {
 		const RichTable& tab = GetTable(parti);
-		if(rc.text == this) {
-			if(tab.format.newhdrftr) {
-				rc.NewHeaderFooter(~tab.header, ~tab.footer);
-				rc.Page();
-			}
-			else
-			if(tab.format.newpage)
-				rc.Page();
+		if(tab.format.newhdrftr && rc.text == this) {
+			rc.NewHeaderFooter(~tab.header, ~tab.footer);
+			rc.Page();
 		}
+		else
+		if(tab.format.newpage)
+			rc.Page();
 		begin = rc;
 		rc.py = GetTable(parti).GetHeight(rc);
 	}
@@ -110,7 +108,7 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 				rc.Page();
 			}
 			else
-			if(pp.newpage && rc.text == this || rc.py.y + cy + nbefore + nline > rc.page.bottom && cy < rc.page.Height())
+			if(pp.newpage || rc.py.y + cy + nbefore + nline > rc.page.bottom && cy < rc.page.Height())
 				rc.Page();
 			begin = rc;
 			rc.py.y += pp.before + pp.ruler;
