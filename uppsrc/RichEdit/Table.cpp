@@ -149,7 +149,6 @@ void RichEdit::TableProps()
 	dlg.footer_qtf = fmt.footer_qtf;
 	r(dlg.gridcolor, fmt.gridcolor);
 	dlg.SyncHdrFtr();
-	dlg.newpage.Enable(cursorp.level == 1);
 	dlg.newhdrftr.Enable(cursorp.level == 1);
 	dlg.hdrftr.Enable(cursorp.level == 1);
 	for(;;) {
