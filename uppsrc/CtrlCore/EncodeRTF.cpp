@@ -189,7 +189,7 @@ void RTFEncoder::GetTxtFaces(const RichTxt& rt)
 			phys_colors.FindAdd(tfmt.gridcolor);
 			for(int r = 0; r < table.GetRows(); r++)
 				for(int c = 0; c < table.GetColumns(); c++) {
-					const RichCell& cell = table.cell[r][c];
+					const RichCell& cell = table[r][c];
 					phys_colors.FindAdd(cell.format.color);
 					phys_colors.FindAdd(cell.format.bordercolor);
 					GetTxtFaces(cell.text);
@@ -498,7 +498,7 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 		Vector<int> cellindex;
 		Rect dflt_margin(600, 600, 600, 600);
 		for(int c = 0; c < table.GetColumns(); c++) {
-			const RichCell& cell = table.cell[r][c];
+			const RichCell& cell = table[r][c];
 			dflt_margin.left = min(dflt_margin.left, cell.format.margin.left);
 			dflt_margin.top = min(dflt_margin.top, cell.format.margin.top);
 			dflt_margin.right = min(dflt_margin.right, cell.format.margin.right);
@@ -515,7 +515,7 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 		bool istop = (r == 0);
 		bool isbottom = (r == table.GetRows() - 1);
 		for(int c = 0; c < table.GetColumns(); c++) {
-			const RichCell& cell = table.cell[r][c];
+			const RichCell& cell = table[r][c];
 /*
 			if(cell.format.margin.left != dflt_margin.left)
 				rowfmt << "\\clpadl" << DotTwips(cell.format.margin.left) << "\\clpadfl3";
@@ -548,24 +548,25 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 				rowfmt << "\\clcbpat" << phys_colors.Find(cell.format.color);
 			int lb, tb, rb, bb;
 			Color lc, tc, rc, bc;
-			lc = tc = rc = bc = table.format.gridcolor;
-			lb = tb = rb = bb = (!IsNull(table.format.gridcolor) ? table.format.grid : 0);
-			int fw = (!IsNull(table.format.framecolor) ? table.format.frame : 0);
+			const RichTable::Format& tf = table.GetFormat();
+			lc = tc = rc = bc = tf.gridcolor;
+			lb = tb = rb = bb = (!IsNull(tf.gridcolor) ? tf.grid : 0);
+			int fw = (!IsNull(tf.framecolor) ? tf.frame : 0);
 			if(isleft) {
 				lb = fw;
-				lc = table.format.framecolor;
+				lc = tf.framecolor;
 			}
 			if(isright) {
 				rb = fw;
-				rc = table.format.framecolor;
+				rc = tf.framecolor;
 			}
 			if(istop) {
 				tb = fw;
-				tc = table.format.framecolor;
+				tc = tf.framecolor;
 			}
 			if(isbottom) {
 				bb = fw;
-				bc = table.format.framecolor;
+				bc = tf.framecolor;
 			}
 			if(!IsNull(cell.format.bordercolor)) {
 				if(cell.format.border.left >= max(lb, 1)) {
@@ -603,7 +604,7 @@ void RTFEncoder::PutTable(const RichTable& table, int nesting, int dot_width)
 			stream.Put(fmtstr);
 		for(int c = 0; c < cellindex.GetCount(); c++) {
 			int cx = cellindex[c];
-			const RichCell& cell = table.cell[r][cx];
+			const RichCell& cell = table[r][cx];
 			int cell_wd = column_pos[cx + cell.hspan + 1] - column_pos[cx];
 			PutTxt(cell.text, nesting + 1, cell_wd);
 			Command(nesting ? "nestcell" : "cell");

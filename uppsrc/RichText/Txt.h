@@ -87,6 +87,7 @@ protected:
 		mutable bool          haspos;
 		mutable bool          newhdrftr;
 		mutable String        header_qtf, footer_qtf;
+		mutable One<RichText> header, footer;
 		One<RichPara::NumberFormat> number;
 
 		void Invalidate();
@@ -102,6 +103,7 @@ protected:
 
 	Vector<Part>           part;
 	String                 header_qtf, footer_qtf;
+	mutable One<RichText>  header, footer;
 	mutable int            length;
 	mutable int            tabcount;
 	mutable Vector<PageY>  py;

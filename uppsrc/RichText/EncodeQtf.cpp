@@ -376,15 +376,15 @@ void QTFEncodeTxt(String& qtf, const RichTxt& text, const RichStyles& styles, co
 			qtf << ' ';
 
 			const RichTable& t = text.GetTable(i);
-			int nx = t.format.column.GetCount();
-			int ny = t.cell.GetCount();
+			const RichTable::Format& f = t.GetFormat();
+			int nx = f.column.GetCount();
+			int ny = t.GetRows();
 			qtf << "{{";
 			for(int i = 0; i < nx; i++) {
 				if(i)
 					qtf << ':';
-				qtf << t.format.column[i];
+				qtf << f.column[i];
 			}
-			const RichTable::Format& f = t.format;
 			const RichTable::Format& d = Single<RichTable::Format>();
 			FmtNumber(qtf, '<', d.lm, f.lm);
 			FmtNumber(qtf, '>', d.rm, f.rm);
@@ -405,7 +405,7 @@ void QTFEncodeTxt(String& qtf, const RichTxt& text, const RichStyles& styles, co
 			FmtNumber(qtf, 'h', d.header, f.header);
 			RichCell::Format cf = Single<RichCell::Format>();
 			for(int i = 0; i < ny; i++) {
-				const Array<RichCell>& r = t.cell[i];
+				const Array<RichCell>& r = t[i];
 				for(int j = 0; j < r.GetCount(); j++) {
 					const RichCell& c = r[j];
 					if(i || j) {

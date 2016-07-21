@@ -72,10 +72,11 @@ public:
 		CellInfo()            { valid = true; }
 	};
 
+private:
 	Format format;
 	Array< Array<RichCell> > cell;
+	mutable One<RichText> header, footer;
 
-private:
 	struct PaintCell : Moveable<PaintCell> {
 		int   left;
 		int   right;
@@ -146,8 +147,8 @@ private:
 
 	friend class RichTxt;
 	friend class RichText;
-public:
 
+public:
 	Array<RichCell>&       operator[](int i)             { return cell[i]; }
 	const Array<RichCell>& operator[](int i) const       { return cell[i]; }
 	RichCell&       operator[](Point p)                  { return cell[p.y][p.x]; }
