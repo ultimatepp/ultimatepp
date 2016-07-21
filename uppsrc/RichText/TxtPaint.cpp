@@ -38,8 +38,18 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.keepnext = p.format.keepnext;
 	pp.orphan = p.format.orphan;
 	pp.newhdrftr = p.format.newhdrftr;
-	pp.header_qtf = p.format.header_qtf;
-	pp.footer_qtf = p.format.footer_qtf;
+	if(~pp.header_qtf != ~p.format.header_qtf) { // we compare just pointers
+		pp.header_qtf = p.format.header_qtf;
+		pp.header.Clear();
+		if(pp.header_qtf.GetCount())
+			pp.header.Create() = ParseQTF(pp.header_qtf);
+	}
+	if(~pp.footer_qtf != ~p.format.footer_qtf) { // we compare just pointers
+		pp.footer_qtf = p.format.footer_qtf;
+		pp.footer.Clear();
+		if(pp.footer_qtf.GetCount())
+			pp.footer.Create() = ParseQTF(pp.footer_qtf);
+	}
 }
 
 void RichTxt::Sync(int parti, const RichContext& rc) const {
@@ -72,7 +82,7 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 		const RichTable& tab = GetTable(parti);
 		if(rc.text == this) {
 			if(tab.format.newhdrftr) {
-				rc.NewHeaderFooter(tab.format.header_qtf, tab.format.footer_qtf);
+				rc.NewHeaderFooter(~tab.header, ~tab.footer);
 				rc.Page();
 			}
 			else
@@ -100,7 +110,7 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 				nline   = p.linecy[0];
 			}
 			if(pp.newhdrftr && rc.text == this) {
-				rc.NewHeaderFooter(pp.header_qtf, pp.footer_qtf);
+				rc.NewHeaderFooter(~pp.header, ~pp.footer);
 				rc.Page();
 			}
 			else
