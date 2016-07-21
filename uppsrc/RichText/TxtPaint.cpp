@@ -40,15 +40,11 @@ void RichTxt::Sync0(const Para& pp, int parti, const RichContext& rc) const
 	pp.newhdrftr = p.format.newhdrftr;
 	if(~pp.header_qtf != ~p.format.header_qtf) { // we compare just pointers
 		pp.header_qtf = p.format.header_qtf;
-		pp.header.Clear();
-		if(pp.header_qtf.GetCount())
-			pp.header.Create() = ParseQTF(pp.header_qtf);
+		Upp::SetQTF(pp.header, pp.header_qtf);
 	}
 	if(~pp.footer_qtf != ~p.format.footer_qtf) { // we compare just pointers
 		pp.footer_qtf = p.format.footer_qtf;
-		pp.footer.Clear();
-		if(pp.footer_qtf.GetCount())
-			pp.footer.Create() = ParseQTF(pp.footer_qtf);
+		Upp::SetQTF(pp.footer, pp.footer_qtf);
 	}
 }
 
