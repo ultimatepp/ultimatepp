@@ -390,6 +390,7 @@ void RichQtfParser::S(int& x, int a)
 void RichQtfParser::TableFormat(bool bw)
 {
 	RichTable& tab = Table();
+	RichTable::Format tabformat = tab.GetFormat();
 	Tab& t = table.Top();
 	int a, b;
 	for(;;) {
@@ -401,19 +402,21 @@ void RichQtfParser::TableFormat(bool bw)
 			Error("Unexpected end of text in cell format");
 		else
 		switch(*term++) {
-		case ' ': return;
+		case ' ':
+			tab.SetFormat(tabformat);
+			return;
 		case ';': break;
-		case '<': tab.format.lm = ReadNumber(); break;
-		case '>': tab.format.rm = ReadNumber(); break;
-		case 'B': tab.format.before = ReadNumber(); break;
-		case 'A': tab.format.after = ReadNumber(); break;
-		case 'f': tab.format.frame = ReadNumber(); break;
+		case '<': tabformat.lm = ReadNumber(); break;
+		case '>': tabformat.rm = ReadNumber(); break;
+		case 'B': tabformat.before = ReadNumber(); break;
+		case 'A': tabformat.after = ReadNumber(); break;
+		case 'f': tabformat.frame = ReadNumber(); break;
 		case '_':
-		case 'F': tab.format.framecolor = GetColor(); break;
-		case 'g': tab.format.grid = ReadNumber(); break;
-		case 'G': tab.format.gridcolor = GetColor(); break;
-		case 'h': tab.format.header = GetNumber(); break;
-		case '~': tab.format.frame = tab.format.grid = 0; break;
+		case 'F': tabformat.framecolor = GetColor(); break;
+		case 'g': tabformat.grid = ReadNumber(); break;
+		case 'G': tabformat.gridcolor = GetColor(); break;
+		case 'h': tabformat.header = GetNumber(); break;
+		case '~': tabformat.frame = tabformat.grid = 0; break;
 		case '^': t.format.align = ALIGN_TOP; break;
 		case '=': t.format.align = ALIGN_CENTER; break;
 		case 'v': t.format.align = ALIGN_BOTTOM; break;
@@ -427,12 +430,12 @@ void RichQtfParser::TableFormat(bool bw)
 		case '!': t.format = RichCell::Format(); break;
 		case 'o': t.format.round = true; break;
 		case 'k': t.format.keep = true; break;
-		case 'K': tab.format.keep = true; break;
-		case 'P': tab.format.newpage = true; break;
+		case 'K': tabformat.keep = true; break;
+		case 'P': tabformat.newpage = true; break;
 		case 'T':
-			tab.format.newhdrftr = true;
-			tab.format.header_qtf = GetText2('^', '^');
-			tab.format.footer_qtf = GetText2('^', '^');
+			tabformat.newhdrftr = true;
+			tabformat.header_qtf = GetText2('^', '^');
+			tabformat.footer_qtf = GetText2('^', '^');
 			break;
 		case 'a':
 			Number2(a, b);
@@ -442,7 +445,7 @@ void RichQtfParser::TableFormat(bool bw)
 				t.format.margin.left = t.format.margin.right = t.format.margin.top = t.format.margin.bottom = b;
 			break; //!!cell all lines
 		case '*':
-			tab.format.frame = tab.format.grid =
+			tabformat.frame = tabformat.grid =
 			t.format.border.left = t.format.border.right = t.format.border.top = t.format.border.bottom =
 			t.format.margin.left = t.format.margin.right = t.format.margin.top = t.format.margin.bottom = 0;
 			break;

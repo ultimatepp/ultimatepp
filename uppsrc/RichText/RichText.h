@@ -365,12 +365,12 @@ class RichText;
 struct RichContext {
 	const RichText   *text;
 	const RichStyles *styles;
-	String            header_qtf, footer_qtf;
+	RichText         *header, *footer;
 	int               header_cy, footer_cy;
 	Rect              page;
 	PageY             py;
 
-	void              NewHeaderFooter(const String& header_qtf, const String& footer_qtf);
+	void              NewHeaderFooter(RichText *header, RichText *footer_qtf);
 	void              Page() { py.page++; py.y = page.top; }
 
 	RichContext(const RichStyles& styles, const RichText *text) : styles(&styles), text(text) { header_cy = footer_cy = 0; }
@@ -445,6 +445,9 @@ inline String StylesAsQTF(const RichText& doc, byte charset = CHARSET_UTF8)
 
 inline String BodyAsQTF(const RichText& doc, byte charset = CHARSET_UTF8)
 { return AsQTF(doc, charset, QTF_BODY|QTF_CRLF); }
+
+
+void SetQTF(One<RichText>& txt, const String& qtf);
 
 enum
 {

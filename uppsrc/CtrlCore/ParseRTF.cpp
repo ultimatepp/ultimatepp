@@ -324,10 +324,12 @@ void RTFParser::FlushTable(int level)
 				}
 			}
 		}
-		table.format.frame = Nvl(tbl_border, 0);
-		table.format.framecolor = (table.format.frame > 0 ? clr_border : Color(Null));
-		table.format.grid = Nvl(tbl_grid, 0);
-		table.format.gridcolor = (table.format.grid > 0 ? clr_grid : Color(Null));
+		RichTable::Format tf = table.GetFormat();
+		tf.frame = Nvl(tbl_border, 0);
+		tf.framecolor = (tf.frame > 0 ? clr_border : Color(Null));
+		tf.grid = Nvl(tbl_grid, 0);
+		tf.gridcolor = (tf.grid > 0 ? clr_grid : Color(Null));
+		table.SetFormat(tf);
 		for(int r = 0; r < child.cells.GetCount(); r++) {
 			Array<Cell>& rw = child.cells[r];
 //			int pos = child.tableformat.lm;

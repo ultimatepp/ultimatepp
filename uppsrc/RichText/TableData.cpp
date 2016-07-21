@@ -302,6 +302,8 @@ Size RichTable::GetSpan(int i, int j) const
 void RichTable::SetFormat(const Format& fmt)
 {
 	format = fmt;
+	Upp::SetQTF(header, fmt.header_qtf);
+	Upp::SetQTF(footer, fmt.footer_qtf);
 }
 
 RichTable RichTable::Copy(const Rect& sel) const

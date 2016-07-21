@@ -119,9 +119,9 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 	{
 		if(text.IsTable(i)) {
 			const RichTable& t = text.GetTable(i);
-			int nx = t.format.column.GetCount();
-			int ny = t.cell.GetCount();
-			const RichTable::Format& tf = t.format;
+			const RichTable::Format& tf = t.GetFormat();
+			int nx = tf.column.GetCount();
+			int ny = t.GetRows();
 			html << "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 			if(tf.before > 0)
 				html << "<tr><td height=" << HtmlDot(tf.before, z) << " colspan=\"3\"></td></tr>";
@@ -137,14 +137,14 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			html << "<table width=\"100%\"" << FormatClass(css, style) << ">";
 			int sum = 0;
 			for(int i = 0; i < nx; i++)
-				sum += t.format.column[i];
+				sum += tf.column[i];
 			html << "<colgroup>";
 			for(int i = 0; i < nx; i++)
-				html << "<col width=\"" << 100 * t.format.column[i] / sum << "%\">";
+				html << "<col width=\"" << 100 * tf.column[i] / sum << "%\">";
 			html << "</colgroup>";
 			html << "\r\n";
 			for(int i = 0; i < ny; i++) {
-				const Array<RichCell>& r = t.cell[i];
+				const Array<RichCell>& r = t[i];
 				html << "<tr>";
 				for(int j = 0; j < r.GetCount(); j++) {
 					if(t(i, j)) {

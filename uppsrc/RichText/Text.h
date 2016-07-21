@@ -39,8 +39,8 @@ public:
 	void                  CatPick(RichText&& p);
 	using                 RichTxt::CatPick;
 
-	RichContext           Context(const Rect& page, PageY py, const String& header_qtf, const String& footer_qtf) const;
-	RichContext           Context(const Rect& page, PageY py) const { return Context(page, py, header_qtf, footer_qtf); }
+	RichContext           Context(const Rect& page, PageY py, RichText *header, RichText *footer) const;
+	RichContext           Context(const Rect& page, PageY py) const { return Context(page, py, ~header, ~footer); }
 	RichContext           Context(const Rect& page) const { return Context(page, PageY(0, 0)); }
 
 	RichPos               GetRichPos(int pos, int maxlevel = INT_MAX) const;
