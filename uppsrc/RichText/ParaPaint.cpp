@@ -402,7 +402,7 @@ void RichPara::Paint(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& 
 		pw.Page(py.page).DrawImage(z * x, z * y0 - sz.cy,
 		                           RichTextImg::EndParaChar(),
 		                           format.indexentry.GetCount() ? pi.indexentry : pi.showcodes);
-	if((format.newpage || format.newhdrftr) && !IsNull(pi.showcodes) && baselevel) {
+	if((format.newpage || format.newhdrftr && baselevel) && !IsNull(pi.showcodes)) {
 		Draw& w = pw.Page(opy.page);
 		int wd = z * page.right - z * page.left;
 		int step = w.Pixels() ? 8 : 50;
