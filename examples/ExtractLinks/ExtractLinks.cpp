@@ -3,6 +3,8 @@
 
 using namespace Upp;
 
+// http://isocpp.org/blog/2014/12/myths-3 6.1
+
 CONSOLE_APP_MAIN
 {
 	String s = ToCharset(CHARSET_UTF8, HttpRequest("http://www.stroustrup.com/C++.html").Execute(),
