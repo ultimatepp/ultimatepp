@@ -6,22 +6,18 @@ static void sCopy(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
 	while(!in.IsEof()) { // TODO: progress!!!
 		String h;
-		{
-			RTIMING("sCopy GET");
-			h = in.Get(4 * 1024*1024);
-		}
-		{
-			RTIMING("sCopy PUT");
-			out.Put(h);
-		}
+		h = in.Get(4 * 1024*1024);
+		out.Put(h);
 	}
 }
 
 static int64 sLZ4Compress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool co)
 {
 	LZ4CompressStream outs(out);
+#ifdef _MULTITHREADED
 	if(co)
 		outs.Concurrent();
+#endif
 	sCopy(outs, in, progress);
 	outs.Close();
 	if(!out.IsError() && !outs.IsError())
@@ -32,8 +28,10 @@ static int64 sLZ4Compress(Stream& out, Stream& in, int64 size, Gate2<int64, int6
 static int64 sLZ4Decompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool co)
 {
 	LZ4DecompressStream ins(in);
+#ifdef _MULTITHREADED
 	if(co)
 		ins.Concurrent();
+#endif
 	sCopy(out, ins, progress);
 	ins.Close();
 	if(!out.IsError() && !ins.IsError())
@@ -75,6 +73,8 @@ String LZ4Decompress(const String& s, Gate2<int64, int64> progress)
 	return LZ4Decompress(~s, s.GetLength(), progress);
 }
 
+#ifdef _MULTITHREADED
+
 int64 CoLZ4Compress(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
 	return sLZ4Compress(out, in, in.GetLeft(), progress, true);
@@ -108,5 +108,7 @@ String CoLZ4Decompress(const String& s, Gate2<int64, int64> progress)
 {
 	return CoLZ4Decompress(~s, s.GetLength(), progress);
 }
+
+#endif
 
 };
