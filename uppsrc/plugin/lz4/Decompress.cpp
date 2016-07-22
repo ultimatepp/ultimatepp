@@ -11,7 +11,6 @@ void LZ4DecompressStream::Init()
 	buffer.Clear();
 	ptr = rdlim = (byte *)~buffer;
 	xxh.Reset();
-	outblock = inblock = 0;
 	ClearError();
 }
 
@@ -175,7 +174,6 @@ dword LZ4DecompressStream::_Get(void *data, dword size)
 
 LZ4DecompressStream::LZ4DecompressStream()
 {
-	co = false;
 	in = NULL;
 }
 

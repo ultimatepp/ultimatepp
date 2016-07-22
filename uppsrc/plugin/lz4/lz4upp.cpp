@@ -10,7 +10,9 @@ void Lz4::Init()
 	pos = 0;
 	header = false;
 	xxh.Reset();
+#ifdef _MULTITHREADED
 	outblock = inblock = 0;
+#endif
 }
 
 void Lz4::Compress()
@@ -72,7 +74,8 @@ void Lz4::FlushOut()
 	int origsize = pos;
 
 	pos = 0;
-	
+
+#ifdef _MULTITHREADED
 	if(parallel) {
 		String bs = buffer;
 		int    inblk = inblock++;
@@ -93,7 +96,9 @@ void Lz4::FlushOut()
 		xxh.Put(~bs, origsize);
 		buffer.SetCount(BLOCK_BYTES);
 	}
-	else {
+	else
+#endif
+	{
 		Buffer<char> outbuf(4 + LZ4_compressBound(maxblock));
 		xxh.Put(~buffer, origsize);
 		int clen = LZ4_compress(~buffer, ~outbuf + 4, origsize);
@@ -106,11 +111,13 @@ void Lz4::End()
 	ASSERT(compress >= 0);
 	if(compress) {
 		FlushOut();
+	#ifdef _MULTITHREADED
 		Mutex::Lock __(lock);
 		{ RTIMING("Waiting for order");
 			while(outblock != inblock)
 				cond.Wait(lock);
 		}
+	#endif
 		byte h[8];
 		Poke32le(h, 0);
 		Poke32le(h + 4, xxh.Finish());
@@ -261,7 +268,9 @@ void Lz4::Put(const void *ptr_, int size)
 Lz4::Lz4()
 {
 	compress = -1;
+#ifdef _MULTITHREADED
 	parallel = false;
+#endif
 	
 	WhenOut = callback(this, &Lz4::PutOut);
 }
