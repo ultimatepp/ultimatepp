@@ -40,13 +40,15 @@ class Lz4 { // Filter is deprecated, use Streams instead, will be removed soon
 	String       header_data;
 
     String       out;
-	
+
+#ifdef _MULTITHREADED
 	bool         parallel;
 	CoWork       co;
 	Mutex        lock;
 	ConditionVariable cond;
 	int          outblock;
 	int          inblock;
+#endif
     
     void          TryHeader();
 
@@ -71,8 +73,10 @@ public:
 
 	void Compress();
 	void Decompress();
-	
+
+#ifdef _MUTLITHREADED
 	void Parallel(bool b = true)           { parallel = b; }
+#endif
 
 	bool   IsError() const                 { return error; }
 
@@ -101,11 +105,13 @@ protected:
 	byte         lz4hdr;
 	String       header_data;
 
+#ifdef _MULTITHREADED
 	bool              co;
 	Mutex             lock;
 	ConditionVariable cond;
 	int               outblock;
 	int               inblock;
+#endif
     
 	void          Init();
 	void          SetupBuffer();
@@ -115,7 +121,9 @@ protected:
 public:
 	Event<int64>                 WhenPos;
 
+#ifdef _MULTITHREADED
 	void Concurrent(bool b = true)         { co = b; }
+#endif
 	void Open(Stream& out_)                { Init(); out = &out_; }
 
 	LZ4CompressStream();
@@ -145,12 +153,6 @@ private:
 	byte         lz4hdr;
 	bool         eof;
 
-	bool         co;
-	Mutex        lock;
-	ConditionVariable cond;
-	int          outblock;
-	int          inblock;
-    
     void          TryHeader();
 
 	void          Init();
@@ -164,7 +166,9 @@ public:
 
 	bool Open(Stream& in);
 
+#ifdef _MULTITHREADED
 	void Concurrent(bool b = true)           { co = b; }
+#endif
 
 	LZ4DecompressStream();
 	LZ4DecompressStream(Stream& in) : LZ4DecompressStream() { Open(in); }
@@ -179,12 +183,14 @@ String LZ4Compress(const String& s, Gate2<int64, int64> progress = false);
 String LZ4Decompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String LZ4Decompress(const String& s, Gate2<int64, int64> progress = false);
 
+#ifdef _MULTITHREADED
 int64  CoLZ4Compress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
 int64  CoLZ4Decompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false);
 String CoLZ4Compress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String CoLZ4Compress(const String& s, Gate2<int64, int64> progress = false);
 String CoLZ4Decompress(const void *data, int64 len, Gate2<int64, int64> progress = false);
 String CoLZ4Decompress(const String& s, Gate2<int64, int64> progress = false);
+#endif
 
 bool IsLZ4(Stream& s);
 

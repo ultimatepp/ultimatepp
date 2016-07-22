@@ -10,7 +10,9 @@ void LZ4CompressStream::Init()
 	pos = 0;
 	header = false;
 	xxh.Reset();
+#ifdef _MULTITHREADED
 	outblock = inblock = 0;
+#endif
 	SetupBuffer();
 }
 
@@ -61,7 +63,8 @@ void LZ4CompressStream::FlushOut()
 	pos += origsize;
 	
 	WhenPos(pos);
-	
+
+#ifdef _MULTITHREADED
 	if(co) {
 		String bs = buffer;
 		int    inblk = inblock++;
@@ -78,7 +81,9 @@ void LZ4CompressStream::FlushOut()
 		xxh.Put(~bs, origsize);
 		SetupBuffer();
 	}
-	else {
+	else
+#endif
+	{
 		Buffer<char> outbuf(4 + LZ4_compressBound(BLOCK_BYTES));
 		xxh.Put(~buffer, origsize);
 		int clen = LZ4_compress(~buffer, ~outbuf + 4, origsize);
@@ -91,11 +96,13 @@ void LZ4CompressStream::Close()
 {
 	ASSERT(compress >= 0);
 	FlushOut();
+#ifdef _MULTITHREADED
 	if(co) {
 		Mutex::Lock __(lock);
 		while(outblock != inblock)
 			cond.Wait(lock);
 	}
+#endif
 	byte h[8];
 	Poke32le(h, 0);
 	Poke32le(h + 4, xxh.Finish());
@@ -143,7 +150,9 @@ void LZ4CompressStream::_Put(const void *data, dword size)
 
 LZ4CompressStream::LZ4CompressStream()
 {
+#ifdef _MULTITHREADED
 	co = false;
+#endif
 	out = NULL;
 	Init();
 }
