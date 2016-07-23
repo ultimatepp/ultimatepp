@@ -227,7 +227,6 @@ RichPara::Lines::~Lines()
 				cache.SetCount(i);
 				break;
 			}
-			i++;
 		}
 	}
 }

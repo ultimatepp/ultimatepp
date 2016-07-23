@@ -7,7 +7,6 @@ void RichTxt::Para::Invalidate()
 	INTERLOCKED {
 		static int64 ss;
 		updateserial = ++ss;
-		dirty.Invalidate();
 		ccx = -1;
 	}
 }
@@ -38,7 +37,6 @@ void RichTxt::Invalidate()
 {
 	length = -1;
 	tabcount = -1;
-	py.Clear();
 }
 
 int RichTxt::GetPartLength(int pi) const
@@ -459,7 +457,6 @@ RichTxt::RichTxt(const RichTxt& src, int)
 	part <<= src.part;
 	length = src.length;
 	tabcount = src.tabcount;
-	py.Clear();
 }
 
 #ifdef _DEBUG
