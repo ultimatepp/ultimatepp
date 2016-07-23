@@ -26,6 +26,7 @@ RichPos::RichPos()
 
 RichPos RichText::GetRichPos(int pos, int maxlevel) const
 {
+	Mutex::Lock __(mutex);
 	RichPos rp;
 	rp.level = 0;
 	RichTxt::GetRichPos(pos, rp, 0, maxlevel, style);
@@ -36,6 +37,7 @@ RichPos RichText::GetRichPos(int pos, int maxlevel) const
 
 int  RichText::AdjustCursor(int anchor, int cursor) const
 {
+	Mutex::Lock __(mutex);
 	int d = anchor;
 	const RichTxt& txt = GetConstText(anchor);
 	d -= anchor;
@@ -138,6 +140,8 @@ void RichText::Insert(int pos, const RichText& p)
 
 RichText RichText::Copy(int pos, int count) const
 {
+	Mutex::Lock __(mutex);
+
 	RichText r;
 	r.SetStyles(style);
 
@@ -181,6 +185,8 @@ RichText RichText::Copy(int pos, int count) const
 
 RichText::FormatInfo RichText::GetFormatInfo(int pos, int count) const
 {
+	Mutex::Lock __(mutex);
+
 	const RichTxt& txt = GetConstText(pos);
 
 	count = min(txt.GetLength() - pos, count);
@@ -297,6 +303,7 @@ void RichText::ReStyle(int pos, const Uuid& id)
 
 RichText::Formating RichText::SaveFormat(int pos, int count) const
 {
+	Mutex::Lock __(mutex);
 	const RichTxt& txt = GetConstText(pos);
 	count += pos;
 	Formating r;
@@ -330,6 +337,23 @@ RichText::RichText(const RichText& x, int)
    : RichTxt(x, 1), style(x.style, 1)
 {
 	nolinks = x.nolinks;
+	footer_hack = x.footer_hack;
+}
+
+RichText::RichText(RichText&& x)
+   : RichTxt(pick(x)), style(pick(x.style))
+{
+	nolinks = x.nolinks;
+	footer_hack = x.footer_hack;
+}
+
+RichText& RichText::operator=(RichText&& x)
+{
+	(RichTxt&)(*this) = pick(x);
+	style = pick(x.style);
+	nolinks = x.nolinks;
+	footer_hack = x.footer_hack;
+	return *this;
 }
 
 RichText::RichText(RichTxt&& x, RichStyles&& st)

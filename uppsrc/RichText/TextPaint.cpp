@@ -4,22 +4,26 @@ NAMESPACE_UPP
 
 PageY RichText::GetHeight(const Rect& page) const
 {
+	Mutex::Lock __(mutex);
 	return RichTxt::GetHeight(Context(page, PageY(0, 0)));
 }
 
 PageY RichText::GetHeight(PageY py, const Rect& page) const
 {
+	Mutex::Lock __(mutex);
 	RichContext ctx = Context(page, py);
 	return RichTxt::GetHeight(ctx);
 }
 
 int   RichText::GetWidth() const
 {
+	Mutex::Lock __(mutex);
 	return RichTxt::GetWidth(style);
 }
 
 void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& pi) const
 {
+	Mutex::Lock __(mutex);
 	RichContext ctx = Context(page, py);
 	int from_page = py.page;
 	RichTxt::Paint(w, ctx, pi);
@@ -28,6 +32,7 @@ void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& p
 
 void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 {
+	Mutex::Lock __(mutex);
 	RichContext ctx = Context(page, PageY(0, 0));
 	int from_page = ctx.py.page;
 	RichTxt::Paint(w, ctx, pi);
@@ -36,21 +41,25 @@ void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 
 RichCaret RichText::GetCaret(int pos, const Rect& page) const
 {
+	Mutex::Lock __(mutex);
 	return RichTxt::GetCaret(pos, Context(page, PageY(0, 0)));
 }
 
 int RichText::GetPos(int x, PageY y, const Rect& page) const
 {
+	Mutex::Lock __(mutex);
 	return RichTxt::GetPos(x, y, Context(page, PageY(0, 0)));
 }
 
 int RichText::GetVertMove(int pos, int gx, const Rect& page, int dir) const
 {
+	Mutex::Lock __(mutex);
 	return RichTxt::GetVertMove(pos, gx, Context(page, PageY(0, 0)), dir);
 }
 
 RichHotPos  RichText::GetHotPos(int x, PageY y, int tolerance, const Rect& page) const
 {
+	Mutex::Lock __(mutex);
 	RichHotPos p = RichTxt::GetHotPos(x, y, tolerance, Context(page, PageY(0, 0)));
 	if(p.column < -2)
 		p.table = 0;
@@ -59,6 +68,7 @@ RichHotPos  RichText::GetHotPos(int x, PageY y, int tolerance, const Rect& page)
 
 Vector<RichValPos> RichText::GetValPos(const Rect& page, int type) const
 {
+	Mutex::Lock __(mutex);
 	Vector<RichValPos> f;
 	GatherValPos(f, Context(page, PageY(0, 0)), 0, type);
 	return f;
@@ -75,6 +85,7 @@ void RichText::Validate()
 bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
                           int sell, int selh, int osell, int oselh) const
 {
+	Mutex::Lock __(mutex);
 	int spi = 0;
 	int rtype = r_type;
 	if(sell != selh || osell != oselh) {
@@ -108,8 +119,8 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 	RichContext rc = Context(page, PageY(0, 0));
 	if(rtype == SPARA) {
 		rc.py = top = GetPartPageY(spi, rc);
-	   	bottom = GetNextPageY(spi, rc);
-	   	return true;
+		bottom = GetNextPageY(spi, rc);
+		return true;
 	}
 #endif
 	RichContext begin;
@@ -160,6 +171,7 @@ int RichText::GetHeight(int cx) const
 
 void RichText::Paint(Draw& w, int x, int y, int cx, const PaintInfo& pinit) const
 {
+	Mutex::Lock __(mutex);
 	SimplePageDraw pw(w);
 	PaintInfo pi(pinit);
 	pi.top = PageY(0, 0);

@@ -4,6 +4,7 @@ NAMESPACE_UPP
 
 RichTable::Format RichText::GetTableFormat(int table) const
 {
+	Mutex::Lock __(mutex);
 	return GetConstTable(table).GetFormat();
 }
 
@@ -29,6 +30,7 @@ int  RichText::SetTable(int pos, const RichTable& table)
 
 RichTable RichText::CopyTable(int table) const
 {
+	Mutex::Lock __(mutex);
 	RichTable tab(GetConstTable(table), 1);
 	return tab;
 }
@@ -100,6 +102,7 @@ void RichText::InsertParaSpecial(int table, bool before, const RichPara::Format&
 
 RichTable RichText::CopyTable(int table, const Rect& sel) const
 {
+	Mutex::Lock __(mutex);
 	return GetConstTable(table).Copy(sel);
 }
 
@@ -169,6 +172,7 @@ void  RichText::JoinCell(int table, const Rect& sel)
 
 RichCell::Format RichText::GetCellFormat(int table, const Rect& sel) const
 {
+	Mutex::Lock __(mutex);
 	return GetConstTable(table).GetCellFormat(sel);
 }
 
@@ -194,6 +198,7 @@ void RichText::ClearTable(int table, const Rect& sel)
 
 RichText::FormatInfo RichText::GetTableFormatInfo(int table, const Rect& sel) const
 {
+	Mutex::Lock __(mutex);
 	const RichTable& tab = GetConstTable(table);
 	bool first = true;
 	FormatInfo fi;
