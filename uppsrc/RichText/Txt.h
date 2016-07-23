@@ -69,7 +69,6 @@ protected:
 		int                   length;
 		String                content;
 		Array<RichObject>     object;
-		mutable LazyUpdate    dirty;
 		int64                 updateserial;
 		mutable int           ccx;
 		mutable int           cy;
@@ -106,7 +105,6 @@ protected:
 	mutable One<RichText>  header, footer;
 	mutable int            length;
 	mutable int            tabcount;
-	mutable Vector<PageY>  py;
 
 	enum {
 		NONE, SPARA, PARA, FROM, ALL

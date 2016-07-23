@@ -1,8 +1,8 @@
 class RichText : public RichTxt, public DeepCopyOption<RichText> {
-	RichStyles style;
-	String     footer_hack; // ugly hack
-
-	bool       nolinks;
+	mutable Mutex mutex; // To cover all those laze evaluation scenarios
+	RichStyles    style;
+	String        footer_hack; // ugly hack
+	bool          nolinks; // another ugly hack
 
 	void       Init();
 
@@ -139,7 +139,8 @@ public:
 
 	RichText()            { Init(); }
 	RichText(const RichText& x, int);
+	RichText(RichText&& x);
 	RichText(RichTxt&& x, RichStyles&& st);
-
-	rval_default(RichText);
+	
+	RichText& operator=(RichText&& x);
 };
