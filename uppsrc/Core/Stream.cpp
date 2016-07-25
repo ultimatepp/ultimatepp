@@ -147,24 +147,22 @@ bool Stream::GetAll(Huge& h, size_t size)
 
 String Stream::Get(int size)
 {
-	if(size < 32 * 1024*1024) {
-		StringBuffer b(size);
-		int n = Get(~b, size);
-		b.SetCount(n);
-		String s = b;
-		s.Trim(n);
-		return s;
-	}
-	else {
-		Huge h;
-		Get(h, size);
-		return h.Get();
-	}
+	StringBuffer b(size);
+	int n = Get(~b, size);
+	b.SetCount(n);
+	return b;
 }
 
 String Stream::GetAll(int size)
 {
-	String result = Get(size);
+	String result;
+	if(size < 4 * 1024*1024)
+		result = Get(size);
+	else {
+		Huge h;
+		Get(h, size);
+		result = h.Get();
+	}
 	if(result.GetCount() != size) {
 		LoadError();
 		result = String::GetVoid();

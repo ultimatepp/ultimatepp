@@ -84,6 +84,7 @@ public:
 	~Lz4();
 };
 
+#ifdef flagCOMPLEXLZ4
 class LZ4CompressStream : public Stream  {
 public:
 	virtual   void  Close();
@@ -113,7 +114,7 @@ protected:
 	int               inblock;
 #endif
     
-	void          Init();
+    void          Init();
 	void          SetupBuffer();
 	void          FinishBlock(char *outbuf, int clen, const char *origdata, int origsize);
 	void          FlushOut();
@@ -130,6 +131,47 @@ public:
 	LZ4CompressStream(Stream& out) : LZ4CompressStream() { Open(out); }
 	~LZ4CompressStream();
 };
+#else
+class LZ4CompressStream : public Stream  {
+public:
+	virtual   void  Close();
+	virtual   bool  IsOpen() const;
+
+protected:
+	virtual   void  _Put(int w);
+	virtual   void  _Put(const void *data, dword size);
+	
+	Stream      *out;
+	
+	Buffer<byte> buffer;
+	Buffer<byte> outbuf;
+	Buffer<int>  outsz;
+
+	enum { BLOCK_BYTES = 1024 * 1024 };
+	
+	xxHashStream xxh;
+
+#ifdef _MULTITHREADED
+	bool         concurrent;
+#endif
+    
+    void          Alloc();
+	void          Init();
+	void          FlushOut();
+
+public:
+	Event<int64>                 WhenPos;
+
+#ifdef _MULTITHREADED
+	void Concurrent(bool b = true);
+#endif
+	void Open(Stream& out_);
+
+	LZ4CompressStream();
+	LZ4CompressStream(Stream& out) : LZ4CompressStream() { Open(out); }
+	~LZ4CompressStream();
+};
+#endif
 
 class LZ4DecompressStream : public Stream {
 public:
@@ -142,8 +184,17 @@ protected:
 
 private:
 	Stream        *in;
-	String         buffer;
-	Vector<String> ahead;
+	struct Workblock {
+		Buffer<char> c, d; // compressed, decompressed data
+		int   clen = 0, dlen = 0; // compressed, decompressed len
+		
+		bool Decompress();
+		void Clear() { c.Clear(); d.Clear(); }
+	};
+	Workblock wb[16];
+	int       count; // count of workblocks fetched
+	int       ii; // next workblock to be read
+	int       dlen; // length of current workblock
 	
 	enum { BLOCK_BYTES = 1024*1024 };
 	
@@ -152,14 +203,14 @@ private:
 	int          blockchksumsz;
 	byte         lz4hdr;
 	bool         eof;
+	
+	bool         concurrent;
 
     void          TryHeader();
 
 	void          Init();
-	String        Read(int& blksz);
-	String        Fetch();
-	void          CheckEof();
-	void          NewBuffer(const String& s);
+	bool          Next();
+	void          Fetch();
 
 public:	
 	Callback2<const void *, int> WhenOut;
@@ -167,7 +218,7 @@ public:
 	bool Open(Stream& in);
 
 #ifdef _MULTITHREADED
-	void Concurrent(bool b = true)           { co = b; }
+	void Concurrent(bool b = true)           { concurrent = b; }
 #endif
 
 	LZ4DecompressStream();

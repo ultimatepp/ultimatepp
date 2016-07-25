@@ -79,7 +79,7 @@ bool CoWork::Pool::DoJob()
 		LLOG("Quit thread");
 		return true;
 	}
-	LLOG("DoJob " << p.scheduled - 1 << ", todo: " << job.work->todo << " (CoWork " << FormatIntHex(job.work) << ")");
+	LLOG("DoJob " << p.scheduled - 1 << " (CoWork " << FormatIntHex(job.work) << ")");
 	finlock = false;
 	Function<void ()> fn = pick(job.fn);
 	CoWork *work = job.work;
@@ -147,7 +147,9 @@ CoWork::MJob& CoWork::PushJob(Function<void ()>&& fn)
 	Pool& p = GetPool();
 	MJob& job = p.jobs[p.scheduled++];
 	job.fn = pick(fn);
-	LLOG("Adding job " << p.scheduled - 1 << "; todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
+	job.work = NULL;
+	job.started = NULL;
+	LLOG("Adding job " << p.scheduled - 1);
 	if(p.waiting_threads) {
 		LLOG("Releasing thread waiting for job: " << p.waiting_threads);
 		p.waiting_threads--;
@@ -237,11 +239,14 @@ CoWork::CoWork()
 {
 	LLOG("CoWork constructed " << FormatHex(this));
 	todo = 0;
+//	SetMagic(magic, sizeof(magic));
 }
 
 CoWork::~CoWork()
 {
+//	CheckMagic(magic, sizeof(magic));
 	Finish();
+//	CheckMagic(magic, sizeof(magic));
 	LLOG("~CoWork " << FormatIntHex(this));
 }
 

@@ -39,6 +39,7 @@ public:
 	static thread_local bool is_worker;
 	static thread_local Pool *pool;
 
+//	byte magic[sizeof(ConditionVariable)];
 	ConditionVariable waitforfinish;
 	int               todo;
 

@@ -2209,7 +2209,7 @@ bool utf8check(const char *_s, int len)
 				if(s + 1 >= lim ||
 				   s[0] < 0x80 || s[0] >= 0xc0 ||
 				   s[1] < 0x80 || s[1] >= 0xc0)
-				   	return false;
+					return false;
 				codePoint = ((code - 0xE0) << 12) + ((s[0] - 0x80) << 6) + s[1] - 0x80;
 				if(codePoint < 0x0800 || codePoint > 0xFFFF)
 					return false;
@@ -2221,7 +2221,7 @@ bool utf8check(const char *_s, int len)
 				   s[0] < 0x80 || s[0] >= 0xc0 ||
 				   s[1] < 0x80 || s[1] >= 0xc0 ||
 				   s[2] < 0x80 || s[2] >= 0xc0)
-				   	return false;
+					return false;
 				codePoint = ((code - 0xf0) << 18) + ((s[0] - 0x80) << 12) +
 				            ((s[1] - 0x80) << 6) + s[2] - 0x80;
 				if(codePoint < 0x010000 || codePoint > 0x10FFFF)
