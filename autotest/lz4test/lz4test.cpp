@@ -36,8 +36,6 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_FILE|LOG_COUT);
 
 	FindFile ff(GetHomeDirFile("testdata") + "/*.*");
-//	String inpFilename = "C:/xxx/Nos.exe";
-//	String inpFilename = "C:/u/aws.data/Viking_Chanarambie_Fenton_With_SurroundingFarms_Backcast_EPEs_14Sep11_v1004_allTI_PCs.blb";
 
 	String outdir = GetHomeDirFile("test.output");
 	RealizeDirectory(outdir);
@@ -48,98 +46,48 @@ CONSOLE_APP_MAIN
 			total_sz += ff.GetLength();
 		    String lz4 = AppendFileName(outdir, ff.GetName() + ".lz4");
 		    String dec = AppendFileName(outdir, ff.GetName());
-
-			RLOG("***************** " << file << ": " << (ff.GetLength() >> 10) << " KB");
+			
+			for(int smll = 0; smll < 2; smll++) {
+				for(int concurrent = 0; concurrent < 2; concurrent++) {
+					RLOG("***************** " << file << ": " << (ff.GetLength() >> 10) << " KB");
+					RLOG("CONCURRENT: " << concurrent);
+					RLOG("SMALL: " << smll);
+				    {
+						RLOG("Compress");
+				        FileIn  in(file);
+				        FileOut out(lz4);
+				        LZ4CompressStream lz4(out);
+				        lz4.Concurrent(concurrent);
+				        int ch = 0;
+				        for(;;) {
+				            String data = in.Get(smll ? (++ch & 511) + 1 : 1024*1024);
+				            if(IsNull(data))
+				                break;
+				            lz4.Put(data);
+				        }
+				    }
 		
-		    {
-				RLOG("=== U++ compress small blocks ===========================================");
-		        { RTIMESTOP("U++ compress small blocks");
-		        FileIn  in(file);
-		        FileOut out(lz4);
-		        Lz4 lz4;
-		        lz4.Compress();
-		        lz4.WhenOut = callback1(Out, &out);
-		        int ch = 0;
-		        for(;;) {
-		            String data = in.Get((++ch & 511) + 1);
-		            if(IsNull(data))
-		                break;
-		            lz4.Put(~data, data.GetCount());
-		        }
-		        lz4.End();
-		        out.Close();
-		        }
-		    }
-
-		    {
-		        RLOG("=== U++ decompress small blocks =====");
-		        { RTIMESTOP("U++ decompress small blocks");
-		        FileIn  in(lz4);
-		        FileOut out(dec);
-		        Lz4 lz4;
-		        lz4.Decompress();
-		        lz4.WhenOut = callback1(Out, &out);
-		        int ch = 0;
-		        for(;;) {
-		            String data = in.Get((++ch & 511) + 1);
-		            if(IsNull(data))
-		                break;
-		            lz4.Put(~data, data.GetCount());
-		        }
-		        lz4.End();
-		        ASSERT(!lz4.IsError());
-		        out.Close();
-		        }
-		    }
+				    {
+				        RLOG("Decompress");
+				        FileIn  in(lz4);
+				        FileOut out(dec);
+				        LZ4DecompressStream lz4(in);
+				        lz4.Concurrent(concurrent);
+				        int ch = 0;
+				        for(;;) {
+				            String data = lz4.Get(smll ? (++ch & 511) + 1 : 1024*1024);
+				            if(IsNull(data))
+				                break;
+				            out.Put(data);
+				        }
+				        ASSERT(lz4.IsEof());
+				        ASSERT(!lz4.IsError());
+				    }
 		
-
-	        ASSERT(FilesEqual(file, dec));
-		
-		    {
-		        RLOG("=== U++ compress big blocks ======");
-		        { RTIMESTOP("U++");
-		        FileIn  in(file);
-		        FileOut out(lz4);
-		        Lz4 lz4;
-		        lz4.Compress();
-		        lz4.WhenOut = callback1(Out, &out);
-		        int ch = 0;
-		        for(;;) {
-		            String data = in.Get(150000);
-		            if(IsNull(data))
-		                break;
-		            lz4.Put(~data, data.GetCount());
-		        }
-		        lz4.End();
-		        out.Close();
-		        }
-		    }
-		
-		    {
-		        RLOG("=== U++ decompress big blocks =====");
-		        { RTIMESTOP("U++ decompress big blocks");
-		        FileIn  in(lz4);
-		        FileOut out(dec);
-		        Lz4 lz4;
-		        lz4.Decompress();
-		        lz4.WhenOut = callback1(Out, &out);
-		        int ch = 0;
-		        for(;;) {
-		            String data = in.Get(167321);
-		            if(IsNull(data))
-		                break;
-		            lz4.Put(~data, data.GetCount());
-		        }
-		        lz4.End();
-		        ASSERT(!lz4.IsError());
-		        
-		        
-		        out.Close();
-		        }
-		    }
-
-	        ASSERT(FilesEqual(file, dec));
-
+			        ASSERT(FilesEqual(file, dec));
+				}
+			}
+	
 		    DeleteFile(lz4);
 		    DeleteFile(dec);
 		}
