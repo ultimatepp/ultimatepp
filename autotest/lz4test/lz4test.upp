@@ -8,5 +8,5 @@ file
 	lz4test.cpp;
 
 mainconfig
-	"" = "";
+	"" = "MT";
 
