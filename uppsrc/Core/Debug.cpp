@@ -190,6 +190,19 @@ void LogHex(const WString& s)
 	HexDump(VppLog(), ~s, sizeof(wchar) * s.GetLength());
 }
 
+void SetMagic(byte *t, int count)
+{
+	for(int i = 0; i < count; i++)
+		t[i] = i;
+}
+
+void CheckMagic(byte *t, int count)
+{
+	for(int i = 0; i < count; i++)
+		if(t[i] != i)
+			Panic("Failed magic area!");
+}
+
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
 
 template <class T>

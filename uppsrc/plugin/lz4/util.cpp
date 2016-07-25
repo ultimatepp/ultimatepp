@@ -4,10 +4,11 @@ namespace Upp {
 	
 static void sCopy(Stream& out, Stream& in, Gate2<int64, int64> progress)
 {
+	const int CHUNK = 16384;
+	Buffer<byte> b(CHUNK);
 	while(!in.IsEof()) { // TODO: progress!!!
-		String h;
-		h = in.Get(4 * 1024*1024);
-		out.Put(h);
+		int n = in.Get(b, CHUNK);
+		out.Put(b, n);
 	}
 }
 

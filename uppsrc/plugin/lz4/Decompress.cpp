@@ -4,12 +4,17 @@
 
 namespace Upp {
 
+
 void LZ4DecompressStream::Init()
 {
+	for(int i = 0; i < 16; i++)
+		wb[i].Clear();
+	ii = 0;
+	count = 0;
+	dlen = 0;
 	pos = 0;
 	eof = false;
-	buffer.Clear();
-	ptr = rdlim = (byte *)~buffer;
+	ptr = rdlim = NULL;
 	xxh.Reset();
 	ClearError();
 }
@@ -58,45 +63,105 @@ bool LZ4DecompressStream::Open(Stream& in_)
 	return true;
 }
 
-String LZ4DecompressStream::Read(int& blksz)
+bool LZ4DecompressStream::Next()
 {
-	if(IsError() || in->IsError())
-		return Null;
-	blksz = in->Get32le();
-	if(blksz == 0) // This is EOF
-		return Null;
-	int len = blksz & 0x7fffffff;
-	if(len > maxblock) {
-		SetError();
-		return Null;
+	RTIMING("Next");
+	if(ii < count) {
+		pos += dlen;
+		ptr = (byte *)~wb[ii].d;
+		dlen = wb[ii].dlen;
+		rdlim = ptr + dlen;
+		ii++;
+		return true;
 	}
-	String data = in->GetAll(len);
-	if(IsNull(data)) {
-		SetError();
-		return Null;
-	}
-	if(lz4hdr & LZ4F_BLOCKCHECKSUM)
-		in->Get32le();
-	return data;
+	return false;
 }
 
-String LZ4DecompressStream::Fetch()
+
+void LZ4DecompressStream::Fetch()
 {
-	RTIMING("Fetch");
-	int blksz;
-	String data = Read(blksz);
-	if((blksz & 0x80000000) || IsNull(data))
-		return data;
-	StringBuffer b(maxblock);
-	int sz = LZ4_decompress_safe(~data, ~b, data.GetCount(), maxblock);
-	if(sz < 0) {
-		SetError();
-		return 0;
+	if(Next())
+		return;
+	if(eof)
+		return;
+#ifdef _MULTITHREADED
+	CoWork co;
+#endif
+	bool   error = false;
+	bool last = false;
+	ii = 0;
+	count = concurrent ? 16 : 1;
+	for(int i = 0; i < count; i++) {
+		Workblock& t = wb[i];
+		int blksz = in->Get32le();
+		if(blksz == 0) { // This is EOF
+			last = true;
+			count = i;
+			break;
+		}
+		t.clen = blksz & 0x7fffffff;
+		if(t.clen > maxblock) {
+			SetError();
+			return;
+		}
+		if(!t.c) {
+			RTIMING("Alloc");
+			t.c.Alloc(maxblock);
+			t.d.Alloc(maxblock);
+		}
+		if(blksz & 0x80000000) { // block is not compressed
+			t.dlen = t.clen;
+			if(!in->GetAll(~t.d, t.clen)) {
+				SetError();
+				return;
+			}
+		}
+		else {
+			{ RTIMING("GetAll");
+			if(!in->GetAll(~t.c, t.clen)) {
+				SetError();
+				return;
+			}
+			}
+#ifdef _MULTITHREADED
+			if(concurrent)
+				co & [=, &error] {
+					Workblock& t = wb[i];
+					t.dlen = LZ4_decompress_safe(~t.c, ~t.d, t.clen, maxblock);
+					CoWork::FinLock();
+					if(t.dlen < 0)
+						error = true;
+				};
+			else
+#endif
+			{
+				RTIMING("LZ4 decompress");
+				t.dlen = LZ4_decompress_safe(~t.c, ~t.d, t.clen, maxblock);
+				if(t.dlen < 0)
+					error = true;
+			}
+		}
+		if(lz4hdr & LZ4F_BLOCKCHECKSUM)
+			in->Get32le(); // just skip it
 	}
-	if(sz <= 0)
-		return Null;
-	b.SetLength(sz);
-	return b;
+#ifdef _MULTITHREADED
+	if(concurrent)
+		co.Finish();
+#endif
+	if(error)
+		SetError();
+	else {
+		for(int i = 0; i < count; i++) {
+			RTIMING("xxh");
+			xxh.Put(wb[i].d, wb[i].dlen);
+		}
+		if(last) {
+			if(in->Get32le() != xxh.Finish())
+				SetError();
+			eof = true;
+		}
+		Next();
+	}
 }
 
 bool LZ4DecompressStream::IsOpen() const
@@ -104,33 +169,11 @@ bool LZ4DecompressStream::IsOpen() const
 	return in->IsOpen() && !IsError();
 }
 
-void LZ4DecompressStream::CheckEof()
-{
-	if(!eof) {
-		if(in->Get32le() != xxh.Finish())
-			SetError();
-		eof = true;
-	}
-}
-
-void LZ4DecompressStream::NewBuffer(const String& s)
-{
-	RTIMING("NewBuffer");
-	pos += buffer.GetCount();
-	buffer = s;
-	ptr = (byte *)buffer.begin();
-	rdlim = (byte *)buffer.end();
-	{ RTIMING("XXH");
-	xxh.Put(s, s.GetCount()); }
-	if(ptr == rdlim)
-		CheckEof();
-}
-
 int LZ4DecompressStream::_Term()
 {
 	if(eof)
 		return -1;
-	NewBuffer(Fetch());
+	Fetch();
 	return ptr == rdlim ? -1 : *ptr;
 }
 
@@ -138,34 +181,32 @@ int LZ4DecompressStream::_Get()
 {
 	if(eof)
 		return -1;
-	NewBuffer(Fetch());
+	Fetch();
 	return ptr == rdlim ? -1 : *ptr++;
 }
-
-int64 copied;
-EXITBLOCK { RDUMP(copied); }
 
 dword LZ4DecompressStream::_Get(void *data, dword size)
 {
 	RTIMING("_Get");
 	byte *t = (byte *)data;
 	while(size) {
-		if(IsError() || in->IsError() || IsEof())
+		if(IsError() || in->IsError() || ptr == rdlim && ii == count && eof)
 			break;
 		dword n = dword(rdlim - ptr);
 		if(size < n) {
-			{ RTIMING("memcpy1");
-			memcpy(t, ptr, size); }
+			RTIMING("memcpy1");
+			memcpy(t, ptr, size);
 			t += size;
 			ptr += size;
 			break;
 		}
 		else {
-			{ RTIMING("memcpy2"); copied += n;
+			{ RTIMING("memcpy2");
 			memcpy(t, ptr, n); }
 			t += n;
 			size -= n;
-			NewBuffer(Fetch());
+			ptr = rdlim;
+			Fetch();
 		}
 	}
 	
@@ -175,6 +216,7 @@ dword LZ4DecompressStream::_Get(void *data, dword size)
 LZ4DecompressStream::LZ4DecompressStream()
 {
 	in = NULL;
+	concurrent = false;
 }
 
 LZ4DecompressStream::~LZ4DecompressStream()

@@ -33,6 +33,9 @@ void     HexDump(Stream& s, const void *ptr, int size, int maxsize = INT_MAX);
 void     LogHex(const String& s);
 void     LogHex(const WString& s);
 
+void     SetMagic(byte *t, int count);
+void     CheckMagic(byte *t, int count);
+
 String        GetTypeName(const char *type_name);
 inline String GetTypeName(const ::std::type_info& tinfo)   { return GetTypeName(tinfo.name()); }
 
