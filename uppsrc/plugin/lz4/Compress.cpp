@@ -1,5 +1,7 @@
 #include "lz4.h"
 
+#ifdef flagCOMPLEXLZ4
+
 #define LLOG(x) // LOG(x)
 
 namespace Upp {
@@ -18,7 +20,6 @@ void LZ4CompressStream::Init()
 
 void LZ4CompressStream::FinishBlock(char *outbuf, int clen, const char *origdata, int origsize)
 {
-	RTIMING("FinishBlock");
 	if(IsError() || out && out->IsError())
 		return;
 	if(clen < 0) {
@@ -162,3 +163,5 @@ LZ4CompressStream::~LZ4CompressStream()
 }
 
 };
+
+#endif

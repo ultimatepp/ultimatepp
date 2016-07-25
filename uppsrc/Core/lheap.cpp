@@ -173,7 +173,7 @@ void *Heap::LAlloc(size_t& size)
 		Header *b = (Header *)((byte *)h + BIGHDRSZ - sizeof(Header));
 		b->size = 0; // header contains large header with size = 0, to detect big during free
 		b->free = false;
-		LLOG("Big alloc " << (void *)b->GetBlock());
+		LLOG("Big alloc " << size << ": " << (void *)b->GetBlock());
 		return b->GetBlock();
 	}
 	int bini = SizeToBin((int)size); // get the bin
