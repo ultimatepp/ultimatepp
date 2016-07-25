@@ -5,9 +5,7 @@ uses
 
 file
 	lz4.h,
-	lz4upp.cpp,
 	Compress.cpp,
-	Compress2.cpp,
 	Decompress.cpp,
 	util.cpp,
 	lib\LICENSE,
