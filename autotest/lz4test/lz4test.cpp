@@ -132,6 +132,8 @@ CONSOLE_APP_MAIN
 		        }
 		        lz4.End();
 		        ASSERT(!lz4.IsError());
+		        
+		        
 		        out.Close();
 		        }
 		    }
