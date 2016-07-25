@@ -33,12 +33,14 @@ void LZ4CompressStream::Alloc()
 	ptr = ~buffer;
 }
 
+#ifdef _MULTITHREADED
 void LZ4CompressStream::Concurrent(bool b)
 {
 	FlushOut();
 	concurrent = b;
 	Alloc();
 }
+#endif
 
 void LZ4CompressStream::FlushOut()
 {
@@ -52,11 +54,13 @@ void LZ4CompressStream::FlushOut()
 	int   ii = 0;
 	for(byte *s = ~buffer; s < ptr; s += BLOCK_BYTES) {
 		int origsize = min((int)BLOCK_BYTES, int(ptr - s));
+#ifdef _MULTITHREADED
 		if(concurrent)
 			co & [=] {
 				outsz[ii] = LZ4_compress_default((char *)s, (char *)t, origsize, osz);
 			};
 		else
+#endif
 			outsz[ii] = LZ4_compress_default((char *)s, (char *)t, origsize, osz);
 		ii++;
 		t += osz;
@@ -144,9 +148,7 @@ void LZ4CompressStream::_Put(const void *data, dword size)
 
 LZ4CompressStream::LZ4CompressStream()
 {
-#ifdef _MULTITHREADED
 	concurrent = false;
-#endif
 	out = NULL;
 }
 
