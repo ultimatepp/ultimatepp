@@ -17,7 +17,6 @@ void xxHashStream::Reset(dword seed)
 
 void xxHashStream::Out(const void *data, dword size)
 {
-	RTIMING("xxh2");
 	XXH32_update((XXH32_state_t *)context, data, size);
 }
 

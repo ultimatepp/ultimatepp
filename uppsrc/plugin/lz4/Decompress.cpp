@@ -65,7 +65,6 @@ bool LZ4DecompressStream::Open(Stream& in_)
 
 bool LZ4DecompressStream::Next()
 {
-	RTIMING("Next");
 	if(ii < count) {
 		pos += dlen;
 		ptr = (byte *)~wb[ii].d;
@@ -105,7 +104,6 @@ void LZ4DecompressStream::Fetch()
 			return;
 		}
 		if(!t.c) {
-			RTIMING("Alloc");
 			t.c.Alloc(maxblock);
 			t.d.Alloc(maxblock);
 		}
@@ -117,11 +115,9 @@ void LZ4DecompressStream::Fetch()
 			}
 		}
 		else {
-			{ RTIMING("GetAll");
 			if(!in->GetAll(~t.c, t.clen)) {
 				SetError();
 				return;
-			}
 			}
 #ifdef _MULTITHREADED
 			if(concurrent)
@@ -135,7 +131,6 @@ void LZ4DecompressStream::Fetch()
 			else
 #endif
 			{
-				RTIMING("LZ4 decompress");
 				t.dlen = LZ4_decompress_safe(~t.c, ~t.d, t.clen, maxblock);
 				if(t.dlen < 0)
 					error = true;
@@ -151,10 +146,8 @@ void LZ4DecompressStream::Fetch()
 	if(error)
 		SetError();
 	else {
-		for(int i = 0; i < count; i++) {
-			RTIMING("xxh");
+		for(int i = 0; i < count; i++)
 			xxh.Put(wb[i].d, wb[i].dlen);
-		}
 		if(last) {
 			if(in->Get32le() != xxh.Finish())
 				SetError();
@@ -187,22 +180,19 @@ int LZ4DecompressStream::_Get()
 
 dword LZ4DecompressStream::_Get(void *data, dword size)
 {
-	RTIMING("_Get");
 	byte *t = (byte *)data;
 	while(size) {
 		if(IsError() || in->IsError() || ptr == rdlim && ii == count && eof)
 			break;
 		dword n = dword(rdlim - ptr);
 		if(size < n) {
-			RTIMING("memcpy1");
 			memcpy(t, ptr, size);
 			t += size;
 			ptr += size;
 			break;
 		}
 		else {
-			{ RTIMING("memcpy2");
-			memcpy(t, ptr, n); }
+			memcpy(t, ptr, n);
 			t += n;
 			size -= n;
 			ptr = rdlim;

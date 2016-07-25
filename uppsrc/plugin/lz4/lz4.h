@@ -24,114 +24,6 @@ enum {
     LZ4F_MAXSIZE_4096KB   = 0x70,
 };
 
-class Lz4 { // Filter is deprecated, use Streams instead, will be removed soon
-	StringBuffer buffer; // to be able to pass as String
-	int8         compress;
-	bool         error;
-	
-	enum { BLOCK_BYTES = 1024 * 1024 };
-	
-	xxHashStream xxh;
-	int          maxblock;
-	int          pos;
-	int          blockchksumsz;
-	bool         header;
-	byte         lz4hdr;
-	String       header_data;
-
-    String       out;
-
-#ifdef _MULTITHREADED
-	bool         parallel;
-	CoWork       co;
-	Mutex        lock;
-	ConditionVariable cond;
-	int          outblock;
-	int          inblock;
-#endif
-    
-    void          TryHeader();
-
-	void          Init();
-	void          FinishBlock(char *outbuf, int clen, const char *origdata, int origsize);
-	void          FlushOut();
-
-	void          PutOut(const void *ptr, int size);
-
-public:	
-	Callback2<const void *, int> WhenOut;
-
-	void Put(const void *ptr, int size);
-	void Put(const String& s)              { Put(~s, s.GetCount()); }
-	void End();
-	void Clear();
-	
-	const String& Get() const              { return out; }
-	operator const String&() const         { return out; }
-	const String& operator~() const        { return out; }
-	void   ClearOut()                      { out.Clear(); }
-
-	void Compress();
-	void Decompress();
-
-#ifdef _MUTLITHREADED
-	void Parallel(bool b = true)           { parallel = b; }
-#endif
-
-	bool   IsError() const                 { return error; }
-
-	Lz4();
-	~Lz4();
-};
-
-#ifdef flagCOMPLEXLZ4
-class LZ4CompressStream : public Stream  {
-public:
-	virtual   void  Close();
-	virtual   bool  IsOpen() const;
-
-protected:
-	virtual   void  _Put(int w);
-	virtual   void  _Put(const void *data, dword size);
-	
-	Stream      *out;
-
-	StringBuffer buffer; // to be able to pass it as String
-	
-	enum { BLOCK_BYTES = 1024 * 1024 };
-	
-	xxHashStream xxh;
-	int          blockchksumsz;
-	bool         header;
-	byte         lz4hdr;
-	String       header_data;
-
-#ifdef _MULTITHREADED
-	bool              co;
-	Mutex             lock;
-	ConditionVariable cond;
-	int               outblock;
-	int               inblock;
-#endif
-    
-    void          Init();
-	void          SetupBuffer();
-	void          FinishBlock(char *outbuf, int clen, const char *origdata, int origsize);
-	void          FlushOut();
-
-public:
-	Event<int64>                 WhenPos;
-
-#ifdef _MULTITHREADED
-	void Concurrent(bool b = true)         { co = b; }
-#endif
-	void Open(Stream& out_)                { Init(); out = &out_; }
-
-	LZ4CompressStream();
-	LZ4CompressStream(Stream& out) : LZ4CompressStream() { Open(out); }
-	~LZ4CompressStream();
-};
-#else
 class LZ4CompressStream : public Stream  {
 public:
 	virtual   void  Close();
@@ -171,7 +63,6 @@ public:
 	LZ4CompressStream(Stream& out) : LZ4CompressStream() { Open(out); }
 	~LZ4CompressStream();
 };
-#endif
 
 class LZ4DecompressStream : public Stream {
 public:
