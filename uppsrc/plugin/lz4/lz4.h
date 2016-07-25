@@ -43,9 +43,7 @@ protected:
 	
 	xxHashStream xxh;
 
-#ifdef _MULTITHREADED
-	bool         concurrent;
-#endif
+	bool          concurrent;
     
     void          Alloc();
 	void          Init();
