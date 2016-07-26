@@ -50,8 +50,6 @@ protected:
 	void          FlushOut();
 
 public:
-	Event<int64>                 WhenPos;
-
 #ifdef _MULTITHREADED
 	void Concurrent(bool b = true);
 #endif
@@ -77,7 +75,6 @@ private:
 		Buffer<char> c, d; // compressed, decompressed data
 		int   clen = 0, dlen = 0; // compressed, decompressed len
 		
-		bool Decompress();
 		void Clear() { c.Clear(); d.Clear(); }
 	};
 	Workblock wb[16];
@@ -102,8 +99,6 @@ private:
 	void          Fetch();
 
 public:	
-	Callback2<const void *, int> WhenOut;
-
 	bool Open(Stream& in);
 
 #ifdef _MULTITHREADED

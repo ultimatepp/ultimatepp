@@ -1,9 +1,5 @@
 #include "lz4.h"
 
-#ifndef flagCOMPLEXLZ4
-
-#define LLOG(x) // LOG(x)
-
 namespace Upp {
 
 void LZ4CompressStream::Open(Stream& out_)
@@ -29,6 +25,7 @@ void LZ4CompressStream::Alloc()
 	buffer.Alloc(sz);
 	outbuf.Alloc(N * LZ4_compressBound(BLOCK_BYTES));
 	outsz.Alloc(N);
+	Stream::buffer = ~buffer;
 	wrlim = ~buffer + sz;
 	ptr = ~buffer;
 }
@@ -93,7 +90,6 @@ void LZ4CompressStream::FlushOut()
 	int origsize = int(ptr - ~buffer);
 	xxh.Put(~buffer, origsize);
 	pos += origsize;
-	WhenPos(pos);
 	ptr = ~buffer;
 }
 
@@ -121,8 +117,6 @@ void LZ4CompressStream::_Put(int w)
 
 void LZ4CompressStream::_Put(const void *data, dword size)
 {
-	LLOG("Put " << size);
-
 	ASSERT(compress >= 0);
 	
 	const char *s = reinterpret_cast<const char *>(data);
@@ -148,6 +142,7 @@ void LZ4CompressStream::_Put(const void *data, dword size)
 
 LZ4CompressStream::LZ4CompressStream()
 {
+	style = STRM_WRITE;
 	concurrent = false;
 	out = NULL;
 }
@@ -158,5 +153,3 @@ LZ4CompressStream::~LZ4CompressStream()
 }
 
 };
-
-#endif

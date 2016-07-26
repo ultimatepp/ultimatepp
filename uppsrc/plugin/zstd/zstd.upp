@@ -1,0 +1,9 @@
+description "\3770,128,128";
+
+file
+	import.ext,
+	zstd.h,
+	Compress.cpp,
+	Decompress.cpp,
+	common\zstd.h;
+
