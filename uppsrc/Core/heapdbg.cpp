@@ -185,6 +185,7 @@ void MemoryDumpLeaks()
 	MemoryCheckDebug();
 	DbgBlkHeader *p = dbg_live.next;
 	bool leaks = false;
+	int n = 0;
 	while(p != &dbg_live) {
 		if(p->serial) {
 			if(!leaks)
@@ -194,6 +195,11 @@ void MemoryDumpLeaks()
 			DbgFormat(b, p);
 			VppLog() << '\n' << b << ": ";
 			HexDump(VppLog(), p + 1, (int)(uintptr_t)p->size, 64);
+			if(++n > 16) {
+				if(p->next != &dbg_live)
+					VppLog() << "\n*** TOO MANY LEAKS TO LIST THEM ALL\n";
+				break;
+			}
 		}
 		p = p->next;
 	}

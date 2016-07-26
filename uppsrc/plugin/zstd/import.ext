@@ -1,0 +1,3 @@
+files *.c;
+
+includes *.h *.hpp;

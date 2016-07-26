@@ -4,7 +4,6 @@
 
 namespace Upp {
 
-
 void LZ4DecompressStream::Init()
 {
 	for(int i = 0; i < 16; i++)
@@ -14,7 +13,8 @@ void LZ4DecompressStream::Init()
 	dlen = 0;
 	pos = 0;
 	eof = false;
-	ptr = rdlim = NULL;
+	static byte h;
+	ptr = rdlim = buffer = &h;
 	xxh.Reset();
 	ClearError();
 }
@@ -65,11 +65,12 @@ bool LZ4DecompressStream::Open(Stream& in_)
 
 bool LZ4DecompressStream::Next()
 {
+	pos += ptr - buffer;
+	ptr = rdlim = buffer;
 	if(ii < count) {
-		pos += dlen;
 		ptr = (byte *)~wb[ii].d;
-		dlen = wb[ii].dlen;
-		rdlim = ptr + dlen;
+		Stream::buffer = ptr;
+		rdlim = ptr + wb[ii].dlen;
 		ii++;
 		return true;
 	}
@@ -205,12 +206,21 @@ dword LZ4DecompressStream::_Get(void *data, dword size)
 
 LZ4DecompressStream::LZ4DecompressStream()
 {
+	style = STRM_READ|STRM_LOADING;
 	in = NULL;
 	concurrent = false;
 }
 
 LZ4DecompressStream::~LZ4DecompressStream()
 {
+}
+
+bool IsLZ4(Stream& s)
+{
+	int64 pos = s.GetPos();
+	bool b = s.Get32le() == LZ4F_MAGIC;
+	s.Seek(pos);
+	return b;
 }
 
 };
