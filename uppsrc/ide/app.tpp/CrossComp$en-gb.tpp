@@ -4,7 +4,7 @@ topic "Using theIDE as a Cross Development Tool";
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
-[b42;a42;2 $$5,5#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
 [l321;t246;C@5;1 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
@@ -43,8 +43,8 @@ package has been created load and edit the <name>.upp file in
 the <name> directory using TheIDE.  If not already present add 
 the lines:&]
 [s5;  &]
-[ {{10000<544;>2176; [s5; mainconfig&]
-[s5;      `"`"`=`"`";]}}&]
+[ {{10000<544;>2176; [s0; mainconfig&]
+[s0;      `"`"`=`"`";]}}&]
 [s5; &]
 [s5; Close and reopen the package.  This tests that the <name> package 
 can be found and that the <name>.upp file is recognized and has 
