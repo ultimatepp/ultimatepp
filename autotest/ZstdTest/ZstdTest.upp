@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/zstd;
+
+file
+	ZstdTest.cpp;
+
+mainconfig
+	"" = "MT";
+

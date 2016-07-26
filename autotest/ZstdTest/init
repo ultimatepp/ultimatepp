@@ -1,0 +1,5 @@
+#ifndef _ZstdTest_icpp_init_stub
+#define _ZstdTest_icpp_init_stub
+#include "Core/init"
+#include "plugin/zstd/init"
+#endif
