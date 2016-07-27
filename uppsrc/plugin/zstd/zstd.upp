@@ -5,6 +5,5 @@ file
 	zstd.h,
 	Compress.cpp,
 	Decompress.cpp,
-	common\zstd.h,
-	Copying;
+	common\zstd.h;
 
