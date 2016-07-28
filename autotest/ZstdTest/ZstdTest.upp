@@ -1,3 +1,5 @@
+description "#WAIT: 35\377";
+
 uses
 	Core,
 	plugin/zstd;
