@@ -38,7 +38,9 @@ void RichContext::NewHeaderFooter(RichText *header_, RichText *footer_)
 	int cx = page.GetWidth();
 	header_cy = header ? GetHeaderFooterText(header, 999990, 999990).GetHeight(cx) : 0;
 	footer_cy = footer ? GetHeaderFooterText(footer, 999990, 999990).GetHeight(cx) : 0;
-	int maxcy = page.GetHeight() * 4 / 5;
+	int maxcy = page.GetHeight();
+	if(maxcy < INT_MAX / 2)
+		maxcy = maxcy * 4 / 5;
 	if(header_cy + footer_cy > maxcy)
 		header_cy = footer_cy = 0;
 	page.top += header_cy;
