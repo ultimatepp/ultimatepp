@@ -1,0 +1,11 @@
+uses
+	Core,
+	plugin/lz4,
+	plugin/zstd;
+
+file
+	LZ4Progress.cpp;
+
+mainconfig
+	"" = "MT";
+
