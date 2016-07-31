@@ -242,11 +242,12 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 		while(parti < part.GetCount()) {
 			RichContext begin;
 			Advance(parti, rc, begin);
-			if(y < rc.py || y.page < rc.py.page)
+			if(y < rc.py || y.page < rc.py.page) {
 				if(IsTable(parti))
 					return GetTable(parti).GetPos(x, y, begin) + pos;
 				else
 					return Get(parti, *rc.styles, true).GetPos(x, y, begin.page, begin.py) + pos;
+			}
 			pos += GetPartLength(parti) + 1;
 			parti++;
 		}
@@ -329,11 +330,12 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 			int nbefore = 0;
 			int nline = 0;
 			const Para& p = part[parti].Get<Para>();
-			if(p.haspos)
+			if(p.haspos) {
 				if(type == LABELS)
 					Get(parti, *begin.styles, true).GatherLabels(f, begin.page, begin.py, pos);
 				else
 					Get(parti, *begin.styles, true).GatherIndexes(f, begin.page, begin.py, pos);
+			}
 		}
 		pos += GetPartLength(parti) + 1;
 		parti++;
