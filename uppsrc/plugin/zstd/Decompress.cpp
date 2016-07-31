@@ -189,9 +189,11 @@ void ZstdDecompressStream::Fetch()
 			}
 		};
 		
+#ifdef _MULTITHREADED
 		if(concurrent)
 			co & decompress;
 		else
+#endif
 			decompress();
 	}
 #ifdef _MULTITHREADED

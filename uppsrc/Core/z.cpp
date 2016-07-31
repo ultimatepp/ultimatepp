@@ -307,7 +307,7 @@ Zlib::~Zlib()
 	Free();
 }
 
-int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip, bool compress,
+int64 zPress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress, bool gzip, bool compress,
              dword *crc = NULL, bool hdr = true)
 {
 	Zlib zlib;
@@ -331,95 +331,95 @@ int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, 
 	return r;
 }
 
-int64 ZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool hdr)
+int64 ZCompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress, bool hdr)
 {
 	return zPress(out, in, size, progress, false, true, NULL, hdr);
 }
 
-int64 ZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool hdr)
+int64 ZDecompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress, bool hdr)
 {
 	return zPress(out, in, size, progress, false, false, NULL, hdr);
 }
 
-int64 ZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
+int64 ZCompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
 {
 	return ZCompress(out, in, in.GetLeft(), progress);
 }
 
-int64 ZDecompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
+int64 ZDecompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
 {
 	return zPress(out, in, in.GetLeft(), progress, false, false);
 }
 
-String ZCompress(const void *data, int64 len, Gate2<int64, int64> progress)
+String ZCompress(const void *data, int64 len, Function<bool(int64, int64)> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return ZCompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String ZCompress(const String& s, Gate2<int64, int64> progress)
+String ZCompress(const String& s, Function<bool(int64, int64)> progress)
 {
 	return ZCompress(~s, s.GetLength(), progress);
 }
 
-String ZDecompress(const void *data, int64 len, Gate2<int64, int64> progress)
+String ZDecompress(const void *data, int64 len, Function<bool(int64, int64)> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return ZDecompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String ZDecompress(const String& s, Gate2<int64, int64> progress)
+String ZDecompress(const String& s, Function<bool(int64, int64)> progress)
 {
 	return ZDecompress(~s, s.GetLength(), progress);
 }
 
-int64  GZCompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress)
+int64  GZCompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress)
 {
 	return zPress(out, in, size, progress, true, true);
 }
 
-int64  GZDecompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress)
+int64  GZDecompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress)
 {
 	return zPress(out, in, size, progress, true, false);
 }
 
-int64  GZCompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
+int64  GZCompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
 {
 	return GZCompress(out, in, in.GetLeft(), progress);
 }
 
-String GZCompress(const void *data, int len, Gate2<int64, int64> progress)
+String GZCompress(const void *data, int len, Function<bool(int64, int64)> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return GZCompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String GZCompress(const String& s, Gate2<int64, int64> progress)
+String GZCompress(const String& s, Function<bool(int64, int64)> progress)
 {
 	return GZCompress(~s, s.GetCount(), progress);
 }
 
-int64  GZDecompress(Stream& out, Stream& in, Gate2<int64, int64> progress)
+int64  GZDecompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
 {
 	return GZDecompress(out, in, in.GetLeft(), progress);
 }
 
-String GZDecompress(const void *data, int len, Gate2<int64, int64> progress)
+String GZDecompress(const void *data, int len, Function<bool(int64, int64)> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return GZDecompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String GZDecompress(const String& s, Gate2<int64, int64> progress)
+String GZDecompress(const String& s, Function<bool(int64, int64)> progress)
 {
 	return GZDecompress(~s, s.GetCount(), progress);
 }
 
-bool GZCompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64> progress)
+bool GZCompressFile(const char *dstfile, const char *srcfile, Function<bool(int64, int64)> progress)
 {
 	FileIn in(srcfile);
 	if(!in)
@@ -433,13 +433,13 @@ bool GZCompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64
 	return !out.IsError();
 }
 
-bool GZCompressFile(const char *srcfile, Gate2<int64, int64> progress)
+bool GZCompressFile(const char *srcfile, Function<bool(int64, int64)> progress)
 {
 	String dstfile = String(srcfile) + ".gz";
 	return GZCompressFile(dstfile, srcfile, progress);
 }
 
-bool GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64> progress)
+bool GZDecompressFile(const char *dstfile, const char *srcfile, Function<bool(int64, int64)> progress)
 {
 	FileIn in(srcfile);
 	if(!in)
@@ -453,7 +453,7 @@ bool GZDecompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int
 	return !out.IsError();
 }
 
-bool GZDecompressFile(const char *srcfile, Gate2<int64, int64> progress)
+bool GZDecompressFile(const char *srcfile, Function<bool(int64, int64)> progress)
 {
 	String dstfile = srcfile;
 	if(dstfile.EndsWith(".gz"))
@@ -466,11 +466,9 @@ bool GZDecompressFile(const char *srcfile, Gate2<int64, int64> progress)
 	return GZDecompressFile(dstfile, srcfile, progress);
 }
 
-Gate2<int64, int64> AsGate64(Gate2<int, int> gate)
+Function<bool(int64, int64)> AsGate64(Gate2<int, int> gate)
 {
-	Gate2<int64, int64> a;
-	a << [=](int64 a, int64 b) { return gate((int)a, (int)b); };
-	return a;
+	return [=](int64 a, int64 b) { return gate((int)a, (int)b); };
 }
 
 #include "lib/lz4.h"
