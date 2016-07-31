@@ -23,13 +23,13 @@ topic "GUI Tutorial";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; GUI Tutorial&]
-[s5; Welcome in GUI Tutorial! Here you will learn how to write GUI 
-applications using U`+`+ library. All code mentions in this tutorial 
-is multi platform. It means it works exactly the same on different 
-operating system. Moreover, examples attached in this tutorial 
-are bundle with U`+`+ standard distribution and they are localized 
-in tutorial assembly. So, you don`'t need to rewrite it by yourself. 
-Good luck!&]
+[s5;~~~2240; Welcome in GUI Tutorial! Here you will learn how to 
+write GUI applications using U`+`+ library. All code mentions 
+in this tutorial is multi platform. It means it works exactly 
+the same on different operating system. Moreover, examples attached 
+in this tutorial are bundle with U`+`+ standard distribution 
+and they are localized in [* tutorial] assembly. So, you don`'t 
+need to rewrite it by yourself. Good luck!&]
 [s5; &]
 [s3;:Gui01: 1. GUI application main function&]
 [s5; To hide platform specific differences, U`+`+ GUI application 
