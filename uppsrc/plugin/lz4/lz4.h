@@ -110,21 +110,20 @@ public:
 	~LZ4DecompressStream();
 };
 
-
-int64  LZ4Compress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = false);
-int64  LZ4Decompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = false);
-String LZ4Compress(const void *data, int64 len, Function<bool(int64, int64)> progress = false);
-String LZ4Compress(const String& s, Function<bool(int64, int64)> progress = false);
-String LZ4Decompress(const void *data, int64 len, Function<bool(int64, int64)> progress = false);
-String LZ4Decompress(const String& s, Function<bool(int64, int64)> progress = false);
+int64  LZ4Compress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
+int64  LZ4Decompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
+String LZ4Compress(const void *data, int64 len, Function<bool(int64, int64)> progress = CNULL);
+String LZ4Compress(const String& s, Function<bool(int64, int64)> progress = CNULL);
+String LZ4Decompress(const void *data, int64 len, Function<bool(int64, int64)> progress = CNULL);
+String LZ4Decompress(const String& s, Function<bool(int64, int64)> progress = CNULL);
 
 #ifdef _MULTITHREADED
-int64  CoLZ4Compress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = false);
-int64  CoLZ4Decompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = false);
-String CoLZ4Compress(const void *data, int64 len, Function<bool(int64, int64)> progress = false);
-String CoLZ4Compress(const String& s, Function<bool(int64, int64)> progress = false);
-String CoLZ4Decompress(const void *data, int64 len, Function<bool(int64, int64)> progress = false);
-String CoLZ4Decompress(const String& s, Function<bool(int64, int64)> progress = false);
+int64  CoLZ4Compress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
+int64  CoLZ4Decompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
+String CoLZ4Compress(const void *data, int64 len, Function<bool(int64, int64)> progress = CNULL);
+String CoLZ4Compress(const String& s, Function<bool(int64, int64)> progress = CNULL);
+String CoLZ4Decompress(const void *data, int64 len, Function<bool(int64, int64)> progress = CNULL);
+String CoLZ4Decompress(const String& s, Function<bool(int64, int64)> progress = CNULL);
 #endif
 
 bool IsLZ4(Stream& s);

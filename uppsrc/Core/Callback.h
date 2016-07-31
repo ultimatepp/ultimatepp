@@ -1,3 +1,5 @@
+enum CNULLer { CNULL };
+
 template<typename Res, typename... ArgTypes>
 class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 	struct WrapperBase {
@@ -48,6 +50,7 @@ class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
 
 public:
 	Function()                                 { ptr = NULL; }
+	Function(CNULLer)                          { ptr = NULL; }
 	
 	template <class F> Function(F fn)          { ptr = new Wrapper<F>(pick(fn)); }
 	
@@ -76,8 +79,6 @@ public:
 
 	~Function()                                { Free(ptr); }
 };
-
-enum CNULLer { CNULL };
 
 // we need "isolation level" to avoid overloading issues
 template <class... ArgTypes>
