@@ -322,7 +322,7 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 	int parti = 0;
 	while(parti < part.GetCount()) {
 		RichContext begin;
-		Advance(parti++, rc, begin);
+		Advance(parti, rc, begin);
 		if(part[parti].Is<RichTable>())
 			GetTable(parti).GatherValPos(f, begin, pos, type);
 		else {
@@ -336,6 +336,7 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 					Get(parti, *begin.styles, true).GatherIndexes(f, begin.page, begin.py, pos);
 		}
 		pos += GetPartLength(parti) + 1;
+		parti++;
 	}
 }
 
