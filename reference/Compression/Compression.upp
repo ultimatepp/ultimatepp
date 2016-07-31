@@ -1,0 +1,13 @@
+description "Using compression streams (zlib, LZ4, Zstd)\377";
+
+uses
+	Core,
+	plugin/lz4,
+	plugin/zstd;
+
+file
+	Compression.cpp;
+
+mainconfig
+	"" = "";
+
