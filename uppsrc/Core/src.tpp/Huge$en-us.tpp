@@ -75,7 +75,7 @@ the [* CHUNK] size.&]
 [s5;:Upp`:`:Huge`:`:Finish`(int`):%- [@(0.0.255) void]_[* Finish]([@(0.0.255) int]_[*@3 last`_
 chunk`_size])&]
 [s2; After adding a last chunk, [* Huge] is `'closed`' with calling 
-this method with the size of it [%-*@3 last`_chunk`_size]. Usually, 
+this method with the size of its [%-*@3 last`_chunk`_size]. Usually, 
 [* Huge] gets data from some source (like Stream) which returns 
 full sized chunks until the last one.&]
 [s3; &]
