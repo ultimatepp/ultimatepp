@@ -31,7 +31,7 @@ void LZ4CompressStream::Alloc()
 }
 
 #ifdef _MULTITHREADED
-void LZ4CompressStream::Concurrent(bool b)
+void LZ4CompressStream::Co(bool b)
 {
 	FlushOut();
 	concurrent = b;

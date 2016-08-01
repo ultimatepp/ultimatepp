@@ -20,7 +20,7 @@ static int64 sLZ4Compress(Stream& out, Stream& in, int64 size, EventGate<int64, 
 	LZ4CompressStream outs(out);
 #ifdef _MULTITHREADED
 	if(co)
-		outs.Concurrent();
+		outs.Co();
 #endif
 	sCompressStreamCopy_(outs, in, progress, in, size);
 	outs.Close();
@@ -34,7 +34,7 @@ static int64 sLZ4Decompress(Stream& out, Stream& in, int64 size, EventGate<int64
 	LZ4DecompressStream ins(in);
 #ifdef _MULTITHREADED
 	if(co)
-		ins.Concurrent();
+		ins.Co();
 #endif
 	sCompressStreamCopy_(out, ins, progress, in, size);
 	ins.Close();
