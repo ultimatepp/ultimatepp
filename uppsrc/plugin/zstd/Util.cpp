@@ -2,9 +2,9 @@
 
 namespace Upp {
 	
-void sCompressStreamCopy_(Stream& out, Stream& in, Function<bool(int64, int64)> progress, Stream& orig_in, int64 insz);
+void sCompressStreamCopy_(Stream& out, Stream& in, EventGate<int64, int64> progress, Stream& orig_in, int64 insz);
 
-static int64 sZstdCompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress, bool co)
+static int64 sZstdCompress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress, bool co)
 {
 	ZstdCompressStream outs(out);
 #ifdef _MULTITHREADED
@@ -18,7 +18,7 @@ static int64 sZstdCompress(Stream& out, Stream& in, int64 size, Function<bool(in
 	return -1;
 }
 
-static int64 sZstdDecompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress, bool co)
+static int64 sZstdDecompress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress, bool co)
 {
 	ZstdDecompressStream ins(in);
 #ifdef _MULTITHREADED
@@ -32,72 +32,72 @@ static int64 sZstdDecompress(Stream& out, Stream& in, int64 size, Function<bool(
 	return -1;
 }
 
-int64 ZstdCompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
+int64 ZstdCompress(Stream& out, Stream& in, EventGate<int64, int64> progress)
 {
 	return sZstdCompress(out, in, in.GetLeft(), progress, false);
 }
 
-int64 ZstdDecompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
+int64 ZstdDecompress(Stream& out, Stream& in, EventGate<int64, int64> progress)
 {
 	return sZstdDecompress(out, in, in.GetLeft(), progress, false);
 }
 
-String ZstdCompress(const void *data, int64 len, Function<bool(int64, int64)> progress)
+String ZstdCompress(const void *data, int64 len, EventGate<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return ZstdCompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String ZstdCompress(const String& s, Function<bool(int64, int64)> progress)
+String ZstdCompress(const String& s, EventGate<int64, int64> progress)
 {
 	return ZstdCompress(~s, s.GetLength(), progress);
 }
 
-String ZstdDecompress(const void *data, int64 len, Function<bool(int64, int64)> progress)
+String ZstdDecompress(const void *data, int64 len, EventGate<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return ZstdDecompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String ZstdDecompress(const String& s, Function<bool(int64, int64)> progress)
+String ZstdDecompress(const String& s, EventGate<int64, int64> progress)
 {
 	return ZstdDecompress(~s, s.GetLength(), progress);
 }
 
 #ifdef _MULTITHREADED
 
-int64 CoZstdCompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
+int64 CoZstdCompress(Stream& out, Stream& in, EventGate<int64, int64> progress)
 {
 	return sZstdCompress(out, in, in.GetLeft(), progress, true);
 }
 
-int64 CoZstdDecompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress)
+int64 CoZstdDecompress(Stream& out, Stream& in, EventGate<int64, int64> progress)
 {
 	return sZstdDecompress(out, in, in.GetLeft(), progress, true);
 }
 
-String CoZstdCompress(const void *data, int64 len, Function<bool(int64, int64)> progress)
+String CoZstdCompress(const void *data, int64 len, EventGate<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return CoZstdCompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String CoZstdCompress(const String& s, Function<bool(int64, int64)> progress)
+String CoZstdCompress(const String& s, EventGate<int64, int64> progress)
 {
 	return CoZstdCompress(~s, s.GetLength(), progress);
 }
 
-String CoZstdDecompress(const void *data, int64 len, Function<bool(int64, int64)> progress)
+String CoZstdDecompress(const void *data, int64 len, EventGate<int64, int64> progress)
 {
 	StringStream out;
 	MemReadStream in(data, len);
 	return CoZstdDecompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
-String CoZstdDecompress(const String& s, Function<bool(int64, int64)> progress)
+String CoZstdDecompress(const String& s, EventGate<int64, int64> progress)
 {
 	return CoZstdDecompress(~s, s.GetLength(), progress);
 }
