@@ -51,7 +51,7 @@ protected:
 
 public:
 #ifdef _MULTITHREADED
-	void Concurrent(bool b = true);
+	void Co(bool b = true);
 #endif
 	void Open(Stream& out_);
 
@@ -102,7 +102,7 @@ public:
 	bool Open(Stream& in);
 
 #ifdef _MULTITHREADED
-	void Concurrent(bool b = true)           { concurrent = b; }
+	void Co(bool b = true)                                  { concurrent = b; }
 #endif
 
 	LZ4DecompressStream();

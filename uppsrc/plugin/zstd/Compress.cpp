@@ -27,7 +27,7 @@ void ZstdCompressStream::Alloc()
 }
 
 #ifdef _MULTITHREADED
-void ZstdCompressStream::Concurrent(bool b)
+void ZstdCompressStream::Co(bool b)
 {
 	FlushOut();
 	concurrent = b;
