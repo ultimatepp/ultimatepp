@@ -244,11 +244,9 @@ inline const T& Value::To() const
 		if(x)
 			return x->Get();
 	}
-	else {
-		ASSERT(t < 255);
-		if(Is((byte)t))
-			return GetSmallRaw<T>();
-	}
+	else
+	if(t < 255 && Is((byte)t))
+		return GetSmallRaw<T>();
 	throw ValueTypeError(String().Cat() << "Invalid value conversion: "
 	                     << GetName() << " -> " << typeid(T).name(),
 	                     *this, t);

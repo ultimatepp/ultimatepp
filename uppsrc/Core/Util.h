@@ -404,6 +404,8 @@ public:
 
 // ------------------- Advanced streaming --------------------
 
+void CheckedSerialize(const Callback1<Stream&> serialize, Stream& stream, int version = Null);
+
 bool Load(Callback1<Stream&> serialize, Stream& stream, int version = Null);
 bool Store(Callback1<Stream&> serialize, Stream& stream, int version = Null);
 bool LoadFromFile(Callback1<Stream&> serialize, const char *file = NULL, int version = Null);
