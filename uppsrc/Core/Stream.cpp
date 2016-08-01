@@ -1329,8 +1329,9 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count) {
 	return done;
 }
 
-int64 CopyStream(Stream& dest, Stream& src, int64 count, Function<bool(int64, int64)> progress) {
-	int block = (int)min<int64>(count, 65536);
+int64 CopyStream(Stream& dest, Stream& src, int64 count, EventGate<int64, int64> progress)
+{
+	int block = (int)min<int64>(count, 32768);
 	Buffer<byte> temp(block);
 	int loaded;
 	int64 done = 0;

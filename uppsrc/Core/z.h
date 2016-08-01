@@ -120,37 +120,37 @@ public:
 	~ZDecompressStream()                   { Close(); }
 };
 
-int64  CopyStream(Stream& dest, Stream& src, int64 count, Function<bool(int64, int64)> progress);
+int64  CopyStream(Stream& dest, Stream& src, int64 count, EventGate<int64, int64> progress);
 
-int64  ZCompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress = CNULL, bool hdr = true);
-int64  ZCompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
-String ZCompress(const void *data, int64 len, Function<bool(int64, int64)> progress = CNULL);
-String ZCompress(const String& s, Function<bool(int64, int64)> progress = CNULL);
+int64  ZCompress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress = false, bool hdr = true);
+int64  ZCompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
+String ZCompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
+String ZCompress(const String& s, EventGate<int64, int64> progress = false);
 
-int64  ZDecompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress = CNULL, bool hdr = true);
-int64  ZDecompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
-String ZDecompress(const void *data, int64 len, Function<bool(int64, int64)> progress = CNULL);
-String ZDecompress(const String& s, Function<bool(int64, int64)> progress = CNULL);
+int64  ZDecompress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress = false, bool hdr = true);
+int64  ZDecompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
+String ZDecompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
+String ZDecompress(const String& s, EventGate<int64, int64> progress = false);
 
-int64  GZCompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress = CNULL);
-int64  GZCompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
-String GZCompress(const void *data, int len, Function<bool(int64, int64)> progress = CNULL);
-String GZCompress(const String& s, Function<bool(int64, int64)> progress = CNULL);
+int64  GZCompress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress = false);
+int64  GZCompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
+String GZCompress(const void *data, int len, EventGate<int64, int64> progress = false);
+String GZCompress(const String& s, EventGate<int64, int64> progress = false);
 
-int64  GZDecompress(Stream& out, Stream& in, int64 size, Function<bool(int64, int64)> progress = CNULL);
-int64  GZDecompress(Stream& out, Stream& in, Function<bool(int64, int64)> progress = CNULL);
-String GZDecompress(const void *data, int len, Function<bool(int64, int64)> progress = CNULL);
-String GZDecompress(const String& s, Function<bool(int64, int64)> progress = CNULL);
+int64  GZDecompress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress = false);
+int64  GZDecompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
+String GZDecompress(const void *data, int len, EventGate<int64, int64> progress = false);
+String GZDecompress(const String& s, EventGate<int64, int64> progress = false);
 
-bool   GZCompressFile(const char *dstfile, const char *srcfile, Function<bool(int64, int64)> progress = CNULL);
-bool   GZCompressFile(const char *srcfile, Function<bool(int64, int64)> progress = CNULL);
+bool   GZCompressFile(const char *dstfile, const char *srcfile, EventGate<int64, int64> progress = false);
+bool   GZCompressFile(const char *srcfile, EventGate<int64, int64> progress = false);
 
-bool   GZDecompressFile(const char *dstfile, const char *srcfile, Function<bool(int64, int64)> progress = CNULL);
-bool   GZDecompressFile(const char *srcfile, Function<bool(int64, int64)> progress = CNULL);
+bool   GZDecompressFile(const char *dstfile, const char *srcfile, EventGate<int64, int64> progress = false);
+bool   GZDecompressFile(const char *srcfile, EventGate<int64, int64> progress = false);
 
 /// Backward compatibility:
 
-Function<bool(int64, int64)> AsGate64(Gate2<int, int> gate);
+EventGate<int64, int64> AsGate64(Gate2<int, int> gate);
 
 inline int ZCompress(Stream& out, Stream& in, Gate2<int, int> progress)        { return (int)ZCompress(out, in, AsGate64(progress)); }
 inline String ZCompress(const void *data, int len, Gate2<int, int> progress)   { return ZCompress(data, len, AsGate64(progress)); }
