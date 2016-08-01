@@ -6,5 +6,6 @@ file
 	zstd.h,
 	Decompress.cpp,
 	Util.cpp,
-	common\zstd.h;
+	common\zstd.h,
+	src.tpp;
 
