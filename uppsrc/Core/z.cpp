@@ -501,4 +501,18 @@ String FastDecompress(const String& data)
 	return b;
 }
 
+// following function is used in both plugin/lz4 and plugin/zstd
+void sCompressStreamCopy_(Stream& out, Stream& in, EventGate<int64, int64> progress, Stream& orig_in, int64 insz)
+{
+	const int CHUNK = 32678;
+	Buffer<byte> b(CHUNK);
+	while(!in.IsEof()) {
+		if(progress(orig_in.GetPos(), insz))
+			break;
+		int n = in.Get(b, CHUNK);
+		out.Put(b, n);
+	}
+	progress(orig_in.GetPos(), insz);
+}
+
 END_UPP_NAMESPACE

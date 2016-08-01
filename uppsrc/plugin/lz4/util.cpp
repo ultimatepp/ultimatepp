@@ -2,18 +2,7 @@
 
 namespace Upp {
 	
-void sCompressStreamCopy_(Stream& out, Stream& in, EventGate<int64, int64> progress, Stream& orig_in, int64 insz)
-{
-	const int CHUNK = 32678;
-	Buffer<byte> b(CHUNK);
-	while(!in.IsEof()) {
-		if(progress(orig_in.GetPos(), insz))
-			break;
-		int n = in.Get(b, CHUNK);
-		out.Put(b, n);
-	}
-	progress(orig_in.GetPos(), insz);
-}
+void sCompressStreamCopy_(Stream& out, Stream& in, EventGate<int64, int64> progress, Stream& orig_in, int64 insz);
 
 static int64 sLZ4Compress(Stream& out, Stream& in, int64 size, EventGate<int64, int64> progress, bool co)
 {
