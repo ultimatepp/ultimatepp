@@ -9,7 +9,7 @@ static int64 sZstdCompress(Stream& out, Stream& in, int64 size, EventGate<int64,
 	ZstdCompressStream outs(out);
 #ifdef _MULTITHREADED
 	if(co)
-		outs.Concurrent();
+		outs.Co();
 #endif
 	sCompressStreamCopy_(outs, in, progress, in, size);
 	outs.Close();
@@ -23,7 +23,7 @@ static int64 sZstdDecompress(Stream& out, Stream& in, int64 size, EventGate<int6
 	ZstdDecompressStream ins(in);
 #ifdef _MULTITHREADED
 	if(co)
-		ins.Concurrent();
+		ins.Co();
 #endif
 	sCompressStreamCopy_(out, ins, progress, in, size);
 	ins.Close();
