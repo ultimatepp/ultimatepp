@@ -2,7 +2,7 @@
 
 namespace Upp {
 	
-// we simply store data as series of complete Zstd frames, as library gives us no better chance
+// we simply store data as series of complete Zstd frames, as library gives us no easy way
 // to do it in MT
 
 void ZstdCompressStream::Open(Stream& out_, int level_)

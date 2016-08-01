@@ -9,5 +9,6 @@ file
 	Decompress.cpp,
 	util.cpp,
 	lib\LICENSE,
-	Copying;
+	Copying,
+	src.tpp;
 
