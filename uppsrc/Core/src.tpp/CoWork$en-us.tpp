@@ -13,44 +13,43 @@ topic "CoWork";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWork]]}}&]
 [s3; &]
 [s1;:CoWork`:`:class: [@(0.0.255)3 class][3 _][*3 CoWork]&]
-[s9;%% This class is indented as loop`-parallelization tool. Whenever 
-loop iterations are independent (they do not share any data between 
-iterations), CoWork can be used to relatively easily spawn loop 
-iterations over threads and thus over CPU cores. Note that previous 
-statement does [* not] preclude CoWork iterations to share data 
-at all `- sharing data using Mutex or similar serialization mechanisms 
-still works. CoWork works with fixed`-size global thread pool, 
-which is created during initialization phase (first CoWork constructor 
-called). No more thread are created or destroyed during normal 
-work. Nesting of CoWork instances is also possible. Of course, 
-not only loop iterations can be parallelized, whenever there 
-are two or more actions that can run in parallel, you can use 
-CoWork.&]
-[s9;%% Single`-threaded implementation simply performs all actions 
-submitted by Do in sequence.&]
+[s9;%% This class is indented as general parallelization tool. Whenever 
+jobs (e.g. loop iterations) are independent (they do not share 
+any data between iterations), CoWork can be used to relatively 
+easily spawn loop iterations over threads and thus over CPU cores. 
+Note that previous statement does [* not] preclude CoWork iterations 
+to share data at all `- sharing data using Mutex or similar serialization 
+mechanisms still works. CoWork works with fixed`-size thread 
+pool, which is created during initialization phase (first CoWork 
+constructor called in master thread). No more thread are created 
+or destroyed during normal work. Nesting of CoWork instances 
+is also possible. Thread pool is normally terminated when master 
+thread finishes.&]
 [s3;%% &]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Upp`:`:CoWork`:`:Do`(const Upp`:`:Callback`&`): [@(0.0.255) void]_[* Do]([@(0.0.255) c
-onst]_[_^topic`:`/`/Core`/src`/Callbacks`$en`-us`#Callback`:`:class^ Callback][@(0.0.255) `&
-]_[*@3 cb])&]
-[s5;:Upp`:`:CoWork`:`:Do`(const std`:`:function`<void`(`)`>`&`): [@(0.0.255) void]_[* Do](
-[@(0.0.255) const]_[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/functional`/function^ s
-td`::function]<[@(0.0.255) void]_()>`&_[*@3 lambda])&]
-[s2;%% Schedules [%-*@3 cb] or [%-*@3 lambda] to be executed. All changes 
-to data done before Do are visible in the scheduled code. The 
-order of execution or whether the code is execute in another 
-or calling thread is not specified.&]
-[s3; &]
+[s5;:Upp`:`:CoWork`:`:Start`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) static] 
+[@(0.0.255) void]_[* Start]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn
+])&]
+[s2;%% This is a low`-level function that schedules [%-*@3 fn] to be 
+executed by worker thread.&]
+[s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Callback`&`): [_^topic`:`/`/Core`/src`/CoWork`$en`-us^ C
-oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Callbacks`$en`-us`#Callback`:`:class^ C
-allback][@(0.0.255) `&]_[*@3 cb])&]
-[s5;:Upp`:`:CoWork`:`:operator`&`(const std`:`:function`<void`(`)`>`&`): [_^topic`:`/`/Core`/src`/CoWork`$en`-us^ C
-oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^http`:`/`/en`.cppreference`.com`/w`/cpp`/utility`/functional`/function^ s
-td`::function]<[@(0.0.255) void]_()>`&_[*@3 lambda])&]
-[s2;%% Same as Do([%-*@3 cb ][/ or] [%-*@3 lambda]); returns `*this;&]
+[s5;:Upp`:`:CoWork`:`:Do`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* Do]([_^Upp`:`:Function^ F
+unction]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:Do`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) void]_[* Do](
+[@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(const Upp`:`:Function`<void`(`)`>`&`): [_^Upp`:`:CoWork^ C
+oWork][@(0.0.255) `&]_[* operator`&]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
+oid]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`&`(Upp`:`:Function`<void`(`)`>`&`&`): [_^Upp`:`:CoWork^ C
+oWork][@(0.0.255) `&]_[* operator`&]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
+`&_[*@3 fn])&]
+[s2;%% Schedules [%-*@3 fn] to be executed. All changes to data done 
+before Do are visible in the scheduled code. The order of execution 
+or whether the code is execute in another or calling thread is 
+not specified.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:FinLock`(`): [@(0.0.255) static] [@(0.0.255) void]_[* FinLock]()&]
@@ -66,11 +65,34 @@ as with all locks, execution of locked code should be short.&]
 [s2;%% Waits until all jobs scheduled using Do (or operator`&) are 
 finished. All changes to data performed by scheduled threads 
 are visible after Finish.&]
-[s3;%% &]
-[s0;%% &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Destructor detail]]}}&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:IsFinished`(`): [@(0.0.255) bool]_[* IsFinished]()&]
+[s2;%% Checkes whether all jobs scheduled using Do (or operator`&) 
+are finished. All changes to data performed by scheduled threads 
+are visible after IsFinished returns true (so this is basically 
+non`-blocking variant of Finish).&]
+[s3;%% &]
+[s4; &]
 [s5;:CoWork`:`:`~CoWork`(`): [@(0.0.255) `~][* CoWork]()&]
 [s2;%% Calls Finish().&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:IsWorker`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsWorker]()&]
+[s2;%% Returns true if current thread is worker thread.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:StartPool`(int`): [@(0.0.255) static] [@(0.0.255) void]_[* StartPool](
+[@(0.0.255) int]_[*@3 n])&]
+[s2;%% Starts the thread pool for current master thread. Note that 
+this also happens automatically on first CoWork use, however 
+StartPool can be used to setup different number of worker thread 
+than default (which is CPU`_Cores() `+ 2).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:ShutdownPool`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownPo
+ol]()&]
+[s2;%% Waits for all jobs to finish and then releases the thread 
+pool.&]
 [s3; &]
 [s0; ]]

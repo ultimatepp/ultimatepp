@@ -58,7 +58,7 @@ public:
 	CoWork&  operator&(const Function<void ()>& fn)           { Do(fn); return *this; }
 	CoWork&  operator&(Function<void ()>&& fn)                { Do(pick(fn)); return *this; }
 
-	void Pipe(int stepi, Function<void ()>&& lambda);
+	void Pipe(int stepi, Function<void ()>&& lambda); // experimental
 
 	static void FinLock();
 
