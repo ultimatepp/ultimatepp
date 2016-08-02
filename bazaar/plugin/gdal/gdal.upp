@@ -13,5 +13,6 @@ file
 	gdal.cpp,
 	import.ext,
 	cpl_config.h,
-	port\cpl_port.h;
+	port\cpl_port.h,
+	Copying;
 
