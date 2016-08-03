@@ -57,7 +57,7 @@ CONSOLE_APP_MAIN
 				        FileIn  in(file);
 				        FileOut out(zstd);
 				        ZstdCompressStream zstd(out);
-				        zstd.Concurrent(concurrent);
+				        zstd.Co(concurrent);
 				        int ch = 0;
 				        for(;;) {
 				            String data = in.Get(smll ? (++ch & 511) + 1 : 1024*1024);
@@ -74,7 +74,7 @@ CONSOLE_APP_MAIN
 				        FileIn  in(zstd);
 				        FileOut out(dec);
 				        ZstdDecompressStream zstd(in);
-				        zstd.Concurrent(concurrent);
+				        zstd.Co(concurrent);
 				        int ch = 0;
 				        for(;;) {
 				            String data = zstd.Get(smll ? (++ch & 511) + 1 : 1024*1024);

@@ -57,7 +57,7 @@ CONSOLE_APP_MAIN
 				        FileIn  in(file);
 				        FileOut out(lz4);
 				        LZ4CompressStream lz4(out);
-				        lz4.Concurrent(concurrent);
+				        lz4.Co(concurrent);
 				        int ch = 0;
 				        for(;;) {
 				            String data = in.Get(smll ? (++ch & 511) + 1 : 1024*1024);
@@ -72,7 +72,7 @@ CONSOLE_APP_MAIN
 				        FileIn  in(lz4);
 				        FileOut out(dec);
 				        LZ4DecompressStream lz4(in);
-				        lz4.Concurrent(concurrent);
+				        lz4.Co(concurrent);
 				        int ch = 0;
 				        for(;;) {
 				            String data = lz4.Get(smll ? (++ch & 511) + 1 : 1024*1024);
