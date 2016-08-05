@@ -1691,7 +1691,8 @@ void ArrayCtrl::SyncInfo()
 					Value q;
 					const Display& d = GetCellInfo(c.y, c.x, HasFocusDeep(), q, fg, bg, st);
 					int cw = r.Width();
-					SpanWideCell(d, q, cm, cw, r, c.y, c.x);
+					if(spanwidecells)
+						SpanWideCell(d, q, cm, cw, r, c.y, c.x);
 					if(r.Contains(p)) {
 						info.Set(this, r, q, &d, fg, bg, st, cm);
 						return;
