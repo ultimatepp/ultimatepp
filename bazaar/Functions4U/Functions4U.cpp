@@ -698,6 +698,15 @@ String GetSystemFolder()
 	return String(ret);
 }
 
+#ifdef PLATFORM_WIN32
+String GetCommonAppDataFolder() { 
+	wchar path[MAX_PATH];
+	if(SHGetFolderPathW(NULL, CSIDL_COMMON_APPDATA, NULL, 0, path) == S_OK)
+		return FromUnicodeBuffer(path);
+	return Null;
+}
+#endif
+
 bool SetEnv(const char *id, const char *val) 
 {
 //	EnvMap().Put(WString(id), WString(val));
