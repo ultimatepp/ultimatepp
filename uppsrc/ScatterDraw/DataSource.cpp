@@ -169,16 +169,54 @@ Vector<Pointf> DataSource::MovingAverage(Getdatafun getdataY, Getdatafun getdata
 		for (j = i+1; j < GetCount(); ++j) {
 			double ynext = Membercall(getdataY)(j);
 			double xnext = Membercall(getdataX)(j);
-			if (IsNull(xnext) || IsNull(ynext))
+			if (IsNull(xnext))
 				continue;
-			if ((xnext - x) > width_2)
+			if ((xnext - x) > width_2) 
 				break;
+			if (IsNull(ynext))
+				continue;
 			sum += ynext;
 			numAvg++;
 		}
 		if (j == GetCount())
 			continue;
 		ret << Pointf(x, sum/numAvg);
+	}
+	return ret;	
+}
+
+Vector<Pointf> DataSource::SectorAverage(Getdatafun getdataY, Getdatafun getdataX, double width) {
+	Vector<Pointf> ret;
+	
+	for (int i = 0; i < GetCount();) {
+		double y = Membercall(getdataY)(i);
+		double x = Membercall(getdataX)(i);
+		if (IsNull(x) || IsNull(y))
+			continue;
+		
+		int numAvg = 1;
+		double sum = y;
+		double sumX = x;
+		int j;
+		for (j = i+1; j < GetCount(); ++j) {
+			double ynext = Membercall(getdataY)(j);
+			double xnext = Membercall(getdataX)(j);
+			if (IsNull(xnext))
+				continue;
+			if ((xnext - x) > width) {
+				--j;
+				break;
+			}
+			if (IsNull(ynext))
+				continue;
+			sumX += xnext;
+			sum += ynext;
+			numAvg++;
+		}
+		ret << Pointf(sumX/numAvg, sum/numAvg);
+		if (j == GetCount())
+			break;
+		i = j+1;
 	}
 	return ret;	
 }
@@ -270,7 +308,7 @@ double CArray::znFixed(int n, int64 id) {
 }
 
 
-Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequency, bool phase) {
+Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequency, int type, bool window) {
 	int numData = int(GetCount());
     VectorXd timebuf(numData);
     int num = 0;
@@ -286,6 +324,16 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
         return res;
     timebuf.resize(num);
     
+    double windowSum = 0;
+    if (window) {
+	    for (int i = 0; i < numData; ++i) {
+	        double windowDat = 0.54 - 0.46*cos(2*M_PI*i/numData);
+	        windowSum += windowDat;
+	    	timebuf[i] *= windowDat;	// Hamming window
+	    }
+	} else
+		windowSum = numData;
+	
     VectorXcd freqbuf;
     try {
 	    Eigen::FFT<double> fft;
@@ -298,19 +346,21 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     	for (int i = 0; i < int(freqbuf.size()); ++i) {    
     		double xdata = i/(tSample*numData);
 		
-			if (phase)
-				res << Pointf(xdata, std::arg(freqbuf[i]));	
-			else
-        		res << Pointf(xdata, 2*std::abs(freqbuf[i])/numData);
+			switch (type) {
+			case T_PHASE:	res << Pointf(xdata, std::arg(freqbuf[i]));				break;
+			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);	break;
+			case T_PSD:		res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(windowSum/tSample));
+			}
     	}
     } else {
-        for (int i = int(freqbuf.size()); i > 0; --i) {    
+        for (int i = int(freqbuf.size()) - 1; i > 0; --i) {    
     		double xdata = (tSample*numData)/i;
 		
-			if (phase)
-				res << Pointf(xdata, std::arg(freqbuf[i]));	
-			else
-        		res << Pointf(xdata, 2*std::abs(freqbuf[i])/numData);
+			switch (type) {
+			case T_PHASE:	res << Pointf(xdata, std::arg(freqbuf[i]));				break;
+			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);	break;
+			case T_PSD:		res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(windowSum/tSample));
+			}
     	}
     }
     return res;
