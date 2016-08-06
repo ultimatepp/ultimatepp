@@ -86,7 +86,7 @@ Vector<String> SearchFile(String dir, const Vector<String> &condFiles, const Vec
 								 const Vector<String> &extFiles,  const Vector<String> &extFolders, 
 								 const String text, Vector<String> &errorList);
 Vector<String> SearchFile(String dir, String condFile, String text, Vector<String> &errorList);//, int flags = 0);
-Vector<String> SearchFile(String dir, String condFile, String text = "");//, int flags = 0);
+Vector<String> SearchFile(String dir, String condFile = "*.*", String text = "");//, int flags = 0);
 ///////////////////////////////
 
 bool FileToTrashBin(const char *path);
@@ -98,6 +98,9 @@ String GetRootFolder();
 String GetTempFolder();
 String GetOsFolder();
 String GetSystemFolder();
+#ifdef PLATFORM_WIN32
+String GetCommonAppDataFolder();
+#endif
 bool SetEnv(const char *id, const char *val);
 
 struct FileData : Moveable<FileData> {
@@ -242,6 +245,10 @@ inline T pow4(T a) {return pow2(pow2(a));}
 template <class T> 
 inline bool Between(const T& val, const T& min, const T& max) { 
 	return val >= min && val <= max;
+}
+template <class T> 
+inline T BetweenVal(const T& val, const T& _min, const T& _max) { 
+	return max(_min, min(_max, val));
 }
 
 #define IsNan(a)	((a) != (a))
@@ -619,7 +626,10 @@ public:
 	int GetStatus()  {return status;}
 	bool IsRunning() {return status > 0;}
 	Gate4<double, String&, bool, bool&> WhenTimer;
-
+	#ifdef PLATFORM_WIN32
+	DWORD GetPid()	{return p.GetPid();}
+	#endif
+	
 private:
 	LocalProcess2 p;
 	TimeStop timeElapsed, timeToTimeout;
