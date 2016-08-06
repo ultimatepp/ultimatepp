@@ -136,7 +136,7 @@ private:
 	SinEquation sinus;
 	SplineEquation spline;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
-	Vector<Pointf> movAvg;
+	Vector<Pointf> movAvg, secAvg;
 	DataSetCond dataSetCond;
 	bool exclamationOpened;
 	double newWidthMax, newWidthMin, newWidthMovAvg;

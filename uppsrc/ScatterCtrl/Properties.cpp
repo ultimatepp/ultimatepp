@@ -483,7 +483,9 @@ ProcessingTab::ProcessingTab()
 	tabFreq.butFFT.WhenAction = THISBACK(OnFFT);
 	tabFreq.opXAxis = 0;
 	tabFreq.opXAxis.WhenAction = THISBACK(OnFFT);
-	tabFreq.opPhase.WhenAction = THISBACK(OnFFT);
+	tabFreq.type.WhenAction = THISBACK(OnFFT);
+	tabFreq.type = 0;
+	tabFreq.setWindow.WhenAction = THISBACK(OnFFT);
 	
 	tabFit.opSeries = true;
 	tabFit.opSeries.WhenAction = THISBACK(OnOp);
@@ -496,6 +498,7 @@ ProcessingTab::ProcessingTab()
 	tabFit.opMax.WhenAction = THISBACK(OnOp);
 	tabFit.opMin.WhenAction = THISBACK(OnOp);
 	tabFit.opMovAvg.WhenAction = THISBACK(OnOp);
+	tabFit.opSecAvg.WhenAction = THISBACK(OnOp);
 	tabFit.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
 	tabFit.width.WhenAction = THISBACK(OnUpdateSensitivity);
 	
@@ -575,6 +578,7 @@ void ProcessingTab::OnOp()
 	tabFit.scatter.ScatterDraw::Show(7, tabFit.opMax);
 	tabFit.scatter.ScatterDraw::Show(8, tabFit.opMin);
 	tabFit.scatter.ScatterDraw::Show(9, tabFit.opMovAvg);
+	tabFit.scatter.ScatterDraw::Show(10, tabFit.opSecAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
@@ -654,6 +658,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFit.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Min"))
 						.NoMark().Dash(LINE_DASHED).SetSequentialX(true);
 		tabFit.scatter.AddSeries(movAvg).SetDataThickness(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("MovAvg")).NoMark();		
+		tabFit.scatter.AddSeries(secAvg).SetDataThickness(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("SecAvg")).NoMark();		
 					
 		OnOp();
 	} else {
@@ -667,6 +672,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		tabFit.opMax.Enable(false);
 		tabFit.opMin.Enable(false);
 		tabFit.opMovAvg.Enable(false);
+		tabFit.opSecAvg.Enable(false);
 	}
 	
 	Show();	
@@ -701,7 +707,13 @@ void ProcessingTab::OnUpdateSensitivity()
 		movAvg = data.MovingAverageY(tabFit.width);
 		refresh = true;
 	}
-	
+	if (tabFit.opSecAvg && newWidthMovAvg != tabFit.width) {
+		newWidthMovAvg = tabFit.width;
+		
+		secAvg = data.SectorAverageY(tabFit.width);
+		refresh = true;
+	}
+		
 	if (refresh)
 		tabFit.scatter.Refresh();
 }
@@ -839,7 +851,7 @@ void ProcessingTab::OnFFT()
 			resampledSeries << orderedSeries[orderedSeries.GetCount() - 1].y;
 	
 		VectorY<double> series(resampledSeries, 0, samplingTime);
-		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.opPhase);
+		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.type, tabFreq.setWindow);
 	}
 	if (fft.IsEmpty()) {
 		tabFreq.comments.SetText(errText);
@@ -847,7 +859,13 @@ void ProcessingTab::OnFFT()
 		return;
 	}
 	
-	String legend = tabFit.scatter.GetLegend(0) + String("-") + (tabFreq.opPhase ? t_("FFT-phase [rad]") : t_("FFT"));
+	String strtype;
+	switch(tabFreq.type) {
+	case DataSource::T_FFT:		strtype = t_("FFT");				break;
+	case DataSource::T_PHASE:	strtype = t_("FFT-phase [rad]");	break;
+	case DataSource::T_PSD:		strtype = t_("PSD");				break;
+	}
+	String legend = tabFit.scatter.GetLegend(0) + String("-") + strtype;
 	tabFreq.scatter.AddSeries(fft).Legend(legend);
 	tabFreq.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();
 	tabFreq.scatter.SetLabelX(tabFreq.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
