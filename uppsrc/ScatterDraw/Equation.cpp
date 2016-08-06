@@ -147,6 +147,9 @@ EvalExpr::EvalExpr() {
 	functions.Add("sinh", sinh);
 	functions.Add("cosh", cosh);
 	functions.Add("tanh", tanh);
+	functions.Add("log", log);
+	functions.Add("log10", log10);
+	functions.Add("exp", exp);
 	functions.Add("degToRad", degToRad);
 }
 
