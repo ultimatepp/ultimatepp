@@ -48,11 +48,14 @@ public:
 	virtual Vector<int64> UpperEnvelopeY(double width) 	{return UpperEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<int64> LowerEnvelopeY(double width) 	{return LowerEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}	
+	virtual Vector<Pointf> SectorAverageY(double width) {return SectorAverage(&DataSource::y, &DataSource::x, width);}	
 	virtual void ZeroCrossingY(bool ascending, bool descending, Vector<double> &zeros, Vector<int64> &ids) {
 		return ZeroCrossing(&DataSource::y, &DataSource::x, ascending, descending, zeros, ids);}	
-	
-	Upp::Vector<Pointf> FFTY(double tSample, bool frequency = false, bool phase = false) {
-		return FFT(&DataSource::y, tSample, frequency, phase);}
+
+	enum FFT_TYPE {T_FFT = 0, T_PHASE, T_PSD};
+
+	Upp::Vector<Pointf> FFTY(double tSample, bool frequency = false, int type = FFT_TYPE::T_FFT, bool window = false) {
+		return FFT(&DataSource::y, tSample, frequency, type, window);}
 
 	double Min(Getdatafun getdata, int64& id);
 	double Max(Getdatafun getdata, int64& id);
@@ -63,11 +66,13 @@ public:
 	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<int64> LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
+	Vector<Pointf> SectorAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	void ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool ascending, bool descending,
 							  Vector<double> &zeros, Vector<int64> &ids);
 	double SinEstim_Amplitude(double avg = Null);
 	bool SinEstim_FreqPhase(double &frequency, double &phase, double avg = Null);
-	Vector<Pointf> FFT(Getdatafun getdata, double tSample, bool frequency = false, bool phase = false);
+	Vector<Pointf> FFT(Getdatafun getdata, double tSample, bool frequency = false, 
+					   int type = FFT_TYPE::T_FFT, bool window = false);
 		
 protected:
 	bool isParam, isExplicit;
