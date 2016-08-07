@@ -2,6 +2,8 @@
 
 NAMESPACE_UPP
 
+#ifndef COWORK2
+
 #ifdef _MULTITHREADED
 
 #define LLOG(x)      // DLOG(x)
@@ -249,6 +251,8 @@ CoWork::~CoWork()
 //	CheckMagic(magic, sizeof(magic));
 	LLOG("~CoWork " << FormatIntHex(this));
 }
+
+#endif
 
 #endif
 
