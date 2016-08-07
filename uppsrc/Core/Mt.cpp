@@ -88,7 +88,9 @@ sThreadRoutine(void *arg)
 	delete cb;
 	if(sExit)
 		(*sExit)();
+#ifndef COWORK2
 	CoWork::ShutdownPool();
+#endif
 #ifdef UPP_HEAP
 	MemoryFreeThread();
 #endif
@@ -208,7 +210,9 @@ void Thread::EndShutdownThreads()
 
 void Thread::ShutdownThreads()
 {
+#ifndef COWORK2
 	CoWork::ShutdownPool();
+#endif
 	BeginShutdownThreads();
 	while(GetCount())
 		Sleep(100);

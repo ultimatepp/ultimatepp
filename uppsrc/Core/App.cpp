@@ -416,7 +416,9 @@ void AppInit__(int argc, const char **argv)
 void AppExit__()
 {
 #ifdef _MULTITHREADED
+#ifndef COWORK2
 	Thread::ShutdownThreads();
+#endif
 #endif
 	sMainRunning = false;
 #ifdef PLATFORM_POSIX
