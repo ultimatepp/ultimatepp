@@ -227,11 +227,11 @@ void Mitor<T>::Shrink()
 
 //#
 template <class T, int N = 1>
-class Link {
-protected:
+struct Link {
 	T *link_prev[N];
 	T *link_next[N];
 
+protected:
 	void LPN(int i)                      { link_prev[i]->link_next[i] = link_next[i]->link_prev[i] = (T *)this; }
 
 public:
