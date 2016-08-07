@@ -2,12 +2,18 @@
 
 using namespace Upp;
 
+#ifdef _DEBUG
+#define N 1000
+#else
+#define N 10000000
+#endif
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
 
 	Vector<String> h;
-	for(int i = 0; i < 10000000; i++)
+	for(int i = 0; i < N; i++)
 		h.Add(AsString(Random()));
 	
 	{
@@ -23,4 +29,6 @@ CONSOLE_APP_MAIN
 		CoSort(h1);
 		RLOG("CoSort " << tm);
 	}
+	
+	DLOG("Exit");
 }
