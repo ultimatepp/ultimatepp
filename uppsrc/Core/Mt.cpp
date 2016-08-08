@@ -62,6 +62,11 @@ void Thread::Exit()
 	throw sThreadExitExc__();
 }
 
+struct sThreadParam {
+	Function<void ()> cb;
+	bool              noshutdown;
+};
+
 static
 #ifdef PLATFORM_WIN32
 	#ifdef CPU_64
@@ -75,22 +80,20 @@ static
 sThreadRoutine(void *arg)
 {
 	LLOG("sThreadRoutine");
-	auto cb = (Function<void ()> *)arg;
+	auto p = (sThreadParam *)arg;
 	try {
-		(*cb)();
+		p->cb();
 	}
 	catch(Exc e) {
 		Panic(e);
 	}
 	catch(sThreadExitExc__) {}
 	catch(Upp::ExitExc) {}
-	AtomicDec(sThreadCount);
-	delete cb;
+	if(!p->noshutdown)
+		AtomicDec(sThreadCount);
+	delete p;
 	if(sExit)
 		(*sExit)();
-#ifndef COWORK2
-	CoWork::ShutdownPool();
-#endif
 #ifdef UPP_HEAP
 	MemoryFreeThread();
 #endif
@@ -112,10 +115,11 @@ Mutex vm; //a common access synchronizer
 //otherwise no child threads could run. they are created by main.
 //now each thread, having any Thread instance can start a first Run()
 
-bool Thread::Run(Function<void ()> _cb)
+bool Thread::Run(Function<void ()> _cb, bool noshutdown)
 {
 	LLOG("Thread::Run");
-	AtomicInc(sThreadCount);
+	if(!noshutdown)
+		AtomicInc(sThreadCount);
 	if(!threadr)
 #ifndef CPU_BLACKFIN
 		threadr = sMain = true;
@@ -137,12 +141,14 @@ bool Thread::Run(Function<void ()> _cb)
 	}
 #endif
 	Detach();
-	auto cb = new Function<void()>(_cb);
+	auto p = new sThreadParam;
+	p->cb = _cb;
+	p->noshutdown = noshutdown;
 #ifdef PLATFORM_WIN32
-	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, cb, 0, ((unsigned int *)(&thread_id)));
+	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
 #endif
 #ifdef PLATFORM_POSIX
-	if(pthread_create(&handle, 0, sThreadRoutine, cb))
+	if(pthread_create(&handle, 0, sThreadRoutine, p))
 		handle = 0;
 #endif
 	return handle;
@@ -196,23 +202,20 @@ int Thread::GetCount()
 	return sThreadCount;
 }
 
-static bool sShutdown;
+static int sShutdown;
 
 void Thread::BeginShutdownThreads()
 {
-	sShutdown = true;
+	sShutdown++;
 }
 
 void Thread::EndShutdownThreads()
 {
-	sShutdown = false;
+	sShutdown--;
 }
 
 void Thread::ShutdownThreads()
 {
-#ifndef COWORK2
-	CoWork::ShutdownPool();
-#endif
 	BeginShutdownThreads();
 	while(GetCount())
 		Sleep(100);
@@ -349,7 +352,7 @@ bool Thread::Priority(int percent)
 #endif
 }
 
-void Thread::Start(Function<void ()> cb)
+void Thread::Start(Function<void ()> cb, bool noshutdown)
 {
 	Thread t;
 	t.Run(cb);
