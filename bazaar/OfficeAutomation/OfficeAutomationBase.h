@@ -30,6 +30,10 @@ public:
     bool ArraySetVariant(int x, VariantOle &value);
     bool ArraySetValue(int x, int y, ::Value value);
     bool ArraySetVariant(int x, int y, VariantOle &value);
+    bool ArrayGetValue(int x, ::Value &value);
+    bool ArrayGetVariant(int x, VariantOle &value);
+    bool ArrayGetValue(int x, int y, ::Value &value);
+    bool ArrayGetVariant(int x, int y, VariantOle &value);
     void Value(::Value value);
 
     VARIANT var;
