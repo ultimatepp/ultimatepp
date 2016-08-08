@@ -44,19 +44,19 @@ void OfficeSheet::CellToColRow(const char *cell, Cell &cellPos) {
 String OfficeSheet::ColRowToCell(const int col, const int row) {
 	String cell;
 	int num_az = 'Z' - 'A' + 1;
-	int firstLetter = col/num_az;
-	int secondLetter = col - firstLetter*num_az;
-	int len = firstLetter > 0 ? 2: 1;
-		
-	StringBuffer bCell(len);
-	if (len == 2) {
-		bCell[0] = 'A' + firstLetter - 1;
-	} else if (len == 1)
-		bCell[0] = 'A' + secondLetter - 1;
-	else
-		return "Error";
-	bCell.Cat(AsString(row));
-	cell = bCell;
+	int ncol = col;
+	while (ncol > 0) {
+		int letter = ncol/num_az;
+		if (letter == 0) {
+			letter = ncol;
+			cell << char('A' + letter - 1);
+			break;
+		} else {
+			ncol -= letter*num_az;
+			cell << char('A' + letter - 1);
+		}
+	}
+	cell << FormatInt(row);
 	
 	return cell;
 }

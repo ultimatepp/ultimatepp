@@ -301,8 +301,7 @@ CONTINUOUS, DASH, DASHDOT and DOT.&]
 [s2;i150;O0;%% [%-*@3 weight ]is the line thickness. Values are HAIRLINE, 
 MEDIUM, THIN and THICK.&]
 [s2;i150;O0;%% [%-*@3 color] is the border color.&]
-[s2;%% [*@(28.42.255)1 SetBorder functions are not implemented in Open/LibreOffice 
-yet.]&]
+[s2;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:SetBorder`(int`,int`,int`,int`,int`,Color`): [@(0.0.255) bool]_[* Set
@@ -318,8 +317,7 @@ CONTINUOUS, DASH, DASHDOT and DOT.&]
 [s2;i150;O0;%% [%-*@3 weight ]is the line thickness. Values are HAIRLINE, 
 MEDIUM, THIN and THICK.&]
 [s2;i150;O0;%% [%-*@3 color] is the border color.&]
-[s0;l288;%% [*@(28.42.255)1 SetBorder functions are not implemented 
-in Open/LibreOffice yet.]&]
+[s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:Select`(String`): [@(0.0.255) bool]_[* Select]([_^String^ String]_[*@3 ra
@@ -335,6 +333,41 @@ nt]_[*@3 fromX], [@(0.0.255) int]_[*@3 fromY], [@(0.0.255) int]_[*@3 toX],
 [@(0.0.255) int]_[*@3 toY])&]
 [s2;%% Selects range from top left vertex [%-*@3 fromX,] [%-*@3 fromY 
 ]to right bottom[%-*@3  toX,] [%-*@3 toY]. Origin is (1, 1).&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:MatrixAllocate`(int`,int`): [@(0.0.255) virtual] 
+[@(0.0.255) bool]_[* MatrixAllocate]([@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 heig
+ht])&]
+[s2;%% Allocates [%-*@3 width], [%-*@3 height] data for matriz operations.&]
+[s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:MatrixDelete`(`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* MatrixDelet
+e]()&]
+[s2;%% Deletes the matrix object.&]
+[s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
+[s3; &]
+[s4; &]
+[s5;:OfficeSheet`:`:MatrixFillSelection`(`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Matr
+ixFillSelection]()&]
+[s2;%% Fills the selected range with matrix data.&]
+[s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
+[s3; &]
+[s4; &]
+[s5;:OfficeSheet`:`:MatrixFill`(int`,int`,Upp`:`:Vector`<Upp`:`:Vector`<Upp`:`:Value`>`>`&`): [@(0.0.255) b
+ool]_[* MatrixFill]([@(0.0.255) int]_[*@3 fromX], [@(0.0.255) int]_[*@3 fromY], 
+[_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>_>_`&[*@3 dat
+a])&]
+[s2;%% Fills with [%-*@3 data] matrix from top left vertex [%-*@3 fromX,] 
+[%-*@3 fromY]. Origin is (1, 1).&]
+[s2; [%% This operation is much faster than using ][* SetValue().]&]
+[s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:MatrixSetValue`(int`,int`,`:`:Value`): [@(0.0.255) virtual] 
+[@(0.0.255) bool]_[* MatrixSetValue]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], 
+`::Value_[*@3 value])&]
+[s2;%% Sets cell [%-*@3 x], [%-*@3 y] with value [%-*@3 value].&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:Select`(`): [@(0.0.255) bool]_[* Select]()&]
@@ -414,4 +447,4 @@ letters to indicate the column and a number to indicate the row
 as in `"B7`", following the format used in spreadsheets. [%-*@3 col,] 
 [%-*@3 row ]origin is (1, 1)&]
 [s3;%% &]
-[s0; ]
+[s0; ]]
