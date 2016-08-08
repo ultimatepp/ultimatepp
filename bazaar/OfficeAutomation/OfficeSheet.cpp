@@ -244,14 +244,20 @@ bool OfficeSheet::MatrixAllocate(int width, int height) {return (static_cast<She
 bool SheetPlugin::MatrixDelete() {return false;}
 bool OfficeSheet::MatrixDelete() {return (static_cast<SheetPlugin *>(GetData()))->MatrixDelete();}
 
-bool SheetPlugin::MatrixFillSelection() {return false;}
-bool OfficeSheet::MatrixFillSelection() {return (static_cast<SheetPlugin *>(GetData()))->MatrixFillSelection();}
+bool SheetPlugin::MatrixSetSelection() {return false;}
+bool OfficeSheet::MatrixSetSelection() {return (static_cast<SheetPlugin *>(GetData()))->MatrixSetSelection();}
 
-bool SheetPlugin::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {return false;}
-bool OfficeSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {return (static_cast<SheetPlugin *>(GetData()))->MatrixFill(fromX, fromY, data);}
+bool SheetPlugin::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {return false;}
+bool OfficeSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {return (static_cast<SheetPlugin *>(GetData()))->MatrixSet(fromX, fromY, data);}
 
 bool SheetPlugin::MatrixSetValue(int i, int j, ::Value value) {return false;}
 bool OfficeSheet::MatrixSetValue(int i, int j, ::Value value) {return (static_cast<SheetPlugin *>(GetData()))->MatrixSetValue(i, j, value);}
+
+bool SheetPlugin::MatrixGet(int fromX, int fromY, int width, int height, Vector<Vector<Value> > &data) {return false;}
+bool OfficeSheet::MatrixGet(int fromX, int fromY, int width, int height, Vector<Vector<Value> > &data) {return (static_cast<SheetPlugin *>(GetData()))->MatrixGet(fromX, fromY, width, height, data);}
+
+bool SheetPlugin::MatrixGetValue(int i, int j, ::Value &value) {return false;}
+bool OfficeSheet::MatrixGetValue(int i, int j, ::Value &value) {return (static_cast<SheetPlugin *>(GetData()))->MatrixGetValue(i, j, value);}
 
 bool SheetPlugin::SaveAs(String fileName, String _type) {return false;}
 bool OfficeSheet::SaveAs(String fileName, String _type) {return (static_cast<SheetPlugin *>(GetData()))->SaveAs(fileName, _type);}

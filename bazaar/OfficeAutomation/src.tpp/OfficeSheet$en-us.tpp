@@ -354,20 +354,32 @@ ixFillSelection]()&]
 [s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
 [s3; &]
 [s4; &]
-[s5;:OfficeSheet`:`:MatrixFill`(int`,int`,Upp`:`:Vector`<Upp`:`:Vector`<Upp`:`:Value`>`>`&`): [@(0.0.255) b
-ool]_[* MatrixFill]([@(0.0.255) int]_[*@3 fromX], [@(0.0.255) int]_[*@3 fromY], 
+[s5;:OfficeSheet`:`:MatrixSet`(int`,int`,Upp`:`:Vector`<Upp`:`:Vector`<Upp`:`:Value`>`>`&`): [@(0.0.255) b
+ool]_[* MatrixSet]([@(0.0.255) int]_[*@3 fromX], [@(0.0.255) int]_[*@3 fromY], 
 [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>_>_`&[*@3 dat
 a])&]
 [s2;%% Fills with [%-*@3 data] matrix from top left vertex [%-*@3 fromX,] 
 [%-*@3 fromY]. Origin is (1, 1).&]
 [s2; [%% This operation is much faster than using ][* SetValue().]&]
-[s0;l288;%% [*@(28.42.255)1 It is not implemented in Open/LibreOffice.]&]
+[s0;l288;%% [*@(28.42.255)1 Open/LibreOffice version retrieves data 
+cell by cell.]&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:MatrixSetValue`(int`,int`,`:`:Value`): [@(0.0.255) virtual] 
 [@(0.0.255) bool]_[* MatrixSetValue]([@(0.0.255) int]_[*@3 x], [@(0.0.255) int]_[*@3 y], 
 `::Value_[*@3 value])&]
 [s2;%% Sets cell [%-*@3 x], [%-*@3 y] with value [%-*@3 value].&]
+[s3;%% &]
+[s4; &]
+[s5;:OfficeSheet`:`:MatrixGet`(int`,int`,int`,int`,Upp`:`:Vector`<Upp`:`:Vector`<Upp`:`:Value`>`>`&`): [@(0.0.255) b
+ool]_[* MatrixGet]([@(0.0.255) int]_[*@3 fromX], [@(0.0.255) int]_[*@3 fromY], 
+[@(0.0.255) int]_[*@3 width], [@(0.0.255) int]_[*@3 height], [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Vector^ V
+ector]<[_^Upp`:`:Value^ Value]>_>_`&[*@3 data])&]
+[s2;%% Retrieves [%-*@3 data]  from top left vertex [%-*@3 fromX], [%-*@3 fromY] 
+with range [%-*@3 width], [%-*@3 height].&]
+[s2; [%% This operation is much faster than using ][* GetValue().]&]
+[s0;l288;%% [*@(28.42.255)1 Open/LibreOffice version retrieves data 
+cell by cell.]&]
 [s3;%% &]
 [s4; &]
 [s5;:OfficeSheet`:`:Select`(`): [@(0.0.255) bool]_[* Select]()&]

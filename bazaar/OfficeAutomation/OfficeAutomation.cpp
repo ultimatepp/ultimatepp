@@ -126,6 +126,34 @@ bool VariantOle::ArraySetVariant(int x, int y, VariantOle &value) {
 	return S_OK == SafeArrayPutElement(var.parray, indices, (void *)&value);
 }
 
+bool VariantOle::ArrayGetValue(int x, ::Value &value) {
+	VariantOle tmp;
+	long indices[] = {x};
+	if (S_OK != SafeArrayGetElement(var.parray, indices, (void *)&tmp))
+		return false;
+	value = GetVARIANT(tmp.var);
+	return true;
+}
+
+bool VariantOle::ArrayGetVariant(int x, VariantOle &value) {
+	long indices[] = {x};
+	return S_OK == SafeArrayGetElement(var.parray, indices, (void *)&value);
+}
+
+bool VariantOle::ArrayGetValue(int x, int y, ::Value &value) {
+	VariantOle tmp;
+	long indices[] = {y, x};
+	if (S_OK != SafeArrayGetElement(var.parray, indices, (void *)&tmp))
+		return false;
+	value = GetVARIANT(tmp.var);
+	return true;
+}
+	
+bool VariantOle::ArrayGetVariant(int x, int y, VariantOle &value) {
+	long indices[] = {y, x};
+	return S_OK == SafeArrayGetElement(var.parray, indices, (void *)&value);
+}
+
 void VariantOle::Value(::Value value) {
 	if(value.Is<bool>()) {
 		bool v = value;
@@ -136,9 +164,6 @@ void VariantOle::Value(::Value value) {
 	} else if(value.Is<int64>()) {
 		int64 v = value;
 		Int4((long)v);
-	//} else if(value.Is<float>()) {
-	//	float v = value;
-	//	Real4(v);
 	}  else if(value.Is<double>()) {
 		double v = value;
 		Real8(v);
@@ -154,6 +179,8 @@ void VariantOle::Value(::Value value) {
 	}        
 }
 
+	
+	
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -562,7 +589,7 @@ bool MSSheet::MatrixSetValue(int x, int y, ::Value value) {
 	return Matrix.ArraySetValue(x, y, value);
 }
 
-bool MSSheet::MatrixFillSelection() {
+bool MSSheet::MatrixSetSelection() {
 	if (!Range)
 		return false;
 
@@ -571,7 +598,7 @@ bool MSSheet::MatrixFillSelection() {
 	return ret;
 }
 
-bool MSSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {
+bool MSSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {
 	if (data.IsEmpty())
 		return false;
 	int height = data.GetCount();
@@ -584,7 +611,31 @@ bool MSSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {
 		for (int row = 0; row < height; ++row)
 			for (int col = 0; col < width; ++col)
 				if (!MatrixSetValue(col + 1, row + 1, data[row][col]))  throw;
-		if (!MatrixFillSelection()) throw;
+		if (!MatrixSetSelection()) throw;
+	} catch (...) {
+		MatrixDelete();
+		return false;
+	}
+	return MatrixDelete();
+}
+
+bool MSSheet::MatrixGetValue(int x, int y, ::Value &value) {
+	return Matrix.ArrayGetValue(x, y, value);
+}
+
+bool MSSheet::MatrixGet(int fromX, int fromY, int width, int height, Vector<Vector<Value> > &data) {
+	data.SetCount(height);
+	for (int i = 0; i < height; i++)
+		data[i].SetCount(width);
+	int toX = fromX + width - 1;	
+	int toY = fromY + height - 1;
+	if (!Select(fromX, fromY, toX, toY)) return false;
+	if (!MatrixAllocate(width, height)) return false;
+	try {
+		for (int row = 0; row < height; ++row)
+			for (int col = 0; col < width; ++col)
+				if (!MatrixGetValue(col + 1, row + 1, data[row][col]))  throw;
+		if (!MatrixSetSelection()) throw;
 	} catch (...) {
 		MatrixDelete();
 		return false;
@@ -1814,11 +1865,15 @@ bool OPENSheet::MatrixSetValue(int x, int y, ::Value value) {
 	return false;
 }
 
-bool OPENSheet::MatrixFillSelection() {
+bool OPENSheet::MatrixGetValue(int x, int y, ::Value &value) {
 	return false;
 }
 
-bool OPENSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {
+bool OPENSheet::MatrixSetSelection() {
+	return false;
+}
+
+bool OPENSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {
 	if (data.IsEmpty())
 		return false;
 	int height = data.GetCount();
@@ -1826,6 +1881,16 @@ bool OPENSheet::MatrixFill(int fromX, int fromY, Vector<Vector<Value> > &data) {
 	for (int row = 0; row < height; ++row)
 		for (int col = 0; col < width; ++col)
 			SetValue(col + fromX, row + fromY, data[row][col]);	
+	return true;
+}
+
+bool OPENSheet::MatrixGet(int fromX, int fromY, int width, int height, Vector<Vector<Value> > &data) {
+	data.SetCount(height);
+	for (int i = 0; i < height; i++)
+		data[i].SetCount(width);
+	for (int row = 0; row < height; ++row)
+		for (int col = 0; col < width; ++col)
+			data[row][col] = GetValue(col + fromX, row + fromY);	
 	return true;
 }
 
