@@ -53,7 +53,13 @@ void TestSheetDetail(OfficeSheet &sheet)
 	else
 		Puts("Tab 'My new tab' NOT removed");
 	Puts("Press enter to continue...");	getchar();
-	
+
+	if(sheet.ChooseTab(0))
+		Puts("Tab 0 chosen");
+	else
+		Puts("Tab 0 NOT chosen");
+	Puts("Press enter to continue...");	getchar();
+		
 	Puts("Changing col width and row height");  
 	sheet.SetRowHeight(4, 30);
 	sheet.SetColWidth(3, 30);
@@ -75,19 +81,21 @@ void TestSheetDetail(OfficeSheet &sheet)
 	sheet.SetVertAlignment(4, 3, OfficeSheet::CENTER);
 	
 	Puts("Filling cells using SetValue");  
-	for (int y = 2; y <= 20; ++y)
+	for (int y = 2; y <= 10; ++y)
 		for (int x = 1; x <= 20; ++x)
 			sheet.SetValue(x, y, x*y);	 
 
-/*				
+			
 	Puts("Filling cells MUCH faster using Range functions");  
-	sheet.Select("A21:GR2020");
-	sheet.DefMatrix(200, 2000);
-	for (int x = 1; x <= 200; ++x)
-		for (int y = 1; y <= 2000; ++y)
-			sheet.SetMatrixValue(x, y, x*y);	
-	sheet.FillSelectionMatrix();		// Fill selected range with matrix values
-*/
+	
+	Vector<Vector<Value> > data;
+	for (int y = 0; y < 300; ++y) {
+		data.Add();
+		for (int x = 0; x < 200; ++x) 
+			data[y].Add(x*y);
+	}
+	sheet.MatrixFill(1, 11, data);
+		
 	sheet.SetValue(2, 2, "=A7*B5");
 	sheet.SetValue(3, 21, "Hello");				Puts("Cell(3, 21) = " + sheet.GetValue(3, 21).ToString());
 	sheet.SetValue("BD25", 23242.343);			Puts("Cell(BD25) = " + sheet.GetValue("BD25").ToString());
