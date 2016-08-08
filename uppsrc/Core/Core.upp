@@ -161,7 +161,6 @@ file
 	Topic.cpp,
 	CoWork.h,
 	CoWork.cpp,
-	CoWork2.cpp,
 	Hash.h,
 	MD5.cpp,
 	SHA1.cpp,

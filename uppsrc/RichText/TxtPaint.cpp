@@ -120,9 +120,8 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 				rc.Page();
 		}
 		else {
-			rc.py.y += pp.before;
 			begin = rc;
-			rc.py.y += pp.cy + pp.after + pp.ruler;
+			rc.py.y += pp.before + pp.cy + pp.after + pp.ruler;
 		}
 	}
 }

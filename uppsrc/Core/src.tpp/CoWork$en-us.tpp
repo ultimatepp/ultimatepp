@@ -25,15 +25,38 @@ constructor called in master thread). No more thread are created
 or destroyed during normal work. Nesting of CoWork instances 
 is also possible. Thread pool is normally terminated when master 
 thread finishes.&]
-[s3;%% &]
+[s9;%% No synchronization is required to access CoWork instances 
+from various threads (CoWork is internally synchronized).&]
+[s9;%% [*/ Implementation notes: ]Current implementation has single 
+global FIFO stack for 2048 scheduled jobs. When there is no slot 
+available when scheduling the job, it is performed immediately 
+by Do. Finish method has to wait until all jobs scheduled by 
+CoWork.instance are finished, while waiting it attempts to perform 
+scheduled jobs from the same instance. That way work always progresses 
+even if there is shortage of worker threads.&]
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Upp`:`:CoWork`:`:Start`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) static] 
-[@(0.0.255) void]_[* Start]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn
-])&]
-[s2;%% This is a low`-level function that schedules [%-*@3 fn] to be 
-executed by worker thread.&]
+[s5;:Upp`:`:CoWork`:`:TrySchedule`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) stati
+c bool]_[* TrySchedule]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])
+&]
+[s5;:Upp`:`:CoWork`:`:TrySchedule`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) s
+tatic] [@(0.0.255) bool]_[* TrySchedule]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<
+[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s2;%% This is a low`-level function that attempts to schedule [%-*@3 fn] 
+to be executed by worker thread. Returns true if [%-*@3 fn] was 
+scheduled, false if not (in case there is no slot left in scheduling 
+stacks). Not that this function only schedules the function, 
+the exact time of execution is unknown.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:Schedule`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) static 
+void]_[* Schedule]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:Schedule`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) stat
+ic] [@(0.0.255) void]_[* Schedule]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
+oid]_()>`&_[*@3 fn])&]
+[s2;%% Similar to TrySchedule, but always schedules [%-*@3 fn] `- even 
+if it has to wait for slot to become available.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:Do`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* Do]([_^Upp`:`:Function^ F
@@ -49,7 +72,8 @@ oWork][@(0.0.255) `&]_[* operator`&]([_^Upp`:`:Function^ Function]<[@(0.0.255) v
 [s2;%% Schedules [%-*@3 fn] to be executed. All changes to data done 
 before Do are visible in the scheduled code. The order of execution 
 or whether the code is execute in another or calling thread is 
-not specified.&]
+not specified. In certain situations (no scheduling slot available), 
+Do can perform scheduled job immediately.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:FinLock`(`): [@(0.0.255) static] [@(0.0.255) void]_[* FinLock]()&]
@@ -64,7 +88,8 @@ as with all locks, execution of locked code should be short.&]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
 [s2;%% Waits until all jobs scheduled using Do (or operator`&) are 
 finished. All changes to data performed by scheduled threads 
-are visible after Finish.&]
+are visible after Finish. While waiting, Finish can perform scheduled 
+jobs.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:IsFinished`(`): [@(0.0.255) bool]_[* IsFinished]()&]
@@ -79,20 +104,11 @@ non`-blocking variant of Finish).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:IsWorker`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsWorker]()&]
-[s2;%% Returns true if current thread is worker thread.&]
+[s2;%% Returns true if current thread is CoWork worker thread.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:CoWork`:`:StartPool`(int`): [@(0.0.255) static] [@(0.0.255) void]_[* StartPool](
-[@(0.0.255) int]_[*@3 n])&]
-[s2;%% Starts the thread pool for current master thread. Note that 
-this also happens automatically on first CoWork use, however 
-StartPool can be used to setup different number of worker thread 
-than default (which is CPU`_Cores() `+ 2).&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:CoWork`:`:ShutdownPool`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownPo
-ol]()&]
-[s2;%% Waits for all jobs to finish and then releases the thread 
-pool.&]
-[s3; &]
+[s5;:Upp`:`:CoWork`:`:SetPoolSize`(int`): [@(0.0.255) static void]_[* SetPoolSize]([@(0.0.255) i
+nt]_[*@3 n])&]
+[s2;%% Adjusts the thread pool size (default pool size is CPU`_Cores() 
+`+ 2).&]
 [s0; ]]

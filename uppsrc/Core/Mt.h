@@ -49,7 +49,7 @@ class Thread : NoCopy {
 	pthread_t  handle;
 #endif
 public:
-	bool       Run(Function<void ()> cb);
+	bool       Run(Function<void ()> cb, bool noshutdown = false);
 
 	void       Detach();
 	int        Wait();
@@ -73,7 +73,7 @@ public:
 	
 	bool        Priority(int percent); // 0 = lowest, 100 = normal
 
-	static void Start(Function<void ()> cb);
+	static void Start(Function<void ()> cb, bool noshutdown = false);
 
 	static void Sleep(int ms);
 

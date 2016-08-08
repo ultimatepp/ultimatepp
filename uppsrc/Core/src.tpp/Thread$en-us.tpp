@@ -20,7 +20,7 @@ topic "Thread";
 [s3; &]
 [s5;:Thread`:`:Thread`(`): [* Thread]()&]
 [s2;%% Default constructor.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:Thread`:`:`~Thread`(`): [@(0.0.255) `~][* Thread]()&]
 [s2;%% Destructor. Performs Detach `- thread continues running.&]
@@ -28,9 +28,22 @@ topic "Thread";
 [s0;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
-[s5;:Thread`:`:Run`(Callback`): [@(0.0.255) bool]_[* Run]([_^Callback^ Callback]_[*@3 cb])&]
-[s2;%% Starts a new thread.&]
-[s3; &]
+[s5;:Upp`:`:Thread`:`:Run`(Upp`:`:Function`<void`(`)`>`,bool`): [@(0.0.255) bool]_[* Run](
+[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], [@(0.0.255) bool]_[*@3 noshut
+down]_`=_[@(0.0.255) false])&]
+[s2;%% Starts a new thread. If [%-*@3 noshutdown] is true, started 
+thread is not meant to be aware of Shutdown system `- basically 
+it means that it does not affect thread counter.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Thread`:`:Start`(Upp`:`:Function`<void`(`)`>`,bool`): [@(0.0.255) static] 
+[@(0.0.255) void]_[* Start]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>_[*@3 cb], 
+[@(0.0.255) bool]_[*@3 noshutdown]_`=_[@(0.0.255) false])&]
+[s2;%% Starts a thread and returns immediately (you cannot Wait for 
+the thread to finish in this case). If [%-*@3 noshutdown] is true, 
+started thread is not meant to be aware of Shutdown system `- 
+basically it means that it does not affect thread counter.&]
+[s3;%% &]
 [s4; &]
 [s5;:Thread`:`:Detach`(`): [@(0.0.255) void]_[* Detach]()&]
 [s2;%% Detaches running thread from the Thread object. It means that 
@@ -55,12 +68,6 @@ in that case returns immediately).&]
 [s2;%% Returns platform specific handle of thread.&]
 [s3; &]
 [s4; &]
-[s5;:Thread`:`:Start`(Callback`): [@(0.0.255) static] [@(0.0.255) void]_[* Start]([_^Callback^ C
-allback]_[*@3 cb])&]
-[s2;%% Starts a thread and returns immediately (you cannot Wait for 
-the thread to finish in this case).&]
-[s3; &]
-[s4; &]
 [s5;:Thread`:`:Sleep`(int`): [@(0.0.255) static] [@(0.0.255) void]_[* Sleep]([@(0.0.255) int]_
 [*@3 ms])&]
 [s2;%% Sleep for a given number of milliseconds.&]
@@ -81,16 +88,17 @@ is running so far).&]
 [s4; &]
 [s5;:Thread`:`:ShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownThread
 s]()&]
-[s2;%% Sets the `"Shutdown`" flag on, waits before all threads terminate, 
-then sets flag off again. It is meant to be used together with 
-IsShutdownThreads to terminate long running secondary service 
-threads. Main thread calls ShutdownThreads, secondary threads 
-test IsShutdownThreads and if true, exit.&]
+[s2;%% Sets the `"Shutdown`" flag on, waits before all threads started 
+without noshutdown true terminate, then sets flag off again. 
+It is meant to be used together with IsShutdownThreads to terminate 
+long running secondary service threads. Main thread calls ShutdownThreads, 
+secondary threads test IsShutdownThreads and if true, exit.&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:IsShutdownThreads`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsShutdownTh
 reads]()&]
-[s2;%% True if ShutdownThreads is active.&]
+[s2;%% True if ShutdownThreads is active. This is supposed to be 
+tested by threads participating in shutdown system.&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:AtExit: [@(0.0.255) static]_[@(0.0.255) void]_(`*[* AtExit]([@(0.0.255) void]_
@@ -107,5 +115,4 @@ value is not null)&]
 reality, current implementation supports only 5 levels, 25%, 
 75%, 125%, 175% and more than 175%; last two levels require root 
 privileges. Returns true if setting the priority was successful.&]
-[s3;%% &]
 [s0; ]]
