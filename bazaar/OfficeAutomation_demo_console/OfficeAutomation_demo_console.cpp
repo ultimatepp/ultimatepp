@@ -94,7 +94,11 @@ void TestSheetDetail(OfficeSheet &sheet)
 		for (int x = 0; x < 200; ++x) 
 			data[y].Add(x*y);
 	}
-	sheet.MatrixFill(1, 11, data);
+	sheet.MatrixSet(1, 11, data);
+	
+	data.Clear();
+	sheet.MatrixGet(1, 11, 10, 10, data);
+	Puts(Format("Retrieved data from cell 5, 16: %s", AsString(data[5][5])));
 		
 	sheet.SetValue(2, 2, "=A7*B5");
 	sheet.SetValue(3, 21, "Hello");				Puts("Cell(3, 21) = " + sheet.GetValue(3, 21).ToString());
