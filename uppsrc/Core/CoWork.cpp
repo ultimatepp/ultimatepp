@@ -28,7 +28,7 @@ void CoWork::Pool::InitThreads(int nthreads)
 {
 	LLOG("Pool::InitThreads: " << nthreads);
 	for(int i = 0; i < nthreads; i++)
-		threads.Add().Run([=] { is_worker = true; ThreadRun(i); }, true);
+		CHECK(threads.Add().Run([=] { is_worker = true; ThreadRun(i); }, true));
 }
 
 void CoWork::Pool::ExitThreads()
@@ -36,8 +36,8 @@ void CoWork::Pool::ExitThreads()
 	lock.Enter();
 	quit = true;
 	lock.Leave();
+	waitforjob.Broadcast();
 	for(int i = 0; i < threads.GetCount(); i++) {
-		waitforjob.Broadcast();
 		threads[i].Wait();
 	}
 	threads.Clear();
@@ -106,15 +106,15 @@ void CoWork::Pool::ThreadRun(int tno)
 	for(;;) {
 		while(!p.jobs.InList()) {
 			LHITCOUNT("CoWork: Parking thread to Wait");
+			if(p.quit) {
+				p.lock.Leave();
+				return;
+			}
 			p.waiting_threads++;
 			LLOG("#" << tno << " Waiting for job");
 			p.waitforjob.Wait(p.lock);
 			LLOG("#" << tno << " Waiting ended");
 			p.waiting_threads--;
-			if(p.quit) {
-				p.lock.Leave();
-				return;
-			}
 		}
 		LLOG("#" << tno << " Job acquired");
 		LHITCOUNT("CoWork: Running new job");

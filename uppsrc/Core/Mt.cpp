@@ -145,7 +145,11 @@ bool Thread::Run(Function<void ()> _cb, bool noshutdown)
 	p->cb = _cb;
 	p->noshutdown = noshutdown;
 #ifdef PLATFORM_WIN32
+#ifdef CPU_32 // in 32-bit, reduce stack size to 1MB to fit more threads into address space
+	handle = (HANDLE)_beginthreadex(0, 1024*1024, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
+#else
 	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
+#endif
 #endif
 #ifdef PLATFORM_POSIX
 	if(pthread_create(&handle, 0, sThreadRoutine, p))
