@@ -196,8 +196,12 @@ void MemoryDumpLeaks()
 			VppLog() << '\n' << b << ": ";
 			HexDump(VppLog(), p + 1, (int)(uintptr_t)p->size, 64);
 			if(++n > 16) {
-				if(p->next != &dbg_live)
-					VppLog() << "\n*** TOO MANY LEAKS TO LIST THEM ALL\n";
+				while(p->next != &dbg_live && n < 10000000) {
+					++n;
+					p = p->next;
+				}
+				sprintf(b, "%d", n);
+				VppLog() << "\n*** TOO MANY LEAKS (" << n << ") TO LIST THEM ALL\n";
 				break;
 			}
 		}
