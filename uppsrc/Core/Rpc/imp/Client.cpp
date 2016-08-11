@@ -124,9 +124,9 @@ RpcGet RpcRequest::Execute()
 	}
 	if(sLogRpcCalls) {
 		if(sLogRpcCallsCompress)
-			RLOG("XmlRpc call request:\n" << CompressLog(request));
+			RLOG("=== XmlRpc call request:\n" << CompressLog(request));
 		else
-			RLOG("XmlRpc call request:\n" << request);
+			RLOG("=== XmlRpc call request:\n" << request);
 	}
 	String response;
 	New();
@@ -136,9 +136,9 @@ RpcGet RpcRequest::Execute()
 		response = Post(request).Execute();
 	if(sLogRpcCalls) {
 		if(sLogRpcCallsCompress)
-			RLOG("XmlRpc call response:\n" << CompressLog(response));
+			RLOG("=== XmlRpc call response:\n" << CompressLog(response));
 		else
-			RLOG("XmlRpc call response:\n" << response);
+			RLOG("=== XmlRpc call response:\n" << response);
 	}
 	RpcGet h;
 	if(IsNull(response)) {
