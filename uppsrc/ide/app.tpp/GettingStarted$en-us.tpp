@@ -105,8 +105,8 @@ cin/cout/cerr will not be connected to anything. (so even if
 you start the program from the command line you will not see 
 any text`-output).]&]
 [s19; Press OK.&]
-[s5; Here is a need of small digression here. Several predefined 
-templates mention in the previous chapter have main package privileges 
+[s5; Here is a need of small digression. Several predefined templates 
+mention in the previous chapter have main package privileges 
 .by default. It means that there is not need to execute above 
 steps. Following templates fall under above definition: Basic 
 [*/ `"CtrlLib application`"], [*/ `"Core console project`"] and [*/ `"Skylark 
