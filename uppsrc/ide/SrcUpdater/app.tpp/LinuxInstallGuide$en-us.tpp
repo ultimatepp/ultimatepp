@@ -103,6 +103,7 @@ asks for confirmation) in the installation process, but if there
 are files with matching names (e.g. from older U`+`+ installation), 
 they will be overwritten.]}}&]
 [s5; &]
-[s5; Now, when you now how to set up everything, you can also have 
+[s3; Summary&]
+[s5; Now, when you know how to set up everything, you can also have 
 a look at article describing how does the [^topic`:`/`/ide`/SrcUpdater`/app`/Updating`$en`-us^ a
 utomatic updates of U`+`+ sources] work.]]
