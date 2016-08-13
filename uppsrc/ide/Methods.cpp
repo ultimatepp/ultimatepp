@@ -535,6 +535,8 @@ void BuildMethods::ChangeMethod()
 
 void BuildMethods::Load()
 {
+	method.Clear();
+	
 	FindFile ff(ConfigFile("*.bm"));
 	while(ff) {
 		VectorMap<String, String> map;
