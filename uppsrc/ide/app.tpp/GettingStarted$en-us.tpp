@@ -151,7 +151,7 @@ forward than creating file by insertion (old way).&]
 [s7; -|-|return 0;&]
 [s7; -|`}&]
 [s7; // `-`- example `-`-&]
-[s0; &]
+[s5; &]
 [s19; If you have configured your compiler previously (you probably 
 did, either the installer instructed you how to do it or it was 
 done automatically), you can start the program by clicking on 
@@ -160,7 +160,8 @@ execute
 (iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAACEElEQVQ4jaWSz0tUURTHP+e+MTCzsAQHUatJCI2gRWkkhRBFLYpWQbRw0ybaWAtdSC0CoSBCBP+AVuUqiBZt2kRFRbUIIqIg/EGtLEadeTP33XtOi+dUS6UDBy6Hy+d8vnDgP0vOjt6/cmz40O1fKS1mgCqmStSIqaGmWIyoGRYjUZXWJl/5+Glx/NHUhZnCwNDA9KbmFtfRvKHFLdWqTgMzhTSYS3+ublg9DeYAChaNyYu9GwZcujVHDjAFwIeIAaZGVFAMVSOqEoPlbYqPxu5iK1FjDsAMAHGCmGFOMDFEBecEEYdIRBIjUUch5P815ADXIDlARBAnJE5wiSAOEgdNScLk41NMPDyCJVkOiLm5M82JiPwBOcm3J4mQCDgH9eDpau9jdHYQH2poI0LjwZoBAGaMPRjGLOA14EOgs62XvuIgK7UKZ2ZKtNlUDghZ9sdAADNDRAjqObFvhGj5USnG9/IC+7uGWPUp79IRSuNsK9halgSwRhQzasETTZlb+kKmgaAZWcxYrq9woPsoq1mVV+nzpYKq/o2w1ohQCzVCDHRs7SFoJJryozzP9i1F3i+84PXXD1TrHJRzV2dni92d5zVGNCoxRlSV5fbL1LzHq6cWPHva+zlcOsnb+Zc8+/yGndVrT57evXF63ZfXf5PKyL3j1jPB4o4x9v5rva7adZ2KarK5XI+l8h2+Nea/AbjMJEcWh0TKAAAAAElFTkSuQmCC)
  icon localized on main tool bar or by pressing CTRL`+F5 &]
 [s19; After program launch, you can close it by typing any letter. 
-On the other hand, it can be ended by closing terminal window.&]
+On the other hand, it can be ended by simply closing terminal 
+window.&]
 [s19; Now you know how to use TheIDE to compile basic C`+`+ program. 
 Looking at the rest of documentation will give you better idea 
 how to unleash the full power of TheIDE and U`+`+. The best parts 
