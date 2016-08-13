@@ -24,25 +24,25 @@ topic "Getting started with TheIDE";
 [{_}%EN-US 
 [s2; Getting started with TheIDE&]
 [s3; 1. Launching TheIDE&]
-[s5; After installing U`+`+ find appropriate TheIDE executable file 
-and launch it. The file by default should be localized in installation 
-directory. However it can depends on operating system and the 
-way you installed U`+`+.&]
+[s5; After installing U`+`+ find the appropriate TheIDE executable 
+file and launch it. By default the file should be localized in 
+the installation directory. However, it can depends on the operating 
+system and the way you installed U`+`+.&]
 [s3; 2. Assemblies and Packages&]
 [s5; In this section we show how to create your own main package. 
 It can be treated as project, solution etc.&]
 [s21; 2.1 Selecting assembly&]
 [s5; After you launch TheIDE on the screen window should appear. 
-This window acts as hub. When you can select/create packages 
-and assemblies. You can back to this window on any time when 
-you working with TheIDE. Just select from main menu `"File`" 
+This window acts as a hub. When you can select/create packages 
+and assemblies. You can back to this window at any time when 
+you are working with TheIDE. Just select from main menu `"File`" 
 menu and select `"Set main package`" option.&]
 [s5; First of all, select assembly which is called `"MyApps`". It 
 exists by default and it is intended to store user application. 
-To select this assembly click on it`'s name once. If you want 
-to read more about assemblies see [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ t
-his reference page] for more details. In brief assembly is collection 
-of packages.&]
+To select this assembly click on its name once. If you want to 
+read more about assemblies see [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ t
+his reference page] for more details. In brief assembly is a 
+collection of packages.&]
 [s5; &]
 [s0;=l160; 
 @@rawimage:2948&2007
@@ -78,7 +78,7 @@ leave it on <empty> for now.&]
 [s19; Finally, press the `"Create`" button on the bottom of the window.&]
 [s0; &]
 [s3; 3. Configuring package&]
-[s5; At the beginning, let`'s assume that package you have created 
+[s5; At the beginning, let`'s assume that the package you have created 
 is main. Please note, that any package created or selected within 
 manager is by default main. To configure it, select `"Main package 
 configuration`" from the `"Project`" menu. Alternatively, you 
@@ -113,7 +113,7 @@ steps. Following templates fall under above definition: Basic
 web application`"].&]
 [s5; Not main package can be used as supportive module for your projects. 
 You can place their common functions and classes and share between 
-other packages. In this way packages delivered by U`+`+ works 
+other packages. In this way packages delivered by U`+`+ work 
 like Core and CtrlLib.&]
 [s5; &]
 [s21; 4. Creating new file&]
@@ -173,7 +173,7 @@ include`- and linker`- paths can be set in multiple places (for
 instance, in Project`->Package organizer, in Setup`->Build methods 
 and by clicking on the current build method in the main screen 
 (at the top, e.g. `"GCC Debug`").&]
-[s5; In the next part of this paragraph we look at all configuration 
+[s5; In the next part of this paragraph, we look at all configuration 
 options.&]
 [s21; 4.1.2 Package organizer&]
 [s5; Package organizer is localized at `"Project `-> Package organizer`".&]
