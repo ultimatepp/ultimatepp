@@ -2,7 +2,7 @@ topic "Getting started with TheIDE";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [b167;a42;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17;ph2 $$6,6#27521748481378242620020725143825:desc]
@@ -116,7 +116,7 @@ You can place their common functions and classes and share between
 other packages. In this way packages delivered by U`+`+ work 
 like Core and CtrlLib.&]
 [s5; &]
-[s21; 4. Creating new file&]
+[s3; 4. Creating new file&]
 [s5; You can now add files to you package, for this example, add 
 a new file `"main.cpp`" to the package. Below is the list of 
 steps that will guild you through the process:&]
@@ -142,19 +142,25 @@ forward than creating file by insertion (old way).&]
 [s7; // `-`- example `-`- -|&]
 [s7; -|#include <iostream>&]
 [s7; -|&]
-[s7; -|int main()`{&]
-[s7; -|&]
+[s7; -|int main()&]
+[s7; -|`{&]
 [s7; -|-|char dummy;&]
 [s7; -|-|std`::cerr << `"Hello, platform! `" << std`::endl;&]
 [s7; -|-|std`::cin >> dummy;&]
+[s7; -|-|&]
+[s7; -|-|return 0;&]
 [s7; -|`}&]
 [s7; // `-`- example `-`-&]
 [s0; &]
 [s19; If you have configured your compiler previously (you probably 
 did, either the installer instructed you how to do it or it was 
-done automatically), you can you press Ctrl`+F5 to compile and 
-start the program (typing any letter followed by enter will end 
-the program)&]
+done automatically), you can start the program by clicking on 
+execute 
+@@rawimage:100&100
+(iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAAAAAAAAAHqZRakAAACEElEQVQ4jaWSz0tUURTHP+e+MTCzsAQHUatJCI2gRWkkhRBFLYpWQbRw0ybaWAtdSC0CoSBCBP+AVuUqiBZt2kRFRbUIIqIg/EGtLEadeTP33XtOi+dUS6UDBy6Hy+d8vnDgP0vOjt6/cmz40O1fKS1mgCqmStSIqaGmWIyoGRYjUZXWJl/5+Glx/NHUhZnCwNDA9KbmFtfRvKHFLdWqTgMzhTSYS3+ublg9DeYAChaNyYu9GwZcujVHDjAFwIeIAaZGVFAMVSOqEoPlbYqPxu5iK1FjDsAMAHGCmGFOMDFEBecEEYdIRBIjUUch5P815ADXIDlARBAnJE5wiSAOEgdNScLk41NMPDyCJVkOiLm5M82JiPwBOcm3J4mQCDgH9eDpau9jdHYQH2poI0LjwZoBAGaMPRjGLOA14EOgs62XvuIgK7UKZ2ZKtNlUDghZ9sdAADNDRAjqObFvhGj5USnG9/IC+7uGWPUp79IRSuNsK9halgSwRhQzasETTZlb+kKmgaAZWcxYrq9woPsoq1mVV+nzpYKq/o2w1ohQCzVCDHRs7SFoJJryozzP9i1F3i+84PXXD1TrHJRzV2dni92d5zVGNCoxRlSV5fbL1LzHq6cWPHva+zlcOsnb+Zc8+/yGndVrT57evXF63ZfXf5PKyL3j1jPB4o4x9v5rva7adZ2KarK5XI+l8h2+Nea/AbjMJEcWh0TKAAAAAElFTkSuQmCC)
+ icon localized on main tool bar or by pressing CTRL`+F5 &]
+[s19; After program launch, you can close it by typing any letter. 
+On the other hand, it can be ended by closing terminal window.&]
 [s19; Now you know how to use TheIDE to compile basic C`+`+ program. 
 Looking at the rest of documentation will give you better idea 
 how to unleash the full power of TheIDE and U`+`+. The best parts 
@@ -165,8 +171,9 @@ in TheIDE: [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+], [^topic`:`/`/ide`
 opic`+`+], [^topic`:`/`/ide`/app`/Blitz`$en`-us^ Blitz] or even 
 one of the tutorials linked from Manual section, if you want 
 to learn more about how to use U`+`+.&]
-[s3; 4. Explanations about TheIDE&]
-[s21; 4.1.1 What is stored where?&]
+[s5; &]
+[s3; 5. Explanations about TheIDE&]
+[s21; 5.1.1 What is stored where?&]
 [s5; When you use TheIDE for the first time, it can be confusing 
 to see that settings like static/shared building, execute`-, 
 include`- and linker`- paths can be set in multiple places (for 
@@ -175,7 +182,7 @@ and by clicking on the current build method in the main screen
 (at the top, e.g. `"GCC Debug`").&]
 [s5; In the next part of this paragraph, we look at all configuration 
 options.&]
-[s21; 4.1.2 Package organizer&]
+[s21; 5.1.2 Package organizer&]
 [s5; Package organizer is localized at `"Project `-> Package organizer`".&]
 [s5; &]
 [s0;= 
@@ -223,7 +230,7 @@ files]]
 :: [s0; `-nologo]
 :: [s0; [/ some extra linker options when compiler is VC`+`+.]]}}&]
 [s5; &]
-[s21; 4.1.3 Build methods&]
+[s21; 5.1.3 Build methods&]
 [s5; Build methods are localized at `"Setup`-> Build methods`".&]
 [s5; &]
 [s0;= 
@@ -254,7 +261,7 @@ current build method in the main screen (top of the screen e.g.
 the build method, the right one sets the current build mode (debug, 
 optimal, size and speed), the left one chooses build method.&]
 [s5; &]
-[s21; 4.1.4 Output mode&]
+[s21; 5.1.4 Output mode&]
 [s5; You will need to click on build method name on main TheIDE tool 
 bar. It is shown on above image with `"MSC9 Debug`" method.&]
 [s5; &]
