@@ -603,8 +603,7 @@ void Ide::CopyError(bool all)
 	String txt;
 	int h = all ? error.GetCount() : error.GetCursor() + 1;
 	for(int i = all ? 0 : c; i < h; i++)
-		txt << error.Get(i, 0) << " (" << error.Get(i, 1) << "): "
-		    << error.Get(i, 2).To<AttrText>().ToString() << "\r\n";
+		txt << error.Get(i, 0) << " (" << error.Get(i, 1) << "): " << error.Get(i, 2) << "\r\n";
 	WriteClipboardText(txt);
 }
 
