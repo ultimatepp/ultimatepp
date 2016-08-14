@@ -61,9 +61,9 @@ for further programmers.&]
 ebsite]. If you are beginner, we highly recommended to download 
 stable releases. It is mostly safer and more polished that nightly 
 builds.&]
-[s5; Sounds interesting? You can move to site where we explain step 
-by step how to create the easiest program in C/C`+`+ with TheIDE 
-(Work in progress). Good luck!&]
+[s5; Sounds interesting? You can move to [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ s
+ite] where we explain step by step how to create the easiest 
+program in C/C`+`+ with TheIDE. Good luck!&]
 [s3; University students&]
 [s5; If you are a computer science student or you study similar direction 
 that`'s looking for gaining experience in open source word. You 
