@@ -61,6 +61,8 @@ designed for developing large C`+`+ applications.&]
 Tutorial]&]
 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ TheIDE 
 basics]&]
+[s4;i150;O0;%% [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Skylark 
+Tutorial (Web framework)]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/comparison`$en`-us^ Comparisons]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/overview`$en`-us^ Overview]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/tutoring`$en`-us^ Tutoring 
