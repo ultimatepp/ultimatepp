@@ -32,7 +32,7 @@ String bazaar;
 bool outPdf;
 bool outHtml;
 bool doSvn;
-
+Exclamation()
 String GetRcFile(const char *s)
 {
 	String f = GetDataFile(s);
