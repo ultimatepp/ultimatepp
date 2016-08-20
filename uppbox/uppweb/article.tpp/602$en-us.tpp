@@ -29,4 +29,4 @@ languages while preserving C/C`+`+ runtime characteristics. Major
 new features of 602 release: new Report package, C`+`+ refactoring 
 and assistance (Assist`+`+) optimized and extended, project organization 
 and building improved.&]
-[s0; ]
+[s0; ]]
