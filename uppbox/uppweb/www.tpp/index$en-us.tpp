@@ -61,7 +61,7 @@ designed for developing large C`+`+ applications.&]
 Tutorial]&]
 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ TheIDE 
 basics]&]
-[s4;i150;O0;%% [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Skylark 
+[s4;i150;O0;%% [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark 
 Tutorial (Web framework)]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/comparison`$en`-us^ Comparisons]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/overview`$en`-us^ Overview]&]
@@ -74,7 +74,9 @@ Plan]]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ Video 
 Tutorials]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^ Supported 
-platforms]]
+platforms]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/UppTechnologies`$en`-us^ U`+`+ 
+Technologies]]
 ::=r0/25t0/15b0/15R0-1 [s0; ]
 :: [s0; ]
 ::^l8/25r8/0t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/apps`$en`-us^ Applications]&]
