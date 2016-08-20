@@ -38,8 +38,7 @@ sources. So, this is definitely a good moment to correct several
 things.&]
 [s5; If you are just starting your journey with U`+`+, this place 
 is for certain what you are looking for, It can helps you better 
-understanding the architecture of U`+`+. And thus efficiently 
-move around in it.&]
+understanding the architecture of U`+`+.&]
 [s3; 2. Organization&]
 [s5; Below diagram presents the most important technologies belonging 
 to the U`+`+ framework.&]
@@ -51,6 +50,42 @@ to the U`+`+ framework.&]
 [s0; &]
 [s3; 3. Components responsibilities&]
 [s22; 3.1 Development tools&]
-[s5; (TODO)&]
+[s5; To work efficiency with U`+`+, you need to use it`'s development 
+tools which include:&]
+[s5;l160;i150;O0; [* TheIDE] `- Integrated development environment 
+general purpose. It is mainly used by C`+`+ developers and U`+`+ 
+users. But, it can be easily used to develop application in other 
+languages such Java, Python etc.. It can acts as text editor 
+as well.&]
+[s5;l160;i150;O0; [*^topic`:`/`/ide`/app`/umk`$en`-us^ UMK] (UltimateMaKE) 
+`- console utility that allows building TheIDE project standalone. 
+It can be used to work with U`+`+ project for other IDEs or even 
+creating your own project using only terminal. However, TheIDE 
+can be required to create icons set or layouts.&]
 [s22; 3.2 U`+`+ framework&]
-[s5; (TODO)]]
+[s5; U`+`+ framework should be understand by collection of C`+`+ 
+supportive libraries. In this case we can distinguished four 
+main areas. They will be discussed in the next parts of this 
+paragraph.&]
+[s22; 3.2.1 Core libraries&]
+[s5; &]
+[s22; 3.2.2 GUI libraries&]
+[s5; &]
+[s22; 3.2.3 Data base libraries&]
+[s5; &]
+[s22; 3.2.4 Web development&]
+[s5; U`+`+ allows to create web application that works directly in 
+your web browser. Currently, we support two following technologies&]
+[s5;l160;i150;O0; [* Skylark] `- web development framework dedicated 
+C`+`+ language. It mainly based on U`+`+ core libraries such 
+as Core. It allows to create web application that based on page 
+generation concept. It means that it can handle all HTML requests 
+and programmer write code that generates HTML page. &]
+[s5;l320;~~~192; Skylark works with all databases engines that are 
+supported by U`+`+.&]
+[s5;l320; More information about this technology can be found in 
+our official Skylark [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ tutorial].&]
+[s5;l160;i150;O0; [* Turtle] `- tiny JavaScript and HTML5 client that 
+allows to run GUI application directly in the browse. Example 
+of usage of that technology can be found on this [^topic`:`/`/uppweb`/reference`/WebWord`$en`-us^ s
+ite].]]
