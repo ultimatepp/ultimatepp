@@ -26,6 +26,10 @@ TOPIC("LearnCpp$en-us")
 #include "LearnCpp$en-us.tppi"
 END_TOPIC
 
+TOPIC("LearnCppFirstApp$en-us")
+#include "LearnCppFirstApp$en-us.tppi"
+END_TOPIC
+
 TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC
@@ -40,6 +44,10 @@ END_TOPIC
 
 TOPIC("apps$de-de")
 #include "apps$de-de.tppi"
+END_TOPIC
+
+TOPIC("apps$en-us")
+#include "apps$en-us.tppi"
 END_TOPIC
 
 TOPIC("bazaar$de-de")
@@ -78,6 +86,10 @@ TOPIC("chss$de-de")
 #include "chss$de-de.tppi"
 END_TOPIC
 
+TOPIC("chss$en-us")
+#include "chss$en-us.tppi"
+END_TOPIC
+
 TOPIC("codestyle$en-us")
 #include "codestyle$en-us.tppi"
 END_TOPIC
@@ -96,6 +108,10 @@ END_TOPIC
 
 TOPIC("cookie$en-us")
 #include "cookie$en-us.tppi"
+END_TOPIC
+
+TOPIC("currenttopics$en-us")
+#include "currenttopics$en-us.tppi"
 END_TOPIC
 
 TOPIC("devmovie$en-us")
@@ -136,6 +152,10 @@ END_TOPIC
 
 TOPIC("extlinks$en-us")
 #include "extlinks$en-us.tppi"
+END_TOPIC
+
+TOPIC("helpus$en-us")
+#include "helpus$en-us.tppi"
 END_TOPIC
 
 TOPIC("idess$cs-cz")
@@ -214,6 +234,10 @@ TOPIC("overview$de-de")
 #include "overview$de-de.tppi"
 END_TOPIC
 
+TOPIC("overview$en-us")
+#include "overview$en-us.tppi"
+END_TOPIC
+
 TOPIC("reference$en-us")
 #include "reference$en-us.tppi"
 END_TOPIC
@@ -224,6 +248,10 @@ END_TOPIC
 
 TOPIC("ss$en-us")
 #include "ss$en-us.tppi"
+END_TOPIC
+
+TOPIC("svnInstall$en-us")
+#include "svnInstall$en-us.tppi"
 END_TOPIC
 
 TOPIC("ubuntuinstall$en-us")
