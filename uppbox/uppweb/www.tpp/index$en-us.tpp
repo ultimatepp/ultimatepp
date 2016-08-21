@@ -57,12 +57,12 @@ designed for developing large C`+`+ applications.&]
 ::r0/25t0/15b0/15@2R0-2 [s0; ]
 ::-1 [s0; ]
 :: [s0; ]
-::l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
-Tutorial]&]
-[s4;i150;O0;%% [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ TheIDE 
+::l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ TheIDE 
 basics]&]
+[s4;i150;O0;%% [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
+Tutorial]&]
 [s4;i150;O0;%% [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark 
-Tutorial (Web framework)]&]
+Tutorial]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/comparison`$en`-us^ Comparisons]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/overview`$en`-us^ Overview]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/tutoring`$en`-us^ Tutoring 

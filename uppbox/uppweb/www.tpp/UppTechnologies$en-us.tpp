@@ -21,7 +21,7 @@ topic "Tutorial";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
-[b83;* $$22,22#21983EF981F3F559AF4A1AB7092BBE6E:subtitle]
+[b83;*2 $$22,22#21983EF981F3F559AF4A1AB7092BBE6E:subtitle]
 [{_}%EN-US 
 [s2; U`+`+ Technologies&]
 [s3; 1. Introduction&]
@@ -40,8 +40,8 @@ things.&]
 is for certain what you are looking for, It can helps you better 
 understanding the architecture of U`+`+.&]
 [s3; 2. Organization&]
-[s5; Below diagram presents the most important technologies belonging 
-to the U`+`+ framework.&]
+[s5; Below diagram presents the most important technologies that 
+belongs to the U`+`+ framework.&]
 [s0; &]
 [s0;= 
 @@rawimage:3759&2412
@@ -57,7 +57,7 @@ general purpose. It is mainly used by C`+`+ developers and U`+`+
 users. But, it can be easily used to develop application in other 
 languages such Java, Python etc.. It can acts as text editor 
 as well.&]
-[s5;l160;i150;O0; [*^topic`:`/`/ide`/app`/umk`$en`-us^ UMK] (UltimateMaKE) 
+[s5;l160;i150;O0; [*^topic`:`/`/ide`/app`/umk`$en`-us^ UMK] (UltimateMaKe) 
 `- console utility that allows building TheIDE project standalone. 
 It can be used to work with U`+`+ project for other IDEs or even 
 creating your own project using only terminal. However, TheIDE 
@@ -68,11 +68,23 @@ supportive libraries. In this case we can distinguished four
 main areas. They will be discussed in the next parts of this 
 paragraph.&]
 [s22; 3.2.1 Core libraries&]
-[s5; &]
+[s5; Core libraries provide low level abstraction.&]
+[s5;l160;i150;O0; [* Core] `- the heart of the U`+`+ framework.&]
+[s5;l160;i150;O0; [* Plugins] `-&]
+[s5;l160;i150;O0; [* Esc] `- scripting language.&]
 [s22; 3.2.2 GUI libraries&]
-[s5; &]
+[s5; All GUI related code is stored here.&]
+[s5;l160;i150;O0; [* CtrlCore] `- low level related code that wraps 
+platform specific code. Thanks to that package it is possible 
+to write UI code on [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^ all 
+platforms supported] by U`+`+ without any modification in user 
+code.&]
 [s22; 3.2.3 Data base libraries&]
-[s5; &]
+[s5; One of the main goals of U`+`+ library was to deliver easy to 
+use access to the databases. In this area we can distinguish 
+following components:&]
+[s5;l160;i150;O0; [* SQL] `- provides abstract layer that generalize 
+access to database.&]
 [s22; 3.2.4 Web development&]
 [s5; U`+`+ allows to create web application that works directly in 
 your web browser. Currently, we support two following technologies&]
