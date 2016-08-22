@@ -76,7 +76,7 @@ String FindGlobalSrc(){
 	static const char* dirs[]={"/usr/share/upp","/usr/local/share/upp","/usr/local/lib/upp","/usr/lib/upp"};
 	int n=4;
 #else
-	static const char* dirs[]={}; // Program Files?
+	static const char* dirs[]={"C:\\upp"}; // Program Files?
 	int n=0;
 #endif
 	for(int i=0;i<n;i++){
@@ -127,8 +127,8 @@ bool SourceUpdater::NeedsUpdate(bool verbose){
 		default: return false;
 	}
 	LLOG("NeedsUpdate: local="<<local<<", global="<<global);
-	
-	
+
+
 	if(ScanInt(global)<=UpdaterCfg().ignored || global.IsVoid() || local.IsVoid())
 		return false;
 	text<<="[ [ [/ Newer version of U`+`+ sources is available.]&][ &]"

@@ -30,14 +30,18 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	h << "Version " << IDE_VERSION;
 #endif
 	if(sizeof(void *) == 8)
-		h << " (64 bit)";
+		h << "\n(64 bit)";
 	else
-		h << " (32 bit)";
+		h << "\n(32 bit)";
 #ifdef _MSC_VER
 	h << " (MSC)";
 #endif
 #if __GNUC__
+#if __clang__
+	h << " (CLANG)";
+#else
 	h << " (GCC)";
+#endif
 #endif
 #if __cplusplus >= 201100
 	h << " (C++11)";
