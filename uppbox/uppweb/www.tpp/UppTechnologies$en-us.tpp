@@ -1,4 +1,4 @@
-topic "Tutorial";
+topic "U++ Technologies";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -80,7 +80,7 @@ to write UI code on [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^ all
 platforms supported] by U`+`+ without any modification in user 
 code.&]
 [s5;l160;i150;O0; [* Draw] `- drawing library.&]
-[s5;l160;i150;O0; [* Painter] `- advanced draw library.&]
+[s5;l160;i150;O0; [* Painter] `- advanced drawing library. It allows&]
 [s22; 3.2.3 UI controls&]
 [s5; Some packages deliver ready to use UI controls. Some times it 
 is only one control, otherwise it is a collection of controls. 
