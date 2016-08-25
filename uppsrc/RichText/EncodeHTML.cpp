@@ -72,7 +72,7 @@ String HtmlParaStyle(const RichPara::Format& f, Zoom z)
 		case RichPara::BULLET_BOX:
 		case RichPara::BULLET_BOXWHITE: style << "square"; break;
 		}
-		style << ";list-style-position:inside;";
+//		style << ";list-style-position:inside;";
 		lm += 20;
 	}
 	style << Format("margin:%dpx %dpx %dpx %dpx;text-indent:%dpx;",

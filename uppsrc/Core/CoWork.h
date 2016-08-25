@@ -44,9 +44,10 @@ public:
 
 //	byte magic[sizeof(ConditionVariable)];
 	ConditionVariable waitforfinish;
-	Link<MJob, 2> jobs;
+	Link<MJob, 2> jobs; // global stack and CoWork stack as double-linked lists
 	int todo;
 
+// experimental pipe support
 	Mutex stepmutex;
 	Array<BiVector<Function<void ()>>> step;
 	Vector<bool> steprunning;
