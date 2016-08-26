@@ -108,9 +108,9 @@ C`+`+ language. It mainly based on U`+`+ core libraries such
 as Core. It allows to create web application that based on page 
 generation concept. It means that it can handle all HTML requests 
 and programmer write code that generates HTML page. &]
-[s5;l320;~~~192; Skylark works with all databases engines that are 
+[s5;l288;~~~192; Skylark works with all databases engines that are 
 supported by U`+`+.&]
-[s5;l320; More information about this technology can be found in 
+[s5;l288; More information about this technology can be found in 
 our official Skylark [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ tutorial].&]
 [s5;l160;i150;O0; [* Turtle] `- tiny JavaScript and HTML5 client that 
 allows to run GUI application directly in the browse. Example 
