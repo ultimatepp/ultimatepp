@@ -1,4 +1,4 @@
-topic "NTL Tutorial";
+topic "U++ Containers Tutorial";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -751,4 +751,12 @@ penalty):&]
 [s7; -|[* StableSort](t, FieldRelation(`&Point`::x, StdLess<int>()));&]
 [s7; &]
 [s16; t `= `[`[1, 0`], `[7, 1`], `[7, 2`], `[7, 3`], `[10, 10`]`]&]
-[s5; ]]
+[s5; &]
+[s3; Recommended tutorials:&]
+[s5; If you want to learn more, we have several tutorials that you 
+can find useful:&]
+[s5;l160;i150;O0; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ U`+`+ 
+Core value types] `- if you miss this one`- it it a good occasion 
+to catch up. Here you will learn about Core basics.&]
+[s5;l160;i150;O0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ SQL] 
+`- learn how to use databases with U`+`+ framework.]]
