@@ -4,7 +4,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Ctrl::GuiPlatformConstruct()
 {
@@ -64,6 +64,6 @@ void Ctrl::InstallPanicBox()
 {
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

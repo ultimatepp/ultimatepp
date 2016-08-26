@@ -4,7 +4,7 @@
 
 #if defined(PLATFORM_WIN32) && defined(COMPILER_MSC)
 
-NAMESPACE_UPP
+namespace Upp {
 
 // #define BYREF // This was not success, maybe later?
 
@@ -1554,6 +1554,6 @@ String MSSQLTextType(int width)
 	return "text";
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

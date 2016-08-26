@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void DrawTextEllipsis(Draw& w, int x, int y, int cx, const wchar *text, const char *ellipsis,
 				      Font font, Color ink, int n)
@@ -125,4 +125,4 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
 	}
 }
 
-END_UPP_NAMESPACE
+}

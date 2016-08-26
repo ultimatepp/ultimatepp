@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -291,4 +291,4 @@ const TopWindow *Ctrl::GetMainWindow() const
 	return const_cast<Ctrl *>(this)->GetMainWindow();
 }
 
-END_UPP_NAMESPACE
+}

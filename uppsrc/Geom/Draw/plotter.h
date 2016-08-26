@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 typedef const signed char  LineStyle[];
 typedef const signed char *LineStyleArg;
@@ -506,4 +506,4 @@ private:
 	VectorMap<int, Array<Item> > cache;
 };
 
-END_UPP_NAMESPACE
+}

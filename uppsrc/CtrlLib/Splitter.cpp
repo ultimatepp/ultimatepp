@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CH_STYLE(Splitter, Style, StyleDefault)
 {
@@ -293,4 +293,4 @@ Splitter::Splitter() {
 
 Splitter::~Splitter() {}
 
-END_UPP_NAMESPACE
+}

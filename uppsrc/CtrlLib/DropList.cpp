@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int DropList::FindKey(const Value& k) const
 {
@@ -335,4 +335,4 @@ void operator*=(DropList& list, const MapConvert& convert)
 	Append(list, convert);
 }
 
-END_UPP_NAMESPACE
+}

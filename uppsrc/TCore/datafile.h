@@ -1,6 +1,6 @@
 // #define CDB_DEBUG // comment this macro to turn various error checking options off
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef CDB_DEBUG
 #define CHECK_INTEGRITY()        CheckIntegrity()
@@ -223,4 +223,4 @@ inline void CopyBackward(T *dst, const T *src, const T *lim) {
 		*--dst = *--src;
 }
 
-END_UPP_NAMESPACE
+}

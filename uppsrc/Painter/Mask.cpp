@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void BufferPainter::BeginMaskOp()
 {
@@ -82,4 +82,4 @@ void BufferPainter::FinishMask()
 	attr.mask = false;
 }
 
-END_UPP_NAMESPACE
+}

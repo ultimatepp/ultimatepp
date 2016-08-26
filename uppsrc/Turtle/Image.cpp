@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // LOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -130,6 +130,6 @@ STD_CURSOR(SizeBottom, 14)
 STD_CURSOR(SizeBottomRight, 15)
 STD_CURSOR(Hand, 16)
 
-END_UPP_NAMESPACE
+}
 
 #endif

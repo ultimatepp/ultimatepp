@@ -25,7 +25,7 @@
 #define XFalse 0
 #define XTrue  1
 
-NAMESPACE_UPP
+namespace Upp {
 
 extern XDisplay   *Xdisplay;
 extern Visual     *Xvisual;
@@ -225,7 +225,7 @@ public:
 	~ImageDraw();
 };
 
-END_UPP_NAMESPACE
+}
 
 #include "X11/keysym.h"
 
@@ -244,7 +244,7 @@ END_UPP_NAMESPACE
 #define GUIPLATFORM_PASTECLIP_DECLS \
 	int          type;
 
-NAMESPACE_UPP
+namespace Upp {
 
 String XAtomName(Atom atom);
 Atom   XAtom(const char *name);
@@ -259,4 +259,4 @@ Index<Atom>& _NET_Supported();
 
 #define GUIPLATFORM_INCLUDE_AFTER "X11GuiA.h"
 
-END_UPP_NAMESPACE
+}

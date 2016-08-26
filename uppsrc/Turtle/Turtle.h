@@ -8,7 +8,7 @@
 #include <CtrlCore/stdids.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS FBImg
 #define IMAGEFILE <Turtle/FB.iml>
@@ -135,6 +135,6 @@ public:
 	~PrinterJob()                                       {}
 };
 
-END_UPP_NAMESPACE
+}
 
 #define GUIPLATFORM_INCLUDE_AFTER <Turtle/After.h>

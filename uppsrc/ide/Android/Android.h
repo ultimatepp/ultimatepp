@@ -7,7 +7,7 @@
 #include "Executables.h"
 #include "Devices.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class Android {
 public:
@@ -157,6 +157,6 @@ private:
 	
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

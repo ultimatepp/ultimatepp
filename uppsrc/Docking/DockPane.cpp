@@ -1,6 +1,6 @@
 #include "Docking.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 /*
 int DockPane::ClientToPos(const Size& p)
@@ -419,4 +419,4 @@ DockPane::DockPane()
 	pos.Clear();
 }
 
-END_UPP_NAMESPACE
+}

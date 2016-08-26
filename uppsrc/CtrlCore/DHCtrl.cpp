@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef PLATFORM_WINCE
 
@@ -113,6 +113,6 @@ DHCtrl::~DHCtrl()
 
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

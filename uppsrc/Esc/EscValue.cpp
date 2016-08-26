@@ -1,7 +1,7 @@
 #include <Esc/Esc.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 
@@ -361,4 +361,4 @@ bool IsTrue(const EscValue& a)
 	return a.GetCount();
 }
 
-END_UPP_NAMESPACE
+}

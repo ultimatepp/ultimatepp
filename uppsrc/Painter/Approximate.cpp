@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static void sQuadratic(LinearPathConsumer& t, const Pointf& p1, const Pointf& p2, const Pointf& p3,
                        double qt, int lvl)
@@ -70,4 +70,4 @@ void ApproximateCubic(LinearPathConsumer& t,
 	t.Line(p4);
 }
 
-END_UPP_NAMESPACE
+}

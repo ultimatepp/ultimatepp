@@ -1,6 +1,6 @@
 #include "pcx.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static Size GetDotSize(Size pixel_size, int xpm, int ypm)
 {
@@ -178,4 +178,4 @@ const RasterFormat *PCXRaster::GetFormat()
 	return &fmt;
 }
 
-END_UPP_NAMESPACE
+}

@@ -3,12 +3,12 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 void InstallBlueToolBar();
 void InstallBlueMenuBar();
 void InstallBlueBar();
 
-END_UPP_NAMESPACE
+}
 
 #endif

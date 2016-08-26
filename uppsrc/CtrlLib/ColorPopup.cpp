@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static struct {
 	const char  *name;
@@ -434,4 +434,4 @@ ColorPopUp::ColorPopUp()
 	voidtext = t_("(none)");
 }
 
-END_UPP_NAMESPACE
+}

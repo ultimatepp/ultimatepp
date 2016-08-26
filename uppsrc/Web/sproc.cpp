@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 /* Mirek:unused
 static void WriteLog(const String& s)
@@ -631,4 +631,4 @@ One<SlaveProcess> StartProcess(const char *cmdline, const char *envptr, int time
 	return rsp.Detach();
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include <Core/Rpc/Rpc.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 String FormatIso8601(Time t)
 {
@@ -160,4 +160,4 @@ void ValuePut(Value& v, const Json& json)
 	v = RawToValue(x);
 }
 
-END_UPP_NAMESPACE
+}

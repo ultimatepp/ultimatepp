@@ -9,7 +9,7 @@
 #include <RichText/RichText.h>
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum { DOC_SCREEN_ZOOM = 140 };
 
@@ -708,7 +708,7 @@ public:
 #endif
 };
 
-END_UPP_NAMESPACE
+}
 
 #include "Report.h"
 #include "QtfCtrl.h"

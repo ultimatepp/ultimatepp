@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 extern int         NlsDefaultCodePage;
 
@@ -90,4 +90,4 @@ private:
 	const byte *cvt;
 };
 
-END_UPP_NAMESPACE
+}

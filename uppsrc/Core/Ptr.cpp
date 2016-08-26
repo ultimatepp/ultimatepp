@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 /* Faster, but consuming more memory....
 PteBase::Prec *PteBase::PtrAdd()
@@ -81,4 +81,4 @@ PtrBase::~PtrBase()
 	Release();
 }
 
-END_UPP_NAMESPACE
+}

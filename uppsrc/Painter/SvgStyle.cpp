@@ -2,7 +2,7 @@
 
 #define LLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "SvgInternal.h"
 
@@ -192,4 +192,4 @@ Xform2D SvgParser::Transform(const char *transform)
 	return mx;
 }
 
-END_UPP_NAMESPACE
+}

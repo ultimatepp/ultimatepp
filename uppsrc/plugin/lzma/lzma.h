@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 int64  LZMACompress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress = false, int lvl = 6);
 int64  LZMACompress(Stream& out, Stream& in, Gate2<int64, int64> progress = false, int lvl = 6);
@@ -19,6 +19,6 @@ bool   LZMACompressFile(const char *srcfile, Gate2<int64, int64> progress, int l
 bool   LZMADecompressFile(const char *dstfile, const char *srcfile, Gate2<int64, int64> progress = false);
 bool   LZMADecompressFile(const char *srcfile, Gate2<int64, int64> progress);
 
-END_UPP_NAMESPACE
+}
 
 #endif

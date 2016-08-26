@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -517,6 +517,6 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 	return out;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

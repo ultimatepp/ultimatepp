@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -1158,4 +1158,4 @@ IgnoreXmlPaths::IgnoreXmlPaths(const char *s)
 	list = Split(s, ';');
 }
 
-END_UPP_NAMESPACE
+}

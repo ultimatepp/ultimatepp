@@ -2,7 +2,7 @@
 
 #include "WebSSL.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 extern bool HttpClient_Trace__;
 
@@ -123,6 +123,6 @@ bool HttpsClient::CreateClientSocket()
 	return true;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

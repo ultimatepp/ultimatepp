@@ -4,7 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <TabBar/TabBar.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class DockWindow;
 
@@ -462,6 +462,6 @@ T& DockWindow::CreateDockable(WString title)
 	return q;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

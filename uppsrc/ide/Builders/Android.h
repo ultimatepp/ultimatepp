@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class AndroidProject {
 public:
@@ -152,6 +152,6 @@ private:
 	Vector<String> importedModules;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 //#BLITZ_APPROVE
 
@@ -109,4 +109,4 @@ ValueGen& UuidValueGen()
 	return Single<UuidValueGenClass>();
 }
 
-END_UPP_NAMESPACE
+}

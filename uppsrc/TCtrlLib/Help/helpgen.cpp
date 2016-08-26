@@ -1,7 +1,7 @@
 #include "TCtrlLibHelp.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RegisterHelpStdItems() {}
 
@@ -232,4 +232,4 @@ static void sBookExpand(String& qtf)
 
 RegisterHelpTopicSys("book_expand", "", callback(&sBookExpand));
 
-END_UPP_NAMESPACE
+}

@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 /* TRC 2/12/2003: obsoleted by Fidler's callback1
 template <class OBJECT_, class METHOD_, class A, class T>
@@ -582,4 +582,4 @@ class VirtualValueArray : public VirtualStdSegtorArray<Value, T>
 {
 };
 
-END_UPP_NAMESPACE
+}

@@ -4,7 +4,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 class MySqlConnection : public SqlConnection {
 protected:
@@ -541,6 +541,6 @@ bool MySqlUpdateSchema(const SqlSchema& sch, int i, StatementExecutor& se) {
 	return true;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

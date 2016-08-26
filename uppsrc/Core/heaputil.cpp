@@ -6,7 +6,7 @@
 #include <sys/mman.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "HeapImp.h"
 
@@ -317,6 +317,6 @@ EXITBLOCK {
 }
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

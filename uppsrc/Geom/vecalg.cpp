@@ -1,6 +1,6 @@
 #include "Geom.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 double Distance(Pointf X, Pointf A, Pointf B, double *arg)
 {
@@ -1804,4 +1804,4 @@ bool VecIntersection::AA(const VecArcInfo &a1, const VecArcInfo &a2)
 
 //////////////////////////////////////////////////////////////////////
 
-END_UPP_NAMESPACE
+}

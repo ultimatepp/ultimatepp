@@ -1,6 +1,6 @@
 #include "PdfDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // LOG(x)
 #define LDUMP(x)  // LLOG(#x << " = " << x);
@@ -308,4 +308,4 @@ TTFReader::~TTFReader()
 	Free();
 }
 
-END_UPP_NAMESPACE
+}

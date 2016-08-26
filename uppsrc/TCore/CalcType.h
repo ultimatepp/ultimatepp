@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 class CalcTypeNameConvert
 {
@@ -171,4 +171,4 @@ struct CalcPtrType
 	template <> struct CalcType<t *> : public CalcPtrType<t> {}; \
 	template <> struct CalcType<const t *> : public CalcPtrType<const t> {};
 
-END_UPP_NAMESPACE
+}

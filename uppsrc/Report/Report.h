@@ -4,7 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <RichText/RichText.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define  LAYOUTFILE <Report/Report.lay>
 #include <CtrlCore/lay.h>
@@ -159,6 +159,6 @@ bool   Perform(Report& r, const char *name = t_("Report"));
 bool   QtfReport(const String& qtf, const char *name = "", bool pagenumbers = false);
 bool   QtfReport(Size pagesize, const String& qtf, const char *name = "", bool pagenumbers = false);
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <TDraw/formula.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct RichObjectTypeFormulaCls : public RichObjectType
 {
@@ -119,4 +119,4 @@ void RichObjectTypeFormulaCls::DefaultAction(RichObject& ex) const
 	}
 }
 
-END_UPP_NAMESPACE
+}

@@ -25,7 +25,7 @@
 #undef  Display
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_GTK
 
@@ -168,6 +168,6 @@ public:
 
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

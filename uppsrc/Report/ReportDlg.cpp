@@ -1,6 +1,6 @@
 #include "Report.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -309,4 +309,4 @@ bool QtfReport(Size pagesize, const String& qtf, const char *name, bool pagenumb
 }
 
 
-END_UPP_NAMESPACE
+}

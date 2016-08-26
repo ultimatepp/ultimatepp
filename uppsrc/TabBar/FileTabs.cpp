@@ -1,6 +1,6 @@
 #include "TabBar.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String FileTabs::GetFileGroup(const String &file)
 {
@@ -181,4 +181,4 @@ extcolor(IsDark(SColorFace()) ? Blend(White, LtBlue) : LtBlue)
 
 }
 
-END_UPP_NAMESPACE
+}

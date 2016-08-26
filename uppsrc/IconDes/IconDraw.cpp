@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void IconDraw::PutHorz(int x, int y, int cx)
 {
@@ -61,4 +61,4 @@ void IconDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor
 	}
 }
 
-END_UPP_NAMESPACE
+}

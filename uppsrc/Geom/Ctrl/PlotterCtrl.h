@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 class PlotterDragDrop;
 
@@ -348,4 +348,4 @@ private:
 	PlotterCtrl&            owner;
 };
 
-END_UPP_NAMESPACE
+}

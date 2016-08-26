@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichTxt::FormatInfo::Set(const RichPara::Format& fmt)
 {
@@ -220,4 +220,4 @@ void RichTxt::FormatInfo::ApplyTo(RichPara::Format& fmt) const
 	}
 }
 
-END_UPP_NAMESPACE
+}

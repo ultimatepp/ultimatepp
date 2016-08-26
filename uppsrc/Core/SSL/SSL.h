@@ -5,7 +5,7 @@
 #include <openssl/err.h>
 #include <openssl/engine.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SslInitThread();
 
@@ -133,4 +133,4 @@ String SslToString(X509_NAME *name);
 Date   Asn1ToDate(ASN1_STRING *time);
 String Asn1ToString(ASN1_STRING *s);
 
-END_UPP_NAMESPACE
+}

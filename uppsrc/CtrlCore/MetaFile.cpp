@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef PLATFORM_WINCE
 
@@ -331,6 +331,6 @@ String AsWMF(const Drawing& iw)
 
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -13,7 +13,7 @@
 
 // #define DBGALLOC 1
 
-NAMESPACE_UPP
+namespace Upp {
 
 #if DBGALLOC
 double total_allocated = 0, total_freed = 0;
@@ -1314,4 +1314,4 @@ void TIFEncoder::WriteLineRaw(const byte *s)
 	data->WriteLineRaw(s);
 }
 
-END_UPP_NAMESPACE
+}

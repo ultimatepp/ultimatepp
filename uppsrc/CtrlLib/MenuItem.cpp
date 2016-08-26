@@ -4,7 +4,7 @@
 #include <mmsystem.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -660,4 +660,4 @@ void TopMenuItem::SyncState()
 	}
 }
 
-END_UPP_NAMESPACE
+}

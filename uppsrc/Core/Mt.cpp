@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -649,4 +649,4 @@ bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr)
 	return false;
 }
 
-END_UPP_NAMESPACE
+}

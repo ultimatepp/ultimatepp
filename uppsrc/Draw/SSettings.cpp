@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CH_COLOR(SBlack, Black());
 CH_COLOR(SGray, Gray());
@@ -40,4 +40,4 @@ CH_COLOR(SColorLtFace, Blend(SColorFace, SColorLight));
 CH_COLOR(SColorDkShadow, Blend(SColorShadow, SColorText));
 CH_COLOR(SColorLabel, SColorText());
 
-END_UPP_NAMESPACE
+}

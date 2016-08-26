@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool HttpClient_Trace__;
 
@@ -634,4 +634,4 @@ String HttpClientGet(String url, String *server_headers, String *error,
 	return HttpClientGet(url, Null, Null, Null, server_headers, error, progress, timeout, max_redirect, retries);
 }
 
-END_UPP_NAMESPACE
+}

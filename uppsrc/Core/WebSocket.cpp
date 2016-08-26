@@ -2,7 +2,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool WebSocket::WebAccept(TcpSocket& socket_, HttpHeader& hdr)
 {
@@ -163,4 +163,4 @@ void WebSocket::Close()
 }
 
 
-END_UPP_NAMESPACE
+}

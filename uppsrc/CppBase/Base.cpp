@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
@@ -113,4 +113,4 @@ void CppBase::RemoveFile(int filei)
 }
 
 
-END_UPP_NAMESPACE
+}

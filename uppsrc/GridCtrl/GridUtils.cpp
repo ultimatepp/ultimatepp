@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 LineEdit *dlog = NULL;
 int dlev = 0;
@@ -65,4 +65,4 @@ void LogGui(int level, const char *fmt, ...)
 	dlog->SetCursor(pos);
 }
 
-END_UPP_NAMESPACE
+}

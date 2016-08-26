@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String sRawClipData(const Value& data)
 {
@@ -289,4 +289,4 @@ INITBLOCK {
 	InitRichImage(GetImageClip, AcceptImage, GetImage, ClipFmtsImage);
 }
 
-END_UPP_NAMESPACE
+}

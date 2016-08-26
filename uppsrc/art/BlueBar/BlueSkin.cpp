@@ -1,6 +1,6 @@
 #include "BlueBar.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS BlueImg
 #define IMAGEFILE <art/BlueBar/BlueSkin.iml>
@@ -53,4 +53,4 @@ void InstallBlueBar()
 	InstallBlueToolBar();
 }
 
-END_UPP_NAMESPACE
+}

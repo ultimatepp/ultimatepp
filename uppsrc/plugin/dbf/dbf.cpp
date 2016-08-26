@@ -1,6 +1,6 @@
 #include "dbf.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -987,4 +987,4 @@ Value DbfStream::GetItemEmpty(int i) const
 	return Value();
 }
 
-END_UPP_NAMESPACE
+}

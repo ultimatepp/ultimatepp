@@ -4,7 +4,7 @@
 
 #include <X11/Xlocale.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _DEBUG
 
@@ -1135,6 +1135,6 @@ ViewDraw::~ViewDraw()
 	LeaveGuiMutex();
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "SMTP.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 namespace Ini {
 	INI_BOOL(Smtp_Trace, false, "Activates HTTP requests tracing")
@@ -425,4 +425,4 @@ Smtp::Smtp()
 	New();
 }
 
-END_UPP_NAMESPACE
+}

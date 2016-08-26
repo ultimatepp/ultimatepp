@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "GridDisplay.h"
 #define  IMAGECLASS GridImg
@@ -454,4 +454,4 @@ void GridDisplay::DrawText(Draw &w, int mx, int x, int y, int cx, int cy, int al
 	}
 }
 
-END_UPP_NAMESPACE
+}

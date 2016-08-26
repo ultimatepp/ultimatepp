@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "SvgInternal.h"
 
@@ -224,4 +224,4 @@ Array<double> GetTransformArgs(String str, const char *command) {
 	return args;
 }
 
-END_UPP_NAMESPACE
+}

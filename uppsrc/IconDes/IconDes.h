@@ -6,7 +6,7 @@
 #include <RichEdit/RichEdit.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS IconDesImg
 #define IMAGEFILE <IconDes/IconDes.iml>
@@ -394,6 +394,6 @@ struct ImlImage {
 bool   LoadIml(const String& data, Array<ImlImage>& img, int& format);
 String SaveIml(const Array<ImlImage>& iml, int format);
 
-END_UPP_NAMESPACE
+}
 
 #endif

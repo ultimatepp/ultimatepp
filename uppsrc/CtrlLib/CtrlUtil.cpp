@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 
@@ -347,4 +347,4 @@ void FileSelButton::Detach()
 	if(p) p->RemoveFrame(button);
 }
 
-END_UPP_NAMESPACE
+}

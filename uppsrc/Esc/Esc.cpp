@@ -1,7 +1,7 @@
 #include <Esc/Esc.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MSC_VER
 #pragma inline_depth(255)
@@ -1254,4 +1254,4 @@ void  Esc::Run()
 		DoStatement();
 }
 
-END_UPP_NAMESPACE
+}

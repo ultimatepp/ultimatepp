@@ -1,7 +1,7 @@
 #include <Esc/Esc.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 
@@ -295,4 +295,4 @@ void StdLib(ArrayMap<String, EscValue>& global)
 	Escape(global, "cos(value)", ESC_cos);
 }
 
-END_UPP_NAMESPACE
+}

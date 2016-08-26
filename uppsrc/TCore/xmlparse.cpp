@@ -1,7 +1,7 @@
 #include "TCore.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 String XMLTag::ToString() const
 {
@@ -481,4 +481,4 @@ Xmls XmlsComment(const char *text)
 	return out;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 RichPara::NumberFormat ParaFormatting::GetNumbering()
 {
@@ -539,4 +539,4 @@ StyleManager::StyleManager()
 	Setup(ff, UNIT_DOT);
 }
 
-END_UPP_NAMESPACE
+}

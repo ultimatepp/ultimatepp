@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 StaticCriticalSection log_mutex;
 
@@ -483,4 +483,4 @@ namespace Ini {
 	INI_BOOL(user_log, false, "Activates logging of user actions");
 };
 
-END_UPP_NAMESPACE
+}

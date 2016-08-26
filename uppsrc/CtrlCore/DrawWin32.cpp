@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -484,6 +484,6 @@ PrintDraw::~PrintDraw() {
 }
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

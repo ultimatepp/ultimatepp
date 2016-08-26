@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
@@ -54,4 +54,4 @@ void SDraw::PutVert(int x, int y, int cy)
 	DrawRect(x, y, 1, cy, docolor);
 }
 
-END_UPP_NAMESPACE
+}

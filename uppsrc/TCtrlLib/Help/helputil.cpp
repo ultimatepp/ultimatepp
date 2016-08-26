@@ -5,7 +5,7 @@
 #include <DocTypes/DocTypes.h>
 #include <PdfDraw/PdfDraw.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 
@@ -1911,4 +1911,4 @@ String CreateHelpRTF()
 }
 
 
-END_UPP_NAMESPACE
+}

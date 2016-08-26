@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef CUSTOM_FONTSYS
 
@@ -423,4 +423,4 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 
 #endif
 
-END_UPP_NAMESPACE
+}

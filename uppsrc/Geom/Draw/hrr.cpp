@@ -9,7 +9,7 @@
 #include <plugin/gif/gif.h>
 #include <plugin/png/png.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -2010,4 +2010,4 @@ int HRR::SizeOfInstance() const
 	return sizeof(*this) + directory_sizeof + cache_sizeof;
 }
 
-END_UPP_NAMESPACE
+}

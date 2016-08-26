@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool StdStatementExecutor::Execute(const String& stmt)
 {
@@ -125,4 +125,4 @@ bool SqlPerformScript(const String& script,
 
 #endif
 
-END_UPP_NAMESPACE
+}

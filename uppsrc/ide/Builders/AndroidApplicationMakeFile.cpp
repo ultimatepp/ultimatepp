@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 AndroidApplicationMakeFile::AndroidApplicationMakeFile()
 {
@@ -102,4 +102,4 @@ void AndroidApplicationMakeFile::AppendToolchain(String& makeFile) const
 	AndroidMakeFile::AppendString(makeFile, toolchain, "NDK_TOOLCHAIN_VERSION");
 }
 
-END_UPP_NAMESPACE
+}

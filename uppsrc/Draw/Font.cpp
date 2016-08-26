@@ -2,7 +2,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 static StaticMutex sFontLock;
 
@@ -569,4 +569,4 @@ FontInfo Font::Info() const
 	return h;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 dword ImageAnyDraw::GetInfo() const
 {
@@ -166,4 +166,4 @@ ImageAnyDraw::~ImageAnyDraw()
 	delete draw;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Geom.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Pointf3 Length(Pointf3 p, double length)
 {
@@ -380,4 +380,4 @@ Pointf3 Camera::InverseXY(Pointf point, double z) const
 	return Pointf3(dx / dr, dy / dr, z);
 }
 
-END_UPP_NAMESPACE
+}

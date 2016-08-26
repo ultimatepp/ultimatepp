@@ -1,7 +1,7 @@
 #ifndef _Geom_Draw_coordutil_h_
 #define _Geom_Draw_coordutil_h_
 
-NAMESPACE_UPP
+namespace Upp {
 
 void AlphaTransformPaint(ImageBuffer& out, const Image& in,
 	const PlanarSegmentTree& planar,
@@ -16,6 +16,6 @@ void PaintPlanarTree(Draw& draw, const PlanarSegmentTree& planar,
 void   PlotLine(PlotterTool& tool, GisTransform transform, Pointf source1, Pointf source2);
 void   PlotRect(PlotterTool& tool, GisTransform transform, const Rectf& src);
 
-END_UPP_NAMESPACE
+}
 
 #endif

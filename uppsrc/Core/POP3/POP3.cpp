@@ -1,6 +1,6 @@
 #include "POP3.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static bool sPop3Trace;
 #define LLOG(x) do { if(sPop3Trace) RLOG(CompressLog(String().Cat() << x)); } while(0)
@@ -255,4 +255,4 @@ Pop3::~Pop3()
 	Logout();
 }
 
-END_UPP_NAMESPACE
+}

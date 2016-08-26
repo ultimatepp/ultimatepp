@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct RichEditHdrFtr : public RichEdit {
 	ToolBar  toolbar;
@@ -152,4 +152,4 @@ bool EditRichHeaderFooter(String& header_qtf, String& footer_qtf)
 	return false;
 }
 
-END_UPP_NAMESPACE
+}

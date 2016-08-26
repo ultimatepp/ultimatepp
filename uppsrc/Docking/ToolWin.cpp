@@ -1,6 +1,6 @@
 #include "Docking.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int ToolWin::GetTitleCy() const
 {
@@ -229,4 +229,4 @@ ToolWin::ToolWin()
 	FrameLess();
 }
 
-END_UPP_NAMESPACE
+}

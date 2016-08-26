@@ -2,7 +2,7 @@
 
 #define LTIMING(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 template <class T>
 String MakeSqlValue(int code, T& value)
@@ -462,4 +462,4 @@ void SqlId::PutOf(String& s, const SqlId& b) const
 	PutOf0(s, b);
 }
 
-END_UPP_NAMESPACE
+}

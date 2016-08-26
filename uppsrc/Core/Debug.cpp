@@ -5,7 +5,7 @@
 #endif
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // TIMING(x)
 
@@ -294,14 +294,14 @@ dword   _DBG_Value_GetType(Value const &v)	{ return v.GetType(); }
 String  _DBG_Value_AsString(Value const &v)	{ return AsString(v); }
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #if defined(__GNUG__) && defined(PLATFORM_POSIX)
 #include <cstdlib>
 #include <memory>
 #include <cxxabi.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct cpp_demangle_handle__ {
     char* p;
@@ -315,17 +315,17 @@ String CppDemangle(const char* name) {
     return (status==0) ? result.p : name ;
 }
 
-END_UPP_NAMESPACE
+}
 
 #else
 
-NAMESPACE_UPP
+namespace Upp {
 
 String CppDemangle(const char* name) {
     return TrimLeft("struct ", TrimLeft("class ", name));
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

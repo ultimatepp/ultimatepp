@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::SaveTableFormat(int table)
 {
@@ -385,4 +385,4 @@ void RichEdit::JoinCell()
 	Move(text.GetCellPos(tablesel, cells.TopLeft()).pos);
 }
 
-END_UPP_NAMESPACE
+}

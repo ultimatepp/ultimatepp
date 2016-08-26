@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int  QtfParser::GetNumber() {
 	int n = 0;
@@ -383,4 +383,4 @@ void QtfParser::Init() {
 	ender = END;
 }
 
-END_UPP_NAMESPACE
+}

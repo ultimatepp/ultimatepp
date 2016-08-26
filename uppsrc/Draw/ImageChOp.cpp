@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int Diff(RGBA a, RGBA b)
 {
@@ -298,4 +298,4 @@ Image ChPartMaker::Make() const
 	return ib;
 }
 
-END_UPP_NAMESPACE
+}

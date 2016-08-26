@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)
 #define LTIMING(x)  // RTIMING(x)
@@ -129,4 +129,4 @@ const Vector<String>& ScopeInfo::GetScopes(const String& usings_)
 	return scopes;
 }
 
-END_UPP_NAMESPACE
+}

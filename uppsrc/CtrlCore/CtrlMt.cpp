@@ -2,7 +2,7 @@
 
 #define LLOG(x)   //  DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MULTITHREADED
 
@@ -103,4 +103,4 @@ void Ctrl::Call(Function<void ()> cb)
 
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 template<>
 void Xmlize(XmlIO& xml, String& var)
@@ -282,4 +282,4 @@ Value LoadJsonValue(const XmlNode& n)
 	return m;
 }
 
-END_UPP_NAMESPACE
+}

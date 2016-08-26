@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void AndroidMakeFile::AppendString(String& makeFile,
                                    const String& variable,
@@ -95,4 +95,4 @@ void AndroidMakeFile::AppendImportedModules(String& makeFile) const
 		makeFile << "$(call import-module, " << importedModules[i] << ")\n";
 }
 
-END_UPP_NAMESPACE
+}

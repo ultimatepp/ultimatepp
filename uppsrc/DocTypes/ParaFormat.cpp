@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 FontInfo ParaTypo::Part::Set(Font _font, Color _color) {
 	font = _font;
@@ -127,4 +127,4 @@ bool ParaTypo::Format(Alignment _align, int _total, char *_text, int *_width,
 	return PutRaw();
 }
 
-END_UPP_NAMESPACE
+}

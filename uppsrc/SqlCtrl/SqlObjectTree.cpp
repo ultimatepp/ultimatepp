@@ -1,7 +1,7 @@
 #include "SqlCtrl.h"
 #include "SqlDlg.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class DlgSqlExport : public WithSqlExportLayout<TopWindow>
 {
@@ -389,4 +389,4 @@ void SqlObjectTree::TableExport(String table_name)
 	RunDlgSqlExport(cursor, "select * from " + schema + "." + table, table);
 }
 
-END_UPP_NAMESPACE
+}

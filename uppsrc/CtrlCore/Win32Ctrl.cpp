@@ -4,7 +4,7 @@
 
 #define LLOG(x)  // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Ctrl::GuiPlatformConstruct()
 {
@@ -122,6 +122,6 @@ String Ctrl::Name() const {
 	return s;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

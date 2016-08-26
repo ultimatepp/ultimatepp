@@ -1,6 +1,6 @@
 #include "ScatterCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS ScatterImg
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
@@ -668,4 +668,4 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	AddKeyBehavior(true,  false, false, K_DOWN, 	true, 	ScatterCtrl::SCROLL_DOWN);
 }
 
-END_UPP_NAMESPACE
+}

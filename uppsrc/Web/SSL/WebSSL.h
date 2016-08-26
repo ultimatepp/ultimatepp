@@ -9,7 +9,7 @@
 #include <openssl/conf.h>
 #include <openssl/err.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 void  *SSLAlloc(size_t size);
 void   SSLFree(void *ptr);
@@ -190,7 +190,7 @@ private:
 	bool            ProxyConnect();
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif//flagNOSSL
 

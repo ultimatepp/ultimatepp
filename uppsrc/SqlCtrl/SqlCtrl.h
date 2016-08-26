@@ -5,7 +5,7 @@
 #include <CtrlLib/CtrlLib.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 int  SqlError(const char *text, const char *error, const char *statement, bool retry = false);
 int  SqlError(const char *text, const SqlSession& session, bool retry = false);
@@ -243,6 +243,6 @@ inline void SQLCommander() { SQLCommander(SQL.GetSession()); }
 #endif
 void        SQLObjectTree(SqlSession& session APPSQLSESSION);
 
-END_UPP_NAMESPACE
+}
 
 #endif

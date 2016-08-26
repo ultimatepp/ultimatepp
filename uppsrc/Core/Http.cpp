@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 namespace Ini {
 	INI_BOOL(HttpRequest_Trace, false, "Activates HTTP requests tracing")
@@ -901,4 +901,4 @@ String HttpRequest::GetPhaseName() const
 	return phase >= 0 && phase <= FAILED ? m[phase] : "";
 }
 
-END_UPP_NAMESPACE
+}

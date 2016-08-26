@@ -6,7 +6,7 @@
 #include <RichEdit/RichEdit.h>
 #include "helputil.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 //RichObjectType *RichObjectTypeDialogHelp();
 RichObjectType *RichObjectTypeDrawing();
@@ -37,6 +37,6 @@ void            OpenHelpTopicIndex(String topic = Null, bool index = false);
 Callback1<Bar&>& HelpTopicBookMenu();
 Callback1<RichText&>& HelpTopicOnlineToc();
 
-END_UPP_NAMESPACE
+}
 
 #endif//__TCtrlLibHelp__

@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef flagSO
 CtrlFrame::CtrlFrame() {}
@@ -161,4 +161,4 @@ void LayoutFrameBottom(Rect& r, Ctrl *ctrl, int cy)
 	}
 }
 
-END_UPP_NAMESPACE
+}

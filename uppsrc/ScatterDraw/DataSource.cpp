@@ -3,7 +3,7 @@ using namespace Eigen;
 
 #include "ScatterDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 
 #define Membercall(fun)	(this->*fun)
@@ -367,4 +367,4 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
 }
 
 
-END_UPP_NAMESPACE
+}

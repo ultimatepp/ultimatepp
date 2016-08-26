@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichTxt::Para::Invalidate()
 {
@@ -497,4 +497,4 @@ String RichCellPos::ToString() const
 
 #endif
 
-END_UPP_NAMESPACE
+}

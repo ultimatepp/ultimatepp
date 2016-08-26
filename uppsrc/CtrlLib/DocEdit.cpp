@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void DocEdit::MouseWheel(Point p, int zdelta, dword keyflags)
 {
@@ -600,4 +600,4 @@ void DocEdit::LeftDrag(Point p, dword flags)
 	}
 }
 
-END_UPP_NAMESPACE
+}

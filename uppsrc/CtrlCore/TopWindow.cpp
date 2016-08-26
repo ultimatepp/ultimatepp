@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -533,4 +533,4 @@ void ArrangeOKCancel(Ctrl& ok, Ctrl& cancel)
 	}   
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LDUMP(x) // DUMP(x)
 
@@ -253,4 +253,4 @@ Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate2<int, int
 	return RescaleFilter(img, Size(cx, cy), filter, progress);
 }
 
-END_UPP_NAMESPACE
+}

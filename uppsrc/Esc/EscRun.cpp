@@ -1,7 +1,7 @@
 #include "Esc.h"
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -289,4 +289,4 @@ String   Expand(const String& doc, ArrayMap<String, EscValue>& global,
 	return out;
 }
 
-END_UPP_NAMESPACE
+}

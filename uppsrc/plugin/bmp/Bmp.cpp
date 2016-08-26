@@ -1,6 +1,6 @@
 #include "bmp.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "bmphdr.h"
 
@@ -284,4 +284,4 @@ BMPRaster::~BMPRaster()
 {
 }
 
-END_UPP_NAMESPACE
+}

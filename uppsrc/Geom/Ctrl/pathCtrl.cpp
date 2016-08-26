@@ -1,6 +1,6 @@
 #include "GeomCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <Geom/Ctrl/pathedit.lay>
 #include           <CtrlCore/lay.h>
@@ -2314,4 +2314,4 @@ void PathStyleCtrl::DoAction()
 		SetDataAction(s);
 }
 
-END_UPP_NAMESPACE
+}

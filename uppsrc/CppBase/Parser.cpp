@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MSC_VER
 #pragma inline_depth(255)
@@ -1828,4 +1828,4 @@ Vector<String> Parser::GetNamespaces() const
 	return ns;
 }
 
-END_UPP_NAMESPACE
+}

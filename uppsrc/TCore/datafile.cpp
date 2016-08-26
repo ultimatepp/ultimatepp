@@ -1,6 +1,6 @@
 #include "TCoreDb.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static const char tag[] =
 "CDF: Cybex Data File version 1.0.\r\n"
@@ -1221,4 +1221,4 @@ void DataFile::DumpObjects(const Vector<int>& list, bool dump_data)
 	}
 }
 
-END_UPP_NAMESPACE
+}

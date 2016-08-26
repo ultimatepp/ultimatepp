@@ -1,7 +1,7 @@
 #ifndef _Gis3_Coords_method_h_
 #define _Gis3_Coords_method_h_
 
-NAMESPACE_UPP
+namespace Upp {
 
 class GisCoordsLonLat : public GisCoords::Data
 {
@@ -226,6 +226,6 @@ public:
 	GisCoordsGaussLatitude gauss;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

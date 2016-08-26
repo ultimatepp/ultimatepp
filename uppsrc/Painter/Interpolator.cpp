@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void LinearInterpolator::Dda2::Set(int p1, int p2, int len)
 {
@@ -42,4 +42,4 @@ Point LinearInterpolator::Get()
 	return Point(ddax.Get(), dday.Get());
 }
 
-END_UPP_NAMESPACE
+}

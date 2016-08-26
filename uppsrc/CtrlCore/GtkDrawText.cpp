@@ -6,7 +6,7 @@
 
 // #include <freetype2/freetype/ftoutln.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)
 
@@ -114,6 +114,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

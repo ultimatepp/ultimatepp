@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // DLOG(x)
 
@@ -240,4 +240,4 @@ bool PointLoop(Ctrl& ctrl, const Image& img)
 	return PointLoop(ctrl, m, 1);
 }
 
-END_UPP_NAMESPACE
+}

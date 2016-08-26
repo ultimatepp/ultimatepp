@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 inline bool Is3(const wchar *s, int c)
 {
@@ -76,4 +76,4 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 		hls.SetPaper(0, hls.GetCount(), hl_style[PAPER_BLOCK2].color);
 }
 
-END_UPP_NAMESPACE
+}

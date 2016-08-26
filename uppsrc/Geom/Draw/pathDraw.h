@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 class PlotterTool;
 
@@ -394,4 +394,4 @@ protected:
 	const PathStyleMap *path_map;
 };
 
-END_UPP_NAMESPACE
+}

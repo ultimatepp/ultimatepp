@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 HlStyle HighlightSetup::hl_style[HL_COUNT];
 byte    HighlightSetup::hilite_scope = 0;
@@ -172,4 +172,4 @@ void HighlightSetup::DefaultHlStyles()
 	SetHlStyle(WARN_WHITESPACE, Blend(SColorLight, SRed));
 }
 
-END_UPP_NAMESPACE
+}

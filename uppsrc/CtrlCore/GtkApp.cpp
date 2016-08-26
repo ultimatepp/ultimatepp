@@ -4,7 +4,7 @@
 
 #define CATCH_ERRORS 0
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // DLOG(x)
 
@@ -86,6 +86,6 @@ void ExitGtkApp()
 #endif
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,8 +1,8 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define TFILE <RichEdit/RichEdit.t>
 #include <Core/t.h>
 
-END_UPP_NAMESPACE
+}

@@ -4,7 +4,7 @@
 
 #include <shellapi.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 #define LLOG(x)     // DLOG(x)
@@ -635,6 +635,6 @@ Image Image::Hand() WCURSOR_(IDC_HAND)
 
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

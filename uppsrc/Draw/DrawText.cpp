@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #if defined(flagWINGL) || defined(flagLINUXGL)
 #include <CoreGl/FontGl.h>
@@ -259,4 +259,4 @@ Size GetTextSize(const String& text, Font font)
 	return GetTextSize(text, font, text.GetLength());
 }
 
-END_UPP_NAMESPACE
+}

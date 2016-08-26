@@ -2,7 +2,7 @@
 
 #define LTIMING(x)  // RTIMING(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 Image RenderGlyphByPainter(Point at, int angle, int chr, Font fnt, Color color, Size sz);
 
@@ -82,4 +82,4 @@ void SDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Co
 	}
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,7 +1,7 @@
 #ifndef _ScatterDraw_Equation_h_
 #define _ScatterDraw_Equation_h_
 
-NAMESPACE_UPP
+namespace Upp {
 
 
 #define FormatCoeff(id, numDigits)		(IsNull(numDigits) ? (String("C") + FormatInt(id)) : FormatDoubleFix(coeff[id], numDigits))
@@ -315,6 +315,6 @@ private:
 };
 
 
-END_UPP_NAMESPACE
+}
 
 #endif

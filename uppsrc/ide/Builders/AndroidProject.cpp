@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 AndroidProject::AndroidProject()
 {
@@ -106,4 +106,4 @@ bool AndroidProject::HasDir() const
 	return !dir.IsEmpty();
 }
 
-END_UPP_NAMESPACE
+}

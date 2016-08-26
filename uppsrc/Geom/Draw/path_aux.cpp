@@ -3,7 +3,7 @@
 
 #include "GeomDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static void PathDraw_Output_1_1(PathDraw::Output& out, Point a, Point b)
 {
@@ -3099,4 +3099,4 @@ void (*PathDraw_Output_Thick[5][5])(PathDraw::Output& out, Point a, Point b) =
 	},
 };
 
-END_UPP_NAMESPACE
+}

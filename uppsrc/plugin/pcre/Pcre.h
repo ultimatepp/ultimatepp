@@ -9,10 +9,10 @@
 
 #include "lib/pcre.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "RegExp.h"
 
-END_UPP_NAMESPACE
+}
 
 #endif

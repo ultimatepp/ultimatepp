@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS IconDesImg
 #define IMAGEFILE <IconDes/IconDes.iml>
@@ -172,4 +172,4 @@ void IconDes::Paint(Draw& w)
 		             Color(200, 200, 255), 3);
 }
 
-END_UPP_NAMESPACE
+}

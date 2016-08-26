@@ -5,7 +5,7 @@
 
 #include <ide/Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class Java {
 public:
@@ -52,6 +52,6 @@ private:
 	String path;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

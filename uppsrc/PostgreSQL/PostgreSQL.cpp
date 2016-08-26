@@ -12,7 +12,7 @@
 
 #ifndef flagNOPOSTGRESQL
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum PGSQL_StandardOid {
 	PGSQL_BOOLOID = 16,
@@ -725,6 +725,6 @@ Value PgSequence::Get()
 	return sql[0];
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -149,6 +149,6 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	GuiLock __;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

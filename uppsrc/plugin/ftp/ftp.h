@@ -5,7 +5,7 @@
 
 typedef struct NetBuf netbuf;
 
-NAMESPACE_UPP
+namespace Upp {
 
 class FtpClient {
 public:
@@ -56,6 +56,6 @@ private:
 
 String FtpClientGet(String url, String *error = NULL);
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -4,7 +4,7 @@
 #include <Geom/Geom.h>
 //#include <TCore/TCore.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define MINRAD (DEGRAD / 60.0)
 #define SECRAD (DEGRAD / 3600.0)
@@ -815,6 +815,6 @@ public:
 PlanarSegmentTree CreatePlanarTree(const LinearSegmentTree& left, const LinearSegmentTree& top,
 	const LinearSegmentTree& right, const LinearSegmentTree& bottom, const SegmentTreeInfo& info);
 
-END_UPP_NAMESPACE
+}
 
 #endif

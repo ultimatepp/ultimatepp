@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -403,6 +403,6 @@ void PasteClip::GuiPlatformConstruct()
 	type = 0;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

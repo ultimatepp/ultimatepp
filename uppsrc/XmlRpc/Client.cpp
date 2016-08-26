@@ -2,7 +2,7 @@
 
 #define LLOG(x)  // LOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 static bool sLogRpcCalls;
 
@@ -118,4 +118,4 @@ void XmlRpcCall::ClearError()
 	error.Clear();
 }
 
-END_UPP_NAMESPACE
+}

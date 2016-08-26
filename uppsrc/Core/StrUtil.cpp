@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int wstrlen(const wchar *s)
 {
@@ -145,4 +145,4 @@ WString FilterWhile(const wchar *s, int (*filter)(int))
 	return result;
 }
 
-END_UPP_NAMESPACE
+}

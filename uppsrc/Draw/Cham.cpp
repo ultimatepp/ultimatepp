@@ -18,7 +18,7 @@ inline void LOGPNG(const char *name, const Image& m)
 
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) //  RTIMING(x)
 
@@ -617,4 +617,4 @@ void ColoredOverride(Iml& target, Iml& source)
 	Override(target, source, true);
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SDraw::Init(const Rect& r)
 {
@@ -75,4 +75,4 @@ void SDraw::EndOp()
 	cloff.Drop();
 }
 
-END_UPP_NAMESPACE
+}

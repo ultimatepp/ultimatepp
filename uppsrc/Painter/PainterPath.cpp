@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool Painter::ReadBool(CParser& p)
 {
@@ -114,4 +114,4 @@ Painter& Painter::Path(const char *path)
 	return *this;
 }
 
-END_UPP_NAMESPACE
+}

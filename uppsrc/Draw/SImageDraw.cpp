@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SImageDraw1::PutImage(Point p, const Image& m, const Rect& src)
 {
@@ -67,4 +67,4 @@ SImageDraw::SImageDraw(int cx, int cy)
 	SImageDraw1::Create(Size(cx, cy));
 }
 
-END_UPP_NAMESPACE
+}

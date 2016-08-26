@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 unsigned stou(const char *s, void *endptr, unsigned base)
 {
@@ -605,4 +605,4 @@ Value FormatConvert::Format(const Value& v) const
 	return UPP::Format(format, va.Get());
 }
 
-END_UPP_NAMESPACE
+}

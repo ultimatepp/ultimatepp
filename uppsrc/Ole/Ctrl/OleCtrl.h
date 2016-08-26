@@ -4,7 +4,7 @@
 #include <CtrlCore/CtrlCore.h>
 #include <Ole/Ole.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define OCXLOG RLOG    // redefine to RLOG if you want logs in retail versions
 
@@ -824,6 +824,6 @@ private:
 	VectorMap<Guid, IConnectionPoint *> point_map;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

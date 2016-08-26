@@ -3,7 +3,7 @@
 #include <Report/Report.h>
 #include <CodeEditor/CodeEditor.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGEFILE <SqlCtrl/SqlCtrl.iml>
 #define IMAGECLASS SqlConsoleImg
@@ -639,4 +639,4 @@ bool IsSqlConsoleActive__()
 	return dynamic_cast<SqlConsole *>(Ctrl::GetActiveWindow());
 }
 
-END_UPP_NAMESPACE
+}

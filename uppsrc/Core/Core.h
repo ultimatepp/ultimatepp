@@ -231,19 +231,12 @@ namespace std {
 #endif
 #endif
 
-namespace Upp {};
-
-#ifdef flagNONAMESPACE
-#define NAMESPACE_UPP
-#define END_UPP_NAMESPACE
-#define UPP
-#else
+// deprecated, use 'namespace' directly instead of macros
 #define NAMESPACE_UPP     namespace Upp {
-#define END_UPP_NAMESPACE };
+#define END_UPP_NAMESPACE }
 #define UPP               Upp
-#endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef flagNODEPRECATED
 #define DEPRECATED
@@ -343,7 +336,7 @@ NTL_MOVEABLE(SIZE)
 NTL_MOVEABLE(RECT)
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
 

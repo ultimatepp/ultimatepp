@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define  TFILE <CtrlCore/CtrlCore.t>
 #include <Core/t.h>
@@ -19,4 +19,4 @@ INITBLOCK {
 	SetRenderGlyph(sRenderGlyph);
 }
 
-END_UPP_NAMESPACE
+}

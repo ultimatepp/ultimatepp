@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)     // LLOG(x)
 #define LDUMP(x)    // RDUMP(x)
@@ -29,6 +29,6 @@ String TurtleStream::FlushStream()
 	return s;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

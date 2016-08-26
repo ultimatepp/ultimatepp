@@ -13,7 +13,7 @@ typedef byte text;
 };
 */
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_WIN32
 	#define DLLFILENAME "ociw32.dll"
@@ -983,4 +983,4 @@ Vector<String> Oracle7::EnumReservedWords()
 	return OracleSchemaReservedWords();
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Fill(RGBA *t, RGBA c, int len)
 {
@@ -404,4 +404,4 @@ void MultiplyComponents(RGBA *t, const RGBA *s, int len, int num, int den)
 	TransformComponents(t, s, len, trans, trans, trans, trans);
 }
 
-END_UPP_NAMESPACE
+}

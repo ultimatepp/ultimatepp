@@ -2,7 +2,7 @@
 
 #include "DroidFonts.brc"
 
-NAMESPACE_UPP
+namespace Upp {
 
 INITBLOCK {
 	SetMemoryFont(Font::SANSSERIF, Font_DroidSans, Font_DroidSans_length);
@@ -14,4 +14,4 @@ INITBLOCK {
 	SetMemoryFont(Font::MONOSPACE, Font_DroidSansMono, Font_DroidSansMono_length);
 }
 
-END_UPP_NAMESPACE
+}

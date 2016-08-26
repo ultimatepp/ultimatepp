@@ -4,7 +4,7 @@
 #include <Web/Web.h>
 #include <Core/Rpc/Rpc.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool   XmlRpcPerform(Socket& http, const char *group);
 bool   XmlRpcServer(int port = 80, const char *group = NULL);
@@ -78,6 +78,6 @@ void LogXmlRpcCalls(bool b = true);
 
 int CharFilterNoCr(int c);
 
-END_UPP_NAMESPACE
+}
 
 #endif

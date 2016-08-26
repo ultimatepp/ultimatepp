@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Value ParseJSON(CParser& p)
 {
@@ -368,4 +368,4 @@ String sJsonFile(const char *file)
 	return file ? String(file) : ConfigFile(GetExeTitle() + ".json");
 }
 
-END_UPP_NAMESPACE
+}

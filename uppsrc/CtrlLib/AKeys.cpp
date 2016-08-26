@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct KeyBinding : Moveable<KeyBinding> {
 	KeyInfo    *key;
@@ -373,4 +373,4 @@ bool Match(const KeyInfo& k, dword key)
 	return findarg(key, k.key[0], k.key[1], k.key[2], k.key[3]) >= 0;
 }
 
-END_UPP_NAMESPACE
+}

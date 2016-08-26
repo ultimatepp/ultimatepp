@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CH_VALUE(ViewEdge, CtrlsImg::VE());
 
@@ -1100,4 +1100,4 @@ EditField::EditField()
 
 EditField::~EditField() {}
 
-END_UPP_NAMESPACE
+}

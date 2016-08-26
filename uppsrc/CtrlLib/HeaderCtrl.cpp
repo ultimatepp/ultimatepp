@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 HeaderCtrl::Column::Column()
 {
@@ -907,4 +907,4 @@ HeaderCtrl::HeaderCtrl() {
 
 HeaderCtrl::~HeaderCtrl() {}
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Raster::Info::Info()
 {
@@ -278,4 +278,4 @@ Image StreamRaster::LoadStringAny(const String& s, const Gate2<int, int> progres
 	return LoadAny(ss, progress);
 }
 
-END_UPP_NAMESPACE
+}

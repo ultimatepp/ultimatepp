@@ -3,7 +3,7 @@
 #define LDUMP(x)  // DDUMP(x)
 #define LLOG(x)   // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef DEF_MEM_LEVEL
 #define DEF_MEM_LEVEL 8
@@ -515,4 +515,4 @@ void sCompressStreamCopy_(Stream& out, Stream& in, EventGate<int64, int64> progr
 	progress(orig_in.GetPos(), insz);
 }
 
-END_UPP_NAMESPACE
+}

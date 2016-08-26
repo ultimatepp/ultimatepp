@@ -1,6 +1,6 @@
 #include "Docking.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS DockingImg
 #define IMAGEFILE <Docking/Docking.iml>
@@ -190,4 +190,4 @@ CH_STYLE(DockableCtrl, Style, StyleDefaultVert)
 	handle_vert = true;
 }
 
-END_UPP_NAMESPACE
+}

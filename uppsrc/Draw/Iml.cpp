@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Vector<Image> UnpackImlData(const void *ptr, int len)
 {
@@ -203,4 +203,4 @@ void SetImlImage(const char *name, const Image& m)
 	}
 }
 
-END_UPP_NAMESPACE
+}

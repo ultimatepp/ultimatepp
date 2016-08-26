@@ -12,7 +12,7 @@ extern "C" {
 #include "lib/disasm.h"
 }
 
-NAMESPACE_UPP
+namespace Upp {
 
 int NDisassemble(char *output, const byte *data, uint64 offset, bool x64)// returns instruction length
 {
@@ -36,4 +36,4 @@ CONSOLE_APP_MAIN
 }
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -1063,4 +1063,4 @@ CodeEditor::CodeEditor() {
 
 CodeEditor::~CodeEditor() {}
 
-END_UPP_NAMESPACE
+}

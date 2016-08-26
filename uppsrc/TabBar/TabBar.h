@@ -7,7 +7,7 @@
 #define IMAGEFILE <TabBar/TabBar.iml>
 #include <Draw/iml_header.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 //#define TABBAR_DEBUG
 
@@ -540,6 +540,6 @@ public:
 #include "FileTabs.h"
 #include "TabBarCtrl.h"
 
-END_UPP_NAMESPACE
+}
 
 #endif

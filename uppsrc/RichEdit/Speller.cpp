@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -325,4 +325,4 @@ Bits RichEdit::SpellParagraph(const RichPara& para)
 	return e;
 }
 
-END_UPP_NAMESPACE
+}

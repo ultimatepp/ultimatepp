@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct sFloodFill {
 	Rect         rc;
@@ -202,4 +202,4 @@ Image DownSample3x(const Image& src)
 	return ib;
 }
 
-END_UPP_NAMESPACE
+}

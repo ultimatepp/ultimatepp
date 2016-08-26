@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define FAKEERROR 0
 #define FAKESLOWLINE 0 // 57600 // Bd fake line speed, 0 = off
@@ -885,4 +885,4 @@ void SocketEvent::Select(Socket& socket, int fd_flags)
 
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -6,7 +6,7 @@
 
 #include "OldTreeCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS OldTreeCtrlImg
 #define IMAGEFILE  <TCtrlLib/OldTreeCtrl.iml>
@@ -1466,4 +1466,4 @@ void OldTreeCtrl::ScCursor(Point pt)
 	scroll = pt;
 }
 
-END_UPP_NAMESPACE
+}

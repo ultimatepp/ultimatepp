@@ -1,6 +1,6 @@
 #include <DocTypes/DocTypes.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 RtfDocOut::RtfDocOut() {
 	color.Add(Black());
@@ -273,4 +273,4 @@ String RtfDocOut::Get() {
 	return out;
 }
 
-END_UPP_NAMESPACE
+}

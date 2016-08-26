@@ -1,6 +1,6 @@
 #include "TabBar.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 TabBarCtrl& TabBarCtrl::AddCtrl(Ctrl &ctrl, Value key, Value value, Image icon, String group, bool make_active)
 {
@@ -107,4 +107,4 @@ void TabBarCtrl::TabClosed(Value key)
 	ctrls.RemoveKey(key);
 }
 
-END_UPP_NAMESPACE
+}

@@ -9,7 +9,7 @@
     #endif
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 TrayIcon::TrayIcon()
 {
@@ -139,6 +139,6 @@ TrayIcon::~TrayIcon()
 	g_object_unref(tray_icon);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

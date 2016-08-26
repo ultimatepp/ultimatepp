@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 AndroidManifest::AndroidManifest()
 {
@@ -12,4 +12,4 @@ AndroidManifest::~AndroidManifest()
 	
 }
 
-END_UPP_NAMESPACE
+}

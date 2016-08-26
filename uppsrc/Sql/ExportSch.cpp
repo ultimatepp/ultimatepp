@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static String sPutId(const char *type, Index<String>& id, String n, int w = 0)
 {
@@ -98,4 +98,4 @@ String ExportIds(const String& database)
 }
 #endif
 
-END_UPP_NAMESPACE
+}

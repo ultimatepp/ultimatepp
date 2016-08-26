@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class Pop3 : public TcpSocket 
 {
@@ -110,6 +110,6 @@ struct MIMEHeader {
 Index<String> ParseMessageIDs(const String& s);
 String        FormatMessageIDs(const Index<String>& id);
 
-END_UPP_NAMESPACE
+}
 
 #endif

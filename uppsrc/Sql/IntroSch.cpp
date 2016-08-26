@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct SchTableInfo {
 	Vector<String> column;
@@ -153,4 +153,4 @@ SqlBool FindSchJoin(const String& tables)
 	return SqlBool::False();
 }
 
-END_UPP_NAMESPACE
+}

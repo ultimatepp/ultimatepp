@@ -7,7 +7,7 @@
 #include <Draw/Draw.h>
 #include "png.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -514,4 +514,4 @@ void PNGEncoder::WriteLineRaw(const byte *s)
 	data->WriteLineRaw(s);
 }
 
-END_UPP_NAMESPACE
+}

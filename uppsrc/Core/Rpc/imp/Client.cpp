@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include <Core/Rpc/Rpc.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -242,4 +242,4 @@ void RpcRequest::ClearError()
 	error.Clear();
 }
 
-END_UPP_NAMESPACE
+}

@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    //LOG(x)
 #define LDUMP(x)   //DDUMP(x)
@@ -450,6 +450,6 @@ void Ctrl::SysEndLoop()
 {
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -5,7 +5,7 @@
 
 #define PAINTER_TIMING(x)  // RTIMING(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct Xform2D {
 	Pointf x, y, t;
@@ -443,6 +443,6 @@ Rectf GetSVGBoundingBox(const char *svg);
 Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&> resloader);
 Image RenderSVGImage(Size sz, const char *svg);
 
-END_UPP_NAMESPACE
+}
 
 #endif

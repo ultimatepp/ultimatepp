@@ -1,8 +1,8 @@
 #include "TSql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define TFILE <TSql/TSql.h>
 #include <Core/t.h>
 
-END_UPP_NAMESPACE
+}

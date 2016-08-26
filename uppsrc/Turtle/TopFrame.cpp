@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 #define LDUMP(x) //DDUMP(x)
@@ -231,6 +231,6 @@ Image TopWindowFrame::CursorImage(Point p, dword)
 	return GetDragImage(HasCapture() ? dir : GetDragMode(p));
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

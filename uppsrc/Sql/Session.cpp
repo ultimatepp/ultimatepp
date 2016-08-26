@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SqlSession::Attach(Sql& sql, SqlConnection *con)
 {
@@ -212,4 +212,4 @@ Sql& AppCursorR()
 	return *empty;
 }
 
-END_UPP_NAMESPACE
+}

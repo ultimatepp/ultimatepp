@@ -1,6 +1,6 @@
 #include "PdfDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 TTFReader::TTFStream& TTFReader::TTFStream::operator%(byte& q) {
 	Raw(&q, 1);
@@ -107,4 +107,4 @@ void TTFReader::TTFStreamIn::Raw(void *ptr, int count) {
 	s += count;
 }
 
-END_UPP_NAMESPACE
+}

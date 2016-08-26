@@ -1,7 +1,7 @@
 #ifndef S_PAINTER_FILLERS_H
 #define S_PAINTER_FILLERS_H
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct SolidFiller : Rasterizer::Filler {
 	RGBA *t;
@@ -95,6 +95,6 @@ struct NoAAFillerFilter : Rasterizer::Filler {
 	void Set(Rasterizer::Filler *f)                 { t = f; }
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

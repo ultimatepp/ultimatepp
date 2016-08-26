@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // DLOG(x)
 
@@ -1278,4 +1278,4 @@ void RTFParser::ReadTableStyle()
 		CellInfoAt(ts.stylecol).format.align = ALIGN_BOTTOM;
 }
 
-END_UPP_NAMESPACE
+}

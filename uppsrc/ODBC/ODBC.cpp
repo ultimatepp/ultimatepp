@@ -1,6 +1,6 @@
 #include "ODBC.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -745,4 +745,4 @@ Value ODBCConnection::GetInsertedId() const
 	                                    : sql.Select("@@IDENTITY");
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 extern Color (*QTFColor[])();
 extern int   QTFFontHeight[];
@@ -598,4 +598,4 @@ String AsQTF(const RichObject& obj)
 	return AsQTF(AsRichText(obj), CHARSET_UTF8, QTF_NOSTYLES|QTF_BODY);
 }
 
-END_UPP_NAMESPACE
+}

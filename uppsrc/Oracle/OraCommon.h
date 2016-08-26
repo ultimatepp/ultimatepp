@@ -4,7 +4,7 @@
 class OciSqlConnection;
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 Date        OciDecodeDate(const byte data[7]);
 bool        OciEncodeDate(byte data[7], Date d);
@@ -82,6 +82,6 @@ protected:
 	virtual void SetParam(int i, OracleRef ref) = 0;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

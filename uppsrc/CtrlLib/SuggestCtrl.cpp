@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SuggestCtrl::CancelMode()
 {
@@ -159,4 +159,4 @@ SuggestCtrl::SuggestCtrl()
 	just_start = false;
 }
 
-END_UPP_NAMESPACE
+}

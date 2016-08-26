@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 DiffSyntax::DiffSyntax()
 {
@@ -91,4 +91,4 @@ bool DiffSyntax::IsPattern(const wchar *current, const wchar *end, String patter
 	return (containing && (i == pattern.GetCount()));
 }
 
-END_UPP_NAMESPACE
+}

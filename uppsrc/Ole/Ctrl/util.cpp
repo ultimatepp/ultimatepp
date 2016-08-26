@@ -2,7 +2,7 @@
 
 #ifdef PLATFORM_WIN32
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum { HIMETRIC_INCH = 2540 }; // HIMETRIC units per inch
 
@@ -734,6 +734,6 @@ void ExeRunServer()
 }
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

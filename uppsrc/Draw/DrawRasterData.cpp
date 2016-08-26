@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct cDrawRasterData : DataDrawer {
 	int                cx;
@@ -37,4 +37,4 @@ void DrawRasterData(Draw& w, int x, int y, int cx, int cy, const String& data)
 	w.DrawData(x, y, cx, cy, data, "image_data");
 }
 
-END_UPP_NAMESPACE
+}

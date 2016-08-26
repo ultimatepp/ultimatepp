@@ -1,7 +1,7 @@
 #include "Oracle8.h"
 #include "OciCommon.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) RLOG(x)
 
@@ -1757,4 +1757,4 @@ OracleClob::~OracleClob() {
 	Close();
 }
 
-END_UPP_NAMESPACE
+}

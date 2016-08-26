@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum {
 	CG_NONE,
@@ -314,4 +314,4 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 	return false;
 }
 
-END_UPP_NAMESPACE
+}

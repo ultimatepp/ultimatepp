@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String HtmlFontStyle(Font f, Font base)
 {
@@ -393,4 +393,4 @@ String AsCss(Index<String>& ss)
 	return css;
 }
 
-END_UPP_NAMESPACE
+}

@@ -21,7 +21,7 @@
 #include <fontconfig/fontconfig.h>
 #include <fontconfig/fcfreetype.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 FT_Face FTFace(Font fnt, String *rpath);
 
@@ -150,6 +150,6 @@ void PaintCharacterSys(Painter& sw, double x, double y, int ch, Font fnt)
 	sw.EvenOdd(true);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

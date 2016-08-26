@@ -1,6 +1,6 @@
 #include "SqlCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 SqlDetail::SqlDetail()
 {
@@ -94,4 +94,4 @@ bool  SqlDetail::Accept()
 }
 
 
-END_UPP_NAMESPACE
+}

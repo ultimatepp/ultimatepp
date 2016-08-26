@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct Vector_ {
 	void *vector;
@@ -83,4 +83,4 @@ thread__ int   invector_cache_blki_;
 thread__ int   invector_cache_offset_;
 thread__ int   invector_cache_end_;
 
-END_UPP_NAMESPACE
+}

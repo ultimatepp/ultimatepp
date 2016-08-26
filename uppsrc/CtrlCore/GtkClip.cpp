@@ -3,7 +3,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -412,6 +412,6 @@ void Ctrl::SetSelectionSource(const char *fmts)
 		gselection().Put(s[i], ClipData(s[i], RenderPrimarySelection));
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

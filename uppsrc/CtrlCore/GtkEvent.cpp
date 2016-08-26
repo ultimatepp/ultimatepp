@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // DLOG(rmsecs() << ' ' << x)
 //_DBG_ #define LOG_EVENTS
@@ -628,6 +628,6 @@ void Ctrl::GuiSleep(int ms)
 	FetchEvents(TRUE);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

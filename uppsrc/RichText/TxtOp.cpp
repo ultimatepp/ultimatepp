@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichTxt::GetAllLanguages(Index<int>& all) const
 {
@@ -357,4 +357,4 @@ void RichTxt::Normalize()
 	}
 }
 
-END_UPP_NAMESPACE
+}

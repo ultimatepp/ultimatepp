@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 IconDes::TextDlg::TextDlg()
 {
@@ -80,4 +80,4 @@ void IconDes::Text()
 	SetBar();
 }
 
-END_UPP_NAMESPACE
+}

@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <HexView/HexView.lay>
 #include <CtrlCore/lay.h>
@@ -95,6 +95,6 @@ public:
 	HexView();
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

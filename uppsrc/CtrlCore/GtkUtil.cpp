@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 void DrawDragLine(SystemDraw& w, bool horz, int x, int y, int len, int n, const int *pattern, Color color, int animation)
 {
@@ -162,6 +162,6 @@ int rmsecs()
 	return msecs(msecs0);
 }
  
-END_UPP_NAMESPACE
+}
 
 #endif

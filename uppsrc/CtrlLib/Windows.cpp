@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 void WindowsList()
 {
@@ -50,4 +50,4 @@ void WindowsMenu(Bar& bar)
 		bar.Add(t_("More windows.."), callback(WindowsList));
 }
 
-END_UPP_NAMESPACE
+}

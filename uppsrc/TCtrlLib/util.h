@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 #define ASSERT_INDEX(arrayctrl, index) ASSERT(arrayctrl.GetIndexCount() == index)
 
@@ -553,4 +553,4 @@ Vector<String> DropFilesGetList(WPARAM hdrop);
 
 bool ShowErrorFocus(bool cond, const char *text, Ctrl& focus);
 
-END_UPP_NAMESPACE
+}

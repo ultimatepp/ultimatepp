@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 TreeCtrl::Node::Node()
 {
@@ -1772,4 +1772,4 @@ int Copy(TreeCtrl& dst, int did, int i, const TreeCtrl& src, int id)
 	return did;
 }
 
-END_UPP_NAMESPACE
+}

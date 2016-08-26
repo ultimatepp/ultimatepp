@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 // iscale: computes x * y / z.
 
@@ -233,4 +233,4 @@ double ceilr(double d, int digits)
 	return ceil(d / fac) * fac;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 double UnitMultiplier(int unit) {
 	static double m[] =
@@ -164,4 +164,4 @@ UnitEdit::UnitEdit()
 	WithSgn(false);
 }
 
-END_UPP_NAMESPACE
+}

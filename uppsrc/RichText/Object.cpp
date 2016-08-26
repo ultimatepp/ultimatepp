@@ -2,7 +2,7 @@
 
 #define LLOG(x) DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 RichObjectType::RichObjectType() {}
 RichObjectType::~RichObjectType() {}
@@ -481,4 +481,4 @@ INITBLOCK {
 	RichObject::Register("PING", &Single<RichObjectTypePNGCls>());
 };
 
-END_UPP_NAMESPACE
+}

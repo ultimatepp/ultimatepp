@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 
@@ -362,4 +362,4 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	   hls.SetPaper(0, hls.v.GetCount(), hl_style[PAPER_IFDEF].color);
 }
 
-END_UPP_NAMESPACE
+}

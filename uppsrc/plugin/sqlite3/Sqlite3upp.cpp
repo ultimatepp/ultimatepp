@@ -3,7 +3,7 @@
 #include "lib/sqlite3.h"
 #include "Sqlite3.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -564,4 +564,4 @@ bool Sqlite3PerformScript(const String& txt, StatementExecutor& se, Gate2<int, i
 	return true;
 }
 
-END_UPP_NAMESPACE
+}
