@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 #define LDUMP(x) // DDUMP(x)
@@ -681,4 +681,4 @@ void DocOut::Put(const Document& doc) {
 			Put(doc.GetTable(i));
 }
 
-END_UPP_NAMESPACE
+}

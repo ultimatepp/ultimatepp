@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool HasNumbering(const RichPara::Format& f)
 {
@@ -215,4 +215,4 @@ bool RichEdit::Key(dword key, int count)
 	return true;
 }
 
-END_UPP_NAMESPACE
+}

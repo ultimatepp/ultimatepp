@@ -3,7 +3,7 @@
 
 #include "formula.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // RLOG(x)
 #define LDUMP(x) // RDUMP(x)
@@ -1416,4 +1416,4 @@ void AppMain()
 }
 #endif
 
-END_UPP_NAMESPACE
+}

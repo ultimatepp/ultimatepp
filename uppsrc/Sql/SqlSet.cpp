@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 SqlSet operator|(const SqlSet& s1, const SqlSet& s2) {
 	if(s1.IsEmpty()) return s2;
@@ -123,4 +123,4 @@ void FieldDumper::Field(const char *name, Ref f)
 	s << name << " = " << Value(f);
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Color (*QTFColor[])() = {
 	Black, LtGray, White, Red, Green, Blue, LtRed, WhiteGray, LtCyan, Yellow
@@ -1079,4 +1079,4 @@ QtfRichObject::QtfRichObject(const RichObject& o)
 	: obj(o)
 {}
 
-END_UPP_NAMESPACE
+}

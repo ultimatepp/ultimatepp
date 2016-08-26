@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)        //DLOG(x)
 
@@ -388,6 +388,6 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 	DropEvent(w, event);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

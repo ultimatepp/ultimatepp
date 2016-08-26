@@ -9,7 +9,7 @@
 #define CUSTOM_FONTSYS
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 class Drawing;
 class Draw;
@@ -901,6 +901,6 @@ DrawingToPdfFnType GetDrawingToPdfFn();
 #include "DDARasterizer.h"
 #include "SDraw.h"
 
-END_UPP_NAMESPACE
+}
 
 #endif

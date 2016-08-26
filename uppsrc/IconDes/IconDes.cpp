@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 IconDes::Slot::Slot()
 {
@@ -599,4 +599,4 @@ void IconDes::SingleMode()
 	resize <<= THISBACK(EditImage);
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Docking.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define ALIGN_ASSERT(al)	ASSERT(al >= 0 && al < 4)
 #define FRAME_MOVE_DIV 		5 // Outside fraction of the highlight that the mouse must be in to trigger dockpane reordering
@@ -1707,4 +1707,4 @@ CH_STYLE(PopUpDockWindow, Style, StyleDefault)
 	outersize = 25;
 }
 
-END_UPP_NAMESPACE
+}

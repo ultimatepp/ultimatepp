@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // DTIMING(x)
 
@@ -3121,4 +3121,4 @@ void ArrayOption::Paint(Draw& w, const Rect& r, const Value& q,
 	w.DrawImage(p.x, p.y, img);
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,7 +1,7 @@
 #include "Core.h"
 //#BLITZ_APPROVE
 
-NAMESPACE_UPP
+namespace Upp {
 
 // Old format ---------------------------
 
@@ -1224,4 +1224,4 @@ String DeFormat(const char *text)
 	return x;
 }
 
-END_UPP_NAMESPACE
+}

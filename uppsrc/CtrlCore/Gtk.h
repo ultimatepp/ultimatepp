@@ -20,7 +20,7 @@
 #pragma clang diagnostic pop
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 class SystemDraw : public Draw {
 	virtual dword GetInfo() const;
@@ -211,6 +211,6 @@ int type; \
 
 int rmsecs();
 
-END_UPP_NAMESPACE
+}
 
 #define GUIPLATFORM_INCLUDE_AFTER <CtrlCore/GtkAfter.h>

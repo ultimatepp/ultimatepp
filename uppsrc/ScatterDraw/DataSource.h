@@ -1,7 +1,7 @@
 #ifndef _ScatterDraw_DataSource_h_
 #define _ScatterDraw_DataSource_h_
 
-NAMESPACE_UPP
+namespace Upp {
 
 
 class DataSource {
@@ -409,6 +409,6 @@ struct PointfLess {
 };
 
 
-END_UPP_NAMESPACE
+}
 
 #endif

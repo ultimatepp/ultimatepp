@@ -4,7 +4,7 @@
 
 #ifdef GDK_WINDOWING_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define Time        XTime
 #define Font        XFont
@@ -163,7 +163,7 @@ GdkFilterReturn Ctrl::RootKeyFilter(GdkXEvent *xevent, GdkEvent *Xevent, gpointe
 	return GDK_FILTER_CONTINUE;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

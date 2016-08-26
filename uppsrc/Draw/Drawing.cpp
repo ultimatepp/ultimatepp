@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum {
 	DRAWING_BEGIN               = 1,
@@ -705,4 +705,4 @@ void Drawing::Serialize(Stream& s)
 	}
 }
 
-END_UPP_NAMESPACE
+}

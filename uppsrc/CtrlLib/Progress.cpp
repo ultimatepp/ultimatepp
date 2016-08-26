@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CH_STYLE(ProgressIndicator, Style, StyleDefault)
 {
@@ -277,4 +277,4 @@ bool Progress::StepCanceled(int n)
 	return cancel;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct PromptDlgWnd__ : TopWindow {
 	bool    esc;
@@ -286,4 +286,4 @@ int PromptSaveDontSaveCancel(const char *qtf) {
 	              CtrlImg::save(), NoButtonImage(), Null);
 }
 
-END_UPP_NAMESPACE
+}

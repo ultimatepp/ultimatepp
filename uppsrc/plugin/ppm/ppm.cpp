@@ -1,6 +1,6 @@
 #include "ppm.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 PPMRaster::PPMRaster()
 {
@@ -104,4 +104,4 @@ PPMRaster::~PPMRaster()
 {
 }
 
-END_UPP_NAMESPACE
+}

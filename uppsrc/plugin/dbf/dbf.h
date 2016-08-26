@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define DBFCOL(x) (#x, x)
 
@@ -147,6 +147,6 @@ protected:
 	byte            version;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

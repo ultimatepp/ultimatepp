@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 {
@@ -205,4 +205,4 @@ void CSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 	e.Refresh();
 }
 
-END_UPP_NAMESPACE
+}

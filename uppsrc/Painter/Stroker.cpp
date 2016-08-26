@@ -2,7 +2,7 @@
 
 #define LLOG(x)   // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin, const Rect& preclip_)
 {
@@ -181,4 +181,4 @@ void Stroker::End()
 	PutEnd();
 }
 
-END_UPP_NAMESPACE
+}

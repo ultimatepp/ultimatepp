@@ -14,7 +14,7 @@
     #endif
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 Atom TraySelection()
 {
@@ -242,6 +242,6 @@ void TrayIcon::BalloonTimeout()
 {
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)           // DLOG(x)
 #define LDUMP(x)          // DUMP(x)
@@ -518,4 +518,4 @@ bool FileOut::Open(const char *fn, mode_t acm)
 
 #endif
 
-END_UPP_NAMESPACE
+}

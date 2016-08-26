@@ -36,7 +36,7 @@
 
 #include GUIPLATFORM_INCLUDE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MULTITHREADED
 void EnterGuiMutex();
@@ -1625,6 +1625,6 @@ RichText   ParseRTF(const char *rtf);
 
 #include GUIPLATFORM_INCLUDE_AFTER
 
-END_UPP_NAMESPACE
+}
 
 #endif

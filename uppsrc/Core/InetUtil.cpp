@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static const char *s_www_month[] = {
 	"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
@@ -725,4 +725,4 @@ void UrlInfo::Parse(const String& url_)
 	}
 }
 
-END_UPP_NAMESPACE
+}

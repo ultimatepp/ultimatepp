@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void StaticText::Paint(Draw& w)
 {
@@ -376,4 +376,4 @@ void DisplayCtrl::SetDisplay(const Display& d)
 	pr.SetDisplay(d);
 }
 
-END_UPP_NAMESPACE
+}

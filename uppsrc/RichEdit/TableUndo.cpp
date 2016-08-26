@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::UndoTableFormat::Apply(RichText& txt)
 {
@@ -99,4 +99,4 @@ RichEdit::UndoTable::UndoTable(const RichText& txt, int tab)
 	copy = txt.CopyTable(tab);
 }
 
-END_UPP_NAMESPACE
+}

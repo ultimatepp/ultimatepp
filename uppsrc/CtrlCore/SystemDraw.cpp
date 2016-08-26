@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)
 
@@ -72,4 +72,4 @@ BackDraw::~BackDraw()
 	Destroy();
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MSC_VER
 #pragma inline_depth(255)
@@ -169,4 +169,4 @@ SrcFile PreProcess(Stream& in, Parser& parser) // This is not really C preproces
 	return pick(res);
 }
 
-END_UPP_NAMESPACE
+}

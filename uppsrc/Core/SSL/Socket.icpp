@@ -2,7 +2,7 @@
 
 #define LLOG(x)  // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct TcpSocket::SSLImp : TcpSocket::SSL {
 	virtual bool  Start();
@@ -222,4 +222,4 @@ void TcpSocket::SSLImp::Close()
 	ssl = NULL;
 }
 
-END_UPP_NAMESPACE
+}

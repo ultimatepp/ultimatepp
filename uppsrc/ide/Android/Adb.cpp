@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Adb::Adb(const String& path) : path(path)
 {
@@ -69,4 +69,4 @@ String Adb::MakeGetAllProcessesCmd() const
 	return MakeCmd() + " shell ps";
 }
 
-END_UPP_NAMESPACE
+}

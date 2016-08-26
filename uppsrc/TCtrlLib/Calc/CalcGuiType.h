@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // CalcGuiType: gui-oriented calc types.
 
-NAMESPACE_UPP
+namespace Upp {
 
 void UseCalcGuiType();
 
@@ -12,4 +12,4 @@ template <> struct CalcType<const Rectf&>  : public CalcRawNullType<Rectf>  {};
 template <> struct CalcType<Color>         : public CalcRawNullType<Color>  {};
 template <> struct CalcType<const Color&>  : public CalcRawNullType<Color>  {};
 
-END_UPP_NAMESPACE
+}

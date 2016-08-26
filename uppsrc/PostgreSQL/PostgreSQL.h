@@ -10,7 +10,7 @@
 #include <postgresql/libpq-fe.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 // Postgre -> Value types
 // Bytea_v values are stored as bytea data, but recived as string type
@@ -120,7 +120,7 @@ public:
 	PgSequence() : seq(ssq)                                             { session = NULL; }
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

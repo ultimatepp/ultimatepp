@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void IconDes::Interpolate()
 {
@@ -486,4 +486,4 @@ void IconDes::Colors()
 	}
 }
 
-END_UPP_NAMESPACE
+}

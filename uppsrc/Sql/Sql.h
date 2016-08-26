@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef flagNOAPPSQL
 	#define NOAPPSQL
@@ -18,6 +18,6 @@ NAMESPACE_UPP
 #include "Sqls.h"
 #include "SqlSchema.h"
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef CPU_X86
 
@@ -174,4 +174,4 @@ void EndianSwap(int *v, size_t count) ENDIAN_SWAP
 void EndianSwap(int64 *v, size_t count) ENDIAN_SWAP
 void EndianSwap(uint64 *v, size_t count) ENDIAN_SWAP
 
-END_UPP_NAMESPACE
+}

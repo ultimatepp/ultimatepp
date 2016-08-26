@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 /* 
    A C-program for MT19937, with initialization improved 2002/1/26.
@@ -267,4 +267,4 @@ double Randomf()
 	return Random64(I64(4503599627370496)) / 4503599627370496.0;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 #define LLOG(x)     // DLOG(x)
@@ -377,4 +377,4 @@ String Cpp::GetDependeciesMd5(const Vector<String>& m)
 	return md5.FinishString();
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "SvgInternal.h"
 
@@ -202,4 +202,4 @@ void BoundsPainter::EndOp()
 	sw.End();
 }
 
-END_UPP_NAMESPACE
+}

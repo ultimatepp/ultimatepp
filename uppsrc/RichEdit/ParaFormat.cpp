@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct ParaFormatDlg : public WithParaFormatLayout<TopWindow> {
 	ParaFormatting para;
@@ -131,4 +131,4 @@ void RichEdit::ApplyStylesheet(const RichText& r)
 	Finish();
 }
 
-END_UPP_NAMESPACE
+}

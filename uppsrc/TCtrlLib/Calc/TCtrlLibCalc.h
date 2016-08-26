@@ -5,7 +5,7 @@
 #include <TCtrlLib/Help/TCtrlLibHelp.h>
 #include "CalcGuiType.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RunDlgCalc(CalcContext& context);
 
@@ -18,6 +18,6 @@ HelpCalcMap GetHelpCalcGroup(const String& groupname);
 void AddHelpCalcGroups(DropList& dest, const String& prefix = "@");
 void AddHelpCalcGroup(DropList& dest, const String& group);
 
-END_UPP_NAMESPACE
+}
 
 #endif//__TCtrlLibCalc__

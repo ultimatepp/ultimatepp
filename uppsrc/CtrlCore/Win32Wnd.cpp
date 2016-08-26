@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   //   DLOG(x)
 #define LOGTIMING 0
@@ -1355,6 +1355,6 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 	return out;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

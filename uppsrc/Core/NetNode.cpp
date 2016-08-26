@@ -2,7 +2,7 @@
 
 #ifdef PLATFORM_WIN32
 
-NAMESPACE_UPP
+namespace Upp {
 
 NetNode::NetNode()
 {
@@ -131,6 +131,6 @@ int NetNode::GetDisplayType() const
 	return UNKNOWN;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,7 +1,7 @@
 #ifndef _TCore_xmlparse_h_
 #define _TCore_xmlparse_h_
 
-NAMESPACE_UPP
+namespace Upp {
 
 inline bool CheckXml(const char *s) { return *s == '<' && s[1] == '?' && s[2] == 'x' && s[3] == 'm' && s[4] == 'l'; }
 
@@ -196,6 +196,6 @@ inline XmlsTag& operator %= (XmlsTag& tag, const XmlsTag& s)         { tag.Combi
 inline Xmls    operator % (const XmlsTag& tag, String s)             { return tag.ApplyTo(s, true); }
 inline Xmls    operator % (const XmlsTag& tag, const char *s)        { return tag.ApplyTo(s, true); }
 
-END_UPP_NAMESPACE
+}
 
 #endif

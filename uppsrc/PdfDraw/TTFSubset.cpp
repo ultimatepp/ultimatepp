@@ -1,6 +1,6 @@
 #include "PdfDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 dword sCheckSum(const String& data)
 {
@@ -204,4 +204,4 @@ String TTFReader::Subset(const Vector<wchar>& chars, int first, bool os2)
 	}
 }
 
-END_UPP_NAMESPACE
+}

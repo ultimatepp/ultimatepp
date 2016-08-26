@@ -7,7 +7,7 @@
 #define IMAGEFILE <TabBar/TabBar.iml>
 #include <Draw/iml_source.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 // AlignedFrame
 void AlignedFrame::FrameLayout(Rect &r)
@@ -2675,4 +2675,4 @@ CH_STYLE(TabBar, Style, StyleDefault)
 	DefaultGroupSeparators();
 }
 
-END_UPP_NAMESPACE
+}

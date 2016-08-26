@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 /* obsoleted by Fidler's StoreAsString
 template <class T>
@@ -284,4 +284,4 @@ bool WithBar<T>::Key(dword key, int repcnt)
 	return MenuBar::Scan(WhenBar, key) || T::Key(key, repcnt);
 }
 
-END_UPP_NAMESPACE
+}

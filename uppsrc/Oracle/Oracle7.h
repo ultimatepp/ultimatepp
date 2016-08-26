@@ -5,7 +5,7 @@
 #include "OraCommon.h"
 #include "OciCommon.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define DLLFILENAME "ociw32.dll"
 #define DLIMODULE   OCI7
@@ -79,6 +79,6 @@ public:
 
 typedef Oracle7 OracleSession;
 
-END_UPP_NAMESPACE
+}
 
 #endif

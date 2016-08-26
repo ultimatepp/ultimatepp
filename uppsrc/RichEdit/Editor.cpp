@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool FontHeight::Key(dword key, int count)
 {
@@ -765,4 +765,4 @@ RichEditWithToolBar::RichEditWithToolBar()
 	extended = true;
 }
 
-END_UPP_NAMESPACE
+}

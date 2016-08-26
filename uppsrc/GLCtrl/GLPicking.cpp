@@ -1,6 +1,6 @@
 #include "GLCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #if defined(GUI_X11) || defined(GUI_WIN32)
 
@@ -62,4 +62,4 @@ Vector<int> GLCtrl::GLPicking::ParseHits(GLuint *buffer, int hits)
 
 #endif
 
-END_UPP_NAMESPACE
+}

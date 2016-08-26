@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <TCtrlLib/DocMgr.lay>
 #include <CtrlCore/lay.h>
@@ -394,4 +394,4 @@ public:
 };
 #endif
 
-END_UPP_NAMESPACE
+}

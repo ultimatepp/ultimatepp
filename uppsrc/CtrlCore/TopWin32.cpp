@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -448,6 +448,6 @@ void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

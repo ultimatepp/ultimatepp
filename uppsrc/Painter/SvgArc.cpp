@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Painter::DoArc0(double theta, double th_sweep, const Xform2D& m)
 {
@@ -64,4 +64,4 @@ void Painter::DoSvgArc(const Pointf& rr, double xangle, int large, int sweep,
 	DoArc0(theta, th_sweep, m);
 }
 
-END_UPP_NAMESPACE
+}

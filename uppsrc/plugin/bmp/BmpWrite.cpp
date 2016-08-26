@@ -1,6 +1,6 @@
 #include "bmp.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "bmphdr.h"
 
@@ -84,4 +84,4 @@ void BMPEncoder::WriteLineRaw(const byte *s)
 	GetStream().Put(scanline, row_bytes);
 }
 
-END_UPP_NAMESPACE
+}

@@ -7,7 +7,7 @@
 	#include <bzlib.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 static void* bzalloc_new(void *opaque, int items, int size)
 {
@@ -217,4 +217,4 @@ void BZ2Compress(Stream& out, Stream& in, Gate2<int, int> progress)
 		out.SetError();
 }
 
-END_UPP_NAMESPACE
+}

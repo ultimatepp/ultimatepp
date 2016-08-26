@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 inline bool IsSpc(byte c)
 {
@@ -157,4 +157,4 @@ String CppMacro::Expand(const Vector<String>& p, const Vector<String>& ep) const
 	return r;
 }
 
-END_UPP_NAMESPACE
+}

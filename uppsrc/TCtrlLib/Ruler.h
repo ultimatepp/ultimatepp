@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 class RulerCtrl : public FrameCtrl<Ctrl>
 {
@@ -112,4 +112,4 @@ private:
 class HRulerCtrl : public RulerCtrl { public: HRulerCtrl() { Horz(); } };
 class VRulerCtrl : public RulerCtrl { public: VRulerCtrl() { Vert(); } };
 
-END_UPP_NAMESPACE
+}

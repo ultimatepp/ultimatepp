@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct DrawDragRectInfo {
 	Rect  rect1, rect2, clip;
@@ -72,6 +72,6 @@ void FinishDragRect(Ctrl& q)
 {
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

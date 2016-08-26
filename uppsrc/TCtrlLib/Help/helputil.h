@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 inline String        HelpDPPStyle()                   { return HelpHostDPP("style"); }
 inline String        HelpDPPTopics()                  { return HelpHostDPP("topics"); }
@@ -126,4 +126,4 @@ private:
 	void                 *context;
 };
 
-END_UPP_NAMESPACE
+}

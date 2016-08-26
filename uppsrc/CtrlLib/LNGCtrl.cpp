@@ -1,7 +1,7 @@
 #include "CtrlLib.h"
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 Size  LNGCtrl::GetMinSize() const
 {
@@ -81,4 +81,4 @@ LNGCtrl::~LNGCtrl()
 {
 }
 
-END_UPP_NAMESPACE
+}

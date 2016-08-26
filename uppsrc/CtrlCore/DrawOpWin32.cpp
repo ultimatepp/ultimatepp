@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)      // LOG(x)
 #define LTIMING(x)   // RTIMING(x)
@@ -290,6 +290,6 @@ void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int width, Color penc
 	::Ellipse(GetHandle(), r.left, r.top, r.right, r.bottom);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

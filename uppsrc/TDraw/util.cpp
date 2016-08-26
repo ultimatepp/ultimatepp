@@ -9,7 +9,7 @@
 enum { DOC_SCREEN_ZOOM = 140 };
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef SYSTEMDRAW
 
@@ -1480,4 +1480,4 @@ PrinterInfo::PrinterInfo()
 #endif
 }
 
-END_UPP_NAMESPACE
+}

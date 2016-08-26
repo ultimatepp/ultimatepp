@@ -1,7 +1,7 @@
 #ifndef __TCtrlLib_CtrlArray__
 #define __TCtrlLib_CtrlArray__
 
-NAMESPACE_UPP
+namespace Upp {
 
 class CtrlArray : public Ctrl
 {
@@ -117,6 +117,6 @@ private:
 	bool              moving;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif//__TCtrlLib_CtrlArray__

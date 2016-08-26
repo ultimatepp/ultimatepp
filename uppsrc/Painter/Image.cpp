@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct RGBAV {
 	dword r, g, b, a;
@@ -208,4 +208,4 @@ void BufferPainter::StrokeOp(double width, const Image& image, const Xform2D& tr
 	RenderImage(width, image, transsrc, flags);
 }
 
-END_UPP_NAMESPACE
+}

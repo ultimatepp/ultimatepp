@@ -19,7 +19,7 @@
 #undef CY
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_WIN32
 
@@ -662,4 +662,4 @@ String GetDownloadFolder()  { return GetShellFolder("XDG_DOWNLOAD_DIR", "XDG_DOW
 
 #endif
 
-END_UPP_NAMESPACE
+}

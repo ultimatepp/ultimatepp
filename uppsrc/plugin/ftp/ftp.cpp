@@ -1,7 +1,7 @@
 #include "ftp.h"
 #include "lib/ftplib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOGBLOCK(x)  // LOGBLOCK(x)
 #define LLOG(x)       // DLOG(x)
@@ -307,4 +307,4 @@ String FtpClientGet(String url, String *error)
 	return data;
 }
 
-END_UPP_NAMESPACE
+}

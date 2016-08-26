@@ -9,7 +9,7 @@
 #	include <cxxabi.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool PanicMode;
 
@@ -874,4 +874,4 @@ WString Replace(const WString& s, const VectorMap<WString, WString>& fr)
 	return Replace__<wchar>(s, fr.GetKeys(), fr.GetValues());
 }
 
-END_UPP_NAMESPACE
+}

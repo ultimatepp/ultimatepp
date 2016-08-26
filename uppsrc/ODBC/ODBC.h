@@ -5,7 +5,7 @@
 #include <sql.h>
 #include <sqlext.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);
 
@@ -64,6 +64,6 @@ public:
 	~ODBCSession();
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

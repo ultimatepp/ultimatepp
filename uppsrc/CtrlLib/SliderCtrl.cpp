@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 SliderCtrl::SliderCtrl()
 : value(Null)
@@ -229,4 +229,4 @@ void SliderCtrl::LostFocus()
 
 SliderCtrl::~SliderCtrl() {}
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void IconDes::LeftDown(Point p, dword flags)
 {
@@ -109,4 +109,4 @@ Image IconDes::CursorImage(Point p, dword flags)
 	return flags & K_SHIFT ? fill_cursor : cursor_image;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "PdfDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String Pdf(const Array<Drawing>& report, Size sz, int margin, bool pdfa)
 {
@@ -18,4 +18,4 @@ INITBLOCK
 	SetDrawingToPdfFn(Pdf);
 }
 
-END_UPP_NAMESPACE
+}

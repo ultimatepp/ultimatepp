@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -523,4 +523,4 @@ Size GetImageStringDots(const String& src)
 	return sz;
 }
 
-END_UPP_NAMESPACE
+}

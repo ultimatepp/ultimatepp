@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define KEYNAMESPACE IconDesKeys
 #define KEYGROUPNAME "Icon designer"
@@ -318,4 +318,4 @@ IconDes::IconDes()
 	single_mode = false;
 }
 
-END_UPP_NAMESPACE
+}

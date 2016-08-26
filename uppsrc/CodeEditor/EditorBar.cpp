@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Renumber(LineInfo& lf)
 {
@@ -530,4 +530,4 @@ void SetError(LineInfo& li, int line, int err)
 	li.At(line).error = err;
 }
 
-END_UPP_NAMESPACE
+}

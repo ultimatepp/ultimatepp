@@ -4,7 +4,7 @@
 #include <sys/mman.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 #define LDUMP(x) // RDUMP(x)
@@ -1478,4 +1478,4 @@ int StreamHeading(Stream& stream, int ver, int minver, int maxver, const char* t
 	return ver;
 }
 
-END_UPP_NAMESPACE
+}

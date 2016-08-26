@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 dword Painter::GetInfo() const
 {
@@ -246,4 +246,4 @@ void Painter::DrawPaintingOp(const Rect& target, const Painting& p)
 	End();
 }
 
-END_UPP_NAMESPACE
+}

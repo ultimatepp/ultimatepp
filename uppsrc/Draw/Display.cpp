@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS DrawImg
 #define IMAGEFILE <Draw/DrawImg.iml>
@@ -408,4 +408,4 @@ PaintRect::PaintRect(const Display& _display, const Value& _val) {
 	value = _val;
 }
 
-END_UPP_NAMESPACE
+}

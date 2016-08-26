@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CH_STYLE(TabCtrl, Style, StyleDefault)
 {
@@ -621,4 +621,4 @@ TabDlg::TabDlg()
 	Ctrl::Add(exit);
 }
 
-END_UPP_NAMESPACE
+}

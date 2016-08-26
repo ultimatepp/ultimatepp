@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_GTK
 
@@ -75,4 +75,4 @@ bool FileSelector::Execute(bool open, const char *title)
 
 #endif
 
-END_UPP_NAMESPACE
+}

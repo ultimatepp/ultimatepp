@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 void ChSysInit()
 {
@@ -16,6 +16,6 @@ void ChHostSkin()
 	ChSysInit();
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

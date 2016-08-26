@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichPara::Smh(Lines& lines, HeightInfo *th, int cx) const
 {
@@ -432,4 +432,4 @@ int RichPara::Lines::BodyHeight() const
 	return sum;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Geom.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 LinearSolver::LinearSolver(int count, double tolerance)
 : rows(count)
@@ -126,4 +126,4 @@ void LinearSolver::SelfTest()
 	}
 }
 
-END_UPP_NAMESPACE
+}

@@ -2,7 +2,7 @@
 
 #include <plugin/Eigen/Eigen.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 using namespace Eigen;
 
@@ -435,4 +435,4 @@ INITBLOCK {
 	ExplicitEquation::Register<FourierEquation4>("FourierEquation4");
 }
 
-END_UPP_NAMESPACE
+}

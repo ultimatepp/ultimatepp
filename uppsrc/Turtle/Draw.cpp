@@ -4,7 +4,7 @@
 
 #define LLOG(x) // LOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SystemDraw::PutRect(const Rect& r, Color color)
 {
@@ -37,6 +37,6 @@ void SystemDraw::PutRect(const Rect& r, Color color)
 	pos = p;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

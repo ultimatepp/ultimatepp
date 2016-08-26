@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Ctrl::GuiPlatformConstruct()
 {
@@ -122,6 +122,6 @@ void Ctrl::SyncCaret() {
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

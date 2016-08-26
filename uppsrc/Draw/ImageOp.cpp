@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2)
 {
@@ -827,4 +827,4 @@ Image Dither(const Image& m, int dival)
 	return ib;
 }
 
-END_UPP_NAMESPACE
+}

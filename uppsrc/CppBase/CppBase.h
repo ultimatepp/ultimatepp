@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool IsCPPFile(const String& file);
 bool IsHFile(const String& path);
@@ -677,6 +677,6 @@ void                  ResolveTParam(const CppBase& codebase, Vector<String>& typ
 Index<String> GetExpressionType(const CppBase& codebase, const Parser& parser, const Vector<String>& xp);
 Vector<String> MakeXP(const char *s);
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 ColorPusher::~ColorPusher() {}
 
@@ -157,4 +157,4 @@ ColorButton::ColorButton()
 	Transparent();
 }
 
-END_UPP_NAMESPACE
+}

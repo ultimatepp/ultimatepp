@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 const wchar *eatstring(const wchar *s) {
 	int delim = *s++;
@@ -347,4 +347,4 @@ void CSyntax::Serialize(Stream& s)
 	s % highlight;
 };
 
-END_UPP_NAMESPACE
+}

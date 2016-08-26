@@ -5,7 +5,7 @@
 #include "CalcType.h"
 #include "CalcNode.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 extern void UseCalcBasic();
 
@@ -19,6 +19,6 @@ String GroupArray();
 String GroupConst();
 String GroupTrans();
 
-END_UPP_NAMESPACE
+}
 
 #endif//__TCoreCalc__

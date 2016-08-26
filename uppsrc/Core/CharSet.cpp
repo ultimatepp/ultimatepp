@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -2846,4 +2846,4 @@ String ToAscii(const String& s, byte charset)
 	return r;
 }
 
-END_UPP_NAMESPACE
+}

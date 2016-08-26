@@ -4,7 +4,7 @@
 
 #include <DocTypes/DocTypes.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <TCtrlLib/Help/DlgHelpView.lay>
 #include <CtrlCore/lay.h>
@@ -808,4 +808,4 @@ void DlgHelpLang::OnLangFileBrowse()
 	}
 }
 
-END_UPP_NAMESPACE
+}

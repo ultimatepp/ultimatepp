@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String MD5Digest(const char *text, int length)
 {
@@ -9,4 +9,4 @@ String MD5Digest(const char *text, int length)
 	return String(digest, 16);
 }
 
-END_UPP_NAMESPACE
+}

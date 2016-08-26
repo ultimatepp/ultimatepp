@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // RLOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -26,7 +26,7 @@ void ChHostSkin()
 
 #else
 
-END_UPP_NAMESPACE
+}
 
 #include <uxtheme.h>
 #if defined(_MSC_VER) && _MSC_VER > 1400	// Visual C > 2005
@@ -35,7 +35,7 @@ END_UPP_NAMESPACE
 #include <tmschema.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define DLLFILENAME "uxtheme.dll"
 #define DLIMODULE   XpTheme
@@ -650,4 +650,4 @@ void ChSysInit()
 
 #endif
 
-END_UPP_NAMESPACE
+}

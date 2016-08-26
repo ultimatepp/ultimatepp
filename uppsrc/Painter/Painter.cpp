@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct PaintCharPath : FontGlyphConsumer {
 	Painter *sw;
@@ -629,4 +629,4 @@ DrawPainter::~DrawPainter()
 	w.DrawImage(0, 0, *this);
 }
 	
-END_UPP_NAMESPACE
+}

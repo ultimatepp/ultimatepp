@@ -1,6 +1,6 @@
 #include "GeomCoords.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 GisCoords::Arg GisCoords::Arg::Edit(double& v, String ident, String name, String help_topic, double min, double max, bool not_null)
 {
@@ -489,4 +489,4 @@ bool GisTransform::Equals(const GisTransform& t) const
 	return Source() == t.Source() && Target() == t.Target();
 }
 
-END_UPP_NAMESPACE
+}

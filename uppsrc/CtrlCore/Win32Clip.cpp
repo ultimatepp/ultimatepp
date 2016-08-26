@@ -3,7 +3,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -537,6 +537,6 @@ void PasteClip::GuiPlatformConstruct()
 	dt = NULL;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

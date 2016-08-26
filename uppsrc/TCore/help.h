@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 class HelpInit
 {
@@ -136,4 +136,4 @@ RegisterHelpTopicInfo(ASSTRING(cls), __FILE__, callback(&COMBINE(cls, HelpTitleP
 #define HELP_TEXT(text) << text
 #define HELP_END );
 
-END_UPP_NAMESPACE
+}

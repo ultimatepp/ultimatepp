@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 // sql/template: SQL templates.
 
-NAMESPACE_UPP
+namespace Upp {
 
 void __sqltempl__instantiation__(Gate2<int, int>); // a weird compiler bug
 
@@ -161,4 +161,4 @@ SqlSelect SelectSchemaWhere(SqlBool cond = true, T * = 0)
 	return Select(T::ColumnSet()).FromSchema(SqlCol(T::TableName)).Where(cond);
 }
 
-END_UPP_NAMESPACE
+}

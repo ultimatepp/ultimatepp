@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class TextOption : public Option {
 public:
@@ -17,6 +17,6 @@ public:
 	virtual Value  GetData() const;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void EditorSyntax::Clear()
 {
@@ -56,4 +56,4 @@ void EditorSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& tex
 
 EditorSyntax::~EditorSyntax() {}
 
-END_UPP_NAMESPACE
+}

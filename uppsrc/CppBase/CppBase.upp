@@ -1,7 +1,5 @@
 description "Partly heurestic (imprecise) C++ parser for purposes of Assist++ (intellisense)\377";
 
-optimize_speed;
-
 uses
 	Core;
 

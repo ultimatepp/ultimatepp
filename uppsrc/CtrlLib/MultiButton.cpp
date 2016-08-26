@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CH_STYLE(MultiButton, Style, StyleDefault)
 {
@@ -740,4 +740,4 @@ void MultiButtonFrame::AddTo(Ctrl& w)
 	w.AddFrame(*this);
 }
 
-END_UPP_NAMESPACE
+}

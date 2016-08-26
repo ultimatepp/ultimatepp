@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)
 
@@ -317,6 +317,6 @@ void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencol
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

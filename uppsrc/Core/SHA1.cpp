@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 /*
 SHA-1 in C
@@ -210,4 +210,4 @@ String  SHA1StringS(const String& data)
 	return SHA1StringS(~data, data.GetLength());
 }
 
-END_UPP_NAMESPACE
+}

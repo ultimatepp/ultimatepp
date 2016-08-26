@@ -1,6 +1,6 @@
 #include "TCoreDb.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static String GetRandomString(int maxlength = 50000, int minlength = 0)
 {
@@ -669,4 +669,4 @@ void DataBase::FullTest()
 	StructuredTest();
 }
 
-END_UPP_NAMESPACE
+}

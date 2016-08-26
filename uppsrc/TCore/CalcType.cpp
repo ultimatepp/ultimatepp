@@ -1,7 +1,7 @@
 #include "TCoreCalc.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 String CalcTypeDescribeInt()             { return t_("integer"); }
 
@@ -85,4 +85,4 @@ bool CalcType<bool>::ValueTo(Value v)
 	return !IsNumber(v) || (double)v != 0;
 }
 
-END_UPP_NAMESPACE
+}

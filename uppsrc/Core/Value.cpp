@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef flagSO
 const Nuller Null;
@@ -768,4 +768,4 @@ String GetErrorText(const Value& v) {
 	return ((RichValueRep<String> *)v.GetVoidPtr())->Get();
 }
 
-END_UPP_NAMESPACE
+}

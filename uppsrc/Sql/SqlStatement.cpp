@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String SqlStatement::Get(int dialect) const {
 	ASSERT(dialect == ORACLE || dialect == SQLITE3 || dialect == MY_SQL || dialect == MSSQL ||
@@ -682,4 +682,4 @@ Value SqlStatement::Fetch() const {
 
 #endif
 
-END_UPP_NAMESPACE
+}

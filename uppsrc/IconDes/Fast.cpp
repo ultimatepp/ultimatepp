@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void IconDes::MaskSelection()
 {
@@ -98,4 +98,4 @@ void IconDes::Set(Point p, RGBA rgba, dword flags)
 	}
 }
 
-END_UPP_NAMESPACE
+}

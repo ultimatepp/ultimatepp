@@ -8,7 +8,7 @@ int sMemDiagInitCount;
 
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #if defined(UPP_HEAP)
 
@@ -242,7 +242,7 @@ void MemoryInitDiagnostics()
 #endif
 
 
-END_UPP_NAMESPACE
+}
 
 #if (defined(TESTLEAKS) || defined(HEAPDBG)) && defined(COMPILER_GCC) && defined(UPP_HEAP)
 

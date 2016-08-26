@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 DocReport::DocReport(const char *_name) {
 	name = _name;
@@ -254,4 +254,4 @@ void PutQTF(DocReport& r, const char *qtf)
 	r.SetYPos(end.y);
 }
 
-END_UPP_NAMESPACE
+}

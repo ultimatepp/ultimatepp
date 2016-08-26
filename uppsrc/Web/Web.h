@@ -21,7 +21,7 @@ typedef int socklen_t;
 #error Unsupported platform
 #endif//PLATFORM switch
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "util.h"
 #include "html.h"
@@ -34,6 +34,6 @@ NAMESPACE_UPP
 #include "sproc.h"
 #include "ScgiServer.h"
 
-END_UPP_NAMESPACE
+}
 
 #endif

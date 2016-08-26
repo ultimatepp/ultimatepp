@@ -8,7 +8,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)     // DLOG(x)
 #define LDUMP(x)    // DDUMP(x)
@@ -149,6 +149,6 @@ bool Ctrl::StartSession()
 
 Callback Ctrl::WhenDisconnect;
 
-END_UPP_NAMESPACE
+}
 
 #endif

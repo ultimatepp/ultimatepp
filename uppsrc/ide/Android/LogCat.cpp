@@ -1,6 +1,6 @@
 #include "Executables.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 LogCat::LogCat()
 {
@@ -26,4 +26,4 @@ String LogCat::MakeCmdByTag(const Adb& adb, const String& packageName) const
 	return adb.MakeCmd() + " " + MakeCmdByTag(packageName);
 }
 
-END_UPP_NAMESPACE
+}

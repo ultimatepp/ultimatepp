@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 enum SetOpCode
 {
@@ -183,4 +183,4 @@ template <class T> T SetAnd (const T& set1, const T& set2) { return SetAnd<T>(se
 template <class T> T SetSub (const T& set1, const T& set2) { return SetSub<T>(set1.Begin(), set1.End(), set2.Begin(), set2.End()); }
 template <class T> T SetXor (const T& set1, const T& set2) { return SetXor<T>(set1.Begin(), set1.End(), set2.Begin(), set2.End());  }
 
-END_UPP_NAMESPACE
+}

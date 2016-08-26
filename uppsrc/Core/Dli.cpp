@@ -12,7 +12,7 @@ typedef void   *DLLHANDLE;
 
 #include <winnt.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class PeFile
 {
@@ -101,7 +101,7 @@ const char *PeFile::FindExportRaw(const char *name, bool case_sensitive) const
 	return 0;
 }
 
-END_UPP_NAMESPACE
+}
 
 HMODULE CheckDll__(const char *fn, const char *const *names, UPP::Vector<void *>& plist)
 {

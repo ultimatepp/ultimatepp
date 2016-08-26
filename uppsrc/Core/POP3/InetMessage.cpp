@@ -2,7 +2,7 @@
 
 #define LLOG(x)  // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 String QDecode(const String& s) 
 {
@@ -354,4 +354,4 @@ String FormatMessageIDs(const Index<String>& id)
 	return r;
 }
 
-END_UPP_NAMESPACE
+}

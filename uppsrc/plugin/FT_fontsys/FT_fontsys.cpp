@@ -7,7 +7,7 @@
 #define LLOG(x)     //  DLOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct FtFontStyle {
 	String      path;
@@ -418,4 +418,4 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 		RenderOutline(face->glyph->outline, sw, x, y + fnt.GetAscent());
 }
 
-END_UPP_NAMESPACE
+}

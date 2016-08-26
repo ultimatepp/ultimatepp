@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class StyleKeysDlg : public WithStyleKeysLayout<TopWindow> {
 	typedef StyleKeysDlg CLASSNAME;
@@ -142,4 +142,4 @@ RichEdit::StyleKey::StyleKey()
 	paper = Null;
 }
 
-END_UPP_NAMESPACE
+}

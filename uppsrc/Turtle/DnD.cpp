@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -145,6 +145,6 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 
 void Ctrl::SetSelectionSource(const char *fmts) {}
 
-END_UPP_NAMESPACE
+}
 
 #endif

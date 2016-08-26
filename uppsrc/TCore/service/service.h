@@ -8,7 +8,7 @@
 extern bool InitService(); // implemented by main program
 extern void RunService(); // implemented by main program
 
-NAMESPACE_UPP
+namespace Upp {
 
 extern volatile bool service_stopped;
 extern volatile bool service_paused;
@@ -18,7 +18,7 @@ bool InstallService(String name, String display_name, String& cmdline, String& s
 bool UninstallService(String name, String& status);
 void RunServiceDispatcher(String service_name);
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

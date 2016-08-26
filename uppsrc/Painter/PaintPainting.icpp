@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 template <class T>
 void sGet(T& r, StringStream& ss)
@@ -326,4 +326,4 @@ INITBLOCK
 	ImageAnyDrawPainter(sCP, sEP);
 }
 
-END_UPP_NAMESPACE
+}

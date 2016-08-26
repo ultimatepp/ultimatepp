@@ -1,6 +1,6 @@
 #include "Java.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String Java::GetDelimiter()
 {
@@ -11,4 +11,4 @@ String Java::GetDelimiter()
 #endif
 }
 
-END_UPP_NAMESPACE
+}

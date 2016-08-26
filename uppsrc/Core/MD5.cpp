@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define MD5_CTX UPP_MD5_CTX
 
@@ -390,4 +390,4 @@ String MD5StringS(const String& data)
 	return MD5StringS(~data, data.GetCount());
 }
 
-END_UPP_NAMESPACE
+}

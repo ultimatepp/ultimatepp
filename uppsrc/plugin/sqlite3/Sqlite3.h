@@ -3,7 +3,7 @@
 
 #include <Sql/Sql.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 
 // Deprecated, use SqlPerformScript instead
@@ -67,6 +67,6 @@ public:
 	~Sqlite3Session();
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

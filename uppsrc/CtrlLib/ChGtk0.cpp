@@ -3,17 +3,17 @@
 #ifdef PLATFORM_X11
 #ifdef flagNOGTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 void ChHostSkin() {}
 
-END_UPP_NAMESPACE
+}
 
 #else
 
 #include "ChGtk.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #if defined(_DEBUG)// && 0
 #include <plugin/png/png.h>
@@ -648,7 +648,7 @@ void GtkChScrollBar(Value *lbutton, Value *lbutton2,
 */
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif
 #endif

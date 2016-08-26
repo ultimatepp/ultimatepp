@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class AndroidDevice : public Moveable<AndroidDevice> {
 public:
@@ -61,6 +61,6 @@ private:
 	Size   size;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

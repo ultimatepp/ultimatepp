@@ -1,7 +1,7 @@
 #ifndef __INCLUDE_CTRL_TREECTRL_H__
 #define __INCLUDE_CTRL_TREECTRL_H__
 
-NAMESPACE_UPP
+namespace Upp {
 
 class OldTreeEdit;
 class OldTreeCursor;
@@ -462,6 +462,6 @@ protected:
 	char              drag_state; // 0 = off, 1 = on, 2 = possible
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif//__INCLUDE_CTRL_TREECTRL_H__

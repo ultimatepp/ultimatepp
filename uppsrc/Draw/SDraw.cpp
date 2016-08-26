@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 dword SDraw::GetInfo() const
 {
@@ -90,4 +90,4 @@ void SDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count,
 	}
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Size RichEdit::GetPhysicalSize(const RichObject& obj)
 {
@@ -422,4 +422,4 @@ void RichEdit::LeftRepeat(Point p, dword flags)
 	}
 }
 
-END_UPP_NAMESPACE
+}

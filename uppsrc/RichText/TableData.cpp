@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichTable::Invalidate()
 {
@@ -588,4 +588,4 @@ RichTable::RichTable()
 	Invalidate();
 }
 
-END_UPP_NAMESPACE
+}

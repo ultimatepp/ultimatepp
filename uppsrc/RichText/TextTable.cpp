@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 RichTable::Format RichText::GetTableFormat(int table) const
 {
@@ -227,4 +227,4 @@ void       RichText::ApplyTableFormatInfo(int table, const Rect& sel, const Rich
 	RefreshAll();
 }
 
-END_UPP_NAMESPACE
+}

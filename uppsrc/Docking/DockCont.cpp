@@ -1,6 +1,6 @@
 #include "Docking.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 // ImgButton
 void ImgButton::Paint(Draw &w)
@@ -841,4 +841,4 @@ DockCont::DockCont()
 	Lock(false);	
 }
 
-END_UPP_NAMESPACE
+}

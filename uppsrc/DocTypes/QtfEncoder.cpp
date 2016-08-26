@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static Color DocQTFColor[] = {
 	Black, LtGray, White, Red, Green, Blue, LtRed, WhiteGray, LtCyan, Yellow
@@ -260,4 +260,4 @@ String AsQtf(const Document& text)
 	return qtf;
 }
 
-END_UPP_NAMESPACE
+}

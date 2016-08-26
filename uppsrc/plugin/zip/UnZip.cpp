@@ -1,6 +1,6 @@
 #include "zip.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void UnZip::ReadDir()
 {
@@ -160,4 +160,4 @@ UnZip::UnZip()
 
 UnZip::~UnZip() {}
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 StaticMutex RichPara::cache_lock;
 
@@ -847,4 +847,4 @@ String RichPara::Format::ToString() const
 
 #endif
 
-END_UPP_NAMESPACE
+}

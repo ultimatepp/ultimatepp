@@ -2,7 +2,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void BufferPainter::ClearPath()
 {
@@ -142,4 +142,4 @@ void BufferPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
 #endif
 }
 
-END_UPP_NAMESPACE
+}

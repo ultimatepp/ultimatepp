@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // TIMING(x)
 
@@ -353,4 +353,4 @@ int ToolButton::OverPaint() const
 	return style->overpaint;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,7 +1,7 @@
 #include "gif.h"
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct GifGlobalInfo // information about gif file
 {
@@ -975,4 +975,4 @@ void GIFEncoder::WriteLineRaw(const byte *s)
 	data->WriteLineRaw(s);
 }
 
-END_UPP_NAMESPACE
+}

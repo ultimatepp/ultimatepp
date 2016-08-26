@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -772,4 +772,4 @@ void LRUList::RemoveEntry(const String& path)
 		lru.Remove(q);
 }
 
-END_UPP_NAMESPACE
+}

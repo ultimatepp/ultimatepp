@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool RichTable::Reduce(RichContext& rc) const
 {
@@ -174,4 +174,4 @@ RichTable::Layout RichTable::Realize(RichContext rc, int ny) const
 	return tab;
 }
 
-END_UPP_NAMESPACE
+}

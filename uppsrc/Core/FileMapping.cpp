@@ -4,7 +4,7 @@
 #include <sys/mman.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 static int sMappingGranularity_()
 {
@@ -228,4 +228,4 @@ String FileMapping::GetData(int64 offset, int len)
 	}
 }
 
-END_UPP_NAMESPACE
+}

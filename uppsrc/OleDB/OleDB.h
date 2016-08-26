@@ -20,7 +20,7 @@
 #undef byte
 #undef CY
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool   OleDBPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);
 String MSSQLTextType(int width);
@@ -78,7 +78,7 @@ protected:
 	int                    level;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

@@ -1,6 +1,6 @@
 #include "zip.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Zip::WriteFolder(const char *path, Time tm)
 {
@@ -256,4 +256,4 @@ String StringZip::Finish()
 	return zip.GetResult();
 }
 
-END_UPP_NAMESPACE
+}

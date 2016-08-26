@@ -1,7 +1,7 @@
 #include "Painter.h"
 #include "Fillers.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void FillRGBA(RGBA *t, RGBA c, int len)
 {
@@ -507,4 +507,4 @@ void NoAAFillerFilter::Render(int val)
 	t->Render(val < 128 ? 0 : 256);
 }
 
-END_UPP_NAMESPACE
+}

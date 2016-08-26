@@ -1,7 +1,7 @@
 #include "Web.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)       // RLOG(x)
 #define LLOGBLOCK(x)  // RLOGBLOCK(x)
@@ -418,4 +418,4 @@ String HttpClientGet(String url, String *server_headers, String *error,
 	return HttpClientGet(url, Null, Null, Null, server_headers, error, progress, timeout, max_redirect, retries);
 }
 
-END_UPP_NAMESPACE
+}

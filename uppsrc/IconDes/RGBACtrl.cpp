@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Color s_stdcolor[] = {
 	Black,
@@ -198,4 +198,4 @@ RGBACtrl::RGBACtrl()
 	SyncText();
 }
 
-END_UPP_NAMESPACE
+}

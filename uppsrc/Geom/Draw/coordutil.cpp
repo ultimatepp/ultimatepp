@@ -1,6 +1,6 @@
 #include "GeomDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static void ExpandSegmentUp(Vector<Point>& src, Vector<Point>& dest, const LinearSegmentTree::Node *node, Point smin, Point dmin)
 {
@@ -201,4 +201,4 @@ void PlotRect(PlotterTool& tool, GisTransform transform, const Rectf& src)
 	PlotLine(tool, transform, src.BottomLeft(),  src.TopLeft());
 }
 
-END_UPP_NAMESPACE
+}

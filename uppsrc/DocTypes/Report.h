@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <DocTypes/Report.lay>
 #include <CtrlCore/lay.h>
@@ -185,4 +185,4 @@ public:
 
 void PutQTF(DocReport& r, const char *qtf);
 
-END_UPP_NAMESPACE
+}

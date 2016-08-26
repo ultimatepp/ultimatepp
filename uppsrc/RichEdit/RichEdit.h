@@ -3,7 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS RichEditImg
 #define IMAGEFILE <RichEdit/RichEdit.iml>
@@ -862,6 +862,6 @@ public:
 
 void AppendClipboard(RichText&& txt);
 
-END_UPP_NAMESPACE
+}
 
 #endif

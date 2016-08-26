@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 FileSel& GFileSel()
 {
@@ -85,4 +85,4 @@ bool SelectSaveFile(const char *types, const String& data)
 	return true;
 }
 
-END_UPP_NAMESPACE
+}

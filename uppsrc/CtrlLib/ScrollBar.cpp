@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -834,4 +834,4 @@ void Scroller::Scroll(Ctrl& p, int newposy)
 	Scroll(p, p.GetSize(), newposy);
 }
 
-END_UPP_NAMESPACE
+}

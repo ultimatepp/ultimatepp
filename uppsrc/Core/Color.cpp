@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RGBtoHSV(double r, double g, double b, double& h, double& s, double& v)
 {
@@ -186,4 +186,4 @@ bool IsLight(Color c)
 	return Grayscale(c) > 255 - 80;
 }
 
-END_UPP_NAMESPACE
+}

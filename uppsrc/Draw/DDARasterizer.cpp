@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 DDARasterizer::DDARasterizer()
 {
@@ -247,4 +247,4 @@ DDARasterizer& DDARasterizer::Ellipse(const Rect& rect)
 
 DDARasterizer::~DDARasterizer() {}
 
-END_UPP_NAMESPACE
+}

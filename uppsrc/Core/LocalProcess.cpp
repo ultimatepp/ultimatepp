@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_POSIX
 //#BLITZ_APPROVE
@@ -642,4 +642,4 @@ String Sys(const char *cmd, const Vector<String>& arg, bool convertcharset)
 	return Sys(cmd, arg, r, convertcharset) ? String::GetVoid() : r;
 }
 
-END_UPP_NAMESPACE
+}

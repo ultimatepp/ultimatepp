@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 RichTable::Format::Format()
 {
@@ -402,4 +402,4 @@ void RichTable::ApplyZoom(Zoom z, const RichStyles& ostyle, const RichStyles& zs
 			}
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class AlphaImageInfo
 {
@@ -370,4 +370,4 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 	return out.GetResult();
 }
 
-END_UPP_NAMESPACE
+}

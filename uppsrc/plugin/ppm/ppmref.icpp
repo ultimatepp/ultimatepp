@@ -1,9 +1,9 @@
 #include "ppm.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 INITBLOCK {
 	StreamRaster::Register<PPMRaster>();
 }
 
-END_UPP_NAMESPACE
+}

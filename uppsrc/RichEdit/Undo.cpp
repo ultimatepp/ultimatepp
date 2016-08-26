@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::UndoInsert::Apply(RichText& txt)
 {
@@ -86,4 +86,4 @@ RichEdit::UndoStyles::UndoStyles(const RichText& txt)
 	styles <<= txt.GetStyles();
 }
 
-END_UPP_NAMESPACE
+}

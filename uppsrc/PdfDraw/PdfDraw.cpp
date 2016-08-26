@@ -1,6 +1,6 @@
 #include "PdfDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "ICCColorSpace.i"
 
@@ -1069,4 +1069,4 @@ String PdfDraw::Finish()
 	return out;
 }
 
-END_UPP_NAMESPACE
+}

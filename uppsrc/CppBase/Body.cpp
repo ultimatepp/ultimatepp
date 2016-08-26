@@ -2,7 +2,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Parser::Locals(const String& type)
 {
@@ -304,4 +304,4 @@ String Parser::ResolveAutoType()
 	return i < 0 ? String() : s[i];
 }
 	
-END_UPP_NAMESPACE
+}

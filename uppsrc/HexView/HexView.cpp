@@ -1,6 +1,6 @@
 #include "HexView.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 inline int FormatHexDigit(int c) {
 	return c < 10 ? c + '0' : c - 10 + 'a';
@@ -491,4 +491,4 @@ HexView::HexView()
 	WhenGoto = THISBACK(StdGoto);
 }
 
-END_UPP_NAMESPACE
+}

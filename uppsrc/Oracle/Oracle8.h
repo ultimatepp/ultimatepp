@@ -5,7 +5,7 @@
 #include "OraCommon.h"
 #include "OciCommon.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #if defined(PLATFORM_WIN32) && defined(COMPILER_MSC)
 #define __STDC__ 1
@@ -174,6 +174,6 @@ public:
 #undef text
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

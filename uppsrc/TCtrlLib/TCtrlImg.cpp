@@ -4,8 +4,8 @@
 #endif//COMPILER_MSC
 #include "TCtrlImg.h"
 
-NAMESPACE_UPP
+namespace Upp {
 #define IMAGECLASS TCtrlImg
 #define IMAGEFILE <TCtrlLib/tctrllib.iml>
 #include <Draw/iml_source.h>
-END_UPP_NAMESPACE
+}

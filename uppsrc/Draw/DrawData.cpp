@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)
 // #define BENCHMARK_RLE
@@ -122,4 +122,4 @@ void Draw::DrawDataOp(int x, int y, int cx, int cy, const String& data, const ch
 
 DataDrawer::~DataDrawer() {}
 
-END_UPP_NAMESPACE
+}

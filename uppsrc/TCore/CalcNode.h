@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 struct CalcPacket;
 class  CalcNode;
@@ -724,4 +724,4 @@ RegisterHelpTopicInfo("Calc$" topic, __FILE__, callback(&FGENID(chlt, SUBEXPAND(
 #define MDECLAP(id, x, group)  MDECLTA(BTA0, "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
 #define MDECLAP0(id, x, group) MDECLTA(BTA1, "C" ASSTRING(id) ASSTRING(x), ASSTRING(id), group, COMBINE3(C, id, x))
 
-END_UPP_NAMESPACE
+}

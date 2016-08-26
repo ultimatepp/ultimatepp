@@ -2,7 +2,7 @@
 
 #define LLOG(x)  // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Rasterizer::CvLine(double x1, double y1, double x2, double y2)
 {
@@ -100,4 +100,4 @@ void Rasterizer::Line(const Pointf& p)
 	p0 = p;
 }
 
-END_UPP_NAMESPACE
+}

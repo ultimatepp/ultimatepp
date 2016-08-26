@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)     // DLOG(x)
 #define LTIMING(x)  // RTIMING(x)
@@ -311,4 +311,4 @@ void Qualify(CppBase& base)
 	QualifyPass2(base);
 }
 
-END_UPP_NAMESPACE
+}

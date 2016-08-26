@@ -1,6 +1,6 @@
 #include "SSL.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String SslBuffer::Get() const
 {
@@ -205,4 +205,4 @@ String Asn1ToString(ASN1_STRING *s)
 	return String(s->data, s->length);
 }
 
-END_UPP_NAMESPACE
+}

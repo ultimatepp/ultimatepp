@@ -1,9 +1,9 @@
 #include "gif.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 INITBLOCK {
 	StreamRaster::Register<GIFRaster>();
 }
 
-END_UPP_NAMESPACE
+}

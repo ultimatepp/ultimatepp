@@ -15,7 +15,7 @@
 #include <signal.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 volatile bool service_stopped = false;
 volatile bool service_paused = false;
@@ -276,6 +276,6 @@ void RunServiceDispatcher(String service_name_)
 	return;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

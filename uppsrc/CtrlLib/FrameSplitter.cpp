@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SplitterFrame::FrameAdd(Ctrl& parent)
 {
@@ -150,4 +150,4 @@ SplitterFrame::SplitterFrame()
 	SetStyle(Splitter::StyleDefault());
 }
 
-END_UPP_NAMESPACE
+}

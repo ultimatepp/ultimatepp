@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static void sLoadBom(Stream& in, String *t, WString *wt, byte def_charset) 
 {
@@ -124,4 +124,4 @@ bool SaveFileBOMUtf8(const char *path, const String& data)
 	return SaveStreamBOMUtf8(out, data);
 }
 
-END_UPP_NAMESPACE
+}

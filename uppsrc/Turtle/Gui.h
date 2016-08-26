@@ -1,6 +1,6 @@
 #define GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 class SystemDraw : public Draw {
 public:
@@ -321,7 +321,7 @@ public:
 	~ImageDraw();
 };
 
-END_UPP_NAMESPACE
+}
 
 #define GUIPLATFORM_KEYCODES_INCLUDE "Win32Keys.h"
 
@@ -339,13 +339,13 @@ END_UPP_NAMESPACE
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE "Win32Top.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 inline unsigned GetHashValue(const HWND& hwnd)
 {
 	return (unsigned)(intptr_t)hwnd;
 }
-END_UPP_NAMESPACE
+}
 
 #ifdef PLATFORM_WIN32
 #ifndef PLATFORM_WINCE

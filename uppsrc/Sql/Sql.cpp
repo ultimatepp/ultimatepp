@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // DLOG(x)
 
@@ -722,4 +722,4 @@ void operator*=(ValueMap& map, SqlSelect select)
 }
 #endif
 
-END_UPP_NAMESPACE
+}

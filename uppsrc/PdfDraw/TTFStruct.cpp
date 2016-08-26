@@ -1,6 +1,6 @@
 #include "PdfDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void   TTFReader::Head::Serialize(TTFStream& s)
 {
@@ -34,4 +34,4 @@ void   TTFReader::Post::Serialize(TTFStream& s)
 	  % reserved % minMemType42 % maxMemType42 % minMemType1 % maxMemType1;
 }
 
-END_UPP_NAMESPACE
+}
