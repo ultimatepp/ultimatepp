@@ -572,5 +572,9 @@ GetHashValue method defines GetHashValue function too.&]
 [s3; Recommended tutorials:&]
 [s5; If you want to learn more, we have several tutorials that you 
 can find useful:&]
+[s5;l160;i150;O0;~~~32; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ Containers 
+Tutorial] `- everything you should know about NTL (Not standard 
+Template Library) containers. This is the natural continuation 
+of issues raised in this article.&]
 [s5;l160;i150;O0;~~~32; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
 tutorial] `- learn about creating GUI application with U`+`+.]]
