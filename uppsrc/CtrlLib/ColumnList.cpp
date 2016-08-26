@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void ColumnList::MouseWheel(Point p, int zdelta, dword keyflags) {
 	sb.Wheel(zdelta);
@@ -1073,4 +1073,4 @@ ColumnList::ColumnList() {
 
 ColumnList::~ColumnList() {}
 
-END_UPP_NAMESPACE
+}

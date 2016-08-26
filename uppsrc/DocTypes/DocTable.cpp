@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 TableCell& TableCell::NewPar() {
 	par.Add();
@@ -534,4 +534,4 @@ int  Table::GetWidth(int zoom) const {
 	return cx + 2 * GetFrameWidth();
 }
 
-END_UPP_NAMESPACE
+}

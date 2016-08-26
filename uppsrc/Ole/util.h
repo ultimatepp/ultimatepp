@@ -1,6 +1,6 @@
 #if defined(PLATFORM_WIN32) && defined(COMPILER_MSC)
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef COMPILER_MSC
 typedef __int64 longlong_t;
@@ -322,6 +322,6 @@ protected:
 	int64          current_offset;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class Smtp : public TcpSocket {
 	struct Attachment
@@ -91,6 +91,6 @@ public:
 	static String  FormatAddr(const String& addr, const String& name);
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

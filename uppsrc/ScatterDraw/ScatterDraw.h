@@ -6,7 +6,7 @@
 #include "DataSource.h"
 #include "Equation.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "DrawingFunctions.h"
 #include "SeriesPlot.h"
@@ -942,7 +942,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 	w.End();
 }
 
-END_UPP_NAMESPACE
+}
 		
 #endif
 

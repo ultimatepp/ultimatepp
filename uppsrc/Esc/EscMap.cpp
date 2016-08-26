@@ -1,6 +1,6 @@
 #include "Esc.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -70,4 +70,4 @@ int  EscValue::GetFieldInt(const char *id) const
 	return HasNumberField(id) ? MapGet(id).GetInt() : 0;
 }
 
-END_UPP_NAMESPACE
+}

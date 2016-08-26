@@ -17,7 +17,7 @@
 #include <ieeefp.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 void UseCalcBasic() {} // to bring in globally constructed objects
 
@@ -1368,4 +1368,4 @@ FDECLP(upper, S, GroupString)
 FDECLP(lower, S, GroupString)
 FDECLP(ascii, S, GroupString)
 
-END_UPP_NAMESPACE
+}

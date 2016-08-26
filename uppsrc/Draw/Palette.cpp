@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)
 
@@ -278,4 +278,4 @@ void CreatePalette(Raster& raster, RGBA *palette, int ncolors, PaletteCv& cv)
 		CreatePaletteCv(palette, ncolors, cv);
 }
 
-END_UPP_NAMESPACE
+}

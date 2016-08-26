@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SqlSchema::FlushColumn() {
 	if(column.IsEmpty()) return;
@@ -214,4 +214,4 @@ void operator*(SqlSchema& schema, const SqlInsert& insert) {
 	                    << ";\n";
 }
 
-END_UPP_NAMESPACE
+}

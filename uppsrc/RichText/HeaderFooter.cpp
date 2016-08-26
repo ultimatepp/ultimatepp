@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct RichNumberField : RichPara::FieldType {
 	virtual Array<RichPara::Part> Evaluate(const String& param, VectorMap<String, Value>& vars,
@@ -102,4 +102,4 @@ void RichTxt::SetFooterQtf(const char *qtf)
 	r_type = ALL;
 }
 
-END_UPP_NAMESPACE
+}

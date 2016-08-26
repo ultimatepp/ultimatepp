@@ -5,7 +5,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <plugin/pcre/Pcre.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define  LAYOUTFILE <CodeEditor/CodeEditor.lay>
 #include <CtrlCore/lay.h>
@@ -514,6 +514,6 @@ public:
 String ReadList(WithDropChoice<EditString>& e);
 void   WriteList(WithDropChoice<EditString>& e, const String& data);
 
-END_UPP_NAMESPACE
+}
 
 #endif

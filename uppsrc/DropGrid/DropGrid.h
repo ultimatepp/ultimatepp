@@ -4,7 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <GridCtrl/GridCtrl.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class DropGrid : public Convert, public GridDisplay, public Ctrl
 {
@@ -235,6 +235,6 @@ class DropGrid : public Convert, public GridDisplay, public Ctrl
 
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

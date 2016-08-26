@@ -1,6 +1,6 @@
 #include "bmp.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "bmphdr.h"
 
@@ -205,4 +205,4 @@ String WriteIcon(const Vector<Image>& icons, int flags)
 	return out;
 }
 
-END_UPP_NAMESPACE
+}

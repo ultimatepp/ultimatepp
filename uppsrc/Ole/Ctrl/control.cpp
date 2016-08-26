@@ -2,7 +2,7 @@
 
 #ifdef PLATFORM_WIN32
 
-NAMESPACE_UPP
+namespace Upp {
 
 LPOLESTR AllocString(String s)
 {
@@ -1204,6 +1204,6 @@ HRESULT OcxConnectionPointContainer::FindConnectionPoint(REFIID riid, IConnectio
 	return LOGRESULT(S_OK);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

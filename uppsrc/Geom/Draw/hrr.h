@@ -1,7 +1,7 @@
 #ifndef __Geom_Draw_hrr__
 #define __Geom_Draw_hrr__
 
-NAMESPACE_UPP
+namespace Upp {
 
 //#include "Stream.h"
 
@@ -234,6 +234,6 @@ private:
 	int                        map_offset;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif//__Geom_Draw_hrr__

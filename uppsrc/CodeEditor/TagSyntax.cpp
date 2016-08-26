@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 TagSyntax::TagSyntax()
 {
@@ -302,4 +302,4 @@ void TagSyntax::Serialize(Stream& s)
 	  % html;
 }
 
-END_UPP_NAMESPACE
+}

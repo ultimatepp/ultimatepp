@@ -2,7 +2,7 @@
 
 #include "method.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 
@@ -855,4 +855,4 @@ GisCoords GisCoords::GetEPSG(int code)
 	return GisCoords(gc);
 }
 
-END_UPP_NAMESPACE
+}

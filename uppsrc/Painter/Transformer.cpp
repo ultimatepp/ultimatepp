@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void LinearPathConsumer::End()
 {
@@ -21,4 +21,4 @@ void Transformer::Line(const Pointf& p)
 	PutLine(xform.Transform(p));
 }
 
-END_UPP_NAMESPACE
+}

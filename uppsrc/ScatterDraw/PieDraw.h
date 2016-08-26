@@ -5,7 +5,7 @@
 #include <Painter/Painter.h>
 #include "DataSource.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class PieDraw {
 public:
@@ -90,6 +90,6 @@ private:
 };
 
 
-END_UPP_NAMESPACE
+}
 		
 #endif

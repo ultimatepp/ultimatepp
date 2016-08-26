@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef COMPILER_MSC
 typedef __int64 longlong_t;
@@ -292,4 +292,4 @@ bool   XmlBool(XmlParser& xml);
 int    XmlInt(XmlParser& xml);
 double XmlDouble(XmlParser& xml);
 
-END_UPP_NAMESPACE
+}

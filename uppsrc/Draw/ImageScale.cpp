@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum
 {
@@ -508,4 +508,4 @@ Image Rescale(const Image& src, int cx, int cy, Gate2<int, int> progress)
 	return Rescale(src, Size(cx, cy));
 }
 
-END_UPP_NAMESPACE
+}

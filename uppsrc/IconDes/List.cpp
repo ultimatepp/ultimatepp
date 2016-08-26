@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static String sFormatImageName(const String& name, const Image& img, bool exp)
 {
@@ -502,4 +502,4 @@ void IconDes::Drag()
 	ilist.DoDragAndDrop(InternalClip(ilist, "icondes-icon"), ilist.GetDragSample(), DND_MOVE);
 }
 
-END_UPP_NAMESPACE
+}

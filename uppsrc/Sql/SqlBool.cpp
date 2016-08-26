@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SqlBool::SetTrue() {
 	priority = TRUEVAL;
@@ -155,4 +155,4 @@ SqlBool RightJoin(SqlId tab1, SqlId tab2, SqlId key) {
 	return key.Of(tab1).Quoted() == SqlId(key.Of(tab2).Quoted() + "(+)");
 }
 
-END_UPP_NAMESPACE
+}

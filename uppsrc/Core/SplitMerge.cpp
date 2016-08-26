@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 template <class S, class Char, class F>
 Vector<S> SplitGeneric(int maxcount, const F& delim, const Char *s, bool ignoreempty = true)
@@ -325,4 +325,4 @@ __Expand12(E__NFBody)
 #undef E__PI
 #undef E__NFBody
 
-END_UPP_NAMESPACE
+}

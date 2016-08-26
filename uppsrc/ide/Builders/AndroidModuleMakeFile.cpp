@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 AndroidModuleMakeFile::AndroidModuleMakeFile()
 {
@@ -150,4 +150,4 @@ void AndroidModuleMakeFile::AppendModules(String& makeFile) const
 	}
 }
 
-END_UPP_NAMESPACE
+}

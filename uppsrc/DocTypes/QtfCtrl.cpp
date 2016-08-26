@@ -1,6 +1,6 @@
 #include "DocTypes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void QtfCtrl::MouseWheel(Point p, int zdelta, dword keyflags) {
 	sb.Wheel(zdelta);
@@ -123,4 +123,4 @@ void QtfCtrl::Pick(pick_ Document& _doc) {
 	Refresh();
 }
 
-END_UPP_NAMESPACE
+}

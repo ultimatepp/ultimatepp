@@ -10,7 +10,7 @@
 #endif
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 
 #ifdef GUI_WIN
@@ -217,4 +217,4 @@ LRESULT TrayIcon::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 #endif
 #endif
 
-END_UPP_NAMESPACE
+}

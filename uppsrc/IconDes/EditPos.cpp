@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool IsSelection(const Image& m) {
 	const RGBA *s = m;
@@ -59,4 +59,4 @@ void IconDes::SetEditPos(const EditPos& e)
 	SyncImage();
 }
 
-END_UPP_NAMESPACE
+}

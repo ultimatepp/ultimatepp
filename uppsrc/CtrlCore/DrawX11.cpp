@@ -18,7 +18,7 @@
 #undef Font
 #undef Display
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)     //LOG(x)
 #define LTIMING(x)  //TIMING(x)
@@ -451,6 +451,6 @@ bool ScreenInPaletteMode()
 	return Xpalette;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

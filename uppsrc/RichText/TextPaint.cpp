@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 PageY RichText::GetHeight(const Rect& page) const
 {
@@ -197,4 +197,4 @@ void RichText::Paint(Draw& w, int x, int y, int cx) const
 	Paint(Zoom(1, 1), w, x, y, cx);
 }
 
-END_UPP_NAMESPACE
+}

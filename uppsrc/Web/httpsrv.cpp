@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // RLOG(x)
 
@@ -987,4 +987,4 @@ String GetHttpErrorPage(HttpQuery query, String err, bool show_query)
 	return HtmlTitlePage(t_("Web server error"), body);
 }
 
-END_UPP_NAMESPACE
+}

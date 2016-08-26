@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -1041,4 +1041,4 @@ int    Ctrl::GetExitCode() const
 	return exitcode;
 }
 
-END_UPP_NAMESPACE
+}

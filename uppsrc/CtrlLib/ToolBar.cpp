@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // TIMING(x)
 
@@ -128,4 +128,4 @@ void StaticBarArea::Paint(Draw& w)
 		             upperframe ? Null : GetScreenRect().bottom);
 }
 
-END_UPP_NAMESPACE
+}

@@ -5,7 +5,7 @@
 #include <Sql/Sql.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "GridUtils.h"
 #include "GridDisplay.h"
@@ -1883,6 +1883,6 @@ class GridText : Ctrl
 template<> void Xmlize(XmlIO& xml, GridCtrl& g);
 template<> void Jsonize(JsonIO& json, GridCtrl& g);
 
-END_UPP_NAMESPACE
+}
 
 #endif

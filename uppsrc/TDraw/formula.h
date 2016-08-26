@@ -1,7 +1,7 @@
 #ifndef __TDraw_formula__
 #define __TDraw_formula__
 
-NAMESPACE_UPP
+namespace Upp {
 inline int Percent(int p, int q) { return p * q / 100; }
 
 enum FORMSYMBOL
@@ -262,6 +262,6 @@ private:
 
 const Display& StdFormulaDisplay();
 
-END_UPP_NAMESPACE
+}
 
 #endif//__TDraw_formula__

@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 HighlightOutput::HighlightOutput(Vector<LineEdit::Highlight>& v)
 :	v(v)
@@ -130,4 +130,4 @@ const wchar *HighlightOutput::CString(const wchar *p)
 	return p;
 }
 
-END_UPP_NAMESPACE
+}

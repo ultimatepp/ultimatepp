@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -537,6 +537,6 @@ UDropTarget *NewUDropTarget(Ctrl *ctrl)
 
 void Ctrl::SetSelectionSource(const char *fmts) {}
 
-END_UPP_NAMESPACE
+}
 
 #endif

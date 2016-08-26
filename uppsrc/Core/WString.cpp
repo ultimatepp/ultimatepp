@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 wchar *WString0::Alloc(int& count)
 {
@@ -406,4 +406,4 @@ int CompareNoCase(const WString& a, const wchar *b)
 	return IterCompare(a.Begin(), a.End(), b, b + wstrlen(b), WStringICompare__());
 }
 
-END_UPP_NAMESPACE
+}

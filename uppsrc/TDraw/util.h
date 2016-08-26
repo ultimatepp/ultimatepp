@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 static const int    DOTS_PER_METER_INT = 23622;
 static const double DOTS_PER_METER_DBL = 600e3 / 25.4;
@@ -194,4 +194,4 @@ private:
 int GdiGetFreeSpace();
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Vector <Index<String> > CSyntax::keyword;
 Vector <Index<String> > CSyntax::name;
@@ -353,4 +353,4 @@ int CSyntax::LoadSyntax(const char *keywords[], const char *names[])	// Changed
 	return keyword.GetCount() - 1;
 }
 
-END_UPP_NAMESPACE
+}

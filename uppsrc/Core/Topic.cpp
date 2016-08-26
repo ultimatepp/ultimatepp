@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct TopicData__ : Moveable<TopicData__> {
 	String      title;
@@ -92,7 +92,7 @@ Topic GetTopicLNG(const char *path)
 	                ("$" + ToLower(LNGAsText(SetLNGCharset(GetCurrentLanguage(), CHARSET_DEFAULT)))));
 }
 
-END_UPP_NAMESPACE
+}
 
 void RegisterTopic__(const char *topicfile, const char *topic, const char *title,
                      const UPP::byte *data, int len)

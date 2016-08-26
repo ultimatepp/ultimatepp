@@ -1,6 +1,6 @@
 #include "Geom.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Pointf Length(const Pointf& p, double length)
 {
@@ -266,4 +266,4 @@ String Matrixf::ToString() const
 	return String().Cat() << "[x = " << x << ", y = " << y << ", a = " << a << "]";
 }
 
-END_UPP_NAMESPACE
+}

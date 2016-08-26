@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 SystemDraw&  ScreenInfo();
 
@@ -89,6 +89,6 @@ void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& cli
 	DrawDragRect(w, rect1, rect2, clip, n, color, sGetAniPat(pattern, animation));
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

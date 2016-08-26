@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String FormatIP(dword _ip)
 {
@@ -761,4 +761,4 @@ String HttpQuery::ToString() const
 	return out;
 }
 
-END_UPP_NAMESPACE
+}

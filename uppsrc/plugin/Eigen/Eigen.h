@@ -24,7 +24,7 @@
 #include <plugin/Eigen/unsupported/Eigen/NonLinearOptimization>
 #include <plugin/Eigen/unsupported/Eigen/FFT>
 
-NAMESPACE_UPP
+namespace Upp {
 
 using namespace Eigen;
 
@@ -195,6 +195,6 @@ void Serialize(Stream& stream, Eigen::Matrix<T, Eigen::Dynamic, 1> &vec) {
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

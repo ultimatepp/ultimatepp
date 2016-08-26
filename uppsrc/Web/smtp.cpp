@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 //#define SMTP_DEBUG // uncomment this line to turn on LOG-based SMTP emulation
 //#define SMTP_LOG // uncomment this line to turn on command-line based logging of SMTP communication
@@ -439,4 +439,4 @@ SmtpMail& SmtpMail::New()
 	return *this;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String Android::GetScriptExt()
 {
@@ -91,4 +91,4 @@ String Android::FindLongestVersion(const Vector<String>& versions)
 	return longest;
 }
 
-END_UPP_NAMESPACE
+}

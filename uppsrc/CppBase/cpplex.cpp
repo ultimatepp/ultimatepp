@@ -2,7 +2,7 @@
 
 // #define LOGNEXT _DBG_
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MSC_VER
 #pragma inline_depth(255)
@@ -496,4 +496,4 @@ const char *Lex::Pos(int pos)
 	return pos < term.GetCount() ? term[pos].ptr : ptr;
 }
 
-END_UPP_NAMESPACE
+}

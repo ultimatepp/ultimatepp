@@ -3,7 +3,7 @@
 #define ANIM_SPEED 10
 #define ANIM_FRAMES 10
 
-NAMESPACE_UPP
+namespace Upp {
 
 // DockTabBar
 int AutoHideBar::autohide_timeout = 1000;
@@ -297,4 +297,4 @@ void AutoHideBar::HidePopup::ChildMouseEvent(Ctrl *child, int event, Point p, in
 		WhenEnter();
 }
 
-END_UPP_NAMESPACE
+}

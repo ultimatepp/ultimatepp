@@ -1,6 +1,6 @@
 #include "TCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 #define LDUMP(x) // RDUMP(x)
@@ -632,4 +632,4 @@ void HelpInit::Run()
 	m.Clear();
 }
 
-END_UPP_NAMESPACE
+}

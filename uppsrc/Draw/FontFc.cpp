@@ -13,7 +13,7 @@
 // #include <ftxf86.h> // The only function required from that header:
 FT_EXPORT( const char* ) FT_Get_X11_Font_Format( FT_Face  face ); // Put here to avoid include path issues...
 
-NAMESPACE_UPP
+namespace Upp {
 
 static FT_Library sFTlib;
 
@@ -390,7 +390,7 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 		              fnt.IsItalic() && !(face->style_flags & FT_STYLE_FLAG_ITALIC));
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

@@ -1,6 +1,6 @@
 #include "GLCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_WIN32
 
@@ -106,4 +106,4 @@ LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 #endif
 
-END_UPP_NAMESPACE
+}

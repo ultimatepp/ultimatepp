@@ -1,6 +1,6 @@
 #include "PieCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 PieCtrl::PieCtrl() : copyRatio(1) {
 	Transparent();
@@ -49,4 +49,4 @@ void PieCtrl::Paint(Draw& w)
 	PaintPie(w, 1);
 }
 
-END_UPP_NAMESPACE
+}

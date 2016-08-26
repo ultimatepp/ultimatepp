@@ -4,7 +4,7 @@
 #ifndef Rpc_Rpc_h
 #define Rpc_Rpc_h
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum {
 	RPC_SERVER_JSON_ERROR = -32700,    // Parse error
@@ -363,6 +363,6 @@ void SuppressRpcServerTraceForMethodCall();
 
 #include "legacy.h"
 
-END_UPP_NAMESPACE
+}
 
 #endif

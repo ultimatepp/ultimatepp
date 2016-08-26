@@ -11,7 +11,7 @@
 #include <ieeefp.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 void WeakBase::Chk() const
 {
@@ -1361,4 +1361,4 @@ double XmlDouble(XmlParser& xml)
 	return ScanDouble(xml.ReadTextE());
 }
 
-END_UPP_NAMESPACE
+}

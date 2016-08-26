@@ -6,7 +6,7 @@
 
 //#include "imm.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -484,6 +484,6 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 
 void Ctrl::PreDestroy() {}
 
-END_UPP_NAMESPACE
+}
 
 #endif

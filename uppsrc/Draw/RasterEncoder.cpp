@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 RasterEncoder::RasterEncoder()
 {
@@ -177,4 +177,4 @@ String StreamRasterEncoder::SaveString(const Image& img)
 	return SaveString(r);
 }
 
-END_UPP_NAMESPACE
+}

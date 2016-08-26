@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)     // DLOG(x)
 #define LTIMING(x)  // TIMING(x)
@@ -795,4 +795,4 @@ void Ctrl::GlobalBackBuffer(bool b)
 	globalbackbuffer = b;
 }
 
-END_UPP_NAMESPACE
+}

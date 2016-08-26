@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)     // LOG(x)
 #define LTIMING(x)  // TIMING(x)
@@ -306,6 +306,6 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 	XChangeGC(Xdisplay, GetGC(), GCForeground, &gcv_old);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

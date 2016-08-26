@@ -30,7 +30,7 @@
 
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 static int sDirSep(int c) {
 	return c == '/' || c == '\\' ? c : 0;
@@ -1043,4 +1043,4 @@ bool FileSystemInfo::FolderExists(String path) const
 	return !fi.IsEmpty() && fi[0].is_directory;
 }
 
-END_UPP_NAMESPACE
+}

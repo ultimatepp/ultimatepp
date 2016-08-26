@@ -3,7 +3,7 @@
 
 #include "CtrlArray.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 CtrlArray::Item::Item()
 {
@@ -336,4 +336,4 @@ void CtrlArray::OnDown(int index)
 	}
 }
 
-END_UPP_NAMESPACE
+}

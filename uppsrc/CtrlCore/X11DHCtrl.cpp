@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // Constructor
@@ -419,6 +419,6 @@ XVisualInfo DHCtrl::GetVisualInfo(void)
 	return visualInfo;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

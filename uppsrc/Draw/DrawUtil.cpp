@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // TIMING(x)
 
@@ -582,4 +582,4 @@ void SetRenderGlyph(Image (*f)(int cx, int x, Font font, int chr, int py, int pc
 	render_glyph = f;
 }
 
-END_UPP_NAMESPACE
+}

@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class PPMRaster : public StreamRaster {
 	Size         size;
@@ -33,6 +33,6 @@ public:
 	virtual void WriteLineRaw(const byte *data);
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

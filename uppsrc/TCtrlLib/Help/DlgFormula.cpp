@@ -4,7 +4,7 @@
 
 #include <TDraw/formula.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <TCtrlLib/Help/DlgFormula.lay>
 #include <CtrlCore/lay.h>
@@ -211,4 +211,4 @@ void DlgFormula::OnOperChar(char c)
 {
 }
 
-END_UPP_NAMESPACE
+}

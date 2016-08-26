@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef CPU_X86 // Use unaligned access
 
@@ -208,4 +208,4 @@ int find(const wchar *text, int len, const wchar *needle, int nlen, int from)
 }
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static int s_month[] = {
 	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
@@ -702,4 +702,4 @@ Time TimeFromUTC(int64 seconds)
 	return tm - GetLeapSeconds(tm);
 }
 
-END_UPP_NAMESPACE
+}

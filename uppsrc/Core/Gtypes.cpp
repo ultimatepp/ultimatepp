@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 //template <>
 //void Rect_<double>::Union(const Rect_<double>& r) {
@@ -161,4 +161,4 @@ double Bearing(const Pointf& p)
 	return atan2(p.y, p.x);
 }
 
-END_UPP_NAMESPACE
+}

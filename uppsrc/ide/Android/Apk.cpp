@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Apk::Apk(const String& path, const AndroidSDK& androidSDK)
 {
@@ -53,4 +53,4 @@ String Apk::FindBadgeTagValue(const String& badge, const String& tag) const
 	return tagValue;
 }
 
-END_UPP_NAMESPACE
+}

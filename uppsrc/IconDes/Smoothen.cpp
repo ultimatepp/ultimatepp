@@ -1,6 +1,6 @@
 #include "IconDes.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 RGBA GetPixel(const Image& img, int x, int y)
 {
@@ -91,4 +91,4 @@ void IconDes::Smoothen()
 	}
 }
 
-END_UPP_NAMESPACE
+}

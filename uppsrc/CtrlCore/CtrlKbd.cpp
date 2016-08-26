@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -419,4 +419,4 @@ String GetKeyDesc(dword key)
 	return desc;
 }
 
-END_UPP_NAMESPACE
+}

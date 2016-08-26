@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void BufferPainter::BeginOnPathOp(double q, bool abs)
 {
@@ -30,4 +30,4 @@ void BufferPainter::BeginOnPathOp(double q, bool abs)
 	pathlen = 0;
 }
 
-END_UPP_NAMESPACE
+}

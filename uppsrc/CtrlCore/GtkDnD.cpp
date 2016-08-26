@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // DLOG(x)
 
@@ -347,6 +347,6 @@ void Ctrl::DndExit()
 		gtk_drag_dest_unset(top->window);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -3,7 +3,7 @@
 #ifndef CtrlCore_MenuImp_h
 #define CtrlCore_MenuImp_h
 
-NAMESPACE_UPP
+namespace Upp {
 
 class MenuItemBase : public Ctrl, public Bar::Item {
 public:
@@ -183,6 +183,6 @@ public:
 	TopMenuItem() { NoInitFocus(); }
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

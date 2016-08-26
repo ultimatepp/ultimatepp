@@ -4,7 +4,7 @@
 
 #include <plugin/png/png.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 static int GetParaHeight(const Array<RichPara::Part>& parts)
 {
@@ -740,4 +740,4 @@ void RTFEncoder::PutDocument()
 	PutTxt(richtext, 0, dot_page_size.cx - dot_margins.left - dot_margins.right);
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef UPP_HEAP
 
@@ -291,4 +291,4 @@ size_t Heap::LGetBlockSize(void *ptr) {
 
 #endif
 
-END_UPP_NAMESPACE
+}

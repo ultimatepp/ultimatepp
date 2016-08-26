@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String CppItem::ToString() const
 {
@@ -78,4 +78,4 @@ void CppItem::Dump(Stream& s) const
 #undef PUT
 }
 
-END_UPP_NAMESPACE
+}

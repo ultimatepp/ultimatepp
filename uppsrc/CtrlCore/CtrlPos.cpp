@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -500,4 +500,4 @@ Rect Ctrl::GetWorkArea(Point pt)
 	return GetPrimaryWorkArea();
 }
 
-END_UPP_NAMESPACE
+}

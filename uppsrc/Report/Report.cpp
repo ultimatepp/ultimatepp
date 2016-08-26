@@ -1,6 +1,6 @@
 #include "Report.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -198,4 +198,4 @@ bool Report::ChooseDefaultPrinter(const char *jobname)
 	return true;
 }
 
-END_UPP_NAMESPACE
+}

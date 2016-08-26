@@ -4,7 +4,7 @@
 
 //#include <shellapi.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // RTIMING(x)
 #define LLOG(x)
@@ -232,6 +232,6 @@ Image Image::SizeBottomRight()  FCURSOR_(GDK_BOTTOM_RIGHT_CORNER)
 Image Image::Cross() FCURSOR_(GDK_CROSSHAIR)
 Image Image::Hand() FCURSOR_(GDK_HAND1)
 
-END_UPP_NAMESPACE
+}
 
 #endif

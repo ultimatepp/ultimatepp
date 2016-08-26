@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 // #define LOG_QUEUE
 #define LLOG(x) // LOG(x)
@@ -181,4 +181,4 @@ dword GetTimeClick()
 	return sTClick;
 }
 
-END_UPP_NAMESPACE
+}

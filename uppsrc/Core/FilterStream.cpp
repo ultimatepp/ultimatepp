@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 InFilterStream::InFilterStream()
 {
@@ -172,4 +172,4 @@ void OutFilterStream::Out(const void *ptr, int size)
 	out->Put(ptr, size);
 }
 
-END_UPP_NAMESPACE
+}

@@ -2,7 +2,7 @@
 
 #ifdef GUI_WIN
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)
 
@@ -41,6 +41,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	::SelectObject(handle, orgfont);
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

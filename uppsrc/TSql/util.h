@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 void __sqltempl__instantiation__(Gate2<int, int>); // a weird compiler bug
 
@@ -140,4 +140,4 @@ String                GetYearDayIndex(Date date);
 SqlVal                GetYearDayIndex(const SqlVal& date);
 SqlBool               GetYearDayRange(const SqlVal& date, Date min, Date max);
 
-END_UPP_NAMESPACE
+}

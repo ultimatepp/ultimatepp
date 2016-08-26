@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  //    DLOG(x)
 
@@ -155,6 +155,6 @@ void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool, bool)
 }
 
 
-END_UPP_NAMESPACE
+}
 
 #endif

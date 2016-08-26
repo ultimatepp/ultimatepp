@@ -2,7 +2,7 @@
 
 #ifdef GUI_TURTLE
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -233,6 +233,6 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

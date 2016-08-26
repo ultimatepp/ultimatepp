@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class FetchColorCtrl : public Button
 {
@@ -1608,4 +1608,4 @@ void ColorCtrl::DoAction()
 		SetDataAction(GetConvert().Scan(new_color));
 }
 
-END_UPP_NAMESPACE
+}

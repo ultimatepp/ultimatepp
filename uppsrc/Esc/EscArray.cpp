@@ -1,6 +1,6 @@
 #include "Esc.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -165,4 +165,4 @@ EscValue::EscValue(int n)
 	total++;
 }
 
-END_UPP_NAMESPACE
+}

@@ -3,7 +3,7 @@
 
 #include <TCtrlLib/OldTreeCtrl.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <TCtrlLib/Help/DlgShot.lay>
 #include <CtrlCore/lay.h>
@@ -448,4 +448,4 @@ void DlgShot::OnEditCtrlAttr()
 	}
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -864,4 +864,4 @@ void DataPusher::SetDataAction(const Value& value)
 	UpdateActionRefresh();
 }
 
-END_UPP_NAMESPACE
+}

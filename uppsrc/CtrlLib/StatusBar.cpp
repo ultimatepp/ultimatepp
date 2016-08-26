@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 class RightInfoFrame : public CtrlFrame {
 	virtual void FrameLayout(Rect& r);
@@ -308,4 +308,4 @@ ProgressInfo::~ProgressInfo()
 		info->Set(Null);
 }
 
-END_UPP_NAMESPACE
+}

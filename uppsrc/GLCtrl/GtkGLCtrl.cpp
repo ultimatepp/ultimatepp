@@ -6,7 +6,7 @@
 #include <gdk/gdkgl.h>
 #include <gdk/gdkglconfig.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 GdkGLConfig *sGlconfig;
 
@@ -64,6 +64,6 @@ void GLCtrl::Paint(Draw& w)
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

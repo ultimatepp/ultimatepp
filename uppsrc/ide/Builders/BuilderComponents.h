@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class BuilderComponent {
 public:
@@ -39,6 +39,6 @@ public:
 	                    const char *objext, const Index<String>& noblitz);
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

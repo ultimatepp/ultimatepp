@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void CtrlsImageLook(Value *look, int i, int n)
 {
@@ -656,4 +656,4 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
 		Refresh();
 }
 
-END_UPP_NAMESPACE
+}

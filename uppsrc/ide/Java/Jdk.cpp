@@ -1,6 +1,6 @@
 #include "Java.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String Jdk::GetDownloadUrl()
 {
@@ -29,4 +29,4 @@ bool Jdk::Validate() const
 	return true;
 }
 
-END_UPP_NAMESPACE
+}

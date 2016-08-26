@@ -3,7 +3,7 @@
 #include <DocTypes/DocTypes.h>
 #include <PdfDraw/PdfDraw.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct FieldTypeVarCls : public RichPara::FieldType
 {
@@ -674,4 +674,4 @@ void HelpBookMenu(Bar& bar)
 	bar.Add(t_("Save manual"), CtrlImg::save(), callback(&ManualMenu));
 }
 
-END_UPP_NAMESPACE
+}

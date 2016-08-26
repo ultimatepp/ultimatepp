@@ -4,7 +4,7 @@
 
 #include <locale.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -614,6 +614,6 @@ void _DBG_Ungrab(void) {
 }
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #endif

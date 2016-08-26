@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "pcxhdr.h"
 
@@ -28,6 +28,6 @@ public:
 	virtual const RasterFormat *GetFormat();
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

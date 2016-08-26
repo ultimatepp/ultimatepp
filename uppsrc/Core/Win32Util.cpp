@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_WIN32
 
@@ -212,4 +212,4 @@ void Win32Event::Set()
 
 #endif
 
-END_UPP_NAMESPACE
+}

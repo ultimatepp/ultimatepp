@@ -1,6 +1,6 @@
 #include "Geom.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define DELDUMP
 
@@ -236,4 +236,4 @@ void Delaunay::AddHull(int i)
 	}
 }
 
-END_UPP_NAMESPACE
+}

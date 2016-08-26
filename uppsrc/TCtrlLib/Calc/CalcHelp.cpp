@@ -1,7 +1,7 @@
 #include "TCtrlLibCalc.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 void UseHelpCalc() {}
 
@@ -322,4 +322,4 @@ STATIC_HELP(CalcIndex, s_(CalcIndexHelpTopic),
 )
 */
 
-END_UPP_NAMESPACE
+}

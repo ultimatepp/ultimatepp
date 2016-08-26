@@ -1,6 +1,6 @@
 #include "GridCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int GridCtrl::ItemRect::sortCol;
 int GridCtrl::ItemRect::sortMode;
@@ -299,4 +299,4 @@ Value GridCtrl::ItemRect::ExtractValue(int r, int c) const
 	return IsType<AttrText>(v) ? Value(ValueTo<AttrText>(v).text) : v;
 }
 
-END_UPP_NAMESPACE
+}

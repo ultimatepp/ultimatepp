@@ -1,6 +1,6 @@
 #include "SqlCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SqlLoad(MapConvert& cv, Sql& sql) {
 	cv.Clear();
@@ -194,4 +194,4 @@ bool SqlCtrls::Load(SqlId table, SqlBool set)
 }
 #endif
 
-END_UPP_NAMESPACE
+}

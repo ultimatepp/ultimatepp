@@ -1,6 +1,6 @@
 #include "ScatterCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS ScatterImgP
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
@@ -874,4 +874,4 @@ void ProcessingTab::OnFFT()
 	tabFreq.comments.SetText(errText);
 }
 
-END_UPP_NAMESPACE
+}

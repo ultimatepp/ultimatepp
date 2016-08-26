@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 class Configuration;
 class ConfigItem;
@@ -103,4 +103,4 @@ protected:
 	bool                  item_error;
 };
 
-END_UPP_NAMESPACE
+}

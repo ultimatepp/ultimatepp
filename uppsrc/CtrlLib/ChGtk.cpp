@@ -8,7 +8,7 @@
 #define LLOG(x)  // DLOG(x)
 #define LDUMP(x) // DDUMP(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS AmbientCtrlsImg
 #define IMAGEFILE <CtrlLib/AmbientCtrls.iml>
@@ -709,7 +709,7 @@ void ChHostSkin()
 	CurrentSoundTheme = GtkStyleString("gtk-sound-theme-name");
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif
 #endif

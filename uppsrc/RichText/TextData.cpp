@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void  RichText::CatPick(RichText&& p)
 {
@@ -371,4 +371,4 @@ void RichTextLayoutTracer::EndTableRow(PageY y) {}
 void RichTextLayoutTracer::TableCell(const Rect& page, PageY y, int i, int j, const RichTable& table, PageY npy) {}
 void RichTextLayoutTracer::EndTableCell(PageY y) {}
 
-END_UPP_NAMESPACE
+}

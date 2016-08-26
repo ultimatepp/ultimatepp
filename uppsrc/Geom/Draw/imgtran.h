@@ -1,7 +1,7 @@
 #ifndef _Geom_Draw_imgtran_h_
 #define _Geom_Draw_imgtran_h_
 
-NAMESPACE_UPP
+namespace Upp {
 
 void LinearSet(ImageBuffer& dest, Point d0, Point d1, Point d2, RGBA color, const Rect *opt_clip = NULL);
 void LinearCopy(ImageBuffer& dest, Point d0, Point d1, Point d2,
@@ -21,6 +21,6 @@ void BilinearCopy(ImageBuffer& dest, Point destpos[4],
 
 Image BilinearRotate(const Image& m, int angle);
 
-END_UPP_NAMESPACE
+}
 
 #endif

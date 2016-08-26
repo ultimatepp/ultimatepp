@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void BufferPainter::BeginOp()
 {
@@ -140,4 +140,4 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 	dopreclip = false;
 }
 
-END_UPP_NAMESPACE
+}

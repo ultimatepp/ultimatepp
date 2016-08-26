@@ -1,6 +1,6 @@
 #include "PopUpText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void PopUpInfo::Paint(Draw& w)
 {
@@ -20,4 +20,4 @@ PopUpInfo::PopUpInfo(): color(SColorInfo())
 	opened = false;
 }
 
-END_UPP_NAMESPACE
+}

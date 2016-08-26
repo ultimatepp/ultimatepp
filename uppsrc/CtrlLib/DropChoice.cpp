@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 DropChoice::DropChoice() {
 	always_drop = false;
@@ -174,4 +174,4 @@ DropChoice& DropChoice::AlwaysDrop(bool e)
 	return *this;
 }
 
-END_UPP_NAMESPACE
+}

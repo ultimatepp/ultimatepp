@@ -1,6 +1,6 @@
 #include "Android.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String AndroidNDK::GetDownloadUrl()
 {
@@ -158,4 +158,4 @@ String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
 	return "";
 }
 
-END_UPP_NAMESPACE
+}

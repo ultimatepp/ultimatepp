@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void PaintingPainter::ClearOp(const RGBA& color)
 {
@@ -333,4 +333,4 @@ void PaintingPainter::Create(Sizef sz)
 	Create(sz.cx, sz.cy);
 }
 
-END_UPP_NAMESPACE
+}

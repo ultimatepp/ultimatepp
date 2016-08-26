@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 extern int  um_table__[256];
 void sInitUmTable__();
@@ -341,4 +341,4 @@ void RasterFormat::Write(byte *t, const RGBA *s, int cx, const PaletteCv *palcv)
 	}
 }
 
-END_UPP_NAMESPACE
+}

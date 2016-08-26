@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static String sAsString(const Vector<Value>& v);
 
@@ -687,5 +687,5 @@ INITBLOCK
 	Value::Register<Rectf>("Rectf");
 }
 
-END_UPP_NAMESPACE
+}
 

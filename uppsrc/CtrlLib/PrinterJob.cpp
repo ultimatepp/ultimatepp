@@ -13,7 +13,7 @@
 
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_WIN
 
@@ -463,4 +463,4 @@ PrinterJob& PrinterJob::CurrentPage(int i)
 
 #endif
 
-END_UPP_NAMESPACE
+}

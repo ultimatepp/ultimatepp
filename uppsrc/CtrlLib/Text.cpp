@@ -2,7 +2,7 @@
 
 #define LTIMING(x)  // RTIMING(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 TextCtrl::TextCtrl()
 {
@@ -980,4 +980,4 @@ String TextCtrl::GetSelectionData(const String& fmt) const
 	return GetTextClip(GetSelectionW(), fmt);
 }
 
-END_UPP_NAMESPACE
+}

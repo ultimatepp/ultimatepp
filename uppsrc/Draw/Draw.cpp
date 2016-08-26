@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // RLOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -521,4 +521,4 @@ void NilDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 void NilDraw::DrawDrawingOp(const Rect& target, const Drawing& w) {}
 void NilDraw::DrawPaintingOp(const Rect& target, const Painting& w) {}
 
-END_UPP_NAMESPACE
+}

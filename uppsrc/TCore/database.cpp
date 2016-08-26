@@ -1,7 +1,7 @@
 #include "TCoreDb.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 static String Format(const Vector<Value>& values)
 {
@@ -2892,4 +2892,4 @@ bool DataBase::TryRemove(String n)
 	return true;
 }
 
-END_UPP_NAMESPACE
+}

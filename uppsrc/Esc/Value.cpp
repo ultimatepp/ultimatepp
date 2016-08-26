@@ -1,7 +1,7 @@
 #include <Esc/Esc.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 EscValue EscFromStdValue(const Value& v)
 {
@@ -63,4 +63,4 @@ void StdValueLib(ArrayMap<String, EscValue>& global)
 	Escape(global, "StdFormat(x)", SIC_StdFormat);
 }
 
-END_UPP_NAMESPACE
+}

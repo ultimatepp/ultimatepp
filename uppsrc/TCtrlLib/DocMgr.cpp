@@ -1,7 +1,7 @@
 #include <TCtrlLib/Help/TCtrlLibHelp.h>
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -1440,4 +1440,4 @@ DocCtrl *DocPokus::CreateDoc()
 }
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "RichText.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int LineZoom(Zoom z, int a)
 {
@@ -247,4 +247,4 @@ RichCell::RichCell(const RichCell& src, int)
 	text <<= src.text;
 }
 
-END_UPP_NAMESPACE
+}

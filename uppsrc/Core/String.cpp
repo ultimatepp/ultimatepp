@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _DEBUG
 void String0::Dsyn()
@@ -514,4 +514,4 @@ int CompareNoCase(const String& a, const char *b, byte encoding)
 	return IterCompare(a.Begin(), a.End(), b, b + strlen(b), StringICompare__(encoding));
 }
 
-END_UPP_NAMESPACE
+}

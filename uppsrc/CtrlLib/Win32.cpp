@@ -10,7 +10,7 @@
 #endif
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_WIN
 
@@ -192,4 +192,4 @@ bool FileSelector::Execute(bool open, const char *dlgtitle) {
 #endif
 #endif
 
-END_UPP_NAMESPACE
+}

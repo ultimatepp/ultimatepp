@@ -1,6 +1,6 @@
 #include <GridCtrl/GridCtrl.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef COMPILER_MSC
 #pragma warning(disable: 4355)
@@ -8699,4 +8699,4 @@ GridCtrl::ItemRect& GridCtrl::AddRow(__List##I(E__Value)) { \
 }
 __Expand(E__AddF1)
 
-END_UPP_NAMESPACE
+}

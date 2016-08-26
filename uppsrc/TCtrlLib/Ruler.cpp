@@ -1,6 +1,6 @@
 #include "TCtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 RulerCtrl::RulerCtrl()
 {
@@ -368,4 +368,4 @@ int RulerCtrl::GetStdWidth()
 	return 22;
 }
 
-END_UPP_NAMESPACE
+}

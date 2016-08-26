@@ -1,6 +1,6 @@
 #include "DropGrid.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 DropGrid::PopUpGrid::PopUpGrid()
 {
@@ -1067,4 +1067,4 @@ GridCtrl::ItemRect& DropGrid::AddRow(__List##I(E__Value)) { \
 }
 __Expand(E__AddF1)
 
-END_UPP_NAMESPACE
+}

@@ -6,7 +6,7 @@
 #include <plugin/jpg/jpg.h>
 #include <GridCtrl/GridCtrl.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class EditDoubleLostFocus : public EditDouble {
 public:
@@ -341,6 +341,6 @@ void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale, bool ctrl) {
 	} 
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

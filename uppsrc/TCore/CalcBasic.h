@@ -1,7 +1,7 @@
 #ifndef __TCore_CalcBasic__
 #define __TCore_CalcBasic__
 
-NAMESPACE_UPP
+namespace Upp {
 
 String GroupComp();
 String GroupBitOp();
@@ -14,6 +14,6 @@ String GroupConst();
 String GroupTrans();
 String GroupSystem();
 
-END_UPP_NAMESPACE
+}
 
 #endif//__TCore_CalcBasic__

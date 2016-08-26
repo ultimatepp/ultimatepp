@@ -1,6 +1,6 @@
 #include "ppm.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int PPMEncoder::GetPaletteCount()
 {
@@ -19,4 +19,4 @@ void PPMEncoder::WriteLineRaw(const byte *data)
 	GetStream().Put(data, size.cx * 3);
 }
 
-END_UPP_NAMESPACE
+}

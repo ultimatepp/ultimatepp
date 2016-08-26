@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 
 void RichEdit::Filter(RichText& txt) {}
@@ -450,4 +450,4 @@ void RichEdit::InsertLine()
 	objectpos = -1;
 }
 
-END_UPP_NAMESPACE
+}

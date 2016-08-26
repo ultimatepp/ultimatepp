@@ -1,6 +1,6 @@
 #include "SqlCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void SqlArray::Join(SqlId id, ArrayCtrl& master) {
 	master.AddCtrlAt(0, *this);
@@ -239,4 +239,4 @@ SqlArray::SqlArray() {
 	updatekey = false;
 }
 
-END_UPP_NAMESPACE
+}

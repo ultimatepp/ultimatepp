@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)  // RTIMING(x)
 #define LLOG(x)     // DLOG(x)
@@ -659,4 +659,4 @@ void SerializePPFiles(Stream& s)
 #endif
 }
 
-END_UPP_NAMESPACE
+}

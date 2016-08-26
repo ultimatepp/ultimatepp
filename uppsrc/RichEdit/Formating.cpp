@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::ApplyFormat(dword charvalid, dword paravalid)
 {
@@ -627,4 +627,4 @@ void RichEdit::AdjustObjectSize()
 	}
 }
 
-END_UPP_NAMESPACE
+}

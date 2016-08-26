@@ -1,6 +1,6 @@
 #include "Builders.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String BlitzBaseFile()
 {
@@ -99,4 +99,4 @@ Blitz BlitzBuilderComponent::MakeBlitzStep(Vector<String>& sfile, Vector<String>
 	return b;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Docking.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define HIGHLIGHT_DURATION 1000
 
@@ -352,4 +352,4 @@ String DockConfigDlg::PositionString(DockableCtrl *dc) const
 		return t_("Hidden");
 }
 
-END_UPP_NAMESPACE
+}

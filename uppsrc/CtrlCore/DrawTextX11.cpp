@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x)
 #define LLOG(x)    // DLOG(x)
@@ -261,6 +261,6 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

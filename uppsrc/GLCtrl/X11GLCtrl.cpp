@@ -1,6 +1,6 @@
 #include "GLCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_X11
 
@@ -152,4 +152,4 @@ void GLCtrl::GLPane::Paint(Draw &draw)
 
 #endif
 
-END_UPP_NAMESPACE
+}

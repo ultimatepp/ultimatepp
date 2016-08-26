@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 String ToHtml(const char *s)
 {
@@ -612,4 +612,4 @@ HtmlTag HtmlFntSize(int size)
 	return HtmlTag("span").Attr("style", Sprintf("font-size: %dpt", size));
 }
 
-END_UPP_NAMESPACE
+}

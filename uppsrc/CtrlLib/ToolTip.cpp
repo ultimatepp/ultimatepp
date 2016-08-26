@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // DLOG(x)
 
@@ -241,4 +241,4 @@ void PerformDescription()
 	}
 }
 
-END_UPP_NAMESPACE
+}

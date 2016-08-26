@@ -3,7 +3,7 @@
 
 #define LLOG(x)  //  DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 typedef void (*RpcFnPtr)(RpcData&);
 
@@ -382,4 +382,4 @@ bool RpcServerLoop(int port, const char *group)
 	}
 }
 
-END_UPP_NAMESPACE
+}

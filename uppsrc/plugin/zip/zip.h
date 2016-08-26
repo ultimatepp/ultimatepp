@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class UnZip {
 	struct File : Moveable<File> {
@@ -162,6 +162,6 @@ public:
 	StringZip()                               { Create(); }
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

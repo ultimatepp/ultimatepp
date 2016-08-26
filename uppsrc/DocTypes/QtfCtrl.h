@@ -1,6 +1,6 @@
 // OBSOLETE!!! Use RichTextView instead!
 
-NAMESPACE_UPP
+namespace Upp {
 
 class QtfCtrl : public Ctrl {
 public:
@@ -71,4 +71,4 @@ public:
 	virtual ~QtfCtrl();
 };
 
-END_UPP_NAMESPACE
+}

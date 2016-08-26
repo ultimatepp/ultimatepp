@@ -1,6 +1,6 @@
 #include <RichEdit/RichEdit.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::FindReplaceAddHistory() {
 	if(!String(~findreplace.find).IsEmpty())
@@ -188,4 +188,4 @@ void RichEdit::OpenFindReplace()
 	}
 }
 
-END_UPP_NAMESPACE
+}

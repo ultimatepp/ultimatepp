@@ -7,7 +7,7 @@
 #undef Status 
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE <CtrlLib/Ctrl.iml>
@@ -56,6 +56,6 @@ class Bar;
 
 #include <CtrlLib/Ch.h>
 
-END_UPP_NAMESPACE
+}
 
 #endif

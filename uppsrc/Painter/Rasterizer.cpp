@@ -25,7 +25,7 @@
 
 #define LLOG(x) // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 void Rasterizer::Init()
 {
@@ -351,4 +351,4 @@ void Rasterizer::Render(int y, Rasterizer::Filler& g, bool evenodd)
 	g.End();
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static int sMaskPos16(dword mask)
 {
@@ -367,4 +367,4 @@ void RasterFormat::Read(RGBA *t, const byte *s, int cx, const RGBA *palette) con
 	}
 }
 
-END_UPP_NAMESPACE
+}

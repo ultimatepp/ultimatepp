@@ -2,7 +2,7 @@
 
 #include <plugin/pcre/Pcre.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 String AndroidSDK::GetDownloadUrl()
 {
@@ -241,4 +241,4 @@ String AndroidSDK::ToolsDir() const
 
 // ---------------------------------------------------------------
 
-END_UPP_NAMESPACE
+}

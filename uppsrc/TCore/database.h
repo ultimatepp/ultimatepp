@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+namespace Upp {
 
 #define CHECK_CACHE() // CheckCache()
 #define CHECK_BLOCK(block, index) // CheckBlock(block, index)
@@ -967,4 +967,4 @@ protected:
 	int           block_level;
 };
 
-END_UPP_NAMESPACE
+}

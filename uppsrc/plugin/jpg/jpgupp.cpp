@@ -12,7 +12,7 @@ extern "C" {
 #undef XINT32
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // LOG(x)
 
@@ -703,4 +703,4 @@ Image JPGRaster::GetExifThumbnail()
 	return StreamRaster::LoadStringAny(ss);
 }
 
-END_UPP_NAMESPACE
+}

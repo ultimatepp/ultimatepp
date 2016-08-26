@@ -1,6 +1,6 @@
 #include "GridCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 /*
 bool GridCtrl::operator<(const Vector<Value>& a, const Vector<Value>& b)
@@ -234,4 +234,4 @@ Vector<GridCtrl::SortOrder> GridCtrl::GetSortOrder() const
 	return v;
 }
 
-END_UPP_NAMESPACE
+}

@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef UPP_HEAP
 
@@ -237,7 +237,7 @@ void MemoryShrink()
 
 #endif
 
-END_UPP_NAMESPACE
+}
 
 #ifdef UPP_HEAP
 #include <new>

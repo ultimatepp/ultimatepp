@@ -9,7 +9,7 @@
 #ifdef PLATFORM_WIN32
 #include <shellapi.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 void DropFilesRegister(HWND hwnd)
 {
@@ -832,4 +832,4 @@ bool ShowErrorFocus(bool cond, const char *text, Ctrl& focus)
 	return true;
 }
 
-END_UPP_NAMESPACE
+}

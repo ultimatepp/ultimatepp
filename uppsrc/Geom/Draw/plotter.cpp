@@ -1,6 +1,6 @@
 #include "GeomDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -2595,4 +2595,4 @@ void PlotterTest()
 }
 #endif
 
-END_UPP_NAMESPACE
+}

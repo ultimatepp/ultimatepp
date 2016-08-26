@@ -5,7 +5,7 @@
 #include "lib/LzmaDec.h"
 #include "lib/LzmaEnc.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static voidpf lzma_alloc_new(void *, size_t size) {
 	voidpf t = new byte[size];
@@ -279,4 +279,4 @@ bool LZMADecompressFile(const char *srcfile, Gate2<int64, int64> progress)
 	return LZMADecompressFile(dstfile, srcfile, progress);
 }
 
-END_UPP_NAMESPACE
+}

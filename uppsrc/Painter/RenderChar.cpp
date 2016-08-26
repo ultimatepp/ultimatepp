@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct GlyphPainter : NilPainter, LinearPathConsumer {
 	Vector<float>       glyph;
@@ -127,4 +127,4 @@ void BufferPainter::ApproximateChar(LinearPathConsumer& t, const CharData& ch, d
 	}
 }
 
-END_UPP_NAMESPACE
+}

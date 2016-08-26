@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 const Point Calendar::nullday = Point(-1, -1);
 
@@ -1552,4 +1552,4 @@ CH_STYLE(Calendar, Style, StyleDefault)
 	spinhighlight = true;
 }
 
-END_UPP_NAMESPACE
+}

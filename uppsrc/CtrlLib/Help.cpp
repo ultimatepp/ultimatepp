@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Topic HelpWindow::AcquireTopic(const String& topic)
 {
@@ -316,4 +316,4 @@ HelpWindow::HelpWindow()
 	view.BackPaintHint();
 }
 
-END_UPP_NAMESPACE
+}

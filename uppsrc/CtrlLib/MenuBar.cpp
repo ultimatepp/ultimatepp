@@ -4,7 +4,7 @@
 #include <mmsystem.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)    // DLOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -606,4 +606,4 @@ MenuBar::~MenuBar()
 	LLOG("~MenuBar 1");
 }
 
-END_UPP_NAMESPACE
+}

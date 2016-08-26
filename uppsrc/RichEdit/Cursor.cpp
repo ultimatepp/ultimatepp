@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::FinishNF()
 {
@@ -450,4 +450,4 @@ void RichEdit::PrevPara()
 	BeginPara();
 }
 
-END_UPP_NAMESPACE
+}

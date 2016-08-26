@@ -1,6 +1,6 @@
 #include "GeomCoords.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct EPSGEllipsoid
 {
@@ -759,4 +759,4 @@ bool operator == (const GisEllipsoid& ea, const GisEllipsoid& eb)
 	return ea.a == eb.a && ea.b == eb.b && ea.from_wgs84 == eb.from_wgs84;
 }
 
-END_UPP_NAMESPACE
+}

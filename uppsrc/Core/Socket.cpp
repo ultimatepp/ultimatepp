@@ -9,7 +9,7 @@
 #include <arpa/inet.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_WIN32
 #pragma comment(lib, "ws2_32.lib")
@@ -1019,4 +1019,4 @@ SocketWaitEvent::SocketWaitEvent()
 	FD_ZERO(exception);
 }
 
-END_UPP_NAMESPACE
+}

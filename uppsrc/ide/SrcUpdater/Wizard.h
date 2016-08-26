@@ -2,7 +2,7 @@
 #define _SourceUpdater_Wizard_h_
 
 #include <CtrlLib/CtrlLib.h>
-NAMESPACE_UPP
+namespace Upp {
 
 struct NullStep : public ParentCtrl {
 	static Size GetLayoutSize() {
@@ -138,5 +138,5 @@ WIZMEM(void)::Cancel(){
 #undef MAP_FN_ON_STEPS
 #undef MAP_FN2_ON_STEPS
 
-END_UPP_NAMESPACE;
+};
 #endif

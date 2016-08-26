@@ -2,7 +2,7 @@
 
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool run = true;
 
@@ -90,4 +90,4 @@ void ScgiServer::Run(int listenCount)
 			Process();
 }
 
-END_UPP_NAMESPACE
+}

@@ -3,7 +3,7 @@
 #include "TCoreCalc.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -1752,4 +1752,4 @@ bool CalcParser::Force(int op, const char *expect)
 	return false;
 }
 
-END_UPP_NAMESPACE
+}

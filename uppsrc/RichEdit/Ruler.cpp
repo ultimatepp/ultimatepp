@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS RichEditImg
 #define IMAGEFILE <RichEdit/RichEdit.iml>
@@ -216,4 +216,4 @@ void RichRuler::SetTabs(int pos, int size)
 	}
 }
 
-END_UPP_NAMESPACE
+}

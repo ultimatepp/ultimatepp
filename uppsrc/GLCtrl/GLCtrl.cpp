@@ -1,6 +1,6 @@
 #include "GLCtrl.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void GLCtrl::GLResize(int w, int h)
 {
@@ -41,4 +41,4 @@ Vector<int> GLCtrl::Pick(int x, int y)
 
 #endif
 
-END_UPP_NAMESPACE
+}

@@ -4,7 +4,7 @@
 
 #define LLOG(x)   // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool Xdnd_waiting_status;
 bool Xdnd_waiting_finished;
@@ -425,6 +425,6 @@ void Ctrl::DropEvent(XWindow& w, XEvent *event)
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

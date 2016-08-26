@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void CreateCSyntax(One<EditorSyntax>& e, int kind)
 {
@@ -62,4 +62,4 @@ INITBLOCK
 	EditorSyntax::Register("log", callback(CreateLogSyntax), "*.log *.info", "Log (*.log)");
 }
 
-END_UPP_NAMESPACE
+}

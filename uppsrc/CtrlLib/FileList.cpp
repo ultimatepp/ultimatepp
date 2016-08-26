@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int GetTextSize(const FontInfo& fi, const wchar *text, const wchar *end) {
 	int w = 0;
@@ -383,4 +383,4 @@ FileList::FileList() {
 
 FileList::~FileList() {}
 
-END_UPP_NAMESPACE
+}

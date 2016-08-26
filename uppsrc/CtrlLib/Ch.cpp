@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  // RLOG(x)
 
@@ -90,4 +90,4 @@ void ChSysInit()
 
 #endif
 
-END_UPP_NAMESPACE
+}

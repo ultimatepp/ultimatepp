@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef UPP_HEAP
 
@@ -428,4 +428,4 @@ MemoryProfile *PeakMemoryProfile()
 
 #endif
 
-END_UPP_NAMESPACE
+}

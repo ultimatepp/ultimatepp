@@ -1,6 +1,6 @@
 #include "TCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 ConfigHeading::ConfigHeading()
 {
@@ -136,4 +136,4 @@ Configuration& Configuration::Main()
 	return main_configuration;
 }
 
-END_UPP_NAMESPACE
+}

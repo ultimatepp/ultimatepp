@@ -2,7 +2,7 @@
 
 #define LLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 #include "SvgInternal.h"
 
@@ -511,4 +511,4 @@ Image RenderSVGImage(Size sz, const char *svg)
 	return RenderSVGImage(sz, svg, Callback2<String, String&>());
 }
 
-END_UPP_NAMESPACE
+}

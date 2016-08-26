@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 double BicubicKernel(double x)
 {
@@ -70,4 +70,4 @@ Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress)
 	return RescaleBicubic(img, sz, img.GetSize(), progress);
 }
 
-END_UPP_NAMESPACE
+}

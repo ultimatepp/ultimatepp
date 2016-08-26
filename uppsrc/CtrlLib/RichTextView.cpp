@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -505,4 +505,4 @@ bool Print(const RichText& text, const Rect& page, int currentpage, const char *
 
 #endif
 
-END_UPP_NAMESPACE
+}

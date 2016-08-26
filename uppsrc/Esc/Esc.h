@@ -4,7 +4,7 @@
 #include <Core/Core.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum EscTypeKind { ESC_VOID, ESC_DOUBLE, ESC_ARRAY, ESC_MAP, ESC_LAMBDA, ESC_INT64 };
 
@@ -318,6 +318,6 @@ bool     IsTime(const EscValue& v);
 String   Expand(const String& doc, ArrayMap<String, EscValue>& global,
                 int oplimit = 50000, String (*format)(const Value& v) = StdFormat);
 
-END_UPP_NAMESPACE
+}
 
 #endif

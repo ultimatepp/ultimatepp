@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void td_scalar(SqlSet& set, const String& prefix, const char *x) {
 	set.Cat(SqlId(prefix + x));
@@ -56,4 +56,4 @@ String AsString(Fields a)
 	return x.text;
 }
 
-END_UPP_NAMESPACE
+}

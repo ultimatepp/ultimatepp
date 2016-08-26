@@ -1,6 +1,6 @@
 #include "zip.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 bool FileUnZip::Create(const char *name)
 {
@@ -22,4 +22,4 @@ void StringUnZip::Create(const String& s)
 	UnZip::Create(zip);
 }
 
-END_UPP_NAMESPACE
+}

@@ -5,7 +5,7 @@
 
 #include <ide/Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class LogCat;
 
@@ -71,6 +71,6 @@ private:
 	int    jobs;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

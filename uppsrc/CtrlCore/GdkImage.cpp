@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 void ImageGdk::Free()
 {
@@ -57,6 +57,6 @@ ImageGdk::~ImageGdk()
 	Free();
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void CodeEditor::InitFindReplace()
 {
@@ -892,4 +892,4 @@ void CodeEditor::FindPrev()
 	FindPrevNext(true);
 }
 
-END_UPP_NAMESPACE
+}

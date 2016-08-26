@@ -1,6 +1,6 @@
 #include "Web.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 enum { EXPIRE = 60 * 30 }; // 30 minutes inactivity expires token
 
@@ -286,4 +286,4 @@ String WebUser::Login(const HttpQuery& map, String& args, const char *iname, boo
 
 //////////////////////////////////////////////////////////////////////
 
-END_UPP_NAMESPACE
+}

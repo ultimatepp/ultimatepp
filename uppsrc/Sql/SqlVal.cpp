@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 SqlId SqlId::Of(const char *of) const
 {
@@ -514,4 +514,4 @@ SqlVal SqlBinary(const String& data)
 	return SqlBinary(~data, data.GetCount());
 }
 
-END_UPP_NAMESPACE
+}

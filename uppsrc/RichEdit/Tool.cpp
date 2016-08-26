@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void RichEdit::UserAction()
 {
@@ -482,4 +482,4 @@ void RichEdit::DefaultBar(Bar& bar, bool extended)
 	}
 }
 
-END_UPP_NAMESPACE
+}

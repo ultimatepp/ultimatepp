@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void BufferPainter::MakeGradient(RGBA color1, RGBA color2, int n)
 {
@@ -75,4 +75,4 @@ void BufferPainter::StrokeOp(double width, const RGBA& color1, const RGBA& color
 	Stroke(width, gradient, Xform2D::Scale(1.0 / 500) * transsrc, sLinearStyle(style));
 }
 
-END_UPP_NAMESPACE
+}

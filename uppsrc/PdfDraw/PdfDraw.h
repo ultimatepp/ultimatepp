@@ -5,7 +5,7 @@
 #include <plugin/z/z.h>
 
 
-NAMESPACE_UPP
+namespace Upp {
 
 class TTFReader {
 	struct TTFStream {
@@ -357,6 +357,6 @@ public:
 
 String Pdf(const Array<Drawing>& report, Size pagesize, int margin, bool pdfa = false);
 
-END_UPP_NAMESPACE
+}
 
 #endif

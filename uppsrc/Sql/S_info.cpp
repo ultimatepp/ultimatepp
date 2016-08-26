@@ -1,6 +1,6 @@
 #include "Sql.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 void S_info_maker::Field(const char *name, Ref f, bool *b)
 {
@@ -105,4 +105,4 @@ void S_info::Init()
 	}
 }
 
-END_UPP_NAMESPACE
+}

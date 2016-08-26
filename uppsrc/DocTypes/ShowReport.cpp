@@ -7,7 +7,7 @@
 #pragma  comment(lib, "comdlg32.lib")
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 void ReportCtrl::MouseWheel(Point, int zdelta, dword) {
 	sb.Wheel(zdelta);
@@ -328,4 +328,4 @@ bool DocReport::Print(int page, const char *_name)
 	return Print0(page, _name ? _name : ~name);
 }
 
-END_UPP_NAMESPACE
+}

@@ -16,7 +16,7 @@
 #include <mysql/mysql.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 const char *MySqlReadString(const char *s, String& stmt);
 
@@ -83,7 +83,7 @@ public:
 	~MySqlSession()      { Close(); }
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif
 

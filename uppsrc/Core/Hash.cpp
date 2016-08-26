@@ -1,6 +1,6 @@
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MSC_VER
 #pragma inline_depth(255)
@@ -359,4 +359,4 @@ void Bits::Set(int i, bool b)
 	bp[q] = (bp[q] & ~(1 << i)) | (b << i);
 }
 
-END_UPP_NAMESPACE
+}

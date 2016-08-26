@@ -2,7 +2,7 @@
 
 #ifdef GUI_GTK
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   //   DLOG(x)
 
@@ -89,6 +89,6 @@ void Ctrl::CaptureSync()
 	}
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

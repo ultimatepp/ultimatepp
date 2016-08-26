@@ -2,7 +2,7 @@
 
 #ifdef GUI_X11
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -470,6 +470,6 @@ void *SystemDraw::CursorX11(const Image& img)
 	return (void *)c;
 }
 
-END_UPP_NAMESPACE
+}
 
 #endif

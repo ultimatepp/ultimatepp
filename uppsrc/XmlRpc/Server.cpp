@@ -3,7 +3,7 @@
 
 #define LLOG(x)   // DLOG(x)
 
-NAMESPACE_UPP
+namespace Upp {
 
 int CharFilterNoCr(int c)
 {
@@ -72,4 +72,4 @@ bool XmlRpcServer(int port, const char *group)
 	}
 }
 
-END_UPP_NAMESPACE
+}

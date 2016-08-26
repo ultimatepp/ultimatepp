@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 static Tuple<const char *, const char *> sEXT_MIME[] = {
 	{ "txt", "text/plain" },
@@ -242,4 +242,4 @@ String MIMEToFileExt(const String& mime)
 	return q >= 0 ? sEXT()[q] : "bin";
 }
 
-END_UPP_NAMESPACE
+}

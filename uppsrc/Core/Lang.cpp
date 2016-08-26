@@ -11,7 +11,7 @@
 	#endif
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  LOG(x)
 
@@ -175,4 +175,4 @@ String GetNativeLangName(int language) {
 	return GetLanguageInfo(language).native_name.ToString();
 }
 
-END_UPP_NAMESPACE
+}

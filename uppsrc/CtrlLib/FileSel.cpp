@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_WIN
 void AvoidPaintingCheck__();
@@ -2171,4 +2171,4 @@ FileSel::FileSel()
 
 FileSel::~FileSel() {}
 
-END_UPP_NAMESPACE
+}

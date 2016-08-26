@@ -1,6 +1,6 @@
 #include "CppBase.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LTIMING(x) // RTIMING(x)
 
@@ -77,4 +77,4 @@ bool   IncludesFile(const String& parent_path, const String& header_path)
 	return pi >= 0 && i >= 0 && sIncludes.Find(MAKEQWORD(pi, i)) >= 0;
 }
 
-END_UPP_NAMESPACE
+}

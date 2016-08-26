@@ -1,6 +1,6 @@
 #include "GeomDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
@@ -2033,4 +2033,4 @@ void PathStyleDisplay::Paint(Draw& draw, const Rect& rc, const Value& v, Color i
 	}
 }
 
-END_UPP_NAMESPACE
+}

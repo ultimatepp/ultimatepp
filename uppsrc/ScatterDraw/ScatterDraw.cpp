@@ -1,6 +1,6 @@
 #include "ScatterDraw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 ScatterDraw& ScatterDraw::SetColor(const Color& _color) {
 	graphColor = _color;
@@ -1830,4 +1830,4 @@ INITBLOCK {
 	MarkPlot::Register<BubblePlot>("Bubble");
 }
 
-END_UPP_NAMESPACE
+}

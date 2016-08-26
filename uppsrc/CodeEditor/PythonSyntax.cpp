@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 PythonSyntax::PythonSyntax() {}
 
@@ -216,4 +216,4 @@ char PythonSyntax::GetIdentationByType(Identation::Type type)
 	return '\t';
 }
 
-END_UPP_NAMESPACE
+}

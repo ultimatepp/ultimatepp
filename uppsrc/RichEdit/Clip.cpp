@@ -1,6 +1,6 @@
 #include "RichEdit.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define RTFS "Rich Text Format;text/rtf;application/rtf"
 
@@ -288,4 +288,4 @@ void  RichEdit::MiddleDown(Point p, dword flags)
 	}
 }
 
-END_UPP_NAMESPACE
+}

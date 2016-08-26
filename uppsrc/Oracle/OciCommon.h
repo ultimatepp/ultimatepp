@@ -2,7 +2,7 @@
 #define __Oracle_OciCommon__
 
 // excerpt from OCI headers (OCI7 & OCI8)
-NAMESPACE_UPP
+namespace Upp {
 struct OCIEnv;
 struct OCIServer;
 struct OCISession;
@@ -11,7 +11,7 @@ struct OCIBind;
 struct OCIDefine;
 struct OCISnapshot;
 struct OCIParam;
-END_UPP_NAMESPACE
+}
 
 #define oci_boolean int
 typedef void dvoid;

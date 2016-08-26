@@ -23,7 +23,7 @@ struct tiff;
 #undef HAVE_UINT16
 #undef HAVE_UINT32
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct tiff *TIFFStreamOpen(const char *filename, const char *mode, Stream *stream, bool destruct = false);
 struct tiff *TIFFFileStreamOpen(const char *filename, const char *mode);
@@ -75,6 +75,6 @@ private:
 	int bpp;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

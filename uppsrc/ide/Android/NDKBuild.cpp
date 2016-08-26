@@ -1,6 +1,6 @@
 #include "Executables.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 NDKBuild::NDKBuild(const String& path)
 {
@@ -24,4 +24,4 @@ String NDKBuild::MakeCmd() const
 	return cmd;
 }
 
-END_UPP_NAMESPACE
+}

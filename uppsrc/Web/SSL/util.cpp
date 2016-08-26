@@ -5,7 +5,7 @@
 
 #include <openssl/engine.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LOG_UPP_SSL_MALLOC 0
 
@@ -600,6 +600,6 @@ bool SSLSecureSocket(Socket& socket)
 }
 
 
-END_UPP_NAMESPACE
+}
 
 #endif//flagNOSSL

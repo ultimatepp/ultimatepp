@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LDUMP(x) // DUMP(x)
 
@@ -322,4 +322,4 @@ Switch::Switch() {
 
 Switch::~Switch() {}
 
-END_UPP_NAMESPACE
+}

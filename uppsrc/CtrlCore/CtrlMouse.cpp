@@ -1,6 +1,6 @@
 #include "CtrlCore.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
@@ -720,4 +720,4 @@ WaitCursor::~WaitCursor() {
 		Ctrl::OverrideCursor(prev);
 }
 
-END_UPP_NAMESPACE
+}

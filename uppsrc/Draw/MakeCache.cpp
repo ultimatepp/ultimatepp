@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x)  //  DLOG(x)
 
@@ -267,4 +267,4 @@ Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color)
 	return MakeImagePaintOnly(m);
 }
 
-END_UPP_NAMESPACE
+}

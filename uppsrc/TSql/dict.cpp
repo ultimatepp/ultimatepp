@@ -4,7 +4,7 @@
 #include "TSql.h"
 #pragma hdrstop
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifndef NOAPPSQL
 int SqlUserGetRightsTo(const char* table)
@@ -528,4 +528,4 @@ unsigned GetHashValue(const SqlAnyColumn& t)
 	return GetHashValue(static_cast<const SqlAnyTable&>(t)) ^ GetHashValue(t.column);
 }
 
-END_UPP_NAMESPACE
+}

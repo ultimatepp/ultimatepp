@@ -1,7 +1,7 @@
 #ifndef __TSql_Ctrl_DlgLogin_h__
 #define __TSql_Ctrl_DlgLogin_h__
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LAYOUTFILE <TSql/Ctrl/DlgLogin.lay>
 #include <CtrlCore/lay.h>
@@ -45,6 +45,6 @@ protected:
 	STYLE             style;
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif

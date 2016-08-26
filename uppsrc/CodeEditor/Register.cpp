@@ -1,6 +1,6 @@
 #include "CodeEditor.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 ArrayMap<String, EditorSyntax::SyntaxDef>& EditorSyntax::defs()
 {
@@ -37,4 +37,4 @@ String EditorSyntax::GetSyntaxForFilename(const char *fn)
 	return Null;
 }
 
-END_UPP_NAMESPACE
+}

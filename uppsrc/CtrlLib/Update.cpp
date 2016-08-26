@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef GUI_WIN
 #ifndef PLATFORM_WINCE
@@ -184,4 +184,4 @@ bool SelfUpdateSelf()
 #endif
 #endif
 
-END_UPP_NAMESPACE
+}

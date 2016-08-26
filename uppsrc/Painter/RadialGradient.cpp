@@ -1,6 +1,6 @@
 #include "Painter.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 struct PainterRadialSpan : SpanSource {
 	LinearInterpolator interpolator;
@@ -93,4 +93,4 @@ void BufferPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, 
 	RenderRadial(width, f, color1, color2, transsrc, style);
 }
 
-END_UPP_NAMESPACE
+}

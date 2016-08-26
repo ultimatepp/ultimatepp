@@ -1,6 +1,6 @@
 #include "GeomCoords.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) // RLOG(x)
 
@@ -1384,4 +1384,4 @@ void GisCoordsGaussLatitude::Create(double a, double e2, double base_parallel)
 	gauss_latitude.CreateInverse(base_parallel - 30, base_parallel + 30, gslf, 300, 5000, 4);
 }
 
-END_UPP_NAMESPACE
+}

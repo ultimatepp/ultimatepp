@@ -1,6 +1,6 @@
 #include "Core.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef _MULTITHREADED
 
@@ -251,5 +251,5 @@ CoWork::~CoWork()
 
 #endif
 
-END_UPP_NAMESPACE
+}
 

@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include <Core/Rpc/Rpc.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 Value ParseXmlRpcValue(XmlParser& p)
 {
@@ -189,4 +189,4 @@ String FormatXmlRpcError(int code, const char *text)
 	return r;
 }
 
-END_UPP_NAMESPACE
+}

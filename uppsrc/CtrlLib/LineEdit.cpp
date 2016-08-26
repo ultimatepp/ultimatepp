@@ -1,6 +1,6 @@
 #include "CtrlLib.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define LLOG(x) //  LOG(x)
 #define LTIMING(x) // RTIMING(x)
@@ -1300,4 +1300,4 @@ void LineEdit::LeftDrag(Point p, dword flags)
 	}
 }
 
-END_UPP_NAMESPACE
+}

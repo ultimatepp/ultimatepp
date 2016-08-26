@@ -2,7 +2,7 @@
 #include "OciCommon.h"
 #include "OraCommon.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 Date OciDecodeDate(const byte data[7]) {
 	Date d;
@@ -539,4 +539,4 @@ Sql::ERRORCLASS OciErrorClass(int errcode)
 	: Sql::ERROR_UNSPECIFIED;
 }
 
-END_UPP_NAMESPACE
+}

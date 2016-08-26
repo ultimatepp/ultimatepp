@@ -1,7 +1,7 @@
 #include "SqlCtrl.h"
 #include "SqlDlg.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 int SqlError(
 #ifdef PLATFORM_WIN32
@@ -114,4 +114,4 @@ bool   ErrorRollback(const char *emsg)  { return ErrorRollback(SQL, emsg); }
 bool   OkCommit(const char *emsg)       { return OkCommit(SQL, emsg); }
 #endif
 
-END_UPP_NAMESPACE
+}
