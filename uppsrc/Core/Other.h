@@ -1,6 +1,12 @@
-template <class T/*, class... Args*/>
-T& Single(/*Args... args*/) {
-	static T o/*(args...)*/; // GCC 4.x bug - wants to do std::move here if args specified
+template <class T, class... Args>
+T& Single(Args... args) {
+	static T o(args...);
+	return o;
+}
+
+template <class T> // Workaround for GCC bug - specialization needed...
+T& Single() {
+	static T o;
 	return o;
 }
 
