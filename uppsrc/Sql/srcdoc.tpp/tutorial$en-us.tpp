@@ -362,4 +362,9 @@ identical to the names of tables, with [* S`_] prefix:&]
 [s3; Recommended tutorials:&]
 [s5; If you want to learn more, we have several tutorials that you 
 can find useful:&]
-[s5;l160;i150;O0;~~~0; ]]
+[s5;l160;i150;O0;~~~0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark] 
+`- now you know everything about databases `- why not to use 
+your knowledge to become web development star?&]
+[s5;l160;i150;O0;~~~0; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ U`+`+ 
+Core value types] `- still not very confident with U`+`+. In 
+this tutorial you will learn basics.]]
