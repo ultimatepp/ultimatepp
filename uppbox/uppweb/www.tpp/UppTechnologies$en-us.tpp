@@ -21,7 +21,7 @@ topic "U++ Technologies";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
-[b83;*2 $$22,22#21983EF981F3F559AF4A1AB7092BBE6E:subtitle]
+[b125;*2 $$22,22#21983EF981F3F559AF4A1AB7092BBE6E:subtitle]
 [{_}%EN-US 
 [s2; U`+`+ Technologies&]
 [s3; 1. Introduction&]
@@ -70,9 +70,18 @@ paragraph.&]
 [s22; 3.2.1 Core libraries&]
 [s5; Core libraries provide low level abstraction.&]
 [s5;l160;i150;O0; [* Core] `- the heart of the U`+`+ framework.&]
-[s5;l160;i150;O0; [* Plugins] `- useful additions to the library. Generally, 
-they add support for specific file format like PNG, JPEG etc..&]
-[s5;l160;i150;O0; [* Esc] `- scripting language.&]
+[s5;l160;i150;O0; [* Plugins] `- useful additions to the library. They 
+are mainly third party libraries that are wrapped by U`+`+ framework. 
+They are adapted to TheIDE build system, so all you need to do 
+is just add it to project.&]
+[s5;l480;i150;O2; [* PNG] `- adds support for PNG graphics format.&]
+[s5;l480;i150;O2; [* JPG] `- similar like previous one expect that 
+it concerns JPEG.&]
+[s5;l480;i150;O2; [* PCRE] `- regular expression support.&]
+[s5;l480;i150;O2; [* Z ]`- adds support for ZIP format. It is used 
+to compares/decompress files.&]
+[s5;l160;i150;O0; [* Esc] `- scripting language. It is mainly used 
+for scripting TheIDE, but it can be easily embed in any application.&]
 [s22; 3.2.2 Graphics libraries&]
 [s5; Libraries that are responsible for processing graphics. They 
 can be used with or without GUI.&]
@@ -100,18 +109,23 @@ use access to the databases. In this area we can distinguish
 following components:&]
 [s5;l160;i150;O0; [* SQL] `- provides abstract layer that generalize 
 access to database.&]
+[s5;l160;i150;O0; [* MySQL] `- adds support for MySQL database engine.&]
+[s5;l160;i150;O0; [* Plugins:]&]
+[s5;l480;i150;O2; [* SQLITE3] `- adds support for SQLite database engine. 
+This type of database doesn`'t require connection to special 
+server. All content is stored on hard drice as a regular file. 
+More information about this technology can be found on official 
+manufacture [^ https`:`/`/sqlite`.org`/^ site].&]
 [s22; 3.2.6 Web development&]
 [s5; U`+`+ allows to create web application that works directly in 
 your web browser. Currently, we support two following technologies&]
-[s5;l160;i150;O0; [* Skylark] `- web development framework dedicated 
-C`+`+ language. It mainly based on U`+`+ core libraries such 
-as Core. It allows to create web application that based on page 
-generation concept. It means that it can handle all HTML requests 
-and programmer write code that generates HTML page. &]
-[s5;l288;~~~192; Skylark works with all databases engines that are 
-supported by U`+`+.&]
-[s5;l288; More information about this technology can be found in 
-our official Skylark [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ tutorial].&]
+[s5;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark] 
+`- web development framework dedicated C`+`+ language. It mainly 
+based on U`+`+ core libraries such as Core. It allows to create 
+web application that based on page generation concept. It means 
+that it can handle all HTML requests and programmer write code 
+that generates HTML page. In addition, Skylark works with all 
+databases engines that are supported by U`+`+.&]
 [s5;l160;i150;O0; [* Turtle] `- tiny JavaScript and HTML5 client that 
 allows to run GUI application directly in the browse. Example 
 of usage of that technology can be found on this [^topic`:`/`/uppweb`/reference`/WebWord`$en`-us^ s
