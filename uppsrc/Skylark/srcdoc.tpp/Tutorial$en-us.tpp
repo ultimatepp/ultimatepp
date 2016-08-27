@@ -1192,4 +1192,10 @@ or pointer to handler function.&]
 [s7; <a href`=`$[* Person:Create]>Insert new person</a>&]
 [s7; <a href`=`$[* CREATE]>Insert new person using LINK</a>&]
 [s7; &]
-[s5;* ]]
+[s5; &]
+[s3; Recommended tutorials:&]
+[s5; If you want to learn more, we have several tutorials that you 
+can find useful:&]
+[s5;l160;i150;O0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ SQL tutorial] 
+`- everything you should know to work efficiency with databases 
+within U`+`+ framework.]]
