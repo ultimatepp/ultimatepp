@@ -7,41 +7,34 @@ topic "Ultimate++ vs D programming language";
 [i448;a25;kKO9;*@(64)2 $$5,0#37138531426314131252341829483370:item]
 [*+117 $$6,6#14700283458701402223321329925657:header]
 [l288;a17;*1 $$7,7#70004532496200323422659154056402:requirement]
-[b42;a42;2 $$8,8#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$8,8#45413000475342174754091244180557:text]
 [{_}%EN-US 
 [s0; [*R6 U`+`+ Core vs D programming language]&]
-[s0;>*^topic`:`/`/uppweb`/www`/vsd`$ru`-ru^1 &]
-[s0;^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^ &]
-[s0; D programming language authors give a nice example of D language 
+[s8; D programming language authors give a nice example of D language 
 string and map here:&]
-[s0; &]
-[s0; [^http`:`/`/www`.digitalmars`.com`/d`/2`.0`/cppstrings`.html^ http://www.digitalmar
-s.com/d/2.0/cppstrings.html]&]
-[s0; &]
-[s0; We have taken the chance to reimplement this in U`+`+ and tested 
+[s8; http://www.digitalmars.com/d/2.0/cppstrings.html [/ (Currently 
+unavailable `- 2016.08.27)]&]
+[s8; We have taken the chance to re implement this in U`+`+ and tested 
 with Ubuntu 64 platform. `"gdc`" compiler was used with flags 
 suggested in the article.&]
-[s0; &]
-[s0; We had to test with larger file than `"Alice30.txt`", because 
+[s8; We had to test with larger file than `"Alice30.txt`", because 
 host platform was too fast for such small file, therefore we 
-combined a couple of text files from the [^http`:`/`/www`.gutenberg`.org`/ebooks`/11^ s
+combined a couple of text files from the [^http`:`/`/www`.umich`.edu`/`~umfandsf`/other`/ebooks`/alice30`.txt^ s
 ame source] to form a single 2MB file.&]
-[s0; &]
-[s0; We have also removed the code to produce the output to make 
+[s8; We have also removed the code to produce the output to make 
 results more relevant.&]
-[s0; &]
-[s0; Results:&]
-[s0; &]
+[s8; Results:&]
+[s8; &]
 [ {{3333:3333:3334<768;>800;h1;@7 [s0; [* D language]]
 :: [s0; [* U`+`+]]
 :: [s0; [* U`+`+ / D language]]
 ::@2 [s0; 0.072s]
 :: [s0; 0.043s]
 :: [s0; 1.7]}}&]
-[s0; &]
-[s0; Means C`+`+ is still well ahead of D (by 70%) if not being hold 
+[s8; &]
+[s8; Means C`+`+ is still well ahead of D (by 70%) if not being hold 
 back by standard library design and average implementation...&]
-[s0; &]
+[s8; &]
 [ {{10000@(254.254.208) [s0; [*C@5 #include <Core/Core.h>]&]
 [s0;*C@5 &]
 [s0; [*C@5 using namespace Upp;]&]
@@ -95,4 +88,4 @@ total`_bytes);]&]
 [s0; [*C@5 -|return 0;]&]
 [s0; [*C@5 `}]&]
 [s0;*C@5 ]}}&]
-[s0; ]
+[s8; ]]

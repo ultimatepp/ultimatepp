@@ -258,11 +258,19 @@ TOPIC("svnInstall$en-us")
 #include "svnInstall$en-us.tppi"
 END_TOPIC
 
+TOPIC("tutoring$en-us")
+#include "tutoring$en-us.tppi"
+END_TOPIC
+
 TOPIC("ubuntuinstall$en-us")
 #include "ubuntuinstall$en-us.tppi"
 END_TOPIC
 
 TOPIC("uppx11$en-us")
 #include "uppx11$en-us.tppi"
+END_TOPIC
+
+TOPIC("vsd$en-us")
+#include "vsd$en-us.tppi"
 END_TOPIC
 

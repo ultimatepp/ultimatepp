@@ -6,8 +6,8 @@ topic "Tutoring Plan";
 [s0; &]
 [s0;# [2 If you find that U`+`+ is a nice C`+`+ library and development 
 environment but you have problems beginning to use it and you 
-do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forum`/^2 Forum][2 , 
-][/2 Tutoring Plan is for you][2 .]&]
+do not feel comfortable with ][^http`:`/`/www`.ultimatepp`.org`/forums`/^2 Forum][2 ,
+ ][/2 Tutoring Plan is for you][2 .]&]
 [s0;2%- &]
 [s0;2%- &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Proposal]]}}&]
@@ -61,4 +61,4 @@ mentoring.]&]
 :: [s0; [2 Begin date will be 2010/07/12.]]
 :: [s0;# [2 2010/06/26]]
 :: [s0; [2 Infrastructure is prepared and we are ready to begin.]]}}&]
-[s0; ]
+[s0; ]]
