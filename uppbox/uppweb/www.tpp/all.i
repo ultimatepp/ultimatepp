@@ -2,6 +2,10 @@ TOPIC("20081chlog$en-us")
 #include "20081chlog$en-us.tppi"
 END_TOPIC
 
+TOPIC("AssociatedProjects$en-us")
+#include "AssociatedProjects$en-us.tppi"
+END_TOPIC
+
 TOPIC("FAQ$de-de")
 #include "FAQ$de-de.tppi"
 END_TOPIC
