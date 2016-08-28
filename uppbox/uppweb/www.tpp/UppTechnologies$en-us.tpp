@@ -74,12 +74,12 @@ paragraph.&]
 are mainly third party libraries that are wrapped by U`+`+ framework. 
 They are adapted to TheIDE build system, so all you need to do 
 is just add it to project.&]
-[s5;l480;i150;O2; [* PNG] `- adds support for PNG graphics format.&]
-[s5;l480;i150;O2; [* JPG] `- similar like previous one expect that 
-it concerns JPEG.&]
-[s5;l480;i150;O2; [* PCRE] `- regular expression support.&]
-[s5;l480;i150;O2; [* Z ]`- adds support for ZIP format. It is used 
-to compares/decompress files.&]
+[s5;l320;i150;O2;~~~480; [* PNG] `- adds support for PNG graphics format.&]
+[s5;l320;i150;O2;~~~480; [* JPG] `- similar like previous one expect 
+that it concerns JPEG.&]
+[s5;l320;i150;O2;~~~480; [* PCRE] `- regular expression support.&]
+[s5;l320;i150;O2;~~~480; [* Z ]`- adds support for ZIP format. It is 
+used to compares/decompress files.&]
 [s5;l160;i150;O0; [* Esc] `- scripting language. It is mainly used 
 for scripting TheIDE, but it can be easily embed in any application.&]
 [s22; 3.2.2 Graphics libraries&]
@@ -111,7 +111,7 @@ following components:&]
 access to database.&]
 [s5;l160;i150;O0; [* MySQL] `- adds support for MySQL database engine.&]
 [s5;l160;i150;O0; [* Plugins:]&]
-[s5;l480;i150;O2; [* SQLITE3] `- adds support for SQLite database engine. 
+[s5;l320;i150;O2; [* SQLITE3] `- adds support for SQLite database engine. 
 This type of database doesn`'t require connection to special 
 server. All content is stored on hard drice as a regular file. 
 More information about this technology can be found on official 
