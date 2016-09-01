@@ -367,7 +367,6 @@ public:
 	String& operator=(const String& s)                     { String0::Assign(s); return *this; }
 	String& operator=(String&& s)                          { if(this != &s) { Free(); Pick0(pick(s)); } return *this; }
 	String& operator=(StringBuffer& b)                     { *this = String(b); return *this; }
-//	String& operator<<=(const String& s)                   { if(this != &s) { String0::Free(); String0::Set0(s, s.GetCount()); } return *this; }
 
 	void   Shrink()                                        { *this = String(Begin(), GetLength()); }
 	int    GetCharCount() const;
