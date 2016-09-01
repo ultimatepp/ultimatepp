@@ -1,4 +1,5 @@
 #include "RichText.h"
+#include "RichText.h"
 
 namespace Upp {
 
@@ -252,15 +253,20 @@ void RichQtfParser::EndPart()
 	}
 	else {
 		Flush();
-		bool b = paragraph.format.newpage;
-		if(breakpage)
-			paragraph.format.newpage = true;
-		if(table.GetCount())
+		if(table.GetCount()) {
+			RichTable& tab = Table();
+			RichTable::Format tabformat = tab.GetFormat();
+			if(breakpage)
+				tabformat.newpage = true;
+			tab.SetFormat(tabformat);
 			table.Top().text.Cat(paragraph, target.GetStyles());
-		else
+		}
+		else {
+			if(breakpage)
+				paragraph.format.newpage = true;
 			target.Cat(paragraph);
-		paragraph.part.Clear();;
-		paragraph.format.newpage = b;
+		}
+		paragraph.part.Clear();
 		SetFormat();
 		breakpage = false;
 	}
