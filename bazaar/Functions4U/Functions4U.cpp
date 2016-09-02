@@ -1042,7 +1042,7 @@ String FitFileName(const String fileName, int len) {
 }
 
 String Tokenize2(const String &str, const String &token, int &pos) {
-	if (IsNull(pos) || pos == str.GetCount()) {
+	if (IsNull(pos) || pos >= str.GetCount()) {
 		pos = Null;
 		return Null;
 	}
@@ -1075,9 +1075,13 @@ Vector<String> Tokenize(const String &str, const String &token, int pos) {
 }
 
 void Tokenize(const String &str, const String &token, Vector<String> &ret, int pos) {
-	for (int _pos = pos; !IsNull(_pos); ret << Tokenize2(str, token, _pos))
-		;
-	//ret.Remove(ret.GetCount() - 1);
+	int _pos = pos;
+	while (true) {
+		String strRet = Tokenize2(str, token, _pos);
+		if (IsNull(_pos))
+			break;
+		ret << strRet;
+	}
 }
 /*
 String Tokenize(const String &str, const String &token, int &pos) {
