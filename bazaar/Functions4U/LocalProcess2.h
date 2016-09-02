@@ -15,6 +15,10 @@ public:
 	virtual void CloseRead();
 	virtual void CloseWrite();
 	virtual void Detach();
+#ifdef PLATFORM_WIN32	
+	void Pause();
+	bool IsPaused()		{return paused;}
+#endif
 
 private:
 	void         Init();
@@ -25,13 +29,14 @@ private:
 
 private:
 	bool         convertcharset;
-
+	
 #ifdef PLATFORM_WIN32
 	HANDLE       hProcess;
 	DWORD		 dwProcessId;
 	HANDLE       hOutputRead;
 	HANDLE       hErrorRead;
 	HANDLE       hInputWrite;
+	bool 		 paused;
 #endif
 #ifdef PLATFORM_POSIX
 	Buffer<char> cmd_buf;

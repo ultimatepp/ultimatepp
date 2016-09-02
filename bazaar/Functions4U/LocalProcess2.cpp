@@ -79,6 +79,7 @@ bool LocalProcess2::DoStart(const char *_command, const Vector<String> *arg, boo
 	String command = TrimBoth(_command);
 
 #ifdef PLATFORM_WIN32
+	paused = false;
 	HANDLE hOutputReadTmp, hOutputWrite;
 	HANDLE hInputWriteTmp, hInputRead;
 	HANDLE hErrorReadTmp, hErrorWrite;
@@ -658,5 +659,33 @@ int LocalProcess2::Finish(String& out)
 	out.Cat(Get());
 	return GetExitCode();
 }
+
+#ifdef PLATFORM_WIN32
+#include <TlHelp32.h>
+
+void LocalProcess2::Pause() {
+	paused = !paused;
+	
+    HANDLE hThreadSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+
+    THREADENTRY32 threadEntry; 
+    threadEntry.dwSize = sizeof(THREADENTRY32);
+
+    Thread32First(hThreadSnapshot, &threadEntry);
+
+    do {
+        if (threadEntry.th32OwnerProcessID == dwProcessId || threadEntry.th32ThreadID == dwProcessId) {
+            HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
+           	if (paused)
+            	SuspendThread(hThread);
+           	else
+           		ResumeThread(hThread);
+            CloseHandle(hThread);
+        }
+    } while (Thread32Next(hThreadSnapshot, &threadEntry));
+
+    CloseHandle(hThreadSnapshot);
+}
+#endif
 
 END_UPP_NAMESPACE

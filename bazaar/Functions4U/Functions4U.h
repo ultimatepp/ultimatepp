@@ -562,20 +562,52 @@ private:
 								return v
 
 
+class RealTimeStop {
+public:
+		RealTimeStop() : timeElapsed(0), time0(-1) {}
+		void Reset() {
+			timeElapsed = 0;
+			Continue();
+		}
+		void Pause() {
+			if (time0 == -1) {		// Only pauses if stopped
+				timeElapsed += (tmGetTimeX() - time0);
+				time0 = -1;
+			}
+		}
+		void Continue() {
+			if (time0 == -1)		// Only continues if paused
+				time0 = tmGetTimeX();
+		}
+		double Seconds() {
+			if (time0 == -1)
+				return timeElapsed;
+			else
+				return timeElapsed + (tmGetTimeX() - time0);
+		}
+		void SetBack(double secs) {
+			timeElapsed -= secs;
+		}
+		
+private:
+	double timeElapsed;				// Time elapsed
+	double time0;					// Time of last Continue()
+};
+
 class LocalProcessX {
 public:
-	LocalProcessX() : status(STOP_OK) {}
+	LocalProcessX() : status(STOP_OK), lastPerform(-1) {}
 	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
-	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double _refreshTime = -1, double _timeOut = -1, bool convertcharset = true) {
+	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, double timeOut = -1, bool convertcharset = true) {
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Reset();
 		timeToTimeout.Reset();
 		if(!p.Start(cmd, envptr, dir))
 			return false;
 		status = RUNNING;
-		timeOut = _timeOut;
-		refreshTime = _refreshTime;
+		this->timeOut = timeOut;
+		this->refreshTime = refreshTime;
 	
 #ifdef CTRLLIB_H
 		if (refreshTime > 0)
@@ -584,6 +616,13 @@ public:
 		return true;
 	}
 	void Perform() {
+		double tActual = tmGetTimeX();
+		if (refreshTime > -1 && !p.IsPaused()) {
+			double deltaLastPerform = tActual - lastPerform;
+			if (deltaLastPerform > 10*refreshTime)		// Some external issue has stopped normal running
+				timeToTimeout.SetBack(deltaLastPerform);// Timeout timer is fixed accordingly
+		}
+		lastPerform = tActual;
 		if (status <= 0)
 			return;
 		String out;
@@ -622,9 +661,15 @@ public:
 			KillTimeCallback(this);
 #endif		
 	}
-	void Write(String str) {p.Write(str);}
-	int GetStatus()  {return status;}
-	bool IsRunning() {return status > 0;}
+	void Pause() {
+		p.Pause();
+		if (p.IsPaused()) 
+			lastPerform = tmGetTimeX();
+	}
+	bool IsPaused()			{return p.IsPaused();}
+	void Write(String str) 	{p.Write(str);}
+	int GetStatus()  		{return status;}
+	bool IsRunning() 		{return status > 0;}
 	Gate4<double, String&, bool, bool&> WhenTimer;
 	#ifdef PLATFORM_WIN32
 	DWORD GetPid()	{return p.GetPid();}
@@ -632,10 +677,11 @@ public:
 	
 private:
 	LocalProcess2 p;
-	TimeStop timeElapsed, timeToTimeout;
+	RealTimeStop timeElapsed, timeToTimeout;
 	ProcessStatus status;
 	double timeOut;
 	double refreshTime;
+	double lastPerform;
 };
 
 template <class T>
