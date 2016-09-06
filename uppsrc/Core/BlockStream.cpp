@@ -334,7 +334,7 @@ bool FileStream::Open(const char *name, dword mode) {
 		NULL
 	);
 	if(handle == INVALID_HANDLE_VALUE) {
-		SetError();
+		SetLastError();
 		return FALSE;
 	}
 	dword fsz_lo, fsz_hi;
