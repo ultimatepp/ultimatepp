@@ -71,6 +71,7 @@ public:
 	void      SetLastError()         { SetError(errno); }
 #endif
 	int       GetError() const       { return errorcode; }
+	String    GetErrorText() const;
 	void      ClearError()           { style = style & ~STRM_ERROR; errorcode = 0; }
 
 	int64     GetPos() const         { return dword(ptr - buffer) + pos; }
