@@ -69,6 +69,11 @@ void Stream::LoadError() {
 		throw LoadingError();
 }
 
+String Stream::GetErrorText() const
+{
+   return IsError() ? Upp::GetErrorMessage(errorcode) : String();
+}
+
 bool Stream::GetAll(void *data, int size) {
 	if(Get(data, size) != size) {
 		LoadError();
