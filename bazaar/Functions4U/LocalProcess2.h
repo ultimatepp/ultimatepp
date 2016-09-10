@@ -12,13 +12,15 @@ public:
 	virtual bool Read2(String& os, String &es);
 	virtual String GetExitMessage();
 	virtual int  GetExitCode();
-	virtual void CloseRead();
-	virtual void CloseWrite();
-	virtual void Detach();
 #ifdef PLATFORM_WIN32	
 	void Pause();
 	bool IsPaused()		{return paused;}
 #endif
+	
+private:
+	virtual void CloseRead();
+	virtual void CloseWrite();
+	virtual void Detach();
 
 private:
 	void         Init();

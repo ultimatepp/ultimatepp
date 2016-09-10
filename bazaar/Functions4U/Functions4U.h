@@ -570,10 +570,8 @@ public:
 			Continue();
 		}
 		void Pause() {
-			if (time0 == -1) {		// Only pauses if stopped
+			if (time0 == -1) 		// Only pauses if stopped
 				timeElapsed += (tmGetTimeX() - time0);
-				time0 = -1;
-			}
 		}
 		void Continue() {
 			if (time0 == -1)		// Only continues if paused
@@ -600,6 +598,7 @@ public:
 	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, double timeOut = -1, bool convertcharset = true) {
+		status = STOP_OK;
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Reset();
 		timeToTimeout.Reset();
@@ -628,8 +627,10 @@ public:
 		String out;
 		p.Read(out);
 		if(p.IsRunning()) {
-			if (timeOut > 0 && timeToTimeout.Seconds() > timeOut) 
-				status = STOP_TIMEOUT;
+			if (!p.IsPaused()) {
+				if (timeOut > 0 && timeToTimeout.Seconds() > timeOut) 
+					status = STOP_TIMEOUT;
+			}
 		} else 
 			status = STOP_OK;
 		
@@ -661,12 +662,18 @@ public:
 			KillTimeCallback(this);
 #endif		
 	}
+#ifdef PLATFORM_WIN32
 	void Pause() {
 		p.Pause();
 		if (p.IsPaused()) 
-			lastPerform = tmGetTimeX();
+			lastPerform = lastPause = tmGetTimeX();
+		else {
+			double deltaLastPause = tmGetTimeX() - lastPause;
+			timeToTimeout.SetBack(deltaLastPause);
+		}
 	}
 	bool IsPaused()			{return p.IsPaused();}
+#endif
 	void Write(String str) 	{p.Write(str);}
 	int GetStatus()  		{return status;}
 	bool IsRunning() 		{return status > 0;}
@@ -675,13 +682,14 @@ public:
 	DWORD GetPid()	{return p.GetPid();}
 	#endif
 	
+	
 private:
 	LocalProcess2 p;
 	RealTimeStop timeElapsed, timeToTimeout;
 	ProcessStatus status;
 	double timeOut;
 	double refreshTime;
-	double lastPerform;
+	double lastPerform, lastPause;
 };
 
 template <class T>
