@@ -676,9 +676,13 @@ public:
 	}
 	BarDisplay &SetValue(double _value) {value = _value;return *this;}
 	BarDisplay &SetText(const char *str){text = str;	return *this;}
-	BarDisplay &SetColor(Color _color, Color _paper = Null, Color _ink = SColorText) {color = _color; 
-										ink = _ink;	paper = _paper;	return *this;}
-	BarDisplay &SetAlign(int a)       	{align = a; return *this;}
+	BarDisplay &SetColor(Color _color, Color _paper = Null, Color _ink = SColorText) {
+		color = _color; 
+		ink = _ink;	
+		paper = _paper;	
+		return *this;
+	}
+	BarDisplay &SetAlign(int a) {align = a; return *this;}
 	
 private:
 	Color color, ink, paper;
@@ -718,8 +722,10 @@ private:
 
 class InfoCtrlBar : public InfoCtrl {
 public:
-	InfoCtrlBar() {Set(PaintRect(bar));}
-
+	InfoCtrlBar() {
+		Set(PaintRect(bar));
+		SetColor(SColorFace);
+	}
 	InfoCtrlBar &SetValue(double value) 											{bar.SetValue(value);				return *this;}	
 	InfoCtrlBar &SetText(const char *str) 											{bar.SetText(str);					return *this;}
 	InfoCtrlBar &SetColor(Color color, Color paper = Null, Color ink = SColorText)	{bar.SetColor(color, paper, ink);	return *this;}
