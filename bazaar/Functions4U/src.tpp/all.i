@@ -10,6 +10,10 @@ TOPIC("Functions4U1$en-us")
 #include "Functions4U1$en-us.tppi"
 END_TOPIC
 
+TOPIC("LocalProcess2$en-us")
+#include "LocalProcess2$en-us.tppi"
+END_TOPIC
+
 TOPIC("QtfEquation$en-us")
 #include "QtfEquation$en-us.tppi"
 END_TOPIC

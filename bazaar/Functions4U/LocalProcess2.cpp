@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include "LocalProcess2.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 #ifdef PLATFORM_WIN32
 #include <TlHelp32.h>
@@ -378,21 +378,28 @@ SIGDEF(SIGIO) SIGDEF(SIGWINCH)
 #endif//PLATFORM_POSIX
 
 #ifdef PLATFORM_WIN32
-Vector<DWORD> GetChildProcessList(DWORD processId)
-{
-	PROCESSENTRY32 proc;
+Vector<DWORD> GetChildProcessList(DWORD processId) {
 	Vector<DWORD> child, all, parents;
+	
 	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	if (hSnap == INVALID_HANDLE_VALUE) 
 		return child;
+	
+	PROCESSENTRY32 proc;
 	proc.dwSize = sizeof(proc);
-	long f = Process32First(hSnap, &proc);
-	while (f) {
+	
+	if (!Process32First(hSnap, &proc)) {
+		CloseHandle(hSnap);	
+		return child;
+	}
+	
+	do {
 		all << proc.th32ProcessID;
 		parents << proc.th32ParentProcessID;
-       	f = Process32Next(hSnap, &proc);
-	}
+    } while(Process32Next(hSnap, &proc));
+	
 	CloseHandle(hSnap);
+	
 	child << processId;
 	int init = 0;
 	while (true) {
@@ -411,11 +418,10 @@ Vector<DWORD> GetChildProcessList(DWORD processId)
 	return child;	
 }
 
-void TerminateChildProcesses(DWORD dwProcessId, UINT uExitCode) 
-{
-	Vector<DWORD> child = GetChildProcessList(dwProcessId);
-	for (int i = 0; i < child.GetCount(); ++i) {
-		HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, child[i]);
+void TerminateChildProcesses(DWORD dwProcessId, UINT uExitCode) {
+	Vector<DWORD> children = GetChildProcessList(dwProcessId);
+	for (int i = 0; i < children.GetCount(); ++i) {
+		HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, children[i]);
 		TerminateProcess(hProcess, uExitCode);
 		CloseHandle(hProcess);
 	}
@@ -663,29 +669,45 @@ int LocalProcess2::Finish(String& out)
 #ifdef PLATFORM_WIN32
 #include <TlHelp32.h>
 
-void LocalProcess2::Pause() {
-	paused = !paused;
+
+void PauseChildThreads(DWORD dwProcessId, bool paused) {
+	HANDLE hThSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
+	if(hThSnap == INVALID_HANDLE_VALUE)
+		return; 
+		
+    THREADENTRY32 thEntry; 
+    thEntry.dwSize = sizeof(THREADENTRY32);
+
+    if (!Thread32First(hThSnap, &thEntry)) {
+        CloseHandle(hThSnap);
+        return;
+    }
 	
-    HANDLE hThreadSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-
-    THREADENTRY32 threadEntry; 
-    threadEntry.dwSize = sizeof(THREADENTRY32);
-
-    Thread32First(hThreadSnapshot, &threadEntry);
-
     do {
-        if (threadEntry.th32OwnerProcessID == dwProcessId || threadEntry.th32ThreadID == dwProcessId) {
-            HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, threadEntry.th32ThreadID);
+        if (thEntry.th32OwnerProcessID == dwProcessId || thEntry.th32ThreadID == dwProcessId) {
+            HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, thEntry.th32ThreadID);
            	if (paused)
             	SuspendThread(hThread);
            	else
            		ResumeThread(hThread);
             CloseHandle(hThread);
         }
-    } while (Thread32Next(hThreadSnapshot, &threadEntry));
+    } while(Thread32Next(hThSnap, &thEntry));
 
-    CloseHandle(hThreadSnapshot);
+    CloseHandle(hThSnap);
+}
+
+void LocalProcess2::Pause() {
+	if (!IsRunning())
+		return;
+	
+	paused = !paused;
+	
+	Vector<DWORD> children = GetChildProcessList(dwProcessId);
+	for (int i = 0; i < children.GetCount(); ++i)
+		PauseChildThreads(children[i], paused);
+    PauseChildThreads(dwProcessId, paused);
 }
 #endif
 
-END_UPP_NAMESPACE
+}
