@@ -18,7 +18,7 @@ void DropList::Sync() {
 	MultiButton::SetDisplay(d);
 	MultiButton::SetValueCy(list.GetLineCy());
 	v = valueconvert->Format(v);
-	Set(v);
+	Set(v, false);
 }
 
 void DropList::Change(int q) {

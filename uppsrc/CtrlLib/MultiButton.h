@@ -156,7 +156,7 @@ public:
 	MultiButton& NoDisplay();
 	MultiButton& SetConvert(const Convert& c);
 	MultiButton& SetValueCy(int cy);
-	MultiButton& Set(const Value& v);
+	MultiButton& Set(const Value& v, bool update = true);
 	MultiButton& Tip(const char *s)                  { tip = s; return *this; }
 	MultiButton& NoBackground(bool b = true);
 

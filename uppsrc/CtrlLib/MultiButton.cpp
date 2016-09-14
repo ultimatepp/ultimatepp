@@ -632,11 +632,14 @@ MultiButton& MultiButton::SetConvert(const Convert& c)
 	return *this;
 }
 
-MultiButton& MultiButton::Set(const Value& v)
+MultiButton& MultiButton::Set(const Value& v, bool update)
 {
 	if(value != v) {
 		value = v;
-		UpdateRefresh();
+		if(update)
+			UpdateRefresh();
+		else
+			Refresh();
 	}
 	return *this;
 }
