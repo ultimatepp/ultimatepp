@@ -97,11 +97,18 @@ struct AboutDlg : TopWindow {
 	RichTextView about;
 
 	typedef AboutDlg CLASSNAME;
-
+	
 	virtual bool Key(dword key, int) {
-		if(key == K_ALT_M)
-			MemoryProfileInfo();
-		return false;
+		switch (key) {
+			case (K_ALT_M):
+				MemoryProfileInfo();
+				return true;
+			case (K_ESCAPE):
+				Close();
+				return true;
+			default:
+				return false;
+		}
 	}
 
 	AboutDlg() {
