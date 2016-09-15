@@ -38,6 +38,7 @@ file
 	Template.cpp,
 	ide.key,
 	Console.cpp,
+	FindFile.cpp,
 	FindInFiles.cpp,
 	Config.cpp,
 	ide.cpp,

@@ -183,53 +183,6 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	return true;
 }
 
-int CharFilterFindFileMask(int c)
-{
-	return ToUpper(ToAscii(c));
-}
-
-void Ide::FindFileName() {
-	const Workspace& wspc = IdeWorkspace();
-
-	WithFindFileLayout<TopWindow> ffdlg;
-	CtrlLayoutOKCancel(ffdlg, "Find file");
-	ffdlg.list.AutoHideSb();
-	ffdlg.list.AddColumn("Package");
-	ffdlg.list.AddColumn("File");
-	ffdlg.list.WhenLeftDouble = ffdlg.Acceptor(IDOK);
-	ffdlg.mask.NullText("Search");
-	ffdlg.mask.SetText(find_file_search_string);
-	ffdlg.mask.SelectAll();
-	ffdlg.mask.SetFilter(CharFilterFindFileMask);
-	ffdlg.mask <<= ffdlg.Breaker(IDYES);
-	for(;;) {
-		ffdlg.list.Clear();
-		String mask = ~ffdlg.mask;
-		for(int p = 0; p < wspc.GetCount(); p++) {
-			String packname = wspc[p];
-			const Package& pack = wspc.GetPackage(p);
-			for(const auto& file : pack.file)
-				if(!file.separator && (ToUpper(packname).Find(mask) >= 0 || ToUpper(file).Find(mask) >= 0))
-					ffdlg.list.Add(packname, file);
-		}
-		if(ffdlg.list.GetCount() > 0)
-			ffdlg.list.SetCursor(0);
-		switch(ffdlg.Run()) {
-		case IDCANCEL:
-			return;
-		case IDOK:
-			if(ffdlg.list.IsCursor()) {
-				find_file_search_string = ~ffdlg.mask;
-				EditFile(SourcePath(ffdlg.list.Get(0),  ffdlg.list.Get(1)));
-				return;
-			}
-			break;
-		case IDYES:
-			break;
-		}
-	}
-}
-
 void Ide::FindInFiles(bool replace) {
 	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	CtrlRetriever rf;
