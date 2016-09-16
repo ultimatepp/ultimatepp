@@ -104,6 +104,7 @@ LAYOUT(FindFileLayout, 450, 280)
 	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(28, 34))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(88, 80).BottomPosZ(4, 22))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+	ITEM(Option, searchInCurrentPackage, SetLabel(t_("Search in current package")).HSizePosZ(4, 262).BottomPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(UppLayout, 936, 576)
