@@ -18,28 +18,37 @@ private:
 		
 			w.DrawRect(r, paper);
 			w.DrawImage(r.left, r.top + ((cellHeight - fileImage.GetHeight()) / 2), fileImage);
-			w.DrawText(r.left + fileImage.GetWidth() + Zx(5), r.top + ((cellHeight - StdFont().GetCy()) / 2), txt, StdFont(), ink);
+			w.DrawText(r.left + fileImage.GetWidth() + Zx(5), r.top +
+					  ((cellHeight - StdFont().GetCy()) / 2),
+					  txt, StdFont(), ink);
 		}
 	};
 
 public:
-	FindFileWindow(const Workspace& wspc, const String& serachString);
+	FindFileWindow(const Workspace& wspc, const String& acctualPackage,
+				   const String& serachString);
 	
 	String GetFile() const;
 	String GetPackage() const;
 	
 private:
 	void OnSearch();
-
+	
+	bool IsFileMeetTheCriteria(
+		const Package::File& file, const String& packageName,const String& query);
+	bool IsAcctualPackage(const String& packageName);
+	
 private:
+	const String     acctualPackage;
 	const Workspace& wspc;
 };
 
-FindFileWindow::FindFileWindow(const Workspace& wspc, const String& serachString)
+FindFileWindow::FindFileWindow(const Workspace& wspc, const String& acctualPackage,
+							   const String& serachString)
 	: wspc(wspc)
+	, acctualPackage(acctualPackage)
 {
 	CtrlLayoutOKCancel(*this, "Find File");
-	
 	Sizeable().Zoomable();
 	list.AutoHideSb();
 	list.AddColumn("File").SetDisplay(Single<FindFileFileDisplay>());
@@ -50,6 +59,7 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& serachString
 	mask.SelectAll();
 	mask.SetFilter(CharFilterFindFileMask);
 	mask << [=] { OnSearch(); };
+	searchInCurrentPackage << [=] { OnSearch(); };
 	
 	OnSearch();
 }
@@ -69,21 +79,37 @@ void FindFileWindow::OnSearch()
 	list.Clear();
 	String maskValue = ~mask;
 	for(int p = 0; p < wspc.GetCount(); p++) {
-		String packname = wspc[p];
+		String packageName = wspc[p];
 		const Package& pack = wspc.GetPackage(p);
-		for(const auto& file : pack.file)
-			if(!file.separator && (ToUpper(packname).Find(maskValue) >= 0 || ToUpper(file).Find(maskValue) >= 0))
-				list.Add(file, packname);
+		for(const auto& file : pack.file) {
+			if(IsFileMeetTheCriteria(file, packageName, maskValue)) {
+				list.Add(file, packageName);
+			}
+		}
 	}
 	if(list.GetCount() > 0)
 		list.SetCursor(0);
-
+	
 	ok.Enable(list.IsCursor());
+}
+
+bool FindFileWindow::IsFileMeetTheCriteria(
+	const Package::File& file, const String& packageName, const String& query)
+{
+	if (searchInCurrentPackage.Get() == true && !IsAcctualPackage(packageName))
+		return false;
+	
+	return !file.separator && (ToUpper(packageName).Find(query) >= 0 || ToUpper(file).Find(query) >= 0);
+}
+
+bool FindFileWindow::IsAcctualPackage(const String& packageName)
+{
+	return acctualPackage.Compare(packageName) == 0;
 }
 
 void Ide::FindFileName()
 {
-	FindFileWindow findFileWindow(IdeWorkspace(), find_file_search_string);
+	FindFileWindow findFileWindow(IdeWorkspace(), actualpackage, find_file_search_string);
 	if(findFileWindow.Execute() == IDOK) {
 		if(findFileWindow.list.IsCursor()) {
 			find_file_search_string = ~findFileWindow.mask;
