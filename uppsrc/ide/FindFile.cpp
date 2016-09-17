@@ -5,6 +5,34 @@ static int CharFilterFindFileMask(int c)
 	return ToUpper(ToAscii(c));
 }
 
+class FindFileData : public Moveable<FindFileData> {
+public:
+	FindFileData(const String& file, const String& package);
+	
+	String GetFile()    const;
+	String GetPackage() const;
+	
+private:
+	String file;
+	String package;
+};
+
+FindFileData::FindFileData(const String& file, const String& package)
+	: file(file)
+	, package(package)
+{
+}
+
+String FindFileData::GetFile() const
+{
+	return file;
+}
+
+String FindFileData::GetPackage() const
+{
+	return package;
+}
+
 class FindFileWindow final : public WithFindFileLayout<TopWindow> {
 private:
 	struct FindFileFileDisplay : public Display {
@@ -28,13 +56,12 @@ public:
 	FindFileWindow(const Workspace& wspc, const String& acctualPackage,
 				   const String& serachString);
 	
-	String GetFile() const;
-	String GetPackage() const;
+	Vector<FindFileData> GetFindedFilesData() const;
 	
 private:
 	void OnSearch();
 	
-	bool IsFileMeetTheCriteria(
+	bool DoseFileMeetTheCriteria(
 		const Package::File& file, const String& packageName,const String& query);
 	bool IsAcctualPackage(const String& packageName);
 	
@@ -50,10 +77,10 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& acctualPacka
 {
 	CtrlLayoutOKCancel(*this, "Find File");
 	Sizeable().Zoomable();
-	list.AutoHideSb();
 	list.AddColumn("File").SetDisplay(Single<FindFileFileDisplay>());
 	list.AddColumn("Package");
 	list.WhenLeftDouble = Acceptor(IDOK);
+	list.MultiSelect();
 	mask.NullText("Search");
 	mask.SetText(serachString);
 	mask.SelectAll();
@@ -64,14 +91,19 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& acctualPacka
 	OnSearch();
 }
 
-String FindFileWindow::GetFile() const
+Vector<FindFileData> FindFileWindow::GetFindedFilesData() const
 {
-	return list.Get(0);
-}
-
-String FindFileWindow::GetPackage() const
-{
-	return list.Get(1);
+	Vector<FindFileData> data;
+	
+	// NOTE: maybe there is cleaner way to obtain multiselected rows,
+	// but I don't find it right now.
+	for(int i = 0; i < list.GetCount(); i++) {
+		if(list.IsSelected(i)) {
+			data.Add(FindFileData(list.Get(i, 0), list.Get(i, 1)));
+		}
+	}
+	
+	return data;
 }
 
 void FindFileWindow::OnSearch()
@@ -82,7 +114,7 @@ void FindFileWindow::OnSearch()
 		String packageName = wspc[p];
 		const Package& pack = wspc.GetPackage(p);
 		for(const auto& file : pack.file) {
-			if(IsFileMeetTheCriteria(file, packageName, maskValue)) {
+			if(DoseFileMeetTheCriteria(file, packageName, maskValue)) {
 				list.Add(file, packageName);
 			}
 		}
@@ -93,7 +125,7 @@ void FindFileWindow::OnSearch()
 	ok.Enable(list.IsCursor());
 }
 
-bool FindFileWindow::IsFileMeetTheCriteria(
+bool FindFileWindow::DoseFileMeetTheCriteria(
 	const Package::File& file, const String& packageName, const String& query)
 {
 	if (searchInCurrentPackage.Get() == true && !IsAcctualPackage(packageName))
@@ -111,9 +143,14 @@ void Ide::FindFileName()
 {
 	FindFileWindow findFileWindow(IdeWorkspace(), actualpackage, find_file_search_string);
 	if(findFileWindow.Execute() == IDOK) {
-		if(findFileWindow.list.IsCursor()) {
-			find_file_search_string = ~findFileWindow.mask;
-			EditFile(SourcePath(findFileWindow.GetPackage(), findFileWindow.GetFile()));
+		find_file_search_string = ~findFileWindow.mask;
+		
+		Vector<FindFileData> data = findFileWindow.GetFindedFilesData();
+		for(const FindFileData& currentData : data) {
+			AddHistory();
+			
+			String filePath = SourcePath(currentData.GetPackage(), currentData.GetFile());
+			EditFile(filePath);
 		}
 	}
 }
