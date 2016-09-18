@@ -70,7 +70,6 @@ void Ide::FileCursor()
 		String p = GetActiveFileName();
 		if(p != HELPNAME)
 			p = GetActiveFilePath();
-
 		EditFile0(p, f.charset ? f.charset : actual.charset ? actual.charset : default_charset,
 		          false, headername);
 	}

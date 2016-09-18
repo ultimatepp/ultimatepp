@@ -504,7 +504,7 @@ void TabBar::ContextMenu(Bar& bar)
 		for(int i = 0; i < cnt; i++)
 		{
 			String name = Format("%s (%d)", groups[i].name, groups[i].count);
-			Bar::Item &it = bar.Add(name, THISBACK1(DoGrouping, i));
+			Bar::Item &it = bar.Add(name, THISBACK1(GoGrouping, i));
 			if(i == group)
 				it.Image(TabBarImg::CHK);
 			if(i == 0 && cnt > 1)
@@ -715,7 +715,7 @@ void TabBar::MakeGroups()
 		group--;
 }
 
-void TabBar::DoGrouping(int n)
+void TabBar::GoGrouping(int n)
 {
 	Value c = GetData();
 	group = n;
@@ -728,6 +728,14 @@ void TabBar::DoGrouping(int n)
 	SetData(c);
 	Refresh();
 }
+
+void TabBar::DoGrouping(int n)
+{
+	group = n;
+	Repos();
+	SyncScrollBar();
+}
+
 
 void TabBar::DoCloseGroup(int n)
 {
