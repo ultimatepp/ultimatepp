@@ -45,8 +45,8 @@ void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls
 		if(IsAlpha(c) || c == '_') {
 			static Index<String> rws, sws;
 			ONCELOCK {
-				rws << "error" << "errors" << "warning" << "warnings" << "failed" << "exit" << "fatal"
-				    << "failure" << "rejected";
+				rws << "error" << "errors" << "warning" << "warnings" << "warn" << "failed" << "exit"
+				    << "fatal" << "failure" << "rejected";
 				sws << "ok" << "success";
 			}
 			String w;
