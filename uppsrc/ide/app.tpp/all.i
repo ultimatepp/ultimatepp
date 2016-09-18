@@ -42,6 +42,10 @@ TOPIC("Files$en-us")
 #include "Files$en-us.tppi"
 END_TOPIC
 
+TOPIC("FindFile$en-us")
+#include "FindFile$en-us.tppi"
+END_TOPIC
+
 TOPIC("Flags$en-us")
 #include "Flags$en-us.tppi"
 END_TOPIC
