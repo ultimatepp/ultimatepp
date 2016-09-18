@@ -200,6 +200,12 @@ NTL_MOVEABLE(wchar_t);
 #endif
 
 template <class T, class B = EmptyClass>
+class WithClone : public B {
+public:
+	friend T clone(const T& src) { T c(src, 1); return c; }
+};
+
+template <class T, class B = EmptyClass>
 class DeepCopyOption : public B {
 public:
 #ifdef DEPRECATED

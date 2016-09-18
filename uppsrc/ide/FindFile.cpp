@@ -63,17 +63,17 @@ private:
 	
 	bool DoseFileMeetTheCriteria(
 		const Package::File& file, const String& packageName, const String& query);
-	bool IsAcctualPackage(const String& packageName);
+	bool IsActualPackage(const String& packageName);
 	
 private:
-	const String     acctualPackage;
+	const String     actualPackage;
 	const Workspace& wspc;
 };
 
-FindFileWindow::FindFileWindow(const Workspace& wspc, const String& acctualPackage,
+FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackage,
 							   const String& serachString)
 	: wspc(wspc)
-	, acctualPackage(acctualPackage)
+	, actualPackage(actualPackage)
 {
 	CtrlLayoutOKCancel(*this, "Find File");
 	Sizeable().Zoomable();
@@ -127,18 +127,18 @@ void FindFileWindow::OnSearch()
 	ok.Enable(list.IsCursor());
 }
 
-bool FindFileWindow::DoseFileMeetTheCriteria(
-	const Package::File& file, const String& packageName, const String& query)
+bool FindFileWindow::DoseFileMeetTheCriteria(const Package::File& file, const String& packageName,
+                                             const String& query)
 {
-	if (searchInCurrentPackage.Get() == true && !IsAcctualPackage(packageName))
+	if (searchInCurrentPackage&& !IsActualPackage(packageName))
 		return false;
 	
 	return !file.separator && (ToUpper(packageName).Find(query) >= 0 || ToUpper(file).Find(query) >= 0);
 }
 
-bool FindFileWindow::IsAcctualPackage(const String& packageName)
+bool FindFileWindow::IsActualPackage(const String& packageName)
 {
-	return acctualPackage.Compare(packageName) == 0;
+	return actualPackage.Compare(packageName) == 0;
 }
 
 void Ide::FindFileName()
