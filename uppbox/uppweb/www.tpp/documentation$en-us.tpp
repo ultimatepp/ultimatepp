@@ -4,7 +4,7 @@ topic "Documentation";
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*2 $$3,5#07864147445237544204411237157677:title]
 [b167;a42;C2 $$4,6#40027414424643823182269349404212:item]
-[b42;a42;2 $$5,5#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17;2 $$6,6#27521748481378242620020725143825:desc]
 [l321;t246;C@5;1 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
@@ -24,70 +24,75 @@ topic "Documentation";
 not everything is documented yet.&]
 [s5; Ultimate`+`+ community is ready to provide an excellent support 
 in the [^http`:`/`/www`.ultimatepp`.org`/forums`/^ forum].&]
-[s0; &]
-[s0; &]
-[s0; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation guide]&]
-[s0; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 POSIX/X11 tarball 
+[s3; [4 Installation and Configuration Documentation]&]
+[s5; &]
+[s0;l160; [*^topic`:`/`/ide`/app`/install`$en`-us^3 Win32 Installation 
+guide]&]
+[s0;l160; [*^topic`:`/`/uppweb`/www`/uppx11`$en`-us^3 POSIX/X11 tarball 
 installation guide]&]
-[s0; [*^topic`:`/`/ide`/SrcUpdater`/app`/LinuxInstallGuide`$en`-us^3 POSIX 
+[s0;l160; [*^topic`:`/`/ide`/SrcUpdater`/app`/LinuxInstallGuide`$en`-us^3 POSIX 
 (Linux, BSD, ...) setup]&]
-[s0; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage and 
-development cycle guide]&]
+[s0;l160; [*^topic`:`/`/uppweb`/www`/community`$en`-us^3 U`+`+ usage 
+and development cycle guide]&]
+[s5;^topic`:`/`/uppweb`/www`/community`$en`-us^ &]
 [s3; [4 TheIDE Documentation]&]
-[s0;*R^topic`:`/`/ide`/app`/HelpPage`$en`-us^4 &]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
+[s5;^topic`:`/`/ide`/app`/HelpPage`$en`-us^ &]
+[s0;l160; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us^ Getting started 
 with TheIDE]&]
-[s0; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
+[s0;l160; [^topic`:`/`/ide`/app`/PackagesAssembliesAndNests`$en`-us^ Packages, 
 Assemblies and Nests]&]
-[s0; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
+[s0;l160; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
 Packages and Assemblies]&]
-[s0; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
-[s0; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
-[s0; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
-[s0; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
-[s0; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
-[s0; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
-[s0; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
+[s0;l160; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
+[s0;l160; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
+[s0;l160; [^topic`:`/`/ide`/app`/PackageTemplates`$en`-us^ Ultimate`+`+ 
 Project Templates]&]
-[s0; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file format]&]
-[s0; [^topic`:`/`/ide`/app`/cmdline`$en`-us^ TheIDE command`-line]&]
-[s0; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
-[s0; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
-[s0; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
+[s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ U`+`+ package file format]&]
+[s0;l160; [^topic`:`/`/ide`/app`/cmdline`$en`-us^ TheIDE command`-line]&]
+[s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/IconDes`$en`-us^ Iml designer]&]
+[s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/special`$en`-us^ Special 
+features]&]
+[s0;l160;~~~0~192; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
+Find and Replace]&]
+[s0;l160; [^topic`:`/`/ide`/app`/FindFile`$en`-us^ Finding specific 
+file in project (Find File)]&]
+[s0;l160; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
 libraries]&]
-[s0; &]
-[s0; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
-[s0; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
-[s0; &]
-[s0; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as a Cross 
-Development Tool]&]
-[s0; &]
-[s0; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with Android 
-builder]&]
-[s0; &]
-[s0; &]
+[s0;l160; &]
+[s0;l160; [^topic`:`/`/ide`/app`/umk`$en`-us^ UMK `- command line builder]&]
+[s0;l160; [^topic`:`/`/ide`/app`/upp`$en`-us^ .upp file format description]&]
+[s0;l160; &]
+[s0;l160; [^topic`:`/`/ide`/app`/CrossComp`$en`-gb^ Using TheIDE as 
+a Cross Development Tool]&]
+[s0;l160; &]
+[s0;l160; [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ Working with 
+Android builder]&]
+[s5; &]
 [s0; [*4 U`+`+ Library Documentation]&]
 [s0;3 &]
 [s0; [*+117 Getting Started With Ultimate`+`+]&]
 [s0;*3 &]
-[s0;l256; [*^topic`:`/`/uppweb`/www`/overview`$en`-us^+92 Overview]&]
-[s0;l256;~~~1024; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ Core 
+[s0;l160; [*^topic`:`/`/uppweb`/www`/overview`$en`-us^+92 Overview]&]
+[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ Core 
 value types tutorial]&]
-[s0;l256;~~~1024; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Containers 
+[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Containers 
 tutorial]&]
-[s0;l256;~~~1024; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
+[s0;l160;~~~1024; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
 tutorial]&]
-[s0;l256;~~~1024; [^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
+[s0;l160;~~~1024; [^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
 tutorial]&]
-[s0;l256; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image tutorial]&]
-[s0;l256; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial]&]
-[s0;l256; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark tutorial]&]
-[s0;l256;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
-[s0;l256;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
+[s0;l160; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image tutorial]&]
+[s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial]&]
+[s0;l160; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark tutorial]&]
+[s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
+[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
 Ultimate`+`+  packages]&]
-[s0;l256; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ List of all widgets]&]
-[s0;l256;^topic`:`/`/CtrlLib`/src`/index`$en`-us^ &]
-[s0;l256; [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Coding style]&]
-[s0;i256; &]
-[s0;i256; &]
+[s0;l160; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ List of all widgets]&]
+[s0;l160;^topic`:`/`/CtrlLib`/src`/index`$en`-us^ &]
+[s0;l160; [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Coding style]&]
+[s5; &]
 [s0; [*4 Packages]]]
