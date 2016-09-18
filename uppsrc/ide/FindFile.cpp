@@ -5,7 +5,7 @@ static int CharFilterFindFileMask(int c)
 	return ToUpper(ToAscii(c));
 }
 
-class FindFileData : public Moveable<FindFileData> {
+class FindFileData final : public Moveable<FindFileData> {
 public:
 	FindFileData(const String& file, const String& package);
 	
