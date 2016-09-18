@@ -8,7 +8,8 @@ topic "LocalProcess2";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Functions4U Reference. LocalProcess2]]}}&]
 [s4;2 &]
-[s1; [@(0.0.255) class]_[* LocalProcess2]_:_[@(0.0.255) public]_[*@3 AProcess]&]
+[s1;:Upp`:`:LocalProcess2`:`:class: [@(0.0.255) class]_[* LocalProcess2]_:_[@(0.0.255) publi
+c]_[*@3 AProcess]&]
 [s0;2 &]
 [s0; [2 LocalProcess2 permits to launch and handle new process from 
 a host application.]&]
@@ -24,7 +25,7 @@ children processes and threads.]&]
 [s0;i150;O0; [2 Process killing includes all children processes and 
 threads.]&]
 [s0;i150;O0; [2 Process starting includes default directory.]&]
-[s0;2 &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s4;%% &]
 [s5;:Upp`:`:LocalProcess2`:`:Start`(const char`*`,const char`*`,const char`*`): [@(0.0.255) b
@@ -127,5 +128,4 @@ and threads.&]
 [s5;:Upp`:`:LocalProcess2`:`:IsPaused`(`): [@(0.0.255) bool]_[* IsPaused]()&]
 [s2;%% Returns true if process is paused.&]
 [s2;%% [*@(0.0.255)1 Only defined in Windows.]&]
-[s3; &]
-[s0;%% ]]
+[s3; ]]

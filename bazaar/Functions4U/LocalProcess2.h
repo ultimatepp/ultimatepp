@@ -22,14 +22,11 @@ private:
 	virtual void CloseWrite();
 	virtual void Detach();
 
-private:
 	void         Init();
 	void         Free();
 #ifdef PLATFORM_POSIX
 	bool         DecodeExitCode(int code);
 #endif
-
-private:
 	bool         convertcharset;
 	
 #ifdef PLATFORM_WIN32
@@ -63,20 +60,20 @@ public:
 	bool Start2(const char *cmd, const Vector<String>& arg, const char *envptr = NULL, const char *dir = NULL) { return DoStart(cmd, &arg, true, envptr, dir); }
 	
 #ifdef PLATFORM_POSIX
-	LocalProcess2& DoubleFork(bool b = true)                           { doublefork = b; return *this; }
+	LocalProcess2& DoubleFork(bool b = true)                   	{ doublefork = b; return *this; }
 
-	int  GetPid()  const                                              { return pid; }
+	int  GetPid()  const                                        { return pid; }
 #endif
 
 #ifdef PLATFORM_WIN32
-	HANDLE  GetProcessHandle()  const                                    { return hProcess; }
-	DWORD  GetPid()  const                                    			 { return dwProcessId; }
+	HANDLE  GetProcessHandle()  const                           { return hProcess; }
+	DWORD  GetPid()  const                                    	{ return dwProcessId; }
 #endif
 
 	int  Finish(String& out);
 		
-	LocalProcess2& ConvertCharset(bool b = true)                       { convertcharset = b; return *this; }
-	LocalProcess2& NoConvertCharset()                                  { return ConvertCharset(false); }
+	LocalProcess2& ConvertCharset(bool b = true)                { convertcharset = b; return *this; }
+	LocalProcess2& NoConvertCharset()                           { return ConvertCharset(false); }
 
 	LocalProcess2()                                                                          { Init(); }
 	LocalProcess2(const char *cmdline, const char *envptr = NULL, const char *dir = NULL)    { Init(); Start(cmdline, envptr, dir); }
