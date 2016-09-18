@@ -97,8 +97,6 @@ Vector<FindFileData> FindFileWindow::GetFindedFilesData() const
 {
 	Vector<FindFileData> data;
 	
-	// NOTE: maybe there is cleaner way to obtain multiselected rows,
-	// but I don't find it right now.
 	for(int i = 0; i < list.GetCount(); i++) {
 		if(list.IsSelected(i)) {
 			data.Add(FindFileData(list.Get(i, 0), list.Get(i, 1)));
@@ -130,7 +128,7 @@ void FindFileWindow::OnSearch()
 bool FindFileWindow::DoseFileMeetTheCriteria(const Package::File& file, const String& packageName,
                                              const String& query)
 {
-	if (searchInCurrentPackage&& !IsActualPackage(packageName))
+	if (searchInCurrentPackage && !IsActualPackage(packageName))
 		return false;
 	
 	return !file.separator && (ToUpper(packageName).Find(query) >= 0 || ToUpper(file).Find(query) >= 0);
