@@ -1,81 +1,103 @@
 #include "ide.h"
 
-class NewPackageFileWindow : public WithNewPackageFileLayout<TopWindow> {
-public:
-	NewPackageFileWindow(const String& packageDir, const String& extension);
-	
-	
-	String GetFileName() const;
-	
-private:
-	void OnFileNameChanged();
+struct NewPackageFileWindow : public WithNewPackageFileLayout<TopWindow> {
+	NewPackageFileWindow();
 
-	void CheckFilePath();
+	void   Type(const char *ext, const char *desc);
+	String GetError();
+	void   Sync();
 	
-private:
-	String packageDir;
-	String extension;
+	String folder;
 };
 
-NewPackageFileWindow::NewPackageFileWindow(const String& packageDir, const String& extension)
-	: packageDir(packageDir)
-	, extension(extension)
+NewPackageFileWindow::NewPackageFileWindow()
 {
-	CtrlLayoutOKCancel(*this, "");
+	CtrlLayoutOKCancel(*this, "New package file");
+
+	type.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
+	type.SetDropLines(20);
+	Type("cpp", "C++ source file");
+	Type("h", "C++ header file");
+	type.AddSeparator();
+	Type("lay", "Layout file (dialog templates)");
+	Type("iml", "Image file (icons)");
+	Type("icpp", "Initialization C++ source file");
+	Type("usc", "Escape script file (scripting TheIDE)");
+	Type("witz", "Skylark template file (web framework files)");
+	type.AddSeparator();
+	Type("json", "JSON file");
+	Type("xml", "XML file");
+	Type("html", "HTML file");
+	Type("css", "CSS file");
+	type.AddSeparator();
+	Type("java", "Java");
+	Type("js", "JavaScript");
+	Type("py", "Python");
+	type.AddSeparator();
+	Type("", "Other");
 	
-	fileName.WhenAction << [=] { OnFileNameChanged(); };
+	name << [=] {
+		String ext = GetFileExt(~~name);
+		if(ext.GetCount()) {
+			ext = ext.Mid(1);
+			type <<= type.HasKey(ext) ? ext : Null;
+		}
+		Sync();
+	};
+	name <<= ".cpp";
 	
-	fullFileName.Disable();
-	if (extension.IsEmpty()) {
-		fullFileNameLabel.Hide();
-		fullFileName.Hide();
-		
-		info.VSizePosZ(28, 36);
-	}
+	type <<= "cpp";
 	
-	OnFileNameChanged();
+	type << [=] {
+		String ext = ~type;
+		if(ext.GetCount()) {
+			String h = ~name;
+			name <<= ForceExt(h, "." + ext);
+			int q = GetFileTitle(h).GetCount();
+			name.SetSelection(q, q);
+		}
+		Sync();
+	};
+	
+	Sync();
 }
 
-void NewPackageFileWindow::OnFileNameChanged()
+String NewPackageFileWindow::GetError()
 {
-	String name = fileName.GetData();
-	if (!extension.IsEmpty())
-		fullFileName.SetData(name + "." + extension);
-	else
-		fullFileName.SetData(name);
-	
-	CheckFilePath();
+	String n = ~name;
+	String p = AppendFileName(folder, n);
+	if(FileExists(p))
+		return String().Cat() << "File&[* \1" << p << "\1]&already exists!";
+	if(*n == '.')
+		return "Invalid filename!";
+	return Null;
 }
 
-void NewPackageFileWindow::CheckFilePath()
+
+void NewPackageFileWindow::Sync()
 {
-	String name = fileName.GetData();
-	String fullName = fullFileName.GetData();
-	
-	info.Clear();
-	if (name.IsEmpty()) {
-		ok.Disable();
-	}
-	else
-	if (FileExists(packageDir + DIR_SEPS + fullName)) {
-		ok.Disable();
-		info.SetData("[ [ [@(170.42.0) File already exists.]]]");
-	}
-	else {
-		ok.Enable();
-	}
+	name.Error(GetError().GetCount());
 }
 
-String NewPackageFileWindow::GetFileName() const
+void NewPackageFileWindow::Type(const char *ext, const char *desc)
 {
-	return fullFileName.GetData();
+	type.Add(ext, AttrText(desc).SetImage(IdeFileImage(String() << "x." << ext, false, false)));
 }
 
-void WorkspaceWork::NewPackageFile(const String& title, const String& extension)
+void WorkspaceWork::NewPackageFile()
 {
-	NewPackageFileWindow dlg(GetFileFolder(GetActivePackagePath()), extension);
-	dlg.Title(title);
-	
-	if (dlg.ExecuteOK())
-		AddItem(dlg.GetFileName(), false, false);
+	NewPackageFileWindow dlg;
+	dlg.folder = GetFileFolder(GetActivePackagePath());
+	dlg.Open();
+	dlg.name.SetFocus();
+	dlg.name.SetSelection(0, 0);
+	for(;;) {
+		if(dlg.Run() != IDOK)
+			return;
+		String e = dlg.GetError();
+		if(e.GetCount() == 0)
+			break;
+		Exclamation(e);
+	}
+	AddItem(~dlg.name, false, false);
 }

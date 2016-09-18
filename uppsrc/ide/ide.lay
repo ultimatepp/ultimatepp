@@ -795,13 +795,11 @@ LAYOUT(RenamePackage2Layout, 228, 100)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
-LAYOUT(NewPackageFileLayout, 372, 132)
-	ITEM(Label, fullFileNameLabel, SetLabel(t_("Full file name:")).LeftPosZ(4, 76).TopPosZ(28, 21))
-	ITEM(EditString, fullFileName, HSizePosZ(84, 4).TopPosZ(28, 19))
-	ITEM(RichTextView, info, Background(Null).AutoHideSb(true).SetFrame(TopSeparatorFrame()).HSizePosZ(4, 4).VSizePosZ(56, 36))
+LAYOUT(NewPackageFileLayout, 260, 88)
+	ITEM(EditString, name, HSizePosZ(44, 8).TopPosZ(28, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Name ")).LeftPosZ(4, 64).TopPosZ(28, 19))
+	ITEM(DropList, type, HSizePosZ(4, 8).TopPosZ(4, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
-	ITEM(Label, dv___5, SetLabel(t_("File name:")).LeftPosZ(4, 76).TopPosZ(4, 21))
-	ITEM(EditString, fileName, HSizePosZ(84, 4).TopPosZ(4, 19))
 END_LAYOUT
 
