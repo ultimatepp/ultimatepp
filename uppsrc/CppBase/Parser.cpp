@@ -612,6 +612,8 @@ String Parser::StructDeclaration(const String& tn, const String& tp)
 		name = AnonymousName();
 		ScopeCat(new_scope, name);
 	}
+	if(lex == tk_final)
+		++lex;
 	if(lex.IsId() || lex == '*') { // struct My { struct My *p; }
 		return name;
 	}
