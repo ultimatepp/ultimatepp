@@ -41,6 +41,8 @@ Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/special`$en`-us^ Special features]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
 Find and Replace]&]
+[s0;l224; [^topic`:`/`/ide`/app`/FindFile`$en`-us^ Finding specific 
+file in project (Find File)]&]
 [s0;l224; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
 libraries]&]
 [s0;l224; &]
