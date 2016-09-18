@@ -859,13 +859,13 @@ void WorkspaceWork::FileMenu(Bar& menu)
 {
 	bool sel = filelist.IsCursor() && filelist[filelist.GetCursor()].isdir;
 	
-	menu.Add("New", THISBACK(NewMenu));
-	menu.Separator();
-	
 	bool isaux = IsAux();
 	if(isaux)
 		InsertSpecialMenu(menu);
 	else {
+		menu.Add("New package file..", [=] { NewPackageFile(); });
+		menu.Add("Insert separator", [=] { AddSeparator(); })
+			.Help("Add text separator line");
 		menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
 			.Help("Insert file relative to current package");
 		menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
@@ -918,31 +918,6 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		}
 	}
 	FilePropertiesMenu(menu);
-}
-
-void WorkspaceWork::NewMenu(Bar& bar)
-{
-	bar.Add("File", CtrlImg::File(), [=] { NewPackageFile("New file", ""); });
-	bar.Add("Separator", [=] { AddSeparator(); })
-		.Help("Add text separator line");
-	
-	bar.Separator();
-	for (int i = 0; i < categories.GetCount(); i++) {
-		bar.Sub(categories.GetKey(i), [=](Bar& subBar) {
-			for (FileType& fileType : categories[i]) {
-				String name = fileType.GetName();
-				String extension = fileType.GetExtension();
-				
-				if (fileType.IsSeparator())
-					subBar.Separator();
-				else {
-					subBar.Add(name, fileType.GetImage(), [=] {
-						NewPackageFile("New " + name, extension);
-					});
-				}
-			}
-		});
-	}
 }
 
 void WorkspaceWork::TogglePCH()
@@ -1146,46 +1121,6 @@ void WorkspaceWork::Drag()
 	                       filelist.GetDragSample(), DND_MOVE);
 }
 
-void WorkspaceWork::LoadCategories()
-{
-	Vector<FileType> cppFiles;
-	cppFiles.Add(FileType("C++ source file", "cpp"));
-	cppFiles.Add(FileType("C++ header file", "h"));
-	categories.Add("C/C++", cppFiles);
-	
-	Vector<FileType> uppFiles;
-	uppFiles.Add(FileType("Layout file", "lay"));
-	uppFiles.Add(FileType("Image file", "iml"));
-	uppFiles.Add(FileType("Escape script file", "usc"));
-	uppFiles.Add(FileType("Skylark template file", "witz"));
-	uppFiles.Add(FileType());
-	uppFiles.Add(FileType("Initialization C++ source file", "icpp"));
-	categories.Add("U++", uppFiles);
-	
-	Vector<FileType> javaFiles;
-	javaFiles.Add(FileType("Java source file", "java"));
-	categories.Add("Java", javaFiles);
-	
-	Vector<FileType> webFiles;
-	webFiles.Add(FileType("HTML source file", "html"));
-	webFiles.Add(FileType("CSS source file", "css"));
-	webFiles.Add(FileType("JavaScript source file", "js"));
-	webFiles.Add(FileType("JSON file", "json"));
-	webFiles.Add(FileType("XML file", "xml"));
-	categories.Add("Web", webFiles);
-	
-	Vector<FileType> otherFiles;
-	otherFiles.Add(FileType("Text file", "txt"));
-	categories.Add("Other", otherFiles);
-}
-
-void WorkspaceWork::LoadCategoriesImages()
-{
-	for (int i = 0; i < categories.GetCount(); i++)
-		for (FileType& type : categories[i])
-			type.SetImage(IdeFileImage("." + type.GetExtension(), false, false));
-}
-
 WorkspaceWork::WorkspaceWork()
 {
 	package <<= THISBACK(PackageCursor);
@@ -1206,9 +1141,6 @@ WorkspaceWork::WorkspaceWork()
 	showtime = false;
 	sort = true;
 	svn_dirs = false;
-	
-	LoadCategories();
-	LoadCategoriesImages();
 }
 
 void WorkspaceWork::SerializeClosed(Stream& s)
