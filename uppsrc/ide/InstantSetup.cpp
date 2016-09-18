@@ -245,9 +245,9 @@ void InstantSetup()
 			bmSet(bm, "RELEASE_OPTIONS", "-O2");
 			bmSet(bm, "RELEASE_FLAGS", "");
 			bmSet(bm, "RELEASE_LINK", "/STACK:20000000");
-			bmSet(bm, "DEBUGGER", "msdev");
 			bmSet(bm, "DISABLE_BLITZ", "");
-		
+			bmSet(bm, "DEBUGGER", GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
+
 			bm.GetAdd("PATH") = Join(bins, ";");
 			bm.GetAdd("INCLUDE") = Join(incs, ";");
 			bm.GetAdd("LIB") = Join(libs, ";");
@@ -258,8 +258,10 @@ void InstantSetup()
 			if(!x64)
 				default_method = "MSC15";
 
+			DUMP(ConfigFile(method + ".bm"));
 			DUMPC(incs);
 			DUMPC(libs);
+			DUMPM(bm);
 		}
 	}
 
@@ -304,6 +306,7 @@ void InstantSetup()
 			bmSet(bm, "DEBUGGER", "gdb");
 			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 			bmSet(bm, "DISABLE_BLITZ", "1");
+			
 	//		bmSet(bm, "LINKMODE_LOCK", "0");
 	
 			String m = x64 ? "64" : "32";
@@ -333,7 +336,7 @@ void InstantSetup()
 	if(default_method.GetCount())
 		SaveFile(GetExeDirFile("default_method"), default_method);
 	
-	static Tuple2<const char *, const char *> ass[] = {
+	static Tuple<const char *, const char *> ass[] = {
 		{ "uppsrc", "#/uppsrc" },
 		{ "reference", "#/reference;#/uppsrc" },
 		{ "examples", "#/examples;#/uppsrc" },
