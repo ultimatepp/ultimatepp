@@ -62,7 +62,7 @@ private:
 	void OnSearch();
 	
 	bool DoseFileMeetTheCriteria(
-		const Package::File& file, const String& packageName,const String& query);
+		const Package::File& file, const String& packageName, const String& query);
 	bool IsAcctualPackage(const String& packageName);
 	
 private:
