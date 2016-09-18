@@ -370,6 +370,7 @@ protected:
 	void MakeGroups();
 	int  FindGroup(const String& g) const;
 	void CloseAll(int exception);	
+	void GoGrouping(int n);
 	void DoGrouping(int n);
 	void DoCloseGroup(int n);
 	void NewGroup(const String& name);
