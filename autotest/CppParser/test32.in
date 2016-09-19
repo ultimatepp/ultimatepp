@@ -16,7 +16,7 @@ class Y {
 
 constexpr int operator|(Flags f1, Flags f2) { return Flags(int(f1)|int(f2)); }
 
-class X {
+class X final {
 	X(int x) { if (0<x && x<=max) a=x; else throw bad_X(x); }
 	X() :X{42} { }
 	X(string s) :X{lexical_cast<int>(s)} { }
