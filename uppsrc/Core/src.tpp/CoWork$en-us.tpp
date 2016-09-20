@@ -20,10 +20,10 @@ easily spawn loop iterations over threads and thus over CPU cores.
 Note that previous statement does [* not] preclude CoWork iterations 
 to share data at all `- sharing data using Mutex or similar serialization 
 mechanisms still works. CoWork works with fixed`-size thread 
-pool, which is created during initialization phase (first CoWork 
-constructor called in master thread). No more thread are created 
-or destroyed during normal work. Nesting of CoWork instances 
-is also possible. Thread pool is normally terminated when master 
+pool, which is created during initialization phase (which first 
+CoWork constructor is called). No more thread are created or 
+destroyed during normal work. Nesting of CoWork instances is 
+also possible. Thread pool is normally terminated when the main 
 thread finishes.&]
 [s9;%% No synchronization is required to access CoWork instances 
 from various threads (CoWork is internally synchronized).&]
@@ -73,7 +73,7 @@ oWork][@(0.0.255) `&]_[* operator`&]([_^Upp`:`:Function^ Function]<[@(0.0.255) v
 before Do are visible in the scheduled code. The order of execution 
 or whether the code is execute in another or calling thread is 
 not specified. In certain situations (no scheduling slot available), 
-Do can perform scheduled job immediately.&]
+Do can perform scheduled job immediately in calling thread.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:FinLock`(`): [@(0.0.255) static] [@(0.0.255) void]_[* FinLock]()&]
@@ -82,7 +82,8 @@ is to serialize access to shared data at the end of the routine.
 The rationale is that CoWork has to lock some mutex anyway after 
 scheduled code finishes, so FinLock can lock this mutex a bit 
 earlier, joining two mutex locks into single one. Of course, 
-as with all locks, execution of locked code should be short.&]
+as with all locks, execution of locked code should be short as 
+not to cause congestion of CoWork scheduling.&]
 [s3;%% &]
 [s4; &]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
