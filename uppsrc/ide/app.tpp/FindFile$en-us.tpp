@@ -29,7 +29,7 @@ of packages. For example, if your project is using CtrlLib and
 Core the search will take also place in that packages.&]
 [s5; The dialog can be open using the following TheIDE menu entry: 
 [/ `"Edit `-> Find and Replace `-> Find file...`"]. Alternatively, 
-you can press ALT`+SHIFT`+F.key combination.&]
+you can press `"ALT`+SHIFT`+F`" key combination.&]
 [s5; &]
 [s0;= 
 @@rawimage:2914&3169
