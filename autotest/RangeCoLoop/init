@@ -1,0 +1,4 @@
+#ifndef _RangeCoLoop_icpp_init_stub
+#define _RangeCoLoop_icpp_init_stub
+#include "Core/init"
+#endif
