@@ -13,7 +13,23 @@ void CoLoopI(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX
 }
 
 template <class Range, class Lambda>
-void CoLoop(Range r, const Lambda& lambda, int max_chunk = INT_MAX)
+void CoLoop(Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
+{
+	size_t chunk = max(r.GetCount() / CPU_Cores(), 1);
+	chunk = min(chunk, (size_t)max_chunk);
+	CoWork co;
+	auto begin = r.begin();
+	auto end = r.end();
+	while(begin < end) {
+		co & [=] {
+			lambda(SubRange(begin, begin + min(chunk, size_t(end - begin))));
+		};
+		begin += chunk;
+	}
+}
+
+template <class Range, class Lambda>
+void CoLoop(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 {
 	size_t chunk = max(r.GetCount() / CPU_Cores(), 1);
 	chunk = min(chunk, (size_t)max_chunk);
