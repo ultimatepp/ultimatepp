@@ -626,7 +626,15 @@ in dots.]
 :: [s0; [C@(128.0.255) `|][/C@(0.0.255) number]]
 :: [s0; Vertical cell span.]
 :: [s0; [C@(128.0.255) ;]]
-::= [s0; NOP  separator. In some cases it helps to separate command code.]}}&]
+::= [s0; NOP  separator. In some cases it helps to separate command code.]
+::^ [s0; [C@(128.0.255) P]]
+::= [s0; Page break before table.]
+::^ [s0;%- [%%C@(128.0.255) T][/C@(0.0.255) qtf][C@(128.0.255) `^`^][/C@(0.0.255) qtf][C@(128.0.255) `^
+`^]]
+:: [s0; New text header  / footer, [%-/C@(0.0.255) qtf] is complete embeded 
+QTF representing header/footer. This QTF can contain field[@5  
+`{:VALUE:PAGENUMBER:`} ]to represent page number and[@5  `{:VALUE:PAGECOUNT:`}] 
+to represent total number of pages.]}}&]
 [s0;3 &]
 [s0; Note: There is also legacy support for old table format (from 
 previous QTF version) that is based on [@(128.0.255) `+`+ ]pair 
