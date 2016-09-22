@@ -51,6 +51,8 @@ auto SubRange(const C& c, int pos, int count) -> decltype(SubRange(c.begin() + p
 	return SubRange(c.begin() + pos, count);
 }
 
+template <class C> using SubRangeOf = decltype(SubRange(((C *)0)->begin(), ((C *)0)->end()));
+
 template <class T>
 struct ConstRangeClass {
 	T   value;
