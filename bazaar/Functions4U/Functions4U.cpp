@@ -1078,8 +1078,11 @@ void Tokenize(const String &str, const String &token, Vector<String> &ret, int p
 	int _pos = pos;
 	while (true) {
 		String strRet = Tokenize2(str, token, _pos);
-		if (IsNull(_pos))
+		if (IsNull(_pos)) {
+			if (!IsNull(strRet)) 
+				ret << strRet;
 			break;
+		}
 		ret << strRet;
 	}
 }

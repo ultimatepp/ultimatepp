@@ -14,12 +14,20 @@ TOPIC("LocalProcess2$en-us")
 #include "LocalProcess2$en-us.tppi"
 END_TOPIC
 
+TOPIC("LocalProcessX$en-us")
+#include "LocalProcessX$en-us.tppi"
+END_TOPIC
+
 TOPIC("QtfEquation$en-us")
 #include "QtfEquation$en-us.tppi"
 END_TOPIC
 
 TOPIC("QtfEquation1$en-us")
 #include "QtfEquation1$en-us.tppi"
+END_TOPIC
+
+TOPIC("RealTimeStop$en-us")
+#include "RealTimeStop$en-us.tppi"
 END_TOPIC
 
 TOPIC("StaticPlugin$en-us")
