@@ -210,7 +210,7 @@ String BytesToString(uint64 bytes, bool units = true);
 
 String SecondsToString(double seconds, bool units = false, int dec = 2);
 String HMSToString(int hour, int min, double seconds, bool units = false, int dec = 2); 
-double StringToSeconds(String str);		// The opposite
+double StringToSeconds(String str);		
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
 String SeasonName(int iseason);
@@ -564,7 +564,7 @@ private:
 
 class RealTimeStop {
 public:
-	RealTimeStop() : timeElapsed(0), time0(-1), isRunning(false), isPaused(false) {
+	RealTimeStop() : timeElapsed(0), time0(-1), isPaused(false) {
 #ifdef CTRLLIB_H	
 		callbackOn = false;
 		lastTick = -1;
@@ -572,16 +572,22 @@ public:
 	}
 	void Reset() {
 		timeElapsed = 0;
-		isRunning = 0;
 #ifdef CTRLLIB_H
 		if (!callbackOn) {
 			SetTimeCallback(-5*1000, callback(this, &RealTimeStop::Tick), this);
 			callbackOn = true;
 		}
 #endif
+		isPaused = true;
 		Continue();
 	}
 	void Start() {Reset();}
+	void Pause(bool pause) {
+		if (pause)
+			Pause();
+		else
+			Continue();
+	}
 	void Pause() {
 		if (!isPaused) { 		
 			timeElapsed += (tmGetTimeX() - time0);
@@ -589,11 +595,10 @@ public:
 		}
 	}
 	void Continue() {
-		if (isPaused || !isRunning) {
+		if (isPaused) {
 			time0 = tmGetTimeX();
 			isPaused = false;
 		}
-		isRunning = true;
 	}
 	double Seconds() {
 		if (isPaused)
@@ -604,13 +609,12 @@ public:
 	void SetBack(double secs) {
 		timeElapsed -= secs;
 	}
-	bool IsRunning()	{return isRunning;}
-	bool IsPaused()		{return isPaused&&isRunning;}
+	bool IsPaused()		{return isPaused;}
 		
 private:
 	double timeElapsed;				// Time elapsed
 	double time0;					// Time of last Continue()
-	bool isRunning, isPaused;
+	bool isPaused;
 #ifdef CTRLLIB_H
 	bool callbackOn;
 	double lastTick;
@@ -628,12 +632,11 @@ private:
 
 class LocalProcessX {
 public:
-	LocalProcessX() : status(STOP_OK), /*lastPerform(-1),*/ callbackOn(false) {}
+	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
 	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
 		status = STOP_OK;
-		//lastPerform = -1;
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Start();
 		timeWithoutOutput.Start();
@@ -655,15 +658,6 @@ public:
 		return true;
 	}
 	void Perform() {
-/*		double tActual = tmGetTimeX();
-		if (refreshTime > -1 && !p.IsPaused() && lastPerform > -1) {
-			double deltaLastPerform = tActual - lastPerform;
-			if (deltaLastPerform > 10*refreshTime) {		// Some external issue has stopped normal running
-				timeWithoutOutput.SetBack(deltaLastPerform);// Timeout timer is fixed accordingly
-				timeElapsed.SetBack(deltaLastPerform);
-			}
-		}
-		lastPerform = tActual;*/
 		if (status <= 0)
 			return;
 		String out;
@@ -698,10 +692,10 @@ public:
 		}
 #endif
 	}
-	void Stop(ProcessStatus _status = STOP_USER) {
+	void Stop(ProcessStatus status = STOP_USER) {
 		if (!IsRunning())
 			return;
-		status = _status;
+		this->status = status;
 		p.Kill();		
 #ifdef CTRLLIB_H		
 		if (callbackOn) {
@@ -713,16 +707,10 @@ public:
 #ifdef PLATFORM_WIN32
 	void Pause() {
 		p.Pause();
-		//if (p.IsPaused()) {
-			timeElapsed.Pause();
-			timeWithoutOutput.Pause();
-		//}	
-/*			lastPerform = lastPause = tmGetTimeX();
-		else {
-			double deltaLastPause = tmGetTimeX() - lastPause;
-			timeWithoutOutput.SetBack(deltaLastPause);
-			timeElapsed.SetBack(deltaLastPause);
-		}*/
+		if (p.IsRunning()) {
+			timeElapsed.Pause(p.IsPaused());
+			timeWithoutOutput.Pause(p.IsPaused());
+		}
 	}
 	bool IsPaused()			{return p.IsPaused();}
 	double Seconds()		{return timeElapsed.Seconds();}

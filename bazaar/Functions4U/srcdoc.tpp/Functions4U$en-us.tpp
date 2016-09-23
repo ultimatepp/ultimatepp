@@ -15,6 +15,7 @@ functions]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/StaticPlugin`$en`-us^2 StaticPlugin]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/QtfEquation`$en`-us^2 QtfEquation]&]
 [s0;i150;O0; [^topic`:`/`/Functions4U`/src`/LocalProcess2`$en`-us^2 LocalProcess2]&]
+[s0;i150;O0; [^topic`:`/`/Functions4U`/src`/RealTimeStop`$en`-us^2 RealTimeStop]&]
 [s0;2 &]
 [s0;2 &]
 [s0; [2 There is also a ][^topic`:`/`/Functions4U`/srcdoc`/ToDo`$en`-us^2 ToDo 
