@@ -13,12 +13,12 @@ void FormView::LeftDouble(Point p, dword keyflags)
 			if (active == pI->GetNumber("Tab.Count", 0, 0)) active = 0;
 
 			pI->SetNumber("Tab.Active", active);
-			WhenUpdateTabs.Execute();
+			WhenUpdateTabs();
 		}
 	}
 
 	if (GetSelected().GetCount())
-		WhenObjectProperties.Execute(GetSelected());
+		WhenObjectProperties(GetSelected());
 }
 
 void FormView::LeftDown(Point p, dword keyflags)
@@ -58,8 +58,8 @@ void FormView::LeftDown(Point p, dword keyflags)
 	if (GetSelectionRect().Contains(p) && (GetSelectedCount() > 1) && (!(keyflags & K_CTRL))
 		&& (!(keyflags & K_SHIFT)))
 	{
-		WhenChildSelected.Execute(GetSelected());
-		WhenUpdate.Execute();
+		WhenChildSelected(GetSelected());
+		WhenUpdate();
 		return;
 	}
 
@@ -69,34 +69,34 @@ void FormView::LeftDown(Point p, dword keyflags)
 		if (keyflags & K_SHIFT)
 		{
 			int id = ObjectFromPt(p);
-			if (id < 0) { WhenUpdate.Execute(); return Refresh(); }
+			if (id < 0) { WhenUpdate(); return Refresh(); }
 			AddToSelection(id);
 		}
 		else if (keyflags & K_CTRL)
 		{
 			int id = ObjectFromPt(p);
-			if (id < 0) { WhenUpdate.Execute(); return Refresh(); }
+			if (id < 0) { WhenUpdate(); return Refresh(); }
 			ToggleSelection(id);
 		}
 		else
 		{
 			if (Zoom(Offseted(GetSelectionRect().Offseted(-20, -20))).Contains(p))
 			{
-				WhenChildSelected.Execute(GetSelected());
+				WhenChildSelected(GetSelected());
 				return;
 			}
 
 			ClearSelection();
 			AddToSelection(obj);
-			WhenUpdate.Execute();
+			WhenUpdate();
 			IsObjectButton(p);
 		}
-		WhenChildSelected.Execute(GetSelected());
+		WhenChildSelected(GetSelected());
 		return;
 	}
 
-	WhenChildSelected.Execute(GetSelected());
-	WhenUpdate.Execute();
+	WhenChildSelected(GetSelected());
+	WhenUpdate();
 }
 
 void FormView::MouseMove(Point p, dword keyflags)
@@ -124,8 +124,8 @@ void FormView::LeftDrag(Point p, dword keyflags)
 		return;
 
 	if (ProcessLeftDrag(p, keyflags))
-		WhenChildPos.Execute(GetSelected());
-	WhenUpdate.Execute();
+		WhenChildPos(GetSelected());
+	WhenUpdate();
 }
 
 bool FormView::ProcessLeftDrag(Point p, dword keyflags)
@@ -177,7 +177,7 @@ bool FormView::ProcessLeftDrag(Point p, dword keyflags)
 			result = true;
 		}
 
-		WhenUpdate.Execute();
+		WhenUpdate();
 		Refresh();
 		return result;
 	}
@@ -208,8 +208,8 @@ bool FormView::ProcessLeftDrag(Point p, dword keyflags)
 
 		SetFormSize( Size(r2.Width(), r2.Height()) );
 		Refresh();
-		WhenUpdate.Execute();
-		WhenChildZ.Execute();
+		WhenUpdate();
+		WhenChildZ();
 
 		return true;
 	}
@@ -224,8 +224,8 @@ bool FormView::ProcessLeftDrag(Point p, dword keyflags)
 			SelectAllInRect(r, true, true);
 		else
 			SelectAllInRect(r);
-		WhenChildSelected.Execute(GetSelected());
-		WhenUpdate.Execute();
+		WhenChildSelected(GetSelected());
+		WhenUpdate();
 		return false;
 	}
 
@@ -233,7 +233,7 @@ bool FormView::ProcessLeftDrag(Point p, dword keyflags)
 
 	Rect oldRect;
 	FormObject* obj = GetObject(sel[0]);
-	if (!obj) { WhenChildSelected.Execute(GetSelected()); return false; }
+	if (!obj) { WhenChildSelected(GetSelected()); return false; }
 
 	oldRect = r = Zoom(Offseted(obj->GetRect()));
 
@@ -270,7 +270,7 @@ bool FormView::ProcessLeftDrag(Point p, dword keyflags)
 
 	obj->SetRect(Deoffseted(r));
 	Refresh();
-	WhenChildSelected.Execute(GetSelected());
+	WhenChildSelected(GetSelected());
 	return true;
 }
 
@@ -293,7 +293,7 @@ void FormView::RightDown(Point p, dword keyflags)
 	{
 		ClearSelection();
 		Refresh();
-		WhenChildSelected.Execute(GetSelected());
+		WhenChildSelected(GetSelected());
 		return;
 	}
 
@@ -306,7 +306,7 @@ void FormView::RightDown(Point p, dword keyflags)
 		ClearSelection();
 		PointToGrid(p);
 		Refresh();
-		WhenChildSelected.Execute(GetSelected());
+		WhenChildSelected(GetSelected());
 		menu.Add(t_("Add object..."), THISBACK1(AddObjectMenu, p));
 		menu.Execute();
 		return;
@@ -318,7 +318,7 @@ void FormView::RightDown(Point p, dword keyflags)
 			ClearSelection();
 			AddToSelection(id);
 			Refresh();
-			WhenUpdate.Execute();
+			WhenUpdate();
 		}
 	}
 
@@ -345,7 +345,7 @@ void FormView::RightDrag(Point p, dword keyflags)
 		return;
 
 	ProcessRightDrag(p, keyflags);
-	WhenChildPos.Execute(GetSelected());
+	WhenChildPos(GetSelected());
 }
 
 void FormView::ProcessRightDrag(Point p, dword keyflags)
@@ -401,9 +401,9 @@ void FormView::ProcessRightDrag(Point p, dword keyflags)
 	ClearSelection();
 	for (int i = 0; i < copies.GetCount(); ++i)
 		AddToSelection( copies[i] );
-	WhenUpdate.Execute();
-	WhenChildSelected.Execute(GetSelected());
-	WhenChildCount.Execute(GetObjectCount());
+	WhenUpdate();
+	WhenChildSelected(GetSelected());
+	WhenChildCount(GetObjectCount());
 }
 
 void FormView::MouseLeave()

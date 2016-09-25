@@ -55,7 +55,7 @@ void FormView::New()
 	_Layouts.Add().Set("Form.Name", t_("Default"));
 	SelectLayout(0);
 
-	WhenUpdateLayouts.Execute();
+	WhenUpdateLayouts();
 }
 
 void FormView::Xmlize(XmlIO xml)
@@ -234,7 +234,7 @@ void FormView::ClearSelection()
 
 	for (int i = GetObjects()->GetCount() - 1; i >= 0; --i)
 		(*GetObjects())[i].SetState(FormObject::NONE);
-	WhenUpdate.Execute();
+	WhenUpdate();
 	Refresh();
 }
 

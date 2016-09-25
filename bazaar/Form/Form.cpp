@@ -364,7 +364,7 @@ int Form::HasLayout(const String& layout)
 
 void Form::OnAction(const String& action)
 {
-	SignalHandler.Execute(Script, "OnAction", action);
+	SignalHandler(Script, "OnAction", action);
 }
 
 bool Form::Exit(const String& action)

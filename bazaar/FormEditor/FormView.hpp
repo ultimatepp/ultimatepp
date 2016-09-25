@@ -140,8 +140,8 @@ public:
 	void ShowInfo()   { _showInfo = 1; Refresh(); }
 	void HideInfo()   { _showInfo = 0; Refresh(); }
 
-	void UpdateTools() { WhenMenuBar.Execute(_tools); }
-	void OpenObjectProperties(const Vector<int>& indexes) { WhenObjectProperties.Execute(indexes); }
+	void UpdateTools() { WhenMenuBar(_tools); }
+	void OpenObjectProperties(const Vector<int>& indexes) { WhenObjectProperties(indexes); }
 	void DoOpenObjectProperties() { OpenObjectProperties(GetSelected()); }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
