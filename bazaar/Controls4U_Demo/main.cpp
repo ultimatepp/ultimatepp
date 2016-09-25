@@ -242,7 +242,7 @@ void Functions4U_Demo::OnPatch() {
 void Functions4U_Demo::OnSet() {
 	String myqtf;
 
-	QtfRichObject a = QtfEquation(strEquation);
+	QtfRichObject a = QtfEquation(~strEquation);
 	
 	myqtf << a;
 

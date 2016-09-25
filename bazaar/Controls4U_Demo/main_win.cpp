@@ -39,13 +39,13 @@ void Firefox_Demo::SwitchOn() {
 void Firefox_Demo::Browse() {
 	if (!iexplorer.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
-	iexplorer.Browse(url);
+	iexplorer.Browse(~url);
 }
 
 void Firefox_Demo::ShowHTML() {
 	if (!iexplorer.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
-	iexplorer.ShowHTML(html);
+	iexplorer.ShowHTML(~html);
 	title = "";
 }
 
@@ -128,13 +128,13 @@ void IExplorer_Demo::SwitchOn() {
 void IExplorer_Demo::Browse() {
 	if (!iexplorer.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
-	iexplorer.Browse(url);
+	iexplorer.Browse(~url);
 }
 
 void IExplorer_Demo::ShowHTML() {
 	if (!iexplorer.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
-	iexplorer.ShowHTML(html);
+	iexplorer.ShowHTML(~html);
 	title = "";
 }
 
@@ -212,7 +212,7 @@ void VLC_Demo::SwitchOn() {
 void VLC_Demo::Load() {
 	if (!player.IsLoaded())
 		Exclamation("Sorry. ActiveX or program not available");	
-	player.AddTarget(file);
+	player.AddTarget(~file);
 }
 
 void VLC_Demo::Play() {
