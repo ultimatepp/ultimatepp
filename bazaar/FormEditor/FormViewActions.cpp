@@ -38,9 +38,9 @@ void FormView::CreateObject(Point p, const char* type)
 	AddToSelection(GetObjectCount() - 1);
 
 	Refresh();
-	WhenUpdate.Execute();
-	WhenChildSelected.Execute(GetSelected());
-	WhenChildCount.Execute(GetObjectCount());
+	WhenUpdate();
+	WhenChildSelected(GetSelected());
+	WhenChildCount(GetObjectCount());
 }
 
 void FormView::SetSprings(dword hAlign, dword vAlign)
@@ -58,7 +58,7 @@ void FormView::SetSprings(dword hAlign, dword vAlign)
 		if (vAlign != -1) pI->SetVAlign(_VAlign = vAlign);
 	}
 
-	WhenUpdate.Execute();
+	WhenUpdate();
 	Refresh();
 }
 
@@ -74,7 +74,7 @@ void FormView::RemoveSelection()
 		GetObjects()->Remove(sel[i]);
 
 	Refresh();
-	WhenChildCount.Execute(GetObjectCount());
+	WhenChildCount(GetObjectCount());
 }
 
 void FormView::MoveUpObject(int id)
@@ -87,7 +87,7 @@ void FormView::MoveUpObject(int id)
 
 	GetObjects()->Swap(id, id + 1);
 	Refresh();
-	WhenChildZ.Execute();
+	WhenChildZ();
 }
 
 void FormView::MoveDownObject(int id)
@@ -100,7 +100,7 @@ void FormView::MoveDownObject(int id)
 
 	GetObjects()->Swap(id, id - 1);
 	Refresh();
-	WhenChildZ.Execute();
+	WhenChildZ();
 }
 
 void FormView::MoveToTopObject(int id)
@@ -114,7 +114,7 @@ void FormView::MoveToTopObject(int id)
 	for (int i = id; i < GetObjectCount() - 1; ++i)
 		GetObjects()->Swap(i, i + 1);
 	Refresh();
-	WhenChildZ.Execute();
+	WhenChildZ();
 }
 
 void FormView::MoveToBottomObject(int id)
@@ -128,7 +128,7 @@ void FormView::MoveToBottomObject(int id)
 	for (int i = id; i > 0; --i)
 		GetObjects()->Swap(i, i - 1);
 	Refresh();
-	WhenChildZ.Execute();
+	WhenChildZ();
 }
 
 void FormView::InvertSelection()
@@ -161,7 +161,7 @@ void FormView::AlignTopSelection()
 		p->SetRect( Rect(Point(p->GetRect().left, min), p->GetSize()) );
 	}
 
-	WhenChildPos.Execute(sel);
+	WhenChildPos(sel);
 }
 
 void FormView::AlignLeftSelection()
@@ -179,7 +179,7 @@ void FormView::AlignLeftSelection()
 		p->SetRect( Rect(Point(min, p->GetRect().top), p->GetSize()) );
 	}
 
-	WhenChildPos.Execute(sel);
+	WhenChildPos(sel);
 }
 
 void FormView::AlignRightSelection()
@@ -197,7 +197,7 @@ void FormView::AlignRightSelection()
 		p->SetRect( Rect(Point(min - p->GetRect().Width(), p->GetRect().top), p->GetSize()) );
 	}
 
-	WhenChildPos.Execute(sel);
+	WhenChildPos(sel);
 }
 
 void FormView::AlignBottomSelection()
@@ -215,7 +215,7 @@ void FormView::AlignBottomSelection()
 		p->SetRect( Rect(Point(p->GetRect().left, min - p->GetRect().Height()), p->GetSize()) );
 	}
 
-	WhenChildPos.Execute(sel);
+	WhenChildPos(sel);
 }
 
 void FormView::ToggleOutlineDraw(int obj)
@@ -227,7 +227,7 @@ void FormView::ToggleOutlineDraw(int obj)
 	if (!pI) return;
 
 	pI->SetBool("OutlineDraw", !pI->GetBool("OutlineDraw", false));
-	WhenChildZ.Execute();
+	WhenChildZ();
 }
 
 bool FormView::IsOutlineDraw(int obj)

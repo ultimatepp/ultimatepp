@@ -117,10 +117,10 @@ inline void ScrollContainer::Scroll()
 		p = psb-newpos;
 		pane->SetPageRect(pane->GetPageRect().Offseted(p));
 		pane->Refresh();
-		pane->WhenChildAllPos.Execute();
+		pane->WhenChildAllPos();
 	}
 	psb = newpos;
-	WhenScroll.Execute(p);
+	WhenScroll(p);
 }
 
 inline ScrollContainer& ScrollContainer::Set(FormView &p, Size sz)

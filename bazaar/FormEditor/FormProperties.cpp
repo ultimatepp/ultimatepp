@@ -113,7 +113,7 @@ void PropertiesWindow::OnEndEdit(int mode)
 			Generate(_Item, _Index);
 		}
 
-		WhenChildZ.Execute();
+		WhenChildZ();
 	}
 }
 
