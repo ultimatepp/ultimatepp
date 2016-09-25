@@ -305,9 +305,9 @@ to adjust timeout before any single TcpSocket operation. Returns
 cpSocket][@(0.0.255) `&]_[* GlobalTimeout]([@(0.0.255) int]_[*@3 ms])&]
 [s2;%% Sets the `"global timeout`". This timeout is in effect over 
 a whole range of operations, until it is canceled by calling 
-this method with Null parameter. If global timeout is exceeded, 
-operation during which it happened fails and socket error code 
-is set to ERROR`_GLOBAL`_TIMEOUT.&]
+this method with Null parameter or by setting a new global timeout. 
+If global timeout is exceeded, operation during which it happened 
+fails and socket error code is set to ERROR`_GLOBAL`_TIMEOUT.&]
 [s3;%% &]
 [s4; &]
 [s5;:TcpSocket`:`:NoGlobalTimeout`(`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
