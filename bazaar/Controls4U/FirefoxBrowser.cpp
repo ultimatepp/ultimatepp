@@ -3,7 +3,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include "ActiveX.h" 
 
-NAMESPACE_UPP
+using namespace Upp;
 
 bool FirefoxBrowser::Browse(const String &strurl) {
 	IIWebBrowser webBrowser(this);
@@ -182,6 +182,5 @@ bool FirefoxBrowser::SetSilent(bool val) {
 	return false;
 }
 
-END_UPP_NAMESPACE
 
 #endif

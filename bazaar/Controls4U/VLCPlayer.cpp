@@ -3,7 +3,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include "ActiveX.h"
 
-NAMESPACE_UPP
+using namespace Upp;
 
 bool VLCPlayer::AddTarget(const String movie) {
 	if (IsPlaying())
@@ -174,6 +174,5 @@ int VLCPlayer::GetLength() {
 	return seconds;
 }
 
-END_UPP_NAMESPACE
 
 #endif
