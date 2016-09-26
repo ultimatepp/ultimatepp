@@ -151,7 +151,8 @@ replaced.]
 [/ sel] is 1.]}}&]
 [s0; &]
 [s19; 2.2 File methods&]
-[s5; &]
+[s5; This section grouped methods that allows to manipulate TheIDE 
+files.&]
 [s0; &]
 [ {{3667:6333h1;@(204) [s0; Method]
 :: [s0; Description]
@@ -165,7 +166,7 @@ replaced.]
 :: [s0;ph [*C+75 CloseFile()]]
 :: [s20; Closes active tab.]}}&]
 [s0; &]
-[s19; 2. 3User interaction methods&]
+[s19; 2.3 User interaction methods&]
 [s5; From time to time, it is necessary to communicate some information 
 from user to the macro or vice versa, which is exactly what these 
 methods do.&]
