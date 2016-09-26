@@ -564,11 +564,12 @@ private:
 
 class RealTimeStop {
 public:
-	RealTimeStop() : timeElapsed(0), time0(-1), isPaused(false) {
+	RealTimeStop() {
 #ifdef CTRLLIB_H	
 		callbackOn = false;
 		lastTick = -1;
 #endif 
+		Start();
 	}
 	void Reset() {
 		timeElapsed = 0;
@@ -663,12 +664,16 @@ public:
 		String out;
 		p.Read(out);
 		if(p.IsRunning()) {
+#ifdef PLATFORM_WIN32			
 			if (!p.IsPaused()) {
+#endif
 				if (maxTimeWithoutOutput > 0 && timeWithoutOutput.Seconds() > maxTimeWithoutOutput) 
 					status = STOP_TIMEOUT;
 				else if (maxRunTime > 0 && timeElapsed.Seconds() > maxRunTime) 
 					status = STOP_TIMEOUT;
+#ifdef PLATFORM_WIN32				
 			}
+#endif
 		} else 
 			status = STOP_OK;
 		

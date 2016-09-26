@@ -17,7 +17,7 @@ topic "LocalProcessX";
 [s0; LocalProcessX permits to launch child executables and batch 
 files managing its input and output.&]
 [s0; It is based in LocalProcess2 including some elements to ease 
-its use.like WhenTimer callback that lets user to manage program 
+its use like WhenTimer callback that lets user to manage program 
 status.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
