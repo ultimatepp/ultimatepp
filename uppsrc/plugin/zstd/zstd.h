@@ -113,6 +113,6 @@ String CoZstdDecompress(const String& s, EventGate<int64, int64> progress = fals
 
 bool IsZstd(Stream& s);
 
-};
+}
 
 #endif

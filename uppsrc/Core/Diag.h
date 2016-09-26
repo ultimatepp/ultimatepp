@@ -167,7 +167,7 @@ struct IniBool;
 
 namespace Ini {
 extern IniBool user_log;
-};
+}
 
 #define USRLOG(x)         LOG_(Ini::user_log, x)
 
