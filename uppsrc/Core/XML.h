@@ -225,7 +225,7 @@ public:
 	
 	void           Shrink();
 	
-	rval_default(XmlNode);
+	rval_default(XmlNode)
 
 	XmlNode(const XmlNode& n, int);
 	

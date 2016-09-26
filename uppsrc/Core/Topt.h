@@ -178,25 +178,25 @@ inline void AssertMoveable(T *t = 0) { if(t) AssertMoveable0(t); }
 
 #endif
 
-NTL_MOVEABLE(bool);
-NTL_MOVEABLE(char);
-NTL_MOVEABLE(signed char);
-NTL_MOVEABLE(unsigned char);
-NTL_MOVEABLE(short);
-NTL_MOVEABLE(unsigned short);
-NTL_MOVEABLE(int);
-NTL_MOVEABLE(unsigned int);
-NTL_MOVEABLE(long);
-NTL_MOVEABLE(unsigned long);
-NTL_MOVEABLE(int64);
-NTL_MOVEABLE(uint64);
-NTL_MOVEABLE(float);
-NTL_MOVEABLE(double);
-NTL_MOVEABLE(void *);
-NTL_MOVEABLE(const void *);
+NTL_MOVEABLE(bool)
+NTL_MOVEABLE(char)
+NTL_MOVEABLE(signed char)
+NTL_MOVEABLE(unsigned char)
+NTL_MOVEABLE(short)
+NTL_MOVEABLE(unsigned short)
+NTL_MOVEABLE(int)
+NTL_MOVEABLE(unsigned int)
+NTL_MOVEABLE(long)
+NTL_MOVEABLE(unsigned long)
+NTL_MOVEABLE(int64)
+NTL_MOVEABLE(uint64)
+NTL_MOVEABLE(float)
+NTL_MOVEABLE(double)
+NTL_MOVEABLE(void *)
+NTL_MOVEABLE(const void *)
 
 #if defined(_NATIVE_WCHAR_T_DEFINED) || defined(COMPILER_GCC)
-NTL_MOVEABLE(wchar_t);
+NTL_MOVEABLE(wchar_t)
 #endif
 
 template <class T, class B = EmptyClass>
