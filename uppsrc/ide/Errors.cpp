@@ -153,7 +153,7 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 				return f.lineno > 0;
 			}
 			else
-			if(*s == ':' || !strchr(s, '/') && strchr(s, '\\')) // safe to say this is final
+			if(*s == ':' || !strchr(s, '/') && !strchr(s, '\\')) // safe to say this is final
 				return false;
 			else
 				f.file.Cat(*s); // File is not complete, e.g.: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Vc\Include\string.h(186)
