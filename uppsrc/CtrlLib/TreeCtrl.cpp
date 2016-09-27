@@ -801,7 +801,8 @@ void TreeCtrl::ShiftSelect(int l1, int l2)
 	if(l1 > l2)
 		UPP::Swap(l1, l2);
 	for(int i = 0; i < line.GetCount(); i++)
-		SelectOne0(line[i].itemi, i >= l1 && i <= l2, true);
+		SelectOne0(line[i].itemi, i >= l1 && i <= l2, false);
+	UpdateSelect();
 }
 
 void TreeCtrl::LeftDrag(Point p, dword keyflags)
@@ -828,7 +829,7 @@ void TreeCtrl::DoClick(Point p, dword flags, bool down)
 			Open(l.itemi, !IsOpen(l.itemi));
 	}
 	else {
-		if(down && IsSel(l.itemi)) {
+		if(down && IsSel(l.itemi)) { // make possible DnD of multiple items
 			selclick = true;
 			if(down)
 				WhenLeftClick();

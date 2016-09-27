@@ -137,7 +137,7 @@ void SubpixelFiller::RenderN(int val, int h, int n)
 	int hh;
 	v += n;
 	switch(n) {
-	case 1: 
+	case 1:
 		w[-2] += h;
 		w[-1] += h2;
 		w[1] += h2;
