@@ -44,6 +44,10 @@ public:
 
 	template <class TT, class... Args>
 	TT&         Create(Args... args)       { TT *q = new TT(args...); Attach(q); return *q; }
+	template <class TT> // with C++ conforming compiler, this would not be neede - GCC bug workaround
+	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
+	template <class... Args>
+	T&          Create(Args... args)       { T *q = new T(args...); Attach(q); return *q; }
 	T&          Create()                   { T *q = new T; Attach(q); return *q; }
 
 	template <class TT>
