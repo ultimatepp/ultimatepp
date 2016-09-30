@@ -465,7 +465,7 @@ int AMap<K, T, V>::Put(const K& k, T&& x)
 {
 	int i = key.Put(k);
 	if(i < value.GetCount())
-		value[i] = x;
+		value[i] = pick(x);
 	else {
 		ASSERT(i == value.GetCount());
 		value.Add(pick(x));
