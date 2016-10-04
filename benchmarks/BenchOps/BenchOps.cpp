@@ -6,13 +6,12 @@ Atomic val;
 
 struct Data {
 	int64 val[4];
+	int   xxx;
 	
 	void Zero() { val[0] = val[1] = val[2] = val[3] = 0; }
 };
 
 Data src[16], dst[16];
-
-int count;
 
 #define N 10000000
 
@@ -32,14 +31,24 @@ force_inline void SSEZero32(void *t)
 CONSOLE_APP_MAIN
 {
 	{
-		RTIMING("Atomic inc/dec");
+		RTIMING("Atomic Inc+Dec");
 		for(int i = 0; i < N; i++) {
 			AtomicInc(val);
 			AtomicDec(val);
 		}
 	}
 	{
-<<<<<<< .mine
+		RTIMING("Atomic Inc+Dec+test (unstable)");
+		for(int i = 0; i < N; i++) {
+			if(i & 1) {
+				AtomicInc(val);
+				AtomicInc(val);
+			}
+			if(AtomicDec(val))
+				count++;
+		}
+	}
+	{
 		RTIMING("Read (no locking)");
 		for(int i = 0; i < N; i++) {
 			count += src[i & 15].val[0];
@@ -59,19 +68,6 @@ CONSOLE_APP_MAIN
 		}
 	}
 	{
-=======
-		RTIMING("Atomic and test");
-		for(int i = 0; i < N; i++) {
-			if(i & 1) {
-				AtomicInc(val);
-				AtomicInc(val);
-			}
-			if(AtomicDec(val))
-				count++;
-		}
-	}
-	{
->>>>>>> .r9514
 		static StaticMutex mtx;
 		RTIMING("StaticMutex");
 		for(int i = 0; i < N; i++) {
@@ -181,6 +177,13 @@ CONSOLE_APP_MAIN
 			dst[i & 15] = src[i & 15];
 			dst[i & 7] = src[i & 7];
 			dst[i & 3] = src[i & 3];
+		}
+	}
+	{
+		int n = Random();
+		RTIMING("Divide");
+		for(int i = 0; i < N; i++) {
+			dst[i & 15].xxx = src[i & 15].xxx / n;
 		}
 	}
 }

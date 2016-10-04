@@ -1,0 +1,5 @@
+#ifndef _SortIndex_icpp_init_stub
+#define _SortIndex_icpp_init_stub
+#include "Core/init"
+#include "Geom/Coords/init"
+#endif
