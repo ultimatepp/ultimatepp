@@ -1,0 +1,105 @@
+topic "";
+[2 $$0,0#00000000000000000000000000000000:Default]
+[i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
+[l288;2 $$2,2#27521748481378242620020725143825:desc]
+[0 $$3,0#96390100711032703541132217272105:end]
+[H6;0 $$4,0#05600065144404261032431302351956:begin]
+[i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
+[l288;a4;*@5;1 $$6,6#70004532496200323422659154056402:requirement]
+[l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
+[b42;2 $$9,9#13035079074754324216151401829390:normal]
+[{_}%EN-US 
+[ {{10000@(113.42.0) [s0; [*@7;4 Function]]}}&]
+[s3;%- &]
+[s1;:noref:%- [@(0.0.255)3 template][3 _<][@(0.0.255)3 typename][3 _][*@4;3 Res][3 , 
+][@(0.0.255)3 typename...][3 _][*@4;3 ArgTypes][3 >]&]
+[s1;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:class:%- [@(0.0.255) class]_[* Function<Res(Ar
+gTypes...)>_]:_[@(0.0.255) private]_[*@3 Moveable]<Function<[*@4 Res]([*@4 ArgTypes][@(0.0.255) .
+..])>>_&]
+[s2; Upp`::Function is wrapper to represent callable operation. It 
+is similar to std`::function with two differences:&]
+[s2;i150;O0; Calling empty Function is allowed (and NOP). Returns 
+zero.&]
+[s2;i150;O0; Functions can be combined (chained) using operator<<.&]
+[s0;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
+[s3; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(`):%- [* Function]()&]
+[s5;:Upp`:`:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(const Upp`:`:Nuller`&`):%- [* F
+unction]([@(0.0.255) const]_[_^Upp`:`:Nuller^ Nuller][@(0.0.255) `&])&]
+[s2; Creates empty Function. Invoking empty function is NOP and eventual 
+return value is Res() (which results in 0 for fundamental types). 
+Variant with Nuller is useful when defining function declaration 
+with optional Function parameters like [*C@5 void Foo(Function<void 
+()> `= Null);]&]
+[s3;%- &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(F`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 F]>_[* Function]([*@4 F]_[*@3 fn])&]
+[s2; This is the `'catch lambda`' constructor which allows converting 
+generic lambda to Function value.&]
+[s3; &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(const Function`&`):%- [* Function](
+[@(0.0.255) const]_[* Function][@(0.0.255) `&]_[*@3 src])&]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator`=`(const Function`&`):%- Function
+[@(0.0.255) `&]_[* operator`=]([@(0.0.255) const]_Function[@(0.0.255) `&]_[*@3 src])&]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(Function`&`&`):%- [* Function]([* Fu
+nction][@(0.0.255) `&`&]_[*@3 src])&]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator`=`(Function`&`&`):%- Function[@(0.0.255) `&
+]_[* operator`=](Function[@(0.0.255) `&`&]_[*@3 src])&]
+[s2; Usual copy/move constructors and assignment operators.&]
+[s3; &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Proxy`(`)const:%- Function_[* Proxy]()_[@(0.0.255) c
+onst]&]
+[s2; Returns a new Function, which, when invoked, invokes this Function. 
+This is useful when some Function is to changed later, but we 
+need another Function to represent it.&]
+[s3; &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator`<`<`(F`):%- [@(0.0.255) template]_<
+[@(0.0.255) class]_[*@4 F]>_Function[@(0.0.255) `&]_[* operator<<]([*@4 F]_[*@3 fn])&]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator`<`<`(const Function`&`):%- Functi
+on[@(0.0.255) `&]_[* operator<<]([@(0.0.255) const]_Function[@(0.0.255) `&]_[*@3 fn])&]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator`<`<`(Function`&`&`):%- Function[@(0.0.255) `&
+]_[* operator<<](Function[@(0.0.255) `&`&]_[*@3 fn])&]
+[s2; These operators combine two Functions or function with lambda. 
+Original `'this`' function is invoked first and then [%-*@3 fn]. 
+If either of Functions returns value, value of [%-*@3 fn] (argument 
+to the right of <<) represents the value of whole Function.&]
+[s3; &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator`(`)`(ArgTypes`.`.`.args`)const:%- [*@4 R
+es]_[* operator()]([*@4 ArgTypes][@(0.0.255) ...]_args)_[@(0.0.255) const]&]
+[s2; Performs the Functions.&]
+[s3; &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:operator bool`(`)const:%- [* operator_bool](
+)_[@(0.0.255) const]&]
+[s2; Returns true if Function is not empty.&]
+[s3; &]
+[s4; &]
+[s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Clear`(`):%- [@(0.0.255) void]_[* Clear]()&]
+[s2; Sets Function empty.&]
+[s0; &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 Event and Gate]]}}&]
+[s3;%- &]
+[s0;%- Two most common types of Function in U`+`+ are those that 
+return `'void`' and those that return `'bool`'. U`+`+ defines 
+two convenience template aliases:&]
+[s0;%- &]
+[s5;:Upp`:`:Event`:`:typedef:%- [@(0.0.255) template <typename... ][*@4 ArgTypes][@(0.0.255) >
+ using]_[* Event]_`=_Function<[@(0.0.255) void]_(ArgTypes[@(0.0.255) ...])>&]
+[s2; Creates alias for Function returning void. For example, [*C@5 Event<int, 
+String>] is equivalent of [*C@5 Function<void (int, String)>].&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Gate`:`:typedef:%- [@(0.0.255) template <typename... ][*@4 ArgTypes][@(0.0.255) >
+ using]_[* Gate]_`=_Function<[@(0.0.255) bool]_(ArgTypes[@(0.0.255) ...])>&]
+[s2; Creates alias for Function returning bool. For example, [*C@5 Gate<int, 
+String>] is equivalent of [*C@5 Function<bool (int, String)>].&]
+[s3;%- &]
+[s0;@(0.0.255)3%- ]]
