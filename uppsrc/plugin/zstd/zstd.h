@@ -95,20 +95,20 @@ public:
 	~ZstdDecompressStream();
 };
 
-int64 ZstdCompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-int64 ZstdDecompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-String ZstdCompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String ZstdCompress(const String& s, EventGate<int64, int64> progress = false);
-String ZstdDecompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String ZstdDecompress(const String& s, EventGate<int64, int64> progress = false);
+int64 ZstdCompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+int64 ZstdDecompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+String ZstdCompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String ZstdCompress(const String& s, Gate<int64, int64> progress = Null);
+String ZstdDecompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String ZstdDecompress(const String& s, Gate<int64, int64> progress = Null);
 
 #ifdef _MULTITHREADED
-int64 CoZstdCompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-int64 CoZstdDecompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-String CoZstdCompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String CoZstdCompress(const String& s, EventGate<int64, int64> progress = false);
-String CoZstdDecompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String CoZstdDecompress(const String& s, EventGate<int64, int64> progress = false);
+int64 CoZstdCompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+int64 CoZstdDecompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+String CoZstdCompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String CoZstdCompress(const String& s, Gate<int64, int64> progress = Null);
+String CoZstdDecompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String CoZstdDecompress(const String& s, Gate<int64, int64> progress = Null);
 #endif
 
 bool IsZstd(Stream& s);

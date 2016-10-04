@@ -65,9 +65,9 @@ private:
 	int     ScrollBarSize() const                 { return style->barsize; }
 
 public:
-	Callback WhenScroll;
-	Callback WhenVisibility;
-	Callback WhenLeftClick;
+	Event<>  WhenScroll;
+	Event<>  WhenVisibility;
+	Event<>  WhenLeftClick;
 
 	bool    IsHorz() const                  { return horz; }
 	bool    IsVert() const                  { return !horz; }
@@ -178,8 +178,8 @@ public:
 	HScrollBar x;
 	VScrollBar y;
 
-	Callback   WhenScroll;
-	Callback   WhenLeftClick;
+	Event<>    WhenScroll;
+	Event<>    WhenLeftClick;
 
 	void    Set(Point pos, Size page, Size total);
 	bool    Set(Point pos);

@@ -1463,7 +1463,7 @@ void FlatSpin::SetTips(const char *tipl, const char *tipr)
 	right.Tip(tipr);
 }
 
-void FlatSpin::SetCallbacks(const Callback &cbl, const Callback& cbr)
+void FlatSpin::SetCallbacks(const Event<>& cbl, const Event<>& cbr)
 {
 	left.WhenAction = cbl;
 	right.WhenAction = cbr;

@@ -17,7 +17,7 @@ public:
 	virtual void  LeftDouble(Point pt, dword keyflags);
 	virtual void  MouseMove(Point pt, dword keyflags);
 
-	Callback      WhenLeftDouble;
+	Event<>       WhenLeftDouble;
 
 private:
 	void          SetColor(Color color, bool set_norm, bool set_hsv);
@@ -84,7 +84,7 @@ public:
 	Ctrl&          GetImplCtrl()                            { return impl->GetCtrl(); }
 
 public:
-	Callback       WhenSetColor;
+	Event<>        WhenSetColor;
 
 public:
 	class Impl
@@ -183,8 +183,8 @@ private:
 	friend void ColorPopUp_InitHint();
 
 public:
-	Callback WhenCancel;
-	Callback WhenSelect;
+	Event<>  WhenCancel;
+	Event<>  WhenSelect;
 
 	static void Hint(Color c);
 

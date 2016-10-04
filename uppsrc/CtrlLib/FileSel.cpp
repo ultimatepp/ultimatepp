@@ -465,7 +465,7 @@ bool MatchSearch(const String& filename, const String& search)
 }
 
 bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
-          Callback3<bool, const String&, Image&> WhenIcon, FileSystemInfo& filesystem,
+          Event<bool, const String&, Image&> WhenIcon, FileSystemInfo& filesystem,
           const String& search, bool hidden, bool hiddenfiles, bool lazyicons)
 {
 	if(dir.IsEmpty()) {
@@ -648,7 +648,7 @@ void LazyExeFileIcons::ReOrder()
 	Restart(0);
 }
 
-void LazyExeFileIcons::Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_)
+void LazyExeFileIcons::Start(FileList& list_, const String& dir_, Event<bool, const String&, Image&> WhenIcon_)
 {
 	list = &list_;
 	dir = dir_;

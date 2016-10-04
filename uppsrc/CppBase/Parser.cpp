@@ -1754,7 +1754,7 @@ void Parser::Do()
 }
 
 void  Parser::Do(Stream& in, CppBase& _base, int filei_, int filetype_,
-                 const String& title_, Callback2<int, const String&> _err,
+                 const String& title_, Event<int, const String&> _err,
                  const Vector<String>& typenames,
                  const Vector<String>& namespace_stack,
                  const Index<String>& namespace_using)

@@ -92,8 +92,8 @@ public:
 	EscLambda&                           CreateLambda();
 
 
-	void    Escape(const char *method, Callback1<EscEscape&> escape);
-	void    Escape(const char *method, EscHandle *h, Callback1<EscEscape&> escape);
+	void    Escape(const char *method, Event<EscEscape&> escape);
+	void    Escape(const char *method, EscHandle *h, Event<EscEscape&> escape);
 	bool    HasNumberField(const char *id) const;
 	int     GetFieldInt(const char *id) const;
 
@@ -158,7 +158,7 @@ public:
 	Vector<bool>          inout;
 	String                code;
 	EscHandle            *handle;
-	Callback1<EscEscape&> escape;
+	Event<EscEscape&> escape;
 	bool                  varargs;
 	String                filename;
 	int                   line;
@@ -291,7 +291,7 @@ struct EscEscape {
 };
 
 void Escape(ArrayMap<String, EscValue>& globals, const char *function, void (*escape)(EscEscape& e));
-void Escape(ArrayMap<String, EscValue>& globals, const char *function, Callback1<EscEscape&> escape);
+void Escape(ArrayMap<String, EscValue>& globals, const char *function, Event<EscEscape&> escape);
 
 void Scan(ArrayMap<String, EscValue>& global, const char *code, const char *filename = "");
 

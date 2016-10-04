@@ -351,7 +351,7 @@ void Gdb_MI2::CleanupVariables(void)
 	{
 		String name = debugVariables.Pop();
 		MICmd("var-delete " + name);
-		timeCallback.Set(50, THISBACK(CleanupVariables));
+		timeEvent<> .Set(50, THISBACK(CleanupVariables));
 	}
 #endif
 }

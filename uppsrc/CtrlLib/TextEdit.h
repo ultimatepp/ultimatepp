@@ -105,9 +105,9 @@ protected:
 public:
 	virtual void   RefreshLine(int i);
 
-	Callback1<Bar&> WhenBar;
-	Callback        WhenState;
-	Callback        WhenSel;
+	Event<Bar&> WhenBar;
+	Event<>         WhenState;
+	Event<>         WhenSel;
 
 	void   CachePos(int pos);
 	void   CacheLinePos(int linei);

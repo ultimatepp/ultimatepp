@@ -41,6 +41,26 @@ void Stream::Seek(int64) {
 	NEVER();
 }
 
+int Stream::Skip(int size)
+{
+	int r = 0;
+	while(size) {
+		int n = min(int(rdlim - ptr), size);
+		if(n == 0) {
+			if(Get() < 0)
+				break;
+			r++;
+			size--;
+		}
+		else {
+			size -= n;
+			r += n;
+			ptr += n;
+		}
+	}
+	return r;
+}
+
 int64 Stream::GetSize() const {
 	return 0;
 }
@@ -1334,7 +1354,7 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count) {
 	return done;
 }
 
-int64 CopyStream(Stream& dest, Stream& src, int64 count, EventGate<int64, int64> progress)
+int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate<int64, int64> progress)
 {
 	int block = (int)min<int64>(count, 32768);
 	Buffer<byte> temp(block);
@@ -1351,7 +1371,7 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count, EventGate<int64, int64>
 	return done;
 }
 
-void CheckedSerialize(const Callback1<Stream&> serialize, Stream& stream, int version)
+void CheckedSerialize(const Event<Stream&> serialize, Stream& stream, int version)
 {
 	int pos = (int)stream.GetPos();
 	stream.Magic(0x61746164);
@@ -1363,7 +1383,7 @@ void CheckedSerialize(const Callback1<Stream&> serialize, Stream& stream, int ve
 	stream.Magic(pos);
 }
 
-bool Load(Callback1<Stream&> serialize, Stream& stream, int version) {
+bool Load(Event<Stream&> serialize, Stream& stream, int version) {
 	StringStream backup;
 	backup.SetStoring();
 	serialize(backup);
@@ -1390,7 +1410,7 @@ bool Load(Callback1<Stream&> serialize, Stream& stream, int version) {
 	return true;
 }
 
-bool Store(Callback1<Stream&> serialize, Stream& stream, int version) {
+bool Store(Event<Stream&> serialize, Stream& stream, int version) {
 	stream.SetStoring();
 	CheckedSerialize(serialize, stream, version);
 	return !stream.IsError();
@@ -1400,14 +1420,14 @@ String Cfgname(const char *file) {
 	return file ? String(file) : ConfigFile();
 }
 
-bool LoadFromFile(Callback1<Stream&> serialize, const char *file, int version) {
+bool LoadFromFile(Event<Stream&> serialize, const char *file, int version) {
 	FileIn f(Cfgname(file));
 	return f ? Load(serialize, f, version) : false;
 }
 
-bool StoreToFile(Callback1<Stream&> serialize, const char *file, int version) {
+bool StoreToFile(Event<Stream&> serialize, const char *file, int version) {
 	FileOut f(Cfgname(file));
-	if(!Store(serialize, f, version))
+	if(!f || !Store(serialize, f, version))
 		return false;
 	f.Close();
 	return !f.IsError();

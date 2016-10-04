@@ -294,7 +294,7 @@ void CodeEditor::IndentInsert(int chr, int count) {
 		InsertChar(chr, count);
 }
 
-void CodeEditor::Make(Callback1<String&> op)
+void CodeEditor::Make(Event<String&> op)
 {
 	Point cursor = GetColumnLine(GetCursor());
 	Point scroll = GetScrollPos();
@@ -1039,9 +1039,9 @@ CodeEditor::CodeEditor() {
 	UndoSteps(10000);
 	InitFindReplace();
 	bar.WhenBreakpoint = THISBACK(ForwardWhenBreakpoint);
-	bar.WhenAnnotationMove = Proxy(WhenAnnotationMove);
-	bar.WhenAnnotationClick = Proxy(WhenAnnotationClick);
-	bar.WhenAnnotationRightClick = Proxy(WhenAnnotationRightClick);
+	bar.WhenAnnotationMove = WhenAnnotationMove.Proxy();
+	bar.WhenAnnotationClick = WhenAnnotationClick.Proxy();
+	bar.WhenAnnotationRightClick = WhenAnnotationRightClick.Proxy();
 	barline = true;
 	sb.WithSizeGrip();
 	DefaultHlStyles();

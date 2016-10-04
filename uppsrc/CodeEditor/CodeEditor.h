@@ -87,10 +87,10 @@ private:
 	void    sPaintImage(Draw& w, int y, int fy, const Image& img);
 
 public:
-	Callback1<int> WhenBreakpoint;
-	Callback       WhenAnnotationMove;
-	Callback       WhenAnnotationClick;
-	Callback       WhenAnnotationRightClick;
+	Event<int> WhenBreakpoint;
+	Event<>        WhenAnnotationMove;
+	Event<>        WhenAnnotationClick;
+	Event<>        WhenAnnotationRightClick;
 
 	void InsertLines(int i, int count);
 	void RemoveLines(int i, int count);
@@ -322,7 +322,7 @@ protected:
 	void   ToggleLineComments(bool usestars = false);
 	void   ToggleStarComments();
 	void   Enclose(const char *c1, const char *c2, int l = -1, int h = -1);
-	void   Make(Callback1<String&> op);
+	void   Make(Event<String&> op);
 	void   TabsOrSpaces(String& out, bool maketabs);
 	void   LineEnds(String& out);
 
@@ -341,16 +341,16 @@ public:
 		Size           sz;
 	};
 
-	Callback           WhenSelection;
+	Event<>            WhenSelection;
 	Gate1<MouseTip&>   WhenTip;
-	Callback           WhenLeftDown;
-	Callback1<int>     WhenCtrlClick;
-	Callback           WhenAnnotationMove;
-	Callback           WhenAnnotationClick;
-	Callback           WhenAnnotationRightClick;
-	Callback           WhenOpenFindReplace;
-	Callback1<String&> WhenPaste;
-	Callback           WhenUpdate;
+	Event<>            WhenLeftDown;
+	Event<int>     WhenCtrlClick;
+	Event<>            WhenAnnotationMove;
+	Event<>            WhenAnnotationClick;
+	Event<>            WhenAnnotationRightClick;
+	Event<>            WhenOpenFindReplace;
+	Event<String&> WhenPaste;
+	Event<>            WhenUpdate;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
@@ -419,7 +419,7 @@ public:
 	void   TabRight();
 	void   TabLeft();
 
-	Callback1<int> WhenBreakpoint;
+	Event<int> WhenBreakpoint;
 
 
 	void    CheckEdited(bool e = true)                { check_edited = e; }

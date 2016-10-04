@@ -319,7 +319,7 @@ int RegExp::Replace(String& t, const String& r, bool backref)
 }
 
 
-int RegExp::Replace(String& t, Callback1<Vector<String>&> cbr)
+int RegExp::Replace(String& t, Event<Vector<String>&> cbr)
 {
 	String t_copy(t);
 	int count=0;
@@ -377,7 +377,7 @@ int RegExp::ReplaceGlobal(String& t, const String& r, bool backref)
 	return ReplaceGlobal(t, rv, backref);
 }
 
-int RegExp::ReplaceGlobal(String& t, Callback1<Vector<String>&> cbr)
+int RegExp::ReplaceGlobal(String& t, Event<Vector<String>&> cbr)
 {
 	String t_copy(t);
 	int count=0;

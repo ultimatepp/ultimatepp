@@ -168,21 +168,21 @@ protected:
 	friend class PopUpTree;
 
 public:
-	Callback1<int>  WhenOpen;
-	Callback1<int>  WhenClose;
-	Callback        WhenLeftClick;
-	Callback        WhenLeftDouble;
-	Callback1<Bar&> WhenBar;
-	Callback        WhenSel;
+	Event<int>  WhenOpen;
+	Event<int>  WhenClose;
+	Event<>     WhenLeftClick;
+	Event<>     WhenLeftDouble;
+	Event<Bar&> WhenBar;
+	Event<>     WhenSel;
 
-	Callback                        WhenDrag;
-	Callback2<int, PasteClip&>      WhenDropItem;
-	Callback3<int, int, PasteClip&> WhenDropInsert;
-	Callback1<PasteClip&>           WhenDrop;
+	Event<>                     WhenDrag;
+	Event<int, PasteClip&>      WhenDropItem;
+	Event<int, int, PasteClip&> WhenDropInsert;
+	Event<PasteClip&>           WhenDrop;
 
 	// deprecated - use WhenSel
-	Callback        WhenCursor;
-	Callback        WhenSelection;
+	Event<>         WhenCursor;
+	Event<>         WhenSelection;
 
 	void   SetRoot(const Node& n);
 	void   SetRoot(const Image& img, Value v);
@@ -341,7 +341,7 @@ protected:
 	virtual void SetChildren(int id, bool b);
 
 public:
-	Callback WhenOption;
+	Event<>  WhenOption;
 
 	void SetRoot(const Image& img, Option& option, const char *text = NULL);
 	void SetRoot(Option& option, const char *text = NULL);
@@ -398,8 +398,8 @@ public:
 	void         PopUp(Ctrl *owner, int width);
 	void         PopUp(Ctrl *owner);
 
-	Callback     WhenCancel;
-	Callback     WhenSelect;
+	Event<>      WhenCancel;
+	Event<>      WhenSelect;
 
 	PopUpTree&   MaxHeight(int maxheight_)          { maxheight = maxheight_; return *this; }
 	int          GetMaxHeight() const               { return maxheight; }
@@ -430,7 +430,7 @@ private:
 	typedef DropTree CLASSNAME;
 
 public:
-	Callback      WhenDrop;
+	Event<>       WhenDrop;
 
 	void Clear();
 

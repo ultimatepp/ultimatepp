@@ -6,7 +6,7 @@ bool IsCb(String t) {
 		t.Trim(q);
 	if(t.StartsWith("Upp::"))
 		t = t.Mid(5);
-	return  t == "Callback" || t == "Callback1" || t == "Callback2" || t == "Callback3" ||
+	return  t == "Event<> " || t == "Event<" || t == "Event<> 2" || t == "Event<> 3" ||
 	        t == "Gate" || t == "Gate1" || t == "Gate2";
 }
 
@@ -44,7 +44,7 @@ ThisbacksDlg::ThisbacksDlg(const String& scope)
 	CtrlLayoutOKCancel(*this, "THISBACKs");
 	list.AddColumn("Defined in");
 	list.AddColumn("Type");
-	list.AddColumn("Callback");
+	list.AddColumn("Event<> ");
 	list.AddColumn("Insert").Ctrls<Option>();
 	list.AddColumn("Method name").Ctrls(THISBACK(CbEdit));
 	list.SetLineCy(EditField::GetStdHeight());

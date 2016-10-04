@@ -454,6 +454,13 @@ obtained from the stream, is corrupted and too big and allocating
 that much memory would cause out`-of`-memory situation.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:Stream`:`:Skip`(int`):%- [@(0.0.255) int]_[* Skip]([@(0.0.255) int]_[*@3 size])&]
+[s2; Skips [%-*@3 size] bytes in input Stream. This is similar to SeekCur([%-*@3 size]), 
+however it works with Streams that do not support seeking. Returns 
+a number of bytes actually skipped (can be less than required 
+because of EOF).&]
+[s3; &]
+[s4;%- &]
 [s5;:Stream`:`:GetAll`(void`*`,int`):%- [@(0.0.255) bool]_[* GetAll]([@(0.0.255) void]_`*[*@3 d
 ata], [@(0.0.255) int]_[*@3 size])&]
 [s2; Reads [%-*@3 size] bytes from the stream to memory at [%-*@3 data]. 

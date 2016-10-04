@@ -404,12 +404,12 @@ public:
 
 // ------------------- Advanced streaming --------------------
 
-void CheckedSerialize(const Callback1<Stream&> serialize, Stream& stream, int version = Null);
+void CheckedSerialize(const Event<Stream&> serialize, Stream& stream, int version = Null);
 
-bool Load(Callback1<Stream&> serialize, Stream& stream, int version = Null);
-bool Store(Callback1<Stream&> serialize, Stream& stream, int version = Null);
-bool LoadFromFile(Callback1<Stream&> serialize, const char *file = NULL, int version = Null);
-bool StoreToFile(Callback1<Stream&> serialize, const char *file = NULL, int version = Null);
+bool Load(Event<Stream&> serialize, Stream& stream, int version = Null);
+bool Store(Event<Stream&> serialize, Stream& stream, int version = Null);
+bool LoadFromFile(Event<Stream&> serialize, const char *file = NULL, int version = Null);
+bool StoreToFile(Event<Stream&> serialize, const char *file = NULL, int version = Null);
 
 template <class T>
 void SerializeTFn(Stream &s, T *x)
@@ -418,7 +418,7 @@ void SerializeTFn(Stream &s, T *x)
 }
 
 template <class T>
-Callback1<Stream&> SerializeCb(T& x)
+Event<Stream&> SerializeCb(T& x)
 {
 	return callback1(SerializeTFn<T>, &x);
 }
@@ -457,7 +457,7 @@ bool LoadFromString(T& x, const String& s) {
 }
 
 void             RegisterGlobalConfig(const char *name) init_;
-void             RegisterGlobalConfig(const char *name, Callback WhenFlush) init_;
+void             RegisterGlobalConfig(const char *name, Event<>  WhenFlush) init_;
 
 String           GetGlobalConfigData(const char *name);
 void             SetGlobalConfigData(const char *name, const String& data);

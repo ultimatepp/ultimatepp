@@ -25,7 +25,7 @@ struct Host {
 	virtual bool               Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count) = 0;
 	virtual bool               Wait() = 0;
 	virtual bool               Wait(int slot) = 0;
-	virtual void               OnFinish(Callback cb) = 0;
+	virtual void               OnFinish(Event<>  cb) = 0;
 	virtual One<AProcess>      StartProcess(const char *cmdline) = 0;
 	virtual void               Launch(const char *cmdline, bool console = false) = 0;
 	virtual void               AddFlags(Index<String>& cfg) = 0;
@@ -59,7 +59,7 @@ struct LocalHost : Host {
 	virtual bool               Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);
 	virtual bool               Wait();
 	virtual bool               Wait(int slot);
-	virtual void               OnFinish(Callback cb);
+	virtual void               OnFinish(Event<>  cb);
 	virtual One<AProcess>      StartProcess(const char *cmdline);
 	virtual void               Launch(const char *cmdline, bool console);
 	virtual void               AddFlags(Index<String>& cfg);

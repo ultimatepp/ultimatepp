@@ -50,8 +50,8 @@ protected:
 	};
 
 public:
-	Callback1<const String&> WhenLink;
-	Callback1<int>           WhenMouseMove;
+	Event<const String&> WhenLink;
+	Event<int>           WhenMouseMove;
 
 	void            Clear();
 	void            Pick(RichText&& t);
@@ -125,13 +125,13 @@ public:
 };
 
 
-int Prompt(Callback1<const String&> WhenLink,
+int Prompt(Event<const String&> WhenLink,
            const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
            const char *button1, const char *button2, const char *button3,
 		   int cx,
 		   Image im1, Image im2, Image im3);
 
-int Prompt(Callback1<const String&> WhenLink,
+int Prompt(Event<const String&> WhenLink,
            const char *title, const Image& icon, const char *qtf, bool okcancel,
            const char *button1, const char *button2 = NULL, const char *button3 = NULL,
 		   int cx = 0);
@@ -173,7 +173,7 @@ void RetryButtonImage_Write(Image m);
 
 
 typedef
-int (*RedirectPromptFn)(Callback1<const String&> WhenLink,
+int (*RedirectPromptFn)(Event<const String&> WhenLink,
                         const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
                         const char *button1, const char *button2, const char *button3,
                         int cx, Image im1, Image im2, Image im3);

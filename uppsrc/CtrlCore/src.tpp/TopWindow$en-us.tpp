@@ -97,7 +97,9 @@ workspace. Exceeding parts are trimmed (decreasing window size).&]
 [s5;:TopWindow`:`:Breaker`(int`):%- [_^Callback^ Callback]_[* Breaker]([@(0.0.255) int]_[*@3 I
 D]_`=_IDEXIT)&]
 [s2; Returns Callback that, when invoked, invokes [* Break] with the 
-specified exit code.&]
+specified exit code. Note that Callback as return value is used 
+for backward compatibility with pre`-C`+`+11 U`+`+ and for practical 
+purposes, you could consider Event<> being returned.&]
 [s7; [%-*C@3 ID]-|Message loop exit code.&]
 [s7; [*/ Return value]-|Callback.&]
 [s3; &]
@@ -105,7 +107,9 @@ specified exit code.&]
 [s5;:TopWindow`:`:Acceptor`(int`):%- [_^Callback^ Callback]_[* Acceptor]([@(0.0.255) int]_[*@3 I
 D])&]
 [s2; Returns Callback that, when invoked, invokes [* AcceptBreak] with 
-the specified exit code.&]
+the specified exit code. Note that Callback as return value is 
+used for backward compatibility with pre`-C`+`+11 U`+`+ and for 
+practical purposes, you could consider Event<> being returned.&]
 [s7; [%-*C@3 ID]-|Message loop exit code.&]
 [s7; [*/ Return value]-|Callback.&]
 [s3; &]
@@ -113,7 +117,9 @@ the specified exit code.&]
 [s5;:TopWindow`:`:Rejector`(int`):%- [_^Callback^ Callback]_[* Rejector]([@(0.0.255) int]_[*@3 I
 D])&]
 [s2; Returns Callback that, when invoked, invokes [* RejectBreak] with 
-the specified exit code.&]
+the specified exit code. Note that Callback as return value is 
+used for backward compatibility with pre`-C`+`+11 U`+`+ and for 
+practical purposes, you could consider Event<> being returned.&]
 [s7; [%-*C@3 ID]-|Message loop exit code.&]
 [s7; [*/ Return value]-|Callback.&]
 [s3; &]

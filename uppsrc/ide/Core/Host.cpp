@@ -143,7 +143,7 @@ bool LocalHost::Wait(int slot)
 	return IdeConsoleWait(slot);
 }
 
-void LocalHost::OnFinish(Callback cb)
+void LocalHost::OnFinish(Event<>  cb)
 {
 	IdeConsoleOnFinish(cb);
 }

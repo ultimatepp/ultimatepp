@@ -6,7 +6,7 @@ namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
-Vector<Callback>  Ctrl::hotkey;
+Vector<Event<> >  Ctrl::hotkey;
 Vector<dword>     Ctrl::keyhot;
 Vector<dword>     Ctrl::modhot;
 
@@ -122,7 +122,7 @@ Ctrl *Ctrl::GetActiveCtrl()
 	return activeCtrl;
 }
 
-// Vector<Callback> Ctrl::hotkey;
+// Vector<Event<> > Ctrl::hotkey;
 
 #ifndef GDK_WINDOWING_X11
 

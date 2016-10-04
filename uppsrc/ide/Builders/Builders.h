@@ -31,7 +31,7 @@ struct CppBuilder : Builder {
 	bool                   Run(const char *cmdline, Stream& out, int slot, String key, int blitz_count);
 	bool                   Wait();
 	bool                   Wait(int slot);
-	void                   OnFinish(Callback cb);
+	void                   OnFinish(Event<>  cb);
 	bool                   Cp(const String& cmd, const String& package, bool& error);
 	bool                   Cd(const String& cmd);
 	Vector<String>         CustomStep(const String& path, const String& package, bool& error);

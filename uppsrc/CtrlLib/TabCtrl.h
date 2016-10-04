@@ -96,7 +96,7 @@ private:
 	int        FindInsert(Ctrl& slave);
 
 public:
-	Callback WhenSet;
+	Event<>  WhenSet;
 
 	TabCtrl::Item& Add();
 	TabCtrl::Item& Add(const char *text);

@@ -59,8 +59,8 @@ private:
 	typedef DbgDisas CLASSNAME;
 
 public:
-	Callback WhenCursor;
-	Callback WhenFocus;
+	Event<>  WhenCursor;
+	Event<>  WhenFocus;
 
 	void  Clear();
 	void  Add(adr_t adr, const String& code, const String& args, const String& bytes = Null);

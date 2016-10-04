@@ -426,8 +426,8 @@ Gdb_MI2::Gdb_MI2()
 	dlock.Hide();
 
 	CtrlLayout(quickwatch, "Quick watch");
-	quickwatch.close.Cancel() <<= quickwatch.Breaker(IDCANCEL);
-	quickwatch.evaluate.Ok() <<= quickwatch.Acceptor(IDOK);
+	quickwatch.close.Cancel() << quickwatch.Breaker(IDCANCEL);
+	quickwatch.evaluate.Ok() << quickwatch.Acceptor(IDOK);
 	quickwatch.WhenClose = quickwatch.Breaker(IDCANCEL);
 	quickwatch.value.SetReadOnly();
 	quickwatch.value.SetFont(CourierZ(12));
@@ -655,8 +655,8 @@ void Gdb_MI2::SyncIde(bool fr)
 {
 	// kill pending update callbacks
 #ifndef flagMT
-	timeCallback.Kill();
-	exploreCallback.Kill();
+	timeEvent<> .Kill();
+	exploreEvent<> .Kill();
 #endif
 
 	// get current frame info and level
@@ -719,9 +719,9 @@ void Gdb_MI2::SyncIde(bool fr)
 	SyncData();
 	CleanupVariables();
 #else
-	exploreCallback.Set(480, THISBACK1(SyncExplorer, DeepClone(Vector<VarItem>())));
-	timeCallback.Set(500, THISBACK(SyncData));
-	timeCallback.Set(550, THISBACK(CleanupVariables));
+	exploreEvent<> .Set(480, THISBACK1(SyncExplorer, DeepClone(Vector<VarItem>())));
+	timeEvent<> .Set(500, THISBACK(SyncData));
+	timeEvent<> .Set(550, THISBACK(CleanupVariables));
 #endif
 }
 
@@ -1160,7 +1160,7 @@ void Gdb_MI2::SyncLocals(const Vector<VarItem>& localVars_)
 		// autos variables can come from members or locals...
 		SyncAutos();
 	
-		timeCallback.Set(500, THISBACK1(SyncLocals, DeepClone(localVars)));
+		timeEvent<> .Set(500, THISBACK1(SyncLocals, DeepClone(localVars)));
 		return;
 	}
 	
@@ -1174,7 +1174,7 @@ void Gdb_MI2::SyncLocals(const Vector<VarItem>& localVars_)
 			localValues[iLoc] = v.value;
 			locals.Set(iLoc, 1, v.value);
 			SyncAutos();
-			timeCallback.Set(100, THISBACK1(SyncLocals, DeepClone(localVars)));
+			timeEvent<> .Set(100, THISBACK1(SyncLocals, DeepClone(localVars)));
 			return;
 		}
 	}
@@ -1305,7 +1305,7 @@ void Gdb_MI2::SyncThis(const Vector<VarItem>& children_)
 		// autos variables can come from members or locals...
 		SyncAutos();
 	
-		timeCallback.Set(500, THISBACK1(SyncThis, DeepClone(children)));
+		timeEvent<> .Set(500, THISBACK1(SyncThis, DeepClone(children)));
 		return;
 	}
 	
@@ -1319,7 +1319,7 @@ void Gdb_MI2::SyncThis(const Vector<VarItem>& children_)
 			thisValues[iVar] = v.value;
 			members.Set(iVar, 1, v.value);
 			SyncAutos();
-			timeCallback.Set(100, THISBACK1(SyncThis, DeepClone(children)));
+			timeEvent<> .Set(100, THISBACK1(SyncThis, DeepClone(children)));
 			return;
 		}
 	}
@@ -1470,7 +1470,7 @@ void Gdb_MI2::SyncWatches(const Vector<VarItem>& watchesVars_)
 			watches.Set(iWatch, 1, val);
 		}
 		
-		timeCallback.Set(500, THISBACK1(SyncWatches, DeepClone(watchesVars_)));
+		timeEvent<> .Set(500, THISBACK1(SyncWatches, DeepClone(watchesVars_)));
 		return;
 	}
 	
@@ -1483,7 +1483,7 @@ void Gdb_MI2::SyncWatches(const Vector<VarItem>& watchesVars_)
 			watchesExpressions.Set(iWatch, v.evaluableExpression);
 			watchesValues[iWatch] = v.value;
 			watches.Set(iWatch, 1, v.value);
-			timeCallback.Set(100, THISBACK1(SyncWatches, DeepClone(watchesVars)));
+			timeEvent<> .Set(100, THISBACK1(SyncWatches, DeepClone(watchesVars)));
 			return;
 		}
 	}

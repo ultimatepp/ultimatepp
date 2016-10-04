@@ -134,7 +134,7 @@ public:
 	String GetLocal()const {return local;}
 	String GetError()const {return error;}
 	void ClearError()      {error="";}
-	Callback WhenUpdateAvailable;
+	Event<>  WhenUpdateAvailable;
 };
 
 #endif
