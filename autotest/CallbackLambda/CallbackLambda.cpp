@@ -57,35 +57,35 @@ CONSOLE_APP_MAIN
 	}
 
 	{
-		EventGate<> cb;
+		Gate<> cb;
 		cb << [&] { a = 1; LOG("EventGate"); return true; };
 		ASSERT(cb());
 		ASSERT(a == 1);
 	}
 	
 	{
-		EventGate<int> cb;
+		Gate<int> cb;
 		cb << [&](int b) { a = b; LOG("EventGate1"); return false; };
 		ASSERT(!cb(123));
 		ASSERT(a == 123);
 	}
 
 	{
-		EventGate<int, int> cb;
+		Gate<int, int> cb;
 		cb << [&](int b, int c) { a = b + c; LOG("EventGate2"); return true; };
 		ASSERT(cb(1, 20));
 		ASSERT(a == 21);
 	}
 
 	{
-		EventGate<int, int, int> cb;
+		Gate<int, int, int> cb;
 		cb << [&](int b, int c, int d) { a = b + c + d; LOG("EventGate3"); return true; };
 		ASSERT(cb(1, 20, 300));
 		ASSERT(a == 321);
 	}
 	
 	{
-		EventGate<int, int, int, int> cb;
+		Gate<int, int, int, int> cb;
 		cb << [&](int b, int c, int d, int e) { a = b + c + d + e; LOG("EventGate4"); return true; };
 		ASSERT(cb(1, 20, 300, 4000));
 		ASSERT(a == 4321);

@@ -69,7 +69,7 @@ CONSOLE_APP_MAIN
 
 	{
 		bool b = false;
-		Gate x;
+		Gate<> x;
 		x << [&]() -> bool { b = true; return b; };
 		ASSERT(x());
 		ASSERT(b);
