@@ -435,8 +435,7 @@ bool GZCompressFile(const char *dstfile, const char *srcfile, Gate<int64, int64>
 
 bool GZCompressFile(const char *srcfile, Gate<int64, int64>progress)
 {
-	String dstfile = String(srcfile) + ".gz";
-	return GZCompressFile(dstfile, srcfile, progress);
+	return GZCompressFile(~(String(srcfile) + ".gz"), srcfile, progress);
 }
 
 bool GZDecompressFile(const char *dstfile, const char *srcfile, Gate<int64, int64>progress)
@@ -463,7 +462,7 @@ bool GZDecompressFile(const char *srcfile, Gate<int64, int64>progress)
 		dstfile.Trim(dstfile.GetLength() - 5);
 	else
 		return false;
-	return GZDecompressFile(dstfile, srcfile, progress);
+	return GZDecompressFile(~dstfile, srcfile, progress);
 }
 
 Gate<int64, int64> AsGate64(Gate2<int, int> gate)
