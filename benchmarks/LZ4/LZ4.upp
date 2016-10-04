@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/lz4;
+
+file
+	LZ4.cpp;
+
+mainconfig
+	"" = "MT";
+
