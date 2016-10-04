@@ -64,8 +64,8 @@ public:
 	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
 
 	template <class F>
-	Function& operator<<(F fn)                 { if(!ptr) { Copy(fn); return *this; }
-	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, fn); Free(b); return *this; }
+	Function& operator<<(F fn)                 { if(!ptr) { Pick(pick(fn)); return *this; }
+	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
 
 	Function& operator<<(const Function& fn)   { if(!ptr) { Copy(fn); return *this; }
 	                                             WrapperBase *b = ptr; ptr = new Wrapper2<Function>(*this, fn); Free(b); return *this; }
