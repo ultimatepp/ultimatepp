@@ -60,7 +60,7 @@ private:
 	typedef MySqlSession CLASSNAME;
 
 public:
-	Gate                 WhenReconnect;
+	Gate<>               WhenReconnect;
 
 	bool Connect(const char *user = NULL, const char *password = NULL, const char *database = NULL,
 		         const char *host = NULL, int port = MYSQL_PORT, const char *socket = NULL);
