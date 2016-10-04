@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	TestApp.h,
+	main.cpp,
+	TestApp.lay;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,11 @@
+description "\377B";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp optimize_speed;
+
+mainconfig
+	"" = "GUI";
+

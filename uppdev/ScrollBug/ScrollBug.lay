@@ -1,0 +1,5 @@
+LAYOUT(ScrollBugLayout, 548, 504)
+	ITEM(ArrayCtrl, list, LeftPosZ(16, 512).TopPosZ(20, 464))
+	ITEM(Button, Test, LeftPosZ(68, 88).TopPosZ(156, 32))
+END_LAYOUT
+

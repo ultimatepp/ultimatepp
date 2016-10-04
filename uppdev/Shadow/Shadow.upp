@@ -1,0 +1,8 @@
+uses
+	CtrlLib;
+
+file
+	Shadow.cpp;
+
+mainconfig
+	"" = "GUI ST";

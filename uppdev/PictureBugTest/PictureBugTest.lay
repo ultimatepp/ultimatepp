@@ -1,0 +1,5 @@
+LAYOUT(PictureBugTestLayout, 200, 108)
+	ITEM(Picture, pict, SetFrame(FieldFrame()).HSizePosZ(8, 76).VSizePosZ(8, 8))
+	ITEM(Button, open, SetLabel(t_("Open...")).RightPosZ(4, 60).TopPosZ(8, 24))
+END_LAYOUT
+

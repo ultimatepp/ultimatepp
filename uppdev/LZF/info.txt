@@ -1,0 +1,70 @@
+cdata.GetCount() = 57059156
+LiteralsLen = 16395511
+Matches = 13179223
+BigMatches = 1112074
+BigLiterals = 2233633
+FarOffsets = 5479742
+LiteralsLen + 2 * Matches + BigMatches + BigLiterals + 2 * FarOffsets = 57059148
+l.GetCount() = 16395511
+data.GetLength() = 100000000
+======================================
+cdata.GetCount() = 51835774
+LiteralsLen = 16860018
+Matches = 13104426
+BigMatches = 1109244
+BigLiterals = 2293057
+FarOffsets = 5364595
+LiteralsLen + 2 * Matches + BigMatches + BigLiterals + FarOffsets = 51835766
+l.GetCount() = 16860018
+data.GetLength() = 100000000
+======================================
+LZFCompress(out, ~data, data.GetLength()) = 50376081
+Literals = 5143815
+LiteralsLen = 16112310
+Matches = 12268374
+BigMatches = 378014
+BigLiterals = 56443
+FarOffsets = 4148746
+BigLiterals + LiteralsLen + 2 * Matches + BigMatches + FarOffsets = 45232261
+data.GetLength() = 100000000
+==========
+LZ4Compress(data).GetLength() = 56988341
+LZ4 0.438
+TIMING Hashing 2      : 302.97 ms - 24.70 ns (471.00 ms / 12268374 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 12268374
+TIMING Out match      : 41.97 ms -  3.42 ns (210.00 ms / 12268374 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 12268374
+TIMING literal cat    : 30.55 ms -  5.94 ns (101.00 ms / 5143815 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 5143815
+TIMING MatchLen       : 27.97 ms -  2.28 ns (196.00 ms / 12268374 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 12268374
+TIMING Hashing1       : 54.33 ms -  3.37 ns (275.00 ms / 16112306 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 16112306
+TIMING Lookup         : 135.30 ms -  4.77 ns (524.00 ms / 28380680 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 28380680
+TIMING LZFCompress    :  3.24 s  -  3.24 s  ( 3.24 s  / 1 ), min:  3.24 s , max:  3.24 s , nesting: 1 - 1
+----------------------------------------------
+LZFCompress(out, ~data, data.GetLength()) = 50127777
+Literals = 5143815
+LiteralsLen = 16112310
+Matches = 12268374
+BigMatches = 1785859
+BigLiterals = 3128
+FarOffsets = 2545912
+BigLiterals + LiteralsLen + 2 * Matches + BigMatches + FarOffsets = 44983957
+data.GetLength() = 100000000
+==========
+enwik8 2048:
+32 39910940 9.39
+16 39975701 
+8  40532362 4.98
+4  45704862
+
+with 8:
+32768 40288716  7.3
+2048  40532362  5.078
+512   41037098  3.531
+256   41618628  2.5
+128   42502290  1.9
+64    43660608  1.766
+32    44616943  1.750
+8     48986896  1.594
+==========
+viking.blb 2048
+32    111426059 23.39
+16    122522804 22.96
+8     146699593 22.57

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	TreeTest.h,
+	main.cpp,
+	TreeTest.lay;
+
+mainconfig
+	"" = "GUI MT";
+

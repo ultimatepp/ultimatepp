@@ -1,0 +1,11 @@
+description "Simple HTTP text server";
+
+uses
+	Web;
+
+file
+	cmdsrv.cpp;
+
+mainconfig
+	"" = "";
+

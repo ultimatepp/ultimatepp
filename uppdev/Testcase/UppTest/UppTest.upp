@@ -1,0 +1,16 @@
+uses
+	CtrlLib;
+
+target(!DEBUG) upp_exe;
+
+target(DEBUG) upp_debug_exe;
+
+file
+	UppTest.h,
+	UppTest.dli,
+	main.cpp,
+	UppTest.lay;
+
+mainconfig
+	"" = "GUI";
+

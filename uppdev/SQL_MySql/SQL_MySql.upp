@@ -1,0 +1,11 @@
+description "Logging to MySql\377";
+
+uses
+	MySql;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "MT";
+

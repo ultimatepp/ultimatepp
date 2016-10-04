@@ -1,0 +1,12 @@
+description "Using binary data for installation";
+
+uses
+	plugin\bz2;
+
+file
+	ship.cpp,
+	ship.brc;
+
+mainconfig
+	"" = "";
+

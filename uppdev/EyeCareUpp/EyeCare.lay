@@ -1,0 +1,27 @@
+LAYOUT(EyeCareLayout, 270, 216)
+	ITEM(MenuBar, menu, LeftPosZ(0, 256).TopPosZ(0, 24))
+	ITEM(ImageCtrl, image, LeftPosZ(10, 253).TopPosZ(32, 40))
+	ITEM(LabelBox, dv___2, LeftPosZ(8, 257).TopPosZ(24, 162))
+	ITEM(Label, text1, SetLabel(t_("text1")).SetFont(Roman(16).Bold()).LeftPosZ(16, 241).TopPosZ(75, 25))
+	ITEM(Label, text2, LeftPosZ(16, 241).TopPosZ(105, 35))
+	ITEM(Button, hide, SetLabel(t_("HIDE")).SetFont(Arial(25).Bold()).LeftPosZ(15, 242).TopPosZ(143, 35))
+	ITEM(StatusBar, status, LeftPosZ(0, 256).TopPosZ(192, 24))
+END_LAYOUT
+
+LAYOUT(ConfigurationLayout, 216, 144)
+	ITEM(LabelBox, dv___0, SetLabel(t_("EyeCare")).LeftPosZ(8, 200).TopPosZ(4, 132))
+	ITEM(Label, dv___1, SetLabel(t_("Relaxing time (minutes):")).LeftPosZ(16, 121).TopPosZ(24, 19))
+	ITEM(EditInt, relax, LeftPosZ(148, 48).TopPosZ(24, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Washing time (Minutes):")).LeftPosZ(16, 125).TopPosZ(48, 19))
+	ITEM(EditInt, wash, LeftPosZ(148, 48).TopPosZ(48, 19))
+	ITEM(Option, topmost, SetLabel(t_("Stay on top")).LeftPosZ(16, 84).TopPosZ(76, 19))
+	ITEM(Option, hideicon, SetLabel(t_("Hide try icon")).RightPosZ(16, 84).TopPosZ(76, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(28, 72).TopPosZ(104, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(112, 72).TopPosZ(104, 24))
+END_LAYOUT
+
+LAYOUT(AboutDialogLayout, 304, 196)
+	ITEM(LabelBox, dv___0, SetLabel(t_("EyeCare")).LeftPosZ(4, 296).TopPosZ(0, 160))
+	ITEM(RichTextCtrl, text, LeftPosZ(12, 280).TopPosZ(20, 132))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(228, 72).TopPosZ(168, 24))
+END_LAYOUT

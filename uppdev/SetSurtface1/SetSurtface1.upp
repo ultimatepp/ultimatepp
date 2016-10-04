@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

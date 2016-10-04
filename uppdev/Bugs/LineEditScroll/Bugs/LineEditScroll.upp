@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"Bugs/LineEditScroll.h"
+	, main.cpp
+
+
+;
+
+mainconfig
+	"" = "GUI";

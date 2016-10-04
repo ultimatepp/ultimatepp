@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	plugin\sqlite3;
+
+file
+	Sats.h,
+	Sats.cpp,
+	Sats.lay,
+	Sats.sch;
+
+mainconfig
+	"" = "GUI";
+

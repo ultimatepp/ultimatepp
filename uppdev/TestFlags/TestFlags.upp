@@ -1,0 +1,8 @@
+optimize_speed;
+
+file
+	another.cpp optimize_speed,
+	ass.cpp optimize_size;
+
+mainconfig
+	"" = "A B";

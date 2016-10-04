@@ -1,0 +1,13 @@
+uses
+	Core,
+	ODBC;
+
+library
+	odbc32.lib;
+
+file
+	odbctest.cpp;
+
+mainconfig
+	"" = "";
+

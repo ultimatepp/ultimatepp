@@ -1,0 +1,11 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	gcc40.cpp;
+
+mainconfig
+	"" = "",
+	"" = "MT";

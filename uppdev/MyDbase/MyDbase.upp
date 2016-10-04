@@ -1,0 +1,31 @@
+uses
+	MySupport,
+	MyCsv;
+
+options(_DEBUG) ;
+
+file
+	dbase.h,
+	Database readonly separator,
+	dbDatabase.h,
+	core.cpp
+		options() -D__WITH_DEBUG,
+	field.cpp,
+	records.cpp,
+	utils.cpp,
+	query.cpp
+		options() -D__WITH_DEBUG,
+	dbRecord readonly separator,
+	dbRecord.h,
+	dbRecord.cpp,
+	dbRecordSet readonly separator,
+	dbRecordSet.h,
+	dbRecordSet.cpp,
+	Compare readonly separator,
+	compare.h,
+	compare.cpp,
+	Utility readonly separator,
+	utility.h,
+	utility.cpp
+		options() -D__WITH_DEBUG;
+

@@ -1,0 +1,37 @@
+options(_DEBUG) -D_WITH_DEBUG;
+
+file
+	support.h,
+	Core readonly separator,
+	Core.h,
+	Core.cpp,
+	Windows readonly separator,
+	Windows.h,
+	Windows.cpp,
+	Ctrl readonly separator,
+	Ctrl.h,
+	MyKeys.h,
+	Ctrl.cpp,
+	Ctrl.lay,
+	MyHelp.h,
+	MyHelp.cpp,
+	MyPrompt.h,
+	MyPrompt.cpp,
+	MyProgress.h,
+	MyProgress.cpp,
+	ExternLib readonly separator,
+	ExternLib.h,
+	ExternLib.cpp,
+	utils readonly separator,
+	utils.h,
+	utils.cpp,
+	Geom readonly separator,
+	geom.h,
+	geom.cpp
+		options() -D__WITH_DEBUG,
+	common readonly separator,
+	common.key,
+	common.iml,
+	common.t,
+	support.icpp;
+

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<methodCall>
+   <methodName>compute</methodName>
+   <params>
+      <param>
+         <value><i4>41</i4></value>
+      </param>
+      <param>
+         <value><string>+</string></value>
+      </param>
+      <param>
+         <value><int>42</int></value>
+      </param>
+      <param>
+         <value><dateTime.iso8601>19980717T14:08:55</dateTime.iso8601></value>
+      </param>
+      <param>
+      	<value>
+         <array>
+         	<data>
+	         <value><i4>1</i4></value>
+	         <value><i4>2</i4></value>
+	         <value><i4>3</i4></value>
+	         <value><i4>4</i4></value>
+	         <value><i4>5</i4></value>
+	        </data>
+         </array>
+        </value>
+      </param>
+      <param>
+      	<value>
+         <struct>
+         	<member>
+         	 <name>first</name>
+	         <value><string>Hello world</string></value>
+	        </member>
+	        <member>
+         	 <name>second</name>
+	         <value><int>42</int></value>
+	        </member>
+         </struct>
+        </value>
+      </param>
+   </params>
+</methodCall>

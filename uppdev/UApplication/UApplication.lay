@@ -1,0 +1,26 @@
+LAYOUT(UApplicationLayout, 284, 128)
+END_LAYOUT
+
+LAYOUT(AboutLayout, 248, 92)
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(6, 74).VCenterPosZ(24, 30))
+END_LAYOUT
+
+LAYOUT(OptionsGeneralLayout, 272, 104)
+	ITEM(StaticText, dv___0, SetText(t_("Language:")).LeftPosZ(4, 60).TopPosZ(4, 18))
+	ITEM(DropList, lang, LeftPosZ(68, 144).TopPosZ(4, 19))
+	ITEM(Option, OptionAlwaysShowTrayIcon, SetLabel(t_("Always show tray icon")).HSizePosZ(4, 8).TopPosZ(28, 16))
+	ITEM(Option, OptionHideInTrayIconOnMinimize, SetLabel(t_("Hide in tray icon when Minimize application")).HSizePosZ(4, 8).TopPosZ(48, 16))
+	ITEM(Option, OptionHideInTrayIconOnClose, SetLabel(t_("Hide in tray icon when Close application")).HSizePosZ(4, 8).TopPosZ(68, 16))
+END_LAYOUT
+
+LAYOUT(OptionsPluginsLayout, 344, 220)
+	ITEM(ArrayCtrl, PluginList, HorzGrid(false).AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 148))
+	ITEM(LabelBox, dv___1, SetLabel(t_("Plugins")).HSizePosZ(4, 4).BottomPosZ(4, 140))
+	ITEM(Label, LabelDescription, SetLabel(t_("Description:")).LeftPosZ(16, 60).BottomPosZ(113, 19))
+	ITEM(Label, LabelAuthosr, SetLabel(t_("Author(s):")).LeftPosZ(16, 60).BottomPosZ(93, 15))
+	ITEM(Label, LabelEmail, SetLabel(t_("E-mail:")).LeftPosZ(16, 60).BottomPosZ(73, 15))
+	ITEM(Label, LabelWebSite, SetLabel(t_("Web-site")).LeftPosZ(16, 60).BottomPosZ(53, 15))
+	ITEM(Label, LabelUUID, SetLabel(t_("UUID:")).LeftPosZ(16, 60).BottomPosZ(33, 15))
+	ITEM(Label, LabelCopyrite, SetLabel(t_("Rights:")).LeftPosZ(16, 60).BottomPosZ(13, 15))
+END_LAYOUT
+

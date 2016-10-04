@@ -11,11 +11,11 @@ struct MyAppWindow : TopWindow {
 	}
 
 	void SubMenu(Bar& bar) {
-		bar.Add("Exit", THISBACK(Exit));
+		bar.Add("Exit", [=] { Exit(); });
 	}
 
 	void MainMenu(Bar& bar) {
-		bar.Add("Menu", THISBACK(SubMenu));
+		bar.Sub("Menu", [=](Bar& bar) { SubMenu(bar); });
 	}
 
 	typedef MyAppWindow CLASSNAME;
@@ -23,7 +23,7 @@ struct MyAppWindow : TopWindow {
 	MyAppWindow() {
 		Title("My application with menu").Sizeable();
 		AddFrame(menu);
-		menu.Set(THISBACK(MainMenu));
+		menu.Set([=](Bar& bar) { MainMenu(bar); });
 	}
 };
 

@@ -1,0 +1,5 @@
+#ifndef _AlphaImage_icpp_init_stub
+#define _AlphaImage_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\zim/init"
+#endif

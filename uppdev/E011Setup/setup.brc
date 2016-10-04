@@ -1,0 +1,4 @@
+BINARY_MASK(root_all, "d:/uppdev/E011/*.*" BZ2)
+BINARY_MASK(help_all, "d:/uppdev/E011/*.*" BZ2)
+BINARY_MASK(support_all, "d:/uppdev/E011/*.*" BZ2)
+BINARY_MASK(mappature_all, "d:/uppdev/E011/*.*" BZ2)

@@ -1,0 +1,40 @@
+* c:\upp\out\MINGW.Debug.Debug_full.Gui\TreeCtrlDnD.exe 21.12.2008 13:15:14, user: rechle
+
+[12/21/2008 13:15:14.3824] Elements: 10
+[12/21/2008 13:15:14.3824]  just created ( 1)  get with i: I	 get with n: I
+[12/21/2008 13:15:14.3824]  just created ( 2)  get with i: II	 get with n: II
+[12/21/2008 13:15:14.3824]  just created ( 3)  get with i: III	 get with n: III
+[12/21/2008 13:15:14.3824]  just created ( 4)  get with i: IV	 get with n: IV
+[12/21/2008 13:15:14.3824]  just created ( 5)  get with i: V	 get with n: V
+[12/21/2008 13:15:14.3824]  just created ( 6)  get with i: VI	 get with n: VI
+[12/21/2008 13:15:14.3824]  just created ( 7)  get with i: VII	 get with n: VII
+[12/21/2008 13:15:14.3824]  just created ( 8)  get with i: VIII	 get with n: VIII
+[12/21/2008 13:15:14.3824]  just created ( 9)  get with i: IX	 get with n: IX
+parent = 0
+ii = 9
+sel[i] = 8
+[12/21/2008 13:15:26.6583] AcceptInternal<TreeCtrl>(d, 'mytreedrag'): parent:  0, ii  9
+[12/21/2008 13:15:26.6583] Elements: 10
+[12/21/2008 13:15:28.8165]  unsorted ( 1)  get with i: I	 get with n: I
+[12/21/2008 13:15:28.8165]  unsorted ( 2)  get with i: II	 get with n: II
+[12/21/2008 13:15:28.8165]  unsorted ( 3)  get with i: III	 get with n: III
+[12/21/2008 13:15:28.8165]  unsorted ( 4)  get with i: IV	 get with n: IV
+[12/21/2008 13:15:28.8165]  unsorted ( 5)  get with i: V	 get with n: V
+[12/21/2008 13:15:28.8165]  unsorted ( 6)  get with i: VI	 get with n: VI
+[12/21/2008 13:15:28.8165]  unsorted ( 7)  get with i: VII	 get with n: VII
+[12/21/2008 13:15:28.8165]  unsorted ( 8)  get with i: 	 get with n: IX
+[12/21/2008 13:15:28.8165]  unsorted ( 9)  get with i: IX	 get with n: VIII
+parent = 0
+ii = 5
+sel[i] = 10
+[12/21/2008 13:16:12.1737] AcceptInternal<TreeCtrl>(d, 'mytreedrag'): parent:  0, ii  5
+[12/21/2008 13:16:12.1737] Elements: 10
+[12/21/2008 13:16:15.4792]  unsorted ( 1)  get with i: I	 get with n: I
+[12/21/2008 13:16:15.4792]  unsorted ( 2)  get with i: II	 get with n: II
+[12/21/2008 13:16:15.4792]  unsorted ( 3)  get with i: III	 get with n: III
+[12/21/2008 13:16:15.4792]  unsorted ( 4)  get with i: IV	 get with n: IV
+[12/21/2008 13:16:15.4792]  unsorted ( 5)  get with i: V	 get with n: V
+[12/21/2008 13:16:15.4792]  unsorted ( 6)  get with i: VI	 get with n: VIII
+[12/21/2008 13:16:15.4792]  unsorted ( 7)  get with i: VII	 get with n: VI
+[12/21/2008 13:16:15.4792]  unsorted ( 8)  get with i: VIII	 get with n: VII
+[12/21/2008 13:16:15.4792]  unsorted ( 9)  get with i: IX	 get with n: IX

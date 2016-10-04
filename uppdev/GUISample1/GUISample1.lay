@@ -1,0 +1,12 @@
+LAYOUT(GUISample1Layout, 644, 480)
+	ITEM(ToolBar, MainTB, SetFrame(BottomSeparatorFrame()).HSizePosZ(0, 0).TopPosZ(0, 28))
+	ITEM(Splitter, S1, SetFrame(ThinOutsetFrame()).HSizePosZ(0, 0).VSizePosZ(28, 88))
+	ITEM(StaticRect, F1, LeftPosZ(4, 156).TopPosZ(32, 352))
+	ITEM(Label, L1, SetLabel(t_("LLLL111")).SetFont(StdFont(14).Bold()).LeftPosZ(8, 144).TopPosZ(36, 19))
+	ITEM(ToolBar, TB1, HCenterPosZ(140, -244).VCenterPosZ(24, -164))
+	ITEM(ArrayCtrl, AC1, SetFrame(RightSeparatorFrame()).HCenterPosZ(150, -239).VCenterPosZ(268, 2))
+	ITEM(ArrayCtrl, AC2, SetFrame(RightSeparatorFrame()).LeftPosZ(164, 150).TopPosZ(56, 328))
+	ITEM(ArrayCtrl, AC3, SetFrame(RightSeparatorFrame()).LeftPosZ(328, 150).TopPosZ(56, 328))
+	ITEM(ArrayCtrl, dv___8, HSizePosZ(0, 0).BottomPosZ(0, 88))
+END_LAYOUT
+

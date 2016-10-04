@@ -1,0 +1,5 @@
+LAYOUT(DateFmtCtrlLayout, 236, 76)
+	ITEM(DropList, lang, LeftPosZ(8, 104).TopPosZ(8, 19))
+	ITEM(EditDate, date, LeftPosZ(120, 104).TopPosZ(8, 19))
+	ITEM(Label, text, LeftPosZ(8, 216).TopPosZ(36, 24))
+END_LAYOUT

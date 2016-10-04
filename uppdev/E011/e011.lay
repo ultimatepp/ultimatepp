@@ -1,0 +1,40 @@
+LAYOUT(mainForm, 500, 404)
+END_LAYOUT
+
+LAYOUT(MapLay, 412, 272)
+	ITEM(DocEdit, description, HSizePosZ(0, 0).VSizePosZ(0, 184))
+	ITEM(ArrayCtrl, data, AutoHideSb(true).HSizePosZ(0, 0).BottomPosZ(0, 180))
+END_LAYOUT
+
+LAYOUT(ConLay, 248, 172)
+	ITEM(Label, dv___0, SetLabel(t_("&Resistenza sonda:")).LeftPosZ(16, 104).TopPosZ(16, 19))
+	ITEM(DropList, rmax, LeftPosZ(124, 88).TopPosZ(16, 19))
+	ITEM(Button, help_rmax, LeftPosZ(220, 19).TopPosZ(16, 19))
+	ITEM(Label, dv___3, SetLabel(t_("&Volume unitario:")).LeftPosZ(16, 80).TopPosZ(68, 19))
+	ITEM(EditInt, volume, Min(1).NotNull(true).LeftPosZ(104, 36).TopPosZ(68, 19))
+	ITEM(Label, dv___5, SetLabel(t_("dm³")).LeftPosZ(148, 26).TopPosZ(68, 19))
+	ITEM(Button, help_volume, LeftPosZ(220, 19).TopPosZ(68, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Numero &gradini:")).LeftPosZ(16, 80).TopPosZ(88, 19))
+	ITEM(EditInt, gradini, Min(1).Max(39).NotNull(true).LeftPosZ(104, 36).TopPosZ(88, 19))
+	ITEM(Button, help_gradini, LeftPosZ(220, 19).TopPosZ(92, 19))
+	ITEM(LabelBox, dv___10, SetLabel(t_("Configurazione contalitri")).LeftPosZ(4, 240).TopPosZ(0, 168))
+	ITEM(Button, validate, SetLabel(t_("Va&lidate")).LeftPosZ(176, 64).TopPosZ(140, 24))
+	ITEM(Option, doppler, SetLabel(t_("&Duplica precisione")).LeftPosZ(124, 116).TopPosZ(40, 15))
+END_LAYOUT
+
+LAYOUT(displayLay, 248, 180)
+	ITEM(Label, dv___0, SetLabel(t_("Filtered Level")).SetFont(StdFont(10)).LeftPosZ(128, 112).TopPosZ(100, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Real time Level")).SetFont(StdFont(10)).LeftPosZ(4, 112).TopPosZ(100, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Liters")).SetAlign(ALIGN_CENTER).SetFont(StdFont(10)).LeftPosZ(68, 112).TopPosZ(8, 19))
+	ITEM(Button, cancel, SetLabel(t_("&Cancel")).LeftPosZ(180, 64).TopPosZ(152, 24))
+	ITEM(EditString, fd_level, SetEditable(false).WantFocus(false).HSizePosZ(128, 8).TopPosZ(120, 19))
+	ITEM(EditString, rt_level, SetEditable(false).WantFocus(false).LeftPosZ(4, 112).TopPosZ(120, 19))
+	ITEM(DisplayCtrl, display, SetFont(Arial(55)).Ink(SLtRed).Paper(SWhiteGray).LeftPosZ(64, 120).TopPosZ(32, 52))
+END_LAYOUT
+
+LAYOUT(settingFoldersLay, 400, 200)
+	ITEM(LabelBox, dv___0, SetLabel(t_("Paths setting")).LeftPosZ(4, 392).TopPosZ(0, 164))
+	ITEM(ArrayCtrl, percorsi, LeftPosZ(8, 384).TopPosZ(16, 144))
+	ITEM(Button, ok, SetLabel(t_("O&k")).LeftPosZ(260, 64).TopPosZ(172, 24))
+	ITEM(Button, cancel, SetLabel(t_("&Cancel")).LeftPosZ(332, 64).TopPosZ(172, 24))
+END_LAYOUT

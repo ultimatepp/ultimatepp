@@ -1,0 +1,11 @@
+uses
+	Core,
+	Web\SSL,
+	Core/SSL;
+
+file
+	testssl.cpp;
+
+mainconfig
+	"" = "";
+

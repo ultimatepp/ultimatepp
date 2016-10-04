@@ -1,0 +1,22 @@
+uses
+	CtrlLib;
+
+file
+	VegaMain.h,
+	main.cpp,
+	Vega.lay,
+	VegaStandard readonly separator,
+	VegaTabs readonly separator,
+	ReadyExtras readonly separator,
+	VegaTournament readonly separator,
+	tournament.cpp,
+	newtournament.cpp,
+	SwissSystem readonly separator,
+	RoundRobinSystem readonly separator,
+	Docs readonly separator,
+	todo.txt,
+	notes.txt,
+	c++notes.txt;
+
+mainconfig
+	"" = "GUI";

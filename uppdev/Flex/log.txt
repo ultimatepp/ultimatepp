@@ -1,0 +1,59 @@
+* u:\upp\out\uppdev\MSC9.Debug_Full.Release\Flex.exe 16.03.2012 09:06:41, user: cxl
+
+
+size (times)         std::vector      Vector        Flex
+      8 (125000x)        0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+     16 (62500x)         0.000 s     0.000 s     0.062 s NBLK:256, blocks:0
+     32 (31250x)         0.000 s     0.000 s     0.063 s NBLK:256, blocks:0
+     64 (15625x)         0.000 s     0.000 s     0.062 s NBLK:256, blocks:0
+    128 (7812x)          0.000 s     0.000 s     0.078 s NBLK:256, blocks:0
+    256 (3906x)          0.000 s     0.000 s     0.094 s NBLK:256, blocks:0
+    512 (1953x)          0.000 s     0.000 s     0.125 s NBLK:256, blocks:1
+   1024 (976x)           0.000 s     0.000 s     0.171 s NBLK:256, blocks:3
+   2048 (488x)           0.000 s     0.000 s     0.203 s NBLK:256, blocks:7
+   4096 (244x)           0.000 s     0.000 s     0.249 s NBLK:256, blocks:15
+   8192 (122x)           0.000 s     0.000 s     0.266 s NBLK:256, blocks:31
+  16384 (61x)            0.000 s     0.000 s     0.296 s NBLK:256, blocks:63
+  32768 (30x)            0.000 s     0.000 s     0.343 s NBLK:512, blocks:63
+  65536 (15x)            0.000 s     0.000 s     0.437 s NBLK:512, blocks:127
+Total Elapsed 2527 ms
+
+* u:\upp\out\uppdev\MSC9.Debug_Full.Release\Flex.exe 16.03.2012 09:00:51, user: cxl
+
+
+size (times)         std::vector      Vector        Flex
+      8 (125000x)        0.000 s     0.000 s     0.078 s NBLK:16, blocks:0
+     16 (62500x)         0.000 s     0.000 s     0.063 s NBLK:16, blocks:0
+     32 (31250x)         0.000 s     0.000 s     0.078 s NBLK:16, blocks:1
+     64 (15625x)         0.000 s     0.000 s     0.078 s NBLK:16, blocks:3
+    128 (7812x)          0.000 s     0.000 s     0.078 s NBLK:32, blocks:3
+    256 (3906x)          0.000 s     0.000 s     0.109 s NBLK:32, blocks:7
+    512 (1953x)          0.000 s     0.000 s     0.141 s NBLK:64, blocks:7
+   1024 (976x)           0.000 s     0.000 s     0.156 s NBLK:64, blocks:15
+   2048 (488x)           0.000 s     0.000 s     0.187 s NBLK:64, blocks:31
+   4096 (244x)           0.000 s     0.000 s     0.218 s NBLK:128, blocks:31
+   8192 (122x)           0.000 s     0.000 s     0.250 s NBLK:128, blocks:63
+  16384 (61x)            0.000 s     0.000 s     0.312 s NBLK:256, blocks:63
+  32768 (30x)            0.000 s     0.000 s     0.359 s NBLK:512, blocks:63
+  65536 (15x)            0.000 s     0.000 s     0.437 s NBLK:512, blocks:127
+Total Elapsed 2544 ms
+
+* u:\upp\out\uppdev\MSC9.Debug_Full.Release\Flex.exe 16.03.2012 09:07:31, user: cxl
+
+
+size (times)         std::vector      Vector        Flex
+      8 (125000x)        0.000 s     0.000 s     0.078 s NBLK:64, blocks:0
+     16 (62500x)         0.000 s     0.000 s     0.063 s NBLK:64, blocks:0
+     32 (31250x)         0.000 s     0.000 s     0.062 s NBLK:64, blocks:0
+     64 (15625x)         0.000 s     0.000 s     0.062 s NBLK:64, blocks:0
+    128 (7812x)          0.000 s     0.000 s     0.094 s NBLK:64, blocks:1
+    256 (3906x)          0.000 s     0.000 s     0.109 s NBLK:64, blocks:3
+    512 (1953x)          0.000 s     0.000 s     0.141 s NBLK:64, blocks:7
+   1024 (976x)           0.000 s     0.000 s     0.156 s NBLK:64, blocks:15
+   2048 (488x)           0.000 s     0.000 s     0.172 s NBLK:64, blocks:31
+   4096 (244x)           0.000 s     0.000 s     0.203 s NBLK:128, blocks:31
+   8192 (122x)           0.000 s     0.000 s     0.250 s NBLK:128, blocks:63
+  16384 (61x)            0.000 s     0.000 s     0.296 s NBLK:256, blocks:63
+  32768 (30x)            0.000 s     0.000 s     0.343 s NBLK:512, blocks:63
+  65536 (15x)            0.000 s     0.000 s     0.437 s NBLK:512, blocks:127
+Total Elapsed 2466 ms

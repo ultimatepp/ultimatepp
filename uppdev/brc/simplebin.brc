@@ -1,0 +1,5 @@
+BINARY(source, "simplebin.cpp")
+BINARY(binsrc, "simplebin.brc")
+BINARY_ARRAY(array, 0, "simplebin.cpp")
+BINARY_ARRAY(array, 1, "simplebin.brc")
+BINARY_ARRAY(array, 2, "simplebin.upp")

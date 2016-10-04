@@ -1,0 +1,13 @@
+LAYOUT(MainWindowLayout, 236, 108)
+	ITEM(Button, show_dialog, SetLabel(t_("Dialog...")).LeftPosZ(68, 92).TopPosZ(44, 24))
+END_LAYOUT
+
+LAYOUT(TestDialogLayout, 328, 224)
+	ITEM(Button, ok, SetLabel(t_("Ok")).LeftPosZ(184, 68).TopPosZ(196, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(256, 64).TopPosZ(196, 20))
+	ITEM(EditString, first, LeftPosZ(8, 168).TopPosZ(28, 19))
+	ITEM(Label, dv___3, SetLabel(t_("Second value")).LeftPosZ(8, 172).TopPosZ(60, 19))
+	ITEM(EditIntSpin, second, LeftPosZ(8, 92).TopPosZ(76, 19))
+	ITEM(Label, dv___5, SetLabel(t_("First value")).LeftPosZ(8, 168).TopPosZ(8, 19))
+END_LAYOUT
+

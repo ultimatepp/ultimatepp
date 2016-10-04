@@ -1,0 +1,22 @@
+<globals> {
+	FUNCTION Test(), line 1
+	FUNCTION foo(), line 15
+	VARIABLE global, line 13
+}
+Foo {
+	CONSTRUCTOR Foo(), line 4
+	STRUCT class, line 3
+}
+Point {
+	INSTANCEVARIABLE bar, line 10
+	INSTANCEVARIABLE next, line 9
+	STRUCT struct, line 7
+	INSTANCEVARIABLE x, line 8
+	INSTANCEVARIABLE y, line 8
+}
+<locals> {
+x , line: 17
+a Point, line: 18
+b Point, line: 18
+c Point pointer, line: 18
+}

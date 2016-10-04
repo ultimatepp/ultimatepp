@@ -1,0 +1,21 @@
+uses
+	plugin\bz2,
+	RichText,
+	RichText;
+
+library "kernel32 user32 gdi32 advapi32 oldnames ole32 oleaut32 comsupp comctl32";
+
+file
+	install.h,
+	Shell.cpp,
+	main.cpp,
+	Installer.lay,
+	data.rc
+		depends E:\upp.b2a;
+
+mainconfig
+	"" = "GUI ST";
+
+custom ".rc",
+	"rc /fo$(OUTDIR)\\$(TITLE)_rc.obj $(PATH)",
+	"$(OUTDIR)\\$(TITLE)_rc.obj";

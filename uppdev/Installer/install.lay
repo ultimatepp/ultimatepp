@@ -1,0 +1,12 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(InstallLayout, 324, 120)
+	ITEM(Label, dv___0, SetLabel("Install path").LeftPosZ(12, 56).TopPosZ(8, 19))
+	ITEM(EditString, dv___1, LeftPosZ(72, 244).TopPosZ(8, 19))
+	ITEM(Option, dv___2, SetLabel("Regster for uninstallation").LeftPosZ(12, 172).TopPosZ(40, 15))
+	ITEM(Option, dv___3, SetLabel("Create desktop icon").LeftPosZ(12, 172).TopPosZ(60, 15))
+	ITEM(Button, ok, SetLabel("Install !").LeftPosZ(12, 64).TopPosZ(88, 24))
+	ITEM(Button, cancel, SetLabel("Cancel").LeftPosZ(252, 64).TopPosZ(88, 24))
+END_LAYOUT
+
+#endif

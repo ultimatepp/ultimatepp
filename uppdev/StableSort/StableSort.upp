@@ -1,0 +1,12 @@
+uses
+	Core;
+
+file
+	StableSort.h,
+	QStableSort.h,
+	StableSort2.h,
+	StableSort.cpp,
+	/media/sda6/uppsrc/bench.txt;
+
+mainconfig
+	"" = "";

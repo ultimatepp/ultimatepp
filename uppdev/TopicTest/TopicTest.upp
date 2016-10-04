@@ -1,0 +1,14 @@
+uses
+	Topic;
+
+file
+	src.tpp,
+	res.tpp,
+	src.tpp readonly separator,
+	res.tpp\all.i,
+	res.tpp\AppRes.group,
+	TopicTest.cpp;
+
+mainconfig
+	"" = "GUI ST";
+

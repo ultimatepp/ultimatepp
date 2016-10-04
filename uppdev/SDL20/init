@@ -1,0 +1,9 @@
+#ifndef _SDL20_icpp_init_stub
+#define _SDL20_icpp_init_stub
+#include "Core/init"
+#include "Draw/init"
+#include "Painter/init"
+#include "RichText/init"
+#include "plugin/FT_fontsys/init"
+#include "plugin/DroidFonts/init"
+#endif

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	Circles.h,
+	CircleDoc.cpp,
+	CircleView.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

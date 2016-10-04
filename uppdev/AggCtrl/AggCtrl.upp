@@ -1,0 +1,34 @@
+optimize_speed;
+
+uses
+	CtrlLib,
+	agg24;
+
+library((LINUX | FREEBSD) & !NOGTK) "gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
+
+library(WIN32 !MSC8ARM) "user32 gdi32";
+
+library(LINUX) X11;
+
+library(LINUX) dl;
+
+library(LINUX !XLFD) Xft;
+
+library(FREEBSD) X11;
+
+library(FREEBSD !XLFD) "Xft fontconfig Xrender freetype expat";
+
+library(LINUX !XLFD !SHARED) "fontconfig Xrender freetype expat";
+
+library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
+
+file
+	PixFmts.h,
+	AggCtrl.h,
+	AggCtrlWin32.cpp,
+	Test.cpp,
+	AggCtrlX11.cpp;
+
+mainconfig
+	"" = "GUI";
+

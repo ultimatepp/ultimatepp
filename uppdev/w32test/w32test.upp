@@ -1,0 +1,8 @@
+library(WIN32) "kernel32 user32 advapi32 shell32 winmm";
+
+file resource.h,
+     w32test.rc,
+     w32test.cpp;
+
+mainconfig
+    "" = "GUI";

@@ -1,0 +1,19 @@
+uses
+	CtrlLib,
+	plugin/tif;
+
+file
+	GatoFax.h,
+	TiffThumbsCtrl.h,
+	TiffThumbsCtrl.cpp,
+	TiffViewCtrl.h,
+	TiffViewCtrl.cpp,
+	TiffCtrl.h,
+	TiffCtrl.cpp,
+	main.cpp,
+	GatoFax.lay,
+	GatoFax.iml;
+
+mainconfig
+	"" = "GUI";
+

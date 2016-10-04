@@ -1,0 +1,245 @@
+* /home/cxl/upp.out/uppdev/GCC.Gtk.Shared/NanoStrings 14.12.2013 17:17:31, user: cxl
+
+  16 B,     13 allocated (    0 KB),    240 fragmented (    3 KB)
+  32 B,     10 allocated (    0 KB),    116 fragmented (    3 KB)
+  48 B,     89 allocated (    4 KB),     79 fragmented (    3 KB)
+  64 B,      3 allocated (    0 KB),     60 fragmented (    3 KB)
+  80 B,      6 allocated (    0 KB),     44 fragmented (    3 KB)
+  96 B,      4 allocated (    0 KB),     38 fragmented (    3 KB)
+ 112 B,      1 allocated (    0 KB),     35 fragmented (    3 KB)
+ 128 B,      9 allocated (    1 KB),     22 fragmented (    2 KB)
+ 144 B,      2 allocated (    0 KB),     26 fragmented (    3 KB)
+ 160 B,      2 allocated (    0 KB),     23 fragmented (    3 KB)
+ 176 B,      1 allocated (    0 KB),     22 fragmented (    3 KB)
+ 192 B,      1 allocated (    0 KB),     20 fragmented (    3 KB)
+ 208 B,      2 allocated (    0 KB),     17 fragmented (    3 KB)
+ 288 B,      5 allocated (    1 KB),      9 fragmented (    2 KB)
+ 368 B,     69 allocated (   24 KB),      8 fragmented (    2 KB)
+ 448 B,      2 allocated (    0 KB),      7 fragmented (    3 KB)
+ 576 B,      4 allocated (    2 KB),      3 fragmented (    1 KB)
+ TOTAL,    223 allocated (   37 KB),    769 fragmented (   56 KB)
+Free pages 0 (0 KB)
+Large block count 9, total size 18 KB
+Large fragments count 4, total size 45 KB
+
+---- Before 39460 KB used -------
+  16 B, 319584 allocated ( 4993 KB),    208 fragmented (    3 KB)
+  32 B, 229904 allocated ( 7184 KB),     46 fragmented (    1 KB)
+  48 B, 489610 allocated (22950 KB),     26 fragmented (    1 KB)
+  64 B,    170 allocated (   10 KB),     19 fragmented (    1 KB)
+  80 B,  24714 allocated ( 1930 KB),     36 fragmented (    2 KB)
+  96 B,     23 allocated (    2 KB),     19 fragmented (    1 KB)
+ 112 B,     62 allocated (    6 KB),     10 fragmented (    1 KB)
+ 128 B,   9580 allocated ( 1197 KB),     30 fragmented (    3 KB)
+ 144 B,      7 allocated (    0 KB),     21 fragmented (    2 KB)
+ 160 B,     42 allocated (    6 KB),      8 fragmented (    1 KB)
+ 176 B,     27 allocated (    4 KB),     19 fragmented (    3 KB)
+ 192 B,    543 allocated (  101 KB),      3 fragmented (    0 KB)
+ 208 B,      4 allocated (    0 KB),     15 fragmented (    3 KB)
+ 224 B,     12 allocated (    2 KB),      6 fragmented (    1 KB)
+ 288 B,     49 allocated (   13 KB),      7 fragmented (    1 KB)
+ 368 B,     90 allocated (   32 KB),      9 fragmented (    3 KB)
+ 448 B,     15 allocated (    6 KB),      3 fragmented (    1 KB)
+ 576 B,     11 allocated (    6 KB),      3 fragmented (    1 KB)
+ TOTAL, 1074447 allocated (38452 KB),    488 fragmented (   37 KB)
+Free pages 0 (0 KB)
+Large block count 17, total size 136879331758 KB
+Large fragments count 8, total size 87 KB
+
+---- Strings 48060 KB used -------
+  16 B, 319599 allocated ( 4993 KB),    193 fragmented (    3 KB)
+  32 B, 229904 allocated ( 7184 KB),     46 fragmented (    1 KB)
+  48 B, 489616 allocated (22950 KB),     20 fragmented (    0 KB)
+  64 B,    170 allocated (   10 KB),     19 fragmented (    1 KB)
+  80 B,  24718 allocated ( 1931 KB),     32 fragmented (    2 KB)
+  96 B,     23 allocated (    2 KB),     19 fragmented (    1 KB)
+ 112 B,     62 allocated (    6 KB),     10 fragmented (    1 KB)
+ 128 B,   9584 allocated ( 1198 KB),     26 fragmented (    3 KB)
+ 144 B,      7 allocated (    0 KB),     21 fragmented (    2 KB)
+ 160 B,     42 allocated (    6 KB),      8 fragmented (    1 KB)
+ 176 B,     27 allocated (    4 KB),     19 fragmented (    3 KB)
+ 192 B,    549 allocated (  102 KB),     18 fragmented (    3 KB)
+ 208 B,      4 allocated (    0 KB),     15 fragmented (    3 KB)
+ 224 B,     12 allocated (    2 KB),      6 fragmented (    1 KB)
+ 288 B,     53 allocated (   14 KB),      3 fragmented (    0 KB)
+ 368 B,     90 allocated (   32 KB),      9 fragmented (    3 KB)
+ 448 B,    695 allocated (  304 KB),      7 fragmented (    3 KB)
+ 576 B,    214 allocated (  120 KB),      3 fragmented (    1 KB)
+ TOTAL, 1075369 allocated (38867 KB),    474 fragmented (   39 KB)
+Free pages 0 (0 KB)
+Large block count 6451, total size 4503736506708148 KB
+Large fragments count 161, total size 165 KB
+
+
+---- Strings 55872 KB used -------
+  16 B, 319585 allocated ( 4993 KB),    207 fragmented (    3 KB)
+  32 B, 449234 allocated (14038 KB),     82 fragmented (    2 KB)
+  48 B, 489611 allocated (22950 KB),     25 fragmented (    1 KB)
+  64 B,    170 allocated (   10 KB),     19 fragmented (    1 KB)
+  80 B,  24714 allocated ( 1930 KB),     36 fragmented (    2 KB)
+  96 B,     23 allocated (    2 KB),     19 fragmented (    1 KB)
+ 112 B,     62 allocated (    6 KB),     10 fragmented (    1 KB)
+ 128 B,   9580 allocated ( 1197 KB),     30 fragmented (    3 KB)
+ 144 B,      7 allocated (    0 KB),     21 fragmented (    2 KB)
+ 160 B,     42 allocated (    6 KB),      8 fragmented (    1 KB)
+ 176 B,     27 allocated (    4 KB),     19 fragmented (    3 KB)
+ 192 B,    543 allocated (  101 KB),      3 fragmented (    0 KB)
+ 208 B,      4 allocated (    0 KB),     15 fragmented (    3 KB)
+ 224 B,     12 allocated (    2 KB),      6 fragmented (    1 KB)
+ 288 B,     49 allocated (   13 KB),      7 fragmented (    1 KB)
+ 368 B,     91 allocated (   32 KB),      8 fragmented (    2 KB)
+ 448 B,     15 allocated (    6 KB),      3 fragmented (    1 KB)
+ 576 B,     11 allocated (    6 KB),      3 fragmented (    1 KB)
+ TOTAL, 1293780 allocated (45307 KB),    521 fragmented (   37 KB)
+
+
+
+
+vf:VymennyFormat
+vf:Hlavicka
+vf:VerzeVFR
+vf:Hlavicka
+vf:TypZaznamu
+vf:Hlavicka
+vf:TypDavky
+vf:Hlavicka
+vf:TypSouboru
+vf:Hlavicka
+vf:Datum
+vf:Hlavicka
+vf:TrasakceOd
+com:Id
+vf:TrasakceOd
+com:Zapsano
+vf:Hlavicka
+vf:TransakceDo
+com:Id
+vf:TransakceDo
+com:Zapsano
+vf:Hlavicka
+vf:PredchoziSoubor
+vf:Hlavicka
+vf:Hlavicka
+vf:PlatnostDatK
+com:ISUI
+vf:PlatnostDatK
+com:ISKN
+vf:VymennyFormat
+vf:Data
+vf:Orp
+vf:Orp
+opi:Kod
+vf:Orp
+opi:Nazev
+vf:Orp
+opi:SpravniObecKod
+vf:Orp
+opi:Vusc
+vci:Kod
+vf:Orp
+opi:PlatiOd
+vf:Orp
+opi:IdTransakce
+vf:Orp
+opi:GlobalniIdNavrhuZmeny
+vf:Orp
+opi:Geometrie
+opi:DefinicniBod
+gml:MultiPoint
+gml:pointMembers
+gml:Point
+gml:pos
+vf:Orp
+vf:Orp
+opi:Kod
+vf:Orp
+opi:Nazev
+vf:Orp
+opi:SpravniObecKod
+vf:Orp
+opi:Vusc
+vci:Kod
+vf:Orp
+opi:PlatiOd
+vf:Orp
+opi:IdTransakce
+vf:Orp
+opi:GlobalniIdNavrhuZmeny
+vf:Orp
+opi:Geometrie
+opi:DefinicniBod
+gml:MultiPoint
+gml:pointMembers
+gml:Point
+gml:pos
+vf:Data
+vf:Pou
+vf:Pou
+pui:Kod
+vf:Pou
+pui:Nazev
+vf:Pou
+pui:SpravniObecKod
+vf:Pou
+pui:Orp
+opi:Kod
+vf:Pou
+pui:PlatiOd
+vf:Pou
+pui:IdTransakce
+vf:Pou
+pui:GlobalniIdNavrhuZmeny
+vf:Pou
+pui:Geometrie
+pui:DefinicniBod
+gml:MultiPoint
+gml:pointMembers
+0: 1, pages: 1
+1: 0, pages: 0
+2: 0, pages: 0
+3: 0, pages: 0
+4: 0, pages: 0
+5: 0, pages: 0
+6: 11006, pages: 172
+7: 32486, pages: 508
+8: 1375, pages: 22
+9: 11597, pages: 182
+10: 138076, pages: 2158
+11: 12132, pages: 190
+12: 25494, pages: 399
+13: 12361, pages: 194
+14: 2791, pages: 44
+15: 31829, pages: 498
+16: 23861, pages: 373
+17: 92513, pages: 1446
+18: 17857, pages: 280
+19: 956, pages: 15
+20: 28683, pages: 449
+21: 1221, pages: 20
+22: 475, pages: 8
+23: 618, pages: 10
+24: 980, pages: 16
+25: 18536, pages: 290
+26: 622, pages: 10
+27: 980, pages: 16
+28: 211, pages: 4
+29: 0, pages: 0
+30: 0, pages: 0
+31: 0, pages: 0
+32: 0, pages: 0
+33: 0, pages: 0
+34: 0, pages: 0
+35: 0, pages: 0
+36: 0, pages: 0
+37: 0, pages: 0
+38: 0, pages: 0
+39: 0, pages: 0
+40: 0, pages: 0
+41: 0, pages: 0
+42: 0, pages: 0
+43: 0, pages: 0
+44: 0, pages: 0
+45: 0, pages: 0
+46: 0, pages: 0
+47: 0, pages: 0
+TIMING Parse all!     : 184.00 ms - 184.00 ms (184.00 ms / 1 ), min: 184.00 ms, max: 184.00 ms, nesting: 1 - 1

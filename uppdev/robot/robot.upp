@@ -1,0 +1,13 @@
+optimize_speed;
+
+uses
+	CtrlLib,
+	GLCtrl;
+
+file
+	robot.h,
+	main.cpp,
+	robot.lay;
+
+mainconfig
+	"" = "GUI";

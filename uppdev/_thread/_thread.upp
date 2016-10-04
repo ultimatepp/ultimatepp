@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	_thread.cpp;
+
+mainconfig
+	"" = "MT";
+

@@ -1,0 +1,19 @@
+uses
+	RichEdit,
+	plugin\jpg,
+	Painter;
+
+file
+	C:\\upp\\out\\uppdev\\MSC9.Debug.Debug_Full.Gui\RichEditTest.log,
+	main.cpp,
+	todo.txt,
+	test.tpp,
+	test.iml;
+
+mainconfig
+	"" = "GUI X11 TEST_HIDPI",
+	"" = "GUI NOGTK",
+	"" = "GUI MT",
+	"" = "GUI USEMALLOC",
+	"" = "GUI";
+

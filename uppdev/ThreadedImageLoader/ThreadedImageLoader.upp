@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	ImageDisplayCtrl,
+	plugin\jpg;
+
+file
+	ThreadedImageLoader.h,
+	main.cpp,
+	ThreadedImageLoader.lay;
+
+mainconfig
+	"" = "GUI MT";

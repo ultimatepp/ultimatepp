@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+html, body {
+  width:  100%;
+  height: 100%;
+  margin: 0px;
+  overflow: hidden;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="myCanvas" width="1000" height="1000" style="border:1px solid #c3c3c3;">
+Your browser does not support the HTML5 canvas tag.
+</canvas>
+
+<script>
+function Log(msg)
+{
+	if (window.console && console.log)
+    	console.log(msg); //for firebug
+}
+
+function Char(p, ch)
+{
+	if(p.pos < p.text.length && (255 & p.text.charCodeAt(p.pos)) == ch) {
+		p.pos++;
+		return true;
+	}
+	return false;
+}
+
+function Get8(p)
+{
+	return p.pos < p.text.length ? (255 & p.text.charCodeAt(p.pos++)) : 0;
+}
+
+function Get16(p)
+{
+	var l = Get8(p);
+	var h = Get8(p);
+	return (h << 8) | l;
+}
+
+function ProcessDraw(s)
+{
+	var x, y, cx, cy, r, g, b, imgData, i, n, px, py;
+	var p = new Object;
+	p.text = s;
+	p.pos = 0;
+
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+
+    while(p.pos < p.text.length) {
+    	Log(p.pos + ": " + p.text.charCodeAt(p.pos));
+        if(Char(p, 0)) {
+        	x = Get16(p);
+        	y = Get16(p);
+        	cx = Get16(p);
+        	cy = Get16(p);
+        	r = Get8(p);
+        	g = Get8(p);
+        	b = Get8(p);
+        	Log("rect: " + x + ", " + y + ", " + cx + ", " + cy);
+        	var c = "rgb(" + r + "," + g + "," + b + ")";
+        	ctx.fillStyle = c;
+        	Log("color: " + c);
+        	ctx.fillRect(x, y, cx, cy);
+        }
+        else
+        if(Char(p, 2)) {
+        	r = Get16(p);
+        	cx = Get16(p);
+        	cy = Get16(p);
+			n = cx * cy * 4;
+			imgData = ctx.createImageData(cx, cy);
+			for(i = 0; i < n; i++)
+				imgData.data[i] = Get8(p);
+        	var img = document.createElement('canvas');
+			img.width = cx;
+			img.height = cy;
+			img.getContext("2d").putImageData(imgData, 0, 0);
+        	window.img_cache[r] = img;
+        	Log("Set image: " + r);
+        }
+        else
+        if(Char(p, 1)) {
+        	n = Get16(p);
+
+        	px = Get16(p);
+        	py = Get16(p);
+        	x = Get16(p);
+        	y = Get16(p);
+        	cx = Get16(p);
+        	cy = Get16(p);
+
+			Log("Draw image: " + n);			
+			ctx.drawImage(window.img_cache[n], x, y, cx, cy, px, py, cx, cy);
+		}
+	}			
+}
+
+window.img_cache = {};
+window.event_queue = "RI\n";
+
+var canvas = document.getElementById("myCanvas");
+
+canvas.onmousedown = function(event)
+{
+	event_queue += "MD " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	Ping();
+}
+
+canvas.onmouseup = function(event)
+{
+	event_queue += "MU " + event.button + " " + event.clientX + " " + event.clientY + "\n";
+	Ping();
+}
+
+canvas.onmousemove = function(event)
+{
+	event_queue += "MM " + event.clientX + " " + event.clientY + "\n";
+	Ping();
+}
+
+function ResizeCanvas()
+{
+	canvas.width  = window.innerWidth;
+	canvas.height = window.innerHeight;
+}
+
+window.onresize = ResizeCanvas();
+
+var Processing = false;
+var timerID;
+
+function Ping()
+{
+	if(!Processing) {
+		Processing = true;
+		var req = new XMLHttpRequest();
+		req.open('POST', 'localhost', true);
+		req.overrideMimeType('text/plain; charset=x-user-defined');
+		req.send(event_queue);
+		event_queue = "";
+		req.onreadystatechange = function() {
+			Log("onreadystatechange");
+			if(req.readyState == 4 && req.status == 200) {
+				ProcessDraw(req.responseText);
+				Processing = false; // TODO: Resolve timeout
+			}
+		}
+	}
+	if(timerID != undefined)
+		clearTimeout(timerID);
+	setTimeout(Ping, 20);
+}
+
+ResizeCanvas();
+
+Ping();
+
+</script>
+</body>
+</html>

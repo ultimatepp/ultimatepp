@@ -1,0 +1,5 @@
+uses
+	Core;
+
+file
+	main.cpp;

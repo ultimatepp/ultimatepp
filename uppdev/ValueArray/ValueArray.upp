@@ -1,0 +1,10 @@
+uses
+	Core,
+	ValueMap;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "CONSOLE ST";
+

@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	Kernel32W.dli,
+	MprW.dli,
+	CharsetW.cpp;
+
+mainconfig
+	"" = "";
+

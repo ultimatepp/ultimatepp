@@ -1,0 +1,6 @@
+LAYOUT(ColumnLayout, 636, 116)
+	ITEM(ColumnList, slist, HSizePosZ(8, 6).VSizePosZ(28, 4))
+	ITEM(Button, btnClose, SetLabel(t_("Show")).RightPosZ(186, 84).TopPosZ(5, 19))
+	ITEM(RichTextCtrl, rt, HSizePosZ(8, 277).VSizePosZ(4, 93))
+	ITEM(ArrayCtrl, console, AskRemove(false).AutoHideSb(true).SetFrame(ThinInsetFrame()).HSizePosZ(4, 4).VSizePosZ(27, 5))
+END_LAYOUT

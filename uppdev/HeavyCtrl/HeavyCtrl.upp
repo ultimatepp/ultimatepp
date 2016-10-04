@@ -1,0 +1,10 @@
+uses
+	GLCtrl;
+
+file
+	HeavyCtrl.h,
+	HeavyCtrl.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

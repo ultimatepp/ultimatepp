@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	test_gunzip.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,69 @@
+00403308  push ebp 
+00403309  mov ebp,esp 
+0040330B  cmp dword [ebp+0x8],0x100 
+00403312  push esi 
+00403313  ja 0x40335b 
+00403315  cmp dword [ebp+0x8],byte +0x0 
+00403319  jnz 0x403322 
+0040331B  mov dword [ebp+0x8],0x1 
+00403322  mov eax,[ebp+0x8] 
+0040332C  dec eax 
+0040332D  sar eax,0x4 
+00403330  cmp eax,byte +0x9 
+00403333  jnl 0x403353 
+
+00403335  lea edx,[ecx+eax*4+0xac0] 
+0040333C  mov esi,[edx] 
+0040333E  test esi,esi 
+00403340  jz 0x403353 
+00403342  dec esi 
+00403343  shl eax,0x5 
+00403346  add eax,esi 
+00403348  mov [edx],esi 
+0040334A  mov eax,[ecx+eax*4+0x2c0] 
+00403351  jmp short 0x403365 
+
+00403353  push eax 
+00403354  call 0x401a5a 
+00403359  jmp short 0x403365 
+0040335B  lea eax,[ebp+0x8] 
+0040335E  push eax 
+0040335F  call 0x401bd1 
+00403364  pop ecx 
+00403365  pop esi 
+00403366  pop ebp 
+00403367  ret 0x4 
+
+
+//--------
+
+004037A0  mov eax,[esp+0x4] 
+004037A4  cmp eax,0x100 
+004037A9  ja 0x4037f1 
+004037AB  test eax,eax 
+004037AD  jnz 0x4037b8 
+004037AF  mov eax,0x1 
+004037B4  mov [esp+0x4],eax 
+004037B8  lea edx,[eax-0x1] 
+004037BB  sar edx,0x4 
+
+004037BE  mov eax,[ecx+edx*4+0x300] 
+004037C5  test eax,eax 
+004037C7  jz 0x4037e8 
+004037C9  add eax,byte -0x1 
+004037CC  mov [ecx+edx*4+0x300],eax 
+004037D3  mov eax,[ecx+edx*4+0x2c0] 
+004037DA  push esi 
+004037DB  mov esi,[eax] 
+004037DD  mov [ecx+edx*4+0x2c0],esi 
+004037E4  pop esi 
+004037E5  ret 0x4 
+
+004037E8  push edx 
+004037E9  call 0x401a3c 
+004037EE  ret 0x4 
+004037F1  lea eax,[esp+0x4] 
+004037F5  push eax 
+004037F6  call 0x401bb3 
+004037FB  add esp,byte +0x4 
+004037FE  ret 0x4 

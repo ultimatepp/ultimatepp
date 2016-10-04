@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	G965.h,
+	main.cpp,
+	G965.lay;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	Divisors.lay;
+
+mainconfig
+	"" = "GUI MT";
+

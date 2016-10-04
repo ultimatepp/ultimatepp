@@ -1,0 +1,4 @@
+#ifndef _ScgiServer_icpp_init_stub
+#define _ScgiServer_icpp_init_stub
+#include "Web/init"
+#endif

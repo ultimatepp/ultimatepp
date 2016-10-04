@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	FontDB.h,
+	main.cpp,
+	FontDB.lay;
+
+mainconfig
+	"" = "GUI";
+

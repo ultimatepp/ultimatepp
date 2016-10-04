@@ -1,0 +1,5 @@
+#ifndef _ValueArray_icpp_init_stub
+#define _ValueArray_icpp_init_stub
+#include "Core/init"
+#include "ValueMap/init"
+#endif

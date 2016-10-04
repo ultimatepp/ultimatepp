@@ -1,0 +1,9 @@
+uses
+	Core,
+	plugin\z;
+
+file
+	DecompressPDF.cpp;
+
+mainconfig
+	"" = "";

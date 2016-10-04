@@ -1,0 +1,5 @@
+LAYOUT(CrushLayout, 372, 268)
+	ITEM(ArrayCtrl, arcCrush, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 32))
+	ITEM(Button, btnCrush, SetLabel(t_("Crush!!")).RightPosZ(4, 72).BottomPosZ(5, 23))
+END_LAYOUT
+

@@ -1,0 +1,4 @@
+LAYOUT(MainWinLayout, 550, 517)
+	ITEM(StaticRect, bottom_left, LeftPosZ(0, 99).VSizePosZ(0, 0))
+	ITEM(StaticRect, bottom_right, HSizePosZ(99, -1).VSizePosZ(0, -1))
+END_LAYOUT

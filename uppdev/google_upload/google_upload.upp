@@ -1,0 +1,11 @@
+uses
+	Core,
+	Web/SSL;
+
+file
+	up.py,
+	google_upload.cpp;
+
+mainconfig
+	"" = "";
+

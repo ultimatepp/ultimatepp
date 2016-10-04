@@ -1,0 +1,16 @@
+description "\377128,128,0";
+
+optimize_speed;
+
+uses
+	Core;
+
+file
+	Any.cpp,
+	app.tpp\test$cs-cz.tppi,
+	app.tpp\test$en-us.tppi,
+	app.tpp;
+
+mainconfig
+	"" = "MT";
+

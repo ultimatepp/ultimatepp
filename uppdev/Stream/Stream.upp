@@ -1,0 +1,9 @@
+uses
+	Core,
+	TCore;
+
+file
+	Stream.cpp;
+
+mainconfig
+	"" = "";

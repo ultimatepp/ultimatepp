@@ -1,0 +1,4 @@
+#ifndef _LocalProcess_icpp_init_stub
+#define _LocalProcess_icpp_init_stub
+#include "Core/init"
+#endif

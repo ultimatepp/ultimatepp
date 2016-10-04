@@ -1,0 +1,6 @@
+#ifndef _SQL_PostgreSql_icpp_init_stub
+#define _SQL_PostgreSql_icpp_init_stub
+#include "CtrlLib/init"
+#include "PostgreSQL/init"
+#include "SqlCtrl/init"
+#endif

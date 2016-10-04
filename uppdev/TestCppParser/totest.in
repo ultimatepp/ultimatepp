@@ -1,0 +1,5 @@
+========================
+[attr] [attr] int function([attr] [attr] string x[4], [attr] int y[4], [attr] const int& x);
+==============
+;
+==============

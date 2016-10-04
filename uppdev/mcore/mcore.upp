@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	mcore.cpp;
+
+mainconfig
+	"" = "";

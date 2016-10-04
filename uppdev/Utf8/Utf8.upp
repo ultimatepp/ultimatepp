@@ -1,0 +1,10 @@
+uses
+	Core,
+	CtrlLib;
+
+file
+	Utf8.cpp;
+
+mainconfig
+	"" = "GUI";
+

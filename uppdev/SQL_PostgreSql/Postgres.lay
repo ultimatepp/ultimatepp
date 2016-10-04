@@ -1,0 +1,4 @@
+LAYOUT(PostgreSQLTestLayout, 416, 348)
+	ITEM(SqlArray, m_array, HSizePosZ(8, 88).VSizePosZ(8, 8))
+	ITEM(Button, m_refresh, SetLabel(t_("Refresh")).Tip(t_("Refresh data in array")).RightPosZ(8, 72).TopPosZ(8, 24))
+END_LAYOUT

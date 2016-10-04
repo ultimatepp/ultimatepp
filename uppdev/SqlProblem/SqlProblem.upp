@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	Sql,
+	SqlCtrl,
+	plugin/sqlite3;
+
+file
+	mysql.sch,
+	main.cpp,
+	SqlProblem.lay;
+
+mainconfig
+	"" = "GUI";
+

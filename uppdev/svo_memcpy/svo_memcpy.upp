@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	svo_memcpy.h,
+	Test.cpp optimize_speed,
+	svo_memcpy.cpp;
+
+mainconfig
+	"" = "";
+

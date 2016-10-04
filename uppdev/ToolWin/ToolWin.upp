@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	ToolWin.h,
+	ToolWin.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

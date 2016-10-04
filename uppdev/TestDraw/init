@@ -1,0 +1,5 @@
+#ifndef _TestDraw_icpp_init_stub
+#define _TestDraw_icpp_init_stub
+#include "CtrlLib/init"
+#include "Geom/init"
+#endif

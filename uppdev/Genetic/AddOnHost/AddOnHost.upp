@@ -1,0 +1,10 @@
+uses
+	Core,
+	AddOn;
+
+file
+	IAddOns.h,
+	AddOnHost.cpp;
+
+mainconfig
+	"" = "";

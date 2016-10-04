@@ -1,0 +1,4 @@
+LAYOUT(ThreadedImageLoaderLayout, 220, 190)
+	ITEM(ImageDisplayCtrl, display, HSizePosZ(4, 4).VSizePosZ(4, 26))
+	ITEM(EditField, time, SetEditable(false).HSizePosZ(2, 4).BottomPosZ(3, 19))
+END_LAYOUT

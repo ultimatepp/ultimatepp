@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	Geom,
+	Geom/Coords,
+	plugin/jpg;
+
+file
+	GeomTest.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";
+

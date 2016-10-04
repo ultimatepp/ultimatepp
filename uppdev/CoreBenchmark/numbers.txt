@@ -1,0 +1,15 @@
+Single threaded 3969
+Multithreaded   4625
+
+-------------------
+"optimized" MT  5016
+
+......................
+
+
+ac :6906
+noac: tm.Elapsed() = 6859
+
+MT:
+ac: tm.Elapsed() = 7172
+no ac: tm.Elapsed() = 7360

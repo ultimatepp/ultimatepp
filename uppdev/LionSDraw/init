@@ -1,0 +1,6 @@
+#ifndef _LionSDraw_icpp_init_stub
+#define _LionSDraw_icpp_init_stub
+#include "CtrlLib/init"
+#include "LionSDraw/init"
+#include "SDraw/init"
+#endif

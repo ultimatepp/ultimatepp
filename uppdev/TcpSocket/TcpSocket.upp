@@ -1,0 +1,10 @@
+uses
+	Core,
+	Web;
+
+file
+	TcpSocket.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,7 @@
+uses Core;
+
+file
+	"Union.cpp";
+
+mainconfig
+	"" = "CONSOLE ST";

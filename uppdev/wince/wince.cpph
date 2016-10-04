@@ -1,0 +1,113 @@
+#include <Core/Core.h>
+
+#pragma comment(linker, "/nodefaultlib:libc.lib")
+#pragma comment(linker, "/nodefaultlib:libcd.lib")
+
+
+#define WINVER _WIN32_WCE
+
+#include <ceconfig.h>
+
+
+//#include <aygshell.h>
+//#pragma comment(lib, "aygshell.lib")
+
+#include <windows.h>
+
+#include <Draw/Draw.h>
+
+void Paint(Draw& w)
+{
+	w.DrawRect(0, 0, 100, 100, LtGray);
+	w.DrawText(20, 20, "Nazdarek!", Arial(50));
+}
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc;
+
+    LOG("WndProc");
+
+
+    switch (message)
+    {
+        case WM_PAINT:
+            LOG("Paint");
+            hdc = BeginPaint(hWnd, &ps);
+            {
+            Draw x(hdc);
+
+            Paint(x);
+            }
+            /* Put your drawing code here */
+
+            EndPaint(hWnd, &ps);
+            break;
+
+        case WM_DESTROY:
+        case WM_LBUTTONDOWN:
+            LOG("Quit");
+            PostQuitMessage(0);
+            break;
+
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
+   }
+   return 0;
+}
+
+int RandomValue()
+{
+	return rand() % 10;
+}
+
+
+int APIENTRY WinMain(HINSTANCE hInstance,
+                     HINSTANCE hPrevInstance,
+                     LPTSTR     lpCmdLine,
+                     int       nCmdShow)
+{
+	LOG("A");
+
+    WNDCLASS wc;
+
+	wc.style         = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc   = WndProc;
+	wc.cbClsExtra    = 0;
+	wc.cbWndExtra    = 0;
+	wc.hInstance     = hInstance;
+	wc.hIcon         = 0;
+	wc.hCursor       = 0;
+	wc.hbrBackground = (HBRUSH) GetStockObject(WHITE_BRUSH);
+	wc.lpszMenuName  = 0;
+	wc.lpszClassName = L"UPPTEST";
+
+    if(RegisterClass(&wc) == 0)
+        return FALSE;
+
+    LOG("B");
+
+    HWND hWnd = CreateWindow(wc.lpszClassName, L"Ultimate application", WS_VISIBLE,
+                             CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                             NULL, NULL, hInstance, NULL);
+
+    if(!hWnd)
+        return FALSE;
+
+    LOG("C");
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
+
+    MSG msg;
+    while(GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    LOG("D");
+
+    return msg.wParam;
+}

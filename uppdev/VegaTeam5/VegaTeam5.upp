@@ -1,0 +1,45 @@
+charset "UTF-8";
+
+uses
+	Report,
+	RichEdit,
+	GridCtrl;
+
+file
+	main.cpp charset "UTF-8",
+	Vega.iml,
+	Vega5.rc,
+	VegaMain.h,
+	Vega.lay charset "UTF-8",
+	message.t,
+	VegaMenu readonly separator,
+	Console.cpp,
+	VegaMenus.cpp,
+	VegaTabs readonly separator,
+	VegaTab1.cpp,
+	VegaTab3.cpp,
+	Tournament readonly separator,
+	Tournament.h,
+	Tournament.cpp,
+	Sort.cpp,
+	FilterDB.cpp,
+	Rankgroup.cpp,
+	Newtournament.cpp,
+	RoundRobinSystem readonly separator,
+	RoundRobin.cpp,
+	SwissSystem readonly separator,
+	ForlanoScoreSystem.cpp,
+	RoundSwiss.cpp,
+	"Rating Report" readonly separator,
+	USCFreport.cpp,
+	Nationalreport.cpp,
+	Fidereport.cpp,
+	Docs readonly separator,
+	changelog.txt,
+	LICENSE.TXT,
+	todo.txt,
+	notes.txt,
+	c++notes.txt;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,4 @@
+#ifndef _StableSort_icpp_init_stub
+#define _StableSort_icpp_init_stub
+#include "Core/init"
+#endif

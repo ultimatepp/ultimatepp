@@ -1,0 +1,4 @@
+#ifndef _idmapBench_icpp_init_stub
+#define _idmapBench_icpp_init_stub
+#include "Core/init"
+#endif

@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	ChangeColors.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

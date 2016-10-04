@@ -1,0 +1,19 @@
+description "(SDraw test)\377";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	glyph.h,
+	TestDraw.cpp,
+	SImageDraw.cpp,
+	Glyph.cpp,
+	main.cpp optimize_speed,
+	text.qtf,
+	help.txt,
+	glyph.iml;
+
+mainconfig
+	"" = "GUI";
+

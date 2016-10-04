@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"ChildClip.h"
+	, main.cpp
+	, "ChildClip.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,3 @@
+LAYOUT(NewTournamentLayout, 268, 92)
+	ITEM(EditString, editTourn, NotNull(true).LeftPosZ(16, 228).TopPosZ(36, 19))
+END_LAYOUT

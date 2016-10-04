@@ -1,0 +1,15 @@
+description "Application to implement MySQL connectivity and actions";
+
+uses
+	CtrlLib,
+	MySql,
+	SqlCtrl;
+
+file
+	SQLApp.h,
+	main.cpp,
+	SQLApp.sch,
+	SQLApp.lay;
+
+mainconfig
+	"" = "GUI MT";

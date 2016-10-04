@@ -1,0 +1,4 @@
+#ifndef _GetSysTime_icpp_init_stub
+#define _GetSysTime_icpp_init_stub
+#include "Core/init"
+#endif

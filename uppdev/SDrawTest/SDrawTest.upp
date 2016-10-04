@@ -1,0 +1,13 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	main.cpp charset "windows-1250",
+	app.tpp,
+	test.iml;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI";
+

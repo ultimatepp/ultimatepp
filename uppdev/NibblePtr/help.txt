@@ -1,0 +1,34 @@
+		for(const char *s = data; s < end; s++) {
+			Recode& r = recode[(byte)*s];
+			if(r.m == 1) {
+				if(nibbler) {
+					*t++ = g | r.l1;
+					nibbler = false;
+				}
+				else {
+					g = r.h1;
+					nibbler = true;
+				}
+			}
+			else
+			if(r.m == 2) {
+				if(nibbler) {
+					*t++ = g | r.l1;
+					g = r.h2;
+				}
+				else
+					*t++ = r.h1l2;
+			}
+			else {
+				if(nibbler) {
+					*t++ = g | r.l1;
+					*t++ = r.h2l3;
+					nibbler = false;
+				}
+				else {
+					*t++ = r.h1l2;
+					g = r.h3;
+					nibbler = true;
+				}
+			}
+		}

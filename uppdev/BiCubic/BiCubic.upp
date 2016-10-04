@@ -1,0 +1,21 @@
+optimize_speed;
+
+uses
+	CtrlLib,
+	Painter,
+	plugin/jpg,
+	plugin/gif;
+
+file
+	bicubic.h,
+	exact.cpp,
+	fast.cpp,
+	fast2.cpp,
+	DownScale.cpp,
+	image.iml,
+	main.cpp,
+	help.txt;
+
+mainconfig
+	"" = "GUI";
+

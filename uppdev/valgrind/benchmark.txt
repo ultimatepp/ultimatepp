@@ -1,0 +1,1 @@
+TIMING Parse          :  53.0 ms -   5.3 ms ( 53.0 ms / 10 ), min:   5.0 ms, max:   6.0 ms, nesting: 1 - 10

@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	editwithkey.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,4 @@
+#ifndef _Dim_icpp_init_stub
+#define _Dim_icpp_init_stub
+#include "Core/init"
+#endif

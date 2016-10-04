@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	Geom;
+
+file
+	test.iml,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";
+

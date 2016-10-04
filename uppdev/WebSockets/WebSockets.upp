@@ -1,0 +1,13 @@
+uses
+	Core;
+
+file
+	WebSockets.h,
+	WebSockets.cpp,
+	main.cpp,
+	test.html,
+	h.java;
+
+mainconfig
+	"" = "";
+

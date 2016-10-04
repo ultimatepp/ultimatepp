@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	ShowQtf.h,
+	main.cpp,
+	app.tpp;
+
+mainconfig
+	"" = "GUI";
+

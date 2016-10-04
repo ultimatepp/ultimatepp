@@ -1,0 +1,5 @@
+#ifndef _GLControlTest_icpp_init_stub
+#define _GLControlTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "GLCtrl/init"
+#endif

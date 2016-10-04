@@ -1,0 +1,24 @@
+LAYOUT(SqlProblemLayout, 232, 228)
+	ITEM(Button, openCommander, SetLabel(t_("SQL COMMANDER")).LeftPosZ(68, 96).TopPosZ(160, 28))
+	ITEM(Button, openCompetiterButton, SetLabel(t_("COMPETITER")).LeftPosZ(68, 96).TopPosZ(40, 28))
+	ITEM(Button, openClubsButton, SetLabel(t_("CLUBS")).LeftPosZ(68, 96).TopPosZ(88, 28))
+END_LAYOUT
+
+LAYOUT(SaisieCompetiteursLayout, 400, 224)
+	ITEM(EditString, name, LeftPosZ(68, 84).TopPosZ(84, 28))
+	ITEM(Button, openClubsButton, SetLabel(t_("MODIFY CLUBS")).LeftPosZ(172, 92).TopPosZ(84, 28))
+	ITEM(EditString, clubId, LeftPosZ(68, 84).TopPosZ(124, 28))
+	ITEM(Label, dv___3, SetLabel(t_("Club ID")).LeftPosZ(8, 60).TopPosZ(124, 28))
+	ITEM(Label, dv___4, SetLabel(t_("Name")).LeftPosZ(8, 58).TopPosZ(84, 28))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(232, 56).TopPosZ(184, 15))
+	ITEM(Button, cancel, SetLabel(t_("CANCEL")).LeftPosZ(116, 56).TopPosZ(184, 15))
+END_LAYOUT
+
+LAYOUT(ClubsLayout, 400, 256)
+	ITEM(SqlArray, clubsList, LeftPosZ(216, 150).TopPosZ(12, 176))
+	ITEM(EditString, city, LeftPosZ(68, 104).TopPosZ(56, 28))
+	ITEM(Label, dv___2, SetLabel(t_("City")).LeftPosZ(8, 58).TopPosZ(56, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(236, 56).TopPosZ(220, 15))
+	ITEM(Button, cancel, SetLabel(t_("CANCEL")).LeftPosZ(120, 56).TopPosZ(220, 15))
+END_LAYOUT
+

@@ -1,0 +1,18 @@
+  template<typename __object_info>
+    class __stack_info_base
+    {
+    public:
+      __stack_info_base() { }
+      __stack_info_base(const __object_info& __info) = 0;
+      virtual ~__stack_info_base() {}
+      void __merge(const __object_info& __info) = 0;
+      virtual float __magnitude() const = 0;
+      virtual const char* __get_id() const = 0;
+    };
+
+  template<std::size_t _Ind, typename... _Tp>
+    inline auto
+    __volget(volatile tuple<_Tp...>& __tuple)
+    -> typename tuple_element<_Ind, tuple<_Tp...>>::type volatile&
+    { return std::get<_Ind>(const_cast<tuple<_Tp...>&>(__tuple)); }
+

@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	hash2.cpp;
+
+mainconfig
+	"" = "";
+

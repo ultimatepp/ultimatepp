@@ -1,0 +1,11 @@
+-------------------------
+OldCore:
+STL map time: 3500 ms
+NTL time: 1968 ms
+-------------------------
+NewCore:
+New heap, new String:
+STL map time: 3469 ms
+NTL time: 1359 ms
+
+*************************

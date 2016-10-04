@@ -1,0 +1,11 @@
+charset "UTF-8";
+
+uses
+	Core;
+
+file
+	Speller.cpp;
+
+mainconfig
+	"" = "";
+

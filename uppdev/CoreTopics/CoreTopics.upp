@@ -1,0 +1,147 @@
+description "Non-GUI code. Streams, NTL containers, concrete types, Value, XML, C parsing etc...";
+
+acceptflags
+	USEMALLOC;
+
+library(MSC !MSC8ARM) "kernel32 user32";
+
+library(WIN32 !GUI !GNU !GCC) "ole32 oleaut32 oldnames";
+
+library(LINUX) "pthread dl";
+
+library(FREEBSD) pthread;
+
+library(WIN32 !MSC8ARM) "advapi32 shell32 winmm mpr";
+
+library(SOLARIS) "posix4 dl";
+
+library(WIN32 GCC) "ole32 oleaut32 uuid";
+
+library(MSC8ARM WIN32) "coredll.lib corelibc.lib ole32.lib oleaut32.lib uuid.lib commctrl.lib ccrtrtti.lib";
+
+library(!WIN32) z;
+
+options(XGNU) -O0;
+
+options(XGNU) -ffunction-sections;
+
+link(SOLARIS) "-Wl,-R -Wl,/usr/local/lib";
+
+file
+	Core.h,
+	Defs.h,
+	Cpu.cpp optimize_speed,
+	Mt.h,
+	Mt.cpp,
+	OL_Set.cpp,
+	Global.h,
+	HeapImp.h,
+	heaputil.cpp optimize_speed,
+	sheap.cpp optimize_speed,
+	lheap.cpp optimize_speed,
+	heap.cpp optimize_speed,
+	heapdbg.cpp optimize_speed,
+	String.h,
+	AString.hpp,
+	String.cpp optimize_speed,
+	WString.cpp optimize_speed,
+	StrUtil.cpp optimize_speed,
+	CharSet.h,
+	CharSet.cpp optimize_speed,
+	Kernel32W.dli,
+	Mpr32W.dli,
+	Path.h,
+	Path.cpp,
+	NetNode.cpp,
+	App.h,
+	App.cpp,
+	Stream.h,
+	Stream.cpp optimize_speed,
+	BlockStream.cpp optimize_speed,
+	Profile.h,
+	Diag.h,
+	Log.cpp,
+	Debug.cpp,
+	Util.h,
+	Util.cpp optimize_speed,
+	mathutil.cpp optimize_speed,
+	Containers readonly separator,
+	Algo.h,
+	Topt.h,
+	Vcont.h,
+	BiCont.h,
+	Vcont.hpp,
+	Vcont.cpp optimize_speed,
+	Index.h,
+	Map.h,
+	Index.hpp,
+	Other.h,
+	Hash.cpp optimize_speed,
+	Concretes readonly separator,
+	Cbgen.h,
+	Callback.h,
+	Callback.cpp optimize_speed,
+	TimeDate.h,
+	TimeDate.cpp optimize_speed,
+	Value.h,
+	Value.cpp optimize_speed,
+	Format.h,
+	Format.cpp optimize_speed,
+	Convert.h,
+	Convert.cpp optimize_speed,
+	Color.h,
+	Color.cpp optimize_speed,
+	Gtypes.h,
+	Gtypes.cpp optimize_speed,
+	Language readonly separator,
+	i18n.h,
+	t.cpp optimize_speed,
+	Core.t charset "UTF-8",
+	t.h,
+	Lang.h,
+	Lang.cpp,
+	lcid.txt,
+	"Other files" readonly separator,
+	Parser.h,
+	parser.cpp optimize_speed,
+	XML.h,
+	XML.cpp optimize_speed,
+	Xmlize.h,
+	Xmlize.cpp optimize_speed,
+	Uuid.h,
+	Uuid.cpp optimize_speed,
+	Ptr.h,
+	Ptr.cpp optimize_speed,
+	z.h,
+	z.cpp,
+	Topic.h,
+	topic_group.h,
+	Topic.cpp,
+	CoWork.h,
+	CoWork.cpp,
+	"Runtime linking" readonly separator,
+	dli.h,
+	dli_header.h,
+	dli_source.h,
+	Dli.cpp,
+	"Win32 support" readonly separator,
+	Win32Util.h,
+	Win32Util.cpp,
+	Meta readonly separator,
+	sub.upt,
+	core.upt,
+	ignorelist,
+	Info readonly separator,
+	test.tpp,
+	app.tpp,
+	src.tpp,
+	srcdoc.tpp,
+	srcimp.tpp,
+	Copying,
+	Copying-plain,
+	Authors;
+
+mainconfig
+	"Normal" = "",
+	"Remote shared" = "SHARED";
+

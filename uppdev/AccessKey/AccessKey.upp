@@ -1,0 +1,40 @@
+uses
+	CtrlLib,
+	Web;
+
+include
+	gdfgsdfg;
+
+file
+	test.js highlight js,
+	h.iml,
+	bak.tpp,
+	bak.tpp,
+	AccessKey.h,
+	testing.icpp,
+	test.key,
+	translate.t,
+	main.cpp charset "UTF-8-BOM",
+	test.cpp,
+	AccessKey.lay,
+	[Content_Types].xml,
+	test.zip,
+	_rels readonly separator,
+	_rels\.rels,
+	docProps readonly separator,
+	docProps\app.xml,
+	docProps\core.xml,
+	xl readonly separator,
+	xl\sharedStrings.xml,
+	xl\styles.xml,
+	xl\workbook.xml,
+	xl\_rels readonly separator,
+	xl\_rels\workbook.xml.rels,
+	xl\theme readonly separator,
+	xl\theme\theme1.xml,
+	xl\worksheets readonly separator,
+	xl\worksheets\sheet1.xml;
+
+mainconfig
+	"" = "GUI ST";
+

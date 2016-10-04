@@ -1,0 +1,4 @@
+#ifndef _ShowQtf_icpp_init_stub
+#define _ShowQtf_icpp_init_stub
+#include "CtrlLib/init"
+#endif

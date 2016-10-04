@@ -1,0 +1,4 @@
+FN(int, Init, (XDisplay *display))
+FN(void, UnInit, ())
+FN(int, IsInitted, ())
+FN(void, DrawCode, (Drawable drawable, int cx, int cy))
