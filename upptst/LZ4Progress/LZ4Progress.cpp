@@ -9,7 +9,7 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 	String data = LoadFile("C:/xxx/xxx/upp-x11-src-9041.tar");
 	
-	EventGate<int64, int64> cp, dp;
+	Gate<int64, int64> cp, dp;
 	cp << [](int64 pos, int64 size) -> bool { DLOG("Compress: " << pos << " " << size); return false; };
 	dp << [](int64 pos, int64 size) -> bool { DLOG("DeCompress: " << pos << " " << size); return false; };
 
