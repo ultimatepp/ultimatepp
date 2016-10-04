@@ -637,8 +637,8 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		findreplace.amend_all.Hide();
 		findreplace.amend_rest.Hide();
 		findreplace.prev.Hide();
-		findreplace.next.Ok() << findreplace.Breaker(IDOK);
-		findreplace.close.Cancel() << findreplace.Breaker(IDCANCEL);
+		findreplace.next.Ok() <<= findreplace.Breaker(IDOK);
+		findreplace.close.Cancel() <<= findreplace.Breaker(IDCANCEL);
 		findreplace.close.SetImage(Null);
 		findreplace.close.Tip("");
 		findreplace.next.SetImage(Null);
