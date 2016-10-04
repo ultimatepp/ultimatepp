@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-int MyPrompt(Callback1<const String&> WhenLink,
+int MyPrompt(Event<const String&> WhenLink,
              const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
              const char *button1, const char *button2, const char *button3,
              int cx, Image im1, Image im2, Image im3)
