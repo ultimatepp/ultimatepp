@@ -132,8 +132,8 @@ void AutoHideBar::TabHighlight()
 	if (c) {
 		ASSERT(ix >= 0 && ix < GetCount());
 		// Clear WhenHighlight ot prevent stack overflow. Perhaps a better solution should be found...
-		Callback cb = WhenHighlight;
-		WhenHighlight = Callback();
+		Event<> cb = WhenHighlight;
+		WhenHighlight = Null;
 		SetCursor(ix);
 		ShowAnimate(c);
 		WhenHighlight = cb;

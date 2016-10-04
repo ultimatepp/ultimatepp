@@ -45,7 +45,7 @@ void TopWindow::SyncCaption()
 	frame->sizeable = sizeable;
 	frame->RefreshLayout();
 	frame->Refresh();
-	frame->close <<= Proxy(WhenClose);
+	frame->close.WhenAction = Proxy(WhenClose);
 	frame->icon = icon;
 	frame->Enable(IsEnabled());
 }
