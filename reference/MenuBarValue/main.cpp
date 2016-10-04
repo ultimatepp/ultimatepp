@@ -4,10 +4,10 @@ using namespace Upp;
 
 struct MyApp : TopWindow {
 	virtual void RightDown(Point p, dword keyflags) {
-		EventArgTarget<int> result;
+		int result = Null;
 		MenuBar menu;
 		for(int i = 0; i < 10; i++)
-			menu.Add(AsString(i), result[i]);
+			menu.Add(AsString(i), [=, &result] { result = i; });
 		menu.Execute();
 		if(IsNull(result))
 			PromptOK("Menu was cancelled");
