@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	FileSel.h,
+	FileSel.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

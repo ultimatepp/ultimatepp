@@ -1,0 +1,17 @@
+uses
+	CtrlLib;
+
+options "-G7";
+
+file
+	MDraw.h,
+	PixelBlock.cpp,
+	Win32.cpp,
+	base.cpp,
+	aa2.cpp,
+	mmx1.cpp,
+	smmx.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	plugin\cairo;
+
+file
+	DrawOutputTest.h charset "UTF-8",
+	main.cpp,
+	DrawOutputTest.lay;
+
+mainconfig
+	"" = "GUI";
+

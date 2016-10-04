@@ -1,0 +1,11 @@
+LAYOUT(AtlantisStatLayout, 640, 480)
+	ITEM(MenuBar, menu, LeftPosZ(0, 236).TopPosZ(0, 24))
+	ITEM(ArrayCtrl, game, MouseMoveCursor(true).AppendLine(true).Appending(true).Inserting(true).LeftPosZ(12, 616).TopPosZ(68, 400))
+	ITEM(DropList, tables, LeftPosZ(12, 140).TopPosZ(36, 22))
+	ITEM(Button, select, SetLabel(t_("&Select")).LeftPosZ(160, 76).TopPosZ(36, 20))
+	ITEM(Label, dv___4, SetLabel(t_("Fitness")).LeftPosZ(460, 36).TopPosZ(40, 20))
+	ITEM(Label, dv___5, SetLabel(t_("Runden")).LeftPosZ(404, 44).TopPosZ(40, 20))
+	ITEM(EditInt, rounds, SetEditable(false).LeftPosZ(356, 44).TopPosZ(40, 22))
+	ITEM(EditInt, fitness, SetEditable(false).LeftPosZ(500, 44).TopPosZ(40, 22))
+END_LAYOUT
+

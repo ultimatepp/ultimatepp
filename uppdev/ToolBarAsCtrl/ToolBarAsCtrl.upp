@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	ToolBarAsCtrl.h,
+	ToolBar.iml,
+	main.cpp,
+	ToolBarAsCtrl.lay;
+
+mainconfig
+	"" = "GUI";
+

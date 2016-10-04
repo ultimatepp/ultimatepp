@@ -1,0 +1,14 @@
+uses
+	Core,
+	PdfDraw,
+	CtrlLib,
+	Web;
+
+file
+	OffsetBug.cpp,
+	SvgDraw.h,
+	SvgDraw.cpp;
+
+mainconfig
+	"" = "";
+

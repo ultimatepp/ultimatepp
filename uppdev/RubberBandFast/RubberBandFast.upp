@@ -1,0 +1,13 @@
+description "Dest de desenare si folosirea mecanismului BackPaint";
+
+uses
+	CtrlLib;
+
+file
+	RubberBand.h,
+	main.cpp,
+	RubberBand.lay;
+
+mainconfig
+	"" = "GUI";
+

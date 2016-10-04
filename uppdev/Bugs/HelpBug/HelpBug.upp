@@ -1,0 +1,9 @@
+uses
+	CtrlLib,
+	VectorDes;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "MT GUI";

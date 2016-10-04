@@ -1,0 +1,5 @@
+#ifndef _UnZip_icpp_init_stub
+#define _UnZip_icpp_init_stub
+#include "Core/init"
+#include "plugin/zip/init"
+#endif

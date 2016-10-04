@@ -1,0 +1,11 @@
+LAYOUT(Jims_MedicalLayout, 336, 184)
+	ITEM(Label, lbldate, SetLabel(t_("Date:")).LeftPosZ(12, 52).TopPosZ(8, 19))
+	ITEM(EditDate, txtdate, LeftPosZ(120, 72).TopPosZ(8, 19))
+	ITEM(Label, lblbld_press, SetLabel(t_("Blood Pressure:")).LeftPosZ(12, 76).TopPosZ(40, 19))
+	ITEM(EditInt, txtbld_press, LeftPosZ(120, 72).TopPosZ(40, 19))
+	ITEM(Label, lblbld_sug, SetLabel(t_("Bloodsugar Level:")).HSizePosZ(12, 240).TopPosZ(72, 19))
+	ITEM(EditInt, txtbld_sug, LeftPosZ(120, 72).TopPosZ(72, 19))
+	ITEM(Button, bttncancel, SetLabel(t_("Cancel")).LeftPosZ(232, 80).VCenterPosZ(28, 22))
+	ITEM(Button, bttndone, SetLabel(t_("Done")).LeftPosZ(232, 80).TopPosZ(48, 24))
+	ITEM(Button, bttnnext_ent, SetLabel(t_("Next Entry >>")).LeftPosZ(232, 80).TopPosZ(12, 28))
+END_LAYOUT

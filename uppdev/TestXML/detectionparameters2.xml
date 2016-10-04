@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<separ>
+<windows>
+	<pixellevel bValue="true"/>
+	<regionlevel bValue="true"/>
+	<playback bValue="true"/>
+	<facedetection bValue="true"/>
+</windows>
+<extradsp>
+	<segmentation bValue="true">
+		<segarea iValue="1"/>
+		<segthresh iValue="10"/>
+	</segmentation>
+	<deInterlace iValue="0"/>
+	<framedelay iValue="0"/>
+	<block_size iValue="1"/>
+</extradsp>
+<pixellevel>
+	<params>
+    <skip iValue="0"/>
+	<mustErode bValue="false"/>
+	<minArea iValue="16"/>
+	<use_hsv bValue="false"/>
+	<filterMotion bValue="true"/>
+	<weights>
+		<w0 fValue="1"/>
+		<w1 fValue="1"/>
+		<w2 fValue="1"/>
+		<w3 fValue="0"/>
+	</weights>
+        <diffthreshold fValue="50"/>
+	</params>
+	<listOfAlgorithms>
+		<algorithm sValue="MOGPredictor" state="false">
+			<win_size iValue="200"/>
+			<n_gauss iValue="5"/>
+			<bg_threshold fValue="0.7"/>
+			<std_threshold fValue="2.5"/>
+			<weight_init fValue="0.05"/>
+			<variance_init fValue="20"/>
+		</algorithm>
+		<algorithm sValue="DKOSMOPredictor" state="false">
+			<theN iValue="20"/>
+			<theK iValue="3"/>
+		</algorithm>
+		<algorithm sValue="BAYESPredictor" state="false">
+			<Lc iValue="128"/>
+			<Lcc iValue="64"/>
+			<N1c iValue="15"/>
+			<N1cc iValue="25"/>
+			<N2c iValue="25"/>
+			<N2cc iValue="40"/>
+			<alpha1 fValue="0.1"/>
+			<alpha2 fValue="0.005"/>
+			<alpha3 fValue="0.1"/>
+			<delta fValue="2"/>
+			<T fValue="0.9"/>
+		</algorithm>
+		<algorithm sValue="NTUAPredictor" state="false">
+			<stableK iValue="7"/>
+			<pastN iValue="20"/>
+		</algorithm>
+		<algorithm sValue="SOMPredictor" state="true">
+			<generating_threshold fValue="1.5"/>
+			<fg_class_threshold iValue="30"/>
+			<rarity_threshold iValue="200"/>
+			<the_A fValue="0.5"/>
+			<the_B fValue="0.5"/>
+		</algorithm>
+		<algorithm sValue="COMPredictor" state="false">
+			<force_threshold fValue="1"/>
+			<training_cycles iValue="1"/>
+			<rarity_threshold iValue="10"/>
+		</algorithm>
+	</listOfAlgorithms>
+</pixellevel>
+<regionlevel state="false">
+	<succthreshold iValue="10"/>
+	<colourthres iValue="20"/>
+	<regionarea iValue="200"/>
+	<recoverarea iValue="100"/>
+</regionlevel>
+<shadow state="false">
+	<rS iValue="75"/>
+	<rH iValue="65"/>
+	<maxArea iValue="500"/>
+	<filterrun iValue="2"/>
+	<alpha fValue="0.5"/>
+	<beta fValue="0.8"/>
+</shadow>
+<listOfDevice>
+<device sValue="sequence" state="true">
+	<image_length_prefix iValue="0"/>
+	<image_prefix sValue="C:/DataSets/Walk1_jpegs/Walk"/>
+	<image_from iValue="1000"/>
+	<image_to iValue="1610"/>
+	<image_type sValue="jpg"/>
+</device>
+<device sValue="camera" state="false">
+	<address sValue="147.102.19.145"/>
+	<port iValue="8085"/>
+	<format sValue="MJPG"/>
+	<duration iValue="0"/>
+	<fps iValue="25"/>
+	<compresion iValue="-1"/>
+	<resolution sValue=""/>
+</device>
+<device sValue="avi" state="false">
+	<file sValue="c://dikomas.avi"/>
+</device>
+</listOfDevice>
+<facedetection>
+	<cascade sValue="c:/haarcascade_frontalface_default.xml"/>
+</facedetection>
+<timeserver state="false">
+	<address sValue="127.0.0.1"/>
+	<logfile sValue="c:/hello.log"/>
+	<port iValue="8005"/>
+</timeserver>
+</separ>

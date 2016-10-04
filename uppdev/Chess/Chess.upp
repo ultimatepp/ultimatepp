@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	main.cpp
+		options(XX) asdfasdf
+		depends() gode.cpp
+		depends() main.cpp;
+
+mainconfig
+	"" = "GUI ST XX";
+

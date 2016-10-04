@@ -1,0 +1,4 @@
+#ifndef _console_mtbug_icpp_init_stub
+#define _console_mtbug_icpp_init_stub
+#include "Core/init"
+#endif

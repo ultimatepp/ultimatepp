@@ -1,0 +1,11 @@
+LAYOUT(Bababasdf, 400, 200)
+END_LAYOUT
+
+LAYOUT(Test, 400, 200)
+	ITEM(DocEdit, dv___0, LeftPosZ(168, 204).TopPosZ(96, 80))
+END_LAYOUT
+
+LAYOUT(sdgf, 384, 252)
+	ITEM(ArrayCtrl, dv___0, LeftPosZ(32, 150).TopPosZ(32, 100))
+END_LAYOUT
+

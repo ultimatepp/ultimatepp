@@ -1,0 +1,4 @@
+LAYOUT(TestAppLayout, 552, 440)
+	ITEM(Button, gridremove, SetLabel(t_("Remove")).RightPosZ(4, 76).BottomPosZ(4, 28))
+	ITEM(ToolBar, toolbar, HSizePosZ(0, 0).TopPosZ(0, 28))
+END_LAYOUT

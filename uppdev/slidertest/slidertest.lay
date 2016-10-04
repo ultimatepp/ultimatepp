@@ -1,0 +1,15 @@
+LAYOUT(slidertestLayout, 452, 220)
+	ITEM(SliderCtrl, sldRevV, LeftPosZ(336, 28).TopPosZ(44, 100))
+	ITEM(Label, dv___1, SetLabel(t_("Reverse Horz")).LeftPosZ(40, 112).TopPosZ(96, 21))
+	ITEM(StaticText, txtRevH, LeftPosZ(40, 40).TopPosZ(144, 19))
+	ITEM(StaticText, txtRevV, LeftPosZ(336, 40).TopPosZ(144, 19))
+	ITEM(StaticText, txtRegV, LeftPosZ(208, 40).TopPosZ(144, 19))
+	ITEM(StaticText, txtRegH, LeftPosZ(40, 40).TopPosZ(68, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Reverse Vert")).LeftPosZ(336, 84).TopPosZ(20, 21))
+	ITEM(Label, dv___7, SetLabel(t_("Regular Vert")).LeftPosZ(208, 84).TopPosZ(20, 21))
+	ITEM(Label, dv___8, SetLabel(t_("Regular Horz")).LeftPosZ(40, 112).TopPosZ(20, 21))
+	ITEM(SliderCtrl, sldRegV, LeftPosZ(208, 28).TopPosZ(44, 100))
+	ITEM(SliderCtrl, sldRevH, LeftPosZ(40, 112).TopPosZ(120, 24))
+	ITEM(SliderCtrl, sldRegH, LeftPosZ(40, 112).TopPosZ(44, 24))
+END_LAYOUT
+

@@ -1,0 +1,5 @@
+#ifndef _CairoDemo_icpp_init_stub
+#define _CairoDemo_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\cairo/init"
+#endif

@@ -1,0 +1,6 @@
+#ifndef _MySQLSch_icpp_init_stub
+#define _MySQLSch_icpp_init_stub
+#include "Core/init"
+#include "MySql/init"
+#include "CtrlCore/init"
+#endif

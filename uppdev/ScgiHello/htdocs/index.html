@@ -1,0 +1,21 @@
+<html>
+<head><title>ScgiHello</title></head>
+<body>
+<h1>Hello World</h1>
+
+<ul>
+<li><a href="/scgi/hello?name=John">Hello John</a></li>
+<li><a href="/scgi/hello?name=Jane">Hello Jane</a></li>
+</ul>
+
+<h1>Hello via POST form</h1>
+<form method="POST" action="/scgi/hello-form">
+Name: 
+<!-- To show post data, add an additional field -->
+<input type="hidden" name="message" value="Hello" />
+<input type="text" name="name" />
+<input type="submit"/>
+</form>
+
+</body>
+</html>

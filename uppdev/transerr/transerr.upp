@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	transerr.h,
+	main.cpp,
+	transerr.lay;
+
+mainconfig
+	"" = "GUI";

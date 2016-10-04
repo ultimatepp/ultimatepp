@@ -1,0 +1,24 @@
+charset "utf8";
+
+uses
+	CtrlLib;
+
+options "-D TIXML_USE_STL";
+
+file
+	YPuzzle.iml,
+	YPuzzle.h charset "utf8",
+	YPuzzle.lay,
+	YPuzzle.t charset "utf8",
+	YPuzzle.rc,
+	main.cpp charset "utf8",
+	TinyXML readonly separator,
+	TinyXML\tinystr.cpp,
+	TinyXML\tinystr.h,
+	TinyXML\tinyxml.cpp,
+	TinyXML\tinyxml.h,
+	TinyXML\tinyxmlerror.cpp,
+	TinyXML\tinyxmlparser.cpp;
+
+mainconfig
+	"" = "GUI ST";

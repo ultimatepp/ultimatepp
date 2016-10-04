@@ -1,0 +1,4 @@
+#ifndef _Vector_icpp_init_stub
+#define _Vector_icpp_init_stub
+#include "Core/init"
+#endif

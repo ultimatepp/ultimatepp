@@ -1,0 +1,8 @@
+LAYOUT(EditFieldLayout, 200, 100)
+	ITEM(Button, ok, SetLabel(t_("sasdfasdf")).RightPosZ(90, 80).BottomPosZ(4, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(4, 22))
+	ITEM(EditString, ef1, TrimRight(true).TrimLeft(true).LeftPosZ(4, 140).TopPosZ(4, 19))
+	ITEM(EditString, ef2, TrimLeft(true).LeftPosZ(4, 140).TopPosZ(28, 19))
+	ITEM(Button, set, SetLabel(t_("Set")).LeftPosZ(120, 64).TopPosZ(48, 24))
+END_LAYOUT
+

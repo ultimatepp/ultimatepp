@@ -1,0 +1,16 @@
+description "helper package for testing Scatter Chart";
+
+uses
+	CtrlLib,
+	Scatter,
+	Report,
+	PdfDraw,
+	plugin\jpg;
+
+file
+	TestScatter.h,
+	main.cpp,
+	TestScatter.lay;
+
+mainconfig
+	"" = "GUI";

@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	plugin\gif;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

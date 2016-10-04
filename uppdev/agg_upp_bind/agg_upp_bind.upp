@@ -1,0 +1,16 @@
+uses
+	CtrlLib,
+	agg24;
+
+file
+	agg_upp_bind.h charset "UTF-8"
+		options() "Wall -Wextra -pedantic",
+	agg_upp_defs.h,
+	ImagBuffer.h,
+	ImagBuffer.cpp,
+	AggDrawer.h,
+	AggDrawer.cpp;
+
+mainconfig
+	"" = "GUI";
+

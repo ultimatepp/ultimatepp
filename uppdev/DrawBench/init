@@ -1,0 +1,6 @@
+#ifndef _DrawBench_icpp_init_stub
+#define _DrawBench_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\cairo/init"
+#include "Painter/init"
+#endif

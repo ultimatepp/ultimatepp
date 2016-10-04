@@ -1,0 +1,6 @@
+#ifndef _PrinterInfo_icpp_init_stub
+#define _PrinterInfo_icpp_init_stub
+#include "CtrlLib/init"
+#include "TDraw/init"
+#include "Report/init"
+#endif

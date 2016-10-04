@@ -1,0 +1,4 @@
+#ifndef _Div64_icpp_init_stub
+#define _Div64_icpp_init_stub
+#include "Core/init"
+#endif

@@ -1,0 +1,6 @@
+#ifndef _RichHtml_icpp_init_stub
+#define _RichHtml_icpp_init_stub
+#include "Web/init"
+#include "CtrlLib/init"
+#include "RichText/init"
+#endif

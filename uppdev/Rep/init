@@ -1,0 +1,7 @@
+#ifndef _Rep_icpp_init_stub
+#define _Rep_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "PdfDraw/init"
+#include "Painter/init"
+#endif

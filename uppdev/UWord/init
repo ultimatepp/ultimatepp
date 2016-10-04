@@ -1,0 +1,7 @@
+#ifndef _UWord_icpp_init_stub
+#define _UWord_icpp_init_stub
+#include "CtrlLib/init"
+#include "RichEdit/init"
+#include "PdfDraw/init"
+#include "art/BlueBar/init"
+#endif

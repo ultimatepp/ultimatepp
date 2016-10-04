@@ -1,0 +1,3 @@
+LAYOUT(SplashLayout, 400, 200)
+	ITEM(RichTextView, rtvSplash, Background(Color(255, 255, 200)).NoSb(true).SetFrame(NullFrame()).LeftPosZ(0, 400).TopPosZ(0, 200))
+END_LAYOUT

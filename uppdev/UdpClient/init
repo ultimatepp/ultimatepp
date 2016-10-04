@@ -1,0 +1,4 @@
+#ifndef _UdpClient_icpp_init_stub
+#define _UdpClient_icpp_init_stub
+#include "Core/init"
+#endif

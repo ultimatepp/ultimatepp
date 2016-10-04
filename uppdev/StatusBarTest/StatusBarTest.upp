@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	StatusBarTest.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

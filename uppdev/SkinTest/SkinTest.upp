@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	Skin.iml,
+	SkinTest.h,
+	main.cpp,
+	SkinTest.lay;
+
+mainconfig
+	"" = "GUI";

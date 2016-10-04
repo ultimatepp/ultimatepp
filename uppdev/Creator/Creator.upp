@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Esc;
+
+file
+	F:\test.upt,
+	test.upt,
+	main.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

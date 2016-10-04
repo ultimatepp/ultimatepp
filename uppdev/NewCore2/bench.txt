@@ -1,0 +1,55 @@
+============================================================
+ST
+
+String
+Slices               New:  438ms Old: 1406ms Ratio:3.2
+Cat 10               New:   63ms Old:  187ms Ratio:3.0
+Cat 20               New:  156ms Old:  328ms Ratio:2.1
+Cat 30               New:  235ms Old:  437ms Ratio:1.9
+Cat 64               New:  610ms Old:  797ms Ratio:1.3
+Cat 200              New: 1875ms Old: 2125ms Ratio:1.1
+Copy 10              New:  484ms Old:  484ms Ratio:1.0
+Copy 20              New: 2750ms Old:  500ms Ratio:0.2
+Copy 30              New: 2735ms Old:  484ms Ratio:0.2
+Copy 64              New: 1563ms Old:  500ms Ratio:0.3
+Key mix              New:  359ms Old: 1078ms Ratio:3.0
+WString
+Slices               New:  609ms Old: 1329ms Ratio:2.2
+Cat 10               New:   78ms Old:  234ms Ratio:3.0
+Cat 20               New:  125ms Old:  328ms Ratio:2.6
+Cat 30               New:  328ms Old:  516ms Ratio:1.6
+Cat 64               New:  906ms Old:  906ms Ratio:1.0
+Cat 200              New: 2922ms Old: 2157ms Ratio:0.7
+Copy 10              New: 2125ms Old:  484ms Ratio:0.2
+Copy 20              New: 2125ms Old:  500ms Ratio:0.2
+Copy 30              New: 1219ms Old:  484ms Ratio:0.4
+Copy 64              New: 1234ms Old:  485ms Ratio:0.4
+Key mix              New:  859ms Old: 1313ms Ratio:1.5
+============================================================
+MT
+
+String
+Slices               New:  453ms Old: 2235ms Ratio:4.9
+Cat 10               New:   78ms Old:  234ms Ratio:3.0
+Cat 20               New:  156ms Old:  469ms Ratio:3.0
+Cat 30               New:  235ms Old:  531ms Ratio:2.3
+Cat 64               New:  625ms Old:  984ms Ratio:1.6
+Cat 200              New: 2125ms Old: 2406ms Ratio:1.1
+Copy 10              New:  469ms Old: 2235ms Ratio:4.8
+Copy 20              New: 3281ms Old: 2219ms Ratio:0.7
+Copy 30              New: 3281ms Old: 2234ms Ratio:0.7
+Copy 64              New: 3063ms Old: 2234ms Ratio:0.7
+Key mix              New:  375ms Old: 1141ms Ratio:3.0
+------------------------------------------------------
+WString
+Slices               New:  687ms Old: 2250ms Ratio:3.3
+Cat 10               New:   78ms Old:  344ms Ratio:4.4
+Cat 20               New:  125ms Old:  422ms Ratio:3.4
+Cat 30               New:  391ms Old:  656ms Ratio:1.7
+Cat 64               New: 1000ms Old: 1078ms Ratio:1.1
+Cat 200              New: 3297ms Old: 2390ms Ratio:0.7
+Copy 10              New: 2594ms Old: 2219ms Ratio:0.9
+Copy 20              New: 2594ms Old: 2218ms Ratio:0.9
+Copy 30              New: 2985ms Old: 2203ms Ratio:0.7
+Copy 64              New: 2984ms Old: 2219ms Ratio:0.7
+Key mix              New:  859ms Old: 1407ms Ratio:1.6

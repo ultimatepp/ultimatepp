@@ -1,0 +1,7 @@
+LAYOUT(PullTextLayout, 740, 464)
+	ITEM(RichEditWithToolBar, txText2, LeftPosZ(12, 712).TopPosZ(196, 180))
+	ITEM(RichEditWithToolBar, txText1, LeftPosZ(4, 720).TopPosZ(16, 136))
+	ITEM(Button, bt2, SetLabel(t_("Write some tx and push this button")).LeftPosZ(100, 196).TopPosZ(392, 28))
+	ITEM(Button, bt1, SetLabel(t_("Write some tx and push this button")).LeftPosZ(88, 196).TopPosZ(160, 28))
+END_LAYOUT
+

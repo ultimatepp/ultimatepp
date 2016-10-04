@@ -30,10 +30,6 @@ TOPIC("LearnCpp$en-us")
 #include "LearnCpp$en-us.tppi"
 END_TOPIC
 
-TOPIC("LearnCppFirstApp$en-us")
-#include "LearnCppFirstApp$en-us.tppi"
-END_TOPIC
-
 TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC
@@ -48,10 +44,6 @@ END_TOPIC
 
 TOPIC("apps$de-de")
 #include "apps$de-de.tppi"
-END_TOPIC
-
-TOPIC("apps$en-us")
-#include "apps$en-us.tppi"
 END_TOPIC
 
 TOPIC("bazaar$de-de")
@@ -88,10 +80,6 @@ END_TOPIC
 
 TOPIC("chss$de-de")
 #include "chss$de-de.tppi"
-END_TOPIC
-
-TOPIC("chss$en-us")
-#include "chss$en-us.tppi"
 END_TOPIC
 
 TOPIC("codestyle$en-us")
@@ -252,10 +240,6 @@ END_TOPIC
 
 TOPIC("ss$en-us")
 #include "ss$en-us.tppi"
-END_TOPIC
-
-TOPIC("svnInstall$en-us")
-#include "svnInstall$en-us.tppi"
 END_TOPIC
 
 TOPIC("tutoring$en-us")

@@ -1,0 +1,52 @@
+
+- Velke hodnoty grid apod... (collapsed mode)
+- keep with next nechodi
+- Equalize columns
+- Vyber s podtabulkou
+- projit IsSelection
+- double click to select word (too long)
+- hezci ctrly
+- izolovat editacni kod
+- center/right prazdny radek lepe zobrazovat
+- ikona pro pagebreak
+- border pro paragraph
+- Zoom x pozice tabelatoru
+- Scolor na tiskarne (Drawing - ulozit Sbarvu)
+- Prekreslovaci problem - ruler / bar nuti IsPainting
+
+Hotovo
+- find/replace
+- delete/backspace
+- special delete/backspace/
+- format in tablesel
+- Divna detekce clicku do tabulky (doprava)
+- vertmove blbne obcas v tabulce
+- spojovat text v Join
+- Tabelace v cellu
+- insert row - preneset hspan
+- Select past last par (Last text enter select)
+- styl u ParaSpecial
+- before/after
+- resize columns problem
+- pred paragraphem plocha problem pri selekci
+- ReadFormat
+- QTF ++ ++ tables
+- Screen mode
+- toolbar
+- No language info and page in styles
+- hspan x split !!!
+- Normalize header
+
+----------------------------------
+TIMING Move           : 448.0 ms -   5.9 ms (448.0 ms / 76 ), min:   3.0 ms, max:   9.0 ms, nesting: 1 - 76
+TIMING GetNearestPos  :  33.0 ms - 383.6 us ( 33.0 ms / 86 ), min:   0.0 us, max:   1.0 ms, nesting: 1 - 86
+TIMING MouseMove      : 530.0 ms -   6.2 ms (530.0 ms / 86 ), min:   0.0 us, max:  10.0 ms, nesting: 1 - 86
+TIMING Paint          :  70.9 ms - 104.6 us ( 71.0 ms / 678 ), min:   0.0 us, max:   1.0 ms, nesting: 1 - 678
+TIMING 4              :  11.0 ms - 118.2 us ( 11.0 ms / 93 ), min:   0.0 us, max:   1.0 ms, nesting: 1 - 93
+TIMING Invalid        :  68.0 ms - 731.1 us ( 68.0 ms / 93 ), min:   0.0 us, max:   2.0 ms, nesting: 1 - 93
+TIMING Caret          :   4.0 ms -  42.9 us (  4.0 ms / 93 ), min:   0.0 us, max:   1.0 ms, nesting: 1 - 93
+TIMING GetHeight      : 178.0 ms - 487.6 us (178.0 ms / 365 ), min:   0.0 us, max:  17.0 ms, nesting: 1 - 365
+TIMING SetSb          :  65.0 ms - 698.8 us ( 65.0 ms / 93 ), min:   0.0 us, max:  17.0 ms, nesting: 1 - 93
+TIMING GetCaret       :  11.0 ms - 118.2 us ( 11.0 ms / 93 ), min:   0.0 us, max:   1.0 ms, nesting: 1 - 93
+TIMING 2              : 159.0 ms -   1.7 ms (159.0 ms / 93 ), min:   0.0 us, max:  17.0 ms, nesting: 1 - 93
+TIMING 1              : 173.0 ms -   1.9 ms (173.0 ms / 93 ), min:   0.0 us, max:  17.0 ms, nesting: 1 - 93

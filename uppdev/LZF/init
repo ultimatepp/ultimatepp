@@ -1,0 +1,6 @@
+#ifndef _LZF_icpp_init_stub
+#define _LZF_icpp_init_stub
+#include "Core/init"
+#include "plugin/lz4/init"
+#include "plugin\lzo/init"
+#endif

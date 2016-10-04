@@ -1,0 +1,4 @@
+LAYOUT(AssistTestLayout, 200, 100)
+	ITEM(Label, dv___0, SetLabel(t_("Just a test")).LeftPosZ(32, 76).TopPosZ(40, 19))
+END_LAYOUT
+

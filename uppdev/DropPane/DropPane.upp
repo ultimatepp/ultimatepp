@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	DropPane.cpp,
+	DropPane.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

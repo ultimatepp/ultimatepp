@@ -1,0 +1,12 @@
+description "High precision decimal class";
+
+uses
+	Core;
+
+file
+	decimal.cpp,
+	decimal.h;
+
+mainconfig
+	"" = "";
+

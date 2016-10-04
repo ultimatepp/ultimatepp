@@ -1,0 +1,19 @@
+uses
+	Core,
+	plugin/lz4,
+	plugin\lzo;
+
+file
+	LZF1.cpp,
+	DEE.cpp,
+	LZF.cpp,
+	LZF3.cpp optimize_speed,
+	LZF4.cpp optimize_speed,
+	LZP.cpp,
+	main.cpp,
+	info.txt;
+
+mainconfig
+	"" = "LZ4STATS",
+	"" = "";
+

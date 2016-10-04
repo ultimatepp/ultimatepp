@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	main.cpp charset "UTF-8";
+
+mainconfig
+	"" = "GUI";
+

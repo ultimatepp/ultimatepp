@@ -1,0 +1,11 @@
+uses
+	Core,
+	plugin\sqlite3;
+
+file
+	sqlite3sch.cpp,
+	schema.sch;
+
+mainconfig
+	"" = "";
+

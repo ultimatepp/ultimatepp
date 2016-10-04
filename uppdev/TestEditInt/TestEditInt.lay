@@ -1,0 +1,8 @@
+LAYOUT(TestEditIntLayout, 448, 412)
+	ITEM(EditIntSpin, edt, Max(10).Min(-10).LeftPosZ(68, 208).TopPosZ(52, 19))
+	ITEM(EditInt64Spin, edt64, Max(10).Min(-10).LeftPosZ(24, 60).TopPosZ(12, 19))
+	ITEM(EditDateSpin, edtdt, LeftPosZ(68, 208).TopPosZ(124, 19))
+	ITEM(EditTimeSpin, edttm, SetInc(3600).LeftPosZ(68, 208).TopPosZ(148, 19))
+	ITEM(EditDoubleSpin, edtf, Max(10).Min(-10).LeftPosZ(68, 208).TopPosZ(76, 19))
+END_LAYOUT
+

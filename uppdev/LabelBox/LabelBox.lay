@@ -1,0 +1,8 @@
+LAYOUT(LabelBoxLayout, 544, 204)
+	ITEM(LabelBox, dv___0, LeftPosZ(8, 232).TopPosZ(8, 24))
+	ITEM(LabelBox, dv___1, SetLabel(t_("Label")).LeftPosZ(8, 232).TopPosZ(36, 24))
+	ITEM(LabelBox, dv___2, SetLabel(t_("Label")).SetFont(StdFontZ(17)).LeftPosZ(248, 232).TopPosZ(36, 20))
+	ITEM(LabelBox, dv___3, LeftPosZ(8, 232).TopPosZ(64, 56))
+	ITEM(LabelBox, dv___4, SetLabel(t_("Label")).LeftPosZ(8, 232).TopPosZ(128, 56))
+	ITEM(LabelBox, dv___5, SetLabel(t_("Label")).SetFont(StdFontZ(20)).LeftPosZ(248, 232).TopPosZ(128, 56))
+END_LAYOUT

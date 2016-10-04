@@ -1,0 +1,11 @@
+LAYOUT(LayoutTestLayout, 344, 188)
+	UNTYPED(b2, RightPosZ(4, 60).BottomPosZ(5, 19))
+	ITEM(Button, b1, SetLabel(t_("OK")).LeftPosZ(4, 60).BottomPosZ(5, 19))
+END_LAYOUT
+
+LAYOUT(TestLayout, 180, 200)
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(96, 80).TopPosZ(172, 23))
+	ITEM(LineEdit, dv___1, LeftPosZ(4, 172).TopPosZ(4, 164))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(4, 80).TopPosZ(172, 23))
+END_LAYOUT
+

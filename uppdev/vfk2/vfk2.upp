@@ -1,0 +1,11 @@
+uses
+	gis3,
+	Core;
+
+file
+	vfkstrm.h,
+	vfkstrm.cpp,
+	vfk2.cpp;
+
+mainconfig
+	"" = ".NOVFK";

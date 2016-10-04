@@ -1,0 +1,4 @@
+#ifndef _XmlRpcTest_icpp_init_stub
+#define _XmlRpcTest_icpp_init_stub
+#include "Core/init"
+#endif

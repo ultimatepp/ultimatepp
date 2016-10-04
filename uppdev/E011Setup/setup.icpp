@@ -1,0 +1,9 @@
+#include "App.h"
+
+#define TFILE <E011Setup/setup.t>
+#include <Core/t.h>
+/*
+#define TOPICFILE <E011Setup/app.tpp/all.i>
+#include <Core/topic_group.h>
+
+*/

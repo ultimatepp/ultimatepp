@@ -1,0 +1,6 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(SmartTextLayout, 200, 100)
+END_LAYOUT
+
+#endif

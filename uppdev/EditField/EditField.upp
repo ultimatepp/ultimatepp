@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	EditField.h,
+	main.cpp,
+	EditField.lay;
+
+mainconfig
+	"" = "GUI ST";
+

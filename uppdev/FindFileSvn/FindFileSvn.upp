@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	FindFileSvn.cpp;
+
+mainconfig
+	"" = "";
+

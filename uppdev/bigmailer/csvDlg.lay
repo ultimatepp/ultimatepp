@@ -1,0 +1,9 @@
+LAYOUT(CSVLayout, 368, 228)
+	ITEM(DropList, dropCharSet, LeftPosZ(100, 116).TopPosZ(8, 20))
+	ITEM(DropList, dropSeparator, LeftPosZ(100, 116).TopPosZ(32, 20))
+	ITEM(GridCtrl, gridData, HSizePosZ(4, 4).VSizePosZ(60, 4))
+	ITEM(Button, btOk, SetLabel(t_("Ok")).LeftPosZ(288, 70).TopPosZ(8, 19))
+	ITEM(Button, btCancel, SetLabel(t_("Cancel")).LeftPosZ(288, 70).TopPosZ(32, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Character set:")).LeftPosZ(4, 92).TopPosZ(11, 13))
+	ITEM(Label, dv___6, SetLabel(t_("Separator:")).LeftPosZ(4, 92).TopPosZ(36, 13))
+END_LAYOUT

@@ -1,0 +1,5 @@
+#ifndef _MyEcho_icpp_init_stub
+#define _MyEcho_icpp_init_stub
+#include "CtrlLib/init"
+#include "Core/init"
+#endif

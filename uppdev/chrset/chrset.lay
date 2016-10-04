@@ -1,0 +1,5 @@
+LAYOUT(chrsetLayout, 200, 100)
+	ITEM(Label, lbl1, LeftPosZ(20, 84).TopPosZ(8, 19))
+	ITEM(Label, lbl2, LeftPosZ(20, 84).TopPosZ(32, 19))
+	ITEM(Label, lbl3, LeftPosZ(20, 84).TopPosZ(56, 19))
+END_LAYOUT

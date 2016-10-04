@@ -1,0 +1,13 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	RefCount.cpp;
+
+mainconfig
+	"" = "MT",
+	"" = "",
+	"" = "MT PROFILEMT";
+

@@ -1,0 +1,41 @@
+uses
+	Core,
+	CtrlLib,
+	CtrlCore,
+	src\Comm,
+	src\support,
+	Display,
+	E011\help;
+
+file
+	e011.h,
+	e011.cpp,
+	menu.cpp,
+	paths.cpp,
+	WorkFiles.cpp,
+	rtd.cpp,
+	ascii.h,
+	console.h,
+	console.cpp,
+	_treeCtrl.h,
+	_treeCtrl.cpp,
+	sep1.h,
+	sep1.cpp,
+	utils.cpp,
+	Risorse readonly separator,
+	e011.iml,
+	e011.lay,
+	e011.rc,
+	e011.icpp,
+	e011.key,
+	e011.t,
+	Headers readonly separator,
+	release.h,
+	Utils readonly separator,
+	utils.h,
+	uninstall.cpp,
+	PIC readonly separator,
+	G:\Lavori\LavoriELCA\picc\E011-V14\common.h;
+
+mainconfig
+	"" = "GUI";

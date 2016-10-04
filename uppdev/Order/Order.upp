@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	Order.h,
+	Order.cpp optimize_speed,
+	Results.txt;
+
+mainconfig
+	"" = "";
+

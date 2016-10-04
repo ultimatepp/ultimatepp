@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	hiddisk.h,
+	main.cpp,
+	hiddisk.lay;
+
+mainconfig
+	"" = "GUI";
+

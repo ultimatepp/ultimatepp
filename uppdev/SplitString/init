@@ -1,0 +1,4 @@
+#ifndef _SplitString_icpp_init_stub
+#define _SplitString_icpp_init_stub
+#include "Core/init"
+#endif

@@ -1,0 +1,30 @@
+LAYOUT(AddressBookLayout, 516, 456)
+	ITEM(MenuBar, menu, LeftPosZ(0, 200).TopPosZ(0, 20))
+	ITEM(TabCtrl, tab, LeftPosZ(8, 500).TopPosZ(32, 84))
+	ITEM(ArrayCtrl, array, LeftPosZ(8, 500).TopPosZ(124, 324))
+END_LAYOUT
+
+LAYOUT(ModifyLayout, 480, 52)
+	ITEM(Label, dv___0, SetLabel(t_("&Name")).LeftPosZ(8, 48).TopPosZ(8, 15))
+	ITEM(EditField, name, LeftPosZ(8, 96).TopPosZ(28, 19))
+	ITEM(Label, dv___2, SetLabel(t_("&Surname")).LeftPosZ(108, 48).TopPosZ(8, 15))
+	ITEM(EditField, surname, LeftPosZ(108, 96).TopPosZ(28, 19))
+	ITEM(Label, dv___4, SetLabel(t_("&Address")).LeftPosZ(208, 48).TopPosZ(8, 15))
+	ITEM(EditField, address, LeftPosZ(208, 96).TopPosZ(28, 19))
+	ITEM(Label, dv___6, SetLabel(t_("&Email")).LeftPosZ(308, 48).TopPosZ(8, 15))
+	ITEM(EditField, email, LeftPosZ(308, 96).TopPosZ(28, 19))
+	ITEM(Button, add, SetLabel(t_("Ad&d")).LeftPosZ(416, 56).TopPosZ(4, 20))
+	ITEM(Button, change, SetLabel(t_("&Change")).LeftPosZ(416, 56).TopPosZ(28, 20))
+END_LAYOUT
+
+LAYOUT(SearchLayout, 480, 56)
+	ITEM(Option, oname, SetLabel(t_("&Name")).LeftPosZ(8, 56).TopPosZ(8, 18))
+	ITEM(EditField, name, LeftPosZ(8, 96).TopPosZ(28, 19))
+	ITEM(Option, osurname, SetLabel(t_("&Surname")).LeftPosZ(108, 64).TopPosZ(8, 18))
+	ITEM(EditField, surname, LeftPosZ(108, 96).TopPosZ(28, 19))
+	ITEM(Option, oaddress, SetLabel(t_("&Address")).LeftPosZ(208, 64).TopPosZ(8, 18))
+	ITEM(EditField, address, LeftPosZ(208, 96).TopPosZ(28, 19))
+	ITEM(Option, oemail, SetLabel(t_("&Email")).LeftPosZ(308, 52).TopPosZ(8, 18))
+	ITEM(EditField, email, LeftPosZ(308, 96).TopPosZ(28, 19))
+	ITEM(Button, search, SetLabel(t_("&Search")).LeftPosZ(416, 56).TopPosZ(28, 20))
+END_LAYOUT

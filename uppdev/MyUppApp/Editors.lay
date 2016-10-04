@@ -1,0 +1,12 @@
+LAYOUT(EditorsLayout, 480, 532)
+	ITEM(StaticText, dv___0, SetText(t_("Doc Edit")).LeftPosZ(20, 48).TopPosZ(20, 19))
+	ITEM(Button, btnLoad, SetLabel(t_("Load")).RightPosZ(348, 44).TopPosZ(20, 20))
+	ITEM(Button, btnClear, SetLabel(t_("Clear")).HSizePosZ(144, 284).TopPosZ(20, 20))
+	ITEM(Button, btnSave, SetLabel(t_("x")).LeftPosZ(204, 44).TopPosZ(20, 20))
+	ITEM(DocEdit, mydocedit, SetFont(StdFont(12)).LeftPosZ(8, 464).TopPosZ(52, 468))
+	ITEM(Label, dv___5, LeftPosZ(296, 25).TopPosZ(8, 19))
+	ITEM(Label, dv___6, SetLabel(t_("sdfsdfsdf")).LeftPosZ(276, 25).TopPosZ(32, 19))
+	ITEM(Label, dv___7, LeftPosZ(368, 25).TopPosZ(12, 19))
+	ITEM(Label, dv___8, SetLabel(t_("ddd")).LeftPosZ(336, 25).TopPosZ(24, 19))
+	ITEM(Label, dv___9, LeftPosZ(428, 25).TopPosZ(12, 19))
+END_LAYOUT

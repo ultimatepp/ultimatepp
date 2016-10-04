@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	Calgo.cpp optimize_speed;
+
+mainconfig
+	"" = "";

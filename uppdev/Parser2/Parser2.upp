@@ -1,0 +1,7 @@
+file
+	src.tpp,
+	test.cpp;
+
+mainconfig
+	"" = "";
+

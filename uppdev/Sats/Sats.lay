@@ -1,0 +1,10 @@
+LAYOUT(SatsLayout, 692, 420)
+	ITEM(Button, btnIST, SetLabel(t_("IST/ISR")).LeftPosZ(12, 80).TopPosZ(88, 24))
+	ITEM(Button, btnOps, SetLabel(t_("Operations")).LeftPosZ(12, 80).TopPosZ(132, 24))
+	ITEM(Button, btnSearch, SetLabel(t_("Search")).LeftPosZ(12, 80).TopPosZ(176, 24))
+	ITEM(Button, btnReport, SetLabel(t_("Reports")).LeftPosZ(12, 80).TopPosZ(220, 24))
+	ITEM(LabelBox, lblBox, LeftPosZ(0, 104).TopPosZ(56, 336))
+	ITEM(MenuBar, menu, SetFrame(BottomSeparatorFrame()).LeftPosZ(0, 684).TopPosZ(0, 24))
+	ITEM(DropList, d_race, LeftPosZ(220, 168).TopPosZ(80, 20))
+END_LAYOUT
+

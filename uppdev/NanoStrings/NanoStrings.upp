@@ -1,0 +1,13 @@
+uses
+	Core;
+
+file
+	NanoStrings.h,
+	NanoStrings.cpp,
+	main.cpp,
+	info.txt,
+	src.tpp;
+
+mainconfig
+	"" = "";
+

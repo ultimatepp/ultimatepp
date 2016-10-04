@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	X11dev.h,
+	main.cpp,
+	X11dev.lay;
+
+mainconfig
+	"" = "GUI";
+

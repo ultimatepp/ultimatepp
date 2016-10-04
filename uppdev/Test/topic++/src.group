@@ -1,0 +1,55 @@
+GROUP("Test", "src")
+
+TOPIC("Test", "EN-US")
+#include "src$Test$EN-US.topic"
+END_TOPIC
+
+TOPIC("Test2", "EN-US")
+#include "src$Test2$EN-US.topic"
+END_TOPIC
+
+TOPIC("Test3", "EN-US")
+#include "src$Test3$EN-US.topic"
+END_TOPIC
+
+TOPIC("XX2", "EN-US")
+#include "src$XX2$EN-US.topic"
+END_TOPIC
+
+TOPIC("ZZZ", "EN-US")
+#include "src$ZZZ$EN-US.topic"
+END_TOPIC
+
+TOPIC("new", "EN-US")
+#include "src$new$EN-US.topic"
+END_TOPIC
+
+TOPIC("new2", "EN-US")
+#include "src$new2$EN-US.topic"
+END_TOPIC
+
+TOPIC("alfa", "EN-US")
+#include "src$alfa$EN-US.topic"
+END_TOPIC
+
+TOPIC("asdf", "EN-US")
+#include "src$asdf$EN-US.topic"
+END_TOPIC
+
+TOPIC("OOO", "EN-US")
+#include "src$OOO$EN-US.topic"
+END_TOPIC
+
+TOPIC("oops", "EN-US")
+#include "src$oops$EN-US.topic"
+END_TOPIC
+
+TOPIC("fuck", "EN-US")
+#include "src$fuck$EN-US.topic"
+END_TOPIC
+
+TOPIC("asdfa", "EN-US")
+#include "src$asdfa$EN-US.topic"
+END_TOPIC
+
+END_GROUP

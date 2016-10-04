@@ -8,15 +8,13 @@ struct MyAppWindow : TopWindow {
 			Break();
 	}
 
-	void LocalMenu(Bar& bar) {
-		bar.Add("Exit", THISBACK(Exit));
-	}
-
 	void RightDown(Point, dword) {
-		MenuBar::Execute(THISBACK(LocalMenu));
+		MenuBar::Execute(
+			[=](Bar& bar) {
+				bar.Add("Exit", [=] { Exit(); });
+			}
+		);
 	}
-
-	typedef MyAppWindow CLASSNAME;
 
 	MyAppWindow() {
 		Title("My application with local menu").Sizeable();

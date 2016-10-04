@@ -1,0 +1,4 @@
+#ifndef _KanjiFlash_icpp_init_stub
+#define _KanjiFlash_icpp_init_stub
+#include "CtrlLib/init"
+#endif

@@ -1,0 +1,8 @@
+LAYOUT(TestTabCtrlLayout, 520, 360)
+	ITEM(TabCtrl, _tab, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+
+LAYOUT(TestArrayCtrlLayout, 388, 196)
+	ITEM(ArrayCtrl, _array, HSizePosZ(0, 0).VSizePosZ(0, 0))
+END_LAYOUT
+

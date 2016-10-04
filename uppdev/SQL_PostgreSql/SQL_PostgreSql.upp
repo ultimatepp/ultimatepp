@@ -1,0 +1,16 @@
+description "Logging and using PostgreSQL\377";
+
+uses
+	CtrlLib,
+	PostgreSQL,
+	SqlCtrl;
+
+file
+	database.sch,
+	Postgres.h,
+	Postgres.cpp,
+	Postgres.lay;
+
+mainconfig
+	"" = "GUI";
+

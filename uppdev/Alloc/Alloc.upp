@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	Alloc.cpp;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC";
+

@@ -1,0 +1,12 @@
+description "Example of using server Socket - its counterpart is SocketClient\377";
+
+uses
+	Core,
+	Web;
+
+file
+	SocketServer.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,6 @@
+LAYOUT(Main, 364, 272)
+	ITEM(Button, OkButton, SetLabel(t_("OK")).LeftPosZ(284, 63).TopPosZ(240, 17))
+	ITEM(Button, CancelButton, SetLabel(t_("Cancel")).LeftPosZ(208, 63).TopPosZ(240, 17))
+	ITEM(DocEdit, Docje, SetFrame(ThinInsetFrame()).Tip(t_("sometihng")).LeftPosZ(8, 336).TopPosZ(40, 156))
+	ITEM(Label, Labeltje, SetLabel(t_("Test")).LeftPosZ(12, 80).TopPosZ(12, 20))
+END_LAYOUT

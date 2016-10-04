@@ -1,0 +1,82 @@
+<<<<<<< .mine
+30214154=======
+Gather files 0.375
+Checking files 0.031
+Removing files 0.000
+Parsing files 5.125
+TIMING PP_DEFINE      :  0.00 ns -  0.00 ns (593.00 ms / 12471437 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 12471437
+TIMING Parse          : 636.94 ms - 554.35 us (637.00 ms / 1149 ), min:  0.00 ns, max: 16.00 ms, nesting: 1 - 1149
+TIMING Expand         : 424.95 ms - 376.39 us (425.00 ms / 1129 ), min:  0.00 ns, max: 38.00 ms, nesting: 1 - 1129
+TIMING macros         : 500.95 ms - 443.71 us (501.00 ms / 1129 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1129
+TIMING Gather IDs     : 208.95 ms - 185.07 us (209.00 ms / 1129 ), min:  0.00 ns, max:  9.00 ms, nesting: 1 - 1129
+TIMING GetMasterFile  : 742.94 ms - 646.60 us (743.00 ms / 1149 ), min:  0.00 ns, max:  4.00 ms, nesting: 1 - 1149
+TIMING Preprocess     :  3.25 s  -  2.83 ms ( 3.25 s  / 1149 ), min:  0.00 ns, max: 45.00 ms, nesting: 1 - 1149
+TIMING GetIncludePath : 190.24 ms - 420.12 ns (212.00 ms / 452817 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 452817
+TIMING sCppFile make  : 999.95 us - 999.95 us ( 1.00 ms / 1 ), min:  1.00 ms, max:  1.00 ms, nesting: 1 - 1
+
+
+Gather files 0.375
+Checking files 0.016
+Removing files 0.000
+Parsing files 6.531
+TIMING PP_DEFINE      :  1.67 s  - 134.20 ns ( 2.30 s  / 12471407 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 12471407
+TIMING Parse          : 676.94 ms - 589.16 us (677.00 ms / 1149 ), min:  0.00 ns, max: 27.00 ms, nesting: 1 - 1149
+TIMING Expand         : 523.94 ms - 464.08 us (524.00 ms / 1129 ), min:  0.00 ns, max: 39.00 ms, nesting: 1 - 1129
+TIMING GetMasterFile  : 728.94 ms - 634.41 us (729.00 ms / 1149 ), min:  0.00 ns, max:  4.00 ms, nesting: 1 - 1149
+TIMING Preprocess     :  4.41 s  -  3.84 ms ( 4.41 s  / 1149 ), min:  0.00 ns, max: 50.00 ms, nesting: 1 - 1149
+TIMING GetIncludePath : 189.15 ms - 417.72 ns (212.00 ms / 452817 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 452817
+TIMING sCppFile make  : 999.95 us - 999.95 us ( 1.00 ms / 1 ), min:  1.00 ms, max:  1.00 ms, nesting: 1 - 1
+	
+* c:\upp\cppide.exe 29.03.2015 22:44:02, user: cxl
+
+Gather files 0.375
+Checking files 0.016
+Removing files 0.000
+Parsing files 5.109
+TIMING PP_DEFINE      :  0.00 ns -  0.00 ns (609.00 ms / 12471437 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 12471437
+TIMING Parse          : 658.94 ms - 573.49 us (659.00 ms / 1149 ), min:  0.00 ns, max: 16.00 ms, nesting: 1 - 1149
+TIMING Expand         : 408.94 ms - 362.22 us (409.00 ms / 1129 ), min:  0.00 ns, max: 38.00 ms, nesting: 1 - 1129
+TIMING macros         : 487.94 ms - 432.19 us (488.00 ms / 1129 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1129
+TIMING add macro      : 65.11 ms - 30.71 ns (169.00 ms / 2120492 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 2120492
+TIMING Gather IDs     : 382.94 ms - 339.19 us (383.00 ms / 1129 ), min:  0.00 ns, max: 16.00 ms, nesting: 1 - 1129
+TIMING GetMasterFile  : 705.94 ms - 614.40 us (706.00 ms / 1149 ), min:  0.00 ns, max:  5.00 ms, nesting: 1 - 1149
+TIMING Preprocess     :  3.32 s  -  2.89 ms ( 3.32 s  / 1149 ), min:  0.00 ns, max: 45.00 ms, nesting: 1 - 1149
+TIMING GetIncludePath : 188.82 ms - 416.98 ns (211.00 ms / 452817 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 452817
+TIMING PP read        : 302.94 ms - 263.43 us (303.00 ms / 1150 ), min:  0.00 ns, max: 10.00 ms, nesting: 1 - 1150
+TIMING sCppFile make  : 999.95 us - 999.95 us ( 1.00 ms / 1 ), min:  1.00 ms, max:  1.00 ms, nesting: 1 - 1
+
+
+* c:\upp\cppide.exe 30.03.2015 22:21:31, user: cxl
+
+Gather files 0.687
+Checking files 0.032
+Removing files 0.000
+Parsing files 3.281
+TIMING PP_DEFINES     :  0.00 ns -  0.00 ns ( 5.00 ms / 154902 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 154902
+TIMING Parse          : 631.95 ms - 551.44 us (632.00 ms / 1146 ), min:  0.00 ns, max: 26.00 ms, nesting: 1 - 1146
+TIMING Expand include : 10.90 ms -  4.96 us (11.00 ms / 2199 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 2199
+TIMING Expand expand  : 544.38 ms - 831.97 ns (574.00 ms / 654331 ), min:  0.00 ns, max: 16.00 ms, nesting: 1 - 654331
+TIMING Expand define  : 13.69 ms - 268.12 ns (16.00 ms / 51057 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 51057
+TIMING Expand         : 737.95 ms - 655.37 us (738.00 ms / 1126 ), min:  0.00 ns, max: 39.00 ms, nesting: 1 - 1126
+TIMING GetMasterFile  : 695.95 ms - 607.28 us (696.00 ms / 1146 ), min:  0.00 ns, max:  4.00 ms, nesting: 1 - 1146
+TIMING Preprocess     :  1.59 s  -  1.38 ms ( 1.59 s  / 1146 ), min:  0.00 ns, max: 41.00 ms, nesting: 1 - 1146
+TIMING GetIncludePath : 188.51 ms - 416.39 ns (209.00 ms / 452724 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 452724
+TIMING PP read        : 492.95 ms - 429.77 us (493.00 ms / 1147 ), min:  0.00 ns, max: 11.00 ms, nesting: 1 - 1147
+TIMING sCppFile make  : 999.95 us - 999.95 us ( 1.00 ms / 1 ), min:  1.00 ms, max:  1.00 ms, nesting: 1 - 1
+
+Gather files 0.375
+Checking files 0.016
+Removing files 0.000
+Parsing files 3.297
+TIMING PP_DEFINES     : 869.25 us -  5.61 ns ( 7.00 ms / 154902 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 154902
+TIMING Parse          : 656.95 ms - 573.26 us (657.00 ms / 1146 ), min:  0.00 ns, max: 25.00 ms, nesting: 1 - 1146
+TIMING Expand include :  4.91 ms -  2.23 us ( 5.00 ms / 2199 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 2199
+TIMING Expand expand  : 517.10 ms - 790.28 ns (543.00 ms / 654331 ), min:  0.00 ns, max: 16.00 ms, nesting: 1 - 654331
+TIMING Expand define  : 19.98 ms - 391.31 ns (22.00 ms / 51057 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 51057
+TIMING Expand         : 731.96 ms - 650.05 us (732.00 ms / 1126 ), min:  0.00 ns, max: 40.00 ms, nesting: 1 - 1126
+TIMING GetMasterFile  : 699.95 ms - 610.78 us (700.00 ms / 1146 ), min:  0.00 ns, max:  4.00 ms, nesting: 1 - 1146
+TIMING Preprocess     :  1.58 s  -  1.38 ms ( 1.58 s  / 1146 ), min:  0.00 ns, max: 41.00 ms, nesting: 1 - 1146
+TIMING GetIncludePath : 166.08 ms - 366.85 ns (184.00 ms / 452724 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 452724
+TIMING PP read        : 315.95 ms - 275.46 us (316.00 ms / 1147 ), min:  0.00 ns, max: 11.00 ms, nesting: 1 - 1147
+TIMING sCppFile make  : 999.96 us - 999.96 us ( 1.00 ms / 1 ), min:  1.00 ms, max:  1.00 ms, nesting: 1 - 1
+>>>>>>> .r8434

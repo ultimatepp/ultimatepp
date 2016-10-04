@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	slidertest.h,
+	main.cpp,
+	slidertest.lay;
+
+mainconfig
+	"" = "GUI";
+

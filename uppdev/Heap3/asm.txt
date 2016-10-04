@@ -1,0 +1,141 @@
+Alloc Index:
+
+0040130F  mov eax,[ebp+0x0]
+00401312  test eax,eax
+00401314  jnz 0x40131d
+0040131D  cmp eax,0x90
+00401322  ja 0x401370
+00401324  push esi
+00401325  push edi
+00401326  lea edi,[eax-0x1]
+00401329  shr edi,0x4
+0040132C  mov esi,edi
+
+0040132E  shl esi,0x7
+00401331  add esi,0x438f78
+00401337  mov eax,[esi+0x7c]
+0040133A  test eax,eax
+0040133C  jnz 0x40135b
+0040133E  push ebx
+0040133F  xor ebx,ebx
+00401341  push edi
+00401342  call 0x401060
+00401347  add esp,byte +0x4
+0040134A  mov [esi+ebx*4],eax
+0040134D  inc ebx
+0040134E  cmp ebx,byte +0xf
+00401351  jl 0x401341
+00401353  mov dword [esi+0x7c],0xe
+0040135A  pop ebx
+
+0040135B  inc edi
+0040135C  shl edi,0x4
+0040135F  mov [ebp+0x0],edi
+00401362  mov eax,[esi+0x7c]
+00401365  dec eax
+00401366  mov [esi+0x7c],eax
+00401369  mov eax,[esi+eax*4]
+0040136C  pop edi
+0040136D  pop esi
+0040136E  pop ebp
+0040136F  ret  (96)
+========================================================
+0040131F  mov eax,[ebp+0x0]
+00401322  test eax,eax
+00401324  jnz 0x40132d
+0040132D  cmp eax,0x90
+00401332  ja 0x401391
+00401334  push esi
+00401335  lea esi,[eax-0x1]
+00401338  shr esi,0x4
+
+0040133B  push edi
+0040133C  mov edi,[esi*8+0x438f78]
+00401343  test edi,edi
+00401345  jnz 0x40136c
+
+00401347  push ebx
+00401348  mov ebx,0xf
+0040134D  lea ecx,[ecx+0x0]
+00401350  push esi
+00401351  call 0x401060
+00401356  add esp,byte +0x4
+00401359  dec ebx
+0040135A  mov [eax],edi
+0040135C  mov edi,eax
+0040135E  jnz 0x401350
+00401360  mov dword [esi*8+0x438f7c],0xf
+0040136B  pop ebx
+
+0040136C  mov ecx,[esi*8+0x438f7c]
+00401373  mov eax,[edi]
+00401375  mov [esi*8+0x438f78],eax
+0040137C  dec ecx
+0040137D  mov [esi*8+0x438f7c],ecx
+00401384  inc esi
+00401385  shl esi,0x4
+00401388  mov eax,edi
+0040138A  pop edi
+0040138B  mov [ebp+0x0],esi
+0040138E  pop esi
+0040138F  pop ebp
+00401390  ret (113)
+---------------------------------------
+---------------------------------------
+0040132E  shl esi,0x7
+00401331  add esi,0x438f78
+00401337  mov eax,[esi+0x7c]
+0040133A  test eax,eax
+0040133C  jnz 0x40135b
+
+0040135B  inc edi
+0040135C  shl edi,0x4
+0040135F  mov [ebp+0x0],edi
+00401362  mov eax,[esi+0x7c]
+00401365  dec eax
+00401366  mov [esi+0x7c],eax
+00401369  mov eax,[esi+eax*4]
+0040136C  pop edi
+0040136D  pop esi
+0040136E  pop ebp
+0040136F  ret  (96)
+
+....................................
+0040133B  push edi
+0040133C  mov edi,[esi*8+0x438f78]
+00401343  test edi,edi
+00401345  jnz 0x40136c
+
+0040136C  mov ecx,[esi*8+0x438f7c]
+00401373  mov eax,[edi]
+00401375  mov [esi*8+0x438f78],eax
+0040137C  dec ecx
+0040137D  mov [esi*8+0x438f7c],ecx
+00401384  inc esi
+00401385  shl esi,0x4
+00401388  mov eax,edi
+0040138A  pop edi
+0040138B  mov [ebp+0x0],esi
+0040138E  pop esi
+0040138F  pop ebp
+00401390  ret (113)  1109
+
+--------------
+tm1.Elapsed() = 3844
+tm2.Elapsed() = 4031
+---------
+tm1.Elapsed() = 1516
+tm2.Elapsed() = 1781
+---------
+tm1.Elapsed() = 922
+tm2.Elapsed() = 766
+
+==============================
+tm1.Elapsed() = 3672
+tm2.Elapsed() = 4015
+---------
+tm1.Elapsed() = 1469
+tm2.Elapsed() = 1781
+---------
+tm1.Elapsed() = 860
+tm2.Elapsed() = 765

@@ -1,0 +1,5 @@
+#ifndef _PipeStreamTest_icpp_init_stub
+#define _PipeStreamTest_icpp_init_stub
+#include "Core/init"
+#include "PipeStream/init"
+#endif

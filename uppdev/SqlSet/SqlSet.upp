@@ -1,0 +1,9 @@
+uses
+	Core,
+	Sql;
+
+file
+	SqlSet.cpp;
+
+mainconfig
+	"" = "";

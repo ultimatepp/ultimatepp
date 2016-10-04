@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	hq2.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

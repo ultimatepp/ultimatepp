@@ -1,0 +1,10 @@
+You should have installed libqt4-dev package.
+
+To compile nonupp.cpp:
+g++ nonupp.cpp -o nonupp_exe $(pkg-config --cflags --libs x11)
+
+Copy all three executables in directory with libtest.so.
+Run each one from console.
+
+
+

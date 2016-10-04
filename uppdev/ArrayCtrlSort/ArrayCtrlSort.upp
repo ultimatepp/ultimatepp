@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	ArrayCtrlSort.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

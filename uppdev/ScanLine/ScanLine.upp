@@ -1,0 +1,26 @@
+optimize_speed;
+
+uses
+	Core,
+	CtrlLib;
+
+file
+	ScanLine.h,
+	ScanLineFiller.cpp,
+	SolidFiller.cpp,
+	SolidFillerMask.cpp,
+	Math.cpp,
+	Bezier.cpp,
+	Stroker.cpp,
+	Dasher.cpp,
+	Xform2D.cpp,
+	Rasterizer.cpp,
+	RasterizerClip.cpp,
+	Path.cpp,
+	help.txt,
+	Lion.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

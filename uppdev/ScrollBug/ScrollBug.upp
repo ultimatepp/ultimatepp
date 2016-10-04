@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"ScrollBug.h"
+	, main.cpp
+	, "ScrollBug.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

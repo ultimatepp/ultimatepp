@@ -1,0 +1,5 @@
+#ifndef _cpp_icpp_init_stub
+#define _cpp_icpp_init_stub
+#include "Core/init"
+#include "CppBase/init"
+#endif

@@ -1,0 +1,5 @@
+#ifndef _f602_icpp_init_stub
+#define _f602_icpp_init_stub
+#include "Core/init"
+#include "Web/init"
+#endif

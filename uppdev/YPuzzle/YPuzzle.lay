@@ -1,0 +1,18 @@
+#ifdef LAYOUTFILE
+
+LAYOUT(YPuzzleDimensionLayout, 152, 216)
+	ITEM(EditIntSpin, Xdim, Min(3).Max(15).NotNull(true).SetFrame(ThinInsetFrame()).LeftPosZ(16, 56).TopPosZ(36, 19))
+	ITEM(EditIntSpin, Ydim, Min(3).Max(15).NotNull(true).SetFrame(ThinInsetFrame()).LeftPosZ(80, 56).TopPosZ(36, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HSizePosZ(80, 8).TopPosZ(188, 20))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).HSizePosZ(8, 80).TopPosZ(188, 20))
+	ITEM(Label, dv___4, SetLabel(t_("Height:")).SetAlign(ALIGN_CENTER).LeftPosZ(80, 48).TopPosZ(20, 13))
+	ITEM(Label, dv___5, SetLabel(t_("Width:")).SetAlign(ALIGN_CENTER).LeftPosZ(16, 48).TopPosZ(20, 13))
+	ITEM(LNGCtrl, applang, LeftPosZ(32, 88).TopPosZ(108, 20))
+	ITEM(LabelBox, dv___7, SetLabel(t_("Dimension:")).LeftPosZ(8, 136).TopPosZ(4, 84))
+	ITEM(LabelBox, dv___8, SetLabel(t_("Language:")).LeftPosZ(8, 136).TopPosZ(88, 52))
+	ITEM(EditIntSpin, CellSize, Min(32).Max(64).NotNull(true).SetFrame(ThinInsetFrame()).LeftPosZ(80, 56).TopPosZ(60, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Cell size:")).SetAlign(ALIGN_RIGHT).LeftPosZ(16, 60).TopPosZ(60, 13))
+	ITEM(Label, dv___11, SetLabel(t_("Use 'SPACE' bar to shuffle\n       cells at any time.")).SetAlign(ALIGN_CENTER).LeftPosZ(12, 132).TopPosZ(144, 40))
+END_LAYOUT
+
+#endif

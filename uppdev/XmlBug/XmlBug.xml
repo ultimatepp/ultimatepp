@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Settings>
+ <CustomerList Url="/admin/gks.php?username=felicita&action=GetCustomers&since=%s" Since="20080114135838" />
+ <Cycle Time="10000" test1="Ahoj '1'" test2='test "2"' test3=2223 />
+ <WebServer Host="www.pizza-felicita.at" Port="80"/>
+ <ProductList Url="/admin/gks.php?username=felicitaaction=GetProducts&since=%s" Since="20080114135838" />
+ <OrderList Url="/admin/gks.php?username=felicitaaction=GetLastOrders&since=%s" Since="20080114135919" />
+</Settings>

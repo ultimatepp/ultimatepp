@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	LineClip.h,
+	main.cpp,
+	LineClip.lay;
+
+mainconfig
+	"" = "GUI";
+

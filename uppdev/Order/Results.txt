@@ -1,0 +1,35 @@
+------ 10 elements
+Order FindAdd: 375ms
+Order Find: 109ms, matches: 10
+tree  insert: 703ms
+tree  find: 125ms, matches: 10
+------ 40 elements
+Order FindAdd: 672ms
+Order Find: 266ms, matches: 40
+tree  insert: 859ms
+tree  find: 328ms, matches: 40
+------ 160 elements
+Order FindAdd: 1094ms
+Order Find: 485ms, matches: 160
+tree  insert: 1187ms
+tree  find: 516ms, matches: 160
+------ 640 elements
+Order FindAdd: 1703ms
+Order Find: 609ms, matches: 640
+tree  insert: 1391ms
+tree  find: 672ms, matches: 640
+------ 2560 elements
+Order FindAdd: 3640ms
+Order Find: 703ms, matches: 2560
+tree  insert: 1719ms
+tree  find: 938ms, matches: 2560
+------ 10240 elements
+Order FindAdd: 11406ms
+Order Find: 843ms, matches: 10240
+tree  insert: 2063ms
+tree  find: 1250ms, matches: 10240
+------ 40960 elements
+Order FindAdd: 57953ms
+Order Find: 1032ms, matches: 40960
+tree  insert: 2390ms
+tree  find: 1562ms, matches: 40960

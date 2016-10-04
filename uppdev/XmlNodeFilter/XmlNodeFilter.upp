@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	XmlNodeFilter.cpp,
+	info.txt;
+
+mainconfig
+	"" = "";
+

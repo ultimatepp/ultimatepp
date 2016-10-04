@@ -1,0 +1,13 @@
+uses
+	CtrlLib;
+
+library
+	"OldNames.lib Kernel32.lib Advapi32.lib User32.lib GDI32.lib GDIPlus.lib ComDlg32.lib WinSpool.lib";
+
+file
+	Scatter.h,
+	Scatter.cpp,
+	Scatter.usc;
+
+mainconfig
+	"" = "GUI";

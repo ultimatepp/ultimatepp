@@ -1,0 +1,4 @@
+LAYOUT(aggtestLayout, 772, 776)
+	ITEM(AggTestCtrl, MyAgg, HSizePosZ(4, 4).VSizePosZ(8, 8))
+END_LAYOUT
+

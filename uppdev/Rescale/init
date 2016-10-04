@@ -1,0 +1,4 @@
+#ifndef _Rescale_icpp_init_stub
+#define _Rescale_icpp_init_stub
+#include "CtrlLib/init"
+#endif

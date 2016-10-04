@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Test.cpp,
+	Div64.cpp;
+
+mainconfig
+	"" = "";

@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"Jims.h"
+	, main.cpp
+	, "Jims.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

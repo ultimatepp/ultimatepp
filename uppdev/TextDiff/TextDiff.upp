@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	TextDiffCtrl;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"nested/test.h"
+	, main.cpp
+	, "nested/test.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

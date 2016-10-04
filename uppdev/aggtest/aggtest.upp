@@ -1,0 +1,15 @@
+optimize_speed;
+
+uses
+	CtrlLib,
+	AggCtrl;
+
+file
+	aggtest.h,
+	lion.cpp,
+	main.cpp,
+	aggtest.lay;
+
+mainconfig
+	"" = "GUI";
+
