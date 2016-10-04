@@ -30,6 +30,7 @@ CONSOLE_APP_MAIN
 		RLOG("CoSort " << tm);
 	}
 
+#ifdef CPU_64
 	{
 		CoWork::SetPoolSize(400);
 		auto h1 = clone(h);
@@ -37,6 +38,7 @@ CONSOLE_APP_MAIN
 		CoSort(h1);
 		RLOG("CoSort (big pool) " << tm);
 	}
+#endif
 	
 	Thread::ShutdownThreads();
 	RLOG("Exit");
