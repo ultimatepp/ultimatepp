@@ -148,6 +148,20 @@ bool   GZCompressFile(const char *srcfile, Gate<int64, int64> progress = Null);
 bool   GZDecompressFile(const char *dstfile, const char *srcfile, Gate<int64, int64> progress = Null);
 bool   GZDecompressFile(const char *srcfile, Gate<int64, int64> progress = Null);
 
+inline
+bool   GZCompressFile(const String& dstfile, const String& srcfile, Gate<int64, int64> progress = Null)
+{ return GZCompressFile(~dstfile, ~srcfile, progress); }
+inline
+bool   GZCompressFile(const String& srcfile, Gate<int64, int64> progress = Null)
+{ return GZCompressFile(~srcfile, progress); }
+
+inline
+bool   GZDecompressFile(const String& dstfile, const String& srcfile, Gate<int64, int64> progress = Null)
+{ return GZDecompressFile(~dstfile, ~srcfile, progress); }
+inline
+bool   GZDecompressFile(const String& srcfile, Gate<int64, int64> progress = Null)
+{ return GZDecompressFile(~srcfile, progress); }
+
 /// Backward compatibility:
 
 Gate<int64, int64> AsGate64(Gate2<int, int> gate);
