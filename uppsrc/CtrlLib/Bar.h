@@ -21,7 +21,7 @@ private:
 	int&     VeHo(bool horz, Size& sz) const { return horz ? sz.cy : sz.cx; }
 
 public:
-	Callback WhenLeftClick;
+	Event<>  WhenLeftClick;
 
 	void  PaintBar(Draw& w, const SeparatorCtrl::Style& ss,
 	               const Value& pane, const Value& iconbar = Null, int iconsz = 0);
@@ -74,8 +74,8 @@ public:
 	};
 
 protected:
-	virtual Item&  AddItem(Callback cb) = 0;
-	virtual Item&  AddSubMenu(Callback1<Bar&> proc) = 0;
+	virtual Item&  AddItem(Event<>  cb) = 0;
+	virtual Item&  AddSubMenu(Event<Bar&> proc) = 0;
 	virtual void   AddCtrl(Ctrl *ctrl, int gapsize) = 0;
 	virtual void   AddCtrl(Ctrl *ctrl, Size sz) = 0;
 
@@ -86,7 +86,7 @@ public:
 	virtual void   Separator() = 0;
 
 	static  Item&  NilItem();
-	static bool    Scan(Callback1<Bar&> proc, dword key);
+	static bool    Scan(Event<Bar&> proc, dword key);
 
 	void   Break();
 	void   Gap(int size = 8);
@@ -153,14 +153,14 @@ public:
 	Item&  AddMenu(const String& text, const UPP::Image& m, const Function<void ()>& fn) { return AddMenu(~text, m, fn); }
 	Item&  AddMenu(KeyInfo& (*key)(), const UPP::Image& m, const Function<void ()>& fn);
 
-	Item&  Add(bool enable, const char *text, const Event<Bar&>& proc);
-	Item&  Add(bool enable, const String& text, const Event<Bar&>& proc) { return Add(enable, ~text, proc); }
-	Item&  Add(const char *text, const Event<Bar&>& proc);
-	Item&  Add(const String& text, const Event<Bar&>& proc) { return Add(~text, proc); }
-	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Event<Bar&>& proc);
-	Item&  Add(bool enable, const String& text, const UPP::Image& image, const Event<Bar&>& proc) { return Add(enable, ~text, proc); }
-	Item&  Add(const char *text, const UPP::Image& image, const Event<Bar&>& proc);
-	Item&  Add(const String& text, const UPP::Image& image, const Event<Bar&>& proc) { return Add(~text, image, proc); }
+	Item&  Add(bool enable, const char *text, const Callback1<Bar&>& proc);
+	Item&  Add(bool enable, const String& text, const Callback1<Bar&>& proc) { return Add(enable, ~text, proc); }
+	Item&  Add(const char *text, const Callback1<Bar&>& proc);
+	Item&  Add(const String& text, const Callback1<Bar&>& proc) { return Add(~text, proc); }
+	Item&  Add(bool enable, const char *text, const UPP::Image& image, const Callback1<Bar&>& proc);
+	Item&  Add(bool enable, const String& text, const UPP::Image& image, const Callback1<Bar&>& proc) { return Add(enable, ~text, proc); }
+	Item&  Add(const char *text, const UPP::Image& image, const Callback1<Bar&>& proc);
+	Item&  Add(const String& text, const UPP::Image& image, const Callback1<Bar&>& proc) { return Add(~text, image, proc); }
 	Item&  Sub(bool enable, const char *text, const Function<void (Bar&)>& submenu);
 	Item&  Sub(bool enable, const String& text, const Function<void (Bar&)>& submenu) { return Sub(enable, ~text, submenu); }
 	Item&  Sub(const char *text, const Function<void (Bar&)>& submenu);
@@ -179,11 +179,11 @@ public:
 	void   AddTool(Ctrl& ctrl, Size sz);
 	void   AddTool(Ctrl& ctrl, int cx, int cy = 0)  { AddTool(ctrl, Size(cx, cy)); }
 
-	Item&  Add(const UPP::Image& image, Callback callback);
-	Item&  Add(bool enable, const UPP::Image& image, Callback callback);
+	Item&  Add(const UPP::Image& image, Event<>  callback);
+	Item&  Add(bool enable, const UPP::Image& image, Event<>  callback);
 
-	virtual void AddKey(dword key, Callback cb);
-	        void AddKey(KeyInfo& (*key)(), Callback cb);
+	virtual void AddKey(dword key, Event<>  cb);
+	        void AddKey(KeyInfo& (*key)(), Event<>  cb);
 
 	virtual bool IsMenuBar() const                  { return false; }
 	virtual bool IsToolBar() const                  { return false; }
@@ -250,8 +250,8 @@ protected:
 	friend class BarPane;
 
 public:
-	Callback1<const String&> WhenHelp;
-	Callback WhenLeftClick;
+	Event<const String&> WhenHelp;
+	Event<>  WhenLeftClick;
 
 	static BarCtrl *GetBarCtrlParent(Ctrl *child);
 	static void     SendHelpLine(Ctrl *q);
@@ -299,8 +299,8 @@ public:
 	virtual bool  IsMenuBar() const                  { return true; }
 
 protected:
-	virtual Item& AddItem(Callback cb);
-	virtual Item& AddSubMenu(Callback1<Bar&> proc);
+	virtual Item& AddItem(Event<>  cb);
+	virtual Item& AddSubMenu(Event<Bar&> proc);
 	virtual Value GetBackground() const;
 
 public:
@@ -362,15 +362,15 @@ protected:
 	};
 
 public:
-	Callback WhenSubMenuOpen;
-	Callback WhenSubMenuClose;
+	Event<>  WhenSubMenuOpen;
+	Event<>  WhenSubMenuClose;
 
 	static int GetStdHeight(Font font = StdFont());
 
 	void     CloseMenu();
 
-	void     Set(Callback1<Bar&> menu);
-	void     Post(Callback1<Bar&> bar);
+	void     Set(Event<Bar&> menu);
+	void     Post(Event<Bar&> bar);
 
 	void     PopUp(Point p)                         { PopUp(GetActiveCtrl(), p); }
 	void     PopUp()                                { PopUp(GetMousePos()); }
@@ -379,9 +379,9 @@ public:
 	void     Execute(Point p)                       { Execute(GetActiveCtrl(), p); }
 	void     Execute()                              { Execute(GetMousePos()); }
 
-	static void Execute(Ctrl *owner, Callback1<Bar&> proc, Point p);
-	static void Execute(Callback1<Bar&> proc, Point p) { Execute(GetActiveCtrl(), proc, p); }
-	static void Execute(Callback1<Bar&> proc)          { Execute(proc, GetMousePos()); }
+	static void Execute(Ctrl *owner, Event<Bar&> proc, Point p);
+	static void Execute(Event<Bar&> proc, Point p) { Execute(GetActiveCtrl(), proc, p); }
+	static void Execute(Event<Bar&> proc)          { Execute(proc, GetMousePos()); }
 
 	bool     IsEmpty() const                         { return item.IsEmpty(); }
 	void     Clear();
@@ -496,8 +496,8 @@ public:
 	virtual void Paint(Draw& w);
 
 protected:
-	virtual Item& AddItem(Callback cb);
-	virtual Item& AddSubMenu(Callback1<Bar&> proc);
+	virtual Item& AddItem(Event<>  cb);
+	virtual Item& AddSubMenu(Event<Bar&> proc);
 
 public:
 	struct Style : ChStyle<Style> {
@@ -514,7 +514,7 @@ private:
 	int               ii;
 	Array<ToolButton> item;
 	int               lock;
-	Callback1<Bar&>   proc;
+	Event<Bar&>   proc;
 	const Style      *style;
 	int               arealook;
 
@@ -535,8 +535,8 @@ public:
 	static int GetStdHeight();
 
 	void Clear();
-	void Set(Callback1<Bar&> bar);
-	void Post(Callback1<Bar&> bar);
+	void Set(Event<Bar&> bar);
+	void Post(Event<Bar&> bar);
 
 	static const Style& StyleDefault();
 
@@ -571,14 +571,14 @@ public:
 class LRUList {
 	Vector<String> lru;
 	int            limit;
-	void           Select(String s, Callback1<const String&> WhenSelect);
+	void           Select(String s, Event<const String&> WhenSelect);
 
 public:
 	static int GetStdHeight();
 
 	void        Serialize(Stream& stream);
 
-	void        operator()(Bar& bar, Callback1<const String&> WhenSelect);
+	void        operator()(Bar& bar, Event<const String&> WhenSelect);
 
 	void        NewEntry(const String& path);
 	void        RemoveEntry(const String& path);

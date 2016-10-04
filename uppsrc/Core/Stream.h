@@ -98,6 +98,8 @@ public:
 	String    Get(int size);
 	String    GetAll(int size);
 	
+	int       Skip(int size);
+	
 	void      LoadThrowing()         { style |= STRM_THROW; }
 	void      LoadError();
 

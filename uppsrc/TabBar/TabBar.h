@@ -93,7 +93,7 @@ class TabScrollBar : public AlignedFrame
 		void Clear();
 		void Set(const TabScrollBar& t);
 		bool IsScrollable() const;
-		Callback WhenScroll;
+		Event<>  WhenScroll;
 };
 
 class TabBar : public AlignedFrame
@@ -407,14 +407,14 @@ protected:
 public:
 	typedef TabBar CLASSNAME;
 
-	Callback 					WhenHighlight;		// Executed on tab mouse-over
-	Callback 					WhenLeftDouble;		// Executed on left-button double-click (clicked tab will be the active tab)
+	Event<>  					WhenHighlight;		// Executed on tab mouse-over
+	Event<>  					WhenLeftDouble;		// Executed on left-button double-click (clicked tab will be the active tab)
 	Gate1<Value> 				CancelClose; 		// Return true to cancel action. Parameter: Key of closed tab
-	Callback1<Value>			WhenClose; 			// Executed before tab closing. Parameter: Key of closed tab
-	Gate	 					CancelCloseAll;		// Return true to cancel action;
-	Callback 		 			WhenCloseAll;		// Executed before 'Close All' action
+	Event<Value>				WhenClose; 			// Executed before tab closing. Parameter: Key of closed tab
+	Gate<>	 					CancelCloseAll;		// Return true to cancel action;
+	Event<>  		 			WhenCloseAll;		// Executed before 'Close All' action
 	Gate1<ValueArray>	     	CancelCloseSome;	// Return true to cancel action (executed with list of closing tabs)
-	Callback1<ValueArray>	    WhenCloseSome;		// Executed before any 'Close' action (with list of closing tabs)
+	Event<ValueArray>	    	WhenCloseSome;		// Executed before any 'Close' action (with list of closing tabs)
 
 	TabBar();
 	TabBar& CopyBaseSettings(const TabBar& src);

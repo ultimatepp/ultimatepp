@@ -173,7 +173,7 @@ class TcpSocket : NoCopy {
 	TcpSocket(const TcpSocket&);
 
 public:
-	Callback        WhenWait;
+	Event<>         WhenWait;
 	
 	void            SetSockError(const char *context, int code, const char *errdesc);
 
@@ -454,10 +454,10 @@ public:
 		METHOD_PATCH   = 8,
 	};
 
-	Callback2<const void *, int> WhenContent;
-	Callback                     WhenStart;
-	Callback                     WhenDo;
-	Gate                         WhenAuthenticate;
+	Event<const void *, int>  WhenContent;
+	Event<>                   WhenStart;
+	Event<>                   WhenDo;
+	Gate<>                    WhenAuthenticate;
 
 	HttpRequest&  MaxHeaderSize(int m)                   { max_header_size = m; return *this; }
 	HttpRequest&  MaxContentSize(int m)                  { max_content_size = m; return *this; }

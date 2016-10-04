@@ -23,12 +23,12 @@ private:
 
 public:
 	Stream                      *in;
-	Callback2<const void *, int> Filter;
-	Callback                     End;
-	Gate                         More;
+	Event<const void *, int>     Filter;
+	Event<>                      End;
+	Gate<>                       More;
 	void                         Out(const void *ptr, int size);
 	
-	Callback                     WhenOut;
+	Event<>                      WhenOut;
 	
 	template <class F>
 	void Set(Stream& in_, F& filter) {
@@ -63,8 +63,8 @@ protected:
 
 public:
 	Stream                      *out;
-	Callback2<const void *, int> Filter;
-	Callback                     End;
+	Event<const void *, int>     Filter;
+	Event<>                      End;
 	void                         Out(const void *ptr, int size);
 	
 	int64                        GetCount() const             { return count; }

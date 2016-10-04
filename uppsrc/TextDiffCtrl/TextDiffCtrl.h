@@ -79,9 +79,9 @@ private:
 	typedef TextCompareCtrl CLASSNAME;
 
 public:
-	Callback       WhenScroll;
-	Callback1<int> WhenLeftDouble;
-	Callback2<Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
+	Event<>        WhenScroll;
+	Event<int> WhenLeftDouble;
+	Event<Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 
 	void           SetCount(int c);
 	void           AddCount(int c);
@@ -118,7 +118,7 @@ public:
 	void           ClearSelection()           { cursor = Null; Refresh(); }
 	void           SetSelection(int l, int h) { cursor = l; anchor = h; }
 
-	Callback       ScrollWhen(TextCompareCtrl& pair) { return THISBACK1(PairScroll, &pair); }
+	Event<>        ScrollWhen(TextCompareCtrl& pair) { return THISBACK1(PairScroll, &pair); }
 
 	TextCompareCtrl();
 };
@@ -136,8 +136,8 @@ struct TextDiffCtrl : public Splitter {
 	void SetFont(Font f, Font nf)                          { left.SetFont(f, nf); right.SetFont(f, nf); }
 	void SetFont(Font f)                                   { left.SetFont(f); right.SetFont(f); }
 	
-	Callback1<int> WhenLeftLine;
-	Callback1<int> WhenRightLine;
+	Event<int> WhenLeftLine;
+	Event<int> WhenRightLine;
 	
 	TextDiffCtrl();
 };
@@ -155,7 +155,7 @@ struct DiffDlg : public TopWindow {
 	void Write();
 	void Execute(const String& f);
 	
-	static Callback3<const String&, Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
+	static Event<const String&, Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 	
 	DiffDlg();
 };

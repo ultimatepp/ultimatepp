@@ -86,7 +86,7 @@ protected:
 	
 	struct Finisher {
 		int               serial;
-		Callback          cb;
+		Event<>           cb;
 	};
 
 	Array<Slot> processes;
@@ -105,10 +105,10 @@ protected:
 	void FlushConsole();
 
 public:
-	Callback WhenSelect;
-	Callback1<Bar&> WhenBar;
-	Callback1<const String&> WhenLine;
-	Callback        WhenRunEnd;
+	Event<>  WhenSelect;
+	Event<Bar&> WhenBar;
+	Event<const String&> WhenLine;
+	Event<>         WhenRunEnd;
 	bool console;
 	bool verbosebuild;
 
@@ -135,7 +135,7 @@ public:
 	void Wait(int slot);
 	bool Wait();
 	
-	void OnFinish(Callback cb);
+	void OnFinish(Event<>  cb);
 
 	void WrapText(bool w)                     { wrap_text = w; }
 
@@ -202,7 +202,7 @@ private:
 	void Next();
 
 public:
-	Callback WhenTopic;
+	Event<>  WhenTopic;
 
 	void SyncDocTree();
 	void SearchWord(const String& s);
@@ -363,7 +363,7 @@ public:
 	virtual   void             IdeConsoleEndGroup();
 	virtual   bool             IdeConsoleWait();
 	virtual   bool             IdeConsoleWait(int slot);
-	virtual   void             IdeConsoleOnFinish(Callback cb);
+	virtual   void             IdeConsoleOnFinish(Event<>  cb);
 
 	virtual   bool      IdeIsDebug() const;
 	virtual   void      IdeEndDebug();

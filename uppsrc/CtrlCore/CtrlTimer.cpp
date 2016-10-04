@@ -10,7 +10,7 @@ int MemoryProbeInt;
 struct TimeEvent : public Link<TimeEvent> {
 	dword      time;
 	int        delay;
-	Callback   cb;
+	Event<>    cb;
 	void      *id;
 	bool       rep;
 };
@@ -29,7 +29,7 @@ static TimeEvent *tevents() {
 	return t.GetPtr();
 }
 
-static void sTimeCallback(dword time, int delay, Callback cb, void *id) {
+static void sTimeCallback(dword time, int delay, Event<>  cb, void *id) {
 	TimeEvent *ne = tevents()->InsertPrev();
 	ne->time = time;
 	ne->cb = cb;
@@ -43,7 +43,7 @@ void SetTimeCallback(int delay_ms, Function<void ()> cb, void *id) {
 	Mutex::Lock __(sTimerLock);
 	ASSERT(abs(delay_ms) < 0x40000000);
 	LLOG("SetTimeCallback " << delay_ms << " " << id);
-	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, Callback() << cb, id);
+	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, Event<> () << cb, id);
 }
 
 void KillTimeCallbacks(void *id, void *idlim) {
@@ -114,7 +114,7 @@ void Ctrl::TimerProc(dword time)
 		if(!todo)
 			break;
 		LLOG("Performing " << todo->time << " " << todo->delay << " " << todo->id);
-		Callback cb = todo->cb;
+		Event<>  cb = todo->cb;
 		if(todo->delay < 0)
 			todo->rep = true;
 		else

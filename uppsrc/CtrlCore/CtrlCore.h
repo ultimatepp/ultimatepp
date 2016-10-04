@@ -880,7 +880,7 @@ public:
 
 	virtual String GetDesc() const;
 
-	Callback       WhenAction;
+	Event<>        WhenAction;
 
 	void             AddChild(Ctrl *child);
 	void             AddChild(Ctrl *child, Ctrl *insafter);
@@ -1138,9 +1138,9 @@ public:
 	const Value& operator<<=(const Value& v)   { SetData(v); return v; }
 	bool         IsNullInstance() const        { return GetData().IsNull(); }
 
-	Callback     operator<<=(Callback action)  { WhenAction = action; return action; }
+	Callback     operator<<=(Callback  action) { WhenAction = action; return action; }
 
-	Callback&    operator<<(Function<void ()> action)  { return WhenAction << action; }
+	Event<>&     operator<<(Event<> action)    { return WhenAction << action; }
 
 	void    SetTimeCallback(int delay_ms, Function<void ()> cb, int id = 0);
 	void    KillTimeCallback(int id = 0);
@@ -1497,8 +1497,8 @@ protected:
 	virtual void    DrawRect(Rect r1, Rect r2);
 
 public:
-	Callback1<Rect>  sync;
-	Callback1<Rect&> round;
+	Event<Rect>  sync;
+	Event<Rect&> round;
 
 	RectTracker&    SetCursorImage(const Image& m) { cursorimage = m; return *this; }
 	RectTracker&    MinSize(Size sz)               { minsize = sz; return *this; }

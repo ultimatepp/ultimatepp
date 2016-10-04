@@ -23,7 +23,7 @@ TopicLinkDlg::TopicLinkDlg()
 	const Workspace& wspc = GetIdeWorkspace();
 	for(int i = 0; i < wspc.GetCount(); i++)
 		package.Add(wspc[i]);
-	insert <<= Breaker(IDYES);
+	insert << Breaker(IDYES);
 }
 
 String TopicLinkDlg::PackageGroup(const char *name)

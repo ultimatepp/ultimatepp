@@ -620,9 +620,9 @@ static VectorMap<String, String>& sGCfg()
 
 static StaticCriticalSection sGCfgLock;
 
-static Vector<Callback>& sGFlush()
+static Vector<Event<> >& sGFlush()
 {
-	static Vector<Callback> m;
+	static Vector<Event<> > m;
 	return m;
 }
 
@@ -636,7 +636,7 @@ void    RegisterGlobalConfig(const char *name)
 	}
 }
 
-void    RegisterGlobalConfig(const char *name, Callback WhenFlush)
+void    RegisterGlobalConfig(const char *name, Event<>  WhenFlush)
 {
 	RegisterGlobalConfig(name);
 	INTERLOCKED_(sGFlushLock) {

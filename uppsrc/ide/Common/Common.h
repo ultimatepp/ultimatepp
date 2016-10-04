@@ -77,7 +77,7 @@ enum {
 };
 
 void             RegisterWorkspaceConfig(const char *name);
-void             RegisterWorkspaceConfig(const char *name, Callback WhenFlush);
+void             RegisterWorkspaceConfig(const char *name, Event<>  WhenFlush);
 String&          WorkspaceConfigData(const char *name);
 
 template <class T>

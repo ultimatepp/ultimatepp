@@ -164,7 +164,7 @@ public: // really private:
 	static Gclipboard& gselection();
 	static String      RenderPrimarySelection(const Value& fmt);
 
-	static Vector<Callback> hotkey;
+	static Vector<Event<> > hotkey;
 	static Vector<dword>    keyhot;
 	static Vector<dword>    modhot;
             

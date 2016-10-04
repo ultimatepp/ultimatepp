@@ -246,7 +246,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
 	
-	Callback1<int> WhenFontScroll;
+	Event<int>     WhenFontScroll;
 
 	typedef AssistEditor CLASSNAME;
 

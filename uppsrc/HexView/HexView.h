@@ -64,8 +64,8 @@ private:
 public:
 	virtual int Byte(int64 adr);
 
-	Callback1<Bar&>          WhenBar;
-	Callback1<const String&> WhenGoto;
+	Event<Bar&>          WhenBar;
+	Event<const String&> WhenGoto;
 
 	void  ColumnsMenu(Bar& bar);
 	void  CharsetMenu(Bar& bar);

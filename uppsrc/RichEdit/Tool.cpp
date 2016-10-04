@@ -7,7 +7,7 @@ void RichEdit::UserAction()
 	useraction = true;
 }
 
-Callback RichEdit::User(Callback cb)
+Event<>  RichEdit::User(Event<>  cb)
 {
 	cb << THISBACK(UserAction);
 	return cb;

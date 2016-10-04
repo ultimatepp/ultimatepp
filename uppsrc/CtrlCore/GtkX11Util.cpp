@@ -128,7 +128,7 @@ int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 			q = i;
 			break;
 		}
-	hotkey.At(q) = Callback() << cb;
+	hotkey.At(q) = Event<> () << cb;
 	keyhot.At(q) = k;
 	modhot.At(q) = mod;
 	return q;

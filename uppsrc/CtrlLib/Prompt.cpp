@@ -50,7 +50,7 @@ void RedirectPrompts(RedirectPromptFn r)
 	RedirectPrompt = r;
 }
 
-int Prompt(Callback1<const String&> WhenLink,
+int Prompt(Event<const String&> WhenLink,
            const char *title, const Image& iconbmp, const char *qtf, bool okcancel,
            const char *button1, const char *button2, const char *button3,
 		   int cx,
@@ -140,7 +140,7 @@ int Prompt(Callback1<const String&> WhenLink,
 	return result;
 }
 
-int Prompt(Callback1<const String&> WhenLink,
+int Prompt(Event<const String&> WhenLink,
            const char *title, const Image& icon, const char *qtf, bool okcancel,
            const char *button1, const char *button2, const char *button3,
 		   int cx)

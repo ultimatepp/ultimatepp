@@ -168,10 +168,10 @@ protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
 
 public:
-	Callback1<Bar&>               WhenBar;
-	Callback                      WhenEnter;
-	Callback1<WString&>           WhenPasteFilter;
-	Callback1<Vector<Highlight>&> WhenHighlight;
+	Event<Bar&>               WhenBar;
+	Event<>                       WhenEnter;
+	Event<WString&>           WhenPasteFilter;
+	Event<Vector<Highlight>&> WhenHighlight;
 
 	static const Style& StyleDefault();
 	EditField&  SetStyle(const Style& s);

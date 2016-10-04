@@ -179,7 +179,7 @@ void SourceUpdater::CheckLocalSvnFinished(){
 	       "[ {{5000:5000FNGN@N; [ [1 Curent local version:]]:: [ [1 "+local+"]]:: [ [1 Will update to:]]:: [ [1 "+global+"]]}}][ &&]"
 	       "[1# If you choose to update now, your local sources (directory "+DeQtf(UpdaterCfg().localsrc)+") will be compared to the files in SVN repository ("+DeQtf(UpdaterCfg().svnserver)+"). If you modified the files in your local copy, you will be able to choose appropriate actions for each changed file before writing anything on your hard drive.]";
 	UpdaterCfg().available=(ScanInt(local)<ScanInt(global));
-	LLOG("Callback chain finished: local="<<local<<", global="<<global);
+	LLOG("Event<>  chain finished: local="<<local<<", global="<<global);
 	UpdaterCfg().last=GetUtcTime();
 	StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 	if(UpdaterCfg().available)

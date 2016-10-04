@@ -44,10 +44,10 @@ public:
 		friend class HeaderCtrl;
 
 	public:
-		Callback        WhenLeftClick;
-		Callback        WhenLeftDouble;
-		Callback        WhenAction;
-		Callback1<Bar&> WhenBar;
+		Event<>         WhenLeftClick;
+		Event<>         WhenLeftDouble;
+		Event<>         WhenAction;
+		Event<Bar&> WhenBar;
 
 		Column&  Min(int _min)                     { min = _min; return *this; }
 		Column&  Max(int _max)                     { max = _max; return *this; }
@@ -116,9 +116,9 @@ protected:
 	Vector<int> GetVisibleCi(int from);
 
 public:
-	Callback      WhenLayout;
-	Callback      WhenScroll;
-	Callback      WhenScrollVisibility;
+	Event<>       WhenLayout;
+	Event<>       WhenScroll;
+	Event<>       WhenScrollVisibility;
 
 	Rect          GetTabRect(int i);
 

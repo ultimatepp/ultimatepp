@@ -78,9 +78,9 @@ VectorMap<String, String>& sWorkspaceCfg()
 	return h;
 }
 
-Vector<Callback>& sWorkspaceCfgFlush()
+Vector<Event<> >& sWorkspaceCfgFlush()
 {
-	static Vector<Callback> h;
+	static Vector<Event<> > h;
 	return h;
 }
 
@@ -90,7 +90,7 @@ void    RegisterWorkspaceConfig(const char *name)
 	sWorkspaceCfg().Add(name);
 }
 
-void    RegisterWorkspaceConfig(const char *name, Callback WhenFlush)
+void    RegisterWorkspaceConfig(const char *name, Event<>  WhenFlush)
 {
 	RegisterWorkspaceConfig(name);
 	sWorkspaceCfgFlush().Add(WhenFlush);

@@ -56,7 +56,7 @@ public:
 	virtual void             IdeConsoleEndGroup() = 0;
 	virtual bool             IdeConsoleWait() = 0;
 	virtual bool             IdeConsoleWait(int slot) = 0;
-	virtual void             IdeConsoleOnFinish(Callback cb) = 0;
+	virtual void             IdeConsoleOnFinish(Event<>  cb) = 0;
 
 	virtual bool      IdeIsDebug() const = 0;
 	virtual void      IdeEndDebug() = 0;
@@ -114,7 +114,7 @@ void             IdeConsoleBeginGroup(String group);
 void             IdeConsoleEndGroup();
 bool             IdeConsoleWait();
 bool             IdeConsoleWait(int slot);
-void             IdeConsoleOnFinish(Callback cb);
+void             IdeConsoleOnFinish(Event<>  cb);
 void             IdeGotoCodeRef(String s);
 
 String GetDefaultMethod();

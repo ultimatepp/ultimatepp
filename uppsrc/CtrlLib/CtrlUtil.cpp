@@ -254,7 +254,7 @@ bool EditDateDlg(Date& d, const char *title, const char *label, Date min, Date m
 	return false;	
 }
 
-Callback CtrlRetriever::operator<<=(Callback cb)
+Event<>  CtrlRetriever::operator<<=(Event<>  cb)
 {
 	for(int i = 0; i < item.GetCount(); i++) {
 		CtrlItem0 *m = dynamic_cast<CtrlItem0 *>(&item[i]);

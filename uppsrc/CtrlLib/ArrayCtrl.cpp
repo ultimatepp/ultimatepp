@@ -62,7 +62,7 @@ ArrayCtrl::Column& ArrayCtrl::Column::SetDisplay(const Display& d)
 	return *this;
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback2<int, One<Ctrl>&> _factory)
+ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Event<int, One<Ctrl>&> _factory)
 {
 	factory = _factory;
 	arrayctrl->hasctrls = arrayctrl->headerctrls = true;
@@ -72,15 +72,9 @@ ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback2<int, One<Ctrl>&> _factory)
 	return *this;
 }
 
-void ArrayCtrl::Column::Factory1(int, One<Ctrl>& x)
-{
-	factory1(x);
-}
-
 ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback1<One<Ctrl>&> _factory)
 {
-	factory1 = _factory;
-	return Ctrls(THISBACK(Factory1));
+	return Ctrls([=](int, One<Ctrl>& x) { _factory(x); });
 }
 
 void ArrayCtrl::Column::ClearCache() {
@@ -3015,7 +3009,7 @@ ArrayCtrl::ArrayCtrl() {
 	header.WhenScroll = THISBACK(HeaderScroll);
 	sb.WhenScroll = THISBACK(Scroll);
 	header.Moving();
-	WhenAcceptRow = true;
+	WhenAcceptRow = [] { return true; };
 	WhenBar = THISBACK(StdBar);
 	SetFrame(ViewFrame());
 	oddpaper = evenpaper = SColorPaper;

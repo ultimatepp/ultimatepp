@@ -231,7 +231,6 @@ void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 	if(xml.IsStoring()) {
 		for(int i = 0; i < data.GetCount(); i++)
 			if(!data.IsUnlinked(i)) {
-				//XmlizeStore(xml.Add(keytag), data.GetKey(i)); //FIXME xmlize with hashfn awareness
 				XmlIO io = xml.Add(keytag);
 				XmlizeStore(io, data[i]);
 			}
@@ -239,10 +238,7 @@ void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
 	else {
 		data.Clear();
 		int i = 0;
-		//while(i < xml->GetCount() - 1 && xml->Node(i).IsTag(keytag) && xml->Node(i + 1).IsTag(valuetag)) {
 		while(i < xml->GetCount() && xml->Node(i).IsTag(keytag)) {
-			//K key;
-			//Xmlize(xml.At(i++), key); //FIXME dexmlize with hashfn awareness
 			K k;
 			XmlIO io = xml.At(i++);
 			Xmlize(io, k);
@@ -261,34 +257,34 @@ struct ParamHelper__ {
 	ParamHelper__(T& data) : data(data) {}
 };
 
-String StoreAsXML(Callback1<XmlIO> xmlize, const char *name);
-bool   LoadFromXML(Callback1<XmlIO> xmlize, const String& xml);
-bool   TryLoadFromXML(Callback1<XmlIO> xmlize, const String& xml);
+String DoStoreAsXML(Event<XmlIO> xmlize, const char *name);
+bool   DoLoadFromXML(Event<XmlIO> xmlize, const String& xml);
+bool   DoTryLoadFromXML(Event<XmlIO> xmlize, const String& xml);
 
 template <class T>
 String StoreAsXML(const T& data, const char *name = NULL)
 {
 	ParamHelper__<T> p(const_cast<T &>(data));
-	return StoreAsXML(callback(&p, &ParamHelper__<T>::Invoke), name);
+	return DoStoreAsXML([&](XmlIO io) { Xmlize(io, const_cast<T &>(data)); }, name);
 }
 
 template <class T>
 bool LoadFromXML(T& data, const String& xml)
 {
 	ParamHelper__<T> p(data);
-	return LoadFromXML(callback(&p, &ParamHelper__<T>::Invoke), xml);
+	return DoLoadFromXML(callback(&p, &ParamHelper__<T>::Invoke), xml);
 }
 
 template <class T>
 bool TryLoadFromXML(T& data, const String& xml)
 {
 	ParamHelper__<T> p(data);
-	return TryLoadFromXML(callback(&p, &ParamHelper__<T>::Invoke), xml);
+	return DoTryLoadFromXML(callback(&p, &ParamHelper__<T>::Invoke), xml);
 }
 
-bool StoreAsXMLFile(Callback1<XmlIO> xmlize, const char *name = NULL, const char *file = NULL);
-bool LoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file = NULL);
-bool TryLoadFromXMLFile(Callback1<XmlIO> xmlize, const char *file = NULL);
+bool StoreAsXMLFile(Event<XmlIO> xmlize, const char *name = NULL, const char *file = NULL);
+bool LoadFromXMLFile(Event<XmlIO> xmlize, const char *file = NULL);
+bool TryLoadFromXMLFile(Event<XmlIO> xmlize, const char *file = NULL);
 
 template <class T>
 bool StoreAsXMLFile(T& data, const char *name = NULL, const char *file = NULL)

@@ -83,8 +83,8 @@ public:
 
 class CoWork : NoCopy {
 public:
-	void     Do(Callback cb)        { cb(); }
-	CoWork&  operator&(Callback cb) { cb(); return *this; }
+	void     Do(Event<>  cb)        { cb(); }
+	CoWork&  operator&(Event<>  cb) { cb(); return *this; }
 	void     Finish()               {}
 	bool     IsFinished()           { return true; }
 

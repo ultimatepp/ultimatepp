@@ -257,7 +257,7 @@ bool Console::Run(One<AProcess> pick_ process, const char *cmdline, Stream *out,
 	return true;
 }
 
-void Console::OnFinish(Callback cb)
+void Console::OnFinish(Event<>  cb)
 {
 	Finisher& f = finisher.Add();
 	f.serial = serial;

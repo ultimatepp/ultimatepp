@@ -120,7 +120,7 @@ void DiffDlg::Write()
 	}
 }
 
-Callback3<const String&, Vector<LineEdit::Highlight>&, const WString&> DiffDlg::WhenHighlight;
+Event<const String&, Vector<LineEdit::Highlight>&, const WString&> DiffDlg::WhenHighlight;
 
 static void sDoHighlight(Vector<LineEdit::Highlight>& hl, const WString& ln, const String *path)
 {

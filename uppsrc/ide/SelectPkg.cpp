@@ -89,8 +89,8 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	base.WhenCursor = THISBACK(OnBase);
 	base.WhenBar = THISBACK(ToolBase);
 	base.WhenLeftDouble = THISBACK(OnBaseEdit);
-	ok <<= clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
-	cancel <<= WhenClose = THISBACK(OnCancel);
+	ok.WhenAction = clist.WhenLeftDouble = alist.WhenLeftDouble = THISBACK(OnOK);
+	cancel.WhenAction = WhenClose = THISBACK(OnCancel);
 	clist.Columns(4);
 	clist.WhenEnterItem = clist.WhenKillCursor = THISBACK(ListCursor);
 	alist.AddColumn("Package").Add(3);

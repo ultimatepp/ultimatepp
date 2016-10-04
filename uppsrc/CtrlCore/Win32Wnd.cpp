@@ -714,7 +714,7 @@ bool PassWindowsKey(int wParam)
 	||     wParam >= 0x90; // OEM keys
 }
 
-Vector<Callback> Ctrl::hotkey;
+Vector<Event<> > Ctrl::hotkey;
 
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
@@ -725,7 +725,7 @@ int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 			q = i;
 			break;
 		}
-	hotkey.At(q) = Callback() << cb;
+	hotkey.At(q) = Event<> () << cb;
 	dword mod = 0;
 	if(key & K_ALT)
 		mod |= MOD_ALT;

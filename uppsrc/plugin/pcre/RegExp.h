@@ -98,11 +98,11 @@ public:
 
 	int            Replace(String& t, const Vector<String>& rv, bool backref=false);
 	int            Replace(String& t, const String& r, bool backref=false);
-	int            Replace(String& t, Callback1<Vector<String>&> cbr);
+	int            Replace(String& t, Event<Vector<String>&> cbr);
 	
 	int            ReplaceGlobal(String& t, const Vector<String>& rv, bool backref=false);
 	int            ReplaceGlobal(String& t, const String& r, bool backref=false);
-	int            ReplaceGlobal(String& t, Callback1<Vector<String>&> cbr);
+	int            ReplaceGlobal(String& t, Event<Vector<String>&> cbr);
 	
 	Vector<String> GetStrings();
 	String         GetPattern() const { return pattern; }

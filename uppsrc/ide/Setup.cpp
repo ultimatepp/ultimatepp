@@ -30,7 +30,7 @@ class FontSelectManager {
 	void Select();
 
 public:
-	Callback  WhenAction;
+	Event<>   WhenAction;
 
 	typedef FontSelectManager CLASSNAME;
 
@@ -487,7 +487,7 @@ void Ide::SetupFormat() {
 	hlt.hlstyle.EvenRowColor().NoHorzGrid().SetLineCy(EditField::GetStdHeight() + 2);
 	ReadHlStyles(hlt.hlstyle);
 	edt.charset <<= (int)default_charset;
-	edt.tabsize <<= rtvr <<=
+	edt.tabsize.WhenAction = rtvr <<=
 		hlt.hlstyle.WhenCtrlsAction = ed.WhenAction = tf.WhenAction =
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
 	ide.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);

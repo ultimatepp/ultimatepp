@@ -333,7 +333,7 @@ void UpdateCodeBase(Progress& pi)
 	UpdateCodeBase2(pi);
 }
 
-void ParseSrc(Stream& in, int file, Callback2<int, const String&> error)
+void ParseSrc(Stream& in, int file, Event<int, const String&> error)
 {
 	String path = GetSourceFilePath(file);
 	CLOG("====== Parse " << file << ": " << path);

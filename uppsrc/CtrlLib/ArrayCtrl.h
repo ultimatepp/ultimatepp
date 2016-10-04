@@ -1,8 +1,7 @@
-
 template <class T>
 void DefaultCtrlFactoryFn(One<Ctrl>& ctrl)
 {
-	ctrl = new T;
+	ctrl.Create<T>();
 }
 
 template <class T>
@@ -60,8 +59,8 @@ public:
 		const Convert        *convert;
 		Ptr<Ctrl>             edit;
 		const Display        *display;
-		Callback2<int, One<Ctrl>&> factory;
-		Callback1< One<Ctrl>& > factory1;
+		Event<int, One<Ctrl>&> factory;
+		Event<One<Ctrl>&>     factory1;
 		int                 (*accel)(int);
 		int                   margin;
 		bool                  cached;
@@ -77,7 +76,6 @@ public:
 		void   RemoveCache(int i);
 		void   ClearCache();
 		void   Sorts();
-		void   Factory1(int, One<Ctrl>& ctrl);
 		
 		typedef Column CLASSNAME;
 
@@ -94,12 +92,12 @@ public:
 		Column& SetDisplay(const Display& d);
 		Column& NoEdit();
 		Column& Edit(Ctrl& e);
-		Column& Ctrls(Callback1<One<Ctrl>&> factory);
-		Column& Ctrls(void (*factory)(One<Ctrl>&)) { return Ctrls(callback(factory)); }
+		Column& Ctrls(Callback1<One<Ctrl>&> factory); // deprecated
+		Column& Ctrls(void (*factory)(One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int, One<Ctrl>& h) { factory(h); })); }
 		template <class T>
 		Column& Ctrls()                            { return Ctrls(DefaultCtrlFactory<T>()); }
-		Column& Ctrls(Callback2<int, One<Ctrl>&> factory);
-		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(callback(factory)); }
+		Column& Ctrls(Event<int, One<Ctrl>&> factory);
+		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int a, One<Ctrl>& b){ factory(a, b); })); }
 		Column& InsertValue(const Value& v);
 		Column& InsertValue(ValueGen& g);
 		Column& NoClickEdit()                      { clickedit = false; return *this; }
@@ -343,36 +341,36 @@ protected:
 	void   ClearModify();
 
 public:
-	Callback          WhenSel; // the most usual ArrayCtrl callbak
+	Event<>           WhenSel; // the most usual ArrayCtrl callbak
 
-	Callback          WhenLeftDouble;
-	Callback1<Point>  WhenMouseMove;
-	Callback          WhenEnterKey;
-	Callback          WhenLeftClick;
-	Callback1<Bar&>   WhenBar;
-	Gate              WhenAcceptRow;
-	Callback          WhenUpdateRow;
-	Callback          WhenArrayAction;
-	Callback          WhenStartEdit;
-	Callback          WhenAcceptEdit;
-	Callback          WhenCtrlsAction;
-	Callback          WhenScroll;
-	Callback          WhenHeaderLayout;
+	Event<>           WhenLeftDouble;
+	Event<Point>      WhenMouseMove;
+	Event<>           WhenEnterKey;
+	Event<>           WhenLeftClick;
+	Event<Bar&>       WhenBar;
+	Gate<>            WhenAcceptRow;
+	Event<>           WhenUpdateRow;
+	Event<>           WhenArrayAction;
+	Event<>           WhenStartEdit;
+	Event<>           WhenAcceptEdit;
+	Event<>           WhenCtrlsAction;
+	Event<>           WhenScroll;
+	Event<>           WhenHeaderLayout;
 
-	Callback2<int, bool&> WhenLineEnabled;
-	Callback2<int, bool&> WhenLineVisible;
+	Event<int, bool&> WhenLineEnabled;
+	Event<int, bool&> WhenLineVisible;
 
-	Callback                        WhenDrag;
-	Callback3<int, int, PasteClip&> WhenDropCell;
-	Callback2<int, PasteClip&>      WhenDropInsert;
-	Callback2<int, PasteClip&>      WhenDropLine;
-	Callback1<PasteClip&>           WhenDrop;
+	Event<>                     WhenDrag;
+	Event<int, int, PasteClip&> WhenDropCell;
+	Event<int, PasteClip&>      WhenDropInsert;
+	Event<int, PasteClip&>      WhenDropLine;
+	Event<PasteClip&>           WhenDrop;
 
 	//Deprecated - use WhenSel
-	Callback          WhenEnterRow;
-	Callback          WhenKillCursor;
-	Callback          WhenCursor;
-	Callback          WhenSelection;
+	Event<>           WhenEnterRow;
+	Event<>           WhenKillCursor;
+	Event<>           WhenCursor;
+	Event<>           WhenSelection;
 
 	IdInfo&    IndexInfo(int ii);
 	IdInfo&    IndexInfo(const Id& id);
@@ -738,9 +736,9 @@ public:
 	void               Click();
 
 public:
-	Callback           WhenAction;
+	Event<>            WhenAction;
 
-	Callback           operator <<= (Callback cb)                  { return WhenAction = cb; }
+	Event<>            operator <<= (Event<>  cb)                  { return WhenAction = cb; }
 
 private:
 	Vector<int>        index;

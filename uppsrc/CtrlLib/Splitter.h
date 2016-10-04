@@ -34,7 +34,7 @@ protected: // Because of docking... (will be private)
 	friend class SplitterFrame;
 
 public:
-	Callback  WhenSplitFinish;
+	Event<>   WhenSplitFinish;
 
 	void      Set(Ctrl& l, Ctrl& r);
 

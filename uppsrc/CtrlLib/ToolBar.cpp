@@ -52,7 +52,7 @@ void ToolBar::Paint(Draw& w)
 	PaintBar(w, style->breaksep, look);
 }
 
-Bar::Item& ToolBar::AddItem(Callback cb)
+Bar::Item& ToolBar::AddItem(Event<>  cb)
 {
 	ToolButton& m = item.DoIndex(ii++);
 	m.ResetKeepStyle();
@@ -66,7 +66,7 @@ Bar::Item& ToolBar::AddItem(Callback cb)
 	return m;
 }
 
-Bar::Item& ToolBar::AddSubMenu(Callback1<Bar&> proc)
+Bar::Item& ToolBar::AddSubMenu(Event<Bar&> proc)
 {
 	if(item.GetCount())
 		Separator();
@@ -85,7 +85,7 @@ bool ToolBar::HotKey(dword key)
 	return Bar::Scan(proc, key) || Ctrl::HotKey(key);
 }
 
-void ToolBar::Set(Callback1<Bar&> bar)
+void ToolBar::Set(Event<Bar&> bar)
 {
 	LTIMING("SetToolBar");
 	if(lock) return;
@@ -102,7 +102,7 @@ void ToolBar::Set(Callback1<Bar&> bar)
 	lock--;
 }
 
-void ToolBar::Post(Callback1<Bar&> bar)
+void ToolBar::Post(Event<Bar&> bar)
 {
 	KillTimeCallback(TIMEID_POST);
 	SetTimeCallback(0, PTEBACK1(Set, bar), TIMEID_POST);

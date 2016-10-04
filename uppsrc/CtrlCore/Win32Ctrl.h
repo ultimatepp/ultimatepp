@@ -48,7 +48,7 @@ protected:
 	Image DoMouse(int e, Point p, int zd = 0);
 	static void sProcessMSG(MSG& msg);
 
-	static  Vector<Callback> hotkey;
+	static  Vector<Event<> > hotkey;
 
 	friend void sSetCursor(Ctrl *ctrl, const Image& m);
 	

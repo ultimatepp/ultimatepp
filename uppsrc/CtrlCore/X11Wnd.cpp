@@ -173,7 +173,7 @@ dword X11mods(dword key)
 	return mod;
 }
 
-Vector<Callback> Ctrl::hotkey;
+Vector<Event<> > Ctrl::hotkey;
 Vector<dword> Ctrl::keyhot;
 Vector<dword> Ctrl::modhot;
 

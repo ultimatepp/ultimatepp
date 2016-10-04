@@ -111,7 +111,7 @@ void MenuBar::Clear()
 	lock--;
 }
 
-Bar::Item& MenuBar::AddItem(Callback cb)
+Bar::Item& MenuBar::AddItem(Event<>  cb)
 {
 	LLOG("MenuBar::AddItem " << Name());
 	MenuItemBase *q;
@@ -131,7 +131,7 @@ Bar::Item& MenuBar::AddItem(Callback cb)
 	return *q;
 }
 
-Bar::Item& MenuBar::AddSubMenu(Callback1<Bar&> proc)
+Bar::Item& MenuBar::AddSubMenu(Event<Bar&> proc)
 {
 	LLOG("MenuBar::AddSubMenu " << Name());
 	SubMenuBase *w;
@@ -248,7 +248,7 @@ void MenuBar::SyncState()
 void MenuBar::ChildGotFocus()
 {
 	if(submenu && !submenuitem->HasFocusDeep() && !ExistsTimeCallback()) {
-	   	if(submenu->IsOpen())
+		if(submenu->IsOpen())
 			submenu->DelayedClose();
 	}
 	KillDelayedClose();
@@ -469,7 +469,7 @@ void MenuBar::KillDelayedClose()
 	KillTimeCallback(TIMEID_STOP);
 }
 
-void MenuBar::Set(const Callback1<Bar&> menu)
+void MenuBar::Set(const Event<Bar&> menu)
 {
 	if(lock) return;
 	Clear();
@@ -480,7 +480,7 @@ void MenuBar::Set(const Callback1<Bar&> menu)
 	lock--;
 }
 
-void MenuBar::Post(Callback1<Bar&> bar)
+void MenuBar::Post(Event<Bar&> bar)
 {
 	KillTimeCallback(TIMEID_POST);
 	SetTimeCallback(0, THISBACK1(Set, bar), TIMEID_POST);
@@ -580,7 +580,7 @@ void MenuBar::Execute(Ctrl *owner, Point p)
 	ows.SetCount(level);
 }
 
-void MenuBar::Execute(Ctrl *owner, Callback1<Bar&> proc, Point p)
+void MenuBar::Execute(Ctrl *owner, Event<Bar&> proc, Point p)
 {
 	MenuBar bar;
 	proc(bar);

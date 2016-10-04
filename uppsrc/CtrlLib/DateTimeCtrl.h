@@ -59,7 +59,7 @@ public:
 	FlatSpin();
 	void SetText(const String& s);
 	void SetTips(const char *tipl, const char *tipr);
-	void SetCallbacks(const Callback &cbl, const Callback& cbr);
+	void SetCallbacks(const Event<>& cbl, const Event<>& cbr);
 
 	FlatSpin& Selectable(bool b = true);
 	int GetWidth(const String& s, bool with_buttons = true);
@@ -87,8 +87,8 @@ protected:
 public:
 	PopUpCtrl() : popup(false) {}
 
-	Callback WhenPopDown;
-	Callback WhenDeactivate;
+	Event<>  WhenPopDown;
+	Event<>  WhenDeactivate;
 	virtual void Deactivate();
 	virtual Size ComputeSize() = 0;
 	virtual void Reset() {}
@@ -208,8 +208,8 @@ private:
 
 public:
 	Calendar();
-	Callback1<Time &> WhenTime;
-	Callback1<Date>   WhenWeek;
+	Event<Time &> WhenTime;
+	Event<Date>   WhenWeek;
 
 	static const Style& StyleDefault();
 
@@ -246,7 +246,7 @@ public:
 
 	void PopUp(Ctrl *owner, Rect &rt);
 
-	Callback WhenSelect;
+	Event<>  WhenSelect;
 };
 
 struct LineCtrl : Ctrl
@@ -406,7 +406,7 @@ public:
 	Clock clock;
 
 	CalendarClock(int m = MODE_TIME);
-	Callback WhenPopDown;
+	Event<>  WhenPopDown;
 
 	virtual void Deactivate();
 	virtual bool Key(dword key, int count);
@@ -490,7 +490,7 @@ class DateTimeCtrl : public T {
 
 		}
 		if(WhenWeek)
-			cc.calendar.WhenWeek = Proxy(WhenWeek);
+			cc.calendar.WhenWeek = WhenWeek.Proxy();
 		else
 			cc.calendar.WhenWeek.Clear();
 		cc.PopUp(this, r);
@@ -501,7 +501,7 @@ class DateTimeCtrl : public T {
 public:
 	typedef DateTimeCtrl CLASSNAME;
 	
-	Callback1<Date> WhenWeek;
+	Event<Date> WhenWeek;
 
 	DateTimeCtrl(int m) : cc(m) {
 		drop.AddTo(*this);
@@ -512,7 +512,7 @@ public:
 		cc.calendar   <<= THISBACK(OnCalendarChoice);
 		cc.clock      <<= THISBACK(OnClockChoice);
 		cc.WhenPopDown  = THISBACK(OnClose);
-		cc.calendar.WhenSelect = Proxy(WhenSelect);
+		cc.calendar.WhenSelect = WhenSelect.Proxy();
 	}
 
 	virtual void GotFocus()  { T::GotFocus(); drop.RefreshFrame(); }
@@ -532,7 +532,7 @@ public:
 	DateTimeCtrl& OneButton(bool b = true)                         { cc.calendar.OneButton(true); return *this; }
 	DateTimeCtrl& NoOneButton()                                    { cc.calendar.OneButton(false); return *this; }
 
-	Callback WhenSelect;
+	Event<>  WhenSelect;
 };
 
 class DropDate : public DateTimeCtrl<EditDate>

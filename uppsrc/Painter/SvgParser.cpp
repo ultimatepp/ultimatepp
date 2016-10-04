@@ -443,7 +443,7 @@ SvgParser::SvgParser(const char *svg, Painter& sw)
 	Reset();
 }
 
-bool ParseSVG(Painter& p, const char *svg, Callback2<String, String&> resloader, Rectf *boundingbox)
+bool ParseSVG(Painter& p, const char *svg, Event<String, String&> resloader, Rectf *boundingbox)
 {
 	SvgParser sp(svg, p);
 	sp.bp.compute_svg_boundingbox = boundingbox;
@@ -455,14 +455,14 @@ bool ParseSVG(Painter& p, const char *svg, Callback2<String, String&> resloader,
 	return true;
 }
 
-bool RenderSVG(Painter& p, const char *svg, Callback2<String, String&> resloader)
+bool RenderSVG(Painter& p, const char *svg, Event<String, String&> resloader)
 {
 	return ParseSVG(p, svg, resloader, NULL);
 }
 
 bool RenderSVG(Painter& p, const char *svg)
 {
-	return RenderSVG(p, svg, Callback2<String, String&>());
+	return RenderSVG(p, svg, Event<String, String&>());
 }
 
 void GetSVGDimensions(const char *svg, Sizef& sz, Rectf& viewbox)
@@ -485,12 +485,12 @@ Rectf GetSVGBoundingBox(const char *svg)
 {
 	NilPainter nil;
 	Rectf bb;
-	if(!ParseSVG(nil, svg, Callback2<String, String&>(), &bb))
+	if(!ParseSVG(nil, svg, Event<String, String&>(), &bb))
 		return Null;
 	return bb;
 }
 
-Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&> resloader)
+Image RenderSVGImage(Size sz, const char *svg, Event<String, String&> resloader)
 {
 	Rectf f = GetSVGBoundingBox(svg);
 	Sizef iszf = GetFitSize(f.GetSize(), Sizef(sz.cx, sz.cy) - 10.0);
@@ -508,7 +508,7 @@ Image RenderSVGImage(Size sz, const char *svg, Callback2<String, String&> resloa
 
 Image RenderSVGImage(Size sz, const char *svg)
 {
-	return RenderSVGImage(sz, svg, Callback2<String, String&>());
+	return RenderSVGImage(sz, svg, Event<String, String&>());
 }
 
 }

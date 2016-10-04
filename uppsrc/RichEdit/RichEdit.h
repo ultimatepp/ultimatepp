@@ -49,12 +49,12 @@ private:
 	int           newtabalign;
 	
 public:
-	Callback      WhenLeftDouble;
-	Callback      WhenLeftDown;
-	Callback      WhenRightDown;
-	Callback      WhenBeginTrack;
-	Callback      WhenTrack;
-	Callback      WhenEndTrack;
+	Event<>       WhenLeftDouble;
+	Event<>       WhenLeftDown;
+	Event<>       WhenRightDown;
+	Event<>       WhenBeginTrack;
+	Event<>       WhenTrack;
+	Event<>       WhenEndTrack;
 
 	void          SetLayout(int x, int pgcx, Zoom zoom, double grid,
 	                        int numbers = INT_MAX, double numbermul = 1, int marks = INT_MAX,
@@ -636,7 +636,7 @@ private:
 	};
 
 	void UserAction();
-	Callback User(Callback cb);
+	Event<>  User(Event<>  cb);
 
 	static void   SpellerAdd(const WString& w, int lang);
 	static int    CompareStyle(const Value& a, const Value& b);
@@ -661,12 +661,12 @@ public:
 	static Bits   SpellParagraph(const RichPara& p);
 	static void   FixedLang(int lang)              { fixedlang = lang; }
 
-	Callback                     WhenRefreshBar;
-	Callback                     WhenStartEvaluating;
-	Callback2<String&, WString&> WhenHyperlink;
-	Callback1<String&>           WhenLabel;
-	Callback1<String&>           WhenIndexEntry;
-	Callback1<Bar&>              WhenBar;
+	Event<>                  WhenRefreshBar;
+	Event<>                  WhenStartEvaluating;
+	Event<String&, WString&> WhenHyperlink;
+	Event<String&>           WhenLabel;
+	Event<String&>           WhenIndexEntry;
+	Event<Bar&>              WhenBar;
 
 	void   StdBar(Bar& menu);
 
