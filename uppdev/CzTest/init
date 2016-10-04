@@ -1,0 +1,5 @@
+#ifndef _CzTest_icpp_init_stub
+#define _CzTest_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#endif

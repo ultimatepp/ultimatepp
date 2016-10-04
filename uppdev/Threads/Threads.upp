@@ -1,0 +1,18 @@
+description "Using paralelization with limited number of threads";
+
+uses
+	CtrlLib;
+
+file
+	complex.h,
+	Threads.cpp,
+	Threads.t,
+	Threads.h,
+	main.cpp,
+	paintbox.cpp,
+	paintbox.h,
+	Threads.lay;
+
+mainconfig
+	"" = "GUI MT";
+

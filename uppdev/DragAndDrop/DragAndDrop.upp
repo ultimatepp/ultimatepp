@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	dnd.h,
+	target.cpp,
+	source.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,22 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	Core.h,
+	HeapImp.h,
+	Heap.cpp,
+	AString.h,
+	AString.hpp,
+	String.h,
+	String.cpp,
+	WString.h,
+	WString.cpp,
+	idmap.cpp,
+	main.cpp,
+	bench.txt;
+
+mainconfig
+	"" = "",
+	"" = "MT";

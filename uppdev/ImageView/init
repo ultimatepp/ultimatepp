@@ -1,0 +1,8 @@
+#ifndef _ImageView_icpp_init_stub
+#define _ImageView_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\tif/init"
+#include "plugin\jpg/init"
+#include "plugin\gif/init"
+#include "plugin\pcx/init"
+#endif

@@ -1,0 +1,151 @@
+============================================================
+ST
+
+String
+Slices               New:  438ms Old: 1406ms Ratio:3.2
+Cat 10               New:   63ms Old:  187ms Ratio:3.0
+Cat 20               New:  156ms Old:  328ms Ratio:2.1
+Cat 30               New:  235ms Old:  437ms Ratio:1.9
+Cat 64               New:  610ms Old:  797ms Ratio:1.3
+Cat 200              New: 1875ms Old: 2125ms Ratio:1.1
+Copy 10              New:  484ms Old:  484ms Ratio:1.0
+Copy 20              New: 2750ms Old:  500ms Ratio:0.2
+Copy 30              New: 2735ms Old:  484ms Ratio:0.2
+Copy 64              New: 1563ms Old:  500ms Ratio:0.3
+Key mix              New:  359ms Old: 1078ms Ratio:3.0
+WString
+Slices               New:  609ms Old: 1329ms Ratio:2.2
+Cat 10               New:   78ms Old:  234ms Ratio:3.0
+Cat 20               New:  125ms Old:  328ms Ratio:2.6
+Cat 30               New:  328ms Old:  516ms Ratio:1.6
+Cat 64               New:  906ms Old:  906ms Ratio:1.0
+Cat 200              New: 2922ms Old: 2157ms Ratio:0.7
+Copy 10              New: 2125ms Old:  484ms Ratio:0.2
+Copy 20              New: 2125ms Old:  500ms Ratio:0.2
+Copy 30              New: 1219ms Old:  484ms Ratio:0.4
+Copy 64              New: 1234ms Old:  485ms Ratio:0.4
+Key mix              New:  859ms Old: 1313ms Ratio:1.5
+============================================================
+MT
+
+String
+Slices               New:  453ms Old: 2235ms Ratio:4.9
+Cat 10               New:   78ms Old:  234ms Ratio:3.0
+Cat 20               New:  156ms Old:  469ms Ratio:3.0
+Cat 30               New:  235ms Old:  531ms Ratio:2.3
+Cat 64               New:  625ms Old:  984ms Ratio:1.6
+Cat 200              New: 2125ms Old: 2406ms Ratio:1.1
+Copy 10              New:  469ms Old: 2235ms Ratio:4.8
+Copy 20              New: 3281ms Old: 2219ms Ratio:0.7
+Copy 30              New: 3281ms Old: 2234ms Ratio:0.7
+Copy 64              New: 3063ms Old: 2234ms Ratio:0.7
+Key mix              New:  375ms Old: 1141ms Ratio:3.0
+------------------------------------------------------
+WString
+Slices               New:  687ms Old: 2250ms Ratio:3.3
+Cat 10               New:   78ms Old:  344ms Ratio:4.4
+Cat 20               New:  125ms Old:  422ms Ratio:3.4
+Cat 30               New:  391ms Old:  656ms Ratio:1.7
+Cat 64               New: 1000ms Old: 1078ms Ratio:1.1
+Cat 200              New: 3297ms Old: 2390ms Ratio:0.7
+Copy 10              New: 2594ms Old: 2219ms Ratio:0.9
+Copy 20              New: 2594ms Old: 2218ms Ratio:0.9
+Copy 30              New: 2985ms Old: 2203ms Ratio:0.7
+Copy 64              New: 2984ms Old: 2219ms Ratio:0.7
+Key mix              New:  859ms Old: 1407ms Ratio:1.6
+
+--------------------------------------------
+0040189D  mov dword [0x0],0x0
+004018A7  mov al,[edi+0xe]
+004018AA  cmp al,0xff
+004018AC  jnz 0x4018b5
+004018AE  mov edx,[edi]
+004018B0  mov edx,[edx-0x4]
+004018B3  jmp short 0x4018b8
+004018B5  movzx edx,al
+004018B8  cmp ecx,edx
+004018BA  jnl near 0x401942
+004018C0  cmp al,0x1
+004018C2  jna 0x4018cc
+004018C4  mov eax,[edi]
+004018C6  cmp dword [eax-0x8],byte +0x1
+004018CA  jnz 0x401942
+
+
+0040186D  mov dword [0x0],0x0
+00401877  mov al,[edi+0xe]
+0040187A  cmp al,0x1
+0040187C  jnz 0x401885
+0040187E  mov edx,0x1f
+00401883  jmp short 0x40188a
+00401885  mov edx,[edi]
+00401887  mov edx,[edx-0x4]
+0040188A  cmp ecx,edx
+0040188C  jnl near 0x401914
+00401892  cmp al,0x2
+00401894  jnz 0x40189e
+00401896  mov eax,[edi]
+00401898  cmp dword [eax-0x8],byte +0x1
+0040189C  jnz 0x401914
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------
+  16 B,  15405 allocated (  240 KB),     89 fragmented (    1 KB)
+  32 B,  36481 allocated ( 1140 KB),     95 fragmented (    2 KB)
+  48 B,   5025 allocated (  235 KB),     15 fragmented (    0 KB)
+  64 B,   4062 allocated (  253 KB),     96 fragmented (    6 KB)
+  80 B,   2850 allocated (  222 KB),      0 fragmented (    0 KB)
+  96 B,   1914 allocated (  179 KB),     18 fragmented (    1 KB)
+ 112 B,   1488 allocated (  162 KB),     60 fragmented (    6 KB)
+ 128 B,   1148 allocated (  143 KB),     30 fragmented (    3 KB)
+ 144 B,    392 allocated (   55 KB),      0 fragmented (    0 KB)
+ 160 B,    136 allocated (   21 KB),     14 fragmented (    2 KB)
+ 176 B,    166 allocated (   28 KB),     18 fragmented (    3 KB)
+ 192 B,     30 allocated (    5 KB),     12 fragmented (    2 KB)
+ 224 B,  14859 allocated ( 3250 KB),      9 fragmented (    1 KB)
+ TOTAL,  83956 allocated ( 5939 KB),    456 fragmented (   32 KB)
+Free pages 1 (4 KB)
+Large block count 1459, total size 3236 KB
+***************************************************
+   4 B,    810 allocated (    3 KB),    214 fragmented (    0 KB)
+   8 B,    249 allocated (    1 KB),    263 fragmented (    2 KB)
+  16 B,  14868 allocated (  232 KB),    236 fragmented (    3 KB)
+  24 B,  68963 allocated ( 1616 KB),     57 fragmented (    1 KB)
+  32 B,  23841 allocated (  745 KB),     95 fragmented (    2 KB)
+  40 B,  13766 allocated (  537 KB),      4 fragmented (    0 KB)
+  48 B,   6563 allocated (  307 KB),     67 fragmented (    3 KB)
+  56 B,   2989 allocated (  163 KB),      4 fragmented (    0 KB)
+  64 B,   3356 allocated (  209 KB),     36 fragmented (    2 KB)
+  72 B,   2266 allocated (  159 KB),     30 fragmented (    2 KB)
+  80 B,  15465 allocated ( 1208 KB),     39 fragmented (    3 KB)
+  88 B,    388 allocated (   33 KB),     26 fragmented (    2 KB)
+  96 B,   1414 allocated (  132 KB),     14 fragmented (    1 KB)
+ 104 B,    151 allocated (   15 KB),      5 fragmented (    0 KB)
+ 112 B,    235 allocated (   25 KB),     17 fragmented (    1 KB)
+ 120 B,    945 allocated (  110 KB),     75 fragmented (    8 KB)
+ 128 B,   1131 allocated (  141 KB),     21 fragmented (    2 KB)
+ 144 B,    206 allocated (   28 KB),     18 fragmented (    2 KB)
+ 160 B,     44 allocated (    6 KB),      6 fragmented (    0 KB)
+ 176 B,     49 allocated (    8 KB),     20 fragmented (    3 KB)
+ 192 B,     23 allocated (    4 KB),     19 fragmented (    3 KB)
+ 224 B,     24 allocated (    5 KB),     12 fragmented (    2 KB)
+ 256 B,    464 allocated (  116 KB),     16 fragmented (    4 KB)
+ 288 B,     12 allocated (    3 KB),      2 fragmented (    0 KB)
+ 304 B,      5 allocated (    1 KB),      8 fragmented (    2 KB)
+ 336 B,     15 allocated (    4 KB),      9 fragmented (    2 KB)
+ 368 B,      3 allocated (    1 KB),      8 fragmented (    2 KB)
+ 408 B,      9 allocated (    3 KB),     11 fragmented (    4 KB)
+ 448 B,     29 allocated (   12 KB),      7 fragmented (    3 KB)
+ 512 B,    308 allocated (  154 KB),     12 fragmented (    6 KB)
+ 672 B,     13 allocated (    8 KB),      5 fragmented (    3 KB)
+ 816 B,      4 allocated (    3 KB),      1 fragmented (    0 KB)
+1024 B,    253 allocated (  253 KB),     11 fragmented (   11 KB)
+ TOTAL, 158861 allocated ( 6259 KB),   1368 fragmented (   93 KB)
+Free pages 4 (16 KB)
+Large block count 283, total size 2160 KB

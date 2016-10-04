@@ -1,0 +1,12 @@
+description "Problematic sequence for sort\377";
+
+uses
+	Core;
+
+file
+	data.txt,
+	BigSort.cpp;
+
+mainconfig
+	"" = "";
+

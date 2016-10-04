@@ -1,0 +1,11 @@
+GROUP("TopicTest", "alfa")
+
+TOPIC("xxx", "EN-US")
+#include "alfa$xxx$EN-US.topic"
+END_TOPIC
+
+TOPIC("yyy", "EN-US")
+#include "alfa$yyy$EN-US.topic"
+END_TOPIC
+
+END_GROUP

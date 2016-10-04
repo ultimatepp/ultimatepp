@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	Bloat.cpp;
+
+mainconfig
+	"" = "USEMALLOC";

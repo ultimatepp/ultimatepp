@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	plugin\cairo,
+	Painter;
+
+file
+	bench.h,
+	lion.cpp,
+	pythagorasTree.cpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

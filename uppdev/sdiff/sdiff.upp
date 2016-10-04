@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = normal "CONSOLE ST STATIC";

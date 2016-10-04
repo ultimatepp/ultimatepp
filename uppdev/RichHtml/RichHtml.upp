@@ -1,0 +1,12 @@
+uses
+	Web,
+	CtrlLib,
+	RichText;
+
+file
+	tst.tpp,
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";
+

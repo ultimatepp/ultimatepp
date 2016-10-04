@@ -1,0 +1,3 @@
+LAYOUT(DropTestLayout, 200, 232)
+	ITEM(DocEdit, edit, LeftPosZ(4, 192).TopPosZ(4, 224))
+END_LAYOUT

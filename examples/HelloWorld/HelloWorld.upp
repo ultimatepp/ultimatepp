@@ -1,4 +1,4 @@
-description "Rudimentary HelloWorld application with menu and status bar";
+description "Rudimentary HelloWorld application with menu and status bar\377";
 
 uses
 	CtrlLib;

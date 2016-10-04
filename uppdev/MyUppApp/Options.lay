@@ -1,0 +1,6 @@
+LAYOUT(OptionsLayout, 400, 200)
+	ITEM(LabelBox, dv___0, LeftPosZ(4, 392).TopPosZ(4, 192))
+	ITEM(Button, btnSave, SetLabel(t_("\vSave")).LeftPosZ(332, 48).TopPosZ(144, 36))
+	ITEM(Option, optSplash, SetLabel(t_("\vDon't show Splash screen during program's startup.")).LeftPosZ(24, 260).TopPosZ(32, 15))
+	ITEM(Option, optSaveWinPos, SetLabel(t_("Save window position.")).LeftPosZ(24, 260).TopPosZ(64, 15))
+END_LAYOUT

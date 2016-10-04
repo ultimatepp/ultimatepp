@@ -1,0 +1,8 @@
+LAYOUT(MainDlg, 328, 108)
+	ITEM(Button, m_file, SetLabel(t_("File Selection...")).LeftPosZ(12, 116).TopPosZ(12, 24))
+	ITEM(Button, m_pallette, SetLabel(t_("Pallette...")).LeftPosZ(136, 92).TopPosZ(12, 24))
+	ITEM(Button, m_printer, SetLabel(t_("Printer...")).LeftPosZ(236, 80).TopPosZ(12, 24))
+	ITEM(Button, m_close, SetLabel(t_("Close")).SetFont(StdFont(11).Bold()).RightPosZ(12, 56).BottomPosZ(12, 24))
+	ITEM(EditString, m_current, SetEditable(false).HSizePosZ(12, 84).BottomPosZ(13, 19))
+END_LAYOUT
+

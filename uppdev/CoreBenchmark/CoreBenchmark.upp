@@ -1,0 +1,12 @@
+uses
+	Core,
+	CppBase;
+
+file
+	CoreBenchmark.cpp optimize_speed,
+	test.txt,
+	numbers.txt;
+
+mainconfig
+	"" = "MT",
+	"" = "";

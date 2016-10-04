@@ -1,0 +1,14 @@
+uses
+	Core;
+
+file
+	Flex.h,
+	Flex.hpp,
+	Order.h,
+	results.txt,
+	Flex.cpp optimize_speed;
+
+mainconfig
+	"" = "",
+	"" = "USEMALLOC";
+

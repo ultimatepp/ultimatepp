@@ -1,0 +1,11 @@
+uses
+	Core,
+	MySql,
+	CtrlCore;
+
+file
+	MySQLSch.cpp;
+
+mainconfig
+	"" = "GUI";
+

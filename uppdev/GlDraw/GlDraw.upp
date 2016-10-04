@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	GLCtrl,
+	Painter;
+
+file
+	GlDraw.h,
+	GlDraw.cpp,
+	main.cpp,
+	test.qtf;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,9 @@
+id1 a045905 id2
+	tab1
+x	tab2
+xx	tab3
+xxx	tab4
+xxxx	tab5
+xxxxx	tab6
+	t7	ta9	ta10	t11
+		t12

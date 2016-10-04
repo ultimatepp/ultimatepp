@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Cors.cpp;
+
+mainconfig
+	"" = "MT";
+

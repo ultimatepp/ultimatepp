@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	KanjiFlash.h,
+	KanjiFlash.cpp,
+	Kanji.h,
+	Kanji.cpp,
+	KanjiFlash.lay;
+
+mainconfig
+	"" = "GUI";

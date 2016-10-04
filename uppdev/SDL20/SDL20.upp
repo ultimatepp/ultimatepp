@@ -1,0 +1,24 @@
+uses
+	Core,
+	Draw,
+	Painter,
+	RichText,
+	plugin/FT_fontsys,
+	plugin/DroidFonts;
+
+library(WIN32) "SDLmain.lib SDL.lib";
+
+library(POSIX) "SDL2 SDL2main";
+
+file
+	SDL20.h,
+	Window.cpp,
+	SDLDraw.cpp,
+	text.qtf,
+	SDL20.cpp,
+	test.iml,
+	main.conf;
+
+mainconfig
+	"" = "MT";
+

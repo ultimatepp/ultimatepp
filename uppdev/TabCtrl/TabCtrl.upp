@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	TabCtrl.h,
+	main.cpp,
+	TabCtrl.lay;
+
+mainconfig
+	"" = "GUI ST";

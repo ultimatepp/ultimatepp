@@ -1,0 +1,15 @@
+uses
+	CtrlLib,
+	RichText;
+
+file
+	ataxx.h,
+	hulpfuncties.cpp,
+	bord.cpp,
+	stapel.cpp,
+	main.cpp,
+	bordselectie.lay,
+	icon.iml;
+
+mainconfig
+	"" = "GUI";

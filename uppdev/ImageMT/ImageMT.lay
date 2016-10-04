@@ -1,0 +1,6 @@
+LAYOUT(ImageMTLayout, 348, 216)
+	ITEM(Button, buttonLoad, SetLabel(t_("Load Image")).LeftPosZ(8, 88).TopPosZ(8, 20))
+	ITEM(Button, buttonSquare, SetLabel(t_("Image from Image to Power")).LeftPosZ(104, 160).TopPosZ(8, 20))
+	ITEM(EditDoubleSpin, m_fPower, Min(2).Max(10).LeftPosZ(272, 64).TopPosZ(8, 19))
+	ITEM(ProgressIndicator, m_prog, LeftPosZ(8, 328).TopPosZ(32, 16))
+END_LAYOUT

@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	EyeCare.h,
+	EyeCare.cpp,
+	EyeCare.lay,
+	EyeCare.iml;
+
+mainconfig
+	"" = "GUI";

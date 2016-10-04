@@ -1,0 +1,12 @@
+ANONE A "Ano", N "Ne"
+
+ZPS NE "Ne", TP "TP", ZTP "ZTP", ZTPP "ZTP/P"
+
+STDNAVRH	^
+		^
+	;
+	deti;
+	CJ         "Èíslo jednací" text +;
+	ZNACKA     "Naše znaèka"   text;
+	OTEC       "Otec"          osoba OTEC;
+	MATKA      "Matka"         osoba MATKA

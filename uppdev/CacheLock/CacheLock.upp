@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	CacheLock.cpp;
+
+mainconfig
+	"" = "MT";

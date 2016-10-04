@@ -1,0 +1,35 @@
+#include "resource.h"
+#include <windows.h>
+
+
+// Put your program icon into the package directory
+//IDI_SMALL ICON DISCARDABLE "icon.ico"
+//IDI_BIG   ICON DISCARDABLE "icon.ico"
+
+
+IDC_WIN32APP MENU DISCARDABLE
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "E&xit", IDM_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About...", IDM_ABOUT
+    END
+END
+IDC_WIN32APP ACCELERATORS MOVEABLE PURE
+BEGIN
+    "?", IDM_ABOUT, ASCII, ALT
+    "/", IDM_ABOUT, ASCII, ALT
+END
+IDD_ABOUT DIALOG DISCARDABLE 0, 0, 150, 55
+STYLE DS_MODALFRAME | DS_CENTER | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "Microsoft Sans Serif"
+BEGIN
+    ICON            IDI_BIG,IDC_MYICON,20,9,16,16
+    LTEXT           "Ultimate application v.1.0",IDC_STATIC,49,10,119,8,SS_NOPREFIX
+    LTEXT           "upp.sourceforge.net",IDC_STATIC,49,20,119,8
+    DEFPUSHBUTTON   "OK",IDOK,55,35,40,15,WS_GROUP
+END

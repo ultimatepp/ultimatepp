@@ -1,0 +1,11 @@
+optimize_speed;
+
+file
+	GCCBug.h,
+	GCCBug1.cpp,
+	GCCBug2.cpp,
+	GCCBug.cpp;
+
+mainconfig
+	"" = "";
+

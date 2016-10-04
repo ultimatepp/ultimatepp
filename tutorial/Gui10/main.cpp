@@ -15,19 +15,15 @@ struct MyAppWindow : TopWindow {
 	}
 
 	void SubMenu(Bar& bar) {
-		bar.Add("Exit", TutorialImg::Exit(), THISBACK(Exit));
+		bar.Add("Exit", TutorialImg::Exit(), [=] { Exit(); });
 	}
-
-	void MainMenu(Bar& bar) {
-		bar.Add("Menu", THISBACK(SubMenu));
-	}
-
-	typedef MyAppWindow CLASSNAME;
 
 	MyAppWindow() {
 		Title("My application with menu and images").Sizeable();
 		AddFrame(menu);
-		menu.Set(THISBACK(MainMenu));
+		menu.Set([=](Bar& bar) {
+			bar.Sub("Menu", [=](Bar& bar) { SubMenu(bar); });
+		});
 	}
 };
 

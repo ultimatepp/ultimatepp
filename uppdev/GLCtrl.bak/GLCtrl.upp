@@ -1,0 +1,16 @@
+uses
+	CtrlLib;
+
+library(WIN32 GCC) "glaux glu32 opengl32";
+
+library(LINUX) "GL GLU";
+
+library(FREEBSD) "GL GLU";
+
+file
+	GLCtrl.h,
+	Win32GLCtrl.cpp,
+	X11GLCtrl.cpp,
+	GLCtrl.cpp,
+	GlPicking.h;
+

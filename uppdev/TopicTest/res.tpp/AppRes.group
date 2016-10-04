@@ -1,0 +1,7 @@
+GROUP("Core", "AppRes")
+
+TOPIC("GPL", "EN-US")
+#include "AppRes$GPL$EN-US.topic"
+END_TOPIC
+
+END_GROUP

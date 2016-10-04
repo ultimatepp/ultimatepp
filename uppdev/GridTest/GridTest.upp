@@ -1,0 +1,27 @@
+charset "windows-1250";
+
+uses
+	CtrlLib,
+	GridCtrl;
+
+library
+	,
+	,
+	,
+	,
+	;
+
+options
+	;
+
+file
+	main.cpp charset "UTF-8",
+	main.lay;
+
+mainconfig
+	"" = "GUI";
+
+custom() "",
+	"",
+	"";
+

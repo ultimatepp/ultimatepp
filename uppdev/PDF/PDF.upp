@@ -1,0 +1,12 @@
+uses
+	PdfDraw,
+	Painter,
+	RichText;
+
+file
+	main.cpp,
+	app.iml;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	Gen2.h,
+	main.cpp;
+
+mainconfig
+	"" = "GUI MT";
+

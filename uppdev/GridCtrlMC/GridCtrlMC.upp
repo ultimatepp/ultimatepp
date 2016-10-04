@@ -1,0 +1,36 @@
+description "Grid control";
+
+charset "windows-1250";
+
+uses
+	CtrlLib;
+
+library
+	,
+	,
+	,
+	,
+	;
+
+options
+	-DLOG_CALLBACKS;
+
+file
+	GridBase.h,
+	GridBase.cpp,
+	GridDisplay.h,
+	GridDisplay.cpp,
+	GridCtrl.h,
+	GridCtrl.cpp,
+	GridSort.cpp,
+	GridCtrl.iml,
+	GridDisplay.iml,
+	GridUtils.h,
+	GridUtils.cpp,
+	ToDo.txt,
+	changelog.txt,
+	GridCtrl.t charset "UTF-8",
+	GridCtrl.usc;
+
+mainconfig
+	"" = "GUI";

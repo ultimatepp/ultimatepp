@@ -1,0 +1,5 @@
+LAYOUT(RichViewLayout, 200, 176)
+	ITEM(RichTextView, text, HSizePosZ(4, 4).VSizePosZ(4, 48))
+	ITEM(Button, add, SetLabel(t_("Add")).LeftPosZ(4, 42).BottomPosZ(8, 32))
+	ITEM(Button, clear, SetLabel(t_("Clear")).RightPosZ(6, 42).BottomPosZ(8, 32))
+END_LAYOUT

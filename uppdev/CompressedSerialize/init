@@ -1,0 +1,5 @@
+#ifndef _CompressedSerialize_icpp_init_stub
+#define _CompressedSerialize_icpp_init_stub
+#include "Core/init"
+#include "plugin/lz4/init"
+#endif

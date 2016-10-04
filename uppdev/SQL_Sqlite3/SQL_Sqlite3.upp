@@ -1,0 +1,13 @@
+description "Connecting Sqlite3 database";
+
+uses
+	plugin\Sqlite3;
+
+file
+	simple.h,
+	main.cpp,
+	simple.sch;
+
+mainconfig
+	"" = "";
+

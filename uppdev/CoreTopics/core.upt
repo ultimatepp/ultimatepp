@@ -1,0 +1,34 @@
+template "Core console project" main;
+
+option "Create header" header;
+option "Commandline loop" cmdline;
+option "Multithreaded" mt;
+
+@@<:PACKAGE:>.h
+??header
+#ifndef _<:PACKAGE:>_<:PACKAGE:>_h
+#define _<:PACKAGE:>_<:PACKAGE:>_h
+
+#include <Core/Core.h>
+
+using namespace Upp;
+
+#endif
+@@<:PACKAGE:>.cpp
+#include <:?header:>"<:PACKAGE:>.h"<:/:><Core/Core.h><:.:>
+
+CONSOLE_APP_MAIN
+{
+	<:?cmdline:>const Vector<String>& cmdline = CommandLine();
+	for(int i = 0; i < cmdline.GetCount(); i++) {
+	}<:.:>
+}
+
+@@<:PACKAGE:>.upp
+uses Core;
+
+file <:?header:>"<:PACKAGE:>.h",<:.:>
+	"<:PACKAGE:>.cpp";
+
+mainconfig
+	"" = <:?mt:>"MT"<:/:>""<:.:>;

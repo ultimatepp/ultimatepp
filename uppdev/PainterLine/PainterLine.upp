@@ -1,0 +1,12 @@
+uses
+	CtrlLib,
+	Painter;
+
+file
+	PainterLine.h,
+	main.cpp,
+	PainterLine.lay;
+
+mainconfig
+	"" = "GUI PRECLIP";
+

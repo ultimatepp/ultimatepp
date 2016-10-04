@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	xadrez.h,
+	main.cpp charset "UTF-8",
+	xadrez.lay,
+	xadrez.iml;
+
+mainconfig
+	"Xadrez" = "GUI";

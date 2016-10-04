@@ -1,0 +1,33 @@
+LAYOUT(AccessKeyLayout, 200, 308)
+	ITEM(EditDate, dv___0, LeftPosZ(56, 140).TopPosZ(4, 19))
+	ITEM(Label, dv___1, SetLabel(t_("asdfasdf\a\001[= Test")).SetFont(SansSerifZ(20)).LeftPosZ(8, 188).TopPosZ(28, 32))
+	ITEM(Base, ok, RightPosZ(90, 80).BottomPosZ(212, 22))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 80).BottomPosZ(212, 22))
+	ITEM(Button, dv___4, SetLabel(t_("\001[= Test&asdflkajsdf&asdflkasldfjlkajsdf")).LeftPosZ(8, 184).TopPosZ(116, 188))
+END_LAYOUT
+
+LAYOUT(asdfasdf, 400, 200)
+	ITEM(DataPusher, data1, LeftPosZ(4, 64).TopPosZ(20, 24))
+	ITEM(DataPusher, data2, LeftPosZ(4, 64).TopPosZ(48, 24))
+	ITEM(LineEdit, edit, LeftPosZ(232, 132).TopPosZ(68, 19))
+	ITEM(Label, label, SetLabel(t_("Label")).LeftPosZ(368, 28).TopPosZ(68, 16))
+	ITEM(LineEdit, edit, LeftPosZ(220, 132).TopPosZ(96, 19))
+	ITEM(Label, label, SetLabel(t_("Label")).LeftPosZ(356, 28).TopPosZ(96, 16))
+	ITEM(DataPusher, data1, LeftPosZ(36, 64).TopPosZ(112, 24))
+	ITEM(DataPusher, data2, LeftPosZ(36, 64).TopPosZ(140, 24))
+END_LAYOUT
+
+LAYOUT(TestLayout, 356, 76)
+	ITEM(LineEdit, edit, LeftPosZ(188, 132).TopPosZ(4, 19))
+	ITEM(Label, label, SetLabel(t_("Label")).LeftPosZ(324, 28).TopPosZ(4, 16))
+	ITEM(DataPusher, data1, LeftPosZ(4, 64).TopPosZ(20, 24))
+	ITEM(DataPusher, data2, LeftPosZ(4, 64).TopPosZ(48, 24))
+END_LAYOUT
+
+LAYOUT(TestLayout3, 356, 76)
+	ITEM(Label, label, SetLabel(t_("Label")).LeftPosZ(144, 28).TopPosZ(8, 16))
+	ITEM(LineEdit, edit, LeftPosZ(188, 132).TopPosZ(4, 19))
+	ITEM(DataPusher, data1, LeftPosZ(4, 64).TopPosZ(20, 24))
+	ITEM(DataPusher, data2, LeftPosZ(4, 64).TopPosZ(48, 24))
+END_LAYOUT
+

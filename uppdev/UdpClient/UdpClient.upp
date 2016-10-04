@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	UdpClient.cpp,
+	notes.tpp;
+
+mainconfig
+	"" = "";
+

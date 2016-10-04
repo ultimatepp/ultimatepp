@@ -1,0 +1,4 @@
+#ifndef _Calgo_icpp_init_stub
+#define _Calgo_icpp_init_stub
+#include "Core/init"
+#endif

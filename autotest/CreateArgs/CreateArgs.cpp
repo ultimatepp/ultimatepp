@@ -34,6 +34,7 @@ CONSOLE_APP_MAIN
 		p.Create(1, 2);
 		ASSERT(p.Top().x == 1);
 		ASSERT(p.Top().y == 2);
+		p.Create();
 	}
 
 	{
@@ -41,6 +42,7 @@ CONSOLE_APP_MAIN
 		p.Create<Point>(1, 2);
 		ASSERT(p.Top().x == 1);
 		ASSERT(p.Top().y == 2);
+		p.Create<Point>();
 	}
 	
 	{

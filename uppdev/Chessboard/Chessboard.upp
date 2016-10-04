@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	images.iml,
+	Chessboard.h,
+	main.cpp,
+	Chessboard.lay;
+
+mainconfig
+	"" = "GUI";
+

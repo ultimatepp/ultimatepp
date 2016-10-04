@@ -1,0 +1,15 @@
+uses
+	Core,
+	CtrlLib,
+	CodeEditor,
+	Sql,
+	plugin\pcre;
+
+file
+	test.cpp,
+	test2.cpp,
+	ignorelist;
+
+mainconfig
+	"" = "";
+

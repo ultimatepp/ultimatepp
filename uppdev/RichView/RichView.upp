@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"RichView.h"
+	, main.cpp
+	, "RichView.lay"
+
+;
+
+mainconfig
+	"" = "GUI";

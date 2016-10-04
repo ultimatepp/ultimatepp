@@ -1,0 +1,535 @@
+POSIX
+
+=======================
+-----------
+40484 KB used -------
+TIMING Parse!         : 152.00 ms - 152.00 ms (152.00 ms / 1 ), min: 152.00 ms, max: 152.00 ms, nesting: 1 - 1
+
+=======================
+* C:\upp\out\uppdev\MSC9.Sse2\XmlNodeFilter.exe 10.12.2013 09:27:10, user: CXL
+
+  16 B,     16 allocated (    0 KB),    238 fragmented (    3 KB)
+  32 B,      9 allocated (    0 KB),    118 fragmented (    3 KB)
+  48 B,     76 allocated (    3 KB),      8 fragmented (    0 KB)
+  64 B,      9 allocated (    0 KB),     54 fragmented (    3 KB)
+  80 B,      9 allocated (    0 KB),     41 fragmented (    3 KB)
+  96 B,      2 allocated (    0 KB),     40 fragmented (    3 KB)
+ 112 B,      2 allocated (    0 KB),     34 fragmented (    3 KB)
+ 128 B,      8 allocated (    1 KB),     23 fragmented (    2 KB)
+ 144 B,      1 allocated (    0 KB),     27 fragmented (    3 KB)
+ 160 B,      4 allocated (    0 KB),     21 fragmented (    3 KB)
+ 192 B,     66 allocated (   12 KB),     18 fragmented (    3 KB)
+ 208 B,      1 allocated (    0 KB),     18 fragmented (    3 KB)
+ 224 B,      1 allocated (    0 KB),     17 fragmented (    3 KB)
+ 288 B,      7 allocated (    1 KB),      7 fragmented (    1 KB)
+ 368 B,      1 allocated (    0 KB),     10 fragmented (    3 KB)
+ 448 B,      3 allocated (    1 KB),      6 fragmented (    2 KB)
+ 576 B,      2 allocated (    1 KB),      5 fragmented (    2 KB)
+ TOTAL,    217 allocated (   25 KB),    685 fragmented (   53 KB)
+Free pages 0 (0 KB)
+Large block count 9, total size 16 KB
+Large fragments count 4, total size 47 KB
+
+-----------
+With ignore
+147632 KB used -------
+  16 B, 1624821 allocated (25387 KB),     17 fragmented (    0 KB)
+  32 B, 770807 allocated (24087 KB),     83 fragmented (    2 KB)
+  48 B, 1821277 allocated (85372 KB),     11 fragmented (    0 KB)
+  64 B, 151791 allocated ( 9486 KB),     39 fragmented (    2 KB)
+  80 B,     11 allocated (    0 KB),     39 fragmented (    3 KB)
+  96 B,     25 allocated (    2 KB),     17 fragmented (    1 KB)
+ 112 B,      6 allocated (    0 KB),     30 fragmented (    3 KB)
+ 128 B,     12 allocated (    1 KB),     19 fragmented (    2 KB)
+ 144 B,      2 allocated (    0 KB),     26 fragmented (    3 KB)
+ 160 B,      4 allocated (    0 KB),     21 fragmented (    3 KB)
+ 176 B,      1 allocated (    0 KB),     22 fragmented (    3 KB)
+ 192 B,     67 allocated (   12 KB),     17 fragmented (    3 KB)
+ 208 B,      2 allocated (    0 KB),     17 fragmented (    3 KB)
+ 224 B,      1 allocated (    0 KB),     17 fragmented (    3 KB)
+ 288 B,     12 allocated (    3 KB),      2 fragmented (    0 KB)
+ 368 B,      3 allocated (    1 KB),      8 fragmented (    2 KB)
+ 448 B,      3 allocated (    1 KB),      6 fragmented (    2 KB)
+ 576 B,      6 allocated (    3 KB),      1 fragmented (    0 KB)
+ TOTAL, 4368851 allocated (144363 KB),    392 fragmented (   43 KB)
+Free pages 0 (0 KB)
+Large block count 13, total size 20 KB
+Large fragments count 5, total size 43 KB
+
+map:
+	[0] = (/vf:VymennyFormat) 1
+	[1] = (/vf:VymennyFormat/vf:Data) 1
+	[2] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista) 1
+	[3] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto) 121959
+	[4] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloDomovni) 121959
+	[5] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloDomovni:XML_TEXT) 121959
+	[6] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacni) 15323
+	[7] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacni:XML_TEXT) 15323
+	[8] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacniPismeno) 637
+	[9] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacniPismeno:XML_TEXT) 637
+	[10] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Kod) 121959
+	[11] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Kod:XML_TEXT) 121959
+	[12] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Psc) 121959
+	[13] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Psc:XML_TEXT) 121959
+	[14] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:StavebniObjekt) 121959
+	[15] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:StavebniObjekt/soi:Kod) 121959
+	[16] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:StavebniObjekt/soi:Kod:XML_TEXT) 121959
+	[17] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Ulice) 59981
+	[18] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Ulice/uli:Kod) 59981
+	[19] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Ulice/uli:Kod:XML_TEXT) 59981
+	[20] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi) 1
+	[21] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi) 137
+	[22] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:ExistujeDigitalniMapa) 137
+	[23] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:ExistujeDigitalniMapa:XML_TEXT) 137
+	[24] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie) 137
+	[25] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod) 137
+	[26] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint) 137
+	[27] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers) 137
+	[28] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers/gml:Point) 137
+	[29] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers/gml:Point/gml:pos) 137
+	[30] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers/gml:Point/gml:pos:XML_TEXT) 137
+	[31] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:GlobalniIdNavrhuZmeny) 137
+	[32] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:GlobalniIdNavrhuZmeny:XML_TEXT) 137
+	[33] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:IdTransakce) 137
+	[34] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:IdTransakce:XML_TEXT) 137
+	[35] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Kod) 137
+	[36] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Kod:XML_TEXT) 137
+	[37] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky) 2
+	[38] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad2) 2
+	[39] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad2:XML_TEXT) 2
+	[40] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad3) 2
+	[41] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad3:XML_TEXT) 2
+	[42] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad4) 2
+	[43] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad4:XML_TEXT) 2
+	[44] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad5) 2
+	[45] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad5:XML_TEXT) 2
+	[46] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad6) 2
+	[47] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad6:XML_TEXT) 2
+	[48] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad7) 2
+	[49] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad7:XML_TEXT) 2
+	[50] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Nazev) 137
+	[51] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Nazev:XML_TEXT) 137
+	[52] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Obec) 137
+	[53] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Obec/obi:Kod) 137
+	[54] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Obec/obi:Kod:XML_TEXT) 137
+	[55] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:PlatiOd) 137
+	[56] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:PlatiOd:XML_TEXT) 137
+	[57] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:RizeniId) 137
+	[58] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:RizeniId:XML_TEXT) 137
+	[59] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty) 1
+	[60] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt) 29390
+	[61] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CastObce) 28496
+	[62] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CastObce/coi:Kod) 28496
+	[63] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CastObce/coi:Kod:XML_TEXT) 28496
+	[64] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CislaDomovni) 28496
+	[65] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CislaDomovni/com:CisloDomovni) 28592
+	[66] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CislaDomovni/com:CisloDomovni:XML_TEXT) 28592
+	[67] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Dokonceni) 1960
+	[68] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Dokonceni:XML_TEXT) 1960
+	[69] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IsknBudovaId) 28951
+	[70] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IsknBudovaId:XML_TEXT) 28951
+	[71] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Kod) 29390
+	[72] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Kod:XML_TEXT) 29390
+	[73] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Momc) 36
+	[74] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Momc/mci:Kod) 36
+	[75] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Momc/mci:Kod:XML_TEXT) 36
+	[76] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Nespravny) 1
+	[77] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Nespravny:XML_TEXT) 1
+	[78] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:TypStavebnihoObjektuKod) 29390
+	[79] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:TypStavebnihoObjektuKod:XML_TEXT) 29390
+	[80] = (/vf:VymennyFormat/vf:Data/vf:Ulice) 1
+	[81] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice) 1
+	[82] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:GlobalniIdNavrhuZmeny) 1
+	[83] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:GlobalniIdNavrhuZmeny:XML_TEXT) 1
+	[84] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:IdTransakce) 1
+	[85] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:IdTransakce:XML_TEXT) 1
+	[86] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Kod) 1
+	[87] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Kod:XML_TEXT) 1
+	[88] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Nazev) 1
+	[89] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Nazev:XML_TEXT) 1
+	[90] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Obec) 1
+	[91] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Obec/obi:Kod) 1
+	[92] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Obec/obi:Kod:XML_TEXT) 1
+	[93] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:PlatiOd) 1
+	[94] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:PlatiOd:XML_TEXT) 1
+	[95] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky) 1
+	[96] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek) 825
+	[97] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:IdTransakce) 825
+	[98] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:IdTransakce:XML_TEXT) 825
+	[99] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:PrvekId) 825
+	[100] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:PrvekId:XML_TEXT) 825
+	[101] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:TypPrvkuKod) 825
+	[102] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:TypPrvkuKod:XML_TEXT) 825
+	[103] = (/vf:VymennyFormat/vf:Hlavicka) 1
+	[104] = (/vf:VymennyFormat/vf:Hlavicka/vf:Datum) 1
+	[105] = (/vf:VymennyFormat/vf:Hlavicka/vf:Datum:XML_TEXT) 1
+	[106] = (/vf:VymennyFormat/vf:Hlavicka/vf:Metadata) 1
+	[107] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK) 1
+	[108] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISKN) 1
+	[109] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISKN:XML_TEXT) 1
+	[110] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISUI) 1
+	[111] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISUI:XML_TEXT) 1
+	[112] = (/vf:VymennyFormat/vf:Hlavicka/vf:PredchoziSoubor) 1
+	[113] = (/vf:VymennyFormat/vf:Hlavicka/vf:PredchoziSoubor:XML_TEXT) 1
+	[114] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo) 1
+	[115] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Id) 1
+	[116] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Id:XML_TEXT) 1
+	[117] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Zapsano) 1
+	[118] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Zapsano:XML_TEXT) 1
+	[119] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd) 1
+	[120] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Id) 1
+	[121] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Id:XML_TEXT) 1
+	[122] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Zapsano) 1
+	[123] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Zapsano:XML_TEXT) 1
+	[124] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypDavky) 1
+	[125] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypDavky:XML_TEXT) 1
+	[126] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypSouboru) 1
+	[127] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypSouboru:XML_TEXT) 1
+	[128] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypZaznamu) 1
+	[129] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypZaznamu:XML_TEXT) 1
+	[130] = (/vf:VymennyFormat/vf:Hlavicka/vf:VerzeVFR) 1
+	[131] = (/vf:VymennyFormat/vf:Hlavicka/vf:VerzeVFR:XML_TEXT) 1
+count:
+	[0] = (XML_TAG) 1106448
+	[1] = (XML_TAG.len) 13320930
+	[2] = (XML_TEXT) 714331
+	[3] = (XML_TEXT.len) 3989925
+	[4] = (attr) 152063
+
+vf:VymennyFormat
+-----------
+ALL
+452392 KB used -------
+  16 B, 4197462 allocated (65585 KB),    142 fragmented (    2 KB)
+  32 B, 2451008 allocated (76594 KB),     92 fragmented (    2 KB)
+  48 B, 5934289 allocated (278169 KB),     59 fragmented (    2 KB)
+  64 B, 355718 allocated (22232 KB),     43 fragmented (    2 KB)
+  80 B,  31375 allocated ( 2451 KB),     25 fragmented (    1 KB)
+  96 B,     28 allocated (    2 KB),     14 fragmented (    1 KB)
+ 112 B,     25 allocated (    2 KB),     11 fragmented (    1 KB)
+ 128 B,   1568 allocated (  196 KB),     13 fragmented (    1 KB)
+ 144 B,     24 allocated (    3 KB),      4 fragmented (    0 KB)
+ 160 B,     13 allocated (    2 KB),     12 fragmented (    1 KB)
+ 176 B,     17 allocated (    2 KB),      6 fragmented (    1 KB)
+ 192 B,     72 allocated (   13 KB),     12 fragmented (    2 KB)
+ 208 B,     13 allocated (    2 KB),      6 fragmented (    1 KB)
+ 224 B,      8 allocated (    1 KB),     10 fragmented (    2 KB)
+ 288 B,     18 allocated (    5 KB),     10 fragmented (    2 KB)
+ 368 B,      4 allocated (    1 KB),      7 fragmented (    2 KB)
+ 448 B,      3 allocated (    1 KB),      6 fragmented (    2 KB)
+ 576 B,      7 allocated (    3 KB),      0 fragmented (    0 KB)
+ TOTAL, 12971652 allocated (445272 KB),    472 fragmented (   33 KB)
+Free pages 0 (0 KB)
+Large block count 14, total size 20 KB
+Large fragments count 5, total size 43 KB
+
+map:
+	[0] = (/vf:VymennyFormat) 1
+	[1] = (/vf:VymennyFormat/vf:Data) 1
+	[2] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista) 1
+	[3] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto) 121959
+	[4] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloDomovni) 121959
+	[5] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloDomovni:XML_TEXT) 121959
+	[6] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacni) 15323
+	[7] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacni:XML_TEXT) 15323
+	[8] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacniPismeno) 637
+	[9] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:CisloOrientacniPismeno:XML_TEXT) 637
+	[10] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie) 121959
+	[11] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod) 121959
+	[12] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:AdresniBod) 121959
+	[13] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:AdresniBod/gml:Point) 121959
+	[14] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:AdresniBod/gml:Point/gml:pos) 121959
+	[15] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:AdresniBod/gml:Point/gml:pos:XML_TEXT) 121959
+	[16] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Hasici) 742
+	[17] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Hasici/gml:Point) 742
+	[18] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Hasici/gml:Point/gml:pos) 742
+	[19] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Hasici/gml:Point/gml:pos:XML_TEXT) 742
+	[20] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Zachranka) 682
+	[21] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Zachranka/gml:Point) 682
+	[22] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Zachranka/gml:Point/gml:pos) 682
+	[23] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Geometrie/ami:DefinicniBod/ami:Zachranka/gml:Point/gml:pos:XML_TEXT) 682
+	[24] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:GlobalniIdNavrhuZmeny) 121959
+	[25] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:GlobalniIdNavrhuZmeny:XML_TEXT) 121959
+	[26] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:IdTransakce) 121959
+	[27] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:IdTransakce:XML_TEXT) 121959
+	[28] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Kod) 121959
+	[29] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Kod:XML_TEXT) 121959
+	[30] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:PlatiOd) 121959
+	[31] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:PlatiOd:XML_TEXT) 121959
+	[32] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Psc) 121959
+	[33] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Psc:XML_TEXT) 121959
+	[34] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:StavebniObjekt) 121959
+	[35] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:StavebniObjekt/soi:Kod) 121959
+	[36] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:StavebniObjekt/soi:Kod:XML_TEXT) 121959
+	[37] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Ulice) 59981
+	[38] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Ulice/uli:Kod) 59981
+	[39] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:Ulice/uli:Kod:XML_TEXT) 59981
+	[40] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:VOKod) 121833
+	[41] = (/vf:VymennyFormat/vf:Data/vf:AdresniMista/vf:AdresniMisto/ami:VOKod:XML_TEXT) 121833
+	[42] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi) 1
+	[43] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi) 137
+	[44] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:ExistujeDigitalniMapa) 137
+	[45] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:ExistujeDigitalniMapa:XML_TEXT) 137
+	[46] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie) 137
+	[47] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod) 137
+	[48] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint) 137
+	[49] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers) 137
+	[50] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers/gml:Point) 137
+	[51] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers/gml:Point/gml:pos) 137
+	[52] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Geometrie/kui:DefinicniBod/gml:MultiPoint/gml:pointMembers/gml:Point/gml:pos:XML_TEXT) 137
+	[53] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:GlobalniIdNavrhuZmeny) 137
+	[54] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:GlobalniIdNavrhuZmeny:XML_TEXT) 137
+	[55] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:IdTransakce) 137
+	[56] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:IdTransakce:XML_TEXT) 137
+	[57] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Kod) 137
+	[58] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Kod:XML_TEXT) 137
+	[59] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky) 2
+	[60] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad2) 2
+	[61] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad2:XML_TEXT) 2
+	[62] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad3) 2
+	[63] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad3:XML_TEXT) 2
+	[64] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad4) 2
+	[65] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad4:XML_TEXT) 2
+	[66] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad5) 2
+	[67] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad5:XML_TEXT) 2
+	[68] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad6) 2
+	[69] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad6:XML_TEXT) 2
+	[70] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad7) 2
+	[71] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:MluvnickeCharakteristiky/com:Pad7:XML_TEXT) 2
+	[72] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Nazev) 137
+	[73] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Nazev:XML_TEXT) 137
+	[74] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Obec) 137
+	[75] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Obec/obi:Kod) 137
+	[76] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:Obec/obi:Kod:XML_TEXT) 137
+	[77] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:PlatiOd) 137
+	[78] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:PlatiOd:XML_TEXT) 137
+	[79] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:RizeniId) 137
+	[80] = (/vf:VymennyFormat/vf:Data/vf:KatastralniUzemi/vf:KatastralniUzemi/kui:RizeniId:XML_TEXT) 137
+	[81] = (/vf:VymennyFormat/vf:Data/vf:Parcely) 1
+	[82] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela) 25627
+	[83] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily) 5366
+	[84] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil) 7377
+	[85] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:BonitovanaJednotkaKod) 7377
+	[86] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:BonitovanaJednotkaKod:XML_TEXT) 7377
+	[87] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:IdTranskace) 7377
+	[88] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:IdTranskace:XML_TEXT) 7377
+	[89] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:RizeniId) 7377
+	[90] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:RizeniId:XML_TEXT) 7377
+	[91] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:Vymera) 7377
+	[92] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:BonitovaneDily/com:BonitovanyDil/com:Vymera:XML_TEXT) 7377
+	[93] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:DruhCislovaniKod) 25627
+	[94] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:DruhCislovaniKod:XML_TEXT) 25627
+	[95] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:DruhPozemkuKod) 25627
+	[96] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:DruhPozemkuKod:XML_TEXT) 25627
+	[97] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Geometrie) 25608
+	[98] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Geometrie/pai:DefinicniBod) 25608
+	[99] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Geometrie/pai:DefinicniBod/gml:Point) 25608
+	[100] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Geometrie/pai:DefinicniBod/gml:Point/gml:pos) 25608
+	[101] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Geometrie/pai:DefinicniBod/gml:Point/gml:pos:XML_TEXT) 25608
+	[102] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Id) 25627
+	[103] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:Id:XML_TEXT) 25627
+	[104] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:IdTransakce) 25627
+	[105] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:IdTransakce:XML_TEXT) 25627
+	[106] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:KatastralniUzemi) 25627
+	[107] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:KatastralniUzemi/kui:Kod) 25627
+	[108] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:KatastralniUzemi/kui:Kod:XML_TEXT) 25627
+	[109] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:KmenoveCislo) 25627
+	[110] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:KmenoveCislo:XML_TEXT) 25627
+	[111] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:PlatiOd) 25627
+	[112] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:PlatiOd:XML_TEXT) 25627
+	[113] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:PododdeleniCisla) 17038
+	[114] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:PododdeleniCisla:XML_TEXT) 17038
+	[115] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:RizeniId) 25627
+	[116] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:RizeniId:XML_TEXT) 25627
+	[117] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:VymeraParcely) 25627
+	[118] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:VymeraParcely:XML_TEXT) 25627
+	[119] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku) 16824
+	[120] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany) 20752
+	[121] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:IdTransakce) 20752
+	[122] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:IdTransakce:XML_TEXT) 20752
+	[123] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:Kod) 20752
+	[124] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:Kod:XML_TEXT) 20752
+	[125] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:RizeniId) 20752
+	[126] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:RizeniId:XML_TEXT) 20752
+	[127] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:TypOchranyKod) 20752
+	[128] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyOchranyPozemku/com:ZpusobOchrany/com:TypOchranyKod:XML_TEXT) 20752
+	[129] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyVyuzitiPozemku) 7220
+	[130] = (/vf:VymennyFormat/vf:Data/vf:Parcely/vf:Parcela/pai:ZpusobyVyuzitiPozemku:XML_TEXT) 7220
+	[131] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty) 1
+	[132] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt) 29390
+	[133] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CastObce) 28496
+	[134] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CastObce/coi:Kod) 28496
+	[135] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CastObce/coi:Kod:XML_TEXT) 28496
+	[136] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CislaDomovni) 28496
+	[137] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CislaDomovni/com:CisloDomovni) 28592
+	[138] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:CislaDomovni/com:CisloDomovni:XML_TEXT) 28592
+	[139] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA) 67
+	[140] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA) 154
+	[141] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:AdresniMistoKod) 154
+	[142] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:AdresniMistoKod/base:Kod) 154
+	[143] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:AdresniMistoKod/base:Kod:XML_TEXT) 154
+	[144] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:DruhKonstrukceKod) 70
+	[145] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:DruhKonstrukceKod:XML_TEXT) 70
+	[146] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:GlobalniIdNavrhuZmeny) 154
+	[147] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:GlobalniIdNavrhuZmeny:XML_TEXT) 154
+	[148] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:Kod) 154
+	[149] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:Kod:XML_TEXT) 154
+	[150] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PlatiOd) 154
+	[151] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PlatiOd:XML_TEXT) 154
+	[152] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PocetBytu) 154
+	[153] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PocetBytu:XML_TEXT) 154
+	[154] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PocetPodlazi) 131
+	[155] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PocetPodlazi:XML_TEXT) 131
+	[156] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PripojeniKanalizaceKod) 84
+	[157] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PripojeniKanalizaceKod:XML_TEXT) 84
+	[158] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PripojeniPlynKod) 84
+	[159] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PripojeniPlynKod:XML_TEXT) 84
+	[160] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PripojeniVodovodKod) 84
+	[161] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:PripojeniVodovodKod:XML_TEXT) 84
+	[162] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:ZpusobVytapeniKod) 84
+	[163] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DetailniTEA/soi:DetailniTEA/soi:ZpusobVytapeniKod:XML_TEXT) 84
+	[164] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Dokonceni) 1960
+	[165] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Dokonceni:XML_TEXT) 1960
+	[166] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DruhKonstrukceKod) 25740
+	[167] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:DruhKonstrukceKod:XML_TEXT) 25740
+	[168] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Geometrie) 29310
+	[169] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Geometrie/soi:DefinicniBod) 29310
+	[170] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Geometrie/soi:DefinicniBod/gml:Point) 29310
+	[171] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Geometrie/soi:DefinicniBod/gml:Point/gml:pos) 29310
+	[172] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Geometrie/soi:DefinicniBod/gml:Point/gml:pos:XML_TEXT) 29310
+	[173] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:GlobalniIdNavrhuZmeny) 29390
+	[174] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:GlobalniIdNavrhuZmeny:XML_TEXT) 29390
+	[175] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IdTransakce) 29390
+	[176] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IdTransakce:XML_TEXT) 29390
+	[177] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IdentifikacniParcela) 29390
+	[178] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IdentifikacniParcela/pai:Id) 29390
+	[179] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IdentifikacniParcela/pai:Id:XML_TEXT) 29390
+	[180] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IsknBudovaId) 28951
+	[181] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:IsknBudovaId:XML_TEXT) 28951
+	[182] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Kod) 29390
+	[183] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Kod:XML_TEXT) 29390
+	[184] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Momc) 36
+	[185] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Momc/mci:Kod) 36
+	[186] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Momc/mci:Kod:XML_TEXT) 36
+	[187] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Nespravny) 1
+	[188] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:Nespravny:XML_TEXT) 1
+	[189] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ObestavenyProstor) 1696
+	[190] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ObestavenyProstor:XML_TEXT) 1696
+	[191] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PlatiOd) 29390
+	[192] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PlatiOd:XML_TEXT) 29390
+	[193] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PocetBytu) 28433
+	[194] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PocetBytu:XML_TEXT) 28433
+	[195] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PocetPodlazi) 23977
+	[196] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PocetPodlazi:XML_TEXT) 23977
+	[197] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PodlahovaPlocha) 1234
+	[198] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PodlahovaPlocha:XML_TEXT) 1234
+	[199] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PripojeniKanalizaceKod) 26880
+	[200] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PripojeniKanalizaceKod:XML_TEXT) 26880
+	[201] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PripojeniPlynKod) 26756
+	[202] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PripojeniPlynKod:XML_TEXT) 26756
+	[203] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PripojeniVodovodKod) 26874
+	[204] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:PripojeniVodovodKod:XML_TEXT) 26874
+	[205] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:TypStavebnihoObjektuKod) 29390
+	[206] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:TypStavebnihoObjektuKod:XML_TEXT) 29390
+	[207] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:VybaveniVytahemKod) 26943
+	[208] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:VybaveniVytahemKod:XML_TEXT) 26943
+	[209] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZastavenaPlocha) 1778
+	[210] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZastavenaPlocha:XML_TEXT) 1778
+	[211] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobVytapeniKod) 26757
+	[212] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobVytapeniKod:XML_TEXT) 26757
+	[213] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobVyuzitiKod) 29156
+	[214] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobVyuzitiKod:XML_TEXT) 29156
+	[215] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany) 2797
+	[216] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany) 2869
+	[217] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:IdTransakce) 2869
+	[218] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:IdTransakce:XML_TEXT) 2869
+	[219] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:Kod) 2869
+	[220] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:Kod:XML_TEXT) 2869
+	[221] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:RizeniId) 2869
+	[222] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:RizeniId:XML_TEXT) 2869
+	[223] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:TypOchranyKod) 2869
+	[224] = (/vf:VymennyFormat/vf:Data/vf:StavebniObjekty/vf:StavebniObjekt/soi:ZpusobyOchrany/com:ZpusobOchrany/com:TypOchranyKod:XML_TEXT) 2869
+	[225] = (/vf:VymennyFormat/vf:Data/vf:Ulice) 1
+	[226] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice) 1
+	[227] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:GlobalniIdNavrhuZmeny) 1
+	[228] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:GlobalniIdNavrhuZmeny:XML_TEXT) 1
+	[229] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:IdTransakce) 1
+	[230] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:IdTransakce:XML_TEXT) 1
+	[231] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Kod) 1
+	[232] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Kod:XML_TEXT) 1
+	[233] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Nazev) 1
+	[234] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Nazev:XML_TEXT) 1
+	[235] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Obec) 1
+	[236] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Obec/obi:Kod) 1
+	[237] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:Obec/obi:Kod:XML_TEXT) 1
+	[238] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:PlatiOd) 1
+	[239] = (/vf:VymennyFormat/vf:Data/vf:Ulice/vf:Ulice/uli:PlatiOd:XML_TEXT) 1
+	[240] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky) 1
+	[241] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek) 825
+	[242] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:IdTransakce) 825
+	[243] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:IdTransakce:XML_TEXT) 825
+	[244] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:PrvekId) 825
+	[245] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:PrvekId:XML_TEXT) 825
+	[246] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:TypPrvkuKod) 825
+	[247] = (/vf:VymennyFormat/vf:Data/vf:ZaniklePrvky/vf:ZaniklyPrvek/vf:TypPrvkuKod:XML_TEXT) 825
+	[248] = (/vf:VymennyFormat/vf:Hlavicka) 1
+	[249] = (/vf:VymennyFormat/vf:Hlavicka/vf:Datum) 1
+	[250] = (/vf:VymennyFormat/vf:Hlavicka/vf:Datum:XML_TEXT) 1
+	[251] = (/vf:VymennyFormat/vf:Hlavicka/vf:Metadata) 1
+	[252] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK) 1
+	[253] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISKN) 1
+	[254] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISKN:XML_TEXT) 1
+	[255] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISUI) 1
+	[256] = (/vf:VymennyFormat/vf:Hlavicka/vf:PlatnostDatK/com:ISUI:XML_TEXT) 1
+	[257] = (/vf:VymennyFormat/vf:Hlavicka/vf:PredchoziSoubor) 1
+	[258] = (/vf:VymennyFormat/vf:Hlavicka/vf:PredchoziSoubor:XML_TEXT) 1
+	[259] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo) 1
+	[260] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Id) 1
+	[261] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Id:XML_TEXT) 1
+	[262] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Zapsano) 1
+	[263] = (/vf:VymennyFormat/vf:Hlavicka/vf:TransakceDo/com:Zapsano:XML_TEXT) 1
+	[264] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd) 1
+	[265] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Id) 1
+	[266] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Id:XML_TEXT) 1
+	[267] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Zapsano) 1
+	[268] = (/vf:VymennyFormat/vf:Hlavicka/vf:TrasakceOd/com:Zapsano:XML_TEXT) 1
+	[269] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypDavky) 1
+	[270] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypDavky:XML_TEXT) 1
+	[271] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypSouboru) 1
+	[272] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypSouboru:XML_TEXT) 1
+	[273] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypZaznamu) 1
+	[274] = (/vf:VymennyFormat/vf:Hlavicka/vf:TypZaznamu:XML_TEXT) 1
+	[275] = (/vf:VymennyFormat/vf:Hlavicka/vf:VerzeVFR) 1
+	[276] = (/vf:VymennyFormat/vf:Hlavicka/vf:VerzeVFR:XML_TEXT) 1
+count:
+	[0] = (XML_TAG) 4415334
+	[1] = (XML_TAG.len) 58221669
+	[2] = (XML_TEXT) 2838657
+	[3] = (XML_TEXT.len) 19642287
+	[4] = (attr) 864656
+-----------
+  16 B,    230 allocated (    3 KB),    532 fragmented (    8 KB)
+  32 B,    116 allocated (    3 KB),    900 fragmented (   28 KB)
+  48 B,    146 allocated (    6 KB),    190 fragmented (    8 KB)
+  64 B,     63 allocated (    3 KB),     63 fragmented (    3 KB)
+  80 B,     50 allocated (    3 KB),     50 fragmented (    3 KB)
+  96 B,     28 allocated (    2 KB),     14 fragmented (    1 KB)
+ 112 B,     33 allocated (    3 KB),     39 fragmented (    4 KB)
+ 128 B,     33 allocated (    4 KB),     60 fragmented (    7 KB)
+ 144 B,     24 allocated (    3 KB),     32 fragmented (    4 KB)
+ 160 B,     22 allocated (    3 KB),      3 fragmented (    0 KB)
+ 176 B,     19 allocated (    3 KB),     27 fragmented (    4 KB)
+ 192 B,     84 allocated (   15 KB),     21 fragmented (    3 KB)
+ 208 B,     16 allocated (    3 KB),     22 fragmented (    4 KB)
+ 224 B,     15 allocated (    3 KB),     21 fragmented (    4 KB)
+ 288 B,     18 allocated (    5 KB),     24 fragmented (    6 KB)
+ 368 B,      4 allocated (    1 KB),      7 fragmented (    2 KB)
+ 448 B,      3 allocated (    1 KB),      6 fragmented (    2 KB)
+ 576 B,      7 allocated (    3 KB),      0 fragmented (    0 KB)
+ TOTAL,    911 allocated (   76 KB),   2011 fragmented (  100 KB)
+Free pages 112778 (451112 KB)
+Large block count 9, total size 16 KB
+Large fragments count 4, total size 47 KB
+
+TIMING Parse all!     :  8.45 s  -  8.45 s  ( 8.45 s  / 1 ), min:  8.45 s , max:  8.45 s , nesting: 1 - 1
+TIMING Parse with ignore!:  5.45 s  -  5.45 s  ( 5.45 s  / 1 ), min:  5.45 s , max:  5.45 s , nesting: 1 - 1

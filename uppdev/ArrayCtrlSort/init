@@ -1,0 +1,4 @@
+#ifndef _ArrayCtrlSort_icpp_init_stub
+#define _ArrayCtrlSort_icpp_init_stub
+#include "CtrlLib/init"
+#endif

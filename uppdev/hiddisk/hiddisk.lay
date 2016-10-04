@@ -1,0 +1,7 @@
+LAYOUT(hiddiskLayout, 92, 192)
+	ITEM(Button, btn_start, SetLabel(t_("启动")).LeftPosZ(16, 56).TopPosZ(16, 28))
+	ITEM(Button, btn_stop, SetLabel(t_("停止")).LeftPosZ(16, 56).TopPosZ(60, 28))
+	ITEM(Button, btn_setup, SetLabel(t_("安装")).LeftPosZ(16, 56).TopPosZ(104, 28))
+	ITEM(Button, btn_uninst, SetLabel(t_("卸载")).LeftPosZ(16, 56).TopPosZ(148, 28))
+END_LAYOUT
+

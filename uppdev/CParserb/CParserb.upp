@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	test.txt,
+	CParserb.cpp optimize_speed;
+
+mainconfig
+	"" = "";
+

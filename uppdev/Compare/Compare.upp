@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	QC.cpp optimize_speed,
+	Compare.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,30 @@
+LAYOUT(EzellApp4Layout, 740, 540)
+	ITEM(TabCtrl, tab, HSizePosZ(8, 8).VSizePosZ(40, 8))
+	ITEM(Button, console, SetLabel(t_("SQL console")).LeftPosZ(600, 108).TopPosZ(4, 23))
+END_LAYOUT
+
+LAYOUT(ListLayout, 716, 452)
+	ITEM(SqlArray, CListView, HSizePosZ(8, 8).VSizePosZ(84, 8))
+	ITEM(Button, btnAddCustomer, SetLabel(t_("Add Customer")).LeftPosZ(264, 100).TopPosZ(36, 15))
+END_LAYOUT
+
+LAYOUT(DetailLayout, 716, 452)
+	ITEM(EditString, strName, LeftPosZ(96, 168).TopPosZ(16, 19))
+	ITEM(EditString, strAddress, LeftPosZ(96, 168).TopPosZ(44, 19))
+	ITEM(EditString, strCSZ, LeftPosZ(96, 168).TopPosZ(72, 19))
+	ITEM(EditString, strPhone1, LeftPosZ(96, 168).VSizePosZ(100, 333))
+	ITEM(EditString, strPhone2, LeftPosZ(96, 168).VSizePosZ(128, 305))
+	ITEM(DocEdit, strUnitInfo, LeftPosZ(328, 208).TopPosZ(16, 48))
+	ITEM(DocEdit, strNotes, LeftPosZ(328, 208).TopPosZ(72, 48))
+	ITEM(SqlOption, chkService, SetLabel(t_("Service Agreement")).LeftPosZ(424, 112).TopPosZ(132, 15))
+	ITEM(SqlOption, chkCurrent, SetLabel(t_("Current")).LeftPosZ(328, 88).TopPosZ(132, 15))
+	ITEM(Button, btnSave, SetLabel(t_("Save")).LeftPosZ(556, 116).TopPosZ(32, 20))
+	ITEM(SqlArray, detailList, HSizePosZ(8, 8).VSizePosZ(168, 8))
+	ITEM(Label, lblAddress, SetLabel(t_("Address")).LeftPosZ(16, 72).TopPosZ(44, 19))
+	ITEM(Label, lblPhone2, SetLabel(t_("Phone 2")).LeftPosZ(16, 72).TopPosZ(128, 19))
+	ITEM(Label, lbNotes, SetLabel(t_("Notes")).LeftPosZ(280, 48).TopPosZ(72, 19))
+	ITEM(Label, lblCSZ, SetLabel(t_("City, State Zip")).LeftPosZ(16, 72).TopPosZ(72, 19))
+	ITEM(Label, lblPhone1, SetLabel(t_("Phone 1")).LeftPosZ(16, 72).TopPosZ(100, 19))
+	ITEM(Label, lblName, SetLabel(t_("Name")).LeftPosZ(16, 72).TopPosZ(16, 19))
+	ITEM(Label, lblUnitInfo, SetLabel(t_("Unit Info")).LeftPosZ(280, 48).TopPosZ(16, 19))
+END_LAYOUT

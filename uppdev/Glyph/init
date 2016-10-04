@@ -1,0 +1,5 @@
+#ifndef _Glyph_icpp_init_stub
+#define _Glyph_icpp_init_stub
+#include "CtrlLib/init"
+#include "Painter/init"
+#endif

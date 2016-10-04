@@ -1,0 +1,11 @@
+description "Menu - as single lambda\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

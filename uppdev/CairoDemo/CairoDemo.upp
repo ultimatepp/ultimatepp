@@ -1,0 +1,11 @@
+uses
+	CtrlLib,
+	plugin\cairo;
+
+file
+	main.cpp,
+	CairoDemo.lay;
+
+mainconfig
+	"" = "GUI";
+

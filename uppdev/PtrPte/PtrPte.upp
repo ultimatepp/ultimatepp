@@ -1,0 +1,7 @@
+uses Core;
+
+file
+	"PtrPte.cpp";
+
+mainconfig
+	"" = "CONSOLE ST";

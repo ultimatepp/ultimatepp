@@ -1,0 +1,15 @@
+uses
+	plugin\sdl,
+	Web\SSL;
+
+library(MSC) "SDL SDLmain";
+
+library(GCC WIN32) "SDL.dll SDLmain";
+
+file
+	sdlt1.h,
+	sdlt1.cpp;
+
+mainconfig
+	"" = "";
+

@@ -1,0 +1,11 @@
+description "Simple XML Test";
+
+library(STUDENT_VER) "C:/xmlsoft_distro/lib/libxml2.lib C:/xmlsoft_distro/lib/zlib.lib C:/xmlsoft_distro/lib/iconv.lib";
+
+options(STUDENT_VER) -Ic:/xmlsoft_distro/include;
+
+file
+	TestXML.cpp;
+
+mainconfig
+	"" = "MT STUDENT_VER";

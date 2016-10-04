@@ -1,0 +1,13 @@
+uses
+	Core,
+	Draw,
+	plugin\agg24;
+
+file
+	AggDraw readonly separator,
+	aggdraw.h,
+	aggdraw.cpp;
+
+mainconfig
+	"" = "DLL GUI";
+

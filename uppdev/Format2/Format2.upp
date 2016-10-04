@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Format2.cpp;
+
+mainconfig
+	"" = "";
+

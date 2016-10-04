@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	e:\out\$target\MSC71cdb.Blitz.Console.Debug.Debug_full.Main.Msc.Msc71.St.Win32\Va.log,
+	main.cpp;
+
+mainconfig
+	"" = "CONSOLE ST";

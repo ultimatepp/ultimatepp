@@ -1,0 +1,7 @@
+#ifndef _telupp_icpp_init_stub
+#define _telupp_icpp_init_stub
+#include "Core/init"
+#include "Draw/init"
+#include "RichText/init"
+#include "Painter/init"
+#endif

@@ -1,0 +1,13 @@
+description "Analogue / digital clock";
+
+uses
+	CtrlLib;
+
+file
+	main.iml,
+	main.cpp,
+	test.lay;
+
+mainconfig
+	"" = "GUI";
+

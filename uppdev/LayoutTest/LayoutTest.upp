@@ -1,0 +1,15 @@
+uses
+	CtrlLib,
+	RichEdit;
+
+file
+	LayoutTest.h,
+	main.cpp,
+	LayoutTest.lay,
+	TitleFrame.h,
+	TitleFrame.cpp;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI USEMALLOC",
+	"" = "GUI MT";

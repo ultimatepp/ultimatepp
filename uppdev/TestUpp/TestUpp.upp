@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	TestUpp.h,
+	main.cpp,
+	TestUpp.lay;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,7 @@
+#ifndef _SqlProblem_icpp_init_stub
+#define _SqlProblem_icpp_init_stub
+#include "CtrlLib/init"
+#include "Sql/init"
+#include "SqlCtrl/init"
+#include "plugin/sqlite3/init"
+#endif

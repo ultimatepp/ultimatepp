@@ -1,0 +1,10 @@
+uses
+	Core,
+	PipeStream;
+
+file
+	PipeStream.cpp;
+
+mainconfig
+	"" = "";
+

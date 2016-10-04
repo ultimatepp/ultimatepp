@@ -1,0 +1,11 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	FwSort.cpp;
+
+mainconfig
+	"" = "";
+

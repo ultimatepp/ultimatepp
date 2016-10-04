@@ -1,0 +1,8 @@
+uses
+	Core;
+
+file
+	StringBufferOf.cpp;
+
+mainconfig
+	"" = "";

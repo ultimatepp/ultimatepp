@@ -1,0 +1,10 @@
+uses
+	CtrlLib,
+	Crypto;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";
+

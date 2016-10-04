@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	WindowBackupRestore.h,
+	main.cpp,
+	WindowBackupRestore.lay;
+
+mainconfig
+	"" = "GUI";
+

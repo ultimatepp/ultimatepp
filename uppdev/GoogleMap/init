@@ -1,0 +1,7 @@
+#ifndef _GoogleMap_icpp_init_stub
+#define _GoogleMap_icpp_init_stub
+#include "CtrlLib/init"
+#include "Web/init"
+#include "plugin\jpg/init"
+#include "Geom\Coords/init"
+#endif

@@ -1,0 +1,14 @@
+uses
+	CtrlLib;
+
+file
+	D:\Core.t charset "UTF-8",
+	D:\CtrlLib.t,
+	main.cpp charset "windows-1250",
+	test.lay,
+	test.t charset "UTF-8";
+
+mainconfig
+	"" = "GUI ST",
+	"" = "GUI MT";
+

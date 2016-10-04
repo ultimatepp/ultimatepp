@@ -1,0 +1,14 @@
+optimize_speed;
+
+uses
+	Core;
+
+file
+	SvoValue.h,
+	SvoValue2.cpp,
+	Checks.cpp,
+	SvoValue.cpp optimize_speed;
+
+mainconfig
+	"" = "";
+

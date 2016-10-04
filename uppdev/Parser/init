@@ -1,0 +1,8 @@
+#ifndef _Parser_icpp_init_stub
+#define _Parser_icpp_init_stub
+#include "Core/init"
+#include "CtrlLib/init"
+#include "CodeEditor/init"
+#include "Sql/init"
+#include "plugin\pcre/init"
+#endif

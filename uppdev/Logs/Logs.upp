@@ -1,0 +1,7 @@
+uses Core;
+
+file
+	"Logs.cpp";
+
+mainconfig
+	"" = "CONSOLE ST";

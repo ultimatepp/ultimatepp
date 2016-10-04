@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	AssistTest.h,
+	app.tpp,
+	main.cpp,
+	AssistTest.lay;
+
+mainconfig
+	"" = "GUI";
+

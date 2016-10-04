@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Network.cpp,
+	sample.txt;
+
+mainconfig
+	"" = "";

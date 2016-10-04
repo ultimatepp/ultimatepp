@@ -1,0 +1,52 @@
+LAYOUT(HomeBudgetLayout, 748, 530)
+	ITEM(GridCtrl, month, LeftPosZ(4, 124).VSizePosZ(4, 34))
+	ITEM(TabCtrl, tab, HSizePosZ(132, 2).VSizePosZ(4, 186))
+	ITEM(Button, about, SetLabel(t_("About")).LeftPosZ(4, 76).BottomPosZ(4, 26))
+	ITEM(Button, help, SetLabel(t_("Help")).LeftPosZ(84, 76).BottomPosZ(4, 26))
+	ITEM(Button, options, SetLabel(t_("Options")).LeftPosZ(164, 76).BottomPosZ(4, 26))
+	ITEM(Button, exit, SetLabel(t_("Exit")).RightPosZ(6, 76).BottomPosZ(4, 26))
+	ITEM(LabelBox, dv___6, SetLabel(t_("Summary")).HSizePosZ(132, 224).BottomPosZ(34, 148))
+	ITEM(StaticText, dv___7, SetText(t_("Income:")).SetFont(StdFont(18).Bold()).LeftPosZ(140, 88).BottomPosZ(144, 22))
+	ITEM(StaticText, plus, SetFont(StdFont(18).Bold()).HSizePosZ(232, 376).BottomPosZ(144, 22))
+	ITEM(StaticText, dv___9, SetText(t_("Spent:")).SetFont(StdFont(18).Bold()).LeftPosZ(140, 88).BottomPosZ(118, 24))
+	ITEM(StaticText, minus, SetFont(StdFont(18).Bold()).HSizePosZ(232, 376).BottomPosZ(120, 22))
+	ITEM(StaticText, rest_label, SetText(t_("Rest:")).SetFont(StdFont(18).Bold()).LeftPosZ(140, 88).BottomPosZ(96, 22))
+	ITEM(StaticText, rest, SetFont(StdFont(18).Bold()).HSizePosZ(232, 376).BottomPosZ(96, 22))
+	ITEM(StaticText, dv___13, SetText(t_("Amount from prev. month:")).SetFont(StdFont(18).Bold()).LeftPosZ(140, 246).BottomPosZ(72, 22))
+	ITEM(StaticText, prev_month, SetFont(StdFont(18).Bold()).HSizePosZ(388, 232).BottomPosZ(72, 22))
+	ITEM(StaticText, dv___15, SetText(t_("Final rest:")).SetFont(StdFont(18).Bold()).LeftPosZ(140, 246).BottomPosZ(48, 22))
+	ITEM(StaticText, real_rest, SetFont(StdFont(18).Bold()).HSizePosZ(388, 232).BottomPosZ(48, 22))
+	ITEM(LabelBox, dv___17, SetLabel(t_("Most expensive")).RightPosZ(4, 216).BottomPosZ(34, 148))
+	ITEM(TabCtrl, tabmost, RightPosZ(12, 200).BottomPosZ(42, 124))
+END_LAYOUT
+
+LAYOUT(OptionsLayout, 216, 86)
+	ITEM(StaticText, dv___0, SetText(t_("Language")).LeftPosZ(4, 60).TopPosZ(4, 18))
+	ITEM(DropList, lang, LeftPosZ(68, 144).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(4, 74).BottomPosZ(4, 24))
+	ITEM(Button, clear, SetLabel(t_("Clear all data from database")).RightPosZ(4, 208).BottomPosZ(34, 24))
+END_LAYOUT
+
+LAYOUT(AboutLayout, 456, 288)
+	ITEM(RichTextView, info, SetFrame(BlackFrame()).HSizePosZ(4, 4).TopPosZ(4, 252))
+	ITEM(Button, cancel, SetLabel(t_("OK")).HCenterPosZ(72, 0).TopPosZ(260, 24))
+END_LAYOUT
+
+LAYOUT(NewCategoryLayout, 244, 108)
+	ITEM(StaticText, dv___0, SetText(t_("Category")).LeftPosZ(4, 60).TopPosZ(4, 19))
+	ITEM(DropList, groups, LeftPosZ(68, 146).TopPosZ(4, 20))
+	ITEM(Button, addgroup, LeftPosZ(218, 20).TopPosZ(4, 20))
+	ITEM(StaticText, dv___3, SetText(t_("Name")).LeftPosZ(4, 60).TopPosZ(26, 19))
+	ITEM(EditString, name, LeftPosZ(68, 172).TopPosZ(26, 19))
+	ITEM(Switch, pm, SetLabel(t_("Plus\nMinus")).LeftPosZ(68, 100).TopPosZ(50, 15))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(88, 74).TopPosZ(80, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(166, 74).TopPosZ(80, 24))
+END_LAYOUT
+
+LAYOUT(NewGroupLayout, 204, 56)
+	ITEM(StaticText, dv___0, SetText(t_("Name")).LeftPosZ(4, 60).TopPosZ(4, 19))
+	ITEM(EditString, name, LeftPosZ(68, 130).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(48, 74).TopPosZ(28, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(126, 74).TopPosZ(28, 24))
+END_LAYOUT
+

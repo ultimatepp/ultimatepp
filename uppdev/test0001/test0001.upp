@@ -1,0 +1,5 @@
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI ST";

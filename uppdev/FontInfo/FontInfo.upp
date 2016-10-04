@@ -1,0 +1,18 @@
+optimize_speed;
+
+uses
+	CtrlLib;
+
+file
+	FontInfo.h charset "UTF-8",
+	Win32.cpp,
+	X11.cpp,
+	Compose.cpp,
+	FontReplace.cpp charset "UTF-8",
+	FontInfo.cpp,
+	main.cpp charset "UTF-8",
+	app.tpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,6 @@
+file
+
+	"test/test2.cpp";
+
+mainconfig
+	"" = "CONSOLE ST";

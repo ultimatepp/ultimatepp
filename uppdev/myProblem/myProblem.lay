@@ -1,0 +1,4 @@
+LAYOUT(myProblemLayout, 412, 320)
+	ITEM(GLCtrl, opengl, HSizePosZ(20, 4).VSizePosZ(20, 4))
+END_LAYOUT
+

@@ -1,0 +1,9 @@
+uses
+	CtrlLib;
+
+file
+	h.cpp,
+	main.cpp optimize_speed;
+
+mainconfig
+	"" = "GUI";

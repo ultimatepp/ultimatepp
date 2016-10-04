@@ -1,0 +1,6 @@
+#ifndef _ReportWithChineseCharacter_icpp_init_stub
+#define _ReportWithChineseCharacter_icpp_init_stub
+#include "CtrlLib/init"
+#include "Report/init"
+#include "PdfDraw/init"
+#endif

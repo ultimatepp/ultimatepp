@@ -1,0 +1,5 @@
+#ifndef _TestLag_icpp_init_stub
+#define _TestLag_icpp_init_stub
+#include "CtrlLib/init"
+#include "CodeEditor/init"
+#endif

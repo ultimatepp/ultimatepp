@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	rescale.iml,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+

@@ -1,0 +1,17 @@
+uses
+	Core,
+	Draw,
+	RichText,
+	Painter;
+
+file
+	telupp.h,
+	teltest.iml,
+	TelDraw.cpp,
+	telupp.html,
+	telupp.cpp,
+	test.qtf;
+
+mainconfig
+	"" = "";
+

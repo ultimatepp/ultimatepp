@@ -1,0 +1,8 @@
+LAYOUT(MainLayout, 492, 376)
+	ITEM(Splitter, vSplitter, SetFrame(ThinOutsetFrame()).HSizePosZ(4, 8).VSizePosZ(4, 0))
+	ITEM(Splitter, hSplitter, HSizePosZ(4, 8).VSizePosZ(288, 4))
+	ITEM(LineEdit, line, HSizePosZ(8, 404).VSizePosZ(292, 8))
+	ITEM(ArrayCtrl, faxList, HSizePosZ(92, 12).VSizePosZ(288, 4))
+	ITEM(TiffCtrl, view, LeftPosZ(8, 472).TopPosZ(8, 276))
+END_LAYOUT
+

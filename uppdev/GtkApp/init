@@ -1,0 +1,5 @@
+#ifndef _GtkApp_icpp_init_stub
+#define _GtkApp_icpp_init_stub
+#include "Draw/init"
+#include "plugin/png/init"
+#endif

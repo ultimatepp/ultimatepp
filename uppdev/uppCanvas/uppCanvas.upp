@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	Canvas.cpp,
+	Canvas.hpp,
+	main.hpp,
+	uppCanvas.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";

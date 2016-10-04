@@ -1,0 +1,16 @@
+LAYOUT(LayoutLayout, 392, 404)
+	ITEM(Label, dv___0, SetLabel(t_("èwskèwsk")).LeftPosZ(28, 112).TopPosZ(264, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).Tip(t_("This is OK!")).LeftPosZ(28, 144).TopPosZ(320, 80))
+	ITEM(WithDropChoice<EditString>, tipper, Tip(t_("Just a tip!")).LeftPosZ(12, 184).TopPosZ(52, 19))
+	ITEM(EditString, aaa, Tip(t_("Another tip")).LeftPosZ(12, 64).TopPosZ(80, 19))
+	ITEM(DropList, dl, Tip(t_("Some tip is here!")).LeftPosZ(12, 64).TopPosZ(108, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Test")).SetFont(StdFontZ(18)).LeftPosZ(24, 112).TopPosZ(144, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Test")).SetFont(SerifZ(18)).LeftPosZ(24, 112).TopPosZ(168, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Test")).SetFont(SansSerifZ(18)).LeftPosZ(24, 112).TopPosZ(192, 19))
+	ITEM(Label, dv___8, SetLabel(t_("Test")).SetFont(MonospaceZ(18)).LeftPosZ(24, 112).TopPosZ(216, 19))
+	ITEM(Label, dv___9, SetLabel(t_("Test")).LeftPosZ(148, 112).TopPosZ(144, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Test")).SetFont(Serif()).LeftPosZ(148, 112).TopPosZ(168, 19))
+	ITEM(Label, dv___11, SetLabel(t_("Test")).SetFont(SansSerif()).LeftPosZ(148, 112).TopPosZ(192, 19))
+	ITEM(Label, dv___12, SetLabel(t_("Test")).SetFont(Monospace()).LeftPosZ(148, 112).TopPosZ(216, 19))
+END_LAYOUT
+

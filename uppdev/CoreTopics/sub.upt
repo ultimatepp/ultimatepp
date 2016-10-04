@@ -1,0 +1,10 @@
+template "Plain package with header" sub;
+
+@@<:PACKAGE:>.h
+#ifndef _<:PACKAGE:>_<:PACKAGE:>_h
+#define _<:PACKAGE:>_<:PACKAGE:>_h
+
+#endif
+
+@@<:PACKAGE:>.upp
+file "<:PACKAGE:>.h";

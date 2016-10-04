@@ -1,0 +1,11 @@
+uses
+	Core,
+	Sql,
+	RichText;
+
+file
+	SqlExp.cpp;
+
+mainconfig
+	"" = "";
+

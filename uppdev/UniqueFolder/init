@@ -1,0 +1,4 @@
+#ifndef _UniqueFolder_icpp_init_stub
+#define _UniqueFolder_icpp_init_stub
+#include "Core/init"
+#endif

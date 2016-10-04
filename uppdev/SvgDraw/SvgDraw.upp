@@ -1,0 +1,11 @@
+description "SVG output as Draw derived class";
+
+uses
+	Draw,
+	CtrlLib,
+	Web;
+
+file
+	SvgDraw.h,
+	SvgDraw.cpp;
+

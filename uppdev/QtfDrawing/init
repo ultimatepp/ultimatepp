@@ -1,0 +1,5 @@
+#ifndef _QtfDrawing_icpp_init_stub
+#define _QtfDrawing_icpp_init_stub
+#include "CtrlLib/init"
+#include "plugin\gif/init"
+#endif

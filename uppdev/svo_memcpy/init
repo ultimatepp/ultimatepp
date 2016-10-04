@@ -1,0 +1,4 @@
+#ifndef _svo_memcpy_icpp_init_stub
+#define _svo_memcpy_icpp_init_stub
+#include "Core/init"
+#endif

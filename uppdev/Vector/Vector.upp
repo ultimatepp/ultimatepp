@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Vector.cpp;
+
+mainconfig
+	"" = "CONSOLE ST";
+

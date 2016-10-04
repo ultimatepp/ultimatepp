@@ -1,0 +1,1 @@
+FN_C(DWORD, APIENTRY, WNetEnumResourceW, (HANDLE hEnum, LPDWORD lpcCount, LPVOID lpBuffer, LPDWORD lpBufferSize))

@@ -1,0 +1,14 @@
+description "KME dispecing\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp,
+	kmedis.h,
+	kmedis.t charset "UTF-8",
+	kmedis.lay;
+
+mainconfig
+	"" = "GUI";
+

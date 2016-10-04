@@ -1,0 +1,14 @@
+uses
+	Core;
+
+file
+	Dim2.h,
+	Dim3.h,
+	Dim.hpp,
+	Dim4.h,
+	Dim5.h,
+	Dim.cpp;
+
+mainconfig
+	"" = "";
+

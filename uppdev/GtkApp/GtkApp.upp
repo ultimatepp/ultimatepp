@@ -1,0 +1,16 @@
+uses
+	Draw,
+	plugin/png;
+
+library
+	"gtk-x11-2.0  gdk-x11-2.0  atk-1.0  gdk_pixbuf-2.0  m  pangocairo-1.0  fontconfig  Xext  Xrender  Xinerama  Xi  Xrandr  Xcursor Xfixes pango-1.0  cairo  X11  gobject-2.0  gmodule-2.0  glib-2.0";
+
+file
+	Test.iml,
+	GtkApp.h,
+	main.cpp;
+
+mainconfig
+	"" = "",
+	"" = "GUI MT";
+

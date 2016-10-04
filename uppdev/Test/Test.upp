@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	asdf.tpp,
+	Test.h,
+	main.cpp,
+	Test.lay;
+
+mainconfig
+	"" = "GUI";
+

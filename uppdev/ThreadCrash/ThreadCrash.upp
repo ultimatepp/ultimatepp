@@ -1,0 +1,12 @@
+uses
+	CtrlLib;
+
+file
+	"ThreadCrash.h"
+	, main.cpp
+	, "ThreadCrash.lay"
+
+;
+
+mainconfig
+	"" = "GUI MT";

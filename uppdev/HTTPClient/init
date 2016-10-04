@@ -1,0 +1,6 @@
+#ifndef _HTTPClient_icpp_init_stub
+#define _HTTPClient_icpp_init_stub
+#include "Core/init"
+#include "Web/init"
+#include "Web/SSL/init"
+#endif
