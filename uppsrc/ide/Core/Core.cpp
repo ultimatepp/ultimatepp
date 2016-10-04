@@ -210,7 +210,7 @@ bool IdeConsoleWait(int slot)
 	return the_ide && the_ide->IdeConsoleWait(slot);
 }
 
-void IdeConsoleOnFinish(Callback cb)
+void IdeConsoleOnFinish(Event<>  cb)
 {
 	if(the_ide) the_ide->IdeConsoleOnFinish(cb);
 }

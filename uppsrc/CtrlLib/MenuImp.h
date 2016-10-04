@@ -100,7 +100,7 @@ public:
 class SubMenuBase {
 protected:
 	MenuBar  menu;
-	Callback1<Bar&> proc;
+	Event<Bar&> proc;
 	MenuBar *parentmenu;
 
 	void     Pull(Ctrl *item, Point p, Size sz);
@@ -109,8 +109,8 @@ public:
 	virtual  void Pull() = 0;
 
 	void SetParent(MenuBar *m)                           { parentmenu = m; menu.MaxIconSize(m->GetMaxIconSize()); }
-	void Set(Callback1<Bar&> _submenu)                   { proc = _submenu; }
-	Callback1<Bar&> Get()                                { return proc; }
+	void Set(Event<Bar&> _submenu)                   { proc = _submenu; }
+	Event<Bar&> Get()                                { return proc; }
 
 	SubMenuBase()                                        { parentmenu = NULL; }
 	virtual ~SubMenuBase() {}

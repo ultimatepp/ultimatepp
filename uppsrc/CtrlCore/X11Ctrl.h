@@ -34,7 +34,7 @@ private:
 	       XWindow *GetXWindow();
 	static void     SyncMousePos();
 	static void     ReleaseGrab();
-	static Vector<Callback> hotkey;
+	static Vector<Event<> > hotkey;
 	static Vector<dword> modhot;
 	static Vector<dword> keyhot;
 

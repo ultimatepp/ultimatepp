@@ -118,7 +118,7 @@ void  EscEscape::CheckMap(int i)
 	ThrowError(String().Cat() << "map expected as parameter " << i + 1 << InCall());
 }
 
-void Escape(ArrayMap<String, EscValue>& globals, const char *function, Callback1<EscEscape&> escape)
+void Escape(ArrayMap<String, EscValue>& globals, const char *function, Event<EscEscape&> escape)
 {
 	CParser p(function);
 	EscValue& v = globals.GetPut(p.ReadId());
@@ -132,7 +132,7 @@ void Escape(ArrayMap<String, EscValue>& globals, const char *function, void (*es
 	Escape(globals, function, callback(escape));
 }
 
-void  EscValue::Escape(const char *method, Callback1<EscEscape&> escape)
+void  EscValue::Escape(const char *method, Event<EscEscape&> escape)
 {
 	CParser p(method);
 	String id = p.ReadId();
@@ -143,7 +143,7 @@ void  EscValue::Escape(const char *method, Callback1<EscEscape&> escape)
 	MapSet(id, v);
 }
 
-void  EscValue::Escape(const char *method, EscHandle *h, Callback1<EscEscape&> escape)
+void  EscValue::Escape(const char *method, EscHandle *h, Event<EscEscape&> escape)
 {
 	CParser p(method);
 	String id = p.ReadId();

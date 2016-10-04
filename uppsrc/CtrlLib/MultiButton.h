@@ -61,8 +61,8 @@ public:
 		void Refresh();
 
 	public:
-		Callback WhenPush;
-		Callback WhenClick;
+		Event<>  WhenPush;
+		Event<>  WhenClick;
 
 		SubButton& SetImage(const Image& m);
 		SubButton& SetMonoImage(const Image& m);
@@ -75,7 +75,7 @@ public:
 		SubButton& Tip(const char *s)                     { tip = s; return *this; }
 		SubButton& Main(bool b = true);
 
-		Callback operator<<=(Callback cb)                 { WhenPush = cb; return cb; }
+		Event<>  operator<<=(Event<>  cb)                 { WhenPush = cb; return cb; }
 
 		SubButton();
 	};
@@ -124,8 +124,8 @@ private:
 	friend class MultiButtonFrame;
 
 public:
-	Callback WhenPush;
-	Callback WhenClick;
+	Event<>  WhenPush;
+	Event<>  WhenClick;
 
 	static const Style& StyleDefault();
 	static const Style& StyleFrame();

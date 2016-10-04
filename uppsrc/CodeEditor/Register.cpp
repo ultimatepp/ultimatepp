@@ -8,7 +8,7 @@ ArrayMap<String, EditorSyntax::SyntaxDef>& EditorSyntax::defs()
 	return d;
 }
 
-void EditorSyntax::Register(const char *id, Callback1<One<EditorSyntax>&> factory,
+void EditorSyntax::Register(const char *id, Event<One<EditorSyntax>&> factory,
                             const char *exts, const char *description)
 {
 	SyntaxDef& f = defs().GetAdd(id);

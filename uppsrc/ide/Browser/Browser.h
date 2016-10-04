@@ -31,7 +31,7 @@ struct SourceFileInfo {
 };
 
 void           NewCodeBase();
-void           ParseSrc(Stream& in, int file, Callback2<int, const String&> error);
+void           ParseSrc(Stream& in, int file, Event<int, const String&> error);
 void           CodeBaseScanFile(Stream& in, const String& fn);
 void           CodeBaseScanFile(const String& fn, bool auto_check);
 void           ClearCodeBase();
@@ -143,8 +143,8 @@ struct CodeBrowser {
 	int                    range;
 	ButtonOption           rangebutton[3];
 	ButtonOption           sort;
-	Callback               WhenKeyItem;
-	Callback               WhenClear;
+	Event<>                WhenKeyItem;
+	Event<>                WhenClear;
 	
 	String             GetPm();
 	void               Load();
@@ -349,7 +349,7 @@ protected:
 	void   FixTopic();
 
 public:
-	Callback1<Bar&> WhenTemplatesMenu;
+	Event<Bar&> WhenTemplatesMenu;
 
 	enum {
 		TIMEID_AUTOSAVE = Ctrl::TIMEID_COUNT,

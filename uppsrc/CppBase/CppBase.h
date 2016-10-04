@@ -250,7 +250,7 @@ class Lex {
 	void ThrowError(const char *e);
 
 public:
-	Callback1<const String&> WhenError;
+	Event<const String&> WhenError;
 
 	struct Grounding {};
 
@@ -503,7 +503,7 @@ struct Parser {
 	bool        inbody;
 	int         struct_level;
 
-	Callback2<int, const String&> err;
+	Event<int, const String&> err;
 
 	int     lpos, line;
 
@@ -600,7 +600,7 @@ public:
 
 	bool                      IsInBody() const                   { return inbody; }
 
-	typedef Callback1<const FunctionStat &> FnEndCallback;
+	typedef Event<const FunctionStat &> FnEndCallback;
 
 	bool                      dobody;
 	String                    current_scope;
@@ -627,7 +627,7 @@ public:
 	Vector<String> GetNamespaces() const;
 
 	void  Do(Stream& in, CppBase& _base, int file, int filetype,
-	         const String& title, Callback2<int, const String&> _err,
+	         const String& title, Event<int, const String&> _err,
 	         const Vector<String>& typenames,
 	         const Vector<String>& namespace_stack,
 	         const Index<String>& namespace_using);

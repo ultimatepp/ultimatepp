@@ -93,7 +93,7 @@ private:
 public:
 	virtual     void ShutdownWindow();
 
-	Callback    WhenClose;
+	Event<>     WhenClose;
 
 	void        Backup();
 	void        Restore();

@@ -98,7 +98,7 @@ private:
 	bool          Next();
 	void          Fetch();
 
-public:	
+public:
 	bool Open(Stream& in);
 
 #ifdef _MULTITHREADED
@@ -110,20 +110,20 @@ public:
 	~LZ4DecompressStream();
 };
 
-int64  LZ4Compress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-int64  LZ4Decompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-String LZ4Compress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String LZ4Compress(const String& s, EventGate<int64, int64> progress = false);
-String LZ4Decompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String LZ4Decompress(const String& s, EventGate<int64, int64> progress = false);
+int64  LZ4Compress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+int64  LZ4Decompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+String LZ4Compress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String LZ4Compress(const String& s, Gate<int64, int64> progress = Null);
+String LZ4Decompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String LZ4Decompress(const String& s, Gate<int64, int64> progress = Null);
 
 #ifdef _MULTITHREADED
-int64  CoLZ4Compress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-int64  CoLZ4Decompress(Stream& out, Stream& in, EventGate<int64, int64> progress = false);
-String CoLZ4Compress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String CoLZ4Compress(const String& s, EventGate<int64, int64> progress = false);
-String CoLZ4Decompress(const void *data, int64 len, EventGate<int64, int64> progress = false);
-String CoLZ4Decompress(const String& s, EventGate<int64, int64> progress = false);
+int64  CoLZ4Compress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+int64  CoLZ4Decompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
+String CoLZ4Compress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String CoLZ4Compress(const String& s, Gate<int64, int64> progress = Null);
+String CoLZ4Decompress(const void *data, int64 len, Gate<int64, int64> progress = Null);
+String CoLZ4Decompress(const String& s, Gate<int64, int64> progress = Null);
 #endif
 
 bool IsLZ4(Stream& s);

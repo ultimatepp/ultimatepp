@@ -123,7 +123,7 @@ struct SvgParser : XmlParser {
 	
 	bool Parse();
 
-	Callback2<String, String&> resloader;
+	Event<String, String&> resloader;
 	
 	SvgParser(const char *svg, Painter& sw);
 };

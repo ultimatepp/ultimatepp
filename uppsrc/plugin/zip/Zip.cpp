@@ -10,7 +10,7 @@ void Zip::WriteFolder(const char *path, Time tm)
 	WriteFile(~p, 0, p, false, tm);
 }
 
-int64 zPress(Stream& out, Stream& in, int64 size, Gate2<int64, int64> progress, bool gzip,
+int64 zPress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool gzip,
              bool compress, dword *crc, bool hdr);
 
 

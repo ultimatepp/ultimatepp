@@ -291,7 +291,7 @@ void Gdb::ClearWatches()
 
 void Gdb::QuickWatch()
 {
-	quickwatch.expression <<= quickwatch.Breaker(999);
+	quickwatch.expression << quickwatch.Breaker(999);
 	FastCmd("set print pretty on");
 	for(;;) {
 		int q = quickwatch.Run();

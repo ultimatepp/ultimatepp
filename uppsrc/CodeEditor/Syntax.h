@@ -89,7 +89,7 @@ public:
 
 class EditorSyntax : public HighlightSetup { // Inheriting to make static members available
 	struct SyntaxDef {
-		Callback1<One<EditorSyntax>&> factory;
+		Event<One<EditorSyntax>&> factory;
 		String                        patterns;
 		String                        description;
 	};
@@ -121,7 +121,7 @@ public:
 
 	EditorSyntax()                         { Clear(); ignore_errors = false; }
 
-	static void Register(const char *id, Callback1<One<EditorSyntax>&> factory,
+	static void Register(const char *id, Event<One<EditorSyntax>&> factory,
 	                     const char *exts, const char *description);
 	static One<EditorSyntax> Create(const char *id);
 	static String            GetSyntaxForFilename(const char *fn);

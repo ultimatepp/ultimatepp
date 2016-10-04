@@ -59,7 +59,7 @@ void WakeUpGuiThread();
 
 struct Ctrl::CallBox {
 	Semaphore sem;
-	Callback  cb;
+	Event<>   cb;
 };
 
 void Ctrl::PerformCall(Ctrl::CallBox *cbox)

@@ -31,16 +31,16 @@ void WindowsList();
 void WindowsMenu(Bar& bar);
 
 class DelayCallback : public Pte<DelayCallback> {
-	Callback target;
+	Event<>  target;
 	int      delay;
 
 public:
 	void     Invoke();
-	void     operator<<=(Callback x)  { target = x; }
+	void     operator<<=(Event<> x)   { target = x; }
 	void     SetDelay(int ms)         { delay = ms; }
-	Callback Get()                    { return callback(this, &DelayCallback::Invoke); }
-	Callback operator~()              { return Get(); }
-	operator Callback()               { return Get(); }
+	Event<>  Get()                    { return callback(this, &DelayCallback::Invoke); }
+	Event<>  operator~()              { return Get(); }
+	operator Event<>()                { return Get(); }
 
 	DelayCallback()                   { delay = 2000; }
 	~DelayCallback()                  { KillTimeCallback(this); }
@@ -124,14 +124,14 @@ public:
 	virtual void    BalloonHide();
 	virtual void    BalloonTimeout();
 
-	Callback        WhenLeftDown;
-	Callback        WhenLeftUp;
-	Callback        WhenLeftDouble;
-	Callback1<Bar&> WhenBar;
-	Callback        WhenBalloonLeftDown;
-	Callback        WhenBalloonShow;
-	Callback        WhenBalloonHide;
-	Callback        WhenBalloonTimeout;
+	Event<>         WhenLeftDown;
+	Event<>         WhenLeftUp;
+	Event<>         WhenLeftDouble;
+	Event<Bar&> WhenBar;
+	Event<>         WhenBalloonLeftDown;
+	Event<>         WhenBalloonShow;
+	Event<>         WhenBalloonHide;
+	Event<>         WhenBalloonTimeout;
 
 	void            Break()                                { EndLoop(0); }
 	void            Run()                                  { EventLoop(this); }
@@ -181,10 +181,10 @@ public:
 	virtual void    LeftUp();
 	virtual void    LeftDouble();
 
-	Callback        WhenLeftDown;
-	Callback        WhenLeftUp;
-	Callback        WhenLeftDouble;
-	Callback1<Bar&> WhenBar;
+	Event<>         WhenLeftDown;
+	Event<>         WhenLeftUp;
+	Event<>         WhenLeftDouble;
+	Event<Bar&> WhenBar;
 
 	void            Break();
 	void            Run();
@@ -260,14 +260,14 @@ public:
 	virtual void    BalloonHide();
 	virtual void    BalloonTimeout();
 
-	Callback        WhenLeftDown;
-	Callback        WhenLeftUp;
-	Callback        WhenLeftDouble;
-	Callback1<Bar&> WhenBar;
-	Callback        WhenBalloonLeftDown;
-	Callback        WhenBalloonShow;
-	Callback        WhenBalloonHide;
-	Callback        WhenBalloonTimeout;
+	Event<>         WhenLeftDown;
+	Event<>         WhenLeftUp;
+	Event<>         WhenLeftDouble;
+	Event<Bar&> WhenBar;
+	Event<>         WhenBalloonLeftDown;
+	Event<>         WhenBalloonShow;
+	Event<>         WhenBalloonHide;
+	Event<>         WhenBalloonTimeout;
 
 	void            Show(bool b = true);
 	void            Hide()                                 { Show(false); }
@@ -424,7 +424,7 @@ public:
 
 	void Retrieve();
 
-	Callback operator<<=(Callback cb);
+	Event<>  operator<<=(Event<>  cb);
 };
 
 template <class T>

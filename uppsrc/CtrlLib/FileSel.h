@@ -72,7 +72,7 @@ protected:
 	};
 
 public:
-	Callback2<const String&, const String&> WhenRename;
+	Event<const String&, const String&> WhenRename;
 
 	void        StartEdit();
 	void        EndEdit();
@@ -121,7 +121,7 @@ public:
 };
 
 bool Load(FileList& list, const String& dir, const char *patterns, bool dirs = false,
-          Callback3<bool, const String&, Image&> WhenIcon = CNULL,
+          Event<bool, const String&, Image&> WhenIcon = Null,
           FileSystemInfo& filesystem = StdFileSystemInfo(), const String& search = String(),
           bool hidden = true, bool hiddenfiles = true, bool lazyicons = false);
 void SortByName(FileList& list);
@@ -135,7 +135,7 @@ class LazyExeFileIcons {
 	FileList    *list;
 	int          pos;
 	Vector<int>  ndx;
-	Callback3<bool, const String&, Image&> WhenIcon;
+	Event<bool, const String&, Image&> WhenIcon;
 
 	Mutex  mutex;
 
@@ -146,7 +146,7 @@ class LazyExeFileIcons {
 
 public:
 	void ReOrder();
-	void Start(FileList& list_, const String& dir_, Callback3<bool, const String&, Image&> WhenIcon_);
+	void Start(FileList& list_, const String& dir_, Event<bool, const String&, Image&> WhenIcon_);
 };
 #endif
 
@@ -258,7 +258,7 @@ protected:
 	typedef FileSel CLASSNAME;
 
 public:
-	Callback3<bool, const String&, Image&> WhenIcon;
+	Event<bool, const String&, Image&> WhenIcon;
 #ifdef _MULTITHREADED
 	void (*WhenIconLazy)(const String& path, Image& result);
 #endif

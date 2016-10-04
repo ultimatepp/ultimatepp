@@ -1,114 +1,33 @@
-enum CNULLer { CNULL };
+// Backward compatibility
 
-template<typename Res, typename... ArgTypes>
-class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
-	struct WrapperBase {
-		Atomic  refcount;
-
-		virtual Res Execute(ArgTypes... args) = 0;
-		
-		WrapperBase() { refcount = 1; }
-		virtual ~WrapperBase() {}
-	};
-
-	template <class F>
-	struct Wrapper : WrapperBase {
-		F fn;
-		virtual Res Execute(ArgTypes... args) { return fn(args...); }
-
-		Wrapper(F&& fn) : fn(pick(fn)) {}
-	};
-
-	template <class F>
-	struct Wrapper2 : WrapperBase {
-		Function l;
-		F        fn;
-
-		virtual Res Execute(ArgTypes... args) { l(args...); return fn(args...); }
-
-		Wrapper2(const Function& l, F&& fn) : l(l), fn(pick(fn)) {}
-		Wrapper2(const Function& l, const F& fn) : l(l), fn(fn) {}
-	};
-
-	WrapperBase *ptr;
-	
-	static void Free(WrapperBase *ptr) {
-		if(ptr && AtomicDec(ptr->refcount) == 0)
-			delete ptr;
-	}
-	
-	void Copy(const Function& a) {
-		ptr = a.ptr;
-		if(ptr)
-			AtomicInc(ptr->refcount);
-	}
-	
-	void Pick(Function&& src) {
-		ptr = src.ptr;
-		src.ptr = NULL;
-	}
-
-public:
-	Function()                                 { ptr = NULL; }
-	Function(CNULLer)                          { ptr = NULL; }
-	
-	template <class F> Function(F fn)          { ptr = new Wrapper<F>(pick(fn)); }
-	
-	Function(const Function& src)              { Copy(src); }
-	Function& operator=(const Function& src)   { auto b = ptr; Copy(src); Free(b); return *this; }
-
-	Function(Function&& src)                   { Pick(pick(src)); }
-	Function& operator=(Function&& src)        { if(&src != this) { Free(ptr); ptr = src.ptr; src.ptr = NULL; } return *this; }
-	
-	Function Proxy() const                     { return [=] (ArgTypes... args) { return (*this)(args...); }; }
-
-	template <class F>
-	Function& operator<<(const F& fn)          { if(!ptr) { Copy(fn); return *this; }
-	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, fn); Free(b); return *this; }
-
-	template <class F>
-	Function& operator<<(F&& fn)               { if(!ptr) { Pick(pick(fn)); return *this; }
-	                                             WrapperBase *b = ptr; ptr = new Wrapper2<F>(*this, pick(fn)); Free(b); return *this; }
-
-	Res operator()(ArgTypes... args) const     { return ptr ? ptr->Execute(args...) : Res(); }
-	
-	operator bool() const                      { return ptr; }
-	void Clear()                               { Free(ptr); ptr = NULL; }
-
-	friend void Swap(Function& a, Function& b) { UPP::Swap(a.ptr, b.ptr); }
-
-	~Function()                                { Free(ptr); }
-};
-
-// we need "isolation level" to avoid overloading issues
 template <class... ArgTypes>
-class Event : Moveable<Event<ArgTypes...>> {
+class CallbackN : Moveable<CallbackN<ArgTypes...>> {
 	typedef Function<void (ArgTypes...)> Fn;
 
 	Fn fn;
 
 public:
-	Event() {}
-	Event(const Event& src) : fn(src.fn)       {}
-	Event& operator=(const Event& src)         { fn = src.fn; return *this; }
+	CallbackN() {}
+	CallbackN(const CallbackN& src) : fn(src.fn)       {}
+	CallbackN& operator=(const CallbackN& src)         { fn = src.fn; return *this; }
 
-	Event(Fn&& src, int) : fn(pick(src))       {} // Helper for callback compatibility code
+	CallbackN(Fn&& src, int) : fn(pick(src))       {} // Helper for callback compatibility code
 	template <class F>
-	Event(F src, int) : fn(src)                {} // Helper for callback compatibility code
+	CallbackN(F src, int) : fn(src)                {} // Helper for callback compatibility code
 	
-	Event(Event&& src) : fn(pick(src.fn))      {}
-	Event& operator=(Event&& src)              { fn = pick(src.fn); return *this; }
+	CallbackN(CallbackN&& src) : fn(pick(src.fn))      {}
+	CallbackN& operator=(CallbackN&& src)              { fn = pick(src.fn); return *this; }
 
-	Event(CNULLer)                             {}
-	Event& operator=(CNULLer)                  { fn.Clear(); return *this; }
+	CallbackN(CNULLer)                             {}
+	CallbackN& operator=(CNULLer)                  { fn.Clear(); return *this; }
 
-	Event Proxy() const                        { return Event(fn.Proxy(), 1); }
-
-	template <class F>
-	Event& operator<<(const F& f)              { fn << f; return *this; }
+	CallbackN Proxy() const                        { return CallbackN(fn.Proxy(), 1); }
 
 	template <class F>
-	Event& operator<<(F&& f)                   { fn << pick(f); return *this; }
+	CallbackN& operator<<(const F& f)              { fn << f; return *this; }
+
+	template <class F>
+	CallbackN& operator<<(F&& f)                   { fn << pick(f); return *this; }
 	
 	void operator()(ArgTypes... args) const    { return fn(args...); }
 
@@ -116,13 +35,13 @@ public:
 	operator bool() const                      { return fn; }
 	void Clear()                               { fn.Clear(); }
 	
-	friend Event Proxy(const Event& a)   { return a.Proxy(); }
-	friend void Swap(Event& a, Event& b) { UPP::Swap(a.fn, b.fn); }
+	friend CallbackN Proxy(const CallbackN& a)   { return a.Proxy(); }
+	friend void Swap(CallbackN& a, CallbackN& b) { UPP::Swap(a.fn, b.fn); }
 };
 
 // we need "isolation level" to avoid overloading issues
 template <class... ArgTypes>
-class EventGate : Moveable<EventGate<ArgTypes...>> {
+class GateN : Moveable<GateN<ArgTypes...>> {
 	typedef Function<bool (ArgTypes...)> Fn;
 
 	Fn fn;
@@ -130,27 +49,27 @@ class EventGate : Moveable<EventGate<ArgTypes...>> {
 	void Set(bool b) { if(b) fn = [](ArgTypes...) { return true; }; else fn.Clear(); }
 
 public:
-	EventGate()                                {}
+	GateN()                                {}
 
-	EventGate(bool b)                          { Set(b); }
-	EventGate& operator=(bool b)               { Set(b); return *this; }
+	GateN(bool b)                          { Set(b); }
+	GateN& operator=(bool b)               { Set(b); return *this; }
 
-	EventGate(const EventGate& a) : fn(a.fn)   {}
-	EventGate& operator=(const EventGate& a)   { fn = a.fn; return *this; }
+	GateN(const GateN& a) : fn(a.fn)   {}
+	GateN& operator=(const GateN& a)   { fn = a.fn; return *this; }
 
-	EventGate(Fn&& src, int) : fn(pick(src))   {}
-	EventGate& operator=(EventGate&& a)        { fn = pick(a.fn); return *this; }
+	GateN(Fn&& src, int) : fn(pick(src))   {}
+	GateN& operator=(GateN&& a)        { fn = pick(a.fn); return *this; }
 
-	EventGate(CNULLer)                         {}
-	EventGate& operator=(CNULLer)              { fn.Clear(); return *this; }
+	GateN(CNULLer)                         {}
+	GateN& operator=(CNULLer)              { fn.Clear(); return *this; }
 
-	EventGate Proxy() const                    { return fn.Proxy(); }
-
-	template <class F>
-	EventGate& operator<<(const F& f)          { fn << f; return *this; }
+	GateN Proxy() const                    { return fn.Proxy(); }
 
 	template <class F>
-	EventGate& operator<<(F&& f)               { fn << pick(f); return *this; }
+	GateN& operator<<(const F& f)          { fn << f; return *this; }
+
+	template <class F>
+	GateN& operator<<(F&& f)               { fn << pick(f); return *this; }
 	
 	bool operator()(ArgTypes... args) const    { return fn(args...); }
 
@@ -158,31 +77,31 @@ public:
 	operator bool() const                      { return fn; }
 	void Clear()                               { fn.Clear(); }
 
-	friend EventGate Proxy(const EventGate& a)     { return a.Proxy(); }
-	friend void Swap(EventGate& a, EventGate& b)   { UPP::Swap(a.fn, b.fn); }
+	friend GateN Proxy(const GateN& a)     { return a.Proxy(); }
+	friend void Swap(GateN& a, GateN& b)   { UPP::Swap(a.fn, b.fn); }
 };
 
 // backward compatibility
-typedef Event<> Callback;
-template <class P1> using Callback1 = Event<P1>;
-template <class P1, class P2> using Callback2 = Event<P1, P2>;
-template <class P1, class P2, class P3> using Callback3 = Event<P1, P2, P3>;
-template <class P1, class P2, class P3, class P4> using Callback4 = Event<P1, P2, P3, P4>;
-template <class P1, class P2, class P3, class P4, class P5> using Callback5 = Event<P1, P2, P3, P4, P5>;
+typedef CallbackN<> Callback;
+template <class P1> using Callback1 = CallbackN<P1>;
+template <class P1, class P2> using Callback2 = CallbackN<P1, P2>;
+template <class P1, class P2, class P3> using Callback3 = CallbackN<P1, P2, P3>;
+template <class P1, class P2, class P3, class P4> using Callback4 = CallbackN<P1, P2, P3, P4>;
+template <class P1, class P2, class P3, class P4, class P5> using Callback5 = CallbackN<P1, P2, P3, P4, P5>;
 
 #define  Res void
-#define  Cb_ Event
+#define  Cb_ CallbackN
 #include "CallbackR.i"
 
-using Gate = EventGate<>;
-template <class P1> using Gate1 = EventGate<P1>;
-template <class P1, class P2> using Gate2 = EventGate<P1, P2>;
-template <class P1, class P2, class P3> using Gate3 = EventGate<P1, P2, P3>;
-template <class P1, class P2, class P3, class P4> using Gate4 = EventGate<P1, P2, P3, P4>;
-template <class P1, class P2, class P3, class P4, class P5> using Gate5 = EventGate<P1, P2, P3, P4, P5>;
+using Gate0 = GateN<>;
+template <class P1> using Gate1 = GateN<P1>;
+template <class P1, class P2> using Gate2 = GateN<P1, P2>;
+template <class P1, class P2, class P3> using Gate3 = GateN<P1, P2, P3>;
+template <class P1, class P2, class P3, class P4> using Gate4 = GateN<P1, P2, P3, P4>;
+template <class P1, class P2, class P3, class P4, class P5> using Gate5 = GateN<P1, P2, P3, P4, P5>;
 
 #define  Res bool
-#define  Cb_ EventGate
+#define  Cb_ GateN
 #include "CallbackR.i"
 
 #define THISBACK(x)                  callback(this, &CLASSNAME::x)
@@ -208,7 +127,7 @@ template <class P1, class P2, class P3, class P4, class P5> using Gate5 = EventG
 
 
 template <class T>
-class EventArgTarget
+class CallbackNArgTarget
 {
 	T result;
 
@@ -216,7 +135,7 @@ class EventArgTarget
 	void Set(T value)                   { result = value; }
 
 public:
-	typedef EventArgTarget CLASSNAME;
+	typedef CallbackNArgTarget CLASSNAME;
 
 	operator const T&() const           { return result; }
 	bool IsNullInstance() const         { return IsNull(result); }
@@ -225,8 +144,8 @@ public:
 	operator Callback1<const T&>()      { return THISBACK(SetResult); }
 	operator Callback1<T>()             { return THISBACK(Set); }
 
-	EventArgTarget()                    { result = Null; }
+	CallbackNArgTarget()                    { result = Null; }
 };
 
 template <class T>
-using CallbackArgTarget = EventArgTarget<T>;
+using CallbackArgTarget = CallbackNArgTarget<T>;

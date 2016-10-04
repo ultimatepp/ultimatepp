@@ -96,21 +96,21 @@ public:
 		MODE_ROWS
 	};
 
-	Callback         WhenLeftClick;
-	Callback1<Point> WhenLeftClickPos;
-	Callback         WhenLeftDouble;
-	Callback1<Bar&>  WhenBar;
-	Callback         WhenSel;
+	Event<>      WhenLeftClick;
+	Event<Point> WhenLeftClickPos;
+	Event<>      WhenLeftDouble;
+	Event<Bar&>  WhenBar;
+	Event<>      WhenSel;
 
-	Callback                     WhenDrag;
-	Callback2<int, PasteClip&>   WhenDropItem;
-	Callback2<int, PasteClip&>   WhenDropInsert;
-	Callback1<PasteClip&>        WhenDrop;
+	Event<>                  WhenDrag;
+	Event<int, PasteClip&>   WhenDropItem;
+	Event<int, PasteClip&>   WhenDropInsert;
+	Event<PasteClip&>        WhenDrop;
 
-	// depracated - use WhenSel
-	Callback         WhenSelection;
-	Callback         WhenEnterItem;
-	Callback         WhenKillCursor;
+	// deprecated - use WhenSel
+	Event<>          WhenSelection;
+	Event<>          WhenEnterItem;
+	Event<>          WhenKillCursor;
 
 	int     GetColumnItems() const;
 	int     GetColumnCx(int i = 0) const;

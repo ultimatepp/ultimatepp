@@ -124,7 +124,7 @@ void Gdb_MI2::SyncExplorer(const Vector<VarItem>& children_)
 		// update 'this' pane
 		FillPane(explorer, explorerExpressions, explorerValues);
 	
-		exploreCallback.Set(500, THISBACK1(SyncExplorer, DeepClone(children)));
+		exploreEvent<> .Set(500, THISBACK1(SyncExplorer, DeepClone(children)));
 		return;
 	}
 	
@@ -136,7 +136,7 @@ void Gdb_MI2::SyncExplorer(const Vector<VarItem>& children_)
 			VarItem &v = children[iVar];
 			explorer.Set(iVar, 1, v.value);
 			explorerValues[iVar] = v.value;
-			exploreCallback.Set(100, THISBACK1(SyncExplorer, DeepClone(children)));
+			exploreEvent<> .Set(100, THISBACK1(SyncExplorer, DeepClone(children)));
 			return;
 		}
 	}

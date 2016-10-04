@@ -283,6 +283,8 @@ class JsonIO;
 #include "Uuid.h"
 #include "Ptr.h"
 
+#include "Function.h"
+
 #include "Callback.h"
 
 #include "Color.h"

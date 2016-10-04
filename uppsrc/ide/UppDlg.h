@@ -72,9 +72,9 @@ struct TemplateDlg : public WithNewPackageLayout<TopWindow> {
 
 	Array<PackageTemplate> pt;
 
-	Array<Label>  label;
-	Array<Ctrl>   ctrl;
-	DelayCallback delay;
+	Array<Label>   label;
+	Array<Ctrl>    ctrl;
+	DelayCallback  delay;
 
 	const PackageTemplate& ActualTemplate();
 

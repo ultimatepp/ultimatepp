@@ -51,8 +51,8 @@ public:
 
 	int      GetVisualState() const;
 
-	Callback WhenPush;
-	Callback WhenRepeat;
+	Event<>  WhenPush;
+	Event<>  WhenRepeat;
 
 	Pusher();
 	virtual ~Pusher();
@@ -359,7 +359,7 @@ protected:
 	virtual void   DoAction();
 
 public:
-	Callback       WhenPreAction;
+	Event<>        WhenPreAction;
 
 
 	DataPusher&    SetConvert(const Convert& _convert) { convert = &_convert; Refresh(); return *this; }

@@ -28,8 +28,8 @@ public:
 	void         PopUp(Ctrl *owner, int width);
 	void         PopUp(Ctrl *owner);
 
-	Callback     WhenCancel;
-	Callback     WhenSelect;
+	Event<>      WhenCancel;
+	Event<>      WhenSelect;
 
 	PopUpTable&  SetDropLines(int _droplines)          { droplines = _droplines; return *this; }
 
@@ -72,7 +72,7 @@ private:
 public:
 	typedef MultiButton::Style Style;
 
-	Callback      WhenDrop;
+	Event<>       WhenDrop;
 
 	DropList&     Add(const Value& key, const Value& value, bool enable = true);
 	DropList&     Add(const Value& value)         { return Add(value, value); }
@@ -173,8 +173,8 @@ protected:
 	typedef DropChoice CLASSNAME;
 
 public:
-	Callback    WhenDrop;
-	Callback    WhenSelect;
+	Event<>     WhenDrop;
+	Event<>     WhenSelect;
 
 	bool        DoKey(dword key);
 	void        DoWheel(int zdelta);
@@ -236,8 +236,8 @@ protected:
 	void            DoWhenDrop()                          { WhenDrop(); }
 
 public:
-	Callback        WhenDrop;
-	Callback        WhenSelect;
+	Event<>         WhenDrop;
+	Event<>         WhenSelect;
 
 	void            ClearList()                           { select.Clear(); }
 	void            AddList(const Value& data)            { select.Add(data); }

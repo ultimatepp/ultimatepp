@@ -124,7 +124,7 @@ bool CppBuilder::Wait(int slot)
 	return host->Wait(slot);
 }
 
-void CppBuilder::OnFinish(Callback cb)
+void CppBuilder::OnFinish(Event<>  cb)
 {
 	host->OnFinish(cb);
 }
