@@ -60,6 +60,4 @@ CONSOLE_APP_MAIN
 	h.Do(fn);
 	
 	LOG(h.out);
-	
-	Thread::ShutdownThreads();
 }
