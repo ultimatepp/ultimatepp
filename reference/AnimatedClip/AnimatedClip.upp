@@ -11,6 +11,8 @@ file
 	main.cpp,
 	AnimatedClip.lay,
 	AnimatedClip.brc,
+	arkearth_e0.gif,
+	arrtan_e0.gif,
 	Credits.txt;
 
 mainconfig

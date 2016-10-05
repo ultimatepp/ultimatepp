@@ -14,15 +14,15 @@ void App::Fn(String text)
 
 void App::AkMenu(Bar& menu)
 {
-	menu.Add(AK_FN1, THISBACK1(Fn, "1"));
-	menu.Add(AK_FN2, THISBACK1(Fn, "2"));
-	menu.Add(AK_EXIT, THISBACK(Close));
+	menu.Add(AK_FN1, [=] { Fn("1"); });
+	menu.Add(AK_FN2, [=] { Fn("2"); });
+	menu.Add(AK_EXIT, [=] { Close(); });
 }
 
 void App::MainMenu(Bar& menu)
 {
-	menu.Add("AK", THISBACK(AkMenu));
-	menu.Add(t_("Setup"), THISBACK(SetupMenu));
+	menu.Sub("AK", [=](Bar& bar) { AkMenu(bar); });
+	menu.Sub(t_("Setup"), [=](Bar& bar) { SetupMenu(bar); });
 }
 
 App::App()

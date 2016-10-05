@@ -1,4 +1,4 @@
-description "Embedding non-owned widgets into ArrayCtrl";
+description "Embedding non-owned widgets into ArrayCtrl\377";
 
 uses
 	CtrlLib;
