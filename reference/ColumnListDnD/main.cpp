@@ -42,10 +42,10 @@ public:
 
 		list.Columns(3);
 		list.MultiSelect();
-		list.WhenDropInsert = THISBACK(DropInsert);
-		list.WhenDropItem = THISBACK(DropSum);
+		list.WhenDropInsert = [=](int i, PasteClip& d) { DropInsert(i, d); };
+		list.WhenDropItem = [=](int i, PasteClip& d) { DropSum(i, d); };
 		
-		list.WhenDrag = THISBACK(Drag);
+		list.WhenDrag = [=] { Drag(); };
 
 		for(int i = 0; i < 500; i++)
 			list.Add(AsString(i));

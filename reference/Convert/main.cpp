@@ -31,19 +31,14 @@ struct App : TopWindow {
 	EditField bin;
 	EditInt   dec;
 
-	void BinChanged()  { dec <<= ~bin; }
-	void DecChanged()  { bin <<= ~dec; }
-
-	typedef App CLASSNAME;
-
 	App()
 	{
 		SetRect(0, 0, 200, 50);
 		bin.SetConvert(Single<ConvertBin>());
 		Add(bin.HSizePos().TopPos(0, Ctrl::STDSIZE));
 		Add(dec.HSizePos().BottomPos(0, Ctrl::STDSIZE));
-		bin <<= THISBACK(BinChanged);
-		dec <<= THISBACK(DecChanged);
+		bin << [=] { dec <<= ~bin; };
+		dec << [=] { bin <<= ~dec; };
 	}
 };
 

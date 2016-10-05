@@ -17,7 +17,7 @@ CONSOLE_APP_MAIN {
 		ImagePainter w(1500, 200);
 		w.DrawRect(0, 0, 1500, 200, White());
 		txt.Paint(w, 0, 0, 1500);
-		PNGEncoder().SaveFile(GetHomeDirFile("richtext.png"), w);	
+		PNGEncoder().SaveFile(GetHomeDirFile("richtext.png"), w);
 		
 		PdfDraw pdf;
 		txt.Paint(pdf, 0, 0, 1000);

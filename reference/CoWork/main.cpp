@@ -60,22 +60,8 @@ void App::Paint(Draw& w)
 	ImageBuffer ib(sz);
 	if(cowork) {
 		CoWork co;
-		for(int y = 0; y < sz.cy; y++) {
-		#ifdef CPP_11
-			co & [=, &ib] {
-				RGBA *line = ib[y];
-				Point c = sz / 2;
-				c = Point(int(sin((double)phase / 131) * c.x + c.x), int(sin((double)phase / 127) * c.y + c.y));
-				int yy = (y - c.y) * (y - c.y);
-				for(int x = 0; x < sz.cx; x++) {
-					double d = (x - c.x) * (x - c.x) + yy;
-					line[x] = GrayColor((int)(120 + 120 * sin(d / 1000 - (double)phase / 5)));
-				}
-			};
-		#else
-			co & callback4(DoLine, ib[y], phase, y, sz);
-		#endif
-		}
+		for(int y = 0; y < sz.cy; y++)
+			co & [=, &ib] { DoLine(ib[y], phase, y, sz); };
 	}
 	else
 		for(int y = 0; y < sz.cy; y++)
