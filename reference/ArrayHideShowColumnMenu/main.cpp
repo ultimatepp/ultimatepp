@@ -8,7 +8,6 @@ using namespace Upp;
 
 class MainWindow : public WithMainWindowLayout<TopWindow> {
 public:
-	typedef MainWindow CLASSNAME;
 	MainWindow();
 	void Serialize(Stream& s);
 protected:
@@ -22,7 +21,7 @@ MainWindow::MainWindow()
 {
 	CtrlLayout(*this, "Array Hide/Show Column Menu demonstration");
 	Sizeable();
-	m_array.WhenBar = THISBACK(OnArrayBar);
+	m_array.WhenBar = [=](Bar& menu) { OnArrayBar(menu); };
 	m_array.AllSorting();
 
 
@@ -71,7 +70,7 @@ void MainWindow::OnArrayBar(Bar &menu)
 	for(int i=0; i<header.GetCount(); i++){
 		bool visible = header.IsTabVisible(i);
 		String label = header[i].GetText();
-		menu.Add(label, THISBACK2(ShowColumn, i, !visible)).Check(visible);
+		menu.Add(label, [=] { ShowColumn(i, !visible); }).Check(visible);
 	}
 }
 

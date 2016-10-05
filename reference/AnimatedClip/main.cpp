@@ -9,17 +9,17 @@ using namespace Upp;
 AnimatedClip::AnimatedClip() {
 	CtrlLayout(*this, "RasterPlayer demo");
 	
-	browse   <<= THISBACK(Browse);
-	play 	 <<= THISBACK(Play);
-	stop 	 <<= THISBACK(Stop);
-	openNext <<= THISBACK(OpenNext);
+	browse << [=] { Browse(); };
+	play << [=] { clip.Play(); };
+	stop << [=] { clip.Stop(); };
+	openNext << [=] { clip.NextFrame(); };
+	numThreads << [=] { clip.SetMT(numThreads == 1); };
 	numThreads = 0;
-	numThreads <<= THISBACK(ChangeThreads);
 	#ifndef _MULTITHREADED
 		numThreads.EnableCase(1, false);
 	#endif
 	
-	clip.WhenShown = THISBACK(OnShown);
+	clip.WhenShown << [=] { openedPage = FormatInt(clip.GetPage()); };
 	arrows.LoadBuffer(String(animatedArrow, animatedArrow_length));
 	arrows.Play();
 	earth.LoadBuffer(String(animatedEarth, animatedEarth_length));
@@ -43,26 +43,6 @@ void AnimatedClip::Browse() {
 	}
 	numberPages = FormatInt(clip.GetPageCount());
 	openedPage = FormatInt(clip.GetPage());
-}
-
-void AnimatedClip::Play() {
-	clip.Play();
-}
-
-void AnimatedClip::Stop() {
-	clip.Stop();
-}
-
-void AnimatedClip::OpenNext() {
-	clip.NextFrame();
-}
-	
-void AnimatedClip::OnShown() {
-	openedPage = FormatInt(clip.GetPage());
-}
-
-void AnimatedClip::ChangeThreads() {
-	clip.SetMT(numThreads == 1);
 }
 
 GUI_APP_MAIN {

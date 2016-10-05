@@ -56,19 +56,17 @@ struct App : TopWindow {
 			b.RemoveSelection();
 	}
 
-	typedef App CLASSNAME;
-
 	App() {
 		a.AddColumn("You can paste the text here too");
 		a.MultiSelect();
-		a.WhenDropInsert = THISBACK(DnDInsert);
-		a.WhenDrop = THISBACK(DnD);
-		a.WhenDrag = THISBACK(Drag);
+		a.WhenDropInsert = [=](int line, PasteClip& d) { DnDInsert(line, d); };
+		a.WhenDrop = [=] (PasteClip& d) { DnD(d); };
+		a.WhenDrag = [=] { Drag(); };
 
 		b.AddColumn("Roman numbers");
 		b.MultiSelect();
-		b.WhenDropInsert = THISBACK(DnDInsertB);
-		b.WhenDrag = THISBACK(DragB);
+		b.WhenDropInsert = [=](int line, PasteClip& d) { DnDInsertB(line, d); };
+		b.WhenDrag = [=] { DragB(); };
 
 		Add(s.Horz(a, b));
 		for(int i = 0; i < 200; i++) {

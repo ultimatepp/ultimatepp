@@ -8,7 +8,6 @@ using namespace Upp;
 struct App : public WithAppLayout<TopWindow> {
 	EditDouble editdbl;
 
-	typedef App CLASSNAME;
 	App();
 };
 

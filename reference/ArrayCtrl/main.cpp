@@ -10,8 +10,6 @@ struct ArrayCtrlExample : public WithDlgLayout<TopWindow> {
 
 	void DoubleClick();
 
-	typedef ArrayCtrlExample CLASSNAME;
-
 	ArrayCtrlExample();
 };
 
@@ -51,7 +49,7 @@ ArrayCtrlExample::ArrayCtrlExample()
 	array.AddColumn("with display").SetDisplay(Single<MyDisplay>());
 	array.AddCtrl(editor);
 	array.AddRowNumColumn("rownum");
-	array.WhenLeftDouble = THISBACK(DoubleClick);
+	array.WhenLeftDouble = [=] { DoubleClick(); };
 	array.ColumnWidths("51 120 60 102 62");
 
 	for(int i = 0; i < 20; i++)

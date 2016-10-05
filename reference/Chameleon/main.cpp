@@ -94,7 +94,6 @@ struct MyApp : WithChameleonLayout<TopWindow> {
 	void Set(void (*skin)());
 	Button::Style scolor, simage, sfn;
 
-	typedef MyApp CLASSNAME;
 	MyApp();
 };
 
@@ -106,16 +105,16 @@ void MyApp::Set(void (*skin)())
 MyApp::MyApp()
 {
 	CtrlLayout(*this, "Chameleon example");
-	host <<= THISBACK1(Set, ChHostSkin);
-	std <<= THISBACK1(Set, ChStdSkin);
-	classic <<= THISBACK1(Set, ChClassicSkin);
-	color <<= THISBACK1(Set, ColorSkin);
+	host << [=] { Set(ChHostSkin); };
+	std << [=] { Set(ChStdSkin); };
+	classic << [=] { Set(ChClassicSkin); };
+	color << [=] { Set(ColorSkin); };
 	scolor = ColorStyle();
 	color.SetStyle(scolor);
-	img <<= THISBACK1(Set, ImageSkin);
-	simage= ImageStyle();
+	img << [=] { Set(ImageSkin); };
+	simage = ImageStyle();
 	img.SetStyle(simage);
-	fn <<= THISBACK1(Set, FnSkin);
+	fn << [=] { Set(FnSkin); };
 	sfn = FnStyle();
 	fn.SetStyle(sfn);
 }
