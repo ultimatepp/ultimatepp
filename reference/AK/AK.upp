@@ -1,4 +1,4 @@
-description "The definition and use of redefinable key accelerators";
+description "The definition and use of redefinable key accelerators\377";
 
 uses
 	CtrlLib;

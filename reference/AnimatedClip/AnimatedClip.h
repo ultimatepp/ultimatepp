@@ -10,10 +10,6 @@ public:
 	AnimatedClip();
 	
 	void Browse();
-	void Play();
-	void Stop();	
-	void OpenNext();
-	void ChangeThreads();
 	
 	void OnShown();
 };
