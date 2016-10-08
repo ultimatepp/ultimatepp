@@ -86,7 +86,7 @@ twofold. Firstly, the IDE has as its `'root`' directory `'MyApps`'
 rather than the package directory when the command is executed. 
  Secondly the explicit directory naming results in the makefile 
 not having to be edited.&]
-[s0; Also for some of the above `'applications; to be found the `'autoexec.bat`' 
+[s5; Also for some of the above `'applications; to be found the `'autoexec.bat`' 
 file path and other environmental variable names have been set 
 from the previous cross development application. This is not 
 part of the function of TheIDE.&]
