@@ -6,13 +6,7 @@ using namespace Upp;
 #include <CtrlCore/lay.h>
 
 struct MyApp1 : public TopWindow {
-	typedef MyApp1 CLASSNAME;
-
 	Switch s;
-
-	void Change(){
-		PromptOK("Switched to value " + AsString(~s));
-	}
 
 	MyApp1() {
 		Title("Switch example");
@@ -24,7 +18,7 @@ struct MyApp1 : public TopWindow {
 		s.Add("Something", "Another case");
 		s.DisableValue(12);
 		s <<= 13.5;
-		s <<= THISBACK(Change);
+		s << [=] { PromptOK("Switched to value " + ~~s); };
 	}
 };
 

@@ -1,4 +1,4 @@
-description "SliderCtrl example";
+description "SliderCtrl example\377";
 
 uses
 	CtrlLib;

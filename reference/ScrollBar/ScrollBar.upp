@@ -1,4 +1,4 @@
-description "Scrolling view using ScrollBar";
+description "Scrolling view using ScrollBar\377";
 
 uses
 	CtrlLib;
