@@ -24,10 +24,10 @@ App::App()
 	tab.Add(testArrayCtrl.SizePos(), "ArrayCtrl");
 	tab.Add(testFocusLost.SizePos(), "Focus lost");
 	
-	tab <<= THISBACK(TabChange);
-	resort <<= THISBACK(Resort);
-	toxml <<= THISBACK(ToXml);
-	fromxml <<= THISBACK(FromXml);
+	tab << [=] { TabChange(); };
+	resort << [=] { Resort(); };
+	toxml << [=] { ToXml(); };
+	fromxml << [=] { FromXml(); };
 	
 	Sizeable().Zoomable();//.BackPaint(!false);	
 }
