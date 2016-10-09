@@ -79,6 +79,8 @@ with given positions.&]
 :: [s0;ph [*C+75 GetLinePos(][/C+75 line][*C+75 )]]
 :: [s20; Position (offset from the beginning of the file) of the first 
 character of [/ line].]
+:: [s0;ph [*C+75 GetLineLength(line)]]
+:: [s20; Returns the number of characters in given line.]
 :: [s0;ph [*C+75 GetCursor()]]
 :: [s20; Cursor offset.]
 :: [s0;ph [*C+75 GetLine(][/C+75 position][*C+75 )]]
@@ -229,5 +231,8 @@ to.]
 :: [s20; Currently selected build method.]
 :: [s0; [*C+75 BuildMode()]]
 :: [s20; Currently selected build mode (0 `= Debug, 1 `= Optimal, 2 `= 
-Speed, 3 `= Size).]}}&]
+Speed, 3 `= Size).]
+:: [s0; [*C+75 Target()]]
+:: [s20; Returns current target name. To obtain this value project must 
+be firstly build.]}}&]
 [s0; ]]
