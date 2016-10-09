@@ -5,9 +5,12 @@ using namespace Upp;
 #define LAYOUTFILE <GuiMT/Divisors.lay>
 #include <CtrlCore/lay.h>
 
-struct Divisors : public WithDivisorsLayout<TopWindow> {
-	typedef Divisors CLASSNAME;
+// This example shows older way how to do multithreded GUI using PostCallback to communicate
+// between worker thread and main GUI thread.
+// While PostCallback is still useful in certain circumstances, new applications are
+// perhaps better off using GuiLock and Call, as demostrated in GuiLock reference example.
 
+struct Divisors : public WithDivisorsLayout<TopWindow> {
 	volatile Atomic terminated;
 	volatile Atomic threads;
 
@@ -42,10 +45,10 @@ void WorkerThread(DivisorsInfo f)
 				r2 = " " + AsString(j) + r2;
 				divisors++;
 			}
-			PostCallback(callback2(f.gui, &Divisors::ShowResult, f.line, "working..." + r1 + r2));
+			PostCallback([=] { f.gui->ShowResult(f.line, "working..." + r1 + r2); });
 		}
 	}
-	PostCallback(callback2(f.gui, &Divisors::ShowResult, f.line, AsString(divisors) + ": " + r1 + r2));
+	PostCallback([=] { f.gui->ShowResult(f.line, AsString(divisors) + ": " + r1 + r2); });
 	AtomicDec(f.gui->threads);
 }
 
@@ -79,7 +82,7 @@ Divisors::Divisors()
 {
 	CtrlLayout(*this, "Window title");
 	Sizeable().Zoomable();
-	push <<= THISBACK(TestNumber);
+	push << [=] { TestNumber(); };
 	editor.SetFilter(CharFilterDigit);
 	table.AddColumn("Number");
 	table.AddColumn("Divisors");

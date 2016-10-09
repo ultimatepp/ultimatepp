@@ -9,6 +9,7 @@ struct Foo {
 	void ActionWithParam(int y)  { Cout() << "ActionWithParam: " << x + y << '\n'; }
 
 	Event<> WhenDo;
+
 	void Do()                    { WhenDo(); }
 
 	Foo(int x = 0) : x(x) {}
@@ -22,11 +23,9 @@ void Fn()
 struct Bar {
 	Foo foo;
 
-	void Action() { Cout() << "foo's Do called\n"; }
-
-	typedef Bar CLASSNAME;
-
-	Bar() { foo.WhenDo = THISBACK(Action); }
+	Bar() {
+		foo.WhenDo = [=] { Cout() << "foo's Do called\n"; };
+	}
 };
 
 struct Safe : Pte<Safe> {
@@ -61,10 +60,10 @@ CONSOLE_APP_MAIN
 	Cout() << "---------\n";
 	{
 		Safe f;
-		ev4 = pteback(&f, &Safe::Action);
+		Ptr<Safe> p = &f;
+		ev4 = [=] { if(p) p->Action(); };
 		Cout() << "callback valid: " << (bool)ev4 << '\n';
 		ev4();
-	}
-	Cout() << "callback valid: " << (bool)ev4 << '\n';
-	ev4();
+	} // Safe f gets destroyed here, which makes capture 'p' NULL
+	ev4(); // captured 'p' is now NULL, so no Action is called
 }
