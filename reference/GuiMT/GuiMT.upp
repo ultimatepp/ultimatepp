@@ -1,4 +1,4 @@
-description "Using event queue for communication between worker threads and GUI";
+description "Using event queue for communication between worker threads and GUI\377";
 
 uses
 	CtrlLib;

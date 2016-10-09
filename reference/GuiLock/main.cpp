@@ -4,9 +4,6 @@ using namespace Upp;
 
 struct App : TopWindow {
 	Thread work;
-
-	void Work();
-	void AskQuit(bool *quit);
 	
 	ArrayCtrl list;
 	
@@ -16,37 +13,33 @@ struct App : TopWindow {
 	~App();
 };
 
-void App::AskQuit(bool *quit)
-{
-	*quit = PromptYesNo("Quit?");
-}
-
-void App::Work()
-{
-	for(;;) {
-		Sleep(1);
-		GuiLock __;
-		if(IsShutdownThreads())
-			break;
-		if(list.GetCount() > 100) {
-			bool quit;
-			Call(PTEBACK1(AskQuit, &quit)); // This is the generic way for any GUI (dlg)
-			// quit = PromptYesNo("Quit?"); // But Prompt has this ability already implemented
-			if(quit) {
-				Break();
-				return;
-			}
-			list.Clear();
-		}
-		list.Add((int64)Random());
-	}
-}
-
 App::App()
 {
 	list.AddColumn("Test");
 	Add(list.SizePos());
-	work.Run(THISBACK(Work));
+	work.Run([=] {
+		for(;;) {
+			Sleep(1);
+			GuiLock __; // After locking GuiLock __, access is allowed to GUI object except opening/closing windows
+			if(IsShutdownThreads())
+				break;
+			if(list.GetCount() > 100) {
+				bool quit;
+				Ptr<Ctrl> p = this;
+				Call([=, &quit] {
+					if(p) // check whether App still exists (e.g. can be closed by close button)
+						quit = PromptYesNo("Quit?");
+				});
+				// quit = PromptYesNo("Quit?"); // (but Prompt has this ability already implemented, so direct call would work too)
+				if(quit) {
+					Break();
+					return;
+				}
+				list.Clear();
+			}
+			list.Add((int64)Random());
+		}
+	});
 }
 
 App::~App()
