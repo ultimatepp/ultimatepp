@@ -11,8 +11,6 @@ using namespace Upp;
 #include <Draw/iml_source.h>
 
 struct MyApp : TopWindow {
-	typedef MyApp CLASSNAME;
-	
 	DropList method;
 	
 	void Paint(Draw& w) {
@@ -38,11 +36,6 @@ struct MyApp : TopWindow {
 		}
 		
 		w.DrawText(GetSize().cx - 200, 40, String().Cat() << "Elapsed " << tm << "s");
-	}
-	
-	void Sync()
-	{
-		Refresh();
 	}
 
 	MyApp() {

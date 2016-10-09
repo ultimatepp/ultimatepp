@@ -18,9 +18,7 @@ struct WebCrawler : public WithCrawlerLayout<TopWindow> {
 	
 	void ExtractUrls(const String& html, int srci);
 	void ShowPath();
-	void OpenURL(ArrayCtrl *a);
-
-	typedef WebCrawler CLASSNAME;
+	void OpenURL(ArrayCtrl& a);
 
 public:
 	void Run();
@@ -125,9 +123,9 @@ void WebCrawler::ShowPath()
 		path.Add(p[i]);
 }
 
-void WebCrawler::OpenURL(ArrayCtrl *a)
+void WebCrawler::OpenURL(ArrayCtrl& a)
 {
-	String u = a->GetKey();
+	String u = a.GetKey();
 	WriteClipboardText(u);
 	LaunchWebBrowser(u);
 }
@@ -139,10 +137,10 @@ WebCrawler::WebCrawler()
 	work.AddColumn("Status");
 	finished.AddColumn("Finished");
 	finished.AddColumn("Response");
-	finished.WhenCursor = THISBACK(ShowPath);
-	finished.WhenLeftDouble = THISBACK1(OpenURL, &finished);
+	finished.WhenCursor = [=] { ShowPath(); };
+	finished.WhenLeftDouble = [=] { OpenURL(finished); };
 	path.AddColumn("Path");
-	path.WhenLeftDouble = THISBACK1(OpenURL, &path);
+	path.WhenLeftDouble = [=] { OpenURL(path); };
 	total = 0;
 	Zoomable().Sizeable();
 }
