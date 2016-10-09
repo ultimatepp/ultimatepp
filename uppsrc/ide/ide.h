@@ -1087,6 +1087,7 @@ public:
 		void  MacroGetLength(EscEscape& e);
 		void  MacroGetLineCount(EscEscape& e);
 		void  MacroGetLinePos(EscEscape& e);
+		void  MacroGetLineLength(EscEscape& e);
 		void  MacroGetCursor(EscEscape& e);
 		void  MacroGetLine(EscEscape& e);
 		void  MacroGetColumn(EscEscape& e);
@@ -1136,6 +1137,7 @@ public:
 		void  MacroCloseFile(EscEscape& e);
 		void  MacroPackageFiles(EscEscape& e);
 		void  MacroAllPackages(EscEscape& e);
+		void  MacroTarget(EscEscape& e);
 	
 	String GetAndroidSdkPath();
 	
