@@ -79,7 +79,7 @@ with given positions.&]
 :: [s0;ph [*C+75 GetLinePos(][/C+75 line][*C+75 )]]
 :: [s20; Position (offset from the beginning of the file) of the first 
 character of [/ line].]
-:: [s0;ph [*C+75 GetLineLength(line)]]
+:: [s0;ph [*C+75 GetLineLength(][/C+75 line][*C+75 )]]
 :: [s20; Returns the number of characters in given line.]
 :: [s0;ph [*C+75 GetCursor()]]
 :: [s20; Cursor offset.]
