@@ -7,16 +7,11 @@ using namespace Upp;
 
 class MyApp : public WithLayout1<TopWindow> {
 public:
-	void Layout1()   { SetLayout_Layout1(*this); }
-	void Layout2()   { SetLayout_Layout2(*this); }
-
-	typedef MyApp CLASSNAME;
-
 	MyApp()
 	{
 		CtrlLayout(*this, "Window title");
-		layout1 <<= THISBACK(Layout1);
-		layout2 <<= THISBACK(Layout2);
+		layout1 << [=] { SetLayout_Layout1(*this); };
+		layout2 << [=] { SetLayout_Layout2(*this); };
 	}
 };
 

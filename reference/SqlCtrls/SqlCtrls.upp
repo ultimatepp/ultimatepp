@@ -12,6 +12,5 @@ file
 	SqlCtrls.lay;
 
 mainconfig
-	"" = "GUI";,
-	"" = "GUI SCH";
+	"" = "GUI";
 
