@@ -13,33 +13,33 @@ Panel::Panel()
 	opts.Add(colsopt, "Colors");
 	opts.Add(numsopt, "Numbers");
 	
-	lookopt.indicator         <<= THISBACK1(LookOptions, 0);
-	lookopt.hgrid             <<= THISBACK1(LookOptions, 1);
-	lookopt.vgrid             <<= THISBACK1(LookOptions, 2);
-	lookopt.resizing_cols     <<= THISBACK1(LookOptions, 3);
-	lookopt.resizing_rows     <<= THISBACK1(LookOptions, 4);
-	lookopt.live_cursor       <<= THISBACK1(LookOptions, 5);
-	lookopt.resize_paint_mode <<= THISBACK1(LookOptions, 6);
-	lookopt.resize_col_mode   <<= THISBACK1(LookOptions, 7);
-	lookopt.resize_row_mode   <<= THISBACK1(LookOptions, 8);
-	lookopt.moving_cols       <<= THISBACK1(LookOptions, 9);
-	lookopt.moving_rows       <<= THISBACK1(LookOptions, 10);
-	lookopt.full_col_resizing <<= THISBACK1(LookOptions, 11);
-	lookopt.full_row_resizing <<= THISBACK1(LookOptions, 12);
-	lookopt.repaint           <<= THISBACK1(LookOptions, 13);		
-	lookopt.disable           <<= THISBACK1(LookOptions, 14);
-	lookopt.chameleon         <<= THISBACK1(LookOptions, 15);
-	lookopt.draw_focus        <<= THISBACK1(LookOptions, 16);
+	lookopt.indicator         << [=] { LookOptions(0); };
+	lookopt.hgrid             << [=] { LookOptions(1); };
+	lookopt.vgrid             << [=] { LookOptions(2); };
+	lookopt.resizing_cols     << [=] { LookOptions(3); };
+	lookopt.resizing_rows     << [=] { LookOptions(4); };
+	lookopt.live_cursor       << [=] { LookOptions(5); };
+	lookopt.resize_paint_mode << [=] { LookOptions(6); };
+	lookopt.resize_col_mode   << [=] { LookOptions(7); };
+	lookopt.resize_row_mode   << [=] { LookOptions(8); };
+	lookopt.moving_cols       << [=] { LookOptions(9); };
+	lookopt.moving_rows       << [=] { LookOptions(10); };
+	lookopt.full_col_resizing << [=] { LookOptions(11); };
+	lookopt.full_row_resizing << [=] { LookOptions(12); };
+	lookopt.repaint           << [=] { LookOptions(13); };
+	lookopt.disable           << [=] { LookOptions(14); };
+	lookopt.chameleon         << [=] { LookOptions(15); };
+	lookopt.draw_focus        << [=] { LookOptions(16); };
 
-	editopt.multiline         <<= THISBACK1(EditOptions, 0);
-	editopt.select_row        <<= THISBACK1(EditOptions, 1);
-	editopt.sorting           <<= THISBACK1(EditOptions, 2);
-	editopt.multisort         <<= THISBACK1(EditOptions, 3);
-	editopt.tab_changes_row   <<= THISBACK1(EditOptions, 4);
-	editopt.tab_adds_row      <<= THISBACK1(EditOptions, 5);
-	editopt.edit_mode         <<= THISBACK1(EditOptions, 6);
-	editopt.one_click_edit    <<= THISBACK1(EditOptions, 7);
-	editopt.enter_like_tab    <<= THISBACK1(EditOptions, 8);
+	editopt.multiline         << [=] { EditOptions(0); };
+	editopt.select_row        << [=] { EditOptions(1); };
+	editopt.sorting           << [=] { EditOptions(2); };
+	editopt.multisort         << [=] { EditOptions(3); };
+	editopt.tab_changes_row   << [=] { EditOptions(4); };
+	editopt.tab_adds_row      << [=] { EditOptions(5); };
+	editopt.edit_mode         << [=] { EditOptions(6); };
+	editopt.one_click_edit    << [=] { EditOptions(7); };
+	editopt.enter_like_tab    << [=] { EditOptions(8); };
 		
 	colsopt.theme.Add(-1, "Flat");
 	colsopt.theme.Add(0, "Cairo");		
@@ -60,13 +60,13 @@ Panel::Panel()
 	lookopt.resize_row_mode.Add(0, "Absolute");
 	lookopt.resize_row_mode.Add(1, "Proportional");
 
-	colsopt.theme             <<= THISBACK1(ColorsOptions, 0);
-	colsopt.odd_color         <<= THISBACK1(ColorsOptions, 1);
-	colsopt.even_color        <<= THISBACK1(ColorsOptions, 2);
-	colsopt.odd_even_mode     <<= THISBACK1(ColorsOptions, 3);
-	colsopt.grid_color        <<= THISBACK1(ColorsOptions, 4);
-	colsopt.focus_color       <<= THISBACK1(ColorsOptions, 5);
-	colsopt.live_color        <<= THISBACK1(ColorsOptions, 6);
+	colsopt.theme             << [=] { ColorsOptions(0); };
+	colsopt.odd_color         << [=] { ColorsOptions(1); };
+	colsopt.even_color        << [=] { ColorsOptions(2); };
+	colsopt.odd_even_mode     << [=] { ColorsOptions(3); };
+	colsopt.grid_color        << [=] { ColorsOptions(4); };
+	colsopt.focus_color       << [=] { ColorsOptions(5); };
+	colsopt.live_color        << [=] { ColorsOptions(6); };
 
 	colsopt.odd_color.NoRampWheel();
 	colsopt.even_color.NoRampWheel();
@@ -74,23 +74,23 @@ Panel::Panel()
 	colsopt.focus_color.NoRampWheel();
 	colsopt.live_color.NoRampWheel();
 	
-	numsopt.total_cols        <<= THISBACK1(Actions, 0);
-	numsopt.total_rows        <<= THISBACK1(Actions, 1);
-	numsopt.fixed_cols        <<= THISBACK1(Actions, 2);
-	numsopt.fixed_rows        <<= THISBACK1(Actions, 3);
+	numsopt.total_cols        << [=] { Actions(0); };
+	numsopt.total_rows        << [=] { Actions(1); };
+	numsopt.fixed_cols        << [=] { Actions(2); };
+	numsopt.fixed_rows        << [=] { Actions(3); };
 	
 	numsopt.total_cols.Disable();
 	
-	clear_grid                <<= THISBACK1(Actions, 4);
-	reset_grid                <<= THISBACK1(Actions, 5);
+	clear_grid                << [=] { Actions(4); };
+	reset_grid                << [=] { Actions(5); };
 
 	#ifndef flagDEBUG
 	debug.Hide();
 	level.Hide();
 	#else
-	clear                     <<= THISBACK1(Actions, 400);
-	debug                     <<= THISBACK1(Actions, 401);
-	level                     <<= THISBACK1(Actions, 402);
+	clear                     << [=] { Actions(400); };
+	debug                     << [=] { Actions(401); };
+	level                     << [=] { Actions(402); };
 	#endif
 		
 	level.Add(0, "All")

@@ -7,7 +7,7 @@ LAYOUT(GridPanel, 896, 540)
 END_LAYOUT
 
 LAYOUT(Test, 564, 356)
-	ITEM(GridCtrl, dv___0, Indicator(true).MovingCols(true).MovingRows(true).LiveCursor(true).LeftPosZ(112, 312).TopPosZ(48, 202))
+	ITEM(GridCtrl, dv___0, MovingCols(true).MovingRows(true).LiveCursor(true).Indicator(true).LeftPosZ(112, 312).TopPosZ(48, 202))
 END_LAYOUT
 
 LAYOUT(DynamicLayout, 380, 216)
