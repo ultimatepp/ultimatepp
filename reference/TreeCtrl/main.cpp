@@ -24,7 +24,7 @@ struct App : TopWindow {
 	}
 
 	void CloseDir(int id) {
-		tree1.RemoveChildren(id);
+		;
 	}
 
 	void LoadTree(int parent, const String& path, Progress& pi)
@@ -43,17 +43,12 @@ struct App : TopWindow {
 					q = tree2.Add(parent, ff.IsFolder() ? CtrlImg::Dir() : CtrlImg::File(),
 				                  edit.Top(), 150);
 				else
-				 	q = tree2.Add(parent, ff.IsFolder() ? CtrlImg::Dir() : CtrlImg::File(), n);
+					q = tree2.Add(parent, ff.IsFolder() ? CtrlImg::Dir() : CtrlImg::File(), n);
 				if(ff.IsFolder())
 					LoadTree(q, AppendFileName(path, n), pi);
 			}
 		}
 	}
-
-	void ShowPath() {
-		info = ~tree1;
-	}
-
 
 	App() {
 		horz.Add(tree1);
@@ -64,8 +59,8 @@ struct App : TopWindow {
 		for(int i = 0; i < 10; i++)
 			optree.Add(i ? rand() % i : 0, x[i], AsString(i));
 		tree1.MultiSelect();
-		tree1.WhenOpen = THISBACK(OpenDir);
-		tree1.WhenClose = THISBACK(CloseDir);
+		tree1.WhenOpen = THISFN(OpenDir);
+		tree1.WhenClose = [=] (int id) { tree1.RemoveChildren(id); };
 	#ifdef PLATFORM_WIN32
 		String dir = String(GetExeFilePath()[0], 1) + ":\\";
 	#else
@@ -80,7 +75,7 @@ struct App : TopWindow {
 		tree2.SortDeep(0);
 		Sizeable();
 
-		tree1.WhenCursor = THISBACK(ShowPath);
+		tree1.WhenCursor = [=] { info = ~tree1; };
 		tree1.AddFrame(info);
 	}
 };

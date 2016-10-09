@@ -59,9 +59,9 @@ struct MyApp : TopWindow {
 		method.Add(FILTER_LANCZOS3, "Lanczos 3");
 		method.Add(FILTER_LANCZOS4, "Lanczos 4");
 		method.Add(FILTER_LANCZOS5, "Lanczos 5");
-		method <<= THISBACK(Sync);
 		Add(method.TopPos(0, STDSIZE).RightPos(0, 200));
 		method <<= FILTER_NEAREST;;
+		method << [=] { Refresh(); };
 
 		Zoomable();
 		Maximize();

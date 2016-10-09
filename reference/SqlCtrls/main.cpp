@@ -69,9 +69,9 @@ PersonsDlg::PersonsDlg()
 {
 	CtrlLayout(*this, "Persons");
 
-	create <<= THISBACK(Create);
-	edit <<= THISBACK(Edit);
-	remove <<= THISBACK(Remove);
+	create << THISFN(Create);
+	edit << THISFN(Edit);
+	remove << THISFN(Remove);
 	
 	list.SetTable(PERSON);
 	list.AddKey(ID);

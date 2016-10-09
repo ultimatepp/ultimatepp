@@ -42,17 +42,10 @@ struct App : TopWindow {
 		sb.SetTotal(n * GetLineHeight());
 	}
 
-	void Scroll()
-	{
-		Refresh();
-	}
-
-	typedef App CLASSNAME;
-
 	App() {
 		Sizeable().Zoomable().BackPaint();
 		AddFrame(sb);
-		sb.WhenScroll = THISBACK(Scroll);
+		sb.WhenScroll = [=] { Refresh(); };
 		sb.SetLine(GetLineHeight());
 	}
 };

@@ -17,7 +17,7 @@ struct App : TopWindow {
 	App() {
 		Sizeable().Zoomable();
 
-		slider <<= THISBACK(Slider);
+		slider << THISFN(Slider);
 		slider.Range(700);
 		slider <<= 250;
 		Add(slider.BottomPosZ(5, 30).HSizePos(10, 10));
