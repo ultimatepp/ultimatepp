@@ -48,8 +48,8 @@ struct MyApp : TopWindow {
 				tree.Open(parent.Top());
 		}
 		tree.Open(0);
-		tree.WhenDropInsert = THISBACK(DropInsert);
-		tree.WhenDrag = THISBACK(Drag);
+		tree.WhenDropInsert = THISFN(DropInsert);
+		tree.WhenDrag = THISFN(Drag);
 		Sizeable();
 	}
 };
