@@ -102,4 +102,26 @@ String>] is equivalent of [*C@5 Function<void (int, String)>].&]
 [s2; Creates alias for Function returning bool. For example, [*C@5 Gate<int, 
 String>] is equivalent of [*C@5 Function<bool (int, String)>].&]
 [s3;%- &]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 MemFn and THISFN]]}}&]
+[s3;%- &]
+[s3;%- &]
+[s0;%- Despide the power of C`+`+11, there are still situations where 
+it is better to put the callable code into member function. C`+`+11 
+lamda syntax can be tedious in that case. MemFn template function 
+and THISFN serve to reduce typing overhead.&]
+[s0;%- &]
+[s5;:Upp`:`:MemFn`(Upp`:`:Ptr`,Res`(`*`)`(ArgTypes`.`.`.`)`):%- [@(0.0.255) template]_<
+[@(0.0.255) class]_[*@4 Ptr], [@(0.0.255) class]_[*@4 Class], [@(0.0.255) class]_[*@4 Res], 
+[@(0.0.255) class...]_[*@4 ArgTypes]>_[_^Upp`:`:Event^ Event]<[*@4 ArgTypes][@(0.0.255) ...
+]>_[* MemFn]([*@4 Ptr]_[*@3 object], [*@4 Res]_(Class`::[@(0.0.255) `*][*@3 member`_function])
+([*@4 ArgTypes][@(0.0.255) ...]))&]
+[s2; Equivalent of std`::mem`_fn returning U`+`+ Function. Creates 
+Function that represents calling [%-*@3 member`_function] of instance 
+[%-*@3 object].&]
+[s3; &]
+[s4;%- &]
+[s5;:THISFN`(x`):%- [* THISFN](x)&]
+[s2; This macro is defined a MemFn(this, `&CLASSNAME`::x).&]
+[s3;%- &]
 [s0;@(0.0.255)3%- ]]
