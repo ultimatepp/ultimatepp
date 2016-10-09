@@ -6,6 +6,7 @@ EscValue Ide::MacroEditor()
 	out.Escape("GetLength()", THISBACK(MacroGetLength));
 	out.Escape("GetLineCount()", THISBACK(MacroGetLineCount));
 	out.Escape("GetLinePos(line)", THISBACK(MacroGetLinePos));
+	out.Escape("GetLineLength(line)", THISBACK(MacroGetLineLength));
 	out.Escape("GetCursor()", THISBACK(MacroGetCursor));
 	out.Escape("GetLine(pos)", THISBACK(MacroGetLine));
 	out.Escape("GetColumn(pos)", THISBACK(MacroGetColumn));
@@ -59,6 +60,7 @@ EscValue Ide::MacroEditor()
 	out.Escape("Flags()",THISBACK(MacroFlags));
 	out.Escape("PackageFiles(...)",THISBACK(MacroPackageFiles));
 	out.Escape("AllPackages()",THISBACK(MacroAllPackages));
+	out.Escape("Target()", THISBACK(MacroTarget));
 
 	return out;
 }
@@ -76,6 +78,11 @@ void Ide::MacroGetLineCount(EscEscape& e)
 void Ide::MacroGetLinePos(EscEscape& e)
 {
 	e = editor.GetPos(e.Int(0));
+}
+
+void Ide::MacroGetLineLength(EscEscape& e)
+{
+	e = editor.GetLineLength(e.Int(0));
 }
 
 void Ide::MacroGetCursor(EscEscape& e)
@@ -294,8 +301,8 @@ void Ide::MacroMoveTextEnd(EscEscape& e)
 void Ide::MacroMoveWordRight(EscEscape& e)
 {
 	if(e.GetCount() > 1) e.ThrowError("MoveWordRight(sel = false) takes at most 1 parameter");
- 	int p = editor.GetCursor();
- 	int b = p;
+	int p = editor.GetCursor();
+	int b = p;
 	int l = editor.GetLength();
 	if(iscid(editor.GetChar(p)))
 		while(p < l && iscid(editor.GetChar(p))) p++;
@@ -528,10 +535,15 @@ void Ide::MacroPackageFiles(EscEscape& e)
 void Ide::MacroAllPackages(EscEscape& e)
 {
 	EscValue ret;
-	for(int i = 0; i < package.GetCount(); i++){
+	for(int i = 0; i < package.GetCount(); i++) {
 		String p = package.Get(i).name;
 		if(!IsAux(p))
 			ret.ArrayAdd(p);
 	}
 	e = ret;
+}
+
+void Ide::MacroTarget(EscEscape& e)
+{
+	e = target;
 }
