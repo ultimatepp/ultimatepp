@@ -31,7 +31,7 @@ class GridFind : public EditString
 
 		GridFind();
 
-		Callback WhenEnter;
+		Event<> WhenEnter;
 		Callback1<Bar &> WhenBar;
 
 		virtual bool Key(dword key, int count);
@@ -100,7 +100,7 @@ class GridResizePanel : public FrameBottom<Ctrl>
 		bool MouseOnGrip(const Point &p);
 		void SetMinSize(Size sz);
 
-		Callback WhenClose;
+		Event<> WhenClose;
 };
 
 class GridPopUp : public Ctrl
@@ -172,7 +172,7 @@ class GridOperation
 		}
 
 		void Clear()        { operation = NONE; }
-		void ClearVersion() { version = 0;      }		
+		void ClearVersion() { version = 0;      }
 		int  GetVersion()   { return version;   }
 
 		GridOperation& operator=(const int op)
@@ -1795,64 +1795,64 @@ class GridCtrl : public Ctrl
 
 	public:
 
-		Callback1<Bar&> WhenMenuBar;
-		Callback1<Bar&> WhenToolBar;
+		Event<Bar&> WhenMenuBar;
+		Event<Bar&> WhenToolBar;
 
-		Callback WhenLeftDouble;
-		Callback WhenLeftClick;
-		Callback WhenEnter;
-		Callback WhenEscape;
+		Event<> WhenLeftDouble;
+		Event<> WhenLeftClick;
+		Event<> WhenEnter;
+		Event<> WhenEscape;
 
-		Callback WhenStartEdit;
-		Callback WhenEndEdit;
+		Event<> WhenStartEdit;
+		Event<> WhenEndEdit;
 
-		Callback WhenCreateRow;
+		Event<> WhenCreateRow;
 
-		Callback WhenAcceptRow;
-		Callback WhenAcceptedRow;
+		Event<> WhenAcceptRow;
+		Event<> WhenAcceptedRow;
 
-		Callback WhenInsertRow;
-		Callback WhenUpdateRow;
-		Callback WhenRemoveRow;
-		Callback WhenRemovedRow;
-		Callback WhenDuplicateRow;
+		Event<> WhenInsertRow;
+		Event<> WhenUpdateRow;
+		Event<> WhenRemoveRow;
+		Event<> WhenRemovedRow;
+		Event<> WhenDuplicateRow;
 		
 		Callback2<int, int> WhenMoveRow;
 
-		Callback WhenCancelNewRow;
+		Event<> WhenCancelNewRow;
 
-		Callback WhenUpdateCell;
+		Event<> WhenUpdateCell;
 		
-		Callback WhenUpdateSummary;
+		Event<> WhenUpdateSummary;
 
-		Callback WhenNewRow;
-		Callback WhenChangeCol;
-		Callback WhenBeforeChangeCol;
-		Callback WhenChangeRow;
-		Callback WhenBeforeChangeRow;
-		Callback WhenCursor;
-		Callback WhenEmpty;
+		Event<> WhenNewRow;
+		Event<> WhenChangeCol;
+		Event<> WhenBeforeChangeCol;
+		Event<> WhenChangeRow;
+		Event<> WhenBeforeChangeRow;
+		Event<> WhenCursor;
+		Event<> WhenEmpty;
 
-		Callback WhenCtrlAction;
-		Callback WhenCtrlsAction;
+		Event<> WhenCtrlAction;
+		Event<> WhenCtrlsAction;
 
-		Callback WhenSearchCursor;
-		Callback WhenClose;
-		Callback WhenChangeOrder;
+		Event<> WhenSearchCursor;
+		Event<> WhenClose;
+		Event<> WhenChangeOrder;
 
-		Callback StdInsert;
-		Callback StdAppend;
-		Callback StdRemove;
-		Callback StdDuplicate;
-		Callback StdEdit;
+		Event<> StdInsert;
+		Event<> StdAppend;
+		Event<> StdRemove;
+		Event<> StdDuplicate;
+		Event<> StdEdit;
 		
-		Callback WhenSort;
-		Callback WhenSorted;
+		Event<> WhenSort;
+		Event<> WhenSorted;
 		
-		Callback1<Value&> ProcessSummaryValue;
+		Event<Value&> ProcessSummaryValue;
 
-		Callback3<int, int, Value&> WhenPasteCell;
-		Callback WhenPaste;
+		Event<int, int, Value&> WhenPasteCell;
+		Event<> WhenPaste;
 };
 
 class GridText : Ctrl

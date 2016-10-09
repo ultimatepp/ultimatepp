@@ -138,7 +138,7 @@ public:
 
 	Size     ComputeSize(Size pane);
 	void     Add(Ctrl& c)                        { pane.Add(c.SizePos()); }
-	TabCtrl& operator<<(Ctrl& c)                 { Add(c); return *this; }
+//	TabCtrl& operator<<(Ctrl& c)                 { Add(c); return *this; } // ambiguos with operator<<(lambda)
 
 	static const Style& StyleDefault();
 
