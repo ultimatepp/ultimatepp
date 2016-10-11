@@ -67,8 +67,8 @@ copy constructor.&]
 [s4; &]
 [s5;:One`:`:Attach`(T`*`): [@(0.0.255) void]_[* Attach]([*@4 T]_`*[*@3 data])&]
 [s2;%% Assigns element to One. (Note: if there is content in One while 
-calling this function, it is destroyed). [%-*C@3 data] mus be pointer 
-to the new content created using operator new.&]
+calling this function, it is destroyed). [%-*C@3 data] must be 
+pointer to the new content created using operator new.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:One`:`:Detach`(`): [*@4 T]_`*[* Detach]()&]
