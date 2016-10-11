@@ -19,14 +19,10 @@ ption][@(0.0.255) <]_[* One][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
 [s0;%% &]
 [s9;%% One is a container capable of containing none or single element 
 of type specified as template argument or derived from it.&]
-[s9;%% One is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
+[s9;%% &]
+[s0;%% One is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
 ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick and 
-optional deep copy] transfer semantics. Calling methods of picked 
-One is logic error with exception of:&]
-[s0;%% &]
-[s0;%% [C+75 void ][*C+75 operator`=][C+75 (pick`_ One`& ][*C@3+75 v][C+75 )]&]
-[s0;%% [C+75 void ][*C+75 operator<<`=][C+75 (const One`& ][*C@3+75 v][C+75 ) 
-][/C+75 (defined using DeepCopyOption template base class)]&]
+optional clone] transfer semantics.&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor List]]}}&]
@@ -42,8 +38,10 @@ of this this object. &]
 [s7;%% [%-*@3 newt]-|Object to be added.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:One`:`:One`(Upp`:`:One`<T`>`&`&`): [* One]([* One]<[*@4 T]>`&`&_[*@3 p])&]
-[s2;%% Pick constructor.&]
+[s5;:Upp`:`:One`:`:One`(Upp`:`:One`<TT`>`&`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 TT]>_[* One]([* One]<[*@4 TT]>`&`&_[*@3 p])&]
+[s2;%% Pick constructor. [%-*@4 TT] must be the same as [%-*@4 T] or 
+derived from [%-*@4 T].&]
 [s3;%% &]
 [s4; &]
 [s5;:One`:`:One`(const One`<T`>`&`,int`): [* One]([@(0.0.255) const]_[* One][@(0.0.255) <][*@4 T
@@ -69,15 +67,15 @@ copy constructor.&]
 [s4; &]
 [s5;:One`:`:Attach`(T`*`): [@(0.0.255) void]_[* Attach]([*@4 T]_`*[*@3 data])&]
 [s2;%% Assigns element to One. (Note: if there is content in One while 
-calling this function, it is destroyed).&]
-[s7;%% [%-*C@3 data]-|Pointer to the new element created using operator 
-new.&]
+calling this function, it is destroyed). [%-*C@3 data] mus be pointer 
+to the new content created using operator new.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:One`:`:Detach`(`): [*@4 T]_`*[* Detach]()&]
 [s2;%% Removes content giving up ownership. Client is responsible 
-for deletion of content.&]
-[s7;%% [*/ Return value]-|Pointer to the content allocated on the heap.&]
+for deletion of content. If One is empty, return value is NULL, 
+otherwise the return value is pointer to the content allocated 
+on the heap.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`=`(T`*`): [@(0.0.255) void]_[* operator`=]([*@4 T]_`*[*@3 data])&]
@@ -86,9 +84,10 @@ for deletion of content.&]
 new.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:One`:`:operator`=`(Upp`:`:One`<T`>`&`&`): [@(0.0.255) void]_[* operator`=]([_^Upp`:`:One^ O
-ne]<[*@4 T]>`&`&_[*@3 d])&]
-[s2;%% Pick assignment.&]
+[s5;:Upp`:`:One`:`:operator`=`(Upp`:`:One`<TT`>`&`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 TT]>_[@(0.0.255) void]_[* operator`=]([_^Upp`:`:One^ One]<[*@4 TT]>`&`&_[*@3 d])&]
+[s2;%% Pick assignment. [%-*@4 TT] must be the same as [%-*@4 T] or derived 
+from [%-*@4 T].&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`-`>`(`)const: [@(0.0.255) const]_[*@4 T]_`*[* operator`->]()_[@(0.0.255) c

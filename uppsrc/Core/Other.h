@@ -23,28 +23,29 @@ class One : MoveableAndDeepCopyOption< One<T> > {
 	mutable T  *ptr;
 
 	void        Free()                     { if(ptr && ptr != (T*)1) delete ptr; }
-	void        Chk() const                { ASSERT(ptr != (T*)1); }
-	void        ChkP() const               { Chk(); ASSERT(ptr); }
-	void        Pick(One<T>&& data)        { T *p = data.ptr; data.ptr = NULL; ptr = p; }
+	template <class TT>
+	void        Pick(One<TT>&& data)       { ptr = data.Detach(); }
 
 public:
 	void        Attach(T *data)            { Free(); ptr = data; }
-	T          *Detach()                   { ChkP(); T *t = ptr; ptr = NULL; return t; }
+	T          *Detach()                   { T *t = ptr; ptr = NULL; return t; }
 	void        Clear()                    { Free(); ptr = NULL; }
 
 	void        operator=(T *data)         { Attach(data); }
-	void        operator=(One<T>&& d)      { if(this != &d) { Free(); Pick(pick(d)); }}
+	
+	template <class TT>
+	void        operator=(One<TT>&& d)     { if((void *)this != (void *)&d) { Free(); Pick(pick(d)); }}
 
-	const T    *operator->() const         { ChkP(); return ptr; }
-	T          *operator->()               { ChkP(); return ptr; }
-	const T    *operator~() const          { Chk(); return ptr; }
-	T          *operator~()                { Chk(); return ptr; }
-	const T&    operator*() const          { ChkP(); return *ptr; }
-	T&          operator*()                { ChkP(); return *ptr; }
+	const T    *operator->() const         { ASSERT(ptr); return ptr; }
+	T          *operator->()               { ASSERT(ptr); return ptr; }
+	const T    *operator~() const          { return ptr; }
+	T          *operator~()                { return ptr; }
+	const T&    operator*() const          { ASSERT(ptr); return *ptr; }
+	T&          operator*()                { ASSERT(ptr); return *ptr; }
 
 	template <class TT, class... Args>
 	TT&         Create(Args... args)       { TT *q = new TT(args...); Attach(q); return *q; }
-	template <class TT> // with C++ conforming compiler, this would not be neede - GCC bug workaround
+	template <class TT> // with C++ conforming compiler, this would not be needed - GCC bug workaround
 	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
 	template <class... Args>
 	T&          Create(Args... args)       { T *q = new T(args...); Attach(q); return *q; }
@@ -53,7 +54,7 @@ public:
 	template <class TT>
 	bool        Is() const                 { return dynamic_cast<const TT *>(ptr); }
 
-	bool        IsEmpty() const            { Chk(); return !ptr; }
+	bool        IsEmpty() const            { return !ptr; }
 
 	operator bool() const                  { return ptr; }
 	
@@ -61,7 +62,8 @@ public:
 
 	One()                                  { ptr = NULL; }
 	One(T *newt)                           { ptr = newt; }
-	One(One<T>&& p)                        { Pick(pick(p)); }
+	template <class TT>
+	One(One<TT>&& p)                       { Pick(pick(p)); }
 	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : DeepCopyNew(*p); }
 	~One()                                 { Free(); }
 };
