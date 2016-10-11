@@ -31,11 +31,12 @@ means that you can for example embed hyper`-link. But, on the
 other hand it can leads to troubles in displaying text. For example 
 we have symbols that are special for QTF `- this situation can 
 happened while displaying directory path. In this case we need 
-to deqtf our text.using [* DeQtf ]function. Below is the code that 
+to deqtf our text.using [*^topic`:`/`/RichText`/src`/Utilities`$en`-us`#Upp`:`:DeQtf`(const char`*`)^ D
+eQtf][*  ]function from RichText package. Below is the code that 
 presenting how to solve such issue:&]
 [s10;l160; [/@(28.42.150) PromptOK(DeQtf(`"C:`\Program Files`\Upp`\theide`"));]&]
-[s10; &]
-[ {{10000@(113.42.0) [s0; [*@7;4 Prompt family]]}}&]
+[s10;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Prompt family]]}}&]
 [s10;%- Displays informative dialogs.&]
 [s10;%- &]
 [s0;=%- 
@@ -88,8 +89,8 @@ yIgnore]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 qtf])&]
 [s5;:Upp`:`:PromptSaveDontSaveCancel`(const char`*`):%- [@(0.0.255) int]_[* PromptSaveDon
 tSaveCancel]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 qtf])&]
 [s2;  [%-*@3 qtf] .Message to display in QTF format.&]
-[s10; &]
-[ {{10000@(113.42.0) [s0; [*@7;4 Exclamation family]]}}&]
+[s10;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Exclamation family]]}}&]
 [s10;%- Displays dialogs with warning.&]
 [s10;%- &]
 [s0;=%- 
@@ -105,8 +106,8 @@ on our donators list.`");]&]
 [s5;:Upp`:`:Exclamation`(const char`*`):%- [@(0.0.255) void]_[* Exclamation]([@(0.0.255) co
 nst]_[@(0.0.255) char]_`*[*@3 qtf])&]
 [s2;  [%-*@3 qtf] .Message to display in QTF format.&]
-[s10; &]
-[ {{10000@(113.42.0) [s0; [*@7;4 Error family]]}}&]
+[s10;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Error family]]}}&]
 [s10;%- Displays dialogs with error.&]
 [s10;%- &]
 [s0;=%- 
