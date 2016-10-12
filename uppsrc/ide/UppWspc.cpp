@@ -1058,7 +1058,7 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 		menu.Add(cando, ~NFormat("Add package to '%s'", act), IdeImg::package_add(), THISBACK(AddNormalUses));
 		RemovePackageMenu(menu);
 		if(menu.IsMenuBar()) {
-			bool main = package.GetCursor() > 0;
+			bool main = package.GetCursor() == 0;
 			
 			menu.Add(cando, "Rename package..", THISBACK(RenamePackage));
 			menu.Add(cando, "Delete package", THISBACK(DeletePackage))
