@@ -1061,8 +1061,7 @@ void WorkspaceWork::PackageMenu(Bar& menu)
 			bool main = package.GetCursor() == 0;
 			
 			menu.Add(cando, "Rename package..", THISBACK(RenamePackage));
-			menu.Add(cando, "Delete package", THISBACK(DeletePackage))
-				.Enable(!main);
+			menu.Add(cando && !main, "Delete package", THISBACK(DeletePackage));
 			menu.Separator();
 			BuildPackageMenu(menu);
 			menu.Add("Open Package Directory",THISBACK(OpenPackageFolder));
