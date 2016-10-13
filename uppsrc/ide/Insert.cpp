@@ -183,5 +183,7 @@ void Ide::EditorMenu(Bar& bar)
 {
 	InsertAdvanced(bar);
 	bar.MenuSeparator();
+	OnlineSearchMenu(bar);
+	bar.MenuSeparator();
 	editor.StdBar(bar);
 }
