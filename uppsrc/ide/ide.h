@@ -638,7 +638,8 @@ public:
 
 	enum { STYLE_NO_REPLACE, STYLE_CONFIRM_REPLACE, STYLE_AUTO_REPLACE };
 
-	String			find_file_search_string;
+	String find_file_search_string;
+	bool   find_file_search_in_current_package;
 
 	FindInFilesDlg ff;
 	String         iwc;

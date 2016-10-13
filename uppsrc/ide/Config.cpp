@@ -2,7 +2,7 @@
 
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
-	int version = 15;
+	int version = 16;
 	s / version;
 	s.Magic(0x12354);
 	if(s.IsStoring()) {
@@ -107,6 +107,9 @@ void Ide::SerializeWorkspace(Stream& s) {
 	}
 	if(version >= 11) {
 		s % find_file_search_string;
+	}
+	if(version >= 16) {
+		s % find_file_search_in_current_package;
 	}
 	if(version >= 12)
 		SerializePlacement(s);
