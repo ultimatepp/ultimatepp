@@ -70,6 +70,7 @@ file
 	About.cpp,
 	Help.cpp,
 	Macro.cpp,
+	OnlineSearch.cpp,
 	Errors.cpp,
 	Calc.cpp,
 	FormatCode.cpp,
