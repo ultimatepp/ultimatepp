@@ -53,14 +53,13 @@ private:
 	};
 
 public:
-	FindFileWindow(const Workspace& wspc, const String& acctualPackage,
-				   const String& serachString);
+	FindFileWindow(const Workspace& wspc, const String& acctualPackage);
 	
 	Vector<FindFileData> GetFindedFilesData() const;
 	
-private:
-	void OnSearch();
+	void Find();
 	
+private:
 	bool DoseFileMeetTheCriteria(
 		const Package::File& file, const String& packageName, const String& query);
 	bool IsActualPackage(const String& packageName);
@@ -70,8 +69,7 @@ private:
 	const Workspace& wspc;
 };
 
-FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackage,
-							   const String& serachString)
+FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackage)
 	: wspc(wspc)
 	, actualPackage(actualPackage)
 {
@@ -84,13 +82,10 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	list.EvenRowColor();
 	list.MultiSelect();
 	mask.NullText("Search");
-	mask.SetText(serachString);
 	mask.SelectAll();
 	mask.SetFilter(CharFilterFindFileMask);
-	mask << [=] { OnSearch(); };
-	searchInCurrentPackage << [=] { OnSearch(); };
-	
-	OnSearch();
+	mask << [=] { Find(); };
+	searchInCurrentPackage << [=] { Find(); };
 }
 
 Vector<FindFileData> FindFileWindow::GetFindedFilesData() const
@@ -106,7 +101,7 @@ Vector<FindFileData> FindFileWindow::GetFindedFilesData() const
 	return data;
 }
 
-void FindFileWindow::OnSearch()
+void FindFileWindow::Find()
 {
 	list.Clear();
 	String maskValue = ~mask;
@@ -141,16 +136,24 @@ bool FindFileWindow::IsActualPackage(const String& packageName)
 
 void Ide::FindFileName()
 {
-	FindFileWindow findFileWindow(IdeWorkspace(), actualpackage, find_file_search_string);
-	if(findFileWindow.Execute() == IDOK) {
-		find_file_search_string = ~findFileWindow.mask;
-		
-		Vector<FindFileData> data = findFileWindow.GetFindedFilesData();
-		for(const FindFileData& currentData : data) {
-			AddHistory();
+	FindFileWindow window(IdeWorkspace(), actualpackage);
+	window.mask.SetText(find_file_search_string);
+	window.searchInCurrentPackage.Set(find_file_search_in_current_package);
+	window.Find();
+	
+	if(window.Execute() != IDOK) {
+		find_file_search_in_current_package = ~window.searchInCurrentPackage;
+		return;
+	}
+	
+	find_file_search_string = ~window.mask;
+	find_file_search_in_current_package = ~window.searchInCurrentPackage;
+	
+	Vector<FindFileData> data = window.GetFindedFilesData();
+	for(const FindFileData& currentData : data) {
+		AddHistory();
 			
-			String filePath = SourcePath(currentData.GetPackage(), currentData.GetFile());
-			EditFile(filePath);
-		}
+		String filePath = SourcePath(currentData.GetPackage(), currentData.GetFile());
+		EditFile(filePath);
 	}
 }
