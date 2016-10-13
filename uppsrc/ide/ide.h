@@ -801,7 +801,11 @@ public:
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
 		void  EditorMenu(Bar& bar);
-
+	
+	void OnlineSearchMenu(Bar& menu);
+		void OnlineSearch();
+		void OnlineSearchOnTheOfficialSite();
+	
 	void SearchMenu(Bar& bar);
 		void  EditFind()                { editor.FindReplace(find_pick_sel, find_pick_text, false); }
 		void  EditReplace()             { editor.FindReplace(find_pick_sel, find_pick_text, true); }

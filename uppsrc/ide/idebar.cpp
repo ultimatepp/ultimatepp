@@ -107,6 +107,12 @@ void Ide::File(Bar& menu)
 	menu.Add(AK_EXIT, THISBACK(Exit));
 }
 
+void Ide::OnlineSearchMenu(Bar& menu)
+{
+	menu.Add(editor.IsSelection(), "Search the web..", THISBACK(OnlineSearch));
+	menu.Add(editor.IsSelection(), "Search on the official site..", THISBACK(OnlineSearchOnTheOfficialSite));
+}
+
 void Ide::EditSpecial(Bar& menu)
 {
 	menu.Add(AK_SPACESTOTABS, THISBACK(EditMakeTabs))
@@ -142,7 +148,8 @@ void Ide::EditSpecial(Bar& menu)
 	menu.Add(editor.IsSelection(), AK_COMMENTLINES, THISBACK(CommentLines))
 		.Help("Comment code lines");
 	menu.Add(editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
-		.Help("Uncomment code");}
+		.Help("Uncomment code");
+}
 
 void Ide::SearchMenu(Bar& menu)
 {
