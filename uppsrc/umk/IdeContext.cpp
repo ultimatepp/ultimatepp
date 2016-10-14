@@ -87,7 +87,7 @@ bool Ide::IdeConsoleWait(int slot)
 	return true;
 }
 
-void Ide::IdeConsoleOnFinish(Callback cb)
+void Ide::IdeConsoleOnFinish(Event<> cb)
 {
 	console.OnFinish(cb);
 }

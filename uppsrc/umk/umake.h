@@ -37,7 +37,7 @@ protected:
 
 	struct Finisher {
 		int               serial;
-		Callback          cb;
+		Event<>           cb;
 	};
 
 	Array<Slot> processes;
@@ -78,7 +78,7 @@ public:
 	void Wait(int slot);
 	bool Wait();
 
-	void OnFinish(Callback cb);
+	void OnFinish(Event<> cb);
 
 	void WrapText(bool w)                     { wrap_text = w; }
 
@@ -115,7 +115,7 @@ struct Ide : public IdeContext, public MakeBuild {
 	virtual void             IdeConsoleEndGroup();
 	virtual bool             IdeConsoleWait();
 	virtual bool             IdeConsoleWait(int slot);
-	virtual void             IdeConsoleOnFinish(Callback cb);
+	virtual void             IdeConsoleOnFinish(Event<> cb);
 
 	virtual bool      IdeIsDebug() const ;
 	virtual void      IdeEndDebug();
