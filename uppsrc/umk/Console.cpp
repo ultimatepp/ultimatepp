@@ -220,7 +220,7 @@ bool Console::Wait()
 	}
 }
 
-void Console::OnFinish(Callback cb)
+void Console::OnFinish(Event<> cb)
 {
 	Finisher& f = finisher.Add();
 	f.serial = serial;
