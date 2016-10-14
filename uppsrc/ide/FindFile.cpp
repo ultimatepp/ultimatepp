@@ -60,7 +60,7 @@ public:
 	void Find();
 	
 private:
-	bool DoseFileMeetTheCriteria(
+	bool DoesFileMeetTheCriteria(
 		const Package::File& file, const String& packageName, const String& query);
 	bool IsActualPackage(const String& packageName);
 	
@@ -109,7 +109,7 @@ void FindFileWindow::Find()
 		String packageName = wspc[p];
 		const Package& pack = wspc.GetPackage(p);
 		for(const auto& file : pack.file) {
-			if(DoseFileMeetTheCriteria(file, packageName, maskValue)) {
+			if(DoesFileMeetTheCriteria(file, packageName, maskValue)) {
 				list.Add(file, packageName);
 			}
 		}
@@ -120,7 +120,7 @@ void FindFileWindow::Find()
 	ok.Enable(list.IsCursor());
 }
 
-bool FindFileWindow::DoseFileMeetTheCriteria(const Package::File& file, const String& packageName,
+bool FindFileWindow::DoesFileMeetTheCriteria(const Package::File& file, const String& packageName,
                                              const String& query)
 {
 	if (searchInCurrentPackage && !IsActualPackage(packageName))
@@ -149,8 +149,7 @@ void Ide::FindFileName()
 	find_file_search_string = ~window.mask;
 	find_file_search_in_current_package = ~window.searchInCurrentPackage;
 	
-	Vector<FindFileData> data = window.GetFindedFilesData();
-	for(const FindFileData& currentData : data) {
+	for(const auto& currentData : window.GetFindedFilesData()) {
 		AddHistory();
 			
 		String filePath = SourcePath(currentData.GetPackage(), currentData.GetFile());
