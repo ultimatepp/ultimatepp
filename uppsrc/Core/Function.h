@@ -1,4 +1,4 @@
-enum CNULLer { CNULL };
+enum CNULLer { CNULL }; // Deprecated, use plain Null
 
 template<typename Res, typename... ArgTypes>
 class Function<Res(ArgTypes...)> : Moveable<Function<Res(ArgTypes...)>> {
