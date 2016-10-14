@@ -14,7 +14,7 @@ topic "Utilities";
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Utilities]]}}&]
 [s10;%% There are several useful functions related to RichText. Below 
 is the list of the most important ones.&]
-[s10; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Functions]]}}&]
 [s3; &]
 [s5;:Upp`:`:DeQtf`(const char`*`): [_^Upp`:`:String^ String]_[* DeQtf]([@(0.0.255) const]_[@(0.0.255) c
@@ -25,4 +25,6 @@ be used in situation where function require string in QTF format,
 but provided string could contain symbols that have meaning in 
 QTF (like `'`[`'). Note that alternative is [^topic`:`/`/RichText`/srcdoc`/QTF`$en`-us^ u
 sing `'`\1`' escape character].&]
+[s7;%% [%-*C@3 s]-|C string.&]
+[s7;%% [*/ Return value]-|String converted to Qtf format.&]
 [s3; ]]
