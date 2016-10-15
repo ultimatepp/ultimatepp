@@ -157,12 +157,6 @@ public:
 	friend String operator+(String&& a, tchar b)               { String c(pick(a)); c += b; return c; }
 	friend String operator+(const tchar *a, const String& b)   { String c(a); c += b; return c; }
 	friend String operator+(tchar a, const String& b)          { String c(a, 1); c += b; return c; }
-
-// Avoid common error of adding offset to String (Fail__ to produce compiler error)
-	friend Fail__ operator+(int, const String&) { return Fail__(); }
-	friend Fail__ operator+(const String&, int) { return Fail__();}
-	friend Fail__ operator+(size_t, const String&) { return Fail__(); }
-	friend Fail__ operator+(const String&, size_t) { return Fail__(); }
 };
 
 class String0 : Moveable<String0> {
@@ -420,7 +414,10 @@ public:
 	char *End()                     { *pend = '\0'; return pend; }
 	char *end()                     { return End(); }
 
+	char& operator[](int i)         { return Begin()[i]; }
 	operator char*()                { return Begin(); }
+	operator byte*()                { return (byte *)Begin(); }
+	operator void*()                { return Begin(); }
 	char *operator~()               { return Begin(); }
 
 	void SetLength(int l);
@@ -858,7 +855,10 @@ public:
 	wchar *End()                     { *pend = '\0'; return pend; }
 	wchar *end()                     { return End(); }
 
+	wchar& operator[](int i)         { return Begin()[i]; }
 	operator wchar*()                { return Begin(); }
+	operator int16*()                { return (int16 *)Begin(); }
+	operator void*()                 { return Begin(); }
 	wchar *operator~()               { return Begin(); }
 
 	void  SetLength(int l);
