@@ -26,39 +26,11 @@ to be explicitly specified when transfering the content of the
 container (exception is the temporary value, which can be pick 
 assigned without explicit pick). This decision has the advantage 
 of not accidentally using costly deep copy semantics, when in 
-reality move is required in majority of case. Moreover, for the 
-increased safety, the source after moving is considered to be 
-in `"picked`" state and number of operations that can be performed 
-on it is limited. In most cases, only allowed operations here 
-are operator`=, destructor and Clear. This one of reasons for 
-having `'pick`' function (and using term `'pick`' instead of 
-`'move`', even if the semantics is about the same as `'std`::move`').&]
+reality move is required in majority of case..&]
 [s7; Vector<int> a, b;&]
-[s7; a `= pick(b); // moves content of b to a, b is put into picked 
-state&]
+[s7; a `= pick(b); // moves content of b to a, b is cleared&]
 [s7; b `= clone(a); // a and b now contain the same data&]
-[s3; C`+`+03 compatibility&]
-[s5; In ideal world, we would be now using only C`+`+11. In real 
-world, we will need to support C`+`+03 for foreseeable future.&]
-[s5; pick constructor/operator`= in C`+`+11 can obviously use&]
-[s7; T(T`&`&);&]
-[s7; T`& operator`=(T`&`&);&]
-[s5; forms. However, to support C`+`+03, we need to implement them 
-using quite ugly trick as&]
-[s7; T(T const`&);&]
-[s7; T`& operator`=(T const`&);&]
-[s5; because not doing so would break returning values from functions, 
-as temporaries in C`+`+11 can only be bind to constant references. 
-To hide this difference, we&]
-[s7; #define rval`_ `&`&&]
-[s5; in C`+`+11 and&]
-[s7; #define rval`_ const`&&]
-[s5; in C`+`+03 to get unified the form&]
-[s7; T(T rval`_);&]
-[s7; T`& operator`=(T rval`_);&]
-[s5; (parameter then also has to be const`_casted, but that is not 
-a problem in C`+`+11). Note also that semantics of `'pick`', 
-for this reason, is not tested very well in C`+`+03.&]
+[s5; &]
 [s3; Composition&]
 [s5; When class contains members with pick semantics, a lot of error`-prone 
 work is saved when compiler is able to generate pick constructor/operator`= 
