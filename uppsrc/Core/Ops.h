@@ -127,8 +127,6 @@ void EndianSwap(int *v, size_t count);
 void EndianSwap(int64 *v, size_t count);
 void EndianSwap(uint64 *v, size_t count);
 
-class Fail__ {}; // Used as return value for function that are not to be called
-
 #define SVO_MEMCPY(tgt, src, len) \
 do {  \
 	const char *s__ = (const char *)(src); \

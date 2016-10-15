@@ -78,7 +78,7 @@ void CSyntax::InitKeywords()
 		"byte", "word", "dword", "__countof", "pick_", "wchar", "NULL", "Null",
 		"int8", "uint8", "int16", "uint16", "int32", "uint32", "int64", "uint64", "qword",
 		"INTERLOCKED_", "INTERLOCKED", "ONCELOCK", "ONCELOCK_", "INITBLOCK", "EXITBLOCK",
-		"rval_", "rval_default", "size_t", "intptr_t", "uintptr_t",
+		"rval_", "rval_default", "size_t", "intptr_t", "uintptr_t"
 		NULL
 	};
 	static const char *usc[] = {
@@ -205,6 +205,7 @@ void CSyntax::InitKeywords()
 		"PTEBACK", "PTEBACK1", "PTEBACK2",  "PTEBACK3",  "PTEBACK4",
 		"QUOTE", "XASSERT", "NEVER", "XNEVER", "CHECK", "XCHECK", "ASSERT", "ASSERT_",
 		"NAMESPACE_UPP", "END_UPP_NAMESPACE", "NEVER_", "SKYLARK", "RPC_METHOD", "RPC_GMETHOD",
+		"THISFN",
 		NULL
 	};
 	static const char *upp_logs[] = {
