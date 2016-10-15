@@ -7,7 +7,7 @@ void Ide::OnlineSearch()
 		return;
 	}
 	
-	LaunchWebBrowser("https://www.google.pl/search?q=" + UrlEncode(selection));
+	LaunchWebBrowser("https://www.google.com/search?q=" + UrlEncode(selection));
 }
 
 void Ide::OnlineSearchOnTheOfficialSite()
@@ -17,6 +17,6 @@ void Ide::OnlineSearchOnTheOfficialSite()
 		return;
 	}
 	
-	LaunchWebBrowser("https://www.google.pl/search?q=" + UrlEncode(selection) +
+	LaunchWebBrowser("https://www.google.com/search?q=" + UrlEncode(selection) +
 	                 "&domains=www.ultimatepp.org&sitesearch=www.ultimatepp.org");
 }
