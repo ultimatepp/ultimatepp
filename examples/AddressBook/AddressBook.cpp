@@ -24,8 +24,6 @@ class AddressBook : public WithAddressBookLayout<TopWindow> {
 	void SaveAs();
 	void Print();
 	void Quit();
-	void FileMenu(Bar& bar);
-	void MainMenu(Bar& bar);
 
 	typedef AddressBook CLASSNAME;
 
@@ -54,23 +52,17 @@ AddressBook::AddressBook()
 	search.search ^= THISFN(Search);
 	SetupSearch();
 	fs.AllFilesType();
-	menu.Set(THISFN(MainMenu));
-}
-
-void AddressBook::FileMenu(Bar& bar)
-{
-	bar.Add("Open..", CtrlImg::open(), THISFN(Open));
-	bar.Add("Save", CtrlImg::save(), THISFN(Save));
-	bar.Add("Save as..", CtrlImg::save_as(), THISFN(SaveAs));
-	bar.Separator();
-	bar.Add("Print", CtrlImg::print(), THISFN(Print));
-	bar.Separator();
-	bar.Add("Quit", THISFN(Quit));
-}
-
-void AddressBook::MainMenu(Bar& bar)
-{
-	bar.Add("File", THISFN(FileMenu));
+	menu.Set([=](Bar& bar) {
+		bar.Sub("File", [=](Bar& bar) {
+			bar.Add("Open..", CtrlImg::open(), THISFN(Open));
+			bar.Add("Save", CtrlImg::save(), THISFN(Save));
+			bar.Add("Save as..", CtrlImg::save_as(), THISFN(SaveAs));
+			bar.Separator();
+			bar.Add("Print", CtrlImg::print(), THISFN(Print));
+			bar.Separator();
+			bar.Add("Quit", THISFN(Quit));
+		});
+	});
 }
 
 void AddressBook::SetupSearch()
