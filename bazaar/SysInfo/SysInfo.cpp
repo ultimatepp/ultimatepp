@@ -1528,7 +1528,7 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 	case DRIVE_UNKNOWN: 	type = "Drive unknown";		break;
    	case DRIVE_NO_ROOT_DIR: type = "The root directory does not exist";	break;
 	case DRIVE_REMOVABLE:
-          switch (*sb) {
+          switch (drive[0]) {
           case 'A':
           case 'B': 		type = "Floppy";		
           					volume = fileSystem = "";
