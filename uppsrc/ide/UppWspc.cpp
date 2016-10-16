@@ -864,14 +864,14 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		InsertSpecialMenu(menu);
 	else {
 		menu.Add("New package file..", [=] { NewPackageFile(); });
-		menu.Add("Insert separator", [=] { AddSeparator(); })
-			.Help("Add text separator line");
 		menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
 			.Help("Insert file relative to current package");
 		menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));
 		menu.Add("Special", THISBACK(SpecialFileMenu))
 		    .Help("Less frequently used methods of adding files to the package");
 	}
+	menu.Add("Insert separator", IdeImg::Separator(), [=] { AddSeparator(); })
+		.Help("Add text separator line");
 	menu.Separator();
 	if(!organizer) {
 		if(sel)
