@@ -373,7 +373,7 @@ struct RichContext {
 	void              NewHeaderFooter(RichText *header, RichText *footer_qtf);
 	void              Page() { py.page++; py.y = page.top; }
 
-	RichContext(const RichStyles& styles, const RichText *text) : styles(&styles), text(text) { header_cy = footer_cy = 0; }
+	RichContext(const RichStyles& styles, const RichText *text) : text(text), styles(&styles) { header_cy = footer_cy = 0; }
 	RichContext() {}
 };
 

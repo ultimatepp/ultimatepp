@@ -326,8 +326,6 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 		if(part[parti].Is<RichTable>())
 			GetTable(parti).GatherValPos(f, begin, pos, type);
 		else {
-			int nbefore = 0;
-			int nline = 0;
 			const Para& p = part[parti].Get<Para>();
 			if(p.haspos) {
 				if(type == LABELS)
