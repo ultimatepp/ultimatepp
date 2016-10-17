@@ -4,7 +4,7 @@ using namespace Upp;
 
 void GetRepoInfo(String repo, Date& d, int& rev)
 {
-	String s = Sys("svn info svn://localhost/upp");
+	String s = Sys("svn info " + repo);
 	LOG("SVN info:");
 	LOG(s);
 
@@ -46,8 +46,7 @@ CONSOLE_APP_MAIN
 
 	ASSERT(d == d1 && rev == rev1);
 	
-	for(int pass = 0; pass < 3; pass++) {
-		String dir = decode(pass, 0, "/mnt/nas1/bak", 1, "/mnt/nas/bak", "/bak");
+	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/bak;/big/bak", ';')) {
 		FindFile ff(dir + "/*");
 		Time tm = Time::Low();
 		int64 len = 0;
