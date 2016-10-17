@@ -414,6 +414,7 @@ public:
 	char *End()                     { *pend = '\0'; return pend; }
 	char *end()                     { return End(); }
 
+	char& operator*()               { return *Begin(); }
 	char& operator[](int i)         { return Begin()[i]; }
 	operator char*()                { return Begin(); }
 	operator byte*()                { return (byte *)Begin(); }
@@ -855,6 +856,7 @@ public:
 	wchar *End()                     { *pend = '\0'; return pend; }
 	wchar *end()                     { return End(); }
 
+	wchar& operator*()               { return *Begin(); }
 	wchar& operator[](int i)         { return Begin()[i]; }
 	operator wchar*()                { return Begin(); }
 	operator int16*()                { return (int16 *)Begin(); }
