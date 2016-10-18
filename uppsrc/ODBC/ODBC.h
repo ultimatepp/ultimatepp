@@ -5,7 +5,7 @@
 #include <sql.h>
 #include <sqlext.h>
 
-// debian: apt-get install unixodbc-dev
+// debian: sudo apt-get install unixodbc-dev
 
 namespace Upp {
 
