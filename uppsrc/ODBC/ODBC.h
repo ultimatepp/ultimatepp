@@ -5,6 +5,8 @@
 #include <sql.h>
 #include <sqlext.h>
 
+// debian: apt-get install unixodbc-dev
+
 namespace Upp {
 
 bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);

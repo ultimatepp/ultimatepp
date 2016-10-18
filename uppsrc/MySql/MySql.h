@@ -1,6 +1,8 @@
 #ifndef __mysql_h__
 #define __mysql_h__
 
+// debian: sudo apt-get install libmysqlclient-dev
+
 #ifndef flagNOMYSQL
 
 #include <Sql/Sql.h>
