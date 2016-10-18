@@ -14,6 +14,8 @@ using namespace Upp;
 #define MODEL <SQL_PostgreSql/database.sch>
 #include "Sql/sch_header.h"
 
+// debian: sudo apt-get install libpq-dev
+
 class PostgreSQLTest : public WithPostgreSQLTestLayout<TopWindow> {
 public:
 	typedef PostgreSQLTest CLASSNAME;
