@@ -6,6 +6,8 @@
 
 using namespace Upp;
 
+// debian: sudo apt-get install unixodbc-dev
+
 #include <MSSQL/MSSQL.h>
 #define SCHEMADIALECT <MSSQL/MSSQLSchema.h>
 #define MODEL <SQL_MSSQL/database.sch>

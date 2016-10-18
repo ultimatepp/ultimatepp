@@ -1,5 +1,7 @@
 #include <MySql/MySql.h>
 
+// debian: sudo apt-get install libmysqlclient-dev
+
 using namespace Upp;
 
 #define SCHEMADIALECT <MySql/MySqlSchema.h>
