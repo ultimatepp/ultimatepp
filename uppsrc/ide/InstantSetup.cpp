@@ -239,12 +239,12 @@ void InstantSetup()
 			bmSet(bm, "DEBUG_LINKMODE", "0");
 			bmSet(bm, "DEBUG_OPTIONS", "-Od");
 			bmSet(bm, "DEBUG_FLAGS", "");
-			bmSet(bm, "DEBUG_LINK", "/STACK:20000000");
+			bmSet(bm, "DEBUG_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
 			bmSet(bm, "RELEASE_BLITZ", "0");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
 			bmSet(bm, "RELEASE_OPTIONS", "-O2");
 			bmSet(bm, "RELEASE_FLAGS", "");
-			bmSet(bm, "RELEASE_LINK", "/STACK:20000000");
+			bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
 			bmSet(bm, "DISABLE_BLITZ", "");
 			bmSet(bm, "DEBUGGER", GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
 
