@@ -3,6 +3,8 @@
 
 #include "ODBC/ODBC.h"
 
+// debian: sudo apt-get install unixodbc-dev
+
 namespace Upp {
 
 String MsSqlTextType(int width);

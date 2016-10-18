@@ -10,6 +10,8 @@
 #include <postgresql/libpq-fe.h>
 #endif
 
+// debian: sudo apt-get install libpq-dev
+
 namespace Upp {
 
 // Postgre -> Value types
