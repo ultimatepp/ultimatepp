@@ -1,4 +1,4 @@
-description "\3770,128,128";
+description "OpenSSL based SSL support for Core\3770,128,128";
 
 library(POSIX) "crypto ssl";
 
