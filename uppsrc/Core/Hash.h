@@ -59,6 +59,34 @@ String  SHA1String(const String& data);
 String  SHA1StringS(const void *data, dword size);
 String  SHA1StringS(const String& data);
 
+class Sha256Stream : public OutStream {
+	byte  buffer[128];
+	int   pos;
+	dword size;
+
+	virtual  void  Out(const void *data, dword size);
+
+	void  Cleanup();
+
+public:
+	void   Finish(byte *hash20);
+	String FinishString();
+	String FinishStringS();
+
+	void   Reset();
+	void   New()                         { Reset(); }
+	
+	Sha256Stream(); 
+	~Sha256Stream();
+};
+
+void    SHA256(byte *hash20, const void *data, dword size);
+void    SHA256(byte *hash20, const String& s);
+String  SHA256String(const void *data, dword size);
+String  SHA256String(const String& data);
+String  SHA256StringS(const void *data, dword size);
+String  SHA256StringS(const String& data);
+
 class xxHashStream : public OutStream {
 	byte context[8 * 8];
 	
