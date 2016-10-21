@@ -20,5 +20,6 @@ file
 	SSL.h,
 	Util.cpp,
 	InitExit.icpp,
-	Socket.icpp;
+	Socket.icpp,
+	P7S.icpp;
 
