@@ -874,4 +874,18 @@ WString Replace(const WString& s, const VectorMap<WString, WString>& fr)
 	return Replace__<wchar>(s, fr.GetKeys(), fr.GetValues());
 }
 
+
+String (*GetP7Signature__)(const void *data, int length, const String& cert_pem, const String& pkey_pem);
+
+String GetP7Signature(const void *data, int length, const String& cert_pem, const String& pkey_pem)
+{
+	ASSERT_(GetP7Signature__, "Missing SSL support (Core/SSL)");
+	return (*GetP7Signature__)(data, length, cert_pem, pkey_pem);
+}
+
+String GetP7Signature(const String& data, const String& cert_pem, const String& pkey_pem)
+{
+	return GetP7Signature(data, data.GetLength(), cert_pem, pkey_pem);
+}
+
 }
