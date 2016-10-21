@@ -487,3 +487,6 @@ String  Replace(const String& s, const Vector<String>& find, const Vector<String
 String  Replace(const String& s, const VectorMap<String, String>& fr);
 WString Replace(const WString& s, const Vector<WString>& find, const Vector<WString>& replace);
 WString Replace(const WString& s, const VectorMap<WString, WString>& fr);
+
+String GetP7Signature(const void *data, int length, const String& cert_pem, const String& pkey_pem);
+String GetP7Signature(const String& data, const String& cert_pem, const String& pkey_pem);
