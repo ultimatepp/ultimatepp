@@ -225,6 +225,20 @@ public:
 	~TTFReader();
 };
 
+struct PdfSignatureInfo {
+	String pkey;
+	String cert;
+
+	String name;
+	String location;
+	String reason;
+	String contact_info;
+
+	Time   time;
+	
+	PdfSignatureInfo() { time = Null; }
+};
+
 class PdfDraw : public Draw {
 public:
 	virtual dword GetInfo() const;
@@ -314,6 +328,7 @@ private:
 	CharPos GetCharPos(Font fnt, wchar chr);
 	void    FlushText(int dx, int fi, int height, const String& txt);
 	static String PdfColor(Color c);
+	static String PdfString(const char *s);
 
 	void PushOffset();
 	void PopOffset();
@@ -346,8 +361,11 @@ private:
 
 	RGlyph RasterGlyph(Font fnt, int chr);
 
+	String Finish(PdfSignatureInfo *sign);
+
 public:
-	String Finish();
+	String Finish()                                          { return Finish(NULL); }
+	String Finish(PdfSignatureInfo& sign)                    { return Finish(&sign); }
 	void   Clear();
 	bool   IsEmpty() const                                   { return empty; }
 	
