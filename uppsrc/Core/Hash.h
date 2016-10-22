@@ -61,8 +61,6 @@ String  SHA1StringS(const String& data);
 
 class Sha256Stream : public OutStream {
 	byte  buffer[128];
-	int   pos;
-	dword size;
 
 	virtual  void  Out(const void *data, dword size);
 
