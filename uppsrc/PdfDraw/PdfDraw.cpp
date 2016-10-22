@@ -36,7 +36,7 @@ void  PdfDraw::Clear()
 	out.Clear();
 	page.Clear();
 	offset.Clear();
-	out << "%PDF-1.3\n";
+	out << "%PDF-1.7\n";
 	out << "%\xf1\xf2\xf3\xf4\n\n";
 	empty = true;
 }
@@ -976,20 +976,30 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 	}
 
 	static String byterange_filler = "[0 ********** ********** **********]";
+	int signature = -1;
 	int signature_widget = -1;
 	int p7s_start, p7s_end, byterange_pos;
 	int sign_page = 0;
 	if(sign) {
-		int signature = BeginObj();
+		signature = BeginObj();
 		out << "<< /Type /Sig\n";
 		out << "/ByteRange ";
 		byterange_pos = out.GetCount();
 		out << byterange_filler << "\n";
+
+/*
 		out << "/Contents <";
 		p7s_start = out.GetCount();
 		out << String('0', 10000);
 		p7s_end = out.GetCount();
 		out << ">\n";
+*/
+		out << "/Contents ";
+		p7s_start = out.GetCount();
+		out << "<" + String('0', 10000) + ">";
+		p7s_end = out.GetCount();
+		out << "\n";
+
 //		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
 //		pdf_length_pos = out.GetCount();
 //		      //1234567890 -  %10d
@@ -1144,7 +1154,19 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		out << "/Metadata " << pdfa_metadata << " 0 R\n";
 	
 	if(sign)
-		out << " /AcroForm << /Fields [" << signature_widget << " 0 R] /SigFlags 3 >>";
+		out << " /AcroForm << /Fields [" << signature_widget << " 0 R] /SigFlags 3 "
+		       " /Perms << /DocMDP " << signature << " 0 R >>>>";
+
+
+/*
+17 0 obj
+<< /Type /Catalog /Version /1.7 /Pages 1 0 R /Names << >> 
+/ViewerPreferences << /Direction /L2R >> /PageLayout /SinglePage /PageMode /UseNone 
+/OpenAction [12 0 R /FitH null] /Metadata 16 0 R /Lang (\Uffffffff\Uffffffffen) 
+/AcroForm << /Fields [4 0 R 10 0 R] /NeedAppearances false /SigFlags 3 /DR << /Font << /F1 3 0 R >> >> /DA (/F1 0 Tf 0 g) 
+/Q 0 >> /Perms << /DocMDP 5 0 R >> >>
+endobj
+*/
 	
 	out << ">>\n";
 	EndObj();
@@ -1182,7 +1204,7 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		DDUMP(byterange);
 		DDUMP(out.GetCount());
 		DDUMP(data.GetCount());
-		String sgn = HexString(GetP7Signature(data, sign->cert, sign->pkey));
+		String sgn = "<" + HexString(GetP7Signature(data, sign->cert, sign->pkey));
 		memcpy(~out + p7s_start, sgn, sgn.GetCount());
 	}
 	   
