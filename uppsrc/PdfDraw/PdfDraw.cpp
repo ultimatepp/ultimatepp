@@ -975,24 +975,27 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		}
 	}
 
+	static String byterange_filler = "[0 ********** ********** **********]";
 	int signature_widget = -1;
-	int p7s_start, p7s_end, pdf_length_pos;
+	int p7s_start, p7s_end, byterange_pos;
 	int sign_page = 0;
 	if(sign) {
 		int signature = BeginObj();
 		out << "<< /Type /Sig\n";
+		out << "/ByteRange ";
+		byterange_pos = out.GetCount();
+		out << byterange_filler << "\n";
 		out << "/Contents <";
 		p7s_start = out.GetCount();
-		out << String('0', 30000);
+		out << String('0', 10000);
 		p7s_end = out.GetCount();
 		out << ">\n";
-		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
-		pdf_length_pos = out.GetCount();
-		      //1234567890 -  %10d
-		out << "**********]\n";
+//		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
+//		pdf_length_pos = out.GetCount();
+//		      //1234567890 -  %10d
+//		out << "**********]\n";
 		out << "/Filter /Adobe.PPKLite\n";
-//		out << "/SubFilter /adbe.pkcs7.detached\n";
-		out << "/SubFilter /adbe.pkcs7.sha1\n";
+		out << "/SubFilter /adbe.pkcs7.detached\n";
 		Time tm = Nvl(sign->time, GetSysTime());
 		out << Format("/M (%02d%02d%02d%02d%02d%02d+02'00')\n", tm.year, tm.month, tm.day, _DBG_ // fix time zone
 		              tm.hour, tm.minute, tm.second);
@@ -1005,13 +1008,13 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 			out << "/Location " << PdfString(sign->location) << "\n";
 		if(sign->contact_info.GetCount())
 			out << "/ContactInfo " << PdfString(sign->contact_info) << "\n";
-		
-		out << "/Reference [ << /Type /SigRef\n"
-		       "  /TransformMethod /UR3\n"
-		       "  /TransformParams <<\n"
-		       "     /Type /TransformParams\n"
-		       "     /V /2.2\n";
-		out << ">> >> ]\n";
+		out << "/Reference [ << /Type /SigRef /TransformMethod /DocMDP /TransformParams << /Type /TransformParams /P 2 /V /1.2 >> >> ]";
+//		out << "/Reference [ << /Type /SigRef\n"
+//		       "  /TransformMethod /UR3\n"
+//		       "  /TransformParams <<\n"
+//		       "     /Type /TransformParams\n"
+//		       "     /V /2.2\n";
+//		out << ">> >> ]\n";
 		out << ">>\n";
 
 		EndObj();
@@ -1162,18 +1165,24 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 	    << "%%EOF\r\n";
 
 	if(sign) {
-		DDUMPHEX(String(~out + pdf_length_pos, 12));
-		memcpy(~out + pdf_length_pos, Format("%10d", out.GetLength() - p7s_end), 10);
-		DDUMP(String(~out + p7s_start - 1, ~out + p7s_end + 1));
+//		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
+//		pdf_length_pos = out.GetCount();
+//		      //1234567890 -  %10d
+//		out << "**********]\n";
+
+//		memcpy(~out + pdf_length_pos, Format("%10d", out.GetLength() - p7s_end), 10);
+
+		String byterange = Format("[0 %10d %10d %10d]", p7s_start, p7s_end, out.GetLength() - p7s_end);
+		ASSERT(byterange.GetCount() == byterange_filler.GetCount());
+
+		memcpy(~out + byterange_pos, byterange, byterange.GetCount());
+
 		String data(~out, p7s_start);
 		data.Cat(~out + p7s_end, out.End());
+		DDUMP(byterange);
+		DDUMP(out.GetCount());
 		DDUMP(data.GetCount());
-		DDUMP(data);
-		String sgn = ToUpper(HexString(GetP7Signature(data, sign->cert, sign->pkey))); _DBG_ // ToUpper?
-		DDUMP(sgn.GetCount());
-		DDUMP(sgn);
-		_DBG_ // check the length
-//		sgn = "SIGNATURE!";
+		String sgn = HexString(GetP7Signature(data, sign->cert, sign->pkey));
 		memcpy(~out + p7s_start, sgn, sgn.GetCount());
 	}
 	   
