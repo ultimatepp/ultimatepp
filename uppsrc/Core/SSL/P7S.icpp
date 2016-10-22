@@ -14,7 +14,7 @@ String GetP7Signature_imp(const void *data, int length, const String& cert_pem, 
 	SslStream in;
 	in.OpenBuffer((const char *)data, length);
 
-    PKCS7 *p7 = PKCS7_sign(x509, pkey, NULL, in, PKCS7_DETACHED|PKCS7_STREAM|PKCS7_BINARY);
+    PKCS7 *p7 = PKCS7_sign(x509, pkey, NULL, in, PKCS7_DETACHED|PKCS7_BINARY);
 
     if (!p7)
         return Null;
@@ -23,7 +23,7 @@ String GetP7Signature_imp(const void *data, int length, const String& cert_pem, 
 	out.CreateBuffer();
 
 	String r;
-    if (SMIME_write_PKCS7(out, p7, in, PKCS7_DETACHED|PKCS7_STREAM|PKCS7_BINARY)) {
+    if (SMIME_write_PKCS7(out, p7, in, PKCS7_DETACHED|PKCS7_BINARY)) {
 		SslStream out1;
 		out1.CreateBuffer();
 		i2d_PKCS7_bio(out1, p7);

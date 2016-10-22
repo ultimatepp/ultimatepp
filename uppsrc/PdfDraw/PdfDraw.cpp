@@ -36,7 +36,7 @@ void  PdfDraw::Clear()
 	out.Clear();
 	page.Clear();
 	offset.Clear();
-	out << "%PDF-1.7\n";
+	out << "%PDF-1.3\n";
 	out << "%\xf1\xf2\xf3\xf4\n\n";
 	empty = true;
 }
@@ -983,7 +983,7 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		out << "<< /Type /Sig\n";
 		out << "/Contents <";
 		p7s_start = out.GetCount();
-		out << String('0', 3000);
+		out << String('0', 30000);
 		p7s_end = out.GetCount();
 		out << ">\n";
 		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
@@ -991,7 +991,8 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		      //1234567890 -  %10d
 		out << "**********]\n";
 		out << "/Filter /Adobe.PPKLite\n";
-		out << "/SubFilter /adbe.pkcs7.detached\n";
+//		out << "/SubFilter /adbe.pkcs7.detached\n";
+		out << "/SubFilter /adbe.pkcs7.sha1\n";
 		Time tm = Nvl(sign->time, GetSysTime());
 		out << Format("/M (%02d%02d%02d%02d%02d%02d+02'00')\n", tm.year, tm.month, tm.day, _DBG_ // fix time zone
 		              tm.hour, tm.minute, tm.second);
@@ -1008,7 +1009,7 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		out << "/Reference [ << /Type /SigRef\n"
 		       "  /TransformMethod /UR3\n"
 		       "  /TransformParams <<\n"
-		       "     /Type /TransformParams\n";
+		       "     /Type /TransformParams\n"
 		       "     /V /2.2\n";
 		out << ">> >> ]\n";
 		out << ">>\n";
@@ -1129,7 +1130,7 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		meta_head << "/Type/Metadata/Subtype/XML";
 		
 		pdfa_metadata = PutStream(metadata, meta_head, false);
-	}	
+	}
 	
 	int catalog = BeginObj();
 	out << "<< /Type /Catalog\n"
