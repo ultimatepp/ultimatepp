@@ -36,7 +36,7 @@ void  PdfDraw::Clear()
 	out.Clear();
 	page.Clear();
 	offset.Clear();
-	out << "%PDF-1.3\n";
+	out << "%PDF-1.7\n";
 	out << "%\xf1\xf2\xf3\xf4\n\n";
 	empty = true;
 }
@@ -264,6 +264,19 @@ void  PdfDraw::FlushText(int dx, int fi, int height, const String& txt)
 String PdfDraw::PdfColor(Color c)
 {
 	return NFormat("%3nf %3nf %3nf", c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0);
+}
+
+String PdfDraw::PdfString(const char *s)
+{
+	StringBuffer b;
+	b.Cat('(');
+	while(*s) {
+		if(findarg(*s, '(', ')', '\\') >= 0)
+			b.Cat('\\');
+		b.Cat(*s++);
+	}
+	b.Cat(')');
+	return b;
 }
 
 void PdfDraw::PutFontHeight(int fi, double ht)
@@ -563,7 +576,7 @@ String GetGrayPdfImage(const Image& m, const Rect& sr)
 	return data;
 }
 
-String PdfDraw::Finish()
+String PdfDraw::Finish(PdfSignatureInfo *sign)
 {
 	if(page.GetLength()) {
 		PutStream(page);
@@ -934,9 +947,8 @@ String PdfDraw::Finish()
 		out << ">>\n";
 	}
 	if(!patternobj.IsEmpty()) {
-		out <<
-		"/ColorSpace << /Cspat " << patcsobj << " 0 R >>\n"
-		"/Pattern << ";
+		out << "/ColorSpace << /Cspat " << patcsobj << " 0 R >>\n"
+		       "/Pattern << ";
 		for(int i = 0; i < patterns.GetCount(); i++)
 			out << "/Pat" << (i + 1) << ' ' << patternobj[i] << " 0 R ";
 		out << ">>\n";
@@ -956,11 +968,81 @@ String PdfDraw::Finish()
 			out << "<</Type/Annot/Subtype/Link/Border[0 0 0]/Rect["
 				<< Pt(u.rect.left) << ' ' << Pt(pgsz.cy - u.rect.bottom) << ' '
 				<< Pt(u.rect.right) << ' ' << Pt(pgsz.cy - u.rect.top)
-				<< "]/A<</Type/Action/S/URI/URI("
-				<< u.url
-				<< ")>>\n>>\n";
+				<< "]/A<</Type/Action/S/URI/URI"
+				<< PdfString(u.url)
+				<< ">>\n>>\n";
 			EndObj();
 		}
+	}
+
+	int signature_widget = -1;
+	int p7s_start, p7s_end, pdf_length_pos;
+	int sign_page = 0;
+	if(sign) {
+		int signature = BeginObj();
+		out << "<< /Type /Sig\n";
+		out << "/Contents <";
+		p7s_start = out.GetCount();
+		out << String('0', 3000);
+		p7s_end = out.GetCount();
+		out << ">\n";
+		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
+		pdf_length_pos = out.GetCount();
+		      //1234567890 -  %10d
+		out << "**********]\n";
+		out << "/Filter /Adobe.PPKLite\n";
+		out << "/SubFilter /adbe.pkcs7.detached\n";
+		Time tm = Nvl(sign->time, GetSysTime());
+		out << Format("/M (%02d%02d%02d%02d%02d%02d+02'00')\n", tm.year, tm.month, tm.day, _DBG_ // fix time zone
+		              tm.hour, tm.minute, tm.second);
+
+		if(sign->reason.GetCount())
+			out << "/Reason " << PdfString(sign->reason) << "\n";
+		if(sign->name.GetCount())
+			out << "/Name " << PdfString(sign->name) << "\n";
+		if(sign->location.GetCount())
+			out << "/Location " << PdfString(sign->location) << "\n";
+		if(sign->contact_info.GetCount())
+			out << "/ContactInfo " << PdfString(sign->contact_info) << "\n";
+		
+		out << "/Reference [ << /Type /SigRef\n"
+		       "  /TransformMethod /UR3\n"
+		       "  /TransformParams <<\n"
+		       "     /Type /TransformParams\n";
+		       "     /V /2.2\n";
+		out << ">> >> ]\n";
+		out << ">>\n";
+
+		EndObj();
+
+		signature_widget = BeginObj();
+	/*
+		out << "<< /Type /Annot "
+		       "/F 132 "
+		       "/Subtype /Widget "
+		       "/Rect[0 0 0 0] "
+		       "/FT /Sig
+		       "/DR<<>> "
+		       "/T(Signature1) "
+		       "/V " << signature << " 0 R "
+		       "/P 221 0 R"
+		       "/AP <</N 400 0 R>>
+		       ">>"
+		;
+	*/
+		out << "<< /Type /Annot\n"
+		       "/Subtype /Widget\n"
+		       "/F 4"
+//		       "/F 132\n" // hidden/noview
+		       "/FT /Sig\n"
+		       "/Ff 0\n" // not sure what is this...
+		       "/T(Signature)\n"
+		       "/V " << signature << " 0 R\n"
+		       "/Rect[0 0 0 0]\n"
+		       "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
+		       ">>\n"
+		;
+		EndObj();
 	}
 
 	int pages = BeginObj();
@@ -979,8 +1061,18 @@ String PdfDraw::Finish()
 		    << "/MediaBox [0 0 " << Pt(pgsz.cx) << ' ' << Pt(pgsz.cy) << "]\n"
 		    << "/Contents " << i + 1 << " 0 R\n"
 		    << "/Resources " << resources << " 0 R\n";
-		if(i < url_ann.GetCount() && url_ann[i].GetCount())
-			out << "/Annots[" << url_ann[i] << "]\n";
+		bool sgned = sign && sign_page == i;
+		bool urls = i < url_ann.GetCount() && url_ann[i].GetCount();
+		if(sgned || urls) {
+			out << "/Annots [";
+			if(urls)
+				out << url_ann[i];
+			if(urls && sgned)
+				out << ' ';
+			if(sgned)
+				out << signature_widget << " 0 R";
+			out << "]\n";
+		}
 		out << ">>\n";
 		EndObj();
 	}
@@ -1037,16 +1129,18 @@ String PdfDraw::Finish()
 		meta_head << "/Type/Metadata/Subtype/XML";
 		
 		pdfa_metadata = PutStream(metadata, meta_head, false);
-	}
+	}	
 	
 	int catalog = BeginObj();
 	out << "<< /Type /Catalog\n"
 	    << "/Outlines " << outlines << " 0 R\n"
 	    << "/Pages " << pages << " 0 R\n";
 	
-	if(pdfa_metadata >= 0) {
+	if(pdfa_metadata >= 0)
 		out << "/Metadata " << pdfa_metadata << " 0 R\n";
-	}
+	
+	if(sign)
+		out << " /AcroForm << /Fields [" << signature_widget << " 0 R] /SigFlags 3 >>";
 	
 	out << ">>\n";
 	EndObj();
@@ -1065,6 +1159,22 @@ String PdfDraw::Finish()
 	    << "startxref\r\n"
 	    << startxref << "\r\n"
 	    << "%%EOF\r\n";
+
+	if(sign) {
+		DDUMPHEX(String(~out + pdf_length_pos, 12));
+		memcpy(~out + pdf_length_pos, Format("%10d", out.GetLength() - p7s_end), 10);
+		DDUMP(String(~out + p7s_start - 1, ~out + p7s_end + 1));
+		String data(~out, p7s_start);
+		data.Cat(~out + p7s_end, out.End());
+		DDUMP(data.GetCount());
+		DDUMP(data);
+		String sgn = ToUpper(HexString(GetP7Signature(data, sign->cert, sign->pkey))); _DBG_ // ToUpper?
+		DDUMP(sgn.GetCount());
+		DDUMP(sgn);
+		_DBG_ // check the length
+//		sgn = "SIGNATURE!";
+		memcpy(~out + p7s_start, sgn, sgn.GetCount());
+	}
 	   
 	return out;
 }
