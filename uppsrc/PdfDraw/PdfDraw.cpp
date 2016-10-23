@@ -975,237 +975,212 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		}
 	}
 
-	static String byterange_filler = "[0 ********** ********** **********]";
-	int signature = -1;
-	int signature_widget = -1;
-	int p7s_start, p7s_end, byterange_pos;
-	int sign_page = 0;
-	if(sign) {
-		signature = BeginObj();
-		out << "<< /Type /Sig\n";
-		out << "/ByteRange ";
-		byterange_pos = out.GetCount();
-		out << byterange_filler << "\n";
+	int p7s_len = HexString(GetP7Signature(String(), sign->cert, sign->pkey)).GetCount();
 
-/*
-		out << "/Contents <";
-		p7s_start = out.GetCount();
-		out << String('0', 10000);
-		p7s_end = out.GetCount();
-		out << ">\n";
-*/
-		out << "/Contents ";
-		p7s_start = out.GetCount();
-		out << "<" + String('0', 10000) + ">";
-		p7s_end = out.GetCount();
-		out << "\n";
-
-//		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
-//		pdf_length_pos = out.GetCount();
-//		      //1234567890 -  %10d
-//		out << "**********]\n";
-		out << "/Filter /Adobe.PPKLite\n";
-		out << "/SubFilter /adbe.pkcs7.detached\n";
-		Time tm = Nvl(sign->time, GetSysTime());
-		out << Format("/M (%02d%02d%02d%02d%02d%02d+02'00')\n", tm.year, tm.month, tm.day, _DBG_ // fix time zone
-		              tm.hour, tm.minute, tm.second);
-
-		if(sign->reason.GetCount())
-			out << "/Reason " << PdfString(sign->reason) << "\n";
-		if(sign->name.GetCount())
-			out << "/Name " << PdfString(sign->name) << "\n";
-		if(sign->location.GetCount())
-			out << "/Location " << PdfString(sign->location) << "\n";
-		if(sign->contact_info.GetCount())
-			out << "/ContactInfo " << PdfString(sign->contact_info) << "\n";
-		out << "/Reference [ << /Type /SigRef /TransformMethod /DocMDP /TransformParams << /Type /TransformParams /P 2 /V /1.2 >> >> ]";
-//		out << "/Reference [ << /Type /SigRef\n"
-//		       "  /TransformMethod /UR3\n"
-//		       "  /TransformParams <<\n"
-//		       "     /Type /TransformParams\n"
-//		       "     /V /2.2\n";
-//		out << ">> >> ]\n";
-		out << ">>\n";
-
-		EndObj();
-
-		signature_widget = BeginObj();
-	/*
-		out << "<< /Type /Annot "
-		       "/F 132 "
-		       "/Subtype /Widget "
-		       "/Rect[0 0 0 0] "
-		       "/FT /Sig
-		       "/DR<<>> "
-		       "/T(Signature1) "
-		       "/V " << signature << " 0 R "
-		       "/P 221 0 R"
-		       "/AP <</N 400 0 R>>
-		       ">>"
-		;
-	*/
-		out << "<< /Type /Annot\n"
-		       "/Subtype /Widget\n"
-		       "/F 4"
-//		       "/F 132\n" // hidden/noview
-		       "/FT /Sig\n"
-		       "/Ff 0\n" // not sure what is this...
-		       "/T(Signature)\n"
-		       "/V " << signature << " 0 R\n"
-		       "/Rect[0 0 0 0]\n"
-		       "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
-		       ">>\n"
-		;
-		EndObj();
-	}
-
-	int pages = BeginObj();
-	out << "<< /Type /Pages\n"
-	    << "/Kids [";
-	for(int i = 0; i < pagecount; i++)
-		out << i + pages + 1 << " 0 R ";
-	out << "]\n"
-	    << "/Count " << pagecount << "\n";
-	out << ">>\n";
-	EndObj();
-	for(int i = 0; i < pagecount; i++) {
-		BeginObj();
-		out << "<< /Type /Page\n"
-		    << "/Parent " << pages << " 0 R\n"
-		    << "/MediaBox [0 0 " << Pt(pgsz.cx) << ' ' << Pt(pgsz.cy) << "]\n"
-		    << "/Contents " << i + 1 << " 0 R\n"
-		    << "/Resources " << resources << " 0 R\n";
-		bool sgned = sign && sign_page == i;
-		bool urls = i < url_ann.GetCount() && url_ann[i].GetCount();
-		if(sgned || urls) {
-			out << "/Annots [";
-			if(urls)
-				out << url_ann[i];
-			if(urls && sgned)
-				out << ' ';
-			if(sgned)
-				out << signature_widget << " 0 R";
-			out << "]\n";
+	int len0 = out.GetCount();
+	int offset0 = offset.GetCount();
+	
+	for(;;) { // in case that signature_len grows...
+		int signature = -1;
+		int signature_widget = -1;
+		int p7s_start, p7s_end, pdf_length_pos;
+	
+		int sign_page = 0;
+		if(sign) {
+			signature = BeginObj();
+			out << "<< /Type /Sig\n";
+			out << "/Contents ";
+			p7s_start = out.GetCount();
+			out << "<" + String('0', p7s_len) + ">";
+			p7s_end = out.GetCount();
+			out << "\n";
+	
+			out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
+			pdf_length_pos = out.GetCount();
+			      //1234567890 -  %10d
+			out << "**********]\n";
+			out << "/Filter /Adobe.PPKLite\n";
+			out << "/SubFilter /adbe.pkcs7.detached\n";
+			Time tm = Nvl(sign->time, GetSysTime());
+			
+			int tz = GetTimeZone();
+			int az = abs(tz) % (24 * 60); // (24 * 60) - sanity clamp to single day...
+			out << Format("/M (%02d%02d%02d%02d%02d%02d%c%02d'%02d')", tm.year, tm.month, tm.day,
+			              tm.hour, tm.minute, tm.second, (tz < 0 ? '-' : '+'), az / 60, az % 60);
+			if(sign->reason.GetCount())
+				out << "/Reason " << PdfString(sign->reason) << "\n";
+			if(sign->name.GetCount())
+				out << "/Name " << PdfString(sign->name) << "\n";
+			if(sign->location.GetCount())
+				out << "/Location " << PdfString(sign->location) << "\n";
+			if(sign->contact_info.GetCount())
+				out << "/ContactInfo " << PdfString(sign->contact_info) << "\n";
+			out << ">>\n";
+	
+			EndObj();
+	
+			signature_widget = BeginObj();
+		/*
+			out << "<< /Type /Annot "
+			       "/F 132 "
+			       "/Subtype /Widget "
+			       "/Rect[0 0 0 0] "
+			       "/FT /Sig
+			       "/DR<<>> "
+			       "/T(Signature1) "
+			       "/V " << signature << " 0 R "
+			       "/P 221 0 R"
+			       "/AP <</N 400 0 R>>
+			       ">>"
+			;
+		*/
+			out << "<< /Type /Annot\n"
+			       "/Subtype /Widget\n"
+			       "/F 4"
+	//		       "/F 132\n" // hidden/noview
+			       "/FT /Sig\n"
+			       "/Ff 0\n" // not sure what is this...
+			       "/T(Signature)\n"
+			       "/V " << signature << " 0 R\n"
+			       "/Rect[0 0 0 0]\n"
+			       "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
+			       ">>\n"
+			;
+			EndObj();
 		}
+	
+		int pages = BeginObj();
+		out << "<< /Type /Pages\n"
+		    << "/Kids [";
+		for(int i = 0; i < pagecount; i++)
+			out << i + pages + 1 << " 0 R ";
+		out << "]\n"
+		    << "/Count " << pagecount << "\n";
 		out << ">>\n";
 		EndObj();
-	}
-	int outlines = BeginObj();
-	out << "<< /Type /Outlines\n"
-	       "/Count 0\n"
-	       ">>\n";
-	EndObj();
-	int pdfa_metadata = -1;
-	if(pdfa) {
-		StringBuffer metadata;
-		metadata <<
-		"<?xpacket id=\"" << Uuid::Create() << "\"?>\n"
-		"<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"PDFNet\">\n"
-		"<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
-		"<rdf:Description rdf:about=\"\"\n"
-		"xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\">\n"
-		"<xmp:CreateDate>0000-01-01</xmp:CreateDate>\n"
-		"<xmp:ModifyDate>0000-01-01</xmp:ModifyDate>\n"
-		"<xmp:CreatorTool/>\n"
-		"</rdf:Description>\n"
-		"<rdf:Description rdf:about=\"\"\n"
-		"xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
-		"<dc:title>\n"
-		"<rdf:Alt>\n"
-		"<rdf:li xml:lang=\"x-default\"/>\n"
-		"</rdf:Alt>\n"
-		"</dc:title>\n"
-		"<dc:creator>\n"
-		"<rdf:Seq>\n"
-		"<rdf:li/>\n"
-		"</rdf:Seq>\n"
-		"</dc:creator>\n"
-		"<dc:description>\n"
-		"<rdf:Alt>\n"
-		"<rdf:li xml:lang=\"x-default\"/>\n"
-		"</rdf:Alt>\n"
-		"</dc:description>\n"
-		"</rdf:Description>\n"
-		"<rdf:Description rdf:about=\"\"\n"
-		"xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\">\n"
-		"<pdf:Keywords/>\n"
-		"<pdf:Producer/>\n"
-		"</rdf:Description>\n"
-		"<rdf:Description rdf:about=\"\"\n"
-		"xmlns:pdfaid=\"http://www.aiim.org/pdfa/ns/id/\">\n"
-		"<pdfaid:part>1</pdfaid:part>\n"
-		"<pdfaid:conformance>B</pdfaid:conformance>\n"
-		"</rdf:Description>\n"
-		"</rdf:RDF>\n"
-		"</x:xmpmeta>\n";
+		for(int i = 0; i < pagecount; i++) {
+			BeginObj();
+			out << "<< /Type /Page\n"
+			    << "/Parent " << pages << " 0 R\n"
+			    << "/MediaBox [0 0 " << Pt(pgsz.cx) << ' ' << Pt(pgsz.cy) << "]\n"
+			    << "/Contents " << i + 1 << " 0 R\n"
+			    << "/Resources " << resources << " 0 R\n";
+			bool sgned = sign && sign_page == i;
+			bool urls = i < url_ann.GetCount() && url_ann[i].GetCount();
+			if(sgned || urls) {
+				out << "/Annots [";
+				if(urls)
+					out << url_ann[i];
+				if(urls && sgned)
+					out << ' ';
+				if(sgned)
+					out << signature_widget << " 0 R";
+				out << "]\n";
+			}
+			out << ">>\n";
+			EndObj();
+		}
+		int outlines = BeginObj();
+		out << "<< /Type /Outlines\n"
+		       "/Count 0\n"
+		       ">>\n";
+		EndObj();
+		int pdfa_metadata = -1;
+		if(pdfa) {
+			StringBuffer metadata;
+			metadata <<
+			"<?xpacket id=\"" << Uuid::Create() << "\"?>\n"
+			"<x:xmpmeta xmlns:x=\"adobe:ns:meta/\" x:xmptk=\"PDFNet\">\n"
+			"<rdf:RDF xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\">\n"
+			"<rdf:Description rdf:about=\"\"\n"
+			"xmlns:xmp=\"http://ns.adobe.com/xap/1.0/\">\n"
+			"<xmp:CreateDate>0000-01-01</xmp:CreateDate>\n"
+			"<xmp:ModifyDate>0000-01-01</xmp:ModifyDate>\n"
+			"<xmp:CreatorTool/>\n"
+			"</rdf:Description>\n"
+			"<rdf:Description rdf:about=\"\"\n"
+			"xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\n"
+			"<dc:title>\n"
+			"<rdf:Alt>\n"
+			"<rdf:li xml:lang=\"x-default\"/>\n"
+			"</rdf:Alt>\n"
+			"</dc:title>\n"
+			"<dc:creator>\n"
+			"<rdf:Seq>\n"
+			"<rdf:li/>\n"
+			"</rdf:Seq>\n"
+			"</dc:creator>\n"
+			"<dc:description>\n"
+			"<rdf:Alt>\n"
+			"<rdf:li xml:lang=\"x-default\"/>\n"
+			"</rdf:Alt>\n"
+			"</dc:description>\n"
+			"</rdf:Description>\n"
+			"<rdf:Description rdf:about=\"\"\n"
+			"xmlns:pdf=\"http://ns.adobe.com/pdf/1.3/\">\n"
+			"<pdf:Keywords/>\n"
+			"<pdf:Producer/>\n"
+			"</rdf:Description>\n"
+			"<rdf:Description rdf:about=\"\"\n"
+			"xmlns:pdfaid=\"http://www.aiim.org/pdfa/ns/id/\">\n"
+			"<pdfaid:part>1</pdfaid:part>\n"
+			"<pdfaid:conformance>B</pdfaid:conformance>\n"
+			"</rdf:Description>\n"
+			"</rdf:RDF>\n"
+			"</x:xmpmeta>\n";
+			
+			StringBuffer meta_head;
+			meta_head << "/Type/Metadata/Subtype/XML";
+			
+			pdfa_metadata = PutStream(metadata, meta_head, false);
+		}
 		
-		StringBuffer meta_head;
-		meta_head << "/Type/Metadata/Subtype/XML";
+		int catalog = BeginObj();
+		out << "<< /Type /Catalog\n"
+		    << "/Outlines " << outlines << " 0 R\n"
+		    << "/Pages " << pages << " 0 R\n";
 		
-		pdfa_metadata = PutStream(metadata, meta_head, false);
-	}
+		if(pdfa_metadata >= 0)
+			out << "/Metadata " << pdfa_metadata << " 0 R\n";
+		
+		if(sign)
+			out << " /AcroForm << /Fields [" << signature_widget << " 0 R] /SigFlags 3 "
+			       " /Perms << /DocMDP " << signature << " 0 R >>>>";
 	
-	int catalog = BeginObj();
-	out << "<< /Type /Catalog\n"
-	    << "/Outlines " << outlines << " 0 R\n"
-	    << "/Pages " << pages << " 0 R\n";
+		out << ">>\n";
+		EndObj();
+		int startxref = out.GetCount();
+		out << "xref\n"
+		    << "0 " << offset.GetCount() + 1 << "\n";
+		out << "0000000000 65535 f\r\n";
+		for(int i = 0; i < offset.GetCount(); i++)
+			out << Sprintf("%010d 00000 n\r\n", offset[i]);
+		out << "\n"
+		    << "trailer\n"
+		    << "<< /Size " << offset.GetCount() + 1 << "\n"
+		    << "/Root " << catalog << " 0 R\n"
+			<< "/ID [ <" << Uuid::Create() << "> <" << Uuid::Create() << "> ]\n"
+		    << ">>\n"
+		    << "startxref\r\n"
+		    << startxref << "\r\n"
+		    << "%%EOF\r\n";
 	
-	if(pdfa_metadata >= 0)
-		out << "/Metadata " << pdfa_metadata << " 0 R\n";
-	
-	if(sign)
-		out << " /AcroForm << /Fields [" << signature_widget << " 0 R] /SigFlags 3 "
-		       " /Perms << /DocMDP " << signature << " 0 R >>>>";
+		if(sign) {
+			memcpy(~out + pdf_length_pos, Format("%10d", out.GetLength() - p7s_end), 10);
+			String data(~out, p7s_start);
+			data.Cat(~out + p7s_end, out.End());
+			String p7s = HexString(GetP7Signature(data, sign->cert, sign->pkey));
+			if(p7s.GetCount() <= p7s_len) {
+				memcpy(~out + p7s_start + 1, p7s, p7s.GetCount());
+				break;
+			}
+			p7s_len = p7s.GetCount();
+		}
+		else
+			break;
 
-
-/*
-17 0 obj
-<< /Type /Catalog /Version /1.7 /Pages 1 0 R /Names << >> 
-/ViewerPreferences << /Direction /L2R >> /PageLayout /SinglePage /PageMode /UseNone 
-/OpenAction [12 0 R /FitH null] /Metadata 16 0 R /Lang (\Uffffffff\Uffffffffen) 
-/AcroForm << /Fields [4 0 R 10 0 R] /NeedAppearances false /SigFlags 3 /DR << /Font << /F1 3 0 R >> >> /DA (/F1 0 Tf 0 g) 
-/Q 0 >> /Perms << /DocMDP 5 0 R >> >>
-endobj
-*/
-	
-	out << ">>\n";
-	EndObj();
-	int startxref = out.GetCount();
-	out << "xref\n"
-	    << "0 " << offset.GetCount() + 1 << "\n";
-	out << "0000000000 65535 f\r\n";
-	for(int i = 0; i < offset.GetCount(); i++)
-		out << Sprintf("%010d 00000 n\r\n", offset[i]);
-	out << "\n"
-	    << "trailer\n"
-	    << "<< /Size " << offset.GetCount() + 1 << "\n"
-	    << "/Root " << catalog << " 0 R\n"
-		<< "/ID [ <" << Uuid::Create() << "> <" << Uuid::Create() << "> ]\n"
-	    << ">>\n"
-	    << "startxref\r\n"
-	    << startxref << "\r\n"
-	    << "%%EOF\r\n";
-
-	if(sign) {
-//		out << "/ByteRange [0 " << p7s_start << ' ' << p7s_end << ' ';
-//		pdf_length_pos = out.GetCount();
-//		      //1234567890 -  %10d
-//		out << "**********]\n";
-
-//		memcpy(~out + pdf_length_pos, Format("%10d", out.GetLength() - p7s_end), 10);
-
-		String byterange = Format("[0 %10d %10d %10d]", p7s_start, p7s_end, out.GetLength() - p7s_end);
-		ASSERT(byterange.GetCount() == byterange_filler.GetCount());
-
-		memcpy(~out + byterange_pos, byterange, byterange.GetCount());
-
-		String data(~out, p7s_start);
-		data.Cat(~out + p7s_end, out.End());
-		DDUMP(byterange);
-		DDUMP(out.GetCount());
-		DDUMP(data.GetCount());
-		String sgn = "<" + HexString(GetP7Signature(data, sign->cert, sign->pkey));
-		memcpy(~out + p7s_start, sgn, sgn.GetCount());
+		out.SetLength(len0); // p7s signature grew, scratch pdf ending and try again
+		offset.SetCount(offset0);
 	}
 	   
 	return out;
