@@ -18,7 +18,7 @@
 
 class ClientHandler : public CefClient, public CefLifeSpanHandler, public CefDisplayHandler,
 					public CefLoadHandler, public CefFocusHandler, public CefContextMenuHandler,
-					public CefJSDialogHandler, public CefRequestHandler
+					public CefJSDialogHandler, public CefRequestHandler, public CefDialogHandler
 {
 
 public:
@@ -49,13 +49,14 @@ public:
 	
 	void WhenMessageWrapper(Upp::String name, Upp::Vector<Upp::Value> * par);
 
-    virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE			{ return this; }
+	virtual CefRefPtr<CefLifeSpanHandler> GetLifeSpanHandler() OVERRIDE			{ return this; }
 	virtual CefRefPtr<CefDisplayHandler> GetDisplayHandler() OVERRIDE			{ return this; }
 	virtual CefRefPtr<CefFocusHandler> GetFocusHandler() OVERRIDE				{ return this; }
 	virtual CefRefPtr<CefLoadHandler> GetLoadHandler() OVERRIDE					{ return this; }
 	virtual CefRefPtr<CefContextMenuHandler> GetContextMenuHandler() OVERRIDE	{ return this; }
 	virtual CefRefPtr<CefJSDialogHandler> GetJSDialogHandler() OVERRIDE			{ return this; }
 	virtual CefRefPtr<CefRequestHandler> GetRequestHandler() OVERRIDE			{ return this; }
+	virtual CefRefPtr<CefDialogHandler> GetDialogHandler() OVERRIDE				{ return this; }
 
 	virtual bool OnBeforePopup(CefRefPtr<CefBrowser> browser,
 								CefRefPtr<CefFrame> frame,
@@ -103,9 +104,6 @@ public:
                 
     virtual bool OnJSDialog(CefRefPtr<CefBrowser> browser,
                           const CefString& origin_url,
-#if CHROME_VERSION_BUILD < 2704
-                          const CefString& accept_lang,
-#endif
                           JSDialogType dialog_type,
                           const CefString& message_text,
                           const CefString& default_prompt_text,
@@ -117,6 +115,14 @@ public:
 									const CefString& request_url,
 									CefRefPtr<CefSSLInfo> ssl_info,
 									CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+
+	virtual bool OnFileDialog(CefRefPtr<CefBrowser> browser,
+								FileDialogMode mode,
+								const CefString& title,
+								const CefString& default_file_path,
+								const std::vector<CefString>& accept_filters,
+								int selected_accept_filter,
+								CefRefPtr<CefFileDialogCallback> callback) OVERRIDE;
 
 
 	CefRefPtr<CefBrowser> GetBrowser() { return browser; }
