@@ -867,16 +867,17 @@ void TreeCtrl::SyncInfo()
 	if(IsShutdown() || IsPainting())
 		return;
 	if((HasMouse() || info.HasMouse()) && popupex) {
-		Size sz = GetSize();
 		Point p = GetMouseViewPos();
 		Point org = sb;
-//		if(p.y + org.y > sb.GetTotal().cy)
-//			return;
 		int i = FindLine(p.y + org.y);
 		if(i < line.GetCount()) {
+			Size sz = GetSize();
 			const Line& l = line[i];
 			const Item& m = item[l.itemi];
 			int x = levelcx + l.level * levelcx - org.x + m.image.GetSize().cx;
+			Size csz = m.GetCtrlSize();
+			if(m.ctrl && !highlight_ctrl)
+				x += csz.cx;
 			Rect r = RectC(x, l.y - org.y, sz.cx - x, m.GetSize(display).cy);
 			if(r.Contains(p)) {
 				Color fg, bg;
