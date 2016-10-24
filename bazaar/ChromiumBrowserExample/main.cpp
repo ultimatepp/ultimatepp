@@ -9,6 +9,10 @@ using namespace Upp;
 #include "files.brc"
 
 
+#define TFILE <ChromiumBrowserExample/translation.t>
+#include <Core/t.h>
+
+
 /* Table of Javascript functions that are forwarded to native code */
 const char * const Upp::ChromiumBrowser::JSFunctions[]={
 	"JSExample1",
@@ -20,7 +24,7 @@ const char * const Upp::ChromiumBrowser::JSFunctions[]={
 
 ChromiumBrowserExample::ChromiumBrowserExample()
 {
-	CtrlLayout(*this, "Embedded Chromium Example " + Browser.GetVersion());
+	CtrlLayout(*this, t_("Embedded Chromium Example ") + Browser.GetVersion());
 	Sizeable().MaximizeBox();
 	Icon(IMG::icon);
 	
@@ -30,10 +34,10 @@ ChromiumBrowserExample::ChromiumBrowserExample()
 	Go.SetImage(IMG::go);
 	Stop.SetImage(IMG::stop);
 	
-	MessagesLog.AddColumn("Time");
-	MessagesLog.AddColumn("URL");
-	MessagesLog.AddColumn("Line");
-	MessagesLog.AddColumn("Message");
+	MessagesLog.AddColumn(t_("Time"));
+	MessagesLog.AddColumn(t_("URL"));
+	MessagesLog.AddColumn(t_("Line"));
+	MessagesLog.AddColumn(t_("Message"));
 	MessagesLog.ColumnWidths("1 1 1 4");
 	MessagesLog.OddRowColor();
 	MessagesLog.EvenRowColor();
@@ -101,7 +105,7 @@ bool ChromiumBrowserExample::OnCertificateError(String url)
 GUI_APP_MAIN
 {
 	StdLogSetup(LOG_FILE | LOG_CERR | LOG_TIMESTAMP | LOG_APPEND);
-	SetLanguage( SetLNGCharset( GetSystemLNG(), CHARSET_UTF8 ) );
+	SetLanguage(SetLNGCharset(GetSystemLNG(), CHARSET_UTF8));
 	
 	if (ChromiumBrowser::IsChildProcess()){
 		ChromiumBrowser::ChildProcess();

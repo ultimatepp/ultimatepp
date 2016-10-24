@@ -54,7 +54,14 @@ void ClientHandler::OnLoadError(CefRefPtr<CefBrowser> browser,
                                 const CefString& errorText,
 								const CefString& failedUrl)
 {
-	frame->LoadString("<html><head></head><body><center><h1>Page not found</h1></center></body></html>", failedUrl);
+	if (errorCode == ERR_ABORTED) return;
+	
+	Upp::String err = Upp::String("<html><head></head><body><center><h1>") +
+						Upp::t_("Page not found") +
+						"<br/>" + failedUrl.ToString().c_str() +
+						"</h1></center></body><html>";
+
+	frame->LoadString(~err, failedUrl);
 }
 
 
@@ -137,9 +144,6 @@ void ClientHandler::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
 
 
 bool ClientHandler::OnJSDialog(CefRefPtr<CefBrowser> browser, const CefString& origin_url,
-								#if CHROME_VERSION_BUILD < 2704
-								const CefString& accept_lang,
-								#endif
 								JSDialogType dialog_type,
 								const CefString& message_text, const CefString& default_prompt_text,
 								CefRefPtr<CefJSDialogCallback> callback, bool& suppress_message)
@@ -200,4 +204,17 @@ bool ClientHandler::OnCertificateError(CefRefPtr<CefBrowser> browser, ErrorCode 
 	
 	callback->Continue(cont);
 	return cont;
+}
+
+
+bool ClientHandler::OnFileDialog(CefRefPtr<CefBrowser> browser,
+								FileDialogMode mode,
+								const CefString& title,
+								const CefString& default_file_path,
+								const std::vector<CefString>& accept_filters,
+								int selected_accept_filter,
+								CefRefPtr<CefFileDialogCallback> callback)
+{
+	RLOG("File dialog blocked");
+	return true;
 }
