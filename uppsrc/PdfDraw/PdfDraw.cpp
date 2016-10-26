@@ -576,7 +576,7 @@ String GetGrayPdfImage(const Image& m, const Rect& sr)
 	return data;
 }
 
-String PdfDraw::Finish(PdfSignatureInfo *sign)
+String PdfDraw::Finish(const PdfSignatureInfo *sign)
 {
 	if(page.GetLength()) {
 		PutStream(page);
@@ -959,22 +959,6 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 	out << ">>\n";
 	EndObj();
 	
-	Vector<String> url_ann;
-	for(int pi = 0; pi < min(page_url.GetCount(), pagecount); pi++) {
-		const Array<UrlInfo>& url = page_url[pi];
-		for(int i = 0; i < url.GetCount(); i++) {
-			const UrlInfo& u = url[i];
-			url_ann.At(pi) << ' ' << BeginObj() << " 0 R";
-			out << "<</Type/Annot/Subtype/Link/Border[0 0 0]/Rect["
-				<< Pt(u.rect.left) << ' ' << Pt(pgsz.cy - u.rect.bottom) << ' '
-				<< Pt(u.rect.right) << ' ' << Pt(pgsz.cy - u.rect.top)
-				<< "]/A<</Type/Action/S/URI/URI"
-				<< PdfString(u.url)
-				<< ">>\n>>\n";
-			EndObj();
-		}
-	}
-
 	int p7s_len = HexString(GetP7Signature(String(), sign->cert, sign->pkey)).GetCount();
 
 	int len0 = out.GetCount();
@@ -985,7 +969,9 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 		int signature_widget = -1;
 		int p7s_start, p7s_end, pdf_length_pos;
 	
-		int sign_page = 0;
+		int sign_page = Null;
+		String sign_rect;
+
 		if(sign) {
 			signature = BeginObj();
 			out << "<< /Type /Sig\n";
@@ -1018,37 +1004,53 @@ String PdfDraw::Finish(PdfSignatureInfo *sign)
 			out << ">>\n";
 	
 			EndObj();
-	
-			signature_widget = BeginObj();
-		/*
-			out << "<< /Type /Annot "
-			       "/F 132 "
-			       "/Subtype /Widget "
-			       "/Rect[0 0 0 0] "
-			       "/FT /Sig
-			       "/DR<<>> "
-			       "/T(Signature1) "
-			       "/V " << signature << " 0 R "
-			       "/P 221 0 R"
-			       "/AP <</N 400 0 R>>
-			       ">>"
-			;
-		*/
-			out << "<< /Type /Annot\n"
-			       "/Subtype /Widget\n"
-			       "/F 4"
-	//		       "/F 132\n" // hidden/noview
-			       "/FT /Sig\n"
-			       "/Ff 0\n" // not sure what is this...
-			       "/T(Signature)\n"
-			       "/V " << signature << " 0 R\n"
-			       "/Rect[0 0 0 0]\n"
-			       "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
-			       ">>\n"
-			;
-			EndObj();
 		}
 	
+		Vector<String> url_ann;
+		for(int pi = 0; pi < min(page_url.GetCount(), pagecount); pi++) {
+			const Array<UrlInfo>& url = page_url[pi];
+			for(int i = 0; i < url.GetCount(); i++) {
+				const UrlInfo& u = url[i];
+				String r;
+				r << "/Border[0 0 0]/Rect["
+				  << Pt(u.rect.left) << ' ' << Pt(pgsz.cy - u.rect.bottom) << ' '
+				  << Pt(u.rect.right) << ' ' << Pt(pgsz.cy - u.rect.top) << "]\n";
+				if(u.url == "<<signature>>") {
+					sign_page = pi;
+					sign_rect = r;
+				}
+				else {
+					url_ann.At(pi) << ' ' << BeginObj() << " 0 R";
+					out << "<</Type/Annot"
+					    << r
+						<< "/A<</Type/Action/S/URI/URI" << PdfString(u.url) << ">>\n"
+						<< "/Subtype/Link";
+					out << ">>\n";
+					EndObj();
+				}
+			}
+		}
+
+		if(sign) { // add invisible signature
+			signature_widget = BeginObj();
+			out << "<< /Type /Annot\n"
+				   "/Subtype /Widget\n"
+			       "/FT /Sig\n"
+				   "/Ff 0\n" // not sure what is this...
+				   "/T(Signature)\n"
+				   "/V " << signature << " 0 R\n"
+				   "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
+			;
+			if(IsNull(sign_page)) {
+				out << "/F 132 /Rect[0 0 0 0]\n";
+				sign_page = 0;
+			}
+			else
+				out << "/F 4 " << sign_rect;
+			out << ">>\n";
+			EndObj();
+		}
+
 		int pages = BeginObj();
 		out << "<< /Type /Pages\n"
 		    << "/Kids [";

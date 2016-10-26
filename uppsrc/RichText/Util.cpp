@@ -179,10 +179,11 @@ Array<Drawing> RenderPages(const RichText& txt, Size pagesize)
 	return pick(pd.page);
 }
 
-String Pdf(const RichText& txt, Size pagesize, int margin, bool pdfa)
+String Pdf(const RichText& txt, Size pagesize, int margin, bool pdfa, const PdfSignatureInfo *sign)
 {
+	ASSERT_(GetDrawingToPdfFn(), "Pdf requires PdfDraw package");
 	Array<Drawing> pages = RenderPages(txt, pagesize);
-	return GetDrawingToPdfFn() && pages.GetCount() ? (*GetDrawingToPdfFn())(pages, pagesize, margin, pdfa)
+	return GetDrawingToPdfFn() && pages.GetCount() ? (*GetDrawingToPdfFn())(pages, pagesize, margin, pdfa, sign)
 	                                               : String();
 }
 

@@ -361,11 +361,8 @@ private:
 
 	RGlyph RasterGlyph(Font fnt, int chr);
 
-	String Finish(PdfSignatureInfo *sign);
-
 public:
-	String Finish()                                          { return Finish(NULL); }
-	String Finish(PdfSignatureInfo& sign)                    { return Finish(&sign); }
+	String Finish(const PdfSignatureInfo *sign = NULL);
 	void   Clear();
 	bool   IsEmpty() const                                   { return empty; }
 	
