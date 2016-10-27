@@ -969,8 +969,8 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		int signature_widget = -1;
 		int p7s_start, p7s_end, pdf_length_pos;
 	
-		int sign_page = Null;
-		String sign_rect;
+		int  sign_page = Null;
+		Rect sign_rect;
 
 		if(sign) {
 			signature = BeginObj();
@@ -1016,8 +1016,12 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 				  << Pt(u.rect.left) << ' ' << Pt(pgsz.cy - u.rect.bottom) << ' '
 				  << Pt(u.rect.right) << ' ' << Pt(pgsz.cy - u.rect.top) << "]\n";
 				if(u.url == "<<signature>>") {
-					sign_page = pi;
-					sign_rect = r;
+					if(sign_page == pi)
+						sign_rect.Union(u.rect);
+					else {
+						sign_page = pi;
+						sign_rect = u.rect;
+					}
 				}
 				else {
 					url_ann.At(pi) << ' ' << BeginObj() << " 0 R";
@@ -1045,7 +1049,10 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 				sign_page = 0;
 			}
 			else
-				out << "/F 4 " << sign_rect;
+				out << "/F 4 /Border[0 0 0]/Rect["
+				    << Pt(sign_rect.left) << ' ' << Pt(pgsz.cy - sign_rect.bottom) << ' '
+				    << Pt(sign_rect.right) << ' ' << Pt(pgsz.cy - sign_rect.top) << "]\n";
+
 			out << "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
 			    << ">>\n";
 			EndObj();

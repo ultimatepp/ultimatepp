@@ -210,11 +210,11 @@ ReportWindow::ReportWindow()
 	pdf <<= THISBACK(Pdf);
 }
 
-String Pdf(Report& report, bool pdfa)
+String Pdf(Report& report, bool pdfa, const PdfSignatureInfo *sgn)
 {
 	return GetDrawingToPdfFn() && report.GetCount() ?
 	      (*GetDrawingToPdfFn())(report.GetPages(), report.GetPage(0).GetSize(),
-	                             Nvl(report.GetMargins().x, 200), pdfa)
+	                             Nvl(report.GetMargins().x, 200), pdfa, sgn)
 	      : String();
 }
 
