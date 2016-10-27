@@ -1,0 +1,7 @@
+#ifndef _SignPDF_icpp_init_stub
+#define _SignPDF_icpp_init_stub
+#include "Core/init"
+#include "PdfDraw/init"
+#include "Core/SSL/init"
+#include "RichText/init"
+#endif
