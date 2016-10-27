@@ -19,7 +19,7 @@ CONSOLE_APP_MAIN
 	f.contact_info = "Email me!";
 
 	pdf.DrawText(200, 200, "Hello world!", Serif(200), Magenta());
-	SaveFile(GetHomeDirFile("invislble_signature.pdf"), pdf.Finish(&f));
+	SaveFile(GetHomeDirFile("invisible_signature.pdf"), pdf.Finish(&f));
 	
 	SaveFile(GetHomeDirFile("signature_field.pdf"),
 	         Pdf(ParseQTF("[9* Hello world!&&&&&&&&[^<<signature>>^ Mahrai Ziller]"),
