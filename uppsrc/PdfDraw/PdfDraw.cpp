@@ -1031,7 +1031,7 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 			}
 		}
 
-		if(sign) { // add invisible signature
+		if(sign) {
 			signature_widget = BeginObj();
 			out << "<< /Type /Annot\n"
 				   "/Subtype /Widget\n"
@@ -1039,15 +1039,15 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 				   "/Ff 0\n" // not sure what is this...
 				   "/T(Signature)\n"
 				   "/V " << signature << " 0 R\n"
-				   "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
 			;
-			if(IsNull(sign_page)) {
+			if(IsNull(sign_page)) { // invisible signature
 				out << "/F 132 /Rect[0 0 0 0]\n";
 				sign_page = 0;
 			}
 			else
 				out << "/F 4 " << sign_rect;
-			out << ">>\n";
+			out << "/P " << signature_widget + 2 + sign_page << " 0 R\n" // next entry is Pages and then Page
+			    << ">>\n";
 			EndObj();
 		}
 
