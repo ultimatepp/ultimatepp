@@ -5,9 +5,9 @@ uses
 	RichText;
 
 file
+	SignPDF.cpp,
 	certificate.pem,
-	privatekey.pem,
-	SignPDF.cpp;
+	privatekey.pem;
 
 mainconfig
 	"" = "";
