@@ -10,7 +10,7 @@ struct MyRichObjectType : public RichObjectType
 	virtual void   Menu(Bar& bar, RichObject& ex, void *context) const;
 	virtual void   DefaultAction(RichObject& ex) const;
 	
-	void Edit(RichObject *ex) const;
+	void Edit(RichObject& ex) const;
 	
 	typedef MyRichObjectType CLASSNAME;
 };
@@ -33,21 +33,21 @@ void MyRichObjectType::Paint(const Value& data, Draw& w, Size sz) const
 	w.DrawText(0, 0, (String)data, fnt, SColorText());
 }
 
-void MyRichObjectType::Edit(RichObject *ex) const
+void MyRichObjectType::Edit(RichObject& ex) const
 {
-	String txt = ex->GetData();
+	String txt = ex.GetData();
 	if(EditText(txt, "Edit MyRichObject", "Text"))
-		ex->SetData(txt);
+		ex.SetData(txt);
 }
 
 void MyRichObjectType::DefaultAction(RichObject& ex) const
 {
-	Edit(&ex);
+	Edit(ex);
 }
 
 void MyRichObjectType::Menu(Bar& bar, RichObject& ex, void *) const
 {
-	bar.Add("Edit object..", THISBACK1(Edit, &ex));
+	bar.Add("Edit object..", [=, &ex] { Edit(ex); });
 }
 
 INITBLOCK {
@@ -63,7 +63,6 @@ class MyRichEdit : public RichEdit {
 	ToolBar  toolbar;
 	bool     extended;
 	void RefreshBar();
-	void TheBar(Bar& bar);
 	void InsertMy();
 
 public:
@@ -83,21 +82,18 @@ void MyRichEdit::InsertMy()
 	}
 }
 
-void MyRichEdit::TheBar(Bar& bar)
-{
-	DefaultBar(bar, false);
-	bar.Add(!IsReadOnly(), "Insert new MyRichObject", CtrlImg::Plus(), THISBACK(InsertMy));
-}
-
 void MyRichEdit::RefreshBar()
 {
-	toolbar.Set(THISBACK(TheBar));
+	toolbar.Set([=](Bar& bar) {
+		DefaultBar(bar, false);
+		bar.Add(!IsReadOnly(), "Insert new MyRichObject", CtrlImg::Plus(), THISFN(InsertMy));
+	});
 }
 
 MyRichEdit::MyRichEdit()
 {
 	InsertFrame(0, toolbar);
-	WhenRefreshBar = THISBACK(RefreshBar);
+	WhenRefreshBar = [=] { RefreshBar(); };
 }
 
 GUI_APP_MAIN
