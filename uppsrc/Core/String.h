@@ -99,6 +99,12 @@ public:
 	int    ReverseFind(const String& s, int from) const       { return ReverseFind(s.GetCount(), ~s, from); }
 	int    ReverseFind(const tchar *s) const                  { return GetLength() ? ReverseFind(s, GetLength()-1) : -1;}
 	int    ReverseFind(const String& s) const                 { return GetLength() ? ReverseFind(s, GetLength()-1) : -1;}
+
+	int    ReverseFindAfter(int len, const tchar *s, int from) const;
+	int    ReverseFindAfter(const tchar *s, int from) const;
+	int    ReverseFindAfter(const String& s, int from) const  { return ReverseFindAfter(s.GetCount(), ~s, from); }
+	int    ReverseFindAfter(const tchar *s) const             { return GetLength() ? ReverseFindAfter(s, GetLength()-1) : -1;}
+	int    ReverseFindAfter(const String& s) const            { return GetLength() ? ReverseFindAfter(s, GetLength()-1) : -1;}
 	
 	void   Replace(const tchar *find, int findlen, const tchar *replace, int replacelen);
 	void   Replace(const String& find, const String& replace);
