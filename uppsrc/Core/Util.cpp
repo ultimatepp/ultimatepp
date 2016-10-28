@@ -385,6 +385,16 @@ String HexString(const String& s, int sep, int sepchr)
 	return HexString(~s, s.GetCount(), sep, sepchr);
 }
 
+String HexEncode(const byte *s, int count, int sep, int sepchr)
+{
+	return HexString(s, count, sep, sepchr);
+}
+
+String HexEncode(const String& s, int sep, int sepchr)
+{
+	return HexString(s, sep, sepchr);
+}
+
 String ScanHexString(const char *s, const char *lim)
 {
 	String r;
@@ -412,6 +422,12 @@ String ScanHexString(const char *s, const char *lim)
 			return r;
 	}
 }
+
+String HexDecode(const char *s, const char *lim)
+{
+	return ScanHexString(s, lim);
+}
+
 
 String NormalizeSpaces(const char *s)
 {
