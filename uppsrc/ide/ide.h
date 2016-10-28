@@ -803,6 +803,7 @@ public:
 		void  EditorMenu(Bar& bar);
 	
 	void OnlineSearchMenu(Bar& menu);
+		String GetSearchPhrase();
 		void OnlineSearch();
 		void OnlineSearchOnTheOfficialSite();
 	

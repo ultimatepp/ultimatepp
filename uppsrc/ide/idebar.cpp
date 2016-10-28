@@ -109,8 +109,10 @@ void Ide::File(Bar& menu)
 
 void Ide::OnlineSearchMenu(Bar& menu)
 {
-	menu.Add(editor.IsSelection(), "Search the web..", THISBACK(OnlineSearch));
-	menu.Add(editor.IsSelection(), "Search on the official site..", THISBACK(OnlineSearchOnTheOfficialSite));
+	bool b = editor.IsSelection() || IsAlNum(editor.GetChar());
+	menu.Add(b, AK_GOOGLE, IdeImg::Google(),
+	         THISBACK(OnlineSearch));
+	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), THISBACK(OnlineSearchOnTheOfficialSite));
 }
 
 void Ide::EditSpecial(Bar& menu)
@@ -640,6 +642,8 @@ void Ide::HelpMenu(Bar& menu)
 	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
 	menu.AddMenu("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
 	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
+	menu.MenuSeparator();
+	OnlineSearchMenu(menu);
 	menu.MenuSeparator();
 	menu.Add("About..", THISBACK(About));
 }
