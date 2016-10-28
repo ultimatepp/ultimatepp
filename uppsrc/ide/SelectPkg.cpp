@@ -26,12 +26,13 @@ bool RenamePackageFs(const String& upp, const String& newname)
 		return false;
 	}
 	String pf = GetFileFolder(upp);
-	String npf = GetFileFolder(pf) + "/" + newname;
+	String npf = GetPackagePathNest(pf) + "/" + newname;
+	RealizePath(npf);
 	if(!FileMove(pf, npf)) {
 		Exclamation("Renaming package folder has failed.");
 		return false;
 	}
-	if(!FileMove(npf + "/" + GetFileName(upp), npf + "/" + newname + ".upp")) {
+	if(!FileMove(npf + "/" + GetFileName(upp), npf + "/" + GetFileName(newname) + ".upp")) {
 		FileMove(npf, pf);
 		Exclamation("Renaming .upp file has failed.");
 		return false;
