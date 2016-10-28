@@ -551,14 +551,17 @@ ens of the string.&]
 begin of the string.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:AString`:`:Find`(int`,const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* Find]([@(0.0.255) int]_[*@3 len], [@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tch
+ar]_`*[*@3 s], [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
 [s5;:AString`:`:Find`(const AString`:`:tchar`*`,int`)const:%- [@(0.0.255) int]_[* Find]([@(0.0.255) c
 onst]_[_^AString`:`:tchar^ tchar]_`*[*@3 s], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) c
 onst]&]
 [s5;:AString`:`:Find`(const AString`:`:String`&`,int`)const:%- [@(0.0.255) int]_[* Find](
 [@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 s], 
 [@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
-[s2; Returns first position of substring [%-*@3 s] tested from [%-*@3 from] 
-position, or `-1 if [%-*@3 s] is not found.&]
+[s2; Returns first position of substring [%-*@3 s] greater than or 
+equal to [%-*@3 from], or `-1 if [%-*@3 s] is not found.&]
 [s3; &]
 [s4;%- &]
 [s5;:AString`:`:FindAfter`(const AString`:`:tchar`*`,int`)const:%- [@(0.0.255) int]_[* Fi
@@ -569,7 +572,46 @@ indAfter]([@(0.0.255) const]_[_^AString`:`:String^ String][@(0.0.255) `&]_[*@3 s
 [@(0.0.255) int]_[*@3 from]_`=_[@3 0])_[@(0.0.255) const]&]
 [s2; Similiar to Find, but if found, returns position [*/ after] the 
 substring found. In other words, if not found returns `-1, if 
-found, returns Find([%-*@3 s][%- , ][%-*@3 from]) `+ strlen([%-*@3 s]).&]
+found, returns Find([%-*@3 s][%- , ][%-*@3 from]) `+ length of [%-*@3 s].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:ReverseFind`(int`,const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* ReverseFind]([@(0.0.255) int]_[*@3 len], [@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ t
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFind`(const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* ReverseFind]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s], 
+[@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFind`(const Upp`:`:AString`:`:String`&`,int`)const:%- [@(0.0.255) i
+nt]_[* ReverseFind]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&
+]_[*@3 s], [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFind`(const Upp`:`:AString`:`:tchar`*`)const:%- [@(0.0.255) i
+nt]_[* ReverseFind]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s])_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:AString`:`:ReverseFind`(const Upp`:`:AString`:`:String`&`)const:%- [@(0.0.255) i
+nt]_[* ReverseFind]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&
+]_[*@3 s])_[@(0.0.255) const]&]
+[s2; Finds the [*/ last] position of [%-*@3 s] less than [%-*@3 from], 
+or `-1 if not found.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:AString`:`:ReverseFindAfter`(int`,const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* ReverseFindAfter]([@(0.0.255) int]_[*@3 len], [@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ t
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFindAfter`(const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) i
+nt]_[* ReverseFindAfter]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s],
+ [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFindAfter`(const Upp`:`:AString`:`:String`&`,int`)const:%- [@(0.0.255) i
+nt]_[* ReverseFindAfter]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&
+]_[*@3 s], [@(0.0.255) int]_[*@3 from])_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFindAfter`(const Upp`:`:AString`:`:tchar`*`)const:%- [@(0.0.255) i
+nt]_[* ReverseFindAfter]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s])
+_[@(0.0.255) const]&]
+[s5;:Upp`:`:AString`:`:ReverseFindAfter`(const Upp`:`:AString`:`:String`&`)const:%- [@(0.0.255) i
+nt]_[* ReverseFindAfter]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&
+]_[*@3 s])_[@(0.0.255) const]&]
+[s2; Similar to ReverseFind, but returns position [*/ after] the substring 
+found. In other words, if not found returns `-1, if found, returns 
+Find([%-*@3 s][%- , ][%-*@3 from]) `+ length of [%-*@3 s].&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:AString`:`:Replace`(const Upp`:`:AString`:`:tchar`*`,int`,const Upp`:`:AString`:`:tchar`*`,int`):%- [@(0.0.255) v

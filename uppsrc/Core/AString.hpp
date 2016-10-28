@@ -92,6 +92,13 @@ int AString<B>::ReverseFind(int len, const tchar *s, int from) const
 }
 
 template <class B>
+int AString<B>::ReverseFindAfter(int len, const tchar *s, int from) const
+{
+	int q = ReverseFind(len, s, from);
+	return q >= 0 ? q + len : -1;
+}
+
+template <class B>
 void AString<B>::Replace(const tchar *find, int findlen, const tchar *replace, int replacelen)
 {
 	if(findlen == 0)
@@ -116,6 +123,12 @@ template <class B>
 int AString<B>::ReverseFind(const tchar *s, int from) const
 {
 	return ReverseFind(strlen__(s), s, from);
+}
+
+template <class B>
+int AString<B>::ReverseFindAfter(const tchar *s, int from) const
+{
+	return ReverseFindAfter(strlen__(s), s, from);
 }
 
 template <class B>
