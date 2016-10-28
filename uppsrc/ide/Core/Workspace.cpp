@@ -241,6 +241,15 @@ String PackagePath(const String& name)
 	return MainNest().PackagePath(name);
 }
 
+String GetPackagePathNest(const String& path)
+{
+	String h = UnixPath(NormalizePath(path));
+	for(auto dir : GetUppDirs())
+		if(h.StartsWith(UnixPath(NormalizePath(dir)) + '/'))
+			return dir;
+	return Null;
+}
+
 String SourcePath(const String& package, const String& file) {
 	if(IsFullPath(file)) return NativePath(file);
 	return NormalizePath(AppendFileName(GetFileFolder(PackagePath(package)), file));

@@ -977,19 +977,20 @@ void WorkspaceWork::PackageOp(String active, String from_package, String rename)
 	from_package = UnixPath(from_package);
 	rename = UnixPath(rename);
 	for(int i = 0; i < package.GetCount(); i++)
-		if(IsNull(from_package) || UnixPath(package[i].name) == from_package) {
+		if(*package[i].name != '<' &&
+		   (IsNull(from_package) || UnixPath(package[i].name) == from_package)) {
 			String pp = PackagePath(package[i].name);
-			RealizePath(pp);
 			Package prj;
-			prj.Load(pp);
-			for(int i = prj.uses.GetCount(); --i >= 0;)
-				if(UnixPath(prj.uses[i].text) == active) {
-					if(rename.GetCount())
-						prj.uses[i].text = rename;
-					else
-						prj.uses.Remove(i);
-				}
-			prj.Save(pp);
+			if(prj.Load(pp)) {
+				for(int i = prj.uses.GetCount(); --i >= 0;)
+					if(UnixPath(prj.uses[i].text) == active) {
+						if(rename.GetCount())
+							prj.uses[i].text = rename;
+						else
+							prj.uses.Remove(i);
+					}
+				prj.Save(pp);
+			}
 		}
 	ScanWorkspace();
 	SyncWorkspace();
@@ -1024,9 +1025,10 @@ again:
 	if(dlg.Execute() != IDOK)
 		return;
 	String pn = ~dlg.name;
-	if(!RenamePackageFs(GetActivePackage(), pn))
+	String ap = GetActivePackage();
+	if(!RenamePackageFs(PackagePath(ap), pn))
 		goto again;
-	PackageOp(GetActivePackage(), Null, pn);
+	PackageOp(ap, Null, pn);
 }
 
 void WorkspaceWork::DeletePackage()

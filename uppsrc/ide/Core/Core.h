@@ -215,6 +215,8 @@ inline
 String PackageDirectory(const String& name) { return GetFileDirectory(PackagePath(name)); }
 bool   IsNestReadOnly(const String& path);
 
+String GetPackagePathNest(const String& path);
+
 String GetLocalDir();
 String LocalPath(const String& filename);
 
