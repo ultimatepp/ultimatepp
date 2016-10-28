@@ -45,7 +45,28 @@ CONSOLE_APP_MAIN
 	LOG("Mirror repository revision: " << rev);
 
 	ASSERT(d == d1 && rev == rev1);
+
+	GetRepoInfo("svn://www.ultimatepp.org/upp/trunk", d, rev);
+	LOG("upp.src revision: " << rev);
 	
+	String h = HttpRequest("https://github.com/ultimatepp/mirror/commits/master").Execute();
+	int q = h.FindAfter("git-svn-id: svn://ultimatepp.org/upp/trunk@");
+	
+	ASSERT(q >= 0);
+	rev1 = atoi(~h + q);
+	LOG("GIT mirror revision " << rev1);
+	ASSERT(rev == rev1);
+	
+	String s = HttpRequest("http://www.ultimatepp.org/df.info").Execute();
+	LOG(s);
+	q = s.Find("%");
+	ASSERT(q >= 0);
+	q = s.Find("%", q + 1);
+	ASSERT(q >= 4);
+	int n = atoi(~s + q - 3);
+	LOG("Filesystem uses " << n << "%");
+	ASSERT(n > 10 && n < 85);
+
 	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/bak;/big/bak", ';')) {
 		FindFile ff(dir + "/*");
 		Time tm = Time::Low();
@@ -83,19 +104,6 @@ CONSOLE_APP_MAIN
 		LOG("forum.fud last date: " << d);
 		ASSERT(d >= GetSysDate() - 1);
 	}
-	
-	String h = HttpRequest("https://github.com/ultimatepp/mirror/commits/master").Execute();
-	int q = h.FindAfter("git-svn-id: svn://ultimatepp.org/upp/trunk@");
-	
-	String s = HttpRequest("http://www.ultimatepp.org/df.info").Execute();
-	LOG(s);
-	int q = s.Find("%");
-	ASSERT(q >= 0);
-	q = s.Find("%", q + 1);
-	ASSERT(q >= 4);
-	int n = atoi(~s + q - 3);
-	LOG("Filesystem uses " << n << "%");
-	ASSERT(n > 10 && n < 85);
 	
 	LOG("------------------- OK");
 }
