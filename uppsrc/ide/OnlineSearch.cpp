@@ -1,22 +1,17 @@
 #include "ide.h"
 
+String Ide::GetSearchPhrase()
+{
+	return UrlEncode(Nvl(editor.GetSelection(), editor.GetWord()));
+}
+
 void Ide::OnlineSearch()
 {
-	String selection = editor.GetSelection();
-	if (selection.IsEmpty()) {
-		return;
-	}
-	
-	LaunchWebBrowser("https://www.google.com/search?q=" + UrlEncode(selection));
+	LaunchWebBrowser("https://www.google.com/search?q=" + GetSearchPhrase());
 }
 
 void Ide::OnlineSearchOnTheOfficialSite()
 {
-	String selection = editor.GetSelection();
-	if (selection.IsEmpty()) {
-		return;
-	}
-	
-	LaunchWebBrowser("https://www.google.com/search?q=" + UrlEncode(selection) +
+	LaunchWebBrowser("https://www.google.com/search?q=" + GetSearchPhrase() +
 	                 "&domains=www.ultimatepp.org&sitesearch=www.ultimatepp.org");
 }
