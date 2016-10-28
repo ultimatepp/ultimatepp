@@ -146,6 +146,7 @@ public:
 
 	int    GetLineCount() const               { return line.GetCount(); }
 	int    GetChar(int pos) const;
+	int    GetChar() const                    { return cursor < total ? GetChar(cursor) : 0; }
 	int    operator[](int pos) const          { return GetChar(pos); }
 	int    GetLength() const                  { return total; }
 

@@ -257,6 +257,11 @@ t]_[*@3 pos])_[@(0.0.255) const]&]
 [s2;%% Returns the UNICODE character at [%-*@3 pos] offset.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:TextCtrl`:`:GetChar`(`)const: [@(0.0.255) int]_[* GetChar]()_[@(0.0.255) const]&]
+[s2;%% Returns UNICODE character at cursor, or 0 if cursor is behind 
+the last character.&]
+[s3; &]
+[s4; &]
 [s5;:TextCtrl`:`:GetLength`(`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetLength]()_
 [@(0.0.255) const]&]
 [s2;%% Returns the total number of characters in the text.&]
