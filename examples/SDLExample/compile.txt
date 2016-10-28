@@ -1,6 +1,9 @@
 SETUP SDL for Linux.
 install the SDL 1.2.x package of your distro, dont forget to install the SDL-devel package for headers.
 
+In debian based distros: sudo apt-get install libsdl1.2-dev
+
+
 SETUP SDL for windows.
 download binaries / prebuilt packages for msc and mingw
 http://www.libsdl.org/download-1.2.php
