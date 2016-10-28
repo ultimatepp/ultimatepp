@@ -83,7 +83,9 @@ CONSOLE_APP_MAIN
 		LOG("forum.fud last date: " << d);
 		ASSERT(d >= GetSysDate() - 1);
 	}
-
+	
+	String h = HttpRequest("https://github.com/ultimatepp/mirror/commits/master").Execute();
+	int q = h.FindAfter("git-svn-id: svn://ultimatepp.org/upp/trunk@");
 	
 	String s = HttpRequest("http://www.ultimatepp.org/df.info").Execute();
 	LOG(s);
