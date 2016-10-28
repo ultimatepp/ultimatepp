@@ -152,20 +152,14 @@ VectorMap<String, String> LoadIniFile(const char *filename);
 
 String timeFormat(double second);
 
-String Garble(const char *s, const char *e);
-String Garble(const String& s);
+String HexEncode(const byte *s, int count, int sep = INT_MAX, int sepchr = ' ');
+inline String HexEncode(const char *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexEncode((byte *)s, count, sep, sepchr); }
+inline String HexEncode(const void *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexEncode((byte *)s, count, sep, sepchr); }
+String HexEncode(const String& s, int sep = INT_MAX, int sepchr = ' ');
 
-String Encode64(const String& s);
-String Decode64(const String& s);
-
-String HexString(const byte *s, int count, int sep = INT_MAX, int sepchr = ' ');
-inline String HexString(const char *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexString((byte *)s, count, sep); }
-inline String HexString(const void *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexString((byte *)s, count, sep); }
-String HexString(const String& s, int sep = INT_MAX, int sepchr = ' ');
-
-String ScanHexString(const char *s, const char *lim);
-inline String ScanHexString(const char *s, int len) { return ScanHexString(s, s + len); }
-inline String ScanHexString(const String& s)        { return ScanHexString(~s, s.GetCount()); }
+String HexDecode(const char *s, const char *lim);
+inline String HexDecode(const char *s, int len) { return HexDecode(s, s + len); }
+inline String HexDecode(const String& s)        { return HexDecode(~s, s.GetCount()); }
 
 #ifdef PLATFORM_WINCE
 WString ToSystemCharset(const String& src);
@@ -490,3 +484,20 @@ WString Replace(const WString& s, const VectorMap<WString, WString>& fr);
 
 String GetP7Signature(const void *data, int length, const String& cert_pem, const String& pkey_pem);
 String GetP7Signature(const String& data, const String& cert_pem, const String& pkey_pem);
+
+// deprecated
+String HexString(const byte *s, int count, int sep = INT_MAX, int sepchr = ' ');
+inline String HexString(const char *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexString((byte *)s, count, sep, sepchr); }
+inline String HexString(const void *s, int count, int sep = INT_MAX, int sepchr = ' ') { return HexString((byte *)s, count, sep, sepchr); }
+String HexString(const String& s, int sep = INT_MAX, int sepchr = ' ');
+
+String ScanHexString(const char *s, const char *lim);
+inline String ScanHexString(const char *s, int len) { return ScanHexString(s, s + len); }
+inline String ScanHexString(const String& s)        { return ScanHexString(~s, s.GetCount()); }
+
+String Garble(const char *s, const char *e);
+String Garble(const String& s);
+
+String Encode64(const String& s);
+String Decode64(const String& s);
+
