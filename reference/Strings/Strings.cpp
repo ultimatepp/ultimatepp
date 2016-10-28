@@ -4,7 +4,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	String s = "Hello world";
+	//          01234567890123456789012345
+	String s = "lorem ipsum dolor sit amet";
 
 	DUMP(s);
 	s.Cat('!');
@@ -14,19 +15,26 @@ CONSOLE_APP_MAIN
 	DUMP(s[0]);
 	DUMP(s.GetCount());
 	
-	DUMP(s.Compare("Abel"));
-	DUMP(s.Compare("Hello world!"));
-	DUMP(s.Compare("Goal"));
+	DUMP(s.Compare("abel"));
+	DUMP(s.Compare("lorem ipsum dolor sit amet"));
+	DUMP(s.Compare("xena"));
 	
 	DUMP(s.Find('l'));
 	DUMP(s.ReverseFind('l'));
 
-	DUMP(s.Find("llo"));
+	DUMP(s.Find("ipsum"));
 	DUMP(s.Find("xxx"));
-	DUMP(s.FindAfter("llo"));
+	DUMP(s.FindAfter("ipsum"));
 	DUMP(s.FindAfter("xxx"));
 
-	DUMP(s.StartsWith("Hello"));
+	DUMP(s.Find("lo"));
+	DUMP(s.Find("lo", 4));
+
+	DUMP(s.ReverseFind("lo"));
+	DUMP(s.ReverseFind("lo", 14));
+	DUMP(s.ReverseFindAfter("lo"));
+	
+	DUMP(s.StartsWith("lorem"));
 	DUMP(s.EndsWith("!"));
 	
 	DUMP(s.FindFirstOf("xyzw"));
@@ -35,7 +43,7 @@ CONSOLE_APP_MAIN
 	DUMP(s.Left(2));
 	DUMP(s.Right(2));
 	
-	s.Replace("world", "Frank");
+	s.Replace("dolor", "DOLOR");
 	DUMP(s);
 	
 	s.Trim(5);
