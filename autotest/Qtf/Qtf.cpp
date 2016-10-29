@@ -11,7 +11,7 @@ CONSOLE_APP_MAIN
 
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
-	String outdir = GetHomeDirFile("autotest.qtf");
+	String outdir = GetHomeDirFile("autotest");
 	DeleteFolderDeep(outdir);
 	RealizeDirectory(outdir);
 
