@@ -959,7 +959,9 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 	out << ">>\n";
 	EndObj();
 	
-	int p7s_len = HexString(GetP7Signature(String(), sign->cert, sign->pkey)).GetCount();
+	int p7s_len = 0;
+	if(sign)
+		p7s_len = HexString(GetP7Signature(String(), sign->cert, sign->pkey)).GetCount();
 
 	int len0 = out.GetCount();
 	int offset0 = offset.GetCount();
