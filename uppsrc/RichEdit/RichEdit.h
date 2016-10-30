@@ -197,10 +197,6 @@ public:
 	StyleManager();
 };
 
-bool SpellWordRaw(const WString& wrd, int lang, Vector<String> *withdia = NULL);
-bool SpellWord(const wchar *ws, int len, int lang);
-bool SpellWord(const WString& ws, int lang);
-
 void SetupFaceList(DropList& face);
 
 class RichEdit : public Ctrl, private TextArrayOps {

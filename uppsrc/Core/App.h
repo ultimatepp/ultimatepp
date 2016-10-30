@@ -16,6 +16,7 @@ void    SetHomeDirectory(const char *dir);
 
 void    UseHomeDirectoryConfig(bool b = true);
 
+String  GetConfigFolder();
 String  ConfigFile(const char *file);
 String  ConfigFile();
 

@@ -332,6 +332,32 @@ void InsertPath(EditString *es)
 	es->SetWantFocus();
 }
 
+void DlSpellerLangs(DropList& dl)
+{
+	static Vector<int> lng;
+	ONCELOCK {
+		VectorMap<int, String> lngs;
+		String path = GetExeDirFile("scd") + ';' + ConfigFile("scd") + ';' +
+		              GetExeFolder() + ';' + GetConfigFolder() + ';' +
+		              getenv("LIB") + ';' + getenv("PATH");
+		Vector<String> p = Split(path, ';');
+		for(auto dir : p) {
+			FindFile ff(AppendFileName(dir, "*.scd"));
+			while(ff) {
+				int lang = LNGFromText(ff.GetName());
+				if(lang)
+					lngs.Add(lang, LNGAsText(lang));
+				ff.Next();
+			}
+		}
+		SortByValue(lngs);
+		lng = lngs.PickKeys();
+	}
+	dl.Add(0, "Off");
+	for(auto l : lng)
+		dl.Add(l, LNGAsText(l));
+}
+
 void Ide::SetupFormat() {
 	FormatDlg dlg;
 	dlg.Title("Settings");
@@ -401,6 +427,9 @@ void Ide::SetupFormat() {
 	edt.indent_amount.Enable(indent_spaces);
 	CtrlRetriever rtvr;
 	int hs = hilite_scope;
+
+	DlSpellerLangs(edt.spellcheck_comments);
+	
 	rtvr
 		(hlt.hilite_scope, hs)
 		(hlt.hilite_bracket, hilite_bracket)
@@ -427,6 +456,7 @@ void Ide::SetupFormat() {
 		(edt.tabs_grouping, tabs_grouping)
 		(edt.tabs_stacking, tabs_stacking)
 		(edt.tabs_serialize, tabs_serialize)
+		(edt.spellcheck_comments, spellcheck_comments)
 		(edt.persistent_find_replace, persistent_find_replace)
 		(edt.find_replace_restore_pos, find_replace_restore_pos)
 

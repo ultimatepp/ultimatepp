@@ -17,6 +17,7 @@ One<EditorSyntax> CodeEditor::GetSyntax(int line)
 {
 	CTIMING("GetSyntax");
 	One<EditorSyntax> syntax = EditorSyntax::Create(highlight);
+	syntax->SpellCheckComments(spellcheck_comments);
 	int ln = 0;
 	for(int i = 0; i < __countof(syntax_cache); i++)
 		if(line >= syntax_cache[i].line && syntax_cache[i].line > 0) {

@@ -303,6 +303,8 @@ void   DrawFileName(Draw& w, const Rect& r, const String& h, Color ink);
 void   AddPath(EditString *es);
 void   InsertPath(EditString *es);
 
+void   DlSpellerLangs(DropList& dl);
+
 #include "Assist.h"
 
 void DirSel(EditField& f, FrameRight<Button>& b);
@@ -589,6 +591,7 @@ public:
 	bool      find_replace_restore_pos;
 	bool      auto_rescan;
 	bool      auto_check;
+	int       spellcheck_comments;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
@@ -708,8 +711,8 @@ public:
 	void      ChangeFileCharset(const String& name, Package& p, byte charset);
 	void      ChangeCharset();
 	void      FlushFile();
-	void      EditFile0(const String& path, byte charset = CHARSET_DEFAULT, bool astext = false,
-	                    const String& header = Null);
+	void      EditFile0(const String& path, byte charset, int spellcheck_comments,
+	                    const String& headername = Null);
 	void      EditFile(const String& path);
 	void      AddEditFile(const String& path);
 	void      ReloadFile();

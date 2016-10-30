@@ -179,6 +179,11 @@ String  ConfigFile(const char *file) {
 #endif//PLATFORM
 }
 
+String GetConfigFolder()
+{
+	return GetFileFolder(ConfigFile("x"));
+}
+
 String  ConfigFile() {
 	return ConfigFile(GetExeTitle() + ".cfg");
 }

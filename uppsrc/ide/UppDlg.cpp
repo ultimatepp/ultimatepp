@@ -90,6 +90,7 @@ void PackageEditor::SaveOptions() {
 		actual.bold = ~bold;
 		actual.italic = ~italic;
 		actual.charset = (byte)(int)~charset;
+		actual.spellcheck_comments = ~spellcheck_comments;
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.noblitz = noblitz;
 		actual.nowarnings = nowarnings;
@@ -116,6 +117,7 @@ void PackageEditor::Empty()
 {
 	FileEmpty();
 	charset.Disable();
+	spellcheck_comments.Disable();
 	noblitz.Disable();
 	nowarnings.Disable();
 	description.Disable();
@@ -174,6 +176,7 @@ void PackageEditor::PackageCursor()
 		bold <<= actual.bold;
 		italic <<= actual.italic;
 		charset <<= (int)actual.charset;
+		spellcheck_comments <<= actual.spellcheck_comments;
 		noblitz = actual.noblitz;
 		nowarnings = actual.nowarnings;
 		String s;
@@ -187,6 +190,7 @@ void PackageEditor::PackageCursor()
 		bold.Enable();
 		italic.Enable();
 		charset.Enable();
+		spellcheck_comments.Enable();
 		noblitz.Enable();
 		nowarnings.Enable();
 		accepts.Enable();
@@ -579,12 +583,15 @@ PackageEditor::PackageEditor()
 	CtrlLayoutOKCancel(*this, "Package organizer");
 	description.Disable();
 	description <<= THISBACK(Description);
+	
+	spellcheck_comments.Add(Null, "Default");
+	DlSpellerLangs(spellcheck_comments);
 	DlCharsetD(charset);
 	charset.Disable();
 	filelist.Disable();
+	spellcheck_comments.Disable();
 	accepts.SetFilter(FlagFilter);
-	accepts <<=
-	charset <<= THISBACK(SaveOptions);
+	accepts ^= spellcheck_comments ^= charset ^= THISFN(SaveOptions);
 	noblitz <<=
 	nowarnings <<=
 	pch_file <<=
