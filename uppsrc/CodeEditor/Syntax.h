@@ -72,13 +72,16 @@ struct HighlightOutput : HighlightSetup {
 public:
 	void SetChar(int pos, int chr)                    { v[pos].chr = chr; }
 	void Set(int pos, int count, const HlStyle& ink);
+	void SetFlags(int pos, int count, word flags);
 	void SetFont(int pos, int count, const HlStyle& f);
 	void SetPaper(int pos, int count, Color paper);
 	void SetInk(int pos, int count, Color ink);
+	void SetFlags(int count, word flags)              { SetFlags(pos, count, flags); }
 	void Put(int count, const HlStyle& ink)           { Set(pos, count, ink); pos += count; }
 	void Put(int count, const HlStyle& ink, const HlStyle& paper);
 	void Put(const HlStyle& ink)                      { Put(1, ink); }
 	void Put(const HlStyle& ink, word flags)          { Put(1, ink); v[pos - 1].flags = flags; }
+	void Flags(word flags)                            { v[pos - 1].flags = flags; }
 	int  GetCount() const                             { return v.GetCount(); }
 
 	const wchar *CString(const wchar *p);
@@ -98,6 +101,7 @@ class EditorSyntax : public HighlightSetup { // Inheriting to make static member
 
 protected:
 	bool                    ignore_errors;
+	int                     comments_lang;
 	
 public:
 	virtual void            Clear();
@@ -118,6 +122,7 @@ public:
 	String  Get()                          { CTIMING("Get"); return StoreAsString(*this); }
 	
 	void    IgnoreErrors()                 { ignore_errors = true; }
+	void    SpellCheckComments(int lang)   { comments_lang = lang; }
 
 	EditorSyntax()                         { Clear(); ignore_errors = false; }
 

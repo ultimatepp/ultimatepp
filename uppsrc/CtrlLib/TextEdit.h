@@ -243,6 +243,7 @@ public:
 	enum Flags {
 		SHIFT_L = 1,
 		SHIFT_R = 2,
+		SPELLERROR = 4,
 	};
 
 	struct Highlight : Moveable<Highlight> {

@@ -71,7 +71,7 @@ void Ide::FileCursor()
 		if(p != HELPNAME)
 			p = GetActiveFilePath();
 		EditFile0(p, f.charset ? f.charset : actual.charset ? actual.charset : default_charset,
-		          false, headername);
+		          Nvl(f.spellcheck_comments, actual.spellcheck_comments, spellcheck_comments));
 	}
 }
 
@@ -136,6 +136,9 @@ void Ide::FileProperties()
 	d.line_endings.Add(LF, "LF");
 	d.line_endings <<= findarg(Nvl(editfile_line_endings, line_endings), LF, DETECT_LF) >= 0 ? LF : CRLF;
 	d.line_endings.Enable(findarg(line_endings, DETECT_CRLF, DETECT_LF) >= 0);
+	d.spellcheck_comments.Add(Null, "Default");
+	DlSpellerLangs(d.spellcheck_comments);
+	d.spellcheck_comments <<= f.spellcheck_comments;
 	for(;;) {
 		switch(d.Run()) {
 		case IDCANCEL:
@@ -149,6 +152,7 @@ void Ide::FileProperties()
 			f.tabsize = Nvl((int)~d.tabsize);
 			f.font = Nvl((int)~d.font);
 			f.highlight = ~d.highlight;
+			f.spellcheck_comments = ~d.spellcheck_comments;
 			SavePackage();
 			PackageCursor();
 			filelist.SetCursor(c);
@@ -413,7 +417,8 @@ bool Ide::FileRemove()
 	return true;
 }
 
-void Ide::EditFile0(const String& path, byte charset, bool astext, const String& headername) {
+void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, const String& headername)
+{
 	text_updated.Kill();
 
 	AKEditor();
@@ -424,12 +429,13 @@ void Ide::EditFile0(const String& path, byte charset, bool astext, const String&
 
 	editfile = path;
 	editor.SetCharset(charset);
+	editor.SpellcheckComments(spellcheck_comments);
 	AddLru();
 
 	editfile_isfolder = IsFolder(editfile) || IsHelpName(editfile);
 	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
-	bool candesigner = !astext && !(debugger && !editfile_isfolder && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
+	bool candesigner = !(debugger && !editfile_isfolder && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
 	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile);
 	
 	if(candesigner) {
@@ -587,8 +593,9 @@ void Ide::EditAsHex()
 	editastext.RemoveKey(editfile);
 	editashex.FindPut(editfile);
 	byte cs = editor.GetCharset();
+	int sc = editor.GetSpellcheckComments();
 	FlushFile();
-	EditFile0(path, cs);
+	EditFile0(path, cs, sc);
 }
 
 bool Ide::IsDesignerFile(const String& path)
@@ -614,8 +621,9 @@ void Ide::EditAsText()
 		return;
 	DoEditAsText(path);
 	byte cs = editor.GetCharset();
+	int sc = editor.GetSpellcheckComments();
 	FlushFile();
-	EditFile0(path, cs);
+	EditFile0(path, cs, sc);
 }
 
 void Ide::EditUsingDesigner()
@@ -626,8 +634,9 @@ void Ide::EditUsingDesigner()
 	editashex.RemoveKey(editfile);
 	editastext.RemoveKey(editfile);
 	byte cs = editor.GetCharset();
+	int sc = editor.GetSpellcheckComments();
 	FlushFile();
-	EditFile0(path, cs);
+	EditFile0(path, cs, sc);
 }
 
 void Ide::AddEditFile(const String& path)
@@ -785,7 +794,7 @@ void Ide::ReloadFile()
 	int ln = editor.GetCursorLine();
 	editfile.Clear();
 	int sc = filelist.GetSbPos();
-	EditFile0(fn, editor.GetCharset());
+	EditFile0(fn, editor.GetCharset(), editor.GetSpellcheckComments());
 	filelist.SetSbPos(sc);
 	int l = LocateLine(data, ln, ~editor);
 	editor.SetCursor(editor.GetPos(l));
@@ -875,6 +884,7 @@ void Ide::PassEditor()
 	editor.SetFocus();
 	editor.ScrollIntoCursor();
 	editor2.Annotate(editfile2);
+	editor2.SpellcheckComments(editor.GetSpellcheckComments());
 }
 
 void Ide::ClearEditedFile()

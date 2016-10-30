@@ -274,6 +274,8 @@ protected:
 
 	String highlight;
 	
+	int    spellcheck_comments = 0;
+	
 	struct Tip : Ctrl {
 		Value v;
 		const Display *d;
@@ -462,6 +464,9 @@ public:
 	void     IndentAmount(int ia)                     { indent_amount = ia; }
 	void     NoParenthesisIndent(bool b)              { no_parenthesis_indent = b; }
 	
+	void     SpellcheckComments(int lang)             { spellcheck_comments = lang; Refresh(); }
+	int      GetSpellcheckComments() const            { return spellcheck_comments; }
+
 	void     NoFindReplace()                          { withfindreplace = false; }
 
 	void     LineNumbers(bool b)                      { bar.LineNumbers(b); }

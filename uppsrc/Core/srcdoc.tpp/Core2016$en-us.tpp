@@ -66,9 +66,8 @@ has ability to `'add`' functions using operator<<. Also, unlike
 exception.&]
 [s5; [* Event ]is equivalent of Callback `- unlike Callback, it is 
 not necessary to have Callback, Callback1, Callback2, number 
-of parameters is resolved by C`+`+11 template varargs. For backward 
-compatibility Callback`[N`] are aliased as Event variants.&]
-[s5; Similarly, [* EventGate] is a new equivalent of [* Gate].&]
+of parameters is resolved by C`+`+11 template varargs.&]
+[s5; Callback is deprecated but supported for backward compatibility.&]
 [s3; Algorithms and Containers&]
 [s5; The set of algorithms provided by U`+`+ is now streamlined by 
 introduction of [/ Range] concept. Range is entity that provides 

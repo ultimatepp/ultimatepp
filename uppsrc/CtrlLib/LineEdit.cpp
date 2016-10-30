@@ -461,7 +461,7 @@ void   LineEdit::Paint0(Draw& w) {
 			else
 				ln = tx.GetCount();
 			int lgp = -1;
-			for(int pass = 0; pass < 2; pass++) {
+			for(int pass = 0; pass < 3; pass++) {
 				int gp = 0;
 				int scx = fsz.cx * sc.x;
 				sOptimizedRectRenderer rw(w);
@@ -546,7 +546,9 @@ void   LineEdit::Paint0(Draw& w) {
 									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1 + cjk)
 										rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
-								else
+								if(pass == 1 && (h.flags & SPELLERROR))
+									rw.DrawRect(x, max(y, y + fsz.cy - Zy(1)), (cjk + 1) * fsz.cx, Zy(1), LtRed());
+								if(pass == 2)
 									tw.DrawChar(x + (h.flags & SHIFT_L ? -fsz.cx / 6 : h.flags & SHIFT_R ? fsz.cx / 6 : 0),
 									            y + fascent - h.font.GetAscent(),
 									            h.chr, (cjk + 1) * fsz.cx, h.font, h.ink);
