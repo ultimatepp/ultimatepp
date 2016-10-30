@@ -302,10 +302,11 @@ public:
 		int            font;
 		String         highlight;
 		bool           pch, nopch, noblitz;
+		int            spellcheck_comments;
 
 		void operator=(const String& s)   { String::operator=(s); readonly = separator = false; }
 		void Init()  { readonly = separator = false; tabsize = Null; charset = 0; font = 0;
-		               pch = nopch = noblitz = false; }
+		               pch = nopch = noblitz = false; spellcheck_comments = Null; }
 
 		File()                            { Init(); }
 		File(const String& s) : String(s) { Init(); }
@@ -334,6 +335,7 @@ public:
 	Time                     time;
 	bool                     bold, italic;
 	Color                    ink;
+	int                      spellcheck_comments;
 
 	int   GetCount() const                { return file.GetCount(); }
 	File& operator[](int i)               { return file[i]; }

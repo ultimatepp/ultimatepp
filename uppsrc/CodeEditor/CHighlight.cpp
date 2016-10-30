@@ -89,16 +89,23 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 
 const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wchar *e)
 {
-	String w;
-	for(const wchar *s = p; s < e && IsAlpha(*s) && w.GetCount() < 5; s++)
+	WString w;
+	for(const wchar *s = p; s < e && IsLetter(*s); s++)
 		w.Cat(ToUpper(*s));
 	int n = w.GetCount();
-	if(findarg(w, "TODO", "FIXME") >= 0)
+	if(!n)
+		for(const wchar *s = p; s < e && !IsLetter(*s); s++)
+			n++;
+	word flags = 0;
+	if(n && comments_lang && !SpellWord(w, comments_lang))
+		flags = LineEdit::SPELLERROR;
+	hls.SetFlags(n, flags);
+	static WString todo = "TODO";
+	static WString fixme = "FIXME";
+	if(w.GetCount() >= 4 && w.GetCount() <= 5 && findarg(w, todo, fixme) >= 0)
 		hls.Put(n, hl_style[INK_COMMENT_WORD], hl_style[PAPER_COMMENT_WORD]);
-	else {
-		n = max(n, 1);
+	else
 		hls.Put(n, hl_style[INK_COMMENT]);
-	}
 	return p + n;
 }
 

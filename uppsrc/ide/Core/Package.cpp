@@ -163,6 +163,7 @@ void Package::Reset()
 	noblitz = nowarnings = false;
 	bold = italic = false;
 	ink = Null;
+	spellcheck_comments = Null;
 }
 
 Package::Package()
@@ -320,6 +321,9 @@ bool Package::Load(const char *path)
 									if(p.Id("highlight"))
 										f.highlight = p.ReadId();
 									else
+									if(p.Id("spellcheck_comments"))
+										f.spellcheck_comments = LNGFromText(p.ReadString());
+									else
 										p.SkipTerm();
 								}
 							}
@@ -348,6 +352,9 @@ bool Package::Load(const char *path)
 					else
 					if(p.Id("custom"))
 						custom.Add().Load(p);
+					else
+					if(p.Id("spellcheck_comments"))
+						spellcheck_comments = LNGFromText(p.ReadString());
 					else
 						p.SkipTerm();
 				}
@@ -422,6 +429,12 @@ String IdeCharsetName(byte charset) {
 		                   CharsetName(charset));
 }
 
+void PutSpellCheckComments(StringStream& out, int sc)
+{
+	if(!IsNull(sc))
+		out << " spellcheck_comments " << AsCString(sc ? LNGAsText(sc) : "");
+}
+
 bool Package::Save(const char *path) const {
 	StringStream out;
 	if(description.GetCount() || italic || bold || !IsNull(ink)) {
@@ -475,6 +488,7 @@ bool Package::Save(const char *path) const {
 				out << " charset " << AsCString(IdeCharsetName(f.charset));
 			if(!IsNull(f.highlight))
 				out << " highlight " << f.highlight;
+			PutSpellCheckComments(out, f.spellcheck_comments);
 			putfopt(out, "options", f.option);
 			putfopt(out, "depends", f.depends);
 		}
@@ -489,6 +503,7 @@ bool Package::Save(const char *path) const {
 		}
 		out << ";\n\n";
 	}
+	PutSpellCheckComments(out, spellcheck_comments);
 	for(int i = 0; i < custom.GetCount(); i++)
 		out << custom[i].AsString();
 	return SaveChangedFile(path, out.GetResult());

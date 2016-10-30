@@ -161,6 +161,7 @@ void WorkspaceWork::SavePackage()
 			b.data = String::GetVoid();
 	}
 	actual.Save(pp);
+#if 0 // nobody is using 'init'. to be replaced by "add by include" method
 	String init;
 	String mnm = Filter('_' + actualpackage + "_icpp_init_stub", CharFilterMacro);
 	init << "#ifndef " << mnm << "\r\n";
@@ -182,6 +183,7 @@ void WorkspaceWork::SavePackage()
 	}
 	init << "#endif\r\n";
 	SaveChangedFile(SourcePath(actualpackage, "init"), init);
+#endif
 }
 
 void WorkspaceWork::RestoreBackup()

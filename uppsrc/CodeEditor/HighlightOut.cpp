@@ -59,6 +59,14 @@ void HighlightOutput::SetPaper(int pos, int count, Color paper)
 		v[pos++].paper = paper;
 }
 
+void HighlightOutput::SetFlags(int pos, int count, word flags)
+{
+	if(pos + count > v.GetCount())
+		v.At(pos + count - 1, def);
+	while(count-- > 0)
+		v[pos++].flags = flags;
+}
+
 void HighlightOutput::SetInk(int pos, int count, Color ink)
 {
 	if(pos + count > v.GetCount())

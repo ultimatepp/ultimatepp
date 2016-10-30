@@ -162,7 +162,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 10;
+	int version = 11;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -200,6 +200,8 @@ void Ide::Serialize(Stream& s)
 	s % tabs_grouping;
 	s % tabs_serialize;
 	s % tabs_stacking;
+	if(version >= 11)
+		s % spellcheck_comments;
 	bool dummy_force_crlf = false;
 	s % dummy_force_crlf;
 	if(version >= 1)
