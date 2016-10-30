@@ -342,12 +342,14 @@ void DlSpellerLangs(DropList& dl)
 		              getenv("LIB") + ';' + getenv("PATH");
 		Vector<String> p = Split(path, ';');
 		for(auto dir : p) {
-			FindFile ff(AppendFileName(dir, "*.scd"));
-			while(ff) {
-				int lang = LNGFromText(ff.GetName());
-				if(lang)
-					lngs.Add(lang, LNGAsText(lang));
-				ff.Next();
+			for(int pass = 0; pass < 2; pass++) {
+				FindFile ff(AppendFileName(dir, pass ? "*.udc" : "*.scd"));
+				while(ff) {
+					int lang = LNGFromText(ff.GetName());
+					if(lang)
+						lngs.Add(lang, LNGAsText(lang));
+					ff.Next();
+				}
 			}
 		}
 		SortByValue(lngs);
