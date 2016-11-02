@@ -71,7 +71,8 @@ void Ide::FileCursor()
 		if(p != HELPNAME)
 			p = GetActiveFilePath();
 		EditFile0(p, f.charset ? f.charset : actual.charset ? actual.charset : default_charset,
-		          Nvl(f.spellcheck_comments, actual.spellcheck_comments, spellcheck_comments));
+		          Nvl(f.spellcheck_comments, actual.spellcheck_comments, spellcheck_comments),
+		          headername);
 	}
 }
 
