@@ -109,7 +109,7 @@ void Ide::File(Bar& menu)
 
 void Ide::OnlineSearchMenu(Bar& menu)
 {
-	bool b = editor.IsSelection() || IsAlNum(editor.GetChar());
+	bool b = editor.IsSelection() || IsAlNum(editor.GetChar()) || editor.GetChar() == '_';
 	menu.Add(b, AK_GOOGLE, IdeImg::Google(),
 	         THISBACK(OnlineSearch));
 	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), THISBACK(OnlineSearchOnTheOfficialSite));
