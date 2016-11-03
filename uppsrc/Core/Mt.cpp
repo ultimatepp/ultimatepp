@@ -146,7 +146,7 @@ bool Thread::Run(Function<void ()> _cb, bool noshutdown)
 	p->noshutdown = noshutdown;
 #ifdef PLATFORM_WIN32
 #ifdef CPU_32 // in 32-bit, reduce stack size to 1MB to fit more threads into address space
-	handle = (HANDLE)_beginthreadex(0, 1024*1024, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
+	handle = (HANDLE)_beginthreadex(0, 1024*1024, sThreadRoutine, p, STACK_SIZE_PARAM_IS_A_RESERVATION, ((unsigned int *)(&thread_id)));
 #else
 	handle = (HANDLE)_beginthreadex(0, 0, sThreadRoutine, p, 0, ((unsigned int *)(&thread_id)));
 #endif
@@ -633,7 +633,7 @@ bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr)
 {
 #ifdef PLATFORM_WIN32
 	HANDLE handle;
-	handle = CreateThread(NULL, 0, fn, ptr, 0, NULL);
+	handle = CreateThread(NULL, 512*1024, fn, ptr, STACK_SIZE_PARAM_IS_A_RESERVATION, NULL);
 	if(handle) {
 		CloseHandle(handle);
 		return true;
