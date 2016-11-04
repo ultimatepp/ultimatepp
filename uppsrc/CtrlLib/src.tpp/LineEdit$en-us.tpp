@@ -308,6 +308,11 @@ rColumn]([@(0.0.255) int]_[*@3 col], [_^Color^ Color]_[*@3 c]_`=_SColorFace())&]
 [s2;%% Displays a border column of width [%-*@3 col] and color [%-*@3 c].&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:LineEdit`:`:GetBorderColumn`(`)const: [@(0.0.255) int]_[* GetBorderColumn]()_
+[@(0.0.255) const]&]
+[s2;%% Return border column position.&]
+[s3; &]
+[s4; &]
 [s5;:LineEdit`:`:SetFont`(Font`): [_^LineEdit^ LineEdit][@(0.0.255) `&]_[* SetFont]([_^Font^ F
 ont]_[*@3 f])&]
 [s2;%% Sets the font. HighlightLine can replace this font, however, 

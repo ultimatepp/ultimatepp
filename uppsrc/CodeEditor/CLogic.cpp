@@ -53,6 +53,33 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 		}
 		return;
 	}
+
+#ifdef _DEBUG
+	{
+		int limit = e.GetBorderColumn();
+		int pos = e.GetCursor();
+		int lp = pos;
+		int l = e.GetLinePos(lp);
+		if(limit > 10 && lp >= limit && lp == e.GetLineLength(l)) {
+			int lp0 = e.GetPos(l);
+			WString ln = e.GetWLine(l);
+			int wl = limit;
+			while(wl > 0 && ln[wl - 1] != '\n' && ln[wl - 1] != ' ')
+				wl--;
+			int sl = wl - 1;
+			while(sl > 0 && ln[wl - 1] != '\n' && ln[sl - 1] == ' ')
+				sl--;
+			e.Remove(lp0 + sl, pos - (lp0 + sl));
+			e.SetCursor(lp0 + sl);
+			e.InsertChar('\n', 1);
+			for(int i = wl; i < ln.GetCount(); i++)
+				e.InsertChar(ln[i], 1);
+			e.InsertChar(chr, 1);
+			return;
+		}
+	}
+#endif
+	
 	// {, } inserted on line alone should be moved left sometimes:
 	int cl = e.GetCursorLine();
 	WString l = e.GetWLine(cl);
