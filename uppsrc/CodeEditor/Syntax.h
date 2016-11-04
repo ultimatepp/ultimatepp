@@ -93,8 +93,8 @@ public:
 class EditorSyntax : public HighlightSetup { // Inheriting to make static members available
 	struct SyntaxDef {
 		Event<One<EditorSyntax>&> factory;
-		String                        patterns;
-		String                        description;
+		String                    patterns;
+		String                    description;
 	};
 	
 	static ArrayMap<String, SyntaxDef>& defs();

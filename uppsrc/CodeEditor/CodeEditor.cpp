@@ -165,7 +165,6 @@ String CodeEditor::GetPasteText()
 	return h;
 }
 
-
 bool CodeEditor::IsCursorBracket(int pos) const
 {
 	return pos == highlight_bracket_pos0 && hilite_bracket;

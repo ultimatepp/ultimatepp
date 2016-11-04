@@ -385,6 +385,7 @@ public:
 	LineEdit& TabSize(int n);
 	int       GetTabSize() const              { return tabsize; }
 	LineEdit& BorderColumn(int col, Color c = SColorFace());
+	int       GetBorderColumn() const         { return bordercolumn; }
 	LineEdit& SetFont(Font f);
 	Font      GetFont() const                 { return font; }
 	LineEdit& NoHorzScrollbar(bool b = true)  { nohbar = b; ScrollIntoCursor(); return *this; }
