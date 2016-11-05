@@ -275,6 +275,7 @@ protected:
 	String highlight;
 	
 	int    spellcheck_comments = 0;
+	bool   wordwrap_comments = true;
 	
 	struct Tip : Ctrl {
 		Value v;
@@ -466,6 +467,8 @@ public:
 	
 	void     SpellcheckComments(int lang)             { spellcheck_comments = lang; Refresh(); }
 	int      GetSpellcheckComments() const            { return spellcheck_comments; }
+	void     WordwrapComments(bool b)                 { wordwrap_comments = b; }
+	bool     IsWordwrapComments() const               { return wordwrap_comments; }
 
 	void     NoFindReplace()                          { withfindreplace = false; }
 
