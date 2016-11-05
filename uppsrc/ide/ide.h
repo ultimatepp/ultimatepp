@@ -592,6 +592,7 @@ public:
 	bool      auto_rescan;
 	bool      auto_check;
 	int       spellcheck_comments;
+	bool      wordwrap_comments;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele

@@ -459,6 +459,7 @@ void Ide::SetupFormat() {
 		(edt.tabs_stacking, tabs_stacking)
 		(edt.tabs_serialize, tabs_serialize)
 		(edt.spellcheck_comments, spellcheck_comments)
+		(edt.wordwrap_comments, wordwrap_comments)
 		(edt.persistent_find_replace, persistent_find_replace)
 		(edt.find_replace_restore_pos, find_replace_restore_pos)
 
