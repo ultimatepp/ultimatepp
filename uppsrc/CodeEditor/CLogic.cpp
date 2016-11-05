@@ -54,31 +54,45 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 		return;
 	}
 
-#ifdef _DEBUG
-	{
+	if(e.IsWordwrapComments()) {
 		int limit = e.GetBorderColumn();
 		int pos = e.GetCursor();
 		int lp = pos;
 		int l = e.GetLinePos(lp);
-		if(limit > 10 && lp >= limit && lp == e.GetLineLength(l)) {
+		if(limit > 10 && e.GetColumnLine(pos).x >= limit && lp == e.GetLineLength(l)) {
 			int lp0 = e.GetPos(l);
 			WString ln = e.GetWLine(l);
-			int wl = limit;
-			while(wl > 0 && ln[wl - 1] != '\n' && ln[wl - 1] != ' ')
-				wl--;
-			int sl = wl - 1;
-			while(sl > 0 && ln[wl - 1] != '\n' && ln[sl - 1] == ' ')
-				sl--;
-			e.Remove(lp0 + sl, pos - (lp0 + sl));
-			e.SetCursor(lp0 + sl);
-			e.InsertChar('\n', 1);
-			for(int i = wl; i < ln.GetCount(); i++)
-				e.InsertChar(ln[i], 1);
-			e.InsertChar(chr, 1);
-			return;
+			
+			int cp = 0;
+			while(cp < ln.GetCount() && findarg(ln[cp], '\t', ' ') >= 0)
+				cp++;
+			if(comment && ln.Find("*/") < 0 ||
+			   cp < ln.GetCount() - 2 && ln[cp] == '/' && ln[cp + 1] == '/') {
+			    if(!comment) {
+					cp += 2;
+					while(cp < ln.GetCount() && findarg(ln[cp], '\t', ' ') >= 0)
+						cp++;
+			    }
+				int wl = e.GetGPos(l, limit) - lp0;
+				while(wl > cp && ln[wl - 1] != '\n' && ln[wl - 1] != ' ')
+					wl--;
+				int sl = wl - 1;
+				while(sl > cp && ln[wl - 1] != '\n' && ln[sl - 1] == ' ')
+					sl--;
+				if(sl > cp) {
+					e.Remove(lp0 + sl, pos - (lp0 + sl));
+					e.SetCursor(lp0 + sl);
+					e.InsertChar('\n', 1);
+					for(int i = 0; i < cp; i++)
+						e.InsertChar(ln[i], 1);
+					for(int i = wl; i < ln.GetCount(); i++)
+						e.InsertChar(ln[i], 1);
+					e.InsertChar(chr, 1);
+					return;
+				}
+			}
 		}
 	}
-#endif
 	
 	// {, } inserted on line alone should be moved left sometimes:
 	int cl = e.GetCursorLine();

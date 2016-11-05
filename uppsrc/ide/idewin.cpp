@@ -526,6 +526,7 @@ Ide::Ide()
 	line_endings = DETECT_CRLF;
 #endif
 	spellcheck_comments = LNG_ENGLISH;
+	wordwrap_comments = true;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele

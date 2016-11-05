@@ -35,6 +35,8 @@ void Ide::SetupEditor(int f, String hl, String path)
 
 	editor.WarnWhiteSpace(warnwhitespace &&
 	                      findarg(hl, "cpp", "java", "js", "cs", "json", "css", "lay", "sch", "t", "usc") >= 0);
+
+	editor.WordwrapComments(wordwrap_comments);
 }
 
 void Ide::SetupEditor()
