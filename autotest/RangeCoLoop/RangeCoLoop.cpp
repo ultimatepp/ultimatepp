@@ -19,6 +19,18 @@ CONSOLE_APP_MAIN {
 	});
 
 	ASSERT(sum = Sum(x));
+
+	sum = 0;
+	
+	CoLoopI(0, x.GetCount(), [&sum, &x](int from, int to) {
+		int sum1 = 0;
+		while(from < to)
+			sum1 += x[from++];
+		CoWork::FinLock();
+		sum += sum1;
+	});
+
+	ASSERT(sum = Sum(x));
 	
 	LOG("=================== OK");
 }
