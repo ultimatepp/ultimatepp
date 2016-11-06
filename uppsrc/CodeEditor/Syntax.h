@@ -114,6 +114,7 @@ public:
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
 	                                  CodeEditor *editor, int line, int pos);
 	virtual Vector<IfState> PickIfStack();
+	virtual void            ReformatComment(CodeEditor& e);
 	virtual ~EditorSyntax();
 
 	static Color IfColor(char ifstate);

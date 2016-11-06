@@ -29,6 +29,10 @@ bool EditorSyntax::CanAssist() const
 	return false;
 }
 
+void EditorSyntax::ReformatComment(CodeEditor& e)
+{
+}
+
 void EditorSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
 {
 }
