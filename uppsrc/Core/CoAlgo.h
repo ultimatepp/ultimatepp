@@ -1,46 +1,52 @@
+template <class C, class MC>
+inline size_t CoChunk__(C count, MC max_chunk)
+{
+	return min(max(count / CPU_Cores() / 2, (C)1), (C)max_chunk);
+}
+
 template <class Iter, class Lambda>
 void CoLoopI(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX)
 {
-	size_t chunk = max(size_t((end - begin) / CPU_Cores()), (size_t)1);
-	chunk = min(chunk, (size_t)max_chunk);
+	size_t chunk = CoChunk__(end - begin, max_chunk);
 	CoWork co;
 	while(begin < end) {
+		Iter e = Iter(begin + min(chunk, size_t(end - begin)));
 		co & [=] {
-			lambda(begin, begin + min(chunk, size_t(end - begin)));
+			lambda(begin, e);
 		};
-		begin += chunk;
+		begin = e;
 	}
 }
 
 template <class Range, class Lambda>
 void CoLoop(Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 {
-	size_t chunk = max(r.GetCount() / CPU_Cores(), 1);
-	chunk = min(chunk, (size_t)max_chunk);
+	size_t chunk = CoChunk__(r.GetCount(), max_chunk);
 	CoWork co;
 	auto begin = r.begin();
 	auto end = r.end();
 	while(begin < end) {
+		auto e = begin + min(chunk, size_t(end - begin));
 		co & [=] {
-			lambda(SubRange(begin, begin + min(chunk, size_t(end - begin))));
+			lambda(SubRange(begin, e));
 		};
-		begin += chunk;
+		begin = e;
 	}
 }
 
 template <class Range, class Lambda>
 void CoLoop(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 {
-	size_t chunk = max(r.GetCount() / CPU_Cores(), 1);
-	chunk = min(chunk, (size_t)max_chunk);
+	size_t chunk = CoChunk__(r.GetCount(), max_chunk);
 	CoWork co;
 	auto begin = r.begin();
 	auto end = r.end();
 	while(begin < end) {
+		auto e = begin + min(chunk, size_t(end - begin));
 		co & [=] {
-			lambda(SubRange(begin, begin + min(chunk, size_t(end - begin))));
+			lambda(SubRange(begin, e));
 		};
-		begin += chunk;
+		begin = e;
 	}
 }
 
@@ -48,7 +54,7 @@ template <class Range, class Accumulator>
 void CoAccumulate(Range r, Accumulator& result)
 {
 	typedef ConstIteratorOf<Range> I;
-	CoLoopI(r.begin(), r.end(),
+	CoLoop(r.begin(), r.end(),
 		[=, &result](I i, I e) {
 			Accumulator h;
 			while(i < e)
