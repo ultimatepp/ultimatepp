@@ -390,6 +390,8 @@ public:
 	void   CopyWord();
 	void   SwapChars();
 	void   DuplicateLine();
+	void   Put(int chr);
+	void   FinishPut();
 
 	void   SerializeFind(Stream& s);
 	bool   IsFindOpen() const                       { return findreplace.IsOpen(); }
@@ -453,6 +455,7 @@ public:
 	void     DisableBreakpointing()                   { bar.EnableBreakpointing(false); }
 	void     Renumber2();
 	int      GetLine2(int i) const;
+	void     ReformatComment();
 
 // TODO: Syntax: Remove
 	void     HiliteScope(byte b)                      { EditorSyntax::hilite_scope = b; Refresh(); }

@@ -389,6 +389,11 @@ void Ide::UnComment()
 	AlterText(sUncomment);
 }
 
+void Ide::ReformatComment()
+{
+	editor.ReformatComment();
+}
+
 void Ide::Times()
 {
 	WithStatisticsLayout<TopWindow> statdlg;
