@@ -837,6 +837,7 @@ public:
 		void  ToComment();
 		void  CommentLines();
 		void  UnComment();
+		void  ReformatComment();
 
 	void      MacroMenu(Bar& menu);
 		bool  HasMacros();

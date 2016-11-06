@@ -10,6 +10,7 @@ public:
 	                                  CodeEditor *editor, int line, int pos);
 	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
 	virtual Vector<IfState> PickIfStack(); // TODO: Refactor?
+	virtual void            ReformatComment(CodeEditor& e);
 
 protected:
 	bool        comment;       // we are in /* */ block comment
@@ -50,6 +51,10 @@ protected:
 
 	
 	static Color BlockColor(int level);
+
+	int     GetCommentPos(CodeEditor& e, int l, WString& ch) const;
+	WString GetCommentHdr(CodeEditor& e, int l) const { WString h; GetCommentPos(e, l, h); return h; }
+	void    IndentInsert0(CodeEditor& e, int chr, int count, bool reformat);
 
 	void Bracket(int pos, HighlightOutput& hls, CodeEditor *editor);
 

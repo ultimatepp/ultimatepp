@@ -224,6 +224,23 @@ void CodeEditor::SwapChars() {
 	}
 }
 
+void CodeEditor::Put(int chr)
+{
+	Insert(cursor++, WString(chr, 1), true);
+}
+
+void CodeEditor::FinishPut()
+{
+	PlaceCaret(cursor);
+	Action();
+}
+
+void CodeEditor::ReformatComment()
+{
+	NextUndo();
+	GetSyntax(GetLine(cursor))->ReformatComment(*this);
+}
+
 void CodeEditor::CancelBracketHighlight(int& pos)
 {
 	if(pos >= 0) {

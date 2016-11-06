@@ -151,6 +151,8 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Comment code lines");
 	menu.Add(editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
 		.Help("Uncomment code");
+	menu.Add(AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
+	    .Help("Reformat multiline comment into paragraph");
 }
 
 void Ide::SearchMenu(Bar& menu)

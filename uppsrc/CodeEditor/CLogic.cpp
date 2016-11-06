@@ -1,8 +1,39 @@
 #include "CodeEditor.h"
 
 namespace Upp {
-
+	
 void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
+{
+	IndentInsert0(e, chr, count, false);
+}
+
+static void sSpaces(int& cp, const WString& ln)
+{
+	while(cp < ln.GetCount() && findarg(ln[cp], '\t', ' ') >= 0)
+		cp++;
+}
+
+int CSyntax::GetCommentPos(CodeEditor& e, int l, WString& ch) const
+{
+	WString ln = e.GetWLine(l);
+	int cp = 0;
+	sSpaces(cp, ln);
+	One<EditorSyntax> esyntax = e.GetSyntax(e.GetCursorLine());
+	CSyntax *syntax = dynamic_cast<CSyntax *>(~esyntax);
+	if(syntax && syntax->comment && ln.Find("*/") < 0 ||
+	   cp < ln.GetCount() - 2 && ln[cp] == '/' && ln[cp + 1] == '/') {
+	    while(cp < ln.GetLength() && findarg(ln[cp], '/', '*', '!', '<', '>', '%', '#', '@', '|') >= 0)
+	        cp++;
+	    ch = ln.Mid(0, cp);
+        sSpaces(cp, ln);
+        if(cp < ln.GetCount())
+	        return cp;
+	}
+	ch = "0";
+	return -1;
+}
+
+void CSyntax::IndentInsert0(CodeEditor& e, int chr, int count, bool reformat)
 {
 	if(chr == '\n') {
 		while(count--) {
@@ -62,17 +93,9 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 		if(limit > 10 && e.GetColumnLine(pos).x >= limit && lp == e.GetLineLength(l)) {
 			int lp0 = e.GetPos(l);
 			WString ln = e.GetWLine(l);
-			
-			int cp = 0;
-			while(cp < ln.GetCount() && findarg(ln[cp], '\t', ' ') >= 0)
-				cp++;
-			if(comment && ln.Find("*/") < 0 ||
-			   cp < ln.GetCount() - 2 && ln[cp] == '/' && ln[cp + 1] == '/') {
-			    if(!comment) {
-					cp += 2;
-					while(cp < ln.GetCount() && findarg(ln[cp], '\t', ' ') >= 0)
-						cp++;
-			    }
+			WString dummy;
+			int cp = GetCommentPos(e, l, dummy);
+			if(cp >= 0) {
 				int wl = e.GetGPos(l, limit) - lp0;
 				while(wl > cp && ln[wl - 1] != '\n' && ln[wl - 1] != ' ')
 					wl--;
@@ -82,18 +105,25 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 				if(sl > cp) {
 					e.Remove(lp0 + sl, pos - (lp0 + sl));
 					e.SetCursor(lp0 + sl);
-					e.InsertChar('\n', 1);
+					e.Put('\n');
 					for(int i = 0; i < cp; i++)
-						e.InsertChar(ln[i], 1);
+						e.Put(ln[i]);
 					for(int i = wl; i < ln.GetCount(); i++)
-						e.InsertChar(ln[i], 1);
-					e.InsertChar(chr, 1);
+						e.Put(ln[i]);
+					e.Put(chr);
+					if(!reformat)
+						e.FinishPut();
 					return;
 				}
 			}
 		}
 	}
 	
+	if(reformat) {
+		e.Put(chr);
+		return;
+	}
+
 	// {, } inserted on line alone should be moved left sometimes:
 	int cl = e.GetCursorLine();
 	WString l = e.GetWLine(cl);
@@ -125,6 +155,36 @@ void CSyntax::IndentInsert(CodeEditor& e, int chr, int count)
 	while(*s == '\t' || *s == ' ')
 		e.InsertChar(*s++, 1);
 	e.InsertChar(chr, 1);
+}
+
+void CSyntax::ReformatComment(CodeEditor& e)
+{
+	if(!e.IsWordwrapComments())
+		return;
+	int first_line = e.GetLine(e.GetCursor());
+	WString ch;
+	if(GetCommentPos(e, first_line, ch) < 0)
+		return;
+	int last_line = first_line;
+	while(first_line > 0 && GetCommentHdr(e, first_line - 1) == ch)
+		first_line--;
+	while(last_line < e.GetLineCount() - 1 && GetCommentHdr(e, last_line + 1) == ch)
+		last_line++;
+	WString p;
+	for(int i = first_line; i <= last_line; i++) {
+		WString ln = e.GetWLine(i);
+		p << ln.Mid(GetCommentPos(e, i, ch)) << ' ';
+	}
+	p = Join(Split(p, CharFilterWhitespace), " ");
+	WString ln = e.GetWLine(first_line);
+	int q = GetCommentPos(e, first_line, ch);
+	p = ln.Mid(0, q) + p;
+	int p0 = e.GetPos(first_line);
+	e.SetCursor(p0);
+	e.Remove(p0, e.GetPos(last_line + 1) - 1 - p0);
+	for(wchar chr : p)
+		IndentInsert0(e, chr, 1, true);
+	e.FinishPut();
 }
 
 bool NotEscape(int pos, const WString& s)
