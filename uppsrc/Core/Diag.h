@@ -18,6 +18,8 @@ void     StdLogSetup(dword options, const char *filepath = NULL,
                      int filesize_limit = 10 * 1024 * 1024);
 Stream&  StdLog();
 
+String GetStdLogPath();
+
 Stream&  UppLog();
 void     SetUppLog(Stream& log);
 
