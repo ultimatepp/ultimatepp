@@ -72,6 +72,10 @@ the most recent log `'.1`'.]}}&]
 [s2; Returns a reference to standard log stream.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:GetStdLogPath`(`):%- [_^Upp`:`:String^ String]_[* GetStdLogPath]()&]
+[s2; Returns the path of current log, if any.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:LOG`_BEGIN:%- [@(0.0.255) const]_[@(0.0.255) char]_[* LOG`_BEGIN `= 
 `'`\x1e`';]&]
 [s2; Putting this character into standard log stream adds one tabulator 
