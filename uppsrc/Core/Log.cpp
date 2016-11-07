@@ -452,6 +452,11 @@ void StdLogSetup(dword options, const char *filepath, int filesize_limit)
 	ReopenLog();
 }
 
+String GetStdLogPath()
+{
+	return sLog.filepath;
+}
+
 Stream& StdLog()
 {
 	return StdLogStream();
