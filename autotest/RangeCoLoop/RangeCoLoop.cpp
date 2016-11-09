@@ -10,7 +10,7 @@ CONSOLE_APP_MAIN {
 	for(int i = 0; i < 100000000; i++)
 		x.Add(i);
 	int sum = 0;
-	CoLoop(x, [&sum](const SubRangeOf<Vector<int>>& range) {
+	CoFor(x, [&sum](const SubRangeOf<Vector<int>>& range) {
 		int sum1 = 0;
 		for(const auto& m : range)
 			sum1 += m;
@@ -20,9 +20,11 @@ CONSOLE_APP_MAIN {
 
 	ASSERT(sum = Sum(x));
 
+	ASSERT(sum = CoSum(x));
+
 	sum = 0;
 	
-	CoLoopI(0, x.GetCount(), [&sum, &x](int from, int to) {
+	CoIterate(0, x.GetCount(), [&sum, &x](int from, int to) {
 		int sum1 = 0;
 		while(from < to)
 			sum1 += x[from++];
