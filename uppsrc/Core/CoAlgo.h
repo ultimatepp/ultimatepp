@@ -5,7 +5,7 @@ inline size_t CoChunk__(C count, MC max_chunk)
 }
 
 template <class Iter, class Lambda>
-void CoLoopI(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX)
+void CoIterate(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX)
 {
 	size_t chunk = CoChunk__(end - begin, max_chunk);
 	CoWork co;
@@ -19,7 +19,7 @@ void CoLoopI(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX
 }
 
 template <class Range, class Lambda>
-void CoLoop(Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
+void CoFor(Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 {
 	size_t chunk = CoChunk__(r.GetCount(), max_chunk);
 	CoWork co;
@@ -35,7 +35,7 @@ void CoLoop(Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 }
 
 template <class Range, class Lambda>
-void CoLoop(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
+void CoFor(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 {
 	size_t chunk = CoChunk__(r.GetCount(), max_chunk);
 	CoWork co;
@@ -54,7 +54,7 @@ template <class Range, class Accumulator>
 void CoAccumulate(Range r, Accumulator& result)
 {
 	typedef ConstIteratorOf<Range> I;
-	CoLoop(r.begin(), r.end(),
+	CoFor(r.begin(), r.end(),
 		[=, &result](I i, I e) {
 			Accumulator h;
 			while(i < e)
@@ -71,7 +71,7 @@ ValueTypeOf<Range> CoSum(const Range& r, const ValueTypeOf<Range>& zero)
 	typedef ValueTypeOf<Range> VT;
 	typedef ConstIteratorOf<Range> I;
 	VT sum = zero;
-	CoLoopI(r.begin(), r.end(),
+	CoIterate(r.begin(), r.end(),
 		[=, &sum](I i, I e) {
 			VT h = zero;
 			while(i < e)
@@ -96,7 +96,7 @@ int CoFindBest(const Range& r, const Better& better)
 		return -1;
 	typedef ConstIteratorOf<Range> I;
 	I best = r.begin();
-	CoLoopI(r.begin() + 1, r.end(),
+	CoIterate(r.begin() + 1, r.end(),
 		[=, &best](I i, I e) {
 			I b = i++;
 			while(i < e) {
@@ -157,7 +157,7 @@ int CoFindMatch(const Range& r, const Match& eq, int from = 0)
 	int count = r.GetCount();
 	std::atomic<int> found;
 	found = count;
-	CoLoopI(from, count,
+	CoIterate(from, count,
 		[=, &found](int i0, int e0) {
 			auto i = r.begin() + i0;
 			auto e = r.begin() + e0;
