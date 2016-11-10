@@ -27,7 +27,6 @@ void Ide::ExportProject(const String& ep, bool all, bool gui, bool deletedir)
 					used.FindAdd(SourcePath(pn, f.depends[q].text));
 			}
 		}
-		used.FindAdd(SourcePath(pn, "init"));
 	}
 	if(FileExists(ep)) {
 		if(gui && !PromptYesNo(DeQtf(ep) + " is existing file.&"
