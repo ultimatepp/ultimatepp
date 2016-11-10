@@ -229,7 +229,7 @@ template <class T> inline const T& max(const T& a, const T& b, const T& c)
 template <class T> inline const T& max(const T& a, const T& b, const T& c, const T& d)
 { return max(max(a, b), max(c, d)); }
 
-template <class T>
+template <class T> // deprecated name, use clamp
 inline T minmax(T x, T _min, T _max)                           { return min(max(x, _min), _max); }
 
 template <class T>
