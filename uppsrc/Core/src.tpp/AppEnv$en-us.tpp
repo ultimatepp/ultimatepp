@@ -197,8 +197,6 @@ lass]_[*@4 T]>_[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* max]([@(0.0.255) con
 [s2;%% Returns the greatest of all arguments.&]
 [s3;%% &]
 [s4; &]
-[s5;:minmax`(T`,T`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* minmax]([*@4 T
-]_[*@3 x], [*@4 T]_[*@3 `_min], [*@4 T]_[*@3 `_max])&]
 [s5;:clamp`(T`,T`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[*@4 T]_[* clamp]([*@4 T
 ]_[*@3 x], [*@4 T]_[*@3 `_min], [*@4 T]_[*@3 `_max])&]
 [s2;%% Returns [%-*@3 x] if it is between [%-*@3 `_min] and [%-*@3 `_max].&]
