@@ -89,6 +89,7 @@ void DrawRectLine(Draw& w, int x, int y, int width, int height, int lineWidth, c
 void DrawRectLine(Draw& w, Point &pos, Size &s, int lineWidth, const Color &color);
 void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color);
 
+int GetEditWidth(const String str);
 
 #endif
 #endif
