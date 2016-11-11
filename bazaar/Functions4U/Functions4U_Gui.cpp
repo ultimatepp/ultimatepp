@@ -135,6 +135,15 @@ void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color) {
 	w.DrawLine(r.left, r.bottom, r.left, r.top, lineWidth, color);
 }
 
+int GetEditWidth(const String str) {
+	Font font = StdFont();
+	
+	int ret = 0;
+	for (int i = 0; i < str.GetCount(); ++i)
+		ret += font.GetWidth(str[i]);
+	return ret;
+}
+
 END_UPP_NAMESPACE
 
 #endif

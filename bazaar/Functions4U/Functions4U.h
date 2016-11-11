@@ -48,7 +48,7 @@ String Tokenize2(const String &str, const String &token);
 	
 /////////
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG); 
-bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew = false);
+bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew = false, String filesToExclude = "");
 bool DirectoryMove(const char *dir, const char *newPlace);
 bool DeleteDeepWildcardsX(const char *path, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -636,7 +636,8 @@ public:
 	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
 	~LocalProcessX() 				  {Stop();}
 	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
-	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
+	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, 
+		double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
 		status = STOP_OK;
 		p.ConvertCharset(convertcharset);
 		timeElapsed.Start();

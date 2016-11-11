@@ -1046,11 +1046,11 @@ String Tokenize2(const String &str, const String &token, int &pos) {
 		pos = Null;
 		return Null;
 	}
-	int npos;
-	for (int i = 0; i < token.GetCount(); ++i) {
+	int npos = str.Find(token, pos);
+/*	for (int i = 0; i < token.GetCount(); ++i) {
 		if ((npos = str.Find(token[i], pos)) >= 0) 
 			break;
-	}
+	}*/
 	int oldpos = pos;
 	if (npos < 0) {
 		pos = Null;
@@ -1086,28 +1086,7 @@ void Tokenize(const String &str, const String &token, Vector<String> &ret, int p
 		ret << strRet;
 	}
 }
-/*
-String Tokenize(const String &str, const String &token, int &pos) {
-	int npos;
-	for (int i = 0; i < token.GetCount(); ++i) {
-		if ((npos = str.Find(token[i], pos)) >= 0) 
-			break;
-	}
-	int oldpos = pos;
-	if (npos < 0) {
-		pos = str.GetCount();
-		return str.Mid(oldpos);
-	} else {
-		pos = npos + 1;
-		return str.Mid(oldpos, npos-oldpos);
-	}
-}
 
-String Tokenize(const String &str, const String &token) {
-	int dummy = 0;
-	return Tokenize(str, token, dummy);
-}
-*/
 String GetLine(const String &str, int &pos) {
 	String ret;
 	int npos = str.Find("\n", pos);
@@ -1426,47 +1405,7 @@ String FileRealName(const char *_fileName) {
 #undef CY
 
 #endif
-/*
-bool GetSymLinkPath(const char *linkPath, String &filePath)
-{
-#ifdef PLATFORM_WIN32	
-	HRESULT hres;
-	IShellLink* psl;
-	IPersistFile* ppf;
-	CoInitialize(NULL);
-	hres = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink,
-	                        (PVOID *) &psl);
-	if(SUCCEEDED(hres)) {
-		hres = psl->QueryInterface(IID_IPersistFile, (PVOID *) &ppf);
-		if(SUCCEEDED(hres)) {
-			hres = ppf->Load(ToSystemCharsetW(linkPath), STGM_READ);
-			if(SUCCEEDED(hres)) {
-				char fileW[_MAX_PATH] = {0};
-				psl->GetPath(fileW, _MAX_PATH, NULL, 0); 
-				filePath = FromSystemCharset(fileW);
-			} else
-				return false;
-			ppf->Release();
-		} else
-			return false;
-		psl->Release();
-	} else
-		return false;
-	CoUninitialize();
-	return true;
-#else
-	char buff[_MAX_PATH + 1];
-	bool ret;
-	int len = readlink(linkPath, buff, _MAX_PATH);
-	if (ret = (len > 0 && len < _MAX_PATH))
-		buff[len] = '\0';
-	else 
-		*buff = '\0';
-	filePath = buff;
-	return ret;
-#endif
-}				
-*/	
+
 bool IsSymLink(const char *path) {
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 	return GetFileExt(path) == ".lnk";
@@ -1611,7 +1550,7 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 	return true;
 }
 
-bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, bool replaceOnlyNew)
+bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, bool replaceOnlyNew, String filesToExclude)
 {
 	String dirPath = AppendFileName(dir, relPath);
 	String newPath = AppendFileName(newPlace, relPath);
@@ -1622,17 +1561,19 @@ bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, b
 			bool copy = !replaceOnlyNew;
 			if (replaceOnlyNew) {
 				Time newPathTime = FileGetTime(newFullPath);
-				if (IsNull(newPathTime) || (newPathTime > Time(ff.GetLastWriteTime())))
+				if (IsNull(newPathTime) || (newPathTime < Time(ff.GetLastWriteTime())))
 					copy = true;
 			}
 			if (copy) {
-				if (!FileCopy(ff.GetPath(), newFullPath))
-				return false;
+				if (!PatternMatchMulti(filesToExclude, ff.GetName())) {
+					if (!FileCopy(ff.GetPath(), newFullPath))
+						return false;
+				}
 			} 
 		} else if (ff.IsFolder()) {
 			DirectoryCreate(AppendFileName(newPath, ff.GetName()));
 			if (!FolderIsEmpty(ff.GetPath())) {
-				if (!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName()), replaceOnlyNew))
+				if (!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName()), replaceOnlyNew, filesToExclude))
 				return false;
 		}
 		}
@@ -1641,10 +1582,10 @@ bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, b
 	return true;
 }
 
-bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew) {
+bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew, String filesToExclude) {
 	if (!DirectoryExists(dir))
 		return false;
-	return DirectoryCopy_Each(dir, newPlace, "", replaceOnlyNew);
+	return DirectoryCopy_Each(dir, newPlace, "", replaceOnlyNew, filesToExclude);
 }
 
 bool FolderIsEmpty(const char *path) {
