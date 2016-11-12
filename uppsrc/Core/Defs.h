@@ -216,18 +216,35 @@ static void COMBINE(MK__s, _fn)() { x } static UPP::Callexit MK__s(COMBINE(MK__s
 #undef max
 #endif
 
+//$-template <class T> inline const T& min(const T& a, const T& b, ...);
+//$-template <class T> inline const T& max(const T& a, const T& b, ...);
+
 template <class T> inline const T& min(const T& a, const T& b) { return a < b ? a : b; }
-
-template <class T> inline const T& min(const T& a, const T& b, const T& c)
-{ return min(a, min(b, c)); }
-template <class T> inline const T& min(const T& a, const T& b, const T& c, const T& d)
-{ return min(min(a, b), min(c, d)); }
-
 template <class T> inline const T& max(const T& a, const T& b) { return a > b ? a : b; }
-template <class T> inline const T& max(const T& a, const T& b, const T& c)
-{ return max(a, max(b, c)); }
-template <class T> inline const T& max(const T& a, const T& b, const T& c, const T& d)
-{ return max(max(a, b), max(c, d)); }
+
+#define E__MinMaxParam(I)  const T& COMBINE(p, I)
+#define E__MinMaxValue(I)  COMBINE(p, I)
+
+#define E__MinBody(I) \
+template <class T> \
+const T& min(const T& a, const T& b, __List##I(E__MinMaxParam)) \
+{\
+	return min(a, min(b, __List##I(E__MinMaxValue))); \
+} \
+
+__Expand40(E__MinBody)
+
+#define E__MaxBody(I) \
+template <class T> \
+const T& max(const T& a, const T& b, __List##I(E__MinMaxParam)) \
+{\
+	return max(a, max(b, __List##I(E__MinMaxValue))); \
+} \
+
+__Expand40(E__MaxBody)
+
+//$+
+
 
 template <class T> // deprecated name, use clamp
 inline T minmax(T x, T _min, T _max)                           { return min(max(x, _min), _max); }
