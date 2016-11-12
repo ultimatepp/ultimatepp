@@ -553,18 +553,18 @@ bool FindFile::Next() {
 	if(!dir) return false;
 	statis = false;
 	for(;;) {
-	  	struct dirent *e = readdir(dir);
-  		if(!e) {
-	  		name.Clear();
-	  		file = false;
-	  		Close();
-	  		return false;
-	  	}
-	  	name = FromSystemCharset(e->d_name);
-	  	if(PatternMatch(pattern, name)) {
-	  		file = true;
-	  		return true;
-	  	}
+		struct dirent *e = readdir(dir);
+		if(!e) {
+			name.Clear();
+			file = false;
+			Close();
+			return false;
+		}
+		name = FromSystemCharset(e->d_name);
+		if(PatternMatch(pattern, name)) {
+			file = true;
+			return true;
+		}
 	}
 }
 

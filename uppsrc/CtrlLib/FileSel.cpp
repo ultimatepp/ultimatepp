@@ -473,11 +473,7 @@ bool Load(FileList& list, const String& dir, const char *patterns, bool dirs,
 		for(int i = 0; i < root.GetCount(); i++)
 			if(MatchSearch(root[i].filename, search))
 				list.Add(root[i].filename,
-			#ifdef PLATFORM_WIN32
-					GetFileIcon(root[i].filename, false, true, false),
-			#else
 					GetDriveImage(root[i].root_style),
-			#endif
 					StdFont().Bold(), SColorText, true, -1, Null, SColorDisabled,
 			#ifdef PLATFORM_WIN32
 					Nvl(root[i].root_desc, String(" ") + t_("Local Disk")),
@@ -730,8 +726,10 @@ Image GetDriveImage(char drive_style)
 	switch(drive_style)
 	{
 	case FileSystemInfo::ROOT_NO_ROOT_DIR: return Null;
+	case FileSystemInfo::ROOT_REMOTE:
+	case FileSystemInfo::ROOT_NETWORK:   return CtrlImg::Share();
 	case FileSystemInfo::ROOT_COMPUTER:  return CtrlImg::Computer();
-	case FileSystemInfo::ROOT_REMOVABLE: return CtrlImg::Diskette();
+	case FileSystemInfo::ROOT_REMOVABLE: return CtrlImg::Flash();
 	case FileSystemInfo::ROOT_CDROM:     return CtrlImg::CdRom();
 	default:                             return CtrlImg::Hd();
 	}
@@ -1577,11 +1575,16 @@ Image GetDirIcon(const String& s)
 #ifdef PLATFORM_X11
 	img = GetFileIcon(GetFileFolder(s), GetFileName(s), true, false, false);
 #endif
-#ifdef GUI_WIN
+#ifdef PLATFORM_WIN32
 	if((byte)*s.Last() == 255)
 		img = CtrlImg::Network();
-	else
-		img = s.GetCount() ? GetFileIcon(s, false, true, false) : CtrlImg::Computer();
+	else {
+		int q = s.Find(0);
+		if(q >= 0 && q + 1 < s.GetCount())
+			img = GetDriveImage(s[q + 1]);
+		else
+			img = s.GetCount() ? GetFileIcon(s, false, true, false) : CtrlImg::Computer();
+	}
 #endif
 	if(IsNull(img))
 		img = CtrlImg::Dir();
@@ -1991,7 +1994,7 @@ void FileSel::AddSystemPlaces(int row)
 {
 	row = row < 0 ? places.GetCount() : row;
 	Array<FileSystemInfo::FileInfo> root;
-#if defined(PLATFORM_WIN32) || defined(PLATFORM_WINCE)
+#ifdef PLATFORM_WIN32
 	root = filesystem->Find(Null);
 	for(int i = 0; i < root.GetCount(); i++) {
 		String desc = root[i].root_desc;
@@ -2004,12 +2007,10 @@ void FileSel::AddSystemPlaces(int row)
 			if(desc.GetCount() == 0)
 			    desc << " " << t_("Local Disk");
 			desc << " (" << n << ")";
-			AddPlace(root[i].filename, desc, "PLACES:SYSTEM", row++);
+			AddPlace(root[i].filename, GetDriveImage(root[i].root_style), desc, "PLACES:SYSTEM", row++);
 		}
 	}
-#endif
 
-#ifdef PLATFORM_WIN32
 	if(GetSystemMetrics(SM_REMOTESESSION))
 		for(int drive = 'A'; drive < 'Z'; drive++) {
 			String path = Format("\\\\tsclient\\%c", drive);
