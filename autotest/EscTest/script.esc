@@ -14,4 +14,8 @@ main() {
 	:out3 = [];
 	for(i = 0; i < 10; i++)
 		:out3[] = i;
+
+	a = Zero();
+	if(a == 0)
+		:out4 = 1;
 }
