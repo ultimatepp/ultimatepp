@@ -79,6 +79,11 @@ void SIC_Print(EscEscape& e)
 		e.ThrowError("invalid argument to 'Print'");
 }
 
+void Zero(EscEscape& e)
+{
+	e = 0;
+}
+
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_FILE|LOG_COUT);
@@ -88,9 +93,10 @@ CONSOLE_APP_MAIN
 	CHKDBL(3.0, (int64)2);
 	CHKDBL((int64)3, 2.0);
 	CHKINT((int64)3, (int64)2);
-	LOG("=============================");	
+	LOG("=============================");
 	ArrayMap<String, EscValue> global;
 	StdLib(global);
+	Escape(global, "Zero()", Zero);
 	global.Add("a", (int64)2);
 	CHKV(Evaluate("a++", global).GetInt64(), 2);
 	CHKV(global.Get("a").GetInt64(), 3);
@@ -110,6 +116,10 @@ CONSOLE_APP_MAIN
 	CHKV(global.Get("a").GetNumber(), 3);
 	CHKV(Evaluate("--a", global).GetNumber(), 2);
 	CHKV(global.Get("a").GetNumber(), 2);
+	CHKV(Evaluate("a = 0", global).GetNumber(), 0);
+	CHKV(Evaluate("a == 0", global).GetNumber(), 1);
+	CHKV(Evaluate("Zero() == 0", global).GetNumber(), 1);
+	CHKV(Evaluate("Zero() == 1", global).GetNumber(), 0);
 	
 	LOG("----");
 	global.GetAdd("s", "Test");
