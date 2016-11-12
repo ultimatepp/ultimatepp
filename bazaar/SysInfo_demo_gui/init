@@ -1,9 +1,0 @@
-#ifndef _SysInfo_demo_gui_icpp_init_stub
-#define _SysInfo_demo_gui_icpp_init_stub
-#include "CtrlLib/init"
-#include "plugin\png/init"
-#include "plugin\bmp/init"
-#include "SysInfo/init"
-#include "RichText/init"
-#include "DropGrid/init"
-#endif

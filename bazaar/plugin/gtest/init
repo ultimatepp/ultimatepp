@@ -1,4 +1,0 @@
-#ifndef _plugin_gtest_icpp_init_stub
-#define _plugin_gtest_icpp_init_stub
-#include "Core/init"
-#endif

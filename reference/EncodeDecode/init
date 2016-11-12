@@ -1,4 +1,0 @@
-#ifndef _EncodeDecode_icpp_init_stub
-#define _EncodeDecode_icpp_init_stub
-#include "Core/init"
-#endif

@@ -1,5 +1,0 @@
-#ifndef _OleDB_icpp_init_stub
-#define _OleDB_icpp_init_stub
-#include "Ole/init"
-#include "Sql/init"
-#endif

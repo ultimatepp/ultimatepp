@@ -1,5 +1,0 @@
-#ifndef _PixRasterCtrl_icpp_init_stub
-#define _PixRasterCtrl_icpp_init_stub
-#include "CtrlLib/init"
-#include "PixRaster/init"
-#endif

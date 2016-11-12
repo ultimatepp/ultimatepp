@@ -1,4 +1,0 @@
-#ifndef _BasicAlgo_icpp_init_stub
-#define _BasicAlgo_icpp_init_stub
-#include "Core/init"
-#endif

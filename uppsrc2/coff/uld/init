@@ -1,4 +1,0 @@
-#ifndef _coff_uld_icpp_init_stub
-#define _coff_uld_icpp_init_stub
-#include "coff/init"
-#endif

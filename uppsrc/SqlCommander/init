@@ -1,9 +1,0 @@
-#ifndef _SqlCommander_icpp_init_stub
-#define _SqlCommander_icpp_init_stub
-#include "SqlCtrl/init"
-#include "Oracle/init"
-#include "OleDB/init"
-#include "plugin\sqlite3/init"
-#include "PostgreSQL/init"
-#include "MySql/init"
-#endif

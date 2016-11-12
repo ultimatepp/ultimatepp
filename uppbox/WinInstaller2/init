@@ -1,4 +1,0 @@
-#ifndef _WinInstaller2_icpp_init_stub
-#define _WinInstaller2_icpp_init_stub
-#include "Core/init"
-#endif

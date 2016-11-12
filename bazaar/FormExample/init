@@ -1,5 +1,0 @@
-#ifndef _FormExample_icpp_init_stub
-#define _FormExample_icpp_init_stub
-#include "Core/init"
-#include "Form/init"
-#endif

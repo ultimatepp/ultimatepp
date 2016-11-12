@@ -1,5 +1,0 @@
-#ifndef _PyConsoleCtrlTest_icpp_init_stub
-#define _PyConsoleCtrlTest_icpp_init_stub
-#include "CtrlLib/init"
-#include "PyConsoleCtrl/init"
-#endif

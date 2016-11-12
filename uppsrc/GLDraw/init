@@ -1,6 +1,0 @@
-#ifndef _GLDraw_icpp_init_stub
-#define _GLDraw_icpp_init_stub
-#include "Draw/init"
-#include "Painter/init"
-#include "plugin/glew/init"
-#endif

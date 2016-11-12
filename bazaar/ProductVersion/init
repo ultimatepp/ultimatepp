@@ -1,4 +1,0 @@
-#ifndef _ProductVersion_icpp_init_stub
-#define _ProductVersion_icpp_init_stub
-#include "Core/init"
-#endif

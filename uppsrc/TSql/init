@@ -1,8 +1,0 @@
-#ifndef _TSql_icpp_init_stub
-#define _TSql_icpp_init_stub
-#include "Sql/init"
-#include "TCore/init"
-#define BLITZ_INDEX__ Fc7553a79185141de02fd1db792933d93
-#include "TSql_init.icpp"
-#undef BLITZ_INDEX__
-#endif

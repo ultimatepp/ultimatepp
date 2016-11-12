@@ -1,5 +1,0 @@
-#ifndef _GridCtrl_icpp_init_stub
-#define _GridCtrl_icpp_init_stub
-#include "CtrlLib/init"
-#include "Sql/init"
-#endif

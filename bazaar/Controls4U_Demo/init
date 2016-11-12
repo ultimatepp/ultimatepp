@@ -1,7 +1,0 @@
-#ifndef _Controls4U_Demo_icpp_init_stub
-#define _Controls4U_Demo_icpp_init_stub
-#include "CtrlLib/init"
-#include "Controls4U/init"
-#include "plugin\gif/init"
-#include "plugin\jpg/init"
-#endif

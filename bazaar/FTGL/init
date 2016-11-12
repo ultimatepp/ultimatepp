@@ -1,4 +1,0 @@
-#ifndef _FTGL_icpp_init_stub
-#define _FTGL_icpp_init_stub
-#include "FreeType/init"
-#endif

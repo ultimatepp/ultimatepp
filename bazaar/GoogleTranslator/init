@@ -1,5 +1,0 @@
-#ifndef _GoogleTranslator_icpp_init_stub
-#define _GoogleTranslator_icpp_init_stub
-#include "Core/init"
-#include "Web/init"
-#endif

@@ -1,4 +1,0 @@
-#ifndef _Nvl_icpp_init_stub
-#define _Nvl_icpp_init_stub
-#include "Core/init"
-#endif

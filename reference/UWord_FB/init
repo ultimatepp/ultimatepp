@@ -1,9 +1,0 @@
-#ifndef _UWord_FB_icpp_init_stub
-#define _UWord_FB_icpp_init_stub
-#include "CtrlLib/init"
-#include "RichEdit/init"
-#include "PdfDraw/init"
-#include "plugin\jpg/init"
-#include "WinFb/init"
-#include "LinuxFb/init"
-#endif

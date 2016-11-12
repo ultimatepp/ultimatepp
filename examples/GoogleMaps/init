@@ -1,4 +1,0 @@
-#ifndef _GoogleMaps_icpp_init_stub
-#define _GoogleMaps_icpp_init_stub
-#include "CtrlLib/init"
-#endif

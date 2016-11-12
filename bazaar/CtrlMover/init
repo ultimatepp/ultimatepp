@@ -1,6 +1,0 @@
-#ifndef _CtrlMover_icpp_init_stub
-#define _CtrlMover_icpp_init_stub
-#include "CtrlLib/init"
-#include "CtrlFinder/init"
-#include "RectCtrl/init"
-#endif
