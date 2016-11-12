@@ -10,6 +10,13 @@ CONSOLE_APP_MAIN {
 		int64 n = GetUTCSeconds(ToTime(d));
 //		DLOG(d << ' ' << GetLeapSeconds(d) << ' ' << n);
 		ASSERT(TimeFromUTC(n) == ToTime(d));
+		
+		Date d2 = d;
+		ASSERT(d2++ == d);
+		ASSERT(d2 == d + 1);
+		ASSERT(d2-- == d + 1);
+		ASSERT(d2 == d);
 	}
+	
 	LOG("=========== OK");
 }
