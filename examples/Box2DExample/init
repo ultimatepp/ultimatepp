@@ -1,6 +1,0 @@
-#ifndef _Box2DExample_icpp_init_stub
-#define _Box2DExample_icpp_init_stub
-#include "CtrlLib/init"
-#include "plugin\box2d/init"
-#include "Painter/init"
-#endif

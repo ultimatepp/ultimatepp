@@ -1,4 +1,0 @@
-#ifndef _MSSQL_icpp_init_stub
-#define _MSSQL_icpp_init_stub
-#include "ODBC/init"
-#endif

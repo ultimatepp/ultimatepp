@@ -1,7 +1,0 @@
-#ifndef _AK_icpp_init_stub
-#define _AK_icpp_init_stub
-#include "CtrlLib/init"
-#define BLITZ_INDEX__ Fd9b2e96dcfffad7e520d84eddd91da83
-#include "ak.icpp"
-#undef BLITZ_INDEX__
-#endif

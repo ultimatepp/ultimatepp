@@ -1,4 +1,0 @@
-#ifndef _HomeDirCp_icpp_init_stub
-#define _HomeDirCp_icpp_init_stub
-#include "CtrlLib/init"
-#endif

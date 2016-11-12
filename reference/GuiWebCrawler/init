@@ -1,4 +1,0 @@
-#ifndef _GuiWebCrawler_icpp_init_stub
-#define _GuiWebCrawler_icpp_init_stub
-#include "CtrlLib/init"
-#endif

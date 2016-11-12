@@ -1,9 +1,0 @@
-#ifndef _ide_Debuggers_icpp_init_stub
-#define _ide_Debuggers_icpp_init_stub
-#include "ide\Common/init"
-#include "plugin\ndisasm/init"
-#include "HexView/init"
-#define BLITZ_INDEX__ Ff98dcbb6b07843a5d0dee1900fadafd0
-#include "UppSimplifiers.icpp"
-#undef BLITZ_INDEX__
-#endif

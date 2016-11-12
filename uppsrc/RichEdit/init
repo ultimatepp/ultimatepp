@@ -1,7 +1,0 @@
-#ifndef _RichEdit_icpp_init_stub
-#define _RichEdit_icpp_init_stub
-#include "CtrlLib/init"
-#define BLITZ_INDEX__ F577a99570bbb000fda524f1066c896cb
-#include "RichEdit.icpp"
-#undef BLITZ_INDEX__
-#endif

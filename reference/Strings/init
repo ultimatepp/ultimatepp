@@ -1,4 +1,0 @@
-#ifndef _Strings_icpp_init_stub
-#define _Strings_icpp_init_stub
-#include "Core/init"
-#endif

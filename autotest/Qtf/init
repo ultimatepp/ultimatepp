@@ -1,6 +1,0 @@
-#ifndef _Qtf_icpp_init_stub
-#define _Qtf_icpp_init_stub
-#include "Core/init"
-#include "RichText/init"
-#include "PdfDraw/init"
-#endif

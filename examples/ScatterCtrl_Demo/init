@@ -1,7 +1,0 @@
-#ifndef _ScatterCtrl_Demo_icpp_init_stub
-#define _ScatterCtrl_Demo_icpp_init_stub
-#include "CtrlLib/init"
-#include "Report/init"
-#include "PdfDraw/init"
-#include "ScatterCtrl/init"
-#endif

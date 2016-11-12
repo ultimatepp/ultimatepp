@@ -1,4 +1,0 @@
-#ifndef _SDLFb_icpp_init_stub
-#define _SDLFb_icpp_init_stub
-#include "Framebuffer/init"
-#endif

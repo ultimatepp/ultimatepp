@@ -1,7 +1,0 @@
-#ifndef _Oracle_icpp_init_stub
-#define _Oracle_icpp_init_stub
-#include "Sql/init"
-#define BLITZ_INDEX__ F1de02542baf464f5c8c49b0a6b37efa4
-#include "Oracle_init.icpp"
-#undef BLITZ_INDEX__
-#endif

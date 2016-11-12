@@ -1,4 +1,0 @@
-#ifndef _Clock_icpp_init_stub
-#define _Clock_icpp_init_stub
-#include "CtrlLib/init"
-#endif

@@ -1,6 +1,0 @@
-#ifndef _Pop3_icpp_init_stub
-#define _Pop3_icpp_init_stub
-#include "Core/init"
-#include "Core/POP3/init"
-#include "Core/SSL/init"
-#endif

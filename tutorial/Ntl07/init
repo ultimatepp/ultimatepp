@@ -1,4 +1,0 @@
-#ifndef _Ntl07_icpp_init_stub
-#define _Ntl07_icpp_init_stub
-#include "Core/init"
-#endif

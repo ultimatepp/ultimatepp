@@ -1,4 +1,0 @@
-#ifndef _Geom_Coords_icpp_init_stub
-#define _Geom_Coords_icpp_init_stub
-#include "Geom/init"
-#endif

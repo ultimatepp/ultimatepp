@@ -1,5 +1,0 @@
-#ifndef _GLCtrlBug_icpp_init_stub
-#define _GLCtrlBug_icpp_init_stub
-#include "CtrlLib/init"
-#include "GLCtrl/init"
-#endif
