@@ -1,7 +1,0 @@
-#ifndef _Skylark04_icpp_init_stub
-#define _Skylark04_icpp_init_stub
-#include "Core/init"
-#include "Skylark/init"
-#include "plugin/jpg/init"
-#include "plugin/png/init"
-#endif

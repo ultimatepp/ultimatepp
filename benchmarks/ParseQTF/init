@@ -1,4 +1,0 @@
-#ifndef _ParseQTF_icpp_init_stub
-#define _ParseQTF_icpp_init_stub
-#include "CtrlLib/init"
-#endif

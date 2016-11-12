@@ -1,4 +1,0 @@
-#ifndef _ArrayHideShowColumnMenu_icpp_init_stub
-#define _ArrayHideShowColumnMenu_icpp_init_stub
-#include "CtrlLib/init"
-#endif

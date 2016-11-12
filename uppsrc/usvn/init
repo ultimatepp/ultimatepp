@@ -1,4 +1,0 @@
-#ifndef _usvn_icpp_init_stub
-#define _usvn_icpp_init_stub
-#include "TextDiffCtrl/init"
-#endif

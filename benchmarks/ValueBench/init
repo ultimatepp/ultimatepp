@@ -1,4 +1,0 @@
-#ifndef _ValueBench_icpp_init_stub
-#define _ValueBench_icpp_init_stub
-#include "Core/init"
-#endif

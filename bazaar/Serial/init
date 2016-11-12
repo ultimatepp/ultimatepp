@@ -1,4 +1,0 @@
-#ifndef _Serial_icpp_init_stub
-#define _Serial_icpp_init_stub
-#include "Core/init"
-#endif

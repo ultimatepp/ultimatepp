@@ -1,5 +1,0 @@
-#ifndef _DispatcherTest_icpp_init_stub
-#define _DispatcherTest_icpp_init_stub
-#include "CtrlLib/init"
-#include "Dispatcher/init"
-#endif

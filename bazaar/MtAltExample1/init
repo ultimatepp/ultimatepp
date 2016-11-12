@@ -1,5 +1,0 @@
-#ifndef _MtAltExample1_icpp_init_stub
-#define _MtAltExample1_icpp_init_stub
-#include "CtrlLib/init"
-#include "MtAlt/init"
-#endif

@@ -1,5 +1,0 @@
-#ifndef _WorkQueueTest2_icpp_init_stub
-#define _WorkQueueTest2_icpp_init_stub
-#include "CtrlLib/init"
-#include "WorkQueue/init"
-#endif

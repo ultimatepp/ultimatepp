@@ -1,6 +1,0 @@
-#ifndef _PyCon_icpp_init_stub
-#define _PyCon_icpp_init_stub
-#include "Core/init"
-#include "LogCtrl/init"
-#include "Py/init"
-#endif

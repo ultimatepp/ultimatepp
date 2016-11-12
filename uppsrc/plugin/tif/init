@@ -1,7 +1,0 @@
-#ifndef _plugin_tif_icpp_init_stub
-#define _plugin_tif_icpp_init_stub
-#include "plugin\jpg/init"
-#define BLITZ_INDEX__ Fe7bd8071315226912b93a1d9cb51e423
-#include "tifreg.icpp"
-#undef BLITZ_INDEX__
-#endif

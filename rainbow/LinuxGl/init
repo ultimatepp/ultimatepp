@@ -1,4 +1,0 @@
-#ifndef _LinuxGl_icpp_init_stub
-#define _LinuxGl_icpp_init_stub
-#include "CoreGl/init"
-#endif

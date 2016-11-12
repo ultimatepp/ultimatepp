@@ -1,8 +1,0 @@
-#ifndef _SkylarkGuiExample_icpp_init_stub
-#define _SkylarkGuiExample_icpp_init_stub
-#include "CtrlLib/init"
-#include "Skylark/init"
-#define BLITZ_INDEX__ F7334f9a91c8498285ef494ed27589caf
-#include "Handlers.icpp"
-#undef BLITZ_INDEX__
-#endif

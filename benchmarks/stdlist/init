@@ -1,4 +1,0 @@
-#ifndef _stdlist_icpp_init_stub
-#define _stdlist_icpp_init_stub
-#include "Core/init"
-#endif

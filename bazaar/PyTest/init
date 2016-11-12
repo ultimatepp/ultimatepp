@@ -1,5 +1,0 @@
-#ifndef _PyTest_icpp_init_stub
-#define _PyTest_icpp_init_stub
-#include "Core/init"
-#include "Py/init"
-#endif

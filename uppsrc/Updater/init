@@ -1,4 +1,0 @@
-#ifndef _Updater_icpp_init_stub
-#define _Updater_icpp_init_stub
-#include "CtrlLib/init"
-#endif

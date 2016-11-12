@@ -1,4 +1,0 @@
-#ifndef _umk_icpp_init_stub
-#define _umk_icpp_init_stub
-#include "ide\Builders/init"
-#endif

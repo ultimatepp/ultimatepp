@@ -1,8 +1,0 @@
-#ifndef _Report_icpp_init_stub
-#define _Report_icpp_init_stub
-#include "CtrlLib/init"
-#include "RichText/init"
-#define BLITZ_INDEX__ F92e20102c48294de23860475d094c3d4
-#include "ReportI.icpp"
-#undef BLITZ_INDEX__
-#endif

@@ -1,5 +1,0 @@
-#ifndef _GoogleTestExample_icpp_init_stub
-#define _GoogleTestExample_icpp_init_stub
-#include "plugin/gtest/init"
-#include "Core/init"
-#endif

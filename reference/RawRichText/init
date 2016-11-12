@@ -1,4 +1,0 @@
-#ifndef _RawRichText_icpp_init_stub
-#define _RawRichText_icpp_init_stub
-#include "CtrlLib/init"
-#endif

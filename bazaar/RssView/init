@@ -1,5 +1,0 @@
-#ifndef _RssView_icpp_init_stub
-#define _RssView_icpp_init_stub
-#include "CtrlLib/init"
-#include "Rss/init"
-#endif

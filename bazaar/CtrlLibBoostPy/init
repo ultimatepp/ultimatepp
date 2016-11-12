@@ -1,7 +1,0 @@
-#ifndef _CtrlLibBoostPy_icpp_init_stub
-#define _CtrlLibBoostPy_icpp_init_stub
-#include "CtrlLib/init"
-#include "Py/init"
-#include "CoreBoostPy/init"
-#include "ValueCtrl/init"
-#endif

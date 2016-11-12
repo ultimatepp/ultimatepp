@@ -1,4 +1,0 @@
-#ifndef _CreateArgs_icpp_init_stub
-#define _CreateArgs_icpp_init_stub
-#include "Core/init"
-#endif

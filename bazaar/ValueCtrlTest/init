@@ -1,5 +1,0 @@
-#ifndef _ValueCtrlTest_icpp_init_stub
-#define _ValueCtrlTest_icpp_init_stub
-#include "CtrlLib/init"
-#include "ValueCtrl/init"
-#endif

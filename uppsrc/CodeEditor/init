@@ -1,8 +1,0 @@
-#ifndef _CodeEditor_icpp_init_stub
-#define _CodeEditor_icpp_init_stub
-#include "CtrlLib/init"
-#include "plugin/pcre/init"
-#define BLITZ_INDEX__ F97a09d04ab17001c0c60ffb6219ac958
-#include "CRegister.icpp"
-#undef BLITZ_INDEX__
-#endif
