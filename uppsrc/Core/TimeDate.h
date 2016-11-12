@@ -21,6 +21,9 @@ struct Date : RelOps< Date, Moveable<Date> > {
 	Date& operator++()                   { if(day < 28) day++; else Set(Get() + 1); return *this; }
 	Date& operator--()                   { if(day > 1) day--; else Set(Get() - 1); return *this; }
 
+	Date  operator++(int)                { Date d = *this; operator++(); return d; }
+	Date  operator--(int)                { Date d = *this; operator--(); return d; }
+
 	Date()                               { year = -32768; day = month = 0; }
 	Date(const Nuller&)                  { year = -32768; day = month = 0; }
 	Date(int y, int m, int d)            { day = d; month = m; year = y; }
