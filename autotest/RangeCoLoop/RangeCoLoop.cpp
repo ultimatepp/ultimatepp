@@ -24,7 +24,7 @@ CONSOLE_APP_MAIN {
 
 	sum = 0;
 	
-	CoIterate(0, x.GetCount(), [&sum, &x](int from, int to) {
+	CoFor(0, x.GetCount(), [&sum, &x](int from, int to) {
 		int sum1 = 0;
 		while(from < to)
 			sum1 += x[from++];
