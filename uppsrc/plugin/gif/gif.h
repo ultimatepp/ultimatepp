@@ -5,6 +5,8 @@
 
 
 namespace Upp {
+	
+INITIALIZE(GifRaster)
 
 class GIFRaster : public StreamRaster {
 public:

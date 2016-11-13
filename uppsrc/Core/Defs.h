@@ -199,6 +199,21 @@ static void COMBINE(MK__s, _fn)()
 static void COMBINE(x, _fn)(); static UPP::Callexit x(COMBINE(x, _fn)); \
 static void COMBINE(x, _fn)()
 
+#define INITIALIZE(x) \
+void x##__initializer(); \
+static struct x##__initialize_struct { x##__initialize_struct() { x##__initializer(); } } x##__initialize_dummy;
+
+#define INITIALIZER(x) \
+void x##__initializer_fn(); \
+void x##__initializer() \
+{ \
+	ONCELOCK { \
+		x##__initializer_fn(); \
+	} \
+} \
+void x##__initializer_fn()
+
+
 
 #ifdef DEPRECATED
 #define INITCODE(x) \

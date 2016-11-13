@@ -584,7 +584,7 @@ void GIFRaster::Data::GetPagesData() {
 		page.width = width;
 		page.height = height;
 		page.disposal = disposal;
-	}	
+	}
 }
 
 GIFRaster::GIFRaster()
@@ -973,6 +973,11 @@ void GIFEncoder::Start(Size sz)
 void GIFEncoder::WriteLineRaw(const byte *s)
 {
 	data->WriteLineRaw(s);
+}
+
+INITIALIZER(GifRaster)
+{
+	StreamRaster::Register<GIFRaster>();
 }
 
 }
