@@ -33,7 +33,7 @@ void CreateLogSyntax(One<EditorSyntax>& e)
 	e.Create<LogSyntax>();
 }
 
-INITBLOCK
+INITIALIZER(RegisterSyntax)
 {
 	RegisterCSyntax("cpp", CSyntax::HIGHLIGHT_CPP,
 	                "*.c *.cpp *.cc *.cxx *.h *.hpp *.hh *.hxx *.m *.mm *.icpp *.conf",

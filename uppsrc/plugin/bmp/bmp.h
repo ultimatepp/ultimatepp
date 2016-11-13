@@ -4,6 +4,8 @@
 #include <Draw/Draw.h>
 
 namespace Upp {
+	
+INITIALIZE(BMPRaster);
 
 class BMPRaster : public StreamRaster {
 	Size             size;

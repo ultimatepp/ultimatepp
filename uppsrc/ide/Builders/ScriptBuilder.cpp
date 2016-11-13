@@ -283,7 +283,7 @@ Builder *CreateScriptBuilder()
 	return new ScriptBuilder;
 }
 
-INITBLOCK
+INITIALIZER(ScriptBuilder)
 {
 	RegisterBuilder("SCRIPT", CreateScriptBuilder);
 }

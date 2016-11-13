@@ -6,7 +6,7 @@ uses
 file
 	Designers.h,
 	Png.cpp,
-	Img.icpp,
-	Qtf.icpp,
-	HexView.icpp;
+	Img.cpp,
+	Qtf.cpp,
+	HexView.cpp;
 

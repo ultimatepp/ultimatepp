@@ -31,6 +31,8 @@ struct tiff *TIFFFileStreamOpen(const char *filename, const char *mode);
 //struct tiff* TIFFWrapOpen(const char*, const char*);
 //int TIFFWrapGetField(::tiff* tif_data, uint32 tag, ...);
 
+INITIALIZE(TIFRaster);
+
 class TIFRaster : public StreamRaster {
 public:
 	struct Data;

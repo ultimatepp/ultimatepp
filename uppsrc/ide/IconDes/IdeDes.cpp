@@ -114,6 +114,6 @@ void IdeIconDes::ListMenuEx(Bar& bar)
 	bar.Add(n.GetCount(), "Copy '" + c + '\'', CtrlImg::copy(), THISBACK1(CopyId, c));
 }
 
-INITBLOCK {
+INITIALIZER(IconDes) {
 	RegisterGlobalConfig("icondes-ctrl");
 }

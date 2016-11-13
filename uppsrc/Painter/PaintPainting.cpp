@@ -320,7 +320,7 @@ static Image sRenderGlyph(Point at, int angle, int chr, Font fnt, Color color, S
 	return ib;
 }
 
-INITBLOCK
+INITIALIZER(PaintPainting)
 {
 	RegisterPaintingFns__(PaintImageBufferPaintingFn, PaintImageBufferDrawingFn, sRenderGlyph);
 	ImageAnyDrawPainter(sCP, sEP);

@@ -7,6 +7,8 @@
 
 namespace Upp {
 
+INITIALIZE(PaintPainting)
+
 struct Xform2D {
 	Pointf x, y, t;
 	

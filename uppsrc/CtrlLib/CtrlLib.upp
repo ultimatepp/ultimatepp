@@ -99,7 +99,7 @@ file
 	Ctrl.iml,
 	Ctrl.lay,
 	CtrlLib.t charset "UTF-8",
-	CtrlLib.icpp,
+	CtrlLibInit.cpp,
 	Lang readonly separator,
 	Lang.h,
 	LNGCtrl.cpp,

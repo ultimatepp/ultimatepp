@@ -9,6 +9,8 @@
 
 namespace Upp {
 
+INITIALIZE(CtrlLib);
+
 #define IMAGECLASS CtrlImg
 #define IMAGEFILE <CtrlLib/Ctrl.iml>
 #include <Draw/iml_header.h>

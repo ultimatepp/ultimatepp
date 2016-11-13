@@ -25,7 +25,6 @@ file
 	StyleKeys.cpp,
 	HeaderFooter.cpp,
 	RichEdit.t charset "UTF-8",
-	RichEdit.icpp,
 	RichEdit.lay,
 	RichEdit.iml,
 	Info readonly separator,

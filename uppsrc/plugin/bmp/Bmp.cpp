@@ -284,4 +284,9 @@ BMPRaster::~BMPRaster()
 {
 }
 
+INITIALIZER(BMPRaster)
+{
+	StreamRaster::Register<BMPRaster>();
+}
+
 }

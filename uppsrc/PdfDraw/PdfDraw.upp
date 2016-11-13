@@ -11,7 +11,8 @@ file
 	TTFSubset.cpp,
 	ICCColorSpace.i,
 	PdfDraw.cpp,
-	PdfReport.icpp,
+	PdfReport.cpp,
+	PdfInit.icpp,
 	Info readonly separator,
 	Copying;
 

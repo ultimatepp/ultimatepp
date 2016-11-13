@@ -245,4 +245,6 @@ void        SQLObjectTree(SqlSession& session APPSQLSESSION);
 
 }
 
+INITIALIZE(SqlCtrl)
+
 #endif

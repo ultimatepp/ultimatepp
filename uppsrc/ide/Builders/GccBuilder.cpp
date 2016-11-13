@@ -583,7 +583,7 @@ Builder *CreateGccBuilder()
 	return new GccBuilder;
 }
 
-INITBLOCK
+INITIALIZER(GccBuilder)
 {
 	RegisterBuilder("GCC", CreateGccBuilder);
 	RegisterBuilder("CLANG", CreateGccBuilder);

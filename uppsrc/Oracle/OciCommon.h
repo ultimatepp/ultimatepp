@@ -292,4 +292,6 @@ typedef sb4 (*OCICallbackOutBind)(dvoid *octxp, UPP::OCIBind *bindp, ub4 iter,
 	ub1 *piecep, dvoid **indp,
 	ub2 **rcodep);
 
+INITIALIZE(Oracle)
+
 #endif//__Oracle_OciCommon__

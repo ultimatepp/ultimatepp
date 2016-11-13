@@ -37,7 +37,8 @@ String GetP7Signature_imp(const void *data, int length, const String& cert_pem, 
 
 extern String (*GetP7Signature__)(const void *data, int length, const String& cert_pem, const String& pkey_pem);
 
-INITBLOCK {
+INITIALIZER(P7S)
+{
 	GetP7Signature__ = GetP7Signature_imp;
 }
 

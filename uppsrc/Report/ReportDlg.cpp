@@ -4,6 +4,9 @@ namespace Upp {
 
 #define LLOG(x) // LOG(x)
 
+#define  TFILE <Report/Report.t>
+#include <Core/t.h>
+
 void Print(Report& r, PrinterJob& pd)
 {
 	Draw& w = pd;

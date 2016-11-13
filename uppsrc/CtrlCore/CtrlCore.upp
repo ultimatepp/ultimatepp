@@ -50,7 +50,7 @@ file
 	CtrlTimer.cpp,
 	CtrlClip.cpp,
 	LocalLoop.cpp,
-	CtrlCore.icpp,
+	CtrlCoreInit.cpp,
 	TopWindow.h,
 	TopWindow.cpp,
 	lay.h,

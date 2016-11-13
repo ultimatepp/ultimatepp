@@ -1,9 +1,1 @@
 #include "bmp.h"
-
-namespace Upp {
-
-INITBLOCK {
-	StreamRaster::Register<BMPRaster>();
-}
-
-}

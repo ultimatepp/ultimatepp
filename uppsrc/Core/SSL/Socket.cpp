@@ -37,7 +37,7 @@ void InitCreateSSL()
 	TcpSocket::CreateSSL = TcpSocket::CreateSSLImp;
 }
 
-INITBLOCK {
+INITIALIZER(SSLSocket) {
 	InitCreateSSL();
 }
 

@@ -6,6 +6,8 @@
 
 namespace Upp {
 
+INITIALIZE(RichImage)
+
 class  PasteClip;
 struct RichPara;
 class  RichTable;
