@@ -1,9 +1,11 @@
 #include "gif.h"
 
 namespace Upp {
-
+	
+// INITIALIZE(GifRaster);
+/*
 INITBLOCK {
 	StreamRaster::Register<GIFRaster>();
 }
-
+*/
 }
