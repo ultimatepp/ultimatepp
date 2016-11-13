@@ -36,7 +36,11 @@ uses
 	plugin/tif,
 	plugin/wincert,
 	plugin/z,
-	plugin/zip;
+	plugin/zip,
+	Core/POP3,
+	Core/Rpc,
+	Core/SMTP,
+	Core/SSL;
 
 file
 	main.cpp;

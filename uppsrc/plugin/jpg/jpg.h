@@ -4,6 +4,8 @@
 #include <Draw/Draw.h>
 
 namespace Upp {
+	
+INITIALIZE(JPGRaster);
 
 class JPGRaster : public StreamRaster {
 public:

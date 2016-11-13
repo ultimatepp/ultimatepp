@@ -703,4 +703,9 @@ Image JPGRaster::GetExifThumbnail()
 	return StreamRaster::LoadStringAny(ss);
 }
 
+INITIALIZER(JPGRaster)
+{
+	StreamRaster::Register<JPGRaster>();
+}
+
 }

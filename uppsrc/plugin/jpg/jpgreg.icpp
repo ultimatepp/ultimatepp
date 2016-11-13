@@ -1,9 +1,1 @@
 #include "jpg.h"
-
-namespace Upp {
-
-INITBLOCK {
-	StreamRaster::Register<JPGRaster>();
-}
-
-}
