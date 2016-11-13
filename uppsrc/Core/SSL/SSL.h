@@ -6,6 +6,10 @@
 #include <openssl/engine.h>
 
 namespace Upp {
+	
+INITIALIZE(SSL);
+INITIALIZE(SSLSocket);
+INITIALIZE(P7S);
 
 void SslInitThread();
 

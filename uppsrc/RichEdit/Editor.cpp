@@ -2,6 +2,9 @@
 
 namespace Upp {
 
+#define TFILE <RichEdit/RichEdit.t>
+#include <Core/t.h>
+
 bool FontHeight::Key(dword key, int count)
 {
 	if(key == K_ENTER) {

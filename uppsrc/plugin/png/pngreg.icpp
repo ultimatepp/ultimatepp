@@ -1,9 +1,1 @@
 #include "png.h"
-
-namespace Upp {
-
-INITBLOCK {
-	StreamRaster::Register<PNGRaster>();
-}
-
-}

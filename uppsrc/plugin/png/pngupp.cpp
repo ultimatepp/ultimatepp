@@ -514,4 +514,8 @@ void PNGEncoder::WriteLineRaw(const byte *s)
 	data->WriteLineRaw(s);
 }
 
+INITIALIZER(PNGRaster) {
+	StreamRaster::Register<PNGRaster>();
+}
+
 }

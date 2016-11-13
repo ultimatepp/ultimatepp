@@ -9,7 +9,7 @@ uses
 file
 	SqlCtrl.h options(BUILDER_OPTION) PCH,
 	SqlCtrl.t charset "UTF-8",
-	SqlCtrl_init.icpp,
+	SqlCtrl_init.cpp,
 	SqlCtrl.cpp,
 	SqlArray.cpp,
 	SqlDetail.cpp,

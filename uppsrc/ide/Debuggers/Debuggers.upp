@@ -28,7 +28,7 @@ file
 	Gdb_MI2Explore.cpp,
 	Gdb_MI2Gdb.cpp,
 	Gdb_MI2.cpp,
-	UppSimplifiers.icpp,
+	UppSimplifiers.cpp,
 	PDB readonly separator,
 	Pdb.h,
 	cvconst.h,

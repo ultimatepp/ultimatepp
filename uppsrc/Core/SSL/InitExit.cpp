@@ -53,7 +53,7 @@ static void *SslRealloc(void *ptr, size_t size)
 
 void TcpSocketInit();
 
-INITBLOCK
+INITIALIZER(SSL)
 {
 	LLOG("SSL init");
 	TcpSocketInit();

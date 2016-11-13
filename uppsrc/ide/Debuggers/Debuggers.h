@@ -224,4 +224,6 @@ struct Gdb : Debugger, ParentCtrl {
 #include "Pdb.h"
 #endif
 
+INITIALIZE(UppSimplifiers)
+
 #endif

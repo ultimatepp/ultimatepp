@@ -74,7 +74,7 @@ struct ImageViewModule : public IdeModule {
 	}
 };
 
-INITBLOCK
+INITIALIZER(Img)
 {
 	RegisterIdeModule(Single<ImageViewModule>());
 }

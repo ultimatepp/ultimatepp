@@ -874,7 +874,7 @@ Builder *CreateAndroidBuilder()
 	return new AndroidBuilder();
 }
 
-INITBLOCK
+INITIALIZER(AndroidBuilder)
 {
 	Index<String> builders = AndroidBuilder::GetBuildersNames();
 	for(int i = 0; i < builders.GetCount(); i++)

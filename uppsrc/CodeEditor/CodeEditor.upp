@@ -19,7 +19,7 @@ file
 	CInit.cpp,
 	CHighlight.cpp,
 	CLogic.cpp,
-	CRegister.icpp,
+	RegisterSyntax.cpp,
 	DiffSyntax readonly separator,
 	DiffSyntax.h,
 	DiffSyntax.cpp,

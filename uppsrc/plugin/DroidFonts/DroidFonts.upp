@@ -4,7 +4,9 @@ uses
 	plugin/FT_fontsys;
 
 file
-	DroidFonts.icpp,
+	DroidFonts.h,
+	DroidFonts.cpp,
+	DroidFontsInit.icpp,
 	DroidFonts.brc,
 	Info readonly separator,
 	Copying;

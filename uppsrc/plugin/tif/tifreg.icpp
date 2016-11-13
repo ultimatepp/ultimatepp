@@ -1,9 +1,1 @@
 #include "tif.h"
-
-namespace Upp {
-
-INITBLOCK {
-	StreamRaster::Register<TIFRaster>();
-}
-
-}

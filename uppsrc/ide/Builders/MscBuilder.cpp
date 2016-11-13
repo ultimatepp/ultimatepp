@@ -703,7 +703,7 @@ Builder *CreateMscBuilder()
 	return new MscBuilder;
 }
 
-INITBLOCK
+INITIALIZER(MscBuilder)
 {
 	RegisterBuilder("MSC71", CreateMscBuilder);
 	RegisterBuilder("MSC8", CreateMscBuilder);

@@ -19,7 +19,8 @@ link(WIN32 MSC SO) /nodefaultlib:libc;
 file
 	SSL.h,
 	Util.cpp,
-	InitExit.icpp,
-	Socket.icpp,
-	P7S.icpp;
+	InitExit.cpp,
+	Socket.cpp,
+	P7S.cpp,
+	Init.icpp;
 

@@ -37,4 +37,6 @@ struct IdeIconEditPos : IconDes::EditPos, Moveable<IdeIconEditPos> {
 	IdeIconEditPos() { filetime = Null; }
 };
 
+INITIALIZE(IconDes);
+
 #endif

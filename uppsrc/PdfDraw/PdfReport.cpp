@@ -14,7 +14,7 @@ String Pdf(const Array<Drawing>& report, Size sz, int margin, bool pdfa,
 	return w.Finish(sign);
 }
 
-INITBLOCK
+INITIALIZER(PdfDraw)
 {
 	SetDrawingToPdfFn(Pdf);
 }

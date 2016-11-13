@@ -1,8 +1,0 @@
-#include "RichEdit.h"
-
-namespace Upp {
-
-#define TFILE <RichEdit/RichEdit.t>
-#include <Core/t.h>
-
-}

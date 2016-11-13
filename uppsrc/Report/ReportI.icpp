@@ -1,8 +1,0 @@
-#include "Report.h"
-
-namespace Upp {
-
-#define  TFILE <Report/Report.t>
-#include <Core/t.h>
-
-}

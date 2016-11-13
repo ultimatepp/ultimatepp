@@ -7,7 +7,7 @@ uses
 file
 	RichText.h options(BUILDER_OPTION) PCH,
 	Object.cpp,
-	RichImage.icpp,
+	RichImage.cpp,
 	Para.h,
 	ParaData.cpp,
 	ParaType.cpp,
