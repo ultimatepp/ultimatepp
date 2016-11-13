@@ -243,8 +243,8 @@ inline void SQLCommander() { SQLCommander(SQL.GetSession()); }
 #endif
 void        SQLObjectTree(SqlSession& session APPSQLSESSION);
 
-}
-
 INITIALIZE(SqlCtrl)
+
+}
 
 #endif
