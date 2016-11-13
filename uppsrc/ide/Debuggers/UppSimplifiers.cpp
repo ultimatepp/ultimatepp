@@ -654,6 +654,8 @@ static int UppValueSimplify(VarItem &varItem, int step)
 
 }
 
+INITIALIZER(UppSimplifiers) {}
+
 // Register the simplifiers
 REGISTERSIMPLIFIER("Upp::String"				, UppStringSimplify);
 REGISTERSIMPLIFIER("Upp::Vector<"				, UppVectorSimplify);

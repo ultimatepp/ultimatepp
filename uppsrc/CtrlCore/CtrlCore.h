@@ -38,6 +38,8 @@
 
 namespace Upp {
 
+INITIALIZE(CtrlCore)
+
 #ifdef _MULTITHREADED
 void EnterGuiMutex();
 void LeaveGuiMutex();

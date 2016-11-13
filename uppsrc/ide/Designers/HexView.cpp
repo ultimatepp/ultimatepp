@@ -70,6 +70,7 @@ FileHexView::~FileHexView()
 	StoreToGlobal(*this, "FileHexView");
 }
 
-INITBLOCK {
+INITIALIZER(HexView)
+{
 	RegisterGlobalConfig("FileHexView");
 }

@@ -1314,4 +1314,9 @@ void TIFEncoder::WriteLineRaw(const byte *s)
 	data->WriteLineRaw(s);
 }
 
+
+INITIALIZER(TIFRaster) {
+	StreamRaster::Register<TIFRaster>();
+}
+
 }

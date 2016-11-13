@@ -248,4 +248,10 @@ private:
 
 void DeletePCHFile(const String& pch_file);
 
+INITIALIZE(GccBuilder)
+INITIALIZE(MscBuilder)
+INITIALIZE(JavaBuilder)
+INITIALIZE(AndroidBuilder)
+INITIALIZE(ScriptBuilder)
+
 #endif

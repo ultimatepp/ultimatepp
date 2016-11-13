@@ -61,4 +61,8 @@ public:
 
 bool  FileIsBinary(const char *path);
 
+INITIALIZE(Img)
+INITIALIZE(Qtf)
+INITIALIZE(HexView)
+
 #endif

@@ -31,7 +31,7 @@ file
 	TopicWin.cpp,
 	Move.cpp,
 	CodeRef.cpp,
-	TopicI.icpp,
+	TopicI.cpp,
 	Topic.lay,
 	Topic.iml,
 	Info readonly separator,

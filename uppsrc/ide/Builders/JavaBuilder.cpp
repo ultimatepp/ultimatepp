@@ -311,7 +311,7 @@ static Builder *CreateJavaBuilder()
 	return new JavaBuilder;
 }
 
-INITBLOCK
+INITIALIZER(JavaBuilder)
 {
 	RegisterBuilder("JDK", &CreateJavaBuilder);
 }

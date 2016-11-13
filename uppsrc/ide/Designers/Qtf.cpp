@@ -144,7 +144,7 @@ struct QtfDesModule : public IdeModule {
 	}
 };
 
-INITBLOCK
+INITIALIZER(Qtf)
 {
 	RegisterIdeModule(Single<QtfDesModule>());
 	RegisterGlobalConfig("qtfdes-ctrl");

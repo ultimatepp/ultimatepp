@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-INITBLOCK {
+INITIALIZER(DroidFonts) {
 	SetMemoryFont(Font::SANSSERIF, Font_DroidSans, Font_DroidSans_length);
 	SetMemoryFont(Font::SANSSERIF, Font_DroidSans_Bold, Font_DroidSans_Bold_length, FtBOLD);
 	SetMemoryFont(Font::SERIF, Font_DroidSerif, Font_DroidSerif_length);

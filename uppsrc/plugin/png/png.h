@@ -4,6 +4,8 @@
 #include <Draw/Draw.h>
 
 namespace Upp {
+	
+INITIALIZE(PNGRaster);
 
 class PNGRaster : public StreamRaster {
 	class Data;

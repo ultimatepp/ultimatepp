@@ -7,6 +7,8 @@
 
 namespace Upp {
 
+INITIALIZE(PdfDraw);
+
 class TTFReader {
 	struct TTFStream {
 		struct Fail {};
