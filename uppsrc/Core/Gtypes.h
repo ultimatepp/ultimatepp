@@ -324,6 +324,8 @@ struct Rect_ : Moveable< Rect_<T> > {
 	Rect_& operator-=(Sz sz)                                { Offset(-sz); return *this; }
 	Rect_& operator-=(Pt p)                                 { Offset(-p); return *this; }
 	Rect_& operator-=(const Rect_& b);
+	Rect_& operator*=(T t)                                  { left *= t; right *= t; top *= t; bottom *= t; return *this; }
+	Rect_& operator/=(T t)                                  { left /= t; right /= t; top /= t; bottom /= t; return *this; }
 
 	Rect_& operator|=(Pt p)                                 { Union(p); return *this; }
 	Rect_& operator|=(const Rect_& rc)                      { Union(rc); return *this; }
@@ -340,6 +342,8 @@ struct Rect_ : Moveable< Rect_<T> > {
 	friend Rect_ operator-(Rect_ a, Sz b)                   { return a -= b; }
 	friend Rect_ operator-(Rect_ a, Pt b)                   { return a -= b; }
 	friend Rect_ operator-(Rect_ a, const Rect_& b)         { return a -= b; }
+	friend Rect_ operator*(Rect_ a, T t)                    { return a *= t; }
+	friend Rect_ operator/(Rect_ a, T t)                    { return a /= t; }
 	friend Rect_ operator|(Rect_ a, Rect_ b)                { a.Union(b); return a; }
 	friend Rect_ operator&(Rect_ a, Rect_ b)                { a.Intersect(b); return a; }
 	friend bool  operator&&(const Rect_& a, const Rect_& b) { return a.Intersects(b); }
