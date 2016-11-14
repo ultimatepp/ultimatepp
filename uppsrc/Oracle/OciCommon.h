@@ -11,6 +11,8 @@ struct OCIBind;
 struct OCIDefine;
 struct OCISnapshot;
 struct OCIParam;
+
+INITIALIZE(Oracle)
 }
 
 #define oci_boolean int
@@ -291,7 +293,5 @@ typedef sb4 (*OCICallbackOutBind)(dvoid *octxp, UPP::OCIBind *bindp, ub4 iter,
 	ub4 index, dvoid **bufpp, ub4 **alenp,
 	ub1 *piecep, dvoid **indp,
 	ub2 **rcodep);
-
-INITIALIZE(Oracle)
 
 #endif//__Oracle_OciCommon__
