@@ -24,11 +24,16 @@ NewPackageFileWindow::NewPackageFileWindow()
 	Type("icpp", "Initialization C++ source file");
 	Type("usc", "Escape script file (scripting TheIDE)");
 	Type("witz", "Skylark template file (web framework files)");
+	Type("qtf", "U++ rich text file");
 	type.AddSeparator();
 	Type("json", "JSON file");
 	Type("xml", "XML file");
 	Type("html", "HTML file");
 	Type("css", "CSS file");
+	type.AddSeparator();
+	Type("sch", "SQL schema file");
+	Type("ddl", "SQL DDL script file");
+	Type("sql", "SQL script file");
 	type.AddSeparator();
 	Type("java", "Java");
 	Type("js", "JavaScript");
