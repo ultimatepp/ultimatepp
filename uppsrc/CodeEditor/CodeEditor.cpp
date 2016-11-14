@@ -13,6 +13,12 @@ namespace Upp {
 #define  TFILE <CodeEditor/CodeEditor.t>
 #include <Core/t.h>
 
+void RegisterSyntaxModules();
+
+INITBLOCK {
+	RegisterSyntaxModules();
+}
+
 One<EditorSyntax> CodeEditor::GetSyntax(int line)
 {
 	CTIMING("GetSyntax");
