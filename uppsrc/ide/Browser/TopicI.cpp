@@ -25,7 +25,7 @@ struct TopicModule : public IdeModule {
 	}
 };
 
-INITIALIZER(TopicModule)
+void InitializeTopicModule()
 {
 	RegisterIdeModule(Single<TopicModule>());
 }
