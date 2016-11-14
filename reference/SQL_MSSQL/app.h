@@ -1,8 +1,7 @@
 #ifndef _app_app_h
 #define _app_app_h
 
-#include <CtrlLib/CtrlLib.h>
-#include <SqlCtrl/SqlCtrl.h>
+#include <Sql/Sql.h>
 
 using namespace Upp;
 

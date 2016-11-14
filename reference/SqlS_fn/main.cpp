@@ -1,4 +1,3 @@
-#include <RichEdit/RichEdit.h>
 #include <Sql/Sql.h>
 
 using namespace Upp;

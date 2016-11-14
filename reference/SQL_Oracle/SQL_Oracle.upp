@@ -1,4 +1,4 @@
-description "Logging to Oracle";
+description "Logging to Oracle\377";
 
 uses
 	Oracle;
