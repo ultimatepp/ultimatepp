@@ -14,8 +14,6 @@
 #define IMAGEFILE <ide/Browser/Browser.iml>
 #include <Draw/iml_header.h>
 
-INITIALIZE(TopicModule)
-
 class Browser;
 
 CppBase&       CodeBase();
