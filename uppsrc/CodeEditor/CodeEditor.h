@@ -525,8 +525,6 @@ public:
 String ReadList(WithDropChoice<EditString>& e);
 void   WriteList(WithDropChoice<EditString>& e, const String& data);
 
-INITIALIZE(RegisterSyntax)
-
 }
 
 #endif
