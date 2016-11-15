@@ -10,7 +10,7 @@ CONSOLE_APP_MAIN {
 	for(int i = 0; i < 100000000; i++)
 		x.Add(i);
 	int sum = 0;
-	CoFor(x, [&sum](const SubRangeOf<Vector<int>>& range) {
+	CoPartition(x, [&sum](const SubRangeOf<Vector<int>>& range) {
 		int sum1 = 0;
 		for(const auto& m : range)
 			sum1 += m;
@@ -24,7 +24,7 @@ CONSOLE_APP_MAIN {
 
 	sum = 0;
 	
-	CoFor(0, x.GetCount(), [&sum, &x](int from, int to) {
+	CoPartition(0, x.GetCount(), [&sum, &x](int from, int to) {
 		int sum1 = 0;
 		while(from < to)
 			sum1 += x[from++];
