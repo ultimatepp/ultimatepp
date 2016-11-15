@@ -211,8 +211,8 @@ int FindBinary(const Range& r, const T& val)
 	return FindBinary(r, val, std::less<T>());
 }
 
-template <class C, class T>
-void LruAdd(C& lru, T value, int limit = 10)
+template <class Container, class T>
+void LruAdd(Container& lru, T value, int limit = 10)
 {
 	int q = FindIndex(lru, value);
 	if(q >= 0)
