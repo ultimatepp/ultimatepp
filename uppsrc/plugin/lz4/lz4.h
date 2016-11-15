@@ -97,6 +97,7 @@ private:
 	void          Init();
 	bool          Next();
 	void          Fetch();
+	bool          Ended() const { return IsError() || in->IsError() || ptr == rdlim && ii == count && eof; }
 
 public:
 	bool Open(Stream& in);

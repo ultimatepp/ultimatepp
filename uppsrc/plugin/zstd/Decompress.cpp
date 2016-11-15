@@ -213,7 +213,7 @@ bool ZstdDecompressStream::IsOpen() const
 
 int ZstdDecompressStream::_Term()
 {
-	if(eof)
+	if(Ended())
 		return -1;
 	Fetch();
 	return ptr == rdlim ? -1 : *ptr;
@@ -221,7 +221,7 @@ int ZstdDecompressStream::_Term()
 
 int ZstdDecompressStream::_Get()
 {
-	if(eof)
+	if(Ended())
 		return -1;
 	Fetch();
 	return ptr == rdlim ? -1 : *ptr++;
@@ -231,7 +231,7 @@ dword ZstdDecompressStream::_Get(void *data, dword size)
 {
 	byte *t = (byte *)data;
 	while(size) {
-		if(IsError() || in->IsError() || ptr == rdlim && ii == count && eof)
+		if(Ended())
 			break;
 		dword n = dword(rdlim - ptr);
 		if(size < n) {
