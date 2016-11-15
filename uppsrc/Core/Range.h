@@ -135,16 +135,6 @@ ViewRangeClass<BaseRange> ViewRange(BaseRange& r, Vector<int>&& ndx)
 	return ViewRangeClass<BaseRange>(r, pick(ndx));
 }
 
-template <class Range, class Predicate>
-Vector<int> FindAll(const Range& r, Predicate p)
-{
-	Vector<int> ndx;
-	for(int i = 0; i < r.GetCount(); i++)
-		if(p(r[i]))
-			ndx.Add(i);
-	return ndx;
-}
-
 template <class BaseRange, class Predicate>
 ViewRangeClass<BaseRange> FilterRange(BaseRange& r, Predicate p)
 {

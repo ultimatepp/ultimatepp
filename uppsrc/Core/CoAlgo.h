@@ -1,13 +1,18 @@
+enum {
+	CO_PARTITION_MIN = 64,
+	CO_PARTITION_MAX = 4*1024*1024,
+};
+
 template <class C, class MC>
-inline size_t CoChunk__(C count, MC max_chunk)
+inline size_t CoChunk__(C count, MC min_chunk = CO_PARTITION_MIN, MC max_chunk = CO_PARTITION_MAX)
 {
-	return min(max(count / CPU_Cores() / 2, (C)1), (C)max_chunk);
+	return clamp(count / CPU_Cores() / 2, (C)min_chunk, (C)max_chunk);
 }
 
 template <class Iter, class Lambda>
-void CoFor(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX)
+void CoPartition(Iter begin, Iter end, const Lambda& lambda, int min_chunk = 64, int max_chunk = 1024*1024*16)
 {
-	size_t chunk = CoChunk__(end - begin, max_chunk);
+	size_t chunk = CoChunk__(end - begin, min_chunk, max_chunk);
 	CoWork co;
 	while(begin < end) {
 		Iter e = Iter(begin + min(chunk, size_t(end - begin)));
@@ -19,7 +24,7 @@ void CoFor(Iter begin, Iter end, const Lambda& lambda, int max_chunk = INT_MAX)
 }
 
 template <class Range, class Lambda>
-void CoFor(Range& r, const Lambda& lambda)
+void CoPartition(Range& r, const Lambda& lambda)
 {
 	size_t chunk = CoChunk__(r.GetCount(), INT_MAX);
 	CoWork co;
@@ -35,7 +40,7 @@ void CoFor(Range& r, const Lambda& lambda)
 }
 
 template <class Range, class Lambda>
-void CoFor(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
+void CoPartition(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 {
 	size_t chunk = CoChunk__(r.GetCount(), max_chunk);
 	CoWork co;
@@ -54,7 +59,7 @@ template <class Range, class Accumulator>
 void CoAccumulate(Range r, Accumulator& result)
 {
 	typedef ConstIteratorOf<Range> I;
-	CoFor(r.begin(), r.end(),
+	CoPartition(r.begin(), r.end(),
 		[=, &result](I i, I e) {
 			Accumulator h;
 			while(i < e)
@@ -71,7 +76,7 @@ ValueTypeOf<Range> CoSum(const Range& r, const ValueTypeOf<Range>& zero)
 	typedef ValueTypeOf<Range> VT;
 	typedef ConstIteratorOf<Range> I;
 	VT sum = zero;
-	CoFor(r.begin(), r.end(),
+	CoPartition(r.begin(), r.end(),
 		[=, &sum](I i, I e) {
 			VT h = zero;
 			while(i < e)
@@ -96,7 +101,7 @@ int CoFindBest(const Range& r, const Better& better)
 		return -1;
 	typedef ConstIteratorOf<Range> I;
 	I best = r.begin();
-	CoFor(r.begin() + 1, r.end(),
+	CoPartition(r.begin() + 1, r.end(),
 		[=, &best](I i, I e) {
 			I b = i++;
 			while(i < e) {
@@ -157,7 +162,7 @@ int CoFindMatch(const Range& r, const Match& eq, int from = 0)
 	int count = r.GetCount();
 	std::atomic<int> found;
 	found = count;
-	CoFor(from, count,
+	CoPartition(from, count,
 		[=, &found](int i0, int e0) {
 			auto i = r.begin() + i0;
 			auto e = r.begin() + e0;
@@ -181,4 +186,24 @@ template <class Range, class V>
 int CoFindIndex(const Range& r, const V& value, int from = 0)
 {
 	return CoFindMatch(r, [=](const V& m) { return m == value; }, from);
+}
+
+template <class Range, class Predicate>
+Vector<int> CoFindAll(const Range& r, Predicate match, int from = 0)
+{
+	Vector<Vector<int>> rs;
+	int total = 0;
+	CoPartition(from, r.GetCount(), [=, &r, &rs, &total](int begin, int end) {
+		Vector<int> v = FindAll(SubRange(r, 0, end), match, begin);
+		CoWork::FinLock();
+		if(v.GetCount()) {
+			total += v.GetCount();
+			rs.Add(pick(v));
+		}
+	});
+	Sort(rs, [](const Vector<int>& a, const Vector<int>& b) { return a[0] < b[0]; });
+	Vector<int> result;
+	for(const auto& s : rs)
+		result.Append(s);
+	return result;
 }
