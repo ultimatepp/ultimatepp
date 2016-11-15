@@ -49,103 +49,126 @@ nt]_[* cmp]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const
 is smaller than ][*@3 b][%%  and zero if ][*@3 a][%%  is equal than ][*@3 b.]&]
 [s3; &]
 [s4;%- &]
-[s5;:Reverse`(I`,I`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 I]>_[@(0.0.255) void]_
-[* Reverse]([*@4 I]_[*@3 start], [*@4 I]_[*@3 end])&]
-[s2; Reverses the values of a C array that begins in [%-*@3 start] 
-and ends in [%-*@3 end].&]
+[s5;:Upp`:`:Reverse`(Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) v
+oid]_[* Reverse]([*@4 Range][@(0.0.255) `&]_[*@3 r])&]
+[s5;:Upp`:`:Reverse`(Range`&`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_
+[@(0.0.255) void]_[* Reverse]([*@4 Range][@(0.0.255) `&`&]_[*@3 r])&]
+[s2; Reverses the order of values in a range.&]
 [s3; &]
 [s4;%- &]
-[s5;:Sum`(V`&`,T`,T`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
-[@(0.0.255) class]_[*@4 V]>_[@(0.0.255) void]_[* Sum]([*@4 V][@(0.0.255) `&]_[*@3 sum], 
-[*@4 T]_[*@3 ptr], [*@4 T]_[*@3 end])&]
-[s2;%- [%% Returns in ][*@3 sum][%%  the sum of the values of a C array 
-that begins in ][*@3 ptr][%%  and ends in ][*@3 end][%% . ][*@4 T]_must 
-have defined operator`+`= and deep copy constructor.&]
+[s5;:Upp`:`:Sum`(const Range`&`,const Upp`:`:ValueTypeOf`<Range`>`&`):%- [@(0.0.255) te
+mplate]_<[@(0.0.255) class]_[*@4 Range]>_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>
+_[* Sum]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ V
+alueTypeOf]<[*@4 Range]>`&_[*@3 zero])&]
+[s2;%- [%% Returns the sum of all elements in range ][*@3 r][%% , with 
+][*@3 zero][%%  representing initial zero value. ][*@4 T]_must have 
+defined operator`+`=.&]
 [s3; &]
 [s4;%- &]
-[s5;:Sum`(const T`&`,const typename ValueType`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[@(0.0.255) typename]_[_^ValueType^ T`::ValueType]_[* Sum]([@(0.0.255) const]_
-[*@4 T][@(0.0.255) `&]_[*@3 c], [@(0.0.255) const]_[@(0.0.255) typename]_[_^ValueType^ T`::Val
-ueType][@(0.0.255) `&]_[*@3 zero])&]
-[s2;%- [%% Returns the sum of all elements in container ][*@3 c][%% , with 
-][*@3 zero][%%  representing zero value. ][*@4 T]_must have defined 
-operator`+`= and deep copy constructor.&]
-[s3; &]
-[s4;%- &]
-[s5;:Sum`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) typen
-ame]_[_^ValueType^ T`::ValueType]_[* Sum]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 c])&]
+[s5;:Sum`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) t
+ypename]_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>_[* Sum]([@(0.0.255) const]_[*@4 T
+][@(0.0.255) `&]_[*@3 c])&]
 [s2; Same as Sum(c, 0).&]
 [s3; &]
 [s4;%- &]
-[s5;:FindMin`(const C`&`,int`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) i
-nt]_[* FindMin]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c], [@(0.0.255) int]_[*@3 pos], 
-[@(0.0.255) int]_[*@3 count])&]
-[s2; Finds the index of minimum value of [%-*@3 c], in [%-*@3 count ]elements 
-starting at [%-*@3 pos]. Elements must have operator< defined.&]
+[s5;:Upp`:`:FindBest`(const Range`&`,const Pred`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Pred]>_[@(0.0.255) int]_[* FindBest]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Pred][@(0.0.255) `&]_[*@3 pre
+d])&]
+[s2; Finds the most suitable element in a range [%-*@3 r] as specified 
+by [%-*@3 pred]. E.g. if [%-*@3 pred] is std`::less, finds minimum. 
+If [%-*@3 r] is empty, returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:FindMin`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) i
-nt]_[* FindMin]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c])&]
-[s2; Same as FindMin(c, 0, c.GetCount()).&]
+[s5;:Upp`:`:FindMin`(const Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Rang
+e]>_[@(0.0.255) int]_[* FindMin]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r])&]
+[s2; Returns the index of minimal element of [%-*@3 r], using std`::less 
+to compare elements. If [%-*@3 r] is empty, returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:Min`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) int]_
-[* Min]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c])&]
-[s2; Returns the minimum element of [%-*@3 c]. If [%-*@3 c] is empty, 
-behaviour is undefined (ASSERT in debug mode).&]
+[s5;:Upp`:`:Min`(const Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_
+[@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>`&_[* Min]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r])&]
+[s2; Returns the [/ value] of minimal element of [%-*@3 r], using std`::less 
+to compare elements. If [%-*@3 r] is empty, behavior is undefined 
+(ASSERT fails in debug).&]
 [s3; &]
 [s4;%- &]
-[s5;:Min`(const C`&`,const typename ValueType`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C]>_[@(0.0.255) int]_[* Min]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c], 
-[@(0.0.255) const]_[@(0.0.255) typename]_[_^ValueType^ C`::ValueType][@(0.0.255) `&]_[*@3 de
-f])&]
-[s2; Returns the minumum element of [%-*@3 c]. If [%-*@3 c] is empty, 
-returns [%-*@3 def].&]
+[s5;:Upp`:`:Min`(const Range`&`,const Upp`:`:ValueTypeOf`<Range`>`&`):%- [@(0.0.255) te
+mplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ ValueT
+ypeOf]<[*@4 Range]>`&_[* Min]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], 
+[@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>`&_[*@3 def])&]
+[s2; Returns the [/ value] of minimal element of [%-*@3 r], using std`::less 
+to compare elements. If [%-*@3 r] is empty, returns [%-*@3 def].&]
 [s3; &]
 [s4;%- &]
-[s5;:FindMax`(const C`&`,int`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) i
-nt]_[* FindMax]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c], [@(0.0.255) int]_[*@3 pos], 
-[@(0.0.255) int]_[*@3 count])&]
-[s2; Finds the index of maximum value of [%-*@3 c], in [%-*@3 count ]elements 
-starting at [%-*@3 pos]. Elements must have operator> defined.&]
+[s5;:Upp`:`:FindMax`(const Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Rang
+e]>_[@(0.0.255) int]_[* FindMax]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r])&]
+[s2; Returns the index of maximal element of [%-*@3 r], using std`::greater 
+to compare elements. If [%-*@3 r] is empty, returns `-1.&]
 [s3; &]
 [s4;%- &]
-[s5;:FindMax`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) i
-nt]_[* FindMax]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c])&]
-[s2; Same as FindMax(c, 0, c.GetCount()).&]
+[s5;:Upp`:`:Max`(const Range`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_
+[@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>`&_[* Max]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r])&]
+[s2; Returns the [/ value] of maximal element of [%-*@3 r], using std`::less 
+to compare elements. If [%-*@3 r] is empty, behavior is undefined 
+(ASSERT fails in debug)..&]
 [s3; &]
 [s4;%- &]
-[s5;:Max`(const C`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) int]_
-[* Max]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c])&]
-[s2; Returns the maximum element of [%-*@3 c]. If [%-*@3 c] is empty, 
-behaviour is undefined (ASSERT in debug mode).&]
+[s5;:Upp`:`:Max`(const Range`&`,const Upp`:`:ValueTypeOf`<Range`>`&`):%- [@(0.0.255) te
+mplate]_<[@(0.0.255) class]_[*@4 Range]>_[@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ ValueT
+ypeOf]<[*@4 Range]>`&_[* Max]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], 
+[@(0.0.255) const]_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>`&_[*@3 def])&]
+[s2; Returns the [/ value] of maximal element of [%-*@3 r], using std`::less 
+to compare elements. If [%-*@3 r] is empty, returns [%-*@3 def].&]
 [s3; &]
 [s4;%- &]
-[s5;:Max`(const C`&`,const typename ValueType`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 C]>_[@(0.0.255) int]_[* Max]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 c], 
-[@(0.0.255) const]_[@(0.0.255) typename]_[_^ValueType^ C`::ValueType][@(0.0.255) `&]_[*@3 de
-f])&]
-[s2; Returns the maximum element of [%-*@3 c]. If [%-*@3 c] is empty, 
-returns [%-*@3 def].&]
+[s5;:Upp`:`:IsEqualRange`(const Range1`&`,const Range2`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range1], [@(0.0.255) class]_[*@4 Range2]>_[@(0.0.255) bool]_[* IsEqualRange]([@(0.0.255) c
+onst]_[*@4 Range1][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const]_[*@4 Range2][@(0.0.255) `&]_[*@3 b
+])&]
+[s2; Returns true if [%-*@3 a] and [%-*@3 b] are equal. operator`=`= 
+is used to compare elements. Ranges are considered equal if they 
+have the same number of elements and for every element at index 
+[/ i: ][%-*@3 a]`[i`] `=`= [%-*@3 b]`[i`].&]
 [s3; &]
 [s4;%- &]
-[s5;:FindIndex`(const T`&`,const V`&`,const C`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 C]>_[@(0.0.255) int]_[* Find
-Index]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 cont], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&
-]_[*@3 value], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 equal], [@(0.0.255) int]_[*@3 fro
-m]_`=_[@3 0])&]
-[s2; Performs a linear search of [%-*@3 cont] to find an index of element 
-with [%-*@3 value]. using predicate [%-*@3 equal] to perform comparisons, 
-starting with element at [%-*@3 from]. If not found, returns `-1.&]
+[s5;:Upp`:`:CompareRanges`(const Range1`&`,const Range2`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range1], [@(0.0.255) class]_[*@4 Range2]>_[@(0.0.255) int]_[* CompareRanges]([@(0.0.255) c
+onst]_[*@4 Range1][@(0.0.255) `&]_[*@3 a], [@(0.0.255) const]_[*@4 Range2][@(0.0.255) `&]_[*@3 b
+])&]
+[s2; Lexicographically compares ranges [%-*@3 a] [%-*@3 b], using SgnCompare 
+to compare elements. SgnCompare is supposed to return value < 
+0 if first element is less than second, 0 if they are equal, 
+>0 otherwise. Returns value <0, 0, >0 if [%-*@3 a] < [%-*@3 b],[%-*@3  
+a] `=`= [%-*@3 b],[%-*@3  a] > [%-*@3 b].&]
 [s3; &]
 [s4;%- &]
-[s5;:FindIndex`(const T`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 T], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindIndex]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
-]_[*@3 cont], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], [@(0.0.255) int]_[*@3 from
-]_`=_[@3 0])&]
-[s2; Performs a linear search of [%-*@3 cont] to find an index of element 
-with [%-*@3 value], starting with element at [%-*@3 from]. If not 
-found, returns `-1.&]
+[s5;:Upp`:`:FindMatch`(const Range`&`,const C`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 V], [@(0.0.255) class]_[*@4 C]>_[@(0.0.255) int]_[* F
+indMatch]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 C][@(0.0.255) `&
+]_[*@3 match], [@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2; Returns the index of first element for which predicate [%-*@3 match] 
+is true. If not found, returns `-1. Search starts at index [%-*@3 from].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindIndex`(const Range`&`,const V`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* FindIndex]([@(0.0.255) con
+st]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 value], 
+[@(0.0.255) int]_[*@3 from]_`=_[@3 0])&]
+[s2; Returns the index of first element which is equal to [%-*@3 value]. 
+If not found, returns `-1. Search starts at index [%-*@3 from].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:FindAll`(const Range`&`,Predicate`):%- [@(0.0.255) template]_<[@(0.0.255) cla
+ss]_[*@4 Range], [@(0.0.255) class]_[*@4 Predicate]>_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
+nt]>_[* FindAll]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], 
+[*@4 Predicate]_[*@3 match])&]
+[s2; Returns the Vector of indices of  [/ ALL] elements for which [%-*@3 match] 
+is true. Returned Vector is sorted in ascending order.&]
+[s3; &]
+[s4;%- &]
 [s3; &]
 [s4; &]
 [s5;:FindLowerBound`(const C`&`,int`,int`,const T`&`,const L`&`):%- [@(0.0.255) templat
@@ -204,11 +227,6 @@ predicate where [%-*@3 val] can be inserted without breaking the
 ordering.&]
 [s3;%- &]
 [s4;%- &]
-[s5;:FindBinary`(const C`&`,const T`&`,int`,int`,const L`&`):%- [@(0.0.255) template]_<
-[@(0.0.255) class]_[*@4 C], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 L][@(0.0.255) >
-]_[@(0.0.255) int]_[* FindBinary]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&]_[*@3 v], 
-[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 val], [@(0.0.255) int]_[*@3 pos], 
-[@(0.0.255) int]_[*@3 count], [@(0.0.255) const]_[*@4 L][@(0.0.255) `&]_[*@3 less])&]
 [s2; Finds the first position of element with specified value [%-*@3 val] 
 in range of container [%-*@3 v] sorted by [%-*@3 less] predicate. 
 If no such element exists, a negative value is returned.&]

@@ -124,31 +124,41 @@ int CompareRanges(const Range1& a, const Range2& b)
 	return SgnCompare(a.GetCount(), b.GetCount());
 }
 
-template <class T, class V, class C>
-int FindMatch(const T& cont, const C& match, int from = 0)
+template <class Range, class V, class C>
+int FindMatch(const Range& r, const C& match, int from = 0)
 {
-	for(int i = from; i < cont.GetCount(); i++)
-		if(match(cont[i])) return i;
+	for(int i = from; i < r.GetCount(); i++)
+		if(match(r[i])) return i;
 	return -1;
 }
 
-template <class T, class V>
-int FindIndex(const T& cont, const V& value, int from = 0)
+template <class Range, class V>
+int FindIndex(const Range& r, const V& value, int from = 0)
 {
-	for(int i = from; i < cont.GetCount(); i++)
-		if(cont[i] == value) return i;
+	for(int i = from; i < r.GetCount(); i++)
+		if(r[i] == value) return i;
 	return -1;
+}
+
+template <class Range, class Predicate>
+Vector<int> FindAll(const Range& r, Predicate match, int from = 0)
+{
+	Vector<int> ndx;
+	for(int i = from; i < r.GetCount(); i++)
+		if(match(r[i]))
+			ndx.Add(i);
+	return ndx;
 }
 
 template <class Range, class T, class Less>
-int FindLowerBound(const Range& v, const T& val, const Less& less = std::less<T>())
+int FindLowerBound(const Range& r, const T& val, const Less& less)
 {
 	int pos = 0;
-	int count = v.GetCount();
+	int count = r.GetCount();
 	while(count > 0) {
 		int half = count >> 1;
 		int m = pos + half;
-		if(less(v[m], val)) {
+		if(less(r[m], val)) {
 			pos = m + 1;
 			count = count - half - 1;
 		}
@@ -159,20 +169,20 @@ int FindLowerBound(const Range& v, const T& val, const Less& less = std::less<T>
 }
 
 template <class Range, class T>
-int FindLowerBound(const Range& v, const T& val)
+int FindLowerBound(const Range& r, const T& val)
 {
-	return FindLowerBound(v, val, std::less<T>());
+	return FindLowerBound(r, val, std::less<T>());
 }
 
 template <class Range, class T, class L>
-int FindUpperBound(const Range& v, const T& val, const L& less = std::less<T>())
+int FindUpperBound(const Range& r, const T& val, const L& less)
 {
 	int pos = 0;
-	int count = v.GetCount();
+	int count = r.GetCount();
 	while(count > 0) {
 		int half = count >> 1;
 		int m = pos + half;
-		if(less(val, v[m]))
+		if(less(val, r[m]))
 			count = half;
 		else {
 			pos = m + 1;
@@ -183,22 +193,22 @@ int FindUpperBound(const Range& v, const T& val, const L& less = std::less<T>())
 }
 
 template <class Range, class T>
-int FindUpperBound(const Range& v, const T& val)
+int FindUpperBound(const Range& r, const T& val)
 {
-	return FindUpperBound(v, val, std::less<T>());
+	return FindUpperBound(r, val, std::less<T>());
 }
 
-template <class C, class T, class L>
-int FindBinary(const C& v, const T& val, const L& less)
+template <class Range, class T, class L>
+int FindBinary(const Range& r, const T& val, const L& less)
 {
-	int i = FindLowerBound(v, val, less);
-	return i < v.GetCount() && !less(val, v[i]) ? i : -1;
+	int i = FindLowerBound(r, val, less);
+	return i < r.GetCount() && !less(val, r[i]) ? i : -1;
 }
 
-template <class C, class T>
-int FindBinary(const C& v, const T& val)
+template <class Range, class T>
+int FindBinary(const Range& r, const T& val)
 {
-	return FindBinary(v, val, std::less<T>());
+	return FindBinary(r, val, std::less<T>());
 }
 
 template <class C, class T>
