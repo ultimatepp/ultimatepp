@@ -15,7 +15,7 @@ topic "ParseXmlFilter and IgnoreXmlPaths";
 [s1;:ParseXmlFilter`:`:struct: [@(0.0.255)3 struct][3 _][*3 ParseXmlFilter]&]
 [s2;%% This abstract class serves as filter for ParseXML function, 
 allowing it to ignore certain parts of source XML.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:ParseXmlFilter`:`:DoTag`(const String`&`): [@(0.0.255) virtual] 
@@ -36,7 +36,7 @@ in in resulting XmlNode, otherwise it is skipped.&]
 lic][3 _][*@3;3 ParseXmlFilter]&]
 [s2;%% This filter can be used to ignore some tags, defined by path, 
 from xml.&]
-[s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]
 [s5;:IgnoreXmlPaths`:`:IgnoreXmlPaths`(const char`*`): [* IgnoreXmlPaths]([@(0.0.255) con
