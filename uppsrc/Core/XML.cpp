@@ -285,9 +285,11 @@ void XmlParser::Next()
 			   term[3] == 'C' && term[4] == 'D' && term[5] == 'A' && term[6] == 'T' && term[7] == 'A' &&
 			   term[8] == '[') { // ![CDATA[
 				term += 9;
+				LLOG("CDATA");
 				for(;;) {
 					if(!HasMore())
 						throw XmlError("Unterminated CDATA");
+					LoadMore();
 					if(term[0] == ']' && term[1] == ']' && term[2] == '>') { // ]]>
 						term += 3;
 						break;
@@ -319,10 +321,8 @@ void XmlParser::Next()
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
 	
-	if(type == XML_TEXT) {
-		LLOG("XML_TEXT " << cdata);
+	if(type == XML_TEXT)
 		return;
-	}
 	
 	term++;
 	LoadMore();
@@ -334,6 +334,7 @@ void XmlParser::Next()
 			type = XML_COMMENT;
 			term += 2;
 			for(;;) {
+				LoadMore();
 				if(term[0] == '-' && term[1] == '-' && term[2] == '>')
 					break;
 				if(!HasMore())
@@ -347,6 +348,7 @@ void XmlParser::Next()
 		}
 		bool intdt = false;
 		for(;;) {
+			LoadMore();
 			if (*term == '[')
 				intdt = true;
 			if(*term == '>' && intdt == false) {
@@ -372,6 +374,7 @@ void XmlParser::Next()
 		type = XML_PI;
 		term++;
 		for(;;) {
+			LoadMore();
 			if(term[0] == '?' && term[1] == '>') {
 				term += 2;
 				return;
@@ -976,8 +979,6 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		m.CreateComment(p.ReadComment());
 		return m;
 	}
-	if(!p.IsText())
-		throw XmlError("Invalid XML.");
 	m.CreateText(p.ReadText());
 	m.Shrink();
 	return m;
@@ -1043,7 +1044,6 @@ XmlNode ParseXMLFile(const char *path, ParseXmlFilter& filter, dword style)
 		throw XmlError("Unable to open intput file!");
 	return ParseXML(in, filter, style);
 }
-
 
 bool ShouldPreserve(const String& s)
 {

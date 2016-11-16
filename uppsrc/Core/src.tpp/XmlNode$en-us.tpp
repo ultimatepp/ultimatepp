@@ -301,7 +301,7 @@ of&]
 [s3;%% &]
 [s2;%% Variants with [%-*@3 filter] allow to speficy a [^topic`:`/`/Core`/src`/ParseXmlFilter`$en`-us`#ParseXmlFilter`:`:struct^ f
 ilter class] to exclude some parts of XML, usually to preserve 
-memory.&]
+memory. Can throw XmlError.&]
 [s3;%% &]
 [s4; &]
 [s5;:AsXML`(Stream`&`,const XmlNode`&`,dword`): [@(0.0.255) void]_[* AsXML]([_^Stream^ Stre
