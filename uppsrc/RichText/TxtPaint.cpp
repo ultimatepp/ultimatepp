@@ -252,7 +252,7 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 		}
 	}
 
-	return pos - 1;
+	return clamp(pos - 1, 0, GetLength());
 }
 
 RichHotPos RichTxt::GetHotPos(int x, PageY y, int tolerance, RichContext rc) const
