@@ -6,4 +6,8 @@
 	<text>Some text</text>
 	<Number value="1.2345e100"/>
 	<TEST test_attr="23"/>
+	<cdata><![CDATA[<cdata&test>]]></cdata>
+	<empty1/>
+	<empty2></empty2>
+	<empty_cdata><![CDATA[]]></empty_cdata>
 </Configuration>
