@@ -45,14 +45,15 @@ RichEdit::UndoRec * RichEdit::UndoBegSelUnFix::GetRedo(const RichText& txt)
 	return new RichEdit::UndoBegSelFix;
 }
 
-bool RichEdit::BegSelTabFix()
+bool RichEdit::BegSelTabFix(int& count)
 {
-	if(begtabsel) {
+	if(begtabsel) { // If selection starts with first table which is the first element in the text
 		int c = cursor;
 		AddUndo(new UndoBegSelFix);
-		BegSelFixRaw(text);
+		BegSelFixRaw(text); // adds an empty paragraph at the start
 		Move(0);
-		Move(c + 1, true);
+		Move(c + 1, true); // and changes the selection
+		count++;
 		begtabsel = false;
 		return true;
 	}
@@ -60,7 +61,7 @@ bool RichEdit::BegSelTabFix()
 }
 
 void RichEdit::BegSelTabFixEnd(bool fix)
-{
+{ // removes empty paragraph added by BegSelTabFix
 	if(fix && GetLength() > 0) {
 		int c = cursor;
 		AddUndo(new UndoBegSelUnFix);
@@ -121,7 +122,7 @@ void RichEdit::SaveFormat()
 		pos = cursor;
 		count = 0;
 	}
-	bool b = BegSelTabFix();
+	bool b = BegSelTabFix(count);
 	SaveFormat(pos, count);
 	BegSelTabFixEnd(b);
 }
@@ -137,7 +138,7 @@ void RichEdit::ModifyFormat(int pos, const RichText::FormatInfo& fi, int count)
 {
 	if(IsReadOnly())
 		return;
-	bool b = BegSelTabFix();
+	bool b = BegSelTabFix(count);
 	Limit(pos, count);
 	SaveFormat(pos, count);
 	text.ApplyFormatInfo(pos, fi, count);

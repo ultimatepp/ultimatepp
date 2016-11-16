@@ -297,7 +297,7 @@ struct RichPos {
 	int              tabposintabtext;
 	int              tabtextlen;
 
-	int              table;
+	int              table; // current level table index (unique in text) or zero if not in table
 	Size             tabsize;
 	Point            cell;
 
