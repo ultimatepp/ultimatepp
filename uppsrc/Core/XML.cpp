@@ -285,7 +285,7 @@ void XmlParser::Next()
 			   term[3] == 'C' && term[4] == 'D' && term[5] == 'A' && term[6] == 'T' && term[7] == 'A' &&
 			   term[8] == '[') { // ![CDATA[
 				term += 9;
-				LLOG("CDATA");
+				DLOG("CDATA");
 				for(;;) {
 					if(!HasMore())
 						throw XmlError("Unterminated CDATA");
@@ -979,8 +979,12 @@ static XmlNode sReadXmlNode(XmlParser& p, ParseXmlFilter *filter, dword style)
 		m.CreateComment(p.ReadComment());
 		return m;
 	}
-	m.CreateText(p.ReadText());
-	m.Shrink();
+	if(p.IsText()) {
+		m.CreateText(p.ReadText());
+		m.Shrink();
+		return m;
+	}
+	p.ReadText(); // skip empty text
 	return m;
 }
 
@@ -990,8 +994,11 @@ XmlNode ParseXML(XmlParser& p, dword style, ParseXmlFilter *filter)
 {
 	XmlNode r;
 	while(!p.IsEof())
-		if(!Ignore(p, style))
-			r.Add() = sReadXmlNode(p, filter, style);
+		if(!Ignore(p, style)) {
+			XmlNode n = sReadXmlNode(p, filter, style);
+			if(n.GetType() != XML_DOC) // tag was ignored
+				r.Add() = pick(n);
+		}
 	return r;
 }
 
