@@ -17,7 +17,8 @@ CONSOLE_APP_MAIN
 	ASSERT(b.GetCount());
 	DDUMP(AsXML(a, XML_HEADER|XML_DOCTYPE));
 	DDUMP(AsXML(b, XML_HEADER|XML_DOCTYPE));
-	AsXML(b, XML_HEADER|XML_DOCTYPE);
+
+	ASSERT(AsXML(a, XML_HEADER|XML_DOCTYPE) == "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?><!DOCTYPE Configuration><Configuration><Language id=\"CS-CZ\"/><Dimension x=\"10\" y=\"20\"/><text>Some text</text><Number value=\"1.2345e100\"/><TEST test_attr=\"23\"/><cdata>&lt;cdata&amp;test&gt;</cdata><empty1/><empty2/><empty_cdata/></Configuration>");
 	
 	DLOG("================ OK");
 }
