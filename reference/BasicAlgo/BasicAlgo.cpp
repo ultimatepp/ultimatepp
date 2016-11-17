@@ -34,9 +34,12 @@ CONSOLE_APP_MAIN{
 //	DUMP(Min(empty)); // This is undefined (fails in ASSERT)
 	DUMP(Min(empty, -99999));
 
-	int mul = 1;
-	Accumulate(data, [&](int x) { mul *= x; });
-	DUMP(mul);
+	struct {
+		int mul = 1;
+		void operator()(int x) { mul *= x; };
+	} acc;
+	Accumulate(data, acc);
+	DUMP(acc.mul);
 	
 	DUMP(Sum(data));
 
@@ -48,7 +51,7 @@ CONSOLE_APP_MAIN{
 
 	DUMP(Sum(data));
 	
-	Vector<String> s = Split("one;two;three", ';');
+	Vector<String> s = { "one", "two", "three" };
 	DUMP(Sum(s, ""));
 	
 	data = { 5, 7, 9,  9, 14, 20, 23, 50 };
