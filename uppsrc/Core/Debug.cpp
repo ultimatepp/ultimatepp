@@ -190,6 +190,16 @@ void LogHex(const WString& s)
 	HexDump(VppLog(), ~s, sizeof(wchar) * s.GetLength());
 }
 
+void LogHex(uint64 i)
+{
+	VppLog() << "0x" << Format64Hex(i) << '\n';
+}
+
+void LogHex(void *p)
+{
+	VppLog() << p << '\n';
+}
+
 void SetMagic(byte *t, int count)
 {
 	for(int i = 0; i < count; i++)
