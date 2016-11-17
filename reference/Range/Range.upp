@@ -1,0 +1,11 @@
+description "Demonstrates SubRange, ConstRange and ViewRange\377";
+
+uses
+	Core;
+
+file
+	Range.cpp;
+
+mainconfig
+	"" = "";
+
