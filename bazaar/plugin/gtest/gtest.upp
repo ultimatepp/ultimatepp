@@ -42,6 +42,8 @@ file
 	internal/custom/gtest.h,
 	internal/custom/gtest-printers.h,
 	internal/custom/gtest-port.h,
+	Additions readonly separator,
+	GTest.usc,
 	Info readonly separator,
 	Copying;
 

@@ -1,0 +1,52 @@
+fn FindInTest(line, type) {
+	startPos = -1;
+	midPos   = -1;
+	endPos   = -1;
+	
+	for (i = 0; i < count(line); i++) {
+		if (line[i] == '(') {
+			startPos = i;
+		}
+		else if (line[i] == ',') {
+			midPos = i;
+		}
+		else if (line[i] == ')') {
+			endPos = i;
+		}
+	}
+	
+	switch (type) {
+		case(0):
+			return line[startPos + 1 : midPos];
+		case(1):
+			return line[midPos + 1: endPos];
+		default:
+			return "";
+	}
+}
+
+macro "Google Test" : "Launch all tests" Ctrl+R {
+	Execute(Target());
+}
+
+macro "Google Test" : "Launch test" Ctrl+E {
+	ClearConsole();
+	
+	currentLine = GetLine(GetCursor());
+	currentLineLength = GetLineLength(currentLine);
+	if (currentLineLength == 0) {
+		Echo("plugin/gtest/GTest.usc: The line is empty.");
+		return;
+	}
+	currentLineValue = Get(GetLinePos(currentLine), currentLineLength);
+	testGroup = replace(FindInTest(currentLineValue, 0), " ", "");
+	testName  = replace(FindInTest(currentLineValue, 1), " ", "");
+	
+	target = Target();
+	if (count(target) == 0) {
+		Echo("plugin/gtest/GTest.usc: Target is unknown. You need to build your project first.");
+		return;
+	}
+	
+	Execute(target + " " + "--gtest_filter=" + testGroup + "." + testName);
+}
