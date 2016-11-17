@@ -285,7 +285,7 @@ void XmlParser::Next()
 			   term[3] == 'C' && term[4] == 'D' && term[5] == 'A' && term[6] == 'T' && term[7] == 'A' &&
 			   term[8] == '[') { // ![CDATA[
 				term += 9;
-				DLOG("CDATA");
+				LLOG("CDATA");
 				for(;;) {
 					if(!HasMore())
 						throw XmlError("Unterminated CDATA");
