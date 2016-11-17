@@ -4,6 +4,8 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
+	TimeStop tm;
+
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	SeedRandom();
@@ -28,5 +30,5 @@ CONSOLE_APP_MAIN
 		LOG("================");
 	}
 	
-	LOG("===================== OK");
+	LOG("===================== OK in " << tm);
 }
