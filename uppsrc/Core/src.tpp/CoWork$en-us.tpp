@@ -31,7 +31,7 @@ from various threads (CoWork is internally synchronized).&]
 global FIFO stack for 2048 scheduled jobs. When there is no slot 
 available when scheduling the job, it is performed immediately 
 by Do. Finish method has to wait until all jobs scheduled by 
-CoWork.instance are finished, while waiting it attempts to perform 
+CoWork instance are finished, while waiting it attempts to perform 
 scheduled jobs from the same instance. That way work always progresses 
 even if there is shortage of worker threads.&]
 [s0;%% &]
@@ -46,7 +46,7 @@ tatic] [@(0.0.255) bool]_[* TrySchedule]([@(0.0.255) const]_[_^Upp`:`:Function^ 
 [s2;%% This is a low`-level function that attempts to schedule [%-*@3 fn] 
 to be executed by worker thread. Returns true if [%-*@3 fn] was 
 scheduled, false if not (in case there is no slot left in scheduling 
-stacks). Not that this function only schedules the function, 
+stacks). Note that this function only schedules the function, 
 the exact time of execution is unknown.&]
 [s3;%% &]
 [s4; &]
