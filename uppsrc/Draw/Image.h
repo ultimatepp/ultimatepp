@@ -185,7 +185,9 @@ public:
 	int   GetResolution() const;
 
 	const RGBA *Begin() const                 { return data ? ~data->buffer : NULL; }
+	const RGBA *begin() const                 { return Begin(); }
 	const RGBA *End() const                   { return Begin() + GetLength(); }
+	const RGBA *end() const                   { return End(); }
 	const RGBA* operator~() const             { return Begin(); }
 	operator const RGBA*() const              { return Begin(); }
 	const RGBA* operator[](int i) const       { ASSERT(data); return data->buffer[i]; }
