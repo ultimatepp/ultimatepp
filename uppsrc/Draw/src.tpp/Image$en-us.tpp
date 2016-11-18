@@ -88,11 +88,15 @@ for future use and returned.&]
 [s4; &]
 [s5;:Image`:`:Begin`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* Begin]()_[@(0.0.255) con
 st]&]
+[s5;:Upp`:`:Image`:`:begin`(`)const: [@(0.0.255) const]_[_^Upp`:`:RGBA^ RGBA]_`*[* begin]()
+_[@(0.0.255) const]&]
 [s2;%% Returns a pointer to the first pixel.&]
 [s3; &]
 [s4; &]
 [s5;:Image`:`:End`(`)const: [@(0.0.255) const]_[_^RGBA^ RGBA]_`*[* End]()_[@(0.0.255) const]&]
-[s2;%% Returns Begin() `+ GetLength().&]
+[s5;:Upp`:`:Image`:`:end`(`)const: [@(0.0.255) const]_[_^Upp`:`:RGBA^ RGBA]_`*[* end]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns begin() `+ GetLength().&]
 [s3; &]
 [s4; &]
 [s5;:Image`:`:GetSerialId`(`)const: [_^int64^ int64]_GetSerialId()[@(64) _][@(0.0.255) cons
