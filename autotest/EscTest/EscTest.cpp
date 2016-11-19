@@ -67,6 +67,9 @@ CHK(a, |, b); \
 LOG(#val << " = " << v << ", ref: " << ref); \
 ASSERT(v == ref); }
 
+#define CHKS(exp) \
+{ double x = Evaluate(#exp, global).GetNumber(); LOG(#exp << " = " << x << ", " << exp); ASSERT(x == exp); }
+
 void SIC_Print(EscEscape& e)
 {
 	if(e[0].IsArray())
@@ -120,8 +123,35 @@ CONSOLE_APP_MAIN
 	CHKV(Evaluate("a == 0", global).GetNumber(), 1);
 	CHKV(Evaluate("Zero() == 0", global).GetNumber(), 1);
 	CHKV(Evaluate("Zero() == 1", global).GetNumber(), 0);
+
+	LOG("=============================");
 	
-	LOG("----");
+	CHKS(sin(0.5))
+	CHKS(cos(0.5))
+	CHKS(tan(0.5))
+	CHKS(asin(0.5))
+	CHKS(acos(0.5))
+	CHKS(atan(0.5))
+	CHKS(atan2(0.5, 0.5))
+	CHKS(sinh(0.5))
+	CHKS(cosh(0.5))
+	CHKS(tanh(0.5))
+	CHKS(asinh(0.5))
+	CHKS(acosh(3.762196))
+	CHKS(atanh(0.5))
+
+	CHKS(exp(0.5))
+	CHKS(log(0.5))
+	CHKS(log10(0.5))
+	CHKS(exp2(8))
+	CHKS(log2(256))
+	CHKS(sqrt(0.5))
+	CHKS(cbrt(0.5))
+
+	CHKS(pow(10, 2))
+
+	LOG("=============================");
+
 	global.GetAdd("s", "Test");
 	CHKV((WString)Evaluate("s", global), "Test");
 	
