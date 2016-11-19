@@ -1,7 +1,5 @@
 description "Esc scripting language interpreter\377";
 
-optimize_speed;
-
 uses
 	Core;
 
