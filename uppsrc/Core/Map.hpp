@@ -92,65 +92,27 @@ inline void HashBase::Unlink(int i)
 	}
 }
 
-template <class T, class V>
-AIndex<T, V>::AIndex(const AIndex& s, int)
-:	key(s.key, 0),
-	hash(s.hash, 0) {}
-
-template <class T, class V>
-void AIndex<T, V>::Hash() {
+template <class T>
+void Index<T>::Hash() {
+	hash.Clear();
 	for(int i = 0; i < key.GetCount(); i++)
 		hash.Add(hashfn(key[i]));
 }
 
-template <class T, class V>
-AIndex<T, V>& AIndex<T, V>::operator=(V&& s) {
-	if(&key != &s) {
-		key = pick(s);
-		hash.Clear();
-		Hash();
-	}
-	return *this;
-}
-
-template <class T, class V>
-AIndex<T, V>& AIndex<T, V>::operator<<=(const V& s) {
-	key <<= s;
-	hash.Clear();
-	Hash();
-	return *this;
-}
-
-template <class T, class V>
-AIndex<T, V>::AIndex(V&& s) : key(pick(s)) {
-	Hash();
-}
-
-template <class T, class V>
-AIndex<T, V>::AIndex(const V& s, int) : key(s, 1) {
-	Hash();
-}
-
-template <class T, class V>
-AIndex<T, V>::AIndex(std::initializer_list<T> init) : key(init)
-{
-	Hash();
-}
-
-template <class T, class V>
-T& AIndex<T, V>::Add(const T& x, unsigned _hash) {
+template <class T>
+T& Index<T>::Add(const T& x, unsigned _hash) {
 	T& t = key.Add(x);
 	hash.Add(_hash);
 	return t;
 }
 
-template <class T, class V>
-T& AIndex<T, V>::Add(const T& x) {
+template <class T>
+T& Index<T>::Add(const T& x) {
 	return Add(x, hashfn(x));
 }
 
-template <class T, class V>
-int  AIndex<T, V>::FindAdd(const T& _key, unsigned _hash) {
+template <class T>
+int  Index<T>::FindAdd(const T& _key, unsigned _hash) {
 	int i = Find(_key, _hash);
 	if(i >= 0) return i;
 	i = key.GetCount();
@@ -158,8 +120,8 @@ int  AIndex<T, V>::FindAdd(const T& _key, unsigned _hash) {
 	return i;
 }
 
-template <class T, class V>
-int AIndex<T, V>::Put(const T& x, unsigned _hash)
+template <class T>
+int Index<T>::Put(const T& x, unsigned _hash)
 {
 	int q = hash.Put(_hash);
 	if(q < 0) {
@@ -171,29 +133,29 @@ int AIndex<T, V>::Put(const T& x, unsigned _hash)
 	return q;
 }
 
-template <class T, class V>
-int AIndex<T, V>::Put(const T& x)
+template <class T>
+int Index<T>::Put(const T& x)
 {
 	return Put(x, hashfn(x));
 }
 
-template <class T, class V>
-int  AIndex<T, V>::FindPut(const T& _key, unsigned _hash)
+template <class T>
+int  Index<T>::FindPut(const T& _key, unsigned _hash)
 {
 	int i = Find(_key, _hash);
 	if(i >= 0) return i;
 	return Put(_key, _hash);
 }
 
-template <class T, class V>
-int  AIndex<T, V>::FindPut(const T& key)
+template <class T>
+int  Index<T>::FindPut(const T& key)
 {
 	return FindPut(key, hashfn(key));
 }
 
-template <class T, class V>
+template <class T>
 inline
-int AIndex<T, V>::Find(const T& x, unsigned hash_) const {
+int Index<T>::Find(const T& x, unsigned hash_) const {
 	int i0 = hash.Find(hash_);
 	if(i0 >= 0) {
 		int i = i0;
@@ -206,79 +168,79 @@ int AIndex<T, V>::Find(const T& x, unsigned hash_) const {
 	return -1;
 }
 
-template <class T, class V>
-int AIndex<T, V>::Find(const T& x) const {
+template <class T>
+int Index<T>::Find(const T& x) const {
 	return Find(x, hashfn(x));
 }
 
-template <class T, class V>
-int AIndex<T, V>::FindNext(int i) const {
+template <class T>
+int Index<T>::FindNext(int i) const {
 	return Find0(key[i], hash.FindNext(i));
 }
 
-template <class T, class V>
-inline int AIndex<T, V>::FindLast(const T& x, unsigned _hash) const {
+template <class T>
+inline int Index<T>::FindLast(const T& x, unsigned _hash) const {
 	return FindB(x, hash.FindLast(_hash));
 }
 
-template <class T, class V>
-int AIndex<T, V>::FindLast(const T& x) const {
+template <class T>
+int Index<T>::FindLast(const T& x) const {
 	return FindLast(x, hashfn(x));
 }
 
-template <class T, class V>
-int AIndex<T, V>::FindPrev(int i) const {
+template <class T>
+int Index<T>::FindPrev(int i) const {
 	return FindB(key[i], hash.FindPrev(i));
 }
 
-template <class T, class V>
-int  AIndex<T, V>::FindAdd(const T& key) {
+template <class T>
+int  Index<T>::FindAdd(const T& key) {
 	return FindAdd(key, hashfn(key));
 }
 
-template <class T, class V>
-T&  AIndex<T, V>::Set(int i, const T& x, unsigned _hash) {
+template <class T>
+T&  Index<T>::Set(int i, const T& x, unsigned _hash) {
 	T& t = key[i];
 	t = x;
 	hash.Set(i, _hash);
 	return t;
 }
 
-template <class T, class V>
-T&  AIndex<T, V>::Set(int i, const T& x) {
+template <class T>
+T&  Index<T>::Set(int i, const T& x) {
 	return Set(i, x, hashfn(x));
 }
 
 #ifdef UPP
-template <class T, class V>
-void AIndex<T, V>::Serialize(Stream& s) {
+template <class T>
+void Index<T>::Serialize(Stream& s) {
 	if(s.IsLoading()) ClearIndex();
 	key.Serialize(s);
 	hash.Serialize(s);
 }
 
-template <class T, class V>
-void AIndex<T, V>::Xmlize(XmlIO& xio, const char *itemtag)
+template <class T>
+void Index<T>::Xmlize(XmlIO& xio, const char *itemtag)
 {
-	XmlizeIndex<T, AIndex<T, V> >(xio, itemtag, *this);
+	XmlizeIndex<T, Index<T> >(xio, itemtag, *this);
 }
 
-template <class T, class V>
-void AIndex<T, V>::Jsonize(JsonIO& jio)
+template <class T>
+void Index<T>::Jsonize(JsonIO& jio)
 {
-	JsonizeIndex<AIndex<T, V>, T>(jio, *this);
+	JsonizeIndex<Index<T>, T>(jio, *this);
 }
 
-template <class T, class V>
-String AIndex<T, V>::ToString() const
+template <class T>
+String Index<T>::ToString() const
 {
 	return AsStringArray(*this);
 }
 
 #endif
 
-template <class T, class V>
-int AIndex<T, V>::UnlinkKey(const T& k, unsigned h)
+template <class T>
+int Index<T>::UnlinkKey(const T& k, unsigned h)
 {
 	int n = 0;
 	int q = hash.Find(h);
@@ -293,63 +255,63 @@ int AIndex<T, V>::UnlinkKey(const T& k, unsigned h)
 	return n;
 }
 
-template <class T, class V>
-int AIndex<T, V>::UnlinkKey(const T& k)
+template <class T>
+int Index<T>::UnlinkKey(const T& k)
 {
 	return UnlinkKey(k, hashfn(k));
 }
 
-template <class T, class V>
-void AIndex<T, V>::Sweep()
+template <class T>
+void Index<T>::Sweep()
 {
 	Vector<int> b = hash.GetUnlinked();
 	Sort(b);
 	Remove(b);
 }
 
-template <class T, class V>
-T& AIndex<T, V>::Insert(int i, const T& k, unsigned h) {
+template <class T>
+T& Index<T>::Insert(int i, const T& k, unsigned h) {
 	key.Insert(i, k);
 	hash.Insert(i, h);
 	return key[i];
 }
 
-template <class T, class V>
-T& AIndex<T, V>::Insert(int i, const T& k) {
+template <class T>
+T& Index<T>::Insert(int i, const T& k) {
 	key.Insert(i, k);
 	hash.Insert(i, hashfn(k));
 	return key[i];
 }
 
-template <class T, class V>
-void AIndex<T, V>::Remove(int i)
+template <class T>
+void Index<T>::Remove(int i)
 {
 	key.Remove(i);
 	hash.Remove(i);
 }
 
-template <class T, class V>
-void AIndex<T, V>::Remove(int i, int count)
+template <class T>
+void Index<T>::Remove(int i, int count)
 {
 	key.Remove(i, count);
 	hash.Remove(i, count);
 }
 
-template <class T, class V>
-void AIndex<T, V>::Remove(const int *sorted_list, int count)
+template <class T>
+void Index<T>::Remove(const int *sorted_list, int count)
 {
 	key.Remove(sorted_list, count);
 	hash.Remove(sorted_list, count);
 }
 
-template <class T, class V>
-void AIndex<T, V>::Remove(const Vector<int>& sl)
+template <class T>
+void Index<T>::Remove(const Vector<int>& sl)
 {
 	Remove(sl, sl.GetCount());
 }
 
-template <class T, class V>
-int AIndex<T, V>::RemoveKey(const T& k, unsigned h)
+template <class T>
+int Index<T>::RemoveKey(const T& k, unsigned h)
 {
 	Vector<int> rk;
 	int q = Find(k, h);
@@ -361,8 +323,8 @@ int AIndex<T, V>::RemoveKey(const T& k, unsigned h)
 	return rk.GetCount();
 }
 
-template <class T, class V>
-int AIndex<T, V>::RemoveKey(const T& k)
+template <class T>
+int Index<T>::RemoveKey(const T& k)
 {
 	return RemoveKey(k, hashfn(k));
 }
