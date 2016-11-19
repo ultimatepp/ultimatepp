@@ -1,3 +1,12 @@
+template <class Range>
+using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
+
+template <class Range>
+using IteratorOf = decltype(((Range *)0)->begin());
+
+template <class Range>
+using ConstIteratorOf = decltype(((const Range *)0)->begin());
+
 template <class I>
 class SubRangeClass {
 	I   l;
