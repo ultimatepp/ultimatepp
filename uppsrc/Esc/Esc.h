@@ -291,6 +291,13 @@ struct EscEscape {
 };
 
 void Escape(ArrayMap<String, EscValue>& globals, const char *function, void (*escape)(EscEscape& e));
+
+inline // resolve overloading with Function...
+void Escfn(ArrayMap<String, EscValue>& globals, const char *function, void (*escape)(EscEscape& e))
+{
+	return Escape(globals, function, escape);
+}
+
 void Escape(ArrayMap<String, EscValue>& globals, const char *function, Event<EscEscape&> escape);
 
 void Scan(ArrayMap<String, EscValue>& global, const char *code, const char *filename = "");
