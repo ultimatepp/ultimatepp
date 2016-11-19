@@ -97,9 +97,10 @@ public:
 
 	T&       Add(const T& x, unsigned _hash);
 	T&       Add(const T& x);
+	Index&   operator<<(const T& x)         { Add(x); return *this; }
+
 	int      FindAdd(const T& key, unsigned _hash);
 	int      FindAdd(const T& key);
-	Index&  operator<<(const T& x)          { Add(x); return *this; }
 
 	int      Put(const T& x, unsigned _hash);
 	int      Put(const T& x);

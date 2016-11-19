@@ -47,7 +47,7 @@ void FinalSort__(T& c, const Less& less)
 template <class T>
 void FinalSort__(T& c)
 {
-	typedef typename T::ValueType VT;
+	typedef ValueTypeOf<T> VT;
 	FinalSort__(c.begin(), c.end(), std::less<VT>());
 }
 
