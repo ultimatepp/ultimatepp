@@ -1,6 +1,6 @@
 enum {
-	CO_PARTITION_MIN = 64,
-	CO_PARTITION_MAX = 4*1024*1024,
+	CO_PARTITION_MIN = 128,
+	CO_PARTITION_MAX = 1024*1024,
 };
 
 template <class C, class MC>
@@ -10,7 +10,7 @@ inline size_t CoChunk__(C count, MC min_chunk = CO_PARTITION_MIN, MC max_chunk =
 }
 
 template <class Iter, class Lambda>
-void CoPartition(Iter begin, Iter end, const Lambda& lambda, int min_chunk = 64, int max_chunk = 1024*1024*16)
+void CoPartition(Iter begin, Iter end, const Lambda& lambda, int min_chunk = CO_PARTITION_MIN, int max_chunk = CO_PARTITION_MAX)
 {
 	size_t chunk = CoChunk__(end - begin, min_chunk, max_chunk);
 	CoWork co;
