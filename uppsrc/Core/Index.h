@@ -145,7 +145,7 @@ public:
 	void     Trim(int n)                     { key.SetCount(n); hash.Trim(n); }
 	void     Drop(int n = 1)                 { key.Drop(n); hash.Drop(n); }
 	const T& Top() const                     { return key.Top(); }
-	T        Pop()                           { T x = B::Top(); B::Drop(); return x; }
+	T        Pop()                           { T x = Top(); Drop(); return x; }
 
 	void     Reserve(int n)                  { key.Reserve(n); hash.Reserve(n); }
 	void     Shrink()                        { key.Shrink(); hash.Shrink(); }
@@ -183,10 +183,8 @@ public:
 	ConstIterator begin() const                           { return key.Begin(); }
 	ConstIterator end() const                             { return key.End(); }
 
-	friend void Swap(Index& b)                            { UPP::Swap(hash, b.hash);
-	                                                        UPP::Swap(key, b.key); }
-
-	STL_INDEX_COMPATIBILITY(Index<T>)
+	friend void Swap(Index& a, Index& b)                  { UPP::Swap(a.hash, b.hash);
+	                                                        UPP::Swap(a.key, b.key); }
 
 #ifdef DEPRECATED
 	Index& operator<<=(const Vector<T>& s)                { *this = clone(s); return *this; }
@@ -197,5 +195,16 @@ public:
 	void     ClearIndex()                    { hash.ClearIndex(); }
 	void     Reindex(int n)                  { hash.Reindex(n); }
 	void     Reindex()                       { hash.Reindex(); }
+
+	typedef T             value_type;
+	typedef ConstIterator const_iterator;
+	typedef const T&      const_reference;
+	typedef int           size_type;
+	typedef int           difference_type;
+	const_iterator        Begin() const          { return begin(); }
+	const_iterator        End() const            { return end(); }
+	void                  clear()                { Clear(); }
+	size_type             size()                 { return GetCount(); }
+	bool                  empty() const          { return IsEmpty(); }
 #endif
 };
