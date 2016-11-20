@@ -228,6 +228,7 @@ void CoStableIndexSort2(MasterRange& r, Range2& r2, Range3& r3, const Less& less
 	                    IndexSort2Iterator__<I, I2, I3, VT>(r.end(), r2.end(), r3.end())).Write(),
 		         less);
 }
+
 template <class MasterRange, class Range2, class Range3, class Less>
 void CoStableIndexSort2(MasterRange&& r, Range2&& r2, Range3&& r3, const Less& less)
 {
