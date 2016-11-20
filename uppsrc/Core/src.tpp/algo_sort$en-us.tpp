@@ -18,7 +18,7 @@ topic "Sorting template functions";
 [s2;%% Sorts container [%-*@3 c] with ordering is defined by [%-*@3 less]. 
 The order of elements with the same value can be changed (unstable 
 sort).&]
-[s6;%% IterSwap must be defined for T`::Iterator.&]
+[s6;%% IterSwap must be defined for IteratorOf<T>.&]
 [s3; &]
 [s4; &]
 [s5;:Sort`(T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) v
@@ -26,7 +26,7 @@ oid]_[* Sort]([*@4 T][@(0.0.255) `&]_[*@3 c])&]
 [s2;%% Sorts container [%-*@3 c] with ordering is determined by [*/ operator<]. 
 The order of elements with the same value can be changed (unstable 
 sort).&]
-[s6;%% IterSwap must be defined for T`::Iterator.&]
+[s6;%% IterSwap must be defined for IteratorOf<T>.&]
 [s3;%% &]
 [s4; &]
 [s5;:StableSort`(T`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
@@ -35,7 +35,7 @@ sort).&]
 [s2;%% Sorts container [%-*@3 c] with ordering is defined by [%-*@3 less]. 
 The order of elements with the same value stays unchanged (stable 
 sort).&]
-[s6;%% IterSwap must be defined for T`::Iterator.&]
+[s6;%% IterSwap must be defined for IteratorOf<T>.&]
 [s3; &]
 [s4; &]
 [s5;:StableSort`(T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) void]_
@@ -43,7 +43,7 @@ sort).&]
 [s2;%% Sorts container [%-*@3 c] with ordering is determined by [*/ operator<]. 
  The order of elements with the same value stays unchanged (stable 
 sort).&]
-[s6;%% IterSwap must be defined for T`::Iterator.&]
+[s6;%% IterSwap must be defined for IteratorOf<T>.&]
 [s3;%% &]
 [s4; &]
 [s5;:IndexSort`(KC`&`,VC`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K
@@ -61,10 +61,6 @@ Ordering is defined by [* less].&]
 [s2;%% Sorts pair of containers. Both containers must have same number 
 of items. Resulting order is determined by the [* keys] container. 
 Ordering is determined by [*/ operator<].&]
-[s7;%% [*C@4 KC]-|Type of keys container.&]
-[s7;%% [*C@4 VC]-|Type of values container.&]
-[s7;%% [*C@3 keys]-|Container of keys.&]
-[s7;%% [*C@3 values]-|Container of values.&]
 [s3; &]
 [s4; &]
 [s5;:GetSortOrder`(const C`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C
@@ -74,11 +70,6 @@ ess])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [%-*@3 less]. The order of elements with the same 
 value can be changed (unstable sort).&]
-[s7;%% [*C@4 C]-|Type of container.&]
-[s7;%% [*C@3 container]-|Source container.&]
-[s7;%% [*C@3 less]-|Ordering predicate.&]
-[s7;%% [*/ Return value]-|Vector of positions of source container in 
-sorted order.&]
 [s3; &]
 [s4; &]
 [s5;:GetSortOrder`(const C`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
@@ -87,10 +78,7 @@ ntainer])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [*/ operator<]. The order of elements with the 
 same value can be changed (unstable sort).&]
-[s7;%% [*C@4 C]-|Type of container.&]
-[s7;%% [*C@3 container]-|Source container.&]
-[s7;%% [*/ Return value]-|Vector of positions of source container in 
-sorted order.&]
+[s7;%% &]
 [s3;%% &]
 [s4; &]
 [s5;:GetStableSortOrder`(const C`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) cl
@@ -108,44 +96,6 @@ ontainer])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [*/ operator<]. The order of elements with the 
 same value stays unchanged (stable sort).&]
-[s3; &]
-[s4; &]
-[s5;:FieldRelation`(O`(`*`)`,const R`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 O],
- [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_FieldRelationCls[@(0.0.255) <
-][*@4 O], [*@4 T], [*@4 R][@(0.0.255) >]_[* FieldRelation]([*@4 O]_(T`::[@(0.0.255) `*][*@3 member
-]), [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])&]
-[s2;%% Creates ordering predicate for [* T] based on the value of member 
-variable of[*  T].&]
-[s7;%% [*C@4 T]-|Type of element.&]
-[s7;%% [*C@3 member]-|Member variable of T.&]
-[s7;%% [*C@3 relation]-|Ordering relation for [* member].&]
-[s7;%% [*/ Return value]-|Ordering predicate.&]
-[s3; &]
-[s4; &]
-[s5;:MethodRelation`(O`(`*`)`(`)`,const R`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_MethodRelationC
-ls[@(0.0.255) <][*@4 O]_(T`::[@(0.0.255) `*])(), [*@4 T], [*@4 R][@(0.0.255) >]_[* MethodRelatio
-n]([*@4 O]_(T`::[@(0.0.255) `*][*@3 method])(), [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 r
-elation])&]
-[s2;%% Creates ordering predicate for [* T] based on the value returned 
-by non`-const method of [* T].&]
-[s7;%% [*C@4 T]-|Type of element.&]
-[s7;%% [*C@3 method]-|Method of T.&]
-[s7;%% [*C@3 relation]-|Ordering relation for value returned by method.&]
-[s7;%% [*/ Return value]-|Ordering predicate.&]
-[s3; &]
-[s4; &]
-[s5;:MethodRelation`(O`(`*`)`(`)const`,const R`&`): [@(0.0.255) template]_<[@(0.0.255) cl
-ass]_[*@4 O], [@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 R][@(0.0.255) >]_MethodRela
-tionCls[@(0.0.255) <][*@4 O]_(T`::[@(0.0.255) `*])()_[@(0.0.255) const], 
-[*@4 T], [*@4 R][@(0.0.255) >]_[* MethodRelation]([*@4 O]_(T`::[@(0.0.255) `*][*@3 method])()_[@(0.0.255) c
-onst], [@(0.0.255) const]_[*@4 R][@(0.0.255) `&]_[*@3 relation])&]
-[s2;%% Creates ordering predicate for [* T] based on the value returned 
-by const method of [* T].&]
-[s7;%% [*C@4 T]-|Type of element.&]
-[s7;%% [*C@3 method]-|Method of T.&]
-[s7;%% [*C@3 relation]-|Ordering relation for value returned by method.&]
-[s7;%% [*/ Return value]-|Ordering predicate.&]
 [s3;%% &]
 [s4; &]
 [s5;:SortByKey`(Map`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Map],

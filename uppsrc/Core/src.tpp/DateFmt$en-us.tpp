@@ -10,9 +10,8 @@ topic "Date formatting and scanning";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0;%- [*@3;4 Date formatting and scanning]&]
-[s3; &]
-[s0; &]
+[ {{10000@(113.42.0) [s0;%- [*@7;4 Date formatting and scanning]]}}&]
+[s0;*@3;4%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Global functions]]}}&]
 [s3;%- &]
 [s5;:StrToDate`(Date`&`,const char`*`):%- [@(0.0.255) const]_[@(0.0.255) char]_`*[* StrToDa
