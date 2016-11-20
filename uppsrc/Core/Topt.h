@@ -252,30 +252,6 @@ public:
     typedef T                                pointer; \
     typedef T                                reference; \
 
-#define STL_INDEX_COMPATIBILITY(C) \
-	typedef T             value_type; \
-	typedef ConstIterator const_iterator; \
-	typedef const T&      const_reference; \
-	typedef int           size_type; \
-	typedef int           difference_type; \
-	const_iterator        Begin() const          { return B::begin(); } \
-	const_iterator        End() const            { return B::end(); } \
-	void                  clear()                { B::Clear(); } \
-	size_type             size()                 { return B::GetCount(); } \
-	bool                  empty() const          { return B::IsEmpty(); } \
-
-#define STL_SINDEX_COMPATIBILITY(C) \
-	typedef T             value_type; \
-	typedef ConstIterator const_iterator; \
-	typedef const T&      const_reference; \
-	typedef int           size_type; \
-	typedef int           difference_type; \
-	const_iterator        Begin() const          { return begin(); } \
-	const_iterator        End() const            { return end(); } \
-	void                  clear()                { Clear(); } \
-	size_type             size()                 { return GetCount(); } \
-	bool                  empty() const          { return IsEmpty(); } \
-
 #define STL_BI_COMPATIBILITY(C) \
 	typedef T             value_type; \
 	typedef ConstIterator const_iterator; \

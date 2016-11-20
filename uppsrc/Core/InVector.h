@@ -536,12 +536,21 @@ public:
 
 	friend void Swap(SortedIndex& a, SortedIndex& b){ a.Swap(b); }
 
-	STL_SINDEX_COMPATIBILITY(SortedIndex<T _cm_ Less>)
-
 #ifdef DEPRECATED
 	ConstIterator    GetIter(int pos) const         { return iv.GetIter(pos); }
 	
 	typedef T        ValueType;
+
+	typedef T             value_type;
+	typedef ConstIterator const_iterator;
+	typedef const T&      const_reference;
+	typedef int           size_type;
+	typedef int           difference_type;
+	const_iterator        Begin() const          { return begin(); }
+	const_iterator        End() const            { return end(); }
+	void                  clear()                { Clear(); }
+	size_type             size()                 { return GetCount(); }
+	bool                  empty() const          { return IsEmpty(); }
 #endif
 };
 
