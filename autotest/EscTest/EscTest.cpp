@@ -67,8 +67,13 @@ CHK(a, |, b); \
 LOG(#val << " = " << v << ", ref: " << ref); \
 ASSERT(v == ref); }
 
+bool DblMatch(double x, double y)
+{
+	return abs(x - y) < min(abs(x), abs(y)) / 1e10;
+}
+
 #define CHKS(exp) \
-{ double x = Evaluate(#exp, global).GetNumber(); LOG(#exp << " = " << x << ", " << exp); ASSERT(x == exp); }
+{ double x = Evaluate(#exp, global).GetNumber(); LOG(#exp << " = " << x << ", " << exp); ASSERT(DblMatch(x, exp)); }
 
 void SIC_Print(EscEscape& e)
 {
@@ -173,4 +178,6 @@ CONSOLE_APP_MAIN
 	ASSERT(AsString(global.Get("out")) == "{ \"a\":123, \"b\":\"Hello!\" }");
 	ASSERT(AsString(global.Get("out2")) == "\"test\"");
 	ASSERT(AsString(global.Get("out3")) == "[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]");
+	
+	LOG("=========================== OK");
 }
