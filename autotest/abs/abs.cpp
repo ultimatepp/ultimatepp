@@ -16,6 +16,12 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+	int n = -1;
+	ASSERT(abs(n) == 1);
+	
+	ASSERT(abs(0) == 0);
+	ASSERT(abs(1) == 1);
+	ASSERT(abs(-1) == 1);
 	ASSERT(abs(-0x40000000) == 0x40000000);
 	ASSERT(abs((int16)-0x4000) == 0x4000);
 	ASSERT(abs((int64)-0x400000000000) == 0x400000000000);
