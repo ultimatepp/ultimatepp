@@ -4,10 +4,12 @@ inline int sgn(T a) { return a > 0 ? 1 : a < 0 ? -1 : 0; }
 template <class T>
 inline T tabs(T a) { return (a >= 0 ? a : -a); }
 
+#ifndef COMPILER_MSC
 inline double abs(double a) { return (a >= 0 ? a : -a); }
 inline float  abs(float a)  { return (a >= 0 ? a : -a); }
 inline int64  abs(int64 a)  { return (a >= 0 ? a : -a); }
 inline int32  abs(int a)  { return (a >= 0 ? a : -a); }
+#endif
 
 template <class T>
 inline int cmp(const T& a, const T& b) { return a > b ? 1 : a < b ? -1 : 0; }
