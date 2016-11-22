@@ -4,17 +4,9 @@ inline int sgn(T a) { return a > 0 ? 1 : a < 0 ? -1 : 0; }
 template <class T>
 inline T tabs(T a) { return (a >= 0 ? a : -a); }
 
-#ifndef COMPILER_MSC
-template <class T>
-inline T abs(T a) { return (a >= 0 ? a : -a); }
-
-/*
-inline double abs(double a) { return (a >= 0 ? a : -a); }
-inline float  abs(float a)  { return (a >= 0 ? a : -a); }
-inline int64  abs(int64 a)  { return (a >= 0 ? a : -a); }
-inline int16  abs(int16 a)  { return (a >= 0 ? a : -a); }
-inline int8   abs(int8 a)   { return (a >= 0 ? a : -a); }*/
-#endif
+// there is a general mess about abs, this is not ideal but best we can do now... as long as we
+// do not want abs(1.1) == 1 surprise in GCC
+template <class T> inline T abs(T a) { return (a >= 0 ? a : -a); }
 
 template <class T>
 inline int cmp(const T& a, const T& b) { return a > b ? 1 : a < b ? -1 : 0; }
