@@ -50,6 +50,26 @@ ValueTypeOf<T> Sum(const T& c)
 	return Sum(c, (ValueTypeOf<T>)0);
 }
 
+template <class Range, class V>
+int Count(const Range& r, const V& val)
+{
+	int count = 0;
+	for(const auto& x : r)
+		if(x == val)
+			count++;
+	return count;
+}
+
+template <class Range, class Predicate>
+int CountIf(const Range& r, Predicate p)
+{
+	int count = 0;
+	for(const auto& x : r)
+		if(p(x))
+			count++;
+	return count;
+}
+
 template <class Range, class Pred>
 int FindBest(const Range& r, const Pred& pred)
 {
