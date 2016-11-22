@@ -33,7 +33,8 @@ void CoPartition(Range& r, const Lambda& lambda)
 	while(begin < end) {
 		auto e = begin + min(chunk, size_t(end - begin));
 		co & [=] {
-			lambda(SubRange(begin, e));
+			auto sr = SubRange(begin, e); // we need l-value
+			lambda(sr);
 		};
 		begin = e;
 	}
@@ -49,7 +50,8 @@ void CoPartition(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
 	while(begin < end) {
 		auto e = begin + min(chunk, size_t(end - begin));
 		co & [=] {
-			lambda(SubRange(begin, e));
+			auto sr = SubRange(begin, e); // we need l-value
+			lambda(sr);
 		};
 		begin = e;
 	}
@@ -92,6 +94,30 @@ template <class T>
 ValueTypeOf<T> CoSum(const T& c)
 {
 	return CoSum(c, (ValueTypeOf<T>)0);
+}
+
+template <class Range, class V>
+int CoCount(const Range& r, const V& val)
+{
+	int count = 0;
+	CoPartition(r, [=, &val, &count](const SubRangeOf<const Range>& r) {
+		int n = Count(r, val);
+		CoWork::FinLock();
+		count += n;
+	});
+	return count;
+}
+
+template <class Range, class Predicate>
+int CoCountIf(const Range& r, const Predicate& p)
+{
+	int count = 0;
+	CoPartition(r, [=, &p, &count](const SubRangeOf<const Range>& r) {
+		int n = CountIf(r, p);
+		CoWork::FinLock();
+		count += n;
+	});
+	return count;
 }
 
 template <class Range, class Better>

@@ -61,7 +61,7 @@ int Count(const Range& r, const V& val)
 }
 
 template <class Range, class Predicate>
-int CountIf(const Range& r, Predicate p)
+int CountIf(const Range& r, const Predicate& p)
 {
 	int count = 0;
 	for(const auto& x : r)

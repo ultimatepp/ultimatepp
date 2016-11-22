@@ -69,9 +69,10 @@ ge][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 val])
 equal to [%-*@3 val] .&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CountIf`(const Range`&`,Predicate`): [@(0.0.255) template]_<[@(0.0.255) class
-]_[*@4 Range], [@(0.0.255) class]_[*@4 Predicate]>_[@(0.0.255) int]_[* CountIf]([@(0.0.255) c
-onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [*@4 Predicate]_[*@3 p])&]
+[s5;:Upp`:`:CountIf`(const Range`&`,const Predicate`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Predicate]>_[@(0.0.255) int]_[* CountIf]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Predicate][@(0.0.255) `&]_[*@3 p
+])&]
 [s2;%% Counts the number of elements in the Range [%-*@3 r] that satisfy 
 condition [%-*@3 p].&]
 [s3;%% &]
