@@ -41,5 +41,10 @@ CONSOLE_APP_MAIN
 	Check(FindLowerBound(x, 3), 2);
 	Check(FindUpperBound(x, 3), 4);
 	
+	Check(Count(x, 3), 2);
+	Check(Count(x, 10), 1);
+	Check(Count(x, 11), 0);
+	Check(CountIf(x, [] (auto x) { return x % 2 == 0; }), 3);
+	
 	LOG("================ OK");
 }
