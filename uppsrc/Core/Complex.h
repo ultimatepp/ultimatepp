@@ -32,6 +32,8 @@ template<> inline String AsString(const Complex& x) { return AsString((const std
 
 template<> inline dword ValueTypeNo(const Complex*) { return COMPLEX_V; }
 
+inline double abs(const Complex& c) { return std::abs(c); }
+
 inline const Complex& Nvl(const Complex& a, const Complex& b)  { return IsNull(a) ? b : a; }
 
 template<>
