@@ -62,6 +62,20 @@ ename]_[_^Upp`:`:ValueTypeOf^ ValueTypeOf]<[*@4 Range]>_[* Sum]([@(0.0.255) cons
 [s2;%% Same as Sum(c, 0).&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Count`(const Range`&`,const V`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
+[*@4 Range], [@(0.0.255) class]_[*@4 V]>_[@(0.0.255) int]_[* Count]([@(0.0.255) const]_[*@4 Ran
+ge][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 V][@(0.0.255) `&]_[*@3 val])&]
+[s2;%% Counts the number of elements in the Range [%-*@3 r] that are 
+equal to [%-*@3 val] .&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CountIf`(const Range`&`,Predicate`): [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 Range], [@(0.0.255) class]_[*@4 Predicate]>_[@(0.0.255) int]_[* CountIf]([@(0.0.255) c
+onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [*@4 Predicate]_[*@3 p])&]
+[s2;%% Counts the number of elements in the Range [%-*@3 r] that satisfy 
+condition [%-*@3 p].&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:FindBest`(const Range`&`,const Pred`&`): [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Pred]>_[@(0.0.255) int]_[* FindBest]([@(0.0.255) c
 onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Pred][@(0.0.255) `&]_[*@3 pre
