@@ -1,4 +1,4 @@
-topic "Convertion between strings and numbers";
+topic "Conversion between strings and numbers";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -10,7 +10,7 @@ topic "Convertion between strings and numbers";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 Convertion between strings and numbers]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Conversion between strings and numbers]]}}&]
 [s9; Sometimes you need to convert numbers to strings and vice vers. 
 U`+`+ provides several functions to help you efficiency deal 
 with that task. In this reference topic, we only mention the 
