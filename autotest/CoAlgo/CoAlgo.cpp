@@ -23,5 +23,21 @@ CONSOLE_APP_MAIN
 	ASSERT(Count(h, 200) == CoCount(h, 200));
 	ASSERT(CountIf(h, [](auto x) { return x % 17 == 0; }) == CoCountIf(h, [](auto x) { return x % 17 == 0; }));
 	
+	Vector<int> a;
+	Array<int> b;
+	for(int i = 0; i < 10000000; i++) {
+		int x = Random(10000);
+		a.Add(x);
+		b.Add(x);
+	}
+	
+	ASSERT(IsEqualRange(a, b));
+	ASSERT(CoIsEqualRange(a, b));
+	
+	a[a.GetCount() - a.GetCount() / 7]++;
+
+	ASSERT(!IsEqualRange(a, b));
+	ASSERT(!CoIsEqualRange(a, b));
+	
 	LOG("============ OK");
 }
