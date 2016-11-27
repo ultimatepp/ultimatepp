@@ -64,7 +64,7 @@ private:
 	const char * error_string;
 	int error_offset;
 	int error_code;
-	int pos[30];
+	int pos[120]; // if modified-chk config.h as well, keep at multiple of 3
 	int rc;
 	bool first;
 	int compile_options;
@@ -72,7 +72,7 @@ private:
 
 	bool ReplacePos(String& t, int p, int q, const String& r);
 	int  Replace0(String& t, const Vector<String>& rv, const int& rv_count, int& offset);
-	Vector<String> ResolveBackRef(const Vector<String>& rv);	
+	Vector<String> ResolveBackRef(const Vector<String>& rv);
 	Vector<String> Make_rv(const String& r);
 	
 public:
