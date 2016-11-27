@@ -145,6 +145,17 @@ If not found, returns `-1. Search starts at index ][*@3 from][%% .
 ]Runs in parallel, operator`=`= must be reentrant.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CoIsEqualRange`(const Range1`&`,const Range2`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range1], [@(0.0.255) class]_[*@4 Range2]>_[@(0.0.255) int]_[* CoIsEqualRange]([@(0.0.255) c
+onst]_[*@4 Range1][@(0.0.255) `&]_[*@3 r1], [@(0.0.255) const]_[*@4 Range2][@(0.0.255) `&]_[*@3 r
+2])&]
+[s2; [%% Returns true if ][*@3 a][%%  and ][*@3 b][%%  are equal. operator`=`= 
+is used to compare elements. Ranges are considered equal if they 
+have the same number of elements and for every element at index 
+][%%/ i: ][*@3 a][%% `[i`] `=`= ][*@3 b][%% `[i`]. ]Runs in parallel, operator`=`= 
+must be reentrant.&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:CoFindAll`(const Range`&`,Predicate`,int`): [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Predicate]>_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
 nt]>_[* CoFindAll]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], 
