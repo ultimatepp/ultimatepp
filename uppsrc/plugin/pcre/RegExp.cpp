@@ -91,7 +91,7 @@ bool RegExp::Study(bool restudy)
 
 int RegExp::Execute(const String &t, int offset)
 {
-	rc = pcre_exec(cpattern, study, t, t.GetLength(), offset, execute_options, pos, 30);
+	rc = pcre_exec(cpattern, study, t, t.GetLength(), offset, execute_options, pos, __countof(pos));
 	if(rc <= 0)
 		first = false;
 	return rc;

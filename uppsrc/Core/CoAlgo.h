@@ -214,6 +214,27 @@ int CoFindIndex(const Range& r, const V& value, int from = 0)
 	return CoFindMatch(r, [=](const V& m) { return m == value; }, from);
 }
 
+template <class Range1, class Range2>
+int CoIsEqualRange(const Range1& r1, const Range2& r2)
+{
+	int count = r1.GetCount();
+	if(r1.GetCount() != r2.GetCount())
+		return false;
+	std::atomic<bool> equal = true;
+	CoPartition(0, r1.GetCount(),
+		[=, &equal, &r1, &r2](int i, int e) {
+			while(i < e && equal) {
+				if(r1[i] != r2[i]) {
+					CoWork::FinLock();
+					equal = false;
+				}
+				i++;
+			}
+		}
+	);
+	return equal;
+}
+
 template <class Range, class Predicate>
 Vector<int> CoFindAll(const Range& r, Predicate match, int from = 0)
 {
