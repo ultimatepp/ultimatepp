@@ -21,7 +21,7 @@ CONSOLE_APP_MAIN
 		ASSERT(FindIndex(h, h[i]) == FindIndex(h, h[i]));
 	
 	ASSERT(Count(h, 200) == CoCount(h, 200));
-	ASSERT(CountIf(h, [](auto x) { return x % 17 == 0; }) == CoCountIf(h, [](auto x) { return x % 17 == 0; }));
+	ASSERT(CountIf(h, [](int x) { return x % 17 == 0; }) == CoCountIf(h, [](int x) { return x % 17 == 0; }));
 	
 	Vector<int> a;
 	Array<int> b;
