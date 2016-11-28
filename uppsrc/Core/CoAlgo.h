@@ -220,7 +220,7 @@ int CoIsEqualRange(const Range1& r1, const Range2& r2)
 	int count = r1.GetCount();
 	if(r1.GetCount() != r2.GetCount())
 		return false;
-	std::atomic<bool> equal = true;
+	std::atomic<bool> equal(true);
 	CoPartition(0, r1.GetCount(),
 		[=, &equal, &r1, &r2](int i, int e) {
 			while(i < e && equal) {
