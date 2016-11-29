@@ -4,7 +4,6 @@ public:
 	virtual void FrameLayout(Rect& r);
 
 private:
-
 	struct Tab {
 		PaintRect             info;
 		int                   width;

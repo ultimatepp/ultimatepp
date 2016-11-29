@@ -19,9 +19,7 @@ rameLR][@(0.0.255)3 <][_^Ctrl^3 Ctrl][@(0.0.255)3 >][3 _]&]
 [s0; &]
 [s2; 
 @@image:643&143
-€ƒç€—€€€ƒéÿ€€€€ø¯œíÕÍ‰€°€Œ…à§öÇ¨ğƒâ¼® âô‡Š„“¶±¦¶í£¼ğ°’Êÿ¾©ºã”÷ˆÒªë²£¥éøï¹Ú÷—
-àç¼ÀƒšĞÌ¸†èµĞ†«È¹‡ ÍÂğ¹€¥£èüËüÿç‰ÁŸÅÈ³ñ¤ã„­¶™Ú¾è±µä¾èÅÁ«Ğ†­øõ¬ˆ½¢ÉğâÙ¶ÚôÖÄÔĞ
-ıªáÓ˜ö¢šâ‘ÒŸıñîâé´—óëƒ×İ•ÙåøÖÁ°ã‡šĞ§€ö¯ğ´’’”¸Êêœ¶¤Œ·§¶©Ø­
+(A2cAFwAAAOn/AAAAAHic7dXNCYAwDAVgJ3YPR3ADD+I8riB0hwoeBJO2pjZtI7zwDhJKfz6pumN3CNIq6zIj6XjvOVr3F2c8QAMa0MwGaDXQhqtIhw8gzcLwOSUdI2h8S3znicGfxcizpGMELbaZ2mixteSdvmjBK9AGLXj1LIi9oklwYrZadNbEVNCqHuGe046YIpriEdKf/e5iaTSX8+vX3RVZZXhWsGMHDQEa0ID2r3A0jxIUuEpqnDYkNye2qVgt)
 &]
 [s0; &]
 [s9; InfoCtrl is a simple static Ctrl that represents information 
@@ -53,7 +51,8 @@ t]_[*@3 tab], [@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&]_[*@3 info],
 [s2; Sets (creates if needed) the section of the InfoCtrl.&]
 [s7; [%-*C@3 tab]-|Index of section.&]
 [s7; [%-*C@3 info]-|Content of section. Value content is converted to 
-the text using AsString.&]
+the text using AsString, unless it is Image, which is displayed 
+as is.&]
 [s7; [%-*C@3 width]-|Width of section in pixels. Negative value indicates 
 that section should be placed given number of pixels from the 
 right border of the InfoCtrl.&]
@@ -126,12 +125,7 @@ nfoCtrl]&]
 [s0; &]
 [s2; 
 @@image:1268&131
-‚ƒË€•€€€ƒëÿ€€€€ø·œí™½Ã ˆÆıÿ›ì™«¥ÙâËÄÊÑ«¶Ø¦éÖâ¤Î‘É¢Œó“€°ŒØŸúÅääÛ†¾¼à”„£ÿß€À›Öõ
-”õŸÃĞüüÿ™œàÔÂ°÷±Œ„«–‚©À°š é˜Š„«‚©•¸‹¶¬‹ûˆéÅÀ°•šÁ–©¨•à°‚åİ£È®ÔÇåÉÏöÒ¨ß‹•
-‚ñó¬ç®ö¶Á²ÑĞï½·Å¬©ËÉçÆ‘ıšé¡˜å…¦¥»ŸïˆÅä¡Èº£¹®ú·¸·ÉãèƒÅ÷°Ûåü»œèÏÃê²å¦¸Úäª«†Š–ç
-¾¬«Î‚É‡õö·¬‚İó‚É¬Û“—¶àæÄ˜ö…¢˜×Ñåÿß©ÆÜÁ¶Ç­¸Ì²ë©Ñ…Ï®˜Úñõ“œÌøù°‚åŸü¶‘ö¨ç²è«°Å¾½‡½
-øô÷„“ìÏ«»‚­†‹ï¥‰ç¦÷ÅåÏú•Ä‚‰ó¤‚¹ì¸†¡Øá¶¤İ„»Şâ÷¹šìß¦³¦«à‡Öƒ‚³“ñ­ì¶¯ì¸ÿÕ´µ
-€Ì¥ö¦Û÷‚…¾†ƒÌ¥Ş•ì½îêÙƒ§ÍÈŠæèÆ°ºŸ÷¿ï‘¢¹¿½ÍôÇœ
+(A8sAFQAAAOv/AAAAAHic7Zk9jsMgEEZ9/xtsGaXZYstEylG22CbpVuIOThHJIgzzEzAMWB96RWRbBr48YJSE/98AQBvWdXUfw1D8fH8BmY+cgWBUMPcxDA4EqwGCqUCwGiCYCgSrAYKpuAu2LIt7CMVAMJUawZaoFQ/gMIJlo0iu1MdlyZD20qhfC5WCcXMsDmcuNsGyUdDvvcWsqUvJ50b9GmkhmGUFJbufbwjFZI9IOiM5rnq4t8lj6INFsNvlfLuc6MPqsuUmONoqK4YKFueQLKvOgsmHdTesgl3zgslbE5e2YOZEdgUimNdRZd+pxtzBtse4Hcyya6lRzy6YWnF1E0x4+bCCZR82HpH2qOeyKzBFvj2Hvfh0gfeEE2yru4KtBgvvjgnnJnfFZfqVxIIJc6Q57DgGIVhhJN2QBLueXne5GmxfprMr4IdWA4Iz8a1sDbYvEOyQuP9VNDUQTCV2Jlt3Bb4GAxBMJRXsve7qWYPNyIpmaMYwH/c/75GiHb89Ac30xxw=)
 &]
 [s0; &]
 [s9; StatusBar is a Frame Ctrl intended to be used as informational 
@@ -291,4 +285,4 @@ by Total method.&]
 [s5;:ProgressInfo`:`:operator int`(`):%- [* operator_int]()&]
 [s7; [*/ Return value]-|Get().&]
 [s3; &]
-[s0; ]
+[s0; ]]
