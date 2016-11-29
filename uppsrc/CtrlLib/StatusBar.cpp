@@ -289,7 +289,7 @@ void ProgressInfo::Refresh()
 	if(!info) return;
 	String txt = Format(~text, pos);
 	info->Set(tabi, txt, tw ? tw : GetTextSize(txt, StdFont()).cx + 8);
-	info->Set(tabi + 1, PaintRect(ProgressDisplay(), 1000.0 * pos / total), cx);
+	info->Set(tabi + 1, PaintRect(ProgressDisplay(), 1000.0 * pos / (total ? total : 1000)), cx);
 }
 
 ProgressInfo& ProgressInfo::Set(int _pos, int _total)
