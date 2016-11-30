@@ -363,6 +363,11 @@ int GetMonths(Date since, Date till)
 	return 12 * till.year + till.month - (12 * since.year + since.month) + (till.day >= since.day) - 1;
 }
 
+int GetMonthsP(Date since, Date till)
+{
+	return 12 * till.year + till.month - (12 * since.year + since.month) + (till.day > since.day);
+}
+
 Date AddYears(Date date, int years) {
 	date.year += years;
 	date.day = min(date.day, LastDayOfMonth(date).day);
