@@ -221,7 +221,8 @@ nth], [@(0.0.255) int]_[*@3 year])&]
 [s4; &]
 [s5;:GetMonths`(Date`,Date`): [@(0.0.255) int]_[* GetMonths]([_^Date^ Date]_[*@3 since], 
 [_^Date^ Date]_[*@3 till])&]
-[s2;%% Number of months between two dates.&]
+[s2;%% Number of months between two dates. Only whole months are 
+counted.&]
 [s2;%% Examples:&]
 [s2;%% [*C@3       ][*C GetMonths(Date(2013, 2, 5), Date(2013, 3, 4)) 
 `= 0]&]
@@ -231,6 +232,20 @@ nth], [@(0.0.255) int]_[*@3 year])&]
 `= 0]&]
 [s2;%% [*C@3       ][*C GetMonths(Date(2013, 8, 31), Date(2013, 10, 1)) 
 `= 1]&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:GetMonthsP`(Upp`:`:Date`,Upp`:`:Date`): [@(0.0.255) int]_[* GetMonthsP]([_^Upp`:`:Date^ D
+ate]_[*@3 since], [_^Upp`:`:Date^ Date]_[*@3 till])&]
+[s2;%% Number of months between two dates, including partial months.&]
+[s2;%% Examples:&]
+[s2;%% [*C       GetMonthsP(Date(2016, 1, 1), Date(2016, 1, 1)) `= 
+0]&]
+[s2;%% [*C       GetMonthsP(Date(2016, 1, 1), Date(2016, 1, 2)) `= 
+1 // partial]&]
+[s2;%% [*C       GetMonthsP(Date(2016, 1, 1), Date(2016, 2, 1)) `= 
+1 // exact one]&]
+[s2;%% [*C       GetMonthsP(Date(2016, 1, 1), Date(2016, 2, 2)) `= 
+2 // partial 2nd]&]
 [s3;%% &]
 [s4; &]
 [s5;:AddYears`(Date`,int`): [_^Date^ Date]_[* AddYears]([_^Date^ Date]_[*@3 date], 

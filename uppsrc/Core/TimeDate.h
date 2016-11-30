@@ -61,6 +61,7 @@ int  DayOfYear(Date d);
 
 Date AddMonths(Date date, int months);
 int  GetMonths(Date since, Date till);
+int  GetMonthsP(Date since, Date till);
 Date AddYears(Date date, int years);
 
 Date GetWeekDate(int year, int week);
