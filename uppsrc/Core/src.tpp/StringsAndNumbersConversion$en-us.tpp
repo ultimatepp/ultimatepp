@@ -10,45 +10,49 @@ topic "Conversion between strings and numbers";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 Conversion between strings and numbers]]}}&]
-[s9; Sometimes you need to convert numbers to strings and vice vers. 
-U`+`+ provides several functions to help you efficiency deal 
-with that task. In this reference topic, we only mention the 
-most important ones.&]
-[s3; &]
-[s0; If you are looking for more powerfull convertion tools. You 
-can see at [^topic`:`/`/Core`/src`/Format`$en`-us`#Formatting`:`:struct^ Format] 
-and [^topic`:`/`/Core`/src`/Convert`$en`-us`#Convert`:`:class^ Convert] 
-class documentation.&]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* String to number converting functions]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Numeric Conversions]]}}&]
 [s3; &]
 [s5;:Upp`:`:StrInt`(const char`*`): [@(0.0.255) int]_[* StrInt]([@(0.0.255) const]_[@(0.0.255) c
 har`*]_[*@3 s])&]
-[s2; Converts string to integer.&]
-[s7;%% [%-*C@3 s]-|String&]
-[s7;%% [*/ Return value]-|String converted to integer.&]
-[s3; &]
-[s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Number to string converting functions]]}}&]
-[s0; &]
-[s5;:Upp`:`:IntStr`(int`): [_^Upp`:`:String^ String]_[* IntStr]([@(0.0.255) int]_[*@3 i])&]
-[s2; Converts integer to string.&]
-[s7;%% [%-*C@3 i]-|Integer.&]
-[s7;%% [*/ Return value]-|Integer converted to string.&]
+[s2; Converts string [*@3 s] to integer. Returns Null if there is no 
+number in [*@3 s].&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:IntStr64`(Upp`:`:int64`): [_^Upp`:`:String^ String]_[* IntStr64]([_^Upp`:`:int64^ i
-nt64]_[*@3 i])&]
-[s2; Converts 64 bits integer to string.&]
-[s7;%% [%-*C@3 i]-|Integer.&]
-[s7;%% [*/ Return value]-|Integer converted to string.&]
+[s5;:Upp`:`:IntStr`(int`): [_^Upp`:`:String^ String]_[* IntStr]([@(0.0.255) int]_[*@3 i])&]
+[s2; Converts integer [*@3 i] to String. If [*@3 i] is Null, returns 
+empty String.&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:StrDbl`(const char`*`): [@(0.0.255) double]_[* StrDbl]([@(0.0.255) const]_[@(0.0.255) c
+har`*]_[*@3 s])&]
+[s2; Converts string [*@3 s] to double. Returns Null if there is no 
+number in [*@3 s].&]
+[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:DblStr`(double`): [_^Upp`:`:String^ String]_[* DblStr]([@(0.0.255) double]_[*@3 d
 ])&]
-[s2; Converts double precision number to string.&]
-[s7;%% [%-*C@3 i]-|Integer.&]
-[s7;%% [*/ Return value]-|Double converted to string.&]
+[s2; Converts double [*@3 d] to String. If [*@3 d] is Null, returns empty 
+String.&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:StrInt64`(Upp`:`:int64`): [_^Upp`:`:String^ String]_[* StrInt64]([_^Upp`:`:int64^ i
+nt64]_[*@3 i])&]
+[s2;%% [%- Converts string ][%-*@3 s][%-  to 64`-bit integer. Returns Null 
+if there is no number in ][%-*@3 s][%- .].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:IntStr64`(Upp`:`:int64`): [_^Upp`:`:String^ String]_[* IntStr64]([_^Upp`:`:int64^ i
+nt64]_[*@3 i])&]
+[s2; Converts 64`-bit integer [*@3 i] to String. If [*@3 i] is Null, 
+returns empty String.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:IntDbl`(int`): [@(0.0.255) double]_[* IntDbl]([@(0.0.255) int]_[*@3 i])&]
+[s2;%% Converts integer to double. If [%-*@3 i] is Null, returns (double)Null, 
+otherwise performs simple cast.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:DblInt`(double`): [@(0.0.255) int]_[* DblInt]([@(0.0.255) double]_[*@3 d])&]
+[s2;%% Converts double to integer. If [%-*@3 d] is Null, returns (int)Null, 
+otherwise performs simple cast.&]
 [s0; ]]
