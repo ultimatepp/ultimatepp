@@ -18,10 +18,10 @@ inline String  FormatHex(const void *ptr)    { return FormatIntHex((int)(uintptr
 #endif
 
 String         FormatInteger(int a);
+String         FormatInt64(int64 a);
 String         FormatUnsigned(unsigned long a);
 String         FormatDouble(double a);
 String         FormatBool(bool a);
-String         FormatInt64(int64 a);
 
 template<> inline String AsString(const short& a)           { return FormatInteger(a); }
 template<> inline String AsString(const unsigned short& a)  { return FormatUnsigned(a); }
@@ -54,10 +54,6 @@ String         FormatDoubleExp(double d, int digits, int flags = 0, int fill_exp
 
 String         FormatDate(Date date, const char *format, int language = 0);
 String         FormatTime(Time time, const char *format, int language = 0);
-
-inline String  IntStr(int i)         { return FormatInt(i); }
-inline String  IntStr64(int64 i)     { return FormatInt64(i); }
-inline String  DblStr(double d)      { return FormatDouble(d, 10); }
 
 /*
 Date        ScanDate(const char *text, const char **endptr, const char *format, int language, Date base_date);

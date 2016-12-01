@@ -1,24 +1,34 @@
-unsigned      stou(const char *ptr, void *endptr = NULL, unsigned base = 10);
-inline unsigned stou(const byte *ptr, void *endptr = NULL, unsigned base = 10) { return stou((const char *)ptr, endptr, base); }
-unsigned      stou(const wchar *ptr, void *endptr = NULL, unsigned base = 10);
+unsigned      stou(const char *ptr, void *endptr = NULL, unsigned radix = 10);
+inline unsigned stou(const byte *ptr, void *endptr = NULL, unsigned radix = 10) { return stou((const char *)ptr, endptr, radix); }
+unsigned      stou(const wchar *ptr, void *endptr = NULL, unsigned radix = 10);
 
-uint64        stou64(const char *s, void *endptr = NULL, unsigned base = 10);
-uint64        stou64(const wchar *s, void *endptr = NULL, unsigned base = 10);
+uint64        stou64(const char *s, void *endptr = NULL, unsigned radix = 10);
+uint64        stou64(const wchar *s, void *endptr = NULL, unsigned radix = 10);
 
 int           ScanInt(const char *ptr, const char **endptr = NULL, int radix = 10);
 int           ScanInt(const wchar *ptr, const wchar **endptr = NULL, int radix = 10);
 
-int64         ScanInt64(const char *ptr, const char **endptr = NULL, int base = 10);
+int64         ScanInt64(const char *ptr, const char **endptr = NULL, int radix = 10);
 
 double        ScanDouble(const char *ptr, const char **endptr = NULL, bool accept_comma = true);
 double        ScanDouble(const wchar *ptr, const wchar **endptr = NULL, bool accept_comma = true);
 
 Value         StrIntValue(const char *s);
-inline int    StrInt(const char* s) { return ScanInt(s); }
-inline double IntDbl(int i)         { return IsNull(i) ? double(Null) : double(i); }
-inline int    DblInt(double d)      { return IsNull(d) ? int(Null) : fround(d); }
-Value         StrDblValue(const char* s);
-inline double StrDbl(const char* s) { return ScanDouble(s); }
+
+inline int     StrInt(const char* s)   { return ScanInt(s); }
+inline String  IntStr(int i)           { return FormatInt(i); }
+
+inline int64   StrInt64(const char *s) { return ScanInt64(s); }
+inline String  IntStr64(int64 i)       { return FormatInt64(i); }
+
+inline double  StrDbl(const char* s)   { return ScanDouble(s); }
+inline String  DblStr(double d)        { return FormatDouble(d, 10); }
+
+inline double  IntDbl(int i)           { return IsNull(i) ? double(Null) : double(i); }
+inline int     DblInt(double d)        { return IsNull(d) ? int(Null) : fround(d); }
+
+Value          StrDblValue(const char* s);
+
 
 Value NotNullError();
 

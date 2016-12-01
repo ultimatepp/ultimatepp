@@ -163,7 +163,7 @@ values are in range).&]
 [s4; &]
 [s5;:Time`:`:AsFileTime`(`)const: [_^FileTime^ FileTime]_[* AsFileTime]()_[@(0.0.255) const
 ]&]
-[s2;%% Converst the time into a system specific value.&]
+[s2;%% Converts the time into a system specific value.&]
 [s3; &]
 [s0; &]
 [s0; &]
@@ -291,7 +291,7 @@ har]_`*[*@3 s])&]
 [s3;%% &]
 [s4; &]
 [s5;:GetLeapSeconds`(Date`): [@(0.0.255) int]_[* GetLeapSeconds]([_^Date^ Date]_[*@3 dt])&]
-[s2;%% Returns the number of leap seconds that has occured since 
+[s2;%% Returns the number of leap seconds that has occurred since 
 the start of adding leap seconds till [%-*@3 dt].&]
 [s3;%% &]
 [s4; &]
