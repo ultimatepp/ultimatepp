@@ -644,7 +644,7 @@ void Ide::HelpMenu(Bar& menu)
 	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
 	menu.AddMenu("Online documentation..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$documentation$en-us.html"));
 	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
-	menu.MenuSeparator();
+	menu.Separator();
 	OnlineSearchMenu(menu);
 	menu.MenuSeparator();
 	menu.Add("About..", THISBACK(About));
