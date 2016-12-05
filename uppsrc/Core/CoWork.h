@@ -40,9 +40,8 @@ public:
 
 	static Pool& GetPool();
 
-	static thread_local bool is_worker;
+	static thread_local int worker_index;
 
-//	byte magic[sizeof(ConditionVariable)];
 	ConditionVariable waitforfinish;
 	Link<MJob, 2> jobs; // global stack and CoWork stack as double-linked lists
 	int todo;
@@ -72,11 +71,33 @@ public:
 	
 	bool IsFinished();
 
-	static bool IsWorker()                                    { return is_worker; }
+	static bool IsWorker()                                    { return worker_index >= 0; }
+	static int  GetWorkerIndex()                              { return worker_index; }
+	static int  GetPoolSize();
 	static void SetPoolSize(int n);
 
 	CoWork();
 	~CoWork();
+};
+
+template <class T>
+class CoWorkerResources {
+	int          workercount;
+	Buffer<T>    res;
+	
+public:
+	int GetCount() const  { return workercount + 1; }
+	T& operator[](int i)  { return res[i]; }
+
+	T& Get()              { int i = CoWork::GetWorkerIndex(); return res[i < 0 ? workercount : i]; }
+	T& operator~()        { return Get(); }
+	
+	CoWorkerResources()   { workercount = CoWork::GetPoolSize(); res.Alloc(GetCount()); }
+
+	CoWorkerResources(Event<T&> initializer) : CoWorkerResources() {
+		for(int i = 0; i < GetCount(); i++)
+			initializer(res[i]);
+	}
 };
 
 #else
