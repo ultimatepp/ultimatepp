@@ -108,8 +108,68 @@ non`-blocking variant of Finish).&]
 [s2;%% Returns true if current thread is CoWork worker thread.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:CoWork`:`:GetWorkerIndex`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetWorker
+Index]()&]
+[s2;%% Returns the index of worker `- index is >`= 0 and < GetPoolSize(). 
+This is useful if there is a need for per`-thread resources.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:GetPoolSize`(`): [@(0.0.255) static] [@(0.0.255) int]_[* GetPoolSize](
+)&]
+[s2;%% Returns the current count of worker threads.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:CoWork`:`:SetPoolSize`(int`): [@(0.0.255) static void]_[* SetPoolSize]([@(0.0.255) i
 nt]_[*@3 n])&]
 [s2;%% Adjusts the thread pool size (default pool size is CPU`_Cores() 
 `+ 2).&]
+[s0; &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkerResources]]}}&]
+[s3; &]
+[s1;:noref: [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][3 >]&]
+[s1;:Upp`:`:CoWorkerResources`:`:class: [@(0.0.255) class]_[* CoWorkerResources]&]
+[s2;%% This is a simple helper class that provides per`-worker resources. 
+For example, certain calculation requires the instance of computation 
+model that is not immutable, but can be reused over iterations. 
+In single`-thread code, a single instance of such model would 
+be used over the whole loop, however in multi`-threaded code, 
+each worker thread, plus thread that created CoWork need its 
+own instance. CoWorkerResources helps to manage such situation.&]
+[s0;%% &]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[s3; &]
+[s5;:Upp`:`:CoWorkerResources`:`:CoWorkerResources`(`): [* CoWorkerResources]()&]
+[s2;%% Creates a required number of instances so that each sub`-job 
+of CoWork has its unique instance.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWorkerResources`:`:CoWorkerResources`(Upp`:`:Event`<T`&`>`): [* CoWorkerR
+esources]([_^Upp`:`:Event^ Event]<[*@4 T][@(0.0.255) `&]>_[*@3 initializer])&]
+[s2;%% Creates a required number of instances so that each sub`-job 
+of CoWork has its unique instance.and initializes them using 
+[%-*@3 initializer].&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWorkerResources`:`:GetCount`(`)const: [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the number of instances. Note that this is equal to 
+CoWork`::GetPoolSize() if thread that created CoWorkerResources 
+is itself CoWork worker, or CoWork`::GetPoolSize() `+ 1 if it 
+is any other thread. The reason for this is that CoWork owner 
+can execute CoWork jobs too (while waiting in Finish).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWorkerResources`:`:operator`[`]`(int`): [*@4 T][@(0.0.255) `&]_[* operator`[`]
+]([@(0.0.255) int]_[*@3 i])&]
+[s2;%% Returns instance [%-*@3 i]. Together with GetCount can be used 
+to initialize resources (alternative method to using constructor 
+with [%-*@3 initializer].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWorkerResources`:`:Get`(`): [*@4 T][@(0.0.255) `&]_[* Get]()&]
+[s5;:Upp`:`:CoWorkerResources`:`:operator`~`(`): [*@4 T][@(0.0.255) `&]_[* operator`~]()&]
+[s2;%% Supposed to be called in CoWork job, returns a reference to 
+resources unique for the thread.&]
+[s3; &]
 [s0; ]]

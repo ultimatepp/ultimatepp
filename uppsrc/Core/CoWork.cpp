@@ -10,7 +10,7 @@ namespace Upp {
 #define LHITCOUNT(x) // RHITCOUNT(x)
 
 thread_local bool CoWork::Pool::finlock;
-thread_local bool CoWork::is_worker;
+thread_local int  CoWork::worker_index = -1;
 
 CoWork::Pool& CoWork::GetPool()
 {
@@ -28,7 +28,7 @@ void CoWork::Pool::InitThreads(int nthreads)
 {
 	LLOG("Pool::InitThreads: " << nthreads);
 	for(int i = 0; i < nthreads; i++)
-		CHECK(threads.Add().Run([=] { is_worker = true; ThreadRun(i); }, true));
+		CHECK(threads.Add().Run([=] { worker_index = i; ThreadRun(i); }, true));
 }
 
 void CoWork::Pool::ExitThreads()
@@ -46,9 +46,15 @@ void CoWork::Pool::ExitThreads()
 	lock.Leave();
 }
 
+int CoWork::GetPoolSize()
+{
+	int n = GetPool().threads.GetCount();
+	return n ? n : CPU_Cores() + 2;
+}
+
 CoWork::Pool::Pool()
 {
-	ASSERT(!is_worker);
+	ASSERT(!IsWorker());
 
 	InitThreads(CPU_Cores() + 2);
 
