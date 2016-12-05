@@ -36,6 +36,7 @@ struct WindowsList_ : WithWindowsList<StaticRect> {
 	}
 	void Fill();
 	void ButUpdate_Push();
+	void ButTopmost_Push();
 	void MenuCallback(Bar &bar);
 	void CbCopy();
 };

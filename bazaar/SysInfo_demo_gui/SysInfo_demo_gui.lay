@@ -159,6 +159,7 @@ END_LAYOUT
 LAYOUT(WindowsList, 672, 120)
 	ITEM(Label, dv___0, SetLabel(t_("Windows list")).SetFrame(ThinOutsetFrame()).HSizePosZ(0, 4).TopPosZ(0, 16))
 	ITEM(ArrayCtrl, Windows, HSizePosZ(0, 4).VSizePosZ(16, 36))
+	ITEM(Button, ButTopmost, SetLabel(t_("Set Topmost")).LeftPosZ(104, 88).BottomPosZ(5, 23))
 	ITEM(Button, ButUpdate, SetLabel(t_("Update")).LeftPosZ(4, 88).BottomPosZ(5, 23))
 END_LAYOUT
 
