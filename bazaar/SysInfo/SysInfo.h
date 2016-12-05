@@ -3,7 +3,7 @@
 
 #include "Functions4U/Functions4U.h"
 
-NAMESPACE_UPP
+using namespace Upp;
 
 /////////////////////////////////////////////////////////////////////
 // Processor Info
@@ -223,7 +223,7 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	void Serialize(Stream &stream);
 };
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
 
 #endif
 

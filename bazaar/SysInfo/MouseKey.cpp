@@ -1,6 +1,6 @@
 #include "SysInfo_in.h"
 
-NAMESPACE_UPP
+using namespace Upp;
 
 struct KeyCodes {
 	String key; 
@@ -532,4 +532,4 @@ void Keyb_SendKeys(String text, long finalDelay, long delayBetweenKeys)
 
 #endif
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE

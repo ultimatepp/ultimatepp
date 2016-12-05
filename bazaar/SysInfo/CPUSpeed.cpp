@@ -1,6 +1,6 @@
 #include "SysInfo.h"
 
-NAMESPACE_UPP
+using namespace Upp;
 
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 uint64 start, end;
@@ -63,4 +63,4 @@ int GetCpuSpeed()
 }
 #endif
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE

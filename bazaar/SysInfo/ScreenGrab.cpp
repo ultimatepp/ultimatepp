@@ -4,7 +4,7 @@
 #include <plugin/jpg/jpg.h>
 #include <plugin/bmp/bmp.h>
 
-NAMESPACE_UPP
+using namespace Upp;
 
 
 bool Window_SaveCapture(int64 windowId, String fileName, int left, int top, int width, int height)
@@ -78,33 +78,47 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 	ImageBuffer b;
 	
 	if ((hDC = GetDC(0)) == NULL)
-		goto end;
-	if ((memDC = CreateCompatibleDC(hDC)) == NULL) 
-		goto end;
-	if ((hb = CreateCompatibleBitmap(hDC, width, height)) == NULL) 
-		goto end;	
-	if ((oldBM = (HBITMAP)SelectObject(memDC, hb)) == NULL)
-		goto end;			
-	if (!BitBlt(memDC, 0, 0, width, height , hDC, left, top, SRCCOPY))
-		goto end;			
+		return Null;
+	if ((memDC = CreateCompatibleDC(hDC)) == NULL) {
+		ReleaseDC(0, hDC);
+		return Null;
+	}
+	if ((hb = CreateCompatibleBitmap(hDC, width, height)) == NULL) {
+		DeleteDC(memDC);
+		ReleaseDC(0, hDC);
+		return Null;
+	}
+	if ((oldBM = (HBITMAP)SelectObject(memDC, hb)) == NULL) {
+		DeleteObject(hb);
+		DeleteDC(memDC);
+		ReleaseDC(0, hDC);
+		return Null;
+	}		
+	if (!BitBlt(memDC, 0, 0, width, height , hDC, left, top, SRCCOPY)) {
+		DeleteObject(hb);
+		DeleteDC(memDC);
+		ReleaseDC(0, hDC);
+		return Null;		
+	}
 	
   	BITMAPINFO bmpInfo;
     ZeroMemory(&bmpInfo, sizeof(BITMAPINFO));
     bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    if (!GetDIBits(hDC, hb, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS))
-        goto end;
+    if (!GetDIBits(hDC, hb, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS)) {
+        DeleteObject(hb);
+        DeleteDC(memDC);
+		ReleaseDC(0, hDC);
+		return Null;		
+	}
    	if(bmpInfo.bmiHeader.biSizeImage <= 0)
      	bmpInfo.bmiHeader.biSizeImage = bmpInfo.bmiHeader.biWidth*labs(bmpInfo.bmiHeader.biHeight)*(bmpInfo.bmiHeader.biBitCount+7)/8;
 	bmpInfo.bmiHeader.biCompression = BI_RGB;
 	bmpInfo.bmiHeader.biHeight = -height;
 
 	b.Create(width, height);
-	if (!GetDIBits(hDC, hb, 0, height, ~b, (BITMAPINFO *)&bmpInfo.bmiHeader, DIB_RGB_COLORS))
-		goto end;
+	if (GetDIBits(hDC, hb, 0, height, ~b, (BITMAPINFO *)&bmpInfo.bmiHeader, DIB_RGB_COLORS))
+		img = b;
 	
-	img = b;
-	
-end:
 	SelectObject(hDC, oldBM);
 	DeleteObject(hb);
 	DeleteDC(memDC);
@@ -615,4 +629,4 @@ Image Snap_Window(int64 handle)
 	return Window_SaveCapture(handle);
 }
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE

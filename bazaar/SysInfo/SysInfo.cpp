@@ -11,7 +11,7 @@
 #endif
 #endif
 
-NAMESPACE_UPP
+using namespace Upp;
 
 #define TFILE <SysInfo/SysInfo.t>
 #include <Core/t.h>
@@ -24,10 +24,12 @@ NAMESPACE_UPP
 // Hardware Info
 #if defined(PLATFORM_WIN32)  
 
-#ifdef COMPILER_MINGW
-REFCLSID CLSID_WbemAdministrativeLocator =
+#ifdef COMPILER_MINGW		
+REFCLSID ___CLSID_WbemAdministrativeLocator =
    { 0xcb8555cc, 0x9128, 0x11d1, {0xad, 0x9b, 0x00, 0xc0, 0x4f, 0xd8, 0xfd, 0xff}};
-#endif 
+#else
+#define ___CLSID_WbemAdministrativeLocator CLSID_WbemAdministrativeLocator
+#endif
 
 bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], String nameSpace = "root\\cimv2") {
 	HRESULT hRes;
@@ -43,7 +45,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], Strin
 		return false;
 	}
 	IWbemLocator* pIWbemLocator = NULL;
-	if (CoCreateInstance(CLSID_WbemAdministrativeLocator, NULL, 
+	if (CoCreateInstance(___CLSID_WbemAdministrativeLocator, NULL, 
 		CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void **)&pIWbemLocator) != S_OK) {
 		CoUninitialize();
 		return false;
@@ -1874,17 +1876,17 @@ bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom
 
 void Window_Bottom(int64 windowId)
 {
-	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
+	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 void Window_Top(int64 windowId)
 {
-	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
+	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 void Window_TopMost(int64 windowId)
 {
-	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE || SWP_NOSIZE || SWP_SHOWWINDOW);
+	SetWindowPos(reinterpret_cast<HWND>(windowId), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 #endif
@@ -2220,4 +2222,4 @@ bool IsPortFree(int port) {
     return ret;
 }
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
