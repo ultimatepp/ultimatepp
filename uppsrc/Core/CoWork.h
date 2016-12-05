@@ -92,6 +92,9 @@ public:
 	T& Get()              { int i = CoWork::GetWorkerIndex(); return res[i < 0 ? workercount : i]; }
 	T& operator~()        { return Get(); }
 	
+	T *begin()            { return ~res; }
+	T *end()              { return ~res + GetCount(); }
+	
 	CoWorkerResources()   { workercount = CoWork::GetPoolSize(); res.Alloc(GetCount()); }
 
 	CoWorkerResources(Event<T&> initializer) : CoWorkerResources() {
