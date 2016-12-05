@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	CoWorkerResources.cpp;
+
+mainconfig
+	"" = "MT";
+
