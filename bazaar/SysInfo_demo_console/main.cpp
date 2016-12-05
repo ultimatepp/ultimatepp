@@ -162,7 +162,7 @@ void Test()
 	priority = GetProcessPriority(id);
 	Puts(Format("Process priority is: %s", priority >= 0? AsString(priority): "Not accesible"));
 
-	Window_SaveCapture(0, AppendFileName(GetDesktopFolder(), "Desktop")); 
+	Snap_Desktop(AppendFileName(GetDesktopFolder(), "Desktop")); 
 	Puts ("Screenshot saved in " + AppendFileName(GetDesktopFolder(), "Desktop"));
 	
 	Puts("\nLaunch file 'test.txt':");
