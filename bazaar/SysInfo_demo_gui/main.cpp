@@ -233,6 +233,7 @@ void SystemInfo::ButUpdate_Push() {
 	Fill();
 }
 
+
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #define SetBit(uIntFlagBuff, Bit)  		(uIntFlagBuff |= (Bit))
@@ -355,10 +356,19 @@ void WindowsList_::Fill() {
 	}
 	Windows.SetEditable();
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
+	ButTopmost.WhenPush = THISBACK(ButTopmost_Push);
 	static MenuBar bar;
 	//GetList().StdToolBar(bar); //bar(2).Remove();bar(1).Remove();
 	//GetList().WhenToolBar=THISBACK(cb);
 	Windows.WhenBar = THISBACK(MenuCallback);
+}
+
+void WindowsList_::ButTopmost_Push() {
+	int row = Windows.GetCursor();
+	if (row < 0)
+		return;
+	int64 id = ScanInt64(String(Windows.Get(row, 1)));
+	Window_TopMost(id);
 }
 
 void WindowsList_::CbCopy() {
@@ -462,11 +472,11 @@ void ScreenGrabTab::ButGrab_Push() {
 	
 	bool ret;
 	if (~SwGrabMode == 0) 
-		ret = Record_Desktop(EditFileNameGrab, EditTime, EditFrameRate, OpGrabMouse);
+		ret = Record_Desktop(~EditFileNameGrab, EditTime, EditFrameRate, OpGrabMouse);
 	else if (~SwGrabMode == 1) 
-		ret = Record_Window(EditFileNameGrab, EditTime, GetWindowIdFromCaption(EditWindowTitle, false), EditFrameRate, OpGrabMouse);
+		ret = Record_Window(~EditFileNameGrab, EditTime, GetWindowIdFromCaption(~EditWindowTitle, false), EditFrameRate, OpGrabMouse);
 	else if (~SwGrabMode == 2) 
-		ret = Record_DesktopRectangle(EditFileNameGrab, EditTime, EditLeft, EditTop, EditWidth, EditHeight, EditFrameRate, OpGrabMouse);
+		ret = Record_DesktopRectangle(~EditFileNameGrab, EditTime, EditLeft, EditTop, EditWidth, EditHeight, EditFrameRate, OpGrabMouse);
 	else
 		throw Exc("Unexpected value");
 	if (!ret)
