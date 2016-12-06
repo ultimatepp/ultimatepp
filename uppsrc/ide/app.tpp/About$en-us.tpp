@@ -5,8 +5,8 @@ topic "Copyright © 1999-2016 Ultimate++ team";
 [s0; [*+117 Copyright © 1998, 2016 Ultimate`+`+ team]&]
 [s0;i704;O9; Authors:[+117 -|][*+117 Mirek_Fídler, Koldo_Ramirez,][+117  
 ][*+117 Tomáš_Rylek, ][*^http`:`/`/www`.digitalsoftware`.pl^+117 Daniel_Kos][* , 
-][*+117 Massimo Del Fedele, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^ Zb
-igniew Rębacz]&]
+][*+117 Massimo Del Fedele, ][*^https`:`/`/www`.linkedin`.com`/in`/zbigniewrebacz^+117 Z
+bigniew Rębacz]&]
 [s0;i704;O9; Contributors:[+117 -|][* Sandor_Hojtsy, Zsolt_Debre, Guido_Schimmels, 
 Augusto_Roman, Arijus Bernotas, Michael_Albert , Marcus_Mauhart, 
 ][*^http`:`/`/nullptr`.nl`/^ Jan_Wilmans][* , Graeme_Prentice, Victor_Berchet, 
