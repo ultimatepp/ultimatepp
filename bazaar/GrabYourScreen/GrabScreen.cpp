@@ -95,11 +95,11 @@ void GrabScreen::ButGrab_Push() {
 	
 	bool ret;
 	if (swGrabMode.GetData() == 0) 
-		ret = Record_Desktop(editFileNameGrab, editTime, editFrameRate, opGrabMouse);
+		ret = Record_Desktop(~editFileNameGrab, editTime, editFrameRate, opGrabMouse);
 	else if (swGrabMode.GetData() == 1) 
-		ret = Record_Window(editFileNameGrab, editTime, GetWindowIdFromCaption(~editWindowTitle, false), editFrameRate, opGrabMouse);
+		ret = Record_Window(~editFileNameGrab, editTime, GetWindowIdFromCaption(~editWindowTitle, false), editFrameRate, opGrabMouse);
 	else if (swGrabMode.GetData() == 2) 
-		ret = Record_DesktopRectangle(editFileNameGrab, editTime, editLeft, editTop, editWidth, editHeight, editFrameRate, opGrabMouse);
+		ret = Record_DesktopRectangle(~editFileNameGrab, editTime, editLeft, editTop, editWidth, editHeight, editFrameRate, opGrabMouse);
 	else
 		throw Exc("Unexpected value");
 	if (!ret)
