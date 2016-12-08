@@ -644,7 +644,7 @@ public:
 	
 	WebSocket()                                                     { Reset(); }
 
-// keep missspelled method names
+// keep mispeled method names
 	bool   RecieveRaw() { return ReceiveRaw(); }
 	String Recieve()    { return Receive(); }
 };

@@ -17,6 +17,7 @@ topic "WebSocket";
 over existing TcpSocket connection, which performs server handshake 
 by calling WebAccept method.&]
 [s0;i448;a25;kKO9;:noref:@(0.0.255) &]
+[s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:WebSocket`:`:WebAccept`(TcpSocket`&`,HttpHeader`&`): [@(0.0.255) bool]_[* WebAccept](
