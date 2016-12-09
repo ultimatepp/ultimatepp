@@ -66,16 +66,15 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 	if (top == -1)
 		top = rc.top;
 	if (width == -1)
-		width	= rc.right - rc.left;
+		width = rc.right - rc.left;
 	if (height == -1)
-		height	= rc.bottom - rc.top;
+		height = rc.bottom - rc.top;
 
 	HDC hDC = NULL;
 	HDC memDC = NULL;
 	HBITMAP hb = NULL;
 	HBITMAP oldBM = NULL;
 	Image img = Null;
-	ImageBuffer b;
 	
 	if ((hDC = GetDC(0)) == NULL)
 		return Null;
@@ -94,29 +93,31 @@ Image Window_SaveCapture(int64 windowId, int left, int top, int width, int heigh
 		ReleaseDC(0, hDC);
 		return Null;
 	}		
-	if (!BitBlt(memDC, 0, 0, width, height , hDC, left, top, SRCCOPY)) {
+	if (!BitBlt(memDC, 0, 0, width, height, hDC, left, top, SRCCOPY|CAPTUREBLT)) {
 		DeleteObject(hb);
 		DeleteDC(memDC);
 		ReleaseDC(0, hDC);
 		return Null;		
 	}
-	
-  	BITMAPINFO bmpInfo;
-    ZeroMemory(&bmpInfo, sizeof(BITMAPINFO));
-    bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-    if (!GetDIBits(hDC, hb, 0, 0, NULL, &bmpInfo, DIB_RGB_COLORS)) {
+		
+  	BITMAPINFO bmi;
+    ZeroMemory(&bmi, sizeof(BITMAPINFO));
+    bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+    if (!GetDIBits(hDC, hb, 0, 0, NULL, &bmi, DIB_RGB_COLORS)) {
         DeleteObject(hb);
         DeleteDC(memDC);
 		ReleaseDC(0, hDC);
 		return Null;		
 	}
-   	if(bmpInfo.bmiHeader.biSizeImage <= 0)
-     	bmpInfo.bmiHeader.biSizeImage = bmpInfo.bmiHeader.biWidth*labs(bmpInfo.bmiHeader.biHeight)*(bmpInfo.bmiHeader.biBitCount+7)/8;
-	bmpInfo.bmiHeader.biCompression = BI_RGB;
-	bmpInfo.bmiHeader.biHeight = -height;
+   	if(bmi.bmiHeader.biSizeImage <= 0)
+     	bmi.bmiHeader.biSizeImage = bmi.bmiHeader.biWidth*labs(bmi.bmiHeader.biHeight)*
+     									(bmi.bmiHeader.biBitCount+7)/8;
+	bmi.bmiHeader.biCompression = BI_RGB;
+	bmi.bmiHeader.biHeight = -height;
+	bmi.bmiHeader.biBitCount = 32;
 
-	b.Create(width, height);
-	if (GetDIBits(hDC, hb, 0, height, ~b, (BITMAPINFO *)&bmpInfo.bmiHeader, DIB_RGB_COLORS))
+	ImageBuffer b(width, height);
+	if (GetDIBits(hDC, hb, 0, height, ~b, (BITMAPINFO *)&bmi.bmiHeader, DIB_RGB_COLORS))
 		img = b;
 	
 	SelectObject(hDC, oldBM);
