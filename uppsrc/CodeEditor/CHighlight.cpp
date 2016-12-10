@@ -194,7 +194,6 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	int lbrace = -1;
 	int lbclose = -1;
 	Color lbcolor = Null;
-	bool is_comment = false;
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
 		if(linecomment && linecont || pair == MAKELONG('/', '/') &&
@@ -202,7 +201,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		   highlight == HIGHLIGHT_PHP && *p == '#') {
 			while(p < e)
 				p = DoComment(hls, p, e);
-			is_comment = true;
+			comment = true;
 			break;
 		}
 		else
@@ -223,7 +222,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			hls.Put(2, hl_style[INK_COMMENT]);
 			p += 2;
 			comment = true;
-			is_comment = true;
+			comment = true;
 		}
 		else
 		if(*p == '(') {
@@ -342,7 +341,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 		}
 	}
-	if(hilite_ifdef && !IsNull(cppid) && !is_comment) {
+	if(hilite_ifdef && !IsNull(cppid) && !comment) {
 		if((cppid == "else" || cppid == "elif" || cppid == "endif") && !ifstack.IsEmpty()) {
 			WStringBuffer ifln;
 			ifln.Cat(" // ");
