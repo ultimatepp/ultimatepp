@@ -43,7 +43,7 @@ T_("Message")
 plPL("Wiadomo\305\233\304\207")
 
 T_("Connection to '%s' is untrusted&Load page anyway?")
-plPL("Po\305\202\304\205czenie z '%s' jest niezaufaned&Za\305\202adowa\304\207 "
+plPL("Po\305\202\304\205czenie z '%s' jest niezaufane&Za\305\202adowa\304\207 "
      "stron\304\231 mimo to?")
 
 

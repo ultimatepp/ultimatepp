@@ -153,21 +153,6 @@ bool ClientHandler::OnJSDialog(CefRefPtr<CefBrowser> browser, const CefString& o
 }
 
 
-static Upp::String GetCefTimeString(const CefTime& v) {
-	if (v.GetTimeT() == 0) return "Unspecified";
-
-	Upp::Time t;
-	t.year	= v.year;
-	t.month	= v.month;
-	t.day	= v.day_of_month;
-	t.hour	= v.hour;
-	t.minute= v.minute;
-	t.second= v.second;
-
-	return Upp::FormatTime(t, "YYYY-MM-DD hh:mm:ss");
-}
-
-
 bool ClientHandler::OnCertificateError(CefRefPtr<CefBrowser> browser, ErrorCode cert_error,
 										const CefString& request_url, CefRefPtr<CefSSLInfo> ssl_info,
 										CefRefPtr<CefRequestCallback> callback)
@@ -177,27 +162,32 @@ bool ClientHandler::OnCertificateError(CefRefPtr<CefBrowser> browser, ErrorCode 
 	bool cont = WhenCertificateError(request_url.ToString());
 
 	if (!cont){
-		CefRefPtr<CefSSLCertPrincipal> subject = ssl_info->GetSubject();
-		CefRefPtr<CefSSLCertPrincipal> issuer = ssl_info->GetIssuer();
+		Upp::String valid_start;
+		Upp::String valid_expiry;
+		Upp::String subject_str = "&nbsp;";
+		Upp::String issuer_str = "&nbsp;";
+		
+		if (ssl_info){
+			CefRefPtr<CefX509Certificate> cert = ssl_info->GetX509Certificate();
+			if (cert.get()){
+				valid_start = Upp::Format(Upp::TimeFromUTC(cert->GetValidStart().GetTimeT()));
+				valid_expiry = Upp::Format(Upp::TimeFromUTC(cert->GetValidExpiry().GetTimeT()));
+				CefRefPtr<CefX509CertPrincipal> subject = cert->GetSubject();
+				subject_str = subject.get() ? subject->GetDisplayName().ToString().c_str() : "&nbsp;";
+				CefRefPtr<CefX509CertPrincipal> issuer = cert->GetIssuer();
+				issuer_str = issuer.get() ? issuer->GetDisplayName().ToString().c_str() : "&nbsp;";
+			}
+		}
 	
-		// Build a table showing certificate information.
+		// certificate information
 		Upp::String ss;
-		ss << "<html><head></head><body>"
-			"<center><h1>Page certificate is not trusted</h1></center>"
-			"<br/>Certificate Information:"
-	        "<table border=1><tr><th>Field</th><th>Value</th></tr>"
-	        "<tr><td>Subject</td><td>" <<
-	            (subject.get() ? subject->GetDisplayName().ToString().c_str() : "&nbsp;") <<
-	            "</td></tr>"
-	        "<tr><td>Issuer</td><td>" <<
-	            (issuer.get() ? issuer->GetDisplayName().ToString().c_str() : "&nbsp;") <<
-	            "</td></tr>"
-	        "<tr><td>Valid Start</td><td>" <<
-	            GetCefTimeString(ssl_info->GetValidStart()) << "</td></tr>"
-	        "<tr><td>Valid Expiry</td><td>" <<
-	            GetCefTimeString(ssl_info->GetValidExpiry()) << "</td></tr>"
-	        "</table>"
-	        "</body></html>";
+		ss << "<h1>Page certificate is not trusted</h1><br/><br/>X.509 Certificate Information:"
+	        "<table border=1><tr><th>Field</th><th>Value</th></tr>" <<
+	        "<tr><td>Subject</td><td>" << subject_str << "</td></tr>"
+	        "<tr><td>Issuer</td><td>" << issuer_str << "</td></tr>"
+	        "<tr><td>Valid Start</td><td>" << valid_start << "</td></tr>"
+	        "<tr><td>Valid Expiry</td><td>" << valid_expiry << "</td></tr>"
+	        "</table>";
 	
 		browser->GetMainFrame()->LoadString(~ss, request_url);
 	}
