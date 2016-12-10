@@ -36,8 +36,8 @@ Windows.&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Linux]]}}&]
 [s0; &]
-[s0;i150;O0; download CEF package for Linux from https://cefbuilds.com/. 
-Downloading stable release is recommended (not `"dev channel`").&]
+[s0;i150;O0; download `"Standard Distribution`" CEF package for Linux 
+from http://opensource.spotify.com/cefbuilds/index.html&]
 [s0;i150;O0; unpack the archive to your `"MyApps`" directory&]
 [s0;i150;O0; go to CEF directory and run following commands:&]
 [s0; -|[C1 cmake `-G `"Unix Makefiles`" `-DCMAKE`_BUILD`_TYPE`=Release]&]
@@ -58,12 +58,13 @@ to work]&]
 [s0;i150;O0; configure library paths in TheIDE, menu [* Setup ]/ [* Build 
 methods]:&]
 [s0; -|[* INCLUDE directories] `- add CEF library directory, for example:&]
-[s0; -|[C1 /home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64]&]
+[s0; -|[C1 /home/`$USER/MyApps/cef`_binary`_3.2840.1518.gffd843c`_linux64]&]
 [s0; -|[* LIB directories] `- add CEF subdirectories containing libcef.so 
 and libcef`_dll`_wrapper.a, for example:&]
-[s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64/Release]&]
-[s0; [C1 -|/home/USER`_NAME/MyApps/cef`_binary`_3.2454.1327.g0ea96ca`_linux64/libcef`_dl
-l]&]
+[s0; [C1 -|/home/`$USER/MyApps/cef`_binary`_3.2840.1518.gffd843c`_linux64/libcef`_dll]&]
+[s0; [C1 -|/home/`$USER/MyApps/cef`_binary`_3.2840.1518.gffd843c`_linux64/Release]&]
+[s0; [C1 -|/home/`$USER/MyApps/cef`_binary`_3.2840.1518.gffd843c`_linux64/libcef`_dll`_w
+rapper]&]
 [s0;i150;O0; open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
 [s0;i150;O0; before you run compiled application, copy asset files 
@@ -146,7 +147,8 @@ to the output directory&]
 [s0; &]
 [s0;i150;O0; required software: Visual Studio 2015, CMake (http://www.cmake.org/downloa
 d/)&]
-[s0;i150;O0; download CEF package for Windows from https://cefbuilds.com/&]
+[s0;i150;O0; download `"Standard Distribution`" CEF package for Windows 
+from http://opensource.spotify.com/cefbuilds/index.html&]
 [s0;i150;O0; unpack the archive to your `"MyApps`" directory&]
 [s0;i150;O0; go to CEF directory and run following command:&]
 [s0; -|[C cmake `-G `"Visual Studio 14`"]&]
