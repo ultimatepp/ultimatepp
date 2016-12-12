@@ -130,7 +130,7 @@ String operator`+: String a; ... String x `= a`+ `" foo `" `+
 [s3; Smaller issues&]
 [s5; Stream`::SerializeRaw count is now int64 (instead of 32`-bit 
 int)&]
-[s5; 2G items limit is better implemented in StringBuffer, WStringBuffer, 
+[s5; 2GB items limit is better implemented in StringBuffer, WStringBuffer, 
 StringStream.&]
 [s5; StringStream now has SizeLimit option, if breached (when storing 
 data to StringStream), exception is thrown.&]

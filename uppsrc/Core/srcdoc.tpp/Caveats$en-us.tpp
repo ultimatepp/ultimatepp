@@ -87,8 +87,7 @@ the GUI init sequence.&]
 [s0; [C@5 `{]&]
 [s0; [C@5 ...]&]
 [s0; [C@5 `}]&]
-[s0;C@5 &]
-[s0; [C@5 `*.icpp]]
+[s0;C@5 ]
 ::^l/25r/25t/15b/15 [s0; Upp provides a nice solution to do init / deinit work of your 
 package`'s static or global stuff (i.e. if it`'s not Plain Ol`' 
 Data and needs some function calls).&]
@@ -103,11 +102,18 @@ won`'t be invoked.&]
 itself in an init facility from upper Upp code. So no code ref 
 downwards is added.&]
 [s0; &]
+[s0; [/ Deprecated Solution:]&]
+[s0; [/ If nothing else references some code in the file, make it a 
+.icpp file.]&]
+[s0;/ &]
+[s0; [/ .icpp files are forced to be linked no matter what. See ][/^topic`:`/`/ide`/app`/Files`$en`-us^ f
+iles ][/ description section in manual.]&]
+[s0;/ &]
 [s0; Solution:&]
-[s0; If nothing else references some code in the file, make it a 
-.icpp file.&]
+[s0; Use INITIALIZE([/ MyName]); in package header and INITIALIZER(PNGRaster) 
+`{ .. `} in .cpp where INITBLOCK / EXITBLOCK are. Possibly, you 
+can replace INITBLOCK by INITIALIZER body. Including header file 
+into main project ensures that file with INITIALIZER will be 
+linked into binary.]}}&]
 [s0; &]
-[s0; .icpp files are forced to be linked no matter what. See [^topic`:`/`/ide`/app`/Files`$en`-us^ f
-iles ]description section in manual]}}&]
-[s0; &]
-[s0; ]
+[s0; ]]
