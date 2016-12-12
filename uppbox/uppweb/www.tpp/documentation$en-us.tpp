@@ -77,9 +77,7 @@ Android builder]&]
 [s0; [*+117 Getting Started With Ultimate`+`+]&]
 [s0;*3 &]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/overview`$en`-us^+92 Overview]&]
-[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ Core 
-value types tutorial]&]
-[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Containers 
+[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core 
 tutorial]&]
 [s0;l160;~~~1024; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
 tutorial]&]
