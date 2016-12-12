@@ -1,0 +1,45 @@
+uses
+	Core,
+	RichEdit;
+
+file
+	Tutorial.h,
+	Tutorial.cpp,
+	Core readonly separator,
+	ToDo.cpp,
+	Range.cpp,
+	Logging.cpp,
+	String.cpp,
+	StringBuffer.cpp,
+	WString.cpp,
+	DateTime.cpp,
+	AsString.cpp,
+	Value.cpp,
+	Null.cpp,
+	Value2.cpp,
+	CombineHash.cpp,
+	Compare.cpp,
+	Vector.cpp,
+	Vector2.cpp,
+	Transfer.cpp,
+	ClientTypes.cpp,
+	Array.cpp,
+	PolyArray.cpp,
+	Bidirectional.cpp,
+	Index.cpp,
+	IndexClient.cpp,
+	Map.cpp,
+	One.cpp,
+	Any.cpp,
+	InVector.cpp,
+	SortedMap.cpp,
+	Tuple.cpp,
+	Ranges.cpp,
+	Sort.cpp,
+	Function.cpp,
+	tutorial2.cpp,
+	help.qtf;
+
+mainconfig
+	"" = "GUI";
+
