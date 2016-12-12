@@ -1,0 +1,5 @@
+#ifndef _tutorial2_icpp_init_stub
+#define _tutorial2_icpp_init_stub
+#include "Core/init"
+#include "RichEdit/init"
+#endif
