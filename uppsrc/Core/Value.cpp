@@ -127,35 +127,22 @@ int Value::Compare(const Value& v) const
 	return 0;
 }
 
-static bool sIsSame(const Value& a, const Value& b)
+bool Value::IsSame(const Value& b) const
 {
-	if(a.Is<ValueMap>() && b.Is<ValueMap>()) {
-		ValueMap m = a;
-		ValueMap n = b;
-		for(int i = 0; i < m.GetCount(); i++)
-			if(!sIsSame(n[m.GetKey(i)], m.GetValue(i)))
-				return false;
-		for(int i = 0; i < n.GetCount(); i++)
-			if(!sIsSame(m[n.GetKey(i)], n.GetValue(i)))
-				return false;
-		return true;
-	}
+	const Value& a = *this;
+	if(a.Is<ValueMap>() && b.Is<ValueMap>())
+		return ValueMap(a).IsSame(ValueMap(b));
 	else
 	if(a.Is<ValueArray>() && b.Is<ValueArray>()) {
 		if(a.GetCount() != b.GetCount())
 			return false;
 		for(int i = 0; i < a.GetCount(); i++)
-			if(!sIsSame(a[i], b[i]))
+			if(!a[i].IsSame(b[i]))
 				return false;
 		return true;
 	}
 	else
 		return a == b;
-}
-
-bool Value::IsSame(const Value& v) const
-{
-	return sIsSame(*this, v);
 }
 
 Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s)); Magic(); }

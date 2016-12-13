@@ -440,6 +440,8 @@ public:
 	bool     operator>=(const ValueMap& x) const    { return Compare(x) >= 0; }
 	bool     operator<(const ValueMap& x) const     { return Compare(x) < 0; }
 	bool     operator>(const ValueMap& x) const     { return Compare(x) > 0; }
+
+	bool     IsSame(const ValueMap& b) const;
 };
 
 class ValueGen {
