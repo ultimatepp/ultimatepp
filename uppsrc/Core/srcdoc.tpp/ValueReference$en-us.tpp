@@ -14,19 +14,19 @@ topic "Rules for references to Value internal maps elements";
 [b42;a42;2 $$12,12#45413000475342174754091244180557:text]
 [l321;t246;C@5;1 $$13,13#20902679421464641399138805415013:code]
 [{_}%EN-US 
-[s10; Rules for references to Value internal maps elements&]
-[s0; Value is originally designed as nonmutable concrete Value of 
-different concrete types.&]
+[s10; Rules for references to ValueArray, ValueMap and Value elements&]
+[s0; Value is originally designed as non`-mutable concrete Value 
+of different concrete types.&]
 [s0; &]
 [s0; However, as Value is commonly used to store complex hierarchies 
-(using ValueArray/ValueMap types), it is in the end very useful 
-to be able to reference ValueArray/ValueMap elements directly. 
-Validity of such references is restricted by following rule:&]
+(using ValueArray/ValueMap), it is in the end very useful to 
+be able to reference ValueArray/ValueMap elements directly. Validity 
+of such references is restricted by following rule:&]
 [s0; &]
-[s0; Reference obtained from Value (by Value`::At, Value`::GetAdd, 
-ValueArray`::At, ValueMap`::GetAdd and derivative methods) are 
-[* only valid until the next operation on originating Value `- 
-including just reading it.]&]
+[s0; Reference obtained from Value/ValueArray/ValueMap (by Value`::At, 
+Value`::GetAdd, ValueArray`::At, ValueMap`::GetAdd and derivative 
+methods) are [* only valid until the next operation on originating 
+Value `- including just reading it.]&]
 [s0; &]
 [s0; Examples of invalid code:&]
 [s0; &]
