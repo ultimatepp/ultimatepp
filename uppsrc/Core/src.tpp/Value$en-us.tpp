@@ -158,7 +158,7 @@ or Values containing them are not considered equal (as with operator`=`=).
 This method provides and alternative comparison of Values which 
 treats contained ValueMaps as unordered. It goes recursively 
 through any contained ValueMaps and ValueArrays too, for other 
-Value types it uses the normal operator`=`=.&]
+Value types than ValueMap it uses the normal operator`=`=.&]
 [s3; &]
 [s4;%- &]
 [s5;:Value`:`:Compare`(const Value`&`)const:%- [@(0.0.255) int]_[* Compare]([@(0.0.255) con

@@ -363,4 +363,16 @@ onst]_[_^ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 x])_[@(0.0.255) const]&]
 [s2; Compares two ValueMaps. Performs ordered (as ValueMap has order 
 of key`-value pairs) comparison of key`-value pairs.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ValueMap`:`:IsSame`(const Upp`:`:ValueMap`&`)const:%- [@(0.0.255) bool]_[* Is
+Same]([@(0.0.255) const]_[_^Upp`:`:ValueMap^ ValueMap][@(0.0.255) `&]_[*@3 b])_[@(0.0.255) c
+onst]&]
+[s2; ValueMap is ordered and is compared as such, which means that 
+even if values of keys are the same, if order is different, ValueMaps 
+or Values containing them are not considered equal (as with operator`=`=). 
+This method provides and alternative comparison of Values which 
+treats contained ValueMaps as unordered. It goes recursively 
+through any contained ValueMaps and ValueArrays too, for other 
+Value types than ValueMap it uses the normal operator`=`=.&]
+[s3; &]
 [s0; ]]

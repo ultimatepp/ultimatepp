@@ -381,6 +381,18 @@ int ValueMap::Compare(const ValueMap& b) const
 	return data->Compare((Value::Void *)b.data);
 }
 
+bool ValueMap::IsSame(const ValueMap& b) const
+{
+	for(int pass = 0; pass < 2; pass++) {
+		const ValueMap& m = pass ? *this : b;
+		const ValueMap& n = pass ? b : *this;
+		for(int i = 0; i < m.GetCount(); i++)
+			if(!n[m.GetKey(i)].IsSame(m.GetValue(i)))
+				return false;
+	}
+	return true;
+}
+
 String ValueMap::Data::AsString() const
 {
 	String s;
