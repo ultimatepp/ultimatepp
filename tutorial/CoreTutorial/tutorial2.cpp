@@ -8,9 +8,6 @@ GUI_APP_MAIN
 	DO(WStringTutorial);
 	DO(DateTime);
 	DO(AsStringTutorial);
-	DO(ValueTutorial);
-	DO(NullTutorial);
-	DO(Value2Tutorial);
 	DO(CombineHashTutorial);
 	DO(ComparableTutorial);
 
@@ -36,6 +33,12 @@ GUI_APP_MAIN
 	DO(Sorting);
 	
 	DO(FunctionTutorial);
+	DO(CapturingContainers);
+
+	DO(ValueTutorial);
+	DO(NullTutorial);
+	DO(Value2Tutorial);
+	DO(ValueArrayMap);
 
 	MakeTutorial();
 }

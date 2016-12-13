@@ -17,6 +17,7 @@ file
 	Value.cpp,
 	Null.cpp,
 	Value2.cpp,
+	ValueArrayMap.cpp,
 	CombineHash.cpp,
 	Compare.cpp,
 	Vector.cpp,
@@ -37,6 +38,7 @@ file
 	Ranges.cpp,
 	Sort.cpp,
 	Function.cpp,
+	CapturingContainers.cpp,
 	tutorial2.cpp,
 	help.qtf;
 
