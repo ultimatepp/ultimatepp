@@ -173,9 +173,10 @@ private:
 		bool          select:1;
 		bool          enabled:1;
 		bool          visible:1;
+		Color         paper;
 		Vector<Value> line;
 
-		Line() { select = false; enabled = true; visible = true; }
+		Line() { select = false; enabled = true; visible = true; paper = Null; }
 	};
 
 	Vector<Line>               array;
@@ -573,6 +574,8 @@ public:
 	int        GetLineCy(int i) const;
 	int        GetTotalCy() const;
 	int        GetLineAt(int y) const;
+	
+	void       SetLineColor(int i, Color c);
 
 	Rect       GetScreenCellRect(int i, int col) const;
 	Rect       GetScreenCellRectM(int i, int col) const;
