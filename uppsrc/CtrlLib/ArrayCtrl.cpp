@@ -631,6 +631,11 @@ void ArrayCtrl::SetLineCy(int i, int cy)
 	}
 }
 
+void ArrayCtrl::SetLineColor(int i, Color c)
+{
+	array.At(i).paper = c;
+}
+
 int  ArrayCtrl::GetTotalCy() const
 {
 	int i = GetCount();
@@ -802,6 +807,8 @@ const Display& ArrayCtrl::GetCellInfo(int i, int j, bool f0,
 	bg = i & 1 ? evenpaper : oddpaper;
 	if(nobg)
 		bg = Null;
+	if(i < array.GetCount() && !IsNull(array[i].paper))
+		bg = array[i].paper;
 	fg = i & 1 ? evenink : oddink;
 	if((st & Display::SELECT) ||
 	    !multiselect && (st & Display::CURSOR) && !nocursor ||

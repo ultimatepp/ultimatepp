@@ -1549,6 +1549,11 @@ GetLineCy(r) > y]).&]
 [s7; [*C@3 y]-|vertical pixel coordinate to locate&]
 [s7; [*/ Return value]-|zero`-based row number or `-1 when not found&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:SetLineColor`(int`,Upp`:`:Color`):%- [@(0.0.255) void]_[* SetLin
+eColor]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Color^ Color]_[*@3 c])&]
+[s2; Sets the background color of line [%-*@3 i] to [%-*@3 c].&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:GetClickColumn`(`)const: [@(0.0.255) int]_[* GetClickColumn]()_[@(0.0.255) c
 onst]&]
