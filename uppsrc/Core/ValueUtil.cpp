@@ -473,14 +473,18 @@ ValueMap::operator Value() const {
 	return Value(data);
 }
 
+void ValueMap::FromArray(const ValueArray& va)
+{
+	Init0();
+	for(int i = 0; i < va.GetCount(); i++)
+		Add(i, va[i]);
+}
+
 ValueMap::ValueMap(const Value& src)
 {
 	if(!IsNull(src)) {
 		if(IsType<ValueArray>(src)) {
-			ValueArray va = src;
-			Init0();
-			for(int i = 0; i < va.GetCount(); i++)
-				Add(i, va[i]);
+			FromArray(src);
 			return;
 		}
 		else {
