@@ -46,6 +46,12 @@ p][@(0.0.255) `&]_[*@3 v])&]
 [s2; Copy constructor.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:ValueMap`:`:ValueMap`(const Upp`:`:ValueArray`&`):%- [* ValueMap]([@(0.0.255) c
+onst]_[_^Upp`:`:ValueArray^ ValueArray][@(0.0.255) `&]_[*@3 va])&]
+[s2; Creates ValueMap from ValueArray. ValueArray elements become 
+values with keys equal to indices.&]
+[s3; &]
+[s4;%- &]
 [s5;:Upp`:`:ValueMap`:`:ValueMap`(Upp`:`:Index`<Upp`:`:Value`>`&`&`,Upp`:`:Vector`<Upp`:`:Value`>`&`&`):%- [* V
 alueMap]([_^Upp`:`:Index^ Index]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 k], 
 [_^Upp`:`:Vector^ Vector]<[_^Upp`:`:Value^ Value]>`&`&_[*@3 v])&]
