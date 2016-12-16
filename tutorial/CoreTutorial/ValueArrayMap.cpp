@@ -87,6 +87,13 @@ void ValueArrayMap()
 	
 	DUMP(m["two"]);
 	
+	/// When key is not present in the map, `operator[]` returns void Value (which is also
+	/// Null):
+	
+	DUMP(m["key"]);
+	DUMP(m["key"].IsVoid());
+	DUMP(IsNull(m["key"]));
+	
 	/// Just like `VectorMap`, `ValueMap` is ordered, so the order of adding pairs to it
 	/// matters:
 	
@@ -102,7 +109,70 @@ void ValueArrayMap()
 	
 	DUMP(m.IsSame(m2));
 	
-	/// 
+	/// Iterating ValueMap can be achieved with `GetCount`, `GetKey` and `GetValue`:
+	
+	for(int i = 0; i < m.GetCount(); i++)
+		LOG(m.GetKey(i) << " = " << m.GetValue(i));
+	
+	/// It is possible to get `ValueArray` of values:
+	
+	LOG(m.GetValues());
+	
+	/// `GetKeys` gets constant reference to `Index<Value>` of keys:
+	
+	LOG(m.GetKeys());
+	
+	/// It is possible to change the value with `Set`:
+	
+	m.Set("two", 4);
+	
+	DUMP(m);
+	
+	/// Or to change the value of key with `SetKey`:
+	
+	m.SetKey(1, "four");
+	
+	DUMP(m);
+	
+	/// It is possible get a reference of value at given key, (with
+	/// ^topic://Core/srcdoc/ValueReference$en-us:special rules^) with `GetAdd` or `operator()`:
+	
+	Value& h = m("five");
+	
+	h = 5;
+	
+	DUMP(m);
+	
+	/// When ValueMap is stored into Value, `operator[](String)` provides access to value at
+	/// key. Note that this narrows keys to text values:
+	
+	v = m;
+	DUMP(v);
+	DUMP(v["five"]);
+	
+	/// `Value::GetAdd` and `Value::operator()` provide a reference to value at key, with
+	/// ^topic://Core/srcdoc/ValueReference$en-us:special rules^:
+	
+	v.GetAdd("newkey") = "foo";
+	v("five") = "FIVE";
+	
+	DUMP(v);
+	
+	/// `ValueMap` and `ValueArray` are convertible with each other. When assigning `ValueMap`
+	/// to `ValueArray`, values are simply used:
+	
+	ValueArray v2 = m;
+
+	DUMP(v2);
+	
+	/// When assigning `ValueArray` to `ValueMap`, keys are set as indices of elements:
+	
+	ValueMap m3 = v2;
+
+	DUMP(m3);
+	
+	/// With basic `Value` types `int`, `String`, `ValueArray` and `ValueMap`, `Value` can
+	/// represent JSON:
 	
 	Value j = ParseJSON("{ \"array\" : [ 1, 2, 3 ] }");
 	
@@ -114,5 +184,11 @@ void ValueArrayMap()
 	
 	DUMP(AsJSON(j));
 	
+	///
+	
+	j("array").At(1) = ValueMap()("key", 1);
+	
+	DUMP(AsJSON(j));
+
 	///
 }
