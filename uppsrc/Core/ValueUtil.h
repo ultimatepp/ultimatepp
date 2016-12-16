@@ -340,6 +340,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 	static ValueMap::Data& UnShare(ValueMap::Data *&ptr) { if(ptr->GetRefCount() != 1) Clone(ptr); return *ptr; }
 	Data& UnShare() { return UnShare(data); }
 	void  Init0();
+	void  FromArray(const ValueArray& va);
 
 	friend Value::Void *ValueMapDataCreate();
 	friend class Value;
@@ -347,6 +348,7 @@ class ValueMap : public ValueType<ValueMap, VALUEMAP_V, Moveable<ValueMap> >{
 public:
 	ValueMap()                                      { Init0(); }
 	ValueMap(const ValueMap& v);
+	ValueMap(const ValueArray& va)                  { FromArray(va); }
 	ValueMap(Index<Value>&& k, Vector<Value>&& v);
 	ValueMap(VectorMap<Value, Value>&& m);
 	ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep);
