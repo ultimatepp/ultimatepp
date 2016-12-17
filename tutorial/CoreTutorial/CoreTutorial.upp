@@ -37,6 +37,7 @@ file
 	Tuple.cpp,
 	Ranges.cpp,
 	Sort.cpp,
+	Algo.cpp,
 	Function.cpp,
 	CapturingContainers.cpp,
 	tutorial2.cpp,
