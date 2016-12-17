@@ -30,6 +30,7 @@ GUI_APP_MAIN
 	DO(TupleTutorial);
 
 	DO(Range);
+	DO(Algo);
 	DO(Sorting);
 	
 	DO(FunctionTutorial);
