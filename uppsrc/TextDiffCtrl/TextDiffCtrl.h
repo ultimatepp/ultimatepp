@@ -58,6 +58,9 @@ private:
 		bool   diff;
 		String text;
 		int    level;
+		String text_diff;
+		int    number_diff;
+		bool   left;
 	};
 	Array<Line>    lines;
 	int            maxwidth;
@@ -75,12 +78,16 @@ private:
 	int            cursor;
 	int            anchor;
 	bool           gutter_capture;
+	bool           show_line_number;
+	bool           show_white_space;
+	bool           show_diff_highlight;
+	bool           change_paper_color;
 
 	typedef TextCompareCtrl CLASSNAME;
 
 public:
 	Event<>        WhenScroll;
-	Event<int> WhenLeftDouble;
+	Callback2<int, int> WhenLeftDouble;
 	Event<Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
 
 	void           SetCount(int c);
@@ -95,6 +102,7 @@ public:
 	void           NumberBgColor(Color bg)  { number_bg = bg; Refresh(); }
 	Color          GetNumberBgColor() const { return number_bg; }
 
+	void           AutoHideSb(bool ssb=true){ scroll.AutoHide(ssb); }
 	void           ShowSb(bool ssb)         { scroll.ShowY(ssb); }
 	void           HideSb()                 { ShowSb(false); }
 
@@ -104,19 +112,32 @@ public:
 	void           TabSize(int t);
 	int            GetTabSize() const { return tabsize; }
 
-	void           Set(int line, String text, bool diff, int number, int level);
+	void           Set(int line, String text, bool diff, int number, int level, String text_diff, int number_diff, bool left);
 	String         GetText(int line) const { return lines[line].text; }
 	bool           GetDiff(int line) const { return lines[line].diff; }
 	int            GetNumber(int line) const { return lines[line].number; }
+	int            GetNumberDiff(int line) const { return lines[line].number_diff; }
 
 	Point          GetPos() const;
 	void           SetPos(Point pos);
 
 	int            GetSb() const { return scroll.Get().y; }
 	void           SetSb(int y)  { scroll.Set(0, y); }
-	
+
 	void           ClearSelection()           { cursor = Null; Refresh(); }
 	void           SetSelection(int l, int h) { cursor = l; anchor = h; }
+
+	void           ShowLineNumber(bool sln)   { show_line_number = sln; Refresh(); }
+	void           HideLineNumber()           { ShowLineNumber(false); }
+
+	void           ShowWhiteSpace(bool sws)   { show_white_space = sws; Refresh(); }
+	void           HideWhiteSpace()           { ShowWhiteSpace(false); }
+
+	void           DiffHighlight(bool dh)     { show_diff_highlight = dh; Refresh(); }
+	void           NoDiffHighlight()          { DiffHighlight(false); }
+
+	void           ChangePaperColor(bool cpc) { change_paper_color = cpc; Refresh(); }
+	void           NoChangePaperColor()       { ChangePaperColor(false); }
 
 	Event<>        ScrollWhen(TextCompareCtrl& pair) { return THISBACK1(PairScroll, &pair); }
 
@@ -127,6 +148,8 @@ struct TextDiffCtrl : public Splitter {
 	TextCompareCtrl left;
 	TextCompareCtrl right;
 
+	typedef TextDiffCtrl CLASSNAME;
+
 	void Set(Stream& l, Stream& r);
 	void Set(const String& l, const String& r);
 	void InsertFrameLeft(CtrlFrame& f)                     { left.InsertFrame(0, f); }
@@ -135,10 +158,13 @@ struct TextDiffCtrl : public Splitter {
 	void AddFrameRight(CtrlFrame& f)                       { right.AddFrame(f); }
 	void SetFont(Font f, Font nf)                          { left.SetFont(f, nf); right.SetFont(f, nf); }
 	void SetFont(Font f)                                   { left.SetFont(f); right.SetFont(f); }
-	
-	Event<int> WhenLeftLine;
-	Event<int> WhenRightLine;
-	
+
+	void GetLeftLine(int number, int line);
+	void GetRightLine(int number, int line);
+
+	Callback1<int> WhenLeftLine;
+	Callback1<int> WhenRightLine;
+
 	TextDiffCtrl();
 };
 
@@ -149,14 +175,14 @@ struct DiffDlg : public TopWindow {
 	Button               write;
 	String               editfile;
 	String               extfile;
-	
+
 	typedef DiffDlg CLASSNAME;
 
 	void Write();
 	void Execute(const String& f);
-	
+
 	static Event<const String&, Vector<LineEdit::Highlight>&, const WString&> WhenHighlight;
-	
+
 	DiffDlg();
 };
 
@@ -164,24 +190,24 @@ FileSel& DiffFs();
 
 struct FileDiff : DiffDlg {
 	FrameTop<DataPusher> r;
-	
+
 	virtual void Open();
 	void Execute(const String& f);
-	
+
 	typedef FileDiff CLASSNAME;
-	
+
 	String GetExtPath() const { return ~r; }
 
 	FileDiff(FileSel& fs);
-	
+
 	FileSel& fs;
 };
 
 struct PatchDiff : FileDiff {
 	PatchDiff(FileSel& fs) : FileDiff(fs) {}
-	
+
 	virtual void Open();
-	
+
 	void Copy(FileIn& in, FileIn& oin, int& l, int ln, int n);
 	void LoadDiff(const char *fn);
 };
@@ -213,16 +239,16 @@ public:
 	TextDiffCtrl               diff;
 
 	typedef DirDiffDlg CLASSNAME;
-	
+
 	void SetFont(Font fnt)                      { diff.SetFont(fnt); }
 	void Dir1(const String& dir)                { dir1 <<= dir; }
 	void Dir2(const String& dir)                { dir2 <<= dir; }
 	void Dir1AddList(const String& dir)         { dir1.AddList(dir); }
 	void Dir2AddList(const String& dir)         { dir2.AddList(dir); }
-	
+
 	String GetLeftFile() const                  { return ~lfile; }
 	String GetRightFile() const                 { return ~rfile; }
-	
+
 	DirDiffDlg();
 };
 
