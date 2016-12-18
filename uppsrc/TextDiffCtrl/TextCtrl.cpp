@@ -13,7 +13,7 @@ TextCompareCtrl::TextCompareCtrl()
 	number_bg = WhiteGray();
 	SetFrame(FieldFrame());
 	AddFrame(scroll);
-	SetFont(CourierZ(14), CourierZ(10));
+	SetFont(CourierZ(10), CourierZ(10));
 	scroll.NoAutoHide();
 	scroll.WhenScroll = THISBACK(SelfScroll);
 	maxwidth = 0;
@@ -23,6 +23,10 @@ TextCompareCtrl::TextCompareCtrl()
 	gutter_fg = SGreen;
 	cursor = anchor = Null;
 	gutter_capture = false;
+	show_line_number = true;
+	show_white_space = true;
+	show_diff_highlight = true;
+	change_paper_color = true;
 }
 
 int TextCompareCtrl::GetLineNo(int y, int& ii)
@@ -69,7 +73,7 @@ void TextCompareCtrl::LeftDouble(Point pt, dword keyflags)
 	int ii;
 	int i = GetLineNo(pt.y, ii);
 	if(!IsNull(i))
-		WhenLeftDouble(i - 1);
+		WhenLeftDouble(i - 1, ii);
 }
 
 void TextCompareCtrl::MouseMove(Point pt, dword flags)
@@ -213,27 +217,35 @@ void TextCompareCtrl::Paint(Draw& draw)
 		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
 	}
 
-	for(int i = first_line; i <= last_line; i++) {
-		const Line& l = lines[i];
-		int y = i * letter.cy - offset.cy;
-		draw.DrawRect(0, y, number_width, letter.cy, number_bg);
-		if(!IsNull(l.number))
-			draw.DrawText(0, y + number_yshift, FormatInt(l.number), number_font, l.diff ? LtBlue() : SColorText());
+	int n_width = show_line_number ? number_width : 0;
+	if(show_line_number) {
+		for(int i = first_line; i <= last_line; i++) {
+			const Line& l = lines[i];
+			int y = i * letter.cy - offset.cy;
+			Color paper = IsNull(l.number) ? LtGray() : l.diff ? l.left ? Blend(LtRed(), White(), 230) : Blend(LtGreen(), White(), 230) : SColorPaper();
+			Color ink = l.diff ? l.left ? Red(): Green() : Gray();
+			draw.DrawRect(0, y, n_width, letter.cy, paper);
+			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
+			if(!IsNull(l.number))
+				draw.DrawText(0, y + number_yshift, FormatInt(l.number_diff), number_font, ink);
+		}
 	}
-	draw.Clip(number_width, 0, sz.cx - gutter_width - number_width, sz.cy);
+	draw.Clip(n_width, 0, sz.cx - gutter_width - n_width, sz.cy);
+
 	int sell, selh;
 	GetSelection(sell, selh);
 	for(int i = first_line; i <= last_line; i++) {
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
 		Color ink = SColorText();
-		Color paper = IsNull(l.number) ? SGray() : l.diff ? SColorInfo() : SColorPaper();
+		Color paper = IsNull(l.number) ? LtGray() : l.diff ? l.left ? Blend(LtRed(), White(), 230) : Blend(LtGreen(), White(), 230) : SColorPaper();
 		bool sel = l.number >= sell && l.number <= selh;
 		if(sel) {
 			ink = SColorHighlightText;
 			paper = SColorHighlight;
 		}
 		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
+
 		WString ln = l.text.ToWString();
 		if(ln.GetCount() > 20000)
 			ln.Trim(20000);
@@ -247,24 +259,66 @@ void TextCompareCtrl::Paint(Draw& draw)
 			h.chr = ln[i];
 			h.font = StdFont();
 		}
-		if(!sel)
+
+		if(!sel) {
 			WhenHighlight(hln, ln);
+
+			WString ln_diff = l.text_diff.ToWString();
+			ln_diff = ExpandTabs(ln_diff);
+
+			int diff_start = -1, diff_end = -1;
+			for(int i = 0; i < ln.GetCount(); ++i) {
+				LineEdit::Highlight& h = hln[i];
+				if (change_paper_color)
+					h.paper = paper;
+				if(show_diff_highlight
+					&& (diff_start == -1)
+					&& (i < ln_diff.GetCount() && (h.chr != ln_diff[i])))
+					diff_start = i;
+			}
+			if(show_diff_highlight && (diff_start >= 0)) {
+				for(int i = ln.GetCount(), j = ln_diff.GetCount(); i >= 0 && j >=0; --i, --j) {
+					if(ln[i] != ln_diff[j]) {
+						diff_end = i;
+						break;
+					}
+				}
+				for(int i = diff_start; i <= diff_end; ++i) {
+					LineEdit::Highlight& h = hln[i];
+					h.paper = l.left ? Blend(LtRed(), White(), 192) : Blend(LtGreen(), White(), 128);
+				}
+			}
+			if(show_white_space) {
+				for(int i = ln.GetCount(); i >= 0; --i) {
+					LineEdit::Highlight& h = hln[i];
+					if (ln[i] == 0)
+						continue;
+					if(ln[i] == 32)
+						h.paper = l.left ? Red() : Green();
+					else
+						break;
+				}
+			}
+		}
+
 		int x = 0;
 		int a = StdFont().GetAscent();
-		for(int i = 0; i < hln.GetCount(); i++) {
+		for(int i = 0; i < hln.GetCount() - 1; ++i) {
 			Font fnt = font;
 			LineEdit::Highlight& h = hln[i];
 			fnt.Bold(h.font.IsBold());
 			fnt.Italic(h.font.IsItalic());
 			fnt.Underline(h.font.IsUnderline());
-			draw.DrawText(number_width - offset.cx + x, y + a - fnt.GetAscent(), &h.chr, fnt, h.ink, 1);
-			x += font[h.chr];
+			int width = fnt[h.chr];
+			draw.DrawRect(n_width - offset.cx + x, y, width, fnt.GetCy(), h.paper);
+			draw.DrawText(n_width - offset.cx + x, y, &h.chr, fnt, h.ink, 1);
+			x += width;
 		}
 	}
 	int lcy = lcnt * letter.cy - offset.cy;
 	draw.DrawRect(0, lcy, sz.cx, sz.cy - lcy, SGray());
 	draw.End();
-	draw.DrawRect(0, lcy, number_width, sz.cy - lcy, number_bg);
+	draw.DrawRect(0, lcy, n_width, sz.cy - lcy, number_bg);
 }
 
 void TextCompareCtrl::TabSize(int t)
@@ -294,7 +348,9 @@ void TextCompareCtrl::SetFont(Font f)
 
 void TextCompareCtrl::Layout()
 {
-	scroll.Set(scroll, (scroll.GetReducedViewSize() - Size(number_width + gutter_width, 0)) / letter, Size(maxwidth, lines.GetCount()));
+	int n_width = show_line_number ? number_width : 0;
+
+	scroll.Set(scroll, (scroll.GetReducedViewSize() - Size(n_width + gutter_width, 0)) / letter, Size(maxwidth, lines.GetCount()));
 	Refresh();
 }
 
@@ -318,7 +374,7 @@ void TextCompareCtrl::AddCount(int c)
 	Layout();
 }
 
-void TextCompareCtrl::Set(int line, String text, bool diff, int number, int level)
+void TextCompareCtrl::Set(int line, String text, bool diff, int number, int level, String text_diff, int number_diff, bool left)
 {
 	Line& l = lines.At(line);
 	int tl = MeasureLength(text.ToWString());
@@ -328,6 +384,9 @@ void TextCompareCtrl::Set(int line, String text, bool diff, int number, int leve
 	l.text = text;
 	l.diff = diff;
 	l.level = level;
+	l.text_diff = text_diff;
+	l.number_diff = number_diff;
+	l.left = left;
 	if(rl)
 		UpdateWidth();
 	else if(tl > maxwidth) {
