@@ -14,8 +14,18 @@ TextDiffCtrl::TextDiffCtrl()
 	left.WhenScroll = right.ScrollWhen(left);
 	right.WhenScroll = left.ScrollWhen(right);
 	right.HideSb();
-	left.WhenLeftDouble = Proxy(WhenLeftLine);
-	right.WhenLeftDouble = Proxy(WhenRightLine);
+	left.WhenLeftDouble = THISBACK(GetLeftLine);
+	right.WhenLeftDouble = THISBACK(GetRightLine);
+}
+
+void TextDiffCtrl::GetLeftLine(int number, int line)
+{
+	WhenLeftLine(number);
+}
+
+void TextDiffCtrl::GetRightLine(int number, int line)
+{
+	WhenRightLine(number);
 }
 
 static bool SmallDiff(const char *s1, const char *s2)
@@ -62,17 +72,17 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 		int l;
 		for(l = 0; l < sec.count1; l++) {
 			int level = (diff ? l < sec.count2 && SmallDiff(ll[sec.start1 + l], rl[sec.start2 + l]) ? 1 : 2 : 0);
-			left.Set(outln + l, ll[sec.start1 + l], diff, sec.start1 + l + 1, level);
+			left.Set(outln + l, ll[sec.start1 + l], diff, sec.start1 + l + 1, level, diff && l < sec.count2 ? rl[sec.start2 + l] : Null, sec.start1 + l + 1, true);
 		}
 		for(; l < maxcount; l++)
-			left.Set(outln + l, Null, diff, Null, 2);
+			left.Set(outln + l, Null, diff, Null, 2, Null, Null, true);
 		right.AddCount(maxcount);
 		for(l = 0; l < sec.count2; l++) {
 			int level = (diff ? l < sec.count1 && SmallDiff(rl[sec.start2 + l], ll[sec.start1 + l]) ? 1 : 2 : 0);
-			right.Set(outln + l, rl[sec.start2 + l], diff, sec.start2 + l + 1, level);
+			right.Set(outln + l, rl[sec.start2 + l], diff, sec.start2 + l + 1, level,  diff && l < sec.count1 ? ll[sec.start1 + l] : Null, sec.start2 + l + 1, false);
 		}
 		for(; l < maxcount; l++)
-			right.Set(outln + l, Null, diff, Null, 2);
+			right.Set(outln + l, Null, diff, Null, 2, Null, Null, false);
 		outln += maxcount;
 	}
 	if(firstdiff >= 0)
