@@ -17,7 +17,6 @@ GUI_APP_MAIN
 	DO(ContainerClientTypes);
 	DO(ArrayTutorial);
 	DO(PolyArray);
-	
 	DO(Bidirectional);
 	
 	DO(IndexTutorial);
@@ -40,6 +39,8 @@ GUI_APP_MAIN
 	DO(NullTutorial);
 	DO(Value2Tutorial);
 	DO(ValueArrayMap);
+	
+	DO(ThreadTutorial);
 
 	MakeTutorial();
 }
