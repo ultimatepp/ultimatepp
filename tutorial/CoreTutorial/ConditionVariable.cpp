@@ -44,7 +44,7 @@ void ConditionVariableTutorial()
 	t.Wait();
 	
 	/// Important note: rarely thread can be resumed from `Wait` even if no other called
-	/// `Signal`. This is not a bud, but ^https://en.wikipedia.org/wiki/Spurious_wakeup:design
+	/// `Signal`. This is not a bug, but ^https://en.wikipedia.org/wiki/Spurious_wakeup:design
 	/// decision for performance reason^. In practice it only means that situation has to be
 	/// (re)checked after resume.
 }
