@@ -41,6 +41,11 @@ file
 	Function.cpp,
 	CapturingContainers.cpp,
 	Thread.cpp,
+	Mutex.cpp,
+	ConditionVariable.cpp,
+	test.txt,
+	CoWork.cpp,
+	CoPartition.cpp,
 	tutorial2.cpp,
 	help.qtf;
 

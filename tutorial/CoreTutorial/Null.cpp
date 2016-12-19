@@ -20,11 +20,11 @@ void NullTutorial()
 	DUMP(d);
 	DUMP(e > d);
 
-	/// Null is the only instance of `Nuller` type. Assigning `Null` to
+	/// `Null` is the only instance of `Nuller` type. Assigning `Null` to
 	/// primitive types is achieved by cast operators of `Nuller`, other types can do it using
 	/// constructor from `Nuller`.
 	
-	/// As a special case, if Value contains Null, it is convertible to any value type that can contain Null:
+	/// As a special case, if `Value` contains `Null`, it is convertible to any value type that can contain `Null`:
 
 	Value v = x; // x is int
 	e = v; // e is Date, but v is Null, so Null is assigned to e
