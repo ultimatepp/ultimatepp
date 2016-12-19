@@ -41,6 +41,10 @@ GUI_APP_MAIN
 	DO(ValueArrayMap);
 	
 	DO(ThreadTutorial);
+	DO(MutexTutorial);
+	DO(ConditionVariableTutorial);
+	DO(CoWorkTutorial);
+	DO(CoPartitionTutorial);
 
 	MakeTutorial();
 }
