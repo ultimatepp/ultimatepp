@@ -40,9 +40,10 @@ file
 	Algo.cpp,
 	Function.cpp,
 	CapturingContainers.cpp,
+	Thread.cpp,
 	tutorial2.cpp,
 	help.qtf;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI MT";
 
