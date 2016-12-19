@@ -4,6 +4,10 @@ void CoPartitionTutorial()
 {
 	/// .CoPartition
 	
+	/// There is some overhead associated with CoWork worker threads. That is why e.g.
+	/// performing a simple operation on the array spawning worker thread for each element is
+	/// not a good idea performance wise:
+	
 	Vector<int> data;
 	for(int i = 0; i < 10000; i++)
 		data.Add(i);
@@ -16,7 +20,12 @@ void CoPartitionTutorial()
 	co.Finish();
 	DUMP(sum);
 	
-	///
+	/// Above code computes the sum of all elements in the `Vector`, using CoWorker job for
+	/// each element. While producing the correct reason, it is likely to run much slower than
+	/// single-threaded version.
+	
+	/// The solution to the problem is to split the array into small number of larger subranges
+	/// that are processed in parallel. This is what `CoPartition` template algorithm does:
 	
 	sum = 0;
 	CoPartition(data, [&sum](const auto& subrange) {
@@ -28,7 +37,8 @@ void CoPartitionTutorial()
 	});
 	DUMP(sum);
 	
-	///
+	/// Note that CoPartition is still internally used, so `CoWork::FinLock` is available.
+	/// Instead of working on subranges, it is also possible to use iterators:
 	
 	sum = 0;
 	CoPartition(data.begin(), data.end(), [&sum] (auto l, auto h) {
@@ -40,7 +50,8 @@ void CoPartitionTutorial()
 	});
 	DUMP(sum);
 	
-	///
+	/// There is no requirement on the type of iterators, so it is even possible to use just
+	/// indices:
 	
 	sum = 0;
 	CoPartition(0, data.GetCount(), [&sum, &data] (int l, int h) {
