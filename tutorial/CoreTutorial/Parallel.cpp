@@ -4,7 +4,7 @@ void CoAlgoTutorial()
 {
 	/// .Parallel algorithms
 	
-	/// U++ provides a parallel version of algorithms where it makes sense. The naming scheme
+	/// U++ provides a parallel versions of algorithms where it makes sense. The naming scheme
 	/// is 'Co' prefix before the name of algorithm designates the parallel version.
 	
 	/// So the parallel version of e.g. `FindIndex` is `CoFindIndex`, for 'Sort' it is 'CoSort':
