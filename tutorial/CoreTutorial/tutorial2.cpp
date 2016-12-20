@@ -45,6 +45,7 @@ GUI_APP_MAIN
 	DO(ConditionVariableTutorial);
 	DO(CoWorkTutorial);
 	DO(CoPartitionTutorial);
+	DO(CoAlgoTutorial);
 
 	MakeTutorial();
 }
