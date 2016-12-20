@@ -46,6 +46,7 @@ file
 	test.txt,
 	CoWork.cpp,
 	CoPartition.cpp,
+	Parallel.cpp,
 	tutorial2.cpp,
 	help.qtf;
 
