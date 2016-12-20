@@ -189,19 +189,16 @@ int CoFindMatch(const Range& r, const Match& eq, int from = 0)
 	std::atomic<int> found;
 	found = count;
 	CoPartition(from, count,
-		[=, &found](int i0, int e0) {
-			auto i = r.begin() + i0;
-			auto e = r.begin() + e0;
-			while(i < e) {
+		[=, &r, &found](int i, int e) {
+			for(; i < e; i++) {
 				if(found < i)
 					break;
-				if(eq(*i)) {
+				if(eq(r[i])) {
 					CoWork::FinLock();
 					if(i < found)
 						found = i;
 					return;
 				}
-				i++;
 			}
 		}
 	);
@@ -211,7 +208,7 @@ int CoFindMatch(const Range& r, const Match& eq, int from = 0)
 template <class Range, class V>
 int CoFindIndex(const Range& r, const V& value, int from = 0)
 {
-	return CoFindMatch(r, [=](const V& m) { return m == value; }, from);
+	return CoFindMatch(r, [=, &value](const ValueTypeOf<Range>& m) { return m == value; }, from);
 }
 
 template <class Range1, class Range2>

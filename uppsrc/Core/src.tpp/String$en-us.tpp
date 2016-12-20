@@ -654,8 +654,8 @@ ool]_[* TrimStart]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 
 [s5;:Upp`:`:AString`:`:TrimStart`(const Upp`:`:AString`:`:String`&`):%- [@(0.0.255) boo
 l]_[* TrimStart]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&]_[*@3 s
 ])&]
-[s2; If string ends with [%-*@3 s]., trims the end to remove it and 
-returns true.&]
+[s2; If string starts with [%-*@3 s], trims the start to remove it 
+and returns true.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:AString`:`:EndsWith`(const Upp`:`:AString`:`:tchar`*`,int`)const:%- [@(0.0.255) b
