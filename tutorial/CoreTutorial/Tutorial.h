@@ -48,4 +48,6 @@ using namespace Upp;
 
 #define DO(x) void x(); x();
 
+#define SECTION(x)        UPP::VppLog() << "=-= " << x << '\n';
+
 void MakeTutorial();

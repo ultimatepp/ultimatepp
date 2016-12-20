@@ -2,6 +2,7 @@
 
 GUI_APP_MAIN
 {
+	SECTION("Basics");
 	DO(Logging);
 	DO(StringTutorial);
 	DO(StringBufferTutorial);
@@ -11,6 +12,7 @@ GUI_APP_MAIN
 	DO(CombineHashTutorial);
 	DO(ComparableTutorial);
 
+	SECTION("Array containers");
 	DO(Vector1);
 	DO(Vector2);
 	DO(Transfer);
@@ -18,7 +20,6 @@ GUI_APP_MAIN
 	DO(ArrayTutorial);
 	DO(PolyArray);
 	DO(Bidirectional);
-	
 	DO(IndexTutorial);
 	DO(IndexClient);
 	DO(Map);
@@ -28,18 +29,22 @@ GUI_APP_MAIN
 	DO(SortedMap);
 	DO(TupleTutorial);
 
+	SECTION("Ranges and algoritims");
 	DO(Range);
 	DO(Algo);
 	DO(Sorting);
 	
-	DO(FunctionTutorial);
-	DO(CapturingContainers);
-
+	SECTION("Value");
 	DO(ValueTutorial);
 	DO(NullTutorial);
 	DO(Value2Tutorial);
 	DO(ValueArrayMap);
 	
+	SECTION("Function and lambdas");
+	DO(FunctionTutorial);
+	DO(CapturingContainers);
+
+	SECTION("Multithreading");
 	DO(ThreadTutorial);
 	DO(MutexTutorial);
 	DO(ConditionVariableTutorial);
