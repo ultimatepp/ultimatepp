@@ -9,14 +9,20 @@ int    minor = 0;
 String qtf =
 "[ $$0,0#00000000000000000000000000000000:Default]"
 "[a83;*R6 $$1,3#31310162474203024125188417583966:caption]"
-"[H4;b83;*6 $$2,3#07864147445237544204411237157677:title]"
+"[b83;*6 $$2,3#07864147445237544204411237157677:title]"
 "[b42;a42 $$3,3#45413000475342174754091244180557:text]"
 "[l100;C@5*;1 $$4,4#20902679421464641399138805415013:code]"
 "[l100;*C$7;2 $$5,5#07531550463529505371228428965313:log]"
-"[H4;b73;*5 $$2,3#07864147445237544204111237153677:subtitle]"
+"[H6;b73;*7 $$6,3#07864147445237544204111237153677:section]"
 ;
 
 #define OUT(x) out << x << '\n';
+
+void Section(const String& title)
+{
+	qtf << "[s6; " << AsString(++major) << "." << ' ' + TrimBoth(title) << "&]";
+	minor = 0;
+}
 
 void FlushDoc(String& docblock)
 {
@@ -29,16 +35,9 @@ void FlushDoc(String& docblock)
 	bool title = false;
 	
 	String style = "[s3;";
-	if(docblock.StartsWith("..")) {
-		docblock = AsString(major) + "." + AsString(++minor) + ' ' + TrimBoth(docblock.Mid(2));
-		style = "[s7;";
-		title = true;
-	}
-	else
 	if(docblock.StartsWith(".")) {
-		docblock = AsString(++major) + "." + ' ' + TrimBoth(docblock.Mid(1));
-		minor = 0;
-		style = "[s2;";
+		docblock = AsString(major) + "." + AsString(++minor) + ' ' + TrimBoth(docblock.Mid(1));
+		style = minor == 1 ? "[s2;" : "[s2;H4";
 		title = true;
 	}
 	
@@ -135,11 +134,18 @@ void MakeTutorial()
 			line = atoi(ln) - 1;
 		}
 		else
+		if(ln.StartsWith("=-="))
+			logline.Add(String()).Add(MakeTuple(0, ln.Mid(4)));
+		else
 		if(path.GetCount())
 			logline.GetAdd(path).Add(MakeTuple(line, ln));
 	}
 	
 	for(auto&& f : ~logline) {
+		if(IsNull(f.key)) {
+			Section(f.value[0].b);
+			continue;
+		}
 		Vector<String> src = Split(Filter(LoadFile(f.key), [] (int c) { return c == '\r' ? 0 : c; }), '\n', false);
 		int i = 0;
 		int logi = 0;
