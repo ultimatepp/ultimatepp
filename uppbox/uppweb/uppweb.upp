@@ -55,7 +55,8 @@ file
 	2008.txt,
 	NewCoreDone.txt,
 	www.t,
-	forum-header.txt;
+	forum-header.txt,
+	2016.txt;
 
 mainconfig
 	"" = "MT SKELETON RAINBOW NOGTK";
