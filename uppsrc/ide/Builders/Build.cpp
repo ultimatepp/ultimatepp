@@ -687,19 +687,19 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				"\n"
 				".PHONY: build_info\n"
 				"build_info:\n"
-				"	date '+#define bmYEAR    %y%n'\\\n"
-				"	'#define bmMONTH   %-m%n'\\\n"
-				"	'#define bmDAY     %-d%n'\\\n"
-				"	'#define bmHOUR    %-H%n'\\\n"
-				"	'#define bmMINUTE  %-M%n'\\\n"
-				"	'#define bmSECOND  %-S%n'\\\n"
-				"	'#define bmTIME    Time(%y, %-m, %-d, %-H, %-M, %-S)' > build_info.h\n"
-				"	echo '#define bmMACHINE \"'`hostname`'\"' >> build_info.h\n"
-				"	echo '#define bmUSER    \"'`whoami`'\"' >> build_info.h\n"
+				"	(date '+#define bmYEAR    %y%n"
+				"#define bmMONTH   %-m%n"
+				"#define bmDAY     %-d%n"
+				"#define bmHOUR    %-H%n"
+				"#define bmMINUTE  %-M%n"
+				"#define bmSECOND  %-S%n"
+				"#define bmTIME    Time(%y, %-m, %-d, %-H, %-M, %-S)' && \\\n"
+				"	echo '#define bmMACHINE \"'`hostname`'\"' && \\\n"
+				"	echo '#define bmUSER    \"'`whoami`'\"') > build_info.h\n"
 				<< svn_info <<
 				"\n"
 				".PHONY: prepare\n"
-				"prepare: build_info\n";
+				"prepare:\n";
 		}
 		config << mf.config;
 		install << mf.install;
@@ -713,11 +713,12 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		<< config
 		<< install
 		<< "\n"
-		"$(OutFile): " << linkdep << "\n\t" << linkfiles << linkfileend << " -Wl,--end-group\n\n"
+		"$(OutFile): build_info " << linkdep << "\n\t" << linkfiles << linkfileend << " -Wl,--end-group\n\n"
 		<< rules
 		<< ".PHONY: clean\n"
 		<< "clean:\n"
-		<< "\tif [ -d $(UPPOUT) ]; then rm -rf $(UPPOUT); fi;\n";
+		<< "\tif [ -d $(UPPOUT) ]; then rm -rf $(UPPOUT); fi;\n"
+		<< "\tif [ -f build_info.h ]; then rm -f build_info.h; fi;\n";
 
 	bool sv = ::SaveFile(fn, makefile);
 	if(!exporting) {
