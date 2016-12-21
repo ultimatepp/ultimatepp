@@ -24,6 +24,71 @@ topic "Changelog";
 [{_}%EN-US 
 [s0; [*R6 Roadmap]&]
 [s0;*3 &]
+[s0; [*_3 Upcoming release]&]
+[s0;*3 &]
+[s0; [*_4 2017 (rev 10564`+) (Jan 2017)]&]
+[s0;*3 &]
+[s0; [3 This is the first release of U`+`+ that ][*/3 requires][3  C`+`+11 
+compatible compiler. The main focus was ][*3 Core][3 , adding many 
+enhancements allowed by C`+`+11 and improved parallel programming 
+support.]&]
+[s0;3 &]
+[s0; [* Core]&]
+[s0;* &]
+[s0;i150;O0; Original U`+`+ Callbacks are deprecated and replaced 
+with Function with better lambda support.&]
+[s0;i150;O0; Begin/End methods are now renamed / deprecated in favor 
+of (standard) begin/end.&]
+[s0;i150;O0; U`+`+ algorithms now primarily work on [/ ranges], besides 
+container SubRange, ConstRange and ViewRange are now provided.&]
+[s0;i150;O0; Initial round of optimizations for ARM architecture.&]
+[s0;i150;O0; U`+`+ allocator optimized once again, locking is reduced 
+in inter`-thread deallocations, allocator now returns blocks 
+always 16 bytes aligned (simplifies SSE2 code).&]
+[s0;i150;O0; General cleanup of U`+`+ algorithms, redundant algorithms 
+removed, new Count and CountIf algorithms&]
+[s0;i150;O0; Improvements in Core/RPC&]
+[s0;i150;O0; CoWork`::FinLock now provides `'free of charge`' mutex 
+at the end of worker jobs.&]
+[s0;i150;O0; CoWorkerResources class now provides `'per worker thread`' 
+context.&]
+[s0;i150;O0; CoPartition algorithm useful for partitioning array 
+for parallel programming.&]
+[s0;i150;O0; Where it makes sense, U`+`+ algorithms now have parallel 
+variant.&]
+[s0;i150;O0; String further optimized, new TrimLast, TrimStart, TrimEnd, 
+FindAfter, ReverseFindAfter&]
+[s0;i150;O0; FastCompress (currently using LZ4) for internal program 
+compression.&]
+[s0;i150;O0; xxHash `- fast non`-cryptographic hash `- now part of 
+Core.&]
+[s0;i150;O0; SHA256 code now part of the Core.&]
+[s0;i150;O0; plugin/pcre updated to the latest pcre version.&]
+[s0;i150;O0; plugin/zstd now provides [^http`:`/`/facebook`.github`.io`/zstd`/^ zstd] 
+compression (with multithreaded option).&]
+[s0;i150;O0; plugin/lz4 now can multithreaded.&]
+[s0; &]
+[s0; [* GUI programming `& graphics]&]
+[s0;* &]
+[s0;i150;O0; PdfDraw and RichText now support PDF signatures.&]
+[s0;i150;O0; RichText now can change header/footer within document.&]
+[s0;i150;O0; ArrayCtrl got SetLineColor and GetCellRect methods.&]
+[s0; &]
+[s0; [* TheIDE]&]
+[s0;* &]
+[s0;i150;O0; Comments now can be spellchecked and there is comment 
+wordwrap and reformatting operation.&]
+[s0;i150;O0; New functions / icons that search the web (launch the 
+browser) for text selected or current identifier.&]
+[s0;i150;O0; Optimal compilation mode is removed as confusing, it 
+is now always either debug or release mode, release mode being 
+configured for speed.&]
+[s0;i150;O0; When comparing files, differences within single lines 
+are now shown.&]
+[s0;i150;O0; Most U`+`+ designers now support drag`&drop to reorganize 
+lists.&]
+[s0;*3 &]
+[s0;*3 &]
 [s0; [*_3 Current release]&]
 [s0;3 &]
 [s0; [*_4 2015.2 (rev 9251)][*3  (Dec 2015)]&]
