@@ -8,16 +8,14 @@ void GetRepoInfo(String repo, Date& d, int& rev)
 	LOG("SVN info:");
 	LOG(s);
 
-	String key = "Revision: ";
-	int q = s.Find(key);
+	int q = s.FindAfter("Last Changed Rev: ");
 	ASSERT(q >= 0);
-	rev = atoi(s.Mid(q + key.GetCount()));
+	rev = atoi(~s + q);
 	ASSERT(rev > 0);
 
-	key = "Last Changed Date: ";
-	q = s.Find(key);
+	q = s.FindAfter("Last Changed Date: ");
 	ASSERT(q >= 0);
-	s = s.Mid(q + key.GetCount());
+	s = s.Mid(q);
 	ASSERT(s.GetCount() > 18);
 
 	// 2014-10-30 01:01:56
@@ -46,7 +44,7 @@ CONSOLE_APP_MAIN
 
 	ASSERT(d == d1 && rev == rev1);
 
-	GetRepoInfo("svn://www.ultimatepp.org/upp/trunk", d, rev);
+	GetRepoInfo("svn://www.ultimatepp.org/upp/trunk/uppsrc", d, rev);
 	LOG("upp.src revision: " << rev);
 	
 	String h = HttpRequest("https://github.com/ultimatepp/mirror/commits/master").Execute();
