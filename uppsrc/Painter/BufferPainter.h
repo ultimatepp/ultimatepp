@@ -280,10 +280,10 @@ private:
 	};
 	struct LinearData {
 		Pointf p;
-	};	
+	};
 	struct QuadraticData : LinearData {
 		Pointf p1;
-	};	
+	};
 	struct CubicData : QuadraticData {
 		Pointf p2;
 	};
@@ -292,7 +292,7 @@ private:
 		int  _filler;
 		Font fnt;
 	};
-	struct Path {	
+	struct Path {
 		Vector<byte> type;
 		Vector<byte> data;
 	};
