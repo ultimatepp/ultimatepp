@@ -4,7 +4,6 @@
 #include <ide/Core/Core.h>
 #include <ide/Android/Android.h>
 #include <ide/Java/Java.h>
-//#include <coff/binobj/binobj.h>
 #include <plugin/bz2/bz2.h>
 
 #include "Android.h"
@@ -162,9 +161,9 @@ private:
 
 class AndroidBuilder : public Builder {
 public:
-	AndroidSDK androidSDK;
-	AndroidNDK androidNDK;
-	Jdk jdk;
+	AndroidSDK     androidSDK;
+	AndroidNDK     androidNDK;
+	Jdk            jdk;
 	
 	bool           ndk_blitz;
 	Vector<String> ndkArchitectures;
@@ -179,29 +178,33 @@ public:
 public:
 	AndroidBuilder();
 	
-	virtual String GetTargetExt() const;
-	virtual bool BuildPackage(const String& packageName,
-	                          Vector<String>& linkfile,
-	                          Vector<String>& immfile,
-	                          String& linkoptions,
-	                          const Vector<String>& all_uses,
-	                          const Vector<String>& all_libraries,
-	                          int optimize);
-	virtual bool Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap);
-	virtual bool Preprocess(const String& package,
-	                        const String& file,
-	                        const String& target,
-	                        bool asmout);
-	virtual void CleanPackage(const String& package, const String& outdir);
-	virtual void AfterClean();
+	virtual String GetTargetExt() const override;
+	virtual bool BuildPackage(
+		const String& packageName,
+	    Vector<String>& linkfile,
+	    Vector<String>& immfile,
+	    String& linkoptions,
+	    const Vector<String>& all_uses,
+	    const Vector<String>& all_libraries,
+	    int optimize) override;
+	virtual bool Link(
+		const Vector<String>& linkfile, const String& linkoptions, bool createmap) override;
+	virtual bool Preprocess(
+		const String& package,
+	    const String& file,
+	    const String& target,
+	    bool asmout) override;
+	virtual void CleanPackage(const String& package, const String& outdir) override;
+	virtual void AfterClean() override;
 	
 protected:
 	void ManageProjectCohesion();
 	void DetectAndManageUnusedPackages(const String& nest, const Index<String>& packages);
-	void DeleteUnusedSourceFiles(const String& nest,
-	                             const Vector<String>& files,
-	                             String exts,
-	                             String excludedFiles = "");
+	void DeleteUnusedSourceFiles(
+		const String& nest,
+	    const Vector<String>& files,
+	    String exts,
+	    String excludedFiles = "");
 	bool MovePackageFileToAndroidProject(const String& src, const String& dest);
 	bool RealizePackageJavaSourcesDirectory(const String& packageName);
 	bool RealizeLinkDirectories() const;
@@ -224,19 +227,19 @@ protected:
 	bool PreprocessJava(const String& package, const String& file, const String& target);
 	
 protected:
-	String GetFilePathInAndroidProject(const String& nestDir,
-	                                   const String& packageName,
-	                                   const String& fileName) const;
+	String GetFilePathInAndroidProject(
+		const String& nestDir,
+	    const String& packageName,
+	    const String& fileName) const;
 	
 	String RemoveDirNameFromFileName(String fileName) const;
 	String NormalizeModuleName(String moduleName) const;
 	
+	String GetModuleMakeFilePath(const String& packageName);
+	
 private:
 	void   InitProject();
 	String GetSandboxDir() const;
-	
-	static String GetAssemblyDir(const String& package);
-	static String GetAssemblyDir(const String& packageDir, const String& package);
 	
 private:
 	AndroidProject project;

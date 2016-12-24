@@ -1,4 +1,5 @@
 #include "Builders.h"
+#include "AndroidBuilder.h"
 
 const String AndroidBuilder::RES_PKG_FLAG = "ANDROID_RESOURCES_PACKAGE";
 
@@ -21,11 +22,12 @@ String AndroidBuilder::GetTargetExt() const
 	return ".apk";
 }
 
-bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfile,
-	                              Vector<String>& immfile, String& linkoptions,
-	                              const Vector<String>& all_uses,
-	                              const Vector<String>& all_libraries,
-	                              int)
+bool AndroidBuilder::BuildPackage(
+	const String& package, Vector<String>& linkfile,
+	Vector<String>& immfile, String& linkoptions,
+	const Vector<String>& all_uses,
+	const Vector<String>& all_libraries,
+	int)
 {
 	InitProject();
 	if(!ValidateBuilderEnviorement())
@@ -35,7 +37,7 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 	const bool isResourcesPackage = HasFlag(RES_PKG_FLAG);
 	String uppManifestPath = PackagePath(package);
 	String packageDir = GetFileFolder(uppManifestPath);
-	String assemblyDir = GetAssemblyDir(packageDir, package);
+	String assemblyDir = AndroidBuilderUtils::GetAssemblyDir(packageDir, package);
 	
 	ChDir(packageDir);
 	PutVerbose("cd " + packageDir);
@@ -209,39 +211,27 @@ bool AndroidBuilder::BuildPackage(const String& package, Vector<String>& linkfil
 			}
 		}
 		
-		AndroidModuleMakeFile pkgMakeFile(NormalizeModuleName(package));
-		for(int i = 0; i < nativeSourceFilesInPackage.GetCount(); i++)
-			pkgMakeFile.AddSourceFile(nativeSourceFilesInPackage[i]);
+		AndroidModuleMakeFileCreator creator(config);
 		
-		// TODO: Check for path with space?
-		pkgMakeFile.AddInclude(assemblyDir);
-		pkgMakeFile.AddInclude(packageDir);
-		for (int i = 0; i < pkg.uses.GetCount(); i++)
-			pkgMakeFile.AddInclude(GetAssemblyDir(pkg.uses[i].text));
+		creator.SetModuleName(NormalizeModuleName(package));
+		creator.AddSources(nativeSourceFilesInPackage);
+		creator.AddInclude(assemblyDir);
+		creator.AddIncludeWithSubdirs(packageDir);
+		creator.AddIncludes(pkg.uses);
+		creator.AddFlags(pkg.flag);
+		creator.AddLdLibraries(pkg.library);
+		creator.AddStaticModuleLibrary(pkg.static_library);
+		creator.AddSharedLibraries(pkg.uses);
 		
-		for(int i = 0; i < pkg.flag.GetCount(); i++)
-			pkgMakeFile.AddCppFlag(pkg.flag[i].text);
-		
-		Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
-		for(int i = 0; i < libs.GetCount(); i++)
-			pkgMakeFile.AddLdLibrary(libs[i]);
-		
-		Vector<String> staticLibs = Split(Gather(pkg.static_library, config.GetKeys()), ' ');
-		for(int i = 0; i < staticLibs.GetCount(); i++)
-			pkgMakeFile.AddStaticModuleLibrary(staticLibs[i]);
-		
-		for(int i = 0; i < pkg.uses.GetCount(); i++)
-			pkgMakeFile.AddSharedLibrary(pkg.uses[i].text);
-		
-		String pkgMakeFilePath = project.GetJniDir() + DIR_SEPS + package + DIR_SEPS + "Android.mk";
-		UpdateFile(pkgMakeFilePath, pkgMakeFile.ToString());
+		UpdateFile(GetModuleMakeFilePath(package), creator.Create());
 	}
 
 	return !error;
 }
 
-bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
-	                      bool createmap)
+bool AndroidBuilder::Link(
+	const Vector<String>& linkfile, const String& linkoptions,
+	bool createmap)
 {
 	InitProject();
 	if(!ValidateBuilderEnviorement())
@@ -343,10 +333,11 @@ bool AndroidBuilder::Link(const Vector<String>& linkfile, const String& linkopti
 	return true;
 }
 
-bool AndroidBuilder::Preprocess(const String& package,
-                                const String& file,
-                                const String& target,
-                                bool asmout)
+bool AndroidBuilder::Preprocess(
+	const String& package,
+    const String& file,
+    const String& target,
+    bool asmout)
 {
 	InitProject();
 	
@@ -411,8 +402,9 @@ void AndroidBuilder::ManageProjectCohesion()
 	DetectAndManageUnusedPackages(project.GetJniDir(), packages);
 }
 
-void AndroidBuilder::DetectAndManageUnusedPackages(const String& nest,
-                                                   const Index<String>& packages)
+void AndroidBuilder::DetectAndManageUnusedPackages(
+	const String& nest,
+    const Index<String>& packages)
 {
 	for(FindFile ff(AppendFileName(nest, "*")); ff; ff.Next()) {
 		if(!ff.IsHidden() && ff.IsDirectory()) {
@@ -423,10 +415,11 @@ void AndroidBuilder::DetectAndManageUnusedPackages(const String& nest,
 	}
 }
 
-void AndroidBuilder::DeleteUnusedSourceFiles(const String& nest,
-                                             const Vector<String>& files,
-                                             String exts,
-                                             String excludedFiles)
+void AndroidBuilder::DeleteUnusedSourceFiles(
+	const String& nest,
+    const Vector<String>& files,
+    String exts,
+    String excludedFiles)
 {
 	exts.Replace(" ", "");
 	excludedFiles.Replace(" ", "");
@@ -437,28 +430,30 @@ void AndroidBuilder::DeleteUnusedSourceFiles(const String& nest,
 	dirs.Add(nest);
 	for(int i = 0; i < dirs.GetCount(); i++) {
 		for(FindFile ff(AppendFileName(dirs[i], "*")); ff; ff.Next()) {
-			if(!ff.IsHidden()) {
-				String path = ff.GetPath();
-				String name = ff.GetName();
-				if(ff.IsFolder() && ff.IsSymLink())
-					dirs.Add(ff.GetPath());
-				else
-				if(extsIdx.Find(GetFileExt(path)) == -1)
-					continue;
-				else
-				if(excludedFilesIdx.Find(name) > -1)
-					continue;
-				else {
-					bool exists = false;
-					for(int j = 0; j < files.GetCount(); j++) {
-						if(files[j] == path) {
-							exists = true;
-							break;
-						}
+			if(ff.IsHidden()) {
+				continue;
+			}
+			
+			String path = ff.GetPath();
+			String name = ff.GetName();
+			if(ff.IsFolder() && ff.IsSymLink())
+				dirs.Add(ff.GetPath());
+			else
+			if(extsIdx.Find(GetFileExt(path)) == -1)
+				continue;
+			else
+			if(excludedFilesIdx.Find(name) > -1)
+				continue;
+			else {
+				bool exists = false;
+				for(int j = 0; j < files.GetCount(); j++) {
+					if(files[j] == path) {
+						exists = true;
+						break;
 					}
-					if(!exists)
-						DeleteFile(path);
 				}
+				if(!exists)
+					DeleteFile(path);
 			}
 		}
 	}
@@ -825,30 +820,12 @@ String AndroidBuilder::GetSandboxDir() const
 	return GetFileFolder(target) + DIR_SEPS + "Sandbox" + DIR_SEPS + mainPackageName;
 }
 
-String AndroidBuilder::GetAssemblyDir(const String& package)
-{
-	String packageManifest = PackagePath(package);
-	String packageDir = GetFileFolder(packageManifest);
-	
-	return GetAssemblyDir(packageDir, package);
-}
-
-String AndroidBuilder::GetAssemblyDir(const String& packageDir, const String& package)
-{
-	String assemblyDir = packageDir;
-	
-	int pos = packageDir.GetCount() - package.GetCount() - 1;
-	if (pos >= 0 && pos < assemblyDir.GetCount())
-		assemblyDir.Trim(pos);
-	
-	return assemblyDir != packageDir ? assemblyDir : "";
-}
-
 // -------------------------------------------------------------------
 
-String AndroidBuilder::GetFilePathInAndroidProject(const String& nestDir,
-	                                               const String& packageName,
-	                                               const String& fileName) const
+String AndroidBuilder::GetFilePathInAndroidProject(
+	const String& nestDir,
+	const String& packageName,
+	const String& fileName) const
 {
 	return nestDir + DIR_SEPS + packageName + DIR_SEPS + RemoveDirNameFromFileName(fileName);
 }
@@ -865,6 +842,11 @@ String AndroidBuilder::NormalizeModuleName(String moduleName) const
 {
 	moduleName.Replace(DIR_SEPS, "_");
 	return moduleName;
+}
+
+String AndroidBuilder::GetModuleMakeFilePath(const String& package)
+{
+	return project.GetJniDir() + DIR_SEPS + package + DIR_SEPS + "Android.mk";
 }
 
 // -------------------------------------------------------------------
