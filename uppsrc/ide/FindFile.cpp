@@ -79,8 +79,9 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	list.AddColumn("Package");
 	list.WhenLeftDouble = Acceptor(IDOK);
 	list.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
-	list.EvenRowColor();
+	list.HorzGrid(false);
 	list.MultiSelect();
+	list.WantFocus(false);
 	mask.NullText("Search");
 	mask.SelectAll();
 	mask.SetFilter(CharFilterFindFileMask);
