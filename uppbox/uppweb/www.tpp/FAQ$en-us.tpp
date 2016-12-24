@@ -35,6 +35,20 @@ backup them first.&]
 [s23; How do I un`-install U`+`+?&]
 [s22; U`+`+ now uses portable approach. All you need to do is just 
 remove directory with U`+`+.&]
+[s3; Installation (Linux)&]
+[s23; What packages should I install to start my journey with U`+`+?&]
+[s22; By default U`+`+ provides a file called `"debian`" which contains 
+a list of all required packages on Debian like distributions 
+such as Ubuntu. The file is located inside the root directory 
+after unpacking archive. The list contains apt`-get command, 
+so you can execute the file from your terminal and wait for the 
+installation. Before, you do that make sure the file has got 
+executable privileges.&]
+[s22; Please notice that currently we don`'t provide such list for 
+other distributions that uses different packaging system like 
+RPM. On that system you need to counterparts and arrange own 
+list. If you do that `- please post your list on the forum `- 
+we will attached it to the future distributions of U`+`+.&]
 [s3; U`+`+ Library&]
 [s23; Is there a complete list of U`+`+ widgets?&]
 [s22; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ Yes.]&]
@@ -153,8 +167,8 @@ By clicking this file layout (image) designer will be invoked
 to edit it.&]
 [s23; File with layout (.lay) or image list (.iml) switched to the 
 text format. How do I switch it back?&]
-[s22; Please invoke menu Edit / Edit using designer, or press hotkey 
-which defaults to Ctrl`+T.&]
+[s22; Please invoke menu `"[/ Edit / Edit using designer`"], or press 
+hotkey which defaults to Ctrl`+T.&]
 [s22; In the newer versions of TheIDE we added switch in main tool 
 bar. You can easily switch between text 
 @@rawimage:100&100
