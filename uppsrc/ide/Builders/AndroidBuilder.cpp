@@ -167,7 +167,7 @@ bool AndroidBuilder::BuildPackage(
 		compileCmd << (HasFlag("DEBUG") ? " -g" : " -g:none");
 		compileCmd << " -d "<< project.GetClassesDir();
 		compileCmd << " -classpath ";
-		compileCmd << NormalizeExePath(androidSDK.AndroidJarPath()) << Java::GetDelimiter();
+		compileCmd << NormalizeExePath(sdk.AndroidJarPath()) << Java::GetDelimiter();
 		compileCmd << project.GetBuildDir();
 		compileCmd << " -sourcepath ";
 		compileCmd << javaSourcesDir << " ";
@@ -265,7 +265,7 @@ bool AndroidBuilder::Link(
 	
 	// Now, we are going to start compiling c/c++ sources
 	if(DirectoryExists(project.GetJniDir())) {
-		if(!androidNDK.Validate()) {
+		if(!ndk.Validate()) {
 			PutErrorOnConsole("Android NDK was not detected");
 			return false;
 		}
@@ -277,7 +277,7 @@ bool AndroidBuilder::Link(
 		GenerateApplicationMakeFile();
 		GenerateMakeFile();
 		
-		NDKBuild ndkBuild(androidNDK.GetNdkBuildPath());
+		NDKBuild ndkBuild(ndk.GetNdkBuildPath());
 		ndkBuild.SetWorkingDir(project.GetDir());
 		ndkBuild.SetJobs(GetHydraThreads());
 		if(Execute(ndkBuild.MakeCmd(), ss) != 0 ) {
@@ -291,7 +291,7 @@ bool AndroidBuilder::Link(
 		PutConsole("-----");
 		PutConsole("Creating dex file...");
 		String dxCmd;
-		dxCmd << NormalizeExePath(androidSDK.DxPath());
+		dxCmd << NormalizeExePath(sdk.DxPath());
 		dxCmd << " --dex ";
 		dxCmd << "--output=" << project.GetBinDir() << DIR_SEPS << "classes.dex ";
 		dxCmd << project.GetClassesDir();
@@ -306,12 +306,12 @@ bool AndroidBuilder::Link(
 	String unsignedApkPath = GetSandboxDir() + DIR_SEPS + GetFileTitle(target) + ".unsigned.apk";
 	DeleteFile(unsignedApkPath);
 	String apkCmd;
-	apkCmd << NormalizeExePath(androidSDK.AaptPath());
+	apkCmd << NormalizeExePath(sdk.AaptPath());
 	apkCmd << " package -v -f";
 	if(DirectoryExists(project.GetResDir()))
 		apkCmd << " -S " << project.GetResDir();
 	apkCmd << " -M " << project.GetManifestPath();
-	apkCmd << " -I " << NormalizeExePath(androidSDK.AndroidJarPath());
+	apkCmd << " -I " << NormalizeExePath(sdk.AndroidJarPath());
 	apkCmd << " -F " << unsignedApkPath;
 	apkCmd << " " << project.GetBinDir();
 	// PutConsole(apkCmd);
@@ -426,8 +426,7 @@ void AndroidBuilder::DeleteUnusedSourceFiles(
 	Index<String> extsIdx = Index<String>(Split(exts, ","));
 	Index<String> excludedFilesIdx = Index<String>(Split(excludedFiles, ","));
 	
-	Vector<String> dirs;
-	dirs.Add(nest);
+	Vector<String> dirs { nest };
 	for(int i = 0; i < dirs.GetCount(); i++) {
 		for(FindFile ff(AppendFileName(dirs[i], "*")); ff; ff.Next()) {
 			if(ff.IsHidden()) {
@@ -526,7 +525,7 @@ bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath
 		PutConsole("Aliging apk file...");
 		DeleteFile(target);
 		String zipalignCmd;
-		zipalignCmd << NormalizeExePath(androidSDK.ZipalignPath());
+		zipalignCmd << NormalizeExePath(sdk.ZipalignPath());
 		zipalignCmd << " -f 4 ";
 		zipalignCmd << (HasFlag("DEBUG") ? signedApkPath : unsignedApkPath) << " ";
 		zipalignCmd << target;
@@ -590,7 +589,7 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 	
 	ChDir(project.GetDir());
 	String aaptAddCmd;
-	aaptAddCmd << NormalizeExePath(androidSDK.AaptPath());
+	aaptAddCmd << NormalizeExePath(sdk.AaptPath());
 	aaptAddCmd << " add " << apkPath;
 	for(int i = 0; i < sharedLibsToAdd.GetCount(); i++)
 		aaptAddCmd << " " << sharedLibsToAdd[i];
@@ -608,15 +607,15 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 
 bool AndroidBuilder::ValidateBuilderEnviorement()
 {
-	if(!androidSDK.Validate()) {
+	if(!sdk.Validate()) {
 		PutErrorOnConsole("Android SDK was not detected");
 		return false;
 	}
-	if(!androidSDK.ValidateBuildTools()) {
+	if(!sdk.ValidateBuildTools()) {
 		PutErrorOnConsole("Android SDK build tools was not detected");
 		return false;
 	}
-	if(!androidSDK.ValidatePlatform()) {
+	if(!sdk.ValidatePlatform()) {
 		PutErrorOnConsole("Android SDK platform was not detected");
 		return false;
 	}
@@ -649,7 +648,7 @@ void AndroidBuilder::UpdateFile(const String& path, const String& data)
 void AndroidBuilder::GenerateApplicationMakeFile()
 {
 	AndroidApplicationMakeFile makeFile;
-	makeFile.SetPlatform(androidSDK.GetPlatform());
+	makeFile.SetPlatform(sdk.GetPlatform());
 	makeFile.SetArchitectures(ndkArchitectures);
 	makeFile.SetCppRuntime(ndkCppRuntime);
 	makeFile.SetCppFlags(ndkCppFlags);
@@ -713,12 +712,12 @@ bool AndroidBuilder::GenerateRFile()
 	if(DirectoryExists(project.GetResDir())) {
 		StringStream ss;
 		String aaptCmd;
-		aaptCmd << NormalizeExePath(androidSDK.AaptPath());
+		aaptCmd << NormalizeExePath(sdk.AaptPath());
 		aaptCmd << " package -v -f -m";
 		aaptCmd << " -S " << project.GetResDir();
 		aaptCmd << " -J " << project.GetJavaDir();
 		aaptCmd << " -M " << project.GetManifestPath();
-		aaptCmd << " -I " << NormalizeExePath(androidSDK.AndroidJarPath());
+		aaptCmd << " -I " << NormalizeExePath(sdk.AndroidJarPath());
 		
 		if(Execute(aaptCmd, ss) != 0) {
 			PutConsole(ss.GetResult());
@@ -749,7 +748,7 @@ bool AndroidBuilder::PreprocessJava(const String& package, const String& file, c
 	compileCmd << NormalizeExePath(jdk.GetJavacPath());
 	compileCmd << " -d "<< classesDir;
 	compileCmd << " -classpath ";
-	compileCmd << NormalizeExePath(androidSDK.AndroidJarPath()) << Java::GetDelimiter();
+	compileCmd << NormalizeExePath(sdk.AndroidJarPath()) << Java::GetDelimiter();
 	compileCmd << project.GetBuildDir();
 	compileCmd << " -sourcepath " << project.GetJavaDir();
 	compileCmd << " " << file;
@@ -788,7 +787,7 @@ bool AndroidBuilder::PreprocessJava(const String& package, const String& file, c
 	javahCmd << NormalizeExePath(jdk.GetJavahPath());
 	javahCmd << " -classpath ";
 	javahCmd << classesDir << Java::GetDelimiter();
-	javahCmd << NormalizeExePath(androidSDK.AndroidJarPath()) << Java::GetDelimiter();
+	javahCmd << NormalizeExePath(sdk.AndroidJarPath()) << Java::GetDelimiter();
 	javahCmd << project.GetBuildDir();
 	javahCmd << " -o " << target;
 	javahCmd << " " << className;

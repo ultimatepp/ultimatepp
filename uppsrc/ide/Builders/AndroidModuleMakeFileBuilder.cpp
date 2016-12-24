@@ -9,8 +9,8 @@ AndroidModuleMakeFileCreator::AndroidModuleMakeFileCreator(const Index<String>& 
 
 void AndroidModuleMakeFileCreator::AddSources(Vector<String>& sources)
 {
-	for(int i = 0; i < sources.GetCount(); ++i) {
-		makeFile.AddSourceFile(sources[i]);
+	for(const String& source : sources) {
+		makeFile.AddSourceFile(source);
 	}
 }
 
@@ -43,38 +43,38 @@ void AndroidModuleMakeFileCreator::AddIncludeWithSubdirs(const String& path)
 
 void AndroidModuleMakeFileCreator::AddIncludes(const Array<OptItem>& uses)
 {
-	for(int i = 0; i < uses.GetCount(); ++i) {
-		makeFile.AddInclude(AndroidBuilderUtils::GetAssemblyDir(uses[i].text));
+	for(const OptItem& use : uses) {
+		makeFile.AddInclude(AndroidBuilderUtils::GetAssemblyDir(use.text));
 	}
 }
 
 void AndroidModuleMakeFileCreator::AddFlags(const Array<OptItem>& flags)
 {
-	for(int i = 0; i < flags.GetCount(); ++i) {
-		makeFile.AddCppFlag(flags[i].text);
+	for(const OptItem& flag : flags) {
+		makeFile.AddCppFlag(flag.text);
 	}
 }
 
 void AndroidModuleMakeFileCreator::AddLdLibraries(const Array<OptItem>& libraries)
 {
 	Vector<String> libs = Split(Gather(libraries, config.GetKeys()), ' ');
-	for(int i = 0; i < libs.GetCount(); ++i) {
-		makeFile.AddLdLibrary(libs[i]);
+	for(const String& lib : libs) {
+		makeFile.AddLdLibrary(lib);
 	}
 }
 
 void AndroidModuleMakeFileCreator::AddStaticModuleLibrary(Array<OptItem>& staticLibraries)
 {
 	Vector<String> slibs = Split(Gather(staticLibraries, config.GetKeys()), ' ');
-	for(int i = 0; i < slibs.GetCount(); ++i) {
-		makeFile.AddStaticModuleLibrary(slibs[i]);
+	for(const String& slib : slibs) {
+		makeFile.AddStaticModuleLibrary(slib);
 	}
 }
 
 void AndroidModuleMakeFileCreator::AddSharedLibraries(const Array<OptItem>& uses)
 {
-	for(int i = 0; i < uses.GetCount(); i++) {
-		makeFile.AddSharedLibrary(uses[i].text);
+	for(const OptItem& use : uses) {
+		makeFile.AddSharedLibrary(use.text);
 	}
 }
 

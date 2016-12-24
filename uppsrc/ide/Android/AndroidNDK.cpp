@@ -2,6 +2,8 @@
 
 namespace Upp {
 
+static const String TOOLCHAIN_CLANG = "clang";
+
 String AndroidNDK::GetDownloadUrl()
 {
 	return "https://developer.android.com/ndk/downloads/index.html";
@@ -43,15 +45,20 @@ String AndroidNDK::FindDefaultPlatform() const
 
 String AndroidNDK::FindDefaultToolchain() const
 {
-	Vector<String> toolchains = FindToolchains();
-	Sort(toolchains, StdGreater<String>());
+	Index<String> toolchains(FindToolchains());
 	
-	return toolchains[toolchains.GetCount() - 1];
+	int clangIdx = toolchains.Find(TOOLCHAIN_CLANG);
+	if (clangIdx >= 0) {
+		return toolchains[clangIdx];
+	}
+	
+	SortIndex(toolchains, StdGreater<String>());
+	return !toolchains.IsEmpty() ? toolchains[toolchains.GetCount()] : "";
 }
 
 String AndroidNDK::FindDefaultCppRuntime() const
 {
-	return "gnustl_shared";
+	return "c++_shared";
 }
 
 Vector<String> AndroidNDK::FindPlatforms() const
@@ -74,7 +81,7 @@ Vector<String> AndroidNDK::FindToolchains() const
 		if(!ff.IsHidden() && ff.IsFolder()) {
 			String name = ff.GetName();
 			if(name.StartsWith("llvm")) {
-				toolchains.Add("clang");
+				toolchains.Add(TOOLCHAIN_CLANG);
 				continue;
 			}
 			
@@ -152,7 +159,7 @@ String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
 	}
 	else
 	if(cppRuntime.StartsWith("c++")) {
-		return nest + "llvm-libc++" + DIR_SEPS + "libcxx" + DIR_SEPS + "include";
+		return nest + "llvm-libc++" + DIR_SEPS + "include";
 	}
 	
 	return "";
