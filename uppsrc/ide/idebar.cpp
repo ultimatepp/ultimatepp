@@ -188,8 +188,11 @@ void Ide::SearchMenu(Bar& menu)
 
 void Ide::Edit(Bar& menu)
 {
-	if(editfile.GetCount() && editashex.Find(editfile) < 0)
+	if(editfile.GetCount() && editashex.Find(editfile) < 0) {
 		menu.Add(AK_EDITASHEX, THISBACK(EditAsHex));
+		if(!designer)
+			menu.MenuSeparator();
+	}
 	if(designer) {
 		if(FileExists(designer->GetFileName())) {
 			menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
@@ -241,7 +244,7 @@ void Ide::Edit(Bar& menu)
 			.Help("Insert text from clipboard at cursor location");
 
 		menu.Separator();
-
+		
 		menu.Add("Select all", CtrlImg::select_all(), callback(&editor, &LineEdit::SelectAll))
 			.Key(K_CTRL_A);
 	}
@@ -623,7 +626,6 @@ void Ide::BrowseMenu(Bar& menu)
 				menu.Add(AK_RESCANCURRENTFILE, THISBACK(EditFileAssistSync));
 			menu.MenuSeparator();
 		}
-		
 	}
 	if(menu.IsMenuBar()) {
 		menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
@@ -704,14 +706,16 @@ void Ide::MainTool(Bar& bar)
 		DebugMenu(bar);
 	}
 	Project(bar);
-	BuildMenu(bar);
-	
-	if(!debugger) {
+	if(!IsEditorMode()) {
+		BuildMenu(bar);
+		if(!debugger) {
+			bar.Separator();
+			DebugMenu(bar);
+		}
+		Setup(bar);
 		bar.Separator();
-		DebugMenu(bar);
 	}
-	Setup(bar);
-	bar.Separator();
+	
 	HelpMenu(bar);
 }
 

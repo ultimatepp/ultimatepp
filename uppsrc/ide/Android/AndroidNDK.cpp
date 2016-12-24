@@ -11,7 +11,6 @@ String AndroidNDK::GetDownloadUrl()
 
 AndroidNDK::AndroidNDK()
 {
-	
 }
 
 AndroidNDK::AndroidNDK(const String& path)
@@ -21,7 +20,6 @@ AndroidNDK::AndroidNDK(const String& path)
 
 AndroidNDK::~AndroidNDK()
 {
-	
 }
 
 bool AndroidNDK::Validate() const
