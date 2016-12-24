@@ -104,26 +104,28 @@ protected:
 	void AppendModules(String& makeFile) const;
 	
 private:
-	String name;
-	Vector<String> sourceFiles;
-	Vector<String> includes;
+	String                    name;
+	Vector<String>            sourceFiles;
+	Index<String>             includes;
 	VectorMap<String, String> cppFlags;
-	Vector<String> ldLibraries;
-	Vector<String> staticLibraries;
-	Vector<String> staticModuleLibraries;
-	Vector<String> sharedLibraries;
+	Vector<String>            ldLibraries;
+	Vector<String>            staticLibraries;
+	Vector<String>            staticModuleLibraries;
+	Vector<String>            sharedLibraries;
 };
 
 class AndroidMakeFile {
 public:
-	static void AppendString(String& makeFile,
-	                         const String& variable,
-	                         const String& variableName);
-	static void AppendStringVector(String& makeFile,
-	                               const Vector<String>& vec,
-	                               const String& variableName,
-	                               const String& variablePrefix = "",
-	                               const String& variableSuffix = "");
+	static void AppendString(
+		String& makeFile,
+	    const String& variable,
+	    const String& variableName);
+	static void AppendStringVector(
+		String& makeFile,
+	    const Vector<String>& vec,
+	    const String& variableName,
+	    const String& variablePrefix = "",
+	    const String& variableSuffix = "");
 	
 public:
 	AndroidMakeFile();
