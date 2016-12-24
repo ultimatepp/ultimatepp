@@ -214,7 +214,6 @@ int CoFindIndex(const Range& r, const V& value, int from = 0)
 template <class Range1, class Range2>
 int CoIsEqualRange(const Range1& r1, const Range2& r2)
 {
-	int count = r1.GetCount();
 	if(r1.GetCount() != r2.GetCount())
 		return false;
 	std::atomic<bool> equal(true);
