@@ -807,7 +807,6 @@ public:
 		void  EditorMenu(Bar& bar);
 	
 	void OnlineSearchMenu(Bar& menu);
-		String GetSearchPhrase();
 		void OnlineSearch();
 		void OnlineSearchOnTheOfficialSite();
 	
@@ -872,7 +871,7 @@ public:
 
 	void      DebugMenu(Bar& menu);
 		void  RunArgs();
-		bool ShouldHaveConsole();
+		bool  ShouldHaveConsole();
 		void  BuildAndExecute();
 		void  ExecuteBinary();
 		void  ExecuteApk();
