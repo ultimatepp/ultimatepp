@@ -42,8 +42,8 @@ a list of all required packages on Debian like distributions
 such as Ubuntu. The file is located inside the root directory 
 after unpacking archive. The list contains apt`-get command, 
 so you can execute the file from your terminal and wait for the 
-installation. Before, you do that make sure the file has got 
-executable privileges.&]
+installation. Before, you do that make sure the file has executable 
+privileges.&]
 [s22; Please notice that currently we don`'t provide such list for 
 other distributions that uses different packaging system like 
 RPM. On that system you need to counterparts and arrange own 
