@@ -1,4 +1,5 @@
 #include "Builders.h"
+#include "AndroidBuilder.h"
 
 #include <plugin/bz2/bz2.h>
 
@@ -135,20 +136,20 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 	b->script = bm.Get("SCRIPT", "");
 	if(AndroidBuilder::GetBuildersNames().Find(builder) > -1) {
 		AndroidBuilder* ab = dynamic_cast<AndroidBuilder*>(b);
-		ab->androidSDK.SetPath((bm.Get("SDK_PATH", "")));
-		ab->androidNDK.SetPath((bm.Get("NDK_PATH", "")));
+		ab->sdk.SetPath((bm.Get("SDK_PATH", "")));
+		ab->ndk.SetPath((bm.Get("NDK_PATH", "")));
 		ab->jdk.SetPath((bm.Get("JDK_PATH", "")));
 		
 		String platformVersion = bm.Get("SDK_PLATFORM_VERSION", "");
 		if(!platformVersion.IsEmpty())
-			ab->androidSDK.SetPlatform(platformVersion);
+			ab->sdk.SetPlatform(platformVersion);
 		else
-			ab->androidSDK.DeducePlatform();
+			ab->sdk.DeducePlatform();
 		String buildToolsRelease = bm.Get("SDK_BUILD_TOOLS_RELEASE", "");
 		if(!buildToolsRelease.IsEmpty())
-			ab->androidSDK.SetBuildToolsRelease(buildToolsRelease);
+			ab->sdk.SetBuildToolsRelease(buildToolsRelease);
 		else
-			ab->androidSDK.DeduceBuildToolsRelease();
+			ab->sdk.DeduceBuildToolsRelease();
 		
 		ab->ndk_blitz = bm.Get("NDK_BLITZ", "") == "1";
 		if(bm.Get("NDK_ARCH_ARMEABI", "") == "1")

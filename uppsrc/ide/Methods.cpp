@@ -1,3 +1,5 @@
+#include <ide/Builders/AndroidBuilder.h>
+
 #include "Methods.h"
 
 void DirTable::SetData(const Value& data)
@@ -256,7 +258,7 @@ void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
 		ndk_arch_armeabi.Set(1);
 		ndk_arch_armeabi_v7a.Set(1);
 		ndk_arch_arm64_v8a.Set(1);
-		ndk_common_cpp_options.SetData("-std=c++14 -fexceptions -frtti");
+		ndk_common_cpp_options.SetData("-std=c++14 -fexceptions -frtti -Wno-logical-op-parentheses");
 	}
 	else
 		ClearNdkCtrls();
@@ -889,6 +891,7 @@ String Ide::GetIncludePath()
 			MergeWith(include, ";", ndk.GetIncludeDir());
 			
 			String cppIncludeDir = ndk.GetCppIncludeDir(bm.Get("NDK_CPP_RUNTIME", ""));
+			Cout() << cppIncludeDir << "\n";
 			if(!cppIncludeDir.IsEmpty())
 				MergeWith(include, ";", cppIncludeDir);
 		}
