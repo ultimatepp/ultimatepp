@@ -53,7 +53,7 @@ void AndroidModuleMakeFile::AddSourceFile(const String& path)
 
 void AndroidModuleMakeFile::AddInclude(const String& includePath)
 {
-	includes.Add(includePath);
+	includes.FindAdd(includePath);
 }
 
 void AndroidModuleMakeFile::AddCppFlag(const String& name, const String& value)
@@ -93,23 +93,25 @@ void AndroidModuleMakeFile::AppendSourceFiles(String& makeFile) const
 
 void AndroidModuleMakeFile::AppendIncludes(String& makeFile) const
 {
-	AndroidMakeFile::AppendStringVector(makeFile, includes, "LOCAL_C_INCLUDES");
+	AndroidMakeFile::AppendStringVector(makeFile, includes.GetKeys(), "LOCAL_C_INCLUDES");
 }
 
 void AndroidModuleMakeFile::AppendCppFlags(String& makeFile) const
 {
-	if(!cppFlags.IsEmpty()) {
-		makeFile << "LOCAL_CPPFLAGS := ";
-		for(int i = 0; i < cppFlags.GetCount(); i++) {
-			String value = cppFlags[i];
-			makeFile << "-D" << cppFlags.GetKey(i);
-			if(!value.IsEmpty())
-				makeFile << "=" << value;
-			if(i + 1 < sourceFiles.GetCount())
-				makeFile << " ";
-		}
-		makeFile << "\n";
+	if(cppFlags.IsEmpty()) {
+		return;
 	}
+	
+	makeFile << "LOCAL_CPPFLAGS := ";
+	for(int i = 0; i < cppFlags.GetCount(); i++) {
+		String value = cppFlags[i];
+		makeFile << "-D" << cppFlags.GetKey(i);
+		if(!value.IsEmpty())
+			makeFile << "=" << value;
+		if(i + 1 < sourceFiles.GetCount())
+			makeFile << " ";
+	}
+	makeFile << "\n";
 }
 
 void AndroidModuleMakeFile::AppendLdLibraries(String& makeFile) const

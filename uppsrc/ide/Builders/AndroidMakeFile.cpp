@@ -2,29 +2,33 @@
 
 namespace Upp {
 
-void AndroidMakeFile::AppendString(String& makeFile,
-                                   const String& variable,
-                                   const String& variableName)
+void AndroidMakeFile::AppendString(
+	String& makeFile,
+    const String& variable,
+    const String& variableName)
 {
 	if(!variable.IsEmpty())
 		makeFile << variableName << " := " << variable << "\n";
 }
 
-void AndroidMakeFile::AppendStringVector(String& makeFile,
-                                         const Vector<String>& vec,
-                                         const String& variableName,
-                                         const String& variablePrefix,
-                                         const String& variableSuffix)
+void AndroidMakeFile::AppendStringVector(
+	String& makeFile,
+    const Vector<String>& vec,
+    const String& variableName,
+    const String& variablePrefix,
+    const String& variableSuffix)
 {
-	if(!vec.IsEmpty()) {
-		makeFile << variableName << " := ";
-		for(int i = 0; i < vec.GetCount(); i++) {
-			makeFile << variablePrefix << vec[i] << variableSuffix;
-			if(i + 1 < vec.GetCount())
-				makeFile << " ";
-		}
-		makeFile << "\n";
+	if(vec.IsEmpty()) {
+		return;
 	}
+	
+	makeFile << variableName << " := ";
+	for(int i = 0; i < vec.GetCount(); ++i) {
+		makeFile << variablePrefix << vec[i] << variableSuffix;
+		if(i + 1 < vec.GetCount())
+			makeFile << " ";
+	}
+	makeFile << "\n";
 }
 
 AndroidMakeFile::AndroidMakeFile()

@@ -81,38 +81,38 @@ AndroidBuilderSetup::AndroidBuilderSetup()
 {
 	CtrlLayout(*this);
 	
-	sdk_path <<= THISBACK(OnSdkPathChange);
+	sdk_path << [=] { OnSdkPathChange(); };
 	
 	sdkDownload.SetImage(IdeImg::DownloadBlack());
 	sdkDownload.Tip("Download");
-	sdkDownload <<= callback1(LaunchWebBrowser, AndroidSDK::GetDownloadUrl());
+	sdkDownload << [=] { LaunchWebBrowser(AndroidSDK::GetDownloadUrl()); };
 	sdk_path.AddFrame(sdkDownload);
 	
 	sdkBrowse.SetImage(CtrlImg::right_arrow());
 	sdkBrowse.Tip("Select directory");
-	sdkBrowse <<= THISBACK(OnSdkPathInsert);
+	sdkBrowse << [=]{ OnSdkPathInsert(); };
 	sdk_path.AddFrame(sdkBrowse);
 	
-	ndk_path <<= THISBACK(OnNdkPathChange);
+	ndk_path << [=] { OnNdkPathChange(); };
 	
 	ndkDownload.SetImage(IdeImg::DownloadBlack());
 	ndkDownload.Tip("Download");
-	ndkDownload <<= callback1(LaunchWebBrowser, AndroidNDK::GetDownloadUrl());
+	ndkDownload << [=] { LaunchWebBrowser(AndroidNDK::GetDownloadUrl()); };
 	ndk_path.AddFrame(ndkDownload);
 	
 	ndkBrowse.SetImage(CtrlImg::right_arrow());
 	ndkBrowse.Tip("Select directory");
-	ndkBrowse <<= THISBACK(OnNdkPathInsert);
+	ndkBrowse << [=] { OnNdkPathInsert(); };
 	ndk_path.AddFrame(ndkBrowse);
 	
 	jdkDownload.SetImage(IdeImg::DownloadBlack());
 	jdkDownload.Tip("Download");
-	jdkDownload <<= callback1(LaunchWebBrowser, Jdk::GetDownloadUrl());
+	jdkDownload << [=] { LaunchWebBrowser(Jdk::GetDownloadUrl()); };
 	jdk_path.AddFrame(jdkDownload);
 	
 	jdkBrowse.SetImage(CtrlImg::right_arrow());
 	jdkBrowse.Tip("Select directory");
-	jdkBrowse <<= callback1(InsertPath, &jdk_path);
+	jdkBrowse << [=] { InsertPath(&jdk_path); };
 	jdk_path.AddFrame(jdkBrowse);
 }
 
@@ -256,7 +256,7 @@ void AndroidBuilderSetup::OnNdkPathChange0(const String& ndkPath)
 		ndk_arch_armeabi.Set(1);
 		ndk_arch_armeabi_v7a.Set(1);
 		ndk_arch_arm64_v8a.Set(1);
-		ndk_common_cpp_options.SetData("-std=c++11 -fexceptions -frtti");
+		ndk_common_cpp_options.SetData("-std=c++14 -fexceptions -frtti");
 	}
 	else
 		ClearNdkCtrls();
@@ -297,9 +297,10 @@ void AndroidBuilderSetup::LoadCppRuntimes(const AndroidNDK& ndk)
 	LoadDropList(ndk_cpp_runtime, runtimes, ndk.FindDefaultCppRuntime());
 }
 
-void AndroidBuilderSetup::LoadDropList(DropList& dropList,
-                                       const Vector<String>& values,
-                                       const String& defaultKey)
+void AndroidBuilderSetup::LoadDropList(
+	DropList& dropList,
+	const Vector<String>& values,
+	const String& defaultKey)
 {
 	dropList.Clear();
 	
