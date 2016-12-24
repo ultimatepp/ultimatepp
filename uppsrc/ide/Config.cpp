@@ -131,6 +131,14 @@ void Ide::EditorMode()
 	editormode = true;
 	main = Null;
 	pocfg = Null;
+	
+	// TODO: This is probably bug with CtrlLib tool bar. If
+	// we did not call clear here - we will have blocked two icons
+	// in editor mode :(. This should be investigated with
+	// appropriate test case.
+	toolbar.Clear();
+	SetMenuBar();
+	SetToolBar();
 }
 
 bool Ide::IsEditorMode() const
