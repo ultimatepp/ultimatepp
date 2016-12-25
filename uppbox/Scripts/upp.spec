@@ -4,6 +4,7 @@
 #define		version 5431
 #define		date $(LC_TIME=En date '+%a %b %d %Y')      
 %define		release 1
+%define		debug_package %{nil}
 
 %define		title     Ultimate++
 %define 	longtitle C++ cross-platform rapid application development suite
@@ -79,6 +80,16 @@ programming. It provides:
 
 sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
 
+make prepare \
+     -C uppsrc \
+     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
+     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
+     -e UPPOUT="$PWD/out/" \
+     -e OutFile="$PWD/out/ide.out" \
+%if "%?fedora" != ""
+     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
+%endif
+
 make %{?_smp_mflags} \
      -C uppsrc \
      -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)     \
@@ -91,7 +102,10 @@ make %{?_smp_mflags} \
 
 # We remove WbemUuid.Lib to prevent strip application to crash at build time in Fedora
 %if "%?fedora" != ""
-rm -f bazaar/SysInfo/plugin/WbemUuid.Lib
+if [ -e bazaar/SysInfo/plugin/WbemUuid.Lib ]
+then
+ rm -f bazaar/SysInfo/plugin/WbemUuid.Lib
+fi
 %endif
 
 #-------
@@ -99,14 +113,14 @@ rm -f bazaar/SysInfo/plugin/WbemUuid.Lib
 rm -rf %{buildroot}
 
 install -d %{buildroot}/%{_bindir}
-install -d %{buildroot}/%{_desktopdir}
+install -d %{buildroot}/%{_datadir}/applications
 install -d %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps
 install -d %{buildroot}/%{_datadir}/pixmaps
 install -d %{buildroot}/%{_datadir}/%{name}
 
 install out/ide.out %{buildroot}/%{_bindir}/theide
 
-cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_desktopdir}/theide.desktop
+cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_datadir}/applications/theide.desktop
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/pixmaps/theide.png
 
@@ -166,7 +180,7 @@ rm -fr %{buildroot}
 # %doc COPYING README INSTALL
 %doc uppsrc/ide/Copying
 %{_bindir}/theide
-%{_desktopdir}/theide.desktop
+%{_datadir}/applications/theide.desktop
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
 %dir %{_datadir}/%{name}
