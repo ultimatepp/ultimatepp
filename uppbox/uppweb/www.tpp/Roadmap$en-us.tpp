@@ -31,8 +31,8 @@ topic "Roadmap";
 [s5; This is the first release of U`+`+ that [*/ requires] C`+`+11 
 compatible compiler. The main focus was [* Core], adding many enhancements 
 allowed by C`+`+11 and improved parallel programming support. 
-We, also didn`'t forget about Android and port Core library on 
-that platform.&]
+We, also didn`'t forget about Android and we ported Core library 
+on that platform.&]
 [s22; Core&]
 [s5;l160;i150;O0; Original U`+`+ Callbacks are deprecated and replaced 
 with Function with better lambda support.&]
@@ -86,11 +86,13 @@ lines are now shown.&]
 [s5;l160;i150;O0; Most U`+`+ designers now support drag`&drop to 
 reorganize lists.&]
 [s5;l160;i150;O0; Find File window was remastered.&]
+[s5;l160;i150;O0; New dialog for creating package file.&]
 [s5;l160;i150;O0; Android application can be directly launch on emulator 
 from TheIDE.&]
 [s5;l160;i150;O0; Clang is now default compiler for native Android 
 applications.&]
-[s5;l160;i150;O0; C`+`+14 is available by default for Android builds.&]
+[s5;l160;i150;O0; C`+`+14 is now default standard for all Android 
+builds.&]
 [s5;l160;i150;O0; Various android builder improvements.&]
 [s22; General&]
 [s5;l160;i150;O0; Documentation improvements.&]
@@ -146,5 +148,5 @@ coupled with TDM64 release of mingw`-w64.&]
 [s5; &]
 [s3;H4; Archival releases:&]
 [s5; If you are looking for informations about archival releases 
-`- you can find them on following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s
+`- you can find them on the following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s
 ite].]]
