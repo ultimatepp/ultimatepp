@@ -7,6 +7,9 @@ For debian/apt-get based distribution, 'debian' file contains required
 dependencies in form of apt-get commands. You can use this file by running
 "sh debian" as root (e.g. "sudo sh debian" if sudo is available).
 
+For fedora/rpm, 'fedora' file contains required dependencies in form of 'yum install'
+commands.
+
 Use 'make' to compile TheIDE. It will generate ~/theide (integrated development
 environment) and ~/umk (commandline tool for building U++ projects).
 
