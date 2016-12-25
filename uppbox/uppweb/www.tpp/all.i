@@ -38,6 +38,10 @@ TOPIC("Roadmap$en-us")
 #include "Roadmap$en-us.tppi"
 END_TOPIC
 
+TOPIC("RoadmapHistorical$en-us")
+#include "RoadmapHistorical$en-us.tppi"
+END_TOPIC
+
 TOPIC("SupportedPlatforms$en-us")
 #include "SupportedPlatforms$en-us.tppi"
 END_TOPIC
