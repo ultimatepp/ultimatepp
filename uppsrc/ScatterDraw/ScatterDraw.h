@@ -200,8 +200,8 @@ public:
 	double GetYMinUnit () const {return yMinUnit;}	
 	double GetYMinUnit2 () const {return yMinUnit2;}	
 	
-	ScatterDraw& SetXYMin(double xmin,double ymin,double ymin2 = 0);
-	ScatterDraw& SetXYMinLinked(double xmin,double ymin,double ymin2 = 0);
+	ScatterDraw& SetXYMin(double xmin, double ymin = Null, double ymin2 = Null);
+	ScatterDraw& SetXYMinLinked(double xmin, double ymin = Null, double ymin2 = Null);
 	double GetXMin () const {return xMin;}
 	double GetYMin () const {return yMin;}	
 	double GetYMin2 () const {return yMin2;}
@@ -862,13 +862,16 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 							}
 							int64 ii;
 							double maxv = dxpix*npix;
+							double maxY = yy, minY = yy;
 							for (ii = 1; i + ii < imax && series[j].PointsData()->x(i + ii) < maxv; ++ii) {
 								double dd = series[j].PointsData()->y(i + ii);
 								if (IsNull(dd))
 									continue;
-								yy += dd;
+								//yy += dd;
+								maxY = max(maxY, dd);
+								minY = min(minY, dd);
 							}
-							yy /= double(ii);
+							//yy /= double(ii);
 							xx = series[j].PointsData()->x(i);
 							if (IsNull(xx)) {
 								++i;
@@ -876,6 +879,22 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 							}
 							i += ii;
 							npix++;
+							int ix = fround(plotW*(xx - xMin)/xRange);
+							//int iy;
+							int iMax, iMin;
+							if (series[j].primaryY) {
+								//iy = fround(plotH*(yy - yMin)/yRange);
+								iMax = fround(plotH*(maxY - yMin)/yRange);
+								iMin = fround(plotH*(minY - yMin)/yRange);
+							} else {
+								//iy = fround(plotH*(yy - yMin2)/yRange2);
+								iMax = fround(plotH*(maxY - yMin2)/yRange2);
+								iMin = fround(plotH*(minY - yMin2)/yRange2);
+							}
+							points << Point(ix, plotH - iMax);
+							if (iMax != iMin)
+								points << Point(ix, plotH - iMin);	
+							//points << Point(ix, plotH - iy);
 						} else {
 							xx = series[j].PointsData()->x(i);
 							yy = series[j].PointsData()->y(i);
@@ -884,14 +903,14 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 								//++i;
 								continue;
 							}
+							int ix = fround(plotW*(xx - xMin)/xRange);
+							int iy;
+							if (series[j].primaryY)
+								iy = fround(plotH*(yy - yMin)/yRange);
+							else
+								iy = fround(plotH*(yy - yMin2)/yRange2);
+							points << Point(ix, plotH - iy);
 						}
-						int ix = fround(plotW*(xx - xMin)/xRange);
-						int iy;
-						if (series[j].primaryY)
-							iy = fround(plotH*(yy - yMin)/yRange);
-						else
-							iy = fround(plotH*(yy - yMin2)/yRange2);
-						points << Point(ix, plotH - iy);
 					}
 				}
 				if (!points.IsEmpty() && series[j].seriesPlot) 

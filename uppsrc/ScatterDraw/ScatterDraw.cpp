@@ -160,6 +160,7 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 		return;
 	Font scaledFont = GetStdFont();
 	int rowHeight = scale*GetStdFont().GetHeight();
+	int rowAscent = scale*GetStdFont().GetAscent();
 	scaledFont.Height(rowHeight);
 	int xWidth = scaledFont.GetWidth('X');
 	int lineLen = 4*xWidth;
@@ -173,7 +174,7 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 		legends.Add(legend);
 		legendWidth = max<int>(legendWidth, GetTextSize(legend, scaledFont).cx);
 	}
-	legendWidth += lineLen + 3*xWidth;
+	legendWidth += lineLen + 4*xWidth;
 	
 	int rowIncSign;
 	int plotW, plotH;
@@ -251,12 +252,12 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 			line << Point(lx, ly) << Point(lx + lineLen, ly);
 			if (series[i].opacity > 0 && series[i].seriesPlot)
 				DrawPolylineOpa(w, line, scale, 1, series[i].thickness, series[i].color, series[i].dash);
-			Point mark_p(lx + scale*7, ly);
+			Point mark_p(lx + xWidth/*scale*7*/, ly);
 			if (series[i].markWidth >= 1 && series[i].markPlot)
 				series[i].markPlot->Paint(w, scale, mark_p, series[i].markWidth, series[i].markColor, 
 					series[i].markBorderWidth, series[i].markBorderColor);   
 			Font &font = series[i].primaryY ? scaledFont : italic;
-			DrawText(w, lx + lineLen + xWidth, ly - scale*6, 0, legends[i], font, series[i].color);                   
+			DrawText(w, lx + lineLen + xWidth, ly - int((2*rowAscent)/3)/*scale*6*/, 0, legends[i], font, series[i].color);                   
 		}
 		start += nlr;
 	}
