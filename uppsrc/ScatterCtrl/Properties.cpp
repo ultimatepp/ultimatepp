@@ -815,6 +815,7 @@ void ProcessingTab::OnFFT()
 		Exclamation(t_("Incorrect sampling time"));
 		return;
 	}
+	int64 idMaxFFT;
 	{
 		WaitCursor waitcursor;
 		
@@ -852,6 +853,8 @@ void ProcessingTab::OnFFT()
 	
 		VectorY<double> series(resampledSeries, 0, samplingTime);
 		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.type, tabFreq.setWindow);
+		VectorPointf fftData(fft);
+		fftData.MaxY(idMaxFFT);
 	}
 	if (fft.IsEmpty()) {
 		tabFreq.comments.SetText(errText);
@@ -871,6 +874,9 @@ void ProcessingTab::OnFFT()
 	tabFreq.scatter.SetLabelX(tabFreq.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
 	tabFreq.scatter.SetLabelY(legend);
 	tabFreq.scatter.ZoomToFit(true, true);
+	if (fft[int(idMaxFFT)].x < (fft[fft.GetCount() - 1].x)/2)
+		tabFreq.scatter.SetRange(fft[int(idMaxFFT)].x*2, Null);
+	
 	tabFreq.comments.SetText(errText);
 }
 
