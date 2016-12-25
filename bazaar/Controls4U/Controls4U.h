@@ -12,7 +12,8 @@
 #include "Controls4U/StarIndicator.h"
 #include "Controls4U/SplitterButton.h"
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
+using namespace Upp;
 
 double AngAdd(double ang, double val);
 
@@ -750,6 +751,6 @@ private:
 };
 	
 	
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
 
 #endif

@@ -1,7 +1,8 @@
 #ifndef _hdIE_ActiveX_Support_h_
 #define _hdIE_ActiveX_Support_h_
 
-NAMESPACE_UPP
+using namespace Upp;
+//NAMESPACE_UPP
 
 bool BSTRSet(const String str, BSTR &bstr);
 String BSTRGet(BSTR &bstr);
@@ -119,6 +120,6 @@ private:
 	bool status;
 };
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
 
 #endif

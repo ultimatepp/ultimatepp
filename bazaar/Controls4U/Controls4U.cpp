@@ -1,6 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
+#include "Controls4U.h"
 
-#include "Controls4U/Controls4U.h"
+using namespace Upp;
 
 #define TFILE <Controls4U/Controls4U.t>
 #include <Core/t.h>
@@ -12,7 +13,7 @@
 #define TOPICFILE <Controls4U/src.tpp/all.i>
 #include <Core/topic_group.h>
 
-NAMESPACE_UPP
+
 
 void PaintCenterText(Painter &w, double x, double y, String text, Font fnt, Color color) {
 	Size sz = GetTextSize(text, fnt);
@@ -2134,4 +2135,3 @@ AboutUpp::AboutUpp() {
 	Add(about.SizePos());
 }
 	
-END_UPP_NAMESPACE

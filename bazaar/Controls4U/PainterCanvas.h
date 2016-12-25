@@ -1,6 +1,7 @@
 #ifndef _Controls4U_PainterCanvas_h_
 #define _Controls4U_PainterCanvas_h_
 
+
 class Svg2DTransform {
 public:
 	Svg2DTransform() 						{Init();}

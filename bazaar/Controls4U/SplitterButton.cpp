@@ -1,7 +1,10 @@
 #include <CtrlLib/CtrlLib.h>
+
+using namespace Upp;
+
 #include "SplitterButton.h"
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
 
 SplitterButton::SplitterButton() {
 	Add(splitter.SizePos());
@@ -168,4 +171,4 @@ void SplitterButton::SetArrows() {
 	}
 }
 		
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
