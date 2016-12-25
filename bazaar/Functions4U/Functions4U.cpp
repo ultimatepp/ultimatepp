@@ -2583,6 +2583,7 @@ int SysX(const char *cmd, String& out, String& err, double timeOut,
 	return IsNull(ret) ? 0 : ret;
 }
 
+
 END_UPP_NAMESPACE
 
 // Dummy functions added after TheIDE change

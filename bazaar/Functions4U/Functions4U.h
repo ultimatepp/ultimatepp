@@ -4,7 +4,7 @@
 #include <float.h>
 #include <Draw/Draw.h>
 #ifdef flagGUI
-#include <ide/Browser/Browser.h>
+///#include <ide/Browser/Browser.h>
 #include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
@@ -251,7 +251,15 @@ inline T BetweenVal(const T& val, const T& _min, const T& _max) {
 	return max(_min, min(_max, val));
 }
 
-#define IsNan(a)	((a) != (a))
+template <class T> 
+inline bool IsNAN(T val) {return std::isnan(val);}
+
+template <class T> 
+inline T FixFloat(T val) {
+	if(std::isnan(val) || std::isinf(val) || val == HUGE_VAL || val == -HUGE_VAL)
+		return Null;
+	return val;
+}
 
 template <class T> 
 T AngleAdd360(T ang, T val) {
@@ -431,10 +439,10 @@ public:
 		}
 		return ret;
 	}
-	double GetDouble(String separators = "")  	{return atof(GetText(separators));};
-	int GetInt(String separators = "")			{return atoi(GetText(separators));};
-	long GetLong(String separators = "")		{return atol(GetText(separators));};
-	uint64 GetUInt64(String separators = "")	{return atoll(GetText(separators));};
+	double GetDouble(String separators = "")  	{return FixFloat(atof(GetText(separators)));};
+	int GetInt(String separators = "")			{return int(FixFloat(atof(GetText(separators))));};
+	long GetLong(String separators = "")		{return long(FixFloat(atof(GetText(separators))));};
+	uint64 GetUInt64(String separators = "")	{return (uint64)(FixFloat(atof(GetText(separators))));};
 	
 	String Right() 			{return String::Mid(pos+1);}
 	int GetLastSeparator() 	{return lastSeparator;}
