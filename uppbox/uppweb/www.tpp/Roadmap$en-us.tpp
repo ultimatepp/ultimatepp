@@ -144,7 +144,7 @@ there is theide32.exe).&]
 [s5;l160;i150;O0; There is once again `'[* mingw]`' variant which is 
 coupled with TDM64 release of mingw`-w64.&]
 [s5; &]
-[s3;H4; Archival release:&]
-[s5; If you are looking for informations about archival release `- 
-you can find them on following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s
+[s3;H4; Archival releases:&]
+[s5; If you are looking for informations about archival releases 
+`- you can find them on following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s
 ite].]]
