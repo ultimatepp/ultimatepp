@@ -112,7 +112,7 @@ _>_]&]
 [s4; &]
 [s5;:Time`:`:Time`(const Nuller`&`): [* Time]([@(0.0.255) const]_[_^Nuller^ Nuller][@(0.0.255) `&
 ])&]
-[s2;%% Construcs an empty time.&]
+[s2;%% Constructs an empty time.&]
 [s3;%% &]
 [s4; &]
 [s5;:Time`:`:Time`(int`,int`,int`,int`,int`,int`): [* Time]([@(0.0.255) int]_[*@3 y], 
