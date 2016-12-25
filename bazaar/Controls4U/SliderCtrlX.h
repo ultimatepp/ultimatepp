@@ -1,4 +1,4 @@
-NAMESPACE_UPP
+//NAMESPACE_UPP
 
 class SliderCtrlX : public Ctrl {
 	static const int BORDER_SIZE = 2;
@@ -111,4 +111,4 @@ public:
 	SliderCtrlX&	UseCustomThumbs( bool b = true )	{ m_bUseCustomThumbs = b; return *this; };
 };
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE

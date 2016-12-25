@@ -1,7 +1,7 @@
 #ifndef _Controls4U_SplitterButton_h_
 #define _Controls4U_SplitterButton_h_
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
 
 class SplitterButton : public StaticRect {
 public:
@@ -49,6 +49,6 @@ private:
 	void SetArrows();
 };
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
 
 #endif

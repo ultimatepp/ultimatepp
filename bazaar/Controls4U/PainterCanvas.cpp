@@ -1,4 +1,8 @@
+#include <CtrlLib/CtrlLib.h>
 #include "Controls4U.h"
+
+using namespace Upp;
+
 #include <plugin/jpg/jpg.h>
 
 #define TFILE <Controls4U/Controls4U.t>

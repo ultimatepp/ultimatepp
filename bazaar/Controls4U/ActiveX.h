@@ -16,7 +16,7 @@
 #include <Exdisp.h> 
 #include "plugin/vlc/axvlc_idl.h"
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
 
 static const CLSID CLSID_MozillaBrowser = {0x1339B54C, 0x3453, 0x11D2, {0x93, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};	//http://www.iol.ie/~locka/mozilla/control.htm
 
@@ -137,6 +137,6 @@ private:
 	};
 };
 
-END_UPP_NAMESPACE
+//END_UPP_NAMESPACE
 
 #endif
