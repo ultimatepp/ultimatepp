@@ -7,6 +7,7 @@ file
 	uppnighty2deb,
 	src,
 	debian,
+	fedora,
 	all,
 	GCCMK.bm,
 	CLANGMK.bm,
