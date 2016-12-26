@@ -51,9 +51,10 @@ private:
 					  txt, StdFont(), ink);
 		}
 	};
-
+	
 public:
 	FindFileWindow(const Workspace& wspc, const String& acctualPackage);
+	bool Key(dword key, int count) override;
 	
 	Vector<FindFileData> GetFindedFilesData() const;
 	
@@ -87,6 +88,11 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	mask.SetFilter(CharFilterFindFileMask);
 	mask << [=] { Find(); };
 	searchInCurrentPackage << [=] { Find(); };
+}
+
+bool FindFileWindow::Key(dword key, int count)
+{
+	return list.Key(key, count);
 }
 
 Vector<FindFileData> FindFileWindow::GetFindedFilesData() const
