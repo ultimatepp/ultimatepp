@@ -3,9 +3,7 @@ uses
 	Core/SSL;
 
 file
-	P7S.cpp,
-	private.pem,
-	public.pem;
+	CheckMirror.cpp;
 
 mainconfig
 	"" = "";

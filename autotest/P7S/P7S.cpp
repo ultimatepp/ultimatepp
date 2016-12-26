@@ -2,6 +2,8 @@
 
 using namespace Upp;
 
+// openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+
 CONSOLE_APP_MAIN
 {
 	String dir = GetHomeDirFile("autotest.p7s");
