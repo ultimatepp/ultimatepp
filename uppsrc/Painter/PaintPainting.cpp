@@ -130,7 +130,7 @@ void Painter::Paint(const Painting& pic)
 			sGet(m, ss);
 			f = ss.Get();
 			FillOp(p1, c, c1, m, f);
-			break;		
+			break;
 		case PAINTING_FILL_RADIAL:
 			sGet(p, ss);
 			sGet(c, ss);
@@ -193,7 +193,7 @@ void Painter::Paint(const Painting& pic)
 			sGet(c1, ss);
 			f = ss.Get();
 			StrokeOp(w, p, c, p1, r, c1, f);
-			break;		
+			break;
 		case PAINTING_CLIP:
 			ClipOp();
 			break;
