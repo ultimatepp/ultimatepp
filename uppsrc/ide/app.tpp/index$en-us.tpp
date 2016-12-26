@@ -42,7 +42,7 @@ Project Templates]&]
 [s0;l224; [^topic`:`/`/ide`/app`/AdvancedReplace`$en`-us^ Advanced 
 Find and Replace]&]
 [s0;l224; [^topic`:`/`/ide`/app`/FindFile`$en`-us^ Finding specific 
-file in project (Find File)]&]
+file in the project (Find File)]&]
 [s0;l224; [^topic`:`/`/ide`/app`/importext`$en`-us^ import.ext `- importing 
 libraries]&]
 [s0;l224; &]

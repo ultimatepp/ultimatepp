@@ -1,4 +1,4 @@
-topic "Finding specific file in project (Find File)";
+topic "Finding specific file in the project (Find File)";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
@@ -22,7 +22,7 @@ topic "Finding specific file in project (Find File)";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
-[s2;~~~832; Finding specific file in project (Find File)&]
+[s2;~~~832; Finding specific file in the project (Find File)&]
 [s5; If you are looking for specified file or files in your project 
 you can use `"Find File`" dialog. By project we mean the set 
 of packages. For example, if your project is using CtrlLib and 
