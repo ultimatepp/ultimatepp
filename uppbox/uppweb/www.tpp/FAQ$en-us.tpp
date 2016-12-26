@@ -35,20 +35,6 @@ backup them first.&]
 [s23; How do I un`-install U`+`+?&]
 [s22; U`+`+ now uses portable approach. All you need to do is just 
 remove directory with U`+`+.&]
-[s3; Installation (Linux)&]
-[s23; What packages should I install to start my journey with U`+`+?&]
-[s22; By default U`+`+ provides a file called `"debian`" which contains 
-a list of all required packages on Debian like distributions 
-such as Ubuntu. The file is located inside the root directory 
-after unpacking archive. The list contains apt`-get command, 
-so you can execute the file from your terminal and wait for the 
-installation. Before, you do that make sure the file has executable 
-privileges.&]
-[s22; Please notice that currently we don`'t provide such list for 
-other distributions that uses different packaging system like 
-RPM. On that system you need to counterparts and arrange own 
-list. If you do that `- please post your list on the forum `- 
-we will attached it to the future distributions of U`+`+.&]
 [s3; U`+`+ Library&]
 [s23; Is there a complete list of U`+`+ widgets?&]
 [s22; [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ Yes.]&]
