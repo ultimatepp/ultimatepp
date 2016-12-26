@@ -122,7 +122,7 @@ protected:
 	                        int style) = 0;
 	virtual void   StrokeOp(double width, const RGBA& color1, const RGBA& color2,
 	                        const Xform2D& transsrc, int style) = 0;
-	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1, 
+	virtual void   StrokeOp(double width, const Pointf& f, const RGBA& color1,
 	                        const Pointf& c, double r, const RGBA& color2,
 	                        int style) = 0;
 	virtual void   StrokeOp(double width, const Pointf& f,
@@ -132,7 +132,7 @@ protected:
 	virtual void   ClipOp() = 0;
 
 	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt) = 0;
-	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
+	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1,
 	                      double *dx = NULL);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color) = 0;
