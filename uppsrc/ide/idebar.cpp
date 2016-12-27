@@ -596,8 +596,8 @@ void Ide::BrowseMenu(Bar& menu)
 	if(!IsEditorMode()) {
 		if(menu.IsMenuBar()) {
 			menu.AddMenu(AK_NAVIGATOR, IdeImg::Navigator(), THISBACK(ToggleNavigator))
-			    .Check(editor.IsNavigator())
-			    .Enable(!designer);
+				.Check(editor.IsNavigator())
+				.Enable(!designer);
 			menu.Add(AK_GOTO, THISBACK(SearchCode))
 				.Enable(!designer);
 			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
