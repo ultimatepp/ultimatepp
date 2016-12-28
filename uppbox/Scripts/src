@@ -32,8 +32,13 @@ cp ~/Scripts/fedora ~/upp.tmp/upp
 cp ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
 cp ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
 
+svn_snapshot_version=$(svnversion ~/upp.src)
+current_date=$(LC_TIME=En date '+%a %b %d %Y')
+
+sed -i -e 's|%version|'$svn_snapshot_version'|g' -e 's|%date|'$current_date'|g' ~/upp.tmp/upp/upp.spec
+
 cd ~/upp.tmp
-mv upp upp-x11-src-`svnversion ~/upp.src`
-tar -cvvzf ~/upload/upp-x11-src-`svnversion ~/upp.src`.tar.gz upp-x11-src-`svnversion ~/upp.src`
-#mv upp-x11-src-`svnversion ~/upp.src` upp
+mv upp upp-x11-src-$svn_snapshot_version
+tar -cvvzf ~/upload/upp-x11-src-$svn_snapshot_version.tar.gz upp-x11-src-$svn_snapshot_version
+#mv upp-x11-src-$svn_snapshot_version upp
 #~/bin/upload
