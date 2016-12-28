@@ -38,11 +38,11 @@ Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel
 
 # -----
 Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
-Requires:       valgrind xterm
+Requires:	valgrind xterm
 
 # Mandriva specific Requires
 %if "%?mdvver" != ""
-Requires:  X11-devel freetype2-devel expat-devel
+Requires:	X11-devel freetype2-devel expat-devel
 
 # OpenSuse specific Requires
 %else
@@ -78,10 +78,12 @@ programming. It provides:
 # ----
 %build
 
-sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
+sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in > uppsrc/Makefile
+sed -e "s@-I((INCLUDES))@@g" uppsrc/uMakefile.in > uppsrc/uMakefile
 
 make prepare \
      -C uppsrc \
+     -f Makefile \
      -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
@@ -92,21 +94,37 @@ make prepare \
 
 make %{?_smp_mflags} \
      -C uppsrc \
-     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)     \
-     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)" \
+     -f Makefile \
+     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
+     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
 %if "%?fedora" != ""
      -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
 %endif
 
-# We remove WbemUuid.Lib to prevent strip application to crash at build time in Fedora
+make prepare \
+     -C uppsrc \
+     -f uMakefile \
+     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
+     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
+     -e UPPOUT="$PWD/out/" \
+     -e OutFile="$PWD/out/umk.out" \
 %if "%?fedora" != ""
-if [ -e bazaar/SysInfo/plugin/WbemUuid.Lib ]
-then
- rm -f bazaar/SysInfo/plugin/WbemUuid.Lib
-fi
+     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
 %endif
+
+make %{?_smp_mflags} \
+     -C uppsrc \
+     -f uMakefile \
+     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
+     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
+     -e UPPOUT="$PWD/out/" \
+     -e OutFile="$PWD/out/umk.out" \
+%if "%?fedora" != ""
+     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
+%endif
+
 
 #-------
 %install
@@ -119,6 +137,7 @@ install -d %{buildroot}/%{_datadir}/pixmaps
 install -d %{buildroot}/%{_datadir}/%{name}
 
 install out/ide.out %{buildroot}/%{_bindir}/theide
+install out/umk.out %{buildroot}/%{_bindir}/umk
 
 cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_datadir}/applications/theide.desktop
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
@@ -126,10 +145,10 @@ cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/pixmaps/theide.png
 
 cp -a bazaar %{buildroot}/%{_datadir}/%{name}/
 # cp -a Common %{buildroot}/%{_datadir}/%{name}/
-cp -a uppsrc %{buildroot}/%{_datadir}/%{name}/
 cp -a examples %{buildroot}/%{_datadir}/%{name}/
 cp -a reference %{buildroot}/%{_datadir}/%{name}/
 cp -a tutorial %{buildroot}/%{_datadir}/%{name}/
+cp -a uppsrc %{buildroot}/%{_datadir}/%{name}/
 
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
@@ -180,6 +199,7 @@ rm -fr %{buildroot}
 # %doc COPYING README INSTALL
 %doc uppsrc/ide/Copying
 %{_bindir}/theide
+%{_bindir}/umk
 %{_datadir}/applications/theide.desktop
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
