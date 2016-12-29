@@ -35,7 +35,7 @@ cp ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
 svn_snapshot_version=$(svnversion ~/upp.src)
 current_date=$(LC_TIME=En date '+%a %b %d %Y')
 
-sed -i -e 's|%version|'$svn_snapshot_version'|g' -e 's|%date|'$current_date'|g' ~/upp.tmp/upp/upp.spec
+sed -i -e 's|%version|'"$svn_snapshot_version"'|g' -e 's|%date|'"$current_date"'|g' ~/upp.tmp/upp/upp.spec
 
 cd ~/upp.tmp
 mv upp upp-x11-src-$svn_snapshot_version
