@@ -152,6 +152,8 @@ cp -a reference %{buildroot}/%{_datadir}/%{name}/
 cp -a tutorial %{buildroot}/%{_datadir}/%{name}/
 cp -a uppsrc %{buildroot}/%{_datadir}/%{name}/
 
+cp -p *.scd %{buildroot}/%{_datadir}/%{name}/
+
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
 
