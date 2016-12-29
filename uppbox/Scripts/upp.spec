@@ -1,12 +1,14 @@
-# How to build example: rpmbuild -tb --define 'version 5431' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-5431.tar.gz
+# How to build snapshots binary: rpmbuild -tb upp-x11-src-10604M.tar.gz
+# How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-10604M.tar.gz
+# If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10603M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10604M.tar.gz
  
-%define		name upp
-#define		version 5431
-#define		date $(LC_TIME=En date '+%a %b %d %Y')      
-%define		release 1
-%define		debug_package %{nil}
+%define	name upp
+#define	version 10604M
+#define	date $(LC_TIME=En date '+%a %b %d %Y')      
+%define	release 1
+%define	debug_package %{nil}
 
-%define		title     Ultimate++
+%define	title     Ultimate++
 %define 	longtitle C++ cross-platform rapid application development suite
 
 Summary:        %longtitle
@@ -165,29 +167,59 @@ LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango a
 cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
 BUILDER		= "GCC";
 COMPILER	= "g++";
-DEBUG_INFO	= "2";
-DEBUG_BLITZ	= "1";
+DEBUG_INFO		= "2";
+DEBUG_BLITZ		= "1";
 DEBUG_LINKMODE	= "1";
-DEBUG_LINK	= "$LINK";
+DEBUG_LINK		= "$LINK";
 DEBUG_OPTIONS	= "-O0";
-DEBUG_FLAGS	= "";
+DEBUG_FLAGS		= "";
 RELEASE_BLITZ		= "0";
 RELEASE_LINKMODE	= "1";
 RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
-RELEASE_FLAGS	= "";
-RELEASE_LINK	= "-Wl,--gc-sections $LINK";
+RELEASE_FLAGS		= "";
+RELEASE_LINK		= "-Wl,--gc-sections $LINK";
 DEBUGGER	= "gdb";
 PATH		= "";
 INCLUDE		= "$INCLUDEDIR";
-LIB		= "$LIBDIR";
-REMOTE_HOST	= "";
-REMOTE_OS	= "";
+LIB			= "$LIBDIR";
+REMOTE_HOST		= "";
+REMOTE_OS		= "";
 REMOTE_TRANSFER	= "";
-REMOTE_MAP	= "";
+REMOTE_MAP		= "";
 LINKMODE_LOCK	= "0";
 EOF
 
+cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm  << EOF
+BUILDER		= "CLANG";
+COMPILER	= "clang++";
+COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
+COMMON_CPP_OPTIONS	= "-std=c++11";
+COMMON_C_OPTIONS	= "";
+COMMON_FLAGS		= "";
+DEBUG_INFO		= "2";
+DEBUG_BLITZ		= "1";
+DEBUG_LINKMODE	= "1";
+DEBUG_OPTIONS	= "-O0";
+DEBUG_FLAGS		= "";
+DEBUG_LINK		= "$LINK";
+RELEASE_BLITZ		= "0";
+RELEASE_LINKMODE	= "1";
+RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
+RELEASE_SIZE_OPTIONS	= "-Os -ffunction-sections -fdata-sections";
+RELEASE_FLAGS		= "";
+RELEASE_LINK		= "-Wl,--gc-sections $LINK";
+DEBUGGER	= "gdb";
+PATH		= "";
+INCLUDE		= "$INCLUDEDIR";
+LIB			= "$LIBDIR";
+REMOTE_HOST		= "";
+REMOTE_OS		= "";
+REMOTE_TRANSFER	= "";
+REMOTE_MAP		= "";
+LINKMODE_LOCK	= "0";
+ALLOW_PRECOMPILED_HEADERS	= "0";
+EOF
 
 #-----
 %clean
