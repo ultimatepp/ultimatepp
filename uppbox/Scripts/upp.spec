@@ -169,6 +169,7 @@ LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango a
 cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
 BUILDER		= "GCC";
 COMPILER	= "g++";
+COMMON_CPP_OPTIONS      = "-std=c++11";
 DEBUG_INFO		= "2";
 DEBUG_BLITZ		= "1";
 DEBUG_LINKMODE	= "1";
