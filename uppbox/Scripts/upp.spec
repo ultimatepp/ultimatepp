@@ -8,33 +8,46 @@
 %define	release 1
 %define	debug_package %{nil}
 
-%define	title     Ultimate++
-%define 	longtitle C++ cross-platform rapid application development suite
+%define		title		Ultimate++
+%define 	longtitle	C++ cross-platform rapid application development suite
 
-Summary:        %longtitle
-Name:           %name
-Version:        %version
-Release:        %release
-License:        BSD
-Group:          Development/Tools
-URL:            http://www.ultimatepp.org
-Source0:        %{name}-x11-src-%{version}.tar.gz
+Summary:	%longtitle
+Name:		%name
+Version:	%version
+Release:	%release
+License:	BSD
+Group:		Development/Tools
+URL:		http://www.ultimatepp.org
+Source0:	%{name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel bzip2-devel
+Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel gnome-shell  libnotify-devel gnome-shell
 
 # Mandriva specific Buildrequires
-%if "%?mdvver" != ""
-Buildrequires:	X11-devel freetype2-devel expat-devel
+%if 0%{?mandriva_version}
+Buildrequires:	X11-devel freetype2-devel expat-devel bzip2-devel
 
 # OpenSuse specific Buildrequires
 %else
-%if "%?suse_version" != ""
-Buildrequires:	patch make xorg-x11-devel freetype2-devel libexpat-devel
+%if 0%{?suse_version}
+Buildrequires:	patch make xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+
+# Redhat based distro specific Buildrequires
+%else
+%if 0%{?rhel_version}
+Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
 
 # Fedora based distro specific Buildrequires
 %else
-Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel
+%if 0%{?fedora_version}
+Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
+
+# Other rpm based distro specific Requires
+%else
+Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+
+%endif
+%endif
 %endif
 %endif
 
@@ -43,17 +56,29 @@ Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-dev
 Requires:	valgrind xterm
 
 # Mandriva specific Requires
-%if "%?mdvver" != ""
-Requires:	X11-devel freetype2-devel expat-devel
+%if 0%{?mandriva_version}
+Requires:	X11-devel freetype2-devel expat-devel bzip2-devel
 
 # OpenSuse specific Requires
 %else
-%if "%?suse_version" != ""
-Requires:	xorg-x11-devel freetype2-devel libexpat-devel
+%if 0%{?suse_version}
+Requires:	xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+
+%else
+%if 0%{?rhel_version}
+Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
 
 # Fedora based distro specific Requires
 %else
-Requires:	xorg-x11-server-devel freetype-devel expat-devel
+%if 0%{?fedora_version}
+Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
+
+# Other rpm based distro specific Requires
+%else
+Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+
+%endif
+%endif
 %endif
 %endif
 
@@ -167,60 +192,60 @@ LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango a
 %endif
 
 cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
-BUILDER		= "GCC";
-COMPILER	= "g++";
-COMMON_CPP_OPTIONS      = "-std=c++11";
-DEBUG_INFO		= "2";
-DEBUG_BLITZ		= "1";
-DEBUG_LINKMODE	= "1";
-DEBUG_LINK		= "$LINK";
-DEBUG_OPTIONS	= "-O0";
-DEBUG_FLAGS		= "";
+BUILDER				= "GCC";
+COMPILER			= "g++";
+COMMON_CPP_OPTIONS	= "-std=c++11";
+DEBUG_INFO			= "2";
+DEBUG_BLITZ			= "1";
+DEBUG_LINKMODE		= "1";
+DEBUG_LINK			= "$LINK";
+DEBUG_OPTIONS		= "-O0";
+DEBUG_FLAGS			= "";
 RELEASE_BLITZ		= "0";
 RELEASE_LINKMODE	= "1";
 RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
 RELEASE_FLAGS		= "";
 RELEASE_LINK		= "-Wl,--gc-sections $LINK";
-DEBUGGER	= "gdb";
-PATH		= "";
-INCLUDE		= "$INCLUDEDIR";
-LIB			= "$LIBDIR";
-REMOTE_HOST		= "";
-REMOTE_OS		= "";
-REMOTE_TRANSFER	= "";
-REMOTE_MAP		= "";
-LINKMODE_LOCK	= "0";
+DEBUGGER			= "gdb";
+PATH				= "";
+INCLUDE				= "$INCLUDEDIR";
+LIB					= "$LIBDIR";
+REMOTE_HOST			= "";
+REMOTE_OS			= "";
+REMOTE_TRANSFER		= "";
+REMOTE_MAP			= "";
+LINKMODE_LOCK		= "0";
 EOF
 
 cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm  << EOF
-BUILDER		= "CLANG";
-COMPILER	= "clang++";
+BUILDER				= "CLANG";
+COMPILER			= "clang++";
 COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
 COMMON_CPP_OPTIONS	= "-std=c++11";
 COMMON_C_OPTIONS	= "";
 COMMON_FLAGS		= "";
-DEBUG_INFO		= "2";
-DEBUG_BLITZ		= "1";
-DEBUG_LINKMODE	= "1";
-DEBUG_OPTIONS	= "-O0";
-DEBUG_FLAGS		= "";
-DEBUG_LINK		= "$LINK";
+DEBUG_INFO			= "2";
+DEBUG_BLITZ			= "1";
+DEBUG_LINKMODE		= "1";
+DEBUG_OPTIONS		= "-O0";
+DEBUG_FLAGS			= "";
+DEBUG_LINK			= "$LINK";
 RELEASE_BLITZ		= "0";
 RELEASE_LINKMODE	= "1";
 RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS	= "-Os -ffunction-sections -fdata-sections";
 RELEASE_FLAGS		= "";
 RELEASE_LINK		= "-Wl,--gc-sections $LINK";
-DEBUGGER	= "gdb";
-PATH		= "";
-INCLUDE		= "$INCLUDEDIR";
-LIB			= "$LIBDIR";
-REMOTE_HOST		= "";
-REMOTE_OS		= "";
-REMOTE_TRANSFER	= "";
-REMOTE_MAP		= "";
-LINKMODE_LOCK	= "0";
+DEBUGGER			= "gdb";
+PATH				= "";
+INCLUDE				= "$INCLUDEDIR";
+LIB					= "$LIBDIR";
+REMOTE_HOST			= "";
+REMOTE_OS			= "";
+REMOTE_TRANSFER		= "";
+REMOTE_MAP			= "";
+LINKMODE_LOCK		= "0";
 ALLOW_PRECOMPILED_HEADERS	= "0";
 EOF
 
