@@ -365,6 +365,16 @@ LegendBorderColor]()&]
 [s3;%- [%% Returns ScatterDraw`::]GetLegendBorderColor().&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterCtrl`:`:SetDefaultCSVSeparator`(Upp`:`:String`):%- [_^ScatterCtrl^ ScatterC
+trl][@(0.0.255) `&]_[* SetDefaultCSVSeparator]([_^Upp`:`:String^ String]_[*@3 sep])&]
+[s3; Sets [%-*@3 sep] as the default .csv files field separator.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetDefaultCSVSeparator`(`):%- [_^Upp`:`:String^ String]_[* GetDefault
+CSVSeparator]()&]
+[s3; Gets the the default .csv files field separator.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterCtrl`:`:ScatterAction:%- [@(0.0.255) enum]_ScatterAction_[* action]&]
 [s3; Is the action to be launched if the previous conditions are 
 complied. It can be:&]

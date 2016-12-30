@@ -6,7 +6,7 @@
 #include <plugin/jpg/jpg.h>
 #include <GridCtrl/GridCtrl.h>
 
-namespace Upp {
+using namespace Upp;
 
 class EditDoubleLostFocus : public EditDouble {
 public:
@@ -250,6 +250,9 @@ public:
 	ScatterCtrl& SetMaxRefreshTime(int _maxRefresh_ms) 	{maxRefresh_ms = _maxRefresh_ms; return *this;}
 	int GetMaxRefreshTime() 							{return maxRefresh_ms;}
 	
+	ScatterCtrl& SetDefaultCSVSeparator(String sep) 	{defaultCSVseparator = sep;	return *this;}
+	String GetDefaultCSVSeparator() 					{return defaultCSVseparator;}
+	
 private:
 	bool showInfo;
 	Point clickPoint;
@@ -315,6 +318,8 @@ private:
 	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = true);	
 	void TimerCallback();	
 	
+	String defaultCSVseparator;
+	
 	FileSel fileToSave;
 };
 
@@ -341,6 +346,5 @@ void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale, bool ctrl) {
 	} 
 }
 
-}
 
 #endif

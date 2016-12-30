@@ -1,6 +1,7 @@
 #ifndef _ScatterCtrl_Properties_h_
 #define _ScatterCtrl_Properties_h_
 
+
 class MeasuresTab : public WithMeasures<StaticRect> {
 public:
 	typedef MeasuresTab CLASSNAME;
@@ -17,7 +18,8 @@ public:
 	typedef TextsTab CLASSNAME;
 	
 	void Init(ScatterCtrl &scatter);
-
+	void DoShowText();
+	
 private:
 	ScatterCtrl *pscatter;
 	
@@ -61,6 +63,7 @@ public:
 	void OnArrayBar(Bar &menu);
 	void ArrayCopy();
 	void ArraySelect();
+	void ArraySaveToFile(String fileName);
 	
 	class DataSourceX : public Convert {
 	public:
@@ -74,7 +77,8 @@ public:
 		Value Format(const Value& q) const;
 		ScatterDraw *pscatter;
 		int index;
-	} dataSourceY;
+	};
+	Array<DataSourceY> dataSourceYArr;
 	
 private:
 	ScatterCtrl *pscatter;	
@@ -156,6 +160,17 @@ private:
 	void UpdateFields();
 };
 
-
+class TextDlg : public WithText<TopWindow> {
+public:
+	typedef TextDlg CLASSNAME;
+	
+	TextDlg(ScatterCtrl& scatter);
+	void Change();
+	void OnClose();
+	
+private:
+	ScatterCtrl& scatter;	
+};
+	
 
 #endif
