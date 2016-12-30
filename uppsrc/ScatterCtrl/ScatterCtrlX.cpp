@@ -1,5 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
+
 #ifdef PLATFORM_POSIX
 
 #include <X11/Xlib.h>
@@ -8,7 +9,7 @@
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 
-namespace Upp {
+using namespace Upp;
 
 int GetKeyCodeX(int key) {
 	_XDisplay *dpy = XOpenDisplay(NULL);
@@ -24,8 +25,6 @@ int GetKeyCodeX(int key) {
 	XFlush(dpy);
  	XCloseDisplay(dpy);
  	return key;
-}
-
 }
 	
 #endif

@@ -1,6 +1,5 @@
 #include "ScatterCtrl.h"
 
-namespace Upp {
 
 #define IMAGECLASS ScatterImg
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
@@ -536,19 +535,28 @@ ScatterCtrl &ScatterCtrl::SetMouseHandling(bool valx, bool valy)
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
-		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0));
-		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY));
-		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY));
+		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0))
+										.Help(t_("Zoom to fit visible all data"));
+		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY))
+										.Help(t_("Zoom in (closer)"));
+		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY))
+										.Help(t_("Zoom out (away)"));
 	}
-	bar.Add(t_("Attach X axis"), Null, THISBACK(ChangeMouseHandlingX)).Check(!mouseHandlingX);
+	bar.Add(t_("Attach X axis"), Null, THISBACK(ChangeMouseHandlingX)).Check(!mouseHandlingX)
+										.Help(t_("Fix X axis so no zoom or scroll is possible"));
 	if (mouseHandlingX) {
-		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT);
-		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT);
+		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT)
+									.Help(t_("Scrolls plot to the left"));
+		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT)
+									.Help(t_("Scrolls plot to the right"));
 	}
-	bar.Add(t_("Attach Y axis"), Null, THISBACK(ChangeMouseHandlingY)).Check(!mouseHandlingY);
+	bar.Add(t_("Attach Y axis"), Null, THISBACK(ChangeMouseHandlingY)).Check(!mouseHandlingY)
+									.Help(t_("Fix Y axis so no zoom or scroll is possible"));
 	if (mouseHandlingY) {
-		bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP);
-		bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN);			
+		bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP)
+									.Help(t_("Scrolls plot up"));
+		bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN)
+									.Help(t_("Scrolls plot down"));
 	}
 	if (mouseHandlingX || mouseHandlingY)
 		bar.Separator();
@@ -556,14 +564,17 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	if (showPropDlg)
 #endif	
 	{
-		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P);		
-		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D);	
+		bar.Add(t_("Properties"), ScatterImg::Gear(), THISBACK1(DoShowEditDlg, 0)).Key(K_CTRL_P)
+									.Help(t_("Plot properties dialog"));
+		bar.Add(t_("Data"), ScatterImg::Database(), THISBACK(DoShowData)).Key(K_CTRL_D)
+									.Help(t_("Raw data table"));
 	}
 #ifndef _DEBUG
 	if (showProcessDlg)
 #endif
 	{
-		bar.Add(t_("Process"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P);	
+		bar.Add(t_("Process"), ScatterImg::chart_curve_edit(), THISBACK(DoProcessing)).Key(K_SHIFT_P)
+									.Help(t_("Data processing dialog"));
 	}
 #ifndef _DEBUG
 	if (showPropDlg || showProcessDlg)
@@ -571,8 +582,10 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	{
 		bar.Separator();
 	}
-	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, true)).Key(K_CTRL_C);
-	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S);
+	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, true)).Key(K_CTRL_C)
+									.Help(t_("Copy image to clipboard"));
+	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S)
+									.Help(t_("Save image to file"));
 }
 
 void ScatterCtrl::SaveToFile(String fileName)
@@ -635,6 +648,7 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	showContextMenu = false;
 	showPropDlg = false;
 	showProcessDlg = false;
+	defaultCSVseparator = ";";
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        
@@ -668,4 +682,3 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	AddKeyBehavior(true,  false, false, K_DOWN, 	true, 	ScatterCtrl::SCROLL_DOWN);
 }
 
-}
