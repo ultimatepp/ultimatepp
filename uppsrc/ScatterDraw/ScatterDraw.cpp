@@ -1,7 +1,5 @@
 #include "ScatterDraw.h"
 
-namespace Upp {
-
 ScatterDraw& ScatterDraw::SetColor(const Color& _color) {
 	graphColor = _color;
 	return *this;
@@ -656,7 +654,7 @@ Color GetOpaqueColor(const Color &color, const Color &background, double opacity
 	             int(opacity*(color.GetB() - background.GetB()) + background.GetB()));
 } 
 		
-ScatterDraw::ScatterBasicSeries::ScatterBasicSeries() {
+ScatterDraw::ScatterBasicSeries::ScatterBasicSeries() { 
 	color = Null;
 	thickness = 3;
 	legend = "";
@@ -715,7 +713,7 @@ ScatterDraw &ScatterDraw::InsertSeries(int index, Vector<double> &xData, Vector<
 	return InsertSeries<VectorDouble>(index, xData, yData);
 }
 
-ScatterDraw &ScatterDraw::InsertSeries(int index, Array<double> &xData, Array<double> &yData) {
+ScatterDraw &ScatterDraw::InsertSeries(int index, Upp::Array<double> &xData, Upp::Array<double> &yData) {
 	return InsertSeries<ArrayDouble>(index, xData, yData);
 }
 		
@@ -723,7 +721,7 @@ ScatterDraw &ScatterDraw::InsertSeries(int index, Vector<Pointf> &points) {
 	return InsertSeries<VectorPointf>(index, points);
 }
 
-ScatterDraw &ScatterDraw::InsertSeries(int index, Array<Pointf> &points) {
+ScatterDraw &ScatterDraw::InsertSeries(int index, Upp::Array<Pointf> &points) {
 	return InsertSeries<ArrayPointf>(index, points);
 }
 
@@ -1510,7 +1508,7 @@ void ScatterDraw::ParseTextMultiline(const String &text, Font fnt, Upp::Array <S
 	}
 }
 
-Size GetTextSizeMultiline(Array <Size> &sizes) {
+Size GetTextSizeMultiline(Upp::Array <Size> &sizes) {
 	Size ret(0, 0);
 	for (int i = 0; i < sizes.GetCount(); ++i) {
 		if (sizes[i].cx > ret.cx)
@@ -1829,6 +1827,4 @@ INITBLOCK {
 	MarkPlot::Register<RhombMarkPlot>("Rhomb");
 	MarkPlot::Register<RangePlot>("Range");
 	MarkPlot::Register<BubblePlot>("Bubble");
-}
-
 }

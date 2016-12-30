@@ -1,10 +1,10 @@
-#include <plugin/Eigen/Eigen.h>
-using namespace Eigen;
-
 #include "ScatterDraw.h"
+
+#include <plugin/Eigen/Eigen.h>
 
 namespace Upp {
 
+using namespace Eigen;
 
 #define Membercall(fun)	(this->*fun)
 
@@ -366,5 +366,15 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     return res;
 }
 
+bool DataSource::SameX(DataSource &data) {
+	int64 num = GetCount();
+	if (data.GetCount() != num)
+		return false;
+	for (int64 i = 0; i < num; ++i) {
+		if (data.x(i) != x(i))
+			return false;
+	}
+	return true;
+}
 
 }
