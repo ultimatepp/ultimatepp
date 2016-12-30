@@ -16,7 +16,7 @@ Name:           %name
 Version:        %version
 Release:        %release
 License:        BSD
-Group:          Development/C++
+Group:          Development/Tools
 URL:            http://www.ultimatepp.org
 Source0:        %{name}-x11-src-%{version}.tar.gz
 
