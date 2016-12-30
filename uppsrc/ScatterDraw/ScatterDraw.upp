@@ -4,6 +4,8 @@ uses
 	Painter,
 	plugin/Eigen;
 
+options(MSC) -D_SCL_SECURE_NO_WARNINGS;
+
 file
 	ScatterDraw.cpp,
 	ScatterDraw.h,
