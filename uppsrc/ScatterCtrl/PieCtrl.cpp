@@ -1,6 +1,5 @@
 #include "PieCtrl.h"
 
-namespace Upp {
 
 PieCtrl::PieCtrl() : copyRatio(1) {
 	Transparent();
@@ -47,6 +46,4 @@ void PieCtrl::SaveToClipboard(bool)
 void PieCtrl::Paint(Draw& w)
 {
 	PaintPie(w, 1);
-}
-
 }

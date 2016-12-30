@@ -1,6 +1,5 @@
 #include "PopUpText.h"
 
-namespace Upp {
 
 void PopUpInfo::Paint(Draw& w)
 {
@@ -18,6 +17,4 @@ PopUpInfo::PopUpInfo(): color(SColorInfo())
 	SetAlign(ALIGN_CENTER);
 	SetFrame(BlackFrame());
 	opened = false;
-}
-
 }

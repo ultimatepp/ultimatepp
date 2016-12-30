@@ -4,7 +4,7 @@
 #include <CtrlLib/CtrlLib.h>
 #include <ScatterDraw/PieDraw.h>
 
-namespace Upp {
+using namespace Upp;
 
 
 class PieCtrl: public StaticRect, public PieDraw {
@@ -41,7 +41,6 @@ public:
 	PieCtrl& SetLegendHeight(const int& height)			{PieDraw::SetLegendHeight(height); 		return *this;};
 };
 
-}
 
 #endif
 
