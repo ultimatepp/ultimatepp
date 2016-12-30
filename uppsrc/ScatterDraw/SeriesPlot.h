@@ -1,8 +1,6 @@
 #ifndef _ScatterDraw_SeriesPlot_h_
 #define _ScatterDraw_SeriesPlot_h_
 
-using namespace Upp;
-
 class SeriesPlot {
 public:
 	virtual ~SeriesPlot() 	{};	

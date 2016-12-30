@@ -5,7 +5,7 @@
 #include <Painter/Painter.h>
 #include "DataSource.h"
 
-namespace Upp {
+using namespace Upp;
 
 class PieDraw {
 public:
@@ -89,7 +89,5 @@ private:
 	String GetPercent(double a, double total);
 };
 
-
-}
 		
 #endif

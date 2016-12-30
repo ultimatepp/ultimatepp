@@ -73,6 +73,8 @@ public:
 	bool SinEstim_FreqPhase(double &frequency, double &phase, double avg = Null);
 	Vector<Pointf> FFT(Getdatafun getdata, double tSample, bool frequency = false, 
 					   int type = FFT_TYPE::T_FFT, bool window = false);
+					   
+	bool SameX(DataSource &data);
 		
 protected:
 	bool isParam, isExplicit;

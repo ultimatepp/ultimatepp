@@ -6,11 +6,12 @@
 #include "DataSource.h"
 #include "Equation.h"
 
-namespace Upp {
+using namespace Upp;
 
 #include "DrawingFunctions.h"
 #include "SeriesPlot.h"
 #include "MarkPlot.h"
+
 
 Color GetOpaqueColor(const Color &color, const Color &background, double opacity);
 
@@ -219,10 +220,10 @@ public:
 														{return AddSeries<CArray>(yData, xData, numData);}
 	ScatterDraw &AddSeries(Vector<double> &xData, Vector<double> &yData)
 														{return AddSeries<VectorDouble>(yData, xData);}
-	ScatterDraw &AddSeries(Array<double> &xData, Array<double> &yData)
+	ScatterDraw &AddSeries(Upp::Array<double> &xData, Upp::Array<double> &yData)
 														{return AddSeries<ArrayDouble>(yData, xData);}		
 	ScatterDraw &AddSeries(Vector<Pointf> &points)		{return AddSeries<VectorPointf>(points);}
-	ScatterDraw &AddSeries(Array<Pointf> &points)		{return AddSeries<ArrayPointf>(points);}
+	ScatterDraw &AddSeries(Upp::Array<Pointf> &points)		{return AddSeries<ArrayPointf>(points);}
 	ScatterDraw &AddSeries(Vector<Vector <double> > &data, int idx, int idy, 
 		Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, bool useCols = true, int beginData = 0, int numData = Null) {
 		return AddSeries<VectorVectorY<double> >(data, idx, idy, idsx, idsy, idsFixed, useCols, beginData, numData);
@@ -556,7 +557,7 @@ private:
 	bool labelsChanged;
 	//bool multiPlot;
 	
-	Index<ScatterDraw *> linkedCtrls;
+	Upp::Index<ScatterDraw *> linkedCtrls;
 	ScatterDraw *linkedMaster;
 };
 
@@ -607,7 +608,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 		xLabel = xLabel_base;
 		yLabel = yLabel_base;
 		yLabel2 = yLabel2_base;
-		Index<String> xUnits, yUnits, yUnits2;
+		Upp::Index<String> xUnits, yUnits, yUnits2;
 		for (int i = 0; i < series.GetCount(); ++i) {
 			ScatterSeries &serie = series[i];
 			if (!serie.unitsX.IsEmpty())
@@ -662,8 +663,8 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 			else
 				gridLabelX = VariableFormatX(gridX);
 			
-			Array <String> texts;
-			Array <Size> sizes;
+			Upp::Array <String> texts;
+			Upp::Array <Size> sizes;
 			ParseTextMultiline(gridLabelX, GetStdFont(), texts, sizes);
 			for (int ii = 0; ii < texts.GetCount(); ++ii) {
 				int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
@@ -959,8 +960,6 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 	}
 	ClipEnd(w);
 	w.End();
-}
-
 }
 		
 #endif

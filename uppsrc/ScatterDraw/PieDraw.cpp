@@ -1,7 +1,5 @@
 #include "PieDraw.h"
 
-namespace Upp {
-
 
 static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int alpha, int width = 0, 
 					Color fill = Null, Color outline = Black, uint64 pattern = 0, Color background = White) {
@@ -212,4 +210,4 @@ PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)), titleColor(Black),
 
 PieDraw::~PieDraw(){}
 
-}
+
