@@ -1,6 +1,6 @@
 # How to build snapshots binary: rpmbuild -tb upp-x11-src-10604M.tar.gz
 # How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-10604M.tar.gz
-# If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10603M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10604M.tar.gz
+# If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10604M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10604M.tar.gz
  
 %define	name upp
 #define	version 10604M
@@ -9,7 +9,7 @@
 %define	debug_package %{nil}
 
 %define		title		Ultimate++
-%define 	longtitle	C++ cross-platform rapid application development suite
+%define		longtitle	C++ cross-platform rapid application development suite
 
 Summary:	%longtitle
 Name:		%name
@@ -32,19 +32,19 @@ Buildrequires:	X11-devel freetype2-devel expat-devel bzip2-devel
 %if 0%{?suse_version}
 Buildrequires:	patch make xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
-# Redhat based distro specific Buildrequires
+# Redhat specific Buildrequires
 %else
 %if 0%{?rhel_version}
-Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
+Buildrequires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
 
-# Fedora based distro specific Buildrequires
+# Fedora specific Buildrequires
 %else
 %if 0%{?fedora_version}
 Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
 
-# Other rpm based distro specific Requires
+# Other rpm based distro specific Buildrequires
 %else
-Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
 
 %endif
 %endif
@@ -68,7 +68,7 @@ Requires:	xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 %if 0%{?rhel_version}
 Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
 
-# Fedora based distro specific Requires
+# Fedora specific Requires
 %else
 %if 0%{?fedora_version}
 Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
