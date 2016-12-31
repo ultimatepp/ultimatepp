@@ -78,9 +78,9 @@ Color PieDraw::GetCatColor(const int& index) const {
 }
 
 void PieDraw::PaintPie(Draw& w, int scale) {
-	Size sz = GetSize();	
+	Size sz = scale*GetSize();	
 	
-	w.DrawRect(scale*sz, backColor);	
+	w.DrawRect(sz, backColor);	
 	
 	Size textsize;
 	textsize.cx = 0;
@@ -101,7 +101,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 	if(vValues.IsEmpty())
 		return;
 	
-	int alfa0 = -900;
+	int alfa0 = -900 + (int)pieAngle;
 	int a0 = 0;
 	double sum = 0;
 	for(int i = 0; i < vValues.GetCount(); i++)
@@ -142,7 +142,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 		alfa0 += fround(3600.0*vValues[i]/sum);
 	}
 	if(showPercent) {
-		alfa0 = -900;
+		alfa0 = -900 + (int)pieAngle;
 		for(int i = 0; i < vValues.GetCount(); i++) {
 			a0 = alfa0;                            		              
 			alfa0 += fround(3600.0*vValues[i]/sum);
@@ -188,9 +188,9 @@ String PieDraw::GetPercent(double a, double total) {
 	return FormatDouble(p, 1) + '%';
 }
 
-Drawing PieDraw::GetDrawing() {
-	DrawingDraw ddw(3*GetSize());
-	PaintPie(ddw, 3);
+Drawing PieDraw::GetDrawing(int scale) {
+	DrawingDraw ddw(scale*GetSize());
+	PaintPie(ddw, scale);
 	return ddw;
 }
 

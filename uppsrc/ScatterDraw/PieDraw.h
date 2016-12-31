@@ -50,7 +50,7 @@ public:
 	Color GetCatColor (const int& index)const;
 	int GetCatCount() const							{return vColors.GetCount();}
 	
-	Drawing GetDrawing();
+	Drawing GetDrawing(int scale = 3);
 	Image GetImage(int scale = 1);
 	
 	virtual void Refresh() {};

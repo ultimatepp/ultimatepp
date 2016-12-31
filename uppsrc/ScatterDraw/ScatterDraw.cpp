@@ -386,6 +386,7 @@ void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 }
 
 
+
 /*
 double ScatterDraw::GetXMin() {
 	double minx = -DOUBLE_NULL;
@@ -792,6 +793,14 @@ double ScatterDraw::GetValueY(int index, int64 idata) {
 	}
 }
 	
+ ScatterDraw &ScatterDraw::SetNoPlot(int index) {
+ 	ASSERT(IsValid(index));
+ 	
+ 	series[index].seriesPlot = NULL;
+ 	return *this;
+}	
+	
+	
 ScatterDraw &ScatterDraw::PlotStyle(SeriesPlot *data) {
 	int index = series.GetCount() - 1;
 	
@@ -1003,6 +1012,18 @@ Color ScatterDraw::GetFillColor(int index) const {
 	return series[index].fillColor;
 }
 
+ScatterDraw &ScatterDraw::SetMarkBorderWidth(int index, double width) { 
+	ASSERT(IsValid(index));
+	series[index].markBorderWidth = width;
+	Refresh();
+	return *this;
+}
+ 
+double ScatterDraw::GetMarkBorderWidth(int index) { 
+ 	ASSERT(IsValid(index));
+ 	return series[index].markBorderWidth;
+}
+
 ScatterDraw &ScatterDraw::SetMarkWidth(int index, double markWidth) {
 	ASSERT(IsValid(index));
 	series[index].markWidth = markWidth;
@@ -1134,8 +1155,7 @@ void ScatterDraw::RemoveAllSeries() {
 	Refresh();
 }
 
-Drawing ScatterDraw::GetDrawing(const Size _size) {
-	int scale = 3;
+Drawing ScatterDraw::GetDrawing(const Size _size, int scale) {
 	Size size = IsNull(_size) ? GetSize() : _size;
 	DrawingDraw ddw(scale*size);
 	
