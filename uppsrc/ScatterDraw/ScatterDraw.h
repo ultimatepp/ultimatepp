@@ -327,6 +327,8 @@ public:
 	double GetValueX(int index, int64 idata);
 	double GetValueY(int index, int64 idata);
 	
+	ScatterDraw &SetNoPlot(int index);
+	
 	ScatterDraw &PlotStyle()								{return PlotStyle(0);};
 	template <class C>
 	ScatterDraw &PlotStyle()								{return PlotStyle(new C());};
@@ -425,7 +427,7 @@ public:
 	ScatterDraw& Id(int index, int id);
 	int GetId(int index);
 	
-	Drawing GetDrawing(const Size size = Null);
+	Drawing GetDrawing(const Size size = Null, int scale = 3);
 	Image GetImage(int scale = 2);
 	Image GetImage(const Size &size, int scale = 2);
 	
