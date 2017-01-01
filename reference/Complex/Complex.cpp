@@ -17,5 +17,3 @@ CONSOLE_APP_MAIN
 	DUMP(2.0 * a);
 	DUMP(a * a);
 }
-
-
