@@ -35,7 +35,8 @@ Buildrequires:	patch make xorg-x11-devel freetype2-devel libexpat-devel libbz2-d
 # Redhat specific Buildrequires
 %else
 %if 0%{?rhel_version}
-Buildrequires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
+#Buildrequires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
+Buildrequires:	freetype-devel expat-devel bzip2-devel
 
 # Fedora specific Buildrequires
 %else
@@ -66,7 +67,8 @@ Requires:	xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
 %else
 %if 0%{?rhel_version}
-Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
+#Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
+Requires:	freetype-devel expat-devel bzip2-devel
 
 # Fedora specific Requires
 %else
@@ -192,59 +194,59 @@ LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango a
 %endif
 
 cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
-BUILDER				= "GCC";
-COMPILER			= "g++";
+BUILDER			= "GCC";
+COMPILER		= "g++";
 COMMON_CPP_OPTIONS	= "-std=c++11";
-DEBUG_INFO			= "2";
-DEBUG_BLITZ			= "1";
+DEBUG_INFO		= "2";
+DEBUG_BLITZ		= "1";
 DEBUG_LINKMODE		= "1";
-DEBUG_LINK			= "$LINK";
+DEBUG_LINK		= "$LINK";
 DEBUG_OPTIONS		= "-O0";
-DEBUG_FLAGS			= "";
+DEBUG_FLAGS		= "";
 RELEASE_BLITZ		= "0";
 RELEASE_LINKMODE	= "1";
 RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS	= "-Os -finline-limit=20 -ffunction-sections -fdata-sections";
 RELEASE_FLAGS		= "";
 RELEASE_LINK		= "-Wl,--gc-sections $LINK";
-DEBUGGER			= "gdb";
-PATH				= "";
-INCLUDE				= "$INCLUDEDIR";
-LIB					= "$LIBDIR";
-REMOTE_HOST			= "";
-REMOTE_OS			= "";
+DEBUGGER		= "gdb";
+PATH			= "";
+INCLUDE			= "$INCLUDEDIR";
+LIB			= "$LIBDIR";
+REMOTE_HOST		= "";
+REMOTE_OS		= "";
 REMOTE_TRANSFER		= "";
-REMOTE_MAP			= "";
+REMOTE_MAP		= "";
 LINKMODE_LOCK		= "0";
 EOF
 
 cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm  << EOF
-BUILDER				= "CLANG";
-COMPILER			= "clang++";
+BUILDER			= "CLANG";
+COMPILER		= "clang++";
 COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
 COMMON_CPP_OPTIONS	= "-std=c++11";
 COMMON_C_OPTIONS	= "";
 COMMON_FLAGS		= "";
-DEBUG_INFO			= "2";
-DEBUG_BLITZ			= "1";
+DEBUG_INFO		= "2";
+DEBUG_BLITZ		= "1";
 DEBUG_LINKMODE		= "1";
 DEBUG_OPTIONS		= "-O0";
-DEBUG_FLAGS			= "";
-DEBUG_LINK			= "$LINK";
+DEBUG_FLAGS		= "";
+DEBUG_LINK		= "$LINK";
 RELEASE_BLITZ		= "0";
 RELEASE_LINKMODE	= "1";
 RELEASE_OPTIONS		= "-O3 -ffunction-sections -fdata-sections";
 RELEASE_SIZE_OPTIONS	= "-Os -ffunction-sections -fdata-sections";
 RELEASE_FLAGS		= "";
 RELEASE_LINK		= "-Wl,--gc-sections $LINK";
-DEBUGGER			= "gdb";
-PATH				= "";
-INCLUDE				= "$INCLUDEDIR";
-LIB					= "$LIBDIR";
-REMOTE_HOST			= "";
-REMOTE_OS			= "";
+DEBUGGER		= "gdb";
+PATH			= "";
+INCLUDE			= "$INCLUDEDIR";
+LIB			= "$LIBDIR";
+REMOTE_HOST		= "";
+REMOTE_OS		= "";
 REMOTE_TRANSFER		= "";
-REMOTE_MAP			= "";
+REMOTE_MAP		= "";
 LINKMODE_LOCK		= "0";
 ALLOW_PRECOMPILED_HEADERS	= "0";
 EOF
