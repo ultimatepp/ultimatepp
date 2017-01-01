@@ -2,19 +2,10 @@
 
 namespace Upp {
 
-AndroidProject::AndroidProject()
+AndroidProject::AndroidProject(const String& dir, bool debug)
+	: dir(dir)
+	, debug(debug)
 {
-	
-}
-
-AndroidProject::AndroidProject(const String& dir)
-{
-	this->dir = dir;
-}
-
-AndroidProject::~AndroidProject()
-{
-	
 }
 
 String AndroidProject::GetDir() const
@@ -96,14 +87,14 @@ String AndroidProject::GetJniApplicationMakeFilePath() const
 
 // -------------------------------------------------------------------
 
-void AndroidProject::SetDir(const String& dir)
+bool AndroidProject::IsDebug() const
 {
-	this->dir = dir;
+	return debug;
 }
 
-bool AndroidProject::HasDir() const
+bool AndroidProject::IsRelease() const
 {
-	return !dir.IsEmpty();
+	return !debug;
 }
 
 }

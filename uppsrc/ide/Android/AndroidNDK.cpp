@@ -140,7 +140,7 @@ String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
 		// TODO: implement selection of library version
 		String versionsDir = nest + "gnu-libstdc++";
 		
-		FindFile ff(nest + "gnu-libstdc++/*.*");
+		FindFile ff(nest + "gnu-libstdc++" + DIR_SEPS + "*.*");
 		String inc;
 		double ver = 0;
 		while(ff) {
@@ -153,7 +153,7 @@ String AndroidNDK::GetCppIncludeDir(const String& cppRuntime) const
 			}
 			ff.Next();
 		}
-		return inc + '/' + "include";
+		return inc + DIR_SEPS + "include";
 	}
 	else
 	if(cppRuntime.StartsWith("c++")) {

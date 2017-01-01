@@ -138,7 +138,7 @@ One<Builder> MakeBuild::CreateBuilder(Host *host)
 		AndroidBuilder* ab = dynamic_cast<AndroidBuilder*>(b);
 		ab->sdk.SetPath((bm.Get("SDK_PATH", "")));
 		ab->ndk.SetPath((bm.Get("NDK_PATH", "")));
-		ab->jdk.SetPath((bm.Get("JDK_PATH", "")));
+		ab->SetJdk(One<Jdk>(new Jdk(bm.Get("JDK_PATH", ""), host)));
 		
 		String platformVersion = bm.Get("SDK_PLATFORM_VERSION", "");
 		if(!platformVersion.IsEmpty())

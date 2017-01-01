@@ -8,8 +8,8 @@ namespace Upp {
 class AndroidProject {
 public:
 	AndroidProject();
-	AndroidProject(const String& dir);
-	virtual ~AndroidProject();
+	AndroidProject(const String& dir, bool debug);
+	virtual ~AndroidProject() {}
 	
 	String GetDir() const;
 	String GetJavaDir() const;
@@ -28,12 +28,12 @@ public:
 	String GetJniMakeFilePath() const;
 	String GetJniApplicationMakeFilePath() const;
 	
-	void SetDir(const String& dir);
-	
-	bool HasDir() const;
+	bool IsDebug() const;
+	bool IsRelease() const;
 	
 private:
 	String dir;
+	bool   debug;
 };
 
 class AndroidApplicationMakeFile {
