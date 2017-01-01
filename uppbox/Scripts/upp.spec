@@ -2,50 +2,49 @@
 # How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-10604M.tar.gz
 # If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10604M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10604M.tar.gz
  
-%define	name upp
-#define	version 10604M
-#define	date $(LC_TIME=En date '+%a %b %d %Y')      
-%define	release 1
-%define	debug_package %{nil}
+%define	project_name	upp
+#define	version	10604M
+#define	date	$(LC_TIME=En date '+%a %b %d %Y')      
+%define	release	1
+%define	debug_package	%{nil}
 
 %define		title		Ultimate++
 %define		longtitle	C++ cross-platform rapid application development suite
 
 Summary:	%longtitle
-Name:		%name
+Name:		%project_name-devel
 Version:	%version
-Release:	%release
+Release:	%release%{?dist}
 License:	BSD
 Group:		Development/Tools
 URL:		http://www.ultimatepp.org
-Source0:	%{name}-x11-src-%{version}.tar.gz
+Source0:	%{project_name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel gnome-shell  libnotify-devel gnome-shell
+Buildrequires:	gtk2-devel pango-devel atk-devel cairo-devel gnome-shell libnotify-devel gnome-shell
 
 # Mandriva specific Buildrequires
 %if 0%{?mandriva_version}
-Buildrequires:	X11-devel freetype2-devel expat-devel bzip2-devel
+Buildrequires:	clang X11-devel freetype2-devel expat-devel bzip2-devel
 
 # OpenSuse specific Buildrequires
 %else
 %if 0%{?suse_version}
-Buildrequires:	patch make xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+Buildrequires:	clang patch make xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
 # Redhat specific Buildrequires
 %else
 %if 0%{?rhel_version}
-#Buildrequires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
-Buildrequires:	freetype-devel expat-devel bzip2-devel
+Buildrequires:	clang freetype-devel expat-devel bzip2-devel
 
 # Fedora specific Buildrequires
 %else
 %if 0%{?fedora_version}
-Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
+Buildrequires:	gcc gcc-c++ xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
 
 # Other rpm based distro specific Buildrequires
 %else
-Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+Buildrequires:	clang xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
 
 %endif
 %endif
@@ -53,31 +52,30 @@ Buildrequires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
 %endif
 
 # -----
-Requires:	gcc gcc-c++ gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
+Requires:	gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
 Requires:	valgrind xterm
 
 # Mandriva specific Requires
 %if 0%{?mandriva_version}
-Requires:	X11-devel freetype2-devel expat-devel bzip2-devel
+Requires:	clang X11-devel freetype2-devel expat-devel bzip2-devel
 
 # OpenSuse specific Requires
 %else
 %if 0%{?suse_version}
-Requires:	xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+Requires:	clang xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
 %else
 %if 0%{?rhel_version}
-#Requires:	xorg-x11-devel freetype-devel expat-devel bzip2-devel
-Requires:	freetype-devel expat-devel bzip2-devel
+Requires:	clang freetype-devel expat-devel bzip2-devel
 
 # Fedora specific Requires
 %else
 %if 0%{?fedora_version}
-Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
+Requires:	gcc gcc-c++ xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
 
 # Other rpm based distro specific Requires
 %else
-Requires:	xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+Requires:	clang xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
 
 %endif
 %endif
@@ -101,7 +99,7 @@ programming. It provides:
 #----
 %prep
 
-%setup -q -n %{name}-x11-src-%{version}
+%setup -q -n %{project_name}-x11-src-%{version}
 
 
 # ----
@@ -117,8 +115,11 @@ make prepare \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if "%?fedora" != ""
+%if 0%{?fedora_version}
      -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
+%else
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
 
 make %{?_smp_mflags} \
@@ -128,8 +129,11 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if "%?fedora" != ""
+%if 0%{?fedora_version}
      -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
+%else
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
 
 make prepare \
@@ -139,8 +143,11 @@ make prepare \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
-%if "%?fedora" != ""
+%if 0%{?fedora_version}
      -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
+%else
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
 
 make %{?_smp_mflags} \
@@ -150,8 +157,11 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
-%if "%?fedora" != ""
+%if 0%{?fedora_version}
      -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
+%else
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
 
 
@@ -172,28 +182,28 @@ cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_datadir}/applications/theide.des
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/pixmaps/theide.png
 
-cp -a bazaar %{buildroot}/%{_datadir}/%{name}/
-# cp -a Common %{buildroot}/%{_datadir}/%{name}/
-cp -a examples %{buildroot}/%{_datadir}/%{name}/
-cp -a reference %{buildroot}/%{_datadir}/%{name}/
-cp -a tutorial %{buildroot}/%{_datadir}/%{name}/
-cp -a uppsrc %{buildroot}/%{_datadir}/%{name}/
+cp -a bazaar %{buildroot}/%{_datadir}/%{project_name}/
+# cp -a Common %{buildroot}/%{_datadir}/%{project_name}/
+cp -a examples %{buildroot}/%{_datadir}/%{project_name}/
+cp -a reference %{buildroot}/%{_datadir}/%{project_name}/
+cp -a tutorial %{buildroot}/%{_datadir}/%{project_name}/
+cp -a uppsrc %{buildroot}/%{_datadir}/%{project_name}/
 
-cp -p *.scd %{buildroot}/%{_datadir}/%{name}/
+cp -p *.scd %{buildroot}/%{_datadir}/%{project_name}/
 
 # We create our own GCC.bm
-# cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
+# cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{project_name}/
 
 INCLUDEDIR=$( pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 
-%if "%?fedora" != ""
+%if 0%{?fedora_version}
      LINK="$(pkg-config --libs libpng freetype2)"
 %else
      LINK=""
 %endif
 
-cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
+cat > %{buildroot}/%{_datadir}/%{project_name}/GCC.bm << EOF
 BUILDER			= "GCC";
 COMPILER		= "g++";
 COMMON_CPP_OPTIONS	= "-std=c++11";
@@ -220,7 +230,7 @@ REMOTE_MAP		= "";
 LINKMODE_LOCK		= "0";
 EOF
 
-cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm  << EOF
+cat > %{buildroot}/%{_datadir}/%{project_name}/CLANG.bm  << EOF
 BUILDER			= "CLANG";
 COMPILER		= "clang++";
 COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
@@ -265,8 +275,8 @@ rm -fr %{buildroot}
 %{_datadir}/applications/theide.desktop
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
-%dir %{_datadir}/%{name}
-%{_datadir}/%{name}/*
+%dir %{_datadir}/%{project_name}
+%{_datadir}/%{project_name}/*
 
 #---------
 %changelog
