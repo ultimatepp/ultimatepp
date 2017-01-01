@@ -12,9 +12,14 @@ Index<String> AndroidBuilder::GetBuildersNames()
 	return builders;
 }
 
-AndroidBuilder::AndroidBuilder() :
-	wspc(GetIdeWorkspace())
+AndroidBuilder::AndroidBuilder()
+	: wspc(GetIdeWorkspace())
 {
+}
+
+void AndroidBuilder::SetJdk(One<Jdk> jdk)
+{
+	this->jdk = pick(jdk);
 }
 
 String AndroidBuilder::GetTargetExt() const
@@ -59,8 +64,8 @@ bool AndroidBuilder::BuildPackage(
 	
 	bool isBlitz = HasFlag("BLITZ") && ndk_blitz;
 	
-	String javaSourcesDir    = project.GetJavaDir();
-	String jniSourcesDir     = project.GetJniDir();
+	String javaSourcesDir    = project->GetJavaDir();
+	String jniSourcesDir     = project->GetJniDir();
 	String pkgJavaSourcesDir = javaSourcesDir + DIR_SEPS + package;
 	String pkgJniSourcesDir  = jniSourcesDir + DIR_SEPS + package;
 	for(int i = 0; i < pkg.GetCount(); i++) {
@@ -80,7 +85,7 @@ bool AndroidBuilder::BuildPackage(
 		if(isResourcesPackage) {
 			if(packageFileDir.Find(package + DIR_SEPS) != -1)
 				packageFileDir.Remove(0, String(package + DIR_SEPS).GetCount());
-			String filePathInAndroidProject = GetFilePathInAndroidProject(project.GetResDir(),
+			String filePathInAndroidProject = GetFilePathInAndroidProject(project->GetResDir(),
 			                                                              packageFileDir,
 			                                                              fileName);
 			
@@ -130,7 +135,7 @@ bool AndroidBuilder::BuildPackage(
 					return false;
 				}
 				
-				if(!FileCopy(filePath, project.GetManifestPath()))
+				if(!FileCopy(filePath, project->GetManifestPath()))
 					return false;
 					
 				androidManifestPath = filePath;
@@ -159,25 +164,10 @@ bool AndroidBuilder::BuildPackage(
 	                        "@blitz.cpp");
 	
 	if(!isResourcesPackage && !error && !javaSourceFiles.IsEmpty()) {
-		if(!RealizeDirectory(project.GetClassesDir()))
+		if(!RealizeDirectory(project->GetClassesDir()))
 			return false;
-		
-		String compileCmd;
-		compileCmd << NormalizeExePath(jdk.GetJavacPath());
-		compileCmd << (HasFlag("DEBUG") ? " -g" : " -g:none");
-		compileCmd << " -d "<< project.GetClassesDir();
-		compileCmd << " -classpath ";
-		compileCmd << NormalizeExePath(sdk.AndroidJarPath()) << Java::GetDelimiter();
-		compileCmd << project.GetBuildDir();
-		compileCmd << " -sourcepath ";
-		compileCmd << javaSourcesDir << " ";
-		for(int i = 0; i < javaSourceFiles.GetCount(); i++) {
-			compileCmd << javaSourceFiles[i];
-			if(i < javaSourceFiles.GetCount() - 1)
-				compileCmd << " ";
-		}
-		
-		linkfile.Add(compileCmd);
+				
+		linkfile.Add(commands->PreperCompileJavaSourcesCommand(javaSourceFiles));
 	}
 	
 	if(!isResourcesPackage && !error && !nativeSourceFiles.IsEmpty()) {
@@ -199,7 +189,7 @@ bool AndroidBuilder::BuildPackage(
 			
 			if(FileExists(blitz.path)) {
 				String blitzDestinationFile;
-				blitzDestinationFile << project.GetJniDir() << DIR_SEPS;
+				blitzDestinationFile << project->GetJniDir() << DIR_SEPS;
 				blitzDestinationFile << blitzDestinationFileInPackage;
 				
 				CopyFile(blitzDestinationFile, blitz.path);
@@ -264,7 +254,7 @@ bool AndroidBuilder::Link(
 	}
 	
 	// Now, we are going to start compiling c/c++ sources
-	if(DirectoryExists(project.GetJniDir())) {
+	if(DirectoryExists(project->GetJniDir())) {
 		if(!ndk.Validate()) {
 			PutErrorOnConsole("Android NDK was not detected");
 			return false;
@@ -278,7 +268,7 @@ bool AndroidBuilder::Link(
 		GenerateMakeFile();
 		
 		NDKBuild ndkBuild(ndk.GetNdkBuildPath());
-		ndkBuild.SetWorkingDir(project.GetDir());
+		ndkBuild.SetWorkingDir(project->GetDir());
 		ndkBuild.SetJobs(GetHydraThreads());
 		if(Execute(ndkBuild.MakeCmd(), ss) != 0 ) {
 			PutConsole(ss.GetResult());
@@ -287,14 +277,14 @@ bool AndroidBuilder::Link(
 		PutConsole("Native sources compiled in " + GetPrintTime(time) + ".");
 	}
 	
-	if(DirectoryExists(project.GetClassesDir())) {
+	if(DirectoryExists(project->GetClassesDir())) {
 		PutConsole("-----");
 		PutConsole("Creating dex file...");
 		String dxCmd;
 		dxCmd << NormalizeExePath(sdk.DxPath());
 		dxCmd << " --dex ";
-		dxCmd << "--output=" << project.GetBinDir() << DIR_SEPS << "classes.dex ";
-		dxCmd << project.GetClassesDir();
+		dxCmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
+		dxCmd << project->GetClassesDir();
 		// PutConsole(dxCmd);
 		if(Execute(dxCmd, ss) != 0) {
 			PutConsole(ss.GetResult());
@@ -308,19 +298,19 @@ bool AndroidBuilder::Link(
 	String apkCmd;
 	apkCmd << NormalizeExePath(sdk.AaptPath());
 	apkCmd << " package -v -f";
-	if(DirectoryExists(project.GetResDir()))
-		apkCmd << " -S " << project.GetResDir();
-	apkCmd << " -M " << project.GetManifestPath();
+	if(DirectoryExists(project->GetResDir()))
+		apkCmd << " -S " << project->GetResDir();
+	apkCmd << " -M " << project->GetManifestPath();
 	apkCmd << " -I " << NormalizeExePath(sdk.AndroidJarPath());
 	apkCmd << " -F " << unsignedApkPath;
-	apkCmd << " " << project.GetBinDir();
+	apkCmd << " " << project->GetBinDir();
 	// PutConsole(apkCmd);
 	if(Execute(apkCmd, ss) != 0) {
 		PutConsole(ss.GetResult());
 		return false;
 	}
 	
-	if(DirectoryExists(project.GetLibsDir())) {
+	if(DirectoryExists(project->GetLibsDir())) {
 		PutConsole("Adding native libraries to apk...");
 		if(!AddSharedLibsToApk(unsignedApkPath))
 			return false;
@@ -354,19 +344,19 @@ void AndroidBuilder::CleanPackage(const String& package, const String& outdir)
 	Vector<String> pkgDirs;
 	Vector<String> pkgFiles;
 	if(HasFlag(RES_PKG_FLAG))
-		pkgDirs.Add(project.GetResDir());
+		pkgDirs.Add(project->GetResDir());
 	else {
 		// TODO: handle deletetion of (.class)es
-		pkgDirs.Add(project.GetJavaDir(package));
-		PutConsole(project.GetJavaDir(package));
-		pkgDirs.Add(project.GetJniDir(package));
-		for(FindFile ff(AppendFileName(project.GetObjLocalDir(), "*")); ff; ff.Next()) {
+		pkgDirs.Add(project->GetJavaDir(package));
+		PutConsole(project->GetJavaDir(package));
+		pkgDirs.Add(project->GetJniDir(package));
+		for(FindFile ff(AppendFileName(project->GetObjLocalDir(), "*")); ff; ff.Next()) {
 			if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder()) {
 				pkgFiles.Add(ff.GetPath() + DIR_SEPS + "lib" + package + ".so");
 				pkgDirs.Add(ff.GetPath() + DIR_SEPS + "objs" + DIR_SEPS + package);
 			}
 		}
-		for(FindFile ff(AppendFileName(project.GetLibsDir(), "*")); ff; ff.Next())
+		for(FindFile ff(AppendFileName(project->GetLibsDir(), "*")); ff; ff.Next())
 			if(!ff.IsHidden() && !ff.IsSymLink() && ff.IsFolder())
 				pkgFiles.Add(ff.GetPath() + DIR_SEPS + "lib" + package + ".so");
 	}
@@ -398,8 +388,8 @@ void AndroidBuilder::ManageProjectCohesion()
 	for(int i = 0; i < wspc.GetCount(); i++)
 		packages.Add(wspc[i]);
 	
-	DetectAndManageUnusedPackages(project.GetJavaDir(), packages);
-	DetectAndManageUnusedPackages(project.GetJniDir(), packages);
+	DetectAndManageUnusedPackages(project->GetJavaDir(), packages);
+	DetectAndManageUnusedPackages(project->GetJniDir(), packages);
 }
 
 void AndroidBuilder::DetectAndManageUnusedPackages(
@@ -474,14 +464,14 @@ bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const St
 
 bool AndroidBuilder::RealizePackageJavaSourcesDirectory(const String& packageName)
 {
-	String dir = project.GetJavaDir() + DIR_SEPS + packageName;
+	String dir = project->GetJavaDir() + DIR_SEPS + packageName;
 	
 	return DirectoryExists(dir) || RealizeDirectory(dir);
 }
 
 bool AndroidBuilder::RealizeLinkDirectories() const
 {
-	if(!RealizeDirectory(project.GetBinDir()))
+	if(!RealizeDirectory(project->GetBinDir()))
 		return false;
 	
 	return true;
@@ -500,7 +490,7 @@ bool AndroidBuilder::SignApk(const String& target, const String& unsignedApkPath
 		PutConsole("Signing apk file...");
 		DeleteFile(signedApkPath);
 		String jarsignerCmd;
-		jarsignerCmd << NormalizeExePath(jdk.GetJarsignerPath());
+		jarsignerCmd << NormalizeExePath(jdk->GetJarsignerPath());
 		
 		// Up to Java 6.0 below alogirms was by default
 		// (In Java 7.0 and above we need to manually specific this algorithms)
@@ -547,7 +537,7 @@ bool AndroidBuilder::GenerateDebugKey(const String& keystorePath)
 		PutConsole("Generating debug key...");
 		
 		String keytoolCmd;
-		keytoolCmd << NormalizeExePath(jdk.GetKeytoolPath());
+		keytoolCmd << NormalizeExePath(jdk->GetKeytoolPath());
 		keytoolCmd << " -genkeypair -alias androiddebugkey -keypass android";
 		keytoolCmd << " -keystore " << keystorePath;
 		keytoolCmd << " -storepass android -dname \"CN=Android Debug,O=Android,C=US\"";
@@ -566,10 +556,10 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 {
 	// TODO: A little bit workearound (I know one thing that shared libs should be in "lib" directory not in "libs")
 	// So, we need to create temporary lib directory with .so files :(
-	const String libDir = project.GetDir() + DIR_SEPS + "lib";
+	const String libDir = project->GetDir() + DIR_SEPS + "lib";
 	
 	Vector<String> sharedLibsToAdd;
-	for(FindFile ff(AppendFileName(project.GetLibsDir(), "*")); ff; ff.Next()) {
+	for(FindFile ff(AppendFileName(project->GetLibsDir(), "*")); ff; ff.Next()) {
 		if (!ff.IsHidden () && !ff.IsSymLink () && ff.IsDirectory()) {
 			for(FindFile ffa(AppendFileName (ff.GetPath(), "*")); ffa; ffa.Next ()) {
 				if(!ffa.IsHidden() && !ffa.IsSymLink() && !ffa.IsDirectory()) {
@@ -577,7 +567,7 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 					String fileExt = ToLower(GetFileExt(ffa.GetPath()));
 					if(fileExt == ".so") {
 						const String libPath = String("lib") + DIR_SEPS + ff.GetName() + DIR_SEPS + ffa.GetName();
-						const String destPath = project.GetDir() + DIR_SEPS + libPath;
+						const String destPath = project->GetDir() + DIR_SEPS + libPath;
 						if(!RealizePath(destPath) || !FileCopy(ffa.GetPath(), destPath))
 							return false;
 						sharedLibsToAdd.Add(libPath);
@@ -587,7 +577,7 @@ bool AndroidBuilder::AddSharedLibsToApk(const String& apkPath)
 		}
 	}
 	
-	ChDir(project.GetDir());
+	ChDir(project->GetDir());
 	String aaptAddCmd;
 	aaptAddCmd << NormalizeExePath(sdk.AaptPath());
 	aaptAddCmd << " add " << apkPath;
@@ -619,7 +609,7 @@ bool AndroidBuilder::ValidateBuilderEnviorement()
 		PutErrorOnConsole("Android SDK platform was not detected");
 		return false;
 	}
-	if(!jdk.Validate()) {
+	if(!jdk->Validate()) {
 		PutErrorOnConsole("JDK was not detected");
 		return false;
 	}
@@ -662,13 +652,13 @@ void AndroidBuilder::GenerateApplicationMakeFile()
 	PutVerbose("CFlags: " + ndkCFlags);
 	PutVerbose("Toolchain: " + ndkToolchain);
 	
-	UpdateFile(project.GetJniApplicationMakeFilePath(), makeFile.ToString());
+	UpdateFile(project->GetJniApplicationMakeFilePath(), makeFile.ToString());
 }
 
 void AndroidBuilder::GenerateMakeFile()
 {
 	const String makeFileName = "Android.mk";
-	const String baseDir = project.GetJniDir();
+	const String baseDir = project->GetJniDir();
 	Vector<String> modules;
 	
 	BiVector<String> dirs;
@@ -700,23 +690,23 @@ void AndroidBuilder::GenerateMakeFile()
 	
 	AndroidMakeFile makeFile;
 	makeFile.AddHeader();
-	for(int i = 0; i < modules.GetCount(); i++)
-		makeFile.AddInclusion(modules[i] + DIR_SEPS + makeFileName);
+	for(const String& module : modules)
+		makeFile.AddInclusion(module + DIR_SEPS + makeFileName);
 	
-	UpdateFile(project.GetJniMakeFilePath(), makeFile.ToString());
+	UpdateFile(project->GetJniMakeFilePath(), makeFile.ToString());
 }
 
 bool AndroidBuilder::GenerateRFile()
 {
 	// TODO: gen in gen folder
-	if(DirectoryExists(project.GetResDir())) {
+	if(DirectoryExists(project->GetResDir())) {
 		StringStream ss;
 		String aaptCmd;
 		aaptCmd << NormalizeExePath(sdk.AaptPath());
 		aaptCmd << " package -v -f -m";
-		aaptCmd << " -S " << project.GetResDir();
-		aaptCmd << " -J " << project.GetJavaDir();
-		aaptCmd << " -M " << project.GetManifestPath();
+		aaptCmd << " -S " << project->GetResDir();
+		aaptCmd << " -J " << project->GetJavaDir();
+		aaptCmd << " -M " << project->GetManifestPath();
 		aaptCmd << " -I " << NormalizeExePath(sdk.AndroidJarPath());
 		
 		if(Execute(aaptCmd, ss) != 0) {
@@ -745,12 +735,12 @@ bool AndroidBuilder::PreprocessJava(const String& package, const String& file, c
 	RealizeDirectory(classesDir);
 	
 	String compileCmd;
-	compileCmd << NormalizeExePath(jdk.GetJavacPath());
+	compileCmd << NormalizeExePath(jdk->GetJavacPath());
 	compileCmd << " -d "<< classesDir;
 	compileCmd << " -classpath ";
 	compileCmd << NormalizeExePath(sdk.AndroidJarPath()) << Java::GetDelimiter();
-	compileCmd << project.GetBuildDir();
-	compileCmd << " -sourcepath " << project.GetJavaDir();
+	compileCmd << project->GetBuildDir();
+	compileCmd << " -sourcepath " << project->GetJavaDir();
 	compileCmd << " " << file;
 	if(Execute(compileCmd) != 0)
 		return false;
@@ -784,11 +774,11 @@ bool AndroidBuilder::PreprocessJava(const String& package, const String& file, c
 	className.Replace(DIR_SEPS, ".");
 	
 	String javahCmd;
-	javahCmd << NormalizeExePath(jdk.GetJavahPath());
+	javahCmd << NormalizeExePath(jdk->GetJavahPath());
 	javahCmd << " -classpath ";
 	javahCmd << classesDir << Java::GetDelimiter();
 	javahCmd << NormalizeExePath(sdk.AndroidJarPath()) << Java::GetDelimiter();
-	javahCmd << project.GetBuildDir();
+	javahCmd << project->GetBuildDir();
 	javahCmd << " -o " << target;
 	javahCmd << " " << className;
 	// PutConsole(javahCmd);
@@ -804,8 +794,10 @@ bool AndroidBuilder::PreprocessJava(const String& package, const String& file, c
 
 void AndroidBuilder::InitProject()
 {
-	if(!project.HasDir())
-		project.SetDir(GetSandboxDir() + DIR_SEPS + "AndroidProject");
+	if(!project) {
+		project.Create<AndroidProject>(GetAndroidProjectDir(), HasFlag("DEBUG"));
+		commands.Create<AndroidBuilderCommands>(~project, &sdk, ~jdk);
+	}
 }
 
 String AndroidBuilder::GetSandboxDir() const
@@ -817,6 +809,11 @@ String AndroidBuilder::GetSandboxDir() const
 	String mainPackageName = GetFileName(target);
 	mainPackageName.Remove(mainPackageName.GetCount() - targetExtLen, targetExtLen);
 	return GetFileFolder(target) + DIR_SEPS + "Sandbox" + DIR_SEPS + mainPackageName;
+}
+
+String AndroidBuilder::GetAndroidProjectDir() const
+{
+	return GetSandboxDir() + DIR_SEPS + "AndroidProject";
 }
 
 // -------------------------------------------------------------------
@@ -845,7 +842,7 @@ String AndroidBuilder::NormalizeModuleName(String moduleName) const
 
 String AndroidBuilder::GetModuleMakeFilePath(const String& package)
 {
-	return project.GetJniDir() + DIR_SEPS + package + DIR_SEPS + "Android.mk";
+	return project->GetJniDir() + DIR_SEPS + package + DIR_SEPS + "Android.mk";
 }
 
 // -------------------------------------------------------------------

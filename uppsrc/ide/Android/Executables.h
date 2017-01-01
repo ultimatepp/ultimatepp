@@ -12,11 +12,11 @@ class LogCat;
 class Adb : public Moveable<Adb> {
 public:
 	Adb(const String& path);
-	virtual ~Adb();
+	virtual ~Adb() {}
 	
 public:
-	String GetPath() const   { return this->path; }
-	String GetSerial() const { return this->serial; }
+	String GetPath() const               { return this->path; }
+	String GetSerial() const             { return this->serial; }
 	
 	void SetPath(const String& path)     { this->path = path; }
 	void SetSerial(const String& serial) { this->serial = serial; }
