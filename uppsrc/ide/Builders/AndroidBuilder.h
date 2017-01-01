@@ -9,11 +9,12 @@
 
 namespace Upp {
 
+class AndroidBuilderCommands;
+
 class AndroidBuilder : public Builder {
 public:
 	AndroidSDK     sdk;
 	AndroidNDK     ndk;
-	Jdk            jdk;
 	
 	bool           ndk_blitz;
 	Vector<String> ndkArchitectures;
@@ -27,6 +28,8 @@ public:
 		
 public:
 	AndroidBuilder();
+	
+	void SetJdk(One<Jdk> jdk);
 	
 	virtual String GetTargetExt() const override;
 	virtual bool BuildPackage(
@@ -86,17 +89,35 @@ protected:
 	String NormalizeModuleName(String moduleName) const;
 	
 	String GetModuleMakeFilePath(const String& packageName);
-	
+		
 private:
 	void   InitProject();
 	String GetSandboxDir() const;
+	String GetAndroidProjectDir() const;
 	
 private:
-	AndroidProject project;
-	const Workspace& wspc;
+	One<Jdk>                    jdk;
+	One<AndroidProject>         project;
+	One<AndroidBuilderCommands> commands;
+	
+	const Workspace&            wspc;
 
 private:
 	static const String RES_PKG_FLAG;
+};
+
+class AndroidBuilderCommands {
+public:
+	AndroidBuilderCommands(
+		AndroidProject* projectPtr, AndroidSDK* sdkPtr, Jdk* jdkPtr);
+	
+	String PreperCompileJavaSourcesCommand(
+		const Vector<String>& sources);
+	
+private:
+	const AndroidProject* projectPtr;
+	const AndroidSDK*     sdkPtr;
+	const Jdk*            jdkPtr;
 };
 
 class AndroidBuilderUtils final {

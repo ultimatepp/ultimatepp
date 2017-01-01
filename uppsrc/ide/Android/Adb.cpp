@@ -2,14 +2,9 @@
 
 namespace Upp {
 
-Adb::Adb(const String& path) : path(path)
+Adb::Adb(const String& path)
+	: path(path)
 {
-	
-}
-
-Adb::~Adb()
-{
-	
 }
 
 int Adb::GetPid(const String& packageName) const
