@@ -725,7 +725,7 @@ BiVector<T>::BiVector(std::initializer_list<T> init)
 	start = items = alloc = 0; vector = NULL;
 
 	start = 0;
-	alloc = items = init.size();
+	alloc = items = (int)init.size();
 	if(!alloc) {
 		vector = NULL;
 		return;
