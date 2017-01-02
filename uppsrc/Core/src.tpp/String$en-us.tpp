@@ -678,7 +678,7 @@ ool]_[* TrimEnd]([@(0.0.255) const]_[_^Upp`:`:AString`:`:tchar^ tchar]_`*[*@3 s]
 [s5;:Upp`:`:AString`:`:TrimEnd`(const Upp`:`:AString`:`:String`&`):%- [@(0.0.255) bool]_
 [* TrimEnd]([@(0.0.255) const]_[_^Upp`:`:AString`:`:String^ String][@(0.0.255) `&]_[*@3 s])
 &]
-[s2; If string ends with [%-*@3 s]., trims the end to remove it and 
+[s2; If string ends with [%-*@3 s], trims the end to remove it and 
 returns true.&]
 [s3; &]
 [s4;%- &]

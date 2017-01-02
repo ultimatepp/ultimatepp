@@ -2,105 +2,74 @@
 
 #ifdef PLATFORM_WIN32
 
-class DirFinder {
-	Vector<String> dirs;
-	VectorMap<String, bool> entry;
-	
-	Progress pi;
-	
-	static String Normz(const String& p);
-	
-	bool Has(const String& d, const Vector<String>& m, bool isfile);
-	bool Contains(const String& d, const Vector<String>& m);
-	void ScanDirs(const char *dir);
+struct DirFinder {
+	Vector<String> dir;
 
-public:
-	void Dir(const String& d) { dirs.Add(d); }
-
-	String ScanForDir(const String& dir, const char *ccontains, const char *cfiles, const char *csubdirs);
+	String Get(const String& substring, const char *files);
+	
+	DirFinder();
 };
 
-String DirFinder::Normz(const String& p)
+DirFinder::DirFinder()
 {
-	String h = ToLower(p);
-	h.Replace("\\", "/");
-	return h;
-}
+	Index<String> path;
 
-void DirFinder::ScanDirs(const char *dir)
-{
-	String h = Normz(dir);
-	if(pi.Canceled() || entry.Find(h) >= 0)
-		return;
-	entry.GetAdd(Normz(dir)) = false;
-	pi.SetText("Scanning " + GetFileName(dir));
-	for(FindFile ff(AppendFileName(dir, "*.*")); ff; ff.Next()) {
-		String p = ff.GetPath();
-		if(ff.IsFolder())
-			ScanDirs(p);
-		else
-		if(ff.IsFile())
-			entry.GetAdd(Normz(p)) = true;
+	for(int i = 0; i < 3; i++) {
+		HKEY key = 0;
+		if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+		                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Installer\\Folders", 0,
+		                KEY_READ|decode(i, 0, KEY_WOW64_32KEY, 1, KEY_WOW64_64KEY, 0),
+		                &key) == ERROR_SUCCESS) {
+			int i = 0;
+			for(;;) {
+				char  value[255];
+				unsigned long valueSize = 250;
+				*value = 0;
+		
+				if(RegEnumValue(key, i++, value, &valueSize, NULL, NULL, NULL, NULL) != ERROR_SUCCESS)
+					break;
+				
+				path.FindAdd(value);
+			}
+			RegCloseKey(key);
+		}
+	}
+
+	for(String s : path) {
+		s = ToLower(s);
+		s.Replace("\\", "/");
+		while(s.TrimEnd("/"));
+		dir.Add(s);
 	}
 }
 
-bool DirFinder::Has(const String& d, const Vector<String>& m, bool isfile)
+String DirFinder::Get(const String& substring, const char *files)
 {
-	for(int i = 0; i < m.GetCount(); i++) {
-		String dd = d + '/' + m[i];
-		int q = entry.Find(dd);
-		if(q < 0 || entry[q] != isfile)
-			return false;
-	}
-	return true;
-}
-
-int CharFilterNotDigit(int c)
-{
-	return IsDigit(c) ? 0 : c;
-}
-
-bool DirFinder::Contains(const String& d, const Vector<String>& m)
-{
-	for(int i = 0; i < m.GetCount(); i++)
-		if(d.Find(m[i]) < 0)
-			return false;
-	return true;
-}
-
-String DirFinder::ScanForDir(const String& dir, const char *ccontains, const char *cfiles, const char *csubdirs)
-{
-	for(;;) {
-		Vector<String> files = Split(cfiles, ';');
-		Vector<String> subdirs = Split(csubdirs, ';');
-		Vector<String> contains = Split(ccontains, ';');
-		Vector<int> max;
-		int min = INT_MAX;
-		String r;
-		for(int i = 0; i < entry.GetCount(); i++) {
-			String d = entry.GetKey(i);
-			if(entry.GetKey(i).EndsWith(dir) && Has(d, files, true) && Has(d, subdirs, false) && Contains(d, contains)) {
-				Vector<String> m0 = Split(d, CharFilterNotDigit);
-				Vector<int> m;
-				for(int i = 0; i < m0.GetCount(); i++)
-					m.Add(atoi(m0[i]));
-				int n = 0;
-				for(const char *s = d; *s; s++)
-					if(*s == '/')
-						n++;
-				if(n < min || n == min && m > max) {
-					min = n;
-					max = pick(m);
-					r = d;
+	String path;
+	Vector<int> versions;
+	Vector<String> fn = Split(files, ';');
+	for(const auto& d : dir) {
+		int p = d.Find(substring);
+		if(p >= 0) {
+			String cp = d;
+			for(const auto& f : fn)
+				if(!FileExists(AppendFileName(d, f))) {
+					cp.Clear();
+					break;
+				}
+			if(cp.GetCount()) {
+				Vector<String> h = Split(cp.Mid(p), [] (int c) { return IsDigit(c) ? 0 : c; });
+				Vector<int> vers;
+				for(const auto& hh : h)
+					vers.Add(atoi(hh));
+				if(CompareRanges(vers, versions) > 0) {
+					path = cp;
+					versions = clone(vers);
 				}
 			}
 		}
-		if(r.GetCount() || dirs.GetCount() == 0)
-			return r;
-		pi.Title("Searching for compilers");
-		ScanDirs(dirs[0]);
-		dirs.Remove(0);
 	}
+	return path;
 }
 
 bool CheckDirs(const Vector<String>& d, int count)
@@ -123,6 +92,7 @@ void InstantSetup()
 {
 	DirFinder df;
 
+#if 0
 	Array<FileSystemInfo::FileInfo> root = StdFileSystemInfo().Find(Null);
 	for(int i = 0; i < root.GetCount(); i++) {
 		if(root[i].root_style == FileSystemInfo::ROOT_FIXED) {
@@ -143,13 +113,14 @@ void InstantSetup()
 	for(int i = 0; i < root.GetCount(); i++)
 		if(root[i].root_style == FileSystemInfo::ROOT_FIXED)
 			df.Dir(root[i].filename);
-	
+#endif
+
 	String default_method;
 	
 	bool dirty = false;
 
 	for(int x64 = 0; x64 < 2; x64++) {
-		String method = x64 ? "MSC15x64" : "MSC15";
+		String method = x64 ? "MSC14x64" : "MSC14";
 	
 	#ifdef _DEBUG
 		method << "Test";
@@ -164,24 +135,19 @@ void InstantSetup()
 	#ifndef _DEBUG
 		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
 			if(!x64)
-				default_method = "MSC15";
+				default_method = "MSC14";
 		
 			continue;
 		}
 	#endif
 		
-		vc = df.ScanForDir("/vc", "", "bin/link.exe;bin/cl.exe;bin/mspdb140.dll", "bin/1033");
-		bin = df.ScanForDir(x64 ? "bin/x64" : "bin/x86", "/windows kits/", "makecat.exe;accevent.exe", "");
-		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
-		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
+		vc = df.Get("/microsoft visual studio 14.0/vc", "bin/cl.exe;bin/lib.exe;bin/link.exe;bin/mspdb140.dll");
+		bin = df.Get(x64 ? "/windows kits/10/bin/x86" : "windows kits/10/bin/x86", "makecat.exe;accevent.exe");
+		inc = df.Get("/windows kits/10", "um/adhoc.h");
+		lib = df.Get("/windows kits/10", "um/x86/kernel32.lib");
 
-		inc = df.ScanForDir("", "/windows kits/", "um/adhoc.h", "um;ucrt;shared");
-		lib = df.ScanForDir("", "/windows kits/", "um/x86/kernel32.lib", "um;ucrt");
-		
 		if(inc.GetCount() == 0 || lib.GetCount() == 0) { // workaround for situation when 8.1 is present, but 10 just partially
-			kit81 = df.ScanForDir("", "/windows kits/8.1", "", "include");
-			inc = df.ScanForDir("", "/windows kits/10/include", "", "um");
-			lib = df.ScanForDir("", "/windows kits/10/lib", "", "ucrt");
+			kit81 = df.Get("/windows kits/8.1", "include");
 		}
 		
 		LOG("=============");
@@ -228,7 +194,7 @@ void InstantSetup()
 			if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
 				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib/VC" : "bin/OpenSSL-Win/lib32/VC");
 		
-			bmSet(bm, "BUILDER", x64 ? "MSC15X64" : "MSC15");
+			bm.GetAdd("BUILDER") = x64 ? "MSC14X64" : "MSC14";
 			bmSet(bm, "COMPILER", "");
 			bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
 			bmSet(bm, "COMMON_CPP_OPTIONS", "");
@@ -256,7 +222,7 @@ void InstantSetup()
 			dirty = true;
 
 			if(!x64)
-				default_method = "MSC15";
+				default_method = "MSC14";
 
 			DUMP(ConfigFile(method + ".bm"));
 			DUMPC(incs);
