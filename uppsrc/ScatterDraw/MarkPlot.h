@@ -3,7 +3,7 @@
 
 class MarkPlot {
 public:
-	MarkPlot() : multiPlot(false) {}
+	MarkPlot() : multiPlot(false), type(0) {}
 	virtual ~MarkPlot() {};	
 	virtual void Paint(Draw &p, const int& scale, const Point& cp, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {};
@@ -18,8 +18,11 @@ public:
 	template<class T>
 	static void Register(const String& name)
 	{
-		classMap().FindAdd(name, __Create<T>);
+		int id = classMap().FindAdd(name, __Create<T>);
 		typeMap().FindAdd(typeid(T).name(), name);
+		T dummy;
+		typeNumber().Add(dummy.GetTypeCount());
+		typeString().Add(dummy.TypeString());
 	}
 	static void Unregister(const String& name)
 	{
@@ -27,23 +30,38 @@ public:
 		ASSERT(i >= 0);
 		classMap().Remove(i);
 		typeMap().Remove(i);
+		typeNumber().Remove(i);
+		typeString().Remove(i);
 	}
 	static String         TypeName(int i)               {return typeMap()[i];}
-	static int            TypeIndex(const String& name) {return typeMap().Find(name);}
+	static int            TypeIndex(const String& name) {return classMap().Find(name);}
 	static int            GetCount()                    {return classMap().GetCount();}
 	static MarkPlot*   	  Create(int i)                 {return classMap()[i]();}
 	static Vector<String> GetTypes()                    {return clone(typeMap()).PickValues();}
 	int GetType() const {return typeMap().Find(typeid(*this).name());}
 	MarkPlot* Copy()const;
 	bool IsMultiPlot() {return multiPlot;}
-	     
+
+	static int GetTypeCount(int iM)                 	{return typeNumber()[iM];}
+	static String TypeString(int iM, int iT)			{return typeString()[iM][iT];}
+	virtual int GetTypeCount()							{return 0;}
+	virtual const char **TypeString()					{return NULL;}
+	
+	void SetTypeType(int _type) {type = _type;}
+	int GetTypeType() 			{return type;}
+ 
 protected:
 	typedef MarkPlot* (*CreateFunc)();
 	template<class T>	
 	static MarkPlot*                      __Create() {return new T;}
 	static VectorMap<String, CreateFunc>& classMap() {static VectorMap<String, CreateFunc> cMap; return cMap;}
 	static VectorMap<String, String>&     typeMap()  {static VectorMap<String, String> tMap; 	 return tMap;}
+	
 	bool multiPlot;
+	int type;
+	
+	static Vector<int>& typeNumber()				 {static Vector<int> typeNumber; 			return typeNumber;}
+	static Vector<const char **>& typeString()		 {static Vector<const char **> typeString; 	return typeString;}
 };
 
 class CircleMarkPlot : public MarkPlot {
@@ -202,16 +220,28 @@ public:
 	}
 };	
 
+void debug_h();			// Dummy function used to debug .h files
+
 class RangePlot : public MarkPlot {
 public:
 	enum RangeType {ALL, MIN_MAX, MIN_AVG_MAX};
-	RangePlot(RangeType rangeType = ALL) : rangeType(rangeType) {multiPlot = true;}
+	RangePlot(RangeType rangeType = ALL) {
+		type = rangeType;
+		multiPlot = true;
+	}
+	virtual int GetTypeCount()			{return 3;}
+	virtual const char **TypeString()	{
+		static const char *names[] = {"ALL", "MIN_MAX", "MIN_AVG_MAX"};
+		return names;
+	}
 	
 private:
 	template <class T>
 	void DoPaint(T& w, const int& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const double& size, const Color& markColor) const
 	{
+		debug_h();
+		
 		int side2l = int((size*scale)/2.);
 		int side2r = int(size*scale - side2l);
 		const Vector<int> *pdata;
@@ -221,50 +251,44 @@ private:
 			pdata = &dataX;
 		if (pdata->GetCount() == 0)
 			return;
-		int min, max, avg = 0;
-		if (rangeType == ALL) {
-			min = (*pdata)[0];
-			max = (*pdata)[pdata->GetCount() - 1];
-		} else {
-			min = INT_MAX;
-			max = INT_MIN;
-			for (int i = 0; i < pdata->GetCount(); ++i) {
-				if (min > (*pdata)[i])
-					min = (*pdata)[i];
-				if (max < (*pdata)[i])
-					max = (*pdata)[i];
-			}
+		int avg = 0;
+		int min = INT_MAX;
+		int max = INT_MIN;
+		for (int i = 0; i < pdata->GetCount(); ++i) {
+			if (min > (*pdata)[i])
+				min = (*pdata)[i];
+			if (max < (*pdata)[i])
+				max = (*pdata)[i];
 		}
-		if (rangeType == MIN_AVG_MAX) {
+		if (type == MIN_AVG_MAX) {
 			for (int i = 0; i < pdata->GetCount(); ++i) 
 				avg += (*pdata)[i];
 			avg /= pdata->GetCount();
 		}
 		if (!dataY.IsEmpty()) {	
-			if (rangeType == ALL) {
+			if (type == ALL) {
 				for (int i = 0; i < dataY.GetCount(); ++i) 
 					w.DrawLine(x - side2l, dataY[i], x + side2r, dataY[i], scale, markColor);
 			} else {
 				w.DrawLine(x - side2l, min, x + side2r, min, scale, markColor);			
 				w.DrawLine(x - side2l, max, x + side2r, max, scale, markColor);			
-				if (rangeType == MIN_AVG_MAX) 
+				if (type == MIN_AVG_MAX) 
 					w.DrawLine(x - side2l, avg, x + side2r, avg, scale*4, markColor);			
 			}
 			w.DrawLine(x, min, x, max, scale, markColor);
 		} else {
-			if (rangeType == ALL) {
+			if (type == ALL) {
 				for (int i = 0; i < dataX.GetCount(); ++i) 
 					w.DrawLine(dataX[i], y - side2l, dataX[i], y + side2r, scale, markColor);
 			} else {
 				w.DrawLine(min, y - side2l, min, y + side2r, scale, markColor);
 				w.DrawLine(max, y - side2l, max, y + side2r, scale, markColor);
-				if (rangeType == MIN_AVG_MAX) 
+				if (type == MIN_AVG_MAX) 
 					w.DrawLine(avg, y - side2l, avg, y + side2r, scale*4, markColor);
 			}
 			w.DrawLine(min, y, max, y, scale, markColor);
 		}
 	}
-	RangeType rangeType; 
 	
 public:
 	virtual void Paint(Draw &p, const int& scale, int x, int y, const Vector<int>& dataX, 

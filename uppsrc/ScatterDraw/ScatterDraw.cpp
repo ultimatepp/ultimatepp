@@ -842,6 +842,24 @@ const String ScatterDraw::GetMarkStyleName(int index) {
 		return t_("No mark");
 }
 
+int ScatterDraw::GetMarkStyleType(int index) {
+	ASSERT(IsValid(index));
+	
+	if (series[index].markPlot)
+		return series[index].markPlot->GetTypeType();
+	else
+		return -1;
+}
+
+ScatterDraw &ScatterDraw::SetMarkStyleType(int index, int type) {
+	ASSERT(IsValid(index));
+	
+	if (series[index].markPlot)
+		series[index].markPlot->SetTypeType(type);
+	
+	return *this;	
+}
+
 ScatterDraw &ScatterDraw::Stroke(double thickness, Color color) {
 	int index = series.GetCount() - 1;
 
@@ -1833,7 +1851,7 @@ void FillPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opaci
 void debug_h() {
 	;			// It does nothing. Just to set a breakpoint in templated functions
 }
-
+	
 INITBLOCK {
 	SeriesPlot::Register<LineSeriesPlot>("Line");
 	SeriesPlot::Register<StaggeredSeriesPlot>("Staggered");
@@ -1847,4 +1865,10 @@ INITBLOCK {
 	MarkPlot::Register<RhombMarkPlot>("Rhomb");
 	MarkPlot::Register<RangePlot>("Range");
 	MarkPlot::Register<BubblePlot>("Bubble");
+	
+	DashStyle::Register("LINE_SOLID", "");
+	DashStyle::Register("LINE_DOTTED", "4 10");
+	DashStyle::Register("LINE_DOTTED_SEP", "4 20");
+	DashStyle::Register("LINE_DASHED", "12 12");
+	DashStyle::Register("LINE_DASH_DOT", "20 10 5 10");
 }

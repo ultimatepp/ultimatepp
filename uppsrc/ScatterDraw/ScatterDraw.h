@@ -16,6 +16,36 @@ using namespace Upp;
 Color GetOpaqueColor(const Color &color, const Color &background, double opacity);
 
 void debug_h();			// Dummy function used to debug .h files
+
+class DashStyle {
+public:
+	static int Register(const String& name, const String& style) {
+		return map().FindAdd(name, style);
+	}
+	static void Unregister(const String& name) {
+		int id = TypeIndex(name);
+		ASSERT(id >= 0);
+		map().Remove(id);
+	}
+	static void UnregisterFrom(int id) {
+		for (int i = GetCount() - 1; i >= id; --i)
+			map().Remove(i);
+	}
+	static String         TypeName(int i)         		{return map().GetKey(i);}
+	static String         Style(int i)         			{return map()[i];}
+	static int            TypeIndex(const String& name) {return map().Find(name);}
+	static int            StyleIndex(const String& style) {
+		for (int i = 0; i < GetCount(); ++i) {
+			if (map()[i] == style)
+				return i;
+		}
+		return -1;
+	}
+	static int            GetCount()   		{return map().GetCount();}
+	     
+protected:
+	static VectorMap<String, String>& map()	{static VectorMap<String, String> map; 	 return map;}
+};
 	
 class ScatterDraw {
 public:
@@ -356,6 +386,8 @@ public:
 	ScatterDraw &MarkStyle(int index, MarkPlot *data);
 	ScatterDraw &MarkStyle(int index, const String name);
 	const String GetMarkStyleName(int index);
+	ScatterDraw &SetMarkStyleType(int index, int type);
+	int GetMarkStyleType(int index);
 	
 	ScatterDraw &NoMark()	{return MarkStyle();};
 		
