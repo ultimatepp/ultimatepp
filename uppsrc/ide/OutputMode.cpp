@@ -478,6 +478,9 @@ void Ide::SetupDefaultMethod()
 	if(IsNull(method)) {
 		SetMethod(GetDefaultMethod());
 		if(IsNull(method)) {
+			if(FileExists(ConfigFile("MSC14.bm")))
+				SetMethod("MSC14");
+			else
 			if(FileExists(ConfigFile("MSC15.bm")))
 				SetMethod("MSC15");
 			else
