@@ -216,22 +216,6 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 	}
 	Text(0, 0, text, font, n, ddx);
 	Fill(ink);
-	if(font.IsUnderline()) {
-		if(IsNull(cx))
-			cx = GetTextSize(text, font).cx;
-		int a = font.GetAscent();
-		int cy = max(a / 16, 1);
-		Rectangle(0, a + cy, cx, cy);
-		Fill(ink);
-	}
-	if(font.IsStrikeout()) {
-		if(IsNull(cx))
-			cx = GetTextSize(text, font).cx;
-		int a = font.GetAscent();
-		int cy = max(a / 16, 1);
-		Rectangle(0, 2 * a / 3, cx, cy);
-		Fill(ink);
-	}
 	End();
 }
 
