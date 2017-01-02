@@ -43,12 +43,18 @@ class SeriesTab : public WithSeries<StaticRect> {
 public:
 	typedef SeriesTab CLASSNAME;
 	
+	SeriesTab() : dashCount(DashStyle::GetCount()) {}
+	~SeriesTab() {
+		DashStyle::UnregisterFrom(dashCount);
+	}
 	void Init(ScatterCtrl& scatter);
 	
 private:
 	ScatterCtrl *pscatter;	
+	int dashCount;
 	
 	void Change();
+	void ChangeMark();
 	void UpdateFields();
 };
 
