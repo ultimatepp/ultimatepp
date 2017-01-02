@@ -214,23 +214,30 @@ void SeriesTab::Init(ScatterCtrl& scatter)
 	list.SetCursor(0);
 	list.WhenSel = THISBACK(UpdateFields);
 
+	marktype.Clear();
+
 	markstyle.Add(t_("No mark"));
 	for(int i = 0; i < MarkPlot::GetCount(); i++)
 		markstyle.Add(MarkPlot::TypeName(i));
 	
 	markstyle.SetIndex(0);
+	
+	for(int i = 0; i < DashStyle::GetCount(); i++)
+		dashStyle.Add(DashStyle::TypeName(i));
+	
 	UpdateFields();
 
 	linecolor <<= THISBACK(Change);
 	fillcolor <<= THISBACK(Change);
 	visible <<= THISBACK(Change);
-	dash <<= THISBACK(Change);
+	dashStyle.WhenAction = THISBACK(Change);
 	linethickness <<= THISBACK(Change);
 
-	markstyle <<= THISBACK(Change);
+	markstyle.WhenAction = THISBACK(Change);
 	markcolor <<= THISBACK(Change);
 	markwidth <<= THISBACK(Change);
-
+	marktype.WhenAction = THISBACK(Change);
+	
 	unitsY <<= THISBACK(Change);
 	unitsX <<= THISBACK(Change);
 
@@ -238,6 +245,28 @@ void SeriesTab::Init(ScatterCtrl& scatter)
 	primary <<= THISBACK(Change);
 	
 	name.SetFocus();
+}
+
+void SeriesTab::ChangeMark() {
+	int index = list.GetCursor();
+	if (index < 0)
+		return;
+	
+	ScatterCtrl &scatter = *pscatter;
+	
+	int id = MarkPlot::TypeIndex(~markstyle);
+	
+	marktype.Clear();
+	
+	if (id >= 0) {
+		for (int i = 0; i < MarkPlot::GetTypeCount(id); ++i)
+			marktype.Add(MarkPlot::TypeString(id, i));
+	}
+	if (marktype.GetCount() > 0)
+		marktype.SetIndex(0);
+	int idStyle = scatter.GetMarkStyleType(index);
+	if (idStyle >= 0 && idStyle < marktype.GetCount())
+		marktype.SetIndex(idStyle);
 }
 
 void SeriesTab::Change() 
@@ -251,12 +280,14 @@ void SeriesTab::Change()
 	scatter.SetDataColor(index, Upp::Color(~linecolor));
 	scatter.SetFillColor(index, ~fillcolor);
 	scatter.ScatterDraw::Show(index, ~visible);
-	scatter.Dash(index, dash.GetData().ToString());
+	scatter.Dash(index, DashStyle::Style(DashStyle::TypeIndex(~dashStyle)));
 	scatter.SetDataThickness(index, ~linethickness);
 	
 	scatter.MarkStyle(index, ~markstyle);
 	scatter.SetMarkColor(index, Upp::Color(~markcolor));
 	scatter.SetMarkWidth(index, ~markwidth);
+	scatter.SetMarkStyleType(index, marktype.GetIndex());
+	ChangeMark();
 	
 	scatter.Units(index, ~unitsY, ~unitsX);
                          
@@ -282,12 +313,18 @@ void SeriesTab::UpdateFields()
 	linecolor <<= scatter.GetDataColor(index);
 	fillcolor <<= scatter.GetFillColor(index);
 	visible <<= scatter.ScatterDraw::IsVisible(index);
-	dash <<= scatter.GetDash(index);
+	int id = DashStyle::StyleIndex(scatter.GetDash(index));
+	if (id < 0) {
+		id = DashStyle::Register(Format(t_("Dash \"%s\""), scatter.GetDash(index)), scatter.GetDash(index));
+		dashStyle.Add(DashStyle::TypeName(id));
+	}
+	dashStyle <<= DashStyle::TypeName(id);
 	linethickness <<= scatter.GetDataThickness(index);
 
 	markstyle <<= scatter.GetMarkStyleName(index);
 	markcolor <<= scatter.GetMarkColor(index);
 	markwidth <<= scatter.GetMarkWidth(index);
+	ChangeMark();
 	
 	unitsY <<= scatter.GetUnitsY(index);
 	unitsX <<= scatter.GetUnitsX(index);
@@ -702,6 +739,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	tabFit.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
 	tabFit.scatter.SetMarkColor(0, pscatter->GetMarkColor(id));
 	tabFit.scatter.SetMarkWidth(0, pscatter->GetMarkWidth(id));
+	tabFit.scatter.SetMarkStyleType(0, pscatter->GetMarkStyleType(id));
 	tabFit.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
 	
 	tabFit.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
