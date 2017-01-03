@@ -588,7 +588,7 @@ void Array<T>::Insert(int i, const Array& x, int offset, int count) {
 template <class T>
 void Array<T>::Insert(int i, std::initializer_list<T> init)
 {
-	vector.InsertN(i, init.size());
+	vector.InsertN(i, (int)init.size());
 	for(auto q : init)
 		vector[i++] = new T(q);
 }
