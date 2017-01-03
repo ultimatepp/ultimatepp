@@ -1,9 +1,9 @@
-# How to build snapshots binary: rpmbuild -tb upp-x11-src-10604M.tar.gz
-# How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-10604M.tar.gz
-# If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10604M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10604M.tar.gz
+# How to build snapshots binary: rpmbuild -tb upp-x11-src-10621M.tar.gz
+# How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-10621M.tar.gz
+# If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10621M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10621M.tar.gz
  
 %define	project_name	upp
-#define	version	10604M
+#define	version	10621M
 #define	date	$(LC_TIME=En date '+%a %b %d %Y')      
 %define	release	1
 %define	debug_package	%{nil}
@@ -18,10 +18,10 @@ Release:	%release%{?dist}
 License:	BSD
 Group:		Development/Tools
 URL:		http://www.ultimatepp.org
-Source0:	%{project_name}-x11-src-%{version}.tar.gz
+Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gtk2-devel pango-devel atk-devel cairo-devel gnome-shell libnotify-devel gnome-shell
+Buildrequires:	gtk2-devel pango-devel atk-devel cairo-devel gnome-shell libnotify-devel
 
 # Mandriva specific Buildrequires
 %if 0%{?mandriva_version}
@@ -87,8 +87,8 @@ Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 #-----------
 %description
-The U++ integrated development environment, TheIDE, introduces modular concepts to C++
-programming. It provides:
+The U++ integrated development environment introduces modular concepts
+to C++ programming. It provides:
 
 	- TheIDE, a visual designers for U++ libraries
 	- Topic++, for documenting code and creating rich text resources
@@ -230,7 +230,7 @@ REMOTE_MAP		= "";
 LINKMODE_LOCK		= "0";
 EOF
 
-cat > %{buildroot}/%{_datadir}/%{project_name}/CLANG.bm  << EOF
+cat > %{buildroot}/%{_datadir}/%{project_name}/CLANG.bm << EOF
 BUILDER			= "CLANG";
 COMPILER		= "clang++";
 COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
