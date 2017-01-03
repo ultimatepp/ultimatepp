@@ -213,7 +213,7 @@ void PaintingPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
 	Put(fnt);
 }
 
-void PaintingPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx)
+void PaintingPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx)
 {
 	Put(PAINTING_TEXT);
 	Putf(p);

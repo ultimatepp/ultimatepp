@@ -119,7 +119,7 @@ protected:
 
 	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
 	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
-	                      double *dx = NULL);
+	                      const double *dx = NULL);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color);
 	virtual void   ClearStopsOp();

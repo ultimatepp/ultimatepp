@@ -481,7 +481,7 @@ Painter& Painter::Character(double x, double y, int ch, Font fnt)
 	return Character(Pointf(x, y), ch, fnt);
 }
 
-void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx)
+void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx)
 {
 	if(n == 0) {
 		Move(0, 0);
@@ -509,38 +509,38 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double
 	}
 }
 
-Painter& Painter::Text(double x, double y, const wchar *text, Font fnt, int n, double *dx)
+Painter& Painter::Text(double x, double y, const wchar *text, Font fnt, int n, const double *dx)
 {
 	return Text(Pointf(x, y), text, fnt, n < 0 ? wstrlen(text) : n, dx);
 }
 
-Painter& Painter::Text(const Pointf& p, const WString& s, Font fnt, double *dx)
+Painter& Painter::Text(const Pointf& p, const WString& s, Font fnt, const double *dx)
 {
 	return Text(p, ~s, fnt, s.GetLength(), dx);
 }
 
-Painter& Painter::Text(double x, double y, const WString& s, Font fnt, double *dx)
+Painter& Painter::Text(double x, double y, const WString& s, Font fnt, const double *dx)
 {
 	return Text(Pointf(x, y), s, fnt, dx);
 }
 
-Painter& Painter::Text(const Pointf& p, const String& s, Font fnt, double *dx)
+Painter& Painter::Text(const Pointf& p, const String& s, Font fnt, const double *dx)
 {
 	return Text(p, s.ToWString(), fnt, dx);
 }
 
-Painter& Painter::Text(double x, double y, const String& s, Font fnt, double *dx)
+Painter& Painter::Text(double x, double y, const String& s, Font fnt, const double *dx)
 {
 	return Text(Pointf(x, y), s, fnt, dx);
 }
 
-Painter& Painter::Text(const Pointf& p, const char *text, Font fnt, int n, double *dx)
+Painter& Painter::Text(const Pointf& p, const char *text, Font fnt, int n, const double *dx)
 {
 	WString s = ToUnicode(text, CHARSET_DEFAULT);
 	return Text(p, s, fnt, n < 0 ? s.GetCount() : n, dx);
 }
 
-Painter& Painter::Text(double x, double y, const char *text, Font fnt, int n, double *dx)
+Painter& Painter::Text(double x, double y, const char *text, Font fnt, int n, const double *dx)
 {
 	return Text(Pointf(x, y), text, fnt, n, dx);
 }
@@ -604,7 +604,7 @@ void NilPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, con
 void NilPainter::StrokeOp(double width, const Pointf& f, const RGBA& color1, const RGBA& color2, const Xform2D& transsrc, int style) {}
 void NilPainter::ClipOp() {}
 void NilPainter::CharacterOp(const Pointf& p, int ch, Font fnt) {}
-void NilPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx) {}
+void NilPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx) {}
 void NilPainter::ColorStopOp(double pos, const RGBA& color) {}
 void NilPainter::ClearStopsOp() {}
 void NilPainter::OpacityOp(double o) {}
