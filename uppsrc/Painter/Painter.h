@@ -133,7 +133,7 @@ protected:
 
 	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt) = 0;
 	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1,
-	                      double *dx = NULL);
+	                      const double *dx = NULL);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color) = 0;
 	virtual void   ClearStopsOp() = 0;
@@ -289,14 +289,14 @@ public:
 
 	Painter& Character(const Pointf& p, int ch, Font fnt);
 	Painter& Character(double x, double y, int ch, Font fnt);
-	Painter& Text(const Pointf& p, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
-	Painter& Text(double x, double y, const wchar *text, Font fnt, int n = -1, double *dx = NULL);
-	Painter& Text(const Pointf& p, const WString& s, Font fnt, double *dx = NULL);
-	Painter& Text(double x, double y, const WString& s, Font fnt, double *dx = NULL);
-	Painter& Text(const Pointf& p, const String& s, Font fnt, double *dx = NULL);
-	Painter& Text(double x, double y, const String& s, Font fnt, double *dx = NULL);
-	Painter& Text(const Pointf& p, const char *text, Font fnt, int n = -1, double *dx = NULL);
-	Painter& Text(double x, double y, const char *text, Font fnt, int n = -1, double *dx = NULL);
+	Painter& Text(const Pointf& p, const wchar *text, Font fnt, int n = -1, const double *dx = NULL);
+	Painter& Text(double x, double y, const wchar *text, Font fnt, int n = -1, const double *dx = NULL);
+	Painter& Text(const Pointf& p, const WString& s, Font fnt, const double *dx = NULL);
+	Painter& Text(double x, double y, const WString& s, Font fnt, const double *dx = NULL);
+	Painter& Text(const Pointf& p, const String& s, Font fnt, const double *dx = NULL);
+	Painter& Text(double x, double y, const String& s, Font fnt, const double *dx = NULL);
+	Painter& Text(const Pointf& p, const char *text, Font fnt, int n = -1, const double *dx = NULL);
+	Painter& Text(double x, double y, const char *text, Font fnt, int n = -1, const double *dx = NULL);
 
 	void Begin();
 	void End();
@@ -414,7 +414,7 @@ protected:
 
 	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
 	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
-	                      double *dx = NULL);
+	                      const double *dx = NULL);
 
 	virtual void   ColorStopOp(double pos, const RGBA& color);
 	virtual void   ClearStopsOp();

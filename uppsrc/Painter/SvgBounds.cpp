@@ -161,7 +161,7 @@ void BoundsPainter::DivOp()
 	sw.Div();
 }
 
-void BoundsPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, double *dx)
+void BoundsPainter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx)
 {
 	Painter::TextOp(p, text, fnt, n, dx);
 }

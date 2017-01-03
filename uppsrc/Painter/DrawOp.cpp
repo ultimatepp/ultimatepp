@@ -204,15 +204,11 @@ void Painter::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, 
 		n = wstrlen(text);
 	double *ddx = NULL;
 	Buffer<double> h;
-	int cx = Null;
 	if(dx) {
 		h.Alloc(n);
 		ddx = h;
-		cx = 0;
-		for(int i = 0; i < n; i++) {
+		for(int i = 0; i < n; i++)
 			ddx[i] = dx[i];
-			cx += dx[i];
-		}
 	}
 	Text(0, 0, text, font, n, ddx);
 	Fill(ink);
