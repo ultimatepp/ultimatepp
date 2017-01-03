@@ -17,7 +17,7 @@ public:
 	
 	PieDraw& SetColor(const Color& _color) 		{backColor = _color; return *this;}
 	PieDraw& SetTitle(const String& _title) 	{title = _title; return *this;}
-	PieDraw& SetTitleFont(const Font& font)		{titleFont = font; return *this;}
+	PieDraw& SetTitleFont(const Upp::Font& font){titleFont = font; return *this;}
 	PieDraw& SetTitleColor(const Color& color)	{titleColor = color; return *this;}
 	PieDraw& SetTitlePos(titlePosition pos)		{titlePos = pos; return *this;}
 	PieDraw& SetTitleGap(const int& gap)		{titleGap = gap; return *this;}
@@ -26,7 +26,7 @@ public:
 	PieDraw& SetPercentBack(const Color& pbcolor)	{percentBack = pbcolor; return *this;}
 	
 	PieDraw& ShowLegend(bool show = true)			{showLegend = show; return *this;}
-	PieDraw& SetLegendFont(const Font& font)		{legendFont = font; return *this;}
+	PieDraw& SetLegendFont(const Upp::Font& font)	{legendFont = font; return *this;}
 	PieDraw& SetLegendTextColor(const Color& color)	{legendTextColor = color; return *this;}
 	PieDraw& SetLegendBackColor(const Color& color)	{legendBackColor = color; return *this;}
 	PieDraw& SetLegendLeft(const int& left)			{legendLeft = left; return *this;}
@@ -64,7 +64,7 @@ protected:
 private:	
 	Color backColor;
 	String title;
-	Font titleFont;
+	Upp::Font titleFont;
 	Color titleColor;
 	titlePosition titlePos;
 	int titleGap;
@@ -72,7 +72,7 @@ private:
 	bool showPercent;
 	Color percentBack;
 	
-	Font legendFont;
+	Upp::Font legendFont;
 	Color legendTextColor, legendBackColor;
 	bool showLegend;	
 	int legendLeft, legendTop, legendWidth, legendHeight;

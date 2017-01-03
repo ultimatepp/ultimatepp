@@ -17,8 +17,8 @@ void DrawVArrow(Draw &w, double x0, double y0, double x1, double y1, double widt
 void DrawVArrow(Painter &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color);
 void DrawHArrow(Draw &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color);
 void DrawHArrow(Painter &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color);
-void DrawText(Draw &w, double x, double y, int angle, const String &text, Font font, Color color);
-void DrawText(Painter &w, double x, double y, int angle, const String &text, Font font, Color color);
+void DrawText(Draw &w, double x, double y, int angle, const String &text, Upp::Font font, Color color);
+void DrawText(Painter &w, double x, double y, int angle, const String &text, Upp::Font font, Color color);
 void Clip(Draw &w, double x, double y, double cx, double cy);
 void Clip(Painter &w, double x, double y, double cx, double cy);
 void ClipEnd(Draw &w);
