@@ -228,10 +228,12 @@ int64 CParser::ReadInt64(int64 min, int64 max) throw(Error)
 
 bool CParser::IsNumber(int base) const
 {
-	if(IsDigit(*term))
-		return true;
+    if(IsDigit(*term)) {
+        int q = *term - '0';
+        return q >= 0 && q < base;
+    }
 	int q = ToUpper(*term) - 'A';
-	return q >= 0 && q < base - 10;
+    return q >= 0 && q < base - 10;
 }
 
 uint32  CParser::ReadNumber(int base) throw(Error)
