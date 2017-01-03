@@ -526,6 +526,8 @@ public:
 	int			  	GetScrollPos() const			{ return sc.GetPos(); }
 	TabBar&		  	SetScrollThickness(int sz);
 
+	void AddFrameToScrollBar(CtrlFrame& fr)  { sc.AddFrame(fr); }
+
 	Vector<Value> 	GetKeys() const;
 	Vector<Image> 	GetIcons() const;
 	TabBar&		  	CopySettings(const TabBar& src);
