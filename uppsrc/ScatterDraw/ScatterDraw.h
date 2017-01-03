@@ -135,9 +135,9 @@ public:
 	ScatterDraw& SetColor(const Color& _color);
 	ScatterDraw& SetTitle(const String& _title);
 	const String& GetTitle();
-	ScatterDraw& SetTitleFont(const Font& fontTitle);
+	ScatterDraw& SetTitleFont(const Upp::Font& fontTitle);
 	ScatterDraw& SetTitleColor(const Color& colorTitle);
-	Font& GetTitleFont() {return titleFont;};
+	Upp::Font& GetTitleFont() {return titleFont;};
 	
 	void SetLabels(const String& _xLabel, const String& _yLabel, const String& _yLabel2 = "");
 	ScatterDraw& SetLabelX(const String& _xLabel);
@@ -146,8 +146,8 @@ public:
 	const String &GetLabelY()	{return yLabel_base;} 
 	ScatterDraw& SetLabelY2(const String& _yLabel);
 	const String &GetLabelY2()	{return yLabel2_base;}
-	ScatterDraw& SetLabelsFont(const Font& fontLabels);
-	Font GetLabelsFont() {return labelsFont;};
+	ScatterDraw& SetLabelsFont(const Upp::Font& fontLabels);
+	Upp::Font GetLabelsFont() {return labelsFont;};
 	ScatterDraw& SetLabelsColor(const Color& colorLabels);
 	
 	ScatterDraw& SetPlotAreaMargin(int hLeft, int hRight, int vTop, int vBottom);
@@ -498,13 +498,13 @@ protected:
 	int mode;
 	Color graphColor;	
 	String title;
-	Font titleFont;
+	Upp::Font titleFont;
 	Color titleColor;
 	int titleHeight;
 	
 	String xLabel, yLabel, yLabel2;
 	String xLabel_base, yLabel_base, yLabel2_base;
-	Font labelsFont;
+	Upp::Font labelsFont;
 	Color labelsColor;
 	
 	int   hPlotLeft, hPlotRight, vPlotTop, vPlotBottom;
@@ -580,7 +580,7 @@ protected:
 	
 private:
 	Size size;		// Size to be used for all but screen painting
-	static void ParseTextMultiline(const String &text, Font fnt, 
+	static void ParseTextMultiline(const String &text, Upp::Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
 	
 	void DoFitToData(bool horizontal, bool vertical, double factor = 0);
@@ -617,7 +617,7 @@ template <class T>
 bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 {
 	if(titleHeight > 0) {
-		Font fontTitle6;
+		Upp::Font fontTitle6;
 		fontTitle6 = titleFont;
 		fontTitle6.Height(titleHeight);
 		fontTitle6.Width(scale*titleFont.GetWidth());
@@ -632,10 +632,10 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	
 	w.Offset(Point(scale*hPlotLeft, scale*vPlotTop + titleHeight));
 	
-	Font fontLabel;
+	Upp::Font fontLabel;
 	fontLabel = labelsFont;
 	fontLabel.Height(scale*labelsFont.GetHeight());
-	Font italicLabel = fontLabel;
+	Upp::Font italicLabel = fontLabel;
 	italicLabel.Italic();
 	
 	if (labelsChanged) {
@@ -682,7 +682,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	drawYReticle &=  (yRange != 0 && yMajorUnit != 0);
 	drawY2Reticle &= (yRange2 != 0 && yMajorUnit != 0);
 	
-	Font standard6 = GetStdFont();
+	Upp::Font standard6 = GetStdFont();
 	standard6.Height(scale*GetStdFont().GetHeight());
 	
 	if (drawXReticle)
@@ -707,7 +707,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 			}
 		}
 
-	Font italic = standard6;
+	Upp::Font italic = standard6;
 	italic.Italic();
 	if (drawYReticle)
 		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {

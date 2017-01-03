@@ -86,7 +86,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 	textsize.cx = 0;
 	textsize.cy = 0;    
 	if(!title.IsEmpty()) {
-		Font FontTitle6;
+		Upp::Font FontTitle6;
 		FontTitle6 = titleFont;
 		FontTitle6.Height(scale*titleFont.GetHeight());
 		FontTitle6.Width(scale*titleFont.GetWidth());
@@ -147,7 +147,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 			a0 = alfa0;                            		              
 			alfa0 += fround(3600.0*vValues[i]/sum);
 			String percent = GetPercent(vValues[i],sum);
-			Font scaledFont;
+			Upp::Font scaledFont;
 			scaledFont.Height(scale*StdFont().GetHeight());
 			scaledFont.Width(scale*StdFont().GetWidth());
 			Size sz = GetTextSize(percent, scaledFont);
@@ -174,7 +174,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 		for(int i = 0; i < nr; i++) {
 			int fh = scale*(legendFont.GetHeight()-3);
 			w.DrawRect(int(leg_x) + 2*scale, int(leg_y) + i*dly + int(dly/2.) - fh/2, fh, fh, vColors[i]);
-			Font scaledFont;
+			Upp::Font scaledFont;
 			scaledFont.Height(scale*legendFont.GetHeight());
 			scaledFont.Width(scale*legendFont.GetWidth());
 			w.DrawText(int(leg_x) + fround(1.8*fh), int(leg_y) + i*dly + int((dly - scaledFont.GetLineHeight())/2),

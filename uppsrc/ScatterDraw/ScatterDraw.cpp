@@ -156,7 +156,7 @@ bool ScatterDraw::PointInLegend(Point &pt)
 void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 	if (series.IsEmpty())
 		return;
-	Font scaledFont = GetStdFont();
+	Upp::Font scaledFont = GetStdFont();
 	int rowHeight = scale*GetStdFont().GetHeight();
 	int rowAscent = scale*GetStdFont().GetAscent();
 	scaledFont.Height(rowHeight);
@@ -238,7 +238,7 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 			w.DrawLine(rect.left, rect.bottom, rect.left, rect.top, 1, legendBorderColor);
 		}
 	}
-	Font italic = scaledFont;
+	Upp::Font italic = scaledFont;
 	italic.Italic();
 	scaledFont.Bold();
 	for(int row = 0, start = 0; row <= nrows; row++) {
@@ -254,7 +254,7 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 			if (series[i].markWidth >= 1 && series[i].markPlot)
 				series[i].markPlot->Paint(w, scale, mark_p, series[i].markWidth, series[i].markColor, 
 					series[i].markBorderWidth, series[i].markBorderColor);   
-			Font &font = series[i].primaryY ? scaledFont : italic;
+			Upp::Font &font = series[i].primaryY ? scaledFont : italic;
 			DrawText(w, lx + lineLen + xWidth, ly - int((2*rowAscent)/3)/*scale*6*/, 0, legends[i], font, series[i].color);                   
 		}
 		start += nlr;
@@ -1530,7 +1530,8 @@ Vector <double> &GetDashedArray(String dash) {
 	return pats.GetValues()[pos];
 }
 
-void ScatterDraw::ParseTextMultiline(const String &text, Font fnt, Upp::Array <String> &texts, Upp::Array <Size> &sizes) {
+void ScatterDraw::ParseTextMultiline(const String &text, Upp::Font fnt, Upp::Array <String> &texts, 
+		Upp::Array <Size> &sizes) {
 	Size ret(0, 0);
 	int npos = 0;
 	for (int pos = 0; npos != -1; pos = npos+1) {
@@ -1685,11 +1686,11 @@ void DrawHArrow(Painter &w, double x0, double y0, double x1, double y1, double w
 	}
 }
 
-void DrawText(Draw &w, double x, double y, int angle, const String &text, Font font, Color color) {
+void DrawText(Draw &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
 	w.DrawText(fround(x), fround(y), angle, text, font, color);
 }
 
-void DrawText(Painter &w, double x, double y, int angle, const String &text, Font font, Color color) {
+void DrawText(Painter &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
 	w.Begin();
 	w.Translate(x, y).Rotate(-angle*M_PI/1800.);
 	w.Text(0, 0, text, font).Fill(color);
