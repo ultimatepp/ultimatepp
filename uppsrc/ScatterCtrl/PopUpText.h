@@ -1,10 +1,6 @@
 #ifndef _PopUpText_PopUpText_h
 #define _PopUpText_PopUpText_h
 
-#include <CtrlLib/CtrlLib.h>
-
-using namespace Upp;
-
 class PopUpInfo : public StaticText {
 	Color color;
 	bool opened;
@@ -12,7 +8,7 @@ class PopUpInfo : public StaticText {
 public:
 	void   Paint(Draw& w);
 
-	PopUpInfo& SetFont(Font font)                      { LabelBase::SetFont(font); return *this; }
+	PopUpInfo& SetFont(Upp::Font font)                 { LabelBase::SetFont(font); return *this; }
 	PopUpInfo& SetInk(Color color)                     { LabelBase::SetInk(color); return *this; }
 	PopUpInfo& SetAlign(int align)                     { LabelBase::SetAlign(align); return *this; }
 	PopUpInfo& SetImage(const Image& img, int spc = 0) { LabelBase::SetImage(img, spc); return *this; }
