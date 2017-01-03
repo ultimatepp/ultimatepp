@@ -147,7 +147,11 @@ void DeleteWinReg(const String& key, HKEY base, dword wow) {
 	RegCloseKey(hkey);
 	while(!subkeys.IsEmpty())
 		DeleteWinReg(key + '\\' + subkeys.Pop(), base);
-	if(wow)
+
+	static LONG (WINAPI *RegDeleteKeyEx)(HKEY, LPCTSTR, REGSAM, DWORD);
+	DllFn(RegDeleteKeyEx, "Advapi32.dll", "RegDeleteKeyExA");
+
+	if(wow && RegDeleteKeyEx)
 		RegDeleteKeyEx(base, key, wow, 0);
 	else
 		RegDeleteKey(base, key);
