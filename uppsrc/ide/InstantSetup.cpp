@@ -3,6 +3,8 @@
 #ifdef PLATFORM_WIN32
 
 struct DirFinder {
+	Progress pi;
+
 	Vector<String> dir;
 
 	String Get(const String& substring, const char *files);
@@ -13,6 +15,8 @@ struct DirFinder {
 DirFinder::DirFinder()
 {
 	Index<String> path;
+	
+	pi.SetText("Setting up build methods");
 
 	for(int i = 0; i < 3; i++) {
 		HKEY key = 0;
@@ -30,6 +34,7 @@ DirFinder::DirFinder()
 					break;
 				
 				path.FindAdd(value);
+				pi.Step();
 			}
 			RegCloseKey(key);
 		}
@@ -49,6 +54,7 @@ String DirFinder::Get(const String& substring, const char *files)
 	Vector<int> versions;
 	Vector<String> fn = Split(files, ';');
 	for(const auto& d : dir) {
+		pi.Step();
 		int p = d.Find(substring);
 		if(p >= 0) {
 			String cp = d;
