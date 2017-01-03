@@ -12,7 +12,7 @@ struct BoundsPainter : public NilPainter {
 	virtual void   DivOp();
 
 	virtual void   TextOp(const Pointf& p, const wchar *text, Font fnt, int n = -1, 
-	                      double *dx = NULL);
+	                      const double *dx = NULL);
 	virtual void   CharacterOp(const Pointf& p, int ch, Font fnt);
 
 	virtual void   TransformOp(const Xform2D& m);

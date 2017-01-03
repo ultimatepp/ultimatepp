@@ -231,7 +231,7 @@ inline Painter& Painter::Character(const Pointf& p, int ch, Font fnt)
 }
 
 inline
-Painter& Painter::Text(const Pointf& p, const wchar *text, Font fnt, int n, double *dx)
+Painter& Painter::Text(const Pointf& p, const wchar *text, Font fnt, int n, const double *dx)
 {
 	TextOp(p, text, fnt, n, dx);
 	return *this;
