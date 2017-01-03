@@ -1,12 +1,14 @@
 #ifndef _ScatterCtrl_ScatterCtrl_h
 #define _ScatterCtrl_ScatterCtrl_h
 
-#include "PopUpText.h"
 #include <ScatterDraw/ScatterDraw.h>
 #include <plugin/jpg/jpg.h>
 #include <GridCtrl/GridCtrl.h>
 
 using namespace Upp;
+
+#include "PopUpText.h"
+
 
 class EditDoubleLostFocus : public EditDouble {
 public:
@@ -202,9 +204,9 @@ public:
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(int axis_width)					{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
 	ScatterCtrl& SetTitle(const String& title)		 			{ScatterDraw::SetTitle(title); 				return *this;};
-	ScatterCtrl& SetTitleFont(const Font& fontTitle) 			{ScatterDraw::SetTitleFont(fontTitle); 		return *this;};
+	ScatterCtrl& SetTitleFont(const Upp::Font& fontTitle) 		{ScatterDraw::SetTitleFont(fontTitle); 		return *this;};
 	ScatterCtrl& SetTitleColor(const Upp::Color& colorTitle)	{ScatterDraw::SetTitleColor(colorTitle);	return *this;};
-	ScatterCtrl& SetLabelsFont(const Font& fontLabels) 			{ScatterDraw::SetLabelsFont(fontLabels); 	return *this;};
+	ScatterCtrl& SetLabelsFont(const Upp::Font& fontLabels) 	{ScatterDraw::SetLabelsFont(fontLabels); 	return *this;};
 	ScatterCtrl& SetLabelsColor(const Upp::Color& colorLabels)	{ScatterDraw::SetLabelsColor(colorLabels);	return *this;};
 	ScatterCtrl& SetLabelX(const String& xLabel)				{ScatterDraw::SetLabelX(xLabel); 			return *this;};
 	ScatterCtrl& SetLabelY(const String& yLabel)				{ScatterDraw::SetLabelY(yLabel); 			return *this;};
