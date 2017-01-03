@@ -194,7 +194,7 @@ class VectorMap : public MoveableAndDeepCopyOption<VectorMap<K, T>>,
                   public AMap<K, T, Vector<T>> {
     typedef AMap<K, T, Vector<T>> B;
 public:
-	T        Pop()                            { T h = B::Top(); B::Drop(); return h; }
+	T        Pop()                            { T h = pick(B::Top()); B::Drop(); return h; }
 
 	VectorMap(const VectorMap& s, int) : AMap<K, T, Vector<T>>(s, 1) {}
 	VectorMap(Index<K>&& ndx, Vector<T>&& val) : AMap<K, T, Vector<T>>(pick(ndx), pick(val)) {}

@@ -145,7 +145,7 @@ public:
 	void     Trim(int n)                     { key.SetCount(n); hash.Trim(n); }
 	void     Drop(int n = 1)                 { key.Drop(n); hash.Drop(n); }
 	const T& Top() const                     { return key.Top(); }
-	T        Pop()                           { T x = Top(); Drop(); return x; }
+	T        Pop()                           { T x = pick(Top()); Drop(); return x; }
 
 	void     Reserve(int n)                  { key.Reserve(n); hash.Reserve(n); }
 	void     Shrink()                        { key.Shrink(); hash.Shrink(); }

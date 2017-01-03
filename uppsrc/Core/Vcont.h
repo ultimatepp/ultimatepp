@@ -147,7 +147,7 @@ public:
 	void     Drop(int n = 1)         { ASSERT(n <= GetCount()); Trim(items - n); }
 	T&       Top()                   { ASSERT(GetCount()); return Get(items - 1); }
 	const T& Top() const             { ASSERT(GetCount()); return Get(items - 1); }
-	T        Pop()                   { T h = Top(); Drop(); return h; }
+	T        Pop()                   { T h = pick(Top()); Drop(); return h; }
 
 	operator T*()                    { return (T*)vector; }
 	operator const T*() const        { return (T*)vector; }
