@@ -116,7 +116,7 @@ public:
 	void     Drop(int n = 1)                        { ASSERT(n <= GetCount()); Trim(GetCount() - n); }
 	T&       Top()                                  { ASSERT(GetCount()); return (*this)[GetCount() - 1]; }
 	const T& Top() const                            { ASSERT(GetCount()); return (*this)[GetCount() - 1]; }
-	T        Pop()                                  { T h = Top(); Drop(); return h; }
+	T        Pop()                                  { T h = pick(Top()); Drop(); return h; }
 
 	template <class L>
 	int FindUpperBound(const T& val, const L& less) const { int off, pos; FindUpperBound(val, less, off, pos); return off + pos; }
@@ -341,7 +341,7 @@ public:
 	void     Drop(int n = 1)                        { Trim(GetCount() - n); }
 	T&       Top()                                  { return (*this)[GetCount() - 1]; }
 	const T& Top() const                            { return (*this)[GetCount() - 1]; }
-	T        Pop()                                  { T h = Top(); Drop(); return h; }
+	T        Pop()                                  { T h = pick(Top()); Drop(); return h; }
 
 	template <class L>
 	int FindUpperBound(const T& val, const L& less) const  { return iv.FindUpperBound((T*)&val, ALess<L>(less)); }
