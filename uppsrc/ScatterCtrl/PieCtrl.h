@@ -33,7 +33,7 @@ public:
 	PieCtrl& SetPercentBack(const Upp::Color& pbcolor)	{PieDraw::SetPercentBack(pbcolor); 		return *this;}
 	
 	PieCtrl& ShowLegend(bool show = true)				{PieDraw::ShowLegend(show); 			return *this;}
-	PieCtrl& SetLegendFont(const Font& font)			{PieDraw::SetLegendFont(font); 			return *this;}
+	PieCtrl& SetLegendFont(const Upp::Font& font)		{PieDraw::SetLegendFont(font); 			return *this;}
 	PieCtrl& SetLegendTextColor(const Upp::Color& color){PieDraw::SetLegendTextColor(color); 	return *this;}
 	PieCtrl& SetLegendBackColor(const Upp::Color& color){PieDraw::SetLegendBackColor(color); 	return *this;}
 	PieCtrl& SetLegendLeft(const int& h)				{PieDraw::SetLegendLeft(h); 			return *this;}

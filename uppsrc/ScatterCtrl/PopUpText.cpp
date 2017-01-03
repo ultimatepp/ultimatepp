@@ -1,3 +1,7 @@
+#include <CtrlLib/CtrlLib.h>
+
+using namespace Upp;
+
 #include "PopUpText.h"
 
 
