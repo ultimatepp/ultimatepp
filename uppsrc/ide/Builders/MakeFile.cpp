@@ -95,7 +95,6 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 			makefile.config << " -L" << GetMakePath(AdjustMakePath(GetHostPathQ(libpath[i])));
 		makefile.config << "\n"
 			"AR = ar -sr\n\n";
-		makefile.install << "\t-mkdir -p $(OutDir)\n";
 		Vector<String> lib;
 		String lnk;
 		lnk << "$(LINKER)";
@@ -124,7 +123,8 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 		<< GetMakePath(AdjustMakePath(String().Cat() << package << '/' << method << '-' << Join(x, "-") << '/')) << "\n"
 		<< macros << " = " << macdef << "\n";
 
-	makefile.install << "\t-mkdir -p $(" << outdir << ")\n";
+	makefile.install << " \\\n\t$(" << outdir << ")";
+	makefile.rules << "$(" << outdir << "):\n\tmkdir -p $(" << outdir << ")\n\n";
 
 	String libdep, libfiles;
 

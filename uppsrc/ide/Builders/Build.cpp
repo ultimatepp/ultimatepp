@@ -700,7 +700,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 				<< svn_info <<
 				"\n"
 				".PHONY: prepare\n"
-				"prepare:\n";
+				"prepare:";
 		}
 		config << mf.config;
 		install << mf.install;
@@ -713,7 +713,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	makefile
 		<< config
 		<< install
-		<< "\n"
+		<< "\n\n"
 		"$(OutFile): build_info " << linkdep << "\n\t" << linkfiles << linkfileend << " -Wl,--end-group\n\n"
 		<< rules
 		<< ".PHONY: clean\n"
