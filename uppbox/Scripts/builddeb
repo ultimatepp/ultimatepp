@@ -382,7 +382,7 @@ echo "Icon=$EXEC_NAME.png" >> $tmp/usr/share/applications/$EXEC_NAME.desktop
 cat >> $tmp/usr/share/applications/$EXEC_NAME.desktop << EOF
 Terminal=false
 Type=Application
-Categories=Application;Development;C++
+Categories=Development;IDE;
 StartupNotify=false
 EOF
 echo "GenericName[de_DE]=$iconname" >> $tmp/usr/share/applications/$EXEC_NAME.desktop
