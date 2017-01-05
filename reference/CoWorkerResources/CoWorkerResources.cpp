@@ -7,7 +7,7 @@ struct Model { // some computation model that is not stateless, abstract definit
 	virtual int    Compute() = 0;
 };
 
-struct Model1 : Model { // concrete model (there would be more)
+struct Model1 : Model { // concrete model (there would be more that this one)
 	int n;
 
 	virtual void   Start(int i) { n = i; }
@@ -19,9 +19,11 @@ CONSOLE_APP_MAIN
 	Vector<int> data;
 	data.SetCount(3000);
 	
+	// generate data using some model:
+
 	CoWorkerResources<One<Model>> res;
 	for(auto& r : res)
-		r.Create<Model1>();
+		r.Create<Model1>(); // all should be the same
 	
 	CoPartition(0, data.GetCount(), [&data, &res](int l, int h) {
 		Model& m = *~res; // gets resource unique for worker

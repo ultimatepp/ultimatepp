@@ -34,6 +34,7 @@ CONSOLE_APP_MAIN
 	DUMP(Format("%n", 1234567.89));
 	DUMP(Format("%,n", 1234567.89));
 	DUMP(Format("%+n", 1234567.89));
+	DUMP(Format("%+n", -1234567.89));
 	DUMP(Format("%2,n", 123.456));
 	DUMP(Format("%2,n", 123));
 	DUMP(Format("%2!,n", 123));
@@ -52,6 +53,7 @@ CONSOLE_APP_MAIN
 	DUMP(Format("%[3%1:one;2:two;3:three;another]s", 20));
 
 	DUMP(Format("%month", 6));
+	DUMP(Format(LNG_('C','S','C','Z'), "%month", 6));
 	DUMP(Format("%Month", 6));
 	DUMP(Format("%MONTH", 6));
 	DUMP(Format("%mon", 6));
