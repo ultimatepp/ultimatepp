@@ -1,22 +1,113 @@
-There are some prerequisites required to build and run U++.
-In debian package names, these are:
+==== U++ POSIX/X11 installation ====
 
-g++, make, libgtk2.0-dev, libnotify-dev, libbz2-dev, sox.
 
-For debian/apt-get based distribution, 'debian' file contains required
-dependencies in form of apt-get commands. You can use this file by running
-"sh debian" as root (e.g. "sudo sh debian" if sudo is available).
+Standard POSIX/X11 distribution of U++ comes as a source tarball. If you want to run U++ graphical environnement (theide) or run U++ command line tool (umk), you will first need to compile and install U++.
 
-For fedora/rpm, 'fedora' file contains required dependencies in form of 'yum install'
-commands.
 
-Use 'make' to compile TheIDE. It will generate ~/theide (integrated development
-environment) and ~/umk (commandline tool for building U++ projects).
+=== Build Requires ===
 
-Use 'make install' to prepare standard U++ environment. It will create ~/upp
-directory to store U++ library sources, MyApps to store your application
-sources and ~/upp.out as output for intermediate files and copies theide and
-umk to ~.
+Before compiling U++ source code, you must install a few developpement packages. Many POSIX/X11 distributions provides developpement packages with the same names. Sometimes, developpement package names don't match. You will have to find the corresponding names for your distribution.
 
-Then start playing with U++ by invoking ~/theide (you might want to put it
-elsewhere later, e.g. to ~/bin/theide).
+
+== Build requires per distribution ==
+
+
+= Debian/apt-get based distributions =
+
+Build requires: g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox
+
+How to install them:
+
+if sudo is available and enabled on your distribution, copy/paste this in a terminal:
+
+$ sudo apt-get install  g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox
+
+if sudo is not available:
+
+$ su -c 'apt-get install  g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox'
+
+The 'buildrequires.debian' file in U++ tarball contains apt-get commands to do the same thing. You can use this file by running 'sh buildrequires.debian' as root (e.g. 'sudo sh buildrequires.debian' if sudo is available or 'su -c "sh buildrequires.debian"' if not).
+
+
+= Fedora based distributions =
+
+Build requires:  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
+
+How to install them:
+
+if sudo is available and enabled on your distribution, copy/paste this in a terminal:
+
+$ sudo yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
+
+if sudo is not available:
+
+$ su -c 'yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel'
+
+The 'buildrequires.fedora' file in U++ tarball contains yum commands to do the same thing. You can use this file by running 'sh buildrequires.fedora' as root (e.g. 'sudo sh buildrequires.fedora' if sudo is available or 'su -c "sh buildrequires.fedora"' if not).
+
+
+= Other rpm based distributions =
+
+Redhat 7 build requires:  gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel freetype-devel expat-devel bzip2-devel
+OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+
+
+=== Compile U++ source code ===
+
+
+== Standard U++ compilation ==
+
+First, uncompress U++ source tarball and change dir into the new created directory.
+
+Example: for upp-x11-src-10641.tar.gz
+
+$ version=10641
+$ tar zxvf upp-x11-src-$version.tar.gz
+$ cd upp-x11-src-$version
+
+Use 'make' to compile U++ and generate theide (U++ integrated development environment) and umk (commandline tool for building U++ projects) then run 'make install' to prepare standard U++ environment:
+
+$ make
+$ make install
+
+Now you can start playing with U++ by invoking ~/theide.
+You might want to put theide and umk elsewhere later, e.g. inside ~/bin/ for example
+
+Note:. 'make install' copy theide and umk in your home directory but it also:
+
+ * create ~/upp directory to store U++ library sources and copy the U++ sources inside
+ * create ~/upp/MyApps to store your application sources
+ * create ~/upp.out as output for intermediate files
+ * set up a few variables in the '~/.upp' directory. Those variables are required by umk and .theide
+
+
+ === Troubleshooting ===
+
+If your POSIX/X11 distribution use an old gcc version (< 4.9), U++ compilation will fail because of missing gcc c++11 standard implementation. To solve this, you need to install and use clang++ compiler instead of g++.
+In order to use clang++ as compiler, run make with those extra parameters:
+
+$ make -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+$ make install
+
+
+=== U++ spec file for rpm based distribution ===
+
+There is an alternative way to build U++ on rpm based distributions. Indead, U++ POSIX/X11 tarball contains a spec file for you to build a standard rpm binary and source file. To do that, first install U++ build requires and rpm-build:
+
+== Fedora based distributions ==
+
+if sudo is available and enabled on your distribution, copy/paste this in a terminal:
+
+$ sudo yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
+$ sudo yum install  rpm-build
+$ version=10641
+$ rpmbuild -ta upp-x11-src-$version.tar.gz
+
+if sudo is not available:
+
+$ su -c 'yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel'
+$ su -c 'yum install  rpm-build'
+$ version=10641
+$ rpmbuild -ta upp-x11-src-$version.tar.gz
+
+Note : the rpm binary doesn't install U++ source in your home directory nor does it create needed configuration for U++ command line tool (umk) after installation. theide will take care of all this on first start.
