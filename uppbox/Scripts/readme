@@ -1,18 +1,18 @@
-==== U++ POSIX/X11 installation ====
+==== U++ POSIX/X11 installation ====
 
 
 Standard POSIX/X11 distribution of U++ comes as a source tarball. If you want to run U++ graphical environnement (theide) or run U++ command line tool (umk), you will first need to compile and install U++.
 
 
-=== Build Requires ===
+=== Build Requires ===
 
 Before compiling U++ source code, you must install a few developpement packages. Many POSIX/X11 distributions provides developpement packages with the same names. Sometimes, developpement package names don't match. You will have to find the corresponding names for your distribution.
 
 
-== Build requires per distribution ==
+== Build requires per distribution ==
 
 
-= Debian/apt-get based distributions =
+= Debian/apt-get based distributions =
 
 Build requires: g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  sox
 
@@ -29,7 +29,7 @@ $ su -c 'apt-get install  g++  make  libgtk2.0-dev  libnotify-dev  libbz2-dev  s
 The 'buildrequires.debian' file in U++ tarball contains apt-get commands to do the same thing. You can use this file by running 'sh buildrequires.debian' as root (e.g. 'sudo sh buildrequires.debian' if sudo is available or 'su -c "sh buildrequires.debian"' if not).
 
 
-= Fedora based distributions =
+= Fedora based distributions =
 
 Build requires:  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify-devel  bzip2-devel xorg-x11-server-devel  freetype-devel  expat-devel
 
@@ -46,16 +46,16 @@ $ su -c 'yum install  gtk2-devel  pango-devel  atk-devel  cairo-devel  libnotify
 The 'buildrequires.fedora' file in U++ tarball contains yum commands to do the same thing. You can use this file by running 'sh buildrequires.fedora' as root (e.g. 'sudo sh buildrequires.fedora' if sudo is available or 'su -c "sh buildrequires.fedora"' if not).
 
 
-= Other rpm based distributions =
+= Other rpm based distributions =
 
 Redhat 7 build requires:  gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel freetype-devel expat-devel bzip2-devel
 OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
 
-=== Compile U++ source code ===
+=== Compile U++ source code ===
 
 
-== Standard U++ compilation ==
+== Standard U++ compilation ==
 
 First, uncompress U++ source tarball and change dir into the new created directory.
 
@@ -81,7 +81,7 @@ Note:. 'make install' copy theide and umk in your home directory but it also:
  * set up a few variables in the '~/.upp' directory. Those variables are required by umk and .theide
 
 
- === Troubleshooting ===
+ === Troubleshooting ===
 
 If your POSIX/X11 distribution use an old gcc version (< 4.9), U++ compilation will fail because of missing gcc c++11 standard implementation. To solve this, you need to install and use clang++ compiler instead of g++.
 In order to use clang++ as compiler, run make with those extra parameters:
@@ -90,11 +90,12 @@ $ make -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wn
 $ make install
 
 
-=== U++ spec file for rpm based distribution ===
+
+=== U++ spec file for rpm based distribution ===
 
 There is an alternative way to build U++ on rpm based distributions. Indead, U++ POSIX/X11 tarball contains a spec file for you to build a standard rpm binary and source file. To do that, first install U++ build requires and rpm-build:
 
-== Fedora based distributions ==
+== Fedora based distributions ==
 
 if sudo is available and enabled on your distribution, copy/paste this in a terminal:
 
