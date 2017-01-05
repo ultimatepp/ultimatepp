@@ -1,3 +1,5 @@
+description "CoWorkerResources provide per-worker-thread context\377";
+
 uses
 	Core;
 

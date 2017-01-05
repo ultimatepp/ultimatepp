@@ -24,15 +24,20 @@ CONSOLE_APP_MAIN{
 	DUMP(decode(2, 1, "one", 2, "two", 3, "three", "?"));
 	DUMP(decode(5, 1, "one", 2, "two", 3, "three", "?"));
 
-	Vector<int> empty;
-	Vector<int> data = { 10, 5, 11, 9, 2 };
-	//                   0   1  2   3  4
+	Vector<int> data = { 10, 5, 11, 9, 2, 11 };
+	//                   0   1  2   3  4  5
 
+	DUMP(FindIndex(data, 11));
 	DUMP(FindMin(data));
 	DUMP(FindMin(data, 0, 4));
 	DUMP(Min(data));
+
+	Vector<int> empty;
 //	DUMP(Min(empty)); // This is undefined (fails in ASSERT)
 	DUMP(Min(empty, -99999));
+	
+	DUMP(Count(data, 11));
+	DUMP(CountIf(data, [=](int c) { return c >= 5; }));
 
 	struct {
 		int mul = 1;
