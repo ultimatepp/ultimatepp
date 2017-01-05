@@ -26,8 +26,8 @@ cp ~/Scripts/domake ~/upp.tmp/upp
 cp ~/Scripts/doinstall ~/upp.tmp/upp
 cp ~/Scripts/readme ~/upp.tmp/upp
 cp ~/Scripts/upp-devel.spec ~/upp.tmp/upp
-cp ~/Scripts/debian ~/upp.tmp/upp
-cp ~/Scripts/fedora ~/upp.tmp/upp
+cp ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
+cp ~/Scripts/fedora ~/upp.tmp/upp/buildrequires.fedora
 
 cp ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
 cp ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in

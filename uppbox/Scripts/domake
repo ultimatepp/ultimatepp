@@ -1,29 +1,29 @@
 if which pkg-config
 then
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+	sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
+	sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+	sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
+	sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
 else
-  sed -e "s@((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@((INCLUDES))@@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@@g" CLANG.bm.in >CLANG.bm
+	sed -e "s@((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
+	sed -e "s@((INCLUDES))@@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+	sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
+	sed -e "s@((INCLUDES))@@g" CLANG.bm.in >CLANG.bm
 fi
 
 if [ ! -f /usr/lib/libdl.so ]
 then
-  sed -i -e s/-ldl//g uppsrc/Makefile
-  sed -i -e s/-ldl//g uppsrc/uMakefile
+	sed -i -e s/-ldl//g uppsrc/Makefile
+	sed -i -e s/-ldl//g uppsrc/uMakefile
 fi
 
 if which gmake
 then
-  gmake -C uppsrc
-  gmake -C uppsrc -f uMakefile
+	gmake -C uppsrc
+	gmake -C uppsrc -f uMakefile
 else
-  make -C uppsrc
-  make -C uppsrc -f uMakefile
+	make -C uppsrc
+	make -C uppsrc -f uMakefile
 fi
 
 cp uppsrc/ide.out ./theide
