@@ -108,20 +108,6 @@ to C++ programming. It provides:
 sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in > uppsrc/Makefile
 sed -e "s@-I((INCLUDES))@@g" uppsrc/uMakefile.in > uppsrc/uMakefile
 
-make prepare \
-     -C uppsrc \
-     -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
-     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/ide.out" \
-%if 0%{?fedora_version}
-     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
-%else
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
-
 make %{?_smp_mflags} \
      -C uppsrc \
      -f Makefile \
@@ -129,20 +115,6 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if 0%{?fedora_version}
-     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
-%else
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
-
-make prepare \
-     -C uppsrc \
-     -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
-     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/umk.out" \
 %if 0%{?fedora_version}
      -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
 %else
