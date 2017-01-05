@@ -676,28 +676,16 @@ String StringFormatter(const Formatting& f)
 	if(!lpad)
 		r.Cat(q);
 	return r;
+}
 
-/*	
-	if(f.format.GetCount())
-	String fmt = '%' + f.format + f.id;
-	char h[256];
-#ifdef COMPILER_MSC
-	int n = _snprintf(h, 256, fmt, ~s);
-	if(n < 0)
-#else
-	int n = snprintf(h, 255, fmt, ~s);
-	if(n >= 254)
-#endif
-	{
-#ifdef COMPILER_MSC
-		n = _scprintf(fmt, ~s);
-#endif
-		Buffer<char> ah(n + 1);
-		sprintf(ah, fmt, ~s);
-		return String(ah, n);
+static inline
+void sFixPoint(char *s) // We do not want locale to affect decimal point, convert ',' to '.'
+{
+	while(*s) {
+		if(*s == ',')
+			*s = '.';
+		s++;
 	}
-	return String(h, n);
-*/
 }
 
 String FloatFormatter(const Formatting& f)
@@ -718,10 +706,12 @@ String FloatFormatter(const Formatting& f)
 #endif
 		Buffer<char> ah(n + 1);
 		sprintf(ah, fmt, d);
+		sFixPoint(ah);
 		return String(ah, n);
 	}
 	if(n < 0)
 		return String();
+	sFixPoint(h);
 	return String(h, n);
 }
 
