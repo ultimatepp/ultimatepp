@@ -195,6 +195,7 @@ private:
 	const Order               *columnsortsecondary;
 	int                        min_visible_line, max_visible_line;
 	int                        ctrl_low, ctrl_high;
+	int                        sorting_from;
 	Index<String>              id_ndx;
 
 	int   keypos;
@@ -531,8 +532,8 @@ public:
 
 	void       ReArrange(const Vector<int>& order);
 
-	void       Sort(Gate2<int, int> order);
 	void       Sort(int from, int count, Gate2<int, int> order);
+	void       Sort(Gate2<int, int> order);
 	void       Sort(const ArrayCtrl::Order& order);
 	void       Sort(int from, int count, const ArrayCtrl::Order& order);
 	void       Sort(int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2));
@@ -681,6 +682,7 @@ public:
 	ArrayCtrl& AllSorting();
 	ArrayCtrl& ColumnSortSecondary(const Order& order) { columnsortsecondary = &order; return *this; }
 	ArrayCtrl& NoColumnSortSecondary()                 { columnsortsecondary = NULL; return *this; }
+	ArrayCtrl& SortingFrom(int from)                   { sorting_from = from; return *this; }
 
 	ArrayCtrl& ColumnWidths(const char *s);
 	String     GetColumnWidths();
