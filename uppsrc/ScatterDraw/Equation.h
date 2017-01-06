@@ -199,10 +199,25 @@ class ExponentialEquation : public ExplicitEquation {
 public:
 	ExponentialEquation() 						{SetCoeff(1, 0);}
 	ExponentialEquation(double c0, double c1)	{SetCoeff(c0, c1);}
-	double f(double x) 					{return coeff[0]*exp(-x) + coeff[1];}
-	virtual String GetName() 			{return t_("Exponential");}
+	double f(double x) 							{return coeff[0]*exp(-x) + coeff[1];}
+	virtual String GetName() 					{return t_("Exponential");}
 	virtual String GetEquation(int numDigits = 3) {
 		String ret = Format("%s*e^-x + %s", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits));
+		ret.Replace("+ -", "- ");
+		return ret;
+	}	
+	virtual void GuessCoeff(DataSource &series) {}
+	void SetDegree(int num)				{NEVER();}
+};
+
+class RealExponentEquation : public ExplicitEquation {
+public:
+	RealExponentEquation() 						{SetCoeff(1, 1);}
+	RealExponentEquation(double a, double b)	{SetCoeff(a, b);}
+	double f(double x) 							{return coeff[0]*pow(x, coeff[1]);}
+	virtual String GetName() 					{return t_("RealExponent");}
+	virtual String GetEquation(int numDigits = 3) {
+		String ret = Format("%s*x^%s", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits));
 		ret.Replace("+ -", "- ");
 		return ret;
 	}	

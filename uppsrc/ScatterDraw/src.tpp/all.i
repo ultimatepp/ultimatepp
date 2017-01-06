@@ -34,6 +34,10 @@ TOPIC("Rational1Equation$en-us")
 #include "Rational1Equation$en-us.tppi"
 END_TOPIC
 
+TOPIC("RealExponentEquation$en-us")
+#include "RealExponentEquation$en-us.tppi"
+END_TOPIC
+
 TOPIC("ScatterDraw$en-us")
 #include "ScatterDraw$en-us.tppi"
 END_TOPIC

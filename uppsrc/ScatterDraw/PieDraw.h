@@ -31,8 +31,6 @@ public:
 	PieDraw& SetLegendBackColor(const Color& color)	{legendBackColor = color; return *this;}
 	PieDraw& SetLegendLeft(const int& left)			{legendLeft = left; return *this;}
 	PieDraw& SetLegendTop(const int& top)			{legendTop = top; return *this;}
-	PieDraw& SetLegendWidth(const int& width)		{legendWidth = width; return *this;}
-	PieDraw& SetLegendHeight(const int& height)		{legendHeight = height; return *this;}
 
 	PieDraw& SetPieAngle(const double& angle)		{pieAngle = angle; return *this;}
 	PieDraw& SetPieMarginLeft(const int& left)		{pieMarginLeft = left; return *this;}
@@ -75,7 +73,7 @@ private:
 	Upp::Font legendFont;
 	Color legendTextColor, legendBackColor;
 	bool showLegend;	
-	int legendLeft, legendTop, legendWidth, legendHeight;
+	int legendLeft, legendTop;
 	
 	double pieAngle;
 	int pieMarginLeft, pieMarginTop, pieMarginRight, pieMarginBottom;
