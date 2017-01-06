@@ -16,7 +16,7 @@ ublic]_[*@3 ExplicitEquation]&]
 [s0; &]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor Detail]]}}&]
-[s0; &]
+[s5; &]
 [s4;:ExponentialEquation`:`:ExponentialEquation`(double`,double`):%- [* ExponentialEqua
 tion]([@(0.0.255) double]_[*@3 a], [@(0.0.255) double]_[*@3 b])&]
 [s2; Initializes equation coefficients [%-*@3 a] and [%-*@3 b].&]
