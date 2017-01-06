@@ -273,9 +273,7 @@ ctrl PieCtrl {
 	Color SetLegendTextColor = :Black;
 	Color SetLegendBackColor = Null;
 	int SetLegendLeft = 10;
-	int SetLegendWidth = 60;
 	int SetLegendTop = Null;
-	int SetLegendHeight = 120;
 	double SetPieAngle = 0;
 	int SetPieMarginLeft = 40;
 	int SetPieMarginTop = 40;
@@ -299,15 +297,17 @@ ctrl PieCtrl {
 		if(.SetTitle == "") 
 			textsize.cy = 0;
 		
+		SetLegendHeight = 120;
+		SetLegendWidth = 60;
 		lcx = 0;
 		lcy = 0;
 		legendBk = .SetColor;
 		if(.SetLegendBackColor != Null) 
 			legendBk = .SetLegendBackColor;
-		if(.SetLegendWidth > 0 && .ShowLegend) 
-			lcx = .SetLegendWidth; 
-		if(.SetLegendHeight > 0 && .ShowLegend) 
-			lcy = .SetLegendHeight;
+		if(SetLegendWidth > 0 && .ShowLegend) 
+			lcx = SetLegendWidth; 
+		if(SetLegendHeight > 0 && .ShowLegend) 
+			lcy = SetLegendHeight;
 		left = - .SetLegendLeft + sz.cx - lcx;
 		if (.SetLegendTop <= :IntNull)
 			top = (sz.cy - Gap - textsize.cy - lcy)/2;
