@@ -338,7 +338,7 @@ be in AMap, otherwise it is logic error (asserted in debug mode).&]
 [s4;%- &]
 [s5;:AMap`:`:Get`(const K`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) c
 onst]_[*@4 K][@(0.0.255) `&]_[*@3 k])_[@(0.0.255) const]&]
-[s2; Retrieves a constant reference the the first element with the 
+[s2; Retrieves a constant reference of the first element with the 
 specified key. If multi`-key ordering is not broken and more 
 than one element with the same value exists in AMap, the lowest 
 position element is retrieved. Unlinked elements are ignored. 
