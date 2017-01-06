@@ -57,6 +57,8 @@ public:
 	GateN(const GateN& a) : fn(a.fn)   {}
 	GateN& operator=(const GateN& a)   { fn = a.fn; return *this; }
 
+	GateN(const Fn& src) : fn(src)   {}
+
 	GateN(Fn&& src, int) : fn(pick(src))   {}
 	GateN& operator=(GateN&& a)        { fn = pick(a.fn); return *this; }
 

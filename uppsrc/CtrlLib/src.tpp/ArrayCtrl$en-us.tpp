@@ -1018,7 +1018,14 @@ they are ordered by this predicate.&]
 [s4; &]
 [s5;:ArrayCtrl`:`:NoColumnSortSecondary`(`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* NoC
 olumnSortSecondary]()&]
-[s2; Same as ColumnSortSecondary(false).&]
+[s2; Removes secondary sorting predicate..&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:SortingFrom`(int`):%- [_^Upp`:`:ArrayCtrl^ ArrayCtrl][@(0.0.255) `&
+]_[* SortingFrom]([@(0.0.255) int]_[*@3 from])&]
+[s2; When ArrayCtrl is sorted (without specifying the range of lines), 
+specifies the first column sorted. This allows for easy header 
+or summation line.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:ColumnWidths`(const char`*`): [_^ArrayCtrl^ ArrayCtrl][@(0.0.255) `&]_[* C
