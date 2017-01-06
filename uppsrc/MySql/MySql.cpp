@@ -503,7 +503,7 @@ const char *MySqlReadString(const char *s, String& stmt) {
 	return s;
 }
 
-bool MySqlPerformScript(const String& txt, StatementExecutor& se, Gate2<int, int> progress_canceled) {
+bool MySqlPerformScript(const String& txt, StatementExecutor& se, Gate<int, int> progress_canceled) {
 	const char *text = txt;
 	for(;;) {
 		String stmt;

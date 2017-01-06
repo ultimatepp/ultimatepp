@@ -7,7 +7,7 @@ void Zip::WriteFolder(const char *path, Time tm)
 	String p = UnixPath(path);
 	if(*p.Last() != '/')
 		p.Cat('/');
-	WriteFile(~p, 0, p, false, tm);
+	WriteFile(~p, 0, p, Null, tm);
 }
 
 int64 zPress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool gzip,
@@ -108,7 +108,7 @@ void Zip::PutCompressed(const void *ptr, int size)
 	file.Top().csize += size;
 }
 
-void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm, bool deflate)
+void Zip::WriteFile(const void *ptr, int size, const char *path, Gate<int, int> progress, Time tm, bool deflate)
 {
 	ASSERT(!IsFileOpened());
 	if(!deflate) {
@@ -155,7 +155,7 @@ void Zip::WriteFile(const void *ptr, int size, const char *path, Gate2<int, int>
 	if (zip->IsError()) WhenError();
 }
 
-void Zip::WriteFile(const String& s, const char *path, Gate2<int, int> progress, Time tm, bool deflate)
+void Zip::WriteFile(const String& s, const char *path, Gate<int, int> progress, Time tm, bool deflate)
 {
 	WriteFile(~s, s.GetCount(), path, progress, tm, deflate);
 }

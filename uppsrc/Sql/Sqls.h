@@ -292,7 +292,7 @@ struct StatementExecutor { // Deprecated, use SqlPerformScript
 };
 
  // Deprecated, use SqlPerforScript
-typedef bool (*RunScript)(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled);
+typedef bool (*RunScript)(const String& text, StatementExecutor& executor, Gate<int, int> progress_canceled);
 
 class AppSql;
 class AppSqlR;
@@ -444,13 +444,13 @@ Sql& AppCursorR();
 class OciConnection;
 
 bool SqlPerformScript(SqlSession& session, Stream& script,
-                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+                      Gate<int, int> progress_canceled = Null, bool stoponerror = false);
 bool SqlPerformScript(Stream& script,
-                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+                      Gate<int, int> progress_canceled = Null, bool stoponerror = false);
 bool SqlPerformScript(SqlSession& session, const String& script,
-                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+                      Gate<int, int> progress_canceled = Null, bool stoponerror = false);
 bool SqlPerformScript(const String& script,
-                      Gate2<int, int> progress_canceled = false, bool stoponerror = false);
+                      Gate<int, int> progress_canceled = Null, bool stoponerror = false);
 
 class SqlMassInsert {
 	struct Row : Moveable<Row> {

@@ -26,7 +26,7 @@ bool PostgreSQLPerformScript(const String& text,
 #else
 	StatementExecutor& se = SQLStatementExecutor(),
 #endif
-	Gate2<int, int> progress_canceled = false
+	Gate<int, int> progress_canceled = Null
 );
 
 

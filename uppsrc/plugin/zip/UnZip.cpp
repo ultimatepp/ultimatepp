@@ -81,7 +81,7 @@ Time UnZip::GetZipTime(dword dt)
 int64 zPress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress, bool gzip,
              bool compress, dword *crc, bool hdr);
 
-bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
+bool UnZip::ReadFile(Stream& out, Gate<int, int> progress)
 {
 	if(error)
 		return false;
@@ -135,7 +135,7 @@ bool UnZip::ReadFile(Stream& out, Gate2<int, int> progress)
 	return true;
 }
 
-String UnZip::ReadFile(Gate2<int, int> progress)
+String UnZip::ReadFile(Gate<int, int> progress)
 {
 	StringStream ss;
 	return ReadFile(ss, progress) ? ss.GetResult() : String::GetVoid();
