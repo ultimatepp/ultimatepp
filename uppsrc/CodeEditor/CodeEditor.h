@@ -345,14 +345,14 @@ public:
 	};
 
 	Event<>            WhenSelection;
-	Gate1<MouseTip&>   WhenTip;
+	Gate<MouseTip&>    WhenTip;
 	Event<>            WhenLeftDown;
-	Event<int>     WhenCtrlClick;
+	Event<int>         WhenCtrlClick;
 	Event<>            WhenAnnotationMove;
 	Event<>            WhenAnnotationClick;
 	Event<>            WhenAnnotationRightClick;
 	Event<>            WhenOpenFindReplace;
-	Event<String&> WhenPaste;
+	Event<String&>     WhenPaste;
 	Event<>            WhenUpdate;
 
 	FrameTop<Button>    topsbbutton;

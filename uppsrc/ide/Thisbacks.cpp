@@ -7,7 +7,7 @@ bool IsCb(String t) {
 	if(t.StartsWith("Upp::"))
 		t = t.Mid(5);
 	return  t == "Event<> " || t == "Event<" || t == "Event<> 2" || t == "Event<> 3" ||
-	        t == "Gate" || t == "Gate1" || t == "Gate2";
+	        t == "Gate" || t == "Gate1" || t == "Gate";
 }
 
 struct ThisbacksDlg : WithThisbacksLayout<TopWindow> {

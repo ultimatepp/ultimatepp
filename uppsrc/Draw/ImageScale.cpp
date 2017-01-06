@@ -474,7 +474,7 @@ void RescaleImage::Get(RGBA *tgt)
 }
 
 bool Rescale(RasterEncoder& tgt, Size tsz, Raster& src, const Rect& src_rc,
-             Gate2<int, int> progress)
+             Gate<int, int> progress)
 {
 	tgt.Create(tsz, src);
 	RescaleImage rs;
@@ -488,7 +488,7 @@ bool Rescale(RasterEncoder& tgt, Size tsz, Raster& src, const Rect& src_rc,
 	return true;
 }
 
-Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress)
+Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate<int, int> progress)
 {
 	if(src.GetSize() == sz && src_rc == sz)
 		return src;
@@ -498,14 +498,14 @@ Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> pro
 	return tgt;
 }
 
-Image Rescale(const Image& src, Size sz, Gate2<int, int> progress)
+Image Rescale(const Image& src, Size sz, Gate<int, int> progress)
 {
-	return Rescale(src, sz, src.GetSize());
+	return Rescale(src, sz, src.GetSize(), progress);
 }
 
-Image Rescale(const Image& src, int cx, int cy, Gate2<int, int> progress)
+Image Rescale(const Image& src, int cx, int cy, Gate<int, int> progress)
 {
-	return Rescale(src, Size(cx, cy));
+	return Rescale(src, Size(cx, cy), progress);
 }
 
 }

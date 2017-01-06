@@ -409,11 +409,11 @@ public:
 
 	Event<>  					WhenHighlight;		// Executed on tab mouse-over
 	Event<>  					WhenLeftDouble;		// Executed on left-button double-click (clicked tab will be the active tab)
-	Gate1<Value> 				CancelClose; 		// Return true to cancel action. Parameter: Key of closed tab
+	Gate<Value> 				CancelClose; 		// Return true to cancel action. Parameter: Key of closed tab
 	Event<Value>				WhenClose; 			// Executed before tab closing. Parameter: Key of closed tab
 	Gate<>	 					CancelCloseAll;		// Return true to cancel action;
 	Event<>  		 			WhenCloseAll;		// Executed before 'Close All' action
-	Gate1<ValueArray>	     	CancelCloseSome;	// Return true to cancel action (executed with list of closing tabs)
+	Gate<ValueArray>	     	CancelCloseSome;	// Return true to cancel action (executed with list of closing tabs)
 	Event<ValueArray>	    	WhenCloseSome;		// Executed before any 'Close' action (with list of closing tabs)
 
 	TabBar();

@@ -94,7 +94,7 @@ public:
 
 	void     AlignText(int align)          { info.SetAlign(align); }
 
-	operator Gate2<int, int>()             { return callback(this, &Progress::SetCanceled); }
+	operator Gate<int, int>()             { return callback(this, &Progress::SetCanceled); }
 
 	Progress();
 	Progress(Ctrl *_owner);

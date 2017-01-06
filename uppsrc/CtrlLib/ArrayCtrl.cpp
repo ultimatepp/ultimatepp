@@ -104,7 +104,7 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting(int (*c)(const Value& a, const Val
 	return *this;
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::Sorting(Gate2<int, int> aorder)
+ArrayCtrl::Column& ArrayCtrl::Column::Sorting(Gate<int, int> aorder)
 {
 	order = NULL;
 	cmp = NULL;
@@ -2416,7 +2416,7 @@ void ArrayCtrl::ReArrange(const Vector<int>& order)
 	SyncInfo();
 }
 
-void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
+void ArrayCtrl::Sort(int from, int count, Gate<int, int> order)
 {
 	KillCursor();
 	ClearSelection();
@@ -2431,7 +2431,7 @@ void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
 	SyncInfo();
 }
 
-void ArrayCtrl::Sort(Gate2<int, int> order)
+void ArrayCtrl::Sort(Gate<int, int> order)
 {
 	if(sorting_from < array.GetCount())
 		Sort(sorting_from, array.GetCount() - sorting_from, order);
@@ -2469,7 +2469,7 @@ bool ArrayCtrl::ColumnSortPred(int i1, int i2, int column, const ValueOrder *o)
 	return (*o)(GetConvertedColumn(i1, column), GetConvertedColumn(i2, column));
 }
 
-void ArrayCtrl::ColumnSort(int column, Gate2<int, int> order)
+void ArrayCtrl::ColumnSort(int column, Gate<int, int> order)
 {
 	Value key = GetKey();
 	CHECK(KillCursor());
