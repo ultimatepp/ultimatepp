@@ -2416,22 +2416,6 @@ void ArrayCtrl::ReArrange(const Vector<int>& order)
 	SyncInfo();
 }
 
-void ArrayCtrl::Sort(const ArrayCtrl::Order& order) {
-	KillCursor();
-	ClearSelection();
-	ClearCache();
-	SortPredicate sp;
-	sp.order = &order;
-	if(ln.GetCount() || cellinfo.GetCount()) {
-		SortA();
-		SortB(GetStableSortOrder(array, sp));
-	}
-	else
-		StableSort(array, sp);
-	Refresh();
-	SyncInfo();
-}
-
 void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
 {
 	KillCursor();
@@ -2449,7 +2433,8 @@ void ArrayCtrl::Sort(int from, int count, Gate2<int, int> order)
 
 void ArrayCtrl::Sort(Gate2<int, int> order)
 {
-	Sort(0, array.GetCount(), order);
+	if(sorting_from < array.GetCount())
+		Sort(sorting_from, array.GetCount() - sorting_from, order);
 }
 
 bool ArrayCtrl::OrderPred(int i1, int i2, const ArrayCtrl::Order *o)
@@ -2460,6 +2445,12 @@ bool ArrayCtrl::OrderPred(int i1, int i2, const ArrayCtrl::Order *o)
 void ArrayCtrl::Sort(int from, int count, const ArrayCtrl::Order& order)
 {
 	Sort(from, count, THISBACK1(OrderPred, &order));
+}
+
+void ArrayCtrl::Sort(const ArrayCtrl::Order& order)
+{
+	if(sorting_from < array.GetCount())
+		Sort(sorting_from, array.GetCount() - sorting_from, order);
 }
 
 struct sAC_ColumnSort : public ValueOrder {
@@ -2687,6 +2678,7 @@ void ArrayCtrl::Reset() {
 	Clear();
 	sb.SetLine(linecy);
 	columnsortsecondary = NULL;
+	sorting_from = 0;
 	min_visible_line = 0;
 	max_visible_line = INT_MAX;
 	ctrl_low = ctrl_high = 0;
