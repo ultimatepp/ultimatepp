@@ -22,7 +22,7 @@ topic "Ultimate++ Overview";
 [b50;2 $$20,20#03324558446220344731010354752573:Par]
 [i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
 [{_}%EN-US 
-[s2; Overview Ultimate`+`+&]
+[s2; Ultimate`+`+ Overview&]
 [s19;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
 [s3; Whetting your appetite&]
 [s5; Ultimate`+`+ promises radical reduction of code complexity of 
@@ -54,33 +54,28 @@ visual designer:&]
 [s0;i128; [*C@(28.42.150)2 class Days : public WithDaysLayout<TopWindow> 
 `{]&]
 [s0;i128; [*C@(28.42.150)2 public:]&]
-[s0;i128; [*C@(28.42.150)2 -|void Compute();]&]
 [s0;i128;*C@(28.42.150)2 &]
 [s0;i128; [*C@(28.42.150)2 -|typedef Days CLASSNAME;]&]
 [s0;i128; [*C@(28.42.150)2 -|Days();]&]
 [s0;i128; [*C@(28.42.150)2 `};]&]
+[s0;l128;*C@5;2 &]
+[s0;l128; [*C@5;2 Days`::Days()]&]
+[s0;l128; [*C@5;2 `{]&]
+[s0;l128; [*C@5;2 -|CtrlLayout(`*this, `"Days`");]&]
+[s0;l128; [*C@5;2 -|date1 `^`= date2 `^`= `[`=`] `{]&]
+[s0;l128; [*C@5;2 -|-|result `= IsNull(date1) `|`| IsNull(date2) ? `"`" 
+:]&]
+[s0;l128; [*C@5;2 -|-|         Format(`"There is %d day(s) between %`` 
+and %```", abs(Date(`~date1) `- Date(`~date2)), `~date1, `~date2);]&]
+[s0;l128; [*C@5;2 -|`};]&]
+[s0;l128; [*C@5;2 `}]&]
+[s0;l128;*C@5;2 &]
+[s0;l128; [*C@5;2 GUI`_APP`_MAIN]&]
+[s0;l128; [*C@5;2 `{]&]
+[s0;l128; [*C@5;2 -|Days().Run();]&]
+[s0;l128; [*C@5;2 `}]&]
+[s7;l128;*3 &]
 [s0;i128;*C@(28.42.150)2 &]
-[s0;i128; [*C@(28.42.150)2 void Days`::Compute()]&]
-[s0;i128; [*C@(28.42.150)2 `{]&]
-[s0;i128; [*C@(28.42.150)2 -|result `= IsNull(date1) `|`| IsNull(date2) 
-? `"`" :]&]
-[s0;i128; [*C@(28.42.150)2 -|         Format(`"There is %d day(s) between 
-%`` and %```",]&]
-[s0;i128; [*C@(28.42.150)2                     abs(Date(`~date1) `- 
-Date(`~date2)), `~date1, `~date2);]&]
-[s0;i128; [*C@(28.42.150)2 `}]&]
-[s0;i128;*C@(28.42.150)2 &]
-[s0;i128; [*C@(28.42.150)2 Days`::Days()]&]
-[s0;i128; [*C@(28.42.150)2 `{]&]
-[s0;i128; [*C@(28.42.150)2 -|CtrlLayout(`*this, `"Days`");]&]
-[s0;i128; [*C@(28.42.150)2 -|date1 <<`= THISBACK(Compute);]&]
-[s0;i128; [*C@(28.42.150)2 -|date2 <<`= THISBACK(Compute);]&]
-[s0;i128; [*C@(28.42.150)2 `}]&]
-[s0;i128;*C@(28.42.150)2 &]
-[s0;i128; [*C@(28.42.150)2 GUI`_APP`_MAIN]&]
-[s0;i128; [*C@(28.42.150)2 `{]&]
-[s0;i128; [*C@(28.42.150)2 -|Days().Run();]&]
-[s0;i128; [*C@(28.42.150)2 `}]&]
 [s0;i128;*C@(28.42.150) &]
 [s3; Everything belongs somewhere&]
 [s5; In Ultimate`+`+, most objects are bound to some logical scope. 
@@ -236,49 +231,18 @@ Display attribute to DisplayColor (remember, Color is Value compatible
 and DropList`'s list consists of Values). Meanwhile, you can 
 use the same DisplayColor as the property of many other widget 
 classes.&]
-[s3; Callbacks&]
+[s3; Function&]
 [s5; While virtual methods provide a great way to organize the [/ input] 
 interface of GUI widgets (like mouse or keyboard input), each 
 GUI toolkit has to provide effective means for [/ output] interfaces 
 as well (if you do not know what output interface is: when a button 
 widget is pressed, the output interface is responsible for delivering 
 this information to the client code).&]
-[s5; Our solution to these needs is called a Callback. You can think 
-about Callbacks as a very generalized form of function pointers. 
-Each Callback represents some kind of action `- usually this 
-comprises calling a certain function or a certain object method 
-`- that can be invoked at any time.&]
-[s5; Callbacks are generic and can take some very interesting forms. 
-For example, a type of Callback does the simple task of calling 
-two other given Callbacks, providing a very simple tool for grouping. 
-There are Callbacks that take no argument, but call a function 
-or method with an argument when invoked `- this additional argument 
-is stored within Callback during its construction. To illustrate 
-this important feature, see the following code snippet:&]
-[s20; &]
-[s21;%- void MyDlg`::SetEditorValue(int x)&]
-[s21;%- `{&]
-[s21;%- -|editor <<`= x;&]
-[s21;%- `}&]
-[s21; &]
-[s21;%- MyDlg`::MyDlg()&]
-[s21;%- `{&]
-[s21;%- -|button1 <<`= THISBACK1(SetEditorValue, 1);&]
-[s21;%- -|button2 <<`= THISBACK1(SetEditorValue, 2);&]
-[s21;%- `}&]
-[s20; &]
-[s5; In this snippet, we have two buttons and one integer input field. 
-Pressing the first or second button sets the input field to the 
-value 1 or 2 respectively.&]
-[s5; It is also very important that Callbacks are completely decoupled 
-from classes. While they can invoke specific methods of certain 
-object instances, there are no further requirements for the method 
-(beyond signature) or the class of the object.&]
-[s5; Just to make things clear for those familiar with boost libraries 
-`- yes, Callback classes are in fact very similar to boost`::function, 
-with interface polished a little bit more toward the needs of 
-Ultimate`+`+ framework (they are Moveable `- can be stored in 
-Vector flavor of containers).&]
+[s5; Our solution to these needs is using std`::function equivalent 
+Upp`::Function. All output actions then can be defined as C`+`+ 
+lambdas. The reason for not using std`::function is that in GUI, 
+a lot of output events remain unassigned and std`::functions throws 
+when invoked empty `- Upp`::Function simply does nothing.&]
 [s3; Ultimate`+`+ set of widgets&]
 [s5; While the standard set of U`+`+ widgets is less important to 
 us than the general principles, partly due to the fact that creating 
@@ -460,7 +424,7 @@ each time we felt that some major or minor aspect of library
 interface or implementation needed to be improved. This enabled 
 us to slowly develop the library and perfect it into its current 
 state.&]
-[s5; Now, after some 11 years of development, Ultimate`+`+ is a mature 
+[s5; Now, after some 18 years of development, Ultimate`+`+ is a mature 
 platform that brings vast reductions of our development costs. 
 Most interfaces seem to be finished and optimal. There is of 
 course still some work ahead, mostly in documentation an IDE 
