@@ -48,8 +48,8 @@ public:
 
 	void   Skip()                 { current++; }
 	void   SkipFile()             { current++; }
-	bool   ReadFile(Stream& out, Gate2<int, int> progress = false);
-	String ReadFile(Gate2<int, int> progress = false);
+	bool   ReadFile(Stream& out, Gate<int, int> progress = Null);
+	String ReadFile(Gate<int, int> progress = Null);
 	
 	dword  GetPos() const;
 
@@ -108,7 +108,7 @@ class Zip {
 	Crc32Stream crc32; // for uncompressed files
 	bool        uncompressed;
 
-	void WriteFile0(const void *ptr, int size, const char *path, Gate2<int, int> progress, Time tm, int method);
+	void WriteFile0(const void *ptr, int size, const char *path, Gate<int, int> progress, Time tm, int method);
 
 	void FileHeader(const char *path, Time tm);
 
@@ -126,8 +126,8 @@ public:
 	bool IsFileOpened() const                 { return pipeZLib || uncompressed; }
 
 	void WriteFolder(const char *path, Time tm);
-	void WriteFile(const void *ptr, int size, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime(), bool deflate = true);
-	void WriteFile(const String& s, const char *path, Gate2<int, int> progress = false, Time tm = GetSysTime(), bool deflate = true);
+	void WriteFile(const void *ptr, int size, const char *path, Gate<int, int> progress = Null, Time tm = GetSysTime(), bool deflate = true);
+	void WriteFile(const String& s, const char *path, Gate<int, int> progress = Null, Time tm = GetSysTime(), bool deflate = true);
 
 	void Create(Stream& out);
 	void Finish();
