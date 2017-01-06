@@ -22,7 +22,7 @@ namespace Upp {
 
 const char *MySqlReadString(const char *s, String& stmt);
 
-bool MySqlPerformScript(const String& text, StatementExecutor& se, Gate2<int, int> progress_canceled = false);
+bool MySqlPerformScript(const String& text, StatementExecutor& se, Gate<int, int> progress_canceled = Null);
 #ifdef NOAPPSQL
 bool MySqlUpdateSchema(const SqlSchema& sch, int i, StatementExecutor& se);
 #else

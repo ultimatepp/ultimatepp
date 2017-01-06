@@ -495,7 +495,7 @@ class VecArcIterator
 {
 public:
 	typedef Callback1<Pointf>     DrawProc;
-	typedef Gate2<Pointf, double> ArcProc;
+	typedef Gate<Pointf, double>  ArcProc;
 
 	VecArcIterator(const VecArc& arc, DrawProc _lineto);
 	VecArcIterator(Pointf start, Pointf end, double bulge, DrawProc _lineto);

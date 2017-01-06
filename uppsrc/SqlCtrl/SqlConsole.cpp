@@ -22,7 +22,7 @@ static const int MAX_NESTING_LEVEL = 10;
 static const int PROGRESS_RANGE = 1000000000;
 
 bool SqlRunScript(int dialect, Stream& script_stream, 
-	Gate1<String> executor, Gate2<int, int> progress,
+	Gate<String> executor, Gate<int, int> progress,
 	Index<String>& script_file_names, int progress_min, int progress_max)
 {
 	int line_number = 1;
@@ -131,7 +131,7 @@ bool SqlRunScript(int dialect, Stream& script_stream,
 }
 
 bool SqlRunScript(int dialect, Stream& script_stream, const String& file_name,
-	Gate1<String> executor, Gate2<int, int> progress)
+                  Gate<String> executor, Gate<int, int> progress)
 {
 	Index<String> script_file_names;
 	String fn = NormalizePath(file_name);
@@ -207,7 +207,7 @@ protected:
 			me->command <<= stmt; me->Sync(); me->Execute(quiet ? QUIET : SCRIPT); return true;
 		}
 		bool GateExec(String stmt) { return Execute(stmt); }
-		operator Gate1<String> () { return THISBACK(GateExec); }
+		operator Gate<String> ()   { return THISBACK(GateExec); }
 		
 	};
 

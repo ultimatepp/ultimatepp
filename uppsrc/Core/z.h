@@ -164,7 +164,7 @@ bool   GZDecompressFile(const String& srcfile, Gate<int64, int64> progress = Nul
 
 /// Backward compatibility:
 
-Gate<int64, int64> AsGate64(Gate2<int, int> gate);
+Gate<int64, int64> AsGate64(Gate<int, int> gate);
 
 inline int ZCompress(Stream& out, Stream& in, Gate2<int, int> progress)        { return (int)ZCompress(out, in, AsGate64(progress)); }
 inline String ZCompress(const void *data, int len, Gate2<int, int> progress)   { return ZCompress(data, len, AsGate64(progress)); }

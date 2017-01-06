@@ -132,7 +132,7 @@ const char *PostgreSQLReadString(const char *s, String& stmt)
 	return s;
 }
 
-bool PostgreSQLPerformScript(const String& txt, StatementExecutor& se, Gate2<int, int> progress_canceled)
+bool PostgreSQLPerformScript(const String& txt, StatementExecutor& se, Gate<int, int> progress_canceled)
 {
 	const char *text = txt;
 	for(;;) {
