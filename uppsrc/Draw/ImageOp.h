@@ -76,10 +76,10 @@ public:
 void DrawRasterData(Draw& w, int x, int y, int cx, int cy, const String& data);
 
 bool  Rescale(RasterEncoder& tgt, Size sz, Raster& src, const Rect& src_rc,
-              Gate2<int, int> progress = false);
-Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
-Image Rescale(const Image& src, Size sz, Gate2<int, int> progress = false);
-Image Rescale(const Image& src, int cx, int cy, Gate2<int, int> progress = false);
+              Gate<int, int> progress = Null);
+Image Rescale(const Image& src, Size sz, const Rect& src_rc, Gate<int, int> progress = Null);
+Image Rescale(const Image& src, Size sz, Gate<int, int> progress = Null);
+Image Rescale(const Image& src, int cx, int cy, Gate<int, int> progress = Null);
 
 struct ImageFilter9 {
 	virtual RGBA operator()(const RGBA **mx) = 0;
@@ -165,11 +165,11 @@ void  SetMakeImageCacheMax(int m);
 Image MakeImagePaintOnly(const ImageMaker& m);
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
-                    double (*kernel_fn)(double x), int kernel_width, Gate2<int, int> progress);
+                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress);
 Image RescaleFilter(const Image& img, Size sz,
-                    double (*kernel_fn)(double x), int kernel_width, Gate2<int, int> progress);
+                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress);
 Image RescaleFilter(const Image& img, int cx, int cy,
-                    double (*kernel_fn)(double x), int kernel_width, Gate2<int, int> progress);
+                    double (*kernel_fn)(double x), int kernel_width, Gate<int, int> progress);
 
 enum {
 	FILTER_NEAREST = 0,
@@ -184,9 +184,9 @@ enum {
 	FILTER_LANCZOS5 = 9,
 };
 
-Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate2<int, int> progress = false);
-Image RescaleFilter(const Image& img, Size sz, int filter, Gate2<int, int> progress = false);
-Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate2<int, int> progress = false);
+Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress = Null);
+Image RescaleFilter(const Image& img, Size sz, int filter, Gate<int, int> progress = Null);
+Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate<int, int> progress = Null);
 
 Image CachedRescale(const Image& m, Size sz, const Rect& src, int filter = Null);
 Image CachedRescale(const Image& m, Size sz, int filter = Null);
@@ -207,6 +207,6 @@ inline int   DPI(int a)   { return IsUHDMode() ? 2 * a : a; }
 inline Size  DPI(Size sz) { return IsUHDMode() ? 2 * sz : sz; }
 
 // Obsolete, replace with RescaleFilter!
-Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate2<int, int> progress = false);
-Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress = false);
-Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress = false);
+Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate<int, int> progress = Null);
+Image RescaleBicubic(const Image& img, Size sz, Gate<int, int> progress = Null);
+Image RescaleBicubic(const Image& img, int cx, int cy, Gate<int, int> progress = Null);
