@@ -19,7 +19,7 @@ double BicubicKernel(double x)
 	return 1 / 6.0 * r;
 }
 
-Image RescaleBicubic(const Image& img, Size sz, const Rect& sr, Gate2<int, int> progress)
+Image RescaleBicubic(const Image& img, Size sz, const Rect& sr, Gate<int, int> progress)
 {
 	ASSERT(sr.top >= 0 && sr.left >= 0 && sr.right <= img.GetWidth() && sr.bottom <= img.GetHeight());
 	Size isz = sr.GetSize();
@@ -60,12 +60,12 @@ Image RescaleBicubic(const Image& img, Size sz, const Rect& sr, Gate2<int, int> 
 	return ib;
 }
 
-Image RescaleBicubic(const Image& img, int cx, int cy, Gate2<int, int> progress)
+Image RescaleBicubic(const Image& img, int cx, int cy, Gate<int, int> progress)
 {
 	return RescaleBicubic(img, Size(cx, cy), img.GetSize(), progress);
 }
 
-Image RescaleBicubic(const Image& img, Size sz, Gate2<int, int> progress)
+Image RescaleBicubic(const Image& img, Size sz, Gate<int, int> progress)
 {
 	return RescaleBicubic(img, sz, img.GetSize(), progress);
 }

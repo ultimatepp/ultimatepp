@@ -68,7 +68,7 @@ public:
 		mutable Any           cache;
 		const ValueOrder     *order;
 		int                 (*cmp)(const Value& a, const Value& b);
-		Gate2<int, int>       line_order;
+		Gate<int, int>       line_order;
 
 
 		void   InvalidateCache(int i);
@@ -107,7 +107,7 @@ public:
 
 		Column& Sorting(const ValueOrder& o);
 		Column& Sorting(int (*c)(const Value& a, const Value& b));
-		Column& Sorting(Gate2<int, int> order);
+		Column& Sorting(Gate<int, int> order);
 		Column& Sorting();
 		Column& SortDefault();
 
@@ -318,7 +318,7 @@ private:
 
 	bool   ColumnSortPred(int i1, int i2, int column, const ValueOrder *o);
 	bool   OrderPred(int i1, int i2, const ArrayCtrl::Order *o);
-	bool   DescendingPred(int i1, int i2, const Gate2<int, int> *pred);
+	bool   DescendingPred(int i1, int i2, const Gate<int, int> *pred);
 	void   SyncInfo();
 	void   SortA();
 	void   SortB(const Vector<int>& o);
@@ -532,8 +532,8 @@ public:
 
 	void       ReArrange(const Vector<int>& order);
 
-	void       Sort(int from, int count, Gate2<int, int> order);
-	void       Sort(Gate2<int, int> order);
+	void       Sort(int from, int count, Gate<int, int> order);
+	void       Sort(Gate<int, int> order);
 	void       Sort(const ArrayCtrl::Order& order);
 	void       Sort(int from, int count, const ArrayCtrl::Order& order);
 	void       Sort(int (*compare)(const Vector<Value>& v1, const Vector<Value>& v2));
@@ -545,7 +545,7 @@ public:
 	                = StdValueCompare);
 	void       Sort()                                  { Sort(0); }
 
-	void       ColumnSort(int column, Gate2<int, int> order);
+	void       ColumnSort(int column, Gate<int, int> order);
 	void       ColumnSort(int column, const ValueOrder& order);
 	void       ColumnSort(int column, int (*compare)(const Value& a, const Value& b) = StdValueCompare);
 

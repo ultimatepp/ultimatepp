@@ -465,7 +465,7 @@ bool GZDecompressFile(const char *srcfile, Gate<int64, int64>progress)
 	return GZDecompressFile(~dstfile, srcfile, progress);
 }
 
-Gate<int64, int64> AsGate64(Gate2<int, int> gate)
+Gate<int64, int64> AsGate64(Gate<int, int> gate)
 {
 	Gate<int64, int64> h;
 	h << [=](int64 a, int64 b) { return gate((int)a, (int)b); };

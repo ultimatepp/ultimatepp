@@ -100,7 +100,7 @@ int   Raster::GetPaletteCount() { return 0; }
 
 const RGBA *Raster::GetPalette() { return NULL; }
 
-Image Raster::GetImage(int x, int y, int cx, int cy, const Gate2<int, int> progress)
+Image Raster::GetImage(int x, int y, int cx, int cy, const Gate<int, int> progress)
 {
 	Size size = GetSize();
 	y = minmax(y, 0, size.cy);
@@ -124,7 +124,7 @@ Image Raster::GetImage(int x, int y, int cx, int cy, const Gate2<int, int> progr
 	return IsError() ? Image() : Image(b);
 }
 
-Image Raster::GetImage(const Gate2<int, int> progress)
+Image Raster::GetImage(const Gate<int, int> progress)
 {
 	Size sz = GetSize();
 	return GetImage(0, 0, sz.cx, sz.cy, progress);
@@ -209,7 +209,7 @@ bool StreamRaster::IsError()
 	return error || !s || s->IsError();
 }
 
-Image StreamRaster::Load(Stream& s, const Gate2<int, int> progress)
+Image StreamRaster::Load(Stream& s, const Gate<int, int> progress)
 {
 	if(Open(s)) {
 		Image img = GetImage(progress);
@@ -219,13 +219,13 @@ Image StreamRaster::Load(Stream& s, const Gate2<int, int> progress)
 	return Image();
 }
 
-Image StreamRaster::LoadFile(const char *fn, const Gate2<int, int> progress)
+Image StreamRaster::LoadFile(const char *fn, const Gate<int, int> progress)
 {
 	FileIn in(fn);
 	return in ? Load(in, progress) : Image();
 }
 
-Image StreamRaster::LoadString(const String& s, const Gate2<int, int> progress)
+Image StreamRaster::LoadString(const String& s, const Gate<int, int> progress)
 {
 	StringStream ss(s);
 	return Load(ss, progress);
@@ -260,19 +260,19 @@ One<StreamRaster> StreamRaster::OpenAny(Stream& s)
 	return NULL;
 }
 
-Image StreamRaster::LoadAny(Stream& s, const Gate2<int, int> progress)
+Image StreamRaster::LoadAny(Stream& s, Gate<int, int> progress)
 {
 	One<StreamRaster> r = OpenAny(s);
 	return r ? r->GetImage(progress) : Image();
 }
 
-Image StreamRaster::LoadFileAny(const char *fn, const Gate2<int, int> progress)
+Image StreamRaster::LoadFileAny(const char *fn, Gate<int, int> progress)
 {
 	FileIn in(fn);
 	return LoadAny(in, progress);
 }
 
-Image StreamRaster::LoadStringAny(const String& s, const Gate2<int, int> progress)
+Image StreamRaster::LoadStringAny(const String& s, Gate<int, int> progress)
 {
 	StringStream ss(s);
 	return LoadAny(ss, progress);

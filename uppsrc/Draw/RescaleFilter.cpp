@@ -39,7 +39,7 @@ static int sGeta(int a, int src, int tgt, int& shift)
 
 Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
                     double (*kfn)(double x), int a,
-                    Gate2<int, int> progress)
+                    Gate<int, int> progress)
 {
 	ASSERT(Rect(img.GetSize()).Contains(sr));
 	Size isz = sr.GetSize();
@@ -133,14 +133,14 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 
 Image RescaleFilter(const Image& img, Size sz,
                     double (*kfn)(double x), int a,
-                    Gate2<int, int> progress)
+                    Gate<int, int> progress)
 {
 	return RescaleFilter(img, sz, img.GetSize(), kfn, a, progress);
 }
 
 Image RescaleFilter(const Image& img, int cx, int cy,
                     double (*kfn)(double x), int a,
-                    Gate2<int, int> progress)
+                    Gate<int, int> progress)
 {
 	return RescaleFilter(img, Size(cx, cy), img.GetSize(), kfn, a, progress);
 }
@@ -223,7 +223,7 @@ static double sCostello(double x)
 	       0;
 }
 
-Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate2<int, int> progress)
+Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate<int, int> progress)
 {
 	if(IsNull(filter))
 		return Rescale(img, sz, sr);
@@ -243,12 +243,12 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr, int filter, Gate2
 	return RescaleFilter(img, sz, sr, tab[filter].a, tab[filter].b, progress);
 }
 
-Image RescaleFilter(const Image& img, Size sz, int filter, Gate2<int, int> progress)
+Image RescaleFilter(const Image& img, Size sz, int filter, Gate<int, int> progress)
 {
 	return RescaleFilter(img, sz, img.GetSize(), filter, progress);
 }
 
-Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate2<int, int> progress)
+Image RescaleFilter(const Image& img, int cx, int cy, int filter, Gate<int, int> progress)
 {
 	return RescaleFilter(img, Size(cx, cy), filter, progress);
 }

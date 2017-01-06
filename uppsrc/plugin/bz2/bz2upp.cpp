@@ -19,7 +19,7 @@ static void bzfree_new(void *opaque, void *addr)
 	delete[] (byte *)addr;
 }
 
-String BZ2Decompress(String s, Gate2<int, int> progress)
+String BZ2Decompress(String s, Gate<int, int> progress)
 {
 	if(s.IsEmpty())
 		return s;
@@ -62,14 +62,14 @@ String BZ2Decompress(String s, Gate2<int, int> progress)
 	return out;
 }
 
-String BZ2Decompress(Stream& strm, Gate2<int, int> progress)
+String BZ2Decompress(Stream& strm, Gate<int, int> progress)
 {
 	StringStream out;
 	BZ2Decompress(out, strm, progress);
 	return out;
 }
 
-String BZ2Compress(String s, Gate2<int, int> progress)
+String BZ2Compress(String s, Gate<int, int> progress)
 {
 	if(s.IsEmpty())
 		return s;
@@ -107,7 +107,7 @@ String BZ2Compress(String s, Gate2<int, int> progress)
 	return out;
 }
 
-void BZ2Decompress(Stream& out, Stream& in, Gate2<int, int> progress)
+void BZ2Decompress(Stream& out, Stream& in, Gate<int, int> progress)
 {
 	enum { BUF_SIZE = 65536 };
 	Buffer<char> input(BUF_SIZE), output(BUF_SIZE);
@@ -163,7 +163,7 @@ void BZ2Decompress(Stream& out, Stream& in, Gate2<int, int> progress)
 	BZ2_bzDecompressEnd(&z);
 }
 
-void BZ2Compress(Stream& out, Stream& in, Gate2<int, int> progress)
+void BZ2Compress(Stream& out, Stream& in, Gate<int, int> progress)
 {
 	enum { BUF_SIZE = 65536 };
 	Buffer<char> input(BUF_SIZE), output(BUF_SIZE);
