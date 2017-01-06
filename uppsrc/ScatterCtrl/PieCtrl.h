@@ -38,7 +38,6 @@ public:
 	PieCtrl& SetLegendBackColor(const Upp::Color& color){PieDraw::SetLegendBackColor(color); 	return *this;}
 	PieCtrl& SetLegendLeft(const int& h)				{PieDraw::SetLegendLeft(h); 			return *this;}
 	PieCtrl& SetLegendTop(const int& v)					{PieDraw::SetLegendTop(v); 				return *this;}
-	PieCtrl& SetLegendHeight(const int& height)			{PieDraw::SetLegendHeight(height); 		return *this;};
 };
 
 

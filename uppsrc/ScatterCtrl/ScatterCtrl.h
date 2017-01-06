@@ -280,8 +280,8 @@ private:
 	
 	bool highlighting;
 	
-	Array<MouseBehavior> mouseBehavior; 
-	Array<KeyBehavior> keyBehavior;
+	Upp::Array<MouseBehavior> mouseBehavior; 
+	Upp::Array<KeyBehavior> keyBehavior;
 	
 	void ProcessPopUp(const Point & pt);
 

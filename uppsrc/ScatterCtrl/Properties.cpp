@@ -756,6 +756,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	if (!data.IsParam() && !data.IsExplicit()) {	
 		double avg = data.AvgY();
 		tabFit.eAverage = avg;
+		tabFit.eRMS = data.RMSY();
 		tabFit.eStdDev = data.StdDevY(avg);
 		int64 idmx;
 		double val;
