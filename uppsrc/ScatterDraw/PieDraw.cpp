@@ -161,6 +161,17 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 		}
 	}
 	if(showLegend) {
+		Upp::Font scaledFont;
+		scaledFont.Height(scale*legendFont.GetHeight());
+		scaledFont.Width(scale*legendFont.GetWidth());
+		int fh = scale*legendFont.GetHeight();
+		int nr = GetCatCount();
+		int legendWidth = 0;
+		int legendHeight = (1 + nr)*scaledFont.GetHeight();
+		for(int i = 0; i < nr; i++) 
+			legendWidth = max<int>(legendWidth, GetTextSize(vNames[i], scaledFont).cx);
+		legendWidth += fround(2.2*fh);
+		
 		double leg_x = -legendLeft + sz.cx - legendWidth;
 		double leg_y;
 		if (IsNull(legendTop))
@@ -169,14 +180,9 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 			leg_y = legendTop*scale;
 		w.DrawRect(int(leg_x), int(leg_y), scale*legendWidth, scale*legendHeight, legendBackColor);
 		
-		int nr = GetCatCount();
 		int dly = scale*legendHeight/nr;
 		for(int i = 0; i < nr; i++) {
-			int fh = scale*(legendFont.GetHeight()-3);
-			w.DrawRect(int(leg_x) + 2*scale, int(leg_y) + i*dly + int(dly/2.) - fh/2, fh, fh, vColors[i]);
-			Upp::Font scaledFont;
-			scaledFont.Height(scale*legendFont.GetHeight());
-			scaledFont.Width(scale*legendFont.GetWidth());
+			w.DrawRect(int(leg_x) + 2*scale, int(leg_y + i*dly + dly/2. - fh/2.), fh, fh, vColors[i]);
 			w.DrawText(int(leg_x) + fround(1.8*fh), int(leg_y) + i*dly + int((dly - scaledFont.GetLineHeight())/2),
 						vNames[i], scaledFont, legendTextColor);
 		}
@@ -203,8 +209,8 @@ Image PieDraw::GetImage(int scale) {
 PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)), titleColor(Black), titlePos(TOP), 
 					titleGap(2), showPercent(true), percentBack(Null),
 					legendFont(StdFont()), legendTextColor(Black), legendBackColor(Null),
-					showLegend(true), legendLeft(10), legendTop(Null), legendWidth(60), 
-					legendHeight(120), pieAngle(0), pieMarginLeft(40), pieMarginTop(40), 
+					showLegend(true), legendLeft(10), legendTop(Null), pieAngle(0), 
+					pieMarginLeft(40), pieMarginTop(40), 
 					pieMarginRight(40), pieMarginBottom(40)
 {}
 

@@ -42,7 +42,8 @@ public:
 	virtual double IsSortedX() 			{return IsSorted(&DataSource::x);}	
 	
 	virtual double AvgY() 				{return Avg(&DataSource::y);}		
-	virtual double AvgX() 				{return Avg(&DataSource::x);}		
+	virtual double AvgX() 				{return Avg(&DataSource::x);}	
+	virtual double RMSY() 				{return RMS(&DataSource::y);}			
 	virtual double StdDevY(double avg = Null) 	{return StdDev(&DataSource::y, avg);}	
 	virtual double VarianceY(double avg = Null) {return Variance(&DataSource::y, avg);}	
 	virtual Vector<int64> UpperEnvelopeY(double width) 	{return UpperEnvelope(&DataSource::y, &DataSource::x, width);}	
@@ -61,6 +62,7 @@ public:
 	double Max(Getdatafun getdata, int64& id);
 	double Avg(Getdatafun getdata);
 	double IsSorted(Getdatafun getdata);
+	double RMS(Getdatafun getdata);
 	double StdDev(Getdatafun getdata, double avg = Null);
 	double Variance(Getdatafun getdata, double avg = Null);
 	Vector<int64> UpperEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);

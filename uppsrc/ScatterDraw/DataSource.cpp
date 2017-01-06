@@ -51,6 +51,21 @@ double DataSource::Avg(Getdatafun getdata) {
 	return ret/count;
 }
 
+double DataSource::RMS(Getdatafun getdata) {
+	double ret = 0;
+	int count = 0;
+	for (int64 i = 0; i < GetCount(); ++i) {
+		double d = Membercall(getdata)(i);
+		if (!IsNull(d)) {
+			ret += d*d;
+			count++;
+		}
+	}
+	if (count == 0) 
+		return Null;
+	return sqrt(ret/count);
+}
+
 double DataSource::IsSorted(Getdatafun getdata) {
 	int64 num = GetCount();
 	if (num == 0)
