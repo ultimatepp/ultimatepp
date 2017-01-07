@@ -18,7 +18,7 @@ Array<Example>& Examples()
 {
 	static Array<Example> x;
 	return x;
-};
+}
 
 void RegisterExample(const char *name, ScatterDemo* (*ctrl)(), String fileName)
 {
