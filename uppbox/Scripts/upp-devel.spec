@@ -21,30 +21,30 @@ URL:		http://www.ultimatepp.org
 Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gtk2-devel gnome-shell
+Buildrequires:	gtk2-devel gnome-shell libnotify-devel
 
 # Mandriva specific Buildrequires
 %if 0%{?mandriva_version}
-Buildrequires:	clang
+Buildrequires:	clang X11-devel bzip2-devel
 
 # OpenSuse specific Buildrequires
 %else
 %if 0%{?suse_version}
-Buildrequires:	clang patch make
+Buildrequires:	clang patch make xorg-x11-devel libbz2-devel
 
 # Redhat specific Buildrequires
 %else
 %if 0%{?rhel_version}
-Buildrequires:	clang
+Buildrequires:	clang bzip2-devel
 
 # Fedora specific Buildrequires
 %else
 %if 0%{?fedora_version}
-Buildrequires:	gcc gcc-c++ fedora-logos
+Buildrequires:	gcc gcc-c++ xorg-x11-server-devel fedora-logos bzip2-devel
 
 # Other rpm based distro specific Buildrequires
 %else
-Buildrequires:	clang
+Buildrequires:	clang xorg-x11-server-devel bzip2-devel
 
 %endif
 %endif
@@ -52,30 +52,30 @@ Buildrequires:	clang
 %endif
 
 # -----
-Requires:	gtk2-devel
+Requires:	gtk2-devel libnotify-devel
 Requires:	valgrind xterm
 
 # Mandriva specific Requires
 %if 0%{?mandriva_version}
-Requires:	clang
+Requires:	clang X11-devel bzip2-devel
 
 # OpenSuse specific Requires
 %else
 %if 0%{?suse_version}
-Requires:	clang patch make
+Requires:	clang patch make xorg-x11-devel libbz2-devel
 
 %else
 %if 0%{?rhel_version}
-Requires:	clang
+Requires:	clang bzip2-devel
 
 # Fedora specific Requires
 %else
 %if 0%{?fedora_version}
-Requires:	gcc gcc-c++ fedora-logos
+Requires:	gcc gcc-c++ xorg-x11-server-devel fedora-logos bzip2-devel
 
 # Other rpm based distro specific Requires
 %else
-Requires:	clang
+Requires:	clang xorg-x11-server-devel bzip2-devel
 
 %endif
 %endif
@@ -105,8 +105,8 @@ to C++ programming. It provides:
 # ----
 %build
 
-sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0)@g" uppsrc/Makefile.in > uppsrc/Makefile
-sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0)@g" uppsrc/uMakefile.in > uppsrc/uMakefile
+sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify bzip2 x11)@g" uppsrc/Makefile.in > uppsrc/Makefile
+sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify bzip2 x11)@g" uppsrc/uMakefile.in > uppsrc/uMakefile
 
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
@@ -114,26 +114,11 @@ then
   sed -i -e s/-ldl//g uppsrc/uMakefile
 fi
 
-if [ "%{?_smp_mflags}" != "-j1" ]
-then
 make prepare \
      -C uppsrc \
      -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/ide.out" \
-%if ! 0%{?fedora_version}
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
-fi
-
-make %{?_smp_mflags} \
-     -C uppsrc \
-     -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
 %if ! 0%{?fedora_version}
@@ -141,33 +126,41 @@ make %{?_smp_mflags} \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
 
-if [ "%{?_smp_mflags}" != "-j1" ]
-then
+make %{?_smp_mflags} \
+     -C uppsrc \
+     -f Makefile \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
+     -e UPPOUT="$PWD/out/" \
+     -e OutFile="$PWD/out/ide.out" \
+%if ! 0%{?fedora_version}
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+%endif
+
 make prepare \
      -C uppsrc \
      -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
 %if ! 0%{?fedora_version}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
-fi
 
 make %{?_smp_mflags} \
      -C uppsrc \
      -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
 %if ! 0%{?fedora_version}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
-
 
 
 #-------
@@ -199,15 +192,14 @@ cp -p *.scd %{buildroot}/%{_datadir}/%{project_name}/
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{project_name}/
 
-INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-LINK=""
+INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 libnotify bzip2 x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 
-#%if 0%{?fedora_version}
-#     LINK="$(pkg-config --libs libpng freetype2)"
-#%else
-#     LINK=""
-#%endif
+%if 0%{?fedora_version}
+     LINK="$(pkg-config --libs libpng freetype2)"
+%else
+     LINK=""
+%endif
 
 cat > %{buildroot}/%{_datadir}/%{project_name}/GCC.bm << EOF
 BUILDER			= "GCC";
