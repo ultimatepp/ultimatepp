@@ -9,7 +9,7 @@
 
 namespace Upp {
 
-bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled = false);
+bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate<int, int> progress_canceled = Null);
 
 class ODBCConnection;
 

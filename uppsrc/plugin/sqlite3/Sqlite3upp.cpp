@@ -535,7 +535,7 @@ const char *Sqlite3ReadString(const char *s, String& stmt) {
 	return s;
 }
 
-bool Sqlite3PerformScript(const String& txt, StatementExecutor& se, Gate2<int, int> progress_canceled) {
+bool Sqlite3PerformScript(const String& txt, StatementExecutor& se, Gate<int, int> progress_canceled) {
 	const char *text = txt;
 	for(;;) {
 		String stmt;
