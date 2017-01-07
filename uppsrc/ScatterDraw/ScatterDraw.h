@@ -361,26 +361,26 @@ public:
 	
 	ScatterDraw &PlotStyle()								{return PlotStyle(0);};
 	template <class C>
-	ScatterDraw &PlotStyle()								{return PlotStyle(new C());};
+	ScatterDraw &PlotStyle()								{return PlotStyle(new C());}
 	template <class C, class T1>
-	ScatterDraw &PlotStyle(T1 arg1)							{return PlotStyle(new C(arg1));};
+	ScatterDraw &PlotStyle(T1 arg1)							{return PlotStyle(new C(arg1));}
 	template <class C, class T1, class T2>
-	ScatterDraw &PlotStyle(T1 arg1, T2 arg2)				{return PlotStyle(new C(arg1, arg2));};
+	ScatterDraw &PlotStyle(T1 arg1, T2 arg2)				{return PlotStyle(new C(arg1, arg2));}
 	template <class C, class T1, class T2, class T3>
-	ScatterDraw &PlotStyle(T1 arg1, T2 arg2, T3 arg3)		{return PlotStyle(new C(arg1, arg2, arg3));};			
+	ScatterDraw &PlotStyle(T1 arg1, T2 arg2, T3 arg3)		{return PlotStyle(new C(arg1, arg2, arg3));}		
 	ScatterDraw &PlotStyle(SeriesPlot *data);
 	
 	ScatterDraw &NoPlot()	{return PlotStyle();};
 
-	ScatterDraw &MarkStyle()								{return MarkStyle(0);};
+	ScatterDraw &MarkStyle()								{return MarkStyle(0);}
 	template <class C>
-	ScatterDraw &MarkStyle()								{return MarkStyle(new C());};
+	ScatterDraw &MarkStyle()								{return MarkStyle(new C());}
 	template <class C, class T1>
-	ScatterDraw &MarkStyle(T1 arg1)							{return MarkStyle(new C(arg1));};
+	ScatterDraw &MarkStyle(T1 arg1)							{return MarkStyle(new C(arg1));}
 	template <class C, class T1, class T2>
-	ScatterDraw &MarkStyle(T1 arg1, T2 arg2)				{return MarkStyle(new C(arg1, arg2));};
+	ScatterDraw &MarkStyle(T1 arg1, T2 arg2)				{return MarkStyle(new C(arg1, arg2));}
 	template <class C, class T1, class T2, class T3>
-	ScatterDraw &MarkStyle(T1 arg1, T2 arg2, T3 arg3)		{return MarkStyle(new C(arg1, arg2, arg3));};			
+	ScatterDraw &MarkStyle(T1 arg1, T2 arg2, T3 arg3)		{return MarkStyle(new C(arg1, arg2, arg3));}		
 	
 	ScatterDraw &MarkStyle(MarkPlot *data);
 	ScatterDraw &MarkStyle(int index, MarkPlot *data);
