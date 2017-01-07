@@ -1,6 +1,10 @@
 #include "Builders.h"
 #include "AndroidBuilder.h"
 
+#define METHOD_NAME       "AndroidBuilder::" + String(__FUNCTION__) + "(): "
+#define ERROR_METHOD_NAME "[ERROR] " METHOD_NAME
+#define INFO_METHOD_NAME  "[INFO] " METHOD_NAME
+
 const String AndroidBuilder::RES_PKG_FLAG = "ANDROID_RESOURCES_PACKAGE";
 
 Index<String> AndroidBuilder::GetBuildersNames()
@@ -40,6 +44,7 @@ bool AndroidBuilder::BuildPackage(
 	
 	const bool isMainPackage = HasFlag("MAIN");
 	const bool isResourcesPackage = HasFlag(RES_PKG_FLAG);
+	const bool isBlitz = HasFlag("BLITZ") && ndk_blitz;
 	String uppManifestPath = PackagePath(package);
 	String packageDir = GetFileFolder(uppManifestPath);
 	String assemblyDir = AndroidBuilderUtils::GetAssemblyDir(packageDir, package);
@@ -50,24 +55,18 @@ bool AndroidBuilder::BuildPackage(
 	Package pkg;
 	pkg.Load(uppManifestPath);
 	
-	Vector<String> javaSourceFiles;
-	Vector<String> nativeFiles;
-	Vector<String> nativeSourceFiles;
-	Vector<String> nativeSourceFilesInPackage;
-	Vector<String> nativeSourceFilesOptions;
+	Vector<String> javaFiles;
+	Vector<String> nativeSources;
+	Vector<String> nativeSourcesOptions;
 	Vector<String> nativeObjects;
 	
 	Index<String> noBlitzNativeSourceFiles;
 	
-	bool error = false;
 	String androidManifestPath;
-	
-	bool isBlitz = HasFlag("BLITZ") && ndk_blitz;
 	
 	String javaSourcesDir    = project->GetJavaDir();
 	String jniSourcesDir     = project->GetJniDir();
 	String pkgJavaSourcesDir = javaSourcesDir + DIR_SEPS + package;
-	String pkgJniSourcesDir  = jniSourcesDir + DIR_SEPS + package;
 	for(int i = 0; i < pkg.GetCount(); i++) {
 		if(!IdeIsBuilding())
 			return false;
@@ -77,58 +76,42 @@ bool AndroidBuilder::BuildPackage(
 		String globalOptions = Gather(pkg[i].option, config.GetKeys());
 		
 		String filePath       = SourcePath(package, pkg[i]);
-		String fileExt        = ToLower(GetFileExt(filePath));
 		String fileName       = NormalizePathSeparator(pkg[i]);
 		String packageFile    = AppendFileName(package, fileName);
 		String packageFileDir = GetFileFolder(packageFile);
-		
 		if(isResourcesPackage) {
 			if(packageFileDir.Find(package + DIR_SEPS) != -1)
 				packageFileDir.Remove(0, String(package + DIR_SEPS).GetCount());
-			String filePathInAndroidProject = GetFilePathInAndroidProject(project->GetResDir(),
-			                                                              packageFileDir,
-			                                                              fileName);
+			String filePathInAndroidProject
+				= GetFilePathInAndroidProject(project->GetResDir(), packageFileDir, fileName);
 			
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
-				error = true;
+				return false;
 		}
 		else
-		if(fileExt == ".java") {
-			String filePathInAndroidProject = GetFilePathInAndroidProject(javaSourcesDir,
-			                                                              packageFileDir,
-			                                                              fileName);
+		if(AndroidBuilderUtils::IsJavaFile(filePath)) {
+			String filePathInAndroidProject
+				= GetFilePathInAndroidProject(javaSourcesDir, packageFileDir, fileName);
 			
 			if(!RealizePackageJavaSourcesDirectory(package))
 				return false;
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
 				return false;
 			
-			javaSourceFiles.Add(filePathInAndroidProject);
+			javaFiles.Add(filePathInAndroidProject);
 		}
 		else
-		if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
-		   fileExt == ".c"    ||
-		   fileExt == ".i"    || fileExt == ".t") {
-			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir,
-			                                                              packageFileDir,
-			                                                              fileName);
-			
-			nativeFiles.Add(filePathInAndroidProject);
-			nativeSourceFilesOptions.Add(globalOptions);
+		if(AndroidBuilderUtils::IsCppOrCFile(filePath)) {
+			nativeSourcesOptions.Add(globalOptions);
 			if(pkg[i].noblitz)
 				noBlitzNativeSourceFiles.Add(packageFile);
 			
-			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
-				return false;
-			
-			if(fileExt == ".icpp" || fileExt == ".cpp" || fileExt == ".cxx" ||
-			   fileExt == ".c") {
-				nativeSourceFiles.Add(filePathInAndroidProject);
-				nativeSourceFilesInPackage.Add(NormalizePathSeparator(packageFile));
+			if(AndroidBuilderUtils::IsCppOrCFile(filePath)) {
+				nativeSources.Add(NormalizePathSeparator(filePath));
 			}
 		}
 		else
-		if(fileExt == ".xml") {
+		if(AndroidBuilderUtils::IsXmlFile(filePath)) {
 			if(isMainPackage && fileName == "AndroidManifest.xml") {
 				if(androidManifestPath.GetCount()) {
 					PutConsole("AndroidManifest.xml is duplicated.");
@@ -142,7 +125,7 @@ bool AndroidBuilder::BuildPackage(
 			}
 		}
 		else
-		if(fileExt == ".o") {
+		if(AndroidBuilderUtils::IsObjectFile(filePath)) {
 			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir, packageFileDir, fileName);
 			
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
@@ -157,66 +140,59 @@ bool AndroidBuilder::BuildPackage(
 		return false;
 	}
 	
-	DeleteUnusedSourceFiles(pkgJavaSourcesDir, javaSourceFiles, ".java");
-	DeleteUnusedSourceFiles(pkgJniSourcesDir,
-	                        nativeFiles,
-	                        ".icpp, .cpp, .cxx, .c, .hpp, .hxx, .h, .i, .t",
-	                        "@blitz.cpp");
-	
-	if(!isResourcesPackage && !error && !javaSourceFiles.IsEmpty()) {
+	DeleteUnusedSourceFiles(pkgJavaSourcesDir, javaFiles, ".java");
+	if(!isResourcesPackage && !javaFiles.IsEmpty()) {
 		if(!RealizeDirectory(project->GetClassesDir()))
 			return false;
 				
-		linkfile.Add(commands->PreperCompileJavaSourcesCommand(javaSourceFiles));
+		linkfile.Add(commands->PreperCompileJavaSourcesCommand(javaFiles));
 	}
 	
-	if(!isResourcesPackage && !error && !nativeSourceFiles.IsEmpty()) {
-		if(isBlitz) {
-			BlitzBuilderComponent bc(this);
-			Blitz blitz = bc.MakeBlitzStep(nativeSourceFilesInPackage,
-			                               nativeSourceFilesOptions,
-			                               nativeObjects,
-			                               immfile,
-			                               ".o",
-			                               noBlitzNativeSourceFiles);
-			
-			String destinationFileName = GetFileName(blitz.path);
-			destinationFileName.Replace("$blitz.cpp", "@blitz.cpp");
-			
-			String blitzDestinationFileInPackage;
-			blitzDestinationFileInPackage << package << DIR_SEPS;
-			blitzDestinationFileInPackage << destinationFileName;
-			
-			if(FileExists(blitz.path)) {
-				String blitzDestinationFile;
-				blitzDestinationFile << project->GetJniDir() << DIR_SEPS;
-				blitzDestinationFile << blitzDestinationFileInPackage;
-				
-				CopyFile(blitzDestinationFile, blitz.path);
-			
-				nativeSourceFilesInPackage.Clear();
-				nativeSourceFilesInPackage.Add(blitzDestinationFileInPackage);
-				for(int i = 0; i < noBlitzNativeSourceFiles.GetCount(); i++)
-					nativeSourceFilesInPackage.Add(noBlitzNativeSourceFiles[i]);
-			}
-		}
-		
-		AndroidModuleMakeFileCreator creator(config);
-		
-		creator.SetModuleName(NormalizeModuleName(package));
-		creator.AddSources(nativeSourceFilesInPackage);
-		creator.AddInclude(assemblyDir);
-		creator.AddIncludeWithSubdirs(packageDir);
-		creator.AddIncludes(pkg.uses);
-		creator.AddFlags(pkg.flag);
-		creator.AddLdLibraries(pkg.library);
-		creator.AddStaticModuleLibrary(pkg.static_library);
-		creator.AddSharedLibraries(pkg.uses);
-		
-		UpdateFile(GetModuleMakeFilePath(package), creator.Create());
+	if(isResourcesPackage || nativeSources.IsEmpty()) {
+		LOG(INFO_METHOD_NAME + "There is not native files in following package " + package + ".");
+		return true;
 	}
+	
+	if(isBlitz) {
+		BlitzBuilderComponent bc(this);
+		Blitz blitz = bc.MakeBlitzStep(
+			nativeSources, nativeSourcesOptions,
+		    nativeObjects, immfile, ".o",
+		    noBlitzNativeSourceFiles);
+		
+		String destinationFileName = GetFileName(blitz.path);
+		destinationFileName.Replace("$blitz.cpp", "@blitz.cpp");
+		
+		String blitzDestinationFileInPackage;
+		blitzDestinationFileInPackage << package << DIR_SEPS;
+		blitzDestinationFileInPackage << destinationFileName;
+		
+		if(FileExists(blitz.path)) {
+			String blitzDestinationFile;
+			blitzDestinationFile << project->GetJniDir() << DIR_SEPS;
+			blitzDestinationFile << blitzDestinationFileInPackage;
+			
+			CopyFile(blitzDestinationFile, blitz.path);
+		
+			nativeSources.Clear();
+			nativeSources.Add(blitzDestinationFileInPackage);
+			for(int i = 0; i < noBlitzNativeSourceFiles.GetCount(); i++)
+				nativeSources.Add(noBlitzNativeSourceFiles[i]);
+		}
+	}
+		
+	AndroidModuleMakeFileCreator creator(config);
+	
+	creator.SetModuleName(NormalizeModuleName(package));
+	creator.AddSources(nativeSources);
+	creator.AddInclude(assemblyDir);
+	creator.AddIncludes(pkg.uses);
+	creator.AddFlags(pkg.flag);
+	creator.AddLdLibraries(pkg.library);
+	creator.AddStaticModuleLibrary(pkg.static_library);
+	creator.AddSharedLibraries(pkg.uses);
 
-	return !error;
+	return creator.Save(GetModuleMakeFilePath(package));
 }
 
 bool AndroidBuilder::Link(
@@ -337,6 +313,28 @@ bool AndroidBuilder::Preprocess(
 	return false;
 }
 
+void AndroidBuilder::AddFlags(Index<String>& cfg)
+{
+	// TODO: Blood hack - should be remove after release.
+	// Talk with Mirek how to do it well - without over engineering.
+	// U++ is not ready for full cross compilation right now.
+	
+	cfg.RemoveKey("WIN32");
+	cfg.RemoveKey("LINUX");
+	cfg.RemoveKey("POSIX");
+	cfg.RemoveKey("BSD");
+	cfg.RemoveKey("FREEBSD");
+	cfg.RemoveKey("OPENBSD");
+	cfg.RemoveKey("NETBSD");
+	cfg.RemoveKey("DRAGONFLY");
+	cfg.RemoveKey("SOLARIS");
+	cfg.RemoveKey("OSX11");
+	
+	cfg.Add("LINUX");
+	cfg.Add("POSIX");
+	cfg.Add("ANDROID");
+}
+
 void AndroidBuilder::CleanPackage(const String& package, const String& outdir)
 {
 	InitProject();
@@ -450,16 +448,19 @@ void AndroidBuilder::DeleteUnusedSourceFiles(
 
 bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const String& dst)
 {
-	if(!RealizeDirectory(GetFileDirectory(dst)))
+	String directory = GetFileDirectory(dst);
+	if(!RealizeDirectory(directory)) {
+		LOG(ERROR_METHOD_NAME + "Cannot relize following directory: \"" + directory + "\".");
 		return false;
+	}
 	
 	if(FileExists(dst)) {
 		if(GetFileTime(dst) > GetFileTime(src))
 			return true;
 	}
-	SaveFile(dst, LoadFile(src));
 	
-	return true;
+	// TODO: Generic host should return bool flag.
+	return ::SaveFile(dst, LoadFile(src));
 }
 
 bool AndroidBuilder::RealizePackageJavaSourcesDirectory(const String& packageName)
@@ -840,7 +841,7 @@ String AndroidBuilder::NormalizeModuleName(String moduleName) const
 	return moduleName;
 }
 
-String AndroidBuilder::GetModuleMakeFilePath(const String& package)
+String AndroidBuilder::GetModuleMakeFilePath(const String& package) const
 {
 	return project->GetJniDir() + DIR_SEPS + package + DIR_SEPS + "Android.mk";
 }
