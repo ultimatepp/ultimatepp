@@ -129,8 +129,8 @@ private:
 	
 public:
 	CArray(double *yData, int numData, double x0, double deltaX) : yData(yData), numData(numData), x0(x0), deltaX(deltaX) {xData = NULL;}
-	CArray(double *yData, double *xData, int numData) : xData(xData), yData(yData), numData(numData) {zData = NULL; x0 = deltaX = 0;}
-	CArray(double *yData, double *xData, double *zData, int numData) : xData(xData), yData(yData), zData(zData), numData(numData) {x0 = deltaX = 0;}
+	CArray(double *yData, double *xData, int numData) : yData(yData), xData(xData), numData(numData) {zData = NULL; x0 = deltaX = 0;}
+	CArray(double *yData, double *xData, double *zData, int numData) : yData(yData), xData(xData), zData(zData), numData(numData) {x0 = deltaX = 0;}
 	virtual inline double y(int64 id) 	{return yData[ptrdiff_t(id)];}
 	virtual inline double x(int64 id) 	{return xData ? xData[ptrdiff_t(id)] : id*deltaX + x0;}
 	virtual double znFixed(int n, int64 id); 
@@ -238,7 +238,7 @@ public:
 		return useRows ? (*data)[beginData + int(id)][idsy[n]] : (*data)[idsy[n]][beginData + int(id)];
 	}
 	virtual double znFixed(int n, int64 id)	{return useRows ? (*data)[beginData + int(id)][idsFixed[n]] : (*data)[idsFixed[n]][beginData + int(id)];}
-	virtual int GetznxCount()			{return idsx.GetCount();}
+	int GetznxCount()						{return idsx.GetCount();}
 	virtual int GetznyCount(int64 id) {
 		if (!IsNull(idy) && idy < 0) 
 			return (useRows ? (*data)[beginData + int(id)].GetCount() : (*data).GetCount()) + idy;
