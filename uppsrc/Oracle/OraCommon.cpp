@@ -190,7 +190,7 @@ static bool scmpw(const byte *s, const char *w) {
 	}
 }
 
-bool OraclePerformScript(const String& text, StatementExecutor& exe, Gate2<int, int> progress_canceled)
+bool OraclePerformScript(const String& text, StatementExecutor& exe, Gate<int, int> progress_canceled)
 {
 	bool error = false;
 	String statement;
