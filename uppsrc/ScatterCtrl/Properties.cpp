@@ -177,6 +177,8 @@ void LegendTab::Change()
         legendTableAnchor = ScatterDraw::LEGEND_ANCHOR_LEFT_BOTTOM;
     else if (legendAnchorRB)
         legendTableAnchor = ScatterDraw::LEGEND_ANCHOR_RIGHT_BOTTOM;
+    else
+        NEVER();
     scatter.SetLegendAnchor(legendTableAnchor);
     bool enable = (legendPosition != 0);
 	table.Enable(enable);    
@@ -959,8 +961,6 @@ void ProcessingTab::OnFFT()
 		resampledSeries << orderedSeries[0].y;
 		double nextSample = orderedSeries[0].x + samplingTime;
 		for (int i = 0; i < orderedSeries.GetCount() - 1;) {
-			double x0 = orderedSeries[i].x;
-			double x1 = orderedSeries[i + 1].x;
 			if (orderedSeries[i].x == nextSample) {
 				resampledSeries << orderedSeries[i].y;
 				nextSample += samplingTime;
