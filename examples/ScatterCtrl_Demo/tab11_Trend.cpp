@@ -45,7 +45,7 @@ void Tab11_Trend::OnSeries() {
 		sin.Fit(vs1, s_r2);	
 		
 		scatter.AddSeries(s1x, s1y).Legend("Series 1").MarkStyle<RhombMarkPlot>().MarkWidth(10).NoPlot();
-	} else if (seriesList == "Series 2") {
+	} else /*if (seriesList == "Series 2")*/ {
 		s2x.Clear();
 		s2y.Clear();
 		s2y << -0.9 << -1.1	<< 2.8 << -3.4 << 2.7 << -0.9 << -1.1 << 2.8 << -3.4 << 2.7 << -0.9 << -1.1 << 2.8 << -3.4 << 2.7 << -0.7 << -1.2;
