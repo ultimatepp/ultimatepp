@@ -31,24 +31,24 @@ public:
 	
 	void SetJdk(One<Jdk> jdk);
 	
-	virtual String GetTargetExt() const override;
-	virtual bool BuildPackage(
+	String GetTargetExt() const override;
+	bool BuildPackage(
 		const String& packageName,
 		Vector<String>& linkfile,
 		Vector<String>& immfile,
 		String& linkoptions,
 		const Vector<String>& all_uses,
 		const Vector<String>& all_libraries,
-	int optimize) override;
-	virtual bool Link(
-		const Vector<String>& linkfile, const String& linkoptions, bool createmap) override;
-	virtual bool Preprocess(
+		int optimize) override;
+	bool Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap) override;
+	bool Preprocess(
 		const String& package,
 		const String& file,
 		const String& target,
 		bool asmout) override;
-	virtual void CleanPackage(const String& package, const String& outdir) override;
-	virtual void AfterClean() override;
+	void AddFlags(Index<String>& cfg) override;
+	void CleanPackage(const String& package, const String& outdir) override;
+	void AfterClean() override;
 	
 protected:
 	void ManageProjectCohesion();
@@ -88,7 +88,7 @@ protected:
 	String RemoveDirNameFromFileName(String fileName) const;
 	String NormalizeModuleName(String moduleName) const;
 	
-	String GetModuleMakeFilePath(const String& packageName);
+	String GetModuleMakeFilePath(const String& package) const;
 		
 private:
 	void   InitProject();
@@ -127,8 +127,25 @@ public:
 	AndroidBuilderUtils& operator=(AndroidBuilderUtils&) = delete;
 	~AndroidBuilderUtils() = delete;
 	
+	// TODO: Core should support creating symbolic link - not builder...
+	static bool CreateSymlink(const String& symbolicLink, const String& target);
+	
 	static String GetAssemblyDir(const String& package);
 	static String GetAssemblyDir(const String& packageDir, const String& package);
+	
+	static bool IsJavaFile(const String& path);
+	static bool IsHeaderFile(const String& path);
+	static bool IsCFile(const String& path);
+	static bool IsCppFile(const String& path);
+	static bool IsCppOrCFile(const String& path);
+	static bool IsObjectFile(const String& path);
+	static bool IsXmlFile(const String& path);
+	
+	static bool IsTranslationFile(const String& path);
+	
+private:
+	static bool   HasExt(const String& path, const Index<String>& exts);
+	static String NormalizeAndGetFileExt(const String& path);
 };
 
 class AndroidModuleMakeFileCreator {
@@ -140,7 +157,6 @@ public:
 
 	void AddSources(Vector<String>& sources);
 	void AddInclude(const String& path);
-	void AddIncludeWithSubdirs(const String& path);
 	
 	void AddIncludes(const Array<OptItem>& uses);
 	void AddFlags(const Array<OptItem>& flags);
@@ -148,6 +164,7 @@ public:
 	void AddStaticModuleLibrary(Array<OptItem>& staticLibraries);
 	void AddSharedLibraries(const Array<OptItem>& uses);
 	
+	bool   Save(const String& path);
 	String Create() { return makeFile.ToString(); }
 	
 private:

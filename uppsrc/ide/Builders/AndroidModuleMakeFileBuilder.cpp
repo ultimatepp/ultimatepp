@@ -1,5 +1,9 @@
 #include "AndroidBuilder.h"
 
+#define METHOD_NAME       "AndroidModuleMakeFileCreator::" + String(__FUNCTION__) + "(): "
+#define ERROR_METHOD_NAME "[ERROR] " METHOD_NAME
+#define INFO_METHOD_NAME  "[INFO] "  METHOD_NAME
+
 namespace Upp {
 
 AndroidModuleMakeFileCreator::AndroidModuleMakeFileCreator(const Index<String>& builderConfig)
@@ -17,28 +21,6 @@ void AndroidModuleMakeFileCreator::AddSources(Vector<String>& sources)
 void AndroidModuleMakeFileCreator::AddInclude(const String& path)
 {
 	makeFile.AddInclude(path);
-}
-
-void AndroidModuleMakeFileCreator::AddIncludeWithSubdirs(const String& path)
-{
-	BiVector<String> dirs { path };
-	while(!dirs.IsEmpty()) {
-		for(FindFile ff(AppendFileName(dirs.Head(), "*")); ff; ff.Next()) {
-			if(ff.IsHidden() || ff.IsSymLink() || !ff.IsFolder()) {
-				continue;
-			}
-			
-			String name = ff.GetName();
-			if (name.EndsWith(".tpp")) {
-				continue;
-			}
-				
-			dirs.AddTail(ff.GetPath());
-		}
-		
-		AddInclude(dirs.Head());
-		dirs.DropHead();
-	}
 }
 
 void AndroidModuleMakeFileCreator::AddIncludes(const Array<OptItem>& uses)
@@ -76,6 +58,28 @@ void AndroidModuleMakeFileCreator::AddSharedLibraries(const Array<OptItem>& uses
 	for(const OptItem& use : uses) {
 		makeFile.AddSharedLibrary(use.text);
 	}
+}
+
+bool AndroidModuleMakeFileCreator::Save(const String& path)
+{
+	String directory = GetFileDirectory(path);
+	if (!RealizeDirectory(directory)) {
+		LOG(ERROR_METHOD_NAME + "Creating module directory failed \"" + directory + "\".");
+		return false;
+	}
+	
+	String data = Create();
+	if (FileExists(path) && LoadFile(path) == data) {
+		LOG(INFO_METHOD_NAME + "Following file \"" + path + "\" content is the same as previous one.");
+		return true;
+	}
+	
+	if (!SaveFile(path, Create())) {
+		LOG(ERROR_METHOD_NAME + "Saving module file failed \"" + path + "\".");
+		return false;
+	}
+	
+	return true;
 }
 
 }
