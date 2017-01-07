@@ -21,30 +21,30 @@ URL:		http://www.ultimatepp.org
 Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.tar.gz
 
 # Common Buildrequires
-Buildrequires:	gtk2-devel pango-devel atk-devel cairo-devel gnome-shell libnotify-devel
+Buildrequires:	gtk2-devel gnome-shell
 
 # Mandriva specific Buildrequires
 %if 0%{?mandriva_version}
-Buildrequires:	clang X11-devel freetype2-devel expat-devel bzip2-devel
+Buildrequires:	clang
 
 # OpenSuse specific Buildrequires
 %else
 %if 0%{?suse_version}
-Buildrequires:	clang patch make xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+Buildrequires:	clang patch make
 
 # Redhat specific Buildrequires
 %else
 %if 0%{?rhel_version}
-Buildrequires:	clang freetype-devel expat-devel bzip2-devel
+Buildrequires:	clang
 
 # Fedora specific Buildrequires
 %else
 %if 0%{?fedora_version}
-Buildrequires:	gcc gcc-c++ xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
+Buildrequires:	gcc gcc-c++ fedora-logos
 
 # Other rpm based distro specific Buildrequires
 %else
-Buildrequires:	clang xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+Buildrequires:	clang
 
 %endif
 %endif
@@ -52,30 +52,30 @@ Buildrequires:	clang xorg-x11-server-devel freetype-devel expat-devel bzip2-deve
 %endif
 
 # -----
-Requires:	gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel
+Requires:	gtk2-devel
 Requires:	valgrind xterm
 
 # Mandriva specific Requires
 %if 0%{?mandriva_version}
-Requires:	clang X11-devel freetype2-devel expat-devel bzip2-devel
+Requires:	clang
 
 # OpenSuse specific Requires
 %else
 %if 0%{?suse_version}
-Requires:	clang xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
+Requires:	clang patch make
 
 %else
 %if 0%{?rhel_version}
-Requires:	clang freetype-devel expat-devel bzip2-devel
+Requires:	clang
 
 # Fedora specific Requires
 %else
 %if 0%{?fedora_version}
-Requires:	gcc gcc-c++ xorg-x11-server-devel freetype-devel expat-devel bzip2-devel fedora-logos
+Requires:	gcc gcc-c++ fedora-logos
 
 # Other rpm based distro specific Requires
 %else
-Requires:	clang xorg-x11-server-devel freetype-devel expat-devel bzip2-devel
+Requires:	clang
 
 %endif
 %endif
@@ -105,36 +105,69 @@ to C++ programming. It provides:
 # ----
 %build
 
-sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in > uppsrc/Makefile
-sed -e "s@-I((INCLUDES))@@g" uppsrc/uMakefile.in > uppsrc/uMakefile
+sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0)@g" uppsrc/Makefile.in > uppsrc/Makefile
+sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0)@g" uppsrc/uMakefile.in > uppsrc/uMakefile
+
+if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
+then
+  sed -i -e s/-ldl//g uppsrc/Makefile
+  sed -i -e s/-ldl//g uppsrc/uMakefile
+fi
+
+if [ "%{?_smp_mflags}" != "-j1" ]
+then
+make prepare \
+     -C uppsrc \
+     -f Makefile \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
+     -e UPPOUT="$PWD/out/" \
+     -e OutFile="$PWD/out/ide.out" \
+%if ! 0%{?fedora_version}
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+%endif
+fi
 
 make %{?_smp_mflags} \
      -C uppsrc \
      -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
-     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if 0%{?fedora_version}
-     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
-%else
+%if ! 0%{?fedora_version}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
 
-make %{?_smp_mflags} \
+if [ "%{?_smp_mflags}" != "-j1" ]
+then
+make prepare \
      -C uppsrc \
      -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk) \
-     -e CINC=" -I. $(pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
-%if 0%{?fedora_version}
-     -e LINKOPTIONS="$(pkg-config --libs libpng freetype2) "
-%else
+%if ! 0%{?fedora_version}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
+fi
+
+make %{?_smp_mflags} \
+     -C uppsrc \
+     -f uMakefile \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0)"  \
+     -e UPPOUT="$PWD/out/" \
+     -e OutFile="$PWD/out/umk.out" \
+%if ! 0%{?fedora_version}
+     -e CXX="clang++" \
+     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+%endif
+
 
 
 #-------
@@ -166,14 +199,15 @@ cp -p *.scd %{buildroot}/%{_datadir}/%{project_name}/
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{project_name}/
 
-INCLUDEDIR=$( pkg-config --cflags x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-LIBDIR=$( pkg-config --libs-only-L x11 freetype2 gtk+-2.0 glib-2.0 cairo pango atk | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+LINK=""
 
-%if 0%{?fedora_version}
-     LINK="$(pkg-config --libs libpng freetype2)"
-%else
-     LINK=""
-%endif
+#%if 0%{?fedora_version}
+#     LINK="$(pkg-config --libs libpng freetype2)"
+#%else
+#     LINK=""
+#%endif
 
 cat > %{buildroot}/%{_datadir}/%{project_name}/GCC.bm << EOF
 BUILDER			= "GCC";
