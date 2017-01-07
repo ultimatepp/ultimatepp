@@ -80,7 +80,7 @@ void LocalHost::RealizeDir(const String& path)
 		DoDir(path);
 }
 
-void    LocalHost::SaveFile(const String& path, const String& data)
+void LocalHost::SaveFile(const String& path, const String& data)
 {
 	::SaveFile(path, data);
 }

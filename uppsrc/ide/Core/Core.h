@@ -434,8 +434,8 @@ struct Builder {
 	{ return false; }
 	virtual void CleanPackage(const String& package, const String& outdir) {}
 	virtual void AfterClean() {}
-	virtual void   AddFlags(Index<String>& cfg) {}
-	virtual void   AddMakeFile(MakeFile& mfinfo, String package,
+	virtual void AddFlags(Index<String>& cfg) {}
+	virtual void AddMakeFile(MakeFile& mfinfo, String package,
 		const Vector<String>& all_uses, const Vector<String>& all_libraries,
 		const Index<String>& common_config, bool exporting) {}
 	virtual String GetTargetExt() const = 0;
