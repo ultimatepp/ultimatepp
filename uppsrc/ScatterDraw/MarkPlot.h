@@ -18,7 +18,6 @@ public:
 	template<class T>
 	static void Register(const String& name)
 	{
-		int id = classMap().FindAdd(name, __Create<T>);
 		typeMap().FindAdd(typeid(T).name(), name);
 		T dummy;
 		typeNumber().Add(dummy.GetTypeCount());
