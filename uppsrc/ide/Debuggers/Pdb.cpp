@@ -25,7 +25,7 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_RUNTO, DbgImg::RunTo(), THISBACK(DoRunTo));
 	bar.Add(b, AK_RUN, DbgImg::Run(), THISBACK(Run));
 	bar.Add(b, AK_SETIP, DbgImg::SetIp(), THISBACK(SetIp));
-	bar.Add(!b, AK_STOP, DbgImg::Stop(), THISBACK(BreakRunning));
+	bar.Add(!b, AK_BREAK, DbgImg::Stop(), THISBACK(BreakRunning));
 	bar.MenuSeparator();
 	bar.Add(b, AK_AUTOS, THISBACK1(SetTab, 0));
 	bar.Add(b, AK_LOCALS, THISBACK1(SetTab, 1));
