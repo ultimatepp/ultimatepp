@@ -264,7 +264,7 @@ String ODBCSession::EnumRowID(String database, String table)
 	return "";
 }
 
-bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate2<int, int> progress_canceled)
+bool   ODBCPerformScript(const String& text, StatementExecutor& executor, Gate<int, int> progress_canceled)
 {
 	const char *p = text;
 	while(*p) {
