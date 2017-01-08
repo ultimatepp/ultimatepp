@@ -19,6 +19,7 @@ License:	BSD-2-Clause
 Group:		Development/Tools
 URL:		http://www.ultimatepp.org
 Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.tar.gz
+Obsoletes:	upp
 
 # Common BuildRequires
 BuildRequires:	gtk2-devel gnome-shell libnotify-devel
