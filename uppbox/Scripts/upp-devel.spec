@@ -147,11 +147,13 @@ install -d %{buildroot}/%{_bindir}
 install -d %{buildroot}/%{_datadir}/applications
 install -d %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps
 install -d %{buildroot}/%{_datadir}/pixmaps
-install -d %{buildroot}/%{_datadir}/%{name}
+install -d %{buildroot}/%{_datadir}/%{project_name}
 install -d %{buildroot}/%{_mandir}/man1
 
 install out/ide.out %{buildroot}/%{_bindir}/theide
 install out/umk.out %{buildroot}/%{_bindir}/umk
+
+ln -s %{_datadir}/%{project_name}  %{buildroot}/%{_datadir}/%{name}
 
 cp -p theide.1 %{buildroot}/%{_mandir}/man1/
 cp -p umk.1 %{buildroot}/%{_mandir}/man1/
