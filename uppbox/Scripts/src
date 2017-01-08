@@ -11,7 +11,7 @@ rm ~/upp.tmp/upp/*.upp || true
 rm ~/upp.tmp/upp/*.chk || true
 rm -R ~/upp.tmp/upp/bin || true
 
-cp ~/Scripts/GCCMK.bm ~/.upp/theide
+cp -p ~/Scripts/GCCMK.bm ~/.upp/theide
 
 ~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/upp/uppsrc
 
@@ -21,16 +21,17 @@ mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/Makefile.in
 
 mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/uMakefile.in
 
-cp ~/Scripts/Makefile ~/upp.tmp/upp
-cp ~/Scripts/domake ~/upp.tmp/upp
-cp ~/Scripts/doinstall ~/upp.tmp/upp
-cp ~/Scripts/readme ~/upp.tmp/upp
-cp ~/Scripts/upp-devel.spec ~/upp.tmp/upp
-cp ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
-cp ~/Scripts/fedora ~/upp.tmp/upp/buildrequires.fedora
-
-cp ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
-cp ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
+cp -p ~/Scripts/Makefile ~/upp.tmp/upp
+cp -p ~/Scripts/domake ~/upp.tmp/upp
+cp -p ~/Scripts/doinstall ~/upp.tmp/upp
+cp -p ~/Scripts/readme ~/upp.tmp/upp
+cp -p ~/Scripts/upp-devel.spec ~/upp.tmp/upp
+cp -p ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
+cp -p ~/Scripts/fedora ~/upp.tmp/upp/buildrequires.fedora
+cp -p ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
+cp -p ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
+cp -p ~/upp.src/uppbox/lpbuild2/umk.1 ~/upp.tmp/upp/
+cp -p ~/upp.src/uppbox/lpbuild2/theide.1 ~/upp.tmp/upp/
 
 svn_snapshot_version=$(svnversion ~/upp.src)
 current_date=$(LC_TIME=En date '+%a %b %d %Y')
