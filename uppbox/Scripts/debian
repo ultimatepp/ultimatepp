@@ -1,3 +1,5 @@
+#!/bin/bash
+
 apt-get install g++
 apt-get install make
 apt-get install libgtk2.0-dev

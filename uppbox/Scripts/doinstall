@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cp ./theide ~/theide
 cp ./umk ~/umk
 
