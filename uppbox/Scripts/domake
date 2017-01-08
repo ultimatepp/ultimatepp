@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if which pkg-config
 then
 	sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
