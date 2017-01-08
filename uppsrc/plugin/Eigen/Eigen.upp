@@ -5,6 +5,8 @@ uses
 
 options(MSC) /bigobj;
 
+options(MSC) _SCL_SECURE_NO_WARNINGS;
+
 include
 	../Eigen;
 
