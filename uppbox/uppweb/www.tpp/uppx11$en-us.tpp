@@ -59,14 +59,14 @@ cairo`-devel libnotify`-devel xorg`-x11`-devel freetype2`-devel
 libexpat`-devel libbz2`-devel&]
 [s1; Compile U`+`+ source code&]
 [s2; [* Standard U`+`+ compilation]&]
-[s2; First, uncompress U`+`+ source tarball and change dir into the 
+[s2; First, uncompress U`+`+ source tarball and change dir to the 
 new created directory.&]
 [s2; Example: for upp`-x11`-src`-[* 10641].tar.gz&]
 [ {{10000@(229) [s2; version`=[* 10641]&]
 [s2; tar zxvf upp`-x11`-src`-`$version.tar.gz&]
 [s2; cd upp`-x11`-src`-`$version]}}&]
 [s2; Use `'[* make]`' to compile U`+`+ and generate [* theide] (U`+`+ 
-integrated development environment) and [* umk] (commandline tool 
+integrated development environment) and [* umk] (command line tool 
 for building U`+`+ projects) then run `'make install`' to prepare 
 standard U`+`+ environment:&]
 [ {{10000@(229) [s2; make&]
@@ -81,7 +81,7 @@ and copy the U`+`+ sources inside&]
 [s2;i150;O0; create `~/upp/MyApps to store your application sources&]
 [s2;i150;O0; create `~/upp.out as output for intermediate files&]
 [s2;i150;O0; set up a few variables in the `'`~/[* .]upp`' directory. 
-Those variables are required by umk and .theide&]
+Those variables are required by umk and theide&]
 [s1; Troubleshooting&]
 [s2; If your POSIX/X11 distribution use an old gcc version (< 4.9), 
 U`+`+ compilation will fail because of missing gcc c`+`+11 standard 
@@ -100,19 +100,20 @@ to build a standard rpm binary and source file. To do that, first
 install U`+`+ build requires and rpm`-build:&]
 [s2; [* Fedora based distributions]&]
 [s2; if sudo is available and enabled on your distribution, copy/paste 
-this in a terminal:&]
+this in a terminal (don`'t forget to modify the version number 
+accordingly):&]
 [ {{10000@(229) [s2; sudo yum install  gtk2`-devel  pango`-devel  atk`-devel  cairo`-devel 
  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel  freetype`-devel 
  expat`-devel&]
 [s2; sudo yum install  rpm`-build&]
-[s2; version`=10641&]
+[s2; version`=[* 10641]&]
 [s2; rpmbuild `-ta upp`-x11`-src`-`$version.tar.gz]}}&]
 [s2; if sudo is not available:&]
 [ {{10000@(229) [s2; su `-c `'yum install  gtk2`-devel  pango`-devel  atk`-devel 
  cairo`-devel  libnotify`-devel  bzip2`-devel xorg`-x11`-server`-devel 
  freetype`-devel  expat`-devel`'&]
 [s2; su `-c `'yum install  rpm`-build`'&]
-[s2; version`=10641&]
+[s2; version`=[* 10641]&]
 [s2; rpmbuild `-ta upp`-x11`-src`-`$version.tar.gz]}}&]
 [s2; &]
 [s0; [*2 Note :] [2 the rpm binary doesn`'t install U`+`+ source in your 
