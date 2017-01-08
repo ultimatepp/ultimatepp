@@ -60,7 +60,7 @@ OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-
 
 ### Standard U++ compilation ###
 
-First, uncompress U++ source tarball and change dir into the new created directory.
+First, uncompress U++ source tarball and change dir to the new created directory.
 
 Example: for upp-x11-src-10641.tar.gz
 ```
@@ -83,7 +83,7 @@ Note:. 'make install' copy theide and umk in your home directory but it also:
  * create ~/upp directory to store U++ library sources and copy the U++ sources inside
  * create ~/upp/MyApps to store your application sources
  * create ~/upp.out as output for intermediate files
- * set up a few variables in the '~/.upp' directory. Those variables are required by umk and .theide
+ * set up a few variables in the '~/.upp' directory. Those variables are required by umk and theide
 
 
 ## Troubleshooting ##
