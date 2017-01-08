@@ -257,6 +257,7 @@ rm -fr %{buildroot}
 %{_datadir}/pixmaps/theide.png
 %dir %{_datadir}/%{project_name}
 %{_datadir}/%{project_name}/*
+%{_datadir}/%{name}
 %{_mandir}/man1/*
 
 #---------
