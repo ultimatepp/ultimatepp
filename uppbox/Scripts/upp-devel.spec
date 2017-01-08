@@ -15,36 +15,36 @@ Summary:	%longtitle
 Name:		%project_name-devel
 Version:	%version
 Release:	%release%{?dist}
-License:	BSD
+License:	BSD-2-Clause
 Group:		Development/Tools
 URL:		http://www.ultimatepp.org
 Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.tar.gz
 
-# Common Buildrequires
-Buildrequires:	gtk2-devel gnome-shell libnotify-devel
+# Common BuildRequires
+BuildRequires:	gtk2-devel gnome-shell libnotify-devel
 
-# Mandriva specific Buildrequires
+# Mandriva specific BuildRequires
 %if 0%{?mandriva_version}
-Buildrequires:	clang X11-devel bzip2-devel
+BuildRequires:	clang X11-devel bzip2-devel
 
-# OpenSuse specific Buildrequires
+# OpenSuse specific BuildRequires
 %else
 %if 0%{?suse_version}
-Buildrequires:	clang patch make xorg-x11-devel libbz2-devel
+BuildRequires:	clang patch make xorg-x11-devel libbz2-devel
 
-# Redhat specific Buildrequires
+# Redhat specific BuildRequires
 %else
 %if 0%{?rhel_version}
-Buildrequires:	clang bzip2-devel
+BuildRequires:	clang bzip2-devel
 
-# Fedora specific Buildrequires
+# Fedora specific BuildRequires
 %else
 %if 0%{?fedora_version}
-Buildrequires:	gcc gcc-c++ xorg-x11-server-devel fedora-logos bzip2-devel
+BuildRequires:	gcc gcc-c++ xorg-x11-server-devel fedora-logos bzip2-devel
 
-# Other rpm based distro specific Buildrequires
+# Other rpm based distro specific BuildRequires
 %else
-Buildrequires:	clang xorg-x11-server-devel bzip2-devel
+BuildRequires:	clang xorg-x11-server-devel bzip2-devel
 
 %endif
 %endif
@@ -83,7 +83,7 @@ Requires:	clang xorg-x11-server-devel bzip2-devel
 %endif
 
 # -------
-Buildroot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-%{_arch}-buildroot
 
 #-----------
 %description
@@ -114,18 +114,6 @@ then
   sed -i -e s/-ldl//g uppsrc/uMakefile
 fi
 
-make prepare \
-     -C uppsrc \
-     -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/ide.out" \
-%if ! 0%{?fedora_version}
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
-
 make %{?_smp_mflags} \
      -C uppsrc \
      -f Makefile \
@@ -133,18 +121,6 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if ! 0%{?fedora_version}
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
-
-make prepare \
-     -C uppsrc \
-     -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/umk.out" \
 %if ! 0%{?fedora_version}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
@@ -161,7 +137,6 @@ make %{?_smp_mflags} \
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
-
 
 #-------
 %install
@@ -172,9 +147,13 @@ install -d %{buildroot}/%{_datadir}/applications
 install -d %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps
 install -d %{buildroot}/%{_datadir}/pixmaps
 install -d %{buildroot}/%{_datadir}/%{name}
+install -d %{buildroot}/%{_mandir}/man1
 
 install out/ide.out %{buildroot}/%{_bindir}/theide
 install out/umk.out %{buildroot}/%{_bindir}/umk
+
+cp -p theide.1 %{buildroot}/%{_mandir}/man1/
+cp -p umk.1 %{buildroot}/%{_mandir}/man1/
 
 cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_datadir}/applications/theide.desktop
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
@@ -266,8 +245,8 @@ rm -fr %{buildroot}
 #-----
 %files
 %defattr(-,root,root,-)
-# %doc COPYING README INSTALL
-%doc uppsrc/ide/Copying
+%license uppsrc/ide/Copying
+%doc readme
 %{_bindir}/theide
 %{_bindir}/umk
 %{_datadir}/applications/theide.desktop
@@ -275,6 +254,7 @@ rm -fr %{buildroot}
 %{_datadir}/pixmaps/theide.png
 %dir %{_datadir}/%{project_name}
 %{_datadir}/%{project_name}/*
+%{_mandir}/man1/*
 
 #---------
 %changelog
