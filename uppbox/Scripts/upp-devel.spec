@@ -105,8 +105,8 @@ to C++ programming. It provides:
 # ----
 %build
 
-sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify bzip2 x11)@g" uppsrc/Makefile.in > uppsrc/Makefile
-sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify bzip2 x11)@g" uppsrc/uMakefile.in > uppsrc/uMakefile
+sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify x11)@g" uppsrc/Makefile.in > uppsrc/Makefile
+sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify x11)@g" uppsrc/uMakefile.in > uppsrc/uMakefile
 
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
@@ -117,8 +117,8 @@ fi
 make %{?_smp_mflags} \
      -C uppsrc \
      -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify x11) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
 %if ! 0%{?fedora_version}
@@ -129,8 +129,8 @@ make %{?_smp_mflags} \
 make %{?_smp_mflags} \
      -C uppsrc \
      -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify bzip2 x11)"  \
+     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify x11) \
+     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
 %if ! 0%{?fedora_version}
@@ -171,8 +171,8 @@ cp -p *.scd %{buildroot}/%{_datadir}/%{project_name}/
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{project_name}/
 
-INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 libnotify bzip2 x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
-LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify bzip2 x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 libnotify x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
+LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 
 %if 0%{?fedora_version}
      LINK="$(pkg-config --libs libpng freetype2)"
