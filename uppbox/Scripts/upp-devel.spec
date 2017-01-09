@@ -155,8 +155,8 @@ install out/umk.out %{buildroot}/%{_bindir}/umk
 
 ln -s %{_datadir}/%{project_name}  %{buildroot}/%{_datadir}/%{name}
 
-cp -p theide.1 %{buildroot}/%{_mandir}/man1/
-cp -p umk.1 %{buildroot}/%{_mandir}/man1/
+cp -p uppsrc/ide/theide.1 %{buildroot}/%{_mandir}/man1/
+cp -p uppsrc/umk/umk.1 %{buildroot}/%{_mandir}/man1/
 
 cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_datadir}/applications/theide.desktop
 cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
