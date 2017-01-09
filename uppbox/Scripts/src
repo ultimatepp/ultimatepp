@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 #rm ~/upload/* || true
@@ -30,8 +32,6 @@ cp -p ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
 cp -p ~/Scripts/fedora ~/upp.tmp/upp/buildrequires.fedora
 cp -p ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
 cp -p ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
-cp -p ~/upp.src/uppbox/lpbuild2/umk.1 ~/upp.tmp/upp/
-cp -p ~/upp.src/uppbox/lpbuild2/theide.1 ~/upp.tmp/upp/
 
 svn_snapshot_version=$(svnversion ~/upp.src)
 current_date=$(LC_TIME=En date '+%a %b %d %Y')
