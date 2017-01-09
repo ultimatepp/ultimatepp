@@ -3,6 +3,10 @@
 
 #define QLIB3
 
+#ifndef flagMT
+#define flagMT // MT is now always on
+#endif
+
 #if defined(flagMT)
 	#define _MULTITHREADED
 	#define MULTITHREADED
