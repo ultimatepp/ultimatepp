@@ -825,10 +825,10 @@ void GridCtrl::Paste(int mode)
 		{
 			int pr = 0;
 			bool new_row = false;
-
+			
 			for(int i = 0; i < lines.GetCount(); i++)
 			{
-				String line = TrimRight(lines[i]);				
+				String line = TrimRight(lines[i]);
 				Vector<String> cells = Upp::Split(line, '\t', false);
 				for(int j = 0; j < cells.GetCount(); j++)
 				{
@@ -849,7 +849,7 @@ void GridCtrl::Paste(int mode)
 						rowidx = lr;
 
 						new_row = lr >= tr || mode > 0;
-
+						
 						if(fixed_paste && new_row)
 							break;
 						
@@ -2773,8 +2773,9 @@ void GridCtrl::SetFixedCols(int n)
 	}
 }
 
-void GridCtrl::Set0(int r, int c, const Value &val, bool paste)
+void GridCtrl::Set0(int r, int c, const Value &val_, bool paste)
 {
+	Value val = val_;
 	if(c > total_cols - 1)
 		return;
 	if(r > total_rows - 1)
@@ -2785,18 +2786,25 @@ void GridCtrl::Set0(int r, int c, const Value &val, bool paste)
 	int ri = vitems[r].id;
 	Item &it = items[ri][c];
 
-	if(it.isjoined)
-	{
+	if(it.isjoined) {
 		ri = it.idy;
 		c  = it.idx;
 	}
-	Ctrl * ctrl = items[ri][c].ctrl;
-	if(ctrl)
-		ctrl->SetData(val);
-	else
-	{
+
+	Ctrl *ctrl = items[ri][c].ctrl;
+	bool  setctrl = true;
+	if(!ctrl) {
 		ctrl = edits[c].ctrl;
-		if(ctrl && ctrlid.y == ri)
+		setctrl = ctrlid.y == ri;
+	}
+	
+	if(ctrl) {
+		if(paste && IsString(val)) {
+			Convert *cv = dynamic_cast<Convert *>(ctrl);
+			if(cv)
+				val = cv->Scan(val);
+		}
+		if(setctrl)
 			ctrl->SetData(val);
 	}
 
