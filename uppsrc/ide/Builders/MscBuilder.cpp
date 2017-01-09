@@ -272,8 +272,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	if(HasFlag("DEBUG_FULL"))
 		cc << " -Zi";
 	cc << ' ' << Gather(pkg.option, config.GetKeys());
-	cc << (HasFlag("SHARED") || is_shared || is_clr ? " -MD"
-	      : (HasFlag("MT") || IsMsc89()) ? " -MT" : " -ML");
+	cc << (HasFlag("SHARED") || is_shared || is_clr ? " -MD" : " -MT");
 
 	String cc_size = cc;
 	String cc_speed = cc;

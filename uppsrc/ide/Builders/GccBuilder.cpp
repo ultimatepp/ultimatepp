@@ -110,7 +110,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	}
 
 	String cc = CmdLine(package, pkg);
-	if(HasFlag("WIN32") && HasFlag("MT"))
+	if(HasFlag("WIN32")/* && HasFlag("MT")*/)
 		cc << " -mthreads";
 	if(HasFlag("DEBUG_MINIMAL"))
 		cc << (HasFlag("WIN32") ? " -g1" : " -ggdb -g1");
@@ -455,7 +455,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << " -mwindowsce";
 			else if(HasFlag("WIN32") && !HasFlag("CLANG")) {
 				lnk << " -mwindows";
-				if(HasFlag("MT"))
+				// if(HasFlag("MT"))
 					lnk << " -mthreads";
 				if(!HasFlag("GUI"))
 					lnk << " -mconsole";
