@@ -44,7 +44,7 @@ CONSOLE_APP_MAIN
 
 	ASSERT(d == d1 && rev == rev1);
 
-	GetRepoInfo("svn://www.ultimatepp.org/upp/trunk/uppsrc", d, rev);
+	GetRepoInfo("svn://www.ultimatepp.org/upp/trunk", d, rev);
 	LOG("upp.src revision: " << rev);
 	
 	String h = HttpRequest("https://github.com/ultimatepp/mirror/commits/master").Execute();
