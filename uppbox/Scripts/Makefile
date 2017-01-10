@@ -1,11 +1,20 @@
-.PHONY: all install clean
+.PHONY: all install clean distclean
+SHELL = /bin/sh
 
 all:
-	sh domake
+	+$(SHELL) domake
 
 install:
-	sh doinstall
-	
+	$(SHELL) doinstall
+
 clean:
-	rm -r uppsrc/_out
-	rm uppsrc/ide.out
+	rm -fr uppsrc/_out
+	rm -f  uppsrc/ide.out
+	rm -f  uppsrc/umk.out
+
+distclean: clean
+	rm -f GCC.bm
+	rm -f CLANG.bm
+	rm -f uppsrc/Makefile
+	rm -f uppsrc/uMakefile
+	rm -f uppsrc/build_info.h
