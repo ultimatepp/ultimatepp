@@ -308,7 +308,7 @@ void SpanFiller::Render(int val)
 	if(alpha != 256)
 		val = alpha * val >> 8;
 	AlphaBlendCover8(*t++, *s++, val);
-} 
+}
 
 void SpanFiller::Render(int val, int len)
 {
