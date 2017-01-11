@@ -14,7 +14,9 @@ show_debug_error="true"
 
 ### Constants
 
-script_name=${0^^}
+script_name=$(echo "$0" | tr '[:lower:]' '[:upper:]' )
+echo_binary=$(which echo)
+
 COLOR_NC='\e[0m' # No Color
 COLOR_BLACK='\e[0;30m'
 COLOR_BLUE='\e[0;34m'
@@ -37,7 +39,12 @@ COLOR_LIGHT_RED='\e[1;31m'
 
 ### Function declarations
 
-function log_debug()
+# Enable standard echo behaviour everywhere
+echo()
+{
+  $echo_binary $@
+}
+log_debug()
 {
   if [ -t 1 ] # If file descriptor fd is open and refers to a terminal.
   then
@@ -47,28 +54,28 @@ function log_debug()
     echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]]\{1,3\}\(;\+[[:digit:]]\{1,3\}\)*m||g'
   fi
 }
-function log_debug_info()
+log_debug_info()
 {
-  if [ "$show_debug_info" == "true" ]
+  if [ "$show_debug_info" = "true" ]
   then
     log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
   fi
 }
-function log_debug_warning()
+log_debug_warning()
 {
-  if [ "$show_debug_warning" == "true" ]
+  if [ "$show_debug_warning" = "true" ]
   then
     log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
   fi
 }
-function log_debug_error()
+log_debug_error()
 {
-  if [ "$show_debug_error" == "true" ]
+  if [ "$show_debug_error" = "true" ]
   then
     log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
   fi
 }
-function show_usage()
+show_usage()
 {
 # full: ./doinstall --prefix=${prefix} --exec-prefix=${exec_prefix} --bindir=${bindir} --sbindir=${sbindir} --sysconfdir=${sysconfdir} --datadir=${datadir} --includedir=${includedir} --libdir=${libdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --sharedstatedir=${sharedstatedir} --mandir=${mandir} --infodir=${infodir} --docdir=${docdir}
 
@@ -279,7 +286,7 @@ done
 
 ### Main script start here
 
-if [ "$prefix" == "$HOME" ]
+if [ "$prefix" = "$HOME" ]
 then
 
 log_debug_info "Starting installation in HOME directory (U++ style)"
