@@ -41,7 +41,7 @@ function log_debug()
     # echo every parameters to stdout
     echo -e "$@"
   else # else, remove output colorisation with sed (usefull for pipe or file redirection)
-    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]];\?[[:digit:]]\{1,3\}\?m||g'
+    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]]\{1,3\}\(;\+[[:digit:]]\{1,3\}\)*m||g'
   fi
 }
 function log_debug_info()
