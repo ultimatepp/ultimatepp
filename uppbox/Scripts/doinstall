@@ -33,6 +33,8 @@ COLOR_LIGHT_GREEN='\e[1;32m'
 COLOR_LIGHT_PURPLE='\e[1;35m'
 COLOR_LIGHT_RED='\e[1;31m'
 
+# for((i=0; i<256; i++)); do printf "\e[48;5;${i}m%03d" $i; printf '\e[0m'; [ ! $((($i - 15) % 6)) -eq 0 ] && printf ' ' || printf '\n'; done
+
 ### Function declarations
 
 function log_debug()
@@ -42,7 +44,7 @@ function log_debug()
     # echo every parameters to stdout
     echo -e "$@"
   else # else, remove output colorisation with sed (usefull for pipe or file redirection)
-    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]];\?[[:digit:]]\{1,2\}\?m||g'
+    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]];\?[[:digit:]]\{1,3\}\?m||g'
   fi
 }
 function log_debug_info()
