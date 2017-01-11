@@ -1,32 +1,195 @@
-#!/bin/bash
+#!/bin/sh
+# domake:
+# Compile U++ main tools: theide and umk
+
+### Variables
+
+minimum_gcc_dumpversion="4.9.0"
+show_debug_info="true"
+show_debug_warning="true"
+show_debug_error="true"
+
+### Constants
+
+script_name=${0^^}
+COLOR_NC='\e[0m' # No Color
+COLOR_BLACK='\e[0;30m'
+COLOR_BLUE='\e[0;34m'
+COLOR_BROWN='\e[0;33m'
+COLOR_GRAY='\e[0;30m'
+COLOR_GREEN='\e[0;32m'
+COLOR_CYAN='\e[0;36m'
+COLOR_RED='\e[0;31m'
+COLOR_PURPLE='\e[0;35m'
+COLOR_WHITE='\e[1;37m'
+COLOR_YELLOW='\e[1;33m'
+COLOR_LIGHT_BLUE='\e[1;34m'
+COLOR_LIGHT_CYAN='\e[1;36m'
+COLOR_LIGHT_GRAY='\e[0;37m'
+COLOR_LIGHT_GREEN='\e[1;32m'
+COLOR_LIGHT_PURPLE='\e[1;35m'
+COLOR_LIGHT_RED='\e[1;31m'
+
+### Function declarations
+
+function log_debug()
+{
+  if [ -t 1 ] # If file descriptor fd is open and refers to a terminal.
+  then
+    # echo every parameters to stdout
+    echo -e "$@"
+  else # else, remove output colorisation with sed (usefull for pipe or file redirection)
+    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]];\?[[:digit:]]\{1,2\}\?m||g'
+  fi
+}
+function log_debug_info()
+{
+  if [ "$show_debug_info" == "true" ]
+  then
+    log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
+  fi
+}
+function log_debug_warning()
+{
+  if [ "$show_debug_warning" == "true" ]
+  then
+    log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
+  fi
+}
+function log_debug_error()
+{
+  if [ "$show_debug_error" == "true" ]
+  then
+    log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
+  fi
+}
+function convert_version_to_number()
+{
+  if [ -z "$1" ]
+  then
+    log_debug_error "Function 'convert_version_to_number' called with empty parameter."
+    return 1
+  fi
+  echo "$1" | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$/&00/'
+  return 0
+}
+
+
+### Main script start here
+
+log_debug_info "Searching for g++ compiler"
+
+minimum_gcc_version=$(convert_version_to_number "$minimum_gcc_dumpversion")
+
+if which g++
+then
+  log_debug_info "Found $(which g++)."
+  gcc_dumpversion=$(gcc -dumpversion)
+  gcc_version=$(convert_version_to_number "$gcc_dumpversion")
+
+  if [ "$gcc_version" -gt "$minimum_gcc_version" ]
+  then
+    use_gcc="true"
+    
+  else
+    use_gcc="false"
+    log_debug_warning "The g++ compiler found (e.q $gcc_dumpversion) has a lower version than the minimum required version (e.q $minimum_gcc_dumpversion)."
+
+  fi
+else
+  use_gcc="false"
+
+fi
+
+if [ "$use_gcc" == "false" ]
+then
+  log_debug_info "Searching for clang++ compiler"
+  if which clang++
+  then
+    use_clang="true"
+    
+  else
+    use_clang="false"
+    log_debug_warning "Can't find clang++ compiler in PATH."
+    log_debug_error "No compatible c++ compiler found in PATH."
+    log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}\n" \
+" * Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)\n" \
+" * Or install clang++ LLVM compiler\n" \
+" * Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)."
+    exit 1
+    
+  fi
+fi
+
+
+log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.bm with pkg-config."
 
 if which pkg-config
 then
-	sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
-	sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-	sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
-	sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+
 else
-	sed -e "s@((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
-	sed -e "s@((INCLUDES))@@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-	sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
-	sed -e "s@((INCLUDES))@@g" CLANG.bm.in >CLANG.bm
+  log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail."
+  log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting."
+  sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES))@@g" CLANG.bm.in >CLANG.bm
+
 fi
 
-if [ ! -f /usr/lib/libdl.so ]
+if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
-	sed -i -e s/-ldl//g uppsrc/Makefile
-	sed -i -e s/-ldl//g uppsrc/uMakefile
+  sed -i -e s/-ldl//g uppsrc/Makefile
+  sed -i -e s/-ldl//g uppsrc/uMakefile
+  
 fi
+
+
+log_debug_info "Searching for gmake or make."
 
 if which gmake
 then
-	gmake -C uppsrc
-	gmake -C uppsrc -f uMakefile
+  make_binary="gmake"
+  
+elif which make
+then
+  make_binary="make"
+
 else
-	make -C uppsrc
-	make -C uppsrc -f uMakefile
+  log_debug_error "No 'make' application found in PATH."
+  exit 2
 fi
 
-cp uppsrc/ide.out ./theide
-cp uppsrc/umk.out ./umk
+
+log_debug_info "Found $make_binary. Compiling..."
+
+if [ "$use_gcc" == "true" ]
+then
+  $make_binary -C uppsrc
+  $make_binary -C uppsrc -f uMakefile
+    
+elif [ "$use_clang" == "true" ]
+then
+    $make_binary -C uppsrc -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+    $make_binary -C uppsrc -f uMakefile -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+    
+fi
+
+
+if [ -f uppsrc/ide.out ]
+then
+  log_debug_info "Installing theide in current directory."
+  cp -p uppsrc/ide.out ./theide
+  
+fi
+
+if [ -f uppsrc/umk.out ]
+then
+  log_debug_info "Installing umk in current directory."
+  cp -p uppsrc/umk.out ./umk
+  
+fi
