@@ -1,4 +1,4 @@
-description "Displays a number of days between two dates";
+description "Displays a number of days between two dates\377";
 
 uses
 	CtrlLib;

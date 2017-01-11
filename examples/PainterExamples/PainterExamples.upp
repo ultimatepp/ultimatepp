@@ -38,6 +38,6 @@ file
 	Test.iml;
 
 mainconfig
-	"" = "GUI",
+	"" = "GUI MT",
 	"" = "GUI";
 

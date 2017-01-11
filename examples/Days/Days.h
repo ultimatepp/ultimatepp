@@ -10,8 +10,6 @@ using namespace Upp;
 
 class Days : public WithDaysLayout<TopWindow> {
 public:
-	void Compute();
-
 	typedef Days CLASSNAME;
 	Days();
 };
