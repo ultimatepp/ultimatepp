@@ -1,33 +1,399 @@
-#!/bin/bash
+#!/bin/sh
+# doinstall:
+# Install U++ binaries and sources
+# 'sh doinstall --help' will show you all available options
 
-cp ./theide ~/theide
-cp ./umk ~/umk
+### Variables
 
-mkdir ~/upp
-mkdir ~/upp.out
-mkdir ~/MyApps
+project_name="upp"
+package_name="$project_name-devel"
 
-cp -r uppsrc ~/upp
-cp -r examples ~/upp
-cp -r bazaar ~/upp
-cp -r tutorial ~/upp
-cp -r reference ~/upp
+show_debug_info="false"
+show_debug_warning="true"
+show_debug_error="true"
 
-rm -r ~/upp/uppsrc/_out
-rm -r ~/upp/uppsrc/ide.out
+### Constants
 
-mkdir ~/.upp
-mkdir ~/.upp/theide
+script_name=${0^^}
+COLOR_NC='\e[0m' # No Color
+COLOR_BLACK='\e[0;30m'
+COLOR_BLUE='\e[0;34m'
+COLOR_BROWN='\e[0;33m'
+COLOR_GRAY='\e[0;30m'
+COLOR_GREEN='\e[0;32m'
+COLOR_CYAN='\e[0;36m'
+COLOR_RED='\e[0;31m'
+COLOR_PURPLE='\e[0;35m'
+COLOR_WHITE='\e[1;37m'
+COLOR_YELLOW='\e[1;33m'
+COLOR_LIGHT_BLUE='\e[1;34m'
+COLOR_LIGHT_CYAN='\e[1;36m'
+COLOR_LIGHT_GRAY='\e[0;37m'
+COLOR_LIGHT_GREEN='\e[1;32m'
+COLOR_LIGHT_PURPLE='\e[1;35m'
+COLOR_LIGHT_RED='\e[1;31m'
 
-cp GCC.bm ~/.upp/theide
-cp CLANG.bm ~/.upp/theide
-cp en-gb.scd ~/.upp/theide
-cp en-us.scd ~/.upp/theide
+### Function declarations
 
-echo UPP = \"$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/uppsrc.var
-echo UPP = \"$HOME/upp/examples\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/examples.var
-echo UPP = \"$HOME/upp/reference\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/reference.var
-echo UPP = \"$HOME/upp/tutorial\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/tutorial.var
-echo UPP = \"$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/examples-bazaar.var
-echo UPP = \"$HOME/MyApps\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyApps.var
-echo UPP = \"$HOME/MyApps\;$HOME/upp/bazaar\;$HOME/upp/uppsrc\"\;OUTPUT = \"$HOME/upp.out\"\; > ~/.upp/theide/MyApps-bazaar.var
+function log_debug()
+{
+  if [ -t 1 ] # If file descriptor fd is open and refers to a terminal.
+  then
+    # echo every parameters to stdout
+    echo -e "$@"
+  else # else, remove output colorisation with sed (usefull for pipe or file redirection)
+    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]];\?[[:digit:]]\{1,2\}\?m||g'
+  fi
+}
+function log_debug_info()
+{
+  if [ "$show_debug_info" == "true" ]
+  then
+    log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
+  fi
+}
+function log_debug_warning()
+{
+  if [ "$show_debug_warning" == "true" ]
+  then
+    log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
+  fi
+}
+function log_debug_error()
+{
+  if [ "$show_debug_error" == "true" ]
+  then
+    log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
+  fi
+}
+function show_usage()
+{
+# full: ./doinstall --prefix=${prefix} --exec-prefix=${exec_prefix} --bindir=${bindir} --sbindir=${sbindir} --sysconfdir=${sysconfdir} --datadir=${datadir} --includedir=${includedir} --libdir=${libdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --sharedstatedir=${sharedstatedir} --mandir=${mandir} --infodir=${infodir} --docdir=${docdir}
+
+# current: ./doinstall --prefix=${prefix} --bindir=${bindir} --datadir=${datadir} --mandir=${mandir} --docdir=${docdir}
+
+# Makefile: make install prefix=${prefix} exec-prefix=${exec_prefix} bindir=${bindir} sbindir=${sbindir} sysconfdir=${sysconfdir} datadir=${datadir} includedir=${includedir} libdir=${libdir} libexecdir=${libexecdir} localstatedir=${localstatedir} sharedstatedir=${sharedstatedir} mandir=${mandir} infodir=${infodir} docdir=${docdir}
+
+    echo "usage: ./$0 [options]"
+    echo
+    echo 'options:'
+    echo '  DESTDIR=<path>          : installation root directory (prepending each target directory to provides staged installs ( default: void )' 
+##  echo '  --prefix=<path>         : installation prefix ( default: /usr/local )'
+    echo '  --prefix=<path>         : installation prefix ( default: $HOME )'
+    echo '  --exec-prefix=<path>    : installation exec prefix for executables and subroutine ( default: /usr/local e.q $(prefix) )'
+    echo '  --bindir=<path>         : programs installation directory, executable that users can run ( default: /usr/local/bin e.g. $(exec_prefix)/bin )'
+#   echo '  --sbindir=<path>        : programs installation directory, executable for system administrators ( default: /usr/local/sbin e.g. $(exec_prefix)/sbin )'
+#   echo '  --sysconfdir=<path>     : read-only data files directory, for configuring a host ( default: /usr/local/etc e.g. $(prefix)/etc )'
+#   echo '  --datarootdir=<path>    : read-only architecture-independent data files directory ( default: /usr/local/share e.g $(prefix)/share )'
+##  echo '  --datadir=<path>        : read-only idiosyncratic architecture-independent data files directory ( default: /usr/local/share e.g $(datarootdir) )'
+    echo '  --datadir=<path>        : read-only idiosyncratic architecture-independent data files directory ( default: /usr/local/share e.g $(prefix)/share )'
+#   echo '  --includedir=<path>     : header files installation directory, headers to be included by user programs ( default: /usr/local/include e.g $(prefix)/include ).'
+#   echo '  --libdir=<path>         : libraries and object files directory ( default: /usr/local/lib e.g $(exec_prefix)/lib )'
+#   echo '  --libexecdir=<path>     : programs installation directory, executable run by applications and not by users ( default: /usr/local/libexec e.g. $(exec_prefix)/libexec )'
+#   echo '  --localstatedir=<path>  : architecture-independent data installation directory, data that programs can modify while they run ( default: /usr/local/var e.g. $(prefix)/var )'
+#   echo '  --sharedstatedir=<path> : data files directory where programs modify their files at runtime ( default: /usr/local/var/lib e.g. $localstatedir/lib )'
+#   echo '  --sharedstatedir=<path> : data files directory where programs modify their files at runtime ( default: $prefix/'$project_name' )'
+##  echo '  --mandir=<path>         : man pages top level directory ( default: /usr/local/share/man e.g. $(datarootdir)/share/man )'
+    echo '  --mandir=<path>         : man pages top level directory ( default: /usr/local/share/man e.g. $(datadir)/share/man )'
+    echo '  --docdir=<path>         : documentation files directory ( default: /usr/local/share/doc e.g. $(datatdir)/doc )'
+#   echo '  --infodir=<path>        : info files directory ( default: /usr/local/share/info e.g. $(datarootdir)/info )'
+#   echo '  --enable-debug          : include debug symbols'
+#   echo '  --disable-debug         : do not include debug symbols'
+    echo '  --verbose               : increase verbosity'
+    echo '  --info=FLAGS            : fine-grained informational verbosity ( default: false )'
+    echo '  --warning=FLAGS         : fine-grained warning verbosity ( default: true )'
+    echo '  --debug=FLAGS           : fine-grained debug verbosity ( default: true )'
+    echo '  --help                  : show current usage information'
+    echo
+    echo 'NOTE:'
+    echo " * If you don't set prefix, installation will be done in your home directory in an U++ style (other install option parameters will be ignored)."
+    echo " * $0 uses environnement variables. If 'prefix' is different than HOME, 'bindir', 'datadir' and other environnement variables will be used."
+    echo " * All option parameters like --prefix, --bindir, ..., will superseed environnement variables."
+    echo
+}
+
+
+log_debug_info "Processing parameters"
+
+for arg in "$@"
+do
+  case "$arg" in
+
+  DESTDIR=*)
+    DESTDIR=$( echo $arg | sed 's/DESTDIR=//' )
+    ;;
+  
+  --prefix=*)
+    prefix=$( echo $arg | sed 's/--prefix=//' )
+    ;;
+
+  --exec-prefix=*)
+    exec_prefix=$( echo $arg | sed 's/--exec-prefix=//' )
+    ;;
+
+  --bindir=*)
+    bindir=$( echo $arg | sed 's/--bindir=//' )
+    ;;
+
+#  --sbindir=*)
+#    sbindir=$( echo $arg | sed 's/--sbindir=//' )
+#    ;;
+
+#  --sysconfdir=*)
+#    sysconfdir=$( echo $arg | sed 's/--sysconfdir=//' )
+#    ;;
+
+#  --datarootdir=*)
+#    datarootdir=$( echo $arg | sed 's/--datarootdir=//' )
+#    ;;
+
+  --datadir=*)
+    datadir=$( echo $arg | sed 's/--datadir=//' )
+    ;;
+
+#  --includedir=*)
+#    includedir=$( echo $arg | sed 's/--includedir=//' )
+#    ;;
+
+#  --libdir=*)
+#    libdir=$( echo $arg | sed 's/--libdir=//' )
+#    ;;
+
+#  --libexecdir=*)
+#    libexecdir=$( echo $arg | sed 's/--libexecdir=//' )
+#    ;;
+
+#  --localstatedir=*)
+#    localstatedir=$( echo $arg | sed 's/--localstatedir=//' )
+#    ;;
+
+#  --sharedstatedir=*)
+#    sharedstatedir=$( echo $arg | sed 's/--sharedstatedir=//' )
+#    ;;
+
+  --mandir=*)
+    mandir=$( echo $arg | sed 's/--mandir=//' )
+    ;;
+
+  --docdir=*)
+    docdir=$( echo $arg | sed 's/--docdir=//' )
+    ;;
+
+#  --infodir=*)
+#    infodir=$( echo $arg | sed 's/--infodir=//' )
+#    ;;
+
+#  --enable-debug)
+#    debugsym=true
+#    ;;
+
+#  --disable-debug)
+#    debugsym=true
+#    ;;
+
+  --verbose)
+    show_debug_info=true
+    show_debug_warning=true
+    show_debug_error=true
+    ;;
+    
+  --info=*)
+    show_debug_info=$( echo $arg | sed 's/--info=//' )
+    if [ "$show_debug_info" != "true" -a "$show_debug_info" != "false"  ]
+    then
+      show_usage
+      exit 0
+    fi
+    ;;
+    
+  --warning=*)
+    show_debug_warning=$( echo $arg | sed 's/--warning=//' )
+    if [ "$show_debug_warning" != "true" -a "$show_debug_warning" != "false"  ]
+    then
+      show_usage
+      exit 0
+    fi
+    ;;
+    
+  --error=*)
+    show_debug_error=$( echo $arg | sed 's/--error=//' )
+    if [ "$show_debug_error" != "true" -a "$show_debug_error" != "false"  ]
+    then
+      show_usage
+      exit 0
+    fi
+    ;;
+
+  --help)
+    show_usage
+    exit 0
+    ;;
+    
+    *)
+    log_debug_error "Bad command line argument '$arg'"
+    show_usage
+    exit 1
+    
+    esac
+
+done
+
+
+[ -z "$DESTDIR"        ] && DESTDIR=""					# DESTDIR=""
+[ -z "$prefix"         ] && prefix="$HOME"				# prefix="/usr/local"
+[ -z "$exec_prefix"    ] && exec_prefix="$prefix"			# exec_prefix="$prefix"
+[ -z "$bindir"         ] && bindir="$exec_prefix/bin"			# bindir="$exec_prefix/bin"
+#[ -z "$sbindir"        ] && sbindir="$exec_prefix/sbin"		# sbindir="$exec_prefix/sbin"
+#[ -z "$sysconfdir"     ] && sysconfdir="/etc"				# sysconfdir="/etc"
+#[ -z "$datarootdir"    ] && datarootdir="$prefix/share"		# datarootdir="$prefix/share"
+[ -z "$datadir"        ] && datadir="$prefix/share"			# datadir="$datarootdir"
+#[ -z "$includedir"     ] && includedir="$prefix/include"		# includedir="$prefix/include"
+#[ -z "$libdir"         ] && libdir="$prefix/lib"			# libdir="$prefix/lib"
+#[ -z "$libexecdir"     ] && libexecdir="$exec_prefix/libexec"		# libexecdir="$exec_prefix/libexec"
+#[ -z "$localstatedir"  ] && localstatedir="/var"			# localstatedir="/var"
+#[ -z "$sharedstatedir" ] && sharedstatedir="$localstatedir/lib"	# sharedstatedir="$localstatedir/lib"
+[ -z "$docdir"         ] && docdir="$datadir/doc"			# docdir="$datadir/doc"
+[ -z "$mandir"         ] && mandir="$datadir/man"			# mandir="$datadir/man"
+#[ -z "$infodir"        ] && infodir="$datadir/info"			# infodir="$datadir/info"
+
+
+#log_debug_info "Variable values:\n" \
+#"prefix         = $prefix\n" \
+#"exec_prefix    = $exec_prefix\n" \
+#"bindir         = $bindir\n" \
+#"sbindir        = $sbindir\n" \
+#"sysconfdir     = $sysconfdir\n" \
+#"datarootdir    = $datarootdir\n" \
+#"datadir        = $datadir\n" \
+#"includedir     = $includedir\n" \
+#"libdir         = $libdir\n" \
+#"libexecdir     = $libexecdir\n" \
+#"localstatedir  = $localstatedir\n" \
+#"sharedstatedir = $sharedstatedir\n" \
+#"docdir         = $docdir\n" \
+#"mandir         = $mandir\n" \
+#"infodir        = $infodir\n" \
+
+
+### Main script start here
+
+if [ "$prefix" == "$HOME" ]
+then
+
+log_debug_info "Starting installation in HOME directory (U++ style)"
+log_debug_info "Variable values:\n" \
+"DESTDIR         = $DESTDIR\n" \
+"prefix          = $prefix\n"
+
+log_debug_info "Creating directories in $DESTDIR/$prefix/"
+  install -d "$DESTDIR/$prefix/upp"
+  install -d "$DESTDIR/$prefix/upp.out"
+  install -d "$DESTDIR/$prefix/MyApps"
+  install -d "$DESTDIR/$prefix/.upp/theide"
+
+log_debug_info "Copying theide and umk"
+  install ./theide "$DESTDIR/$prefix/theide"
+  install ./umk    "$DESTDIR/$prefix/umk"
+
+log_debug_info "Copying U++ source code"
+  cp -r uppsrc    "$DESTDIR/$prefix/upp"
+  cp -r examples  "$DESTDIR/$prefix/upp"
+  cp -r bazaar    "$DESTDIR/$prefix/upp"
+  cp -r tutorial  "$DESTDIR/$prefix/upp"
+  cp -r reference "$DESTDIR/$prefix/upp"
+
+#<begin> TODO: BINARY FROM COMPILATION AND build_info.h ARE STILL IN UPPSRC AND MUST NOT BE PART OF INSTALLATION. MUST USE A DIFFERENT APPROCHE THAN REMOVING THEM AFTER INSTALL (LIKE DEFINING UPPOUT ELSEWHERE THAN IN uppsrc/_out)
+log_debug_info "Cleaning source code"
+  rm -r "$DESTDIR/$prefix/upp/uppsrc/_out"
+  rm -r "$DESTDIR/$prefix/upp/uppsrc/ide.out"
+  rm -r "$DESTDIR/$prefix/upp/uppsrc/umk.out"
+#<end> TODO
+
+log_debug_info "Copying GCC.bm CLANG.bm" *.scd "and U++ license"
+  cp -p GCC.bm   "$DESTDIR/$prefix/.upp/theide"
+  cp -p CLANG.bm "$DESTDIR/$prefix/.upp/theide"
+  cp -p *.scd    "$DESTDIR/$prefix/.upp/theide"
+  cp -p uppsrc/ide/Copying "$DESTDIR/$prefix/upp"
+  
+log_debug_info "Generating default theide var files in $DESTDIR/$prefix/.upp/theide/"
+  echo "UPP = \"$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"                                > "$DESTDIR/$prefix/.upp/theide/uppsrc.var"
+  echo "UPP = \"$DESTDIR/$prefix/upp/examples;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"  > "$DESTDIR/$prefix/.upp/theide/examples.var"
+  echo "UPP = \"$DESTDIR/$prefix/upp/reference;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";" > "$DESTDIR/$prefix/.upp/theide/reference.var"
+  echo "UPP = \"$DESTDIR/$prefix/upp/tutorial;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"  > "$DESTDIR/$prefix/.upp/theide/tutorial.var"
+  echo "UPP = \"$DESTDIR/$prefix/upp/bazaar;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"    > "$DESTDIR/$prefix/.upp/theide/examples-bazaar.var"
+  echo "UPP = \"$DESTDIR/$prefix/MyApps;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"        > "$DESTDIR/$prefix/.upp/theide/MyApps.var"
+  echo "UPP = \"$DESTDIR/$prefix/MyApps;$DESTDIR/$prefix/upp/bazaar;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";" > "$DESTDIR/$prefix/.upp/theide/MyApps-bazaar.var"
+
+else
+
+log_debug_info ">> Starting standard installation for POSIX operating systems"
+log_debug_info "Variable values:\n" \
+"DESTDIR         = $DESTDIR\n" \
+"prefix          = $prefix\n" \
+"exec_prefix     = $exec_prefix\n" \
+"bindir          = $bindir\n" \
+"datadir         = $datadir\n" \
+"docdir          = $docdir\n" \
+"mandir          = $mandir\n"
+
+log_debug_info "Creating directories"
+  install -d "$DESTDIR/$bindir"
+  install -d "$DESTDIR/$datadir/$project_name"
+  install -d "$DESTDIR/$datadir/applications"
+  install -d "$DESTDIR/$datadir/icons/hicolor/48x48/apps"
+  install -d "$DESTDIR/$datadir/pixmaps"
+  install -d "$DESTDIR/$datadir/licenses/$project_name"
+  install -d "$DESTDIR/$docdir/$project_name"
+  install -d "$DESTDIR/$mandir/man1"
+
+log_debug_info "Copying theide and umk"
+  install ./theide "$DESTDIR/$bindir/theide"
+  install ./umk    "$DESTDIR/$bindir/umk"
+
+log_debug_info "Adding symbolic link ( $package_name -> $datadir/$project_name )"
+  if [ ! -e "$DESTDIR/$datadir/$package_name" ]
+  then
+    ln -s "$datadir/$project_name" "$DESTDIR/$datadir/$package_name"
+  elif [ -h "$DESTDIR/$datadir/$package_name" ]
+  then
+    rm -f "$DESTDIR/$datadir/$package_name"
+    ln -s "$datadir/$project_name" "$DESTDIR/$datadir/$package_name"
+  else
+    log_debug_error "Already exist: $DESTDIR/$datadir/$package_name"
+  fi
+
+log_debug_info "Copying man pages"
+  cp -p "uppsrc/ide/theide.1" "$DESTDIR/$mandir/man1/"
+  cp -p "uppsrc/umk/umk.1"    "$DESTDIR/$mandir/man1/"
+
+log_debug_info "Copying icons and destop file"
+  cp -p "uppsrc/ide/theide.desktop" "$DESTDIR/$datadir/applications/theide.desktop"
+  cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/icons/hicolor/48x48/apps/theide.png"
+  cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/pixmaps/theide.png"
+
+log_debug_info "Copying U++ source code"
+  cp -a bazaar    "$DESTDIR/$datadir/$project_name/"
+# cp -a Common    "$DESTDIR/$datadir/$project_name/"
+  cp -a examples  "$DESTDIR/$datadir/$project_name/"
+  cp -a reference "$DESTDIR/$datadir/$project_name/"
+  cp -a tutorial  "$DESTDIR/$datadir/$project_name/"
+  cp -a uppsrc    "$DESTDIR/$datadir/$project_name/"
+  
+#<begin> TODO: BINARY FROM COMPILATION AND build_info.h ARE STILL IN UPPSRC AND MUST NOT BE PART OF INSTALLATION. MUST USE A DIFFERENT APPROCHE THAN REMOVING THEM AFTER INSTALL (LIKE DEFINING UPPOUT ELSEWHERE THAN IN uppsrc/_out)
+log_debug_info "Cleaning source code"
+  rm -fr "$DESTDIR/$datadir/$project_name/uppsrc/_out"
+  rm -f  "$DESTDIR/$datadir/$project_name/uppsrc/ide.out"
+  rm -f  "$DESTDIR/$datadir/$project_name/uppsrc/umk.out"
+  rm -f  "$DESTDIR/$datadir/$project_name/uppsrc/build_info.h"
+#<end> TODO
+
+log_debug_info "Copying GCC.bm CLANG.bm" *.scd "U++ license and readme"
+  cp -p GCC.bm   "$DESTDIR/$datadir/$project_name/"
+  cp -p CLANG.bm "$DESTDIR/$datadir/$project_name/"
+  cp -p *.scd    "$DESTDIR/$datadir/$project_name/"
+  cp -p readme   "$DESTDIR/$docdir/$project_name/"
+  cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$project_name/"
+
+fi
+
+log_debug_info "<< End of installation"
