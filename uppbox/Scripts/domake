@@ -11,7 +11,9 @@ show_debug_error="true"
 
 ### Constants
 
-script_name=${0^^}
+script_name=$(echo "$0" | tr '[:lower:]' '[:upper:]' )
+echo_binary=$(which echo)
+
 COLOR_NC='\e[0m' # No Color
 COLOR_BLACK='\e[0;30m'
 COLOR_BLUE='\e[0;34m'
@@ -34,7 +36,12 @@ COLOR_LIGHT_RED='\e[1;31m'
 
 ### Function declarations
 
-function log_debug()
+# Enable standard echo behaviour everywhere
+echo()
+{
+  $echo_binary $@
+}
+log_debug()
 {
   if [ -t 1 ] # If file descriptor fd is open and refers to a terminal.
   then
@@ -44,28 +51,28 @@ function log_debug()
     echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]]\{1,3\}\(;\+[[:digit:]]\{1,3\}\)*m||g'
   fi
 }
-function log_debug_info()
+log_debug_info()
 {
-  if [ "$show_debug_info" == "true" ]
+  if [ "$show_debug_info" = "true" ]
   then
     log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
   fi
 }
-function log_debug_warning()
+log_debug_warning()
 {
-  if [ "$show_debug_warning" == "true" ]
+  if [ "$show_debug_warning" = "true" ]
   then
     log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
   fi
 }
-function log_debug_error()
+log_debug_error()
 {
-  if [ "$show_debug_error" == "true" ]
+  if [ "$show_debug_error" = "true" ]
   then
     log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
   fi
 }
-function convert_version_to_number()
+convert_version_to_number()
 {
   if [ -z "$1" ]
   then
@@ -103,7 +110,7 @@ else
 
 fi
 
-if [ "$use_gcc" == "false" ]
+if [ "$use_gcc" = "false" ]
 then
   log_debug_info "Searching for clang++ compiler"
   if which clang++
@@ -169,12 +176,12 @@ fi
 
 log_debug_info "Found $make_binary. Compiling..."
 
-if [ "$use_gcc" == "true" ]
+if [ "$use_gcc" = "true" ]
 then
   $make_binary -C uppsrc
   $make_binary -C uppsrc -f uMakefile
     
-elif [ "$use_clang" == "true" ]
+elif [ "$use_clang" = "true" ]
 then
     $make_binary -C uppsrc -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
     $make_binary -C uppsrc -f uMakefile -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
