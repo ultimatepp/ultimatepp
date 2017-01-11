@@ -133,6 +133,20 @@ struct PainterImageSpan : SpanSource {
 	{
 		interpolator.Begin(x, y, len);
 		fixed = hstyle && vstyle;
+		if(hstyle + vstyle == 0 && fast) {
+			while(len--) {
+				Point l = interpolator.Get() >> 8;
+				if(l.x > 0 && l.x < maxx && l.y > 0 && l.y < maxy)
+					*span = Pixel(l.x, l.y);
+				else
+				if(style == 0 && (l.x < -1 || l.x > cx || l.y < -1 || l.y > cy))
+					*span = RGBAZero();
+				else
+					*span = GetPixel(l.x, l.y);
+				++span;
+			}
+			return;
+		}
 		while(len--) {
 			Point h = interpolator.Get();
 	//		h -= 128;
