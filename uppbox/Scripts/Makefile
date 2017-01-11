@@ -5,7 +5,7 @@ all:
 	+$(SHELL) domake
 
 install:
-	$(SHELL) doinstall
+	$(SHELL) doinstall --verbose
 
 clean:
 	rm -fr uppsrc/_out
