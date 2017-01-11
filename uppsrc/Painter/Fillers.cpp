@@ -321,12 +321,11 @@ void SpanFiller::Render(int val, int len)
 	if(alpha != 256)
 		val = alpha * val >> 8;
 	if(val == 256)
-		while(t < e) {
-			if(s->a == 255)
-				*t++ = *s++;
+		for(int i=0; i < len; i++)
+			if(s[i].a == 255)
+				t[i] = s[i];
 			else
-				AlphaBlend(*t++, *s++);
-		}
+				AlphaBlend(t[i], s[i]);
 	else
 		while(t < e)
 			AlphaBlendCover8(*t++, *s++, val);

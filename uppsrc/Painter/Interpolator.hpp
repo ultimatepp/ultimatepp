@@ -1,7 +1,4 @@
-#include "Painter.h"
-
-namespace Upp {
-
+inline
 void LinearInterpolator::Dda2::Set(int p1, int p2, int len)
 {
 	count = len <= 0 ? 1 : len;
@@ -17,6 +14,7 @@ void LinearInterpolator::Dda2::Set(int p1, int p2, int len)
 	mod -= count;
 }
 
+inline
 int LinearInterpolator::Dda2::Get()
 {
 	int pp = p;
@@ -29,6 +27,7 @@ int LinearInterpolator::Dda2::Get()
 	return pp;
 }
 
+inline
 void LinearInterpolator::Begin(int x, int y, int len)
 {
 	Pointf p1 = xform.Transform(Pointf(x, y));
@@ -37,9 +36,8 @@ void LinearInterpolator::Begin(int x, int y, int len)
 	dday.Set(Q8(p1.y), Q8(p2.y), len);
 }
 
+inline
 Point LinearInterpolator::Get()
 {
 	return Point(ddax.Get(), dday.Get());
-}
-
 }
