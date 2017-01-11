@@ -382,3 +382,5 @@ public:
 
 	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 };
+
+#include "Interpolator.hpp"
