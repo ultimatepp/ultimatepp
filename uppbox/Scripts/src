@@ -15,11 +15,11 @@ rm -R ~/upp.tmp/upp/bin || true
 
 cp -p ~/Scripts/GCCMK.bm ~/.upp/theide
 
-~/bin/umk ~/upp.src/uppsrc ide ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/upp/uppsrc
+~/bin/umk ~/upp.src/uppsrc ide GCCMK -asrXk ~/upp.tmp/upp/uppsrc
 
 mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/Makefile.in
 
-~/bin/umk ~/upp.src/uppsrc umk ~/Scripts/GCCMK.bm -asrXk ~/upp.tmp/upp/uppsrc
+~/bin/umk ~/upp.src/uppsrc umk GCCMK -asrXk ~/upp.tmp/upp/uppsrc
 
 mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/uMakefile.in
 
