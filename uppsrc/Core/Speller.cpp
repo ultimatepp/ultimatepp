@@ -147,6 +147,9 @@ Speller *sGetSpeller(int lang)
 		DoSpellerPath(pp, GetExeDirFile("scd"));
 		DoSpellerPath(pp, ConfigFile("scd"));
 		pp << spell_path << ';' << getenv("LIB") << ';' << getenv("PATH") << ';';
+#ifdef PLATFORM_POSIX
+		pp << "/usr/share/upp;/usr/local/share/upp;/usr/share/upp/scd;/usr/local/share/upp/scd";
+#endif
 		String path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".udc", pp);
 		if(IsNull(path))
 			path = GetFileOnPath(ToLower(LNGAsText(lang)) + ".scd", pp);
