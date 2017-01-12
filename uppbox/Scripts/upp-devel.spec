@@ -40,7 +40,7 @@ BuildRequires:	clang bzip2-devel
 
 # Fedora specific BuildRequires
 %else
-%if 0%{?fedora_version}
+%if 0%{?fedora_version} || 0%{?fedora}
 BuildRequires:	gcc gcc-c++ xorg-x11-server-devel fedora-logos bzip2-devel
 
 # Other rpm based distro specific BuildRequires
@@ -71,7 +71,7 @@ Requires:	clang bzip2-devel
 
 # Fedora specific Requires
 %else
-%if 0%{?fedora_version}
+%if 0%{?fedora_version} || 0%{?fedora}
 Requires:	gcc gcc-c++ xorg-x11-server-devel fedora-logos bzip2-devel
 
 # Other rpm based distro specific Requires
@@ -122,7 +122,7 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if ! 0%{?fedora_version}
+%if ! 0%{?fedora_version} || 0%{?fedora}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
@@ -134,7 +134,7 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
-%if ! 0%{?fedora_version}
+%if ! 0%{?fedora_version} || 0%{?fedora}
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
@@ -177,7 +177,7 @@ cp -p *.scd %{buildroot}/%{_datadir}/%{project_name}/
 INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 libnotify x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 
-%if 0%{?fedora_version}
+%if 0%{?fedora_version} || 0%{?fedora}
      LINK="$(pkg-config --libs libpng freetype2)"
 %else
      LINK=""
