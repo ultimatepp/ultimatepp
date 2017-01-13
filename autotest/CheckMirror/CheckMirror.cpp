@@ -34,6 +34,7 @@ CONSOLE_APP_MAIN
 	
 	GetRepoInfo("svn://localhost/upp", d, rev);
 
+
 	GetRepoInfo("svn://www.ultimatepp.org/upp", d1, rev1);
 
 	LOG("Main repository last date: " << d1);
