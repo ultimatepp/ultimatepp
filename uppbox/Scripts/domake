@@ -67,9 +67,9 @@ then
     log_debug_warning "Can't find clang++ compiler in PATH"
     log_debug_error "No compatible c++ compiler found in PATH"
     log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}"
-    log_debug " * Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
-    log_debug " * Or install clang++ LLVM compiler"
-    log_debug " * Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
+    log_debug " - Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
+    log_debug " - Or install clang++ LLVM compiler"
+    log_debug " - Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
     exit 1
     
   fi
