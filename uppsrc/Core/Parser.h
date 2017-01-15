@@ -15,6 +15,7 @@ protected:
 	String      fn;
 	bool        skipspaces;
 	bool        skipcomments;
+	bool        nestcomments;
 	bool        uescape;
 
 	bool        Spaces0();
@@ -105,6 +106,8 @@ public:
 	CParser& UnicodeEscape(bool b = true)     { uescape = b; return *this; }
 	CParser& SkipComments(bool b = true);
 	CParser& NoSkipComments()                 { return SkipComments(false); }
+	CParser& NestComments(bool b = true);
+	CParser& NoNestComments()                 { return NestComments(false); }
 
 	CParser(const char *ptr);
 	CParser(const char *ptr, const char *fn, int line = 1);
