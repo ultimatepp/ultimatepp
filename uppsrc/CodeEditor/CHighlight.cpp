@@ -65,13 +65,14 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 	if(*p == 'e' || *p == 'E') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
-	}
-	if(c == HighlightSetup::INK_CONST_FLOAT) {
 		p += *p == '-' || *p == '+';
 		while(IsDigit(*p)) p++;
 		if(*p == 'f' || *p == 'F')
 			p++;
 	}
+	else
+	if(*p == 'u' && c != HighlightSetup::INK_CONST_FLOAT)
+		p++;
 	if(c == HighlightSetup::INK_CONST_OCT && p - t == 1)
 		c = HighlightSetup::INK_CONST_INT;
 	int n = int(p - t);
@@ -194,36 +195,41 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	int lbrace = -1;
 	int lbclose = -1;
 	Color lbcolor = Null;
+	bool is_comment = false;
 	while(p < e) {
 		int pair = MAKELONG(p[0], p[1]);
+		if(pair == MAKELONG('/', '*') && highlight != HIGHLIGHT_JSON || comment) {
+			if(!comment) {
+				hls.Put(2, hl_style[INK_COMMENT]);
+				p += 2;
+			}
+			for(const wchar *ce = p; ce < e - 1; ce++)
+				if(ce[0] == '*' && ce[1] == '/') {
+					while(p < ce)
+						p = DoComment(hls, p, ce);
+					hls.Put(2, hl_style[INK_COMMENT]);
+					p += 2;
+					comment = false;
+					goto comment_ended;
+				}
+			while(p < e)
+				p = DoComment(hls, p, e);
+			comment = is_comment = true;
+			break;
+		comment_ended:;
+		}
+		else
 		if(linecomment && linecont || pair == MAKELONG('/', '/') &&
 		   highlight != HIGHLIGHT_CSS && highlight != HIGHLIGHT_JSON ||
 		   highlight == HIGHLIGHT_PHP && *p == '#') {
 			while(p < e)
 				p = DoComment(hls, p, e);
-			comment = true;
+			is_comment = true;
 			break;
-		}
-		else
-		if(comment && highlight != HIGHLIGHT_JSON) {
-			if(pair == MAKELONG('*', '/')) {
-				hls.Put(2, hl_style[INK_COMMENT]);
-				p += 2;
-				comment = false;
-			}
-			else
-				p = DoComment(hls, p, e);
 		}
 		else
 		if((*p == '\"' || *p == '\'') || linecont && string)
 			p = hls.CString(p);
-		else
-		if(pair == MAKELONG('/', '*') && highlight != HIGHLIGHT_JSON) {
-			hls.Put(2, hl_style[INK_COMMENT]);
-			p += 2;
-			comment = true;
-			comment = true;
-		}
 		else
 		if(*p == '(') {
 			brk.Add(')');
@@ -341,7 +347,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			p++;
 		}
 	}
-	if(hilite_ifdef && !IsNull(cppid) && !comment) {
+	if(hilite_ifdef && !IsNull(cppid) && !is_comment) {
 		if((cppid == "else" || cppid == "elif" || cppid == "endif") && !ifstack.IsEmpty()) {
 			WStringBuffer ifln;
 			ifln.Cat(" // ");
