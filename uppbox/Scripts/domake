@@ -12,71 +12,16 @@ show_debug_error="true"
 ### Constants
 
 script_name=$(echo "$0" | tr '[:lower:]' '[:upper:]' )
-echo_binary=$(which echo)
-
-COLOR_NC='\e[0m' # No Color
-COLOR_BLACK='\e[0;30m'
-COLOR_BLUE='\e[0;34m'
-COLOR_BROWN='\e[0;33m'
-COLOR_GRAY='\e[0;30m'
-COLOR_GREEN='\e[0;32m'
-COLOR_CYAN='\e[0;36m'
-COLOR_RED='\e[0;31m'
-COLOR_PURPLE='\e[0;35m'
-COLOR_WHITE='\e[1;37m'
-COLOR_YELLOW='\e[1;33m'
-COLOR_LIGHT_BLUE='\e[1;34m'
-COLOR_LIGHT_CYAN='\e[1;36m'
-COLOR_LIGHT_GRAY='\e[0;37m'
-COLOR_LIGHT_GREEN='\e[1;32m'
-COLOR_LIGHT_PURPLE='\e[1;35m'
-COLOR_LIGHT_RED='\e[1;31m'
-
-# for((i=0; i<256; i++)); do printf "\e[48;5;${i}m%03d" $i; printf '\e[0m'; [ ! $((($i - 15) % 6)) -eq 0 ] && printf ' ' || printf '\n'; done
 
 ### Function declarations
 
-# Enable standard echo behaviour everywhere
-echo()
-{
-  $echo_binary $@
-}
-log_debug()
-{
-  if [ -t 1 ] # If file descriptor fd is open and refers to a terminal.
-  then
-    # echo every parameters to stdout
-    echo -e "$@"
-  else # else, remove output colorisation with sed (usefull for pipe or file redirection)
-    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]]\{1,3\}\(;\+[[:digit:]]\{1,3\}\)*m||g'
-  fi
-}
-log_debug_info()
-{
-  if [ "$show_debug_info" = "true" ]
-  then
-    log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
-  fi
-}
-log_debug_warning()
-{
-  if [ "$show_debug_warning" = "true" ]
-  then
-    log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
-  fi
-}
-log_debug_error()
-{
-  if [ "$show_debug_error" = "true" ]
-  then
-    log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
-  fi
-}
+. ./function_library
+
 convert_version_to_number()
 {
   if [ -z "$1" ]
   then
-    log_debug_error "Function 'convert_version_to_number' called with empty parameter."
+    log_debug_error "Function 'convert_version_to_number' called with empty parameter"
     return 1
   fi
   echo "$1" | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$/&00/'
@@ -92,7 +37,7 @@ minimum_gcc_version=$(convert_version_to_number "$minimum_gcc_dumpversion")
 
 if which g++
 then
-  log_debug_info "Found $(which g++)."
+  log_debug_info "Found $(which g++)"
   gcc_dumpversion=$(gcc -dumpversion)
   gcc_version=$(convert_version_to_number "$gcc_dumpversion")
 
@@ -102,7 +47,7 @@ then
     
   else
     use_gcc="false"
-    log_debug_warning "The g++ compiler found (e.q $gcc_dumpversion) has a lower version than the minimum required version (e.q $minimum_gcc_dumpversion)."
+    log_debug_warning "The g++ compiler found (e.q $gcc_dumpversion) has a lower version than the minimum required version (e.q $minimum_gcc_dumpversion)"
 
   fi
 else
@@ -119,30 +64,42 @@ then
     
   else
     use_clang="false"
-    log_debug_warning "Can't find clang++ compiler in PATH."
-    log_debug_error "No compatible c++ compiler found in PATH."
-    log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}\n" \
-" * Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)\n" \
-" * Or install clang++ LLVM compiler\n" \
-" * Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)."
+    log_debug_warning "Can't find clang++ compiler in PATH"
+    log_debug_error "No compatible c++ compiler found in PATH"
+    log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}"
+    log_debug " * Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
+    log_debug " * Or install clang++ LLVM compiler"
+    log_debug " * Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
     exit 1
     
   fi
 fi
 
-
-log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.bm with pkg-config."
+log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.bm with pkg-config"
 
 if which pkg-config
 then
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I gtk+-2.0|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+
+  library_list=""
+  for i in gtk+-2.0 x11 libnotify freetype2
+  do
+    if pkg-config --exists $i
+    then
+      library_list="$library_list $i"
+      log_debug_info "pkg-config: Found library $i"
+    else
+      log_debug_warning "pkg-config: '$i' not found in $(pkg-config --variable pc_path pkg-config). Do you need to install $i developpement package?"
+    fi
+  done
+  
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
 
 else
-  log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail."
-  log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting."
+  log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
+  log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting"
   sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
   sed -e "s@-I((INCLUDES))@@g" uppsrc/uMakefile.in >uppsrc/uMakefile
   sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
@@ -158,7 +115,7 @@ then
 fi
 
 
-log_debug_info "Searching for gmake or make."
+log_debug_info "Searching for gmake or make"
 
 if which gmake
 then
@@ -169,7 +126,7 @@ then
   make_binary="make"
 
 else
-  log_debug_error "No 'make' application found in PATH."
+  log_debug_error "No 'make' application found in PATH"
   exit 2
 fi
 
@@ -191,14 +148,14 @@ fi
 
 if [ -f uppsrc/ide.out ]
 then
-  log_debug_info "Installing theide in current directory."
+  log_debug_info "Installing theide in current directory"
   cp -p uppsrc/ide.out ./theide
   
 fi
 
 if [ -f uppsrc/umk.out ]
 then
-  log_debug_info "Installing umk in current directory."
+  log_debug_info "Installing umk in current directory"
   cp -p uppsrc/umk.out ./umk
   
 fi
