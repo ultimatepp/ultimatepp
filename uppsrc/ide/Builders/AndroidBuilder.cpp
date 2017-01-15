@@ -149,7 +149,7 @@ bool AndroidBuilder::BuildPackage(
 	}
 	
 	if(isResourcesPackage || nativeSources.IsEmpty()) {
-		LOG(INFO_METHOD_NAME + "There is not native files in following package " + package + ".");
+		LOG(INFO_METHOD_NAME + "There are not native files in following package " + package + ".");
 		return true;
 	}
 	
@@ -246,8 +246,7 @@ bool AndroidBuilder::Link(
 		NDKBuild ndkBuild(ndk.GetNdkBuildPath());
 		ndkBuild.SetWorkingDir(project->GetDir());
 		ndkBuild.SetJobs(GetHydraThreads());
-		if(Execute(ndkBuild.MakeCmd(), ss) != 0 ) {
-			PutConsole(ss.GetResult());
+		if(host->Execute(ndkBuild.MakeCmd()) != 0 ) {
 			return false;
 		}
 		PutConsole("Native sources compiled in " + GetPrintTime(time) + ".");
