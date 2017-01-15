@@ -122,7 +122,8 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/ide.out" \
-%if ! 0%{?fedora_version} || 0%{?fedora}
+%if 0%{?fedora_version} || 0%{?fedora}
+%else
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
@@ -134,7 +135,8 @@ make %{?_smp_mflags} \
      -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
      -e UPPOUT="$PWD/out/" \
      -e OutFile="$PWD/out/umk.out" \
-%if ! 0%{?fedora_version} || 0%{?fedora}
+%if 0%{?fedora_version} || 0%{?fedora}
+%else
      -e CXX="clang++" \
      -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 %endif
