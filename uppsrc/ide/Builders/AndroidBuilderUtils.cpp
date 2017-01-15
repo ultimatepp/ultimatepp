@@ -41,12 +41,12 @@ bool AndroidBuilderUtils::IsCFile(const String& path)
 
 bool AndroidBuilderUtils::IsCppFile(const String& path)
 {
-	return HasExt(path, { "icpp", "cpp", "cxx" });
+	return HasExt(path, { "icpp", "cpp", "cc", "cxx" });
 }
 
 bool AndroidBuilderUtils::IsCppOrCFile(const String& path)
 {
-	return HasExt(path, { "c", "icpp", "cpp", "cxx" });
+	return HasExt(path, { "c", "icpp", "cpp", "cc", "cxx" });
 }
 
 bool AndroidBuilderUtils::IsXmlFile(const String& path)
