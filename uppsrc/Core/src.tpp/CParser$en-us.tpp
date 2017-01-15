@@ -98,6 +98,17 @@ Note that SkipComments has to be called before any parsing happens.&]
 [s2;%% Same as SkipComments(false).&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:CParser`:`:NestComments`(bool`): [_^Upp`:`:CParser^ CParser][@(0.0.255) `&]_[* N
+estComments]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% If active, CParser recognizes nested comments (e.g `"[C /`* 
+level1 /`* level2 `*/ `*/]`").&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CParser`:`:NoNestComments`(`): [_^Upp`:`:CParser^ CParser][@(0.0.255) `&]_[* No
+NestComments]()&]
+[s2;%% Same as NestComments(false).&]
+[s3; &]
+[s4; &]
 [s5;:CParser`:`:Spaces`(`): [@(0.0.255) bool]_[* Spaces]()&]
 [s2;%% Skips white`-spaces. Returns [* true] if there were white`-space 
 to skip, [* false] otherwise. Stores the position before advancing 

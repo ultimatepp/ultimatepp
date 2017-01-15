@@ -22,6 +22,14 @@ CParser& CParser::SkipComments(bool b)
 	return *this;
 }
 
+CParser& CParser::NestComments(bool b)
+{
+	nestcomments = b;
+	term = wspc;
+	Spaces0();
+	return *this;
+}
+
 bool CParser::Spaces0() {
 	LTIMING("Spaces");
 	if((byte)*term > ' ' &&
@@ -60,13 +68,31 @@ bool CParser::Spaces0() {
 		}
 		else
 		if(term[0] == '/' && term[1] == '*' && skipcomments) {
-			term += 2;
-			while(*term) {
-				if(term[0] == '*' && term[1] == '/') {
-					term += 2;
-					break;
+			if(nestcomments) {
+				int count = 1;
+				term += 2;
+				while(*term) {
+					if(term[0] == '*' && term[1] == '/') {
+						term += 2;
+						count--;
+						if (count == 0)
+							break;
+					}
+					else if(term[0] == '/' && term[1] == '*')
+						count++;
+					
+					if(*term++ == '\n') line++;
 				}
-				if(*term++ == '\n') line++;
+			}
+			else {
+				term += 2;
+				while(*term) {
+					if(term[0] == '*' && term[1] == '/') {
+						term += 2;
+						break;
+					}
+					if(*term++ == '\n') line++;
+				}
 			}
 		}
 		if(!*term) break;
@@ -491,6 +517,7 @@ CParser::CParser(const char *ptr)
 {
 	line = 1;
 	skipspaces = skipcomments = true;
+	nestcomments = false;
 	uescape = false;
 	Spaces();
 }
@@ -499,6 +526,7 @@ CParser::CParser(const char *ptr, const char *fn, int line)
 : term(ptr), wspc(ptr), lineptr(ptr), line(line), fn(fn)
 {
 	skipspaces = skipcomments = true;
+	nestcomments = false;
 	uescape = false;
 	Spaces();
 }
@@ -507,7 +535,8 @@ CParser::CParser()
 {
 	term = lineptr = wspc = NULL;
 	line = 0;
-	skipspaces = true;
+	skipspaces = skipcomments = true;
+	nestcomments = false;
 	uescape = false;
 }
 
