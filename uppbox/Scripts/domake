@@ -92,18 +92,18 @@ then
     fi
   done
   
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
 
 else
   log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
   log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting"
-  sed -e "s@-I((INCLUDES))@@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@@g" CLANG.bm.in >CLANG.bm
+  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" CLANG.bm.in >CLANG.bm
 
 fi
 
