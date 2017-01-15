@@ -22,7 +22,7 @@ Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.
 Obsoletes:	upp
 
 # Common BuildRequires
-BuildRequires:	gtk2-devel gnome-shell libnotify-devel
+BuildRequires:	gtk2-devel gnome-shell libnotify-devel pkgconfig
 
 # Mandriva specific BuildRequires
 %if 0%{?mandriva_version}
@@ -106,8 +106,38 @@ to C++ programming. It provides:
 # ----
 %build
 
-sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify x11)@g" uppsrc/Makefile.in > uppsrc/Makefile
-sed -e "s@-I((INCLUDES))@$(pkg-config --cflags-only-I gtk+-2.0 libnotify x11)@g" uppsrc/uMakefile.in > uppsrc/uMakefile
+
+if which pkg-config
+then
+  library_list=""
+  for i in gtk+-2.0 x11 libnotify freetype2
+  do
+    if pkg-config --exists $i
+    then
+      library_list="$library_list $i"
+    fi
+  done
+
+  if [ "$library_list" = "" ]
+  then
+    echo "Can't find any configuration file with pkg-config"
+    exit 1
+  fi
+
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+
+else
+  echo "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
+  echo "If compilation fail because of missing include, please install pkg-config before reporting"
+  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/Makefile.in >uppsrc/Makefile
+  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/uMakefile.in >uppsrc/uMakefile
+  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" GCC.bm.in >GCC.bm
+  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" CLANG.bm.in >CLANG.bm
+
+fi
 
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
