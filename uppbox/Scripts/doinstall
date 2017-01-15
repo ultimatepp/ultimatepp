@@ -15,66 +15,11 @@ show_debug_error="true"
 ### Constants
 
 script_name=$(echo "$0" | tr '[:lower:]' '[:upper:]' )
-echo_binary=$(which echo)
-
-COLOR_NC='\e[0m' # No Color
-COLOR_BLACK='\e[0;30m'
-COLOR_BLUE='\e[0;34m'
-COLOR_BROWN='\e[0;33m'
-COLOR_GRAY='\e[0;30m'
-COLOR_GREEN='\e[0;32m'
-COLOR_CYAN='\e[0;36m'
-COLOR_RED='\e[0;31m'
-COLOR_PURPLE='\e[0;35m'
-COLOR_WHITE='\e[1;37m'
-COLOR_YELLOW='\e[1;33m'
-COLOR_LIGHT_BLUE='\e[1;34m'
-COLOR_LIGHT_CYAN='\e[1;36m'
-COLOR_LIGHT_GRAY='\e[0;37m'
-COLOR_LIGHT_GREEN='\e[1;32m'
-COLOR_LIGHT_PURPLE='\e[1;35m'
-COLOR_LIGHT_RED='\e[1;31m'
-
-# for((i=0; i<256; i++)); do printf "\e[48;5;${i}m%03d" $i; printf '\e[0m'; [ ! $((($i - 15) % 6)) -eq 0 ] && printf ' ' || printf '\n'; done
 
 ### Function declarations
 
-# Enable standard echo behaviour everywhere
-echo()
-{
-  $echo_binary $@
-}
-log_debug()
-{
-  if [ -t 1 ] # If file descriptor fd is open and refers to a terminal.
-  then
-    # echo every parameters to stdout
-    echo -e "$@"
-  else # else, remove output colorisation with sed (usefull for pipe or file redirection)
-    echo -e "$@" | sed -e 's|'$'\033''\[[[:digit:]]\{1,3\}\(;\+[[:digit:]]\{1,3\}\)*m||g'
-  fi
-}
-log_debug_info()
-{
-  if [ "$show_debug_info" = "true" ]
-  then
-    log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
-  fi
-}
-log_debug_warning()
-{
-  if [ "$show_debug_warning" = "true" ]
-  then
-    log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
-  fi
-}
-log_debug_error()
-{
-  if [ "$show_debug_error" = "true" ]
-  then
-    log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
-  fi
-}
+. ./function_library
+
 show_usage()
 {
 # full: ./doinstall --prefix=${prefix} --exec-prefix=${exec_prefix} --bindir=${bindir} --sbindir=${sbindir} --sysconfdir=${sysconfdir} --datadir=${datadir} --includedir=${includedir} --libdir=${libdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --sharedstatedir=${sharedstatedir} --mandir=${mandir} --infodir=${infodir} --docdir=${docdir}
@@ -266,33 +211,30 @@ done
 #[ -z "$infodir"        ] && infodir="$datadir/info"			# infodir="$datadir/info"
 
 
-#log_debug_info "Variable values:\n" \
-#"prefix         = $prefix\n" \
-#"exec_prefix    = $exec_prefix\n" \
-#"bindir         = $bindir\n" \
-#"sbindir        = $sbindir\n" \
-#"sysconfdir     = $sysconfdir\n" \
-#"datarootdir    = $datarootdir\n" \
-#"datadir        = $datadir\n" \
-#"includedir     = $includedir\n" \
-#"libdir         = $libdir\n" \
-#"libexecdir     = $libexecdir\n" \
-#"localstatedir  = $localstatedir\n" \
-#"sharedstatedir = $sharedstatedir\n" \
-#"docdir         = $docdir\n" \
-#"mandir         = $mandir\n" \
-#"infodir        = $infodir\n" \
-
-
 ### Main script start here
 
 if [ "$prefix" = "$HOME" ]
 then
 
 log_debug_info "Starting installation in HOME directory (U++ style)"
-log_debug_info "Variable values:\n" \
-"DESTDIR         = $DESTDIR\n" \
-"prefix          = $prefix\n"
+log_debug_info "Variable values:"
+log_debug_info "DESTDIR         = $DESTDIR"
+log_debug_info "prefix          = $prefix"
+#log_debug_info "exec_prefix     = $exec_prefix"
+#log_debug_info "bindir          = $bindir"
+#log_debug_info "sbindir         = $sbindir"
+#log_debug_info "sysconfdir      = $sysconfdir"
+#log_debug_info "datarootdir     = $datarootdir"
+#log_debug_info "datadir         = $datadir"
+#log_debug_info "includedir      = $includedir"
+#log_debug_info "libdir          = $libdir"
+#log_debug_info "libexecdir      = $libexecdir"
+#log_debug_info "localstatedir   = $localstatedir"
+#log_debug_info "sharedstatedir  = $sharedstatedir"
+#log_debug_info "docdir          = $docdir"
+#log_debug_info "mandir          = $mandir"
+#log_debug_info "infodir         = $infodir"
+
 
 log_debug_info "Creating directories in $DESTDIR/$prefix/"
   install -d "$DESTDIR/$prefix/upp"
@@ -336,14 +278,23 @@ log_debug_info "Generating default theide var files in $DESTDIR/$prefix/.upp/the
 else
 
 log_debug_info ">> Starting standard installation for POSIX operating systems"
-log_debug_info "Variable values:\n" \
-"DESTDIR         = $DESTDIR\n" \
-"prefix          = $prefix\n" \
-"exec_prefix     = $exec_prefix\n" \
-"bindir          = $bindir\n" \
-"datadir         = $datadir\n" \
-"docdir          = $docdir\n" \
-"mandir          = $mandir\n"
+log_debug_info "Variable values:"
+log_debug_info "DESTDIR         = $DESTDIR"
+log_debug_info "prefix          = $prefix"
+log_debug_info "exec_prefix     = $exec_prefix"
+log_debug_info "bindir          = $bindir"
+#log_debug_info "sbindir         = $sbindir"
+#log_debug_info "sysconfdir      = $sysconfdir"
+#log_debug_info "datarootdir     = $datarootdir"
+log_debug_info "datadir         = $datadir"
+#log_debug_info "includedir      = $includedir"
+#log_debug_info "libdir          = $libdir"
+#log_debug_info "libexecdir      = $libexecdir"
+#log_debug_info "localstatedir   = $localstatedir"
+#log_debug_info "sharedstatedir  = $sharedstatedir"
+log_debug_info "docdir          = $docdir"
+log_debug_info "mandir          = $mandir"
+#log_debug_info "infodir         = $infodir"
 
 log_debug_info "Creating directories"
   install -d "$DESTDIR/$bindir"
