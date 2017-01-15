@@ -6,15 +6,15 @@ topic "U++ POSIX/X11 installation";
 [{_}%EN-US 
 [s3; U`+`+ POSIX/X11 installation&]
 [s2; Standard POSIX/X11 distribution of U`+`+ comes as a source tarball. 
-If you want to run U`+`+ graphical environnement (theide) or 
-run U`+`+ command line tool (umk), you will first need to compile 
+If you want to run U`+`+ graphical environment (theide) or run 
+U`+`+ command line tool (umk), you will first need to compile 
 and install U`+`+.&]
 [s1; Build Requires&]
-[s2; Before compiling U`+`+ source code, you must install a few developpement 
-packages. Many POSIX/X11 distributions provides developpement 
-packages with the same names. Sometimes, developpement package 
-names don`'t match. You will have to find the corresponding names 
-for your distribution.&]
+[s2; Before compiling U`+`+ source code, you must install a few development 
+packages. Many POSIX/X11 distributions provides development packages 
+with the same names. Sometimes, development package names don`'t 
+match. You will have to find the corresponding names for your 
+distribution.&]
 [s2; [*3 Build requires per distribution]&]
 [s2; [* Debian/apt`-get based distributions]&]
 [s2; Build requires:[*  ]g`+`+  make  libgtk2.0`-dev  libnotify`-dev 
@@ -57,6 +57,14 @@ cairo`-devel libnotify`-devel freetype`-devel expat`-devel bzip2`-devel&]
 [s2; OpenSuse build requires: gtk2`-devel pango`-devel atk`-devel 
 cairo`-devel libnotify`-devel xorg`-x11`-devel freetype2`-devel 
 libexpat`-devel libbz2`-devel&]
+[s2; [* BSD based distributions]&]
+[s2; Build requires:  gtk2 freetype2 libnotify llvm39 (clang`+`+)&]
+[s2; How to install them:&]
+[s2; if sudo is available and enabled on your distribution, copy/paste 
+this in a terminal:&]
+[ {{10000@(229) [s2; sudo pkg install gtk2 freetype2 libnotify llvm39]}}&]
+[s2; if sudo is not available:&]
+[ {{10000@(229) [s2; su `-m root `-c `'pkg install gtk2 freetype2 libnotify llvm39`']}}&]
 [s1; Compile U`+`+ source code&]
 [s2; [* Standard U`+`+ compilation]&]
 [s2; First, uncompress U`+`+ source tarball and change dir to the 

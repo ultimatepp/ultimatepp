@@ -54,6 +54,21 @@ The 'buildrequires.fedora' file in U++ tarball contains yum commands to do the s
 Redhat 7 build requires:  gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel freetype-devel expat-devel bzip2-devel
 OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
+#### BSD based distributions ####
+
+Build requires:  gtk2 freetype2 libnotify llvm39 (clang++)
+
+How to install them:
+
+if sudo is available and enabled on your distribution, copy/paste this in a terminal:
+```
+sudo pkg install gtk2 freetype2 libnotify llvm39
+```
+if sudo is not available:
+```
+su -m root -c 'pkg install gtk2 freetype2 libnotify llvm39'
+```
+
 
 ## Compile U++ source code ##
 
