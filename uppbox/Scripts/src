@@ -26,6 +26,7 @@ mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/uMakefile.in
 cp -p ~/Scripts/Makefile ~/upp.tmp/upp
 cp -p ~/Scripts/domake ~/upp.tmp/upp
 cp -p ~/Scripts/doinstall ~/upp.tmp/upp
+cp -p ~/Scripts/function_library ~/upp.tmp/upp
 cp -p ~/Scripts/readme ~/upp.tmp/upp
 cp -p ~/Scripts/upp-devel.spec ~/upp.tmp/upp
 cp -p ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
