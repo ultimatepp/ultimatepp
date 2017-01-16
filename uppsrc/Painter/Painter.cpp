@@ -503,9 +503,9 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const 
 		int a = fnt.GetAscent();
 		int cy = max(a / 16, 1);
 		if(fnt.IsUnderline())
-			Rectangle(0, a + cy, x, cy);
+			Rectangle(p.x, p.y + a + cy, x, cy);
 		if(fnt.IsStrikeout())
-			Rectangle(0, 2 * a / 3, x, cy);
+			Rectangle(p.x, p.y + 2 * a / 3, x, cy);
 	}
 }
 
