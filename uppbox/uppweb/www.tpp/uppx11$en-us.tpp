@@ -58,13 +58,14 @@ cairo`-devel libnotify`-devel freetype`-devel expat`-devel bzip2`-devel&]
 cairo`-devel libnotify`-devel xorg`-x11`-devel freetype2`-devel 
 libexpat`-devel libbz2`-devel&]
 [s2; [* BSD based distributions]&]
-[s2; Build requires:  gtk2 freetype2 libnotify llvm39 (clang`+`+)&]
+[s2; Build requires:  gmake gtk2 freetype2 libnotify llvm39 (clang`+`+)&]
 [s2; How to install them:&]
 [s2; if sudo is available and enabled on your distribution, copy/paste 
 this in a terminal:&]
-[ {{10000@(229) [s2; sudo pkg install gtk2 freetype2 libnotify llvm39]}}&]
+[ {{10000@(229) [s2; sudo pkg install gmake gtk2 freetype2 libnotify llvm39]}}&]
 [s2; if sudo is not available:&]
-[ {{10000@(229) [s2; su `-m root `-c `'pkg install gtk2 freetype2 libnotify llvm39`']}}&]
+[ {{10000@(229) [s2; su `-m root `-c `'pkg install gmake gtk2 freetype2 libnotify 
+llvm39`']}}&]
 [s1; Compile U`+`+ source code&]
 [s2; [* Standard U`+`+ compilation]&]
 [s2; First, uncompress U`+`+ source tarball and change dir to the 
@@ -100,7 +101,15 @@ parameters:&]
 [ {{10000@(229) [s2; make `-e CXX`=`"clang`+`+`" `-e CXXFLAGS`=`"`-O3 `-ffunction`-sections 
 `-fdata`-sections `-Wno`-logical`-op`-parentheses `-std`=c`+`+11`"&]
 [s2; make install]}}&]
-[s2; &]
+[s2; On BSD distributions, if you use make instead of gmake, U`+`+ 
+compilation will fail because BSD `'make`' needs four dollar 
+characters (`'`$`') to escape one. To solve this, you can install 
+gmake or, if you want to play in a dangerous territory, you can 
+manually (or with sed or awk) modify uppsrc/Makefile.in and uppsrc/uMakefile.in. 
+You will have to change all file names containing `'`$`$`' with 
+`'`$`$`$`$`'.&]
+[s2; Those file names are already escaped for gmake. This is why 
+they already use two dollars (`'`$`$`').&]
 [s1; U`+`+ spec file for rpm based distribution&]
 [s2; There is an alternative way to build U`+`+ on rpm based distributions. 
 Indead, U`+`+ POSIX/X11 tarball contains a spec file for you 
