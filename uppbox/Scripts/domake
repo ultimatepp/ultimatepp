@@ -354,21 +354,23 @@ else
     
 fi
 
-if [ "$UPPOUT" = "" ]
-then
-  UPPOUT="uppsrc"
-fi
 
-if [ -f "$UPPOUT/ide.out" ]
+if [ -f "uppsrc/ide.out" ]
 then
   log_debug_info "Installing theide in current directory"
-  cp -p "$UPPOUT/ide.out" ./theide
+  cp -p "uppsrc/ide.out" ./theide
+
+else
+  log_debug_warning "Can't find uppsrc/ide.out binary"
 
 fi
 
-if [ -f "$UPPOUT/umk.out" ]
+if [ -f "uppsrc/umk.out" ]
 then
   log_debug_info "Installing umk in current directory"
-  cp -p "$UPPOUT/umk.out" ./umk
+  cp -p "uppsrc/umk.out" ./umk
+
+else
+  log_debug_warning "Can't find uppsrc/umk.out binary"
 
 fi
