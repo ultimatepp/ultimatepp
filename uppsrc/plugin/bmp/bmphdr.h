@@ -1,7 +1,7 @@
 #ifndef _nImage__bmp_h_
 #define _nImage__bmp_h_
 
-#ifdef COMPILER_MSC
+#if defined(COMPILER_MSC) || defined(COMPILER_MINGW)
 #pragma pack(push, 1)
 #endif
 
