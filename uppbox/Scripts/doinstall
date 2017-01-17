@@ -1,7 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # doinstall:
 # Install U++ binaries and sources
 # 'sh doinstall --help' will show you all available options
+
+### Sourced file(s)
+
+. ./function_library
 
 ### Variables
 
@@ -14,21 +18,19 @@ show_debug_error="true"
 
 ### Constants
 
-script_name=$(echo "$0" | tr '[:lower:]' '[:upper:]' )
+SCRIPT_NAME=$(basename "$0" | tr '[:lower:]' '[:upper:]' )
 
 ### Function declarations
 
-. ./function_library
-
 show_usage()
 {
+# current: Calling directly: ./doinstall --prefix=${prefix} --bindir=${bindir} --datadir=${datadir} --mandir=${mandir} --docdir=${docdir} --verbose
+# current: Using Makefile:   make install prefix=${prefix} exec-prefix=${exec_prefix} bindir=${bindir} datadir=${datadir} mandir=${mandir} docdir=${docdir}
+
+# full: Using Makefile: make install prefix=${prefix} exec-prefix=${exec_prefix} bindir=${bindir} sbindir=${sbindir} sysconfdir=${sysconfdir} datadir=${datadir} includedir=${includedir} libdir=${libdir} libexecdir=${libexecdir} localstatedir=${localstatedir} sharedstatedir=${sharedstatedir} mandir=${mandir} infodir=${infodir} docdir=${docdir}
 # full: ./doinstall --prefix=${prefix} --exec-prefix=${exec_prefix} --bindir=${bindir} --sbindir=${sbindir} --sysconfdir=${sysconfdir} --datadir=${datadir} --includedir=${includedir} --libdir=${libdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --sharedstatedir=${sharedstatedir} --mandir=${mandir} --infodir=${infodir} --docdir=${docdir}
 
-# current: ./doinstall --prefix=${prefix} --bindir=${bindir} --datadir=${datadir} --mandir=${mandir} --docdir=${docdir}
-
-# Makefile: make install prefix=${prefix} exec-prefix=${exec_prefix} bindir=${bindir} sbindir=${sbindir} sysconfdir=${sysconfdir} datadir=${datadir} includedir=${includedir} libdir=${libdir} libexecdir=${libexecdir} localstatedir=${localstatedir} sharedstatedir=${sharedstatedir} mandir=${mandir} infodir=${infodir} docdir=${docdir}
-
-    echo "usage: ./$0 [options]"
+    echo "usage: ./$SCRIPT_NAME [options]"
     echo
     echo 'options:'
     echo '  DESTDIR=<path>          : installation root directory (prepending each target directory to provides staged installs ( default: void )' 
@@ -46,7 +48,7 @@ show_usage()
 #   echo '  --libexecdir=<path>     : programs installation directory, executable run by applications and not by users ( default: /usr/local/libexec e.g. $(exec_prefix)/libexec )'
 #   echo '  --localstatedir=<path>  : architecture-independent data installation directory, data that programs can modify while they run ( default: /usr/local/var e.g. $(prefix)/var )'
 #   echo '  --sharedstatedir=<path> : data files directory where programs modify their files at runtime ( default: /usr/local/var/lib e.g. $localstatedir/lib )'
-#   echo '  --sharedstatedir=<path> : data files directory where programs modify their files at runtime ( default: $prefix/'$project_name' )'
+#   echo '  --sharedstatedir=<path> : data files directory where programs modify their files at runtime ( default: $prefix/'$package_name' )'
 ##  echo '  --mandir=<path>         : man pages top level directory ( default: /usr/local/share/man e.g. $(datarootdir)/share/man )'
     echo '  --mandir=<path>         : man pages top level directory ( default: /usr/local/share/man e.g. $(datadir)/share/man )'
     echo '  --docdir=<path>         : documentation files directory ( default: /usr/local/share/doc e.g. $(datatdir)/doc )'
@@ -61,8 +63,8 @@ show_usage()
     echo
     echo 'NOTE:'
     echo " * If you don't set prefix, installation will be done in your home directory in an U++ style (other install option parameters will be ignored)."
-    echo " * $0 uses environnement variables. If 'prefix' is different than HOME, 'bindir', 'datadir' and other environnement variables will be used."
-    echo " * All option parameters like --prefix, --bindir, ..., will superseed environnement variables."
+    echo " * $SCRIPT_NAME uses environment variables. If 'prefix' is different than HOME, 'bindir', 'datadir' and other environment variables will be used."
+    echo " * All option parameters like --prefix, --bindir, ..., will superseed environment variables."
     echo
 }
 
@@ -192,7 +194,6 @@ do
 
 done
 
-
 [ -z "$DESTDIR"        ] && DESTDIR=""					# DESTDIR=""
 [ -z "$prefix"         ] && prefix="$HOME"				# prefix="/usr/local"
 [ -z "$exec_prefix"    ] && exec_prefix="$prefix"			# exec_prefix="$prefix"
@@ -298,28 +299,28 @@ log_debug_info "mandir          = $mandir"
 
 log_debug_info "Creating directories"
   install -d "$DESTDIR/$bindir"
-  install -d "$DESTDIR/$datadir/$project_name"
+  install -d "$DESTDIR/$datadir/$package_name"
   install -d "$DESTDIR/$datadir/applications"
   install -d "$DESTDIR/$datadir/icons/hicolor/48x48/apps"
   install -d "$DESTDIR/$datadir/pixmaps"
-  install -d "$DESTDIR/$datadir/licenses/$project_name"
-  install -d "$DESTDIR/$docdir/$project_name"
+  install -d "$DESTDIR/$datadir/licenses/$package_name"
+  install -d "$DESTDIR/$docdir/$package_name"
   install -d "$DESTDIR/$mandir/man1"
 
 log_debug_info "Copying theide and umk"
   install ./theide "$DESTDIR/$bindir/theide"
   install ./umk    "$DESTDIR/$bindir/umk"
 
-log_debug_info "Adding symbolic link ( $package_name -> $datadir/$project_name )"
-  if [ ! -e "$DESTDIR/$datadir/$package_name" ]
+log_debug_info "Adding symbolic link ( $project_name -> $datadir/$package_name )"
+  if [ ! -e "$DESTDIR/$datadir/$project_name" ]
   then
-    ln -s "$datadir/$project_name" "$DESTDIR/$datadir/$package_name"
-  elif [ -h "$DESTDIR/$datadir/$package_name" ]
+    ln -s "$datadir/$package_name" "$DESTDIR/$datadir/$project_name"
+  elif [ -h "$DESTDIR/$datadir/$project_name" ]
   then
-    rm -f "$DESTDIR/$datadir/$package_name"
-    ln -s "$datadir/$project_name" "$DESTDIR/$datadir/$package_name"
+    rm -f "$DESTDIR/$datadir/$project_name"
+    ln -s "$datadir/$package_name" "$DESTDIR/$datadir/$project_name"
   else
-    log_debug_error "Already exist: $DESTDIR/$datadir/$package_name"
+    log_debug_error "Already exist: $DESTDIR/$datadir/$project_name"
   fi
 
 log_debug_info "Copying man pages"
@@ -332,27 +333,27 @@ log_debug_info "Copying icons and destop file"
   cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/pixmaps/theide.png"
 
 log_debug_info "Copying U++ source code"
-  cp -a bazaar    "$DESTDIR/$datadir/$project_name/"
-# cp -a Common    "$DESTDIR/$datadir/$project_name/"
-  cp -a examples  "$DESTDIR/$datadir/$project_name/"
-  cp -a reference "$DESTDIR/$datadir/$project_name/"
-  cp -a tutorial  "$DESTDIR/$datadir/$project_name/"
-  cp -a uppsrc    "$DESTDIR/$datadir/$project_name/"
+  cp -a bazaar    "$DESTDIR/$datadir/$package_name/"
+# cp -a Common    "$DESTDIR/$datadir/$package_name/"
+  cp -a examples  "$DESTDIR/$datadir/$package_name/"
+  cp -a reference "$DESTDIR/$datadir/$package_name/"
+  cp -a tutorial  "$DESTDIR/$datadir/$package_name/"
+  cp -a uppsrc    "$DESTDIR/$datadir/$package_name/"
   
 #<begin> TODO: BINARY FROM COMPILATION AND build_info.h ARE STILL IN UPPSRC AND MUST NOT BE PART OF INSTALLATION. MUST USE A DIFFERENT APPROCHE THAN REMOVING THEM AFTER INSTALL (LIKE DEFINING UPPOUT ELSEWHERE THAN IN uppsrc/_out)
 log_debug_info "Cleaning source code"
-  rm -fr "$DESTDIR/$datadir/$project_name/uppsrc/_out"
-  rm -f  "$DESTDIR/$datadir/$project_name/uppsrc/ide.out"
-  rm -f  "$DESTDIR/$datadir/$project_name/uppsrc/umk.out"
-  rm -f  "$DESTDIR/$datadir/$project_name/uppsrc/build_info.h"
+  rm -fr "$DESTDIR/$datadir/$package_name/uppsrc/_out"
+  rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/ide.out"
+  rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/umk.out"
+  rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/build_info.h"
 #<end> TODO
 
 log_debug_info "Copying GCC.bm CLANG.bm" *.scd "U++ license and readme"
-  cp -p GCC.bm   "$DESTDIR/$datadir/$project_name/"
-  cp -p CLANG.bm "$DESTDIR/$datadir/$project_name/"
-  cp -p *.scd    "$DESTDIR/$datadir/$project_name/"
-  cp -p readme   "$DESTDIR/$docdir/$project_name/"
-  cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$project_name/"
+  cp -p GCC.bm   "$DESTDIR/$datadir/$package_name/"
+  cp -p CLANG.bm "$DESTDIR/$datadir/$package_name/"
+  cp -p *.scd    "$DESTDIR/$datadir/$package_name/"
+  cp -p readme   "$DESTDIR/$docdir/$package_name/"
+  cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$package_name/"
 
 fi
 
