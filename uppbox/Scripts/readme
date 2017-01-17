@@ -56,17 +56,17 @@ OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-
 
 #### BSD based distributions ####
 
-Build requires: gmake gtk2 freetype2 libnotify llvm39 (clang++)
+Build requires: bash gmake gtk2 freetype2 libnotify llvm39 (clang++)
 
 How to install them:
 
 if sudo is available and enabled on your distribution, copy/paste this in a terminal:
 ```
-sudo pkg install gmake gtk2 freetype2 libnotify llvm39
+sudo pkg install bash gmake gtk2 freetype2 libnotify llvm39
 ```
 if sudo is not available:
 ```
-su -m root -c 'pkg install gmake gtk2 freetype2 libnotify llvm39'
+su -m root -c 'pkg install bash gmake gtk2 freetype2 libnotify llvm39'
 ```
 
 

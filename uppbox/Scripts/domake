@@ -1,81 +1,292 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # domake:
 # Compile U++ main tools: theide and umk
+
+### Sourced file(s)
+
+. ./function_library
 
 ### Variables
 
 minimum_gcc_dumpversion="4.9.0"
+minimum_gcc_version=$(convert_version_to_number "$minimum_gcc_dumpversion")
+
 show_debug_info="true"
 show_debug_warning="true"
 show_debug_error="true"
 
+use_gcc="false"
+use_clang="false"
+use_cpp_compiler="false"
+use_other_cpp_compiler="false"
+
+unset make_parameter_array
+
 ### Constants
 
-script_name=$(echo "$0" | tr '[:lower:]' '[:upper:]' )
+DEFAULT_GCC_CXXFLAGS=""
+DEFAULT_CLANG_CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+DEFAULT_CPP_CXXFLAGS=""
+DEFAULT_OTHER_CPP_CXXFLAGS=""
+
+SCRIPT_NAME=$(basename "$0" | tr '[:lower:]' '[:upper:]' )
 
 ### Function declarations
 
-. ./function_library
-
-convert_version_to_number()
+show_usage()
 {
-  if [ -z "$1" ]
-  then
-    log_debug_error "Function 'convert_version_to_number' called with empty parameter"
-    return 1
-  fi
-  echo "$1" | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$/&00/'
-  return 0
+    echo "usage: ./$SCRIPT_NAME [options]"
+    echo
+    echo 'options:'
+    echo '  --verbose       : increase verbosity'
+    echo '  --info=FLAGS    : fine-grained informational verbosity ( default: true )'
+    echo '  --warning=FLAGS : fine-grained warning verbosity ( default: true )'
+    echo '  --debug=FLAGS   : fine-grained debug verbosity ( default: true )'
+    echo '  --help          : show current usage information'
+    echo
+    echo 'NOTE:'
+    echo " * $SCRIPT_NAME use environment variables to supersede auto generated variables and those from Makefile.in: "
+    echo "   - CXX          : c++ compiler"
+    echo "   - CXXFLAGS     : c++ compiler flags"
+    echo "   - UPPOUT       : U++ output directory"
+    echo "   - CINC         : default include directory list (use ';' as separator)"
+    echo "   - Macro        : U++ macro (ex: -DflagLINUX)"
+    echo "   - LINKER       : linker binary name"
+    echo "   - LDFLAGS      : linker extra flags"
+    echo "   - LIBPATH      : library path list (use ';' as separator)"
+    echo "   - AR           : archive-maintaining program"
+    echo
+    echo "Example: CXX=g++ UPPOUT=\$HOME/tmp ./$SCRIPT_NAME"
 }
+
+log_debug_info "Processing parameters"
+
+for arg in "$@"
+do
+  case "$arg" in
+
+  --verbose)
+    show_debug_info=true
+    show_debug_warning=true
+    show_debug_error=true
+    ;;
+    
+  --info=*)
+    show_debug_info=$( echo $arg | sed 's/--info=//' )
+    if [ "$show_debug_info" != "true" -a "$show_debug_info" != "false"  ]
+    then
+      show_usage
+      exit 0
+    fi
+    ;;
+    
+  --warning=*)
+    show_debug_warning=$( echo $arg | sed 's/--warning=//' )
+    if [ "$show_debug_warning" != "true" -a "$show_debug_warning" != "false"  ]
+    then
+      show_usage
+      exit 0
+    fi
+    ;;
+    
+  --error=*)
+    show_debug_error=$( echo $arg | sed 's/--error=//' )
+    if [ "$show_debug_error" != "true" -a "$show_debug_error" != "false"  ]
+    then
+      show_usage
+      exit 0
+    fi
+    ;;
+
+  --help)
+    show_usage
+    exit 0
+    ;;
+    
+    *)
+    log_debug_error "Bad command line argument '$arg'"
+    show_usage
+    exit 1
+    
+    esac
+
+done
 
 
 ### Main script start here
 
-log_debug_info "Searching for g++ compiler"
-
-minimum_gcc_version=$(convert_version_to_number "$minimum_gcc_dumpversion")
-
-if which g++
+if [ "$CXX" != "" ]
 then
-  log_debug_info "Found $(which g++)"
-  gcc_dumpversion=$(gcc -dumpversion)
-  gcc_version=$(convert_version_to_number "$gcc_dumpversion")
+  log_debug_warning "Use of $CXX forced by CXX environment variable"
 
-  if [ "$gcc_version" -gt "$minimum_gcc_version" ]
+  if [ "$(basename "$CXX")" = "g++" ]
   then
+    log_debug_info "Will use g++ as requested"
     use_gcc="true"
     
-  else
-    use_gcc="false"
-    log_debug_warning "The g++ compiler found (e.q $gcc_dumpversion) has a lower version than the minimum required version (e.q $minimum_gcc_dumpversion)"
-
-  fi
-else
-  use_gcc="false"
-
-fi
-
-if [ "$use_gcc" = "false" ]
-then
-  log_debug_info "Searching for clang++ compiler"
-  if which clang++
+  elif [ "$(basename "$CXX")" = "clang++" ]
   then
+    log_debug_info "Will use g++ as requested"
     use_clang="true"
-    
+  
+  elif [ "$(basename "$CXX")" = "c++" ]
+  then
+    log_debug_info "Will use c++ as requested"
+    use_cpp_compiler="true"
+
   else
-    use_clang="false"
-    log_debug_warning "Can't find clang++ compiler in PATH"
-    log_debug_error "No compatible c++ compiler found in PATH"
-    log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}"
-    log_debug " - Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
-    log_debug " - Or install clang++ LLVM compiler"
-    log_debug " - Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
-    exit 1
-    
+    log_debug_info "Will use $CXX as requested"
+    use_other_cpp_compiler="true"
+
+  fi
+
+else
+
+  log_debug_info "Searching for g++ compiler"
+
+  if which g++
+  then
+    log_debug_info "Found $(which g++)"
+    gcc_dumpversion=$(gcc -dumpversion)
+    gcc_version=$(convert_version_to_number "$gcc_dumpversion")
+
+    if [ "$gcc_version" -gt "$minimum_gcc_version" ]
+    then
+      use_gcc="true"
+      CXX="g++"
+
+    else
+      log_debug_warning "The g++ compiler found (e.q $gcc_dumpversion) has a lower version than the minimum required version (e.q $minimum_gcc_dumpversion)"
+
+    fi
+  fi
+
+  if [ "$use_gcc" = "false" ]
+  then
+    log_debug_info "Searching for clang++ compiler"
+    if which clang++
+    then
+      log_debug_info "Found $(which clang++)"
+      use_clang="true"
+      CXX="clang++"
+
+    else
+      log_debug_info "Searching for a standard c++ compiler"
+
+      if which c++
+      then
+        log_debug_info "Found $(which c++)"
+        log_debug_warning "This c++ compiler has not been tested yet. Compilation will perhaps fail"
+        use_cpp_compiler="true"
+        CXX="c++"
+
+        c++ --version || true
+
+      else
+        log_debug_error "No compatible c++ compiler found in PATH"
+        log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}"
+        log_debug " - Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
+        log_debug " - Or install clang++ LLVM compiler"
+        log_debug " - Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
+        exit 1
+
+      fi    
+    fi
   fi
 fi
+
+
+log_debug_info "Searching for extra make parameters"
+
+i=0
+
+if [ "$CXXFLAGS" != "" ]
+then
+  log_debug_warning "CXXFLAGS superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="CXXFLAGS=$CXXFLAGS"
+
+elif [ "$use_gcc" = "true" -a "$DEFAULT_GCC_CXXFLAGS" != "" ]
+then
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="CXXFLAGS=$DEFAULT_GCC_CXXFLAGS"
+  
+elif [ "$use_clang" = "true" -a "$DEFAULT_CLANG_CXXFLAGS" != "" ]
+then
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="CXXFLAGS=$DEFAULT_CLANG_CXXFLAGS"
+
+elif [ "$use_cpp_compiler" = "true" -a "$DEFAULT_CPP_CXXFLAGS" != "" ]
+then
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="CXXFLAGS=$DEFAULT_CPP_CXXFLAGS"
+
+elif [ "$use_other_cpp_compiler" = "true" -a "$DEFAULT_OTHER_CPP_CXXFLAGS" != "" ]
+then
+  log_debug_warning "CXXFLAGS environment variable not set. Will use the default value from uppsrc/Makefile.in"
+
+fi
+
+if [ "$UPPOUT" != "" ]
+then
+  log_debug_warning "UPPOUT superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="UPPOUT=$UPPOUT"
+fi
+if [ "$CINC" != "" ]
+then
+  log_debug_warning "CINC superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="CINC=$CINC"
+fi
+if [ "$Macro" != "" ]
+then
+  log_debug_warning "Macro superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="Macro=$Macro"
+fi
+if [ "$LINKER" != "" ]
+then
+  log_debug_warning "LINKER superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="LINKER=$LINKER"
+fi
+if [ "$LDFLAGS" != "" ]
+then
+  log_debug_warning "LDFLAGS superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="LDFLAGS=$LDFLAGS"
+fi
+if [ "$LIBPATH" != "" ]
+then
+  log_debug_warning "LIBPATH superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="LIBPATH=$LIBPATH"
+fi
+if [ "$AR" != "" ]
+then
+  log_debug_warning "AR superseded by corresponding environment variable"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="AR=$AR"
+fi
+
+if [ "${#make_parameter_array[@]}" != "0" ]
+then
+  log_debug_info "Make parameters:"
+  for (( i=1 ; i < ${#make_parameter_array[@]} ; i+=2 ))
+  do
+    log_debug_info " --> ${make_parameter_array[$i]}"
+  done
+fi
+
 
 log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.bm with pkg-config"
+
+if [ "${#make_parameter_array}" != "0" ]
+then
+  log_debug_info "Extra parameters will supersede default parameters"
+
+fi
 
 if which pkg-config
 then
@@ -88,7 +299,7 @@ then
       library_list="$library_list $i"
       log_debug_info "pkg-config: Found library $i"
     else
-      log_debug_warning "pkg-config: '$i' not found in $(pkg-config --variable pc_path pkg-config). Do you need to install $i developpement package?"
+      log_debug_warning "pkg-config: '$i' not found in $(pkg-config --variable pc_path pkg-config). Do you need to install $i development package?"
     fi
   done
   
@@ -132,30 +343,32 @@ fi
 
 
 log_debug_info "Found $make_binary. Compiling..."
-
-if [ "$use_gcc" = "true" ]
+if [ "${#make_parameter_array}" = "0" ]
 then
-  $make_binary -C uppsrc
-  $make_binary -C uppsrc -f uMakefile
+  $make_binary -C uppsrc -e CXX="$CXX"
+  $make_binary -C uppsrc -e CXX="$CXX" -f uMakefile
     
-elif [ "$use_clang" = "true" ]
-then
-    $make_binary -C uppsrc -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-    $make_binary -C uppsrc -f uMakefile -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+else
+  $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}"
+  $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}" -f uMakefile
     
 fi
 
+if [ "$UPPOUT" = "" ]
+then
+  UPPOUT="uppsrc"
+fi
 
-if [ -f uppsrc/ide.out ]
+if [ -f "$UPPOUT/ide.out" ]
 then
   log_debug_info "Installing theide in current directory"
-  cp -p uppsrc/ide.out ./theide
-  
+  cp -p "$UPPOUT/ide.out" ./theide
+
 fi
 
-if [ -f uppsrc/umk.out ]
+if [ -f "$UPPOUT/umk.out" ]
 then
   log_debug_info "Installing umk in current directory"
-  cp -p uppsrc/umk.out ./umk
-  
+  cp -p "$UPPOUT/umk.out" ./umk
+
 fi
