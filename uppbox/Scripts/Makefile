@@ -2,17 +2,23 @@
 SHELL = /bin/sh
 
 all:
-	+$(SHELL) domake
+	+./domake
 
 install:
-	$(SHELL) doinstall --verbose
+	+./doinstall --verbose
 
 clean:
-	rm -fr uppsrc/_out
-	rm -f  uppsrc/ide.out
-	rm -f  uppsrc/umk.out
+	if [ "$(UPPOUT)" != "" -a -d "$(UPPOUT)" ] ; then \
+	  rm -fr "$(UPPOUT)" ; \
+	else \
+	  rm -fr uppsrc/_out ; \
+	fi
+	rm -f uppsrc/ide.out
+	rm -f uppsrc/umk.out
 
 distclean: clean
+	rm -f theide
+	rm -f umk
 	rm -f GCC.bm
 	rm -f CLANG.bm
 	rm -f uppsrc/Makefile

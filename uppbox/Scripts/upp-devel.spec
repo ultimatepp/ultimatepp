@@ -106,105 +106,15 @@ to C++ programming. It provides:
 # ----
 %build
 
-
-if which pkg-config
-then
-  library_list=""
-  for i in gtk+-2.0 x11 libnotify freetype2
-  do
-    if pkg-config --exists $i
-    then
-      library_list="$library_list $i"
-    fi
-  done
-
-  if [ "$library_list" = "" ]
-  then
-    echo "Can't find any configuration file with pkg-config"
-    exit 1
-  fi
-
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
-
-else
-  echo "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
-  echo "If compilation fail because of missing include, please install pkg-config before reporting"
-  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" CLANG.bm.in >CLANG.bm
-
-fi
-
-if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
-then
-  sed -i -e s/-ldl//g uppsrc/Makefile
-  sed -i -e s/-ldl//g uppsrc/uMakefile
-fi
-
-make %{?_smp_mflags} \
-     -C uppsrc \
-     -f Makefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify x11) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/ide.out" \
-%if 0%{?fedora_version} || 0%{?fedora}
-%else
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
-
-make %{?_smp_mflags} \
-     -C uppsrc \
-     -f uMakefile \
-     -e LIBPATH=$(pkg-config --libs-only-L gtk+-2.0 libnotify x11) \
-     -e CINC=" -I. $(pkg-config --cflags gtk+-2.0 libnotify x11)"  \
-     -e UPPOUT="$PWD/out/" \
-     -e OutFile="$PWD/out/umk.out" \
-%if 0%{?fedora_version} || 0%{?fedora}
-%else
-     -e CXX="clang++" \
-     -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
-%endif
+make %{?_smp_mflags}
 
 #-------
 %install
 rm -rf %{buildroot}
-
-install -d %{buildroot}/%{_bindir}
-install -d %{buildroot}/%{_datadir}/applications
-install -d %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps
-install -d %{buildroot}/%{_datadir}/pixmaps
-install -d %{buildroot}/%{_datadir}/%{project_name}
-install -d %{buildroot}/%{_mandir}/man1
-
-install out/ide.out %{buildroot}/%{_bindir}/theide
-install out/umk.out %{buildroot}/%{_bindir}/umk
-
-ln -s %{_datadir}/%{project_name}  %{buildroot}/%{_datadir}/%{name}
-
-cp -p uppsrc/ide/theide.1 %{buildroot}/%{_mandir}/man1/
-cp -p uppsrc/umk/umk.1 %{buildroot}/%{_mandir}/man1/
-
-cp -p uppsrc/ide/theide.desktop %{buildroot}/%{_datadir}/applications/theide.desktop
-cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/icons/hicolor/48x48/apps/theide.png
-cp -p uppsrc/ide/theide-48.png %{buildroot}/%{_datadir}/pixmaps/theide.png
-
-cp -a bazaar %{buildroot}/%{_datadir}/%{project_name}/
-# cp -a Common %{buildroot}/%{_datadir}/%{project_name}/
-cp -a examples %{buildroot}/%{_datadir}/%{project_name}/
-cp -a reference %{buildroot}/%{_datadir}/%{project_name}/
-cp -a tutorial %{buildroot}/%{_datadir}/%{project_name}/
-cp -a uppsrc %{buildroot}/%{_datadir}/%{project_name}/
-
-cp -p *.scd %{buildroot}/%{_datadir}/%{project_name}/
+make DESTDIR="%{buildroot}" prefix="%{_prefix}" datadir="%{_datadir}" mandir="%{_mandir}" docdir="%{_datadir}/doc" install
 
 # We create our own GCC.bm
-# cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{project_name}/
+# cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
 
 INCLUDEDIR=$( pkg-config --cflags gtk+-2.0 libnotify x11 | awk ' { gsub ( /-pthread /, "" ) ; gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
 LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify x11 | awk ' { gsub ( / /, "" ) ; gsub ( /-I/, ";" ) ; sub ( /;/, "" ) ; print $0 }' )
@@ -215,7 +125,7 @@ LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify x11 | awk ' { gsub ( / /, 
      LINK=""
 %endif
 
-cat > %{buildroot}/%{_datadir}/%{project_name}/GCC.bm << EOF
+cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
 BUILDER			= "GCC";
 COMPILER		= "g++";
 COMMON_CPP_OPTIONS	= "-std=c++11";
@@ -242,7 +152,7 @@ REMOTE_MAP		= "";
 LINKMODE_LOCK		= "0";
 EOF
 
-cat > %{buildroot}/%{_datadir}/%{project_name}/CLANG.bm << EOF
+cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm << EOF
 BUILDER			= "CLANG";
 COMPILER		= "clang++";
 COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
@@ -287,9 +197,9 @@ rm -fr %{buildroot}
 %{_datadir}/applications/theide.desktop
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
-%dir %{_datadir}/%{project_name}
-%{_datadir}/%{project_name}/*
-%{_datadir}/%{name}
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*
+%{_datadir}/%{project_name}
 %{_mandir}/man1/*
 
 #---------
