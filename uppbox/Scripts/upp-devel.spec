@@ -111,7 +111,7 @@ make %{?_smp_mflags}
 #-------
 %install
 rm -rf %{buildroot}
-make DESTDIR="%{buildroot}" prefix="%{_prefix}" datadir="%{_datadir}" mandir="%{_mandir}" docdir="%{_datadir}/doc" install
+make DESTDIR="%{buildroot}" prefix="%{_prefix}" bindir="%{_bindir}" datadir="%{_datadir}" mandir="%{_mandir}" docdir="%{_datadir}/doc" install
 
 # We create our own GCC.bm
 # cp -p uppsrc/ide/GCC.bm %{buildroot}/%{_datadir}/%{name}/
