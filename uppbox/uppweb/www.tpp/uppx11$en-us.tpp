@@ -58,15 +58,15 @@ cairo`-devel libnotify`-devel freetype`-devel expat`-devel bzip2`-devel&]
 cairo`-devel libnotify`-devel xorg`-x11`-devel freetype2`-devel 
 libexpat`-devel libbz2`-devel&]
 [s2; [* BSD based distributions]&]
-[s2; Build requires: bash gmake gtk2 freetype2 libnotify llvm39 (e.g. 
-clang`+`+)&]
+[s2; Build requires: bash gmake gtk2 freetype2 libnotify clang`-devel 
+(e.g. clang`+`+)&]
 [s2; How to install them:&]
 [s2; if sudo is available and enabled on your distribution, copy/paste 
 this in a terminal:&]
-[ {{10000@(229) [s2; sudo pkg install bash gmake gtk2 freetype2 libnotify llvm39]}}&]
+[ {{10000@(229) [s2; sudo pkg install bash gmake gtk2 freetype2 libnotify clang`-devel]}}&]
 [s2; if sudo is not available:&]
 [ {{10000@(229) [s2; su `-m root `-c `'pkg install bash gmake gtk2 freetype2 libnotify 
-llvm39`']}}&]
+clang`-devel`']}}&]
 [s1; Compile U`+`+ source code&]
 [s2; [* Standard U`+`+ compilation]&]
 [s2; First, uncompress U`+`+ source tarball and change dir to the 
