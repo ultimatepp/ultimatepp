@@ -500,12 +500,13 @@ void Painter::TextOp(const Pointf& p, const wchar *text, Font fnt, int n, const 
 		n--;
 	}
 	if(fnt.IsUnderline() || fnt.IsStrikeout()) {
-		int a = fnt.GetAscent();
-		int cy = max(a / 16, 1);
+		double a = fnt.GetAscent();
+		double cy = max(a / 16, 1.0);
+		double cx = x - p.x;
 		if(fnt.IsUnderline())
-			Rectangle(p.x, p.y + a + cy, x, cy);
+			Rectangle(p.x, p.y + a + cy, cx, cy);
 		if(fnt.IsStrikeout())
-			Rectangle(p.x, p.y + 2 * a / 3, x, cy);
+			Rectangle(p.x, p.y + 2 * a / 3, cx, cy);
 	}
 }
 
