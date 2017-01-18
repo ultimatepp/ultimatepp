@@ -39,7 +39,7 @@ COLOR_LIGHT_RED='\e[1;31m'
 # Enable standard echo behaviour everywhere
 echo()
 {
-  $echo_binary $@
+  $echo_binary "$@"
 }
 log_debug()
 {
@@ -55,21 +55,21 @@ log_debug_info()
 {
   if [ "$show_debug_info" = "true" ]
   then
-    log_debug "${COLOR_GREEN}$script_name INFO:${COLOR_NC}" "$@"
+    log_debug "${COLOR_GREEN}$SCRIPT_NAME INFO:${COLOR_NC}" "$@"
   fi
 }
 log_debug_warning()
 {
   if [ "$show_debug_warning" = "true" ]
   then
-    log_debug "${COLOR_BROWN}$script_name WARNING:${COLOR_NC}" "$@"
+    log_debug "${COLOR_BROWN}$SCRIPT_NAME WARNING:${COLOR_NC}" "$@"
   fi
 }
 log_debug_error()
 {
   if [ "$show_debug_error" = "true" ]
   then
-    log_debug "${COLOR_RED}$script_name ERROR:${COLOR_NC}" "$@"
+    log_debug "${COLOR_RED}$SCRIPT_NAME ERROR:${COLOR_NC}" "$@"
   fi
 }
 convert_version_to_number()
