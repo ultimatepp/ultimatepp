@@ -12,7 +12,7 @@
 project_name="upp"
 package_name="$project_name-devel"
 
-show_debug_info="false"
+show_debug_info="true"
 show_debug_warning="true"
 show_debug_error="true"
 
@@ -30,9 +30,9 @@ show_usage()
 # full: Using Makefile: make install prefix=${prefix} exec-prefix=${exec_prefix} bindir=${bindir} sbindir=${sbindir} sysconfdir=${sysconfdir} datadir=${datadir} includedir=${includedir} libdir=${libdir} libexecdir=${libexecdir} localstatedir=${localstatedir} sharedstatedir=${sharedstatedir} mandir=${mandir} infodir=${infodir} docdir=${docdir}
 # full: ./doinstall --prefix=${prefix} --exec-prefix=${exec_prefix} --bindir=${bindir} --sbindir=${sbindir} --sysconfdir=${sysconfdir} --datadir=${datadir} --includedir=${includedir} --libdir=${libdir} --libexecdir=${libexecdir} --localstatedir=${localstatedir} --sharedstatedir=${sharedstatedir} --mandir=${mandir} --infodir=${infodir} --docdir=${docdir}
 
-    echo "usage: ./$SCRIPT_NAME [options]"
+    echo "Usage: ./doinstall [options]"
     echo
-    echo 'options:'
+    echo 'Options:'
     echo '  DESTDIR=<path>          : installation root directory (prepending each target directory to provides staged installs ( default: void )' 
 ##  echo '  --prefix=<path>         : installation prefix ( default: /usr/local )'
     echo '  --prefix=<path>         : installation prefix ( default: $HOME )'
@@ -56,20 +56,20 @@ show_usage()
 #   echo '  --enable-debug          : include debug symbols'
 #   echo '  --disable-debug         : do not include debug symbols'
     echo '  --verbose               : increase verbosity'
-    echo '  --info=FLAGS            : fine-grained informational verbosity ( default: false )'
+    echo '  --info=FLAGS            : fine-grained informational verbosity ( default: true )'
     echo '  --warning=FLAGS         : fine-grained warning verbosity ( default: true )'
     echo '  --debug=FLAGS           : fine-grained debug verbosity ( default: true )'
     echo '  --help                  : show current usage information'
     echo
-    echo 'NOTE:'
-    echo " * If you don't set prefix, installation will be done in your home directory in an U++ style (other install option parameters will be ignored)."
-    echo " * $SCRIPT_NAME uses environment variables. If 'prefix' is different than HOME, 'bindir', 'datadir' and other environment variables will be used."
-    echo " * All option parameters like --prefix, --bindir, ..., will superseed environment variables."
+    echo 'Note:'
+    echo " - If you don't set prefix, installation will be done in your home directory in an U++ style (other options will be ignored)."
+    echo " - doinstall uses environment variables. If 'prefix' is different than HOME, 'bindir', 'datadir' and other environment variables will be used."
+    echo " - All option parameters like --prefix, --bindir, ..., will superseed environment variables."
     echo
 }
 
 
-log_debug_info "Processing parameters"
+# log_debug_info "Processing parameters"
 
 for arg in "$@"
 do
@@ -217,7 +217,7 @@ done
 if [ "$prefix" = "$HOME" ]
 then
 
-log_debug_info "Starting installation in HOME directory (U++ style)"
+log_debug_info ">> Starting installation in HOME directory (U++ style)"
 log_debug_info "Variable values:"
 log_debug_info "DESTDIR         = $DESTDIR"
 log_debug_info "prefix          = $prefix"
@@ -237,7 +237,7 @@ log_debug_info "prefix          = $prefix"
 #log_debug_info "infodir         = $infodir"
 
 
-log_debug_info "Creating directories in $DESTDIR/$prefix/"
+log_debug_info "Creating upp, upp.out, MyApps and .upp directories in $DESTDIR/$prefix/"
   install -d "$DESTDIR/$prefix/upp"
   install -d "$DESTDIR/$prefix/upp.out"
   install -d "$DESTDIR/$prefix/MyApps"

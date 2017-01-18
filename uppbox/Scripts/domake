@@ -35,31 +35,31 @@ SCRIPT_NAME=$(basename "$0" | tr '[:lower:]' '[:upper:]' )
 
 show_usage()
 {
-    echo "usage: ./$SCRIPT_NAME [options]"
+    echo 'Usage: ./domake [options]'
     echo
-    echo 'options:'
+    echo 'Options:'
     echo '  --verbose       : increase verbosity'
     echo '  --info=FLAGS    : fine-grained informational verbosity ( default: true )'
     echo '  --warning=FLAGS : fine-grained warning verbosity ( default: true )'
     echo '  --debug=FLAGS   : fine-grained debug verbosity ( default: true )'
     echo '  --help          : show current usage information'
     echo
-    echo 'NOTE:'
-    echo " * $SCRIPT_NAME use environment variables to supersede auto generated variables and those from Makefile.in: "
-    echo "   - CXX          : c++ compiler"
-    echo "   - CXXFLAGS     : c++ compiler flags"
-    echo "   - UPPOUT       : U++ output directory"
+    echo 'Note:'
+    echo ' * domake use environment variables to supersede auto generated variables and those from uppsrc/Makefile.in:'
+    echo '   - CXX          : c++ compiler'
+    echo '   - CXXFLAGS     : c++ compiler flags'
+    echo '   - UPPOUT       : U++ output directory'
     echo "   - CINC         : default include directory list (use ';' as separator)"
-    echo "   - Macro        : U++ macro (ex: -DflagLINUX)"
-    echo "   - LINKER       : linker binary name"
-    echo "   - LDFLAGS      : linker extra flags"
+    echo '   - Macro        : U++ macro (ex: -DflagLINUX)'
+    echo '   - LINKER       : linker binary name'
+    echo '   - LDFLAGS      : linker extra flags'
     echo "   - LIBPATH      : library path list (use ';' as separator)"
-    echo "   - AR           : archive-maintaining program"
+    echo '   - AR           : archive-maintaining program'
     echo
-    echo "Example: CXX=g++ UPPOUT=\$HOME/tmp ./$SCRIPT_NAME"
+    echo 'Example: CXX=g++ UPPOUT=\$HOME/tmp ./domake'
 }
 
-log_debug_info "Processing parameters"
+# log_debug_info "Processing parameters"
 
 for arg in "$@"
 do
