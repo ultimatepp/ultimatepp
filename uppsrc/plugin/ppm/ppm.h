@@ -1,5 +1,5 @@
-#ifndef _plugin_bmp_bmp_h_
-#define _plugin_bmp_bmp_h_
+#ifndef _plugin_ppm_ppm_h_
+#define _plugin_ppm_ppm_h_
 
 #include <Draw/Draw.h>
 
