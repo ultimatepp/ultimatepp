@@ -56,7 +56,7 @@ show_usage()
     echo "   - LIBPATH      : library path list (use ';' as separator)"
     echo '   - AR           : archive-maintaining program'
     echo
-    echo 'Example: CXX=g++ UPPOUT=\$HOME/tmp ./domake'
+    echo 'Example: CXX=g++ UPPOUT=$HOME/tmp ./domake'
 }
 
 # log_debug_info "Processing parameters"
