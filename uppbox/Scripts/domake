@@ -126,7 +126,7 @@ then
     
   elif [ "$(basename "$CXX")" = "clang++" ]
   then
-    log_debug_info "Will use g++ as requested"
+    log_debug_info "Will use clang++ as requested"
     use_clang="true"
   
   elif [ "$(basename "$CXX")" = "c++" ]
