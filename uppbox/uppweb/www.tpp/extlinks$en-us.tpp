@@ -63,6 +63,11 @@ acebook]&]
 [s0;i150;O0; [^https`:`/`/www`.linkedin`.com`/groups`/8542229`/profile^2 Linkedin 
 `- User group]&]
 [s0;2 &]
+[s0;%- &]
+[ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Communication channels]]}}&]
+[s0;2 &]
+[s0;i150;O0; [^http`:`/`/uplusplus`.slack`.com`/^2 Slack]&]
+[s0;2 &]
 [ {{10000f0;g0;^t/25b4/25 [s0;# [*+117 Just a joke :`-)]]}}&]
 [s0;2 &]
 [s0;i150;O0; [^http`:`/`/www`.thesuperfantastics`.com^2 The Superfantastics][2  
