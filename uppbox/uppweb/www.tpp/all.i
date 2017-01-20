@@ -218,10 +218,6 @@ TOPIC("overview$de-de")
 #include "overview$de-de.tppi"
 END_TOPIC
 
-TOPIC("overview$en-us")
-#include "overview$en-us.tppi"
-END_TOPIC
-
 TOPIC("reference$en-us")
 #include "reference$en-us.tppi"
 END_TOPIC
