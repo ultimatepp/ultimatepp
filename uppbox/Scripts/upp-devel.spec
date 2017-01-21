@@ -191,7 +191,7 @@ rm -fr %{buildroot}
 %files
 %defattr(-,root,root,-)
 %license uppsrc/ide/Copying
-%doc readme
+%doc readme.md
 %{_bindir}/theide
 %{_bindir}/umk
 %{_datadir}/applications/theide.desktop

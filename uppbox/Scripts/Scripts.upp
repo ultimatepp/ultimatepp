@@ -12,7 +12,7 @@ file
 	git-mirror,
 	idebuild,
 	Makefile,
-	readme,
+	readme.md,
 	src,
 	upgrade.sh,
 	uppdeb,
