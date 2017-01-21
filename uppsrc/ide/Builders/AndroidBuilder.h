@@ -127,9 +127,6 @@ public:
 	AndroidBuilderUtils& operator=(AndroidBuilderUtils&) = delete;
 	~AndroidBuilderUtils() = delete;
 	
-	// TODO: Core should support creating symbolic link - not builder...
-	static bool CreateSymlink(const String& symbolicLink, const String& target);
-	
 	static String GetAssemblyDir(const String& package);
 	static String GetAssemblyDir(const String& packageDir, const String& package);
 	

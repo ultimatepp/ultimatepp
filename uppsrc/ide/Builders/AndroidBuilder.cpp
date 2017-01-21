@@ -260,7 +260,6 @@ bool AndroidBuilder::Link(
 		dxCmd << " --dex ";
 		dxCmd << "--output=" << project->GetBinDir() << DIR_SEPS << "classes.dex ";
 		dxCmd << project->GetClassesDir();
-		// PutConsole(dxCmd);
 		if(Execute(dxCmd, ss) != 0) {
 			PutConsole(ss.GetResult());
 			return false;
