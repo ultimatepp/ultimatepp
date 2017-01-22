@@ -327,7 +327,7 @@ log_debug_info "Copying man pages"
   cp -p "uppsrc/ide/theide.1" "$DESTDIR/$mandir/man1/"
   cp -p "uppsrc/umk/umk.1"    "$DESTDIR/$mandir/man1/"
 
-log_debug_info "Copying icons and destop file"
+log_debug_info "Copying icons and desktop file"
   cp -p "uppsrc/ide/theide.desktop" "$DESTDIR/$datadir/applications/theide.desktop"
   cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/icons/hicolor/48x48/apps/theide.png"
   cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/pixmaps/theide.png"
