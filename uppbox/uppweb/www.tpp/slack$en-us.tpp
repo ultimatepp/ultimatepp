@@ -1,4 +1,4 @@
-topic "Slack (Direct communication)";
+topic "Team collaboration (Slack)";
 [ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,2#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
