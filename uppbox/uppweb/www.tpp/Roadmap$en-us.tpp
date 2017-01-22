@@ -98,6 +98,8 @@ builds.&]
 [s5;l160;i150;O0; New math functions like sin, cos, tg, pow etc.&]
 [s5;l160;i150;O0; New replace in string function.&]
 [s22; General&]
+[s5;l160;i150;O0; Significantly improved the process of building 
+TheIDE on UMK from tarball (POSIX environment).&]
 [s5;l160;i150;O0; Documentation improvements.&]
 [s5;l160;i150;O0; Bug fixes in various areas.&]
 [s24; &]
