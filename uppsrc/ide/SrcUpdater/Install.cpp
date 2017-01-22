@@ -24,7 +24,7 @@ InstallWizard::InstallWizard(){
 	if(usrshare){
 		s1.src.EnableCase(0);
 		s1.src.EnableCase(1);
-		s1.src.SetLabel(0,"Local copy of sources from "+UpdaterCfg().globalsrc+" [recomended]");
+		s1.src.SetLabel(0,"Local copy of sources from "+UpdaterCfg().globalsrc+" [recommended]");
 		s1.src.SetLabel(1,"Read only repositories in "+UpdaterCfg().globalsrc);
 	}
 	bool hassvn=HasSvn();
