@@ -4,7 +4,6 @@ id     "Main window class name" classname = PACKAGE;
 select("No layouts", "Generate layout file", "Main window has layout", "Main window has OK/Cancel")
        "Layout" lay = 2;
 option "Imagelist file" iml;
-option "Multithreaded" mt;
 
 @@<:PACKAGE:>.h
 #ifndef _<:PACKAGE:>_<:PACKAGE:>_h
@@ -63,4 +62,4 @@ file
 	<:PACKAGE:>.iml<:.:>;
 
 mainconfig
-	"" = "GUI<:?mt:> MT<:.:>";
+	"" = "GUI";
