@@ -26,7 +26,6 @@ natural progression.&]
 [s3; Channels&]
 [s2; U`+`+ Slack offers several dedicated communication channels. 
 Below is the complete list of them:&]
-[s2;l160;i150;O0; [*/ #general] `- the main discussion stream.&]
-[s2;l160;i150;O0; [*/ #random] `- not U`+`+ related topics. talk about 
-anything you want with the members of the community.&]
-[s3; ]]
+[s2;l160;i150;O0; [* #general] `- the main discussion stream.&]
+[s2;l160;i150;O0; [* #random] `- not U`+`+ related topics. talk about 
+anything you want with the members of the community.]]
