@@ -25,7 +25,7 @@ library(BSD !XLFD  !RAINBOW) "Xft fontconfig Xrender freetype expat";
 
 library(LINUX !XLFD !SHARED  !RAINBOW GUI) "fontconfig Xrender freetype";
 
-library(OSX11) "X11 Xft fontconfig Xrender freetype expat";
+library(OSX11) "X11 Xft fontconfig Xrender Xinerama freetype expat";
 
 library(FREEBSD | DRAGONFLY) xcb;
 
