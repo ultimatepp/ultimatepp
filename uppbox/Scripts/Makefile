@@ -1,8 +1,14 @@
-.PHONY: all install clean distclean
+.PHONY: all umk ide install clean distclean
 SHELL = /bin/sh
 
 all:
 	+./domake
+
+umk:
+	+./domake umk
+
+ide:
+	+./domake ide
 
 install:
 	+./doinstall --verbose

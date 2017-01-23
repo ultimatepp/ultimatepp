@@ -20,6 +20,9 @@ use_clang="false"
 use_cpp_compiler="false"
 use_other_cpp_compiler="false"
 
+build_ide="true"
+build_umk="true"
+
 unset make_parameter_array
 
 ### Constants
@@ -28,6 +31,13 @@ DEFAULT_GCC_CXXFLAGS=""
 DEFAULT_CLANG_CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
 DEFAULT_CPP_CXXFLAGS=""
 DEFAULT_OTHER_CPP_CXXFLAGS=""
+
+EXIT_SUCCESS=0
+EXIT_ERROR_COMMAND_LINE=1
+EXIT_ERROR_NO_COMPILER_FOUND=2
+EXIT_ERROR_NO_MAKE_FOUND=3
+EXIT_ERROR_NO_IDE_FOUND=4
+EXIT_ERROR_NO_UMK_FOUND=5
 
 SCRIPT_NAME=$(basename "$0" | tr '[:lower:]' '[:upper:]' )
 
@@ -38,6 +48,8 @@ show_usage()
     echo 'Usage: ./domake [options]'
     echo
     echo 'Options:'
+    echo '    ide           : build theide only'
+    echo '    umk           : build umk only'
     echo '  --verbose       : increase verbosity'
     echo '  --info=FLAGS    : fine-grained informational verbosity ( default: true )'
     echo '  --warning=FLAGS : fine-grained warning verbosity ( default: true )'
@@ -65,18 +77,29 @@ for arg in "$@"
 do
   case "$arg" in
 
+  ide)
+    build_ide="true"
+    build_umk="false"
+    ;;
+
+  umk)
+    build_ide="false"
+    build_umk="true"
+    ;;
+  
   --verbose)
-    show_debug_info=true
-    show_debug_warning=true
-    show_debug_error=true
+    show_debug_info="true"
+    show_debug_warning="true"
+    show_debug_error="true"
     ;;
     
   --info=*)
     show_debug_info=$( echo $arg | sed 's/--info=//' )
     if [ "$show_debug_info" != "true" -a "$show_debug_info" != "false"  ]
     then
+      log_debug_error "Bad command line argument '$arg'"
       show_usage
-      exit 0
+      exit $EXIT_ERROR_COMMAND_LINE
     fi
     ;;
     
@@ -84,8 +107,9 @@ do
     show_debug_warning=$( echo $arg | sed 's/--warning=//' )
     if [ "$show_debug_warning" != "true" -a "$show_debug_warning" != "false"  ]
     then
+      log_debug_error "Bad command line argument '$arg'"
       show_usage
-      exit 0
+      exit $EXIT_ERROR_COMMAND_LINE
     fi
     ;;
     
@@ -93,20 +117,21 @@ do
     show_debug_error=$( echo $arg | sed 's/--error=//' )
     if [ "$show_debug_error" != "true" -a "$show_debug_error" != "false"  ]
     then
+      log_debug_error "Bad command line argument '$arg'"
       show_usage
-      exit 0
+      exit $EXIT_ERROR_COMMAND_LINE
     fi
     ;;
 
   --help)
     show_usage
-    exit 0
+    exit $EXIT_SUCCESS
     ;;
     
     *)
     log_debug_error "Bad command line argument '$arg'"
     show_usage
-    exit 1
+    exit $EXIT_ERROR_COMMAND_LINE
     
     esac
 
@@ -114,6 +139,9 @@ done
 
 
 ### Main script start here
+
+log_debug_info "Build ide = $build_ide"
+log_debug_info "Build umk = $build_umk"
 
 if [ "$CXX" != "" ]
 then
@@ -188,7 +216,7 @@ else
         log_debug " - Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
         log_debug " - Or install clang++ LLVM compiler"
         log_debug " - Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
-        exit 1
+        exit $EXIT_ERROR_NO_COMPILER_FOUND
 
       fi    
     fi
@@ -338,39 +366,65 @@ then
 
 else
   log_debug_error "No 'make' application found in PATH"
-  exit 2
+  exit $EXIT_ERROR_NO_MAKE_FOUND
 fi
 
 
 log_debug_info "Found $make_binary. Compiling..."
+
 if [ "${#make_parameter_array}" = "0" ]
 then
-  $make_binary -C uppsrc -e CXX="$CXX"
-  $make_binary -C uppsrc -e CXX="$CXX" -f uMakefile
+  if [ "$build_ide" = "true" ]
+  then
+    $make_binary -C uppsrc -e CXX="$CXX"
+
+  fi  
+  if [ "$build_umk" = "true" ]
+  then
+    $make_binary -C uppsrc -e CXX="$CXX" -f uMakefile
+
+  fi
     
 else
-  $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}"
-  $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}" -f uMakefile
-    
+  if [ "$build_ide" = "true" ]
+  then
+    $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}"
+
+  fi  
+  if [ "$build_umk" = "true" ]
+  then
+    $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}" -f uMakefile
+
+  fi
 fi
 
 
-if [ -f "uppsrc/ide.out" ]
+if [ "$build_ide" = "true" ]
 then
-  log_debug_info "Installing theide in current directory"
-  cp -p "uppsrc/ide.out" ./theide
+  if [ -f "uppsrc/ide.out" ]
+  then
+    log_debug_info "Installing theide in current directory"
+    cp -p "uppsrc/ide.out" ./theide
 
-else
-  log_debug_warning "Can't find uppsrc/ide.out binary"
+  else
+    log_debug_warning "Can't find uppsrc/ide.out binary"
+    exit $EXIT_ERROR_NO_IDE_FOUND
 
+  fi
 fi
 
-if [ -f "uppsrc/umk.out" ]
+if [ "$build_umk" = "true" ]
 then
-  log_debug_info "Installing umk in current directory"
-  cp -p "uppsrc/umk.out" ./umk
+  if [ -f "uppsrc/umk.out" ]
+  then
+    log_debug_info "Installing umk in current directory"
+    cp -p "uppsrc/umk.out" ./umk
 
-else
-  log_debug_warning "Can't find uppsrc/umk.out binary"
+  else
+    log_debug_warning "Can't find uppsrc/umk.out binary"
+    exit $EXIT_ERROR_NO_UMK_FOUND
 
+  fi
 fi
+
+exit $EXIT_SUCCESS
