@@ -7,9 +7,8 @@ topic "Screenshots";
 [{_}%EN-US 
 [s1; Screenshots&]
 [s0;>*R^topic`:`/`/uppweb`/www`/ss`$ru`-ru^1 &]
-[s0;/1 &]
 [s4; [^topic`:`/`/uppweb`/www`/idess`$en`-us^ TheIDE screenshots]&]
-[s4; [^topic`:`/`/uppweb`/www`/idess`$en`-us^ POSIX screenshots]&]
+[s4; [^topic`:`/`/uppweb`/www`/ssposix`$en`-us^ POSIX screenshots]&]
 [s4; [^topic`:`/`/uppweb`/www`/chss`$en`-us^ Chameleon screenshots]&]
 [s4; [^topic`:`/`/uppweb`/www`/examples`$en`-us^ U`+`+ examples]&]
 [s0; ]]
