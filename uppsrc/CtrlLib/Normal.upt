@@ -1,7 +1,6 @@
 template "Basic CtrlLib application" main;
 
 option "Create header" header;
-option "Multithreaded" mt;
 
 @@<:PACKAGE:>.h
 ??header
@@ -30,4 +29,4 @@ file<:?header:>
 	main.cpp;
 
 mainconfig
-	"" = "GUI<:?mt:> MT<:.:>";
+	"" = "GUI";

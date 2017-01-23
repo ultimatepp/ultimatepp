@@ -2,7 +2,6 @@ template "Core console project" main;
 
 option "Create header" header;
 option "Commandline loop" cmdline;
-option "Multithreaded" mt;
 
 @@<:PACKAGE:>.h
 ??header
@@ -31,6 +30,3 @@ uses Core;
 file<:?header:>
 	<:PACKAGE:>.h,<:.:>
 	<:PACKAGE:>.cpp;
-
-mainconfig
-	"" = "<:?mt:>MT<:.:>";
