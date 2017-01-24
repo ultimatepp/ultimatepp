@@ -305,16 +305,13 @@ then
   do
     log_debug_info " --> ${make_parameter_array[$i]}"
   done
+
+  log_debug_info "Extra parameters will supersede default parameters"
+
 fi
 
 
 log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.bm with pkg-config"
-
-if [ "${#make_parameter_array}" != "0" ]
-then
-  log_debug_info "Extra parameters will supersede default parameters"
-
-fi
 
 if which pkg-config
 then
