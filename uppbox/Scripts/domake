@@ -345,8 +345,16 @@ log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.
 if which pkg-config
 then
 
+  if [[ "$Macro" == *"-DflagNOGTK"* ]]
+  then
+    requires_libraries="x11 libnotify freetype2"
+  else
+    requires_libraries="gtk+-2.0 x11 libnotify freetype2"
+
+  fi
+  
   library_list=""
-  for i in gtk+-2.0 x11 libnotify freetype2
+  for i in $requires_libraries
   do
     if pkg-config --exists $i
     then
