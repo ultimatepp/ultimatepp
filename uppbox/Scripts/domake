@@ -372,6 +372,13 @@ else
 
 fi
 
+if [ "$platform" = "Darwin" ]
+then
+ log_debug_info "Adjusting Makefile/uMakefile for Mac OS X"
+ sed -i -E -e 's/(-Wl,[^[:space:]]*)//g' uppsrc/Makefile
+ sed -i -E -e 's/(-Wl,[^[:space:]]*)//g' uppsrc/uMakefile
+fi
+
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
   sed -i -e s/-ldl//g uppsrc/Makefile
