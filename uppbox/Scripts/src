@@ -18,14 +18,10 @@ cp -p ~/Scripts/GCCMK.bm ~/.upp/theide
 ~/bin/umk ~/upp.src/uppsrc ide GCCMK -asrXk ~/upp.tmp/upp/uppsrc
 
 mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/Makefile.in
-# remove linker optimisation option because we are building an executable: "-Wl,-O,2"
-sed -i -e 's| -Wl,-O,2||g' ~/upp.tmp/upp/uppsrc/Makefile.in
 
 ~/bin/umk ~/upp.src/uppsrc umk GCCMK -asrXk ~/upp.tmp/upp/uppsrc
 
 mv ~/upp.tmp/upp/uppsrc/Makefile ~/upp.tmp/upp/uppsrc/uMakefile.in
-# remove linker optimisation option because we are building an executable: "-Wl,-O,2"
-sed -i -e 's| -Wl,-O,2||g' ~/upp.tmp/upp/uppsrc/uMakefile.in
 
 cp -p ~/Scripts/Makefile ~/upp.tmp/upp
 cp -p ~/Scripts/domake ~/upp.tmp/upp
