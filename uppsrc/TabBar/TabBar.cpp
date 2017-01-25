@@ -2133,21 +2133,23 @@ void TabBar::RightDown(Point p, dword keyflags)
 
 void TabBar::MiddleDown(Point p, dword keyflags)
 {
-	if (highlight >= 0)
-	{
-		Value v = tabs[highlight].key;
-		ValueArray vv;
-		vv.Add(v);
-		if (!CancelClose(v) && ! CancelCloseSome(vv)) {
-			Value v = tabs[highlight].key;
-			// 2014/03/06 - FIRST the callbacks, THEN remove the tab
-			// otherwise keys in WhenCloseSome() are invalid
-			WhenClose(v);
-			WhenCloseSome(vv);
-			TabClosed(v);
-			Close(highlight);
-		}
-	}
+    if (highlight >= 0)
+    {
+        Value v = tabs[highlight].key;
+        ValueArray vv;
+        vv.Add(v);
+        int highlightBack = highlight;
+        if (!CancelClose(v) && ! CancelCloseSome(vv)) {
+            // highlight can be changed by the prompt. When reading "v", it can be invalid. I use the value from before the prompt to fix it
+            Value v = tabs[highlightBack].key;
+            // 2014/03/06 - FIRST the callbacks, THEN remove the tab
+            // otherwise keys in WhenCloseSome() are invalid
+            WhenClose(v);
+            WhenCloseSome(vv);
+            TabClosed(v);
+            Close(highlightBack);
+        }
+    }
 }
 
 void TabBar::MiddleUp(Point p, dword keyflags)
