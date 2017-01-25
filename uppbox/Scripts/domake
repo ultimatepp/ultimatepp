@@ -143,9 +143,46 @@ done
 log_debug_info "Build ide = $build_ide"
 log_debug_info "Build umk = $build_umk"
 
+if which uname
+then
+  platform=$(uname -s)
+  log_debug_info "Detected system: $platform"
+
+  case "$platform" in
+
+  Darwin)
+    if [ "$CXX" = "" ] # Force clang++ on Mac OS X (for now)
+    then
+      CXX="clang++"
+      log_debug_info "Force CXX=$CXX for $platform"
+    fi
+    if [ "$Macro" = "" ]
+    then
+      Macro="-DflagCLANG -DflagNOGTK -DflagGUI -DflagMT -DflagSHARED -DflagOSX -DflagPOSIX"
+      log_debug_info "Force Macro='$Macro' for $platform"
+    fi
+    ;;
+
+  Linux)
+  ;;
+
+  MINGW*)
+  ;;
+
+  CYGWIN*)
+  ;;
+
+  GNU*)
+  ;;
+
+  *)
+  
+  esac
+  
+fi
+
 if [ "$CXX" != "" ]
 then
-  log_debug_warning "Use of $CXX forced by CXX environment variable"
 
   if [ "$(basename "$CXX")" = "g++" ]
   then
@@ -230,7 +267,6 @@ i=0
 
 if [ "$CXXFLAGS" != "" ]
 then
-  log_debug_warning "CXXFLAGS superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CXXFLAGS=$CXXFLAGS"
 
@@ -257,43 +293,36 @@ fi
 
 if [ "$UPPOUT" != "" ]
 then
-  log_debug_warning "UPPOUT superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="UPPOUT=$UPPOUT"
 fi
 if [ "$CINC" != "" ]
 then
-  log_debug_warning "CINC superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CINC=$CINC"
 fi
 if [ "$Macro" != "" ]
 then
-  log_debug_warning "Macro superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="Macro=$Macro"
 fi
 if [ "$LINKER" != "" ]
 then
-  log_debug_warning "LINKER superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="LINKER=$LINKER"
 fi
 if [ "$LDFLAGS" != "" ]
 then
-  log_debug_warning "LDFLAGS superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="LDFLAGS=$LDFLAGS"
 fi
 if [ "$LIBPATH" != "" ]
 then
-  log_debug_warning "LIBPATH superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="LIBPATH=$LIBPATH"
 fi
 if [ "$AR" != "" ]
 then
-  log_debug_warning "AR superseded by corresponding environment variable"
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="AR=$AR"
 fi
