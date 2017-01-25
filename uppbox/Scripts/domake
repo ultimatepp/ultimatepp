@@ -375,8 +375,14 @@ fi
 if [ "$platform" = "Darwin" ]
 then
  log_debug_info "Adjusting Makefile/uMakefile for Mac OS X"
- sed -i -E -e 's/(-Wl,[^[:space:]]*)//g' uppsrc/Makefile
- sed -i -E -e 's/(-Wl,[^[:space:]]*)//g' uppsrc/uMakefile
+ sed -i '' -E -e 's/(-Wl,[^[:space:]]*)//g' -e 's/-lrt//g' uppsrc/Makefile uppsrc/uMakefile
+ if [[ "$Macro" == *"-DflagNOGTK"* ]]
+ then
+  log_debug_info "Removing references to GTK+"
+  sed -i '' -E -e 's/-lgtk-x11-2.0//g' -e 's/-lgdk-x11-2.0//g' \
+     -e 's/-latk-1.0//g' -e 's/-lgdk_pixbuf-2.0//g' -e 's/-lpangocairo-1.0//g' -e 's/-lpango-1.0//g' \
+     -e 's/-lgobject-2.0//g' -e 's/-lgmodule-2.0//g' -e 's/-lglib-2.0//g' -e 's/-lnotify//g' uppsrc/Makefile uppsrc/uMakefile
+ fi
 fi
 
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
