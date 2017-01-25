@@ -20,7 +20,7 @@ namespace Ini {
 };
 
 #ifdef PLATFORM_WIN32
-BOOL WINAPI SkylarkApp::CtrlCHandlerRoutine(__in  DWORD dwCtrlType)
+BOOL WINAPI SkylarkApp::CtrlCHandlerRoutine(DWORD dwCtrlType)
 {
 	LOG("Ctrl+C handler");
 	TheApp().quit = true;
