@@ -31,6 +31,7 @@ aims to document the syntax of the .upp file.&]
 [s0; &]
 [s0; Each section of .upp file begins with a keyword and ends with 
 semicolon. The recognized section keywords are:&]
+[s0; &]
 [ {{2500:2500:2500:2500g2; [s7;l160; [2 acceptflags]&]
 [s7;l160; [2 charset]&]
 [s7;l160; [2 custom]&]
