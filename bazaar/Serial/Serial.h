@@ -65,10 +65,17 @@ class Serial
 		// close the port
 		void Close(void);
 		
+		// control DTR and RTS lines
+		bool SetDTR(bool on);
+		bool SetRTS(bool on);
+
 		// flush data
 		bool FlushInput(void);
 		bool FlushOutput(void);
 		bool FlushAll(void);
+		
+		// check if data is available on serial port
+		int Avail(void);
 		
 		// read a single byte, block 'timeout' milliseconds
 		bool Read(byte &c, uint32_t timeout = 0);

@@ -10,15 +10,16 @@
 
 NAMESPACE_UPP
 
-static bool __IsSymLink(const char *path) 
+static bool __IsSymLink(const char *path)
 {
 	struct stat stf;
 	lstat(path, &stf);
 	return S_ISLNK(stf.st_mode);
-}	
+}
 
 
-dword Serial::stdBauds[] = {
+dword Serial::stdBauds[] =
+{
 	0, 50, 75, 110, 134, 150,
 	200, 300, 600, 1200, 1800,
 	2400, 4800, 9600, 19200,
@@ -26,7 +27,7 @@ dword Serial::stdBauds[] = {
 };
 
 int Serial::stdBaudsCount = sizeof(Serial::stdBauds) / sizeof(dword);
-	
+
 // constructor
 Serial::Serial()
 {
@@ -52,11 +53,12 @@ Serial::~Serial()
 // open the port
 bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte stopBits)
 {
-	static int stdBaudCodes[] = {
+	static int stdBaudCodes[] =
+	{
 		B0, B50, B75, B110, B134, B150,
 		B200, B300, B600, B1200, B1800,
 		B2400, B4800, B9600, B19200,
-		B38400, B57600, B115200,B230400
+		B38400, B57600, B115200, B230400
 	};
 
 	// open the device
@@ -79,12 +81,12 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		errCode = DeviceError;
 		return false;
 	}
-	
+
 	//// CFLAG /////
 
 	int idx = GetStandardBaudRates().Find(lSpeed);
 	dword speed;
-	if(idx < 0)
+	if (idx < 0)
 	{
 		// custom speed
 		// @@ maybe add support later
@@ -103,7 +105,7 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 
 	// parity
 	tty.c_cflag &= ~(PARENB | PARODD);
-	switch(parity)
+	switch (parity)
 	{
 		case ParityNone:
 			break;
@@ -125,9 +127,9 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 			errCode = InvalidParity;
 			return false;
 	}
-	
+
 	// set data size
-	switch(bits)
+	switch (bits)
 	{
 		case 5:
 			tty.c_cflag = (tty.c_cflag & ~CSIZE) | CS5;
@@ -147,11 +149,11 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 			errCode = InvalidSize;
 			return false;
 	}
-	
+
 	// stop bits
-	if(stopBits == 1)
+	if (stopBits == 1)
 		tty.c_cflag &= ~CSTOPB;
-	else if(stopBits == 2)
+	else if (stopBits == 2)
 		tty.c_cflag |= CSTOPB;
 	else
 	{
@@ -163,15 +165,15 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 
 	// ignore modem controls, enable reading
 	tty.c_cflag |= (CLOCAL | CREAD);
-	
+
 	// no rts/cts
 	tty.c_cflag &= ~CRTSCTS;
 
 	//// LFLAG /////
 
 	// no signaling chars, no echo, no canonical mode
-	tty.c_lflag = 0;	
-//	tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);	
+	tty.c_lflag = 0;
+//	tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
 
 	//// IFLAG /////
 
@@ -182,34 +184,36 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 
 	// DO NOT ignore carriage returns
 	tty.c_iflag &= ~IGNCR;
-	
+
 	// DO NOT translate cr/lf
 	tty.c_iflag &= ~ICRNL;
-	
+
 	// DO NOT translate cr
 	tty.c_iflag &= ~INLCR;
-	
+
 	// shut off xon/xoff ctrl
 	tty.c_iflag &= ~(IXON | IXOFF | IXANY);
-	
+
 	//// OFLAG /////
 
 	// no remapping, no delays
 	tty.c_oflag = 0;
-	
+
 	//// CONTROL CHARACTERS /////
 
 	// read doesn't block
 	tty.c_cc[VMIN]  = 0;
-	
+
 	// 0.5 seconds read timeout
 	tty.c_cc[VTIME] = 0;
-	
-	RLOG("CFLAGS : " << tty.c_cflag);
-	RLOG("LFLAGS : " << tty.c_lflag);
-	RLOG("IFLAGS : " << tty.c_iflag);
-	RLOG("OFLAGS : " << tty.c_oflag);
-	
+
+	/*
+		RLOG("CFLAGS : " << tty.c_cflag);
+		RLOG("LFLAGS : " << tty.c_lflag);
+		RLOG("IFLAGS : " << tty.c_iflag);
+		RLOG("OFLAGS : " << tty.c_oflag);
+	*/
+
 	if (tcsetattr(fd, TCSANOW, &tty) != 0)
 	{
 		Close();
@@ -217,97 +221,150 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		errCode = DeviceError;
 		return false;
 	}
-	
+
 	return true;
 }
 
 // close the port
 void Serial::Close(void)
 {
-	if(fd != -1)
+	if (fd != -1)
 		close(fd);
 	fd = -1;
 	isError = false;
 	errCode = Ok;
 }
 
+// control DTR and RTS lines
+bool Serial::SetDTR(bool on)
+{
+	unsigned int ctl;
+	int r;
+
+	r = ioctl(fd, TIOCMGET, &ctl);
+	if (r < 0)
+		return false;
+
+	if (on)
+		ctl |= TIOCM_DTR;
+	else
+		ctl &= ~TIOCM_DTR;
+
+	r = ioctl(fd, TIOCMSET, &ctl);
+	if (r < 0)
+		return false;
+
+	return true;
+}
+
+bool Serial::SetRTS(bool on)
+{
+	unsigned int ctl;
+	int r;
+
+	r = ioctl(fd, TIOCMGET, &ctl);
+	if (r < 0)
+		return false;
+
+	if (on)
+		ctl |= TIOCM_RTS;
+	else
+		ctl &= ~TIOCM_RTS;
+
+	r = ioctl(fd, TIOCMSET, &ctl);
+	if (r < 0)
+		return false;
+
+	return true;
+}
+
 // flush data
 bool Serial::FlushInput(void)
 {
-	if(fd == -1)
+	if (fd == -1)
 		return false;
 	return !tcflush(fd, TCIFLUSH);
 }
 
 bool Serial::FlushOutput(void)
 {
-	if(fd == -1)
+	if (fd == -1)
 		return false;
 	return !tcflush(fd, TCOFLUSH);
 }
 
 bool Serial::FlushAll(void)
 {
-	if(fd == -1)
+	if (fd == -1)
 		return false;
 	return !tcflush(fd, TCIOFLUSH);
 }
-		
+
+// check if data is available on serial port
+int Serial::Avail(void)
+{
+	if (fd == -1)
+		return false;
+	int bytes = 0;
+	ioctl(fd, FIONREAD, &bytes);
+	return bytes;
+}
+
 // read a single byte, block 'timeout' milliseconds
 bool Serial::Read(byte &c, uint32_t timeout)
 {
 	char buf[1];
-	
+
 	uint32_t tim = msecs() + timeout;
-	for(;;)
+	for (;;)
 	{
-		if(!read(fd, buf, 1))
+		if (!read(fd, buf, 1))
 		{
-			if((uint32_t)msecs() > tim)
+			if ((uint32_t)msecs() > tim)
 				return false;
 			continue;
 		}
 		c = (byte)buf[0];
 		return true;
-	}		
+	}
 }
 
 bool Serial::Read(char &c, uint32_t timeout)
 {
 	char buf[1];
-	
+
 	uint32_t tim = msecs() + timeout;
-	for(;;)
+	for (;;)
 	{
-		if(!read(fd, buf, 1))
+		if (!read(fd, buf, 1))
 		{
-			if((uint32_t)msecs() > tim)
+			if ((uint32_t)msecs() > tim)
 				return false;
 			continue;
 		}
 		c = buf[0];
 		return true;
-	}		
+	}
 }
 
 // write a single byte
 bool Serial::Write(char c, uint32_t timeout)
 {
-	if(!timeout)
+	if (!timeout)
 		return write(fd, &c, 1);
 
 	uint32_t tim = msecs() + timeout;
-	for(;;)
+	for (;;)
 	{
-		if(write(fd, &c, 1) == 1)
+		if (write(fd, &c, 1) == 1)
 			return true;
-		if((uint32_t)msecs() > tim)
+		if ((uint32_t)msecs() > tim)
 			break;
 	}
-	
+
 	return false;
 }
-		
+
 // read data, requested amount, blocks 'timeout' milliseconds
 // if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
 String Serial::Read(size_t reqSize, uint32_t timeout)
@@ -318,21 +375,21 @@ String Serial::Read(size_t reqSize, uint32_t timeout)
 
 	size_t n;
 	uint32_t tim = msecs() + timeout;
-	if(reqSize)
+	if (reqSize)
 	{
 		n = min(reqSize, (size_t)1000);
-		while(reqSize)
+		while (reqSize)
 		{
 			n = read(fd, buf, n);
-			if(!n)
+			if (!n)
 			{
-				if((uint32_t)msecs() > tim)
+				if ((uint32_t)msecs() > tim)
 					break;
 				n = min(reqSize, (size_t)1000);
 				continue;
 			}
 			tim = msecs() + timeout;
-			if(n)
+			if (n)
 			{
 				reqSize -= n;
 				data.Cat(buf, n);
@@ -342,44 +399,44 @@ String Serial::Read(size_t reqSize, uint32_t timeout)
 	}
 	else
 	{
-		for(;;)
+		for (;;)
 		{
 			n = read(fd, buf, 1000);
-			if(!n)
+			if (!n)
 			{
-				if((uint32_t)msecs() > tim)
+				if ((uint32_t)msecs() > tim)
 					break;
 				continue;
 			}
 			tim = msecs() + timeout;
-			if(n)
+			if (n)
 				data.Cat(buf, n);
 		}
 	}
-	return data;	
+	return data;
 }
 
 // writes data
 bool Serial::Write(String const &data, uint32_t timeout)
 {
 	int dLen = data.GetCount();
-	if(!timeout)
+	if (!timeout)
 		return (write(fd, ~data, data.GetCount()) == dLen);
 
 	uint32_t tim = msecs() + timeout;
 	const char *dPos = ~data;
-	for(;;)
+	for (;;)
 	{
 		int written = write(fd, dPos, dLen);
-		if(written == dLen)
+		if (written == dLen)
 			return true;
-		if(written >= 0)
+		if (written >= 0)
 		{
 			dPos += written;
 			dLen -= written;
 			continue;
 		}
-		if((uint32_t)msecs() >= tim)
+		if ((uint32_t)msecs() >= tim)
 			break;
 	}
 	return false;
