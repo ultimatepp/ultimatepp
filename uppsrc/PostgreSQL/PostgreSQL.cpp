@@ -641,7 +641,7 @@ void PostgreSQLConnection::GetColumn(int i, Ref f) const
 			f.SetValue(atoi(s));
 			break;
 		case DOUBLE_V:
-			f.SetValue(atof(s));
+			f.SetValue(Atof(s));
 			break;
 		case BOOL_V:
 			f.SetValue(*s == 't' ? "1" : "0");
