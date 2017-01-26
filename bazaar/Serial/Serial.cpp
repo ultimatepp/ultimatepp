@@ -1,6 +1,6 @@
 #include "Serial.h"
 
-NAMESPACE_UPP
+namespace Upp {
 
 // get a list of standard baud rates
 Index<dword> const &Serial::GetStandardBaudRates(void)
@@ -14,4 +14,4 @@ Index<dword> const &Serial::GetStandardBaudRates(void)
 	return v;
 }
 
-END_UPP_NAMESPACE;
+} // END_UPP_NAMESPACE

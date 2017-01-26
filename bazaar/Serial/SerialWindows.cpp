@@ -9,7 +9,7 @@ typedef DWORD REGSAM;
 #include <setupapi.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 dword Serial::stdBauds[] =
 {
@@ -237,9 +237,9 @@ void Serial::Close ( void )
 bool Serial::SetDTR(bool on)
 {
 	if(on)
-		EscapeCommFunction(hComPort, SETDTR);
+		EscapeCommFunction(fd, SETDTR);
 	else
-		EscapeCommFunction(hComPort, CLRDTR);
+		EscapeCommFunction(fd, CLRDTR);
 
 	return true;
 }
@@ -247,9 +247,9 @@ bool Serial::SetDTR(bool on)
 bool Serial::SetRTS(bool on)
 {
 	if(on)
-		EscapeCommFunction(hComPort, SETRTS);
+		EscapeCommFunction(fd, SETRTS);
 	else
-		EscapeCommFunction(hComPort, CLRRTS);
+		EscapeCommFunction(fd, CLRRTS);
 
 	return true;
 }
@@ -280,8 +280,8 @@ int Serial::Avail(void)
 	if(!ClearCommError(fd, &errors, &stat))
 		return 0;
 	
-	return stat.cbInQue;	
-);
+	return stat.cbInQue;
+}
 
 
 // read a single byte, block 'timeout' milliseconds
@@ -868,6 +868,6 @@ ArrayMap<String, String> Serial::GetSerialPorts ( void )
 }
 #endif
 
-END_UPP_NAMESPACE
+} // END_UPP_NAMESPACE
 
 #endif

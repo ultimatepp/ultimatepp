@@ -4,7 +4,7 @@
 #include <Core/Core.h>
 
 // module to manage serial ports and discover attached devices
-NAMESPACE_UPP
+namespace Upp {
 
 class Serial
 {
@@ -109,6 +109,6 @@ class Serial
 		static Index<dword> const &GetStandardBaudRates(void);
 };
 
-END_UPP_NAMESPACE
+} // END_UPP_NAMESPACE
 
 #endif
