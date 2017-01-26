@@ -182,6 +182,11 @@ double ScanDouble(const wchar *p, const wchar **endptr, bool accept_comma)
 	return ScanDoubleT(p, endptr, accept_comma);
 }
 
+double Atof(const char *s)
+{
+	return Nvl(ScanDouble(s));
+}
+
 Value StrIntValue(const char *s)
 {
 	if(s && *s) {

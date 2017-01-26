@@ -835,7 +835,7 @@ bool RTFParser::ReadField(const char *p)
 			face = Font::FindFaceNameIndex(symdef[f + 1]);
 		f = symdef.Find("\\s");
 		if(f >= 0 && f + 1 < symdef.GetCount())
-			height = PointDots(fround(2 * atof(symdef[f + 1]))) >> 1;
+			height = PointDots(fround(2 * Atof(symdef[f + 1]))) >> 1;
 		if(face < 0)
 #ifdef PLATFORM_WIN32
 			face = Font::SYMBOL;

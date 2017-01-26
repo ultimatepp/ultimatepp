@@ -13,6 +13,8 @@ int64         ScanInt64(const char *ptr, const char **endptr = NULL, int radix =
 double        ScanDouble(const char *ptr, const char **endptr = NULL, bool accept_comma = true);
 double        ScanDouble(const wchar *ptr, const wchar **endptr = NULL, bool accept_comma = true);
 
+double        Atof(const char *s);
+
 Value         StrIntValue(const char *s);
 
 inline int     StrInt(const char* s)   { return ScanInt(s); }

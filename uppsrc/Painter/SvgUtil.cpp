@@ -212,13 +212,13 @@ Array<double> GetTransformArgs(String str, const char *command) {
 		if ((endpos = str.Find(',', pos)) < 0) 
 			break;
 		double &d = args.Add();
-		d = atof(str.Mid(pos, endpos-pos));
+		d = Atof(str.Mid(pos, endpos-pos));
 		pos = endpos+1;
 	} 
 	if (args.GetCount() < 2) {
 		if ((endpos = str.Find(')', pos)) >= 0) {
 			double &d = args.Add();
-			d = atof(str.Mid(pos, endpos-pos));
+			d = Atof(str.Mid(pos, endpos-pos));
 		}
 	}
 	return args;
