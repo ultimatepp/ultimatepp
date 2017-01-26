@@ -383,14 +383,15 @@ fi
 if [ "$platform" = "Darwin" ]
 then
   log_debug_info "Adjusting Makefile/uMakefile for Mac OS X"
-  sed -i -E -e 's/(-Wl,[^[:space:]]*)//g' -e 's/-lrt//g' uppsrc/Makefile uppsrc/uMakefile
+  sed -i.backup -E -e 's/(-Wl,[^[:space:]]*)//g' -e 's/-lrt//g' uppsrc/Makefile uppsrc/uMakefile
 
 fi
 
 if [[ "$Macro" == *"-DflagNOGTK"* ]]
 then
   log_debug_info "Removing references to GTK+"
-  sed -i -e 's/-lgtk-x11-2.0//g'    \
+  sed -i.backup \
+         -e 's/-lgtk-x11-2.0//g'    \
          -e 's/-lgdk-x11-2.0//g'    \
          -e 's/-latk-1.0//g'        \
          -e 's/-lgdk_pixbuf-2.0//g' \
@@ -405,11 +406,12 @@ fi
 
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
-  sed -i -e s/-ldl//g uppsrc/Makefile
-  sed -i -e s/-ldl//g uppsrc/uMakefile
+  sed -i.backup -e s/-ldl//g uppsrc/Makefile
+  sed -i.backup -e s/-ldl//g uppsrc/uMakefile
   
 fi
 
+rm -f uppsrc/*.backup
 
 log_debug_info "Searching for gmake or make"
 
