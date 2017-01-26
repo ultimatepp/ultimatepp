@@ -233,6 +233,27 @@ void Serial::Close ( void )
 	fd = INVALID_HANDLE_VALUE;
 }
 
+// control DTR and RTS lines
+bool Serial::SetDTR(bool on)
+{
+	if(on)
+		EscapeCommFunction(hComPort, SETDTR);
+	else
+		EscapeCommFunction(hComPort, CLRDTR);
+
+	return true;
+}
+
+bool Serial::SetRTS(bool on)
+{
+	if(on)
+		EscapeCommFunction(hComPort, SETRTS);
+	else
+		EscapeCommFunction(hComPort, CLRRTS);
+
+	return true;
+}
+
 // flush data
 bool Serial::FlushInput ( void )
 {
@@ -248,6 +269,20 @@ bool Serial::FlushAll ( void )
 {
 	return PurgeComm ( fd, PURGE_RXCLEAR ) & PurgeComm ( fd, PURGE_TXCLEAR );
 }
+
+
+// check if data is available on serial port
+int Serial::Avail(void)
+{
+	dword errors;
+	COMSTAT stat;
+	
+	if(!ClearCommError(fd, &errors, &stat))
+		return 0;
+	
+	return stat.cbInQue;	
+);
+
 
 // read a single byte, block 'timeout' milliseconds
 bool Serial::Read ( byte &c, uint32_t timeout )
