@@ -240,6 +240,9 @@ namespace std {
 #define END_UPP_NAMESPACE }
 #define UPP               Upp
 
+// #define atof @ // atof is broken, as it depends on setlocale - might want ',' instead of '.' breaking a lot of code
+// Use Atof instead (which accepts both '.' and ',' as decimal separator)
+
 namespace Upp {
 
 #ifndef flagNODEPRECATED
