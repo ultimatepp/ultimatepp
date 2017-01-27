@@ -1312,10 +1312,10 @@ void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 			} 
 		}
 	}
-	double plotW = scale*(GetSize().cx - (hPlotLeft + hPlotRight));
-	double plotH = scale*(GetSize().cy - (vPlotTop + vPlotBottom)) - titleHeight;
-	double dw = plotW*xMajorUnit/double(xRange);
-	double dh = plotH*yMajorUnit/double(yRange);
+	//double plotW = scale*(GetSize().cx - (hPlotLeft + hPlotRight));
+	//double plotH = scale*(GetSize().cy - (vPlotTop + vPlotBottom)) - titleHeight;
+	//double dw = plotW*xMajorUnit/double(xRange);
+	//double dh = plotH*yMajorUnit/double(yRange);
 	
 	bool can = true;//min<double>(dw, dh) > 20 || scale < 1;
 	if (mouseX && can) {
