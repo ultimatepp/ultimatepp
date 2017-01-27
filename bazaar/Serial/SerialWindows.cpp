@@ -435,7 +435,7 @@ String Serial::Read ( size_t reqSize, uint32_t timeout )
 // write buffer
 bool Serial::Write(uint8_t const *buf, uint32_t len, uint32_t timeout)
 {
-	uint32_t count = 0;
+	unsigned long count = 0;
 
 	if (!timeout)
 	{
@@ -444,7 +444,7 @@ bool Serial::Write(uint8_t const *buf, uint32_t len, uint32_t timeout)
 	}
 
 	uint32_t tim = msecs() + timeout;
-	const char *dPos = buf;
+	const uint8_t *dPos = buf;
 
 	for (;;)
 	{
