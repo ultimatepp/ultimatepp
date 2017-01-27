@@ -432,42 +432,43 @@ String Serial::Read ( size_t reqSize, uint32_t timeout )
 	return res;
 }
 
-// writes data
-bool Serial::Write ( String const &data, uint32_t timeout )
+// write buffer
+bool Serial::Write(uint8_t const *buf, uint32_t len, uint32_t timeout)
 {
-	unsigned long count = 0;
+	uint32_t count = 0;
 
-	int dLen = data.GetCount();
-
-	if ( !timeout )
+	if (!timeout)
 	{
-		WriteFile ( fd, ~data, dLen, &count, NULL );
-		return count == dLen;
+		WriteFile(fd, buf, len, &count, NULL);
+		return count == len;
 	}
 
 	uint32_t tim = msecs() + timeout;
+	const char *dPos = buf;
 
-	const char *dPos = ~data;
-
-	for ( ;; )
+	for (;;)
 	{
-		WriteFile ( fd, dPos, dLen, &count, NULL );
-		if ( count == dLen )
+		WriteFile(fd, dPos, len, &count, NULL);
+		if (count == len )
 			return true;
 
-		if ( count > 0 )
+		if(count > 0)
 		{
 			dPos += count;
-			dLen -= count;
+			len -= count;
 			continue;
 		}
 
-		if ( ( uint32_t ) msecs() >= tim )
+		if((uint32_t)msecs() >= tim)
 			break;
 	}
-
 	return false;
+}
 
+// writes string
+bool Serial::Write(String const &data, uint32_t timeout)
+{
+	return Write((const uint8_t *)~data, data.GetCount(), timeout);
 }
 
 // check if opened
