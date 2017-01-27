@@ -345,7 +345,7 @@ log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.
 if which pkg-config
 then
 
-  if [[ "$Macro" == *"-DflagNOGTK"* ]]
+  if [[ "$Macro" = *"-DflagNOGTK"* ]]
   then
     requires_libraries="x11 libnotify freetype2"
   else
@@ -387,7 +387,7 @@ then
 
 fi
 
-if [[ "$Macro" == *"-DflagNOGTK"* ]]
+if [[ "$Macro" = *"-DflagNOGTK"* ]]
 then
   log_debug_info "Removing references to GTK+"
   sed -i.backup \
