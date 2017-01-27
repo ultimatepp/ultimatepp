@@ -637,6 +637,12 @@ void ScatterCtrl::InsertSeries(int id, GridCtrl &data, bool useCols, int idX, in
 	InsertSeries<GridCtrlSource>(id, data, useCols, idX, idY, beginData, numData);
 }
 
+void ScatterCtrl::CheckButtonVisible() {
+	processButton.Show(showButtons && showProcessDlg);
+	dataButton.Show(showButtons && showPropDlg);
+	propertiesButton.Show(showButtons && showPropDlg);
+}
+	
 ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 {
 	showInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = isZoomWindow = false;
@@ -648,6 +654,7 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	showContextMenu = false;
 	showPropDlg = false;
 	showProcessDlg = false;
+	showButtons = false;
 	defaultCSVseparator = ";";
 	Color(graphColor);	
 	BackPaint();
@@ -657,6 +664,21 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	maxRefresh_ms = 500;
 	highlighting = false;
 	ShowInfo().ShowContextMenu().ShowPropertiesDlg();
+	
+	Add(processButton.RightPosZ(0, 15).TopPosZ(0, 15));
+	processButton.Show(false);
+	processButton.SetImage(ScatterImg::chart_curve_edit()).Tip(t_("Data processing dialog"));
+	processButton.WhenAction = THISBACK(DoProcessing);
+	
+	Add(dataButton.RightPosZ(15, 15).TopPosZ(0, 15));
+	dataButton.Show(false);
+	dataButton.SetImage(ScatterImg::Database()).Tip(t_("Raw data table"));
+	dataButton.WhenAction = THISBACK(DoShowData);
+	
+	Add(propertiesButton.RightPosZ(30, 15).TopPosZ(0, 15));
+	propertiesButton.Show(false);
+	propertiesButton.SetImage(ScatterImg::Gear()).Tip(t_("Plot properties dialog"));
+	propertiesButton.WhenAction = THISBACK1(DoShowEditDlg, 0);
 	
 	AddMouseBehavior(false, false, false, true , false, 0, false, ScatterCtrl::SHOW_COORDINATES); 
 	AddMouseBehavior(true,  false, false, true , false, 0, false, ScatterCtrl::ZOOM_WINDOW);
