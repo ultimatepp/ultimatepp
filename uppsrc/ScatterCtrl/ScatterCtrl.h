@@ -172,9 +172,23 @@ public:
 	void RemoveKeyBehavior(ScatterAction action);	
 	void ClearKeyBehavior();
 	
-	ScatterCtrl& ShowContextMenu(bool show = true) 			{showContextMenu = show; return *this;}
-	ScatterCtrl& ShowPropertiesDlg(bool show = true)		{showPropDlg = show; 	 return *this;}
-	ScatterCtrl& ShowProcessDlg(bool show = true)			{showProcessDlg = show;  return *this;}
+	ScatterCtrl& ShowContextMenu(bool show = true) 	{showContextMenu = show; return *this;}
+	ScatterCtrl& ShowPropertiesDlg(bool show = true){
+		showPropDlg = show; 	
+	 	CheckButtonVisible();
+		return *this;
+	}
+	ScatterCtrl& ShowProcessDlg(bool show = true)	{
+		showProcessDlg = show;  
+		CheckButtonVisible();
+		return *this;
+	}
+	ScatterCtrl& ShowButtons(bool show = true)		{
+		showButtons = show;
+		CheckButtonVisible();
+		return *this;
+	}
+	void CheckButtonVisible();
 	
 	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
 															{popTextX = x; popTextY = y1; popTextY2 = y2; return *this;}
@@ -273,6 +287,7 @@ private:
 	bool showContextMenu;
 	bool showPropDlg;
 	bool showProcessDlg;
+	bool showButtons;
 	
 	int lastRefresh_ms;
 	dword lastRefresh0_ms;
@@ -323,6 +338,8 @@ private:
 	String defaultCSVseparator;
 	
 	FileSel fileToSave;
+	
+	Button processButton, dataButton, propertiesButton;
 };
 
 template <class T>
