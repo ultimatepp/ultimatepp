@@ -143,7 +143,7 @@ frFR("")
 
 T_("Data processing dialog")
 caES("")
-esES("Dia\303\241logo para procesado de datos")
+esES("Di\303\241logo para procesado de datos")
 euES("")
 frFR("")
 
@@ -864,6 +864,12 @@ frFR("")
 T_("Statistical data")
 caES("")
 esES("Datos estadisticos")
+euES("")
+frFR("")
+
+T_("RMS:")
+caES("")
+esES("")
 euES("")
 frFR("")
 

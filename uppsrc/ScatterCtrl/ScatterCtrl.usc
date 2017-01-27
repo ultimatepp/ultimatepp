@@ -40,6 +40,10 @@ ctrl ScatterCtrl {
 	bool ShowHGrid = true;
 	bool ShowVGrid = true;
 	bool ShowInfo = true;
+	bool ShowContextMenu = false;
+	bool ShowPropertiesDlg = false;
+	bool ShowProcessDlg = false;
+	bool ShowButtons = false;
 	bool ShowLegend = true;
 	LEGEND_POS SetLegendAnchor; 					
 	int SetLegendPosX = 5;
