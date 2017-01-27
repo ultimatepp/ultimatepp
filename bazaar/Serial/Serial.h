@@ -89,6 +89,7 @@ class Serial
 		String Read(size_t reqSize = 0, uint32_t timeout = 0);
 		
 		// writes data
+		bool Write(uint8_t const *buf, uint32_t len, uint32_t timeout = 0);
 		bool Write(String const &data, uint32_t timeout = 0);
 		
 		// check if opened
