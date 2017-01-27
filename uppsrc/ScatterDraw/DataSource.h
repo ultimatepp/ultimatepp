@@ -123,7 +123,7 @@ public:
 
 class CArray : public DataSource {
 private:
-	double *xData, *yData, *zData;
+	double *yData, *xData, *zData;
 	int64 numData;
 	double x0, deltaX;
 	

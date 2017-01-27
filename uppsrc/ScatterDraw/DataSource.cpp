@@ -311,6 +311,7 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 	phase = -frequency*firstZero;
 	if (!firstIsToPositive)
 		phase += M_PI;
+	phase = phase - 2*M_PI*int(phase/(2*M_PI));
 	return true;
 }
 
@@ -357,13 +358,25 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     } catch(...) {
         return res;
     }
+    double threshold = 0;
+    if (type == T_PHASE) {
+        for (int i = 0; i < int(freqbuf.size()); ++i) {    
+            if (threshold < std::abs(freqbuf[i]))
+                threshold = std::abs(freqbuf[i]);
+        }
+    }
+    threshold /= 10000.;
     if (frequency) {
     	for (int i = 0; i < int(freqbuf.size()); ++i) {    
     		double xdata = i/(tSample*numData);
 		
 			switch (type) {
-			case T_PHASE:	res << Pointf(xdata, std::arg(freqbuf[i]));				break;
-			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);	break;
+			case T_PHASE:	if (std::abs(freqbuf[i]) > threshold)
+								res << Pointf(xdata, std::arg(freqbuf[i]));
+							else
+								res << Pointf(xdata, 0);
+							break;
+			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);		break;
 			case T_PSD:		res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(windowSum/tSample));
 			}
     	}
@@ -372,8 +385,12 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     		double xdata = (tSample*numData)/i;
 		
 			switch (type) {
-			case T_PHASE:	res << Pointf(xdata, std::arg(freqbuf[i]));				break;
-			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);	break;
+			case T_PHASE:	if (std::abs(freqbuf[i]) > threshold) 
+								res << Pointf(xdata, std::arg(freqbuf[i]));				
+							else
+								res << Pointf(xdata, 0);
+							break;
+			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);		break;
 			case T_PSD:		res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(windowSum/tSample));
 			}
     	}

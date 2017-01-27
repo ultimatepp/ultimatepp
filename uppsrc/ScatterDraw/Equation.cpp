@@ -347,17 +347,21 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
 	}
 
 	if(seriesRaw.IsEmpty())
-        return InadequateDataSource;
+        return SmallDataSource;
         	
 	PointfLess less;
 	Sort(seriesRaw, less);								// Sort
 	
 	Vector<Pointf> series;
+	series << seriesRaw[0];
 	for (int i = 1; i < seriesRaw.GetCount(); ++i) {	// Remove points with duplicate x
 		if (seriesRaw[i].x != seriesRaw[i - 1].x)
 			series << seriesRaw[i];	
 	}
-
+	
+	if (series.GetCount() < 2)
+		return SmallDataSource;
+	
 	r2 = 0;
 	
     int n = int(series.GetCount()) - 1;
@@ -368,7 +372,7 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
 
     Buffer<double> alpha(n);
     for(int i = 1; i < n; ++i)
-        alpha[i] = (3.*(series[i+1].y - series[i].y)/h[i] - 3*(series[i].y - series[i-1].y)/h[i-1]);
+        alpha[i] = 3*(series[i+1].y - series[i].y)/h[i] - 3*(series[i].y - series[i-1].y)/h[i-1];
 
     Buffer<double> c(n+1), l(n+1), mu(n+1), z(n+1);
     l[0] = 1;
@@ -381,7 +385,7 @@ ExplicitEquation::FitError SplineEquation::Fit(DataSource &data, double &r2)
         z[i] = (alpha[i] - h[i-1]*z[i-1])/l[i];
     }
 
-    l[n] = 1.;
+    l[n] = 1;
     z[n] = 0;
     c[n] = 0;
 
@@ -410,7 +414,7 @@ double SplineEquation::f(double x)
     for (j = 0; j < ncoeff; j++) {
         if(coeff[j].x > x) {
             if(j == 0)
-                j++;
+                j = 1;
             break;
         }
     }

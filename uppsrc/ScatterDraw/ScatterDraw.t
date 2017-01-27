@@ -63,6 +63,12 @@ esES("Exponencial")
 euES("")
 frFR("")
 
+T_("RealExponent")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Rational_1")
 caES("Racional_1")
 esES("Racional_1")
