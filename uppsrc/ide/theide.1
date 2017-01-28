@@ -11,8 +11,8 @@ designed for developing large C++ applications.
 .BI "theide " "assembly package" 
 .br
 .BI "theide " "assembly package build_method" 
-.RB "[" \-options "] [" >FLAG [ ,FLAG ]...]
-.RI [ out ]
+[-[a] [b] [e] [r] [s] [S] [v] [1] [2] [m] [d] [M] [l] [x] [X] [Hn]]
+[+FLAG[,FLAG]...] [ out ]
 .LP
 The first method starts TheIDE with a Package selection dialog, 
 the second method directly opens 
@@ -42,23 +42,26 @@ and can also be used to develop non-U++ applications.
 .SH OPTIONS
 
 .IP assembly
-Selects in which assembly to look for package. It must be configured 
-in file 
-.I ~/.upp/theide/assembly.var
+Selects in which assembly to look for package. It can be a predefined assembly
+(in .var file) which is in Win32 in directory where is located theide.exe
+or in POSIX systems in directories ~, ~/.upp/umk, ~/.upp/theide
+or ~/.upp/theide. Alternatively, it is a direct set of directories
+that represent U++ assembly separated by ','.
 .
 .IP package
 Selects which package to use. The package must exist in selected assembly.
 .IP build_method
-Selects build method. It must be configured in file 
-.I ~/.upp/theide/build_method.bm
+Selects build method to be used to build the resulting executable, specified
+either as name of build method (which is then searched for in ~, ~/.upp/umk,
+~/.upp/theide ~/.upp/theide directories) or it is a direct path to the .bm file.
 .
 .LP
 .IP FLAGs
-Specify witch flags should be set up. This works the same way as inside 
-TheIDE. The FLAGs must be separated by commas and first and prepended 
-with ">" character. Please note, that ">" has special meaning in most 
-shells and therefore you must either escape it or enclose in quotation
-marks.
+Specify witch flags should be set up. This works the same way as inside
+TheIDE. The FLAGs must be separated by commas and prepended with "+" or ">"
+character. Please note, that ">" has special meaning in most shells and
+therefore you must either escape it or enclose in quotation marks. If flags
+are not specified, the first main configuration entry in .upp file is used.
 .LP
 Parameter
 .B options
@@ -151,7 +154,7 @@ since it is easier and safer.
 Opens UWord (an example implementation of text proccesor) in TheIDE. 
 .RE
 .LP
-.B theide examples AddressBook GCC \-vasb ">GUI,MT" /tmp/ab
+.B theide examples AddressBook GCC \-vasb "+GUI,MT" /tmp/ab
 .RS
 Builds application AddressBook with verbose output, using 
 .BR gcc (1)
@@ -159,7 +162,7 @@ in debug mode, with GUI and multithreading support, links it using
 shared libraries and places it in /tmp/ab.
 .RE
 .LP
-.B theide uppsrc ide \-2sx ">GUI,MT" /tmp/ide
+.B theide uppsrc ide \-2sx "+GUI,MT" /tmp/ide
 .RS
 Exports Makefile and all the files needed to build TheIDE itself
 (with speed optimizations) into the directory /tmp/ide/.

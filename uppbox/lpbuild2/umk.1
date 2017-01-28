@@ -32,10 +32,10 @@ either as name of build method (which is then searched for in ~, ~/.upp/umk,
 .LP
 .IP FLAGs
 Specify witch flags should be set up. This works the same way as inside 
-TheIDE. The FLAGs must be separated by commas and first and prepended 
-with ">" character. Please note, that ">" has special meaning in most 
-shells and therefore you must either escape it or enclose in quotation
-marks.
+TheIDE. The FLAGs must be separated by commas and prepended with "+" or ">"
+character. Please note, that ">" has special meaning in most shells and
+therefore you must either escape it or enclose in quotation marks. If flags
+are not specified, the first main configuration entry in .upp file is used.
 .LP
 Parameter
 .B options
@@ -112,7 +112,7 @@ The build methods configurations.
 Opens UWord (an example implementation of text proccesor) in TheIDE. 
 .RE
 .LP
-.B umk examples AddressBook GCC \-vasb ">GUI,MT" /tmp/ab
+.B umk examples AddressBook GCC \-vasb "+GUI,MT" /tmp/ab
 .RS
 Builds application AddressBook with verbose output, using 
 .BR gcc (1)
@@ -120,7 +120,7 @@ in debug mode, with GUI and multithreading support, links it using
 shared libraries and places it in /tmp/ab.
 .RE
 .LP
-.B umk uppsrc ide \-2sx ">GUI,MT" /tmp/ide
+.B umk uppsrc ide \-2sx "+GUI,MT" /tmp/ide
 .RS
 Exports Makefile and all the files needed to build TheIDE itself
 (with speed optimizations) into the directory /tmp/ide/.
