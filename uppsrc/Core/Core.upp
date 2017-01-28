@@ -25,7 +25,7 @@ library(!WIN32) z;
 
 library(OSX11) pthread;
 
-static_library(ANDROID) cpufeatures;
+static_library(ANDROID) "cpufeatures atomic";
 
 options(XGNU) -O0;
 
