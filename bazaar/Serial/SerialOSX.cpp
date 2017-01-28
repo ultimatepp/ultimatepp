@@ -1,12 +1,24 @@
 #include "Serial.h"
 
-#ifdef PLATFORM_POSIX
+#ifdef PLATFORM_OSX11
 
-#include <SysExec/SysExec.h>
-
-#include <termios.h>
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <sys/ioctl.h>
-#include <linux/serial.h>
+#include <errno.h>
+#include <paths.h>
+#include <termios.h>
+#include <sysexits.h>
+#include <sys/param.h>
+#include <sys/select.h>
+#include <sys/time.h>
+#include <time.h>
+#include <CoreFoundation/CoreFoundation.h>
+#include <IOKit/IOKitLib.h>
+#include <IOKit/serial/IOSerialKeys.h>
+#include <IOKit/IOBSD.h>
 
 NAMESPACE_UPP
 
@@ -16,7 +28,6 @@ static bool __IsSymLink(const char *path)
 	lstat(path, &stf);
 	return S_ISLNK(stf.st_mode);
 }
-
 
 dword Serial::stdBauds[] =
 {
@@ -61,10 +72,39 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		B38400, B57600, B115200, B230400
 	};
 
-	// open the device
-	fd = open(port, O_RDWR | O_NOCTTY /*| O_SYNC*/ | O_NDELAY);
+	int bits;
+
+	fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (fd < 0)
 	{
+		fd = -1;
+		isError = true;
+		errCode = DeviceError;
+		return false;
+	}
+	if (ioctl(fd, TIOCEXCL) == -1)
+	{
+		// unable to get exclusive access to port
+		close(fd);
+		fd = -1;
+		isError = true;
+		errCode = DeviceError;
+		return false;
+	}
+	if (ioctl(fd, TIOCMGET, &bits) < 0)
+	{
+		// unable to query serial ports signals
+		close(fd);
+		fd = -1;
+		isError = true;
+		errCode = DeviceError;
+		return false;
+	}
+	bits &= ~(TIOCM_DTR | TIOCM_RTS);
+	if (ioctl(fd, TIOCMSET, &bits) < 0)
+	{
+		// unable to control serial ports signals
+		close(fd);
 		fd = -1;
 		isError = true;
 		errCode = DeviceError;
@@ -453,89 +493,63 @@ bool Serial::IsOpened(void) const
 	return fd != -1;
 }
 
+static void macos_ports(io_iterator_t  *PortIterator, ArrayMap<String, String> &list)
+{
+	io_object_t modemService;
+	CFTypeRef nameCFstring;
+	char s[MAXPATHLEN];
+
+	while ((modemService = IOIteratorNext(*PortIterator)))
+	{
+		nameCFstring = IORegistryEntryCreateCFProperty(modemService, CFSTR(kIOCalloutDeviceKey), kCFAllocatorDefault, 0);
+		if (nameCFstring)
+		{
+			if (CFStringGetCString((const __CFString *)nameCFstring, s, sizeof(s), kCFStringEncodingASCII))
+				list.Add(s, "");
+
+			CFRelease(nameCFstring);
+		}
+		IOObjectRelease(modemService);
+	}
+}
+
 // get a list of connected serial ports
 // for old-style serials, check if something is connected
 // for usb ones, return also a description
 ArrayMap<String, String> Serial::GetSerialPorts(void)
 {
-	const char *sysClassTTY = "/sys/class/tty/";
-
 	ArrayMap<String, String> res;
+	
+	mach_port_t masterPort;
+	CFMutableDictionaryRef classesToMatch;
+	io_iterator_t serialPortIterator;
+	
+	if (IOMasterPort(NULL, &masterPort) != KERN_SUCCESS)
+		return res;
 
-	// first, scan all tty devices and dereference symlinks
-	FindFile ff(AppendFileName(sysClassTTY, "*"));
-
-	while (ff)
-	{
-		if (ff.IsSymLink())
-		{
-			// it's a symlink
-			// get the device name
-			String devName = ff.GetName();
-
-			// build the full path of it
-			String serial = AppendFileName(sysClassTTY, devName);
-
-			// look for its driver, skip if none
-			String devPath = AppendFileName(serial, "device");
-
-			// it must be a symlink....
-
-			if (__IsSymLink(devPath))
-			{
-				// get the driver path
-				String drvLink = AppendFileName(devPath, "driver");
-
-				// it must be a symlink too...
-
-				if (__IsSymLink(drvLink))
-				{
-					// get link target
-					String drvName = GetFileName(GetSymLinkPath(drvLink));
-
-					if (!drvName.IsEmpty())
-					{
-						// build the full device name
-						devName = AppendFileName("/dev", devName);
-
-						// now if driver is 'serial8250' we check if
-						// the port responds
-
-						if (drvName == "serial8250")
-						{
-							// Try to open the device
-							int fd = open(devName, O_RDWR | O_NONBLOCK | O_NOCTTY);
-
-							if (fd >= 0)
-							{
-								// Get serial_info
-
-								struct serial_struct serinfo;
-
-								if (ioctl(fd, TIOCGSERIAL, &serinfo) == 0)
-								{
-									// If device type is no PORT_UNKNOWN we accept the port
-									if (serinfo.type != PORT_UNKNOWN)
-										res.Add(devName, "");
-								}
-
-								close(fd);
-							}
-						}
-
-						// otherwise, just add the device to result
-
-						else
-							res.Add(devName, drvName);
-					}
-				}
-			}
-		}
-
-		ff.Next();
-	}
-
-	return res;
+	// a usb-serial adaptor is usually considered a "modem",
+	// especially when it implements the CDC class spec
+	classesToMatch = IOServiceMatching(kIOSerialBSDServiceValue);
+	if (!classesToMatch)
+		return res;
+	
+	CFDictionarySetValue(classesToMatch, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDModemType));
+	if (IOServiceGetMatchingServices(masterPort, classesToMatch, &serialPortIterator) != KERN_SUCCESS)
+		return res;
+	
+	macos_ports(&serialPortIterator, res);
+	IOObjectRelease(serialPortIterator);
+	
+	// but it might be considered a "rs232 port", so repeat this search for rs232 ports
+	classesToMatch = IOServiceMatching(kIOSerialBSDServiceValue);
+	if (!classesToMatch)
+		return res;
+	
+	CFDictionarySetValue(classesToMatch, CFSTR(kIOSerialBSDTypeKey), CFSTR(kIOSerialBSDRS232Type));
+	if (IOServiceGetMatchingServices(masterPort, classesToMatch, &serialPortIterator) != KERN_SUCCESS)
+		return res;
+	macos_ports(&serialPortIterator, res);
+	IOObjectRelease(serialPortIterator);
 }
 
 END_UPP_NAMESPACE
