@@ -317,8 +317,8 @@ void LocalHost::AddFlags(Index<String>& cfg)
 {
 	// Allow to specify custom platform flags
 	for (const String& config : cfg)
-		if(findarg(config, "WIN32", "LINUX", "POSIX", "BSD", "FREEBSD", \
-			"OPENBSD", "NETBSD", "DRAGONFLY", "SOLARIS", "OSX11") >= 0)
+		if(findarg(config, "WIN32", "LINUX", "POSIX", "BSD", "FREEBSD",
+			               "OPENBSD", "NETBSD", "DRAGONFLY", "SOLARIS", "OSX11") >= 0)
 			return;
 
 #if   defined(PLATFORM_WIN32)
