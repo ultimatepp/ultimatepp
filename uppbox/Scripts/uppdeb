@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # uppdeb
 # Creates .deb packages for Ultimate++
 #

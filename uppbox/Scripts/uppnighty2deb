@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # uppnighty2deb
 # From a 'nighty build' source tree, batch builds theide and creates .deb package
 #
