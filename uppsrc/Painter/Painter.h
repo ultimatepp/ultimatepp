@@ -297,6 +297,8 @@ public:
 	Painter& Text(double x, double y, const String& s, Font fnt, const double *dx = NULL);
 	Painter& Text(const Pointf& p, const char *text, Font fnt, int n = -1, const double *dx = NULL);
 	Painter& Text(double x, double y, const char *text, Font fnt, int n = -1, const double *dx = NULL);
+	
+	void EndPath()                                                    { Stroke(0, RGBAZero()); }
 
 	void Begin();
 	void End();
