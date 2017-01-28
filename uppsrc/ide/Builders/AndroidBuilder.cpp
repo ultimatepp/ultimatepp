@@ -313,21 +313,6 @@ bool AndroidBuilder::Preprocess(
 
 void AndroidBuilder::AddFlags(Index<String>& cfg)
 {
-	// TODO: Blood hack - should be remove after release.
-	// Talk with Mirek how to do it well - without over engineering.
-	// U++ is not ready for full cross compilation right now.
-	
-	cfg.RemoveKey("WIN32");
-	cfg.RemoveKey("LINUX");
-	cfg.RemoveKey("POSIX");
-	cfg.RemoveKey("BSD");
-	cfg.RemoveKey("FREEBSD");
-	cfg.RemoveKey("OPENBSD");
-	cfg.RemoveKey("NETBSD");
-	cfg.RemoveKey("DRAGONFLY");
-	cfg.RemoveKey("SOLARIS");
-	cfg.RemoveKey("OSX11");
-	
 	cfg.Add("LINUX");
 	cfg.Add("POSIX");
 	cfg.Add("ANDROID");

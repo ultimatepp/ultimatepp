@@ -891,7 +891,6 @@ String Ide::GetIncludePath()
 			MergeWith(include, ";", ndk.GetIncludeDir());
 			
 			String cppIncludeDir = ndk.GetCppIncludeDir(bm.Get("NDK_CPP_RUNTIME", ""));
-			Cout() << cppIncludeDir << "\n";
 			if(!cppIncludeDir.IsEmpty())
 				MergeWith(include, ";", cppIncludeDir);
 		}
