@@ -56,6 +56,8 @@ Be silent.
 Be verbose.
 .IP m
 Create a map file.
+.IP Hn
+Number of threads used for building (single digit). Default is number of logical cores available.
 .RE
 .SS Output mode:
 .RS
@@ -93,6 +95,8 @@ Create makefile in file
 .IP xM,XM
 If you mix M with x or X, Makefile is exported to directory 
 .I out
+.IP k
+Do not delete target directory out when exporting.
 .LP
 Options x and X are mutually exclusive. The last specified is used. 
 .RE
