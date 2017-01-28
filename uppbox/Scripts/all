@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 rm ~/upload/* || true
 
 export WINEDEBUG=-all wine program.exe

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # dostable
 # quick go to create deb package from my stable repo
 #
