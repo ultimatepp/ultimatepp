@@ -72,8 +72,6 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		B38400, B57600, B115200, B230400
 	};
 
-	int bits;
-
 	fd = open(port, O_RDWR | O_NOCTTY | O_NONBLOCK);
 	if (fd < 0)
 	{
@@ -91,7 +89,9 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		errCode = DeviceError;
 		return false;
 	}
-	if (ioctl(fd, TIOCMGET, &bits) < 0)
+
+	unsigned int ctl;
+	if (ioctl(fd, TIOCMGET, &ctl) < 0)
 	{
 		// unable to query serial ports signals
 		close(fd);
@@ -100,8 +100,8 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 		errCode = DeviceError;
 		return false;
 	}
-	bits &= ~(TIOCM_DTR | TIOCM_RTS);
-	if (ioctl(fd, TIOCMSET, &bits) < 0)
+	ctl &= ~(TIOCM_DTR | TIOCM_RTS);
+	if (ioctl(fd, TIOCMSET, &ctl) < 0)
 	{
 		// unable to control serial ports signals
 		close(fd);
@@ -154,12 +154,6 @@ bool Serial::Open(String const &port, dword lSpeed, byte parity, byte bits, byte
 			break;
 		case ParityOdd:
 			tty.c_cflag |= PARENB | PARODD;
-			break;
-		case ParityMark:
-			tty.c_cflag |= PARENB | PARODD | CMSPAR;
-			break;
-		case ParitySpace:
-			tty.c_cflag |= PARENB | CMSPAR;
 			break;
 		default:
 			Close();
@@ -466,7 +460,7 @@ bool Serial::Write(uint8_t const *buf, uint32_t len, uint32_t timeout)
 	const uint8_t *dPos = buf;
 	for (;;)
 	{
-		uint32_t written = write(fd, dPos, len);
+		int written = write(fd, dPos, len);
 		if (written == len)
 			return true;
 		if (written >= 0)
@@ -524,7 +518,7 @@ ArrayMap<String, String> Serial::GetSerialPorts(void)
 	CFMutableDictionaryRef classesToMatch;
 	io_iterator_t serialPortIterator;
 	
-	if (IOMasterPort(NULL, &masterPort) != KERN_SUCCESS)
+	if (IOMasterPort(0, &masterPort) != KERN_SUCCESS)
 		return res;
 
 	// a usb-serial adaptor is usually considered a "modem",
@@ -550,6 +544,8 @@ ArrayMap<String, String> Serial::GetSerialPorts(void)
 		return res;
 	macos_ports(&serialPortIterator, res);
 	IOObjectRelease(serialPortIterator);
+	
+	return res;
 }
 
 END_UPP_NAMESPACE
