@@ -54,8 +54,8 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 		if(!pkg.noblitz && m.def.blitz && bm.Get("DISABLE_BLITZ", "") != "1")
 			cfg.FindAdd("BLITZ");
 	}
-	host.AddFlags(cfg);
 	b.AddFlags(cfg);
+	host.AddFlags(cfg);
 	for(int i = 0; i < pkg.flag.GetCount(); i++) {
 		if(MatchWhen(pkg.flag[i].when, cfg.GetKeys())) {
 			Vector<String> h = Split(pkg.flag[i].text, ' ');
