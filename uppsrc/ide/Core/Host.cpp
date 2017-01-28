@@ -315,12 +315,9 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 
 void LocalHost::AddFlags(Index<String>& cfg)
 {
-	// Allow to specify custom platform flags
-	for (const String& config : cfg)
-		if(findarg(config, "WIN32", "LINUX", "POSIX", "BSD", "FREEBSD",
-			               "OPENBSD", "NETBSD", "DRAGONFLY", "SOLARIS", "OSX11") >= 0)
-			return;
-
+	if(HasPlatformFlag(cfg))
+		return;
+	
 #if   defined(PLATFORM_WIN32)
 	cfg.Add("WIN32");
 #endif
@@ -360,6 +357,21 @@ void LocalHost::AddFlags(Index<String>& cfg)
 #ifdef PLATFORM_OSX11
 	cfg.Add("OSX11");
 #endif
+}
+
+bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
+{
+	static const Index<String> platformFlags = {
+		"ANDROID", "WIN32", "LINUX", "POSIX",
+		"BSD", "FREEBSD", "OPENBSD", "NETBSD",
+		"DRAGONFLY", "SOLARIS", "OSX11"
+	};
+	
+	for(const String& flag : cfg)
+		if(platformFlags.Find(flag) >= 0)
+			return true;
+		
+	return false;
 }
 
 #if 0

@@ -33,7 +33,8 @@ struct Host {
 	virtual ~Host() {}
 };
 
-struct LocalHost : Host {
+class LocalHost : public Host {
+public:
 	Vector<String> exedirs;
 	String         environment;
 
@@ -63,6 +64,9 @@ struct LocalHost : Host {
 	virtual One<AProcess>      StartProcess(const char *cmdline);
 	virtual void               Launch(const char *cmdline, bool console);
 	virtual void               AddFlags(Index<String>& cfg);
+	
+private:
+	bool HasPlatformFlag(const Index<String>& cfg);
 };
 
 /*
