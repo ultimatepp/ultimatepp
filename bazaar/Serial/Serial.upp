@@ -6,6 +6,7 @@ uses
 file
 	Serial.h,
 	Serial.cpp,
-	SerialPosix.cpp,
+	SerialLinux.cpp,
+	SerialOSX.cpp,
 	SerialWindows.cpp;
 
