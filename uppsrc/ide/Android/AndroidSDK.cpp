@@ -11,7 +11,6 @@ String AndroidSDK::GetDownloadUrl()
 
 AndroidSDK::AndroidSDK()
 {
-	
 }
 
 AndroidSDK::AndroidSDK(const String& path, bool deduceValues)
@@ -23,7 +22,6 @@ AndroidSDK::AndroidSDK(const String& path, bool deduceValues)
 
 AndroidSDK::~AndroidSDK()
 {
-	
 }
 
 void AndroidSDK::DeducePathReleatedValues()

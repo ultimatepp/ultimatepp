@@ -322,12 +322,16 @@ void LocalHost::AddFlags(Index<String>& cfg)
 	cfg.Add("WIN32");
 #endif
 
+#ifdef PLATFORM_POSIX
+	cfg.Add("POSIX");
+#endif
+
 #ifdef PLATFORM_LINUX
 	cfg.Add("LINUX");
 #endif
 
-#ifdef PLATFORM_POSIX
-	cfg.Add("POSIX");
+#ifdef PLATFORM_ANDROID
+	cfg.Add("ANDROID");
 #endif
 
 #ifdef PLATFORM_BSD
@@ -362,15 +366,15 @@ void LocalHost::AddFlags(Index<String>& cfg)
 bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
 {
 	static const Index<String> platformFlags = {
-		"ANDROID", "WIN32", "LINUX", "POSIX",
+		"WIN32", "POSIX", "LINUX", "ANDROID",
 		"BSD", "FREEBSD", "OPENBSD", "NETBSD",
 		"DRAGONFLY", "SOLARIS", "OSX11"
 	};
-	
+
 	for(const String& flag : cfg)
 		if(platformFlags.Find(flag) >= 0)
 			return true;
-		
+
 	return false;
 }
 
