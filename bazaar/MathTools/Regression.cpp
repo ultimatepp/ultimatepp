@@ -6,8 +6,11 @@ int r2Compare(const Vector<Value>& v1, const Vector<Value>& v2) {return double(v
 void TabRegression::Init() {
 	CtrlLayout(up);
 	CtrlLayout(down);
+	
 	Add(splitter.SizePos());
 	splitter.Vert(up.SizePos(), down.SizePos());
+	splitter.SetPos(3500, 0);
+	
 	HSizePos().VSizePos();
 
 	down.gridDef.Clipboard().Editing().Appending().Removing().Sorting(false).ResizeColMode(0);
@@ -24,7 +27,7 @@ void TabRegression::Init() {
 		down.coefficients = 0;
 	}
 
-	up.scatter.SetMouseHandling(true, true).ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
+	up.scatter.SetMouseHandling(true, true).ShowButtons().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
 
 	const int totalCols = 50;
 	
@@ -165,7 +168,7 @@ void TabRegression::Fit() {
 	int numData = int(down.gridDef.Get(0, 2)) - beginData + 1;
 	ds.Init(down.grid, idY, idX, useCols, beginData, numData);
 	
-	userEquation->Init("User", down.formula);
+	userEquation->Init("User", ~down.formula);
 	
 	Array<double> r2;
 	r2.SetCount(equationTypes.GetCount());
