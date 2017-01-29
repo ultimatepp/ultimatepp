@@ -42,7 +42,7 @@ private:
 	void Process(int n)
 	{
 		INTERLOCKED { LOG("Process " << n << " started"); }
-		Mutex accept_mutex;
+		static Mutex accept_mutex;
 		
 		for(;;)
 		{
