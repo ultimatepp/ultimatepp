@@ -348,12 +348,13 @@ log_debug_info "Cleaning source code"
   rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/build_info.h"
 #<end> TODO
 
-log_debug_info "Copying GCC.bm CLANG.bm" *.scd "U++ license and readme.md"
+# log_debug_info "Copying GCC.bm CLANG.bm" *.scd "U++ license and readme.md"
+log_debug_info "Copying GCC.bm CLANG.bm" *.scd
   cp -p GCC.bm   "$DESTDIR/$datadir/$package_name/"
   cp -p CLANG.bm "$DESTDIR/$datadir/$package_name/"
   cp -p *.scd    "$DESTDIR/$datadir/$package_name/"
-  cp -p readme.md   "$DESTDIR/$docdir/$package_name/"
-  cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$package_name/"
+#  cp -p readme.md   "$DESTDIR/$docdir/$package_name/"
+#  cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$package_name/"
 
 fi
 
