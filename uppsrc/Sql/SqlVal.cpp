@@ -425,7 +425,7 @@ SqlVal SqlCurrentDate() {
 }
 
 SqlVal SqlCurrentTime() {
-	return SqlVal(SqlCode(SQLITE3, "time('now')")
+	return SqlVal(SqlCode(SQLITE3, "datetime('now')")
 	                     ("current_timestamp"), SqlVal::HIGH);
 }
 
