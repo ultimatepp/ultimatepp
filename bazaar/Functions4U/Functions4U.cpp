@@ -249,9 +249,38 @@ bool DirectoryExistsX_Each(const char *name) {
 	if(name[0] && name[1] == ':' && name[2] == '\\' && name[3] == 0 &&
 	   GetDriveType(name) != DRIVE_NO_ROOT_DIR) 
 	    return true;
-	DWORD dwAttrib = GetFileAttributes(ToSystemCharset(name));
-	return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
-           (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));	
+	DWORD res = GetFileAttributes(ToSystemCharset(name));
+	if (!(res & FILE_ATTRIBUTE_DIRECTORY))
+		return false;
+	if (res != INVALID_FILE_ATTRIBUTES)
+		return true;
+	if (!(name[0] && name[1] == ':'))
+		return false;
+	if (!(ERROR_PATH_NOT_FOUND == GetLastError()))
+		return false;
+	
+	String localName = String(name, 2);
+	char remoteName[256]; 
+	DWORD lenRemoteName = sizeof(remoteName); 
+	res = WNetGetConnection(localName, remoteName, &lenRemoteName);  
+	if (res != ERROR_CONNECTION_UNAVAIL)
+		return false;
+	
+	NETRESOURCE nr;
+	memset(&nr, 0, sizeof(NETRESOURCE));
+	nr.dwType = RESOURCETYPE_DISK;
+	nr.lpLocalName = (char *)localName.Begin();
+	nr.lpRemoteName = remoteName;
+	nr.lpProvider = NULL;
+    DWORD dwFlags = CONNECT_UPDATE_PROFILE;
+    res = WNetAddConnection2(&nr, NULL, NULL, dwFlags);
+   	if (res != NO_ERROR)
+   		return false;
+   	
+	res = GetFileAttributes(ToSystemCharset(name));
+	return (res != INVALID_FILE_ATTRIBUTES && 
+           (res & FILE_ATTRIBUTE_DIRECTORY));	
+	
 #else
 	FindFile ff(name);
 	return ff && ff.IsDirectory();
