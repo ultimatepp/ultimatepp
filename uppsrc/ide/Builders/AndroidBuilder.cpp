@@ -313,8 +313,8 @@ bool AndroidBuilder::Preprocess(
 
 void AndroidBuilder::AddFlags(Index<String>& cfg)
 {
-	cfg.Add("LINUX");
 	cfg.Add("POSIX");
+	cfg.Add("LINUX");
 	cfg.Add("ANDROID");
 }
 
