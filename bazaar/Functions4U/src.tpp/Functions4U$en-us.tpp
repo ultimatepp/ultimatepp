@@ -301,6 +301,14 @@ onst]_[@(0.0.255) char]_`*[*@3 path], EXT`_FILE`_FLAGS_[*@3 flags]_`=_NO`_FLAG)&
 [s2; Deletes [%-*@3 path] file using [%-*@3 flags].&]
 [s2; Returns true in case of success.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:DirectoryExistsX`(const char`*`,EXT`_FILE`_FLAGS`):%- [@(0.0.255) bool]_[* Di
+rectoryExistsX]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], 
+EXT`_FILE`_FLAGS_[*@3 flags]_`=_NO`_FLAG)&]
+[s2; Determines if directory [%-*@3 path] exists using [%- EXT`_FILE`_FLAGS 
+][%-*@3 flags].&]
+[s2; In Windows it mounts persistent but unmounted network drives.&]
+[s3; &]
 [s0; &]
 [ {{10000@1 [s0; [* String functions]]}}&]
 [s4;%- &]
