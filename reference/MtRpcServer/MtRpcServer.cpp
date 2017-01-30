@@ -69,7 +69,7 @@ private:
 				INTERLOCKED { LOG("Request rejected " << n); }
 				break;
 			}
-		}		
+		}
 	}
 
 	#ifdef PLATFORM_WIN32
