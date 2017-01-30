@@ -317,11 +317,10 @@ void SpanFiller::Render(int val, int len)
 		s += len;
 		return;
 	}
-	const RGBA *e = t + len;
 	if(alpha != 256)
 		val = alpha * val >> 8;
 	if(val == 256) {
-		for(int i=0; i < len; i++) {
+		for(int i = 0; i < len; i++) {
 			if(s[i].a == 255)
 				t[i] = s[i];
 			else
@@ -330,9 +329,11 @@ void SpanFiller::Render(int val, int len)
 		t += len;
 		s += len;
 	}
-	else
+	else {
+		const RGBA *e = t + len;
 		while(t < e)
 			AlphaBlendCover8(*t++, *s++, val);
+	}
 }
 
 ClipFiller::ClipFiller(int _cx)
