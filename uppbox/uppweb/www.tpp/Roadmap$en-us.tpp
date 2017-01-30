@@ -26,8 +26,8 @@ topic "Roadmap";
 [b83;*_2 $$24,24#F44F66EA0BD27C61EACACB2D8ED88A05:release]
 [{_}%EN-US 
 [s2; Roadmap&]
-[s24; Upcoming release&]
-[s3; 2017.1 (rev 10564`+) (Jan 2017)&]
+[s24; Current release&]
+[s3; 2017.1 (rev 10804) (Jan 2017)&]
 [s5; This is the first release of U`+`+ that [*/ requires] C`+`+11 
 compatible compiler. The main focus was [* Core], adding many enhancements 
 allowed by C`+`+11 and improved parallel programming support. 
@@ -103,55 +103,6 @@ TheIDE and UMK from tarball (POSIX environment). Compilation
 on multiple cores is possible with `"`-j`" option.&]
 [s5;l160;i150;O0; Documentation improvements.&]
 [s5;l160;i150;O0; Bug fixes in various areas.&]
-[s24; &]
-[s24; Current release&]
-[s3; 2015.2 (rev 9251)[3  (Dec 2015)]&]
-[s5; The main focus of this release was [^topic`:`/`/ide`/app`/Assist`$en`-us^ C`+`+ 
-parser and Assist`+`+ features]. and [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A
-ndroid applications builder] in TheIDE (library does not yet 
-support Android though).&]
-[s22; Core&]
-[s5;l160;i150;O0; Improved [* C`+`+11] support.&]
-[s5;l160;i150;O0; Leap second of 2015 added to time routines.&]
-[s22; GUI programming `& graphics&]
-[s5;l160;i150;O0; Improved support of UHD displays.&]
-[s5;l160;i150;O0; New QTF command [*@5 `{`{`*] is shortcut for [*@5 `{`{`~0/0] 
-to simplify using invisible tables for organizing text.&]
-[s5;l160;i150;O0; PdfDraw now supports urls (e.g. when converting 
-QTF/RichText to PDF).&]
-[s5;l160;i150;O0; RichText/QTF now support round borders for table 
-cells.&]
-[s5;l160;i150;O0; ScatterCtrl: new features.&]
-[s22; TheIDE&]
-[s5;l160;i150;O0; Assist`+`+ and C`+`+ parser now support C`+`+11 
-and non`-project headers, parsing ability is generally improved.&]
-[s5;l160;i150;O0; Android builder.&]
-[s5;l160;i150;O0; UTF16 support, UTF BOM autodetection.&]
-[s5;l160;i150;O0; Rename/Delete package functions.&]
-[s5;l160;i150;O0; Layout designer has new code generation features 
-and can jump to C`+`+ using the layout.&]
-[s5;l160;i150;O0; Editor now [* truncates ]files longer than[*  200MB 
-/ 1GB] (32/64 bits ide) while loading, makes them read`-only.&]
-[s5;l160;i150;O0; Editor now shows [* misplaced whitespaces] in source 
-files.&]
-[s5;l160;i150;O0; TheIDE now detects binary files and provides binary 
-viewer.&]
-[s5;l160;i150;O0; Toolbar has new navigation icons and icons to switch 
-editation mode (text/designer/binary).&]
-[s5;l160;i150;O0; Legacy [* GDB]`-backended [* debugger ]was refurbished 
-and became `'Standard`' debugger for GCC.&]
-[s5;l160;i150;O0; Icon designer now shows images as files icons when 
-inserting image files.&]
-[s22; Win32 releases&]
-[s5;l160;i150;O0; Win32 now does not come as .exe installer, but 
-simple .7z archive, which acts as `"[* portable]`" installation. 
-Nothing is written to the registry, nothing needs to be installed, 
-simply running `"theide.exe`" setups everything needed. (theide.exe 
-is 64bit executable. For those unlucky to still run 32`-bit os, 
-there is theide32.exe).&]
-[s5;l160;i150;O0; There is once again `'[* mingw]`' variant which is 
-coupled with TDM64 release of mingw`-w64.&]
-[s5; &]
 [s3;H4; Archival releases:&]
 [s5; If you are looking for informations about archival releases 
 `- you can find them on the following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s

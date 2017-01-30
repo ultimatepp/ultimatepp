@@ -4,7 +4,7 @@ topic "Historical roadmap";
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
-[b42;a42;2 $$5,5#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
 [l321;C@5;1 $$7,7#20902679421464641399138805415013:code]
 [b2503;2 $$8,0#65142375456100023862071332075487:separator]
@@ -21,8 +21,56 @@ topic "Historical roadmap";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[b83;*_2 $$22,22#F44F66EA0BD27C61EACACB2D8ED88A05:release]
+[b125;a21;*2 $$23,23#72A57D7B347482931820FBB21B426750:subtitle]
 [{_}%EN-US 
 [s0; [*R6 Historical roadmap]&]
+[s3; 2015.2 (rev 9251)[3  (Dec 2015)]&]
+[s5; The main focus of this release was [^topic`:`/`/ide`/app`/Assist`$en`-us^ C`+`+ 
+parser and Assist`+`+ features]. and [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A
+ndroid applications builder] in TheIDE (library does not yet 
+support Android though).&]
+[s23; Core&]
+[s5;l160;i150;O0; Improved [* C`+`+11] support.&]
+[s5;l160;i150;O0; Leap second of 2015 added to time routines.&]
+[s23; GUI programming `& graphics&]
+[s5;l160;i150;O0; Improved support of UHD displays.&]
+[s5;l160;i150;O0; New QTF command [*@5 `{`{`*] is shortcut for [*@5 `{`{`~0/0] 
+to simplify using invisible tables for organizing text.&]
+[s5;l160;i150;O0; PdfDraw now supports urls (e.g. when converting 
+QTF/RichText to PDF).&]
+[s5;l160;i150;O0; RichText/QTF now support round borders for table 
+cells.&]
+[s5;l160;i150;O0; ScatterCtrl: new features.&]
+[s23; TheIDE&]
+[s5;l160;i150;O0; Assist`+`+ and C`+`+ parser now support C`+`+11 
+and non`-project headers, parsing ability is generally improved.&]
+[s5;l160;i150;O0; Android builder.&]
+[s5;l160;i150;O0; UTF16 support, UTF BOM autodetection.&]
+[s5;l160;i150;O0; Rename/Delete package functions.&]
+[s5;l160;i150;O0; Layout designer has new code generation features 
+and can jump to C`+`+ using the layout.&]
+[s5;l160;i150;O0; Editor now [* truncates ]files longer than[*  200MB 
+/ 1GB] (32/64 bits ide) while loading, makes them read`-only.&]
+[s5;l160;i150;O0; Editor now shows [* misplaced whitespaces] in source 
+files.&]
+[s5;l160;i150;O0; TheIDE now detects binary files and provides binary 
+viewer.&]
+[s5;l160;i150;O0; Toolbar has new navigation icons and icons to switch 
+editation mode (text/designer/binary).&]
+[s5;l160;i150;O0; Legacy [* GDB]`-backended [* debugger ]was refurbished 
+and became `'Standard`' debugger for GCC.&]
+[s5;l160;i150;O0; Icon designer now shows images as files icons when 
+inserting image files.&]
+[s23; Win32 releases&]
+[s5;l160;i150;O0; Win32 now does not come as .exe installer, but 
+simple .7z archive, which acts as `"[* portable]`" installation. 
+Nothing is written to the registry, nothing needs to be installed, 
+simply running `"theide.exe`" setups everything needed. (theide.exe 
+is 64bit executable. For those unlucky to still run 32`-bit os, 
+there is theide32.exe).&]
+[s5;l160;i150;O0; There is once again `'[* mingw]`' variant which is 
+coupled with TDM64 release of mingw`-w64.&]
 [s0;*_4 &]
 [s0; [*_4 2015.1 (rev 8227)][*3  (Mar 2015)]&]
 [s0;4 &]
