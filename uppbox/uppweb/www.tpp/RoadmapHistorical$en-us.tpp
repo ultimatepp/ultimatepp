@@ -2,7 +2,7 @@ topic "Historical roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
+[b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -24,7 +24,7 @@ topic "Historical roadmap";
 [b83;*_2 $$22,22#F44F66EA0BD27C61EACACB2D8ED88A05:release]
 [b125;a21;*2 $$23,23#72A57D7B347482931820FBB21B426750:subtitle]
 [{_}%EN-US 
-[s0; [*R6 Historical roadmap]&]
+[s2; Historical roadmap&]
 [s3; 2015.2 (rev 9251)[3  (Dec 2015)]&]
 [s5; The main focus of this release was [^topic`:`/`/ide`/app`/Assist`$en`-us^ C`+`+ 
 parser and Assist`+`+ features]. and [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A
