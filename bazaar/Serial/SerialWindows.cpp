@@ -345,7 +345,7 @@ namespace Upp
 		if(!reqSize || !buf)
 			return 0;
 		
-		uint32_t n;
+		unsigned long count;
 		uint32_t tim = (uint32_t)msecs() + timeout;
 		uint32_t req = reqSize;
 		while(req)
