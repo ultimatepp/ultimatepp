@@ -81,12 +81,16 @@ class Serial
 		bool Read(byte &c, uint32_t timeout = 0);
 		bool Read(char &c, uint32_t timeout = 0);
 		
-		// write a single byte
-		bool Write(char c, uint32_t timeout = 0);
-		
+		// read data, requested amount, blocks 'timeout' milliseconds
+		// return number of bytes got
+		uint32_t Read(uint8_t *buf, uint32_t reqSize, uint32_t timeout = 0);
+
 		// read data, requested amount, blocks 'timeout' milliseconds
 		// if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
-		String Read(size_t reqSize = 0, uint32_t timeout = 0);
+		String Read(uint32_t reqSize = 0, uint32_t timeout = 0);
+		
+		// write a single byte
+		bool Write(char c, uint32_t timeout = 0);
 		
 		// writes data
 		bool Write(uint8_t const *buf, uint32_t len, uint32_t timeout = 0);
