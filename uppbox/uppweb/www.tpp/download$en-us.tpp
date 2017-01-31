@@ -30,7 +30,7 @@ eb, dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
 dsc][2  (install ][*2 theide`_`*.deb][2  and ][*2 upp`_`*`_all.deb][2 )]]
-:: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
+:: [s0;%DE-DE [*2 Fedora, OpenSUSE, Centos]]
 :: [s0;=2 ]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
@@ -74,8 +74,8 @@ releases, because bugfixes are not backported to stable releases.&]
 [s4; Stable releases are published at Sourceforge.net. You can download 
 them at [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^ http://sourceforge.net
 /projects/upp/files]. In addition to Windows installer and source 
-tarballs, you can also find here rpm packages for Fedora, Mandriva 
-and OpenSUSE.&]
+tarballs, you can also find here rpm packages for Fedora, OpenSUSE 
+and Centos.&]
 [s4; For Ubuntu users who doesn`'t want to update every day from 
 nightly PPA, there is stable releases PPA, [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^ h
 ttps://launchpad.net/`~dolik`-rce/`+archive/upp]. To install Ultimate`+`+ 
