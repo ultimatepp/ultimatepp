@@ -27,7 +27,7 @@ eb, dsc]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
 dsc]]
-:: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
+:: [s0; [*2 Fedora, OpenSUSE, Centos]]
 :: [s0;=2 ]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
@@ -88,7 +88,7 @@ nachträglich in die `"stable`" Releases eingefügt werden.]&]
 Du kannst sie unter  ][^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^2 http://
 sourceforge.net/projects/upp/files][2  herunterladen. Zusätzlich 
 zum Windows `- Installer und den Source `- Tarballs kannst du 
-hier die rpm Pakete für Fedora, Mandriva und OpenSUSE finden.]&]
+hier die rpm Pakete für Fedora, OpenSUSE und Centos finden.]&]
 [s0;#2 &]
 [s0;# [2 Für Ubuntu und Debian Nutzer, die nicht jeden Tag von den 
 Nightly PPA`'s updaten wollen, gibt es einen Stable Release PPA 
