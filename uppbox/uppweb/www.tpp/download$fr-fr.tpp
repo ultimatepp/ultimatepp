@@ -27,7 +27,7 @@ eb, dsc]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
 dsc]]
-:: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
+:: [s0;%DE-DE [*2 Fedora, OpenSUSE, Centos]]
 :: [s0;=2 ]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
@@ -100,7 +100,7 @@ les versions stables.]&]
 pouvez les télécharger ici: ][^http`:`/`/sourceforge`.net`/projects`/upp`/files`/^2 h
 ttp://sourceforge.net/projects/upp/files][2 . En plus de l`'installateur 
 Windows et de l`'archive des sources, vous pourrez aussi trouver 
-ici des paquets RPM pour Fedora, Mandriva et OpenSUSE.]&]
+ici des paquets RPM pour Fedora, OpenSUSE et Centos.]&]
 [s0;#2 &]
 [s0;# [2 Pour les utilisateurs Ubuntu/Debian ne souhaitant pas mettre 
 à jour quotidiennement avec le PPA quotidien, des versions PPA 

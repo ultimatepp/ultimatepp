@@ -27,7 +27,7 @@ eb, dsc]]
 :: [s0;= [^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp^2 PPA][2 , 
 ][^https`:`/`/launchpad`.net`/`~dolik`-rce`/`+archive`/upp`/`+packages^2 deb, 
 dsc]]
-:: [s0; [*2 Fedora, Mandriva, OpenSUSE]]
+:: [s0;%DE-DE [*2 Fedora, OpenSUSE, Centos]]
 :: [s0;=2 ]
 :: [s0;=2 ]
 :: [s0;= [^http`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/^2 rpms]]
@@ -107,7 +107,7 @@ Sourceforge.net. Вы можете загрузить их по
 rge.net/projects/upp/files][2 . В дополнение к инсталлятору
  для Windows и архиву с исходным кодом, 
 вы обнаружите там rpm`-пакеты для Fedora, 
-Mandriva и OpenSUSE.]&]
+OpenSUSE и Centos.]&]
 [s0;#2 &]
 [s0;# [2 Для пользователей Ubuntu и Debian, которые 
 не хотят делать обновления ежедневно 
