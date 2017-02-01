@@ -415,7 +415,7 @@ namespace Upp
 		uint32_t tim = msecs() + timeout;
 		if (reqSize)
 		{
-			n = min(reqSize, (size_t)1000);
+			n = min(reqSize, (uint32_t)1000);
 			while (reqSize)
 			{
 				n = read(fd, buf, n);
@@ -423,7 +423,7 @@ namespace Upp
 				{
 					if ((uint32_t)msecs() > tim)
 						break;
-					n = min(reqSize, (size_t)1000);
+					n = min(reqSize, (uint32_t)1000);
 					continue;
 				}
 				tim = msecs() + timeout;
@@ -432,7 +432,7 @@ namespace Upp
 					reqSize -= n;
 					data.Cat(buf, n);
 				}
-				n = min(reqSize, (size_t)1000);
+				n = min(reqSize, (uint32_t)1000);
 			}
 		}
 		else
