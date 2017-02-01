@@ -205,6 +205,25 @@ rm -fr %{buildroot}
 #---------
 %changelog
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
+- New snapshot
+
+* Tue Jan 31 2017 Amrein-Marie Christophe <camreinmarie@free.fr> 2017.1-1
+- New release
+- Rename package (upp -> upp-devel)
+- Obsoletes old upp package
+- Use default Makefile to build and install U++
+- Update BuildRequires and Requires for all platforms
+- Enable clang++ for distribution with gcc version < 4.9.0
+- Build and add umk binary
+- Add theide and umk man pages
+
+* Thu Nov 08 2012 Amrein-Marie Christophe <camreinmarie@free.fr> 5485-1
+- New release
+
+* Fri Oct 26 2012 Amrein-Marie Christophe <camreinmarie@free.fr> 5431-1
+- New release
+
+* Tue Jan 31 2012 Amrein-Marie Christophe <camreinmarie@free.fr> 4193-1
 - New release
 
 * Fri Aug 15 2008 Amrein-Marie Christophe <camreinmarie@free.fr> 2008.1-1

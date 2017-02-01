@@ -14,10 +14,10 @@ install:
 	+./doinstall --verbose
 
 clean:
-	if [ "$(UPPOUT)" != "" -a -d "$(UPPOUT)" ] ; then \
-	  rm -fr "$(UPPOUT)" ; \
+	if [ -d "$(UPPOUT)" ] ; then \
+		rm -fr "$(UPPOUT)" ; \
 	else \
-	  rm -fr uppsrc/_out ; \
+		rm -fr uppsrc/_out ; \
 	fi
 	rm -f uppsrc/ide.out
 	rm -f uppsrc/umk.out

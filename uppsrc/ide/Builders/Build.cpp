@@ -567,7 +567,7 @@ void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 		return;
 	String outdir = OutDir(PackageConfig(wspc, package, GetMethodVars(method), mainconfigparam,
 	                       *host, *builder), wspc[package], GetMethodVars(method));
-	// TODO: almost perfect, but target will be detected after build. if build dosen't occure the target is empty :(
+	// TODO: almost perfect, but target will be detected after build. if build does not occur the target is empty :(
 	// How to make sure we know target? Target directory is where android project sandbox is.
 	builder->target = target;
 	builder->CleanPackage(wspc[package], outdir);
@@ -643,13 +643,18 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		inclist << " -I" << includes[i];
 
 	makefile << "\n"
-		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
-		"CINC = " << inclist << "\n"
-		"Macro = ";
-
+	"comma := ,\n"
+	"empty :=\n"
+	"space := $(empty) $(empty)\n"
+	"\n"
+	"Flags := ";
 	for(int i = 0; i < allconfig.GetCount(); i++)
-		makefile << " -Dflag" << allconfig[i];
-	makefile << "\n";
+		makefile << (i == 0 ? '+' : ',' ) << allconfig[i];
+	makefile << "\n"
+		"Macro := $(subst $(comma),$(space)-Dflag,$(subst +,-Dflag,$(strip $(Flags))))" "\n"
+		"\n"
+		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
+		"CINC = " << inclist << "\n";
 
 	String output, config, install, rules, linkdep, linkfiles, linkfileend;
 
@@ -718,8 +723,8 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		<< rules
 		<< ".PHONY: clean\n"
 		<< "clean:\n"
-		<< "\tif [ -d $(UPPOUT) ]; then rm -rf $(UPPOUT); fi;\n"
-		<< "\tif [ -f build_info.h ]; then rm -f build_info.h; fi;\n";
+		<< "\tif [ -d \"$(UPPOUT)\" ]; then rm -rf \"$(UPPOUT)\" ; fi\n"
+		<< "\tif [ -f build_info.h ]; then rm -f build_info.h ; fi\n";
 
 	bool sv = ::SaveFile(fn, makefile);
 	if(!exporting) {
@@ -735,3 +740,4 @@ String MakeBuild::GetInvalidBuildMethodError(const String& method)
 {
 	return "Invalid build method " + method + " (" + GetMethodPath(method) + ").";
 }
+ 

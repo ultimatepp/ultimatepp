@@ -57,18 +57,18 @@ show_usage()
     echo '  --help          : show current usage information'
     echo
     echo 'Note:'
-    echo ' * domake use environment variables to supersede auto generated variables and those from uppsrc/Makefile.in:'
+    echo ' * domake use environment variables to supersede auto generated variables and those from uppsrc/*Makefile.in:'
     echo '   - CXX          : c++ compiler'
     echo '   - CXXFLAGS     : c++ compiler flags'
-    echo '   - UPPOUT       : U++ output directory'
+    echo '   - UPPOUT       : U++ output directory (full path)'
     echo "   - CINC         : default include directory list (use ';' as separator)"
-    echo '   - Macro        : U++ macro (ex: -DflagLINUX)'
+    echo '   - Flags        : U++ build flags (ex: +GUI,LINUX,POSIX,SHARED)'
     echo '   - LINKER       : linker binary name'
     echo '   - LDFLAGS      : linker extra flags'
     echo "   - LIBPATH      : library path list (use ';' as separator)"
     echo '   - AR           : archive-maintaining program'
     echo
-    echo 'Example: CXX=g++ UPPOUT=$HOME/tmp ./domake'
+    echo 'Example: CXX=g++ Flags=+GUI,MT,GCC,SHARED,LINUX,POSIX UPPOUT=$HOME/tmp ./domake'
 }
 
 # log_debug_info "Processing parameters"
@@ -156,10 +156,10 @@ then
       CXX="clang++"
       log_debug_info "Force CXX=$CXX for $platform"
     fi
-    if [ "$Macro" = "" ]
+    if [ "$Flags" = "" ]
     then
-      Macro="-DflagCLANG -DflagNOGTK -DflagGUI -DflagMT -DflagSHARED -DflagOSX -DflagPOSIX"
-      log_debug_info "Force Macro='$Macro' for $platform"
+      Flags="+CLANG,NOGTK,GUI,MT,SHARED,OSX,POSIX"
+      log_debug_info "Force Flags='$Flags' for $platform"
     fi
     ;;
 
@@ -301,10 +301,10 @@ then
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CINC=$CINC"
 fi
-if [ "$Macro" != "" ]
+if [ "$Flags" != "" ]
 then
   make_parameter_array[i++]="-e"
-  make_parameter_array[i++]="Macro=$Macro"
+  make_parameter_array[i++]="Flags=$Flags"
 fi
 if [ "$LINKER" != "" ]
 then
@@ -336,7 +336,6 @@ then
   done
 
   log_debug_info "Extra parameters will supersede default parameters"
-
 fi
 
 
@@ -345,7 +344,7 @@ log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.
 if which pkg-config
 then
 
-  if [[ "$Macro" = *"-DflagNOGTK"* ]]
+  if [[ "$Flags" = *"NOGTK"* ]]
   then
     requires_libraries="x11 libnotify freetype2"
   else
@@ -387,7 +386,7 @@ then
 
 fi
 
-if [[ "$Macro" = *"-DflagNOGTK"* ]]
+if [[ "$Flags" = *"NOGTK"* ]]
 then
   log_debug_info "Removing references to GTK+"
   sed -i.backup \
@@ -450,7 +449,7 @@ else
     $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}"
 
   fi  
-  if [ "$build_umk" = "true" ]
+  if [ "$build_umk" = "true" ] # It doesn't matter if we define flags like GTK, NOGTK, X11 or GUI. umk is console based and won't use them.
   then
     $make_binary -C uppsrc -e CXX="$CXX" "${make_parameter_array[@]}" -f uMakefile
 
