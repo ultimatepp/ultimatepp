@@ -27,7 +27,7 @@ TextCtrl::TextCtrl()
 	nobg = false;
 	rectsel = false;
 #ifdef CPU_64
-	max_total = 1000 * 1024 * 1024;
+	max_total = 2047 * 1024 * 1024;
 #else
 #ifdef _DEBUG
 	max_total = 100 * 1024 * 1024;
@@ -306,8 +306,6 @@ finish:
 }
 
 void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
-	if(truncated)
-		return;
 	if(charset == CHARSET_UTF8_BOM) {
 		static byte bom[] = { 0xEF, 0xBB, 0xBF };
 		s.Put(bom, 3);
