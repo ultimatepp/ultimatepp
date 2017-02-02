@@ -180,7 +180,7 @@ void Ide::SearchMenu(Bar& menu)
 	}
 	menu.Add(AK_FINDINFILES, THISBACK1(FindInFiles, false))
 		.Help("Find text or text pattern in subtree of given path");
-	menu.Add(AK_REPLACEINFILES, THISBACK1(FindInFiles, true))
+	menu.Add(editor.IsEditable(), AK_REPLACEINFILES, THISBACK1(FindInFiles, true))
 		.Help("Find text or text pattern in subtree of given path, with replace option(s)");
 	menu.Add(AK_FINDFILE, THISBACK(FindFileName))
 		.Help("Locate file by filename (use *, ? when you're not sure)");

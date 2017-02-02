@@ -184,6 +184,8 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 }
 
 void Ide::FindInFiles(bool replace) {
+	if(editor.IsReadOnly())
+		replace = false;
 	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	CtrlRetriever rf;
 	rf(ff.find, d.find)
