@@ -651,7 +651,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	for(int i = 0; i < allconfig.GetCount(); i++)
 		makefile << (i == 0 ? '+' : ',' ) << allconfig[i];
 	makefile << "\n"
-		"Macro := $(subst $(comma),$(space)-Dflag,$(subst +,-Dflag,$(strip $(Flags))))" "\n"
+		"Macro != echo \"$(Flags)\" | sed -e 's|[[:space:]]*+[[:space:]]*|-Dflag|g' -e 's|[[:space:]]*,[[:space:]]*| -Dflag|g'\n"
 		"\n"
 		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
 		"CINC = " << inclist << "\n";
