@@ -644,8 +644,9 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 
 	makefile << "\n"
  		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
-		"CINC = " << inclist << "\n"
-		"Macro = ";
+		"CINC   = " << inclist << "\n"
+		"Dollar = $$\n"
+		"Macro  = ";
  
 	for(int i = 0; i < allconfig.GetCount(); i++)
 		makefile << " -Dflag" << allconfig[i];

@@ -92,30 +92,48 @@ and copy the U`+`+ sources inside&]
 [s2;i150;O0; create `~/upp.out as output for intermediate files&]
 [s2;i150;O0; set up a few variables in the `'`~/[* .]upp`' directory. 
 Those variables are required by umk and theide&]
+[s2; If you only want to build umk or theide, run make with the corresponding 
+target:&]
+[ {{10000@(229) [s2; make umk&]
+[s2; # or&]
+[s2; make theide]}}&]
+[s2; &]
+[s1; Advanced installation&]
+[s2; You can install umk and theide like most other POSIX project 
+do. If make detects that you has defined the prefix variable, 
+it will switch to standard POSIX installation mode.&]
+[ {{10000@(229) [s2; make&]
+[s2; make install prefix`=`"/usr`"]}}&]
+[s2; You can also use several other standard installation variables 
+in this installation mode: `'DESTDIR`', `'bindir`', `'datadir`', 
+`'mandir`', and `'docdir`'.&]
 [s1; Troubleshooting&]
 [s2; If your POSIX/X11 distribution use an old gcc version (< 4.9), 
 U`+`+ compilation will fail because of missing gcc c`+`+11 standard 
 implementation. To solve this, you need to install and use clang`+`+ 
 compiler instead of g`+`+.&]
-[s2; In order to use clang`+`+ as compiler, run make with those extra 
-parameters:&]
-[ {{10000@(229) [s2; make `-e CXX`=`"clang`+`+`" `-e CXXFLAGS`=`"`-O3 `-ffunction`-sections 
-`-fdata`-sections `-Wno`-logical`-op`-parentheses `-std`=c`+`+11`"&]
+[s2; Make search for g`+`+ first and if gcc version is too old, it 
+will automatically search for clang`+`+ and then for any compiler 
+named `'c`+`+`'. If you still need to force clang`+`+ as default 
+compiler or if clang`+`+ is not in your path or if you want to 
+use another compiler, you can run make with the CXX parameter. 
+Example:&]
+[ {{10000@(229) [s2; make CXX`=`"/home/user/my`-clang`-install`-dir/clang`+`+`"&]
 [s2; make install]}}&]
 [s2; On BSD distributions, if you use make instead of gmake, U`+`+ 
-compilation will fail because BSD `'make`' needs four dollar 
-characters (`'`$`') to escape one. To solve this, you can install 
-gmake or, if you want to play in a dangerous territory, you can 
-manually (or with sed or awk) modify uppsrc/Makefile.in and uppsrc/uMakefile.in. 
-You will have to change all file names containing `'`$`$`' with 
-`'`$`$`$`$`'.&]
+compilation will fail because BSD `'make`' needs four dollars 
+(`'`$`$`$`$`') to escape one. To solve this, you can install 
+gmake or you can run make with an extra parameter if you use 
+recent U`+`+ snapshots. Example in bash shell run:&]
+[ {{10000@(229) [s2; make `'Dollar`=`$`$`$`$`'&]
+[s2; make install]}}&]
 [s2; Those file names are already escaped for gmake. This is why 
-they already use two dollars (`'`$`$`').&]
+they already use two dollars (Dollar `= `$`$).&]
 [s1; U`+`+ spec file for rpm based distribution&]
 [s2; There is an alternative way to build U`+`+ on rpm based distributions. 
 Indeed, U`+`+ POSIX/X11 tarball contains a spec file for you 
 to build a standard rpm binary and source file. To do that, first 
-install U`+`+ build requires and rpm`-build:&]
+install U`+`+ build requires and rpm`-build then build U`+`+:&]
 [s2; [* Fedora based distributions]&]
 [s2; if sudo is available and enabled on your distribution, copy/paste 
 this in a terminal (don`'t forget to modify the version number 

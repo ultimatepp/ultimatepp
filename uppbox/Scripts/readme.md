@@ -54,6 +54,7 @@ The 'buildrequires.fedora' file in U++ tarball contains yum commands to do the s
 Redhat 7 build requires:  gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel freetype-devel expat-devel bzip2-devel
 OpenSuse build requires: gtk2-devel pango-devel atk-devel cairo-devel libnotify-devel xorg-x11-devel freetype2-devel libexpat-devel libbz2-devel
 
+
 #### BSD based distributions
 
 Build requires: bash gmake gtk2 freetype2 libnotify clang-devel (e.g. clang++)
@@ -93,7 +94,14 @@ make install
 Now you can start playing with U++ by invoking ~/theide.
 You might want to put theide and umk elsewhere later, e.g. inside ~/bin/ for example
 
-Note:. 'make install' copy theide and umk in your home directory but it also:
+If you only want to build umk or theide, run make with the corresponding target:
+```
+make umk
+# or
+make theide
+```
+
+Note: 'make install' copy theide and umk in your home directory but it also:
 
 * create ~/upp directory to store U++ library sources and copy the U++ sources inside
 * create ~/upp/MyApps to store your application sources
@@ -101,22 +109,36 @@ Note:. 'make install' copy theide and umk in your home directory but it also:
 * set up a few variables in the '~/.upp' directory. Those variables are required by umk and theide
 
 
+## Advanced installation
+
+You can install umk and theide like most other POSIX project do. If make detects that you has defined the prefix variable, it will switch to standard POSIX installation mode.
+```
+make
+make install prefix="/usr"
+```
+You can also use several other standard installation variables in this installation mode: 'DESTDIR', 'bindir', 'datadir', 'mandir', and 'docdir'.
+
+
 ## Troubleshooting
 
 If your POSIX/X11 distribution use an old gcc version (< 4.9), U++ compilation will fail because of missing gcc c++11 standard implementation. To solve this, you need to install and use clang++ compiler instead of g++.
-In order to use clang++ as compiler, run make with those extra parameters:
+
+Make search for g++ first and if gcc version is too old, it will automatically search for clang++ and then for any compiler named 'c++'. If you still need to force clang++ as default compiler or if clang++ is not in your path or if you want to use another compiler, you can run make with the CXX parameter. Example:
 ```
-make -e CXX="clang++" -e CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+make CXX="/home/user/my-clang-install-dir/clang++"
 make install
 ```
-
-On BSD distributions, if you use make instead of gmake, U++ compilation will fail because BSD 'make' needs four dollar characters ('$') to escape one. To solve this, you can install gmake or, if you want to play in a dangerous territory, you can manually (or with sed or awk) modify 'uppsrc/Makefile.in' and 'uppsrc/uMakefile.in'. You will have to change all file names containing '$$' with '$$$$'.
-Those file names are already escaped for gmake. This is why they already use two dollars ('$$').
+On BSD distributions, if you use make instead of gmake, U++ compilation will fail because BSD 'make' needs four dollars ('$$$$') to escape one. To solve this, you can install gmake or you can run make with an extra parameter if you use a recent U++ snapshots. Example in bash shell:
+```
+make 'Dollar=$$$$'
+make install
+```
+Those file names are already escaped for gmake. This is why they already use two dollars (Dollar = $$).
 
 
 ## U++ spec file for rpm based distribution
 
-There is an alternative way to build U++ on rpm based distributions. Indead, U++ POSIX/X11 tarball contains a spec file for you to build a standard rpm binary and source file. To do that, first install U++ build requires and rpm-build than build U++:
+There is an alternative way to build U++ on rpm based distributions. Indead, U++ POSIX/X11 tarball contains a spec file for you to build a standard rpm binary and source file. To do that, first install U++ build requires and rpm-build then build U++.
 
 ### Fedora based distributions
 
