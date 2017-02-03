@@ -305,7 +305,10 @@ if [ "$Flags" != "" ]
 then
   make_parameter_array[i++]="-e"
   make_parameter_array[i++]="Flags=$Flags"
+  make_parameter_array[i++]="-e"
+  make_parameter_array[i++]="Macro=$(echo "$Flags" | sed -e 's|[[:space:]]*+[[:space:]]*|-Dflag|g' -e 's|[[:space:]]*,[[:space:]]*| -Dflag|g')"
 fi
+
 if [ "$LINKER" != "" ]
 then
   make_parameter_array[i++]="-e"
