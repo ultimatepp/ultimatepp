@@ -105,7 +105,7 @@ void CppBuilder::AddMakeFile(MakeFile& makefile, String package,
 			if(!HasFlag("GUI"))
 				makefile.linkfiles << " -mconsole";
 		}
-		lnk << " -o $(OutFile)";
+		lnk << " -o \"$(OutFile)\"";
 		if(HasFlag("DEBUG") || HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
 			lnk << " -ggdb";
 		else
