@@ -643,18 +643,13 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		inclist << " -I" << includes[i];
 
 	makefile << "\n"
-	"comma := ,\n"
-	"empty :=\n"
-	"space := $(empty) $(empty)\n"
-	"\n"
-	"Flags := ";
+ 		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
+		"CINC = " << inclist << "\n"
+		"Macro = ";
+ 
 	for(int i = 0; i < allconfig.GetCount(); i++)
-		makefile << (i == 0 ? '+' : ',' ) << allconfig[i];
-	makefile << "\n"
-		"Macro != echo \"$(Flags)\" | sed -e 's|[[:space:]]*+[[:space:]]*|-Dflag|g' -e 's|[[:space:]]*,[[:space:]]*| -Dflag|g'\n"
-		"\n"
-		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
-		"CINC = " << inclist << "\n";
+		makefile << " -Dflag" << allconfig[i];
+	makefile << "\n";
 
 	String output, config, install, rules, linkdep, linkfiles, linkfileend;
 
