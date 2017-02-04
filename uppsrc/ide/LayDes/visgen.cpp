@@ -191,6 +191,7 @@ void VisGenDlg::Refresh()
 						ss << ~name << '.';
 					if(toupper2)
 						ss << ToUpper(id2);
+					else
 					if(tolower2)
 						ss << ToLower(id2);
 					else
@@ -210,6 +211,8 @@ void VisGenDlg::Refresh()
 				}
 				if(pars)
 					s << ')';
+				if(semicolon)
+					s << ';';
 				s << '\n';
 			}
 		}
