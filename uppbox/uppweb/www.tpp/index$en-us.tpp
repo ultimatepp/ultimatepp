@@ -24,9 +24,9 @@ Visual designers for U`+`+ libraries, a [^topic`:`/`/ide`/app`/Topic`$en`-us^ To
 for applications (like help and code documentation) and [^topic`:`/`/ide`/app`/Assist`$en`-us^ A
 ssist`+`+] `- a powerful C`+`+ code analyzer that provides features 
 like code completion, navigation and transformation.&]
-[s2;r58;%% TheIDE can work with GCC, MinGW and Visual C`+`+ and contains 
-a full featured debugger. TheIDE can also be used to develop 
-non`-U`+`+ applications.&]
+[s2;r58;%% TheIDE can work with GCC, Clang, MinGW and Visual C`+`+ 
+and contains a full featured debugger. TheIDE can also be used 
+to develop non`-U`+`+ applications.&]
 [s2;r58;%% [* What you can get with the Ultimate`+`+ download in plain 
 English?]&]
 [s2;l160;r58;i150;O0;%% Very effective C`+`+ library for cross`-platform 
