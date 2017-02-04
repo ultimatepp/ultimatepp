@@ -128,7 +128,7 @@ Make search for g++ first and if gcc version is too old, it will automatically s
 make CXX="/home/user/my-clang-install-dir/clang++"
 make install
 ```
-On BSD distributions, if you use make instead of gmake, U++ compilation will fail because BSD 'make' needs four dollars ('$$$$') to escape one. To solve this, you can install gmake or you can run make with an extra parameter if you use a recent U++ snapshots. Example in bash shell:
+On BSD based distributions, if you use make instead of gmake, U++ compilation will fail because BSD 'make' needs four dollars ('$$$$') to escape one. To solve this, you can install gmake or you can run make with an extra parameter if you use a recent U++ snapshot. Example (for bash shell):
 ```
 make 'Dollar=$$$$'
 make install
