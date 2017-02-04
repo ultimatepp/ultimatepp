@@ -120,11 +120,11 @@ use another compiler, you can run make with the CXX parameter.
 Example:&]
 [ {{10000@(229) [s2; make CXX`=`"/home/user/my`-clang`-install`-dir/clang`+`+`"&]
 [s2; make install]}}&]
-[s2; On BSD distributions, if you use make instead of gmake, U`+`+ 
-compilation will fail because BSD `'make`' needs four dollars 
+[s2; On BSD based distributions, if you use make instead of gmake, 
+U`+`+ compilation will fail because BSD `'make`' needs four dollars 
 (`'`$`$`$`$`') to escape one. To solve this, you can install 
 gmake or you can run make with an extra parameter if you use 
-recent U`+`+ snapshots. Example in bash shell run:&]
+a recent U`+`+ snapshot. Example (for bash shell):&]
 [ {{10000@(229) [s2; make `'Dollar`=`$`$`$`$`'&]
 [s2; make install]}}&]
 [s2; Those file names are already escaped for gmake. This is why 
