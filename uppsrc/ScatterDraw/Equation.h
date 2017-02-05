@@ -37,7 +37,7 @@ public:
 	
 	friend struct Equation_functor;
 	
-	const Array<double> &GetCoeff()			{return coeff;}
+	const Vector<double> &GetCoeff()			{return coeff;}
 
 	template<class T>	
 	static void Register(const String& name) {
@@ -54,13 +54,21 @@ public:
 	
 	int GetNumCoeff(int num) {return coeff.GetCount();}
 	
+	ExplicitEquation &operator=(ExplicitEquation &other) {
+		if (this != &other) {
+			degree = other.degree;
+			coeff = clone(other.coeff);
+		}
+		return *this;
+	}
+	
 protected:
-	Array<double> coeff;
+	Vector<double> coeff;
 	int degree;
 	static int numDigits, maxFitFunctionEvaluations;
 	
 	void SetNumCoeff(int num);
-	void SetCoeff(const Array<double>& c)           {coeff = clone(c);}
+	void SetCoeff(const Vector<double>& c)          {coeff = clone(c);}
 	void SetCoeff(double c0, double c1, double c2)	{coeff.Clear();	coeff << c0 << c1 << c2;}
 	void SetCoeff(double c0, double c1) 			{coeff.Clear();	coeff << c0 << c1;}
 	void SetCoeff(double c0) 						{coeff.Clear();	coeff << c0;}
@@ -104,7 +112,7 @@ public:
 class PolynomialEquation : public ExplicitEquation {
 public:
 	PolynomialEquation() 				       	{}
-	PolynomialEquation(const Array<double>& c) 	{SetCoeff(c);}
+	PolynomialEquation(const Vector<double>& c) {SetCoeff(c);}
 	double f(double x);
 	virtual String GetName() 			       	{return t_("Polynomial");}
 	virtual String GetFullName() 		       	{return t_("Polynomial") + String(" n = ") + FormatInt(degree);}
@@ -166,7 +174,7 @@ public:
 class FourierEquation : public ExplicitEquation {
 public:
 	FourierEquation() 					        {}
-	FourierEquation(const Array<double>& c) 	{SetCoeff(c);}
+	FourierEquation(const Vector<double>& c) 	{SetCoeff(c);}
 	double f(double x);
 	virtual String GetName() 			        {return t_("Fourier");}
 	virtual String GetFullName() 		        {return t_("Fourier") + String(" n = ") + FormatInt(degree);}
