@@ -10,16 +10,16 @@ public:
 
 	DataSource() : isParam(false), isExplicit(false), key(111111) {}
 	virtual ~DataSource() 				{key = 0;}	
-	virtual double y(int64 id)				{NEVER();	return Null;}
-	virtual double x(int64 id)				{NEVER();	return Null;}
-	virtual double znx(int n, int64 id)		{NEVER();	return Null;}
-	virtual double zny(int n, int64 id)		{NEVER();	return Null;}
-	virtual double znFixed(int n, int64 id)	{NEVER();	return Null;}
-	virtual double y(double t)				{NEVER();	return Null;}
-	virtual double x(double t)				{NEVER();	return Null;}
-	virtual double f(double x)				{NEVER();	return Null;}
-	virtual double f(Vector<double> zn)		{NEVER();	return Null;}
-	virtual int64 GetCount()			{NEVER();	return Null;}
+	virtual double y(int64 id)				{/*NEVER();*/	return Null;}
+	virtual double x(int64 id)				{/*NEVER();*/	return Null;}
+	virtual double znx(int n, int64 id)		{/*NEVER();*/	return Null;}
+	virtual double zny(int n, int64 id)		{/*NEVER();*/	return Null;}
+	virtual double znFixed(int n, int64 id)	{/*NEVER();*/	return Null;}
+	virtual double y(double t)				{/*NEVER();*/	return Null;}
+	virtual double x(double t)				{/*NEVER();*/	return Null;}
+	virtual double f(double x)				{/*NEVER();*/	return Null;}
+	virtual double f(Vector<double> zn)		{/*NEVER();*/	return Null;}
+	virtual int64 GetCount()				{/*NEVER();*/	return Null;}
 	bool IsEmpty()						{return GetCount() == 0;}
 	virtual int GetznxCount(int64 id)	{return 0;}
 	virtual int GetznyCount(int64 id)	{return 0;}
@@ -90,35 +90,62 @@ private:
 class DataSetCond : public DataSource {
 private:
 	DataSource *data;
-	double xGreater, xLower;
+	double xHigh, xLow;
 
 public:
 	DataSetCond() {data = 0;}
-	DataSetCond(DataSource &_data, double _xGreater, double _xLower) {Init(_data, _xGreater, _xLower);}
-	void Init(DataSource &_data, double _xGreater, double _xLower) {
-		data = &_data;
-		xGreater = _xGreater;
-		xLower = _xLower;
+	DataSetCond(DataSource &data, double xLow, double xHigh) {Init(data, xLow, xHigh);}
+	void Init(DataSource &data, double xLow, double xHigh) {
+		this->data = &data;
+		isExplicit = data.IsExplicit();
+		isParam = data.IsParam();
+		this->xLow = xLow;
+		this->xHigh = xHigh;
 	}
+	void SetXLow(double xLow) 	{this->xLow = xLow;}
+	void SetXHigh(double xHigh) {this->xHigh = xHigh;}
 	bool Check(int64 id) {
 		double x = data->x(id);
-		if (!IsNull(xGreater) && xGreater > x)
+		if (!IsNull(xHigh) && xHigh < x)
 			return false;
-		if (!IsNull(xLower) && xLower < x)
+		if (!IsNull(xLow) && xLow > x)
 			return false;
 		return true;
 	}
-	virtual inline double y(int64 id)	{return Check(id) ? data->y(id) : Null;}
-	virtual inline double x(int64 id) 	{return Check(id) ? data->x(id) : Null;}
+	virtual inline double y(int64 id) {
+		if (isExplicit)
+			return f(xLow + id*(xHigh - xLow)/(1000. - 1));
+		else
+			return Check(id) ? data->y(id) : Null;
+	}
+	virtual inline double x(int64 id) {
+		if (isExplicit)
+			return xLow + id*(xHigh - xLow)/(1000. - 1);
+		else
+			return Check(id) ? data->x(id) : Null;
+	}
 	virtual inline double x(double t) {
 		double x = data->x(t);
-		if (!IsNull(xGreater) && xGreater > x)
+		if (!IsNull(xHigh) && xHigh < x)
 			return Null;
-		if (!IsNull(xLower) && xLower < x)
+		if (!IsNull(xLow) && xLow > x)
 			return Null;
 		return x;
 	}
-	virtual inline int64 GetCount()		{return data->GetCount();}
+	virtual double f(double x) {
+		if (!IsNull(xHigh) && xHigh < x)
+			return Null;
+		if (!IsNull(xLow) && xLow > x)
+			return Null;
+		return data->f(x);
+	}
+	virtual double MinX() 				{return xLow;}
+	virtual double MaxX() 				{return xHigh;}
+	virtual inline int64 GetCount()	{
+		if (isExplicit)
+			return 1000;
+		return data->GetCount();
+	}
 };
 
 class CArray : public DataSource {

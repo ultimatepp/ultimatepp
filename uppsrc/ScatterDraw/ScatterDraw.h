@@ -863,7 +863,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 					int64 imin, imax;
 					if (series[j].sequential) {
 						imin = imax = Null;
-						for (int64 i = 0/*1*/; i < series[j].PointsData()->GetCount()/* - 1*/; ++i) {
+						for (int64 i = 0; i < series[j].PointsData()->GetCount(); ++i) {
 							double xx = series[j].PointsData()->x(i);
 							if (IsNull(xx))
 								continue;
