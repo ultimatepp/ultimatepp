@@ -133,8 +133,8 @@ private:
 	WithProcessingTabFrequency<StaticRect> tabFreq;
 	WithProcessingTabOp<StaticRect> tabOp;
 	
-	bool avgFirst, linearFirst, cuadraticFirst, cubicFirst, sinusFirst, splineFirst;
-	double r2Linear, r2Cuadratic, r2Cubic, r2Sinus;
+	bool avgFirst, linearFirst, cuadraticFirst, cubicFirst, sinusFirst, sinusTendFirst, splineFirst;
+	double r2Linear, r2Cuadratic, r2Cubic, r2Sinus, r2SinusTend;
 	bool tabFreqFirst, tabOpFirst;
 	
 	Vector<Pointf> fft;
@@ -143,7 +143,7 @@ private:
 	LinearEquation linear;
 	PolynomialEquation2 cuadratic;
 	PolynomialEquation3 cubic;
-	SinEquation sinus;
+	SinEquation sinus, sinusTend;
 	SplineEquation spline;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
 	Vector<Pointf> movAvg, secAvg;
