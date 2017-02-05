@@ -312,6 +312,10 @@ bool DataSource::SinEstim_FreqPhase(double &frequency, double &phase, double avg
 	if (!firstIsToPositive)
 		phase += M_PI;
 	phase = phase - 2*M_PI*int(phase/(2*M_PI));
+	if (phase > M_PI)
+		phase = phase - 2*M_PI;
+	if (phase < -M_PI)
+		phase = 2*M_PI + phase;
 	return true;
 }
 
