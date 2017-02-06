@@ -56,6 +56,7 @@ void SvnDiff::Execute(const String& f)
 		r.SetIndex(0);
 		Load();
 	}
+	
 	DiffDlg::Execute(f);
 }
 
