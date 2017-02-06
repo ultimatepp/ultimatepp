@@ -22,7 +22,7 @@ Vector<String> GetLineMap(Stream& stream)
 		while(!stream.IsEof()) {
 			String s = stream.GetLine();
 			const char *p = s, *e = s.End(), *f = e;
-			while(e > p && (byte)e[-1] != 9 && (byte)e[-1] < ' ')
+			while(e > p && /*(byte)e[-1] != 9 && */(byte)e[-1] < ' ')
 				e--;
 			if(e == p)
 				emp++;
