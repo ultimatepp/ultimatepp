@@ -643,11 +643,13 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		inclist << " -I" << includes[i];
 
 	makefile << "\n"
- 		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
+		"Dollar := $$\n"
+		"Dollar != if [ \"$(Dollar)\" = \"$$\" ]; then echo '$$$$'; else echo '$$$$$$$$' ; fi\n"
+		"\n"
+		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
 		"CINC   = " << inclist << "\n"
-		"Dollar = $$\n"
 		"Macro  = ";
- 
+
 	for(int i = 0; i < allconfig.GetCount(); i++)
 		makefile << " -Dflag" << allconfig[i];
 	makefile << "\n";
