@@ -356,7 +356,7 @@ namespace Upp
 			req -= count;
 			buf += count;
 			
-			if(!req || (uint32_t)msecs() > timeout)
+			if(!req || (uint32_t)msecs() > tim)
 				break;
 		}
 		
