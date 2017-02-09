@@ -104,7 +104,6 @@ file
 	Copying;
 
 mainconfig
-	"" = "GUI MT",
 	"" = "GUI",
 	"" = "GUI .USEMALLOC",
 	"" = ".NOGTK GUI",

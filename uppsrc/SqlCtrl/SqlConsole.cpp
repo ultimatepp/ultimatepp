@@ -376,9 +376,11 @@ void SqlConsole::Serialize(Stream& s) {
 	for(int i = 0; i < trace.GetCount(); i++)
 		ar.Add(trace.GetArray(i));
 	s % ar;
-	if(s.IsLoading())
+	if(s.IsLoading()) {
 		for(int i = 0; i < ar.GetCount(); i++)
 			trace.SetArray(i, ar[i]);
+		trace.GoEnd();
+	}
 	if(version >= 1)
 		s % LastDir;
 	s.Magic();
