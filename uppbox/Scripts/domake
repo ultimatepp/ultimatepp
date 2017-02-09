@@ -68,7 +68,7 @@ show_usage()
     echo "   - LIBPATH      : library path list (use ';' as separator)"
     echo '   - AR           : archive-maintaining program'
     echo
-    echo 'Example: CXX=g++ Flags=+GUI,MT,GCC,SHARED,LINUX,POSIX UPPOUT=$HOME/tmp ./domake'
+    echo 'Example: CXX=g++ Flags=+GUI,MT,GCC,SHARED,LINUX,POSIX UPPOUT="$HOME/tmp" ./domake'
 }
 
 # log_debug_info "Processing parameters"
@@ -267,22 +267,18 @@ i=0
 
 if [ "$CXXFLAGS" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CXXFLAGS=$CXXFLAGS"
 
 elif [ "$use_gcc" = "true" -a "$DEFAULT_GCC_CXXFLAGS" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CXXFLAGS=$DEFAULT_GCC_CXXFLAGS"
   
 elif [ "$use_clang" = "true" -a "$DEFAULT_CLANG_CXXFLAGS" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CXXFLAGS=$DEFAULT_CLANG_CXXFLAGS"
 
 elif [ "$use_cpp_compiler" = "true" -a "$DEFAULT_CPP_CXXFLAGS" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CXXFLAGS=$DEFAULT_CPP_CXXFLAGS"
 
 elif [ "$use_other_cpp_compiler" = "true" -a "$DEFAULT_OTHER_CPP_CXXFLAGS" != "" ]
@@ -293,47 +289,39 @@ fi
 
 if [ "$UPPOUT" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="UPPOUT=$UPPOUT"
 fi
 if [ "$CINC" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="CINC=$CINC"
 fi
 if [ "$Flags" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="Flags=$Flags"
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="Macro=$(echo "$Flags" | sed -e 's|[[:space:]]*+[[:space:]]*|-Dflag|g' -e 's|[[:space:]]*,[[:space:]]*| -Dflag|g')"
 fi
 
 if [ "$LINKER" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="LINKER=$LINKER"
 fi
 if [ "$LDFLAGS" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="LDFLAGS=$LDFLAGS"
 fi
 if [ "$LIBPATH" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="LIBPATH=$LIBPATH"
 fi
 if [ "$AR" != "" ]
 then
-  make_parameter_array[i++]="-e"
   make_parameter_array[i++]="AR=$AR"
 fi
 
 if [ "${#make_parameter_array[@]}" != "0" ]
 then
   log_debug_info "Make parameters:"
-  for (( i=1 ; i < ${#make_parameter_array[@]} ; i+=2 ))
+  for (( i=0 ; i < ${#make_parameter_array[@]} ; i++ ))
   do
     log_debug_info " --> ${make_parameter_array[$i]}"
   done
@@ -366,26 +354,37 @@ then
       log_debug_warning "pkg-config: '$i' not found in $(pkg-config --variable pc_path pkg-config). Do you need to install $i development package?"
     fi
   done
+
+  for i in uppsrc/*Makefile.in
+  do
+    sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" "$i" > "${i%.in}"
+  done
   
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@`pkg-config --cflags-only-I $library_list`@g" -e "s@-L\"((LIBRARIES))\"@`pkg-config --libs-only-L $library_list`@g" uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" CLANG.bm.in >CLANG.bm
+  for i in *.bm.in
+  do
+    sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" "$i" > "${i%.in}"
+  done
 
 else
   log_debug_warning "Can't find pkg-config in PATH. Will do configuration without it. Compilation will probably fail"
   log_debug_warning "If compilation fail because of missing include, please install pkg-config before reporting"
-  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/Makefile.in >uppsrc/Makefile
-  sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' uppsrc/uMakefile.in >uppsrc/uMakefile
-  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" GCC.bm.in >GCC.bm
-  sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" CLANG.bm.in >CLANG.bm
+  
+  for i in uppsrc/*Makefile.in
+  do
+    sed -e "s@-I((INCLUDES))@@g" -e 's@-L"((LIBRARIES))"@@g' "$i" > "${i%.in}"
+  done
+  
+  for i in *.bm.in
+  do
+    sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" "$i" > "${i%.in}"
+  done
 
 fi
 
 if [ "$platform" = "Darwin" ]
 then
   log_debug_info "Adjusting Makefile/uMakefile for Mac OS X"
-  sed -i.backup -E -e 's/(-Wl,[^[:space:]]*)//g' -e 's/-lrt//g' uppsrc/Makefile uppsrc/uMakefile
+  sed -i.backup -E -e 's/(-Wl,[^[:space:]]*)//g' -e 's/-lrt//g' uppsrc/*Makefile
 
 fi
 
@@ -393,26 +392,27 @@ if [[ "$Flags" = *"NOGTK"* ]]
 then
   log_debug_info "Removing references to GTK+"
   sed -i.backup \
-         -e 's/-lgtk-x11-2.0//g'    \
-         -e 's/-lgdk-x11-2.0//g'    \
-         -e 's/-latk-1.0//g'        \
-         -e 's/-lgdk_pixbuf-2.0//g' \
-         -e 's/-lpangocairo-1.0//g' \
-         -e 's/-lpango-1.0//g'      \
-         -e 's/-lgobject-2.0//g'    \
-         -e 's/-lgmodule-2.0//g'    \
-         -e 's/-lglib-2.0//g'       \
-         -e 's/-lnotify//g'         \
-         uppsrc/Makefile uppsrc/uMakefile
+      -e 's/-lgtk-x11-2.0//g'    \
+      -e 's/-lgdk-x11-2.0//g'    \
+      -e 's/-latk-1.0//g'        \
+      -e 's/-lgdk_pixbuf-2.0//g' \
+      -e 's/-lpangocairo-1.0//g' \
+      -e 's/-lpango-1.0//g'      \
+      -e 's/-lgobject-2.0//g'    \
+      -e 's/-lgmodule-2.0//g'    \
+      -e 's/-lglib-2.0//g'       \
+      -e 's/-lnotify//g'         \
+      uppsrc/*Makefile
 fi
 
 if [ ! -f /usr/lib/libdl.so -a ! -f /usr/lib64/libdl.so ]
 then
-  sed -i.backup -e s/-ldl//g uppsrc/Makefile
-  sed -i.backup -e s/-ldl//g uppsrc/uMakefile
+  # We use sed -i.backup because Mac OS X sed version needs it (or it fails)
+  sed -i.backup -e s/-ldl//g uppsrc/*Makefile
   
 fi
 
+# Cleanup
 rm -f uppsrc/*.backup
 
 log_debug_info "Searching for gmake or make"
