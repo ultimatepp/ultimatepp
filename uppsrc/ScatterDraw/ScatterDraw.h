@@ -117,6 +117,9 @@ protected:
 	static String GetNewDash(int index);
 	static MarkPlot *GetNewMarkPlot(int index);
 	
+	void WhenPaint(Painter &w)	{WhenPainter(w);}
+	void WhenPaint(Draw &w) 	{WhenDraw(w);}
+	
 public:
 	Callback3<String&, int, double> cbModifFormatX;
 	Callback3<String&, int, double> cbModifFormatDeltaX;
@@ -128,6 +131,8 @@ public:
 	Callback WhenZoomScroll;
 	Callback WhenSetRange;
 	Callback WhenSetXYMin;
+	Callback1<Painter&> WhenPainter;
+	Callback1<Draw&> WhenDraw;
 	
 	ScatterDraw& SetSize(Size sz) 	{size = sz; return *this;};
 	virtual Size GetSize() const	{return size;};
@@ -491,6 +496,24 @@ public:
 	ScatterDraw& LinkedWith(ScatterDraw& ctrl);
 	void Unlinked();
 	
+	int GetPlotWidth()	{return plotW;}
+	int GetPlotHeight()	{return plotH;}
+	Pointf GetPosPrimary(double x, double y) {
+		Pointf ret;
+		ret.x = plotW*(x - xMin)/xRange;
+		ret.y = plotH - plotH*(y - yMin)/yRange;
+		return ret;
+	}
+	double GetSizeX(double cx) 			{return plotW*cx/xRange;}
+	double GetSizeYPrimary(double cy) 	{return plotH*cy/yRange;}		
+	Pointf GetPosSecondary(double x, double y) {
+		Pointf ret;
+		ret.x = plotW*(x - xMin)/xRange;
+		ret.y = plotH - plotH*(y - yMin2)/yRange2;
+		return ret;
+	}
+	double GetSizeYSecondary(double cy) 	{return plotH*cy/yRange2;}
+	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
 	virtual void Refresh() {};
@@ -826,7 +849,7 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 				if (series[j].opacity == 0 || (!series[j].seriesPlot && !series[j].markPlot) || 
 					(!series[j].PointsData()->IsExplicit() && series[j].PointsData()->GetCount() == 0))
 					continue;
-				Vector<Point> points;
+				Vector<Pointf> points;
 				if (series[j].PointsData()->IsParam()) {
 					double xmin = 0;
 					double xmax = double(series[j].PointsData()->GetCount());
@@ -992,9 +1015,11 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 			ASSERT_(true, error);
 		}
 	}
+	WhenPaint(w);
 	ClipEnd(w);
 	w.End();
 }
+
 		
 #endif
 
