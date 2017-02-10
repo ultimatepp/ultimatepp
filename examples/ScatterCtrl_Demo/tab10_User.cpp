@@ -10,7 +10,7 @@ private:
 	void DoPaint(T& w, Vector<Point> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
 				const Color &fillColor, int y0) const {
-		Vector<Point> t;
+		Vector<Pointf> t;
 		t.SetCount(3);
 		for (int i = 0; i < p.GetCount(); ++i) {
 			t[0].x = p[i].x + 80;

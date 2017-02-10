@@ -225,6 +225,55 @@ private:
 	Vector<int> idsBubble;
 };
 
+class Tab_UserPaint : public WithTabUserPaint<ScatterDemo> {
+public:
+	typedef Tab_UserPaint CLASSNAME;
+	
+	virtual void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+
+	void OnPainter(Painter &w)		{OnPaint(w);}
+	void OnDraw(Draw &w)			{OnPaint(w);}
+	
+	template <class T>
+	void OnPaint(T& w) {
+		int plotW = scatter.GetPlotWidth(), plotH = scatter.GetPlotHeight();
+		DrawLineOpa(w, 0, 0, plotW, plotH, 1, 1, 1, LtRed(), "2 2");
+		DrawText(w, plotW/5, plotH/5, 0, "Fixed line", Arial(15), Black());		
+		
+		String text = "Fixed text";
+		Font font = Arial(30);
+		Size sz = GetTextSize(text, font);
+		FillRectangleOpa(w, plotW - sz.cx - 10, 10, plotW - 10, 10 + sz.cy, 1, 0.3, Null, LtGreen());
+		DrawText(w, plotW - sz.cx - 10, 10, 0, text, font, Black());
+		
+		for (int i = 0; i < s1.GetCount(); ++i) {
+			if (s1[i].x >= 1) {
+				Pointf pos = scatter.GetPosPrimary(s1[i].x, s1[i].y);
+				double sizex = scatter.GetSizeX(0.2);
+				FillRectangleOpa(w, pos.x - sizex/2., pos.y - sizex/2., 
+									pos.x + sizex/2., pos.y + sizex/2., 
+									1, 0.8, Null, LtGreen());
+				Vector<Pointf> p;
+				p << Pointf(pos.x - sizex/2., pos.y - sizex/2.) 
+				  << Pointf(pos.x + sizex/2., pos.y - sizex/2.) 
+				  << Pointf(pos.x + sizex/2., pos.y + sizex/2.) 
+				  << Pointf(pos.x - sizex/2., pos.y + sizex/2.)
+				  << Pointf(pos.x - sizex/2., pos.y - sizex/2.); 
+				DrawPolylineOpa(w, p, 1, 1, 2, Green(), "", Null);
+				DrawText(w, pos.x + sizex/2., pos.y, 0, Format("Pos %.2f, %.2f fixed font", s1[i].x, s1[i].y), Arial(15), Black());
+				double sizeT = scatter.GetSizeYPrimary(0.05);
+				Font font = Arial((int)sizeT);
+				DrawText(w, pos.x + sizex/2., pos.y + 15, 0, Format("Pos %.2f, %.2f scaled font", s1[i].x, s1[i].y), font, Black());
+				break;
+			}
+		}
+	}
+
+private:
+	Vector<Pointf> s1;
+};
+
 class TabPie : public WithTabPie<StaticRect> {
 public:
 	typedef TabPie CLASSNAME;
