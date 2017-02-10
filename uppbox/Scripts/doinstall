@@ -277,8 +277,8 @@ log_debug_info "Cleaning source code"
 #<end> TODO
 
 log_debug_info "Copying" *.bm *.scd
-  cp -p *.bm               "$DESTDIR/$prefix/.upp/theide"
-  cp -p *.scd              "$DESTDIR/$prefix/.upp/theide"
+  cp -p *.bm  "$DESTDIR/$prefix/.upp/theide"
+  cp -p *.scd "$DESTDIR/$prefix/.upp/theide"
 
   if [ "$installdoc" = "true" ]
   then
@@ -323,9 +323,12 @@ log_debug_info "Creating directories"
   install -d "$DESTDIR/$datadir/applications"
   install -d "$DESTDIR/$datadir/icons/hicolor/48x48/apps"
   install -d "$DESTDIR/$datadir/pixmaps"
-  install -d "$DESTDIR/$datadir/licenses/$package_name"
-  install -d "$DESTDIR/$docdir/$package_name"
   install -d "$DESTDIR/$mandir/man1"
+  if [ "$installdoc" = "true" ]
+  then
+    install -d "$DESTDIR/$datadir/licenses/$package_name"
+    install -d "$DESTDIR/$docdir/$package_name"
+  fi
 
 log_debug_info "Copying theide and umk"
   install ./theide "$DESTDIR/$bindir/theide"
