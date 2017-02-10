@@ -15,7 +15,7 @@ LAYOUT(Tab1Basic, 428, 296)
 END_LAYOUT
 
 LAYOUT(Tab2Functions, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetGridWidth(2).SetPlotAreaRightMargin(110).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(-107).SetLegendPosY(0).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetPlotAreaRightMargin(110).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetGridWidth(2).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(-107).SetLegendPosY(0).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab3ParametricFunctions, 384, 284)
@@ -104,6 +104,10 @@ END_LAYOUT
 
 LAYOUT(TabBubblePlot, 420, 236)
 	ITEM(ScatterCtrl, scatter, SetTitle(t_("Bubble Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(TabUserPaint, 428, 296)
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("User paint")).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).HSizePosZ(4, 4).VSizePosZ(4, 4))
 END_LAYOUT
 
 LAYOUT(TabPie, 536, 440)
