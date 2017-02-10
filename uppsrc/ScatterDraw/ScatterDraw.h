@@ -496,23 +496,14 @@ public:
 	ScatterDraw& LinkedWith(ScatterDraw& ctrl);
 	void Unlinked();
 	
-	int GetPlotWidth()	{return plotW;}
-	int GetPlotHeight()	{return plotH;}
-	Pointf GetPosPrimary(double x, double y) {
-		Pointf ret;
-		ret.x = plotW*(x - xMin)/xRange;
-		ret.y = plotH - plotH*(y - yMin)/yRange;
-		return ret;
-	}
+	int GetPlotWidth()					{return plotW;}
+	int GetPlotHeight()					{return plotH;}
+	double GetPosX(double x)			{return plotW*(x - xMin)/xRange;}
 	double GetSizeX(double cx) 			{return plotW*cx/xRange;}
+	double GetPosYPrimary(double y)		{return plotH - plotH*(y - yMin)/yRange;}
 	double GetSizeYPrimary(double cy) 	{return plotH*cy/yRange;}		
-	Pointf GetPosSecondary(double x, double y) {
-		Pointf ret;
-		ret.x = plotW*(x - xMin)/xRange;
-		ret.y = plotH - plotH*(y - yMin2)/yRange2;
-		return ret;
-	}
-	double GetSizeYSecondary(double cy) 	{return plotH*cy/yRange2;}
+	double GetPosYSecondary(double y)	{return plotH - plotH*(y - yMin2)/yRange2;}
+	double GetSizeYSecondary(double cy) {return plotH*cy/yRange2;}
 	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
