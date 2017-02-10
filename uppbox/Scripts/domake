@@ -283,7 +283,7 @@ then
 
 elif [ "$use_other_cpp_compiler" = "true" -a "$DEFAULT_OTHER_CPP_CXXFLAGS" != "" ]
 then
-  log_debug_warning "CXXFLAGS environment variable not set. Will use the default value from uppsrc/Makefile.in"
+  log_debug_warning "CXXFLAGS environment variable not set. Will use the default value from uppsrc/*Makefile.in"
 
 fi
 
@@ -300,7 +300,6 @@ then
   make_parameter_array[i++]="Flags=$Flags"
   make_parameter_array[i++]="Macro=$(echo "$Flags" | sed -e 's|[[:space:]]*+[[:space:]]*|-Dflag|g' -e 's|[[:space:]]*,[[:space:]]*| -Dflag|g')"
 fi
-
 if [ "$LINKER" != "" ]
 then
   make_parameter_array[i++]="LINKER=$LINKER"
@@ -330,7 +329,7 @@ then
 fi
 
 
-log_debug_info "Configuring uppsrc/Makefile, uppsrc/uMakefile, GCC.bm and CLANG.bm with pkg-config"
+log_debug_info "Configuring" uppsrc/*Makefile.in *.bm.in "with pkg-config"
 
 if which pkg-config
 then
@@ -383,7 +382,7 @@ fi
 
 if [ "$platform" = "Darwin" ]
 then
-  log_debug_info "Adjusting Makefile/uMakefile for Mac OS X"
+  log_debug_info "Adjusting Makefiles for Mac OS X"
   sed -i.backup -E -e 's/(-Wl,[^[:space:]]*)//g' -e 's/-lrt//g' uppsrc/*Makefile
 
 fi
