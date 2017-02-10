@@ -16,7 +16,12 @@ show_debug_info="true"
 show_debug_warning="true"
 show_debug_error="true"
 
+installdoc="false"
+
 ### Constants
+
+EXIT_SUCCESS=0
+EXIT_ERROR_COMMAND_LINE=1
 
 SCRIPT_NAME=$(basename "$0" | tr '[:lower:]' '[:upper:]' )
 
@@ -55,6 +60,7 @@ show_usage()
 #   echo '  --infodir=<path>        : info files directory ( default: /usr/local/share/info e.g. $(datarootdir)/info )'
 #   echo '  --enable-debug          : include debug symbols'
 #   echo '  --disable-debug         : do not include debug symbols'
+    echo '  --installdoc=FLAGS      : install documentation in docdir ( default: false )'
     echo '  --verbose               : increase verbosity'
     echo '  --info=FLAGS            : fine-grained informational verbosity ( default: true )'
     echo '  --warning=FLAGS         : fine-grained warning verbosity ( default: true )'
@@ -147,6 +153,15 @@ do
 #    debugsym=true
 #    ;;
 
+  --installdoc=*)
+    installdoc=$( echo $arg | sed 's/--installdoc=//' )
+    if [ "$installdoc" != "true" -a "$installdoc" != "false"  ]
+    then
+      show_usage
+      exit $EXIT_ERROR_COMMAND_LINE
+    fi
+    ;;
+
   --verbose)
     show_debug_info=true
     show_debug_warning=true
@@ -158,7 +173,7 @@ do
     if [ "$show_debug_info" != "true" -a "$show_debug_info" != "false"  ]
     then
       show_usage
-      exit 0
+      exit $EXIT_ERROR_COMMAND_LINE
     fi
     ;;
     
@@ -167,7 +182,7 @@ do
     if [ "$show_debug_warning" != "true" -a "$show_debug_warning" != "false"  ]
     then
       show_usage
-      exit 0
+      exit $EXIT_ERROR_COMMAND_LINE
     fi
     ;;
     
@@ -176,19 +191,19 @@ do
     if [ "$show_debug_error" != "true" -a "$show_debug_error" != "false"  ]
     then
       show_usage
-      exit 0
+      exit $EXIT_ERROR_COMMAND_LINE
     fi
     ;;
 
   --help)
     show_usage
-    exit 0
+    exit $EXIT_SUCCESS
     ;;
     
     *)
     log_debug_error "Bad command line argument '$arg'"
     show_usage
-    exit 1
+    exit $EXIT_ERROR_COMMAND_LINE
     
     esac
 
@@ -261,12 +276,17 @@ log_debug_info "Cleaning source code"
   rm -r "$DESTDIR/$prefix/upp/uppsrc/umk.out"
 #<end> TODO
 
-log_debug_info "Copying GCC.bm CLANG.bm" *.scd "and U++ license"
-  cp -p GCC.bm   "$DESTDIR/$prefix/.upp/theide"
-  cp -p CLANG.bm "$DESTDIR/$prefix/.upp/theide"
-  cp -p *.scd    "$DESTDIR/$prefix/.upp/theide"
-  cp -p uppsrc/ide/Copying "$DESTDIR/$prefix/upp"
-  
+log_debug_info "Copying" *.bm *.scd
+  cp -p *.bm               "$DESTDIR/$prefix/.upp/theide"
+  cp -p *.scd              "$DESTDIR/$prefix/.upp/theide"
+
+  if [ "$installdoc" = "true" ]
+  then
+log_debug_info "Copying readme.md and license"
+    cp -p readme.md          "$DESTDIR/$prefix/upp"
+    cp -p uppsrc/ide/Copying "$DESTDIR/$prefix/upp"
+  fi
+ 
 log_debug_info "Generating default theide var files in $DESTDIR/$prefix/.upp/theide/"
   echo "UPP = \"$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"                                > "$DESTDIR/$prefix/.upp/theide/uppsrc.var"
   echo "UPP = \"$DESTDIR/$prefix/upp/examples;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"  > "$DESTDIR/$prefix/.upp/theide/examples.var"
@@ -348,14 +368,20 @@ log_debug_info "Cleaning source code"
   rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/build_info.h"
 #<end> TODO
 
-# log_debug_info "Copying GCC.bm CLANG.bm" *.scd "U++ license and readme.md"
-log_debug_info "Copying GCC.bm CLANG.bm" *.scd
-  cp -p GCC.bm   "$DESTDIR/$datadir/$package_name/"
-  cp -p CLANG.bm "$DESTDIR/$datadir/$package_name/"
-  cp -p *.scd    "$DESTDIR/$datadir/$package_name/"
-#  cp -p readme.md   "$DESTDIR/$docdir/$package_name/"
-#  cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$package_name/"
+# log_debug_info "Copying" *.bm *.scd "U++ license and readme.md"
+log_debug_info "Copying" *.bm *.scd
+  cp -p *.bm  "$DESTDIR/$datadir/$package_name/"
+  cp -p *.scd "$DESTDIR/$datadir/$package_name/"
+  
+  if [ "$installdoc" = "true" ]
+  then
+log_debug_info "Copying readme.md and license"
+    cp -p readme.md          "$DESTDIR/$docdir/$package_name/"
+    cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$package_name/"
+  fi
 
 fi
 
 log_debug_info "<< End of installation"
+
+exit $EXIT_SUCCESS
