@@ -243,14 +243,14 @@ void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
 	scaledFont.Bold();
 	for(int row = 0, start = 0; row <= nrows; row++) {
 		for(int i = start; i < min(start + nlr, nlab); i++) {
-			int lx = rect.left + (i - start)*legendWidth + xWidth;
-			int ly = (rowIncSign >= 0 ? rect.top : rect.bottom) +
+			double lx = rect.left + (i - start)*legendWidth + xWidth;
+			double ly = (rowIncSign >= 0 ? rect.top : rect.bottom) +
 					 rowIncSign*int(rowHeight*(row + 0.6) + loclegendRowSpacing*(row + 0.5));
-			Vector <Point> line;
-			line << Point(lx, ly) << Point(lx + lineLen, ly);
+			Vector <Pointf> line;
+			line << Pointf(lx, ly) << Pointf(lx + lineLen, ly);
 			if (series[i].opacity > 0 && series[i].seriesPlot)
 				DrawPolylineOpa(w, line, scale, 1, series[i].thickness, series[i].color, series[i].dash);
-			Point mark_p(lx + xWidth/*scale*7*/, ly);
+			Pointf mark_p(lx + xWidth/*scale*7*/, ly);
 			if (series[i].markWidth >= 1 && series[i].markPlot)
 				series[i].markPlot->Paint(w, scale, mark_p, series[i].markWidth, series[i].markColor, 
 					series[i].markBorderWidth, series[i].markBorderColor);   
@@ -1710,18 +1710,18 @@ void ClipEnd(Painter &w) {
 	;	
 }
 
-void DrawLineOpa(Draw& w, int x0, int y0, int x1, int y1, int scale, double opacity, 
+void DrawLineOpa(Draw& w, double x0, double y0, double x1, double y1, int scale, double opacity, 
 				double thick, const Color &_color, String dash, const Color &background) {
-	Vector<Point> p;
-	p << Point(x0, y0) << Point(x1, y1);
+	Vector<Pointf> p;
+	p << Pointf(x0, y0) << Pointf(x1, y1);
 	DrawPolylineOpa(w, p, scale, opacity, thick, _color, dash, background);
 }
 
-void DrawCircleOpa(Draw& w, int x, int y, int r, int scale, double opacity, 
+void DrawCircleOpa(Draw& w, double x, double y, double r, int scale, double opacity, 
 				double thick, const Color &_color, String dash, const Color &background) {
-	Vector<Point> p;
+	Vector<Pointf> p;
 	for (double ang = 0; ang <= 2*M_PI; ang += 2*M_PI/50) 
-		p << Point(fround(x + r*cos(ang)), fround(y + r*sin(ang)));
+		p << Pointf(fround(x + r*cos(ang)), fround(y + r*sin(ang)));
 	DrawPolylineOpa(w, p, scale, opacity, thick, _color, dash, background);
 }
 
@@ -1742,7 +1742,7 @@ void DashScaled(Painter& w, const String dash, double scale) {
 	}
 }
 
-void DrawLineOpa(Painter& w, int x0, int y0, int x1, int y1, int scale, 
+void DrawLineOpa(Painter& w, double x0, double y0, double x1, double y1, int scale, 
 				double opacity, double thick, const Color &color, String dash, 
 				const Color &background) {	
 	w.Move(Pointf(x0, y0));
@@ -1752,7 +1752,7 @@ void DrawLineOpa(Painter& w, int x0, int y0, int x1, int y1, int scale,
 	w.Stroke(thick*scale, color);
 }
 
-void DrawCircleOpa(Painter& w, int x, int y, int r, int scale, 
+void DrawCircleOpa(Painter& w, double x, double y, double r, int scale, 
 				double opacity, double thick, const Color &color, String dash, 
 				const Color &background) {	
 	w.Circle(x, y, r);
@@ -1780,13 +1780,15 @@ void FillRectangleOpa(Painter &w, double x0, double y0, double x1, double y1, in
 	w.Rectangle(x0, y0, x1 - x0, y1 - y0).Opacity(opacity).Fill(color);
 }
 
-void DrawPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity, 
+void DrawPolylineOpa(Draw& w, const Vector<Pointf> &p, int scale, double opacity, 
 				double thick, const Color &_color, String dash, const Color &background) {
 	ASSERT(!p.IsEmpty());
 	Color color = GetOpaqueColor(_color, background, opacity) ;
-	if (dash == LINE_SOLID) 
-		w.DrawPolyline(p, fround(thick*scale), color);
-	else {
+	if (dash == LINE_SOLID) {
+		//w.DrawPolyline(p, fround(thick*scale), color);
+		for (int i = 1; i < p.GetCount(); ++i) 
+			w.DrawLine(p[i-1], p[i], fround(thick*scale), color);
+	} else {
 		Vector <double> &pat = GetDashedArray(dash);
 		if (pat.IsEmpty())
 			return;
@@ -1817,7 +1819,7 @@ void DrawPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity,
 	}		
 }
 
-void DrawPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opacity, 
+void DrawPolylineOpa(Painter& w, const Vector<Pointf> &p, int scale, double opacity, 
 				double thick, const Color &color, String dash, const Color &background) {	
 	ASSERT(!p.IsEmpty());
 	w.Move(p[0]);
@@ -1828,15 +1830,21 @@ void DrawPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opaci
 	w.Stroke(thick*scale, color);
 }
 
-void FillPolylineOpa(Draw& w, const Vector<Point> &p, int scale, double opacity, 
+void FillPolylineOpa(Draw& w, const Vector<Pointf> &p, int scale, double opacity, 
 				const Color &background, const Color &fillColor) {
 	ASSERT(!p.IsEmpty());
 	Color opacolor = GetOpaqueColor(fillColor, background, opacity) ;
 
-	w.DrawPolygon(p, opacolor);
+	Vector<Point> pi;
+	pi.SetCount(p.GetCount());
+	for (int i = 0; i < pi.GetCount(); ++i) {
+		pi[i].x = (int)p[i].x;
+		pi[i].y = (int)p[i].y;
+	}
+	w.DrawPolygon(pi, opacolor);
 }
 
-void FillPolylineOpa(Painter& w, const Vector<Point> &p, int scale, double opacity, 
+void FillPolylineOpa(Painter& w, const Vector<Pointf> &p, int scale, double opacity, 
 				const Color &background, const Color &fillColor) {	
 	ASSERT(!p.IsEmpty());
 	w.Move(p[0]);
