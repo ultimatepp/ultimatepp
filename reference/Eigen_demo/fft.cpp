@@ -1,8 +1,7 @@
 #include <Core/Core.h>
+#include <plugin/Eigen/Eigen.h>
 
 using namespace Upp;
-
-#include <plugin/Eigen/Eigen.h>
 
 #ifdef USE_FFTW
 #include <fftw3.h>
