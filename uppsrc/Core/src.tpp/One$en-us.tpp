@@ -20,6 +20,9 @@ ption][@(0.0.255) <]_[* One][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
 [s9;%% One is a container capable of containing none or single element 
 of type specified as template argument or derived from it.&]
 [s9;%% &]
+[s9;%% The container is very similar to [^http`:`/`/en`.cppreference`.com`/w`/cpp`/memory`/unique`_ptr^ s
+td`::unique`_ptr].&]
+[s9;%% &]
 [s0;%% One is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
 ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick and 
 optional clone] transfer semantics.&]
