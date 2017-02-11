@@ -16,8 +16,7 @@ void Tab_UserPaint::Init()
 	scatter.ZoomToFit(true, true);
 	scatter.WhenPainter = THISBACK(OnPainter);
 	scatter.WhenDraw = THISBACK(OnDraw);
-}
-	
+}	
 
 ScatterDemo *Construct17()
 {

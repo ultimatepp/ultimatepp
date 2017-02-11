@@ -247,26 +247,32 @@ public:
 		FillRectangleOpa(w, plotW - sz.cx - 10, 10, plotW - 10, 10 + sz.cy, 1, 0.3, Null, LtGreen());
 		DrawText(w, plotW - sz.cx - 10, 10, 0, text, font, Black());
 		
-		for (int i = 0; i < s1.GetCount(); ++i) {
-			if (s1[i].x >= 1) {
-				double posx = scatter.GetPosX(s1[i].x);
-				double posy = scatter.GetPosYPrimary(s1[i].y);
+		if (scatter.GetXMin() < 1 && scatter.GetXMax() > 1) {
+			Pointf p;
+			for (int i = 0; i < s1.GetCount(); ++i) {
+				if (s1[i].x >= 1) { 
+					p = s1[i];
+					break;
+				}
+			}
+			if (scatter.GetYMin() < p.y && scatter.GetYMax() > p.y) {
+				double posx = scatter.GetPosX(p.x);
+				double posy = scatter.GetPosY(p.y);
 				double sizex = scatter.GetSizeX(0.2);
 				FillRectangleOpa(w, posx - sizex/2., posy - sizex/2., 
 									posx + sizex/2., posy + sizex/2., 
 									1, 0.8, Null, LtGreen());
-				Vector<Pointf> p;
-				p << Pointf(posx - sizex/2., posy - sizex/2.) 
+				Vector<Pointf> s;
+				s << Pointf(posx - sizex/2., posy - sizex/2.) 
 				  << Pointf(posx + sizex/2., posy - sizex/2.) 
 				  << Pointf(posx + sizex/2., posy + sizex/2.) 
 				  << Pointf(posx - sizex/2., posy + sizex/2.)
 				  << Pointf(posx - sizex/2., posy - sizex/2.); 
-				DrawPolylineOpa(w, p, 1, 1, 2, Green(), "", Null);
-				DrawText(w, posx + sizex/2., posy, 0, Format("Pos %.2f, %.2f fixed font", s1[i].x, s1[i].y), Arial(15), Black());
+				DrawPolylineOpa(w, s, 1, 1, 2, Green(), "", Null);
+				DrawText(w, posx + sizex/2., posy, 0, Format("Pos %.2f, %.2f fixed font", p.x, p.y), Arial(15), Black());
 				double sizeT = scatter.GetSizeYPrimary(0.05);
 				Font font = Arial((int)sizeT);
-				DrawText(w, posx + sizex/2., posy + 15, 0, Format("Pos %.2f, %.2f scaled font", s1[i].x, s1[i].y), font, Black());
-				break;
+				DrawText(w, posx + sizex/2., posy + 15, 0, Format("Pos %.2f, %.2f scaled font", p.x, p.y), font, Black());
 			}
 		}
 	}
