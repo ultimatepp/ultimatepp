@@ -270,7 +270,7 @@ public:
 				  << Pointf(posx - sizex/2., posy - sizex/2.); 
 				DrawPolylineOpa(w, s, 1, 1, 2, Green(), "", Null);
 				DrawText(w, posx + sizex/2., posy, 0, Format("Pos %.2f, %.2f fixed font", p.x, p.y), Arial(15), Black());
-				double sizeT = scatter.GetSizeYPrimary(0.05);
+				double sizeT = scatter.GetSizeY(0.05);
 				Font font = Arial((int)sizeT);
 				DrawText(w, posx + sizex/2., posy + 15, 0, Format("Pos %.2f, %.2f scaled font", p.x, p.y), font, Black());
 			}
