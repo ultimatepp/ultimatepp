@@ -218,9 +218,9 @@ public:
 	ScatterDraw &SetZoomStyleY(ZoomStyle style = TO_CENTER) {zoomStyleY = style; return *this;}
 
 	ScatterDraw& SetRange(double rx, double ry, double ry2 = 100);
-	double GetRangeX() {return xRange;}
-	double GetRangeY() {return yRange;}
-	double GetRangeY2() {return yRange2;}
+	//double GetRangeX() {return xRange;}
+	//double GetRangeY() {return yRange;}
+	//double GetRangeY2() {return yRange2;}
 	ScatterDraw& SetRangeLinked(double rx, double ry, double ry2 = 100);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
@@ -238,10 +238,13 @@ public:
 	
 	ScatterDraw& SetXYMin(double xmin, double ymin = Null, double ymin2 = Null);
 	ScatterDraw& SetXYMinLinked(double xmin, double ymin = Null, double ymin2 = Null);
-	double GetXMin () const {return xMin;}
-	double GetYMin () const {return yMin;}	
-	double GetYMin2 () const {return yMin2;}
-	double GetY2Min () const {return yMin2;}
+	double GetXMin() 	const {return xMin;}
+	double GetYMin() 	const {return yMin;}	
+	double GetYMin2() 	const {return yMin2;}
+	double GetY2Min() 	const {return yMin2;}
+	double GetXMax() 	const {return xMin + xRange;}
+	double GetYMax() 	const {return yMin + yRange;}	
+	double GetY2Max() 	const {return yMin2 + yRange2;}
 	
 	ScatterDraw &Graduation_FormatX(Formats fi);	
 	ScatterDraw &Graduation_FormatY(Formats fi);
@@ -496,14 +499,15 @@ public:
 	ScatterDraw& LinkedWith(ScatterDraw& ctrl);
 	void Unlinked();
 	
-	int GetPlotWidth()					{return plotW;}
-	int GetPlotHeight()					{return plotH;}
-	double GetPosX(double x)			{return plotW*(x - xMin)/xRange;}
-	double GetSizeX(double cx) 			{return plotW*cx/xRange;}
-	double GetPosYPrimary(double y)		{return plotH - plotH*(y - yMin)/yRange;}
-	double GetSizeYPrimary(double cy) 	{return plotH*cy/yRange;}		
-	double GetPosYSecondary(double y)	{return plotH - plotH*(y - yMin2)/yRange2;}
-	double GetSizeYSecondary(double cy) {return plotH*cy/yRange2;}
+	double GetMinX()			{return xMin;}
+	int GetPlotWidth()			{return plotW;}
+	int GetPlotHeight()			{return plotH;}
+	double GetPosX(double x)	{return plotW*(x - xMin)/xRange;}
+	double GetSizeX(double cx) 	{return plotW*cx/xRange;}
+	double GetPosY(double y)	{return plotH - plotH*(y - yMin)/yRange;}
+	double GetSizeY(double cy) 	{return plotH*cy/yRange;}		
+	double GetPosY2(double y)	{return plotH - plotH*(y - yMin2)/yRange2;}
+	double GetSizeY2(double cy) {return plotH*cy/yRange2;}
 	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
