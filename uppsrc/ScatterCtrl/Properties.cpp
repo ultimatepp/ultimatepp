@@ -779,7 +779,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	tabFit.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 	
 	bool primary = pscatter->IsDataPrimaryY(id);
-    tabFit.scatter.SetRange(pscatter->GetRangeX(), primary ? pscatter->GetRangeY() : pscatter->GetRangeY2());
+    tabFit.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
 	tabFit.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 	tabFit.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 	
@@ -802,8 +802,8 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 			tabFit.eMin = Format("(%f,%f)", data.x(idmx), val);
 	}
 	if (!data.IsParam() && !data.IsExplicit()) {	
-		tabFit.width <<= pscatter->GetRangeX()/15.;
-		tabFit.width.SetInc(pscatter->GetRangeX()/15./2.);
+		tabFit.width <<= pscatter->GetXRange()/15.;
+		tabFit.width.SetInc(pscatter->GetXRange()/15./2.);
 		
 		tabFit.scatter.AddSeries(average).NoMark().SetDataThickness(1.5);
 		tabFit.scatter.AddSeries(linear).NoMark().SetDataThickness(1.5);
@@ -934,7 +934,7 @@ void ProcessingTab::OnSet()
 		tabOp.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 		
 		bool primary = pscatter->IsDataPrimaryY(id);
-		tabOp.scatter.SetRange(pscatter->GetRangeX(), primary ? pscatter->GetRangeY() : pscatter->GetRangeY2());
+		tabOp.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
 		tabOp.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 		tabOp.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
