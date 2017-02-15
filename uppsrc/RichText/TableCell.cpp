@@ -48,9 +48,11 @@ bool  RichCell::Reduce(RichContext& rc) const
 	rc.page.bottom -= format.margin.bottom + format.border.bottom;
 	rc.page.left += format.margin.left + format.border.left;
 	rc.page.right -= format.margin.right + format.border.right;
-	if(rc.page.IsEmpty())
+	if(rc.page.IsEmpty()) {
 		rc.page = br;
-	return !rc.page.IsEmpty();
+		return false;
+	}
+	return true;
 }
 
 PageY RichCell::GetTop(RichContext rc) const
@@ -168,7 +170,8 @@ PageY RichCell::Align(const RichContext& rc, PageY npy) const
 }
 
 void RichCell::Paint(PageDraw& pw, RichContext rc, PageY npy,
-                     const Rect& xpg, int y, int ny, const PaintInfo& pi, bool select) const
+                     const Rect& xpg, const Rect& nxpg,
+                     int y, int ny, const PaintInfo& pi, bool select) const
 {
 	if(!Reduce(rc))
 		return;
@@ -181,8 +184,8 @@ void RichCell::Paint(PageDraw& pw, RichContext rc, PageY npy,
 	else {
 		DrawCell(pw.Page(rc.py.page), xpg.left, xpg.right, y, xpg.bottom, border, margin);
 		for(int i = rc.py.page + 1; i < npy.page; i++)
-			DrawCell(pw.Page(i), xpg.left, xpg.right, xpg.top, xpg.bottom, border, margin);
-		DrawCell(pw.Page(npy.page), xpg.left, xpg.right, xpg.top, ny, border, margin);
+			DrawCell(pw.Page(i), nxpg.left, nxpg.right, nxpg.top, nxpg.bottom, border, margin);
+		DrawCell(pw.Page(npy.page), nxpg.left, nxpg.right, nxpg.top, ny, border, margin);
 	}
 
 	rc.py = Align(rc, npy);
@@ -195,8 +198,8 @@ void RichCell::Paint(PageDraw& pw, RichContext rc, PageY npy,
 		else {
 			pw.Page(rc.py.page).DrawRect(xpg.left, y, cx, xpg.bottom - y, InvertColor);
 			for(int i = rc.py.page + 1; i < npy.page; i++)
-				pw.Page(i).DrawRect(xpg.left, xpg.top, cx, xpg.Height(), InvertColor);
-			pw.Page(npy.page).DrawRect(xpg.left, xpg.top, cx, ny - xpg.top, InvertColor);
+				pw.Page(i).DrawRect(nxpg.left, nxpg.top, cx, nxpg.Height(), InvertColor);
+			pw.Page(npy.page).DrawRect(nxpg.left, nxpg.top, cx, ny - nxpg.top, InvertColor);
 		}
 	}
 }
@@ -209,7 +212,7 @@ RichCaret RichCell::GetCaret(int pos, RichContext rc, PageY pyy) const
 	return text.GetCaret(pos, rc);
 }
 
-int      RichCell::GetPos(int x, PageY y, RichContext rc, PageY pyy) const
+int RichCell::GetPos(int x, PageY y, RichContext rc, PageY pyy) const
 {
 	if(!Reduce(rc))
 		return 0;

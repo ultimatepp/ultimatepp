@@ -2,105 +2,135 @@
 
 namespace Upp {
 
-bool RichTable::Reduce(RichContext& rc) const
+bool RichTable::Reduce(Rect& r) const
 {
-	Rect br = rc.page;
-	rc.page.left += format.lm;
-	rc.page.right -= format.rm;
-	rc.page.Deflate(format.frame);
-	if(rc.page.IsEmpty())
-		rc.page = br;
-	return !rc.page.IsEmpty();
+	Rect br = r;
+	r.left += format.lm;
+	r.right -= format.rm;
+	r.Deflate(format.frame);
+	if(r.IsEmpty()) {
+		r = br;
+		return false;
+	}
+	return true;
+}
+
+Rect RichTable::GetPageRect(PageY py) const
+{
+	return py.page == clayout.py.page ? clayout.first_page : clayout.next_page;
+}
+
+void RichTable::NextPage(PageY& py, bool header) const
+{
+	py.y = header ? clayout.header_page.top : clayout.next_page.top;
+	py.page++;
+}
+
+RichContext RichTable::MakeRichContext(RichContext rc, PageY py, bool header) const
+{
+	if(header)
+		rc.Set(py, clayout.header_page, clayout.header_page, py);
+	else
+		rc.Set(clayout.py, clayout.first_page, clayout.next_page, py);
+	return rc;
 }
 
 const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
 { // Create page layout with header
-	if(rc.py != cpy || rc.page != cpage) {
-		rc.py.y += format.before;
-		if(rc.py.y > rc.page.bottom) {
-			// TODO: header/footer adjustment here
-			rc.py.y = rc.page.top;
-			rc.py.page++;
-		}
-		cpage = rc.page;
-		cpy = rc.py;
-		Reduce(rc);
-		clayout.page = rc.page;
-		clayout.hasheader = false;
+	RichContext rc2 = rc;
+	rc2.Page();
+	if(rc.py != clayout.py || rc.page != clayout.first_page0 || rc2.page != clayout.next_page0) {
 		clayout.sz = GetSize();
+		clayout.py = rc.py;
+		clayout.first_page = clayout.first_page0 = rc.page;
+		clayout.next_page = clayout.next_page0 = rc2.page;
+		Reduce(clayout.first_page);
+		Reduce(clayout.next_page);
+		clayout.header_page = clayout.next_page;
+		PageY py = rc.py;
+		py.y += format.before;
+		if(py.y > clayout.first_page.bottom)
+			NextPage(py, false);
+		clayout.hasheader = false;
 		if(format.header && cell.GetCount()) {
+			RichContext nextpage_rc = rc;
+			PageY hpy(0, clayout.next_page.top); // RowPaint will need page zero here to add real page
+			nextpage_rc.Set(hpy, clayout.next_page, clayout.next_page, hpy);
 			int hy = min(format.header, cell.GetCount());
-			RichContext nrc = rc;
-			nrc.py.page = 0;
-			nrc.py.y = clayout.page.top;
-			clayout.header = Realize(nrc, hy); // realize header as if first on page
+			clayout.header = Realize(hpy, nextpage_rc, hy, true); // realize header as if first on next page
 			if(clayout.header[0].py.page == clayout.header[hy - 1].pyy.page) { // header fits single page
-				Layout x = Realize(rc, cell.GetCount());
-				if(cell.GetCount() > hy && rc.py.page != x[hy].py.page) { // first header would break the end of page
-					// TODO: header/footer adjustment here
-					rc.py.page++;
-					rc.py.y = rc.page.top;
-				}
+				Layout x = Realize(py, MakeRichContext(rc, py, false), cell.GetCount(), false); // TODO: check this
+				if(cell.GetCount() > hy && py.page != x[hy].py.page) // first header would break the end of page
+					NextPage(py, false);
 				clayout.hasheader = true; // if it fits, we repeat header on each new page
-				rc.page.top = clayout.page.top = clayout.header[hy - 1].pyy.y + format.grid; // so have to reduce the page size for nonheader rows
+				clayout.header_page.bottom = clayout.header[hy - 1].pyy.y;
+				clayout.next_page.top = clayout.header_page.bottom + format.grid ;// so have to reduce the page size for nonheader rows
 			}
 		}
-		clayout.page0 = rc.py.page;
-		(Layout&)clayout = Realize(rc, cell.GetCount());
+		(Layout&)clayout = Realize(py, MakeRichContext(rc, py, false), cell.GetCount(), false);
 		if(format.keep && cell.GetCount()) {
-			if(clayout[0].py.page != clayout[cell.GetCount() - 1].pyy.page) {
-				rc.py.page++;
-				rc.py.y = rc.page.top;
-			}
-			clayout.page0 = rc.py.page;
-			(Layout&)clayout = Realize(rc, cell.GetCount());
+			if(clayout[0].py.page != clayout[cell.GetCount() - 1].pyy.page)
+				NextPage(py, false);
+			(Layout&)clayout = Realize(py, MakeRichContext(rc, py, false), cell.GetCount(), false);
 		}
 	}
 	return clayout;
 }
 
-RichTable::Layout RichTable::Realize(RichContext rc, int ny) const
+RichContext RichTable::PaintCell::MakeRichContext(RichContext rc) const
+{
+	rc.page.left = page_left;
+	rc.page.right = page_right;
+	return rc;
+}
+
+RichTable::Layout RichTable::Realize(PageY py, RichContext arc, int ny, bool header) const
 { // create layout for first ny rows
 	Layout tab;
-
+	
 	int nx = format.column.GetCount();
 	tab.row.Alloc(ny);
 	for(int i = 0; i < ny; i++)
 		tab[i].cell.Alloc(nx);
-	tab.col.Alloc(nx);
-
+	
 	int sum = 0;
 	for(int i = 0; i < nx; i++)
 		sum += format.column[i];
 
+	Buffer<int> column_left, column_right;
+	column_left.Alloc(nx);
+	column_right.Alloc(nx);
+
 	int x = 0;
-	int xx = rc.page.left;
-	int dcx = rc.page.Width();
+	int xx = arc.page.left;
+	int dcx = arc.page.Width();
 	for(int i = 0; i < nx; i++) {
-		Rect& cp = tab.col[i];
-		cp = rc.page;
-		cp.left = xx;
+		column_left[i] = xx;
 		x += format.column[i];
-		xx = cp.right = x * dcx / sum + rc.page.left;
+		xx = column_right[i] = x * dcx / sum + arc.page.left;
 	}
 
 	int f2 = format.grid / 2;
 	int ff2 = format.grid - f2;
 
-	rc.py.y += format.frame;
+	py.y += format.frame;
 	for(int i = 0; i < ny; i++) {
 		const Array<RichCell>& row = cell[i];
 		PaintRow& pr = tab[i];
 		pr.first = i == 0;
-		pr.gpy = rc.py;
+		pr.gpy = py;
 		if(i)
-			rc.py.y += format.grid;
+			py.y += format.grid;
 		for(int j = 0; j < nx;) {
 			PaintCell& pc = pr[j];
 			const RichCell& cell = row[j];
 			if(pc.top) {
-				pc.page = tab.col[j];
-				pc.page.right = tab.col[min(nx - 1, j + cell.hspan)].right;
+				pc.page_left = pc.left = column_left[j];
+				pc.page_right = pc.right = column_right[min(nx - 1, j + cell.hspan)];
+				if(j)
+					pc.page_left += f2;
+				if(j + cell.hspan < nx - 1)
+					pc.page_right -= ff2;
 				pc.bottom = false;
 				int ms = min(ny - 1, i + cell.vspan);
 				for(int k = i + 1; k <= ms; k++) {
@@ -108,12 +138,6 @@ RichTable::Layout RichTable::Realize(RichContext rc, int ny) const
 					pc.top = pc.bottom = false;
 				}
 				tab[ms][j].bottom = true;
-				pc.left = pc.page.left;
-				pc.right = pc.page.right;
-				if(j)
-					pc.page.left += f2;
-				if(j + cell.hspan < nx - 1)
-					pc.page.right -= ff2;
 			}
 			j += cell.hspan + 1;
 		}
@@ -135,41 +159,40 @@ RichTable::Layout RichTable::Realize(RichContext rc, int ny) const
 			}
 			j += cell.hspan + 1;
 		}
-		if(!span)
+		if(!span) // check whether we should break page before this row
 			for(int j = 0; j < nx;) {
 				const RichCell& cell = row[j];
 				PaintCell& pc = pr[j];
 				if(pc.top) {
-					rc.page = pc.page;
-					PageY ty = cell.GetTop(rc);
-					PageY ky = rc.py;
+					RichContext trc = pc.MakeRichContext(MakeRichContext(arc, py, header));
+					PageY ty = cell.GetTop(trc);
+					PageY ky = py;
 					if(keep)
-						ky = cell.GetHeight(rc);
-					if(ty.page != rc.py.page || ky.page != rc.py.page) {
-						rc.Page();
-						pr.gpy = rc.py;
+						ky = cell.GetHeight(trc);
+					if(ty.page != py.page || ky.page != py.page) {
+						NextPage(py, header);
+						pr.gpy = py;
 						pr.first = true;
 						break;
 					}
 				}
 				j += cell.hspan + 1;
 			}
-		pr.py = rc.py;
+		pr.py = py;
 		for(int j = 0; j < nx;) {
 			const RichCell& cell = row[j];
 			PaintCell& pc = pr[j];
-			rc.page = pc.page;
 			if(pc.top)
-				tab[min(ny - 1, i + cell.vspan)][j].hy = cell.GetHeight(rc);
+				tab[min(ny - 1, i + cell.vspan)][j].hy = cell.GetHeight(pc.MakeRichContext(MakeRichContext(arc, py, header)));
 			j += cell.hspan + 1;
 		}
 		for(int j = 0; j < nx;) {
 			const RichCell& cell = row[j];
 			if(pr[j].bottom)
-				rc.py = max(pr[j].hy, rc.py);
+				py = max(pr[j].hy, py);
 			j += cell.hspan + 1;
 		}
-		tab.pyy = pr.pyy = rc.py;
+		tab.pyy = pr.pyy = py;
 	}
 	return tab;
 }

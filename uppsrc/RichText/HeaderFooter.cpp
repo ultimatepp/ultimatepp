@@ -29,10 +29,15 @@ RichText& GetHeaderFooterText(RichText *text, int page, int pagecount)
 	return *text;
 }
 
-void RichContext::NewHeaderFooter(RichText *header_, RichText *footer_)
+RichContext::RichContext(const RichStyles& styles, const RichText *text)
+:	text(text), styles(&styles)
 {
-	page.top -= header_cy;
-	page.bottom += footer_cy;
+	header_cy = footer_cy = 0;
+	current_header_cy = current_footer_cy = 0;
+}
+
+void RichContext::HeaderFooter(RichText *header_, RichText *footer_)
+{
 	header = header_;
 	footer = footer_;
 	int cx = page.GetWidth();
@@ -43,8 +48,36 @@ void RichContext::NewHeaderFooter(RichText *header_, RichText *footer_)
 		maxcy = maxcy * 4 / 5;
 	if(header_cy + footer_cy > maxcy)
 		header_cy = footer_cy = 0;
-	page.top += header_cy;
-	page.bottom -= footer_cy;
+}
+
+void RichContext::AdjustPage()
+{
+	page.top += header_cy - current_header_cy;
+	page.bottom -= footer_cy - current_footer_cy;
+	current_header_cy = header_cy;
+	current_footer_cy = footer_cy;
+}
+
+void RichContext::Set(PageY p0, const Rect& first_page, const Rect& next_page, PageY p)
+{ // table layout helper, real hdr/ftr is irrelevant, need correct page.top / page.bottom
+	current_header_cy = current_footer_cy = 0;
+	if(p.page != p0.page) { // we are already on next page
+		page = next_page;
+		header_cy = footer_cy = 0;
+	}
+	else {
+		page = first_page;
+		header_cy = next_page.top - page.top;
+		footer_cy = page.bottom - next_page.bottom;
+	}
+	py = p;
+}
+
+void RichContext::Page()
+{
+	py.page++;
+	AdjustPage();
+	py.y = page.top;
 }
 
 RichContext RichText::Context(const Rect& page, PageY py, RichText *header, RichText *footer) const
@@ -52,7 +85,8 @@ RichContext RichText::Context(const Rect& page, PageY py, RichText *header, Rich
 	RichContext rc(style, this);
 	rc.page = page;
 	rc.py = py;
-	rc.NewHeaderFooter(header, footer);
+	rc.HeaderFooter(header, footer);
+	rc.AdjustPage();
 	if(rc.py.y < rc.page.top)
 		rc.py.y = rc.page.top;
 	return rc;
