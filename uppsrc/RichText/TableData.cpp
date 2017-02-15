@@ -4,7 +4,7 @@ namespace Upp {
 
 void RichTable::Invalidate()
 {
-	cpy.page = -1;
+	clayout.py.page = -1;
 	length = tabcount = -1;
 }
 
@@ -17,14 +17,33 @@ void RichTable::InvalidateRefresh(int i, int j)
 		if(r_row == -2 && clayout.sz == GetSize()) {
 			r_row = i;
 			r_column = j;
-			r_py = cpy;
+			r_py = clayout.py;
 			r_pyy = clayout[min(GetRows() - 1, i + cell[i][j].vspan)].pyy;
-			r_page = cpage;
+			r_first_page = clayout.first_page0;
+			r_next_page = clayout.next_page0;
 		}
 		else
 			r_row = -1;
 	}
 	Invalidate();
+}
+
+int  RichTable::GetInvalid(PageY& top, PageY& bottom, RichContext rc) const
+{
+	if(r_row == -2)
+		return -1;
+	const TabLayout& tab = Realize(rc);
+	RichContext rc2 = rc;
+	rc2.Page();
+	if(r_row >= 0 && r_first_page == rc.page && r_next_page == rc2.page
+	   && r_py == rc.py && tab[min(GetRows() - 1, r_row + cell[r_row][r_column].vspan)].pyy == r_pyy) {
+		const PaintRow& pr = tab[r_row];
+		const RichCell& cl = cell[r_row][r_column];
+		top = pr.py;
+		bottom = tab[min(cell.GetCount() - 1, r_row + cl.vspan)].pyy;
+		return 0;
+	}
+	return 1;
 }
 
 void RichTable::Normalize0()
@@ -243,22 +262,6 @@ int RichTable::GetTableCount() const
 void RichTable::Validate()
 {
 	r_row = -2;
-}
-
-int  RichTable::GetInvalid(PageY& top, PageY& bottom, RichContext rc) const
-{
-	if(r_row == -2)
-		return -1;
-	const TabLayout& tab = Realize(rc);
-	if(r_row >= 0 && r_page == rc.page
-	   && r_py == rc.py && tab[min(GetRows() - 1, r_row + cell[r_row][r_column].vspan)].pyy == r_pyy) {
-		const PaintRow& pr = tab[r_row];
-		const RichCell& cl = cell[r_row][r_column];
-		top = pr.py;
-		bottom = tab[min(cell.GetCount() - 1, r_row + cl.vspan)].pyy;
-		return 0;
-	}
-	return 1;
 }
 
 void RichTable::AddColumn(int cx)
@@ -583,7 +586,7 @@ RichTable::RichTable(const RichTable& src, int)
 
 RichTable::RichTable()
 {
-	cpy.page = -1;
+	clayout.py.page = -1;
 	r_row = -1;
 	Invalidate();
 }

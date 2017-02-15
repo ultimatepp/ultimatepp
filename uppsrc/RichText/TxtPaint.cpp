@@ -71,15 +71,15 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 {
 	if(part[parti].Is<RichTable>()) {
 		const RichTable& tab = GetTable(parti);
-		if(tab.format.newhdrftr && rc.text == this) {
-			rc.NewHeaderFooter(~tab.header, ~tab.footer);
-			rc.Page();
-		}
-		else
+		if(tab.format.newhdrftr && rc.text == this)
+			rc.HeaderFooter(~tab.header, ~tab.footer);
 		if(tab.format.newpage)
 			rc.Page();
 		begin = rc;
-		rc.py = GetTable(parti).GetHeight(rc);
+		PageY py = GetTable(parti).GetHeight(rc);
+		if(py.page > rc.py.page)
+			rc.Page(); // set new header / footer and page size
+		rc.py = py;
 	}
 	else {
 		Sync(parti, rc);
@@ -98,11 +98,8 @@ void RichTxt::Advance(int parti, RichContext& rc, RichContext& begin) const
 				nbefore = p.before + p.ruler;
 				nline   = p.linecy[0];
 			}
-			if(pp.newhdrftr && rc.text == this) {
-				rc.NewHeaderFooter(~pp.header, ~pp.footer);
-				rc.Page();
-			}
-			else
+			if(pp.newhdrftr && rc.text == this)
+				rc.HeaderFooter(~pp.header, ~pp.footer);
 			if(pp.newpage || rc.py.y + cy + nbefore + nline > rc.page.bottom && cy < rc.page.Height())
 				rc.Page();
 			begin = rc;
@@ -171,7 +168,7 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 			const RichTable& tab = GetTable(parti);
 			RichContext begin;
 			Advance(parti, rc, begin);
-			tab.Paint(pw, begin, pi);
+			tab.Paint(pw, begin, pi, rc.text == this);
 			pi.tablesel -= tab.GetTableCount();
 		}
 		else {
@@ -195,7 +192,7 @@ void RichTxt::Paint(PageDraw& pw, RichContext& rc, const PaintInfo& _pi) const
 					pp.spellerrors.Clear();
 				}
 				if(IsPainting(pw, pi.zoom, rc.page, begin.py, next.py))
-					p.Paint(pw, rc.page, begin.py, pi, n, pp.spellerrors, rc.text == this);
+					p.Paint(pw, begin, pi, n, pp.spellerrors, rc.text == this);
 			}
 			rc = next;
 		}
@@ -221,7 +218,7 @@ RichCaret RichTxt::GetCaret(int pos, RichContext rc) const
 			if(IsTable(parti))
 				return GetTable(parti).GetCaret(pos, begin);
 			else {
-				RichCaret tp = Get(parti, *rc.styles, true).GetCaret(pos, begin.page, begin.py);
+				RichCaret tp = Get(parti, *rc.styles, true).GetCaret(pos, begin);
 				tp.textpage = begin.page;
 				return tp;
 			}
@@ -245,7 +242,7 @@ int   RichTxt::GetPos(int x, PageY y, RichContext rc) const
 				if(IsTable(parti))
 					return GetTable(parti).GetPos(x, y, begin) + pos;
 				else
-					return Get(parti, *rc.styles, true).GetPos(x, y, begin.page, begin.py) + pos;
+					return Get(parti, *rc.styles, true).GetPos(x, y, begin) + pos;
 			}
 			pos += GetPartLength(parti) + 1;
 			parti++;
@@ -329,9 +326,9 @@ void RichTxt::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int t
 			const Para& p = part[parti].Get<Para>();
 			if(p.haspos) {
 				if(type == LABELS)
-					Get(parti, *begin.styles, true).GatherLabels(f, begin.page, begin.py, pos);
+					Get(parti, *begin.styles, true).GatherLabels(f, begin, pos);
 				else
-					Get(parti, *begin.styles, true).GatherIndexes(f, begin.page, begin.py, pos);
+					Get(parti, *begin.styles, true).GatherIndexes(f, begin, pos);
 			}
 		}
 		pos += GetPartLength(parti) + 1;

@@ -24,17 +24,15 @@ void RichTable::ExpandFrr(VectorMap<int, Rect>& frr, int pi, int l, int r, int t
 	fr.bottom = max(fr.bottom, b);
 }
 
-bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
-                          int i, int ny, const Rect& pg, VectorMap<int, Rect>& frr,
+bool RichTable::RowPaint(PageDraw& pw, RichContext rc, const Layout& tab, bool header,
+                          int i, int ny, Rect pg, Rect npg,
+                          VectorMap<int, Rect>& frr,
                           PaintInfo& pi, int pd, bool sel) const
 {
-	RichContext rc(st, NULL);
 	const Array<RichCell>& row = cell[i];
 	const PaintRow& pr = tab[i];
-	rc.py = pr.py;
-	rc.py.page += pd;
 	if(pw.tracer)
-		pw.tracer->TableRow(pg, rc.py, i, *this);
+		pw.tracer->TableRow(GetPageRect(pr.py), rc.py, i, *this);
 	int gridln = LineZoom(pi.zoom, format.grid);
 	int ff2ln = gridln - gridln / 2;
 	Color gc = format.gridcolor;
@@ -42,53 +40,59 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
 		gridln = 1;
 		gc = pi.showcodes;
 	}
+	PageY py = pr.py;
+	py.page += pd;
+	if(py.page != clayout.py.page) // We are on the next page already
+		pg = npg;
 	for(int j = 0; j < format.column.GetCount();) {
 		const RichCell& cell = row[j];
 		const PaintCell& pc = pr[j];
 		if(pc.top) {
 			PageY pyy = tab[min(ny - 1, i + cell.vspan)].pyy;
-			pyy.page += pd;
+			pyy.page += pd; // move header line
 			bool paint = pyy > pi.top;
-			rc.page = pr[j].page;
-			Rect xpg = pg;
+			Rect xpg = pg; // on first page
+			Rect nxpg = npg; // on next page
 			int y;
 			int ny = pi.zoom * pyy.y;
 			y = pi.zoom * pr.gpy.y;
-			if(j) {
-				xpg.left = pi.zoom * pc.left - ff2ln;
-				if(pyy.page == rc.py.page)
-					pw.Page(rc.py.page).DrawRect(xpg.left, y, gridln, ny - y, gc);
+			nxpg.left = xpg.left = pi.zoom * pc.left;
+			xpg.right = pi.zoom * pc.right;
+			if(j) { // need to draw vertical grid line on the left
+				nxpg.left = xpg.left = xpg.left - ff2ln; // move half of vertical grid width left
+				if(py.page == pyy.page)
+					pw.Page(py.page).DrawRect(xpg.left, y, gridln, ny - y, gc);
 				else {
-					pw.Page(rc.py.page).DrawRect(xpg.left, y, gridln, pg.bottom - y, gc);
-					for(int i = rc.py.page + 1; i < pyy.page; i++)
-						pw.Page(i).DrawRect(xpg.left, pg.top, gridln, pg.bottom - pg.top, gc);
-					pw.Page(pyy.page).DrawRect(xpg.left, pg.top, gridln, ny - pg.top, gc);
+					pw.Page(py.page).DrawRect(xpg.left, y, gridln, pg.bottom - y, gc);
+					for(int i = py.page + 1; i < pyy.page; i++)
+						pw.Page(i).DrawRect(nxpg.left, npg.top, gridln, npg.bottom - npg.top, gc);
+					pw.Page(pyy.page).DrawRect(nxpg.left, npg.top, gridln, ny - npg.top, gc);
 				}
-				xpg.left += gridln;
+				nxpg.left = xpg.left = xpg.left + gridln;
 			}
 			if(j + cell.hspan < format.column.GetCount() - 1)
-				xpg.right = pi.zoom * pc.right - ff2ln;
-			if(!pr.first) {
-				y += gridln;
+				xpg.right = pi.zoom * pc.right - ff2ln; // make place for the next grid line
+			if(!pr.first) { // Draw horizontal grid line
 				if(paint)
-					pw.Page(rc.py.page).DrawRect(xpg.left, y - gridln, xpg.Width(), gridln, gc);
+					pw.Page(py.page).DrawRect(xpg.left, y, xpg.Width(), gridln, gc);
+				y += gridln;
 			}
 			if(paint) {
 				if(pw.tracer)
 					pw.tracer->TableCell(rc.page, rc.py, i, j, *this, pyy);
-				row[j].Paint(pw, rc, pyy, xpg, y, ny, pi,
+				row[j].Paint(pw, pc.MakeRichContext(MakeRichContext(rc, py, header)), pyy, xpg, nxpg, y, ny, pi,
 				             sel && j >= pi.cells.left && i >= pi.cells.top &&
 				             j + cell.hspan <= pi.cells.right && i + cell.vspan <= pi.cells.bottom);
 				if(pw.tracer)
 					pw.tracer->EndTableCell(pyy);
 			}
-			if(pyy.page == rc.py.page)
-				ExpandFrr(frr, pyy.page, xpg.left, xpg.right, y, ny);
+			if(pyy.page == py.page)
+				ExpandFrr(frr, py.page, xpg.left, xpg.right, y, ny);
 			else {
-				ExpandFrr(frr, rc.py.page, xpg.left, xpg.right, y, xpg.bottom);
-				for(int i = rc.py.page + 1; i < pyy.page; i++)
-					ExpandFrr(frr, i, xpg.left, xpg.right, xpg.top, xpg.bottom);
-				ExpandFrr(frr, pyy.page, xpg.left, xpg.right, xpg.top, ny);
+				ExpandFrr(frr, py.page, xpg.left, xpg.right, y, xpg.bottom);
+				for(int i = py.page + 1; i < pyy.page; i++)
+					ExpandFrr(frr, i, nxpg.left, nxpg.right, nxpg.top, nxpg.bottom);
+				ExpandFrr(frr, pyy.page, nxpg.left, nxpg.right, nxpg.top, ny);
 			}
 			int l = cell.text.GetLength() + 1;
 			pi.sell -= l;
@@ -102,70 +106,86 @@ bool RichTable::RowPaint(PageDraw& pw, const RichStyles& st, const Layout& tab,
 	return rc.py >= pi.bottom;
 }
 
-void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi) const
+void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi, bool baselevel) const
 {
 	if(pw.tracer)
 		pw.tracer->Table(rc.page, rc.py, *this);
 	const TabLayout& tab = Realize(rc);
-	if(!tab.page.IsEmpty()) {
-		PaintInfo pi = _pi;
-		int frameln = LineZoom(pi.zoom, format.frame);
-		int gridln = LineZoom(pi.zoom, format.grid);
-		Rect pg = rc.page;
-		pg.left += format.lm;
-		pg.right -= format.rm;
-		pg.left = pi.zoom * pg.left;
-		pg.right = pi.zoom * pg.right;
-		pg.top = pi.zoom * pg.top;
-		pg.bottom = pi.zoom * pg.bottom;
-		pg.Deflate(frameln);
-		int hy = min(format.header, cell.GetCount());
-		Rect hpg = pg;
+	PaintInfo pi = _pi;
+	int frameln = LineZoom(pi.zoom, format.frame);
+	int gridln = LineZoom(pi.zoom, format.grid);
+	Rect pg[2];
+	Rect hpg;
+	RichContext hrc = rc;
+	int hy = min(format.header, cell.GetCount());
+	for(int pass = 0;; pass++) {
+		Rect& pgr = pg[pass];
+		pgr = pass ? tab.next_page : tab.first_page;
+		pgr.left += format.lm;
+		pgr.right -= format.rm;
+		pgr.left = pi.zoom * pgr.left;
+		pgr.right = pi.zoom * pgr.right;
+		pgr.top = pi.zoom * pgr.top;
+		pgr.bottom = pi.zoom * pgr.bottom;
+		pgr.Deflate(LineZoom(pi.zoom, format.frame));
+		if(pass)
+			break;
+		hpg = pgr;
 		if(tab.hasheader) {
 			hpg.bottom = pi.zoom * tab.header[hy - 1].pyy.y;
-			pg.top = hpg.bottom + gridln;
+			pgr.top = hpg.bottom + LineZoom(pi.zoom, format.grid);
 		}
-		bool allsel = false;
-		if(pi.sell < 0 && pi.selh >= 0) {
-			pi.sell = pi.selh = 0;
-			allsel = true;
-		}
-		bool sel = pi.tablesel == 0;
-		int ny = cell.GetCount();
-		VectorMap<int, Rect> frr;
-		for(int i = 0; i < ny; i++)
-			if(RowPaint(pw, *rc.styles, tab, i, ny, pg, frr, pi, 0, sel))
-				break;
+		hrc.Page();
+	}
 	
-		Color gc = format.gridcolor;
-		Color fc = format.framecolor;
-		int fl = frameln;
-		if(!IsNull(pi.showcodes)) {
-			if(fl == 0 && !IsNull(pi.showcodes)) {
-				fl = 1;
-				fc = pi.showcodes;
-			}
-			if(gridln == 0) {
-				gridln = 1;
-				gc = pi.showcodes;
-			}
+	bool allsel = false;
+	if(pi.sell < 0 && pi.selh >= 0) {
+		pi.sell = pi.selh = 0;
+		allsel = true;
+	}
+	bool sel = pi.tablesel == 0;
+	int ny = cell.GetCount();
+
+	if(format.newhdrftr && ny && baselevel) {
+		Image img = RichTextImg::HdrFtr();
+		Size isz = img.GetSize();
+		pw.Page(tab[0].py.page).DrawImage(-7 - isz.cx, pi.zoom * tab[0].py.y, img, pi.showcodes);
+	}
+
+	VectorMap<int, Rect> frr; // page -> table rectangle
+	for(int i = 0; i < ny; i++)
+		if(RowPaint(pw, rc, tab, false, i, ny, pg[0], pg[1], frr, pi, 0, sel))
+			break;
+
+	Color gc = format.gridcolor;
+	Color fc = format.framecolor;
+	int fl = frameln;
+	if(!IsNull(pi.showcodes)) {
+		if(fl == 0 && !IsNull(pi.showcodes)) {
+			fl = 1;
+			fc = pi.showcodes;
 		}
-		for(int i = 0; i < frr.GetCount(); i++) {
-			pi.tablesel = 0;
-			pi.sell = pi.selh = -1;
-			int pgi = frr.GetKey(i);
-			Draw& w = pw.Page(pgi);
-			if(pgi > tab.page0 && tab.hasheader)
-				for(int i = 0; i < hy; i++) {
-					RowPaint(pw, *rc.styles, tab.header, i, hy, hpg, frr, pi, pgi, false);
-					w.DrawRect(pg.left, hpg.bottom, pg.Width(), gridln, format.gridcolor);
-				}
-			Rect r = frr[i].Inflated(frameln);
-			if(!r.IsEmpty()) {
-				DrawFatFrame(w, r, fc, fl);
-				if(allsel)
-					w.DrawRect(r, InvertColor);
+		if(gridln == 0) {
+			gridln = 1;
+			gc = pi.showcodes;
+		}
+	}
+	for(int i = 0; i < frr.GetCount(); i++) { // add headers on subsequent pages and outer border
+		pi.tablesel = 0;
+		pi.sell = pi.selh = -1;
+		int pgi = frr.GetKey(i);
+		Rect r = frr[i];
+		if(pgi > tab.py.page && tab.hasheader) // need to paint header here...
+			for(int i = 0; i < hy; i++) {
+				RowPaint(pw, rc, tab.header, true, i, hy, hpg, hpg, frr, pi, pgi, false);
+				pw.Page(pgi).DrawRect(r.left, hpg.bottom, r.Width(), gridln, format.gridcolor);
 			}
+		r = frr[i].Inflated(frameln);
+		Draw& w = pw.Page(pgi);
+		if(!r.IsEmpty()) {
+			DrawFatFrame(w, r, fc, fl);
+			if(allsel)
+				w.DrawRect(r, InvertColor);
 		}
 	}
 	if(pw.tracer)
@@ -200,10 +220,8 @@ PageY RichTable::GetHeight(RichContext rc) const
 	PageY pyy = Realize(rc).pyy;
 	pyy.y += format.frame;
 	pyy.y += format.after;
-	if(pyy.y > rc.page.bottom) {
-		pyy.y = rc.page.top;
-		pyy.page++;
-	}
+	if(pyy.y > GetPageRect(pyy).bottom)
+		NextPage(pyy);
 	return pyy;
 }
 
@@ -211,9 +229,9 @@ PageY RichTable::GetTop(RichContext rc) const
 {
 	if(cell.GetCount() == 0)
 		return rc.py;
-	rc.py = Realize(rc)[0].py;
-	rc.py.y -= format.frame;
-	return rc.py;
+	PageY py = Realize(rc)[0].py;
+	py.y -= format.frame;
+	return py;
 }
 
 RichCaret RichTable::GetCaret(int pos, RichContext rc) const
@@ -225,17 +243,14 @@ RichCaret RichTable::GetCaret(int pos, RichContext rc) const
 	const TabLayout& tab = Realize(rc);
 	for(int i = 0; i < ny; i++) {
 		const PaintRow& pr = tab[i];
-		rc.py = pr.py;
 		PageY pyy;
 		for(int j = 0; j < nx; j++) {
 			if(ci[i][j].valid) {
 				const RichCell& cl = cell[i][j];
 				pyy = tab[min(ny - 1, i + cl.vspan)].pyy;
 				int l = cl.text.GetLength() + 1;
-				if(pos < l) {
-					rc.page = pr[j].page;
-					return cl.GetCaret(pos, rc, pyy);
-				}
+				if(pos < l)
+					return cl.GetCaret(pos, pr[j].MakeRichContext(MakeRichContext(rc, pr.py)), pyy);
 				ti += cl.text.GetTableCount();
 				pos -= l;
 			}
@@ -260,11 +275,9 @@ int  RichTable::GetPos(int x, PageY y, RichContext rc) const
 				const PaintCell& pc = pr[j];
 				PageY pyy = tab[min(ny - 1, i + cl.vspan)].pyy;
 				if(y < pyy
-				   && (j == 0 || x >= pc.page.left - format.grid)
-				   && (j == nx - 1 || x < pc.page.right)) {
-					rc.page = pc.page;
-					return cl.GetPos(x, y, rc, pyy) + pos;
-				}
+				   && (j == 0 || x >= pc.page_left - format.grid)
+				   && (j == nx - 1 || x < pc.page_right))
+					return cl.GetPos(x, y, pr[j].MakeRichContext(MakeRichContext(rc, pr.py)), pyy) + pos;
 				pos += cl.text.GetLength() + 1;
 			}
 	}
@@ -273,45 +286,46 @@ int  RichTable::GetPos(int x, PageY y, RichContext rc) const
 
 RichHotPos  RichTable::GetHotPos(int x, PageY y, int tolerance, RichContext rc) const
 {
+	
 	RichHotPos hp;
 	hp.textleft = rc.page.left;
 	hp.textcx = rc.page.Width();
 	int nx = format.column.GetCount();
 	int ny = cell.GetCount();
 	const TabLayout& tab = Realize(rc);
-	if(abs(x - tab.page.left) <= tolerance) {
+	int left = tab.first_page.left;
+	int right = tab.first_page.right;
+	if(abs(x - left) <= tolerance) {
 		hp.table = 0;
 		hp.column = RICHHOT_LM;
-		hp.delta = x - tab.page.left;
+		hp.delta = x - left;
 		return hp;
 	}
-	if(abs(x - tab.page.right) <= tolerance) {
+	if(abs(x - right) <= tolerance) {
 		hp.table = 0;
 		hp.column = RICHHOT_RM;
-		hp.delta = x - tab.page.right;
+		hp.delta = x - right;
 		return hp;
 	}
 	int ti = 0;
 	for(int i = 0; i < ny; i++) {
 		const PaintRow& pr = tab[i];
-		rc.py = pr.py;
 		for(int j = 0; j < nx; j++) {
 			if(ci[i][j].valid) {
 				const RichCell& cl = cell[i][j];
 				const PaintCell& pc = pr[j];
 				PageY pyy = tab[min(ny - 1, i + cl.vspan)].pyy;
 				if(y < pyy) {
-					if(j < nx - 1 && abs(x - pc.page.right) <= tolerance) {
+					if(j < nx - 1 && abs(x - pc.right) <= tolerance) {
 						hp.table = 0;
 						hp.column = j + cl.hspan;
-						hp.delta = x - pc.page.right;
-						hp.left = tab.page.left;
-						hp.cx = tab.page.Width();
+						hp.delta = x - pc.right;
+						hp.left = left;
+						hp.cx = right - left;
 						return hp;
 					}
-					if((j == 0 || x >= pc.page.left - format.grid) && (j == nx - 1 || x < pc.page.right)) {
-						rc.page = pc.page;
-						hp = cl.GetHotPos(x, y, tolerance, rc, pyy);
+					if((j == 0 || x >= pc.left - format.grid) && (j == nx - 1 || x < pc.right)) {
+						hp = cl.GetHotPos(x, y, tolerance, MakeRichContext(rc, pr.py) , pyy);
 						hp.table += ti;
 						return hp;
 					}
@@ -338,16 +352,15 @@ int RichTable::GetVertMove(int pos, int gx, RichContext rc, int dir) const
 		cp.x = 0;
 		const PaintRow& pr = tab[cp.y];
 		for(int j = 0; j < nx; j++)
-			if(ci[cp.y][cp.x].valid && gx < pr[j].page.right) {
+			if(ci[cp.y][cp.x].valid && gx < pr[j].page_right) {
 				cp.x = j;
 				break;
 			}
 		pos = -1;
 	}
 	for(;;) {
-		rc.page = tab[cp.y][cp.x].page;
+		RichContext rc1 = tab[cp.y][cp.x].MakeRichContext(rc);
 		const RichCell& c = cell[cp.y][cp.x];
-		RichContext rc1 = rc;
 		if(c.Reduce(rc1)) {
 			int q = cell[cp.y][cp.x].text.GetVertMove(pos, gx, rc1, dir);
 			if(q >= 0)
@@ -372,8 +385,7 @@ void RichTable::GatherValPos(Vector<RichValPos>& f, RichContext rc, int pos, int
 		for(int j = 0; j < nx; j++)
 			if(ci[i][j].valid) {
 				const RichCell& cl = cell[i][j];
-				rc.page = pr[j].page;
-				cl.GatherValPos(f, rc, tab[min(ny - 1, i + cl.vspan)].pyy, pos, type);
+				cl.GatherValPos(f, pr[j].MakeRichContext(rc), tab[min(ny - 1, i + cl.vspan)].pyy, pos, type);
 				pos += cl.text.GetLength() + 1;
 			}
 	}
