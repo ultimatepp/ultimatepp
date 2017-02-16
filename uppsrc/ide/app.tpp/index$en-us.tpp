@@ -28,7 +28,7 @@ Assemblies and Nests]&]
 [s0;l224; [^topic`:`/`/ide`/app`/ConfiguringPackagesAssemblies`$en`-us^ Configuring 
 Packages and Assemblies]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+ (code completion, 
-navigation and trasformation)]&]
+navigation and transformation)]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Blitz`$en`-us^ BLITZ]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Files`$en`-us^ File types]&]
 [s0;l224; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]

@@ -45,7 +45,7 @@ can have a single [/ blitz`-block] (blitz block  is SCU).&]
 [s7; //#BLITZ`_APPROVE&]
 [s7; &]
 [s0; &]
-[s0; (also works for header) or exlusion by&]
+[s0; (also works for header) or exclusion by&]
 [s0; &]
 [s7; #pragma BLITZ`_PROHIBIT.&]
 [s7; &]
@@ -99,7 +99,7 @@ compile without BLITZ):&]
 headers] is a compiler technique trying to solve the very same 
 problem. In general, we have found BLITZ faster than any precompiled 
 header use, however BLITZ tends to have one disadvantage: by combining 
-all files into single object file, linker has less oportunity 
+all files into single object file, linker has less opportunity 
 to remove unused code. This leads to (sometimes significantly) 
 larger executable binaries. For this reason, we do not recommend 
 (and have off by default) BLITZ for release builds and if possible, 
@@ -108,7 +108,7 @@ we use precompiled headers for release builds.&]
 [s0; Precompiled headers have a set of its own problems. Notably, 
 Microsoft C`+`+ precompiled headers are hard to use with multiple 
 processes building the code (Hydra) in debug mode. Also, precompiled 
-headers in general are very bulky files, easily surpasing 100MB, 
+headers in general are very bulky files, easily surpassing 100MB, 
 which is a problem as we need to have single precompiled header 
 per package.&]
 [s0; &]

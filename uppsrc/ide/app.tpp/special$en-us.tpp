@@ -6,8 +6,8 @@ topic "Special Features";
 [{_}%EN-US 
 [s1; Special features&]
 [s3; Below is the list of TheIDE special features:&]
-[s2; Use Ctrl`+Tab to cycle throught files. This is perhaps the most 
-used key in theide!&]
+[s2; Use Ctrl`+Tab to cycle through files. This is perhaps the most 
+used key in TheIDE!&]
 [s2; Use Alt`+Left to `"return`" to important places (e.g. where 
 you have written something). Use Alt`+Right to cycle this places 
 forward.&]
