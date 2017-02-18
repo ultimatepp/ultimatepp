@@ -119,7 +119,7 @@ void RepGen::Perform() {
 			PerformLoopPlain("##BP","##EP",tpl);
 		}
 
-		RepGenReportFinish.Execute();
+		RepGenReportFinish();
 		
 		result = tpl;
 		Size page = Size(4500, 6700);
