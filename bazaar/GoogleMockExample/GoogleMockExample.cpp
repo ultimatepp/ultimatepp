@@ -17,7 +17,7 @@ public:
 
 class CarRepairShop final {
 public:
-	bool Service(Car& car) {
+	void Service(Car& car) {
 		car.OpenHood();
 	}
 };
