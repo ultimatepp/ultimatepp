@@ -10,6 +10,7 @@ topic "One";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 One]]}}&]
 [s3; &]
 [s1;:noref: [@(0.0.255)3 template][3 _<][@(0.0.255)3 class][3 _][*@4;3 T][@(0.0.255)3 >]&]
@@ -19,11 +20,11 @@ ption][@(0.0.255) <]_[* One][@(0.0.255) <][*@4 T][@(0.0.255) >]_>_&]
 [s0;%% &]
 [s9;%% One is a container capable of containing none or single element 
 of type specified as template argument or derived from it.&]
-[s9;%% &]
-[s9;%% The container is very similar to [^http`:`/`/en`.cppreference`.com`/w`/cpp`/memory`/unique`_ptr^ s
-td`::unique`_ptr].&]
-[s9;%% &]
-[s0;%% One is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
+[s9;%% The container is similar to [^http`:`/`/en`.cppreference`.com`/w`/cpp`/memory`/unique`_ptr^ s
+td`::unique`_ptr]., but unlike it, it is treated more like container 
+than smart pointer. For example, it propagates constantness of 
+One to contained element.&]
+[s9;%% One is [*/^topic`:`/`/Core`/srcdoc`/Moveable`$en`-us^ moveable][*/  
 ]type with [*/^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ pick and 
 optional clone] transfer semantics.&]
 [s3; &]
@@ -35,10 +36,9 @@ optional clone] transfer semantics.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:One`(T`*`): [* One]([*@4 T]_`*[*@3 newt])&]
-[s2;%% Constructs One with content. Content is specified by pointer 
-to object created using operator new. One takes over ownership 
-of this this object. &]
-[s7;%% [%-*@3 newt]-|Object to be added.&]
+[s2;%% Constructs One with content [%-*@3 newt]. Content is specified 
+by pointer to object created using operator new. One takes over 
+ownership of this this object.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:One`:`:One`(Upp`:`:One`<TT`>`&`&`): [@(0.0.255) template]_<[@(0.0.255) class]_
@@ -82,9 +82,7 @@ on the heap.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`=`(T`*`): [@(0.0.255) void]_[* operator`=]([*@4 T]_`*[*@3 data])&]
-[s2;%% Same as Attach(data) (operator version).&]
-[s7;%% [%-*C@3 data]-|Pointer to the new element created using operator 
-new.&]
+[s7;%% Same as Attach([%-*@3 data]) (operator version).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:One`:`:operator`=`(Upp`:`:One`<TT`>`&`&`): [@(0.0.255) template]_<[@(0.0.255) c
@@ -95,38 +93,35 @@ from [%-*@4 T].&]
 [s4; &]
 [s5;:One`:`:operator`-`>`(`)const: [@(0.0.255) const]_[*@4 T]_`*[* operator`->]()_[@(0.0.255) c
 onst]&]
-[s2;%% Constant content access operator. Illegal if there is no content.&]
-[s7;%% [*/ Return value]-|Returns constant pointer to content.&]
+[s2;%% Constant content access operator. Illegal if there is no content. 
+Returns constant pointer to content.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`-`>`(`): [*@4 T]_`*[* operator`->]()&]
-[s2;%% Content access operator. Illegal if there is no content.&]
-[s7;%% [*/ Return value]-|Returns pointer to content.&]
+[s2;%% Content access operator. Illegal if there is no content. Returns 
+pointer to content.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`~`(`)const: [@(0.0.255) const]_[*@4 T]_`*[* operator`~]()_[@(0.0.255) co
 nst]&]
-[s2;%% Constant content pointer access.&]
-[s7;%% [*/ Return value]-|Returns constant pointer to content or NULL 
-when there is no content.&]
+[s2;%% Constant content pointer access. Returns constant pointer 
+to content or NULL when there is no content.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`~`(`): [*@4 T]_`*[* operator`~]()&]
-[s2;%% Content pointer access.&]
-[s7;%% [*/ Return value]-|Returns pointer to content or NULL when there 
-is no content.&]
+[s2;%% Content pointer access. Returns pointer to content or NULL 
+when there is no content.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`*`(`)const: [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* operator`*]()_[@(0.0.255) c
 onst]&]
 [s2;%% Content constant reference access. Illegal if there is no 
-content.&]
-[s7;%% [*/ Return value]-|Constant reference to content.&]
+content. Returns constant reference to content.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`*`(`): [*@4 T][@(0.0.255) `&]_[* operator`*]()&]
-[s2;%% Content reference access. Illegal if there is no content.&]
-[s7;%% [*/ Return value]-|Reference to content.&]
+[s2;%% Content reference access. Illegal if there is no content. 
+Returns reference to content.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:One`:`:Create`(Args`.`.`.args`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
@@ -153,5 +148,4 @@ from [%-*@4 TT]. [%-*@4 T] must be polymorphic.&]
 [s4; &]
 [s5;:One`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
 [s2;%% Returns [* true] if there is content.&]
-[s3;%% &]
 [s0; ]]
