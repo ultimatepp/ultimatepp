@@ -236,7 +236,7 @@ bool EditNumber(double& n, const char *title, const char *label, double min, dou
 		n = ~dlg.number;
 		return true;
 	}
-	return false;	
+	return false;
 }
 
 bool EditDateDlg(Date& d, const char *title, const char *label, Date min, Date max, bool notnull)
@@ -251,7 +251,7 @@ bool EditDateDlg(Date& d, const char *title, const char *label, Date min, Date m
 		d = ~dlg.date;
 		return true;
 	}
-	return false;	
+	return false;
 }
 
 Event<>  CtrlRetriever::operator<<=(Event<>  cb)

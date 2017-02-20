@@ -6,15 +6,15 @@ LAYOUT(EditStringLayout, 396, 68)
 END_LAYOUT
 
 LAYOUT(EditIntLayout, 236, 62)
-	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
-	ITEM(EditInt, number, HSizePosZ(68, 4).TopPosZ(4, 19))
+	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 96).TopPosZ(4, 19))
+	ITEM(EditInt, number, HSizePosZ(104, 4).TopPosZ(4, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 14).BottomPosZ(6, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 24))
 END_LAYOUT
 
 LAYOUT(EditDoubleLayout, 236, 62)
-	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 68).TopPosZ(4, 19))
-	ITEM(EditDouble, number, HSizePosZ(68, 4).TopPosZ(4, 19))
+	ITEM(Label, lbl, SetLabel(t_("Test")).LeftPosZ(4, 116).TopPosZ(4, 19))
+	ITEM(EditDouble, number, HSizePosZ(124, 4).TopPosZ(4, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, 14).BottomPosZ(6, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(4, 64).BottomPosZ(6, 24))
 END_LAYOUT
