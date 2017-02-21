@@ -68,6 +68,13 @@ public:
 	~One()                                 { Free(); }
 };
 
+template <class T>
+struct MakeOne : One<T> {
+	template <class... Args>
+	MakeOne(Args... args)                  { One<T>::Create(args...); }
+	MakeOne()                              { One<T>::Create(); }
+};
+
 class Any : Moveable<Any> {
 	struct BaseData {
 		int      typeno;
