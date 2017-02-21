@@ -3,7 +3,8 @@ description "Report example\377";
 uses
 	CtrlLib,
 	Report,
-	plugin\pcre;
+	plugin\pcre,
+	PdfDraw;
 
 file
 	RepGen.h,
