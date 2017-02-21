@@ -113,7 +113,7 @@ public:
 };
 
 class Bits : Moveable<Bits> {
-	mutable int alloc;
+	int         alloc;
 	dword      *bp;
 
 public:
