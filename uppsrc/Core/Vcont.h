@@ -38,7 +38,7 @@ inline void DeepCopyConstruct(T *t, const S *s, const S *end) {
 
 template <class T>
 class Buffer : Moveable< Buffer<T> > {
-	mutable T *ptr;
+	T *ptr;
 
 public:
 	operator T*()                        { return ptr; }
