@@ -48,5 +48,20 @@ void OneTutorial()
 	s.Clear();
 	DUMP((bool)s);
 	
+	/// Helper class MakeOne derived from One can be used to create contained element:
+	
+	s = MakeOne<Derived1>();
+	DUMP(s->Get());
+	
+	///
+	
+	MakeOne<Derived2> d2;
+	DUMP(d2->Get());
+	
+	///
+
+	s = pick(d2);
+	DUMP(s->Get());
+	
 	///
 }
