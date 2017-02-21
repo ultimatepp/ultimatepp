@@ -1,0 +1,8 @@
+description "Demonstrates the usage of One\377";
+
+uses
+	Core;
+
+file
+	One.cpp;
+
