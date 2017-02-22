@@ -56,7 +56,7 @@ void Ide::FileCursor()
 	if(IsActiveFile() && !filelist[filelist.GetCursor()].isdir) {
 		Package::File& f = ActiveFile();
 		editor.SetEditable(!f.readonly);
-		editor.TabSize(f.tabsize > 0 ? f.tabsize : editortabsize);
+		editor.TabSize(f.tabsize > 0 ? f.tabsize : actual.tabsize > 0 ? actual.tabsize : editortabsize);
 		SetupEditor();
 		String headername;
 		if(insert_include)
