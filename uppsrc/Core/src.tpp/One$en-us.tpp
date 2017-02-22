@@ -103,11 +103,13 @@ pointer to content.&]
 [s4; &]
 [s5;:One`:`:operator`~`(`)const: [@(0.0.255) const]_[*@4 T]_`*[* operator`~]()_[@(0.0.255) co
 nst]&]
+[s5;:Upp`:`:One`:`:Get`(`)const: [@(0.0.255) const]_[*@4 T]_`*[* Get]()_[@(0.0.255) const]&]
 [s2;%% Constant content pointer access. Returns constant pointer 
 to content or NULL when there is no content.&]
 [s3; &]
 [s4; &]
 [s5;:One`:`:operator`~`(`): [*@4 T]_`*[* operator`~]()&]
+[s5;:Upp`:`:One`:`:Get`(`): [*@4 T]_`*[* Get]()&]
 [s2;%% Content pointer access. Returns pointer to content or NULL 
 when there is no content.&]
 [s3; &]
