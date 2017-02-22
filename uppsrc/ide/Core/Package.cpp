@@ -164,6 +164,7 @@ void Package::Reset()
 	bold = italic = false;
 	ink = Null;
 	spellcheck_comments = Null;
+	tabsize = Null;
 }
 
 Package::Package()
@@ -240,6 +241,9 @@ bool Package::Load(const char *path)
 				   !LoadOpt(p, "include", include)) {
 					if(p.Id("charset"))
 						charset = CharsetByNameX(p.ReadString());
+					else
+					if(p.Id("tabsize"))
+						tabsize = minmax(p.ReadInt(), 1, 20);
 					else
 					if(p.Id("description")) {
 						description = p.ReadString();
@@ -450,6 +454,8 @@ bool Package::Save(const char *path) const {
 	}
 	if(charset > 0)
 		out << "charset " << AsCString(IdeCharsetName(charset)) << ";\n\n";
+	if(!IsNull(tabsize))
+		out << "tabsize " << tabsize << ";\n\n";
 	if(noblitz)
 		out << "noblitz;\n\n";
 	if(nowarnings)

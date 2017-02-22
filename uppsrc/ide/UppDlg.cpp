@@ -90,6 +90,7 @@ void PackageEditor::SaveOptions() {
 		actual.bold = ~bold;
 		actual.italic = ~italic;
 		actual.charset = (byte)(int)~charset;
+		actual.tabsize = ~tabsize;
 		actual.spellcheck_comments = ~spellcheck_comments;
 		actual.accepts = Split(accepts.GetText().ToString(), ' ');
 		actual.noblitz = noblitz;
@@ -117,6 +118,7 @@ void PackageEditor::Empty()
 {
 	FileEmpty();
 	charset.Disable();
+	tabsize.Disable();
 	spellcheck_comments.Disable();
 	noblitz.Disable();
 	nowarnings.Disable();
@@ -176,6 +178,7 @@ void PackageEditor::PackageCursor()
 		bold <<= actual.bold;
 		italic <<= actual.italic;
 		charset <<= (int)actual.charset;
+		tabsize <<= actual.tabsize;
 		spellcheck_comments <<= actual.spellcheck_comments;
 		noblitz = actual.noblitz;
 		nowarnings = actual.nowarnings;
@@ -190,6 +193,7 @@ void PackageEditor::PackageCursor()
 		bold.Enable();
 		italic.Enable();
 		charset.Enable();
+		tabsize.Enable();
 		spellcheck_comments.Enable();
 		noblitz.Enable();
 		nowarnings.Enable();
@@ -591,7 +595,7 @@ PackageEditor::PackageEditor()
 	filelist.Disable();
 	spellcheck_comments.Disable();
 	accepts.SetFilter(FlagFilter);
-	accepts ^= spellcheck_comments ^= charset ^= THISFN(SaveOptions);
+	accepts ^= spellcheck_comments ^= charset ^= tabsize ^= THISFN(SaveOptions);
 	noblitz <<=
 	nowarnings <<=
 	pch_file <<=
