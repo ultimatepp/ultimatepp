@@ -317,6 +317,7 @@ public:
 		String param;
 	};
 	byte                     charset;
+	int                      tabsize;
 	bool                     noblitz;
 	bool                     nowarnings;
 	String                   description;
