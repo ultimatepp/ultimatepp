@@ -100,7 +100,8 @@ void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo
 	RichContext rc = Context(page);
 	int last_page = -1;
 	int pagecount = GetHeight(page).page + 1;
-	for(int i = 0; last_page <= to_page; i++) {
+	int i = 0;
+	while(last_page <= to_page) {
 		while(last_page < rc.py.page) {
 			last_page++;
 			if(rc.header || rc.footer) {
