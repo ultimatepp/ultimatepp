@@ -447,7 +447,7 @@ void RichEdit::InsertLine()
 			return;
 		}
 	}
-	ApplyFormat(0, RichText::NEWPAGE|RichText::LABEL);
+	ApplyFormat(0, RichText::NEWPAGE|RichText::LABEL|RichText::NEWHDRFTR);
 	objectpos = -1;
 }
 
