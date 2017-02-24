@@ -31,8 +31,6 @@
 
 #include "internal/gtest-port.h"
 
-#include <Core/Core.h>
-
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -78,6 +76,8 @@
 #define GTEST_IMPLEMENTATION_ 1
 #include "gtest-internal-inl.h"
 #undef GTEST_IMPLEMENTATION_
+
+#include <Core/Core.h>
 
 namespace testing {
 namespace internal {

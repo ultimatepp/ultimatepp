@@ -1,7 +1,12 @@
+description "Unit test package that shows how to use Google Test with Google Mock\377";
+
 uses
 	Core,
 	plugin/gmock;
 
 file
 	GoogleMockExample.cpp;
+
+mainconfig
+	"" = "";
 
