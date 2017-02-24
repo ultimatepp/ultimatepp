@@ -25,18 +25,14 @@ void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& p
 {
 	Mutex::Lock __(mutex);
 	RichContext ctx = Context(page, py);
-	int from_page = py.page;
+	int from_page = ctx.py.page;
 	RichTxt::Paint(w, ctx, pi);
 	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
 }
 
 void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
 {
-	Mutex::Lock __(mutex);
-	RichContext ctx = Context(page, PageY(0, 0));
-	int from_page = ctx.py.page;
-	RichTxt::Paint(w, ctx, pi);
-	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
+	Paint(w, PageY(0, 0), page, pi);
 }
 
 RichCaret RichText::GetCaret(int pos, const Rect& page) const

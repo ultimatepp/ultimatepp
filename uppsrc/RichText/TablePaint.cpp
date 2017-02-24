@@ -60,7 +60,7 @@ bool RichTable::RowPaint(PageDraw& pw, RichContext rc, const Layout& tab, bool h
 			xpg.right = pi.zoom * pc.right;
 			if(j) { // need to draw vertical grid line on the left
 				nxpg.left = xpg.left = xpg.left - ff2ln; // move half of vertical grid width left
-				if(py.page == pyy.page)
+			if(0)	if(py.page == pyy.page)
 					pw.Page(py.page).DrawRect(xpg.left, y, gridln, ny - y, gc);
 				else {
 					pw.Page(py.page).DrawRect(xpg.left, y, gridln, pg.bottom - y, gc);
@@ -72,6 +72,7 @@ bool RichTable::RowPaint(PageDraw& pw, RichContext rc, const Layout& tab, bool h
 			}
 			if(j + cell.hspan < format.column.GetCount() - 1)
 				xpg.right = pi.zoom * pc.right - ff2ln; // make place for the next grid line
+			nxpg.right = xpg.right;
 			if(!pr.first) { // Draw horizontal grid line
 				if(paint)
 					pw.Page(py.page).DrawRect(xpg.left, y, xpg.Width(), gridln, gc);
