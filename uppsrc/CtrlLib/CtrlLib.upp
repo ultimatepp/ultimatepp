@@ -13,6 +13,8 @@ file
 	CtrlLib readonly separator,
 	LabelBase.h,
 	LabelBase.cpp,
+	DisplayPopup.h,
+	DisplayPopup.cpp,
 	PushCtrl.h,
 	Button.cpp,
 	Switch.cpp,
