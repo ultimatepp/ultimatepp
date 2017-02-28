@@ -40,7 +40,7 @@ void *BufferPainter::PathAddRaw(int type, int size)
 {
 	int q = path.data.GetCount();
 	path.type.Add(type);
-	path.data.SetCount(q + size);
+	path.data.SetCountR(q + size);
 	return &path.data[q];
 }
 
