@@ -246,6 +246,7 @@ void Ctrl::IgnoreMouseUp()
 void Ctrl::UnIgnoreMouse()
 {
 	GuiLock __;
+	LLOG("Ctrl::EndIgnore");
 	KillRepeat();
 	ignoreclick = false;
 	ignoremouseup = false;
@@ -342,8 +343,10 @@ Image Ctrl::MEvent0(int e, Point p, int zd)
 
 void    Ctrl::LRepeat() {
 	GuiLock __;
-	if(repeatTopCtrl && repeatTopCtrl->HasFocusDeep() && GetMouseLeft()) // 4.7.2004 cxl, IsForeground...
-		repeatTopCtrl->DispatchMouseEvent(LEFTREPEAT, repeatMousePos, 0);
+	if(repeatTopCtrl && GetMouseLeft()) {
+		if(repeatTopCtrl->HasFocusDeep())
+			repeatTopCtrl->DispatchMouseEvent(LEFTREPEAT, repeatMousePos, 0);
+	}
 	else
 		KillRepeat();
 	LLOG("LRepeat " << UPP::Name(mouseCtrl));
@@ -372,8 +375,10 @@ void    Ctrl::LHold() {
 
 void    Ctrl::RRepeat() {
 	GuiLock __;
-	if(repeatTopCtrl && repeatTopCtrl->IsForeground() && GetMouseRight())
-		repeatTopCtrl->DispatchMouseEvent(RIGHTREPEAT, repeatMousePos, 0);
+	if(repeatTopCtrl && GetMouseRight()) {
+		if(repeatTopCtrl->HasFocusDeep())
+			repeatTopCtrl->DispatchMouseEvent(RIGHTREPEAT, repeatMousePos, 0);
+	}
 	else
 		KillRepeat();
 }
@@ -390,8 +395,10 @@ void    Ctrl::RHold() {
 
 void    Ctrl::MRepeat() {
 	GuiLock __;
-	if(repeatTopCtrl && repeatTopCtrl->IsForeground() && GetMouseMiddle())
-		repeatTopCtrl->DispatchMouseEvent(MIDDLEREPEAT, repeatMousePos, 0);
+	if(repeatTopCtrl && GetMouseMiddle()) {
+		if(repeatTopCtrl->HasFocusDeep())
+			repeatTopCtrl->DispatchMouseEvent(MIDDLEREPEAT, repeatMousePos, 0);
+	}
 	else
 		KillRepeat();
 }
@@ -505,16 +512,16 @@ bool sDblTime(int time)
 
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	GuiLock __;
-	if(e == MOUSEMOVE) {
-		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this && GetMouseLeft()) {
+	if(e == MOUSEMOVE && repeatTopCtrl == this) {
+		if(sDistMin(leftmousepos, p) > GUI_DragDistance() && GetMouseLeft()) {
 			DispatchMouseEvent(LEFTDRAG, leftmousepos, 0);
 			leftmousepos = Null;
 		}
-		if(sDistMin(rightmousepos, p) > GUI_DragDistance() && repeatTopCtrl == this && GetMouseRight()) {
+		if(sDistMin(rightmousepos, p) > GUI_DragDistance() && GetMouseRight()) {
 			DispatchMouseEvent(RIGHTDRAG, rightmousepos, 0);
 			rightmousepos = Null;
 		}
-		if(sDistMin(middlemousepos, p) > GUI_DragDistance() && repeatTopCtrl == this && GetMouseMiddle()) {
+		if(sDistMin(middlemousepos, p) > GUI_DragDistance() && GetMouseMiddle()) {
 			DispatchMouseEvent(MIDDLEDRAG, middlemousepos, 0);
 			middlemousepos = Null;
 		}
@@ -573,7 +580,7 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 		rightmousepos = Null;
 	if(e == MIDDLEUP)
 		rightmousepos = Null;
-	if(e == LEFTUP || e == RIGHTUP || e == MIDDLEUP)
+	if(findarg(e, LEFTUP, RIGHTUP, MIDDLEUP) >= 0)
 		KillRepeat();
 	Image result = DispatchMouseEvent(e, p, zd);
 	if(!GetMouseRight() && !GetMouseMiddle() && !GetMouseLeft())
