@@ -26,6 +26,7 @@ INITIALIZE(CtrlLib);
 class Bar;
 
 #include <CtrlLib/LabelBase.h>
+#include <CtrlLib/DisplayPopup.h>
 #include <CtrlLib/StaticCtrl.h>
 #include <CtrlLib/PushCtrl.h>
 #include <CtrlLib/MultiButton.h>

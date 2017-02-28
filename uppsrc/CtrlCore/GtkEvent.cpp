@@ -361,6 +361,7 @@ void Ctrl::Proc()
 			SetWndFocus();
 		ClickActivateWnd();
 		if(ignoremouseup) {
+			DLOG("Ignore mouse up KillRepeat");
 			KillRepeat();
 			ignoreclick = false;
 			ignoremouseup = false;
