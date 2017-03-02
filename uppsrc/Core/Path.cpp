@@ -883,7 +883,7 @@ bool DeleteFolderDeep(const char *dir)
 		while(ff) {
 			String name = ff.GetName();
 			String p = AppendFileName(dir, name);
-			if(ff.IsFile())
+			if(ff.IsFile() || ff.IsSymLink())
 				FileDelete(p);
 			else
 			if(ff.IsFolder())
