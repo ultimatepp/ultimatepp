@@ -3,6 +3,7 @@
 void Ide::RunArgs() {
 	WithRunLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Run options");
+	dlg.Sizeable().Zoomable();
 	
 #ifndef PLATFORM_POSIX
 	dlg.consolemode.Hide();
@@ -36,7 +37,6 @@ void Ide::RunArgs() {
 	dlg.utf8 <<= console_utf8;
 	dlg.runmode <<= dlg.Breaker(222);
 	
-
 	for(;;) {
 		bool b = ~dlg.runmode == RUN_FILE;
 		dlg.stdout_file_lbl.Enable(b);
