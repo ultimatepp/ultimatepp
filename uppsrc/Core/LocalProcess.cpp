@@ -168,6 +168,9 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	return true;
 #endif
 #ifdef PLATFORM_POSIX
+	Buffer<char> cmd_buf;
+	Vector<char *> args;
+
 	String app;
 	if(arg) {
 		app = command;

@@ -48,8 +48,6 @@ private:
 	DWORD        dwProcessId;
 #endif
 #ifdef PLATFORM_POSIX
-	Buffer<char> cmd_buf;
-	Vector<char *> args;
 	pid_t        pid;
 	int          rpipe[2], wpipe[2], epipe[2];
 	String       exit_string;
