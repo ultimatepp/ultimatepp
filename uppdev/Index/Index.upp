@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	Index.cpp;
-
-mainconfig
-	"" = "";
-

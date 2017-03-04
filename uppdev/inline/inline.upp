@@ -1,7 +1,0 @@
-uses Core;
-
-file
-	"inline.cpp";
-
-mainconfig
-	"" = "CONSOLE ST";

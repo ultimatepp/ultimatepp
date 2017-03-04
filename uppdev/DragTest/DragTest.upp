@@ -1,9 +1,0 @@
-uses
-	CtrlLib;
-
-file
-	DragTest.h,
-	main.cpp;
-
-mainconfig
-	"" = "GUI";

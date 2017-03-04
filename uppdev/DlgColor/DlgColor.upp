@@ -1,8 +1,0 @@
-uses
-	CtrlLib;
-
-file
-	main.cpp optimize_speed;
-
-mainconfig
-	"" = "GUI ST";
