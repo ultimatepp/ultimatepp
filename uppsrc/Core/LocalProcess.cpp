@@ -55,6 +55,7 @@ void LocalProcess::Free() {
 	if(epipe[1] >= 0) { close(epipe[1]); epipe[1] = -1; }
 	if(pid) waitpid(pid, 0, WNOHANG | WUNTRACED);
 	pid = 0;
+	exit_code = Null;
 #endif
 }
 
