@@ -1,5 +1,0 @@
-file
-	amd64.cpp;
-
-mainconfig
-	"" = "ST";

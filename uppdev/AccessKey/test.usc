@@ -1,3 +1,0 @@
-macro "Swap":"Swap Chars" Ctrl+Shift+T {
-	Execute("cmd.exe");
-}

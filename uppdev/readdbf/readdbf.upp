@@ -1,9 +1,0 @@
-uses
-	Core,
-	TCore;
-
-file
-	readdbf.cpp;
-
-mainconfig
-	"" = "";

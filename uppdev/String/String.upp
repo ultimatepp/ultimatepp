@@ -1,7 +1,0 @@
-uses Core;
-
-file
-	"String.cpp";
-
-mainconfig
-	"" = "CONSOLE ST";

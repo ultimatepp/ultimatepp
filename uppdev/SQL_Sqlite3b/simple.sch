@@ -1,8 +1,0 @@
-TABLE_(TEST)
-   INT_     (ID) PRIMARY_KEY
-   STRING_  (NAME, 200)
-   STRING_  (LASTNAME, 200)
-   INT_     (BDATE)
-   DATE_    (DATE_TEST)
-   TIME_    (TIME_TEST)
-END_TABLE
