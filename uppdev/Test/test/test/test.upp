@@ -1,6 +1,0 @@
-file
-
-	"test/test.cpp";
-
-mainconfig
-	"" = "CONSOLE ST";

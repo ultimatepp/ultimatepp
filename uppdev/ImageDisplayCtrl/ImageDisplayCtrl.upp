@@ -1,6 +1,0 @@
-uses
-	CtrlLib;
-
-file
-	ImageDisplayCtrl.cpp,
-	ImageDisplayCtrl.h;

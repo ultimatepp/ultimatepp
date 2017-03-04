@@ -1,6 +1,0 @@
-file
-
-	"gccbug1.cpp";
-
-mainconfig
-	"" = "CONSOLE ST";

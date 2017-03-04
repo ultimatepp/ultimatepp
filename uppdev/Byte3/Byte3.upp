@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	Byte3.cpp;
-
-mainconfig
-	"" = "";
-

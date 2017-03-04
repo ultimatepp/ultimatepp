@@ -1,7 +1,0 @@
-file
-	test.h,
-	test.cpp;
-
-mainconfig
-	"" = "";
-

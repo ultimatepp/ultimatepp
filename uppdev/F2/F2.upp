@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	F2.cpp;
-
-mainconfig
-	"" = "";
-

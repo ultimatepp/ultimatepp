@@ -1,9 +1,0 @@
-uses
-	Core;
-
-file
-	benchmark.txt,
-	valgrind.cpp;
-
-mainconfig
-	"" = "";
