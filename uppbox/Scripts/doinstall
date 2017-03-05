@@ -229,6 +229,22 @@ done
 
 ### Main script start here
 
+if [ ! -z "$DESTDIR" ]
+then
+  if [ "${prefix:0:1}" != "/" ]
+  then
+    if [ "${DESTDIR:${#DESTDIR}-1}" != "/" ]
+    then
+      DESTDIR="$DESTDIR/"
+    fi
+  else
+    while [ "${DESTDIR:${#DESTDIR}-1}" = "/" ]
+    do
+      DESTDIR="${DESTDIR:0:-1}"
+    done
+  fi
+fi
+
 if [ "$prefix" = "$HOME" ]
 then
 
@@ -252,49 +268,49 @@ log_debug_info "prefix          = $prefix"
 #log_debug_info "infodir         = $infodir"
 
 
-log_debug_info "Creating upp, upp.out, MyApps and .upp directories in $DESTDIR/$prefix/"
-  install -d "$DESTDIR/$prefix/upp"
-  install -d "$DESTDIR/$prefix/upp.out"
-  install -d "$DESTDIR/$prefix/MyApps"
-  install -d "$DESTDIR/$prefix/.upp/theide"
+log_debug_info "Creating upp, upp.out, MyApps and .upp directories in $DESTDIR$prefix/"
+  install -d "$DESTDIR$prefix/upp"
+  install -d "$DESTDIR$prefix/upp.out"
+  install -d "$DESTDIR$prefix/MyApps"
+  install -d "$DESTDIR$prefix/.upp/theide"
 
 log_debug_info "Copying theide and umk"
-  install ./theide "$DESTDIR/$prefix/theide"
-  install ./umk    "$DESTDIR/$prefix/umk"
+  install ./theide "$DESTDIR$prefix/theide"
+  install ./umk    "$DESTDIR$prefix/umk"
 
 log_debug_info "Copying U++ source code"
-  cp -r uppsrc    "$DESTDIR/$prefix/upp"
-  cp -r examples  "$DESTDIR/$prefix/upp"
-  cp -r bazaar    "$DESTDIR/$prefix/upp"
-  cp -r tutorial  "$DESTDIR/$prefix/upp"
-  cp -r reference "$DESTDIR/$prefix/upp"
+  cp -r uppsrc    "$DESTDIR$prefix/upp"
+  cp -r examples  "$DESTDIR$prefix/upp"
+  cp -r bazaar    "$DESTDIR$prefix/upp"
+  cp -r tutorial  "$DESTDIR$prefix/upp"
+  cp -r reference "$DESTDIR$prefix/upp"
 
 #<begin> TODO: BINARY FROM COMPILATION AND build_info.h ARE STILL IN UPPSRC AND MUST NOT BE PART OF INSTALLATION. MUST USE A DIFFERENT APPROCHE THAN REMOVING THEM AFTER INSTALL (LIKE DEFINING UPPOUT ELSEWHERE THAN IN uppsrc/_out)
 log_debug_info "Cleaning source code"
-  rm -r "$DESTDIR/$prefix/upp/uppsrc/_out"
-  rm -r "$DESTDIR/$prefix/upp/uppsrc/ide.out"
-  rm -r "$DESTDIR/$prefix/upp/uppsrc/umk.out"
+  rm -r "$DESTDIR$prefix/upp/uppsrc/_out"
+  rm -r "$DESTDIR$prefix/upp/uppsrc/ide.out"
+  rm -r "$DESTDIR$prefix/upp/uppsrc/umk.out"
 #<end> TODO
 
 log_debug_info "Copying" *.bm *.scd
-  cp -p *.bm  "$DESTDIR/$prefix/.upp/theide"
-  cp -p *.scd "$DESTDIR/$prefix/.upp/theide"
+  cp -p *.bm  "$DESTDIR$prefix/.upp/theide"
+  cp -p *.scd "$DESTDIR$prefix/.upp/theide"
 
   if [ "$installdoc" = "true" ]
   then
 log_debug_info "Copying readme.md and license"
-    cp -p readme.md          "$DESTDIR/$prefix/upp"
-    cp -p uppsrc/ide/Copying "$DESTDIR/$prefix/upp"
+    cp -p readme.md          "$DESTDIR$prefix/upp"
+    cp -p uppsrc/ide/Copying "$DESTDIR$prefix/upp"
   fi
  
-log_debug_info "Generating default theide var files in $DESTDIR/$prefix/.upp/theide/"
-  echo "UPP = \"$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"                                > "$DESTDIR/$prefix/.upp/theide/uppsrc.var"
-  echo "UPP = \"$DESTDIR/$prefix/upp/examples;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"  > "$DESTDIR/$prefix/.upp/theide/examples.var"
-  echo "UPP = \"$DESTDIR/$prefix/upp/reference;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";" > "$DESTDIR/$prefix/.upp/theide/reference.var"
-  echo "UPP = \"$DESTDIR/$prefix/upp/tutorial;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"  > "$DESTDIR/$prefix/.upp/theide/tutorial.var"
-  echo "UPP = \"$DESTDIR/$prefix/upp/bazaar;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"    > "$DESTDIR/$prefix/.upp/theide/examples-bazaar.var"
-  echo "UPP = \"$DESTDIR/$prefix/MyApps;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";"        > "$DESTDIR/$prefix/.upp/theide/MyApps.var"
-  echo "UPP = \"$DESTDIR/$prefix/MyApps;$DESTDIR/$prefix/upp/bazaar;$DESTDIR/$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR/$prefix/upp.out\";" > "$DESTDIR/$prefix/.upp/theide/MyApps-bazaar.var"
+log_debug_info "Generating default theide var files in $DESTDIR$prefix/.upp/theide/"
+  echo "UPP = \"$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";"                               > "$DESTDIR$prefix/.upp/theide/uppsrc.var"
+  echo "UPP = \"$DESTDIR$prefix/upp/examples;$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";"  > "$DESTDIR$prefix/.upp/theide/examples.var"
+  echo "UPP = \"$DESTDIR$prefix/upp/reference;$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";" > "$DESTDIR$prefix/.upp/theide/reference.var"
+  echo "UPP = \"$DESTDIR$prefix/upp/tutorial;$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";"  > "$DESTDIR$prefix/.upp/theide/tutorial.var"
+  echo "UPP = \"$DESTDIR$prefix/upp/bazaar;$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";"    > "$DESTDIR$prefix/.upp/theide/examples-bazaar.var"
+  echo "UPP = \"$DESTDIR$prefix/MyApps;$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";"        > "$DESTDIR$prefix/.upp/theide/MyApps.var"
+  echo "UPP = \"$DESTDIR$prefix/MyApps;$DESTDIR$prefix/upp/bazaar;$DESTDIR$prefix/upp/uppsrc\";OUTPUT = \"$DESTDIR$prefix/upp.out\";" > "$DESTDIR$prefix/.upp/theide/MyApps-bazaar.var"
 
 else
 
@@ -318,69 +334,68 @@ log_debug_info "mandir          = $mandir"
 #log_debug_info "infodir         = $infodir"
 
 log_debug_info "Creating directories"
-  install -d "$DESTDIR/$bindir"
-  install -d "$DESTDIR/$datadir/$package_name"
-  install -d "$DESTDIR/$datadir/applications"
-  install -d "$DESTDIR/$datadir/icons/hicolor/48x48/apps"
-  install -d "$DESTDIR/$datadir/pixmaps"
-  install -d "$DESTDIR/$mandir/man1"
+  install -d "$DESTDIR$bindir"
+  install -d "$DESTDIR$datadir/$package_name"
+  install -d "$DESTDIR$datadir/applications"
+  install -d "$DESTDIR$datadir/icons/hicolor/48x48/apps"
+  install -d "$DESTDIR$datadir/pixmaps"
+  install -d "$DESTDIR$mandir/man1"
   if [ "$installdoc" = "true" ]
   then
-    install -d "$DESTDIR/$datadir/licenses/$package_name"
-    install -d "$DESTDIR/$docdir/$package_name"
+    install -d "$DESTDIR$datadir/licenses/$package_name"
+    install -d "$DESTDIR$docdir/$package_name"
   fi
 
 log_debug_info "Copying theide and umk"
-  install ./theide "$DESTDIR/$bindir/theide"
-  install ./umk    "$DESTDIR/$bindir/umk"
+  install ./theide "$DESTDIR$bindir/theide"
+  install ./umk    "$DESTDIR$bindir/umk"
 
 log_debug_info "Adding symbolic link ( $project_name -> $datadir/$package_name )"
-  if [ ! -e "$DESTDIR/$datadir/$project_name" ]
+  if [ ! -e "$DESTDIR$datadir/$project_name" ]
   then
-    ln -s "$datadir/$package_name" "$DESTDIR/$datadir/$project_name"
-  elif [ -h "$DESTDIR/$datadir/$project_name" ]
+    ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
+  elif [ -h "$DESTDIR$datadir/$project_name" ]
   then
-    rm -f "$DESTDIR/$datadir/$project_name"
-    ln -s "$datadir/$package_name" "$DESTDIR/$datadir/$project_name"
+    rm -f "$DESTDIR$datadir/$project_name"
+    ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
   else
-    log_debug_error "Already exist: $DESTDIR/$datadir/$project_name"
+    log_debug_error "Already exist: $DESTDIR$datadir/$project_name"
   fi
 
 log_debug_info "Copying man pages"
-  cp -p "uppsrc/ide/theide.1" "$DESTDIR/$mandir/man1/"
-  cp -p "uppsrc/umk/umk.1"    "$DESTDIR/$mandir/man1/"
+  cp -p "uppsrc/ide/theide.1" "$DESTDIR$mandir/man1/"
+  cp -p "uppsrc/umk/umk.1"    "$DESTDIR$mandir/man1/"
 
 log_debug_info "Copying icons and desktop file"
-  cp -p "uppsrc/ide/theide.desktop" "$DESTDIR/$datadir/applications/theide.desktop"
-  cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/icons/hicolor/48x48/apps/theide.png"
-  cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR/$datadir/pixmaps/theide.png"
+  cp -p "uppsrc/ide/theide.desktop" "$DESTDIR$datadir/applications/theide.desktop"
+  cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR$datadir/icons/hicolor/48x48/apps/theide.png"
+  cp -p "uppsrc/ide/theide-48.png"  "$DESTDIR$datadir/pixmaps/theide.png"
 
 log_debug_info "Copying U++ source code"
-  cp -a bazaar    "$DESTDIR/$datadir/$package_name/"
-# cp -a Common    "$DESTDIR/$datadir/$package_name/"
-  cp -a examples  "$DESTDIR/$datadir/$package_name/"
-  cp -a reference "$DESTDIR/$datadir/$package_name/"
-  cp -a tutorial  "$DESTDIR/$datadir/$package_name/"
-  cp -a uppsrc    "$DESTDIR/$datadir/$package_name/"
+  cp -a bazaar    "$DESTDIR$datadir/$package_name/"
+# cp -a Common    "$DESTDIR$datadir/$package_name/"
+  cp -a examples  "$DESTDIR$datadir/$package_name/"
+  cp -a reference "$DESTDIR$datadir/$package_name/"
+  cp -a tutorial  "$DESTDIR$datadir/$package_name/"
+  cp -a uppsrc    "$DESTDIR$datadir/$package_name/"
   
 #<begin> TODO: BINARY FROM COMPILATION AND build_info.h ARE STILL IN UPPSRC AND MUST NOT BE PART OF INSTALLATION. MUST USE A DIFFERENT APPROCHE THAN REMOVING THEM AFTER INSTALL (LIKE DEFINING UPPOUT ELSEWHERE THAN IN uppsrc/_out)
 log_debug_info "Cleaning source code"
-  rm -fr "$DESTDIR/$datadir/$package_name/uppsrc/_out"
-  rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/ide.out"
-  rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/umk.out"
-  rm -f  "$DESTDIR/$datadir/$package_name/uppsrc/build_info.h"
+  rm -fr "$DESTDIR$datadir/$package_name/uppsrc/_out"
+  rm -f  "$DESTDIR$datadir/$package_name/uppsrc/ide.out"
+  rm -f  "$DESTDIR$datadir/$package_name/uppsrc/umk.out"
+  rm -f  "$DESTDIR$datadir/$package_name/uppsrc/build_info.h"
 #<end> TODO
 
-# log_debug_info "Copying" *.bm *.scd "U++ license and readme.md"
 log_debug_info "Copying" *.bm *.scd
-  cp -p *.bm  "$DESTDIR/$datadir/$package_name/"
-  cp -p *.scd "$DESTDIR/$datadir/$package_name/"
+  cp -p *.bm  "$DESTDIR$datadir/$package_name/"
+  cp -p *.scd "$DESTDIR$datadir/$package_name/"
   
   if [ "$installdoc" = "true" ]
   then
 log_debug_info "Copying readme.md and license"
-    cp -p readme.md          "$DESTDIR/$docdir/$package_name/"
-    cp -p uppsrc/ide/Copying "$DESTDIR/$datadir/licenses/$package_name/"
+    cp -p readme.md          "$DESTDIR$docdir/$package_name/"
+    cp -p uppsrc/ide/Copying "$DESTDIR$datadir/licenses/$package_name/"
   fi
 
 fi
