@@ -290,7 +290,6 @@ private:
 	void   AfterSet(int i);
 
 	void   Reline(int i, int y);
-	bool   AcceptRow();
 	void   Remove0(int i);
 	void   DisableCtrls();
 	void   SetCtrls();
@@ -519,6 +518,7 @@ public:
 	int        GetScroll() const;
 	void       ScrollTo(int sc);
 	void       ShowAppendLine();
+	bool       AcceptRow();
 
 	void       Move(int d);
 	void       SwapUp();
