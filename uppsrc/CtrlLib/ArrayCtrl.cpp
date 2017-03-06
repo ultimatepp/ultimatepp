@@ -1246,6 +1246,7 @@ bool ArrayCtrl::UpdateRow() {
 		}
 	}
 	if(iv) {
+		RefreshRow(cursor);
 		InvalidateCache(cursor);
 		WhenArrayAction();
 	}

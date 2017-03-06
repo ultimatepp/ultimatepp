@@ -546,6 +546,15 @@ values.&]
 [s2; Show an additional pseudo`-row at the table end. When clicked, 
 a new row is appended to the array.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:AcceptRow`(`):%- [@(0.0.255) bool]_[* AcceptRow]()&]
+[s2; When there are slave widgets (connected using AddCtrl), the 
+visible content of ArrayCtrl line is normally updated when cursor 
+moves to another line (and the move is prevented if any slave 
+widget has invalid value). This method tries to check for invalid 
+values and updates the row immediately. Returns true if there 
+were no invalid values in slave widgets.&]
+[s3;%- &]
 [s4; &]
 [s5;:ArrayCtrl`:`:IsEdit`(`)const: [@(0.0.255) bool]_[* IsEdit]()_[@(0.0.255) const]&]
 [s2; Checks whether the array is currently being edited.&]
