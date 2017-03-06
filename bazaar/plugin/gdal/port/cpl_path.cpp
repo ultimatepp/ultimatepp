@@ -32,6 +32,8 @@
 #include "cpl_string.h"
 #include "cpl_multiproc.h"
 
+#include <direct.h>
+
 CPL_CVSID("$Id: cpl_path.cpp 27044 2014-03-16 23:41:27Z rouault $");
 
 
@@ -364,7 +366,7 @@ char *CPLGetCurrentDir()
         return NULL;
 
 #ifdef HAVE_GETCWD
-    return getcwd( pszDirPath, nPathMax );
+    return _getcwd( pszDirPath, nPathMax );
 #else
     return NULL;
 #endif /* HAVE_GETCWD */
