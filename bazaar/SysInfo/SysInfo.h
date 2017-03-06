@@ -101,7 +101,6 @@ bool ProcessExists(int64 pid);
 /////////////////////////////////////////////////////////////////////
 // Os Info
 bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, String &distro, String &distVersion, String &desktop, String &deskVersion);
-String GetDesktopManagerNew();
 
 /////////////////////////////////////////////////////////////////////
 // Get drives info

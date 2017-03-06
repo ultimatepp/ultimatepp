@@ -22,6 +22,8 @@ enum EXT_FILE_FLAGS {NO_FLAG = 0,
 					 //ASK_BEFORE_DELETE = 8
 };
 
+String GetDesktopManagerNew();
+
 bool LaunchFile(const char *file, const char *params = 0, const char *directory = ".");
 
 bool FileCat(const char *file, const char *appendFile);
