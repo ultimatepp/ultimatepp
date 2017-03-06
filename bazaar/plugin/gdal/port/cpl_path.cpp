@@ -32,7 +32,9 @@
 #include "cpl_string.h"
 #include "cpl_multiproc.h"
 
+#ifdef COMPILER_MSC
 #include <direct.h>
+#endif
 
 CPL_CVSID("$Id: cpl_path.cpp 27044 2014-03-16 23:41:27Z rouault $");
 
@@ -366,7 +368,11 @@ char *CPLGetCurrentDir()
         return NULL;
 
 #ifdef HAVE_GETCWD
+#ifdef COMPILER_MSC
     return _getcwd( pszDirPath, nPathMax );
+#else
+    return getcwd( pszDirPath, nPathMax );
+#endif
 #else
     return NULL;
 #endif /* HAVE_GETCWD */
