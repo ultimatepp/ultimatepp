@@ -41,6 +41,10 @@
 
 #include "config.h"
 
+#ifndef CPP_11
+#error This version of U++ REQUIRES C++11
+#endif
+
 #include <typeinfo>
 #include <stddef.h>
 #include <math.h>
