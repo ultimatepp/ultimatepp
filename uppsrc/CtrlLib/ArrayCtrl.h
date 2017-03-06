@@ -496,7 +496,7 @@ public:
 
 	Image      GetDragSample();
 
-	void       InsertDrop(int line, const Vector< Vector<Value> >& data, PasteClip& d, bool self);
+	void       InsertDrop(int line, const Vector<Vector<Value>>& data, PasteClip& d, bool self);
 	void       InsertDrop(int line, const Vector<Value>& data, PasteClip& d, bool self);
 	void       InsertDrop(int line, const Value& data, PasteClip& d, bool self);
 	void       InsertDrop(int line, const ArrayCtrl& src, PasteClip& d);
