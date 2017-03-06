@@ -54,13 +54,6 @@
 
 #define HAVE_GETCWD 1
 
-#ifndef PLATFORM_POSIX
-/* gmt_notunix.h from GMT project also redefines getcwd. See #3138 */
-#ifndef getcwd
-#define getcwd _getcwd
-#endif
-#endif
-
 /* Define if you have the ANSI C header files.  */
 #ifndef STDC_HEADERS
 #  define STDC_HEADERS 1
