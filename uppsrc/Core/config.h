@@ -116,9 +116,6 @@
 
 #ifdef _MSC_VER
 	#define COMPILER_MSC 1
-	#ifndef _CPPRTTI
-		#error  RTTI must be enabled !!!
-	#endif  //_CPPRTTI
 	#if _MSC_VER <= 1300
 		#error  MSC 6.0 not supported anymore
 	#endif
