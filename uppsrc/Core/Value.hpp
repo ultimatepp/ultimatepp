@@ -118,7 +118,7 @@ inline unsigned ValueGetHashValue(const WString& x) {
 template <class T>
 class RawValueRep : public Value::Void {
 public:
-	virtual dword GetType() const             { return GetValueTypeNo<T>(); }
+	virtual dword GetType() const             { return GetValueTypeNo<T>() + 0x10000000; }
 	virtual bool  IsNull() const              { return false; }
 
 	T v;
