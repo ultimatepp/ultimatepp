@@ -1,3 +1,5 @@
+#include <Core/config.h> // we want PLATFORM and COMPILER defines
+
 #define CPL_DISABLE_DLL
 #define DISABLE_CPLID // ALLOW BLITZ
 
@@ -28,8 +30,10 @@
    declare STDCALL interfaces even if an application is built against it
    using MinGW */
 
+#ifdef PLATFORM_WIN32
 #ifndef CPL_DISABLE_STDCALL
 #  define CPL_STDCALL __stdcall
+#endif
 #endif
 
 #define HAVE_LIBZ 1
@@ -49,9 +53,12 @@
 #endif
 
 #define HAVE_GETCWD 1
+
+#ifndef PLATFORM_POSIX
 /* gmt_notunix.h from GMT project also redefines getcwd. See #3138 */
 #ifndef getcwd
 #define getcwd _getcwd
+#endif
 #endif
 
 /* Define if you have the ANSI C header files.  */
@@ -86,7 +93,7 @@
 #define HAVE_SEARCH_H 1
 
 /* Define to 1 if you have the <direct.h> header file. */
-#define HAVE_DIRECT_H
+// #define HAVE_DIRECT_H
 
 /* Define to 1 if you have the `localtime_r' function. */
 #undef HAVE_LOCALTIME_R
@@ -129,12 +136,12 @@
 
 #define lfind _lfind
 
-#if defined(_MSC_VER) && (_MSC_VER < 1310)
-#  define VSI_STAT64 _stat
-#  define VSI_STAT64_T _stat
+#ifdef PLATFORM_POSIX
+#define VSI_STAT64 stat64
+#define VSI_STAT64_T stat64
 #else
-#  define VSI_STAT64 _stat64
-#  define VSI_STAT64_T __stat64
+#define VSI_STAT64 _stat64
+#define VSI_STAT64_T __stat64
 #endif
 
 /* VC6 doesn't known intptr_t */

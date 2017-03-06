@@ -36,8 +36,14 @@ exclude
 	*/ods/*
 	*/gpkg/*
 	*/osm/*
+	*/pgeo/*
+	*/geomedia/*
+	*/mssqlspatial/*
+	*/walk/*
+	*/odbc/*
 	port/cpl_vsil_simple.cpp
 	port/cpl_win32ce_api.cpp
+	port/cpl_odbc.cpp
 	frmts/bgp/*
 	frmts/dds/*
 	frmts/ecw/*
