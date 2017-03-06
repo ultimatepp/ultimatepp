@@ -101,6 +101,7 @@ bool LaunchFile(const char *file, const char *params, const char *directory) {
 	return true;
 }
 #endif
+
 #ifdef PLATFORM_POSIX
 
 String GetDesktopManagerNew() {

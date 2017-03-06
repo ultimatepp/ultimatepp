@@ -2212,8 +2212,11 @@ bool IsPortFree(int port) {
     bool ret = true;
     if(bind(socket_desc,(struct sockaddr *)&service , sizeof(service)) < 0) 
         ret = false;
-    
+#ifdef PLATFORM_WIN32
  	closesocket(socket_desc);
+#else
+ 	close(socket_desc);
+#endif
 
 #ifdef PLATFORM_WIN32    
     WSACleanup();
