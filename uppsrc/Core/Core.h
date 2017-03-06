@@ -45,6 +45,12 @@
 #error This version of U++ REQUIRES C++11
 #endif
 
+#ifdef _MSC_VER
+	#ifndef _CPPRTTI
+		#error  RTTI must be enabled !!!
+	#endif  //_CPPRTTI
+#endif
+
 #include <typeinfo>
 #include <stddef.h>
 #include <math.h>
