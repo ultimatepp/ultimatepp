@@ -322,9 +322,9 @@ public:
 
 	EditString& MaxLen(int maxlen)                   { ConvertString::MaxLen(maxlen); Ctrl::Refresh(); return *this; }
 	EditString& NotNull(bool nn = true)              { ConvertString::NotNull(nn); Ctrl::Refresh(); return *this; }
-	EditString& TrimLeft(bool b)                     { ConvertString::TrimLeft(b); Ctrl::Refresh(); return *this; }
-	EditString& TrimRight(bool b)                    { ConvertString::TrimRight(b); Ctrl::Refresh(); return *this; }
-	EditString& TrimBoth(bool b)                     { ConvertString::TrimBoth(b); Ctrl::Refresh(); return *this; }
+	EditString& TrimLeft(bool b = true)              { ConvertString::TrimLeft(b); Ctrl::Refresh(); return *this; }
+	EditString& TrimRight(bool b = true)             { ConvertString::TrimRight(b); Ctrl::Refresh(); return *this; }
+	EditString& TrimBoth(bool b = true)              { ConvertString::TrimBoth(b); Ctrl::Refresh(); return *this; }
 };
 
 class EditStringNotNull : public EditString {
