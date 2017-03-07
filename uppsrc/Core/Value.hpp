@@ -6,7 +6,7 @@ Value::Value(const Value& v)
 		SetLarge(v);
 	else
 		data.SetSmall(v.data);
- 	Magic();
+	Magic();
 }
 
 template<>
@@ -118,7 +118,7 @@ inline unsigned ValueGetHashValue(const WString& x) {
 template <class T>
 class RawValueRep : public Value::Void {
 public:
-	virtual dword GetType() const             { return GetValueTypeNo<T>() + 0x10000000; }
+	virtual dword GetType() const             { return GetValueTypeNo<T>(); }
 	virtual bool  IsNull() const              { return false; }
 
 	T v;
@@ -235,14 +235,15 @@ inline const T& Value::To() const
 		return *(T*)this; // Illegal, but works -> better than crash in release mode
 	}
 #endif
-	if(t == STRING_V) {
-		ASSERT(IsString());
-		return *reinterpret_cast<const T*>(&data); // Only active when T is String
-	}
 	if(IsRef()) {
 		const RawValueRep<T> *x = dynamic_cast<const RawValueRep<T>*>(ptr());
 		if(x)
 			return x->Get();
+	}
+	else
+	if(t == STRING_V) {
+		ASSERT(IsString());
+		return *reinterpret_cast<const T*>(&data); // Only active when T is String
 	}
 	else
 	if(t < 255 && Is((byte)t))
@@ -256,16 +257,13 @@ template <class T>
 inline bool Value::Is() const
 {
 	dword t = GetValueTypeNo<T>();
-	if(t > 0x80000000)
-		return IsRef() && dynamic_cast<const RawValueRep<T> *>(ptr());
+	if(IsRef() && ptr()->GetType() == t)
+		return true;
 	if(t == STRING_V)
 		return IsString();
 	if(t == VOID_V)
 		return IsVoid();
-	if(t == INT_V || t == INT64_V || t == DOUBLE_V || t == BOOL_V ||
-	   t == DATE_V || t == TIME_V)
-		return Is((byte)t);
-	return t < 255 && Is((byte)t) || IsRef() && ptr()->GetType() == t;
+	return t < 255 && Is((byte)t);
 }
 
 template <class T>
@@ -363,6 +361,12 @@ template <class T>
 inline Value RichToValue(const T& data)
 {
 	return Value(new RichValueRep<T>(data));
+}
+
+template <>
+inline Value RichToValue(const String& data)
+{
+	return Value(data);
 }
 
 #ifdef DEPRECATED
