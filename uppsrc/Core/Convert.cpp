@@ -499,15 +499,23 @@ ConvertString::~ConvertString() {}
 
 Value ConvertString::Scan(const Value& text) const {
 	if(IsError(text)) return text;
-	if(IsNull(text)) return notnull ? NotNullError() : Value(text);
-	if(text.GetType() == STRING_V && String(text).GetLength() <= maxlen ||
-	   text.GetType() == WSTRING_V && WString(text).GetLength() <= maxlen) {
-		String s = text;
+	if(text.GetType() == STRING_V) {
+		String s = ~text;
 		if(trimleft)
 			s = Upp::TrimLeft(s);
 		if(trimright)
 			s = Upp::TrimRight(s);
-		return s;
+		if(IsNull(s)) return notnull ? NotNullError() : String();
+		if(s.GetLength() <= maxlen) return s;
+	}
+	if(text.GetType() == WSTRING_V) {
+		WString s = ~text;
+		if(trimleft)
+			s = Upp::TrimLeft(s);
+		if(trimright)
+			s = Upp::TrimRight(s);
+		if(IsNull(s)) return notnull ? NotNullError() : String();
+		if(s.GetLength() <= maxlen) return s;
 	}
 	return ErrorValue(UPP::Format(t_("Please enter no more than %d characters."), maxlen));
 }

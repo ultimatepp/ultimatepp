@@ -198,6 +198,14 @@ Returns `*this.&]
 [@(0.0.255) bool]_[*@3 nn]_`=_[@(0.0.255) true])&]
 [s2;%- [%% Sets ][* NotNull] property.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:EditString`:`:TrimLeft`(bool`):%- [_^Upp`:`:EditString^ EditString][@(0.0.255) `&
+]_[* TrimLeft]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:EditString`:`:TrimRight`(bool`):%- [_^Upp`:`:EditString^ EditString][@(0.0.255) `&
+]_[* TrimRight]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:EditString`:`:TrimBoth`(bool`):%- [_^Upp`:`:EditString^ EditString][@(0.0.255) `&
+]_[* TrimBoth]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Whitechars on the left/right/both side(s) are removed.&]
 [s0; &]
 [s0; &]
 [s0;%- &]
