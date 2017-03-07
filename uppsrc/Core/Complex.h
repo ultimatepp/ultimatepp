@@ -10,8 +10,8 @@ struct Complex : std::complex<double>
 	Complex(const C& c) : C(c)              {}
 
 	Complex(const Nuller&) : C(DOUBLE_NULL, DOUBLE_NULL) {}
-	operator Value() const                  { return RichValue<Complex>(*this); }
-	Complex(const Value& v) : C(IsNumber(v) ? Complex((double)v) : RichValue<Complex>::Extract(v)) {}
+	operator Value() const                  { return RichToValue(*this); }
+	Complex(const Value& v) : C(IsNumber(v) ? Complex((double)v) : v.Get<Complex>()) {}
 
 	operator Ref()                          { return AsRef(*this); }
 

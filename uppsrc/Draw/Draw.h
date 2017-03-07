@@ -196,8 +196,8 @@ public:
 	Font(int face, int height)      { v.face = face; v.height = height; v.flags = 0; v.width = 0; }
 	Font(const Nuller&)             { SetNull(); }
 
-	operator Value() const          { return RichValue<Font>(*this); }
-	Font(const Value& q)            { *this = RichValue<Font>::Extract(q); }
+	operator Value() const          { return RichToValue(*this); }
+	Font(const Value& q)            { *this = q.Get<Font>(); }
 
 // BW compatibility
 	FontInfo Info() const;
@@ -391,8 +391,8 @@ public:
 	unsigned GetHashValue() const               { return CombineHash(cmd, data); }
 	String  ToString() const                    { return "painting " + AsString(size); }
 
-	operator Value() const                      { return RichValue<Painting>(*this); }
-	Painting(const Value& q)                    { *this = RichValue<Painting>::Extract(q); }
+	operator Value() const                      { return RichToValue(*this); }
+	Painting(const Value& q)                    { *this = q.Get<Painting>(); }
 
 	Painting()                                  { SetNull(); }
 	Painting(const Nuller&)                     { SetNull(); }
@@ -661,11 +661,11 @@ public:
 	String  ToString() const                   { return "drawing " + AsString(size); }
 	unsigned GetHashValue() const              { return CombineHash(data, val); }
 
-	operator Value() const         { return RichValue<Drawing>(*this); }
-	Drawing(const Value& src);
+	operator Value() const                     { return RichToValue(*this); }
+	Drawing(const Value& src)                  { *this = src.Get<Drawing>(); }
 
-	Drawing()                      { SetNull(); }
-	Drawing(const Nuller&)         { SetNull(); }
+	Drawing()                                  { SetNull(); }
+	Drawing(const Nuller&)                     { SetNull(); }
 };
 
 class DrawingDraw : public Draw {

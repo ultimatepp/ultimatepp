@@ -211,7 +211,7 @@ public:
 	bool IsNullInstance() const         { Size sz = GetSize(); return (sz.cx|sz.cy) == 0; }
 
 	bool IsEmpty() const                { return IsNullInstance(); }
-	operator Value() const              { return RichValue<Image>(*this); }
+	operator Value() const              { return RichToValue(*this); }
 	
 	bool IsPaintOnly() const            { return data && data->paintonly; }
 

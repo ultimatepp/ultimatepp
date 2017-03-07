@@ -371,8 +371,8 @@ struct Rect_ : Moveable< Rect_<T> > {
 
 	Rect_(const Nuller&)             { SetNull(); }
 
-	operator Value() const           { return RichValue<Rect_>(*this); }
-	/*explicit */Rect_(const Value& src) { *this = RichValue<Rect_>::Extract(src); }
+	operator Value() const           { return RichToValue(*this); }
+	Rect_(const Value& src)          { *this = src.Get<Rect_>(); }
 
 	operator Ref()                   { return AsRef(*this); }
 
