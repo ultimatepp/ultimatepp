@@ -30,3 +30,6 @@ uses Core;
 file<:?header:>
 	<:PACKAGE:>.h,<:.:>
 	<:PACKAGE:>.cpp;
+
+mainconfig
+	"" = "";

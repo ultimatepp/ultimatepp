@@ -22,7 +22,7 @@ unsigned Value::GetOtherHashValue() const {
 
 void Value::RefRelease()
 {
-	ASSERT(ptr()->GetType() >= 255 || !svo[ptr()->GetType()]); // Check that svo type is not registered as Ref
+	ASSERT(IsRef()); // Check that svo type is not registered as Ref
 	ptr()->Release();
 }
 
@@ -169,7 +169,9 @@ Time Value::GetOtherTime() const
 String Value::GetOtherString() const
 {
 	if(IsNull()) return Null;
-	return RichValue<WString>::Extract(*this).ToString();
+	if(Is<String>())
+		return To<String>();
+	return To<WString>().ToString();
 }
 
 int Value::GetOtherInt() const
