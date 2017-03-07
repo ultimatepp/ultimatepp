@@ -55,14 +55,13 @@ CONSOLE_APP_MAIN
 	uuid.c = 1111;
 	uuid.d = 19999;
 	CheckType(uuid, true);
-
 	CheckType(Arial(50).Bold().Strikeout(), true);
 
 	{
 		DrawingDraw g(100, 100);
 		g.DrawText(0, 0, "Hello world");
 		Drawing x = g.GetResult();
-		CheckType(x);	
+		CheckType(x);
 	}
 
 	{
@@ -71,7 +70,7 @@ CONSOLE_APP_MAIN
 		Painting x = g.GetResult();
 		CheckType(x);
 	}
-	
+
 	{
 		CheckType(CreateImage(Size(20, 20), Blue));
 	}
