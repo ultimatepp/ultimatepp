@@ -150,8 +150,7 @@ Value::Value(const WString& s) { InitRef(new RichValueRep<WString>(s)); Magic();
 Value::operator WString() const
 {
 	if(IsNull()) return Null;
-	return GetType() == WSTRING_V ? RichValue<WString>::Extract(*this)
-		                          : ((String)(*this)).ToWString();//!!!
+	return GetType() == WSTRING_V ? To<WString>() : ((String)(*this)).ToWString();
 }
 
 Date Value::GetOtherDate() const

@@ -21,7 +21,7 @@ Ref RawAsRef(T& x) {
 
 template <class T>
 struct RichRef : public RawRef<T> {
-	virtual Value GetValue(const void *p)                 { return RichValue<T>(*(T *) p); }
+	virtual Value GetValue(const void *p)                 { return RichToValue(*(T *) p); }
 	virtual bool  IsNull(const void *p)                   { return UPP::IsNull(*(T *) p); }
 	virtual void  SetValue(void *p, const Value& v)       { *(T *) p = T(v); }
 	virtual void  SetNull(void *p)                        { UPP::SetNull(*(T *)p); }

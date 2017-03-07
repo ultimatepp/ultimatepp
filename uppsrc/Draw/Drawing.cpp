@@ -685,14 +685,6 @@ void Drawing::Append(Drawing& dw)
 		val.Add(dw.val[i]);
 }
 
-Drawing::Drawing(const Value& src)
-{
-	if(IsNull(src))
-		size = Null;
-	else
-		*this = RichValue<Drawing>::Extract(src);
-}
-
 void Drawing::Serialize(Stream& s)
 {
 	if(val.GetCount())
