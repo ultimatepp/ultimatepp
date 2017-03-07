@@ -302,8 +302,7 @@ Image::Image(Image (*fn)())
 Image::Image(const Value& src)
 {
 	data = NULL;
-	if(!IsNull(src))
-		*this = RawValue<Image>::Extract(src);
+	*this = src.Get<Image>();
 }
 
 Image::Image(ImageBuffer& b)

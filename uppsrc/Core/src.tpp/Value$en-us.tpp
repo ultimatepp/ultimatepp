@@ -408,14 +408,18 @@ onst]_[_^Value^ Value][@(0.0.255) `&])_[@(0.0.255) const]&]
 alue]_[* SvoToValue]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
 [s2; Creates SVO Value from [%-*@3 x]. T has to have defined all that 
 is required for Value compatibility (derivation from ValueType 
-takes care of this).&]
+takes care of this). Unlike RawToValue, SvoToValue should only 
+be used in client`'s type operator Value() `- to avoid casting 
+issues between Rich and Svo kinds.&]
 [s3; &]
 [s4;%- &]
 [s5;:RichToValue`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
 alue]_[* RichToValue]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 data])&]
 [s2; Creates Rich Value from [%-*@3 data]. T has to have defined all 
 that is required for Value compatibility (derivation from ValueType 
-takes care of this).&]
+takes care of this). Unlike RawToValue, RichToValue should only 
+be used in client`'s type operator Value() `- to avoid casting 
+issues between Rich and Svo kinds.&]
 [s3; &]
 [s4;%- &]
 [s5;:RawToValue`(const T`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[_^Value^ V
