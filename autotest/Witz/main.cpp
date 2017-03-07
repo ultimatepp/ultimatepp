@@ -76,8 +76,9 @@ CONSOLE_APP_MAIN
 	LOG(result);
 	LOG("------------");
 //	SaveFile(GetDataFile("etalon"), result);
-	result.Replace("/home/upp", "/home/cxl");
-	ASSERT(result == LoadFile(GetDataFile("etalon2")));
+
+	ASSERT(result.Find("autotest/Witz/index2.witz(17,13): missing number</body></html>") >= 0);
+	
 	
 	m.Add("name", "What is that?");
 	http("res", m);
