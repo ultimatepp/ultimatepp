@@ -64,6 +64,7 @@
 #include "gtest_prod.h"
 #include "gtest-test-part.h"
 #include "gtest-typed-test.h"
+#include "gtest-upp.h"
 
 // Depending on the platform, different string classes are available.
 // On Linux, in addition to ::std::string, Google also makes use of
