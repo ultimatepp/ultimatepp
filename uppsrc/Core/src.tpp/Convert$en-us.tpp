@@ -369,6 +369,22 @@ otNull](false).&]
 onst]&]
 [s7; [*/ Return value]-|true mean empty Strings are not allowed.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ConvertString`:`:TrimLeft`(bool`):%- [_^Upp`:`:ConvertString^ ConvertString
+][@(0.0.255) `&]_[* TrimLeft]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ConvertString`:`:TrimRight`(bool`):%- [_^Upp`:`:ConvertString^ ConvertStrin
+g][@(0.0.255) `&]_[* TrimRight]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:ConvertString`:`:TrimBoth`(bool`):%- [_^Upp`:`:ConvertString^ ConvertString
+][@(0.0.255) `&]_[* TrimBoth]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Whitechars on the left/right/both side(s) are removed before 
+checking count of characters or nullness.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ConvertString`:`:IsTrimLeft`(`)const:%- [@(0.0.255) bool]_[* IsTrimLeft]()_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:ConvertString`:`:IsTrimRight`(`)const:%- [@(0.0.255) bool]_[* IsTrimRight]()_
+[@(0.0.255) const]&]
+[s2; Checks whether TrimLeft or TrimRight (or both) is active.&]
 [s0; &]
 [s0; &]
 [s0;%- &]
@@ -391,7 +407,7 @@ inval]_`=_ToTime(Date`::Low()), [_^Time^ Time]_[*@3 maxval]_`=_ToTime(Date`::Hig
 [s7; [%-*C@3 minval]-|Lower limit. Default means there is no limit.&]
 [s7; [%-*C@3 maxval]-|Upper limit. Default means there is no limit.&]
 [s7; [%-*C@3 notnull]-|true disallows Nulls.&]
-[s3; &]
+[s3;%- &]
 [s4;%- &]
 [s5;:ConvertTime`:`:`~ConvertTime`(`):%- [@(0.0.255) `~][* ConvertTime]()&]
 [s2; Default destructor.&]
