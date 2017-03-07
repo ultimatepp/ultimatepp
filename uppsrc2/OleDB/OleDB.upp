@@ -1,0 +1,15 @@
+description "OLEDB interface\377";
+
+uses
+	Ole,
+	Sql;
+
+link(MT DEBUG) /nodefaultlib:LIBCMT;
+
+file
+	OleDB.h,
+	OleDBSchema.h,
+	OleDB.cpp,
+	Info readonly separator,
+	Copying;
+
