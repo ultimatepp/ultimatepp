@@ -57,7 +57,7 @@ void ProgressIndicator::Paint(Draw& w) {
 		w.DrawRect(r2, SColorPaper);
 		w.DrawRect(r3, SColorPaper);
 		if(percent) {
-			String pt = Format("%d %%", 100 * actual / max(total, 1));
+			String pt = Format("%d %%", (int)(100L * actual / max(total, 1)));
 			Size psz = GetTextSize(pt, StdFont());
 			int px = (sz.cx - psz.cx) / 2 + 2;
 			int py = (sz.cy - psz.cy) / 2 + 2;
