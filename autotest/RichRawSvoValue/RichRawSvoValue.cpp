@@ -22,7 +22,7 @@ void Test(T c)
 		T h1 = v.To<T>();
 		ASSERT(h == h1);
 	}
-	{ // this is not supported by Value definition (RichToValue should only be used in client type)
+	{ // this is not supported by Value definition (RichToValue should only be used in client type operator Value)
 		Value v = RichToValue(h);
 		ASSERT(~v == AsString(c));
 		ASSERT(v.Is<T>());
