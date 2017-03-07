@@ -1570,6 +1570,30 @@ GetLineCy(r) > y]).&]
 eColor]([@(0.0.255) int]_[*@3 i], [_^Upp`:`:Color^ Color]_[*@3 c])&]
 [s2; Sets the background color of line [%-*@3 i] to [%-*@3 c].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:GetCellRect`(int`,int`)const:%- [_^Upp`:`:Rect^ Rect]_[* GetCell
+Rect]([@(0.0.255) int]_[*@3 i], [@(0.0.255) int]_[*@3 col])_[@(0.0.255) const]&]
+[s2; Returns rectangle of cell at [%-*@3 i],[%-*@3  col] in view coordinates. 
+Cell left and right margins are included in rectangle.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:GetCellRectM`(int`,int`)const:%- [_^Upp`:`:Rect^ Rect]_[* GetCel
+lRectM]([@(0.0.255) int]_[*@3 i], [@(0.0.255) int]_[*@3 col])_[@(0.0.255) const]&]
+[s2; Returns rectangle of cell at [%-*@3 i],[%-*@3  col] in view coordinates. 
+Cell left and right margins are not included in rectangle.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:GetScreenCellRect`(int`,int`)const:%- [_^Upp`:`:Rect^ Rect]_[* G
+etScreenCellRect]([@(0.0.255) int]_[*@3 i], [@(0.0.255) int]_[*@3 col])_[@(0.0.255) const]&]
+[s2; Returns rectangle of cell at [%-*@3 i],[%-*@3  col] in screen coordinates. 
+Cell left and right margins are included in rectangle.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:GetScreenCellRectM`(int`,int`)const:%- [_^Upp`:`:Rect^ Rect]_[* G
+etScreenCellRectM]([@(0.0.255) int]_[*@3 i], [@(0.0.255) int]_[*@3 col])_[@(0.0.255) const]&]
+[s2; Returns rectangle of cell at [%-*@3 i],[%-*@3  col] in screen coordinates. 
+Cell left and right margins are not included in rectangle.&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:GetClickColumn`(`)const: [@(0.0.255) int]_[* GetClickColumn]()_[@(0.0.255) c
 onst]&]
