@@ -85,7 +85,8 @@
 #define zhTW(text)  { LNGC_('Z','H','T','W', CHARSET_UTF8), text },
 #define koKR(text)  { LNGC_('K','O','K','R', CHARSET_UTF8), text },
 #define jaJP(text)  { LNGC_('J','A','J','P', CHARSET_UTF8), text },
-
+#define thTH(text)  { LNGC_('T','H','T','H', CHARSET_UTF8), text },
+#define msMY(text)  { LNGC_('M','S','M','Y', CHARSET_UTF8), text },
 
 #define T_(text)    { 1, text },
 
@@ -296,6 +297,8 @@ INITBLOCK_(COMBINE3(LNG_MODULE, LNG_VERB, LNG_VERA))
 #undef zhTW
 #undef koKR
 #undef jaJP
+#undef thTH
+#undef msMY
 
 #undef T_
 
