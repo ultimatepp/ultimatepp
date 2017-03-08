@@ -1,8 +1,8 @@
-description "Unit test package that shows how to use Google Test with Google Mock\377";
+description "Google mock in action\377";
 
 uses
-	Core,
-	plugin/gmock;
+	plugin/gmock,
+	Core;
 
 file
 	GoogleMockExample.cpp;
