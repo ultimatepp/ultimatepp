@@ -1,27 +1,24 @@
 template "Unit test package with Google Test" main;
 
 option "Main package" mainPackage = 1;
+option "Use Google Mock" googleMock = 1;
 
 @@<:PACKAGE:>.cpp
 ??mainPackage
-#include <plugin/gtest/gtest.h>
+#include <Core/Core.h>
+<:?googleMock == 0:>#include <plugin/gtest/gtest.h><:.:><:?googleMock == 1:>#include <plugin/gmock/gmock.h><:.:>
 
-int main(int argc, char *argv[])
-{
-	testing::InitGoogleTest(&argc, argv);
-	
-	return RUN_ALL_TESTS();
-}<:.:>
-
+TEST_APP_MAIN {}<:.:>
 @@<:PACKAGE:>.upp
 uses
-	plugin/gtest;
-
+	Core,
+	plugin/gtest<:?googleMock == 0:>;<:.:><:?googleMock == 1:>,
+	plugin/gmock;<:.:>
+	
 file
 	Tests readonly separator<:?mainPackage == 0:>;<:.:><:?mainPackage:>,
 	Init readonly separator,
 	<:PACKAGE:>.cpp
-
 
 mainconfig
 	"" = "";
