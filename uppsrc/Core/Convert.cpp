@@ -500,21 +500,21 @@ ConvertString::~ConvertString() {}
 Value ConvertString::Scan(const Value& text) const {
 	if(IsError(text)) return text;
 	if(text.GetType() == STRING_V) {
-		String s = ~text;
+		String s = text;
 		if(trimleft)
 			s = Upp::TrimLeft(s);
 		if(trimright)
 			s = Upp::TrimRight(s);
-		if(IsNull(s)) return notnull ? NotNullError() : String();
+		if(IsNull(s)) return notnull ? NotNullError() : Value(s);
 		if(s.GetLength() <= maxlen) return s;
 	}
 	if(text.GetType() == WSTRING_V) {
-		WString s = ~text;
+		WString s = text;
 		if(trimleft)
 			s = Upp::TrimLeft(s);
 		if(trimright)
 			s = Upp::TrimRight(s);
-		if(IsNull(s)) return notnull ? NotNullError() : String();
+		if(IsNull(s)) return notnull ? NotNullError() : Value(s);
 		if(s.GetLength() <= maxlen) return s;
 	}
 	return ErrorValue(UPP::Format(t_("Please enter no more than %d characters."), maxlen));
