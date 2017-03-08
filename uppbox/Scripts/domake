@@ -220,7 +220,7 @@ else
 
     if [ "$gcc_version" -ge "$minimum_gcc_version" ]
     then
-      log_debug_info "Will use g++ version: $gcc_dumpversion"
+      log_debug_info "g++ version: $gcc_dumpversion"
       use_gcc="true"
       CXX="g++"
 
@@ -240,7 +240,7 @@ else
       clang_dumpversion=$(clang++ -dumpversion)
       clang_version=$(convert_version_to_number "$clang_dumpversion")
 
-      log_debug_info "Will use clang++ version: $clang_dumpversion"
+      log_debug_info "clang++ version: $clang_dumpversion"
       use_clang="true"
       CXX="clang++"
 
