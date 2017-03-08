@@ -529,7 +529,7 @@ Rect GetDesktopRect() {
 Image Window_SaveCapture(int64 windowId, int left, int top, int width, int height)
 {
 	if ((width <= 0 && width != -1) || (height <= 0 && height != -1))
-		return Null
+		return Null;
 		
 	SetSysInfoX11ErrorHandler();
 	
