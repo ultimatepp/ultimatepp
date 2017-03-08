@@ -11,6 +11,9 @@
 minimum_gcc_dumpversion="4.9.0"
 minimum_gcc_version=$(convert_version_to_number "$minimum_gcc_dumpversion")
 
+minimum_clang_dumpversion="3.5.0"
+minimum_clang_version=$(convert_version_to_number "$minimum_clang_dumpversion")
+
 show_debug_info="true"
 show_debug_warning="true"
 show_debug_error="true"
@@ -28,7 +31,7 @@ unset make_parameter_array
 ### Constants
 
 DEFAULT_GCC_CXXFLAGS=""
-DEFAULT_CLANG_CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++11"
+DEFAULT_CLANG_CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++14"
 DEFAULT_CPP_CXXFLAGS=""
 DEFAULT_OTHER_CPP_CXXFLAGS=""
 
@@ -215,8 +218,9 @@ else
     gcc_dumpversion=$(gcc -dumpversion)
     gcc_version=$(convert_version_to_number "$gcc_dumpversion")
 
-    if [ "$gcc_version" -gt "$minimum_gcc_version" ]
+    if [ "$gcc_version" -ge "$minimum_gcc_version" ]
     then
+      log_debug_info "Will use g++ version: $gcc_dumpversion"
       use_gcc="true"
       CXX="g++"
 
@@ -232,8 +236,19 @@ else
     if which clang++
     then
       log_debug_info "Found $(which clang++)"
+
+      clang_dumpversion=$(clang++ -dumpversion)
+      clang_version=$(convert_version_to_number "$clang_dumpversion")
+
+      log_debug_info "Will use clang++ version: $clang_dumpversion"
       use_clang="true"
       CXX="clang++"
+
+      if [ "$clang_version" -lt "$minimum_clang_version" ]
+      then
+        log_debug_warning "The clang++ compiler found (e.q $clang_dumpversion) has a lower version than the minimum required version (e.q $minimum_clang_dumpversion)"
+
+      fi
 
     else
       log_debug_info "Searching for a standard c++ compiler"
