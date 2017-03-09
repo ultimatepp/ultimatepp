@@ -110,6 +110,9 @@ private:
 
 		PaintRow& operator[](int i)                 { return row[i]; }
 		const PaintRow& operator[](int i) const     { return row[i]; }
+		
+		rval_default(Layout); // Old CLANG requires this
+		Layout() {}
 	};
 
 	struct TabLayout : Layout {
@@ -123,6 +126,7 @@ private:
 		Rect              next_page;
 		Rect              header_page;
 		
+		rval_default(TabLayout); // Old CLANG requires this
 		TabLayout() {}
 	};
 

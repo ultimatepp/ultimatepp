@@ -1,0 +1,6 @@
+#ifndef _Core_SSL_icpp_init_stub
+#define _Core_SSL_icpp_init_stub
+#define BLITZ_INDEX__ F92bd8f18f9eb3ff16ad250c0ea8df0e9
+#include "Init.icpp"
+#undef BLITZ_INDEX__
+#endif
