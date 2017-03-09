@@ -8,6 +8,8 @@ option "Use Google Mock" googleMock = 1;
 #include <Core/Core.h>
 <:?googleMock == 0:>#include <plugin/gtest/gtest.h><:.:><:?googleMock == 1:>#include <plugin/gmock/gmock.h><:.:>
 
+using namespace Upp;
+
 TEST_APP_MAIN {}<:.:>
 @@<:PACKAGE:>.upp
 uses
