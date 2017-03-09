@@ -1,3 +1,6 @@
+#ifndef CORE_CONFIG_H // sometimes we want just these fancy platform macros from this file...
+#define CORE_CONFIG_H
+
 #include <uppconfig.h>
 
 #if __GNUC__
@@ -152,4 +155,6 @@
 
 #if _MSC_VER >= 1900 // MSC from VS2015 is good enough C++11 compiler...
 #define CPP_11
+#endif
+
 #endif
