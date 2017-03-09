@@ -1,0 +1,4 @@
+#ifndef _RichEdit_icpp_init_stub
+#define _RichEdit_icpp_init_stub
+#include "CtrlLib/init"
+#endif

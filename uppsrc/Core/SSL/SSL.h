@@ -46,7 +46,11 @@ public:
 	bool     IsEmpty() const                 { return !bio; }
 
 	bool     Set(BIO *b)                     { Clear(); return !!(bio = b); }
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
 	bool     Create(const BIO_METHOD *meth)  { return Set(BIO_new(meth)); }
+#else
+	bool     Create(BIO_METHOD *meth)        { return Set(BIO_new(meth)); }
+#endif
 	void     Clear()                         { if(bio) { BIO_free(bio); bio = NULL; } }
 
 	bool     OpenBuffer(const char *data, int length);

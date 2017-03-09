@@ -1,0 +1,5 @@
+#ifndef _RichText_icpp_init_stub
+#define _RichText_icpp_init_stub
+#include "plugin\png/init"
+#include "Draw/init"
+#endif
