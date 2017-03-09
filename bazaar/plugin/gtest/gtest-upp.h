@@ -1,7 +1,9 @@
 #ifndef GTEST_INCLUDE_GTEST_UPP_H
 #define GTEST_INCLUDE_GTEST_UPP_H
 
-#if defined(PLATFORM_WIN32)
+#include <Core/config.h>
+
+#if defined(PLATFORM_WIN32) || defined(PLATFORM_WIN64)
 
 	#define TEST_APP_MAIN \
 	namespace Upp { extern bool PanicMode; } \
