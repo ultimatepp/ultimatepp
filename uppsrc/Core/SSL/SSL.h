@@ -40,20 +40,20 @@ private:
 class SslStream
 {
 public:
-	SslStream(BIO *b = NULL) : bio(b) {}
-	~SslStream()                       { Clear(); }
+	SslStream(BIO *b = NULL) : bio(b)        {}
+	~SslStream()                             { Clear(); }
 
-	bool     IsEmpty() const           { return !bio; }
+	bool     IsEmpty() const                 { return !bio; }
 
-	bool     Set(BIO *b)               { Clear(); return !!(bio = b); }
-	bool     Create(BIO_METHOD *meth)  { return Set(BIO_new(meth)); }
-	void     Clear()                   { if(bio) { BIO_free(bio); bio = NULL; } }
+	bool     Set(BIO *b)                     { Clear(); return !!(bio = b); }
+	bool     Create(const BIO_METHOD *meth)  { return Set(BIO_new(meth)); }
+	void     Clear()                         { if(bio) { BIO_free(bio); bio = NULL; } }
 
 	bool     OpenBuffer(const char *data, int length);
 	bool     CreateBuffer();
 	String   GetResult() const;
 
-	operator BIO * () const            { return bio; }
+	operator BIO * () const                  { return bio; }
 
 private:
 	BIO     *bio;

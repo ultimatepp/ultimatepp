@@ -6,7 +6,11 @@ namespace Upp {
 
 static int64 UPP_SSL_alloc = 0;
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+static void *SslAlloc(size_t size, const char *, int)
+#else
 static void *SslAlloc(size_t size)
+#endif
 {
 	LLOG("Alloc " << size);
 	size_t alloc = size + sizeof(int64);
@@ -17,7 +21,11 @@ static void *SslAlloc(size_t size)
 	return aptr;
 }
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+static void SslFree(void *ptr, const char *, int)
+#else
 static void SslFree(void *ptr)
+#endif
 {
 	if(!ptr)
 		return;
@@ -27,7 +35,11 @@ static void SslFree(void *ptr)
 	MemoryFree(aptr);
 }
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+static void *SslRealloc(void *ptr, size_t size, const char *, int)
+#else
 static void *SslRealloc(void *ptr, size_t size)
+#endif
 {
 	if(!ptr)
 		return NULL;
@@ -69,7 +81,9 @@ EXITBLOCK
 	EVP_cleanup();
 	ENGINE_cleanup();
 	CRYPTO_cleanup_all_ex_data();
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
 	ERR_remove_state(0);
+#endif
 	ERR_free_strings();
 	
 	STACK_OF(SSL_COMP) *pCOMP = SSL_COMP_get_compression_methods();
@@ -77,7 +91,7 @@ EXITBLOCK
 		sk_SSL_COMP_free( pCOMP );
 }
 
-#ifdef _MULTITHREADED
+#if defined(_MULTITHREADED) && OPENSSL_VERSION_NUMBER < 0x10100000L
 
 static thread__ bool sThreadInit;
 static thread__ void (*sPrevExit)();
