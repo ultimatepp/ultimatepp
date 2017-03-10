@@ -216,6 +216,7 @@ double StringToSeconds(String str);
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
 String SeasonName(int iseason);
+int GetSeason(Date &date);
 	
 String FormatDoubleAdjust(double d, double range);
 
