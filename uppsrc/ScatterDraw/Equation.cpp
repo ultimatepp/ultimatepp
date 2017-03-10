@@ -29,7 +29,6 @@ void ExplicitEquation::SetNumCoeff(int num) {
 }
 
 ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2) {
-	r2 = 0;
 	if (series.IsExplicit() || series.IsParam())
 		return InadequateDataSource;
 	
@@ -61,20 +60,27 @@ ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2)
 	if (ret == LevenbergMarquardtSpace::TooManyFunctionEvaluation)
 		return TooManyFunctionEvaluation;
 
-	double mean = series.AvgY();
+	r2 = R2Y(series);
+
+	return NoError;
+}
+
+double ExplicitEquation::R2Y(DataSource &series, double mean) {
+	if (IsNull(mean))
+		mean = series.AvgY();
 	double sse = 0, sst = 0;
 	for (int64 i = 0; i < series.GetCount(); ++i) {
 		double y = series.y(i);
 		if (!IsNull(y)) {
-			double res = y - f(series.x(i));
-			sse += res*res;
+			double err = y - f(series.x(i));
+			sse += err*err;
 			double d = y - mean;
 			sst += d*d;
 		}
 	}
-	r2 = 1 - sse/sst;
-
-	return NoError;
+	if (sst == 0)
+		return Null;
+	return 1 - sse/sst;
 }
 
 int ExplicitEquation::maxFitFunctionEvaluations = 1000;
