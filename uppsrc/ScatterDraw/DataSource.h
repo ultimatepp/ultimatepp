@@ -50,14 +50,32 @@ public:
 	virtual Vector<int64> LowerEnvelopeY(double width) 	{return LowerEnvelope(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<Pointf> MovingAverageY(double width) {return MovingAverage(&DataSource::y, &DataSource::x, width);}	
 	virtual Vector<Pointf> SectorAverageY(double width) {return SectorAverage(&DataSource::y, &DataSource::x, width);}	
+	virtual void MaxListY(Vector<int64> &id, double width){MaxList(&DataSource::y, &DataSource::x, id, width);}
+	virtual Pointf MaxSubDataImpY(int64 maxId, int width)	{return MaxSubDataImp(&DataSource::y, &DataSource::x, maxId, width);}
 	virtual void ZeroCrossingY(bool ascending, bool descending, Vector<double> &zeros, Vector<int64> &ids) {
-		return ZeroCrossing(&DataSource::y, &DataSource::x, ascending, descending, zeros, ids);}	
+		return ZeroCrossing(&DataSource::y, &DataSource::x, ascending, descending, zeros, ids);}
+	virtual double IntegralY()			{return Integral(&DataSource::y, &DataSource::x);}
+	virtual double IntegralY(double from, double to, double n)	{return Integral(from, to, n);}
 
-	enum FFT_TYPE {T_FFT = 0, T_PHASE, T_PSD};
+	enum FFT_WINDOW {NO_WINDOW = 0, HAMMING, COS};
+	enum FFT_TYPE   {T_FFT = 0, T_PHASE, T_PSD};
 
-	Upp::Vector<Pointf> FFTY(double tSample, bool frequency = false, int type = FFT_TYPE::T_FFT, bool window = false) {
-		return FFT(&DataSource::y, tSample, frequency, type, window);}
-
+	Upp::Vector<Pointf> FFTY(double tSample, bool frequency = false, int type = FFT_TYPE::T_FFT, 
+					int window = FFT_WINDOW::HAMMING, int numSub = 1, double overlapping = 0) {
+		return FFT(&DataSource::y, tSample, frequency, type, window, numSub, overlapping);}
+	static int GetFFTWindowCount()	{return 3;}
+	static const char *GetFFTWindowStr(int i) {
+		const char *str[] = {"no window", "hamming", "cos"};
+		if (i < 0 || i >= GetFFTWindowCount())
+			return 0;
+		return str[i];
+	}
+	void GetSpectralMomentsY(double from, double to, double n, bool frequency, 
+									double &m_1, double &m0, double &m1, double &m2) 
+		{GetSpectralMoments(from, to, n, frequency, m_1, m0, m1, m2);}
+	void GetSpectralMomentsY(bool frequency, double &m_1, double &m0, double &m1, double &m2)
+		{GetSpectralMoments(&DataSource::y, &DataSource::x, frequency, m_1, m0, m1, m2);}
+	
 	double Min(Getdatafun getdata, int64& id);
 	double Max(Getdatafun getdata, int64& id);
 	double Avg(Getdatafun getdata);
@@ -69,18 +87,27 @@ public:
 	Vector<int64> LowerEnvelope(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> MovingAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
 	Vector<Pointf> SectorAverage(Getdatafun getdataY, Getdatafun getdataX, double width);
+	void MaxList(Getdatafun getdataY, Getdatafun getdataX, Vector<int64> &id, double width);
+	Pointf MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64 maxId, int64 width);
 	void ZeroCrossing(Getdatafun getdataY, Getdatafun getdataX, bool ascending, bool descending,
 							  Vector<double> &zeros, Vector<int64> &ids);
+	double Integral(Getdatafun getdataY, Getdatafun getdataX);						  
+	double Integral(double from, double to, double n);
+	
 	double SinEstim_Amplitude(double avg = Null);
 	bool SinEstim_FreqPhase(double &frequency, double &phase, double avg = Null);
 	Vector<Pointf> FFT(Getdatafun getdata, double tSample, bool frequency = false, 
-					   int type = FFT_TYPE::T_FFT, bool window = false);
-					   
+					   int type = FFT_TYPE::T_FFT, int window = FFT_WINDOW::HAMMING, 
+					   int numSub = 1, double overlapping = 0);
+	void GetSpectralMoments(double from, double to, double n, bool frequency, 
+						double &m_1, double &m0, double &m1, double &m2);
+	void GetSpectralMoments(Getdatafun getdataY, Getdatafun getdataX, bool frequency, 
+						double &m_1, double &m0, double &m1, double &m2);
 	bool SameX(DataSource &data);
 		
 protected:
 	bool isParam, isExplicit;
-
+	
 private:
 	int key;
 	
@@ -172,7 +199,13 @@ private:
 	double x0, deltaX;
 
 public:
-	VectorY(Vector<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
+	VectorY() : yData(0), x0(0), deltaX(0) {}
+	VectorY(Vector<Y> &yData, double x0, double deltaX) {Init(yData, x0, deltaX);}
+	void Init(Vector<Y> &yData, double x0, double deltaX) {
+		this->yData = &yData;
+		this->x0 = x0;
+		this->deltaX = deltaX;
+	}	
 	virtual inline double y(int64 id)	{return (*yData)[int(id)];}
 	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
@@ -188,7 +221,13 @@ private:
 	double x0, deltaX;
 
 public:
-	ArrayY(Upp::Array<Y> &yData, double x0, double deltaX) : yData(&yData), x0(x0), deltaX(deltaX) {}
+	ArrayY() : yData(0), x0(0), deltaX(0) {}
+	ArrayY(Upp::Array<Y> &yData, double x0, double deltaX) {Init(yData, x0, deltaX);}
+	void Init(Upp::Array<Y> &yData, double x0, double deltaX) {
+		this->yData = &yData;
+		this->x0 = x0;
+		this->deltaX = deltaX;
+	}	
 	virtual inline double y(int64 id)	{return (*yData)[ptrdiff_t(id)];}
 	virtual inline double x(int64 id) 	{return id*deltaX + x0;}
 	virtual inline int64 GetCount()		{return yData->GetCount();}
@@ -210,35 +249,35 @@ private:
 public:
 	VectorVectorY() : data(0), useRows(true), beginData(0), numData(Null), idx(0), idy(1) {}
 	VectorVectorY(Vector<Vector<Y> > &data, int idx, int idy, 
-				  Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, bool useRows = true, int beginData = 0, int numData = Null) : 
-		data(&data), useRows(useRows), beginData(beginData), numData(numData) {
+				  Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, 
+				  bool useRows = true, int beginData = 0, int numData = Null) {
 		Init(data, idx, idy, idsx, idsy, idsFixed, useRows, beginData, numData);
 	}
-	void Init(Vector<Vector<Y> > &_data, int _idx, int _idy, Vector<int> &_idsx, Vector<int> &_idsy, Vector<int> &_idsFixed, 
-			  bool _useRows = true, int _beginData = 0, int _numData = Null) {
-		data = &_data;
-		useRows = _useRows;
+	void Init(Vector<Vector<Y> > &data, int idx, int idy, Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, 
+			  bool useRows = true, int beginData = 0, int numData = Null) {
+		this->data = &data;
+		this->useRows = useRows;
 		
-		idx = _idx;
-		idy = _idy;
-		idsx = clone(_idsx);
-		idsy = clone(_idsy);
-		idsFixed = clone(_idsFixed);
-		beginData = _beginData;
-		numData = _numData;
-		if (IsNull(_numData)) {
+		this->idx = idx;
+		this->idy = idy;
+		this->idsx = clone(idsx);
+		this->idsy = clone(idsy);
+		this->idsFixed = clone(idsFixed);
+		this->beginData = beginData;
+		this->numData = numData;
+		if (IsNull(numData)) {
 			if (!useRows) {
-				if (data->IsEmpty())
-					numData = 0;
+				if (data.IsEmpty())
+					this->numData = 0;
 				else	
-					numData = (*data)[0].GetCount() - beginData;
+					this->numData = data[0].GetCount() - beginData;
 			} else
-				numData = data->GetCount() - beginData;
+				this->numData = data.GetCount() - beginData;
 		}
 	}
-	void Init(Vector<Vector<Y> > &_data, int idx, int idy, bool _useRows = true, int _beginData = 0, int _numData = Null) {
+	void Init(Vector<Vector<Y> > &data, int idx, int idy, bool useRows = true, int beginData = 0, int numData = Null) {
 		static Vector<int> idsVoid;
-		Init(_data, idx, idy, idsVoid, idsVoid, idsVoid, _useRows, _beginData, _numData);
+		Init(data, idx, idy, idsVoid, idsVoid, idsVoid, useRows, beginData, numData);
 	}
 	virtual inline double y(int64 id) {
 		if (!IsNull(idy) && idy >= 0) {
@@ -342,22 +381,23 @@ public:
 	virtual inline double x(int64 id) 	{return (*data).GetKey(int(id));}
 	virtual inline int64 GetCount()		{return data->GetCount();}
 };		
- 
+
 class FuncSource : public DataSource {
-private:
-	double (*function)(double);
+protected:
+	Function <double(double)> function;
 
 public:
-	FuncSource(double (*function)(double)) : function(function) {isExplicit = true;}
+	FuncSource() {isExplicit = true;}
+	FuncSource(Function <double(double)> function) : function(function) {isExplicit = true;}
 	virtual inline double f(double x)	{return function(x);}
 };
 
 class FuncSourceV : public DataSource {
 private:
-	void (*function)(double&, double);
+	Event<double&, double> function;
 
 public:
-	FuncSourceV(void (*function)(double&, double)) : function(function) {isExplicit = true;}
+	FuncSourceV(Event<double&, double> function) : function(function) {isExplicit = true;}
 	virtual inline double f(double x)	{double y; function(y, x); return y;}
 };
 
@@ -392,8 +432,9 @@ public:
 	virtual inline int64 GetCount()	{return numPoints;}
 };	
 
-typedef Callback2<double&, double> PlotExplicFunc; 
-typedef Callback2<Pointf&, double> PlotParamFunc;
+typedef Event<double&, double> PlotExplicFunc; 
+typedef Event<Pointf&, double> PlotParamFunc;
+
 
 class PlotExplicFuncSource : public DataSource {
 private:
@@ -438,7 +479,6 @@ public:
 struct PointfLess {
 	bool operator () (const Pointf& a, const Pointf& b) const { return a.x < b.x; }
 };
-
 
 }
 

@@ -217,7 +217,7 @@ public:
 	ScatterDraw &SetZoomStyleX(ZoomStyle style = TO_CENTER) {zoomStyleX = style; return *this;}
 	ScatterDraw &SetZoomStyleY(ZoomStyle style = TO_CENTER) {zoomStyleY = style; return *this;}
 
-	ScatterDraw& SetRange(double rx, double ry, double ry2 = 100);
+	ScatterDraw& SetRange(double rx, double ry = Null, double ry2 = Null);
 	//double GetRangeX() {return xRange;}
 	//double GetRangeY() {return yRange;}
 	//double GetRangeY2() {return yRange2;}
@@ -363,7 +363,9 @@ public:
 	int64 GetCount(int index);
 	void GetValues(int index, int64 idata, double &x, double &y);
 	double GetValueX(int index, int64 idata);
+	Value GetStringX(int index, int64 idata);
 	double GetValueY(int index, int64 idata);
+	Value GetStringY(int index, int64 idata);
 	
 	ScatterDraw &SetNoPlot(int index);
 	

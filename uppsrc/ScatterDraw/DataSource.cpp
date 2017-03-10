@@ -36,6 +36,71 @@ double DataSource::Max(Getdatafun getdata, int64& id) {
 	return maxVal;
 }
 
+void DataSource::MaxList(Getdatafun getdataY, Getdatafun getdataX, Vector<int64> &id, double width) {
+	id.Clear();
+	for (int64 i = 1; i < GetCount() - 1; ++i) {
+		double d = Membercall(getdataY)(i);
+		if (IsNull(d))
+			continue;
+		int64 ii;
+		for (ii = i-1; ii >= 0; --ii) {
+			if (!IsNull(Membercall(getdataY)(ii)))
+				break;
+		}
+		if (ii < 0)
+			continue;
+		double d_1 = Membercall(getdataY)(ii);
+		for (ii = i+1; ii < GetCount(); ++ii) {
+			if (!IsNull(Membercall(getdataY)(ii)))
+				break;
+		}
+		if (ii >= GetCount())
+			continue;
+		double d1 = Membercall(getdataY)(ii);
+		if (d >= d_1 && d > d1) {
+			if (id.GetCount() == 0 || 
+				(Membercall(getdataX)(i) - Membercall(getdataX)(id.GetCount() - 1) >= width))
+				id << i;
+		}
+	}
+}
+
+Pointf DataSource::MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64 maxId, int64 width)
+{
+	Vector<Pointf> p;
+	
+	int iw;
+	int64 idMin, idMax;
+	iw = 0;
+	for (idMin = maxId - 1; idMin >= 0 && iw < width; idMin--) {
+		if (IsNull(Membercall(getdataY)(idMin)) || IsNull(Membercall(getdataX)(idMin)))
+			continue;
+		iw++;
+	}
+	if (idMin < 0)
+		idMin = 0;
+	iw = 0;
+	for (idMax = maxId + 1; idMax < GetCount() && iw < width; idMax++) {
+		if (IsNull(Membercall(getdataY)(idMax)) || IsNull(Membercall(getdataX)(idMax)))
+			continue;
+		iw++;
+	}
+	if (idMax >= GetCount())
+		idMax = GetCount() - 1;
+	for (int64 i = idMin; i <= idMax; ++i) {
+		if (IsNull(Membercall(getdataY)(i)) || IsNull(Membercall(getdataX)(i)))
+			continue;
+		p << Pointf(Membercall(getdataX)(i), Membercall(getdataY)(i));
+	}
+	VectorPointf pf(p);
+	PolynomialEquation2 polyFit;
+	polyFit.Fit(pf);
+	const Vector<double> &coeff = polyFit.GetCoeff();
+	double b = coeff[1];
+	double a = coeff[2];
+	return Pointf(-b/2/a, polyFit.f(-b/2/a));
+}
+
 double DataSource::Avg(Getdatafun getdata) {
 	double ret = 0;
 	int count = 0;
@@ -327,43 +392,49 @@ double CArray::znFixed(int n, int64 id) {
 	return Null;
 }
 
-
-Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequency, int type, bool window) {
-	int numData = int(GetCount());
-    VectorXd timebuf(numData);
-    int num = 0;
-    for (int i = 0; i < numData; ++i) {
-        double data = Membercall(getdata)(i);
-        if (!IsNull(data)) {
-			timebuf[i] = Membercall(getdata)(i);
-			num++;
-        }
-    }
-    Vector<Pointf> res;	
-    if (num < 3)
-        return res;
-    timebuf.resize(num);
+Vector<Pointf> FFTSimple(VectorXd &data, double tSample, bool frequency, int type, 
+		int window, int numOver) {
+	int numData = int(data.size());
     
-    double windowSum = 0;
-    if (window) {
-	    for (int i = 0; i < numData; ++i) {
-	        double windowDat = 0.54 - 0.46*cos(2*M_PI*i/numData);
-	        windowSum += windowDat;
-	    	timebuf[i] *= windowDat;	// Hamming window
-	    }
-	} else
-		windowSum = numData;
-	
+    double numDataFact = 0;
+    switch (window) {
+    case DataSource::HAMMING:	
+				for (int i = 0; i < numData; ++i) {
+			        double windowFact = 0.54 - 0.46*cos(2*M_PI*i/numData);
+			        numDataFact += windowFact;
+			    	data[i] *= windowFact;	
+			    }
+			    break;
+	case DataSource::COS:		
+				for (int i = 0; i < numOver; ++i) {
+			        double windowFact = 0.5*(1 - cos(M_PI*i/numOver));
+			        numDataFact += windowFact;
+			    	data[i] *= windowFact;	
+			    }
+			    for (int i = numOver; i < numData - numOver; ++i) {
+			        double windowFact = 1;		// 1.004
+			        numDataFact += windowFact;
+			    	//data[i] *= windowFact;	
+			    }
+			    for (int i = numData - numOver; i < numData; ++i) {
+			  		double windowFact = 0.5*(1 + cos(M_PI*(numData - i - numOver)/numOver));
+			        numDataFact += windowFact;
+			    	data[i] *= windowFact;	
+			    }
+			    break;
+	default:	numDataFact = numData;
+    }
+    Vector<Pointf> res;
     VectorXcd freqbuf;
     try {
 	    Eigen::FFT<double> fft;
 	    fft.SetFlag(fft.HalfSpectrum);
-	    fft.fwd(freqbuf, timebuf);
+	    fft.fwd(freqbuf, data);
     } catch(...) {
         return res;
     }
     double threshold = 0;
-    if (type == T_PHASE) {
+    if (type == DataSource::T_PHASE) {
         for (int i = 0; i < int(freqbuf.size()); ++i) {    
             if (threshold < std::abs(freqbuf[i]))
                 threshold = std::abs(freqbuf[i]);
@@ -375,13 +446,16 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     		double xdata = i/(tSample*numData);
 		
 			switch (type) {
-			case T_PHASE:	if (std::abs(freqbuf[i]) > threshold)
-								res << Pointf(xdata, std::arg(freqbuf[i]));
-							else
-								res << Pointf(xdata, 0);
-							break;
-			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);		break;
-			case T_PSD:		res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(windowSum/tSample));
+			case DataSource::T_PHASE:	
+					if (std::abs(freqbuf[i]) > threshold)
+						res << Pointf(xdata, std::arg(freqbuf[i]));
+					else
+						res << Pointf(xdata, 0);
+					break;
+			case DataSource::T_FFT:		
+					res << Pointf(xdata, 2*std::abs(freqbuf[i])/numDataFact);		break;
+			case DataSource::T_PSD:		
+					res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(numDataFact/tSample));
 			}
     	}
     } else {
@@ -389,19 +463,188 @@ Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequenc
     		double xdata = (tSample*numData)/i;
 		
 			switch (type) {
-			case T_PHASE:	if (std::abs(freqbuf[i]) > threshold) 
-								res << Pointf(xdata, std::arg(freqbuf[i]));				
-							else
-								res << Pointf(xdata, 0);
-							break;
-			case T_FFT:		res << Pointf(xdata, 2*std::abs(freqbuf[i])/windowSum);		break;
-			case T_PSD:		res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(windowSum/tSample));
+			case DataSource::T_PHASE:	
+					if (std::abs(freqbuf[i]) > threshold) 
+						res << Pointf(xdata, std::arg(freqbuf[i]));				
+					else
+						res << Pointf(xdata, 0);
+					break;
+			case DataSource::T_FFT:		
+					res << Pointf(xdata, 2*std::abs(freqbuf[i])/numDataFact);		break;
+			case DataSource::T_PSD:		
+					res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(numDataFact/tSample));
 			}
     	}
     }
     return res;
 }
 
+Vector<Pointf> DataSource::FFT(Getdatafun getdata, double tSample, bool frequency, int type, 
+		int window, int numSub, double overlapping) {
+	int numData = int(GetCount());
+
+    VectorXd data(numData);
+    int num = 0;
+    for (int i = 0; i < numData; ++i) {
+        double d = Membercall(getdata)(i);
+        if (!IsNull(d)) {
+			data[i] = d;
+			num++;
+        }
+    }
+    numData = num;
+    
+    Vector<Pointf> res;	
+    if (num < 3)
+        return res;
+    data.resize(numData);
+	double numOver;
+	    
+	if (numSub == 1) {
+		numOver = numData*overlapping;
+		return FFTSimple(data, tSample, frequency, type, window, int(numOver));
+	} else {	// solve v t=2*(v-f*v/2) + (n-2)*(v-f*v) ==> v=t/(f + n -f*n)
+		double numDataPart = numData/(overlapping + numSub - overlapping*numSub); 
+		int inumDataPart = int(numDataPart);
+		numOver = numDataPart*overlapping;
+		VectorXd dataPart(inumDataPart);
+		double izero = 0;
+		int izerod = 0;
+		Vector<Pointf> fft;
+		for (int iPart = 0; iPart < numSub; ++iPart) {
+			if (iPart > 0) {
+				izero += int(numDataPart - numOver);
+				izerod = int(izero);
+			}
+			for (int i = 0; i < inumDataPart; ++i)
+				dataPart[i] = data[izerod + i];
+			Vector<Pointf> fftPart;
+			fftPart = FFTSimple(dataPart, tSample, frequency, type, window, int(numOver));
+			if (iPart == 0)
+				fft = clone(fftPart);		// pick()
+			else {
+				for (int i = 0; i < fftPart.GetCount(); ++i) {
+					fft[i].y += fftPart[i].y;
+					ASSERT(fft[i].x == fftPart[i].x);
+				}
+			}
+		}
+		for (int i = 0; i < fft.GetCount(); ++i) 
+			fft[i].y /= numSub;
+		return fft;
+	}
+}
+
+double DataSource::Integral(double from, double to, double n) {
+	double h = (to - from)/n;
+	double h2 = h/2;
+	   
+   	double sum1 = 0, sum2 = 0;
+   	for(int i = 0; i < n; i++) {
+      	sum1 += f(from + h*i + h2);
+      	sum2 += f(from + h*i);
+   	}
+   	return h/6*(f(from) + f(to) + 4*sum1 + 2*sum2);
+}
+
+double DataSource::Integral(Getdatafun getdataY, Getdatafun getdataX) {
+	double prevx = Membercall(getdataX)(0);	
+	double prevy = Membercall(getdataY)(0);
+	double sum = 0;
+	for (int i = 1; i < GetCount(); ++i) {
+		double x = Membercall(getdataX)(i);	
+		double y = Membercall(getdataY)(i);	
+		sum += (x - prevx)*(y + prevy);
+		prevx = x;
+		prevy = y;
+	}
+	return sum/2;	
+}
+
+void DataSource::GetSpectralMoments(double from, double to, double n, bool frequency, 
+									double &m_1, double &m0, double &m1, double &m2) {
+	if (!frequency) {
+		from = 1/to;
+		to = 1/from;
+	}
+	double h = (to - from)/n;
+	double h2 = h/2;
+	   
+   	double sum1_m_1 = 0, sum2_m_1 = 0;
+   	double sum1_m0 = 0, sum2_m0 = 0;
+   	double sum1_m1 = 0, sum2_m1 = 0;
+   	double sum1_m2 = 0, sum2_m2 = 0;
+   	double f1, f2, x1, x2;
+   	for(int i = 0; i < n; i++) {
+   		if (frequency) {
+	   		x1 = from + h*i + h2;
+	   		x2 = from + h*i;
+	   		f1 = f(x1);
+	   		f2 = f(x2);
+   		} else {
+   			x1 = 1/(from + h*i + h2);
+	   		x2 = 1/(from + h*i);
+	   		f1 = f(1/x1);
+	   		f2 = f(1/x2);
+   		}
+	   	sum1_m_1 += f1/x1;
+      	sum2_m_1 += f2/x2;
+      	sum1_m0 += f1;
+      	sum2_m0 += f2;
+      	sum1_m1 += f1*x1;
+      	sum2_m1 += f2*x2;
+      	sum1_m2 += f1*x1*x1;
+      	sum2_m2 += f2*x2*x2;
+   	}
+   	double f_from, f_to;
+	if (frequency) {
+   		f_from = f(from);
+   		f_to = f(to);   	
+	} else {
+   		f_from = f(1/from);
+   		f_to = f(1/to);   	
+	}
+   	m_1 = h/6*(f_from/from 	 	+ f_to/to    + 4*sum1_m_1 + 2*sum2_m_1);
+   	m0  = h/6*(f_from 			+ f(to) 	 + 4*sum1_m0  + 2*sum2_m0);
+   	m1  = h/6*(f_from*from 	 	+ f_to*to    + 4*sum1_m1  + 2*sum2_m1);
+   	m2  = h/6*(f_from*from*from + f_to*to*to + 4*sum1_m2  + 2*sum2_m2);
+}
+	
+void DataSource::GetSpectralMoments(Getdatafun getdataY, Getdatafun getdataX, bool frequency, 
+						double &m_1, double &m0, double &m1, double &m2) {
+	double prevx = Membercall(getdataX)(0);
+	double Si_1 = Membercall(getdataY)(0);
+	m_1 = m0 = m1 = m2 = 0;
+	for (int i = 1; i < GetCount(); ++i) {
+		double x = Membercall(getdataX)(i);
+		double Si = Membercall(getdataY)(i);
+		
+		double deltaX;
+		double fi, fi_1;
+		if (frequency) {
+			fi = x;
+			fi_1 = prevx;
+			deltaX = fi - fi_1;
+		} else {
+			fi = 1/x;
+			fi_1 = 1/prevx;
+			deltaX = fi_1 - fi;
+		}
+		if (fi != 0 && fi_1 != 0) {
+			m_1 += (Si/fi + Si_1/fi_1)*deltaX;
+			m0  += (Si + Si_1)*deltaX;
+			m1  += (Si*fi + Si_1*fi_1)*deltaX;
+			m2  += (Si*fi*fi + Si_1*fi_1*fi_1)*deltaX;
+		}
+		prevx = x;
+		Si_1 = Si;
+	}
+	m_1 /= 2;
+	m0  /= 2;
+	m1  /= 2;
+	m2  /= 2;
+}
+			
 bool DataSource::SameX(DataSource &data) {
 	int64 num = GetCount();
 	if (data.GetCount() != num)

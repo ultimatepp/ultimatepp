@@ -779,6 +779,19 @@ double ScatterDraw::GetValueX(int index, int64 idata) {
 	}
 }
 
+Value ScatterDraw::GetStringX(int index, int64 idata) {
+	double ret = GetValueX(index, idata);
+	if (IsNull(ret))
+		return Null;
+	if (cbModifFormatX) {
+		String sret;
+		cbModifFormatX(sret, int(idata), ret);
+		return sret;
+	} else
+		return ret;
+}
+	
+
 double ScatterDraw::GetValueY(int index, int64 idata) {
 	ASSERT(IsValid(index) && !IsNull(GetCount(index)));
 	ASSERT(idata >= 0 && idata < series[index].PointsData()->GetCount());
@@ -789,8 +802,21 @@ double ScatterDraw::GetValueY(int index, int64 idata) {
 		return Null;
 	}
 }
+
+Value ScatterDraw::GetStringY(int index, int64 idata) {
+	double ret = GetValueY(index, idata);
+	if (IsNull(ret))
+		return Null;
+	String sret;
+	if (cbModifFormatY) {
+		String sret;
+		cbModifFormatY(sret, int(idata), ret);
+		return sret;
+	} else
+		return ret;
+}
 	
- ScatterDraw &ScatterDraw::SetNoPlot(int index) {
+ScatterDraw &ScatterDraw::SetNoPlot(int index) {
  	ASSERT(IsValid(index));
  	
  	series[index].seriesPlot = NULL;

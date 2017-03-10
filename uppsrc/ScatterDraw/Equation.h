@@ -61,6 +61,7 @@ public:
 		}
 		return *this;
 	}
+	double R2Y(DataSource &series, double mean = Null);
 	
 protected:
 	Vector<double> coeff;
