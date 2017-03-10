@@ -169,21 +169,21 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int v
 		ZoomWindow(false, pt);
 	}
 	switch (action) {
-	case SCROLL: 		Scrolling(down, pt);
-						break;
+	case SCROLL: 			Scrolling(down, pt);
+							break;
 	case ZOOM_H_ENL:	 
-	case ZOOM_H_RED:	MouseZoom(value, true, false); 
-						break;
+	case ZOOM_H_RED:		MouseZoom(value, true, false); 
+							break;
 	case ZOOM_V_ENL:
-	case ZOOM_V_RED:	MouseZoom(value, false, true); 
-						break;
+	case ZOOM_V_RED:		MouseZoom(value, false, true); 
+							break;
 	case SHOW_COORDINATES:	LabelPopUp(down, pt);
 							break;
-	case ZOOM_WINDOW:	ZoomWindow(down, pt);
-						break;						
-	case CONTEXT_MENU:	if(showContextMenu)
-							MenuBar::Execute(THISBACK(ContextMenu));
-						break;
+	case ZOOM_WINDOW:		ZoomWindow(down, pt);
+							break;						
+	case CONTEXT_MENU:		if(showContextMenu && !down)
+								MenuBar::Execute(THISBACK(ContextMenu));
+							break;
 	case NO_ACTION:;
 	}
 }
@@ -256,8 +256,10 @@ void ScatterCtrl::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool s
 		if (mouseBehavior[i].ctrl   == ctrl   && mouseBehavior[i].alt   == alt   &&
 		    mouseBehavior[i].shift  == shift  && mouseBehavior[i].left  == left  &&
 		    mouseBehavior[i].middle == middle && mouseBehavior[i].right == right &&
-		    ((mouseBehavior[i].middleWheel == 0) || mouseBehavior[i].middleWheel == ((middleWheel > 0) - (middleWheel < 0))))
+		    ((mouseBehavior[i].middleWheel == 0) || mouseBehavior[i].middleWheel == ((middleWheel > 0) - (middleWheel < 0)))) {
 		    DoMouseAction(down, pt, mouseBehavior[i].action, middleWheel);
+			break;
+		}
 	}	
 }
 
