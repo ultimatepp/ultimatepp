@@ -132,6 +132,8 @@ void TabRegression::OnAutoset() {
 }
 
 void TabRegression::OnUpdate() {
+	if (down.grid.GetRowCount() == 0 || down.gridDef.GetRowCount() == 0)
+		return;
 	up.scatter.RemoveAllSeries();
 	int idX = down.gridDef.Get(0, 0);
 	int idY = down.gridDef.Get(0, 3);
@@ -139,7 +141,25 @@ void TabRegression::OnUpdate() {
 	int beginData = down.gridDef.Get(0, 1);
 	int numData = int(down.gridDef.Get(0, 2)) - beginData + 1;
 	ds.Init(down.grid, idY, idX, useCols, beginData, numData);
-	up.scatter.AddSeries(ds).Legend("Series").NoMark();
+	String serieName, xLegend;
+	if (down.firstCellIsName) {
+		if (down.switchColsRows == 0) {
+			xLegend = down.grid.Get(0, down.gridDef.Get(0, 0));
+			serieName = down.grid.Get(0, down.gridDef.Get(0, 3));
+		} else {
+			xLegend = down.grid.Get(down.gridDef.Get(0, 0), 0);
+			serieName = down.grid.Get(down.gridDef.Get(0, 3), 0);
+		}
+	} else
+		serieName = t_("Series");
+	up.scatter.AddSeries(ds).Legend(serieName).NoMark();
+	if (!xLegend.IsEmpty()) {
+		up.scatter.SetPlotAreaBottomMargin(45);
+		up.scatter.SetLabelX(xLegend);
+	} else {
+		up.scatter.SetPlotAreaBottomMargin(30);
+		up.scatter.SetLabelX("");
+	}
 	down.gridTrend.Clear();
 	up.scatter.ZoomToFit(true, true);
 }
@@ -180,7 +200,6 @@ void TabRegression::Fit() {
 	up.scatter.RemoveAllSeries();
 	up.scatter.AddSeries(ds).Legend("Series").NoMark();
 	for (int i = 0; i < equationTypes.GetCount(); ++i) {
-		double kk = r2[i];
 		if (r2[i] >= down.minR2)
 			up.scatter.AddSeries(equationTypes[i]).Legend(equationTypes[i].GetFullName()).NoMark().Stroke(2);
 	}
