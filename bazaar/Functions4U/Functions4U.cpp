@@ -923,6 +923,10 @@ String SeasonName(int iseason) {
 	return iseason >= 0 && iseason < 4 ? season[iseason] : "";
 }
 
+int GetSeason(Date &date) {
+	return int((date.month - 1)/3.);
+}
+
 String BytesToString(uint64 _bytes, bool units)
 {
 	String ret;
