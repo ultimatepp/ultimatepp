@@ -9,7 +9,9 @@ void   vfunct1(double& y, double x) {y = 0;}
 void   vfunct2(double& y, double x) {y = x*x;}
 void   vfunct3(double& y, double x) {y = -x*x;}
 
-void Tab2_Functiona::Init()
+double Tab2_Functions::MySource::Calc(double x) {return x + data/10;}
+
+void Tab2_Functions::Init()
 {
 	CtrlLayout(*this);	
 	SizePos();
@@ -24,11 +26,14 @@ void Tab2_Functiona::Init()
 	scatter.AddSeries(&vfunct1).Legend("y = 0").NoMark();
 	scatter.AddSeries(&vfunct2).Legend("y = x^2").NoMark();
 	scatter.AddSeries(&vfunct3).Legend("y = -x^2").NoMark();
+	
+	source.Init(23);
+	scatter.AddSeries(source).Legend("My source").NoMark();
 }
 
 ScatterDemo *Construct2()
 {
-	static Tab2_Functiona tab;
+	static Tab2_Functions tab;
 	return &tab;
 }
 
