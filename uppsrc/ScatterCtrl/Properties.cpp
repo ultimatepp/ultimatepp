@@ -389,12 +389,24 @@ DataDlg::DataDlg(ScatterCtrl& scatter)
 
 Value DataDlg::DataSourceX::Format(const Value& q) const 
 {
-	return pscatter->GetValueX(index, q);
+	Value ret = pscatter->GetStringX(index, q);
+	if (ret.Is<String>()) {
+		String sret = ret;
+		sret.Replace("\n", " ");
+		return sret;
+	}
+	return ret;
 }
 
 Value DataDlg::DataSourceY::Format(const Value& q) const 
 {
-	return pscatter->GetValueY(index, q);
+	Value ret = pscatter->GetStringY(index, q);
+	if (ret.Is<String>()) {
+		String sret = ret;
+		sret.Replace("\n", " ");
+		return sret;
+	}
+	return ret;
 }
 
 void DataDlg::OnTab() 
@@ -438,7 +450,6 @@ void DataDlg::OnTab()
 			}
 		}
 	}
-		
 	data.WhenBar = THISBACK(OnArrayBar);
 }
 
@@ -613,7 +624,13 @@ ProcessingTab::ProcessingTab()
 	tabFreq.opXAxis.WhenAction = THISBACK(OnFFT);
 	tabFreq.type.WhenAction = THISBACK(OnFFT);
 	tabFreq.type = 0;
-	tabFreq.setWindow.WhenAction = THISBACK(OnFFT);
+	
+	for (int i = 0; i < DataSource::GetFFTWindowCount(); ++i)
+		tabFreq.window.Add(InitCaps(DataSource::GetFFTWindowStr(i)));
+	tabFreq.window.SetIndex(0);
+	tabFreq.window.WhenAction = THISBACK(OnFFT);
+	tabFreq.num <<= 1;
+	tabFreq.overlapping <<= 0.1;
 	
 	tabFit.opSeries = true;
 	tabFit.opSeries.WhenAction = THISBACK(OnOp);
@@ -628,6 +645,7 @@ ProcessingTab::ProcessingTab()
 	tabFit.opMin.WhenAction = THISBACK(OnOp);
 	tabFit.opMovAvg.WhenAction = THISBACK(OnOp);
 	tabFit.opSecAvg.WhenAction = THISBACK(OnOp);
+	tabFit.butAutoSensSector.WhenAction = THISBACK(OnAutoSensSector);
 	tabFit.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
 	tabFit.width.WhenAction = THISBACK(OnUpdateSensitivity);
 	
@@ -732,11 +750,38 @@ void ProcessingTab::OnOp()
 	tabFit.scatter.ScatterDraw::Show(7, tabFit.opSpline);
 	tabFit.scatter.ScatterDraw::Show(8, tabFit.opMax);
 	tabFit.scatter.ScatterDraw::Show(9, tabFit.opMin);
-	tabFit.scatter.ScatterDraw::Show(10, tabFit.opMovAvg);
-	tabFit.scatter.ScatterDraw::Show(11, tabFit.opSecAvg);
+	tabFit.scatter.ScatterDraw::Show(10,tabFit.opMovAvg);
+	tabFit.scatter.ScatterDraw::Show(11,tabFit.opSecAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
+}
+
+
+void ProcessingTab::OnAutoSensSector() 
+{
+	DataSource &data = tabFit.scatter.GetSeries(0);
+	Vector<Pointf> secAvg;
+	double baseWidth;
+	
+	baseWidth = 0;
+	for (int64 i = 1; i < data.GetCount(); ++i)
+		baseWidth += (data.x(i) - data.x(i-1));
+	baseWidth /= (data.GetCount() - 1);
+	
+	double rangeX = data.x(data.GetCount() - 1) - data.x(int64(0));
+	
+	for(double width = baseWidth; width < rangeX/10.; width += baseWidth) {
+		secAvg = data.SectorAverageY(width);
+		VectorPointf sector(secAvg);
+		Vector<int64> ids;
+		sector.MaxListY(ids, 10*baseWidth);
+		if (ids.GetCount() < 5) {
+			tabFit.width <<= width;
+			return;
+		}
+	}
+	tabFit.scatter.Refresh();
 }
 
 void ProcessingTab::OnOperation()
@@ -797,6 +842,9 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		val = data.MaxY(idmx);
 		if (!IsNull(val))
 			tabFit.eMax = Format("(%f,%f)", data.x(idmx), val);
+		Pointf p = data.MaxSubDataImpY(idmx, 3);
+		if (!IsNull(p))
+			tabFit.eMaxImp = Format("(%f,%f)", p.x, p.y);
 		val = data.MinY(idmx);
 		if (!IsNull(val))
 			tabFit.eMin = Format("(%f,%f)", data.x(idmx), val);
@@ -1002,7 +1050,7 @@ void ProcessingTab::OnFFT()
 		PointfLess less;
 		Sort(orderedSeries, less);								
 		
-		resampledSeries.Clear();
+		Vector<double> resampledSeries;
 		resampledSeries << orderedSeries[0].y;
 		double nextSample = orderedSeries[0].x + samplingTime;
 		for (int i = 0; i < orderedSeries.GetCount() - 1;) {
@@ -1020,9 +1068,27 @@ void ProcessingTab::OnFFT()
 			resampledSeries << orderedSeries[orderedSeries.GetCount() - 1].y;
 	
 		VectorY<double> series(resampledSeries, 0, samplingTime);
-		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.type, tabFreq.setWindow);
+		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.type, 
+							tabFreq.window.GetIndex(), tabFreq.num, tabFreq.overlapping);
 		VectorPointf fftData(fft);
 		fftData.MaxY(idMaxFFT);
+		Pointf p = fftData.MaxSubDataImpY(idMaxFFT, 3);
+		if (!IsNull(p))
+			tabFreq.eMax = Format("(%f,%f)", p.x, p.y);
+		
+		if (tabFreq.type == DataSource::T_PSD) {
+			double m_1, m0, m1, m2;
+			fftData.GetSpectralMomentsY(tabFreq.opXAxis == 1, m_1, m0, m1, m2);
+			tabFreq.m_1 <<= FormatDouble(m_1);
+			tabFreq.m0  <<= FormatDouble(m0);
+			tabFreq.m1  <<= FormatDouble(m1);
+			tabFreq.m2  <<= FormatDouble(m2);
+		} else {
+			tabFreq.m_1 <<= "";
+			tabFreq.m0  <<= "";
+			tabFreq.m1  <<= "";
+			tabFreq.m2  <<= "";
+		}
 	}
 	if (fft.IsEmpty()) {
 		tabFreq.comments.SetText(errText);
@@ -1032,9 +1098,9 @@ void ProcessingTab::OnFFT()
 	
 	String strtype;
 	switch(tabFreq.type) {
-	case DataSource::T_FFT:		strtype = t_("FFT");				break;
-	case DataSource::T_PHASE:	strtype = t_("FFT-phase [rad]");	break;
-	case DataSource::T_PSD:		strtype = t_("PSD");				break;
+	case DataSource::T_FFT:		strtype = t_("FFT");					break;
+	case DataSource::T_PHASE:	strtype = t_("FFT-phase [rad]");		break;
+	case DataSource::T_PSD:		strtype = t_("Power Spectral Density");	break;
 	}
 	String legend = tabFit.scatter.GetLegend(0) + String("-") + strtype;
 	tabFreq.scatter.AddSeries(fft).Legend(legend);

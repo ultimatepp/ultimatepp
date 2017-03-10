@@ -118,6 +118,7 @@ public:
 	void UpdateField(const String name, int id);
 	void OnFFT();
 	void OnOp();
+	void OnAutoSensSector();
 	void OnShowEquation();
 	void UpdateEquations();
 	void OnFromTo();
@@ -138,7 +139,6 @@ private:
 	bool tabFreqFirst, tabOpFirst;
 	
 	Vector<Pointf> fft;
-	Vector<double> resampledSeries;
 	AvgEquation average;
 	LinearEquation linear;
 	PolynomialEquation2 cuadratic;

@@ -119,13 +119,20 @@ and `"Data`" dialogs.&]
 the `"Data`" dialog details are described.&]
 [s1; &]
 [s6;%- &]
-[s5;:Upp`:`:ScatterCtrl`:`:ShowProcessDlg`(bool`):%- [_^Upp`:`:ScatterCtrl^ ScatterCtrl
-][@(0.0.255) `&]_[* ShowProcessDlg]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s5;:ScatterCtrl`:`:ShowProcessDlg`(bool`):%- [_^Upp`:`:ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+]_[* ShowProcessDlg]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 show] is true, the context menu will have a `"Process`" 
 dialog.&]
 [s3; In DEBUG mode the `"Process`" menu will always appear.&]
 [s3; [^topic`:`/`/ScatterCtrl`/srcdoc`/Process`$en`-us^ Here] the `"Process`" 
 dialog details are described.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:ShowButtons`(bool`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_[* S
+howButtons]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3; If [%-*@3 show] is true, Properties, Data and Process buttons 
+will appear at the right top end of the control.&]
+[s3; In DEBUG mode these buttons will always appear.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterCtrl`:`:ShowInfo`(bool`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* ShowInfo]([@(0.0.255) b
