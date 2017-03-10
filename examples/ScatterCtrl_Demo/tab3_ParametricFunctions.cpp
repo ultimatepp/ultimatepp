@@ -22,12 +22,12 @@ void Tab3_ParametricFunctions::Init()
 	scatter.SetXYMin(-2, -2);
 	
 	scatter.AddSeries(&opara1, 20).Legend("Circle 1");//.NoMark();
-	scatter.AddSeries(STDBACK(para1), 100).Legend("Circle 2").NoMark();
-	scatter.AddSeries(STDBACK(para2), 100).Legend("Coil").NoMark();
-	scatter.AddSeries(STDBACK(para3), 150).Legend("Spiral 1").NoMark();
+	scatter.AddSeries(&para1, 100).Legend("Circle 2").NoMark();
+	scatter.AddSeries(&para2, 100).Legend("Coil").NoMark();
+	scatter.AddSeries(&para3, 150).Legend("Spiral 1").NoMark();
 	scatter.AddSeries(STDBACK1(para3p, 2.5), 150, 0, 1).Legend("Spiral 2").NoMark();
-	scatter.AddSeries(STDBACK(para4), 2).Legend("VLine").NoMark();
-	scatter.AddSeries(STDBACK(para5), 2).Legend("HLine").NoMark();
+	scatter.AddSeries(&para4, 2).Legend("VLine").NoMark();
+	scatter.AddSeries(&para5, 2).Legend("HLine").NoMark();
 	scatter.AddSeries(STDBACK2(para1p, 4.0, 0.25), 50, 0, 1).Legend("Ellipse 1").NoMark();
 	scatter.AddSeries(STDBACK2(para1p, 2.0, 0.5), 50, 0, 1).Legend("Ellipse 2").NoMark();
 }

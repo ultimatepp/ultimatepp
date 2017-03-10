@@ -36,14 +36,26 @@ private:
 	VectorMap<double, double> s5;
 };
 
-class Tab2_Functiona : public WithTab2Functions<ScatterDemo> {
+class Tab2_Functions : public WithTab2Functions<ScatterDemo> {
 public:
-	typedef Tab2_Functiona CLASSNAME;
+	typedef Tab2_Functions CLASSNAME;
 	
 	void Init();
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 	
-	Callback back1, back2, back3;
+	class MySource : public FuncSource {
+	public:
+		void Init(double data) {
+			this->data = data;
+			function = [=](double x) {return Calc(x);};
+		}
+		
+		double Calc(double x);
+		
+	private:
+		double data;
+	};
+	MySource source;
 };
 
 class Tab3_ParametricFunctions : public WithTab3ParametricFunctions<ScatterDemo> {
