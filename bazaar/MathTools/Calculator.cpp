@@ -19,7 +19,7 @@ void TabCalculator::Init() {
 	gridVariables.AddColumn(t_("Name"));
 	gridVariables.AddColumn(t_("Value"));
 	
-	code.SetFont(Courier(12));
+	code.SetFont(Courier(14));
 	code.DisableBreakpointing();
 	code.LineNumbers(false);
 	code.Highlight("cpp");	
