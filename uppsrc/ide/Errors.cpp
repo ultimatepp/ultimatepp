@@ -47,7 +47,6 @@ bool Ide::FindLineError(const String& ln, FindLineErrorCache& cache, ErrorInfo& 
 					}
 					for(int i = 0; i < cache.wspc_paths.GetCount(); i++) {
 						String path = AppendFileName(cache.wspc_paths[i], file);
-						bool b = false;
 						String ext = ToLower(GetFileExt(path));
 						if(findarg(ext, ".obj", ".lib", ".o", ".so", ".a", ".", "") < 0) {
 							FindFile ff;
