@@ -218,7 +218,6 @@ bool AndroidBuilder::Link(
 	if(linkfile.GetCount()) {
 		PutConsole("-----");
 		PutConsole("Compiling java sources...");
-		bool error = false;
 		time = GetTickCount();
 		for(int i = 0; i < linkfile.GetCount(); i++) {
 			if(Execute(linkfile[i], ss) != 0) {
