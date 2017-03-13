@@ -29,7 +29,7 @@ INITBLOCK {
 #undef KEY2
 
 #ifdef KEYNAMESPACE
-};
+}
 #endif
 
 #include <Core/t_.h>

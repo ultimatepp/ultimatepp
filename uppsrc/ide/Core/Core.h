@@ -32,7 +32,7 @@ struct Ide;
 namespace Upp {
 class  Ctrl;
 class  Image;
-};
+}
 
 class IdeContext
 {
