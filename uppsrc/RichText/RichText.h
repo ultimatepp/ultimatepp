@@ -10,7 +10,7 @@ namespace Upp {
 #define IMAGEFILE <RichText/RichText.iml>
 #include <Draw/iml_header.h>
 
-INITIALIZE(RichImage)
+INITIALIZE(RichImage);
 
 class  PasteClip;
 struct RichPara;
