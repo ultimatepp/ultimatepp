@@ -116,7 +116,8 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	ErrorInfo f;
 	f.file = fn;
 	f.lineno = ln;
-	f.linepos = 0;
+	f.linepos = pos + 1;
+	f.len = count;
 	f.kind = 0;
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
 	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
@@ -217,6 +218,8 @@ void Ide::FindInFiles(bool replace) {
 	editor.SetFindReplaceData(d);
 	
 	if(c == IDOK) {
+		SaveFile();
+
 		ffound.HeaderTab(2).SetText("Source line");
 		Renumber();
 		ff.find.AddHistory();
@@ -296,6 +299,20 @@ void Ide::FindInFiles(bool replace) {
 	}
 }
 
+
+void Ide::FindFileAll(const Vector<Tuple<int, int>>& f)
+{
+	ShowConsole2();
+	ffound.Clear();
+	for(auto pos : f) {
+		editor.CachePos(pos.a);
+		int linei = editor.GetLinePos(pos.a);
+		AddFoundFile(editfile, linei + 1, editor.GetUtf8Line(linei), pos.a, pos.b);
+	}
+	ffound.HeaderTab(2).SetText(Format("Source line (%d)", ffound.GetCount()));
+	ffound.Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");
+};
+	
 void Ide::FindString(bool back)
 {
 	if(!editor.FindString(back))

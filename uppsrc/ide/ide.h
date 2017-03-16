@@ -794,7 +794,7 @@ public:
 		void  FindString(bool back);
 		void  ClearEditedFile();
 		void  ClearEditedAll();
-	
+		void  FindFileAll(const Vector<Tuple<int, int>>& f);
 		void  InsertColor();
 		void  InsertLay(const String& fn);
 		void  InsertIml(const String& fn, String classname);
@@ -985,11 +985,12 @@ public:
 		String file;
 		int    lineno;
 		int    linepos;
+		int    len;
 		int    kind;
 		String message;
 		String error_pos;
 		
-		ErrorInfo() { lineno = linepos = kind = 0; }
+		ErrorInfo() { lineno = linepos = kind = len = 0; }
 	};
 	
 	FindLineErrorCache error_cache;
