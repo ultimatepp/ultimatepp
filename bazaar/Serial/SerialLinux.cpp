@@ -239,6 +239,9 @@ namespace Upp
 	// control DTR and RTS lines
 	bool Serial::SetDTR(bool on)
 	{
+		if(fd == -1)
+			return false;
+		
 		unsigned int ctl;
 		int r;
 
@@ -260,6 +263,9 @@ namespace Upp
 
 	bool Serial::SetRTS(bool on)
 	{
+		if(fd == -1)
+			return false;
+		
 		unsigned int ctl;
 		int r;
 
@@ -304,6 +310,9 @@ namespace Upp
 	// check if data is available on serial port
 	int Serial::Avail(void)
 	{
+		if(fd == -1)
+			return 0;
+		
 		if (fd == -1)
 			return false;
 		int bytes = 0;
@@ -314,6 +323,9 @@ namespace Upp
 	// read a single byte, block 'timeout' milliseconds
 	bool Serial::Read(byte &c, uint32_t timeout)
 	{
+		if(fd == -1)
+			return false;
+		
 		char buf[1];
 
 		uint32_t tim = msecs() + timeout;
@@ -332,6 +344,9 @@ namespace Upp
 
 	bool Serial::Read(char &c, uint32_t timeout)
 	{
+		if(fd == -1)
+			return false;
+		
 		char buf[1];
 
 		uint32_t tim = msecs() + timeout;
@@ -373,6 +388,9 @@ namespace Upp
 	// if reqSize == 0 just read all available data, waiting for 'timeout' if != 0
 	String Serial::Read(uint32_t reqSize, uint32_t timeout)
 	{
+		if(fd == -1)
+			return "";
+		
 		char buf[1001];
 		buf[1000] = 0;
 		String data;
@@ -423,6 +441,9 @@ namespace Upp
 	// write a single byte
 	bool Serial::Write(char c, uint32_t timeout)
 	{
+		if(fd == -1)
+			return false;
+		
 		if (!timeout)
 			return write(fd, &c, 1);
 
@@ -441,6 +462,9 @@ namespace Upp
 	// write buffer
 	bool Serial::Write(uint8_t const *buf, uint32_t len, uint32_t timeout)
 	{
+		if(fd == -1)
+			return false;
+		
 		if (!timeout)
 			return (write(fd, buf, len) == len);
 
