@@ -355,6 +355,8 @@ public:
 	Event<String&>     WhenPaste;
 	Event<>            WhenUpdate;
 
+	Event<const Vector<Tuple<int, int>>&> WhenFindAll;
+
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
 
@@ -370,6 +372,7 @@ public:
 	void   EscapeFindReplace();
 	void   CloseFindReplace();
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
+	void   FindAll();
 	bool   FindFrom(int pos, bool back, bool block);
 	bool   RegExpFind(int pos, bool block);
 	bool   Find(bool back, bool block);

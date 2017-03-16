@@ -1,4 +1,5 @@
 #include "ide.h"
+#include "ide.h"
 
 #define IMAGECLASS IdeImg
 #define IMAGEFILE  <ide/ide.iml>
@@ -469,11 +470,8 @@ Ide::Ide()
 	editor.WhenFontScroll = THISBACK(EditorFontScroll);
 	editor.WhenOpenFindReplace = THISBACK(AddHistory);
 	editor.WhenPaste = THISBACK(IdePaste);
-
-#ifdef CPU_64
-	editor.MaxLength(700000000);
-	editor2.MaxLength(700000000);
-#endif
+	
+	editor.WhenFindAll << THISFN(FindFileAll);
 
 	macro_api = MacroEditor();
 

@@ -21,6 +21,7 @@ void CodeEditor::InitFindReplace()
 	                 <<= findreplace.incremental <<= findreplace.regexp
 	                 <<= findreplace.ignorecase <<= THISBACK(IncrementalFind);
 	ff_start_pos = -1;
+	findreplace.find_all << [=] { FindAll(); };
 }
 
 FindReplaceDlg::FindReplaceDlg()
@@ -32,6 +33,7 @@ FindReplaceDlg::FindReplaceDlg()
 	amend.SetImage(CodeEditorImg::Replace());
 	amend_all.SetImage(CodeEditorImg::ReplaceAll());
 	amend_rest.SetImage(CodeEditorImg::ReplaceRest());
+	find_all.SetImage(CodeEditorImg::FindAll());
 	incremental <<= true;
 	mode <<= THISBACK(Sync);
 	mode.Hide();
@@ -233,6 +235,21 @@ bool CodeEditor::RegExpFind(int pos, bool block)
 		ln = GetUtf8Line(line);
 		pos = 0;
 	}
+}
+
+void CodeEditor::FindAll()
+{
+	Vector<Tuple<int, int>> found;
+	foundpos = 0;
+	while(FindFrom(foundpos, false, true)) {
+		found.Add(MakeTuple(foundpos, foundsize));
+		foundpos += foundsize;
+		if(found.GetCount() >= 1000) {
+			Exclamation("Too many matches, only first 1000 will be shown.");
+			break;
+		}
+	}
+	WhenFindAll(found);
 }
 
 bool CodeEditor::FindFrom(int pos, bool back, bool block)
@@ -573,6 +590,7 @@ void CodeEditor::OpenNormalFindReplace0(bool replace)
 {
 	findreplace.incremental.Enable(GetLength() < 2000000);
 	findreplace.Setup(replace);
+	findreplace.find_all.Show(!replace && WhenFindAll);
 	findreplace.itext = GetI();
 	findreplace.prev.Show();
 	findreplace.next <<= THISBACK(DoFind);
@@ -586,8 +604,8 @@ void CodeEditor::OpenNormalFindReplace0(bool replace)
 void CodeEditor::OpenNormalFindReplace(bool replace)
 {
 	OpenNormalFindReplace0(replace);
-	if(!findreplace.incremental_from_cursor)
-		IncrementalFind();
+//	if(!findreplace.incremental_from_cursor)
+//		IncrementalFind();
 }
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
