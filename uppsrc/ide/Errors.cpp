@@ -295,7 +295,10 @@ void Ide::GoToError(const ErrorInfo& f)
 	String file = NormalizePath(f.file);
 	DoEditAsText(file);
 	EditFile(file);
-	editor.SetCursor(editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0)));
+	int pos = editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0));
+	editor.SetCursor(pos);
+	if(f.len)
+		editor.SetSelection(pos, pos + f.len);
 	editor.CenterCursor();
 	editor.SetFocus();
 	Sync();
