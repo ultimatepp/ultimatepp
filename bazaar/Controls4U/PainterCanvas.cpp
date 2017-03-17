@@ -104,7 +104,7 @@ String GetValueStringXml(String str, const char* var) {
 
 Color HtmlToColor(const char *str) {
 	int col;
-	sscanf(str+1, "%x", &col);
+	sscanf(str+1, "%x", (unsigned int *)&col);
 	return Color(col >> 16, (col >> 8) & 255, col & 255);
 }
 

@@ -224,13 +224,13 @@ EditFile::EditFile() {
 	isFile = true;		
 	title = t_("Select file");	
 	EditFileFolder();
-};
+}
 
 EditFolder::EditFolder() {
 	isFile = false;	
 	title = t_("Select directory");	
 	EditFileFolder();
-};
+}
 
 bool SetFirstChild(Ctrl *ctrl) {
 	if (Ctrl *p = ctrl->GetParent()) {
@@ -373,7 +373,7 @@ void StaticImage::MouseLeave() {
 
 void StaticImage::Layout() {
    	if (useAsBackground) {
-  		Ctrl *q = GetFirstChild(); 
+  		//Ctrl *q = GetFirstChild(); 
 		SetFirstChild((Ctrl *)this);
 		SizePos();
 	}
@@ -726,7 +726,7 @@ void StaticArrow::FramePaint(Draw& w, const Rect& rr) {
 	Rect r = rr;
 	r.Offset(off, off);
 		
-	Size sz = rr.GetSize();
+	//Size sz = rr.GetSize();
 	
 	sw.Clear(RGBAZero());
 	sw.LineCap(LINECAP_BUTT);
@@ -899,7 +899,7 @@ void StaticClock::Paint(Draw& ww) {
 	w.LineCap(LINECAP_BUTT);
 		
 	Rect r = GetRect();
-	Rect ro = GetRect();
+	//Rect ro = GetRect();
 	
 	Color letterColor, background;;
 	if (colorType == WhiteType) {
@@ -909,7 +909,7 @@ void StaticClock::Paint(Draw& ww) {
 		background = Black();
 		letterColor = White();
 	}	
-	double hs = 20;
+	//double hs = 20;
 	int width = min(r.right - r.left, r.bottom - r.top);
 	double bigF = width/200.;
 	if (image)
@@ -1219,7 +1219,7 @@ void Meter::Paint(Draw& ww) {
 	double miny = sina;
 	double maxy = sina;
 	double angminx = a;
-	double angminy = a;
+	//double angminy = a;
 	if (cosb < minx) {
 		minx = cosb;
 		angminx = b;
@@ -1228,12 +1228,12 @@ void Meter::Paint(Draw& ww) {
 		maxx = cosb;
 	if (sinb > miny) {
 		miny = sinb;
-		angminy = b;
+		//angminy = b;
 	}
 	if (sinb < maxy)
 		maxy = sinb;
 	int maxgrad = 0;
-	double angmaxx = 0;
+	//double angmaxx = 0;
 	for (double ang = a; ang != b; ang = AngleAdd360(ang, double(direction))) {
 		maxgrad++;
 		if (ang == 180) {
@@ -1241,10 +1241,10 @@ void Meter::Paint(Draw& ww) {
 			angminx = 180;
 		} else if (ang == 0) {
 			maxx = 1;
-			angmaxx = 0; 
+			//angmaxx = 0; 
 		} else if (ang == 90) {
 			miny = 1;
-			angminy = 90;
+			//angminy = 90;
 		} else if (ang == 270)
 			maxy = -1;
 	}
@@ -1315,7 +1315,7 @@ void MeterThread(Meter *gui, double newValue) {
 	long deltaT = labs(long(1000.*delta*gui->speed/(gui->max - gui->min)));
 	int maxi = (int)(fabs((newValue-gui->value)/delta));
 	
-	long t0 = GetTickCount();
+	//long t0 = GetTickCount();
 	for (int i = 0; i < maxi; ++i, gui->value += delta) {
 		if (gui->kill) {
 			AtomicDec(gui->running);
@@ -1450,7 +1450,7 @@ void Knob::Layout() {
 		dangle = angleBegin - dangle;
 	else
 		dangle = angleBegin + dangle;
-	double angle = ToRad(dangle);
+	//double angle = ToRad(dangle);
 	ImageBuffer ib(int(2*R), int(2*R));
 	BufferPainter sw(ib);	
 	sw.Clear(RGBAZero());
@@ -1502,8 +1502,8 @@ void Knob::Layout() {
 			if (colorType == WhiteType) {
 				sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(dx+R/2, dx+R/2, White(), dx+R, dx+R, R, LtGray());
 			} else if (colorType == BlackType) {
-				Color lineColor = (colorType == WhiteType) ? Black() : White();
-				Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
+				//Color lineColor = (colorType == WhiteType) ? Black() : White();
+				//Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
 				sw.Circle(dx+rugg+R, dx+rugg+R, R).Fill(fill);	
 				sw.Begin();
 					sw.BeginMask();
@@ -1562,11 +1562,11 @@ void Knob::Paint(Draw& w) {
 	BufferPainter sw(ib);	
 	sw.Clear(RGBAZero());
 	
-	int direction;
+/*	int direction;
 	if (clockWise)
 		direction = -1;
 	else
-		direction = 1;
+		direction = 1;*/
 
 	if (majorstep == 0)
 		majorstep = maxv - minv;
@@ -1585,8 +1585,8 @@ void Knob::Paint(Draw& w) {
 	//majorstep = (maxv-minv)/(nmajor+1);
 	nmajor = int((maxv-minv)/majorstep) - 1;
 	
-	double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
-	double majorstepa = majorstep*maxgrad/(maxv - minv);	
+	//double minorstepa = minorstep*maxgrad/(maxv - minv);	// Step in angle
+	//double majorstepa = majorstep*maxgrad/(maxv - minv);	
 
 	if (HasFocus()) {
 		if (number)
@@ -1630,7 +1630,7 @@ void Knob::Paint(Draw& w) {
 			sw.Circle(cx+0.7*r*cos(angle), cy-0.7*r*sin(angle), 0.15*r).Stroke(1, lineColor).Fill(fill);
 	} else if (colorType == WhiteType || colorType == BlackType) {
 		Color lineColor = (colorType == WhiteType) ? Black() : White();
-		Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
+		//Color almostColor = (colorType == WhiteType) ? Color(220, 220, 220) : Color(60, 60, 60);
 		if (mark == Line)
 			sw.Move(cx+realR*cos(angle), cy-realR*sin(angle))
 			  .Line(cx+0.5*r*cos(angle), cy-0.5*r*sin(angle)).Stroke(r/25., lineColor);
@@ -2097,7 +2097,7 @@ void FileBrowser::FolderWhenChange() {
 
 void FileBrowser::FilesEnterRow() {
 	Exclamation("DELETE");
-	int i = 1;
+	//int i = 1;
 }
 
 void FileBrowser::SortByColumn(int col) {

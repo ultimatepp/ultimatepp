@@ -389,8 +389,8 @@ void SliderCtrlX::MouseMove(Point pos, dword keyflags)
 {
 	if(HasCapture()) {
 		int n;
-		int p = HoVe(pos.x, pos.y);
-		int thumbPos = SliderToClient(m_vValues[0]);
+		//int p = HoVe(pos.x, pos.y);
+		//int thumbPos = SliderToClient(m_vValues[0]);
 		if (IsInverted())
 			n = ClientToSlider(HoVe(GetSize().cx-pos.x, GetSize().cy-pos.y));
 		else
