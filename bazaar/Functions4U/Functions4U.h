@@ -37,7 +37,7 @@ bool AppendFile(const char *filename, const char *str);
 
 String AppendFileName(const String& path1, const char *path2, const char *path3);
 	
-inline String Trim(const String& s) {return TrimBoth(s);};
+inline String Trim(const String& s) {return TrimBoth(s);}
 
 String FitFileName(String fileName, int len);
 

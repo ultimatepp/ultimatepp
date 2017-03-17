@@ -75,8 +75,8 @@ bool LaunchFileCreateProcess(const char *file, const char *params, const char *d
 	wexec = Format("\"%s\" \"%s\"", GetExtExecutable(GetFileExt(file)), file).ToWString();
 	WStringBuffer wsbexec(wexec);
 	
-    if(!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, ToSystemCharsetW(directory), &startInfo, &procInfo))  
-        return false;
+	if (!CreateProcessW(NULL, wsbexec, NULL, NULL, FALSE, 0, NULL, ToSystemCharsetW(directory), &startInfo, &procInfo))  
+		return false;
 
    	WaitForSingleObject(procInfo.hProcess, 0);
 
@@ -169,7 +169,7 @@ bool FileStrAppend(const char *file, const char *str) {
 	return true;
 }
 
-bool AppendFile(const char *file, const char *str) {return FileStrAppend(file, str);};
+bool AppendFile(const char *file, const char *str) {return FileStrAppend(file, str);}
 
 String AppendFileName(const String& path1, const char *path2, const char *path3) {
 	String result = path1;
@@ -1196,7 +1196,7 @@ Value GetField(const String &str, int &pos, char separator, char decimalSign, bo
 		Time t = ScanTime(sret);
 		if (IsNull(t)) 
 			return sret;
-		else if (t.hour == t.minute == t.second == 0)
+		else if (t.hour == 0 && t.minute == 0 && t.second == 0)
 			return Date(t);
 		else
 			return t;
@@ -1510,12 +1510,12 @@ bool DeleteDeepWildcardsX(const char *path, const char *namewc, bool filefolder,
 		if (PatternMatch(namewc, name)) {
 			if (ff.IsFolder() && !filefolder) {
 				if (!DeleteFolderDeepX(full, flags)) {
-					dword error = GetLastError();
+					//dword error = GetLastError();
 					return false;
 				}
 			} else if (ff.IsFile() && filefolder) {
 				if (!FileDeleteX(full, flags)) {
-					dword error = GetLastError();
+					//dword error = GetLastError();
 					return false;
 				}
 			}
@@ -1574,7 +1574,7 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 		if (PatternMatch(namewc, name)) {
 			if ((ff.IsFolder() && forfolder) || (ff.IsFile() && forfile)) {
 				if (!FileMoveX(full, AppendFileName(path, newname)), flags) {
-					dword error = GetLastError();
+					//dword error = GetLastError();
 					return false;
 				}
 			}
@@ -1882,8 +1882,6 @@ bool FileDataArray::Search(String dir, String condFile, bool recurse, String tex
 void FileDataArray::Search_Each(String dir, String condFile, bool recurse, String text)
 {
 	FindFile ff;
-	if (dir == "C:\\Desarrollo\\Packages\\ffmpeg_source\\tests\\ref\\vsynth2\\rgb")
-		int kk = 1;
 	if (ff.Search(AppendFileName(dir, condFile))) {
 		do {
 			if(ff.IsFile()) {
@@ -2195,7 +2193,7 @@ bool FileDiffArray::Compare(FileDataArray &master, FileDataArray &secondary, con
 				else {
 					equal = false;
 					FileDiffData &f = diffList.Add();
-					bool isf = f.isFolder = master[i].isFolder;
+					//bool isf = f.isFolder = master[i].isFolder;
 					f.relPath = master[i].relFilename;
 					String name = f.fileName = master[i].fileName;
 					f.idMaster = master[i].id;
