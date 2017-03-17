@@ -134,7 +134,7 @@ StaticClock_Demo::StaticClock_Demo() {
 	checkImage = false;
 	checkImage.WhenAction = THISBACK(ChangeProperties);
 	back.Set(Images::cream2());
-};
+}
 
 void Meter_Demo::ChangeValueKnob(Knob *knob, Meter *meter) {
 	*meter <<= ~*knob;

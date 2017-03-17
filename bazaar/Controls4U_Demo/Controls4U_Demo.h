@@ -110,7 +110,7 @@ public:
 	
 private:
 	Vector<StaticRect *> controls;
-	void OnGridSel();;
+	void OnGridSel();
 };
 
 #endif
