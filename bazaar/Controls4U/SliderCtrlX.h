@@ -19,31 +19,32 @@ public:
 
 private:
 	int				border2;			//
-	bool			m_bInverted;		// True if origin is right or down 
-	bool		  	m_bJump;			// Jumps directly to mouse pos if click on the scale
-	bool          	m_bRound_step;		// Uses the defined Step
-	bool			m_bUseCustomThumbs;
 	Color			m_FillColor;		// what color to use for filling the slider
+	int           	m_nMin;	
 	int           	m_nMax;
+	bool			m_bInverted;		// True if origin is right or down 	
+	int           	m_nStep;			// Value of steps to inc/dec
+	bool          	m_bRound_step;		// Uses the defined Step	
+	bool		  	m_bJump;			// Jumps directly to mouse pos if click on the scale	
+	bool			m_bUseCustomThumbs;
 	// eg a slider from -180 to 180, setting MajorTix to 30 would put Major tix
 	// on the endpoints, as well as every 30, so: -180, -150, -120, -90, -60, -30, 0, 30...
 	// Text Labels are drawn on all Major Tick points.
-	// Setting MinorTix	to 5 would draw minor tix every 5, eg: -175, -170, -165...
+	// Setting MinorTix	to 5 would draw minor tix every 5, eg: -175, -170, -165...	
 	int				m_nMajorTicks;		// This is the "increment" for major tix
-	int				m_nMajorTickSize; 	// Percent of the space from the line to the edge, eg 30
-	int           	m_nMin;
 	int				m_nMinorTicks;		// This is the "increment" for minor tix
+	int				m_nMajorTickSize; 	// Percent of the space from the line to the edge, eg 30
 	int				m_nMinorTickSize; 	// Percent of the space from the line to the edge, eg 20
-	int				m_nSliderType;		// either a CONTROL / INDICATOR
-	int           	m_nStep;			// Value of steps to inc/dec
 	int				m_nTextAlign;
+	int				m_nTickPosition;
 	int				m_nThickness;		// Thickness of the thumb guide
+	int				m_nSliderType;		// either a CONTROL / INDICATOR
 	int				m_nThumbNumber;		// Number of the thumb
 	int				m_nThumbType;		// Index of thumb in Image list
-	int				m_nTickPosition;
 	Image			m_ThumbImg;			// Image of the thumb
 	Image			m_ThumbFImg;		// Image of the focused thumb
 	Size			m_ThumbSize;		// Size of the thumb;
+	
 	Vector<Ctrl*>	m_vctrlOutput;
 	Vector<int>		m_vValues;
 	Vector<Image>	m_vThumbImgs;

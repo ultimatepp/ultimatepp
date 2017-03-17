@@ -60,7 +60,7 @@ bool CBSTR::Set(const String str) {
 }
 
 DHCtrlActiveX::DHCtrlActiveX(CLSID clsid, const String name, bool status) : 
-						oleObj(0), pClientSite(0), clsid(clsid), name(name), status(status) {}
+						clsid(clsid), name(name), status(status), oleObj(0), pClientSite(0) {}
 
 DHCtrlActiveX::~DHCtrlActiveX(void) {
 	Detach();
@@ -77,7 +77,7 @@ DHCtrlActiveX &DHCtrlActiveX::SetStatus(bool _status) {
 		BackPaint(FULLBACKPAINT);
 	}
 	return *this;
-};
+}
           
 LRESULT DHCtrlActiveX::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	if (status) {

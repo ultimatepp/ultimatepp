@@ -401,9 +401,10 @@ public:
 class Knob : public Ctrl {
 private:
 	double value;
-	double minv, maxv, keyStep;
+	double minv, maxv;
 	int nminor, nmajor;
 	double minorstep, majorstep;
+	double keyStep;
 	double angleBegin, angleEnd;
 	double angleClick;
 	int  colorType;
