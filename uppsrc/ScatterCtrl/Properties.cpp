@@ -1108,7 +1108,7 @@ void ProcessingTab::OnFFT()
 	tabFreq.scatter.SetLabelX(tabFreq.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
 	tabFreq.scatter.SetLabelY(legend);
 	tabFreq.scatter.ZoomToFit(true, true);
-	if (fft[int(idMaxFFT)].x < (fft[fft.GetCount() - 1].x)/2)
+	if (idMaxFFT > 0 && fft[int(idMaxFFT)].x < (fft[fft.GetCount() - 1].x)/2)
 		tabFreq.scatter.SetRange(fft[int(idMaxFFT)].x*2, Null);
 	
 	tabFreq.comments.SetText(errText);
