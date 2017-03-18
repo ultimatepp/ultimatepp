@@ -103,15 +103,17 @@ bool AndroidBuilder::BuildPackage(
 		}
 		else
 		if(BuilderUtils::IsCppOrCFile(filePath)) {
+			String normailzedFilePath = NormalizePathSeparator(filePath);
+			
 			nativeSourcesOptions.Add(globalOptions);
 			if(pkg[i].noblitz) {
 				if (isBlitz) {
-					noBlitzNativeSourceFiles.Add(filePath);
+					noBlitzNativeSourceFiles.Add(normailzedFilePath);
 					continue;
 				}
 			}
 			
-			nativeSources.Add(filePath);
+			nativeSources.Add(normailzedFilePath);
 		}
 		else
 		if(BuilderUtils::IsXmlFile(filePath)) {
@@ -172,7 +174,7 @@ bool AndroidBuilder::BuildPackage(
 			LOG(ERROR_METHOD_NAME + "Blitz was enable, but no blitz file generated.");
 		}
 		else {
-			nativeSources.Add(blitz.path);
+			nativeSources.Add(package + DIR_SEPS + GetFileName(blitz.path));
 		}
 	}
 	
@@ -239,6 +241,9 @@ bool AndroidBuilder::Link(
 		GenerateMakeFile();
 		
 		NDKBuild ndkBuild(ndk.GetNdkBuildPath());
+		if(IsVerbose()) {
+			ndkBuild.EnableVerbose();
+		}
 		ndkBuild.SetWorkingDir(project->GetDir());
 		ndkBuild.SetJobs(GetHydraThreads());
 		if(host->Execute(ndkBuild.MakeCmd()) != 0 ) {

@@ -37,6 +37,7 @@ class  Image;
 class IdeContext
 {
 public:
+	virtual bool      IsVerbose() const = 0;
 	virtual void      PutConsole(const char *s) = 0;
 	virtual void      PutVerbose(const char *s) = 0;
 	virtual void      PutLinking() = 0;
@@ -95,6 +96,7 @@ public:
 IdeContext *TheIde();
 void        TheIde(IdeContext *context);
 
+bool      IsVerbose();
 void      PutConsole(const char *s);
 void      PutVerbose(const char *s);
 void      PutLinking();
