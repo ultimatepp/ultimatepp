@@ -346,6 +346,7 @@ public:
 	virtual   void   Activate();
 	virtual   void   Layout();
 
+	virtual   bool   IsVerbose() const;
 	virtual   void   PutConsole(const char *s);
 	virtual   void   PutVerbose(const char *s);
 	virtual   void   PutLinking();

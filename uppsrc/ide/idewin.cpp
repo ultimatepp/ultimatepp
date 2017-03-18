@@ -90,6 +90,11 @@ void Ide::ConsolePaste()
 	}
 }
 
+bool Ide::IsVerbose() const
+{
+	return console.verbosebuild;
+}
+
 void Ide::PutConsole(const char *s)
 {
 	console << s << "\n";

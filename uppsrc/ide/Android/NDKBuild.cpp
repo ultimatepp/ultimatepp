@@ -3,19 +3,17 @@
 namespace Upp {
 
 NDKBuild::NDKBuild(const String& path)
+	: path(path)
+	, jobs(jobs)
+	, verbose(false)
 {
-	this->path = path;
-	this->jobs = 0;
-}
-
-NDKBuild::~NDKBuild()
-{
-	
 }
 
 String NDKBuild::MakeCmd() const
 {
 	String cmd = NormalizeExePath(path);
+	if(verbose)
+		cmd << " V=1 ";
 	if(!workingDir.IsEmpty())
 		cmd << " -C " << workingDir;
 	if(jobs > 0)

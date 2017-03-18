@@ -58,10 +58,11 @@ private:
 class NDKBuild {
 public:
 	NDKBuild(const String& path);
-	virtual ~NDKBuild();
+	virtual ~NDKBuild() {}
 	
 	void SetJobs(int jobs)                       { this->jobs = jobs; }
 	void SetWorkingDir(const String& workingDir) { this->workingDir = workingDir; }
+	void EnableVerbose(bool verbose = true)      { this->verbose = verbose; }
 	
 	String MakeCmd() const;
 	
@@ -69,6 +70,7 @@ private:
 	String path;
 	String workingDir;
 	int    jobs;
+	bool   verbose;
 };
 
 }
