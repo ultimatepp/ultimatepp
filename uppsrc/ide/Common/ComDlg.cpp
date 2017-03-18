@@ -34,6 +34,9 @@ void IdeFileIcon0(bool dir, const String& filename, Image& img)
 	if(ext == ".java" || ext == ".class")
 		img = IdeCommonImg::java();
 	else
+	if(ext == ".log")
+		img = IdeCommonImg::Log();
+	else
 	if(ext == ".xml" || ext == ".xsd")
 		img = IdeCommonImg::xml();
 	else
