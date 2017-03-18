@@ -1,4 +1,5 @@
 #include "Builders.h"
+#include "BuilderUtils.h"
 
 void   GccBuilder::AddFlags(Index<String>& cfg)
 {
@@ -565,16 +566,21 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 bool GccBuilder::Preprocess(const String& package, const String& file, const String& target, bool asmout)
 {
 	Package pkg;
-	String packagepath = PackagePath(package);
-	pkg.Load(packagepath);
-	String packagedir = GetFileFolder(packagepath);
-	ChDir(packagedir);
-	PutVerbose("cd " + packagedir);
+	String packagePath = PackagePath(package);
+	pkg.Load(packagePath);
+	String packageDir = GetFileFolder(packagePath);
+	ChDir(packageDir);
+	PutVerbose("cd " + packageDir);
 
 	String cmd = CmdLine(package, pkg);
 	cmd << " " << Gather(pkg.option, config.GetKeys());
 	cmd << " -o " << target;
 	cmd << (asmout ? " -S " : " -E ") << GetHostPathQ(file);
+	if(BuilderUtils::IsCFile(file))
+		cmd << " " << c_options;
+	else
+	if(BuilderUtils::IsCppFile(file))
+		cmd << " " << cpp_options;
 	return Execute(cmd);
 }
 

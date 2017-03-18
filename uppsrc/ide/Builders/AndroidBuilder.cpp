@@ -1,5 +1,6 @@
 #include "Builders.h"
 #include "AndroidBuilder.h"
+#include "BuilderUtils.h"
 
 #define METHOD_NAME       "AndroidBuilder::" + String(__func__) + "(): "
 #define ERROR_METHOD_NAME "[ERROR] " METHOD_NAME
@@ -89,7 +90,7 @@ bool AndroidBuilder::BuildPackage(
 				return false;
 		}
 		else
-		if(AndroidBuilderUtils::IsJavaFile(filePath)) {
+		if(BuilderUtils::IsJavaFile(filePath)) {
 			String filePathInAndroidProject
 				= GetFilePathInAndroidProject(javaSourcesDir, packageFileDir, fileName);
 			
@@ -101,7 +102,7 @@ bool AndroidBuilder::BuildPackage(
 			javaFiles.Add(filePathInAndroidProject);
 		}
 		else
-		if(AndroidBuilderUtils::IsCppOrCFile(filePath)) {
+		if(BuilderUtils::IsCppOrCFile(filePath)) {
 			nativeSourcesOptions.Add(globalOptions);
 			if(pkg[i].noblitz) {
 				if (isBlitz) {
@@ -113,7 +114,7 @@ bool AndroidBuilder::BuildPackage(
 			nativeSources.Add(filePath);
 		}
 		else
-		if(AndroidBuilderUtils::IsXmlFile(filePath)) {
+		if(BuilderUtils::IsXmlFile(filePath)) {
 			if(isMainPackage && fileName == "AndroidManifest.xml") {
 				if(androidManifestPath.GetCount()) {
 					PutConsole("AndroidManifest.xml is duplicated.");
@@ -127,7 +128,7 @@ bool AndroidBuilder::BuildPackage(
 			}
 		}
 		else
-		if(AndroidBuilderUtils::IsObjectFile(filePath)) {
+		if(BuilderUtils::IsObjectFile(filePath)) {
 			String filePathInAndroidProject = GetFilePathInAndroidProject(jniSourcesDir, packageFileDir, fileName);
 			
 			if(!MovePackageFileToAndroidProject(filePath, filePathInAndroidProject))
