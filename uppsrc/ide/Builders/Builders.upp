@@ -33,8 +33,11 @@ file
 	Components readonly separator,
 	BuilderComponents.h,
 	Blitz.cpp,
-	Info readonly separator,
 	Build.h,
 	Build.cpp,
+	Helpers readonly separator,
+	BuilderUtils.h,
+	BuilderUtils.cpp,
+	Info readonly separator,
 	Copying;
 

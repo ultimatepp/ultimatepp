@@ -129,20 +129,6 @@ public:
 	
 	static String GetAssemblyDir(const String& package);
 	static String GetAssemblyDir(const String& packageDir, const String& package);
-	
-	static bool IsJavaFile(const String& path);
-	static bool IsHeaderFile(const String& path);
-	static bool IsCFile(const String& path);
-	static bool IsCppFile(const String& path);
-	static bool IsCppOrCFile(const String& path);
-	static bool IsObjectFile(const String& path);
-	static bool IsXmlFile(const String& path);
-	
-	static bool IsTranslationFile(const String& path);
-	
-private:
-	static bool   HasExt(const String& path, const Index<String>& exts);
-	static String NormalizeAndGetFileExt(const String& path);
 };
 
 class AndroidModuleMakeFileCreator {
