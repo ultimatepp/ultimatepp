@@ -14,8 +14,8 @@ struct Host {
 	virtual void               DeleteFile(const Vector<String>& path) = 0;
 	virtual void               DeleteFolderDeep(const String& dir) = 0;
 	virtual void               ChDir(const String& path) = 0;
-	virtual void               RealizeDir(const String& path) = 0;
-	virtual void               SaveFile(const String& path, const String& data) = 0;
+	virtual bool               RealizeDir(const String& path) = 0;
+	virtual bool               SaveFile(const String& path, const String& data) = 0;
 	virtual String             LoadFile(const String& path) = 0;
 	virtual int                Execute(const char *cmdline) = 0;
 	virtual int                ExecuteWithInput(const char *cmdline, bool noconvert) = 0;
@@ -49,8 +49,8 @@ public:
 	virtual void               DeleteFile(const Vector<String>& path);
 	virtual void               DeleteFolderDeep(const String& dir);
 	virtual void               ChDir(const String& path);
-	virtual void               RealizeDir(const String& path);
-	virtual void               SaveFile(const String& path, const String& data);
+	virtual bool               RealizeDir(const String& path);
+	virtual bool               SaveFile(const String& path, const String& data);
 	virtual String             LoadFile(const String& path);
 	virtual int                Execute(const char *cmdline);
 	virtual int                ExecuteWithInput(const char *cmdline, bool noconvert);

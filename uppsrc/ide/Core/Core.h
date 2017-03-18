@@ -458,7 +458,8 @@ struct Builder {
 	void                   DeleteFile(const Vector<String>& path);
 	void                   DeleteFile(const String& path);
 	bool                   FileExists(const String& path) const;
-	void                   SaveFile(const String& path, const String& data);
+	bool                   RealizeDir(const String& path);
+	bool                   SaveFile(const String& path, const String& data);
 	String                 LoadFile(const String& path);
 	bool                   HasFlag(const char *f) const { return config.Find(f) >= 0; }
 };

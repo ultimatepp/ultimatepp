@@ -74,9 +74,14 @@ void Builder::DeleteFile(const String& path)
 	host->DeleteFile(Vector<String>() << path);
 }
 
-void Builder::SaveFile(const String& path, const String& data)
+bool Builder::RealizeDir(const String& path)
 {
-	host->SaveFile(path, data);
+	return host->RealizeDir(path);
+}
+
+bool Builder::SaveFile(const String& path, const String& data)
+{
+	return host->SaveFile(path, data);
 }
 
 String Builder::LoadFile(const String& path)

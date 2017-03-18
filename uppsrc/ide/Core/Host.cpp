@@ -73,16 +73,17 @@ void LocalHost::DoDir(const String& dir)
 	}
 }
 
-void LocalHost::RealizeDir(const String& path)
+bool LocalHost::RealizeDir(const String& path)
 {
-	RealizeDirectory(path);
+	bool realized = RealizeDirectory(path);
 	if(cmdout)
 		DoDir(path);
+	return realized;
 }
 
-void LocalHost::SaveFile(const String& path, const String& data)
+bool LocalHost::SaveFile(const String& path, const String& data)
 {
-	::SaveFile(path, data);
+	return ::SaveFile(path, data);
 }
 
 String  LocalHost::LoadFile(const String& path)

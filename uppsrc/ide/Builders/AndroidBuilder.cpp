@@ -1,7 +1,7 @@
 #include "Builders.h"
 #include "AndroidBuilder.h"
 
-#define METHOD_NAME       "AndroidBuilder::" + String(__FUNCTION__) + "(): "
+#define METHOD_NAME       "AndroidBuilder::" + String(__func__) + "(): "
 #define ERROR_METHOD_NAME "[ERROR] " METHOD_NAME
 #define INFO_METHOD_NAME  "[INFO] " METHOD_NAME
 
@@ -44,7 +44,7 @@ bool AndroidBuilder::BuildPackage(
 	
 	const bool isMainPackage = HasFlag("MAIN");
 	const bool isResourcesPackage = HasFlag(RES_PKG_FLAG);
-	const bool isBlitz = HasFlag("BLITZ") && ndk_blitz;
+	const bool isBlitz = HasFlag("BLITZ") || ndk_blitz;
 	String uppManifestPath = PackagePath(package);
 	String packageDir = GetFileFolder(uppManifestPath);
 	String assemblyDir = AndroidBuilderUtils::GetAssemblyDir(packageDir, package);
@@ -103,12 +103,14 @@ bool AndroidBuilder::BuildPackage(
 		else
 		if(AndroidBuilderUtils::IsCppOrCFile(filePath)) {
 			nativeSourcesOptions.Add(globalOptions);
-			if(pkg[i].noblitz)
-				noBlitzNativeSourceFiles.Add(packageFile);
-			
-			if(AndroidBuilderUtils::IsCppOrCFile(filePath)) {
-				nativeSources.Add(NormalizePathSeparator(filePath));
+			if(pkg[i].noblitz) {
+				if (isBlitz) {
+					noBlitzNativeSourceFiles.Add(filePath);
+					continue;
+				}
 			}
+			
+			nativeSources.Add(filePath);
 		}
 		else
 		if(AndroidBuilderUtils::IsXmlFile(filePath)) {
@@ -149,42 +151,35 @@ bool AndroidBuilder::BuildPackage(
 	}
 	
 	if(isResourcesPackage || nativeSources.IsEmpty()) {
-		LOG(INFO_METHOD_NAME + "There are not native files in following package " + package + ".");
+		LOG(INFO_METHOD_NAME + "There are not native files in the following package " + package + ".");
 		return true;
 	}
 	
 	if(isBlitz) {
+		LOG(INFO_METHOD_NAME + "Creating blitz step for package " + package + ".");
+		
 		BlitzBuilderComponent bc(this);
+		bc.SetWorkingDir(project->GetJniDir() + DIR_SEPS + package);
+		bc.SetBlitzFileName("blitz");
+		
 		Blitz blitz = bc.MakeBlitzStep(
 			nativeSources, nativeSourcesOptions,
 		    nativeObjects, immfile, ".o",
 		    noBlitzNativeSourceFiles);
 		
-		String destinationFileName = GetFileName(blitz.path);
-		destinationFileName.Replace("$blitz.cpp", "@blitz.cpp");
-		
-		String blitzDestinationFileInPackage;
-		blitzDestinationFileInPackage << package << DIR_SEPS;
-		blitzDestinationFileInPackage << destinationFileName;
-		
-		if(FileExists(blitz.path)) {
-			String blitzDestinationFile;
-			blitzDestinationFile << project->GetJniDir() << DIR_SEPS;
-			blitzDestinationFile << blitzDestinationFileInPackage;
-			
-			CopyFile(blitzDestinationFile, blitz.path);
-		
-			nativeSources.Clear();
-			nativeSources.Add(blitzDestinationFileInPackage);
-			for(int i = 0; i < noBlitzNativeSourceFiles.GetCount(); i++)
-				nativeSources.Add(noBlitzNativeSourceFiles[i]);
+		if(!FileExists(blitz.path)) {
+			LOG(ERROR_METHOD_NAME + "Blitz was enable, but no blitz file generated.");
+		}
+		else {
+			nativeSources.Add(blitz.path);
 		}
 	}
-		
+	
 	AndroidModuleMakeFileCreator creator(config);
 	
 	creator.SetModuleName(NormalizeModuleName(package));
 	creator.AddSources(nativeSources);
+	creator.AddSources(noBlitzNativeSourceFiles);
 	creator.AddInclude(assemblyDir);
 	creator.AddIncludes(pkg.uses);
 	creator.AddFlags(pkg.flag);
@@ -779,7 +774,7 @@ void AndroidBuilder::InitProject()
 {
 	if(!project) {
 		project.Create<AndroidProject>(GetAndroidProjectDir(), HasFlag("DEBUG"));
-		commands.Create<AndroidBuilderCommands>(~project, &sdk, ~jdk);
+		commands.Create<AndroidBuilderCommands>(project.Get(), &sdk, jdk.Get());
 	}
 }
 

@@ -153,6 +153,7 @@ public:
 	void SetModuleName(const String& name) { makeFile.SetName(name); }
 
 	void AddSources(Vector<String>& sources);
+	void AddSources(Index<String>& sources);
 	void AddInclude(const String& path);
 	
 	void AddIncludes(const Array<OptItem>& uses);
