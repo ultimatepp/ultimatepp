@@ -18,6 +18,13 @@ void AndroidModuleMakeFileCreator::AddSources(Vector<String>& sources)
 	}
 }
 
+void AndroidModuleMakeFileCreator::AddSources(Index<String>& sources)
+{
+	for(const String& source : sources) {
+		makeFile.AddSourceFile(source);
+	}
+}
+
 void AndroidModuleMakeFileCreator::AddInclude(const String& path)
 {
 	makeFile.AddInclude(path);
