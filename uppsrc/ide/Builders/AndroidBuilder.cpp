@@ -103,17 +103,15 @@ bool AndroidBuilder::BuildPackage(
 		}
 		else
 		if(BuilderUtils::IsCppOrCFile(filePath)) {
-			String normailzedFilePath = NormalizePathSeparator(filePath);
-			
 			nativeSourcesOptions.Add(globalOptions);
 			if(pkg[i].noblitz) {
 				if (isBlitz) {
-					noBlitzNativeSourceFiles.Add(normailzedFilePath);
+					noBlitzNativeSourceFiles.Add(filePath);
 					continue;
 				}
 			}
 			
-			nativeSources.Add(normailzedFilePath);
+			nativeSources.Add(filePath);
 		}
 		else
 		if(BuilderUtils::IsXmlFile(filePath)) {
