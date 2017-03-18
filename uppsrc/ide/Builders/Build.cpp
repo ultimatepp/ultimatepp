@@ -252,8 +252,8 @@ struct OneFileHost : Host {
 	virtual void   DeleteFile(const Vector<String>& path) { host->DeleteFile(path); }
 	virtual void   DeleteFolderDeep(const String& folder) { host->DeleteFolderDeep(folder); }
 	virtual void   ChDir(const String& path) { host->ChDir(path); }
-	virtual bool   RealizeDir(const String& path) { host->RealizeDir(path); }
-	virtual bool   SaveFile(const String& path, const String& data) { host->SaveFile(path, data); }
+	virtual bool   RealizeDir(const String& path) { return host->RealizeDir(path); }
+	virtual bool   SaveFile(const String& path, const String& data) { return host->SaveFile(path, data); }
 	virtual String LoadFile(const String& path) { return host->LoadFile(path); }
 	virtual int    Execute(const char *c) { return host->Execute(c); }
 	virtual int    ExecuteWithInput(const char *c, bool noconvert) { return host->ExecuteWithInput(c, noconvert); }
