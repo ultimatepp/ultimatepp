@@ -32,11 +32,19 @@ void   InitBlitz();
 
 class BlitzBuilderComponent : public BuilderComponent {
 public:
-	BlitzBuilderComponent(Builder *builder) : BuilderComponent(builder) {}
+	BlitzBuilderComponent(Builder *builder);
 	
-	Blitz MakeBlitzStep(Vector<String>& sfile, Vector<String>& soptions,
-	                    Vector<String>& obj, Vector<String>& immfile,
-	                    const char *objext, const Index<String>& noblitz);
+	void SetWorkingDir(const String& workingDir)       { this->workingDir = workingDir; }
+	void SetBlitzFileName(const String& blitzFileName) { this->blitzFileName = blitzFileName; }
+	
+	Blitz MakeBlitzStep(
+		Vector<String>& sfile, Vector<String>& soptions,
+		Vector<String>& obj, Vector<String>& immfile,
+		const char *objext, const Index<String>& noblitz);
+	                    
+private:
+	String workingDir;
+	String blitzFileName;
 };
 
 }
