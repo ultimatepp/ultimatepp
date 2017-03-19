@@ -505,6 +505,10 @@ void Ide::ConsoleLine(const String& line, bool assist)
 			error.Add(f.file, f.lineno,
 			          AttrText(FormatErrorLine(f.message, linecy)).NormalPaper(paper),
 			          RawToValue(f));
+			if(prenotes.GetCount()) {
+				error.Set(error.GetCount() - 1, "NOTES", prenotes);
+				prenotes.Clear();
+			}
 			error.SetLineCy(error.GetCount() - 1, linecy);
 			SyncErrorsMessage();
 			addnotes = true;
@@ -512,6 +516,13 @@ void Ide::ConsoleLine(const String& line, bool assist)
 		}
 	}
 	else {
+		int q = line.FindAfter(" from "); // GCC style "included from"
+		ErrorInfo fi;
+		if(q >= 0 && FindLineError(line.Mid(q), error_cache, fi)) {
+			fi.message = line;
+			prenotes.Add(RawToValue(fi));
+			return;
+		}
 		f.lineno = Null;
 		f.file = Null;
 		f.message = line;
@@ -569,6 +580,7 @@ void Ide::SyncErrorsMessage()
 void Ide::ConsoleRunEnd()
 {
 	addnotes = false;
+	prenotes.Clear();
 }
 
 void Ide::ShowFound()
