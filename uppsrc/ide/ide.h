@@ -450,6 +450,7 @@ public:
 	int         error_count;
 	int         warning_count;
 	bool        addnotes;
+	ValueArray  prenotes;
 	bool        linking;
 	Vector<String> linking_line;
 	bool        removing_notes;
