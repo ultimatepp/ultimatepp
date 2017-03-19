@@ -245,8 +245,8 @@ void CodeEditor::FindAll()
 	while(FindFrom(foundpos, false, true)) {
 		found.Add(MakeTuple(foundpos, foundsize));
 		foundpos += foundsize;
-		if(found.GetCount() >= 1000) {
-			Exclamation("Too many matches, only first 1000 will be shown.");
+		if(found.GetCount() >= 10000) {
+			Exclamation("Too many matches, only first 10000 will be shown.");
 			break;
 		}
 	}
