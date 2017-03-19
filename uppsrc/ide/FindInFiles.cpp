@@ -122,7 +122,6 @@ void Ide::AddFoundFile(const String& fn, int ln, const String& line, int pos, in
 	f.message = "\1" + EditorSyntax::GetSyntaxForFilename(fn) + "\1" +
 	            AsString(pos) + "\1" + AsString(count) + "\1" + line;
 	ffound.Add(fn, ln, f.message, RawToValue(f));
-	ffound.Sync();
 }
 
 bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, bool ignorecase,
@@ -133,18 +132,22 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	bool wb = wholeword ? iscid(*pattern) : false;
 	bool we = wholeword ? iscid(*pattern.Last()) : false;
 	int infile = 0;
+	bool sync = false;
 	while(!in.IsEof()) {
 		String line = in.GetLine();
 		bool bw = true;
 		int  count;
 		if(regexp) {
-			if(regexp->Match(line))
+			if(regexp->Match(line)) {
 				AddFoundFile(fn, ln, line, regexp->GetOffset(), regexp->GetLength());
+				sync = true;
+			}
 		}
 		else
 			for(const char *s = line; *s; s++) {
 				if(bw && Match(pattern, s, we, ignorecase, count)) {
 					AddFoundFile(fn, ln, line, int(s - line), count);
+					sync = true;
 					infile++;
 					n++;
 					break;
@@ -153,6 +156,9 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 			}
 		ln++;
 	}
+
+	if(sync)
+		ffound.Sync();
 
 	in.Close();
 	int ffs = ~ff.style;
