@@ -38,6 +38,9 @@ FindReplaceDlg::FindReplaceDlg()
 	mode <<= THISBACK(Sync);
 	mode.Hide();
 	Sync();
+	
+	find.NullText("Find");
+	replace.NullText("Replace");
 }
 
 void FindReplaceDlg::Sync()
@@ -51,7 +54,6 @@ void FindReplaceDlg::Sync()
 	incremental_from_cursor.Enable(IsIncremental());
 	b = !mode.IsVisible() || ~mode == 0;
 	replace.Enable(b);
-	replace_txt.Enable(b);
 }
 
 dword CodeEditor::find_next_key = K_F3;
@@ -101,7 +103,6 @@ void FindReplaceDlg::Setup(bool doreplace)
 	prev.Tip("Find prev (" + GetKeyDesc(CodeEditor::find_prev_key) + ")");
 	amend.Tip("Replace (" + GetKeyDesc(CodeEditor::replace_key) + ")");
 	amend.Disable();
-	info.SetLabel("&Find");
 	replacing = doreplace;
 	replace.Show(replacing);
 	amend.Show(replacing);
@@ -362,13 +363,11 @@ void CodeEditor::FindReplaceAddHistory()
 void CodeEditor::NoFindError()
 {
 	findreplace.find.Error(false);
-	findreplace.info.SetLabel("&Find");
 }
 
 void CodeEditor::NotFound()
 {
 	findreplace.find.Error();
-	findreplace.info.SetLabel("Not &found");
 	if(!findreplace.IsIncremental())
 		SetFocus();
 	findreplace.amend.Disable();
