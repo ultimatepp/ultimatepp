@@ -58,7 +58,7 @@ void Scgi::Process()
 	header.Read(clientSock);
 	String method = header.GetMethod();
 	int64 contentLen = header.GetContentLength();
-	serverVars = header.fields;
+	serverVars = pick(header.fields);
 	header.Clear();
 	
 	query.Clear();
