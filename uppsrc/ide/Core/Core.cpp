@@ -581,7 +581,7 @@ String GetExeExt()
 	return ".exe";
 #else
 	return "";
-#endif	
+#endif
 }
 
 String NormalizeExePath(String exePath)
