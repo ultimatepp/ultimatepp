@@ -335,9 +335,9 @@ bool Gdb::Key(dword key, int count)
 bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = pick(_host);
-	dbg = host->StartProcess(GdbCommand(console) + GetHostPath(exefile));
+	dbg = host->StartProcess(GdbCommand(console) + NormalizeExePath(GetHostPath(exefile)));
 	if(!dbg) {
-		Exclamation("Error invoking gdb !");
+		ErrorOK("Error while invoking gdb!");
 		return false;
 	}
 	IdeSetBottom(*this);
