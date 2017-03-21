@@ -96,6 +96,7 @@ struct Ide : public IdeContext, public MakeBuild {
 	String    main;
 	int       build_time;
 
+	virtual bool             IsVerbose() const;
 	virtual void             PutConsole(const char *s);
 	virtual void             PutVerbose(const char *s);
 	virtual void             PutLinking() {}
