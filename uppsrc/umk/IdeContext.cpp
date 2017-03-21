@@ -5,6 +5,11 @@ Ide::Ide()
 	verbose = false;
 }
 
+bool Ide::IsVerbose() const
+{
+	return verbose;
+}
+
 void Ide::PutConsole(const char *s)
 {
 	console << s << "\n";
