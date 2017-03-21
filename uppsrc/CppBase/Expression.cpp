@@ -120,7 +120,7 @@ struct ExpressionTyper {
 };
 
 ExpressionTyper::ExpressionTyper(const CppBase& codebase, const Parser& parser, const Vector<String>& xp)
-:	codebase(codebase), parser(parser), xp(xp)
+:	codebase(codebase), xp(xp), parser(parser)
 {
 	scan_counter = 0;
 	context_type = parser.current_scope;

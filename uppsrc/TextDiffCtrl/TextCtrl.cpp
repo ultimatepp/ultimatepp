@@ -302,7 +302,6 @@ void TextCompareCtrl::Paint(Draw& draw)
 		}
 
 		int x = 0;
-		int a = StdFont().GetAscent();
 		for(int i = 0; i < hln.GetCount() - 1; ++i) {
 			Font fnt = font;
 			LineEdit::Highlight& h = hln[i];
