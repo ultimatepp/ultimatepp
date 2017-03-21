@@ -400,7 +400,7 @@ void Vector<T>::Xmlize(XmlIO& xio, const char *itemtag)
 template <class T>
 void Vector<T>::Jsonize(JsonIO& jio)
 {
-	JsonizeArray<Vector<T>, T>(jio, *this);
+	JsonizeArray<Vector<T>>(jio, *this);
 }
 
 template <class C>
@@ -603,7 +603,7 @@ void Array<T>::Xmlize(XmlIO& xio, const char *itemtag)
 template <class T>
 void Array<T>::Jsonize(JsonIO& jio)
 {
-	JsonizeArray<Array<T>, T>(jio, *this);
+	JsonizeArray<Array<T>>(jio, *this);
 }
 
 template <class T>

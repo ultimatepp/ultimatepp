@@ -75,6 +75,16 @@ void VisGenDlg::Refresh()
 		n = GetName();
 	
 	String b1, b2, b3;
+	if(lambdas) {
+		for(int i = 0; i < layout.item.GetCount(); i++) {
+			String bn = layout.item[i].variable;
+			if(layout.item[i].type == "Button" && findarg(bn, "cancel", "ok", "exit") < 0) {
+				if(b2.GetCount() == 0)
+					b2 = "\n";
+				b2 << '\t' << bn << " << [=] { };\n";
+			}
+		}
+	}
 	if(buttons) {
 		for(int i = 0; i < layout.item.GetCount(); i++) {
 			String bn = layout.item[i].variable;
@@ -82,9 +92,11 @@ void VisGenDlg::Refresh()
 				String mn = IdInitCaps(bn);
 				mn.Replace("_", "");
 				if(b1.GetCount() == 0)
-					b1 = b2 = "\n";
+					b1 = "\n";
+				if(b2.GetCount() == 0)
+					b2 = "\n";
 				b1 << '\t' << "void " << mn << "();\n";
-				b2 << '\t' << bn << " << [=] { " << mn << "};\n";
+				b2 << '\t' << bn << " << [=] { " << mn << "(); };\n";
 				b3 << '\n' << "void " << n << "::" << mn << "()\n{\n}\n";
 			}
 		}
