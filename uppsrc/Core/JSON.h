@@ -201,7 +201,7 @@ template<> void Jsonize(JsonIO& io, WString& var);
 template<> void Jsonize(JsonIO& io, Date& var);
 template<> void Jsonize(JsonIO& io, Time& var);
 
-template <class T, class V>
+template <class T>
 void JsonizeArray(JsonIO& io, T& array)
 {
 	if(io.IsLoading()) {
