@@ -71,8 +71,8 @@ private:
 };
 
 FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackage)
-	: wspc(wspc)
-	, actualPackage(actualPackage)
+	: actualPackage(actualPackage)
+	, wspc(wspc)
 {
 	CtrlLayoutOKCancel(*this, "Find File");
 	Sizeable().Zoomable();

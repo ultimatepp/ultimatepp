@@ -344,7 +344,6 @@ int TabBar::GetTabStackLR( int jd )
 	int nt = -1;
 	if ( HasCursor() ) {
 		int c = GetCursor();
-		int tc = GetCount();
     
 		if ( IsStacking() ) {
 			int c_stack = tabs[ c ].stack;
