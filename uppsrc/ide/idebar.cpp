@@ -703,9 +703,8 @@ void Ide::MainTool(Bar& bar)
 		bar.Separator();
 	Edit(bar);
 	if(debugger) {
-		if(!designer)
-			bar.Separator();
 		DebugMenu(bar);
+		bar.Separator();
 	}
 	Project(bar);
 	if(!IsEditorMode()) {
