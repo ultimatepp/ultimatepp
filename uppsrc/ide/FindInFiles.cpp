@@ -313,7 +313,8 @@ void Ide::FindFileAll(const Vector<Tuple<int, int>>& f)
 	for(auto pos : f) {
 		editor.CachePos(pos.a);
 		int linei = editor.GetLinePos(pos.a);
-		AddFoundFile(editfile, linei + 1, editor.GetUtf8Line(linei), pos.a, pos.b);
+		WString ln = editor.GetWLine(linei);
+		AddFoundFile(editfile, linei + 1, ln.ToString(), lenAsUtf8(~ln, pos.a), lenAsUtf8(~ln + pos.a, pos.b));
 	}
 	ffound.HeaderTab(2).SetText(Format("Source line (%d)", ffound.GetCount()));
 	ffound.Add(Null, Null, AsString(f.GetCount()) + " occurrence(s) have been found.");

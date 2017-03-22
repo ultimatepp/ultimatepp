@@ -295,10 +295,14 @@ void Ide::GoToError(const ErrorInfo& f)
 	String file = NormalizePath(f.file);
 	DoEditAsText(file);
 	EditFile(file);
-	int pos = editor.GetPos(editor.GetLineNo(f.lineno - 1), max(f.linepos - 1, 0));
+	int lp = max(f.linepos - 1, 0);
+	int pos = editor.GetPos(editor.GetLineNo(f.lineno - 1), lp);
 	editor.SetCursor(pos);
-	if(f.len)
-		editor.SetSelection(pos, pos + f.len);
+	if(*f.message == '\1') {
+		Vector<String> h = Split(~f.message + 1, '\1', false);
+		if(h.GetCount() >= 4)
+			editor.Illuminate(h[3].Mid(atoi(h[1]), atoi(h[2])).ToWString());
+	}
 	editor.CenterCursor();
 	editor.SetFocus();
 	Sync();

@@ -268,7 +268,7 @@ protected:
 	enum { SEL_CHARS, SEL_WORDS, SEL_LINES };
 	int    selkind;
 
-	WString selword;
+	WString illuminated;
 
 	String  iwc;
 
@@ -500,6 +500,8 @@ public:
 
 	void     SyncTip();
 	void     CloseTip()                               { if(tip.IsOpen()) tip.Close(); tip.d = NULL;  }
+	
+	void     Illuminate(const WString& text)          { illuminated = text; Refresh(); }
 
 	One<EditorSyntax> GetSyntax(int line);
 	bool IsCursorBracket(int pos) const;

@@ -270,22 +270,20 @@ void CodeEditor::Periodic()
 void CodeEditor::SelectionChanged()
 {
 	int l, h;
-	WString nselword;
+	WString nilluminated;
 	bool sel = GetSelection(l, h);
-	if(sel && h - l < 128 &&
-	   (l == 0 || !iscid(GetChar(l - 1))) &&
-	   (h >= GetLength() || !iscid(GetChar(h)))) {
+	if(sel && h - l < 128) {
 		for(int i = l; i < h; i++) {
 			int c = GetChar(i);
-			if(!iscid(c)) {
-				nselword.Clear();
+			if(c == '\n') {
+				nilluminated.Clear();
 				break;
 			}
-			nselword.Cat(c);
+			nilluminated.Cat(c);
 		}
 	}
-	if(selword != nselword) {
-		selword = nselword;
+	if(illuminated != nilluminated) {
+		illuminated = nilluminated;
 		Refresh();
 	}
 	if(!foundsel) {
@@ -1010,21 +1008,20 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 	HighlightOutput hls(hl);
 	WString l = GetWLine(line);
 	GetSyntax(line)->Highlight(l.Begin(), l.End(), hls, this, line, pos);
-	if(selword.GetCount()) {
+	if(illuminated.GetCount()) {
 		int q = 0;
-		for(;;) {
-			q = l.Find(selword, q);
+		while(q < l.GetCount() && q < hl.GetCount()) {
+			q = l.Find(illuminated, q);
 			if(q < 0)
 				break;
-			int h = q + selword.GetCount();
-			if((q == 0 || !iscid(l[q - 1])) && (h >= l.GetCount() || !iscid(l[h])))
-				for(int i = 0; i < selword.GetCount() && i + q < hl.GetCount(); i++) {
-					const HlStyle& st = hl_style[PAPER_SELWORD];
-					hl[i + q].paper = st.color;
-					if(st.bold)
-						hl[i + q].font.Bold();
-				}
-			q = h;
+			int n = illuminated.GetCount();
+			while(n-- && q < hl.GetCount()) {
+				const HlStyle& st = hl_style[PAPER_SELWORD];
+				hl[q].paper = st.color;
+				if(st.bold)
+					hl[q].font.Bold();
+				q++;
+			}
 		}
 	}
 }
