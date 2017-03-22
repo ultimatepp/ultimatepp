@@ -51,6 +51,12 @@ CONSOLE_APP_MAIN
 		ASSERT(out == "65:A:0 66:B:2 67:C:4 68:D:6 69:E:8 70:F:10 71:G:12 72:H:14 73:I:16 74:J:18 ");
 		ASSERT(err == " ERRORA1 ERRORB3 ERRORC5 ERRORD7 ERRORE9 ERRORF11 ERRORG13 ERRORH15 ERRORI17 ERRORJ19");
 		ASSERT(!p.IsRunning());
+		
+		DUMP(p.GetExitCode());
+		ASSERT(p.GetExitCode() == 0);
+		p.Kill(); // check that the exit code is OK even after the Kill
+		DUMP(p.GetExitCode());
+		ASSERT(p.GetExitCode() == 0);
 	
 		o = Sys(GetExeFilePath() + " echo something different");
 		DUMP(o);
