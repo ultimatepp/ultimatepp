@@ -102,6 +102,8 @@ void FindReplaceDlg::Setup(bool doreplace)
 	next.SetLabel("");
 	prev.Tip("Find prev (" + GetKeyDesc(CodeEditor::find_prev_key) + ")");
 	amend.Tip("Replace (" + GetKeyDesc(CodeEditor::replace_key) + ")");
+	find_all.Show();
+	find_all.Tip("Find all");
 	amend.Disable();
 	replacing = doreplace;
 	replace.Show(replacing);
@@ -650,6 +652,7 @@ void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 		SetLayout_BlockReplaceLayout(findreplace);
 		findreplace.SetRect(WithBlockReplaceLayout<EmptyClass>::GetLayoutSize());
 		findreplace.Title(t_("Replace in selection"));
+		findreplace.find_all.Hide();
 		findreplace.amend.Hide();
 		findreplace.amend_all.Hide();
 		findreplace.amend_rest.Hide();
