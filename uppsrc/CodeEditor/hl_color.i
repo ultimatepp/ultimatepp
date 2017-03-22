@@ -53,7 +53,7 @@ HL_COLOR(INK_DIFF_ADDED, t_("Diff added line"), 0)
 HL_COLOR(INK_DIFF_REMOVED, t_("Diff removed line"), 0)
 HL_COLOR(INK_DIFF_COMMENT, t_("Diff comment"), 0)
 
-HL_COLOR(PAPER_SELWORD, t_("Selected word through file"), 0)
+HL_COLOR(PAPER_SELWORD, t_("Found/selected matches"), 0)
 
 HL_COLOR(PAPER_ERROR, t_("Error in compiler messages"), 0)
 HL_COLOR(PAPER_WARNING, t_("Warning in compiler messages"), 0)
