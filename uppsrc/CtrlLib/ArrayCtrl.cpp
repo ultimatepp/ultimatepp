@@ -46,6 +46,15 @@ ArrayCtrl::Column& ArrayCtrl::Column::SetConvert(const Convert& c) {
 	return *this;
 }
 
+Column& ArrayCtrl::Column::ConvertBy(Function<Value(const Value&)> cv)
+{
+	convertby = cv;
+	ClearCache();
+	arrayctrl->Refresh();
+	arrayctrl->SyncInfo();
+	return *this;
+}
+
 ArrayCtrl::Column& ArrayCtrl::Column::SetFormat(const char *fmt)
 {
 	FormatConvert::SetFormat(fmt);
@@ -515,7 +524,7 @@ Value ArrayCtrl::GetConvertedColumn(int i, int col) const {
 	LTIMING("GetConvertedColumn");
 	const Column& m = column[col];
 	Value v = GetColumn(i, col);
-	if(!m.convert) return v;
+	if(!m.convert && !m.convertby) return v;
 	if(m.cache.Is< Vector<String> >() && i < m.cache.Get< Vector<String> >().GetCount()) {
 		const String& s = m.cache.Get< Vector<String> >()[i];
 		if(!s.IsVoid()) return s;
@@ -524,16 +533,19 @@ Value ArrayCtrl::GetConvertedColumn(int i, int col) const {
 		const Value& v = m.cache.Get< Vector<Value> >()[i];
 		if(!v.IsVoid()) return v;
 	}
-	Value r = m.convert->Format(v);
+	if(m.convertby)
+		v = m.convertby(v);
+	if(m.convert)
+		v = m.convert->Format(v);
 	if(m.cached) {
 		if(m.cache.IsEmpty())
 			m.cache.Create< Vector<String> >();
 		if(IsString(r) && m.cache.Is< Vector<String> >())
-			m.cache.Get< Vector<String> >().At(i, String::GetVoid()) = r;
+			m.cache.Get< Vector<String> >().At(i, String::GetVoid()) = v;
 		if(!IsString(r) && m.cache.Is< Vector<String> >())
 			m.cache.Create< Vector<Value> >();
 		if(m.cache.Is< Vector<Value> >())
-			m.cache.Get< Vector<Value> >().At(i) = r;
+			m.cache.Get< Vector<Value> >().At(i) = v;
 		ASSERT(m.pos.GetCount() || m.cache.IsEmpty());
 	}
 	return r;
