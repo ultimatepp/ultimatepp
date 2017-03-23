@@ -57,6 +57,7 @@ public:
 		int                   index;
 		Mitor<int>            pos;
 		const Convert        *convert;
+		Function<Value(const Value&)> convertby;
 		Ptr<Ctrl>             edit;
 		const Display        *display;
 		Event<int, One<Ctrl>&> factory;
@@ -88,6 +89,7 @@ public:
 		Column& AddIndex()                         { Add(arrayctrl->GetIndexCount()); arrayctrl->AddIndex(); return *this; }
 
 		Column& SetConvert(const Convert& c);
+		Column& ConvertBy(Function<Value(const Value&)> cv);
 		Column& SetFormat(const char *fmt);
 		Column& SetDisplay(const Display& d);
 		Column& NoEdit();
