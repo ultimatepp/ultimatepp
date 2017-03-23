@@ -697,7 +697,7 @@ void InVector<T>::Xmlize(XmlIO& xio, const char *itemtag)
 template <class T>
 void InVector<T>::Jsonize(JsonIO& jio)
 {
-	JsonizeArray<InVector<T>, T>(jio, *this);
+	JsonizeArray<InVector<T>>(jio, *this);
 }
 
 template <class T>
@@ -864,7 +864,7 @@ void InArray<T>::Xmlize(XmlIO& xio, const char *itemtag)
 template <class T>
 void InArray<T>::Jsonize(JsonIO& jio)
 {
-	JsonizeArray<InArray<T>, T>(jio, *this);
+	JsonizeArray<InArray<T>>(jio, *this);
 }
 
 template <class T>
