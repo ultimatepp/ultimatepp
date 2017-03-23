@@ -46,7 +46,7 @@ ArrayCtrl::Column& ArrayCtrl::Column::SetConvert(const Convert& c) {
 	return *this;
 }
 
-Column& ArrayCtrl::Column::ConvertBy(Function<Value(const Value&)> cv)
+ArrayCtrl::Column& ArrayCtrl::Column::ConvertBy(Function<Value(const Value&)> cv)
 {
 	convertby = cv;
 	ClearCache();
@@ -540,15 +540,15 @@ Value ArrayCtrl::GetConvertedColumn(int i, int col) const {
 	if(m.cached) {
 		if(m.cache.IsEmpty())
 			m.cache.Create< Vector<String> >();
-		if(IsString(r) && m.cache.Is< Vector<String> >())
+		if(IsString(v) && m.cache.Is< Vector<String> >())
 			m.cache.Get< Vector<String> >().At(i, String::GetVoid()) = v;
-		if(!IsString(r) && m.cache.Is< Vector<String> >())
+		if(!IsString(v) && m.cache.Is< Vector<String> >())
 			m.cache.Create< Vector<Value> >();
 		if(m.cache.Is< Vector<Value> >())
 			m.cache.Get< Vector<Value> >().At(i) = v;
 		ASSERT(m.pos.GetCount() || m.cache.IsEmpty());
 	}
-	return r;
+	return v;
 }
 
 int ArrayCtrl::GetCount() const {
