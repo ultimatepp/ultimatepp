@@ -184,6 +184,7 @@ public:
 	Ctrl&       operator[](int i)                    { return *item[i].ctrl; }
 	const Ctrl& operator[](int i) const              { return *item[i].ctrl; }
 	SqlId       operator()(int i) const              { return item[i].id; }
+	SqlId       GetKey(int i) const                  { return item[i].id; }
 
 	ValueMap    Get() const;
 
