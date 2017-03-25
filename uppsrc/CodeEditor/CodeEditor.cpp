@@ -272,6 +272,7 @@ void CodeEditor::SelectionChanged()
 	int l, h;
 	WString nilluminated;
 	bool sel = GetSelection(l, h);
+	bool ill = false;
 	if(sel && h - l < 128) {
 		for(int i = l; i < h; i++) {
 			int c = GetChar(i);
@@ -279,9 +280,13 @@ void CodeEditor::SelectionChanged()
 				nilluminated.Clear();
 				break;
 			}
+			if(!IsSpace(c))
+				ill = true;
 			nilluminated.Cat(c);
 		}
 	}
+	if(!ill)
+		nilluminated.Clear();
 	if(illuminated != nilluminated) {
 		illuminated = nilluminated;
 		Refresh();
