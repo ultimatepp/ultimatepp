@@ -13,11 +13,14 @@ String Builder::GetHostPath(const String& path) const
 String Builder::GetHostPathShort(const String& path) const
 {
 #ifdef PLATFORM_WIN32
-	const dword SHORT_PATH_LENGTH = 2048;
-	char short_path[SHORT_PATH_LENGTH];
-	dword length = ::GetShortPathName((LPCTSTR) path, (LPTSTR) short_path, SHORT_PATH_LENGTH);
+	dword length = ::GetShortPathName(static_cast<LPCTSTR>(path), nullptr, 0);
+	if(length == 0)
+		return path;
+	Buffer<char> shortPathBuffer(length);
+	length = ::GetShortPathName(
+		static_cast<LPCTSTR>(path), static_cast<LPTSTR>(~shortPathBuffer), length);
 	if(length > 0)
-		return String(short_path, length);
+		return String(shortPathBuffer, length);
 #endif
 	return path;
 }
