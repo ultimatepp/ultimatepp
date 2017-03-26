@@ -364,6 +364,11 @@ void LocalHost::AddFlags(Index<String>& cfg)
 #endif
 }
 
+const Vector<String>& LocalHost::GetExecutablesDirs() const
+{
+	return exedirs;
+}
+
 bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
 {
 	static const Index<String> platformFlags = {
