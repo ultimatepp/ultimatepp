@@ -103,7 +103,11 @@ void MarkChanged(const VectorMap<String, String>& m, ArrayCtrl& data);
 
 #define GDB_PROMPT "<u++dbg-" "q98klwr835f427>"
 
-struct Gdb : Debugger, ParentCtrl {
+class Gdb
+	: public Debugger
+	, public ParentCtrl
+{
+public:
 	virtual void DebugBar(Bar& bar);
 	virtual bool SetBreakpoint(const String& filename, int line, const String& bp);
 	virtual bool RunTo();
@@ -114,7 +118,7 @@ struct Gdb : Debugger, ParentCtrl {
 	virtual bool Tip(const String& exp, CodeEditor::MouseTip& mt);
 
 	One<Host>          host;
-	One<AProcess>  dbg;
+	One<AProcess>      dbg;
 
 	Vector<String>     regname;
 	Vector<Label *>    reglbl;
@@ -144,7 +148,10 @@ struct Gdb : Debugger, ParentCtrl {
 	adr_t              addr;
 
 	FileOut            log;
-
+	
+	String             autoline;
+	bool               firstrun;
+	
 	bool Result(String& result, const String& s);
 
 	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
@@ -157,9 +164,6 @@ struct Gdb : Debugger, ParentCtrl {
 
 	String    Cmd(const char *command);
 	String    FastCmd(const char *command);
-
-	String          autoline;
-	bool            firstrun;
 
 	bool      TryBreak(const char *command);
 	void      CheckEnd(const char *result);
@@ -211,6 +215,9 @@ struct Gdb : Debugger, ParentCtrl {
 
 	virtual ~Gdb();
 	Gdb();
+	
+private:
+	bool CreateDbg(One<Host>& host, const String& exeFile, bool console);
 };
 
 #include "Gdb_MI2.h"

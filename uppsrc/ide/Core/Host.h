@@ -33,7 +33,9 @@ public:
 	virtual One<AProcess>         StartProcess(const char *cmdline) = 0;
 	virtual void                  Launch(const char *cmdline, bool console = false) = 0;
 	virtual void                  AddFlags(Index<String>& cfg) = 0;
+	
 	virtual const Vector<String>& GetExecutablesDirs() const = 0;
+	virtual const HostTools&      GetTools() const = 0;
 };
 
 class LocalHost : public Host {
@@ -45,6 +47,8 @@ public:
 	void    DoDir(const String& s);
 
 public: /* Host */
+	LocalHost();
+	
 	String                GetEnvironment() override;
 	String                GetHostPath(const String& path) override;
 	String                GetLocalPath(const String& path) override;
@@ -68,10 +72,15 @@ public: /* Host */
 	One<AProcess>         StartProcess(const char *cmdline) override;
 	void                  Launch(const char *cmdline, bool console) override;
 	void                  AddFlags(Index<String>& cfg) override;
+	
 	const Vector<String>& GetExecutablesDirs() const override;
+	const HostTools&      GetTools() const override;
 	
 private:
 	bool HasPlatformFlag(const Index<String>& cfg);
+	
+private:
+	One<HostTools> tools;
 };
 
 /*
