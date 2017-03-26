@@ -215,7 +215,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			bool execerr = false;
 			if(rc) {
 				String exec;
-				exec << "windres -i " << GetHostPathQ(fn);
+				exec << GetHostPathShort(FindInDirs(host->GetExecutablesDirs(), "windres.exe")) << " -i " << GetHostPathQ(fn);
 				if(cc.Find(" -m32 ") >= 0)
 					exec << " --target=pe-i386 ";
 				exec << " -o " << GetHostPathQ(objfile) << IncludesShort(" --include-dir=", package, pkg)

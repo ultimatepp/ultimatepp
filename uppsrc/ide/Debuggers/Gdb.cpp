@@ -335,6 +335,8 @@ bool Gdb::Key(dword key, int count)
 bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = pick(_host);
+	
+	// TODO: Normalize exe path should be part of the host. What about remote GDB?
 	dbg = host->StartProcess(GdbCommand(console) + NormalizeExePath(GetHostPath(exefile)));
 	if(!dbg) {
 		ErrorOK("Error while invoking gdb!");
