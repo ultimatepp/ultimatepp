@@ -4,6 +4,11 @@
 
 #include <plugin/bz2/bz2.h>
 
+LocalHost::LocalHost()
+	: tools(MakeOne<LocalHostTools>())
+{
+}
+
 String LocalHost::GetEnvironment()
 {
 	return environment;
@@ -367,6 +372,11 @@ void LocalHost::AddFlags(Index<String>& cfg)
 const Vector<String>& LocalHost::GetExecutablesDirs() const
 {
 	return exedirs;
+}
+
+const HostTools& LocalHost::GetTools() const
+{
+	return *tools.Get();
 }
 
 bool LocalHost::HasPlatformFlag(const Index<String>& cfg)
