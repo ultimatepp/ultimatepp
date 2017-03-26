@@ -336,12 +336,11 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 {
 	host = pick(_host);
 	
-	// TODO: Normalize exe path should be part of the host. What about remote GDB?
-	dbg = host->StartProcess(GdbCommand(console) + NormalizeExePath(GetHostPath(exefile)));
-	if(!dbg) {
+	if (!CreateDbg(host, exefile, console)) {
 		ErrorOK("Error while invoking gdb!");
 		return false;
 	}
+
 	IdeSetBottom(*this);
 	IdeSetRight(disas);
 
@@ -371,10 +370,17 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	if(!IsNull(cmdline))
 		Cmd("set args " + cmdline);
 
-
 	firstrun = true;
 
 	return true;
+}
+
+bool Gdb::CreateDbg(One<Host>& host, const String& exeFile, bool console)
+{
+	const auto& hostTools = host->GetTools();
+	dbg = host->StartProcess(GdbCommand(console) + hostTools.NormalizeExecutablePath(exeFile));
+
+	return static_cast<bool>(dbg);
 }
 
 Gdb::~Gdb()

@@ -267,7 +267,8 @@ struct OneFileHost : Host {
 	virtual One<AProcess> StartProcess(const char *c) { return host->StartProcess(c); }
 	virtual void   Launch(const char *cmdline, bool) { host->Launch(cmdline); }
 	virtual void   AddFlags(Index<String>& cfg) { host->AddFlags(cfg); }
-	virtual const Vector<String>& GetExecutablesDirs() const { return host->GetExecutablesDirs(); }
+	virtual const  Vector<String>& GetExecutablesDirs() const { return host->GetExecutablesDirs(); }
+	virtual const  HostTools& GetTools() const { return host->GetTools(); }
 
 	virtual Vector<FileInfo> GetFileInfo(const Vector<String>& path) {
 		Vector<FileInfo> fi = host->GetFileInfo(path);
