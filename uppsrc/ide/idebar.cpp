@@ -642,8 +642,10 @@ void Ide::BrowseMenu(Bar& menu)
 
 void Ide::HelpMenu(Bar& menu)
 {
-	menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
-	menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
+	if(!IsEditorMode()) {
+		menu.Add(AK_BROWSETOPICS, IdeImg::help(), THISBACK(ShowTopics));
+		menu.Add(AK_SEARCHTOPICS, THISBACK(SearchTopics));
+	}
 	menu.Add(AK_BROWSETOPICS_WIN, IdeImg::help_win(), THISBACK(ShowTopicsWin));
 	menu.MenuSeparator();
 	menu.AddMenu("Get help / report bugs..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/forums"));
@@ -716,7 +718,6 @@ void Ide::MainTool(Bar& bar)
 		}
 		bar.Separator();
 	}
-	
 	HelpMenu(bar);
 }
 
