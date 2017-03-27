@@ -347,7 +347,8 @@ void Ide::Setup(Bar& menu)
 	menu.Add("Be verbose", THISBACK(ToggleVerboseBuild))
 		.Check(console.verbosebuild)
 		.Help("Log detailed description of build and debug");
-	menu.Add("Settings..", THISBACK(SetupFormat))
+	menu.MenuSeparator();
+	menu.Add("Settings..", IdeImg::Settings(), THISBACK(SetupFormat))
 		.Help("Fonts, tabs, indentation, status bar");
 	menu.Add("Abbreviations..", THISBACK(Abbreviations))
 		.Help("Edit abbreviation keywords and code");
@@ -554,7 +555,7 @@ void Ide::DebugMenu(Bar& menu)
 	}
 	else {
 		if(console.IsRunning())
-			menu.Add("Stop !", THISBACK(StopDebug))
+			menu.Add("Stop!", THISBACK(StopDebug))
 			    .Help("Stop controlled process");
 		if(menu.IsMenuBar())
 			menu.Add(AK_RUNOPTIONS, THISBACK(RunArgs))
@@ -713,7 +714,6 @@ void Ide::MainTool(Bar& bar)
 			bar.Separator();
 			DebugMenu(bar);
 		}
-		Setup(bar);
 		bar.Separator();
 	}
 	
