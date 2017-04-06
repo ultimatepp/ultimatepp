@@ -181,7 +181,7 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi, bool b
 				RowPaint(pw, rc, tab.header, true, i, hy, hpg, hpg, frr, pi, pgi, false);
 				pw.Page(pgi).DrawRect(r.left, hpg.bottom, r.Width(), gridln, format.gridcolor);
 			}
-		r = frr[i].Inflated(frameln);
+		r = frr[i].Inflated(fl);
 		Draw& w = pw.Page(pgi);
 		if(!r.IsEmpty()) {
 			DrawFatFrame(w, r, fc, fl);
@@ -287,7 +287,6 @@ int  RichTable::GetPos(int x, PageY y, RichContext rc) const
 
 RichHotPos  RichTable::GetHotPos(int x, PageY y, int tolerance, RichContext rc) const
 {
-	
 	RichHotPos hp;
 	hp.textleft = rc.page.left;
 	hp.textcx = rc.page.Width();
@@ -326,7 +325,7 @@ RichHotPos  RichTable::GetHotPos(int x, PageY y, int tolerance, RichContext rc) 
 						return hp;
 					}
 					if((j == 0 || x >= pc.left - format.grid) && (j == nx - 1 || x < pc.right)) {
-						hp = cl.GetHotPos(x, y, tolerance, MakeRichContext(rc, pr.py) , pyy);
+						hp = cl.GetHotPos(x, y, tolerance, pr[j].MakeRichContext(rc), pyy);
 						hp.table += ti;
 						return hp;
 					}
