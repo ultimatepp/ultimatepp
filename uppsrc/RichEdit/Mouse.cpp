@@ -168,15 +168,17 @@ void RichEdit::MouseMove(Point p, dword flags)
 			Finish();
 		}
 		else
-		if(tabmove.table && tabmove.column == -1) {
+		if(tabmove.table && tabmove.column == RICHHOT_LM) {
 			RichTable::Format fmt = text.GetTableFormat(tabmove.table);
-			fmt.lm = minmax(GetSnapX(p.x) - tabmove.textleft, 0, max(tabmove.textcx - fmt.rm - 120, 0));
+			fmt.rm = clamp(fmt.rm, 0, tabmove.textcx - fmt.lm - 120);
+			fmt.lm = clamp(GetSnapX(p.x) - tabmove.textleft, 0, max(tabmove.textcx - fmt.rm - 120, 0));
 			text.SetTableFormat(tabmove.table, fmt);
 			Finish();
 		}
 		else
-		if(tabmove.table && tabmove.column == -2) {
+		if(tabmove.table && tabmove.column == RICHHOT_RM) {
 			RichTable::Format fmt = text.GetTableFormat(tabmove.table);
+			fmt.lm = clamp(fmt.lm, 0, max(tabmove.textcx - fmt.rm - 120, 0));
 			fmt.rm = minmax(tabmove.textcx - GetSnapX(p.x) + tabmove.textleft, 0, tabmove.textcx - fmt.lm - 120);
 			text.SetTableFormat(tabmove.table, fmt);
 			Finish();

@@ -15,6 +15,15 @@ bool RichTable::Reduce(Rect& r) const
 	return true;
 }
 
+bool RichTable::Reduce(RichContext rc, Rect& first_page, Rect& next_page) const
+{
+	RichContext rc2 = rc;
+	rc2.Page();
+	first_page = rc.page;
+	next_page = rc2.page;
+	return Reduce(first_page) && Reduce(next_page);
+}
+
 Rect RichTable::GetPageRect(PageY py) const
 {
 	return py.page == clayout.py.page ? clayout.first_page : clayout.next_page;
@@ -37,13 +46,13 @@ RichContext RichTable::MakeRichContext(RichContext rc, PageY py, bool header) co
 
 const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
 { // Create page layout with header
-	RichContext rc2 = rc;
-	rc2.Page();
-	if(rc.py != clayout.py || rc.page != clayout.first_page0 || rc2.page != clayout.next_page0) {
+	Rect first_page, next_page;
+	Reduce(rc, first_page, next_page);
+	if(rc.py != clayout.py || first_page != clayout.first_page || next_page != clayout.next_page) {
 		clayout.sz = GetSize();
 		clayout.py = rc.py;
-		clayout.first_page = clayout.first_page0 = rc.page;
-		clayout.next_page = clayout.next_page0 = rc2.page;
+		clayout.first_page = first_page;
+		clayout.next_page = next_page;
 		Reduce(clayout.first_page);
 		Reduce(clayout.next_page);
 		clayout.header_page = clayout.next_page;
