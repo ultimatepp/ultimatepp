@@ -163,7 +163,7 @@ HttpRequest& HttpRequest::Part(const char *id, const String& data,
 	postdata << "--" << multipart << "\r\n"
 	         << "Content-Disposition: form-data; name=\"" << id << "\"";
 	if(filename && *filename)
-	postdata << "; filename=\"" << filename << "\"";
+		postdata << "; filename=\"" << filename << "\"";
 	postdata << "\r\n";
 	if(content_type && *content_type)
 		postdata << "Content-Type: " << content_type << "\r\n";
