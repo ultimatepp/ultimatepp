@@ -120,8 +120,6 @@ private:
 		Layout            header;
 		Size              sz;
 		PageY             py;
-		Rect              first_page0;
-		Rect              next_page0;
 		Rect              first_page;
 		Rect              next_page;
 		Rect              header_page;
@@ -142,6 +140,7 @@ private:
 	void             InvalidateRefresh(Point p)            { InvalidateRefresh(p.y, p.x); }
 
 	bool             Reduce(Rect& r) const;
+	bool             Reduce(RichContext rc, Rect& first_page, Rect& next_page) const;
 	Rect             GetPageRect(PageY py) const;
 	void             NextPage(PageY& py, bool header = false) const;
 	RichContext      MakeRichContext(RichContext rc, PageY py, bool header = false) const;

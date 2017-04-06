@@ -19,8 +19,8 @@ void RichTable::InvalidateRefresh(int i, int j)
 			r_column = j;
 			r_py = clayout.py;
 			r_pyy = clayout[min(GetRows() - 1, i + cell[i][j].vspan)].pyy;
-			r_first_page = clayout.first_page0;
-			r_next_page = clayout.next_page0;
+			r_first_page = clayout.first_page;
+			r_next_page = clayout.next_page;
 		}
 		else
 			r_row = -1;
@@ -33,9 +33,9 @@ int  RichTable::GetInvalid(PageY& top, PageY& bottom, RichContext rc) const
 	if(r_row == -2)
 		return -1;
 	const TabLayout& tab = Realize(rc);
-	RichContext rc2 = rc;
-	rc2.Page();
-	if(r_row >= 0 && r_first_page == rc.page && r_next_page == rc2.page
+	Rect first_page, next_page;
+	Reduce(rc, first_page, next_page);
+	if(r_row >= 0 && r_first_page == first_page && r_next_page == next_page
 	   && r_py == rc.py && tab[min(GetRows() - 1, r_row + cell[r_row][r_column].vspan)].pyy == r_pyy) {
 		const PaintRow& pr = tab[r_row];
 		const RichCell& cl = cell[r_row][r_column];

@@ -80,7 +80,7 @@ String UnitEdit::AsText(double d, int unit)
 		return Null;
 	String utxt = UnitText(unit);
 	if(unit == UNIT_POINT)
-		d = floor(4 * d + 0.5) / 4;
+		d = floor(10 * d + 0.5) / 10;
 	return AsString(d, unit == UNIT_DOT ? 0 : unit == UNIT_MM ? 1 : 2) + ' ' + utxt;
 }
 
