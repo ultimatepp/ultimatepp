@@ -53,8 +53,6 @@ const RichTable::TabLayout& RichTable::Realize(RichContext rc) const
 		clayout.py = rc.py;
 		clayout.first_page = first_page;
 		clayout.next_page = next_page;
-		Reduce(clayout.first_page);
-		Reduce(clayout.next_page);
 		clayout.header_page = clayout.next_page;
 		PageY py = rc.py;
 		py.y += format.before;
