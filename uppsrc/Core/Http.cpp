@@ -446,13 +446,15 @@ void HttpRequest::Start()
 		p = ssl ? DEFAULT_HTTPS_PORT : DEFAULT_HTTP_PORT;
 	String h = use_proxy ? ssl ? ssl_proxy_host : proxy_host : host;
 	LLOG("Using " << (use_proxy ? "proxy " : "") << h << ":" << p);
+	
+	SSLServerNameIndication(host);
 
 	StartPhase(DNS);
 	if(IsNull(GetTimeout()) && timeout == INT_MAX) {
 		if(WhenWait) {
 			addrinfo.Start(h, p);
 			while(addrinfo.InProgress()) {
-				Sleep(GetWaitStep());		
+				Sleep(GetWaitStep());
 				WhenWait();
 				if(msecs(start_time) >= timeout)
 					break;
