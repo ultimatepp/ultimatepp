@@ -277,12 +277,18 @@ tring][@(0.0.255) `&]_[*@3 pkey], [@(0.0.255) bool]_[*@3 asn1])&]
 (Note that clients usually do not need certificates, this is 
 usually used on accepting sockets.)&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TcpSocket`:`:SSLServerNameIndication`(const Upp`:`:String`&`): [@(0.0.255) v
+oid]_[* SSLServerNameIndication]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 name])&]
+[s2;%% Sets [^https`:`/`/cs`.wikipedia`.org`/wiki`/Server`_Name`_Indication^ SNI] 
+for SSL connection.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:GetSSLInfo`(`)const: [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#SSLInfo`:`:struct^ S
 SLInfo]_`*[* GetSSLInfo]()_[@(0.0.255) const]&]
 [s2;%% Returns information about established (after handshake) SSL 
 connection or NULL if such information is not available.&]
-[s2;%% &]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:Timeout`(int`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
