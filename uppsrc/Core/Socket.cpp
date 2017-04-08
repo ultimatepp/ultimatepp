@@ -961,6 +961,11 @@ void TcpSocket::SSLCertificate(const String& cert_, const String& pkey_, bool as
 	asn1 = asn1_;
 }
 
+void TcpSocket::SSLServerNameIndication(const String& name)
+{
+	sni = name;
+}
+
 void TcpSocket::Clear()
 {
 	ClearError();

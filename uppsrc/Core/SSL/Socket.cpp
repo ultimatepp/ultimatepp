@@ -89,7 +89,14 @@ void TcpSocket::SSLImp::SetSSLResError(const char *context, int res)
 		socket.SetSockError(context);
 		return;
 	}
-	socket.SetSockError(context, code, GetErrorText(code));
+	String txt = GetErrorText(code);
+	int err = ERR_get_error();
+	if(err) {
+		char h[260];
+		ERR_error_string(err, h);
+		txt << "; " << h;
+	}
+	socket.SetSockError(context, code, txt);
 }
 
 bool TcpSocket::SSLImp::IsAgain(int res) const
@@ -125,6 +132,13 @@ bool TcpSocket::SSLImp::Start()
 		SetSSLError("Start: SSL_new");
 		return false;
 	}
+
+	if(socket.sni.GetCount()) {
+		Buffer<char> h(socket.sni.GetCount() + 1);
+		strcpy(~h, ~socket.sni);
+		SSL_set_tlsext_host_name(ssl, h);
+	}
+
 	if(!SSL_set_fd(ssl, (int)socket.GetSOCKET())) {
 		SetSSLError("Start: SSL_set_fd");
 		return false;
