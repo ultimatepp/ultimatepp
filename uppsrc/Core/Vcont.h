@@ -45,11 +45,14 @@ public:
 	operator const T*() const            { return ptr; }
 	T *operator~()                       { return ptr; }
 	const T *operator~() const           { return ptr; }
+	T          *Get()                    { return ptr; }
+	const T    *Get() const              { return ptr; }
 
 	void Alloc(size_t size)              { Clear(); ptr = new T[size]; }
 	void Alloc(size_t size, const T& in) { Clear(); ptr = new T[size]; Fill(ptr, ptr + size, in); }
 
 	void Clear()                         { if(ptr) delete[] ptr; ptr = NULL; }
+	bool IsEmpty() const                 { return ptr == NULL; }
 
 	Buffer()                             { ptr = NULL; }
 	Buffer(size_t size)                  { ptr = new T[size]; }
