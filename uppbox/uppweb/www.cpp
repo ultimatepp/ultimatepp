@@ -639,7 +639,8 @@ void ExportPage(int i)
 		pageTitle << " :: Ultimate++";
 
 	Htmls content =
-	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
+	    "<!DOCTYPE html>" +
+	    //"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
 		HtmlHeader(pageTitle, AsCss(css) +
 			"a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; "
 			              "font-weight: normal; }\n"
