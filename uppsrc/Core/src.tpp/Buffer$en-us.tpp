@@ -77,22 +77,13 @@ ick`_]_[_^Buffer^ Buffer][@(0.0.255) `&]_[*@3 v])&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Buffer`:`:operator T`*`(`):%- [* operator_T`*]()&]
-[s2; Returns a pointer to the first element of the Buffer or NULL 
-if the Buffer is empty.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Buffer`:`:operator const T`*`(`)const:%- [* operator_const_T`*]()_[@(0.0.255) const]&]
-[s2; Returns a pointer to the first element of the Buffer or NULL 
-if the Buffer is empty.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Buffer`:`:operator`~`(`):%- [*@4 T]_`*[* operator`~]()&]
-[s2; Returns a pointer to the first element of the Buffer or NULL 
-if the Buffer is empty.&]
-[s3;%- &]
-[s4;%- &]
 [s5;:Buffer`:`:operator`~`(`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* operator`~]()_[@(0.0.255) c
 onst]&]
+[s5;:Upp`:`:Buffer`:`:Get`(`):%- [*@4 T]_`*[* Get]()&]
+[s5;:Upp`:`:Buffer`:`:Get`(`)const:%- [@(0.0.255) const]_[*@4 T]_`*[* Get]()_[@(0.0.255) cons
+t]&]
 [s2; Returns a pointer to the first element of the Buffer or NULL 
 if the Buffer is empty.&]
 [s3;%- &]
@@ -115,4 +106,9 @@ are lost.&]
 [s2; Clears the buffer to the same state as default constructor. 
 All current elements are destroyed.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Buffer`:`:IsEmpty`(`)const:%- [@(0.0.255) bool]_[* IsEmpty]()_[@(0.0.255) const
+]&]
+[s2; Returns true if Buffer is empty.&]
+[s3;%- &]
 [s0; ]]
