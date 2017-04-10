@@ -164,7 +164,7 @@ Htmls SearchBar(const char *domain)
 	    .Style("margin:0px;padding:0px;") /
 	    ( HtmlHidden("ie", "UTF-8") +
 	      HtmlHidden("oe", "UTF-8") +
-	      HtmlEdit("q", 15) +
+	      HtmlEdit("q", 15).Attr("placeholder", t_("Site search")) +
 	      HtmlHidden("domains", domain) +
 	      HtmlHidden("sitesearch", domain)
 	    );
