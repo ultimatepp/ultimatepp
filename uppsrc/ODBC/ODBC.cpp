@@ -117,8 +117,9 @@ void ODBCSession::Close()
 	SessionClose();
 	if(hdbc != SQL_NULL_HANDLE) {
 		FlushConnections();
-		SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
+		SQLDisconnect(hdbc);
 		SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
+		SQLFreeHandle(SQL_HANDLE_DBC, hdbc);
 		hdbc = SQL_NULL_HANDLE;
 		hstmt = SQL_NULL_HANDLE;
 	}
