@@ -150,7 +150,7 @@ Htmls BarLink(const char *link, const char *text, bool nxt = true)
 {
 	String style = "border: 0px solid black; "
 	               "padding-left:12px; padding-right:0px; "
-	               "padding-top:6px; padding-bottom:6px;";
+	               "padding-top:0px; padding-bottom:6px;";
 	if(nxt)
 	  style += " border-top: 1px solid #6E89AE;";
 
