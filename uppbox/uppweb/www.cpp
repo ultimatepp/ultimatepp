@@ -150,7 +150,7 @@ Htmls BarLink(const char *link, const char *text, bool nxt = true)
 {
 	String style = "border: 0px solid black; "
 	               "padding-left:12px; padding-right:0px; "
-	               "padding-top:0px; padding-bottom:6px;";
+	               "padding-top:6px; padding-bottom:6px;";
 	if(nxt)
 	  style += " border-top: 1px solid #6E89AE;";
 
@@ -639,8 +639,8 @@ void ExportPage(int i)
 		pageTitle << " :: Ultimate++";
 
 	Htmls content =
-	    "<!DOCTYPE html>" +
-	    //"<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
+	    //"<!DOCTYPE html>" +
+	    "<!DOCTYPE html PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n" +
 		HtmlHeader(pageTitle, AsCss(css) +
 			"a.l1         { text-decoration:none; font-size: 8pt; font-family: sans-serif; "
 			              "font-weight: normal; }\n"
