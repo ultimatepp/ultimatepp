@@ -92,19 +92,19 @@ RichContext RichText::Context(const Rect& page, PageY py, RichText *header, Rich
 	return rc;
 }
 
-void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo& pi_,
+void RichText::PaintHeaderFooter(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& pi_,
                                  int from_page, int to_page) const
 {
 	PaintInfo pi = pi_;
 	pi.sell = pi.selh = 0;
-	RichContext rc = Context(page);
+	RichContext rc = Context(page, py);
 	int last_page = -1;
 	int pagecount = GetHeight(page).page + 1;
 	int i = 0;
 	while(last_page <= to_page) {
 		while(last_page < rc.py.page) {
 			last_page++;
-			if(rc.header || rc.footer) {
+			if(last_page >= from_page && (rc.header || rc.footer)) {
 				if(rc.header_cy)
 					GetHeaderFooterText(rc.header, last_page, pagecount).Paint(pw, PageY(last_page, page.top), page, pi);
 				if(rc.footer_cy)
