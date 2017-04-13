@@ -27,7 +27,7 @@ void RichText::Paint(PageDraw& w, PageY py, const Rect& page, const PaintInfo& p
 	RichContext ctx = Context(page, py);
 	int from_page = ctx.py.page;
 	RichTxt::Paint(w, ctx, pi);
-	PaintHeaderFooter(w, page, pi, from_page, ctx.py.page);
+	PaintHeaderFooter(w, page, py, pi, from_page, ctx.py.page);
 }
 
 void  RichText::Paint(PageDraw& w, const Rect& page, const PaintInfo& pi) const
@@ -111,22 +111,15 @@ bool RichText::GetInvalid(PageY& top, PageY& bottom, const Rect& page,
 		bottom = GetHeight(page);
 		return true;
 	}
-#if 0
-	RichContext rc = Context(page, PageY(0, 0));
-	if(rtype == SPARA) {
-		rc.py = top = GetPartPageY(spi, rc);
-		bottom = GetNextPageY(spi, rc);
-		return true;
-	}
-#endif
 	RichContext begin;
+	RichContext zctx = Context(page, PageY(0, 0)); // we can use PageY(0, 0) as GetInvalid is only used in editor(s)
 	if(rtype == SPARA) { // selection changed within single paragraph
-		RichContext rc = GetPartContext(spi, Context(page));
+		RichContext rc = GetPartContext(spi, zctx);
 		top = rc.py;
 		bottom = GetAdvanced(spi, rc, begin).py;
 		return true;
 	}
-	RichContext rc = GetPartContext(r_parti, Context(page));
+	RichContext rc = GetPartContext(r_parti, zctx);
 	top = rc.py;
 	if(rtype == PARA) {
 		if(IsTable(r_parti))

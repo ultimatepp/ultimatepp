@@ -6,7 +6,7 @@ class RichText : public RichTxt, public DeepCopyOption<RichText> {
 
 	void       Init();
 
-	void       PaintHeaderFooter(PageDraw& pw, const Rect& page, const PaintInfo& pi,
+	void       PaintHeaderFooter(PageDraw& pw, const Rect& page, PageY py, const PaintInfo& pi,
 	                             int from_page, int to_page) const;
 
 	struct StyleChangeOp;
@@ -41,7 +41,7 @@ public:
 
 	RichContext           Context(const Rect& page, PageY py, RichText *header, RichText *footer) const;
 	RichContext           Context(const Rect& page, PageY py) const { return Context(page, py, ~header, ~footer); }
-	RichContext           Context(const Rect& page) const { return Context(page, PageY(0, 0)); }
+//	RichContext           Context(const Rect& page) const { return Context(page, PageY(0, 0)); }
 
 	RichPos               GetRichPos(int pos, int maxlevel = INT_MAX) const;
 	int                   operator[](int pos) const            { return GetRichPos(pos).chr; }
