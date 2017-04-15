@@ -103,6 +103,7 @@ TheIDE and UMK from tarball (POSIX environment). Compilation
 on multiple cores is possible with `"`-j`" option.&]
 [s5;l160;i150;O0; Documentation improvements.&]
 [s5;l160;i150;O0; Bug fixes in various areas.&]
+[s0; &]
 [s3;H4; Archival releases:&]
 [s5; If you are looking for informations about archival releases 
 `- you can find them on the following [^topic`:`/`/uppweb`/www`/RoadmapHistorical`$en`-us^ s
