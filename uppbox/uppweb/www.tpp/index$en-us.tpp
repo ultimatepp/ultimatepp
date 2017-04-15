@@ -105,6 +105,7 @@ management (Redmine)]&]
 and permissions]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Bug report. 
 Submitting a patch]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Code style]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^ Web page]&]
 [s4;i150;O0;%% New development ideas&]
 [s4;l192;i150;O0;%% [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^ Current 
