@@ -6,6 +6,8 @@
 //#include <coff/binobj/binobj.h>
 #include <plugin/bz2/bz2.h>
 
+#include "Logger.h"
+
 using namespace Upp;
 
 int CharFilterCid(int c);

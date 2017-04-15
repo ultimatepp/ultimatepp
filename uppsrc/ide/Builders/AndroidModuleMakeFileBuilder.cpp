@@ -1,8 +1,6 @@
 #include "AndroidBuilder.h"
 
-#define METHOD_NAME       "AndroidModuleMakeFileCreator::" + String(__FUNCTION__) + "(): "
-#define ERROR_METHOD_NAME "[ERROR] " METHOD_NAME
-#define INFO_METHOD_NAME  "[INFO] "  METHOD_NAME
+#define METHOD_NAME "AndroidModuleMakeFileCreator::" << UPP_FUNCTION_NAME << "(): "
 
 namespace Upp {
 
@@ -71,18 +69,18 @@ bool AndroidModuleMakeFileCreator::Save(const String& path)
 {
 	String directory = GetFileDirectory(path);
 	if (!RealizeDirectory(directory)) {
-		LOG(ERROR_METHOD_NAME + "Creating module directory failed \"" + directory + "\".");
+		LoggerError() << METHOD_NAME << "Creating module directory failed \"" << directory << "\".";
 		return false;
 	}
 	
 	String data = Create();
 	if (FileExists(path) && LoadFile(path) == data) {
-		LOG(INFO_METHOD_NAME + "Following file \"" + path + "\" content is the same as previous one.");
+		LoggerInfo() << METHOD_NAME << "Following file \"" << path << "\" content is the same as previous one.";
 		return true;
 	}
 	
 	if (!SaveFile(path, Create())) {
-		LOG(ERROR_METHOD_NAME + "Saving module file failed \"" + path + "\".");
+		LoggerError() << METHOD_NAME << "Saving module file failed \"" << path << "\".";
 		return false;
 	}
 	

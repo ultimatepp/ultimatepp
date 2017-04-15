@@ -16,10 +16,13 @@ file
 	Host readonly separator,
 	Host.h,
 	Host.cpp,
-	Documentation readonly separator,
 	HostTools.h,
 	HostTools.cpp,
-	src.tpp,
+	Logger readonly separator,
+	Logger.cpp,
+	Logger.h,
 	Info readonly separator,
-	Copying;
+	Copying,
+	Documentation readonly separator,
+	src.tpp;
 
