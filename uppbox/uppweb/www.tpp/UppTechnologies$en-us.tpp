@@ -70,6 +70,16 @@ paragraph.&]
 [s22; 3.2.1 Core libraries&]
 [s5; Core libraries provide low level abstraction.&]
 [s5;l160;i150;O0; [* Core] `- the heart of the U`+`+ framework.&]
+[s5;l320;i150;O2; [* NTL] (Non standard Template Library) `- containers 
+library.&]
+[s5;l320;i150;O2; [* SSL ]`- adds security layer to the library. It 
+should be used when you want to provide secure connection for 
+your sockets or HTTP requests.&]
+[s5;l320;i150;O2; [* RPC ]`- support for remote procedure call.&]
+[s5;l320;i150;O2; [* SMTP ]`- adds the possibility to communicate with 
+mail server with SMTP protocol.&]
+[s5;l320;i150;O2; [* POP3 ]`- just as before, only in this case the 
+POP3 protocol is used.&]
 [s5;l160;i150;O0; [* Plugins] `- useful additions to the library. They 
 are mainly third party libraries that are wrapped by U`+`+ framework. 
 They are adapted to TheIDE build system, so all you need to do 
