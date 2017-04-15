@@ -363,7 +363,7 @@ String FormatDoubleExp(double d, int digits, int flags, int fill_exp)
 	int pointchar = (flags & FD_COMMA) ? ',' : '.';
 	String dig = FormatDoubleDigits(d, digits, flags | FD_REL, exp);
 	exp = Nvl(exp, 0);
-	String out;
+	StringBuffer out;
 	if(flags & FD_SIGN || d < 0 && !IsNull(exp))
 		out.Cat(d >= 0 ? '+' : '-');
 	out.Cat(dig[0]);

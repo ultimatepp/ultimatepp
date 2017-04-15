@@ -199,7 +199,7 @@ double normalize(double d, int& exp)
 	}
 	bool sign = (d < 0);
 	if(sign) d = -d;
-	exp = minmax<int>(ilog10(d), -300, +300); // 8-byte double!
+	exp = minmax<int>(ilog10(d), -308, +308); // 8-byte double!
 	d /= ipow10(exp);
 	if(d >= 10) { d /= 10; exp++; }
 	if(d < 1)   { d *= 10; exp--; }
