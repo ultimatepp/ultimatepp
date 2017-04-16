@@ -927,6 +927,7 @@ CONSOLE_APP_MAIN
 				tt[di].text << qtf;
 			}
 		}
+		bi << BarLink(Www("Tutorials", lang), t_("Tutorials"));
 		bi << BarLink(Www("bazaar", lang), t_("Bazaar"));
 		bi << BarLink(Www("Roadmap", lang), t_("Status & Roadmap"));
 		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
