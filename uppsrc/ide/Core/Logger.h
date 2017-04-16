@@ -3,13 +3,12 @@
 
 #include <Core/Core.h>
 
-// Provides common way to print function name between compilers.
-// TODO: Check MSVC compatibility
 #define UPP_FUNCTION_NAME String(__func__)
 
 namespace Upp {
 
-// TODO: Add support for thread names ids
+// TODO: Add support for thread names ids.
+// TODO: Add logger config to select global logging level.
 class Logger {
 public:
 	enum class LoggingLevel {

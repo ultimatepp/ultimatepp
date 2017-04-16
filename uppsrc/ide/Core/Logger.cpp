@@ -68,5 +68,7 @@ Stream& Upp::operator<<(Stream& s, Logger::LoggingLevel level)
 			return s << "WARN ";
 		case (Logger::LoggingLevel::ERROR):
 			return s << "ERROR";
+		case (Logger::LoggingLevel::NONE):
+			return s << "NONE ";
 	}
 }
