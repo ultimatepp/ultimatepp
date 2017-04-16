@@ -7,7 +7,7 @@ topic "Funding of U++ development";
 [s1; Funding Ultimate`+`+&]
 [s2; If you like Ultimate`+`+ and want to see it grow, you can consider 
 donating the money.&]
-[s2; U`+`+ is free BSD licensed software. You do not have to pay 
+[s2; U`+`+ is a free BSD licensed software. You do not have to pay 
 anything for downloading and using it. However, if you still 
 want to donate its development, you are welcome.&]
 [s2; The donation can be named or anonymous. The named donation will 
