@@ -34,26 +34,8 @@ void Logger::Log()
 
 String Logger::GetCurrentTime()
 {
-	// TODO: Add support for ms somehow...
-	
-	time_t currentTime = time(nullptr);
-	tm* timeInfo = localtime(&currentTime);
-	
-	StringStream ss;
-	ss << AlignTime(timeInfo->tm_hour) << ":"
-	   << AlignTime(timeInfo->tm_min)  << ":"
-	   << AlignTime(timeInfo->tm_sec);
-	
-	return ss.GetResult();
-}
-
-String Logger::AlignTime(int timeValue, int level)
-{
-	String alignedTime = IntStr(timeValue);
-	for (int i = 0; i < level - alignedTime.GetLength(); i++) {
-		alignedTime = "0" + alignedTime;
-	}
-	return alignedTime;
+	Time tm = GetSysTime();
+	return Format("%02d:%02d:%02d", (int)tm.hour, (int)tm.minute, (int)tm.second);
 }
 
 Stream& Upp::operator<<(Stream& s, Logger::LoggingLevel level)
@@ -66,9 +48,10 @@ Stream& Upp::operator<<(Stream& s, Logger::LoggingLevel level)
 			return s << "INFO ";
 		case (Logger::LoggingLevel::WARN):
 			return s << "WARN ";
-		case (Logger::LoggingLevel::ERROR):
+		case (Logger::LoggingLevel::ERROR_LEVEL):
 			return s << "ERROR";
 		case (Logger::LoggingLevel::NONE):
 			return s << "NONE ";
 	}
+	return s;
 }

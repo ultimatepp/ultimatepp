@@ -18,7 +18,7 @@ void DirDiffDlg::GatherFilesDeep(Index<String>& files, const String& base, const
 	}
 }
 
-bool FileEqual(const String& f1, const String& f2)
+bool FileEqual(const String& f1, const String& f2, int& n)
 {
 	FileIn in1(f1);
 	FileIn in2(f2);
@@ -31,6 +31,11 @@ bool FileEqual(const String& f1, const String& f2)
 		}
 		return true;
 	}
+	else
+	{
+		n = (in1 ? 1 : 2);
+	}
+	
 	return false;
 }
 
@@ -48,15 +53,32 @@ void DirDiffDlg::Compare()
 	Sort(f);
 	Progress pi(t_("Comparing.."));
 	pi.SetTotal(f.GetCount());
+
+	list.Clear();
 	for(int i = 0; i < f.GetCount(); i++) {
 		if(pi.StepCanceled())
 			break;
 		String p1 = AppendFileName(~dir1, f[i]);
 		String p2 = AppendFileName(~dir2, f[i]);
-		if(!FileEqual(p1, p2))
-			files.Add(f[i], NativePathIcon(FileExists(p1) ? p1 : p2));
-		info = AsString(files.GetCount()) + " files";
+		int n = 0;
+		if(!FileEqual(p1, p2, n))
+			list.Add(MakeTuple(f[i], p1, p2, n));
 	}
+	
+	ShowResult();
+}
+
+void DirDiffDlg::ShowResult()
+{
+	static Color cs[] = {SColorText(), Red, Green()};
+	files.Clear();
+	for(int i = 0; i < list.GetCount(); i++)
+	{
+		int n = list[i].d;
+		if( (n==0 && modified) || (n==1 && removed) || (n==2 && added))
+		files.Add(list[i].a, NativePathIcon(FileExists(list[i].b) ? list[i].b : list[i].c), StdFont(),cs[list[i].d]);
+	}
+	info = AsString(files.GetCount()) + " files";
 }
 
 void DirDiffDlg::ClearFiles()
@@ -101,15 +123,29 @@ DirDiffDlg::DirDiffDlg()
 	int bcx = GetTextSize(t_("Compare"), StdFont()).cx * 12 / 10 + 2 * div;
 
 	hidden.SetLabel(t_("Hidden"));
+	
+	added.SetLabel(t_("New"));
+	modified.SetLabel(t_("Modified"));
+	removed.SetLabel(t_("Removed"));
+	
 	compare.SetLabel(t_("Compare"));
 	int bcy = compare.GetStdSize().cy;
 	
 	files_pane.Add(dir1.TopPos(0, cy).HSizePos());
 	files_pane.Add(dir2.TopPos(cy + div, cy).HSizePos());
 	files_pane.Add(hidden.TopPos(2 * cy + 2 * div, bcy).LeftPos(0, bcx));
-	files_pane.Add(info.TopPos(2 * cy + 2 * div, bcy).HSizePos(bcx + 2 * div, bcx + div));
+	
+	files_pane.Add(   added.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(2, 60));
+	files_pane.Add(modified.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(52, 70));
+	files_pane.Add( removed.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(132, 80));
+	
+	removed = 1;
+	added = 1;
+	modified = 1;
+	
+	files_pane.Add(info.SetAlign(ALIGN_RIGHT).TopPos(3 * cy + 3 * div, bcy).RightPos(1, 70));
 	files_pane.Add(compare.TopPos(2 * cy + 2 * div, bcy).RightPos(0, bcx));
-	files_pane.Add(files.VSizePos(2 * cy + bcy + 3 * div, 0).HSizePos());
+	files_pane.Add(files.VSizePos(3 * cy + bcy + 4 * div, 0).HSizePos());
 
 	Add(files_diff.SizePos());
 	files_diff.Set(files_pane, diff);
@@ -123,6 +159,10 @@ DirDiffDlg::DirDiffDlg()
 	compare <<= THISBACK(Compare);
 	dir1 <<= THISBACK(ClearFiles);
 	dir2 <<= THISBACK(ClearFiles);
+	
+	modified << [=]() {ShowResult();};
+	removed << [=]() {ShowResult();};
+	added << [=]() {ShowResult();};
 	
 	files.WhenSel = THISBACK(File);
 
