@@ -78,6 +78,7 @@ public:
 	void SetInk(int pos, int count, Color ink);
 	void SetFlags(int count, word flags)              { SetFlags(pos, count, flags); }
 	void Put(int count, const HlStyle& ink)           { Set(pos, count, ink); pos += count; }
+	void Put(int count, const HlStyle& ink, Color paper);
 	void Put(int count, const HlStyle& ink, const HlStyle& paper);
 	void Put(const HlStyle& ink)                      { Put(1, ink); }
 	void Put(const HlStyle& ink, word flags)          { Put(1, ink); v[pos - 1].flags = flags; }
