@@ -51,10 +51,10 @@ public: \
 	{} \
 };
 
-LOGGER(LoggerDebug, Logger::LoggingLevel::DEBUG)
-LOGGER(LoggerInfo,  Logger::LoggingLevel::INFO)
-LOGGER(LoggerWarn,  Logger::LoggingLevel::WARN)
-LOGGER(LoggerError, Logger::LoggingLevel::ERROR)
+LOGGER(Logd, Logger::LoggingLevel::DEBUG)
+LOGGER(Logi, Logger::LoggingLevel::INFO)
+LOGGER(Logw, Logger::LoggingLevel::WARN)
+LOGGER(Loge, Logger::LoggingLevel::ERROR)
 
 #undef LOGGER
 
