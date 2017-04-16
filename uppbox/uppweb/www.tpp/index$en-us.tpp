@@ -105,7 +105,6 @@ management (Redmine)]&]
 and permissions]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Bug report. 
 Submitting a patch]&]
-[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Code style]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^ Web page]&]
 [s4;i150;O0;%% New development ideas&]
 [s4;l192;i150;O0;%% [^topic`:`/`/uppweb`/www`/currenttopics`$en`-us^ Current 
@@ -114,7 +113,8 @@ topics]&]
 ideas]]
 ::=l0/25r0/25t0/15b0/15R0-1 [s0; ]
 :: [s0; ]
-::^l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/slack`$en`-us^ Team collaboration 
+::^l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/codestyle`$en`-us^ Code style]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/slack`$en`-us^ Team collaboration 
 (Slack)]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bazaar`$en`-us^ Bazaar]&]
 [s4;i150;O0;%% [^topic`:`/`/ide`/app`/About`$en`-us^ Authors `& License]]
