@@ -43,33 +43,20 @@ private:
 
 Stream& operator<<(Stream& s, Logger::LoggingLevel level);
 
-class LoggerDebug final : public Logger {
-public:
-	LoggerDebug(const String& tag = "")
-		: Logger(Logger::LoggingLevel::DEBUG, tag)
-	{}
+#define LOGGER(CLASS_NAME, LEVEL) \
+class CLASS_NAME : public Logger { \
+public: \
+	CLASS_NAME(const String& tag = "") \
+		: Logger(LEVEL, tag) \
+	{} \
 };
 
-class LoggerInfo final : public Logger {
-public:
-	LoggerInfo(const String& tag = "")
-		: Logger(Logger::LoggingLevel::INFO, tag)
-	{}
-};
+LOGGER(LoggerDebug, Logger::LoggingLevel::DEBUG)
+LOGGER(LoggerInfo,  Logger::LoggingLevel::INFO)
+LOGGER(LoggerWarn,  Logger::LoggingLevel::WARN)
+LOGGER(LoggerError, Logger::LoggingLevel::ERROR)
 
-class LoggerWarn final : public Logger {
-public:
-	LoggerWarn(const String& tag = "")
-		: Logger(Logger::LoggingLevel::WARN, tag)
-	{}
-};
-
-class LoggerError final : public Logger {
-public:
-	LoggerError(const String& tag = "")
-		: Logger(Logger::LoggingLevel::ERROR, tag)
-	{}
-};
+#undef LOGGER
 
 }
 
