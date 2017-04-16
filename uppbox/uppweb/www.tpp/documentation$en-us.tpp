@@ -77,15 +77,7 @@ Android builder]&]
 [s0; [*+117 Getting Started With Ultimate`+`+]&]
 [s0;*3 &]
 [s0;l160; [*^topic`:`/`/uppweb`/www`/overview`$en`-us^+92 Overview]&]
-[s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core 
-tutorial]&]
-[s0;l160;~~~1024; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
-tutorial]&]
-[s0;l160;~~~1024; [^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
-tutorial]&]
-[s0;l160; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image tutorial]&]
-[s0;l160; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql Tutorial]&]
-[s0;l160; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark tutorial]&]
+[s0;l160;~~~1024; [^topic`:`/`/uppweb`/www`/Tutorials`$en`-us^ Tutorials]&]
 [s0;l160;^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ &]
 [s0;l160;~~~1024; [^topic`:`/`/Core`/srcdoc`/Packages`$en`-us^ Standard 
 Ultimate`+`+  packages]&]
