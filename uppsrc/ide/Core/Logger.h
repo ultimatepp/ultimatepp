@@ -16,7 +16,8 @@ public:
 		DEBUG,
 		INFO,
 		WARN,
-		ERROR
+		ERROR,
+		NONE
 	};
 
 	Logger(LoggingLevel level, const String& tag = "");
