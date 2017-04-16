@@ -116,18 +116,17 @@ doors to many bugs and makes the usage of your class difficult
 in classes that maintain it.&]
 [s13;i150;O0; [* Use integer counter access]. Do not use iterators on 
 the Containers. Example:&]
-[s0;l320; [@(28.0.200) for(int i `= 0; i < vec.GetCount(); i`+`+)]&]
-[s0;l320; [@(28.0.200) `{]&]
-[s0;l320; [@(28.0.200)     vec`[i`] `= 0;]&]
-[s0;l320; [@(28.0.200) `}]&]
+[s0;l320; [C for(int i `= 0; i < vec.GetCount(); i`+`+)]&]
+[s0;l320; [C `{]&]
+[s0;l320; [C     vec`[i`] `= 0;]&]
+[s0;l320; [C `}]&]
 [s13;i150;O0; User for each loop when you want to go over whole container.&]
 [s13;i150;O0; Use positive action semantic. Think of general usage 
 patterns, known to the user, like Add(), Remove(), Detach(). 
 Example:&]
-[s0;l320; [@(28.0.200) void Enable(bool e `= true) `{ /`*your code`*/ 
-`}]&]
-[s0;l320; [@(28.0.200) void Disable() `{ return Enable(false); `}]&]
-[s0;l320; [@(28.0.200) bool IsEnabled() const `{ /`*your code`*/ `}]&]
+[s0;l320; [C void Enable(bool e `= true) `{ /`*your code`*/ `}]&]
+[s0;l320; [C void Disable() `{ return Enable(false); `}]&]
+[s0;l320; [C bool IsEnabled() const `{ /`*your code`*/ `}]&]
 [s13;l160;~~~32; Upp code is both easier to read and to write because 
 of little things like that.&]
 [s13;i150;O0; [* Implement small functions in class definition itself]. 
@@ -135,7 +134,8 @@ Many functions only have 1 or 2 syntactically important statements
 (return `*this doesn`'t count) and are maybe important to understand 
 class function. A developer will first look in header file. Rule 
 of thumb: >3 statements should go into own implementation in .cpp 
-file. Example: [C String Right(int count) const `{ return Mid(GetLength() 
+file. Example:&]
+[s13;l320; [C String Right(int count) const `{ return Mid(GetLength() 
 `- count); `}]&]
 [s13;i150;O0; Provide for Methods chaining in your class by returning 
 `*this, where logically useful. This makes it possible to [C myControl.HSizePos().V
