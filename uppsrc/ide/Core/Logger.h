@@ -15,7 +15,7 @@ public:
 		DEBUG,
 		INFO,
 		WARN,
-		ERROR,
+		ERROR_LEVEL,
 		NONE
 	};
 
@@ -32,7 +32,6 @@ private:
 	void Log();
 	
 	String GetCurrentTime();
-	String AlignTime(int timeValue, int level = 2);
 	
 private:
 	StringStream outputStream;
@@ -54,7 +53,7 @@ public: \
 LOGGER(Logd, Logger::LoggingLevel::DEBUG)
 LOGGER(Logi, Logger::LoggingLevel::INFO)
 LOGGER(Logw, Logger::LoggingLevel::WARN)
-LOGGER(Loge, Logger::LoggingLevel::ERROR)
+LOGGER(Loge, Logger::LoggingLevel::ERROR_LEVEL)
 
 #undef LOGGER
 
