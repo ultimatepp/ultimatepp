@@ -37,7 +37,7 @@ bool AndroidBuilder::BuildPackage(
 	const Vector<String>& all_libraries,
 	int)
 {
-	LoggerDebug() << METHOD_NAME;
+	Logd() << METHOD_NAME;
 	
 	InitProject();
 	if(!ValidateBuilderEnviorement())
@@ -152,12 +152,12 @@ bool AndroidBuilder::BuildPackage(
 	}
 	
 	if(isResourcesPackage || nativeSources.IsEmpty()) {
-		LoggerDebug() << METHOD_NAME << "There are not native files in the following package " << package << ".";
+		Logd() << METHOD_NAME << "There are not native files in the following package " << package << ".";
 		return true;
 	}
 	
 	if(isBlitz) {
-		LoggerDebug() << METHOD_NAME << "Creating blitz step for package " << package << ".";
+		Logd() << METHOD_NAME << "Creating blitz step for package " << package << ".";
 		
 		BlitzBuilderComponent bc(this);
 		bc.SetWorkingDir(project->GetJniDir() + DIR_SEPS + package);
@@ -169,7 +169,7 @@ bool AndroidBuilder::BuildPackage(
 		    noBlitzNativeSourceFiles);
 		
 		if(!FileExists(blitz.path)) {
-			LoggerError() << METHOD_NAME << "Blitz was enable, but no blitz file generated.";
+			Loge() << METHOD_NAME << "Blitz was enable, but no blitz file generated.";
 		}
 		else {
 			nativeSources.Add(package + DIR_SEPS + GetFileName(blitz.path));
@@ -431,7 +431,7 @@ bool AndroidBuilder::MovePackageFileToAndroidProject(const String& src, const St
 {
 	String directory = GetFileDirectory(dst);
 	if(!RealizeDirectory(directory)) {
-		LoggerError() << METHOD_NAME << "Cannot relize following directory: \"" << directory << "\".";
+		Loge() << METHOD_NAME << "Cannot relize following directory: \"" << directory << "\".";
 		return false;
 	}
 	

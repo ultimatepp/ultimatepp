@@ -69,18 +69,18 @@ bool AndroidModuleMakeFileCreator::Save(const String& path)
 {
 	String directory = GetFileDirectory(path);
 	if (!RealizeDirectory(directory)) {
-		LoggerError() << METHOD_NAME << "Creating module directory failed \"" << directory << "\".";
+		Loge() << METHOD_NAME << "Creating module directory failed \"" << directory << "\".";
 		return false;
 	}
 	
 	String data = Create();
 	if (FileExists(path) && LoadFile(path) == data) {
-		LoggerInfo() << METHOD_NAME << "Following file \"" << path << "\" content is the same as previous one.";
+		Logi() << METHOD_NAME << "Following file \"" << path << "\" content is the same as previous one.";
 		return true;
 	}
 	
 	if (!SaveFile(path, Create())) {
-		LoggerError() << METHOD_NAME << "Saving module file failed \"" << path << "\".";
+		Loge() << METHOD_NAME << "Saving module file failed \"" << path << "\".";
 		return false;
 	}
 	
