@@ -193,8 +193,18 @@ void sCleanZombies(int signal_number)
 
 String LinuxHostConsole = "/usr/bin/xterm -e";
 
+static char* NormalizeFirstArgument(const char* argument)
+{
+	String str = argument;
+	str.Replace("\"", "");
+	
+	return strdup(str);
+}
+
 void LocalHost::Launch(const char *_cmdline, bool console)
 {
+	Cout () << "_cmdline: " << _cmdline << "\n";
+	
 	String cmdline = FindCommand(exedirs, _cmdline);
 	PutVerbose(cmdline);
 #ifdef PLATFORM_WIN32
@@ -257,15 +267,20 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	Vector<char *> args;
 	const char *p = cmdline;
 	const char *b = p;
+	
 	while(*p && (byte)*p > ' ')
 		if(*p++ == '\"')
 			while(*p && *p++ != '\"')
 				;
-	args.Add(cmd_out);
+	
 	memcpy(cmd_out, b, p - b);
 	cmd_out += p - b;
 	*cmd_out++ = '\0';
-
+	
+	cmd_out = cmd_buf;
+	args.Add(NormalizeFirstArgument(cmd_out));
+	cmd_out += p - b + 1;
+	
 	while(*p)
 		if((byte)*p <= ' ')
 			p++;
@@ -299,7 +314,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		sigchld_action.sa_handler = sCleanZombies;
 		sigaction(SIGCHLD, &sigchld_action, NULL);
 	}
-
+	
 	pid_t pid = fork();
 	if(pid == 0)
 	{
