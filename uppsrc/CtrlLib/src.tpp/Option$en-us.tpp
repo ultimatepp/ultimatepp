@@ -17,12 +17,7 @@ er]&]
 [s0; &]
 [s2;%% 
 @@image:712&131
-€ƒò€•€€€ƒëÿ€€€€ø·œí˜íŠƒÀöŒ†½Óï´ç©ØÓ®Ã¢‚¬ğ¢â‘ÙÊÒŸØ‰•›Ìäâ‚Ø»”’Şä¾¹Ôä“üğ¼¯„³Ëåò¹
-÷ĞéôáÑ¿ÇùŞ‚âßè¡í„ï´¦éÚ¶Çı¹Û°ŒÎõ¥‰Ô§Ì£ÔÁ«Ç»®¼úùƒúú‚ÉÇÛİæƒ±€†€ëºèŞ§êõÙ¥¨·–ùÚù–—Ñ
-İÿÒ Æ©Ê–È—Â‡¤Äõ„œÇ§ÚÀ•ø¸‚½àÈ‚ ŠÑçù¶Óå½ÖÁ£«òæ¶­Âº€Òùä»ºå´©¿Ì¥Šæ…ª¤¨Ñ¥µ°ë¤Û©²­
-½åôúŠä ¼ú˜Ú¼¤‚´ê¿«Ğ¥°ÀÔ¤ÁáƒÏß´å‚ÜµĞÍİœÑ¥ªÓ¨å¥Š¤®›¤ÂµåÚÖÒ•…¿¢ÏÎ‹š‘ª¥¢„±«ß¨Êµõ
-˜–£Õİ‹ÎÕä¡©©öİ×÷²½Ô»Ãú‡öÎ´Õ­¹êÀ¼²®£šÍÕ÷ºèÒø„ô÷Š¶¿ƒÈ­õºÊ–ÒªŠ£¡ÁÉ­¹åá¨ƒÚìÌÙª€ôš
-ô¦»Õ²ÙëèäıõÜÿ€–´—Æ¯ìò¹Ü®ƒ×¢›«¤¬Ü
+(A3IAFQAAAOv/AAAAAHic7ZhtioNADIa9U++059hTLsMigiwiYhFZytKfDQkVm8xk4li7FBJeZD7UZB6T/PA8hLPL5XK5DtDp9GHRv8f5XgJiX2ghhG+0pmnatv252zAMTvWJVIEnTKNUq0c7Ljx6+fr6AklHW10DsYAGAOu6Xidq9VmlqJb52nmWl1Hdf1IgRilKSJfCB6REdRxHp1pAFXgCPWDIkIIgUed5tlNlPUGOoyvyZrbCOoDSeeQ7ZbQpv8ydJWaFKqQoUSWwa6RbqbIt5XT6iuSgPBidWrykgrQ/q1ClDrDAJEHhA89ftIJctVBN3ZylKlMo5SWKLhukQjXlWlKVhT+iAc8LmpGqJQ2iMSvfKEo1dRYjVd2LTlUhKal2Xdf3PdQ7Q/qHdjTVrblqD8AyLqOazdUejbroUviE9Iq2vwPIrfVKllKqiqMhyS05ZWEog2zMWaqAdJomO9Uy2evofXXcfwCWtMav7HK5XC7XohsrJCxc)
 &]
 [s0;%% &]
 [s9;%% Widget providing the selection of 2 or alternatively 3 states 
@@ -79,27 +74,36 @@ representation suitable for placing it on dialog (SColorFace).&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Option`:`:IsBlackEdge`(`)const: [@(0.0.255) bool]_[* IsBlackEdge]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns true if BlackEdge is active.&]
+[s3; &]
+[s4; &]
 [s5;:Option`:`:SwitchImage`(bool`): [_^Option^ Option][@(0.0.255) `&]_[* SwitchImage]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Activates visual representation that paints the Option with 
 the Switch appearance.&]
-[s7;%% [%-*C@3 b]-|true to activate.&]
-[s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Option`:`:IsSwitchImage`(`)const: [@(0.0.255) bool]_[* IsSwitchImage]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns true if SwitchImage is active.&]
+[s3; &]
 [s4; &]
 [s5;:Option`:`:ThreeState`(bool`): [_^Option^ Option][@(0.0.255) `&]_[* ThreeState]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Activates three`-state mode. Also activates NoNotNull mode.&]
-[s7;%% [%-*C@3 b]-|true to activate.&]
-[s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Option`:`:IsThreeState`(`)const: [@(0.0.255) bool]_[* IsThreeState]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns true if ThreeState is active.&]
+[s3; &]
 [s4; &]
 [s5;:Option`:`:NotNull`(bool`): [_^Option^ Option][@(0.0.255) `&]_[* NotNull]([@(0.0.255) boo
 l]_[*@3 nn]_`=_[@(0.0.255) true])&]
 [s2;%% Activates NotNull mode `- Null Value assigned to Option (via 
 SetData) is interpreted as false.&]
-[s7;%% [%-*C@3 nn]-|true to activate.&]
-[s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
 [s5;:Option`:`:NoNotNull`(`): [_^Option^ Option][@(0.0.255) `&]_[* NoNotNull]()&]
@@ -108,10 +112,23 @@ is interpreted as Null.&]
 [s7;%% [*/ Return value]-|`*this for chaining.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Option`:`:IsNotNull`(`)const: [@(0.0.255) bool]_[* IsNotNull]()_[@(0.0.255) con
+st]&]
+[s2;%% Returns true if NotNull is active.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Option`:`:SetColor`(Upp`:`:Color`): [_^Upp`:`:Option^ Option][@(0.0.255) `&]_
+[* SetColor]([_^Upp`:`:Color^ Color]_[*@3 c])&]
+[s2;%% Sets the color of text of Option label. Setting Null restores 
+the default color.&]
+[s3;%% &]
+[s4; &]
 [s5;:Option`:`:ShowLabel`(bool`): [_^Option^ Option][@(0.0.255) `&]_[* ShowLabel]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2;%% Togles the display of the option`'s label.&]
-[s7; [*@3 b]-|true to show label&]
-[s7;%% [*/ Return value]-|`*this for chaining.&]
+[s2;%% Toggles the display of the option`'s label.&]
 [s3;%% &]
-[s0; ]
+[s4; &]
+[s5;:Upp`:`:Option`:`:IsShowLabel`(`)const: [@(0.0.255) bool]_[* IsShowLabel]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns true if ShowLabel is active.&]
+[s0; ]]

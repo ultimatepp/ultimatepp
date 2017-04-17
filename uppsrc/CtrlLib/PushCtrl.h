@@ -182,6 +182,7 @@ protected:
 	bool   notnull;
 	bool   blackedge;
 	bool   showlabel;
+	Color  color;
 
 public:
 	Option& Set(int b);
@@ -201,6 +202,7 @@ public:
 	Option& NotNull(bool nn = true)               { notnull = nn; Refresh(); return *this; }
 	Option& NoNotNull()                           { return NotNull(false); }
 	bool    IsNotNull() const                     { return notnull; }
+	Option& SetColor(Color c)                     { color = c; Refresh(); return *this; }
 
 	Option();
 	virtual ~Option();
