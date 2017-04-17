@@ -203,8 +203,6 @@ static char* NormalizeFirstArgument(const char* argument)
 
 void LocalHost::Launch(const char *_cmdline, bool console)
 {
-	Cout () << "_cmdline: " << _cmdline << "\n";
-	
 	String cmdline = FindCommand(exedirs, _cmdline);
 	PutVerbose(cmdline);
 #ifdef PLATFORM_WIN32
