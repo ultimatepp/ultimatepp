@@ -70,13 +70,14 @@ void DirDiffDlg::Compare()
 
 void DirDiffDlg::ShowResult()
 {
-	static Color cs[] = {SColorText(), Red, Green()};
+	static Color cs[] = { SColorText(), Red(), Green() };
 	files.Clear();
 	for(int i = 0; i < list.GetCount(); i++)
 	{
 		int n = list[i].d;
-		if( (n==0 && modified) || (n==1 && removed) || (n==2 && added))
-		files.Add(list[i].a, NativePathIcon(FileExists(list[i].b) ? list[i].b : list[i].c), StdFont(),cs[list[i].d]);
+		if(n == 0 && modified || n == 1 && removed || n == 2 && added)
+			files.Add(list[i].a, NativePathIcon(FileExists(list[i].b) ? list[i].b : list[i].c),
+			          StdFont(), cs[list[i].d]);
 	}
 	info = AsString(files.GetCount()) + " files";
 }
@@ -124,9 +125,9 @@ DirDiffDlg::DirDiffDlg()
 
 	hidden.SetLabel(t_("Hidden"));
 	
-	added.SetLabel(t_("New"));
+	added.SetColor(Green()).SetLabel(t_("New"));
 	modified.SetLabel(t_("Modified"));
-	removed.SetLabel(t_("Removed"));
+	removed.SetColor(Red()).SetLabel(t_("Removed"));
 	
 	compare.SetLabel(t_("Compare"));
 	int bcy = compare.GetStdSize().cy;
@@ -160,9 +161,9 @@ DirDiffDlg::DirDiffDlg()
 	dir1 <<= THISBACK(ClearFiles);
 	dir2 <<= THISBACK(ClearFiles);
 	
-	modified << [=]() {ShowResult();};
-	removed << [=]() {ShowResult();};
-	added << [=]() {ShowResult();};
+	modified << [=] { ShowResult(); };
+	removed << [=] { ShowResult(); };
+	added << [=] { ShowResult(); };
 	
 	files.WhenSel = THISBACK(File);
 
