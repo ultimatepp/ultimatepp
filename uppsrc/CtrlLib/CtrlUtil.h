@@ -424,7 +424,13 @@ public:
 
 	void Retrieve();
 
-	Event<>  operator<<=(Event<>  cb);
+	Event<>  operator^=(Event<> cb);
+	Event<>  operator<<(Event<> cb);
+	
+	void Reset()                                  { item.Clear(); }
+
+// Backward compatibility
+	Event<>  operator<<=(Event<> cb)              { *this ^= cb; }
 };
 
 template <class T>
