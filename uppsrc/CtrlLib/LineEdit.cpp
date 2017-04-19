@@ -283,6 +283,7 @@ class sOptimizedTextRenderer {
 	int         y;
 	struct Chrs : Moveable<Chrs> {
 		Vector<int> x;
+		Vector<int> width;
 		WString     text;
 	};
 	VectorMap< Tuple2<Font, Color>, Chrs > cache;
@@ -307,7 +308,7 @@ void sOptimizedTextRenderer::Flush()
 			int x = c.x[0];
 			for(int i = 0; i < c.x.GetCount() - 1; i++)
 				c.x[i] = c.x[i + 1] - c.x[i];
-			c.x.Top() = 0;
+			c.x.Top() = c.width.Top();
 			w.DrawText(x, y, c.text, fc.a, fc.b, c.x);
 		}
 	}
@@ -331,6 +332,7 @@ void sOptimizedTextRenderer::DrawChar(int x, int _y, int chr, int width, Font fo
 		c = &cache.GetAdd(MakeTuple(font, color));
 	}
 	c->text.Cat(chr);
+	c->width.Add(width);
 	c->x.Add(x);
 }
 #else
@@ -486,6 +488,7 @@ void   LineEdit::Paint0(Draw& w) {
 						}
 					}
 					sOptimizedTextRenderer tw(w);
+					Highlight lastHighlight;
 					while(q < ln) {
 						if(q == tx.GetCount())
 							lgp = gp;
@@ -503,19 +506,25 @@ void   LineEdit::Paint0(Draw& w) {
 							h.ink = color[INK_SELECTED];
 						}
 						int x = gp * fsz.cx - scx;
+						bool cjk = IsCJKIdeograph(h.chr);
+						int xx = x + (gp + 1 + cjk) * fsz.cx;
 						if(h.chr == '\t') {
 							int ngp = (gp + tabsize) / tabsize * tabsize;
 							int l = ngp - gp;
 							LLOG("Highlight -> tab[" << q << "] paper = " << h.paper);
-							if(pass == 0 && x >= -fsz.cy * tabsize) {
-								rw.DrawRect(x, y, fsz.cx * l, fsz.cy, h.paper);
-								if((showtabs || warn_whitespace) &&
-								   h.paper != SColorHighlight && q < tx.GetLength()) {
-									rw.DrawRect(x + 2, y + fsz.cy / 2, l * fsz.cx - 4, 1, showcolor);
-									rw.DrawRect(ngp * fsz.cx - scx - 3, y + 3, 1, fsz.cy - 6, showcolor);
+							if(x >= -fsz.cy * tabsize) {
+								if(pass == 0) {
+									rw.DrawRect(x, y, fsz.cx * l, fsz.cy, h.paper);
+									if((showtabs || warn_whitespace) &&
+									   h.paper != SColorHighlight && q < tx.GetLength()) {
+										rw.DrawRect(x + 2, y + fsz.cy / 2, l * fsz.cx - 4, 1, showcolor);
+										rw.DrawRect(ngp * fsz.cx - scx - 3, y + 3, 1, fsz.cy - 6, showcolor);
+									}
+									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
+										rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
-								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + l)
-									rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+								if(pass == 2) // resolve underlined tabs
+									tw.DrawChar(x, y, ' ', fsz.cx * l, h.font, h.ink);
 							}
 							q++;
 							gp = ngp;
@@ -523,23 +532,25 @@ void   LineEdit::Paint0(Draw& w) {
 						else
 						if(h.chr == ' ') {
 							LLOG("Highlight -> space[" << q << "] paper = " << h.paper);
-							if(pass == 0 && x >= -fsz.cy) {
-								rw.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
-								if((showspaces || warn_whitespace)
-								   && h.paper != SColorHighlight && q < tx.GetLength()) {
-									int n = fsz.cy / 10 + 1;
-									rw.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, n, n, showcolor);
+							if(x >= -fsz.cy) {
+								if(pass == 0) {
+									rw.DrawRect(x, y, fsz.cx, fsz.cy, h.paper);
+									if((showspaces || warn_whitespace)
+									   && h.paper != SColorHighlight && q < tx.GetLength()) {
+										int n = fsz.cy / 10 + 1;
+										rw.DrawRect(x + fsz.cx / 2, y + fsz.cy / 2, n, n, showcolor);
+									}
+									if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
+										rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
 								}
-								if(bordercolumn > 0 && bordercolumn >= gp && bordercolumn < gp + 1)
-									rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+								if(pass == 2) // resolve underlined spaces
+									tw.DrawChar(x, y, ' ', fsz.cx, h.font, h.ink);
 							}
 							q++;
 							gp++;
 						}
 						else {
-							bool cjk = IsCJKIdeograph(h.chr);
 							LLOG("Highlight -> paper[" << q << "] = " << h.paper);
-							int xx = x + (gp + 1 + cjk) * fsz.cx;
 							if(max(x, 0) < min(xx, sz.cx) && fsz.cx >= -fsz.cy) {
 								if(pass == 0) {
 									rw.DrawRect(x, y, (cjk + 1) * fsz.cx, fsz.cy, h.paper);
