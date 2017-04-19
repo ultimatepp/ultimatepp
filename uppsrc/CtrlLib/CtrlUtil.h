@@ -430,7 +430,7 @@ public:
 	void Reset()                                  { item.Clear(); }
 
 // Backward compatibility
-	Event<>  operator<<=(Event<> cb)              { *this ^= cb; }
+	Event<>  operator<<=(Event<> cb)              { return *this ^= cb; }
 };
 
 template <class T>
