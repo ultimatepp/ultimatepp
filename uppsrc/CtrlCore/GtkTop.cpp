@@ -186,6 +186,7 @@ void TopWindow::SetMode(int mode)
 			gtk_window_fullscreen(w);
 			break;
 		}
+	fullscreen = state == FULLSCREEN;
 }
 
 void TopWindow::Minimize(bool effect)
@@ -195,7 +196,7 @@ void TopWindow::Minimize(bool effect)
 
 TopWindow& TopWindow::FullScreen(bool b)
 {
-	SetMode(FULLSCREEN);
+	SetMode(b ? FULLSCREEN : OVERLAPPED);
 	return *this;
 }
 
