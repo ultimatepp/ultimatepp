@@ -44,12 +44,17 @@ void Ctrl::Create(Ctrl *owner, bool popup)
 
 	gtk_widget_set_events(top->window, 0xffffffff);
 	g_signal_connect(top->window, "event", G_CALLBACK(GtkEvent), (gpointer)(uintptr_t)top->id);
-	
-	gtk_widget_realize(top->window);
 
+	GdkWindowTypeHint hint = gtk_window_get_type_hint(gtk());
+	if(tw && findarg(hint, GDK_WINDOW_TYPE_HINT_NORMAL, GDK_WINDOW_TYPE_HINT_DIALOG, GDK_WINDOW_TYPE_HINT_UTILITY) >= 0)
+		tw->SyncSizeHints();
+	
 	Rect r = GetRect();
 	gtk_window_move(gtk(), r.left, r.top);
 	gtk_window_resize(gtk(), r.GetWidth(), r.GetHeight());
+
+	gtk_widget_realize(top->window);
+
 
 	if(owner && owner->top)
 		gtk_window_set_transient_for(gtk(), owner->gtk());
