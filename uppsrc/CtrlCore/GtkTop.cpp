@@ -196,7 +196,7 @@ void TopWindow::Minimize(bool effect)
 
 TopWindow& TopWindow::FullScreen(bool b)
 {
-	SetMode(b ? FULLSCREEN : OVERLAPPED);
+	SetMode(b ? (int)FULLSCREEN : (int)OVERLAPPED);
 	return *this;
 }
 
