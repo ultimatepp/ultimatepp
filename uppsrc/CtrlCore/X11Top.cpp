@@ -10,7 +10,7 @@ Rect TopWindow::windowFrameMargin;
 
 void TopWindow::SyncSizeHints()
 {
-	GuiLock __; 
+	GuiLock __;
 	Size min = GetMinSize();
 	Size max = GetMaxSize();
 	if(!sizeable)
@@ -30,13 +30,13 @@ void TopWindow::SyncSizeHints()
 
 void TopWindow::EndIgnoreTakeFocus()
 {
-	GuiLock __; 
+	GuiLock __;
 	ignoretakefocus = false;
 }
 
 void TopWindow::EventProc(XWindow& w, XEvent *event)
 {
-	GuiLock __; 
+	GuiLock __;
 	Ptr<Ctrl> this_ = this;
 	if(event->type == ClientMessage) {
 		if(event->xclient.format == 32 && event->xclient.message_type)
@@ -87,7 +87,7 @@ void TopWindow::EventProc(XWindow& w, XEvent *event)
 
 void TopWindow::DefSyncTitle()
 {
-	GuiLock __; 
+	GuiLock __;
 	if(title2 == title)
 		return;
 	title2 = title;
@@ -107,7 +107,7 @@ void TopWindow::DefSyncTitle()
 
 void TopWindow::SyncTitle()
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("SyncTitle: " << title);
 	KillTimeCallback(TIMEID_DEFSYNCTITLE);
 	SetTimeCallback(0, THISBACK(DefSyncTitle), TIMEID_DEFSYNCTITLE);
@@ -131,7 +131,7 @@ void WmState(Window w, bool set, Atom a1, Atom a2 = 0)
 
 void TopWindow::SyncState()
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("SyncState");
 	SyncCaption();
 	if(IsOpen() && GetWindow()) {		
@@ -160,11 +160,9 @@ typedef struct {
 #define PROP_MOTIF_WM_HINTS_ELEMENTS 5
 #define PROP_MWM_HINTS_ELEMENTS PROP_MOTIF_WM_HINTS_ELEMENTS
 
-
-
 void TopWindow::SyncCaption()
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("SyncCaption0");
 	SyncTitle();
 	if(IsOpen() && GetWindow()) {
@@ -273,7 +271,7 @@ void TopWindow::CenterRect(Ctrl *owner)
 void TopWindow::Open(Ctrl *owner)
 {
 	LLOG("TopWindow::Open");
-	GuiLock __; 
+	GuiLock __;
 	if(dokeys && (!GUI_AKD_Conservative() || GetAccessKeysDeep() <= 1))
 		DistributeAccessKeys();
 	USRLOG("   OPEN " + Desc(this));
@@ -398,40 +396,40 @@ void TopWindow::Open(Ctrl *owner)
 
 void TopWindow::Open()
 {
-	GuiLock __; 
+	GuiLock __;
 	Open(GetActiveWindow());
 }
 
 void TopWindow::OpenMain()
 {
-	GuiLock __; 
+	GuiLock __;
 	Open(NULL);
 }
 
 void TopWindow::Minimize(bool)
 {
-	GuiLock __; 
+	GuiLock __;
 	state = MINIMIZED;
 	SyncState();
 }
 
 void TopWindow::Maximize(bool effect)
 {
-	GuiLock __; 
+	GuiLock __;
 	state = MAXIMIZED;
 	SyncState();
 }
 
 void TopWindow::Overlap(bool effect)
 {
-	GuiLock __; 
+	GuiLock __;
 	state = OVERLAPPED;
 	SyncState();
 }
 
 TopWindow& TopWindow::FullScreen(bool b)
 {
-	GuiLock __; 
+	GuiLock __;
 	fullscreen = b;
 	SyncState();
 	return *this;
@@ -439,7 +437,7 @@ TopWindow& TopWindow::FullScreen(bool b)
 
 TopWindow& TopWindow::TopMost(bool b, bool)
 {
-	GuiLock __; 
+	GuiLock __;
 	topmost = b;
 	SyncState();
 	return *this;
@@ -447,7 +445,7 @@ TopWindow& TopWindow::TopMost(bool b, bool)
 
 bool TopWindow::IsTopMost() const
 {
-	GuiLock __; 
+	GuiLock __;
 	return topmost;
 }
 
