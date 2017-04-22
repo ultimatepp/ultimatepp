@@ -106,7 +106,7 @@ bool Uniq::SendCmdLine(void)
 	// disconnects from client
 	DisconnectNamedPipe(pipe);
 	
-	PostCallback(callback1(WhenInstance, v));
+	PostCallback([=, &v]() { WhenInstance(v); } );
 	return true;
 }
 

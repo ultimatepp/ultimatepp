@@ -54,7 +54,7 @@ class Uniq
 	typedef Uniq CLASSNAME;
 	
 	// callback called when another app instance is run
-	Callback1<Vector<String> const &> WhenInstance;
+	Event<const Vector<String>&> WhenInstance;
 	
 	Uniq();
 	
