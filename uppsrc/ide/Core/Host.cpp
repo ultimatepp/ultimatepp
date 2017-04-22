@@ -193,17 +193,11 @@ void sCleanZombies(int signal_number)
 
 String LinuxHostConsole = "/usr/bin/xterm -e";
 
-static char* NormalizeFirstArgument(const char* argument)
-{
-	String str = argument;
-	str.Replace("\"", "");
-	
-	return strdup(str);
-}
-
 void LocalHost::Launch(const char *_cmdline, bool console)
 {
+	DDUMP(_cmdline);
 	String cmdline = FindCommand(exedirs, _cmdline);
+	DDUMP(cmdline);
 	PutVerbose(cmdline);
 #ifdef PLATFORM_WIN32
 	if(console)
@@ -261,48 +255,33 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	if(LinuxHostConsole.GetCount())
 		PutConsole("Warning: Terminal '" + lc + "' not found, executing in background.");
 	Buffer<char> cmd_buf(strlen(cmdline) + 1);
-	char *cmd_out = cmd_buf;
 	Vector<char *> args;
-	const char *p = cmdline;
-	const char *b = p;
-	
-	while(*p && (byte)*p > ' ')
-		if(*p++ == '\"')
-			while(*p && *p++ != '\"')
-				;
-	
-	memcpy(cmd_out, b, p - b);
-	cmd_out += p - b;
-	*cmd_out++ = '\0';
-	
-	cmd_out = cmd_buf;
-	args.Add(NormalizeFirstArgument(cmd_out));
-	cmd_out += p - b + 1;
-	
-	while(*p)
-		if((byte)*p <= ' ')
-			p++;
-		else {
-			args.Add(cmd_out);
-			b = p;
-			while(*p && (byte)*p > ' ')
-				if(*p++ == '\"')
-				{
-					memcpy(cmd_out, b, p - b - 1);
-					cmd_out += p - b - 1;
-					b = p;
-					while(*p && *p != '\"')
-						p++;
-					memcpy(cmd_out, b, p - b);
-					cmd_out += p - b;
-					if(*p == '\"')
-						p++;
-					b = p;
+
+	char *o = cmd_buf;
+	const char *s = cmdline;
+	while(*s) {
+		char *arg = o;
+		while((byte)*s > ' ') {
+			if(*s == '\"') {
+				s++;
+				while(*s) {
+					if(*s == '\"') {
+						s++;
+						break;
+					}
+					*o++ = *s++;
 				}
-			memcpy(cmd_out, b, p - b);
-			cmd_out += p - b;
-			*cmd_out++ = '\0';
+			}
+			else
+				*o++ = *s++;
 		}
+		while(*s && (byte)*s <= ' ')
+			s++;
+		if(o > arg) {
+			*o++ = '\0';
+			args.Add(arg);
+		}
+	}
 
 	args.Add(NULL);
 
@@ -312,7 +291,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 		sigchld_action.sa_handler = sCleanZombies;
 		sigaction(SIGCHLD, &sigchld_action, NULL);
 	}
-	
+
 	pid_t pid = fork();
 	if(pid == 0)
 	{
