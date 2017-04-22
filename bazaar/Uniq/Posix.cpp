@@ -40,7 +40,7 @@ bool Uniq::SendCmdLine(int pipe)
 	}
 	fclose(f);
 	// posts the callback to handle new instance's command line
-	PostCallback(callback1(WhenInstance, v));
+	PostCallback([=, &v]() { WhenInstance(v); } );
 	return true;
 
 }
