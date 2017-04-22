@@ -195,9 +195,7 @@ String LinuxHostConsole = "/usr/bin/xterm -e";
 
 void LocalHost::Launch(const char *_cmdline, bool console)
 {
-	DDUMP(_cmdline);
 	String cmdline = FindCommand(exedirs, _cmdline);
-	DDUMP(cmdline);
 	PutVerbose(cmdline);
 #ifdef PLATFORM_WIN32
 	if(console)
