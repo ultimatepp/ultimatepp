@@ -1825,13 +1825,21 @@ void GridCtrl::RemoveColumn(int n, int count)
 			--genr_ctrls;
 		r.Add(hitems[n + i].id);
 	}
+
+	int id = hitems[n].id;
 		
 	hitems.Remove(n, count);
+
 	rowbkp.Remove(r);
 	summary.Remove(r);
 	edits.Remove(r);
 	total_cols -= count;
 	recalc_cols = true;
+
+	for(int i = 0; i < total_cols; i++)
+		if(hitems[i].id >= id)
+			hitems[i].id -= count;
+
 	valid_cursor = SetCursor0(min(curpos.x, total_cols - 1), curpos.y).IsValid();
 	Repaint(true);
 }
