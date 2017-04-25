@@ -296,10 +296,28 @@ ProgressInfo& ProgressInfo::Set(int _pos, int _total)
 {
 	pos = _pos;
 	total = _total;
-	Refresh();
-	if(info)
-		info->Sync();
+
+	dword t = GetTickCount();
+	if((int)(t - set_time) >= granularity) {
+		set_time = t;
+	
+		Refresh();
+		if(info)
+			info->Sync();
+	}
 	return *this;
+}
+
+void ProgressInfo::Reset()
+{
+	tabi = 0;
+	cx = 200;
+	total = 100;
+	pos = 0;
+	tw = 0;
+	info = NULL;
+	granularity = 50;
+	set_time = 0;
 }
 
 ProgressInfo::~ProgressInfo()

@@ -97,9 +97,12 @@ class ProgressInfo {
 	int       cx;
 	int       total;
 	int       pos;
+	
+	int       granularity;
+	dword     set_time;
 
 	void Refresh();
-	void Reset()                                { tabi = 0; cx = 200; total = 100; pos = 0; tw = 0; info = NULL; }
+	void Reset();
 
 public:
 	ProgressInfo& Text(const String& s)         { text = s; Refresh(); return *this; }
@@ -116,7 +119,7 @@ public:
 	int           GetTotal() const              { return total; }
 
 	void operator=(int p)                       { Set(p); }
-	void operator++()                           { pos++; Refresh(); }
+	void operator++()                           { Set(pos + 1, total); }
 	operator int()                              { return pos; }
 
 	ProgressInfo()                              { Reset(); }
