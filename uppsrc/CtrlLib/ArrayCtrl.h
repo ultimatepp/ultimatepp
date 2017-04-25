@@ -357,6 +357,7 @@ public:
 	Event<>           WhenCtrlsAction;
 	Event<>           WhenScroll;
 	Event<>           WhenHeaderLayout;
+	Event<>           WhenColumnSorted;
 
 	Event<int, bool&> WhenLineEnabled;
 	Event<int, bool&> WhenLineVisible;

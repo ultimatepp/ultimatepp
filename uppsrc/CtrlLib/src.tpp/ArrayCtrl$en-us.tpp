@@ -2619,6 +2619,13 @@ in the cell editors and react to specific situations accordingly.&]
 [s5;:ArrayCtrl`:`:WhenHeaderLayout: [_^Callback^ Callback]_[* WhenHeaderLayout]&]
 [s2; Called when header changes.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:WhenColumnSorted:%- [_^Upp`:`:Event^ Event]<>_[* WhenColumnSorte
+d]&]
+[s2; Invoked at the end of DoColumnSort. This allows to react to 
+user sorting ArrayCtrl by clicking on column header marked as 
+Sorting.&]
+[s3;%- &]
 [s4; &]
 [s5;:ArrayCtrl`:`:WhenLineEnabled: [_^Callback2^ Callback2]<[@(0.0.255) int], 
 [@(0.0.255) bool`&]>_[* WhenLineEnabled]&]
