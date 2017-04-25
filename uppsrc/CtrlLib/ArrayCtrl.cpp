@@ -2558,6 +2558,7 @@ void ArrayCtrl::DoColumnSort()
 			ColumnSort(sortcolumn, cs);
 		}
 	}
+	WhenColumnSorted();
 }
 
 ArrayCtrl& ArrayCtrl::AllSorting()
