@@ -83,4 +83,26 @@ thread__ int   invector_cache_blki_;
 thread__ int   invector_cache_offset_;
 thread__ int   invector_cache_end_;
 
+
+void Bits::Clear()
+{
+	if(bp)
+		delete[] bp;
+	alloc = 0;
+	bp = NULL;
+}
+
+void Bits::Expand(int q)
+{
+	int nalloc = 4 * q / 3 + 1;
+	dword *nbp = new dword[nalloc];
+	if(bp) {
+		Copy(nbp, bp, bp + alloc);
+		delete[] bp;
+	}
+	Fill(nbp + alloc, nbp + nalloc, (dword)0);
+	bp = nbp;
+	alloc = nalloc;
+}
+
 }

@@ -117,10 +117,13 @@ public:
 class Bits : Moveable<Bits> {
 	int         alloc;
 	dword      *bp;
+	
+	void Expand(int q);
 
 public:
 	void   Clear();
-	void   Set(int i, bool b = true);
+	void   Set(int i, bool b = true) { ASSERT(i >= 0 && alloc >= 0); int q = i >> 5;
+		                               if(q >= alloc) Expand(q); i &= 31; bp[q] = (bp[q] & ~(1 << i)) | (b << i); }
 	bool   Get(int i) const        { ASSERT(i >= 0 && alloc >= 0); int q = i >> 5;
 	                                 return q < alloc ? bp[q] & (1 << (i & 31)) : false; }
 	bool   operator[](int i) const { return Get(i); }

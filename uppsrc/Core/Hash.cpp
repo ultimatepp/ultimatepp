@@ -331,32 +331,4 @@ unsigned GetHashValue0(const double& d)
 	return memhash(&d, sizeof(double));
 }
 
-void Bits::Clear()
-{
-	if(bp)
-		delete[] bp;
-	alloc = 0;
-	bp = NULL;
-}
-
-void Bits::Set(int i, bool b)
-{
-	ASSERT(i >= 0 && alloc >= 0);
-	int q = i >> 5;
-	if(q >= alloc) {
-		int nalloc = 4 * q / 3 + 1;
-		dword *nbp = new dword[nalloc];
-		if(bp) {
-			Copy(nbp, bp, bp + alloc);
-			delete[] bp;
-		}
-		Fill(nbp + alloc, nbp + nalloc, (dword)0);
-		bp = nbp;
-		alloc = nalloc;
-	}
-	i &= 31;
-	ASSERT(q < alloc);
-	bp[q] = (bp[q] & ~(1 << i)) | (b << i);
-}
-
 }
