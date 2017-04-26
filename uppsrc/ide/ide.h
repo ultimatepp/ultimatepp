@@ -1046,6 +1046,7 @@ public:
 	void      SetupEditor();
 
 	void      DoDisplay();
+	void      ManageDisplayVisibility();
 
 	void      SetIcon();
 	bool      IsCppBaseFile();
