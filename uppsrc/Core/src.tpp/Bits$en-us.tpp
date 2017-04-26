@@ -35,4 +35,28 @@ onst]&]
 [s5;:Bits`:`:operator`[`]`(int`)const: [@(0.0.255) bool]_[* operator`[`]]([@(0.0.255) int]_
 [*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the value of bool [%-*@3 i].&]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:Reserve`(int`): [@(0.0.255) void]_[* Reserve]([@(0.0.255) int]_[*@3 nbits
+])&]
+[s2;%% Preallocates internal storage for [%-*@3 nbits] bits, avoiding 
+further reallocations during Set (as long as only nbits are used).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:Shrink`(`): [@(0.0.255) void]_[* Shrink]()&]
+[s2;%% Tries to reduce internal storage.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:CreateRaw`(int`): [_^Upp`:`:dword^ dword]_`*[* CreateRaw]([@(0.0.255) i
+nt]_[*@3 n`_dwords])&]
+[s2;%% Creates a new internal storage for [%-*@3 n`_dwords] dwords 
+(sizeof(dword) `* [%-*@3 n`_dwords] bits) and returns a pointer 
+to it. Bits are numbered from LSB.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:Raw`(int`&`)const: [@(0.0.255) const]_[_^Upp`:`:dword^ dword]_`*[* Raw](
+[@(0.0.255) int`&]_[*@3 n`_dwords])_[@(0.0.255) const]&]
+[s5;:Upp`:`:Bits`:`:Raw`(int`&`): [_^Upp`:`:dword^ dword]_`*[* Raw]([@(0.0.255) int`&]_[*@3 n
+`_dwords])&]
+[s2;%% Returns a pointer to internal storage and the size of internal 
+storage.&]
 [s0;%% ]]

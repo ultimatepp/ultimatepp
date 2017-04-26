@@ -119,6 +119,8 @@ class Bits : Moveable<Bits> {
 	dword      *bp;
 	
 	void Expand(int q);
+	void Realloc(int nalloc);
+	void Free();
 
 public:
 	void   Clear();
@@ -127,9 +129,16 @@ public:
 	bool   Get(int i) const        { ASSERT(i >= 0 && alloc >= 0); int q = i >> 5;
 	                                 return q < alloc ? bp[q] & (1 << (i & 31)) : false; }
 	bool   operator[](int i) const { return Get(i); }
+	
+	void   Reserve(int nbits);
+	void   Shrink();
+
+	dword       *CreateRaw(int n_dwords);
+	const dword *Raw(int& n_dwords) const { n_dwords = alloc; return bp; }
+	dword       *Raw(int& n_dwords)       { n_dwords = alloc; return bp; }
 
 	Bits()                         { bp = NULL; alloc = 0; }
-	~Bits()                        { Clear(); }
+	~Bits()                        { Free(); }
 
 	Bits(Bits&& b)                 { alloc = b.alloc; bp = b.bp; b.bp = NULL; }
 	void operator=(Bits&& b)       { if(this != &b) { Clear(); alloc = b.alloc; bp = b.bp; b.bp = NULL; } }
