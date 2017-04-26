@@ -360,7 +360,7 @@ void SetupError(ArrayCtrl& error, const char *s)
 
 void Ide::Layout()
 {
-	display.Show(menubar.GetSize().cx + display.GetSize().cx < GetSize().cx);
+	display.Show(!designer && (menubar.GetSize().cx + display.GetSize().cx < GetSize().cx));
 }
 
 static void sHighlightLine(const String& path, Vector<LineEdit::Highlight>& hln, const WString& ln)

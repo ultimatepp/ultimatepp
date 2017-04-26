@@ -449,7 +449,9 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	if(!designer && editastext.Find(path) < 0 &&
 	   (findarg(GetFileExt(path), ".log") < 0 && FileIsBinary(path) || editashex.Find(path) >= 0))
 		designer.Create<FileHexView>().Open(path);
-
+	
+	ManageDisplayVisibility();
+	
 	if(designer) {
 		editpane.Add(designer->DesignerCtrl().SizePos());
 		designer->RestoreEditPos();
@@ -461,7 +463,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		editor.SyncNavigatorShow();
 		return;
 	}
-
+	
 	tabs.SetAddFile(editfile);
 	tabs.SetSplitColor(editfile2, Yellow);
 	editor.Enable();
