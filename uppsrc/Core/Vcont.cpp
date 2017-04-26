@@ -83,26 +83,60 @@ thread__ int   invector_cache_blki_;
 thread__ int   invector_cache_offset_;
 thread__ int   invector_cache_end_;
 
+void Bits::Free()
+{
+	if(bp)
+		MemoryFree(bp);
+}
 
 void Bits::Clear()
 {
-	if(bp)
-		delete[] bp;
 	alloc = 0;
 	bp = NULL;
 }
 
-void Bits::Expand(int q)
+void Bits::Realloc(int nalloc)
 {
-	int nalloc = 4 * q / 3 + 1;
-	dword *nbp = new dword[nalloc];
+	size_t sz = sizeof(dword) * nalloc;
+	dword *nbp = (dword *)MemoryAllocSz(sz);
+	nalloc = sz / sizeof(dword);
 	if(bp) {
-		Copy(nbp, bp, bp + alloc);
-		delete[] bp;
+		Copy(nbp, bp, bp + min(alloc, nalloc));
+		Free();
 	}
-	Fill(nbp + alloc, nbp + nalloc, (dword)0);
+	if(nalloc > alloc)
+		Fill(nbp + alloc, nbp + nalloc, (dword)0);
 	bp = nbp;
 	alloc = nalloc;
+}
+
+void Bits::Expand(int q)
+{
+	Realloc(3 * q / 2 + 1);
+}
+
+void Bits::Reserve(int nbits)
+{
+	int n = (nbits + 31) >> 5;
+	if(n > alloc)
+		Realloc(n);
+}
+
+void Bits::Shrink()
+{
+	int lasti = alloc - 1;
+	while(lasti > 0 && bp[lasti] == 0)
+		lasti--;
+	int nalloc = lasti + 1;
+	if(nalloc != alloc)
+		Realloc(nalloc);
+}
+
+dword *Bits::CreateRaw(int n_dwords)
+{
+	Clear();
+	Realloc(n_dwords);
+	return bp;
 }
 
 }
