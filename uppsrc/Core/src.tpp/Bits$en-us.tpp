@@ -50,7 +50,8 @@ further reallocations during Set (as long as only nbits are used).&]
 nt]_[*@3 n`_dwords])&]
 [s2;%% Creates a new internal storage for [%-*@3 n`_dwords] dwords 
 (sizeof(dword) `* [%-*@3 n`_dwords] bits) and returns a pointer 
-to it. Bits are numbered from LSB.&]
+to it. Bits are numbered from LSB, client code has to account 
+for endiannes.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Bits`:`:Raw`(int`&`)const: [@(0.0.255) const]_[_^Upp`:`:dword^ dword]_`*[* Raw](
@@ -58,5 +59,12 @@ to it. Bits are numbered from LSB.&]
 [s5;:Upp`:`:Bits`:`:Raw`(int`&`): [_^Upp`:`:dword^ dword]_`*[* Raw]([@(0.0.255) int`&]_[*@3 n
 `_dwords])&]
 [s2;%% Returns a pointer to internal storage and the size of internal 
-storage.&]
+storage. Bits are numbered from LSB, client code has to account 
+for endiannes.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:Serialize`(Upp`:`:Stream`&`): [@(0.0.255) void]_[* Serialize]([_^Upp`:`:Stream^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Serializes Bits. Serialize resolves eventual endiannes issue.&]
+[s3;%% &]
 [s0;%% ]]
