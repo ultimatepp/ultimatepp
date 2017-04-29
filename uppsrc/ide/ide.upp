@@ -51,6 +51,7 @@ file
 	Assist.cpp,
 	DCopy.cpp,
 	ContextGoto.cpp,
+	GoToLine.cpp,
 	Swaps.cpp,
 	ParamInfo.cpp,
 	Navigator.cpp,
