@@ -83,14 +83,10 @@ thread__ int   invector_cache_blki_;
 thread__ int   invector_cache_offset_;
 thread__ int   invector_cache_end_;
 
-void Bits::Free()
+void Bits::Clear()
 {
 	if(bp)
 		MemoryFree(bp);
-}
-
-void Bits::Clear()
-{
 	alloc = 0;
 	bp = NULL;
 }
@@ -99,10 +95,10 @@ void Bits::Realloc(int nalloc)
 {
 	size_t sz = sizeof(dword) * nalloc;
 	dword *nbp = (dword *)MemoryAllocSz(sz);
-	nalloc = sz / sizeof(dword);
+	nalloc = int(sz / sizeof(dword));
 	if(bp) {
 		Copy(nbp, bp, bp + min(alloc, nalloc));
-		Free();
+		MemoryFree(bp);
 	}
 	if(nalloc > alloc)
 		Fill(nbp + alloc, nbp + nalloc, (dword)0);
@@ -122,21 +118,46 @@ void Bits::Reserve(int nbits)
 		Realloc(n);
 }
 
-void Bits::Shrink()
+int Bits::GetLast() const
 {
 	int lasti = alloc - 1;
 	while(lasti > 0 && bp[lasti] == 0)
 		lasti--;
-	int nalloc = lasti + 1;
+	return lasti;
+}
+
+void Bits::Shrink()
+{
+	int nalloc = GetLast() + 1;
 	if(nalloc != alloc)
 		Realloc(nalloc);
 }
 
 dword *Bits::CreateRaw(int n_dwords)
 {
+	
 	Clear();
 	Realloc(n_dwords);
 	return bp;
+}
+
+String Bits::ToString() const
+{
+	StringBuffer ss;
+	for(int i = GetLast(); i >= 0; i--)
+		ss << FormatIntHex(bp[i]);
+	return ss;
+}
+
+void Bits::Serialize(Stream& s)
+{
+	int dwords;
+	if(s.IsStoring())
+		dwords = GetLast() + 1;
+	s % dwords;
+	if(s.IsLoading())
+		CreateRaw(dwords);
+	s.SerializeRaw(bp, dwords);
 }
 
 }
