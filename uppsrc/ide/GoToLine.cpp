@@ -6,7 +6,7 @@ class GoToLineDialog : public WithGoToLineLayout<TopWindow> {
 public:
 	GoToLineDialog(int currentLine, int maxLine)
 	{
-		CtrlLayoutOKCancel(*this, String(t_("Go to line")) << "..");
+		CtrlLayoutOKCancel(*this, t_("Go to line"));
 		
 		lineInformation.SetText(GenerateLineInfo(maxLine));
 		lineEdit.Min(MIN_LINE_NUMBER).Max(maxLine);
