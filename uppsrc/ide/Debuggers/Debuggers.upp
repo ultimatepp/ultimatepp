@@ -14,6 +14,7 @@ file
 	Gdb.lay,
 	Terminal.cpp,
 	Disas.cpp,
+	GDB readonly separator,
 	GdbCmd.cpp,
 	GdbData.cpp,
 	Gdb.cpp,
