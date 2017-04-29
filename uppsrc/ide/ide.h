@@ -777,12 +777,12 @@ public:
 		void   Print();
 		void   Diff();
 		void   GotoDiffLeft(int line, DiffDlg *df);
-		void GotoDiffRight(int line, FileDiff *df);
+		void   GotoDiffRight(int line, FileDiff *df);
 		void   Patch();
 		void   SvnHistory();
 
 	void      Edit(Bar& menu);
-		bool IsDesignerFile(const String& path);
+		bool  IsDesignerFile(const String& path);
 		void  DoEditAsText(const String& path);
 		void  EditAsText();
 		void  EditAsHex();
@@ -927,6 +927,7 @@ public:
 		void  FindId(const String& id);
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
+		void  GoToLine();
 		void  CtrlClick(int pos);
 		void  Qtf();
 		void  Xml();

@@ -805,9 +805,16 @@ LAYOUT(RenamePackage2Layout, 228, 100)
 END_LAYOUT
 
 LAYOUT(NewPackageFileLayout, 260, 88)
-	ITEM(EditString, name, HSizePosZ(44, 8).TopPosZ(28, 19))
-	ITEM(Label, dv___1, SetLabel(t_("Name ")).LeftPosZ(4, 64).TopPosZ(28, 19))
+	ITEM(EditString, name, HSizePosZ(48, 8).TopPosZ(28, 19))
+	ITEM(Label, dv___1, SetLabel(t_("Name ")).LeftPosZ(4, 40).TopPosZ(28, 19))
 	ITEM(DropList, type, HSizePosZ(4, 8).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
+LAYOUT(GoToLineLayout, 260, 88)
+	ITEM(StaticText, lineInformation, HSizePosZ(8, 8).TopPosZ(8, 19))
+	ITEM(EditInt, lineEdit, NotNull(true).HSizePosZ(8, 8).TopPosZ(28, 19))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
