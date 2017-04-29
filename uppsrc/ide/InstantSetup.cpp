@@ -8,9 +8,22 @@ struct DirFinder {
 	Vector<String> dir;
 
 	String Get(const String& substring, const char *files);
+	void   GatherDirs(Index<String>& path, const String& dir);
 	
 	DirFinder();
 };
+
+void DirFinder::GatherDirs(Index<String>& path, const String& dir)
+{
+	pi.Step();
+	path.FindAdd(dir);
+	FindFile ff(dir + "/*");
+	while(ff) {
+		if(ff.IsFolder())
+			GatherDirs(path, ff.GetPath());
+		ff.Next();
+	}
+}
 
 DirFinder::DirFinder()
 {
@@ -39,6 +52,20 @@ DirFinder::DirFinder()
 			RegCloseKey(key);
 		}
 	}
+
+	Array<FileSystemInfo::FileInfo> root = StdFileSystemInfo().Find(Null);
+	for(int i = 0; i < root.GetCount(); i++) {
+		if(root[i].root_style == FileSystemInfo::ROOT_FIXED) {
+			int drive = *root[i].filename;
+			String pf = GetProgramsFolderX86();
+			pf.Set(0, drive);
+			pf = AppendFileName(pf, "Microsoft Visual Studio");
+			if(DirectoryExists(pf))
+				GatherDirs(path, pf);
+		}
+	}
+
+	DUMP(path);
 
 	for(String s : path) {
 		s = ToLower(s);
@@ -102,117 +129,125 @@ void InstantSetup()
 	
 	bool dirty = false;
 
-	for(int x64 = 0; x64 < 2; x64++) {
-		String method = x64 ? "MSC14x64" : "MSC14";
+	for(int msc15 = 0; msc15 < 2; msc15++)
+		for(int x64 = 0; x64 < 2; x64++) {
+			String x86method = msc15 ? "MSC15" : "MSC14";
+			String method = x86method + (x64 ? "x64" : "");
+			String builder = ToUpper(method);
+		
+		#ifdef _DEBUG
+			method << "Test";
+		#endif
 	
-	#ifdef _DEBUG
-		method << "Test";
-	#endif
-
-		String vc, bin, inc, lib, kit81;
+			String vc, bin, inc, lib, kit81;
+		
+			VectorMap<String, String> bm = GetMethodVars(method);
+			Vector<String> bins = Split(bm.Get("PATH", ""), ';');
+			Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
+			Vector<String> libs = Split(bm.Get("LIB", ""), ';');
+		#ifndef _DEBUG
+			if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
+				if(!x64)
+					default_method = x86method;
+			
+				continue;
+			}
+		#endif
+			
+			if(msc15)
+				vc = df.Get("/microsoft visual studio/2017/community/vc/tools/msvc",
+				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
+				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
+			else
+				vc = df.Get("/microsoft visual studio 14.0/vc", "bin/cl.exe;bin/lib.exe;bin/link.exe;bin/mspdb140.dll");
+			bin = df.Get(x64 ? "/windows kits/10/bin/x86" : "windows kits/10/bin/x86", "makecat.exe;accevent.exe");
+			inc = df.Get("/windows kits/10", "um/adhoc.h");
+			lib = df.Get("/windows kits/10", "um/x86/kernel32.lib");
 	
-		VectorMap<String, String> bm = GetMethodVars(method);
-		Vector<String> bins = Split(bm.Get("PATH", ""), ';');
-		Vector<String> incs = Split(bm.Get("INCLUDE", ""), ';');
-		Vector<String> libs = Split(bm.Get("LIB", ""), ';');
-	#ifndef _DEBUG
-		if(CheckDirs(bins, 2) && CheckDirs(incs, 4) && CheckDirs(libs, 3)) {
-			if(!x64)
-				default_method = "MSC14";
-		
-			continue;
-		}
-	#endif
-		
-		vc = df.Get("/microsoft visual studio 14.0/vc", "bin/cl.exe;bin/lib.exe;bin/link.exe;bin/mspdb140.dll");
-		bin = df.Get(x64 ? "/windows kits/10/bin/x86" : "windows kits/10/bin/x86", "makecat.exe;accevent.exe");
-		inc = df.Get("/windows kits/10", "um/adhoc.h");
-		lib = df.Get("/windows kits/10", "um/x86/kernel32.lib");
-
-		if(inc.GetCount() == 0 || lib.GetCount() == 0) { // workaround for situation when 8.1 is present, but 10 just partially
-			kit81 = df.Get("/windows kits/8.1", "include");
-		}
-		
-		LOG("=============");
-		DUMP(vc);
-		DUMP(bin);
-		DUMP(inc);
-		DUMP(kit81);
-		DUMP(lib);
-
-		if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
-			bins.At(0) = vc + (x64 ? "/bin/amd64" : "/bin");
-			bins.At(1) = bin;
-			String& sslbin = bins.At(2);
-			if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
-				sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin" : "bin/OpenSSL-Win/bin32");
+			if(inc.GetCount() == 0 || lib.GetCount() == 0) { // workaround for situation when 8.1 is present, but 10 just partially
+				kit81 = df.Get("/windows kits/8.1", "include");
+			}
 			
-			incs.At(0) = vc + "/include";
-			int ii = 1;
-			if(inc.GetCount()) {
-				incs.At(ii++) = inc + "/um";
-				incs.At(ii++) = inc + "/ucrt";
-				incs.At(ii++) = inc + "/shared";
-			}
-			if(kit81.GetCount()) {
-				incs.At(ii++) = kit81 + "/include/um";
-				incs.At(ii++) = kit81 + "/include/ucrt";
-				incs.At(ii++) = kit81 + "/include/shared";
-			}
-
-			String& sslinc = incs.At(4);
-			if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
-				sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
+			LOG("=============");
+			DUMP(vc);
+			DUMP(bin);
+			DUMP(inc);
+			DUMP(kit81);
+			DUMP(lib);
+	
+			if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
+				bins.At(0) = vc + (msc15 ? (x64 ? "/bin/hostx64/x64" : "/bin/hostx86/x86") : (x64 ? "/bin/amd64" : "/bin"));
+				bins.At(1) = bin;
+				String& sslbin = bins.At(2);
+				if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
+					sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin" : "bin/OpenSSL-Win/bin32");
+				
+				incs.At(0) = vc + "/include";
+				int ii = 1;
+				if(inc.GetCount()) {
+					incs.At(ii++) = inc + "/um";
+					incs.At(ii++) = inc + "/ucrt";
+					incs.At(ii++) = inc + "/shared";
+				}
+				if(kit81.GetCount()) {
+					incs.At(ii++) = kit81 + "/include/um";
+					incs.At(ii++) = kit81 + "/include/ucrt";
+					incs.At(ii++) = kit81 + "/include/shared";
+				}
+	
+				String& sslinc = incs.At(4);
+				if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
+					sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
+				
+				libs.At(0) = vc + (msc15 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
+				ii = 1;
+				if(lib.GetCount()) {
+					libs.At(ii++) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
+					libs.At(ii++) = lib + (x64 ? "/um/x64" : "/um/x86");
+				}
+				if(kit81.GetCount()) {
+					libs.At(ii++) = kit81 + (x64 ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
+				}
+				String& ssllib = libs.At(3);
+				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
+					ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib/VC" : "bin/OpenSSL-Win/lib32/VC");
 			
-			libs.At(0) = vc + (x64 ? "/lib/amd64" : "/lib");
-			ii = 1;
-			if(lib.GetCount()) {
-				libs.At(ii++) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
-				libs.At(ii++) = lib + (x64 ? "/um/x64" : "/um/x86");
+				bm.GetAdd("BUILDER") = builder;
+				bmSet(bm, "COMPILER", "");
+				bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
+				bmSet(bm, "COMMON_CPP_OPTIONS", "");
+				bmSet(bm, "COMMON_C_OPTIONS", "");
+				bmSet(bm, "COMMON_FLAGS", "");
+				bmSet(bm, "DEBUG_INFO", "2");
+				bmSet(bm, "DEBUG_BLITZ", "1");
+				bmSet(bm, "DEBUG_LINKMODE", "0");
+				bmSet(bm, "DEBUG_OPTIONS", "-Od");
+				bmSet(bm, "DEBUG_FLAGS", "");
+				bmSet(bm, "DEBUG_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
+				bmSet(bm, "RELEASE_BLITZ", "0");
+				bmSet(bm, "RELEASE_LINKMODE", "0");
+				bmSet(bm, "RELEASE_OPTIONS", "-O2");
+				bmSet(bm, "RELEASE_FLAGS", "");
+				bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
+				bmSet(bm, "DISABLE_BLITZ", "");
+				bmSet(bm, "DEBUGGER", GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
+	
+				bm.GetAdd("PATH") = Join(bins, ";");
+				bm.GetAdd("INCLUDE") = Join(incs, ";");
+				bm.GetAdd("LIB") = Join(libs, ";");
+				
+				SaveVarFile(ConfigFile(method + ".bm"), bm);
+				dirty = true;
+	
+				if(!x64)
+					default_method = x86method;
+	
+				DUMP(ConfigFile(method + ".bm"));
+				DUMPC(incs);
+				DUMPC(libs);
+				DUMPM(bm);
 			}
-			if(kit81.GetCount()) {
-				libs.At(ii++) = kit81 + (x64 ? "/lib/winv6.3/um/x64" : "/lib/winv6.3/um/x86");
-			}
-			String& ssllib = libs.At(3);
-			if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-				ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib/VC" : "bin/OpenSSL-Win/lib32/VC");
-		
-			bm.GetAdd("BUILDER") = x64 ? "MSC14X64" : "MSC14";
-			bmSet(bm, "COMPILER", "");
-			bmSet(bm, "COMMON_OPTIONS", x64 ? "/bigobj" : "/bigobj /D_ATL_XP_TARGETING");
-			bmSet(bm, "COMMON_CPP_OPTIONS", "");
-			bmSet(bm, "COMMON_C_OPTIONS", "");
-			bmSet(bm, "COMMON_FLAGS", "");
-			bmSet(bm, "DEBUG_INFO", "2");
-			bmSet(bm, "DEBUG_BLITZ", "1");
-			bmSet(bm, "DEBUG_LINKMODE", "0");
-			bmSet(bm, "DEBUG_OPTIONS", "-Od");
-			bmSet(bm, "DEBUG_FLAGS", "");
-			bmSet(bm, "DEBUG_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
-			bmSet(bm, "RELEASE_BLITZ", "0");
-			bmSet(bm, "RELEASE_LINKMODE", "0");
-			bmSet(bm, "RELEASE_OPTIONS", "-O2");
-			bmSet(bm, "RELEASE_FLAGS", "");
-			bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
-			bmSet(bm, "DISABLE_BLITZ", "");
-			bmSet(bm, "DEBUGGER", GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
-
-			bm.GetAdd("PATH") = Join(bins, ";");
-			bm.GetAdd("INCLUDE") = Join(incs, ";");
-			bm.GetAdd("LIB") = Join(libs, ";");
-			
-			SaveVarFile(ConfigFile(method + ".bm"), bm);
-			dirty = true;
-
-			if(!x64)
-				default_method = "MSC14";
-
-			DUMP(ConfigFile(method + ".bm"));
-			DUMPC(incs);
-			DUMPC(libs);
-			DUMPM(bm);
 		}
-	}
 
 	String bin = GetExeDirFile("bin");
 	if(DirectoryExists(bin + "/mingw64"))

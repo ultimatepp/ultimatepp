@@ -120,7 +120,7 @@ class Bits : Moveable<Bits> {
 	
 	void Expand(int q);
 	void Realloc(int nalloc);
-	void Free();
+	int  GetLast() const;
 
 public:
 	void   Clear();
@@ -132,16 +132,20 @@ public:
 	
 	void   Reserve(int nbits);
 	void   Shrink();
+	
+	String ToString() const;
 
 	dword       *CreateRaw(int n_dwords);
 	const dword *Raw(int& n_dwords) const { n_dwords = alloc; return bp; }
 	dword       *Raw(int& n_dwords)       { n_dwords = alloc; return bp; }
+	
+	void         Serialize(Stream& s);
 
-	Bits()                         { bp = NULL; alloc = 0; }
-	~Bits()                        { Free(); }
+	Bits()                                { bp = NULL; alloc = 0; }
+	~Bits()                               { Clear(); }
 
-	Bits(Bits&& b)                 { alloc = b.alloc; bp = b.bp; b.bp = NULL; }
-	void operator=(Bits&& b)       { if(this != &b) { Clear(); alloc = b.alloc; bp = b.bp; b.bp = NULL; } }
+	Bits(Bits&& b)                        { alloc = b.alloc; bp = b.bp; b.bp = NULL; }
+	void operator=(Bits&& b)              { if(this != &b) { Clear(); alloc = b.alloc; bp = b.bp; b.bp = NULL; } }
 
 #ifdef DEPRECATED
 	void   Set(int i, bool b, int count) { while(count--) Set(i++, b); }
