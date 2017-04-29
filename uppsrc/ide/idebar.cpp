@@ -610,6 +610,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(!designer, AK_THISBACKS, callback(&editor, &AssistEditor::Thisbacks));
 			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
+			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
 			menu.Add(!designer, "Insert", THISBACK(InsertMenu));
 			menu.MenuSeparator();
 		}
@@ -630,6 +631,11 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.MenuSeparator();
 		}
 	}
+	else {
+		menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
+		menu.MenuSeparator();
+	}
+	
 	if(menu.IsMenuBar()) {
 		menu.AddMenu(AK_CALC, IdeImg::calc(), THISBACK1(ToggleBottom, BCALC))
 	     .Check(IsBottomShown() && btabs.GetCursor() == BCALC);
