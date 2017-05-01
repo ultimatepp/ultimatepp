@@ -322,7 +322,7 @@ void Ide::IdeSetBar()
 void Ide::SetupBars()
 {
 	ClearFrames();
-	int r = HorzLayoutZoom(100);
+	int r = HorzLayoutZoom(170);
 	int l = HorzLayoutZoom(350);
 	menubar.Transparent();
 	if(toolbar_in_row) {
@@ -391,8 +391,7 @@ Ide::Ide()
 
 	Sizeable().Zoomable();
 
-	display.SetFrame(ThinInsetFrame());
-	display.SetAlign(ALIGN_CENTER);
+	display.SetAlign(ALIGN_RIGHT);
 
 	filelist.Columns(2);
 	package.Columns(2);

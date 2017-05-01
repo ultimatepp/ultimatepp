@@ -527,7 +527,13 @@ void Ide::BookKey(int key)
 void Ide::DoDisplay()
 {
 	Point p = editor.GetColumnLine(editor.GetCursor());
-	display.SetLabel(Format("Ln %d, Col %d", p.y + 1, p.x + 1));
+	String s;
+	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;
+	int l, h;
+	editor.GetSelection(l, h);
+	if(h > l)
+		s << ", Sel " << h - l;
+	display.SetLabel(s);
 	
 	ManageDisplayVisibility();
 }
