@@ -132,6 +132,7 @@ void Ide::SetMain(const String& package)
 	transferfilecache.Clear();
 	main = package;
 	export_dir = GetHomeDirFile(main);
+	history.Clear();
 	mainconfigname.Clear();
 	mainconfigparam.Clear();
 	ScanWorkspace();
