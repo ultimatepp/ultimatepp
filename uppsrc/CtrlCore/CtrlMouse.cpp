@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)   // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 Ptr<Ctrl> Ctrl::eventCtrl;
 Ptr<Ctrl> Ctrl::mouseCtrl;
@@ -58,6 +58,7 @@ void Ctrl::LogMouseEvent(const char *f, const Ctrl *ctrl, int event, Point p, in
 		txt << " MIDDLE";
 	txt << " ) " << Desc(ctrl);
 	USRLOG(txt);
+	LLOG(txt);
 }
 
 Image Ctrl::FrameMouseEventH(int event, Point p, int zdelta, dword keyflags)
