@@ -1,6 +1,9 @@
 #include <Core/Core.h>
 #include "bin.brc"
 #include <plugin/bz2/bz2.h>
+#include <plugin/lzma/lzma.h>
+#include <plugin/lz4/lz4.h>
+#include <plugin/zstd/zstd.h>
 
 using namespace Upp;
 
@@ -8,27 +11,28 @@ using namespace Upp;
 
 CONSOLE_APP_MAIN
 {
-	puts(String().Cat() << "brc length: " << bin_brc_length);
-	fflush(stdout);
-	puts(String().Cat() << "cpp length: " << bin_cpp_length);
-	fflush(stdout);
-	puts(String().Cat() << "all count:  " << bin_all_count);
-	fflush(stdout);
-//	puts(String().Cat() << "cpp: <<<\n" << (const char *)bin_cpp << "\n>>>");
-	MemReadStream in1(bin_cpp, bin_cpp_length);
-	puts(String().Cat() << "cpp: <<<\n" << BZ2Decompress(in1) << "\n>>>");
-	fflush(stdout);
-//	puts(String().Cat() << "brc: <<<\n" << (const char *)bin_brc << "\n>>>");
-	MemReadStream in2(bin_brc, bin_brc_length);
-	puts(String().Cat() << "brc: <<<\n" << BZ2Decompress(in2) << "\n>>>");
-	fflush(stdout);
-	for(int i = 0; i < bin_all_count; i++) {
-		puts(String().Cat() << "all length[" << i << "]: " << bin_all_length[i]);
-		fflush(stdout);
-		puts(String().Cat() << "all files[" << i << "]: " << bin_all_files[i]);
-		fflush(stdout);
-		MemReadStream in3(bin_all[i], bin_all_length[i]);
-		puts(String().Cat() << "all[" << i << "]: <<<\n" << BZ2Decompress(in3) << "\n>>>");
-		fflush(stdout);
+	StdLogSetup(LOG_COUT|LOG_FILE);
+
+	LOG("=== PLAIN");
+	LOG(String(brc_plain, brc_plain_length));
+	LOG("=== ZIP");
+	LOG(ZDecompress(brc_zip, brc_zip_length));
+	LOG("=== BZ2");
+	LOG(BZ2Decompress(brc_bz2, brc_bz2_length));
+	LOG("=== LZ4");
+	LOG(LZ4Decompress(brc_lz4, brc_lz4_length));
+	LOG("=== LZMA");
+	LOG(LZMADecompress(brc_lzma, brc_lzma_length));
+	LOG("=== Zstd");
+	LOG(ZstdDecompress(brc_zstd, brc_zstd_length));
+	
+	for(int i = 0; i < bin_array_count; i++) {
+		LOG("=== ARRAY " << i);
+		LOG(ZDecompress(bin_array[i], bin_array_length[i]));
+	}
+
+	for(int i = 0; i < bin_mask_count; i++) {
+		LOG("=== MASK " << i);
+		LOG(LZ4Decompress(bin_mask[i], bin_mask_length[i]));
 	}
 }
