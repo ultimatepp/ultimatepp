@@ -19,11 +19,7 @@ taType][3 >]&]
 [s2;%- &]
 [s2;%- 
 @@image:369&148
-€ƒΗ€€€€€€€€€€€ψηϋπα”‚”ΑΦΉ³ΪωνυΪ΅‡γ€Ξ†Ί«§σ¶ÿώμή»ρÿΓ€½δωδγάϊώλΑΟΐ»„Φ―
-‡έό‡Έ€Τ‰ΐΤτ¶ΟΑµ‰®θμ©Ο„€ΑάΣΐ°¤ΌυΏϋχοχ¨ΐ·Ρ¬‚Ν„¨ζΘ²ωκ’ΟΫΑΘ‚¤ϋκχυÿ‡πΞ»ÿ
-ΌΡτχΤΟΏ’ίΐΐΑλΕδ¨„—‡ª΅ΓΣ‘υƒ—ΣΏÿ‘ΎΘ€ΥΉΟ‘ƒΘΞώ‹Φ€§Η¤ ψ–ΑΡηΐάϊαε© ΊΪ¬ϊΧΣΔ
-κΧΎΓΘΣ΄«¦όλοΜ‘Λ¬ƒΎΒ€Ϊ‘—§µΪ€†οΨ‚ύ΄ΜªσίξΡόϊυαλª€¶“ΠϊΔ€κ†–§ΤΫ”Έ€Ι­£φ”•«ίί
-ÿώÒΝεψ€›©υ”ΠΩψΌϊµόϊΎ·Όιέώσ¨Ά γ±±ϊκ”‚Ρ ΐΉ€€Ιτ¬€§
+(A0cAHAAAAAAAAAAAAHic+/BhFIyCQQHWHrkeM3mPbfXaIYeAzgY6Hquntp5/fuzeu/9DEACdveTkY1ye+v7rz0A7EARWr938hzgAVAlUD3Q2Hk/BjTWeiY4YGBjo7KlPhADcU0AwJDz1+/fv96jAN6wCTQSoZsh56h0SiM9bCkHIgiR7avX/h3DOu/9RdPfUz58/X8BAQetFZAQXB6ohw1P1AxdTnz9/vkgIANUMOU8RA8hOfgtWD4CniEckeAoWQVHnQNz64eUpIDoIjiz611PEV75DyFO0q3zr7w1MkQ6sgz7CAFqRDhcntZ5aAG/Ygn00TCrfgW5R/Pr16w0qADaT0ESAaoaWp5BbFLgAyS2KgfYUFSvfX3/+0s3leACp9RTQ2Xg8Nfx6vreevN1+c6gioOOxemoUjIJRQDkAAEn0LCc=)
 &]
 [s2; &]
 [s2; This template adds spin buttons to the [%-*@3 Base] widget to 
@@ -66,6 +62,15 @@ ool]_[*@3 s]_`=_[@(0.0.255) true])&]
 [s5;:WithSpin`:`:IsSpinVisible`(`)const:%- [@(0.0.255) bool]_[* IsSpinVisible]()_[@(0.0.255) c
 onst]&]
 [s2; Returns true if spin buttes are shown.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:WithSpin`:`:RoundFromMin`(bool`):%- [_^Upp`:`:WithSpin^ WithSpin][@(0.0.255) `&
+]_[* RoundFromMin]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; If this option is active, increments are rounded with respect 
+to minimum value. E.g. normally (when not active) if minimum 
+value is 3, going up from the minimum goes through values 3, 
+5, 10, ..., which when RoundFromMin is active, it goes through 
+3, 8, 13, ...&]
 [s3; &]
 [s4; &]
 [s5;:WithSpin`:`:SpinButtonsObject`(`):%- [_^SpinButtons^ SpinButtons][@(0.0.255) `&]_[* Sp
