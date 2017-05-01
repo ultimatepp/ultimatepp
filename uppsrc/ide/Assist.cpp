@@ -517,6 +517,17 @@ void AssistEditor::Assist()
 	PopUpAssist();
 }
 
+Ptr<Ctrl> AssistEditor::assist_ptr;
+
+bool AssistEditor::WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelta, dword keyflags)
+{
+	if(!inframe && event == MOUSEWHEEL && assist_ptr && assist_ptr->IsOpen()) {
+		assist_ptr->MouseWheel(p, zdelta, keyflags);
+		return true;
+	}
+	return false;
+}
+
 void AssistEditor::PopUpAssist(bool auto_insert)
 {
 	LTIMING("PopUpAssist");
@@ -561,8 +572,13 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 		assist.GoBegin();
 		AssistInsert();
 	}
-	else
+	else {
 		popup.Ctrl::PopUp(this, false, false, true);
+		assist_ptr = &assist;
+		ONCELOCK {
+			InstallMouseHook(AssistEditor::WheelHook);
+		}
+	}
 }
 
 bool sILess(const String& a, const String& b)

@@ -174,9 +174,13 @@ struct AssistEditor : CodeEditor, Navigator {
 	int       parami;
 
 	String    current_type;
+	
+	static Ptr<Ctrl> assist_ptr;
+
 
 	void           PopUpAssist(bool auto_insert = false);
 	void           CloseAssist();
+	static bool    WheelHook(Ctrl *, bool inframe, int event, Point p, int zdelta, dword keyflags);
 	void           Assist();
 	bool           IncludeAssist();
 	String         ReadIdBackPos(int& pos, bool include);
