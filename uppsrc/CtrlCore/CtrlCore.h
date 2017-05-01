@@ -1130,6 +1130,7 @@ public:
 	String  GetDescription() const;
 	String  GetHelpTopic() const;
 	String  GetLayoutId() const;
+	void    ClearInfo()                        { info.Clear(); }
 
 	void    Add(Ctrl& ctrl)                    { AddChild(&ctrl); }
 	Ctrl&   operator<<(Ctrl& ctrl)             { Add(ctrl); return *this; }
