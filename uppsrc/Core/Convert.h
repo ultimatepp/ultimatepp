@@ -68,6 +68,9 @@ public:
 	int         GetMin() const                    { return (int)minval; }
 	int         GetMax() const                    { return (int)maxval; }
 	bool        IsNotNull() const                 { return notnull; }
+	
+	static int  GetDefaultMin()                   { return -INT_MAX; }
+	static int  GetDefaultMax()                   { return INT_MAX; }
 
 #ifdef flagSO
 	ConvertInt(int minval = -INT_MAX, int maxval = INT_MAX, bool notnull = false);
@@ -87,6 +90,9 @@ struct ConvertInt64 : public ConvertInt {
 	ConvertInt64& Max(int64 _max)                   { maxval = _max; return *this; }
 	int64         GetMin() const                    { return minval; }
 	int64         GetMax() const                    { return maxval; }
+
+	static int64  GetDefaultMin()                   { return -INT64_MAX; }
+	static int64  GetDefaultMax()                   { return INT64_MAX; }
 
 #ifdef flagSO
 	ConvertInt64(int64 minval = -INT64_MAX, int64 maxval = INT64_MAX, bool notnull = false);
@@ -120,6 +126,9 @@ public:
 	double         GetMax() const                    { return maxval; }
 	bool           IsNotNull() const                 { return notnull; }
 
+	static double  GetDefaultMin()                   { return DOUBLE_NULL_LIM; }
+	static double  GetDefaultMax()                   { return -DOUBLE_NULL_LIM; }
+
 	ConvertDouble(double minval = DOUBLE_NULL_LIM, double maxval = -DOUBLE_NULL_LIM,
 		          bool notnull = false);
 #ifdef flagSO
@@ -151,6 +160,8 @@ public:
 	Date         GetMax() const                    { return maxval; }
 	bool         IsNotNull() const                 { return notnull; }
 
+	static Date  GetDefaultMin()                   { return Date::Low(); }
+	static Date  GetDefaultMax()                   { return Date::High(); }
 
 	ConvertDate(Date minval = Date::Low(), Date maxval = Date::High(), bool notnull = false);
 	virtual ~ConvertDate();
@@ -189,6 +200,9 @@ public:
 	bool         IsSeconds() const                 { return seconds; }
 	bool         IsTimeAlways() const              { return timealways; }
 	bool         IsDayEnd() const                  { return dayend; }
+
+	static Time  GetDefaultMin()                   { return ToTime(Date::Low()); }
+	static Time  GetDefaultMax()                   { return ToTime(Date::High()); }
 
 	ConvertTime(Time minval = ToTime(Date::Low()), Time maxval = ToTime(Date::High()), bool notnull = false);
 	virtual ~ConvertTime();

@@ -340,19 +340,23 @@ template <class IncType> IncType WithSpin_DefaultIncValue() { return 1; }
 template <> inline       double  WithSpin_DefaultIncValue() { return 0.1; }
 
 template <class DataType, class IncType>
-void WithSpin_Add(DataType& value, IncType inc)
+void WithSpin_Add(DataType& value, IncType inc, DataType min, bool roundfrommin)
 {
 	value += inc;
 }
 
 template <> inline
-void WithSpin_Add(double& value, double inc) {
+void WithSpin_Add(double& value, double inc, double min, bool roundfrommin) {
+	if(roundfrommin)
+		value -= min;
 	if(inc < 0) {
 		inc = -inc;
 		value = (ceil(value / inc - inc / 100) - 1) * inc;
 	}
 	else
 		value = (floor(value / inc + inc / 100) + 1) * inc;
+	if(roundfrommin)
+		value += min;
 }
 
 template <class DataType, class Base, class IncType = DataType>
@@ -369,6 +373,7 @@ protected:
 private:
 	SpinButtons     sb;
 	IncType         inc;
+	bool            roundfrommin;
 
 	typedef WithSpin CLASSNAME;
 public:
@@ -381,6 +386,8 @@ public:
 	
 	WithSpin&          ShowSpin(bool s = true)      { sb.Show(s); return *this; }
 	bool               IsSpinVisible() const        { return sb.IsVisible(); }
+	
+	WithSpin&          RoundFromMin(bool b = true)  { roundfrommin = b; return *this; }
 
 	SpinButtons&       SpinButtonsObject()          { return sb; }
 	const SpinButtons& SpinButtonsObject() const    { return sb; }
@@ -419,6 +426,7 @@ void WithSpin<DataType, Base, IncType>::Init()
 	Ctrl::AddFrame(sb);
 	sb.inc.WhenRepeat = sb.inc.WhenAction = THISBACK(Inc);
 	sb.dec.WhenRepeat = sb.dec.WhenAction = THISBACK(Dec);
+	roundfrommin = false;
 }
 
 template <class DataType, class Base, class IncType>
@@ -430,7 +438,7 @@ void WithSpin<DataType, Base, IncType>::Inc()
 	}
 	DataType d = Base::GetData();
 	if(!IsNull(d)) {
-		WithSpin_Add(d, inc);
+		WithSpin_Add(d, inc, Base::GetMin(), roundfrommin);
 		if(IsNull(Base::GetMax()) || d <= Base::GetMax()) {
 			Base::SetData(d);
 			Ctrl::Action();
@@ -438,7 +446,9 @@ void WithSpin<DataType, Base, IncType>::Inc()
 	}
 	else {
 		DataType min = Base::GetMin();
-		if(!IsNull(min))
+		if(IsNull(min) || min <= Base::GetDefaultMin())
+			Base::SetData(0);
+		else
 			Base::SetData(min);
 	}
 	Ctrl::SetFocus();
@@ -453,7 +463,7 @@ void WithSpin<DataType, Base, IncType>::Dec()
 	}
 	DataType d = Base::GetData();
 	if(!IsNull(d)) {
-		WithSpin_Add(d, -inc);
+		WithSpin_Add(d, -inc, Base::GetMin(), roundfrommin);
 		if(IsNull(Base::GetMin()) || d >= Base::GetMin()) {
 			Base::SetData(d);
 			Ctrl::Action();
@@ -461,8 +471,10 @@ void WithSpin<DataType, Base, IncType>::Dec()
 	}
 	else {
 		DataType max = Base::GetMax();
-		if(!IsNull(max))
-			Base::SetData(Base::maxval);
+		if(IsNull(max) || max >= Base::GetDefaultMax())
+			Base::SetData(0);
+		else
+			Base::SetData(max);
 	}
 	Ctrl::SetFocus();
 }
