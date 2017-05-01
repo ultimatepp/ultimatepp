@@ -187,8 +187,10 @@ Bar::Item& ToolButton::Enable(bool enable)
 
 Bar::Item& ToolButton::Tip(const char *tip)
 {
-	tiptext = tip;
-	UpdateTip();
+	if(tiptext != tip) {
+		tiptext = tip;
+		UpdateTip();
+	}
 	return *this;
 }
 

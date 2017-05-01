@@ -52,7 +52,7 @@ void ToolBar::Paint(Draw& w)
 	PaintBar(w, style->breaksep, look);
 }
 
-Bar::Item& ToolBar::AddItem(Event<>  cb)
+Bar::Item& ToolBar::AddItem(Event<> cb)
 {
 	ToolButton& m = item.DoIndex(ii++);
 	m.ResetKeepStyle();
@@ -62,6 +62,8 @@ Bar::Item& ToolBar::AddItem(Event<>  cb)
 	m.Kind(kind);
 	m.SetStyle(style->buttonstyle);
 	m.NoDarkAdjust(nodarkadjust);
+	m.Enable(true).Check(false).Bar::Item::Key((dword)0);
+	m.ClearInfo();
 	pane.Add(&m, Null);
 	return m;
 }
