@@ -2,9 +2,10 @@
 #define COMMON_H
 
 #include <Esc/Esc.h>
-// #include <Web/Web.h>
-//#include <coff/binobj/binobj.h>
 #include <plugin/bz2/bz2.h>
+#include <plugin/lz4/lz4.h>
+#include <plugin/lzma/lzma.h>
+#include <plugin/zstd/zstd.h>
 
 #include "Logger.h"
 
@@ -506,6 +507,9 @@ public:
 			ENC_PLAIN,
 			ENC_ZIP,
 			ENC_BZ2,
+			ENC_LZ4,
+			ENC_LZMA,
+			ENC_ZSTD,
 		};
 		int    flags;
 		enum {
@@ -516,6 +520,8 @@ public:
 		int    offset;
 		int    off_meta_offset;
 		int    len_meta_offset;
+		
+		void Compress(String& data);
 	};
 
 	VectorMap< String, ArrayMap<int, Block> > blocks;

@@ -19,7 +19,8 @@ uses
 	TabBar,
 	ide/Designers,
 	ide/Android,
-	ide/Java;
+	ide/Java,
+	plugin/zstd;
 
 uses(POSIX) ide\SrcUpdater;
 

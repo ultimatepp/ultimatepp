@@ -462,10 +462,7 @@ String BrcToC(CParser& binscript, String basedir)
 					if(data.GetLength() != b.length)
 						throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
 							b.file, b.length, data.GetLength()));
-					switch(b.encoding) {
-						case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
-						case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
-					}
+					b.Compress(data);
 					b.length = data.GetLength();
 					data.Cat('\0');
 					WriteByteArray(fo, data);
@@ -501,10 +498,7 @@ String BrcToC(CParser& binscript, String basedir)
 			if(data.GetLength() != b.length)
 				throw Exc(NFormat("length of file '%s' changed (%d -> %d) during object creation",
 					b.file, b.length, data.GetLength()));
-			switch(b.encoding) {
-				case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
-				case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
-			}
+			b.Compress(data);
 			int b_length = data.GetLength();
 			data.Cat('\0');
 			WriteByteArray(fo, data);
