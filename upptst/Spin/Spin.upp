@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	Spin.h,
+	main.cpp,
+	Spin.lay;
+
+mainconfig
+	"" = "GUI";
+

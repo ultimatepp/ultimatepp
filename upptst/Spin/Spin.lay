@@ -1,0 +1,18 @@
+LAYOUT(SpinLayout, 768, 500)
+	ITEM(EditIntSpin, int_1, LeftPosZ(12, 160).TopPosZ(12, 19))
+	ITEM(EditInt64Spin, int64_1, LeftPosZ(12, 160).TopPosZ(36, 19))
+	ITEM(EditDoubleSpin, double_1, LeftPosZ(12, 160).TopPosZ(60, 19))
+	ITEM(EditDateSpin, date_1, LeftPosZ(12, 160).TopPosZ(84, 19))
+	ITEM(EditTimeSpin, time_1, LeftPosZ(12, 160).TopPosZ(108, 19))
+	ITEM(EditIntSpin, int_2, LeftPosZ(188, 160).TopPosZ(12, 19))
+	ITEM(EditInt64Spin, int64_2, LeftPosZ(188, 160).TopPosZ(36, 19))
+	ITEM(EditDoubleSpin, double_2, LeftPosZ(188, 160).TopPosZ(60, 19))
+	ITEM(EditDateSpin, date_2, LeftPosZ(188, 160).TopPosZ(84, 19))
+	ITEM(EditTimeSpin, time_2, LeftPosZ(188, 160).TopPosZ(108, 19))
+	ITEM(EditIntSpin, int_3, LeftPosZ(364, 160).TopPosZ(12, 19))
+	ITEM(EditInt64Spin, int64_3, LeftPosZ(364, 160).TopPosZ(36, 19))
+	ITEM(EditDoubleSpin, double_3, LeftPosZ(364, 160).TopPosZ(60, 19))
+	ITEM(EditDateSpin, date_3, LeftPosZ(364, 160).TopPosZ(84, 19))
+	ITEM(EditTimeSpin, time_3, LeftPosZ(364, 160).TopPosZ(108, 19))
+END_LAYOUT
+
