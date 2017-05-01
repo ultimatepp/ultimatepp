@@ -339,10 +339,28 @@ public:
 template <class IncType> IncType WithSpin_DefaultIncValue() { return 1; }
 template <> inline       double  WithSpin_DefaultIncValue() { return 0.1; }
 
+template <class IncType> IncType WithSpin_DefaultStartValue() { return 0; }
+template <> inline       Date    WithSpin_DefaultStartValue() { return GetSysDate(); }
+template <> inline       Time    WithSpin_DefaultStartValue() { return GetSysTime(); }
+
 template <class DataType, class IncType>
 void WithSpin_Add(DataType& value, IncType inc, DataType min, bool roundfrommin)
 {
 	value += inc;
+}
+
+template <> inline
+void WithSpin_Add(int& value, int inc, int min, bool roundfrommin) {
+	if(roundfrommin)
+		value -= min;
+	if(inc < 0) {
+		inc = -inc;
+		value = (value - inc) / inc * inc;
+	}
+	else
+		value = (value + inc) / inc * inc;
+	if(roundfrommin)
+		value += min;
 }
 
 template <> inline
@@ -447,7 +465,7 @@ void WithSpin<DataType, Base, IncType>::Inc()
 	else {
 		DataType min = Base::GetMin();
 		if(IsNull(min) || min <= Base::GetDefaultMin())
-			Base::SetData(0);
+			Base::SetData(WithSpin_DefaultStartValue<DataType>());
 		else
 			Base::SetData(min);
 	}
@@ -472,7 +490,7 @@ void WithSpin<DataType, Base, IncType>::Dec()
 	else {
 		DataType max = Base::GetMax();
 		if(IsNull(max) || max >= Base::GetDefaultMax())
-			Base::SetData(0);
+			Base::SetData(WithSpin_DefaultStartValue<DataType>());
 		else
 			Base::SetData(max);
 	}
