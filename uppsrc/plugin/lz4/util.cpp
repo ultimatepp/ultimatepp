@@ -42,11 +42,22 @@ int64 LZ4Decompress(Stream& out, Stream& in, Gate<int64, int64> progress)
 	return sLZ4Decompress(out, in, in.GetLeft(), progress, false);
 }
 
-String LZ4Compress(const void *data, int64 len, Gate<int64, int64> progress)
+String LZ4Compress(Stream& in, Gate<int64, int64> progress)
 {
 	StringStream out;
-	MemReadStream in(data, len);
 	return LZ4Compress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
+}
+
+String LZ4Decompress(Stream& in, Gate<int64, int64> progress)
+{
+	StringStream out;
+	return LZ4Decompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
+}
+
+String LZ4Compress(const void *data, int64 len, Gate<int64, int64> progress)
+{
+	MemReadStream in(data, len);
+	return LZ4Compress(in, progress);
 }
 
 String LZ4Compress(const String& s, Gate<int64, int64> progress)
@@ -56,9 +67,8 @@ String LZ4Compress(const String& s, Gate<int64, int64> progress)
 
 String LZ4Decompress(const void *data, int64 len, Gate<int64, int64> progress)
 {
-	StringStream out;
 	MemReadStream in(data, len);
-	return LZ4Decompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
+	return LZ4Decompress(in, progress);
 }
 
 String LZ4Decompress(const String& s, Gate<int64, int64> progress)
@@ -76,6 +86,18 @@ int64 CoLZ4Compress(Stream& out, Stream& in, Gate<int64, int64> progress)
 int64 CoLZ4Decompress(Stream& out, Stream& in, Gate<int64, int64> progress)
 {
 	return sLZ4Decompress(out, in, in.GetLeft(), progress, true);
+}
+
+String CoLZ4Compress(Stream& in, Gate<int64, int64> progress)
+{
+	StringStream out;
+	return CoLZ4Compress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
+}
+
+String CoLZ4Decompress(Stream& in, Gate<int64, int64> progress)
+{
+	StringStream out;
+	return CoLZ4Decompress(out, in, progress) < 0 ? String::GetVoid() : out.GetResult();
 }
 
 String CoLZ4Compress(const void *data, int64 len, Gate<int64, int64> progress)
