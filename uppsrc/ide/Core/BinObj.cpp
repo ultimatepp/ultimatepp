@@ -4,6 +4,17 @@ BinObjInfo::BinObjInfo()
 {
 }
 
+void BinObjInfo::Block::Compress(String& data)
+{
+	switch(encoding) {
+	case BinObjInfo::Block::ENC_BZ2: data = BZ2Compress(data); break;
+	case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
+	case BinObjInfo::Block::ENC_LZ4: data = LZ4Compress(data); break;
+	case BinObjInfo::Block::ENC_LZMA: data = LZMACompress(data); break;
+	case BinObjInfo::Block::ENC_ZSTD: data = ZstdCompress(data); break;
+	}
+}
+
 void BinObjInfo::Parse(CParser& binscript, String base_dir)
 {
 	while(!binscript.IsEof()) {
@@ -34,6 +45,12 @@ void BinObjInfo::Parse(CParser& binscript, String base_dir)
 				blk.encoding = Block::ENC_ZIP;
 			else if(binscript.Id("BZ2"))
 				blk.encoding = Block::ENC_BZ2;
+			else if(binscript.Id("LZ4"))
+				blk.encoding = Block::ENC_LZ4;
+			else if(binscript.Id("LZMA"))
+				blk.encoding = Block::ENC_LZMA;
+			else if(binscript.Id("ZSTD"))
+				blk.encoding = Block::ENC_ZSTD;
 			binscript.PassChar(')');
 			FindFile ff;
 			String searchpath = NormalizePath(file, base_dir);

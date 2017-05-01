@@ -2,7 +2,8 @@ description "TheIDE - common library\377B";
 
 uses
 	Esc,
-	plugin/bz2;
+	plugin/bz2,
+	plugin/lzma;
 
 file
 	Core.h options(BUILDER_OPTION) PCH,

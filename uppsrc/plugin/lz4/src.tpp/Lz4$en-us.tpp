@@ -59,54 +59,66 @@ ressStream]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in])&]
 [s0;*@7;4%% &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 LZ4 Compress/Decompress functions]]}}&]
 [s3; &]
-[s5;:Upp`:`:LZ4Compress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
+[s5;:Upp`:`:LZ4Compress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
 nt64]_[* LZ4Compress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ i
-nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:LZ4Decompress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
+[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ i
+nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:LZ4Decompress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
 nt64]_[* LZ4Decompress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ i
-nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:LZ4Compress`(const void`*`,Upp`:`:int64`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ i
+nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:LZ4Compress`(Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+tring]_[* LZ4Compress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
+[_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
+[s5;:Upp`:`:LZ4Decompress`(Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+tring]_[* LZ4Decompress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
+[_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
+[s5;:Upp`:`:LZ4Compress`(const void`*`,Upp`:`:int64`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* LZ4Compress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], 
-[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64
-], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:LZ4Compress`(const Upp`:`:String`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
+[_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:LZ4Compress`(const Upp`:`:String`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* LZ4Compress]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s],
- [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 p
-rogress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:LZ4Decompress`(const void`*`,Upp`:`:int64`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+ [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=
+_Null)&]
+[s5;:Upp`:`:LZ4Decompress`(const void`*`,Upp`:`:int64`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* LZ4Decompress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], 
-[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64
-], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:LZ4Decompress`(const Upp`:`:String`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
+[_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:LZ4Decompress`(const Upp`:`:String`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* LZ4Decompress]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s
-], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 p
-rogress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:CoLZ4Compress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
+], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_
+`=_Null)&]
+[s5;:Upp`:`:CoLZ4Compress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
 nt64]_[* CoLZ4Compress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ i
-nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:CoLZ4Decompress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
+[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ i
+nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:CoLZ4Decompress`(Upp`:`:Stream`&`,Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:int64^ i
 nt64]_[* CoLZ4Decompress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ i
-nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:CoLZ4Compress`(const void`*`,Upp`:`:int64`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ i
+nt64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:CoLZ4Compress`(Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+tring]_[* CoLZ4Compress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
+[_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
+[s5;:Upp`:`:CoLZ4Decompress`(Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+tring]_[* CoLZ4Decompress]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
+[_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
+[s5;:Upp`:`:CoLZ4Compress`(const void`*`,Upp`:`:int64`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* CoLZ4Compress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], 
-[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64
-], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:CoLZ4Compress`(const Upp`:`:String`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
+[_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:CoLZ4Compress`(const Upp`:`:String`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* CoLZ4Compress]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s
-], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 p
-rogress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:CoLZ4Decompress`(const void`*`,Upp`:`:int64`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_
+`=_Null)&]
+[s5;:Upp`:`:CoLZ4Decompress`(const void`*`,Upp`:`:int64`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* CoLZ4Decompress]([@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 data], 
-[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64
-], [_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_[@(0.0.255) false])&]
-[s5;:Upp`:`:CoLZ4Decompress`(const Upp`:`:String`&`,Upp`:`:EventGate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
+[_^Upp`:`:int64^ int64]_[*@3 len], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
+[_^Upp`:`:int64^ int64]>_[*@3 progress]_`=_Null)&]
+[s5;:Upp`:`:CoLZ4Decompress`(const Upp`:`:String`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`>`): [_^Upp`:`:String^ S
 tring]_[* CoLZ4Decompress]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s
-], [_^Upp`:`:EventGate^ EventGate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 p
-rogress]_`=_[@(0.0.255) false])&]
+], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress]_
+`=_Null)&]
 [s2;%% Simple LZ4 compression/decompression functions. [%-*@3 out] 
 [%-*@3 in] parameters are input / ouput streams and function returns 
 the number of bytes stored to [%-*@3 out], otherwise input is provided 
@@ -115,6 +127,7 @@ as memory block [%-*@3 data] of [%-*@3 len] bytes or as input String
 can be used to to track progress of operation and eventually 
 interrupt it by returning true. Functions with Co prefix run 
 multithreaded.&]
+[s2;%% &]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:IsLZ4`(Upp`:`:Stream`&`): [@(0.0.255) bool]_[* IsLZ4]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&
@@ -122,5 +135,6 @@ multithreaded.&]
 [s2;%% Checks the Stream for magic number identifying LZ4 stream. 
 Seeks back after the check. Returns true if magic number was 
 detected.&]
+[s3;%% &]
 [s3;%% &]
 [s0;%% ]]
