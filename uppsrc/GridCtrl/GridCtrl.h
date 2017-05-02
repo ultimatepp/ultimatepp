@@ -582,7 +582,7 @@ class GridCtrl : public Ctrl
 				Convert     *convert;
 				GridDisplay *display;
 
-				Callback1<One<Ctrl>&> factory;				
+				Callback1<One<Ctrl>&> factory;
 				
 				static VectorMap<Id, int> *aliases;
 
@@ -639,7 +639,7 @@ class GridCtrl : public Ctrl
 				double Right(int scroll = 0)   { return pos + size - scroll;   }
 				double Top(int scroll = 0)     { return pos - scroll;          }
 				double Bottom(int scroll = 0)  { return pos + size - scroll;   }
-				double Width()                 { return size; 				   }
+				double Width()                 { return size;                  }
 				double Height()                { return size;				   }
 
 				bool   InvertSelect()          { return BitInverse(style, GD::SELECT); }
@@ -659,7 +659,7 @@ class GridCtrl : public Ctrl
 				int    nRight(int scroll = 0)  { return npos + nsize - scroll; }
 				int    nTop(int scroll = 0)    { return npos - scroll;         }
 				int    nBottom(int scroll = 0) { return npos + nsize - scroll; }
-				int    nWidth()                { return nsize; 				   }
+				int    nWidth()                { return nsize;                 }
 				int    nHeight()               { return nsize;				   }
 
 				ItemRect& Size(int n, bool hv = false);
@@ -790,11 +790,11 @@ class GridCtrl : public Ctrl
 
 				ItemRect& Skip(bool b)                           { skip = b;          return *this; }
 				
-				ItemRect& DoAvg(const char *s = "")            	 { sop = SOP_AVG; sopfrm = s; return *this; }
+				ItemRect& DoAvg(const char *s = "")              { sop = SOP_AVG; sopfrm = s; return *this; }
 				ItemRect& DoSum(const char *s = "")              { sop = SOP_SUM; sopfrm = s; return *this; }
 				ItemRect& DoMin(const char *s = "")              { sop = SOP_MIN; sopfrm = s; return *this; }
 				ItemRect& DoMax(const char *s = "")              { sop = SOP_MAX; sopfrm = s; return *this; }
-				ItemRect& DoCount(const char *s = "")          	 { sop = SOP_CNT; sopfrm = s; return *this; }
+				ItemRect& DoCount(const char *s = "")            { sop = SOP_CNT; sopfrm = s; return *this; }
 
 				int  GetId()                                     { return id;                       }
 				int  GetNumber()                                 { return id - parent->fixed_cols;  }
