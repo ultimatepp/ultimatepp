@@ -61,6 +61,11 @@ can be already finished and not running anymore (calling to Wait
 in that case returns immediately).&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:Thread`:`:GetId`(`)const: [_^Upp`:`:Thread`:`:Id^ Thread`::Id]_[* GetId]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns the system`-unique id of thread.&]
+[s3; &]
+[s4; &]
 [s5;:Thread`:`:GetHandle`(`)const: HANDLE_[* GetHandle]()_[@(0.0.255) const 
 ][*C `[WIN32`]]&]
 [s5;:Thread`:`:GetHandle`(`)const: pthread`_t_[* GetHandle]()_[@(0.0.255) const 
@@ -107,6 +112,11 @@ tested by threads participating in shutdown system.&]
 exit. Returns the pointer to function already installed or NULL, 
 client code should call the already installed function (return 
 value is not null)&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Thread`:`:GetCurrentId`(`): [@(0.0.255) static] [_^Upp`:`:Thread`:`:Id^ Threa
+d`::Id]_[* GetCurrentId]()&]
+[s2;%% Returns the system`-unique id of calling thread.&]
 [s3; &]
 [s4; &]
 [s5;:Thread`:`:Priority`(int`): [@(0.0.255) bool]_[* Priority]([@(0.0.255) int]_[*@3 percent])
