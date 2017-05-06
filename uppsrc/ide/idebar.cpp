@@ -356,6 +356,7 @@ void Ide::Setup(Bar& menu)
 		.Help("Edit key bindings");
 	menu.Add("Build methods..", THISBACK(SetupBuildMethods))
 	    .Help("Setup build methods");
+	menu.Add("Macro Manager..", THISBACK(DoMacroManager));
 #ifdef PLATFORM_WIN32
 	menu.Add("Automatic build methods setup..", callback(InstantSetup))
 	    .Help("Setups/fixes build methods and basic assemblies..");

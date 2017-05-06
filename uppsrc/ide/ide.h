@@ -731,7 +731,8 @@ public:
 
 	void      DoEditKeys();
 	void      AKEditor();
-
+	void      DoMacroManager();
+	
 	void      PackageMenu(Bar& menu);
 
 	void      UscFile(const String& file);
