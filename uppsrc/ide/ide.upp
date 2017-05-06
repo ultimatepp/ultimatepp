@@ -81,6 +81,7 @@ file
 	Xml.cpp,
 	Json.cpp,
 	Update.cpp,
+	MacroManager.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,
 	MethodsCtrls.cpp,
