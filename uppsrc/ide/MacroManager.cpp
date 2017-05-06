@@ -46,7 +46,7 @@ Image MacroElement::GetImage(Type type)
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
-class MacroManagerWindow : public WithMacroManagerLayout<TopWindow> {
+class MacroManagerWindow final : public WithMacroManagerLayout<TopWindow> {
 	using MacroStore = ArrayMap<String, Array<MacroElement>>;
 
 public:
@@ -84,6 +84,11 @@ private:
 	
 	MacroStore macrosStore;
 	TreeCtrl   macrosTree;
+	// TODO:
+	// - Macro should be organized in two tree roots - global and packages macros.
+	// - The path of macro should not be shown in tree - it can be show in corresponding label.
+	//   Only file title and package name (if macro belongs to package) should be show.
+	
 	CodeEditor editor;
 };
 

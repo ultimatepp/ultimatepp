@@ -729,9 +729,7 @@ public:
 	TimeCallback text_updated;
 	void      TriggerAssistSync();
 
-	void      DoEditKeys();
 	void      AKEditor();
-	void      DoMacroManager();
 	
 	void      PackageMenu(Bar& menu);
 
@@ -898,12 +896,14 @@ public:
 
 	void      Setup(Bar& menu);
 		void  SetupFormat();
+		void  DoEditKeys();
 		void  ToggleVerboseBuild();
 		void  AutoSetup();
 		void  CheckUpdates(bool verbose);
 		void  CheckUpdatesManual();
 		void  SetUpdateTimer(int period);
 		void  Abbreviations();
+		void  DoMacroManager();
 	
 	void      SetupMobilePlatforms(Bar& bar);
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
