@@ -80,16 +80,17 @@ private:
 private:
 	// TODO: MacroManager shold not depend upon Ide instance.
 	// The edit logic should be outside class the same as load macros.
-	Ide&       ide;
+	Ide&          ide;
 	
-	MacroStore macrosStore;
-	TreeCtrl   macrosTree;
+	MacroStore    macrosStore;
+	TreeCtrl      macrosTree;
+	SplitterFrame splitter;
 	// TODO:
 	// - Macro should be organized in two tree roots - global and packages macros.
 	// - The path of macro should not be shown in tree - it can be show in corresponding label.
 	//   Only file title and package name (if macro belongs to package) should be show.
 	
-	CodeEditor editor;
+	CodeEditor    editor;
 };
 
 MacroManagerWindow::MacroManagerWindow(Ide& ide)
@@ -99,7 +100,8 @@ MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	Zoomable().Sizeable().MinimizeBox(false);
 	macrosTree.NoRoot();
 	
-	splitter.Horz(macrosTree, editor).SetPos(3500);
+	parent.Add(editor.SizePos());
+	parent.AddFrame(splitter.Left(macrosTree, 300));
 
 	editor.Highlight("usc");
 	editor.SetReadOnly();
