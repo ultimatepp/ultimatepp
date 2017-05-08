@@ -596,10 +596,17 @@ void ChSysInit()
 	ChReset();
 	XpClear();
 
-	BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
-	DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
-	if(SetProcessDPIAware && Ctrl::IsUHDEnabled())
-		(*SetProcessDPIAware)();
+
+	HRESULT (STDAPICALLTYPE *SetProcessDpiAwareness)(int);
+	DllFn(SetProcessDpiAwareness, "Shcore.dll", "SetProcessDpiAwareness");
+	if(SetProcessDpiAwareness)
+		SetProcessDpiAwareness(1);
+	else {
+		BOOL (STDAPICALLTYPE * SetProcessDPIAware)(void);
+		DllFn(SetProcessDPIAware, "User32.dll", "SetProcessDPIAware");
+		if(SetProcessDPIAware && Ctrl::IsUHDEnabled())
+			(*SetProcessDPIAware)();
+	}
 	NONCLIENTMETRICS ncm;
 #if (WINVER >= 0x0600 && !defined(__MINGW32_VERSION))
 	ncm.cbSize = sizeof(ncm) - sizeof(ncm.iPaddedBorderWidth); // WinXP does not like it...
