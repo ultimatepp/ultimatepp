@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-#define LLOG(x) // LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 int  GetClipboardFormatCode(const char *format_id);
 
@@ -170,6 +170,7 @@ STDMETHODIMP UDropTarget::DragEnter(LPDATAOBJECT pDataObj, DWORD grfKeyState, PO
 		if(fmtetc.ptd)
 			CoTaskMemFree(fmtetc.ptd);
 	}
+	LLOG("DragEnter fmt: " << fmt);
 	fe->Release();
 	DnD(pt, false, pdwEffect, grfKeyState);
 	return NOERROR;
