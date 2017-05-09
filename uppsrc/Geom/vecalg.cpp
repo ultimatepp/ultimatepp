@@ -373,7 +373,6 @@ private:
 template <class C, class VP>
 Vector<int> ConvexHullGenerator<C, VP>::Generate()
 {
-	RTIMING("ConvexHullGenerator::Generate");
 	for(int i = 0; i < points.GetCount(); i++)
 		if(!IsNull(points[i]))
 			upper.Add(i);
@@ -416,7 +415,6 @@ bool ConvexHullGenerator<C, VP>::operator () (int i, int j) const
 template <class C, class VP>
 void ConvexHullGenerator<C, VP>::Recurse(int ib, int ie, int &ue, int& le)
 {
-	RTIMING("ConvexHullGenerator::Recurse");
 	if(ie - ib <= 2) {
 		ue = le = ie;
 		return;
@@ -432,7 +430,6 @@ void ConvexHullGenerator<C, VP>::Recurse(int ib, int ie, int &ue, int& le)
 template <class C, class VP>
 int ConvexHullGenerator<C, VP>::Stitch(int lb, int le, int rb, int re, bool is_lower)
 {
-	RTIMING("ConvexHullGenerator::Stitch");
 	Vector<int>& index = (is_lower ? lower : upper);
 	for(;;) {
 		const P& l1 = points[index[le - 1]];
