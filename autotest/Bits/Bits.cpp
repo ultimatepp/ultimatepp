@@ -20,8 +20,15 @@ CONSOLE_APP_MAIN
 			h.Set(pos, b);
 		}
 		
-		for(int i = 0; i < v.GetCount(); i++)
+		Bits hh;
+		String s = StoreAsString(h);
+		LoadFromString(hh, s);
+		LoadFromString(h, s);
+		
+		for(int i = 0; i < v.GetCount(); i++) {
 			ASSERT(h.Get(i) == v[i]);
+			ASSERT(hh.Get(i) == v[i]);
+		}
 	}
 	
 	{
@@ -57,6 +64,12 @@ CONSOLE_APP_MAIN
 		r.Shrink();
 		ASSERT(*r.Raw(n) == 0x80004444);
 		DUMP(n);
+	}
+	
+	{
+		Bits x;
+		x.Set(4, 1);
+		DUMP(x);
 	}
 	
 	LOG("--------- OK");
