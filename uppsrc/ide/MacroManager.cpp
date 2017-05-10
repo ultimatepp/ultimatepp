@@ -26,9 +26,9 @@ public:
 
 MacroElement::MacroElement(Type type, const String& fileName, int line, const String& comment)
 	: type(type)
+	, comment(comment)
 	, fileName(fileName)
 	, line(line)
-	, comment(comment)
 {}
 
 Image MacroElement::GetImage(Type type)
@@ -46,9 +46,11 @@ Image MacroElement::GetImage(Type type)
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
+using MacroList = Array<MacroElement>;
+
 class MacroManagerWindow final : public WithMacroManagerLayout<TopWindow> {
 	using MacroStore = ArrayMap<String, Array<MacroElement>>;
-
+	
 public:
 	MacroManagerWindow(Ide& ide);
 
@@ -57,21 +59,23 @@ public:
 private:
 	void InitButtons();
 	
-	void LoadUscFile(const String& fileName);
-	void LoadUscDir(const String& dir);
+	MacroList LoadUscFile(const String& fileName);
+	void LoadUscDir(const String& dir, MacroList& store);
 	void LoadMacros();
-	void ReloadMacros();
+	void ReloadGlobalMacros();
+	void ReloadLocalMacros();
 
 	void OnMacroSel();
 	void OnImport();
 	void OnExport();
 	void OnEditFile();
 
-	void ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin);
-	void ReadMacro(CParser& parser, const String& comment, const char* prototypeBegin);
-	void FinishRead(CParser& parser, const char* prototypeBegin, MacroElement& element);
+	void ExportFiles(Index<String>& files, String dir);
+	void FindNodeFiles(int id, Index<String>& list);
 
-	MacroElement& ObtainElement(const Value& key);
+	void ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list);
+	void ReadMacro(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list);
+	void FinishRead(CParser& parser, const char* prototypeBegin, MacroElement& element, MacroList& list);
 
 private:
 	static String ReadArgs(CParser& parser);
@@ -82,13 +86,8 @@ private:
 	// The edit logic should be outside class the same as load macros.
 	Ide&          ide;
 	
-	MacroStore    macrosStore;
 	TreeCtrl      macrosTree;
 	SplitterFrame splitter;
-	// TODO:
-	// - Macro should be organized in two tree roots - global and packages macros.
-	// - The path of macro should not be shown in tree - it can be show in corresponding label.
-	//   Only file title and package name (if macro belongs to package) should be show.
 	
 	CodeEditor    editor;
 };
@@ -148,14 +147,14 @@ void MacroManagerWindow::OnMacroSel()
 	}
 
 	Value key = macrosTree.Get();
-	if(IsNull(key)) {
+	if(IsNumber(key)) {
 		editor.Hide();
-		editButton.Enable();
+		editButton.Disable();
 		exportButton.Enable();
 		return;
 	}
 
-	MacroElement& element = ObtainElement(key);
+	MacroElement element = ValueTo<MacroElement>(key);
 
 	String macroContent = TrimBoth(element.comment);
 	if(macroContent.GetCount())
@@ -185,24 +184,74 @@ void MacroManagerWindow::OnImport()
 	}
 	
 	if(FileExists(newFilePath)) {
-		if(!PromptYesNo("Target file aready exists! Do you want to overwrite it?"))
+		if(!PromptYesNo(DeQtf(newFilePath << " : Target file aready exists! Do you want to overwrite it?")))
 			return;
 	}
 
 	FileCopy(filePath, newFilePath);
+	ReloadGlobalMacros();
+	OnMacroSel();
+}
 
-	LoadUscFile(newFilePath);
-	ReloadMacros();
+void MacroManagerWindow::ExportFiles(Index<String>& files, String dir)
+{
+	for(const String& file : files)
+	{
+		String newFilePath = AppendFileName(dir, GetFileName(file));
+		if(FileExists(newFilePath)) {
+			if(!PromptYesNo(DeQtf(newFilePath << " : Target file aready exists! Do you want to overwrite it?")))
+				continue;
+		}
+		
+		FileCopy(file, newFilePath);
+	}
+}
+
+void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
+{
+	Value key = macrosTree.Get(id);
+	if(IsNumber(key)) {
+		for(int i = 0; i < macrosTree.GetChildCount(id); i++)
+		{
+			int n = macrosTree.GetChild(id, i);
+			Value k = macrosTree.Get(n);
+			FindNodeFiles(n, list);
+		}
+	}
+	else {
+		MacroElement element = ValueTo<MacroElement>(key);
+		list.FindAdd(element.fileName);
+	}
 }
 
 void MacroManagerWindow::OnExport()
 {
+	if(!macrosTree.IsCursor())
+		return;
+	
 	String dir = SelectDirectory();
 	if(dir.IsEmpty())
 		return;
 
-	for(const String& filePath : macrosStore.GetKeys())
-		FileCopy(filePath, AppendFileName(dir, GetFileName(filePath)));
+	Value key = macrosTree.Get();
+	
+	if(IsNumber(key)) {
+		int id = macrosTree.GetCursor();
+		Index<String> list;
+		FindNodeFiles(id, list);
+		ExportFiles(list, dir);
+	}
+	else {
+		String fileName = ValueTo<MacroElement>(key).fileName;
+		String newFilePath = AppendFileName(dir, GetFileName(fileName));
+		
+		if(FileExists(newFilePath)) {
+			if(!PromptYesNo(DeQtf(newFilePath << " : Target file aready exists! Do you want to overwrite it?")))
+				return;
+		}
+		
+		FileCopy(fileName, newFilePath);
+	}
 }
 
 void MacroManagerWindow::OnEditFile()
@@ -211,14 +260,10 @@ void MacroManagerWindow::OnEditFile()
 		return;
 
 	Value key = macrosTree.Get();
-	if(IsNull(key)) {
-		ide.EditFile(macrosTree.GetValue());
-		ide.editor.SetCursor(ide.editor.GetPos(0));
-		Break();
+	if(IsNumber(key))
 		return;
-	}
 
-	MacroElement& element = ObtainElement(key);
+	MacroElement element = ValueTo<MacroElement>(key);
 
 	ide.EditFile(element.fileName);
 	ide.editor.SetCursor(ide.editor.GetPos(element.line - 1));
@@ -233,7 +278,7 @@ static void FindNext(CParser& parser)
 		parser.SkipTerm();
 }
 
-void MacroManagerWindow::ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin)
+void MacroManagerWindow::ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list)
 {
 	String fileName = parser.GetFileName();
 	MacroElement fn(MacroElement::Type::FUNCTION, fileName, parser.GetLine(), comment);
@@ -249,10 +294,10 @@ void MacroManagerWindow::ReadFunction(CParser& parser, const String& comment, co
 	}
 	fn.args = ReadArgs(parser);
 	
-	FinishRead(parser, prototypeBegin, fn);
+	FinishRead(parser, prototypeBegin, fn, list);
 }
 
-void MacroManagerWindow::ReadMacro(CParser& parser, const String& comment, const char* prototypeBegin)
+void MacroManagerWindow::ReadMacro(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list)
 {
 	String fileName = parser.GetFileName();
 	MacroElement macro(MacroElement::Type::MACRO, fileName, parser.GetLine(), comment);
@@ -273,10 +318,10 @@ void MacroManagerWindow::ReadMacro(CParser& parser, const String& comment, const
 	if (!parser.IsChar('{'))
 		ReadKeyDesc(parser);
 
-	FinishRead(parser, prototypeBegin, macro);
+	FinishRead(parser, prototypeBegin, macro, list);
 }
 
-void MacroManagerWindow::FinishRead(CParser& parser, const char* prototypeBegin, MacroElement& element)
+void MacroManagerWindow::FinishRead(CParser& parser, const char* prototypeBegin, MacroElement& element, MacroList& list)
 {
 	const char* bodyBegin = parser.GetPtr();
 
@@ -292,23 +337,16 @@ void MacroManagerWindow::FinishRead(CParser& parser, const char* prototypeBegin,
 	if(parser.GetSpacePtr() > bodyBegin)
 		element.code = String(bodyBegin, parser.GetSpacePtr());
 
-	macrosStore.GetAdd(element.fileName).Add(element);
+	list.Add(element);
 }
 
-MacroElement& MacroManagerWindow::ObtainElement(const Value& key)
+MacroList MacroManagerWindow::LoadUscFile(const String& fileName)
 {
-	ASSERT(!key.IsNull());
-	
-	Point pos = static_cast<Point>(key);
-	return macrosStore[pos.x][pos.y];
-}
-
-void MacroManagerWindow::LoadUscFile(const String& fileName)
-{
+	MacroList ret;
 	String fileContent = LoadFile(fileName);
 	if(fileContent.IsEmpty()) {
 		Logw() << METHOD_NAME << "Following file \"" << fileName << "\" doesn't exist or is empty.";
-		return;
+		return ret;
 	}
 
 	try {
@@ -318,23 +356,25 @@ void MacroManagerWindow::LoadUscFile(const String& fileName)
 			String comment = TrimLeft(String(parser.GetSpacePtr(), parser.GetPtr()));
 
 			if (!parser.IsId())
-				return;
+				return ret;
 			
 			const char* prototypeBegin = parser.GetPtr();
 			String id = parser.ReadId();
 			
 			if(id.IsEqual("fn"))
-				ReadFunction(parser, comment, prototypeBegin);
+				ReadFunction(parser, comment, prototypeBegin, ret);
 			else
 			if(id.IsEqual("macro"))
-				ReadMacro(parser, comment, prototypeBegin);
+				ReadMacro(parser, comment, prototypeBegin, ret);
 			else
-				return;
+				return ret;
 		}
 	}
 	catch (const CParser::Error& error) {
 		Logw() << METHOD_NAME << "Parsing file \"" << fileName << "\" failed with error: " << error << ".";
 	}
+	
+	return ret;
 }
 
 String MacroManagerWindow::ReadArgs(CParser& parser)
@@ -378,44 +418,78 @@ String MacroManagerWindow::ReadKeyDesc(CParser& parser)
 	return ret;
 }
 
-void MacroManagerWindow::LoadUscDir(const String& dir)
+void MacroManagerWindow::LoadUscDir(const String& dir, MacroList& store)
 {
 	for(FindFile ff(AppendFileName(dir, "*.usc")); ff; ff.Next())
-		LoadUscFile(AppendFileName(dir, ff.GetName()));
+	{
+		MacroList list = LoadUscFile(AppendFileName(dir, ff.GetName()));
+		if(list.GetCount())
+			store.AppendRange(list);
+	}
 }
 
 void MacroManagerWindow::LoadMacros()
 {
+	ReloadGlobalMacros();
+	ReloadLocalMacros();
+}
+
+void MacroManagerWindow::ReloadGlobalMacros()
+{
+	MacroList global;
+	LoadUscDir(GetLocalDir(), global);
+	LoadUscDir(GetFileFolder(ConfigFile("x")), global);
+	
+	int configFolderNameLength = GetFileFolder(ConfigFile("x")).GetCount() + 1;
+
+	int globalNode = macrosTree.Find(0);
+	if(globalNode < 0) {
+		globalNode = macrosTree.Add(0, Image(), 0, t_("Global macros"));
+	}
+	else {
+		macrosTree.RemoveChildren(globalNode);
+	}
+
+	String file;
+	int fileNode = -1;
+	for(const auto& element : global) {
+		if(!file.IsEqual(element.fileName))
+		{
+			file = element.fileName;
+			fileNode = macrosTree.Add(globalNode, Image(), 3, file.Mid(configFolderNameLength));
+		}
+			
+		macrosTree.Add(fileNode, MacroElement::GetImage(element.type), RawToValue(element), element.name);
+	}
+}
+
+void MacroManagerWindow::ReloadLocalMacros()
+{
+	int localNode = macrosTree.Add(0, Image(), 1, t_("Local macros"));
+
 	const Workspace& wspc = ide.IdeWorkspace();
 
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& package = wspc.GetPackage(i);
-		
+		int packageNode = -1;
 		for (const auto& file : package.file) {
 			String filePath = SourcePath(wspc[i], file);
 
-			if (ToLower(GetFileExt(filePath)) == ".usc")
-				LoadUscFile(filePath);
-		}
-	}
-
-	LoadUscDir(GetLocalDir());
-	LoadUscDir(GetFileFolder(ConfigFile("x")));
-
-	ReloadMacros();
-}
-
-void MacroManagerWindow::ReloadMacros()
-{
-	macrosTree.Clear();
-
-	for(int i = 0; i < macrosStore.GetCount(); i++) {
-		int id = macrosTree.Add(0, Image(), Null, macrosStore.GetKey(i));
-		
-		for(int j = 0; j < macrosStore[i].GetCount(); j++) {
-			MacroElement& element = macrosStore[i][j];
+			if (ToLower(GetFileExt(filePath)) != ".usc")
+				continue;
+				
+			MacroList list = LoadUscFile(filePath);
+			if (list.GetCount() == 0)
+				continue;
 			
-			macrosTree.Add(id, MacroElement::GetImage(element.type), Point(i, j), element.name);
+			if(packageNode == -1)
+				packageNode = macrosTree.Add(localNode, Image(), 2, wspc[i]);
+					
+			int fileNode = macrosTree.Add(packageNode, Image(), 3, file);
+			for(int j = 0; j < list.GetCount(); j++) {
+				MacroElement& element = list[j];
+				macrosTree.Add(fileNode, MacroElement::GetImage(element.type), RawToValue(element), element.name);
+			}
 		}
 	}
 }
