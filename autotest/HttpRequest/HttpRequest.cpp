@@ -74,5 +74,23 @@ CONSOLE_APP_MAIN
 		ASSERT(r.Execute().GetCount() == 0);
 		ASSERT(r.IsSuccess());
 	}
+	
+	{
+		HttpRequest h("https://journeyman.cz/");
+		String s = h.Execute();
+		DUMP(h.GetReasonPhrase());
+		DUMP(h.GetContent());
+		ASSERT(s.Find("<script type=\"text/javascript\" src=\"//c.imedia.cz/js/retargeting.js\"></script>") >= 0);
+	}
+
+	{
+		HttpRequest h("https://journeyman.cz/");
+		h.Timeout(0);
+		String s = h.Execute();
+		DUMP(h.GetReasonPhrase());
+		DUMP(h.GetContent());
+		ASSERT(s.Find("<script type=\"text/javascript\" src=\"//c.imedia.cz/js/retargeting.js\"></script>") >= 0);
+	}
+
 	LLOG("*********** Everything is OK");
 }
