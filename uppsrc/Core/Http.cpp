@@ -379,9 +379,14 @@ bool HttpRequest::Do()
 	case CHUNK_BODY:
 		if(ReadingBody())
 			break;
-		c1 = TcpSocket::Get();
-		c2 = TcpSocket::Get();
-		if(c1 != '\r' || c2 != '\n')
+		StartPhase(CHUNK_CRLF);
+		break;
+	case CHUNK_CRLF:
+		if(chunk_crlf.GetCount() < 2)
+			chunk_crlf.Cat(TcpSocket::Get(2 - chunk_crlf.GetCount()));
+		if(chunk_crlf.GetCount() < 2)
+			break;
+		if(chunk_crlf != "\r\n")
 			HttpError("missing ending CRLF in chunked transfer");
 		StartPhase(CHUNK_HEADER);
 		break;
@@ -692,6 +697,7 @@ void HttpRequest::ReadingChunkHeader()
 			}
 			count += n;
 			StartPhase(CHUNK_BODY);
+			chunk_crlf.Clear();
 			break;
 		}
 		if(c != '\r')
@@ -894,6 +900,7 @@ String HttpRequest::GetPhaseName() const
 		"Receiving content",
 		"Receiving chunk header",
 		"Receiving content chunk",
+		"Receiving content chunk ending",
 		"Receiving trailer",
 		"Request with continue",
 		"Waiting for continue header",
