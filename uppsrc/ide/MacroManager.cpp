@@ -70,7 +70,7 @@ private:
 	void OnExport();
 	void OnEditFile();
 
-	void ExportFiles(Index<String>& files, String dir);
+	void ExportFiles(Index<String>& files, const String& dir);
 	void FindNodeFiles(int id, Index<String>& list);
 
 	void ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list);
@@ -193,7 +193,7 @@ void MacroManagerWindow::OnImport()
 	OnMacroSel();
 }
 
-void MacroManagerWindow::ExportFiles(Index<String>& files, String dir)
+void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
 {
 	for(const String& file : files)
 	{
