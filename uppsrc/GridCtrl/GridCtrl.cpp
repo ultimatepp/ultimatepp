@@ -1827,6 +1827,8 @@ void GridCtrl::RemoveColumn(int n, int count)
 	}
 
 	int id = hitems[n].id;
+
+	Upp::Sort(r);
 		
 	hitems.Remove(n, count);
 
