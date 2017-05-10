@@ -414,7 +414,8 @@ class HttpRequest : public TcpSocket {
 
 	Stream      *poststream;
 	int64        postlen;
-		
+	
+	String       chunk_crlf;
 
 	void         Init();
 
@@ -557,7 +558,7 @@ public:
 		BEGIN, START, DNS,
 		SSLPROXYREQUEST, SSLPROXYRESPONSE, SSLHANDSHAKE,
 		REQUEST, HEADER, BODY,
-		CHUNK_HEADER, CHUNK_BODY, TRAILER,
+		CHUNK_HEADER, CHUNK_BODY, CHUNK_CRLF, TRAILER,
 		FINISHED, FAILED,
 	};
 
