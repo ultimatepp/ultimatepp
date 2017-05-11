@@ -330,7 +330,6 @@ void HttpRequest::Clear()
 
 bool HttpRequest::Do()
 {
-	int c1, c2;
 	switch(phase) {
 	case BEGIN:
 		retry_count = 0;
