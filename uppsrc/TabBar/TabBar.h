@@ -369,7 +369,7 @@ protected:
 	// Grouping
 	void MakeGroups();
 	int  FindGroup(const String& g) const;
-	void CloseAll(int exception);	
+	void CloseAll(int exception, int last_closed = 0);
 	void GoGrouping(int n);
 	void DoGrouping(int n);
 	void DoCloseGroup(int n);
