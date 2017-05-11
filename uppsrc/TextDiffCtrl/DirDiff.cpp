@@ -72,14 +72,17 @@ void DirDiffDlg::ShowResult()
 {
 	static Color cs[] = { SColorText(), Red(), Green() };
 	files.Clear();
+	String sFind = ToLower((String)~find);
 	for(int i = 0; i < list.GetCount(); i++)
 	{
 		int n = list[i].d;
 		if(n == 0 && modified || n == 1 && removed || n == 2 && added)
-			files.Add(list[i].a, NativePathIcon(FileExists(list[i].b) ? list[i].b : list[i].c),
+			if(ToLower(list[i].a).Find(sFind) >= 0)
+				files.Add(list[i].a, NativePathIcon(FileExists(list[i].b) ? list[i].b : list[i].c),
 			          StdFont(), cs[list[i].d]);
 	}
 	info = AsString(files.GetCount()) + " files";
+	clearFind.Show(!IsNull(find));
 }
 
 void DirDiffDlg::ClearFiles()
@@ -117,6 +120,15 @@ void DirDiffDlg::Copy(bool left)
 	}
 }
 
+bool Upp::DirDiffDlg::HotKey(dword key)
+{
+	if(key == K_CTRL_F) {
+		ActiveFocus(find);
+		return true;
+	}
+	return false;
+}
+
 DirDiffDlg::DirDiffDlg()
 {
 	int div = HorzLayoutZoom(4);
@@ -138,15 +150,20 @@ DirDiffDlg::DirDiffDlg()
 	
 	files_pane.Add(   added.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(2, 60));
 	files_pane.Add(modified.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(52, 70));
-	files_pane.Add( removed.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(132, 80));
+	files_pane.Add( removed.TopPos(3 * cy + 3 * div, bcy).LeftPosZ(128, 80));
 	
 	removed = 1;
 	added = 1;
 	modified = 1;
+	find.NullText(t_("Find (Ctrl+F)"));
+	clearFind.SetLabel("X");
+	clearFind.RightPosZ(1, 16).VSizePosZ(1, 1);
+	find.AddChild(&clearFind);
 	
 	files_pane.Add(info.SetAlign(ALIGN_RIGHT).TopPos(3 * cy + 3 * div, bcy).RightPos(1, 70));
 	files_pane.Add(compare.TopPos(2 * cy + 2 * div, bcy).RightPos(0, bcx));
-	files_pane.Add(files.VSizePos(3 * cy + bcy + 4 * div, 0).HSizePos());
+	files_pane.Add(files.VSizePos(3 * cy + bcy + 4 * div, 22).HSizePos());
+	files_pane.Add(find.HSizePosZ(4, 4).BottomPosZ(4, 19));
 
 	Add(files_diff.SizePos());
 	files_diff.Set(files_pane, diff);
@@ -161,9 +178,11 @@ DirDiffDlg::DirDiffDlg()
 	dir1 <<= THISBACK(ClearFiles);
 	dir2 <<= THISBACK(ClearFiles);
 	
-	modified << [=] { ShowResult(); };
-	removed << [=] { ShowResult(); };
-	added << [=] { ShowResult(); };
+	modified	<< [=] { ShowResult(); };
+	removed		<< [=] { ShowResult(); };
+	added		<< [=] { ShowResult(); };
+	find		<< [=] { ShowResult(); };
+	clearFind	<< [=] { find.Clear(); ShowResult();};
 	
 	files.WhenSel = THISBACK(File);
 
