@@ -446,39 +446,6 @@ void TabBar::Set(const TabBar& t)
 	SetAlign(t.GetAlign());
 }
 
-void TabBar::CloseAll(int exception)
-{
-	ValueArray vv;
-	for(int i = 0; i < tabs.GetCount(); i++)
-		if(i != exception)
-			vv.Add(tabs[i].key);
-		
-	if (exception < 0 && CancelCloseAll())
-		return;
-	else if (exception >= 0 && CancelCloseSome(vv)) 
-		return;
-	
-	// 2014/03/06 - FIRST the callbacks, THEN remove the tab
-	// otherwise keys in WhenCloseSome() are invalid
-	// WhenCloseSome() is called ALWAYS even if all tabs are closed
-	WhenCloseSome(vv);
-	if (exception < 0)
-		WhenCloseAll();
-
-	for(int i = tabs.GetCount() - 1; i >= 0; i--)
-		if(i != exception)
-		{
-			TabClosed(tabs[i].key);
-			tabs.Remove(i);
-		}
-
-	SetCursor(0);
-	
-	MakeGroups();
-	Repos();
-	Refresh();
-}
-
 int TabBar::GetNextId()
 {
 	return id++;
@@ -486,15 +453,16 @@ int TabBar::GetNextId()
 
 void TabBar::ContextMenu(Bar& bar)
 {
-	if (highlight >= 0 && crosses) {
+	if (GetCursor() >= 0 && crosses) {
 		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK2(Close, highlight, true));
 	}
-	if (GetCursor() >= 0 && crosses) {
-		bar.Add(t_("Close others"), THISBACK1(CloseAll, GetCursor()));
-	}
-	if (mintabcount <= 0 && crosses) {
-		bar.Add(t_("Close all"), THISBACK1(CloseAll, -1));
-	}
+	int ii = GetHighlight(); // Need copy to freeze it, [=] copies 'this' and thus reference to highlight
+	if (ii >= 0 && crosses)
+		bar.Add(t_("Close others"), [=] { CloseAll(ii); });
+    if (ii < GetCount() - 1 && crosses)
+        bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
+	if (mintabcount <= 0 && crosses)
+		bar.Add(t_("Close all"), [=] { CloseAll(-1); });
 	if(grouping) {
 		if(group > 0)
 			bar.Add(t_("Close group"), THISBACK(CloseGroup));
@@ -510,6 +478,32 @@ void TabBar::ContextMenu(Bar& bar)
 				bar.Separator();
 		}
 	}
+}
+void TabBar::CloseAll(int exception, int last_closed)
+{
+	ValueArray vv;
+	for(int i = last_closed; i < tabs.GetCount(); i++)
+		if(i != exception)
+			vv.Add(tabs[i].key);
+		
+	if(exception < 0 && last_closed == 0 ? CancelCloseAll() : CancelCloseSome(vv))
+		return;
+	
+	WhenCloseSome(vv);
+	if(exception < 0 && last_closed == 0)
+		WhenCloseAll();
+
+	for(int i = tabs.GetCount() - 1; i >= last_closed; i--)
+		if(i != exception) {
+			TabClosed(tabs[i].key);
+			tabs.Remove(i);
+		}
+
+	SetCursor(last_closed ? last_closed - 1 : 0);
+	
+	MakeGroups();
+	Repos();
+	Refresh();
 }
 
 void TabBar::CloseGroup()
@@ -2239,7 +2233,7 @@ void TabBar::SetHighlight(int n)
 {
 	highlight = n;
 	WhenHighlight();
-	Refresh();	
+	Refresh();
 }
 
 void TabBar::SetColor(int n, Color c)
