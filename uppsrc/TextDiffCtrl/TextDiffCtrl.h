@@ -213,6 +213,10 @@ struct PatchDiff : FileDiff {
 };
 
 class DirDiffDlg : public TopWindow {
+public:
+	virtual bool HotKey(dword key);
+
+private:
 	Splitter                   files_diff;
 	ParentCtrl                 files_pane;
 	FileList                   files;
@@ -226,6 +230,8 @@ class DirDiffDlg : public TopWindow {
 	Label                      info;
 	
 	Option                     removed, added, modified;
+	EditString				   find;
+	Button					   clearFind;
 
 	FrameTop<ParentCtrl>       left, right;
 	EditString                 lfile, rfile;
