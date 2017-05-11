@@ -460,7 +460,7 @@ void TabBar::ContextMenu(Bar& bar)
 	if (ii >= 0 && crosses)
 		bar.Add(t_("Close others"), [=] { CloseAll(ii); });
     if (ii < GetCount() - 1 && crosses)
-        bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
+		bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
 	if (mintabcount <= 0 && crosses)
 		bar.Add(t_("Close all"), [=] { CloseAll(-1); });
 	if(grouping) {

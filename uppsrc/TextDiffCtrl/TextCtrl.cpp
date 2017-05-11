@@ -179,6 +179,43 @@ bool TextCompareCtrl::Key(dword key, int repcnt)
 	return true;
 }
 
+int TextCompareCtrl::GetMatchLen(const wchar *s1, const wchar *s2, int len)
+{
+	for(int q = 0; q < len; q++)
+		if(s1[q] != s2[q])
+			return q;
+	return len;
+}
+
+void TextCompareCtrl::LineDiff(Vector<LineEdit::Highlight>& hln, Color eq_color,
+                               const wchar *s1, int l1, int h1,
+                               const wchar *s2, int l2, int h2, int depth)
+{
+	int p1 = 0;
+	int p2 = 0;
+	int matchlen = 0;
+	
+	for(int pos1 = l1; pos1 < h1; pos1++)
+		for(int pos2 = l2; pos2 < h2; pos2++) {
+			int ml = GetMatchLen(s1 + pos1, s2 + pos2, min(h1 - pos1, h2 - pos2));
+			if(ml >= matchlen) {
+				p1 = pos1;
+				p2 = pos2;
+				matchlen = ml;
+			}
+		}
+	
+	if(matchlen) {
+		for(int i = 0; i < matchlen; i++)
+			hln[p1 + i].paper = eq_color;
+
+		if(++depth < 20) {
+			LineDiff(hln, eq_color, s1, l1, p1, s2, l2, p2, depth);
+			LineDiff(hln, eq_color, s1, p1 + matchlen, h1, s2, p2 + matchlen, h2, depth);
+		}
+	}
+}
+
 void TextCompareCtrl::Paint(Draw& draw)
 {
 	Point sc = scroll.Get();
@@ -216,13 +253,15 @@ void TextCompareCtrl::Paint(Draw& draw)
 		draw.DrawRect(gx, ty, 2, by - ty, Black);
 		draw.DrawRect(gx + gutter_width - 2, ty, 2, by - ty, Black);
 	}
+	
+	Color diffpaper = Blend(LtRed(), White(), 192);
 
 	int n_width = show_line_number ? number_width : 0;
 	if(show_line_number) {
 		for(int i = first_line; i <= last_line; i++) {
 			const Line& l = lines[i];
 			int y = i * letter.cy - offset.cy;
-			Color paper = IsNull(l.number) ? LtGray() : l.diff ? l.left ? Blend(LtRed(), White(), 230) : Blend(LtGreen(), White(), 230) : SColorPaper();
+			Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : SColorPaper();
 			Color ink = l.diff ? l.left ? Red(): Green() : Gray();
 			draw.DrawRect(0, y, n_width, letter.cy, paper);
 			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
@@ -238,13 +277,13 @@ void TextCompareCtrl::Paint(Draw& draw)
 		const Line& l = lines[i];
 		int y = i * letter.cy - offset.cy;
 		Color ink = SColorText();
-		Color paper = IsNull(l.number) ? LtGray() : l.diff ? l.left ? Blend(LtRed(), White(), 230) : Blend(LtGreen(), White(), 230) : SColorPaper();
+		Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : SColorPaper();
 		bool sel = l.number >= sell && l.number <= selh;
 		if(sel) {
 			ink = SColorHighlightText;
 			paper = SColorHighlight;
 		}
-		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
+		draw.DrawRect(0, y, sz.cx, letter.cy, l.text.GetCount() && l.text_diff.GetCount() ? SColorPaper() : paper);
 
 		WString ln = l.text.ToWString();
 		if(ln.GetCount() > 20000)
@@ -254,7 +293,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 		hln.SetCount(ln.GetCount() + 1);
 		for(int i = 0; i < ln.GetCount(); i++) {
 			LineEdit::Highlight& h = hln[i];
-			h.paper = paper;
+			h.paper = diffpaper;
 			h.ink = ink;
 			h.chr = ln[i];
 			h.font = StdFont();
@@ -263,30 +302,17 @@ void TextCompareCtrl::Paint(Draw& draw)
 		if(!sel) {
 			WhenHighlight(hln, ln);
 
-			WString ln_diff = l.text_diff.ToWString();
-			ln_diff = ExpandTabs(ln_diff);
-
-			int diff_start = -1, diff_end = -1;
 			for(int i = 0; i < ln.GetCount(); ++i) {
 				LineEdit::Highlight& h = hln[i];
 				if (change_paper_color)
 					h.paper = paper;
-				if(show_diff_highlight
-					&& (diff_start == -1)
-					&& (i < ln_diff.GetCount() && (h.chr != ln_diff[i])))
-					diff_start = i;
 			}
-			if(show_diff_highlight && (diff_start >= 0)) {
-				for(int i = ln.GetCount(), j = ln_diff.GetCount(); i >= 0 && j >=0; --i, --j) {
-					if(ln[i] != ln_diff[j]) {
-						diff_end = i;
-						break;
-					}
-				}
-				for(int i = diff_start; i <= diff_end; ++i) {
-					LineEdit::Highlight& h = hln[i];
-					h.paper = l.left ? Blend(LtRed(), White(), 192) : Blend(LtGreen(), White(), 128);
-				}
+			if(show_diff_highlight) {
+				WString ln_diff = l.text_diff.ToWString();
+				ln_diff = ExpandTabs(ln_diff);
+				if(ln_diff.GetCount() * ln.GetCount() < 50000)
+					LineDiff(hln, SColorPaper(),
+					         ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
 			}
 			if(show_white_space) {
 				for(int i = ln.GetCount(); i >= 0; --i) {
