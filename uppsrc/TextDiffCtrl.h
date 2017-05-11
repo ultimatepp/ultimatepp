@@ -225,7 +225,9 @@ class DirDiffDlg : public TopWindow {
 	Button                     compare;
 	Label                      info;
 	
-	Option removed, added, modified;
+	Option                     removed, added, modified;
+	EditString				   find;
+	Button					   clearFind;
 
 	FrameTop<ParentCtrl>       left, right;
 	EditString                 lfile, rfile;
