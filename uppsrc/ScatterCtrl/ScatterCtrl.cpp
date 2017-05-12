@@ -184,7 +184,11 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int v
 	case CONTEXT_MENU:		if(showContextMenu && !down)
 								MenuBar::Execute(THISBACK(ContextMenu));
 							break;
-	case NO_ACTION:;
+	case NO_ACTION:
+	case SCROLL_LEFT:
+	case SCROLL_RIGHT:
+	case SCROLL_UP:
+	case SCROLL_DOWN:;
 	}
 }
 
@@ -199,7 +203,11 @@ void ScatterCtrl::DoKeyAction(ScatterAction action)
 	case SCROLL_RIGHT:	ScatterDraw::Scroll(-0.2, 0); 		break;
 	case SCROLL_UP:		ScatterDraw::Scroll(0, -0.2); 		break;
 	case SCROLL_DOWN:	ScatterDraw::Scroll(0, 0.2); 		break;
-	case NO_ACTION:;
+	case NO_ACTION: 
+	case SCROLL:
+	case SHOW_COORDINATES:
+	case ZOOM_WINDOW:
+	case CONTEXT_MENU:;
 	}	
 }
 
