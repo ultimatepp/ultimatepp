@@ -1993,6 +1993,36 @@ void SystemSignature::Load() {
 	netAdapters = GetAdapterInfo();	
 }
 
+
+String Serial_ReorderInPairs(String input) {
+	String ret;
+	for (int i = 0; i < input.GetCount(); i += 2)
+		ret << char(input[i + 1]) << char(input[i]);
+	return ret;
+}
+
+String Serial_HexToStr(String input) {
+	return TrimBoth(HexDecode(input));
+}
+
+bool Serial_Check(String hdSerial, String other_hdSerial) {
+	Vector<String> list, otherList;
+	String toStr = Serial_HexToStr(hdSerial);
+	list << hdSerial << Serial_ReorderInPairs(hdSerial) << toStr << Serial_ReorderInPairs(toStr);
+	String toStrOther = Serial_HexToStr(other_hdSerial);
+	otherList << other_hdSerial << Serial_ReorderInPairs(other_hdSerial) << toStrOther << Serial_ReorderInPairs(toStrOther);
+	
+	// Check them all
+	bool hdSerialMatch = false;
+	for (int i = 0; i < list.GetCount(); ++i) {
+		for (int j = 0; j < otherList.GetCount(); ++j) 
+			if (list[i] == otherList[j]) 
+				return true;
+	}
+	return false;
+}
+				
+
 bool SystemSignature::operator==(const SystemSignature &other) const {
 //	if (!(manufacturer == other.manufacturer && productName == other.productName))
 //		return false;		// Manufacturers do change manufacturer name and product name...
@@ -2002,15 +2032,12 @@ bool SystemSignature::operator==(const SystemSignature &other) const {
 		  userName == other.userName))
 		return false;
 	
-	if (hdSerial != other.hdSerial) {	// Check error reported in at least Windows Vista and 7
-		if (Odd(hdSerial.GetCount()))		
+	// hdSerial check
+	if (Odd(hdSerial.GetCount()))		
 			return false;
-		String reOrderedHdSerial;
-		for (int i = 0; i < hdSerial.GetCount(); i += 2)
-			reOrderedHdSerial << char(hdSerial[i + 1]) << char(hdSerial[i]);
-		if (reOrderedHdSerial != other.hdSerial)
-			return false;	
-	}
+	
+	if (!Serial_Check(hdSerial, other.hdSerial))
+		return false;				
 	
 	for (int i = 0; i < netAdapters.GetCount(); ++i) {
 		if (TrimBoth(netAdapters[i].mac).IsEmpty())
