@@ -4,8 +4,7 @@ uses
 	Esc,
 	plugin/bz2,
 	plugin/lzma,
-	plugin/lz4,
-	plugin/zstd;
+	plugin/lz4;
 
 file
 	Core.h options(BUILDER_OPTION) PCH,
