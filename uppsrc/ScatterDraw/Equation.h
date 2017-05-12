@@ -171,6 +171,31 @@ public:
 		}
 	}
 };
+
+class DampedSinEquation : public ExplicitEquation {
+public:
+	DampedSinEquation() 					{coeff.Clear();	coeff << 0. << 0.1 << 0.1 << 0.1 << 0.1;}
+	DampedSinEquation(double offset, double A, double lambda, double w, double phi) {Init(offset, A, lambda, w, phi);}
+	void Init(double offset, double A, double lambda, double w, double phi) 	{coeff.Clear();	coeff << offset << A << lambda << w << phi;}
+	double f(double x)				{return coeff[0] + coeff[1]*exp(-coeff[2]*x)*cos(coeff[3]*x + coeff[4]);}
+	virtual String GetName() 		{return t_("DampedSinusoidal");}
+	virtual String GetEquation(int numDigits = 3) {
+		String ret = Format("%s + %s*e^(-%s*t)*cos(%s*t + %s)", FormatCoeff(0, numDigits), 
+			FormatCoeff(1, numDigits), FormatCoeff(2, numDigits), FormatCoeff(3, numDigits), FormatCoeff(4, numDigits));
+		ret.Replace("+ -", "- ");
+		return ret;
+	}													
+	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &series)	{
+		coeff[0] = series.AvgY();	
+		coeff[2] = series.SinEstim_Amplitude(coeff[0]);
+		double frequency, phase;
+		if (series.SinEstim_FreqPhase(frequency, phase, coeff[0])) {
+			coeff[3] = frequency;
+			coeff[4] = phase;
+		}
+	}
+};
 	
 class FourierEquation : public ExplicitEquation {
 public:

@@ -452,10 +452,10 @@ Vector<Pointf> FFTSimple(VectorXd &data, double tSample, bool frequency, int typ
 					else
 						res << Pointf(xdata, 0);
 					break;
-			case DataSource::T_FFT:		
+			case DataSource::T_FFT:		// Amplitude spectrum
 					res << Pointf(xdata, 2*std::abs(freqbuf[i])/numDataFact);		break;
-			case DataSource::T_PSD:		
-					res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(numDataFact/tSample));
+			case DataSource::T_PSD:		// Variance density spectrum
+					res << Pointf(xdata, 2*sqr(std::abs(freqbuf[i]))/(numDataFact/tSample)); // 1/2*FFT^2
 			}
     	}
     } else {
@@ -465,7 +465,7 @@ Vector<Pointf> FFTSimple(VectorXd &data, double tSample, bool frequency, int typ
 			switch (type) {
 			case DataSource::T_PHASE:	
 					if (std::abs(freqbuf[i]) > threshold) 
-						res << Pointf(xdata, std::arg(freqbuf[i]));				
+						res << Pointf(xdata, std::arg(freqbuf[i]));
 					else
 						res << Pointf(xdata, 0);
 					break;
