@@ -51,6 +51,12 @@ esES("Seno")
 euES("")
 frFR("")
 
+T_("DampedSinusoidal")
+caES("")
+esES("SinusoidalAmortiguada")
+euES("")
+frFR("")
+
 T_("Fourier")
 caES("")
 esES("")

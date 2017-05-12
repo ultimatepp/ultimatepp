@@ -437,6 +437,7 @@ INITBLOCK {
 	ExplicitEquation::Register<PolynomialEquation4>("PolynomialEquation4");
 	ExplicitEquation::Register<PolynomialEquation5>("PolynomialEquation5");
 	ExplicitEquation::Register<SinEquation>("SinEquation");
+	ExplicitEquation::Register<DampedSinEquation>("DampedSinusoidal");
 	ExplicitEquation::Register<ExponentialEquation>("ExponentialEquation");
 	ExplicitEquation::Register<RealExponentEquation>("RealExponentEquation");
 	ExplicitEquation::Register<Rational1Equation>("Rational1Equation");
