@@ -4,7 +4,7 @@ namespace Upp {
 
 NDKBuild::NDKBuild(const String& path)
 	: path(path)
-	, jobs(jobs)
+	, jobs(0)
 	, verbose(false)
 {
 }
