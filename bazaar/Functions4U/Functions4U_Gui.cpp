@@ -65,8 +65,10 @@ bool SaveImage(const Image &img, int qualityBpp, const String &fileName, String 
 	    JPGEncoder jpg;	    
 	    if (IsNull(qualityBpp))
 	        qualityBpp = 85;
-	    else if (qualityBpp > 100)
-	        qualityBpp = 100;		// Max 100
+	    else {
+	    	if (qualityBpp > 100)
+	        	qualityBpp = 100;		// Max 100
+	    }
 		jpg.Quality(qualityBpp);	
 		jpg.SaveFile(fileName, img);
 	} else if (ext == ".gif") {

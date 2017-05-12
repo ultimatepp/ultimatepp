@@ -7,11 +7,12 @@ NAMESPACE_UPP
 Array<StaticPlugin::PluginData>& StaticPlugin::Plugins() {
 	static Array<PluginData> x;
 	return x;
-};
+}
 
 StaticPlugin::StaticPlugin() {
 	data = 0;
 }
+
 StaticPlugin::~StaticPlugin() {
 	End();
 }

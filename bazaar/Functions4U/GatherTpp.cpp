@@ -109,7 +109,6 @@ struct GatherLinkIterator : RichText::Iterator {
 			if(!IsNull(l)) {
 				if(l[0] == ':') {
 					int q = reflink->Find(l);
-					int w = q;
 					if(q < 0)
 						q = reflink->Find(l + "::class");
 					if(q < 0)
@@ -193,8 +192,6 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 	String path = links.GetKey(i);
 	
 	String text = GetText(path);
-	int h;
-	h = ParseQTF(tt[i].text).GetHeight(1000);
 	
 	String qtflangs;	
 	String strlang;
@@ -202,7 +199,6 @@ void GatherTpp::ExportPage(int i, String htmlFolder, String keywords)
 	String page = tt[i];
 	page = QtfAsHtml(page, css, links, labels, htmlFolder, links[i]);
 	
-	Color paper = SWhite;
 	Color bg = Color(210, 217, 210);
 
 	HtmlsD html;

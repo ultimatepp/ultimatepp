@@ -8,7 +8,7 @@
 NAMESPACE_UPP
 
 inline bool iscidplus(int c) {
-	return iscib(c) || c == '.' || c >= '0' && c <= '9';
+	return iscib(c) || c == '.' || (c >= '0' && c <= '9');
 }
 
 String CParserPlus::ReadIdPlus() throw(Error) {

@@ -761,4 +761,11 @@ the field to loose the focus.&]
 [s5;:Upp`:`:tmGetTimeX`(`):%- [@(0.0.255) double]_[* tmGetTimeX]()&]
 [s2; High resolution clock. Returns time in seconds or Null in case 
 of error.&]
+[s4;%- &]
+[s5;:Upp`:`:Shuffle`(C`&`,int`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[@(0.0.255) v
+oid]_[* Shuffle]([*@4 C]_`&[*@3 data], [@(0.0.255) int]_[*@3 randomSeed]_`=_Null)&]
+[s2; Shuffles Vector [%-*@3 data]. [%-*@3 randomSeed] is the seed for 
+the random number generator.&]
+[s2; If [%-*@3 randomSeed] is Null or not included, a new random seed 
+is used every function call..&]
 [s3; ]]

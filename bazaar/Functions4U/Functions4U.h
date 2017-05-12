@@ -12,6 +12,7 @@
 #include <Functions4U/SvgColors.h>
 #include "StaticPlugin.h"
 #include "LocalProcess2.h"
+#include <random>
 
 NAMESPACE_UPP
 
@@ -794,7 +795,33 @@ private:
 	T val;
 };
 
+template <class C>
+static void ShuffleAscending(C &data, std::default_random_engine &generator) {
+	for (int i = 0; i < data.GetCount() - 2; i++) {
+	  	std::uniform_int_distribution<int> distribution(i, data.GetCount() - 1);
+        Swap(data[i], data[distribution(generator)]);
+    }
+}
 
+template <class C>
+static void ShuffleDescending(C &data, std::default_random_engine &generator) {
+	for (int i = data.GetCount() - 1; i > 0; i--) {
+	  	std::uniform_int_distribution<int> distribution(0, i);
+        Swap(data[i], data[distribution(generator)]);
+    }
+}
+
+template <class C>
+void Shuffle(C &data, int randomSeed = Null) {
+	if (IsNull(randomSeed))	{
+		std::random_device rd;
+		randomSeed = rd();
+	}
+	std::mt19937 generator(randomSeed);
+  
+	ShuffleAscending(data, generator);
+	ShuffleDescending(data, generator);	
+}
 
 END_UPP_NAMESPACE
 
