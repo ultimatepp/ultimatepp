@@ -63,6 +63,8 @@ Bar::Item& ToolBar::AddItem(Event<> cb)
 	m.SetStyle(style->buttonstyle);
 	m.NoDarkAdjust(nodarkadjust);
 	m.Enable(true).Check(false).Bar::Item::Key((dword)0);
+	m.Text("");
+	m.Tip("");
 	m.ClearInfo();
 	pane.Add(&m, Null);
 	return m;
