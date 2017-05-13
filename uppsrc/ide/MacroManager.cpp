@@ -42,7 +42,6 @@ Image MacroElement::GetImage(Type type)
 		case(Type::UNKNOWN):
 			return Image();
 	}
-	return Image();
 }
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
@@ -82,6 +81,8 @@ private:
 	static String ReadArgs(CParser& parser);
 	static String ReadKeyDesc(CParser& parser);
 	
+	static String GenFileOverrideMessage(const String& fileName);
+	
 private:
 	// TODO: MacroManager shold not depend upon Ide instance.
 	// The edit logic should be outside class the same as load macros.
@@ -89,14 +90,13 @@ private:
 	
 	TreeCtrl      macrosTree;
 	SplitterFrame splitter;
-	
 	CodeEditor    editor;
 };
 
 MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	: ide(ide)
 {
-	CtrlLayout(*this, "Macro Manager");
+	CtrlLayout(*this, t_("Macro Manager"));
 	Zoomable().Sizeable().MinimizeBox(false);
 	macrosTree.NoRoot();
 	
@@ -140,6 +140,7 @@ void MacroManagerWindow::Layout()
 
 void MacroManagerWindow::OnMacroSel()
 {
+	
 	if(!macrosTree.IsCursor()) {
 		editor.Hide();
 		editButton.Disable();
@@ -151,7 +152,10 @@ void MacroManagerWindow::OnMacroSel()
 	if(IsNumber(key)) {
 		editor.Hide();
 		editButton.Disable();
-		exportButton.Enable();
+		
+		int node = macrosTree.Find(key);
+		exportButton.Enable(macrosTree.GetChildCount(node) > 0);
+		
 		return;
 	}
 
@@ -164,7 +168,7 @@ void MacroManagerWindow::OnMacroSel()
 	macroContent << element.prototype <<  element.code;
 
 	editButton.Enable();
-	exportButton.Enable();
+	exportButton.Disable();
 	editor.Show();
 	editor.Set(macroContent);
 }
@@ -172,22 +176,21 @@ void MacroManagerWindow::OnMacroSel()
 void MacroManagerWindow::OnImport()
 {
 	String filePath = SelectFileOpen("*.usc");
-
 	if(IsNull(filePath))
 		return;
-
-	String newFilePath = AppendFileName(GetLocalDir(), GetFileName(filePath));
-
-	RealizeDirectory(GetLocalDir());
-	if(!DirectoryExists(GetLocalDir())) {
-		Loge() << METHOD_NAME << "Realize directory \"" << GetLocalDir() << "\" failed.";
-		return;
+	
+	{
+		String localDir = GetLocalDir();
+		if(!DirectoryExists(localDir) && !RealizeDirectory(localDir)) {
+			ErrorOK(DeQtf(String(t_("Realizing directory")) << " \"" << localDir << "\" " << t_("failed.")));
+			return;
+		}
 	}
 	
-	if(FileExists(newFilePath)) {
-		if(!PromptYesNo(DeQtf(newFilePath << " : Target file aready exists! Do you want to overwrite it?")))
-			return;
-	}
+	String newFileName = GetFileName(filePath);
+	String newFilePath = LocalPath(newFileName);
+	if(FileExists(newFilePath) && !PromptYesNo(DeQtf(GenFileOverrideMessage(newFileName))))
+		return;
 
 	FileCopy(filePath, newFilePath);
 	ReloadGlobalMacros();
@@ -196,15 +199,14 @@ void MacroManagerWindow::OnImport()
 
 void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
 {
-	for(const String& file : files)
-	{
-		String newFilePath = AppendFileName(dir, GetFileName(file));
-		if(FileExists(newFilePath)) {
-			if(!PromptYesNo(DeQtf(newFilePath << " : Target file aready exists! Do you want to overwrite it?")))
-				continue;
-		}
+	for(const String& file : files) {
+		String fileName = GetFileName(file);
+		String filePath = AppendFileName(dir, GetFileName(file));
 		
-		FileCopy(file, newFilePath);
+		if(FileExists(filePath) && !PromptYesNo(DeQtf(GenFileOverrideMessage(fileName))))
+			continue;
+		
+		FileCopy(file, filePath);
 	}
 }
 
@@ -212,11 +214,9 @@ void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
 {
 	Value key = macrosTree.Get(id);
 	if(IsNumber(key)) {
-		for(int i = 0; i < macrosTree.GetChildCount(id); i++)
-		{
-			int n = macrosTree.GetChild(id, i);
-			Value k = macrosTree.Get(n);
-			FindNodeFiles(n, list);
+		for(int i = 0; i < macrosTree.GetChildCount(id); i++) {
+			int node = macrosTree.GetChild(id, i);
+			FindNodeFiles(node, list);
 		}
 	}
 	else {
@@ -235,23 +235,11 @@ void MacroManagerWindow::OnExport()
 		return;
 
 	Value key = macrosTree.Get();
-	
 	if(IsNumber(key)) {
 		int id = macrosTree.GetCursor();
 		Index<String> list;
 		FindNodeFiles(id, list);
 		ExportFiles(list, dir);
-	}
-	else {
-		String fileName = ValueTo<MacroElement>(key).fileName;
-		String newFilePath = AppendFileName(dir, GetFileName(fileName));
-		
-		if(FileExists(newFilePath)) {
-			if(!PromptYesNo(DeQtf(newFilePath << " : Target file aready exists! Do you want to overwrite it?")))
-				return;
-		}
-		
-		FileCopy(fileName, newFilePath);
 	}
 }
 
@@ -419,6 +407,11 @@ String MacroManagerWindow::ReadKeyDesc(CParser& parser)
 	return ret;
 }
 
+String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)
+{
+	return String(t_("Target file")) << " \"" << fileName << "\" " << t_("already exists! Do you want to overwrite it?");
+}
+
 void MacroManagerWindow::LoadUscDir(const String& dir, MacroList& store)
 {
 	for(FindFile ff(AppendFileName(dir, "*.usc")); ff; ff.Next())
@@ -454,10 +447,12 @@ void MacroManagerWindow::ReloadGlobalMacros()
 	String file;
 	int fileNode = -1;
 	for(const auto& element : global) {
-		if(!file.IsEqual(element.fileName))
-		{
+		if(!file.IsEqual(element.fileName)) {
 			file = element.fileName;
-			fileNode = macrosTree.Add(globalNode, Image(), 3, file.Mid(configFolderNameLength));
+			String fileTitle = file.Mid(configFolderNameLength);
+			if(!fileTitle.TrimStart(String() << "UppLocal" << DIR_SEPS))
+				fileTitle = "../" + fileTitle;
+			fileNode = macrosTree.Add(globalNode, Image(), 3, fileTitle);
 		}
 			
 		macrosTree.Add(fileNode, MacroElement::GetImage(element.type), RawToValue(element), element.name);
