@@ -5,7 +5,7 @@
 #include <plugin/bz2/bz2.h>
 #include <plugin/lz4/lz4.h>
 #include <plugin/lzma/lzma.h>
-// #include <plugin/zstd/zstd.h>
+#include <plugin/zstd/zstd.h>
 
 #include "Logger.h"
 

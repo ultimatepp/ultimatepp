@@ -42,6 +42,7 @@ Image MacroElement::GetImage(Type type)
 		case(Type::UNKNOWN):
 			return Image();
 	}
+	return Image();
 }
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
