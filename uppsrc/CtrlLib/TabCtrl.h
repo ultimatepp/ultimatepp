@@ -51,6 +51,8 @@ public:
 		const Ctrl    *GetSlave() const                 { return slave; }
 		Ctrl          *GetCtrl()                        { return ctrl; }
 		const Ctrl    *GetCtrl() const                  { return ctrl; }
+		String         GetText() const                  { return text; }
+		PaintRect      GetPicture() const               { return pict; }
 
 		Item();
 
