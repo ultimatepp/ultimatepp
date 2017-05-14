@@ -50,6 +50,8 @@ public:
 	void   SkipFile()             { current++; }
 	bool   ReadFile(Stream& out, Gate<int, int> progress = Null);
 	String ReadFile(Gate<int, int> progress = Null);
+
+	String ReadFile(const char *path, Gate<int, int> progress = Null);
 	
 	dword  GetPos() const;
 
