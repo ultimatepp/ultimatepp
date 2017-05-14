@@ -295,6 +295,23 @@ void ArrayCtrl::SetDisplay(int i, int j, const Display& d)
 	RefreshRow(i);
 }
 
+void ArrayCtrl::SetRowDisplay(int i, const Display& d)
+{
+	if(i >= 0 && i < GetCount())
+		for (int j = 0 ; j < GetColumnCount(); j++)
+			this->cellinfo.At(i).At(j).Set(d);
+	RefreshRow(i);
+}
+
+void ArrayCtrl::SetColumnDisplay(int j, const Display& d)
+{
+	if(j >= 0 && j < GetColumnCount())
+		for (int i = 0 ; i < GetCount(); i++) {
+			this->cellinfo.At(i).At(j).Set(d);
+			RefreshRow(i);
+		}
+}
+
 const Display& ArrayCtrl::GetDisplay(int i, int j)
 {
 	if(i < cellinfo.GetCount() && j < cellinfo[i].GetCount() && cellinfo[i][j].IsDisplay())
