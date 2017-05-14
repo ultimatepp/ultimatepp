@@ -4,7 +4,7 @@
 #include <Core/Core.h>
 
 #define ZSTD_STATIC_LINKING_ONLY
-#include "common/zstd.h"
+#include "lib/zstd.h"
 
 namespace Upp {
 
