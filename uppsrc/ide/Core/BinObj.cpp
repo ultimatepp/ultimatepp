@@ -11,8 +11,7 @@ void BinObjInfo::Block::Compress(String& data)
 	case BinObjInfo::Block::ENC_ZIP: data = ZCompress(data); break;
 	case BinObjInfo::Block::ENC_LZ4: data = LZ4Compress(data); break;
 	case BinObjInfo::Block::ENC_LZMA: data = LZMACompress(data); break;
-//	case BinObjInfo::Block::ENC_ZSTD: data = ZstdCompress(data); break; // Postponed until we
-//	have import.ext support in the MakeFile export
+	case BinObjInfo::Block::ENC_ZSTD: data = ZstdCompress(data); break;
 	}
 }
 
