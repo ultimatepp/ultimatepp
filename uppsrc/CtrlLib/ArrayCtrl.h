@@ -559,6 +559,8 @@ public:
 	bool       IsInsert() const                        { return insertmode; }
 
 	void            SetDisplay(int i, int col, const Display& d);
+	void            SetRowDisplay(int i, const Display& d);
+	void            SetColumnDisplay(int j, const Display& d);
 	const Display&  GetDisplay(int row, int col);
 	const Display&  GetDisplay(int col);
 

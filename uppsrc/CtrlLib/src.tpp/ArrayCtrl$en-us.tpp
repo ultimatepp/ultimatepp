@@ -1502,6 +1502,18 @@ or graphical exports from the array control).&]
 [s7; [*C@3 j]-|zero`-based column index&]
 [s7; [*C@3 d]-|display to use&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:SetRowDisplay`(int`,const Upp`:`:Display`&`):%- [@(0.0.255) vo
+id]_[* SetRowDisplay]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^Upp`:`:Display^ Displ
+ay][@(0.0.255) `&]_[*@3 d])&]
+[s2; Sets Display [%-*@3 d] for each cell of line [%-*@3 i].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:SetColumnDisplay`(int`,const Upp`:`:Display`&`):%- [@(0.0.255) v
+oid]_[* SetColumnDisplay]([@(0.0.255) int]_[*@3 j], [@(0.0.255) const]_[_^Upp`:`:Display^ D
+isplay][@(0.0.255) `&]_[*@3 d])&]
+[s2; Sets Display [%-*@3 d] for each cell of column j.&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:GetDisplay`(int`,int`): [@(0.0.255) const]_[_^Display^ Display][@(0.0.255) `&
 ]_[* GetDisplay]([@(0.0.255) int]_[*@3 row], [@(0.0.255) int]_[*@3 col])&]
