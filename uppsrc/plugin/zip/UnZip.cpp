@@ -141,6 +141,17 @@ String UnZip::ReadFile(Gate<int, int> progress)
 	return ReadFile(ss, progress) ? ss.GetResult() : String::GetVoid();
 }
 
+String UnZip::ReadFile(const char *path, Gate<int, int> progress)
+{
+    for(int i = 0; i < file.GetCount(); i++)
+        if(file[i].path == path) {
+            Seek(i);
+            return ReadFile(progress);
+        }
+
+    return String::GetVoid();
+}
+
 void UnZip::Create(Stream& _zip)
 {
 	zip = &_zip;
