@@ -306,6 +306,7 @@ void   InsertPath(EditString *es);
 void   DlSpellerLangs(DropList& dl);
 
 #include "Assist.h"
+#include "MacroManager.h"
 
 void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);

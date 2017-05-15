@@ -1,98 +1,6 @@
 #include "ide.h"
 
-class MacroElement {
-public:
-	enum class Type {
-		MACRO,
-		FUNCTION,
-		UNKNOWN
-	};
-
-public:
-	MacroElement(Type type, const String& fileName, int line, const String& comment);
-	
-	static Image GetImage(Type type);
-	
-public:
-	Type   type;
-	String comment;
-	String name;
-	String prototype;
-	String args;
-	String code;
-	String fileName;
-	int    line;
-};
-
-MacroElement::MacroElement(Type type, const String& fileName, int line, const String& comment)
-	: type(type)
-	, comment(comment)
-	, fileName(fileName)
-	, line(line)
-{}
-
-Image MacroElement::GetImage(Type type)
-{
-	switch(type)
-	{
-		case(Type::MACRO):
-			return IdeImg::Macro();
-		case(Type::FUNCTION):
-			return IdeImg::Fn();
-		case(Type::UNKNOWN):
-			return Image();
-	}
-	return Image();
-}
-
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
-
-using MacroList = Array<MacroElement>;
-
-class MacroManagerWindow final : public WithMacroManagerLayout<TopWindow> {
-	using MacroStore = ArrayMap<String, Array<MacroElement>>;
-	
-public:
-	MacroManagerWindow(Ide& ide);
-
-	void Layout() override;
-
-private:
-	void InitButtons();
-	
-	MacroList LoadUscFile(const String& fileName);
-	void LoadUscDir(const String& dir, MacroList& store);
-	void LoadMacros();
-	void ReloadGlobalMacros();
-	void ReloadLocalMacros();
-
-	void OnMacroSel();
-	void OnImport();
-	void OnExport();
-	void OnEditFile();
-
-	void ExportFiles(Index<String>& files, const String& dir);
-	void FindNodeFiles(int id, Index<String>& list);
-
-	void ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list);
-	void ReadMacro(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list);
-	void FinishRead(CParser& parser, const char* prototypeBegin, MacroElement& element, MacroList& list);
-
-private:
-	static String ReadArgs(CParser& parser);
-	static String ReadKeyDesc(CParser& parser);
-	
-	static String GenFileOverrideMessage(const String& fileName);
-	
-private:
-	// TODO: MacroManager shold not depend upon Ide instance.
-	// The edit logic should be outside class the same as load macros.
-	Ide&          ide;
-	
-	TreeCtrl      macrosTree;
-	SplitterFrame splitter;
-	CodeEditor    editor;
-};
 
 MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	: ide(ide)
@@ -262,152 +170,6 @@ void MacroManagerWindow::OnEditFile()
 	Break();
 }
 
-static void FindNext(CParser& parser)
-{
-	while(!parser.IsEof() && !parser.IsId("fn") && !parser.IsId("macro"))
-		parser.SkipTerm();
-}
-
-void MacroManagerWindow::ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list)
-{
-	String fileName = parser.GetFileName();
-	MacroElement fn(MacroElement::Type::FUNCTION, fileName, parser.GetLine(), comment);
-	
-	if(!parser.IsId()) {
-		FindNext(parser);
-		return;
-	}
-	fn.name = parser.ReadId();
-	if(!parser.Char('(')) {
-		FindNext(parser);
-		return;
-	}
-	fn.args = ReadArgs(parser);
-	
-	FinishRead(parser, prototypeBegin, fn, list);
-}
-
-void MacroManagerWindow::ReadMacro(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list)
-{
-	String fileName = parser.GetFileName();
-	MacroElement macro(MacroElement::Type::MACRO, fileName, parser.GetLine(), comment);
-	
-	if(!parser.IsString()) {
-		FindNext(parser);
-		return;
-	}
-	macro.name = String() << (parser.IsString() ? parser.ReadString() : "");
-	if(parser.Char(':')) {
-		if(!parser.IsString()) {
-			FindNext(parser);
-			return;
-		}
-
-		macro.name << " : " << (parser.IsString() ? parser.ReadString() : "");
-	}
-	if (!parser.IsChar('{'))
-		ReadKeyDesc(parser);
-
-	FinishRead(parser, prototypeBegin, macro, list);
-}
-
-void MacroManagerWindow::FinishRead(CParser& parser, const char* prototypeBegin, MacroElement& element, MacroList& list)
-{
-	const char* bodyBegin = parser.GetPtr();
-
-	element.prototype = String(prototypeBegin, bodyBegin);
-	
-	if (!parser.Char('{')) {
-		FindNext(parser);
-		return;
-	}
-
-	Upp::SkipBlock(parser);
-
-	if(parser.GetSpacePtr() > bodyBegin)
-		element.code = String(bodyBegin, parser.GetSpacePtr());
-
-	list.Add(element);
-}
-
-MacroList MacroManagerWindow::LoadUscFile(const String& fileName)
-{
-	MacroList ret;
-	String fileContent = LoadFile(fileName);
-	if(fileContent.IsEmpty()) {
-		Logw() << METHOD_NAME << "Following file \"" << fileName << "\" doesn't exist or is empty.";
-		return ret;
-	}
-
-	try {
-		CParser parser(fileContent, fileName);
-		
-		while (!parser.IsEof()) {
-			String comment = TrimLeft(String(parser.GetSpacePtr(), parser.GetPtr()));
-
-			if (!parser.IsId())
-				return ret;
-			
-			const char* prototypeBegin = parser.GetPtr();
-			String id = parser.ReadId();
-			
-			if(id.IsEqual("fn"))
-				ReadFunction(parser, comment, prototypeBegin, ret);
-			else
-			if(id.IsEqual("macro"))
-				ReadMacro(parser, comment, prototypeBegin, ret);
-			else
-				return ret;
-		}
-	}
-	catch (const CParser::Error& error) {
-		Logw() << METHOD_NAME << "Parsing file \"" << fileName << "\" failed with error: " << error << ".";
-	}
-	
-	return ret;
-}
-
-String MacroManagerWindow::ReadArgs(CParser& parser)
-{
-	int level = 1;
-	parser.Char('(');
-	
-	String ret = "(";
-	while(level > 0 && !parser.IsEof()) {
-		if (parser.Char('('))
-			level++;
-		else
-		if (parser.Char(')'))
-			level--;
-		else
-			ret << parser.GetChar();
-	}
-	ret << ")";
-
-	return ret;
-}
-
-String MacroManagerWindow::ReadKeyDesc(CParser& parser)
-{
-	if(!parser.IsId())
-		return String();
-
-	String ret = parser.ReadId();
-
-	while(!parser.IsEof() && parser.Char('+')) {
-		if(parser.IsId())
-			ret << "+" << parser.ReadId();
-
-		else
-		if(parser.IsNumber())
-			ret << "+" << parser.ReadInt();
-		else
-			break;
-	}
-
-	return ret;
-}
-
 String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)
 {
 	return String(t_("Target file")) << " \"" << fileName << "\" " << t_("already exists! Do you want to overwrite it?");
@@ -417,7 +179,7 @@ void MacroManagerWindow::LoadUscDir(const String& dir, MacroList& store)
 {
 	for(FindFile ff(AppendFileName(dir, "*.usc")); ff; ff.Next())
 	{
-		MacroList list = LoadUscFile(AppendFileName(dir, ff.GetName()));
+		auto list = UscFileParser(AppendFileName(dir, ff.GetName())).Parse();
 		if(list.GetCount())
 			store.AppendRange(list);
 	}
@@ -475,7 +237,7 @@ void MacroManagerWindow::ReloadLocalMacros()
 			if (ToLower(GetFileExt(filePath)) != ".usc")
 				continue;
 				
-			MacroList list = LoadUscFile(filePath);
+			auto list = UscFileParser(filePath).Parse();
 			if (list.GetCount() == 0)
 				continue;
 			
@@ -490,8 +252,6 @@ void MacroManagerWindow::ReloadLocalMacros()
 		}
 	}
 }
-
-#undef METHOD_NAME
 
 void Ide::DoMacroManager()
 {
