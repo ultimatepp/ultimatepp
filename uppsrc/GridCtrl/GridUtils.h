@@ -40,7 +40,9 @@ inline int32 Round(double a)
 #ifdef flagDEBUG
 #define LG LogGui
 #else
-#define LG
+inline void LG_Dummy_Nop__(int level, const char *fmt, ...) {} // needed to silence CLANG warnings
+inline void LG_Dummy_Nop__(const char *fmt, ...) {} // about unused value
+#define LG LG_Dummy_Nop__
 #endif
 #define LGR LogGui
 
