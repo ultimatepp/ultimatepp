@@ -67,8 +67,9 @@ function that calls [* Xmlize ]method for [%-*@3 var] with new XmlIO
 as parameter `- that way the [* Xmlize ]can be defined either as 
 global template function specializastion for [%-*@4 T] or as method 
 of [%-*@4 T] (usually easier, but not always possible). [%-*@3 def] 
-parameter can be used to provide default value when retrieving 
-data from XML fails.&]
+parameter can be used to provide default value when there is 
+no corresponding tag on loading. Variant without [%-*@3 def] leaves 
+[%-*@3 var] unchanged in this case.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:XmlIO`:`:List`(const char`*`,const char`*`,T`&`,const D`&`): [@(0.0.255) te
@@ -88,7 +89,10 @@ the [* Xmlize ]can be defined either as global template function
 specializastion for [%-*@4 T] or as method of [%-*@4 T] (usually 
 easier, but not always possible). [%-*@3 itemtag] is additional 
 parameter that can be used as name of embeded tags when collections 
-of items are Xmlized. &]
+of items are Xmlized. [%-*@3 def] parameter can be used to provide 
+default value when there is no corresponding tag on loading. 
+Variant without [%-*@3 def] leaves [%-*@3 var] unchanged in this 
+case.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:XmlIO`:`:Attr`(const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
