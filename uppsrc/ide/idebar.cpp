@@ -602,7 +602,8 @@ void Ide::BrowseMenu(Bar& menu)
 				.Check(editor.IsNavigator())
 				.Enable(!designer);
 			menu.Add(AK_GOTO, THISBACK(SearchCode))
-				.Enable(!designer);
+				.Enable(!designer)
+				.Help("Go to given line");
 			menu.Add(AK_GOTOGLOBAL, THISBACK(NavigatorDlg));
 			menu.Add(!designer, AK_JUMPS, THISBACK(ContextGoto));
 			menu.Add(!designer, AK_SWAPS, THISBACK(SwapS));
