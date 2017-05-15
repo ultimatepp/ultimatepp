@@ -32,8 +32,8 @@ public:
 	template <class T> XmlIO operator()(const char *tag, T& var);
 	template <class T> XmlIO List(const char *tag, const char *itemtag, T& var);
 
-	template <class T> XmlIO operator()(const char *tag, T& var, const T& def);
-	template <class T> XmlIO List(const char *tag, const char *itemtag, T& var, const T& def);
+	template <class T, class D> XmlIO operator()(const char *tag, T& var, const D& def);
+	template <class T, class D> XmlIO List(const char *tag, const char *itemtag, T& var, const D& def);
 
 	template <class T> XmlIO Attr(const char *id, T& var) {
 		if(IsLoading())
@@ -43,7 +43,7 @@ public:
 		return *this;
 	}
 
-	template <class T> XmlIO Attr(const char *id, T& var, T def) {
+	template <class T, class D> XmlIO Attr(const char *id, T& var, const D& def) {
 		if(IsLoading())
 		    if(IsNull(node.Attr(id)))
 				var = def;
@@ -92,7 +92,7 @@ template <class T> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& va
 	return *this;
 }
 
-template <class T> XmlIO XmlIO::operator()(const char *tag, T& var, const T& def)
+template <class T, class D> XmlIO XmlIO::operator()(const char *tag, T& var, const D& def)
 {
 	XmlIO n(*this, tag);
 	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
@@ -102,7 +102,7 @@ template <class T> XmlIO XmlIO::operator()(const char *tag, T& var, const T& def
 	return *this;
 }
 
-template <class T> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& var, const T& def)
+template <class T, class D> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& var, const D& def)
 {
 	XmlIO n(*this, tag);
 	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
