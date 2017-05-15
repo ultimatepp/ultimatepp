@@ -56,18 +56,29 @@ of attribute of current XmlNode (used when storing data to XML).&]
 [s5;:XmlIO`:`:operator`(`)`(const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class
 ]_[*@4 T]>_[_^XmlIO^ XmlIO]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tag], 
 [*@4 T][@(0.0.255) `&]_[*@3 var])&]
+[s5;:Upp`:`:XmlIO`:`:operator`(`)`(const char`*`,T`&`,const D`&`): [@(0.0.255) template
+]_<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 D]>_[_^Upp`:`:XmlIO^ XmlIO]_[* operato
+r()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tag], [*@4 T][@(0.0.255) `&]_[*@3 var], 
+[@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 def])&]
 [s2;%% Creates subtag of current XmlNode [%-*@3 tag], forms a new XmlIO 
 for it and calls global [* Xmlize ]function with this new XmlIO 
 and [%-*@3 var] as parameters. Common global [* Xmlize ]is a template 
 function that calls [* Xmlize ]method for [%-*@3 var] with new XmlIO 
 as parameter `- that way the [* Xmlize ]can be defined either as 
 global template function specializastion for [%-*@4 T] or as method 
-of [%-*@4 T] (usually easier, but not always possible).&]
+of [%-*@4 T] (usually easier, but not always possible). [%-*@3 def] 
+parameter can be used to provide default value when retrieving 
+data from XML fails.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:XmlIO`:`:operator`(`)`(const char`*`,const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 T]>_[_^XmlIO^ XmlIO]_[* operator()]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 ta
-g], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 itemtag], [*@4 T][@(0.0.255) `&]_[*@3 var])&]
+[s4; &]
+[s5;:Upp`:`:XmlIO`:`:List`(const char`*`,const char`*`,T`&`,const D`&`): [@(0.0.255) te
+mplate]_<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 D]>_[_^Upp`:`:XmlIO^ XmlIO]_[* L
+ist]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 tag], [@(0.0.255) const]_[@(0.0.255) char]_
+`*[*@3 itemtag], [*@4 T][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 d
+ef])&]
+[s5;:Upp`:`:XmlIO`:`:List`(const char`*`,const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[_^Upp`:`:XmlIO^ XmlIO]_[* List]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 t
+ag], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 itemtag], [*@4 T][@(0.0.255) `&]_[*@3 var])&]
 [s2;%% Creates subtag of current XmlNode [%-*@3 tag], forms a new XmlIO 
 for it and calls global [* Xmlize ]function with this new XmlIO, 
 [%-*@3 itemtag] and [%-*@3 var] as parameters. Common global [* Xmlize 
@@ -77,15 +88,16 @@ the [* Xmlize ]can be defined either as global template function
 specializastion for [%-*@4 T] or as method of [%-*@4 T] (usually 
 easier, but not always possible). [%-*@3 itemtag] is additional 
 parameter that can be used as name of embeded tags when collections 
-of items are Xmlized.&]
+of items are Xmlized. &]
 [s3;%% &]
 [s4;%% &]
 [s5;:XmlIO`:`:Attr`(const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
 _[_^XmlIO^ XmlIO]_[* Attr]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
 [*@4 T][@(0.0.255) `&]_[*@3 var])&]
 [s5;:XmlIO`:`:Attr`(const char`*`,T`&`,T`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
-]>_[_^XmlIO^ XmlIO]_[* Attr]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
-[*@4 T][@(0.0.255) `&]_[*@3 var], [*@4 T]_[*@3 def])&]
+], [@(0.0.255) class]_[*@4 D]>_[_^Upp`:`:XmlIO^ XmlIO]_[* Attr]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 id], [*@4 T][@(0.0.255) `&]_[*@3 var], [@(0.0.255) const]_[*@4 D][@(0.0.255) `&]_[*@3 d
+ef])&]
 [s2;%% When retrieving data, calls global function [@(0.0.255) void 
 ][* XmlAttrLoad]([%-*@4 T][%-@(0.0.255) `&][%- _][%-*@3 var], const String`& 
 [* text]) with [* text] set to the value of attribute [%-*@3 id] of 
@@ -96,8 +108,8 @@ of current XmlNode to the result of global function call String
 [* XmlAttrStore]([@(0.0.255) const ][%-*@4 T]`& var). Common global 
 Xmlize is a template function that calls [@(0.0.255) void ][* XmlAttrLoad](const 
 String`& [* text]) method for [%-*@3 var]. [%-*@3 def] parameter can 
-be used to provide default value when retrieving data and XML 
-attribute is empty text. Returns `*this.&]
+be used to provide default value when retrieving data from XML 
+fails. Returns `*this.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:XmlIO`:`:At`(int`): [_^XmlIO^ XmlIO]_[* At]([@(0.0.255) int]_[*@3 i])&]
