@@ -81,6 +81,8 @@ CONSOLE_APP_MAIN
 			int   count = Random(33);
 			
 			a.Set(pos, value, count);
+			
+			ASSERT(a.Get(pos, count) == (value & (count == 32 ? (dword)-1 : (1 << count) - 1)));
 
 			for(int i = 0; i < count; i++)
 				b.Set(pos + i, value & (1 << i));
@@ -100,6 +102,8 @@ CONSOLE_APP_MAIN
 			
 			a.Set64(pos, value, count);
 
+			ASSERT(a.Get64(pos, count) == (value & (count == 64 ? (uint64)-1 : ((uint64)1 << count) - 1)));
+
 			for(int i = 0; i < count; i++)
 				b.Set(pos + i, value & ((uint64)1 << i));
 		}
@@ -116,7 +120,7 @@ CONSOLE_APP_MAIN
 			bool  value = Random(2);
 			int   count = Random(150);
 			
-			a.SetN(pos, count, value);
+			a.SetN(pos, value, count);
 
 			for(int i = 0; i < count; i++)
 				b.Set(pos + i, value);
