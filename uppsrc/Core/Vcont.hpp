@@ -786,7 +786,7 @@ BiArray<T>::BiArray(std::initializer_list<T> init)
 inline
 void   Bits::Set(int i, dword bits, int count)
 {
-	ASSERT(i >= 0 && alloc >= 0 && count >= 0 && count <= 32);
+	ASSERT(i >= 0 && count >= 0 && count <= 32);
 	if(!count) // note: this also avoids problem with (dword)-1 >> 32 being undefined
 		return;
 	int q = i >> 5;
@@ -809,6 +809,26 @@ void   Bits::Set(int i, dword bits, int count)
 }
 
 inline
+dword Bits::Get(int i, int count)
+{
+	ASSERT(i >= 0 && count >= 0 && count <= 32);
+	if(!count) // note: this also avoids problem with (dword)-1 >> 32 being undefined
+		return 0;
+	int q = i >> 5;
+	i &= 31;
+	if(q >= alloc)
+		return 0;
+	if(i == 0 && count == 32)
+		return bp[q];
+	dword mask = (dword)-1 >> (32 - count); // does not work for count == 0
+	dword ret = (bp[q] & (mask << i)) >> i;
+	if(i + count <= 32 || ++q >= alloc)
+		return ret;
+	i = 32 - i;
+	return ret | ((bp[q] & (mask >> i)) << i);
+}
+
+inline
 void Bits::Set64(int i, uint64 bits, int count)
 {
 	if(count > 32) {
@@ -820,9 +840,20 @@ void Bits::Set64(int i, uint64 bits, int count)
 }
 
 inline
-void Bits::SetN(int i, int count, bool b)
+uint64 Bits::Get64(int i, int count)
 {
-	ASSERT(i >= 0 && alloc >= 0);
+	if(count > 32) {
+		dword l = Get(i, 32);
+		return MAKEQWORD(l, Get(i + 32, count - 32));
+	}
+	else
+		return Get(i, count);
+}
+
+inline
+void Bits::SetN(int i, bool b, int count)
+{
+	ASSERT(i >= 0);
 	if(!count) // note: this also avoids problem with (dword)-1 >> 32 being undefined
 		return;
 	

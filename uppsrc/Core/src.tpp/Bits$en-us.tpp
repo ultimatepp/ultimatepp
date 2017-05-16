@@ -35,17 +35,30 @@ onst]&]
 [s5;:Bits`:`:operator`[`]`(int`)const: [@(0.0.255) bool]_[* operator`[`]]([@(0.0.255) int]_
 [*@3 i])_[@(0.0.255) const]&]
 [s2;%% Returns the value of bool [%-*@3 i].&]
+[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Bits`:`:Set`(int`,Upp`:`:dword`,int`): [@(0.0.255) void]_[* Set]([@(0.0.255) in
 t]_[*@3 i], [_^Upp`:`:dword^ dword]_[*@3 bits], [@(0.0.255) int]_[*@3 count])&]
 [s2;%% Sets [%-*@3 count] [%-*@3 bits] ([%-*@3 bits ]LSB is first) starting 
-from [%-*@3 i].&]
+at[%-*@3 i].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:Get`(int`,int`): [_^Upp`:`:dword^ dword]_[* Get]([@(0.0.255) int]_[*@3 i],
+ [@(0.0.255) int]_[*@3 count])&]
+[s2;%% Returns a set of [%-*@3 count ]bits (at most 32) starting at 
+[%-*@3 i], as binary number. First bit is returned as LSB.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Bits`:`:Set64`(int`,Upp`:`:uint64`,int`): [@(0.0.255) void]_[* Set64]([@(0.0.255) i
 nt]_[*@3 i], [_^Upp`:`:uint64^ uint64]_[*@3 bits], [@(0.0.255) int]_[*@3 count])&]
 [s2;%% Sets [%-*@3 count] [%-*@3 bits] ([%-*@3 bits ]LSB is first) starting 
 from [%-*@3 i].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:Get64`(int`,int`): [_^Upp`:`:uint64^ uint64]_[* Get64]([@(0.0.255) int]_
+[*@3 i], [@(0.0.255) int]_[*@3 count])&]
+[s2;%% Returns a set of [%-*@3 count ]bits (at most 64) starting at 
+[%-*@3 i], as binary number. First bit is returned as LSB.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Bits`:`:SetN`(int`,int`,bool`): [@(0.0.255) void]_[* SetN]([@(0.0.255) int]_[*@3 i

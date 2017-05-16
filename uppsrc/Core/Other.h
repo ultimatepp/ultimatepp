@@ -131,8 +131,12 @@ public:
 	bool   operator[](int i) const { return Get(i); }
 
 	void   Set(int i, dword bits, int count);
+	dword  Get(int i, int count);
 	void   Set64(int i, uint64 bits, int count);
-	void   SetN(int i, int count, bool b = true);
+	uint64 Get64(int i, int count);
+
+	void   SetN(int i, bool b, int count);
+	void   SetN(int i, int count)         { SetN(i, count); }
 	
 	void   Reserve(int nbits);
 	void   Shrink();
@@ -150,7 +154,6 @@ public:
 
 	Bits(Bits&& b)                        { alloc = b.alloc; bp = b.bp; b.bp = NULL; }
 	void operator=(Bits&& b)              { if(this != &b) { Clear(); alloc = b.alloc; bp = b.bp; b.bp = NULL; } }
-
 };
 
 //# System dependent
