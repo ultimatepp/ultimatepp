@@ -782,3 +782,78 @@ BiArray<T>::BiArray(std::initializer_list<T> init)
 }
 
 #endif
+
+inline
+void   Bits::Set(int i, dword bits, int count)
+{
+	ASSERT(i >= 0 && alloc >= 0 && count >= 0 && count <= 32);
+	if(!count) // note: this also avoids problem with (dword)-1 >> 32 being undefined
+		return;
+	int q = i >> 5;
+	i &= 31;
+	if(q >= alloc)
+		Expand(q);
+	if(i == 0 && count == 32) {
+		bp[q] = bits;
+		return;
+	}
+	dword mask = (dword)-1 >> (32 - count); // does not work for count == 0
+	bits &= mask;
+	bp[q] = (bp[q] & ~(mask << i)) | (bits << i);
+	if(i + count <= 32)
+		return;
+	if(++q >= alloc)
+		Expand(q);
+	i = 32 - i;
+	bp[q] = (bp[q] & ~(mask >> i)) | (bits >> i);
+}
+
+inline
+void Bits::Set64(int i, uint64 bits, int count)
+{
+	if(count > 32) {
+		Set(i, LODWORD(bits), 32);
+		Set(i + 32, HIDWORD(bits), count - 32);
+	}
+	else
+		Set(i, LODWORD(bits), count);
+}
+
+inline
+void Bits::SetN(int i, int count, bool b)
+{
+	ASSERT(i >= 0 && alloc >= 0);
+	if(!count) // note: this also avoids problem with (dword)-1 >> 32 being undefined
+		return;
+	
+	dword bits = (dword)0 - b;
+
+	int q = i >> 5;
+	i &= 31;
+	if(q >= alloc)
+		Expand(q);
+
+	int n = min(32 - i, count); // number of bits to dword boundary (or count if smaller)
+	dword mask = (dword)-1 >> (32 - n);
+	bp[q] = (bp[q] & ~(mask << i)) | ((bits & mask) << i);
+	count -= n;
+	if(!count)
+		return;
+	
+	int dw_count = count >> 5;
+	if(++q + dw_count >= alloc)
+		Expand(q + dw_count);
+	while(dw_count) {
+		bp[q++] = bits;
+		dw_count--;
+	}
+	
+	count = count & 31; // remaining bits to set
+	if(!count)
+		return;
+	if(q >= alloc)
+		Expand(q);
+	mask = (dword)-1 >> (32 - count);
+	bp[q] = (bp[q] & ~mask) | (bits & mask);
+}
+
