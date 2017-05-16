@@ -39,7 +39,7 @@ Bits RichEdit::SpellParagraph(const RichPara& para)
 			while(s < end && IsLetter(*s) || s + 1 < end && *s == '\'' && IsLetter(s[1]))
 				s++;
 			if(!SpellWord(q, int(s - q), lang[q - text]))
-				e.Set(int(q - text), true, int(s - q));
+				e.SetN(int(q - text), int(s - q));
 		}
 		else
 			s++;
