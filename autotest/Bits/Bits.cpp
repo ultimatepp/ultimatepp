@@ -72,5 +72,59 @@ CONSOLE_APP_MAIN
 		DUMP(x);
 	}
 	
+	{
+		Bits a, b;
+		
+		for(int i = 0; i < 20000; i++) {
+			int   pos = Random(100000);
+			dword value = Random();
+			int   count = Random(33);
+			
+			a.Set(pos, value, count);
+
+			for(int i = 0; i < count; i++)
+				b.Set(pos + i, value & (1 << i));
+		}
+		
+		for(int i = 0; i < 100000; i++)
+			ASSERT(a[i] == b[i]);
+	}
+
+	{
+		Bits a, b;
+
+		for(int i = 0; i < 20000; i++) {
+			int   pos = Random(100000);
+			uint64 value = MAKEQWORD(Random(), Random());
+			int   count = Random(65);
+			
+			a.Set64(pos, value, count);
+
+			for(int i = 0; i < count; i++)
+				b.Set(pos + i, value & ((uint64)1 << i));
+		}
+
+		for(int i = 0; i < 100000; i++)
+			ASSERT(a[i] == b[i]);
+	}
+
+	{
+		Bits a, b;
+
+		for(int i = 0; i < 20000; i++) {
+			int   pos = Random(100000);
+			bool  value = Random(2);
+			int   count = Random(150);
+			
+			a.SetN(pos, count, value);
+
+			for(int i = 0; i < count; i++)
+				b.Set(pos + i, value);
+		}
+
+		for(int i = 0; i < 100000; i++)
+			ASSERT(a[i] == b[i]);
+	}
+	
 	LOG("--------- OK");
 }
