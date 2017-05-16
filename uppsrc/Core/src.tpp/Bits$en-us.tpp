@@ -61,9 +61,14 @@ from [%-*@3 i].&]
 [%-*@3 i], as binary number. First bit is returned as LSB.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:Bits`:`:SetN`(int`,int`,bool`): [@(0.0.255) void]_[* SetN]([@(0.0.255) int]_[*@3 i
-], [@(0.0.255) int]_[*@3 count], [@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s5;:Upp`:`:Bits`:`:SetN`(int`,bool`,int`): [@(0.0.255) void]_[* SetN]([@(0.0.255) int]_[*@3 i
+], [@(0.0.255) bool]_[*@3 b], [@(0.0.255) int]_[*@3 count])&]
 [s2;%% Sets [%-*@3 count] bits, starting from [%-*@3 i], to [%-*@3 b].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Bits`:`:SetN`(int`,int`): [@(0.0.255) void]_[* SetN]([@(0.0.255) int]_[*@3 i], 
+[@(0.0.255) int]_[*@3 count])&]
+[s2;%% Sets [%-*@3 count] bits, starting from [%-*@3 i], to true.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:Bits`:`:Reserve`(int`): [@(0.0.255) void]_[* Reserve]([@(0.0.255) int]_[*@3 nbits
