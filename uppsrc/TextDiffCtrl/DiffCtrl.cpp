@@ -8,6 +8,7 @@ namespace Upp {
 
 TextDiffCtrl::TextDiffCtrl()
 {
+	left.SetLeft();
 	left.Gutter(30);
 	right.NoGutter();
 	Horz(left, right);
@@ -72,17 +73,17 @@ void TextDiffCtrl::Set(Stream& l, Stream& r)
 		int l;
 		for(l = 0; l < sec.count1; l++) {
 			int level = (diff ? l < sec.count2 && SmallDiff(ll[sec.start1 + l], rl[sec.start2 + l]) ? 1 : 2 : 0);
-			left.Set(outln + l, ll[sec.start1 + l], diff, sec.start1 + l + 1, level, diff && l < sec.count2 ? rl[sec.start2 + l] : Null, sec.start1 + l + 1, true);
+			left.Set(outln + l, ll[sec.start1 + l], diff, sec.start1 + l + 1, level, diff && l < sec.count2 ? rl[sec.start2 + l] : Null, sec.start1 + l + 1);
 		}
 		for(; l < maxcount; l++)
-			left.Set(outln + l, Null, diff, Null, 2, Null, Null, true);
+			left.Set(outln + l, Null, diff, Null, 2, Null, Null);
 		right.AddCount(maxcount);
 		for(l = 0; l < sec.count2; l++) {
 			int level = (diff ? l < sec.count1 && SmallDiff(rl[sec.start2 + l], ll[sec.start1 + l]) ? 1 : 2 : 0);
-			right.Set(outln + l, rl[sec.start2 + l], diff, sec.start2 + l + 1, level,  diff && l < sec.count1 ? ll[sec.start1 + l] : Null, sec.start2 + l + 1, false);
+			right.Set(outln + l, rl[sec.start2 + l], diff, sec.start2 + l + 1, level,  diff && l < sec.count1 ? ll[sec.start1 + l] : Null, sec.start2 + l + 1);
 		}
 		for(; l < maxcount; l++)
-			right.Set(outln + l, Null, diff, Null, 2, Null, Null, false);
+			right.Set(outln + l, Null, diff, Null, 2, Null, Null);
 		outln += maxcount;
 	}
 	if(firstdiff >= 0)

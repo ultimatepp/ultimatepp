@@ -51,7 +51,7 @@ private:
 	void           Copy();
 	int            GetLineNo(int y, int& yy);
 	int            GetMatchLen(const wchar *s1, const wchar *s2, int len);
-	void           LineDiff(Vector<LineEdit::Highlight>& hln, Color eq_color,
+	void           LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Color eq_color,
 	                        const wchar *s1, int l1, int h1,
 	                        const wchar *s2, int l2, int h2, int depth);
 
@@ -64,7 +64,6 @@ private:
 		int    level;
 		String text_diff;
 		int    number_diff;
-		bool   left;
 	};
 	Array<Line>    lines;
 	int            maxwidth;
@@ -86,6 +85,7 @@ private:
 	bool           show_white_space;
 	bool           show_diff_highlight;
 	bool           change_paper_color;
+	bool           left = false;
 
 	typedef TextCompareCtrl CLASSNAME;
 
@@ -116,7 +116,7 @@ public:
 	void           TabSize(int t);
 	int            GetTabSize() const { return tabsize; }
 
-	void           Set(int line, String text, bool diff, int number, int level, String text_diff, int number_diff, bool left);
+	void           Set(int line, String text, bool diff, int number, int level, String text_diff, int number_diff);
 	String         GetText(int line) const { return lines[line].text; }
 	bool           GetDiff(int line) const { return lines[line].diff; }
 	int            GetNumber(int line) const { return lines[line].number; }
@@ -142,6 +142,8 @@ public:
 
 	void           ChangePaperColor(bool cpc) { change_paper_color = cpc; Refresh(); }
 	void           NoChangePaperColor()       { ChangePaperColor(false); }
+	
+	void           SetLeft()                  { left = true; }
 
 	Event<>        ScrollWhen(TextCompareCtrl& pair) { return THISBACK1(PairScroll, &pair); }
 
