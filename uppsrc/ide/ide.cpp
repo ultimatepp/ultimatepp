@@ -474,8 +474,11 @@ void Ide::IdePaste(String& data)
 		for(int i = 0; i < s.GetCount(); i++)
 			if(FileExists(s[i]) && IsTextFile(s[i], 10000)) {
 				int64 len = GetFileLength(s[i]);
-				if(len > 5000000 || data.GetLength() + len < 5000000)
-					data.Cat(LoadFile(s[i]));
+				if(data.GetLength() + len > 104857600) {
+					Exclamation("The paste size breaks the 100MB limit.");
+					return;
+				}
+				data.Cat(LoadFile(s[i]));
 			}
 	}
 }
