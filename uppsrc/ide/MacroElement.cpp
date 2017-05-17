@@ -18,4 +18,5 @@ Image MacroElement::GetImage(Type type)
 		case(Type::UNKNOWN):
 			return Image();
 	}
+	return Image();
 }

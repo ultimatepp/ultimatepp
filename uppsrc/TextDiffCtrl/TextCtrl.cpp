@@ -187,31 +187,39 @@ int TextCompareCtrl::GetMatchLen(const wchar *s1, const wchar *s2, int len)
 	return len;
 }
 
-void TextCompareCtrl::LineDiff(Vector<LineEdit::Highlight>& hln, Color eq_color,
+void TextCompareCtrl::LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Color eq_color,
                                const wchar *s1, int l1, int h1,
                                const wchar *s2, int l2, int h2, int depth)
 {
 	int p1 = 0;
 	int p2 = 0;
 	int matchlen = 0;
+	int subscore = 0; // prefer matches that are not in words
 	
 	for(int pos1 = l1; pos1 < h1; pos1++)
 		for(int pos2 = l2; pos2 < h2; pos2++) {
 			int ml = GetMatchLen(s1 + pos1, s2 + pos2, min(h1 - pos1, h2 - pos2));
-			if(ml >= matchlen) {
-				p1 = pos1;
-				p2 = pos2;
-				matchlen = ml;
+			if(ml && ml >= matchlen) {
+				int l = pos1;
+				int h = pos1 + matchlen;
+				int sc = (l == 0 || IsAlNum(s1[l - 1]) != IsAlNum(s1[l])) +
+				         (h == 0 || h >= l1 || IsAlNum(s1[h - 1]) != IsAlNum(s1[h]));
+				if(ml > matchlen || sc > subscore) {
+					p1 = pos1;
+					p2 = pos2;
+					matchlen = ml;
+					subscore = sc;
+				}
 			}
 		}
 	
-	if(matchlen) {
+	if(matchlen > 1 || matchlen && !IsAlNum(s1[p1])) {
 		for(int i = 0; i < matchlen; i++)
-			hln[p1 + i].paper = eq_color;
+			hln[(left ? p1 : p2) + i].paper = eq_color;
 
 		if(++depth < 20) {
-			LineDiff(hln, eq_color, s1, l1, p1, s2, l2, p2, depth);
-			LineDiff(hln, eq_color, s1, p1 + matchlen, h1, s2, p2 + matchlen, h2, depth);
+			LineDiff(left, hln, eq_color, s1, l1, p1, s2, l2, p2, depth);
+			LineDiff(left, hln, eq_color, s1, p1 + matchlen, h1, s2, p2 + matchlen, h2, depth);
 		}
 	}
 }
@@ -262,7 +270,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 			const Line& l = lines[i];
 			int y = i * letter.cy - offset.cy;
 			Color paper = IsNull(l.number) ? LtGray() : l.diff ? diffpaper : SColorPaper();
-			Color ink = l.diff ? l.left ? Red(): Green() : Gray();
+			Color ink = l.diff ? Red(): Gray();
 			draw.DrawRect(0, y, n_width, letter.cy, paper);
 			draw.DrawRect(n_width - 1, y, 1, letter.cy, Gray());
 			if(!IsNull(l.number))
@@ -283,7 +291,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 			ink = SColorHighlightText;
 			paper = SColorHighlight;
 		}
-		draw.DrawRect(0, y, sz.cx, letter.cy, l.text.GetCount() && l.text_diff.GetCount() ? SColorPaper() : paper);
+		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
 
 		WString ln = l.text.ToWString();
 		if(ln.GetCount() > 20000)
@@ -291,9 +299,9 @@ void TextCompareCtrl::Paint(Draw& draw)
 		ln = ExpandTabs(ln);
 		Vector<LineEdit::Highlight> hln;
 		hln.SetCount(ln.GetCount() + 1);
-		for(int i = 0; i < ln.GetCount(); i++) {
+		for(int i = 0; i < hln.GetCount(); i++) {
 			LineEdit::Highlight& h = hln[i];
-			h.paper = diffpaper;
+			h.paper = sel ? paper : diffpaper;
 			h.ink = ink;
 			h.chr = ln[i];
 			h.font = StdFont();
@@ -302,7 +310,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 		if(!sel) {
 			WhenHighlight(hln, ln);
 
-			for(int i = 0; i < ln.GetCount(); ++i) {
+			for(int i = 0; i < hln.GetCount(); ++i) {
 				LineEdit::Highlight& h = hln[i];
 				if (change_paper_color)
 					h.paper = paper;
@@ -311,8 +319,12 @@ void TextCompareCtrl::Paint(Draw& draw)
 				WString ln_diff = l.text_diff.ToWString();
 				ln_diff = ExpandTabs(ln_diff);
 				if(ln_diff.GetCount() * ln.GetCount() < 50000)
-					LineDiff(hln, SColorPaper(),
-					         ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
+					if(left)
+						LineDiff(true, hln, SColorPaper(),
+						         ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
+					else
+						LineDiff(false, hln, SColorPaper(),
+						         ~ln_diff, 0, ln_diff.GetCount(), ~ln, 0, ln.GetCount(), 0);
 			}
 			if(show_white_space) {
 				for(int i = ln.GetCount(); i >= 0; --i) {
@@ -320,7 +332,7 @@ void TextCompareCtrl::Paint(Draw& draw)
 					if (ln[i] == 0)
 						continue;
 					if(ln[i] == 32)
-						h.paper = l.left ? Red() : Green();
+						h.paper = Red();
 					else
 						break;
 				}
@@ -399,7 +411,7 @@ void TextCompareCtrl::AddCount(int c)
 	Layout();
 }
 
-void TextCompareCtrl::Set(int line, String text, bool diff, int number, int level, String text_diff, int number_diff, bool left)
+void TextCompareCtrl::Set(int line, String text, bool diff, int number, int level, String text_diff, int number_diff)
 {
 	Line& l = lines.At(line);
 	int tl = MeasureLength(text.ToWString());
@@ -411,7 +423,6 @@ void TextCompareCtrl::Set(int line, String text, bool diff, int number, int leve
 	l.level = level;
 	l.text_diff = text_diff;
 	l.number_diff = number_diff;
-	l.left = left;
 	if(rl)
 		UpdateWidth();
 	else if(tl > maxwidth) {
