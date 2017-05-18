@@ -86,6 +86,12 @@ as with all locks, execution of locked code should be short as
 not to cause congestion of CoWork scheduling.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CoWork`:`:Cancel`(`): [@(0.0.255) void]_[* Cancel]()&]
+[s2;%% Removed all jobs scheduled by this thread that has not started 
+yet from the queue and then waits for any jobs already started 
+to finish.&]
+[s3; &]
+[s4; &]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
 [s2;%% Waits until all jobs scheduled using Do (or operator`&) are 
 finished. All changes to data performed by scheduled threads 

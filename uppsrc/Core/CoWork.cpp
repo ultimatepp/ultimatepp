@@ -87,8 +87,8 @@ void CoWork::Pool::DoJob(MJob& job)
 	LLOG("DoJob (CoWork " << FormatIntHex(job.work) << ")");
 	finlock = false;
 	Function<void ()> fn = pick(job.fn);
-	Free(job);
 	CoWork *work = job.work;
+	Free(job);
 	lock.Leave();
 	fn();
 	if(!finlock)
@@ -180,6 +180,24 @@ void CoWork::Do(Function<void ()>&& fn)
 	p.PushJob(pick(fn), this);
 	todo++;
 	p.lock.Leave();
+}
+
+void CoWork::Cancel()
+{
+	Pool& p = GetPool();
+	p.lock.Enter();
+	while(!jobs.IsEmpty(1)) {
+		MJob& job = *jobs.GetNext(1);
+		job.UnlinkAll();
+		p.Free(job);
+		--todo;
+	}
+	while(todo) {
+		LLOG("Cancel (CoWork " << FormatIntHex(this) << ")");
+		waitforfinish.Wait(p.lock);
+	}
+	p.lock.Leave();
+	LLOG("CoWork " << FormatIntHex(this) << " finished");
 }
 
 void CoWork::Finish() {
