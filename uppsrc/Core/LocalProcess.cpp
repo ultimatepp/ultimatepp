@@ -510,7 +510,7 @@ bool LocalProcess::Read2(String& reso, String& rese)
 		FD_SET(pipe[0], set);
 		timeval tval = { 0, 0 };
 		int sv;
-		while((sv = select(pipe[0]+1, set, NULL, NULL, &tval)) > 0) {
+		if((sv = select(pipe[0]+1, set, NULL, NULL, &tval)) > 0) {
 			LLOG("Read() -> select");
 			char buffer[1024];
 			int done = read(pipe[0], buffer, sizeof(buffer));
