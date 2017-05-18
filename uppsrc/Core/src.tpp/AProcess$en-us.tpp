@@ -39,9 +39,8 @@ tring]_[*@3 s])_`=_[@3 0]&]
 [s4; &]
 [s5;:AProcess`:`:Read`(String`&`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Read]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 s])_`=_[@3 0]&]
-[s2;%% Reads data from standard output combined with standard error 
-output. Returns true if there process was running or there are 
-more data to be read.&]
+[s2;%% Reads data from standard output combined. Returns true if 
+the process was running or there are more data to be read.&]
 [s3;%% &]
 [s4; &]
 [s5;:AProcess`:`:Read2`(String`&`,String`&`): [@(0.0.255) virtual] 
@@ -49,7 +48,7 @@ more data to be read.&]
 tring][@(0.0.255) `&]_[*@3 os], [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 es])&]
 [s2;%% Reads data separately from standard output combined and from 
-standard error output. Returns true if there process was running 
+standard error output. Returns true if the process was running 
 or there are more data to be read. Usually, implementing class 
 has to be in special mode for this to work (e.g. LocalProcess 
 must be started with Start2).&]
