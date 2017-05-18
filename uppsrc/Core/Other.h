@@ -136,7 +136,7 @@ public:
 	uint64 Get64(int i, int count);
 
 	void   SetN(int i, bool b, int count);
-	void   SetN(int i, int count)         { SetN(i, count, true); }
+	void   SetN(int i, int count)         { SetN(i, true, count); }
 	
 	void   Reserve(int nbits);
 	void   Shrink();
