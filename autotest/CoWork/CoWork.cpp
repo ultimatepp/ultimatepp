@@ -12,6 +12,17 @@ void Do() {
 
 CONSOLE_APP_MAIN
 {
+	if(1) {
+		CoWork co;
+		String out;
+		for(int i = 0; i < 4000; i++)
+			co & [=, &out] { Sleep(1); INTERLOCKED { out << i << ", "; }};
+		co.Cancel();
+		co.Finish();
+		co.Finish();
+		DUMP(out);
+	}
+
 	Thread a, b, c;
 	a.Run(callback(Do));
 	b.Run(callback(Do));
