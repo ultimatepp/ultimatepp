@@ -66,6 +66,8 @@ public:
 	void Pipe(int stepi, Function<void ()>&& lambda); // experimental
 
 	static void FinLock();
+	
+	void Cancel();
 
 	void Finish();
 	
