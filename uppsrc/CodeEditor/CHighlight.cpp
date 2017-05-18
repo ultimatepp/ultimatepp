@@ -57,6 +57,7 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 	const wchar *t = p;
 	while(IsDigit(*p)) p++;
 	int fixdigits = int(p - t);
+	bool u = false;
 	if(*p == '.') {
 		c = HighlightSetup::INK_CONST_FLOAT;
 		p++;
@@ -71,9 +72,11 @@ const wchar *HighlightNumber(HighlightOutput& hls, const wchar *p, bool ts, bool
 			p++;
 	}
 	else
-	if(*p == 'u' && c != HighlightSetup::INK_CONST_FLOAT)
+	if(*p == 'u' && c != HighlightSetup::INK_CONST_FLOAT) {
+		u = true;
 		p++;
-	if(c == HighlightSetup::INK_CONST_OCT && p - t == 1)
+	}
+	if(c == HighlightSetup::INK_CONST_OCT && p - t == (u ? 2 : 1))
 		c = HighlightSetup::INK_CONST_INT;
 	int n = int(p - t);
 	for(int i = 0; i < n; i++) {
