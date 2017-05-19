@@ -75,7 +75,8 @@ void CSyntax::IndentInsert0(CodeEditor& e, int chr, int count, bool reformat)
 				e.InsertChar(*s++, 1);
 			if(!syntax)
 				return;
-			if(syntax->stmtline == cl || syntax->blk.GetCount() && syntax->blk.Top() == cl) {
+			if(syntax->stmtline == cl || syntax->blk.GetCount() && syntax->blk.Top() == cl // statement (if, while..) || first line of block
+			   || *pl.Last() == ':') { // label
 				if(indent_spaces || (s > pl && s[-1] == ' '))
 					e.InsertChar(' ', indent_amount);
 				else
