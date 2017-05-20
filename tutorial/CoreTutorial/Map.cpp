@@ -64,6 +64,16 @@ void Map()
 		DUMP(e.key);
 		DUMP(e.value);
 	}
+	
+	/// Note that the 'projection range' obtained by `operator~` is temporary value, which
+	/// means that if mutating operation is required for values, r-value reference has to be
+	/// used instead of plain reference:
+
+	for(const auto& e : ~m)
+		if(e.key == "2")
+			e.value.surname = "May";
+	
+	DUMP(m);
 
 	/// You can use Find method to retrieve position of element with required key:
 
