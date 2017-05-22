@@ -165,25 +165,27 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 	if(infile && ffs != STYLE_NO_REPLACE)
 	{
 		EditFile(fn);
-		bool doit = true;
-		if(ffs == STYLE_CONFIRM_REPLACE)
-		{
-			editor.SetCursor(0);
-			editor.Find(false, true);
-			switch(PromptYesNoCancel(NFormat("Replace %d lines in [* \1%s\1]?", infile, fn)))
+		if(!editor.IsReadOnly()) {
+			bool doit = true;
+			if(ffs == STYLE_CONFIRM_REPLACE)
 			{
-			case 1:  break;
-			case 0:  doit = false; break;
-			case -1: return false;
+				editor.SetCursor(0);
+				editor.Find(false, true);
+				switch(PromptYesNoCancel(NFormat("Replace %d lines in [* \1%s\1]?", infile, fn)))
+				{
+				case 1:  break;
+				case 0:  doit = false; break;
+				case -1: return false;
+				}
 			}
-		}
-		if(doit)
-		{
-			editor.SelectAll();
-			editor.BlockReplace();
-			SaveFile();
-			ffound.Add(fn, Null, AsString(infile) + " replacements made");
-			ffound.Sync();
+			if(doit)
+			{
+				editor.SelectAll();
+				editor.BlockReplace();
+				SaveFile();
+				ffound.Add(fn, Null, AsString(infile) + " replacements made");
+				ffound.Sync();
+			}
 		}
 	}
 
@@ -191,8 +193,6 @@ bool Ide::SearchInFile(const String& fn, const String& pattern, bool wholeword, 
 }
 
 void Ide::FindInFiles(bool replace) {
-	if(editor.IsReadOnly())
-		replace = false;
 	CodeEditor::FindReplaceData d = editor.GetFindReplaceData();
 	CtrlRetriever rf;
 	rf(ff.find, d.find)
@@ -328,6 +328,7 @@ void Ide::FindString(bool back)
 
 void Ide::TranslateString()
 {
+	if(editor.IsReadOnly()) return;
 	int l, h;
 	if(editor.GetSelection(l, h)) {
 		editor.Insert(l, "t_(");

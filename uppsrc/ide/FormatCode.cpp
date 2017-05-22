@@ -116,6 +116,7 @@ WString Ide::FormatCodeString(WString const &Src, ASFormatter &Formatter)
 // Formats editor's code with Ide format parameters
 void Ide::FormatCode()
 {
+	if(editor.IsReadOnly()) return;
 	// Gets editor contents from editor
 	WString Src;
 	int l, h;

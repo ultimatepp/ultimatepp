@@ -611,6 +611,9 @@ void CodeEditor::OpenNormalFindReplace(bool replace)
 
 void CodeEditor::FindReplace(bool pick_selection, bool pick_text, bool replace)
 {
+	if(IsReadOnly())
+		replace = false;
+	
 	if(findreplace.IsOpen())
 		CloseFindReplace();
 

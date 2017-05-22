@@ -289,7 +289,7 @@ String FormatElapsedTime(double run)
 
 void Ide::AlterText(WString (*op)(const WString& in))
 {
-	if(designer || !editor.IsSelection())
+	if(designer || !editor.IsSelection() || editor.IsReadOnly())
 		return;
 	editor.NextUndo();
 	WString w = editor.GetSelectionW();

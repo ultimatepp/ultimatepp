@@ -59,6 +59,8 @@ bool InsertColorDlg::IsCanceled()
 
 void Ide::InsertColor()
 {
+	if(editor.IsReadOnly())
+		return;
 	InsertColorDlg dlg;
 	dlg.Execute();
 	if (!dlg.IsCanceled())
@@ -67,6 +69,8 @@ void Ide::InsertColor()
 
 void Ide::InsertLay(const String& fn)
 {
+	if(editor.IsReadOnly())
+		return;
 	String s;
 	s << "#define LAYOUTFILE <" << fn << ">\n"
 	  << "#include <CtrlCore/lay.h>\n";
@@ -75,6 +79,8 @@ void Ide::InsertLay(const String& fn)
 
 void Ide::InsertIml(const String& fn, String classname)
 {
+	if(editor.IsReadOnly())
+		return;
 	if(!EditText(classname, "Insert .iml include", "Img class"))
 		return;
 	String h;
@@ -89,11 +95,15 @@ void Ide::InsertIml(const String& fn, String classname)
 
 void Ide::InsertText(const String& text)
 {
+	if(editor.IsReadOnly())
+		return;
 	editor.Paste(text.ToWString());
 }
 
 void Ide::InsertCString()
 {
+	if(editor.IsReadOnly())
+		return;
 	String txt = ReadClipboardText();
 	if(txt.GetCount())
 		editor.Paste(AsCString(txt).ToWString());
@@ -101,6 +111,8 @@ void Ide::InsertCString()
 
 void Ide::InsertFilePath(bool c)
 {
+	if(editor.IsReadOnly())
+		return;
 	String path = SelectFileOpen("All files\t*.*");
 	path.Replace("\\", "/");
 	if(path.GetCount()) {
@@ -174,9 +186,10 @@ void Ide::InsertInclude(Bar& bar)
 
 void Ide::InsertAdvanced(Bar& bar)
 {
-	bar.Add("Insert", THISBACK(InsertMenu));
-	bar.Add("Insert #include", THISBACK(InsertInclude));
-	bar.Add("Advanced", THISBACK(EditSpecial));
+	bool b = !editor.IsReadOnly();
+	bar.Add(b, "Insert", THISBACK(InsertMenu));
+	bar.Add(b, "Insert #include", THISBACK(InsertInclude));
+	bar.Add(b, "Advanced", THISBACK(EditSpecial));
 }
 
 void Ide::EditorMenu(Bar& bar)
