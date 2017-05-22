@@ -50,7 +50,6 @@ void ZstdDecompressStream::Fetch()
 	CoWork co;
 #endif
 	bool   error = false;
-	bool last = false;
 	ii = 0;
 	count = concurrent ? 16 : 1;
 	int osz = (int)ZSTD_compressBound(BLOCK_BYTES);
