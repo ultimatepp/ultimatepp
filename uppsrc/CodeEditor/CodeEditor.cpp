@@ -211,6 +211,7 @@ void CodeEditor::CopyWord() {
 
 void CodeEditor::DuplicateLine()
 {
+	if(IsReadOnly()) return;
 	int i = GetLine(cursor);
 	int pos = GetPos(i);
 	int len = GetLineLength(i);
@@ -243,6 +244,7 @@ void CodeEditor::FinishPut()
 
 void CodeEditor::ReformatComment()
 {
+	if(IsReadOnly()) return;
 	NextUndo();
 	GetSyntax(GetLine(cursor))->ReformatComment(*this);
 }
@@ -322,6 +324,7 @@ void CodeEditor::IndentInsert(int chr, int count) {
 
 void CodeEditor::Make(Event<String&> op)
 {
+	if(IsReadOnly()) return;
 	Point cursor = GetColumnLine(GetCursor());
 	Point scroll = GetScrollPos();
 	int l, h;
@@ -541,6 +544,7 @@ bool CodeEditor::GetLineSelection(int& l, int& h) {
 }
 
 void CodeEditor::TabRight() {
+	if(IsReadOnly()) return;
 	int l, h;
 	if(!GetLineSelection(l, h)) return;
 	int ll = l;
@@ -551,6 +555,7 @@ void CodeEditor::TabRight() {
 }
 
 void CodeEditor::TabLeft() {
+	if(IsReadOnly()) return;
 	int l, h;
 	if(!GetLineSelection(l, h)) return;
 	int ll = l;
@@ -731,6 +736,8 @@ void CodeEditor::Goto() {
 
 bool CodeEditor::ToggleSimpleComment(int &start_line, int &end_line, bool usestars)
 {
+	if(IsReadOnly()) return true;
+
 	int l, h;
 	if(!GetSelection(l, h))
 		return true;
@@ -752,6 +759,8 @@ bool CodeEditor::ToggleSimpleComment(int &start_line, int &end_line, bool usesta
 
 void CodeEditor::ToggleLineComments(bool usestars)
 {
+	if(IsReadOnly()) return;
+
 	int start_line, end_line;
 	if(ToggleSimpleComment(start_line, end_line))
 		return;
@@ -801,6 +810,8 @@ void CodeEditor::ToggleLineComments(bool usestars)
 
 void CodeEditor::ToggleStarComments()
 {
+	if(IsReadOnly()) return;
+
 	int start_line, end_line;
 	if(ToggleSimpleComment(start_line, end_line))
 		return;
@@ -828,6 +839,8 @@ void CodeEditor::ToggleStarComments()
 
 void CodeEditor::Enclose(const char *c1, const char *c2, int l, int h)
 {
+	if(IsReadOnly()) return;
+
 	if((l < 0 || h < 0) && !GetSelection(l, h))
 		return;
 	Insert(l, WString(c1));

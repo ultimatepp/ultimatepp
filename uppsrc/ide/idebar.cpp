@@ -117,41 +117,42 @@ void Ide::OnlineSearchMenu(Bar& menu)
 
 void Ide::EditSpecial(Bar& menu)
 {
-	menu.Add(AK_SPACESTOTABS, THISBACK(EditMakeTabs))
+	bool b = !editor.IsReadOnly();
+	menu.Add(b, AK_SPACESTOTABS, THISBACK(EditMakeTabs))
 		.Help("Convert leading blanks on each line to tabs");
-	menu.Add(AK_TABSTOSPACES, THISBACK(EditMakeSpaces))
+	menu.Add(b, AK_TABSTOSPACES, THISBACK(EditMakeSpaces))
 		.Help("Convert all tabs to spaces");
-	menu.Add(AK_LINEENDINGS, THISBACK(EditMakeLineEnds))
+	menu.Add(b, AK_LINEENDINGS, THISBACK(EditMakeLineEnds))
 		.Help("Remove tabs and spaces at line endings");
-	menu.Add(AK_TRANSLATESTRING, THISBACK(TranslateString))
+	menu.Add(b, AK_TRANSLATESTRING, THISBACK(TranslateString))
 		.Help("Mark the current selection as translated string");
-	menu.Add(AK_SWAPCHARS, THISBACK(SwapChars))
+	menu.Add(b, AK_SWAPCHARS, THISBACK(SwapChars))
 	    .Help("Transpose characters");
 	menu.Add(AK_COPYWORD, THISBACK(CopyWord))
 	    .Help("Copy the current identifier to the clipboard");
-	menu.Add(AK_DUPLICATELINE, THISBACK(DuplicateLine))
+	menu.Add(b, AK_DUPLICATELINE, THISBACK(DuplicateLine))
 	    .Help("Duplicate the current line");
-	menu.Add(AK_FORMATCODE, THISBACK(FormatCode))
+	menu.Add(b, AK_FORMATCODE, THISBACK(FormatCode))
 	    .Help("Reformat code in editor");
-	menu.Add(editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
+	menu.Add(b && editor.IsSelection(), AK_TOUPPER, THISBACK(TextToUpper))
 	    .Help("Convert letters in selection to uppercase");
-	menu.Add(editor.IsSelection(), AK_TOLOWER, THISBACK(TextToLower))
+	menu.Add(b && editor.IsSelection(), AK_TOLOWER, THISBACK(TextToLower))
 	    .Help("Convert letters in selection to lowercase");
-	menu.Add(editor.IsSelection(), AK_TOASCII, THISBACK(TextToAscii))
+	menu.Add(b && editor.IsSelection(), AK_TOASCII, THISBACK(TextToAscii))
 		.Help("Covert text to 7-bit ASCII removing all accents and special symbols");
-	menu.Add(editor.IsSelection(), AK_INITCAPS, THISBACK(TextInitCaps))
+	menu.Add(b && editor.IsSelection(), AK_INITCAPS, THISBACK(TextInitCaps))
 	    .Help("Capitalize the first character of words in selection");
-	menu.Add(editor.IsSelection(), AK_SWAPCASE, THISBACK(SwapCase))
+	menu.Add(b && editor.IsSelection(), AK_SWAPCASE, THISBACK(SwapCase))
 	    .Help("Swap the case of letters in selection");
-	menu.Add(editor.IsSelection(), AK_TOCSTRING, THISBACK(ToCString))
+	menu.Add(b && editor.IsSelection(), AK_TOCSTRING, THISBACK(ToCString))
 	    .Help("Convert selection to CString");
-	menu.Add(editor.IsSelection(), AK_TOCOMMENT, THISBACK(ToComment))
+	menu.Add(b && editor.IsSelection(), AK_TOCOMMENT, THISBACK(ToComment))
 		.Help("Comment code");
-	menu.Add(editor.IsSelection(), AK_COMMENTLINES, THISBACK(CommentLines))
+	menu.Add(b && editor.IsSelection(), AK_COMMENTLINES, THISBACK(CommentLines))
 		.Help("Comment code lines");
-	menu.Add(editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
+	menu.Add(b && editor.IsSelection(), AK_UNCOMMENT, THISBACK(UnComment))
 		.Help("Uncomment code");
-	menu.Add(AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
+	menu.Add(b, AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
 	    .Help("Reformat multiline comment into paragraph");
 }
 
@@ -160,7 +161,7 @@ void Ide::SearchMenu(Bar& menu)
 	if(!designer) {
 		menu.Add(AK_FIND, THISBACK(EditFind))
 			.Help("Search for text or text pattern");
-		menu.Add(AK_REPLACE, THISBACK(EditReplace))
+		menu.Add(!editor.IsReadOnly(), AK_REPLACE, THISBACK(EditReplace))
 			.Help("Search for text or text pattern, with replace option");
 //		menu.Add(AK_FINDSEL, THISBACK(EditFindReplacePickText))
 //			.Help("Show find / replace dialog & set active text as the 'find' text");
@@ -180,7 +181,7 @@ void Ide::SearchMenu(Bar& menu)
 	}
 	menu.Add(AK_FINDINFILES, THISBACK1(FindInFiles, false))
 		.Help("Find text or text pattern in subtree of given path");
-	menu.Add(editor.IsEditable(), AK_REPLACEINFILES, THISBACK1(FindInFiles, true))
+	menu.Add(AK_REPLACEINFILES, THISBACK1(FindInFiles, true))
 		.Help("Find text or text pattern in subtree of given path, with replace option(s)");
 	menu.Add(AK_FINDFILE, THISBACK(FindFileName))
 		.Help("Locate file by filename (use *, ? when you're not sure)");
@@ -188,6 +189,7 @@ void Ide::SearchMenu(Bar& menu)
 
 void Ide::Edit(Bar& menu)
 {
+	bool b = !editor.IsReadOnly();
 	if(editfile.GetCount() && editashex.Find(editfile) < 0) {
 		menu.Add(AK_EDITASHEX, THISBACK(EditAsHex));
 		if(!designer)
@@ -220,18 +222,18 @@ void Ide::Edit(Bar& menu)
 			    .Help("Edit using the designer (not as text)");
 			menu.MenuSeparator();
 		}
-		menu.Add("Undo", CtrlImg::undo(), callback(&editor, &LineEdit::Undo))
+		menu.Add(b, "Undo", CtrlImg::undo(), callback(&editor, &LineEdit::Undo))
 			.Key(K_CTRL_Z)
 			.Enable(editor.IsUndo())
 			.Help("Undo changes to text");
-		menu.Add("Redo", CtrlImg::redo(), callback(&editor, &LineEdit::Redo))
+		menu.Add(b, "Redo", CtrlImg::redo(), callback(&editor, &LineEdit::Redo))
 			.Key(K_SHIFT|K_CTRL_Z)
 			.Enable(editor.IsRedo())
 			.Help("Redo undone changes");
 
 		menu.Separator();
 
-		menu.Add("Cut", CtrlImg::cut(), callback(&editor, &LineEdit::Cut))
+		menu.Add(b, "Cut", CtrlImg::cut(), callback(&editor, &LineEdit::Cut))
 			.Key(K_CTRL_X)
 			.Enable(selection)
 			.Help("Cut selection and place it on the system clipboard");
@@ -239,7 +241,7 @@ void Ide::Edit(Bar& menu)
 			.Key(K_CTRL_C)
 			.Enable(selection)
 			.Help("Copy current selection on the system clipboard");
-		menu.Add("Paste", CtrlImg::paste(), THISBACK(EditPaste))
+		menu.Add(b, "Paste", CtrlImg::paste(), THISBACK(EditPaste))
 			.Key(K_CTRL_V)
 			.Help("Insert text from clipboard at cursor location");
 
