@@ -78,7 +78,7 @@ extern Pointf3        AtLine(Pointf3 a, double ta, Pointf3 b, double tb, double 
 inline double         GetXYBearing(Pointf3 a)                   { return atan2(a.y, a.x); }
 inline double         GetYZBearing(Pointf3 a)                   { return atan2(a.z, a.y); }
 inline double         GetZXBearing(Pointf3 a)                   { return atan2(a.x, a.z); }
-extern double         Angle(Pointf a, Pointf b);
+extern double         Angle(Pointf3 a, Pointf3 b);
 
 inline Pointf3        fpmin(Pointf3 p, Pointf3 q)               { return Pointf3(min(p.x, q.x), min(p.y, q.y), min(p.z, q.z)); }
 inline Pointf3        fpmax(Pointf3 p, Pointf3 q)               { return Pointf3(max(p.x, q.x), max(p.y, q.y), max(p.z, q.z)); }
