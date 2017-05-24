@@ -75,7 +75,7 @@ FindFileWindow::FindFileWindow(const Workspace& wspc, const String& actualPackag
 	, wspc(wspc)
 {
 	CtrlLayoutOKCancel(*this, "Find File");
-	Sizeable().Zoomable();
+	Sizeable().Zoomable().MinimizeBox(false);
 	list.AddColumn("File").SetDisplay(Single<FindFileFileDisplay>());
 	list.AddColumn("Package");
 	list.WhenLeftDouble = Acceptor(IDOK);
