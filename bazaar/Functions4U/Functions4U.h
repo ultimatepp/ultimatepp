@@ -289,7 +289,7 @@ inline const T Distance(const T& x1, const T& y1, const T& z1, const T& x2, cons
 	
 template <class T> 
 inline const double Angle(const T& x1, const T& y1, const T& x2, const T& y2)  { 
-	return atan2(y2-y2, x2-x1);
+	return atan2(y2-y1, x2-x1);
 }
 
 template <class T> 

@@ -581,14 +581,14 @@ uclidean]) between ([%-*@3 x1], [%-*@3 y1] [%-*@3 z1]), and ([%-*@3 x2],
 lass]_[*@4 T]>_[@(0.0.255) const]_[@(0.0.255) double]_[* Angle]([@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y1], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
 ]_[*@3 x2], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 y2])&]
-[s2; Returns the angle between ([%-*@3 x1], [%-*@3 y1]) and ([%-*@3 x2], 
-[%-*@3 y2]).&]
+[s2; Returns the slope of the line that crosses ([%-*@3 x1], [%-*@3 y1]) 
+and ([%-*@3 x2], [%-*@3 y2]).&]
 [s3; &]
 [s4;%- &]
 [s5;:Angle`(const Point`_`<T`>`&`,const Point`_`<T`>`&`):%- [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 T]>_[@(0.0.255) const]_[@(0.0.255) double]_[* Angle]([@(0.0.255) const]_[_^Point`_^ P
 oint`_]<[*@4 T]>`&_[*@3 p1], [@(0.0.255) const]_[_^Point`_^ Point`_]<[*@4 T]>`&_[*@3 p2])&]
-[s2; Return the angle between [%-*@3 p1] and [%-*@3 p2].&]
+[s2; Returns the slope of the line that crosses [%-*@3 p1] and [%-*@3 p2].&]
 [s3; &]
 [s4; &]
 [s5;:Odd`(int`):%- [@(0.0.255) bool]_[* Odd]([@(0.0.255) int]_[*@3 val])&]
