@@ -1213,6 +1213,8 @@ Image ScatterDraw::GetImage(const Size &size, int scale) {
 	ImageBuffer ib(scale*size);	
 	BufferPainter bp(ib, mode);	
 	
+	bp.LineCap(LINECAP_SQUARE);
+	bp.LineJoin(LINEJOIN_MITER);
 	SetDrawing(bp, size, scale, false);
 
 	return ib;
