@@ -64,6 +64,8 @@ void ScatterCtrl::Paint(Draw& w)
 		} else {
 			ImageBuffer ib(GetSize());
 			BufferPainter bp(ib, mode);
+			bp.LineCap(LINECAP_SQUARE);
+			bp.LineJoin(LINEJOIN_MITER);
 			ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 			w.DrawImage(0, 0, ib);
 			PlotTexts(w, GetSize(), 1);
