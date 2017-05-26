@@ -179,7 +179,7 @@ public:
 	Point GetHotSpot() const;
 	Point Get2ndSpot() const;
 	Size  GetDots() const;
-	Size  GetDPI();
+	Size  GetDPI() const;
 	int   GetKindNoScan() const;
 	int   GetKind() const;
 	int   GetResolution() const;

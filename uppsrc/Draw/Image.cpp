@@ -187,7 +187,7 @@ Size Image::GetDots() const
 	return data ? data->buffer.GetDots() : Size(0, 0);
 }
 
-Size Image::GetDPI() 
+Size Image::GetDPI() const
 {
 	Size size = GetSize();
 	Size dots = GetDots();
