@@ -21,8 +21,21 @@
 
 namespace Upp {
 
-#ifdef PLATFORM_WIN32
+static StaticCriticalSection sHlock;
 
+String& sHomeDir() {
+	static String s;
+	return s;
+}
+
+void    SetHomeDirectory(const char *dir)
+{
+	INTERLOCKED_(sHlock) {
+		sHomeDir() = dir;
+	}
+}
+
+#ifdef PLATFORM_WIN32
 
 String GetEnv(const char *id)
 {
@@ -35,7 +48,14 @@ String GetExeFilePath()
 }
 
 String  GetHomeDirectory() {
-	return GetEnv("HOMEDRIVE") + GetEnv("HOMEPATH");
+	String r;
+	INTERLOCKED_(sHlock) {
+		String& s = sHomeDir();
+		if(s.IsEmpty())
+			s = GetEnv("HOMEDRIVE") + GetEnv("HOMEPATH");
+		r = s;
+	}
+	return r;
 }
 
 #endif
@@ -120,30 +140,15 @@ String GetExeTitle()
 
 #ifdef PLATFORM_POSIX
 
-static StaticCriticalSection sHlock;
-
-String& sHomeDir() {
-	static String s;
-	return s;
-}
-
 String  GetHomeDirectory() {
 	String r;
 	INTERLOCKED_(sHlock) {
 		String& s = sHomeDir();
-		if(s.IsEmpty()) {
+		if(s.IsEmpty())
 			s = Nvl(GetEnv("HOME"), "/root");
-		}
 		r = s;
 	}
 	return r;
-}
-
-void    SetHomeDirectory(const char *dir)
-{
-	INTERLOCKED_(sHlock) {
-		sHomeDir() = dir;
-	}
 }
 
 #endif//PLATFORM_POSIX

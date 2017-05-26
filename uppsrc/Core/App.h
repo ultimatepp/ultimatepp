@@ -8,11 +8,7 @@ String  GetExeDirFile(const char *fp);
 String  GetHomeDirFile(const char *fp);
 String  GetHomeDirectory();
 
-#ifdef PLATFORM_POSIX
-
 void    SetHomeDirectory(const char *dir);
-
-#endif
 
 void    UseHomeDirectoryConfig(bool b = true);
 
