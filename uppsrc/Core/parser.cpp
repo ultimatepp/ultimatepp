@@ -329,6 +329,25 @@ double CParser::ReadDouble() throw(Error)
 	return n;
 }
 
+int CParser::ReadUTF16()
+{
+	int hex = 0;
+	if(IsXDigit(*++term)) {
+		hex = ctoi(*term);
+		if(IsXDigit(*++term)) {
+			hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
+			if(IsXDigit(*++term)) {
+				hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
+				if(IsXDigit(*++term)) {
+					hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
+					term++;
+				}
+			}
+		}
+	}
+	return hex;
+}
+
 String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
 	if(!IsChar(delim))
 		ThrowError("missing string");
@@ -364,21 +383,19 @@ String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
 			}
 			case 'u':
 				if(uescape) {
-					int hex = 0;
-					if(IsXDigit(*++term)) {
-						hex = ctoi(*term);
-						if(IsXDigit(*++term)) {
-							hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
-							if(IsXDigit(*++term)) {
-								hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
-								if(IsXDigit(*++term)) {
-									hex = 16 * hex + (*term >= 'A' ? ToUpper(*term) - 'A' + 10 : *term - '0');
-									term++;
-								}
-							}
+					int hex = ReadUTF16();
+					if(hex >= 0xD800 && hex < 0xDBFF) {
+						if(term[0] == '\\' && term[1] == 'u') {
+							term++;
+							int hex2 = ReadUTF16();
+							if(hex2 >= 0xDC00 && hex2 <= 0xDFFF)
+								result.Cat(ToUtf8(((hex & 0x3ff) << 10) | (hex2 & 0x3ff) + 0x10000));
+							break;
 						}
+						ThrowError("Invalid UTF-16 surrogate pair");
 					}
-					result.Cat(WString(hex, 1).ToString());
+					else
+						result.Cat(WString(hex, 1).ToString());
 				}
 				else
 					result.Cat(*term++);

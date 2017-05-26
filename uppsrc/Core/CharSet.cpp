@@ -2458,6 +2458,35 @@ int lenAsUtf8(const wchar *s)
 	return lenAsUtf8(s, wstrlen(s));
 }
 
+String ToUtf8(int code)
+{
+	char h[10];
+	char *t = h;
+	if(code < 0x80)
+		*t++ = (char)code;
+	else
+	if(code < 0x800) {
+		*t++ = 0xc0 | (code >> 6);
+		*t++ = 0x80 | (code & 0x3f);
+	}
+	else
+	if((code & 0xFF00) == 0xEE00)
+		*t++ = (char) code;
+	else
+	if(code < 0xFFFF) {
+		*t++ = 0xe0 | (code >> 12);
+		*t++ = 0x80 | ((code >> 6) & 0x3f);
+		*t++ = 0x80 | (code & 0x3f);
+	}
+	else {
+		*t++ = 0xf0 | (code >> 18);
+		*t++ = 0x80 | ((code >> 12) & 0x3f);
+		*t++ = 0x80 | ((code >> 6) & 0x3f);
+		*t++ = 0x80 | (code & 0x3f);
+	}
+	return String(h, t);
+}
+
 String ToUtf8(wchar code)
 {
 	return ToUtf8(&code, 1);
