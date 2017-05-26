@@ -159,7 +159,6 @@ URL that will be opened in the browser&]
 [s4; &]
 [s5;:SetHomeDirectory`(const char`*`): [@(0.0.255) void]_[* SetHomeDirectory]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 dir])&]
-[s2; [*@3 POSIX specific]&]
 [s2;%% Sets the current user`'s home folder.&]
 [s2;%% [*@(129.0.0) dir]................................................the 
 URL that will be opened in the browser&]
