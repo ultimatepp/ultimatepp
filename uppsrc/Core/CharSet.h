@@ -50,7 +50,7 @@ inline bool IsUtf8Lead(int c)
 	return (c & 0xc0) != 0x80;
 }
 
-String  ToUtf8(wchar code);
+String  ToUtf8(int code);
 String  ToUtf8(const wchar *s, int len);
 String  ToUtf8(const wchar *s);
 String  ToUtf8(const WString& w);

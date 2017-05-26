@@ -22,6 +22,7 @@ protected:
 	const char *IsId0(const char *s) const;
 	bool        Id0(const char *id);
 	void        DoSpaces()                    { if(skipspaces) Spaces(); }
+	int         ReadUTF16();
 
 public:
 	struct Error : public Exc                 { Error(const char *s) : Exc(s) {} };
