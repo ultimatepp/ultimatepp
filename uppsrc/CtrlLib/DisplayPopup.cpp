@@ -57,6 +57,8 @@ void DisplayPopup::Paint(Draw& w)
 	if(display) {
 		display->PaintBackground(w, r, value, ink, paper, style);
 		r.left += margin;
+		if(usedisplaystdsize)
+			r.top += (r.Height() - display->GetStdSize(value).cy) / 2;
 		display->Paint(w, r, value, ink, paper, style);
 	}
 }

@@ -883,6 +883,7 @@ void TreeCtrl::SyncInfo()
 				Color fg, bg;
 				dword st;
 				const Display *d = GetStyle(i, fg, bg, st);
+				info.UseDisplayStdSize();
 				info.Set(this, r, m.value, d, fg, bg, st, m.margin);
 				return;
 			}
