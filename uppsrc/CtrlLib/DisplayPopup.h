@@ -20,6 +20,7 @@ private:
 	dword          style;
 	const Display *display;
 	int            margin;
+	bool           usedisplaystdsize = false;
 
 	Point   Op(Point p);
 	void    Sync();
@@ -37,6 +38,7 @@ public:
 	void Cancel();
 	bool IsOpen();
 	bool HasMouse();
+	void UseDisplayStdSize()                             { usedisplaystdsize = true; }
 
 	DisplayPopup();
 	~DisplayPopup();
