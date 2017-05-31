@@ -36,8 +36,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		::ExtTextOutW(handle, x + fround(ascent * sina), y + fround(ascent * cosa), 0, NULL, (const WCHAR *)text, n, dx);
 	}
 	else
-		::ExtTextOutW(handle, x, y + ascent, 0, NULL, (const WCHAR *)text,
-		              n, dx);
+		::ExtTextOutW(handle, x, y + ascent, 0, NULL, (const WCHAR *)text, n, dx);
 	::SelectObject(handle, orgfont);
 }
 
