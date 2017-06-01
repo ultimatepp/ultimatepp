@@ -12,6 +12,17 @@ SqlId SqlId::Of(SqlId id) const
 	return id.IsNull() ? ToString() : String().Cat() << id.ToString() << (char)SQLC_OF << ToString();
 }
 
+void SqlId::PutOf0(String& s, const SqlId& b) const
+{
+	s << ToString() << (char)SQLC_OF << ~b;
+}
+
+void SqlId::PutOf(String& s, const SqlId& b) const
+{
+	s << (char)SQLC_COMMA;
+	PutOf0(s, b);
+}
+
 SqlId SqlId::operator[](const SqlId& id) const
 {
 	return Of(id);
