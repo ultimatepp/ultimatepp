@@ -104,6 +104,46 @@ ConstRangeClass<T> ConstRange(int count)
 }
 
 template <class BaseRange>
+struct ReverseRangeClass {
+	BaseRange&  r;
+	
+	typedef typename BaseRange::value_type               value_type;
+	typedef value_type                                   ValueType;
+	
+	const value_type& operator[](int i) const            { return r[r.GetCount() - i - 1]; }
+	value_type& operator[](int i)                        { return r[r.GetCount() - i - 1]; }
+	int GetCount() const                                 { return r.GetCount(); }
+	
+	typedef IIterator<ReverseRangeClass>                  Iterator;
+	typedef ConstIIterator<ReverseRangeClass>             ConstIterator;
+
+	ReverseRangeClass& Write()                           { return *this; }
+
+	ConstIterator begin() const                          { return ConstIterator(*this, 0); }
+	ConstIterator end() const                            { return ConstIterator(*this, r.GetCount()); }
+	
+	Iterator begin()                                     { return Iterator(*this, 0); }
+	Iterator end()                                       { return Iterator(*this, r.GetCount()); }
+
+	String   ToString() const                            { return AsStringArray(*this); }
+	template <class B> bool operator==(const B& b) const { return IsEqualRange(*this, b); }
+	template <class B> bool operator!=(const B& b) const { return !operator==(b); }
+	template <class B> int  Compare(const B& b) const    { return CompareRanges(*this, b); }
+	template <class B> bool operator<=(const B& x) const { return Compare(x) <= 0; }
+	template <class B> bool operator>=(const B& x) const { return Compare(x) >= 0; }
+	template <class B> bool operator<(const B& x) const  { return Compare(x) < 0; }
+	template <class B> bool operator>(const B& x) const  { return Compare(x) > 0; }
+
+	ReverseRangeClass(BaseRange& r) : r(r) {}
+};
+
+template <class BaseRange>
+ReverseRangeClass<BaseRange> ReverseRange(BaseRange& r)
+{
+	return ReverseRangeClass<BaseRange>(r);
+}
+
+template <class BaseRange>
 struct ViewRangeClass {
 	BaseRange  *r;
 	Vector<int> ndx;
@@ -148,4 +188,16 @@ template <class BaseRange, class Predicate>
 ViewRangeClass<BaseRange> FilterRange(BaseRange& r, Predicate p)
 {
 	return ViewRangeClass<BaseRange>(r, FindAll(r, p));
+}
+
+template <class BaseRange, class Predicate>
+ViewRangeClass<BaseRange> SortedRange(BaseRange& r, Predicate p)
+{
+	return ViewRangeClass<BaseRange>(r, GetSortOrder(r, p));
+}
+
+template <class BaseRange>
+ViewRangeClass<BaseRange> SortedRange(BaseRange& r)
+{
+	return SortedRange(r, std::less<ValueTypeOf<BaseRange>>());
 }
