@@ -97,4 +97,24 @@ eClass]<[*@4 BaseRange]>_[* FilterRange]([*@4 BaseRange][@(0.0.255) `&]_[*@3 r],
 [%-*@3 p])). Creates a view of elements of master Range that satisfy 
 condition [%-*@3 p].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ReverseRange`(BaseRange`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 B
+aseRange]>_[_^Upp`:`:ReverseRangeClass^ ReverseRangeClass]<[*@4 BaseRange]>_[* ReverseR
+ange]([*@4 BaseRange][@(0.0.255) `&]_[*@3 r])&]
+[s2; Makes a Range reverting the order of elements of [%-*@3 r]. First 
+element of [%-*@3 r] becomes the last element of ReverseRange etc..&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SortedRange`(BaseRange`&`,Predicate`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 BaseRange], [@(0.0.255) class]_[*@4 Predicate]>&]
+[s5;%- [_^Upp`:`:ViewRangeClass^ ViewRangeClass]<[*@4 BaseRange]>_[* SortedRange]([*@4 BaseRa
+nge][@(0.0.255) `&]_[*@3 r], [*@4 Predicate]_[*@3 p])&]
+[s2; Returns a view of range [%-*@3 r] sorted by predicate [%-*@3 p].&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SortedRange`(BaseRange`&`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Ba
+seRange]>_[_^Upp`:`:ViewRangeClass^ ViewRangeClass]<[*@4 BaseRange]>_[* SortedRange]([*@4 B
+aseRange][@(0.0.255) `&]_[*@3 r])&]
+[s2; Returns a view of range [%-*@3 r] sorted by std`::less predicate.&]
+[s3; &]
 [s0; ]]
