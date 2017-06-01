@@ -7,7 +7,6 @@ file
 	Tutorial.cpp,
 	Core readonly separator,
 	ToDo.cpp,
-	Range.cpp,
 	Logging.cpp,
 	String.cpp,
 	StringBuffer.cpp,
