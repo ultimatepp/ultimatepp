@@ -450,16 +450,4 @@ SqlCode::SqlCode(byte cond, const String& text) {
 	s << (char)SQLC_IF << (char)cond << text;
 }
 
-// Put to different file to force non-inline (size opt)
-void SqlId::PutOf0(String& s, const SqlId& b) const
-{
-	s << ToString() << (char)SQLC_OF << ~b;
-}
-
-void SqlId::PutOf(String& s, const SqlId& b) const
-{
-	s << (char)SQLC_COMMA;
-	PutOf0(s, b);
-}
-
 }
