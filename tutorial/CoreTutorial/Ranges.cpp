@@ -48,6 +48,12 @@ void Range()
 	
 	DUMP(ConstRange(1, 10));
 	
+	/// `ReverseRange` reverses the order of elements in the source range:
+		
+	Vector<int> v{ 1, 2, 3, 4 };
+	
+	DUMP(ReverseRange(v));
+	
 	/// `ViewRange` picks a source range and `Vector` of integer indices a provides a view of
 	/// source range through this `Vector`:
 	
@@ -61,9 +67,17 @@ void Range()
 	DUMP(ViewRange(x, clone(h)));
 	DUMP(x);
 	
+	/// `SortedRange` returns range sorted by predicate (default is std::less):
+
+	DUMP(SortedRange(x));
+	
 	/// Finally `FilterRange` creates a subrange of elements satisfying certain condition:
 	
 	DUMP(FilterRange(x, [](int x) { return x > 3; }));
+	
+	/// Various Range functions can be combined to produce complex results:
+		
+	DUMP(ReverseRange(FilterRange(x, [](int x) { return x < 4; })));
 	
 	///
 }
