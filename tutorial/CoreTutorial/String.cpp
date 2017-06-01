@@ -10,7 +10,7 @@ void StringTutorial()
 	String a = "Hello";
 	DUMP(a);
 
-	/// You camn concatenate with another String or literal:
+	/// You can concatenate it with another String or literal:
 
 	a = a + " world";
 	DUMP(a);
