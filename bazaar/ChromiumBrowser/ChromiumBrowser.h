@@ -6,7 +6,7 @@
 
 namespace Upp{
 
-class ChromiumBrowser : public Ctrl {
+class ChromiumBrowser : public DHCtrl {
 private:
 	CefRefPtr<ClientHandler> handler;
 
