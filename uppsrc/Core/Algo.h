@@ -245,3 +245,13 @@ void LruAdd(Container& lru, T value, int limit = 10)
 	if(lru.GetCount() > limit)
 		lru.SetCount(limit);
 }
+
+template <class C = Vector<int>, class V>
+C MakeIota(V end, V start = 0, V step = 1)
+{
+	C x;
+	x.Reserve((end - start) / step);
+	for(V i = start; i < end; i += step)
+		x.Add(i);
+	return x;
+}
