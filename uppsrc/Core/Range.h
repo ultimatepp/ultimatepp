@@ -55,7 +55,7 @@ auto SubRange(C& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, co
 }
 
 template <class C>
-auto SubRange(const C& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
+auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
 {
 	return SubRange(c.begin() + pos, count);
 }
@@ -144,6 +144,12 @@ ReverseRangeClass<BaseRange> ReverseRange(BaseRange& r)
 }
 
 template <class BaseRange>
+ReverseRangeClass<BaseRange> ReverseRange(BaseRange&& r)
+{
+	return ReverseRangeClass<BaseRange>(r);
+}
+
+template <class BaseRange>
 struct ViewRangeClass {
 	BaseRange  *r;
 	Vector<int> ndx;
@@ -184,10 +190,22 @@ ViewRangeClass<BaseRange> ViewRange(BaseRange& r, Vector<int>&& ndx)
 	return ViewRangeClass<BaseRange>(r, pick(ndx));
 }
 
+template <class BaseRange>
+ViewRangeClass<BaseRange> ViewRange(BaseRange&& r, Vector<int>&& ndx)
+{
+	return ViewRange(r, pick(ndx));
+}
+
 template <class BaseRange, class Predicate>
 ViewRangeClass<BaseRange> FilterRange(BaseRange& r, Predicate p)
 {
 	return ViewRangeClass<BaseRange>(r, FindAll(r, p));
+}
+
+template <class BaseRange, class Predicate>
+ViewRangeClass<BaseRange> FilterRange(BaseRange&& r, Predicate p)
+{
+	return FilterRange(r, p);
 }
 
 template <class BaseRange, class Predicate>
@@ -200,4 +218,16 @@ template <class BaseRange>
 ViewRangeClass<BaseRange> SortedRange(BaseRange& r)
 {
 	return SortedRange(r, std::less<ValueTypeOf<BaseRange>>());
+}
+
+template <class BaseRange, class Predicate>
+ViewRangeClass<BaseRange> SortedRange(BaseRange&& r, Predicate p)
+{
+	return SortedRange(r, p);
+}
+
+template <class BaseRange>
+ViewRangeClass<BaseRange> SortedRange(BaseRange&& r)
+{
+	return SortedRange(r);
 }
