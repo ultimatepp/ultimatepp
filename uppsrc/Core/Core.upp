@@ -63,6 +63,8 @@ file
 	SplitMerge.cpp,
 	CharSet.i,
 	CharSet.h,
+	Utf.hpp,
+	Utf.cpp,
 	CharSet.cpp,
 	Bom.cpp,
 	Path.h,
