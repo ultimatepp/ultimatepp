@@ -270,7 +270,6 @@ class JsonIO;
 #include "Mt.h"
 #include "String.h"
 
-#include "CharSet.h"
 #include "TimeDate.h"
 #include "Path.h"
 #include "Stream.h"
@@ -287,6 +286,8 @@ class JsonIO;
 #include "Obsolete.h"
 #include "FixedMap.h"
 #include "InVector.h"
+
+#include "CharSet.h"
 
 #include "SplitMerge.h"
 

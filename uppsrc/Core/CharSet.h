@@ -25,6 +25,72 @@ enum {
 
 #endif
 
+#include "Utf.hpp"
+
+int    strlen32(const dword *s);
+
+bool   CheckUtf8(const char *s, int len);
+inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, strlen(s)); }
+inline bool   CheckUtf8(const String& s)              { return CheckUtf8(~s, s.GetCount()); }
+
+int    Utf8Len(const dword *s, int len);
+inline int    Utf8Len(const dword *s)                 { return Utf8Len(s, strlen32(s)); }
+inline int    Utf8Len(const Vector<dword>& s)         { return Utf8Len(s, s.GetCount()); }
+inline int    Utf8Len(dword code)                     { return Utf8Len(&code, 1); }
+
+void   ToUtf8(char *t, const dword *s, int len);
+String ToUtf8(const dword *s, int len);
+inline String ToUtf8(const dword *s)                  { return ToUtf8(s, strlen32(s)); }
+inline String ToUtf8(const Vector<dword>& s)          { return ToUtf8(s, s.GetCount()); }
+inline String ToUtf8(dword code)                      { return ToUtf8(&code, 1); }
+
+int    Utf8Len(const wchar *s, int len);
+inline int    Utf8Len(const wchar *s)                 { return Utf8Len(s, wstrlen(s)); }
+inline int    Utf8Len(const WString& s)               { return Utf8Len(~s, s.GetCount()); }
+
+void   ToUtf8(char *t, const wchar *s, int len);
+String ToUtf8(const wchar *s, int len);
+inline String ToUtf8(const wchar *s)                  { return ToUtf8(s, wstrlen(s)); }
+inline String ToUtf8(const WString& s)                { return ToUtf8(~s, s.GetCount()); }
+
+int Utf16Len(const dword *s, int len);
+inline int Utf16Len(const dword *s)                   { return Utf16Len(s, strlen32(s)); }
+inline int Utf16Len(const Vector<dword>& s)           { return Utf16Len(s, s.GetCount()); }
+inline int Utf16Len(dword code)                       { return Utf16Len(&code, 1); }
+
+void    ToUtf16(wchar *t, const dword *s, int len);
+WString ToUtf16(const dword *s, int len);
+inline WString ToUtf16(const dword *s)                { return ToUtf16(s, strlen32(s)); }
+inline WString ToUtf16(const Vector<dword>& s)        { return ToUtf16(s, s.GetCount()); }
+inline WString ToUtf16(dword code)                    { return ToUtf16(&code, 1); }
+
+int Utf16Len(const char *s, int len);
+inline int Utf16Len(const char *s)                    { return Utf16Len(s, strlen(s)); }
+inline int Utf16Len(const String& s)                  { return Utf16Len(~s, s.GetCount()); }
+
+void    ToUtf16(wchar *t, const char *s, int len);
+WString ToUtf16(const char *s, int len);
+inline WString ToUtf16(const char *s)                 { return ToUtf16(s, strlen(s)); }
+inline WString ToUtf16(const String& s)               { return ToUtf16(~s, s.GetCount()); }
+
+int     Utf32Len(const wchar *s, int len);
+inline  int Utf32Len(const wchar *s)                  { return Utf32Len(s, wstrlen(s)); }
+inline  int Utf32Len(const WString& s)                { return Utf32Len(~s, s.GetCount()); }
+
+void          ToUtf32(dword *t, const wchar *s, int len);
+Vector<dword> ToUtf32(const wchar *s, int len);
+inline Vector<dword> ToUtf32(const wchar *s)          { return ToUtf32(s, wstrlen(s)); }
+inline Vector<dword> ToUtf32(const WString& s)        { return ToUtf32(~s, s.GetCount()); }
+
+int    Utf32Len(const char *s, int len);
+inline int Utf32Len(const char *s)                    { return Utf32Len(s, strlen(s)); }
+inline int Utf32Len(const String& s)                  { return Utf32Len(~s, s.GetCount()); }
+
+void          ToUtf32(dword *t, const char *s, int len);
+Vector<dword> ToUtf32(const char *s, int len);
+inline Vector<dword> ToUtf32(const char *s)           { return ToUtf32(s, strlen(s)); }
+inline Vector<dword> ToUtf32(const String& s)         { return ToUtf32(~s, s.GetCount()); }
+
 void  SetDefaultCharset(byte charset);
 byte  GetDefaultCharset();
 
@@ -49,11 +115,6 @@ inline bool IsUtf8Lead(int c)
 {
 	return (c & 0xc0) != 0x80;
 }
-
-String  ToUtf8(int code);
-String  ToUtf8(const wchar *s, int len);
-String  ToUtf8(const wchar *s);
-String  ToUtf8(const WString& w);
 
 WString FromUtf8(const char *_s, int len);
 WString FromUtf8(const char *_s);
