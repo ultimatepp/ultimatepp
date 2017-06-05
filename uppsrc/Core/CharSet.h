@@ -30,7 +30,7 @@ enum {
 int    strlen32(const dword *s);
 
 bool   CheckUtf8(const char *s, int len);
-inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, strlen(s)); }
+inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen(s)); }
 inline bool   CheckUtf8(const String& s)              { return CheckUtf8(~s, s.GetCount()); }
 
 int    Utf8Len(const dword *s, int len);
@@ -65,12 +65,12 @@ inline WString ToUtf16(const Vector<dword>& s)        { return ToUtf16(s, s.GetC
 inline WString ToUtf16(dword code)                    { return ToUtf16(&code, 1); }
 
 int Utf16Len(const char *s, int len);
-inline int Utf16Len(const char *s)                    { return Utf16Len(s, strlen(s)); }
+inline int Utf16Len(const char *s)                    { return Utf16Len(s, (int)strlen(s)); }
 inline int Utf16Len(const String& s)                  { return Utf16Len(~s, s.GetCount()); }
 
 void    ToUtf16(wchar *t, const char *s, int len);
 WString ToUtf16(const char *s, int len);
-inline WString ToUtf16(const char *s)                 { return ToUtf16(s, strlen(s)); }
+inline WString ToUtf16(const char *s)                 { return ToUtf16(s, (int)strlen(s)); }
 inline WString ToUtf16(const String& s)               { return ToUtf16(~s, s.GetCount()); }
 
 int     Utf32Len(const wchar *s, int len);
@@ -83,12 +83,12 @@ inline Vector<dword> ToUtf32(const wchar *s)          { return ToUtf32(s, wstrle
 inline Vector<dword> ToUtf32(const WString& s)        { return ToUtf32(~s, s.GetCount()); }
 
 int    Utf32Len(const char *s, int len);
-inline int Utf32Len(const char *s)                    { return Utf32Len(s, strlen(s)); }
+inline int Utf32Len(const char *s)                    { return Utf32Len(s, (int)strlen(s)); }
 inline int Utf32Len(const String& s)                  { return Utf32Len(~s, s.GetCount()); }
 
 void          ToUtf32(dword *t, const char *s, int len);
 Vector<dword> ToUtf32(const char *s, int len);
-inline Vector<dword> ToUtf32(const char *s)           { return ToUtf32(s, strlen(s)); }
+inline Vector<dword> ToUtf32(const char *s)           { return ToUtf32(s, (int)strlen(s)); }
 inline Vector<dword> ToUtf32(const String& s)         { return ToUtf32(~s, s.GetCount()); }
 
 void  SetDefaultCharset(byte charset);
