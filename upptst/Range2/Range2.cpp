@@ -15,7 +15,7 @@ CONSOLE_APP_MAIN
 	Sort(SortedRange(MakeIota(10)));
 
 	// Testing const argument
-	auto h = MakeIota(10);american go
+	auto h = MakeIota(10);
 	const auto& x = h;
 
 	DUMP(SubRange(x, 1, 4));
