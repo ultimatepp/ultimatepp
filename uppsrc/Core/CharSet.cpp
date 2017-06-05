@@ -2420,34 +2420,6 @@ int lenAsUtf8(const wchar *s, int len)
 	return len;
 }
 
-String ToUtf8(const wchar *s, int len)
-{
-	const wchar *lim = s + len;
-	int tlen = lenAsUtf8(s, len);
-	StringBuffer result(tlen);
-	char *t = result;
-	while(s < lim) {
-		word code = *s++;
-		if(code < 0x80)
-			*t++ = (char)code;
-		else
-		if(code < 0x800) {
-			*t++ = 0xc0 | (code >> 6);
-			*t++ = 0x80 | (code & 0x3f);
-		}
-		else
-		if((code & 0xFF00) == 0xEE00)
-			*t++ = (char) code;
-		else {
-			*t++ = 0xe0 | (code >> 12);
-			*t++ = 0x80 | ((code >> 6) & 0x3f);
-			*t++ = 0x80 | (code & 0x3f);
-		}
-	}
-	ASSERT(t - ~result == tlen);
-	return result;
-}
-
 int utf8len(const char *s)
 {
 	return utf8len(s, (int)strlen(s));
@@ -2490,21 +2462,6 @@ String ToUtf8(int code)
 String ToUtf8(wchar code)
 {
 	return ToUtf8(&code, 1);
-}
-
-String ToUtf8(const WString& w)
-{
-	return ToUtf8(w, w.GetLength());
-}
-
-String ToUtf8(const wchar *s)
-{
-	return ToUtf8(s, wstrlen(s));
-}
-
-bool  CheckUtf8(const String& src)
-{
-	return utf8check(~src, src.GetLength());
 }
 
 WString FromUtf8(const char *s)
