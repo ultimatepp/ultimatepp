@@ -6,7 +6,7 @@ int strlen32(const dword *s)
 {
 	const dword *s0 = s;
 	while(*s) s++;
-	return s - s0;
+	return int(s - s0);
 }
 
 bool CheckUtf8(const char *s, int len)
