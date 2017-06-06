@@ -1,5 +1,5 @@
 template <class Target>
-force_inline bool ToUtf8_(Target &t, dword codepoint)
+force_inline bool ToUtf8_(Target t, dword codepoint)
 {
 	if(codepoint < 0x80)
 		t((char)codepoint);
@@ -30,7 +30,7 @@ force_inline bool ToUtf8_(Target &t, dword codepoint)
 }
 
 template <class Target>
-force_inline bool FromUtf8_(Target& t, const char *_s, size_t len)
+force_inline bool FromUtf8_(Target t, const char *_s, size_t len)
 {
 	bool ok = true;
 	const byte *s = (const byte *)_s;
@@ -77,7 +77,7 @@ force_inline bool FromUtf8_(Target& t, const char *_s, size_t len)
 }
 
 template <class Target>
-force_inline bool ToUtf16_(Target &t, size_t codepoint)
+force_inline bool ToUtf16_(Target t, size_t codepoint)
 {
 	if(codepoint < 0x10000)
 		t((wchar)codepoint);
@@ -93,7 +93,7 @@ force_inline bool ToUtf16_(Target &t, size_t codepoint)
 }
 
 template <class Target>
-force_inline void FromUtf16_(Target& t, const wchar *s, size_t len)
+force_inline void FromUtf16_(Target t, const wchar *s, size_t len)
 {
 	const wchar *lim = s + len;
 	while(s < lim) {
