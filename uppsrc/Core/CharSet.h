@@ -29,6 +29,11 @@ enum {
 
 int    strlen32(const dword *s);
 
+inline bool IsUtf8Lead(int c)
+{
+	return (c & 0xc0) != 0x80;
+}
+
 bool   CheckUtf8(const char *s, int len);
 inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen(s)); }
 inline bool   CheckUtf8(const String& s)              { return CheckUtf8(~s, s.GetCount()); }
@@ -38,15 +43,15 @@ inline int    Utf8Len(const dword *s)                 { return Utf8Len(s, strlen
 inline int    Utf8Len(const Vector<dword>& s)         { return Utf8Len(s, s.GetCount()); }
 inline int    Utf8Len(dword code)                     { return Utf8Len(&code, 1); }
 
+int    Utf8Len(const wchar *s, int len);
+inline int    Utf8Len(const wchar *s)                 { return Utf8Len(s, wstrlen(s)); }
+inline int    Utf8Len(const WString& s)               { return Utf8Len(~s, s.GetCount()); }
+
 void   ToUtf8(char *t, const dword *s, int len);
 String ToUtf8(const dword *s, int len);
 inline String ToUtf8(const dword *s)                  { return ToUtf8(s, strlen32(s)); }
 inline String ToUtf8(const Vector<dword>& s)          { return ToUtf8(s, s.GetCount()); }
 inline String ToUtf8(dword code)                      { return ToUtf8(&code, 1); }
-
-int    Utf8Len(const wchar *s, int len);
-inline int    Utf8Len(const wchar *s)                 { return Utf8Len(s, wstrlen(s)); }
-inline int    Utf8Len(const WString& s)               { return Utf8Len(~s, s.GetCount()); }
 
 void   ToUtf8(char *t, const wchar *s, int len);
 String ToUtf8(const wchar *s, int len);
@@ -58,15 +63,15 @@ inline int Utf16Len(const dword *s)                   { return Utf16Len(s, strle
 inline int Utf16Len(const Vector<dword>& s)           { return Utf16Len(s, s.GetCount()); }
 inline int Utf16Len(dword code)                       { return Utf16Len(&code, 1); }
 
+int Utf16Len(const char *s, int len);
+inline int Utf16Len(const char *s)                    { return Utf16Len(s, (int)strlen(s)); }
+inline int Utf16Len(const String& s)                  { return Utf16Len(~s, s.GetCount()); }
+
 void    ToUtf16(wchar *t, const dword *s, int len);
 WString ToUtf16(const dword *s, int len);
 inline WString ToUtf16(const dword *s)                { return ToUtf16(s, strlen32(s)); }
 inline WString ToUtf16(const Vector<dword>& s)        { return ToUtf16(s, s.GetCount()); }
 inline WString ToUtf16(dword code)                    { return ToUtf16(&code, 1); }
-
-int Utf16Len(const char *s, int len);
-inline int Utf16Len(const char *s)                    { return Utf16Len(s, (int)strlen(s)); }
-inline int Utf16Len(const String& s)                  { return Utf16Len(~s, s.GetCount()); }
 
 void    ToUtf16(wchar *t, const char *s, int len);
 WString ToUtf16(const char *s, int len);
@@ -77,14 +82,14 @@ int     Utf32Len(const wchar *s, int len);
 inline  int Utf32Len(const wchar *s)                  { return Utf32Len(s, wstrlen(s)); }
 inline  int Utf32Len(const WString& s)                { return Utf32Len(~s, s.GetCount()); }
 
+int    Utf32Len(const char *s, int len);
+inline int Utf32Len(const char *s)                    { return Utf32Len(s, (int)strlen(s)); }
+inline int Utf32Len(const String& s)                  { return Utf32Len(~s, s.GetCount()); }
+
 void          ToUtf32(dword *t, const wchar *s, int len);
 Vector<dword> ToUtf32(const wchar *s, int len);
 inline Vector<dword> ToUtf32(const wchar *s)          { return ToUtf32(s, wstrlen(s)); }
 inline Vector<dword> ToUtf32(const WString& s)        { return ToUtf32(~s, s.GetCount()); }
-
-int    Utf32Len(const char *s, int len);
-inline int Utf32Len(const char *s)                    { return Utf32Len(s, (int)strlen(s)); }
-inline int Utf32Len(const String& s)                  { return Utf32Len(~s, s.GetCount()); }
 
 void          ToUtf32(dword *t, const char *s, int len);
 Vector<dword> ToUtf32(const char *s, int len);
@@ -103,31 +108,13 @@ const char *CharsetName(byte charset);
 int CharsetCount();
 int CharsetByName(const char *name);
 
+void ConvertCharset(char *t, byte tcharset, const char *s, byte scharset, int n);
+
 int  ToUnicode(int chr, byte charset);
 int  FromUnicode(wchar wchr, byte charset, int defchar = DEFAULTCHAR);
 
 void ToUnicode(wchar *ws, const char *s, int n, byte charset);
 void FromUnicode(char *s, const wchar *ws, int n, byte charset, int defchar = DEFAULTCHAR);
-
-void ConvertCharset(char *t, byte tcharset, const char *s, byte scharset, int n);
-
-inline bool IsUtf8Lead(int c)
-{
-	return (c & 0xc0) != 0x80;
-}
-
-WString FromUtf8(const char *_s, int len);
-WString FromUtf8(const char *_s);
-WString FromUtf8(const String& s);
-
-bool utf8check(const char *_s, int len);
-
-int utf8len(const char *s, int len);
-int utf8len(const char *s);
-int lenAsUtf8(const wchar *s, int len);
-int lenAsUtf8(const wchar *s);
-
-bool    CheckUtf8(const String& src);
 
 WString ToUnicode(const String& src, byte charset);
 WString ToUnicode(const char *src, int n, byte charset);
@@ -227,13 +214,26 @@ String  ToAscii(const char *s, byte charset = CHARSET_DEFAULT);
 
 WString LoadStreamBOMW(Stream& in, byte def_charset);
 WString LoadStreamBOMW(Stream& in);
-String LoadStreamBOM(Stream& in, byte def_charset);
-String LoadStreamBOM(Stream& in);
+String  LoadStreamBOM(Stream& in, byte def_charset);
+String  LoadStreamBOM(Stream& in);
 WString LoadFileBOMW(const char *path, byte def_charset);
 WString LoadFileBOMW(const char *path);
-String LoadFileBOM(const char *path, byte def_charset);
-String LoadFileBOM(const char *path);
-bool SaveStreamBOM(Stream& out, const WString& data);
-bool SaveFileBOM(const char *path, const WString& data);
-bool SaveStreamBOMUtf8(Stream& out, const String& data);
-bool SaveFileBOMUtf8(const char *path, const String& data);
+String  LoadFileBOM(const char *path, byte def_charset);
+String  LoadFileBOM(const char *path);
+bool    SaveStreamBOM(Stream& out, const WString& data);
+bool    SaveFileBOM(const char *path, const WString& data);
+bool    SaveStreamBOMUtf8(Stream& out, const String& data);
+bool    SaveFileBOMUtf8(const char *path, const String& data);
+
+// Deprecated names
+
+inline WString FromUtf8(const char *s, int len)        { return ToUtf16(s, len); }
+inline WString FromUtf8(const char *s)                 { return ToUtf16(s); }
+inline WString FromUtf8(const String& s)               { return ToUtf16(s); }
+
+inline bool utf8check(const char *s, int len)          { return CheckUtf8(s, len); }
+
+inline int utf8len(const char *s, int len)             { return Utf16Len(s, len); }
+inline int utf8len(const char *s)                      { return Utf16Len(s); }
+inline int lenAsUtf8(const wchar *s, int len)          { return Utf8Len(s, len); }
+inline int lenAsUtf8(const wchar *s)                   { return Utf8Len(s); }

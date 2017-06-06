@@ -75,7 +75,8 @@ of characters that do not exist in target charset.&]
 [s4; &]
 [s5;:SetDefaultCharset`(byte`): [@(0.0.255) void]_[* SetDefaultCharset]([_^byte^ byte]_[*@3 c
 harset])&]
-[s2;%% Sets the default [%-*@3 charset].&]
+[s2;%% Sets the default [%-*@3 charset]. This is to support legacy 
+application; new applications should always use UTF8.&]
 [s3;%% &]
 [s4; &]
 [s5;:ResolveCharset`(byte`): [_^byte^ byte]_[* ResolveCharset]([_^byte^ byte]_[*@3 charset])&]
@@ -170,86 +171,6 @@ tCharset]([@(0.0.255) char]_`*[*@3 t], [_^byte^ byte]_[*@3 tcharset],
 [%-*@3 scharset] to another 8`-bit array with encoding [%-*@3 tcharset]. 
 Both arrays must have (at least) [%-*@3 n] elements. Neither [%-*@3 tcharset] 
 or[%-*@3  scharset ]can be CHARSET`_UTF8.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:IsUtf8Lead`(int`): [@(0.0.255) bool]_[* IsUtf8Lead]([@(0.0.255) int]_[*@3 c])&]
-[s2;%% Tests whether [%-*@3 c ]is lead UTF`-8 byte.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:ToUtf8`(int`): [_^Upp`:`:String^ String]_[* ToUtf8]([@(0.0.255) int]_[*@3 code])&]
-[s2;%% Converts single unicode character to Utf8. Bytes from private 
-0xEExx range are converted to xx bytes.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:ToUtf8`(const wchar`*`,int`): [_^String^ String]_[* ToUtf8]([@(0.0.255) const]_[_^wchar^ w
-char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
-[s2;%% Converts UNICODE array to UTF`-8. Bytes from private 0xEExx 
-range are converted to xx bytes.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:ToUtf8`(const wchar`*`): [_^String^ String]_[* ToUtf8]([@(0.0.255) const]_[_^wchar^ wcha
-r]_`*[*@3 s])&]
-[s2;%% Converts zero`-terminated string [%-*@3 s] to UTF`-8. Bytes 
-from private 0xEExx range are converted to xx bytes.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:ToUtf8`(const WString`&`): [_^String^ String]_[* ToUtf8]([@(0.0.255) const]_[_^WString^ W
-String][@(0.0.255) `&]_[*@3 w])&]
-[s2;%% Converts string to UTF`-8. Bytes from private 0xEExx range 
-are converted to xx bytes.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:FromUtf8`(const char`*`,int`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 `_s], [@(0.0.255) int]_[*@3 len])&]
-[s2;%% Converts UTF`-8 to UNICODE string. Any wrong bytes and sequences 
-are converted to private 0xEExx range.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:FromUtf8`(const char`*`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 `_s])&]
-[s2;%% Converts zero`-terminted UTF`-8 string to UNICODE. Any wrong 
-bytes and sequences are converted to private 0xEExx range.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:FromUtf8`(const String`&`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[_^String^ S
-tring][@(0.0.255) `&]_[*@3 s])&]
-[s2;%% Converts UTF`-8 string to UNICODE. Any wrong bytes and sequences 
-are converted to private 0xEExx range.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:utf8check`(const char`*`,int`): [@(0.0.255) bool]_[* utf8check]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 `_s], [@(0.0.255) int]_[*@3 len])&]
-[s2;%% Checks whether array contains a valid UTF`-8 sequence.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:utf8len`(const char`*`,int`): [@(0.0.255) int]_[* utf8len]([@(0.0.255) const]_[@(0.0.255) c
-har]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
-[s2;%% Returns a number of UNICODE characters in UTF`-8 text. Error`-escaped 
-0xEExx characters for ill`-formed parts of UTF`-8 are correctly 
-accounted for.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:utf8len`(const char`*`): [@(0.0.255) int]_[* utf8len]([@(0.0.255) const]_[@(0.0.255) cha
-r]_`*[*@3 s])&]
-[s2;%% Returns a number of UNICODE characters in zero`-terminated 
-UTF`-8 text. Error`-escaped 0xEExx characters for ill`-formed 
-parts of UTF`-8 are correctly accounted for.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:lenAsUtf8`(const wchar`*`,int`): [@(0.0.255) int]_[* lenAsUtf8]([@(0.0.255) const]_[_^wchar^ w
-char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
-[s2;%% Returns number of bytes of UNICODE text when UTF`-8 encoded.&]
-[s3;%% &]
-[s4;%% &]
-[s5;:lenAsUtf8`(const wchar`*`): [@(0.0.255) int]_[* lenAsUtf8]([@(0.0.255) const]_[_^wchar^ w
-char]_`*[*@3 s])&]
-[s2;%% Returns number of bytes of UNICODE zero`-terminated text when 
-UTF`-8 encoded..&]
-[s3;%% &]
-[s4;%% &]
-[s5;:CheckUtf8`(const String`&`): [@(0.0.255) bool]_[* CheckUtf8]([@(0.0.255) const]_[_^String^ S
-tring][@(0.0.255) `&]_[*@3 src])&]
-[s2;%% Checks whether String contains a valid UTF`-8 sequence.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:ToUnicode`(const String`&`,byte`): [_^WString^ WString]_[* ToUnicode]([@(0.0.255) cons
@@ -715,4 +636,55 @@ true on success.&]
 [s2; Saves 8`-bit string in default encoding to the file. Returns 
 true on success.&]
 [s3; &]
+[s4; &]
+[s5;:FromUtf8`(const char`*`,int`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 `_s], [@(0.0.255) int]_[*@3 len])&]
+[s2;%% Converts UTF`-8 to UNICODE string. Any wrong bytes and sequences 
+are converted to private 0xEExx range. Deprecated, use ToUtf16.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:FromUtf8`(const char`*`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 `_s])&]
+[s2;%% Converts zero`-terminted UTF`-8 string to UNICODE. Any wrong 
+bytes and sequences are converted to private 0xEExx range. Deprecated, 
+use ToUtf16.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:FromUtf8`(const String`&`): [_^WString^ WString]_[* FromUtf8]([@(0.0.255) const]_[_^String^ S
+tring][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Converts UTF`-8 string to UNICODE. Any wrong bytes and sequences 
+are converted to private 0xEExx range. Deprecated, use ToUtf16.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:utf8check`(const char`*`,int`): [@(0.0.255) bool]_[* utf8check]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 `_s], [@(0.0.255) int]_[*@3 len])&]
+[s2;%% Checks whether array contains a valid UTF`-8 sequence. Deprecated, 
+use CheckUtf8.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:utf8len`(const char`*`,int`): [@(0.0.255) int]_[* utf8len]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
+[s2;%% Returns a number of UNICODE characters in UTF`-8 text. Error`-escaped 
+0xEExx characters for ill`-formed parts of UTF`-8 are correctly 
+accounted for. Deprecated, use Utf16Len.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:utf8len`(const char`*`): [@(0.0.255) int]_[* utf8len]([@(0.0.255) const]_[@(0.0.255) cha
+r]_`*[*@3 s])&]
+[s2;%% Returns a number of UNICODE characters in zero`-terminated 
+UTF`-8 text. Error`-escaped 0xEExx characters for ill`-formed 
+parts of UTF`-8 are correctly accounted for. Deprecated, use 
+Utf16Len.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:lenAsUtf8`(const wchar`*`,int`): [@(0.0.255) int]_[* lenAsUtf8]([@(0.0.255) const]_[_^wchar^ w
+char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
+[s2;%% Returns number of bytes of UNICODE text when UTF`-8 encoded. 
+Deprecated, use Utf8Len.&]
+[s3;%% &]
+[s4;%% &]
+[s5;:lenAsUtf8`(const wchar`*`): [@(0.0.255) int]_[* lenAsUtf8]([@(0.0.255) const]_[_^wchar^ w
+char]_`*[*@3 s])&]
+[s2;%% Returns number of bytes of UNICODE zero`-terminated text when 
+UTF`-8 encoded. Deprecated, use Utf8Len.&]
 [s0; ]]
