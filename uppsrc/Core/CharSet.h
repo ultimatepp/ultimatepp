@@ -110,18 +110,6 @@ int CharsetByName(const char *name);
 
 void ConvertCharset(char *t, byte tcharset, const char *s, byte scharset, int n);
 
-int  ToUnicode(int chr, byte charset);
-int  FromUnicode(wchar wchr, byte charset, int defchar = DEFAULTCHAR);
-
-void ToUnicode(wchar *ws, const char *s, int n, byte charset);
-void FromUnicode(char *s, const wchar *ws, int n, byte charset, int defchar = DEFAULTCHAR);
-
-WString ToUnicode(const String& src, byte charset);
-WString ToUnicode(const char *src, int n, byte charset);
-String  FromUnicodeBuffer(const wchar *src, int len, byte charset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
-String  FromUnicodeBuffer(const wchar *src);
-String  FromUnicode(const WString& src, byte charset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
-
 String  ToCharset(byte charset, const String& s, byte scharset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
 
 #ifndef flagSO
@@ -225,7 +213,19 @@ bool    SaveFileBOM(const char *path, const WString& data);
 bool    SaveStreamBOMUtf8(Stream& out, const String& data);
 bool    SaveFileBOMUtf8(const char *path, const String& data);
 
-// Deprecated names
+// Deprecated
+
+int  ToUnicode(int chr, byte charset);
+int  FromUnicode(wchar wchr, byte charset, int defchar = DEFAULTCHAR);
+
+void ToUnicode(wchar *ws, const char *s, int n, byte charset);
+void FromUnicode(char *s, const wchar *ws, int n, byte charset, int defchar = DEFAULTCHAR);
+
+WString ToUnicode(const String& src, byte charset);
+WString ToUnicode(const char *src, int n, byte charset);
+String  FromUnicodeBuffer(const wchar *src, int len, byte charset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
+String  FromUnicodeBuffer(const wchar *src);
+String  FromUnicode(const WString& src, byte charset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
 
 inline WString FromUtf8(const char *s, int len)        { return ToUtf16(s, len); }
 inline WString FromUtf8(const char *s)                 { return ToUtf16(s); }
