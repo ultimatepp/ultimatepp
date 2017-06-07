@@ -96,7 +96,7 @@ private:
 public:
 	Callback                           WhenPreQuery;
 	Callback                           WhenPostQuery;
-	Gate1<const VectorMap<Id, Value>&> WhenFilter;
+	Gate<const VectorMap<Id, Value>&>  WhenFilter;
 
 	void      StdBar(Bar& menu);
 	bool      CanInsert() const;
