@@ -57,7 +57,7 @@ void Map()
 		DUMP(p);
 	
 	/// Alternatively, it is possible to create 'projection range' of VectorMap that provides
-	/// convenient key/value iteration, using `operator~` (note that is also removes 'unliked'
+	/// convenient key/value iteration, using `operator~` (note that is also removes 'unlinked'
 	/// items, see later):
 	
 	for(const auto& e : ~m) {
