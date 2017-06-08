@@ -53,7 +53,7 @@ void Map()
 	
 	/// To iterate through keys, you can use `begin`/`end` of internal `Index`:
 	
-	for(const auto& k : m.GetKeys())
+	for(const auto& p : m.GetKeys())
 		DUMP(p);
 	
 	/// Alternatively, it is possible to create 'projection range' of VectorMap that provides
