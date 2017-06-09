@@ -22,7 +22,8 @@ protected:
 	const char *IsId0(const char *s) const;
 	bool        Id0(const char *id);
 	void        DoSpaces()                    { if(skipspaces) Spaces(); }
-	int         ReadUTF16();
+	dword       ReadHex();
+	bool        ReadHex(dword& hex, int n);
 
 public:
 	struct Error : public Exc                 { Error(const char *s) : Exc(s) {} };
