@@ -82,8 +82,9 @@ paces][*  ]method. Default is true.&]
 [s4; &]
 [s5;:CParser`:`:UnicodeEscape`(bool`): [_^CParser^ CParser][@(0.0.255) `&]_[* UnicodeEscape
 ]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2;%% Activates/deactivates whether CParser should recognize Java/JavaScript 
-`\u unicode escape sequences in String.&]
+[s2;%% Activates/deactivates whether CParser should recognize `\u 
+and `\U unicode escape sequences in String. This option is active 
+by default.&]
 [s3; &]
 [s4; &]
 [s5;:CParser`:`:SkipComments`(bool`): [_^CParser^ CParser][@(0.0.255) `&]_[* SkipComments](
