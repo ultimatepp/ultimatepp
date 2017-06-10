@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	Unicode.cpp,
+	UnicodeData.txt;
+
+mainconfig
+	"" = "";
+
