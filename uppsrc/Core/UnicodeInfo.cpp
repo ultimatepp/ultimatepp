@@ -47,10 +47,12 @@ UnicodeInfo::UnicodeInfo()
 		composed.Add(data[i + 1]);
 		decomposed.Add(MakeTuple(data[i + count + 1], data[i + 2 * count + 1], data[i + 3 * count + 1]));
 	}
+	composed.Shrink();
+	decomposed.Shrink();
 }
 
 int UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED])
-{
+{ // TODO: Add hangul support
 	UnicodeInfo& f = Single<UnicodeInfo>();
 	
 	int q = f.composed.Find(codepoint);
