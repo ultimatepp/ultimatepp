@@ -96,6 +96,11 @@ Vector<dword> ToUtf32(const char *s, int len);
 inline Vector<dword> ToUtf32(const char *s)           { return ToUtf32(s, (int)strlen(s)); }
 inline Vector<dword> ToUtf32(const String& s)         { return ToUtf32(~s, s.GetCount()); }
 
+enum { MAX_DECOMPOSED = 3 };
+
+int   UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED]);
+dword UnicodeCompose(dword *t, int count);
+
 void  SetDefaultCharset(byte charset);
 byte  GetDefaultCharset();
 
