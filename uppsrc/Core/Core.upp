@@ -65,6 +65,7 @@ file
 	CharSet.h,
 	Utf.hpp,
 	Utf.cpp,
+	UnicodeInfo.cpp,
 	CharSet.cpp,
 	Bom.cpp,
 	Path.h,
