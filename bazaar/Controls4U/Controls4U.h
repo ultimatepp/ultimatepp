@@ -340,8 +340,8 @@ public:
 	void SetTimeRefresh() {SetTime();};
 	void SetTime(int h, int n, int s);
 
-	StaticClock();	
-	~StaticClock(); 
+	StaticClock();
+	~StaticClock();	
 };
 
 class Meter : public Ctrl {

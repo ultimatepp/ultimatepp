@@ -1052,7 +1052,7 @@ struct StaticClocks {
 	}
 	void Add(StaticClock *clock) {
 		clocks.Add(clock);
-#ifdef _MULTITHREADED
+#ifdef flagMT
 		if (!running) {
 			AtomicInc(running);
 			Thread().Run(callback1(StaticClockThread, this));
@@ -1078,6 +1078,7 @@ struct StaticClocks {
 	}
 	int GetCount() {return clocks.GetCount();}
 };
+
 
 StaticClocks clocks;
 
@@ -1117,6 +1118,7 @@ StaticClock::StaticClock() {
 }
 
 StaticClock::~StaticClock() {
+	clocks.Remove(this);
 }
 
 void Meter::PaintMarks(BufferPainter &w, double cx, double cy, double R, double ang0, 
@@ -1309,7 +1311,7 @@ void Meter::Paint(Draw& ww) {
 	ww.DrawImage(0, 0, ib);
 }
 
-#ifdef _MULTITHREADED
+#ifdef flagMT
 void MeterThread(Meter *gui, double newValue) {
 	double delta = Sign(newValue-gui->value)*(gui->max - gui->min)/gui->sensibility;
 	long deltaT = labs(long(1000.*delta*gui->speed/(gui->max - gui->min)));
@@ -1332,7 +1334,7 @@ void MeterThread(Meter *gui, double newValue) {
 
 void Meter::SetData(const Value& v)	{
 	double val = minmax(double(v), min, max) ;
-#ifdef _MULTITHREADED
+#ifdef flagMT
 	if (running) {	// Stop movement before changing value
 		AtomicInc(kill);	
 		while (running)
