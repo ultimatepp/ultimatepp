@@ -1,4 +1,3 @@
-
 class DisplayPopup : public Ctrl, public Link<DisplayPopup> {
 	virtual void  Paint(Draw& w);
 	virtual void  LeftDown(Point p, dword);
