@@ -3,7 +3,7 @@
 
 #include <ClassFactory/ClassFactory.h>
 
-NAMESPACE_UPP;
+NAMESPACE_UPP
 
 template<class T> class WithPolyXML : public WithFactory<T>
 {
@@ -257,6 +257,6 @@ template<class K, class T> void PolyXMLArrayMapOne<K, T>::Xmlize(XmlIO &xml)
 	}
 }
 
-END_UPP_NAMESPACE;
+END_UPP_NAMESPACE
 
 #endif
