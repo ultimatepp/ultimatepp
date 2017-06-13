@@ -54,6 +54,7 @@ void Controls4U_Demo::Timer() {
 	timerOn = true;
 	staticClock_Demo.UpdateInfo();
 	timerOn = false;
+	
 #if defined(PLATFORM_WIN32)
 	firefox_Demo.UpdateInfo();
 	iexplorer_Demo.UpdateInfo();
@@ -189,7 +190,7 @@ Meter_Demo::Meter_Demo() {
 FileBrowser_Demo::FileBrowser_Demo() {
 	CtrlLayout(*this);
 
-	browser.SetReadOnly().SetUseTrashBin().SetBrowseLinks().SetDeleteReadOnly()./*SetAskBeforeDelete().*/SetDragAndDrop();
+	browser.SetReadOnly().SetUseTrashBin().SetBrowseLinks().SetDeleteReadOnly().SetDragAndDrop();
 	
 	browser.WhenAction = THISBACK(FileOpened);
 	browser.WhenSelected = THISBACK(FileSelected);
@@ -248,7 +249,7 @@ void Functions4U_Demo::OnSet() {
 
 	userEquation.SetData(myqtf);	
 }
-	
+
 PainterCanvas_Demo::PainterCanvas_Demo() {
 	CtrlLayout(*this);
 
