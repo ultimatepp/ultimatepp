@@ -2,6 +2,9 @@
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
+#define GLOBAL_MACRO_KEY 0
+#define LOCAL_MACRO_KEY  10
+
 MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	: ide(ide)
 {
@@ -22,10 +25,55 @@ MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	macrosTree.OpenDeep(0);
 	editor.Hide();
 	
-	macrosTree.WhenSel = [=] { OnMacroSel(); };
-	
+	macrosTree.WhenSel = [=]           { OnMacroSel(); };
+	macrosTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
+
 	InitButtons();
 };
+
+void MacroManagerWindow::OnMacroBar(Bar& bar)
+{
+	Value key = macrosTree.Get();
+	bool isGlobalFile = IsString(key);
+	
+	bar.Add(t_("New global macro file"), [=]{ OnNewMacroFile();});
+	bar.Add(t_("Delete macro file"),     [=]{ OnDeleteMacroFile();})
+	    .Enable(isGlobalFile);
+
+}
+
+void MacroManagerWindow::OnNewMacroFile()
+{
+	String filename;
+	if(!EditTextNotNull(filename, t_("New global macro file"), t_("Macro file name:"))) {
+		return;
+	}
+	
+	if(!filename.EndsWith(".usc"))
+		filename << ".usc";
+	
+	String fullpath  = AppendFileName(GetLocalDir(),filename);
+	if(FileExists(fullpath)) {
+		PromptOK(String() << t_("file") << " \"" << filename << "\" " << t_("already exists!"));
+		return;
+	}
+	
+	SaveFile(fullpath, "macro \"\" {}");
+	ReloadGlobalMacros();
+	
+	macrosTree.FindSetCursor(filename); //select newly added file
+}
+
+void MacroManagerWindow::OnDeleteMacroFile()
+{
+	String fileName = static_cast<String>(macrosTree.GetValue());
+	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?"))) {
+		return;
+	}
+	
+	FileDelete(AppendFileName(GetLocalDir(), fileName));
+	macrosTree.Remove(macrosTree.GetCursor());
+}
 
 void MacroManagerWindow::InitButtons()
 {
@@ -58,7 +106,7 @@ void MacroManagerWindow::OnMacroSel()
 	}
 
 	Value key = macrosTree.Get();
-	if(IsNumber(key)) {
+	if(IsNumber(key) || IsString(key)) {
 		editor.Hide();
 		editButton.Disable();
 		
@@ -122,7 +170,7 @@ void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
 void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
 {
 	Value key = macrosTree.Get(id);
-	if(IsNumber(key)) {
+	if(IsNumber(key) || IsString(key)) {
 		for(int i = 0; i < macrosTree.GetChildCount(id); i++) {
 			int node = macrosTree.GetChild(id, i);
 			FindNodeFiles(node, list);
@@ -144,7 +192,7 @@ void MacroManagerWindow::OnExport()
 		return;
 
 	Value key = macrosTree.Get();
-	if(IsNumber(key)) {
+	if(IsNumber(key) || IsString(key)) {
 		int id = macrosTree.GetCursor();
 		Index<String> list;
 		FindNodeFiles(id, list);
@@ -158,7 +206,7 @@ void MacroManagerWindow::OnEditFile()
 		return;
 
 	Value key = macrosTree.Get();
-	if(IsNumber(key))
+	if(IsNumber(key) || IsString(key))
 		return;
 
 	MacroElement element = ValueTo<MacroElement>(key);
@@ -201,7 +249,7 @@ void MacroManagerWindow::ReloadGlobalMacros()
 
 	int globalNode = macrosTree.Find(0);
 	if(globalNode < 0) {
-		globalNode = macrosTree.Add(0, Image(), 0, t_("Global macros"));
+		globalNode = macrosTree.Add(0, Image(), GLOBAL_MACRO_KEY, t_("Global macros"));
 	}
 	else {
 		macrosTree.RemoveChildren(globalNode);
@@ -215,16 +263,18 @@ void MacroManagerWindow::ReloadGlobalMacros()
 			String fileTitle = file.Mid(configFolderNameLength);
 			if(!fileTitle.TrimStart(String() << "UppLocal" << DIR_SEPS))
 				fileTitle = "../" + fileTitle;
-			fileNode = macrosTree.Add(globalNode, Image(), 3, fileTitle);
+			fileNode = macrosTree.Add(globalNode, Image(), fileTitle, fileTitle);
 		}
 			
 		macrosTree.Add(fileNode, MacroElement::GetImage(element.type), RawToValue(element), element.name);
 	}
+	
+	macrosTree.OpenDeep(0);
 }
 
 void MacroManagerWindow::ReloadLocalMacros()
 {
-	int localNode = macrosTree.Add(0, Image(), 1, t_("Local macros"));
+	int localNode = macrosTree.Add(0, Image(), LOCAL_MACRO_KEY, t_("Local macros"));
 
 	const Workspace& wspc = ide.IdeWorkspace();
 
@@ -242,9 +292,9 @@ void MacroManagerWindow::ReloadLocalMacros()
 				continue;
 			
 			if(packageNode == -1)
-				packageNode = macrosTree.Add(localNode, Image(), 2, wspc[i]);
+				packageNode = macrosTree.Add(localNode, Image(), LOCAL_MACRO_KEY + 1, wspc[i]);
 					
-			int fileNode = macrosTree.Add(packageNode, Image(), 3, file);
+			int fileNode = macrosTree.Add(packageNode, Image(), LOCAL_MACRO_KEY + 2, file);
 			for(int j = 0; j < list.GetCount(); j++) {
 				MacroElement& element = list[j];
 				macrosTree.Add(fileNode, MacroElement::GetImage(element.type), RawToValue(element), element.name);

@@ -65,10 +65,14 @@ private:
 	void ReloadGlobalMacros();
 	void ReloadLocalMacros();
 
+	void OnMacroBar(Bar& bar);
 	void OnMacroSel();
 	void OnImport();
 	void OnExport();
 	void OnEditFile();
+
+	void OnNewMacroFile();
+	void OnDeleteMacroFile();
 
 	void ExportFiles(Index<String>& files, const String& dir);
 	void FindNodeFiles(int id, Index<String>& list);
