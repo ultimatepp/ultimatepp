@@ -2,8 +2,8 @@
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
-#define GLOBAL_MACRO_KEY 0
-#define LOCAL_MACRO_KEY  10
+static const int GLOBAL_MACRO_KEY = 0;
+static const int LOCAL_MACRO_KEY  = 10;
 
 MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	: ide(ide)
@@ -29,50 +29,16 @@ MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	macrosTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
 
 	InitButtons();
-};
+}
 
 void MacroManagerWindow::OnMacroBar(Bar& bar)
 {
-	Value key = macrosTree.Get();
-	bool isGlobalFile = IsString(key);
+	bool isGlobalFile = IsString(macrosTree.Get());
 	
 	bar.Add(t_("New global macro file"), [=]{ OnNewMacroFile();});
 	bar.Add(t_("Delete macro file"),     [=]{ OnDeleteMacroFile();})
 	    .Enable(isGlobalFile);
 
-}
-
-void MacroManagerWindow::OnNewMacroFile()
-{
-	String filename;
-	if(!EditTextNotNull(filename, t_("New global macro file"), t_("Macro file name:"))) {
-		return;
-	}
-	
-	if(!filename.EndsWith(".usc"))
-		filename << ".usc";
-	
-	String fullpath  = AppendFileName(GetLocalDir(),filename);
-	if(FileExists(fullpath)) {
-		PromptOK(String() << t_("file") << " \"" << filename << "\" " << t_("already exists!"));
-		return;
-	}
-	
-	SaveFile(fullpath, "macro \"\" {}");
-	ReloadGlobalMacros();
-	
-	macrosTree.FindSetCursor(filename); //select newly added file
-}
-
-void MacroManagerWindow::OnDeleteMacroFile()
-{
-	String fileName = static_cast<String>(macrosTree.GetValue());
-	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?"))) {
-		return;
-	}
-	
-	FileDelete(AppendFileName(GetLocalDir(), fileName));
-	macrosTree.Remove(macrosTree.GetCursor());
 }
 
 void MacroManagerWindow::InitButtons()
@@ -97,7 +63,6 @@ void MacroManagerWindow::Layout()
 
 void MacroManagerWindow::OnMacroSel()
 {
-	
 	if(!macrosTree.IsCursor()) {
 		editor.Hide();
 		editButton.Disable();
@@ -216,6 +181,38 @@ void MacroManagerWindow::OnEditFile()
 	ide.editor.CenterCursor();
 	
 	Break();
+}
+
+void MacroManagerWindow::OnNewMacroFile()
+{
+	String fileName;
+	if(!EditTextNotNull(fileName, t_("New global macro file"), t_("Macro file name:")))
+		return;
+	
+	if(!fileName.EndsWith(".usc"))
+		fileName << ".usc";
+	
+	String fullPath = AppendFileName(GetLocalDir(), fileName);
+	if(FileExists(fullPath)) {
+		PromptOK(String() << t_("file") << " \"" << fileName << "\" " << t_("already exists!"));
+		return;
+	}
+	
+	SaveFile(fullPath, "macro \"\" {}");
+	ReloadGlobalMacros();
+	
+	macrosTree.FindSetCursor(fileName);
+}
+
+void MacroManagerWindow::OnDeleteMacroFile()
+{
+	String fileName = static_cast<String>(macrosTree.GetValue());
+	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?"))) {
+		return;
+	}
+	
+	FileDelete(AppendFileName(GetLocalDir(), fileName));
+	macrosTree.Remove(macrosTree.GetCursor());
 }
 
 String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)

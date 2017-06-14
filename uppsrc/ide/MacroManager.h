@@ -70,7 +70,6 @@ private:
 	void OnImport();
 	void OnExport();
 	void OnEditFile();
-
 	void OnNewMacroFile();
 	void OnDeleteMacroFile();
 
