@@ -20,14 +20,14 @@ MacroManagerWindow::MacroManagerWindow(Ide& ide)
 
 	editButton.Disable();
 	exportButton.Disable();
-
+	
 	LoadMacros();
 	macrosTree.OpenDeep(0);
 	editor.Hide();
 	
 	macrosTree.WhenSel = [=]           { OnMacroSel(); };
 	macrosTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
-
+	
 	InitButtons();
 }
 
@@ -35,8 +35,8 @@ void MacroManagerWindow::OnMacroBar(Bar& bar)
 {
 	bool isGlobalFile = IsString(macrosTree.Get());
 	
-	bar.Add(t_("New global macro file"), [=]{ OnNewMacroFile();});
-	bar.Add(t_("Delete macro file"),     [=]{ OnDeleteMacroFile();})
+	bar.Add(t_("New global macro file.."), [=]{ OnNewMacroFile();});
+	bar.Add(t_("Delete macro file"),       [=]{ OnDeleteMacroFile();})
 	    .Enable(isGlobalFile);
 
 }
