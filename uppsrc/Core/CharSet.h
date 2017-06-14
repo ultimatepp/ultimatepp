@@ -119,13 +119,16 @@ String  ToCharset(byte charset, const String& s, byte scharset = CHARSET_DEFAULT
 
 #ifndef flagSO
 extern dword uni__info[2048];
+dword ToUpperRest_(dword c);
+dword ToLowerRest_(dword c);
+dword ToAsciiRest_(dword c);
 
 inline bool IsLetter(int c)        { return (dword)c < 2048 ? uni__info[c] & 0xc0000000 : 0; }
 inline bool IsUpper(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x40000000 : 0; }
 inline bool IsLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x80000000 : 0; }
-inline int  ToUpper(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 11) & 2047 : c; }
-inline int  ToLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 2047 : c; }
-inline int  ToAscii(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 22) & 0x7f : 0; }
+inline int  ToUpper(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 11) & 2047 : ToUpperRest_(c); }
+inline int  ToLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 2047 : ToLowerRest_(c); }
+inline int  ToAscii(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 22) & 0x7f : ToAsciiRest_(c); }
 #else
 bool        IsLetter(int c);
 bool        IsUpper(int c);
