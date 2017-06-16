@@ -97,6 +97,8 @@ CONSOLE_APP_MAIN
 	Vector<dword> code, comb[3], er, ercode;
 	Vector<dword> catcode, cat;
 	Vector<dword> lettercode, letter;
+	Vector<dword> uppercode, lowercode;
+	Vector<dword> rtl;
 	VectorMap<String, int> catcount;
 	Index<String> kind;
 	kind.Add("Cc");
@@ -130,6 +132,8 @@ CONSOLE_APP_MAIN
 	kind.Add("Zl");
 	kind.Add("Zp");
 	kind.Add("Zs");
+	int composed_upper_count = 0;
+	int composed_failed = 0;
 	while(!in.IsEof()) {
 		Vector<String> h = Split(in.GetLine(), ';', false);
 //		DUMP(h);
@@ -138,12 +142,19 @@ CONSOLE_APP_MAIN
 			dword lower = ScanHex(h[13]);
 			dword upper = ScanHex(h[14]);
 			dword cde = ScanInt(h[0], NULL, 16);
+			if(h[4] == "R")
+				rtl.Add(cde);
 //			kind.FindAdd(h[2]);
 			Vector<String> decomb;
 			decomb.AppendRange(FilterRange(Split(h[5], ' '), [] (const String& x) { return x[0] != '<'; }));
-			if(decomb.GetCount() > 1) {
+			dword first;
+			if(decomb.GetCount() > 1 ||
+			   decomb.GetCount() && (first = ScanHex(decomb[0])) != cde && first < 128) // for ToAscii...
+			{
 				// DLOG(h[0] << " -> " << comb[0] << ' ' << comb[1]);
 				code.Add(cde);
+				decomb.Add("0");
+				decomb.Add("0");
 				decomb.Add("0");
 				comb[0].Add(ScanInt(decomb[0], NULL, 16));
 				comb[1].Add(ScanInt(decomb[1], NULL, 16));
@@ -166,35 +177,70 @@ CONSOLE_APP_MAIN
 				er.Add(other);
 			}
 			
-			dword t[MAX_DECOMPOSED];
-			UnicodeDecompose(cde, t);
-			dword composed_upper = 0;
-			dword composed_lower = 0;
-			if(t[0] < 128 && t[1]) {
-				t[0] = ToUpper((char)t[0]);
-				composed_upper = UnicodeCompose(t, 2);
-				t[0] = ToLower((char)t[0]);
-				composed_lower = UnicodeCompose(t, 2);
+			if(cde >= 0x7ff && upper) {
+				lowercode.Add(cde);
+				uppercode.Add(upper);
 			}
-			if(upper)
-				if(composed_upper = upper)
-					DLOG("Composed upper " << Hex(cde) << " -> " << Hex(composed_upper));
-				else
-					DLOG("Composed upper failed " << cde);
 		}
 	}
-/*
-	DDUMP(code.GetCount());
+
+	DDUMP(composed_upper_count);
+	DDUMP(composed_failed);
+	DUMP(code.GetCount());
+	DUMP(lowercode.GetCount());
+	
+	Index<dword> cx(pick(code));
+	Vector<dword> ocomb[3];
+	ocomb[0] = pick(comb[0]);
+	ocomb[1] = pick(comb[1]);
+	ocomb[2] = pick(comb[2]);
+
+	code.Clear();
+	comb[0].Clear();
+	comb[1].Clear();
+	comb[2].Clear();
+	
+	for(int i = 0; i < cx.GetCount(); i++) {
+		code.Add(cx[i]);
+		for(int ci = 0; ci < 3; ci++)
+			comb[ci].Add(ocomb[ci][i]);
+		
+		if(ocomb[1][i]) {
+			int q = cx.Find(ocomb[0][i]);
+			if(q >= 0) {
+				DUMPHEX(cx[i]);
+				Vector<int> n;
+				int ti = 0;
+				for(int ci = 0; ci < 3 && ocomb[ci][q]; ci++)
+					n.Add(ocomb[ci][q]);
+				for(int ci = 1; ci < 3 && ocomb[ci][i]; ci++)
+					n.Add(ocomb[ci][i]);
+				DUMP(n);
+				ASSERT(ti < 4);
+				code.Add(cx[i]);
+				for(int ci = 0; ci < 3; ci++)
+					comb[ci].Add(i < n.GetCount() ? n[i] : 0);
+			}
+		}
+	}
+	
 	
 	Vector<dword> data;
 	data.Add(code.GetCount());
 	data.Append(code);
 	data.Append(comb[0]);
 	data.Append(comb[1]);
-	DUMP(comb[0]);
-	DUMP(comb[2]);
 	data.Append(comb[2]);
-
+	data.Add(lowercode.GetCount());
+	data.Append(lowercode);
+	data.Append(uppercode);
+	
+	DDUMP(rtl[0]);
+	DDUMP(rtl.GetCount());
+	
+	data.Add(rtl.GetCount());
+	data.Append(rtl);
+/*
 	DDUMP(letter.GetCount());
 	DUMPC(letter);
 	DUMP(ZCompress(Encode(letter)).GetCount());
@@ -203,9 +249,9 @@ CONSOLE_APP_MAIN
 	DUMP(cat.GetCount());
 	DUMP(ZCompress(Encode(cat)).GetCount());
 	DUMP(ZCompress(Encode(catcode)).GetCount());
-	
+*/
 	Output("unicode_info__", ZCompress(Encode(data)));
-*/	
+	
 	DUMPM(catcount);
 	DUMP(Sum(catcount));
 #if 0
