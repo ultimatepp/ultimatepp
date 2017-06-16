@@ -187,7 +187,7 @@ int TextCompareCtrl::GetMatchLen(const wchar *s1, const wchar *s2, int len)
 	return len;
 }
 
-void TextCompareCtrl::LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Color eq_color,
+bool TextCompareCtrl::LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Color eq_color,
                                const wchar *s1, int l1, int h1,
                                const wchar *s2, int l2, int h2, int depth)
 {
@@ -221,7 +221,9 @@ void TextCompareCtrl::LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Colo
 			LineDiff(left, hln, eq_color, s1, l1, p1, s2, l2, p2, depth);
 			LineDiff(left, hln, eq_color, s1, p1 + matchlen, h1, s2, p2 + matchlen, h2, depth);
 		}
+		return true;
 	}
+	return false;
 }
 
 void TextCompareCtrl::Paint(Draw& draw)
@@ -291,7 +293,6 @@ void TextCompareCtrl::Paint(Draw& draw)
 			ink = SColorHighlightText;
 			paper = SColorHighlight;
 		}
-		draw.DrawRect(0, y, sz.cx, letter.cy, paper);
 
 		WString ln = l.text.ToWString();
 		if(ln.GetCount() > 20000)
@@ -306,6 +307,8 @@ void TextCompareCtrl::Paint(Draw& draw)
 			h.chr = ln[i];
 			h.font = StdFont();
 		}
+		
+		bool ldiff = false;
 
 		if(!sel) {
 			WhenHighlight(hln, ln);
@@ -320,11 +323,11 @@ void TextCompareCtrl::Paint(Draw& draw)
 				ln_diff = ExpandTabs(ln_diff);
 				if(ln_diff.GetCount() * ln.GetCount() < 50000) {
 					if(left)
-						LineDiff(true, hln, SColorPaper(),
-						         ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
+						ldiff = LineDiff(true, hln, SColorPaper(),
+						                 ~ln, 0, ln.GetCount(), ~ln_diff, 0, ln_diff.GetCount(), 0);
 					else
-						LineDiff(false, hln, SColorPaper(),
-						         ~ln_diff, 0, ln_diff.GetCount(), ~ln, 0, ln.GetCount(), 0);
+						ldiff = LineDiff(false, hln, SColorPaper(),
+						                 ~ln_diff, 0, ln_diff.GetCount(), ~ln, 0, ln.GetCount(), 0);
 				}
 			}
 			if(show_white_space) {
@@ -338,7 +341,12 @@ void TextCompareCtrl::Paint(Draw& draw)
 						break;
 				}
 			}
+			
+			if(ldiff)
+				paper = SColorPaper();
 		}
+
+		draw.DrawRect(0, y, sz.cx, letter.cy, paper); // paint the end of line
 
 		int x = 0;
 		for(int i = 0; i < hln.GetCount() - 1; ++i) {

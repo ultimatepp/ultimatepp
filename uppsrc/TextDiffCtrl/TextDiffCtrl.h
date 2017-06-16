@@ -51,7 +51,7 @@ private:
 	void           Copy();
 	int            GetLineNo(int y, int& yy);
 	int            GetMatchLen(const wchar *s1, const wchar *s2, int len);
-	void           LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Color eq_color,
+	bool           LineDiff(bool left, Vector<LineEdit::Highlight>& hln, Color eq_color,
 	                        const wchar *s1, int l1, int h1,
 	                        const wchar *s2, int l2, int h2, int depth);
 
