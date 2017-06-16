@@ -1033,13 +1033,17 @@ void CodeEditor::HighlightLine(int line, Vector<LineEdit::Highlight>& hl, int po
 			if(q < 0)
 				break;
 			int n = illuminated.GetCount();
-			while(n-- && q < hl.GetCount()) {
-				const HlStyle& st = hl_style[PAPER_SELWORD];
-				hl[q].paper = st.color;
-				if(st.bold)
-					hl[q].font.Bold();
+			if(n > 1 || !iscid(illuminated[0]) ||
+			   (q == 0 || !iscid(l[q - 1])) && (q + n >= l.GetCount() || !iscid(l[q + n])))
+				while(n-- && q < hl.GetCount()) {
+					const HlStyle& st = hl_style[PAPER_SELWORD];
+					hl[q].paper = st.color;
+					if(st.bold)
+						hl[q].font.Bold();
+					q++;
+				}
+			else
 				q++;
-			}
 		}
 	}
 }
