@@ -1,7 +1,5 @@
 // TODO: Move to separate package...
 
-
-
 class MacroElement {
 public:
 	enum class Type {
@@ -13,7 +11,7 @@ public:
 public:
 	MacroElement(Type type, const String& fileName, int line, const String& comment);
 	
-	static Image GetImage(Type type);
+	Image GetImage() const;
 	
 public:
 	Type   type;
@@ -33,6 +31,7 @@ public:
 	UscFileParser(const String& filePath);
 	
 	MacroList Parse();
+	bool      IsValid();
 	
 private:
 	void ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list);
@@ -60,7 +59,7 @@ public:
 private:
 	void InitButtons();
 	
-	void LoadUscDir(const String& dir, MacroList& store);
+	void LoadUscDir(const String& dir, int globalNode);
 	void LoadMacros();
 	void ReloadGlobalMacros();
 	void ReloadLocalMacros();
