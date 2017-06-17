@@ -162,7 +162,7 @@ CONSOLE_APP_MAIN
 			}
 			if(cde > 2048) {
 				if(*h[2] == 'L') {
-					catcode.Add(cde);
+					letter.Add(cde);
 					cat.Add(cde);
 				}
 			}
@@ -240,8 +240,11 @@ CONSOLE_APP_MAIN
 	
 	data.Add(rtl.GetCount());
 	data.Append(rtl);
-/*
+
 	DDUMP(letter.GetCount());
+	data.Add(letter.GetCount());
+	data.Append(letter);
+/*
 	DUMPC(letter);
 	DUMP(ZCompress(Encode(letter)).GetCount());
 	DUMP(ZCompress(Encode(lettercode)).GetCount());
