@@ -118,7 +118,11 @@ void ConvertCharset(char *t, byte tcharset, const char *s, byte scharset, int n)
 String  ToCharset(byte charset, const String& s, byte scharset = CHARSET_DEFAULT, int defchar = DEFAULTCHAR);
 
 #ifndef flagSO
-extern dword uni__info[2048];
+extern word unicode_fast_upper__[2048];
+extern word unicode_fast_lower__[2048];
+extern byte unicode_fast_ascii__[2048];
+extern byte unicode_fast_info__[2048];
+
 dword ToUpperRest_(dword c);
 dword ToLowerRest_(dword c);
 dword ToAsciiRest_(dword c);
@@ -127,12 +131,12 @@ bool  IsLetter_(dword c);
 bool  IsUpper_(dword c);
 bool  IsLower_(dword c);
 
-inline int  ToUpper(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 11) & 2047 : ToUpperRest_(c); }
-inline int  ToLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 2047 : ToLowerRest_(c); }
-inline int  ToAscii(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 22) & 0x7f : ToAsciiRest_(c); }
-inline bool IsUpper(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x40000000 : c != ToLower(c); }
-inline bool IsLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x80000000 : c != ToUpper(c); }
-inline bool IsLetter(int c)        { return (dword)c < 2048 ? uni__info[c] & 0xc0000000 : IsLetter_(c); }
+inline dword ToUpper(dword c)     { return c < 2048 ? unicode_fast_upper__[c] : ToUpperRest_(c); }
+inline dword ToLower(dword c)     { return c < 2048 ? unicode_fast_lower__[c] : ToLowerRest_(c); }
+inline dword ToAscii(dword c)     { return c < 2048 ? unicode_fast_ascii__[c] : ToAsciiRest_(c); }
+inline bool  IsLower(dword c)     { return c < 2048 ? unicode_fast_info__[c] & 1 : IsLower_(c); }
+inline bool  IsUpper(dword c)     { return c < 2048 ? unicode_fast_info__[c] & 2 : IsUpper_(c); }
+inline bool  IsLetter(dword c)    { return c < 2048 ? unicode_fast_info__[c] & 4 : IsLetter_(c); }
 #else
 bool        IsLetter(int c);
 bool        IsUpper(int c);
@@ -142,28 +146,35 @@ int         ToLower(int c);
 int         ToAscii(int c);
 #endif
 
-inline bool IsRTL(int c)           { return (dword)c >= 1470 && IsRTL_(c); }
+inline bool IsRTL(dword c)         { return (dword)c >= 1470 && IsRTL_(c); }
 
-inline bool IsLetter(char c)       { return IsLetter((byte) c); }//?????
-inline bool IsUpper(char c)        { return IsUpper((byte) c); }
-inline bool IsLower(char c)        { return IsLower((byte) c); }
-inline int  ToUpper(char c)        { return ToUpper((byte) c); }
-inline int  ToLower(char c)        { return ToLower((byte) c); }
-inline int  ToAscii(char c)        { return ToAscii((byte) c); }
+inline bool IsLetter(int c)        { return IsLetter((dword) c); }
+inline bool IsUpper(int c)         { return IsUpper((dword) c); }
+inline bool IsLower(int c)         { return IsLower((dword) c); }
+inline int  ToUpper(int c)         { return ToUpper((dword) c); }
+inline int  ToLower(int c)         { return ToLower((dword) c); }
+inline int  ToAscii(int c)         { return ToAscii((dword) c); }
 
-inline bool IsLetter(signed char c) { return IsLetter((byte) c); }
-inline bool IsUpper(signed char c)  { return IsUpper((byte) c); }
-inline bool IsLower(signed char c)  { return IsLower((byte) c); }
-inline int  ToUpper(signed char c)  { return ToUpper((byte) c); }
-inline int  ToLower(signed char c)  { return ToLower((byte) c); }
-inline int  ToAscii(signed char c)  { return ToAscii((byte) c); }
+inline bool  IsLetter(char c)      { return IsLetter((dword)(byte) c); }
+inline bool  IsUpper(char c)       { return IsUpper((dword)(byte) c); }
+inline bool  IsLower(char c)       { return IsLower((dword)(byte) c); }
+inline dword ToUpper(char c)       { return ToUpper((dword)(byte) c); }
+inline dword ToLower(char c)       { return ToLower((dword)(byte) c); }
+inline dword ToAscii(char c)       { return ToAscii((dword)(byte) c); }
 
-inline bool IsLetter(wchar c)      { return IsLetter((int) c); }
-inline bool IsUpper(wchar c)       { return IsUpper((int) c); }
-inline bool IsLower(wchar c)       { return IsLower((int) c); }
-inline int  ToUpper(wchar c)       { return ToUpper((int) c); }
-inline int  ToLower(wchar c)       { return ToLower((int) c); }
-inline int  ToAscii(wchar c)       { return ToAscii((int) c); }
+inline bool  IsLetter(signed char c) { return IsLetter((dword)(byte) c); }
+inline bool  IsUpper(signed char c)  { return IsUpper((dword)(byte) c); }
+inline bool  IsLower(signed char c)  { return IsLower((dword)(byte) c); }
+inline dword ToUpper(signed char c)  { return ToUpper((dword)(byte) c); }
+inline dword ToLower(signed char c)  { return ToLower((dword)(byte) c); }
+inline dword ToAscii(signed char c)  { return ToAscii((dword)(byte) c); }
+
+inline bool  IsLetter(wchar c)      { return IsLetter((dword) c); }
+inline bool  IsUpper(wchar c)       { return IsUpper((dword) c); }
+inline bool  IsLower(wchar c)       { return IsLower((dword) c); }
+inline dword ToUpper(wchar c)       { return ToUpper((dword) c); }
+inline dword ToLower(wchar c)       { return ToLower((dword) c); }
+inline dword ToAscii(wchar c)       { return ToAscii((dword) c); }
 
 inline bool IsDigit(int c)         { return c >= '0' && c <= '9'; }
 inline bool IsAlpha(int c)         { return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z'; }
