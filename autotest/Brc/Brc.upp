@@ -1,0 +1,14 @@
+uses
+	Core,
+	plugin/lz4,
+	plugin/bz2,
+	plugin/lzma,
+	plugin/zstd;
+
+file
+	Brc.cpp,
+	Brc.brc;
+
+mainconfig
+	"" = "";
+
