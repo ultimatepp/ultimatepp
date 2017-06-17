@@ -44,6 +44,11 @@ MacroList UscFileParser::Parse()
 	return ret;
 }
 
+bool UscFileParser::IsValid()
+{
+	return !Parse().IsEmpty();
+}
+
 void UscFileParser::ReadFunction(CParser& parser, const String& comment, const char* prototypeBegin, MacroList& list)
 {
 	String fileName = parser.GetFileName();
