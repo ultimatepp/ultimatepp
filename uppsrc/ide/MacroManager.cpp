@@ -36,7 +36,6 @@ void MacroManagerWindow::OnMacroBar(Bar& bar)
 	bool isGlobalFile = IsString(macrosTree.Get());
 	
 	bar.Add(t_("New global macro file.."), [=]{ OnNewMacroFile();});
-	bar.Separator();
 	bar.Add(t_("Delete macro file"),       [=]{ OnDeleteMacroFile();})
 	    .Enable(isGlobalFile);
 
