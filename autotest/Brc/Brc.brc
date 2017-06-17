@@ -1,0 +1,8 @@
+BINARY(brc_plain, "Brc.cpp")
+BINARY(brc_bz2, "Brc.cpp" BZ2)
+BINARY(brc_zip, "Brc.cpp" ZIP)
+BINARY(brc_lz4, "Brc.cpp" LZ4)
+BINARY(brc_lzma, "Brc.cpp" LZMA)
+BINARY(brc_zstd, "Brc.cpp" ZSTD)
+
+
