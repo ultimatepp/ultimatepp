@@ -2186,12 +2186,12 @@ void ConvertCharset(char *t, byte tcharset, const char *s, byte scharset, int n)
 }
 
 #ifdef flagSO
-bool IsLetter(int c)        { return (dword)c < 2048 ? uni__info[c] & 0xc0000000 : 0; }
-bool IsUpper(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x40000000 : 0; }
-bool IsLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x80000000 : 0; }
 int  ToUpper(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 11) & 2047 : ToUpperRest_(c); }
-int  ToLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 2047 : ToLowerRest_(c);; }
+int  ToLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 2047 : ToLowerRest_(c); }
 int  ToAscii(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 22) & 0x7f : ToAsciiRest_(c); }
+bool IsUpper(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x40000000 : c != ToLower(c); }
+bool IsLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x80000000 : c != ToUpper(c); }
+bool IsLetter(int c)        { return (dword)c < 2048 ? uni__info[c] & 0xc0000000 : IsLetter_(c); }
 #endif
 
 void ToUpper(wchar *t, const wchar *s, int len)
