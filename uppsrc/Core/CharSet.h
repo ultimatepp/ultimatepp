@@ -122,13 +122,17 @@ extern dword uni__info[2048];
 dword ToUpperRest_(dword c);
 dword ToLowerRest_(dword c);
 dword ToAsciiRest_(dword c);
+bool  IsRTL_(dword c);
+bool  IsLetter_(dword c);
+bool  IsUpper_(dword c);
+bool  IsLower_(dword c);
 
-inline bool IsLetter(int c)        { return (dword)c < 2048 ? uni__info[c] & 0xc0000000 : 0; }
-inline bool IsUpper(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x40000000 : 0; }
-inline bool IsLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x80000000 : 0; }
 inline int  ToUpper(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 11) & 2047 : ToUpperRest_(c); }
 inline int  ToLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 2047 : ToLowerRest_(c); }
 inline int  ToAscii(int c)         { return (dword)c < 2048 ? (uni__info[c] >> 22) & 0x7f : ToAsciiRest_(c); }
+inline bool IsUpper(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x40000000 : c != ToLower(c); }
+inline bool IsLower(int c)         { return (dword)c < 2048 ? uni__info[c] & 0x80000000 : c != ToUpper(c); }
+inline bool IsLetter(int c)        { return (dword)c < 2048 ? uni__info[c] & 0xc0000000 : IsLetter_(c); }
 #else
 bool        IsLetter(int c);
 bool        IsUpper(int c);
@@ -137,6 +141,8 @@ int         ToUpper(int c);
 int         ToLower(int c);
 int         ToAscii(int c);
 #endif
+
+inline bool IsRTL(int c)           { return (dword)c >= 1470 && IsRTL_(c); }
 
 inline bool IsLetter(char c)       { return IsLetter((byte) c); }//?????
 inline bool IsUpper(char c)        { return IsUpper((byte) c); }

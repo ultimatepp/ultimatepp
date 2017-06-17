@@ -67,7 +67,7 @@ void __LOGF__(const char *format, ...);
 #define DUMPCC(c)        UPP::DumpContainer2(VppLog() << #c << ':' << UPP::EOL, (c))
 #define DUMPCCC(c)       UPP::DumpContainer3(VppLog() << #c << ':' << UPP::EOL, (c))
 #define DUMPM(c)         UPP::DumpMap(VppLog() << #c << ':' << UPP::EOL, (c))
-#define DUMPHEX(x)       UPP::VppLog() << #x << " = "; UPP::LogHex(x)
+#define DUMPHEX(x)       UPP::VppLog() << #x << " = ", UPP::LogHex(x)
 #define XASSERT(c, d)    if(!bool(c)) { LOG("XASSERT failed"); LOGSRCPOS(); LOG(d); ASSERT(0); } else
 #define NEVER()          ASSERT(0)
 #define NEVER_(msg)      ASSERT_(0, msg)
