@@ -14,6 +14,32 @@ void Output(const String& id, const String& data)
 	VppLog() << "\n};\n";
 }
 
+void Output(const String& id, const word *data, int count)
+{
+	LOG("word " << id << "[] = {");
+	for(int i = 0; i < count; i++) {
+		if(i % 512 == 0)
+			VppLog() << '\t';
+		VppLog() << Format("0x%04X,", data[i]);
+		if(i % 512 == 511)
+			VppLog() << "\n";
+	}
+	LOG("};");
+}
+
+void Output(const String& id, const byte *data, int count)
+{
+	LOG("byte " << id << "[] = {");
+	for(int i = 0; i < count; i++) {
+		if(i % 512 == 0)
+			VppLog() << '\t';
+		VppLog() << Format("0x%02X,", data[i]);
+		if(i % 512 == 511)
+			VppLog() << "\n";
+	}
+	LOG("};");
+}
+
 void Delta(Vector<dword>& data)
 {
 	for(int i = data.GetCount() - 1; i > 0; i--)
@@ -95,61 +121,42 @@ CONSOLE_APP_MAIN
 {
 	FileIn in(GetDataFile("UnicodeData.txt"));
 	Vector<dword> code, comb[3], er, ercode;
+	Vector<dword> despec;
 	Vector<dword> catcode, cat;
 	Vector<dword> lettercode, letter;
 	Vector<dword> uppercode, lowercode;
+	Vector<dword> isupper, islower; // only those that do not have uppercode/lowercode
 	Vector<dword> rtl;
-	VectorMap<String, int> catcount;
-	Index<String> kind;
-	kind.Add("Cc");
-	kind.Add("Cf");
-	kind.Add("Cn");
-	kind.Add("Co");
-	kind.Add("Cs");
-	kind.Add("LC");
-	kind.Add("Ll");
-	kind.Add("Lm");
-	kind.Add("Lo");
-	kind.Add("Lt");
-	kind.Add("Lu");
-	kind.Add("Mc");
-	kind.Add("Me");
-	kind.Add("Mn");
-	kind.Add("Nd");
-	kind.Add("Nl");
-	kind.Add("No");
-	kind.Add("Pc");
-	kind.Add("Pd");
-	kind.Add("Pe");
-	kind.Add("Pf");
-	kind.Add("Pi");
-	kind.Add("Po");
-	kind.Add("Ps");
-	kind.Add("Sc");
-	kind.Add("Sk");
-	kind.Add("Sm");
-	kind.Add("So");
-	kind.Add("Zl");
-	kind.Add("Zp");
-	kind.Add("Zs");
+	VectorMap<String, int> dmap;
 	int composed_upper_count = 0;
 	int composed_failed = 0;
+	Buffer<word> fast_upper(2048, 0);
+	Buffer<word> fast_lower(2048, 0);
+	Buffer<byte> fast_ascii(2048, 0);
+	Buffer<byte> fast_info(2048, 0);
+	for(int i = 0; i < 2048; i++)
+		fast_upper[i] = fast_lower[i] = i;
 	while(!in.IsEof()) {
 		Vector<String> h = Split(in.GetLine(), ';', false);
 //		DUMP(h);
 //		DUMPC(h);
 		if(h.GetCount() > 14) {
+			dword upper = ScanHex(h[12]);
 			dword lower = ScanHex(h[13]);
-			dword upper = ScanHex(h[14]);
 			dword cde = ScanInt(h[0], NULL, 16);
+			String cat = h[2];
 			if(h[4] == "R")
 				rtl.Add(cde);
 //			kind.FindAdd(h[2]);
-			Vector<String> decomb;
-			decomb.AppendRange(FilterRange(Split(h[5], ' '), [] (const String& x) { return x[0] != '<'; }));
-			dword first;
+			Vector<String> decomb = Split(h[5], ' ');
+			if(decomb.GetCount() && *decomb[0] == '<') {
+				dmap.GetAdd(decomb[0], 0)++;
+				decomb.Remove(0);
+				despec.Add(cde);
+			}
+			dword first = decomb.GetCount() ? ScanHex(decomb[0]) : 0;
 			if(decomb.GetCount() > 1 ||
-			   decomb.GetCount() && (first = ScanHex(decomb[0])) != cde && first < 128) // for ToAscii...
+			   decomb.GetCount() && cde >= 2048 && first != cde && first < 128) // for ToAscii...
 			{
 				// DLOG(h[0] << " -> " << comb[0] << ' ' << comb[1]);
 				code.Add(cde);
@@ -160,15 +167,6 @@ CONSOLE_APP_MAIN
 				comb[1].Add(ScanInt(decomb[1], NULL, 16));
 				comb[2].Add(ScanInt(decomb[2], NULL, 16));
 			}
-			if(cde > 2048) {
-				if(*h[2] == 'L') {
-					letter.Add(cde);
-					cat.Add(cde);
-				}
-			}
-			catcount.GetAdd(h[2], 0)++;
-			catcode.Add(cde);
-			cat.Add(max(kind.Find(h[2]), 0));
 			dword other = Nvl(ScanInt(Nvl(h[12], h[13]), NULL, 16));
 			if(other) {
 			//	DUMP(other);
@@ -177,53 +175,49 @@ CONSOLE_APP_MAIN
 				er.Add(other);
 			}
 			
-			if(cde >= 0x7ff && upper) {
-				lowercode.Add(cde);
-				uppercode.Add(upper);
+			if(cde < 0x800) {
+				fast_upper[cde] = word(upper ? upper : cde);
+				fast_lower[cde] = word(lower ? lower : cde);
+				fast_ascii[cde] = byte(cde < 128 ? cde : first < 128 ? first : 0);
+				byte w = 0;
+				if(cat == "Ll")
+					w |= 1;
+				if(cat == "Lu")
+					w |= 2;
+				if(*cat == 'L')
+					w |= 4;
+				fast_info[cde] = w;
 			}
+			else {
+				if(*cat == 'L') {
+					letter.Add(cde);
+				}
+				DUMPHEX(cde);
+				if(cde == 0x1D7CA)
+					LOG("HERE");
+				if(!upper && !lower || cde == 0x1E9E) { // Capital sharp S does is not considered capital of lower case sharp s
+					if(cat == "Lu")
+						isupper.Add(cde);
+					if(cat == "Ll")
+						islower.Add(cde);
+					DUMP(cat);
+				}
+			}
+			if(upper)
+				if(cde >= 0x800 || upper >= 0x800) {
+//					DUMP(cat);
+//					DUMPHEX(cde);
+//					DUMPHEX(upper);
+					lowercode.Add(cde);
+					uppercode.Add(upper);
+				}
 		}
 	}
+	
+	DUMPM(dmap);
 
-	DDUMP(composed_upper_count);
-	DDUMP(composed_failed);
 	DUMP(code.GetCount());
 	DUMP(lowercode.GetCount());
-	
-	Index<dword> cx(pick(code));
-	Vector<dword> ocomb[3];
-	ocomb[0] = pick(comb[0]);
-	ocomb[1] = pick(comb[1]);
-	ocomb[2] = pick(comb[2]);
-
-	code.Clear();
-	comb[0].Clear();
-	comb[1].Clear();
-	comb[2].Clear();
-	
-	for(int i = 0; i < cx.GetCount(); i++) {
-		code.Add(cx[i]);
-		for(int ci = 0; ci < 3; ci++)
-			comb[ci].Add(ocomb[ci][i]);
-		
-		if(ocomb[1][i]) {
-			int q = cx.Find(ocomb[0][i]);
-			if(q >= 0) {
-				DUMPHEX(cx[i]);
-				Vector<int> n;
-				int ti = 0;
-				for(int ci = 0; ci < 3 && ocomb[ci][q]; ci++)
-					n.Add(ocomb[ci][q]);
-				for(int ci = 1; ci < 3 && ocomb[ci][i]; ci++)
-					n.Add(ocomb[ci][i]);
-				DUMP(n);
-				ASSERT(ti < 4);
-				code.Add(cx[i]);
-				for(int ci = 0; ci < 3; ci++)
-					comb[ci].Add(i < n.GetCount() ? n[i] : 0);
-			}
-		}
-	}
-	
 	
 	Vector<dword> data;
 	data.Add(code.GetCount());
@@ -244,49 +238,17 @@ CONSOLE_APP_MAIN
 	DDUMP(letter.GetCount());
 	data.Add(letter.GetCount());
 	data.Append(letter);
-/*
-	DUMPC(letter);
-	DUMP(ZCompress(Encode(letter)).GetCount());
-	DUMP(ZCompress(Encode(lettercode)).GetCount());
+	data.Add(islower.GetCount());
+	data.Append(islower);
+	data.Add(isupper.GetCount());
+	data.Append(isupper);
+	data.Add(despec.GetCount());
+	data.Append(despec);
 
-	DUMP(cat.GetCount());
-	DUMP(ZCompress(Encode(cat)).GetCount());
-	DUMP(ZCompress(Encode(catcode)).GetCount());
-*/
 	Output("unicode_info__", ZCompress(Encode(data)));
-	
-	DUMPM(catcount);
-	DUMP(Sum(catcount));
-#if 0
-	Delta(code);
-	Delta(comb1);
-	Delta(comb2);
 
-	{
-		String h;
-		h.Cat((const char *)code.begin(), 4 * code.GetCount());
-		h.Cat((const char *)comb1.begin(), 4 * code.GetCount());
-		h.Cat((const char *)comb2.begin(), 4 * code.GetCount());
-		
-		DUMPC(comb1);
-		
-		DUMP(h.GetCount());
-		DUMP(ZCompress(h).GetCount());
-	}
-
-	{
-		DDUMP(ercode.GetCount());
-		DDUMP(ercode);
-		Delta(ercode);
-		DDUMP(ercode);
-		Delta(er);
-		
-		String h;
-		h.Cat((const char *)ercode.begin(), 4 * ercode.GetCount());
-		h.Cat((const char *)er.begin(), 4 * er.GetCount());
-
-		DUMP(h.GetCount());
-		DUMP(ZCompress(h).GetCount());
-	}
-#endif
+	Output("unicode_fast_upper__", fast_upper, 2048);
+	Output("unicode_fast_lower__", fast_lower, 2048);
+	Output("unicode_fast_ascii__", fast_ascii, 2048);
+	Output("unicode_fast_info__", fast_info, 2048);
 }
