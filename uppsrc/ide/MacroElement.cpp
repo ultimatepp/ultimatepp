@@ -7,7 +7,7 @@ MacroElement::MacroElement(Type type, const String& fileName, int line, const St
 	, line(line)
 {}
 
-Image MacroElement::GetImage(Type type)
+Image MacroElement::GetImage() const
 {
 	switch(type)
 	{
