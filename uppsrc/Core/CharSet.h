@@ -98,6 +98,7 @@ inline Vector<dword> ToUtf32(const String& s)         { return ToUtf32(~s, s.Get
 
 enum { MAX_DECOMPOSED = 3 };
 
+int   UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED], bool& canonical);
 int   UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED]);
 dword UnicodeCompose(dword *t, int count);
 
