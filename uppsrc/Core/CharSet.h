@@ -128,6 +128,7 @@ dword ToUpperRest_(dword c);
 dword ToLowerRest_(dword c);
 dword ToAsciiRest_(dword c);
 bool  IsRTL_(dword c);
+bool  IsMark_(dword c);
 bool  IsLetter_(dword c);
 bool  IsUpper_(dword c);
 bool  IsLower_(dword c);
@@ -148,6 +149,7 @@ int         ToAscii(int c);
 #endif
 
 inline bool IsRTL(dword c)         { return (dword)c >= 1470 && IsRTL_(c); }
+inline bool IsMark(dword c)        { return c < 0x300 ? false : c <= 0x36f ? true : IsMark_(c); }
 
 inline bool IsLetter(int c)        { return IsLetter((dword) c); }
 inline bool IsUpper(int c)         { return IsUpper((dword) c); }
