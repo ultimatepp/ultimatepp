@@ -367,6 +367,10 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	Cmd("set print repeat 0");
 	Cmd("set print null-stop");
 
+#ifdef PLATFORM_WIN32
+	Cmd("set new-console on");
+#endif
+
 	if(!IsNull(cmdline))
 		Cmd("set args " + cmdline);
 
