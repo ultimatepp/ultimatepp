@@ -126,6 +126,7 @@ CONSOLE_APP_MAIN
 	Vector<dword> uppercode, lowercode;
 	Vector<dword> isupper, islower; // only those that do not have uppercode/lowercode
 	Vector<dword> rtl;
+	Vector<dword> mark;
 	VectorMap<String, int> dmap;
 	int composed_upper_count = 0;
 	int composed_failed = 0;
@@ -208,8 +209,8 @@ CONSOLE_APP_MAIN
 					lowercode.Add(cde);
 					uppercode.Add(upper);
 				}
-			if(*cat == 'M')
-				DUMPHEX(cde);
+			if(*cat == 'M' && cde > 0x36f)
+				mark.Add(cde);
 		}
 	}
 	
@@ -246,6 +247,8 @@ CONSOLE_APP_MAIN
 	data.Append(islower);
 	data.Add(isupper.GetCount());
 	data.Append(isupper);
+	data.Add(mark.GetCount());
+	data.Append(mark);
 
 	Output("unicode_info__", ZCompress(Encode(data)));
 
