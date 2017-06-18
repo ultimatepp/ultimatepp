@@ -31,6 +31,7 @@ CONSOLE_APP_MAIN
 			DDUMP(IsUpper(code));
 			DDUMP(IsLower(code));
 			DUMPHEX(ToAscii(code));
+			DDUMP(IsMark(code));
 			ASSERT(IsLetter(code) == (*cat == 'L'));
 			if(cat == "Lu")
 				ASSERT(IsUpper(code));
@@ -41,6 +42,7 @@ CONSOLE_APP_MAIN
 			if(upper)
 				ASSERT(ToUpper(code) == upper);
 			ASSERT((h[4] == "R") == IsRTL(code));
+			ASSERT((*cat == 'M') == IsMark(code));
 
 			Vector<String> decomb;
 			decomb.AppendRange(FilterRange(Split(h[5], ' '), [] (const String& x) { return x[0] != '<'; }));
@@ -54,6 +56,8 @@ CONSOLE_APP_MAIN
 				else
 					ASSERT(ToAscii(code) == 0);
 			}
+			
+			bool compat = *h[5] == '<';
 
 			if(decomb.GetCount() > 1 ||
 			   decomb.GetCount() && code >= 2048 && first != code && first < 128) // for ToAscii...
@@ -65,14 +69,16 @@ CONSOLE_APP_MAIN
 				comb[2] = ScanHex(decomb[2]);
 				
 				dword t[MAX_DECOMPOSED];
-				int n = UnicodeDecompose(code, t);
+				bool canonical;
+				int n = UnicodeDecompose(code, t, canonical);
 				ASSERT(comb[0] == t[0]);
 				ASSERT(comb[1] == t[1]);
 				ASSERT(comb[2] == t[2]);
+				ASSERT(canonical == !compat);
 				
 				DDUMP(n);
 				
-				if(n > 1) {
+				if(n > 1 && canonical) {
 					DDUMPHEX(UnicodeCompose(t, n));
 					ASSERT(code == UnicodeCompose(t, n));
 				}
