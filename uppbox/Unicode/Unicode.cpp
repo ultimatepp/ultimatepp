@@ -120,8 +120,7 @@ enum {
 CONSOLE_APP_MAIN
 {
 	FileIn in(GetDataFile("UnicodeData.txt"));
-	Vector<dword> code, comb[3], er, ercode;
-	Vector<dword> despec;
+	Vector<dword> code, comb[3], ccode, ccomb[3];
 	Vector<dword> catcode, cat;
 	Vector<dword> lettercode, letter;
 	Vector<dword> uppercode, lowercode;
@@ -148,31 +147,33 @@ CONSOLE_APP_MAIN
 			if(h[4] == "R")
 				rtl.Add(cde);
 //			kind.FindAdd(h[2]);
+			bool compat = false;
 			Vector<String> decomb = Split(h[5], ' ');
 			if(decomb.GetCount() && *decomb[0] == '<') {
 				dmap.GetAdd(decomb[0], 0)++;
 				decomb.Remove(0);
-				despec.Add(cde);
+				compat = true;
 			}
 			dword first = decomb.GetCount() ? ScanHex(decomb[0]) : 0;
 			if(decomb.GetCount() > 1 ||
 			   decomb.GetCount() && cde >= 2048 && first != cde && first < 128) // for ToAscii...
 			{
 				// DLOG(h[0] << " -> " << comb[0] << ' ' << comb[1]);
-				code.Add(cde);
 				decomb.Add("0");
 				decomb.Add("0");
 				decomb.Add("0");
-				comb[0].Add(ScanInt(decomb[0], NULL, 16));
-				comb[1].Add(ScanInt(decomb[1], NULL, 16));
-				comb[2].Add(ScanInt(decomb[2], NULL, 16));
-			}
-			dword other = Nvl(ScanInt(Nvl(h[12], h[13]), NULL, 16));
-			if(other) {
-			//	DUMP(other);
-			//	DUMP(h);
-				ercode.Add(cde);
-				er.Add(other);
+				if(compat) {
+					ccode.Add(cde);
+					ccomb[0].Add(ScanInt(decomb[0], NULL, 16));
+					ccomb[1].Add(ScanInt(decomb[1], NULL, 16));
+					ccomb[2].Add(ScanInt(decomb[2], NULL, 16));
+				}
+				else {
+					code.Add(cde);
+					comb[0].Add(ScanInt(decomb[0], NULL, 16));
+					comb[1].Add(ScanInt(decomb[1], NULL, 16));
+					comb[2].Add(ScanInt(decomb[2], NULL, 16));
+				}
 			}
 			
 			if(cde < 0x800) {
@@ -192,15 +193,11 @@ CONSOLE_APP_MAIN
 				if(*cat == 'L') {
 					letter.Add(cde);
 				}
-				DUMPHEX(cde);
-				if(cde == 0x1D7CA)
-					LOG("HERE");
 				if(!upper && !lower || cde == 0x1E9E) { // Capital sharp S does is not considered capital of lower case sharp s
 					if(cat == "Lu")
 						isupper.Add(cde);
 					if(cat == "Ll")
 						islower.Add(cde);
-					DUMP(cat);
 				}
 			}
 			if(upper)
@@ -211,6 +208,8 @@ CONSOLE_APP_MAIN
 					lowercode.Add(cde);
 					uppercode.Add(upper);
 				}
+			if(*cat == 'M')
+				DUMPHEX(cde);
 		}
 	}
 	
@@ -221,10 +220,15 @@ CONSOLE_APP_MAIN
 	
 	Vector<dword> data;
 	data.Add(code.GetCount());
+	data.Add(ccode.GetCount());
 	data.Append(code);
+	data.Append(ccode);
 	data.Append(comb[0]);
+	data.Append(ccomb[0]);
 	data.Append(comb[1]);
+	data.Append(ccomb[1]);
 	data.Append(comb[2]);
+	data.Append(ccomb[2]);
 	data.Add(lowercode.GetCount());
 	data.Append(lowercode);
 	data.Append(uppercode);
@@ -242,8 +246,6 @@ CONSOLE_APP_MAIN
 	data.Append(islower);
 	data.Add(isupper.GetCount());
 	data.Append(isupper);
-	data.Add(despec.GetCount());
-	data.Append(despec);
 
 	Output("unicode_info__", ZCompress(Encode(data)));
 
