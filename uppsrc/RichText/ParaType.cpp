@@ -141,7 +141,7 @@ void RichPara::StorePart::Store(Lines& lines, const Part& part, int pinc)
 				else
 				if(IsLower(c)) {
 					*f++ = &cfmt;
-					c = ToUpper(c);
+					c = (wchar)ToUpper(c);
 					h->ascent = cfi.GetAscent();
 					h->descent = cfi.GetDescent();
 					h->external = cfi.GetExternal();
