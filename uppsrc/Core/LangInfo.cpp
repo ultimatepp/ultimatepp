@@ -104,16 +104,16 @@ WString CSCZGetIndexLetter(const wchar *s, int)
 	temp[0] = temp[1] = temp[2] = 0;
 	if(*s <= 2047 && IsLetter(*s)) // IsLetter
 	{
-		temp[0] = ToUpper(*s);
+		temp[0] = (wchar)ToUpper(*s);
 		if(s[1] <= 2047 && IsLetter(s[1]))
-			temp[1] = ToLower(s[1]);
+			temp[1] = (wchar)ToLower(s[1]);
 		if(temp[0] != 'C' || temp[1] != 'h')
 			temp[1] = 0;
 		switch(ToUpper(ToAscii(*s)))
 		{
 		case 'A': case 'E': case 'I': case 'N':
 		case 'O': case 'T': case 'U': case 'Y':
-			temp[0] = ToAscii(temp[0]);
+			temp[0] = (wchar)ToAscii(temp[0]);
 			break;
 		}
 	}
