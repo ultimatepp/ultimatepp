@@ -178,13 +178,15 @@ void Progress::Create() {
 		Open(owner);
 	else
 		Open();
-	SetFocus();
-	Show();
-	modality.Begin(this);
-	if(total) Set(pos, total);
-	Setxt();
-	Sync();
-	Process();
+	if(IsOpen()) { // in some context, e.g. headless skeleton, window does not open - need prevent infinite recursion here
+		SetFocus();
+		Show();
+		modality.Begin(this);
+		if(total) Set(pos, total);
+		Setxt();
+		Sync();
+		Process();
+	}
 }
 
 void Progress::Process()
