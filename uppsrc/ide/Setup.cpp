@@ -473,6 +473,7 @@ void Ide::SetupFormat() {
 		(assist.assist, editor.auto_assist)
 		(assist.rescan, auto_rescan)
 		(assist.check, auto_check)
+		(assist.navigator_right, editor.navigator_right)
 
 		(ide.showtime, showtime)
 		(ide.show_status_bar, show_status_bar)
