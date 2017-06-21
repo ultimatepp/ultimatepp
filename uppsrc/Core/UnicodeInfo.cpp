@@ -174,7 +174,7 @@ dword ToLowerRest_(dword c)
 	return q >= 0 ? f.lower[q] : c;
 }
 
-dword ToAsciiRest_(dword c)
+char ToAsciiRest_(dword c)
 {
 	UnicodeInfo& f = Single<UnicodeInfo>();
 	int q = f.composed.Find(c);
