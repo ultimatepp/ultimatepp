@@ -698,30 +698,32 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 		es->Highlight(ln.Begin(), ln.End(), hl, NULL, 0, 0);
 		int fcy = GetStdFontCy();
 		int y = r.top + (r.GetHeight() - fcy) / 2;
-		int x = r.left;
 		w.DrawRect(r, paper);
 		int sl = utf8len(~h[3], atoi(h[1]));
 		int sh = utf8len(~h[3] + sl, atoi(h[2])) + sl;
-		for(int i = 0; i < hln.GetCount(); i++) {
-			Font fnt = StdFont();
-			LineEdit::Highlight& h = hln[i];
-			fnt.Bold(h.font.IsBold());
-			fnt.Italic(h.font.IsItalic());
-			fnt.Underline(h.font.IsUnderline());
-			int cw = fnt[h.chr];
-			if(h.chr == '\t')
-				cw = 4 * fnt[' '];
-			Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
-			Color hink = h.ink;
-			if(IsDarkMismatch()) {
-				hpaper = paper;
-				hink = ink;
+		for(int text = 0; text < 2; text++) {
+			int x = r.left;
+			for(int i = 0; i < hln.GetCount(); i++) {
+				Font fnt = StdFont();
+				LineEdit::Highlight& h = hln[i];
+				fnt.Bold(h.font.IsBold());
+				fnt.Italic(h.font.IsItalic());
+				fnt.Underline(h.font.IsUnderline());
+				int cw = fnt[h.chr];
+				if(h.chr == '\t')
+					cw = 4 * fnt[' '];
+				Color hpaper = HighlightSetup::GetHlStyle(HighlightSetup::PAPER_SELWORD).color;
+				Color hink = h.ink;
+				if(IsDarkMismatch()) {
+					hpaper = paper;
+					hink = ink;
+				}
+				if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)) && !text)
+					w.DrawRect(x, y, cw, fcy, hpaper);
+				if(h.chr != '\t' && text)
+					w.DrawText(x, y, &h.chr, fnt, hink, 1);
+				x += cw;
 			}
-			if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)))
-				w.DrawRect(x, y, cw, fcy, hpaper);
-			if(h.chr != '\t')
-				w.DrawText(x, y, &h.chr, fnt, hink, 1);
-			x += cw;
 		}
 	}
 	else
