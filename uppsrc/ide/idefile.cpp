@@ -48,6 +48,7 @@ void Ide::SetupEditor()
 	if(p != HELPNAME)
 		p = GetActiveFilePath();
 	SetupEditor(f.font, f.highlight, p);
+	editor.SyncNavigatorPlacement();
 }
 
 void Ide::FileCursor()

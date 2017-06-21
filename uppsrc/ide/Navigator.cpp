@@ -70,8 +70,9 @@ int PaintFileName(Draw& w, const Rect& r, String h, Color ink)
 Navigator::Navigator()
 :	navidisplay(litem)
 {
+	scope_display.navigator = this;
 	scope.NoHeader();
-	scope.AddColumn().SetDisplay(Single<ScopeDisplay>());
+	scope.AddColumn().SetDisplay(scope_display);
 	scope.NoWantFocus();
 	scope.WhenSel = THISBACK(Scope);
 	scope.WhenLeftDouble = THISBACK(ScopeDblClk);
@@ -118,6 +119,8 @@ void Navigator::SyncCursor()
 		navigating = false;
 	}
 	SyncLines();
+	if(scope.IsCursor())
+		scope.RefreshRow(scope.GetCursor());
 }
 
 void Navigator::SyncLines()
@@ -631,18 +634,29 @@ int Navigator::ScopeDisplay::DoPaint(Draw& w, const Rect& r, const Value& q, Col
 {
 	w.DrawRect(r, paper);
 	if(IsNull(q)) {
-		const char *txt = "All";
+		const char *txt = "* ";
+		int x = 0;
 		w.DrawText(r.left, r.top, txt, StdFont().Bold().Italic(),
 		           style & CURSOR ? ink : HighlightSetup::GetHlStyle(HighlightSetup::INK_KEYWORD).color);
-		return GetTextSize(txt, StdFont().Bold().Italic()).cx;
+		x += GetTextSize(txt, StdFont().Bold().Italic()).cx;
+		int ii = navigator->list.GetCursor();
+		if(ii >= 0 && ii < navigator->litem.GetCount()) {
+			const NavItem& m = *navigator->litem[ii];
+			String txt = m.nest;
+			if(IsCppCode(m.kind))
+				txt << "::" << m.name;
+			w.DrawText(r.left + x, r.top, txt, StdFont().Bold(), ink);
+			x += GetTextSize(txt, StdFont().Bold()).cx;
+		}
+		return x;
 	}
 	String h = q;
 	if(*h == '\xff')
 		return PaintFileName(w, r, h, ink);
 	else
 		h = FormatNest(h);
-	w.DrawText(r.left, r.top, h, StdFont().Bold(), ink);
-	return GetTextSize(h, StdFont().Bold()).cx;
+	w.DrawText(r.left, r.top, h, StdFont(), ink);
+	return GetTextSize(h, StdFont()).cx;
 }
 
 void Navigator::ScopeDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const
