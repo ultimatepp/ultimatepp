@@ -32,6 +32,15 @@ Value AssistEditor::AssistItemConvert::Format(const Value& q) const
 	return RawToValue(empty);
 }
 
+void AssistEditor::SyncNavigatorPlacement()
+{
+	int sz = navigatorframe.GetSize();
+	if(navigator_right)
+		navigatorframe.Right(navigatorpane, sz);
+	else
+		navigatorframe.Left(navigatorpane, sz);
+}
+
 AssistEditor::AssistEditor()
 {
 	assist_convert.editor = this;
@@ -50,6 +59,7 @@ AssistEditor::AssistEditor()
 	auto_assist = auto_check = true;
 	commentdp = false;
 
+	SyncNavigatorPlacement();
 	navigatorframe.Left(navigatorpane, HorzLayoutZoom(140));
 	navigating = false;
 
@@ -1031,7 +1041,7 @@ void AssistEditor::SyncNavigator()
 		Search();
 		SyncCursor();
 	}
-	navigatorframe.Show(navigator && theide && !theide->IsEditorMode());
+	SyncNavigatorShow();
 }
 
 void AssistEditor::SelectionChanged()
@@ -1043,7 +1053,7 @@ void AssistEditor::SelectionChanged()
 
 void AssistEditor::SerializeNavigator(Stream& s)
 {
-	int version = 4;
+	int version = 5;
 	s / version;
 	s % navigatorframe;
 	s % navigator;
@@ -1053,5 +1063,10 @@ void AssistEditor::SerializeNavigator(Stream& s)
 	}
 	if(version >= 4)
 		s % navigator_splitter;
+	if(version >= 5)
+		s % navigator_right;
 	Navigator(navigator);
+	
+	if(s.IsLoading())
+		SyncNavigatorPlacement();
 }

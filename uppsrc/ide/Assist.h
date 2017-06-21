@@ -38,6 +38,8 @@ struct Navigator {
 	enum KindEnum { KIND_LINE = 123, KIND_NEST, KIND_FILE };
 	
 	struct ScopeDisplay : Display {
+		Navigator *navigator;
+
 		int DoPaint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual void Paint(Draw& w, const Rect& r, const Value& q, Color ink, Color paper, dword style) const;
 		virtual Size GetStdSize(const Value& q) const;
@@ -79,6 +81,8 @@ struct Navigator {
 	ArrayCtrl         list;
 	ArrayCtrl         navlines;
 	EditString        search;
+	
+	ScopeDisplay      scope_display;
 	
 	void TriggerSearch();
 	void NavGroup(bool local);
@@ -176,6 +180,8 @@ struct AssistEditor : CodeEditor, Navigator {
 	String    current_type;
 	
 	static Ptr<Ctrl> assist_ptr;
+	
+	bool      navigator_right = true;
 
 
 	void           PopUpAssist(bool auto_insert = false);
@@ -249,6 +255,7 @@ struct AssistEditor : CodeEditor, Navigator {
 	void           SyncNavigatorShow();
 	void           SyncNavigator();
 	void           SerializeNavigator(Stream& s);
+	void           SyncNavigatorPlacement();
 	
 	Event<int>     WhenFontScroll;
 
