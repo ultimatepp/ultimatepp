@@ -2,11 +2,7 @@
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
-static const int GLOBAL_MACRO_KEY = 0;
-static const int LOCAL_MACRO_KEY  = 10;
-
-MacroManagerWindow::MacroManagerWindow(Ide& ide)
-	: ide(ide)
+MacroManagerWindow::MacroManagerWindow()
 {
 	CtrlLayout(*this, t_("Macro Manager"));
 	Zoomable().Sizeable().MinimizeBox(false);
@@ -21,6 +17,9 @@ MacroManagerWindow::MacroManagerWindow(Ide& ide)
 	editButton.Disable();
 	exportButton.Disable();
 	
+	globalNode = macrosTree.Add(0, Image(), 0, t_("Global macros"));
+	localNode  = macrosTree.Add(0, Image(), 0, t_("Local macros (Read only)"));
+
 	LoadMacros();
 	macrosTree.OpenDeep(0);
 	editor.Hide();
@@ -33,12 +32,15 @@ MacroManagerWindow::MacroManagerWindow(Ide& ide)
 
 void MacroManagerWindow::OnMacroBar(Bar& bar)
 {
-	bool isGlobalFile = IsString(macrosTree.Get());
-	
-	bar.Add(t_("New global macro file.."), [=]{ OnNewMacroFile();});
-	bar.Add(t_("Delete macro file"),       [=]{ OnDeleteMacroFile();})
-	    .Enable(isGlobalFile);
-
+	bar.Add(t_("New.."),                      [=] { OnNewMacroFile();});
+	bar.Add(t_("Import.."),                   [=] { OnImport();});
+	bar.Add(t_("Delete"),                     [=] { OnDeleteMacroFile();})
+	    .Enable(IsGlobalFile());
+	bar.Add(t_("Export.."),                   [=] { OnExport();})
+	    .Enable(IsGlobalFile() || IsGlobalRoot());
+	bar.Separator();
+	bar.Add(t_("Edit"),                       [=] { OnEditFile();})
+	    .Enable(IsEditPossible());
 }
 
 void MacroManagerWindow::InitButtons()
@@ -63,45 +65,16 @@ void MacroManagerWindow::Layout()
 
 void MacroManagerWindow::OnMacroSel()
 {
-	if(!macrosTree.IsCursor()) {
-		editor.Hide();
-		editButton.Disable();
-		exportButton.Disable();
-		return;
-	}
-
-	Value key = macrosTree.Get();
-	if(IsNumber(key)) {
-		editor.Hide();
-		editButton.Disable();
-		
-		int node = macrosTree.Find(key);
-		exportButton.Enable(macrosTree.GetChildCount(node) > 0);
-		
-		return;
-	}
-
-	if(IsString(key)) {
-		editButton.Enable();
-		exportButton.Disable();
-		editor.Show();
-		editor.Set(LoadFile(AppendFileName(GetLocalDir(),  (String)key)));
-		
-		return;
-	}
-
-	MacroElement element = ValueTo<MacroElement>(key);
-
-	String macroContent = TrimBoth(element.comment);
-	if(macroContent.GetCount())
-		macroContent << "\n";
-
-	macroContent << element.prototype <<  element.code;
-
-	editButton.Enable();
-	exportButton.Disable();
-	editor.Show();
-	editor.Set(macroContent);
+	bool hasCursor = macrosTree.IsCursor();
+	
+	exportButton.Enable(hasCursor && (IsGlobalFile() || IsGlobalRoot()));
+	editButton.Enable(hasCursor && IsEditPossible());
+	editor.Show(editButton.IsEnabled());
+	
+	if(IsFile())
+		editor.Set(LoadFile(static_cast<String>(macrosTree.Get())));
+	else if(IsMacro())
+		editor.Set(ValueTo<MacroElement>(macrosTree.Get()).GetContent());
 }
 
 void MacroManagerWindow::OnImport()
@@ -146,16 +119,14 @@ void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
 
 void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
 {
-	Value key = macrosTree.Get(id);
-	if(IsNumber(key) || IsString(key)) {
-		for(int i = 0; i < macrosTree.GetChildCount(id); i++) {
-			int node = macrosTree.GetChild(id, i);
-			FindNodeFiles(node, list);
-		}
+	if(IsFile(id)) {
+		list.FindAdd((String)macrosTree.Get(id));
+		return;
 	}
-	else {
-		MacroElement element = ValueTo<MacroElement>(key);
-		list.FindAdd(element.fileName);
+	
+	for(int i = 0; i < macrosTree.GetChildCount(id); i++) {
+		int node = macrosTree.GetChild(id, i);
+		FindNodeFiles(node, list);
 	}
 }
 
@@ -163,16 +134,14 @@ void MacroManagerWindow::OnExport()
 {
 	if(!macrosTree.IsCursor())
 		return;
-	
-	String dir = SelectDirectory();
-	if(dir.IsEmpty())
-		return;
 
-	Value key = macrosTree.Get();
-	if(IsNumber(key) || IsString(key)) {
-		int id = macrosTree.GetCursor();
+	if(IsGlobalFile() || IsGlobalRoot()) {
+		String dir = SelectDirectory();
+		if(dir.IsEmpty())
+			return;
+		
 		Index<String> list;
-		FindNodeFiles(id, list);
+		FindNodeFiles(macrosTree.GetCursor(), list);
 		ExportFiles(list, dir);
 	}
 }
@@ -182,24 +151,15 @@ void MacroManagerWindow::OnEditFile()
 	if(!macrosTree.IsCursor())
 		return;
 
-	Value key = macrosTree.Get();
-	if(IsNumber(key))
-		return;
-	
-	// TODO: Move this logic outside class - we serious don't want ide dependency here.
-	if(IsString(key)) {
-		ide.EditFile(AppendFileName(GetLocalDir(), (String)key));
-		ide.editor.SetCursor(0);
-		ide.editor.CenterCursor();
-	} else {
-		MacroElement element = ValueTo<MacroElement>(key);
-	
-		ide.EditFile(element.fileName);
-		ide.editor.SetCursor(ide.editor.GetPos(element.line - 1));
-		ide.editor.CenterCursor();
+	if(IsMacro()) {
+		MacroElement element = ValueTo<MacroElement>(macrosTree.Get());
+		WhenEdit(element.fileName, element.line - 1);
+		Break();
 	}
-	
-	Break();
+	else if(IsFile()) {
+		WhenEdit( (String)macrosTree.Get(), 1);
+		Break();
+	}
 }
 
 void MacroManagerWindow::OnNewMacroFile()
@@ -232,6 +192,7 @@ void MacroManagerWindow::OnDeleteMacroFile()
 	
 	FileDelete(AppendFileName(GetLocalDir(), fileName));
 	macrosTree.Remove(macrosTree.GetCursor());
+	OnMacroSel();
 }
 
 String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)
@@ -239,14 +200,14 @@ String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)
 	return String(t_("Target file")) << " \"" << fileName << "\" " << t_("already exists! Do you want to overwrite it?");
 }
 
-void MacroManagerWindow::LoadUscDir(const String& dir, int globalNode)
+void MacroManagerWindow::LoadUscDir(const String& dir)
 {
 	for(FindFile ff(AppendFileName(dir, "*.usc")); ff; ff.Next()) {
 		String fileTitle = ff.GetName();
 		if(!ff.GetPath().EndsWith(String() << "UppLocal" << DIR_SEPS << ff.GetName()))
 			fileTitle = "../" + fileTitle;
 		
-		int fileNode = macrosTree.Add(globalNode, Image(), fileTitle, fileTitle);
+		int fileNode = macrosTree.Add(globalNode, Image(), ff.GetPath(), fileTitle);
 		
 		auto list = UscFileParser(ff.GetPath()).Parse();
 		for(const auto& element : list) {
@@ -263,25 +224,17 @@ void MacroManagerWindow::LoadMacros()
 
 void MacroManagerWindow::ReloadGlobalMacros()
 {
-	int globalNode = macrosTree.Find(0);
-	if(globalNode < 0) {
-		globalNode = macrosTree.Add(0, Image(), GLOBAL_MACRO_KEY, t_("Global macros"));
-	}
-	else {
-		macrosTree.RemoveChildren(globalNode);
-	}
+	macrosTree.RemoveChildren(globalNode);
 
-	LoadUscDir(GetLocalDir(), globalNode);
-	LoadUscDir(GetFileFolder(ConfigFile("x")), globalNode);
+	LoadUscDir(GetLocalDir());
+	LoadUscDir(GetFileFolder(ConfigFile("x")));
 	
 	macrosTree.OpenDeep(0);
 }
 
 void MacroManagerWindow::ReloadLocalMacros()
 {
-	int localNode = macrosTree.Add(0, Image(), LOCAL_MACRO_KEY, t_("Local macros"));
-
-	const Workspace& wspc = ide.IdeWorkspace();
+	const Workspace& wspc = GetIdeWorkspace();
 
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& package = wspc.GetPackage(i);
@@ -297,9 +250,9 @@ void MacroManagerWindow::ReloadLocalMacros()
 				continue;
 			
 			if(packageNode == -1)
-				packageNode = macrosTree.Add(localNode, Image(), LOCAL_MACRO_KEY + 1, wspc[i]);
+				packageNode = macrosTree.Add(localNode, Image(), 0, wspc[i]);
 					
-			int fileNode = macrosTree.Add(packageNode, Image(), LOCAL_MACRO_KEY + 2, file);
+			int fileNode = macrosTree.Add(packageNode, Image(), filePath.ToWString(), file);
 			for(int j = 0; j < list.GetCount(); j++) {
 				MacroElement& element = list[j];
 				macrosTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
@@ -310,5 +263,13 @@ void MacroManagerWindow::ReloadLocalMacros()
 
 void Ide::DoMacroManager()
 {
-	MacroManagerWindow(*this).Execute();
+	MacroManagerWindow dlg;
+	
+	dlg.WhenEdit = [&](String fileName, int line) {
+		EditFile(fileName);
+		editor.SetCursor(editor.GetPos(line));
+		editor.CenterCursor();
+	};
+	
+	dlg.Execute();
 }

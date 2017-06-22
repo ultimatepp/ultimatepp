@@ -20,3 +20,15 @@ Image MacroElement::GetImage() const
 	}
 	return Image();
 }
+
+String MacroElement::GetContent() const
+{
+	String content = TrimBoth(comment);
+	if(content.GetCount())
+		content << "\n";
+
+	content << prototype << code;
+	
+	return content;
+}
+
