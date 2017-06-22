@@ -11,7 +11,8 @@ public:
 public:
 	MacroElement(Type type, const String& fileName, int line, const String& comment);
 	
-	Image GetImage() const;
+	Image  GetImage() const;
+	String GetContent() const;
 	
 public:
 	Type   type;
@@ -52,14 +53,17 @@ public:
 	using MacroStore = ArrayMap<String, Array<MacroElement>>;
 	
 public:
-	MacroManagerWindow(Ide& ide);
+	MacroManagerWindow();
 
 	void Layout() override;
+	
+public:
+	Event<String, int> WhenEdit;
 
 private:
 	void InitButtons();
 	
-	void LoadUscDir(const String& dir, int globalNode);
+	void LoadUscDir(const String& dir);
 	void LoadMacros();
 	void ReloadGlobalMacros();
 	void ReloadLocalMacros();
@@ -77,13 +81,19 @@ private:
 
 private:
 	static String GenFileOverrideMessage(const String& fileName);
+
+	bool IsGlobalRoot() const     { return macrosTree.GetCursor() == globalNode; }
+	bool IsGlobalFile() const     { return macrosTree.Get().Is<String>(); }
+	bool IsFile() const           { return macrosTree.Get().Is<String>() || macrosTree.Get().Is<WString>(); }
+	bool IsFile(int id) const     { return macrosTree.Get(id).Is<String>() || macrosTree.Get(id).Is<WString>(); }
+	bool IsMacro() const          { return macrosTree.Get().Is<MacroElement>();}
+	bool IsEditPossible() const   { return IsFile() || IsMacro(); }
 	
 private:
-	// TODO: MacroManager shold not depend upon Ide instance.
-	// The edit logic should be outside class the same as load macros.
-	Ide&          ide;
-	
 	TreeCtrl      macrosTree;
 	SplitterFrame splitter;
 	CodeEditor    editor;
+	
+	int globalNode;
+	int localNode;
 };
