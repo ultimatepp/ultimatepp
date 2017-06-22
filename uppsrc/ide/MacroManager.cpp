@@ -2,7 +2,8 @@
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
-MacroManagerWindow::MacroManagerWindow()
+MacroManagerWindow::MacroManagerWindow(const Workspace& wspc)
+	: wspc(wspc)
 {
 	CtrlLayout(*this, t_("Macro Manager"));
 	Zoomable().Sizeable().MinimizeBox(false);
@@ -234,8 +235,6 @@ void MacroManagerWindow::ReloadGlobalMacros()
 
 void MacroManagerWindow::ReloadLocalMacros()
 {
-	const Workspace& wspc = GetIdeWorkspace();
-
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& package = wspc.GetPackage(i);
 		int packageNode = -1;
@@ -263,7 +262,7 @@ void MacroManagerWindow::ReloadLocalMacros()
 
 void Ide::DoMacroManager()
 {
-	MacroManagerWindow dlg;
+	MacroManagerWindow dlg(IdeWorkspace());
 	
 	dlg.WhenEdit = [&](String fileName, int line) {
 		EditFile(fileName);

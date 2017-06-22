@@ -53,7 +53,7 @@ public:
 	using MacroStore = ArrayMap<String, Array<MacroElement>>;
 	
 public:
-	MacroManagerWindow();
+	MacroManagerWindow(const Workspace& wspc);
 
 	void Layout() override;
 	
@@ -90,10 +90,12 @@ private:
 	bool IsEditPossible() const   { return IsFile() || IsMacro(); }
 	
 private:
-	TreeCtrl      macrosTree;
-	SplitterFrame splitter;
-	CodeEditor    editor;
+	const Workspace& wspc;
 	
-	int globalNode;
-	int localNode;
+	TreeCtrl         macrosTree;
+	SplitterFrame    splitter;
+	CodeEditor       editor;
+	
+	int              globalNode;
+	int              localNode;
 };
