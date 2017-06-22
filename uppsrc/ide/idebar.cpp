@@ -647,6 +647,7 @@ void Ide::BrowseMenu(Bar& menu)
 		menu.AddMenu(AK_QTF, IdeCommonImg::Qtf(), THISBACK(Qtf));
 		menu.AddMenu(!designer, AK_XML, IdeCommonImg::xml(), THISBACK(Xml));
 		menu.AddMenu(!designer, AK_JSON, IdeCommonImg::json(), THISBACK(Json));
+		menu.AddMenu(!designer, AK_ASERRORS, IdeImg::errors(), THISBACK(AsErrors));
 		menu.AddMenu(AK_DIRDIFF, DiffImg::DirDiff(), THISBACK(DoDirDiff));
 	}
 }

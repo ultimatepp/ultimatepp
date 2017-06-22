@@ -508,6 +508,17 @@ void Ide::DoDirDiff()
 		dlg.SetFocus();
 }
 
+void Ide::AsErrors()
+{
+	ClearErrorsPane();
+	SetBottom(BERRORS);
+	String s = editor.IsSelection() ? editor.GetSelection() : editor.Get();
+	StringStream ss(s);
+	while(!ss.IsEof())
+		ConsoleLine(ss.GetLine(), true);
+	SetErrorEditor();
+}
+
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
 {
 	One<Host> host = CreateHost(false);
