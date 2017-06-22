@@ -937,6 +937,7 @@ public:
 		void  GotoDirDiffLeft(int line, DirDiffDlg *df);
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
+		void  AsErrors();
 
 	void      HelpMenu(Bar& menu);
 		void  About();
@@ -1009,6 +1010,7 @@ public:
 	void      CopyFound(bool all);
 	void      FFoundMenu(Bar& bar);
 	void      SelError();
+	void      ClearErrorsPane();
 	WString   FormatErrorLine(const String& text, int& linecy);
 	WString   FormatErrorLineEP(const String& text, const char *ep, int& linecy);
 	

@@ -328,6 +328,17 @@ bool Ide::FindLineError(int l) {
 	return false;
 }
 
+void Ide::ClearErrorsPane()
+{
+	linking = false;
+	linking_line.Clear();
+	error_cache.Clear();
+	error.Clear();
+	SyncErrorsMessage();
+	error_count = 0;
+	warning_count = 0;
+}
+
 void Ide::PutLinking()
 {
 	linking = true;
