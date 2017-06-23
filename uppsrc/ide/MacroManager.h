@@ -97,5 +97,4 @@ private:
 	CodeEditor       editor;
 	
 	int              globalNode;
-	int              localNode;
 };

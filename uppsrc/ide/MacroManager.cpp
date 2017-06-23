@@ -19,7 +19,6 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc)
 	exportButton.Disable();
 	
 	globalNode = macrosTree.Add(0, Image(), 0, t_("Global macros"));
-	localNode  = macrosTree.Add(0, Image(), 0, t_("Local macros (Read only)"));
 
 	LoadMacros();
 	macrosTree.OpenDeep(0);
@@ -235,6 +234,8 @@ void MacroManagerWindow::ReloadGlobalMacros()
 
 void MacroManagerWindow::ReloadLocalMacros()
 {
+	int localNode = macrosTree.Find(1);
+		
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& package = wspc.GetPackage(i);
 		int packageNode = -1;
@@ -247,6 +248,9 @@ void MacroManagerWindow::ReloadLocalMacros()
 			auto list = UscFileParser(filePath).Parse();
 			if (list.GetCount() == 0)
 				continue;
+			
+			if(localNode == -1)
+				localNode  = macrosTree.Add(0, Image(), 1, t_("Local macros (Read only)"));
 			
 			if(packageNode == -1)
 				packageNode = macrosTree.Add(localNode, Image(), 0, wspc[i]);
