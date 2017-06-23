@@ -453,17 +453,16 @@ int TabBar::GetNextId()
 
 void TabBar::ContextMenu(Bar& bar)
 {
-	if (GetCursor() >= 0 && crosses) {
-		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK2(Close, highlight, true));
-	}
 	int ii = GetHighlight(); // Need copy to freeze it, [=] copies 'this' and thus reference to highlight
+	if (GetCursor() >= 0 && crosses && ii >= 0)
+		bar.Add(tabs.GetCount() > mintabcount, t_("Close"), THISBACK2(Close, highlight, true));
 	if (ii >= 0 && crosses)
 		bar.Add(t_("Close others"), [=] { CloseAll(ii); });
-    if (ii < GetCount() - 1 && crosses)
+    if (ii >= 0 && ii < GetCount() - 1 && crosses)
 		bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
 	if (mintabcount <= 0 && crosses)
 		bar.Add(t_("Close all"), [=] { CloseAll(-1); });
-	if(grouping) {
+	if(grouping && ii >= 0) {
 		if(group > 0)
 			bar.Add(t_("Close group"), THISBACK(CloseGroup));
 		bar.Separator();
@@ -2482,6 +2481,8 @@ void TabBar::SetTabGroup(int n, const String &group)
 
 void TabBar::CloseForce(int n, bool action)
 {
+	if(n < 0 || n >= tabs.GetCount())
+		return;
 	if(n == active)
 	{
 		int c = FindId(tabs[n].id);
