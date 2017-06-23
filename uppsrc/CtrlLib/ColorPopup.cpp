@@ -112,7 +112,7 @@ static int sCharFilterHex(int c)
 Color ColorFromText(const char *s)
 {
 	Vector<String> h = Split(s, sCharFilterNoDigit);
-	if(h.GetCount() == 3 && (strchr(s, ',') || strchr(s, ';') || strchr(s, '.'))) {
+	if(h.GetCount() == 3 && (strchr(s, ',') || strchr(s, ';') || strchr(s, '.') || strchr(s, ' '))) {
 		int r = atoi(h[0]);
 		int g = atoi(h[1]);
 		int b = atoi(h[2]);
@@ -222,7 +222,7 @@ void ColorPopUp::Paint(Draw& w)
 		for(int x = 0; x < 18 * 16; x += 16) {
 			if(i >= GetColorCount()) {
 				if(!norampwheel) {
-					Rect r(8 * 16 + 1, cy + 4, 10 * 16 - 1, sz.cy - 4);
+					Rect r(8 * 16 + 1, cy + 4, 10 * 16 - 1, sz.cy - 4 - 24);
 					DrawFilledFrame(w, r, SColorText, color);
 
 					r.Inflate(1);
@@ -414,6 +414,11 @@ void ColorPopUp::Select()
 	Finish();
 }
 
+void ColorPopUp::Layout()
+{
+	settext.LeftPos(8 * 16, 2 * 16).BottomPos(2, 24);
+}
+
 ColorPopUp::ColorPopUp()
 {
 	norampwheel = false;
@@ -432,6 +437,25 @@ ColorPopUp::ColorPopUp()
 	BackPaint();
 	nulltext = t_("(transparent)");
 	voidtext = t_("(none)");
+	
+	settext.SetImage(CtrlImg::color_edit());
+	settext << [=] {
+		String text;
+		if(!IsNull(color) && color != VoidColor())
+			text = ColorToHtml(color);
+		EditText(text, "Set Color", "Color value");
+		Color c = ColorFromText(text);
+		if(IsNull(c))
+			return;
+		color = c;
+		ramp <<= wheel <<= c;
+		colori = 999;
+		WhenAction();
+		Refresh();
+		Finish();
+	};
+	
+	Add(settext);
 }
 
 }
