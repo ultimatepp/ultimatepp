@@ -512,12 +512,13 @@ void Navigator::Search()
 	else
 	if(IsNull(s) && !sorting) {
 		const CppBase& b = CodeBase();
+		bool sch = GetFileExt(theide->editfile) == ".sch";
 		for(int i = 0; i < b.GetCount(); i++) {
 			String nest = b.GetKey(i);
 			const Array<CppItem>& ci = b[i];
 			for(int j = 0; j < ci.GetCount(); j++) {
 				const CppItem& m = ci[j];
-				if(m.file == fileii) {
+				if(m.file == fileii && (!sch || !m.IsData() || m.type != "SqlId")) {
 					NavItem& n = nitem.Add();
 					n.Set(m);
 					n.nest = nest;
