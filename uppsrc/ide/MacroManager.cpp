@@ -2,7 +2,7 @@
 
 #define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
 
-MacroManagerWindow::MacroManagerWindow(const Workspace& wspc)
+MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlStyles)
 	: wspc(wspc)
 {
 	CtrlLayout(*this, t_("Macro Manager"));
@@ -23,6 +23,7 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc)
 	LoadMacros();
 	macrosTree.OpenDeep(0);
 	editor.Hide();
+	editor.LoadHlStyles(hlStyles);
 	
 	macrosTree.WhenSel = [=]           { OnMacroSel(); };
 	macrosTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
@@ -266,7 +267,7 @@ void MacroManagerWindow::ReloadLocalMacros()
 
 void Ide::DoMacroManager()
 {
-	MacroManagerWindow dlg(IdeWorkspace());
+	MacroManagerWindow dlg(IdeWorkspace(), editor.StoreHlStyles());
 	
 	dlg.WhenEdit = [&](String fileName, int line) {
 		EditFile(fileName);

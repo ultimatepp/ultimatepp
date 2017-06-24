@@ -12,7 +12,7 @@ class AbbreviationsDlg : public WithAbbreviationsLayout<TopWindow> {
 	void Finish(const String& s);
 
 public:
-	AbbreviationsDlg();
+	AbbreviationsDlg(const String& hlStyles);
 };
 
 void AbbreviationsDlg::Sync()
@@ -62,7 +62,7 @@ void AbbreviationsDlg::Edit()
 	}
 }
 
-AbbreviationsDlg::AbbreviationsDlg()
+AbbreviationsDlg::AbbreviationsDlg(const String& hlStyles)
 {
 	CtrlLayoutOKCancel(*this, "Abbreviations");
 	abbr.AddColumn("Keyword").Edit(keyword);
@@ -73,12 +73,13 @@ AbbreviationsDlg::AbbreviationsDlg()
 	edit <<= THISBACK(Edit);
 	code.Highlight("cpp");
 	code.ShowTabs();
+	code.LoadHlStyles(hlStyles);
 	Sync();
 }
 
 void Ide::Abbreviations()
 {
-	AbbreviationsDlg dlg;
+	AbbreviationsDlg dlg(editor.StoreHlStyles());
 	for(int i = 0; i < abbr.GetCount(); i++)
 		dlg.abbr.Add(abbr.GetKey(i), abbr[i]);
 	if(dlg.Execute() != IDOK)
