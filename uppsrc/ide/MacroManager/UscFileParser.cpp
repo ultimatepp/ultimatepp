@@ -1,12 +1,14 @@
-#include "ide.h"
+#include "MacroManager.h"
 
 #define METHOD_NAME "UscFileParser::" << UPP_FUNCTION_NAME << "(): "
+
+namespace Upp {
 
 UscFileParser::UscFileParser(const String& filePath)
 	: filePath(filePath)
 {}
 
-MacroList UscFileParser::Parse()
+UscFileParser::MacroList UscFileParser::Parse()
 {
 	MacroList ret;
 	
@@ -156,4 +158,6 @@ String UscFileParser::ReadKeyDesc(CParser& parser)
 	}
 
 	return ret;
+}
+
 }

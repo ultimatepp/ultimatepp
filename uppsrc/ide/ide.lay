@@ -819,12 +819,3 @@ LAYOUT(GoToLineLayout, 260, 88)
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
-
-LAYOUT(MacroManagerLayout, 708, 388)
-	ITEM(ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(4, 36))
-	ITEM(Button, editButton, SetLabel(t_("Edit")).LeftPosZ(4, 68).BottomPosZ(4, 24))
-	ITEM(Button, importButton, SetLabel(t_("Import")).LeftPosZ(76, 68).BottomPosZ(4, 24))
-	ITEM(Button, exportButton, SetLabel(t_("Export")).LeftPosZ(148, 72).BottomPosZ(4, 24))
-	ITEM(Button, closeButton, SetLabel(t_("Close")).RightPosZ(4, 72).BottomPosZ(4, 24))
-END_LAYOUT
-

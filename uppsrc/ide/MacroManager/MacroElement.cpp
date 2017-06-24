@@ -1,4 +1,6 @@
-#include "ide.h"
+#include "MacroManager.h"
+
+namespace Upp {
 
 MacroElement::MacroElement(Type type, const String& fileName, int line, const String& comment)
 	: type(type)
@@ -12,9 +14,9 @@ Image MacroElement::GetImage() const
 	switch(type)
 	{
 		case(Type::MACRO):
-			return IdeImg::Macro();
+			return MacroManagerImg::Macro();
 		case(Type::FUNCTION):
-			return IdeImg::Fn();
+			return MacroManagerImg::Fn();
 		case(Type::UNKNOWN):
 			return Image();
 	}
@@ -32,3 +34,4 @@ String MacroElement::GetContent() const
 	return content;
 }
 
+}
