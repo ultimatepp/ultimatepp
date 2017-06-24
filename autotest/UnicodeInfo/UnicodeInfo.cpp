@@ -62,25 +62,24 @@ CONSOLE_APP_MAIN
 			if(decomb.GetCount() > 1 ||
 			   decomb.GetCount() && code >= 2048 && first != code && first < 128) // for ToAscii...
 			{
-				decomb.SetCount(3, "0");
-				dword comb[3];
-				comb[0] = ScanHex(decomb[0]);
-				comb[1] = ScanHex(decomb[1]);
-				comb[2] = ScanHex(decomb[2]);
+				Vector<dword> comb;
+				for(int i = 0; i < decomb.GetCount(); i++)
+					comb.Add(ScanHex(decomb[i]));
+				
+				DUMP(comb);
 				
 				dword t[MAX_DECOMPOSED];
-				bool canonical;
-				int n = UnicodeDecompose(code, t, canonical);
-				ASSERT(comb[0] == t[0]);
-				ASSERT(comb[1] == t[1]);
-				ASSERT(comb[2] == t[2]);
-				ASSERT(canonical == !compat);
+				int n = UnicodeDecompose(code, t);
+				ASSERT(n == comb.GetCount());
+				for(int i = 0; i < comb.GetCount(); i++)
+					ASSERT(comb[i] == t[i]);
 				
-				DDUMP(n);
+				ASSERT(comb == UnicodeDecompose(code));
 				
-				if(n > 1 && canonical) {
-					DDUMPHEX(UnicodeCompose(t, n));
-					ASSERT(code == UnicodeCompose(t, n));
+				Vector<dword> h = UnicodeDecompose(code, true);
+				if(h.GetCount() > 1) {
+					DUMP(h);
+					ASSERT(code == UnicodeCompose(h));
 				}
 			}
 
