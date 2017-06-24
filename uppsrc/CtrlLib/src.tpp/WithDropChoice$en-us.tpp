@@ -48,6 +48,17 @@ onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Adds [%-*@3 data] to the drop`-down list.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:WithDropChoice`:`:Set`(int`,const Upp`:`:Value`&`): [@(0.0.255) void]_[* Set](
+[@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 data
+])&]
+[s2;%% Sets entry [%-*@3 i] in drop`-down list to [%-*@3 data] .&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WithDropChoice`:`:Remove`(int`): [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_
+[*@3 i])&]
+[s2;%% Removes entry [%-*@3 i] in drop`-down list.&]
+[s3;%% &]
+[s4; &]
 [s5;:WithDropChoice`:`:SerializeList`(Stream`&`): [@(0.0.255) void]_[* SerializeList]([_^Stream^ S
 tream][@(0.0.255) `&]_[*@3 s])&]
 [s2;%% Serializes the drop`-down list content.&]

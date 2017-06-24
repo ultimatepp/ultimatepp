@@ -114,6 +114,12 @@ void DropChoice::Add(const Value& s) {
 	EnableDrop(true);
 }
 
+void DropChoice::Remove(int i)
+{
+	list.Remove(i);
+	EnableDrop(list.GetCount());
+}
+
 void DropChoice::Clear() {
 	list.Clear();
 	EnableDrop(always_drop);
