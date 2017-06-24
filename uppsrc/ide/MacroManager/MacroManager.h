@@ -1,6 +1,20 @@
-// TODO: Move to separate package...
+#ifndef _MacroManager_MacroManager_h_
+#define _MacroManager_MacroManager_h_
 
-class MacroElement {
+#include <CtrlLib/CtrlLib.h>
+#include <CodeEditor/CodeEditor.h>
+#include <ide/Core/Core.h>
+
+namespace Upp {
+
+#define LAYOUTFILE <ide/MacroManager/MacroManager.lay>
+#include <CtrlCore/lay.h>
+
+#define IMAGECLASS MacroManagerImg
+#define IMAGEFILE  <ide/MacroManager/MacroManager.iml>
+#include <Draw/iml_header.h>
+
+class MacroElement final {
 public:
 	enum class Type {
 		MACRO,
@@ -25,9 +39,10 @@ public:
 	int    line;
 };
 
-using MacroList = Array<MacroElement>;
-
 class UscFileParser final {
+public:
+	using MacroList = Array<MacroElement>;
+	
 public:
 	UscFileParser(const String& filePath);
 	
@@ -98,3 +113,7 @@ private:
 	
 	int              globalNode;
 };
+
+}
+
+#endif
