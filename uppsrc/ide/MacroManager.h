@@ -53,7 +53,7 @@ public:
 	using MacroStore = ArrayMap<String, Array<MacroElement>>;
 	
 public:
-	MacroManagerWindow(const Workspace& wspc);
+	MacroManagerWindow(const Workspace& wspc, const String& hlStyles);
 
 	void Layout() override;
 	
