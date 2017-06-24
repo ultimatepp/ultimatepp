@@ -1,0 +1,17 @@
+description "TheIDE - extensions (macro) managment utility\377B";
+
+uses
+	CtrlLib,
+	CodeEditor;
+
+file
+	MacroManager.h,
+	MacroElement.cpp,
+	MacroManager.cpp,
+	UscFileParser.cpp,
+	Resources readonly separator,
+	MacroManager.lay,
+	MacroManager.iml,
+	Info readonly separator,
+	Copying;
+

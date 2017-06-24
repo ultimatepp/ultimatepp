@@ -1,4 +1,4 @@
-description "\377B";
+description "TheIDE - common dialogs and interfaces\377B";
 
 uses
 	ide\Core,

@@ -19,7 +19,8 @@ uses
 	TabBar,
 	ide/Designers,
 	ide/Android,
-	ide/Java;
+	ide/Java,
+	ide/MacroManager;
 
 uses(POSIX) ide\SrcUpdater;
 
@@ -79,12 +80,8 @@ file
 	Qtf.cpp,
 	Xml.cpp,
 	Json.cpp,
-	Update.cpp,
-	MacroManager readonly separator,
-	MacroManager.h,
-	MacroElement.cpp,
-	UscFileParser.cpp,
 	MacroManager.cpp,
+	Update.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,
 	MethodsCtrls.cpp,
