@@ -120,7 +120,7 @@ enum {
 CONSOLE_APP_MAIN
 {
 	FileIn in(GetDataFile("UnicodeData.txt"));
-	Vector<dword> code, comb[3], ccode, ccomb[3];
+	Vector<dword> code, comb[3], combn, ccode, ccomb[3];
 	Vector<dword> catcode, cat;
 	Vector<dword> lettercode, letter;
 	Vector<dword> uppercode, lowercode;
@@ -160,9 +160,8 @@ CONSOLE_APP_MAIN
 			   decomb.GetCount() && cde >= 2048 && first != cde && first < 128) // for ToAscii...
 			{
 				// DLOG(h[0] << " -> " << comb[0] << ' ' << comb[1]);
-				decomb.Add("0");
-				decomb.Add("0");
-				decomb.Add("0");
+				if(decomb.GetCount() < 3)
+					decomb.SetCount(3, "0");
 				if(compat) {
 					ccode.Add(cde);
 					ccomb[0].Add(ScanInt(decomb[0], NULL, 16));
@@ -175,8 +174,15 @@ CONSOLE_APP_MAIN
 					comb[1].Add(ScanInt(decomb[1], NULL, 16));
 					comb[2].Add(ScanInt(decomb[2], NULL, 16));
 				}
+				if(decomb.GetCount() > 3) {
+					combn.Add(cde);
+					for(int i = 3; i < decomb.GetCount(); i++)
+						combn.Add(ScanHex(decomb[i]));
+					combn.Add(0);
+					DLOG(Hex(cde) << ' ' << decomb);
+				}
 			}
-			
+
 			if(cde < 0x800) {
 				fast_upper[cde] = word(upper ? upper : cde);
 				fast_lower[cde] = word(lower ? lower : cde);
@@ -218,6 +224,7 @@ CONSOLE_APP_MAIN
 
 	DUMP(code.GetCount());
 	DUMP(lowercode.GetCount());
+	DUMP(combn.GetCount());
 	
 	Vector<dword> data;
 	data.Add(code.GetCount());
@@ -230,6 +237,8 @@ CONSOLE_APP_MAIN
 	data.Append(ccomb[1]);
 	data.Append(comb[2]);
 	data.Append(ccomb[2]);
+	combn.Add(0);
+	data.Append(combn);
 	data.Add(lowercode.GetCount());
 	data.Append(lowercode);
 	data.Append(uppercode);
