@@ -96,11 +96,12 @@ Vector<dword> ToUtf32(const char *s, int len);
 inline Vector<dword> ToUtf32(const char *s)           { return ToUtf32(s, (int)strlen(s)); }
 inline Vector<dword> ToUtf32(const String& s)         { return ToUtf32(~s, s.GetCount()); }
 
-enum { MAX_DECOMPOSED = 3 };
+enum { MAX_DECOMPOSED = 18 };
 
-int   UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED], bool& canonical);
-int   UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED]);
-dword UnicodeCompose(dword *t, int count);
+int           UnicodeDecompose(dword codepoint, dword t[MAX_DECOMPOSED], bool only_canonical = false);
+Vector<dword> UnicodeDecompose(dword codepoint, bool only_canonical = false);
+dword         UnicodeCompose(const dword *t, int count);
+inline dword  UnicodeCompose(const Vector<dword>& t) { return UnicodeCompose(t, t.GetCount()); }
 
 void  SetDefaultCharset(byte charset);
 byte  GetDefaultCharset();
