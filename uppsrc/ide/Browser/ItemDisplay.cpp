@@ -3,6 +3,7 @@
 void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPart>& n,
            int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
+	bool dark = IsDark(SColorPaper());
 	for(int i = starti; i < count; i++) {
 		const ItemTextPart& p = n[i];
 		Font f = BrowserFont();
@@ -11,10 +12,10 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 		case ITEM_PNAME:
 			f.Bold();
 		case ITEM_NUMBER:
-			ink = Red;
+			ink = dark ? Color(28, 255, 0) : Red;
 			break;
 		case ITEM_TNAME:
-			ink = Green;
+			ink = dark ? LtGreen : Green;
 		case ITEM_NAME:
 			f.Bold();
 			break;
@@ -24,7 +25,7 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 		case ITEM_CPP_TYPE:
 		case ITEM_CPP:
 		case ITEM_SIGN:
-			ink = LtBlue;
+			ink = dark ? Color(255, 42, 150) : LtBlue;
 			break;
 		}
 		if(italic)
