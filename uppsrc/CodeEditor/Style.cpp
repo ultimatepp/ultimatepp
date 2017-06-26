@@ -143,9 +143,9 @@ void HighlightSetup::DefaultHlStyles()
 		SetHlStyle(PAPER_IFDEF, Color(63, 63, 63));
 		SetHlStyle(INK_IFDEF, Color(170, 170, 170));
 		SetHlStyle(INK_UPPER, Color(28, 255, 0));
-		SetHlStyle(INK_SQLBASE, Black);
-		SetHlStyle(INK_SQLFUNC, Black);
-		SetHlStyle(INK_SQLBOOL, Black);
+		SetHlStyle(INK_SQLBASE, Color(113, 255, 255), true);
+		SetHlStyle(INK_SQLFUNC, Color(113, 255, 255), true);
+		SetHlStyle(INK_SQLBOOL, Color(113, 255, 255), true);
 		SetHlStyle(INK_UPPMACROS, Color(255, 127, 255));
 		SetHlStyle(INK_UPPLOGS, Green);
 		SetHlStyle(INK_DIFF_FILE_INFO, Black, true);
