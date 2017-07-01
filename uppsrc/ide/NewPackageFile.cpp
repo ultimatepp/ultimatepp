@@ -25,6 +25,7 @@ NewPackageFileWindow::NewPackageFileWindow()
 	Type("usc", "Escape script file (scripting TheIDE)");
 	Type("witz", "Skylark template file (web framework files)");
 	Type("qtf", "U++ rich text file");
+	Type("tpp", "Documentation file");
 	type.AddSeparator();
 	Type("json", "JSON file");
 	Type("xml", "XML file");
