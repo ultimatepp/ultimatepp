@@ -45,7 +45,7 @@ tutorial] `- learn how to build graphical user interfaces with
 the U`+`+&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
 tutorial] `- get knowledge about drawing custom content inside 
-window or control&]
+window, control or even paper sheet (printing)&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
 tutorial] `- check out the mechanism behind the image manipulation&]
 [s3;l160;i150;O0; [*^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql 
