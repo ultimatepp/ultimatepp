@@ -77,6 +77,7 @@ public:
 
 private:
 	void InitButtons();
+	void InitEvents();
 	
 	void LoadUscDir(const String& dir);
 	void LoadMacros();
@@ -84,7 +85,8 @@ private:
 	void ReloadLocalMacros();
 
 	void OnMacroBar(Bar& bar);
-	void OnMacroSel();
+	void OnTreeSel();
+	void OnTabSet();
 	void OnImport();
 	void OnExport();
 	void OnEditFile();
@@ -97,17 +99,24 @@ private:
 private:
 	static String GenFileOverrideMessage(const String& fileName);
 
-	bool IsGlobalRoot() const     { return macrosTree.GetCursor() == globalNode; }
-	bool IsGlobalFile() const     { return macrosTree.Get().Is<String>(); }
-	bool IsFile() const           { return macrosTree.Get().Is<String>() || macrosTree.Get().Is<WString>(); }
-	bool IsFile(int id) const     { return macrosTree.Get(id).Is<String>() || macrosTree.Get(id).Is<WString>(); }
-	bool IsMacro() const          { return macrosTree.Get().Is<MacroElement>();}
+	bool IsGlobalRoot() const     { return globalTree.GetCursor() == globalNode; }
+	bool IsGlobalFile() const     { return globalTree.Get().Is<String>(); }
+	bool IsFile() const           { return GetCurrentTree().Get().Is<String>(); }
+	bool IsFile(int id) const     { return globalTree.Get(id).Is<String>(); }
+	bool IsMacro() const          { return GetCurrentTree().Get().Is<MacroElement>();}
 	bool IsEditPossible() const   { return IsFile() || IsMacro(); }
 	
+	bool IsGlobalTab() const      { return !tab.Get(); }
+	
+	const TreeCtrl& GetCurrentTree() const { return tab.Get() ? localTree : globalTree;};
+
 private:
 	const Workspace& wspc;
 	
-	TreeCtrl         macrosTree;
+	TabCtrl          tab;
+	TreeCtrl         globalTree;
+	TreeCtrl         localTree;
+	
 	SplitterFrame    splitter;
 	CodeEditor       editor;
 	
