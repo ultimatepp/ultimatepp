@@ -13,10 +13,12 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlSt
 {
 	CtrlLayout(*this, t_("Macro Manager"));
 	Zoomable().Sizeable().MinimizeBox(false);
-	macrosTree.NoRoot();
+	globalTree.NoRoot();
+	localTree.NoRoot();
 	
 	parent.Add(editor.SizePos());
-	parent.AddFrame(splitter.Left(macrosTree, 300));
+	parent.AddFrame(splitter.Left(tab, 330));
+	tab.Add(globalTree.SizePos(), t_("Global macros"));
 
 	editor.Highlight("usc");
 	editor.SetReadOnly();
@@ -24,30 +26,15 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlSt
 	editButton.Disable();
 	exportButton.Disable();
 	
-	globalNode = macrosTree.Add(0, Image(), 0, t_("Global macros"));
+	globalNode = globalTree.Add(0, Image(), 0, t_("Global macros"));
 
 	LoadMacros();
-	macrosTree.OpenDeep(0);
+
 	editor.Hide();
 	editor.LoadHlStyles(hlStyles);
 	
-	macrosTree.WhenSel = [=]           { OnMacroSel(); };
-	macrosTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
-	
 	InitButtons();
-}
-
-void MacroManagerWindow::OnMacroBar(Bar& bar)
-{
-	bar.Add(t_("New.."),                      [=] { OnNewMacroFile();});
-	bar.Add(t_("Import.."),                   [=] { OnImport();});
-	bar.Add(t_("Delete"),                     [=] { OnDeleteMacroFile();})
-	    .Enable(IsGlobalFile());
-	bar.Add(t_("Export.."),                   [=] { OnExport();})
-	    .Enable(IsGlobalFile() || IsGlobalRoot());
-	bar.Separator();
-	bar.Add(t_("Edit"),                       [=] { OnEditFile();})
-	    .Enable(IsEditPossible());
+	InitEvents();
 }
 
 void MacroManagerWindow::InitButtons()
@@ -65,23 +52,61 @@ void MacroManagerWindow::InitButtons()
 	exportButton <<	[=] { OnExport(); };
 }
 
-void MacroManagerWindow::Layout()
+void MacroManagerWindow::InitEvents()
 {
-	OnMacroSel();
+	globalTree.WhenSel = [=]           { OnTreeSel(); };
+	localTree.WhenSel  = [=]           { OnTreeSel(); };
+	
+	globalTree.WhenBar = [=](Bar& bar) { OnMacroBar(bar); };
+	localTree.WhenBar  = [=](Bar& bar) { OnMacroBar(bar); };
+	
+	tab.WhenSet        = [=]           { OnTabSet(); };
 }
 
-void MacroManagerWindow::OnMacroSel()
+void MacroManagerWindow::OnMacroBar(Bar& bar)
 {
-	bool hasCursor = macrosTree.IsCursor();
+	if(IsGlobalTab()) {
+		bool partOfFile = IsGlobalFile() || IsGlobalRoot();
+		
+		bar.Add(t_("New.."),    [=] { OnNewMacroFile();});
+		bar.Add(t_("Import.."), [=] { OnImport();});
+		bar.Add(t_("Delete"),   [=] { OnDeleteMacroFile();})
+		    .Enable(partOfFile);
+		bar.Add(t_("Export.."), [=] { OnExport();})
+		    .Enable(partOfFile);
+		bar.Separator();
+	}
+	bar.Add(t_("Edit"), [=] { OnEditFile();})
+	    .Enable(IsEditPossible());
+}
+
+void MacroManagerWindow::Layout()
+{
+	OnTreeSel();
+}
+
+void MacroManagerWindow::OnTreeSel()
+{
+	const TreeCtrl& tree = GetCurrentTree();
+	bool hasCursor = tree.IsCursor();
 	
-	exportButton.Enable(hasCursor && (IsGlobalFile() || IsGlobalRoot()));
+	exportButton.Enable(IsGlobalTab() && hasCursor && (IsGlobalFile() || IsGlobalRoot()));
+	
 	editButton.Enable(hasCursor && IsEditPossible());
 	editor.Show(editButton.IsEnabled());
 	
 	if(IsFile())
-		editor.Set(LoadFile(static_cast<String>(macrosTree.Get())));
+		editor.Set(LoadFile(static_cast<String>(tree.Get())));
 	else if(IsMacro())
-		editor.Set(ValueTo<MacroElement>(macrosTree.Get()).GetContent());
+		editor.Set(ValueTo<MacroElement>(tree.Get()).GetContent());
+}
+
+void MacroManagerWindow::OnTabSet()
+{
+	exportButton.Show(tab.Get() == 0);
+	editor.Hide();
+	
+	OnTreeSel();
 }
 
 void MacroManagerWindow::OnImport()
@@ -108,7 +133,7 @@ void MacroManagerWindow::OnImport()
 	
 	FileCopy(filePath, newFilePath);
 	ReloadGlobalMacros();
-	OnMacroSel();
+	OnTreeSel();
 }
 
 void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
@@ -127,19 +152,19 @@ void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
 void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
 {
 	if(IsFile(id)) {
-		list.FindAdd((String)macrosTree.Get(id));
+		list.FindAdd((String)globalTree.Get(id));
 		return;
 	}
 	
-	for(int i = 0; i < macrosTree.GetChildCount(id); i++) {
-		int node = macrosTree.GetChild(id, i);
+	for(int i = 0; i < globalTree.GetChildCount(id); i++) {
+		int node = globalTree.GetChild(id, i);
 		FindNodeFiles(node, list);
 	}
 }
 
 void MacroManagerWindow::OnExport()
 {
-	if(!macrosTree.IsCursor())
+	if(!globalTree.IsCursor())
 		return;
 
 	if(IsGlobalFile() || IsGlobalRoot()) {
@@ -148,23 +173,24 @@ void MacroManagerWindow::OnExport()
 			return;
 		
 		Index<String> list;
-		FindNodeFiles(macrosTree.GetCursor(), list);
+		FindNodeFiles(globalTree.GetCursor(), list);
 		ExportFiles(list, dir);
 	}
 }
 
 void MacroManagerWindow::OnEditFile()
 {
-	if(!macrosTree.IsCursor())
+	const TreeCtrl& tree = GetCurrentTree();
+	if(!tree.IsCursor())
 		return;
 
 	if(IsMacro()) {
-		MacroElement element = ValueTo<MacroElement>(macrosTree.Get());
+		MacroElement element = ValueTo<MacroElement>(tree.Get());
 		WhenEdit(element.fileName, element.line - 1);
 		Break();
 	}
 	else if(IsFile()) {
-		WhenEdit( (String)macrosTree.Get(), 1);
+		WhenEdit(tree.Get(), 1);
 		Break();
 	}
 }
@@ -187,19 +213,18 @@ void MacroManagerWindow::OnNewMacroFile()
 	SaveFile(fullPath, "macro \"\" {}");
 	ReloadGlobalMacros();
 	
-	macrosTree.FindSetCursor(fileName);
+	globalTree.FindSetCursor(fileName);
 }
 
 void MacroManagerWindow::OnDeleteMacroFile()
 {
-	String fileName = static_cast<String>(macrosTree.GetValue());
-	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?"))) {
+	String fileName = static_cast<String>(globalTree.GetValue());
+	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?")))
 		return;
-	}
 	
 	FileDelete(AppendFileName(GetLocalDir(), fileName));
-	macrosTree.Remove(macrosTree.GetCursor());
-	OnMacroSel();
+	globalTree.Remove(globalTree.GetCursor());
+	OnTreeSel();
 }
 
 String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)
@@ -214,12 +239,11 @@ void MacroManagerWindow::LoadUscDir(const String& dir)
 		if(!ff.GetPath().EndsWith(String() << "UppLocal" << DIR_SEPS << ff.GetName()))
 			fileTitle = "../" + fileTitle;
 		
-		int fileNode = macrosTree.Add(globalNode, Image(), ff.GetPath(), fileTitle);
+		int fileNode = globalTree.Add(globalNode, Image(), ff.GetPath(), fileTitle);
 		
 		auto list = UscFileParser(ff.GetPath()).Parse();
-		for(const auto& element : list) {
-			macrosTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
-		}
+		for(const auto& element : list)
+			globalTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
 	}
 }
 
@@ -231,18 +255,16 @@ void MacroManagerWindow::LoadMacros()
 
 void MacroManagerWindow::ReloadGlobalMacros()
 {
-	macrosTree.RemoveChildren(globalNode);
+	globalTree.RemoveChildren(globalNode);
 
 	LoadUscDir(GetLocalDir());
 	LoadUscDir(GetFileFolder(ConfigFile("x")));
 	
-	macrosTree.OpenDeep(0);
+	globalTree.OpenDeep(0);
 }
 
 void MacroManagerWindow::ReloadLocalMacros()
 {
-	int localNode = macrosTree.Find(1);
-		
 	for(int i = 0; i < wspc.GetCount(); i++) {
 		const Package& package = wspc.GetPackage(i);
 		int packageNode = -1;
@@ -256,19 +278,21 @@ void MacroManagerWindow::ReloadLocalMacros()
 			if (list.GetCount() == 0)
 				continue;
 			
-			if(localNode == -1)
-				localNode  = macrosTree.Add(0, Image(), 1, t_("Local macros (Read only)"));
+			if(tab.GetCount() == 1)
+				tab.Add(localTree.SizePos(), t_("Local macros (Read only)"));
 			
 			if(packageNode == -1)
-				packageNode = macrosTree.Add(localNode, Image(), 0, wspc[i]);
+				packageNode = localTree.Add(0, Image(), 0, wspc[i]);
 					
-			int fileNode = macrosTree.Add(packageNode, Image(), filePath.ToWString(), file);
+			int fileNode = localTree.Add(packageNode, Image(), filePath, file);
 			for(int j = 0; j < list.GetCount(); j++) {
 				MacroElement& element = list[j];
-				macrosTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
+				localTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
 			}
 		}
 	}
+
+	localTree.OpenDeep(0);
 }
 
 }

@@ -20,7 +20,6 @@ Image MacroElement::GetImage() const
 		case(Type::UNKNOWN):
 			return Image();
 	}
-	return Image();
 }
 
 String MacroElement::GetContent() const
