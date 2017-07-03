@@ -1,0 +1,82 @@
+-----------------------
+DONE
+
+CoWork remove Semaphore
+
+IIterator	typedef        typename V::ValueType T;
+
+SerializeRaw - int64!
+
+StringBuffer 2GB limit
+
+Remove NanoStrings
+
+Fix StringStream 2GB limit, 
+Stream SizeLimit
+
+CoWork pipe
+CoWork limits, logical thread not working
+
+rename Function (Functor, Event, EventGate)
+
+ExitThread (or Thread::Exit), Sleep(10)
+
+Generic Tuple
+
+String() <<
+
+String &&
+
+Remove IsPicked
+
+Remove AddPick (keep as synonym)
+
+void XmlNode::SetAttrsPick(VectorMap<String, String>&& a)
+
+inline String& operator<<(String&& s, const T& x)
+
+Remove HashFn
+
+for(auto i: ~map)
+
+Remove precomputed hash
+
+Remove StringC
+
+Create like emplace everywhere
+
+Global.h ?
+
+nanoalloc
+
+ONCELOCK_PTR removed
+
+Atomic->std::atomic, Barriers removed
+
+Optimize Index::Hash
+
+ConditionVariable
+
+idmapBencmark ValueMap optimize
+
+BiVector/Array/BiArray Pop
+
+Range Insert/Append in containers
+
+Function/Callback &&, Swap
+
+Range
+
+Remove:
+WithDeepCopy<T> DeepClone(const T& src)
+class WithPick : public T {
+WithPick<T> AsPick(T&& src)
+
+
+WithDeepCopy should implement &&
+
+Remove CPP_11
+
+Remove commented out code
+
+AuxMutex, MT: Remove!
