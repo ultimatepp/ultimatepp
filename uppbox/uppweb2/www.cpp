@@ -19,6 +19,17 @@ String examples =  rootdir + "examples";
 String targetdir = "u:\\devweb\\uppwww";
 String pdfdir    = "u:\\devweb\\pdf";
 #else
+
+#ifdef _DEBUG
+String rootdir   = GetHomeDirFile("upp.src");
+String uppbox    = rootdir + "uppbox";
+String uppsrc    = rootdir + "uppsrc";
+String reference = rootdir + "reference";
+String examples  = rootdir + "examples";
+String targetdir = GetHomeDirFile("www");
+String diffdir   = GetHomeDirFile("wwwd");
+String pdfdir    = GetHomeDirFile("www");
+#else
 String rootdir = "/root/upp.src";
 String uppbox =    rootdir + "uppbox";
 String uppsrc =    rootdir + "uppsrc";
@@ -27,6 +38,8 @@ String examples =  rootdir + "examples";
 String targetdir = "/var/www";
 String diffdir   = "/root/wwwupp";
 String pdfdir    = "/var/www";
+#endif
+
 #endif
 String bazaar;
 bool outPdf;
