@@ -1,7 +1,8 @@
 description "Simple Mail Transfer Protocol\3770,128,128";
 
 uses
-	Core;
+	Core,
+	Core/SSL;
 
 file
 	SMTP.h,

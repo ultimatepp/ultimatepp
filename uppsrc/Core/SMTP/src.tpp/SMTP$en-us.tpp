@@ -30,13 +30,21 @@ st]_[_^String^ String][@(0.0.255) `&]_[*@3 h])&]
 [s3; &]
 [s4; &]
 [s5;:Smtp`:`:Port`(int`):%- [_^Smtp^ Smtp][@(0.0.255) `&]_[* Port]([@(0.0.255) int]_[*@3 p])&]
-[s2; SMTP host port. If Null, 25 is used for normal SMTP and 465 
-for SMTPS (using SSL).&]
+[s2; SMTP host port. If Null, 25 is used for normal SMTP, 465 for 
+SMTPS (using SSL), and 587 for SMTPS (using STARTTLS).&]
 [s3; &]
 [s4; &]
 [s5;:Smtp`:`:SSL`(bool`):%- [_^Smtp^ Smtp][@(0.0.255) `&]_[* SSL]([@(0.0.255) bool]_[*@3 b]_`=_
 [@(0.0.255) true])&]
-[s2; Activates SMTPS mode (using SSL). Requires Core/SSL package.&]
+[s2; Activates SMTPS mode (using SSL). &]
+[s6; Requires Core/SSL package.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Smtp`:`:StartTLS`(bool`):%- [_^Upp`:`:Smtp^ Smtp][@(0.0.255) `&]_[* StartTLS]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2; Activates SMTPS mode (using STARTTLS). &]
+[s6; Requires Core/SSL package.&]
+[s3; &]
 [s4;%- &]
 [s5;:Smtp`:`:Auth`(const String`&`,const String`&`):%- [_^Smtp^ Smtp][@(0.0.255) `&]_[* Aut
 h]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 user], [@(0.0.255) const]_[_^String^ S
