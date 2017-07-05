@@ -6,17 +6,18 @@
 namespace Upp {
 
 class Smtp : public TcpSocket {
-	struct Attachment
-	{
-		String name; // mail name
-		String file; // source path (dynamic attachments only)
-		String mime; // content type (application/octet-stream by default)
-		String data;
-	};
+    struct Attachment
+    {
+        String name; // mail name
+        String file; // source path (dynamic attachments only)
+        String mime; // content type (application/octet-stream by default)
+        String data;
+    };
 
 	String         host;
 	int            port; // default = 25
 	bool           ssl;
+	bool           starttls;
 	String         auth_user;
 	String         auth_pwd;
 	String         sender;
@@ -39,14 +40,33 @@ class Smtp : public TcpSocket {
 	String         subject;
 
 	int            start_time;
+	String         smtp_msg;
+	int            smtp_code;
 	String         error;
 	String         message_id;
 
-	void   CheckFail();
-	void   SendData(const String &s, bool trace_bytes_only = false);
-	String SendRecv(const String& s, bool trace_bytes_only = false);
-	void   SendRecvOK(const String& s, bool trace_bytes_only = false);
-	String GetMessage(bool chunks);
+	String      GetDomainName();
+	ValueMap    GetExtensions();
+	int         GetSmtpCode(const String& s);
+	void        SetSender();
+	void        SetRecipients();
+	void        SendRecv(const String& s);
+	void	    SendRecvOK(const String& s);
+	void        SendMail(const String& msg_);
+	void        SendData(const String &s);
+	bool	    SendHello();
+	void        StartTls();
+	void        Authenticate();
+	void        Quit();
+ 
+	String     GetMessage(bool chunks);
+	
+
+	bool       ReplyIsWait() const                                { return smtp_code >= 100 && smtp_code <= 199; }
+	bool       ReplyIsSuccess() const                             { return smtp_code >= 200 && smtp_code <= 299; }
+	bool       ReplyIsPending() const                             { return smtp_code >= 300 && smtp_code <= 399; }
+	bool       ReplyIsFailure() const                             { return smtp_code >= 400 && smtp_code <= 499; }
+	bool       ReplyIsError() const                               { return smtp_code >= 500 || smtp_code == -1;  }
 
 public:
 	enum AS { TO, CC, BCC };
@@ -54,7 +74,8 @@ public:
 	Smtp&      RequestTimeout(int ms)                             { request_timeout = ms; return *this; }
 	Smtp&      Host(const String& h)                              { host = h; return *this; }
 	Smtp&      Port(int p)                                        { port = p; return *this; }
-	Smtp&      SSL(bool b = true)                                 { ssl = b; return *this; }
+	Smtp&      SSL(bool b = true)                                 { ssl = b; if(b) starttls = !b; return *this; }
+	Smtp&      StartTLS(bool b = true)                            { starttls = b; if(b) ssl = !b; return *this; }
 	Smtp&      Auth(const String& user, const String& pwd)        { auth_user = user; auth_pwd = pwd; return *this; }
 	Smtp&      From(const String& email, const String& name = Null, const String& sender = Null);
 	Smtp&      To(const String& email, const String& name, AS a = TO);
@@ -74,12 +95,12 @@ public:
 
 	Smtp&      New();
 
-	String     GetMessage()                                       { return GetMessage(false); }
+    String     GetMessage()                                       { return GetMessage(false); }
 	String     GetMessageID();
 	bool       Send(const String& message);
-	
+
 	bool       Send()                                             { return Send(Null); }
-	
+
 	String     GetError() const                                   { return error; }
 
 	Smtp();
