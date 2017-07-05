@@ -62,6 +62,7 @@ GUI_APP_MAIN
 	EXP(Select(COL).From(TABLE1));
 	EXP(Select(COL.Of(TABLE1)).From(TABLE1));
 	EXP(Select(COL.As(A)).From(TABLE1));
+	EXP(Select(TABLE1(COL, A.As("T_A"), SEQ)).From(TABLE1));
 	EXP(Select(COL&A).From(TABLE1));
 	EXP(Select(COL[3]).From(TABLE1));
 	EXP(Select(COLUMN1 % COLUMN2).From(TABLE1));
