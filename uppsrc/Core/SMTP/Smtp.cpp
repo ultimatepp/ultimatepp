@@ -55,51 +55,172 @@ static String GetDelimiter(String s, String init)
 	return GetDelimiter(s.Begin(), s.End(), init);
 }
 
-void Smtp::CheckFail()
+String Smtp::GetDomainName()
 {
-	if(msecs(start_time) > request_timeout)
-		throw Exc(t_("Communication Failure: Timeout."));
-	if(IsError())
-		throw Exc("Connection error: " + GetErrorDesc());
-}
-
-void Smtp::SendData(const String &s, bool trace_bytes_only)
-{
-	if (trace_bytes_only)
-	    LLOG("SMTP send body: " << s.GetCount() << " bytes");
-	else
-	    LLOG("SMTP send: " << s);
-	const char *p = s.Begin(), *e = s.End();
-	while(p != e) {
-		CheckFail();
-		int amount = Put(p, int(e - p));
-		p += amount;
+	String org;
+	auto pos = sender.Find('@');
+	if(pos >= 0) {
+		auto start = ++pos, len = sender.GetLength();
+		while(pos < len && sender[pos] != '>')
+			pos++;
+		org = sender.Mid(start, pos - start);
 	}
+	else org << TcpSocket::GetHostName();
+	return org;
 }
 
-String Smtp::SendRecv(const String& s, bool trace_bytes_only)
+ValueMap Smtp::GetExtensions()
 {
-	SendData(s, trace_bytes_only);
-	String reply;
-	for(;;) {
-		CheckFail();
-		int c = Get();
-		if(c >= 0) {
-			if(c == '\n') {
-				LLOG("Reply: " << reply);
-				return reply;
+	ValueMap features;
+	if(!smtp_msg.IsEmpty()) {
+		StringStream ss(smtp_msg);
+		ss.GetLine();
+		while(!ss.IsEof()) {
+			// Get smtp service extensions.
+			auto e = NormalizeSpaces(TrimBoth(ss.GetLine().Mid(4)));
+			Vector<String> v = Split(e, ' ');
+			features.GetAdd(ToLower(v[0]));
+			for(auto i = 1; i < v.GetCount(); i++)
+				features(v[0]) << v[i];
+		}
+	}
+	return pick(features);
+}
+
+int Smtp::GetSmtpCode(const String& s)
+{
+	if(s.IsVoid() || s.GetLength() < 3 || !IsDigit(s[0]) || !IsDigit(s[1]) || !IsDigit(s[2]))
+		return -1;
+	return StrInt(s.Mid(0, 3));
+}
+
+void Smtp::SetSender()
+{
+	// Specify the e-mail address of the sender.
+	SendRecvOK("MAIL FROM:<" + sender + ">");
+}
+
+void Smtp::SetRecipients()
+{
+	// A single e-mail can be sent to multiple recipients.
+	for(auto& rcp : to)
+		SendRecv("RCPT TO:<" + rcp + ">");
+}
+
+void Smtp::SendRecv(const String& s)
+{
+	// We need to check the control connection.
+	if(!IsOpen())
+		throw Exc("Socket is not open.");
+
+	// Send request.
+	if(!s.IsEmpty())
+		SendData(s + "\r\n");
+
+	// Receive response.
+	// Response can be "multiline".
+	smtp_msg = GetLine();
+	smtp_code = GetSmtpCode(smtp_msg);
+	if(smtp_code == -1)
+		throw Exc("Recv failed. " << GetErrorDesc());
+	LLOG("<< " << smtp_msg);
+	smtp_msg.Cat('\n');
+	if(smtp_msg[3] && smtp_msg[3] == '-') {
+		for(;;) {
+			auto line = GetLine();
+			if(line.IsVoid()) {
+				throw Exc("Recv failed: " << GetErrorDesc());
 			}
-			reply.Cat(c);
+			auto end_code = GetSmtpCode(line);
+			LLOG("<< " << line);
+			smtp_msg.Cat(line);
+			smtp_msg.Cat('\n');
+			if(smtp_code == end_code && line[3] && line[3] == ' ')
+				break;
 		}
 	}
 }
 
-void Smtp::SendRecvOK(const String& s, bool trace_bytes_only)
+void Smtp::SendRecvOK(const String& s)
 {
-	String ans = SendRecv(s, trace_bytes_only);
-	if(ans[0] != '2' || ans[1] != '5' || ans[2] != '0')
-		throw Exc(ans);
+	SendRecv(s);
+	if(!ReplyIsSuccess())
+		throw Exc(smtp_msg);
 }
+
+bool Smtp::SendHello()
+{
+	auto org = GetDomainName();
+	// Try EHLO command first.
+	// EHLO command may return available service extensions.
+	SendRecv("EHLO " << org);
+	if(!ReplyIsSuccess()) {
+		// Fall back to original client greeting if EHLO fails.
+		SendRecvOK("HELO " << org);
+		return false;
+	}
+	return true;
+}
+
+void Smtp::StartTls()
+{
+	SendRecv("STARTTLS");
+	if(!ReplyIsSuccess() || !StartSSL())
+		throw Exc("Unable to init TLS session.");
+	LLOG("++ STARTTLS successful.");
+}
+
+void Smtp::Authenticate()
+{
+	if(!IsNull(auth_user)) {
+		SendRecv("AUTH LOGIN");
+		while(ReplyIsPending()){
+			auto param = Base64Decode(smtp_msg.GetIter(4), smtp_msg.End());
+			if(param == "Username:")
+				SendRecv(Base64Encode(auth_user));
+			else
+			if(param == "Password:")
+				SendRecv(Base64Encode(auth_pwd));
+		}
+		if(!ReplyIsSuccess())
+			throw Exc(smtp_msg);
+	}
+}
+
+void Smtp::Quit()
+{
+	SendRecv("QUIT");
+}
+
+void Smtp::SendMail(const String& msg_)
+{
+	SetSender();
+	SetRecipients();
+
+	// Now send the actual e-mail.
+	SendRecv("DATA");
+	if(ReplyIsPending()) {
+		String msg = msg_;
+		if(msg.IsEmpty())
+			msg = GetMessage(true);
+		
+		SendRecv(msg + ".");
+		if(ReplyIsSuccess())
+			return;
+	}
+	throw Exc(smtp_msg);
+}
+
+void Smtp::SendData(const String &s)
+{
+	if(Ini::Smtp_TraceBody)
+		LLOG(">> " << s);
+	else
+		LLOG(">> [Smtp send body: " << s.GetCharCount() << " bytes]");
+	if(!PutAll(s))
+		throw Exc("Send failed. " << GetErrorDesc());
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Smtp::
@@ -327,9 +448,8 @@ String Smtp::GetMessage(bool chunks)
 
 bool Smtp::Send(const String& msg_)
 {
-	start_time = msecs();
-
-	String ipaddr;
+	smtp_code = 0;
+	smtp_msg.Clear();
 
 	try {
 		if(IsNull(host))
@@ -338,65 +458,45 @@ bool Smtp::Send(const String& msg_)
 		if(to.IsEmpty())
 			throw Exc(t_("Recipient not set."));
 
-		if(!Connect(host, Nvl(port, ssl ? 465 : 25)))
+		if(!Connect(host, Nvl(port, starttls ? 587 : (ssl ? 465 : 25))))
 			throw Exc(Format("Cannot open socket %s:%d: %s", host, port, GetErrorDesc()));
 
 		GlobalTimeout(request_timeout);
 
-		String ans;
-		
 		if(ssl)
 			if(!StartSSL())
 				throw Exc("Unable to start SSL");
 
-		// receive initial message & send hello
+		// Receive initial message.
 		SendRecv(Null);
-		String org;
-		int pos = sender.Find('@');
-		if(pos >= 0) {
-			int start = ++pos, len = sender.GetLength();
-			while(pos < len && sender[pos] != '>')
-				pos++;
-			org = sender.Mid(start, pos - start);
-		}
-		else
-			org << TcpSocket::GetHostName();
 
-		SendRecvOK("HELO " + org + "\r\n");
-		if(!IsNull(auth_user)) {
-			String ans = SendRecv("AUTH LOGIN\r\n");
-			while(ans[0] != '2')
-				if(ans[0] == '3' && ans[1] == '3' && ans[2] == '4' && ans[3] == ' ') {
-					String param = Base64Decode(ans.GetIter(4), ans.End());
-					if(param == "Username:")
-						ans = SendRecv(Base64Encode(auth_user) + "\r\n");
-					else if(param == "Password:")
-						ans = SendRecv(Base64Encode(auth_pwd) + "\r\n");
-					else
-						throw Exc(ans);
+		// Send HELO/EHLO command and query smtp service extensions.
+		if(SendHello()) {
+			auto ext = GetExtensions();
+			if(!ext.IsEmpty()) {
+				// Check services.
+				if(starttls) {
+					if(ext.Find("starttls") < 0)
+						throw Exc("STARTTLS is not supported by the server.");
+					StartTls();
+					SendHello();
 				}
-				else
-					throw Exc(ans);
+			}
 		}
-		SendRecvOK("MAIL FROM:<" + sender + ">\r\n");
-		for(int i = 0; i < to.GetCount(); i++)
-			SendRecv("RCPT TO:<" + to[i] + ">\r\n");
-		ans = SendRecv("DATA\r\n");
 
-		if(memcmp(ans, "354", 3))
-			throw Exc(ans);
+		// Everything is fine. Let us login now.
+		Authenticate();
 
-		String msg = msg_;
-		if(msg.GetCount() == 0)
-			msg = GetMessage(true);
+		// Send mail.
+		SendMail(msg_);
 
-		SendRecvOK(msg + ".\r\n", true);
-
-		SendRecv("QUIT\r\n");
+		// Close connection.
+		Quit();
 		return true;
 	}
 	catch(Exc e) {
 		error = e;
+		LLOG("-- " << error);
 		return false;
 	}
 }
@@ -421,7 +521,9 @@ Smtp::Smtp()
 	no_header = no_header_sep = false;
 	time_sent = GetSysTime();
 	request_timeout = 120000;
+	smtp_code = 0;
 	ssl = false;
+	starttls = false;
 	New();
 }
 
