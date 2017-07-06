@@ -356,10 +356,10 @@ void Ide::Setup(Bar& menu)
 		.Help("Edit abbreviation keywords and code");
 	menu.Add("Keyboard shortcuts..", THISBACK(DoEditKeys))
 		.Help("Edit key bindings");
-	menu.Add("Build methods..", THISBACK(SetupBuildMethods))
-	    .Help("Setup build methods");
 	menu.Add("Macro Manager..", THISBACK(DoMacroManager))
 		.Help("Manage macros collection..");
+	menu.Add("Build methods..", THISBACK(SetupBuildMethods))
+	    .Help("Setup build methods");
 #ifdef PLATFORM_WIN32
 	menu.Add("Automatic build methods setup..", callback(InstantSetup))
 	    .Help("Setups/fixes build methods and basic assemblies..");

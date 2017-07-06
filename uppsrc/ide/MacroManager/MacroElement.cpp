@@ -17,9 +17,8 @@ Image MacroElement::GetImage() const
 			return MacroManagerImg::Macro();
 		case(Type::FUNCTION):
 			return MacroManagerImg::Fn();
-		case(Type::UNKNOWN):
-			return Image();
 	}
+	return Image();
 }
 
 String MacroElement::GetContent() const

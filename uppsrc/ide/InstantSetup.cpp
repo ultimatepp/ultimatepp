@@ -128,12 +128,15 @@ void InstantSetup()
 	String default_method;
 	
 	bool dirty = false;
+	
+	enum { VS_2015, VS_2017, BT_2017 };
 
-	for(int msc15 = 0; msc15 < 2; msc15++)
+	for(int version = VS_2015; version <= BT_2017; version++)
 		for(int x64 = 0; x64 < 2; x64++) {
-			String x86method = msc15 ? "MSC15" : "MSC14";
-			String method = x86method + (x64 ? "x64" : "");
-			String builder = ToUpper(method);
+			String x86method = decode(version, VS_2015, "MSVS15", VS_2017, "MSVS17", "MSBT17");
+			String x64s = x64 ? "x64" : "";
+			String method = x86method + x64s;
+			String builder = (version == VS_2015 ? "MSC15" : "MSC17") + ToUpper(x64s);
 		
 		#ifdef _DEBUG
 			method << "Test";
@@ -153,22 +156,26 @@ void InstantSetup()
 				continue;
 			}
 		#endif
-			
-			if(msc15)
-				vc = df.Get("/microsoft visual studio/2017/community/vc/tools/msvc",
+
+			if(version == VS_2015)
+				vc = df.Get("/microsoft visual studio 14.0/vc", "bin/cl.exe;bin/lib.exe;bin/link.exe;bin/mspdb140.dll");
+			else
+				vc = df.Get(version == BT_2017 ? "/microsoft visual studio/2017/buildtools/vc/tools/msvc"
+				                               : "/microsoft visual studio/2017/community/vc/tools/msvc",
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
-			else
-				vc = df.Get("/microsoft visual studio 14.0/vc", "bin/cl.exe;bin/lib.exe;bin/link.exe;bin/mspdb140.dll");
+
 			bin = df.Get(x64 ? "/windows kits/10/bin/x86" : "windows kits/10/bin/x86", "makecat.exe;accevent.exe");
 			inc = df.Get("/windows kits/10", "um/adhoc.h");
 			lib = df.Get("/windows kits/10", "um/x86/kernel32.lib");
+			
+			bool ver17 = version >= VS_2017;
 	
-			if(inc.GetCount() == 0 || lib.GetCount() == 0) { // workaround for situation when 8.1 is present, but 10 just partially
+			if(inc.GetCount() == 0 || lib.GetCount() == 0) // workaround for situation when 8.1 is present, but 10 just partially
 				kit81 = df.Get("/windows kits/8.1", "include");
-			}
 			
 			LOG("=============");
+			DUMP(method);
 			DUMP(vc);
 			DUMP(bin);
 			DUMP(inc);
@@ -176,7 +183,7 @@ void InstantSetup()
 			DUMP(lib);
 	
 			if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
-				bins.At(0) = vc + (msc15 ? (x64 ? "/bin/hostx64/x64" : "/bin/hostx86/x86") : (x64 ? "/bin/amd64" : "/bin"));
+				bins.At(0) = vc + (ver17 ? (x64 ? "/bin/hostx64/x64" : "/bin/hostx86/x86") : (x64 ? "/bin/amd64" : "/bin"));
 				bins.At(1) = bin;
 				String& sslbin = bins.At(2);
 				if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
@@ -199,7 +206,7 @@ void InstantSetup()
 				if(IsNull(sslinc) || ToLower(sslinc).Find("openssl") >= 0)
 					sslinc = GetExeDirFile("bin/OpenSSL-Win/include");
 				
-				libs.At(0) = vc + (msc15 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
+				libs.At(0) = vc + (ver17 ? (x64 ? "/lib/x64" : "/lib/x86") : (x64 ? "/lib/amd64" : "/lib"));
 				ii = 1;
 				if(lib.GetCount()) {
 					libs.At(ii++) = lib + (x64 ? "/ucrt/x64" : "/ucrt/x86");
@@ -230,7 +237,7 @@ void InstantSetup()
 				bmSet(bm, "RELEASE_FLAGS", "");
 				bmSet(bm, "RELEASE_LINK", x64 ? "/STACK:20000000" : "/STACK:10000000");
 				bmSet(bm, "DISABLE_BLITZ", "");
-				bmSet(bm, "DEBUGGER", GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
+				bmSet(bm, "DEBUGGER", version == BT_2017 ? String() : GetFileFolder(vc) +  "/Common7/IDE/devenv.exe");
 	
 				bm.GetAdd("PATH") = Join(bins, ";");
 				bm.GetAdd("INCLUDE") = Join(incs, ";");

@@ -5,6 +5,8 @@ namespace Upp {
 
 #define LLOG(x) // DLOG(x)
 
+void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
+
 void BufferPainter::ClearOp(const RGBA& color)
 {
 	UPP::Fill(~ib, color, ib.GetLength());
@@ -44,7 +46,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 	bool evenodd = pathattr.evenodd;
 	bool regular = pathattr.mtx.IsRegular() && width < 0 && !ischar;
 	double tolerance;
-	LinearPathConsumer *g = &rasterizer;
+	LinearPathConsumer *g = alt ? (LinearPathConsumer *)alt : &rasterizer;
 	Rectf preclip = Null;
 	if(dopreclip && width != ONPATH) {
 		preclip = rasterizer.GetClip();
@@ -69,6 +71,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 			return newclip;
 		}
 	}
+	if(!IsNull(alt_tolerance))
+		tolerance = alt_tolerance;
+	else
 	if(regular)
 		tolerance = 0.3;
 	else {
@@ -151,28 +156,32 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, SpanSource *ss, con
 		if(i >= path.type.GetCount() || path.type[i] == DIV) {
 			g->End();
 			if(width != ONPATH) {
-				PAINTER_TIMING("Fill");
-				for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
-					solid_filler.t = subpixel_filler.t = span_filler.t = ib[y];
-					subpixel_filler.end = subpixel_filler.t + ib.GetWidth();
-					span_filler.y = subpixel_filler.y = y;
-					Rasterizer::Filler *rf = rg;
-					if(clip.GetCount()) {
-						const ClippingLine& s = clip.Top()[y];
-						if(s.IsEmpty()) goto empty;
-						if(!s.IsFull()) {
-							mf.Set(rg, s);
-							rf = &mf;
+				if(alt)
+					alt->Fill(width, ss, color);
+				else {
+					PAINTER_TIMING("Fill");
+					for(int y = rasterizer.MinY(); y <= rasterizer.MaxY(); y++) {
+						solid_filler.t = subpixel_filler.t = span_filler.t = ib[y];
+						subpixel_filler.end = subpixel_filler.t + ib.GetWidth();
+						span_filler.y = subpixel_filler.y = y;
+						Rasterizer::Filler *rf = rg;
+						if(clip.GetCount()) {
+							const ClippingLine& s = clip.Top()[y];
+							if(s.IsEmpty()) goto empty;
+							if(!s.IsFull()) {
+								mf.Set(rg, s);
+								rf = &mf;
+							}
 						}
+						if(doclip)
+							clip_filler.Clear();
+						rasterizer.Render(y, *rf, evenodd);
+						if(doclip)
+							clip_filler.Finish(newclip[y]);
+					empty:;
 					}
-					if(doclip)
-						clip_filler.Clear();
-					rasterizer.Render(y, *rf, evenodd);
-					if(doclip)
-						clip_filler.Finish(newclip[y]);
-				empty:;
+					rasterizer.Reset();
 				}
-				rasterizer.Reset();
 			}
 			if(i >= path.type.GetCount())
 				break;
