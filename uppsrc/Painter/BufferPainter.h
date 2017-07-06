@@ -206,6 +206,10 @@ public:
 	Point  Get();
 };
 
+struct PainterTarget : LinearPathConsumer {
+	virtual void Fill(double width, SpanSource *ss, const RGBA& color);
+};
+
 class BufferPainter : public Painter {
 protected:
 	virtual void   ClearOp(const RGBA& color);
@@ -319,6 +323,9 @@ private:
 		bool                            onpath;
 	};
 	
+	PainterTarget             *alt = NULL;
+	double                     alt_tolerance = Null;
+	ImageBuffer                dummy;
 	ImageBuffer&               ib;
 	int                        mode;
 	Buffer<int16>              subpixel;
@@ -381,6 +388,7 @@ public:
 	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; return *this; }
 
 	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
+	BufferPainter(PainterTarget& t, double tolerance = Null);
 };
 
 #include "Interpolator.hpp"

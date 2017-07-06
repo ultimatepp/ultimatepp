@@ -140,4 +140,12 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 	dopreclip = false;
 }
 
+BufferPainter::BufferPainter(PainterTarget& t, double tolerance)
+:	BufferPainter(dummy, MODE_ANTIALIASED)
+{
+	alt = &t;
+	alt_tolerance = tolerance;
+	dummy.Create(1, 1);
+}
+
 }
