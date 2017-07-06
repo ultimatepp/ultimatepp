@@ -1250,6 +1250,5 @@ mention on this page.&]
 [s5;l192;i150;O0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
 tutorial] `- here we move things related to images. We show how 
 to create, use and embed icons directly in application.&]
-[s5;l192;i150;O0; [^topic`:`/`/Core`/srcdoc`/CoreTutorial`$en`-us^ Core 
-value types tutorial] `- learn basics about non user U`+`+ related 
-code.]]
+[s5;l192;i150;O0; [^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core 
+tutorial] `- learn basics about non user U`+`+ related code.]]
