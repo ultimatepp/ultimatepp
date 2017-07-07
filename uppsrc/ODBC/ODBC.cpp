@@ -147,7 +147,7 @@ bool ODBCSession::IsOk(SQLRETURN ret)
 			error << "\r\n";
 		error << (char *)Msg;
 	}
-	SetError(error, statement);
+	SetError(error, statement, NativeError);
 	return false;
 }
 
