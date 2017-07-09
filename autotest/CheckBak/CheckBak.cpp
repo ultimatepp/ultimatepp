@@ -14,7 +14,7 @@ CONSOLE_APP_MAIN
 	ASSERT(q >= 4);
 	int n = atoi(~s + q - 3);
 	LOG("Filesystem uses " << n << "%");
-	ASSERT(n > 10 && n < 90);
+	ASSERT(n > 10 && n < 80);
 
 	for(auto dir : Split("/net/nas1/bak;/net/nas/bak;/bak;/big/bak", ';')) {
 		FindFile ff(dir + "/*");
