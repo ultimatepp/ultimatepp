@@ -18,10 +18,15 @@ String qtf =
 
 #define OUT(x) out << x << '\n';
 
+String toc;
+
 void Section(const String& title)
 {
-	qtf << "[s6; " << AsString(++major) << "." << ' ' + TrimBoth(title) << "&]";
+	String lbl = AsString(++major);
+	String text = String().Cat() << lbl << "." << ' ' + TrimBoth(title);
+	qtf << "[s6;:" << lbl << ": " << text << "&]";
 	minor = 0;
+	toc << "&[A3^" << lbl << "^ " << text << "]&";
 }
 
 void FlushDoc(String& docblock)
@@ -35,16 +40,21 @@ void FlushDoc(String& docblock)
 	bool title = false;
 	
 	String style = "[s3;";
+	String lbl;
 	if(docblock.StartsWith(".")) {
+		
 		docblock = AsString(major) + "." + AsString(++minor) + ' ' + TrimBoth(docblock.Mid(1));
 		style = minor == 1 ? "[s2;" : "[s2;H4";
+		lbl = AsString(major) + "_" + AsString(minor);
+		style << ":" <<  lbl << ":";
 		title = true;
 	}
 	
 	qtf << style << " ";
 	
 	const char *s = docblock;
-	
+
+	String qtf2;
 	while(*s)
 		if((s == ~docblock || findarg(s[-1], '(', ' ', '\'', '\"') >= 0) && findarg(s[0], '*', '%', '_', '`', '^') >= 0 && s[1] && s[1] != ' ') {
 			int c = *s++;
@@ -56,26 +66,28 @@ void FlushDoc(String& docblock)
 				s++;
 			}
 			if(c == '^') {
-				qtf << "[^";
+				qtf2 << "[^";
 				if(dc) {
-					qtf.Cat(b, dc);
+					qtf2.Cat(b, dc);
 					b = dc + 1;
 				}
 				else
-					qtf.Cat(b, s);
-				qtf << "^ ";
+					qtf2.Cat(b, s);
+				qtf2 << "^ ";
 			}
 			else
-				qtf << decode(c, '*', "[* ", '%', "[/ ", '_', "[_ ", '`', title ? "[C@5 " : "[C@5* ", "");
+				qtf2 << decode(c, '*', "[* ", '%', "[/ ", '_', "[_ ", '`', title ? "[C@5 " : "[C@5* ", "");
 			while(b < s)
-				qtf << '`' << *b++;
-			qtf << "]";
+				qtf2 << '`' << *b++;
+			qtf2 << "]";
 			if(*s) s++;
 		}
 		else
-			qtf << '`' << *s++;
+			qtf2 << '`' << *s++;
 
-	qtf << "&]";
+	qtf << qtf2 << "&]";
+	if(lbl.GetCount())
+		toc << "___[A2^" << lbl << "^ " << qtf2 << "]&";
 	docblock.Clear();
 }
 
@@ -190,9 +202,12 @@ void MakeTutorial()
 	LOG("--------------------------------------------");
 	LOG(qtf);
 	
+	LOG("--------------------------------------------");
+	LOG(toc);
+	
 	RichEditWithToolBar edit;
 	edit.SetReadOnly();
-	edit <<= qtf;
+	edit <<= toc + qtf;
 	TopWindow win;
 	win.Add(edit.SizePos());
 	win.Run();
