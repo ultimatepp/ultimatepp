@@ -117,6 +117,9 @@ void Ctrl::WndDestroy()
 		wins.Remove(q);
 	if(owner)
 		owner->WndUpdate();
+	TopWindow *w = dynamic_cast<TopWindow *>(this);
+	if(w && w->overlapped.GetWidth() && w->overlapped.GetHeight())
+		SetRect(w->overlapped);
 }
 
 Vector< Ptr<Ctrl> > Ctrl::activePopup;
