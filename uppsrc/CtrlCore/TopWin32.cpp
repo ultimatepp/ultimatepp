@@ -46,6 +46,10 @@ LRESULT TopWindow::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 			WhenClose();
 		}
 		return 0;
+	case WM_DESTROY:
+		if(overlapped.GetWidth() && overlapped.GetHeight())
+			SetRect(overlapped);
+		break;
 	case WM_WINDOWPOSCHANGED:
 		if(!isopen)
 			break;
