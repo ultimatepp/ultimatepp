@@ -105,8 +105,10 @@ gboolean TopWindow::StateEvent(GtkWidget *widget, GdkEventWindowState *event, gp
 	else
 	if(h & GDK_WINDOW_STATE_MAXIMIZED)
 		w->state = MAXIMIZED;
-	else
+	else {
 		w->state = OVERLAPPED;
+		w->overlapped = w->GetRect();
+	}
 	w->topmost = h & GDK_WINDOW_STATE_ABOVE;
 	return FALSE;
 }

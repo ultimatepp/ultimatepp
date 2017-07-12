@@ -487,6 +487,11 @@ void Ctrl::Proc()
 			Rect rect = CurrentEvent.value;
 			if(GetRect() != rect)
 				SetWndRect(rect);
+			{
+				TopWindow *w = dynamic_cast<TopWindow *>(this);
+				if(w && w->state == TopWindow::OVERLAPPED)
+					w->overlapped = rect;
+			}
 		}
 		break;
 	default:
