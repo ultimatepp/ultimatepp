@@ -76,7 +76,7 @@ String HtmlParaStyle(const RichPara::Format& f, Zoom z)
 //		style << ";list-style-position:inside;";
 		lm += 20;
 	}
-	style << Format("margin:%dpx %dpx %dpx %dpx;text-indent:%dpx;",
+	style << Format("margin:%d`px %d`px %d`px %d`px;text-indent:%d`px;",
 	                z * f.before,
 	                z * f.rm,
 	                z * f.after,
