@@ -21,7 +21,7 @@ void CoPartitionTutorial()
 	DUMP(sum);
 	
 	/// Above code computes the sum of all elements in the `Vector`, using CoWorker job for
-	/// each element. While producing the correct reason, it is likely to run much slower than
+	/// each element. While producing the correct result, it is likely to run much slower than
 	/// single-threaded version.
 	
 	/// The solution to the problem is to split the array into small number of larger subranges
