@@ -2,10 +2,6 @@ TOPIC("AddressBook$en-us")
 #include "AddressBook$en-us.tppi"
 END_TOPIC
 
-TOPIC("AddressBook$ru-ru")
-#include "AddressBook$ru-ru.tppi"
-END_TOPIC
-
 TOPIC("AddressBookWeb$en-us")
 #include "AddressBookWeb$en-us.tppi"
 END_TOPIC
@@ -20,10 +16,6 @@ END_TOPIC
 
 TOPIC("AnimatedHello$en-us")
 #include "AnimatedHello$en-us.tppi"
-END_TOPIC
-
-TOPIC("AnimatedHello$ru-ru")
-#include "AnimatedHello$ru-ru.tppi"
 END_TOPIC
 
 TOPIC("Bombs$en-us")
@@ -54,10 +46,6 @@ TOPIC("Converter$en-us")
 #include "Converter$en-us.tppi"
 END_TOPIC
 
-TOPIC("Converter$ru-ru")
-#include "Converter$ru-ru.tppi"
-END_TOPIC
-
 TOPIC("Days$en-us")
 #include "Days$en-us.tppi"
 END_TOPIC
@@ -80,10 +68,6 @@ END_TOPIC
 
 TOPIC("HelloWorld$en-us")
 #include "HelloWorld$en-us.tppi"
-END_TOPIC
-
-TOPIC("HelloWorld$ru-ru")
-#include "HelloWorld$ru-ru.tppi"
 END_TOPIC
 
 TOPIC("HomeBudget$en-us")
