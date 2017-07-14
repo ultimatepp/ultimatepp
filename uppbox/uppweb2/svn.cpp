@@ -82,8 +82,8 @@ void GetSvnFolderDeep(VectorMap<String, SvnListRev> &data, const String &tppfold
 }
 void GetSvnList(VectorMap<String, SvnListRev> &data, const String &rootdir) {
 	LLOG("Querying svn for documentation metadata ...");
-	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/www.tpp"));
-	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb/gsoc.tpp"));
+	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb2/www.tpp"));
+	GetSvnFolder(data, AppendFileName(rootdir, "uppbox/uppweb2/gsoc.tpp"));
 	GetSvnFolderDeep(data, AppendFileName(rootdir, "uppsrc"));
 	GetSvnFolderDeep(data, AppendFileName(rootdir, "bazaar"));
 }

@@ -147,7 +147,7 @@ String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, cons
 				return "index.html";
 			title = p.title;
 			p.title += " (translated)";			
-			String help = "topic://uppweb/www/contribweb$" + GetTopicLanguage(topic);
+			String help = "topic://uppweb2/www/contribweb$" + GetTopicLanguage(topic);
 			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") + 
 					"]. " + "[^" + help + "^ [<A2 " + t_("Do you want to translate it?") + "]]}}&&" + p.text;
 		}
