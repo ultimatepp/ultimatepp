@@ -1,11 +1,11 @@
 #include "www.h"
 #include "www.h"
 #define IMAGECLASS WWW
-#define IMAGEFILE  <uppweb/www.iml>
+#define IMAGEFILE  <uppweb2/www.iml>
 #include <Draw/iml.h>
 #include <plugin/ftp/ftp.h>
 
-#define TFILE <uppweb/www.t>
+#define TFILE <uppweb2/www.t>
 #include <Core/t.h>
 
 #define LLOG(x)  // LOG(x)
@@ -51,7 +51,7 @@ String GetRcFile(const char *s)
 	String f = GetDataFile(s);
 	if(FileExists(f))
 		return f;
-	return GetHomeDirFile("upp.src/uppbox/uppweb/" + AsString(s));
+	return GetHomeDirFile("upp.src/uppbox/uppweb2/" + AsString(s));
 }
 
 bool ContainsAt(const String &source, const String &pattern, int pos)
@@ -284,7 +284,7 @@ ArrayMap<String, Topic> tt;
 Vector<int> ttId;
 Vector<String> ttFullIds;
 
-String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/www/")
+String Www(const char *topic, int lang, String topicLocation = "topic://uppweb2/www/")
 {
 	String strLang = ToLower(LNGAsText(lang));
 	String www = GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << strLang, "");
@@ -390,7 +390,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		
 		String fn = AppendFileName(
 						AppendFileName(
-							AppendFileName(uppbox, "uppweb"),
+							AppendFileName(uppbox, "uppweb2"),
 							String(www) + ".tpp"
 						),
 						topic.title + "$" + ToLower(LNGAsText(language))  + ".tpp"
@@ -539,7 +539,7 @@ void ExportPage(int i)
 //	if (!strlang.IsEmpty())
 //		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
 	if (tt[i].title.Find("How to contribute. Web page") < 0) {
-		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
+		String help = "topic://uppweb2/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
 		if (googleFile != "")
 			qtflangs += ". [^https`:`/`/raw`.githubusercontent`.com`/ultimatepp`/mirror`/master" + DeQtf(UrlEncode(googleFile)) + "^/1 " + "T`+`+" + "]";
@@ -570,11 +570,11 @@ void ExportPage(int i)
 		page.Replace(String("QTFHTMLTEXT") + FormatInt(iHtml), htmlrep[iHtml]);
 	
 	Color paper = SWhite;
-	if(path == "topic://uppweb/www/download$en-us")
+	if(path == "topic://uppweb2/www/download$en-us")
 		page << LoadFile(GetRcFile("adsense3.txt"));
-/*		if(path == "topic://uppweb/www/index$en-us") {
+/*		if(path == "topic://uppweb2/www/index$en-us") {
 		for(int q = 0; q < news.GetCount(); q++) {
-			String n = GetText("uppweb/www_news/" + news[q]);
+			String n = GetText("uppweb2/www_news/" + news[q]);
 			String h = news[q];
 			int i = h.Find('$');
 			if(i >= 0)
@@ -823,6 +823,7 @@ CONSOLE_APP_MAIN
 	InitWwwTpp();
 
 	languages.Add(LNG_('E','N','U','S'));		// en-us has to be the first one
+#if 0
 #ifndef _DEBUG // too slow to have them all while developing
 	languages.Add(LNG_('C','A','E','S'));
 	languages.Add(LNG_('C','S','C','Z'));
@@ -835,7 +836,7 @@ CONSOLE_APP_MAIN
 	languages.Add(LNG_('Z','H','C','N'));
 	languages.Add(LNG_('Z','H','T','W'));
 #endif
-	
+#endif
 	if (outHtml)
 		RealizeDirectory(targetdir);
 	
@@ -900,9 +901,9 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("overview", lang), t_("Overview"), false);
 		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
-			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
+			int di = tt.Find("topic://uppweb2/www/examples$" + ToLower(LNGAsText(lang)));
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
-			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
+			tt[di].text << GetTopic("topic://uppweb2/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
 
@@ -913,7 +914,7 @@ CONSOLE_APP_MAIN
 
 		bi << BarLink(Www("documentation", lang), t_("Documentation"));			
 		{
-			int di = tt.Find("topic://uppweb/www/documentation$" + ToLower(LNGAsText(lang)));
+			int di = tt.Find("topic://uppweb2/www/documentation$" + ToLower(LNGAsText(lang)));
 			if (di >= 0) {
 				Index<String> x;
 				x.Clear();
@@ -988,7 +989,7 @@ CONSOLE_APP_MAIN
 
 	for(int i = 0; i < tt.GetCount(); i++) {
 		String topic = tt.GetKey(i);
-		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
+		links.Add(topic, topic == "topic://uppweb2/www/index$en-us" ? "index.html" :
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
 
@@ -997,7 +998,7 @@ CONSOLE_APP_MAIN
 		if (tt[i].title == "Svn releases") 
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, ""));
 		else if (tt[i].title == "Svn Web releases") 
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb"));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb2"));
 		else if (tt[i].title == "Svn Bazaar releases") 
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar"));
 		else if (tt[i].title == "Svn Upp releases") 
@@ -1005,7 +1006,7 @@ CONSOLE_APP_MAIN
 		else if (tt[i].title == "Svn major releases") 
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 300, "", true));
 		else if (tt[i].title == "Svn Web major releases") 
-			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb", true));
+			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "uppweb2", true));
 		else if (tt[i].title == "Svn Bazaar major releases") 
 			tt[i].text.Replace(svntableStr, SvnChanges(svnlog, 100, "bazaar", true));
 		else if (tt[i].title == "Svn Upp major releases") 
@@ -1168,7 +1169,7 @@ CONSOLE_APP_MAIN
 	
 		LLOG("I: " << MemoryUsedKb());
 	
-		FileCopy(AppendFileName(uppbox, "uppweb/favicon.png"), AppendFileName(targetdir, "favicon.png"));
+		FileCopy(AppendFileName(uppbox, "uppweb2/favicon.png"), AppendFileName(targetdir, "favicon.png"));
 		//	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 		SaveFile(AppendFileName(targetdir, "stats.html"),
 		         HtmlLink("http://www.mygooglepagerank.com", "_blank") /
