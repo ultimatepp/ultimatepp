@@ -18,10 +18,6 @@ TOPIC("IDE$en-us")
 #include "IDE$en-us.tppi"
 END_TOPIC
 
-TOPIC("IDE$pl-pl")
-#include "IDE$pl-pl.tppi"
-END_TOPIC
-
 TOPIC("IDEoverview$en-us")
 #include "IDEoverview$en-us.tppi"
 END_TOPIC
