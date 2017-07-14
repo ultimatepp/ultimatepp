@@ -61,14 +61,14 @@ Topic ReadTopic0(const char *text)
 
 void InitWwwTpp()
 {
-	String wwwtpp = AppendFileName(uppbox, "uppweb/www.tpp");
+	String wwwtpp = AppendFileName(uppbox, "uppweb2/www.tpp");
 	FindFile ff(AppendFileName(wwwtpp, "*"));
 	static Vector<String> data;
 	while(ff) {
 		RLOG(ff.GetName());
 		Topic p = ReadTopic0(LoadFile(AppendFileName(wwwtpp, ff.GetName())));
 		data.Add(p.text);
-		RegisterTopic__("<uppweb/www.tpp/all.i>", GetFileTitle(ff.GetName()), p.title, data.Top(), data.Top().GetCount());
+		RegisterTopic__("<uppweb2/www.tpp/all.i>", GetFileTitle(ff.GetName()), p.title, data.Top(), data.Top().GetCount());
 		ff.Next();
 	}
 };
