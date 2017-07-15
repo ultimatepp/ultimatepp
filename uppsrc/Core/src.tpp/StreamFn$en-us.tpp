@@ -62,6 +62,13 @@ Data written to this stream are displayed as characters in console.&]
 [s7;%% [*/ Return value]-|Console input.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:ReadSecret`(`): [_^Upp`:`:String^ String]_[* ReadSecret]()&]
+[s2;%% Reads one line of input data from the console without echoing. 
+This function is useful for reading passwords, secret phrases, 
+etc. from the console.&]
+[s7;%% [*/ Return value]-|Console input.&]
+[s3; &]
+[s4; &]
 [s5;:NilStream`(`): [_^Stream^ Stream][@(0.0.255) `&]_[* NilStream]()&]
 [s2;%% Returns special stream that is always in IsEof state and simply 
 discards all data written to it.&]
