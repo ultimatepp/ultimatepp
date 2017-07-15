@@ -1,0 +1,2 @@
+select home_page, join_date, id, registration_ip, email from fud30_users where posted_msg_count = 0 and join_date < unix_timestamp() - 2 * 3600 and home_page  is not null and id > 1400 order by id desc;
+delete from fud30_users where posted_msg_count = 0 and join_date < unix_timestamp() - 2 * 3600 and home_page  is not null and id > 1400 order by id desc;
