@@ -24,7 +24,16 @@ topic "Draw tutorial";
 [i448;a25;kKO9;*@(64)2 $$22,0#37138531426314131252341829483370:item]
 [{_}%EN-US 
 [s2; Draw tutorial&]
-[s3; 1. Basic drawing operations&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^1^ 1. Basic drawing operations]&]
+[s0; [^2^ 2. Offsets and clipping]&]
+[s0; [^3^ 3. Fonts and font metrics]&]
+[s0; [^4^ 4. DrawingDraw]&]
+[s0; [^5^ 5. ImageDraw]&]
+[s0; [^6^ 6. Printing]&]
+[s0; &]
+[s3;:1: 1. Basic drawing operations&]
 [s5; Draw class is base class representing graphical output. It is 
 intentionally designed with quite limited set of easy to use 
 drawing primitives. Unlike most of other similar classes in competing 
