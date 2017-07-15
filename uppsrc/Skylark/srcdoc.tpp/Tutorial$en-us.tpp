@@ -23,7 +23,22 @@ topic "Tutorial";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; Skylark Tutorial&]
-[s3; 1. SKYLARK handlers and path patterns&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^1^ 1. SKYLARK handlers and path patterns]&]
+[s0; [^2^ 2. Witz templates]&]
+[s0; [^3^ 3. Witz links to handlers]&]
+[s0; [^4^ 4. Combining Witz templates using #define and #include]&]
+[s0; [^5^ 5. FORM GET]&]
+[s0; [^6^ 6. FORM POST]&]
+[s0; [^7^ 7. Session variables]&]
+[s0; [^8^ 8. Ajax support]&]
+[s0; [^9^ 9. Connecting SQL database]&]
+[s0; [^10^ 10. Advanced SQL]&]
+[s0; [^11^ 11. Language support]&]
+[s0; [^12^ 12. Packs]&]
+[s0; &]
+[s3;:1: 1. SKYLARK handlers and path patterns&]
 [s5; Skylark application is divided to `'handlers`' which provide 
 response to various HTTP requests based on url pattern:&]
 [s7; &]
@@ -124,7 +139,7 @@ be able to access it from your browser by entering &]
 [s5; Last one should result in error `"Page not found`", as no matching 
 handler is present.&]
 [s5; &]
-[s3; 2. Witz templates&]
+[s3;:2: 2. Witz templates&]
 [s5; To decouple presentation layer from application logic, Skylark 
 features template language `'Witz`':&]
 [s7; &]
@@ -208,7 +223,7 @@ also used to search for static files.&]
 raw html code as parameter, you have to either use [@5 Raw ]C`+`+ 
 function in application logic or [@5 raw] function in Witz.&]
 [s5; &]
-[s3; 3. Witz links to handlers&]
+[s3;:3: 3. Witz links to handlers&]
 [s5; Skylark handlers are represented in witz templates as function 
 calls or simple variables with the same identifiers as the id 
 of handler; both yield `" quoted path that matches the handler 
@@ -288,7 +303,7 @@ passed as argument of the function:&]
 [s7; </html>&]
 [s7; &]
 [s5; &]
-[s3; 4. Combining Witz templates using #define and #include&]
+[s3;:4: 4. Combining Witz templates using #define and #include&]
 [s5; Witz templates can be parametrized using subblock [@5 #define] 
 [/@5 id] and [@5 #][/@5 id] insertion and combined from several files 
 using [@5 #include]:&]
@@ -314,7 +329,7 @@ using [@5 #include]:&]
 [s7; This is MyApp body html!&]
 [s7; &]
 [s5; &]
-[s3; 5. FORM GET&]
+[s3;:5: 5. FORM GET&]
 [s5; Whenever Skylark founds `'?`' sign in the request path, it converts 
 attached values into http`'s [/ shared variable space], which is 
 accessible using [* operator`[`]].&]
@@ -380,7 +395,7 @@ enctype`=`"multipart/form`-data`">&]
 [s7; </html>&]
 [s7; &]
 [s5; &]
-[s3; 6. FORM POST&]
+[s3;:6: 6. FORM POST&]
 [s5; If HTTP method is POST and content`-type field of header contains 
 standard values (either `"application/x`-www`-form`-urlencoded`" 
 or starts with `"multipart/`", Skylark parses the posted content 
@@ -460,7 +475,7 @@ enctype`=`"multipart/form`-data`">&]
 SKYLARK handler definition `- such handler also reacts to POST 
 requests, but it avoids identity checks to prevent CSRF attacks.&]
 [s5; &]
-[s3; 7. Session variables&]
+[s3;:7: 7. Session variables&]
 [s5; Http`::SessioSet method can be used to store `'session variables`' 
 that are persistent for specific browser across requests. Implementation 
 is based on cookie, session variables are stored either in filesystem 
@@ -530,7 +545,7 @@ enctype`=`"multipart/form`-data`">&]
 [s7; </html>&]
 [s7; &]
 [s5; &]
-[s3; 8. Ajax support&]
+[s3;:8: 8. Ajax support&]
 [s5; Skylark provides optional direct support for handling Ajax requests. 
 On client side, this support is implemented using tiny JavaScript 
 library `"skylark.js`".&]
@@ -615,7 +630,7 @@ is similar to Ux, but renders the text from witz template and
 finally [*@5 UxRun] can be used to run any JavaScript code in the 
 client.&]
 [s5; &]
-[s3; 9. Connecting SQL database&]
+[s3;:9: 9. Connecting SQL database&]
 [s5; Skylark naturally uses U`+`+ SQL support when dealing with persistent 
 storage, using `"session per`-thread`" mode. Because of this, 
 database session needs to be connected when starting each thread 
@@ -750,7 +765,7 @@ create a new DB&]
 [s7; END`_TABLE&]
 [s7; &]
 [s5; &]
-[s3; 10.  Advanced SQL&]
+[s3;:10: 10. Advanced SQL&]
 [s5; Http class contains some advanced convenience support for dealing 
 with SQL databases:&]
 [s5;l160;i150;O0; It is possible to fill result set of SqlSelect 
@@ -960,7 +975,7 @@ enctype`=`"multipart/form`-data`">&]
 [s7; END`_TABLE&]
 [s7; &]
 [s5; &]
-[s3; 11. Language support&]
+[s3;:11: 11. Language support&]
 [s5; Skylark language support is based on session variables:&]
 [s5; `"[@5 .`_`_lang`_`_]`" contains integer with U`+`+ language identifier&]
 [s5; `"[@5 .language]`" contains the string form of this identifier 
@@ -1043,7 +1058,7 @@ that way U`+`+ i18n system can be used in Skylark handlers.&]
 [s7; </html>&]
 [s7; &]
 [s5; &]
-[s3; 12. Packs&]
+[s3;:12: 12. Packs&]
 [s5; Sometimes it is useful to parametrize a group of handlers so 
 that they can be used in different contexts. For example, the 
 Create/Edit/Delete operations in chapter 10 share many elements 
