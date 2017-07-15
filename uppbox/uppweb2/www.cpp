@@ -173,7 +173,7 @@ Htmls BarLink(const char *link, const char *text, bool nxt = true)
 Htmls SearchBar(const char *domain)
 {
 	Htmls form =
-	  HtmlForm("http://www.google.com/search", false, "GET")
+	  HtmlForm("https://www.google.com/search", false, "GET")
 	    .Style("margin:0px;padding:0px;") /
 	    ( HtmlHidden("ie", "UTF-8") +
 	      HtmlHidden("oe", "UTF-8") +
@@ -618,8 +618,8 @@ void ExportPage(int i)
 //						"<br><br>" +
 //						amazon[i % amazon.GetCount()] +
 			       	"<br><br><br>" +
-					~(HtmlLink("http://sourceforge.net/projects/upp/") /
-					   HtmlImg("http://sourceforge.net/sflogo.php?group_id=93970&type=2",
+					~(HtmlLink("https://sourceforge.net/projects/upp/") /
+					   HtmlImg("https://sourceforge.net/sflogo.php?group_id=93970&type=2",
 					           "SourceForge.net Logo").Border(0).Width(125).Height(37)) +
 			       	"<br><br>" +
 			       	(links[i] == "index.html" ? lastUpdate : Htmls())
@@ -947,7 +947,7 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("FAQ", lang), t_("FAQ"));
 		bi << BarLink(Www("About", lang, "topic://ide/app/"), t_("Authors & License"));
 	
-		bi << BarLink("http://www.ultimatepp.org/forums", t_("Forums"));
+		bi << BarLink("https://www.ultimatepp.org/forums", t_("Forums"));
 	//	bcom << BarLink(Www("mailing"), "Mailing lists");
 	//	bi << BarLink("http://www.ultimatepp.org/wiki/index.php", "Wiki");
 		bi << BarLink(Www("Funding", lang), t_("Funding Ultimate++"));
@@ -1172,20 +1172,20 @@ CONSOLE_APP_MAIN
 		FileCopy(AppendFileName(uppbox, "uppweb2/favicon.png"), AppendFileName(targetdir, "favicon.png"));
 		//	SaveFile(AppendFileName(targetdir, "favicon.ico"), LoadFile(AppendFileName(uppsrc, "ide/ide.ico")));
 		SaveFile(AppendFileName(targetdir, "stats.html"),
-		         HtmlLink("http://www.mygooglepagerank.com", "_blank") /
-			         "<img src=\"http://www.mygooglepagerank.com/PRimage.php?url=http://upp.sf.net\" "
+		         HtmlLink("https://www.mygooglepagerank.com", "_blank") /
+			         "<img src=\"https://www.mygooglepagerank.com/PRimage.php?url=http://upp.sf.net\" "
 			         "border=\"0\" width=\"66\" height=\"13\" "
 			         "alt=\"Google PageRank&trade; - Post your PR with MyGooglePageRank.com\">" +
 		         "<noscript>" +
-		         HtmlLink("http://www.mygooglepagerank.com").Title("My Google Page Rank") /
+		         HtmlLink("https://www.mygooglepagerank.com").Title("My Google Page Rank") /
 		           "My Google Page Rank" +
 		         "</noscript>" +
-		         HtmlLink("http://www.mygooglepagerank.com", "_blank") /
+		         HtmlLink("https://www.mygooglepagerank.com", "_blank") /
 			         "<img src=\"http://www.mygooglepagerank.com/PRimage.php?url=http://www.ultimatepp.org\" "
 			         "border=\"0\" width=\"66\" height=\"13\" "
 			         "alt=\"Google PageRank&trade; - Post your PR with MyGooglePageRank.com\">" +
 		         "<noscript>" +
-		         HtmlLink("http://www.mygooglepagerank.com").Title("My Google Page Rank") /
+		         HtmlLink("https://www.mygooglepagerank.com").Title("My Google Page Rank") /
 		           "My Google Page Rank" +
 		         "</noscript>"
 		);
