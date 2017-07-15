@@ -23,7 +23,11 @@ topic "SQL Tutorial";
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [{_}%EN-US 
 [s2; SQL Tutorial&]
-[s3; 1. SqlSession, Sql, opening database connection&]
+[s3; Table of contents&]
+[s0; &]
+[s0; &]
+[s0; &]
+[s3;:1: 1. SqlSession, Sql, opening database connection&]
 [s5; SqlSession derived objects represent database connection. Each 
 SQL database (Sqlite3, Microsoft SQL, Oracle, MySQL, PostgreSQL) 
 has its own session class derived from SqlSession. Sql class 
@@ -66,8 +70,8 @@ is Select, it may return a result set, which is retrieved using
 using index of column (starts with 0). Values are returned as 
 Value type.&]
 [s5; &]
-[s3; 2. Using global main database, executing statements with parameters, 
-getting resultset info&]
+[s3;:2: 2. Using global main database, executing statements with 
+parameters, getting resultset info&]
 [s5; Most applications need to work with just single database backend, 
 therefore repeating SqlSession parameter in all Sql declarations 
 would be tedious.&]
@@ -127,7 +131,7 @@ of this code).]&]
 information about columns `- returns [* SqlColumnInfo] reference 
 with information like name or type of column.&]
 [s5; &]
-[s3; 3. Using SqlExp&]
+[s3;:3: 3. Using SqlExp&]
 [s5; U`+`+ contains an unique feature, `"SqlExp`". This is a mechanism 
 where you construct SQL statements as C`+`+ expressions (using 
 heavily overloaded operators).&]
@@ -179,7 +183,7 @@ in examples].&]
 [s5; SqlId identifiers can be also used as parameter of Sql`::operator`[`] 
 to retrieve particular columns of result`-set.&]
 [s5; &]
-[s3; 4. Schema file&]
+[s3;:4: 4. Schema file&]
 [s5; Schema files can be used to describe the database schema. Such 
 schema files can be used to upload the schema to the database, 
 to defined SqlId constants and also to work with database records 
@@ -248,7 +252,7 @@ schema in SQL database server.&]
 [s7; `}&]
 [s7;* &]
 [s5; &]
-[s3; 5. Using schema file to define SqlId constants&]
+[s3;:5: 5. Using schema file to define SqlId constants&]
 [s5; As names of columns are present in the database schema, it is 
 natural to recycle them to create SqlId constants.&]
 [s5; However, due to C`+`+ one definition rule (.sch files are interpreted 
