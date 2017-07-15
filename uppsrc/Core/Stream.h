@@ -622,6 +622,9 @@ void    CoutUTF8();
 Stream& Cout();
 Stream& Cerr();
 String  ReadStdIn();
+String  ReadSecret();
+void    EnableEcho(bool b = true);
+void    DisableEcho();
 #endif
 
 Stream& NilStream();
