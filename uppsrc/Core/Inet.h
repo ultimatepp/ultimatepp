@@ -389,6 +389,7 @@ class HttpRequest : public TcpSocket {
 	bool         std_headers;
 	bool         hasurlvar;
 	bool		 keep_alive;
+	bool         all_content;
 	String       contenttype;
 	String       username;
 	String       password;
@@ -438,7 +439,6 @@ class HttpRequest : public TcpSocket {
 	void         CopyCookies();
 
 	void         HttpError(const char *s);
-	void         ContentOut(const void *ptr, int size);
 	void         Out(const void *ptr, int size);
 
 	String       CalculateDigest(const String& authenticate) const;
@@ -467,6 +467,7 @@ public:
 	HttpRequest&  MaxRetries(int n)                      { max_retries = n; return *this; }
 	HttpRequest&  RequestTimeout(int ms)                 { timeout = ms; return *this; }
 	HttpRequest&  ChunkSize(int n)                       { chunk = n; return *this; }
+	HttpRequest&  AllContent(bool b = true)              { all_content = b; return *this; }
 
 	HttpRequest&  Method(int m, const char *custom_name = NULL);
 	HttpRequest&  GET()                                  { return Method(METHOD_GET); }
