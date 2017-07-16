@@ -25,7 +25,17 @@ topic "SQL Tutorial";
 [s2; SQL Tutorial&]
 [s3; Table of contents&]
 [s0; &]
-[s0; &]
+[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#1^ 1. SqlSession, 
+Sql, opening database connection]&]
+[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#2^ 2. Using global 
+main database, executing statements with parameters, getting 
+resultset info]&]
+[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#3^ 3. Using SqlExp]&]
+[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#4^ 4. Schema file]&]
+[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#5^ 5. Using schema 
+file to define SqlId constants]&]
+[s0; [^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us`#6^ 6. Using structures 
+defined by schema files]&]
 [s0; &]
 [s3;:1: 1. SqlSession, Sql, opening database connection&]
 [s5; SqlSession derived objects represent database connection. Each 
@@ -321,7 +331,7 @@ mark identifiers using underscore:&]
 [s7; `}&]
 [s7; &]
 [s5; &]
-[s3; 6. Using structures defined by schema files&]
+[s3;:6: 6. Using structures defined by schema files&]
 [s5; Schema files also define structures that can be used to fetch, 
 insert or update database records. Names of such structures are 
 identical to the names of tables, with [* S`_] prefix:&]
