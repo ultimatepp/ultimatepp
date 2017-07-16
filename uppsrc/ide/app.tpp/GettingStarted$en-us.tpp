@@ -23,15 +23,40 @@ topic "Getting started with TheIDE";
 [b83;*+117 $$21,21#2AC2FD302E8CD436942CC99374D81489:SubTitle]
 [{_}%EN-US 
 [s2; Getting started with TheIDE&]
-[s3; 1. Launching TheIDE&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#1^ 1. Launching 
+TheIDE]&]
+[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#2^ 2. Assemblies 
+and Packages]&]
+[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#2`_1^ 2.1 Selecting 
+assembly]&]
+[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#2`_2^ 2.2 Creating 
+new package]&]
+[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#3^ 3. Configuring 
+package]&]
+[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#4^ 4. Creating 
+new file]&]
+[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5^ 5. Explanations 
+about TheIDE]&]
+[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_1^ 5.1 What 
+is stored where?]&]
+[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_2^ 5.2 Package 
+organizer]&]
+[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_3^ 5.3 Build 
+methods]&]
+[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_4^ 5.4 Output 
+mode]&]
+[s0; &]
+[s3;:1: 1. Launching TheIDE&]
 [s5; After installing U`+`+ find the appropriate TheIDE executable 
 file and launch it. By default the file should be localized in 
 the installation directory. However, it can depends on the operating 
 system and the way you installed U`+`+.&]
-[s3; 2. Assemblies and Packages&]
+[s3;:2: 2. Assemblies and Packages&]
 [s5; In this section we show how to create your own main package. 
 It can be treated as project, solution etc.&]
-[s21; 2.1 Selecting assembly&]
+[s21;:2`_1: 2.1 Selecting assembly&]
 [s5; After you launch TheIDE on the screen window should appear. 
 This window acts as a hub. When you can select/create packages 
 and assemblies. You can back to this window at any time when 
@@ -57,7 +82,7 @@ assembly will be used.&]
 [s19; If you`'re just getting started, leave this as it is and continue 
 creating package process.&]
 [s5; &]
-[s21; 2.2 Creating new package&]
+[s21;:2`_2: 2.2 Creating new package&]
 [s5; To create a new package, press the `"New package`" button localized 
 on the bottom of the window. After that on the screen appears 
 the package creator.&]
@@ -77,7 +102,7 @@ that will appear in the package selection dialog.&]
 leave it on <empty> for now.&]
 [s19; Finally, press the `"Create`" button on the bottom of the window.&]
 [s0; &]
-[s3; 3. Configuring package&]
+[s3;:3: 3. Configuring package&]
 [s5; At the beginning, let`'s assume that the package you have created 
 is main. Please note, that any package created or selected within 
 manager is by default main. To configure it, select `"Main package 
@@ -116,7 +141,7 @@ You can place their common functions and classes and share between
 other packages. In this way packages delivered by U`+`+ work 
 like Core and CtrlLib.&]
 [s5; &]
-[s3; 4. Creating new file&]
+[s3;:4: 4. Creating new file&]
 [s5; You can now add files to you package, for this example, add 
 a new file `"main.cpp`" to the package. Below is the list of 
 steps that will guild you through the process:&]
@@ -173,8 +198,8 @@ opic`+`+], [^topic`:`/`/ide`/app`/Blitz`$en`-us^ Blitz] or even
 one of the tutorials linked from Manual section, if you want 
 to learn more about how to use U`+`+.&]
 [s5; &]
-[s3; 5. Explanations about TheIDE&]
-[s21; 5.1.1 What is stored where?&]
+[s3;:5: 5. Explanations about TheIDE&]
+[s21;:5`_1: 5.1 What is stored where?&]
 [s5; When you use TheIDE for the first time, it can be confusing 
 to see that settings like static/shared building, execute`-, 
 include`- and linker`- paths can be set in multiple places (for 
@@ -183,7 +208,7 @@ and by clicking on the current build method in the main screen
 (at the top, e.g. `"GCC Debug`").&]
 [s5; In the next part of this paragraph, we look at all configuration 
 options.&]
-[s21; 5.1.2 Package organizer&]
+[s21;:5`_2: 5.2 Package organizer&]
 [s5; Package organizer is localized at `"Project `-> Package organizer`".&]
 [s5; &]
 [s0;= 
@@ -231,7 +256,7 @@ files]]
 :: [s0; `-nologo]
 :: [s0; [/ some extra linker options when compiler is VC`+`+.]]}}&]
 [s5; &]
-[s21; 5.1.3 Build methods&]
+[s21;:5`_3: 5.3 Build methods&]
 [s5; Build methods are localized at `"Setup`-> Build methods`".&]
 [s5; &]
 [s0;= 
@@ -260,8 +285,7 @@ current build method in the main screen (top of the screen e.g.
 [s5; Notice that it has two `"pull`-down`" arrows. The left one selects 
 the build method. The right one sets the current build mode, 
 which occurs in two variants `"Debug`" and `"Release`".&]
-[s5; &]
-[s21; 5.1.4 Output mode&]
+[s21;:5`_4: 5.4 Output mode&]
 [s5; You will need to click on build method name on main TheIDE tool 
 bar. It is shown on above image with `"MINGW Debug`" method.&]
 [s5; &]
