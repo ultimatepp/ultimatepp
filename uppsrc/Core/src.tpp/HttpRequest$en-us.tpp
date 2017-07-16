@@ -18,26 +18,32 @@ topic "HttpRequest";
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
 [s3; &]
-[s5;:HttpRequest`:`:WhenContent: [_^Callback2^ Callback2]<[@(0.0.255) const]_[@(0.0.255) vo
-id]_`*, [@(0.0.255) int]>_[* WhenContent]&]
-[s2;%% Defines consumer function for HTTP response content. Default 
-value is method inside HttpRequest that gathers the output content 
-in String that can be read using GetContent method.&]
+[s5;:HttpRequest`:`:WhenContent: [_^Callback2^ Event]<[@(0.0.255) const]_[@(0.0.255) void]_
+`*, [@(0.0.255) int]>_[* WhenContent]&]
+[s2;%% Defines consumer function for HTTP response content. If defined, 
+HttpRequest uses this output event instead of storing the output 
+content in String that can be read using GetContent method. Note 
+that only `"valid`" content, defined as content in response with 
+status code in the range 200 .. 299 is sent to WhenContent `- 
+this avoids problems with multiple requests because of redirection 
+or authorization. It is possible to change this behavior with 
+AllContent `- in that case client code is likely to use WhenStart 
+to separate responses to individual requests.&]
 [s3; &]
 [s4; &]
-[s5;:HttpRequest`:`:WhenStart: [_^Callback^ Callback]_[* WhenStart]&]
+[s5;:HttpRequest`:`:WhenStart: [_^Callback^ Event<>]_[* WhenStart]&]
 [s2;%% Invoked each time HttpRequest starts a new request attempt 
 `- this includes redirections, authentization or retries on error. 
 Gives chance to client software to restart processing, e.g. to 
 delete partially downloaded file.&]
 [s3; &]
 [s4; &]
-[s5;:HttpRequest`:`:WhenDo: [_^Callback^ Callback]_[* WhenDo]&]
+[s5;:HttpRequest`:`:WhenDo: [_^Callback^ Event<>]_[* WhenDo]&]
 [s2;%% Invoked each time Do routine exits. Useful to show progres 
 or allow abortions in GUI.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:HttpRequest`:`:WhenAuthenticate: [_^Upp`:`:Gate^ Gate]_[* WhenAuthenticate]&]
+[s5;:Upp`:`:HttpRequest`:`:WhenAuthenticate: [_^Upp`:`:Gate^ Gate<>]_[* WhenAuthenticate]&]
 [s2;%% Invoked when request returns 401 code (unauthorized). Callback 
 should check returned headers and if possible, provide authorization 
 header (through Authorization). In that case, it should return 
@@ -81,6 +87,12 @@ is .120000 `- two minutes). Returns `*this.&]
 ize]([@(0.0.255) int]_[*@3 n])&]
 [s2;%% Specifies the maximum size of content data block for processing 
 (default is 4096). Returns `*this.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:AllContent`(bool`): [_^Upp`:`:HttpRequest^ HttpRequest][@(0.0.255) `&
+]_[* AllContent]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% When active, WhenContent receives content from all responses, 
+even if they are just redirection or authorization texts.&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpRequest`:`:Method`(int`,const char`*`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&
