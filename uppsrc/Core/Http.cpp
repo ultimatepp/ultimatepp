@@ -57,7 +57,7 @@ void HttpRequest::Init()
 	redirect_count = 0;
 	retry_count = 0;
 	gzip = false;
-	WhenContent = callback(this, &HttpRequest::ContentOut);
+	all_content = false;
 	WhenAuthenticate = callback(this, &HttpRequest::ResolveDigestAuthentication);
 	chunk = 4096;
 	timeout = 120000;
@@ -760,11 +760,6 @@ void HttpRequest::StartBody()
 	}
 }
 
-void HttpRequest::ContentOut(const void *ptr, int size)
-{
-	body.Cat((const char *)ptr, size);
-}
-
 void HttpRequest::Out(const void *ptr, int size)
 {
 	LLOG("HTTP Out " << size);
@@ -775,7 +770,10 @@ void HttpRequest::Out(const void *ptr, int size)
 		phase = FAILED;
 		return;
 	}
-	WhenContent(ptr, size);
+	if(WhenContent && (status_code >= 200 && status_code < 300 || all_content))
+		WhenContent(ptr, size);
+	else
+		body.Cat((const char *)ptr, size);
 }
 
 
