@@ -7,7 +7,7 @@ void CoAlgoTutorial()
 	/// U++ provides a parallel versions of algorithms where it makes sense. The naming scheme
 	/// is 'Co' prefix before the name of algorithm designates the parallel version.
 	
-	/// So the parallel version of e.g. `FindIndex` is `CoFindIndex`, for 'Sort' it is 'CoSort':
+	/// So the parallel version of e.g. `FindIndex` is `CoFindIndex`, for `Sort` it is `CoSort`:
 	
 	Vector<String> x{ "zero", "one", "two", "three", "four", "five" };
 	
