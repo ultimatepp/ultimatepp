@@ -116,7 +116,6 @@ CONSOLE_APP_MAIN
 		String path = GetHomeDirFile("test.z");
 		{
 			FileOut fout(path);
-			DDUMP(data.GetLength());
 			int64 sz_pos = fout.GetPos();
 			fout.Put64(0);
 			Zlib zlib;
