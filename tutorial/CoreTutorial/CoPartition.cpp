@@ -37,7 +37,7 @@ void CoPartitionTutorial()
 	});
 	DUMP(sum);
 	
-	/// Note that CoPartition is still internally used, so `CoWork::FinLock` is available.
+	/// Note that CoWork is still internally used, so `CoWork::FinLock` is available.
 	/// Instead of working on subranges, it is also possible to use iterators:
 	
 	sum = 0;
