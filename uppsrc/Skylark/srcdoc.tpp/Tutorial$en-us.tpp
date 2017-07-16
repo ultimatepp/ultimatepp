@@ -25,9 +25,11 @@ topic "Tutorial";
 [s2; Skylark Tutorial&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^1^ 1. SKYLARK handlers and path patterns]&]
-[s0; [^2^ 2. Witz templates]&]
-[s0; [^3^ 3. Witz links to handlers]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#1^ 1. SKYLARK 
+handlers and path patterns]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#2^ 2. Witz templates]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#3^ 3. Witz links 
+to handlers]&]
 [s0; [^4^ 4. Combining Witz templates using #define and #include]&]
 [s0; [^5^ 5. FORM GET]&]
 [s0; [^6^ 6. FORM POST]&]
