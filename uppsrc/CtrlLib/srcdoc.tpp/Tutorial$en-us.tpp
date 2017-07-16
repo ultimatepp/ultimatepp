@@ -32,28 +32,47 @@ and they are localized in [* tutorial] assembly. So, you don`'t
 need to rewrite it by yourself. Good luck!&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^1^ 1. GUI application main function]&]
-[s0; [^2^ 2. Application window]&]
-[s0; [^3^ 3. Modifying TopWindow properties]&]
-[s0; [^4^ 4. Painting the view area]&]
-[s0; [^5^ 5. Reacting to input events]&]
-[s0; [^6^ 6. Multiple main windows]&]
-[s0; [^7^ 7. Menu]&]
-[s0; [^8^ 8. Context menu]&]
-[s0; [^9^ 9. Context menu alternative]&]
-[s0; [^10^ 10. Adding images]&]
-[s0; [^11^ 11. Toolbar]&]
-[s0; [^12^ 12. StatusBar and decorative Frames]&]
-[s0; [^13^ 13. Adding child Ctrls `- widgets, reacting to widget events]&]
-[s0; [^14^ 14. More about logical coordinates]&]
-[s0; [^15^ 15. Font`-zoomed logical coordinates]&]
-[s0; [^16^ 16. Layouts]&]
-[s0; [^17^ 17. Value of widget]&]
-[s0; [^18^ 18. Accepting and rejecting widgets]&]
-[s0; [^19^ 19. Widget edit status flags]&]
-[s0; [^20^ 20. Breaking the modal loop]&]
-[s0; [^21^ 21. Creating and using custom widgets]&]
-[s0; [^22^ 22. Non`-modal dialogs]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#1^ 1. GUI application 
+main function]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#2^ 2. Application 
+window]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#3^ 3. Modifying 
+TopWindow properties]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#4^ 4. Painting 
+the view area]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#5^ 5. Reacting 
+to input events]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#6^ 6. Multiple 
+main windows]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#7^ 7. Menu]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#8^ 8. Context 
+menu]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#9^ 9. Context 
+menu alternative]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#10^ 10. Adding 
+images]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#11^ 11. Toolbar]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#12^ 12. StatusBar 
+and decorative Frames]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#13^ 13. Adding 
+child Ctrls `- widgets, reacting to widget events]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#14^ 14. More about 
+logical coordinates]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#15^ 15. Font`-zoomed 
+logical coordinates]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#16^ 16. Layouts]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#17^ 17. Value 
+of widget]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#18^ 18. Accepting 
+and rejecting widgets]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#19^ 19. Widget 
+edit status flags]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#20^ 20. Breaking 
+the modal loop]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#21^ 21. Creating 
+and using custom widgets]&]
+[s0; [^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us`#22^ 22. Non`-modal 
+dialogs]&]
 [s0; &]
 [s3;:1: 1. GUI application main function&]
 [s5; To hide platform specific differences, U`+`+ GUI application 
