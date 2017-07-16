@@ -24,6 +24,7 @@ void Section(const String& title)
 {
 	String lbl = AsString(++major);
 	String text = String().Cat() << lbl << "." << ' ' + TrimBoth(title);
+	lbl = "Chapter_" + lbl;
 	qtf << "[s6;:" << lbl << ": " << text << "&]";
 	minor = 0;
 	toc << "&[A3^" << lbl << "^ " << text << "]&";
@@ -45,7 +46,7 @@ void FlushDoc(String& docblock)
 		
 		docblock = AsString(major) + "." + AsString(++minor) + ' ' + TrimBoth(docblock.Mid(1));
 		style = minor == 1 ? "[s2;" : "[s2;H4";
-		lbl = AsString(major) + "_" + AsString(minor);
+		lbl = "Section_" + AsString(major) + "_" + AsString(minor);
 		style << ":" <<  lbl << ":";
 		title = true;
 	}
