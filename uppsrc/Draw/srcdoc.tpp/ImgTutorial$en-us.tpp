@@ -25,12 +25,17 @@ topic "Image tutorial";
 [s2; Image tutorial&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^1^ 1. Image designer and painting the image]&]
-[s0; [^2^ 2. Image list classes as arrays]&]
-[s0; [^3^ 3. Creating and altering images in the code using ImageBuffer]&]
-[s0; [^4^ 4. Loading Images from file]&]
-[s0; [^5^ 5. Processing raster images by scanlines]&]
-[s0; [^6^ 6. Image cache]&]
+[s0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us`#1^ 1. Image designer 
+and painting the image]&]
+[s0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us`#2^ 2. Image list 
+classes as arrays]&]
+[s0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us`#3^ 3. Creating 
+and altering images in the code using ImageBuffer]&]
+[s0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us`#4^ 4. Loading 
+Images from file]&]
+[s0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us`#5^ 5. Processing 
+raster images by scanlines]&]
+[s0; [^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us`#6^ 6. Image cache]&]
 [s0; &]
 [s3;:1: 1. Image designer and painting the image&]
 [s5; In U`+`+, predefined Images needed for application (e.g. as 
