@@ -43,7 +43,6 @@ void FlushDoc(String& docblock)
 	String style = "[s3;";
 	String lbl;
 	if(docblock.StartsWith(".")) {
-		
 		docblock = AsString(major) + "." + AsString(++minor) + ' ' + TrimBoth(docblock.Mid(1));
 		style = minor == 1 ? "[s2;" : "[s2;H4";
 		lbl = "Section_" + AsString(major) + "_" + AsString(minor);
@@ -55,7 +54,7 @@ void FlushDoc(String& docblock)
 	
 	const char *s = docblock;
 
-	String qtf2;
+	String plain;
 	while(*s)
 		if((s == ~docblock || findarg(s[-1], '(', ' ', '\'', '\"') >= 0) && findarg(s[0], '*', '%', '_', '`', '^') >= 0 && s[1] && s[1] != ' ') {
 			int c = *s++;
@@ -67,28 +66,32 @@ void FlushDoc(String& docblock)
 				s++;
 			}
 			if(c == '^') {
-				qtf2 << "[^";
+				qtf << "[^";
 				if(dc) {
-					qtf2.Cat(b, dc);
+					qtf.Cat(b, dc);
 					b = dc + 1;
 				}
 				else
-					qtf2.Cat(b, s);
-				qtf2 << "^ ";
+					qtf.Cat(b, s);
+				qtf << "^ ";
 			}
 			else
-				qtf2 << decode(c, '*', "[* ", '%', "[/ ", '_', "[_ ", '`', title ? "[C@5 " : "[C@5* ", "");
-			while(b < s)
-				qtf2 << '`' << *b++;
-			qtf2 << "]";
+				qtf << decode(c, '*', "[* ", '%', "[/ ", '_', "[_ ", '`', title ? "[C@5 " : "[C@5* ", "");
+			while(b < s) {
+				plain << '`' << *b;
+				qtf << '`' << *b++;
+			}
+			qtf << "]";
 			if(*s) s++;
 		}
-		else
-			qtf2 << '`' << *s++;
+		else {
+			plain << '`' << *s;
+			qtf << '`' << *s++;
+		}
 
-	qtf << qtf2 << "&]";
+	qtf << "&]";
 	if(lbl.GetCount())
-		toc << "___[A2^" << lbl << "^ " << qtf2 << "]&";
+		toc << "___[A2^" << lbl << "^ " << plain << "]&";
 	docblock.Clear();
 }
 
