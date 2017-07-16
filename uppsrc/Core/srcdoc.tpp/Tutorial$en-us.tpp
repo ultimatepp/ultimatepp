@@ -24,38 +24,32 @@ topic "U++ Core Tutorial";
 [H8;b73;*+150 $$22,5#07864147445237544204111237153677:subtitle]
 [{_} 
 [s2;%% U`+`+ Core Tutorial&]
+[s0;3 &]
 [s0; [^Chapter`_1^ 1. Basics]&]
 [s0; ___[^Section`_1`_1^ 1.1 Logging]&]
 [s0; ___[^Section`_1`_2^ 1.2 String]&]
 [s0; ___[^Section`_1`_3^ 1.3 StringBuffer]&]
 [s0; ___[^Section`_1`_4^ 1.4 WString]&]
 [s0; ___[^Section`_1`_5^ 1.5 Date and Time]&]
-[s0; ___[^Section`_1`_6^ 1.6 ][C^Section`_1`_6^@5 AsString][^Section`_1`_6^ , 
-][C^Section`_1`_6^@5 ToString][^Section`_1`_6^  and ][C^Section`_1`_6^@5 operator<<]&]
+[s0; ___[^Section`_1`_6^ 1.6 AsString, ToString and operator<<]&]
 [s0; ___[^Section`_1`_7^ 1.7 CombineHash]&]
 [s0; ___[^Section`_1`_8^ 1.8 SgnCompare and CombineCompare]&]
 [s0; &]
 [s0; [^Chapter`_2^ 2. Array containers]&]
-[s0; ___[^Section`_2`_1^ 2.1 ][C^Section`_2`_1^@5 Vector][^Section`_2`_1^  
-basics]&]
-[s0; ___[^Section`_2`_2^ 2.2 ][C^Section`_2`_2^@5 Vector][^Section`_2`_2^  
-operations]&]
+[s0; ___[^Section`_2`_1^ 2.1 Vector basics]&]
+[s0; ___[^Section`_2`_2^ 2.2 Vector operations]&]
 [s0; ___[^Section`_2`_3^ 2.3 Transfer issues]&]
 [s0; ___[^Section`_2`_4^ 2.4 Client types in U`+`+ containers]&]
 [s0; ___[^Section`_2`_5^ 2.5 Array flavor]&]
-[s0; ___[^Section`_2`_6^ 2.6 Polymorphic ][C^Section`_2`_6^@5 Array]&]
+[s0; ___[^Section`_2`_6^ 2.6 Polymorphic Array]&]
 [s0; ___[^Section`_2`_7^ 2.7 Bidirectional containers]&]
-[s0; ___[^Section`_2`_8^ 2.8 ][C^Section`_2`_8^@5 Index]&]
+[s0; ___[^Section`_2`_8^ 2.8 Index]&]
 [s0; ___[^Section`_2`_9^ 2.9 Index and client types]&]
-[s0; ___[^Section`_2`_10^ 2.10 ][C^Section`_2`_10^@5 VectorMap][^Section`_2`_10^ , 
-][C^Section`_2`_10^@5 ArrayMap]&]
-[s0; ___[^Section`_2`_11^ 2.11 ][C^Section`_2`_11^@5 One]&]
-[s0; ___[^Section`_2`_12^ 2.12 ][C^Section`_2`_12^@5 Any]&]
-[s0; ___[^Section`_2`_13^ 2.13 ][C^Section`_2`_13^@5 InVector][^Section`_2`_13^ , 
-][C^Section`_2`_13^@5 InArray]&]
-[s0; ___[^Section`_2`_14^ 2.14 ][C^Section`_2`_14^@5 SortedIndex][^Section`_2`_14^ , 
-][C^Section`_2`_14^@5 SortedVectorMap][^Section`_2`_14^ , ][C^Section`_2`_14^@5 SortedA
-rrayMap]&]
+[s0; ___[^Section`_2`_10^ 2.10 VectorMap, ArrayMap]&]
+[s0; ___[^Section`_2`_11^ 2.11 One]&]
+[s0; ___[^Section`_2`_12^ 2.12 Any]&]
+[s0; ___[^Section`_2`_13^ 2.13 InVector, InArray]&]
+[s0; ___[^Section`_2`_14^ 2.14 SortedIndex, SortedVectorMap, SortedArrayMap]&]
 [s0; ___[^Section`_2`_15^ 2.15 Tuples]&]
 [s0; &]
 [s0; [^Chapter`_3^ 3. Ranges and algoritims]&]
@@ -65,21 +59,19 @@ rrayMap]&]
 [s0; &]
 [s0; [^Chapter`_4^ 4. Value]&]
 [s0; ___[^Section`_4`_1^ 4.1 Value]&]
-[s0; ___[^Section`_4`_2^ 4.2 ][C^Section`_4`_2^@5 Null]&]
-[s0; ___[^Section`_4`_3^ 4.3 Client types and ][C^Section`_4`_3^@5 Value][^Section`_4`_3^ ,
- ][C^Section`_4`_3^@5 RawValue][^Section`_4`_3^ , ][C^Section`_4`_3^@5 RichValue]&]
-[s0; ___[^Section`_4`_4^ 4.4 ][C^Section`_4`_4^@5 ValueArray][^Section`_4`_4^  
-and ][C^Section`_4`_4^@5 ValueMap]&]
+[s0; ___[^Section`_4`_2^ 4.2 Null]&]
+[s0; ___[^Section`_4`_3^ 4.3 Client types and Value, RawValue, RichValue]&]
+[s0; ___[^Section`_4`_4^ 4.4 ValueArray and ValueMap]&]
 [s0; &]
 [s0; [^Chapter`_5^ 5. Function and lambdas]&]
 [s0; ___[^Section`_5`_1^ 5.1 Function]&]
 [s0; ___[^Section`_5`_2^ 5.2 Capturing U`+`+ containers into lambdas]&]
 [s0; &]
 [s0; [^Chapter`_6^ 6. Multithreading]&]
-[s0; ___[^Section`_6`_1^ 6.1 ][C^Section`_6`_1^@5 Thread]&]
-[s0; ___[^Section`_6`_2^ 6.2 ][C^Section`_6`_2^@5 Mutex]&]
-[s0; ___[^Section`_6`_3^ 6.3 ][C^Section`_6`_3^@5 ConditionVariable]&]
-[s0; ___[^Section`_6`_4^ 6.4 ][C^Section`_6`_4^@5 CoWork]&]
+[s0; ___[^Section`_6`_1^ 6.1 Thread]&]
+[s0; ___[^Section`_6`_2^ 6.2 Mutex]&]
+[s0; ___[^Section`_6`_3^ 6.3 ConditionVariable]&]
+[s0; ___[^Section`_6`_4^ 6.4 CoWork]&]
 [s0; ___[^Section`_6`_5^ 6.5 CoPartition]&]
 [s0; ___[^Section`_6`_6^ 6.6 Parallel algorithms]&]
 [s0;^Section`_6`_6^ &]
@@ -125,8 +117,8 @@ variable name and value:&]
 [s7; DUMPHEX(h);&]
 [s0; &]
 [s17; x `= 0x7b&]
-[s17; h `= Memory at 0x0215FC58, size 0x3 `= 3&]
-[s17;     `+0 0x0215FC58 66 6F 6F                                 
+[s17; h `= Memory at 0x01B3F718, size 0x3 `= 3&]
+[s17;     `+0 0x01B3F718 66 6F 6F                                 
            foo             &]
 [s0; &]
 [s5; To log the value of a container (or generic Range), you can 
@@ -370,8 +362,8 @@ data, including zeroes:&]
 [s7; &]
 [s7; DUMPHEX(a);&]
 [s0; &]
-[s17; a `= Memory at 0x0215FCB8, size 0x5 `= 5&]
-[s17;     `+0 0x0215FCB8 31 32 33 34 00                           
+[s17; a `= Memory at 0x01B3F778, size 0x5 `= 5&]
+[s17;     `+0 0x01B3F778 31 32 33 34 00                           
            1234.           &]
 [s0; &]
 [s3;H4;:Section`_1`_3: 1.3 StringBuffer&]
@@ -603,11 +595,11 @@ time:&]
 [s7; DUMP((int)time.minute);&]
 [s7; DUMP((int)time.second);&]
 [s0; &]
-[s17; time `= 07/16/2017 19:46:49&]
+[s17; time `= 07/16/2017 19:57:34&]
 [s17; (Date)time `= 07/16/2017&]
 [s17; (int)time.hour `= 19&]
-[s17; (int)time.minute `= 46&]
-[s17; (int)time.second `= 49&]
+[s17; (int)time.minute `= 57&]
+[s17; (int)time.second `= 34&]
 [s0; &]
 [s5; Times can be compared:&]
 [s0; &]
@@ -634,10 +626,10 @@ but numbers represent seconds (using [*C@5 int64] datatype):&]
 is in days&]
 [s7; DUMP(time `- ToTime(date)); // Time `- Time is in seconds&]
 [s0; &]
-[s17; time `+ 1 `= 07/16/2017 19:46:50&]
-[s17; time `+ 24 `* 3600 `= 07/17/2017 19:46:49&]
+[s17; time `+ 1 `= 07/16/2017 19:57:35&]
+[s17; time `+ 24 `* 3600 `= 07/17/2017 19:57:34&]
 [s17; time `- date `= 0&]
-[s17; time `- ToTime(date) `= 71209&]
+[s17; time `- ToTime(date) `= 71854&]
 [s0; &]
 [s5; [*C@5 Time] defines era limits too:&]
 [s0; &]
@@ -693,8 +685,8 @@ items predefined by U`+`+:&]
 [s7; DUMP(sout);&]
 [s0; &]
 [s17; LoadFile(ConfigFile(`"test.txt`")) `= 1.23 07/16/2017 07/16/2017 
-19:46:49&]
-[s17; sout `= 1.23 07/16/2017 07/16/2017 19:46:49&]
+19:57:34&]
+[s17; sout `= 1.23 07/16/2017 07/16/2017 19:57:34&]
 [s0; &]
 [s5; Getting client types involved into this schema is not too difficult, 
 all you need to do is to add [*C@5 ToString] method:&]
@@ -1037,7 +1029,7 @@ value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[992, 962, 1032, 1034, 1014, 957, 1010, 1016, 963, 1020`]&]
+[s17; v `= `[973, 994, 1039, 1001, 1019, 1029, 1014, 997, 970, 964`]&]
 [s0; &]
 [s5; You can apply algorithms on containers, e.g. Sort&]
 [s0; &]
@@ -1045,7 +1037,7 @@ value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[957, 962, 963, 992, 1010, 1014, 1016, 1020, 1032, 1034`]&]
+[s17; v `= `[964, 970, 973, 994, 997, 1001, 1014, 1019, 1029, 1039`]&]
 [s0; &]
 [s3;H4;:Section`_2`_3: 2.3 Transfer issues&]
 [s5; Often you need to pass content of one container to another of 
@@ -1151,15 +1143,15 @@ to it:&]
 [s7; DUMPC(dist);&]
 [s0; &]
 [s17; dist:&]
-[s17; -|`[0`] `= Test 5: `[1923, 2077, 1968, 2008, 2024`]&]
-[s17; -|`[1`] `= Test 6: `[1702, 1614, 1680, 1663, 1651, 1690`]&]
-[s17; -|`[2`] `= Test 7: `[1432, 1372, 1469, 1431, 1409, 1405, 1482`]&]
-[s17; -|`[3`] `= Test 8: `[1237, 1313, 1283, 1216, 1279, 1226, 1244, 
-1202`]&]
-[s17; -|`[4`] `= Test 9: `[1070, 1112, 1104, 1100, 1167, 1073, 1130, 
-1134, 1110`]&]
-[s17; -|`[5`] `= Test 10: `[987, 1082, 979, 973, 975, 1012, 1010, 1004, 
-973, 1005`]&]
+[s17; -|`[0`] `= Test 5: `[1983, 1936, 2040, 2032, 2009`]&]
+[s17; -|`[1`] `= Test 6: `[1620, 1713, 1686, 1633, 1691, 1657`]&]
+[s17; -|`[2`] `= Test 7: `[1382, 1477, 1410, 1430, 1429, 1467, 1405`]&]
+[s17; -|`[3`] `= Test 8: `[1265, 1282, 1233, 1273, 1204, 1270, 1221, 
+1252`]&]
+[s17; -|`[4`] `= Test 9: `[1121, 1044, 1114, 1130, 1126, 1096, 1172, 
+1082, 1115`]&]
+[s17; -|`[5`] `= Test 10: `[978, 1000, 968, 1061, 972, 999, 1012, 1049, 
+997, 964`]&]
 [s0; &]
 [s5; Another possibility is to use [*C@5 Vector`::Add(T`&`&)] method, 
 which uses pick`-constructor instead of deep`-copy constructor. 
@@ -2987,16 +2979,16 @@ thread to [*C@5 Wait] for its completion:&]
 [s0; &]
 [s17; In the main thread 0&]
 [s17; In the thread 0&]
-[s17; In the thread 1&]
 [s17; In the main thread 1&]
-[s17; In the thread 2&]
+[s17; In the thread 1&]
 [s17; In the main thread 2&]
-[s17; In the thread 3&]
+[s17; In the thread 2&]
 [s17; In the main thread 3&]
-[s17; In the thread 4&]
+[s17; In the thread 3&]
 [s17; In the main thread 4&]
-[s17; In the thread 5&]
+[s17; In the thread 4&]
 [s17; About to wait for thread to finish&]
+[s17; In the thread 5&]
 [s17; In the thread 6&]
 [s17; In the thread 7&]
 [s17; In the thread 8&]
@@ -3044,7 +3036,7 @@ code demonstrates why:&]
 [s7; t.Wait();&]
 [s7; DUMP(sum);&]
 [s0; &]
-[s17; sum `= 1027510&]
+[s17; sum `= 1030928&]
 [s0; &]
 [s5; While the expected value is 2000000, produced value is different. 
 The problem is that both thread read / modify / write [*C@5 sum] 
@@ -3169,13 +3161,13 @@ testing data&]
 [s7; DUMP(w);&]
 [s0; &]
 [s17; w `= `[Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, 
-elit, sed, do, eiusmod, quis, nostrud, exercitation, ullamco, 
-laboris, nisi, ut, aliquip, ex, ea, commodo, tempor, incididunt, 
-labore, et, dolore, magna, aliqua, Ut, enim, ad, minim, veniam, 
+elit, sed, do, eiusmod, tempor, incididunt, ut, labore, et, dolore, 
+magna, aliqua, Ut, enim, ad, minim, veniam, consequat, Duis, 
+aute, irure, in, reprehenderit, voluptate, velit, quis, nostrud, 
+exercitation, ullamco, laboris, nisi, aliquip, ex, ea, commodo, 
 esse, cillum, eu, fugiat, nulla, pariatur, Excepteur, sint, occaecat, 
-cupidatat, consequat, Duis, aute, irure, in, reprehenderit, voluptate, 
-velit, non, proident, sunt, culpa, qui, officia, deserunt, mollit, 
-anim, id, est, laborum`]&]
+cupidatat, non, proident, sunt, culpa, qui, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Adding words to [*C@5 w] requires [*C@5 Mutex]. Alternative to this 
 `'result gathering`' [*C@5 Mutex] is CoWork`::FinLock. The idea 
@@ -3203,13 +3195,13 @@ end of CoWork job&]
 [s7; DUMP(w);&]
 [s0; &]
 [s17; w `= `[Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, 
-elit, sed, do, eiusmod, quis, nostrud, exercitation, ullamco, 
-laboris, nisi, ut, aliquip, ex, ea, commodo, tempor, incididunt, 
-labore, et, dolore, magna, aliqua, Ut, enim, ad, minim, veniam, 
+elit, sed, do, eiusmod, tempor, incididunt, ut, labore, et, dolore, 
+magna, aliqua, Ut, enim, ad, minim, veniam, consequat, Duis, 
+aute, irure, in, reprehenderit, voluptate, velit, quis, nostrud, 
+exercitation, ullamco, laboris, nisi, aliquip, ex, ea, commodo, 
 esse, cillum, eu, fugiat, nulla, pariatur, Excepteur, sint, occaecat, 
-cupidatat, consequat, Duis, aute, irure, in, reprehenderit, voluptate, 
-velit, non, proident, sunt, culpa, qui, officia, deserunt, mollit, 
-anim, id, est, laborum`]&]
+cupidatat, non, proident, sunt, culpa, qui, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Of course, the code performed after FinLock should not take 
 long, otherwise there is negative impact on all CoWork instances. 
@@ -3294,7 +3286,7 @@ h) `{&]
 sense. The naming scheme is `'Co`' prefix before the name of 
 algorithm designates the parallel version.&]
 [s5; So the parallel version of e.g. [*C@5 FindIndex] is [*C@5 CoFindIndex], 
-for `'Sort`' it is `'CoSort`':&]
+for [*C@5 Sort] it is [*C@5 CoSort]:&]
 [s0; &]
 [s7; Vector<String> x`{ `"zero`", `"one`", `"two`", `"three`", `"four`", 
 `"five`" `};&]
