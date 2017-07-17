@@ -139,6 +139,8 @@ Size Ctrl::GetMaxSize() const
 void Ctrl::SyncLayout(int force)
 {
 	GuiLock __;
+	if(destroying)
+		return;
 	LLOG("SyncLayout " << Name() << " size: " << GetSize());
 	bool refresh = false;
 	Rect oview = GetView();
