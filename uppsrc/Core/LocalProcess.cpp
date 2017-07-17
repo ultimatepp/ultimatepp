@@ -605,6 +605,33 @@ void LocalProcess::CloseWrite()
 #endif
 }
 
+/*
+int LocalProcess::Finish(String& out)
+{
+	out.Clear();
+	while(IsRunning()) {
+		String h = Get();
+//		if(IsNull(h))
+//			Sleep(1); // p.Wait would be much better here!
+//		else
+			out.Cat(h);
+			Sleep(1); // p.Wait would be much better here!
+	}
+	
+	LLOG("Finish: About to read the rest of output");
+	
+	for(;;) {
+		String h = Get();
+//		DDUMP(h.GetCount());
+//		DDUMP(h.IsVoid());
+		if(h.IsVoid())
+			break;
+		out.Cat(h);
+	}
+	return GetExitCode();
+}
+*/
+
 int LocalProcess::Finish(String& out)
 {
 	out.Clear();

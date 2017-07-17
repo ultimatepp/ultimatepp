@@ -507,6 +507,7 @@ TopWindow::TopWindow()
 TopWindow::~TopWindow()
 {
 	GuiLock __;
+	destroying = true;
 	if(InLoop())
 		EndLoop(IDOK);
 	if(!IsChild())
