@@ -131,6 +131,7 @@ CONSOLE_APP_MAIN
 		String data2;
 		{
 			FileIn fin(path);
+			fin.Get64();
 			Zlib zlib;
 			InFilterStream in(fin, zlib);
 			zlib.Decompress();
