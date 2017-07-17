@@ -612,7 +612,12 @@ int LocalProcess::Finish(String& out)
 		out.Cat(Get());
 		Sleep(1); // p.Wait would be much better here!
 	}
-	out.Cat(Get());
+	for(;;) {
+		String h = Get();
+		if(h.IsVoid())
+			break;
+		out.Cat(h);
+	}
 	return GetExitCode();
 }
 
