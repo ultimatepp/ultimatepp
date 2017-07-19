@@ -25,62 +25,59 @@ topic "U++ Core Tutorial";
 [{_} 
 [s2;%% U`+`+ Core Tutorial&]
 [s0;3 &]
-[s0; [^1^ 1. Basics]&]
-[s0; ___[^1`_1^ 1.1 Logging]&]
-[s0; ___[^1`_2^ 1.2 String]&]
-[s0; ___[^1`_3^ 1.3 StringBuffer]&]
-[s0; ___[^1`_4^ 1.4 WString]&]
-[s0; ___[^1`_5^ 1.5 Date and Time]&]
-[s0; ___[^1`_6^ 1.6 ][C^1`_6^@5 AsString][^1`_6^ , ][C^1`_6^@5 ToString][^1`_6^  
-and ][C^1`_6^@5 operator<<]&]
-[s0; ___[^1`_7^ 1.7 CombineHash]&]
-[s0; ___[^1`_8^ 1.8 SgnCompare and CombineCompare]&]
+[s0;3 &]
+[s0; [^`#Chapter`_1^ 1. Basics]&]
+[s0; ___[^`#Section`_1`_1^ 1.1 Logging]&]
+[s0; ___[^`#Section`_1`_2^ 1.2 String]&]
+[s0; ___[^`#Section`_1`_3^ 1.3 StringBuffer]&]
+[s0; ___[^`#Section`_1`_4^ 1.4 WString]&]
+[s0; ___[^`#Section`_1`_5^ 1.5 Date and Time]&]
+[s0; ___[^`#Section`_1`_6^ 1.6 AsString, ToString and operator<<]&]
+[s0; ___[^`#Section`_1`_7^ 1.7 CombineHash]&]
+[s0; ___[^`#Section`_1`_8^ 1.8 SgnCompare and CombineCompare]&]
 [s0; &]
-[s0; [^2^ 2. Array containers]&]
-[s0; ___[^2`_1^ 2.1 ][C^2`_1^@5 Vector][^2`_1^  basics]&]
-[s0; ___[^2`_2^ 2.2 ][C^2`_2^@5 Vector][^2`_2^  operations]&]
-[s0; ___[^2`_3^ 2.3 Transfer issues]&]
-[s0; ___[^2`_4^ 2.4 Client types in U`+`+ containers]&]
-[s0; ___[^2`_5^ 2.5 Array flavor]&]
-[s0; ___[^2`_6^ 2.6 Polymorphic ][C^2`_6^@5 Array]&]
-[s0; ___[^2`_7^ 2.7 Bidirectional containers]&]
-[s0; ___[^2`_8^ 2.8 ][C^2`_8^@5 Index]&]
-[s0; ___[^2`_9^ 2.9 Index and client types]&]
-[s0; ___[^2`_10^ 2.10 ][C^2`_10^@5 VectorMap][^2`_10^ , ][C^2`_10^@5 ArrayMap]&]
-[s0; ___[^2`_11^ 2.11 ][C^2`_11^@5 One]&]
-[s0; ___[^2`_12^ 2.12 ][C^2`_12^@5 Any]&]
-[s0; ___[^2`_13^ 2.13 ][C^2`_13^@5 InVector][^2`_13^ , ][C^2`_13^@5 InArray]&]
-[s0; ___[^2`_14^ 2.14 ][C^2`_14^@5 SortedIndex][^2`_14^ , ][C^2`_14^@5 SortedVectorMap][^2`_14^ ,
- ][C^2`_14^@5 SortedArrayMap]&]
-[s0; ___[^2`_15^ 2.15 Tuples]&]
+[s0; [^`#Chapter`_2^ 2. Array containers]&]
+[s0; ___[^`#Section`_2`_1^ 2.1 Vector basics]&]
+[s0; ___[^`#Section`_2`_2^ 2.2 Vector operations]&]
+[s0; ___[^`#Section`_2`_3^ 2.3 Transfer issues]&]
+[s0; ___[^`#Section`_2`_4^ 2.4 Client types in U`+`+ containers]&]
+[s0; ___[^`#Section`_2`_5^ 2.5 Array flavor]&]
+[s0; ___[^`#Section`_2`_6^ 2.6 Polymorphic Array]&]
+[s0; ___[^`#Section`_2`_7^ 2.7 Bidirectional containers]&]
+[s0; ___[^`#Section`_2`_8^ 2.8 Index]&]
+[s0; ___[^`#Section`_2`_9^ 2.9 Index and client types]&]
+[s0; ___[^`#Section`_2`_10^ 2.10 VectorMap, ArrayMap]&]
+[s0; ___[^`#Section`_2`_11^ 2.11 One]&]
+[s0; ___[^`#Section`_2`_12^ 2.12 Any]&]
+[s0; ___[^`#Section`_2`_13^ 2.13 InVector, InArray]&]
+[s0; ___[^`#Section`_2`_14^ 2.14 SortedIndex, SortedVectorMap, SortedArrayMap]&]
+[s0; ___[^`#Section`_2`_15^ 2.15 Tuples]&]
 [s0; &]
-[s0; [^3^ 3. Ranges and algoritims]&]
-[s0; ___[^3`_1^ 3.1 Range]&]
-[s0; ___[^3`_2^ 3.2 Algorithms]&]
-[s0; ___[^3`_3^ 3.3 Sorting]&]
+[s0; [^`#Chapter`_3^ 3. Ranges and algoritims]&]
+[s0; ___[^`#Section`_3`_1^ 3.1 Range]&]
+[s0; ___[^`#Section`_3`_2^ 3.2 Algorithms]&]
+[s0; ___[^`#Section`_3`_3^ 3.3 Sorting]&]
 [s0; &]
-[s0; [^4^ 4. Value]&]
-[s0; ___[^4`_1^ 4.1 Value]&]
-[s0; ___[^4`_2^ 4.2 ][C^4`_2^@5 Null]&]
-[s0; ___[^4`_3^ 4.3 Client types and ][C^4`_3^@5 Value][^4`_3^ , ][C^4`_3^@5 RawValue][^4`_3^ ,
- ][C^4`_3^@5 RichValue]&]
-[s0; ___[^4`_4^ 4.4 ][C^4`_4^@5 ValueArray][^4`_4^  and ][C^4`_4^@5 ValueMap]&]
+[s0; [^`#Chapter`_4^ 4. Value]&]
+[s0; ___[^`#Section`_4`_1^ 4.1 Value]&]
+[s0; ___[^`#Section`_4`_2^ 4.2 Null]&]
+[s0; ___[^`#Section`_4`_3^ 4.3 Client types and Value, RawValue, RichValue]&]
+[s0; ___[^`#Section`_4`_4^ 4.4 ValueArray and ValueMap]&]
 [s0; &]
-[s0; [^5^ 5. Function and lambdas]&]
-[s0; ___[^5`_1^ 5.1 Function]&]
-[s0; ___[^5`_2^ 5.2 Capturing U`+`+ containers into lambdas]&]
+[s0; [^`#Chapter`_5^ 5. Function and lambdas]&]
+[s0; ___[^`#Section`_5`_1^ 5.1 Function]&]
+[s0; ___[^`#Section`_5`_2^ 5.2 Capturing U`+`+ containers into lambdas]&]
 [s0; &]
-[s0; [^6^ 6. Multithreading]&]
-[s0; ___[^6`_1^ 6.1 ][C^6`_1^@5 Thread]&]
-[s0; ___[^6`_2^ 6.2 ][C^6`_2^@5 Mutex]&]
-[s0; ___[^6`_3^ 6.3 ][C^6`_3^@5 ConditionVariable]&]
-[s0; ___[^6`_4^ 6.4 ][C^6`_4^@5 CoWork]&]
-[s0; ___[^6`_5^ 6.5 CoPartition]&]
-[s0; ___[^6`_6^ 6.6 Parallel algorithms]&]
-[s0;^6`_6^ &]
-[s0;^6`_6^ &]
-[s22;:1: 1. Basics&]
-[s3;:1`_1: 1.1 Logging&]
+[s0; [^`#Chapter`_6^ 6. Multithreading]&]
+[s0; ___[^`#Section`_6`_1^ 6.1 Thread]&]
+[s0; ___[^`#Section`_6`_2^ 6.2 Mutex]&]
+[s0; ___[^`#Section`_6`_3^ 6.3 ConditionVariable]&]
+[s0; ___[^`#Section`_6`_4^ 6.4 CoWork]&]
+[s0; ___[^`#Section`_6`_5^ 6.5 CoPartition]&]
+[s0; ___[^`#Section`_6`_6^ 6.6 Parallel algorithms]&]
+[s0;^`#Section`_6`_6^ &]
+[s22;:Chapter`_1: 1. Basics&]
+[s3;:Section`_1`_1: 1.1 Logging&]
 [s5; Logging is a useful technique to trace the flow of the code 
 and examine results. In this tutorial we will be using logging 
 extensively, so let us start tutorial with the explanation of 
@@ -121,8 +118,8 @@ variable name and value:&]
 [s7; DUMPHEX(h);&]
 [s0; &]
 [s17; x `= 0x7b&]
-[s17; h `= Memory at 0x0x7fff6d628910, size 0x3 `= 3&]
-[s17;     `+0 0x00007FFF6D628910 66 6F 6F                         
+[s17; h `= Memory at 0x0x7ffcb01abe30, size 0x3 `= 3&]
+[s17;     `+0 0x00007FFCB01ABE30 66 6F 6F                         
                    foo             &]
 [s0; &]
 [s5; To log the value of a container (or generic Range), you can 
@@ -192,7 +189,7 @@ to output the log both to the console and .log file:&]
 [s0; &]
 [s7; StdLogSetup(LOG`_COUT`|LOG`_FILE);&]
 [s0; &]
-[s3;H4;:1`_2: 1.2 String&]
+[s3;H4;:Section`_1`_2: 1.2 String&]
 [s5; String is a value type useful for storing text or binary data.&]
 [s0; &]
 [s7; String a `= `"Hello`";&]
@@ -366,11 +363,11 @@ data, including zeroes:&]
 [s7; &]
 [s7; DUMPHEX(a);&]
 [s0; &]
-[s17; a `= Memory at 0x0x7fff6d628800, size 0x5 `= 5&]
-[s17;     `+0 0x00007FFF6D628800 31 32 33 34 00                   
+[s17; a `= Memory at 0x0x7ffcb01abd20, size 0x5 `= 5&]
+[s17;     `+0 0x00007FFCB01ABD20 31 32 33 34 00                   
                    1234.           &]
 [s0; &]
-[s3;H4;:1`_3: 1.3 StringBuffer&]
+[s3;H4;:Section`_1`_3: 1.3 StringBuffer&]
 [s5; If you need a direct write access to [*C@5 String]`'s C`-string 
 character buffer, you can use complementary [*C@5 StringBuffer] 
 class. One of reasons to do so is when you have to deal with 
@@ -425,7 +422,7 @@ to StringBuffer clears the source String.&]
 [s5; Note that sometimes when creating some String from a lot of 
 single characters, using StringBuffer for the operation is slightly 
 faster then using String directly.&]
-[s3;H4;:1`_4: 1.4 WString&]
+[s3;H4;:Section`_1`_4: 1.4 WString&]
 [s5; String works with 8 bit characters. For 16`-bit character encoding 
 use [*C@5 WString]. Both classes are closely related and share 
 most of interface methods. U`+`+ also provides conversions between 
@@ -462,7 +459,7 @@ in most WString operations&]
 [s17; x `= characters 280`-300: ĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪī 
 (appended)&]
 [s0; &]
-[s3;H4;:1`_5: 1.5 Date and Time&]
+[s3;H4;:Section`_1`_5: 1.5 Date and Time&]
 [s5; To represent date and time, U`+`+ provides [*C@5 Date] and [*C@5 Time] 
 concrete types.&]
 [s0; &]
@@ -470,7 +467,7 @@ concrete types.&]
 [s7; &]
 [s7; DUMP(date);&]
 [s0; &]
-[s17; date `= 07/12/2017&]
+[s17; date `= 07/19/2017&]
 [s0; &]
 [s5; All data members of [*C@5 Date] structure are public:&]
 [s0; &]
@@ -482,7 +479,7 @@ would log&]
 [s0; &]
 [s17; (int)date.year `= 2017&]
 [s17; (int)date.month `= 7&]
-[s17; (int)date.day `= 12&]
+[s17; (int)date.day `= 19&]
 [s0; &]
 [s5; Dates can be compared:&]
 [s0; &]
@@ -497,15 +494,15 @@ ing goes to the next/previous day:&]
 [s7; DUMP(`-`-date);&]
 [s7; DUMP(`+`+date);&]
 [s0; &]
-[s17; date `+ 1 `= 07/13/2017&]
-[s17; `-`-date `= 07/11/2017&]
-[s17; `+`+date `= 07/12/2017&]
+[s17; date `+ 1 `= 07/20/2017&]
+[s17; `-`-date `= 07/18/2017&]
+[s17; `+`+date `= 07/19/2017&]
 [s0; &]
 [s5; Subtraction of dates yields a number of days between them:&]
 [s0; &]
 [s7; DUMP(date `- Date(2000, 1, 1));&]
 [s0; &]
-[s17; date `- Date(2000, 1, 1) `= 6402&]
+[s17; date `- Date(2000, 1, 1) `= 6409&]
 [s0; &]
 [s5; There are several [*C@5 Date] and calendar related functions:&]
 [s0; &]
@@ -545,7 +542,7 @@ ing goes to the next/previous day:&]
 [s17; FirstDayOfMonth(date) `= 07/01/2017&]
 [s17; LastDayOfYear(date) `= 12/31/2017&]
 [s17; FirstDayOfYear(date) `= 01/01/2017&]
-[s17; DayOfYear(date) `= 193&]
+[s17; DayOfYear(date) `= 200&]
 [s17; DayOfYear(Date(2016, 1, 1)) `= 1&]
 [s0; &]
 [s0; &]
@@ -556,10 +553,10 @@ between two dates&]
 partial months`' between two dates&]
 [s7; DUMP(AddYears(date, 2));&]
 [s0; &]
-[s17; AddMonths(date, 20) `= 03/12/2019&]
+[s17; AddMonths(date, 20) `= 03/19/2019&]
 [s17; GetMonths(date, date `+ 100) `= 3&]
 [s17; GetMonthsP(date, date `+ 100) `= 4&]
-[s17; AddYears(date, 2) `= 07/12/2019&]
+[s17; AddYears(date, 2) `= 07/19/2019&]
 [s0; &]
 [s0; &]
 [s7; DUMP(GetWeekDate(2015, 1));&]
@@ -599,11 +596,11 @@ time:&]
 [s7; DUMP((int)time.minute);&]
 [s7; DUMP((int)time.second);&]
 [s0; &]
-[s17; time `= 07/12/2017 12:03:35&]
-[s17; (Date)time `= 07/12/2017&]
-[s17; (int)time.hour `= 12&]
-[s17; (int)time.minute `= 3&]
-[s17; (int)time.second `= 35&]
+[s17; time `= 07/19/2017 22:55:10&]
+[s17; (Date)time `= 07/19/2017&]
+[s17; (int)time.hour `= 22&]
+[s17; (int)time.minute `= 55&]
+[s17; (int)time.second `= 10&]
 [s0; &]
 [s5; Times can be compared:&]
 [s0; &]
@@ -630,10 +627,10 @@ but numbers represent seconds (using [*C@5 int64] datatype):&]
 is in days&]
 [s7; DUMP(time `- ToTime(date)); // Time `- Time is in seconds&]
 [s0; &]
-[s17; time `+ 1 `= 07/12/2017 12:03:36&]
-[s17; time `+ 24 `* 3600 `= 07/13/2017 12:03:35&]
+[s17; time `+ 1 `= 07/19/2017 22:55:11&]
+[s17; time `+ 24 `* 3600 `= 07/20/2017 22:55:10&]
 [s17; time `- date `= 0&]
-[s17; time `- ToTime(date) `= 43415&]
+[s17; time `- ToTime(date) `= 82510&]
 [s0; &]
 [s5; [*C@5 Time] defines era limits too:&]
 [s0; &]
@@ -643,7 +640,7 @@ is in days&]
 [s17; Time`::Low() `= 01/01/`-4000 00:00:00&]
 [s17; Time`::High() `= 01/01/4000 00:00:00&]
 [s0; &]
-[s3;H4;:1`_6: 1.6 [C@5 AsString], [C@5 ToString] and [C@5 operator<<]&]
+[s3;H4;:Section`_1`_6: 1.6 [C@5 AsString], [C@5 ToString] and [C@5 operator<<]&]
 [s5; U`+`+ Core provides simple yet effective standard schema for 
 converting values to default textual form. System is based on 
 the combination of template functions (following code is part 
@@ -688,9 +685,9 @@ items predefined by U`+`+:&]
 [s7; DUMP(LoadFile(ConfigFile(`"test.txt`")));&]
 [s7; DUMP(sout);&]
 [s0; &]
-[s17; LoadFile(ConfigFile(`"test.txt`")) `= 1.23 07/12/2017 07/12/2017 
-12:03:35&]
-[s17; sout `= 1.23 07/12/2017 07/12/2017 12:03:35&]
+[s17; LoadFile(ConfigFile(`"test.txt`")) `= 1.23 07/19/2017 07/19/2017 
+22:55:10&]
+[s17; sout `= 1.23 07/19/2017 07/19/2017 22:55:10&]
 [s0; &]
 [s5; Getting client types involved into this schema is not too difficult, 
 all you need to do is to add [*C@5 ToString] method:&]
@@ -724,7 +721,7 @@ in Upp namespace:&]
 FormatIntRoman(a.x); `}&]
 [s7; `};&]
 [s0; &]
-[s3;H4;:1`_7: 1.7 CombineHash&]
+[s3;H4;:Section`_1`_7: 1.7 CombineHash&]
 [s5; To simplify providing of high quality hash codes for composite 
 types, U`+`+ provides [*C@5 CombineHash] utility class. This class 
 uses [*C@5 GetHashValue] function to gather hash codes of all values 
@@ -758,7 +755,7 @@ too:&]
 [s0; &]
 [s17; GetHashValue(x) `= 3378606405&]
 [s0; &]
-[s3;H4;:1`_8: 1.8 SgnCompare and CombineCompare&]
+[s3;H4;:Section`_1`_8: 1.8 SgnCompare and CombineCompare&]
 [s5; Traditional approach of C language of representing comparison 
 results was 3`-state: comparing a and b results in negative value 
 (if a < b), zero (if a `=`= b) or positive value (a > b). In 
@@ -907,8 +904,8 @@ be further simplified using [*C@5 CombineCompare] helper class:&]
 [s17; o !`= p `= true&]
 [s17; SgnCompare(o, p) `= `-1&]
 [s0; &]
-[s22;:2: 2. Array containers&]
-[s3;:2`_1: 2.1 [C@5 Vector] basics&]
+[s22;:Chapter`_2: 2. Array containers&]
+[s3;:Section`_2`_1: 2.1 [C@5 Vector] basics&]
 [s5; [*C@5 Vector] is the basic container of U`+`+. It is the random 
 access container similar to [*C@5 std`::vector] with one important 
 performance related difference: There are rules for elements of 
@@ -993,7 +990,7 @@ returns a reference to a new element in [*C@5 Vector]:&]
 [s17; 6&]
 [s17; 7&]
 [s0; &]
-[s3;H4;:2`_2: 2.2 [C@5 Vector] operations&]
+[s3;H4;:Section`_2`_2: 2.2 [C@5 Vector] operations&]
 [s5; You can [*C@5 Insert] or [*C@5 Remove] elements at random positions 
 of Vector (O(n) complexity):&]
 [s0; &]
@@ -1033,7 +1030,7 @@ value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[966, 1022, 948, 999, 1040, 995, 1071, 1019, 938, 1002`]&]
+[s17; v `= `[972, 1037, 983, 993, 1009, 981, 1002, 1033, 963, 1027`]&]
 [s0; &]
 [s5; You can apply algorithms on containers, e.g. Sort&]
 [s0; &]
@@ -1041,9 +1038,9 @@ value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[938, 948, 966, 995, 999, 1002, 1019, 1022, 1040, 1071`]&]
+[s17; v `= `[963, 972, 981, 983, 993, 1002, 1009, 1027, 1033, 1037`]&]
 [s0; &]
-[s3;H4;:2`_3: 2.3 Transfer issues&]
+[s3;H4;:Section`_2`_3: 2.3 Transfer issues&]
 [s5; Often you need to pass content of one container to another of 
 the same type. U`+`+ containers always support [^topic`:`/`/Core`/srcdoc`/pick`_`$en`-us^ p
 ick semantics] (synonym of std`::move), and, depending on type 
@@ -1109,7 +1106,7 @@ instead of explicit [*C@5 clone]. You can easily achieve that using
 [s17; v `= `[1, 2`]&]
 [s17; v2 `= `[1, 2`]&]
 [s0; &]
-[s3;H4;:2`_4: 2.4 Client types in U`+`+ containers&]
+[s3;H4;:Section`_2`_4: 2.4 Client types in U`+`+ containers&]
 [s5; So far we were using int as type of elements. In order to store 
 client defined types into the [*C@5 Vector] (and the Vector [^topic`:`/`/Core`/src`/Overview`$en`-us^ f
 lavor]) the type must satisfy [^topic`:`/`/Core`/src`/Moveable`$en`-us^ moveable] 
@@ -1147,15 +1144,15 @@ to it:&]
 [s7; DUMPC(dist);&]
 [s0; &]
 [s17; dist:&]
-[s17; -|`[0`] `= Test 5: `[2020, 2007, 2013, 1938, 2022`]&]
-[s17; -|`[1`] `= Test 6: `[1709, 1627, 1623, 1673, 1705, 1663`]&]
-[s17; -|`[2`] `= Test 7: `[1374, 1452, 1467, 1433, 1421, 1463, 1390`]&]
-[s17; -|`[3`] `= Test 8: `[1237, 1281, 1281, 1243, 1245, 1212, 1252, 
-1249`]&]
-[s17; -|`[4`] `= Test 9: `[1076, 1121, 1097, 1152, 1138, 1126, 1080, 
-1127, 1083`]&]
-[s17; -|`[5`] `= Test 10: `[1009, 1028, 1012, 1025, 1005, 991, 987, 
-1037, 947, 959`]&]
+[s17; -|`[0`] `= Test 5: `[1940, 2038, 2008, 2034, 1980`]&]
+[s17; -|`[1`] `= Test 6: `[1643, 1672, 1672, 1635, 1718, 1660`]&]
+[s17; -|`[2`] `= Test 7: `[1458, 1420, 1432, 1369, 1471, 1403, 1447`]&]
+[s17; -|`[3`] `= Test 8: `[1229, 1288, 1283, 1256, 1237, 1221, 1223, 
+1263`]&]
+[s17; -|`[4`] `= Test 9: `[1069, 1126, 1075, 1090, 1112, 1126, 1139, 
+1148, 1115`]&]
+[s17; -|`[5`] `= Test 10: `[1058, 982, 984, 973, 982, 988, 1009, 1030, 
+990, 1004`]&]
 [s0; &]
 [s5; Another possibility is to use [*C@5 Vector`::Add(T`&`&)] method, 
 which uses pick`-constructor instead of deep`-copy constructor. 
@@ -1172,7 +1169,7 @@ E.g. [*C@5 Distribution] elements might be generated by some function:&]
 [s0; &]
 [s7; -|dist.Add() `= CreateDist();&]
 [s0; &]
-[s3;H4;:2`_5: 2.5 Array flavor&]
+[s3;H4;:Section`_2`_5: 2.5 Array flavor&]
 [s5; If elements are not [*C@5 Moveable] and therefore cannot be stored 
 in [*C@5 Vector] flavor, they can still be stored in [*C@5 Array] 
 flavor. Another reason for using Array is the need for referencing 
@@ -1195,7 +1192,7 @@ standard library knows nothing about U`+`+ Moveable concept):&]
 [s17; s.c`_str() `= Test&]
 [s17; s.c`_str() `= Test&]
 [s0; &]
-[s3;H4;:2`_6: 2.6 Polymorphic [C@5 Array]&]
+[s3;H4;:Section`_2`_6: 2.6 Polymorphic [C@5 Array]&]
 [s5; [*C@5 Array] can even be used for storing polymorphic elements:&]
 [s0; &]
 [s7; struct Number `{&]
@@ -1252,7 +1249,7 @@ a.Get() < b.Get(); `});&]
 [s0; &]
 [s17; num `= `[1.1, 3, 15.5`]&]
 [s0; &]
-[s3;H4;:2`_7: 2.7 Bidirectional containers&]
+[s3;H4;:Section`_2`_7: 2.7 Bidirectional containers&]
 [s5; [*C@5 Vector] and [*C@5 Array] containers allow fast adding and 
 removing elements at the end of sequence. Sometimes, same is 
 needed at begin of sequence too (usually to support FIFO queues). 
@@ -1305,7 +1302,7 @@ needed at begin of sequence too (usually to support FIFO queues).
 [s0; &]
 [s17; num `= `[World, 3, Hello, 2`]&]
 [s0; &]
-[s3;H4;:2`_8: 2.8 [C@5 Index]&]
+[s3;H4;:Section`_2`_8: 2.8 [C@5 Index]&]
 [s5; [*C@5 Index] is the the foundation of all U`+`+ associative operations 
 and is one of defining features of U`+`+.&]
 [s5; [*C@5 Index] is a container very similar to the plain [*C@5 Vector] 
@@ -1455,7 +1452,7 @@ Index)&]
 [s0; &]
 [s17; ndx `= `[test, alfa, foo, delta, one, three`]&]
 [s0; &]
-[s3;H4;:2`_9: 2.9 Index and client types&]
+[s3;H4;:Section`_2`_9: 2.9 Index and client types&]
 [s5; In order to store elements to [*C@5 Index], they type must be 
 [*C@5 Moveable], have deep copy and defined the [*C@5 operator`=`=] 
 and a [*C@5 GetHashValue] function or method to compute the hash 
@@ -1485,7 +1482,7 @@ b.name `&`& surname `=`= b.surname; `}&]
 [s0; &]
 [s17; p.Find(Person(`"Paul`", `"Carpenter`")) `= 1&]
 [s0; &]
-[s3;H4;:2`_10: 2.10 [C@5 VectorMap], [C@5 ArrayMap]&]
+[s3;H4;:Section`_2`_10: 2.10 [C@5 VectorMap], [C@5 ArrayMap]&]
 [s5; [*C@5 VectorMap] is nothing else than a simple composition of 
 [*C@5 Index] of keys and [*C@5 Vector] of values. You can use [*C@5 Add] 
 methods to put elements into the [*C@5 VectorMap]:&]
@@ -1688,7 +1685,7 @@ Array is better fit for value type (e.g. they are polymorphic):&]
 [s0; &]
 [s17; am `= `{key: new person`}&]
 [s0; &]
-[s3;H4;:2`_11: 2.11 [C@5 One]&]
+[s3;H4;:Section`_2`_11: 2.11 [C@5 One]&]
 [s5; [*C@5 One] is a container that can store none or one element of 
 T or derived from T. It is functionally quite similar to [*C@5 std`::unique`_ptr], 
 but has some convenient features.&]
@@ -1767,7 +1764,7 @@ contained element:&]
 [s0; &]
 [s17; s`->Get() `= Derived2&]
 [s0; &]
-[s3;H4;:2`_12: 2.12 [C@5 Any]&]
+[s3;H4;:Section`_2`_12: 2.12 [C@5 Any]&]
 [s5; [*C@5 Any] is a container that can contain none or one element 
 of [/ any] type. [*C@5 Any`::Is] method matches exact type ignoring 
 class hierarchies (unlike [*C@5 One`::Is]). You can use [*C@5 Get] 
@@ -1790,7 +1787,7 @@ to retrieve a reference to the instance stored:&]
 [s17; Any is now Color: Color(0, 0, 128)&]
 [s17; Any is now String: Hello!&]
 [s0; &]
-[s3;H4;:2`_13: 2.13 [C@5 InVector], [C@5 InArray]&]
+[s3;H4;:Section`_2`_13: 2.13 [C@5 InVector], [C@5 InArray]&]
 [s5; [*C@5 InVector] and [*C@5 InArray] are container types quite similar 
 to [*C@5 Vector]/``Array``, but they trade the speed of [*C@5 operator`[`]] 
 with the ability to insert or remove elements at any position 
@@ -1817,7 +1814,8 @@ basically match the performace of [*C@5 Find`*Bound] on simple
 [s0; &]
 [s17; v.FindLowerBound(55) `= 56&]
 [s0; &]
-[s3;H4;:2`_14: 2.14 [C@5 SortedIndex], [C@5 SortedVectorMap], [C@5 SortedArrayMap]&]
+[s3;H4;:Section`_2`_14: 2.14 [C@5 SortedIndex], [C@5 SortedVectorMap], 
+[C@5 SortedArrayMap]&]
 [s5; [*C@5 SortedIndex] is similar to regular [*C@5 Index], but keeps 
 its elements in sorted order (sorting predicate is a template 
 parameter, defaults to [*C@5 StdLess]). Implementation is using 
@@ -1865,7 +1863,7 @@ based equivalents to [*C@5 VectorMap]/``ArrayMap``:&]
 [s17; -|`[2`] `= (zulu) 11&]
 [s17; m.Get(`"zulu`") `= 11&]
 [s0; &]
-[s3;H4;:2`_15: 2.15 Tuples&]
+[s3;H4;:Section`_2`_15: 2.15 Tuples&]
 [s5; Template class [*C@5 Tuple] allows combining 2`-4 values with 
 different types. These are principally similar to [*C@5 std`::tuple], 
 with some advantages. Unlike [*C@5 std`::tuple], individual elements 
@@ -2010,8 +2008,8 @@ tuple based on the first value ([*C@5 a]) (linear O(n) search):&]
 [s0; &]
 [s17; FindTuple(map, `_`_countof(map), 3)`->b `= one&]
 [s0; &]
-[s22;:3: 3. Ranges and algoritims&]
-[s3;:3`_1: 3.1 Range&]
+[s22;:Chapter`_3: 3. Ranges and algoritims&]
+[s3;:Section`_3`_1: 3.1 Range&]
 [s5; Unlike STL, which interface algorithms with data using [*C@5 begin] 
 / [*C@5 end] pair, U`+`+ algorithms usually work on [/ Ranges]. Range 
 is an object that has [*C@5 begin] / [*C@5 end] methods providing 
@@ -2124,7 +2122,7 @@ certain condition:&]
 [s17; ReverseRange(FilterRange(x, `[`](int x) `{ return x < 4; `})) 
 `= `[3, 2, 1, 3, 1, 2`]&]
 [s0; &]
-[s3;H4;:3`_2: 3.2 Algorithms&]
+[s3;H4;:Section`_3`_2: 3.2 Algorithms&]
 [s5; In principle, is is possible to apply C`+`+ standard library 
 algorithms on U`+`+ containers or ranges.&]
 [s5; U`+`+ algorithms are tuned for U`+`+ approach `- they work on 
@@ -2212,7 +2210,7 @@ the index of element with given value or `-1 if not found:&]
 [s17; FindUpperBound(data, 10) `= 4&]
 [s17; FindBinary(data, 10) `= `-1&]
 [s0; &]
-[s3;H4;:3`_3: 3.3 Sorting&]
+[s3;H4;:Section`_3`_3: 3.3 Sorting&]
 [s5; Unsurprisingly, [*C@5 Sort] function sorts a range. You can specify 
 sorting predicate, default is [*C@5 operator<]:&]
 [s0; &]
@@ -2284,8 +2282,8 @@ a.x < b.x; `});&]
 [s0; &]
 [s5; All sorting algorithms have they `'Stable`' variant, so there 
 is [*C@5 StableIndexSort], [*C@5 GetStableSortOrder] etc...&]
-[s22;:4: 4. Value&]
-[s3;:4`_1: 4.1 Value&]
+[s22;:Chapter`_4: 4. Value&]
+[s3;:Section`_4`_1: 4.1 Value&]
 [s5; Value is sort of equivalent of polymorphic data types from scripting 
 languages like Python or JavaSript. [*C@5 Value] can represent 
 values of concrete types, some types also have extended interoperability 
@@ -2318,11 +2316,11 @@ is for the most part seamless:&]
 [s0; &]
 [s17; a `= 1&]
 [s17; b `= 2.34&]
-[s17; c `= 07/12/2017&]
+[s17; c `= 07/19/2017&]
 [s17; d `= hello&]
 [s17; x `= 1&]
 [s17; y `= 2.34&]
-[s17; z `= 07/12/2017&]
+[s17; z `= 07/19/2017&]
 [s17; s `= hello&]
 [s0; &]
 [s5; As for primitive types, Value seamlessly works with [*C@5 int], 
@@ -2354,7 +2352,7 @@ as it is supported by these types):&]
 [s0; &]
 [s17; i `= 1&]
 [s17; j `= 2&]
-[s17; k `= 07/12/2017 00:00:00&]
+[s17; k `= 07/19/2017 00:00:00&]
 [s17; t `= hello&]
 [s0; &]
 [s5; To determine type of value stored in [*C@5 Value], you can use 
@@ -2388,7 +2386,7 @@ functions are defined:&]
 [s17; IsDateTime(c) `= true&]
 [s17; IsString(d) `= true&]
 [s0; &]
-[s3;H4;:4`_2: 4.2 [C@5 Null]&]
+[s3;H4;:Section`_4`_2: 4.2 [C@5 Null]&]
 [s5; U`+`+ defines a special [*C@5 Null] constant to represent an empty 
 value. This constant is convertible to many value types including 
 primitive types [*C@5 double], [*C@5 int] and [*C@5 int64] (defined 
@@ -2437,7 +2435,8 @@ coalesce (ifnull, Nvl), which returns the first non`-null argument
 [s0; &]
 [s17; Nvl(a, b, c) `= 123&]
 [s0; &]
-[s3;H4;:4`_3: 4.3 Client types and [C@5 Value], [C@5 RawValue], [C@5 RichValue]&]
+[s3;H4;:Section`_4`_3: 4.3 Client types and [C@5 Value], [C@5 RawValue], 
+[C@5 RichValue]&]
 [s5; There are two Value compatibility levels. The simple one, [*C@5 RawValue], 
 has little requirements for the type used `- only copy constructor 
 and assignment operator are required (and there are even forms 
@@ -2540,7 +2539,7 @@ correct type, then uses&]
 [s0; &]
 [s17; loaded `= 54321&]
 [s0; &]
-[s3;H4;:4`_4: 4.4 [C@5 ValueArray] and [C@5 ValueMap]&]
+[s3;H4;:Section`_4`_4: 4.4 [C@5 ValueArray] and [C@5 ValueMap]&]
 [s5; [*C@5 ValueArray] is a type that represents an array of [*C@5 Value]s:&]
 [s0; &]
 [s7; ValueArray va`{1, 2, 3`};&]
@@ -2805,8 +2804,8 @@ e`":5`}`}&]
 [s17; AsJSON(j) `= `{`"array`":`[1,`{`"key`":1`},3`],`"value`":`{`"one`":1,`"four`":4,`"thr
 ee`":3,`"five`":5`}`}&]
 [s0; &]
-[s22;:5: 5. Function and lambdas&]
-[s3;:5`_1: 5.1 Function&]
+[s22;:Chapter`_5: 5. Function and lambdas&]
+[s3;:Section`_5`_1: 5.1 Function&]
 [s5; U`+`+ [*C@5 Function] is quite similar to [*C@5 std`::function] `- 
 it is a function wrapper that can store/copy/invoke any callable 
 target. There are two important differences. First, invoking 
@@ -2924,7 +2923,7 @@ less verbose&]
 [s17; Foo`::Test 1, using lambda&]
 [s17; Foo`::Test 2, using THISFN&]
 [s0; &]
-[s3;H4;:5`_2: 5.2 Capturing U`+`+ containers into lambdas&]
+[s3;H4;:Section`_5`_2: 5.2 Capturing U`+`+ containers into lambdas&]
 [s5; Capturing objects with pick/clone semantics can be achieved 
 using [/ capture with an initializer]:&]
 [s0; &]
@@ -2946,8 +2945,8 @@ using [/ capture with an initializer]:&]
 [s17; x `= `[1, 2`]&]
 [s17; y `= `[one, two`]&]
 [s0; &]
-[s22;:6: 6. Multithreading&]
-[s3;:6`_1: 6.1 [C@5 Thread]&]
+[s22;:Chapter`_6: 6. Multithreading&]
+[s3;:Section`_6`_1: 6.1 [C@5 Thread]&]
 [s5; Since C`+`+11, there is now a reasonable support for threads 
 in standard library. There are however reasons to use U`+`+ threads 
 instead. One of them is that U`+`+ high performance memory allocator 
@@ -2980,12 +2979,12 @@ thread to [*C@5 Wait] for its completion:&]
 [s0; &]
 [s17; In the main thread 0&]
 [s17; In the thread 0&]
-[s17; In the main thread 1&]
 [s17; In the thread 1&]
-[s17; In the main thread 2&]
+[s17; In the main thread 1&]
 [s17; In the thread 2&]
-[s17; In the thread 3&]
+[s17; In the main thread 2&]
 [s17; In the main thread 3&]
+[s17; In the thread 3&]
 [s17; In the main thread 4&]
 [s17; In the thread 4&]
 [s17; About to wait for thread to finish&]
@@ -3017,7 +3016,7 @@ true; `});&]
 [s17; Wait for thread done&]
 [s0; &]
 [s5; (method used here is horrible, but should demonstrate the point).&]
-[s3;H4;:6`_2: 6.2 [C@5 Mutex]&]
+[s3;H4;:Section`_6`_2: 6.2 [C@5 Mutex]&]
 [s5; Mutex (`"mutual exclusion`") is a well known concept in multithreaded 
 programming: When multiple threads write and read the same data, 
 the access has to be serialized using Mutex. Following invalid 
@@ -3037,7 +3036,7 @@ code demonstrates why:&]
 [s7; t.Wait();&]
 [s7; DUMP(sum);&]
 [s0; &]
-[s17; sum `= 1261320&]
+[s17; sum `= 1560532&]
 [s0; &]
 [s5; While the expected value is 2000000, produced value is different. 
 The problem is that both thread read / modify / write [*C@5 sum] 
@@ -3069,7 +3068,7 @@ destructor:&]
 [s0; &]
 [s17; sum `= 2000000&]
 [s0; &]
-[s3;H4;:6`_3: 6.3 [C@5 ConditionVariable]&]
+[s3;H4;:Section`_6`_3: 6.3 [C@5 ConditionVariable]&]
 [s5; [*C@5 ConditionVariable] in general is a synchronization primitive 
 used to block/awaken the thread. [*C@5 ConditionVariable] is associated 
 with [*C@5 Mutex] used to protect some data; in the thread that 
@@ -3127,7 +3126,7 @@ threads.&]
 if no other called [*C@5 Signal]. This is not a bug, but [^https`:`/`/en`.wikipedia`.org`/wiki`/Spurious`_wakeup^ d
 esign decision for performance reason]. In practice it only means 
 that situation has to be (re)checked after resume.&]
-[s3;H4;:6`_4: 6.4 [C@5 CoWork]&]
+[s3;H4;:Section`_6`_4: 6.4 [C@5 CoWork]&]
 [s5; [*C@5 CoWork] is intented to be use when thread are used to speedup 
 code by distributing tasks over multiple CPU cores. [*C@5 CoWork] 
 spans a single set of worker threads that exist for the whole 
@@ -3161,14 +3160,14 @@ testing data&]
 [s7; &]
 [s7; DUMP(w);&]
 [s0; &]
-[s17; w `= `[non, proident, sunt, in, culpa, qui, officia, deserunt, 
-mollit, anim, id, est, laborum, consequat, Duis, aute, irure, 
-dolor, reprehenderit, voluptate, velit, esse, cillum, dolore, 
-eu, fugiat, nulla, pariatur, Excepteur, sint, occaecat, cupidatat, 
-tempor, incididunt, ut, labore, et, magna, aliqua, Ut, enim, 
-ad, minim, veniam, quis, nostrud, exercitation, ullamco, laboris, 
-nisi, aliquip, ex, ea, commodo, Lorem, ipsum, sit, amet, consectetur, 
-adipiscing, elit, sed, do, eiusmod`]&]
+[s17; w `= `[esse, cillum, dolore, eu, fugiat, nulla, pariatur, Excepteur, 
+sint, occaecat, cupidatat, consequat, Duis, aute, irure, dolor, 
+in, reprehenderit, voluptate, velit, quis, nostrud, exercitation, 
+ullamco, laboris, nisi, ut, aliquip, ex, ea, commodo, tempor, 
+incididunt, labore, et, magna, aliqua, Ut, enim, ad, minim, veniam, 
+Lorem, ipsum, sit, amet, consectetur, adipiscing, elit, sed, 
+do, eiusmod, non, proident, sunt, culpa, qui, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Adding words to [*C@5 w] requires [*C@5 Mutex]. Alternative to this 
 `'result gathering`' [*C@5 Mutex] is CoWork`::FinLock. The idea 
@@ -3195,20 +3194,20 @@ end of CoWork job&]
 [s7; &]
 [s7; DUMP(w);&]
 [s0; &]
-[s17; w `= `[non, proident, sunt, in, culpa, qui, officia, deserunt, 
-mollit, anim, id, est, laborum, consequat, Duis, aute, irure, 
-dolor, reprehenderit, voluptate, velit, esse, cillum, dolore, 
-eu, fugiat, nulla, pariatur, Excepteur, sint, occaecat, cupidatat, 
-tempor, incididunt, ut, labore, et, magna, aliqua, Ut, enim, 
-ad, minim, veniam, quis, nostrud, exercitation, ullamco, laboris, 
-nisi, aliquip, ex, ea, commodo, Lorem, ipsum, sit, amet, consectetur, 
-adipiscing, elit, sed, do, eiusmod`]&]
+[s17; w `= `[esse, cillum, dolore, eu, fugiat, nulla, pariatur, Excepteur, 
+sint, occaecat, cupidatat, consequat, Duis, aute, irure, dolor, 
+in, reprehenderit, voluptate, velit, quis, nostrud, exercitation, 
+ullamco, laboris, nisi, ut, aliquip, ex, ea, commodo, tempor, 
+incididunt, labore, et, magna, aliqua, Ut, enim, ad, minim, veniam, 
+Lorem, ipsum, sit, amet, consectetur, adipiscing, elit, sed, 
+do, eiusmod, non, proident, sunt, culpa, qui, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Of course, the code performed after FinLock should not take 
 long, otherwise there is negative impact on all CoWork instances. 
 In fact, from this perspective, above code is probably past this 
 threshold...&]
-[s3;H4;:6`_5: 6.5 CoPartition&]
+[s3;H4;:Section`_6`_5: 6.5 CoPartition&]
 [s5; There is some overhead associated with CoWork worker threads. 
 That is why e.g. performing a simple operation on the array spawning 
 worker thread for each element is not a good idea performance 
@@ -3231,7 +3230,7 @@ wise:&]
 [s0; &]
 [s5; Above code computes the sum of all elements in the [*C@5 Vector], 
 using CoWorker job for each element. While producing the correct 
-reason, it is likely to run much slower than single`-threaded 
+result, it is likely to run much slower than single`-threaded 
 version.&]
 [s5; The solution to the problem is to split the array into small 
 number of larger subranges that are processed in parallel. This 
@@ -3249,7 +3248,7 @@ is what [*C@5 CoPartition] template algorithm does:&]
 [s0; &]
 [s17; sum `= 49995000&]
 [s0; &]
-[s5; Note that CoPartition is still internally used, so [*C@5 CoWork`::FinLock] 
+[s5; Note that CoWork is still internally used, so [*C@5 CoWork`::FinLock] 
 is available. Instead of working on subranges, it is also possible 
 to use iterators:&]
 [s0; &]
@@ -3282,12 +3281,12 @@ h) `{&]
 [s0; &]
 [s17; sum `= 49995000&]
 [s0; &]
-[s3;H4;:6`_6: 6.6 Parallel algorithms&]
+[s3;H4;:Section`_6`_6: 6.6 Parallel algorithms&]
 [s5; U`+`+ provides a parallel versions of algorithms where it makes 
 sense. The naming scheme is `'Co`' prefix before the name of 
 algorithm designates the parallel version.&]
 [s5; So the parallel version of e.g. [*C@5 FindIndex] is [*C@5 CoFindIndex], 
-for `'Sort`' it is `'CoSort`':&]
+for [*C@5 Sort] it is [*C@5 CoSort]:&]
 [s0; &]
 [s7; Vector<String> x`{ `"zero`", `"one`", `"two`", `"three`", `"four`", 
 `"five`" `};&]
