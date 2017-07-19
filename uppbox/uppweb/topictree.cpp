@@ -42,21 +42,23 @@ void GatherRefLinks(const char *upp)
 			for(FindFile ff(AppendFileName(pdir, "*.tpp")); ff; ff.Next()) {
 				if(ff.IsFolder()) {
 					String group = GetFileTitle(ff.GetName());
-					tl.group = group;
-					String dir = AppendFileName(pdir, ff.GetName());
-					for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next()) {
-						if(ft.IsFile()) {
-							String path = AppendFileName(dir, ft.GetName());
-							tl.topic = GetFileTitle(ft.GetName());
-							String link = TopicLinkString(tl);
-#ifdef MTC
-							work & callback2(sDoFile, path, link);
-#else
-							ScanTopicIterator sti;
-							sti.link = link;
-							LLOG("Indexing topic " << path << " link: " << link);
-							ParseQTF(ReadTopic(LoadFile(path))).Iterate(sti);
-#endif
+					if(group == "src.tpp") { // only translate links for src.tpp
+						tl.group = group;
+						String dir = AppendFileName(pdir, ff.GetName());
+						for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next()) {
+							if(ft.IsFile()) {
+								String path = AppendFileName(dir, ft.GetName());
+								tl.topic = GetFileTitle(ft.GetName());
+								String link = TopicLinkString(tl);
+	#ifdef MTC
+								work & callback2(sDoFile, path, link);
+	#else
+								ScanTopicIterator sti;
+								sti.link = link;
+								LLOG("Indexing topic " << path << " link: " << link);
+								ParseQTF(ReadTopic(LoadFile(path))).Iterate(sti);
+	#endif
+							}
 						}
 					}
 				}
@@ -86,6 +88,9 @@ struct GatherLinkIterator : RichText::Iterator {
 					if(q >= 0)
 						l = reflink[q];
 				}
+				int q = l.Find('#');
+				if(q >= 0)
+					l.Trim(q);
 				link.FindAdd(Nvl(reflink.Get(l, Null), l));
 			}
 		}
