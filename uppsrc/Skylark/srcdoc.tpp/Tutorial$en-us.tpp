@@ -30,15 +30,20 @@ handlers and path patterns]&]
 [s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#2^ 2. Witz templates]&]
 [s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#3^ 3. Witz links 
 to handlers]&]
-[s0; [^4^ 4. Combining Witz templates using #define and #include]&]
-[s0; [^5^ 5. FORM GET]&]
-[s0; [^6^ 6. FORM POST]&]
-[s0; [^7^ 7. Session variables]&]
-[s0; [^8^ 8. Ajax support]&]
-[s0; [^9^ 9. Connecting SQL database]&]
-[s0; [^10^ 10. Advanced SQL]&]
-[s0; [^11^ 11. Language support]&]
-[s0; [^12^ 12. Packs]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#4^ 4. Combining 
+Witz templates using #define and #include]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#5^ 5. FORM GET]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#6^ 6. FORM POST]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#7^ 7. Session 
+variables]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#8^ 8. Ajax support]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#9^ 9. Connecting 
+SQL database]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#10^ 10. Advanced 
+SQL]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#11^ 11. Language 
+support]&]
+[s0; [^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us`#12^ 12. Packs]&]
 [s0; &]
 [s3;:1: 1. SKYLARK handlers and path patterns&]
 [s5; Skylark application is divided to `'handlers`' which provide 
