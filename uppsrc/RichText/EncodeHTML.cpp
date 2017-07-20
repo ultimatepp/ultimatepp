@@ -190,7 +190,6 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 			RichPara p = text.Get(i, styles);
 			if(p.format.ruler)
 				html << "<hr>";
-			String lbl = labels.Get(p.format.label, p.format.label);
 			bool bultext = false;
 			if(p.format.bullet == RichPara::BULLET_TEXT)
 				for(int i = 0; i < p.part.GetCount(); i++) {
@@ -212,6 +211,7 @@ String AsHtml(const RichTxt& text, const RichStyles& styles, Index<String>& css,
 				p.format.ruler = p.format.after = p.format.before = p.format.indent = p.format.lm = 0;
 			}
 			String par = "<p";
+			String lbl = labels.Get(p.format.label, p.format.label);
 			if(lbl.GetCount())
 				par << " id=\"" << lbl << "\"";
 			par << FormatClass(css, HtmlParaStyle(p.format, z)) << ">";
