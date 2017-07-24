@@ -842,7 +842,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	if(isaux)
 		InsertSpecialMenu(menu);
 	else {
-		menu.Add("New package file..", IdeImg::PageAdd(), [=] { NewPackageFile(); });
+		menu.Add("New package file..", IdeCommonImg::PageAdd(), [=] { NewPackageFile(); });
 		menu.Add(!isaux, "Insert package directory file(s)", THISBACK1(AddFile, PACKAGE_FILE))
 			.Help("Insert file relative to current package");
 		menu.Add(!isaux, "Insert topic++ group", THISBACK(AddTopicGroup));

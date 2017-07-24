@@ -116,6 +116,7 @@ private:
 	
 	ToolButton       editLabel;
 	ToolButton       exportLabel;
+	ToolButton       newGlobalLabel;
 	ToolButton       importGlobalsLabel;
 	ToolButton       exportGlobalsLabel;
 	

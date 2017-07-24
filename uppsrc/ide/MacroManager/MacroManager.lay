@@ -2,6 +2,6 @@ LAYOUT(MacroManagerLayout, 708, 408)
 	ITEM(ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(36, 36))
 	ITEM(Button, closeButton, SetLabel(t_("Close")).RightPosZ(4, 72).BottomPosZ(4, 24))
 	ITEM(ToolBar, tool, HSizePosZ(4, 4).TopPosZ(4, 24))
-	ITEM(Ctrl, dv___3, SetFrame(BottomSeparatorFrame()).HSizePosZ(4, 4).TopPosZ(28, 2))
+	ITEM(Ctrl, dv___3, SetFrame(BottomSeparatorFrame()).HSizePosZ(4, 4).TopPosZ(32, 2))
 END_LAYOUT
 

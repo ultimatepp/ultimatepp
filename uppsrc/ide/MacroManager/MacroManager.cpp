@@ -1,5 +1,7 @@
 #include "MacroManager.h"
 
+#include <ide/Common/Common.h>
+
 #define IMAGECLASS MacroManagerImg
 #define IMAGEFILE  <ide/MacroManager/MacroManager.iml>
 #include <Draw/iml_source.h>
@@ -38,9 +40,11 @@ void MacroManagerWindow::InitToolBar()
 	InitToolButton(editLabel, t_("Edit"), MacroManagerImg::PluginEdit());
 	InitToolButton(exportLabel, t_("Export current"), MacroManagerImg::PluginGo());
 	tool.Separator();
-	InitToolButton(importGlobalsLabel, t_("Import global macro"), MacroManagerImg::PluginAdd());
-	InitToolButton(exportGlobalsLabel, t_("Export global macros"), MacroManagerImg::ArrowRight());
+	InitToolButton(newGlobalLabel, t_("New global"), IdeCommonImg::PageAdd());
+	InitToolButton(importGlobalsLabel, t_("Import globals"), MacroManagerImg::PluginAdd());
+	InitToolButton(exportGlobalsLabel, t_("Export globals"), MacroManagerImg::ArrowRight());
 	
+	newGlobalLabel.Enable(true);
 	importGlobalsLabel.Enable(true);
 	exportGlobalsLabel.Enable(true);
 }
@@ -61,6 +65,7 @@ void MacroManagerWindow::InitButtons()
 	closeButton        << [=] { Break(); };
 	editLabel          << [=] { OnEditFile(); };
 	exportLabel        << [=] { OnExport(globalTree.GetCursor()); };
+	newGlobalLabel     << [=] { OnNewMacroFile(); };
 	importGlobalsLabel << [=] { OnImport(); };
 	exportGlobalsLabel << [=] { OnExport(0); };
 }
