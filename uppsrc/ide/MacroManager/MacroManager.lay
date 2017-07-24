@@ -1,8 +1,7 @@
-LAYOUT(MacroManagerLayout, 708, 388)
-	ITEM(ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(4, 36))
-	ITEM(Button, editButton, SetLabel(t_("Edit")).LeftPosZ(4, 68).BottomPosZ(4, 24))
-	ITEM(Button, importButton, SetLabel(t_("Import")).LeftPosZ(76, 68).BottomPosZ(4, 24))
-	ITEM(Button, exportButton, SetLabel(t_("Export")).LeftPosZ(148, 72).BottomPosZ(4, 24))
+LAYOUT(MacroManagerLayout, 708, 408)
+	ITEM(ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(36, 36))
 	ITEM(Button, closeButton, SetLabel(t_("Close")).RightPosZ(4, 72).BottomPosZ(4, 24))
+	ITEM(ToolBar, tool, HSizePosZ(4, 4).TopPosZ(4, 24))
+	ITEM(Ctrl, dv___3, SetFrame(BottomSeparatorFrame()).HSizePosZ(4, 4).TopPosZ(28, 2))
 END_LAYOUT
 
