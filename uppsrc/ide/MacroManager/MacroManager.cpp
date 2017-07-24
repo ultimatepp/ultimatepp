@@ -23,11 +23,6 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlSt
 	editor.Highlight("usc");
 	editor.SetReadOnly();
 
-	editButton.Disable();
-	exportButton.Disable();
-	
-	globalNode = globalTree.Add(0, Image(), 0, t_("Global macros"));
-
 	LoadMacros();
 
 	editor.Hide();
@@ -35,21 +30,39 @@ MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlSt
 	
 	InitButtons();
 	InitEvents();
+	InitToolBar();
+}
+
+void MacroManagerWindow::InitToolBar()
+{
+	InitToolButton(editLabel, t_("Edit"), MacroManagerImg::PluginEdit());
+	InitToolButton(exportLabel, t_("Export current"), MacroManagerImg::PluginGo());
+	tool.Separator();
+	InitToolButton(importGlobalsLabel, t_("Import global macro"), MacroManagerImg::PluginAdd());
+	InitToolButton(exportGlobalsLabel, t_("Export global macros"), MacroManagerImg::ArrowRight());
+	
+	importGlobalsLabel.Enable(true);
+	exportGlobalsLabel.Enable(true);
+}
+
+void MacroManagerWindow::InitToolButton(
+	ToolButton& toolButton, const String& label, const Image& image)
+{
+	tool.Add(toolButton.Label(label));
+	toolButton.Image(image);
+	toolButton.SizePos();
+	toolButton.Disable();
 }
 
 void MacroManagerWindow::InitButtons()
 {
-	closeButton.Tip(t_("Close macro manager."));
-	editButton.Tip(t_("Edit selected element inside TheIDE."));
-	importButton.Tip(t_("Import macro from .usc file to your global macros store."));
-	exportButton.Tip(t_("Export current selected element. If macro or function is selected the parent file will be exported."));
-	
 	closeButton.Close();
 	
-	closeButton  << [=] { Break(); };
-	editButton   << [=] { OnEditFile(); };
-	importButton <<	[=] { OnImport(); };
-	exportButton <<	[=] { OnExport(); };
+	closeButton        << [=] { Break(); };
+	editLabel          << [=] { OnEditFile(); };
+	exportLabel        << [=] { OnExport(globalTree.GetCursor()); };
+	importGlobalsLabel << [=] { OnImport(); };
+	exportGlobalsLabel << [=] { OnExport(0); };
 }
 
 void MacroManagerWindow::InitEvents()
@@ -66,13 +79,13 @@ void MacroManagerWindow::InitEvents()
 void MacroManagerWindow::OnMacroBar(Bar& bar)
 {
 	if(IsGlobalTab()) {
-		bool partOfFile = IsGlobalFile() || IsGlobalRoot();
+		bool partOfFile = IsGlobalFile();
 		
-		bar.Add(t_("New.."),    [=] { OnNewMacroFile();});
-		bar.Add(t_("Import.."), [=] { OnImport();});
-		bar.Add(t_("Delete"),   [=] { OnDeleteMacroFile();})
+		bar.Add(t_("New.."),    [=] { OnNewMacroFile(); });
+		bar.Add(t_("Import.."), [=] { OnImport(); });
+		bar.Add(t_("Delete"),   [=] { OnDeleteMacroFile(); })
 		    .Enable(partOfFile);
-		bar.Add(t_("Export.."), [=] { OnExport();})
+		bar.Add(t_("Export.."), [=] { OnExport(globalTree.GetCursor()); })
 		    .Enable(partOfFile);
 		bar.Separator();
 	}
@@ -89,11 +102,11 @@ void MacroManagerWindow::OnTreeSel()
 {
 	const TreeCtrl& tree = GetCurrentTree();
 	bool hasCursor = tree.IsCursor();
+	exportLabel.Enable(IsGlobalTab() && IsGlobalFile());
 	
-	exportButton.Enable(IsGlobalTab() && hasCursor && (IsGlobalFile() || IsGlobalRoot()));
-	
-	editButton.Enable(hasCursor && IsEditPossible());
-	editor.Show(editButton.IsEnabled());
+	editLabel.Enable(hasCursor && IsEditPossible());
+
+	editor.Show(editLabel.IsEnabled());
 	
 	if(IsFile())
 		editor.Set(LoadFile(static_cast<String>(tree.Get())));
@@ -103,7 +116,7 @@ void MacroManagerWindow::OnTreeSel()
 
 void MacroManagerWindow::OnTabSet()
 {
-	exportButton.Show(tab.Get() == 0);
+	exportLabel.Enable(tab.Get() == 0);
 	editor.Hide();
 	
 	OnTreeSel();
@@ -111,7 +124,7 @@ void MacroManagerWindow::OnTabSet()
 
 void MacroManagerWindow::OnImport()
 {
-	String filePath = SelectFileOpen("*.usc");
+	auto filePath = SelectFileOpen("*.usc");
 	if(IsNull(filePath))
 		return;
 	
@@ -120,14 +133,14 @@ void MacroManagerWindow::OnImport()
 		return;
 	}
 	
-	String localDir = GetLocalDir();
+	auto localDir = GetLocalDir();
 	if(!DirectoryExists(localDir) && !RealizeDirectory(localDir)) {
 		ErrorOK(DeQtf(String(t_("Realizing directory")) << " \"" << localDir << "\" " << t_("failed.")));
 		return;
 	}
 	
-	String newFileName = GetFileName(filePath);
-	String newFilePath = LocalPath(newFileName);
+	auto newFileName = GetFileName(filePath);
+	auto newFilePath = LocalPath(newFileName);
 	if(FileExists(newFilePath) && !PromptYesNo(DeQtf(GenFileOverrideMessage(newFileName))))
 		return;
 	
@@ -138,9 +151,9 @@ void MacroManagerWindow::OnImport()
 
 void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
 {
-	for(const String& file : files) {
-		String fileName = GetFileName(file);
-		String filePath = AppendFileName(dir, GetFileName(file));
+	for(const auto& file : files) {
+		auto fileName = GetFileName(file);
+		auto filePath = AppendFileName(dir, GetFileName(file));
 		
 		if(FileExists(filePath) && !PromptYesNo(DeQtf(GenFileOverrideMessage(fileName))))
 			continue;
@@ -162,18 +175,15 @@ void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
 	}
 }
 
-void MacroManagerWindow::OnExport()
+void MacroManagerWindow::OnExport(int id)
 {
-	if(!globalTree.IsCursor())
-		return;
-
-	if(IsGlobalFile() || IsGlobalRoot()) {
+	if(id == 0 || IsGlobalFile()) {
 		String dir = SelectDirectory();
 		if(dir.IsEmpty())
 			return;
 		
 		Index<String> list;
-		FindNodeFiles(globalTree.GetCursor(), list);
+		FindNodeFiles(id, list);
 		ExportFiles(list, dir);
 	}
 }
@@ -218,7 +228,7 @@ void MacroManagerWindow::OnNewMacroFile()
 
 void MacroManagerWindow::OnDeleteMacroFile()
 {
-	String fileName = static_cast<String>(globalTree.GetValue());
+	auto fileName = static_cast<String>(globalTree.GetValue());
 	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?")))
 		return;
 	
@@ -239,8 +249,8 @@ void MacroManagerWindow::LoadUscDir(const String& dir)
 		if(!ff.GetPath().EndsWith(String() << "UppLocal" << DIR_SEPS << ff.GetName()))
 			fileTitle = "../" + fileTitle;
 		
-		int fileNode = globalTree.Add(globalNode, Image(), ff.GetPath(), fileTitle);
-		
+		int fileNode = globalTree.Add(0, Image(), ff.GetPath(), fileTitle);
+
 		auto list = UscFileParser(ff.GetPath()).Parse();
 		for(const auto& element : list)
 			globalTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
@@ -255,7 +265,7 @@ void MacroManagerWindow::LoadMacros()
 
 void MacroManagerWindow::ReloadGlobalMacros()
 {
-	globalTree.RemoveChildren(globalNode);
+	globalTree.Clear();
 
 	LoadUscDir(GetLocalDir());
 	LoadUscDir(GetFileFolder(ConfigFile("x")));
@@ -266,10 +276,10 @@ void MacroManagerWindow::ReloadGlobalMacros()
 void MacroManagerWindow::ReloadLocalMacros()
 {
 	for(int i = 0; i < wspc.GetCount(); i++) {
-		const Package& package = wspc.GetPackage(i);
+		const auto& package = wspc.GetPackage(i);
 		int packageNode = -1;
 		for (const auto& file : package.file) {
-			String filePath = SourcePath(wspc[i], file);
+			auto filePath = SourcePath(wspc[i], file);
 
 			if (ToLower(GetFileExt(filePath)) != ".usc")
 				continue;
@@ -286,8 +296,8 @@ void MacroManagerWindow::ReloadLocalMacros()
 					
 			int fileNode = localTree.Add(packageNode, Image(), filePath, file);
 			for(int j = 0; j < list.GetCount(); j++) {
-				MacroElement& element = list[j];
-				localTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
+				auto& macroElement = list[j];
+				localTree.Add(fileNode, macroElement.GetImage(), RawToValue(macroElement), macroElement.name);
 			}
 		}
 	}

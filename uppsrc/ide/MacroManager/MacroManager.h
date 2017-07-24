@@ -78,6 +78,8 @@ public:
 private:
 	void InitButtons();
 	void InitEvents();
+	void InitToolBar();
+	void InitToolButton(ToolButton& toolButton, const String& label, const Image& image);
 	
 	void LoadUscDir(const String& dir);
 	void LoadMacros();
@@ -88,7 +90,7 @@ private:
 	void OnTreeSel();
 	void OnTabSet();
 	void OnImport();
-	void OnExport();
+	void OnExport(int id);
 	void OnEditFile();
 	void OnNewMacroFile();
 	void OnDeleteMacroFile();
@@ -99,8 +101,7 @@ private:
 private:
 	static String GenFileOverrideMessage(const String& fileName);
 
-	bool IsGlobalRoot() const     { return globalTree.GetCursor() == globalNode; }
-	bool IsGlobalFile() const     { return globalTree.Get().Is<String>(); }
+	bool IsGlobalFile() const     { return globalTree.IsCursor() && globalTree.Get().Is<String>(); }
 	bool IsFile() const           { return GetCurrentTree().Get().Is<String>(); }
 	bool IsFile(int id) const     { return globalTree.Get(id).Is<String>(); }
 	bool IsMacro() const          { return GetCurrentTree().Get().Is<MacroElement>();}
@@ -113,16 +114,20 @@ private:
 private:
 	const Workspace& wspc;
 	
+	ToolButton       editLabel;
+	ToolButton       exportLabel;
+	ToolButton       importGlobalsLabel;
+	ToolButton       exportGlobalsLabel;
+	
 	TabCtrl          tab;
 	TreeCtrl         globalTree;
 	TreeCtrl         localTree;
 	
 	SplitterFrame    splitter;
 	CodeEditor       editor;
-	
-	int              globalNode;
 };
 
 }
+
 
 #endif
