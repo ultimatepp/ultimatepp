@@ -640,10 +640,9 @@ String AsCString(const char *s, const char *lim, int linemax, const char *linepf
 					if(c < 0x10000)
 						t.Cat(s0, s);
 					else {
-						WString h = ToUtf16(c);
-						ASSERT(h.GetCount() == 2);
-						sCatHex(t, h[0]);
-						sCatHex(t, h[1]);
+						c -= 0x10000;
+						sCatHex(t, wchar(0xD800 + (0x3ff & (c >> 10))));
+						sCatHex(t, wchar(0xDC00 + (0x3ff & c)));
 					}
 				}
 				else
