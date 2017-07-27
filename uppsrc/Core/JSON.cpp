@@ -78,7 +78,7 @@ Json& Json::CatRaw(const char *key, const String& val)
 	if(text.GetCount())
 		text << ',';
 	text << AsJSON(key) << ":" << val;
-	return *this;		
+	return *this;
 }
 
 JsonArray& JsonArray::CatRaw(const String& val)
@@ -86,7 +86,7 @@ JsonArray& JsonArray::CatRaw(const String& val)
 	if(text.GetCount())
 		text << ',';
 	text << val;
-	return *this;		
+	return *this;
 }
 
 String AsJSON(const Value& v, const String& sep, bool pretty)
