@@ -1,0 +1,11 @@
+description "Testing surrogate pairs in JSON\377";
+
+uses
+	Core;
+
+file
+	JsonEmoticon.cpp;
+
+mainconfig
+	"" = "";
+
