@@ -16,6 +16,19 @@ topic "";
 [s2;%% Tests whether [%-*@3 c ]is lead UTF`-8 byte.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:FetchUtf8`(const char`*`&`,const char`*`,bool`&`): [_^Upp`:`:dword^ dword]_
+[* FetchUtf8]([@(0.0.255) const]_[@(0.0.255) char]_`*`&[*@3 s], [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 lim], [@(0.0.255) bool`&]_[*@3 ok])&]
+[s5;:Upp`:`:FetchUtf8`(const char`*`&`,const char`*`): [_^Upp`:`:dword^ dword]_[* FetchUt
+f8]([@(0.0.255) const]_[@(0.0.255) char]_`*`&[*@3 s], [@(0.0.255) const]_[@(0.0.255) char]_
+`*[*@3 lim])&]
+[s2;%% Reads a single UTF`-32 codepoint from UTF`-8 string [%-*@3 s] 
+with end at [%-*@3 lim]. [%-*@3 s] must be less than [%-*@3 lim]. [%-*@3 s] 
+is advanced accordingly. [%-*@3 ok] is set to false if UTF`-8 is 
+invalid `- in that case, error`-escape of single byte is returned 
+(but it is NOT set to true if valid UTF`-8 character is read).&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:CheckUtf8`(const char`*`,int`): [@(0.0.255) bool]_[* CheckUtf8]([@(0.0.255) con
 st]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) int]_[*@3 len])&]
 [s5;:Upp`:`:CheckUtf8`(const char`*`): [@(0.0.255) bool]_[* CheckUtf8]([@(0.0.255) const]_[@(0.0.255) c

@@ -34,6 +34,9 @@ inline bool IsUtf8Lead(int c)
 	return (c & 0xc0) != 0x80;
 }
 
+dword FetchUtf8(const char *&s, const char *lim, bool& ok);
+inline dword FetchUtf8(const char *&s, const char *lim) { bool ok; return FetchUtf8(s, lim, ok); }
+
 bool   CheckUtf8(const char *s, int len);
 inline bool   CheckUtf8(const char *s)                { return CheckUtf8(s, (int)strlen(s)); }
 inline bool   CheckUtf8(const String& s)              { return CheckUtf8(~s, s.GetCount()); }
