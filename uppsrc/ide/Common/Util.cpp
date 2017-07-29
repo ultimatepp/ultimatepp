@@ -219,3 +219,27 @@ INITBLOCK {
 }
 
 bool IdeExit;
+
+bool CopyFolder(const char *dst, const char *src, Progress *pi)
+{
+	if(strcmp(src, dst) == 0)
+		return true;
+	RealizeDirectory(dst);
+	if(pi)
+		pi->SetText(dst);
+	FindFile ff(AppendFileName(src, "*"));
+	while(ff) {
+		if(pi && pi->StepCanceled())
+			return false;
+		String s = AppendFileName(src, ff.GetName());
+		String d = AppendFileName(dst, ff.GetName());
+		if(ff.IsFolder())
+			if(!CopyFolder(d, s, pi))
+				return false;
+		if(ff.IsFile())
+			if(!SaveFile(d, LoadFile(s)))
+				return false;
+		ff.Next();
+	}
+	return true;
+}

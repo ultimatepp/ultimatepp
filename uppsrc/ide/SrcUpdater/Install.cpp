@@ -4,7 +4,6 @@
 #define IMAGEFILE <ide/ide.iml>
 #include <Draw/iml_header.h>
 
-bool CopyFolder(const char *dst, const char *src, Progress *pi);
 bool LoadVarFile(const char *name, VectorMap<String, String>& _var);
 
 bool HasSvn(){
