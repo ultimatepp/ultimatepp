@@ -44,9 +44,9 @@ void MacroManagerWindow::InitToolBar()
 	InitToolButton(importGlobalsLabel, t_("Import globals"), MacroManagerImg::PluginAdd());
 	InitToolButton(exportGlobalsLabel, t_("Export globals"), MacroManagerImg::ArrowRight());
 	
-	newGlobalLabel.Enable(true);
-	importGlobalsLabel.Enable(true);
-	exportGlobalsLabel.Enable(true);
+	newGlobalLabel.Enable();
+	importGlobalsLabel.Enable();
+	exportGlobalsLabel.Enable();
 }
 
 void MacroManagerWindow::InitToolButton(
