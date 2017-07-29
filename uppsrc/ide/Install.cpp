@@ -249,29 +249,6 @@ bool Install()
 
 #else
 
-bool CopyFolder(const char *dst, const char *src, Progress *pi)
-{
-	if(strcmp(src, dst) == 0)
-		return true;
-	RealizeDirectory(dst);
-	if(pi)
-		pi->SetText(dst);
-	FindFile ff(AppendFileName(src, "*"));
-	while(ff) {
-		if(pi && pi->StepCanceled())
-			return false;
-		String s = AppendFileName(src, ff.GetName());
-		String d = AppendFileName(dst, ff.GetName());
-		if(ff.IsFolder())
-			if(!CopyFolder(d, s, pi))
-				return false;
-		if(ff.IsFile())
-			SaveFile(d, LoadFile(s));
-		ff.Next();
-	}
-	return true;
-}
-
 bool CopyFolder(Progress& pi, const char *dst, const char *src)
 {
 	return CopyFolder(dst, src, &pi);

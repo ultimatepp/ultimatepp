@@ -196,16 +196,17 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	                          const String& nest, Index<String>& dir_exists,
 	                          const String& prefix);
 	String         CachePath(const char *vn) const;
-	void           Load();
+	void           Load(const String& find = Null);
 	void           SyncBase(String initvars);
-	void           SyncList();
+	void           SyncList(const String& find);
 	static bool    Pless(const SelectPackageDlg::PkInfo& a, const SelectPackageDlg::PkInfo& b);
 	
 	Vector<String> GetSvnDirs();
 	void           SyncSvnDir(const String& dir);
 	void           SyncSvnDirs();
 
-	void           RenamePackage();
+	void           DuplicatePackage();
+	void           RenamePackage(bool duplicate);
 	void           DeletePackage();
 	void           PackageMenu(Bar& bar);
 	
@@ -214,7 +215,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 	};
 };
 
-bool RenamePackageFs(const String& upp, const String& newname);
+bool RenamePackageFs(const String& upp, const String& newname, bool duplicate = false);
 
 String SelectPackage(const char *title, const char *startwith = NULL,
 	bool selectvars = false, bool all = false);

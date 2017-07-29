@@ -11,23 +11,31 @@ void SelectPackageDlg::PackageMenu(Bar& menu)
 	bool b = GetCurrentName().GetCount();
 	menu.Add("New package..", THISBACK(OnNew));
 	menu.Separator();
-	menu.Add(b, "Rename package..", THISBACK(RenamePackage));
+	menu.Add(b, "Duplicate package..", [=] { RenamePackage(true); });
+	menu.Add(b, "Rename package..", [=] { RenamePackage(false); });
 	menu.Add(b, "Delete package", THISBACK(DeletePackage));
 }
 
-bool RenamePackageFs(const String& upp, const String& newname)
+bool RenamePackageFs(const String& upp, const String& newname, bool duplicate)
 {
 	if(IsNull(newname)) {
 		Exclamation("Wrong name.");
 		return false;
 	}
-	if(FileExists(PackagePath(newname))) {
+	String pf = GetFileFolder(upp);
+	String npf = AppendFileName(GetFileFolder(pf), newname);
+	if(DirectoryExists(npf)) {
 		Exclamation("Package [* \1" + newname + "\1] already exists!");
 		return false;
 	}
-	String pf = GetFileFolder(upp);
-	String npf = GetPackagePathNest(pf) + "/" + newname;
-	RealizePath(npf);
+	if(duplicate) {
+		if(!CopyFolder(npf, pf)) {
+			DeleteFolderDeep(npf);
+			Exclamation("Duplicating package folder has failed.");
+			return false;
+		}
+	}
+	else
 	if(!FileMove(pf, npf)) {
 		Exclamation("Renaming package folder has failed.");
 		return false;
@@ -40,22 +48,17 @@ bool RenamePackageFs(const String& upp, const String& newname)
 	return true;
 }
 
-void SelectPackageDlg::RenamePackage()
+void SelectPackageDlg::RenamePackage(bool duplicate)
 {
 	String n = GetCurrentName();
 	if(IsNull(n))
 		return;
-	WithRenamePackageLayout<TopWindow> dlg;
-	CtrlLayoutOKCancel(dlg, "Rename package");
-	dlg.name.SetFilter(FilterPackageName);
-	dlg.name <<= n;
-	dlg.name.SelectAll();
 again:
-	if(dlg.Execute() != IDOK)
+	if(!EditText(n, duplicate ? "Duplicate package:" : "Rename package", "Name", FilterPackageName))
 		return;
-	if(!RenamePackageFs(PackagePath(GetCurrentName()), ~dlg.name))
+	if(!RenamePackageFs(PackagePath(GetCurrentName()), n, duplicate))
 		goto again;
-	Load();
+	Load(n);
 }
 
 void SelectPackageDlg::DeletePackage()
@@ -117,7 +120,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	progress.Hide();
 	brief <<= THISBACK(SyncBrief);
 	search.NullText("Search (Ctrl+K)", StdFont().Italic(), SColorDisabled());
-	search <<= THISBACK(SyncList);
+	search << [=] { SyncList(Null); };
 	search.SetFilter(CharFilterDefaultToUpperAscii);
 	SyncBrief();
 	description.NullText("Package description (Alt+Enter)", StdFont().Italic(), SColorDisabled());
@@ -264,7 +267,7 @@ void SelectPackageDlg::OnCancel()
 
 void SelectPackageDlg::OnFilter()
 {
-	SyncList();
+	SyncList(Null);
 }
 
 void SelectPackageDlg::OnBase()
@@ -411,9 +414,9 @@ struct PackageDisplay : Display {
 	PackageDisplay() { fnt = StdFont(); }
 };
 
-void SelectPackageDlg::SyncList()
+void SelectPackageDlg::SyncList(const String& find)
 {
-	String n = GetCurrentName();
+	String n = Nvl(find, GetCurrentName());
 	int asc = alist.GetScroll();
 	int csc = clist.GetSbPos();
 
@@ -483,7 +486,7 @@ String SelectPackageDlg::CachePath(const char *vn) const
 	return AppendFileName(ConfigFile("cfg"), String(vn) + ".pkg_cache");
 }
 
-void SelectPackageDlg::Load()
+void SelectPackageDlg::Load(const String& find)
 {
 	if(selectvars && !base.IsCursor())
 		return;
@@ -523,7 +526,7 @@ void SelectPackageDlg::Load()
 					if(!IsSplashOpen() && !IsOpen())
 						Open();
 					progress++;
-					SyncList();
+					SyncList(find);
 					update = msecs();
 				}
 				ProcessEvents(); // keep GUI running
@@ -532,7 +535,7 @@ void SelectPackageDlg::Load()
 				String path = nest.GetKey(i);
 				if(NormalizePath(path).StartsWith(nest_dir) && DirectoryExists(path)) {
 					String upp_path = AppendFileName(path, GetFileName(d.package) + ".upp");
-					LSLOW();
+					LSLOW(); // this is used for testing only, normally it is NOP
 					Time tm = FileGetTime(upp_path);
 					if(IsNull(tm)) // .upp file does not exist - not a package
 						d.ispackage = false;
@@ -578,7 +581,7 @@ void SelectPackageDlg::Load()
 		description.Show();
 		if(loading) {
 			loading = false;
-			SyncList();
+			SyncList(find);
 		}
 	}
 }
