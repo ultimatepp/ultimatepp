@@ -99,4 +99,6 @@ void SerializeWorkspaceConfigs(Stream& s);
 
 extern bool IdeExit;
 
+bool CopyFolder(const char *dst, const char *src, Progress *pi = NULL);
+
 #endif
