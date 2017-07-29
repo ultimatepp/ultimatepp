@@ -422,7 +422,7 @@ public:
 	virtual Bar::Item& Key(dword key);
 	virtual Bar::Item& Repeat(bool repeat = true);
 	virtual Bar::Item& Image(const UPP::Image& img);
-	virtual Bar::Item& Enable(bool _enable);
+	virtual Bar::Item& Enable(bool _enable = true);
 	virtual Bar::Item& Tip(const char *tip);
 	virtual Bar::Item& Help(const char *help);
 	virtual Bar::Item& Topic(const char *help);
