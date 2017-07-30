@@ -4,6 +4,7 @@
 #include "Wizard.h"
 #include <usvn/usvn.h>
 #include <ide/version.h>
+#include <ide/Common/Common.h>
 
 #if !defined(PLATFORM_POSIX) && !defined(flagWIN32)
 #error Updater is only implemented for POSIX compliant platforms
