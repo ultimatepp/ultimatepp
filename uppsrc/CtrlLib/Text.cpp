@@ -35,6 +35,7 @@ TextCtrl::TextCtrl()
 	max_total = 200 * 1024 * 1024;
 #endif
 #endif
+	max_line_len = 100000;
 	truncated = false;
 }
 
@@ -161,17 +162,20 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				cr = true;
 			else
 			if(c == '\n') {
+			truncate_line:
 				WString l = wln;
 				line.Add(l);
 				total += l.GetCount() + 1;
 				wln.Clear();
 			}
-			else
+			else {
 				wln.Cat(c);
+				if(wln.GetCount() >= max_line_len)
+					goto truncate_line;
+			}
 		}
 	}
 	else
-	if(charset == CHARSET_UTF8)
 		for(;;) {
 			byte h[200];
 			int size;
@@ -185,105 +189,65 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			const byte *e = s + size;
 			while(s < e) {
 				const byte *b = s;
+				const byte *ee = s + min(e - s, max_line_len - ln.GetCount());
 				{
-					LTIMING("ChkLoop UTF8");
-					while(s < e && (*s >= ' ' || *s == '\t')) {
+					while(s < ee && *s != '\r' && *s != '\n') {
 						b8 |= *s++;
-						while(s < e && *s >= ' ' && *s < 128) // Interestingly, this speeds things up
+						while(s < ee && *s >= ' ' && *s < 128) // Interestingly, this speeds things up
 							s++;
-						while(s < e && *s >= ' ')
+						while(s < ee && *s >= ' ')
 							b8 |= *s++;
 					}
 				}
 				if(b < s) {
-					LTIMING("ln.Cat");
-					if(b - s + ln.GetCount() > max_total)
-						break;
-					ln.Cat((const char *)b, (const char *)s);
+					if(s - b + ln.GetCount() > max_total)
+						ln.Cat((const char *)b, max_total - ln.GetCount());
+					else
+						ln.Cat((const char *)b, (const char *)s);
 				}
-				if(s < e) {
-					if(*s == '\r')
-						cr = true;
-					if(*s == '\n') {
-						LTIMING("ADD");
-						int len = (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
-						if(total + len + 1 > max_total) {
-							truncated = true;
-							goto out_of_limit;
-						}
-						total += len + 1;
-						Ln& l = line.Add();
-						l.len = len;
+				while(ln.GetCount() >= max_line_len) {
+					int ei = max_line_len;
+					if(charset == CHARSET_UTF8)
+						while(ei > 0 && ei > max_line_len - 6 && !((byte)ln[ei] < 128 || IsUtf8Lead((byte)ln[ei]))) // break line at whole utf8 codepoint if possible
+							ei--;
+					String nln(~ln + ei, ln.GetCount() - ei);
+					ln.SetCount(ei);
+					int len = charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+					truncated = true;
+					if(total + len + 1 >= max_total)
+						goto out_of_limit;
+					total += len + 1;
+					Ln& l = line.Add();
+					l.len = len;
+					if(charset == CHARSET_UTF8)
 						l.text = ln;
-						ln.Clear();
-						b8 = 0;
-						b = s;
+					else {
+						String h = ln;
+						l.text = ToCharset(CHARSET_UTF8, h, charset);
 					}
+					ln = nln;
+				}
+				if(s < e && *s == '\r') {
 					s++;
+					cr = true;
 				}
-			}
-		}
-	else
-		for(;;) {
-			byte h[200];
-			int size;
-			const byte *s = in.GetSzPtr(size);
-			if(size == 0)  {
-				size = in.Get(h, 200);
-				s = h;
-				if(size == 0)
-					break;
-			}
-			const byte *e = s + size;
-			while(s < e) {
-				const byte *b = s;
-				{
-					LTIMING("ChkLoop");
-					while(s < e && (*s >= ' ' || *s == '\t')) {
-						b8 |= *s++;
-						while(s < e && *s >= ' ' && *s < 128) // Interestingly, this speeds things up
-							s++;
-						while(s < e && *s >= ' ')
-							b8 |= *s++;
-					}
-				}
-				if(b < s) {
-					LTIMING("ln.Cat");
-					if(b - s + ln.GetCount() > max_total) {
+				if(s < e && *s == '\n') {
+					int len = charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+					if(total + len + 1 > max_total) {
 						truncated = true;
 						goto out_of_limit;
 					}
-					ln.Cat((const char *)b, (const char *)s);
-				}
-				if(s < e) {
-					if(*s == '\r')
-						cr = true;
-					if(*s == '\n') {
-						if(b8 & 128) {
-							LTIMING("ToUnicode");
-							WString w = ToUnicode(~ln, ln.GetCount(), charset);
-							if(total + w.GetLength() + 1 > max_total) {
-								truncated = true;
-								goto out_of_limit;
-							}
-							line.Add(w);
-							total += w.GetLength() + 1;
-						}
-						else {
-							LTIMING("ADD");
-							if(total + ln.GetCount() + 1 > max_total) {
-								truncated = true;
-								goto out_of_limit;
-							}
-							total += ln.GetCount() + 1;
-							Ln& l = line.Add();
-							l.len = ln.GetCount();
-							l.text = ln;
-						}
-						ln.Clear();
-						b8 = 0;
-						b = s;
+					total += len + 1;
+					Ln& l = line.Add();
+					l.len = len;
+					if(charset == CHARSET_UTF8)
+						l.text = ln;
+					else {
+						String h = ln;
+						l.text = ToCharset(CHARSET_UTF8, h, charset);
 					}
+					ln.Clear();
+					b8 = 0;
 					s++;
 				}
 			}
@@ -292,6 +256,7 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 out_of_limit:
 	{
 		WString w = ToUnicode(~ln, ln.GetCount(), charset);
+		DDUMP(w);
 		if(total + w.GetLength() <= max_total) {
 			line.Add(w);
 			total += w.GetLength();
