@@ -88,6 +88,7 @@ protected:
 	bool             processtab, processenter;
 	bool             nobg;
 	int              max_total;
+	int              max_line_len;
 
 	void   IncDirty();
 	void   DecDirty();
@@ -106,8 +107,8 @@ public:
 	virtual void   RefreshLine(int i);
 
 	Event<Bar&> WhenBar;
-	Event<>         WhenState;
-	Event<>         WhenSel;
+	Event<>     WhenState;
+	Event<>     WhenSel;
 
 	void   CachePos(int pos);
 	void   CacheLinePos(int linei);
@@ -201,7 +202,7 @@ public:
 	TextCtrl& ProcessEnter(bool b = true)      { processenter = b; return *this; }
 	TextCtrl& NoProcessEnter()                 { return ProcessEnter(false); }
 	TextCtrl& NoBackground(bool b = true)      { nobg = b; Transparent(); Refresh(); return *this; }
-	TextCtrl& MaxLength(int len)               { max_total = len; return *this; }
+	TextCtrl& MaxLength(int len, int linelen)  { max_total = len; max_line_len = linelen; return *this; }
 	bool      IsNoBackground() const           { return nobg; }
 	bool      IsProcessTab() const             { return processtab; }
 	bool      IsProcessEnter() const           { return processenter; }
