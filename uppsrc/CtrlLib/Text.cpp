@@ -189,7 +189,7 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			const byte *e = s + size;
 			while(s < e) {
 				const byte *b = s;
-				const byte *ee = s + min(e - s, max_line_len - ln.GetCount());
+				const byte *ee = s + min(size_t(e - s), size_t(max_line_len - ln.GetCount()));
 				{
 					while(s < ee && *s != '\r' && *s != '\n') {
 						b8 |= *s++;
@@ -256,7 +256,6 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 out_of_limit:
 	{
 		WString w = ToUnicode(~ln, ln.GetCount(), charset);
-		DDUMP(w);
 		if(total + w.GetLength() <= max_total) {
 			line.Add(w);
 			total += w.GetLength();
