@@ -205,6 +205,23 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					else
 						ln.Cat((const char *)b, (const char *)s);
 				}
+				auto put_ln = [&]() -> bool {
+					int len = charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+					if(total + len + 1 > max_total) {
+						truncated = true;
+						return false;
+					}
+					total += len + 1;
+					Ln& l = line.Add();
+					l.len = len;
+					if(charset == CHARSET_UTF8)
+						l.text = ln;
+					else {
+						String h = ln;
+						l.text = ToCharset(CHARSET_UTF8, h, charset);
+					}
+					return true;
+				};
 				while(ln.GetCount() >= max_line_len) {
 					int ei = max_line_len;
 					if(charset == CHARSET_UTF8)
@@ -212,19 +229,9 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 							ei--;
 					String nln(~ln + ei, ln.GetCount() - ei);
 					ln.SetCount(ei);
-					int len = charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
 					truncated = true;
-					if(total + len + 1 >= max_total)
+					if(!put_ln())
 						goto out_of_limit;
-					total += len + 1;
-					Ln& l = line.Add();
-					l.len = len;
-					if(charset == CHARSET_UTF8)
-						l.text = ln;
-					else {
-						String h = ln;
-						l.text = ToCharset(CHARSET_UTF8, h, charset);
-					}
 					ln = nln;
 				}
 				if(s < e && *s == '\r') {
@@ -232,20 +239,8 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 					cr = true;
 				}
 				if(s < e && *s == '\n') {
-					int len = charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
-					if(total + len + 1 > max_total) {
-						truncated = true;
+					if(!put_ln())
 						goto out_of_limit;
-					}
-					total += len + 1;
-					Ln& l = line.Add();
-					l.len = len;
-					if(charset == CHARSET_UTF8)
-						l.text = ln;
-					else {
-						String h = ln;
-						l.text = ToCharset(CHARSET_UTF8, h, charset);
-					}
 					ln.Clear();
 					b8 = 0;
 					s++;
