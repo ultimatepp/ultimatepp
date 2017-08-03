@@ -635,14 +635,20 @@ String AsCString(const char *s, const char *lim, int linemax, const char *linepf
 				}
 				else
 				if((byte)*s >= 0x7f) {
-					const char *s0 = s;
-					dword c = toutf8 ? ToUnicode((byte)*s++, cs) : FetchUtf8(s, lim);
-					if(c < 0x10000)
-						t.Cat(s0, s);
+					if((byte)*s == 0x7f) {
+						sCatHex(t, 0x7f);
+						s++;
+					}
 					else {
-						c -= 0x10000;
-						sCatHex(t, wchar(0xD800 + (0x3ff & (c >> 10))));
-						sCatHex(t, wchar(0xDC00 + (0x3ff & c)));
+						const char *s0 = s;
+						dword c = toutf8 ? ToUnicode((byte)*s++, cs) : FetchUtf8(s, lim);
+						if(c < 0x10000)
+							t.Cat(s0, s);
+						else {
+							c -= 0x10000;
+							sCatHex(t, wchar(0xD800 + (0x3ff & (c >> 10))));
+							sCatHex(t, wchar(0xDC00 + (0x3ff & c)));
+						}
 					}
 				}
 				else
