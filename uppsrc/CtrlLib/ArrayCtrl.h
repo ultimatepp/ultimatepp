@@ -448,6 +448,7 @@ public:
 	bool       IsSelected(int i) const                          { return i < array.GetCount() && array[i].select; }
 	void       ClearSelection();
 	bool       IsSel(int i) const;
+	Vector<int> GetSelKeys() const;
 
 	void       EnableLine(int i, bool e);
 	void       DisableLine(int i)                               { EnableLine(i, false); }

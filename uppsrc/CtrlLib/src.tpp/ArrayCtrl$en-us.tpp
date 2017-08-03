@@ -2179,6 +2179,12 @@ onst]&]
 [s2; If there is selection in the widget, returns true if [*@3 i] is 
 selected, otherwise returns true if cursor is at [*@3 i].&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:GetSelKeys`(`)const:%- [_^Upp`:`:Vector^ Vector]<[@(0.0.255) int
+]>_[* GetSelKeys]()_[@(0.0.255) const]&]
+[s2; Returns keys (elements with index 0) of all selected lines (ordered 
+by line order).&]
+[s3;%- &]
 [s4; &]
 [s5;:Upp`:`:ArrayCtrl`:`:EnableLine`(int`,bool`): [@(0.0.255) void]_[* EnableLine]([@(0.0.255) i
 nt]_[*@3 i], [@(0.0.255) bool]_[*@3 e])&]
