@@ -1343,7 +1343,7 @@ String LoadStream(Stream& in) {
 	if(in.IsOpen()) {
 		in.ClearError();
 		int64 size = in.GetLeft();
-		if(size >= 0 && size < INT_MAX / 2) {
+		if(size >= 0 && size < INT_MAX) {
 			StringBuffer s((int)size);
 			in.Get(s, (int)size);
 			if(!in.IsError())
