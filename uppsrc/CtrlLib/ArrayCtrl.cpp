@@ -1552,6 +1552,15 @@ bool ArrayCtrl::IsSel(int i) const
 	return multiselect ? IsSelected(i) : GetCursor() == i;
 }
 
+Vector<int> ArrayCtrl::GetSelKeys() const
+{
+	Vector<int> id;
+	for(int i = 0; i < GetCount(); i++)
+		if(IsSel(i))
+			id.Add(Get(i, 0));
+	return id;
+}
+
 int  ArrayCtrl::GetScroll() const
 {
 	return sb;
