@@ -104,6 +104,7 @@ public:
 	static const Style& StyleEdge();
 	static const Style& StyleLeftEdge();
 	static const Style& StyleScroll();
+	static const Style& StyleNaked();
 
 	Button&  SetStyle(const Style& s);
 	Button&  AutoStyle();
@@ -112,6 +113,7 @@ public:
 	Button&  EdgeStyle()                          { return SetStyle(StyleEdge()); }
 	Button&  LeftEdgeStyle()                      { return SetStyle(StyleLeftEdge()); }
 	Button&  ScrollStyle()                        { return SetStyle(StyleScroll()); }
+	Button&  NakedStyle()                         { return SetStyle(StyleNaked()); }
 
 	Button&  Ok();
 	Button&  Cancel();
