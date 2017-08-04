@@ -216,6 +216,12 @@ CH_STYLE(Button, Style, StyleScroll)
 	CtrlsImageLook(look, CtrlsImg::I_SB);
 }
 
+CH_STYLE(Button, Style, StyleNaked)
+{
+	Assign(Button::StyleNormal());
+	look[0] = look[1] = look[2] = look[3] = Null;
+}
+
 Color ButtonMonoColor(int i)
 {
 	return Button::StyleNormal().monocolor[i];
