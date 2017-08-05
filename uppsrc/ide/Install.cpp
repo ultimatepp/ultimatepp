@@ -272,13 +272,12 @@ String DefaultInstallFolder()
 		DefaultFolder = "upp-svn";
 	else if(ExeTitle.Find("DEV") >= 0)
 		DefaultFolder = "upp-dev";
-	else if(ExeTitle.Find("BETA") >= 0) 
+	else if(ExeTitle.Find("BETA") >= 0)
 		DefaultFolder = "upp-beta";
 	else
 		DefaultFolder = "upp";
 	
 	return DefaultFolder;
-
 }
 
 struct XInstallDlg : public WithXInstallLayout<TopWindow> {
@@ -294,7 +293,6 @@ public:
 	typedef XInstallDlg CLASSNAME;
 
 	XInstallDlg();
-
 };
 
 void XInstallDlg::FindInstFolder() {
