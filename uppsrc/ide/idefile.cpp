@@ -448,7 +448,10 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	}
 
 	if(!designer && editastext.Find(path) < 0 &&
-	   (findarg(GetFileExt(path), ".log") < 0 && FileIsBinary(path) || editashex.Find(path) >= 0))
+	   (findarg(GetFileExt(path), ".log") < 0 &&
+	    findarg(charset, CHARSET_UTF8_BOM, CHARSET_UTF16_LE, CHARSET_UTF16_BE,
+	            CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM) < 0 &&
+	    FileIsBinary(path) || editashex.Find(path) >= 0))
 		designer.Create<FileHexView>().Open(path);
 	
 	ManageDisplayVisibility();
