@@ -29,7 +29,7 @@ struct IdePngDes : IdeIconDes {
 
 INITIALIZE(Img)
 
-class FileHexView : public IdeDesigner, public HexView, private LRUCache<String, int64>::Maker {
+struct FileHexView : public IdeDesigner, public HexView, private LRUCache<String, int64>::Maker {
 public:
 	virtual int Byte(int64 addr);
 
@@ -40,8 +40,9 @@ public:
 	virtual void   Save()                     {}
 	virtual void   EditMenu(Bar& menu)        { StdMenu(menu); }
 	virtual Ctrl&  DesignerCtrl()             { return *this; }
+	virtual void   RestoreEditPos();
+	virtual void   SaveEditPos();
 
-private:
 	String  filename;
 
 	FileIn  file;
@@ -49,10 +50,10 @@ private:
 	
 	LRUCache<String, int64> cache;
 
+	static VectorMap<String, Tuple2<int64, int64>> pos;
+	
 	enum { BLKSHIFT = 14, BLKSIZE = 1 << BLKSHIFT };
 	
-
-public:
 	void    Serialize(Stream& s)              { SerializeSettings(s); }
 
 	void Open(const char *path);

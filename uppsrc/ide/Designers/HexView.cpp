@@ -30,6 +30,24 @@ bool  FileIsBinary(const char *path)
 	return false;
 }
 
+VectorMap<String, Tuple2<int64, int64>> FileHexView::pos;
+
+void FileHexView::RestoreEditPos()
+{
+	auto *p = pos.FindPtr(filename);
+	if(p) {
+		SetSc(p->a);
+		SetCursor(p->b);
+	}
+}
+
+void FileHexView::SaveEditPos()
+{
+	auto& p = pos.GetAdd(filename);
+	p.a = GetSc();
+	p.b = GetCursor();
+}
+
 int64 FileHexView::Key() const
 {
 	return blk;
@@ -73,4 +91,9 @@ FileHexView::~FileHexView()
 INITIALIZER(HexView)
 {
 	RegisterGlobalConfig("FileHexView");
+	RegisterGlobalSerialize("FileHexViewPos", [=](Stream& s) {
+		int version = 0;
+		s / version;
+		s % FileHexView::pos;
+	});
 }
