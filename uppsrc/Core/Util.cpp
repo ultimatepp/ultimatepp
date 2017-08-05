@@ -628,81 +628,88 @@ String FromSystemCharset(const String& src)
 #endif
 #endif
 
-static VectorMap<String, String>& sGCfg()
-{
-	static VectorMap<String, String> m;
-	return m;
-}
 
 static StaticCriticalSection sGCfgLock;
 
-static Vector<Event<> >& sGFlush()
+static VectorMap<String, String>& sGCfg()
 {
-	static Vector<Event<> > m;
-	return m;
+	static VectorMap<String, String> h;
+	return h;
 }
 
-static StaticCriticalSection sGFlushLock;
+static Vector<Event<>>& sGFlush()
+{
+	static Vector<Event<>> h;
+	return h;
+}
+
+static VectorMap<String, Event<Stream&>>& sGSerialize()
+{
+	static VectorMap<String, Event<Stream&>> h;
+	return h;
+}
 
 void    RegisterGlobalConfig(const char *name)
 {
-	INTERLOCKED_(sGCfgLock) {
-		ASSERT(sGCfg().Find(name) < 0);
-		sGCfg().Add(name);
-	}
+	Mutex::Lock __(sGCfgLock);
+	ASSERT(sGCfg().Find(name) < 0);
+	sGCfg().Add(name);
+}
+
+void    RegisterGlobalSerialize(const char *name, Event<Stream&> WhenSerialize)
+{
+	Mutex::Lock __(sGCfgLock);
+	RegisterGlobalConfig(name);
+	sGSerialize().Add(name, WhenSerialize);
 }
 
 void    RegisterGlobalConfig(const char *name, Event<>  WhenFlush)
 {
+	Mutex::Lock __(sGCfgLock);
 	RegisterGlobalConfig(name);
-	INTERLOCKED_(sGFlushLock) {
-		sGFlush().Add(WhenFlush);
-	}
+	sGFlush().Add(WhenFlush);
 }
 
 String GetGlobalConfigData(const char *name)
 {
-	INTERLOCKED_(sGCfgLock) {
-		return sGCfg().GetAdd(name);
-	}
-	return String();
+	Mutex::Lock __(sGCfgLock);
+	return sGCfg().GetAdd(name);
 }
 
 void SetGlobalConfigData(const char *name, const String& data)
 {
-	INTERLOCKED_(sGCfgLock) {
-		sGCfg().GetAdd(name) = data;
-	}
+	Mutex::Lock __(sGCfgLock);
+	sGCfg().GetAdd(name) = data;
 }
 
 void  SerializeGlobalConfigs(Stream& s)
 {
-	INTERLOCKED_(sGFlushLock) {
-		for(int i = 0; i < sGFlush().GetCount(); i++)
-			sGFlush()[i]();
-	}
-	INTERLOCKED_(sGCfgLock) {
-		VectorMap<String, String>& cfg = sGCfg();
-		int version = 0;
-		s / version;
-		int count = cfg.GetCount();
-		s / count;
-		for(int i = 0; i < count; i++) {
-			String name;
-			if(s.IsStoring())
-				name = cfg.GetKey(i);
-			s % name;
-			int q = cfg.Find(name);
-			if(q >= 0)
-				s % cfg[q];
+	Mutex::Lock __(sGCfgLock);
+	for(int i = 0; i < sGFlush().GetCount(); i++)
+		sGFlush()[i]();
+	int version = 0;
+	s / version;
+	int count = sGCfg().GetCount();
+	s / count;
+	for(int i = 0; i < count; i++) {
+		String name;
+		if(s.IsStoring())
+			name = sGCfg().GetKey(i);
+		s % name;
+		int q = sGCfg().Find(name);
+		if(q >= 0) {
+			int w = sGSerialize().Find(name);
+			if(w >= 0)
+				sGSerialize()[w](s);
 			else
-			{
-				String dummy;
-				s % dummy;
-			}
+				s % sGCfg()[q];
 		}
-		s.Magic();
+		else {
+			String dummy;
+			s % dummy;
+		}
 	}
+	s.Magic();
 }
 
 AbortExc::AbortExc() :

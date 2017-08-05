@@ -235,6 +235,8 @@ public:
 	bool   IsOpen(int id) const;
 	void   Open(int id, bool open = true);
 	void   Close(int id)                                       { Open(id, false); }
+	Vector<int> GetOpenIds() const;
+	void   OpenIds(const Vector<int>& ids);
 
 	void   OpenDeep(int id, bool open = true);
 	void   CloseDeep(int id)                                   { OpenDeep(id, false); }

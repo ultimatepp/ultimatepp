@@ -1,25 +1,5 @@
 #include "Designers.h"
 
-struct IdeQtfDes : IdeDesigner, RichEditWithToolBar {
-	String  filename;
-
-	virtual String GetFileName() const        { return filename; }
-	virtual void   Save();
-	virtual void   SaveEditPos();
-	virtual void   EditMenu(Bar& menu);
-	virtual Ctrl&  DesignerCtrl()             { return *this; }
-
-	virtual void   Serialize(Stream& s);
-
-	bool   Load(const char *filename);
-	void   FileProperties();
-	void   CopyId(const String& n);
-
-	typedef IdeQtfDes CLASSNAME;
-	
-	IdeQtfDes() { Extended(); }
-};
-
 struct IdeQtfEditPos : Moveable<IdeQtfEditPos> {
 	Time               filetime;
 	RichEdit::PosInfo  pos;

@@ -8,5 +8,8 @@ file
 	Png.cpp,
 	Img.cpp,
 	Qtf.cpp,
-	HexView.cpp;
+	HexView.cpp,
+	TreeDes.cpp,
+	Xml.cpp,
+	Json.cpp;
 

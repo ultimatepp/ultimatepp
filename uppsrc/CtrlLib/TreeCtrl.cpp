@@ -502,6 +502,22 @@ bool TreeCtrl::IsOpen(int id) const
 	return item[id].isopen;
 }
 
+Vector<int> TreeCtrl::GetOpenIds() const
+{
+	Vector<int> r;
+	for(int id = 0; id < item.GetCount(); id++)
+		if(!item[id].free && item[id].isopen)
+			r.Add(id);
+	return r;
+}
+
+void TreeCtrl::OpenIds(const Vector<int>& ids)
+{
+	for(int id : ids)
+		if(IsValid(id))
+			Open(id);
+}
+
 void TreeCtrl::Dirty(int id)
 {
 //	if(selectcount) SelClear(0);
