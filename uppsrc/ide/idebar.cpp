@@ -217,7 +217,7 @@ void Ide::Edit(Bar& menu)
 			menu.MenuSeparator();
 		}
 		else
-		if(editastext.Find(editfile) >= 0 && IsDesignerFile(editfile)) {
+		if(editastext.Find(editfile) >= 0/* && IsDesignerFile(editfile)*/) {
 			menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
 			    .Help("Edit using the designer (not as text)");
 			menu.MenuSeparator();

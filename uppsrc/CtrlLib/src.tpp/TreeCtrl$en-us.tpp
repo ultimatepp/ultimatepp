@@ -289,6 +289,11 @@ t]_[*@3 id])_[@(0.0.255) const]&]
 [s2;%% Sets attributes.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:IsValid`(int`)const: [@(0.0.255) bool]_[* IsValid]([@(0.0.255) int]_
+[*@3 id])_[@(0.0.255) const]&]
+[s2;%% Returns true if [%-*@3 id] represents a valid node id.&]
+[s3;%% &]
+[s4; &]
 [s5;:TreeCtrl`:`:IsOpen`(int`)const: [@(0.0.255) bool]_[* IsOpen]([@(0.0.255) int]_[*@3 id])_
 [@(0.0.255) const]&]
 [s2;%% Tests whether item is opened.&]
@@ -303,6 +308,16 @@ all child items visible.&]
 [s5;:TreeCtrl`:`:Close`(int`): [@(0.0.255) void]_[* Close]([@(0.0.255) int]_[*@3 id])&]
 [s2;%% Same as Open(id, false).&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:GetOpenIds`(`)const: [_^Upp`:`:Vector^ Vector]<[@(0.0.255) int]>_
+[* GetOpenIds]()_[@(0.0.255) const]&]
+[s2;%% Returns all open node ids.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TreeCtrl`:`:OpenIds`(const Upp`:`:Vector`<int`>`&`): [@(0.0.255) void]_[* Ope
+nIds]([@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[@(0.0.255) int]>`&_[*@3 ids])&]
+[s2;%% Opens all valid [%-*@3 ids].&]
+[s3;%% &]
 [s4; &]
 [s5;:TreeCtrl`:`:OpenDeep`(int`,bool`): [@(0.0.255) void]_[* OpenDeep]([@(0.0.255) int]_[*@3 i
 d], [@(0.0.255) bool]_[*@3 open]_`=_[@(0.0.255) true])&]

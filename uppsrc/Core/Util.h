@@ -450,8 +450,9 @@ bool LoadFromString(T& x, const String& s) {
 	return Load(x, ss);
 }
 
-void             RegisterGlobalConfig(const char *name) init_;
-void             RegisterGlobalConfig(const char *name, Event<>  WhenFlush) init_;
+void             RegisterGlobalConfig(const char *name);
+void             RegisterGlobalSerialize(const char *name, Event<Stream&> WhenSerialize);
+void             RegisterGlobalConfig(const char *name, Event<>  WhenFlush);
 
 String           GetGlobalConfigData(const char *name);
 void             SetGlobalConfigData(const char *name, const String& data);
