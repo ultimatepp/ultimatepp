@@ -699,8 +699,19 @@ void  SerializeGlobalConfigs(Stream& s)
 		int q = sGCfg().Find(name);
 		if(q >= 0) {
 			int w = sGSerialize().Find(name);
-			if(w >= 0)
-				sGSerialize()[w](s);
+			if(w >= 0) {
+				String h;
+				if(s.IsStoring()) {
+					StringStream ss;
+					sGSerialize()[w](ss);
+					h = ss;
+				}
+				s % h;
+				if(s.IsLoading()) {
+					StringStream ss(h);
+					sGSerialize()[w](ss);
+				}
+			}
 			else
 				s % sGCfg()[q];
 		}
