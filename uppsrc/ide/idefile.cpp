@@ -458,12 +458,12 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	
 	if(designer) {
 		editpane.Add(designer->DesignerCtrl().SizePos());
+		designer->DesignerCtrl().SetFocus();
 		designer->RestoreEditPos();
 		if(filetabs)
 			tabs.SetAddFile(editfile);
 		MakeTitle();
 		SetBar();
-		designer->SetFocus();
 		editor.SyncNavigatorShow();
 		return;
 	}
