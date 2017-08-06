@@ -265,6 +265,8 @@ public:
 	virtual void   EditMenu(Bar& menu);
 	virtual Ctrl&  DesignerCtrl()                                   { return *this; }
 	virtual void   SetFocus();
+	virtual void   RestoreEditPos()                                 { editor.SetFocus(); }
+
 
 	virtual bool Key(dword key, int);
 
@@ -281,6 +283,7 @@ protected:
 
 	String            grouppath;
 	String            topicpath;
+	String            singlefilepath;
 
 	static String     lasttemplate;
 	static int        lastlang;
@@ -369,6 +372,7 @@ public:
 	void ShowEditor(bool b)                          { editor.Show(b); }
 	bool NewTopicEx(const String& name, const String& create);
 	void Open(const String& grouppath);
+	void OpenFile(const String& path);
 	void GoTo(const String& topic, const String& link, const String& create, bool before);
 	void PersistentFindReplace(bool b)               { editor.PersistentFindReplace(b); }
 	

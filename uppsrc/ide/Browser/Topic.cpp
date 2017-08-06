@@ -41,6 +41,16 @@ void TopicEditor::Open(const String& _grouppath)
 		topic.SetCursor(0);
 }
 
+void TopicEditor::OpenFile(const String& path)
+{
+	grouppath.Clear();
+	singlefilepath = path;
+	topic.Clear();
+	topic.Add(GetFileTitle(path), TopicImg::Topic());
+	topic.Enable();
+	topic.SetCursor(0);
+}
+
 String TopicEditor::GetCurrentTopicPath()
 {
 	if(topic.IsCursor())
@@ -59,10 +69,17 @@ void TopicEditor::ShowTopic(bool b)
 
 void TopicEditor::TopicCursor()
 {
+	String h;
 	HideTopic();
-	if(!topic.IsCursor())
-		return;
-	String h = GetCurrentTopicPath();
+	if(IsNull(grouppath)) {
+		ShowTopic();
+		h = singlefilepath;
+	}
+	else {
+		if(!topic.IsCursor())
+			return;
+		h = GetCurrentTopicPath();
+	}
 	if(h != topicpath)
 		Load(h);
 	else
