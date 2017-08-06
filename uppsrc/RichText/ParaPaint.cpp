@@ -32,7 +32,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 			else
 				draw.DrawRect(zx0, zy0, width, 2, pi.indexentry);
 		}
-		if(!IsNull(f.paper) && !highlight)
+		if(!IsNull(f.paper) && !highlight && IsNull(pi.textcolor))
 			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y,
 			              pi.coloroverride ? SColorPaper() : f.paper);
 		Font fnt = f;
@@ -47,17 +47,16 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		}
 		fnt.Height(zht ? zht : 1);
 		FontInfo fi = fnt.Info();
+		Color ink = Nvl(pi.textcolor, pi.coloroverride ? SColorText() : f.ink);
 		if(f.dashed) {
 			int dx = max(fi.GetAscent() / 5, 2);
 			for(int i = 0; dx * i < width; i++)
 				draw.DrawRect(zx0 + i * dx, zy0 + fi.GetDescent() / 2,
-				              dx / 2, max(fi.GetDescent() / 3, 1),
-				              pi.coloroverride ? SColorText() : f.ink);
+				              dx / 2, max(fi.GetDescent() / 3, 1), ink);
 		}
-		Color ink = pi.coloroverride ? SColorText() : f.ink;
 		if(!IsNull(f.link) && !IsNull(pi.hyperlink) && !(fnt.IsUnderline() || f.dashed)) {
 			fnt.Underline();
-			if(!pi.coloroverride)
+			if(!pi.coloroverride && IsNull(pi.textcolor))
 				ink = pi.hyperlink;
 		}
 		x = zx0;

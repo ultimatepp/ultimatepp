@@ -73,7 +73,12 @@ void QTFDisplayCls::Paint(Draw& draw, const Rect& r, const Value& v, Color ink, 
 	rtext.ApplyZoom(GetRichTextStdScreenZoom());
 	draw.DrawRect(r, paper);
 	draw.Clipoff(r);
-	rtext.Paint(Zoom(1, 1), draw, 0, 0, r.Width());
+	PaintInfo pi;
+	pi.highlightpara = false;
+	pi.zoom = Zoom(1, 1);
+	if(style & (CURSOR|SELECT|READONLY))
+		pi.textcolor = ink;
+	rtext.Paint(draw, 0, 0, r.Width(), pi);
 	draw.End();
 }
 
