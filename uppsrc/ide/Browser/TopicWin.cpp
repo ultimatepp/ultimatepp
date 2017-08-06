@@ -205,6 +205,8 @@ void TopicEditor::AllFonts()
 
 void TopicEditor::TopicMenu(Bar& bar)
 {
+	if(IsNull(grouppath))
+		return;
 	bar.Add("New topic..", THISBACK(NewTopic))
 	   .Key(K_CTRL_N).Key(K_ALT_INSERT);
 	bar.Add(topic.IsCursor(), "Move topic..", THISBACK(MoveTopic));
@@ -220,8 +222,10 @@ void TopicEditor::TopicMenu(Bar& bar)
 
 void TopicEditor::FileBar(Bar& bar)
 {
-	TopicMenu(bar);
-	bar.Separator();
+	if(!IsNull(grouppath)) {
+		TopicMenu(bar);
+		bar.Separator();
+	}
 	bar.Add("Print", CtrlImg::print(), THISBACK(Print))
 	   .Key(K_CTRL_P);
 	bar.Add("Export to PDF..", THISBACK(ExportPdf));
