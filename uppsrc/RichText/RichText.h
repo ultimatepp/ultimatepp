@@ -274,6 +274,7 @@ struct PaintInfo {
 	PageY   bottom;
 	Color   hyperlink;
 	Color   indexentry;
+	Color   textcolor; // not Null overrides text color, makes paper transparent, useful for QTFDisplay
 	bool    indexentrybg;
 	bool    usecache;
 	bool    sizetracking;

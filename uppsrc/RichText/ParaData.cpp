@@ -60,6 +60,7 @@ PaintInfo::PaintInfo()
 	context = NULL;
 	showlabels = false;
 	shrink_oversized_objects = false;
+	textcolor = Null;
 }
 
 String RichPara::Number::AsText(const RichPara::NumberFormat& format) const
