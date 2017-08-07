@@ -462,9 +462,10 @@ public:
 
 	FileOut    stdout_fout;
 
-	Splitter   editorsplit;
-	Splitter   pfsplit;
-	Splitter   wesplit;
+	Splitter      editorsplit;
+	Splitter      pfsplit;
+	StaticRect    wepane;
+	SplitterFrame weframe;
 
 	Splitter   right_split;
 	StaticRect right;

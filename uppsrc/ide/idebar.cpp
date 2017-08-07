@@ -82,7 +82,7 @@ void Ide::File(Bar& menu)
 	}
 
 	menu.Add(AK_PACKAGESFILES, THISBACK(SwapPackagesFiles))
-	    .Check(wesplit.GetZoom() != 1);
+	    .Check(weframe.IsShown());
 
 	menu.MenuSeparator();
 
