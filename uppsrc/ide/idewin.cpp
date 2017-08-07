@@ -56,7 +56,7 @@ void Ide::ToggleStopOnErrors() {
 
 void Ide::SwapPackagesFiles()
 {
-	wesplit.Zoom(wesplit.GetZoom() == 1 ? -1 : 1);
+	weframe.Show(weframe.IsShown() ? false : true);
 }
 
 void IdePutErrorLine(const String& line)
@@ -456,9 +456,9 @@ Ide::Ide()
 
 	pfsplit.SetPos(2000);
 	pfsplit.Vert(package, filelist);
-	wesplit.Horz(pfsplit, editor_bottom);
-	wesplit.SetPos(2000);
-	Add(wesplit);
+	wepane.Add(editor_bottom.SizePos());
+	wepane.AddFrame(weframe.Left(pfsplit, HorzLayoutZoom(280)));
+	Add(wepane.SizePos());
 
 	editor.topsbbutton.ScrollStyle().NoWantFocus().Show();
 	editor.topsbbutton1.ScrollStyle().NoWantFocus().Show();

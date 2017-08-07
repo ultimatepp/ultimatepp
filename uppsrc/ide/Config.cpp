@@ -170,7 +170,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 11;
+	int version = 12;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -183,7 +183,12 @@ void Ide::Serialize(Stream& s)
 	s % AnyPackageFs();
 	Sentinel(s, "after AnyPackageFs");
 	s % pfsplit;
-	s % wesplit;
+	if (version >= 12)
+		s % weframe;
+	else {
+		Splitter dummy;
+		s % dummy;
+	}
 	package.SerializeSettings(s);
 	filelist.SerializeSettings(s);
 	s % editorfont;
