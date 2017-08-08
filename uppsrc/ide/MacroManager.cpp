@@ -13,7 +13,6 @@ void Ide::DoMacroManager()
 	manager.Execute();
 	
 	if (manager.IsGlobalMacrosChanged()) {
-		Cout() << "Refreshing global macros.\n";
 		SyncUsc();
 		SetMenuBar();
 	}
