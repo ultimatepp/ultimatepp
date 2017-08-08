@@ -69,7 +69,9 @@ public:
 	
 public:
 	MacroManagerWindow(const Workspace& wspc, const String& hlStyles);
-
+	
+	bool IsGlobalMacrosChanged() const { return globalMacrosChanged; }
+	
 	void Layout() override;
 	
 public:
@@ -94,6 +96,7 @@ private:
 	void OnEditFile();
 	void OnNewMacroFile();
 	void OnDeleteMacroFile();
+	void OnGlobalMacrosChanged();
 
 	void ExportFiles(Index<String>& files, const String& dir);
 	void FindNodeFiles(int id, Index<String>& list);
@@ -126,6 +129,8 @@ private:
 	
 	SplitterFrame    splitter;
 	CodeEditor       editor;
+	
+	bool             globalMacrosChanged;
 };
 
 }
