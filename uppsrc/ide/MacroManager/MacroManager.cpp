@@ -12,6 +12,7 @@ namespace Upp {
 
 MacroManagerWindow::MacroManagerWindow(const Workspace& wspc, const String& hlStyles)
 	: wspc(wspc)
+	, globalMacrosChanged(false)
 {
 	CtrlLayout(*this, t_("Macro Manager"));
 	Zoomable().Sizeable().MinimizeBox(false);
@@ -152,6 +153,8 @@ void MacroManagerWindow::OnImport()
 	FileCopy(filePath, newFilePath);
 	ReloadGlobalMacros();
 	OnTreeSel();
+	
+	OnGlobalMacrosChanged();
 }
 
 void MacroManagerWindow::ExportFiles(Index<String>& files, const String& dir)
@@ -183,7 +186,7 @@ void MacroManagerWindow::FindNodeFiles(int id, Index<String>& list)
 void MacroManagerWindow::OnExport(int id)
 {
 	if(id == 0 || IsGlobalFile()) {
-		String dir = SelectDirectory();
+		auto dir = SelectDirectory();
 		if(dir.IsEmpty())
 			return;
 		
@@ -225,10 +228,11 @@ void MacroManagerWindow::OnNewMacroFile()
 		return;
 	}
 	
-	SaveFile(fullPath, "macro \"\" {}");
-	ReloadGlobalMacros();
-	
+	SaveFile(fullPath, "macro \"" + GetFileTitle(fileName) + "\" {}");
+	ReloadGlobalMacros(); // TODO: This is a little bit overkill we add one element to the tree and we reload all tree...
 	globalTree.FindSetCursor(fileName);
+	
+	OnGlobalMacrosChanged();
 }
 
 void MacroManagerWindow::OnDeleteMacroFile()
@@ -240,6 +244,13 @@ void MacroManagerWindow::OnDeleteMacroFile()
 	FileDelete(AppendFileName(GetLocalDir(), fileName));
 	globalTree.Remove(globalTree.GetCursor());
 	OnTreeSel();
+	
+	OnGlobalMacrosChanged();
+}
+
+void MacroManagerWindow::OnGlobalMacrosChanged()
+{
+	globalMacrosChanged = true;
 }
 
 String MacroManagerWindow::GenFileOverrideMessage(const String& fileName)
