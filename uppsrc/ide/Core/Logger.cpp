@@ -29,7 +29,7 @@ void Logger::Log()
 	}
 	ss << " " << output;
 	
-	RLOG(ss.GetResult());
+	VppLog() << ss.GetResult() << EOL;
 }
 
 String Logger::GetCurrentTime()
