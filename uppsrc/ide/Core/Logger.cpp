@@ -29,7 +29,7 @@ void Logger::Log()
 	}
 	ss << " " << output;
 	
-	LOG(ss.GetResult());
+	RLOG(ss.GetResult());
 }
 
 String Logger::GetCurrentTime()
