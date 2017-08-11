@@ -6,7 +6,7 @@
 #define IMAGEFILE  <ide/MacroManager/MacroManager.iml>
 #include <Draw/iml_source.h>
 
-#define METHOD_NAME "MacroManagerWindow " << UPP_FUNCTION_NAME << "(): "
+#define METHOD_NAME "MacroManagerWindow::" << UPP_FUNCTION_NAME << "(): "
 
 namespace Upp {
 
