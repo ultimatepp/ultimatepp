@@ -152,20 +152,20 @@ to WhenAction method of specified Ctrl.&]
 [s3; &]
 [s4;%- &]
 [s5;:TopWindow`:`:NoCenter`(`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* NoCenter]()&]
-[s2; Sets TopWindow not to be centered when opening.&]
-[s7; [*/ Return value]-|`*this.&]
+[s2; Sets TopWindow not to be centered when being created on the 
+screen. Returns `*this.&]
 [s3; &]
 [s4;%- &]
 [s5;:TopWindow`:`:CenterOwner`(`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* CenterOwner
 ]()&]
-[s2; Sets TopWindow to be centered w.r.t. its owner. This is default.&]
-[s7; [*/ Return value]-|`*this.&]
+[s2; Sets TopWindow to be centered w.r.t. its owner when being created 
+on the screen. This is default. Returns `*this.&]
 [s3; &]
 [s4;%- &]
 [s5;:TopWindow`:`:CenterScreen`(`):%- [_^TopWindow^ TopWindow][@(0.0.255) `&]_[* CenterScre
 en]()&]
-[s2; Sets TopWindow to be desktop centered.&]
-[s7; [*/ Return value]-|`*this.&]
+[s2; Sets TopWindow to be desktop centered when being created on 
+the screen. Returns `*this.&]
 [s3; &]
 [s4;%- &]
 [s5;:TopWindow`:`:SetMinSize`(Size`):%- [@(0.0.255) virtual] [@(0.0.255) void]_[* SetMinSiz
