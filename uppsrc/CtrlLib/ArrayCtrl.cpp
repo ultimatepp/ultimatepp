@@ -802,6 +802,7 @@ void ArrayCtrl::ChildGotFocus()
 			if(nocursor)
 				ScrollInto(p.y);
 			else
+			if(p.y != cursor) // avoid setting cursor if it is already there - important for multiselect
 				SetCursor(p.y);
 		}
 	}
