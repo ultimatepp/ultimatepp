@@ -3,6 +3,7 @@
 namespace Upp {
 
 
+void RichEdit::PasteFilter(RichText& txt, const String&) { Filter(txt); }
 void RichEdit::Filter(RichText& txt) {}
 
 void BegSelFixRaw(RichText& text)
