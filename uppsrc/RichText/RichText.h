@@ -461,6 +461,8 @@ inline String BodyAsQTF(const RichText& doc, byte charset = CHARSET_UTF8)
 
 void SetQTF(One<RichText>& txt, const String& qtf);
 
+int GetRichTextScreenStdFontHeight();
+
 enum
 {
 	ROUNDOFF          = 1 << 20,
@@ -536,6 +538,7 @@ Array<Drawing> RenderPages(const RichText& txt, Size pagesize = Size(3968, 6074)
 
 String Pdf(const RichText& txt, Size pagesize = Size(3968, 6074), int margin = 200,
            bool pdfa = false, const PdfSignatureInfo *sign = NULL);
+
 
 }
 
