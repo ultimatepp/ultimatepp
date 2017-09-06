@@ -607,8 +607,8 @@ private:
 	void     DoRefreshBar();
 	void     RefreshBar();
 
-	bool     Accept(PasteClip& d, RichText& clip);
-	void     ClipPaste(RichText& clip);
+	bool     Accept(PasteClip& d, RichText& clip, String& fmt);
+	void     ClipPaste(RichText& clip, const String& fmt);
 	bool     InSelection(int& c) const;
 	void     RefreshDropCaret();
 	void     ZoomClip(RichText& text) const;
@@ -651,6 +651,7 @@ protected:
 	};
 
 public:
+	virtual void  PasteFilter(RichText& txt, const String& fmt);
 	virtual void  Filter(RichText& txt);
 
 	static double DotToPt(int dot);

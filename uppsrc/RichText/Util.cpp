@@ -116,14 +116,6 @@ RichText AsRichText(const wchar *s, const RichPara::Format& f)
 	RichPara p;
 	p.format = f;
 	p.part.Add().format = f;
-	RichStyle cs;
-	cs.format = f;
-	cs.format.sscript = 0;
-	cs.format.link.Clear();
-	cs.format.indexentry.Clear();
-	cs.format.language = LNG_ENGLISH;
-	cs.format.label.Clear();
-	clip.SetStyle(f.styleid, cs);
 	WString& part = p.part.Top().text;
 	while(*s) {
 		if(*s == '\n') {

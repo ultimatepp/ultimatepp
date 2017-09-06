@@ -23,10 +23,10 @@ void RichEdit::InsertImage()
 	RichPara p;
 	p.Cat(CreateRawImageObject(data), formatinfo);
 	clip.Cat(p);
-	ClipPaste(clip);
+	ClipPaste(clip, "image/raw");
 }
 
-bool RichEdit::Accept(PasteClip& d, RichText& clip)
+bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 {
 	if(IsReadOnly())
 		return false;
@@ -41,6 +41,7 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 						RichPara p;
 						p.Cat(CreateRawImageObject(LoadFile(fn)), formatinfo);
 						clip.Cat(p);
+						fmt = "files";
 					}
 					return true;
 				}
@@ -50,10 +51,12 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 		d.Reject();
 	}
 	if(d.Accept("text/QTF")) {
+		fmt = "text/QTF";
 		clip = ParseQTF(~d, 0, context);
 		return true;
 	}
 	if(d.Accept(RTFS)) {
+		fmt = RTFS;
 		clip = ParseRTF(~d);
 		return true;
 	}
@@ -63,23 +66,26 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip)
 			Value data = rt.Read(d);
 			if(!IsNull(data)) {
 				RichPara p;
-				p.Cat(RichObject(&rt, data, pagesz), formatinfo);
+				RichObject o = RichObject(&rt, data, pagesz);
+				p.Cat(o, formatinfo);
 				clip.Cat(p);
+				fmt = o.GetTypeName();
 			}
 			return true;
 		}
 	}
 	if(AcceptText(d)) {
+		fmt = "text/plain";
 		clip = AsRichText(GetWString(d), formatinfo);
 		return true;
 	}
 	return false;
 }
 
-void RichEdit::ClipPaste(RichText& clip)
+void RichEdit::ClipPaste(RichText& clip, const String& fmt)
 {
 	clip.ApplyZoom(clipzoom.Reciprocal());
-	Filter(clip);
+	PasteFilter(clip, fmt);
 	NextUndo();
 	if(clip.GetPartCount() == 1 && clip.IsTable(0)) {
 		CancelSelection();
@@ -100,7 +106,8 @@ void RichEdit::DragAndDrop(Point p, PasteClip& d)
 	int dropcursor = GetMousePos(p);
 	if(dropcursor >= 0) {
 		RichText clip;
-		if(Accept(d, clip)) {
+		String fmt;
+		if(Accept(d, clip, fmt)) {
 			NextUndo();
 			int a = sb;
 			int c = dropcursor;
@@ -120,7 +127,7 @@ void RichEdit::DragAndDrop(Point p, PasteClip& d)
 			}
 			Move(c);
 			clip.Normalize();
-			ClipPaste(clip);
+			ClipPaste(clip, fmt);
 			sb = a;
 			Select(c, clip.GetLength());
 			SetFocus();
@@ -162,9 +169,10 @@ void RichEdit::Paste()
 		return;
 	RichText clip;
 	PasteClip d = Clipboard();
-	if(!Accept(d, clip))
+	String fmt;
+	if(!Accept(d, clip, fmt))
 		return;
-	ClipPaste(clip);
+	ClipPaste(clip, fmt);
 }
 
 void RichEdit::DragLeave()
@@ -281,10 +289,11 @@ void  RichEdit::MiddleDown(Point p, dword flags)
 	RichText clip;
 	if(IsReadOnly())
 		return;
-	if(Accept(Selection(), clip)) {
+	String fmt;
+	if(Accept(Selection(), clip, fmt)) {
 		selclick = false;
 		LeftDown(p, flags);
-		ClipPaste(clip);
+		ClipPaste(clip, fmt);
 	}
 }
 
