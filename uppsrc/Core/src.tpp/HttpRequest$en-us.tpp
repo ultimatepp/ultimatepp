@@ -507,18 +507,21 @@ st]&]
 [s4;%% &]
 [s5;:HttpRequest`:`:IsFailure`(`)const: [@(0.0.255) bool]_[* IsFailure]()_[@(0.0.255) const
 ]&]
-[s2;%% Request has failed (it can be either due to connection errors 
-or because the request did not ended with 2xx response code).&]
+[s2;%% Request has failed. That means either a communication error 
+or failure of HTTP protocol. Successfully completed requests 
+ending with non 2xx code are not considered failure.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:IsSuccess`(`)const: [@(0.0.255) bool]_[* IsSuccess]()_[@(0.0.255) const
 ]&]
-[s2;%% Request succeeded.&]
+[s2;%% Request succeeded with 2xx code. Not that IsSuccess is not 
+complementary to IsFailure (request can e.g. end with 404 code, 
+which means that both IsFailure() [/ and] IsSuccess() are false.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:HttpRequest`:`:Execute`(`): [_^String^ String]_[* Execute]()&]
 [s2;%% Performs the whole request, returns resulting content on success 
-or String`::GetVoid() on failer.&]
+or String`::GetVoid() on failure.&]
 [s3;%% &]
 [s4; &]
 [s5;:HttpRequest`:`:New`(`): [@(0.0.255) void]_[* New]()&]

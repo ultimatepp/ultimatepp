@@ -295,6 +295,7 @@ void HttpRequest::HttpError(const char *s)
 	error = NFormat(t_("%s:%d: ") + String(s), host, port);
 	LLOGS("HTTP ERROR: " << error);
 	Close();
+	phase = FAILED;
 }
 
 void HttpRequest::StartPhase(int s)
@@ -407,15 +408,11 @@ bool HttpRequest::Do()
 		if(IsSocketError() || IsError())
 			phase = FAILED;
 		else
-		if(msecs(start_time) >= timeout) {
+		if(msecs(start_time) >= timeout)
 			HttpError("connection timed out");
-			phase = FAILED;
-		}
 		else
-		if(IsAbort()) {
+		if(IsAbort())
 			HttpError("connection was aborted");
-			phase = FAILED;
-		}
 	}
 	
 	if(phase == FAILED) {
@@ -763,11 +760,12 @@ void HttpRequest::StartBody()
 void HttpRequest::Out(const void *ptr, int size)
 {
 	LLOG("HTTP Out " << size);
-	if(z.IsError())
+	if(z.IsError()) {
 		HttpError("gzip format error");
+		return;
+	}
 	if(body.GetCount() + size > max_content_size) {
 		HttpError("content length exceeded " + AsString(max_content_size));
-		phase = FAILED;
 		return;
 	}
 	if(WhenContent && (status_code >= 200 && status_code < 300 || all_content))
@@ -839,14 +837,12 @@ void HttpRequest::Finish()
 		body = GZDecompress(body);
 		if(body.IsVoid()) {
 			HttpError("gzip decompress at finish error");
-			phase = FAILED;
 			return;
 		}
 	#else
 		z.End();
 		if(z.IsError()) {
 			HttpError("gzip format error (finish)");
-			phase = FAILED;
 			return;
 		}
 	#endif
