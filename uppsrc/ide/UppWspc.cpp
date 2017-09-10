@@ -867,7 +867,7 @@ void WorkspaceWork::FileMenu(Bar& menu)
 	menu.Add("Remove", THISBACK(RemoveFile))
 		.Key(organizer ? K_DELETE : K_ALT_DELETE)
 		.Help("Remove file / separator / topic group from package");
-	menu.Add(filelist.IsCursor() && !sel, "Delete", THISBACK(DelFile))
+	menu.Add(filelist.IsCursor(), "Delete", sel ? THISBACK(RemoveFile) : THISBACK(DelFile))
 		.Help("Remove file / topic group reference from package & delete file / folder on disk");
 	menu.Separator();
 	menu.Add("Open File Directory",THISBACK(OpenFileFolder));
