@@ -142,7 +142,7 @@ In single`-thread code, a single instance of such model would
 be used over the whole loop, however in multi`-threaded code, 
 each worker thread, plus thread that created CoWork need its 
 own instance. CoWorkerResources helps to manage such situation.&]
-[s0;%% &]
+[s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:CoWorkerResources`:`:CoWorkerResources`(`): [* CoWorkerResources]()&]
