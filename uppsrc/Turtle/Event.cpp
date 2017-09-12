@@ -53,7 +53,7 @@ bool Ctrl::IsWaitingEvent()
 	}
 	while(socket.Timeout(0).WaitRead()) {
 		socket.Timeout(20000);
-		String s = websocket.Recieve();
+		String s = websocket.Receive();
 		if(s.IsVoid()) { // No data returned -> means EOF was reached
 			WhenDisconnect();
 			EndSession();
