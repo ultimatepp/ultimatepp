@@ -89,6 +89,7 @@ void __LOGF__(const char *format, ...);
 #define DLOGHEX(x)       LOGHEX(x)
 #define DDUMPHEX(x)      DUMPHEX(x)
 #define DTIMESTOP(x)     TIMESTOP(x)
+#define DHITCOUNT(x)     HITCOUNT(x)
 
 #else
 
@@ -100,6 +101,7 @@ void __LOGF__(const char *format, ...);
 #define DLOGHEX(x)       @ // To clean logs after debugging, this produces error in release mode
 #define DDUMPHEX(nx)     @ // To clean logs after debugging, this produces error in release mode
 #define DTIMESTOP(x)     @ // To clean logs after debugging, this produces error in release mode
+#define DHITCOUNT(x)     @ // To clean logs after debugging, this produces error in release mode
 
 #define DEBUGCODE(x)     LOG_NOP
 
