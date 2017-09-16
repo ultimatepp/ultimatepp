@@ -22,8 +22,9 @@ operations.&]
 [s5;:TcpSocket`:`:WhenWait: [_^topic`:`/`/Core`/src`/Callbacks`$en`-us`#Callback`:`:class^ C
 allback]_[* WhenWait]&]
 [s2;%% If this callback is defined, it is invoked periodically while 
-TcpSocket performs any operations, with the frequency 50Hz. This 
-is intended to give user feedback in interactive applications.&]
+TcpSocket performs any operations, with the period set by WaitStep 
+(default 10ms / 100hz). This is intended to give user feedback 
+in interactive applications.&]
 [s3; &]
 [s4; &]
 [s5;:TcpSocket`:`:GetHostName`(`): [@(0.0.255) static] [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
@@ -303,7 +304,7 @@ using e.g. SocketWaitEvent). Null means operations are blocking
 (but they still can invoke WhenProgress periodically if defined). 
 Other values specify a number of milliseconds. Note: It is possible 
 to adjust timeout before any single TcpSocket operation. Returns 
-`*this.&]
+`*this. Default value is Null, which means TcpSocket is blocking.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:GetTimeout`(`)const: [@(0.0.255) int]_[* GetTimeout]()_[@(0.0.255) const]&]
@@ -326,8 +327,13 @@ cpSocket][@(0.0.255) `&]_[* NoGlobalTimeout]()&]
 [s4;%% &]
 [s5;:TcpSocket`:`:Blocking`(`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
 cpSocket][@(0.0.255) `&]_[* Blocking]()&]
-[s2;%% Same as Timeout(Null). Returns `*this.&]
+[s2;%% Same as Timeout(Null). Returns `*this. This is the default 
+value.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TcpSocket`:`:IsBlocking`(`): [@(0.0.255) bool]_[* IsBlocking]()&]
+[s2;%% Same is IsNull(GetTimeout()).&]
+[s3; &]
 [s4; &]
 [s5;:TcpSocket`:`:WaitStep`(int`): [_^topic`:`/`/Core`/src`/TcpSocket`$en`-us`#TcpSocket`:`:class^ T
 cpSocket][@(0.0.255) `&]_[* WaitStep]([@(0.0.255) int]_[*@3 ms])&]
