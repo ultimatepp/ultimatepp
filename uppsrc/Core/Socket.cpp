@@ -936,7 +936,7 @@ bool TcpSocket::StartSSL()
 	return true;
 }
 
-bool TcpSocket::SSLHandshake()
+dword TcpSocket::SSLHandshake()
 {
 	if(ssl && (mode == CONNECT || mode == ACCEPT)) {
 		dword w = ssl->Handshake();
@@ -951,7 +951,7 @@ bool TcpSocket::SSLHandshake()
 			return ssl->Handshake();
 		}
 	}
-	return false;
+	return 0;
 }
 
 void TcpSocket::SSLCertificate(const String& cert_, const String& pkey_, bool asn1_)

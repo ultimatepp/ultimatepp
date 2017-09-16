@@ -85,7 +85,7 @@ struct SSLInfo {
 	String  cert_serial;
 };
 
-enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_IS_EXCEPTION, WAIT_ALL = 7 };
+enum { WAIT_READ = 1, WAIT_WRITE = 2, WAIT_IS_EXCEPTION = 4 };
 
 class TcpSocket : NoCopy {
 	enum { BUFFERSIZE = 512 };
@@ -236,7 +236,7 @@ public:
 	
 	bool            StartSSL();
 	bool            IsSSL() const                            { return ssl; }
-	bool            SSLHandshake();
+	dword           SSLHandshake();
 	void            SSLCertificate(const String& cert, const String& pkey, bool asn1);
 	void            SSLServerNameIndication(const String& name);
 	const SSLInfo  *GetSSLInfo() const                       { return ~sslinfo; }
@@ -262,8 +262,8 @@ class SocketWaitEvent {
 
 public:
 	void  Clear()                                            { socket.Clear(); }
-	void  Add(SOCKET s, dword events = WAIT_ALL)             { socket.Add(MakeTuple((int)s, events)); }
-	void  Add(TcpSocket& s, dword events = WAIT_ALL)         { Add(s.GetSOCKET(), events); }
+	void  Add(SOCKET s, dword events)                        { socket.Add(MakeTuple((int)s, events)); }
+	void  Add(TcpSocket& s, dword events)                    { Add(s.GetSOCKET(), events); }
 	int   Wait(int timeout);
 	dword Get(int i) const;
 	dword operator[](int i) const                            { return Get(i); }
@@ -346,6 +346,7 @@ private:
 
 class HttpRequest : public TcpSocket {
 	int          phase;
+	dword        waitevents;
 	String       data;
 	int64        count;
 
@@ -564,6 +565,7 @@ public:
 	};
 
 	bool    Do();
+	dword   GetWaitEvents()                       { return waitevents; }
 	int     GetPhase() const                      { return phase; }
 	String  GetPhaseName() const;
 	bool    InProgress() const                    { return phase != FAILED && phase != FINISHED; }

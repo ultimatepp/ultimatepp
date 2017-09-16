@@ -66,6 +66,7 @@ void HttpRequest::Init()
 	postlen = Null;
 	has_content_length = false;
 	chunked_encoding = false;
+	waitevents = 0;
 }
 
 HttpRequest::HttpRequest()
@@ -300,6 +301,7 @@ void HttpRequest::HttpError(const char *s)
 
 void HttpRequest::StartPhase(int s)
 {
+	waitevents = WAIT_READ;
 	phase = s;
 	LLOG("Starting status " << s << " '" << GetPhaseName() << "', url: " << host);
 	data.Clear();
@@ -309,6 +311,7 @@ void HttpRequest::New()
 {
 	ClearError();
 	ClearAbort();
+	waitevents = 0;
 	phase = BEGIN;
 }
 
@@ -354,7 +357,8 @@ bool HttpRequest::Do()
 		ProcessSSLProxyResponse();
 		break;
 	case SSLHANDSHAKE:
-		if(SSLHandshake())
+		waitevents = SSLHandshake();
+		if(waitevents)
 			break;
 		StartRequest();
 		break;
@@ -490,6 +494,7 @@ void HttpRequest::StartConnect()
 	addrinfo.Clear();
 	if(ssl && ssl_proxy_host.GetCount()) {
 		StartPhase(SSLPROXYREQUEST);
+		waitevents = WAIT_WRITE;
 		String host_port = host;
 		if(port)
 			host_port << ':' << port;
@@ -535,6 +540,7 @@ void HttpRequest::AfterConnect()
 void HttpRequest::StartRequest()
 {
 	StartPhase(REQUEST);
+	waitevents = WAIT_WRITE;
 	count = 0;
 	String ctype = contenttype;
 	if((method == METHOD_POST || method == METHOD_PUT) && IsNull(ctype))

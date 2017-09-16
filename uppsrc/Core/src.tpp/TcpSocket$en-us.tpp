@@ -264,9 +264,12 @@ false.&]
 [s2;%% Returns true if TcpSocket is in SSL mode.&]
 [s3;%% &]
 [s4;%% &]
-[s5;:TcpSocket`:`:SSLHandshake`(`): [@(0.0.255) bool]_[* SSLHandshake]()&]
+[s5;:TcpSocket`:`:SSLHandshake`(`): [@(0.0.255) dword]_[* SSLHandshake]()&]
 [s2;%% Attempts the progress on SSL handshake for at most timeout 
-period. Returns true if SSL handshake is (still) in progress.&]
+period. Returns a combination of WAIT`_READ and WAIT`_WRITE if 
+SSL handshake is (still) in progress, indicating whether the 
+process needs to read or write more bytes from the socket. Returns 
+0 if handshake is finished.&]
 [s3;%% &]
 [s4;%% &]
 [s5;:TcpSocket`:`:SSLCertificate`(const String`&`,const String`&`,bool`): [@(0.0.255) v
