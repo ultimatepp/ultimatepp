@@ -487,6 +487,13 @@ be called at any time.&]
 [s2;%% Progresses the request. Maximum duration is defined by Socket`::Timeout. 
 Returns true if processing is not finished.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:GetWaitEvents`(`): [_^Upp`:`:dword^ dword]_[* GetWaitEvents]()
+&]
+[s2;%% Returns a combination of WAIT`_READ and WAIT`_WRITE flags 
+to indicate what is blocking the progress of HTTP request. Can 
+be used with SocketWaitEvent.&]
+[s3; &]
 [s4;%% &]
 [s5;:HttpRequest`:`:GetPhase`(`)const: [@(0.0.255) int]_[* GetPhase]()_[@(0.0.255) const]&]
 [s2;%% Returns the current phase of request processing, one of BEGIN, 
