@@ -248,6 +248,7 @@ public:
 	TcpSocket&      GlobalTimeout(int ms);
 	TcpSocket&      NoGlobalTimeout()                        { return GlobalTimeout(Null); }
 	TcpSocket&      Blocking()                               { return Timeout(Null); }
+	bool            IsBlocking()                             { return IsNull(GetTimeout()); }
 	TcpSocket&      WaitStep(int ms)                         { waitstep = ms; return *this; }
 	int             GetWaitStep() const                      { return waitstep; }
 
