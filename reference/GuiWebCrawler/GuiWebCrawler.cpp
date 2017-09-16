@@ -72,7 +72,7 @@ void WebCrawler::Run()
 		}
 		SocketWaitEvent we;
 		for(int i = 0; i < http.GetCount(); i++)
-			we.Add(http[i].http);
+			we.Add(http[i].http, http[i].http.GetWaitEvents());
 		we.Wait(10);
 		int i = 0;
 		while(i < http.GetCount()) {
