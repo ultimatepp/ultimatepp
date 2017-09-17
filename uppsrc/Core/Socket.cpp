@@ -825,7 +825,7 @@ int TcpSocket::Get(void *buffer, int count)
 	return done;
 }
 
-String TcpSocket::Get(int count)
+String TcpSocket::	Get(int count)
 {
 	if(count == 0)
 		return Null;
