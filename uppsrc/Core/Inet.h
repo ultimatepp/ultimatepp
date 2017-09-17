@@ -592,24 +592,54 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
                   const char *content_type = NULL, const String& data = Null,
                   const char *server = NULL, bool gzip = false);
 
+#include <Core/Core.h>
+
+using namespace Upp;
+
 class WebSocket {
-	int64 ReadLen(int n);
+	String     error;
+
+	TcpSocket  std_socket;
+	TcpSocket *socket;
+	
+	String     uri;
+	String     host;
+	IpAddrInfo addrinfo;
+	bool       ssl;
+
+	String     data;
+	int        data_pos;
+
+	int        max_chunk;
 
 	int        opcode;
-	String     data;
-	int64      maxlen;
-	TcpSocket *socket;
+	int64      length;
+	bool       mask;
+	int        key[4];
 
-	void Reset();
-	bool Handshake();
-
-public:
-	enum {
-		ERROR_DATA = TcpSocket::ERROR_LAST, ERROR_SEND, ERROR_LEN_LIMIT
+	struct Input : Moveable<Input> {
+		dword  opcode;
+		String data;
 	};
+	
+	BiVector<Input>  in_queue;
+	
+	BiVector<String> out_queue;
+	int              out_at;
+	
+	bool             close_sent;
+	bool             close_received;
+	
+	dword            current_opcode;
+
 	enum {
+		HTTP_REQUEST_HEADER = -100,
+		HTTP_RESPONSE_HEADER = -101,
+		READING_FRAME_HEADER = -102,
+		DNS = -103,
+		SSL_HANDSHAKE = -104,
+
 		FIN = 0x80,
-		CONTINUE = 0x0,
 		TEXT = 0x1,
 		BINARY = 0x2,
 		CLOSE = 0x8,
@@ -617,41 +647,75 @@ public:
 		PONG = 0xa,
 	};
 
+	void Clear();
+	void Error(const String& error);
+
+	void Out(const String& s);
+
+	void Output();
+
+	void StartConnect();
+	void Dns();
+	void SSLHandshake();
+	void SendRequest();
+	bool ReadHttpHeader();
+	void ResponseHeader();
+	void RequestHeader();
+	void FrameHeader();
+	void FrameData();
+
+	int GetFinIndex() const;
+
+	void   SendRaw(int hdr, const String& data);
+	void   Do0();
+
+public:
+	WebSocket& NonBlocking(bool b = true)               { socket->Timeout(b ? 0 : Null); return *this; }
+	
+	bool   IsBlocking() const                           { return IsNull(socket->GetTimeout()); }
+	
+	bool   IsError() const                              { return socket->IsError() || error.GetCount(); }
+	String GetError() const                             { return Nvl(socket->GetErrorDesc(), error); }
+	
+	void   Accept(TcpSocket& listener_socket);
+	void   Connect(const String& url);
+	
+	void   Do();
+
+	String Receive();
+	bool   IsFin() const                                { return current_opcode & FIN; }
+	bool   IsText() const                               { return current_opcode & TEXT; }
+	bool   IsBinary() const                             { return current_opcode & BINARY; }
+
+	void   SendText(const String& data)                 { SendRaw(FIN|TEXT, data); }
+	void   SendBinary(const String& data)               { SendRaw(FIN|BINARY, data); }
+
+	void   BeginText(const String& data)                { SendRaw(TEXT, data); }
+	void   BeginBinary(const String& data)              { SendRaw(BINARY, data); }
+	void   Continue(const String& data)                 { SendRaw(0, data); }
+	void   Fin(const String& data)                      { SendRaw(FIN, data); }
+
+	void   Close(const String& msg = Null);
+	bool   IsOpen() const                               { return socket->IsOpen(); }
+	bool   IsClosed() const                             { return !IsOpen(); }
+
+	WebSocket();
+
+// backward compatibility:
 	bool   WebAccept(TcpSocket& socket, HttpHeader& hdr);
 	bool   WebAccept(TcpSocket& socket);
 
-	bool   ReceiveRaw();
-	String Receive();
+	int    GetOpCode() const { return current_opcode & 15; }
 
-	bool   IsFin()           { return opcode & FIN; }
-	int    GetOpCode() const { return opcode & 15; }
-	bool   IsText() const    { return GetOpCode() == TEXT; }
-	bool   IsBinary() const  { return GetOpCode() == BINARY; }
-	bool   IsClosed() const  { return GetOpCode() == CLOSE; }
-	String GetData() const   { return data; }
+	bool   SendText(const String& data, bool fin)                   { SendRaw((fin ? 0x80 : 0)|TEXT, data); return !IsError(); }
+	bool   SendText(const void *data, int len, bool fin = true)     { return SendText(String((char *)data, len), fin); }
 
-	bool   SendRaw(int hdr, const void *data, int64 len);
+	bool   SendBinary(const String& data, bool fin)                 { SendRaw((fin ? 0x80 : 0)|BINARY, data); return !IsError(); }
+	bool   SendBinary(const void *data, int len, bool fin = true)   { return SendText(String((char *)data, len), fin); }
 
-	bool   SendText(const void *data, int64 len, bool fin = true)   { return SendRaw((fin ? 0x80 : 0)|TEXT, data, len); }
-	bool   SendText(const String& data, bool fin = true)            { return SendText(~data, data.GetCount(), fin); }
-
-	bool   SendBinary(const void *data, int64 len, bool fin = true) { return SendRaw((fin ? 0x80 : 0)|BINARY, data, len); }
-	bool   SendBinary(const String& data, bool fin = true)          { return SendBinary(~data, data.GetCount(), fin); }
-
-	void   Close();
-
-	bool   IsOpen() const                                           { return socket && socket->IsOpen(); }
-	bool   IsError() const                                          { return socket && socket->IsError(); }
-	void   ClearError()                                             { if(socket) socket->ClearError(); }
-	int    GetError() const                                         { return socket ? socket->GetError() : 0; }
-	String GetErrorDesc() const                                     { return socket ? socket->GetErrorDesc() : String(); }
-	
-	WebSocket& MaxLen(int64 maxlen_)                                { maxlen = maxlen_; return *this; }
-	
-	WebSocket()                                                     { Reset(); }
+	String GetErrorDesc() const                                     { return GetError(); }
 
 // keep mispeled method names
-	bool   RecieveRaw() { return ReceiveRaw(); }
 	String Recieve()    { return Receive(); }
 };
 
