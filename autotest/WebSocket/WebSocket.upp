@@ -1,0 +1,10 @@
+uses
+	Core,
+	Core/SSL;
+
+file
+	WebSocket.cpp;
+
+mainconfig
+	"" = "";
+
