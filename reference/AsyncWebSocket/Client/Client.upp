@@ -1,0 +1,7 @@
+uses Core;
+
+file
+	Client.cpp;
+
+mainconfig
+	"" = "";
