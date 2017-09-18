@@ -610,8 +610,6 @@ class WebSocket {
 	String     data;
 	int        data_pos;
 
-	int        max_chunk;
-
 	int        opcode;
 	int64      length;
 	bool       mask;
@@ -631,6 +629,8 @@ class WebSocket {
 	bool             close_received;
 	
 	dword            current_opcode;
+	
+	bool             client;
 
 	enum {
 		HTTP_REQUEST_HEADER = -100,
@@ -668,6 +668,8 @@ class WebSocket {
 
 	void   SendRaw(int hdr, const String& data);
 	void   Do0();
+	
+	static String FormatBlock(const String& s);
 
 public:
 	WebSocket& NonBlocking(bool b = true)               { socket->Timeout(b ? 0 : Null); return *this; }
@@ -677,7 +679,7 @@ public:
 	bool   IsError() const                              { return socket->IsError() || error.GetCount(); }
 	String GetError() const                             { return Nvl(socket->GetErrorDesc(), error); }
 	
-	void   Accept(TcpSocket& listener_socket);
+	bool   Accept(TcpSocket& listener_socket);
 	void   Connect(const String& url);
 	
 	void   Do();
@@ -698,6 +700,10 @@ public:
 	void   Close(const String& msg = Null);
 	bool   IsOpen() const                               { return socket->IsOpen(); }
 	bool   IsClosed() const                             { return !IsOpen(); }
+	
+	void   AddTo(SocketWaitEvent& e)                    { e.Add(*socket, WAIT_READ|(!!out_queue.GetCount() * WAIT_WRITE)); }
+
+	void   Trace(bool b = true);
 
 	WebSocket();
 
