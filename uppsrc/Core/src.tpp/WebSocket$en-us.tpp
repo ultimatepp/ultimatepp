@@ -60,7 +60,8 @@ called in blocking mode.&]
 is available. In non`-blocking mode returns either message or 
 String`::GetVoid() if there is no message. In both cases also 
 returns String`::GetVoid() in case of exceptional situations (errors, 
-connection closed etc...).&]
+connection closed etc...). Note that in non`-blocking mode Receive 
+calls Do, so there is no need to call it separately.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:IsFin`(`)const: [@(0.0.255) bool]_[* IsFin]()_[@(0.0.255) const]&]
