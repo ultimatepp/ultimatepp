@@ -39,9 +39,10 @@ onst]&]
 [s2;%% Returns the description of error.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:WebSocket`:`:Accept`(Upp`:`:TcpSocket`&`): [@(0.0.255) void]_[* Accept]([_^Upp`:`:TcpSocket^ T
+[s5;:Upp`:`:WebSocket`:`:Accept`(Upp`:`:TcpSocket`&`): [@(0.0.255) bool]_[* Accept]([_^Upp`:`:TcpSocket^ T
 cpSocket][@(0.0.255) `&]_[*@3 listen`_socket])&]
-[s2;%% Accepts connection from [%-*@3 listen`_socket].&]
+[s2;%% Accepts connection from [%-*@3 listen`_socket]. Returns true 
+on success.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:Connect`(const Upp`:`:String`&`): [@(0.0.255) void]_[* Connect](
@@ -117,4 +118,15 @@ onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 msg])&]
 [s4;%% &]
 [s5;:WebSocket`:`:IsClosed`(`)const: [@(0.0.255) bool]_[* IsClosed]()_[@(0.0.255) const]&]
 [s2;%% Returns true if the socket is closed.&]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:AddTo`(Upp`:`:SocketWaitEvent`&`): [@(0.0.255) void]_[* AddTo]([_^Upp`:`:SocketWaitEvent^ S
+ocketWaitEvent][@(0.0.255) `&]_[*@3 e])&]
+[s2;%% Adds WebSocket to [%-_^Upp`:`:SocketWaitEvent^ SocketWaitEvent] 
+for waiting on it.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:Trace`(bool`): [@(0.0.255) void]_[* Trace]([@(0.0.255) bool]_[*@3 b])
+&]
+[s2;%% Activates tracing log.&]
+[s3;%% &]
 [s0;%% ]]

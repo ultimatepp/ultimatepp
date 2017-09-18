@@ -1,12 +1,23 @@
 #include "Core.h"
 
-#define LLOG(x)  // DLOG(x)
-
 namespace Upp {
+	
+static bool sTrace;
+
+#define LLOG(x)  if(sTrace) DLOG((client ? "WS CLIENT " : "WS SERVER ") << x)
+
+void WebSocket::Trace(bool b)
+{
+	sTrace = b;
+}
+
+String WebSocket::FormatBlock(const String& s)
+{
+	return AsCString(s.GetCount() < 500 ? s : s.Mid(0, 500), INT_MAX, NULL, ASCSTRING_OCTALHI);
+}
 
 WebSocket::WebSocket()
 {
-	max_chunk = 10 * 1024 * 1024;
 	Clear();
 }
 
@@ -23,6 +34,7 @@ void WebSocket::Clear()
 	error.Clear();
 	socket->Clear();
 	close_sent = close_received = false;
+	client = false;
 }
 
 void WebSocket::Error(const String& err)
@@ -31,19 +43,22 @@ void WebSocket::Error(const String& err)
 	error = err;
 }
 
-void WebSocket::Accept(TcpSocket& listen_socket)
+bool WebSocket::Accept(TcpSocket& listen_socket)
 {
+	Clear();
 	if(!socket->Accept(listen_socket)) {
 		Error("Accept has failed");
-		return;
+		return false;
 	}
-	Clear();
 	opcode = HTTP_REQUEST_HEADER;
+	return true;
 }
 
 void WebSocket::Connect(const String& url)
 {
 	Clear();
+	
+	client = true;
 
 	uri = url;
 	const char *u = url;
@@ -69,6 +84,8 @@ void WebSocket::Connect(const String& url)
 		}
 		LLOG("DNS resolved");
 		StartConnect();
+		while(opcode != READING_FRAME_HEADER)
+			Do0();
 	}
 	else
 		opcode = DNS;
@@ -158,8 +175,7 @@ bool WebSocket::ReadHttpHeader()
 		if(data.GetCount() >= 3) {
 			const char *h = data.Last();
 			if(h[0] == '\n' && h[-1] == '\r' && h[-2] == '\n') { // empty ending line after non-empty header
-				LLOG("HTTP header received");
-				LLOG(data);
+				LLOG("HTTP header received: " << FormatBlock(data));
 				return true;
 			}
 		}
@@ -173,7 +189,6 @@ bool WebSocket::ReadHttpHeader()
 void WebSocket::RequestHeader()
 {
 	if(ReadHttpHeader()) {
-		LLOG(data);
 		HttpHeader hdr;
 		if(!hdr.Parse(data)) {
 			Error("Invalid HTTP header");
@@ -257,7 +272,7 @@ void WebSocket::FrameHeader()
 		}
 
 		if(ok) {
-			LLOG("Frame header received, len: " << length << ", code " << opcode);
+			LLOG("Frame header received, len: " << length << ", code " << new_opcode);
 			opcode = new_opcode;
 			data.Clear();
 			data_pos = 0;
@@ -308,8 +323,8 @@ void WebSocket::FrameData()
 				Input& m = in_queue.AddTail();
 				m.opcode = opcode;
 				m.data = data;
-				LLOG((m.opcode & TEXT ? "TEXT" : "BINARY") << ", input queue count is now " << in_queue.GetCount());
-				LOGHEXDUMP(data, min(data.GetCount(), 64));
+				LLOG((m.opcode & TEXT ? "TEXT: " : "BINARY: ") << FormatBlock(data));
+				LLOG("Input queue count is now " << in_queue.GetCount());
 				break;
 			}
 			data.Clear();
@@ -321,33 +336,37 @@ void WebSocket::FrameData()
 
 void WebSocket::Do0()
 {
-	if(socket->IsEof() && !(close_sent || close_received))
-		Error("Socket has been closed unexpectedly");
-	if(IsError())
-		return;
-	if(findarg(opcode, DNS, SSL_HANDSHAKE) < 0)
-		Output();
-	int prev_opcode = opcode;
-	switch(opcode) {
-	case DNS:
-		Dns();
-		break;
-	case SSL_HANDSHAKE:
-		SSLHandshake();
-		break;
-	case HTTP_RESPONSE_HEADER:
-		ResponseHeader();
-		break;
-	case HTTP_REQUEST_HEADER:
-		RequestHeader();
-		break;
-	case READING_FRAME_HEADER:
-		FrameHeader();
-		break;
-	default:
-		FrameData();
-		break;
+	int prev_opcode;
+	do {
+		prev_opcode = opcode;
+		if(socket->IsEof() && !(close_sent || close_received))
+			Error("Socket has been closed unexpectedly");
+		if(IsError())
+			return;
+		if(findarg(opcode, DNS, SSL_HANDSHAKE) < 0)
+			Output();
+		switch(opcode) {
+		case DNS:
+			Dns();
+			break;
+		case SSL_HANDSHAKE:
+			SSLHandshake();
+			break;
+		case HTTP_RESPONSE_HEADER:
+			ResponseHeader();
+			break;
+		case HTTP_REQUEST_HEADER:
+			RequestHeader();
+			break;
+		case READING_FRAME_HEADER:
+			FrameHeader();
+			break;
+		default:
+			FrameData();
+			break;
+		}
 	}
+	while(!IsBlocking() && opcode != prev_opcode);
 }
 
 void WebSocket::Do()
@@ -387,7 +406,7 @@ void WebSocket::Output()
 			int n = socket->Put(~s + out_at, s.GetCount() - out_at);
 			if(n == 0)
 				break;
-			LLOG("Sent " << n << " bytes");
+			LLOG("Sent " << n << " bytes: " << FormatBlock(s));
 			out_at += n;
 			if(out_at >= s.GetCount()) {
 				out_at = 0;
@@ -405,7 +424,6 @@ void WebSocket::SendRaw(int hdr, const String& data)
 	
 	ASSERT(!close_sent);
 	LLOG("Send " << data.GetCount() << " bytes, hdr: " << hdr);
-	LOGHEXDUMP(data, min(data.GetCount(), 64));
 	
 	String header;
 	header.Cat(hdr);
