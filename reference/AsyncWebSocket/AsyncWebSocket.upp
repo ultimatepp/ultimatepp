@@ -1,0 +1,12 @@
+description "Demonstrates asynchronous WebSocket server\377";
+
+uses
+	Core;
+
+file
+	Client.cpp,
+	AsyncWebSocket.cpp;
+
+mainconfig
+	"" = "";
+
