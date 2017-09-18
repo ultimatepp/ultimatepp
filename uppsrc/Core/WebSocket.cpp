@@ -4,7 +4,7 @@ namespace Upp {
 	
 static bool sTrace;
 
-#define LLOG(x)  if(sTrace) DLOG((client ? "WS CLIENT " : "WS SERVER ") << x)
+#define LLOG(x)  if(sTrace) RLOG((client ? "WS CLIENT " : "WS SERVER ") << x)
 
 void WebSocket::Trace(bool b)
 {
