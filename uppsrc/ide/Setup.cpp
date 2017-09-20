@@ -526,6 +526,8 @@ void Ide::SetupFormat() {
 		con.WhenAction = f1.WhenAction = f2.WhenAction = dlg.Breaker(222);
 	ide.showtimeafter <<= Nvl((Date)FileGetTime(ConfigFile("version")), GetSysDate() - 1);
 	hlt.hl_restore <<= dlg.Breaker(333);
+	hlt.hl_restore_white <<= dlg.Breaker(334);
+	hlt.hl_restore_dark <<= dlg.Breaker(335);
 	ide.chstyle.Add(0, "Host platform");
 	ide.chstyle.Add(1, "Standard");
 	ide.chstyle.Add(2, "Classic");
@@ -571,6 +573,17 @@ void Ide::SetupFormat() {
 			break;
 		if(c == 333 && PromptYesNo("Restore default highlighting colors?")) {
 			editor.DefaultHlStyles();
+			SetupEditor();
+			ReadHlStyles(hlt.hlstyle);
+		}
+		if(c == 334 && PromptYesNo("Set white theme?")) {
+			editor.WhiteTheme();
+			SetupEditor();
+			ReadHlStyles(hlt.hlstyle);
+		}
+		if(c == 335 && PromptYesNo("Set dark theme?")) {
+			editor.DarkTheme();
+			SetupEditor();
 			ReadHlStyles(hlt.hlstyle);
 		}
 	}
