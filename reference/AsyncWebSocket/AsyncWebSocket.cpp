@@ -66,10 +66,11 @@ CONSOLE_APP_MAIN
 					LOG("WebSocket closed, current count: " << worker.GetCount());
 				}
 			}
-		if(sel[0])
+		if(sel[0]) {
 			if(!worker.Add().ws.NonBlocking().Accept(server))
 				worker.Drop();
 			else
 				LOG("WebSocket accepted, current count: " << worker.GetCount());
+		}
 	}
 }
