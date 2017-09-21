@@ -7,7 +7,7 @@ using namespace Upp;
 void ClientEmulation()
 {
 	Thread::Start([] {
-	#if 0 // change to 1 to dome single request
+	#if 0 // change to 1 to do single request
 		Sleep(500);
 		WebSocket ws;
 		ws.Connect("ws://127.0.0.1:12321");
