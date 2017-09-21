@@ -703,7 +703,7 @@ public:
 	
 	void   AddTo(SocketWaitEvent& e)                    { e.Add(*socket, WAIT_READ|(!!out_queue.GetCount() * WAIT_WRITE)); }
 
-	void   Trace(bool b = true);
+	static void Trace(bool b = true);
 
 	WebSocket();
 
