@@ -53,7 +53,7 @@ CONSOLE_APP_MAIN
 		SocketWaitEvent sel;
 		sel.Add(server, WAIT_READ);
 		for(auto& w : worker)
-			w.ws.AddTo(sel);
+			w.ws.AddTo(sel);id
 		sel.Wait(1000);
 		LOG("Waiting ended at " << GetSysTime());
 		for(int i = worker.GetCount() - 1; i >= 0; i--)
