@@ -1,0 +1,11 @@
+description "Demonstrates CoWork Cancel\377";
+
+uses
+	Core;
+
+file
+	CoWorkCancel.cpp;
+
+mainconfig
+	"" = "";
+
