@@ -1,0 +1,11 @@
+description "Demonstrates of worker thread exception handling\377";
+
+uses
+	Core;
+
+file
+	CoWorkExceptions.cpp;
+
+mainconfig
+	"" = "";
+
