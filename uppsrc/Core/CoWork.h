@@ -30,7 +30,7 @@ public:
 		Pool();
 		~Pool();
 		
-		static thread__ bool finlock;
+		static thread_local bool    finlock;
 
 		bool DoJob();
 		static void ThreadRun(int tno);
@@ -41,10 +41,16 @@ public:
 	static Pool& GetPool();
 
 	static thread_local int worker_index;
+	static thread_local CoWork *current;
 
-	ConditionVariable waitforfinish;
-	Link<MJob, 2> jobs; // global stack and CoWork stack as double-linked lists
-	int todo;
+	ConditionVariable  waitforfinish;
+	Link<MJob, 2>      jobs; // global stack and CoWork stack as double-linked lists
+	int                todo;
+	bool               canceled;
+	std::exception_ptr exc;
+
+	void Cancel0();
+	void Finish0();
 
 // experimental pipe support
 	Mutex stepmutex;
@@ -68,10 +74,13 @@ public:
 	static void FinLock();
 	
 	void Cancel();
+	static bool IsCanceled()                                  { return current && current->canceled; }
 
 	void Finish();
 	
 	bool IsFinished();
+	
+	void Reset();
 
 	static bool IsWorker()                                    { return worker_index >= 0; }
 	static int  GetWorkerIndex()                              { return worker_index; }
@@ -79,7 +88,7 @@ public:
 	static void SetPoolSize(int n);
 
 	CoWork();
-	~CoWork();
+	~CoWork() noexcept(false);
 };
 
 template <class T>

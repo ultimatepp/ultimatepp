@@ -4,13 +4,14 @@ namespace Upp {
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)      // DLOG(x)
-#define LDUMP(x)     // DDUMP(x)
+#define LLOG(x)       // DLOG(x)
+#define LDUMP(x)      // DDUMP(x)
 
-#define LHITCOUNT(x) // RHITCOUNT(x)
+#define LHITCOUNT(x)  // RHITCOUNT(x)
 
-thread_local bool CoWork::Pool::finlock;
-thread_local int  CoWork::worker_index = -1;
+thread_local bool    CoWork::Pool::finlock;
+thread_local int     CoWork::worker_index = -1;
+thread_local CoWork *CoWork::current;
 
 CoWork::Pool& CoWork::GetPool()
 {
@@ -37,9 +38,8 @@ void CoWork::Pool::ExitThreads()
 	quit = true;
 	lock.Leave();
 	waitforjob.Broadcast();
-	for(int i = 0; i < threads.GetCount(); i++) {
+	for(int i = 0; i < threads.GetCount(); i++)
 		threads[i].Wait();
-	}
 	threads.Clear();
 	lock.Enter();
 	quit = false;
@@ -88,13 +88,25 @@ void CoWork::Pool::DoJob(MJob& job)
 	finlock = false;
 	Function<void ()> fn = pick(job.fn);
 	CoWork *work = job.work;
+	CoWork::current = work;
 	Free(job);
 	lock.Leave();
-	fn();
+	std::exception_ptr exc;
+	try {
+		fn();
+	}
+	catch(...) {
+		LLOG("DoJob caught exception");
+		exc = std::current_exception();
+	}
 	if(!finlock)
 		lock.Enter();
 	if(!work)
 		return;
+	if(exc && !work->exc) {
+		work->Cancel0();
+		work->exc = exc;
+	}
 	if(--work->todo == 0) {
 		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
 		work->waitforfinish.Signal();
@@ -182,35 +194,51 @@ void CoWork::Do(Function<void ()>&& fn)
 	p.lock.Leave();
 }
 
-void CoWork::Cancel()
+void CoWork::Cancel0()
 {
+	LLOG("CoWork Cancel0");
+	canceled = true;
 	Pool& p = GetPool();
-	p.lock.Enter();
 	while(!jobs.IsEmpty(1)) {
+		LHITCOUNT("CoWork::Canceling scheduled Job");
 		MJob& job = *jobs.GetNext(1);
 		job.UnlinkAll();
 		p.Free(job);
 		--todo;
 	}
+}
+
+void CoWork::Finish0()
+{
+	Pool& p = GetPool();
 	while(todo) {
-		LLOG("Cancel (CoWork " << FormatIntHex(this) << ")");
+		LLOG("WaitForFinish (CoWork " << FormatIntHex(this) << ")");
 		waitforfinish.Wait(p.lock);
 	}
+	canceled = false;
+	if(exc) {
+		LLOG("CoWork rethrowing worker exception");
+		auto e = exc;
+		exc = nullptr;
+		p.lock.Leave();
+		std::rethrow_exception(e);
+	}
+}
+
+void CoWork::Cancel()
+{
+	Pool& p = GetPool();
+	p.lock.Enter();
+	Cancel0();
+	Finish0();
 	p.lock.Leave();
-	LLOG("CoWork " << FormatIntHex(this) << " finished");
+	LLOG("CoWork " << FormatIntHex(this) << " canceled and finished");
 }
 
 void CoWork::Finish() {
 	Pool& p = GetPool();
 	p.lock.Enter();
-	while(!jobs.IsEmpty(1)) {
-		LLOG("Finish: todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
-		p.DoJob(*jobs.GetNext(1));
-	}
-	while(todo) {
-		LLOG("WaitForFinish (CoWork " << FormatIntHex(this) << ")");
-		waitforfinish.Wait(p.lock);
-	}
+	Finish0();
 	p.lock.Leave();
 	LLOG("CoWork " << FormatIntHex(this) << " finished");
 }
@@ -261,13 +289,24 @@ void CoWork::Pipe(int stepi, Function<void ()>&& fn)
 	}
 }
 
+void CoWork::Reset()
+{
+	try {
+		Cancel();
+	}
+	catch(...) {}
+	todo = 0;
+	canceled = false;
+}
+
 CoWork::CoWork()
 {
 	LLOG("CoWork constructed " << FormatHex(this));
 	todo = 0;
+	canceled = false;
 }
 
-CoWork::~CoWork()
+CoWork::~CoWork() noexcept(false)
 {
 	Finish();
 	LLOG("~CoWork " << FormatIntHex(this));
@@ -276,4 +315,3 @@ CoWork::~CoWork()
 #endif
 
 }
-
