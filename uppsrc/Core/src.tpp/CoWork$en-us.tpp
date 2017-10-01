@@ -27,6 +27,10 @@ also possible. Thread pool is normally terminated when the main
 thread finishes.&]
 [s9;%% No synchronization is required to access CoWork instances 
 from various threads (CoWork is internally synchronized).&]
+[s9;%% If an exception is thrown in worker thread, which is not handled 
+by worker thread, it is caught and rethrown in CoWork thread 
+in Finish routine. Any such exception also causes the Cancel 
+of the CoWork.&]
 [s9;%% [*/ Implementation notes: ]Current implementation has single 
 global FIFO stack for 2048 scheduled jobs. When there is no slot 
 available when scheduling the job, it is performed immediately 
@@ -89,14 +93,23 @@ not to cause congestion of CoWork scheduling.&]
 [s5;:Upp`:`:CoWork`:`:Cancel`(`): [@(0.0.255) void]_[* Cancel]()&]
 [s2;%% Removed all jobs scheduled by this thread that has not started 
 yet from the queue and then waits for any jobs already started 
-to finish.&]
+to finish. Rethrows the exception thrown in worker threads. If 
+more than single worker thread throws the exception, the first 
+exception thrown in absolute time is rethrown.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:IsCanceled`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsCanceled](
+)&]
+[s2;%% This methods returns true in worker thread when the worker 
+thread is a part of some CoWork instance and that instance was 
+canceled.&]
 [s3; &]
 [s4; &]
 [s5;:CoWork`:`:Finish`(`): [@(0.0.255) void]_[* Finish]()&]
 [s2;%% Waits until all jobs scheduled using Do (or operator`&) are 
 finished. All changes to data performed by scheduled threads 
 are visible after Finish. While waiting, Finish can perform scheduled 
-jobs.&]
+jobs. Can &]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:IsFinished`(`): [@(0.0.255) bool]_[* IsFinished]()&]
@@ -106,8 +119,17 @@ are visible after IsFinished returns true (so this is basically
 non`-blocking variant of Finish).&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CoWork`:`:Reset`(`): [@(0.0.255) void]_[* Reset]()&]
+[s2;%% Calls Cancel, catches and ignores all exceptions eventually 
+thrown by worker threads. Then resets CoWork to the initial state 
+as if it was just constructed. Useful when using CoWork as nonlocal 
+variable.&]
+[s3; &]
+[s4; &]
 [s5;:CoWork`:`:`~CoWork`(`): [@(0.0.255) `~][* CoWork]()&]
-[s2;%% Calls Finish().&]
+[s2;%% Calls Finish(). Can eventually rethrow worker thread exception. 
+If there is a chance of destructor being involved in stack unwinding, 
+Finish should be called separately before destructor.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:IsWorker`(`): [@(0.0.255) static] [@(0.0.255) bool]_[* IsWorker]()&]
