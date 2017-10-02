@@ -138,7 +138,7 @@ public:
 	bool   IsText();
 	String PeekText()                                         { return cdata; }
 	String ReadText();
-	String ReadTextE();	
+	String ReadTextE();
 
 	bool   IsDecl();
 	String PeekDecl()                                         { return ReadDecl(false); }
@@ -149,7 +149,7 @@ public:
 	String ReadPI()                                           { return ReadPI(true); }
 
 	bool   IsComment();
-	String PeekComment()                                      { return ReadComment(false); } 
+	String PeekComment()                                      { return ReadComment(false); }
 	String ReadComment()                                      { return ReadComment(true); }
 
 	void   Skip();
