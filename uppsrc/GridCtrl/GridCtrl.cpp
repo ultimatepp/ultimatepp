@@ -6472,9 +6472,9 @@ Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility, bool hrel, bool vr
 	return ctrl;
 }
 
-Ctrl * GridCtrl::GetCtrl(int r, int c)
+Ctrl * GridCtrl::GetCtrl(int r, int c, bool check_visibility)
 {
-	return GetCtrl(r + fixed_rows, c, true, true, false);
+	return GetCtrl(r + fixed_rows, c, check_visibility, true, false);
 }
 
 Ctrl * GridCtrl::GetCtrl(int c)
