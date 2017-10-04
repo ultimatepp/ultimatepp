@@ -1590,8 +1590,9 @@ class GridCtrl : public Ctrl
 
 		void Serialize(Stream &s);
 
-		Ctrl * GetCtrl(int r, int c, bool check_visibility = true);
-		Ctrl * GetCtrl(int c);
+		Ctrl * GetCtrl(int r, int c); // checks visibility - if widget is out of view, returns NULL
+		Ctrl * GetCtrlAt(int r, int c); // does not check visibility
+		Ctrl * GetCtrl(int c); // checks visibility - if widget is out of view, returns NULL
 
 		static int GetStdHeight() { return Draw::GetStdFontCy() + 4; }
 
@@ -1763,7 +1764,7 @@ class GridCtrl : public Ctrl
 		void Nothing();
 		void Init();
 
-		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool hrel, bool vrel = false, bool check_edits = true);
+		Ctrl * GetCtrl(int x, int y, bool check_visibility, bool hrel = false, bool vrel = false, bool check_edits = true);
 		Ctrl * GetCtrl(const Point &p, bool check_visibility, bool hrel = false, bool vrel = false, bool check_edits = true);
 		bool IsCtrl(Point &p, bool check_visibility = true);
 
