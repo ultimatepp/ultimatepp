@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	colorpopup.h,
+	main.cpp,
+	colorpopup.lay;
+
+mainconfig
+	"" = "GUI ST";
+
