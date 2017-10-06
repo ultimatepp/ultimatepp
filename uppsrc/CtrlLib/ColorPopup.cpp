@@ -158,22 +158,21 @@ Color ColorPopUp::GetColor(int i) const
 
 int ColorPopUp::GetCy()
 {
-	return ((GetColorCount() + 17) / 18) * 16 +
-			(norampwheel ? 0 : 2) +
-	        (notnull ? 0 : StdFont().Info().GetHeight() + 3 + 2) +
-	        (withvoid ? StdFont().Info().GetHeight() + 3 + 2 : 0);
+	return ((GetColorCount() + 17) / 18) * DPI(16) +
+			(norampwheel ? 0 : DPI(2)) +
+	        (notnull ? 0 : StdFont().Info().GetHeight() + DPI(3 + 2)) +
+	        (withvoid ? StdFont().Info().GetHeight() + DPI(3 + 2) : 0);
 }
 
 void ColorPopUp::DrawFilledFrame(Draw &w, int x, int y, int cx, int cy, Color fcol, Color bcol)
 {
 	DrawFrame(w, x, y, cx, cy, fcol);
-	w.DrawRect(x + 1, y + 1, cx - 2, cy - 2, bcol);
+	w.DrawRect(x + DPI(1), y + DPI(1), cx - DPI(2), cy - DPI(2), bcol);
 }
 
 void ColorPopUp::DrawFilledFrame(Draw &w, Rect &r, Color fcol, Color bcol)
 {
-	DrawFrame(w, r.left, r.top, r.Width(), r.Height(), fcol);
-	w.DrawRect(r.left + 1, r.top + 1, r.Width() - 2, r.Height() - 2, bcol);
+	DrawFilledFrame(w, r.left, r.top, r.GetWidth(), r.GetHeight(), fcol, bcol);
 }
 
 void ColorPopUp::Paint(Draw& w)
@@ -183,14 +182,14 @@ void ColorPopUp::Paint(Draw& w)
 
 	w.DrawRect(sz, SColorMenu);
 
-	int y = 1;
+	int y = DPI(1);
 
 	if(withvoid) {
 		Size fsz = GetTextSize(nulltext, StdFont());
-		Rect r(1, y, sz.cx - 1, fsz.cy + y + 2);
+		Rect r(1, y, sz.cx - DPI(1), fsz.cy + y + DPI(2));
 		DrawFrame(w, r, SColorText);
 		w.DrawText((sz.cx - fsz.cx) / 2, y, voidtext, StdFont(), SColorText());
-		y = r.bottom + 3;
+		y = r.bottom + DPI(3);
 		if(colori == 997)
 		{
 			r.Inflate(1);
@@ -203,10 +202,10 @@ void ColorPopUp::Paint(Draw& w)
 
 	if(!notnull) {
 		Size fsz = GetTextSize(nulltext, StdFont());
-		Rect r(1, y, sz.cx - 1, fsz.cy + y + 2);
+		Rect r(1, y, sz.cx - DPI(1), fsz.cy + y + DPI(2));
 		DrawFrame(w, r, SColorText);
 		w.DrawText((sz.cx - fsz.cx) / 2, y, nulltext, StdFont(), SColorText());
-		y = r.bottom + 3;
+		y = r.bottom + DPI(3);
 		if(colori == 998)
 		{
 			r.Inflate(1);
@@ -219,10 +218,10 @@ void ColorPopUp::Paint(Draw& w)
 
 	int i = 0;
 	for(;;) {
-		for(int x = 0; x < 18 * 16; x += 16) {
+		for(int x = 0; x < 18 * DPI(16); x += DPI(16)) {
 			if(i >= GetColorCount()) {
 				if(!norampwheel) {
-					Rect r(8 * 16 + 1, cy + 4, 10 * 16 - 1, sz.cy - 4 - 24);
+					Rect r(DPI(8 * 16 + 1), cy + DPI(4), DPI(10 * 16 - 1), sz.cy - DPI(4) - DPI(24));
 					DrawFilledFrame(w, r, SColorText, color);
 
 					r.Inflate(1);
@@ -236,19 +235,19 @@ void ColorPopUp::Paint(Draw& w)
 				return;
 			}
 
-			DrawFilledFrame(w, x + 1, y, 14, 14, SColorText, GetColor(i));
+			DrawFilledFrame(w, x + DPI(1), y, DPI(14), DPI(14), SColorText, GetColor(i));
 			if(i < 18 && scolors)
-				DrawFrame(w, x + 2, y + 1, 12, 12, Blend(SColorLight, SColorHighlight));
+				DrawFrame(w, x + DPI(2), y + DPI(1), DPI(12), DPI(12), Blend(SColorLight, SColorHighlight));
 
 			if(i == colori) {
 				if(GetMouseLeft())
-					DrawFrame(w, x, y - 1, 16, 16, SColorShadow, SColorLight);
+					DrawFrame(w, x, y - DPI(1), DPI(16), DPI(16), SColorShadow, SColorLight);
 				else
-					DrawFrame(w, x, y - 1, 16, 16, GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
+					DrawFrame(w, x, y - DPI(1), DPI(16), DPI(16), GUI_GlobalStyle() >= GUISTYLE_XP ? SColorText : SColorHighlight);
 			}
 			i++;
 		}
-		y += 16;
+		y += DPI(16);
 	}
 }
 
@@ -257,20 +256,20 @@ int ColorPopUp::Get(Point p)
 	if(p.y >= GetCy())
 		return 999;
 	if(withvoid) {
-		int y0 = StdFont().Info().GetHeight() + 4;
+		int y0 = StdFont().Info().GetHeight() + DPI(4);
 		if(p.y < y0)
 			return 997;
 		p.y -= y0;
 	}
 	if(!notnull) {
-		int y0 = StdFont().Info().GetHeight() + 4;
+		int y0 = StdFont().Info().GetHeight() + DPI(4);
 		if(p.y < y0)
 			return 998;
 		p.y -= y0;
 	}
 	Size sz = GetSize();
 	if(p.x >= 0 && p.x < sz.cx && p.y >= 0)
-		return p.x / 16 + p.y / 16 * 18;
+		return p.x / DPI(16) + p.y / DPI(16) * 18;
 	return -1;
 }
 
@@ -356,8 +355,8 @@ void ColorPopUp::PopupDeactivate() {
 
 void ColorPopUp::PopUp(Ctrl *owner, Color c)
 {
-	int cy = norampwheel ? 0 : 110;
-	Size sz = AddFrameSize(18 * 16, GetCy() + cy);
+	int cy = norampwheel ? 0 : DPI(110);
+	Size sz = AddFrameSize(18 * DPI(16), GetCy() + cy);
 	Rect wr = GetWorkArea();
 	Rect r = owner->GetScreenRect();
 	int x = r.left;
@@ -384,8 +383,8 @@ void ColorPopUp::PopUp(Ctrl *owner, Color c)
 	popup->SetRect(RectC(start.x, start.y, 3, 3));
 
 	if(!norampwheel) {
-		ramp.LeftPos(0, 18*7).VSizePos(GetCy(), 0);
-		wheel.LeftPos(18*9 - 1, 18*7).VSizePos(GetCy(), 0);
+		ramp.LeftPos(0, DPI(18*7)).VSizePos(GetCy(), 0);
+		wheel.LeftPos(DPI(18*9 - 1), DPI(18*7)).VSizePos(GetCy(), 0);
 	}
 	ramp <<= c;
 	wheel <<= c;
@@ -416,7 +415,10 @@ void ColorPopUp::Select()
 
 void ColorPopUp::Layout()
 {
-	settext.LeftPos(8 * 16, 2 * 16).BottomPos(2, 24);
+	if(norampwheel)
+		settext.Hide();
+	else
+		settext.LeftPos(DPI(8 * 16), DPI(2 * 16)).BottomPos(DPI(2), DPI(24));
 }
 
 ColorPopUp::ColorPopUp()
