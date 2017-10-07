@@ -1,0 +1,15 @@
+LAYOUT(MyAppLayout, 576, 64)
+	ITEM(ColorPusher, c0, LeftPosZ(8, 84).TopPosZ(36, 20))
+	ITEM(Label, dv___1, SetLabel(t_("Full. Scolors(0)")).LeftPosZ(8, 84).TopPosZ(8, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Full. Scolors(1)")).LeftPosZ(108, 84).TopPosZ(8, 19))
+	ITEM(Label, dv___3, SetLabel(t_("NotNull")).LeftPosZ(204, 84).TopPosZ(8, 19))
+	ITEM(ColorPusher, c1, LeftPosZ(108, 84).TopPosZ(36, 20))
+	ITEM(ColorPusher, c2, LeftPosZ(204, 84).TopPosZ(36, 20))
+	ITEM(Label, dv___6, SetLabel(t_("NoRamp")).LeftPosZ(300, 84).TopPosZ(8, 19))
+	ITEM(ColorPusher, c3, LeftPosZ(300, 84).TopPosZ(36, 20))
+	ITEM(Label, dv___8, SetLabel(t_("NotNull.NoRamp")).LeftPosZ(392, 84).TopPosZ(8, 19))
+	ITEM(ColorPusher, c4, LeftPosZ(392, 84).TopPosZ(36, 20))
+	ITEM(Label, dv___10, SetLabel(t_("WithVoid")).LeftPosZ(484, 84).TopPosZ(8, 19))
+	ITEM(ColorPusher, c5, LeftPosZ(484, 84).TopPosZ(36, 20))
+END_LAYOUT
+

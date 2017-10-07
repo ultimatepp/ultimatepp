@@ -1,6 +1,17 @@
-#include "colorpopup.h"
+#include <CtrlLib/CtrlLib.h>
 
-colorpopup::colorpopup()
+using namespace Upp;
+
+#define LAYOUTFILE <ColorPopup/ColorPopup.lay>
+#include <CtrlCore/lay.h>
+
+class MyApp : public WithMyAppLayout<TopWindow> {
+public:
+	typedef MyApp CLASSNAME;
+	MyApp();
+};
+
+MyApp::MyApp()
 {
 	CtrlLayout(*this, "Window title");
 	c0.SColors(false);
@@ -15,5 +26,5 @@ GUI_APP_MAIN
 {
 //	SetStdFont(Arial(25));
 	SyncUHDMode();
-	colorpopup().Run();
+	MyApp().Run();
 }
