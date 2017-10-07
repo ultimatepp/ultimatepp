@@ -2,9 +2,8 @@ uses
 	CtrlLib;
 
 file
-	colorpopup.h,
 	main.cpp,
-	colorpopup.lay;
+	ColorPopup.lay;
 
 mainconfig
 	"" = "GUI ST";
