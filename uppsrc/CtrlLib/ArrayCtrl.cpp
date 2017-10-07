@@ -106,8 +106,8 @@ void ArrayCtrl::Column::Sorts()
 
 ArrayCtrl::Column& ArrayCtrl::Column::Sorting(const ValueOrder& o)
 {
-	cmp.Clear();
 	order = &o;
+	cmp.Clear();
 	line_order.Clear();
 	Sorts();
 	return *this;
@@ -115,8 +115,8 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting(const ValueOrder& o)
 
 ArrayCtrl::Column& ArrayCtrl::Column::SortingBy(Function<int (const Value& a, const Value& b)> c)
 {
-	order = NULL;
 	cmp = c;
+	order = NULL;
 	line_order.Clear();
 	Sorts();
 	return *this;
@@ -124,9 +124,9 @@ ArrayCtrl::Column& ArrayCtrl::Column::SortingBy(Function<int (const Value& a, co
 
 ArrayCtrl::Column& ArrayCtrl::Column::SortingLined(Gate<int, int> aorder)
 {
+	line_order = aorder;
 	order = NULL;
 	cmp.Clear();
-	line_order = aorder;
 	Sorts();
 	return *this;
 }
