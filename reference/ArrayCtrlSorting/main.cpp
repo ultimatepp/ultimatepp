@@ -5,22 +5,22 @@ using namespace Upp;
 GUI_APP_MAIN
 {
 	ArrayCtrl list;
-	list.AddColumn("Trivial").Sorting();
 
-	list.AddColumn("With function")
-	.SortingBy( // sort with sorting function
+	list.AddColumn("Trivial").Sorting(); // with standard comparison
+
+	list.AddColumn("With sorting lambda").SortingBy( // sort with sorting function
 		[](int a, int b) -> int {
 			int q = SgnCompare(a % 100, b % 100);
 			if(q) return q;
 			return SgnCompare(a, b);
 		}
-	)
-	.SortDefault(); // set his column to be the initial sorting column;
+	).SortDefault(); // set his column to be the initial sorting column;
 	
 	list.AddColumn("Line comparison").SortingLined( // row indices passed to predicate
-		[&list](int i, int j) -> bool {
-			return int(list.Get(i, 0)) + int(list.Get(i, 1)) // sort by sum of first two columns
-			       < int(list.Get(i, 0)) + int(list.Get(i, 1));
+		[&list](int i, int j) -> bool { // sort by sum of first two columns (as an example)
+			int a = int(list.Get(i, 0)) + int(list.Get(i, 1));
+			int b = int(list.Get(j, 0)) + int(list.Get(j, 1));
+			return list.IsSortDescending() ? b < a : a < b;
 		}
 	);
 
