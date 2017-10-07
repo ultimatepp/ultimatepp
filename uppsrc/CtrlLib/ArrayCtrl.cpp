@@ -14,7 +14,6 @@ ArrayCtrl::Column::Column() {
 	clickedit = true;
 	index = -1;
 	order = NULL;
-	cmp = NULL;
 }
 
 ArrayCtrl::Column& ArrayCtrl::Column::Cache() {
@@ -71,14 +70,24 @@ ArrayCtrl::Column& ArrayCtrl::Column::SetDisplay(const Display& d)
 	return *this;
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Event<int, One<Ctrl>&> _factory)
+ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Event<int, One<Ctrl>&> factory)
 {
-	factory = _factory;
+	return WithLined(factory);
+}
+
+ArrayCtrl::Column& ArrayCtrl::Column::WithLined(Event<int, One<Ctrl>&> f)
+{
+	factory = f;
 	arrayctrl->hasctrls = arrayctrl->headerctrls = true;
 	arrayctrl->SyncCtrls();
 	arrayctrl->Refresh();
 	arrayctrl->SyncInfo();
 	return *this;
+}
+
+ArrayCtrl::Column& ArrayCtrl::Column::With(Event<One<Ctrl>&> factory)
+{
+	return WithLined([=](int, One<Ctrl>& x) { factory(x); });
 }
 
 ArrayCtrl::Column& ArrayCtrl::Column::Ctrls(Callback1<One<Ctrl>&> _factory)
@@ -97,14 +106,14 @@ void ArrayCtrl::Column::Sorts()
 
 ArrayCtrl::Column& ArrayCtrl::Column::Sorting(const ValueOrder& o)
 {
-	cmp = NULL;
+	cmp.Clear();
 	order = &o;
 	line_order.Clear();
 	Sorts();
 	return *this;
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::Sorting(int (*c)(const Value& a, const Value& b))
+ArrayCtrl::Column& ArrayCtrl::Column::SortingBy(Function<int (const Value& a, const Value& b)> c)
 {
 	order = NULL;
 	cmp = c;
@@ -113,10 +122,10 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting(int (*c)(const Value& a, const Val
 	return *this;
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::Sorting(Gate<int, int> aorder)
+ArrayCtrl::Column& ArrayCtrl::Column::SortingLined(Gate<int, int> aorder)
 {
 	order = NULL;
-	cmp = NULL;
+	cmp.Clear();
 	line_order = aorder;
 	Sorts();
 	return *this;
@@ -124,12 +133,12 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting(Gate<int, int> aorder)
 
 ArrayCtrl::Column& ArrayCtrl::Column::Sorting()
 {
-	return Sorting(StdValueCompare);
+	return SortingBy(StdValueCompare);
 }
 
 ArrayCtrl::Column& ArrayCtrl::Column::SortDefault()
 {
-	if(!cmp || !order)
+	if(!cmp && !order && !line_order)
 		Sorting();
 	arrayctrl->SetSortColumn(index);
 	return *this;
@@ -2494,13 +2503,13 @@ void ArrayCtrl::Sort(const ArrayCtrl::Order& order)
 }
 
 struct sAC_ColumnSort : public ValueOrder {
-	bool              descending;
-	const ValueOrder *order;
-	int             (*cmp)(const Value& a, const Value& b);
+	bool                                           descending;
+	const ValueOrder                              *order;
+	Function<int (const Value& a, const Value& b)> cmp;
 
 	virtual bool operator()(const Value& a, const Value& b) const {
-		return descending ? cmp ? (*cmp)(b, a) < 0 : (*order)(b, a)
-		                  : cmp ? (*cmp)(a, b) < 0 : (*order)(a, b);
+		return descending ? order ? (*order)(b, a) : cmp(b, a) < 0
+		                  : order ? (*order)(a, b) : cmp(a, b) < 0;
 	}
 };
 

@@ -2789,6 +2789,13 @@ is normally prone to slicing.&]
 the given column&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:ConvertBy`(Upp`:`:Function`<Upp`:`:Value`(const Upp`:`:Value`&`)`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+rrayCtrl`::Column][@(0.0.255) `&]_[* ConvertBy]([_^Upp`:`:Function^ Function]<Value([@(0.0.255) c
+onst]_Value[@(0.0.255) `&])>_[*@3 cv])&]
+[s2; Similar to SetConvert, but using [%-*@3 cv] instead of class for 
+conversion.&]
+[s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Column`:`:SetFormat`(const char`*`): [@(0.0.255) virtual] 
 [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* SetFormat]([@(0.0.255) const]_[@(0.0.255) c
@@ -2853,18 +2860,31 @@ the position represents the position within the cell.&]
 [s7; [*/ Return value]-|[* `*this]&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:Ctrls`(Upp`:`:Event`<int`,Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ C
-olumn][@(0.0.255) `&]_[* Ctrls]([_^Upp`:`:Event^ Event]<[@(0.0.255) int], 
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:WithLined`(Upp`:`:Event`<int`,Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+rrayCtrl`::Column][@(0.0.255) `&]_[* WithLined]([_^Upp`:`:Event^ Event]<[@(0.0.255) int], 
 [_^Upp`:`:One^ One]<[_^Upp`:`:Ctrl^ Ctrl]>`&>_[*@3 factory])&]
 [s2; This method sets up a factory which the ArrayCtrl uses to create 
 new Ctrl`'s for editing a given column. The argument, a global 
-function, is supposed to allocate a new editor control (normally 
-using the One`::Create method) and set it to its argument. The 
-first argument of Event is the line index. If the position of 
-Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', which is the default 
+function, is supposed to create a new editor control in the second 
+argument (usually using the One`::Create method). The first argument 
+of Event is the line index. If the position of Ctrl is equivalent 
+to `'SetRect(0, 0, 0, 0)`', which is the default value, Ctrl 
+is resized to fit the ArrayCtrl cell accurately, spanning the 
+whole width and using STDSIZE for height, otherwise the position 
+represents the position within the cell.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:With`(Upp`:`:Event`<Upp`:`:One`<Upp`:`:Ctrl`>`&`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+rrayCtrl`::Column][@(0.0.255) `&]_[* With]([_^Upp`:`:Event^ Event]<[_^Upp`:`:One^ One]<[_^Upp`:`:Ctrl^ C
+trl]>`&>_[*@3 factory])&]
+[s2; This method sets up a factory which the ArrayCtrl uses to create 
+new Ctrl`'s for editing a given column. The argument, a global 
+function, is supposed to create a new editor control in the argument 
+(usually using the One`::Create method). If the position of Ctrl 
+is equivalent to `'SetRect(0, 0, 0, 0)`', which is the default 
 value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
 spanning the whole width and using STDSIZE for height, otherwise 
-the position represents the position within the cell..&]
+the position represents the position within the cell.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Column`:`:InsertValue`(const Value`&`): [_^ArrayCtrl`:`:Column^ Colum
@@ -2937,31 +2957,39 @@ etMargin] method of the underlying [* HeaderTab].&]
 [s5;:ArrayCtrl`:`:Column`:`:Sorting`(const ValueOrder`&`): [_^ArrayCtrl`:`:Column^ Colu
 mn][@(0.0.255) `&]_[* Sorting]([@(0.0.255) const]_[_^ValueOrder^ ValueOrder][@(0.0.255) `&]_
 [*@3 o])&]
-[s5;:ArrayCtrl`:`:Column`:`:Sorting`(int`(`*`)`(const Value`&a`,const Value`&b`)`): [_^ArrayCtrl`:`:Column^ C
-olumn][@(0.0.255) `&]_[* Sorting]([@(0.0.255) int]_(`*[*@3 c])([@(0.0.255) const]_Value[@(0.0.255) `&
-]_a, [@(0.0.255) const]_Value[@(0.0.255) `&]_b))&]
 [s5;:ArrayCtrl`:`:Column`:`:Sorting`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&]_[* S
 orting]()&]
 [s2; Activates sorting of ArrayCtrl column by clicking on its header 
 tab. Parameterless version uses default Value ordering using 
 StdValueCompare.&]
 [s3; &]
-[s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:Sorting`(Gate2`<int`,int`>`): [_^ArrayCtrl`:`:Column^ Colum
-n][@(0.0.255) `&]_[* Sorting]([_^Gate2^ Gate2]<[@(0.0.255) int], [@(0.0.255) int]>_[*@3 order
-])&]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortingLined`(Upp`:`:Gate`<int`,int`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+rrayCtrl`::Column][@(0.0.255) `&]_[* SortingLined]([_^Upp`:`:Gate^ Gate]<[@(0.0.255) int],
+ [@(0.0.255) int]>_[*@3 aorder])&]
 [s2; Activates sorting of ArrayCtrl column by clicking on its header 
 tab. This variant uses a Gate2 predicate that is supposed to 
 compare two lines (it has indicies as parameters). Note that 
 this variant ignores ascending/descending order, it has to be 
-implemented in predicated, using ArrayCtrl`::IsSortDescending 
-to determine the order.&]
+implemented in predicate, using ArrayCtrl`::IsSortDescending to 
+determine the order.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortingBy`(Upp`:`:Function`<int`(const Upp`:`:Value`&a`,const Upp`:`:Value`&b`)`>`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+rrayCtrl`::Column][@(0.0.255) `&]_[* SortingBy]([_^Upp`:`:Function^ Function]<[@(0.0.255) i
+nt]_([@(0.0.255) const]_Value[@(0.0.255) `&]_a, [@(0.0.255) const]_Value[@(0.0.255) `&]_b
+)>_[*@3 c])&]
+[s2; Activates sorting of ArrayCtrl column by clicking on its header 
+tab, using [%-*@3 c] to compare values of column. [%-*@3 c] should 
+return `-1, 0, 1 for <, `=, >.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Column`:`:SortDefault`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
 ]_[* SortDefault]()&]
 [s2; Sets this column to be initial sorting column (calls SetSortColumn 
-of ArrayCtrl).&]
+of ArrayCtrl). If none of Sorting/SortingBy/SortingLines methods 
+was called on this column yet, calls default Sorting for the 
+column too.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Column`:`:HeaderTab`(`): [_^HeaderCtrl`:`:Column^ HeaderCtrl`::Column][@(0.0.255) `&

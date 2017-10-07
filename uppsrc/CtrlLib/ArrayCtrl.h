@@ -68,8 +68,8 @@ public:
 		bool                  clickedit;
 		mutable Any           cache;
 		const ValueOrder     *order;
-		int                 (*cmp)(const Value& a, const Value& b);
-		Gate<int, int>       line_order;
+		Function<int (const Value& a, const Value& b)> cmp;
+		Gate<int, int>        line_order;
 
 
 		void   InvalidateCache(int i);
@@ -94,12 +94,10 @@ public:
 		Column& SetDisplay(const Display& d);
 		Column& NoEdit();
 		Column& Edit(Ctrl& e);
-		Column& Ctrls(Callback1<One<Ctrl>&> factory); // deprecated
-		Column& Ctrls(void (*factory)(One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int, One<Ctrl>& h) { factory(h); })); }
 		template <class T>
 		Column& Ctrls()                            { return Ctrls(DefaultCtrlFactory<T>()); }
-		Column& Ctrls(Event<int, One<Ctrl>&> factory);
-		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int a, One<Ctrl>& b){ factory(a, b); })); }
+		Column& WithLined(Event<int, One<Ctrl>&> factory);
+		Column& With(Event<One<Ctrl>&> factory);
 		Column& InsertValue(const Value& v);
 		Column& InsertValue(ValueGen& g);
 		Column& NoClickEdit()                      { clickedit = false; return *this; }
@@ -107,10 +105,10 @@ public:
 		Column& Accel(int (*filter)(int))          { accel = filter; return *this; }
 		Column& Accel()                            { return Accel(CharFilterDefaultToUpperAscii); }
 
-		Column& Sorting(const ValueOrder& o);
-		Column& Sorting(int (*c)(const Value& a, const Value& b));
-		Column& Sorting(Gate<int, int> order);
 		Column& Sorting();
+		Column& Sorting(const ValueOrder& o);
+		Column& SortingLined(Gate<int, int> line_order);
+		Column& SortingBy(Function<int (const Value& a, const Value& b)> cmp);
 		Column& SortDefault();
 
 		Column& Margin(int m)                      { margin = m; return *this; }
@@ -120,6 +118,13 @@ public:
 		Column& Tip(const char *tip)               { HeaderTab().Tip(tip); return *this; }
 
 		Column();
+
+// deprecated (due to overloading issues)
+		Column& Ctrls(Callback1<One<Ctrl>&> factory); // deprecated
+		Column& Ctrls(void (*factory)(One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int, One<Ctrl>& h) { factory(h); })); }
+		Column& Ctrls(Event<int, One<Ctrl>&> factory);
+		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int a, One<Ctrl>& b){ factory(a, b); })); }
+		Column& Sorting(Gate<int, int> order) { return SortingLined(order); }
 	};
 
 	struct Order {
@@ -180,6 +185,9 @@ private:
 
 		Line() { select = false; enabled = true; visible = true; paper = Null; }
 	};
+	
+	static int StdValueCompare(const Value& a, const Value& b) { return Upp::StdValueCompare(a, b); }
+
 
 	Vector<Line>               array;
 	HeaderCtrl                 header;
