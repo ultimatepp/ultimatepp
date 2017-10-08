@@ -403,12 +403,12 @@ void Ide::SetupAndroidMobilePlatform(Bar& menu, const AndroidSDK& androidSDK)
 	menu.Add("Device monitor", THISBACK1(LauchAndroidDeviceMonitor, androidSDK));
 }
 
-void Ide::ProjectSvn(Bar& menu)
+void Ide::ProjectRepo(Bar& menu)
 {
-	Vector<String> w = SvnDirs(true);
+	Vector<String> w = RepoDirs(true);
 	for(int i = 0; i < w.GetCount(); i++)
-		menu.Add("Synchronize " + w[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, w[i]));
-	menu.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
+		menu.Add("Synchronize " + w[i], IdeImg::svn_dir(), THISBACK1(SyncRepoDir, w[i]));
+	menu.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncRepo));
 }
 
 void Ide::Project(Bar& menu)
@@ -444,11 +444,11 @@ void Ide::Project(Bar& menu)
 	}
 	FilePropertiesMenu(menu);
 	if(!IsEditorMode()) {
-		if(svn_dirs) {
+		if(repo_dirs) {
 			if(menu.IsMenuBar())
-				menu.Add("SVN", THISBACK(ProjectSvn));
+				menu.Add("Repo", THISBACK(ProjectRepo));
 			else
-				menu.Add("SVN Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvn));
+				menu.Add("Synchronize all repositories..", IdeImg::svn(), THISBACK(SyncRepo));
 		}
 	}
 }

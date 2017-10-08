@@ -274,7 +274,7 @@ void  ArrayCtrl::SetCtrl(int i, int j, Ctrl& ctrl, bool value)
 	SyncLineCtrls(i);
 }
 
-Ctrl * ArrayCtrl::GetCtrl(int i, int col)
+Ctrl *ArrayCtrl::GetCtrl(int i, int col)
 {
 	SyncLineCtrls(i);
 	if(IsCtrl(i, col))
