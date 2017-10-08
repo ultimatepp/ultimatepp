@@ -381,7 +381,8 @@ void Ide::FlushFile() {
 	if(!editfile.IsEmpty())
 		Filedata(editfile).undodata = editor.PickUndoData();
 	editfile.Clear();
-	editfile_svn = editfile_isfolder = false;
+	editfile_repo = NOT_REPO_DIR;
+	editfile_isfolder = false;
 	repo_dirs = RepoDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	editor.Clear();
 	editor.Disable();
@@ -561,7 +562,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	editor.CheckEdited(true);
 	editor.Annotate(editfile);
 	editor.SyncNavigator();
-	editfile_svn = IsSvnDir(GetFileFolder(editfile));
+	editfile_repo = GetRepoKind(editfile);
 	editfile_includes = IncludesMD5();
 }
 
