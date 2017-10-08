@@ -9,6 +9,7 @@
 #include <TabBar/TabBar.h>
 #include <CodeEditor/CodeEditor.h>
 #include <usvn/usvn.h>
+#include <urepo/urepo.h>
 #include <ide/IconDes/IconDes.h>
 #include <ide/Java/Java.h>
 #include <ide/LayDes/LayDes.h>
@@ -309,7 +310,7 @@ void   DlSpellerLangs(DropList& dl);
 
 void DirSel(EditField& f, FrameRight<Button>& b);
 bool CopyFolder(const char *dst, const char *src, Progress *pi);
-void SvnSyncDirs(const Vector<String>& working);
+void RepoSyncDirs(const Vector<String>& working);
 
 struct FindInFilesDlg : WithFindInFilesLayout<TopWindow> {
 	WString itext;
@@ -333,7 +334,7 @@ public:
 	virtual   void   PackageCursor();
 	virtual   void   SyncWorkspace();
 	virtual   void   BuildFileMenu(Bar& menu);
-	virtual   void   ProjectSvn(Bar& bar);
+	virtual   void   ProjectRepo(Bar& bar);
 	virtual   void   FilePropertiesMenu(Bar& menu);
 	virtual   String GetOutputDir();
 	virtual   String GetConfigDir();
@@ -850,9 +851,9 @@ public:
 		void  ConvertST();
 		void  ExportMakefile(const String& ep);
 		void  ExportProject(const String& ep, bool all, bool gui, bool deletedir = true);
-		void  SyncSvnDirs(const Vector<String>& working);
-		void  SyncSvnDir(const String& working);
-		void  SyncSvn();
+		void  SyncRepoDirs(const Vector<String>& working);
+		void  SyncRepoDir(const String& working);
+		void  SyncRepo();
 
 	void      BuildMenu(Bar& menu);
 		void BuildPackageMenu(Bar& menu);

@@ -382,7 +382,7 @@ void Ide::FlushFile() {
 		Filedata(editfile).undodata = editor.PickUndoData();
 	editfile.Clear();
 	editfile_svn = editfile_isfolder = false;
-	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
+	repo_dirs = RepoDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	editor.Clear();
 	editor.Disable();
 	editorsplit.Ctrl::Remove();
@@ -437,7 +437,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 	AddLru();
 
 	editfile_isfolder = IsFolder(editfile) || IsHelpName(editfile);
-	svn_dirs = SvnDirs(true).GetCount(); // Perhaps not the best place, but should be ok
+	repo_dirs = RepoDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	
 	bool candesigner = !(debugger && !editfile_isfolder && (PathIsEqual(path, posfile[0]) || PathIsEqual(path, posfile[0])))
 	   && editastext.Find(path) < 0 && editashex.Find(path) < 0 && !IsNestReadOnly(editfile);

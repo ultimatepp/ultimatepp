@@ -315,13 +315,13 @@ Vector<String> SelectPackageDlg::GetSvnDirs()
 
 void SelectPackageDlg::SyncSvnDir(const String& dir)
 {
-	SvnSyncDirs(Vector<String>() << dir);
+	RepoSyncDirs(Vector<String>() << dir);
 	Load();
 }
 
 void SelectPackageDlg::SyncSvnDirs()
 {
-	SvnSyncDirs(GetSvnDirs());
+	RepoSyncDirs(GetSvnDirs());
 	Load();
 }
 
