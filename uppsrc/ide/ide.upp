@@ -14,13 +14,14 @@ uses
 	HexView,
 	art\BlueBar,
 	plugin/astyle,
-	usvn,
 	TextDiffCtrl,
 	TabBar,
 	ide/Designers,
 	ide/Android,
 	ide/Java,
-	ide/MacroManager;
+	ide/MacroManager,
+	urepo,
+	usvn;
 
 uses(POSIX) ide\SrcUpdater;
 

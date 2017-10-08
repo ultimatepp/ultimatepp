@@ -1,8 +1,7 @@
 description "TheIDE - Source codes management\377B";
 
 uses
-	CtrlLib,
-	usvn;
+	CtrlLib;
 
 file
 	SrcUpdater.h,

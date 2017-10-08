@@ -415,44 +415,43 @@ INITBLOCK {
 	RegisterGlobalConfig("svn-msgs");
 }
 
-void SvnSyncDirs(const Vector<String>& working)
+void RepoSyncDirs(const Vector<String>& working)
 {
 	if(!CheckSvn())
 		return;
 	Ptr<Ctrl> f = Ctrl::GetFocusCtrl();
-	SvnSync svn;
+	RepoSync repo;
 	String msgs;
 	LoadFromGlobal(msgs, "svn-msgs");
-	svn.SetMsgs(msgs);
+	repo.SetMsgs(msgs);
 	for(int i = 0; i < working.GetCount(); i++)
-		svn.Dir(working[i]);
-	svn.DoSync();
-	msgs = svn.GetMsgs();
+		repo.Dir(working[i]);
+	repo.DoSync();
+	msgs = repo.GetMsgs();
 	StoreToGlobal(msgs, "svn-msgs");
 	if(f)
 		f->SetFocus();
 }
 
-void Ide::SyncSvnDirs(const Vector<String>& working)
+void Ide::SyncRepoDirs(const Vector<String>& working)
 {
 	SaveFile();
-	SvnSyncDirs(working);
+	RepoSyncDirs(working);
 	ScanWorkspace();
 	SyncWorkspace();
 }
 
-void Ide::SyncSvn()
-{
-	Vector<String> d = SvnDirs();
+void Ide::SyncRepo(){
+	Vector<String> d = RepoDirs();
 	if(d.GetCount())
-		SyncSvnDirs(d);
+		SyncRepoDirs(d);
 	else
-		SyncSvnDirs(SvnDirs(true));
+		SyncRepoDirs(RepoDirs(true));
 }
 
-void Ide::SyncSvnDir(const String& working)
+void Ide::SyncRepoDir(const String& working)
 {
-	SyncSvnDirs(Vector<String>() << working);
+	SyncRepoDirs(Vector<String>() << working);
 }
 
 void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
