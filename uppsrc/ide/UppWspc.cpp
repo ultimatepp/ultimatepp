@@ -302,7 +302,8 @@ Vector<String> WorkspaceWork::RepoDirs(bool actual)
 		d.Insert(0, GetFileFolder(PackagePath(actualpackage)));
 	Vector<String> r;
 	for(int i = 0; i < d.GetCount(); i++)
-		r.Add(d[i]);
+		if(GetRepoKind(d[i]))
+			r.Add(d[i]);
 	return r;
 }
 

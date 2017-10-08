@@ -81,8 +81,10 @@ void RepoDiff::Execute(const String& f)
 			else
 			if(s.GetCount() >= 2) {
 				String k = ToLower(s[0]);
-				if(k == "author:")
-					author = s[1];
+				if(k == "author:") {
+					s.Remove(0);
+					author = Join(s, " ");
+				}
 				if(k == "date:")
 					date = s[1];
 				if(k == "commit")

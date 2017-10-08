@@ -97,13 +97,10 @@ bool RepoSync::ListSvn(const String& path)
 
 String GitCmd(const char *dir, const char *command)
 {
-	DDUMP(dir);
-	DDUMP(command);
 	String h = GetCurrentDirectory();
 	SetCurrentDirectory(dir);
 	String r = Sys(String() << "git " << command);
 	SetCurrentDirectory(h);
-	DDUMP(r);
 	return r;
 }
 

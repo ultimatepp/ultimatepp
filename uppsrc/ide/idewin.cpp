@@ -638,7 +638,8 @@ Ide::Ide()
 	
 	editor.WhenUpdate = THISBACK(TriggerAssistSync);
 
-	editfile_isfolder = editfile_svn = false;
+	editfile_isfolder = false;
+	editfile_repo = NOT_REPO_DIR;
 	
 	auto_rescan = auto_check = true;
 }

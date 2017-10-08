@@ -463,9 +463,11 @@ void Ide::FilePropertiesMenu(Bar& menu)
 	    .Help("Show differences between the project and arbitrary files");
 	menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_PATCH, IdeImg::Patch(), THISBACK(Patch))
 	    .Help("Show differences with patch file applied");
-	if(editfile_svn)
+	if(editfile_repo) {
+		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of file";
 		menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
-		    .Help("Show svn history of file");
+		    .Text(txt + "..").Help(txt);
+	}
 }
 
 void Ide::BuildFileMenu(Bar& menu)

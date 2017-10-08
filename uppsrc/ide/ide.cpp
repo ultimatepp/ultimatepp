@@ -676,5 +676,5 @@ void Ide::SvnHistory()
 {
 	if(IsNull(editfile))
 		return;
-	RunSvnDiff(editfile);
+	RunRepoDiff(editfile);
 }
