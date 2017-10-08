@@ -474,7 +474,7 @@ public:
 	String    editfile;
 	FileTime  edittime;
 	int       editfile_line_endings;
-	bool      editfile_svn;
+	int       editfile_repo;
 	bool      editfile_isfolder;
 	String    editfile_includes;
 
