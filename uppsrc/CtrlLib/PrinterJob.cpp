@@ -49,7 +49,7 @@ PrinterJob::~PrinterJob()
 
 bool PrinterJob::Execute0(bool dodlg)
 {
-	pdlg = new Win32PrintDlg_;
+	pdlg.Create<Win32PrintDlg_>();
 	PRINTDLG& dlg = *pdlg;
 	dlg.Flags = PD_DISABLEPRINTTOFILE|PD_NOSELECTION|PD_HIDEPRINTTOFILE|PD_RETURNDEFAULT;
 	dlg.nFromPage = current;
@@ -67,31 +67,46 @@ bool PrinterJob::Execute0(bool dodlg)
 		pDevMode->dmOrientation = landscape ? DMORIENT_LANDSCAPE : DMORIENT_PORTRAIT;
 		::GlobalUnlock(dlg.hDevMode);
 	}
-	HDC hdc;
+	int copies = 1;
 	if(dodlg) {
-		dlg.Flags = PD_DISABLEPRINTTOFILE|PD_NOSELECTION|PD_HIDEPRINTTOFILE|PD_RETURNDC|PD_USEDEVMODECOPIESANDCOLLATE;
+		dlg.Flags = PD_DISABLEPRINTTOFILE|PD_NOSELECTION|PD_HIDEPRINTTOFILE;
 		Vector< Ptr<Ctrl> > disabled = DisableCtrls(Ctrl::GetTopCtrls());
 		bool b = PrintDlg(&dlg);
 		EnableCtrls(disabled);
 		if(!b) return false;
-		hdc = dlg.hDC;
+		copies = dlg.nCopies;
+		dlg.nCopies = 1; // because of buggy drivers for certain printers, we need to workaround copies problem
+		if(dlg.hDevMode) {
+			DEVMODE *pDevMode = (DEVMODE*)::GlobalLock(dlg.hDevMode);
+			if(pDevMode->dmFields & DM_COPIES)
+				copies = max((WORD)pDevMode->dmCopies, (WORD)copies);
+			pDevMode->dmCopies = 1; // always set number of copies to 1 and deal with it by sending multiple pages to printer
+			::GlobalUnlock(dlg.hDevMode);
+		}
 	}
-	else {
+	HDC hdc = NULL;
+	if(dlg.hDevNames) {
 		DEVNAMES *p = (DEVNAMES *)::GlobalLock(dlg.hDevNames);
 		const char *driver = (const char *)p + p->wDriverOffset;
 		const char *device = (const char *)p + p->wDeviceOffset;
-		if(dlg.hDevMode) {
+		if(dlg.hDevMode && dlg.hDevNames) {
 			DEVMODE *pDevMode = (DEVMODE*)::GlobalLock(dlg.hDevMode);
 			hdc = CreateDC(driver, device, NULL, pDevMode);
 			::GlobalUnlock(dlg.hDevMode);
 		}
 		else
 			hdc = CreateDC(driver, device, NULL, NULL);
+		::GlobalUnlock(dlg.hDevNames);
 	}
-	if(dlg.hDevMode)
+	if(dlg.hDevMode) {
 		::GlobalFree(dlg.hDevMode);
-	if(dlg.hDevNames)
+		dlg.hDevMode = NULL;
+	}
+	if(dlg.hDevNames) {
 		::GlobalFree(dlg.hDevNames);
+		dlg.hDevNames = NULL;
+	}
+		
 	if(hdc) {
 		draw = new PrintDraw(hdc, Nvl(name, Ctrl::GetAppName()));
 		page.Clear();
@@ -99,8 +114,9 @@ bool PrinterJob::Execute0(bool dodlg)
 			dlg.nFromPage = dlg.nMinPage;
 			dlg.nToPage = dlg.nMaxPage;
 		}
-		for(int i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++)
-			page.Add(i);
+		for(int n = 0; n < copies; n++)
+			for(int i = dlg.nFromPage - 1; i <= dlg.nToPage - 1; i++)
+				page.Add(i);
 		return true;
 	}
 	return false;
