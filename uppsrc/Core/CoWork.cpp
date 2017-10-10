@@ -238,6 +238,10 @@ void CoWork::Cancel()
 void CoWork::Finish() {
 	Pool& p = GetPool();
 	p.lock.Enter();
+	while(!jobs.IsEmpty(1)) {
+		LLOG("Finish: todo: " << todo << " (CoWork " << FormatIntHex(this) << ")");
+		p.DoJob(*jobs.GetNext(1));
+	}
 	Finish0();
 	p.lock.Leave();
 	LLOG("CoWork " << FormatIntHex(this) << " finished");

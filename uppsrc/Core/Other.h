@@ -67,6 +67,7 @@ public:
 	template <class TT>
 	One(One<TT>&& p)                       { Pick(pick(p)); }
 	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : DeepCopyNew(*p); }
+	One(const One<T>& p) = delete;
 	~One()                                 { Free(); }
 };
 
