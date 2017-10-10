@@ -444,6 +444,7 @@ void CtrlRetriever::Put(Ctrl& ctrl, T& val)
 }
 
 class IdCtrls {
+protected:
 	struct Item {
 		Id    id;
 		Ctrl *ctrl;
@@ -453,16 +454,28 @@ class IdCtrls {
 public:
 	void        Reset()                              { item.Clear(); }
 
-	void        Add(Id id, Ctrl& ctrl);
-	IdCtrls&    operator()(Id id, Ctrl& ctrl)        { Add(id, ctrl); return *this; }
-	int         GetCount() const                     { return item.GetCount(); }
-	Ctrl&       operator[](int i)                    { return *item[i].ctrl; }
-	const Ctrl& operator[](int i) const              { return *item[i].ctrl; }
-	Id          GetKey(int i) const                  { return item[i].id; }
-	Id          operator()(int i) const              { return item[i].id; }
+	void            Add(Id id, Ctrl& ctrl);
+	IdCtrls&        operator()(Id id, Ctrl& ctrl)    { Add(id, ctrl); return *this; }
+	int             GetCount() const                 { return item.GetCount(); }
+	Ctrl&           operator[](int i)                { return *item[i].ctrl; }
+	const Ctrl&     operator[](int i) const          { return *item[i].ctrl; }
+	Id              GetKey(int i) const              { return item[i].id; }
+	Id              operator()(int i) const          { return item[i].id; }
 
-	ValueMap    Get() const;
-	void        Set(const ValueMap& m);
+	bool            Accept();
+	void            ClearModify();
+	bool            IsModified();
+	void            Enable(bool b = true);
+	void            Disable()                        { Enable(false); }
+	void            SetNull();
+	
+	Event<>         operator<<(Event<> action);
+	Event<>         operator^=(Event<> action);
+
+	ValueMap        Get() const;
+	void            Set(const ValueMap& m);
+	ValueMap        operator~() const                { return Get(); }
+	const ValueMap& operator<<=(const ValueMap& m)   { Set(m); return m; }
 };
 
 class FileSelButton : public FileSel

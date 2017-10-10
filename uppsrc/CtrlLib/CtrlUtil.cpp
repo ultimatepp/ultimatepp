@@ -301,6 +301,36 @@ void IdCtrls::Set(const ValueMap& m)
 		item[i].ctrl->SetData(m[item[i].id]);
 }
 
+bool IdCtrls::Accept()
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		if(!item[i].ctrl->Accept()) return false;
+	return true;
+}
+
+void IdCtrls::ClearModify() {
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].ctrl->ClearModify();
+}
+
+bool IdCtrls::IsModified() {
+	for(int i = 0; i < item.GetCount(); i++)
+		if(item[i].ctrl->IsModified()) return true;
+	return false;
+}
+
+void IdCtrls::Enable(bool b)
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].ctrl->Enable(b);
+}
+
+void IdCtrls::SetNull()
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].ctrl->SetData(Null);
+}
+
 void Set(ArrayCtrl& array, int ii, IdCtrls& m)
 {
 	for(int i = 0; i < m.GetCount(); i++)
@@ -311,6 +341,20 @@ void Get(ArrayCtrl& array, int ii, IdCtrls& m)
 {
 	for(int i = 0; i < m.GetCount(); i++)
 		m[i] <<= array.Get(ii, m(i));
+}
+
+Event<> IdCtrls::operator<<(Event<> action)
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].ctrl->WhenAction << action;
+	return action;
+}
+
+Event<> IdCtrls::operator^=(Event<> action)
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].ctrl->WhenAction = action;
+	return action;
 }
 
 String sProfile(const MemoryProfile& mem)
