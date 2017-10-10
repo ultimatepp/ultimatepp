@@ -154,9 +154,9 @@ public:
 	~AsyncWork()                                    { if(imp) imp->co.Cancel(); }
 };
 
-//template< class Function, class... Args>
-//AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>>
-void Async(Function&& f, Args&&... args)
+template< class Function, class... Args>
+AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>>
+Async(Function&& f, Args&&... args)
 {
 	AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>> h;
 	h.Do(f, args...);
