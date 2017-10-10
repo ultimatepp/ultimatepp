@@ -65,12 +65,6 @@ Value SqlNOption::GetData() const
 	return Null;
 }
 
-void SqlCtrls::Add(SqlId id, Ctrl& ctrl) {
-	Item& m = item.Add();
-	m.id = id;
-	m.ctrl = &ctrl;
-}
-
 void SqlCtrls::Table(Ctrl& dlg, SqlId table)
 {
 	Vector<String> col = GetSchColumns(~table);
@@ -84,7 +78,7 @@ void SqlCtrls::Table(Ctrl& dlg, SqlId table)
 SqlSet SqlCtrls::Set() const {
 	SqlSet set;
 	for(int i = 0; i < item.GetCount(); i++)
-		set.Cat(item[i].id);
+		set.Cat(SqlId(item[i].id));
 	return set;
 }
 
@@ -92,7 +86,7 @@ void SqlCtrls::Read(Sql& sql)
 {
 	for(int i = 0; i < item.GetCount(); i++) {
 		Item& m = item[i];
-		m.ctrl->SetData(sql[m.id]);
+		m.ctrl->SetData(sql[SqlId(m.id)]);
 	}
 }
 
@@ -134,44 +128,6 @@ SqlUpdate SqlCtrls::UpdateModified(SqlId table) const {
 	SqlUpdate update(table);
 	UpdateModified(update);
 	return update;
-}
-
-bool SqlCtrls::Accept()
-{
-	for(int i = 0; i < item.GetCount(); i++)
-		if(!item[i].ctrl->Accept()) return false;
-	return true;
-}
-
-void SqlCtrls::ClearModify() {
-	for(int i = 0; i < item.GetCount(); i++)
-		item[i].ctrl->ClearModify();
-}
-
-bool SqlCtrls::IsModified() {
-	for(int i = 0; i < item.GetCount(); i++)
-		if(item[i].ctrl->IsModified()) return true;
-	return false;
-}
-
-void SqlCtrls::Enable(bool b)
-{
-	for(int i = 0; i < item.GetCount(); i++)
-		item[i].ctrl->Enable(b);
-}
-
-ValueMap SqlCtrls::Get() const
-{
-	ValueMap m;
-	for(int i = 0; i < item.GetCount(); i++)
-		m.Add(item[i].id, item[i].ctrl->GetData());
-	return m;
-}
-
-void SqlCtrls::SetNull()
-{
-	for(int i = 0; i < item.GetCount(); i++)
-		item[i].ctrl->SetData(Null);
 }
 
 Callback SqlCtrls::operator<<=(Callback cb)
