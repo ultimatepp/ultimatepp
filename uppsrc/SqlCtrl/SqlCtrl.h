@@ -139,15 +139,8 @@ public:
 	SqlArray();
 };
 
-class SqlCtrls {
-	struct Item {
-		SqlId id;
-		Ctrl *ctrl;
-	};
-	Array<Item> item;
-
+class SqlCtrls : public IdCtrls {
 public:
-	void      Add(SqlId id, Ctrl& ctrl);
 	SqlCtrls& operator()(SqlId id, Ctrl& ctrl)       { Add(id, ctrl); return *this; }
 	void      Table(Ctrl& dlg, SqlId table);
 	SqlCtrls& operator()(Ctrl& dlg, SqlId table)     { Table(dlg, table); return *this; }
@@ -155,15 +148,11 @@ public:
 	operator  SqlSet() const                         { return Set(); }
 	void      Read(Sql& sql);
 	bool      Fetch(Sql& sql);
-#ifndef NOAPPSQL
-	bool      Fetch()                                { return Fetch(SQL); }
-#endif
-	bool      Load(Sql& sql, SqlSelect set)          { sql * set; return Fetch(sql); }
-#ifndef NOAPPSQL
-	bool      Load(SqlSelect set)                    { return Load(SQL, set); }
-#endif
+	bool      Load(Sql& sql, SqlSelect select)       { sql * select; return Fetch(sql); }
 	bool      Load(Sql& sql, SqlId table, SqlBool where);
 #ifndef NOAPPSQL
+	bool      Fetch()                                { return Fetch(SQL); }
+	bool      Load(SqlSelect select)                 { return Load(SQL, select); }
 	bool      Load(SqlId table, SqlBool where);
 #endif
 	void      Insert(SqlInsert& insert) const;
@@ -172,23 +161,12 @@ public:
 	SqlInsert Insert(SqlId table) const;
 	SqlUpdate Update(SqlId table) const;
 	SqlUpdate UpdateModified(SqlId table) const;
-	bool      Accept();
-	void      ClearModify();
-	bool      IsModified();
-	void      Enable(bool b = true);
-	void      Disable()                              { Enable(false); }
-	void      SetNull();
-	Callback  operator<<=(Callback cb);
 
-	int         GetCount() const                     { return item.GetCount(); }
-	Ctrl&       operator[](int i)                    { return *item[i].ctrl; }
-	const Ctrl& operator[](int i) const              { return *item[i].ctrl; }
 	SqlId       operator()(int i) const              { return item[i].id; }
 	SqlId       GetKey(int i) const                  { return item[i].id; }
 
-	ValueMap    Get() const;
-
-	void        Reset()                                { item.Clear(); }
+//deprecated:
+	Callback  operator<<=(Callback cb);
 };
 
 class SqlDetail : public StaticRect {
