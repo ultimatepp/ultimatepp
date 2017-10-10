@@ -114,6 +114,55 @@ public:
 	}
 };
 
+template <class Ret>
+class AsyncWork {
+	template <class Ret>
+	struct Imp {
+		CoWork co;
+		Ret    ret;
+	
+		template< class Function, class... Args>
+		void       Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(args...); }); }
+		const Ret& Get()                            { return ret; }
+	};
+
+	template <>
+	struct Imp<void> {
+		CoWork co;
+	
+		template< class Function, class... Args>
+		void       Do(Function&& f, Args&&... args) { co.Do([=]() { f(args...); }); }
+		void       Get()                            {}
+	};
+	
+	One<Imp<Ret>> imp;
+	
+public:
+	template< class Function, class... Args>
+	void  Do(Function&& f, Args&&... args)          { imp.Create().Do(f, args...); }
+
+	void        Cancel()                            { if(imp) imp->co.Cancel(); }
+	static bool IsCanceled()                        { return CoWork::IsCanceled(); }
+	bool        IsFinished()                        { return imp && imp->co.IsFinished(); }
+	Ret         Get()                               { ASSERT(imp); imp->co.Finish(); return imp->Get(); }
+	Ret         operator~()                         { return Get(); }
+	
+	AsyncWork& operator=(AsyncWork&&) = default;
+	AsyncWork(AsyncWork&&) = default;
+
+	AsyncWork()                                     {}
+	~AsyncWork()                                    { if(imp) imp->co.Cancel(); }
+};
+
+//template< class Function, class... Args>
+//AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>>
+void Async(Function&& f, Args&&... args)
+{
+	AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>> h;
+	h.Do(f, args...);
+	return pick(h);
+}
+
 #else
 
 class CoWork : NoCopy {
