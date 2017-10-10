@@ -1,0 +1,11 @@
+description "Connecting Sqlite3 database\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "";
+
