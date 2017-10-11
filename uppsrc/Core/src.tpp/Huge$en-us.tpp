@@ -1,4 +1,4 @@
-topic "";
+topic "Huge";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
@@ -10,7 +10,7 @@ topic "";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[ {{10000@(113.42.0) [s0; [*@7;4 Title]]}}&]
+[ {{10000@(113.42.0) [s0; [*@7;4 Huge]]}}&]
 [s3;%- &]
 [s1;:Upp`:`:Huge`:`:class:%- [@(0.0.255)3 class][3 _][*3 Huge]&]
 [s2; This class is intended for dealing of raw binary data bigger 
@@ -98,5 +98,4 @@ onst]&]
 [s5;:Upp`:`:Huge`:`:Get`(`)const:%- [_^Upp`:`:String^ String]_[* Get]()_[@(0.0.255) const]&]
 [s2; Returns data as String. There must be less than 2GB of data 
 or operation fails with Panic.&]
-[s3;%- &]
-[s0; ]]
+[s3;%- ]]

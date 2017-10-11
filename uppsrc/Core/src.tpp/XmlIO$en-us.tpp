@@ -11,7 +11,7 @@ topic "XmlIO";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlIO and Xmlize framework]]}}&]
-[s1;@(0.0.255)3 &]
+[s3; &]
 [s1;:XmlIO`:`:class: [@(0.0.255)3 class][3 _][*3 XmlIO]&]
 [s2;%% XmlIO represents a single XmlNode in Jsonize framework. It 
 is used as parameter for Xmlize and XmlAttrLoad/XmlAttrStore 

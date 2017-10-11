@@ -10,8 +10,8 @@ topic "Format - text formatting";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*@3;4 Format `- text formatting]&]
-[s0;*+117 &]
+[ {{10000@(113.42.0) [s0; [*@2;4 Format `- text formatting]]}}&]
+[s0;*@3;4 &]
 [s5;:`:`:Format`(const char`*`,const`:`:Vector`<`:`:Value`>`&`):%- [^`:`:String^ String
 ]_[* Format][@(64) (][@(0.0.255) const][@(64) _][@(0.0.255) char][@(64) _`*][*@3 format][@(64) , 
 ][@(0.0.255) const][@(64) _][^`:`:Vector^@(64) Vector][@(64) <][^`:`:Value^@(64) Value][@(64) >
