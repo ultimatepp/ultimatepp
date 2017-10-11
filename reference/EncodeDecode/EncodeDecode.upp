@@ -1,3 +1,5 @@
+description "Web related encoding / decoding routines\377";
+
 uses
 	Core;
 

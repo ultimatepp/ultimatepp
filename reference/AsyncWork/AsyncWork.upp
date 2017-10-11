@@ -1,0 +1,11 @@
+description "AsyncWork is U++ variant of std::future mechanism\377";
+
+uses
+	Core;
+
+file
+	AsyncWork.cpp;
+
+mainconfig
+	"" = "";
+
