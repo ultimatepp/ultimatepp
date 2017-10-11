@@ -10,73 +10,72 @@ topic "Thread synchronization primitives";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [*C1 $$10,10#39751211140134154172026758035355:code]
-[{_} 
-[s0;%% [*@3;4 Thread synchronization primitives]&]
+[{_}%EN-US 
+[ {{10000@(113.42.0) [s0; [*@2;4 Thread synchronization primitives]]}}&]
 [s3; &]
-[s0; &]
-[ {{10000t/25b/25@1 [s0; [* Function List]]}}&]
-[s3; &]
-[s5;:AssertST`(`): [@(0.0.255) void]_[* AssertST]()&]
-[s2;%% This operation only has effect in DEBUG mode. If any Thread 
+[ {{10000t/25b/25@1 [s0;%- [* Function List]]}}&]
+[s3;%- &]
+[s5;:AssertST`(`):%- [@(0.0.255) void]_[* AssertST]()&]
+[s2; This operation only has effect in DEBUG mode. If any Thread 
 was started prior to calling AssertST, it will stop the execution 
 with diagnostic message. The purpose is that some global initialization 
 routines are best performed before any multi`-threading starts. 
 AssertST can be used to assure this as runtime check.&]
-[s3;%% &]
-[s4; &]
-[s5;:Atomic`:`:typedef: [@(0.0.255) typedef]_[/ integer`_type]_[* Atomic]&]
-[s2;%% This is the integer type that can be used as argument of AtomicInc/AtomicDec 
+[s3; &]
+[s4;%- &]
+[s5;:Atomic`:`:typedef:%- [@(0.0.255) typedef]_[/ integer`_type]_[* Atomic]&]
+[s2; This is the integer type that can be used as argument of AtomicInc/AtomicDec 
 function. It is compatible with `'int`' `- it has the same value 
 range and it can be converted to `'int`'. Since C`+`+11, it is 
 in fact implemented using std`::atomic<int> and kept only because 
 of backward compatibility.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:AtomicInc`(volatile Atomic`&`):%- [@(0.0.255) int]_[* AtomicInc]([@(0.0.255) volatile]_
+[_^Atomic^ Atomic][@(0.0.255) `&]_[*@3 t])&]
+[s2; Increments t by one and returns the result (`"`+`+t`").&]
 [s3; &]
-[s4; &]
-[s5;:AtomicInc`(volatile Atomic`&`): [@(0.0.255) int]_[* AtomicInc]([@(0.0.255) volatile]_[_^Atomic^ A
-tomic][@(0.0.255) `&]_[*@3 t])&]
-[s2;%% Increments t by one and returns the result (`"`+`+t`").&]
-[s3;%% &]
-[s4; &]
-[s5;:AtomicDec`(volatile Atomic`&`): [@(0.0.255) int]_[* AtomicDec]([@(0.0.255) volatile]_[_^Atomic^ A
-tomic][@(0.0.255) `&]_[*@3 t])&]
-[s2;%% Decrements t by one and returns the result (`"`-`-t`").&]
-[s3; &]
-[s0; &]
-[ {{10000t/25b/25@1 [s0; [* Macro List]]}}&]
-[s3; &]
-[s5;:INTERLOCKED: [* INTERLOCKED]&]
-[s2;%% This macro adds static Mutex to the block. For example:&]
-[s2;%% [C1 -|-|INTERLOCKED `{]&]
-[s2;%% [C1 -|-|-|Foo();]&]
-[s2;%% [C1 -|-|`}]&]
-[s2;%% -|is equivalent to&]
-[s2;%% [C1 -|-|`{-|static Mutex ][/C1 uniquename][C1 ;]&]
-[s2;%% [C1 -|-|-|][/C1 uniquename][C1 .Enter();]&]
-[s2;%% [C1 -|-|-|Foo();]&]
-[s2;%% [C1 -|-|-|][/C1 uniquename][C1 .Leave();]&]
-[s2;%% [C1 -|-|`}]&]
-[s3; &]
-[s4; &]
-[s5;:INTERLOCKED`_`(cs`): [* INTERLOCKED`_]([*@3 cs])&]
-[s2;%% Similar to INTERLOCKED, but instead of `'anonymous`' implicit 
+[s4;%- &]
+[s5;:AtomicDec`(volatile Atomic`&`):%- [@(0.0.255) int]_[* AtomicDec]([@(0.0.255) volatile]_
+[_^Atomic^ Atomic][@(0.0.255) `&]_[*@3 t])&]
+[s2; Decrements t by one and returns the result (`"`-`-t`").&]
+[s3;%- &]
+[s0;%- &]
+[ {{10000t/25b/25@1 [s0;%- [* Macro List]]}}&]
+[s3;%- &]
+[s5;:INTERLOCKED:%- [* INTERLOCKED]&]
+[s2; This macro adds static Mutex to the block. For example:&]
+[s2; [C1 -|-|INTERLOCKED `{]&]
+[s2; [C1 -|-|-|Foo();]&]
+[s2; [C1 -|-|`}]&]
+[s2; -|is equivalent to&]
+[s2; [C1 -|-|`{-|static Mutex ][/C1 uniquename][C1 ;]&]
+[s2; [C1 -|-|-|][/C1 uniquename][C1 .Enter();]&]
+[s2; [C1 -|-|-|Foo();]&]
+[s2; [C1 -|-|-|][/C1 uniquename][C1 .Leave();]&]
+[s2; [C1 -|-|`}]&]
+[s3;%- &]
+[s4;%- &]
+[s5;:INTERLOCKED`_`(cs`):%- [* INTERLOCKED`_]([*@3 cs])&]
+[s2; Similar to INTERLOCKED, but instead of `'anonymous`' implicit 
 static Mutex it uses explicit Mutex [%-*@3 cs].&]
-[s3; &]
-[s4; &]
-[s5;:ONCELOCK: [* ONCELOCK]&]
-[s2;%% Designates block that only gets performed at first run, taking 
+[s3;%- &]
+[s4;%- &]
+[s5;:ONCELOCK:%- [* ONCELOCK]&]
+[s2; Designates block that only gets performed at first run, taking 
 into account all multi`-threading issues. In single threaded 
 environment&]
-[s2;%% -|-|[C1 ONCELOCK `{ Foo(); `}]&]
-[s2;%% -|is equivalent to&]
-[s2;%% [C1 -|-|`{ static bool x; if(!x) `{ x `= true; Foo(); `} `}.]&]
-[s3;%% &]
-[s4; &]
-[s5;:ONCELOCK`_`(o`_b`_`): [* ONCELOCK`_](o`_b`_)&]
-[s2;%% Similar to oncelock, but allows associating a flag variable, 
+[s2; -|-|[C1 ONCELOCK `{ Foo(); `}]&]
+[s2; -|is equivalent to&]
+[s2; [C1 -|-|`{ static bool x; if(!x) `{ x `= true; Foo(); `} `}.]&]
+[s3; &]
+[s4;%- &]
+[s5;:ONCELOCK`_`(o`_b`_`):%- [* ONCELOCK`_](o`_b`_)&]
+[s2; Similar to oncelock, but allows associating a flag variable, 
 which must be of type OnceFlag. Such variable has to initialized 
 to zero (preferably by static zero initialization of memory). 
 On the first run of for specific OnceFlag, ONCELOCK`_ performs 
 the block (and changes the variable so that it is not performed 
 on the next run).&]
-[s3; &]
-[s0; ]]
+[s3;%- &]
+[s0;%- ]]

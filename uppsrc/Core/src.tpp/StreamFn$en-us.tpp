@@ -10,8 +10,8 @@ topic "Stream utilities";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[s0;%% [5 Stream helpers]&]
-[s0;3 &]
+[ {{10000@(113.42.0) [s0;%% [*@2;4 Stream helpers]]}}&]
+[s0;%% &]
 [ {{10000t/25b/25@1 [s0; [* Function List]]}}&]
 [s3; &]
 [s5;:LoadStream`(Stream`&`): [_^String^ String]_[* LoadStream]([_^Stream^ Stream][@(0.0.255) `&

@@ -10,8 +10,8 @@ topic "ValueMap";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[ {{10000@(113.42.0) [s0; [*@7;4 Title]]}}&]
-[s1;@(0.0.255)3%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 ValueMap]]}}&]
+[s3;%- &]
 [s1;:ValueMap`:`:class:%- [@(0.0.255)3 class][3 _][*3 ValueMap]&]
 [s2; ValueMap is a map of key`-value pairs, where both key and value 
 are of Value type. Key has to be rich Value type with operator`=`= 
@@ -34,7 +34,6 @@ elements with corresponding indices.&]
 ValueArray elements contained in Value with text keys (if Value 
 does not contain ValueMap or requested key, Void Value is returned).&]
 [s2; &]
-[s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
 [s5;:ValueMap`:`:ValueMap`(`):%- [* ValueMap]()&]

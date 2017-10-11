@@ -10,8 +10,8 @@ topic "Serialization utilities";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
-[s0; [*@3;4 Serialization utilities]&]
-[s0;3%- &]
+[ {{10000@(113.42.0) [s0; [*@2;4 Serialization utilities]]}}&]
+[s0;*@3;4 &]
 [ {{10000t/25b/25@1 [s0;%- [* Function List]]}}&]
 [s0;0%- &]
 [s5;:Pack16`(Stream`&`,int`&`):%- [_^Stream^ Stream][@(0.0.255) `&]_[* Pack16]([_^Stream^ Str

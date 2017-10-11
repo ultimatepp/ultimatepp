@@ -11,6 +11,8 @@ topic "Callbacks";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Callbacks]]}}&]
+[s9; [/ Note: Callbacks are now deprecated. Use Function/Event/Gate 
+instead!]&]
 [s9; Callbacks can be described as a very generalized form of function 
 pointers. Each Callback represents some kind of action (usually 
 calling a certain function or a certain object method) that can 
