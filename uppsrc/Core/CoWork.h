@@ -116,26 +116,27 @@ public:
 
 template <class Ret>
 class AsyncWork {
-	template <class Ret>
+	template <class Ret2>
 	struct Imp {
 		CoWork co;
-		Ret    ret;
+		Ret2   ret;
 	
-		template< class Function, class... Args>
-		void       Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(args...); }); }
-		const Ret& Get()                            { return ret; }
+		template<class Function, class... Args>
+		void        Do(Function&& f, Args&&... args) { co.Do([=]() { ret = f(args...); }); }
+		const Ret2& Get()                            { return ret; }
 	};
 
-	template <>
-	struct Imp<void> {
+	struct ImpVoid {
 		CoWork co;
 	
-		template< class Function, class... Args>
-		void       Do(Function&& f, Args&&... args) { co.Do([=]() { f(args...); }); }
-		void       Get()                            {}
+		template<class Function, class... Args>
+		void        Do(Function&& f, Args&&... args) { co.Do([=]() { f(args...); }); }
+		void        Get()                            {}
 	};
 	
-	One<Imp<Ret>> imp;
+	using ImpType = typename std::conditional<std::is_void<Ret>::value, ImpVoid, Imp<Ret>>::type;
+	
+	One<ImpType> imp;
 	
 public:
 	template< class Function, class... Args>
