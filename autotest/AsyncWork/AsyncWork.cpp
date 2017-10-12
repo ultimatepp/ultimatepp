@@ -31,5 +31,3 @@ CONSOLE_APP_MAIN
 	
 	LOG("------------- OK");
 }
-
-./autot
