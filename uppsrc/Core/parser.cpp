@@ -139,31 +139,31 @@ bool CParser::Id0(const char *s) {
 	return true;
 }
 
-void CParser::PassId(const char *s) throw(Error) {
+void CParser::PassId(const char *s) {
 	LTIMING("PassId");
 	if(!Id(s))
 		ThrowError(String("missing '") + s + "\'");
 }
 
-void CParser::PassChar(char c) throw(Error) {
+void CParser::PassChar(char c) {
 	LTIMING("PassChar");
 	if(!Char(c))
 		ThrowError(String("missing '") + c + "\'");
 }
 
-void CParser::PassChar2(char c1, char c2) throw(Error) {
+void CParser::PassChar2(char c1, char c2) {
 	LTIMING("PassChar2");
 	if(!Char2(c1, c2))
 		ThrowError(String("missing '") + c1 + c2 + "\'");
 }
 
-void CParser::PassChar3(char c1, char c2, char c3) throw(Error) {
+void CParser::PassChar3(char c1, char c2, char c3) {
 	LTIMING("PassChar3");
 	if(!Char3(c1, c2, c3))
 		ThrowError(String("missing '") + c1 + c2 + c3 + "\'");
 }
 
-String CParser::ReadId() throw(Error) {
+String CParser::ReadId() {
 	LTIMING("ReadId");
 	if(!IsId())
 		ThrowError("missing id");
@@ -177,7 +177,7 @@ String CParser::ReadId() throw(Error) {
 	return String(b, (int)(uintptr_t)(p - b));
 }
 
-String CParser::ReadIdt() throw(Error) {
+String CParser::ReadIdt() {
 	if(!IsId())
 		ThrowError("missing id");
 	StringBuffer result;
@@ -217,7 +217,7 @@ int  CParser::Sgn()
 	return sign;
 }
 
-int  CParser::ReadInt() throw(Error) {
+int  CParser::ReadInt() {
 	LTIMING("ReadInt");
 	int sign = Sgn();
 	uint32 n = ReadNumber(10);
@@ -226,7 +226,7 @@ int  CParser::ReadInt() throw(Error) {
 	return sign * (int)n;
 }
 
-int CParser::ReadInt(int min, int max) throw(Error)
+int CParser::ReadInt(int min, int max)
 {
 	int n = ReadInt();
 	if(n < min || n > max)
@@ -234,7 +234,7 @@ int CParser::ReadInt(int min, int max) throw(Error)
 	return n;
 }
 
-int64 CParser::ReadInt64() throw(Error)
+int64 CParser::ReadInt64()
 {
 	LTIMING("ReadInt64");
 	int sign = Sgn();
@@ -244,7 +244,7 @@ int64 CParser::ReadInt64() throw(Error)
 	return sign * n;
 }
 
-int64 CParser::ReadInt64(int64 min, int64 max) throw(Error)
+int64 CParser::ReadInt64(int64 min, int64 max)
 {
 	int64 n = ReadInt64();
 	if(n < min || n > max)
@@ -262,7 +262,7 @@ bool CParser::IsNumber(int base) const
     return q >= 0 && q < base - 10;
 }
 
-uint32  CParser::ReadNumber(int base) throw(Error)
+uint32  CParser::ReadNumber(int base)
 {
 	LTIMING("ReadNumber");
 	uint32 n = 0;
@@ -283,7 +283,7 @@ uint32  CParser::ReadNumber(int base) throw(Error)
 	return n;
 }
 
-uint64  CParser::ReadNumber64(int base) throw(Error)
+uint64  CParser::ReadNumber64(int base)
 {
 	LTIMING("ReadNumber");
 	uint64 n = 0;
@@ -304,7 +304,7 @@ uint64  CParser::ReadNumber64(int base) throw(Error)
 	return n;
 }
 
-double CParser::ReadDouble() throw(Error)
+double CParser::ReadDouble()
 {
 	LTIMING("ReadDouble");
 	int sign = Sgn();
@@ -349,7 +349,7 @@ bool CParser::ReadHex(dword& hex, int n)
 	return true;
 }
 
-String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
+String CParser::ReadOneString(int delim, bool chkend) {
 	if(!IsChar(delim))
 		ThrowError("missing string");
 	term++;
@@ -441,12 +441,12 @@ String CParser::ReadOneString(int delim, bool chkend) throw(Error) {
 	return result;
 }
 
-String CParser::ReadOneString(bool chkend) throw(Error)
+String CParser::ReadOneString(bool chkend)
 {
 	return ReadOneString('\"', chkend);
 }
 
-String CParser::ReadString(int delim, bool chkend) throw(Error) {
+String CParser::ReadString(int delim, bool chkend) {
 	LTIMING("ReadString");
 	String result;
 	do
@@ -455,7 +455,7 @@ String CParser::ReadString(int delim, bool chkend) throw(Error) {
 	return result;
 }
 
-String CParser::ReadString(bool chkend) throw(Error)
+String CParser::ReadString(bool chkend)
 {
 	return ReadString('\"', chkend);
 }
