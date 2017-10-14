@@ -44,6 +44,7 @@ file
 	ConditionVariable.cpp,
 	test.txt,
 	CoWork.cpp,
+	Async.cpp,
 	CoPartition.cpp,
 	Parallel.cpp,
 	tutorial2.cpp,
