@@ -531,7 +531,7 @@ void Ctrl::Dump(Stream& s) const {
 	LG("Rect:   " << GetRect());
 	LG("View:   " << GetView());
 	for(int i = 0; i < frame.GetCount(); i++)
-		LG("Frame " << i << ": " << typeid(*frame[i].frame).name() << " - " << frame[i].view);
+		LG("Frame " << i << ": " << typeid(decltype(*frame[i].frame)).name() << " - " << frame[i].view);
 	LG("Data: " << GetData().ToString());
 	if(firstchild) {
 		LG("Children");
