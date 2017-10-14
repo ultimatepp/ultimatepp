@@ -49,6 +49,7 @@ GUI_APP_MAIN
 	DO(MutexTutorial);
 	DO(ConditionVariableTutorial);
 	DO(CoWorkTutorial);
+	DO(AsyncTutorial);
 	DO(CoPartitionTutorial);
 	DO(CoAlgoTutorial);
 

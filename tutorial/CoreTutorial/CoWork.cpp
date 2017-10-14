@@ -35,7 +35,7 @@ void CoWorkTutorial()
 	DUMP(w);
 	
 	/// Adding words to `w` requires `Mutex`. Alternative to this 'result gathering' `Mutex` is
-	/// CoWork::FinLock. The idea behind this is that CoWork requires an internal `Mutex` to
+	/// `CoWork::FinLock`. The idea behind this is that CoWork requires an internal `Mutex` to
 	/// serialize access to common data, so why `FinLock` locks this internal mutex a bit
 	/// earlier, saving CPU cycles required to lock and unlock dedicated mutex. From API
 	/// contract perspective, you can consider `FinLock` to serialize code till the end of
@@ -55,7 +55,33 @@ void CoWorkTutorial()
 
 	DUMP(w);
 	
-	/// Of course, the code performed after FinLock should not take long, otherwise there is
-	/// negative impact on all CoWork instances. In fact, from this perspective, above code is
-	/// probably past this threshold...
+	/// Of course, the code performed after `FinLock` should not take long, otherwise there is
+	/// negative impact on all `CoWork` instances. In fact, from this perspective, above code is
+	/// probably past the threshold...
+	
+	/// When exception is thrown in `CoWork`, it is propagated to the thread that calls `Finish`.
+	/// As `CoWork` destructor calls `Finish` too, it is possible that it will be thrown by
+	/// destructor, which is not exactly recommended thing to do in C++, but is well defined
+	///  and really the best option here:
+	
+	try {
+		CoWork co;
+		co & [] { throw Exc(); };
+	}
+	catch(Exc) {
+		LOG("Caught exception");
+	}
+	
+	/// Sometimes there is a need for cancellation of the whole `CoWork`. `Cancel` method
+	/// cancels all scheduled jobs that have not been yet executed and sets `CoWork` to
+	/// canceled state, which can be checked in job routine using `CoWork::IsCanceled`:
+	
+	co & [] {
+		for(;;)
+			if(CoWork::IsCanceled())
+				return;
+	};
+	co.Cancel();
+	
+	///
 }
