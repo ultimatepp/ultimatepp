@@ -700,8 +700,11 @@ public:
 	void   Close(const String& msg = Null);
 	bool   IsOpen() const                               { return socket->IsOpen(); }
 	bool   IsClosed() const                             { return !IsOpen(); }
+
+	dword  GetWaitEvents() const                        { return WAIT_READ|(!!out_queue.GetCount() * WAIT_WRITE); }
+	SOCKET GetSOCKET() const                            { return socket ? socket->GetSOCKET() : 0; }
 	
-	void   AddTo(SocketWaitEvent& e)                    { e.Add(*socket, WAIT_READ|(!!out_queue.GetCount() * WAIT_WRITE)); }
+	void   AddTo(SocketWaitEvent& e)                    { e.Add(*socket, GetWaitEvents()); }
 
 	static void Trace(bool b = true);
 
