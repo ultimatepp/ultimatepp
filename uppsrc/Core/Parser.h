@@ -41,33 +41,33 @@ public:
 	bool   Char(char c);
 	bool   Char2(char c1, char c2);
 	bool   Char3(char c1, char c2, char c3);
-	void   PassChar(char c) throw(Error);
-	void   PassChar2(char c1, char c2) throw(Error);
-	void   PassChar3(char c1, char c2, char c3) throw(Error);
+	void   PassChar(char c);
+	void   PassChar2(char c1, char c2);
+	void   PassChar3(char c1, char c2, char c3);
 	bool   Id(const char *s)                  { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && Id0(s); }
-	void   PassId(const char *s) throw(Error);
+	void   PassId(const char *s);
 	bool   IsId() const                       { return iscib(*term); }
 	bool   IsId(const char *s) const          { return term[0] == s[0] && (s[1] == 0 || term[1] == s[1]) && IsId0(s); }
-	String ReadId() throw(Error);
-	String ReadIdt() throw(Error);
+	String ReadId();
+	String ReadIdt();
 	bool   IsInt() const;
 	int    Sgn();
-	int    ReadInt() throw(Error);
-	int    ReadInt(int min, int max) throw(Error);
-	int64  ReadInt64() throw(Error);
-	int64  ReadInt64(int64 min, int64 max) throw(Error);
+	int    ReadInt();
+	int    ReadInt(int min, int max);
+	int64  ReadInt64();
+	int64  ReadInt64(int64 min, int64 max);
 	bool   IsNumber() const                   { return IsDigit(*term); }
 	bool   IsNumber(int base) const;
-	uint32 ReadNumber(int base = 10) throw(Error);
-	uint64 ReadNumber64(int base = 10) throw(Error);
+	uint32 ReadNumber(int base = 10);
+	uint64 ReadNumber64(int base = 10);
 	bool   IsDouble() const                   { return IsInt(); }
 	bool   IsDouble2() const                  { return IsInt() || IsChar('.'); }
-	double ReadDouble() throw(Error);
+	double ReadDouble();
 	bool   IsString() const                   { return IsChar('\"'); };
-	String ReadOneString(bool chkend = true) throw(Error);
-	String ReadString(bool chkend = true) throw(Error);
-	String ReadOneString(int delim, bool chkend = true) throw(Error);
-	String ReadString(int delim, bool chkend = true) throw(Error);
+	String ReadOneString(bool chkend = true);
+	String ReadString(bool chkend = true);
+	String ReadOneString(int delim, bool chkend = true);
+	String ReadString(int delim, bool chkend = true);
 
 	void   SkipTerm();
 

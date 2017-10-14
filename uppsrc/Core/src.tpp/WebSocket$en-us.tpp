@@ -120,6 +120,19 @@ onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 msg])&]
 [s5;:WebSocket`:`:IsClosed`(`)const: [@(0.0.255) bool]_[* IsClosed]()_[@(0.0.255) const]&]
 [s2;%% Returns true if the socket is closed.&]
 [s4; &]
+[s5;:Upp`:`:WebSocket`:`:GetWaitEvents`(`)const: [_^Upp`:`:dword^ dword]_[* GetWaitEvents
+]()_[@(0.0.255) const]&]
+[s2;%% Returns a combination of WAIT`_READ and WAIT`_WRITE flags 
+to indicate what is blocking the operation of WebSocket. Can 
+be used with SocketWaitEvent.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:GetSOCKET`(`)const: [_^SOCKET^ SOCKET]_[* GetSOCKET]()_[@(0.0.255) c
+onst]&]
+[s2;%% Is there associated socket, returns its handle. Otherwise 
+returns NULL.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:WebSocket`:`:AddTo`(Upp`:`:SocketWaitEvent`&`): [@(0.0.255) void]_[* AddTo]([_^Upp`:`:SocketWaitEvent^ S
 ocketWaitEvent][@(0.0.255) `&]_[*@3 e])&]
 [s2;%% Adds WebSocket to [%-_^Upp`:`:SocketWaitEvent^ SocketWaitEvent] 
