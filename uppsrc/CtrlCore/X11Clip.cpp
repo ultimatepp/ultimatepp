@@ -368,7 +368,7 @@ Vector<String> GetClipFiles(const String& data)
 }
 
 Vector<String> GetFiles(PasteClip& clip) {
-	GuiLock __; 
+	GuiLock __;
 	Vector<String> r;
 	if(clip.Accept("text/uri-list")) {
 		String txt = clip;
