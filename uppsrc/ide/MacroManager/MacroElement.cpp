@@ -17,6 +17,8 @@ Image MacroElement::GetImage() const
 			return MacroManagerImg::Macro();
 		case(Type::FUNCTION):
 			return MacroManagerImg::Fn();
+		case(Type::UNKNOWN): // silence CLANG warning
+			break;
 	}
 	return Image();
 }

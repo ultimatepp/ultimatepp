@@ -34,6 +34,7 @@ TextDiffCtrl
 ODBC
 MSSQL
 usvn
+urepo
 art
 Painter
 XmlRpc

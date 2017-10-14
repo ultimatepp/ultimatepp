@@ -123,7 +123,6 @@ bool RepoSync::ListGit(const String& path)
 				color = Gray;
 			}
 			else {
-				int q = file.ReverseFind('.');
 				static const char *as[] = {
 					"Modify", "Resolved", "Add", "Remove", "Rename"
 				};
