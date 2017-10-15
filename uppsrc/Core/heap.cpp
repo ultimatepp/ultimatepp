@@ -242,6 +242,10 @@ void MemoryShrink()
 #ifdef UPP_HEAP
 #include <new>
 
+#ifdef COMPILER_GCC
+#pragma GCC diagnostic ignored "-Wdeprecated" // silence modern GCC warning about throw(std::bad_alloc)
+#endif
+
 void *operator new(size_t size) throw(std::bad_alloc)             { void *ptr = UPP::MemoryAlloc(size); return ptr; }
 void operator  delete(void *ptr) throw()                          { UPP::MemoryFree(ptr); }
 
