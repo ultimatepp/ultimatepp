@@ -8,7 +8,6 @@ using namespace Upp;
 
 int main(int argc, const char *argv[])
 {
-	int n;
 	VectorMap<String, int> map;
 	Cout() << "   lines   words   bytes file\n";
 	int total_lines = 0;
