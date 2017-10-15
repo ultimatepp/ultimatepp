@@ -1,6 +1,4 @@
-description "Word-count utility";
-
-optimize_speed;
+description "Word-count utility\377";
 
 uses
 	Core;
@@ -12,3 +10,4 @@ mainconfig
 	"" = "",
 	"" = "USEMALLOC",
 	"" = "MT";
+
