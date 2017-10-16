@@ -45,7 +45,7 @@ _[*@3 fr])&]
 [s2;%% Replaces multiple patterns with replace texts. When patterns 
 and replaces are specified by VectorMap, keys are patterns. Text 
 replaced is not searched for more instances of patterns. Longest 
-pattern is always used (if patterns:replases are `"hell`":`"hello`" 
+pattern is always used (if patterns:replaces are `"hell`":`"hello`" 
 and `"hello`":`"hell`", then replacing within `"hell hello`" produces 
 `"hello hell`").&]
 [s3;%% &]

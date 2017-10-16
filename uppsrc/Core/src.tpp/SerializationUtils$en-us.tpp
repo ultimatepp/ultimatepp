@@ -189,13 +189,29 @@ has to be explicitly triggered before storing configuration.&]
 [s5;:LoadFromGlobal`(T`&`,const char`*`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
 ][@(0.0.255) >]_[@(0.0.255) bool]_[* LoadFromGlobal]([*@4 T][@(0.0.255) `&]_[*@3 x], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name])&]
-[s2; Loads [%-*@3 x] from global configuration key [%-*@3 name].&]
+[s2; Loads [%-*@3 x] from global configuration key [%-*@3 name], using 
+Serialize method of T.&]
 [s3; &]
 [s4;%- &]
 [s5;:StoreToGlobal`(T`&`,const char`*`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
 ][@(0.0.255) >]_[@(0.0.255) void]_[* StoreToGlobal]([*@4 T][@(0.0.255) `&]_[*@3 x], 
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name])&]
-[s2; Stores [@3 x] to global configuration key [%-*C@3 name].&]
+[s2; Stores [@3 x] to global configuration key [%-*@3 name], using Serialize 
+method of T.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:LoadFromGlobal`(Upp`:`:Event`<Upp`:`:Stream`&`>`,const char`*`):%- [@(0.0.255) b
+ool]_[* LoadFromGlobal]([_^Upp`:`:Event^ Event]<Stream[@(0.0.255) `&]>_[*@3 serialize], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name])&]
+[s2; Loads [%-*@3 x] from global configuration key [%-*@3 name], using 
+[%-*@3 serialize] as serialization function.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:StoreToGlobal`(Upp`:`:Event`<Upp`:`:Stream`&`>`,const char`*`):%- [@(0.0.255) v
+oid]_[* StoreToGlobal]([_^Upp`:`:Event^ Event]<Stream[@(0.0.255) `&]>_[*@3 x], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 name])&]
+[s2; Stores [@3 x] to global configuration key [%-*@3 name], using [%-*@3 serialize] 
+as serialization function.&]
 [s3; &]
 [s4;%- &]
 [s5;:SerializeGlobalConfigs`(Stream`&`):%- [@(0.0.255) void]_[* SerializeGlobalConfigs]([_^Stream^ S
