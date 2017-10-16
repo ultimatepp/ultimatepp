@@ -26,6 +26,7 @@ struct Heap {
 			32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384,
 			448, 576, 672, 800, 992, 8, 16, 24, 40, 48, 56
 		//  12   13   14   15   16  17  18  19  20  21  22
+		//  8 - 56 sizes are only available with TinyAlloc
 		};
 		static_assert(__countof(sz) == 23, "NKLASS mismatch");
 		return sz[k];

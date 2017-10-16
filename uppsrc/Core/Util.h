@@ -472,6 +472,9 @@ void StoreToGlobal(T& x, const char *name)
 	SetGlobalConfigData(name, ss);
 }
 
+bool LoadFromGlobal(Event<Stream&> serialize, const char *name);
+void StoreToGlobal(Event<Stream&> serialize, const char *name);
+
 void SerializeGlobalConfigs(Stream& s);
 
 #ifdef PLATFORM_WINCE

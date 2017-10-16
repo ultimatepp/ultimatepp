@@ -682,6 +682,19 @@ void SetGlobalConfigData(const char *name, const String& data)
 	sGCfg().GetAdd(name) = data;
 }
 
+bool LoadFromGlobal(Event<Stream&> x, const char *name)
+{
+	StringStream ss(GetGlobalConfigData(name));
+	return ss.IsEof() || Load(x, ss);
+}
+
+void StoreToGlobal(Event<Stream&> x, const char *name)
+{
+	StringStream ss;
+	Store(x, ss);
+	SetGlobalConfigData(name, ss);
+}
+
 void  SerializeGlobalConfigs(Stream& s)
 {
 	Mutex::Lock __(sGCfgLock);
