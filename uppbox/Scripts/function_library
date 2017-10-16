@@ -79,6 +79,6 @@ convert_version_to_number()
     log_debug_error "Function 'convert_version_to_number' called with empty parameter"
     return 1
   fi
-  echo "$1" | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$/&00/'
+  echo "$1" | sed -e 's/\.\([0-9][0-9]\)/\1/g' -e 's/\.\([0-9]\)/0\1/g' -e 's/^[0-9]\{3,4\}$/&00/' -e 's/^[0-9]\{1,2\}$/&0000/'
   return 0
 }
