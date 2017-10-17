@@ -1,4 +1,5 @@
 #include "Core.h"
+#include "cpuid.h"
 
 namespace Upp {
 
@@ -8,22 +9,15 @@ static bool sHasMMX;
 static bool sHasSSE;
 static bool sHasSSE2;
 static bool sHasSSE3;
+static bool sHypervisor;
 
 static void sCheckCPU()
 {
 	static bool done;
 	if(done) return;
 	done = true;
-#ifdef PLATFORM_OSX11
-	sHasMMX = true;
-	sHasSSE = true;
-	sHasSSE2 = true;
-#else
-	#ifdef CPU_AMD64
-		sHasMMX = true;
-		sHasSSE = true;
-		sHasSSE2 = true;
-	#else
+	unsigned int eax, ebx, ecx, edx;
+	ONCELOCK {
 		#ifdef COMPILER_MSC
 			dword info1;
 			dword info2;
@@ -34,26 +28,26 @@ static void sCheckCPU()
 				mov info2, ecx
 			}
 		#else
-			dword info1;
-			dword info2;
-			__asm__("pushl %%ebx\n\tmovl $1, %%eax\n\tcpuid\n\tpopl %%ebx" : "=d" (info1), "=c" (info2) : : "%eax");
+			__get_cpuid(1, &eax, &ebx, &ecx, &edx);
 		#endif
-		sHasMMX = ((info1 >> 23) & 0x1);
-		sHasSSE = ((info1 >> 25) & 0x1);
-		sHasSSE2 = ((info1 >> 26) & 0x1);
-		sHasSSE3 = ((info2) & 0x1);
-	#endif
-#endif
+		// https://en.wikipedia.org/wiki/CPUID#EAX.3D1:_Processor_Info_and_Feature_Bits
+		sHasMMX = edx & (1 << 23);
+		sHasSSE = edx & (1 << 25);
+		sHasSSE2 = edx & (1 << 26);
+		sHasSSE3 = ecx & 1;
+		sHypervisor = ecx & (1 << 31);
+	}
 }
 
 INITBLOCK {
 //	sCheckCPU();
 }
 
-bool CpuMMX()  { sCheckCPU(); return sHasMMX; }
-bool CpuSSE()  { sCheckCPU(); return sHasSSE; }
-bool CpuSSE2() { sCheckCPU(); return sHasSSE2; }
-bool CpuSSE3() { sCheckCPU(); return sHasSSE3; }
+bool CpuMMX()        { sCheckCPU(); return sHasMMX; }
+bool CpuSSE()        { sCheckCPU(); return sHasSSE; }
+bool CpuSSE2()       { sCheckCPU(); return sHasSSE2; }
+bool CpuSSE3()       { sCheckCPU(); return sHasSSE3; }
+bool CpuHypervisor() { sCheckCPU(); return sHypervisor; }
 
 #ifdef PLATFORM_POSIX
 #ifdef PLATFORM_BSD
