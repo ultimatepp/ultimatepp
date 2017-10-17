@@ -225,6 +225,12 @@ last argument [%-*@3 def].&]
 [s2;%% Returns true if CPU has SSE3 support.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:CpuHypervisor`(`): [@(0.0.255) bool]_[* CpuHypervisor]()&]
+[s2;%% Checks whether CPU has hypervisor flag set. If it has, the 
+program is running in virtual machine. Unfortunately, opposite 
+is not true `- some VMs run without this flag set.&]
+[s3; &]
+[s4; &]
 [s5;:CPU`_Cores`(`): [@(0.0.255) int]_[* CPU`_Cores]()&]
 [s2;%% Returns the number of cores the CPU has.&]
 [s3; &]
