@@ -487,6 +487,7 @@ bool CpuMMX();
 bool CpuSSE();
 bool CpuSSE2();
 bool CpuSSE3();
+bool CpuHypervisor();
 #endif
 
 int  CPU_Cores();
