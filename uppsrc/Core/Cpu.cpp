@@ -1,9 +1,13 @@
 #include "Core.h"
-#include "cpuid.h"
-
 namespace Upp {
 
 #ifdef CPU_X86
+
+#ifdef COMPILER_MSC
+#include <intrin.h> 
+#else
+#include <cpuid.h>
+#endif
 
 static bool sHasMMX;
 static bool sHasSSE;
@@ -16,17 +20,15 @@ static void sCheckCPU()
 	static bool done;
 	if(done) return;
 	done = true;
-	unsigned int eax, ebx, ecx, edx;
 	ONCELOCK {
+		unsigned int eax, ebx, ecx, edx;
 		#ifdef COMPILER_MSC
-			dword info1;
-			dword info2;
-			__asm {
-				mov eax, 1
-				cpuid
-				mov info1, edx
-				mov info2, ecx
-			}
+			int cpuInfo[4];
+			__cpuid(cpuInfo, 1);
+			eax = cpuInfo[0];
+			ebx = cpuInfo[1];
+			ecx = cpuInfo[2];
+			edx = cpuInfo[3];
 		#else
 			__get_cpuid(1, &eax, &ebx, &ecx, &edx);
 		#endif
