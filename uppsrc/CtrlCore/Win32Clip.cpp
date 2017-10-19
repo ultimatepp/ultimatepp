@@ -503,7 +503,7 @@ void AppendFiles(VectorMap<String, ClipData>& clip, const Vector<String>& files)
 {
 	WString wfiles;
 	for(int i = 0; i < files.GetCount(); i++)
-		wfiles << files[i].ToWString() << "\0";
+		wfiles << files[i].ToWString() << (wchar)0;
 	sDROPFILES h;
 	h.unicode = true;
 	h.offset = sizeof(h);
