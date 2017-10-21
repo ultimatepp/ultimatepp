@@ -1,7 +1,8 @@
 /*
  * jpegint.h
  *
- * Copyright (C) 1991-1998, Thomas G. Lane.
+ * Copyright (C) 1991-1997, Thomas G. Lane.
+ * Modified 1997-2013 by Guido Vollbeding.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -72,12 +73,8 @@ struct jpeg_c_prep_controller {
 				   JDIMENSION out_row_groups_avail));
 };
 
-/* Compression codec (compressor proper) */
-struct jpeg_c_codec {
-  JMETHOD(void, entropy_start_pass, (j_compress_ptr cinfo,
-				     boolean gather_statistics));
-  JMETHOD(void, entropy_finish_pass, (j_compress_ptr cinfo));
-  JMETHOD(boolean, need_optimization_pass, (j_compress_ptr cinfo));
+/* Coefficient buffer control */
+struct jpeg_c_coef_controller {
   JMETHOD(void, start_pass, (j_compress_ptr cinfo, J_BUF_MODE pass_mode));
   JMETHOD(boolean, compress_data, (j_compress_ptr cinfo,
 				   JSAMPIMAGE input_buf));
@@ -100,6 +97,26 @@ struct jpeg_downsampler {
 			     JDIMENSION out_row_group_index));
 
   boolean need_context_rows;	/* TRUE if need rows above & below */
+};
+
+/* Forward DCT (also controls coefficient quantization) */
+typedef JMETHOD(void, forward_DCT_ptr,
+		(j_compress_ptr cinfo, jpeg_component_info * compptr,
+		 JSAMPARRAY sample_data, JBLOCKROW coef_blocks,
+		 JDIMENSION start_row, JDIMENSION start_col,
+		 JDIMENSION num_blocks));
+
+struct jpeg_forward_dct {
+  JMETHOD(void, start_pass, (j_compress_ptr cinfo));
+  /* It is useful to allow each component to have a separate FDCT method. */
+  forward_DCT_ptr forward_DCT[MAX_COMPONENTS];
+};
+
+/* Entropy encoding */
+struct jpeg_entropy_encoder {
+  JMETHOD(void, start_pass, (j_compress_ptr cinfo, boolean gather_statistics));
+  JMETHOD(boolean, encode_mcu, (j_compress_ptr cinfo, JBLOCKROW *MCU_data));
+  JMETHOD(void, finish_pass, (j_compress_ptr cinfo));
 };
 
 /* Marker writing */
@@ -148,14 +165,15 @@ struct jpeg_d_main_controller {
 			       JDIMENSION out_rows_avail));
 };
 
-/* Decompression codec (decompressor proper) */
-struct jpeg_d_codec {
-  JMETHOD(void, calc_output_dimensions, (j_decompress_ptr cinfo));
+/* Coefficient buffer control */
+struct jpeg_d_coef_controller {
   JMETHOD(void, start_input_pass, (j_decompress_ptr cinfo));
   JMETHOD(int, consume_data, (j_decompress_ptr cinfo));
   JMETHOD(void, start_output_pass, (j_decompress_ptr cinfo));
   JMETHOD(int, decompress_data, (j_decompress_ptr cinfo,
 				 JSAMPIMAGE output_buf));
+  /* Pointer to array of coefficient virtual arrays, or NULL if none */
+  jvirt_barray_ptr *coef_arrays;
 };
 
 /* Decompression postprocessing (color quantization buffer control) */
@@ -188,6 +206,25 @@ struct jpeg_marker_reader {
   boolean saw_SOF;		/* found SOF? */
   int next_restart_num;		/* next restart number expected (0-7) */
   unsigned int discarded_bytes;	/* # of bytes skipped looking for a marker */
+};
+
+/* Entropy decoding */
+struct jpeg_entropy_decoder {
+  JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
+  JMETHOD(boolean, decode_mcu, (j_decompress_ptr cinfo, JBLOCKROW *MCU_data));
+  JMETHOD(void, finish_pass, (j_decompress_ptr cinfo));
+};
+
+/* Inverse DCT (also performs dequantization) */
+typedef JMETHOD(void, inverse_DCT_method_ptr,
+		(j_decompress_ptr cinfo, jpeg_component_info * compptr,
+		 JCOEFPTR coef_block,
+		 JSAMPARRAY output_buf, JDIMENSION output_col));
+
+struct jpeg_inverse_dct {
+  JMETHOD(void, start_pass, (j_decompress_ptr cinfo));
+  /* It is useful to allow each component to have a separate IDCT method. */
+  inverse_DCT_method_ptr inverse_DCT[MAX_COMPONENTS];
 };
 
 /* Upsampling (note that upsampler must also call color converter) */
@@ -256,8 +293,6 @@ struct jpeg_color_quantizer {
 /* Short forms of external names for systems with brain-damaged linkers. */
 
 #ifdef NEED_SHORT_EXTERNAL_NAMES
-#define jinit_c_codec		jICCodec
-#define jinit_lossy_c_codec	jILossyC
 #define jinit_compress_master	jICompress
 #define jinit_c_master_control	jICMaster
 #define jinit_c_main_controller	jICMainC
@@ -266,24 +301,17 @@ struct jpeg_color_quantizer {
 #define jinit_color_converter	jICColor
 #define jinit_downsampler	jIDownsampler
 #define jinit_forward_dct	jIFDCT
-#define jinit_shuff_encoder	jISHEncoder
-#define jinit_phuff_encoder	jIPHEncoder
+#define jinit_huff_encoder	jIHEncoder
+#define jinit_arith_encoder	jIAEncoder
 #define jinit_marker_writer	jIMWriter
-#define jinit_d_codec		jIDCodec
-#define jinit_lossy_d_codec	jILossyD
-#define jinit_lossless_d_codec	jILosslsD
 #define jinit_master_decompress	jIDMaster
 #define jinit_d_main_controller	jIDMainC
 #define jinit_d_coef_controller	jIDCoefC
-#define jinit_d_diff_controller	jIDDiffC
 #define jinit_d_post_controller	jIDPostC
 #define jinit_input_controller	jIInCtlr
 #define jinit_marker_reader	jIMReader
-#define jinit_shuff_decoder	jISHDecoder
-#define jinit_phuff_decoder	jIPHDecoder
-#define jinit_lhuff_decoder	jILHDecoder
-#define jinit_undifferencer	jIUndiff
-#define jinit_d_scaler		jIDScaler
+#define jinit_huff_decoder	jIHDecoder
+#define jinit_arith_decoder	jIADecoder
 #define jinit_inverse_dct	jIIDCT
 #define jinit_upsampler		jIUpsampler
 #define jinit_color_deconverter	jIDColor
@@ -293,41 +321,70 @@ struct jpeg_color_quantizer {
 #define jinit_memory_mgr	jIMemMgr
 #define jdiv_round_up		jDivRound
 #define jround_up		jRound
+#define jzero_far		jZeroFar
 #define jcopy_sample_rows	jCopySamples
 #define jcopy_block_row		jCopyBlocks
-#define jzero_far		jZeroFar
 #define jpeg_zigzag_order	jZIGTable
 #define jpeg_natural_order	jZAGTable
+#define jpeg_natural_order7	jZAG7Table
+#define jpeg_natural_order6	jZAG6Table
+#define jpeg_natural_order5	jZAG5Table
+#define jpeg_natural_order4	jZAG4Table
+#define jpeg_natural_order3	jZAG3Table
+#define jpeg_natural_order2	jZAG2Table
+#define jpeg_aritab		jAriTab
 #endif /* NEED_SHORT_EXTERNAL_NAMES */
+
+
+/* On normal machines we can apply MEMCOPY() and MEMZERO() to sample arrays
+ * and coefficient-block arrays.  This won't work on 80x86 because the arrays
+ * are FAR and we're assuming a small-pointer memory model.  However, some
+ * DOS compilers provide far-pointer versions of memcpy() and memset() even
+ * in the small-model libraries.  These will be used if USE_FMEM is defined.
+ * Otherwise, the routines in jutils.c do it the hard way.
+ */
+
+#ifndef NEED_FAR_POINTERS	/* normal case, same as regular macro */
+#define FMEMZERO(target,size)	MEMZERO(target,size)
+#else				/* 80x86 case */
+#ifdef USE_FMEM
+#define FMEMZERO(target,size)	_fmemset((void FAR *)(target), 0, (size_t)(size))
+#else
+EXTERN(void) jzero_far JPP((void FAR * target, size_t bytestozero));
+#define FMEMZERO(target,size)	jzero_far(target, size)
+#endif
+#endif
 
 
 /* Compression module initialization routines */
 EXTERN(void) jinit_compress_master JPP((j_compress_ptr cinfo));
 EXTERN(void) jinit_c_master_control JPP((j_compress_ptr cinfo,
 					 boolean transcode_only));
-EXTERN(void) jinit_c_codec JPP((j_compress_ptr cinfo));
-EXTERN(void) jinit_lossless_c_codec JPP((j_compress_ptr cinfo));
-EXTERN(void) jinit_c_diff_controller JPP((j_compress_ptr cinfo, boolean need_full_buffer));
 EXTERN(void) jinit_c_main_controller JPP((j_compress_ptr cinfo,
 					  boolean need_full_buffer));
 EXTERN(void) jinit_c_prep_controller JPP((j_compress_ptr cinfo,
 					  boolean need_full_buffer));
-EXTERN(void) jinit_compressor JPP((j_compress_ptr cinfo));
+EXTERN(void) jinit_c_coef_controller JPP((j_compress_ptr cinfo,
+					  boolean need_full_buffer));
 EXTERN(void) jinit_color_converter JPP((j_compress_ptr cinfo));
 EXTERN(void) jinit_downsampler JPP((j_compress_ptr cinfo));
+EXTERN(void) jinit_forward_dct JPP((j_compress_ptr cinfo));
+EXTERN(void) jinit_huff_encoder JPP((j_compress_ptr cinfo));
+EXTERN(void) jinit_arith_encoder JPP((j_compress_ptr cinfo));
 EXTERN(void) jinit_marker_writer JPP((j_compress_ptr cinfo));
 /* Decompression module initialization routines */
 EXTERN(void) jinit_master_decompress JPP((j_decompress_ptr cinfo));
 EXTERN(void) jinit_d_main_controller JPP((j_decompress_ptr cinfo,
 					  boolean need_full_buffer));
-EXTERN(void) jinit_d_codec JPP((j_decompress_ptr cinfo));
-EXTERN(void) jinit_lossless_d_codec JPP((j_decompress_ptr cinfo));
-EXTERN(void) jinit_d_diff_controller JPP((j_decompress_ptr cinfo, boolean need_full_buffer));
-EXTERN(void) jinit_decompressor JPP((j_decompress_ptr cinfo));
+EXTERN(void) jinit_d_coef_controller JPP((j_decompress_ptr cinfo,
+					  boolean need_full_buffer));
 EXTERN(void) jinit_d_post_controller JPP((j_decompress_ptr cinfo,
 					  boolean need_full_buffer));
 EXTERN(void) jinit_input_controller JPP((j_decompress_ptr cinfo));
 EXTERN(void) jinit_marker_reader JPP((j_decompress_ptr cinfo));
+EXTERN(void) jinit_huff_decoder JPP((j_decompress_ptr cinfo));
+EXTERN(void) jinit_arith_decoder JPP((j_decompress_ptr cinfo));
+EXTERN(void) jinit_inverse_dct JPP((j_decompress_ptr cinfo));
 EXTERN(void) jinit_upsampler JPP((j_decompress_ptr cinfo));
 EXTERN(void) jinit_color_deconverter JPP((j_decompress_ptr cinfo));
 EXTERN(void) jinit_1pass_quantizer JPP((j_decompress_ptr cinfo));
@@ -344,12 +401,20 @@ EXTERN(void) jcopy_sample_rows JPP((JSAMPARRAY input_array, int source_row,
 				    int num_rows, JDIMENSION num_cols));
 EXTERN(void) jcopy_block_row JPP((JBLOCKROW input_row, JBLOCKROW output_row,
 				  JDIMENSION num_blocks));
-EXTERN(void) jzero_far JPP((void FAR * target, size_t bytestozero));
 /* Constant tables in jutils.c */
 #if 0				/* This table is not actually needed in v6a */
 extern const int jpeg_zigzag_order[]; /* natural coef order to zigzag order */
 #endif
 extern const int jpeg_natural_order[]; /* zigzag coef order to natural order */
+extern const int jpeg_natural_order7[]; /* zz to natural order for 7x7 block */
+extern const int jpeg_natural_order6[]; /* zz to natural order for 6x6 block */
+extern const int jpeg_natural_order5[]; /* zz to natural order for 5x5 block */
+extern const int jpeg_natural_order4[]; /* zz to natural order for 4x4 block */
+extern const int jpeg_natural_order3[]; /* zz to natural order for 3x3 block */
+extern const int jpeg_natural_order2[]; /* zz to natural order for 2x2 block */
+
+/* Arithmetic coding probability estimation tables in jaricom.c */
+extern const INT32 jpeg_aritab[];
 
 /* Suppress undefined-structure complaints if necessary. */
 
