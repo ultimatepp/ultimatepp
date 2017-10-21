@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+mingw64
+
+https://sourceforge.net/projects/mingw-w64/files/mingw-w64/
+
+x86_64-win32-seh
+i686-win32-dwarf
+
+directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
+------------------------------------------------------------------
+plugin/jpg
+
+test with ImageView
+
+http://www.ijg.org/files/
+
+download jpegsr*.zip
+
+rename current lib to lib.bak
+
+remove (delete) files with main:
+remove jmemdos.c
+remove jmemmac.c
+remove jmemname.c
+remove jmemnobs.c
+remove ckconfig.c
+remove djpeg.c
+remove jpegtran.c
+remove example.c
+remove wrjpg.com
+remove cdjpeg.c
+remove rdjpgcom.c
+
+remove all lib\ files from package
+insert all *.c and *.h files
+rename jconfig.vc -> jconfig.h
+
+fix problem with boolean (include from plugin/tif):
+
+#ifndef __RPCNDR_H__		/* don't conflict if rpcndr.h already read */
+#ifndef boolean
+typedef unsigned char boolean;
+#endif
+#endif
+
+remove all files except *.h, *.c and README (put it at the start of package),
+
+current 9b
+-------------------------------------------------------------------
+plugin/tif
+
+
+-------------------------------------------------------------------
+plugin/png
+-------------------------------------------------------------------
+plugin/lz4
+plugin/lzma
+plugin/bz2
+plugin/pcre
+plugin/z
+plugin/zstd
+
+------------------------------------------------------------------
+plugin/Eigen
+plugin/FT_fontsys
+plugin/astyle
+plugin/box2d
+plugin/glew
+plugin/ndisasm
