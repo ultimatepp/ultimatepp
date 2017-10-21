@@ -160,15 +160,16 @@ public:
 	int    GetColumns() const;
 	int    GetColumnCount() const;
 
-	void   GetColumn(int i, Ref r) const;
-	void   GetColumn(SqlId colid, Ref r) const;
-	Value  operator[](int i) const;
-	Value  operator[](SqlId colid) const;
+	void                 GetColumn(int i, Ref r) const;
+	void                 GetColumn(SqlId colid, Ref r) const;
+	Value                operator[](int i) const;
+	Value                operator[](SqlId colid) const;
 	const SqlColumnInfo& GetColumnInfo(int i) const    { return cn->info[i]; }
-	Vector<Value> GetRow() const;
-	ValueMap GetRowMap() const;
-	operator Vector<Value>() const                     { return GetRow(); }
-	void   Get(Fields fields);
+	Vector<Value>        GetRow() const;
+	operator             Vector<Value>() const         { return GetRow(); }
+	ValueMap             GetRowMap() const;
+	ValueMap             operator~() const             { return GetRowMap(); }
+	void                 Get(Fields fields);
 
 	void        SetFetchRows(int nrows)                { cn->fetchrows = nrows; } // deprecated
 	void        SetLongSize(int lsz)                   { cn->longsize = lsz; } // deprecated

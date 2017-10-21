@@ -461,6 +461,8 @@ bool ODBCConnection::Execute()
 					return false;
 				}
 				Value v = param[pi++];
+				if(session->charset >= 0 && IsString(v))
+					v = ToCharset(session->charset, (String)v, CHARSET_DEFAULT, '?');
 				if(v.GetType() == 34)
 					query.Cat(SqlCompile(MSSQL, ~SqlBinary(SqlRaw(v))));
 				else
@@ -629,7 +631,10 @@ bool ODBCConnection::Fetch0()
 					sb.SetLength(li);
 					if(!IsOk(SQLGetData(session->hstmt, i + 1, ct, ~sb, li + 1, &li)))
 					   break;
-					v = String(sb);
+					String s = sb;
+					if(session->charset >= 0)
+						s = ToCharset(CHARSET_DEFAULT, s, session->charset, '?');
+					v = s;
 				}
 			}
 			break;
