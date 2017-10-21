@@ -17,11 +17,10 @@
 #undef INCOMPLETE_TYPES_BROKEN
 
 /* Define "boolean" as unsigned char, not enum, per Windows custom */
-#ifndef __RPCNDR_H__		/* don't conflict if rpcndr.h already read */
-#ifndef boolean
-typedef unsigned char boolean;
+#ifdef boolean
+#undef boolean
 #endif
-#endif
+#define boolean int
 #ifndef FALSE			/* in case these macros already exist */
 #define FALSE	0		/* values of boolean */
 #endif

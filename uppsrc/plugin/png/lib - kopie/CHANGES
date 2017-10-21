@@ -768,7 +768,7 @@ version 1.0.7beta11 [May 7, 2000]
   Removed the new PNG_CREATED_READ_STRUCT and PNG_CREATED_WRITE_STRUCT modes
     which are no longer used.
   Eliminated the three new members of png_text when PNG_LEGACY_SUPPORTED is
-    defined or when neither PNG_READ_iTXt_SUPPORTED nor PNG_WRITE_iTXt_SUPPORTED
+    defined or when neither PNG_READ_iTXt_SUPPORTED nor PNG_WRITE_iTXT_SUPPORTED
     is defined.
   Made PNG_NO_READ|WRITE_iTXt the default setting, to avoid memory
     overrun when old applications fill the info_ptr->text structure directly.
@@ -2927,35 +2927,7 @@ version 1.2.57rc01 [December 27, 2016]
 
 version 1.0.67 and 1.2.57 [December 29, 2016]
   Fixed a potential null pointer dereference in png_set_text_2() (bug report
-    and patch by Patrick Keshishian, CVE-2016-10087).
-
-version 1.2.58beta01 [August 11, 2017]
-  Added png_check_chunk_length() function, and check all chunks except
-    IDAT against the default 8MB limit; check IDAT against the maximum
-    size computed from IHDR parameters (Fixes CVE-2017-12652).
-
-version 1.2.58rc01 [August 19, 2017]
-  Check for 0 return from png_get_rowbytes() and added some (size_t) typecasts
-    in contrib/pngminus/*.c to stop some Coverity issues (162705, 162706,
-    and 162707).
-
-version 1.0.68 and 1.2.58 [September 28, 2017]
-  No changes.
-
-Version 1.2.59beta01 [August 28, 2017]
-  Added PNGMINUS_UNUSED macro to contrib/pngminus/p*.c and added missing
-    parenthesis in contrib/pngminus/pnm2png.c (bug report by Christian Hesse).
-
-Version 1.2.59beta02 [September 14, 2017]
-  Compute a larger limit on IDAT because some applications write a deflate
-    buffer for each row (Bug report by Andrew Church).
-
-Version 1.2.59rc01 [September 21, 2017]
-  Initialize memory allocated by png_inflate to zero, using memset, to
-    stop an oss-fuzz "use of uninitialized value" detection in png_set_text_2()
-    due to truncated iTXt or zTXt chunk.
-
-Version 1.0.69 and 1.2.59 [September 28, 2017]
+    and patch by Patrick Keshishian).
 
 Send comments/corrections/commendations to png-mng-implement at lists.sf.net
 (subscription required; visit
