@@ -26,6 +26,7 @@ file
 	tifupp.cpp,
 	tifreg.icpp,
 	lib readonly separator,
+	lib\Version,
 	lib\Copyright,
 	lib\jerror.h,
 	lib\jpeg.patch1,
