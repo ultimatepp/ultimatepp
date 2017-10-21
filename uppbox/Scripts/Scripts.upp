@@ -20,7 +20,8 @@ file
 	uppnighty2deb,
 	upp.xml,
 	win,
-	www;
+	www,
+	updateinfo.txt;
 
 mainconfig
 	"" = "SCRIPTS";
