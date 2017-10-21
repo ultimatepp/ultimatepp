@@ -1,7 +1,8 @@
 /*
  * jmemmgr.c
  *
- * Copyright (C) 1991-1998, Thomas G. Lane.
+ * Copyright (C) 1991-1997, Thomas G. Lane.
+ * Modified 2011-2012 by Guido Vollbeding.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -42,12 +43,11 @@ extern char * getenv JPP((const char * name));
  *   The allocation routines provided here must never return NULL.
  *   They should exit to error_exit if unsuccessful.
  *
- *   It's not a good idea to try to merge the sarray, barray and darray
- *   routines, even though they are textually almost the same, because
- *   samples are usually stored as bytes while coefficients and differenced
- *   are shorts or ints.  Thus, in machines where byte pointers have a
- *   different representation from word pointers, the resulting machine
- *   code could not be the same.
+ *   It's not a good idea to try to merge the sarray and barray routines,
+ *   even though they are textually almost the same, because samples are
+ *   usually stored as bytes while coefficients are shorts or ints.  Thus,
+ *   in machines where byte pointers have a different representation from
+ *   word pointers, the resulting machine code could not be the same.
  */
 
 
@@ -214,7 +214,7 @@ print_mem_stats (j_common_ptr cinfo, int pool_id)
 #endif /* MEM_STATS */
 
 
-LOCAL(void)
+LOCAL(noreturn_t)
 out_of_memory (j_common_ptr cinfo, int which)
 /* Report an out-of-memory error and stop execution */
 /* If we compiled MEM_STATS support, report alloc requests before dying */
@@ -239,13 +239,13 @@ out_of_memory (j_common_ptr cinfo, int which)
  * machines, but may be too small if longs are 64 bits or more.
  */
 
-static const size_t first_pool_slop[JPOOL_NUMPOOLS] =
+static const size_t first_pool_slop[JPOOL_NUMPOOLS] = 
 {
 	1600,			/* first PERMANENT pool */
 	16000			/* first IMAGE pool */
 };
 
-static const size_t extra_pool_slop[JPOOL_NUMPOOLS] =
+static const size_t extra_pool_slop[JPOOL_NUMPOOLS] = 
 {
 	0,			/* additional PERMANENT pools */
 	5000			/* additional IMAGE pools */
@@ -481,58 +481,6 @@ alloc_barray (j_common_ptr cinfo, int pool_id,
 
   return result;
 }
-
-
-#ifdef NEED_DARRAY
-
-/*
- * Creation of 2-D difference arrays.
- * This is essentially the same as the code for sample arrays, above.
- */
-
-METHODDEF(JDIFFARRAY)
-alloc_darray (j_common_ptr cinfo, int pool_id,
-	      JDIMENSION diffsperrow, JDIMENSION numrows)
-/* Allocate a 2-D difference array */
-{
-  my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
-  JDIFFARRAY result;
-  JDIFFROW workspace;
-  JDIMENSION rowsperchunk, currow, i;
-  long ltemp;
-
-  /* Calculate max # of rows allowed in one allocation chunk */
-  ltemp = (MAX_ALLOC_CHUNK-SIZEOF(large_pool_hdr)) /
-	  ((long) diffsperrow * SIZEOF(JDIFF));
-  if (ltemp <= 0)
-    ERREXIT(cinfo, JERR_WIDTH_OVERFLOW);
-  if (ltemp < (long) numrows)
-    rowsperchunk = (JDIMENSION) ltemp;
-  else
-    rowsperchunk = numrows;
-  mem->last_rowsperchunk = rowsperchunk;
-
-  /* Get space for row pointers (small object) */
-  result = (JDIFFARRAY) alloc_small(cinfo, pool_id,
-				    (size_t) (numrows * SIZEOF(JDIFFROW)));
-
-  /* Get the rows themselves (large objects) */
-  currow = 0;
-  while (currow < numrows) {
-    rowsperchunk = MIN(rowsperchunk, numrows - currow);
-    workspace = (JDIFFROW) alloc_large(cinfo, pool_id,
-	(size_t) ((size_t) rowsperchunk * (size_t) diffsperrow
-		  * SIZEOF(JDIFF)));
-    for (i = rowsperchunk; i > 0; i--) {
-      result[currow++] = workspace;
-      workspace += diffsperrow;
-    }
-  }
-
-  return result;
-}
-
-#endif
 
 
 /*
@@ -874,7 +822,7 @@ access_virt_sarray (j_common_ptr cinfo, jvirt_sarray_ptr ptr,
       undef_row -= ptr->cur_start_row; /* make indexes relative to buffer */
       end_row -= ptr->cur_start_row;
       while (undef_row < end_row) {
-	jzero_far((void FAR *) ptr->mem_buffer[undef_row], bytesperrow);
+	FMEMZERO((void FAR *) ptr->mem_buffer[undef_row], bytesperrow);
 	undef_row++;
       }
     } else {
@@ -959,7 +907,7 @@ access_virt_barray (j_common_ptr cinfo, jvirt_barray_ptr ptr,
       undef_row -= ptr->cur_start_row; /* make indexes relative to buffer */
       end_row -= ptr->cur_start_row;
       while (undef_row < end_row) {
-	jzero_far((void FAR *) ptr->mem_buffer[undef_row], bytesperrow);
+	FMEMZERO((void FAR *) ptr->mem_buffer[undef_row], bytesperrow);
 	undef_row++;
       }
     } else {
@@ -1121,9 +1069,6 @@ jinit_memory_mgr (j_common_ptr cinfo)
   mem->pub.alloc_large = alloc_large;
   mem->pub.alloc_sarray = alloc_sarray;
   mem->pub.alloc_barray = alloc_barray;
-#ifdef NEED_DARRAY
-  mem->pub.alloc_darray = alloc_darray;
-#endif
   mem->pub.request_virt_sarray = request_virt_sarray;
   mem->pub.request_virt_barray = request_virt_barray;
   mem->pub.realize_virt_arrays = realize_virt_arrays;

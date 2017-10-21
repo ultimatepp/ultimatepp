@@ -45,6 +45,7 @@ private:
 	String                user;
 	int                   tlevel;
 	int                   tmode;
+	int                   charset = -1;
 
 	void   FlushConnections();
 	bool   IsOk(SQLRETURN ret);
@@ -61,6 +62,7 @@ public:
 	};
 
 	void    SetTransactionMode(int mode);
+	void    Charset(int cs)                              { charset = cs; }
 
 	ODBCSession();
 	~ODBCSession();

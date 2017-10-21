@@ -168,9 +168,11 @@ Fetch.&]
 [s3; &]
 [s4; &]
 [s5;:Sql`:`:GetRowMap`(`)const:%- [_^ValueMap^ ValueMap]_[* GetRowMap]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Sql`:`:operator`~`(`)const:%- [_^Upp`:`:ValueMap^ ValueMap]_[* operator`~]()_
+[@(0.0.255) const]&]
 [s2; Returns the whole fetched row, keys of ValueMap are names of 
 columns. Only valid after successfull Fetch.&]
-[s3; &]
+[s3;%- &]
 [s4; &]
 [s5;:Sql`:`:operator Vector`<Value`>`(`)const:%- [* operator_Vector<Value>]()_[@(0.0.255) c
 onst]&]
