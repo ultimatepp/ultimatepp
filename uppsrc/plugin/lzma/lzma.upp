@@ -12,6 +12,8 @@ file
 	lib/LzmaDec.h,
 	lib/LzmaEnc.c tabsize 8 highlight cpp,
 	lib/LzmaEnc.h,
-	lib/Types.h,
+	lib\7zTypes.h,
+	lib\Precomp.h,
+	lib\Compiler.h,
 	Copying;
 
