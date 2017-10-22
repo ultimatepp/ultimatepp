@@ -103,8 +103,7 @@ for any one of them can use a range. */
 If the offset vector is bigger, malloc is used. This should be a multiple of 3,
 because the offset vector is always a multiple of 3 long. */
 
-#define REC_STACK_SAVE_MAX max_pcre_offsets
-//30
+#define REC_STACK_SAVE_MAX 30
 
 /* Min and max values for the common repeats; for the maxima, 0 => infinity */
 
@@ -670,7 +669,7 @@ if (ecode == NULL)
     return match((PCRE_PUCHAR)&rdepth, NULL, NULL, 0, NULL, NULL, 1);
   else
     {
-    int len = (char *)&rdepth - (char *)eptr;
+    int len = (int)((char *)&rdepth - (char *)eptr);
     return (len > 0)? -len : len;
     }
   }
