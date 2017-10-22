@@ -1,0 +1,10 @@
+uses
+	Core,
+	plugin/lzma;
+
+file
+	TestLZMA.cpp;
+
+mainconfig
+	"" = "";
+
