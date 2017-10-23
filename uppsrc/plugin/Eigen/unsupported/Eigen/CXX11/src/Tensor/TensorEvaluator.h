@@ -32,7 +32,6 @@ struct TensorEvaluator
   typedef typename Derived::Scalar CoeffReturnType;
   typedef typename PacketType<CoeffReturnType, Device>::type PacketReturnType;
   typedef typename Derived::Dimensions Dimensions;
-  typedef Derived XprType;
 
   // NumDimensions is -1 for variable dim tensors
   static const int NumCoords = internal::traits<Derived>::NumDimensions > 0 ?
@@ -69,9 +68,7 @@ struct TensorEvaluator
     return m_data[index];
   }
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-  typename internal::traits<Derived>::template MakePointer<Scalar>::RefType
-   coeffRef(Index index) {
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE Scalar& coeffRef(Index index) {
     eigen_assert(m_data);
     return m_data[index];
   }
@@ -97,9 +94,7 @@ struct TensorEvaluator
     }
   }
 
-  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
-  typename internal::traits<Derived>::template MakePointer<Scalar>::RefType
-  coeffRef(const array<DenseIndex, NumCoords>& coords) {
+  EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE Scalar& coeffRef(const array<DenseIndex, NumCoords>& coords) {
     eigen_assert(m_data);
     if (static_cast<int>(Layout) == static_cast<int>(ColMajor)) {
       return m_data[m_dims.IndexOfColMajor(coords)];
@@ -157,8 +152,6 @@ struct TensorEvaluator<const Derived, Device>
   typedef typename Derived::Scalar CoeffReturnType;
   typedef typename PacketType<CoeffReturnType, Device>::type PacketReturnType;
   typedef typename Derived::Dimensions Dimensions;
-  typedef const Derived XprType;
-
 
   // NumDimensions is -1 for variable dim tensors
   static const int NumCoords = internal::traits<Derived>::NumDimensions > 0 ?

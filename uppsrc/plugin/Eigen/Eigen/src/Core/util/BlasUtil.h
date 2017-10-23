@@ -222,11 +222,6 @@ class blas_data_mapper {
     return ploadt<Packet, AlignmentType>(&operator()(i, j));
   }
 
-  template <typename PacketT, int AlignmentT>
-  EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE PacketT load(Index i, Index j) const {
-    return ploadt<PacketT, AlignmentT>(&operator()(i, j));
-  }
-
   EIGEN_DEVICE_FUNC EIGEN_ALWAYS_INLINE HalfPacket loadHalfPacket(Index i, Index j) const {
     return ploadt<HalfPacket, AlignmentType>(&operator()(i, j));
   }

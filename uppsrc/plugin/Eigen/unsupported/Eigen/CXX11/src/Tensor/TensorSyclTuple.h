@@ -20,7 +20,6 @@
 
 #ifndef UNSUPPORTED_EIGEN_CXX11_SRC_TENSOR_TENSORSYCL_TUPLE_HPP
 #define UNSUPPORTED_EIGEN_CXX11_SRC_TENSOR_TENSORSYCL_TUPLE_HPP
-
 namespace utility {
 namespace tuple {
 /// \struct StaticIf
@@ -232,5 +231,4 @@ Tuple<Args1..., Args2...> append(Tuple<Args1...> t1,Tuple<Args2...> t2) {
 }
 }  // tuple
 }  // utility
-
 #endif  // UNSUPPORTED_EIGEN_CXX11_SRC_TENSOR_TENSORSYCL_TUPLE_HPP

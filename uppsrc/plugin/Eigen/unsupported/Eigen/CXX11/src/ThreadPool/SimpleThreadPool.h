@@ -69,14 +69,6 @@ class SimpleThreadPoolTempl : public ThreadPoolInterface {
     }
   }
 
-  void Cancel() {
-#ifdef EIGEN_THREAD_ENV_SUPPORTS_CANCELLATION
-    for (size_t i = 0; i < threads_.size(); i++) {
-      threads_[i]->OnCancel();
-    }
-#endif
-  }
-
   int NumThreads() const final {
     return static_cast<int>(threads_.size());
   }

@@ -122,9 +122,9 @@ ASSIGNEXPR()
 /// specialisation of the \ref PlaceHolderExpression when the node is
 /// TensorMap
 #define TENSORMAPEXPR(CVQual)\
-template <typename T, int Options_, template <class> class MakePointer_, size_t N>\
-struct PlaceHolderExpression< CVQual TensorMap< T, Options_, MakePointer_>, N> {\
-  typedef CVQual PlaceHolder<CVQual TensorMap<T, Options_, MakePointer_>, N> Type;\
+template <typename Scalar_, int Options_, int Options2_, int NumIndices_, typename IndexType_, template <class> class MakePointer_, size_t N>\
+struct PlaceHolderExpression< CVQual TensorMap< Tensor<Scalar_, NumIndices_, Options_, IndexType_>, Options2_, MakePointer_>, N> {\
+  typedef CVQual PlaceHolder<CVQual TensorMap<Tensor<Scalar_, NumIndices_, Options_, IndexType_>, Options2_, MakePointer_>, N> Type;\
 };
 
 TENSORMAPEXPR(const)
@@ -166,31 +166,6 @@ struct PlaceHolderExpression<CVQual TensorReductionOp<OP, Dims, Expr>, N>{\
 SYCLREDUCTION(const)
 SYCLREDUCTION()
 #undef SYCLREDUCTION
-
-
-/// specialisation of the \ref PlaceHolderExpression when the node is
-/// TensorCwiseSelectOp
-#define SLICEOPEXPR(CVQual)\
-template <typename StartIndices, typename Sizes, typename XprType, size_t N>\
-struct PlaceHolderExpression<CVQual TensorSlicingOp<StartIndices, Sizes, XprType>, N> {\
-  typedef CVQual TensorSlicingOp<StartIndices, Sizes, typename CalculateIndex<N, XprType>::ArgType> Type;\
-};
-
-SLICEOPEXPR(const)
-SLICEOPEXPR()
-#undef SLICEOPEXPR
-
-
-#define SYCLSLICESTRIDEOPPLH(CVQual)\
-template<typename StartIndices, typename StopIndices, typename Strides, typename XprType, size_t N>\
-struct PlaceHolderExpression<CVQual TensorStridingSlicingOp<StartIndices, StopIndices, Strides, XprType>, N> {\
-  typedef CVQual TensorStridingSlicingOp<StartIndices, StopIndices, Strides, typename CalculateIndex<N, XprType>::ArgType> Type;\
-};
-
-SYCLSLICESTRIDEOPPLH(const)
-SYCLSLICESTRIDEOPPLH()
-#undef SYCLSLICESTRIDEOPPLH
-
 
 /// template deduction for \ref PlaceHolderExpression struct
 template <typename Expr>

@@ -59,8 +59,8 @@ template<> struct packet_traits<float>  : default_packet_traits
     HasLog = 1,
 #endif
     HasExp = 1,
-    HasSqrt = EIGEN_FAST_MATH,
-    HasRsqrt = EIGEN_FAST_MATH,
+    HasSqrt = 1,
+    HasRsqrt = 1,
 #endif
     HasDiv = 1
   };
@@ -75,7 +75,7 @@ template<> struct packet_traits<double> : default_packet_traits
     size = 8,
     HasHalfPacket = 1,
 #if EIGEN_GNUC_AT_LEAST(5, 3)
-    HasSqrt = EIGEN_FAST_MATH,
+    HasSqrt = 1,
     HasRsqrt = EIGEN_FAST_MATH,
 #endif
     HasDiv = 1
@@ -461,21 +461,53 @@ EIGEN_STRONG_INLINE Packet16i ploadu<Packet16i>(const int* from) {
 // {a0, a0  a1, a1, a2, a2, a3, a3, a4, a4, a5, a5, a6, a6, a7, a7}
 template <>
 EIGEN_STRONG_INLINE Packet16f ploaddup<Packet16f>(const float* from) {
-  __m256i low_half = _mm256_load_si256(reinterpret_cast<const __m256i*>(from));
-  __m512 even_elements = _mm512_castsi512_ps(_mm512_cvtepu32_epi64(low_half));
-  __m512 pairs = _mm512_permute_ps(even_elements, _MM_SHUFFLE(2, 2, 0, 0));
-  return pairs;
+  Packet8f lane0 = _mm256_broadcast_ps((const __m128*)(const void*)from);
+  // mimic an "inplace" permutation of the lower 128bits using a blend
+  lane0 = _mm256_blend_ps(
+      lane0, _mm256_castps128_ps256(_mm_permute_ps(
+                 _mm256_castps256_ps128(lane0), _MM_SHUFFLE(1, 0, 1, 0))),
+      15);
+  // then we can perform a consistent permutation on the global register to get
+  // everything in shape:
+  lane0 = _mm256_permute_ps(lane0, _MM_SHUFFLE(3, 3, 2, 2));
+
+  Packet8f lane1 = _mm256_broadcast_ps((const __m128*)(const void*)(from + 4));
+  // mimic an "inplace" permutation of the lower 128bits using a blend
+  lane1 = _mm256_blend_ps(
+      lane1, _mm256_castps128_ps256(_mm_permute_ps(
+                 _mm256_castps256_ps128(lane1), _MM_SHUFFLE(1, 0, 1, 0))),
+      15);
+  // then we can perform a consistent permutation on the global register to get
+  // everything in shape:
+  lane1 = _mm256_permute_ps(lane1, _MM_SHUFFLE(3, 3, 2, 2));
+
+#ifdef EIGEN_VECTORIZE_AVX512DQ
+  Packet16f res = _mm512_undefined_ps();
+  return _mm512_insertf32x8(res, lane0, 0);
+  return _mm512_insertf32x8(res, lane1, 1);
+  return res;
+#else
+  Packet16f res = _mm512_undefined_ps();
+  res = _mm512_insertf32x4(res, _mm256_extractf128_ps(lane0, 0), 0);
+  res = _mm512_insertf32x4(res, _mm256_extractf128_ps(lane0, 1), 1);
+  res = _mm512_insertf32x4(res, _mm256_extractf128_ps(lane1, 0), 2);
+  res = _mm512_insertf32x4(res, _mm256_extractf128_ps(lane1, 1), 3);
+  return res;
+#endif
 }
 // Loads 4 doubles from memory a returns the packet {a0, a0  a1, a1, a2, a2, a3,
 // a3}
 template <>
 EIGEN_STRONG_INLINE Packet8d ploaddup<Packet8d>(const double* from) {
- __m512d x = _mm512_setzero_pd();
-  x = _mm512_insertf64x2(x, _mm_loaddup_pd(&from[0]), 0);
-  x = _mm512_insertf64x2(x, _mm_loaddup_pd(&from[1]), 1);
-  x = _mm512_insertf64x2(x, _mm_loaddup_pd(&from[2]), 2);
-  x = _mm512_insertf64x2(x, _mm_loaddup_pd(&from[3]), 3);
-  return x;
+  Packet4d lane0 = _mm256_broadcast_pd((const __m128d*)(const void*)from);
+  lane0 = _mm256_permute_pd(lane0, 3 << 2);
+
+  Packet4d lane1 = _mm256_broadcast_pd((const __m128d*)(const void*)(from + 2));
+  lane1 = _mm256_permute_pd(lane1, 3 << 2);
+
+  Packet8d res = _mm512_undefined_pd();
+  res = _mm512_insertf64x4(res, lane0, 0);
+  return _mm512_insertf64x4(res, lane1, 1);
 }
 
 // Loads 4 floats from memory a returns the packet
@@ -493,11 +525,11 @@ EIGEN_STRONG_INLINE Packet16f ploadquad<Packet16f>(const float* from) {
 // {a0, a0  a0, a0, a1, a1, a1, a1}
 template <>
 EIGEN_STRONG_INLINE Packet8d ploadquad<Packet8d>(const double* from) {
-  __m128d tmp0 = _mm_load_pd1(from);
-  __m256d lane0 = _mm256_broadcastsd_pd(tmp0);
-  __m128d tmp1 = _mm_load_pd1(from + 1);
-  __m256d lane1 = _mm256_broadcastsd_pd(tmp1);
-  __m512d tmp = _mm512_undefined_pd();
+  Packet8d tmp = _mm512_undefined_pd();
+  Packet2d tmp0 = _mm_load_pd1(from);
+  Packet2d tmp1 = _mm_load_pd1(from + 1);
+  Packet4d lane0 = _mm256_broadcastsd_pd(tmp0);
+  Packet4d lane1 = _mm256_broadcastsd_pd(tmp1);
   tmp = _mm512_insertf64x4(tmp, lane0, 0);
   return _mm512_insertf64x4(tmp, lane1, 1);
 }
@@ -628,8 +660,8 @@ EIGEN_STRONG_INLINE Packet8d pabs(const Packet8d& a) {
 #ifdef EIGEN_VECTORIZE_AVX512DQ
 // AVX512F does not define _mm512_extractf32x8_ps to extract _m256 from _m512
 #define EIGEN_EXTRACT_8f_FROM_16f(INPUT, OUTPUT)                           \
-  __m256 OUTPUT##_0 = _mm512_extractf32x8_ps(INPUT, 0);                    \
-  __m256 OUTPUT##_1 = _mm512_extractf32x8_ps(INPUT, 1)
+  __m256 OUTPUT##_0 = _mm512_extractf32x8_ps(INPUT, 0) __m256 OUTPUT##_1 = \
+      _mm512_extractf32x8_ps(INPUT, 1)
 #else
 #define EIGEN_EXTRACT_8f_FROM_16f(INPUT, OUTPUT)                \
   __m256 OUTPUT##_0 = _mm256_insertf128_ps(                     \
@@ -719,7 +751,7 @@ vecs)
   blend1 = _mm256_blend_ps(sum1, sum2, 0xcc);
   blend2 = _mm256_blend_ps(sum3, sum4, 0xcc);
 
-  final = _mm256_add_ps(final, _mm256_blend_ps(blend1, blend2, 0xf0));
+  final = padd(final, _mm256_blend_ps(blend1, blend2, 0xf0));
 
   hsum1 = _mm256_hadd_ps(vecs8_0, vecs9_0);
   hsum2 = _mm256_hadd_ps(vecs10_0, vecs11_0);
@@ -769,7 +801,7 @@ vecs)
   blend1 = _mm256_blend_ps(sum1, sum2, 0xcc);
   blend2 = _mm256_blend_ps(sum3, sum4, 0xcc);
 
-  final_1 = _mm256_add_ps(final_1, _mm256_blend_ps(blend1, blend2, 0xf0));
+  final_1 = padd(final_1, _mm256_blend_ps(blend1, blend2, 0xf0));
 
   __m512 final_output;
 
@@ -819,7 +851,7 @@ template<> EIGEN_STRONG_INLINE Packet8d preduxp<Packet8d>(const Packet8d* vecs)
   tmp1 = _mm256_hadd_pd(vecs2_1, vecs3_1);
   tmp1 = _mm256_add_pd(tmp1, _mm256_permute2f128_pd(tmp1, tmp1, 1));
 
-  final_0 = _mm256_add_pd(final_0, _mm256_blend_pd(tmp0, tmp1, 0xC));
+  final_0 = padd(final_0, _mm256_blend_pd(tmp0, tmp1, 0xC));
 
   tmp0 = _mm256_hadd_pd(vecs4_0, vecs5_0);
   tmp0 = _mm256_add_pd(tmp0, _mm256_permute2f128_pd(tmp0, tmp0, 1));
@@ -835,7 +867,7 @@ template<> EIGEN_STRONG_INLINE Packet8d preduxp<Packet8d>(const Packet8d* vecs)
   tmp1 = _mm256_hadd_pd(vecs6_1, vecs7_1);
   tmp1 = _mm256_add_pd(tmp1, _mm256_permute2f128_pd(tmp1, tmp1, 1));
 
-  final_1 = _mm256_add_pd(final_1, _mm256_blend_pd(tmp0, tmp1, 0xC));
+  final_1 = padd(final_1, _mm256_blend_pd(tmp0, tmp1, 0xC));
 
   __m512d final_output = _mm512_insertf64x4(final_output, final_0, 0);
 
@@ -844,52 +876,55 @@ template<> EIGEN_STRONG_INLINE Packet8d preduxp<Packet8d>(const Packet8d* vecs)
 
 template <>
 EIGEN_STRONG_INLINE float predux<Packet16f>(const Packet16f& a) {
-#ifdef EIGEN_VECTORIZE_AVX512DQ
-  __m256 lane0 = _mm512_extractf32x8_ps(a, 0);
-  __m256 lane1 = _mm512_extractf32x8_ps(a, 1);
-  Packet8f x = _mm256_add_ps(lane0, lane1);
-  return predux<Packet8f>(x);
+  //#ifdef EIGEN_VECTORIZE_AVX512DQ
+#if 0
+  Packet8f lane0 = _mm512_extractf32x8_ps(a, 0);
+  Packet8f lane1 = _mm512_extractf32x8_ps(a, 1);
+  Packet8f sum = padd(lane0, lane1);
+  Packet8f tmp0 = _mm256_hadd_ps(sum, _mm256_permute2f128_ps(a, a, 1));
+  tmp0 = _mm256_hadd_ps(tmp0, tmp0);
+  return pfirst(_mm256_hadd_ps(tmp0, tmp0));
 #else
-  __m128 lane0 = _mm512_extractf32x4_ps(a, 0);
-  __m128 lane1 = _mm512_extractf32x4_ps(a, 1);
-  __m128 lane2 = _mm512_extractf32x4_ps(a, 2);
-  __m128 lane3 = _mm512_extractf32x4_ps(a, 3);
-  __m128 sum = _mm_add_ps(_mm_add_ps(lane0, lane1), _mm_add_ps(lane2, lane3));
+  Packet4f lane0 = _mm512_extractf32x4_ps(a, 0);
+  Packet4f lane1 = _mm512_extractf32x4_ps(a, 1);
+  Packet4f lane2 = _mm512_extractf32x4_ps(a, 2);
+  Packet4f lane3 = _mm512_extractf32x4_ps(a, 3);
+  Packet4f sum = padd(padd(lane0, lane1), padd(lane2, lane3));
   sum = _mm_hadd_ps(sum, sum);
   sum = _mm_hadd_ps(sum, _mm_permute_ps(sum, 1));
-  return _mm_cvtss_f32(sum);
+  return pfirst(sum);
 #endif
 }
 template <>
 EIGEN_STRONG_INLINE double predux<Packet8d>(const Packet8d& a) {
-  __m256d lane0 = _mm512_extractf64x4_pd(a, 0);
-  __m256d lane1 = _mm512_extractf64x4_pd(a, 1);
-  __m256d sum = _mm256_add_pd(lane0, lane1);
-  __m256d tmp0 = _mm256_hadd_pd(sum, _mm256_permute2f128_pd(sum, sum, 1));
-  return _mm_cvtsd_f64(_mm256_castpd256_pd128(_mm256_hadd_pd(tmp0, tmp0)));
+  Packet4d lane0 = _mm512_extractf64x4_pd(a, 0);
+  Packet4d lane1 = _mm512_extractf64x4_pd(a, 1);
+  Packet4d sum = padd(lane0, lane1);
+  Packet4d tmp0 = _mm256_hadd_pd(sum, _mm256_permute2f128_pd(sum, sum, 1));
+  return pfirst(_mm256_hadd_pd(tmp0, tmp0));
 }
 
 template <>
 EIGEN_STRONG_INLINE Packet8f predux_downto4<Packet16f>(const Packet16f& a) {
 #ifdef EIGEN_VECTORIZE_AVX512DQ
-  __m256 lane0 = _mm512_extractf32x8_ps(a, 0);
-  __m256 lane1 = _mm512_extractf32x8_ps(a, 1);
-  return _mm256_add_ps(lane0, lane1);
+  Packet8f lane0 = _mm512_extractf32x8_ps(a, 0);
+  Packet8f lane1 = _mm512_extractf32x8_ps(a, 1);
+  return padd(lane0, lane1);
 #else
-  __m128 lane0 = _mm512_extractf32x4_ps(a, 0);
-  __m128 lane1 = _mm512_extractf32x4_ps(a, 1);
-  __m128 lane2 = _mm512_extractf32x4_ps(a, 2);
-  __m128 lane3 = _mm512_extractf32x4_ps(a, 3);
-  __m128 sum0 = _mm_add_ps(lane0, lane2);
-  __m128 sum1 = _mm_add_ps(lane1, lane3);
+  Packet4f lane0 = _mm512_extractf32x4_ps(a, 0);
+  Packet4f lane1 = _mm512_extractf32x4_ps(a, 1);
+  Packet4f lane2 = _mm512_extractf32x4_ps(a, 2);
+  Packet4f lane3 = _mm512_extractf32x4_ps(a, 3);
+  Packet4f sum0 = padd(lane0, lane2);
+  Packet4f sum1 = padd(lane1, lane3);
   return _mm256_insertf128_ps(_mm256_castps128_ps256(sum0), sum1, 1);
 #endif
 }
 template <>
 EIGEN_STRONG_INLINE Packet4d predux_downto4<Packet8d>(const Packet8d& a) {
-  __m256d lane0 = _mm512_extractf64x4_pd(a, 0);
-  __m256d lane1 = _mm512_extractf64x4_pd(a, 1);
-  __m256d res = _mm256_add_pd(lane0, lane1);
+  Packet4d lane0 = _mm512_extractf64x4_pd(a, 0);
+  Packet4d lane1 = _mm512_extractf64x4_pd(a, 1);
+  Packet4d res = padd(lane0, lane1);
   return res;
 }
 
@@ -904,59 +939,58 @@ EIGEN_STRONG_INLINE float predux_mul<Packet16f>(const Packet16f& a) {
   res = pmul(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 3, 2)));
   return pfirst(pmul(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 0, 1))));
 #else
-  __m128 lane0 = _mm512_extractf32x4_ps(a, 0);
-  __m128 lane1 = _mm512_extractf32x4_ps(a, 1);
-  __m128 lane2 = _mm512_extractf32x4_ps(a, 2);
-  __m128 lane3 = _mm512_extractf32x4_ps(a, 3);
-  __m128 res = pmul(pmul(lane0, lane1), pmul(lane2, lane3));
+  Packet4f lane0 = _mm512_extractf32x4_ps(a, 0);
+  Packet4f lane1 = _mm512_extractf32x4_ps(a, 1);
+  Packet4f lane2 = _mm512_extractf32x4_ps(a, 2);
+  Packet4f lane3 = _mm512_extractf32x4_ps(a, 3);
+  Packet4f res = pmul(pmul(lane0, lane1), pmul(lane2, lane3));
   res = pmul(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 3, 2)));
   return pfirst(pmul(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 0, 1))));
 #endif
 }
 template <>
 EIGEN_STRONG_INLINE double predux_mul<Packet8d>(const Packet8d& a) {
-  __m256d lane0 = _mm512_extractf64x4_pd(a, 0);
-  __m256d lane1 = _mm512_extractf64x4_pd(a, 1);
-  __m256d res = pmul(lane0, lane1);
+  Packet4d lane0 = _mm512_extractf64x4_pd(a, 0);
+  Packet4d lane1 = _mm512_extractf64x4_pd(a, 1);
+  Packet4d res = pmul(lane0, lane1);
   res = pmul(res, _mm256_permute2f128_pd(res, res, 1));
   return pfirst(pmul(res, _mm256_shuffle_pd(res, res, 1)));
 }
 
 template <>
 EIGEN_STRONG_INLINE float predux_min<Packet16f>(const Packet16f& a) {
-  __m128 lane0 = _mm512_extractf32x4_ps(a, 0);
-  __m128 lane1 = _mm512_extractf32x4_ps(a, 1);
-  __m128 lane2 = _mm512_extractf32x4_ps(a, 2);
-  __m128 lane3 = _mm512_extractf32x4_ps(a, 3);
-  __m128 res = _mm_min_ps(_mm_min_ps(lane0, lane1), _mm_min_ps(lane2, lane3));
+  Packet4f lane0 = _mm512_extractf32x4_ps(a, 0);
+  Packet4f lane1 = _mm512_extractf32x4_ps(a, 1);
+  Packet4f lane2 = _mm512_extractf32x4_ps(a, 2);
+  Packet4f lane3 = _mm512_extractf32x4_ps(a, 3);
+  Packet4f res = _mm_min_ps(_mm_min_ps(lane0, lane1), _mm_min_ps(lane2, lane3));
   res = _mm_min_ps(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 3, 2)));
   return pfirst(_mm_min_ps(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 0, 1))));
 }
 template <>
 EIGEN_STRONG_INLINE double predux_min<Packet8d>(const Packet8d& a) {
-  __m256d lane0 = _mm512_extractf64x4_pd(a, 0);
-  __m256d lane1 = _mm512_extractf64x4_pd(a, 1);
-  __m256d res = _mm256_min_pd(lane0, lane1);
+  Packet4d lane0 = _mm512_extractf64x4_pd(a, 0);
+  Packet4d lane1 = _mm512_extractf64x4_pd(a, 1);
+  Packet4d res = _mm256_min_pd(lane0, lane1);
   res = _mm256_min_pd(res, _mm256_permute2f128_pd(res, res, 1));
   return pfirst(_mm256_min_pd(res, _mm256_shuffle_pd(res, res, 1)));
 }
 
 template <>
 EIGEN_STRONG_INLINE float predux_max<Packet16f>(const Packet16f& a) {
-  __m128 lane0 = _mm512_extractf32x4_ps(a, 0);
-  __m128 lane1 = _mm512_extractf32x4_ps(a, 1);
-  __m128 lane2 = _mm512_extractf32x4_ps(a, 2);
-  __m128 lane3 = _mm512_extractf32x4_ps(a, 3);
-  __m128 res = _mm_max_ps(_mm_max_ps(lane0, lane1), _mm_max_ps(lane2, lane3));
+  Packet4f lane0 = _mm512_extractf32x4_ps(a, 0);
+  Packet4f lane1 = _mm512_extractf32x4_ps(a, 1);
+  Packet4f lane2 = _mm512_extractf32x4_ps(a, 2);
+  Packet4f lane3 = _mm512_extractf32x4_ps(a, 3);
+  Packet4f res = _mm_max_ps(_mm_max_ps(lane0, lane1), _mm_max_ps(lane2, lane3));
   res = _mm_max_ps(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 3, 2)));
   return pfirst(_mm_max_ps(res, _mm_permute_ps(res, _MM_SHUFFLE(0, 0, 0, 1))));
 }
-
 template <>
 EIGEN_STRONG_INLINE double predux_max<Packet8d>(const Packet8d& a) {
-  __m256d lane0 = _mm512_extractf64x4_pd(a, 0);
-  __m256d lane1 = _mm512_extractf64x4_pd(a, 1);
-  __m256d res = _mm256_max_pd(lane0, lane1);
+  Packet4d lane0 = _mm512_extractf64x4_pd(a, 0);
+  Packet4d lane1 = _mm512_extractf64x4_pd(a, 1);
+  Packet4d res = _mm256_max_pd(lane0, lane1);
   res = _mm256_max_pd(res, _mm256_permute2f128_pd(res, res, 1));
   return pfirst(_mm256_max_pd(res, _mm256_shuffle_pd(res, res, 1)));
 }

@@ -33,7 +33,7 @@ namespace Eigen {
 namespace internal {
 
 template<std::size_t n, typename Dimension> struct dget {
-  static const std::ptrdiff_t value = get<n, Dimension>::value;
+  static const std::size_t value = get<n, Dimension>::value;
 };
 
 
@@ -90,11 +90,9 @@ struct fixed_size_tensor_index_extraction_helper<Index, 0>
 // Fixed size
 #ifndef EIGEN_EMULATE_CXX11_META_H
 template <typename std::ptrdiff_t... Indices>
-struct Sizes {
+struct Sizes : internal::numeric_list<std::ptrdiff_t, Indices...> {
   typedef internal::numeric_list<std::ptrdiff_t, Indices...> Base;
-  const Base t = Base();
   static const std::ptrdiff_t total_size = internal::arg_prod(Indices...);
-  static const size_t count = Base::count;
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE std::ptrdiff_t rank() const {
     return Base::count;
@@ -122,16 +120,16 @@ struct Sizes {
   }
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE std::ptrdiff_t operator[] (const std::size_t index) const {
-    return internal::fixed_size_tensor_index_extraction_helper<std::ptrdiff_t, Base::count>::run(index, t);
+    return internal::fixed_size_tensor_index_extraction_helper<std::ptrdiff_t, Base::count>::run(index, *this);
   }
 
   template <typename DenseIndex> EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
   size_t IndexOfColMajor(const array<DenseIndex, Base::count>& indices) const {
-    return internal::fixed_size_tensor_index_linearization_helper<DenseIndex, Base::count, Base::count, false>::run(indices, t);
+    return internal::fixed_size_tensor_index_linearization_helper<DenseIndex, Base::count, Base::count, false>::run(indices, *static_cast<const Base*>(this));
   }
   template <typename DenseIndex> EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
   size_t IndexOfRowMajor(const array<DenseIndex, Base::count>& indices) const {
-    return internal::fixed_size_tensor_index_linearization_helper<DenseIndex, Base::count, Base::count, true>::run(indices, t);
+    return internal::fixed_size_tensor_index_linearization_helper<DenseIndex, Base::count, Base::count, true>::run(indices, *static_cast<const Base*>(this));
   }
 };
 
