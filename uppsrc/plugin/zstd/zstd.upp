@@ -17,7 +17,6 @@ file
 	lib\huf_decompress.c,
 	lib\pool.c,
 	lib\threading.c,
-	lib\xxhash.c,
 	lib\zstd_common.c,
 	lib\zstd_compress.c,
 	lib\zstd_decompress.c,
