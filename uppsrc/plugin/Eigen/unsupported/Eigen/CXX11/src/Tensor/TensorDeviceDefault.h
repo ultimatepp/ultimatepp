@@ -45,7 +45,7 @@ struct DefaultDevice {
   }
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE size_t firstLevelCacheSize() const {
-#if !defined(__CUDA_ARCH__) && !defined(__SYCL_DEVICE_ONLY__)
+#ifndef __CUDA_ARCH__
     // Running on the host CPU
     return l1CacheSize();
 #else
@@ -55,7 +55,7 @@ struct DefaultDevice {
   }
 
   EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE size_t lastLevelCacheSize() const {
-#if !defined(__CUDA_ARCH__) && !defined(__SYCL_DEVICE_ONLY__)
+#ifndef __CUDA_ARCH__
     // Running single threaded on the host CPU
     return l3CacheSize();
 #else

@@ -16,13 +16,7 @@ namespace Eigen {
 // custom thread pools underneath.
 class ThreadPoolInterface {
  public:
-  // Submits a closure to be run by a thread in the pool.
   virtual void Schedule(std::function<void()> fn) = 0;
-
-  // If implemented, stop processing the closures that have been enqueued.
-  // Currently running closures may still be processed.
-  // If not implemented, does nothing.
-  virtual void Cancel() {}
 
   // Returns the number of threads in the pool.
   virtual int NumThreads() const = 0;

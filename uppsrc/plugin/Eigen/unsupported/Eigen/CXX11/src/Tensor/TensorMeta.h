@@ -75,7 +75,6 @@ struct PacketType<half, GpuDevice> {
     HasSqrt   = 1,
     HasRsqrt  = 1,
     HasExp    = 1,
-    HasExpm1  = 0,
     HasLog    = 1,
     HasLog1p  = 0,
     HasLog10  = 0,
@@ -169,12 +168,12 @@ template <typename Idx> struct IndexPair {
 #ifdef EIGEN_HAS_SFINAE
 namespace internal {
 
-  template<typename IndexType, typename Index, Index... Is>
+  template<typename IndexType, Index... Is>
   EIGEN_CONSTEXPR EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
   array<Index, sizeof...(Is)> customIndices2Array(IndexType& idx, numeric_list<Index, Is...>) {
     return { idx[Is]... };
   }
-  template<typename IndexType, typename Index>
+  template<typename IndexType>
   EIGEN_CONSTEXPR EIGEN_DEVICE_FUNC EIGEN_STRONG_INLINE
   array<Index, 0> customIndices2Array(IndexType&, numeric_list<Index>) {
     return array<Index, 0>();
