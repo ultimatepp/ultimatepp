@@ -43,8 +43,10 @@
   #else
     #define EIGEN_DEVICE_FUNC
   #endif
+
 #else
   #define EIGEN_DEVICE_FUNC
+
 #endif
 
 // When compiling CUDA device code with NVCC, pull in math functions from the
@@ -145,15 +147,11 @@
     #ifdef __FMA__
       #define EIGEN_VECTORIZE_FMA
     #endif
-    #if defined(__AVX512F__)
+    #if defined(__AVX512F__) && defined(EIGEN_ENABLE_AVX512)
       #define EIGEN_VECTORIZE_AVX512
       #define EIGEN_VECTORIZE_AVX2
       #define EIGEN_VECTORIZE_AVX
       #define EIGEN_VECTORIZE_FMA
-      #define EIGEN_VECTORIZE_SSE3
-      #define EIGEN_VECTORIZE_SSSE3
-      #define EIGEN_VECTORIZE_SSE4_1
-      #define EIGEN_VECTORIZE_SSE4_2
       #ifdef __AVX512DQ__
         #define EIGEN_VECTORIZE_AVX512DQ
       #endif
@@ -285,15 +283,6 @@
   #include <intrin.h>
 #endif
 
-#if defined(__SYCL_DEVICE_ONLY__)
-  #undef min
-  #undef max
-  #undef isnan
-  #undef isinf
-  #undef isfinite
-  #include <SYCL/sycl.hpp>
-#endif
-
 /** \brief Namespace containing all symbols from the %Eigen library. */
 namespace Eigen {
 
@@ -332,11 +321,15 @@ inline static const char *SimdInstructionSetsInUse(void) {
 #error Eigen2-support is only available up to version 3.2. Please go to "http://eigen.tuxfamily.org/index.php?title=Eigen2" for further information
 #endif
 
+namespace Eigen {
+
 // we use size_t frequently and we'll never remember to prepend it with std:: everytime just to
 // ensure QNX/QCC support
 using std::size_t;
 // gcc 4.6.0 wants std:: for ptrdiff_t
 using std::ptrdiff_t;
+
+}
 
 /** \defgroup Core_Module Core module
   * This is the main module of Eigen providing dense matrix and vector support
@@ -364,8 +357,6 @@ using std::ptrdiff_t;
   #include "src/Core/arch/SSE/PacketMath.h"
   #include "src/Core/arch/AVX/PacketMath.h"
   #include "src/Core/arch/AVX512/PacketMath.h"
-  #include "src/Core/arch/SSE/MathFunctions.h"
-  #include "src/Core/arch/AVX/MathFunctions.h"
   #include "src/Core/arch/AVX512/MathFunctions.h"
 #elif defined EIGEN_VECTORIZE_AVX
   // Use AVX for floats and doubles, SSE for integers
@@ -418,6 +409,7 @@ using std::ptrdiff_t;
 // on CUDA devices
 #include "src/Core/arch/CUDA/Complex.h"
 
+#include "src/Core/IO.h"
 #include "src/Core/DenseCoeffsBase.h"
 #include "src/Core/DenseBase.h"
 #include "src/Core/MatrixBase.h"
@@ -465,7 +457,6 @@ using std::ptrdiff_t;
 #include "src/Core/Redux.h"
 #include "src/Core/Visitor.h"
 #include "src/Core/Fuzzy.h"
-#include "src/Core/IO.h"
 #include "src/Core/Swap.h"
 #include "src/Core/CommaInitializer.h"
 #include "src/Core/GeneralProduct.h"

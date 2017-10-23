@@ -12,6 +12,17 @@
 
 namespace Eigen {
 
+// Use the SimpleThreadPool by default. We'll switch to the new non blocking
+// thread pool later.
+#ifndef EIGEN_USE_SIMPLE_THREAD_POOL
+template <typename Env> using ThreadPoolTempl = NonBlockingThreadPoolTempl<Env>;
+typedef NonBlockingThreadPool ThreadPool;
+#else
+template <typename Env> using ThreadPoolTempl = SimpleThreadPoolTempl<Env>;
+typedef SimpleThreadPool ThreadPool;
+#endif
+
+
 // Barrier is an object that allows one or more threads to wait until
 // Notify has been called a specified number of times.
 class Barrier {
@@ -245,7 +256,7 @@ struct ThreadPoolDevice {
       // Split into halves and submit to the pool.
       Index mid = first + divup((last - first) / 2, block_size) * block_size;
       pool_->Schedule([=, &handleRange]() { handleRange(mid, last); });
-      handleRange(first, mid);
+      pool_->Schedule([=, &handleRange]() { handleRange(first, mid); });
     };
     handleRange(0, n);
     barrier.Wait();

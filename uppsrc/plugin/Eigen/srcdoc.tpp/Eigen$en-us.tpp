@@ -17,7 +17,7 @@ vectors, numerical solvers and related algorithms.]&]
 [s0; [C2 -|Matrix2d res `= a`*b;-|// Just multiply them using `*]&]
 [s0;#2 &]
 [s0;#2 &]
-[s0;# [2 Eigen package is a wrapper of Eigen 3.3.1 library. It includes 
+[s0;# [2 Eigen package is a wrapper of Eigen 3.3.4 library. It includes 
 the library and helper functions to integrate better Eigen with 
 U`+`+. Starting from the 3.1.1 version, it is licensed under 
 the ][^http`:`/`/www`.mozilla`.org`/MPL`/2`.0`/^2 MPL2][2 , which 

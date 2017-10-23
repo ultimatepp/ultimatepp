@@ -88,7 +88,7 @@ static void initializeDeviceProp() {
 #if __cplusplus >= 201103L
         std::atomic_thread_fence(std::memory_order_acquire);
 #endif
-        EIGEN_SLEEP(1000);
+        sleep(1);
       }
     }
   }
