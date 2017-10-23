@@ -481,7 +481,7 @@ String FastCompress(const void *s, int sz)
 		Panic("Compress result is too big!");
 	StringBuffer b((int)maxsize + sizeof(int));
 	*(int *)~b = sz;
-	int clen = LZ4_compress((const char *)s, ~b + sizeof(int), sz);
+	int clen = LZ4_compress_default((const char *)s, ~b + sizeof(int), sz, maxsize);
 	b.SetCount(clen + sizeof(int));
 	b.Shrink();
 	return b;
