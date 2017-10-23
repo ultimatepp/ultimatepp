@@ -1,0 +1,15 @@
+description "Ensures backwatd compatibility of compression formats\377";
+
+uses
+	Core,
+	plugin/lzma,
+	plugin/lz4,
+	plugin/zstd,
+	plugin/bz2;
+
+file
+	CompresFmt.cpp;
+
+mainconfig
+	"" = "";
+
