@@ -8,7 +8,6 @@ uses
 library(POSIX) bz2;
 
 file
-	Wrapper readonly separator,
 	bz2.h,
 	bz2upp.cpp,
 	bzlib.c,
