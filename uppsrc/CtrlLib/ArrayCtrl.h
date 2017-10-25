@@ -125,6 +125,7 @@ public:
 		Column& Ctrls(Event<int, One<Ctrl>&> factory);
 		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int a, One<Ctrl>& b){ factory(a, b); })); }
 		Column& Sorting(Gate<int, int> order) { return SortingLined(order); }
+		Column& Sorting(int (*c)(const Value& a, const Value& b)) { return SortingBy(c); }
 	};
 
 	struct Order {
