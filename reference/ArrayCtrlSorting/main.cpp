@@ -25,7 +25,7 @@ GUI_APP_MAIN
 	);
 
 	for(int i = 0; i < 300; i++)
-		list.Add((int)Random(1000), (int)Random(10000), 0);
+		list.Add((int)Random(1000), (int)Random(10000), i);
 
 	TopWindow app;
 	app.Add(list.SizePos());
