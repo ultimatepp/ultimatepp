@@ -47,7 +47,7 @@ void MacroManagerWindow::InitToolBar()
 	
 	newGlobalLabel.Enable();
 	importGlobalsLabel.Enable();
-	exportGlobalsLabel.Enable();
+	exportGlobalsLabel.Enable(globalTree.GetChildCount(0));
 }
 
 void MacroManagerWindow::InitToolButton(
@@ -223,14 +223,25 @@ void MacroManagerWindow::OnNewMacroFile()
 		fileName << ".usc";
 	
 	String fullPath = AppendFileName(GetLocalDir(), fileName);
+	RealizeDirectory(GetLocalDir());
 	if(FileExists(fullPath)) {
 		PromptOK(String() << t_("file") << " \"" << fileName << "\" " << t_("already exists!"));
 		return;
 	}
 	
-	SaveFile(fullPath, "macro \"" + GetFileTitle(fileName) + "\" {}");
-	ReloadGlobalMacros(); // TODO: This is a little bit overkill we add one element to the tree and we reload all tree...
-	globalTree.FindSetCursor(fileName);
+	if(!SaveFile(fullPath, "macro \"" + GetFileTitle(fileName) + "\" {}")) {
+		PromptOK(String() << t_("Error occured while saving file") << " \"" << fileName << "\"");
+		return;
+	}
+
+	int fileNode = globalTree.Add(0, Image(), fullPath, fileName);
+	auto list = UscFileParser(fullPath).Parse();
+	for(const auto& element : list) {
+		globalTree.Add(fileNode, element.GetImage(), RawToValue(element), element.name);
+	}
+	
+	globalTree.OpenDeep(fileNode);
+	globalTree.FindSetCursor(fullPath);
 	
 	OnGlobalMacrosChanged();
 }
@@ -238,7 +249,7 @@ void MacroManagerWindow::OnNewMacroFile()
 void MacroManagerWindow::OnDeleteMacroFile()
 {
 	auto fileName = static_cast<String>(globalTree.GetValue());
-	if(!PromptOKCancel(t_("Are you sure you want to remove followin macro file \"" + fileName + "\"?")))
+	if(!PromptOKCancel(t_("Are you sure you want to remove following macro file \"" + fileName + "\"?")))
 		return;
 	
 	FileDelete(AppendFileName(GetLocalDir(), fileName));
@@ -250,6 +261,7 @@ void MacroManagerWindow::OnDeleteMacroFile()
 
 void MacroManagerWindow::OnGlobalMacrosChanged()
 {
+	exportGlobalsLabel.Enable(globalTree.GetChildCount(0));
 	globalMacrosChanged = true;
 }
 
