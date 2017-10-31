@@ -42,7 +42,7 @@ void GLCtrl::Paint(Draw& w)
 	if(pixmap) {
 		GdkGLDrawable *gldrawable = GDK_GL_DRAWABLE(gdk_pixmap_set_gl_capability(pixmap, sGlconfig, NULL));
 		if(gldrawable) {
-			GdkGLContext *glcontext = gdk_gl_context_new(gldrawable, NULL, FALSE, GDK_GL_RGBA_TYPE);
+			GdkGLContext *glcontext = gdk_gl_context_new(gldrawable, NULL, TRUE, GDK_GL_RGBA_TYPE);
 			if(glcontext) {
 				if(gdk_gl_drawable_gl_begin(gldrawable, glcontext)) {
 					glViewport(0, 0, sz.cx, sz.cy);
