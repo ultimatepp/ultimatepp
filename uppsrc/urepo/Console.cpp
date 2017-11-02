@@ -21,10 +21,11 @@ void UrepoConsole::AddResult(const String& out)
 
 int UrepoConsole::System(const char *cmd)
 {
-	LOG(cmd);
+//	LOG(cmd);
 	if(!IsOpen())
 		Open();
 	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(LtBlue));
+//	_DBG_; return 0;
 	int ii = list.GetCount();
 	LocalProcess p;
 	if(!p.Start(cmd))
