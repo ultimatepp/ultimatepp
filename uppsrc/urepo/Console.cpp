@@ -21,6 +21,7 @@ void UrepoConsole::AddResult(const String& out)
 
 int UrepoConsole::System(const char *cmd)
 {
+	LOG(cmd);
 	if(!IsOpen())
 		Open();
 	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(LtBlue));

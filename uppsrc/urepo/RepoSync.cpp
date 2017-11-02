@@ -25,6 +25,25 @@ int CharFilterSvnMsgRepo(int c)
 	return c >= 32 && c < 128 && c != '\"' ? c : 0;
 }
 
+bool IsConflictFile(String path)
+{
+	String ext = GetFileExt(path);
+	if(*ext == '.') {
+		ext = ext.Mid(1);
+		if(findarg(ext, "mine", "theirs", "working") >= 0 || *ext == 'r' && IsDigit(ext[1])) {
+			for(int i = 0; i < 3; i++) {
+				int q = path.ReverseFind('.');
+				if(q < 0)
+					return false;
+				path.Trim(q);
+				if(FileExists(path))
+					return true;
+			}
+		}
+	}
+	return false;
+}
+
 bool RepoSync::ListSvn(const String& path)
 {
 	Vector<String> ln = Split(Sys("svn status " + path), CharFilterCrLf);
@@ -60,10 +79,7 @@ bool RepoSync::ListSvn(const String& path)
 						}
 					}
 					else {
-						int q = file.ReverseFind('.');
-						if(action == ADD && q >= 0 && (file.Mid(q + 1) == "mine" ||
-						   file[q + 1] == 'r' && IsDigit(file[q + 2]))
-						   && FileExists(file.Mid(0, q))) {
+						if(action == ADD && IsConflictFile(file)) {
 							action = DELETEC;
 							an = "Delete (conflict resolved)";
 							color = Black;
@@ -77,7 +93,7 @@ bool RepoSync::ListSvn(const String& path)
 							color = c[action];
 						}
 					}
-					if(pass == action < 0) {
+					if(pass == action < 0 && action != DELETEC) {
 						int ii = list.GetCount();
 						list.Add(action, file, Null,
 						         AttrText(action < 0 ? ln[i] : "  " + file.Mid(path.GetCount() + 1)).Ink(color));
