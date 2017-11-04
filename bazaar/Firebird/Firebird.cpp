@@ -1704,7 +1704,7 @@ static bool SkipOrAlter(const char*& s)
 	return true;
 }
 
-bool FirebirdPerformScript(const String& text, StatementExecutor& exe, Gate2<int, int> progress_canceled)
+bool FirebirdPerformScript(const String& text, StatementExecutor& exe, Gate<int, int> progress_canceled)
 {
 	String statement;
 	String term(";");
