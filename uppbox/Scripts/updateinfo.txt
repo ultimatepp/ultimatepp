@@ -1,3 +1,8 @@
+-----------------------------------------------------------------
+IDE
+
+Update license agreement year
+
 ------------------------------------------------------------------
 mingw64
 
@@ -9,6 +14,16 @@ i686-win32-dwarf
 directories renamed mingw32->bin/mingw64/32, mingw64->bin/mingw64/64
 
 current MinGW-W64 GCC-7.2.0
+------------------------------------------------------------------
+OpenSSL
+
+http://slproweb.com/products/Win32OpenSSL.html
+
+install 1.0.2? Win32, Win64
+
+Copy corresponding files
+
+current 1.0.2l
 ------------------------------------------------------------------
 plugin/jpg
 
@@ -153,8 +168,22 @@ replace .c files and udc.h file
 current 8.41
 ------------------------------------------------------------------
 plugin/Eigen
+
+http://eigen.tuxfamily.org
+
+download latest .zip
+
+overwrite COPYING.* and README.md
+
+replace Eigen folder without CMakeLists.txt files
+
+replace unsupported folder without CMakeLists.txt files
+
+current version 1.2.59
+------------------------------------------------------------------
 plugin/FT_fontsys
-plugin/astyle
+
+lz4plugin/astyle
 plugin/box2d
 plugin/glew
 plugin/ndisasm
