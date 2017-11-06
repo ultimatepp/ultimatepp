@@ -77,8 +77,10 @@ CoWork::Pool::~Pool()
 
 void CoWork::FinLock()
 {
-	Pool::finlock = true;
-	GetPool().lock.Enter();
+	if(current) {
+		Pool::finlock = true;
+		GetPool().lock.Enter();
+	}
 }
 
 void CoWork::Pool::DoJob(MJob& job)
@@ -99,6 +101,7 @@ void CoWork::Pool::DoJob(MJob& job)
 		LLOG("DoJob caught exception");
 		exc = std::current_exception();
 	}
+	CoWork::current = NULL;
 	if(!finlock)
 		lock.Enter();
 	if(!work)
