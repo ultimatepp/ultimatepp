@@ -8,7 +8,7 @@
 
 ### Variables
 
-minimum_gcc_dumpversion="4.9.0"
+minimum_gcc_dumpversion="5.4.0"
 minimum_gcc_version=$(convert_version_to_number "$minimum_gcc_dumpversion")
 
 minimum_clang_dumpversion="3.5.0"
