@@ -237,7 +237,7 @@ else
     then
       log_debug_info "Found $(which clang++)"
 
-      clang_dumpversion=$(clang++ -dumpversion)
+      clang_dumpversion=$(clang++ --version | grep -i version | grep -o -e '[[:digit:]][\.[:digit:]]*' | head -1)
       clang_version=$(convert_version_to_number "$clang_dumpversion")
 
       log_debug_info "clang++ version: $clang_dumpversion"
@@ -266,7 +266,7 @@ else
         log_debug_error "No compatible c++ compiler found in PATH"
         log_debug "${COLOR_WHITE}SOLUTIONS (a few):${COLOR_NC}"
         log_debug " - Install a compatible gcc-c++ version (> $minimum_gcc_dumpversion)"
-        log_debug " - Or install clang++ LLVM compiler"
+        log_debug " - Or install clang++ LLVM compiler (> $minimum_clang_dumpversion)"
         log_debug " - Or add clang++ or g++ path to the PATH variable (if clang++ or a g++ compatible version is already installed)"
         exit $EXIT_ERROR_NO_COMPILER_FOUND
 
