@@ -18,6 +18,10 @@ CONSOLE_APP_MAIN
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
 	String data = LoadDataFile("alice30.txt");
+
+	ASSERT(ZstdDecompress(ZstdCompress(data)) == data);
+
+
 	if(0 && !FileExists(GetDataFile("alice30.gz"))) {
 		LOG("Reference files not found. Press a key to create them");
 		ReadStdIn();
@@ -34,6 +38,12 @@ CONSOLE_APP_MAIN
 	ASSERT(LZ4Decompress(LoadDataFile("alice30.lz4")) == data);
 	ASSERT(LZMADecompress(LoadDataFile("alice30.lzma")) == data);
 	ASSERT(ZstdDecompress(LoadDataFile("alice30.zstd")) == data);
+
+	ASSERT(GZDecompress(GZCompress(data)) == data);
+	ASSERT(BZ2Decompress(BZ2Compress(data)) == data);
+	ASSERT(LZ4Decompress(LZ4Compress(data)) == data);
+	ASSERT(LZMADecompress(LZMACompress(data)) == data);
+	ASSERT(ZstdDecompress(ZstdCompress(data)) == data);
 	
 	LOG("=================== OK");
 }
