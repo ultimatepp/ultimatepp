@@ -47,8 +47,6 @@ functions, support for UTF16 surrogate pairs&]
 [s5;l160;i150;O0; RegisterGlobalSerialize&]
 [s5; &]
 [s22; GUI programming&]
-[s5;l160;i150;O0; Original U`+`+ Callbacks are deprecated and replaced 
-with Function with better lambda support.&]
 [s5;l160;i150;O0; ArrayCtrl: Improvements in sorting, new public GetCellRect, 
 GetCellRectM, GetSelKeys, SetRowDisplay, SetColumnDisplay, AcceptRow 
 methods&]
