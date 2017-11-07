@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#define LAYOUTFILE <ColorPopup/ColorPopup.lay>
+#define LAYOUTFILE <ColorPopup/colorpopup.lay>
 #include <CtrlCore/lay.h>
 
 class MyApp : public WithMyAppLayout<TopWindow> {
