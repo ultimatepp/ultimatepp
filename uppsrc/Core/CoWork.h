@@ -155,7 +155,7 @@ public:
 	~AsyncWork()                                    { if(imp) imp->co.Cancel(); }
 };
 
-#if !defined(__clang__) || 1000 * __clang_major__ + __clang_minor__ > 3400
+#if !defined(__clang__) || 1000 * __clang_major__ + __clang_minor__ > 3004
 
 template< class Function, class... Args>
 AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>>
