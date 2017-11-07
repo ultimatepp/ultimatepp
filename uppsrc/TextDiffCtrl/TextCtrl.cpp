@@ -24,7 +24,7 @@ TextCompareCtrl::TextCompareCtrl()
 	cursor = anchor = Null;
 	gutter_capture = false;
 	show_line_number = true;
-	show_white_space = true;
+	show_white_space = false;
 	show_diff_highlight = true;
 	change_paper_color = true;
 }
