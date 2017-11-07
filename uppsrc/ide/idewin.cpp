@@ -727,6 +727,26 @@ bool IsAssembly(const String& s)
 	return false;
 }
 
+void PreperEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
+{
+	if(args.IsEmpty() || clset) {
+		return;
+	}
+	
+	Vector<String> dir = Split(LoadFile(GetHomeDirFile("usc.path")), ';');
+	for(int i = 0; i < dir.GetCount(); i++)
+		ide.UscProcessDirDeep(dir[i]);
+	for(int i = 0; i < args.GetCount(); i++) {
+		if(args[i] != "-f") {
+			ide.EditFile(NormalizePath(args[i]));
+			ide.FileSelected();
+		}
+	}
+	
+	clset = true;
+	ide.EditorMode();
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
@@ -1035,24 +1055,13 @@ void AppMain___()
 				clset=true;
 			}
 		}
+		
 		ide.LoadAbbr();
-
 		ide.SyncCh();
 
 		DelTemps();
 		
-		if(arg.GetCount() && !clset) {
-			Vector<String> dir = Split(LoadFile(GetHomeDirFile("usc.path")), ';');
-			for(int i = 0; i < dir.GetCount(); i++)
-				ide.UscProcessDirDeep(dir[i]);
-			for(int i = 0; i < arg.GetCount(); i++)
-				if(arg[i] != "-f") {
-					ide.EditFile(NormalizePath(arg[i]));
-					ide.FileSelected();
-				}
-			clset = true;
-			ide.EditorMode();
-		}
+		PreperEditorMode(arg, ide, clset);
 
 		if(splash_screen && !ide.IsEditorMode()) {
 			ShowSplash();
@@ -1069,7 +1078,7 @@ void AppMain___()
 				ide.SetTimeCallback(max(0, next),callback1(&ide,&Ide::SetUpdateTimer,abs(p)));
 		}
 	#endif
-
+			
 		ide.editor_bottom.Zoom(0);
 		ide.right_split.Zoom(0);
 		if(FileExists(ConfigFile("developide"))) {
