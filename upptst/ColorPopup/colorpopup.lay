@@ -1,4 +1,4 @@
-LAYOUT(colorpopupLayout, 576, 64)
+LAYOUT(MyAppLayout, 576, 64)
 	ITEM(ColorPusher, c0, LeftPosZ(8, 84).TopPosZ(36, 20))
 	ITEM(Label, dv___1, SetLabel(t_("Full. Scolors(0)")).LeftPosZ(8, 84).TopPosZ(8, 19))
 	ITEM(Label, dv___2, SetLabel(t_("Full. Scolors(1)")).LeftPosZ(108, 84).TopPosZ(8, 19))
