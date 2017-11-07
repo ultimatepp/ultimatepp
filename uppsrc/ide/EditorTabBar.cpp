@@ -116,10 +116,10 @@ void Ide::TabsLR(int jd)
 	TabBar::JumpStack js;
 	int tc = tabs.GetCount();
 	
-	int n = tabs.GetTabLR( jd );
-	if ( n >= 0 && n < tc ) {
+	int n = tabs.GetTabLR(jd);
+	if(n >= 0 && n < tc) {
 		js = tabs.jump_stack;
-		EditFile( tabs.GetFile( n ) );
+		EditFile(tabs.GetFile(n));
 		tabs.jump_stack = js;
 	}
 }
@@ -128,13 +128,15 @@ void Ide::TabsStackLR(int jd)
 {
 	int tc = tabs.GetCount();
   
-	int n = tabs.GetTabStackLR( jd );
-	if ( n >= 0 && n < tc )
-		EditFile( tabs.GetFile( n ) );
+	int n = tabs.GetTabStackLR(jd);
+	if(n >= 0 && n < tc)
+		EditFile(tabs.GetFile(n));
 }
 
 void Ide::FileSelected()
 {
-	if(!IsNull(editfile))
-		tabs.SetAddFile(editfile);
+	if(IsNull(editfile))
+		return;
+	
+	tabs.SetAddFile(editfile);
 }
