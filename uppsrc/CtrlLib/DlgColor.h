@@ -273,6 +273,5 @@ public:
 
 String FormatColor(Color c);
 Color  ReadColor(CParser& p);
-Color  ColorFromText(const char *s);
 
 #endif//__TCtrlLib_DlgColor__

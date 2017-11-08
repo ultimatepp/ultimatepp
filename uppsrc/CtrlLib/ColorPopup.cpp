@@ -98,35 +98,6 @@ Color ReadColor(CParser& p)
 	return Color(minmax(r, 0, 255), minmax(g, 0, 255), minmax(b, 0, 255));
 }
 
-
-static int sCharFilterNoDigit(int c)
-{
-	return IsDigit(c) ? 0 : c;
-}
-
-static int sCharFilterHex(int c)
-{
-	return c >= 'a' && c <= 'f' || c >= 'A' && c <= 'F' || IsDigit(c) ? c : 0;
-}
-
-Color ColorFromText(const char *s)
-{
-	Vector<String> h = Split(s, sCharFilterNoDigit);
-	if(h.GetCount() == 3 && (strchr(s, ',') || strchr(s, ';') || strchr(s, '.') || strchr(s, ' '))) {
-		int r = atoi(h[0]);
-		int g = atoi(h[1]);
-		int b = atoi(h[2]);
-		if(r >= 0 && r <= 255 && g >= 0 && g <= 255 && b >= 0 && b <= 255)
-			return Color(r, g, b);
-	}
-	String hex = Filter(s, sCharFilterHex);
-	if(hex.GetCount() == 6 || hex.GetCount() == 8) {
-		dword w = (dword)ScanInt64(~hex, NULL, 16);
-		return Color(byte(w >> 16), byte(w >> 8), byte(w));
-	}
-	return Null;
-}
-
 ColorPopUp::~ColorPopUp() {}
 
 int ColorPopUp::GetColorCount() const
