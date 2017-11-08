@@ -47,4 +47,6 @@ use your GPU through Nvidia CUDA). ]&]
 CUDA]&]
 [s0;i150;O0; [2 For the rest of graphic cards as AMD/ATI or Intel, 
 you can install OpenCL from their vendor download web]&]
-[s0;2 ]]
+[s0;2 &]
+[s0; [*2 ArrayFire does not yet compile with MinGW on Windows platform][2 . 
+In this case it is advised to use an updated Visual Studio compiler.]]]
