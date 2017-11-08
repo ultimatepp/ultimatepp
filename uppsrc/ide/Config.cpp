@@ -113,7 +113,6 @@ void Ide::SerializeWorkspace(Stream& s) {
 	}
 	if(version >= 12)
 		SerializePlacement(s);
-
 }
 
 void Ide::SerializeLastMain(Stream& s)
