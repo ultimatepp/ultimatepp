@@ -121,6 +121,7 @@ Color  HsvColorf(double h, double s, double v);
 Color  Blend(Color c1, Color c2, int alpha = 128);
 
 String ColorToHtml(Color color);
+Color  ColorFromText(const char *s);
 
 int  Grayscale(const Color& c);
 bool IsDark(Color c);

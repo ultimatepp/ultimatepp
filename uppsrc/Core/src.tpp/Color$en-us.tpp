@@ -296,6 +296,14 @@ form like #ffffff for white).&]
 [s7; [*/ Return value]-|HTML text.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:ColorFromText`(const char`*`):%- [_^Upp`:`:Color^ Color]_[* ColorFromText]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 s])&]
+[s2; Converts text to Color. Allowed formats are 3 decimal numbers 
+in range 0`-255, representing r, g, b colors and separated by 
+`',`' or `';`' or `'.`' or `' `', or the text must exactly contain 
+6 hexadecimal digits representing RRGGBB values.&]
+[s3; &]
+[s4;%- &]
 [s5;:GrayColor`(int`):%- [_^Color^ Color]_[* GrayColor]([@(0.0.255) int]_[*@3 a]_`=_[@3 128])&]
 [s2; Returns a gray color of intensity [%-*@3 a].&]
 [s3; &]
