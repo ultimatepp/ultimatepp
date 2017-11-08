@@ -139,9 +139,6 @@ void Ide::EditorMode()
 	toolbar.Clear();
 	SetBar();
 	
-	// NOTE: For some reasons navigator is not synchronized while opening
-	//       editor file. This is the chepest place to do that synchronization.
-	//       More information in ticket #1806.
 	editor.SyncNavigator();
 }
 
