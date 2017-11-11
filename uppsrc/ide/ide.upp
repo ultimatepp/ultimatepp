@@ -70,6 +70,8 @@ file
 	Android.cpp,
 	idebar.cpp,
 	idewin.cpp,
+	main.cpp,
+	About.h,
 	About.cpp,
 	Help.cpp,
 	Macro.cpp,
