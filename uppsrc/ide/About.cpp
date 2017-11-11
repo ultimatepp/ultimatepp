@@ -11,28 +11,21 @@
 #include <build_info.h>
 #endif
 
-Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
+String SplashCtrl::GenerateVersionInfo(const String& separator)
 {
-	Image logo = IdeImg::logo();
-	Size  isz = logo.GetSize();
-	ImageCtrl& l = ctrl.Create<ImageCtrl>();
-	Label& v1 = ctrl.Create<Label>();
-	l.SetImage(logo);
-	Size sz = Size(isz.cx, isz.cy/* + 80*/);
-	const CppBase& cpp = CodeBase();
-	int total = 0;
-	for(int i = 0; i < cpp.GetCount(); i++)
-		total += cpp[i].GetCount();
 	String h;
+	
+	h << "Version: ";
 #ifdef bmSVN_REVISION
-	h << "Version " << bmSVN_REVISION;
+	h << bmSVN_REVISION;
 #else
-	h << "Version " << IDE_VERSION;
+	h << IDE_VERSION;
 #endif
+	h << separator;
 	if(sizeof(void *) == 8)
-		h << "\n(64 bit)";
+		h << "(64 bit)";
 	else
-		h << "\n(32 bit)";
+		h << "(32 bit)";
 #ifdef _MSC_VER
 	h << " (MSC)";
 #endif
@@ -49,11 +42,29 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif
-	h << "\n";
+	h << separator;
 #ifdef bmTIME
-	h << "Compiled " << bmTIME << "\n";
+	h << "Compiled: " << bmTIME;
 #endif
-	h << "Using " << MemoryUsedKb() << " KB\n";
+
+	return h;
+}
+
+Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
+{
+	Image logo = IdeImg::logo();
+	Size  isz = logo.GetSize();
+	ImageCtrl& l = ctrl.Create<ImageCtrl>();
+	Label& v1 = ctrl.Create<Label>();
+	l.SetImage(logo);
+	Size sz = Size(isz.cx, isz.cy/* + 80*/);
+	const CppBase& cpp = CodeBase();
+	int total = 0;
+	for(int i = 0; i < cpp.GetCount(); i++)
+		total += cpp[i].GetCount();
+	String h;
+	h << GenerateVersionInfo() << "\n";
+	h << "Using: " << MemoryUsedKb() << " KB\n";
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
 	v1 = h;
@@ -65,40 +76,50 @@ Size MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	return sz;
 }
 
-struct Splash : Ctrl {
-	Array<Ctrl> ctrl;
-
-	Splash() {
-		SetRect(GetWorkArea().CenterRect(MakeLogo(*this, ctrl) + 2));
-		SetFrame(BlackFrame());
-	}
-};
+SplashCtrl::SplashCtrl()
+{
+	SetRect(GetWorkArea().CenterRect(MakeLogo(*this, ctrl) + 2));
+	SetFrame(BlackFrame());
+}
 
 void HideSplash()
 {
-	if(Single<Splash>().IsOpen())
-		Single<Splash>().Close();
+	if(Single<SplashCtrl>().IsOpen())
+		Single<SplashCtrl>().Close();
 }
 
 void ShowSplash()
 {
-	Single<Splash>().PopUp(NULL, false, false);
-	SetTimeCallback(750, callback(HideSplash));
+	Single<SplashCtrl>().PopUp(nullptr, false, false);
+	SetTimeCallback(750, [] { HideSplash(); });
 }
 
 bool IsSplashOpen()
 {
-	return Single<Splash>().IsOpen();
+	return Single<SplashCtrl>().IsOpen();
 }
 
-struct AboutDlg : TopWindow {
-	Array<Ctrl>  ctrl;
-//	StaticRect   separator;
-	RichTextView about;
-
-	typedef AboutDlg CLASSNAME;
+class AboutDlg : public TopWindow
+{
+public:
+	AboutDlg()
+	{
+		Size isz = SplashCtrl::MakeLogo(*this, ctrl);
+		int cx = min(isz.cx * 2, GetWorkArea().GetWidth());
+		SetRect(0, 0, cx, isz.cy);
+		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(DPI(120), 1024));
+		about.SetZoom(Zoom(1, 1));
+		about.RightPos(0, cx - isz.cx - DPI(1)).VSizePos();
+		about.HMargins(Zx(4));
+		about.SetFrame(NullFrame());
+		about.NoLazy();
+		Background(PaintRect(ColorDisplay(), SColorPaper()));
+		Add(about);
+		Title("About TheIDE");
+	}
 	
-	virtual bool Key(dword key, int) {
+	bool Key(dword key, int) override
+	{
 		switch (key) {
 			case (K_ALT_M):
 				MemoryProfileInfo();
@@ -110,23 +131,10 @@ struct AboutDlg : TopWindow {
 				return false;
 		}
 	}
-
-	AboutDlg() {
-		Size isz = MakeLogo(*this, ctrl);
-		int cx = min(isz.cx * 2, GetWorkArea().GetWidth());
-		SetRect(0, 0, cx, isz.cy);
-		about.SetQTF(GetTopic("ide/app/About$en-us"), Zoom(DPI(120), 1024));
-		about.SetZoom(Zoom(1, 1));
-		about.RightPos(0, cx - isz.cx - DPI(1)).VSizePos();
-		about.HMargins(Zx(4));
-		about.SetFrame(NullFrame());
-		about.NoLazy();
-		Background(PaintRect(ColorDisplay(), SColorPaper()));
-		Add(about);
-//		separator.Color(Gray());
-//		Add(separator.RightPos(cx - isz.cx, DPI(1)).VSizePos());
-		Title("About TheIDE");
-	}
+	
+private:
+	Array<Ctrl>  ctrl;
+	RichTextView about;
 };
 
 void Ide::About()
