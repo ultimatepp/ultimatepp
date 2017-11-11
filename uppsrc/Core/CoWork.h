@@ -155,18 +155,24 @@ public:
 	~AsyncWork()                                    { if(imp) imp->co.Cancel(); }
 };
 
-#if !defined(__clang__) || 1000 * __clang_major__ + __clang_minor__ > 3004
-
 template< class Function, class... Args>
-AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>>
+AsyncWork<
+	typename std::result_of<
+		typename std::decay<Function>::type
+			(typename std::decay<Args>::type...)
+	>::type
+>
 Async(Function&& f, Args&&... args)
 {
-	AsyncWork<std::result_of_t<std::decay_t<Function>(std::decay_t<Args>...)>> h;
+	AsyncWork<
+		typename std::result_of<
+			typename std::decay<Function>::type
+				(typename std::decay<Args>::type...)
+		>::type
+	> h;
 	h.Do(f, args...);
 	return pick(h);
 }
-
-#endif
 
 #else
 
