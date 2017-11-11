@@ -67,7 +67,7 @@ void LayUscClean()
 	LayLib();
 }
 
-bool LayUscParse(CParser& p) throw(CParser::Error)
+bool LayUscParse(CParser& p)
 {
 	if(p.Id("ctrl"))
 		ReadClass(p, LAYOUT_CTRL);

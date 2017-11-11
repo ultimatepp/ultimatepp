@@ -115,7 +115,8 @@ String CustomStep::AsString() const {
 					  AsCString(output, 70, "\t") + ";\n\n";
 }
 
-void CustomStep::Load(CParser& p) throw(CParser::Error) {
+void CustomStep::Load(CParser& p)
+{
 	when = ReadWhen(p);
 	ext = p.ReadString();
 	p.PassChar(',');

@@ -168,7 +168,7 @@ void SetIdeModuleUsc(bool (*IdeModuleUsc)(CParser& p));
 void UscSetReadMacro(void (*ReadMacro)(CParser& p));
 
 void CleanUsc();
-void ParseUscFile(const char *filename) throw(CParser::Error);
+void ParseUscFile(const char *filename);
 
 Point ReadNums(CParser& p);
 Point ReadPoint(CParser& p);
@@ -261,7 +261,7 @@ struct CustomStep {
 	String command;
 	String output;
 
-	void   Load(CParser& p) throw(CParser::Error);
+	void   Load(CParser& p);
 	String AsString() const;
 
 	String GetExt() const;

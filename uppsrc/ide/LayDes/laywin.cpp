@@ -381,7 +381,7 @@ LayDesigner *CreateLayDesigner(const char *filename, byte charset, const char *c
 }
 
 void LayUscClean();
-bool LayUscParse(CParser& p) throw(CParser::Error);
+bool LayUscParse(CParser& p);
 void SerializeLayEditPos(Stream& s);
 
 bool IsLayFile(const char *path)

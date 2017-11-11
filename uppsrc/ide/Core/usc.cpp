@@ -68,7 +68,7 @@ void UscSetReadMacro(void (*ReadMacro)(CParser& p))
 	sReadMacro = ReadMacro;
 }
 
-void ParseUscFile(const char *filename) throw(CParser::Error)
+void ParseUscFile(const char *filename)
 {
 	String d = LoadFile(filename);
 	try {
