@@ -417,31 +417,6 @@ void Ide::StopDebug()
 	PosSync();
 }
 
-String Ide::GetLogPath()
-{
-	if(target.GetCount() == 0)
-		return Null;
-#ifdef PLATFORM_WIN32
-	return ForceExt(target, ".log");
-#else
-	String p = GetFileTitle(target);
-	return GetHomeDirFile(".upp/" + p + "/" + p + ".log");
-#endif
-}
-
-void Ide::OpenLog()
-{
-	String p = GetLogPath();
-	String path = NormalizePath(p);
-	if(!designer && path == editfile) {
-		History(-1);
-		return;
-	}
-	AddHistory();
-	if(FileExists(p))
-		EditFile(p);
-}
-
 bool Ide::EditorTip(CodeEditor::MouseTip& mt)
 {
 	if(!debugger)

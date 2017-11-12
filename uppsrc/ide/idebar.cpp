@@ -594,7 +594,9 @@ void Ide::DebugMenu(Bar& menu)
 		menu.Add(!editfile.IsEmpty() /*&& !debuglock*/, AK_CLEARBREAKPOINTS, THISBACK(DebugClearBreakpoints))
 			.Help("Clear all breakpoints");
 		menu.Separator();
-		menu.Add(target.GetCount() && FileExists(GetLogPath()), AK_OPENLOG, THISBACK(OpenLog));
+		
+		auto targetLogPath = GetTargetLogPath();
+		menu.Add(target.GetCount() && FileExists(targetLogPath), AK_OPENLOG, THISBACK1(OpenLog, targetLogPath));
 	}
 }
 
@@ -667,8 +669,12 @@ void Ide::HelpMenu(Bar& menu)
 	menu.AddMenu("Common information..", IdeImg::Go_forward(), callback1(LaunchWebBrowser, "http://www.ultimatepp.org/www$uppweb$community$en-us.html"));
 	menu.Separator();
 	OnlineSearchMenu(menu);
-	menu.MenuSeparator();
-	menu.Add("About..", THISBACK(About));
+	if(menu.IsMenuBar()) {
+		menu.Separator();
+		menu.Add(FileExists(GetIdeLogPath()), "View application log file", THISBACK(ViewIdeLogFile));
+		menu.Separator();
+		menu.Add("About..", IdeImg::info(), THISBACK(About));
+	}
 }
 
 void Ide::MainMenu(Bar& menu)

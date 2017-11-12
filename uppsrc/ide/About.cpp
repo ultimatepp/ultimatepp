@@ -11,7 +11,7 @@
 #include <build_info.h>
 #endif
 
-String SplashCtrl::GenerateVersionInfo(const String& separator)
+String SplashCtrl::GenerateVersionInfo(char separator)
 {
 	String h;
 	

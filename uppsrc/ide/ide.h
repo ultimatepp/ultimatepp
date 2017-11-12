@@ -893,8 +893,6 @@ public:
 		void  DebugClearBreakpoints();
 		void  OnBreakpoint(int i);
 
-		String GetLogPath();
-		void  OpenLog();
 		bool  EditorTip(CodeEditor::MouseTip& mt);
 
 	void      Setup(Bar& menu);
@@ -942,6 +940,7 @@ public:
 		void  AsErrors();
 
 	void      HelpMenu(Bar& menu);
+	    void  ViewIdeLogFile();
 		void  About();
 
 	void      ConsoleMenu(Bar& menu);
@@ -976,7 +975,11 @@ public:
 	void      CycleFiles();
 
 	void      Renumber();
-
+	
+	String    GetTargetLogPath();
+	String    GetIdeLogPath();
+	void      OpenLog(const String& logFilePath);
+	
 //	Console&  GetConsole();
 
 	struct FindLineErrorCache {
