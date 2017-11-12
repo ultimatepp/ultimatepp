@@ -29,11 +29,13 @@ build_umk="true"
 unset make_parameter_array
 
 ### Constants
-
-DEFAULT_GCC_CXXFLAGS=""
-DEFAULT_CLANG_CXXFLAGS="-O3 -ffunction-sections -fdata-sections -Wno-logical-op-parentheses -std=c++14"
-DEFAULT_CPP_CXXFLAGS=""
-DEFAULT_OTHER_CPP_CXXFLAGS=""
+if [ -z "${DEFAULT_CXXFLAGS}" ]; then
+  DEFAULT_CXXFLAGS="-O3 -ffunction-sections -fdata-sections"
+fi
+DEFAULT_GCC_CXXFLAGS=${DEFAULT_CXXFLAGS}
+DEFAULT_CLANG_CXXFLAGS="${DEFAULT_CXXFLAGS} -Wno-logical-op-parentheses"
+DEFAULT_CPP_CXXFLAGS=${DEFAULT_CXXFLAGS}
+DEFAULT_OTHER_CPP_CXXFLAGS=${DEFAULT_CXXFLAGS}
 
 EXIT_SUCCESS=0
 EXIT_ERROR_COMMAND_LINE=1
@@ -63,6 +65,8 @@ show_usage()
     echo ' * domake use environment variables to supersede auto generated variables and those from uppsrc/*Makefile.in:'
     echo '   - CXX          : c++ compiler'
     echo '   - CXXFLAGS     : c++ compiler flags'
+    echo '   - CXXSTD       : selected c++ mode (for -std value)'
+    echo '   - NO_CXXSTD    : do not add c++ mode to CXXFLAGS (disabled by default)'
     echo '   - UPPOUT       : U++ output directory (full path)'
     echo "   - CINC         : default include directory list (use ';' as separator)"
     echo '   - Flags        : U++ build flags (ex: +GUI,LINUX,POSIX,SHARED)'
@@ -276,6 +280,44 @@ else
 fi
 
 
+if [ -z "${NO_CXXSTD}" ]; then
+
+if [ "$platform" = "FreeBSD" ]; then
+  CHECK_CXXSTD="c++14 c++1y c++11 c++0x"
+else
+  CHECK_CXXSTD="c++14 c++11"
+fi
+
+if [ -z "${CXXSTD}" ]; then
+  log_debug_info "Searching for supported C++ mode"
+  for s in ${CHECK_CXXSTD}; do
+    output=`${CXX} -std=${s} -c -x c++ /dev/null -o /dev/null 2>/dev/null && echo true`
+    if [ "${output}" = "true" ]; then
+      CXXSTD=${s}
+      break
+    fi
+  done
+
+  if [ -n "${CXXSTD}" ]; then
+    log_debug_info "The -std=${CXXSTD} is supported by '${CXX}'"
+  else
+    log_debug_warning "The C++11 is not supported by '${CXX}'"
+  fi
+fi
+
+if [ -n "${CXXSTD}" ]; then
+  DEFAULT_GCC_CXXFLAGS="${DEFAULT_GCC_CXXFLAGS} -std=${CXXSTD}"
+  DEFAULT_CLANG_CXXFLAGS="${DEFAULT_CLANG_CXXFLAGS} -std=${CXXSTD}"
+  DEFAULT_CPP_CXXFLAGS="${DEFAULT_CPP_CXXFLAGS} -std=${CXXSTD}"
+  DEFAULT_OTHER_CPP_CXXFLAGS="${DEFAULT_OTHER_CPP_CXXFLAGS} -std=${CXXSTD}"
+  if [ -n "${CXXFLAGS}" ]; then
+    CXXFLAGS="${CXXFLAGS} -std=${CXXSTD}"
+  fi
+fi
+
+fi
+
+
 log_debug_info "Searching for extra make parameters"
 
 i=0
@@ -298,6 +340,9 @@ then
 
 elif [ "$use_other_cpp_compiler" = "true" -a "$DEFAULT_OTHER_CPP_CXXFLAGS" != "" ]
 then
+  make_parameter_array[i++]="CXXFLAGS=$DEFAULT_OTHER_CPP_CXXFLAGS"
+
+else
   log_debug_warning "CXXFLAGS environment variable not set. Will use the default value from uppsrc/*Makefile.in"
 
 fi
@@ -394,6 +439,14 @@ else
   done
 
 fi
+
+if [ -n "${CXXSTD}" -a -z "${NO_CXXSTD}" ]; then
+  for i in *.bm
+  do
+    sed -i '' -e "/COMMON_CPP_OPTIONS/s|\(-std=\)[^\"[:blank:]]*|\1${CXXSTD}|" "${i}"
+  done
+fi
+
 
 if [ "$platform" = "Darwin" ]
 then
