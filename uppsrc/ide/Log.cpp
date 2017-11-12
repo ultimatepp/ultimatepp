@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define METHOD_NAME "Ide::" << UPP_FUNCTION_NAME << "(): "
+
 String Ide::GetIdeLogPath()
 {
 	return GetStdLogPath();
@@ -17,7 +19,7 @@ String Ide::GetTargetLogPath()
 #endif
 }
 
-void Ide::OpenLog(const String& logFilePath)
+void Ide::OpenLog(String logFilePath)
 {
 	auto normalizedPath = NormalizePath(logFilePath);
 	if(!designer && normalizedPath == editfile) {
@@ -25,6 +27,10 @@ void Ide::OpenLog(const String& logFilePath)
 		return;
 	}
 	AddHistory();
-	if(FileExists(logFilePath))
-		EditFile(logFilePath);
+	if(!FileExists(logFilePath)) {
+		Loge() << METHOD_NAME << "Following log file doesn't exist: \"" << logFilePath << "\".";
+		return;
+	}
+	
+	EditFile(logFilePath);
 }
