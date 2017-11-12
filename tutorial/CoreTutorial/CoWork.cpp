@@ -59,29 +59,49 @@ void CoWorkTutorial()
 	/// negative impact on all `CoWork` instances. In fact, from this perspective, above code is
 	/// probably past the threshold...
 	
-	/// When exception is thrown in `CoWork`, it is propagated to the thread that calls `Finish`.
-	/// As `CoWork` destructor calls `Finish` too, it is possible that it will be thrown by
-	/// destructor, which is not exactly recommended thing to do in C++, but is well defined
-	///  and really the best option here:
+	/// When exception is thrown in `CoWork`, it is propagated to the thread that calls
+	/// `Finish` and `CoWork` is canceled. If more than single job throws, one of exceptions is
+	/// selected randomly to be rethrown in Finish.
 	
+	/// As `CoWork` destructor calls `Finish` too,
+	/// it is possible that it will be thrown by destructor, which is not exactly recommended
+	/// thing to do in C++, but is well defined and really the best option here:
+
+	in.Seek(0);
 	try {
-		CoWork co;
-		co & [] { throw Exc(); };
+		while(!in.IsEof()) {
+			String ln = in.GetLine();
+			co & [ln, &w, &m] {
+				if(ln.GetCount() > 75)
+					throw "Input line was too long!";
+				Vector<String> h = Split(ln, [](int c) { return IsAlpha(c) ? 0 : c; });
+				CoWork::FinLock(); // replaces the mutex, locked till the end of CoWork job
+				for(const auto& s : h)
+					w.FindAdd(s);
+			};
+		}
+		co.Finish();
 	}
-	catch(Exc) {
-		LOG("Caught exception");
+	catch(const char *exception) {
+		DUMP(exception);
 	}
 	
 	/// Sometimes there is a need for cancellation of the whole `CoWork`. `Cancel` method
 	/// cancels all scheduled jobs that have not been yet executed and sets `CoWork` to
 	/// canceled state, which can be checked in job routine using `CoWork::IsCanceled`:
 	
-	co & [] {
-		for(;;)
-			if(CoWork::IsCanceled())
-				return;
-	};
+	for(int i = 0; i < 100; i++)
+		co & [] {
+			for(;;) {
+				if(CoWork::IsCanceled()) {
+					LOG("Job was canceled");
+					return;
+				}
+				Sleep(1);
+			}
+		};
+	Sleep(200); // Give CoWork a chance to start some jobs
 	co.Cancel();
 	
-	///
+	/// Canceling CoWork is common in GUI applications.
 }
