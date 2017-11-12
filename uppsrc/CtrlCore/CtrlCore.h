@@ -882,7 +882,7 @@ public:
 
 	virtual String GetDesc() const;
 
-	Event<>        WhenAction;
+	Event<>          WhenAction;
 
 	void             AddChild(Ctrl *child);
 	void             AddChild(Ctrl *child, Ctrl *insafter);

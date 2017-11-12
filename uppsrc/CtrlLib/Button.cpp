@@ -13,7 +13,7 @@ void Pusher::RefreshPush() {
 }
 
 void Pusher::PerformAction() {
-	WhenAction();
+	Action();
 }
 
 void Pusher::GotFocus() {
