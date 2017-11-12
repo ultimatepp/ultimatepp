@@ -22,7 +22,7 @@ is similar to std`::function with two differences:&]
 [s2;i150;O0; Calling empty Function is allowed (and NOP). Returns 
 zero.&]
 [s2;i150;O0; Functions can be combined (chained) using operator<<.&]
-[s0;%- &]
+[s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3; &]
 [s5;:Function`<Res`(ArgTypes`.`.`.`)`> `:`:Function`(`):%- [* Function]()&]
