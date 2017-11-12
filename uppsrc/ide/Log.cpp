@@ -21,7 +21,7 @@ String Ide::GetTargetLogPath()
 
 void Ide::OpenLog(const String& logFilePath)
 {
-	auto normalizedPath = NormalizePath(logFilePath);
+	String normalizedPath = NormalizePath(logFilePath);
 	if(!designer && normalizedPath == editfile) {
 		History(-1);
 		return;

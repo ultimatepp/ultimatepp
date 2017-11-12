@@ -8560,7 +8560,7 @@ void GridButton::LeftUp(Point p, dword flags)
 {
 	img = 1;
 	Refresh();
-	WhenAction();
+	Action();
 }
 
 void GridButton::MouseEnter(Point p, dword flags)

@@ -372,7 +372,7 @@ void MenuItem::LeftUp(Point, dword)
 #endif
 #endif
 	LLOG("Menu Item pre Action");
-	WhenAction();
+	Action();
 	LLOG("Menu Item post Action");
 }
 
@@ -389,7 +389,7 @@ bool MenuItem::HotKey(dword key)
 		SetFocus();
 		Sync();
 		Sleep(50);
-		WhenAction();
+		Action();
 		return true;
 	}
 	return false;
@@ -398,7 +398,7 @@ bool MenuItem::HotKey(dword key)
 bool MenuItem::Key(dword key, int count)
 {
 	if(key == K_ENTER && isenabled) {
-		WhenAction();
+		Action();
 		return true;
 	}
 	return false;
@@ -614,7 +614,7 @@ void TopMenuItem::MouseLeave()
 void TopMenuItem::LeftUp(Point, dword)
 {
 	if(!isenabled) return;
-	WhenAction();
+	Action();
 	Refresh();
 }
 
@@ -636,7 +636,7 @@ void TopMenuItem::LostFocus()
 bool TopMenuItem::Key(dword key, int count)
 {
 	if(isenabled && key == K_ENTER) {
-		WhenAction();
+		Action();
 		return true;
 	}
 	return false;

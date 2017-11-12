@@ -595,7 +595,7 @@ void Ide::DebugMenu(Bar& menu)
 			.Help("Clear all breakpoints");
 		menu.Separator();
 		
-		auto targetLogPath = GetTargetLogPath();
+		String targetLogPath = GetTargetLogPath();
 		menu.Add(target.GetCount() && FileExists(targetLogPath), AK_OPENLOG, THISBACK1(OpenLog, targetLogPath));
 	}
 }
