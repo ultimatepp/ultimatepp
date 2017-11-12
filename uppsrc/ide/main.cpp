@@ -103,7 +103,7 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
-	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(" ");
+	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
 	
 	Ctrl::SetUHDEnabled();
 

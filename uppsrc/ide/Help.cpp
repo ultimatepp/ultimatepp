@@ -654,3 +654,8 @@ void Ide::RefreshBrowser()
 	editor.SyncNavigator();
 	doc.SyncDocTree();
 }
+
+void Ide::ViewIdeLogFile()
+{
+	OpenLog(GetIdeLogPath());
+}

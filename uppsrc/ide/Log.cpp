@@ -1,0 +1,30 @@
+#include "ide.h"
+
+String Ide::GetIdeLogPath()
+{
+	return GetStdLogPath();
+}
+
+String Ide::GetTargetLogPath()
+{
+	if(target.GetCount() == 0)
+		return Null;
+#ifdef PLATFORM_WIN32
+	return ForceExt(target, ".log");
+#else
+	String p = GetFileTitle(target);
+	return GetHomeDirFile(".upp/" + p + "/" + p + ".log");
+#endif
+}
+
+void Ide::OpenLog(const String& logFilePath)
+{
+	auto normalizedPath = NormalizePath(logFilePath);
+	if(!designer && normalizedPath == editfile) {
+		History(-1);
+		return;
+	}
+	AddHistory();
+	if(FileExists(logFilePath))
+		EditFile(logFilePath);
+}

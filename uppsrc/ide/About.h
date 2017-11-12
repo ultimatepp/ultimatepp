@@ -8,7 +8,7 @@ namespace Upp {
 class SplashCtrl final : public Ctrl
 {
 public:
-	static String GenerateVersionInfo(const String& separator = "\n");
+	static String GenerateVersionInfo(char separator = '\n');
 	static Size   MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl);
 	
 public:

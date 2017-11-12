@@ -60,6 +60,7 @@ file
 	Annotations.cpp,
 	Virtuals.cpp,
 	Thisbacks.cpp,
+	Log.cpp,
 	Jump.cpp,
 	Setup.cpp,
 	Custom.cpp,
