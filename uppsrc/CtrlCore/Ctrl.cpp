@@ -458,8 +458,10 @@ void Ctrl::Update() {
 	Updated();
 }
 
-void Ctrl::Action() {
-	WhenAction();
+void Ctrl::Action()
+{
+	Event<> h = WhenAction; // we make copy of action just in case widget is destroyed during the call
+	h();
 }
 
 void Ctrl::UpdateAction() {

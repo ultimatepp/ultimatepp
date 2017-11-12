@@ -81,7 +81,7 @@ void RichEdit::FinishNF()
 	SetupRuler();
 	if(modified) {
 		if(useraction)
-			WhenAction();
+			Action();
 	}
 	useraction = modified = false;
 }

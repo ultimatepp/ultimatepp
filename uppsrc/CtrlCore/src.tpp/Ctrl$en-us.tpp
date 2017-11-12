@@ -2112,7 +2112,9 @@ can check this flag using IsEditable method and behave accordingly.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:Action`(`):%- [@(0.0.255) void]_[* Action]()&]
-[s2;b17;a17; Invokes default Ctrl callback `- WhenAction.&]
+[s2;b17;a17; Invokes default Ctrl callback `- WhenAction. Action 
+actually makes a copy of WhenAction `- this ensures that the 
+Event<> object is not destroyed during the call.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Ctrl`:`:UpdateAction`(`):%- [@(0.0.255) void]_[* UpdateAction]()&]
