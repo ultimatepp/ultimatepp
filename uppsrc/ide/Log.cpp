@@ -19,8 +19,9 @@ String Ide::GetTargetLogPath()
 #endif
 }
 
-void Ide::OpenLog(String logFilePath)
+void Ide::OpenLog(const String& logFilePath)
 {
+	DUMP(logFilePath);
 	auto normalizedPath = NormalizePath(logFilePath);
 	if(!designer && normalizedPath == editfile) {
 		History(-1);

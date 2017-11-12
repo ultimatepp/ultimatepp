@@ -978,7 +978,7 @@ public:
 	
 	String    GetTargetLogPath();
 	String    GetIdeLogPath();
-	void      OpenLog(String logFilePath);
+	void      OpenLog(const String& logFilePath);
 	
 //	Console&  GetConsole();
 
