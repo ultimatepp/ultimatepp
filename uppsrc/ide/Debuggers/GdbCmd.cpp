@@ -159,8 +159,9 @@ String Gdb::FastCmd(const char *command)
 	TimeStop ts;
 	while(dbg) {
 		String s;
-		if(TTYQuit())
+		if(TTYQuit()) {
 			Stop();
+		}
 		if(!dbg->Read(s)) {
 			LLOG(result);
 			PutVerbose(result);
