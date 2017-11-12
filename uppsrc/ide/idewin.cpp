@@ -102,6 +102,7 @@ void Ide::PutConsole(const char *s)
 
 void Ide::PutVerbose(const char *s)
 {
+	LOG("VERBOSE: " << s);
 	if(console.verbosebuild) {
 		PutConsole(s);
 		console.Sync();

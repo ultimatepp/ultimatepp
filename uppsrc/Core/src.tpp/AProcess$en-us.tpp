@@ -40,7 +40,8 @@ tring]_[*@3 s])_`=_[@3 0]&]
 [s5;:AProcess`:`:Read`(String`&`): [@(0.0.255) virtual] [@(0.0.255) bool]_[* Read]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 s])_`=_[@3 0]&]
 [s2;%% Reads data from standard output combined. Returns true if 
-the process was running or there are more data to be read.&]
+the process is running or there are more data to be read (even 
+after the process terminated).&]
 [s3;%% &]
 [s4; &]
 [s5;:AProcess`:`:Read2`(String`&`,String`&`): [@(0.0.255) virtual] 
@@ -48,10 +49,10 @@ the process was running or there are more data to be read.&]
 tring][@(0.0.255) `&]_[*@3 os], [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring][@(0.0.255) `&]_[*@3 es])&]
 [s2;%% Reads data separately from standard output combined and from 
-standard error output. Returns true if the process was running 
-or there are more data to be read. Usually, implementing class 
-has to be in special mode for this to work (e.g. LocalProcess 
-must be started with Start2).&]
+standard error output. Returns true if the process is running 
+or there are more data to be read  (even after the process terminated). 
+Usually, implementing class has to be in special mode for this 
+to work (e.g. LocalProcess must be started with Start2).&]
 [s3;%% &]
 [s4; &]
 [s5;:AProcess`:`:GetExitCode`(`): [@(0.0.255) virtual] [@(0.0.255) int]_[* GetExitCode]()_`=
