@@ -128,7 +128,7 @@ LIBDIR=$( pkg-config --libs-only-L gtk+-2.0 libnotify x11 | awk ' { gsub ( / /, 
 cat > %{buildroot}/%{_datadir}/%{name}/GCC.bm << EOF
 BUILDER			= "GCC";
 COMPILER		= "g++";
-COMMON_CPP_OPTIONS	= "-std=c++14";
+COMMON_CPP_OPTIONS	= "-std=c++11";
 DEBUG_INFO		= "2";
 DEBUG_BLITZ		= "1";
 DEBUG_LINKMODE		= "1";
@@ -156,7 +156,7 @@ cat > %{buildroot}/%{_datadir}/%{name}/CLANG.bm << EOF
 BUILDER			= "CLANG";
 COMPILER		= "clang++";
 COMMON_OPTIONS		= "-Wno-logical-op-parentheses";
-COMMON_CPP_OPTIONS	= "-std=c++14";
+COMMON_CPP_OPTIONS	= "-std=c++11";
 COMMON_C_OPTIONS	= "";
 COMMON_FLAGS		= "";
 DEBUG_INFO		= "2";
@@ -206,7 +206,6 @@ rm -fr %{buildroot}
 %changelog
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
 - New snapshot
-- Used stdc++14 instead of stdc++11 in build method files (.bm)
 
 * Tue Jan 31 2017 Amrein-Marie Christophe <camreinmarie@free.fr> 2017.1-1
 - New release
