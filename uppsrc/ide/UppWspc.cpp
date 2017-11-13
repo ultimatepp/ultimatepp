@@ -201,6 +201,17 @@ void WorkspaceWork::SaveLoadPackage(bool sel)
 	SyncWorkspace();
 }
 
+bool PathIsLocal(const String& path)
+{
+#ifdef PLATFORM_WIN32
+	char drive[4] = "?:\\";
+	*drive = *path;
+	return GetDriveType(drive) == DRIVE_FIXED;
+#else
+	return false;
+#endif
+}
+
 void WorkspaceWork::LoadActualPackage()
 {
 	Time utime = FileGetTime(ConfigFile("version"));
@@ -220,7 +231,7 @@ void WorkspaceWork::LoadActualPackage()
 		if(open) {
 			Color uln = Null;
 			String p = SourcePath(GetActivePackage(), f);
-			if(showtime) {
+			if(showtime && (findarg(actualpackage, "<ide-aux>", "<prj-aux>", "<temp-aux>") < 0 || PathIsLocal(p))) {
 				FindFile ff(p);
 				if(ff) {
 					Time ftm = Time(ff.GetLastWriteTime());

@@ -77,7 +77,7 @@ bool IsAssembly(const String& s)
 	return false;
 }
 
-void PreperEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
+void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 {
 	if(args.IsEmpty() || clset) {
 		return;
@@ -413,7 +413,7 @@ void AppMain___()
 
 		DelTemps();
 		
-		PreperEditorMode(arg, ide, clset);
+		StartEditorMode(arg, ide, clset);
 
 		if(splash_screen && !ide.IsEditorMode()) {
 			ShowSplash();
