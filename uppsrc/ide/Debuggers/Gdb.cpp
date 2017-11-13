@@ -32,6 +32,8 @@ void Gdb::DebugBar(Bar& bar)
 
 void Gdb::CopyStack()
 {
+	if(IdeIsDebugLock())
+		return;
 	DropFrames();
 	String s;
 	for(int i = 0; i < frame.GetCount(); i++)
@@ -41,6 +43,8 @@ void Gdb::CopyStack()
 
 void Gdb::CopyDisas()
 {
+	if(IdeIsDebugLock())
+		return;
 	disas.WriteClipboard();
 }
 
@@ -238,6 +242,8 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 
 bool Gdb::RunTo()
 {
+	if(IdeIsDebugLock())
+		return false;
 	String bi;
 	bool df = disas.HasFocus();
 	if(df) {
@@ -263,6 +269,8 @@ bool Gdb::RunTo()
 
 void Gdb::Run()
 {
+	if(IdeIsDebugLock())
+		return;
 	CheckEnd(Cmdp(firstrun ? "run" : "continue"));
 	firstrun = false;
 	IdeActivateBottom();
@@ -270,6 +278,8 @@ void Gdb::Run()
 
 void Gdb::Step(const char *cmd)
 {
+	if(IdeIsDebugLock())
+		return;
 	bool b = disas.HasFocus();
 	String s = Cmdp(cmd);
 	if(b) disas.SetFocus();
