@@ -149,7 +149,7 @@ void HelpViewer::showLink(String const &link)
 		
 		String label = t.label;
 		RichText txt = ParseQTF(t.text);
-		contentsPane.Pick(txt, zoom);
+		contentsPane.Pick(pick(txt), zoom);
 		contentsPane.GotoLabel(label, true);
 		int tocId = mainTocTree.Find(link);
 		if(tocId >= 0)
