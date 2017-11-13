@@ -8,7 +8,7 @@ DXFLine::DXFLine(DXFEntities *e) : DXFEntity(e, "LINE")
 
 Vector<Pointf> DXFLine::GetPoints(void) const
 {
-	return Vector<Pointf>() << p1 << p2;
+	return pick(Vector<Pointf>() << p1 << p2);
 }
 
 DXFLine &DXFLine::SetPoints(Pointf const &_p1, Pointf const &_p2)
