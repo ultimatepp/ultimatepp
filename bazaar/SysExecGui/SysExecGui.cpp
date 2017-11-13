@@ -30,7 +30,7 @@ class PasswordDlg : public WithPasswordDlgLayout<TopWindow>
 		// constructor
 		PasswordDlg();
 		
-		String GetPassword(void) { return pwd; }
+		String GetPassword(void) { return ~pwd; }
 
 		// starts dialog, return true on success
 		bool Run(String const &u = "root");
@@ -64,7 +64,7 @@ bool PasswordDlg::Run(String const &u)
 		{
 			case IDOK:
 				// check the password running pwd
-				if(SysExecUser(user, pwd, "/bin/pwd", ""))
+				if(SysExecUser(user, ~pwd, "/bin/pwd", ""))
 					return true;
 				PromptOK(DeQtf(t_("Wrong password -- Try again")));
 				break;
@@ -90,7 +90,7 @@ static PasswordDlg &pDlg()
 // return true on success, false otherwise
 bool SysStartAdmin(String const &command, String const &args, const VectorMap<String, String> &Environ)
 {
-	PasswordDlg *pp = &(pDlg());
+//	PasswordDlg *pp = &(pDlg());
 	if(!pDlg().Run())
 		return false;
 	return SysStartAdmin(pDlg().GetPassword(), command, args, Environ);
