@@ -279,18 +279,24 @@ void Gdb::Data()
 
 void Gdb::SetTab(int q)
 {
+	if(IdeIsDebugLock())
+		return;
 	tab.Set(q);
 	Data();
 }
 
 void Gdb::ClearWatches()
 {
+	if(IdeIsDebugLock())
+		return;
 	watches.Clear();
 	SetTab(2);
 }
 
 void Gdb::QuickWatch()
 {
+	if(IdeIsDebugLock())
+		return;
 	quickwatch.expression << quickwatch.Breaker(999);
 	FastCmd("set print pretty on");
 	for(;;) {

@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#define LLOG(x)  LOG(x)
+#define LLOG(x)  // DLOG(x)
 
 #define IMAGECLASS DbgImg
 #define IMAGEFILE  <ide/Debuggers/Debuggers.iml>
@@ -122,6 +122,7 @@ String Gdb::Cmd(const char *command)
 		if(!dbg->Read(s)) {
 			PutVerbose(result);
 			PutVerbose("Debugger terminated");
+			LLOG("Running: " << dbg->IsRunning());
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
@@ -160,12 +161,14 @@ String Gdb::FastCmd(const char *command)
 	while(dbg) {
 		String s;
 		if(TTYQuit()) {
+			LLOG("TTYQuit");
 			Stop();
 		}
 		if(!dbg->Read(s)) {
 			LLOG(result);
 			PutVerbose(result);
 			PutVerbose("dbg terminated");
+			LLOG("Running: " << dbg->IsRunning());
 			break;
 		}
 		if(!s.IsEmpty() && Result(result, s)) {
@@ -196,11 +199,12 @@ String Gdb::FastCmd(const char *command)
 
 void Gdb::Stop()
 {
+	LLOG("Stop");
 	if(dbg && dbg->IsRunning())
 		dbg->Kill();
 }
 
 bool Gdb::IsFinished()
 {
-	return !dbg->IsRunning() && !IdeIsDebugLock();
+	return !(dbg && dbg->IsRunning()) && !IdeIsDebugLock();
 }
