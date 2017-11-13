@@ -443,7 +443,7 @@ fi
 if [ -n "${CXXSTD}" -a -z "${NO_CXXSTD}" ]; then
   for i in *.bm
   do
-    sed -i '' -e "/COMMON_CPP_OPTIONS/s|\(-std=\)[^\"[:blank:]]*|\1${CXXSTD}|" "${i}"
+    sed -i.backup -e "/COMMON_CPP_OPTIONS/s|\(-std=\)[^\"[:blank:]]*|\1${CXXSTD}|" "${i}"
   done
 fi
 
@@ -480,7 +480,7 @@ then
 fi
 
 # Cleanup
-rm -f uppsrc/*.backup
+rm -f uppsrc/*.backup *.backup
 
 log_debug_info "Searching for gmake or make"
 
