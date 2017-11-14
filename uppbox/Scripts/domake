@@ -280,6 +280,7 @@ else
 fi
 
 
+CXXSTD_RE=	#empty
 if [ -z "${NO_CXXSTD}" ]; then
 
 if [ "$platform" = "FreeBSD" ]; then
@@ -313,6 +314,8 @@ if [ -n "${CXXSTD}" ]; then
   if [ -n "${CXXFLAGS}" ]; then
     CXXFLAGS="${CXXFLAGS} -std=${CXXSTD}"
   fi
+
+  CXXSTD_RE="; /COMMON_CPP_OPTIONS/s|\(-std=\)[^\"[:blank:]]*|\1${CXXSTD}|"
 fi
 
 fi
@@ -421,7 +424,7 @@ then
   
   for i in *.bm.in
   do
-    sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g" "$i" > "${i%.in}"
+    sed -e "s@((INCLUDES))@`pkg-config --cflags-only-I $library_list|sed -e s/-I//g -e \"s/ /;/g\"`@g" -e "s@((LIBRARIES))@`pkg-config --libs-only-L $library_list|sed -e s/-L//g -e \"s/ /;/g\"`@g ${CXXSTD_RE}" "$i" > "${i%.in}"
   done
 
 else
@@ -435,16 +438,9 @@ else
   
   for i in *.bm.in
   do
-    sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g" "$i" > "${i%.in}"
+    sed -e "s@((INCLUDES));@@g" -e "s@((LIBRARIES));@@g ${CXXSTD_RE}" "$i" > "${i%.in}"
   done
 
-fi
-
-if [ -n "${CXXSTD}" -a -z "${NO_CXXSTD}" ]; then
-  for i in *.bm
-  do
-    sed -i.backup -e "/COMMON_CPP_OPTIONS/s|\(-std=\)[^\"[:blank:]]*|\1${CXXSTD}|" "${i}"
-  done
 fi
 
 
@@ -480,7 +476,7 @@ then
 fi
 
 # Cleanup
-rm -f uppsrc/*.backup *.backup
+rm -f uppsrc/*.backup
 
 log_debug_info "Searching for gmake or make"
 
