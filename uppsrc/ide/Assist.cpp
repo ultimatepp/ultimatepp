@@ -573,10 +573,7 @@ void AssistEditor::PopUpAssist(bool auto_insert)
 	int cx = min(wa.Width() - 100, max(wa.GetWidth() / 2, HorzLayoutZoom(600)));
 	if(p.x + cx > wa.right)
 		p.x = wa.right - cx;
-	if(p.y + cy + GetFontSize().cy < wa.bottom)
-		popup.SetRect(p.x, p.y + GetFontSize().cy, cx, cy);
-	else
-		popup.SetRect(p.x, p.y - cy, cx, cy);
+	popup.SetRect(RectC(p.x, p.y + cy + GetFontSize().cy < wa.bottom ? p.y + GetFontSize().cy : p.y - cy, cx, cy) & wa);
 	popup.BackPaint();
 	if(auto_insert && assist.GetCount() == 1) {
 		assist.GoBegin();

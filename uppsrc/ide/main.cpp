@@ -110,7 +110,12 @@ void AppMain___()
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 
-	const Vector<String>& arg = CommandLine();
+	Vector<String> arg = clone(CommandLine());
+	if(arg.GetCount() && arg[0].StartsWith("--scale=")) {
+		int scale = atoi(Filter(arg[0], CharFilterDigit));
+		Font::SetStdFont(StdFont().Height(GetStdFontCy() * minmax(scale, 50, 400) / 100));
+		arg.Remove(0);
+	}
 
 	bool first_install = false;
 
