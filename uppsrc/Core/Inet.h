@@ -680,7 +680,7 @@ public:
 	String GetError() const                             { return Nvl(socket->GetErrorDesc(), error); }
 	
 	bool   Accept(TcpSocket& listener_socket);
-	void   Connect(const String& url);
+	bool   Connect(const String& url);
 	
 	void   Do();
 

@@ -54,7 +54,7 @@ bool WebSocket::Accept(TcpSocket& listen_socket)
 	return true;
 }
 
-void WebSocket::Connect(const String& url)
+bool WebSocket::Connect(const String& url)
 {
 	Clear();
 	
@@ -80,15 +80,19 @@ void WebSocket::Connect(const String& url)
 	if(socket->IsBlocking()) {
 		if(!addrinfo.Execute(host, port)) {
 			Error("Not found");
-			return;
+			return false;
 		}
 		LLOG("DNS resolved");
 		StartConnect();
-		while(opcode != READING_FRAME_HEADER)
+		while(opcode != READING_FRAME_HEADER) {
 			Do0();
+			if(IsError())
+				return false;
+		}
 	}
 	else
 		opcode = DNS;
+	return true;
 }
 
 void WebSocket::SendRequest()
