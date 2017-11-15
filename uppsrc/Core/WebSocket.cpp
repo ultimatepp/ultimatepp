@@ -363,7 +363,6 @@ void WebSocket::Do0()
 			FrameHeader();
 			break;
 		default:
-			DLOG("FrameData");
 			FrameData();
 			break;
 		}
