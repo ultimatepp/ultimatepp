@@ -298,7 +298,7 @@ void WebSocket::Close(const String& msg)
 void WebSocket::FrameData()
 {
 	Buffer<char> buffer(32768);
-	for(;;) {
+	while(data_pos < length) {
 		int n = socket->Get(~buffer, (int)min(length - data_pos, (int64)32768));
 		if(n == 0)
 			return;
@@ -308,34 +308,31 @@ void WebSocket::FrameData()
 		data.Cat(~buffer, n); // TODO: Split long data
 		data_pos += n;
 		LLOG("Frame data chunk received, chunk len: " << n);
-		if(data_pos >= length) {
-			LLOG("Frame data received");
-			int op = opcode & 15;
-			switch(op) {
-			case PING:
-				LLOG("PING");
-				SendRaw(PONG, data);
-				break;
-			case CLOSE:
-				LLOG("CLOSE received");
-				close_received = true;
-				if(!close_sent)
-					Close(data);
-				socket->Close();
-				break;
-			default:
-				Input& m = in_queue.AddTail();
-				m.opcode = opcode;
-				m.data = data;
-				LLOG((m.opcode & TEXT ? "TEXT: " : "BINARY: ") << FormatBlock(data));
-				LLOG("Input queue count is now " << in_queue.GetCount());
-				break;
-			}
-			data.Clear();
-			opcode = READING_FRAME_HEADER;
-			return;
-		}
 	}
+	LLOG("Frame data received");
+	int op = opcode & 15;
+	switch(op) {
+	case PING:
+		LLOG("PING");
+		SendRaw(PONG, data);
+		break;
+	case CLOSE:
+		LLOG("CLOSE received");
+		close_received = true;
+		if(!close_sent)
+			Close(data);
+		socket->Close();
+		break;
+	default:
+		Input& m = in_queue.AddTail();
+		m.opcode = opcode;
+		m.data = data;
+		LLOG((m.opcode & TEXT ? "TEXT: " : "BINARY: ") << FormatBlock(data));
+		LLOG("Input queue count is now " << in_queue.GetCount());
+		break;
+	}
+	data.Clear();
+	opcode = READING_FRAME_HEADER;
 }
 
 void WebSocket::Do0()
@@ -366,6 +363,7 @@ void WebSocket::Do0()
 			FrameHeader();
 			break;
 		default:
+			DLOG("FrameData");
 			FrameData();
 			break;
 		}
