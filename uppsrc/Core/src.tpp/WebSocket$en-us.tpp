@@ -45,9 +45,10 @@ cpSocket][@(0.0.255) `&]_[*@3 listen`_socket])&]
 on success.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:WebSocket`:`:Connect`(const Upp`:`:String`&`): [@(0.0.255) void]_[* Connect](
+[s5;:Upp`:`:WebSocket`:`:Connect`(const Upp`:`:String`&`): [@(0.0.255) bool]_[* Connect](
 [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 url])&]
-[s2;%% Initiates connection to [%-*@3 url].&]
+[s2;%% Initiates connection to [%-*@3 url]. In blocking mode returns 
+false if connection cannot be established, otherwise true.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:Do`(`): [@(0.0.255) void]_[* Do]()&]
