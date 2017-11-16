@@ -15,10 +15,7 @@ private:
 	int            vmargin, hmargin;
 	bool           menu;
 
-	int&     HoVe(Size& sz)                  { return horz ? sz.cx : sz.cy; }
-	int&     VeHo(Size& sz)                  { return horz ? sz.cy : sz.cx; }
-	int&     HoVe(bool horz, Size& sz) const { return horz ? sz.cx : sz.cy; }
-	int&     VeHo(bool horz, Size& sz) const { return horz ? sz.cy : sz.cx; }
+	Size     LayOut(bool horz, int maxsize, bool repos);
 
 public:
 	Event<>  WhenLeftClick;
