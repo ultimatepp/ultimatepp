@@ -52,19 +52,23 @@ void BarPane::PaintBar(Draw& w, const SeparatorCtrl::Style& ss, const Value& pan
 	ChPaint(w, r, pane);
 }
 
-Size BarPane::Repos(bool _horz, int maxsize)
+Size BarPane::LayOut(bool horz, int maxsize, bool repos)
 {
-	horz = _horz;
+	auto HoVe = [&](Size& sz)->int& { return horz ? sz.cx : sz.cy; };
+	auto VeHo = [&](Size& sz)->int& { return horz ? sz.cy : sz.cx; };
 	maxsize -= 2 * (horz ? hmargin : vmargin);
+	if(repos) {
+		this->horz = horz;
+		breakpos.Clear();
+	}
 	int bmargin = horz ? vmargin : hmargin;
-	breakpos.Clear();
 	Size asz(0, 0);
 	VeHo(asz) = bmargin;
-	Array<Item>::Iterator q = item.Begin();
-	while(q < item.End()) {
+	auto q = item.begin();
+	while(q < item.end()) {
 		Size psz(0, 0);
-		Array<Item>::Iterator f = q;
-		while(q < item.End()) {
+		auto f = q;
+		while(q < item.end()) {
 			if(q->ctrl == NULL && IsNull(q->gapsize)) {
 				q++;
 				break;
@@ -76,8 +80,8 @@ Size BarPane::Repos(bool _horz, int maxsize)
 					break;
 				}
 				gapsize = 0;
-				Array<Item>::Iterator w = q + 1;
-				while(w < item.End()) {
+				auto w = q + 1;
+				while(w < item.end()) {
 					if(!w->ctrl) break;
 					Size sz = w->ctrl->GetMinSize();
 					if(HoVe(psz) + gapsize + HoVe(sz) > maxsize) break;
@@ -91,7 +95,7 @@ Size BarPane::Repos(bool _horz, int maxsize)
 			if(HoVe(sz) == INT_MAX)
 				HoVe(sz) = maxsize - HoVe(psz);
 			if(HoVe(psz) + HoVe(sz) > maxsize && HoVe(psz)) {
-				while(q < item.End() && q->ctrl == NULL && !IsNull(q->gapsize))
+				while(q < item.end() && q->ctrl == NULL && !IsNull(q->gapsize))
 					q++;
 				break;
 			}
@@ -107,18 +111,20 @@ Size BarPane::Repos(bool _horz, int maxsize)
 		}
 		int& bp = VeHo(asz);
 		if(bp > bmargin) {
-			breakpos.Add(bp + bmargin);
+			if(repos)
+				breakpos.Add(bp + bmargin);
 			bp += 2 + 2 * bmargin;
 		}
-		while(f != q) {
-			if(f->ctrl) {
-				if(horz)
-					f->ctrl->TopPos(bp, psz.cy);
-				else
-					f->ctrl->LeftPos(bp, psz.cx);
+		if(repos)
+			while(f != q) {
+				if(f->ctrl) {
+					if(horz)
+						f->ctrl->TopPos(bp, psz.cy);
+					else
+						f->ctrl->LeftPos(bp, psz.cx);
+				}
+				f++;
 			}
-			f++;
-		}
 		bp += VeHo(psz);
 		HoVe(asz) = max(HoVe(asz), HoVe(psz));
 	}
@@ -128,59 +134,15 @@ Size BarPane::Repos(bool _horz, int maxsize)
 	return asz;
 }
 
-Size BarPane::GetPaneSize(bool horz, int maxsize) const
+
+Size BarPane::Repos(bool horz, int maxsize)
 {
-	int msz = maxsize;
-	maxsize -= 2 * (horz ? hmargin : vmargin);
-	Size asz(0, 0);
-	int bmargin = horz ? vmargin : hmargin;
-	VeHo(horz, asz) = bmargin;
-	Array<Item>::ConstIterator q = item.Begin();
-	while(q < item.End()) {
-		Size psz(0, 0);
-		while(q < item.End()) {
-			if(q->ctrl == NULL && IsNull(q->gapsize)) {
-				q++;
-				break;
-			}
-			int gapsize = q->gapsize;
-			if(gapsize == INT_MAX && q->ctrl == NULL) {
-				if(msz == INT_MAX) {
-					q++;
-					break;
-				}
-				gapsize = 0;
-				Array<Item>::ConstIterator w = q + 1;
-				while(w < item.End()) {
-					if(!w->ctrl) break;
-					Size sz = w->ctrl->GetMinSize();
-					if(HoVe(horz, psz) + gapsize + HoVe(horz, sz) > maxsize) break;
-					gapsize += HoVe(horz, sz);
-					w++;
-				}
-				gapsize = maxsize - gapsize - HoVe(horz, psz);
-			}
-			Size sz = q->ctrl ? q->ctrl->GetMinSize()
-			                  : Size(horz ? gapsize : 0, horz ? 0 : gapsize);
-			if(HoVe(horz, psz) + HoVe(horz, sz) >= maxsize && HoVe(horz, psz)) {
-				while(q < item.End() && q->ctrl == NULL && !IsNull(q->gapsize))
-					q++;
-				break;
-			}
-			VeHo(horz, psz) = max(VeHo(horz, psz), VeHo(horz, sz));
-			HoVe(horz, psz) += HoVe(horz, sz);
-			q++;
-		}
-		int& bp = VeHo(horz, asz);
-		if(bp > bmargin)
-			bp += 2 + 2 * bmargin;
-		bp += VeHo(horz, psz);
-		HoVe(horz, asz) = max(HoVe(horz, asz), HoVe(horz, psz));
-	}
-	VeHo(horz, asz) += bmargin;
-	HoVe(horz, asz) += horz ? 2 * hmargin : 2 * vmargin;
-	LLOG("Size " << Name() << " " << asz);
-	return asz + Size(2 * hmargin, 2 * vmargin);
+	return LayOut(horz, maxsize, true);
+}
+
+Size BarPane::GetPaneSize(bool _horz, int maxsize) const
+{
+	return const_cast<BarPane *>(this)->LayOut(horz, maxsize, false);
 }
 
 void BarPane::IClear()
