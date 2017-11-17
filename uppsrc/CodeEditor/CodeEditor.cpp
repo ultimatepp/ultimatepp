@@ -987,6 +987,36 @@ bool CodeEditor::Key(dword code, int count) {
 				return true;
 			}
 		}
+		if(wordwrap && code > 0 && code < 65535) {
+			int limit = GetBorderColumn();
+			int pos = GetCursor();
+			int lp = pos;
+			int l = GetLinePos(lp);
+			if(limit > 10 && GetColumnLine(pos).x >= limit && lp == GetLineLength(l)) {
+				int lp0 = GetPos(l);
+				WString ln = GetWLine(l);
+				int wl = GetGPos(l, limit) - lp0;
+				while(wl > 0 && ln[wl - 1] != ' ')
+					wl--;
+				int sl = wl - 1;
+				while(sl > 0 && ln[wl - 1] != '\n' && ln[sl - 1] == ' ')
+					sl--;
+				wordwrap = false;
+				Remove(lp0 + sl, pos - (lp0 + sl));
+				SetCursor(lp0 + sl);
+				Put('\n');
+				for(int i = 0; i < wl && findarg(ln[i], ' ', '\t') >= 0; i++)
+					Put(ln[i]);
+				for(int i = wl; i < ln.GetCount(); i++)
+					Put(ln[i]);
+				while(count--)
+					Put(code);
+				FinishPut();
+				wordwrap = true;
+				return true;
+			}
+	
+		}
 		if(code >= 32 && code < 128 && count == 1) {
 			IndentInsert(code, 1);
 			return true;
@@ -1101,6 +1131,7 @@ CodeEditor::CodeEditor() {
 	tippos = -1;
 	selkind = SEL_CHARS;
 	withfindreplace = true;
+	wordwrap = false;
 }
 
 CodeEditor::~CodeEditor() {}

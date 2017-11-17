@@ -598,6 +598,7 @@ public:
 	bool      auto_check;
 	int       spellcheck_comments;
 	bool      wordwrap_comments;
+	bool      wordwrap;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
@@ -809,6 +810,7 @@ public:
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
 		void  EditorMenu(Bar& bar);
+		void  ToggleWordwrap();
 	
 	void OnlineSearchMenu(Bar& menu);
 		void OnlineSearch();

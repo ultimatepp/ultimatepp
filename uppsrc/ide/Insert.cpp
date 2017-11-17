@@ -184,12 +184,10 @@ void Ide::InsertInclude(Bar& bar)
 	bar.Add("All #includes", THISBACK1(InsertText, all));
 }
 
-void Ide::InsertAdvanced(Bar& bar)
+void Ide::ToggleWordwrap()
 {
-	bool b = !editor.IsReadOnly();
-	bar.Add(b, "Insert", THISBACK(InsertMenu));
-	bar.Add(b, "Insert #include", THISBACK(InsertInclude));
-	bar.Add(b, "Advanced", THISBACK(EditSpecial));
+	wordwrap = !wordwrap;
+	SetupEditor();
 }
 
 void Ide::EditorMenu(Bar& bar)
