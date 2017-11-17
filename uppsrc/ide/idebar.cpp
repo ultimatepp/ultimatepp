@@ -115,6 +115,16 @@ void Ide::OnlineSearchMenu(Bar& menu)
 	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), THISBACK(OnlineSearchOnTheOfficialSite));
 }
 
+void Ide::InsertAdvanced(Bar& bar)
+{
+	bool b = !editor.IsReadOnly();
+	bar.Add(AK_WORDWRAP, THISBACK(ToggleWordwrap))
+	   .Check(wordwrap);
+	bar.Add(b, "Insert", THISBACK(InsertMenu));
+	bar.Add(b, "Insert #include", THISBACK(InsertInclude));
+	bar.Add(b, "Advanced", THISBACK(EditSpecial));
+}
+
 void Ide::EditSpecial(Bar& menu)
 {
 	bool b = !editor.IsReadOnly();

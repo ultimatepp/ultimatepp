@@ -225,13 +225,13 @@ protected:
 
 //	EditorSyntax rm_ins;
 
-	char        rmb;
-	int         highlight_bracket_pos0;
-	int         highlight_bracket_pos;
-	bool        bracket_flash;
-	int         bracket_start;
+	char    rmb;
+	int     highlight_bracket_pos0;
+	int     highlight_bracket_pos;
+	bool    bracket_flash;
+	int     bracket_start;
 
-	bool    barline : 1;
+	bool    barline;
 	double  stat_edit_time;
 	Time    last_key_time;
 
@@ -241,6 +241,7 @@ protected:
 	bool    persistent_find_replace;
 	bool    do_ff_restore_pos;
 	bool    withfindreplace;
+	bool    wordwrap;
 
 	int     ff_start_pos;
 
@@ -483,6 +484,7 @@ public:
 	bool     GetMarkLines()                           { return mark_lines; }
 	void     AutoEnclose(bool b)                      { auto_enclose = b; }
 	void     BarLine(bool b)                          { barline = b; }
+	void     WordWrap(bool b)                         { wordwrap = b; }
 	
 	void     PersistentFindReplace(bool b = true)     { persistent_find_replace = b; }
 	bool     IsPersistentFindReplace() const          { return persistent_find_replace; }
