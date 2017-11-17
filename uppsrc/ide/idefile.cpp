@@ -37,6 +37,7 @@ void Ide::SetupEditor(int f, String hl, String path)
 	                      findarg(hl, "cpp", "java", "js", "cs", "json", "css", "lay", "sch", "t", "usc") >= 0);
 
 	editor.WordwrapComments(wordwrap_comments);
+	editor.WordWrap(wordwrap);
 }
 
 void Ide::SetupEditor()
