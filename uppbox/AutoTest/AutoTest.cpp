@@ -38,7 +38,7 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		    txt << bm;
 		    if(release)
                        txt << "-R ";
-                   txt << ' ' << h << ' ';PL
+                   txt << ' ' << h << ' ';
                        String c;
                        c << umk << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
                        if(first)
