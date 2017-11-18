@@ -38,17 +38,17 @@ void Do(const char *nest, const char *bm, bool release, bool test)
 		    txt << bm;
 		    if(release)
                        txt << "-R ";
-                   txt << ' ' << h << ' ';
-                       String c;
-                       c << umk << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
-                       if(first)
-                               c << 'a';
-               #ifdef PLATFORM_POSIX
-                       c << 's';
-               #endif
-                       c << ' ' << exe;
-                       Cout() << c << '\n';
-                       infolog << txt;
+            txt << ' ' << h << ' ';
+			String c;
+			c << umk << " " << nest << ' ' << name << ' ' << bm << " -" << flags;
+			if(first)
+				c << 'a';
+#ifdef PLATFORM_POSIX
+			c << 's';
+#endif
+			c << ' ' << exe;
+			Cout() << c << '\n';
+			infolog << txt;
 			String out;
 			Tested += test;
 			if(Sys(c, out)) {
