@@ -29,6 +29,7 @@ build_umk="true"
 unset make_parameter_array
 
 ### Constants
+
 if [ -z "${DEFAULT_CXXFLAGS}" ]; then
   DEFAULT_CXXFLAGS="-O3 -ffunction-sections -fdata-sections"
 fi
@@ -476,6 +477,7 @@ then
 fi
 
 # Cleanup
+
 rm -f uppsrc/*.backup
 
 log_debug_info "Searching for gmake or make"
