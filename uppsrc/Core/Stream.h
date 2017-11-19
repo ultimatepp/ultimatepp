@@ -530,8 +530,11 @@ protected:
 	virtual  void  _Put(int w);
 	virtual  void  _Put(const void *data, dword size);
 	virtual  bool  IsOpen() const;
-	
+
 	virtual  void  Out(const void *data, dword size) = 0;
+
+public:
+	virtual  void  Close();
 	
 	void     Flush();
 	
