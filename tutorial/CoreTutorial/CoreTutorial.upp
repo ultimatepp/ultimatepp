@@ -47,6 +47,11 @@ file
 	Async.cpp,
 	CoPartition.cpp,
 	Parallel.cpp,
+	Stream readonly separator,
+	Stream.cpp,
+	SpecialStream.cpp,
+	Serialize.cpp,
+	Tutorial readonly separator,
 	tutorial2.cpp,
 	help.qtf;
 
