@@ -2,6 +2,7 @@
 
 GUI_APP_MAIN
 {
+#if 0
 	SECTION("Basics");
 	DO(Logging);
 	DO(StringTutorial);
@@ -52,6 +53,11 @@ GUI_APP_MAIN
 	DO(AsyncTutorial);
 	DO(CoPartitionTutorial);
 	DO(CoAlgoTutorial);
+#endif
+
+	SECTION("Streams");
+	DO(Stream);
+	DO(SpecialStream);
 
 	MakeTutorial();
 }
