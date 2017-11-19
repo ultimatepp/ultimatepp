@@ -1158,6 +1158,7 @@ OutStream::OutStream()
 
 OutStream::~OutStream()
 {
+	Close();
 	delete[] h;
 }
 
@@ -1188,6 +1189,11 @@ void OutStream::Flush()
 		Out(buffer, int(ptr - buffer));
 		ptr = h;
 	}
+}
+
+void OutStream::Close()
+{
+	Flush();
 }
 
 bool OutStream::IsOpen() const
