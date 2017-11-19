@@ -4,11 +4,17 @@ void Stream()
 {
 	/// .Streams basics
 
+	/// U++ stream working with files is `FileStream`. It has 3 derived classes, `FileIn`,
+	/// `FileOut` and `FileAppend`, for the most common uses.
+
 	FileIn in(GetDataFile("test.txt"));
 	if(!in) {
 		LOG("Failed to open the file");
 		return;
 	}
+	
+	/// The most basic operations of streams are Put and Get. Get works in the same ways as
+	/// good old C getc - it returns negative number on eof or error:
 
 	String h;
 	int c;
@@ -16,12 +22,23 @@ void Stream()
 		h.Cat(c);
 	DUMP(h);
 
+	/// U++ streams provide no formatting capabilities (that is deferred to text utilities),
+	/// but they have some unique features. U++ does not distinguish between 'text' and
+	/// 'binary' mode streams, methods are well suited to work with both in common mode.
+	
+	/// GetLine returns String of single line read (lines separators being '\n', '\r' are
+	/// ignored):
+
 	in.Seek(0);
 	while(!in.IsEof())
 		DUMP(in.GetLine());
 
+	/// Get method reads at most specified number of bytes from the stream and returns them as
+	/// String:
+
 	in.Seek(0);
 	DUMP(in.Get(10));
+	
 	
 	in.Seek(0);
 	DUMP(in.Get(999999).GetCount());
