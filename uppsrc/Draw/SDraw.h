@@ -36,8 +36,7 @@ private:
 	bool  paintonly;
 	
 	Array<Cloff> cloff;
-
-protected:
+	
 	Color docolor;
 
 public:
