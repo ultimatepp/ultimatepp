@@ -551,8 +551,6 @@ private:
 	Stream& b;
 
 public:
-	void    Close()                              { Flush(); }
-
 	TeeStream(Stream& a, Stream& b) : a(a), b(b) {}
 	~TeeStream()                                 { Close(); }
 };
