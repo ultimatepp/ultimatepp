@@ -71,7 +71,7 @@ void Serialize()
 		}
 	};
 	MyFoo2 foo3;
-	LoadFromString(foo3, h);
+	LoadFromString(foo3, data);
 	DUMP(foo3.number);
 	DUMP(foo3.color);
 }
