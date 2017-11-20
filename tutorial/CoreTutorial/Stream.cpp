@@ -26,7 +26,7 @@ void Stream()
 	/// but they have some unique features. U++ does not distinguish between 'text' and
 	/// 'binary' mode streams, methods are well suited to work with both in common mode.
 	
-	/// GetLine returns String of single line read (lines separators being '\n', '\r' are
+	/// GetLine returns String of single line read (lines separator being '\n', '\r' is
 	/// ignored):
 
 	in.Seek(0);
