@@ -1157,8 +1157,7 @@ OutStream::OutStream()
 }
 
 OutStream::~OutStream()
-{
-	Close();
+{	// Note: cannot call Close here !
 	delete[] h;
 }
 
