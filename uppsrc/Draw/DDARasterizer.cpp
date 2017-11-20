@@ -1,7 +1,5 @@
 #include "Draw.h"
 
-#define LTIMING(x)  //  RTIMING(x)
-
 namespace Upp {
 
 DDARasterizer::DDARasterizer()
@@ -36,7 +34,6 @@ void DDARasterizer::AVert(int x, int y, int cy)
 
 void DDARasterizer::DoLine(Point p1, Point p2, bool last)
 {
-	LTIMING("DoLine");
 	dirx = sgn(p2.x - p1.x);
 	diry = sgn(p2.y - p1.y);
 	int dx = abs(p2.x - p1.x);
@@ -99,19 +96,14 @@ struct DDARasterizer::Segments : DDARasterizer {
 			m.l = x;
 			m.h = x + cx;
 			m.flag = flag;
+			miny = min(y, miny);
+			maxy = max(y, maxy);
 		}
 		flag = true;
 	}
 	virtual void PutVert(int x, int y, int cy) {
-		int l = max(y, 0);
-		int h = min(y + cy, this->cy);
-		while(l < h) {
-			Segment& m = segment.At(l++).Add();
-			m.l = x;
-			m.h = x + 1;
-			m.flag = flag;
-			flag = true;
-		}
+		for(int i = 0; i < cy; i++)
+			PutHorz(x, y + i, 1);
 	}
 	
 	Segments() { miny = INT_MAX; maxy = 0; }
@@ -119,7 +111,6 @@ struct DDARasterizer::Segments : DDARasterizer {
 
 void DDARasterizer::FatLine(Point p2)
 {
-	LTIMING("FatLine");
 	if(p1 == p2)
 		return;
 	Point pp = p0;
@@ -166,13 +157,10 @@ DDARasterizer& DDARasterizer::Move(Point p)
 DDARasterizer& DDARasterizer::Line(Point p)
 {
 	if(pseg) {
-		LTIMING("Polygon Line");
 		Point a = p1;
 		Point b = p;
 		if(a.y > b.y)
 			Swap(a, b);
-		pseg->miny = min(a.y, b.y, pseg->miny);
-		pseg->maxy = max(a.y, b.y, pseg->maxy);
 		pseg->flag = false;
 		pseg->DoLine(a, b, true);
 		p1 = p;
@@ -201,7 +189,6 @@ DDARasterizer& DDARasterizer::Close()
 
 DDARasterizer& DDARasterizer::Polygon()
 {
-	LTIMING("Start Polygon");
 	pseg.Create();
 	pseg->Cy(cy);
 	return *this;
@@ -209,7 +196,6 @@ DDARasterizer& DDARasterizer::Polygon()
 
 DDARasterizer& DDARasterizer::Fill()
 {
-	LTIMING("Fill Polygon");
 	ASSERT(pseg);
 	Close();
 	for(int y = pseg->miny; y <= pseg->maxy; y++) {
@@ -225,7 +211,6 @@ DDARasterizer& DDARasterizer::Fill()
 				h = gg[i].h;
 				flag ^= gg[i++].flag;
 			}
-			LTIMING("PutHorz Fill");
 			PutHorz(l, y, h - l);
 		}
 	}
