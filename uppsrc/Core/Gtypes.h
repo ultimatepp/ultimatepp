@@ -257,7 +257,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 	void   Set(Pt a, Sz sz)                 { Set(a, a + sz); }
 	void   Set(const Rect_& r)              { Set(r.left, r.top, r.right, r.bottom); }
 
-	void   SetSize(int cx, int cy)              { right = left + cx; bottom = top + cy; }
+	void   SetSize(T cx, T cy)                  { right = left + cx; bottom = top + cy; }
 	void   SetSize(Sz sz)                       { SetSize(sz.cx, sz.cy); }
 
 	void   InflateHorz(T dx)                    { left -= dx; right += dx; }
