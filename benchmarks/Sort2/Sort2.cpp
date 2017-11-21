@@ -2,7 +2,11 @@
 
 using namespace Upp;
 
+#ifdef _DEBUG
+const int N = 1000;
+#else
 const int N = 1000000;
+#endif
 
 // M. D. MCILROY
 // Appendix. An adversary for
@@ -53,16 +57,28 @@ int antiqsort(int n, int *a)
 CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
-	for(int n = -1; n <= 10; n++) {
+	// -3 Sorted
+	// -2 Valley pattern
+	// -1 Reverse sorted
+	// 0 Max Random values
+	// >0 - number of random values
+	for(int n = -3; n <= 10; n++) {
 		Vector<String> h;
 		for(int i = 0; i < N; i++)
-			if(n < 0)
-				h.Add(AsString(N - i));
+			if(n == -3)
+				h.Add(Format("%06d", i));
+			else
+			if(n == -2)
+				h.Add(Format("%06d", 2 * abs(N / 2 - i) + (i > N / 2)));
+			else
+			if(n == -1)
+				h.Add(Format("%06d", N - i));
 			else
 			if(n)
 				h.Add(AsString(Random(n)));
 			else
 				h.Add(AsString(Random()));
+		DUMP(h);
 		TimeStop tm;
 		Sort(h);
 		double t = tm.Seconds();
