@@ -268,11 +268,11 @@ void Ide::IdeHidePtr()
 bool Ide::IdeDebugLock()
 {
 	if(debuglock == 0) {
+		debuglock = 1;
 		editor.DisableBreakpointing();
 		MakeTitle();
 		SetBar();
 		Sync();
-		debuglock = 1;
 		return true;
 	}
 	debuglock++;
