@@ -153,13 +153,15 @@ public:
 		Node() {}
 		Node(int branch) : branch(branch) {}
 		Node(One<Split> split) : branch(-1), split(pick(split)) {}
+		Node(Node&&) = default;
+
 		int        branch;
 		One<Split> split;
 	};
 
 	struct Split
 	{
-		Split(Pointf n, double c, Node rval_ minus, Node rval_ plus)
+		Split(Pointf n, double c, Node&& minus, Node&& plus)
 			: n(n), c(c), minus(pick(minus)), plus(pick(plus)) {}
 
 		Pointf     n;
