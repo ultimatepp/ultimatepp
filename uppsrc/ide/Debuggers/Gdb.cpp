@@ -187,6 +187,7 @@ void Gdb::CheckEnd(const char *s)
 String Gdb::Cmdp(const char *cmdline, bool fr)
 {
 	expression_cache.Clear();
+	IdeHidePtr();
 	String s = Cmd(cmdline);
 	if(ParsePos(s, file, line, addr)) {
 		IdeSetDebugPos(GetLocalPath(file), line - 1, fr ? DbgImg::FrameLinePtr()

@@ -74,7 +74,6 @@ void MarkChanged(const VectorMap<String, String>& m, ArrayCtrl& data)
 
 void Gdb::Lock()
 {
-	IdeHidePtr();
 	IdeDebugLock();
 	watches.Disable();
 	locals.Disable();
