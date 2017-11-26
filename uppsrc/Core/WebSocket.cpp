@@ -90,8 +90,10 @@ bool WebSocket::Connect(const String& url)
 				return false;
 		}
 	}
-	else
+	else {
 		opcode = DNS;
+		addrinfo.Start(host, port);
+	}
 	return true;
 }
 
@@ -152,6 +154,10 @@ void WebSocket::Dns()
 {
 	if(addrinfo.InProgress())
 		return;
+	if(!addrinfo.GetResult()) {
+		Error("DNS lookup failed");
+		return;
+	}
 	LLOG("DNS resolved");
 	StartConnect();
 }
@@ -340,12 +346,13 @@ void WebSocket::Do0()
 	int prev_opcode;
 	do {
 		prev_opcode = opcode;
-		if(socket->IsEof() && !(close_sent || close_received))
-			Error("Socket has been closed unexpectedly");
+		if(findarg(opcode, DNS, SSL_HANDSHAKE) < 0) {
+			Output();
+			if(socket->IsEof() && !(close_sent || close_received))
+				Error("Socket has been closed unexpectedly");
+		}
 		if(IsError())
 			return;
-		if(findarg(opcode, DNS, SSL_HANDSHAKE) < 0)
-			Output();
 		switch(opcode) {
 		case DNS:
 			Dns();
