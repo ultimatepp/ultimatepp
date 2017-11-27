@@ -228,40 +228,35 @@ void Image::Serialize(Stream& s)
 	Size dots = GetDots();
 	s % sz % p % dots;
 	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
-	if(s.IsLoading())
+	if(s.IsLoading()) {
 		if(len) {
-//			if(s.GetPos() + len > s.GetSize()) {
-//				s.SetError();
-//				return;
-//			}
-			// TODO: Add invalid stream protection
 			ImageBuffer b;
 			if(len < 6 * 1024 * 1024) {
 				b.Create(sz);
 				if(!s.GetAll(~b, (int)len)) {
-					s.LoadError();
 					Clear();
+					s.LoadError();
 					return;
 				}
 			}
 			else {
 				Huge h;
 				if(!s.GetAll(h, (size_t)len)) {
-					s.LoadError();
 					Clear();
+					s.LoadError();
 					return;
 				}
 				b.Create(sz);
 				h.Get(~b);
 			}
-			
-			
+
 			b.SetDots(dots);
 			b.SetHotSpot(p);
 			*this = b;
 		}
 		else
 			Clear();
+	}
 	else
 		s.Put64(~*this, len);
 }
