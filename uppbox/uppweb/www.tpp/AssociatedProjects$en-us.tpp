@@ -11,13 +11,18 @@ topic "Associated projects";
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [a83;*R6 $$10,11#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$11,11#45413000475342174754091244180557:text]
-[b83;*2 $$12,11#07864147445237544204411237157677:title]
+[b133;*2 $$12,11#07864147445237544204411237157677:title]
 [{_}%EN-US 
 [s10; Associated Projects&]
-[s11; Below is a list of associated projects that expanding the u`+`+ 
-world:&]
+[s11; Below is a list of associated projects that expands the U`+`+ 
+world.&]
+[s12; [4 Build system]&]
 [s11;l160;i150;O0; [*^https`:`/`/github`.com`/CoolmanCZ`/upp`_cmake^ Ultimate`+`+ 
 CMakeLists generator] `- fantastic tool made by our forum user 
 CoolmanCZ that allows to generate Cmake project files from Ultimate`+`+ 
 sources.&]
-[s0;*@7;4 ]]
+[s12; [4 Libraries]&]
+[s11;l160;i150;O0; [*^https`:`/`/github`.com`/ismail`-yilmaz`/upp`-components^ Upp 
+components] `- additional general purpose packages managed by 
+our forum user Oblivion. &]
+[s11; ]]
