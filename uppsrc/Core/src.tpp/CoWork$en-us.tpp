@@ -160,7 +160,7 @@ nt]_[*@3 n])&]
 [s2;%% This is a simple helper class that provides per`-worker resources. 
 For example, certain calculation requires the instance of computation 
 model that is not immutable, but can be reused over iterations. 
-In single`-thread code, a single instance of such model would 
+In single`-threaded code, a single instance of such model would 
 be used over the whole loop, however in multi`-threaded code, 
 each worker thread, plus thread that created CoWork need its 
 own instance. CoWorkerResources helps to manage such situation.&]
