@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin, const Rect& preclip_)
+void Stroker::Init(double width, double miterlimit, double tolerance, int _linecap, int _linejoin, const Rectf& preclip_)
 {
 	linecap = _linecap;
 	linejoin = _linejoin;
@@ -12,7 +12,7 @@ void Stroker::Init(double width, double miterlimit, double tolerance, int _linec
 	w2 = width / 2;
 	qmiter = miterlimit * w2;
 	if(!IsNull(preclip))
-		tw = 4 * max(qmiter, w2); // preclipping width
+		tw = 4 * max(qmiter, width); // preclipping width
 	qmiter *= qmiter;
 	fid = acos(1 - tolerance / w2);
 	p0 = p1 = p2 = Null;
@@ -155,7 +155,7 @@ void Stroker::Finish()
 	if(IsNull(p1) || IsNull(p2) || IsNull(p0))
 		return;
 	LLOG("-- Finish " << p1 << " " << p2 << ", lines " << lines);
-	if(lines == 1 && !IsNull(preclip) && PreClipped(p1, p2)) {
+	if(lines == 1 && !IsNull(preclip) && PreClipped(p1, p2)) { // this is mostly intended to preclip dasher segments
 		LLOG("FINISH PRECLIPPED " << p1 << " - " << p2);
 		lines = 0;
 		return;

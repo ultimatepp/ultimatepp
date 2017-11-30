@@ -48,7 +48,7 @@ private:
 	bool   PreClipped(Pointf p2, Pointf p3);
 
 public:	
-	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin, const Rect& preclip);
+	void Init(double width, double miterlimit, double tolerance, int linecap, int linejoin, const Rectf& preclip);
 };
 
 class Dasher : public LinearPathFilter {
