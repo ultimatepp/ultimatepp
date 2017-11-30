@@ -156,7 +156,7 @@ String AsString(const Color& c) {
 
 String ColorToHtml(Color color)
 {
-	return Format("#%02X%02X%02X",  color.GetR(), color.GetG(), color.GetB());
+	return IsNull(color) ? Null : Format("#%02X%02X%02X",  color.GetR(), color.GetG(), color.GetB());
 }
 
 static int sCharFilterNoDigit(int c)
