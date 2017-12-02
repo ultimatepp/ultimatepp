@@ -1,212 +1,212 @@
-TOPIC("AK$en-us")
-#include "AK$en-us.tppi"
+TOPIC("AK_en-us")
+#include "AK_en-us.tppi"
 END_TOPIC
 
-TOPIC("AnimatedClip$en-us")
-#include "AnimatedClip$en-us.tppi"
+TOPIC("AnimatedClip_en-us")
+#include "AnimatedClip_en-us.tppi"
 END_TOPIC
 
-TOPIC("ArrayCtrl$en-us")
-#include "ArrayCtrl$en-us.tppi"
+TOPIC("ArrayCtrlEdits_en-us")
+#include "ArrayCtrlEdits_en-us.tppi"
 END_TOPIC
 
-TOPIC("ArrayCtrlEdits$en-us")
-#include "ArrayCtrlEdits$en-us.tppi"
+TOPIC("ArrayCtrl_en-us")
+#include "ArrayCtrl_en-us.tppi"
 END_TOPIC
 
-TOPIC("CallbackArgTarget$en-us")
-#include "CallbackArgTarget$en-us.tppi"
+TOPIC("CallbackArgTarget_en-us")
+#include "CallbackArgTarget_en-us.tppi"
 END_TOPIC
 
-TOPIC("Chameleon$en-us")
-#include "Chameleon$en-us.tppi"
+TOPIC("Chameleon_en-us")
+#include "Chameleon_en-us.tppi"
 END_TOPIC
 
-TOPIC("ColumnList$en-us")
-#include "ColumnList$en-us.tppi"
+TOPIC("ColumnList_en-us")
+#include "ColumnList_en-us.tppi"
 END_TOPIC
 
-TOPIC("CtrlRetriever$en-us")
-#include "CtrlRetriever$en-us.tppi"
+TOPIC("CtrlRetriever_en-us")
+#include "CtrlRetriever_en-us.tppi"
 END_TOPIC
 
-TOPIC("DynamicDlg$en-us")
-#include "DynamicDlg$en-us.tppi"
+TOPIC("DynamicDlg_en-us")
+#include "DynamicDlg_en-us.tppi"
 END_TOPIC
 
-TOPIC("Format$en-us")
-#include "Format$en-us.tppi"
+TOPIC("Format_en-us")
+#include "Format_en-us.tppi"
 END_TOPIC
 
-TOPIC("Frame$en-us")
-#include "Frame$en-us.tppi"
+TOPIC("Frame_en-us")
+#include "Frame_en-us.tppi"
 END_TOPIC
 
-TOPIC("GuiMT$en-us")
-#include "GuiMT$en-us.tppi"
+TOPIC("GuiMT_en-us")
+#include "GuiMT_en-us.tppi"
 END_TOPIC
 
-TOPIC("ImageDraw$en-us")
-#include "ImageDraw$en-us.tppi"
+TOPIC("ImageDraw_en-us")
+#include "ImageDraw_en-us.tppi"
 END_TOPIC
 
-TOPIC("OpenGL$en-us")
-#include "OpenGL$en-us.tppi"
+TOPIC("OpenGL_en-us")
+#include "OpenGL_en-us.tppi"
 END_TOPIC
 
-TOPIC("Paint$en-us")
-#include "Paint$en-us.tppi"
+TOPIC("Paint_en-us")
+#include "Paint_en-us.tppi"
 END_TOPIC
 
-TOPIC("Ptr$en-us")
-#include "Ptr$en-us.tppi"
+TOPIC("Ptr_en-us")
+#include "Ptr_en-us.tppi"
 END_TOPIC
 
-TOPIC("Qtf$en-us")
-#include "Qtf$en-us.tppi"
+TOPIC("QtfDrawing_en-us")
+#include "QtfDrawing_en-us.tppi"
 END_TOPIC
 
-TOPIC("QtfDrawing$en-us")
-#include "QtfDrawing$en-us.tppi"
+TOPIC("Qtf_en-us")
+#include "Qtf_en-us.tppi"
 END_TOPIC
 
-TOPIC("RectTracker$en-us")
-#include "RectTracker$en-us.tppi"
+TOPIC("RectTracker_en-us")
+#include "RectTracker_en-us.tppi"
 END_TOPIC
 
-TOPIC("RegExp$en-us")
-#include "RegExp$en-us.tppi"
+TOPIC("RegExp_en-us")
+#include "RegExp_en-us.tppi"
 END_TOPIC
 
-TOPIC("Reports$en-us")
-#include "Reports$en-us.tppi"
+TOPIC("Reports_en-us")
+#include "Reports_en-us.tppi"
 END_TOPIC
 
-TOPIC("RichTextObject$en-us")
-#include "RichTextObject$en-us.tppi"
+TOPIC("RichTextObject_en-us")
+#include "RichTextObject_en-us.tppi"
 END_TOPIC
 
-TOPIC("SQL_Sqlite3$en-us")
-#include "SQL_Sqlite3$en-us.tppi"
+TOPIC("SQL_Sqlite3_en-us")
+#include "SQL_Sqlite3_en-us.tppi"
 END_TOPIC
 
-TOPIC("ScrollBar$en-us")
-#include "ScrollBar$en-us.tppi"
+TOPIC("ScrollBar_en-us")
+#include "ScrollBar_en-us.tppi"
 END_TOPIC
 
-TOPIC("ScrollView$en-us")
-#include "ScrollView$en-us.tppi"
+TOPIC("ScrollView_en-us")
+#include "ScrollView_en-us.tppi"
 END_TOPIC
 
-TOPIC("Serialize$en-us")
-#include "Serialize$en-us.tppi"
+TOPIC("Serialize_en-us")
+#include "Serialize_en-us.tppi"
 END_TOPIC
 
-TOPIC("Slider$en-us")
-#include "Slider$en-us.tppi"
+TOPIC("SliderProgressInd_en-us")
+#include "SliderProgressInd_en-us.tppi"
 END_TOPIC
 
-TOPIC("SliderProgressInd$en-us")
-#include "SliderProgressInd$en-us.tppi"
+TOPIC("Slider_en-us")
+#include "Slider_en-us.tppi"
 END_TOPIC
 
-TOPIC("Splitter$en-us")
-#include "Splitter$en-us.tppi"
+TOPIC("SplitterFrame_en-us")
+#include "SplitterFrame_en-us.tppi"
 END_TOPIC
 
-TOPIC("SplitterFrame$en-us")
-#include "SplitterFrame$en-us.tppi"
+TOPIC("Splitter_en-us")
+#include "Splitter_en-us.tppi"
 END_TOPIC
 
-TOPIC("SqlArray$en-us")
-#include "SqlArray$en-us.tppi"
+TOPIC("SqlArray_en-us")
+#include "SqlArray_en-us.tppi"
 END_TOPIC
 
-TOPIC("SqlCtrls$en-us")
-#include "SqlCtrls$en-us.tppi"
+TOPIC("SqlCtrls_en-us")
+#include "SqlCtrls_en-us.tppi"
 END_TOPIC
 
-TOPIC("StatusBar$en-us")
-#include "StatusBar$en-us.tppi"
+TOPIC("StatusBar_en-us")
+#include "StatusBar_en-us.tppi"
 END_TOPIC
 
-TOPIC("TabDlg$en-us")
-#include "TabDlg$en-us.tppi"
+TOPIC("TabDlg_en-us")
+#include "TabDlg_en-us.tppi"
 END_TOPIC
 
-TOPIC("Timing$en-us")
-#include "Timing$en-us.tppi"
+TOPIC("Timing_en-us")
+#include "Timing_en-us.tppi"
 END_TOPIC
 
-TOPIC("Topic$en-us")
-#include "Topic$en-us.tppi"
+TOPIC("Topic_en-us")
+#include "Topic_en-us.tppi"
 END_TOPIC
 
-TOPIC("TreeCtrl$en-us")
-#include "TreeCtrl$en-us.tppi"
+TOPIC("TreeCtrl_en-us")
+#include "TreeCtrl_en-us.tppi"
 END_TOPIC
 
-TOPIC("VirtualArray$en-us")
-#include "VirtualArray$en-us.tppi"
+TOPIC("VirtualArray_en-us")
+#include "VirtualArray_en-us.tppi"
 END_TOPIC
 
-TOPIC("WebWord$en-us")
-#include "WebWord$en-us.tppi"
+TOPIC("WebWord_en-us")
+#include "WebWord_en-us.tppi"
 END_TOPIC
 
-TOPIC("XML$en-us")
-#include "XML$en-us.tppi"
+TOPIC("XML_en-us")
+#include "XML_en-us.tppi"
 END_TOPIC
 
-TOPIC("callback$en-us")
-#include "callback$en-us.tppi"
+TOPIC("callback_en-us")
+#include "callback_en-us.tppi"
 END_TOPIC
 
-TOPIC("convert$en-us")
-#include "convert$en-us.tppi"
+TOPIC("convert_en-us")
+#include "convert_en-us.tppi"
 END_TOPIC
 
-TOPIC("cparser$en-us")
-#include "cparser$en-us.tppi"
+TOPIC("cparser_en-us")
+#include "cparser_en-us.tppi"
 END_TOPIC
 
-TOPIC("ctrlpos$en-us")
-#include "ctrlpos$en-us.tppi"
+TOPIC("ctrlpos_en-us")
+#include "ctrlpos_en-us.tppi"
 END_TOPIC
 
-TOPIC("display$en-us")
-#include "display$en-us.tppi"
+TOPIC("display_en-us")
+#include "display_en-us.tppi"
 END_TOPIC
 
-TOPIC("draw$en-us")
-#include "draw$en-us.tppi"
+TOPIC("draw_en-us")
+#include "draw_en-us.tppi"
 END_TOPIC
 
-TOPIC("drawing$en-us")
-#include "drawing$en-us.tppi"
+TOPIC("drawing_en-us")
+#include "drawing_en-us.tppi"
 END_TOPIC
 
-TOPIC("events$en-us")
-#include "events$en-us.tppi"
+TOPIC("events_en-us")
+#include "events_en-us.tppi"
 END_TOPIC
 
-TOPIC("image$en-us")
-#include "image$en-us.tppi"
+TOPIC("image_en-us")
+#include "image_en-us.tppi"
 END_TOPIC
 
-TOPIC("log$en-us")
-#include "log$en-us.tppi"
+TOPIC("log_en-us")
+#include "log_en-us.tppi"
 END_TOPIC
 
-TOPIC("menu$en-us")
-#include "menu$en-us.tppi"
+TOPIC("menu_en-us")
+#include "menu_en-us.tppi"
 END_TOPIC
 
-TOPIC("uscctrl$en-us")
-#include "uscctrl$en-us.tppi"
+TOPIC("uscctrl_en-us")
+#include "uscctrl_en-us.tppi"
 END_TOPIC
 
-TOPIC("value$en-us")
-#include "value$en-us.tppi"
+TOPIC("value_en-us")
+#include "value_en-us.tppi"
 END_TOPIC
 

@@ -1,68 +1,68 @@
-TOPIC("602$en-us")
-#include "602$en-us.tppi"
+TOPIC("602_en-us")
+#include "602_en-us.tppi"
 END_TOPIC
 
-TOPIC("602long$en-us")
-#include "602long$en-us.tppi"
+TOPIC("602long_en-us")
+#include "602long_en-us.tppi"
 END_TOPIC
 
-TOPIC("CallbackExample$en-us")
-#include "CallbackExample$en-us.tppi"
+TOPIC("CallbackExample_en-us")
+#include "CallbackExample_en-us.tppi"
 END_TOPIC
 
-TOPIC("Core$en-us")
-#include "Core$en-us.tppi"
+TOPIC("Core_en-us")
+#include "Core_en-us.tppi"
 END_TOPIC
 
-TOPIC("IDE$en-us")
-#include "IDE$en-us.tppi"
+TOPIC("IDE_en-us")
+#include "IDE_en-us.tppi"
 END_TOPIC
 
-TOPIC("IDEoverview$en-us")
-#include "IDEoverview$en-us.tppi"
+TOPIC("IDEoverview_en-us")
+#include "IDEoverview_en-us.tppi"
 END_TOPIC
 
-TOPIC("Menu$en-us")
-#include "Menu$en-us.tppi"
+TOPIC("Menu_en-us")
+#include "Menu_en-us.tppi"
 END_TOPIC
 
-TOPIC("article$en-us")
-#include "article$en-us.tppi"
+TOPIC("article2_en-us")
+#include "article2_en-us.tppi"
 END_TOPIC
 
-TOPIC("article2$en-us")
-#include "article2$en-us.tppi"
+TOPIC("article_en-us")
+#include "article_en-us.tppi"
 END_TOPIC
 
-TOPIC("blitz$en-us")
-#include "blitz$en-us.tppi"
+TOPIC("blitz_en-us")
+#include "blitz_en-us.tppi"
 END_TOPIC
 
-TOPIC("crawler$en-us")
-#include "crawler$en-us.tppi"
+TOPIC("crawler_en-us")
+#include "crawler_en-us.tppi"
 END_TOPIC
 
-TOPIC("daniel$en-us")
-#include "daniel$en-us.tppi"
+TOPIC("daniel_en-us")
+#include "daniel_en-us.tppi"
 END_TOPIC
 
-TOPIC("roadmap$en-us")
-#include "roadmap$en-us.tppi"
+TOPIC("roadmap_en-us")
+#include "roadmap_en-us.tppi"
 END_TOPIC
 
-TOPIC("trc_commentary$en-us")
-#include "trc_commentary$en-us.tppi"
+TOPIC("trc_commentary_en-us")
+#include "trc_commentary_en-us.tppi"
 END_TOPIC
 
-TOPIC("upp$en-us")
-#include "upp$en-us.tppi"
+TOPIC("upp_en-us")
+#include "upp_en-us.tppi"
 END_TOPIC
 
-TOPIC("uppheap$en-us")
-#include "uppheap$en-us.tppi"
+TOPIC("uppheap_en-us")
+#include "uppheap_en-us.tppi"
 END_TOPIC
 
-TOPIC("uppp$en-us")
-#include "uppp$en-us.tppi"
+TOPIC("uppp_en-us")
+#include "uppp_en-us.tppi"
 END_TOPIC
 
