@@ -1,32 +1,32 @@
-TOPIC("svn$en-us")
-#include "svn$en-us.tppi"
+TOPIC("svn_en-us")
+#include "svn_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnbazaar$en-us")
-#include "svnbazaar$en-us.tppi"
+TOPIC("svnbazaar_en-us")
+#include "svnbazaar_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnmain$en-us")
-#include "svnmain$en-us.tppi"
+TOPIC("svnmain_en-us")
+#include "svnmain_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnmajor$en-us")
-#include "svnmajor$en-us.tppi"
+TOPIC("svnmajor_en-us")
+#include "svnmajor_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnmajorbazaar$en-us")
-#include "svnmajorbazaar$en-us.tppi"
+TOPIC("svnmajorbazaar_en-us")
+#include "svnmajorbazaar_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnmajormain$en-us")
-#include "svnmajormain$en-us.tppi"
+TOPIC("svnmajormain_en-us")
+#include "svnmajormain_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnmajorweb$en-us")
-#include "svnmajorweb$en-us.tppi"
+TOPIC("svnmajorweb_en-us")
+#include "svnmajorweb_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnweb$en-us")
-#include "svnweb$en-us.tppi"
+TOPIC("svnweb_en-us")
+#include "svnweb_en-us.tppi"
 END_TOPIC
 

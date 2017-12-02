@@ -1,120 +1,120 @@
-TOPIC("AddressBook$en-us")
-#include "AddressBook$en-us.tppi"
+TOPIC("AddressBookWeb_en-us")
+#include "AddressBookWeb_en-us.tppi"
 END_TOPIC
 
-TOPIC("AddressBookWeb$en-us")
-#include "AddressBookWeb$en-us.tppi"
+TOPIC("AddressBook_en-us")
+#include "AddressBook_en-us.tppi"
 END_TOPIC
 
-TOPIC("AndroidMath$en-us")
-#include "AndroidMath$en-us.tppi"
+TOPIC("AndroidMathUtility_en-us")
+#include "AndroidMathUtility_en-us.tppi"
 END_TOPIC
 
-TOPIC("AndroidMathUtility$en-us")
-#include "AndroidMathUtility$en-us.tppi"
+TOPIC("AndroidMath_en-us")
+#include "AndroidMath_en-us.tppi"
 END_TOPIC
 
-TOPIC("AnimatedHello$en-us")
-#include "AnimatedHello$en-us.tppi"
+TOPIC("AnimatedHello_en-us")
+#include "AnimatedHello_en-us.tppi"
 END_TOPIC
 
-TOPIC("Bombs$en-us")
-#include "Bombs$en-us.tppi"
+TOPIC("Bombs_en-us")
+#include "Bombs_en-us.tppi"
 END_TOPIC
 
-TOPIC("Box2DExample$en-us")
-#include "Box2DExample$en-us.tppi"
+TOPIC("Box2DExample_en-us")
+#include "Box2DExample_en-us.tppi"
 END_TOPIC
 
-TOPIC("Button$en-us")
-#include "Button$en-us.tppi"
+TOPIC("Button_en-us")
+#include "Button_en-us.tppi"
 END_TOPIC
 
-TOPIC("CodeMetric$en-us")
-#include "CodeMetric$en-us.tppi"
+TOPIC("CodeMetric_en-us")
+#include "CodeMetric_en-us.tppi"
 END_TOPIC
 
-TOPIC("Color$en-us")
-#include "Color$en-us.tppi"
+TOPIC("Color_en-us")
+#include "Color_en-us.tppi"
 END_TOPIC
 
-TOPIC("CompDir$en-us")
-#include "CompDir$en-us.tppi"
+TOPIC("CompDir_en-us")
+#include "CompDir_en-us.tppi"
 END_TOPIC
 
-TOPIC("Converter$en-us")
-#include "Converter$en-us.tppi"
+TOPIC("Converter_en-us")
+#include "Converter_en-us.tppi"
 END_TOPIC
 
-TOPIC("Days$en-us")
-#include "Days$en-us.tppi"
+TOPIC("Days_en-us")
+#include "Days_en-us.tppi"
 END_TOPIC
 
-TOPIC("EyeCare$en-us")
-#include "EyeCare$en-us.tppi"
+TOPIC("EyeCare_en-us")
+#include "EyeCare_en-us.tppi"
 END_TOPIC
 
-TOPIC("FnGraph$en-us")
-#include "FnGraph$en-us.tppi"
+TOPIC("FnGraph_en-us")
+#include "FnGraph_en-us.tppi"
 END_TOPIC
 
-TOPIC("GeoFun$en-us")
-#include "GeoFun$en-us.tppi"
+TOPIC("GeoFun_en-us")
+#include "GeoFun_en-us.tppi"
 END_TOPIC
 
-TOPIC("GoogleMaps$en-us")
-#include "GoogleMaps$en-us.tppi"
+TOPIC("GoogleMaps_en-us")
+#include "GoogleMaps_en-us.tppi"
 END_TOPIC
 
-TOPIC("HelloWorld$en-us")
-#include "HelloWorld$en-us.tppi"
+TOPIC("HelloWorld_en-us")
+#include "HelloWorld_en-us.tppi"
 END_TOPIC
 
-TOPIC("HomeBudget$en-us")
-#include "HomeBudget$en-us.tppi"
+TOPIC("HomeBudget_en-us")
+#include "HomeBudget_en-us.tppi"
 END_TOPIC
 
-TOPIC("ImageView$en-us")
-#include "ImageView$en-us.tppi"
+TOPIC("ImageView_en-us")
+#include "ImageView_en-us.tppi"
 END_TOPIC
 
-TOPIC("PainterExamples$en-us")
-#include "PainterExamples$en-us.tppi"
+TOPIC("PainterExamples_en-us")
+#include "PainterExamples_en-us.tppi"
 END_TOPIC
 
-TOPIC("Puzzle$en-us")
-#include "Puzzle$en-us.tppi"
+TOPIC("Puzzle_en-us")
+#include "Puzzle_en-us.tppi"
 END_TOPIC
 
-TOPIC("SDLExample$en-us")
-#include "SDLExample$en-us.tppi"
+TOPIC("SDLExample_en-us")
+#include "SDLExample_en-us.tppi"
 END_TOPIC
 
-TOPIC("SQLApp$en-us")
-#include "SQLApp$en-us.tppi"
+TOPIC("SQLApp_en-us")
+#include "SQLApp_en-us.tppi"
 END_TOPIC
 
-TOPIC("SVGView$en-us")
-#include "SVGView$en-us.tppi"
+TOPIC("SVGView_en-us")
+#include "SVGView_en-us.tppi"
 END_TOPIC
 
-TOPIC("ScatterCtrl_Demo$en-us")
-#include "ScatterCtrl_Demo$en-us.tppi"
+TOPIC("ScatterCtrl_Demo_en-us")
+#include "ScatterCtrl_Demo_en-us.tppi"
 END_TOPIC
 
-TOPIC("Scribble$en-us")
-#include "Scribble$en-us.tppi"
+TOPIC("Scribble_en-us")
+#include "Scribble_en-us.tppi"
 END_TOPIC
 
-TOPIC("UWord$en-us")
-#include "UWord$en-us.tppi"
+TOPIC("UWord_en-us")
+#include "UWord_en-us.tppi"
 END_TOPIC
 
-TOPIC("XmlView$en-us")
-#include "XmlView$en-us.tppi"
+TOPIC("XmlView_en-us")
+#include "XmlView_en-us.tppi"
 END_TOPIC
 
-TOPIC("clock$en-us")
-#include "clock$en-us.tppi"
+TOPIC("clock_en-us")
+#include "clock_en-us.tppi"
 END_TOPIC
 

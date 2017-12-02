@@ -1,80 +1,80 @@
-TOPIC("application$en-us")
-#include "application$en-us.tppi"
+TOPIC("application2011_en-us")
+#include "application2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("application2011$en-us")
-#include "application2011$en-us.tppi"
+TOPIC("application_en-us")
+#include "application_en-us.tppi"
 END_TOPIC
 
-TOPIC("application_template2011$en-us")
-#include "application_template2011$en-us.tppi"
+TOPIC("application_template2011_en-us")
+#include "application_template2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("experience2010$en-us")
-#include "experience2010$en-us.tppi"
+TOPIC("experience2010_en-us")
+#include "experience2010_en-us.tppi"
 END_TOPIC
 
-TOPIC("gsoc2010$en-us")
-#include "gsoc2010$en-us.tppi"
+TOPIC("gsoc2010_en-us")
+#include "gsoc2010_en-us.tppi"
 END_TOPIC
 
-TOPIC("gsoc2011$en-us")
-#include "gsoc2011$en-us.tppi"
+TOPIC("gsoc2011_en-us")
+#include "gsoc2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("gsoc2014$en-us")
-#include "gsoc2014$en-us.tppi"
+TOPIC("gsoc2014_en-us")
+#include "gsoc2014_en-us.tppi"
 END_TOPIC
 
-TOPIC("ideas2010$en-us")
-#include "ideas2010$en-us.tppi"
+TOPIC("ideas2010_en-us")
+#include "ideas2010_en-us.tppi"
 END_TOPIC
 
-TOPIC("ideas2011$en-us")
-#include "ideas2011$en-us.tppi"
+TOPIC("ideas2011_en-us")
+#include "ideas2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("ideas2014$en-us")
-#include "ideas2014$en-us.tppi"
+TOPIC("ideas2014_en-us")
+#include "ideas2014_en-us.tppi"
 END_TOPIC
 
-TOPIC("manual2010$en-us")
-#include "manual2010$en-us.tppi"
+TOPIC("manual2010_en-us")
+#include "manual2010_en-us.tppi"
 END_TOPIC
 
-TOPIC("manual2011$en-us")
-#include "manual2011$en-us.tppi"
+TOPIC("manual2011_en-us")
+#include "manual2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("manual2014$en-us")
-#include "manual2014$en-us.tppi"
+TOPIC("manual2014_en-us")
+#include "manual2014_en-us.tppi"
 END_TOPIC
 
-TOPIC("mentor2011$en-us")
-#include "mentor2011$en-us.tppi"
+TOPIC("mentor2011_en-us")
+#include "mentor2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("mentor2014$en-us")
-#include "mentor2014$en-us.tppi"
+TOPIC("mentor2014_en-us")
+#include "mentor2014_en-us.tppi"
 END_TOPIC
 
-TOPIC("student2011$en-us")
-#include "student2011$en-us.tppi"
+TOPIC("student2011_en-us")
+#include "student2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("student2014$en-us")
-#include "student2014$en-us.tppi"
+TOPIC("student2014_en-us")
+#include "student2014_en-us.tppi"
 END_TOPIC
 
-TOPIC("student_application2011$en-us")
-#include "student_application2011$en-us.tppi"
+TOPIC("student_application2011_en-us")
+#include "student_application2011_en-us.tppi"
 END_TOPIC
 
-TOPIC("student_application2014$en-us")
-#include "student_application2014$en-us.tppi"
+TOPIC("student_application2014_en-us")
+#include "student_application2014_en-us.tppi"
 END_TOPIC
 
-TOPIC("track2011$en-us")
-#include "track2011$en-us.tppi"
+TOPIC("track2011_en-us")
+#include "track2011_en-us.tppi"
 END_TOPIC
 
