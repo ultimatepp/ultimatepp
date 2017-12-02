@@ -645,9 +645,6 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 		inclist << " -I" << includes[i];
 
 	makefile << "\n"
-		"Dollar := $$\n"
-		"Dollar != if [ \"$(Dollar)\" = \"$$\" ]; then echo '$$$$'; else echo '$$$$$$$$' ; fi\n"
-		"\n"
 		"UPPOUT = " << (exporting ? "_out/" : GetMakePath(AdjustMakePath(host->GetHostPath(AppendFileName(uppout, ""))), win32)) << "\n"
 		"CINC   = " << inclist << "\n"
 		"Macro  = ";
