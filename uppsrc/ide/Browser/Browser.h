@@ -247,7 +247,7 @@ struct StyleDlg;
 template <class T>
 struct TopicDlg : T {
 	String GetName() const {
-		return (String)~T::topic + "@" + ToLower(LNGAsText(~T::lang)) + ".tpp";
+		return (String)~T::topic + "_" + ToLower(LNGAsText(~T::lang)) + ".tpp";
 	}
 
 	TopicDlg(const char *title) {

@@ -5,7 +5,7 @@ void TopicEditor::ListTemplates(Vector<String>& path, Vector<String>& name)
 	Vector<String> ud = GetUppDirs();
 	for(int i = 0; i < ud.GetCount(); i++) {
 		String nest = ud[i];
-		String tmpl = AppendFileName(nest, "$.tpp");
+		String tmpl = AppendFileName(nest, "_.tpp");
 		FindFile ff(AppendFileName(tmpl, "*.tpp"));
 		while(ff) {
 			if(ff.IsFile()) {
