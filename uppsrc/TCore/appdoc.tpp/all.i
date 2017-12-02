@@ -1,63 +1,63 @@
-TOPIC("CalcNode$cs-cz")
-#include "CalcNode$cs-cz.tpp"
+TOPIC("CalcNode_cs-cz")
+#include "CalcNode_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcNode$en-us")
-#include "CalcNode$en-us.tpp"
+TOPIC("CalcNode_en-us")
+#include "CalcNode_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcArith$cs-cz")
-#include "CalcArith$cs-cz.tpp"
+TOPIC("CalcArith_cs-cz")
+#include "CalcArith_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcArray$cs-cz")
-#include "CalcArray$cs-cz.tpp"
+TOPIC("CalcArray_cs-cz")
+#include "CalcArray_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcTrans$cs-cz")
-#include "CalcTrans$cs-cz.tpp"
+TOPIC("CalcTrans_cs-cz")
+#include "CalcTrans_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcText$cs-cz")
-#include "CalcText$cs-cz.tpp"
+TOPIC("CalcText_cs-cz")
+#include "CalcText_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcDate$cs-cz")
-#include "CalcDate$cs-cz.tpp"
+TOPIC("CalcDate_cs-cz")
+#include "CalcDate_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcLog$cs-cz")
-#include "CalcLog$cs-cz.tpp"
+TOPIC("CalcLog_cs-cz")
+#include "CalcLog_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcSys$cs-cz")
-#include "CalcSys$cs-cz.tpp"
+TOPIC("CalcSys_cs-cz")
+#include "CalcSys_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcArith$en-us")
-#include "CalcArith$en-us.tpp"
+TOPIC("CalcArith_en-us")
+#include "CalcArith_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcArray$en-us")
-#include "CalcArray$en-us.tpp"
+TOPIC("CalcArray_en-us")
+#include "CalcArray_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcDate$en-us")
-#include "CalcDate$en-us.tpp"
+TOPIC("CalcDate_en-us")
+#include "CalcDate_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcLog$en-us")
-#include "CalcLog$en-us.tpp"
+TOPIC("CalcLog_en-us")
+#include "CalcLog_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcSys$en-us")
-#include "CalcSys$en-us.tpp"
+TOPIC("CalcSys_en-us")
+#include "CalcSys_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcText$en-us")
-#include "CalcText$en-us.tpp"
+TOPIC("CalcText_en-us")
+#include "CalcText_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcTrans$en-us")
-#include "CalcTrans$en-us.tpp"
+TOPIC("CalcTrans_en-us")
+#include "CalcTrans_en-us.tpp"
 END_TOPIC

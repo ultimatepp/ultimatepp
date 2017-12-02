@@ -1,56 +1,56 @@
-TOPIC("CArray$en-us")
-#include "CArray$en-us.tppi"
+TOPIC("CArray_en-us")
+#include "CArray_en-us.tppi"
 END_TOPIC
 
-TOPIC("DataSource$en-us")
-#include "DataSource$en-us.tppi"
+TOPIC("DataSource_en-us")
+#include "DataSource_en-us.tppi"
 END_TOPIC
 
-TOPIC("EvalExpr$en-us")
-#include "EvalExpr$en-us.tppi"
+TOPIC("EvalExpr_en-us")
+#include "EvalExpr_en-us.tppi"
 END_TOPIC
 
-TOPIC("ExplicitEquation$en-us")
-#include "ExplicitEquation$en-us.tppi"
+TOPIC("ExplicitEquation_en-us")
+#include "ExplicitEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("ExponentialEquation$en-us")
-#include "ExponentialEquation$en-us.tppi"
+TOPIC("ExponentialEquation_en-us")
+#include "ExponentialEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("FourierEquation$en-us")
-#include "FourierEquation$en-us.tppi"
+TOPIC("FourierEquation_en-us")
+#include "FourierEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("LinearEquation$en-us")
-#include "LinearEquation$en-us.tppi"
+TOPIC("LinearEquation_en-us")
+#include "LinearEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("PolynomialEquation$en-us")
-#include "PolynomialEquation$en-us.tppi"
+TOPIC("PolynomialEquation_en-us")
+#include "PolynomialEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("Rational1Equation$en-us")
-#include "Rational1Equation$en-us.tppi"
+TOPIC("Rational1Equation_en-us")
+#include "Rational1Equation_en-us.tppi"
 END_TOPIC
 
-TOPIC("RealExponentEquation$en-us")
-#include "RealExponentEquation$en-us.tppi"
+TOPIC("RealExponentEquation_en-us")
+#include "RealExponentEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("ScatterDraw$en-us")
-#include "ScatterDraw$en-us.tppi"
+TOPIC("ScatterDraw_en-us")
+#include "ScatterDraw_en-us.tppi"
 END_TOPIC
 
-TOPIC("SinEquation$en-us")
-#include "SinEquation$en-us.tppi"
+TOPIC("SinEquation_en-us")
+#include "SinEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("UserEquation$en-us")
-#include "UserEquation$en-us.tppi"
+TOPIC("UserEquation_en-us")
+#include "UserEquation_en-us.tppi"
 END_TOPIC
 
-TOPIC("VectorY$en-us")
-#include "VectorY$en-us.tppi"
+TOPIC("VectorY_en-us")
+#include "VectorY_en-us.tppi"
 END_TOPIC
 

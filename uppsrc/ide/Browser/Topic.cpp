@@ -19,8 +19,18 @@ bool LoadTopics(FileList& topic, const String& grouppath)
 	bool renamed = false;
 	for(int pass = 0; pass < 2; pass++) {
 		topic.Clear();
-		FindFile ff(AppendFileName(grouppath, "*.tpp"));
+		FindFile ff(AppendFileName(grouppath, "*.*"));
 		while(ff) {
+			if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tppi") {
+				String n = ff.GetName();
+				int q = n.ReverseFind('$');
+				if(q >= 0 && q > n.GetLength() - 12) {
+					String nn = n;
+					n.Set(q, '_');
+					FileMove(AppendFileName(grouppath, nn), AppendFileName(grouppath, n));
+					renamed = true;
+				}
+			}
 			if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tpp") {
 				String n = ff.GetName();
 				int q = n.ReverseFind('$');

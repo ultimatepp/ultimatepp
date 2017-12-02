@@ -1,12 +1,12 @@
-TOPIC("Data$en-us")
-#include "Data$en-us.tppi"
+TOPIC("Data_en-us")
+#include "Data_en-us.tppi"
 END_TOPIC
 
-TOPIC("Process$en-us")
-#include "Process$en-us.tppi"
+TOPIC("Process_en-us")
+#include "Process_en-us.tppi"
 END_TOPIC
 
-TOPIC("Properties$en-us")
-#include "Properties$en-us.tppi"
+TOPIC("Properties_en-us")
+#include "Properties_en-us.tppi"
 END_TOPIC
 

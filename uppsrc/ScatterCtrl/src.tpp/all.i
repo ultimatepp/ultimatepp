@@ -1,8 +1,8 @@
-TOPIC("MouseBehavior$en-us")
-#include "MouseBehavior$en-us.tppi"
+TOPIC("MouseBehavior_en-us")
+#include "MouseBehavior_en-us.tppi"
 END_TOPIC
 
-TOPIC("ScatterCtrl$en-us")
-#include "ScatterCtrl$en-us.tppi"
+TOPIC("ScatterCtrl_en-us")
+#include "ScatterCtrl_en-us.tppi"
 END_TOPIC
 
