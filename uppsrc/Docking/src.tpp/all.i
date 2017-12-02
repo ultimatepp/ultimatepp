@@ -1,12 +1,12 @@
-TOPIC("DockableCtrl$en-us")
-#include "DockableCtrl$en-us.tpp"
+TOPIC("DockableCtrl_en-us")
+#include "DockableCtrl_en-us.tpp"
 END_TOPIC
 
-TOPIC("DockWindow$en-us")
-#include "DockWindow$en-us.tpp"
+TOPIC("DockWindow_en-us")
+#include "DockWindow_en-us.tpp"
 END_TOPIC
 
-TOPIC("Utility$en-us")
-#include "Utility$en-us.tpp"
+TOPIC("Utility_en-us")
+#include "Utility_en-us.tpp"
 END_TOPIC
 

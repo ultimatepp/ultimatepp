@@ -1,12 +1,12 @@
-TOPIC("LegendTable$en-us")
-#include "LegendTable$en-us.tppi"
+TOPIC("LegendTable_en-us")
+#include "LegendTable_en-us.tppi"
 END_TOPIC
 
-TOPIC("Overview$en-us")
-#include "Overview$en-us.tppi"
+TOPIC("Overview_en-us")
+#include "Overview_en-us.tppi"
 END_TOPIC
 
-TOPIC("Units$en-us")
-#include "Units$en-us.tppi"
+TOPIC("Units_en-us")
+#include "Units_en-us.tppi"
 END_TOPIC
 

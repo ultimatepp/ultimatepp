@@ -1,11 +1,11 @@
-TOPIC("DlgCalc$cs-cz")
-#include "DlgCalc$cs-cz.tpp"
+TOPIC("DlgCalc_cs-cz")
+#include "DlgCalc_cs-cz.tpp"
 END_TOPIC
 
-TOPIC("CalcGuiType$en-us")
-#include "CalcGuiType$en-us.tpp"
+TOPIC("CalcGuiType_en-us")
+#include "CalcGuiType_en-us.tpp"
 END_TOPIC
 
-TOPIC("CalcGuiType$cs-cz")
-#include "CalcGuiType$cs-cz.tpp"
+TOPIC("CalcGuiType_cs-cz")
+#include "CalcGuiType_cs-cz.tpp"
 END_TOPIC
