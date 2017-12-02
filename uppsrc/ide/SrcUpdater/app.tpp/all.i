@@ -1,32 +1,32 @@
-TOPIC("InstallWizard$en-us")
-#include "InstallWizard$en-us.tppi"
+TOPIC("InstallWizard_en-us")
+#include "InstallWizard_en-us.tppi"
 END_TOPIC
 
-TOPIC("InstallWizard$ru-ru")
-#include "InstallWizard$ru-ru.tppi"
+TOPIC("InstallWizard_ru-ru")
+#include "InstallWizard_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("LinuxInstallGuide$en-us")
-#include "LinuxInstallGuide$en-us.tppi"
+TOPIC("LinuxInstallGuide_en-us")
+#include "LinuxInstallGuide_en-us.tppi"
 END_TOPIC
 
-TOPIC("LinuxInstallGuide$ru-ru")
-#include "LinuxInstallGuide$ru-ru.tppi"
+TOPIC("LinuxInstallGuide_ru-ru")
+#include "LinuxInstallGuide_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("Uninstall$en-us")
-#include "Uninstall$en-us.tppi"
+TOPIC("Uninstall_en-us")
+#include "Uninstall_en-us.tppi"
 END_TOPIC
 
-TOPIC("Uninstall$ru-ru")
-#include "Uninstall$ru-ru.tppi"
+TOPIC("Uninstall_ru-ru")
+#include "Uninstall_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("Updating$en-us")
-#include "Updating$en-us.tppi"
+TOPIC("Updating_en-us")
+#include "Updating_en-us.tppi"
 END_TOPIC
 
-TOPIC("Updating$ru-ru")
-#include "Updating$ru-ru.tppi"
+TOPIC("Updating_ru-ru")
+#include "Updating_ru-ru.tppi"
 END_TOPIC
 

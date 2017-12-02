@@ -1,4 +1,4 @@
-TOPIC("PDBExpressions$en-us")
-#include "PDBExpressions$en-us.tppi"
+TOPIC("PDBExpressions_en-us")
+#include "PDBExpressions_en-us.tppi"
 END_TOPIC
 

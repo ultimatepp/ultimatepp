@@ -1,144 +1,144 @@
-TOPIC("About$en-us")
-#include "About$en-us.tppi"
+TOPIC("About_en-us")
+#include "About_en-us.tppi"
 END_TOPIC
 
-TOPIC("AdvancedReplace$en-us")
-#include "AdvancedReplace$en-us.tppi"
+TOPIC("AdvancedReplace_en-us")
+#include "AdvancedReplace_en-us.tppi"
 END_TOPIC
 
-TOPIC("AndroidBuilder$en-us")
-#include "AndroidBuilder$en-us.tppi"
+TOPIC("AndroidBuilder_en-us")
+#include "AndroidBuilder_en-us.tppi"
 END_TOPIC
 
-TOPIC("Assist$en-us")
-#include "Assist$en-us.tppi"
+TOPIC("Assist_en-us")
+#include "Assist_en-us.tppi"
 END_TOPIC
 
-TOPIC("BSD$en-us")
-#include "BSD$en-us.tppi"
+TOPIC("BSD_en-us")
+#include "BSD_en-us.tppi"
 END_TOPIC
 
-TOPIC("Blitz$en-us")
-#include "Blitz$en-us.tppi"
+TOPIC("Blitz_en-us")
+#include "Blitz_en-us.tppi"
 END_TOPIC
 
-TOPIC("ConfiguringPackagesAssemblies$en-us")
-#include "ConfiguringPackagesAssemblies$en-us.tppi"
+TOPIC("ConfiguringPackagesAssemblies_en-us")
+#include "ConfiguringPackagesAssemblies_en-us.tppi"
 END_TOPIC
 
-TOPIC("Contact$en-us")
-#include "Contact$en-us.tppi"
+TOPIC("Contact_en-us")
+#include "Contact_en-us.tppi"
 END_TOPIC
 
-TOPIC("Cpp$en-us")
-#include "Cpp$en-us.tppi"
+TOPIC("Cpp_en-us")
+#include "Cpp_en-us.tppi"
 END_TOPIC
 
-TOPIC("CrossComp$en-gb")
-#include "CrossComp$en-gb.tppi"
+TOPIC("CrossComp_en-gb")
+#include "CrossComp_en-gb.tppi"
 END_TOPIC
 
-TOPIC("Files$en-us")
-#include "Files$en-us.tppi"
+TOPIC("Files_en-us")
+#include "Files_en-us.tppi"
 END_TOPIC
 
-TOPIC("FindFile$en-us")
-#include "FindFile$en-us.tppi"
+TOPIC("FindFile_en-us")
+#include "FindFile_en-us.tppi"
 END_TOPIC
 
-TOPIC("Flags$en-us")
-#include "Flags$en-us.tppi"
+TOPIC("Flags_en-us")
+#include "Flags_en-us.tppi"
 END_TOPIC
 
-TOPIC("GPL$en-us")
-#include "GPL$en-us.tppi"
+TOPIC("GPL_en-us")
+#include "GPL_en-us.tppi"
 END_TOPIC
 
-TOPIC("GettingStarted$en-us")
-#include "GettingStarted$en-us.tppi"
+TOPIC("GettingStarted_en-us")
+#include "GettingStarted_en-us.tppi"
 END_TOPIC
 
-TOPIC("GettingStarted$ru-ru")
-#include "GettingStarted$ru-ru.tppi"
+TOPIC("GettingStarted_ru-ru")
+#include "GettingStarted_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("IconDes$en-us")
-#include "IconDes$en-us.tppi"
+TOPIC("IconDes_en-us")
+#include "IconDes_en-us.tppi"
 END_TOPIC
 
-TOPIC("IntroductionToUPP$en-us")
-#include "IntroductionToUPP$en-us.tppi"
+TOPIC("IntroductionToUPP_en-us")
+#include "IntroductionToUPP_en-us.tppi"
 END_TOPIC
 
-TOPIC("Keys$en-us")
-#include "Keys$en-us.tppi"
+TOPIC("Keys_en-us")
+#include "Keys_en-us.tppi"
 END_TOPIC
 
-TOPIC("NewProject$en-us")
-#include "NewProject$en-us.tppi"
+TOPIC("NewProject_en-us")
+#include "NewProject_en-us.tppi"
 END_TOPIC
 
-TOPIC("PackageTemplates$en-us")
-#include "PackageTemplates$en-us.tppi"
+TOPIC("PackageTemplates_en-us")
+#include "PackageTemplates_en-us.tppi"
 END_TOPIC
 
-TOPIC("PackagesAssembliesAndNests$en-us")
-#include "PackagesAssembliesAndNests$en-us.tppi"
+TOPIC("PackagesAssembliesAndNests_en-us")
+#include "PackagesAssembliesAndNests_en-us.tppi"
 END_TOPIC
 
-TOPIC("PackagesAssembliesAndNests$ru-ru")
-#include "PackagesAssembliesAndNests$ru-ru.tppi"
+TOPIC("PackagesAssembliesAndNests_ru-ru")
+#include "PackagesAssembliesAndNests_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("Sponsor$en-us")
-#include "Sponsor$en-us.tppi"
+TOPIC("Sponsor_en-us")
+#include "Sponsor_en-us.tppi"
 END_TOPIC
 
-TOPIC("Topic$en-us")
-#include "Topic$en-us.tppi"
+TOPIC("Topic_en-us")
+#include "Topic_en-us.tppi"
 END_TOPIC
 
-TOPIC("cmdline$en-us")
-#include "cmdline$en-us.tppi"
+TOPIC("cmdline_en-us")
+#include "cmdline_en-us.tppi"
 END_TOPIC
 
-TOPIC("esc$en-us")
-#include "esc$en-us.tppi"
+TOPIC("esc_en-us")
+#include "esc_en-us.tppi"
 END_TOPIC
 
-TOPIC("importext$en-us")
-#include "importext$en-us.tppi"
+TOPIC("importext_en-us")
+#include "importext_en-us.tppi"
 END_TOPIC
 
-TOPIC("index$en-us")
-#include "index$en-us.tppi"
+TOPIC("index_en-us")
+#include "index_en-us.tppi"
 END_TOPIC
 
-TOPIC("index$ru-ru")
-#include "index$ru-ru.tppi"
+TOPIC("index_ru-ru")
+#include "index_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("install$en-us")
-#include "install$en-us.tppi"
+TOPIC("install_en-us")
+#include "install_en-us.tppi"
 END_TOPIC
 
-TOPIC("install$ru-ru")
-#include "install$ru-ru.tppi"
+TOPIC("install_ru-ru")
+#include "install_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("macros$en-us")
-#include "macros$en-us.tppi"
+TOPIC("macros_en-us")
+#include "macros_en-us.tppi"
 END_TOPIC
 
-TOPIC("special$en-us")
-#include "special$en-us.tppi"
+TOPIC("special_en-us")
+#include "special_en-us.tppi"
 END_TOPIC
 
-TOPIC("umk$en-us")
-#include "umk$en-us.tppi"
+TOPIC("umk_en-us")
+#include "umk_en-us.tppi"
 END_TOPIC
 
-TOPIC("upp$en-us")
-#include "upp$en-us.tppi"
+TOPIC("upp_en-us")
+#include "upp_en-us.tppi"
 END_TOPIC
 
