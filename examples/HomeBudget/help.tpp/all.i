@@ -1,8 +1,8 @@
-TOPIC("Introduction$pl-pl")
-#include "Introduction$pl-pl.tppi"
+TOPIC("Introduction_pl-pl")
+#include "Introduction_pl-pl.tppi"
 END_TOPIC
 
-TOPIC("T0$pl-pl")
-#include "T0$pl-pl.tppi"
+TOPIC("T0_pl-pl")
+#include "T0_pl-pl.tppi"
 END_TOPIC
 

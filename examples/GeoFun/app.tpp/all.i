@@ -1,20 +1,20 @@
-TOPIC("About$en-us")
-#include "About$en-us.tppi"
+TOPIC("About_en-us")
+#include "About_en-us.tppi"
 END_TOPIC
 
-TOPIC("Help$en-us")
-#include "Help$en-us.tppi"
+TOPIC("HelpCloid_en-us")
+#include "HelpCloid_en-us.tppi"
 END_TOPIC
 
-TOPIC("HelpCloid$en-us")
-#include "HelpCloid$en-us.tppi"
+TOPIC("HelpCycloid_en-us")
+#include "HelpCycloid_en-us.tppi"
 END_TOPIC
 
-TOPIC("HelpCycloid$en-us")
-#include "HelpCycloid$en-us.tppi"
+TOPIC("HelpTrochoid_en-us")
+#include "HelpTrochoid_en-us.tppi"
 END_TOPIC
 
-TOPIC("HelpTrochoid$en-us")
-#include "HelpTrochoid$en-us.tppi"
+TOPIC("Help_en-us")
+#include "Help_en-us.tppi"
 END_TOPIC
 
