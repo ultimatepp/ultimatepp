@@ -388,7 +388,7 @@ bool CheckLicense()
 	Ctrl::ProcessEvents();
 	WithLicenseLayout<TopWindow> d;
 	CtrlLayoutOKCancel(d, "License agreement");
-	d.license = GetTopic("ide/app/BSD$en-us").text;
+	d.license = GetTopic("ide/app/BSD_en-us").text;
 	d.license.Margins(4);
 	d.license.SetZoom(Zoom(Zy(18), 100));
 	d.ActiveFocus(d.license);

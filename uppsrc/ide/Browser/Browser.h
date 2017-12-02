@@ -228,7 +228,7 @@ Vector<String> GatherLabels(const RichText& text);
 String WriteTopic(const char *title, const RichText& text);
 String WriteTopicI(const char *title, const RichText& text);
 
-void LoadTopics(FileList& topic, const String& dir);
+bool LoadTopics(FileList& topic, const String& dir);
 
 TopicLink ParseTopicFilePath(const String& path);
 String    TopicFilePath(const TopicLink& tl);
@@ -247,7 +247,7 @@ struct StyleDlg;
 template <class T>
 struct TopicDlg : T {
 	String GetName() const {
-		return (String)~T::topic + "$" + ToLower(LNGAsText(~T::lang)) + ".tpp";
+		return (String)~T::topic + "@" + ToLower(LNGAsText(~T::lang)) + ".tpp";
 	}
 
 	TopicDlg(const char *title) {
