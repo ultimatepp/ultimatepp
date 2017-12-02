@@ -61,12 +61,12 @@ CONSOLE_APP_MAIN
 			count += src[i & 15].val[0];
 		}
 	}
-	{
+/*	{
 		RTIMING("Barrier read");
 		for(int i = 0; i < N; i++) {
 			count += ReadWithBarrier(src[i & 15].val[0]);
 		}
-	}
+	}*/
 	{
 		static StaticMutex mtx;
 		RTIMING("StaticMutex");

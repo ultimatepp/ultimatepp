@@ -2,9 +2,6 @@ uses
 	Core;
 
 file
-	BenchOps.cpp.mine,
-	BenchOps.cpp.r10063,
-	BenchOps.cpp.r10157,
 	BenchOps.cpp;
 
 mainconfig
