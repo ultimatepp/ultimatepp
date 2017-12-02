@@ -1,8 +1,8 @@
-TOPIC("Splash$ru-ru")
-#include "Splash$ru-ru.tppi"
+TOPIC("Splash_ru-ru")
+#include "Splash_ru-ru.tppi"
 END_TOPIC
 
-TOPIC("Splash$en-us")
-#include "Splash$en-us.tppi"
+TOPIC("Splash_en-us")
+#include "Splash_en-us.tppi"
 END_TOPIC
 

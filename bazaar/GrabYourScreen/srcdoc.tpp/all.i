@@ -1,4 +1,4 @@
-TOPIC("GrabYourScreen$en-us")
-#include "GrabYourScreen$en-us.tppi"
+TOPIC("GrabYourScreen_en-us")
+#include "GrabYourScreen_en-us.tppi"
 END_TOPIC
 

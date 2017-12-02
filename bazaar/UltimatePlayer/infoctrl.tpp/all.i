@@ -1,4 +1,4 @@
-TOPIC("body$en-us")
-#include "body$en-us.tpp"
+TOPIC("body_en-us")
+#include "body_en-us.tpp"
 END_TOPIC
 

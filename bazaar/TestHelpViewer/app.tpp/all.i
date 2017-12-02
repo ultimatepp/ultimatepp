@@ -1,128 +1,128 @@
-TOPIC("Beam2SupporteGenericLoad$it-it")
-#include "Beam2SupporteGenericLoad$it-it.tppi"
+TOPIC("Beam2SupporteGenericLoad_it-it")
+#include "Beam2SupporteGenericLoad_it-it.tppi"
 END_TOPIC
 
-TOPIC("Beam2SupportsUnifLoad$it-it")
-#include "Beam2SupportsUnifLoad$it-it.tppi"
+TOPIC("Beam2SupportsUnifLoad_it-it")
+#include "Beam2SupportsUnifLoad_it-it.tppi"
 END_TOPIC
 
-TOPIC("ContinuousBeamGenericLoad$it-it")
-#include "ContinuousBeamGenericLoad$it-it.tppi"
+TOPIC("ContinuousBeamGenericLoad_it-it")
+#include "ContinuousBeamGenericLoad_it-it.tppi"
 END_TOPIC
 
-TOPIC("ContinuousBeamUnifLoad$it-it")
-#include "ContinuousBeamUnifLoad$it-it.tppi"
+TOPIC("ContinuousBeamUnifLoad_it-it")
+#include "ContinuousBeamUnifLoad_it-it.tppi"
 END_TOPIC
 
-TOPIC("curpage$it-it")
-#include "curpage$it-it.tppi"
+TOPIC("JointBolted_it-it")
+#include "JointBolted_it-it.tppi"
 END_TOPIC
 
-TOPIC("elementpages$it-it")
-#include "elementpages$it-it.tppi"
+TOPIC("JointExternalTimber1_it-it")
+#include "JointExternalTimber1_it-it.tppi"
 END_TOPIC
 
-TOPIC("infopages$it-it")
-#include "infopages$it-it.tppi"
+TOPIC("JointInternalPlate1_it-it")
+#include "JointInternalPlate1_it-it.tppi"
 END_TOPIC
 
-TOPIC("intro$it-it")
-#include "intro$it-it.tppi"
+TOPIC("JointInternalPlate2_it-it")
+#include "JointInternalPlate2_it-it.tppi"
 END_TOPIC
 
-TOPIC("jobselector$it-it")
-#include "jobselector$it-it.tppi"
+TOPIC("LoadAnalysis_IT_it-it")
+#include "LoadAnalysis_IT_it-it.tppi"
 END_TOPIC
 
-TOPIC("JointBolted$it-it")
-#include "JointBolted$it-it.tppi"
+TOPIC("Seismic_IT_it-it")
+#include "Seismic_IT_it-it.tppi"
 END_TOPIC
 
-TOPIC("JointExternalTimber1$it-it")
-#include "JointExternalTimber1$it-it.tppi"
+TOPIC("TOC2_it-it")
+#include "TOC2_it-it.tppi"
 END_TOPIC
 
-TOPIC("JointInternalPlate1$it-it")
-#include "JointInternalPlate1$it-it.tppi"
+TOPIC("TOC_it-it")
+#include "TOC_it-it.tppi"
 END_TOPIC
 
-TOPIC("JointInternalPlate2$it-it")
-#include "JointInternalPlate2$it-it.tppi"
+TOPIC("WordProc_it-it")
+#include "WordProc_it-it.tppi"
 END_TOPIC
 
-TOPIC("jointpages$it-it")
-#include "jointpages$it-it.tppi"
+TOPIC("curpage_it-it")
+#include "curpage_it-it.tppi"
 END_TOPIC
 
-TOPIC("LoadAnalysis_IT$it-it")
-#include "LoadAnalysis_IT$it-it.tppi"
+TOPIC("elementpages_it-it")
+#include "elementpages_it-it.tppi"
 END_TOPIC
 
-TOPIC("main$it-it")
-#include "main$it-it.tppi"
+TOPIC("infopages_it-it")
+#include "infopages_it-it.tppi"
 END_TOPIC
 
-TOPIC("menu$it-it")
-#include "menu$it-it.tppi"
+TOPIC("intro_it-it")
+#include "intro_it-it.tppi"
 END_TOPIC
 
-TOPIC("pageselector$it-it")
-#include "pageselector$it-it.tppi"
+TOPIC("jobselector_it-it")
+#include "jobselector_it-it.tppi"
 END_TOPIC
 
-TOPIC("relsettings$it-it")
-#include "relsettings$it-it.tppi"
+TOPIC("jointpages_it-it")
+#include "jointpages_it-it.tppi"
 END_TOPIC
 
-TOPIC("Seismic_IT$it-it")
-#include "Seismic_IT$it-it.tppi"
+TOPIC("main_it-it")
+#include "main_it-it.tppi"
 END_TOPIC
 
-TOPIC("settings$it-it")
-#include "settings$it-it.tppi"
+TOPIC("menu_it-it")
+#include "menu_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingsDAN$it-it")
-#include "settingsDAN$it-it.tppi"
+TOPIC("pageselector_it-it")
+#include "pageselector_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingsDANnorm$it-it")
-#include "settingsDANnorm$it-it.tppi"
+TOPIC("relsettings_it-it")
+#include "relsettings_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingsDANpsi$it-it")
-#include "settingsDANpsi$it-it.tppi"
+TOPIC("settingsDAN_it-it")
+#include "settingsDAN_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingsDANsteel$it-it")
-#include "settingsDANsteel$it-it.tppi"
+TOPIC("settingsDANnorm_it-it")
+#include "settingsDANnorm_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingsDANtimber$it-it")
-#include "settingsDANtimber$it-it.tppi"
+TOPIC("settingsDANpsi_it-it")
+#include "settingsDANpsi_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingssteel$it-it")
-#include "settingssteel$it-it.tppi"
+TOPIC("settingsDANsteel_it-it")
+#include "settingsDANsteel_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingstimber$it-it")
-#include "settingstimber$it-it.tppi"
+TOPIC("settingsDANtimber_it-it")
+#include "settingsDANtimber_it-it.tppi"
 END_TOPIC
 
-TOPIC("settingsuser$it-it")
-#include "settingsuser$it-it.tppi"
+TOPIC("settings_it-it")
+#include "settings_it-it.tppi"
 END_TOPIC
 
-TOPIC("TOC$it-it")
-#include "TOC$it-it.tppi"
+TOPIC("settingssteel_it-it")
+#include "settingssteel_it-it.tppi"
 END_TOPIC
 
-TOPIC("TOC2$it-it")
-#include "TOC2$it-it.tppi"
+TOPIC("settingstimber_it-it")
+#include "settingstimber_it-it.tppi"
 END_TOPIC
 
-TOPIC("WordProc$it-it")
-#include "WordProc$it-it.tppi"
+TOPIC("settingsuser_it-it")
+#include "settingsuser_it-it.tppi"
 END_TOPIC
 

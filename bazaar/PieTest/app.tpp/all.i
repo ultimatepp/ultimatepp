@@ -1,12 +1,12 @@
-TOPIC("page1$en-us")
-#include "page1$en-us.tppi"
+TOPIC("page1_en-us")
+#include "page1_en-us.tppi"
 END_TOPIC
 
-TOPIC("page2$en-us")
-#include "page2$en-us.tppi"
+TOPIC("page2_en-us")
+#include "page2_en-us.tppi"
 END_TOPIC
 
-TOPIC("page3$en-us")
-#include "page3$en-us.tppi"
+TOPIC("page3_en-us")
+#include "page3_en-us.tppi"
 END_TOPIC
 
