@@ -1,4 +1,4 @@
-TOPIC("userguide$en-us")
-#include "userguide$en-us.tpp"
+TOPIC("userguide_en-us")
+#include "userguide_en-us.tppi"
 END_TOPIC
 
