@@ -49,7 +49,7 @@ void TopicCtrl::ScanDirForTpp(const char *dir, const String& rel,
 						for(FindFile ft(AppendFileName(dir, "*.tpp")); ft; ft.Next())
 							if(ft.IsFile()) {
 								tl.topic = GetFileTitle(ft.GetName());
-								int q = tl.topic.ReverseFind('$');
+								int q = tl.topic.ReverseFind('_');
 								String l;
 								if(q >= 0) {
 									l = ToUpper(tl.topic.Mid(q + 1));
@@ -196,7 +196,7 @@ void TopicCtrl::SyncDocTree()
 				const Index<String>& topic = group[i];
 				for(int i = 0; i < topic.GetCount(); i++) {
 					tl.topic = topic[i];
-					int q = tl.topic.ReverseFind('$');
+					int q = tl.topic.ReverseFind('_');
 					String l;
 					if(q >= 0)
 						l = ToUpper(tl.topic.Mid(q + 1));
