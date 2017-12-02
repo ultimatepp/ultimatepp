@@ -14,17 +14,34 @@ public:
 	}
 };
 
-void LoadTopics(FileList& topic, const String& grouppath)
+bool LoadTopics(FileList& topic, const String& grouppath)
 {
-	topic.Clear();
-	FindFile ff(AppendFileName(grouppath, "*.tpp"));
-	while(ff) {
-		if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tpp")
-			topic.Add(GetFileTitle(ff.GetName()), TopicImg::Topic());
-		ff.Next();
+	bool renamed = false;
+	for(int pass = 0; pass < 2; pass++) {
+		topic.Clear();
+		FindFile ff(AppendFileName(grouppath, "*.tpp"));
+		while(ff) {
+			if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tpp") {
+				String n = ff.GetName();
+				int q = n.ReverseFind('$');
+				if(q < 0)
+					q = n.ReverseFind('@');
+				if(q >= 0 && q > n.GetLength() - 12) {
+					String nn = n;
+					n.Set(q, '_');
+					FileMove(AppendFileName(grouppath, nn), AppendFileName(grouppath, n));
+					renamed = true;
+				}
+				topic.Add(GetFileTitle(n), TopicImg::Topic());
+			}
+			ff.Next();
+		}
+		if(!renamed)
+			break;
 	}
 	topic.Sort(ListOrder());
 	topic.Enable();
+	return renamed;
 }
 
 void TopicEditor::Open(const String& _grouppath)
@@ -33,7 +50,8 @@ void TopicEditor::Open(const String& _grouppath)
 	if(FileExists(grouppath))
 		DeleteFile(grouppath);
 	DirectoryCreate(grouppath);
-	LoadTopics(topic, grouppath);
+	if(LoadTopics(topic, grouppath))
+		SaveInc();
 	int q = grouptopic.Find(grouppath);
 	if(q >= 0)
 		topic.FindSetCursor(grouptopic[q]);

@@ -78,7 +78,7 @@ String AdjustMakePath(const char *fn)
 	String out;
 	for(; *fn; fn++)
 		if(*fn == '$')
-			out << "$(Dollar)";
+			out << "$$";
 		else
 			out << *fn;
 	return out;

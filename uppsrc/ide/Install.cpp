@@ -167,7 +167,7 @@ bool CheckLicense()
 	Ctrl::ProcessEvents();
 	WithLicenseLayout<TopWindow> d;
 	CtrlLayoutOKCancel(d, "License agreement");
-	d.license = GetTopic("ide/app/BSD$en-us").text;
+	d.license = GetTopic("ide/app/BSD_en-us").text;
 	d.license.Margins(4);
 	d.license.SetZoom(Zoom(Zy(18), 100));
 	d.ActiveFocus(d.license);
@@ -194,7 +194,7 @@ bool Install()
 	{
 		WithInfoLayout<TopWindow> d;
 		CtrlLayoutOKCancel(d, "Installation guide");
-		d.info = GetTopic("ide/app/install$en-us").text;
+		d.info = GetTopic("ide/app/install_en-us").text;
 		d.info.Margins(4);
 		d.info.SetZoom(Zoom(Zy(18), 100));
 		d.ActiveFocus(d.info);

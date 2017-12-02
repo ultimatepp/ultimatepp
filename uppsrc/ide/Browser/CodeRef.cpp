@@ -283,7 +283,7 @@ String CreateQtf(const String& item, const String& name, const CppItem& m, const
 
 String TopicEditor::GetLang() const
 {
-	int q = topicpath.ReverseFind('$');
+	int q = topicpath.ReverseFind('@');
 	if(q >= 0) {
 		int lang = LNGFromText(~topicpath + q + 1);
 		if(lang)

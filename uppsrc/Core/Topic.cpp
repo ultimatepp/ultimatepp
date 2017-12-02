@@ -54,15 +54,17 @@ TopicLink ParseTopicLink(const char *link)
 	return tl;
 }
 
-static StaticCriticalSection sTopicLock;
+static StaticMutex sTopicLock;
 
-Topic GetTopic(const String& package, const String& group, const String& topic)
+Topic GetTopic(const String& package, const String& group, const String& topic_)
 {
-	INTERLOCKED_(sTopicLock) {
-		VectorMap<String, VectorMap<String, TopicData__> > *p = Topics__().FindPtr(package);
-		if(p) {
-			VectorMap<String, TopicData__> *g = p->FindPtr(group);
-			if(g) {
+	Mutex::Lock __(sTopicLock);
+	VectorMap<String, VectorMap<String, TopicData__> > *p = Topics__().FindPtr(package);
+	if(p) {
+		VectorMap<String, TopicData__> *g = p->FindPtr(group);
+		if(g) {
+			String topic = topic_;
+			for(int pass = 0; pass < 2; pass++) {
 				const TopicData__ *d = g->FindPtr(topic);
 				if(d) {
 					Topic t;
@@ -70,6 +72,15 @@ Topic GetTopic(const String& package, const String& group, const String& topic)
 					t.text = ZDecompress(d->data, d->len);
 					return t;
 				}
+				
+				int q = topic.ReverseFind('$'); // we have change lang separator from $ to _, keep compatibility
+				if(q >= 0)
+					topic.Set(q, '_');
+				else
+				if((q = topic.ReverseFind('_')) >= 0)
+					topic.Set(q, '$');
+				else
+					break;
 			}
 		}
 	}
@@ -97,16 +108,15 @@ Topic GetTopicLNG(const char *path)
 void RegisterTopic__(const char *topicfile, const char *topic, const char *title,
                      const UPP::byte *data, int len)
 {
-	INTERLOCKED_(UPP::sTopicLock) {
-		ASSERT(*topicfile == '<');
-		ASSERT(*UPP::GetFileName(topicfile).Last() == '>');
-		UPP::String q = UPP::GetFileFolder(topicfile + 1);
-		UPP::String group = UPP::GetFileTitle(q);
-		UPP::String package = UPP::UnixPath(UPP::GetFileFolder(q));
-		UPP::TopicData__& d = UPP::Topics__().GetAdd(package).GetAdd(group).GetAdd(topic);
-		d.title = title;
-		d.data = data;
-		d.len = len;
-		UPP::TopicBase().GetAdd(package).GetAdd(group).Add(topic);
-	}
+	Upp::Mutex::Lock __(Upp::sTopicLock);
+	ASSERT(*topicfile == '<');
+	ASSERT(*UPP::GetFileName(topicfile).Last() == '>');
+	UPP::String q = UPP::GetFileFolder(topicfile + 1);
+	UPP::String group = UPP::GetFileTitle(q);
+	UPP::String package = UPP::UnixPath(UPP::GetFileFolder(q));
+	UPP::TopicData__& d = UPP::Topics__().GetAdd(package).GetAdd(group).GetAdd(topic);
+	d.title = title;
+	d.data = data;
+	d.len = len;
+	UPP::TopicBase().GetAdd(package).GetAdd(group).Add(topic);
 }

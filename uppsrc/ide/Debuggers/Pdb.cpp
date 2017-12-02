@@ -400,7 +400,7 @@ PDBExpressionDlg::PDBExpressionDlg(const char *title, String& brk, Pdb *pdb)
 :	pdb(pdb)
 {
 	CtrlLayoutOKCancel(*this, title);
-	help.SetQTF(GetTopic("ide/Debuggers/app/PDBExpressions$en-us"));
+	help.SetQTF(GetTopic("ide/Debuggers/app/PDBExpressions_en-us"));
 	help.Background(White());
 	help.SetFrame(ViewFrame());
 	text <<= brk;
