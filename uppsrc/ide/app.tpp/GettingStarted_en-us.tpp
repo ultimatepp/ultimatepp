@@ -25,28 +25,17 @@ topic "Getting started with TheIDE";
 [s2; Getting started with TheIDE&]
 [s3; Table of contents&]
 [s0; &]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#1^ 1. Launching 
-TheIDE]&]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#2^ 2. Assemblies 
-and Packages]&]
-[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#2`_1^ 2.1 Selecting 
-assembly]&]
-[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#2`_2^ 2.2 Creating 
-new package]&]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#3^ 3. Configuring 
-package]&]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#4^ 4. Creating 
-new file]&]
-[s0; [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5^ 5. Explanations 
-about TheIDE]&]
-[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_1^ 5.1 What 
-is stored where?]&]
-[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_2^ 5.2 Package 
-organizer]&]
-[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_3^ 5.3 Build 
-methods]&]
-[s0;     [^topic`:`/`/ide`/app`/GettingStarted`$en`-us`#5`_4^ 5.4 Output 
-mode]&]
+[s0; [^`#1^ 1. Launching TheIDE]&]
+[s0; [^`#2^ 2. Assemblies and Packages]&]
+[s0;     [^`#2`_1^ 2.1 Selecting assembly]&]
+[s0;     [^`#2`_2^ 2.2 Creating new package]&]
+[s0; [^`#3^ 3. Configuring package]&]
+[s0; [^`#4^ 4. Creating new file]&]
+[s0; [^`#5^ 5. Explanations about TheIDE]&]
+[s0;     [^`#5`_1^ 5.1 What is stored where?]&]
+[s0;     [^`#5`_2^ 5.2 Package organizer]&]
+[s0;     [^`#5`_3^ 5.3 Build methods]&]
+[s0;     [^`#5`_4^ 5.4 Output mode]&]
 [s0; &]
 [s3;:1: 1. Launching TheIDE&]
 [s5; After installing U`+`+ find the appropriate TheIDE executable 
