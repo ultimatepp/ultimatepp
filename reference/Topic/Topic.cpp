@@ -8,6 +8,6 @@ using namespace Upp;
 GUI_APP_MAIN
 {
 	HelpWindow help;
-	help.GoTo("topic://Topic/app/main$en-us");
+	help.GoTo("topic://Topic/app/main_en-us");
 	help.Execute();
 }
