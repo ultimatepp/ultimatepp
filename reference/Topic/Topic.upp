@@ -1,4 +1,4 @@
-description "Using TheIDE documentation editor (Topic++) to provide application help";
+description "Using TheIDE documentation editor (Topic++) to provide application help\377";
 
 uses
 	CtrlLib;
