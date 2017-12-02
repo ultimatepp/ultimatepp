@@ -1,16 +1,16 @@
-TOPIC("ChangesLog$en-us")
-#include "ChangesLog$en-us.tppi"
+TOPIC("ChangesLog_en-us")
+#include "ChangesLog_en-us.tppi"
 END_TOPIC
 
-TOPIC("License$en-us")
-#include "License$en-us.tppi"
+TOPIC("License_en-us")
+#include "License_en-us.tppi"
 END_TOPIC
 
-TOPIC("MAPIEx$en-us")
-#include "MAPIEx$en-us.tppi"
+TOPIC("MAPIEx_en-us")
+#include "MAPIEx_en-us.tppi"
 END_TOPIC
 
-TOPIC("ToDo$en-us")
-#include "ToDo$en-us.tppi"
+TOPIC("ToDo_en-us")
+#include "ToDo_en-us.tppi"
 END_TOPIC
 

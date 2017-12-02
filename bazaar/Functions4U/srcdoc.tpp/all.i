@@ -1,12 +1,12 @@
-TOPIC("ChangesLog$en-us")
-#include "ChangesLog$en-us.tppi"
+TOPIC("ChangesLog_en-us")
+#include "ChangesLog_en-us.tppi"
 END_TOPIC
 
-TOPIC("Functions4U$en-us")
-#include "Functions4U$en-us.tppi"
+TOPIC("Functions4U_en-us")
+#include "Functions4U_en-us.tppi"
 END_TOPIC
 
-TOPIC("ToDo$en-us")
-#include "ToDo$en-us.tppi"
+TOPIC("ToDo_en-us")
+#include "ToDo_en-us.tppi"
 END_TOPIC
 

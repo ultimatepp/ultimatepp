@@ -1,16 +1,16 @@
-TOPIC("ChangesLog$en-us")
-#include "ChangesLog$en-us.tppi"
+TOPIC("ChangesLog_en-us")
+#include "ChangesLog_en-us.tppi"
 END_TOPIC
 
-TOPIC("Controls4U$en-us")
-#include "Controls4U$en-us.tppi"
+TOPIC("Controls4UDemo_en-us")
+#include "Controls4UDemo_en-us.tppi"
 END_TOPIC
 
-TOPIC("Controls4UDemo$en-us")
-#include "Controls4UDemo$en-us.tppi"
+TOPIC("Controls4U_en-us")
+#include "Controls4U_en-us.tppi"
 END_TOPIC
 
-TOPIC("Credits$en-us")
-#include "Credits$en-us.tppi"
+TOPIC("Credits_en-us")
+#include "Credits_en-us.tppi"
 END_TOPIC
 

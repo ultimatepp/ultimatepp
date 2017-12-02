@@ -1,28 +1,28 @@
-TOPIC("MAPIAppointment$en-us")
-#include "MAPIAppointment$en-us.tppi"
+TOPIC("MAPIAppointment_en-us")
+#include "MAPIAppointment_en-us.tppi"
 END_TOPIC
 
-TOPIC("MAPIAttachment$en-us")
-#include "MAPIAttachment$en-us.tppi"
+TOPIC("MAPIAttachment_en-us")
+#include "MAPIAttachment_en-us.tppi"
 END_TOPIC
 
-TOPIC("MAPIContact$en-us")
-#include "MAPIContact$en-us.tppi"
+TOPIC("MAPIContact_en-us")
+#include "MAPIContact_en-us.tppi"
 END_TOPIC
 
-TOPIC("MAPIEx$en-us")
-#include "MAPIEx$en-us.tppi"
+TOPIC("MAPIEx_en-us")
+#include "MAPIEx_en-us.tppi"
 END_TOPIC
 
-TOPIC("MAPIFolder$en-us")
-#include "MAPIFolder$en-us.tppi"
+TOPIC("MAPIFolder_en-us")
+#include "MAPIFolder_en-us.tppi"
 END_TOPIC
 
-TOPIC("MAPIMessage$en-us")
-#include "MAPIMessage$en-us.tppi"
+TOPIC("MAPIMessage_en-us")
+#include "MAPIMessage_en-us.tppi"
 END_TOPIC
 
-TOPIC("aa$en-us")
-#include "aa$en-us.tppi"
+TOPIC("aa_en-us")
+#include "aa_en-us.tppi"
 END_TOPIC
 

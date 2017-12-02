@@ -1,16 +1,16 @@
-TOPIC("ChangesLog$en-us")
-#include "ChangesLog$en-us.tppi"
+TOPIC("ChangesLog_en-us")
+#include "ChangesLog_en-us.tppi"
 END_TOPIC
 
-TOPIC("SysInfo$en-us")
-#include "SysInfo$en-us.tppi"
+TOPIC("SysInfo_en-us")
+#include "SysInfo_en-us.tppi"
 END_TOPIC
 
-TOPIC("SysInfoDemo$en-us")
-#include "SysInfoDemo$en-us.tppi"
+TOPIC("SysInfoDemo_en-us")
+#include "SysInfoDemo_en-us.tppi"
 END_TOPIC
 
-TOPIC("ToDo$en-us")
-#include "ToDo$en-us.tppi"
+TOPIC("ToDo_en-us")
+#include "ToDo_en-us.tppi"
 END_TOPIC
 
