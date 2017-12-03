@@ -103,8 +103,11 @@ String TopicFileName(const char *dir, const char *topic)
 	return AppendFileName(dir, AppendFileName(tl.package, AppendFileName(tl.group + ".tpp", tl.topic + ".tpp")));
 }
 
-String TopicFileName(const char *topic)
+String TopicFileName(String topic)
 {
+	int q = topic.ReverseFind('$');
+	if(q >= 0)
+		topic.Set(q, '_');
 	String p = TopicFileName(uppbox, topic);
 	if(FileExists(p))
 		return p;
