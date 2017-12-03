@@ -54,11 +54,12 @@ String CppAsQtf(const String& str)
 			if(*s == '\n')
 				qtf << '&';
 			else
-			if((byte)*s >= 32)
+			if((byte)*s >= 32) {
 				if(strchr("!+-*^/%~&|=[]:?<>.#", *s))
 					qtf << "[@B `" << *s << "]";
 				else
 					qtf << '`' << *s;
+			}
 			s++;
 		}
 	}
