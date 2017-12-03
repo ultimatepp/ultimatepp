@@ -237,7 +237,7 @@ Vector <SvnBazaarItems> SvnBazaarList(String bazaarPath, Vector<SvnLogRev> &log)
 	FindFile ff(AppendFileName(bazaarPath, "*.*"));
 	while(ff) {
 		String name = ff.GetName();
-		if(ff.IsFolder() && name != "$.tpp" && name != ".svn") {
+		if(ff.IsFolder() && name != "_.tpp" && name != ".svn") {
 			SvnBazaarItems &item = items.Add();
 			item.name = name;
 			String p = AppendFileName(bazaarPath, item.name);
