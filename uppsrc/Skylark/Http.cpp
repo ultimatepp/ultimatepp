@@ -74,7 +74,7 @@ Http& Http::SetRawCookie(const char *id, const String& value, Time expires,
 {
 	if(*id == '.')
 		id++;
-	var.GetAdd('@' + id) = value;
+	var.GetAdd('@' + String(id)) = value;
 	String& c = cookies.GetAdd(id);
 	c.Clear();
 	c << "Set-Cookie:" << ' ' << id << '=' << value;
