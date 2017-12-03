@@ -78,7 +78,6 @@ struct GatherLinkIterator : RichText::Iterator {
 				LLOG("GatherLink " << l);
 				if(l[0] == ':') {
 					int q = reflink.Find(l);
-					int w = q;
 					if(q < 0)
 						q = reflink.Find(l + "::class");
 					if(q < 0)

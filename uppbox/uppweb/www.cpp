@@ -569,7 +569,6 @@ void ExportPage(int i)
 	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
 		page.Replace(String("QTFHTMLTEXT") + FormatInt(iHtml), htmlrep[iHtml]);
 	
-	Color paper = SWhite;
 	if(path == "topic://uppweb/www/download_en-us")
 		page << LoadFile(GetRcFile("adsense3.txt"));
 /*		if(path == "topic://uppweb/www/index$en-us") {
@@ -1041,7 +1040,6 @@ CONSOLE_APP_MAIN
 		labels.Add(l, lbl);
 	}
 
-	Date d = GetSysDate();
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
 	                   (String().Cat() << "Last update " << GetSysDate());
 
