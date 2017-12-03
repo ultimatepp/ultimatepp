@@ -218,7 +218,7 @@ String GetText(const char *s)
 }
 
 String ChangeTopicLanguage(const String &topic, int lang) {
-	int pos = topic.ReverseFind('_');
+	int pos = topic.ReverseFind('$');
 	if (pos < 0)
 		return "";			
 	String langtxt = ToLower(LNGAsText(lang));		
@@ -226,7 +226,7 @@ String ChangeTopicLanguage(const String &topic, int lang) {
 }
 
 String GetTopicLanguage(const String &topic) {
-	int pos = topic.ReverseFind('_');
+	int pos = topic.ReverseFind('$');
 	if (pos < 0)
 		return "";			
 	return topic.Mid(pos+1, 5); 
@@ -287,10 +287,10 @@ Vector<String> ttFullIds;
 String Www(const char *topic, int lang, String topicLocation = "topic://uppweb/www/")
 {
 	String strLang = ToLower(LNGAsText(lang));
-	String www = GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "_" << strLang, "");
+	String www = GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << strLang, "");
 	if (www != "index.html")
 		return www;
-	return GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "_" << "en-us", "");
+	return GatherTopics(tt, ttFullIds, String().Cat() << topicLocation << topic << "$" << "en-us", "");
 }
 
 struct Title {
@@ -381,7 +381,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 	Sort(ls, Isort());
 	for(int i = 0; i < ls.GetCount(); i++) {
 		String name = ls[i];
-		String link = String().Cat() << www << '$' << name << "_" << ToLower(LNGAsText(language)) << ".html";
+		String link = String().Cat() << www << '$' << name << "$" << ToLower(LNGAsText(language)) << ".html";
 		Topic& topic = tt.Add(link);
 		topic.title = name;
 		int q = tt.GetCount() - 1;
@@ -393,7 +393,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 							AppendFileName(uppbox, "uppweb"),
 							String(www) + ".tpp"
 						),
-						topic.title + "_" + ToLower(LNGAsText(language))  + ".tpp"
+						topic.title + "$" + ToLower(LNGAsText(language))  + ".tpp"
 					);
 		String h = ReadTopic(LoadFile(fn)).text;
 		Package p;
@@ -473,7 +473,7 @@ Array <Htmls> bar;
 Array <int> languages;
 
 int GetLinkLanguage(const String &link) {
-	int pos = link.ReverseFind('_');
+	int pos = link.ReverseFind('$');
 	if (pos < 0)
 		return 0;
 	int lang = LNGFromText(ToUpper(link.Mid(pos+1)));
@@ -539,7 +539,7 @@ void ExportPage(int i)
 //	if (!strlang.IsEmpty())
 //		qtflangs += Format(String("[2  ") + t_("This page is also in %s") + ".]", strlang);
 	if (tt[i].title.Find("How to contribute. Web page") < 0) {
-		String help = "topic://uppweb/www/contribweb_" + ToLower(LNGAsText(languages[ilang]));
+		String help = "topic://uppweb/www/contribweb$" + ToLower(LNGAsText(languages[ilang]));
 		qtflangs += " " + String("[^") + help + "^ [<A2 " + t_("Do you want to contribute?") + "]]";
 		if (googleFile != "")
 			qtflangs += ". [^https`:`/`/raw`.githubusercontent`.com`/ultimatepp`/mirror`/master" + DeQtf(UrlEncode(googleFile)) + "^/1 " + "T`+`+" + "]";
@@ -569,7 +569,8 @@ void ExportPage(int i)
 	for (int iHtml = 0; iHtml < htmlrep.GetCount(); ++iHtml) 
 		page.Replace(String("QTFHTMLTEXT") + FormatInt(iHtml), htmlrep[iHtml]);
 	
-	if(path == "topic://uppweb/www/download_en-us")
+	Color paper = SWhite;
+	if(path == "topic://uppweb/www/download$en-us")
 		page << LoadFile(GetRcFile("adsense3.txt"));
 /*		if(path == "topic://uppweb/www/index$en-us") {
 		for(int q = 0; q < news.GetCount(); q++) {
@@ -900,9 +901,9 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("overview", lang), t_("Overview"), false);
 		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
-			int di = tt.Find("topic://uppweb/www/examples_" + ToLower(LNGAsText(lang)));
+			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
-			tt[di].text << GetTopic("topic://uppweb/www/reference_" + ToLower(LNGAsText(lang))).text << '\n';
+			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
 
@@ -913,7 +914,7 @@ CONSOLE_APP_MAIN
 
 		bi << BarLink(Www("documentation", lang), t_("Documentation"));			
 		{
-			int di = tt.Find("topic://uppweb/www/documentation_" + ToLower(LNGAsText(lang)));
+			int di = tt.Find("topic://uppweb/www/documentation$" + ToLower(LNGAsText(lang)));
 			if (di >= 0) {
 				Index<String> x;
 				x.Clear();
@@ -988,7 +989,7 @@ CONSOLE_APP_MAIN
 
 	for(int i = 0; i < tt.GetCount(); i++) {
 		String topic = tt.GetKey(i);
-		links.Add(topic, topic == "topic://uppweb/www/index_en-us" ? "index.html" :
+		links.Add(topic, topic == "topic://uppweb/www/index$en-us" ? "index.html" :
 		                 memcmp(topic, "topic://", 8) ? topic : TopicFileNameHtml(topic));
 	}
 
@@ -1040,6 +1041,7 @@ CONSOLE_APP_MAIN
 		labels.Add(l, lbl);
 	}
 
+	Date d = GetSysDate();
 	lastUpdate = HtmlItalic() / HtmlArial(8) / HtmlFontColor(Gray()) /
 	                   (String().Cat() << "Last update " << GetSysDate());
 
