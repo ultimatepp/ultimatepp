@@ -30,11 +30,13 @@ struct IdePngDes : IdeIconDes {
 INITIALIZE(Img)
 
 struct FileHexView : public IdeDesigner, public HexView, private LRUCache<String, int64>::Maker {
-public:
-	virtual int Byte(int64 addr);
+	virtual bool   Key(dword key, int count)  { return HexView::Key(key, count); } // silence CLANG warning
 
-	virtual int64 Key() const;
-	virtual int Make(String& object) const;
+public:
+	virtual int    Byte(int64 addr);
+
+	virtual int64  Key() const;
+	virtual int    Make(String& object) const;
 
 	virtual String GetFileName() const        { return filename; }
 	virtual void   Save()                     {}
