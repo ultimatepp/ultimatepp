@@ -80,8 +80,10 @@ struct NetBuf {
 	char perror[256];
 };
 
+/*
 static const char version[] =
 	"ftplib Release 3.1-1 9/16/00, copyright 1996-2000 Thomas Pfau";
+*/
 
 GLOBALDEF int ftplib_debug = 0;
 
@@ -423,7 +425,7 @@ GLOBALDEF int FtpConnect(const char *host, netbuf **nControl, char perror[],
 #if defined(VMS)
 		sin.sin_port = htons(21);
 #else
-		if(pse = getservbyname("ftp", "tcp"))
+		if((pse = getservbyname("ftp", "tcp")))
 			sin.sin_port = pse->s_port;
 		else
 			sin.sin_port = htons(21);
