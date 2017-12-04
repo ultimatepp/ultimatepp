@@ -4,6 +4,17 @@ void Serialize()
 {
 	/// .Binary serialization
 	
+	/// Serialization is a mechanism that converts structured data to/from binary stream. In
+	/// U++, loading and storing of data is performed by single code, in most cases represented
+	/// by method `Serialize`. Serialization is performed directly with basic `Stream`. To this
+	/// end, `Stream` features a single boolean representing the direction of serialization
+	/// process. The direction can be checked using `IsLoading` and `IsStoring` methods and
+	/// changed with `SetStoring` and `SetLoading` methods. Direction is usually set properly
+	/// by derived classes (e.g. FileOut sets it to storing, FileIn to loading).
+	///
+	/// Shortcut to calling `Serialize` method is `operator%`, which is templated overload that
+	/// calls `Serialize` for given variable (primitive types have direct overload in `Stream` class):
+	
 	StringStream ss;
 	
 	int x = 123;
@@ -21,7 +32,7 @@ void Serialize()
 	DUMP(x2);
 	DUMP(h2);
 	
-	///
+	/// 
 	
 	ss2.Seek(0);
 	ss2.LoadThrowing();
@@ -41,6 +52,7 @@ void Serialize()
 		void Serialize(Stream& s) {
 			int version = 0;
 			s / version; // allow backward compatibility in the future
+			s.Magic(31415);
 			s % number % color;
 		}
 	};
@@ -74,4 +86,6 @@ void Serialize()
 	LoadFromString(foo3, data);
 	DUMP(foo3.number);
 	DUMP(foo3.color);
+	
+	///
 }
