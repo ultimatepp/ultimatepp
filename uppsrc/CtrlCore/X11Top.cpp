@@ -337,7 +337,7 @@ void TopWindow::Open(Ctrl *owner)
 				while(XCheckTypedWindowEvent(Xdisplay, top->window, ConfigureNotify, &e)) {
 					if(e.xconfigure.window != top->window)
 						ProcessEvent(&e);
-				}	
+				}
 			if(XCheckTypedWindowEvent(Xdisplay, top->window, FocusIn, &e)) {
 				ProcessEvent(&e);
 				if(e.xfocus.window == top->window)

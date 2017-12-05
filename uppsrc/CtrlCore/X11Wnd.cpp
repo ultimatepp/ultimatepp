@@ -879,7 +879,7 @@ void Ctrl::KillFocus(Window window)
 	if(q < 0)
 		return;
 	XWindow& w = Xwindow()[q];
-	if(w.ctrl) 
+	if(w.ctrl)
 		w.ctrl->KillFocusWnd();
 }
 
