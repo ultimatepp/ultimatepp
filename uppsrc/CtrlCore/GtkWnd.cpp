@@ -230,7 +230,7 @@ Rect Ctrl::GetWorkArea() const
 {
 	GuiLock __;
 	static Array<Rect> rc;
-	if(rc.IsEmpty()) 
+	if(rc.IsEmpty())
 		GetWorkArea(rc);
 	
 	Point pt = GetScreenRect().TopLeft();
@@ -469,7 +469,7 @@ void Ctrl::WndUpdate()
 
 Rect Ctrl::GetDefaultWindowRect()
 {
-	GuiLock __; 
+	GuiLock __;
 	Rect r  = GetPrimaryWorkArea();
 	Size sz = r.GetSize();
 	
