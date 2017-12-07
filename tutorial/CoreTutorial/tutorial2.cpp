@@ -58,6 +58,7 @@ GUI_APP_MAIN
 	SECTION("Streams");
 	DO(Stream);
 	DO(SpecialStream);
+	DO(Serialize);
 
 	MakeTutorial();
 }

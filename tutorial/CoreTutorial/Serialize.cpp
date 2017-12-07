@@ -32,7 +32,9 @@ void Serialize()
 	DUMP(x2);
 	DUMP(h2);
 	
-	/// 
+	/// When serialization fails to load the data (e.g. because of wrong structure or not
+	/// enough data in the stream), `Stream::LoadError` is invoked, which can trigger the
+	/// exception if the stream is `LoadThrowing`:
 	
 	ss2.Seek(0);
 	ss2.LoadThrowing();
@@ -43,7 +45,11 @@ void Serialize()
 		LOG("Deserialization has failed");
 	}
 	
-	///
+	/// Examples so far serve mostly like basic demonstration of serialization. In practice,
+	/// the implementation is usually represented by `Serialize` method of class that is to be
+	/// compatible with this concept. To that end, it is a good idea to provide means for
+	/// future expansion of such class:
+	
 	
 	struct MyFoo {
 		int    number;
@@ -52,7 +58,7 @@ void Serialize()
 		void Serialize(Stream& s) {
 			int version = 0;
 			s / version; // allow backward compatibility in the future
-			s.Magic(31415);
+			s.Magic(31415); // put magic number into the stream to check for invalid data
 			s % number % color;
 		}
 	};
@@ -61,13 +67,19 @@ void Serialize()
 	foo.number = 321;
 	foo.color = Blue();
 	
+	/// `StoreAsFile`, `StoreAsString`, `LoadFromFile` and `LoadFromString` are convenience
+	/// functions that simplify storing / loading objects to / from the most common forms of
+	/// storage:
+	
 	String data = StoreAsString(foo);
 	MyFoo foo2;
 	LoadFromString(foo2, data);
 	DUMP(foo2.number);
 	DUMP(foo2.color);
 	
-	///
+	/// Now if `MyFoo` was to be extended to `MyFoo2` and we wanted to maintain the ability to
+	/// load it from binary data stored by original `MyFoo`, we can branch on previously stored
+	/// `version`:
 
 	struct MyFoo2 {
 		int    number;
@@ -86,6 +98,9 @@ void Serialize()
 	LoadFromString(foo3, data);
 	DUMP(foo3.number);
 	DUMP(foo3.color);
+	
+	/// Note: `operator/` is Stream method with several overloads optimized for small value -
+	/// in this case `int` is stored as single byte if possible (and as 5 bytes if not).
 	
 	///
 }
