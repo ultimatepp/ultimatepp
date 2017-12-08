@@ -1,0 +1,11 @@
+uses
+	Core;
+
+file
+	XmlCharset.cpp,
+	0.xml,
+	1.xml charset "windows-1250";
+
+mainconfig
+	"" = "";
+
