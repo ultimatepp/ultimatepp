@@ -172,9 +172,9 @@ XmlTag& XmlTag::operator()(const char *attr, double q)
 force_inline
 String XmlParser::Convert(StringBuffer& b)
 {
-	if(charset == CHARSET_UTF8)
+	if(acharset == scharset)
 		return b;
-	return FromUtf8(String(b)).ToString();
+	return ToCharset(acharset, b, scharset);
 }
 
 void XmlParser::Ent(StringBuffer& out)
@@ -385,6 +385,22 @@ void XmlParser::Next()
 			LoadMore();
 			if(term[0] == '?' && term[1] == '>') {
 				term += 2;
+				LLOG("XML_PI " << tagtext);
+				if(!tagtext.StartsWith("xml "))
+					return;
+				int q = tagtext.Find("encoding");
+				if(q < 0)
+					return;
+				q = tagtext.Find('\"', q);
+				if(q < 0)
+					return;
+				q++;
+				int w = tagtext.Find('\"', q);
+				if(w < 0)
+					return;
+				q = CharsetByName(tagtext.Mid(q, w));
+				if(q)
+					scharset = q;
 				return;
 			}
 			if(!HasMore())
@@ -393,7 +409,6 @@ void XmlParser::Next()
 				line++;
 			tagtext.Cat(*term++);
 		}
-		LLOG("XML_PI " << tagtext);
 	}
 	else
 	if(*term == '/') {
@@ -792,7 +807,8 @@ void XmlParser::Init()
 	in = NULL;
 	len = 0;
 	raw = false;
-	charset = GetDefaultCharset();
+	acharset = GetDefaultCharset();
+	scharset = CHARSET_UTF8;
 }
 
 XmlParser::XmlParser(const char *s)
