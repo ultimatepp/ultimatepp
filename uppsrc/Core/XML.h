@@ -84,7 +84,8 @@ class XmlParser {
 
 	int                       line;
 	
-	byte                      charset;
+	byte                      acharset;
+	byte                      scharset;
 
 	void                      Init();
 	void                      LoadMore0();
