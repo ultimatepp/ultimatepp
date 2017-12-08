@@ -333,7 +333,6 @@ String FolderLinks(String package, String group, int lang, int level, String par
 			if (ff.GetName().Find("en-us") >= 0) {
 				String title;
 				String tl = "topic://" + package + '/' + group + '/' + GetFileTitle(ff.GetName());
-				tl =  ChangeTopicLanguage(tl, lang);
 				GatherTopics(tt, ttFullIds, tl, title, parentIds);
 				titles.Add(Title(DeQtf(Nvl(title, tl)), tl));
 				//qtf << "________[^" << tl << "^ " << DeQtf(Nvl(title, tl)) << "]&";

@@ -147,23 +147,23 @@ String GatherTopics(ArrayMap<String, Topic>& tt, Vector<String>& ttFullIds, cons
 				
 		String t = p;
 		if(IsNull(t)) {
-			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));		
+			String topicEng = ChangeTopicLanguage(topic, LNG_('E','N','U','S'));
 			p = ReadTopic(LoadFile(TopicFileName(topicEng)));
 			String tt = p;
-			if(IsNull(tt)) 
+			if(IsNull(tt))
 				return "index.html";
 			title = p.title;
-			p.title += " (translated)";			
+			p.title += " (translated)";
 			String help = "topic://uppweb/www/contribweb$" + GetTopicLanguage(topic);
-			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") + 
+			p.text = String("{{1f1t0/50b0/50@(240.240.240) [<A2 ") + t_("This page has not been translated yet") +
 					"]. " + "[^" + help + "^ [<A2 " + t_("Do you want to translate it?") + "]]}}&&" + p.text;
 		}
 		String newParentIds;
-		INTERLOCKED_(mapl) 
+		INTERLOCKED_(mapl)
 		{
 			tt.Add(topic) = p;
 			q = tt.GetCount() - 1;
-			newParentIds = parentIds + "/" + FormatInt(q);	
+			newParentIds = parentIds + "/" + FormatInt(q);
 			ttFullIds.Add(newParentIds);
 		}
 		GatherLinkIterator ti;
