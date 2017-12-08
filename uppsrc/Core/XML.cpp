@@ -169,6 +169,14 @@ XmlTag& XmlTag::operator()(const char *attr, double q)
 	return operator()(attr, AsString(q));
 }
 
+force_inline
+String XmlParser::Convert(StringBuffer& b)
+{
+	if(charset == CHARSET_UTF8)
+		return b;
+	return FromUtf8(String(b)).ToString();
+}
+
 void XmlParser::Ent(StringBuffer& out)
 {
 	LoadMore();
@@ -316,7 +324,7 @@ void XmlParser::Next()
 			raw_text.Cat(*term++);
 		}
 	}
-	cdata = FromUtf8(String(raw_text)).ToString();
+	cdata = Convert(raw_text);
 
 	if(cdata.GetCount() && (npreserve || preserveall))
 		type = XML_TEXT;
@@ -444,7 +452,7 @@ void XmlParser::Next()
 							attrval.Cat(*term++);
 				if(attr == "xml:space" && attrval.GetLength() == 8 && !memcmp(~attrval, "preserve", 8))
 					npreserve = true;
-				String aval = FromUtf8(~attrval, attrval.GetLength()).ToString();
+				String aval = Convert(attrval);
 				if(IsNull(nattr1)) {
 					nattr1 = attr;
 					nattrval1 = aval;
@@ -784,6 +792,7 @@ void XmlParser::Init()
 	in = NULL;
 	len = 0;
 	raw = false;
+	charset = GetDefaultCharset();
 }
 
 XmlParser::XmlParser(const char *s)

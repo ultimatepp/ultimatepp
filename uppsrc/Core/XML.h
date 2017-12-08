@@ -83,6 +83,8 @@ class XmlParser {
 	bool                      raw;
 
 	int                       line;
+	
+	byte                      charset;
 
 	void                      Init();
 	void                      LoadMore0();
@@ -98,6 +100,7 @@ class XmlParser {
 	String                    ReadPI(bool next);
 	String                    ReadComment(bool next);
 	int                       GetColumn0() const;
+	String                    Convert(StringBuffer& b);
 
 public:
 	void   SkipWhites();
