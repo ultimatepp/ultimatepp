@@ -2,7 +2,6 @@
 
 GUI_APP_MAIN
 {
-#if 0
 	SECTION("Basics");
 	DO(Logging);
 	DO(StringTutorial);
@@ -12,6 +11,11 @@ GUI_APP_MAIN
 	DO(AsStringTutorial);
 	DO(CombineHashTutorial);
 	DO(ComparableTutorial);
+
+	SECTION("Streams");
+	DO(Stream);
+	DO(SpecialStream);
+	DO(Serialize);
 
 	SECTION("Array containers");
 	DO(Vector1);
@@ -30,7 +34,7 @@ GUI_APP_MAIN
 	DO(SortedMap);
 	DO(TupleTutorial);
 
-	SECTION("Ranges and algoritims");
+	SECTION("Ranges and algorithms");
 	DO(Range);
 	DO(Algo);
 	DO(Sorting);
@@ -53,12 +57,6 @@ GUI_APP_MAIN
 	DO(AsyncTutorial);
 	DO(CoPartitionTutorial);
 	DO(CoAlgoTutorial);
-#endif
-
-	SECTION("Streams");
-	DO(Stream);
-	DO(SpecialStream);
-	DO(Serialize);
 
 	MakeTutorial();
 }
