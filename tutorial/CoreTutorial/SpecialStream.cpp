@@ -36,7 +36,7 @@ void SpecialStream()
 	os << "This is a test " << 12345;
 	os.Close();
 	
-	/// `TeeStream` send output data to two separate streams:
+	/// `TeeStream` sends output data to two separate streams:
 	
 	StringStream ss1;
 	StringStream ss2;
@@ -49,9 +49,9 @@ void SpecialStream()
 	/// `MemReadStream` can be used to convert read-only memory block to stream data:
 	
 	static const char s[] = "Some line\nAnother line";
-	MemReadStream ms(s, sizeof(os));
+	MemReadStream ms(s, sizeof(s) - 1);
 	while(!ms.IsEof())
-		DUMP(ms.GetLine());
+		DUMPHEX(ms.GetLine());
 	
 	///
 }
