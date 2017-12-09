@@ -120,11 +120,10 @@ you start the program from the command line you will not see
 any text`-output).]&]
 [s19; Press OK.&]
 [s5; Here is a need of small digression. Several predefined templates 
-mention in the previous chapter have main package privileges 
-.by default. It means that there is not need to execute above 
-steps. Following templates fall under above definition: Basic 
-[*/ `"CtrlLib application`"], [*/ `"Core console project`"] and [*/ `"Skylark 
-web application`"].&]
+mention in the previous chapter have main package setup by default. 
+It means that there is not need to execute above steps. Following 
+templates fall under above definition: Basic [*/ `"CtrlLib application`"], 
+[*/ `"Core console project`"] and [*/ `"Skylark web application`"].&]
 [s5; Not main package can be used as supportive module for your projects. 
 You can place their common functions and classes and share between 
 other packages. In this way packages delivered by U`+`+ work 
@@ -284,9 +283,11 @@ bar. It is shown on above image with `"MINGW Debug`" method.&]
 &]
 [s0; &]
 [s5; Link mode &]
-[s19; [* All static] `- static libraries are preferred.&]
-[s19; [* Shared libs] `- shared libraries are preferred, but the program`'s 
-packages will be linked statically.&]
+[s19; [* All static] `- static external libraries are preferred. This 
+is default and recommended option for windows environment.&]
+[s19; [* Shared libs] `- shared external libraries are preferred, but 
+the program`'s packages will be linked statically. This is default 
+and recommended option for POSIX environments.&]
 [s19; [* All shared] `- both the external libraries and the applications 
 packages will be compiled and linked dynamically.&]
 [s5; Target override&]
