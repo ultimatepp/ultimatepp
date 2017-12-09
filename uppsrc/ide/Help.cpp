@@ -14,8 +14,11 @@ struct GatherLinksIterator : RichText::Iterator {
 	}
 };
 
-void GatherLinks(Index<String>& link, const char *topic)
+void GatherLinks(Index<String>& link, String topic)
 {
+	int q = topic.ReverseFind('$');
+	if(q >= 0)
+		topic.Set(q, '_');
 	if(link.Find(topic) < 0) {
 		Topic p = GetTopic(topic);
 		if(IsNull(p.text))
@@ -91,7 +94,7 @@ void TopicCtrl::LoadMap()
 		lang.SetIndex(0);
 }
 
-static String sTopicHome = "\3topic://ide/app/index$en-us";
+static String sTopicHome = "topic://ide/app/index_en-us";
 static String s_idehelp = "TheIDE help";
 static String s_usedpackages = "Used packages";
 static String s_otherpackages = "Other packages";
@@ -145,22 +148,21 @@ void TopicCtrl::SyncDocTree()
 
 	ClearTree();
 
-	String hdx = sTopicHome.Mid(1);
 	if(idelink.GetCount() == 0)
-		GatherLinks(idelink, hdx);
+		GatherLinks(idelink, sTopicHome);
 	int ide = 0;
 	bool idefirst = true;
-	if(MatchTopicLink(hdx, sdx)) {
-		ide = AddTree(0, IdeImg::Package(), "\3" + hdx, s_idehelp);
+	if(MatchTopicLink(sTopicHome, sdx)) {
+		ide = AddTree(0, IdeImg::Package(), sTopicHome, s_idehelp);
 		idefirst = false;
 	}
 	for(int i = 0; i < idelink.GetCount(); i++) {
-		if(idelink[i] != hdx && MatchTopicLink(idelink[i], sdx)) {
+		if(idelink[i] != sTopicHome && MatchTopicLink(idelink[i], sdx)) {
 			if(idefirst) {
-				ide = AddTree(0, IdeImg::Package(), "\3" + hdx, s_idehelp);
+				ide = AddTree(0, IdeImg::Package(), sTopicHome, s_idehelp);
 				idefirst = false;
 			}
-			AddTree(ide, TopicImg::Topic(), "\3" + idelink[i], GetTopic(idelink[i]).title);
+			AddTree(ide, TopicImg::Topic(), idelink[i], GetTopic(idelink[i]).title);
 		}
 	}
 
@@ -258,11 +260,12 @@ String recent_topic;
 
 Topic TopicCtrl::AcquireTopic(const String& t)
 {
-	recent_topic = t;
+	String current = GetCurrent();
 	String topic = t;
+	if(*topic == '#')
+		topic = current + topic;
+	recent_topic = topic;
 	internal = (byte)*topic < 32;
-	if(*topic == '\3')
-		return GetTopic(topic.Mid(1));
 	if(topic[0] == ':' && topic[1] == ':') {
 		String lbl;
 		Vector<String> link = GetTypeRefLinks(topic, lbl);
@@ -287,10 +290,16 @@ Topic TopicCtrl::AcquireTopic(const String& t)
 	}
 	TopicLink tl = ParseTopicLink(topic);
 	if(!IsNull(tl.package)) {
-		String path = AppendFileName(
-						AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp"),
-						tl.topic + ".tpp");
-		Topic t = ReadTopic(LoadFile(path));
+		int q = tl.topic.ReverseFind('$');
+		if(q >= 0)
+			tl.topic.Set(q, '_');
+		Topic t;
+		if(tl.topic.StartsWith("topic://ide/app/"))
+			t = GetTopic(tl.topic);
+		else
+			t = ReadTopic(LoadFile(AppendFileName(
+							AppendFileName(PackageDirectory(tl.package), tl.group + ".tpp"),
+							tl.topic + ".tpp")));
 		t.label = tl.label;
 		tl.label.Clear();
 		t.link = TopicLinkString(tl);
