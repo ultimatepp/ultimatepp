@@ -408,7 +408,9 @@ as the [/ condition] is true.]
 [s0; [*C -|][/C statement]]
 :: [s0; Iterates through [/ map], assigning keys of elements with non`-void 
 value to the [/ l`-value].]
-:: [s0; [*C break;]]
+:: [s0; [*C continue]]
+:: [s0; Skips the rest of loop statement.]
+:: [s0; [*C break]]
 :: [s0; Causes exit from innermost loop or switch statement.]
 :: [s0; [*C switch(][/C value][*C ) ][/C statement]]
 :: [s0; Matches [/ value] to all case statements inside the [/ statement], 

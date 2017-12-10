@@ -1019,7 +1019,7 @@ bool  Esc::PCond()
 
 void Esc::FinishSwitch()
 {
-	while(no_break && no_return) {
+	while(no_break && no_return && no_continue) {
 		if(Id("case")) {
 			SRVal r;
 			Exp(r);
@@ -1060,6 +1060,7 @@ void  Esc::DoStatement()
 			SetPos(pos);
 			DoStatement();
 			PassId("while");
+			no_continue = true;
 		}
 		while(PCond() && no_break && no_return);
 		PassChar(';');
@@ -1072,11 +1073,12 @@ void  Esc::DoStatement()
 		Pos pos = GetPos();
 		for(;;) {
 			SetPos(pos);
-			if(!PCond() || !no_break || !no_return) {
+			if(!PCond() || !no_break || !no_return || !no_continue) {
 				SkipStatement();
 				break;
 			}
 			DoStatement();
+			no_continue = true;
 		}
 		no_break = true;
 		loop--;
@@ -1088,7 +1090,7 @@ void  Esc::DoStatement()
 		SRVal var;
 		if(!IsChar(';'))
 			Exp(var);
-		if(Id("in")) {
+		if(Id("in") || Char(':')) {
 			EscValue range = GetExp();
 			PassChar(')');
 			Pos stmt = GetPos();
@@ -1111,11 +1113,12 @@ void  Esc::DoStatement()
 					}
 					Assign(var, map.GetKey(i));
 				}
-				if(!no_break || !no_return) {
+				if(!no_break || !no_return || !no_continue) {
 					SkipStatement();
 					break;
 				}
 				DoStatement();
+				no_continue = true;
 				i++;
 			}
 			SkipStatement();
@@ -1142,11 +1145,12 @@ void  Esc::DoStatement()
 					c = IsTrue(GetExp());
 				}
 				SetPos(stmt);
-				if(!c || !no_break || !no_return) {
+				if(!c || !no_break || !no_return || !no_continue) {
 					SkipStatement();
 					break;
 				}
 				DoStatement();
+				no_continue = true;
 				if(after.ptr) {
 					SetPos(after);
 					SRVal r;
@@ -1162,6 +1166,13 @@ void  Esc::DoStatement()
 		if(!loop)
 			ThrowError("misplaced 'break'");
 		no_break = false;
+		PassChar(';');
+	}
+	else
+	if(Id("continue")) {
+		if(!loop)
+			ThrowError("misplaced 'continue'");
+		no_continue = false;
 		PassChar(';');
 	}
 	else
@@ -1234,7 +1245,7 @@ void  Esc::DoStatement()
 	}
 	else
 	if(Char('{')) {
-		while(!Char('}') && no_break && no_return)
+		while(!Char('}') && no_break && no_return && no_continue)
 			DoStatement();
 	}
 	else
@@ -1247,10 +1258,10 @@ void  Esc::DoStatement()
 
 void  Esc::Run()
 {
-	no_return = no_break = true;
+	no_return = no_break = no_continue = true;
 	loop = 0;
 	skipexp = 0;
-	while(!IsEof() && no_return && no_break)
+	while(!IsEof() && no_return && no_break && no_continue)
 		DoStatement();
 }
 
