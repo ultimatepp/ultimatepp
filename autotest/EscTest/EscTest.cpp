@@ -174,10 +174,13 @@ CONSOLE_APP_MAIN
 	DDUMP(global.Get("out2"));
 	DDUMP(global.Get("out3"));
 	DDUMP(global.Get("out4"));
+	DDUMP(global.Get("out5"));
 
 	ASSERT(AsString(global.Get("out")) == "{ \"a\":123, \"b\":\"Hello!\" }");
 	ASSERT(AsString(global.Get("out2")) == "\"test\"");
 	ASSERT(AsString(global.Get("out3")) == "[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]");
+	ASSERT(AsString(global.Get("out4")) == "1");
+	ASSERT(AsString(global.Get("out5")) == "5");
 	
 	LOG("=========================== OK");
 }
