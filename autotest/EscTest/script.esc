@@ -18,4 +18,11 @@ main() {
 	a = Zero();
 	if(a == 0)
 		:out4 = 1;
+
+	:out5 = 0;
+	for(i = 0; i < 10; i++) {
+		if(i < 5)
+			continue;
+ 		:out5++;
+	}
 }
