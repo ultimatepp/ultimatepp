@@ -200,7 +200,7 @@ struct Esc : public CParser {
 
 	int      skipexp;
 	int      loop;
-	bool     no_break, no_return;
+	bool     no_break, no_return, no_continue;
 	int&     op_limit;
 	int      r_stack_level;
 	EscValue return_value;
