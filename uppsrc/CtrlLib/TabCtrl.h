@@ -139,6 +139,7 @@ public:
 	void GoPrev()                                { Go(-1); }
 
 	Size     ComputeSize(Size pane);
+	Size     ComputeSize();
 	void     Add(Ctrl& c)                        { pane.Add(c.SizePos()); }
 //	TabCtrl& operator<<(Ctrl& c)                 { Add(c); return *this; } // ambiguos with operator<<(lambda)
 

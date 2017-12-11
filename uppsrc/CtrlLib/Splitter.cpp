@@ -154,6 +154,12 @@ Splitter& Splitter::SetPos(int p, int i) {
 	return *this;
 }
 
+void   Splitter::SyncMin()
+{
+	for(int i = 0; i < pos.GetCount(); i++)
+		SetPos(pos[i], i);
+}
+
 void   Splitter::Zoom(int i)
 {
 	style = i;
