@@ -28,6 +28,7 @@ protected: // Because of docking... (will be private)
 	int         FindIndex(Point client) const;
 	int         GetMins(int i) const;
 	int         GetBarWidth() const;
+	void        SyncMin();
 
 	static void PaintDots(Draw& w, const Rect& r, bool vert);
 	
@@ -50,8 +51,8 @@ public:
 	void      NoZoom()                             { Zoom(-1); }
 	int       GetZoom() const                      { return style; }
 
-	void      SetMin(int i, int w)                 { mins.At(i, 0) = w; }
-	void      SetMinPixels(int i, int w)           { minpx.At(i, 0) = w; }
+	void      SetMin(int i, int w)                 { mins.At(i, 0) = w; SyncMin(); }
+	void      SetMinPixels(int i, int w)           { minpx.At(i, 0) = w; SyncMin(); }
 	
 	int       GetSplitWidth() const;
 
