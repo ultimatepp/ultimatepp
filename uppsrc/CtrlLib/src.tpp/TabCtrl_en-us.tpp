@@ -196,6 +196,12 @@ e])&]
 have client area of [%-*@3 pane] size.&]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:TabCtrl`:`:ComputeSize`(`):%- [_^Upp`:`:Size^ Size]_[* ComputeSize]()&]
+[s2; Computes required smallest size of TabCtrl is big enough to 
+have client area big enough to accommodate all slave widgets, 
+based on GetMinSize of slave widgets.&]
+[s3;%- &]
+[s4;%- &]
 [s5;:TabCtrl`:`:Add`(Ctrl`&`):%- [@(0.0.255) void]_[* Add]([_^Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 c
 ])&]
 [s2; Adds widget [%-*@3 c] to client area. Note that in this case, 

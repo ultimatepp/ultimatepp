@@ -152,6 +152,17 @@ Size TabCtrl::ComputeSize(Size pane)
 	            pane.cy + style->tabheight + style->edge.top + style->edge.bottom);
 }
 
+Size TabCtrl::ComputeSize()
+{
+	Size sz(0, 0);
+	for(int i = 0; i < tab.GetCount(); i++) {
+		Ctrl *q = tab[i].slave;
+		if(q)
+			sz = max(sz, q->GetMinSize());
+	}
+	return ComputeSize(sz);
+}
+
 int TabCtrl::TabsRight()
 {
 	return tabs.GetSize().cx - style->sel.left - style->sel.right;
