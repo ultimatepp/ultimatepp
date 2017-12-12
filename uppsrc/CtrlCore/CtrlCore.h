@@ -1310,6 +1310,7 @@ int GUI_DragFullWindow();
 enum { GUIEFFECT_NONE, GUIEFFECT_SLIDE, GUIEFFECT_FADE };
 int GUI_PopUpEffect();
 
+int GUI_ToolTips();
 int GUI_ToolTipDelay();
 
 int GUI_DropShadows();
@@ -1322,6 +1323,7 @@ int GUI_WheelScrollLines();
 void GUI_GlobalStyle_Write(int);
 void GUI_DragFullWindow_Write(int);
 void GUI_PopUpEffect_Write(int);
+void GUI_ToolTips_Write(int);
 void GUI_ToolTipDelay_Write(int);
 void GUI_DropShadows_Write(int);
 void GUI_AltAccessKeys_Write(int);

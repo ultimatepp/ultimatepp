@@ -63,6 +63,8 @@ void EndShowMode()
 void ShowToolTip()
 {
 	LLOG("ShowToolTip");
+	if(!GUI_ToolTips())
+		return;
 	CloseToolTip();
 	if(tipctrl) {
 		String text = tipctrl->GetTip();
@@ -89,6 +91,8 @@ void ShowToolTip()
 
 void SyncToolTip(Ctrl *ctrl)
 {
+	if(!GUI_ToolTips())
+		return;
 	if(ctrl != tipctrl || ctrl && ctrl->GetTip() != AppToolTip().Get()) {
 		LLOG("ToolTipHook / ctrl change " << UPP::Name(ctrl) << " -> " << UPP::Name(ctrl));
 		tipctrl = ctrl;

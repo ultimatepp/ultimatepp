@@ -191,6 +191,8 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
                        const Value& _value, const Display *_display,
                        Color _ink, Color _paper, dword _style, int _margin)
 {
+	if(!GUI_ToolTips())
+		return;
 	if(item != _item || ctrl != _ctrl || value != _value || display != _display || ink != _ink ||
 	   paper != _paper || style != _style) {
 		item = _item;
