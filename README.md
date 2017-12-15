@@ -20,7 +20,7 @@ You can use both, or you can use whichever you need.
 
 U++ uses BSD license.
 
-## Dwonload
+## Download
 
 [SourceForge](https://sourceforge.net/projects/upp/) - stables releases
 [Official site](https://www.ultimatepp.org/www$uppweb$download$en-us.html) - nightly builds
