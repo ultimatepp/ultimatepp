@@ -125,9 +125,9 @@ content. Returns constant reference to content.&]
 Returns reference to content.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:One`:`:Create`(Args`.`.`.args`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T
-T], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) .
-..]_args)&]
+[s5;:Upp`:`:One`:`:Create`(Args`&`&`.`.`.args`): [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) `&
+`&...]_args)&]
 [s2;%% Creates [%-*@4 TT] content in One. If there is content in One 
 while calling this function, it is destroyed. Additional arguments 
 can be specified for [%-*@4 TT ]constructor.&]

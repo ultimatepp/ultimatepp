@@ -39,9 +39,9 @@ while destroying its content by picking..&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:Upp`:`:Any`:`:Create`(Args`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) class]_
-[*@4 T], [@(0.0.255) class...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) .
-..]_args)&]
+[s5;:Upp`:`:Any`:`:Create`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) cla
+ss]_[*@4 T], [@(0.0.255) class...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) `&
+`&...]_args)&]
 [s2; Creates content of type T inside Any. Additional parameters 
 to constructor can be specified.&]
 [s3;%- &]
