@@ -27,7 +27,7 @@ void Section(const String& title)
 	lbl = "Chapter_" + lbl;
 	qtf << "[s6;:" << lbl << ": " << text << "&]";
 	minor = 0;
-	toc << "&[A3^" << lbl << "^ " << text << "]&";
+	toc << "&[A3^#" << lbl << "^ " << text << "]&";
 }
 
 void FlushDoc(String& docblock)
@@ -91,7 +91,7 @@ void FlushDoc(String& docblock)
 
 	qtf << "&]";
 	if(lbl.GetCount())
-		toc << "___[A2^" << lbl << "^ " << plain << "]&";
+		toc << "___[A2^#" << lbl << "^ " << plain << "]&";
 	docblock.Clear();
 }
 
