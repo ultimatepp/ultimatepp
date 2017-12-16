@@ -5,45 +5,88 @@ using namespace Upp;
 struct Test : Moveable<Test> {
 	Test(const Vector<int>& a, int b) : a(clone(a)), b(b) {}
 	Test(Vector<int>&& a, int b) : a(pick(a)), b(b) {}
+	Test() {}
 	
 	Vector<int> a;
 	int         b;
 };
 
+template <class T>
+void TestCreate()
+{
+	T h;
+	DLOG("---- Create " << typeid(T).name());
+	Vector<int> v;
+	v.Add(12);
+	// Copy-constructor
+	h.Create(v, 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 1);
+	// Move-constructor
+	h.Create(pick(v), 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 0);
+	v.Add(21);
+	h.Create(clone(v), 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 1);
+}
+
+template <class T>
+void TestCreateT()
+{
+	T h;
+	DLOG("---- Create<Test> " << typeid(T).name());
+	Vector<int> v;
+	v.Add(12);
+	// Copy-constructor
+	h.Create<Test>(v, 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 1);
+	// Move-constructor
+	h.Create<Test>(pick(v), 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 0);
+	v.Add(21);
+	h.Create<Test>(clone(v), 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 1);
+}
+
+template <class T>
+void TestCreateMap()
+{
+	T h;
+	DLOG("---- Create<Test> " << typeid(T).name());
+	Vector<int> v;
+	v.Add(12);
+	// Copy-constructor
+	h.Create<Test>("a", v, 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 1);
+	// Move-constructor
+	h.Create<Test>("a", pick(v), 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 0);
+	v.Add(21);
+	h.Create<Test>("a", clone(v), 22);
+	DDUMP(v.GetCount());
+	ASSERT(v.GetCount() == 1);
+}
+
 CONSOLE_APP_MAIN
 {
-	{
-		Array<Test> h;
-		Vector<int> v;
-		v.Add(12);
-		// Copy-constructor
-		h.Create<Test>(v, 22);
-		DDUMP(v.GetCount());
-		ASSERT(v.GetCount() == 1);
-		// Move-constructor
-		h.Create<Test>(pick(v), 22);
-		DDUMP(v.GetCount());
-		ASSERT(v.GetCount() == 0);
-		v.Add(21);
-		h.Create<Test>(Vector<int>(v, 0), 22);
-		DDUMP(v.GetCount());
-		ASSERT(v.GetCount() == 1);
-	}
-	{
-		Vector<Test> h;
-		Vector<int> v;
-		v.Add(12);
-		// Copy-constructor
-		h.Create(v, 22);
-		DDUMP(v.GetCount());
-		ASSERT(v.GetCount() == 1);
-		// Move-constructor
-		h.Create(pick(v), 22);
-		DDUMP(v.GetCount());
-		ASSERT(v.GetCount() == 0);
-		v.Add(21);
-		h.Create(Vector<int>(v, 0), 22);
-		DDUMP(v.GetCount());
-		ASSERT(v.GetCount() == 1);
-	}
+	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	TestCreate<One<Test>>();
+	TestCreateT<One<Test>>();
+	TestCreateT<Any>();
+	TestCreate<Vector<Test>>();
+	TestCreateT<Array<Test>>();
+	TestCreateT<InArray<Test>>();
+	TestCreateMap<ArrayMap<String, Test>>();
+	TestCreateMap<FixedArrayMap<String, Test>>();
+	TestCreateMap<SortedArrayMap<String, Test>>();
+	
+	LOG("======== OK");
 }
