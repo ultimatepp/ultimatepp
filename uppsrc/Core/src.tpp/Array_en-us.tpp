@@ -121,12 +121,11 @@ can be either T or a type derived from T. No constructor is applied.
 [s7; [*/ Return value]-|Reference to the new element  (that is [* `*newt]).&]
 [s0;*%- &]
 [s4;%- &]
-[s5;:Array`:`:Create`(`):%- [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 TT][@(0.0.255) >]_
-[*@4 TT][@(0.0.255) `&]_[* Create]()&]
-[s2; Creates and adds a new element to the Array.&]
-[s6; Requires T to have default constructor.&]
-[s7; [*C@4 TT]-|Type of the new element.&]
-[s7; [*/ Return value]-|Reference to the newly created element.&]
+[s5;:Upp`:`:Array`:`:Create`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) `&
+`&...]_[*@3 args])&]
+[s2; Creates and adds a new element to the Array. [%-*@3 args] are 
+forwarded to constructor.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Array`:`:operator`[`]`(int`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[* operat
