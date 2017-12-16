@@ -106,6 +106,12 @@ s...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) ...]_a
 &]
 [s3; &]
 [s4;%- &]
+[s5;:Upp`:`:Vector`:`:Create`(Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass...]_[*@4 Args]>_[*@4 T][@(0.0.255) `&]_[* Create]([*@4 Args][@(0.0.255) `&`&...]_args)&]
+[s2; Creates and adds a new element to the Array. [%-*@3 args] are 
+forwarded to constructor.&]
+[s3; &]
+[s4;%- &]
 [s5;:Vector`:`:AddN`(int`):%- [@(0.0.255) void]_[* AddN]([@(0.0.255) int]_[*@3 n])&]
 [s2; Adds specified number of default constructed elements to Vector.&]
 [s6; Requires T to have default constructor.&]
