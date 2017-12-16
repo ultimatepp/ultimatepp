@@ -301,7 +301,7 @@ public:
 	T&       Insert(int i)                          { return Insert(i, new T); }
 	T&       Insert(int i, const T& x)              { return Insert(i, new T(x)); }
 	template<class TT, class... Args>
-	TT&      InsertCreate(int i, Args... args)      { TT *q = new TT(args...); Insert(i, q); return *q; }
+	TT&      InsertCreate(int i, Args&&... args)    { TT *q = new TT(std::forward<Args>(args)...); Insert(i, q); return *q; }
 
 	void     InsertN(int i, int count);
 	template <class Range>
@@ -319,7 +319,7 @@ public:
 	void     AddN(int n)                            { InsertN(GetCount(), n); }
 	T&       Add(T *newt)                           { Insert(GetCount(), newt); return *newt; }
 	template<class TT, class... Args>
-	TT&      Create(Args... args)                   { TT *q = new TT(args...); Add(q); return *q; }
+	TT&      Create(Args&&... args)                 { TT *q = new TT(std::forward<Args>(args)...); Add(q); return *q; }
 	
 	int      GetCount() const                       { return iv.GetCount(); }
 	bool     IsEmpty() const                        { return GetCount() == 0; }
@@ -727,7 +727,7 @@ public:
 	T&       Add(const K& k)                      { B::value.res = NULL; B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k, T *newt)             { B::value.res = newt; B::key.Add(k); return *newt; }
 	template <class TT, class... Args>
-	TT&      Create(const K& k, Args... args)     { TT *q = new TT(args...); B::value.res = q; B::key.Add(k); return *q; }
+	TT&      Create(const K& k, Args&&... args)   { TT *q = new TT(std::forward<Args>(args)...); B::value.res = q; B::key.Add(k); return *q; }
 
 	int      FindAdd(const K& k)                  { B::value.res = NULL; return B::key.FindAdd(k); }
 	int      FindAdd(const K& k, const T& init);

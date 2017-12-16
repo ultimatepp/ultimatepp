@@ -222,7 +222,7 @@ public:
 	T&        Insert(int i, const K& k, T *newt)   { B::key.Insert(i, k); return B::value.Insert(i, newt); }
 	using B::Insert;
 	template <class TT, class... Args>
-	TT& Create(const K& k, Args... args)           { TT *q = new TT(args...); B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
+	TT& Create(const K& k, Args&&... args)         { TT *q = new TT(std::forward<Args>(args)...); B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
 
 	T&        Set(int i, T *ptr)                   { return B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }

@@ -46,11 +46,11 @@ public:
 	T&          operator*()                { ASSERT(ptr); return *ptr; }
 
 	template <class TT, class... Args>
-	TT&         Create(Args... args)       { TT *q = new TT(args...); Attach(q); return *q; }
+	TT&         Create(Args&&... args)     { TT *q = new TT(std::forward<Args>(args)...); Attach(q); return *q; }
 	template <class TT> // with C++ conforming compiler, this would not be needed - GCC bug workaround
 	TT&         Create()                   { TT *q = new TT; Attach(q); return *q; }
 	template <class... Args>
-	T&          Create(Args... args)       { T *q = new T(args...); Attach(q); return *q; }
+	T&          Create(Args&&... args)     { T *q = new T(std::forward<Args>(args)...); Attach(q); return *q; }
 	T&          Create()                   { T *q = new T; Attach(q); return *q; }
 
 	template <class TT>
@@ -90,7 +90,7 @@ class Any : Moveable<Any> {
 		T        data;
 
 		template <class... Args>
-		Data(Args... args) : data(args...)        { typeno = StaticTypeNo<T>(); }
+		Data(Args&&... args) : data(std::forward<Args>(args)...) { typeno = StaticTypeNo<T>(); }
 	};
 
 	BaseData *ptr;
@@ -99,7 +99,7 @@ class Any : Moveable<Any> {
 	void Pick(Any&& s)                            { ptr = s.ptr; const_cast<Any&>(s).ptr = NULL; }
 
 public:
-	template <class T, class... Args> T& Create(Args... args) { Clear(); Data<T> *x = new Data<T>(args...); ptr = x; return x->data; }
+	template <class T, class... Args> T& Create(Args&&... args) { Clear(); Data<T> *x = new Data<T>(std::forward<Args>(args)...); ptr = x; return x->data; }
 	template <class T> bool Is() const            { return ptr && ptr->typeno == StaticTypeNo<T>(); }
 	template <class T> T& Get()                   { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
 	template <class T> const T& Get() const       { ASSERT(Is<T>()); Chk(); return ((Data<T>*)ptr)->data; }
