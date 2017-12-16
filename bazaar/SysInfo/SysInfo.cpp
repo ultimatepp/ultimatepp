@@ -16,7 +16,7 @@ using namespace Upp;
 #define TFILE <SysInfo/SysInfo.t>
 #include <Core/t.h>
 
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 #pragma comment(lib, "ws2_32.lib")
 #endif
 
@@ -91,7 +91,7 @@ bool GetWMIInfo(String system, Array <String> &data, Array <Value> *ret[], Strin
     int row = 0;
     bool rt = false;
 	while (pEnumerator) {
-        hRes = pEnumerator->Next(WBEM_INFINITE, 1, &pClassObject, &uReturn);
+        hRes = pEnumerator->Next(LONG(WBEM_INFINITE), 1, &pClassObject, &uReturn);
        	if(0 == uReturn) {
        		if (rt)
        			break;
@@ -1053,7 +1053,7 @@ BOOL CALLBACK EnumGetWindowsList(HWND hWnd, LPARAM lParam)
 void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &name, Array<String> &fileName, Array<String> &caption, bool getAll)
 {
 	HANDLE hProcess;
-	DWORD dwThreadId, dwProcessId;
+	DWORD /*dwThreadId, */dwProcessId;
 	HINSTANCE hInstance;
 	WCHAR str[MAX_PATH];
 	int count;
@@ -1067,15 +1067,15 @@ void GetWindowsList(Array<int64> &hWnd, Array<int64> &processId, Array<String> &
 		}
 		String sstr;
 		hInstance = (HINSTANCE)GetWindowLongPtr(reinterpret_cast<HWND>(hWnd[i]), GWLP_HINSTANCE);
-		dwThreadId = GetWindowThreadProcessId(reinterpret_cast<HWND>(hWnd[i]), &dwProcessId);
+		/* dwThreadId = */GetWindowThreadProcessId(reinterpret_cast<HWND>(hWnd[i]), &dwProcessId);
 		processId.Add(dwProcessId);
 		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, dwProcessId);
-		if (count = GetModuleFileNameExW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR))) {
+		if ((count = GetModuleFileNameExW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))) {
 			sstr = WString(str, count).ToString();
 			fileName << sstr;
 		} else
 			fileName << t_("Unknown process");	
-		if (count = GetModuleBaseNameW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR))) {
+		if ((count = GetModuleBaseNameW(hProcess, hInstance, str, sizeof(str)/sizeof(WCHAR)))) {
 			sstr = WString(str, count).ToString();
 			name << sstr;
 		 } else
@@ -1116,7 +1116,7 @@ bool ProcessTerminate(int64 pId, int timeout)
   	::EnumWindows((WNDENUMPROC)TerminateAppEnum, (LPARAM)pId) ;
 
 	int ret;
-  	int state = ::WaitForSingleObject(hProc, timeout);
+  	DWORD state = ::WaitForSingleObject(hProc, timeout);
   	if ((state == WAIT_TIMEOUT) || (state == WAIT_FAILED))
      	ret = ::TerminateProcess(hProc, 0);
 	else
@@ -1818,6 +1818,7 @@ bool TakeWindowPlacement(HWND hwnd, RECT &rcNormalPosition, POINT &ptMinPosition
     if (!ret)
         return false;
     ptMinPosition = place.ptMinPosition;
+    
     ptMaxPosition = place.ptMaxPosition;
     rcNormalPosition = place.rcNormalPosition;
     showcmd = place.showCmd;     //SW_SHOWMAXIMIZED, SW_SHOWMINIMIZED, SW_SHOWNORMAL
@@ -1831,9 +1832,9 @@ int Window_GetStatus(int64 windowId)
     
     place.length = sizeof(place);
     bool ret = GetWindowPlacement((HWND)windowId, &place);
-    if (!ret)
+    if (!ret) {
         return Null;
-
+    }
 	switch(place.showCmd) {
 	case SW_SHOWMAXIMIZED:	return WINDOW_MAXIMIZED;
 	case SW_SHOWMINIMIZED:	return WINDOW_MINIMIZED;
@@ -1844,7 +1845,7 @@ int Window_GetStatus(int64 windowId)
 
 bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom)
 {
-	RECT rcNormalPosition;
+	RECT rcNormalPosition = {0};
     POINT ptMinPosition, ptMaxPosition;
     long showcmd;	
     
@@ -2013,7 +2014,7 @@ bool Serial_Check(String hdSerial, String other_hdSerial) {
 	otherList << other_hdSerial << Serial_ReorderInPairs(other_hdSerial) << toStrOther << Serial_ReorderInPairs(toStrOther);
 	
 	// Check them all
-	bool hdSerialMatch = false;
+	//bool hdSerialMatch = false;
 	for (int i = 0; i < list.GetCount(); ++i) {
 		for (int j = 0; j < otherList.GetCount(); ++j) 
 			if (list[i] == otherList[j]) 
@@ -2198,9 +2199,9 @@ int GetAvailableSocketPort(int from) {
 	if (GetTcpTable(pTable, &size, TRUE) == ERROR_INSUFFICIENT_BUFFER) 
 		table.Alloc(size);
 	pTable = (MIB_TCPTABLE*)~table;	
-    if (GetTcpTable(pTable, &size, TRUE) != NO_ERROR)
+    if (GetTcpTable(pTable, &size, TRUE) != NO_ERROR) {
     	return Null;
-
+    }
   	for (int i = 0; i < (int)pTable->dwNumEntries; i++) 
   		ports.FindAdd(ntohs((u_short)pTable->table[i].dwLocalPort));
 #else
@@ -2228,7 +2229,7 @@ bool IsPortFree(int port) {
 #endif
     
     SOCKET socket_desc = socket(AF_INET, SOCK_STREAM, 0);
-    if (socket_desc == -1)
+    if (socket_desc == INVALID_SOCKET)
         return false;
     
     sockaddr_in service;

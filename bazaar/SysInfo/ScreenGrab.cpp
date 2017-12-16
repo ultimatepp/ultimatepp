@@ -288,7 +288,8 @@ HICON ScreenGrab::GetCursorHandle()
         if (AttachThreadInput(lCurrentThreadID, lThreadID, true)) {
             ret = GetCursor();
             AttachThreadInput(lCurrentThreadID, lThreadID, false);
-        }
+        } else
+            ret = 0;
     } else
         ret = GetCursor();
    
