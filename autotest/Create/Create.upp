@@ -1,0 +1,9 @@
+uses
+	Core;
+
+file
+	Create.cpp;
+
+mainconfig
+	"" = "";
+
