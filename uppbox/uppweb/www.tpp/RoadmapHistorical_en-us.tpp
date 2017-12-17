@@ -25,6 +25,83 @@ topic "Historical roadmap";
 [b125;a21;*2 $$23,23#72A57D7B347482931820FBB21B426750:subtitle]
 [{_}%EN-US 
 [s2; Historical roadmap&]
+[s3; 2017.1 (rev 10804) (Jan 2017)&]
+[s5; This is the first release of U`+`+ that [*/ requires] C`+`+11 
+compatible compiler. The main focus was [* Core], adding many enhancements 
+allowed by C`+`+11 and improved parallel programming support. 
+We, also didn`'t forget about Android and we ported Core library 
+on that platform.&]
+[s23; Core&]
+[s5;l160;i150;O0; Original U`+`+ Callbacks are deprecated and replaced 
+with Function with better lambda support.&]
+[s5;l160;i150;O0; Begin/End methods are now renamed / deprecated 
+in favor of (standard) begin/end.&]
+[s5;l160;i150;O0; U`+`+ algorithms now primarily work on [/ ranges], 
+besides container SubRange, ConstRange and ViewRange are now 
+provided.&]
+[s5;l160;i150;O0; Initial round of optimizations for ARM architecture.&]
+[s5;l160;i150;O0; U`+`+ allocator optimized once again, locking is 
+reduced in inter`-thread deallocations, allocator now returns 
+blocks always 16 bytes aligned (simplifies SSE2 code).&]
+[s5;l160;i150;O0; General cleanup of U`+`+ algorithms, redundant 
+algorithms removed, new Count and CountIf algorithms&]
+[s5;l160;i150;O0; Improvements in Core/RPC&]
+[s5;l160;i150;O0; CoWork`::FinLock now provides `'free of charge`' 
+mutex at the end of worker jobs.&]
+[s5;l160;i150;O0; CoWorkerResources class now provides `'per worker 
+thread`' context.&]
+[s5;l160;i150;O0; CoPartition algorithm useful for partitioning array 
+for parallel programming.&]
+[s5;l160;i150;O0; Where it makes sense, U`+`+ algorithms now have 
+parallel variant.&]
+[s5;l160;i150;O0; String further optimized, new TrimLast, TrimStart, 
+TrimEnd, FindAfter, ReverseFindAfter&]
+[s5;l160;i150;O0; FastCompress (currently using LZ4) for internal 
+program compression.&]
+[s5;l160;i150;O0; Core can be compiled on Android and major of features 
+are currently ported.&]
+[s5;l160;i150;O0; xxHash `- fast non`-cryptographic hash `- now part 
+of Core.&]
+[s5;l160;i150;O0; SHA256 code now part of the Core.&]
+[s5;l160;i150;O0; plugin/pcre updated to the latest pcre version.&]
+[s5;l160;i150;O0; plugin/zstd now provides [^http`:`/`/facebook`.github`.io`/zstd`/^ zs
+td] compression (with multithreaded option).&]
+[s5;l160;i150;O0; plugin/lz4 now can multithreaded.&]
+[s23; GUI programming `& graphics&]
+[s5;l160;i150;O0; PdfDraw and RichText now support PDF signatures.&]
+[s5;l160;i150;O0; RichText now can change header/footer within document.&]
+[s5;l160;i150;O0; ArrayCtrl got SetLineColor and GetCellRect methods.&]
+[s23; TheIDE&]
+[s5;l160;i150;O0; Comments now can be spell checked and there is 
+comment word wrap and reformatting operation.&]
+[s5;l160;i150;O0; New functions / icons that search the web (launch 
+the browser) for text selected or current identifier.&]
+[s5;l160;i150;O0; Optimal compilation mode is removed as confusing, 
+it is now always either debug or release mode, release mode being 
+configured for speed.&]
+[s5;l160;i150;O0; When comparing files, differences within single 
+lines are now shown.&]
+[s5;l160;i150;O0; Most U`+`+ designers now support drag`&drop to 
+reorganize lists.&]
+[s5;l160;i150;O0; Find File window was remastered.&]
+[s5;l160;i150;O0; New dialog for creating package file.&]
+[s5;l160;i150;O0; Android application can be directly launch on emulator 
+from TheIDE.&]
+[s5;l160;i150;O0; Clang is now default compiler for native Android 
+applications.&]
+[s5;l160;i150;O0; C`+`+14 is now default standard for all Android 
+builds.&]
+[s5;l160;i150;O0; Various android builder improvements.&]
+[s23; ESC&]
+[s5;l160;i150;O0; New math functions like sin, cos, tg, pow etc.&]
+[s5;l160;i150;O0; New replace in string function.&]
+[s23; General&]
+[s5;l160;i150;O0; Significantly improved the process of building 
+TheIDE and UMK from tarball (POSIX environment). Compilation 
+on multiple cores is possible with `"`-j`" option.&]
+[s5;l160;i150;O0; Documentation improvements.&]
+[s5;l160;i150;O0; Bug fixes in various areas.&]
+[s3; &]
 [s3; 2015.2 (rev 9251)[3  (Dec 2015)]&]
 [s5; The main focus of this release was [^topic`:`/`/ide`/app`/Assist`$en`-us^ C`+`+ 
 parser and Assist`+`+ features]. and [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A

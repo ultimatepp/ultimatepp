@@ -26,7 +26,7 @@ topic "Roadmap";
 [b83;*_2 $$24,24#F44F66EA0BD27C61EACACB2D8ED88A05:release]
 [{_}%EN-US 
 [s2; Roadmap&]
-[s24; Release candidate&]
+[s24; Current release&]
 [s3; 2017.2 (rev 11540) (Dev 2017)&]
 [s5; U`+`+ now requires C`+`+14 compatible compiler.&]
 [s22; Core&]
@@ -101,83 +101,6 @@ auto setup&]
 [s5;l192;i150;O0; plugin/z: Updated to 1.2.11&]
 [s5;l192;i150;O0; plugin/Eigen: Updated to version 3.3.4&]
 [s5; &]
-[s24; Current release&]
-[s3; 2017.1 (rev 10804) (Jan 2017)&]
-[s5; This is the first release of U`+`+ that [*/ requires] C`+`+11 
-compatible compiler. The main focus was [* Core], adding many enhancements 
-allowed by C`+`+11 and improved parallel programming support. 
-We, also didn`'t forget about Android and we ported Core library 
-on that platform.&]
-[s22; Core&]
-[s5;l160;i150;O0; Original U`+`+ Callbacks are deprecated and replaced 
-with Function with better lambda support.&]
-[s5;l160;i150;O0; Begin/End methods are now renamed / deprecated 
-in favor of (standard) begin/end.&]
-[s5;l160;i150;O0; U`+`+ algorithms now primarily work on [/ ranges], 
-besides container SubRange, ConstRange and ViewRange are now 
-provided.&]
-[s5;l160;i150;O0; Initial round of optimizations for ARM architecture.&]
-[s5;l160;i150;O0; U`+`+ allocator optimized once again, locking is 
-reduced in inter`-thread deallocations, allocator now returns 
-blocks always 16 bytes aligned (simplifies SSE2 code).&]
-[s5;l160;i150;O0; General cleanup of U`+`+ algorithms, redundant 
-algorithms removed, new Count and CountIf algorithms&]
-[s5;l160;i150;O0; Improvements in Core/RPC&]
-[s5;l160;i150;O0; CoWork`::FinLock now provides `'free of charge`' 
-mutex at the end of worker jobs.&]
-[s5;l160;i150;O0; CoWorkerResources class now provides `'per worker 
-thread`' context.&]
-[s5;l160;i150;O0; CoPartition algorithm useful for partitioning array 
-for parallel programming.&]
-[s5;l160;i150;O0; Where it makes sense, U`+`+ algorithms now have 
-parallel variant.&]
-[s5;l160;i150;O0; String further optimized, new TrimLast, TrimStart, 
-TrimEnd, FindAfter, ReverseFindAfter&]
-[s5;l160;i150;O0; FastCompress (currently using LZ4) for internal 
-program compression.&]
-[s5;l160;i150;O0; Core can be compiled on Android and major of features 
-are currently ported.&]
-[s5;l160;i150;O0; xxHash `- fast non`-cryptographic hash `- now part 
-of Core.&]
-[s5;l160;i150;O0; SHA256 code now part of the Core.&]
-[s5;l160;i150;O0; plugin/pcre updated to the latest pcre version.&]
-[s5;l160;i150;O0; plugin/zstd now provides [^http`:`/`/facebook`.github`.io`/zstd`/^ zs
-td] compression (with multithreaded option).&]
-[s5;l160;i150;O0; plugin/lz4 now can multithreaded.&]
-[s22; GUI programming `& graphics&]
-[s5;l160;i150;O0; PdfDraw and RichText now support PDF signatures.&]
-[s5;l160;i150;O0; RichText now can change header/footer within document.&]
-[s5;l160;i150;O0; ArrayCtrl got SetLineColor and GetCellRect methods.&]
-[s22; TheIDE&]
-[s5;l160;i150;O0; Comments now can be spell checked and there is 
-comment word wrap and reformatting operation.&]
-[s5;l160;i150;O0; New functions / icons that search the web (launch 
-the browser) for text selected or current identifier.&]
-[s5;l160;i150;O0; Optimal compilation mode is removed as confusing, 
-it is now always either debug or release mode, release mode being 
-configured for speed.&]
-[s5;l160;i150;O0; When comparing files, differences within single 
-lines are now shown.&]
-[s5;l160;i150;O0; Most U`+`+ designers now support drag`&drop to 
-reorganize lists.&]
-[s5;l160;i150;O0; Find File window was remastered.&]
-[s5;l160;i150;O0; New dialog for creating package file.&]
-[s5;l160;i150;O0; Android application can be directly launch on emulator 
-from TheIDE.&]
-[s5;l160;i150;O0; Clang is now default compiler for native Android 
-applications.&]
-[s5;l160;i150;O0; C`+`+14 is now default standard for all Android 
-builds.&]
-[s5;l160;i150;O0; Various android builder improvements.&]
-[s22; ESC&]
-[s5;l160;i150;O0; New math functions like sin, cos, tg, pow etc.&]
-[s5;l160;i150;O0; New replace in string function.&]
-[s22; General&]
-[s5;l160;i150;O0; Significantly improved the process of building 
-TheIDE and UMK from tarball (POSIX environment). Compilation 
-on multiple cores is possible with `"`-j`" option.&]
-[s5;l160;i150;O0; Documentation improvements.&]
-[s5;l160;i150;O0; Bug fixes in various areas.&]
 [s0; &]
 [s3;H4; Archival releases:&]
 [s5; If you are looking for informations about archival releases 
