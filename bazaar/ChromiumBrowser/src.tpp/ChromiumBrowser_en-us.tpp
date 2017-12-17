@@ -164,10 +164,12 @@ rebuild `"cefclient`"&]
 [s0;i150;O0; configure library paths in TheIDE, menu [* Setup ]/ [* Build 
 methods]:&]
 [s0; -|[* INCLUDE directories]: add CEF library directory, for example:&]
-[s0; -|[C c:`\MyApps`\cef`_binary`_3.2454.1328.gc45b7de`_windows32]&]
-[s0; -|[* LIB directories]: the same path as above, for example&]
-[s0; [C1 -|][C C:`\MyApps`\cef`_binary`_3.2454.1328.gc45b7de`_windows32 
-]&]
+[s0; -|[C c:`\MyApps`\cef`_binary`_3.3239.1700.g385b2d4`_windows32]&]
+[s0; -|[* LIB directories]: add directories containing `*.lib files, 
+for example:&]
+[s0; [C1 -|][C C:`\MyApps`\cef`_binary`_3.3239.1700.g385b2d4`_windows32`\libcef`_dll`_wrapp
+er`\Release]&]
+[s0; [C -|C:`\MyApps`\cef`_binary`_3.3239.1700.g385b2d4`_windows32`\Release]&]
 [s0;i150;O0; open ChromiumBrowserExample from Bazaar and try to compile 
 it&]
 [s0;i150;O0; before you run compiled application, copy asset files 

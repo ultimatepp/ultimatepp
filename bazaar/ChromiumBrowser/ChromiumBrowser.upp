@@ -9,9 +9,7 @@ uses
 
 library(LINUX) "libcef.so cef_dll_wrapper";
 
-library(WIN32 !DEBUG) "Release\\libcef libcef_dll\\Release\\libcef_dll_wrapper.lib";
-
-library(WIN32 DEBUG) "Debug\\libcef libcef_dll\\Debug\\libcef_dll_wrapper.lib";
+library(WIN32) "libcef.lib libcef_dll_wrapper.lib";
 
 options(GCC) -std=c++11;
 
