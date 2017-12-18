@@ -21,6 +21,7 @@ class DashStyle {
 public:
 	static int Register(const String& name, const String& style) {
 		return map().FindAdd(name, style);
+		return map().FindAdd(name, style);
 	}
 	static void Unregister(const String& name) {
 		int id = TypeIndex(name);
@@ -97,20 +98,178 @@ protected:
 		String unitsX, unitsY;
 		
 		double opacity;
+		
+		double barWidth;
+		bool isClosed;
 
 		int id;
+		
+		void Xmlize(XmlIO& xio) {
+			XmlizeByJsonize(xio, *this);
+		}
+		void Jsonize(JsonIO& json) {
+			int seriesP = Null;
+			int markP = Null;
+			if (json.IsStoring()) {
+				if (markPlot)
+					markP = markPlot->GetType();
+				if (seriesP)
+					seriesP = seriesPlot->GetType();
+			}
+			json
+				("primaryY", primaryY)
+				("sequential", sequential)
+				("thickness", thickness)
+				("color", color)
+				("dash", dash)
+				("markWidth", markWidth)
+				("markColor", markColor)
+				("markBorderWidth", markBorderWidth)
+				("markWidth", markWidth)
+				("markBorderColor", markBorderColor)
+				("fillColor", fillColor)
+				("markBorderColor", markBorderColor)
+				("legend", legend)
+				("unitsX", unitsX)
+				("unitsY", unitsY)
+				("opacity", opacity)
+				("id", id)
+				("seriesP", seriesP)
+				("markPlot", markP)
+				("seriesPlot", seriesP)
+				("barWidth", barWidth)
+				("isClosed", isClosed)
+			;
+			if (json.IsLoading()) {
+				if (!IsNull(markP))
+					markPlot = MarkPlot::Create(markP);
+				else
+					markPlot = 0;
+				if (!IsNull(seriesP))
+					seriesPlot = SeriesPlot::Create(seriesP);
+				else
+					seriesPlot = 0;
+			}
+		}
+		void Serialize(Stream& s) {
+			int seriesP = Null;
+			int markP = Null;
+			if (s.IsStoring()) {
+				if (markPlot)
+					markP = markPlot->GetType();
+				if (seriesP)
+					seriesP = seriesPlot->GetType();
+			}
+			s	% primaryY
+				% sequential
+				% thickness
+				% color
+				% dash
+				% markWidth
+				% markColor
+				% markBorderWidth
+				% markWidth
+				% markBorderColor
+				% fillColor
+				% markBorderColor
+				% legend
+				% unitsX
+				% unitsY
+				% opacity
+				% id
+				% seriesP
+				% markP
+				% seriesP
+				% barWidth
+				% isClosed
+			;
+			if (s.IsLoading()) {
+				if (!IsNull(markP))
+					markPlot = MarkPlot::Create(markP);
+				else
+					markPlot = 0;
+				if (!IsNull(seriesP))
+					seriesPlot = SeriesPlot::Create(seriesP);
+				else
+					seriesPlot = 0;
+			}
+		} 
 	};
 		
 	class ScatterSeries : public Moveable<ScatterSeries>, public ScatterBasicSeries {
 	public:
-		ScatterSeries()	{pD = 0;}
-		void SetDataSource(DataSource *pointsData, bool ownsData = true) {pD = pointsData; owns = ownsData;}
+		ScatterSeries()	: userpD(0), owns(false), serializeData(false), pD(0) {dataS.Init(&data);}
+		void SetDataSource(DataSource *pointsData, bool ownsData = true) {
+			DeletePD();
+			pD = userpD = pointsData; 
+			owns = ownsData;
+		}
+		void SetDataSource() {
+			pD = userpD;
+		}
+		void SetDataSource_Internal(bool copy = true) {
+			pD = &dataS;
+			if (copy) 
+				CopyInternal();
+		}
 		DataSource &GetDataSource() {return *pD;}
-		inline DataSource *PointsData()	{ASSERT_(!pD->IsDeleted(), "DataSource in ScatterCtrl/Draw has been deleted.\nIt has been probably declared in a function.");	return pD;}
-		~ScatterSeries()	{if(pD && owns) delete pD;}
+		inline DataSource *PointsData()	{
+			ASSERT_(!pD || !pD->IsDeleted(), "DataSource in ScatterCtrl/Draw has been deleted.\nIt has been probably declared in a function.");	
+			return pD;
+		}
+		~ScatterSeries()   {DeletePD();}
+		void SerializeData(bool ser = true) 	{serializeData = ser;}
+		void SerializeFormat(bool ser = false) 	{serializeFormat = ser;}
+		void Xmlize(XmlIO& xio) {
+			XmlizeByJsonize(xio, *this);
+		}
+		void Jsonize(JsonIO& json) {
+			ScatterBasicSeries::Jsonize(json);
+			if (json.IsStoring() && userpD) 
+				CopyInternal();
+			json("data", data);
+			if (json.IsLoading()) {
+				if (!data.IsEmpty()) {
+					pD = &dataS;
+					serializeData = true;
+				}
+			}
+		}
+		void Serialize(Stream& s) { 
+			ScatterBasicSeries::Serialize(s);
+			if (s.IsStoring() && userpD) 
+				CopyInternal();
+			s % data;
+			if (s.IsLoading()) {
+				if (!data.IsEmpty()) {
+					pD = &dataS;
+					serializeData = true;
+				}
+			}
+		}
+		
 	private:
-		DataSource *pD;
+		DataSource *userpD;
 		bool owns;
+		Vector<Pointf> data;
+		VectorPointf dataS;
+		bool serializeData, serializeFormat;
+		DataSource *pD;
+		
+		void CopyInternal() {
+			int64 sz = userpD->GetCount();
+			data.SetCount(int(sz));
+			for (int64 i = 0; i < sz; ++i) {
+				data[int(i)].x = userpD->x(i);
+				data[int(i)].y = userpD->y(i);
+			}
+		}
+		void DeletePD() {
+			if(userpD && owns) {
+				delete userpD;
+				userpD = 0;
+			}
+		}
 	};
 
 	static Color GetNewColor(int index, int version = 1);
@@ -378,9 +537,16 @@ public:
 	ScatterDraw &PlotStyle(T1 arg1, T2 arg2)				{return PlotStyle(new C(arg1, arg2));}
 	template <class C, class T1, class T2, class T3>
 	ScatterDraw &PlotStyle(T1 arg1, T2 arg2, T3 arg3)		{return PlotStyle(new C(arg1, arg2, arg3));}		
-	ScatterDraw &PlotStyle(SeriesPlot *data);
+	
+	ScatterDraw &PlotStyle(int index, SeriesPlot *data);
+	ScatterDraw &PlotStyle(SeriesPlot *data)				{return PlotStyle(series.GetCount() - 1, data);}
+	ScatterDraw &PlotStyle(int index, const String name);
+	ScatterDraw &PlotStyle(const String name)				{return PlotStyle(series.GetCount() - 1, name);}
+	const String GetPlotStyleName(int index);	
 	
 	ScatterDraw &NoPlot()	{return PlotStyle();};
+
+	ScatterDraw &Stacked(bool _stacked = true)				{stacked = _stacked; return *this;}
 
 	ScatterDraw &MarkStyle()								{return MarkStyle(0);}
 	template <class C>
@@ -392,16 +558,27 @@ public:
 	template <class C, class T1, class T2, class T3>
 	ScatterDraw &MarkStyle(T1 arg1, T2 arg2, T3 arg3)		{return MarkStyle(new C(arg1, arg2, arg3));}		
 	
-	ScatterDraw &MarkStyle(MarkPlot *data);
 	ScatterDraw &MarkStyle(int index, MarkPlot *data);
+	ScatterDraw &MarkStyle(MarkPlot *data)					{return MarkStyle(series.GetCount() - 1, data);}
 	ScatterDraw &MarkStyle(int index, const String name);
+	ScatterDraw &MarkStyle(int index, int typeidx);
+	ScatterDraw &MarkStyle(const String name)				{return MarkStyle(series.GetCount() - 1, name);}
 	const String GetMarkStyleName(int index);
-	ScatterDraw &SetMarkStyleType(int index, int type);
+	//ScatterDraw &SetMarkStyleType(int index, int type);
+	//ScatterDraw &SetMarkStyleType(int type)					{return SetMarkStyleType(series.GetCount() - 1, type);}
 	int GetMarkStyleType(int index);
 	
 	ScatterDraw &NoMark()	{return MarkStyle();};
 		
-	ScatterDraw &Stroke(double thickness = 3, Color color = Null);
+	ScatterDraw &Stroke(int index, double thickness, Color color);
+	ScatterDraw &Stroke(double thickness, Color color = Null)   {return Stroke(series.GetCount() - 1, thickness, color);}
+	void GetStroke(int index, double &thickness, Color &color);
+	ScatterDraw &Closed(int index, bool closed);
+	ScatterDraw &Closed(bool closed)							{return Closed(series.GetCount() - 1, closed);}
+	bool IsClosed(int index);
+	ScatterDraw &BarWidth(int index, double width);
+	ScatterDraw &BarWidth(double width)							{return BarWidth(series.GetCount() - 1, width);}
+	double GetBarWidth(int index);
 	ScatterDraw &Dash(const char *dash);
 	ScatterDraw &Dash(int index, const char *dash);
 	const String GetDash(int index);
@@ -427,30 +604,32 @@ public:
 	ScatterDraw& SetDrawYReticle(bool set = true);
 	ScatterDraw& SetDrawY2Reticle(bool set = true);
 	
-	ScatterDraw &SetDataColor(int index, const Color& pcolor);
-	ScatterDraw &SetDataColor(const Color& pcolor) {return SetDataColor(series.GetCount() - 1, pcolor);}
-	Color GetDataColor (int index) const;
-	ScatterDraw &SetDataThickness(int index, double thick);
-	ScatterDraw &SetDataThickness(double thick) {return SetDataThickness(series.GetCount() - 1, thick);}
-	double GetDataThickness(int index) const;
+	//ScatterDraw &SetDataColor(int index, const Color& pcolor);
+	//ScatterDraw &SetDataColor(const Color& pcolor) {return SetDataColor(series.GetCount() - 1, pcolor);}
+	//Color GetDataColor (int index) const;
+	//ScatterDraw &SetDataThickness(int index, double thick);
+	//ScatterDraw &SetDataThickness(double thick) {return SetDataThickness(series.GetCount() - 1, thick);}
+	//double GetDataThickness(int index) const;
 	ScatterDraw &SetFillColor(int index, const Color& color);
-	ScatterDraw &SetFillColor(const Color& color) {return SetDataColor(series.GetCount() - 1, color);}
+	ScatterDraw &SetFillColor(const Color& color) {return SetFillColor(series.GetCount() - 1, color);}
 	Color GetFillColor(int index) const;
 
 	ScatterDraw &SetMarkWidth(int index, double width);
+	ScatterDraw &SetMarkWidth(double width) {return SetMarkWidth(series.GetCount() - 1, width);}
 	double GetMarkWidth(int index);
-	void SetMarkColor(int index, const Color& pcolor);
+	ScatterDraw &SetMarkColor(int index, const Color& pcolor);
+	ScatterDraw &SetMarkColor(const Color& pcolor) {return SetMarkColor(series.GetCount() - 1, pcolor);}
 	Color GetMarkColor(int index) const;
 	ScatterDraw &SetMarkBorderWidth(int index, double width);
 	double GetMarkBorderWidth(int index);
 	void SetMarkBorderColor(int index, const Color& pcolor);
 	Color GetMarkBorderColor(int index) const;
 	void NoMark(int index);
-	bool IsShowMark(int index) const throw (Exc);
+	bool IsShowMark(int index);
 	
 	void SetDataPrimaryY(int index, bool primary = true);
 	ScatterDraw &SetDataPrimaryY(bool primary); 	
-	bool IsDataPrimaryY(int index) const throw (Exc);	
+	bool IsDataPrimaryY(int index);	
 	
 	void SetSequentialX(int index, bool sequential = true);
 	ScatterDraw &SetSequentialX(bool sequential = true);
@@ -510,6 +689,136 @@ public:
 	double GetSizeY(double cy) 	{return plotH*cy/yRange;}		
 	double GetPosY2(double y)	{return plotH - plotH*(y - yMin2)/yRange2;}
 	double GetSizeY2(double cy) {return plotH*cy/yRange2;}
+	
+	ScatterDraw& SetDataSource_Internal(bool copy = true) {
+		for (int i = 0; i < series.GetCount(); ++i)
+			series[i].SetDataSource_Internal(copy);
+		return *this;
+	}
+	ScatterDraw& SetDataSource() {
+		for (int i = 0; i < series.GetCount(); ++i)
+			series[i].SetDataSource();
+		return *this;
+	}
+	ScatterDraw& SerializeData(bool ser = true) {
+		for (int i = 0; i < series.GetCount(); ++i)
+			series[i].SerializeData(ser);
+		return *this;
+	}
+	ScatterDraw& SerializeFormat(bool ser = true) {
+		for (int i = 0; i < series.GetCount(); ++i)
+			series[i].SerializeFormat(ser);
+		serializeFormat = ser;
+		return *this;
+	}
+	void Xmlize(XmlIO& xio) {
+		XmlizeByJsonize(xio, *this);
+	}
+	void Jsonize(JsonIO& json) {
+		if (serializeFormat) {
+			int intlegendAnchor = 0;
+			if (json.IsStoring())
+				intlegendAnchor = legendAnchor;
+			json
+				("title", title)
+				("titleFont", titleFont)
+				("titleColor", titleColor)
+				("titleHeight", titleHeight)
+				("xLabel_base", xLabel_base)
+				("yLabel_base", yLabel_base)
+				("yLabel2_base", yLabel2_base)
+				("labelsFont", labelsFont)
+				("labelsColor", labelsColor)
+				("xRange", xRange)
+				("yRange", yRange)
+				("yRange2", yRange2)
+				("xMin", xMin)
+				("yMin", yMin)
+				("yMin2", yMin2)
+				("xMajorUnit", xMajorUnit)
+				("yMajorUnit", yMajorUnit)
+				("yMajorUnit2", yMajorUnit2)
+				("xMinUnit", xMinUnit)
+				("yMinUnit", yMinUnit)
+				("yMinUnit2", yMinUnit2)
+				("minXRange", minXRange)
+				("maxXRange", maxXRange)
+				("minYRange", minYRange)
+				("maxYRange", maxYRange)
+				("minXmin", minXmin)
+				("minYmin", minYmin)
+				("maxXmax", maxXmax)
+				("maxYmax", maxYmax)
+				("hPlotLeft", hPlotLeft)
+				("hPlotRight", hPlotRight)
+				("vPlotTop", vPlotTop)  
+				("vPlotBottom", vPlotBottom)
+				("size", size)
+				("legendAnchor", intlegendAnchor)
+				("legendPos", legendPos)
+				("legendFillColor", legendFillColor)
+				("legendBorderColor", legendBorderColor)
+				("series", series)
+			;
+			if (json.IsLoading()) {
+				labelsChanged = true;
+				legendAnchor = static_cast<LEGEND_POS>(intlegendAnchor);
+			}
+		} else
+			json("series", series);
+	}
+	void Serialize(Stream& s) { 
+		if (serializeFormat) {
+			int intlegendAnchor = 0;
+			if (s.IsStoring())
+				intlegendAnchor = legendAnchor;
+			s 	% title
+				% titleFont
+				% titleColor
+				% titleHeight
+				% xLabel_base
+				% yLabel_base
+				% yLabel2_base
+				% labelsFont
+				% labelsColor
+				% xRange
+				% yRange
+				% yRange2
+				% xMin
+				% yMin
+				% yMin2
+				% xMajorUnit
+				% yMajorUnit
+				% yMajorUnit2
+				% xMinUnit
+				% yMinUnit
+				% yMinUnit2
+				% minXRange
+				% maxXRange
+				% minYRange
+				% maxYRange
+				% minXmin
+				% minYmin
+				% maxXmax
+				% maxYmax
+				% hPlotLeft
+				% hPlotRight
+				% vPlotTop
+				% vPlotBottom
+				% size
+				% intlegendAnchor
+				% legendPos
+				% legendFillColor
+				% legendBorderColor
+				% series
+			;
+			if (s.IsLoading()) {
+				labelsChanged = true;
+				legendAnchor = static_cast<LEGEND_POS>(intlegendAnchor);
+			}
+		} else
+			s % series;
+	}
 	
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
@@ -609,7 +918,8 @@ private:
 	
 	int plotW, plotH;
 	bool labelsChanged;
-	//bool multiPlot;
+	bool stacked;
+	bool serializeFormat;
 	
 	Upp::Index<ScatterDraw *> linkedCtrls;
 	ScatterDraw *linkedMaster;
@@ -964,7 +1274,8 @@ void ScatterDraw::Plot(T& w, const Size &size, int scale)
 					series[j].seriesPlot->Paint(w, points, scale, series[j].opacity, 
 												fround(series[j].thickness), series[j].color, 
 												series[j].dash, plotAreaColor, series[j].fillColor, plotW/xRange, plotH/yRange, 
-												int(plotH*(1 + yMin/yRange)));
+												int(plotH*(1 + yMin/yRange)), series[j].barWidth, 
+												series[j].isClosed);
 			
 				if (series[j].markWidth >= 1 && series[j].markPlot) {
 					if (!series[j].markPlot->IsMultiPlot()) {

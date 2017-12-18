@@ -672,6 +672,8 @@ ScatterDraw::ScatterBasicSeries::ScatterBasicSeries() {
 	markBorderWidth = 1;
 	markBorderColor = Null;
 	fillColor = Null;
+	barWidth = 10;
+	isClosed = false;
 }
 
 void ScatterDraw::ScatterBasicSeries::Init(int index) {
@@ -697,7 +699,7 @@ DataSource &ScatterDraw::GetSeries(int index) {
 ScatterDraw &ScatterDraw::_AddSeries(DataSource *data) {
 	ScatterSeries &s = series.Add();
 	s.Init(series.GetCount()-1);
-	s.SetDataSource(data);
+	s.SetDataSource(data, true);
 	Refresh();
 	return *this;	
 }
@@ -746,7 +748,7 @@ ScatterDraw &ScatterDraw::_InsertSeries(int index, DataSource *data) {
 	ASSERT(IsValid(index));
 	ScatterSeries &s = series.Insert(index);
 	s.Init(index);
-	s.SetDataSource(data);
+	s.SetDataSource(data, true);
 	Refresh();	
 	return *this;
 }
@@ -824,17 +826,32 @@ ScatterDraw &ScatterDraw::SetNoPlot(int index) {
 }	
 	
 	
-ScatterDraw &ScatterDraw::PlotStyle(SeriesPlot *data) {
-	int index = series.GetCount() - 1;
+ScatterDraw &ScatterDraw::PlotStyle(int index, SeriesPlot *data) {
+	ASSERT(IsValid(index));
 	
 	series[index].seriesPlot = data;
 	return *this;
 }
 
-ScatterDraw &ScatterDraw::MarkStyle(MarkPlot *data) {
-	int index = series.GetCount() - 1;
+ScatterDraw &ScatterDraw::PlotStyle(int index, const String name) {
+	ASSERT(IsValid(index));
 	
-	return MarkStyle(index, data);
+	int typeidx = SeriesPlot::TypeIndex(name);
+	
+	if (typeidx >= 0)
+		series[index].seriesPlot = SeriesPlot::Create(typeidx);
+	else
+		series[index].seriesPlot = 0;
+	return *this;
+}
+
+const String ScatterDraw::GetPlotStyleName(int index) {
+	ASSERT(IsValid(index));
+	
+	if (series[index].seriesPlot)
+		return SeriesPlot::TypeName(series[index].seriesPlot->GetType());
+	else
+		return t_("No series");
 }
 
 ScatterDraw &ScatterDraw::MarkStyle(int index, MarkPlot *data) {
@@ -845,9 +862,12 @@ ScatterDraw &ScatterDraw::MarkStyle(int index, MarkPlot *data) {
 }
 
 ScatterDraw &ScatterDraw::MarkStyle(int index, const String name) {
-	ASSERT(IsValid(index));
-	
 	int typeidx = MarkPlot::TypeIndex(name);
+	return MarkStyle(index, typeidx);
+}
+
+ScatterDraw &ScatterDraw::MarkStyle(int index, int typeidx) {
+	ASSERT(IsValid(index));
 	
 	if (typeidx >= 0)
 		series[index].markPlot = MarkPlot::Create(typeidx);
@@ -874,26 +894,63 @@ int ScatterDraw::GetMarkStyleType(int index) {
 		return -1;
 }
 
-ScatterDraw &ScatterDraw::SetMarkStyleType(int index, int type) {
+/*ScatterDraw &ScatterDraw::SetMarkStyleType(int index, int type) {
 	ASSERT(IsValid(index));
 	
 	if (series[index].markPlot)
 		series[index].markPlot->SetTypeType(type);
 	
 	return *this;	
-}
+}*/
 
-ScatterDraw &ScatterDraw::Stroke(double thickness, Color color) {
-	int index = series.GetCount() - 1;
-
+ScatterDraw &ScatterDraw::Stroke(int index, double thickness, Color color) {
+	ASSERT(IsValid(index));
+	
+	series[index].thickness = thickness;
 	if (IsNull(color))
 		color = GetNewColor(index);
 	series[index].color = color;
-	series[index].thickness = thickness;
 	//series[index].dash = GetNewDash(index);
 	
 	Refresh();
-	return *this;	
+	return *this;		
+}
+
+void ScatterDraw::GetStroke(int index, double &thickness, Color &color) {
+	ASSERT(IsValid(index));
+	
+	color = series[index].color;
+	thickness = series[index].thickness;
+}
+
+ScatterDraw &ScatterDraw::Closed(int index, bool closed) {
+	ASSERT(IsValid(index));
+	
+	series[index].isClosed = closed;
+	
+	Refresh();
+	return *this;
+}
+
+bool ScatterDraw::IsClosed(int index) {
+	ASSERT(IsValid(index));
+	
+	return series[index].isClosed;
+}
+
+ScatterDraw &ScatterDraw::BarWidth(int index, double width) {
+	ASSERT(IsValid(index));
+	
+	series[index].barWidth = width;
+	
+	Refresh();
+	return *this;
+}
+
+double ScatterDraw::GetBarWidth(int index) {
+	ASSERT(IsValid(index));
+	
+	return series[index].barWidth;
 }
 
 ScatterDraw &ScatterDraw::Fill(Color color) {
@@ -1017,6 +1074,7 @@ const String ScatterDraw::GetUnitsY(int index) {
 	return series[index].unitsY;
 }
 
+/*
 ScatterDraw& ScatterDraw::SetDataColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].color = color;
@@ -1039,7 +1097,7 @@ ScatterDraw& ScatterDraw::SetDataThickness(int index, double thickness) {
 double ScatterDraw::GetDataThickness(int index) const {
 	ASSERT(IsValid(index));
 	return series[index].thickness;
-}
+}*/
 
 ScatterDraw& ScatterDraw::SetFillColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
@@ -1077,10 +1135,11 @@ double ScatterDraw::GetMarkWidth(int index) {
 	return series[index].markWidth;
 }
 
-void ScatterDraw::SetMarkColor(int index, const Color& color) {
+ScatterDraw &ScatterDraw::SetMarkColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].markColor = color;
 	Refresh();
+	return *this;
 }
 
 Color ScatterDraw::GetMarkColor(int index) const {
@@ -1104,7 +1163,7 @@ void ScatterDraw::NoMark(int index) {
 	series[index].markWidth = 0;
 }
 
-bool ScatterDraw::IsShowMark(int index) const throw (Exc) {
+bool ScatterDraw::IsShowMark(int index) {
 	ASSERT(IsValid(index));
 	return series[index].markWidth > 0;
 }
@@ -1121,7 +1180,7 @@ ScatterDraw &ScatterDraw::SetDataPrimaryY(bool primary) {
 	return *this;
 }
 
-bool ScatterDraw::IsDataPrimaryY(int index) const throw (Exc) {
+bool ScatterDraw::IsDataPrimaryY(int index) {
 	ASSERT(IsValid(index));
 	return series[index].primaryY;	
 }
@@ -1213,7 +1272,7 @@ Image ScatterDraw::GetImage(const Size &size, int scale) {
 	ImageBuffer ib(scale*size);	
 	BufferPainter bp(ib, mode);	
 	
-	bp.LineCap(LINECAP_SQUARE);
+	bp.LineCap(LINECAP_BUTT);
 	bp.LineJoin(LINEJOIN_MITER);
 	SetDrawing(bp, size, scale, false);
 
@@ -1614,7 +1673,7 @@ ScatterDraw::ScatterDraw() {
 	titleFont = Roman(20);
 	labelsFont = GetStdFont();
 	labelsColor = SColorText();
-	plotAreaColor = SColorLtFace();
+	plotAreaColor = White();//SColorLtFace();
 	axisColor = SColorText();
 	axisWidth = 6;
 	hPlotLeft = hPlotRight = vPlotTop = vPlotBottom = 30;
@@ -1632,7 +1691,7 @@ ScatterDraw::ScatterDraw() {
 	zoomStyleX = zoomStyleY = TO_CENTER;
 	maxMajorUnitsX = maxMajorUnitsY = 10;
 	SetMajorUnitsNum(5, 10);
-	Color(graphColor);	
+	//Color(graphColor);	
 	isPolar = false;
 	lastxRange = xRange;
 	lastyRange = yRange;
@@ -1646,7 +1705,8 @@ ScatterDraw::ScatterDraw() {
 	legendBorderColor = Black();
 	legendRowSpacing = 5;
 	linkedMaster = 0;
-	//multiPlot = false;
+	stacked = false;
+	serializeFormat = true;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color) {

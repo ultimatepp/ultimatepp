@@ -201,9 +201,16 @@ Drawing PieDraw::GetDrawing(int scale) {
 }
 
 Image PieDraw::GetImage(int scale) {
-	DrawingDraw idraw(scale*GetSize());
-	PaintPie(idraw,scale);
-	return Image(idraw.GetResult());
+	int mode = MODE_ANTIALIASED;
+	
+	ImageBuffer ib(scale*GetSize());	
+	BufferPainter bp(ib, mode);	
+	
+	bp.LineCap(LINECAP_BUTT);
+	bp.LineJoin(LINEJOIN_MITER);
+	PaintPie(bp, scale);
+
+	return ib;
 }
 
 PieDraw::PieDraw(): backColor(White), titleFont(StdFont(16)), titleColor(Black), titlePos(TOP), 
