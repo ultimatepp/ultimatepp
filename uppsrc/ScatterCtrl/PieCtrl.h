@@ -3,6 +3,7 @@
 
 #include <CtrlLib/CtrlLib.h>
 #include <ScatterDraw/PieDraw.h>
+#include <plugin/jpg/jpg.h>
 
 using namespace Upp;
 
@@ -19,12 +20,19 @@ public:
  	
  	void SaveAsMetafile(const char* file);
 	void SaveToClipboard(bool saveAsMetafile);
+	void SaveToFile(String fileName = Null);
 	
 	PieCtrl& SetCopyRatio(int ratio)				{copyRatio = ratio; return *this;}
 	int GetCopyRatio()								{return copyRatio;} 
 
+	virtual void RightDown(Point, dword);
+	void ContextMenu(Bar& bar);
+	
 private:
 	int copyRatio;
+	
+	FileSel fileToSave;
+	void OnFileToSave();
 	
 public:
 	PieCtrl& SetTitle(const String& title)		 		{PieDraw::SetTitle(title); 				return *this;}

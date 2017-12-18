@@ -44,13 +44,18 @@ public:
 		for (int i = 0; i < ids.GetCount(); ++i)
 			ids[i] = _ids[i];
 		beginData = _beginData;
-		numData = _numData;
 		if (IsNull(_numData)) {
 			if (!useCols)
-				numData = data->GetColumnCount() - beginData;
+				numData = data->GetColumnCount();
 			else
-				numData = data->GetCount() - beginData;
+				numData = data->GetCount();
+		} else {
+			if (!useCols)
+				numData = min(_numData, data->GetColumnCount());
+			else
+				numData = min(_numData, data->GetCount());
 		}
+		numData -= beginData;
 	}
 	void Init(ArrayCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		//Vector<int> ids;
@@ -95,13 +100,18 @@ public:
 		for (int i = 0; i < ids.GetCount(); ++i)
 			ids[i] = _ids[i];
 		beginData = _beginData;
-		numData = _numData;
 		if (IsNull(_numData)) {
 			if (!useCols)
-				numData = data->GetColumnCount() - beginData;
+				numData = data->GetColumnCount();
 			else
-				numData = data->GetRowCount() - beginData;
-		}		
+				numData = data->GetRowCount();
+		} else {
+			if (!useCols)
+				numData = min(_numData, data->GetColumnCount());
+			else
+				numData = min(_numData, data->GetRowCount());
+		}
+		numData -= beginData;
 	}
 	void Init(GridCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		Vector<int> ids;
@@ -139,7 +149,7 @@ public:
 	ScatterCtrl();
 	
 	enum ScatterAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW, 
-					  SCROLL_LEFT, SCROLL_RIGHT, SCROLL_UP, SCROLL_DOWN};
+					  SCROLL_LEFT, SCROLL_RIGHT, SCROLL_UP, SCROLL_DOWN, ZOOM_FIT};
 	#define SHOW_INFO SHOW_COORDINATES
 	
 	struct MouseBehavior {
@@ -178,12 +188,12 @@ public:
 	 	CheckButtonVisible();
 		return *this;
 	}
-	ScatterCtrl& ShowProcessDlg(bool show = true)	{
+	ScatterCtrl& ShowProcessDlg(bool show = true) {
 		showProcessDlg = show;  
 		CheckButtonVisible();
 		return *this;
 	}
-	ScatterCtrl& ShowButtons(bool show = true)		{
+	ScatterCtrl& ShowButtons(bool show = true) {
 		showButtons = show;
 		CheckButtonVisible();
 		return *this;
@@ -269,6 +279,14 @@ public:
 	ScatterCtrl& SetDefaultCSVSeparator(String sep) 	{defaultCSVseparator = sep;	return *this;}
 	String GetDefaultCSVSeparator() 					{return defaultCSVseparator;}
 	
+	void Jsonize(JsonIO& json) {
+		ScatterDraw::Jsonize(json);
+		json
+			("mouseHandlingX", mouseHandlingX)
+			("mouseHandlingY", mouseHandlingY)
+		;
+	}
+	
 private:
 	bool showInfo;
 	Point clickPoint;
@@ -338,6 +356,7 @@ private:
 	String defaultCSVseparator;
 	
 	FileSel fileToSave;
+	void OnFileToSave();
 	
 	Button processButton, dataButton, propertiesButton;
 };
