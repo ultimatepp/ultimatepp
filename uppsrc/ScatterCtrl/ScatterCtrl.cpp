@@ -64,7 +64,7 @@ void ScatterCtrl::Paint(Draw& w)
 		} else {
 			ImageBuffer ib(GetSize());
 			BufferPainter bp(ib, mode);
-			bp.LineCap(LINECAP_SQUARE);
+			bp.LineCap(LINECAP_BUTT);
 			bp.LineJoin(LINEJOIN_MITER);
 			ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 			w.DrawImage(0, 0, ib);
@@ -134,10 +134,10 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 	
 	String str = popTextX + ": " + _strx;
 	if (strx != _strx)
-		str << "; " + popTextX + "': " + strx + "; Δ" + popTextX + ": " + dstrx;
+		str << "; " + popTextX + "': " + strx + "; " + t_("Δ") + popTextX + ": " + dstrx;
 	str << "\n" + popTextY + ": " + _stry;
 	if (stry != _stry)	
- 		str << "; " + popTextY + "': " + stry + "; Δ" + popTextY + ": " + dstry;
+ 		str << "; " + popTextY + "': " + stry + "; " + t_("Δ") + popTextY + ": " + dstry;
 	if (drawY2Reticle) {
 		String stry2, _stry2, dstry2;
 		if (cbModifFormatY2) {
@@ -157,7 +157,7 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 		
 		str << "\n" + popTextY2 + ": " + _stry2;
 		if (stry2 != _stry2)		
-			str << "; " + popTextY2 + ": " + stry2 + "; Δ" + popTextY2 + ": " + dstry2;
+			str << "; " + popTextY2 + ": " + stry2 + "; " + t_("Δ") + popTextY2 + ": " + dstry2;
 	}
 	const Point p2 = pt + offset;
 	popText.SetText(str).Move(this, p2.x, p2.y);
@@ -190,7 +190,8 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int v
 	case SCROLL_LEFT:
 	case SCROLL_RIGHT:
 	case SCROLL_UP:
-	case SCROLL_DOWN:;
+	case SCROLL_DOWN:
+	case ZOOM_FIT:;
 	}
 }
 
@@ -205,6 +206,7 @@ void ScatterCtrl::DoKeyAction(ScatterAction action)
 	case SCROLL_RIGHT:	ScatterDraw::Scroll(-0.2, 0); 		break;
 	case SCROLL_UP:		ScatterDraw::Scroll(0, -0.2); 		break;
 	case SCROLL_DOWN:	ScatterDraw::Scroll(0, 0.2); 		break;
+	case ZOOM_FIT:		ScatterDraw::ZoomToFit(true, true);	break;
 	case NO_ACTION: 
 	case SCROLL:
 	case SHOW_COORDINATES:
@@ -547,27 +549,27 @@ ScatterCtrl &ScatterCtrl::SetMouseHandling(bool valx, bool valy)
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
-		bar.Add(t_("Fit to data"), 	ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0))
-										.Help(t_("Zoom to fit visible all data"));
-		bar.Add(t_("Zoom +"), 		ScatterImg::ZoomPlus(), 	THISBACK3(Zoom, 1/1.2, true, mouseHandlingY))
+		bar.Add(t_("Fit to data"), ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0)).Key(K_CTRL_F)
+									.Help(t_("Zoom to fit visible all data"));
+		bar.Add(t_("Zoom +"), 	   ScatterImg::ZoomPlus(), THISBACK3(Zoom, 1/1.2, true, mouseHandlingY)).Key(K_CTRL|K_ADD)
 										.Help(t_("Zoom in (closer)"));
-		bar.Add(t_("Zoom -"), 		ScatterImg::ZoomMinus(), 	THISBACK3(Zoom, 1.2, true, mouseHandlingY))
-										.Help(t_("Zoom out (away)"));
+		bar.Add(t_("Zoom -"), 	   ScatterImg::ZoomMinus(), THISBACK3(Zoom, 1.2, true, mouseHandlingY)).Key(K_CTRL|K_SUBTRACT)
+									.Help(t_("Zoom out (away)"));
 	}
 	bar.Add(t_("Attach X axis"), Null, THISBACK(ChangeMouseHandlingX)).Check(!mouseHandlingX)
-										.Help(t_("Fix X axis so no zoom or scroll is possible"));
+									.Help(t_("Fix X axis so no zoom or scroll is possible"));
 	if (mouseHandlingX) {
-		bar.Add(t_("Scroll Left"), 	ScatterImg::LeftArrow(), 	THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT)
+		bar.Add(t_("Scroll Left"), ScatterImg::LeftArrow(), THISBACK2(ScatterDraw::Scroll, 0.2, 0)).Key(K_CTRL_LEFT)
 									.Help(t_("Scrolls plot to the left"));
-		bar.Add(t_("Scroll Right"), ScatterImg::RightArrow(), 	THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT)
+		bar.Add(t_("Scroll Right"),ScatterImg::RightArrow(), THISBACK2(ScatterDraw::Scroll, -0.2, 0)).Key(K_CTRL_RIGHT)
 									.Help(t_("Scrolls plot to the right"));
 	}
-	bar.Add(t_("Attach Y axis"), Null, THISBACK(ChangeMouseHandlingY)).Check(!mouseHandlingY)
+	bar.Add(t_("Attach Y axis"),   Null, THISBACK(ChangeMouseHandlingY)).Check(!mouseHandlingY)
 									.Help(t_("Fix Y axis so no zoom or scroll is possible"));
 	if (mouseHandlingY) {
-		bar.Add(t_("Scroll Up"), 	ScatterImg::UpArrow(), 	THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP)
+		bar.Add(t_("Scroll Up"),   ScatterImg::UpArrow(), THISBACK2(ScatterDraw::Scroll, 0, -0.2)).Key(K_CTRL_UP)
 									.Help(t_("Scrolls plot up"));
-		bar.Add(t_("Scroll Down"), 	ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN)
+		bar.Add(t_("Scroll Down"), ScatterImg::DownArrow(), THISBACK2(ScatterDraw::Scroll, 0, 0.2)).Key(K_CTRL_DOWN)
 									.Help(t_("Scrolls plot down"));
 	}
 	if (mouseHandlingX || mouseHandlingY)
@@ -600,6 +602,15 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 									.Help(t_("Save image to file"));
 }
 
+void ScatterCtrl::OnFileToSave() {
+	String name = ~fileToSave;
+	int ext = fileToSave.GetActiveType();
+	if (ext == 0) 
+		fileToSave.file = ForceExt(name, ".jpg");
+	else
+		fileToSave.file = ForceExt(name, ".png");
+}
+
 void ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
@@ -607,15 +618,16 @@ void ScatterCtrl::SaveToFile(String fileName)
 		String name = GetTitle();
 		if (name.IsEmpty())
 			name = t_("Scatter plot");
-		fileToSave.Set(ForceExt(name, ".jpg"));
+		fileToSave.PreSelect(ForceExt(name, ".jpg"));
 		fileToSave.ClearTypes();
 		fileToSave.Type(Format(t_("%s file"), "JPEG"), "*.jpg");
 		fileToSave.Type(Format(t_("%s file"), "PNG"), "*.png");
+		fileToSave.type.WhenAction = THISBACK(OnFileToSave);
 	    if(!fileToSave.ExecuteSaveAs(t_("Saving plot to PNG or JPEG file"))) {
 	        Exclamation(t_("Plot has not been saved"));
 	        return;
 	    }
-        fileName = fileToSave;
+        fileName = ~fileToSave;
 	} 
 	if (GetFileExt(fileName) == ".png") {
 		PNGEncoder encoder;
@@ -659,9 +671,9 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 {
 	showInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = isZoomWindow = false;
 	WantFocus();
-	popTextX = "x";
-	popTextY = "y1";
-	popTextY2 = "y2";
+	popTextX = t_("x");
+	popTextY = t_("y1");
+	popTextY2 = t_("y2");
 	popLT = popRB = Null;
 	showContextMenu = false;
 	showPropDlg = false;
@@ -714,5 +726,6 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 	AddKeyBehavior(true,  false, false, K_RIGHT, 	true, 	ScatterCtrl::SCROLL_RIGHT);
 	AddKeyBehavior(true,  false, false, K_UP,   	true, 	ScatterCtrl::SCROLL_UP);
 	AddKeyBehavior(true,  false, false, K_DOWN, 	true, 	ScatterCtrl::SCROLL_DOWN);
+	AddKeyBehavior(true,  false, false, K_F, 		true, 	ScatterCtrl::ZOOM_FIT);
 }
 

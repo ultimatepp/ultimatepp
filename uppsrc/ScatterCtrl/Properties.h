@@ -125,6 +125,7 @@ public:
 	void OnOperation();
 	void OnSet();
 	void OnUpdateSensitivity();
+	void OnFit();
 		
 private:
 	ScatterCtrl* pscatter;
@@ -133,10 +134,18 @@ private:
 	WithProcessingTabFit<StaticRect> tabFit;	
 	WithProcessingTabFrequency<StaticRect> tabFreq;
 	WithProcessingTabOp<StaticRect> tabOp;
+	WithProcessingTabBestFit<StaticRect> tabBestFit;
+	
+	void ArrayCopy();
+	void ArraySelect();
+	void OnArrayBar(Bar &menu);
+	Array<ExplicitEquation> equationTypes;
+	UserEquation *userEquation;
+	//GridCtrlSource ds;
 	
 	bool avgFirst, linearFirst, cuadraticFirst, cubicFirst, sinusFirst, sinusTendFirst, splineFirst;
 	double r2Linear, r2Cuadratic, r2Cubic, r2Sinus, r2SinusTend;
-	bool tabFreqFirst, tabOpFirst;
+	bool tabFreqFirst, tabOpFirst, tabBestFitFirst;
 	
 	Vector<Pointf> fft;
 	AvgEquation average;
@@ -147,7 +156,7 @@ private:
 	SplineEquation spline;
 	Vector<Pointf> upperEnvelope, lowerEnvelope;
 	Vector<Pointf> movAvg, secAvg;
-	DataSetCond dataSetCond;
+	DataXRange dataXRange;
 	bool exclamationOpened;
 	double newWidthMax, newWidthMin, newWidthMovAvg;
 };
