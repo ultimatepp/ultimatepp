@@ -6,10 +6,12 @@ public:
 	virtual ~SeriesPlot() 	{};	
 	virtual void Paint(Draw& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const {};
+				const Color &fillColor, double fx, double fy, int y0, double width, 
+				bool isClosed) const {};
 	virtual void Paint(Painter& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const {};
+				const Color &fillColor, double fx, double fy, int y0, double width, 
+				bool isClosed) const {};
 	template<class T>
 	static void Register(const String& name)
 	{
@@ -44,16 +46,20 @@ private:
 	template <class T>
 	void DoPaint(T& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, int y0) const 
+				const Color &fillColor, int y0, bool isClosed) const 
 	{
 		if (!IsNull(fillColor)) {
-			double x = p[0].x;
-			p.Insert(0, Pointf(x, y0));
-			x = p[p.GetCount() - 1].x;
-			p.Add(Pointf(x, y0));
-			FillPolylineOpa(w, p, scale, opacity, background, fillColor);
-			p.Remove(0);
-			p.Remove(p.GetCount() - 1);
+			if(isClosed) 
+				FillPolylineOpa(w, p, scale, opacity, background, fillColor);
+			else {
+				double x = p[0].x;
+				p.Insert(0, Pointf(x, y0));
+				x = p[p.GetCount() - 1].x;
+				p.Add(Pointf(x, y0));
+				FillPolylineOpa(w, p, scale, opacity, background, fillColor);
+				p.Remove(0);
+				p.Remove(p.GetCount() - 1);
+			}
 		}
 		DrawPolylineOpa(w, p, scale, 1, thick, color, pattern, background);		
 	}
@@ -61,15 +67,15 @@ private:
 public:
 	void Paint(Draw& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const 
+				const Color &fillColor, double fx, double fy, int y0, double width, bool isClosed) const 
 	{
-		DoPaint(w, p, scale, opacity, fround(thick), color, pattern, background, fillColor, y0);		
+		DoPaint(w, p, scale, opacity, fround(thick), color, pattern, background, fillColor, y0, isClosed);		
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const 
+				const Color &fillColor, double fx, double fy, int y0, double width, bool isClosed) const 
 	{
-		DoPaint(w, p, scale, opacity, fround(thick), color, pattern, background, fillColor, y0);		
+		DoPaint(w, p, scale, opacity, fround(thick), color, pattern, background, fillColor, y0, isClosed);		
 	}
 };
 
@@ -105,13 +111,13 @@ private:
 public:
 	void Paint(Draw& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const 
+				const Color &fillColor, double fx, double fy, int y0, double width, bool isClosed) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, y0);
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const 
+				const Color &fillColor, double fx, double fy, int y0, double width, bool isClosed) const 
 	{
 		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, y0);
 	}
@@ -122,7 +128,7 @@ private:
 	template <class T>
 	void DoPaint(T& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, int y0) const 
+				const Color &fillColor, double fx, int y0, double width) const 
 	{
 		for (int i = 0; i < p.GetCount(); ++i) {
 			FillRectangleOpa(w, p[i].x - width*fx, y0, p[i].x + width*fx, p[i].y, scale, opacity, background, fillColor);
@@ -132,22 +138,19 @@ private:
 			DrawPolylineOpa(w, ps, scale, 1, fround(thick), color, pattern, background);
 		}
 	}
-	double width;
 	
 public:
-	BarSeriesPlot(double width) : width(width) {};
-	BarSeriesPlot() {};
 	void Paint(Draw& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const 
+				const Color &fillColor, double fx, double fy, int y0, double width, bool isClosed) const 
 	{
-		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, fx, y0);
+		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, fx, y0, width);
 	}
 	void Paint(Painter& w, Vector<Pointf> &p, const int &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const 
+				const Color &fillColor, double fx, double fy, int y0, double width, bool isClosed) const 
 	{
-		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, fx, y0);
+		DoPaint(w, p, scale, opacity, thick, color, pattern, background, fillColor, fx, y0, width);
 	}
 };	
 

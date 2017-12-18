@@ -3,6 +3,12 @@
 #endif
 // ScatterDraw.cpp
 
+T_("No series")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("No mark")
 caES("Sense marca")
 esES("Sin marca")
@@ -11,6 +17,18 @@ frFR("Sans marque")
 
 
 // Equation.cpp
+
+T_("Error in %s(%f)")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Unknown var '%s'")
+caES("")
+esES("")
+euES("")
+frFR("")
 
 T_("Divide by zero")
 caES("")
@@ -54,6 +72,12 @@ frFR("")
 T_("DampedSinusoidal")
 caES("")
 esES("SinusoidalAmortiguada")
+euES("")
+frFR("")
+
+T_("Sin_DampedSinusoidal")
+caES("")
+esES("")
 euES("")
 frFR("")
 

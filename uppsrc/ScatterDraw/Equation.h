@@ -196,6 +196,36 @@ public:
 		}
 	}
 };
+
+class Sin_DampedSinEquation : public ExplicitEquation {
+public:
+	Sin_DampedSinEquation() 			{coeff.Clear();	coeff << 0. << 0.1 << 0.1 << 0.1 << 0.1 << 0.1 << 0.1 << 0.1;}
+	Sin_DampedSinEquation(double offset, double A1, double w1, double phi1, double A2, 
+			double lambda, double w2, double phi2) {Init(offset, A1, w1, phi1, A2, lambda, w2, phi2);}
+	void Init(double offset, double A1, double w1, double phi1, double A2, double lambda, 
+		double w2, double phi2) {coeff.Clear();	
+								coeff << offset << A1 << w1 << phi1 << A2 << lambda << w2 << phi2;}
+	double f(double x)				{return coeff[0] + coeff[1]*cos(coeff[2]*x + coeff[3]) + coeff[4]*exp(-coeff[5]*x)*cos(coeff[6]*x + coeff[7]);}
+	virtual String GetName() 		{return t_("Sin_DampedSinusoidal");}
+	virtual String GetEquation(int numDigits = 3) {
+		String ret = Format("%s + %s*cos(%s*t + %s) + %s*e^(-%s*t)*cos(%s*t + %s)", 
+			FormatCoeff(0, numDigits), FormatCoeff(1, numDigits), FormatCoeff(2, numDigits), 
+			FormatCoeff(3, numDigits), FormatCoeff(4, numDigits), FormatCoeff(5, numDigits),
+			FormatCoeff(6, numDigits), FormatCoeff(7, numDigits));
+		ret.Replace("+ -", "- ");
+		return ret;
+	}													
+	void SetDegree(int num)				{NEVER();}
+	virtual void GuessCoeff(DataSource &series)	{
+		coeff[0] = series.AvgY();	
+		coeff[1] = series.SinEstim_Amplitude(coeff[0]);
+		double frequency, phase;
+		if (series.SinEstim_FreqPhase(frequency, phase, coeff[0])) {
+			coeff[2] = frequency;
+			coeff[3] = phase;
+		}
+	}
+};
 	
 class FourierEquation : public ExplicitEquation {
 public:
@@ -295,9 +325,11 @@ private:
 class EvalExpr {
 public:
 	EvalExpr();
+	void Init()									  {variables.Clear();}
 	double Eval(String line);
 	String EvalStr(String line, int numDigits = 3);
-	void SetCaseSensitivity(bool val = true) {noCase = !val;}
+	EvalExpr &SetCaseSensitivity(bool val = true) {noCase = !val;			return *this;}
+	EvalExpr &SetErrorUndefined(bool val = true)  {errorIfUndefined = val;	return *this;}
 	
 	const String &GetFunction(int id) 						{return functions.GetKey(id);}
 	int GetFunctionsCount() 								{return functions.GetCount();}
@@ -313,23 +345,34 @@ public:
 	double GetVariable(String name)							{return variables.Get(name, Null);}	
 	void GetVariable(int id, String &name, double &value)	{name = variables.GetKey(id); value = variables[id];}
 	int GetVariablesCount() 								{return variables.GetCount();}
-
+	void ClearVariables();
+	String &GetLastError()									{return lastError;}
+	
 	VectorMap<String, double> constants;
 	VectorMap<String, double (*)(double)> functions;
+
+	CParser p;
+
+static void EvalThrowError(CParser &p, const char *s);
+	
+protected:
+	double Exp(CParser& p);
+	
+	bool noCase;
+	String lastError;
+	VectorMap<String, double> variables;
+	bool errorIfUndefined;
 	
 private:
 	void *Functions_Get(CParser& p);
 	double Term(CParser& p);
 	double Pow(CParser& p);
 	double Mul(CParser& p);
-	double Exp(CParser& p);
+	
 	String TermStr(CParser& p, int numDigits);
 	String PowStr(CParser& p, int numDigits);
 	String MulStr(CParser& p, int numDigits);
 	String ExpStr(CParser& p, int numDigits);
-	bool noCase;
-		
-	VectorMap<String, double> variables;
 };
 
 class UserEquation : public ExplicitEquation {
@@ -339,10 +382,13 @@ public:
 	void Init(String _name, String _strEquation, String varHoriz = "x") {
 		name = _name;
 		strEquation = _strEquation;
+		eval.Init();
 		eval.SetConstant(varHoriz);
 		idx = eval.GetConstantsCount() - 1;
 		eval.EvalStr(strEquation);
 		coeff.SetCount(eval.GetVariablesCount());
+		for (int i = 0; i < coeff.GetCount(); ++i)
+			coeff[i] = 0.1;
 	}
 	double f(double x) {
 		eval.SetConstant(idx, x);

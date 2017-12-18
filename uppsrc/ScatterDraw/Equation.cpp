@@ -29,6 +29,8 @@ void ExplicitEquation::SetNumCoeff(int num) {
 }
 
 ExplicitEquation::FitError ExplicitEquation::Fit(DataSource &series, double &r2) {
+	r2 = Null;
+	
 	if (series.IsExplicit() || series.IsParam())
 		return InadequateDataSource;
 	
@@ -78,8 +80,8 @@ double ExplicitEquation::R2Y(DataSource &series, double mean) {
 			sst += d*d;
 		}
 	}
-	if (sst == 0)
-		return Null;
+	if (sst < 1E-50 || sse > sst)
+		return 0;
 	return 1 - sse/sst;
 }
 
@@ -131,10 +133,24 @@ String FourierEquation::GetEquation(int numDigits) {
 	return ret;
 }
 
-static double degToRad(double deg) {return M_PI/180.;}
+static double DegToRad(double deg) {return deg*M_PI/180.;}
+static double RadToDeg(double rad) {return rad*180./M_PI;}
+
+void EvalExpr::EvalThrowError(CParser &p, const char *s) {
+	CParser::Pos pos = p.GetPos();
+	CParser::Error err(Format("(%d): ", pos.GetColumn()) + s);
+	throw err;
+}
+
+double safe_sqrt(double val) {
+	if (val < 0) 
+		return Null;
+	return sqrt(val);
+}
 
 EvalExpr::EvalExpr() {
 	noCase = false;
+	errorIfUndefined = false;
 	
 	constants.Add("PI", M_PI);
 	constants.Add("M_PI", M_PI);
@@ -143,7 +159,7 @@ EvalExpr::EvalExpr() {
 	functions.Add("abs", fabs);
 	functions.Add("ceil", ceil);
 	functions.Add("floor", floor);
-	functions.Add("sqrt", sqrt);
+	functions.Add("sqrt", safe_sqrt);
 	functions.Add("sin", sin);
 	functions.Add("cos", cos);
 	functions.Add("tan", tan);
@@ -156,7 +172,8 @@ EvalExpr::EvalExpr() {
 	functions.Add("log", log);
 	functions.Add("log10", log10);
 	functions.Add("exp", exp);
-	functions.Add("degToRad", degToRad);
+	functions.Add("degToRad", DegToRad);
+	functions.Add("radToDeg", RadToDeg);
 }
 
 double EvalExpr::Term(CParser& p) {
@@ -166,13 +183,25 @@ double EvalExpr::Term(CParser& p) {
 			p.PassChar('(');
 			double x = Exp(p);
 			p.PassChar(')');
-			return function(x);
+			double ret = function(x);
+			if (IsNull(ret))
+				EvalThrowError(p, Format(t_("Error in %s(%f)"), strId, x));	
+			return ret;
 		}	
+		String strsearch;
 		if (noCase)
-			strId = ToUpper(strId);
-		double ret = constants.Get(strId, Null);
-		if (IsNull(ret))
-			ret = variables.GetAdd(strId, 0);
+			strsearch = ToUpper(strId);
+		else
+			strsearch = strId;
+		double ret = constants.Get(strsearch, Null);
+		if (IsNull(ret)) {
+			ret = variables.Get(strsearch, Null);
+			if (IsNull(ret)) {
+				if (errorIfUndefined)
+					EvalThrowError(p, Format(t_("Unknown var '%s'"), strId));	
+				ret = variables.GetAdd(strsearch, 0);
+			}
+		}
 		return ret;
 	} else if(p.Char('(')) {
 		double x = Exp(p);
@@ -200,7 +229,7 @@ double EvalExpr::Mul(CParser& p) {
 		else if(p.Char('/')) {
 			double y = Pow(p);
 			if(y == 0)
-				p.ThrowError(t_("Divide by zero"));
+				EvalThrowError(p, t_("Divide by zero"));
 			x = x / y;
 		} else
 			return x;
@@ -226,13 +255,15 @@ double EvalExpr::Eval(String line) {
 	if (line.IsEmpty())
 		return Null;
 	
-	CParser p(line);
+	p.Set(line);
 	try {
 		if(p.IsId()) {
 			CParser::Pos pos = p.GetPos();
 			String var = p.ReadId();
 			if(p.Char('=')) {
 				double ret = Exp(p);
+				if (noCase)
+					var = ToUpper(var);
 				variables.GetAdd(var) = ret;
 				return ret;
 			} else {
@@ -243,7 +274,7 @@ double EvalExpr::Eval(String line) {
 			return Exp(p);
 	}
 	catch(CParser::Error e) {
-		LOG(Format(t_("Error evaluating '%s': %s"), line, e));
+		lastError = e;
 		return Null;
 	}
 }
@@ -338,9 +369,13 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 			return ExpStr(p, numDigits);
 	}
 	catch(CParser::Error e) {
-		LOG(Format(t_("Error evaluating '%s': %s"), line, e));
+		lastError = Format(t_("Error evaluating '%s': %s"), line, e);
 		return Null;
 	}
+}
+
+void EvalExpr::ClearVariables() {
+	variables.Clear();
 }
 
 
@@ -438,6 +473,7 @@ INITBLOCK {
 	ExplicitEquation::Register<PolynomialEquation5>("PolynomialEquation5");
 	ExplicitEquation::Register<SinEquation>("SinEquation");
 	ExplicitEquation::Register<DampedSinEquation>("DampedSinusoidal");
+	ExplicitEquation::Register<Sin_DampedSinEquation>("Sin_DampedSinusoidal");
 	ExplicitEquation::Register<ExponentialEquation>("ExponentialEquation");
 	ExplicitEquation::Register<RealExponentEquation>("RealExponentEquation");
 	ExplicitEquation::Register<Rational1Equation>("Rational1Equation");
