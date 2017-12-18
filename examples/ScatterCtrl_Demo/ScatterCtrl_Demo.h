@@ -29,6 +29,7 @@ public:
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 
 private:
+	Vector<Pointf> sDemoRed1, sDemoRed2,sDemoGreen;
 	Vector<Pointf> s1;
 	double s2y[5];
 	double s3x[5], s3y[5];
@@ -221,8 +222,12 @@ public:
 	virtual ScatterCtrl &Scatter()	{return scatter;};
 	
 private:
-	Vector<Vector <double> > s1;
+	Vector<Vector <double> > s1, s2;
 	Vector<int> idsRange;
+	Vector<Pointf> sdata, smin, smax;
+	VectorPointf dmin, dmax;
+	DataReverse rev;
+	DataAppend app;
 };
 
 class TabBubblePlot : public WithTabBubblePlot<ScatterDemo> {

@@ -9,6 +9,7 @@ void Tab5_Dynamic::Init()
 	scatter.SetRange(10, 100);
 	scatter.AddSeries(s1).Legend("U-t").Units("V", "s").NoMark();
 	scatter.AddSeries(s2).Legend("I-t").Units("A", "s").NoMark();
+	scatter.SetFastViewX(true).SetSequentialXAll(true);
 	bStart <<=(THISBACK(Start));
 	bStop <<=(THISBACK(Stop));
 	bReset <<=(THISBACK(Reset));
