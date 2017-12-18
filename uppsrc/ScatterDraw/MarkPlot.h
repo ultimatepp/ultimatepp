@@ -40,15 +40,15 @@ public:
 	static Vector<String> GetTypes()                    {return clone(typeMap()).PickValues();}
 	int GetType() const {return typeMap().Find(typeid(*this).name());}
 	MarkPlot* Copy()const;
-	bool IsMultiPlot() {return multiPlot;}
+	bool IsMultiPlot() 	{return multiPlot;}
 
 	static int GetTypeCount(int iM)                 	{return typeNumber()[iM];}
 	static String TypeString(int iM, int iT)			{return typeString()[iM][iT];}
 	virtual int GetTypeCount()							{return 0;}
 	virtual const char **TypeString()					{return NULL;}
 	
-	void SetTypeType(int _type) {type = _type;}
-	int GetTypeType() 			{return type;}
+	//void SetTypeType(int _type) {type = _type;}
+	int GetTypeType() 									{return type;}
  
 protected:
 	typedef MarkPlot* (*CreateFunc)();
@@ -240,8 +240,6 @@ private:
 	void DoPaint(T& w, const int& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const double& size, const Color& markColor) const
 	{
-		debug_h();
-		
 		int side2l = int((size*scale)/2.);
 		int side2r = int(size*scale - side2l);
 		const Vector<int> *pdata;

@@ -114,21 +114,24 @@ private:
 	Vector<int64> Envelope(Getdatafun getdataY, Getdatafun getdataX, double width, bool (*fun)(double a, double b));
 };
 
-class DataSetCond : public DataSource {
+class DataXRange : public DataSource {
 private:
 	DataSource *data;
 	double xHigh, xLow;
+	int count;
 
 public:
-	DataSetCond() {data = 0;}
-	DataSetCond(DataSource &data, double xLow, double xHigh) {Init(data, xLow, xHigh);}
+	DataXRange() : data(0), count(1000) {}
+	DataXRange(DataSource &data, double xLow, double xHigh) {Init(data, xLow, xHigh);}
 	void Init(DataSource &data, double xLow, double xHigh) {
 		this->data = &data;
 		isExplicit = data.IsExplicit();
 		isParam = data.IsParam();
 		this->xLow = xLow;
 		this->xHigh = xHigh;
+		count = 1000;
 	}
+	void SetCount(int count)	{this->count = count;}
 	void SetXLow(double xLow) 	{this->xLow = xLow;}
 	void SetXHigh(double xHigh) {this->xHigh = xHigh;}
 	bool Check(int64 id) {
@@ -141,13 +144,13 @@ public:
 	}
 	virtual inline double y(int64 id) {
 		if (isExplicit)
-			return f(xLow + id*(xHigh - xLow)/(1000. - 1));
+			return f(xLow + id*(xHigh - xLow)/double(count - 1));
 		else
 			return Check(id) ? data->y(id) : Null;
 	}
 	virtual inline double x(int64 id) {
 		if (isExplicit)
-			return xLow + id*(xHigh - xLow)/(1000. - 1);
+			return xLow + id*(xHigh - xLow)/double(count - 1);
 		else
 			return Check(id) ? data->x(id) : Null;
 	}
@@ -170,9 +173,69 @@ public:
 	virtual double MaxX() 				{return xHigh;}
 	virtual inline int64 GetCount()	{
 		if (isExplicit)
-			return 1000;
+			return count;
 		return data->GetCount();
 	}
+};
+
+class DataReverse : public DataSource {
+private:
+	DataSource *data;
+
+public:
+	DataReverse() : data(0) {}
+	DataReverse(DataSource &data) {Init(data);}
+	void Init(DataSource *data) {Init(*data);}
+	void Init(DataSource &data) {
+		ASSERT(!data.IsExplicit() && !data.IsParam());
+		this->data = &data;
+	}
+	virtual inline double y(int64 id) {return data->y(GetCount() - id - 1);}
+	virtual inline double x(int64 id) {return data->x(GetCount() - id - 1);}
+	virtual int64 GetCount()		  {return data->GetCount();}
+};
+
+class DataReverseX : public DataSource {
+private:
+	DataSource *data;
+
+public:
+	DataReverseX() : data(0) {}
+	DataReverseX(DataSource &data) {Init(data);}
+	void Init(DataSource &data) {
+		ASSERT(!data.IsExplicit() && !data.IsParam());
+		this->data = &data;
+	}
+	virtual inline double y(int64 id) {return data->y(id);}
+	virtual inline double x(int64 id) {return data->x(GetCount() - id - 1);}
+	virtual int64 GetCount()		  {return data->GetCount();}
+};
+
+class DataAppend : public DataSource {
+private:
+	DataSource *data1, *data2;
+
+public:
+	DataAppend() : data1(0), data2(0) {}
+	DataAppend(DataSource &data1, DataSource &data2) {Init(data1, data2);}
+	void Init(DataSource &data1, DataSource &data2) {
+		ASSERT(!data1.IsExplicit() && !data1.IsParam() && !data2.IsExplicit() && !data2.IsParam());
+		this->data1 = &data1;
+		this->data2 = &data2;
+	}
+	virtual inline double y(int64 id) {
+		int64 count1 = data1->GetCount();
+		if (id < count1)
+			return data1->y(id);	
+		return data2->y(id - count1);
+	}
+	virtual inline double x(int64 id) {
+		int64 count1 = data1->GetCount();
+		if (id < count1)
+			return data1->x(id);	
+		return data2->x(id - count1);
+	}
+	virtual int64 GetCount()			{return data1->GetCount() + data2->GetCount();}
 };
 
 class CArray : public DataSource {
@@ -340,11 +403,14 @@ private:
 	const Vector<Pointf> *data;
 
 public:
-	VectorPointf(const Vector<Pointf> &data) : data(&data) 	{}
-	VectorPointf(Vector<Pointf> *data) : data(data) 		{}
-	virtual inline double y(int64 id)	{return (*data)[int(id)].y;}
-	virtual inline double x(int64 id) 	{return (*data)[int(id)].x;}
-	virtual inline int64 GetCount()		{return data->GetCount();}
+	VectorPointf() : data(0) {}
+	VectorPointf(const Vector<Pointf> &data){Init(&data);}
+	VectorPointf(Vector<Pointf> *data) 		{Init(data);}
+	void Init(const Vector<Pointf> *_data) 	{data = _data;}
+	void Init(const Vector<Pointf> &_data) 	{data = &_data;}
+	virtual inline double y(int64 id)		{return (*data)[int(id)].y;}
+	virtual inline double x(int64 id) 		{return (*data)[int(id)].x;}
+	virtual inline int64 GetCount()			{return data->GetCount();}
 };	
 
 class ArrayPointf : public DataSource {
@@ -475,7 +541,7 @@ public:
 	}
 	virtual inline int64 GetCount()	{return numPoints;}
 };	
-
+	
 struct PointfLess {
 	bool operator () (const Pointf& a, const Pointf& b) const { return a.x < b.x; }
 };

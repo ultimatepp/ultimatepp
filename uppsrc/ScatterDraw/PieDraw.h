@@ -17,6 +17,7 @@ public:
 	
 	PieDraw& SetColor(const Color& _color) 		{backColor = _color; return *this;}
 	PieDraw& SetTitle(const String& _title) 	{title = _title; return *this;}
+	String GetTitle()							{return title;}
 	PieDraw& SetTitleFont(const Upp::Font& font){titleFont = font; return *this;}
 	PieDraw& SetTitleColor(const Color& color)	{titleColor = color; return *this;}
 	PieDraw& SetTitlePos(titlePosition pos)		{titlePos = pos; return *this;}
