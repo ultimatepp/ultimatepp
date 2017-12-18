@@ -27,7 +27,7 @@ topic "Roadmap";
 [{_}%EN-US 
 [s2; Roadmap&]
 [s24; Current release&]
-[s3; 2017.2 (rev 11540) (Dev 2017)&]
+[s3; 2017.2 (rev 11540) (Dec 2017)&]
 [s5; U`+`+ now requires C`+`+14 compatible compiler.&]
 [s22; Core&]
 [s5;l160;i150;O0; New AsyncWork class `- U`+`+ future`-alike tool&]
