@@ -40,15 +40,15 @@ void TestCreateT()
 	Vector<int> v;
 	v.Add(12);
 	// Copy-constructor
-	h.Create<Test>(v, 22);
+	h.template Create<Test>(v, 22);
 	DDUMP(v.GetCount());
 	ASSERT(v.GetCount() == 1);
 	// Move-constructor
-	h.Create<Test>(pick(v), 22);
+	h.template Create<Test>(pick(v), 22);
 	DDUMP(v.GetCount());
 	ASSERT(v.GetCount() == 0);
 	v.Add(21);
-	h.Create<Test>(clone(v), 22);
+	h.template Create<Test>(clone(v), 22);
 	DDUMP(v.GetCount());
 	ASSERT(v.GetCount() == 1);
 }
@@ -61,15 +61,15 @@ void TestCreateMap()
 	Vector<int> v;
 	v.Add(12);
 	// Copy-constructor
-	h.Create<Test>("a", v, 22);
+	h.template Create<Test>("a", v, 22);
 	DDUMP(v.GetCount());
 	ASSERT(v.GetCount() == 1);
 	// Move-constructor
-	h.Create<Test>("a", pick(v), 22);
+	h.template Create<Test>("a", pick(v), 22);
 	DDUMP(v.GetCount());
 	ASSERT(v.GetCount() == 0);
 	v.Add(21);
-	h.Create<Test>("a", clone(v), 22);
+	h.template Create<Test>("a", clone(v), 22);
 	DDUMP(v.GetCount());
 	ASSERT(v.GetCount() == 1);
 }
