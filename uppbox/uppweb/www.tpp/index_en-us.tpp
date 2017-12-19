@@ -71,12 +71,14 @@ Plan]]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ Video 
 Tutorials]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^ Supported 
-platforms]&]
+Platforms]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/UppTechnologies`$en`-us^ U`+`+ 
 Technologies]]
 ::=r0/25t0/15b0/15R0-1 [s0; ]
 :: [s0; ]
 ::^l8/25r8/0t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/apps`$en`-us^ Applications]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/AssociatedProjects`_en`-us^ Associated 
+Projects]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/FAQ`$en`-us^ FAQ]&]
 [s4;i150;O0;%% [^http`:`/`/www`.ultimatepp`.org`/forums^ Forums]]
 ::=l0/25r0/25t0/15b0/15R0 [s0; ]
