@@ -35,7 +35,7 @@ Color CSyntax::BlockColor(int level)
 	return GetHlStyle(PAPER_NORMAL).color;
 }
 
-void CSyntax::Bracket(int pos, HighlightOutput& hls, CodeEditor *editor) // TODO:SYNTAX: Cleanup passing bracket info
+void CSyntax::Bracket(int64 pos, HighlightOutput& hls, CodeEditor *editor) // TODO:SYNTAX: Cleanup passing bracket info
 {
 	if(!editor)
 		return;
@@ -113,7 +113,7 @@ const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wcha
 	return p + n;
 }
 
-void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
+void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 	ONCELOCK {
 		InitKeywords();

@@ -4,10 +4,10 @@ public:
 	virtual void            ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size);
 	virtual void            Serialize(Stream& s);
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
-	                                  CodeEditor *editor, int line, int pos);
-	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
+	                                  CodeEditor *editor, int line, int64 pos);
+	virtual void            CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text);
 	virtual void            IndentInsert(CodeEditor& editor, int chr, int count);
-	virtual bool            CheckBrackets(CodeEditor& e, int& bpos0, int& bpos);
+	virtual bool            CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos);
 
 private:
 
@@ -27,8 +27,8 @@ private:
 	HighlightOutput *hout;
 
 	const wchar *Spaces(const wchar *s, const wchar *e);
-	void DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos);
-	void Do(const wchar *ln, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos);
+	void DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int64 pos);
+	void Do(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int64 pos);
 	void Put0(int ink, int n = 1, int paper = PAPER_NORMAL);
 
 	void Set(int ink, int paper = PAPER_NORMAL)                 { hl_ink = ink; hl_paper = paper; }

@@ -28,7 +28,7 @@ void Ide::ResolveUvsConflict() {
 			   ln != "END REPOSITORY INSERT" &&
 			   ln != "PENDING CONFLICT") {
 				Exclamation("Cannot resolve uvs conflict -&conflicting modifications found");
-				editor.SetCursor(editor.GetPos(i));
+				editor.SetCursor(editor.GetPos64(i));
 				return;
 			}
 		}
@@ -49,7 +49,7 @@ void Ide::GotoPos(String path, int line)
 			DoEditAsText(path);
 		EditFile(path);
 	}
-	editor.SetCursor(editor.GetPos(line - 1));
+	editor.SetCursor(editor.GetPos64(line - 1));
 	editor.TopCursor(4);
 	editor.SetFocus();
 	AddHistory();
@@ -296,7 +296,7 @@ void Ide::AlterText(WString (*op)(const WString& in))
 	editor.RemoveSelection();
 	int l = editor.GetCursor();
 	editor.Paste((*op)(w));
-	editor.SetSelection(l, editor.GetCursor());
+	editor.SetSelection(l, editor.GetCursor64());
 }
 
 void Ide::TextToUpper()
@@ -457,14 +457,14 @@ void Ide::SyncRepoDir(const String& working)
 void Ide::GotoDirDiffLeft(int line, DirDiffDlg *df)
 {
 	EditFile(df->GetLeftFile());
-	editor.SetCursor(editor.GetPos(line));
+	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
 }
 
 void Ide::GotoDirDiffRight(int line, DirDiffDlg *df)
 {
 	EditFile(df->GetRightFile());
-	editor.SetCursor(editor.GetPos(line));
+	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
 }
 

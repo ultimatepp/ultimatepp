@@ -4,7 +4,7 @@
 
 void AssistEditor::SwapSContext(Parser& p)
 {
-	int i = GetCursor();
+	int i = GetCursor32();
 	if(Ch(i - 1) == ';')
 		i--;
 	else

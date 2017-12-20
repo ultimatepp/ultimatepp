@@ -168,7 +168,7 @@ void AssistEditor::EditAnnotation(bool fastedit)
 	Vector<String> tl;
 	if(!GetAnnotationRefs(tl, coderef))
 		return;
-	SetCursor(GetPos(GetActiveAnnotationLine()));
+	SetCursor(GetPos64(GetActiveAnnotationLine()));
 	if(tl.GetCount() > 1) {
 		MenuBar bar;
 		for(int i = 0; i < tl.GetCount(); i++)

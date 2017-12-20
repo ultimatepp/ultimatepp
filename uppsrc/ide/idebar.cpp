@@ -216,7 +216,12 @@ void Ide::Edit(Bar& menu)
 	}
 	else {
 		bool selection = editor.IsAnySelection();
-		
+
+		if(editor.IsView()) {
+			menu.Add(AK_EDITASTEXT, THISBACK(EditAsText))
+			    .Help("Edit file");
+			menu.MenuSeparator();
+		}
 		if(GetFileExt(editfile) == ".t") {
 			if(editastext.Find(editfile) >= 0)
 				menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
@@ -229,7 +234,7 @@ void Ide::Edit(Bar& menu)
 		else
 		if(editastext.Find(editfile) >= 0/* && IsDesignerFile(editfile)*/) {
 			menu.Add(AK_DESIGNER, THISBACK(EditUsingDesigner))
-			    .Help("Edit using the designer (not as text)");
+			    .Help(editor.GetLength() > 256*1024*1024 ? "View file" : "Edit using the designer (not as text)");
 			menu.MenuSeparator();
 		}
 		menu.Add(b, "Undo", CtrlImg::undo(), callback(&editor, &LineEdit::Undo))

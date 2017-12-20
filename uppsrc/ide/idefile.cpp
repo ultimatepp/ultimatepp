@@ -1,5 +1,41 @@
 #include "ide.h"
 
+String ViewCache()
+{
+	return ConfigFile("view_maps");
+}
+
+String ViewFileHash(const String& path)
+{
+	Sha1Stream s;
+	FindFile ff(path);
+	if(ff) {
+		Sha1Stream sha;
+		sha << path << ';' << Time(ff.GetLastWriteTime()) << ';' << ff.GetLength();
+		return AppendFileName(ViewCache(), sha.FinishString());
+	}
+	return Null;
+}
+
+void ViewFile(LineEdit& edit, Stream& view_file, const String& path)
+{
+	edit.View(view_file);
+	String f = ViewFileHash(path);
+	if(f.GetCount())
+		LoadFromFile([&](Stream& s) { edit.SerializeViewMap(s); }, f);
+}
+
+void CacheViewFile(LineEdit& edit, const String& path)
+{
+	if(edit.IsView()) {
+		ReduceCacheFolder(ViewCache(), 20000000);
+		String f = ViewFileHash(path);
+		RealizePath(f);
+		if(f.GetCount())
+			StoreToFile([&](Stream& s) { edit.SerializeViewMap(s); }, f);
+	}
+}
+
 void Ide::SetupEditor(int f, String hl, String path)
 {
 	if(IsNull(hl)) {
@@ -327,6 +363,8 @@ void Ide::SaveFile0(bool always)
 	fd.editpos = editor.GetEditPos();
 	fd.columnline = editor.GetColumnLine(fd.editpos.cursor);
 	fd.filetime = edittime;
+	if(editor.IsView())
+		return;
 	if(!editor.IsDirty() && !always)
 		return;
 	TouchFile(editfile);
@@ -371,6 +409,7 @@ void Ide::SaveFile0(bool always)
 void Ide::FlushFile() {
 	editor.CloseAssist();
 	SaveFile();
+	CacheViewFile(editor, editfile);
 	editor.assist_active = false;
 	if(designer) {
 		designer->SaveEditPos();
@@ -387,8 +426,10 @@ void Ide::FlushFile() {
 	repo_dirs = RepoDirs(true).GetCount(); // Perhaps not the best place, but should be ok
 	editor.Clear();
 	editor.Disable();
+	editor.SetEditable();
 	editorsplit.Ctrl::Remove();
 	designer.Clear();
+	view_file.Close();
 	SetBar();
 }
 
@@ -469,7 +510,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		editor.SyncNavigatorShow();
 		return;
 	}
-	
+
 	tabs.SetAddFile(editfile);
 	tabs.SetSplitColor(editfile2, Yellow);
 	editor.Enable();
@@ -484,13 +525,13 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		edittime = ff.GetLastWriteTime();
 		if(edittime != fd.filetime || IsNull(fd.filetime))
 			fd.undodata.Clear();
-		FileIn in(editfile);
-		if(in) {
+		view_file.Open(editfile);
+		if(view_file) {
 			if(tfile && editastext.Find(editfile) < 0) {
 				String f;
 				String ln;
 				for(;;) {
-					int c = in.Get();
+					int c = view_file.Get();
 					if(c < 0) {
 						f.Cat(ConvertTLine(ln, 0));
 						break;
@@ -507,7 +548,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 				editor.SetCharset(CHARSET_UTF8);
 			}
 			else {
-				String s = in.Get(3);
+				String s = view_file.Get(3);
 				if(s.GetCount() >= 2) {
 					if((byte)s[0] == 0xff && (byte)s[1] == 0xfe)
 						charset = CHARSET_UTF16_LE_BOM;
@@ -516,8 +557,24 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 				}
 				if(s.GetCount() >= 3 && (byte)s[0] == 0xef && (byte)s[1] == 0xbb && (byte)s[2] == 0xbf)
 					charset = CHARSET_UTF8_BOM;
-				in.Seek(0);
-				int le = editor.Load(in, charset);
+				view_file.Seek(0);
+				int le = Null;
+			#ifdef CPU_64
+				const int64 max_size = (int64)4096*1024*1024;
+			#else
+				const int64 max_size = 768*1024*1024;
+			#endif
+				const int view_limit = 256*1024*1024;
+				DDUMP(view_file.GetSize());
+				DDUMP(editastext.Find(editfile));
+				DDUMP(editor.IsReadOnly());
+				if(view_file.GetSize() < 256*1024*1024 || editastext.Find(editfile) >= 0 && view_file.GetSize() < max_size) {
+					le = editor.Load(view_file, charset);
+					view_file.Close();
+				}
+				else
+					ViewFile(editor, view_file, editfile);
+				
 				editfile_line_endings = le == TextCtrl::LE_CRLF ? CRLF : le == TextCtrl::LE_LF ? LF : (int)Null;
 			}
 		}
@@ -526,15 +583,22 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 		editor.SetEditPos(fd.editpos);
 		if(!IsNull(fd.columnline) && fd.columnline.y >= 0 && fd.columnline.y < editor.GetLineCount())
 			editor.SetCursor(editor.GetColumnLinePos(fd.columnline));
-		editor.SetPickUndoData(pick(fd.undodata));
-		editor.SetLineInfo(fd.lineinfo);
-		editor.SetLineInfoRem(pick(fd.lineinforem));
-		if(ff.IsReadOnly() || IsNestReadOnly(editfile) || editor.IsTruncated()) {
+		if(!editor.IsView()) {
+			editor.SetPickUndoData(pick(fd.undodata));
+			editor.SetLineInfo(fd.lineinfo);
+			editor.SetLineInfoRem(pick(fd.lineinforem));
+		}
+		DDUMP(ff.IsReadOnly());
+		DDUMP(IsNestReadOnly(editfile));
+		DDUMP(editor.IsTruncated());
+		DDUMP(editor.IsView());
+		if(ff.IsReadOnly() || IsNestReadOnly(editfile) || editor.IsTruncated() || editor.IsView()) {
 			editor.SetReadOnly();
 			editor.NoShowReadOnly();
 		}
 		fd.ClearP();
 		PosSync();
+		editor.ClearDirty();
 	}
 	else {
 		RealizePath(editfile);
@@ -547,11 +611,11 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 			s << "\r\n";
 			s << "#endif\r\n";
 			editor <<= s;
-			editor.SetCursor(editor.GetPos(2));
+			editor.SetCursor(editor.GetPos64(2));
 		}
 		if(IsCSourceFile(editfile) && !IsNull(headername)) {
 			editor <<= "#include \"" + headername + "\"\r\n";
-			editor.SetCursor(editor.GetPos(1));
+			editor.SetCursor(editor.GetPos64(1));
 		}
 		editor.SetCharset(tfile ? CHARSET_UTF8 : charset);
 	}
@@ -592,7 +656,7 @@ void Ide::EditFileAssistSync()
 
 void Ide::TriggerAssistSync()
 {
-	if(auto_rescan && editor.GetLength() < 500000) // Sanity
+	if(auto_rescan && editor.GetLength64() < 500000) // Sanity
 		text_updated.KillSet(1000, THISBACK(EditFileAssistSync));
 }
 
@@ -808,7 +872,7 @@ void Ide::ReloadFile()
 	EditFile0(fn, editor.GetCharset(), editor.GetSpellcheckComments());
 	filelist.SetSbPos(sc);
 	int l = LocateLine(data, ln, ~editor);
-	editor.SetCursor(editor.GetPos(l));
+	editor.SetCursor(editor.GetPos64(l));
 }
 
 void Ide::EditAnyFile() {
@@ -887,9 +951,16 @@ void Ide::PassEditor()
 	editor2.SetFont(editor.GetFont());
 	editor2.Highlight(editor.GetHighlight());
 	editor2.LoadHlStyles(editor.StoreHlStyles());
+	editor2.NoShowReadOnly();
 	byte charset = editor.GetCharset();
 	editor2.CheckEdited(false);
-	editor2.Set(editor.Get(charset), charset);
+	view_file2.Close();
+	if(editor.IsView()) {
+		view_file2.Open(editfile2);
+		ViewFile(editor2, view_file2, editfile2);
+	}
+	else
+		editor2.Set(editor.Get(charset), charset);
 	editor2.SetEditPosSb(editor.GetEditPos());
 	editor2.CheckEdited();
 	editor.SetFocus();
@@ -956,6 +1027,7 @@ void Ide::CloseSplit()
 {
 	editorsplit.Vert(editor, editor2);
 	editorsplit.Zoom(0);
+	view_file2.Close();
 	editfile2.Clear();
 	tabs.ClearSplitColor();
 	SyncEditorSplit();

@@ -176,12 +176,12 @@ bool RichEdit::IsW(int c)
 
 void RichEdit::MoveWordRight(bool select)
 {
-	Move(GetNextWord(cursor), select);
+	Move((int)GetNextWord(cursor), select);
 }
 
 void RichEdit::MoveWordLeft(bool select)
 {
-	Move(GetPrevWord(cursor), select);
+	Move((int)GetPrevWord(cursor), select);
 }
 
 bool RichEdit::SelBeg(bool select)

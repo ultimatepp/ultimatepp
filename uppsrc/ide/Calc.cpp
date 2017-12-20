@@ -18,15 +18,15 @@ void IdeCalc::Execute()
 	if(IsSelection()) {
 		String s = GetSelection();
 		if(s.GetLength() < 80) {
-			SetCursor(GetLength());
+			SetCursor(GetLength64());
 			Paste(Filter(s, LfToSpaceFilter).ToWString());
 		}
 		return;
 	}
-	if(GetLine(GetCursor()) != li) {
-		WString s = GetWLine(GetLine(GetCursor()));
+	if(GetLine(GetCursor64()) != li) {
+		WString s = GetWLine(GetLine(GetCursor64()));
 		if(s[0] == '$') s = s.Mid(1);
-		SetCursor(GetLength());
+		SetCursor(GetLength64());
 		Paste(s);
 		return;
 	}
@@ -46,9 +46,9 @@ void IdeCalc::Execute()
 		const char *x = strchr(e, ':');
 		txt << "ERROR: " << (x ? x + 1 : ~e);
 	}
-	SetCursor(GetPos(li));
+	SetCursor(GetPos64(li));
 	Paste("$");
-	SetCursor(GetLength());
+	SetCursor(GetLength64());
 	Paste("\n");
 	Paste(FromUtf8(txt));
 	Paste("\n");

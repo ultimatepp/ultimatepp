@@ -7,7 +7,7 @@ inline bool Is3(const wchar *s, int c)
 	return s[0] == c && s[1] == c && s[2] == c;
 }
 
-void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
+void LogSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 	const HlStyle& ink = hl_style[INK_NORMAL];
 	HlStyle err = hl_style[INK_ERROR];

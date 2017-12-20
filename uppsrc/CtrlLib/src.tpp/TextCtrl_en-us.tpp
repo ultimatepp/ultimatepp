@@ -107,6 +107,12 @@ from not`-modified to modified (`"dirty`") or back.&]
 [s2;%% Called when cursor or selection changes.&]
 [s3; &]
 [s4; &]
+[s5;:Upp`:`:TextCtrl`:`:WhenViewLoading: [_^Upp`:`:Event^ Event]<[_^Upp`:`:int64^ int64]>
+_[* WhenViewMapping]&]
+[s2;%% Called during mapping view stream with current position in 
+the stream.&]
+[s3; &]
+[s4; &]
 [s5;:TextCtrl`:`:CachePos`(int`): [@(0.0.255) void]_[* CachePos]([@(0.0.255) int]_[*@3 pos])&]
 [s2;%% This is specific optimization hint to the widget saying that 
 following operations will be performed near [%-*@3 pos]. Unlikely 
@@ -171,14 +177,14 @@ _CHARSET`_DEFAULT)_[@(0.0.255) const]&]
 [s2;%% Gets the text in the widget.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:Get`(int`,int`,byte`)const: [_^String^ String]_[* Get]([@(0.0.255) int]_[*@3 p
-os], [@(0.0.255) int]_[*@3 size], [_^byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)_[@(0.0.255) c
-onst]&]
+[s5;:Upp`:`:TextCtrl`:`:Get`(Upp`:`:int64`,int`,Upp`:`:byte`)const: [_^Upp`:`:String^ S
+tring]_[* Get]([_^Upp`:`:int64^ int64]_[*@3 pos], [@(0.0.255) int]_[*@3 size], 
+[_^Upp`:`:byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)_[@(0.0.255) const]&]
 [s2;%% Gets the part of text in the widget.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:GetW`(int`,int`)const: [_^WString^ WString]_[* GetW]([@(0.0.255) int]_[*@3 p
-os], [@(0.0.255) int]_[*@3 size])_[@(0.0.255) const]&]
+[s5;:Upp`:`:TextCtrl`:`:GetW`(Upp`:`:int64`,int`)const: [_^Upp`:`:WString^ WString]_[* Ge
+tW]([_^Upp`:`:int64^ int64]_[*@3 pos], [@(0.0.255) int]_[*@3 size])_[@(0.0.255) const]&]
 [s2;%% Gets the part of text in the widget in UNICODE.&]
 [s3;%% &]
 [s4; &]
@@ -202,6 +208,11 @@ setting it or at ClearDirty).&]
 [s2;%% Empties the text.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:TextCtrl`:`:GetLine`(Upp`:`:int64`)const: [@(0.0.255) int]_[* GetLine]([_^Upp`:`:int64^ i
+nt64]_[*@3 pos])_[@(0.0.255) const]&]
+[s2;%% Similar to GetLinePos, but does not alter [%-*@3 pos] parameter.&]
+[s3;%% &]
+[s4; &]
 [s5;:TextCtrl`:`:GetLinePos`(int`&`)const: [@(0.0.255) int]_[* GetLinePos]([@(0.0.255) int`&
 ]_[*@3 pos])_[@(0.0.255) const]&]
 [s2;%% Returns the line where character at offset [%-*@3 pos] resides; 
@@ -217,11 +228,6 @@ index within the line.&]
 [s5;:TextCtrl`:`:GetPos`(int`)const: [@(0.0.255) int]_[* GetPos]([@(0.0.255) int]_[*@3 line])
 _[@(0.0.255) const]&]
 [s2;%% Same as GetPos([%-*@3 line], 0).&]
-[s3;%% &]
-[s4; &]
-[s5;:TextCtrl`:`:GetLine`(int`)const: [@(0.0.255) int]_[* GetLine]([@(0.0.255) int]_[*@3 pos])
-_[@(0.0.255) const]&]
-[s2;%% Similar to GetLinePos, but does not alter [%-*@3 pos] parameter.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:GetUtf8Line`(int`)const: [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&
@@ -250,20 +256,19 @@ st]&]
 [s2;%% Returns the number of lines.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:GetChar`(int`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetChar]([@(0.0.255) i
-nt]_[*@3 pos])_[@(0.0.255) const]&]
-[s5;:TextCtrl`:`:operator`[`]`(int`)const: [@(0.0.255) int]_[* operator`[`]]([@(0.0.255) in
-t]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:TextCtrl`:`:GetChar`(Upp`:`:int64`)const: [@(0.0.255) int]_[* GetChar]([_^Upp`:`:int64^ i
+nt64]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:TextCtrl`:`:operator`[`]`(Upp`:`:int64`)const: [@(0.0.255) int]_[* operator`[
+`]]([_^Upp`:`:int64^ int64]_[*@3 pos])_[@(0.0.255) const]&]
 [s2;%% Returns the UNICODE character at [%-*@3 pos] offset.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:TextCtrl`:`:GetChar`(`)const: [@(0.0.255) int]_[* GetChar]()_[@(0.0.255) const]&]
 [s2;%% Returns UNICODE character at cursor, or 0 if cursor is behind 
 the last character.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:GetLength`(`)const: [@(0.0.255) virtual] [@(0.0.255) int]_[* GetLength]()_
-[@(0.0.255) const]&]
+[s5;:TextCtrl`:`:GetLength`(`)const: [@(0.0.255) int]_[* GetLength]()_[@(0.0.255) const]&]
 [s2;%% Returns the total number of characters in the text.&]
 [s3;%% &]
 [s4; &]
@@ -271,12 +276,14 @@ the last character.&]
 [s2;%% Returns the position of cursor.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:GetCursorLine`(`): [@(0.0.255) int]_[* GetCursorLine]()&]
+[s5;:Upp`:`:TextCtrl`:`:GetCursorLine`(`)const: [@(0.0.255) int]_[* GetCursorLine]()_[@(0.0.255) c
+onst]&]
 [s2;%% Same as GetLine(GetCursor).&]
-[s3;%% &]
+[s3; &]
 [s4; &]
-[s5;:TextCtrl`:`:SetSelection`(int`,int`): [@(0.0.255) void]_[* SetSelection]([@(0.0.255) i
-nt]_[*@3 anchor]_`=_[@3 0], [@(0.0.255) int]_[*@3 cursor]_`=_INT`_MAX)&]
+[s5;:Upp`:`:TextCtrl`:`:SetSelection`(Upp`:`:int64`,Upp`:`:int64`): [@(0.0.255) void]_[* S
+etSelection]([_^Upp`:`:int64^ int64]_[*@3 anchor]_`=_[@3 0], [_^Upp`:`:int64^ int64]_[*@3 c
+ursor]_`=_[@3 2147483647]_)&]
 [s2;%% Sets the selection. If [%-*@3 anchor] or [%-*@3 cursor] are out 
 of range, they are `"fixed`". If they are equal, method changes 
 the position of cursor.&]
@@ -295,11 +302,16 @@ onst]&]
 [s5;:TextCtrl`:`:IsAnySelection`(`)const: [@(0.0.255) bool]_[* IsAnySelection]()_[@(0.0.255) c
 onst]&]
 [s2;%% Returns true if there is either rectangular or normal selection.&]
-[s3; &]
+[s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:GetSelection`(int`&`,int`&`)const: [@(0.0.255) bool]_[* GetSelection]([@(0.0.255) i
 nt`&]_[*@3 l], [@(0.0.255) int`&]_[*@3 h])_[@(0.0.255) const]&]
-[s2;%% Returns the selection lower and upper bounds.&]
+[s5;:Upp`:`:TextCtrl`:`:GetSelection`(Upp`:`:int64`&`,Upp`:`:int64`&`)const: [@(0.0.255) b
+ool]_[* GetSelection]([_^Upp`:`:int64^ int64][@(0.0.255) `&]_[*@3 l], 
+[_^Upp`:`:int64^ int64][@(0.0.255) `&]_[*@3 h])_[@(0.0.255) const]&]
+[s2;%% Returns the selection lower and upper bounds. int64 version 
+is only useful in view mode. In view mode, 32 bit version returns 
+false if the range is larger than 2GB.&]
 [s3;%% &]
 [s4; &]
 [s5;:TextCtrl`:`:GetSelection`(byte`)const: [_^String^ String]_[* GetSelection]([_^byte^ by
@@ -320,8 +332,8 @@ onst]&]
 [s2;%% Deletes the selection text.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:SetCursor`(int`): [@(0.0.255) void]_[* SetCursor]([@(0.0.255) int]_[*@3 curs
-or])&]
+[s5;:Upp`:`:TextCtrl`:`:SetCursor`(Upp`:`:int64`): [@(0.0.255) void]_[* SetCursor]([_^Upp`:`:int64^ i
+nt64]_[*@3 cursor])&]
 [s2;%% Places cursor at new position.&]
 [s3;%% &]
 [s4; &]
@@ -392,9 +404,9 @@ records with the text. Must be followed by either SetPickUndoData
 or ClearUndo before performing any text altering operation.&]
 [s3;%% &]
 [s4; &]
-[s5;:TextCtrl`:`:SetPickUndoData`(pick`_ TextCtrl`:`:UndoData`&`): [@(0.0.255) void]_[* S
-etPickUndoData]([@(0.128.128) pick`_]_[_^TextCtrl`:`:UndoData^ UndoData][@(0.0.255) `&]_
-[*@3 data])&]
+[s5;:Upp`:`:TextCtrl`:`:SetPickUndoData`(Upp`:`:TextCtrl`:`:UndoData`&`&`): [@(0.0.255) v
+oid]_[* SetPickUndoData]([_^Upp`:`:TextCtrl`:`:UndoData^ TextCtrl`::UndoData][@(0.0.255) `&
+`&]_[*@3 data])&]
 [s2;%% Sets the undo/redo records. [%-@3 data] is picked (destroyed) 
 during the operation.&]
 [s3;%% &]
@@ -455,6 +467,61 @@ user into the text.&]
 _[@(0.0.255) const]&]
 [s2;%% Gets the color used to display the text.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:View`(Upp`:`:Stream`&`,Upp`:`:byte`): [@(0.0.255) int]_[* View]([_^Upp`:`:Stream^ S
+tream][@(0.0.255) `&]_[*@3 s], [_^Upp`:`:byte^ byte]_[*@3 charset]_`=_CHARSET`_DEFAULT)&]
+[s2;%% Initiates the view mode. In view mode, file is not loaded, 
+but displayed while loading it from the stream as necessary. 
+TextCtrl retains a reference to [%-*@3 s] so it must exist for 
+the whole time it is displayed in TextCtrl. TextCtrl is in read`-only 
+mode for view operations. View allows viewing of files >2GB, 
+therefore some functions have 64`-bit counterparts working in 
+view mode only. View actually needs to scan the file to create 
+a map of file; this operation is performed in background (via 
+PostCallbacks), application can use SerializeViewMap to store 
+cache this map for particular file.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:WaitView`(int`,bool`): [@(0.0.255) void]_[* WaitView]([@(0.0.255) i
+nt]_[*@3 line], [@(0.0.255) bool]_[*@3 progress])&]
+[s2;%% While mapping of file for view is in progress, makes sure 
+that the file is mapped up to [%-*@3 line] or EOF. If [%-*@3 progress] 
+is true, progress is displayed.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:LockViewMapping`(`): [@(0.0.255) void]_[* LockViewMapping]()&]
+[s2;%% Stops background mapping of file for view.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:UnlockViewMapping`(`): [@(0.0.255) void]_[* UnlockViewMapping]()&]
+[s2; Continues mapping of file for view.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:SerializeViewMap`(Upp`:`:Stream`&`): [@(0.0.255) void]_[* Seriali
+zeViewMap]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 s])&]
+[s2;%% Serializes the file view map.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:IsView`(`)const: [@(0.0.255) bool]_[* IsView]()_[@(0.0.255) const]&]
+[s2;%% Returns true if TextCtrl is in view mode.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:GetViewSize`(`)const: [_^Upp`:`:int64^ int64]_[* GetViewSize]()_[@(0.0.255) c
+onst]&]
+[s2;%% Returns GetSize of view stream.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TextCtrl`:`:GetLinePos64`(Upp`:`:int64`&`)const: [@(0.0.255) int]_[* GetLineP
+os64]([_^Upp`:`:int64^ int64][@(0.0.255) `&]_[*@3 pos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:TextCtrl`:`:GetPos64`(int`,int`)const: [_^Upp`:`:int64^ int64]_[* GetPos64]([@(0.0.255) i
+nt]_[*@3 ln], [@(0.0.255) int]_[*@3 lpos])_[@(0.0.255) const]&]
+[s5;:Upp`:`:TextCtrl`:`:GetLength64`(`)const: [_^Upp`:`:int64^ int64]_[* GetLength64]()_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:TextCtrl`:`:GetCursor64`(`)const: [_^Upp`:`:int64^ int64]_[* GetCursor64]()_[@(0.0.255) c
+onst]&]
+[s2;%% These are variants of GetLinePos, GetPos, GetLength and GetCursor64 
+for view mode (where values > INT`_MAX are possible).&]
+[s3; &]
 [s4; &]
 [s5;:TextCtrl`:`:UndoSteps`(int`): [_^TextCtrl^ TextCtrl][@(0.0.255) `&]_[* UndoSteps]([@(0.0.255) i
 nt]_[*@3 n])&]

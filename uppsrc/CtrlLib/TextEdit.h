@@ -11,8 +11,11 @@ public:
 		int    serial;
 		int    pos;
 		int    size;
-		String text;
+		String data;
 		bool   typing;
+		
+		void   SetText(const String& text) { data = FastCompress(text); }
+		String GetText() const             { return FastDecompress(data); }
 	};
 
 	struct UndoData {
@@ -36,6 +39,9 @@ public:
 	};
 
 protected:
+	virtual int64   GetTotal() const                  { return total; }
+	virtual int     GetCharAt(int64 i) const          { return GetChar(i); }
+
 	virtual void    DirtyFrom(int line);
 	virtual void    SelectionChanged();
 	virtual void    ClearLines();
@@ -46,7 +52,7 @@ protected:
 	virtual void    PreRemove(int pos, int size);
 	virtual void    PostRemove(int pos, int size);
 	virtual void    SetSb();
-	virtual void    PlaceCaret(int newcursor, bool sel = false);
+	virtual void    PlaceCaret(int64 newcursor, bool sel = false);
 	virtual void    InvalidateLine(int i);
 	virtual int     RemoveRectSelection();
 	virtual WString CopyRectSelection();
@@ -57,17 +63,15 @@ protected:
 		int    len;
 		String text;
 
-		int      GetLength() const       { return len; }
-		operator WString() const         { return FromUtf8(text); }
-
-		Ln(const WString& wtext)         { text = ToUtf8(wtext); len = wtext.GetLength(); }
 		Ln()                             { len = 0; }
 	};
 
-	Vector<Ln>       line;
-	int              total;
-	int              cline, cpos;
-	int              cursor, anchor;
+	Vector<Ln>       lin;
+	int64            total;
+
+	int64            cpos;
+	int              cline;
+	int64            cursor, anchor;
 	int              undoserial;
 	bool             rectsel;
 	bool             incundoserial;
@@ -89,6 +93,20 @@ protected:
 	bool             nobg;
 	int              max_total;
 	int              max_line_len;
+	
+	mutable Stream  *view;
+	struct ViewCache {
+		int        blk;
+		Vector<Ln> line;
+	};
+	mutable ViewCache view_cache[2];
+	mutable int viewlines;
+	
+	Vector<int64>     offset256;
+	Vector<int>       total256;
+	int               view_loading_lock;
+	int64             view_loading_pos;
+	bool              view_all;
 
 	void   IncDirty();
 	void   DecDirty();
@@ -103,67 +121,88 @@ protected:
 	void   RefreshLines(int l1, int l2);
 	static bool   IsUnicodeCharset(byte charset);
 
+	int    Load0(Stream& in, byte charset, bool view);
+	int    LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte charset,
+	                 int max_line_len, int max_total, bool& truncated) const;
+	void   ViewLoading();
+
+	void   SetLine(int i, const String& txt, int len) { lin[i].text = txt; lin[i].len = len; }
+	void   SetLine(int i, const WString& w)           { SetLine(i, ToUtf8(w), w.GetCount()); }
+	void   LineRemove(int i, int n)                   { lin.Remove(i, n); }
+	void   LineInsert(int i, int n)                   { lin.InsertN(i, n); }
+	const Ln& GetLn(int i) const;
+
+	int    GetLinePos32(int& pos) const;
+	bool   GetSelection32(int& l, int& h) const;
+	int    GetPos32(int line, int column = 0) const   { return (int)GetPos64(line, column); }
+	int    GetLength32() const;
+	int    GetCursor32() const;
+
 public:
 	virtual void   RefreshLine(int i);
 
-	Event<Bar&> WhenBar;
-	Event<>     WhenState;
-	Event<>     WhenSel;
+	Event<Bar&>  WhenBar;
+	Event<>      WhenState;
+	Event<>      WhenSel;
+	Event<int64> WhenViewMapping;
 
-	void   CachePos(int pos);
+	void   CachePos(int64 pos);
 	void   CacheLinePos(int linei);
 
 	enum CS { CHARSET_UTF8_BOM = 250, CHARSET_UTF16_LE, CHARSET_UTF16_BE, CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM };
 	enum LE { LE_DEFAULT, LE_CRLF, LE_LF };
 
-	int    Load(Stream& s, byte charset = CHARSET_DEFAULT);
+	int    Load(Stream& s, byte charset = CHARSET_DEFAULT)    { return Load0(s, charset, false); }
 	bool   IsTruncated() const                                { return truncated; }
 	void   Save(Stream& s, byte charset = CHARSET_DEFAULT, int line_endings = LE_DEFAULT) const;
 
 	int    GetInvalidCharPos(byte charset = CHARSET_DEFAULT) const;
 	bool   CheckCharset(byte charset = CHARSET_DEFAULT) const { return GetInvalidCharPos(charset) < 0; }
 
+	int    LimitSize(int64 size) const                        { return int(view ? min((int64)max_total, size) : size); }
+
+	int    GetLinePos(int& pos) const                         { return GetLinePos32(pos); }
+	int    GetPos(int line, int column = 0) const             { return GetPos32(line, column); }
+
 	void    Set(const WString& s);
 	void    Set(const String& s, byte charset = CHARSET_DEFAULT);
 	String  Get(byte charset = CHARSET_DEFAULT) const;
-	String  Get(int pos, int size, byte charset = CHARSET_DEFAULT) const;
-	WString GetW(int pos, int size) const;
-	WString GetW() const                      { return GetW(0, GetLength()); }
+	String  Get(int64 pos, int size, byte charset = CHARSET_DEFAULT) const;
+	WString GetW(int64 pos, int size) const;
+	WString GetW() const                      { return GetW(0, LimitSize(GetLength64())); }
 
 	void   ClearDirty();
 	bool   IsDirty() const                    { return dirty; }
 
 	void   Clear();
 
-	int    GetLinePos(int& pos) const;
-	int    GetPos(int line, int column) const;
-	int    GetPos(int line) const             { return GetPos(line, 0); }
-	int    GetLine(int pos) const             { return GetLinePos(pos); }
+	int    GetLine(int64 pos) const           { return GetLinePos64(pos); }
 
-	const String& GetUtf8Line(int i) const    { return line[i].text; }
-	WString       GetWLine(int i) const       { return FromUtf8(line[i].text); }
+	const String& GetUtf8Line(int i) const;
+	WString       GetWLine(int i) const       { return FromUtf8(GetUtf8Line(i)); }
 	String        GetEncodedLine(int i, byte charset = CHARSET_DEFAULT) const;
-	int           GetLineLength(int i) const  { return line[i].GetLength(); }
+	int           GetLineLength(int i) const;
 
-	int    GetLineCount() const               { return line.GetCount(); }
-	int    GetChar(int pos) const;
-	int    GetChar() const                    { return cursor < total ? GetChar(cursor) : 0; }
-	int    operator[](int pos) const          { return GetChar(pos); }
-	int    GetLength() const                  { return total; }
+	int     GetLength() const                 { return GetLength32(); }
+	int     GetLineCount() const              { return view ? viewlines : lin.GetCount(); }
+	int     GetChar(int64 pos) const;
+	int     GetChar() const                   { return cursor < GetLength64() ? GetChar(cursor) : 0; }
+	int     operator[](int64 pos) const       { return GetChar(pos); }
 
-	int     GetCursor() const                 { return cursor; }
-	int     GetCursorLine()                   { return GetLine(GetCursor()); }
+	int     GetCursor() const                 { return GetCursor32(); }
+	int     GetCursorLine() const             { return GetLine(GetCursor64()); }
 
-	void    SetSelection(int anchor = 0, int cursor = INT_MAX);
+	void    SetSelection(int64 anchor = 0, int64 cursor = INT_MAX);
 	bool    IsSelection() const               { return IsAnySelection() && !rectsel; }
 	bool    IsRectSelection() const           { return IsAnySelection() && rectsel; }
 	bool    IsAnySelection() const            { return anchor >= 0 && anchor != cursor; }
-	bool    GetSelection(int& l, int& h) const;
+	bool    GetSelection(int& l, int& h) const{ return GetSelection32(l, h); }
+	bool    GetSelection(int64& l, int64& h) const;
 	String  GetSelection(byte charset = CHARSET_DEFAULT) const;
 	WString GetSelectionW() const;
 	void    ClearSelection();
 	bool    RemoveSelection();
-	void    SetCursor(int cursor)                { PlaceCaret(cursor); }
+	void    SetCursor(int64 cursor)              { PlaceCaret(cursor); }
 	int     Paste(const WString& text);
 
 	int     Insert(int pos, const WString& txt)  { return Insert(pos, txt, false); }
@@ -194,6 +233,19 @@ public:
 
 	void      SetColor(int i, Color c)         { color[i] = c; Refresh(); }
 	Color     GetColor(int i) const            { return color[i]; }
+
+	int       View(Stream& s, byte charset = CHARSET_DEFAULT)    { return Load0(s, charset, true); }
+	void      WaitView(int line = INT_MAX, bool progress = false);
+	void      LockViewMapping()                                  { view_loading_lock++; }
+	void      UnlockViewMapping();
+	void      SerializeViewMap(Stream& s);
+	bool      IsView() const                                     { return view; }
+	int64     GetViewSize() const                                { return view ? view->GetSize() : 0; }
+
+	int       GetLinePos64(int64& pos) const;
+	int64     GetPos64(int line, int column = 0) const;
+	int64     GetLength64() const                                { return total; }
+	int64     GetCursor64() const                                { return cursor; }
 
 	TextCtrl& UndoSteps(int n)                 { undosteps = n; Undodo(); return *this; }
 	int       GetUndoSteps() const             { return undosteps; }
@@ -235,7 +287,7 @@ public:
 
 protected:
 	virtual void    SetSb();
-	virtual void    PlaceCaret(int newcursor, bool sel = false);
+	virtual void    PlaceCaret(int64 newcursor, bool sel = false);
 	virtual int     RemoveRectSelection();
 	virtual WString CopyRectSelection();
 	virtual int     PasteRectSelection(const WString& s);
@@ -261,8 +313,8 @@ public:
 	};
 
 	struct EditPos : Moveable<EditPos> {
-		int sby;
-		int cursor;
+		int   sby;
+		int64 cursor;
 
 		void Serialize(Stream& s);
 		void Clear()                      { sby = 0; cursor = 0; }
@@ -270,12 +322,12 @@ public:
 	};
 
 protected:
-	virtual void  HighlightLine(int line, Vector<Highlight>& h, int pos);
+	virtual void  HighlightLine(int line, Vector<Highlight>& h, int64 pos);
 	virtual void  NewScrollPos();
 
 	ScrollBars       sb;
 	int              gcolumn;
-	int              mpos;
+	int64            mpos;
 
 
 	Font             font;
@@ -303,7 +355,7 @@ protected:
 	void   MovePage(int dir, bool sel);
 
 	void   PlaceCaret0(Point p);
-	int    PlaceCaretNoG(int newcursor, bool sel = false);
+	int    PlaceCaretNoG(int64 newcursor, bool sel = false);
 
 	void   Scroll();
 	void   SetHBar();
@@ -314,19 +366,21 @@ protected:
 	struct RefreshDraw;
 	friend class TextCtrl;
 
+	int    GetMousePos32(Point p) const       { return (int)GetMousePos(p); }
+
 public:
 	Size   GetFontSize() const;
-	int    GetGPos(int ln, int cl) const;
-	int    GetMousePos(Point p) const;
-	Point  GetColumnLine(int pos) const;
-	int    GetColumnLinePos(Point pos) const  { return GetGPos(pos.y, pos.x); }
-	Point  GetIndexLine(int pos) const;
-	int    GetIndexLinePos(Point pos) const;
+	int64  GetGPos(int ln, int cl) const;
+	int64  GetMousePos(Point p) const;
+	Point  GetColumnLine(int64 pos) const;
+	int64  GetColumnLinePos(Point pos) const  { return GetGPos(pos.y, pos.x); }
+	Point  GetIndexLine(int64 pos) const;
+	int64  GetIndexLinePos(Point pos) const;
 
-	void   SetRectSelection(int l, int h);
+	void   SetRectSelection(int64 l, int64 h);
 	void   SetRectSelection(const Rect& rect);
 	Rect   GetRectSelection() const;
-	bool   GetRectSelection(const Rect& rect, int line, int& l, int &h);
+	bool   GetRectSelection(const Rect& rect, int line, int64& l, int64& h);
 
 	void   ScrollUp()                         { sb.LineUp(); }
 	void   ScrollDown()                       { sb.LineDown(); }
@@ -443,7 +497,7 @@ protected:
 	virtual void  ClearLines();
 	virtual void  InsertLines(int line, int count);
 	virtual void  RemoveLines(int line, int count);
-	virtual void  PlaceCaret(int pos, bool select = false);
+	virtual void  PlaceCaret(int64 pos, bool select = false);
 	virtual void  InvalidateLine(int i);
 
 	struct Para : Moveable<Para> {

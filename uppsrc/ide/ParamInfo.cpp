@@ -12,8 +12,8 @@ void AssistEditor::SyncParamInfo()
 			int i = GetCursorLine();
 			if(m.line >= 0 && m.line < GetLineCount() && i >= m.line && i < m.line + 10
 			   && m.editfile == theide->editfile && GetWLine(m.line).StartsWith(m.test)) {
-				int c = GetCursor();
-				i = GetPos(m.line) + m.test.GetCount();
+				int c = GetCursor32();
+				i = GetPos32(m.line) + m.test.GetCount();
 				if(c >= i) {
 					int par = 0;
 					int pari = 0;
@@ -77,9 +77,9 @@ void AssistEditor::SyncParamInfo()
 
 void AssistEditor::StartParamInfo(const CppItem& m, int pos)
 {
-	int x = GetCursor();
+	int x = GetCursor32();
 	ParamInfo& f = param[parami];
-	f.line = GetLinePos(x);
+	f.line = GetLinePos32(x);
 	f.test = GetWLine(f.line).Mid(0, x);
 	f.item = m;
 	f.editfile = theide->editfile;
@@ -97,5 +97,5 @@ void AssistEditor::State(int reason)
 
 int AssistEditor::GetCurrentLine()
 {
-	return GetLine(GetCursor());
+	return GetLine(GetCursor64());
 }
