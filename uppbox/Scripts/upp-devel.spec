@@ -207,8 +207,11 @@ rm -fr %{buildroot}
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
 - New snapshot
 
+* Sat Dec 09 2017 Amrein-Marie Christophe <camreinmarie@free.fr> 2017.2-1
+- New release (rev 11540)
+
 * Tue Jan 31 2017 Amrein-Marie Christophe <camreinmarie@free.fr> 2017.1-1
-- New release
+- New release (rev 10804)
 - Rename package (upp -> upp-devel)
 - Obsoletes old upp package
 - Use default Makefile to build and install U++
