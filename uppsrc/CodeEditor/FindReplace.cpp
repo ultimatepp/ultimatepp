@@ -929,17 +929,16 @@ void CodeEditor::FindPrev()
 void CodeEditor::StartSearchProgress(int64, int64)
 {
 	search_canceled = false;
+	search_progress.Create();
+	search_progress->SetText("Scanning the file");
 	search_time0 = msecs();
 }
 
 bool CodeEditor::SearchProgress(int line)
 {
-	if(!search_canceled && msecs(search_time0) > 20) {
+	if(search_progress && !search_canceled && msecs(search_time0) > 20) {
 		search_time0 = msecs();
-		if(!search_progress) {
-			search_progress.Create().Create();
-			search_progress->SetText("Scanning the file");
-		}
+		search_progress->Create();
 		search_canceled = IsView() ? search_progress->SetCanceled(int(GetPos64(line) >> 8), int(GetViewSize() >> 8))
 		                           : search_progress->SetCanceled(line, GetLineCount());
 	}
