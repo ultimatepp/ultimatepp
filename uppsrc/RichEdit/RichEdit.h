@@ -226,6 +226,9 @@ public:
 
 
 private:
+	virtual int   GetCharAt(int64 i) const                  { return GetChar((int)i); }
+	virtual int64 GetTotal() const                          { return GetLength(); }
+
 	int                      viewborder;
 	void                    *context;
 	Size                     p_size;

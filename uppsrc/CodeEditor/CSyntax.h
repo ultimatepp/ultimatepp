@@ -4,11 +4,11 @@ public:
 	virtual void            ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size);
 	virtual void            Serialize(Stream& s);
 	virtual void            IndentInsert(CodeEditor& editor, int chr, int count);
-	virtual bool            CheckBrackets(CodeEditor& e, int& bpos0, int& bpos);
+	virtual bool            CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos);
 	virtual bool            CanAssist() const;
 	virtual void            Highlight(const wchar *s, const wchar *end, HighlightOutput& hls,
-	                                  CodeEditor *editor, int line, int pos);
-	virtual void            CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text);
+	                                  CodeEditor *editor, int line, int64 pos);
+	virtual void            CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text);
 	virtual Vector<IfState> PickIfStack(); // TODO: Refactor?
 	virtual void            ReformatComment(CodeEditor& e);
 
@@ -56,15 +56,15 @@ protected:
 	WString GetCommentHdr(CodeEditor& e, int l) const { WString h; GetCommentPos(e, l, h); return h; }
 	void    IndentInsert0(CodeEditor& e, int chr, int count, bool reformat);
 
-	void Bracket(int pos, HighlightOutput& hls, CodeEditor *editor);
+	void Bracket(int64 pos, HighlightOutput& hls, CodeEditor *editor);
 
 	void  ClearBraces();
 
 	void  Grounding(const wchar *ln, const wchar *e);
 
-	bool CheckBracket(CodeEditor& e, int li, int pos, int ppos, int pos0, WString ln, int d, int limit, int& bpos0, int& bpos);
-	bool CheckLeftBracket(CodeEditor& e, int pos, int& bpos0, int& bpos);
-	bool CheckRightBracket(CodeEditor& e, int pos, int& bpos0, int& bpos);
+	bool CheckBracket(CodeEditor& e, int li, int64 pos, int64 ppos, int64 pos0, WString ln, int d, int limit, int64& bpos0, int64& bpos);
+	bool CheckLeftBracket(CodeEditor& e, int64 pos, int64& bpos0, int64& bpos);
+	bool CheckRightBracket(CodeEditor& e, int64 pos, int64& bpos0, int64& bpos);
 	
 public:
 	static int  LoadSyntax(const char *keywords[], const char *names[]);

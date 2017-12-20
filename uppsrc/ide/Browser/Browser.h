@@ -16,6 +16,8 @@
 
 class Browser;
 
+void ReduceCacheFolder(const char *path, int max_total);
+
 CppBase&       CodeBase();
 
 struct SourceFileInfo {

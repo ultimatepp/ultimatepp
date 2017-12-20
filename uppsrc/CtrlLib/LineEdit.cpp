@@ -74,7 +74,7 @@ Size LineEdit::GetFontSize() const {
 	return Size(max(fi['M'], fi['W']), fi.GetHeight());
 }
 
-void LineEdit::SetRectSelection(int anchor, int cursor)
+void LineEdit::SetRectSelection(int64 anchor, int64 cursor)
 {
 	dorectsel = true;
 	SetSelection(anchor, cursor);
@@ -89,7 +89,7 @@ void LineEdit::SetRectSelection(const Rect& rect)
 Rect LineEdit::GetRectSelection() const
 {
 	if(IsRectSelection()) {
-		int sell, selh;
+		int64 sell, selh;
 		GetSelection(sell, selh);
 		Rect r(GetColumnLine(sell), GetColumnLine(selh));
 		if(r.left > r.right)
@@ -99,7 +99,7 @@ Rect LineEdit::GetRectSelection() const
 	return Null;
 }
 
-bool LineEdit::GetRectSelection(const Rect& rect, int line, int& l, int &h)
+bool LineEdit::GetRectSelection(const Rect& rect, int line, int64& l, int64& h)
 {
 	if(line >= rect.top && line <= rect.bottom) {
 		l = GetGPos(line, rect.left);
@@ -114,33 +114,33 @@ int LineEdit::RemoveRectSelection()
 	Rect rect = GetRectSelection();
 	WString txt;
 	for(int i = rect.top; i <= rect.bottom; i++) {
-		int l, h;
+		int64 l, h;
 		CacheLinePos(i);
 		GetRectSelection(rect, i, l, h);
 		WString s = GetWLine(i);
-		s.Remove(l - GetPos(i), h - l);
+		s.Remove(int(l - GetPos64(i)), int(h - l));
 		txt.Cat(s);
 		txt.Cat('\n');
 	}
-	int l = GetPos(rect.top);
-	int h = GetPos(rect.bottom) + GetLineLength(rect.bottom);
-	if(h < GetLength())
+	int l = GetPos32(rect.top);
+	int h = GetPos32(rect.bottom) + GetLineLength(rect.bottom);
+	if(h < GetLength32())
 		h++;
-	Remove(l, h - l);
-	Insert(l, txt);
-	return GetGPos(rect.bottom, rect.left);
+	Remove((int)l, int(h - l));
+	Insert((int)l, txt);
+	return (int)GetGPos(rect.bottom, rect.left);
 }
 
 WString LineEdit::CopyRectSelection()
 {
 	WString txt;
 	Rect rect = GetRectSelection();
-	for(int i = rect.top; i <= rect.bottom; i++) {
-		int l, h;
+	for(int i = rect.top; i <= rect.bottom && txt.GetCount() < max_total; i++) {
+		int64 l, h;
 		CacheLinePos(i);
-		int pos = GetPos(i);
+		int64 pos = GetPos64(i);
 		GetRectSelection(rect, i, l, h);
-		txt.Cat(GetWLine(i).Mid(l - pos, h - l));
+		txt.Cat(GetWLine(i).Mid(int(l - pos), int(h - l)));
 #ifdef PLATFORM_WIN32
 		txt.Cat('\r');
 #endif
@@ -153,14 +153,14 @@ int LineEdit::PasteRectSelection(const WString& s)
 {
 	Vector<WString> cl = Split(s, '\n', false);
 	Rect rect = GetRectSelection();
-	int pos = cursor;
+	int64 pos = cursor;
 	int n = 0;
 	for(int i = 0; i < cl.GetCount() && rect.top + i <= rect.bottom; i++) {
-		int l, h;
+		int64 l, h;
 		CacheLinePos(i);
 		GetRectSelection(rect, i + rect.top, l, h);
-		Remove(l, h - l);
-		int nn = Insert(l, cl[i]);
+		Remove((int)l, int(h - l));
+		int nn = Insert((int)l, cl[i]);
 		n += nn;
 		pos = l + nn;
 	}
@@ -180,27 +180,27 @@ void LineEdit::PasteColumn(const WString& text)
 		Rect t = GetRectSelection();
 		RemoveSelection();
 		Point p = t.TopLeft();
-		pos = cursor;
+		pos = (int)cursor;
 		for(int i = 0; i < t.bottom - t.top + 1; i++) {
 			CacheLinePos(i + p.y);
-			int l = GetGPos(i + p.y, p.x);
+			int l = (int)GetGPos(i + p.y, p.x);
 			pos = l + Insert(l, cl[i % cl.GetCount()]);
 		}
 	}
 	else {
 		RemoveSelection();
 		Point p = GetColumnLine(cursor);
-		pos = cursor;
+		pos = (int)cursor;
 		for(int i = 0; i < cl.GetCount(); i++) {
 			CacheLinePos(i + p.y);
 			int li = p.y + i;
-			if(li < line.GetCount()) {
-				int l = GetGPos(i + p.y, p.x);
+			if(li < GetLineCount()) {
+				int l = (int)GetGPos(i + p.y, p.x);
 				pos = l + Insert(l, cl[i]);
 			}
 			else {
-				Insert(GetLength(), cl[i] + "\n");
-				pos = GetLength();
+				Insert(GetLength32(), cl[i] + "\n");
+				pos = GetLength32();
 			}
 		}
 	}
@@ -230,13 +230,13 @@ void LineEdit::Sort()
 	Vector<WString> key;
 	Vector<WString> ln;
 	for(int i = rect.top; i <= rect.bottom; i++) {
-		int l, h;
+		int64 l, h;
 		GetRectSelection(rect, i, l, h);
-		key.Add(GetW(l, h - l));
-		ln.Add(line[i]);
+		key.Add(GetW((int)l, int(h - l)));
+		ln.Add(GetWLine(i));
 	}
-	int sell = GetPos(rect.top);
-	int selh = rect.bottom + 1 < line.GetCount() ? GetPos(rect.bottom + 1) : GetLength();
+	int sell = GetPos32(rect.top);
+	int selh = rect.bottom + 1 < GetLineCount() ? GetPos32(rect.bottom + 1) : GetLength32();
 	IndexSort(key, ln, sSortLineOrder);
 	Remove(sell, selh - sell);
 	Insert(sell, Join(ln, "\n"));
@@ -385,7 +385,8 @@ void sOptimizedTextRenderer::DrawChar(int _x, int _y, int chr, int width, Font _
 
 void   LineEdit::Paint0(Draw& w) {
 	LTIMING("LineEdit::Paint0");
-	int sell, selh;
+	GuiLock __;
+	int64 sell, selh;
 	GetSelection(sell, selh);
 	if(!IsEnabled())
 		sell = selh = 0;
@@ -396,14 +397,14 @@ void   LineEdit::Paint0(Draw& w) {
 	Size sz = GetSize();
 	Size fsz = GetFontSize();
 	Point sc = sb;
-	int ll = min(line.GetCount(), sz.cy / fsz.cy + sc.y + 1);
+	int ll = min(GetLineCount(), sz.cy / fsz.cy + sc.y + 1);
 	int  y = 0;
-	sc.y = minmax(sc.y, 0, line.GetCount() - 1);
-	cpos = GetPos(sc.y);
+	sc.y = minmax(sc.y, 0, GetLineCount() - 1);
+	cpos = GetPos64(sc.y);
 	cline = sc.y;
 	sell -= cpos;
 	selh -= cpos;
-	int pos = cpos;
+	int64 pos = cpos;
 	int fascent = font.Info().GetAscent();
 	int cursorline = GetLine(cursor);
 	Highlight ih;
@@ -415,11 +416,11 @@ void   LineEdit::Paint0(Draw& w) {
 	ih.chr = 0;
 	for(int i = sc.y; i < ll; i++) {
 		Color showcolor = color[WHITESPACE];
-		WString tx = line[i];
+		WString tx = GetWLine(i);
 		bool warn_whitespace = false;
 		if(warnwhitespace && !IsSelection()) {
-			int pos = GetCursor();
-			int linei = GetLinePos(pos);
+			int64 pos = GetCursor64();
+			int linei = GetLinePos64(pos);
 			if(linei != i || pos < tx.GetCount()) {
 				int wkind = 0;
 				bool empty = true;
@@ -650,11 +651,11 @@ void   LineEdit::Layout() {
 	SetHBar();
 }
 
-int   LineEdit::GetGPos(int ln, int cl) const {
-	ln = minmax(ln, 0, line.GetCount() - 1);
-	const String& stxt = line[ln].text;
-	const char *s = stxt;
-	const char *e = stxt.End();
+int64  LineEdit::GetGPos(int ln, int cl) const {
+	ln = minmax(ln, 0, GetLineCount() - 1);
+	String h = GetUtf8Line(ln);
+	const char *s = h.begin();
+	const char *e = h.end();
 	const char *b = s;
 	int gl = 0;
 	int wpos = 0;
@@ -684,15 +685,15 @@ int   LineEdit::GetGPos(int ln, int cl) const {
 		s++;
 	}
 	
-	return GetPos(ln, int(s - b) + wpos);
+	return GetPos64(ln, int(s - b) + wpos);
 }
 
-Point LineEdit::GetColumnLine(int pos) const {
+Point LineEdit::GetColumnLine(int64 pos) const {
 	Point p;
-	if(pos > total) pos = total;
-	p.y = GetLinePos(pos);
+	if(pos > GetLength64()) pos = GetLength64();
+	p.y = GetLinePos64(pos);
 	p.x = 0;
-	WString txt = line[p.y];
+	WString txt = GetWLine(p.y);
 	const wchar *s = txt;
 	while(pos--) {
 		if(*s == '\t')
@@ -704,22 +705,22 @@ Point LineEdit::GetColumnLine(int pos) const {
 	return p;
 }
 
-Point LineEdit::GetIndexLine(int pos) const
+Point LineEdit::GetIndexLine(int64 pos) const
 {
 	Point p;
-	if(pos > total) pos = total;
-	p.y = GetLinePos(pos);
-	p.x = minmax(pos, 0, line[p.y].GetLength());
+	if(pos > GetLength64()) pos = GetLength64();
+	p.y = GetLinePos64(pos);
+	p.x = minmax((int)pos, 0, GetLineLength(p.y));
 	return p;
 }
 
-int LineEdit::GetIndexLinePos(Point pos) const
+int64 LineEdit::GetIndexLinePos(Point pos) const
 {
 	if(pos.y < 0)
 		return 0;
 	if(pos.y >= GetLineCount())
-		return total;
-	return GetPos(pos.y, minmax(pos.x, 0, line[pos.y].GetLength()));
+		return GetLength64();
+	return GetPos64(pos.y, minmax(pos.x, 0, GetLineLength(pos.y)));
 }
 
 void LineEdit::RefreshLine(int i) {
@@ -736,15 +737,15 @@ Rect LineEdit::GetLineScreenRect(int line) const {
 }
 
 void LineEdit::SetSb() {
-	sb.SetTotalY(line.GetCount());
+	sb.SetTotalY(GetLineCount());
 	SetHBar();
 }
 
 void LineEdit::NewScrollPos() {}
-void LineEdit::HighlightLine(int line, Vector<Highlight>& h, int pos) {}
+void LineEdit::HighlightLine(int line, Vector<Highlight>& h, int64 pos) {}
 
 void LineEdit::AlignChar() {
-	int c = GetCursor();
+	int c = GetCursor32();
 	if(c == 0)
 		return;
 	Point pos = GetColumnLine(c);
@@ -753,7 +754,7 @@ void LineEdit::AlignChar() {
 	for(int d = 1; d <= pos.y && d < 100; d++) {
 		int lny = pos.y - d;
 		WString above = GetWLine(lny);
-		int offset = GetGPos(lny, pos.x) - GetPos(lny);
+		int offset = int(GetGPos(lny, pos.x) - GetPos64(lny));
 		int end = offset;
 		char ch = GetChar(c - 1);
 		if(ch == ' ')
@@ -787,8 +788,8 @@ void LineEdit::PlaceCaret0(Point p) {
 		SetCaret(caretpos.x, caretpos.y, 2, fsz.cy);
 }
 
-int LineEdit::PlaceCaretNoG(int newcursor, bool sel) {
-	if(newcursor > total) newcursor = total;
+int LineEdit::PlaceCaretNoG(int64 newcursor, bool sel) {
+	if(newcursor > GetLength64()) newcursor = GetLength64();
 	Point p = GetColumnLine(newcursor);
 	if(sel) {
 		if(anchor < 0) {
@@ -822,7 +823,7 @@ int LineEdit::PlaceCaretNoG(int newcursor, bool sel) {
 	return p.x;
 }
 
-void LineEdit::PlaceCaret(int newcursor, bool sel) {
+void LineEdit::PlaceCaret(int64 newcursor, bool sel) {
 	gcolumn = PlaceCaretNoG(newcursor, sel);
 }
 
@@ -834,7 +835,7 @@ void LineEdit::TopCursor(int lines)
 void LineEdit::CenterCursor() {
 	int cy = sb.GetPage().cy;
 	if(cy > 4)
-		sb.SetY(max(min(GetLine(cursor) - cy / 2, line.GetCount() - cy), 0));
+		sb.SetY(max(min(GetLine(cursor) - cy / 2, GetLineCount() - cy), 0));
 }
 
 void LineEdit::Scroll() {
@@ -844,7 +845,7 @@ void LineEdit::Scroll() {
 	NewScrollPos();
 }
 
-int LineEdit::GetMousePos(Point p) const {
+int64 LineEdit::GetMousePos(Point p) const {
 	Size fsz = GetFontSize();
 	p = (p + fsz.cx / 2 + fsz * (Size)sb.Get()) / fsz;
 	return GetGPos(p.y, p.x);
@@ -852,7 +853,7 @@ int LineEdit::GetMousePos(Point p) const {
 
 void LineEdit::LeftDown(Point p, dword flags) {
 	mpos = GetMousePos(p);
-	int l, h;
+	int64 l, h;
 	if(GetSelection(l, h) && mpos >= l && mpos < h) {
 		selclick = true;
 		return;
@@ -879,7 +880,7 @@ void LineEdit::RightDown(Point p, dword flags)
 {
 	mpos = GetMousePos(p);
 	SetFocus();
-	int l, h;
+	int64 l, h;
 	GetSelection(l, h);
 	if(!IsAnySelection() || !(mpos >= l && mpos < h))
 		PlaceCaret(mpos, false);
@@ -888,22 +889,22 @@ void LineEdit::RightDown(Point p, dword flags)
 
 void LineEdit::LeftDouble(Point, dword)
 {
-	int l, h;
+	int64 l, h;
 	if(GetWordSelection(cursor, l, h))
 		SetSelection(l, h);
 }
 
 void LineEdit::LeftTriple(Point, dword)
 {
-	int q = cursor;
-	int i = GetLinePos(q);
+	int64 q = cursor;
+	int i = GetLinePos64(q);
 	q = cursor - q;
 	SetSelection(q, q + GetLineLength(i) + 1);
 }
 
 void LineEdit::MouseMove(Point p, dword flags) {
 	if((flags & K_MOUSELEFT) && HasFocus() && HasCapture()) {
-		int c = GetMousePos(p);
+		int64 c = GetMousePos(p);
 		dorectsel = flags & K_ALT;
 		PlaceCaret(c, mpos != c || HasCapture());
 		dorectsel = false;
@@ -912,7 +913,7 @@ void LineEdit::MouseMove(Point p, dword flags) {
 
 void LineEdit::LeftRepeat(Point p, dword flags) {
 	if(HasCapture()) {
-		int c = GetMousePos(p);
+		int64 c = GetMousePos(p);
 		if(mpos != c) {
 			dorectsel = flags & K_ALT;
 			PlaceCaret(c, true);
@@ -926,9 +927,11 @@ Image LineEdit::CursorImage(Point, dword) {
 }
 
 void LineEdit::MoveUpDown(int n, bool sel) {
-	int cl = cursor;
-	int ln = GetLinePos(cl);
-	ln = minmax(ln + n, 0, line.GetCount() - 1);
+	int64 cl = cursor;
+	int ln = GetLinePos64(cl);
+	if(ln + n >= GetLineCount())
+		WaitView(ln + n);
+	ln = minmax(ln + n, 0, GetLineCount() - 1);
 	PlaceCaretNoG(GetGPos(ln, gcolumn), sel);
 }
 
@@ -938,7 +941,7 @@ void LineEdit::MoveLeft(bool sel) {
 }
 
 void LineEdit::MoveRight(bool sel) {
-	if(cursor < total)
+	if(cursor < GetLength64())
 		PlaceCaret(cursor + 1, sel);
 }
 
@@ -967,18 +970,18 @@ void LineEdit::MovePageDown(bool sel) {
 inline bool sTabSpace(int c) { return c == '\t' || c == ' '; }
 
 void LineEdit::MoveHome(bool sel) {
-	int cl = cursor;
-	int li = GetLinePos(cl);
+	int64 cl = cursor;
+	int li = GetLinePos64(cl);
 	int i = 0;
-	WString l = line[li];
+	WString l = GetWLine(li);
 	while(sTabSpace(l[i]))
 		i++;
-	PlaceCaret(GetPos(li, cl == i ? 0 : i), sel);
+	PlaceCaret(GetPos64(li, cl == i ? 0 : i), sel);
 }
 
 void LineEdit::MoveEnd(bool sel) {
 	int i = GetLine(cursor);
-	PlaceCaret(GetPos(i, line[i].GetLength()), sel);
+	PlaceCaret(GetPos64(i, GetLineLength(i)), sel);
 }
 
 void LineEdit::MoveTextBegin(bool sel) {
@@ -986,7 +989,8 @@ void LineEdit::MoveTextBegin(bool sel) {
 }
 
 void LineEdit::MoveTextEnd(bool sel) {
-	PlaceCaret(total, sel);
+	WaitView(INT_MAX, true);
+	PlaceCaret(GetLength64(), sel);
 }
 
 bool LineEdit::InsertChar(dword key, int count, bool canow) {
@@ -1000,13 +1004,13 @@ bool LineEdit::InsertChar(dword key, int count, bool canow) {
 		   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 			return true;
 		if(!RemoveSelection() && overwrite && key != '\n' && key != K_ENTER && canow) {
-			int q = cursor;
-			int i = GetLinePos(q);
+			int64 q = cursor;
+			int i = GetLinePos64(q);
 			if(q + count - 1 < GetLineLength(i))
-				Remove(cursor, count);
+				Remove((int)cursor, (int)count);
 		}
 		WString text(key == K_ENTER ? '\n' : key == K_SHIFT_SPACE ? ' ' : key, count);
-		Insert(cursor, text, true);
+		Insert((int)cursor, text, true);
 		PlaceCaret(cursor + count);
 		Action();
 		return true;
@@ -1019,8 +1023,8 @@ void LineEdit::DeleteChar() {
 		Action();
 		return;
 	}
-	if(cursor < total) {
-		Remove(cursor, 1);
+	if(cursor < GetLength32()) {
+		Remove((int)cursor, 1);
 		Action();
 	}
 }
@@ -1034,14 +1038,14 @@ void LineEdit::Backspace() {
 
 void LineEdit::DeleteLine()
 {
-	int b, e;
+	int64 b, e;
 	if(GetSelection(b, e) && GetLine(b) != GetLine(e)) {
 		RemoveSelection();
 		return;
 	}
 	int i = GetLine(cursor);
-	int p = GetPos(i);
-	Remove(p, line[i].GetLength() + 1);
+	int p = GetPos32(i);
+	Remove((int)p, GetLineLength(i) + 1);
 	PlaceCaret(p);
 	Action();
 }
@@ -1049,14 +1053,14 @@ void LineEdit::DeleteLine()
 void LineEdit::CutLine()
 {
 	if(IsReadOnly()) return;
-	int b, e;
+	int64 b, e;
 	if(GetSelection(b, e) && GetLine(b) != GetLine(e)) {
 		Cut();
 		return;
 	}
 	int i = GetLine(cursor);
-	int p = GetPos(i);
-	WString txt = Get(p, line[i].GetLength() + 1).ToWString();
+	int p = GetPos32(i);
+	WString txt = Get(p, GetLineLength(i) + 1).ToWString();
 	WriteClipboardUnicodeText(txt);
 	AppendClipboardText(txt.ToString());
 	ClearSelection();
@@ -1064,9 +1068,15 @@ void LineEdit::CutLine()
 }
 
 void LineEdit::EditPos::Serialize(Stream& s) {
-	int version = 0;
+	int version = 1;
 	s / version;
-	s % sby % cursor;
+	if(version >= 1)
+		s % sby % cursor;
+	else {
+		int c = (int)cursor;
+		s % sby % c;
+		cursor = c;
+	}
 }
 
 LineEdit::EditPos LineEdit::GetEditPos() const {
@@ -1077,23 +1087,23 @@ LineEdit::EditPos LineEdit::GetEditPos() const {
 }
 
 void LineEdit::SetEditPos(const LineEdit::EditPos& pos) {
-	sb.SetY(minmax(pos.sby, 0, line.GetCount() - 1));
+	sb.SetY(minmax(pos.sby, 0, GetLineCount() - 1));
 	SetCursor(pos.cursor);
 }
 
 void LineEdit::SetEditPosSb(const LineEdit::EditPos& pos) {
 	SetCursor(pos.cursor);
-	sb.SetY(minmax(pos.sby, 0, line.GetCount() - 1));
+	sb.SetY(minmax(pos.sby, 0, GetLineCount() - 1));
 }
 
 void LineEdit::SetHBar()
 {
 	int mpos = 0;
 	if(!nohbar && !isdrag) {
-		int m = min(sb.y + sb.GetPage().cy + 2, line.GetCount());
+		int m = min(sb.y + sb.GetPage().cy + 2, GetLineCount());
 		for(int i = sb.y; i < m; i++) {
 			int pos = 0;
-			WString l = line[i];
+			WString l = GetWLine(i);
 			const wchar *s = l;
 			const wchar *e = l.End();
 			while(s < e) {
@@ -1111,7 +1121,7 @@ void LineEdit::SetHBar()
 
 void LineEdit::ScrollIntoCursor()
 {
-	Point p = GetColumnLine(GetCursor());
+	Point p = GetColumnLine(GetCursor64());
 	sb.ScrollInto(p);
 	SetHBar();
 	sb.ScrollInto(p);
@@ -1221,13 +1231,13 @@ bool LineEdit::Key(dword key, int count) {
 void LineEdit::DragAndDrop(Point p, PasteClip& d)
 {
 	if(IsReadOnly()) return;
-	int c = GetMousePos(p);
+	int c = GetMousePos32(p);
 	if(AcceptText(d)) {
 		NextUndo();
 		int a = sb.y;
 		int sell, selh;
 		WString text = GetWString(d);
-		if(GetSelection(sell, selh)) {
+		if(GetSelection32(sell, selh)) {
 			if(c >= sell && c < selh) {
 				if(!IsReadOnly())
 					RemoveSelection();
@@ -1296,10 +1306,10 @@ void LineEdit::DragLeave()
 
 void LineEdit::LeftDrag(Point p, dword flags)
 {
-	int c = GetMousePos(p);
-	int l, h;
+	int64 c = GetMousePos(p);
+	int64 l, h;
 	if(!HasCapture() && GetSelection(l, h) && c >= l && c < h) {
-		WString sample = GetW(l, min(h - l, 3000));
+		WString sample = GetW(l, (int)min(h - l, (int64)3000));
 		Size sz = StdSampleSize();
 		ImageDraw iw(sz);
 		iw.DrawRect(sz, Black());

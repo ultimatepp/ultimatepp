@@ -10,19 +10,19 @@ void DocEdit::MouseWheel(Point p, int zdelta, dword keyflags)
 void DocEdit::ClearLines()
 {
 	para.Clear();
-	ASSERT(this->line.GetCount() == para.GetCount());
+	ASSERT(GetLineCount() == para.GetCount());
 }
 
 void DocEdit::InsertLines(int line, int count)
 {
 	para.Insert(line, Para(), count);
-	ASSERT(this->line.GetCount() == para.GetCount());
+	ASSERT(GetLineCount() == para.GetCount());
 }
 
 void DocEdit::RemoveLines(int line, int count)
 {
 	para.Remove(line, count);
-	ASSERT(this->line.GetCount() == para.GetCount());
+	ASSERT(GetLineCount() == para.GetCount());
 }
 
 DocEdit::Fmt DocEdit::Format(const WString& text) const
@@ -72,7 +72,7 @@ DocEdit::Fmt DocEdit::Format(const WString& text) const
 int  DocEdit::GetHeight(int i) {
 	Para& p = para[i];
 	if(p.cx == cx) return p.cy;
-	Fmt fmt = Format(line[i]);
+	Fmt fmt = Format(GetWLine(i));
 	p.cx = cx;
 	p.cy = fmt.line.GetCount() * (fmt.fi.GetHeight()) + after;
 	return p.cy;
@@ -113,11 +113,11 @@ void DocEdit::Paint(Draw& w) {
 	int y = -sb + 1;
 	int pos = 0;
 	int sell, selh;
-	GetSelection(sell, selh);
+	GetSelection32(sell, selh);
 	for(int i = 0; i < para.GetCount() && y < sz.cy; i++) {
 		int h = GetHeight(i);
 		if(y + h >= 0) {
-			WString text = line[i];
+			WString text = GetWLine(i);
 			Fmt fmt = Format(text);
 			int p = pos;
 			for(int i = 0; i < fmt.line.GetCount(); i++) {
@@ -148,7 +148,7 @@ void DocEdit::Paint(Draw& w) {
 		}
 		else
 			y += h;
-		pos += line[i].GetLength() + 1;
+		pos += GetLineLength(i) + 1;
 	}
 	w.DrawRect(0, -sb, sz.cx, 1, bg);
 	w.DrawRect(0, 0, 1, sz.cy, bg);
@@ -176,8 +176,8 @@ void DocEdit::Layout()
 }
 
 Point DocEdit::GetCaret(int pos) {
-	int i = GetLinePos(pos);
-	Fmt fmt = Format(line[i]);
+	int i = GetLinePos32(pos);
+	Fmt fmt = Format(GetWLine(i));
 	int l;
 	for(l = 0; l < fmt.line.GetCount(); l++)
 		if(pos < fmt.line[l])
@@ -196,7 +196,7 @@ int  DocEdit::GetCursorPos(Point p) {
 	for(int i = 0; i < para.GetCount(); i++) {
 		int h = GetHeight(i);
 		if(p.y < h) {
-			WString text = line[i];
+			WString text = GetWLine(i);
 			Fmt fmt = Format(text);
 			int x = 0;
 			int l = p.y / fmt.fi.GetHeight();
@@ -217,16 +217,16 @@ int  DocEdit::GetCursorPos(Point p) {
 			return p + pos;
 		}
 		p.y -= h;
-		pos += line[i].GetLength() + 1;
+		pos += GetLineLength(i) + 1;
 	}
-	return GetLength();
+	return GetLength32();
 }
 
 void DocEdit::PlaceCaret(bool scroll) {
-	Point cr = GetCaret(cursor);
+	Point cr = GetCaret((int)cursor);
 	int fy = font.Info().GetLineHeight();
 	if(scroll) {
-		if(cursor == total)
+		if(cursor == GetLength32())
 			sb.End();
 		else
 			sb.ScrollInto(cr.y, fy + 2);
@@ -235,9 +235,9 @@ void DocEdit::PlaceCaret(bool scroll) {
 	WhenSel();
 }
 
-void DocEdit::PlaceCaret(int newpos, bool select) {
-	if(newpos > GetLength())
-		newpos = GetLength();
+void DocEdit::PlaceCaret(int64 newpos, bool select) {
+	if(newpos > GetLength32())
+		newpos = GetLength32();
 	int z = GetLine(newpos);
 	if(select) {
 		if(anchor < 0) {
@@ -266,7 +266,7 @@ void DocEdit::LeftDown(Point p, dword flags) {
 	SetFocus();
 	int c = GetMousePos(p);
 	int l, h;
-	if(GetSelection(l, h) && c >= l && c < h) {
+	if(GetSelection32(l, h) && c >= l && c < h) {
 		selclick = true;
 		return;
 	}
@@ -292,16 +292,16 @@ void DocEdit::MouseMove(Point p, dword flags) {
 
 void DocEdit::LeftDouble(Point, dword)
 {
-	int l, h;
+	int64 l, h;
 	if(GetWordSelection(cursor, l, h))
 		SetSelection(l, h);
 }
 
 void DocEdit::LeftTriple(Point, dword)
 {
-	int q = cursor;
-	int i = GetLinePos(q);
-	q = cursor - q;
+	int q = (int)cursor;
+	int i = GetLinePos32(q);
+	q = (int)cursor - q;
 	SetSelection(q, q + GetLineLength(i) + 1);
 }
 
@@ -319,7 +319,7 @@ void DocEdit::LostFocus() {
 
 void DocEdit::VertMove(int delta, bool select, bool scs) {
 	int hy = GetY(para.GetCount());
-	Point p = GetCaret(cursor);
+	Point p = GetCaret((int)cursor);
 	int yy = p.y;
 	for(;;) {
 		p.y += delta;
@@ -331,18 +331,18 @@ void DocEdit::VertMove(int delta, bool select, bool scs) {
 			break;
 		}
 		if(p.y == 0 || p.y >= hy - 1) {
-			PlaceCaret(delta > 0 ? total : 0, select);
+			PlaceCaret(delta > 0 ? GetLength32() : 0, select);
 			break;
 		}
 		delta = sgn(delta) * 4;
 	}
 	if(scs)
-		sb = GetCaret(cursor).y - (yy - sb);
+		sb = GetCaret((int)cursor).y - (yy - sb);
 	PlaceCaret(true);
 }
 
 void DocEdit::HomeEnd(int x, bool select) {
-	Point p = GetCaret(cursor);
+	Point p = GetCaret((int)cursor);
 	p.x = x;
 	PlaceCaret(GetCursorPos(p), select);
 }
@@ -373,7 +373,7 @@ bool DocEdit::Key(dword key, int cnt)
 		break;
 	case K_CTRL_END:
 	case K_CTRL_PAGEDOWN:
-		PlaceCaret(total, select);
+		PlaceCaret(GetLength32(), select);
 		break;
 	case K_UP:
 		if(GetCursor() == 0)
@@ -381,7 +381,7 @@ bool DocEdit::Key(dword key, int cnt)
 		VertMove(-8, select, false);
 		return true;
 	case K_DOWN:
-		if(GetCursor() == GetLength())
+		if(GetCursor32() == GetLength32())
 			return !updownleave;
 		VertMove(8, select, false);
 		return true;
@@ -396,7 +396,7 @@ bool DocEdit::Key(dword key, int cnt)
 			PlaceCaret(cursor - 1, select);
 		break;
 	case K_RIGHT:
-		if(cursor < total)
+		if(cursor < GetLength32())
 			PlaceCaret(cursor + 1, select);
 		break;
 	default:
@@ -407,30 +407,30 @@ bool DocEdit::Key(dword key, int cnt)
 			if(RemoveSelection()) break;
 			if(cursor == 0) return true;
 			cursor--;
-			Remove(cursor, 1);
+			Remove((int)cursor, 1);
 			break;
 		case K_CTRL_BACKSPACE:
 			if(RemoveSelection()) break;
 			if(cursor <= 0) return true;
-			q = cursor - 1;
+			q = (int)cursor - 1;
 			h = IsLetter(GetChar(q));
 			while(q > 0 && IsLetter(GetChar(q - 1)) == h) q--;
-			Remove(q, cursor - q);
+			Remove(q, (int)cursor - q);
 			SetCursor(q);
 			break;
 		case K_DELETE:
 			if(RemoveSelection()) break;
-			if(cursor >= total) return true;
-			if(cursor < total)
-				Remove(cursor, 1);
+			if(cursor >= GetLength32()) return true;
+			if(cursor < GetLength32())
+				Remove((int)cursor, 1);
 			break;
 		case K_CTRL_DELETE:
 			if(RemoveSelection()) break;
-			if(cursor >= total) return true;
-			q = cursor;
+			if(cursor >= GetLength32()) return true;
+			q = (int)cursor;
 			h = IsLetter(GetChar(q));
-			while(IsLetter(GetChar(q)) == h && q < total) q++;
-			Remove(cursor, q - cursor);
+			while(IsLetter(GetChar(q)) == h && q < GetLength32()) q++;
+			Remove((int)cursor, q - (int)cursor);
 			break;
 		case K_ENTER:
 			if(!processenter)
@@ -446,7 +446,7 @@ bool DocEdit::Key(dword key, int cnt)
 				   && FromUnicode((wchar)key, charset) == DEFAULTCHAR)
 					return true;
 				RemoveSelection();
-				Insert(cursor, WString(key == K_SHIFT_SPACE ? ' ' : key, cnt), true);
+				Insert((int)cursor, WString(key == K_SHIFT_SPACE ? ' ' : key, cnt), true);
 				cursor += cnt;
 				break;
 			}
@@ -486,7 +486,7 @@ void DocEdit::RightDown(Point p, dword w)
 	SetFocus();
 	int c = GetMousePos(p);
 	int l, h;
-	if(!GetSelection(l, h) || c < l || c >= h)
+	if(!GetSelection32(l, h) || c < l || c >= h)
 		PlaceCaret(c, false);
 	MenuBar::Execute(WhenBar);
 }
@@ -519,7 +519,7 @@ void DocEdit::DragAndDrop(Point p, PasteClip& d)
 		int a = sb;
 		int sell, selh;
 		WString txt = GetWString(d);
-		if(GetSelection(sell, selh)) {
+		if(GetSelection32(sell, selh)) {
 			if(c >= sell && c < selh) {
 				if(!IsReadOnly())
 					RemoveSelection();
@@ -585,7 +585,7 @@ void DocEdit::LeftDrag(Point p, dword flags)
 {
 	int c = GetMousePos(p);
 	int l, h;
-	if(!HasCapture() && GetSelection(l, h) && c >= l && c < h) {
+	if(!HasCapture() && GetSelection32(l, h) && c >= l && c < h) {
 		WString sample = GetW(l, min(h - l, 3000));
 		Size ssz = StdSampleSize();
 		ImageDraw iw(ssz);

@@ -625,7 +625,7 @@ void Ide::SyncT(int kind)
 	case IDYES:
 		if(dlg.source.IsCursor()) {
 			EditFile(dlg.source.Get(0));
-			editor.SetCursor(editor.GetPos(editor.GetLineNo((int)dlg.source.Get(1) - 1)));
+			editor.SetCursor(editor.GetPos64(editor.GetLineNo((int)dlg.source.Get(1) - 1)));
 			editor.CenterCursor();
 			editor.SetFocus();
 			StoreToWorkspace(dlg, "Tdlg");

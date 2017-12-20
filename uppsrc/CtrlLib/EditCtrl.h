@@ -1,10 +1,10 @@
 struct TextArrayOps {
-	virtual int GetLength() const = 0;
-	virtual int GetChar(int i) const = 0;
+	virtual int64 GetTotal() const = 0;
+	virtual int   GetCharAt(int64 i) const = 0;
 
-	bool GetWordSelection(int c, int& sell, int& selh);
-	int  GetNextWord(int c);
-	int  GetPrevWord(int c);
+	bool   GetWordSelection(int64 c, int64& sell, int64& selh);
+	int64  GetNextWord(int64 c);
+	int64  GetPrevWord(int64 c);
 
 	virtual ~TextArrayOps() {}
 };
@@ -166,10 +166,12 @@ protected:
 
 protected:
 	virtual void  HighlightText(Vector<Highlight>& hl);
+	virtual int64 GetTotal() const             { return text.GetLength(); }
+	virtual int   GetCharAt(int64 pos) const   { return text[(int)pos]; }
 
 public:
 	Event<Bar&>               WhenBar;
-	Event<>                       WhenEnter;
+	Event<>                   WhenEnter;
 	Event<WString&>           WhenPasteFilter;
 	Event<Vector<Highlight>&> WhenHighlight;
 

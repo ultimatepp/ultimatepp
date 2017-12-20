@@ -12,7 +12,7 @@ public:
 	PythonSyntax();
 
 	virtual void Highlight(const wchar *start, const wchar *end, HighlightOutput& hls,
-	                       CodeEditor *editor, int line, int pos);
+	                       CodeEditor *editor, int line, int64 pos);
 	virtual void IndentInsert(CodeEditor& e, int chr, int count);
 	
 private:

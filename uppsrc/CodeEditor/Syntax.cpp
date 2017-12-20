@@ -19,7 +19,7 @@ void EditorSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 	editor.InsertChar(chr, count);
 }
 
-bool EditorSyntax::CheckBrackets(CodeEditor& e, int& bpos0, int& bpos)
+bool EditorSyntax::CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos)
 {
 	return false;
 }
@@ -33,7 +33,7 @@ void EditorSyntax::ReformatComment(CodeEditor& e)
 {
 }
 
-void EditorSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
+void EditorSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 }
 
@@ -54,7 +54,7 @@ Color EditorSyntax::IfColor(char c)
 	}
 }
 
-void EditorSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
+void EditorSyntax::CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text)
 {
 }
 

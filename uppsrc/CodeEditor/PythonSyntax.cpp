@@ -4,7 +4,7 @@ namespace Upp {
 
 PythonSyntax::PythonSyntax() {}
 
-void PythonSyntax::Highlight(const wchar *start, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
+void PythonSyntax::Highlight(const wchar *start, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 	InitKeywords();
 	

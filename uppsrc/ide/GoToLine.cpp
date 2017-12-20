@@ -44,7 +44,7 @@ void Ide::GoToLine()
 		return;
 	
 	AddHistory();
-	editor.SetCursor(editor.GetPos(newLine - 1));
+	editor.SetCursor(editor.GetPos64(newLine - 1));
 	editor.SetFocus();
 	AddHistory();
 }

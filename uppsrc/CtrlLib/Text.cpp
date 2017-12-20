@@ -63,13 +63,16 @@ void TextCtrl::CancelMode()
 
 void TextCtrl::Clear()
 {
-	cline = cpos = 0;
+	GuiLock __;
+	view = NULL;
+	viewlines = 0;
+	cline = 0;
+	cpos = 0;
 	total = 0;
 	truncated = false;
-	line.Clear();
-	line.Shrink();
+	lin.Clear();
 	ClearLines();
-	line.Add();
+	lin.Add();
 	InsertLines(0, 1);
 	DirtyFrom(0);
 	undo.Clear();
@@ -95,23 +98,25 @@ void TextCtrl::PostRemove(int pos, int size) {}
 void TextCtrl::RefreshLine(int i) {}
 void TextCtrl::InvalidateLine(int i) {}
 void TextCtrl::SetSb() {}
-void TextCtrl::PlaceCaret(int newcursor, bool sel) {}
+void TextCtrl::PlaceCaret(int64 newcursor, bool sel) {}
 
 int TextCtrl::RemoveRectSelection() { return 0; }
 WString TextCtrl::CopyRectSelection() { return Null; }
 int TextCtrl::PasteRectSelection(const WString& s) { return 0; }
 
-void   TextCtrl::CachePos(int pos)
+void   TextCtrl::CachePos(int64 pos)
 {
-	int p = pos;
-	cline = GetLinePos(p);
+	GuiLock __;
+	int64 p = pos;
+	cline = GetLinePos64(p);
 	cpos = pos - p;
 }
 
 void   TextCtrl::CacheLinePos(int linei)
 {
+	GuiLock __;
 	if(linei >= 0 && linei < GetLineCount()) {
-		cpos = GetPos(linei);
+		cpos = GetPos64(linei);
 		cline = linei;
 	}
 }
@@ -122,15 +127,25 @@ bool   TextCtrl::IsUnicodeCharset(byte charset)
 	                        CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM) >= 0;
 }
 
-int   TextCtrl::Load(Stream& in, byte charset) {
+int   TextCtrl::Load0(Stream& in, byte charset, bool view) {
+	GuiLock __;
 	Clear();
-	line.Clear();
+	lin.Clear();
 	ClearLines();
-	StringBuffer ln;
 	total = 0;
 	SetCharset(charset);
 	charset = ResolveCharset(charset);
 	truncated = false;
+	viewlines = 0;
+	this->view = NULL;
+	view_all = false;
+	offset256.Clear();
+	total256.Clear();
+	view_cache[0].blk = view_cache[1].blk = -1;
+	if(view) {
+		this->view = &in;
+		SetReadOnly();
+	}
 	if(charset == CHARSET_UTF8_BOM && in.GetLeft() >= 3) {
 		int64 pos = in.GetPos();
 		byte h[3];
@@ -146,16 +161,41 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			in.Seek(pos);
 		charset = be16 ? CHARSET_UTF16_BE : CHARSET_UTF16_LE;
 	}
+	
+	if(view) {
+		view_loading_pos = in.GetPos();
+		view_loading_lock = 0;
+		ViewLoading();
+		PlaceCaret(0);
+		return 0;
+	}
+
+	int m = LoadLines(lin, INT_MAX, total, in, charset, max_line_len, max_total, truncated);
+
+	InsertLines(0, lin.GetCount());
+	Update();
+	SetSb();
+	PlaceCaret(0);
+	return m;
+}
+
+int TextCtrl::LoadLines(Vector<Ln>& ls, int n, int64& total, Stream& in, byte charset, int max_line_len, int max_total, bool& truncated) const
+{
+	StringBuffer ln;
 	bool cr = false;
 	byte b8 = 0;
 	if(charset == CHARSET_UTF16_LE || charset == CHARSET_UTF16_BE) {
 		WStringBuffer wln;
+		auto put_wln = [&]() {
+			Ln& ln = ls.Add();
+			ln.len = wln.GetCount();
+			ln.text = ToUtf8(~wln, ln.len);
+		};
 		for(;;) {
 			int c = charset == CHARSET_UTF16_LE ? in.Get16le() : in.Get16be();
 			if(c < 0) {
-				WString l = wln;
-				line.Add(l);
-				total += l.GetCount();
+				total += wln.GetCount();
+				put_wln();
 				goto finish;
 			}
 			if(c == '\r')
@@ -163,9 +203,10 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			else
 			if(c == '\n') {
 			truncate_line:
-				WString l = wln;
-				line.Add(l);
-				total += l.GetCount() + 1;
+				total += wln.GetCount() + 1;
+				put_wln();
+				if(ls.GetCount() >= n)
+					goto finish;
 				wln.Clear();
 			}
 			else {
@@ -175,10 +216,11 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 			}
 		}
 	}
-	else
+	else {
 		for(;;) {
 			byte h[200];
 			int size;
+			int64 pos = in.GetPos();
 			const byte *s = in.GetSzPtr(size);
 			if(size == 0)  {
 				size = in.Get(h, 200);
@@ -186,6 +228,7 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				if(size == 0)
 					break;
 			}
+			const byte *posptr = s;
 			const byte *e = s + size;
 			while(s < e) {
 				const byte *b = s;
@@ -206,32 +249,37 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 						ln.Cat((const char *)b, (const char *)s);
 				}
 				auto put_ln = [&]() -> bool {
-					int len = charset == CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
-					if(total + len + 1 > max_total) {
+					Ln& l = ls.Add();
+					if(charset == CHARSET_UTF8) {
+						l.len = CHARSET_UTF8 && (b8 & 0x80) ? utf8len(~ln, ln.GetCount()) : ln.GetCount();
+						l.text = ln;
+					}
+					else {
+						l.len = ln.GetCount();
+						l.text = ToCharset(CHARSET_UTF8, ln, charset);
+					}
+					if(total + l.len + 1 > max_total) {
+						ls.Drop();
 						truncated = true;
 						return false;
 					}
-					total += len + 1;
-					Ln& l = line.Add();
-					l.len = len;
-					if(charset == CHARSET_UTF8)
-						l.text = ln;
-					else {
-						String h = ln;
-						l.text = ToCharset(CHARSET_UTF8, h, charset);
-					}
+					total += l.len + 1;
 					return true;
 				};
 				while(ln.GetCount() >= max_line_len) {
 					int ei = max_line_len;
 					if(charset == CHARSET_UTF8)
-						while(ei > 0 && ei > max_line_len - 6 && !((byte)ln[ei] < 128 || IsUtf8Lead((byte)ln[ei]))) // break line at whole utf8 codepoint if possible
+						while(ei > 0 && ei > max_line_len - 6 && !((byte)ln[ei] < 128 || IsUtf8Lead((byte)ln[ei]))) // break lse at whole utf8 codepoint if possible
 							ei--;
 					String nln(~ln + ei, ln.GetCount() - ei);
 					ln.SetCount(ei);
 					truncated = true;
 					if(!put_ln())
 						goto out_of_limit;
+					if(ls.GetCount() >= n) {
+						in.Seek(s - posptr + pos);
+						goto finish;
+					}
 					ln = nln;
 				}
 				if(s < e && *s == '\r') {
@@ -241,27 +289,156 @@ int   TextCtrl::Load(Stream& in, byte charset) {
 				if(s < e && *s == '\n') {
 					if(!put_ln())
 						goto out_of_limit;
+					s++;
+					if(ls.GetCount() >= n) {
+						in.Seek(s - posptr + pos);
+						goto finish;
+					}
 					ln.Clear();
 					b8 = 0;
-					s++;
 				}
 			}
 		}
+	}
 
 out_of_limit:
 	{
 		WString w = ToUnicode(~ln, ln.GetCount(), charset);
 		if(total + w.GetLength() <= max_total) {
-			line.Add(w);
-			total += w.GetLength();
+			Ln& ln = ls.Add();
+			ln.len = w.GetCount();
+			ln.text = ToUtf8(~w, ln.len);
+			total += ln.len;
 		}
 	}
 finish:
-	InsertLines(0, line.GetCount());
-	Update();
+	return ls.GetCount() > 1 ? cr ? LE_CRLF : LE_LF : LE_DEFAULT;
+}
+
+void TextCtrl::ViewLoading()
+{
+	GuiLock __;
+	if(view_all || !view)
+		return;
+	int start = msecs();
+	view->Seek(view_loading_pos);
+	int lines0 = viewlines;
+	for(;;) {
+		offset256.Add(view->GetPos());
+		Vector<Ln> l;
+		bool b;
+		int64 t = 0;
+
+		LoadLines(l, 256, t, *view, charset, 10000, INT_MAX, b);
+		viewlines += l.GetCount();
+		total += t;
+		total256.Add((int)t);
+		
+	#ifdef CPU_32
+		enum { MAX_LINES = 128000000 };
+	#else
+		enum { MAX_LINES = INT_MAX - 512 };
+	#endif
+
+		if(view->IsEof() || viewlines > INT_MAX - 512) {
+			WhenViewMapping(view->GetPos());
+			view_all = true;
+			break;
+		}
+		
+		if(view_loading_lock) {
+			view_loading_pos = view->GetPos();
+			WhenViewMapping(view_loading_pos);
+			break;
+		}
+		
+		if(msecs(start) > 20) {
+			view_loading_pos = view->GetPos();
+			PostCallback([=] { ViewLoading(); });
+			WhenViewMapping(view_loading_pos);
+			break;
+		}
+	}
+	InsertLines(lines0, viewlines - lines0);
 	SetSb();
-	PlaceCaret(0);
-	return line.GetCount() > 1 ? cr ? LE_CRLF : LE_LF : LE_DEFAULT;
+	Update();
+}
+
+void TextCtrl::UnlockViewMapping()
+{
+	view_loading_lock--;
+	ViewLoading();
+}
+
+void TextCtrl::WaitView(int line, bool progress)
+{
+	if(view)
+		if(progress) {
+			LockViewMapping();
+			Progress pi("Scanning the file");
+			pi.Delay(1000);
+			while(view && !view_all && viewlines < line) {
+				if(pi.SetCanceled(int(view_loading_pos >> 10), int(view->GetSize()) >> 10))
+					break;
+				ViewLoading();
+			}
+			UnlockViewMapping();
+		}
+		else
+			while(view && !view_all && viewlines <= line)
+				ViewLoading();
+}
+
+void TextCtrl::SerializeViewMap(Stream& s)
+{
+	GuiLock __;
+	int version = 0;
+	s / version;
+	s.Magic(327845692);
+	s % view_loading_pos
+	  % total
+	  % viewlines
+	  % view_all
+	  % total256
+	  % offset256
+	;
+	if(s.IsLoading()) {
+		SetSb();
+		Update();
+		Refresh();
+	}
+}
+
+const TextCtrl::Ln& TextCtrl::GetLn(int i) const
+{
+	if(view) {
+		GuiLock __;
+		int blk = i >> 8;
+		if(view_cache[0].blk != blk)
+			Swap(view_cache[0], view_cache[1]); // trivial LRU
+			if(view_cache[0].blk != blk) {
+				Swap(view_cache[0], view_cache[1]); // trivial LRU
+				view->Seek(offset256[blk]);
+				int64 t = 0;
+				bool b;
+				view_cache[0].line.Clear();
+				view_cache[0].blk = blk;
+				LoadLines(view_cache[0].line, 256, t, *view, charset, 5000, INT_MAX, b);
+			}
+		return view_cache[0].line[i & 255];
+	}
+	else
+		return lin[i];
+}
+
+const String& TextCtrl::GetUtf8Line(int i) const
+{
+	return GetLn(i).text;
+}
+
+int TextCtrl::GetLineLength(int i) const
+{
+	return GetLn(i).len;
 }
 
 void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
@@ -296,10 +473,10 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 			if(!be16)
 				wle.Cat(0);
 		}
-		for(int i = 0; i < line.GetCount(); i++) {
+		for(int i = 0; i < GetLineCount(); i++) {
 			if(i)
 				s.Put(wle);
-			WString txt = line[i];
+			WString txt = GetWLine(i);
 			const wchar *e = txt.End();
 			if(be16)
 				for(const wchar *w = txt; w != e; w++)
@@ -310,13 +487,13 @@ void   TextCtrl::Save(Stream& s, byte charset, int line_endings) const {
 		}
 		return;
 	}
-	for(int i = 0; i < line.GetCount(); i++) {
+	for(int i = 0; i < GetLineCount(); i++) {
 		if(i)
 			s.Put(le);
 		if(charset == CHARSET_UTF8)
-			s.Put(line[i].text);
+			s.Put(GetUtf8Line(i));
 		else {
-			String txt = FromUnicode(line[i], charset);
+			String txt = FromUnicode(GetWLine(i), charset);
 			const char *e = txt.End();
 			for(const char *w = txt; w != e; w++)
 				s.Put(*w == DEFAULTCHAR ? '?' : *w);
@@ -340,8 +517,8 @@ int TextCtrl::GetInvalidCharPos(byte charset) const
 {
 	int q = 0;
 	if(!IsUnicodeCharset(charset))
-		for(int i = 0; i < line.GetCount(); i++) {
-			WString txt = line[i];
+		for(int i = 0; i < GetLineCount(); i++) {
+			WString txt = GetWLine(i);
 			WString ctxt = ToUnicode(FromUnicode(txt, charset), charset);
 			for(int w = 0; w < txt.GetLength(); w++)
 				if(txt[w] != ctxt[w])
@@ -394,17 +571,17 @@ Value TextCtrl::GetData() const
 String TextCtrl::GetEncodedLine(int i, byte charset) const
 {
 	charset = ResolveCharset(charset);
-	if(charset == CHARSET_UTF8)
-		return line[i].text;
-	return FromUnicode(FromUtf8(line[i].text), charset);
+	String h = GetUtf8Line(i);
+	return charset == CHARSET_UTF8 ? h : FromUnicode(FromUtf8(h), charset);
 }
 
-int   TextCtrl::GetLinePos(int& pos) const {
-	if(pos < cpos && cpos - pos < pos) {
+int   TextCtrl::GetLinePos64(int64& pos) const {
+	GuiLock __;
+	if(pos < cpos && cpos - pos < pos && !view) {
 		int i = cline;
-		int ps = cpos;
+		int64 ps = cpos;
 		for(;;) {
-			ps -= line[--i].GetLength() + 1;
+			ps -= GetLineLength(--i) + 1;
 			if(ps <= pos) {
 				pos = pos - ps;
 				return i;
@@ -413,59 +590,83 @@ int   TextCtrl::GetLinePos(int& pos) const {
 	}
 	else {
 		int i = 0;
+		if(view) {
+			GuiLock __;
+			int blk = 0;
+			for(;;) {
+				int n = total256[blk];
+				if(pos < n)
+					break;
+				pos -= n;
+				blk++;
+				if(blk >= total256.GetCount()) {
+					pos = GetLineLength(GetLineCount() - 1);
+					return GetLineCount() - 1;
+				}
+			}
+			i = blk << 8;
+		}
+		else
 		if(pos >= cpos) {
 			pos -= cpos;
 			i = cline;
 		}
 		for(;;) {
-			int n = line[i].GetLength() + 1;
+			int n = GetLineLength(i) + 1;
 			if(pos < n) return i;
 			pos -= n;
 			i++;
-			if(i >= line.GetCount()) {
-				pos = line.Top().GetLength();
-				return line.GetCount() - 1;
+			if(i >= GetLineCount()) {
+				pos = GetLineLength(GetLineCount() - 1);
+				return GetLineCount() - 1;
 			}
 		}
 	}
 }
 
-int   TextCtrl::GetPos(int ln, int lpos) const {
-	ln = minmax(ln, 0, line.GetCount() - 1);
-	int i, pos;
-	if(ln < cline && cline - ln < ln) {
+int64  TextCtrl::GetPos64(int ln, int lpos) const {
+	GuiLock __;
+	ln = minmax(ln, 0, GetLineCount() - 1);
+	int i;
+	int64 pos;
+	if(ln < cline && cline - ln < ln && !view) {
 		pos = cpos;
 		i = cline;
 		while(i > ln)
-			pos -= line[--i].GetLength() + 1;
+			pos -= GetLineLength(--i) + 1;
 	}
 	else {
+		pos = 0;
+		i = 0;
+		if(view) {
+			for(int j = 0; j < ln >> 8; j++) {
+				pos += total256[j];
+				i += 256;
+			}
+		}
+		else
 		if(ln >= cline) {
 			pos = cpos;
 			i = cline;
 		}
-		else {
-			pos = 0;
-			i = 0;
-		}
 		while(i < ln)
-			pos += line[i++].GetLength() + 1;
+			pos += GetLineLength(i++) + 1;
 	}
-	return pos + min(line[ln].GetLength(), lpos);
+	return pos + min(GetLineLength(ln), lpos);
 }
 
-WString TextCtrl::GetW(int pos, int size) const
+WString TextCtrl::GetW(int64 pos, int size) const
 {
-	int i = GetLinePos(pos);
+	int i = GetLinePos64(pos);
 	WStringBuffer r;
 	for(;;) {
-		if(i >= line.GetCount()) break;
-		WString ln = line[i++];
-		int sz = min(ln.GetLength() - pos, size);
+		if(i >= GetLineCount()) break;
+		WString ln = GetWLine(i++);
+		int sz = min(LimitSize(ln.GetLength() - pos), size);
 		if(pos == 0 && sz == ln.GetLength())
 			r.Cat(ln);
 		else
-			r.Cat(ln.Mid(pos, sz));
+			r.Cat(ln.Mid((int)pos, sz));
 		size -= sz;
 		if(size == 0) break;
 #ifdef PLATFORM_WIN32
@@ -479,19 +680,22 @@ WString TextCtrl::GetW(int pos, int size) const
 	return r;
 }
 
-String TextCtrl::Get(int pos, int size, byte charset) const
+String TextCtrl::Get(int64 pos, int size, byte charset) const
 {
 	if(charset == CHARSET_UTF8) {
-		int i = GetLinePos(pos);
+		int i = GetLinePos64(pos);
 		StringBuffer r;
 		for(;;) {
-			if(i >= line.GetCount()) break;
-			int sz = min(line[i].GetLength() - pos, size);
-			const String& ln = line[i++].text;
-			if(pos == 0 && sz == ln.GetLength())
-				r.Cat(ln);
+			if(i >= GetLineCount()) break;
+			int sz = min(LimitSize(GetLineLength(i) - pos), size);
+			const String& h = GetUtf8Line(i);
+			const char *s = h;
+			int n = h.GetCount();
+			i++;
+			if(pos == 0 && sz == n)
+				r.Cat(s, n);
 			else
-				r.Cat(ln.ToWString().Mid(pos, sz).ToString());
+				r.Cat(FromUtf8(s, n).Mid((int)pos, sz).ToString());
 			size -= sz;
 			if(size == 0) break;
 	#ifdef PLATFORM_WIN32
@@ -507,26 +711,58 @@ String TextCtrl::Get(int pos, int size, byte charset) const
 	return FromUnicode(GetW(pos, size), charset);
 }
 
-int  TextCtrl::GetChar(int pos) const {
-	if(pos < 0 || pos >= GetLength())
+int  TextCtrl::GetChar(int64 pos) const {
+	if(pos < 0 || pos >= GetLength64())
 		return 0;
-	int i = GetLinePos(pos);
-	WString ln = line[i];
-	int c = ln.GetLength() == pos ? '\n' : ln[pos];
+	int i = GetLinePos64(pos);
+	WString ln = GetWLine(i);
+	int c = ln.GetLength() == pos ? '\n' : ln[(int)pos];
 	return c;
 }
 
-int TextCtrl::Insert0(int pos, const WString& txt) {
+int TextCtrl::GetLinePos32(int& pos) const
+{
+	int64 p = pos;
+	int l = GetLinePos64(p);
+	pos = (int)p;
+	return l;
+}
+
+bool TextCtrl::GetSelection32(int& l, int& h) const
+{
+	int64 ll, hh;
+	bool b = GetSelection(ll, hh);
+	if(hh >= INT_MAX)
+		return false;
+	l = (int)ll;
+	h = (int)hh;
+	return b;
+}
+
+int TextCtrl::GetCursor32() const
+{
+	int64 h = GetCursor64();
+	return h < INT_MAX ? (int)h : 0;
+}
+
+int TextCtrl::GetLength32() const
+{
+	int64 h = GetLength64();
+	return h < INT_MAX ? (int)h : 0;
+}
+
+int TextCtrl::Insert0(int pos, const WString& txt) { // TODO: Do this with utf8
+	GuiLock __;
 	int inspos = pos;
 	PreInsert(inspos, txt);
 	if(pos < cpos)
 		cpos = cline = 0;
-	int i = GetLinePos(pos);
+	int i = GetLinePos32(pos);
 	DirtyFrom(i);
 	int size = 0;
 
 	WStringBuffer lnb;
-	Vector<Ln> iln;
+	Vector<WString> iln;
 	const wchar *s = txt;
 	while(s < txt.End())
 		if(*s >= ' ') {
@@ -545,7 +781,7 @@ int TextCtrl::Insert0(int pos, const WString& txt) {
 		}
 		else
 		if(*s == '\n') {
-			iln.Add(WString(lnb));
+			iln.Add(lnb);
 			size++;
 			lnb.Clear();
 			s++;
@@ -553,19 +789,20 @@ int TextCtrl::Insert0(int pos, const WString& txt) {
 		else
 			s++;
 	WString ln = lnb;
-
-	WString l = line[i];
+	WString l = GetWLine(i);
 	if(iln.GetCount()) {
-		iln[0] = l.Mid(0, pos) + WString(iln[0]);
+		iln[0] = l.Mid(0, pos) + iln[0];
 		ln.Cat(l.Mid(pos));
-		line[i] = ln;
+		SetLine(i, ln);
 		InvalidateLine(i);
-		line.Insert(i, iln);
+		LineInsert(i, iln.GetCount());
+		for(int j = 0; j < iln.GetCount(); j++)
+			SetLine(i + j, iln[j]);
 		InsertLines(i, iln.GetCount());
 		Refresh();
 	}
 	else {
-		line[i] = l.Mid(0, pos) + ln + l.Mid(pos);
+		SetLine(i, l.Mid(0, pos) + ln + l.Mid(pos));
 		InvalidateLine(i);
 		RefreshLine(i);
 	}
@@ -577,18 +814,19 @@ int TextCtrl::Insert0(int pos, const WString& txt) {
 }
 
 void TextCtrl::Remove0(int pos, int size) {
+	GuiLock __;
 	int rmpos = pos, rmsize = size;
 	PreRemove(rmpos, rmsize);
 	total -= size;
 	if(pos < cpos)
 		cpos = cline = 0;
-	int i = GetLinePos(pos);
+	int i = GetLinePos32(pos);
 	DirtyFrom(i);
-	WString ln = line[i];
-	int sz = min(ln.GetLength() - pos, size);
+	WString ln = GetWLine(i);
+	int sz = min(LimitSize(ln.GetLength() - pos), size);
 	ln.Remove(pos, sz);
 	size -= sz;
-	line[i] = ln;
+	SetLine(i, ln);
 	if(size == 0) {
 		InvalidateLine(i);
 		RefreshLine(i);
@@ -597,16 +835,16 @@ void TextCtrl::Remove0(int pos, int size) {
 		size--;
 		int j = i + 1;
 		for(;;) {
-			int sz = line[j].GetLength() + 1;
+			int sz = GetLineLength(j) + 1;
 			if(sz > size) break;
 			j++;
 			size -= sz;
 		}
-		WString p1 = line[i];
-		WString p2 = line[j];
+		WString p1 = GetWLine(i);
+		WString p2 = GetWLine(j);
 		p1.Insert(p1.GetLength(), p2.Mid(size, p2.GetLength() - size));
-		line[i] = p1;
-		line.Remove(i + 1, j - i);
+		SetLine(i, p1);
+		LineRemove(i + 1, j - i);
 		RemoveLines(i + 1, j - i);
 		InvalidateLine(i);
 		Refresh();
@@ -685,7 +923,7 @@ void TextCtrl::RemoveU(int pos, int size) {
 		u.serial = undoserial;
 		u.pos = pos;
 		u.size = 0;
-		u.text = Get(pos, size, CHARSET_UTF8);
+		u.SetText(Get(pos, size, CHARSET_UTF8));
 		u.typing = false;
 	}
 	Remove0(pos, size);
@@ -730,11 +968,11 @@ void TextCtrl::Undo() {
 		CachePos(r.pos);
 		if(u.size) {
 			r.size = 0;
-			r.text = Get(u.pos, u.size, CHARSET_UTF8);
+			r.SetText(Get(u.pos, u.size, CHARSET_UTF8));
 			Remove0(u.pos, u.size);
 		}
 		else {
-			WString text = FromUtf8(u.text);
+			WString text = FromUtf8(u.GetText());
 			r.size = Insert0(u.pos, text);
 			nc += r.size;
 		}
@@ -761,7 +999,7 @@ void TextCtrl::Redo() {
 		if(r.size)
 			RemoveU(r.pos, r.size);
 		else
-			nc += InsertU(r.pos, FromUtf8(r.text));
+			nc += InsertU(r.pos, FromUtf8(r.GetText()));
 		redo.DropTail();
 		IncDirty();
 	}
@@ -777,16 +1015,16 @@ void  TextCtrl::ClearSelection() {
 	WhenSel();
 }
 
-void   TextCtrl::SetSelection(int l, int h) {
+void   TextCtrl::SetSelection(int64 l, int64 h) {
 	if(l != h) {
-		PlaceCaret(minmax(l, 0, total), false);
-		PlaceCaret(minmax(h, 0, total), true);
+		PlaceCaret(minmax(l, (int64)0, total), false);
+		PlaceCaret(minmax(h, (int64)0, total), true);
 	}
 	else
 		SetCursor(l);
 }
 
-bool   TextCtrl::GetSelection(int& l, int& h) const {
+bool   TextCtrl::GetSelection(int64& l, int64& h) const {
 	if(anchor < 0) {
 		l = h = cursor;
 		return false;
@@ -799,27 +1037,27 @@ bool   TextCtrl::GetSelection(int& l, int& h) const {
 }
 
 String TextCtrl::GetSelection(byte charset) const {
-	int l, h;
+	int64 l, h;
 	if(GetSelection(l, h))
-		return Get(l, h - l, charset);
+		return Get(l, LimitSize(h - l), charset);
 	return String();
 }
 
 WString TextCtrl::GetSelectionW() const {
-	int l, h;
+	int64 l, h;
 	if(GetSelection(l, h))
-		return GetW(l, h - l);
+		return GetW(l, LimitSize(h - l));
 	return WString();
 }
 
 bool   TextCtrl::RemoveSelection() {
-	int l, h;
+	int64 l, h;
 	if(anchor < 0) return false;
 	if(IsRectSelection())
 		l = RemoveRectSelection();
 	else {
 		GetSelection(l, h);
-		Remove(l, h - l);
+		Remove((int)l, int(h - l));
 	}
 	anchor = -1;
 	Refresh();
@@ -842,17 +1080,17 @@ void TextCtrl::Cut() {
 }
 
 void TextCtrl::Copy() {
-	int l, h;
+	int64 l, h;
 	if(!GetSelection(l, h) && !IsAnySelection()) {
 		int i = GetLine(cursor);
-		l = GetPos(i);
-		h = l + line[i].GetLength() + 1;
+		l = GetPos64(i);
+		h = l + GetLineLength(i) + 1;
 	}
 	WString txt;
 	if(IsRectSelection())
 		txt = CopyRectSelection();
 	else
-		txt = GetW(l, h - l);
+		txt = GetW(l, LimitSize(h - l));
 	ClearClipboard();
 	AppendClipboardUnicodeText(txt);
 	AppendClipboardText(txt.ToString());
@@ -869,7 +1107,7 @@ int  TextCtrl::Paste(const WString& text) {
 		n = PasteRectSelection(text);
 	else {
 		RemoveSelection();
-		n = Insert(cursor, text);
+		n = Insert((int)cursor, text);
 		PlaceCaret(cursor + n);
 	}
 	Refresh();
@@ -927,7 +1165,7 @@ void TextCtrl::StdBar(Bar& menu) {
 			t_("Erase"), CtrlImg::remove(), THISBACK(DoRemoveSelection))
 		.Key(K_DELETE);
 	menu.Separator();
-	menu.Add(GetLength(),
+	menu.Add(GetLength64(),
 			t_("Select all"), CtrlImg::select_all(), THISBACK(SelectAll))
 		.Key(K_CTRL_A);
 }
