@@ -565,9 +565,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 				const int64 max_size = 768*1024*1024;
 			#endif
 				const int view_limit = 256*1024*1024;
-				DDUMP(view_file.GetSize());
-				DDUMP(editastext.Find(editfile));
-				DDUMP(editor.IsReadOnly());
 				if(view_file.GetSize() < 256*1024*1024 || editastext.Find(editfile) >= 0 && view_file.GetSize() < max_size) {
 					le = editor.Load(view_file, charset);
 					view_file.Close();
@@ -588,10 +585,6 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 			editor.SetLineInfo(fd.lineinfo);
 			editor.SetLineInfoRem(pick(fd.lineinforem));
 		}
-		DDUMP(ff.IsReadOnly());
-		DDUMP(IsNestReadOnly(editfile));
-		DDUMP(editor.IsTruncated());
-		DDUMP(editor.IsView());
 		if(ff.IsReadOnly() || IsNestReadOnly(editfile) || editor.IsTruncated() || editor.IsView()) {
 			editor.SetReadOnly();
 			editor.NoShowReadOnly();
