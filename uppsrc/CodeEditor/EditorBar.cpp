@@ -188,7 +188,8 @@ String& EditorBar::PointBreak(int& y)
 {
 	y = minmax(y / editor->GetFont().Info().GetHeight()
 		+ editor->GetScrollPos().y, 0, editor->GetLineCount());
-	return li.At(y).breakpoint;
+	static String e;
+	return y < 100000 ? li.At(y).breakpoint : e;
 }
 
 void EditorBar::LeftDouble(Point p, dword flags)

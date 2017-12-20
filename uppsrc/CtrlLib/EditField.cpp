@@ -26,41 +26,41 @@ bool IsWCh(int c)
 	return IsLeNum(c) || c == '_';
 }
 
-bool TextArrayOps::GetWordSelection(int c, int& l, int& h)
+bool TextArrayOps::GetWordSelection(int64 c, int64& l, int64& h)
 {
-	if(IsWCh(GetChar(c))) {
+	if(IsWCh(GetCharAt(c))) {
 		l = h = c;
-		while(l > 0 && IsWCh(GetChar(l - 1)))
+		while(l > 0 && IsWCh(GetCharAt(l - 1)))
 			l--;
-		while(h < GetLength() && IsWCh(GetChar(h)))
+		while(h < GetTotal() && IsWCh(GetCharAt(h)))
 			h++;
 		if(h != c)
-			while(h < GetLength() && GetChar(h) == ' ')
+			while(h < GetTotal() && GetCharAt(h) == ' ')
 				h++;
 		return true;
 	}
 	return false;
 }
 
-int TextArrayOps::GetNextWord(int cursor)
+int64 TextArrayOps::GetNextWord(int64 cursor)
 {
-	bool a = IsWCh(GetChar(cursor));
+	bool a = IsWCh(GetCharAt(cursor));
 	int n = 0;
-	int c = cursor;
-	while(c <= GetLength() && IsWCh(GetChar(c)) == a) {
+	int64 c = cursor;
+	while(c <= GetTotal() && IsWCh(GetCharAt(c)) == a) {
 		if(++n > 10000) return cursor;
 		c++;
 	}
 	return c;
 }
 
-int TextArrayOps::GetPrevWord(int cursor)
+int64 TextArrayOps::GetPrevWord(int64 cursor)
 {
 	int n = 0;
-	int c = cursor;
+	int64 c = cursor;
 	if(c == 0) return 0;
-	bool a = IsWCh(GetChar(c - 1));
-	while(c > 0 && IsWCh(GetChar(c - 1)) == a) {
+	bool a = IsWCh(GetCharAt(c - 1));
+	while(c > 0 && IsWCh(GetCharAt(c - 1)) == a) {
 		if(++n > 10000) return cursor;
 		c--;
 	}
@@ -540,9 +540,9 @@ void EditField::LeftUp(Point p, dword flags)
 
 void EditField::LeftDouble(Point p, dword flags)
 {
-	int l, h;
+	int64 l, h;
 	if(GetWordSelection(cursor, l, h))
-		SetSelection(l, h);
+		SetSelection((int)l, (int)h);
 }
 
 void EditField::LeftTriple(Point p, dword keyflags)
@@ -894,10 +894,10 @@ bool EditField::Key(dword key, int rep)
 		Move(cursor - 1, select);
 		return true;
 	case K_CTRL_LEFT:
-		Move(GetPrevWord(cursor), select);
+		Move((int)GetPrevWord(cursor), select);
 		return true;
 	case K_CTRL_RIGHT:
-		Move(GetNextWord(cursor), select);
+		Move((int)GetNextWord(cursor), select);
 		return true;
 	case K_RIGHT:
 		Move(cursor + 1, select);

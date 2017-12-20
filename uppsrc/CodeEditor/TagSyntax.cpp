@@ -37,7 +37,7 @@ const wchar *TagSyntax::Spaces(const wchar *s, const wchar *e)
 	return s;
 }
 
-void TagSyntax::DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos)
+void TagSyntax::DoScript(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int64 pos)
 {
 	if(hout)
 		script.Highlight(s, e, *hout, editor, line, pos);
@@ -99,7 +99,7 @@ const wchar *IsScriptEnd(const wchar *s, const wchar *e, bool script)
 	return NULL;
 }
 
-void TagSyntax::Do(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int pos)
+void TagSyntax::Do(const wchar *s, const wchar *e, CodeEditor *editor, int line, int tabsize, int64 pos)
 {
 doscript:
 	if(status == SCRIPT) {
@@ -245,7 +245,7 @@ doscript:
 	}
 }
 
-void TagSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
+void TagSyntax::CheckSyntaxRefresh(CodeEditor& e, int64 pos, const WString& text)
 {
 	script.CheckSyntaxRefresh(e, pos, text);
 	for(const wchar *s = text; *s; s++)
@@ -253,13 +253,13 @@ void TagSyntax::CheckSyntaxRefresh(CodeEditor& e, int pos, const WString& text)
 			e.Refresh();
 			return;
 		}
-	int l = max(pos - 6, 0);
-	int h = min(pos + text.GetLength() + 6, e.GetLength());
+	int64 l = max(pos - 6, (int64)0);
+	int64 h = min(pos + text.GetLength() + 6, e.GetLength64());
 	if(h - l > 200) {
 		e.Refresh();
 		return;
 	}
-	WString w = ToLower(e.GetW(l, h - l));
+	WString w = ToLower(e.GetW(l, e.LimitSize(h - l)));
 	if(w.Find("style") >= 0 || w.Find("script") >= 0)
 		e.Refresh();
 }
@@ -269,7 +269,7 @@ void TagSyntax::ScanSyntax(const wchar *s, const wchar *e, int line, int tabsize
 	Do(s, e, NULL, line, tabsize, 0);
 }
 
-void TagSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int pos)
+void TagSyntax::Highlight(const wchar *s, const wchar *end, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 	hout = &hls;
 	Do(s, end, editor, line, editor ? editor->GetTabSize() : 4, pos);
@@ -284,7 +284,7 @@ void TagSyntax::IndentInsert(CodeEditor& editor, int chr, int count)
 		editor.InsertChar(chr, count);
 }
 
-bool TagSyntax::CheckBrackets(CodeEditor& e, int& bpos0, int& bpos)
+bool TagSyntax::CheckBrackets(CodeEditor& e, int64& bpos0, int64& bpos)
 {
 	if(status == SCRIPT)
 		return script.CheckBrackets(e, bpos0, bpos);

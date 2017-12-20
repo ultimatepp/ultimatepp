@@ -434,7 +434,9 @@ public:
 
 	One<IdeDesigner> designer;
 	AssistEditor     editor;
+	FileIn           view_file;
 	AssistEditor     editor2; // no edits happen in editor2, just view
+	FileIn           view_file2;
 	EditorTabBar     tabs;
 	EscValue         macro_api;
 #ifdef PLATFORM_POSIX
@@ -799,7 +801,7 @@ public:
 		void  FindString(bool back);
 		void  ClearEditedFile();
 		void  ClearEditedAll();
-		void  FindFileAll(const Vector<Tuple<int, int>>& f);
+		void  FindFileAll(const Vector<Tuple<int64, int>>& f);
 		void  InsertColor();
 		void  InsertLay(const String& fn);
 		void  InsertIml(const String& fn, String classname);
@@ -932,7 +934,7 @@ public:
 		void  ContextGoto0(int pos);
 		void  ContextGoto();
 		void  GoToLine();
-		void  CtrlClick(int pos);
+		void  CtrlClick(int64 pos);
 		void  Qtf();
 		void  Xml();
 		void  Json();

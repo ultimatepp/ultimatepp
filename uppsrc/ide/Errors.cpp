@@ -320,7 +320,7 @@ bool Ide::FindLineError(int l) {
 	FindLineErrorCache cache;
 	if(FindLineError(console.GetUtf8Line(l), cache, f)) {
 		GoToError(f);
-		console.SetSelection(console.GetPos(l), console.GetPos(l + 1));
+		console.SetSelection(console.GetPos64(l), console.GetPos64(l + 1));
 		if(btabs.GetCursor() != BCONSOLE && btabs.GetCursor() != BFINDINFILES)
 			ShowConsole();
 		return true;

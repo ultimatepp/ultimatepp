@@ -53,10 +53,10 @@ struct RCB_FileInfo {
 	bool operator<(const RCB_FileInfo& a) const { return time > a.time; }
 };
 
-void ReduceCodeBaseCache()
+void ReduceCacheFolder(const char *path, int max_total)
 {
 	Array<RCB_FileInfo> file;
-	FindFile ff(AppendFileName(CodeBaseCacheDir(), "*.*"));
+	FindFile ff(AppendFileName(path, "*.*"));
 	int64 total = 0;
 	while(ff) {
 		if(ff.IsFile()) {
@@ -69,11 +69,16 @@ void ReduceCodeBaseCache()
 		ff.Next();
 	}
 	Sort(file);
-	while(total > 256000000 && file.GetCount()) {
+	while(total > max_total && file.GetCount()) {
 		DeleteFile(file.Top().path);
 		total -= file.Top().length;
 		file.Drop();
 	}
+}
+
+void ReduceCodeBaseCache()
+{
+	ReduceCacheFolder(CodeBaseCacheDir(), 256000000);
 }
 
 String CodeBaseCacheFile()

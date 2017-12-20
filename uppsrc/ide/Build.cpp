@@ -154,7 +154,7 @@ void Ide::FileCompile()
 
 void Ide::PreprocessInternal()
 {
-	if(editor.GetLength() >= 1000000) // Sanity...
+	if(editor.GetLength64() >= 1000000) // Sanity...
 		return;
 	int l = editor.GetCurrentLine();
 	PPSync(GetIncludePath());
@@ -169,7 +169,7 @@ void Ide::PreprocessInternal()
 	EditAsText();
 	if(!editor.IsReadOnly())
 		ToggleReadOnly();
-	editor.SetCursor(editor.GetPos(l));
+	editor.SetCursor(editor.GetPos64(l));
 }
 
 void Ide::Preprocess(bool asmout) {

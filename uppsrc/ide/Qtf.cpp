@@ -44,7 +44,7 @@ void QtfDlg::Copy()
 struct QtfDlgEditor : TopWindow {
 	RichEditWithToolBar editor;
 
-	void Serialize(Stream& s);	
+	void Serialize(Stream& s);
 	
 	QtfDlgEditor();
 };
@@ -123,16 +123,16 @@ void Ide::Qtf()
 {
 	QtfDlg dlg;
 	LoadFromGlobal(dlg, "QTF-designer");
-	int l,h;
-	bool sel=editor.GetSelection(l,h);
-	if(qtfsel && sel){
-		dlg.qtfText.text<<=(~editor).ToString().Mid(l,h-l);
+	int l, h;
+	bool sel = editor.GetSelection(l,h);
+	if(qtfsel && sel) {
+		dlg.qtfText.text <<= (~editor).ToString().Mid(l, h - l);
 		dlg.qtfText.copy.SetLabel("Apply and close");
 		dlg.Run();
-		editor.Remove(l,h-l);
-		editor.Insert(l,(~dlg.qtfText.text).ToString());
+		editor.Remove(l, h - l);
+		editor.Insert(l, (~dlg.qtfText.text).ToString());
 	}
-	else{
+	else {
 		dlg.qtfText.copy.SetLabel("Copy and close");
 		dlg.Run();
 	}

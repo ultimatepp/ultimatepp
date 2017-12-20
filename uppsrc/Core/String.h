@@ -238,6 +238,7 @@ class String0 : Moveable<String0> {
 	friend class String;
 	friend class StringBuffer;
 	friend class Value;
+	friend class TextCtrl;
 
 protected:
 //	void Zero()                     { q[0] = q[1] = 0; Dsyn(); }

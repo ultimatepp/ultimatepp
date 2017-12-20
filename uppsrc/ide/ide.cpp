@@ -16,25 +16,26 @@ void Ide::MakeTitle()
 		title << " - ";
 	title << "TheIDE";
 	if(designer) {
-		title << " - [" << designer->GetFileName();
+		title << " - " << designer->GetFileName();
 		int cs = designer->GetCharset();
 		if(cs >= 0)
 			title << " " << CharsetName(cs);
-		title << "]";
 	}
 	else
 	if(!editfile.IsEmpty()) {
-		title << " - [" << editfile;
+		title << " - " << editfile;
 		int chrset = editor.GetCharset();
 		title << " " << IdeCharsetName(chrset)
 		      << " " << (findarg(Nvl(editfile_line_endings, line_endings), LF, DETECT_LF) >= 0 ? "LF" : "CRLF");
 		if(editor.IsTruncated())
-			title << " (Truncated)";
+			title << " [Truncated]";
+		if(editor.IsView())
+			title << " [View]";
+		else
 		if(editor.IsReadOnly())
-			title << " (Read Only)";
+			title << " [Read Only]";
 		if(editor.IsDirty())
 			title << " *";
-		title << "]";
 	}
 	if(!IsNull(editfile))
 		for(int i = 0; i < 10; i++)
@@ -75,7 +76,7 @@ void Ide::MakeIcon() {
 
 bool Ide::CanToggleReadOnly()
 {
-	return NormalizePath(GetActiveFilePath()) == NormalizePath(editfile);
+	return NormalizePath(GetActiveFilePath()) == NormalizePath(editfile) && !editor.IsView();
 }
 
 void Ide::ToggleReadOnly()
@@ -367,7 +368,7 @@ void Ide::CycleFiles()
 
 void Ide::DeactivateBy(Ctrl *new_focus)
 {
-	if(deactivate_save && issaving == 0 && !new_focus && editor.GetLength() < 1000000) {
+	if(deactivate_save && issaving == 0 && !new_focus && editor.GetLength64() < 1000000) {
 		DeactivationSave(true);
 		SaveFile();
 		DeactivationSave(false);
@@ -463,7 +464,7 @@ bool Ide::IsHistDiff(int i)
 	if(i < 0 || i >= history.GetCount())
 		return false;
 	Bookmark& b = history[i];
-	return b.file != editfile || abs(editor.GetCursor() - b.pos.cursor) > 20;
+	return b.file != editfile || abs(editor.GetCursor64() - b.pos.cursor) > 20;
 }
 
 void Ide::IdePaste(String& data)
@@ -530,10 +531,10 @@ void Ide::BookKey(int key)
 
 void Ide::DoDisplay()
 {
-	Point p = editor.GetColumnLine(editor.GetCursor());
+	Point p = editor.GetColumnLine(editor.GetCursor64());
 	String s;
 	s << "Ln " << p.y + 1 << ", Col " << p.x + 1;
-	int l, h;
+	int64 l, h;
 	editor.GetSelection(l, h);
 	if(h > l)
 		s << ", Sel " << h - l;
@@ -643,14 +644,14 @@ int Ide::GetPackageIndex()
 void Ide::GotoDiffLeft(int line, DiffDlg *df)
 {
 	EditFile(df->editfile);
-	editor.SetCursor(editor.GetPos(line));
+	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
 }
 
 void Ide::GotoDiffRight(int line, FileDiff *df)
 {
 	EditFile(df->GetExtPath());
-	editor.SetCursor(editor.GetPos(line));
+	editor.SetCursor(editor.GetPos64(line));
 	editor.SetFocus();
 }
 

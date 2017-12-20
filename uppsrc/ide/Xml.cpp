@@ -68,7 +68,7 @@ void XmlView::Load(const String& txt)
 		AddFrame(errorbg);
 		view.Show();
 		view <<= txt;
-		view.SetCursor(view.GetPos(p.GetLine() - 1, p.GetColumn() - 1));
+		view.SetCursor(view.GetPos64(p.GetLine() - 1, p.GetColumn() - 1));
 		view.SetFocus();
 		return;
 	}

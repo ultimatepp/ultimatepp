@@ -51,15 +51,15 @@ void Console::Append(const String& s) {
 		return;
 	}
 	int l, h;
-	GetSelection(l, h);
-	if(GetCursor() == GetLength()) l = -1;
+	GetSelection32(l, h);
+	if(GetCursor32() == GetLength32()) l = -1;
 	EditPos p = GetEditPos();
 	SetEditable();
 	MoveTextEnd();
 	WString t = Filter(s, sAppf).ToWString();
 	int mg = sb.GetReducedViewSize().cx / GetFont().GetAveWidth();
 	if(wrap_text && mg > 4) {
-		int x = GetColumnLine(GetCursor()).x;
+		int x = GetColumnLine(GetCursor32()).x;
 		WStringBuffer tt;
 		const wchar *q = t;
 		while(*q) {

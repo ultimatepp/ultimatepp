@@ -77,10 +77,10 @@ Vector<Point> GetLineString(const wchar *wline, bool& is_begin, bool& is_end)
 	return out;
 }
 
-bool CodeEditor::GetStringRange(int cursor, int& b, int &e) const
+bool CodeEditor::GetStringRange(int64 cursor, int64& b, int64& e) const
 {
 	int cl = GetLine(cursor);
-	cursor -= GetPos(cl);
+	cursor -= GetPos64(cl);
 	bool is_begin, is_end; //@@@@@@
 	Vector<Point> list = GetLineString(GetWLine(cl), is_begin, is_end);
 	int i = list.GetCount();
@@ -106,17 +106,19 @@ bool CodeEditor::GetStringRange(int cursor, int& b, int &e) const
 		el++;
 		ep = list[0].y;
 	}
-	b = GetPos(bl, bp);
-	e = GetPos(el, ep);
+	b = GetPos64(bl, bp);
+	e = GetPos64(el, ep);
 	return b < e;
 }
 
 bool CodeEditor::FindString(bool back)
 {
-	int l, h;
-	if(!GetSelection(l, h)) h = GetCursor();
-	else h = (back ? l : h);
-	h -= GetPos(l = GetLine(h));
+	int64 ll, hh;
+	hh = GetSelection(ll, hh) ? back ? ll : hh
+	                          : GetCursor64();
+	int l = GetLine(hh);
+	int h = LimitSize(hh - GetPos64(l));
+
 	while(l >= 0 && l < GetLineCount())
 	{
 		bool is_begin, is_end;
@@ -148,8 +150,8 @@ bool CodeEditor::FindString(bool back)
 			++l;
 		}
 	}
-	int b, e;
-	if(l < 0 || l >= GetLineCount() || !GetStringRange(GetPos(l, h), b, e))
+	int64 b, e;
+	if(l < 0 || l >= GetLineCount() || !GetStringRange(GetPos64(l, h), b, e))
 		return false;
 	SetSelection(b, e);
 	return true;
@@ -157,14 +159,16 @@ bool CodeEditor::FindString(bool back)
 
 bool CodeEditor::FindLangString(bool back)
 {
-	int l, h;
-	if(!GetSelection(l, h)) h = GetCursor();
-	else h = (back ? l : h);
-	h -= GetPos(l = GetLine(h));
+	int64 ll, hh;
+	hh = GetSelection(ll, hh) ? back ? ll : hh
+	                          : GetCursor64();
+	int l = GetLine(hh);
+	int h = LimitSize(hh - GetPos64(l));
+
 	for(;;)
 	{
 		Array<IdentPos> list = GetLineIdent(GetUtf8Line(l));
-		int b, e;
+		int64 b, e;
 		if(back)
 		{
 			int i = list.GetCount();
@@ -177,8 +181,8 @@ bool CodeEditor::FindLangString(bool back)
 					break;
 				continue;
 			}
-			b = GetPos(l, list[i].begin);
-			e = GetPos(l, list[i].end);
+			b = GetPos64(l, list[i].begin);
+			e = GetPos64(l, list[i].end);
 		}
 		else
 		{
@@ -192,8 +196,8 @@ bool CodeEditor::FindLangString(bool back)
 					break;
 				continue;
 			}
-			b = GetPos(l, list[i].begin);
-			e = GetPos(l, list[i].end);
+			b = GetPos64(l, list[i].begin);
+			e = GetPos64(l, list[i].end);
 		}
 		SetSelection(b, e);
 		return true;

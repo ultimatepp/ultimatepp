@@ -195,7 +195,7 @@ public:
 	virtual void  MouseWheel(Point p, int zdelta, dword keyFlags);
 
 protected:
-	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int pos);
+	virtual void HighlightLine(int line, Vector<LineEdit::Highlight>& h, int64 pos);
 	virtual void PreInsert(int pos, const WString& s);
 	virtual void PostInsert(int pos, const WString& s);
 	virtual void PreRemove(int pos, int size);
@@ -226,10 +226,10 @@ protected:
 //	EditorSyntax rm_ins;
 
 	char    rmb;
-	int     highlight_bracket_pos0;
-	int     highlight_bracket_pos;
+	int64   highlight_bracket_pos0;
+	int64   highlight_bracket_pos;
 	bool    bracket_flash;
-	int     bracket_start;
+	int64   bracket_start;
 
 	bool    barline;
 	double  stat_edit_time;
@@ -264,7 +264,8 @@ protected:
 	WString      foundtext;
 	bool   foundsel;
 	bool   found, notfoundfw, notfoundbk;
-	int    foundpos, foundsize;
+	int64  foundpos;
+	int    foundsize;
 	
 	enum { SEL_CHARS, SEL_WORDS, SEL_LINES };
 	int    selkind;
@@ -291,12 +292,16 @@ protected:
 	int   tippos;
 	
 	int   replacei;
+	
+	bool          search_canceled;
+	int           search_time0;
+	One<Progress> search_progress;
 
 	struct HlSt;
 	
 	bool   MouseSelSpecial(Point p, dword flags);
 	void   InitFindReplace();
-	void   CancelBracketHighlight(int& pos);
+	void   CancelBracketHighlight(int64& pos);
 	void   FindPrevNext(bool prev);
 	void   CheckBrackets();
 	void   OpenNormalFindReplace0(bool replace);
@@ -308,7 +313,7 @@ protected:
 	void   IncrementalFind();
 	void   NotFound();
 	void   NoFindError();
-	void   CheckSyntaxRefresh(int pos, const WString& text);
+	void   CheckSyntaxRefresh(int64 pos, const WString& text);
 
 	void   SetFound(int fi, int type, const WString& text);
 
@@ -337,6 +342,11 @@ protected:
 
 	void   Periodic();
 
+	void   StartSearchProgress(int64 l, int64 h);
+	bool   SearchProgress(int line);
+	bool   SearchCanceled();
+	void   EndSearchProgress();
+
 public:
 	struct MouseTip {
 		int            pos;
@@ -348,7 +358,7 @@ public:
 	Event<>            WhenSelection;
 	Gate<MouseTip&>    WhenTip;
 	Event<>            WhenLeftDown;
-	Event<int>         WhenCtrlClick;
+	Event<int64>       WhenCtrlClick;
 	Event<>            WhenAnnotationMove;
 	Event<>            WhenAnnotationClick;
 	Event<>            WhenAnnotationRightClick;
@@ -356,7 +366,7 @@ public:
 	Event<String&>     WhenPaste;
 	Event<>            WhenUpdate;
 
-	Event<const Vector<Tuple<int, int>>&> WhenFindAll;
+	Event<const Vector<Tuple<int64, int>>&> WhenFindAll;
 
 	FrameTop<Button>    topsbbutton;
 	FrameTop<Button>    topsbbutton1;
@@ -374,14 +384,14 @@ public:
 	void   CloseFindReplace();
 	void   FindReplace(bool pick_selection, bool pick_text, bool replace);
 	void   FindAll();
-	bool   FindFrom(int pos, bool back, bool block);
-	bool   RegExpFind(int pos, bool block);
+	bool   FindFrom(int64 pos, bool back, bool block);
+	bool   RegExpFind(int64 pos, bool block);
 	bool   Find(bool back, bool block);
 	bool   Find(bool back, bool blockreplace, bool replace);
 	void   FindNext();
 	void   FindPrev();
-	bool   GetStringRange(int cursor, int& b, int &e) const;
-	bool   GetStringRange(int& b, int &e) const { return GetStringRange(GetCursor(), b, e); }
+	bool   GetStringRange(int64 cursor, int64& b, int64& e) const;
+	bool   GetStringRange(int64& b, int64& e) const { return GetStringRange(GetCursor64(), b, e); }
 	bool   FindString(bool back);
 	bool   FindLangString(bool back);
 	void   Replace();
@@ -416,10 +426,10 @@ public:
 	void   MoveNextBrk(bool sel);
 	void   MovePrevBrk(bool sel);
 
-	String GetWord(int pos);
+	String GetWord(int64 pos);
 	String GetWord();
 
-	bool   GetWordPos(int pos, int& l, int& h);
+	bool   GetWordPos(int64 pos, int64& l, int64& h);
 
 	void   DeleteWord();
 	void   DeleteWordBack();
@@ -506,8 +516,8 @@ public:
 	void     Illuminate(const WString& text)          { illuminated = text; Refresh(); }
 
 	One<EditorSyntax> GetSyntax(int line);
-	bool IsCursorBracket(int pos) const;
-	bool IsMatchingBracket(int pos) const;
+	bool IsCursorBracket(int64 pos) const;
+	bool IsMatchingBracket(int64 pos) const;
 
 // TODO: Do we really need this ?
 	Vector<IfState> GetIfStack(int line)              { return GetSyntax(line)->PickIfStack(); }

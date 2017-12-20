@@ -363,9 +363,9 @@ void RichEdit::LeftDouble(Point p, dword flags)
 				Finish();
 			}
 			else {
-				int l, h;
+				int64 l, h;
 				if(GetWordSelection(c, l, h))
-					SetSelection(l, h);
+					SetSelection((int)l, (int)h);
 			}
 		}
 	}

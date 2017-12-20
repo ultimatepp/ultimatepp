@@ -129,7 +129,7 @@ String AssistEditor::ReadIdBackPos(int& pos, bool include)
 	while(pos > 0 && (*test)(GetChar(pos - 1)))
 		pos--;
 	int q = pos;
-	while(q < GetLength() && (*test)(GetChar(q)))
+	while(q < GetLength64() && (*test)(GetChar(q)))
 		id << (char)GetChar(q++);
 	return id;
 }
@@ -160,11 +160,11 @@ void AssistEditor::DirtyFrom(int line)
 
 int AssistEditor::Ch(int i)
 {
-	if(i >= 0 && i < GetLength()) {
+	if(i >= 0 && i < GetLength64()) {
 		if(i < cachedpos || i - cachedpos > cachedline.GetCount()) {
 			cachedln = GetLine(i);
 			cachedline = GetWLine(cachedln);
-			cachedpos = GetPos(cachedln);
+			cachedpos = GetPos32(cachedln);
 		}
 		i -= cachedpos;
 		return i < cachedline.GetCount() ? cachedline[i] : '\n';
@@ -207,7 +207,7 @@ String AssistEditor::IdBack(int& qq)
 			q--;
 		if(iscib(Ch(q))) {
 			qq = q;
-			while(q < GetLength() && iscid(Ch(q)))
+			while(q < GetLength64() && iscid(Ch(q)))
 				r.Cat(Ch(q++));
 		}
 	}
@@ -331,7 +331,7 @@ void AssistEditor::SyncAssist()
 {
 	LTIMING("SyncAssist");
 	bool destructor;
-	String name = ReadIdBack(GetCursor(), include_assist, &destructor);
+	String name = ReadIdBack(GetCursor32(), include_assist, &destructor);
 	String uname = ToUpper(name);
 	assist_item_ndx.Clear();
 	int typei = type.GetCursor() - 1;
@@ -456,7 +456,7 @@ void AssistEditor::Assist()
 	if(!assist_active)
 		return;
 	CloseAssist();
-	int q = GetCursor();
+	int q = GetCursor32();
 	assist_cursor = q;
 	assist_type.Clear();
 	assist_item.Clear();
@@ -464,7 +464,7 @@ void AssistEditor::Assist()
 	if(IncludeAssist())
 		return;
 	Parser parser;
-	Context(parser, GetCursor());
+	Context(parser, GetCursor32());
 	Index<String> in_types;
 	while(iscid(Ch(q - 1)) || Ch(q - 1) == '~')
 		q--;
@@ -597,7 +597,7 @@ void AssistEditor::Complete()
 {
 	CloseAssist();
 
-	int c = GetCursor();
+	int c = GetCursor32();
 	String q = IdBack(c);
 
 	Index<String> ids;
@@ -657,7 +657,7 @@ void AssistEditor::Complete()
 void AssistEditor::Abbr()
 {
 	CloseAssist();
-	int c = GetCursor();
+	int c = GetCursor32();
 	int ch;
 	String s;
 	while(IsAlpha(ch = Ch(c - 1))) {
@@ -672,13 +672,13 @@ void AssistEditor::Abbr()
 	SetCursor(c);
 	Remove(c, len);
 	int linepos = c;
-	int line = GetLinePos(linepos);
+	int line = GetLinePos32(linepos);
 	WString h = GetWLine(line).Mid(0, linepos);
 	for(int i = 0; i < s.GetCount(); i++) {
 		ch = s[i];
 		switch(ch) {
 		case '@':
-			c = GetCursor();
+			c = GetCursor32();
 			break;
 		case '\n':
 			InsertChar('\n');
@@ -708,8 +708,8 @@ void AssistEditor::AssistInsert()
 		}
 		const CppItemInfo& f = assist_item[ii];
 		if(include_assist) {
-			int ln = GetLine(GetCursor());
-			int pos = GetPos(ln);
+			int ln = GetLine(GetCursor32());
+			int pos = GetPos32(ln);
 			Remove(pos, GetLineLength(ln));
 			SetCursor(pos);
 			String h;
@@ -745,7 +745,7 @@ void AssistEditor::AssistInsert()
 			int pl = txt.GetCount();
 			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND)
 				txt << "()";
-			int cl = GetCursor();
+			int cl = GetCursor32();
 			int ch = cl;
 			while(iscid(Ch(cl - 1)))
 				cl--;
@@ -769,16 +769,16 @@ void AssistEditor::AssistInsert()
 				txt << "()";
 			int n = Paste(ToUnicode(txt, CHARSET_WIN1250));
 			if(!thisback && f.kind >= FUNCTION && f.kind <= INLINEFRIEND) {
-				SetCursor(GetCursor() - 1);
+				SetCursor(GetCursor32() - 1);
 				StartParamInfo(f, cl);
 				int x = f.natural.ReverseFind('(');
 				if(x >= 0 && f.natural[x + 1] == ')')
-					SetCursor(GetCursor() + 1);
+					SetCursor(GetCursor32() + 1);
 			}
 			else
 			if(thisback) {
 				if(thisbackn)
-					SetCursor(GetCursor() - 1);
+					SetCursor(GetCursor32() - 1);
 			}
 			else
 			if(!inbody)
@@ -796,8 +796,8 @@ void AssistEditor::AssistInsert()
 
 bool AssistEditor::InCode()
 {
-	int pos = GetCursor();
-	int line = GetLinePos(pos);
+	int pos = GetCursor32();
+	int line = GetLinePos32(pos);
 	One<EditorSyntax> st = GetSyntax(line);
 	WString l = GetWLine(line);
 	st->ScanSyntax(l, ~l + pos, line, GetTabSize());
@@ -840,12 +840,14 @@ bool AssistEditor::Key(dword key, int count)
 			return true;
 		}
 	}
-	int c = GetCursor();
+	int c = GetCursor32();
 	int cc = GetChar(c);
 	int bcc = c > 0 ? GetChar(c - 1) : 0;
 	bool b = CodeEditor::Key(key, count);
 	if(b && search.HasFocus())
 		SetFocus();
+	if(IsReadOnly())
+		return b;
 	if(assist.IsOpen()) {
 		bool (*test)(int c) = include_assist ? isincludefnchar : isaid;
 		if(!(*test)(key) &&
@@ -863,12 +865,12 @@ bool AssistEditor::Key(dword key, int count)
 	else
 	if(auto_assist) {
 		if(InCode()) {
-			if(key == '.' || key == '>' && Ch(GetCursor() - 2) == '-' ||
-			   key == ':' && Ch(GetCursor() - 2) == ':')
+			if(key == '.' || key == '>' && Ch(GetCursor32() - 2) == '-' ||
+			   key == ':' && Ch(GetCursor32() - 2) == ':')
 				Assist();
 			else
 			if(key == '(') {
-				int q = GetCursor() - 1;
+				int q = GetCursor32() - 1;
 				String id = IdBack(q);
 				if(id == "THISBACK" || id == "THISBACK1" || id == "THISBACK2" || id == "THISBACK3" || id == "THISBACK4")
 					Assist();
