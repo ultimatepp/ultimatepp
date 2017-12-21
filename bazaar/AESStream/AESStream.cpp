@@ -1,6 +1,7 @@
 #include <Core/Core.h>
 
 #undef _WIN32
+#define OPENSSL_SYS_WINDOWS
 #include <openssl/rand.h>
 #include "AESStream.h"
 
