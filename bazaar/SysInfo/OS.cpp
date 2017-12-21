@@ -297,7 +297,12 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 	default:							kerArchitecture = "Unknown";
 	}
    	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4) {
-		if (osvi.dwMajorVersion == 6) {
+   		if (osvi.dwMajorVersion == 10 && osvi.dwMinorVersion == 0) {
+   			if (osvi.wProductType == VER_NT_WORKSTATION)
+            	kernel.Cat(" 10");
+        	else 
+				kernel.Cat(" Server 2016");
+   		} else if (osvi.dwMajorVersion == 6) {
 			if (osvi.dwMinorVersion == 3) {
             	if (osvi.wProductType == VER_NT_WORKSTATION)
                 	kernel.Cat(" 8.1");
@@ -484,8 +489,8 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
  		}
  		distro = "";
  	} else if (osvi.dwPlatformId == 2) {
+ 		kernel.Cat(" NT");
     	switch(osvi.dwMajorVersion) {
-    	kernel.Cat(" NT");
         case 3:
         	kernel.Cat(" 3.51");
         	break;
