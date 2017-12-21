@@ -11,7 +11,7 @@ inline bool iscidplus(int c) {
 	return iscib(c) || c == '.' || (c >= '0' && c <= '9');
 }
 
-String CParserPlus::ReadIdPlus() throw(Error) {
+String CParserPlus::ReadIdPlus() {
 	if(!IsId())
 		ThrowError("missing id");
 	String result;

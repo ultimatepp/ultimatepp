@@ -37,7 +37,7 @@ Image NativePathIconX(const char *path, bool folder, int flags = 0);
 class CParserPlus : public CParser {
 public:
 	CParserPlus(const char *ptr) : CParser(ptr) {}
-	String ReadIdPlus() throw(Error);
+	String ReadIdPlus();
 };
 
 class EquationDraw {
