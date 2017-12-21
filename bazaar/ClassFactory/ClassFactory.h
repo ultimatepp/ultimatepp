@@ -3,7 +3,7 @@
 
 #include <Draw/Draw.h>
 
-NAMESPACE_UPP;
+NAMESPACE_UPP
 
 extern String CLASSFACTORY_UNKNOWN;
 
@@ -174,6 +174,6 @@ template<class T> class WithFactory
 	INITBLOCK { \
 		type::RegisterClassGroupIcon(groupMask, desc, icon); \
 	}
-END_UPP_NAMESPACE;
+END_UPP_NAMESPACE
 
 #endif
