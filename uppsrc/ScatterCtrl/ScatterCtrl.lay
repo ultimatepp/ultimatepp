@@ -18,6 +18,8 @@ LAYOUT(Measures, 396, 256)
 	ITEM(Label, dv___11, SetLabel(t_("Y max")).LeftPosZ(12, 64).TopPosZ(12, 21))
 	ITEM(Label, dv___12, SetLabel(t_("Y min")).LeftPosZ(12, 64).BottomPosZ(79, 21))
 	ITEM(Label, dv___13, SetLabel(t_("X min")).LeftPosZ(80, 64).BottomPosZ(35, 21))
+	ITEM(Option, opAttachX, SetLabel(t_("Attach")).HSizePosZ(168, 160).BottomPosZ(16, 16))
+	ITEM(Option, opAttachY, SetLabel(t_("Attach")).LeftPosZ(12, 64).VSizePosZ(60, 104))
 END_LAYOUT
 
 LAYOUT(Texts, 472, 284)
