@@ -5,7 +5,7 @@
 
 T_("No series")
 caES("")
-esES("")
+esES("Sin series")
 euES("")
 frFR("")
 
@@ -20,19 +20,19 @@ frFR("Sans marque")
 
 T_("Error in %s(%f)")
 caES("")
-esES("")
+esES("Error en %s(%f)")
 euES("")
 frFR("")
 
 T_("Unknown var '%s'")
 caES("")
-esES("")
+esES("Variable '%s' desconocida")
 euES("")
 frFR("")
 
 T_("Divide by zero")
 caES("")
-esES("Divisi\303\263n por cero")
+esES("Divisi\303\263n entre cero")
 euES("")
 frFR("")
 
@@ -77,7 +77,7 @@ frFR("")
 
 T_("Sin_DampedSinusoidal")
 caES("")
-esES("")
+esES("Seno_SinusoidalAmortiguada")
 euES("")
 frFR("")
 
@@ -95,7 +95,7 @@ frFR("")
 
 T_("RealExponent")
 caES("")
-esES("")
+esES("ExponenteReal")
 euES("")
 frFR("")
 
