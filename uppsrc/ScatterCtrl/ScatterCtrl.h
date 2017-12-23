@@ -202,12 +202,6 @@ public:
 	
 	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
 															{popTextX = x; popTextY = y1; popTextY2 = y2; return *this;}
-	ScatterCtrl& SetMouseHandling(bool valx = true, bool valy = false);
-	bool GetMouseHandlingX()								{return mouseHandlingX;}
-	bool GetMouseHandlingY()								{return mouseHandlingY;}
-private:
-	void ChangeMouseHandlingX()								{mouseHandlingX = !mouseHandlingX;}
-	void ChangeMouseHandlingY()								{mouseHandlingY = !mouseHandlingY;}
 
 public:
 	ScatterCtrl& ShowInfo(bool show = true)					{showInfo = show;		 return *this;}
@@ -279,12 +273,11 @@ public:
 	ScatterCtrl& SetDefaultCSVSeparator(String sep) 	{defaultCSVseparator = sep;	return *this;}
 	String GetDefaultCSVSeparator() 					{return defaultCSVseparator;}
 	
+	ScatterCtrl &SetMouseHandling(bool valx = true, bool valy = false)			{ScatterDraw::SetMouseHandling(valx, valy);	return *this;} 
+	ScatterCtrl &SetMouseHandlingLinked(bool valx = true, bool valy = false) 	{ScatterDraw::SetMouseHandlingLinked(valx, valy);	return *this;}
+	
 	void Jsonize(JsonIO& json) {
 		ScatterDraw::Jsonize(json);
-		json
-			("mouseHandlingX", mouseHandlingX)
-			("mouseHandlingY", mouseHandlingY)
-		;
 	}
 	
 private:
@@ -301,7 +294,6 @@ private:
 	int butDownX, butDownY;
 	bool isScrolling, isLabelPopUp;
 	
-	bool mouseHandlingX, mouseHandlingY;
 	bool showContextMenu;
 	bool showPropDlg;
 	bool showProcessDlg;
