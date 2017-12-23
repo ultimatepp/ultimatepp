@@ -60,7 +60,7 @@ void ScatterCtrl::Paint(Draw& w)
 	if (IsEnabled()) {
 		if (mode == MD_DRAW) {
 			ScatterCtrl::SetDrawing(w, GetSize(), 1);
-			PlotTexts(w, GetSize(), 1);
+			PlotTexts(w, GetSize(), 1, !mouseHandlingX, !mouseHandlingY);
 		} else {
 			ImageBuffer ib(GetSize());
 			BufferPainter bp(ib, mode);
@@ -68,7 +68,7 @@ void ScatterCtrl::Paint(Draw& w)
 			bp.LineJoin(LINEJOIN_MITER);
 			ScatterCtrl::SetDrawing(bp, GetSize(), 1);
 			w.DrawImage(0, 0, ib);
-			PlotTexts(w, GetSize(), 1);
+			PlotTexts(w, GetSize(), 1, !mouseHandlingX, !mouseHandlingY);
 		}
 		if (HasFocus()) {
 			w.DrawLine(0, 0, GetSize().cx, 0, 2, LtGray());
@@ -539,13 +539,6 @@ Image ScatterCtrl::CursorImage(Point p, dword keyflags)
 	return Image::Arrow();
 }
 
-ScatterCtrl &ScatterCtrl::SetMouseHandling(bool valx, bool valy) 
-{
-	mouseHandlingX = valx;
-	mouseHandlingY = valy;
-	return *this;
-}
-
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
@@ -669,7 +662,7 @@ void ScatterCtrl::CheckButtonVisible() {
 	
 ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
 {
-	showInfo = mouseHandlingX = mouseHandlingY = isScrolling = isLabelPopUp = isZoomWindow = false;
+	showInfo = isScrolling = isLabelPopUp = isZoomWindow = false;
 	WantFocus();
 	popTextX = t_("x");
 	popTextY = t_("y1");

@@ -39,6 +39,9 @@ void MeasuresTab::Init(ScatterCtrl& scatter)
 	yMin2 <<= scatter.GetYMin2();
 	yMax2 <<= scatter.GetY2Range() + scatter.GetYMin2();
 	
+	opAttachX <<= !scatter.GetMouseHandlingX();
+	opAttachY <<= !scatter.GetMouseHandlingY();
+	
 	xMin.WhenEnter = THISBACK(Change);
 	xMax.WhenEnter = THISBACK(Change);
 	yMin.WhenEnter = THISBACK(Change);
@@ -46,11 +49,14 @@ void MeasuresTab::Init(ScatterCtrl& scatter)
 	yMin2.WhenEnter = THISBACK(Change);
 	yMax2.WhenEnter = THISBACK(Change);
 	
+	opAttachX.WhenAction = THISBACK(Change);
+	opAttachY.WhenAction = THISBACK(Change);
+	
 	Change();
 }
 	
 void MeasuresTab::Change() 
-{
+{	
 	if (xMax <= xMin) {
 		Exclamation(t_("X min has to be lower than X max"));
 		return;
@@ -63,11 +69,19 @@ void MeasuresTab::Change()
 		Exclamation(t_("Y min2 has to be lower than Y max2"));
 		return;
 	}
-	ScatterCtrl &scatter = *pscatter;
 	
-    scatter.SetXYMin(xMin, yMin, yMin2);
+	xMin.Enable(!opAttachX);
+	xMax.Enable(!opAttachX);
+	yMin.Enable(!opAttachY);
+	yMax.Enable(!opAttachY);
+	
+	ScatterCtrl &scatter = *pscatter;
+
+	scatter.SetMouseHandlingLinked(!opAttachX, !opAttachY);
+	
+    scatter.SetXYMinLinked(xMin, yMin, yMin2);
     //scatter.SetMinUnits(xMin, yMin);
-	scatter.SetRange(xMax - xMin, yMax - yMin, yMax2 - yMin2);
+	scatter.SetRangeLinked(xMax - xMin, yMax - yMin, yMax2 - yMin2);
 
 	scatter.SetModify();
 	scatter.Refresh();
@@ -907,7 +921,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	tabFit.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 	tabFit.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 	
-	tabFit.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();
+	tabFit.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
 	
 	DataSource &data = tabFit.scatter.GetSeries(0);
 	
@@ -1065,7 +1079,7 @@ void ProcessingTab::OnSet()
 		tabOp.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 		tabOp.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
-		tabOp.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();	
+		tabOp.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
 	} else if (tabBestFitFirst && tab.Get() == 3) {
 		tabBestFitFirst = false; 
 		
@@ -1085,7 +1099,7 @@ void ProcessingTab::OnSet()
 		tabBestFit.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
 		tabBestFit.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
-		tabBestFit.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();	
+		tabBestFit.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
 	}
 }
 
@@ -1203,7 +1217,7 @@ void ProcessingTab::OnFFT()
 	}
 	String legend = tabFit.scatter.GetLegend(0) + String("-") + strtype;
 	tabFreq.scatter.AddSeries(fft).Legend(legend);
-	tabFreq.scatter.SetMouseHandling(true, true).ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg();
+	tabFreq.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
 	tabFreq.scatter.SetLabelX(tabFreq.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
 	tabFreq.scatter.SetLabelY(legend);
 	tabFreq.scatter.ZoomToFit(true, true);

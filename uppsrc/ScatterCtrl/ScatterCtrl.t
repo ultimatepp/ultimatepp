@@ -603,6 +603,12 @@ esES("")
 euES("")
 frFR("")
 
+T_("Attach")
+caES("")
+esES("")
+euES("")
+frFR("")
+
 T_("Label Y2:")
 caES("Etiqueta Y2:")
 esES("Etiqueta Y2:")
@@ -1049,7 +1055,7 @@ frFR("")
 
 T_("Normal\nFull\nText")
 caES("")
-esES("")
+esES("Normal\nCompleto\nTexto")
 euES("")
 frFR("")
 
@@ -1102,10 +1108,12 @@ euES("")
 frFR("")
 
 
-// Obsolete
+// PieCtrl.cpp
 
-T_("Update")
+T_("Pie plot")
 caES("")
-esES("Actualizar")
+esES("Gr\303\241fico de tarta")
 euES("")
 frFR("")
+
+
