@@ -1336,6 +1336,29 @@ ScatterDraw &ScatterDraw::SetXYMinLinked(double xmin, double ymin, double ymin2)
 	return *this;
 }
 
+ScatterDraw &ScatterDraw::SetMouseHandling(bool valx, bool valy) 
+{
+	mouseHandlingX = valx;
+	mouseHandlingY = valy;
+	return *this;
+}
+
+ScatterDraw &ScatterDraw::SetMouseHandlingLinked(bool valx, bool valy) {
+	if (linkedMaster) {
+		linkedMaster->SetMouseHandlingLinked(valx, valy);
+		linkedMaster->Refresh();
+		return *this;
+	}
+	SetMouseHandling(valx, valy);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
+	    	linkedCtrls[i]->SetMouseHandling(valx, valy);
+	    	linkedCtrls[i]->Refresh();
+		}
+	}
+	return *this;
+}
+
 void ScatterDraw::Zoom(double scale, bool mouseX, bool mouseY) {
 	if (linkedMaster) {
 		linkedMaster->Zoom(scale, mouseX, mouseY);
@@ -1707,6 +1730,7 @@ ScatterDraw::ScatterDraw() {
 	linkedMaster = 0;
 	stacked = false;
 	serializeFormat = true;
+	mouseHandlingX = mouseHandlingY = false;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color) {

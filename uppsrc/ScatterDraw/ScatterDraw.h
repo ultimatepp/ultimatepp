@@ -690,6 +690,11 @@ public:
 	double GetPosY2(double y)	{return plotH - plotH*(y - yMin2)/yRange2;}
 	double GetSizeY2(double cy) {return plotH*cy/yRange2;}
 	
+	ScatterDraw& SetMouseHandling(bool valx = true, bool valy = false);
+	ScatterDraw& SetMouseHandlingLinked(bool valx = true, bool valy = false);
+	bool GetMouseHandlingX()	{return mouseHandlingX;}
+	bool GetMouseHandlingY()	{return mouseHandlingY;}
+	
 	ScatterDraw& SetDataSource_Internal(bool copy = true) {
 		for (int i = 0; i < series.GetCount(); ++i)
 			series[i].SetDataSource_Internal(copy);
@@ -759,6 +764,8 @@ public:
 				("legendFillColor", legendFillColor)
 				("legendBorderColor", legendBorderColor)
 				("series", series)
+				("mouseHandlingX", mouseHandlingX)
+				("mouseHandlingY", mouseHandlingY)
 			;
 			if (json.IsLoading()) {
 				labelsChanged = true;
@@ -897,7 +904,7 @@ protected:
 	template<class T>
 	void Plot(T& w, const Size &size, int scale);	
 	template<class T>
-	bool PlotTexts(T& w, const Size &size, int scale);
+	bool PlotTexts(T& w, const Size &size, int scale, bool boldX = false, bool boldY = false);
 		
 	void AdjustMinUnitX();
 	void AdjustMinUnitY();
@@ -906,6 +913,14 @@ protected:
 	bool PointInPlot(Point &pt);
 	bool PointInBorder(Point &pt);
 	bool PointInLegend(Point &pt);
+	
+	Upp::Index<ScatterDraw *> linkedCtrls;
+	ScatterDraw *linkedMaster;
+	
+	void ChangeMouseHandlingX()								{mouseHandlingX = !mouseHandlingX;}
+	void ChangeMouseHandlingY()								{mouseHandlingY = !mouseHandlingY;}
+	
+	bool mouseHandlingX, mouseHandlingY;
 	
 private:
 	Size size;		// Size to be used for all but screen painting
@@ -920,9 +935,6 @@ private:
 	bool labelsChanged;
 	bool stacked;
 	bool serializeFormat;
-	
-	Upp::Index<ScatterDraw *> linkedCtrls;
-	ScatterDraw *linkedMaster;
 };
 
 template <class T>
@@ -944,7 +956,7 @@ void ScatterDraw::SetDrawing(T& w, const Size& size, int scale, bool ctrl)
 }
 
 template <class T>
-bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
+bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale, bool boldX, bool boldY)
 {
 	if(titleHeight > 0) {
 		Upp::Font fontTitle6;
@@ -965,8 +977,14 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	Upp::Font fontLabel;
 	fontLabel = labelsFont;
 	fontLabel.Height(scale*labelsFont.GetHeight());
-	Upp::Font italicLabel = fontLabel;
-	italicLabel.Italic();
+	Upp::Font fontX = fontLabel;
+	if (boldX)
+		fontX.Bold();
+	Upp::Font fontY = fontLabel;
+	if (boldY)
+		fontY.Bold();
+	Upp::Font fontY2 = fontY;
+	fontY2.Italic();
 	
 	if (labelsChanged) {
 		xLabel = xLabel_base;
@@ -1001,12 +1019,12 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 		}						
 		labelsChanged = false;	
 	}
-	Size lx  = GetTextSize(xLabel, 	fontLabel);
-	Size ly  = GetTextSize(yLabel, 	fontLabel);
-	Size ly2 = GetTextSize(yLabel2, italicLabel);
-	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontLabel, labelsColor);
-	DrawText(w, scale*(2 - hPlotLeft), (plotH + ly.cx)/2.,  900, yLabel,  fontLabel, labelsColor);
-	DrawText(w, scale*(size.cx - 2) - ly2.cy - hPlotLeft, (plotH + ly2.cx)/2., 900, yLabel2, italicLabel, labelsColor);
+	Size lx  = GetTextSize(xLabel, 	fontX);
+	Size ly  = GetTextSize(yLabel, 	fontY);
+	Size ly2 = GetTextSize(yLabel2, fontY2);
+	DrawText(w, (plotW - lx.cx)/2., plotH + scale*(vPlotBottom - 2) - lx.cy, 0, xLabel, fontX, labelsColor);
+	DrawText(w, scale*(2 - hPlotLeft), (plotH + ly.cx)/2.,  900, yLabel,  fontY, labelsColor);
+	DrawText(w, scale*(size.cx - 2) - ly2.cy - hPlotLeft, (plotH + ly2.cx)/2., 900, yLabel2, fontY2, labelsColor);
 
 	drawXReticle &=  (xRange != 0 && xMajorUnit != 0);
 	drawYReticle &=  (yRange != 0 && yMajorUnit != 0);
@@ -1014,7 +1032,15 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 	
 	Upp::Font standard6 = GetStdFont();
 	standard6.Height(scale*GetStdFont().GetHeight());
-	
+	Upp::Font fontXNum = standard6;
+	if (boldX)
+		fontXNum.Bold();
+	Upp::Font fontYNum = standard6;
+	if (boldY)
+		fontYNum.Bold();
+	Upp::Font fontY2Num = fontYNum;
+	fontY2Num.Italic();
+		
 	if (drawXReticle)
 		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) {
 			w.DrawLine(fround(plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit)), plotH,   
@@ -1033,12 +1059,10 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 			for (int ii = 0; ii < texts.GetCount(); ++ii) {
 				int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
 				DrawText(w, plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit) - scale*sizes[ii].cx/2., 
-							plotH + scale*(4 + ii*cy), 0, texts[ii], standard6, axisColor);
+							plotH + scale*(4 + ii*cy), 0, texts[ii], fontXNum, axisColor);
 			}
 		}
 
-	Upp::Font italic = standard6;
-	italic.Italic();
 	if (drawYReticle)
 		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			int reticleY = fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit));
@@ -1052,7 +1076,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 			else
 				gridLabelY = VariableFormatY(gridY);
 			int dx = scale*GetTextSize(gridLabelY, GetStdFont()).cx;
-			DrawText(w, -dx - scale*6, reticleY - scale*8, 0, gridLabelY, standard6, axisColor);
+			DrawText(w, -dx - scale*6, reticleY - scale*8, 0, gridLabelY, fontYNum, axisColor);
 			if (drawY2Reticle) {
 				double gridY2 = (gridY - yMin)/yRange*yRange2 + yMin2;
 				String gridLabelY2;
@@ -1060,7 +1084,7 @@ bool ScatterDraw::PlotTexts(T& w, const Size &size, int scale)
 					cbModifFormatY2(gridLabelY2, i, gridY2);
 				else
 					gridLabelY2 = VariableFormatY2(gridY2);
-				DrawText(w, plotW + scale*10, reticleY - scale*8, 0, gridLabelY2, italic, axisColor);
+				DrawText(w, plotW + scale*10, reticleY - scale*8, 0, gridLabelY2, fontY2Num, axisColor);
 			}
 		}
 	
