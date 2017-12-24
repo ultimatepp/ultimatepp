@@ -245,7 +245,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 			FileStream out(script, FileStream::CREATE, 0777);
 			out << "#!/bin/sh\n"
 			    << cmdline << '\n'
-			    << "echo \"<--- Finished, press enter to close the window --->\"\nread dummy\n";
+			    << "echo \"<--- Finished, press [ENTER] to close the window --->\"\nread dummy\n";
 			cmdline = LinuxHostConsole + " sh " + script;
 		}
 	}
