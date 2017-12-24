@@ -28,8 +28,8 @@ topic "Roadmap";
 [s2; Roadmap&]
 [s24; Current release&]
 [s3; 2017.2 (rev 11540) (Dec 2017)&]
-[s5; Core&]
-[s5;l160;i150;O0; New AsyncWork class `- U`+`+ future`-alike tool&]
+[s22; Core&]
+[s5;l160;i150;O0; New [* AsyncWork ]class `- U`+`+ future`-alike tool&]
 [s5;l160;i150;O0; CoWork: Exception propagation from worker threads, 
 job cancellation support.&]
 [s5;l160;i150;O0; Bits class optimized, it is now possible to set 
@@ -38,11 +38,11 @@ multiple bits (count parameter)&]
 [s5;l160;i150;O0; UTF`-32 support functions, UnicodeCompose and UnicodeDecompose 
 functions, support for UTF16 surrogate pairs&]
 [s5;l160;i150;O0; DeleteFolderDeep now deletes symlinks&]
-[s5;l160;i150;O0; MakeOne function (alternative to One`::Create)&]
+[s5;l160;i150;O0; [* MakeOne ]function (alternative to One`::Create)&]
 [s5;l160;i150;O0; LoadFromFile, StoreToFile `- Event variant&]
-[s5;l160;i150;O0; ReverseRange and SortedRange&]
+[s5;l160;i150;O0; [* ReverseRange ]and [* SortedRange]&]
 [s5;l160;i150;O0; Server Name Indicator support in Socket and HttpRequest&]
-[s5;l160;i150;O0; SSL1.1 API support&]
+[s5;l160;i150;O0; [* SSL1.1] API support&]
 [s5;l160;i150;O0; RegisterGlobalSerialize&]
 [s5; &]
 [s22; GUI programming&]
@@ -67,27 +67,28 @@ is not normal&]
 [s22; TheIDE&]
 [s5;l192;i150;O0; Improved debugging of console applications with 
 MinGW&]
-[s5;l192;i150;O0; MacroManager&]
-[s5;l192;i150;O0; Explicit Go to line.. operation (in addition to 
-Navigator)&]
+[s5;l192;i150;O0; Debugging with GDB is now much more stable&]
+[s5;l192;i150;O0; [* Macro manager]&]
+[s5;l192;i150;O0; Explicit `"Go to line.. `"operation (in addition 
+to Navigator)&]
 [s5;l192;i150;O0; BRC now supports LZ4, LZMA and Zstd compression&]
 [s5;l192;i150;O0; File comparison tool improved&]
 [s5;l192;i150;O0; Directory comparison now can show/filter new/modified/removed 
 files&]
-[s5;l192;i150;O0; Dark theme highlighting&]
+[s5;l192;i150;O0; [* Dark theme] highlighting&]
 [s5;l192;i150;O0; Duplicate package function&]
-[s5;l192;i150;O0; FindAll button in normal Search (finds all occurences 
-in current file)&]
+[s5;l192;i150;O0; [* `"Find all`" ]button in normal Search (finds all 
+occurrences in current file). &]
 [s5;l192;i150;O0; HexView now remembers position&]
 [s5;l192;i150;O0; Selection can be interpreted as error list&]
-[s5;l192;i150;O0; now shows the number of selected characters&]
-[s5;l192;i150;O0; tab size now possible on per`-file basis&]
+[s5;l192;i150;O0; TheIDE now shows the number of selected characters&]
+[s5;l192;i150;O0; Tab size now possible on per`-file basis&]
 [s5;l192;i150;O0; Repository synchronize refactored, now supports 
 both svn and git&]
 [s5;l192;i150;O0; Layout visgen improvements&]
-[s5;l192;i150;O0; theide now supports Visual Studio 2017 C`+`+ compiler 
-auto setup&]
-[s5;l192;i150;O0; MS build tools autosetup&]
+[s5;l192;i150;O0; TheIDE  now supports [* Visual Studio 2017] C`+`+ 
+compiler auto setup&]
+[s5;l192;i150;O0; MS build tools auto setup&]
 [s22; 3rd party modules&]
 [s5;l192;i150;O0; MinGW 64 updated to GCC`-7.2.0&]
 [s5;l192;i150;O0; OpenSSL for VC`+`+ updated to 1.0.2l&]
