@@ -2,7 +2,7 @@ topic "Historical roadmap";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [i288;O9;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;b17;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -101,7 +101,7 @@ TheIDE and UMK from tarball (POSIX environment). Compilation
 on multiple cores is possible with `"`-j`" option.&]
 [s5;l160;i150;O0; Documentation improvements.&]
 [s5;l160;i150;O0; Bug fixes in various areas.&]
-[s3; &]
+[s0; &]
 [s3; 2015.2 (rev 9251)[3  (Dec 2015)]&]
 [s5; The main focus of this release was [^topic`:`/`/ide`/app`/Assist`$en`-us^ C`+`+ 
 parser and Assist`+`+ features]. and [^topic`:`/`/ide`/app`/AndroidBuilder`$en`-us^ A
@@ -149,133 +149,129 @@ there is theide32.exe).&]
 [s5;l160;i150;O0; There is once again `'[* mingw]`' variant which is 
 coupled with TDM64 release of mingw`-w64.&]
 [s0;*_4 &]
-[s0; [*_4 2015.1 (rev 8227)][*3  (Mar 2015)]&]
-[s0;4 &]
-[s0; [* Core]&]
-[s0;* &]
-[s0;i150;O0; U`+`+ abandoned `"default pick`" semantics for containers. 
-The transfer semantics now has to be specified explicitly, either 
-as `'[* pick]`' or `'[* clone]`' (this is enforced in C`+`+11 mode, 
-in legacy mode old behaviour is maintained and pick/clone are 
-optional).&]
-[s0;i150;O0; New containers, based on fast`-insertion arrays: [* InVector, 
-InArray, SortedIndex, SortedVectorMap, SortedArrayMap]. SortedIndex, 
-SortedVectorMap and SortedArrayMap provide binary searches, while 
-maintaining random access to the array, with performance comparable 
-to binary tree based containers (e.g. std`::map).&]
-[s0;i150;O0; New [* Core/POP3] package `- support for retrieving emails 
-form POP3 servers.&]
-[s0;i150;O0; Initial round of C`+`+11 support (lambda callbacks, 
+[s3; 2015.1 (rev 8227)[3  (Mar 2015)]&]
+[s23; Core&]
+[s5;l160;i150;O0; U`+`+ abandoned `"default pick`" semantics for 
+containers. The transfer semantics now has to be specified explicitly, 
+either as `'[* pick]`' or `'[* clone]`' (this is enforced in C`+`+11 
+mode, in legacy mode old behaviour is maintained and pick/clone 
+are optional).&]
+[s5;l160;i150;O0; New containers, based on fast`-insertion arrays: 
+[* InVector, InArray, SortedIndex, SortedVectorMap, SortedArrayMap]. 
+SortedIndex, SortedVectorMap and SortedArrayMap provide binary 
+searches, while maintaining random access to the array, with 
+performance comparable to binary tree based containers (e.g. 
+std`::map).&]
+[s5;l160;i150;O0; New [* Core/POP3] package `- support for retrieving 
+emails form POP3 servers.&]
+[s5;l160;i150;O0; Initial round of [* C`+`+11] support (lambda callbacks, 
 minor fixes)&]
-[s0;i150;O0; A set of small utility functions [* findarg], [* decode], 
+[s5;l160;i150;O0; A set of small utility functions [* findarg], [* decode], 
 [* min]/[* max] now supporting more arguments. [* SplitTo ]and [* Merge] 
 for splitting/merging strings.&]
-[s0;i150;O0; [* InFilterStream], [* OutFilterStream] classes that can 
+[s5;l160;i150;O0; InFilterStream, OutFilterStream classes that can 
 provide some sort of processing (e.g. compression) to regular 
 streams.&]
-[s0;i150;O0; New Date related functions [* EasterDay], [* GetMonths], 
+[s5;l160;i150;O0; New Date related functions [* EasterDay], [* GetMonths], 
 [* GetWeek], [* GetWeekDate].&]
-[s0;i150;O0; MIME / fileextension mapping functions [* FileExtToMIME 
+[s5;l160;i150;O0; MIME / fileextension mapping functions [* FileExtToMIME 
 ]and [* MIMEToFileExt].&]
-[s0;i150;O0; Some ARMv7 related optimization (unaligned access, byte 
-swaps).&]
-[s0;i150;O0; [* SpinLock] class.&]
-[s0;i150;O0; Stream optimization methods [* GetPtr], [* PutPtr], [* GetSzPtr] 
-provide safe access to Stream internal buffer.&]
-[s0;i150;O0; String/WString`::[* Find](const String`&) significantly 
+[s5;l160;i150;O0; Some [* ARMv7] related optimization (unaligned access, 
+byte swaps).&]
+[s5;l160;i150;O0; [* SpinLock] class.&]
+[s5;l160;i150;O0; Stream optimization methods [* GetPtr], [* PutPtr], 
+[* GetSzPtr] provide safe access to Stream internal buffer.&]
+[s5;l160;i150;O0; String/WString`::[* Find](const String`&) significantly 
 speed optimized.&]
-[s0;i150;O0; [* Value] invalid casts now throwing exception [* ValueTypeError] 
+[s5;l160;i150;O0; Value invalid casts now throwing exception ValueTypeError 
 instead of panic.&]
-[s0;i150;O0; [* WebSocket] class.&]
-[s0;i150;O0; `[[* Stable]`][* SortBy]`[[* Keys]`|[* Values]`] functions for 
-sorting VectorMap, ArrayMap.&]
-[s0;i150;O0; [* plugin]/[* lz4 ]`- adapted fast compression library&]
-[s0;i150;O0; [* plugin]/[* lzma ]`- adapted high ratio compression library&]
-[s0;i150;O0; [* plugin]/[* glew] `- popular OpenGL utility library adapted 
-as package&]
-[s0; &]
-[s0; [* GUI programming `& graphics]&]
-[s0;* &]
-[s0;i150;O0; [* Gtk ]backend (U`+`+ now using Gtk for host platform 
+[s5;l160;i150;O0; [* WebSocket] class.&]
+[s5;l160;i150;O0; `[[* Stable]`][* SortBy]`[[* Keys]`|[* Values]`] functions 
+for sorting VectorMap, ArrayMap.&]
+[s5;l160;i150;O0; [* plugin/lz4] `- adapted fast compression library&]
+[s5;l160;i150;O0; [* plugin/lzma] `- adapted high ratio compression 
+library&]
+[s5;l160;i150;O0; [* plugin/glew] `- popular OpenGL utility library 
+adapted as package&]
+[s23; GUI programming `& graphics&]
+[s5;l160;i150;O0; [* GTK backend] (U`+`+ now using Gtk for host platform 
 interface)&]
-[s0;i150;O0; [* EditDateDlg], [* EditNumber ]simple function for entering 
-single value (equivalent to EditText)&]
-[s0;i150;O0; ArrayCtrl new methods to add/retrieve ValueMaps and 
-ValueArrays, new [* CreateCtrl]<T> method.&]
-[s0;i150;O0; LineEdit heavily optimized to be able to work with huge 
-files (>100MB).&]
-[s0;i150;O0; LineEdit now able to work with [* rectangular selections.]&]
-[s0;i150;O0; [* DDARasterizer] and [* SDraw] are new tools providing 
+[s5;l160;i150;O0; [* EditDateDlg], [* EditNumber] simple function for 
+entering single value (equivalent to EditText)&]
+[s5;l160;i150;O0; ArrayCtrl new methods to add/retrieve ValueMaps 
+and ValueArrays, new [* CreateCtrl]<T> method.&]
+[s5;l160;i150;O0; LineEdit heavily optimized to be able to work with 
+huge files (>100MB).&]
+[s5;l160;i150;O0; LineEdit now able to work with [* rectangular selections.]&]
+[s5;l160;i150;O0; [* DDARasterizer] and [* SDraw ]are new tools providing 
 Draw with minimal host platform support (only two operations, 
 paint Image and paint colored rectangle, are required).&]
-[s0;i150;O0; Image rescaling now supports varios filters, like bicubic 
-or lanczos.&]
-[s0;i150;O0; AttrText is now rich comparable Value: it is now possible 
-to sort ArrayCtrl by AttrText filled columns.&]
-[s0;i150;O0; [* GLDraw] `- Draw implemented using OpenGL (ES).&]
-[s0;i150;O0; [* SVG parser] (to Painter interface).&]
-[s0;i150;O0; [* plugin]/[* ppm ]`- trivial image format support.&]
-[s0;i150;O0; [* RichText]/RichEdit [* header]/[* footer ]support, QTF now 
-using BASE64 for binary data (instead of 7`-bit raw encoding).&]
-[s0;i150;O0; [* Turtle] is another web framework of U`+`+ `- this one 
-allows to convert existing GUI applications into Web application: 
-simple javascript terminal connects to server where GUI application 
+[s5;l160;i150;O0; Image rescaling now supports varios filters, like 
+bicubic or lanczos.&]
+[s5;l160;i150;O0; AttrText is now rich comparable Value: it is now 
+possible to sort ArrayCtrl by AttrText filled columns.&]
+[s5;l160;i150;O0; [* GLDraw] `- Draw implemented using OpenGL (ES).&]
+[s5;l160;i150;O0; [* SVG parser] (to Painter interface).&]
+[s5;l160;i150;O0; [* plugin/ppm] `- trivial image format support.&]
+[s5;l160;i150;O0; [* RichText/RichEdit] header/footer support, QTF 
+now using BASE64 for binary data (instead of 7`-bit raw encoding).&]
+[s5;l160;i150;O0; [* Turtle ]is another web framework of U`+`+ `- this 
+one allows to convert existing GUI applications into Web application: 
+simple Java Script terminal connects to server where GUI application 
 runs.&]
-[s0;i150;O0; [* ScatterDraw/ScatterCtrl] `- Added legend table, linked 
-scroll controls, units, data fitting to equations, run time user 
-equations, zoom window, improved text drawing, huge datasets 
-handling and key/mouse handling.&]
-[s0;i150;O0; X11 backend: Multimonitor support, removed flickering 
+[s5;l160;i150;O0; [* ScatterDraw/ScatterCtrl] `- Added legend table, 
+linked scroll controls, units, data fitting to equations, run 
+time user equations, zoom window, improved text drawing, huge 
+datasets handling and key/mouse handling.&]
+[s5;l160;i150;O0; X11 backend: Multimonitor support, removed flickering 
 when opening window&]
-[s0;i150;O0; [* Error]`[[* OK]`|[* Cancel]`|[* Yes]`|[* No]...`] `- new Prompt 
+[s5;l160;i150;O0; [* Error`[OK`|Cancel`|Yes`|No...`]] `- new Prompt 
 variants with Error decorations&]
-[s0; &]
-[s0; [* Sql]&]
-[s0; &]
-[s0;i150;O0; New variants of Insert/Select/Update commands (now roughly 
-supporting all important combinations of SQL standard).&]
-[s0;i150;O0; [* SqlSetFrom ]functions creates a SqlSet from any container.&]
-[s0;i150;O0; S`_ structures refactored, now provide an improved interface 
-with better introspection.&]
-[s0;i150;O0; Sql console redesigned.&]
-[s0; &]
-[s0; [* TheIDE]&]
-[s0;* &]
-[s0;i150;O0; Win64 PDB (Visual C`+`+ compiled code) debugger.&]
-[s0;i150;O0; Find/replace GUI refactored, added support for incremental 
-finds, added regexp support.&]
-[s0;i150;O0; Block replace now has grep`-like feature to remove matching/non`-matchin
-g lines (instead of replacing matches)&]
-[s0;i150;O0; Case insensitive replace now has `"mimic case`" option 
-(mimics the case of first and next characters, so replacing `"vector`" 
-`-> `"array`", when match is `"Vector`", result is `"Array`").&]
-[s0;i150;O0; Compilation errors now parsed and displayed nicely.&]
-[s0;i150;O0; Assist`+`+ context goto (Alt`+J) now supports local 
+[s23; Sql&]
+[s5;l160;i150;O0; New variants of Insert/Select/Update commands (now 
+roughly supporting all important combinations of SQL standard).&]
+[s5;l160;i150;O0; SqlSetFrom functions creates a SqlSet from any 
+container.&]
+[s5;l160;i150;O0; S`_ structures refactored, now provide an improved 
+interface with better introspection.&]
+[s5;l160;i150;O0; Sql console redesigned.&]
+[s23; TheIDE&]
+[s5;l160;i150;O0; Win64 PDB (Visual C`+`+ compiled code) debugger.&]
+[s5;l160;i150;O0; Find/replace GUI refactored, added support for 
+incremental finds, added regexp support.&]
+[s5;l160;i150;O0; Block replace now has grep`-like feature to remove 
+matching/non`-matching lines (instead of replacing matches)&]
+[s5;l160;i150;O0; Case insensitive replace now has `"mimic case`" 
+option (mimics the case of first and next characters, so replacing 
+`"vector`" `-> `"array`", when match is `"Vector`", result is 
+`"Array`").&]
+[s5;l160;i150;O0; Compilation errors now parsed and displayed nicely.&]
+[s5;l160;i150;O0; Assist`+`+ context goto (Alt`+J) now supports local 
 variables (goes to declaration).&]
-[s0;i150;O0; Layout/Icon designers now have find Search filter.&]
-[s0;i150;O0; Ide now displays long numbers with thousands separators.&]
-[s0;i150;O0; Syntax highlighting refactored, added highlighting of 
-HTML, XML, .log files, .xsd files, .diff files, C`+`+11 keywords 
+[s5;l160;i150;O0; Layout/Icon designers now have find Search filter.&]
+[s5;l160;i150;O0; Ide now displays long numbers with thousands separators.&]
+[s5;l160;i150;O0; Syntax highlighting refactored, added highlighting 
+of HTML, XML, .log files, .xsd files, .diff files, C`+`+11 keywords 
 highlighted, TODO and FIXME comments highlighted&]
-[s0;i150;O0; Directory comparison tool.&]
-[s0;i150;O0; Simple Json/XML viewers.&]
-[s0;i150;O0; Comment/Uncomment block.&]
-[s0;i150;O0; Selected identifier is now highlighted in all the text.&]
-[s0;i150;O0; Current line is highlighted with faint lines.&]
-[s0;i150;O0; Precompiled headers support for release mode (BLITZ 
+[s5;l160;i150;O0; Directory comparison tool.&]
+[s5;l160;i150;O0; Simple Json/XML viewers.&]
+[s5;l160;i150;O0; Comment/Uncomment block.&]
+[s5;l160;i150;O0; Selected identifier is now highlighted in all the 
+text.&]
+[s5;l160;i150;O0; Current line is highlighted with faint lines.&]
+[s5;l160;i150;O0; Precompiled headers support for release mode (BLITZ 
 still far better for debug builds).&]
-[s0;i150;O0; Insert file path (plain or as CString) function.&]
-[s0;i150;O0; Layout code generator now can place double`-quotes around 
-elements, generate handlers for buttons.&]
-[s0;i150;O0; Layout designer now can sort widgets based on their 
+[s5;l160;i150;O0; Insert file path (plain or as CString) function.&]
+[s5;l160;i150;O0; Layout code generator now can place double`-quotes 
+around elements, generate handlers for buttons.&]
+[s5;l160;i150;O0; Layout designer now can sort widgets based on their 
 graphical position.&]
-[s0;i150;O0; Code navigator is completely redesigned.&]
-[s0;i150;O0; Icon designer supports various rescaling filters and 
-new icon smoothing function.&]
-[s0;i150;O0; Ide now has line duplicate feature (CTRL`+D).&]
+[s5;l160;i150;O0; Code navigator is completely redesigned.&]
+[s5;l160;i150;O0; Icon designer supports various rescaling filters 
+and new icon smoothing function.&]
+[s5;l160;i150;O0; Ide now has line duplicate feature (CTRL`+D).&]
 [s0; &]
-[s0;3 &]
-[s0; [*_4 5485][*3  (Oct 2012)]&]
+[s3; 5485[3  (Oct 2012)]&]
 [s0;3 &]
 [s0; The focus of this release was server programming. The main new 
 feature is `"[* Skylark]`", lean and mean [^http`:`/`/www`.ultimatepp`.org`/srcdoc`$Skylark`$Tutorial`$en`-us`.html^ U
@@ -366,10 +362,7 @@ functions.&]
 [s0;i150;O0; New find in files dialog option to filter files according 
 to their `'read only`' status.&]
 [s0;4 &]
-[s0;4 &]
-[s0; [*_3 Previous releases]&]
-[s0; &]
-[s0; [*_4 4193][*3  (24 Nov 2011)]&]
+[s3; 4193[3  (24 Nov 2011)]&]
 [s0;* &]
 [s0; `"Rainbow`" technology decouples U`+`+ GUI from host platform. 
 It is now possible to develop new GUI&]
@@ -439,7 +432,7 @@ are now replaced with actual parameters.&]
 manipulation and PDF digital signing.&]
 [s0;#i150;O0; HttpClient now supports PUT method.&]
 [s0;3 &]
-[s0; [*_4 3211][*3  (16 Feb 2011)]&]
+[s3; 3211[3  (16 Feb 2011)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; SSE2 as Option in main config, templates now include 
@@ -519,7 +512,7 @@ PointCtrl, PopUpC, RectCtrl, Styler, ValueCtrl, Docking , TabBar,
 SysExec, Protect, Updater, SysExecGui, OfficeAutomation, Dispatcher, 
 Styler, Cypher, ProductVersion, Uniq, SplashSV and HelpViewer.&]
 [s0;4 &]
-[s0; [*_4 2791][*3  (18 Oct 2010)]&]
+[s3; 2791[3  (18 Oct 2010)]&]
 [s0;*3 &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; Now it has direct support for Windows SDK 7.1.&]
@@ -632,7 +625,7 @@ recipients.&]
 [s0; UltimateBook&]
 [s0;i150;O0; Updated doc &]
 [s0;4 &]
-[s0; [*_4 2467][*3  (10 Jun 2010)]&]
+[s3; 2467[3  (10 Jun 2010)]&]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; Now has QTF designer. &]
@@ -668,7 +661,7 @@ refresh.&]
 [s0;i150;O0; ExpandFrame/ExpanderCtrl: Fixes fopr horizontal alignment.&]
 [s0;i150;O0; AESStream: Added SHA2 functions.&]
 [s0;4 &]
-[s0; [*_4 2361][*3  (4 May 2010)]&]
+[s3; 2361[3  (4 May 2010)]&]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; Packages now sorted by directory closeness to main package 
@@ -700,7 +693,7 @@ instead of last&]
 [s0; Uppsrc:&]
 [s0; New IT`-IT translation&]
 [s0;4 &]
-[s0; [*_4 2232][*3  (17 March 2010)]&]
+[s3; 2232[3  (17 March 2010)]&]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; Sorting of package has been improved, placing project 
@@ -725,7 +718,7 @@ reference to slave instead of index.&]
 [s0; RichText:&]
 [s0;i150;O0; RichTextView now have `"ShrinkOversizedObjects`" option.&]
 [s0;4 &]
-[s0; [*_4 2070][*3  (16 February 2010)]&]
+[s3; 2070[3  (16 February 2010)]&]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; User interface for Find and Replace was significantly 
@@ -750,7 +743,7 @@ added.&]
 [s0; Draw:&]
 [s0;i150;O0; The search for missing glyphs (i18n issue) was optimized.&]
 [s0;4 &]
-[s0; [*_4 1952][*3  (27 January 2010)]&]
+[s3; 1952[3  (27 January 2010)]&]
 [s0; &]
 [s0; [* TheIde]&]
 [s0;i150;O0; Improved installation in Win32 with support for the 
@@ -776,7 +769,7 @@ in Win32.&]
 [s0;i150;O0; Containers now have a new debugging utility to resolve 
 pick semantic errors.&]
 [s0;4 &]
-[s0; [*_4 1824][*3  (21 December 2009)]&]
+[s3; 1824[3  (21 December 2009)]&]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; Autosetup now recognizes Win32 SDK 7.0.&]
@@ -795,7 +788,7 @@ complement Core and CtrlLib.&]
 &]
 [s0;i150;O0; SysInfo: Improved Unicode support.&]
 [s0;4 &]
-[s0; [*_4 1713][*3  (30 November 2009)]&]
+[s3; 1713[3  (30 November 2009)]&]
 [s0; &]
 [s0; [* TheIDE]&]
 [s0;i150;O0; .t files are now saved with strings converted by escaping 
@@ -839,7 +832,7 @@ the content.&]
 [s0;i150;O0; New functions to SysInfo&]
 [s0; Urr `- UDP request`-response protocol added &]
 [s0;4 &]
-[s0; [*_4 1659][*3  (26 October 2009)]&]
+[s3; 1659[3  (26 October 2009)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0;* &]
@@ -862,7 +855,7 @@ Assist`+`+ package check when inserting / removing separators
 and auxiliary package contents&]
 [s0; Package selector now shows app icons if available &]
 [s0;4 &]
-[s0; [*_4 1607][*3  (07 October 2009)]&]
+[s3; 1607[3  (07 October 2009)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0; &]
@@ -879,7 +872,7 @@ insertion)&]
 [s0;i150;O0; CtrlCore: RegisterSystemHotKey (system`-wide hotkey) 
 &]
 [s0;4 &]
-[s0; [*_4 1579][*3  (23 September 2009)]&]
+[s3; 1579[3  (23 September 2009)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0;* &]
@@ -891,7 +884,7 @@ hull calculation (ConvexHullOrder)&]
 [s0;i150;O0; Draw, plugin/tif: Added GetActivePage support&]
 [s0;i150;O0; Fixed a lot of minor bugs&]
 [s0;*4 &]
-[s0; [*_4 1517][*3  (19 August 2009)]&]
+[s3; 1517[3  (19 August 2009)]&]
 [s0; &]
 [s0; Major overhaul graphics infrastructure is finished, U`+`+ is 
 now capable of headless drawing operations&]
@@ -915,7 +908,7 @@ data to screen&]
 [s0;i150;O0; Added package internal include paths&]
 [s0; Ctrl`+mouse wheel changes font size&]
 [s0;*4 &]
-[s0; [*_4 1314][*3  (17 June 2009)]&]
+[s3; 1314[3  (17 June 2009)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0; &]
@@ -935,7 +928,7 @@ data to screen&]
 [s0;i150;O0; FileTabs now persistent&]
 [s0;i150;O0; Non`-fixed pitch fonts allowed in editor (used as fixed...)&]
 [s0;4 &]
-[s0; [*_4 1254][*3  (03 June 2009)]&]
+[s3; 1254[3  (03 June 2009)]&]
 [s0;*4 &]
 [s0; [* Library]&]
 [s0; &]
@@ -950,7 +943,7 @@ SqlBinary enable for PGSQL) &]
 selection of more understandable options, main packages now displayed 
 bold&]
 [s0;4 &]
-[s0; [*_4 1205][*3  (18 May 2009)]&]
+[s3; 1205[3  (18 May 2009)]&]
 [s0;*4 &]
 [s0; [* Library]&]
 [s0; &]
@@ -966,7 +959,7 @@ bold&]
 [s0;i150;O0; Ctrl`+Click onto symbol jumps to its definition &]
 [s0;i150;O0; Package selector now shows the nest&]
 [s0;*4 &]
-[s0; [*_4 1126][*3  (5 May 2009)]&]
+[s3; 1126[3  (5 May 2009)]&]
 [s0;*4 &]
 [s0;%- [* Library]&]
 [s0;*%- &]
@@ -987,7 +980,7 @@ Register &]
 [s0;i150;O0; Refactored CodeNavigator, search symbol (Ctrl`+Q) now 
 copies current id search field &]
 [s0;*4 &]
-[s0; [%-*_4 1096][*3  (26 April 2009)]&]
+[s3; [%- 1096][3  (26 April 2009)]&]
 [s0;*4%- &]
 [s0;%- [* Library]&]
 [s0;*%- &]
@@ -1033,7 +1026,7 @@ to expand it to if() ;&]
 [s0;i150;O0;%- Print command (of source files)&]
 [s0;i150;O0;%- Editor: ToUpper/Lower/InitCaps/SwapCase &]
 [s0;4 &]
-[s0; [*_4 2008.1][*3  (28 July 2008)]&]
+[s3; 2008.1[3  (28 July 2008)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0; &]
@@ -1056,7 +1049,7 @@ to expand it to if() ;&]
 window&]
 [s0;i150;O0; Help Help integrated into main window&]
 [s0;4 &]
-[s0; [*_4 2007.1][*3  (11 April 2007)]&]
+[s3; 2007.1[3  (11 April 2007)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0;* &]
@@ -1085,7 +1078,7 @@ to produce antialiased icons)&]
 [s0;i150;O0; FreeBSD port available&]
 [s0;i150;O0; Ubuntu .deb packages released&]
 [s0;4 &]
-[s0; [*_4 605][*3  (15 May 2006)]&]
+[s3; 605[3  (15 May 2006)]&]
 [s0;* &]
 [s0; [* Library]&]
 [s0;* &]
@@ -1101,7 +1094,7 @@ to produce antialiased icons)&]
 [s0;i150;O0; new Windows installer `- download size reduced by 50%&]
 [s0; &]
 [s0;*3 &]
-[s0; [*_4 602][*3  (28 February 2006)]&]
+[s3; 602[3  (28 February 2006)]&]
 [s0; &]
 [s0; [* Library]&]
 [s0;* &]
@@ -1128,7 +1121,7 @@ marked files are optimized for speed) modes&]
 [s0;i150;O0; New TheIDE command`-line mode, including compilation 
 (via umk utility)&]
 [s0;*_3 &]
-[s0; [*_4 511][*3  (20 November 2005)]&]
+[s3; 511[3  (20 November 2005)]&]
 [s0; &]
 [s0; [* U`+`+ Library]&]
 [s0; &]
