@@ -23,7 +23,7 @@ ge][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Lambda][@(0.0.255) `&]_[*@3 
 [s5;:Upp`:`:CoPartition`(const Range`&`,const Lambda`&`,int`): [@(0.0.255) template]_<[@(0.0.255) c
 lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Lambda]>_[@(0.0.255) void]_[* CoPartition]([@(0.0.255) c
 onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Lambda][@(0.0.255) `&]_[*@3 l
-ambda], [@(0.0.255) int]_[*@3 max`_chunk]_`=_[@3 2147483647]_)&]
+ambda], [@(0.0.255) int]_[*@3 max`_chunk]_`=_CO`_PARTITION`_MAX)&]
 [s2;%% Partitions a Range (possibly defined [%-*@3 begin] / [%-*@3 end] 
 pair) into several subranges, based on number of CPU cores, and 
 invokes [%-*@3 lambda] on them in parallel. [%-*@3 begin] / [%-*@3 end] 
