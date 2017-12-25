@@ -121,7 +121,7 @@ ideas]]
 ::=l0/25r0/25t0/15b0/15R0 [s0; ]
 :: [s0; ]
 ::^l8/25r8/25t8/25b8/25R(165)-1 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/download`$en`-us^ Download]&]
-[s4;i150;O0;%% [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2017`.1`/^ Cur
+[s4;i150;O0;%% [^https`:`/`/sourceforge`.net`/projects`/upp`/files`/upp`/2017`.2`/^ Cur
 rent release]: [IRELEASE; release]&]
 [s4;i150;O0;%% [^http`:`/`/www`.ultimatepp`.org`/www`$uppweb`$nightly`$en`-us`.html^ La
 test svn]: [ILATESTSVN; latestsvn]]
