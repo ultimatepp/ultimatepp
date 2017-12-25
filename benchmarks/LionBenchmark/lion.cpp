@@ -173,6 +173,7 @@ Vector<ColorPolygon> Lion()
 			dword c = p.ReadNumber(16);
 			color = Color(c >> 16, (c >> 8) & 255, c & 255);
 		}
+	RDUMP(data.GetCount());
 	return data;
 }
 

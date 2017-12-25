@@ -5,7 +5,8 @@ uses
 file
 	LionBenchmark.h,
 	lion.cpp,
-	main.cpp;
+	main.cpp,
+	info.txt;
 
 mainconfig
 	"" = "GUI MT";
