@@ -4,6 +4,7 @@ class CoWork : NoCopy {
 	struct MJob : Moveable<MJob>, Link<MJob, 2> {
 		Function<void ()> fn;
 		CoWork           *work = NULL;
+		bool              looper = false;
 	};
 	
 	enum { SCHEDULED_MAX = 2048 };
@@ -22,7 +23,7 @@ public:
 		
 		void              Free(MJob& m);
 		void              DoJob(MJob& m);
-		void              PushJob(Function<void ()>&& fn, CoWork *work);
+		void              PushJob(Function<void ()>&& fn, CoWork *work, bool looper = false);
 
 		void              InitThreads(int nthreads);
 		void              ExitThreads();
@@ -49,8 +50,12 @@ public:
 	bool               canceled;
 	std::exception_ptr exc;
 
+	void Do0(Function<void ()>&& fn, bool looper);
+
 	void Cancel0();
 	void Finish0();
+	
+	Atomic             index;
 
 // experimental pipe support
 	Mutex stepmutex;
@@ -63,11 +68,18 @@ public:
 	static void Schedule(Function<void ()>&& fn);
 	static void Schedule(const Function<void ()>& fn)         { return Schedule(clone(fn)); }
 
-	void     Do(Function<void ()>&& fn);
+	void     Do(Function<void ()>&& fn)                       { Do0(pick(fn), false); }
 	void     Do(const Function<void ()>& fn)                  { Do(clone(fn)); }
 
 	CoWork&  operator&(const Function<void ()>& fn)           { Do(fn); return *this; }
 	CoWork&  operator&(Function<void ()>&& fn)                { Do(pick(fn)); return *this; }
+	
+	void     Loop(Function<void ()>&& fn);
+	void     Loop(const Function<void ()>& fn)                { Loop(clone(fn)); }
+	int      Next()                                           { return ++index - 1; }
+
+	CoWork&  operator*(const Function<void ()>& fn)           { Loop(fn); return *this; }
+	CoWork&  operator*(Function<void ()>&& fn)                { Loop(pick(fn)); return *this; }
 
 	void Pipe(int stepi, Function<void ()>&& lambda); // experimental
 

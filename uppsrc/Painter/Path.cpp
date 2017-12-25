@@ -6,8 +6,7 @@ namespace Upp {
 
 void BufferPainter::ClearPath()
 {
-	path.type.Clear();
-	path.data.Clear();
+	path.Clear();
 	current = move = Null;
 	ccontrol = qcontrol = Pointf(0, 0);
 	ischar = false;
@@ -36,19 +35,22 @@ Pointf BufferPainter::EndPoint(const Pointf& p, bool rel)
 	return current = PathPoint(p, rel);
 }
 
-void *BufferPainter::PathAddRaw(int type, int size)
+void  BufferPainter::PathAddRaw(int type, const void *data, int size)
 {
-	int q = path.data.GetCount();
-	path.type.Add(type);
-	path.data.SetCountR(q + size);
-	return &path.data[q];
+	if(path.GetCount() == 0)
+		path.Add();
+	String& p = path.Top();
+	p.Cat(type);
+	p.Cat((char *)data, size);
 }
 
 void BufferPainter::MoveOp(const Pointf& p, bool rel)
 {
 	LLOG("@ MoveOp " << p << ", " << rel);
 	move = ccontrol = qcontrol = EndPoint(p, rel);
-	PathAdd<LinearData>(MOVE).p = move;
+	LinearData h;
+	h.p = move;
+	PathAdd(MOVE, h);
 }
 
 void BufferPainter::DoMove0()
@@ -61,16 +63,19 @@ void BufferPainter::LineOp(const Pointf& p, bool rel)
 {
 	LLOG("@ LineOp " << p << ", " << rel);
 	DoMove0();
-	PathAdd<LinearData>(LINE).p = ccontrol = qcontrol = EndPoint(p, rel);
+	LinearData h;
+	h.p = ccontrol = qcontrol = EndPoint(p, rel);
+	PathAdd(LINE, h);
 }
 
 void BufferPainter::QuadraticOp(const Pointf& p1, const Pointf& p, bool rel)
 {
 	LLOG("@ QuadraticOp " << p1 << ", " << p << ", " << rel);
 	DoMove0();
-	QuadraticData& m = PathAdd<QuadraticData>(QUADRATIC);
+	QuadraticData m;
 	qcontrol = m.p1 = PathPoint(p1, rel);
 	m.p = EndPoint(p, rel);
+	PathAdd(QUADRATIC, m);
 }
 
 void BufferPainter::QuadraticOp(const Pointf& p, bool rel)
@@ -82,10 +87,11 @@ void BufferPainter::CubicOp(const Pointf& p1, const Pointf& p2, const Pointf& p,
 {
 	LLOG("@ CubicOp " << p1 << ", " << p1 << ", " << p << ", " << rel);
 	DoMove0();
-	CubicData& m = PathAdd<CubicData>(CUBIC);
+	CubicData m;
 	m.p1 = PathPoint(p1, rel);
 	ccontrol = m.p2 = PathPoint(p2, rel);
 	m.p = EndPoint(p, rel);
+	PathAdd(CUBIC, m);
 }
 
 void BufferPainter::CubicOp(const Pointf& p2, const Pointf& p, bool rel)
@@ -122,7 +128,7 @@ void BufferPainter::DivOp()
 {
 	LLOG("@ DivOp");
 	CloseOp();
-	path.type.Add(DIV);
+	path.Add();
 }
 
 void BufferPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
@@ -133,12 +139,13 @@ void BufferPainter::CharacterOp(const Pointf& p, int ch, Font fnt)
 	PaintCharacter(*this, p, ch, fnt);
 #else
 	move = current = EndPoint(p, false);
-	CharData& m = PathAdd<CharData>(CHAR);
+	CharData m;
 	m.p = EndPoint(p, false);
 	m.ch = ch;
 	m.fnt = fnt;
 	ischar = true;
 	EvenOdd();
+	PathAdd(CHAR, m);
 #endif
 }
 

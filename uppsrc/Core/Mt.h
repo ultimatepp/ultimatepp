@@ -360,24 +360,25 @@ public:
 inline bool IsMainThread() { return Thread::IsMain(); }
 
 struct SpinLock : Moveable<SpinLock> {
-#ifdef PLATFORM_WIN32
+#ifdef COMPILER_MSC
 	volatile LONG locked;
-	
-	bool TryEnter() { return InterlockedExchange(&locked, 1) == 0; }
-	void Leave()    { InterlockedExchange(&locked, 0); }
-#endif
-#ifdef PLATFORM_POSIX
+
+	bool TryEnter() { return InterlockedCompareExchange(&locked, 1, 0) == 0; }
+	void Leave()    { _ReadWriteBarrier(); locked = 0; }
+#else
 	volatile int locked;
 	
-	bool TryEnter() { return __sync_lock_test_and_set(&locked, 1) == 0; }
+	bool TryEnter() { return  __sync_bool_compare_and_swap (&locked, 0, 1); }
 	void Leave()    { __sync_lock_release(&locked); }
 #endif
+
+	void Enter()    { while(!TryEnter()) Wait(); }
 	
-	void Enter()    { while(!TryEnter()); }
+	void Wait();
 	
 	class Lock;
 
-	SpinLock()      { locked = 0; }
+	SpinLock()         { locked = 0; }
 };
 
 class SpinLock::Lock : NoCopy {

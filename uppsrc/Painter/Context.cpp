@@ -11,6 +11,7 @@ void BufferPainter::BeginOp()
 
 void BufferPainter::EndOp()
 {
+	Finish();
 	if(attrstack.GetCount() == 0) {
 		NEVER_("Painter::End: attribute stack is empty");
 		return;
@@ -138,6 +139,7 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 	gradientn = Null;
 	
 	dopreclip = false;
+	jobcount = 0;
 }
 
 BufferPainter::BufferPainter(PainterTarget& t, double tolerance)

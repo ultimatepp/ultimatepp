@@ -107,9 +107,13 @@ void CoWork::Pool::DoJob(MJob& job)
 	if(!work)
 		return;
 	if(exc && !work->exc) {
+		work->canceled = true;
 		work->Cancel0();
 		work->exc = exc;
 	}
+	else
+	if(job.looper)
+		work->Cancel0();
 	if(--work->todo == 0) {
 		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
 		work->waitforfinish.Signal();
@@ -146,7 +150,7 @@ void CoWork::Pool::ThreadRun(int tno)
 	LLOG("CoWork thread #" << tno << " finished");
 }
 
-void CoWork::Pool::PushJob(Function<void ()>&& fn, CoWork *work)
+void CoWork::Pool::PushJob(Function<void ()>&& fn, CoWork *work, bool looper)
 {
 	ASSERT(free);
 	MJob& job = *free;
@@ -156,6 +160,7 @@ void CoWork::Pool::PushJob(Function<void ()>&& fn, CoWork *work)
 		job.LinkAfter(&work->jobs, 1);
 	job.fn = pick(fn);
 	job.work = work;
+	job.looper = looper;
 	LLOG("Adding job");
 	if(waiting_threads) {
 		LLOG("Releasing thread waiting for job, waiting threads: " << waiting_threads);
@@ -178,9 +183,10 @@ void CoWork::Schedule(Function<void ()>&& fn)
 	while(!TrySchedule(pick(fn))) Sleep(0);
 }
 
-void CoWork::Do(Function<void ()>&& fn)
+void CoWork::Do0(Function<void ()>&& fn, bool looper)
 {
-	LHITCOUNT("CoWork: Sheduling callback");
+	LHITCOUNT("CoWork: Scheduling callback");
+	LLOG("Do0, looper: " << looper << ", previous todo: " << todo);
 	Pool& p = GetPool();
 	p.lock.Enter();
 	if(!p.free) {
@@ -197,10 +203,17 @@ void CoWork::Do(Function<void ()>&& fn)
 	p.lock.Leave();
 }
 
+void CoWork::Loop(Function<void ()>&& fn)
+{
+	index = 0;
+	for(int i = 0; i < GetPoolSize(); i++)
+		Do0(clone(fn), true);
+	Finish();
+}
+
 void CoWork::Cancel0()
 {
 	LLOG("CoWork Cancel0");
-	canceled = true;
 	Pool& p = GetPool();
 	while(!jobs.IsEmpty(1)) {
 		LHITCOUNT("CoWork::Canceling scheduled Job");
@@ -232,6 +245,7 @@ void CoWork::Cancel()
 {
 	Pool& p = GetPool();
 	p.lock.Enter();
+	canceled = true;
 	Cancel0();
 	Finish0();
 	p.lock.Leave();
