@@ -27,6 +27,40 @@
 
 namespace Upp {
 
+Rasterizer::Rasterizer(int cx, int cy, bool subpixel)
+{
+	Create(cx, cy, subpixel);
+}
+
+Rasterizer::~Rasterizer()
+{
+	Free();
+}
+
+void Rasterizer::Free()
+{
+	if(cell)
+		for(int i = 0; i <= sz.cy; i++)
+			if(cell[i])
+				MemoryFree(cell[i]);
+}
+
+void Rasterizer::Create(int cx, int cy, bool subpixel)
+{
+	Free();
+
+	mx = subpixel ? 3 * 256 : 256;
+	sz.cx = cx;
+	sz.cy = cy;
+
+	cell.Alloc(sz.cy + 1); // one more for overrun
+	memset(cell, 0, sizeof(CellArray *) * (sz.cy + 1));
+
+	cliprect = Sizef(sz);
+	Init();
+	Reset();
+}
+
 void Rasterizer::Init()
 {
 	p0 = Pointf(0, 0);
@@ -36,9 +70,15 @@ void Rasterizer::Init()
 
 void Rasterizer::Reset()
 {
-	PAINTER_TIMING("Rasterizer::Reset");
 	for(int i = min_y; i <= max_y; i++)
-		cell[i].SetCount(0);
+		if(cell[i]) {
+			if(cell[i]->alloc > 11) {
+				MemoryFree(cell[i]);
+				cell[i] = NULL;
+			}
+			else
+				cell[i]->count = 0;
+		}
 	Init();
 }
 
@@ -47,28 +87,36 @@ void Rasterizer::SetClip(const Rectf& rect)
 	cliprect = rect & Sizef(sz);
 }
 
-Rasterizer::Rasterizer(int cx, int cy, bool subpixel)
+force_inline Rasterizer::CellArray *Rasterizer::AllocArray(int n)
 {
-	mx = subpixel ? 3 * 256 : 256;
-	sz.cx = /*subpixel ? 3 * cx : */cx;
-	sz.cy = cy;
-	cell.Alloc(sz.cy + 1);
-	cliprect = Sizef(sz);
-	Init();
-	Reset();
+	size_t sz = sizeof(Cell) * max(n, 8) + sizeof(CellArray);
+	CellArray *a = (CellArray *)MemoryAllocSz(sz);
+	a->alloc = int((sz - sizeof(CellArray)) / sizeof(Cell));
+	return a;
 }
 
-inline Rasterizer::Cell *Rasterizer::AddCells(int y, int n)
+force_inline Rasterizer::Cell *Rasterizer::AddCells(int y, int n)
 {
-	Vector<Cell>& v = cell[y];
-	if(v.GetAlloc() == 0) {
-		v.Reserve(16);
-		v.SetCount(n);
-		return &v[0];
+	CellArray *a = cell[y];
+	if(a) {
+		if(n + a->count <= a->alloc) {
+			Cell *c = (Cell *)(a + 1) + a->count;
+			a->count += n;
+			return c;
+		}
+		else {
+			CellArray *b = AllocArray(max(2 * a->alloc, a->count + n));
+			memcpy(b + 1, a + 1, sizeof(Cell) * a->count);
+			Cell *c = (Cell *)(b + 1) + a->count;
+			b->count = a->count + n;
+			cell[y] = b;
+			MemoryFree(a);
+			return c;
+		}
 	}
-	y = v.GetCount();
-	v.SetCount(y + n);
-	return &v[y];
+	a = cell[y] = AllocArray(n);
+	a->count = n;
+	return (Cell *)(a + 1);
 }
 
 inline void Rasterizer::RenderHLine(int ey, int x1, int y1, int x2, int y2)
@@ -309,13 +357,12 @@ void Rasterizer::Filler::End() {}
 void Rasterizer::Render(int y, Rasterizer::Filler& g, bool evenodd)
 {
 	PAINTER_TIMING("Render");
-	const Cell *c, *e;
-	if(y < min_y || y > max_y) return;
-	Vector<Cell>& cl = cell[y];
-	if(cl.GetCount() == 0) return;
-	Sort(cl);
-	c = cl;
-	e = cl.End();
+	CellArray *a = cell[y];
+	if(!a || a->count == 0)
+		return;
+	Cell *c = (Cell *)(a + 1);
+	Cell *e = c + a->count;
+	Sort(SubRange(c, e));
 	g.Start(c->x, (e - 1)->x);
 	int cover = 0;
 	while(c < e) {

@@ -62,7 +62,7 @@ void DumpDispatchMap()
 		for(int j = 0; j < DispatchMap[i].subnode.GetCount(); j++)
 			sub << DispatchMap[i].subnode.GetKey(j) << "->" << DispatchMap[i].subnode[j] << ", ";
 		LLOG(i << " " << (bool)DispatchMap[i].handler << ": " << sub);
-	}			
+	}
 }
 
 String SkylarkAppendPath__(const String& path_prefix, const String& path)

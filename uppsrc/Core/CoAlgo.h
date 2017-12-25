@@ -244,7 +244,7 @@ Vector<int> CoFindAll(const Range& r, Predicate match, int from = 0)
 			rs.Add(pick(v));
 		}
 	});
-	Sort(rs, [](const Vector<int>& a, const Vector<int>& b) { return a[0] < b[0]; });
+	CoSort(rs, [](const Vector<int>& a, const Vector<int>& b) { return a[0] < b[0]; });
 	Vector<int> result;
 	for(const auto& s : rs)
 		result.Append(s);

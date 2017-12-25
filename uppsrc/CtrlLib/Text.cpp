@@ -372,7 +372,7 @@ void TextCtrl::UnlockViewMapping()
 
 void TextCtrl::WaitView(int line, bool progress)
 {
-	if(view)
+	if(view) {
 		if(progress) {
 			LockViewMapping();
 			Progress pi("Scanning the file");
@@ -387,6 +387,7 @@ void TextCtrl::WaitView(int line, bool progress)
 		else
 			while(view && !view_all && viewlines <= line)
 				ViewLoading();
+	}
 }
 
 void TextCtrl::SerializeViewMap(Stream& s)

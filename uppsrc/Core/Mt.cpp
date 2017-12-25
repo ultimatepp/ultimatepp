@@ -627,6 +627,18 @@ LazyUpdate::LazyUpdate()
 	dirty = true;
 }
 
+void SpinLock::Wait()
+{
+	volatile int n = 0;
+	while(locked) {
+	#ifdef CPU_X86
+		_mm_pause();
+	#endif
+		if(n++ > 500)
+			Sleep(0);
+	}
+}
+
 #endif
 
 bool StartAuxThread(auxthread_t (auxthread__ *fn)(void *ptr), void *ptr)
