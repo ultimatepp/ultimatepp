@@ -17,6 +17,7 @@ Data src[16], dst[16];
 
 int count;
 
+/*
 force_inline void SSEZero16(void *t)
 {
 	_mm_storeu_si128((__m128i*)t, _mm_setzero_si128());
@@ -27,6 +28,7 @@ force_inline void SSEZero32(void *t)
 	_mm_storeu_si128((__m128i*)t, _mm_setzero_si128());
 	_mm_storeu_si128((__m128i*)t + 1, _mm_setzero_si128());
 }
+*/
 
 CONSOLE_APP_MAIN
 {
@@ -101,6 +103,12 @@ CONSOLE_APP_MAIN
 		}
 	}
 	{
+		for(int i = 0; i < 100; i++) {
+			RTIMING("Alloc/Free huge");
+			delete[] new byte[300000];
+		}
+	}
+	{
 		RTIMING("Alloc/Free large");
 		for(int i = 0; i < N; i++) {
 			delete[] new byte[3000];
@@ -124,7 +132,7 @@ CONSOLE_APP_MAIN
 			dst[i & 15].Zero();
 		}
 	}
-	{
+/*	{
 		RTIMING("SSEZero32");
 		for(int i = 0; i < N; i++) {
 			SSEZero32(&dst[i & 15]);
@@ -136,7 +144,7 @@ CONSOLE_APP_MAIN
 			SSEZero16(&dst[i & 15]);
 		}
 	}
-	{
+*/	{
 		RTIMING("Copy32");
 		for(int i = 0; i < N; i++) {
 			dst[i & 15] = src[i & 15];
@@ -184,6 +192,13 @@ CONSOLE_APP_MAIN
 		RTIMING("Divide");
 		for(int i = 0; i < N; i++) {
 			dst[i & 15].xxx = src[i & 15].xxx / n;
+		}
+	}
+	{
+		int n = Random();
+		RTIMING("Mul");
+		for(int i = 0; i < N; i++) {
+			dst[i & 15].xxx = src[i & 15].xxx * n;
 		}
 	}
 }
