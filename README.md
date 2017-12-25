@@ -22,9 +22,10 @@ U++ uses BSD license.
 
 ## Download
 
-[SourceForge](https://sourceforge.net/projects/upp/) - stables releases
-[Official site](https://www.ultimatepp.org/www$uppweb$download$en-us.html) - nightly builds
+* [SourceForge](https://sourceforge.net/projects/upp/) - stables releases
+* [Official site](https://www.ultimatepp.org/www$uppweb$download$en-us.html) - nightly builds
 
 ## U++ Resources
 
 More information about the framework, can be found on the official [site](https://ww.ultimatepp.org). Don't forget to check our rich [documentation](https://www.ultimatepp.org/www$uppweb$documentation$en-us.html).
+ 
