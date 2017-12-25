@@ -39,9 +39,8 @@ String Logger::GetCurrentTime()
 	using namespace std::chrono;
 	using days = duration<int, std::ratio_multiply<hours::period, std::ratio<24>>::type>;
 	
-	auto now = system_clock::now();
-	now += minutes(GetTimeZone());
-	auto tp = now.time_since_epoch();
+	auto tp = system_clock::now().time_since_epoch();
+	tp += minutes(GetTimeZone());
 	
 	auto d  = duration_cast<days>(tp);    tp -= d;
 	auto h  = duration_cast<hours>(tp);   tp -= h;
