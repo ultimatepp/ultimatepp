@@ -30,10 +30,6 @@ void App::DoPaint0(Painter& sw)
 	sw.Opacity(~ctrl.opacity);
 	sw.LineCap(~ctrl.linecap);
 	sw.LineJoin(~ctrl.linejoin);
-	if(ctrl.transparent)
-		sw.Clear(RGBAZero());
-	else
-		sw.Clear(White());
 	if(list.IsCursor())
 		Examples()[list.GetCursor()].example(sw);
 }
@@ -60,18 +56,23 @@ void App::Print()
 
 void App::Benchmark()
 {
-	int time;
-	int time0 = GetTickCount();
-	int n = 0;
-	for(;;) {
-		time = GetTickCount();
-		if(time - time0 > 1000) break;
-		ImageBuffer ib(800, 600);
-		BufferPainter sw(ib, ctrl.quality);
-		DoPaint(sw);
-		n++;
+	double tm[2];
+	for(int pass = 0; pass < 2; pass++) {
+		int time0 = GetTickCount();
+		int n = 0;
+		int time;
+		for(;;) {
+			time = GetTickCount();
+			if(time - time0 > 1000) break;
+			ImageBuffer ib(800, 600);
+			BufferPainter sw(ib, ctrl.quality);
+			sw.Co(pass);
+			DoPaint(sw);
+			n++;
+		}
+		tm[pass] = double(time - time0) / n;
 	}
-	PromptOK("Benchmark: " + AsString(double(time - time0) / n) + " ms");
+	PromptOK(Format("ST %.2f ms, MT %.2f ms, ST/MT %.2f", tm[0], tm[1], tm[0] / tm[1]));
 }
 
 void App::Paint(Draw& w)
@@ -83,8 +84,15 @@ void App::Paint(Draw& w)
 				w.DrawRect(x, y, 32, 32, (x ^ y) & 32 ? Color(254, 172, 120) : Color(124, 135, 253));
 	}
 	ImageBuffer ib(sz);
-	BufferPainter sw(ib, ctrl.quality);
-	DoPaint(sw);
+	{
+		BufferPainter sw(ib, ctrl.quality);
+		if(ctrl.transparent)
+			sw.Clear(RGBAZero());
+		else
+			sw.Clear(White());
+		sw.Co(ctrl.mt);
+		DoPaint(sw);
+	}
 	w.DrawImage(0, 0, ib);
 }
 
@@ -174,13 +182,13 @@ App::App() {
 	ctrl.linejoin.Add(LINEJOIN_MITER, "Miter joins");
 	ctrl.linejoin.Add(LINEJOIN_ROUND, "Round joins");
 	ctrl.linejoin.Add(LINEJOIN_BEVEL, "Bevel joins");
-	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.quality <<= ctrl.transparent <<= THISBACK(Sync);
+	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.quality <<= ctrl.transparent <<= ctrl.mt <<= THISBACK(Sync);
 	ctrl.reset <<= THISBACK(Reset);
 	ctrl.benchmark <<= THISBACK(Benchmark);
 	ctrl.print <<= THISBACK(Print);
 	Reset();
 	LoadFromFile(*this);
-	Title("Painter 2.0");
+	Title("Painter");
 }
 
 App::~App()
