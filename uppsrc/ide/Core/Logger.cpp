@@ -1,5 +1,7 @@
 #include "Logger.h"
 
+#include <chrono>
+
 using namespace Upp;
 
 Logger::Logger(LoggingLevel level, const String& tag)
@@ -34,8 +36,18 @@ void Logger::Log()
 
 String Logger::GetCurrentTime()
 {
-	Time tm = GetSysTime();
-	return Format("%02d:%02d:%02d", (int)tm.hour, (int)tm.minute, (int)tm.second);
+	using namespace std::chrono;
+	using days = duration<int, std::ratio_multiply<hours::period, std::ratio<24>>::type>;
+	
+	auto tp = system_clock::now().time_since_epoch();
+	
+	auto d  = duration_cast<days>(tp);    tp -= d;
+	auto h  = duration_cast<hours>(tp);   tp -= h;
+	auto m  = duration_cast<minutes>(tp); tp -= m;
+	auto s  = duration_cast<seconds>(tp); tp -= s;
+	auto ms = duration_cast<milliseconds>(tp);
+	
+	return Format("%02d:%02d:%02d:%03d", (int)h.count(), (int)m.count(), (int)s.count(), (int)ms.count());
 }
 
 Stream& Upp::operator<<(Stream& s, Logger::LoggingLevel level)
