@@ -1,6 +1,0 @@
-LAYOUT(Main, 400, 164)
-	ITEM(ArrayCtrl, grid, HSizePosZ(4, 4).VSizePosZ(32, 4))
-	ITEM(Label, dv___1, SetLabel(t_("Choose a Media demo")).LeftPosZ(8, 128).TopPosZ(8, 19))
-	ITEM(Button, butRun, SetLabel(t_("Run")).RightPosZ(4, 76).TopPosZ(4, 24))
-END_LAYOUT
-
