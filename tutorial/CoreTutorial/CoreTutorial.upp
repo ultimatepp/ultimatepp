@@ -46,6 +46,7 @@ file
 	CoWork.cpp,
 	Async.cpp,
 	CoPartition.cpp,
+	CoLoop.cpp,
 	Parallel.cpp,
 	Stream readonly separator,
 	Stream.cpp,

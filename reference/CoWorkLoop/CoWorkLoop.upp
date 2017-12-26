@@ -1,0 +1,11 @@
+description "Demonstrates Loop (aka operator *) method\377";
+
+uses
+	Core;
+
+file
+	CoWorkLoop.cpp;
+
+mainconfig
+	"" = "";
+
