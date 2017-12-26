@@ -76,10 +76,11 @@ public:
 	
 	void     Loop(Function<void ()>&& fn);
 	void     Loop(const Function<void ()>& fn)                { Loop(clone(fn)); }
-	int      Next()                                           { return ++index - 1; }
 
 	CoWork&  operator*(const Function<void ()>& fn)           { Loop(fn); return *this; }
 	CoWork&  operator*(Function<void ()>&& fn)                { Loop(pick(fn)); return *this; }
+
+	int      Next()                                           { return ++index - 1; }
 
 	void Pipe(int stepi, Function<void ()>&& lambda); // experimental
 
