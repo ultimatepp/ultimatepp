@@ -1,0 +1,869 @@
+make: Warning: File `/upp/uppsrc/Web/TServ/tserv.cpp' has modification time 2.9e+03 s in the future
+In file included from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/stdlib.h:140: error: syntax error before `(' token
+In file included from /usr/include/sys/types.h:133,
+                 from /usr/include/stdlib.h:433,
+                 from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/time.h:10: error: 'time_t' is used as a type, but is not
+   defined as a type.
+/usr/include/linux/time.h:16: error: 'time_t' is used as a type, but is not
+   defined as a type.
+/usr/include/linux/time.h:17: error: 'suseconds_t' is used as a type, but is
+   not defined as a type.
+In file included from /usr/include/sys/select.h:46,
+                 from /usr/include/sys/types.h:216,
+                 from /usr/include/stdlib.h:433,
+                 from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/bits/time.h:70: error: redefinition of `struct timeval'
+/usr/include/linux/time.h:15: error: previous definition of `struct timeval'
+In file included from /usr/include/sys/types.h:266,
+                 from /usr/include/stdlib.h:433,
+                 from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/bits/pthreadtypes.h:48: error: 'size_t' is used as a type, but is
+   not defined as a type.
+/usr/include/bits/pthreadtypes.h:51: error: 'size_t' is used as a type, but is
+   not defined as a type.
+In file included from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/stdlib.h:450: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:450: error: syntax error before `)' token
+/usr/include/stdlib.h:480: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:480: error: syntax error before `,' token
+/usr/include/stdlib.h:584: error: `size_t' was not declared in this scope
+/usr/include/stdlib.h:584: error: syntax error before `)' token
+/usr/include/stdlib.h:586: error: `size_t' was not declared in this scope
+/usr/include/stdlib.h:586: error: syntax error before `,' token
+/usr/include/stdlib.h:595: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:595: error: syntax error before `)' token
+In file included from /usr/include/stdlib.h:606,
+                 from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/alloca.h:33: error: `size_t' was not declared in this scope
+/usr/include/alloca.h:33: error: syntax error before `)' token
+In file included from /upp/uppsrc/Core/Core.h:206,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/stdlib.h:611: error: `size_t' was not declared in this scope
+/usr/include/stdlib.h:611: error: syntax error before `)' token
+/usr/include/stdlib.h:616: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:616: error: syntax error before `,' token
+/usr/include/stdlib.h:768: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:768: error: syntax error before `,' token
+/usr/include/stdlib.h:773: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:773: error: syntax error before `,' token
+/usr/include/stdlib.h:846: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:846: error: syntax error before `)' token
+/usr/include/stdlib.h:849: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:849: error: syntax error before `)' token
+/usr/include/stdlib.h:853: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:853: error: syntax error before `)' token
+/usr/include/stdlib.h:857: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:857: error: syntax error before `)' token
+/usr/include/stdlib.h:866: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:866: error: syntax error before `)' token
+/usr/include/stdlib.h:870: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:870: error: syntax error before `)' token
+/usr/include/stdlib.h:877: error: syntax error before `(' token
+/usr/include/stdlib.h:880: error: syntax error before `(' token
+/usr/include/stdlib.h:943: error: type specifier omitted for parameter `size_t'
+/usr/include/stdlib.h:943: error: syntax error before `)' token
+In file included from /usr/include/_G_config.h:44,
+                 from /usr/include/libio.h:32,
+                 from /usr/include/stdio.h:72,
+                 from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/gconv.h:72: error: type specifier omitted for parameter `size_t'
+/usr/include/gconv.h:72: error: syntax error before `*' token
+/usr/include/gconv.h:88: error: type specifier omitted for parameter `size_t'
+/usr/include/gconv.h:88: error: syntax error before `*' token
+/usr/include/gconv.h:97: error: type specifier omitted for parameter `size_t'
+/usr/include/gconv.h:97: error: syntax error before `*' token
+/usr/include/gconv.h:174: error: 'size_t' is used as a type, but is not defined
+   as a type.
+In file included from /usr/include/stdio.h:72,
+                 from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/libio.h:53:21: stdarg.h: No such file or directory
+In file included from /usr/include/stdio.h:72,
+                 from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/libio.h:354: error: type specifier omitted for parameter `size_t'
+/usr/include/libio.h:354: error: syntax error before `)' token
+/usr/include/libio.h:363: error: type specifier omitted for parameter `size_t'
+/usr/include/libio.h:363: error: syntax error before `)' token
+/usr/include/libio.h:475: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/libio.h:477: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/libio.h:479: error: syntax error before `(' token
+In file included from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/stdio.h:77: error: syntax error before `;' token
+In file included from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/stdio.h:286: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:286: error: syntax error before `,' token
+/usr/include/stdio.h:292: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:292: error: syntax error before `*' token
+/usr/include/stdio.h:304: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:304: error: syntax error before `)' token
+/usr/include/stdio.h:311: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:311: error: syntax error before `)' token
+/usr/include/stdio.h:339: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:339: error: syntax error before `)' token
+/usr/include/stdio.h:344: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:344: error: syntax error before `)' token
+/usr/include/stdio.h:347: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:347: error: syntax error before `)' token
+/usr/include/stdio.h:353: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:353: error: syntax error before `,' token
+/usr/include/stdio.h:357: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:357: error: syntax error before `,' token
+/usr/include/stdio.h:367: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:367: error: syntax error before `)' token
+/usr/include/stdio.h:383: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:383: error: syntax error before `)' token
+/usr/include/stdio.h:414: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:414: error: syntax error before `)' token
+/usr/include/stdio.h:421: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:421: error: syntax error before `)' token
+/usr/include/stdio.h:426: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:426: error: syntax error before `)' token
+/usr/include/stdio.h:562: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:562: error: syntax error before `*' token
+/usr/include/stdio.h:565: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:565: error: syntax error before `*' token
+/usr/include/stdio.h:575: error: type specifier omitted for parameter `size_t'
+/usr/include/stdio.h:575: error: syntax error before `*' token
+/usr/include/stdio.h:605: error: syntax error before `(' token
+/usr/include/stdio.h:611: error: syntax error before `(' token
+/usr/include/stdio.h:633: error: syntax error before `(' token
+/usr/include/stdio.h:635: error: syntax error before `(' token
+In file included from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/stdio.h:800: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/stdio.h:800: error: syntax error before `)' token
+In file included from /usr/include/stdio.h:830,
+                 from /upp/uppsrc/Core/Core.h:207,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/bits/stdio.h:34: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/bits/stdio.h:34: error: syntax error before `)' token
+/usr/include/bits/stdio.h: In function `int vprintf(...)':
+/usr/include/bits/stdio.h:36: error: `__fmt' undeclared (first use this
+   function)
+/usr/include/bits/stdio.h:36: error: (Each undeclared identifier is reported
+   only once for each function it appears in.)
+/usr/include/bits/stdio.h:36: error: `__arg' undeclared (first use this
+   function)
+/usr/include/bits/stdio.h: At global scope:
+/usr/include/bits/stdio.h:102: error: type specifier omitted for parameter `
+   size_t'
+/usr/include/bits/stdio.h:102: error: syntax error before `*' token
+/usr/include/bits/stdio.h: In function `__ssize_t getline(...)':
+/usr/include/bits/stdio.h:104: error: `__lineptr' undeclared (first use this
+   function)
+/usr/include/bits/stdio.h:104: error: `__n' undeclared (first use this
+   function)
+/usr/include/bits/stdio.h:104: error: `__stream' undeclared (first use this
+   function)
+In file included from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/upp/uppsrc/Core/Core.h:209:20: stdarg.h: No such file or directory
+In file included from /upp/uppsrc/Core/Core.h:221,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/sys/time.h: At global scope:
+/usr/include/sys/time.h:57: error: redefinition of `struct timezone'
+/usr/include/linux/time.h:20: error: previous definition of `struct timezone'
+/usr/include/sys/time.h:94: error: syntax error before numeric constant
+/usr/include/sys/time.h:108: error: redefinition of `struct itimerval'
+/usr/include/linux/time.h:402: error: previous definition of `struct itimerval'
+In file included from /usr/include/asm-x86_64/vsyscall.h:4,
+                 from /usr/include/asm/vsyscall.h:4,
+                 from /usr/include/asm-x86_64/timex.h:12,
+                 from /usr/include/asm/timex.h:4,
+                 from /usr/include/linux/timex.h:157,
+                 from /usr/include/linux/sched.h:11,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/seqlock.h: In function `void write_seqlock(seqlock_t*)':
+/usr/include/linux/seqlock.h:52: error: `spin_lock' undeclared (first use this
+   function)
+/usr/include/linux/seqlock.h:54: error: `smp_wmb' undeclared (first use this
+   function)
+/usr/include/linux/seqlock.h: In function `void write_sequnlock(seqlock_t*)':
+/usr/include/linux/seqlock.h:61: error: `spin_unlock' undeclared (first use
+   this function)
+/usr/include/linux/seqlock.h: In function `int write_tryseqlock(seqlock_t*)':
+/usr/include/linux/seqlock.h:66: error: `spin_trylock' undeclared (first use
+   this function)
+/usr/include/linux/seqlock.h: In function `unsigned int read_seqbegin(const
+   seqlock_t*)':
+/usr/include/linux/seqlock.h:79: error: `smp_rmb' undeclared (first use this
+   function)
+In file included from /usr/include/asm/system.h:4,
+                 from /usr/include/linux/jiffies.h:8,
+                 from /usr/include/linux/sched.h:12,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/asm-x86_64/system.h: At global scope:
+/usr/include/asm-x86_64/system.h:243: error: syntax error before `new'
+/usr/include/asm-x86_64/system.h: In function `long unsigned int __cmpxchg(...)
+   ':
+/usr/include/asm-x86_64/system.h:246: error: `size' undeclared (first use this
+   function)
+/usr/include/asm-x86_64/system.h:248: error: syntax error before string
+   constant
+/usr/include/asm-x86_64/system.h:254: error: syntax error before string
+   constant
+/usr/include/asm-x86_64/system.h:260: error: syntax error before string
+   constant
+/usr/include/asm-x86_64/system.h:266: error: syntax error before string
+   constant
+/usr/include/asm-x86_64/system.h:272: error: `old' undeclared (first use this
+   function)
+In file included from /usr/include/linux/sched.h:12,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/jiffies.h: At global scope:
+/usr/include/linux/jiffies.h:16: error: syntax error before `;' token
+/usr/include/linux/jiffies.h:20: error: syntax error before `)' token
+In file included from /usr/include/linux/sched.h:13,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/rbtree.h:129: error: syntax error before `new'
+In file included from /usr/include/linux/thread_info.h:20,
+                 from /usr/include/linux/sched.h:14,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/bitops.h: In function `int get_bitmask_order(unsigned int)':
+/usr/include/linux/bitops.h:78: error: `fls' undeclared (first use this
+   function)
+In file included from /usr/include/linux/cpumask.h:78,
+                 from /usr/include/linux/sched.h:15,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/bitmap.h: In function `void bitmap_zero(long unsigned int*,
+   int)':
+/usr/include/linux/bitmap.h:113: error: `BITS_PER_LONG' undeclared (first use
+   this function)
+/usr/include/linux/bitmap.h:116: error: `BITS_TO_LONGS' undeclared (first use
+   this function)
+/usr/include/linux/bitmap.h:117: error: `memset' undeclared (first use this
+   function)
+/usr/include/linux/bitmap.h: In function `void bitmap_fill(long unsigned int*,
+   int)':
+/usr/include/linux/bitmap.h:123: error: `size_t' undeclared (first use this
+   function)
+/usr/include/linux/bitmap.h:123: error: syntax error before `=' token
+/usr/include/linux/bitmap.h:124: error: `nlongs' undeclared (first use this
+   function)
+/usr/include/linux/bitmap.h:126: error: `memset' undeclared (first use this
+   function)
+/usr/include/linux/bitmap.h: In function `void bitmap_copy(long unsigned int*,
+   const long unsigned int*, int)':
+/usr/include/linux/bitmap.h:137: error: `BITS_TO_LONGS' undeclared (first use
+   this function)
+/usr/include/linux/bitmap.h:138: error: `memcpy' undeclared (first use this
+   function)
+In file included from /usr/include/linux/sched.h:15,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/cpumask.h: At global scope:
+/usr/include/linux/cpumask.h:81: error: `bits' was not declared in this scope
+/usr/include/linux/cpumask.h:81: error: invalid data member initialization
+/usr/include/linux/cpumask.h:81: error: (use `=' to initialize static data
+   members)
+/usr/include/linux/cpumask.h: In function `void __cpu_set(int, volatile
+   cpumask_t*)':
+/usr/include/linux/cpumask.h:87: error: 'volatile struct cpumask_t' has no
+   member named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpu_clear(int, volatile
+   cpumask_t*)':
+/usr/include/linux/cpumask.h:93: error: 'volatile struct cpumask_t' has no
+   member named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_setall(cpumask_t*, int)
+   ':
+/usr/include/linux/cpumask.h:99: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_clear(cpumask_t*, int)':
+/usr/include/linux/cpumask.h:105: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h: In function `int __cpu_test_and_set(int,
+   cpumask_t*)':
+/usr/include/linux/cpumask.h:114: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_and(cpumask_t*, const
+   cpumask_t*, const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:121: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:121: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:121: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_or(cpumask_t*, const
+   cpumask_t*, const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:128: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:128: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:128: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_xor(cpumask_t*, const
+   cpumask_t*, const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:135: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:135: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:135: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_andnot(cpumask_t*, const
+   cpumask_t*, const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:143: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:143: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:143: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_complement(cpumask_t*,
+   const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:150: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:150: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpus_equal(const cpumask_t*,
+   const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:157: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:157: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpus_intersects(const
+   cpumask_t*, const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:164: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:164: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpus_subset(const cpumask_t*,
+   const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:171: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h:171: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpus_empty(const cpumask_t*,
+   int)':
+/usr/include/linux/cpumask.h:177: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpus_full(const cpumask_t*,
+   int)':
+/usr/include/linux/cpumask.h:183: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpus_weight(const cpumask_t*,
+   int)':
+/usr/include/linux/cpumask.h:189: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_shift_right(cpumask_t*,
+   const cpumask_t*, int, int)':
+/usr/include/linux/cpumask.h:197: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:197: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `void __cpus_shift_left(cpumask_t*,
+   const cpumask_t*, int, int)':
+/usr/include/linux/cpumask.h:205: error: 'struct cpumask_t' has no member named
+   'bits'
+/usr/include/linux/cpumask.h:205: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __first_cpu(const cpumask_t*,
+   int)':
+/usr/include/linux/cpumask.h:211: error: syntax error before `,' token
+/usr/include/linux/cpumask.h: In function `int __next_cpu(int, const
+   cpumask_t*, int)':
+/usr/include/linux/cpumask.h:217: error: syntax error before `,' token
+/usr/include/linux/cpumask.h: In function `int __cpumask_scnprintf(char*, int,
+   const cpumask_t*, int)':
+/usr/include/linux/cpumask.h:268: error: 'const struct cpumask_t' has no member
+   named 'bits'
+/usr/include/linux/cpumask.h: In function `int __cpumask_parse(const char*,
+   int, cpumask_t*, int)':
+/usr/include/linux/cpumask.h:276: error: 'struct cpumask_t' has no member named
+   'bits'
+In file included from /usr/include/asm/mmu.h:4,
+                 from /usr/include/linux/sched.h:21,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/asm-x86_64/mmu.h: At global scope:
+/usr/include/asm-x86_64/mmu.h:15: error: 'rwlock_t' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/mmu.h:17: error: field `sem' has incomplete type
+In file included from /usr/include/linux/signal.h:4,
+                 from /usr/include/linux/sched.h:25,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/list.h:715:2: warning: #warning "don't include kernel headers in userspace"
+In file included from /usr/include/asm/signal.h:4,
+                 from /usr/include/linux/signal.h:6,
+                 from /usr/include/linux/sched.h:25,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/asm-x86_64/signal.h:35: error: conflicting types for `typedef long
+   unsigned int sigset_t'
+/usr/include/sys/select.h:38: error: previous declaration as `typedef struct
+   __sigset_t sigset_t'
+/usr/include/asm-x86_64/signal.h:163: error: 'size_t' is used as a type, but is
+   not defined as a type.
+In file included from /usr/include/asm-x86_64/siginfo.h:8,
+                 from /usr/include/asm/siginfo.h:4,
+                 from /usr/include/linux/signal.h:7,
+                 from /usr/include/linux/sched.h:25,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/asm-generic/siginfo.h:57: error: 'timer_t' is used as a type, but
+   is not defined as a type.
+/usr/include/asm-generic/siginfo.h:76: error: 'clock_t' is used as a type, but
+   is not defined as a type.
+/usr/include/asm-generic/siginfo.h:77: error: 'clock_t' is used as a type, but
+   is not defined as a type.
+In file included from /usr/include/linux/sched.h:27,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/fs_struct.h:9: error: 'rwlock_t' is used as a type, but is
+   not defined as a type.
+In file included from /usr/include/linux/sched.h:29,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/completion.h:15: error: syntax error before `;' token
+/usr/include/linux/completion.h: In function `void init_completion(completion*)
+   ':
+/usr/include/linux/completion.h:27: error: invalid use of `union wait'
+/usr/include/linux/completion.h:27: error: `init_waitqueue_head' undeclared
+   (first use this function)
+In file included from /usr/include/linux/sched.h:30,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/pid.h: At global scope:
+/usr/include/linux/pid.h:17: error: field `pid_chain' has incomplete type
+/usr/include/linux/pid.h:19: error: field `pid_list' has incomplete type
+In file included from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/sched.h:92: error: type specifier omitted for parameter `
+   process_counts'
+In file included from /usr/include/linux/sched.h:101,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/linux/timer.h:11: error: field `entry' has incomplete type
+/usr/include/linux/timer.h: In function `void init_timer(timer_list*)':
+/usr/include/linux/timer.h:45: error: `spin_lock_init' undeclared (first use
+   this function)
+In file included from /usr/include/asm/pda.h:4,
+                 from /usr/include/asm-x86_64/current.h:7,
+                 from /usr/include/asm/current.h:4,
+                 from /usr/include/asm-x86_64/processor.h:18,
+                 from /usr/include/asm/processor.h:4,
+                 from /usr/include/linux/sched.h:103,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/asm-x86_64/pda.h: At global scope:
+/usr/include/asm-x86_64/pda.h:26: error: `CONFIG_X86_L1_CACHE_SHIFT' was not
+   declared in this scope
+/usr/include/asm-x86_64/pda.h:26: error: requested alignment is not a constant
+In file included from /usr/include/asm/processor.h:4,
+                 from /usr/include/linux/sched.h:103,
+                 from /usr/include/pthread.h:20,
+                 from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/asm-x86_64/processor.h:190: error: 'u16' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:191: error: 'u16' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:192: error: 'u16' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:193: error: 'u16' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:194: error: 'u64' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:195: error: 'u64' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:196: error: 'u32' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:197: error: 'u32' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:198: error: syntax error before `[' token
+/usr/include/asm-x86_64/processor.h:199: error: syntax error before `[' token
+/usr/include/asm-x86_64/processor.h:200: error: syntax error before `[' token
+/usr/include/asm-x86_64/processor.h:208: error: 'u32' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:209: error: 'u64' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:210: error: 'u64' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:211: error: 'u64' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:212: error: 'u64' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:213: error: syntax error before `[' token
+/usr/include/asm-x86_64/processor.h:214: error: 'u32' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:215: error: 'u32' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:216: error: 'u16' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:217: error: 'u16' is used as a type, but is
+   not defined as a type.
+/usr/include/asm-x86_64/processor.h:228: error: `CONFIG_X86_L1_CACHE_SHIFT' was
+   not declared in this scope
+/usr/include/asm-x86_64/processor.h:228: error: requested alignment is not a
+   constant
+/usr/include/asm-x86_64/processor.h:259: error: syntax error before `[' token
+/usr/include/asm-x86_64/processor.h: In function `void prefetchw(void*)':
+/usr/include/asm-x86_64/processor.h:401: error: `"r"' cannot be used as a
+   function
+/usr/include/asm-x86_64/processor.h:401: error: `alternative_input' undeclared
+   (first use this function)
+In file included from /upp/uppsrc/Core/Core.h:225,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/pthread.h: At global scope:
+/usr/include/pthread.h:247: error: type specifier omitted for parameter `size_t
+   '
+/usr/include/pthread.h:247: error: syntax error before `)' token
+/usr/include/pthread.h:251: error: type specifier omitted for parameter `size_t
+   '
+/usr/include/pthread.h:251: error: syntax error before `*' token
+/usr/include/pthread.h:272: error: type specifier omitted for parameter `size_t
+   '
+/usr/include/pthread.h:272: error: syntax error before `)' token
+/usr/include/pthread.h:277: error: type specifier omitted for parameter `size_t
+   '
+/usr/include/pthread.h:277: error: syntax error before `*' token
+/usr/include/pthread.h:284: error: type specifier omitted for parameter `size_t
+   '
+/usr/include/pthread.h:284: error: syntax error before `)' token
+/usr/include/pthread.h:288: error: type specifier omitted for parameter `size_t
+   '
+/usr/include/pthread.h:288: error: syntax error before `*' token
+In file included from /usr/include/c++/3.3.5/cstring:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:65,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/cstddef:52: error: `ptrdiff_t' not declared
+In file included from /usr/include/c++/3.3.5/bits/stl_algobase.h:65,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/cstring:80: error: `memmove' not declared
+/usr/include/c++/3.3.5/cstring:81: error: `strcpy' not declared
+/usr/include/c++/3.3.5/cstring:82: error: `strncpy' not declared
+/usr/include/c++/3.3.5/cstring:83: error: `strcat' not declared
+/usr/include/c++/3.3.5/cstring:84: error: `strncat' not declared
+/usr/include/c++/3.3.5/cstring:85: error: `memcmp' not declared
+/usr/include/c++/3.3.5/cstring:86: error: `strcmp' not declared
+/usr/include/c++/3.3.5/cstring:87: error: `strcoll' not declared
+/usr/include/c++/3.3.5/cstring:88: error: `strncmp' not declared
+/usr/include/c++/3.3.5/cstring:89: error: `strxfrm' not declared
+/usr/include/c++/3.3.5/cstring:90: error: `strcspn' not declared
+/usr/include/c++/3.3.5/cstring:91: error: `strspn' not declared
+/usr/include/c++/3.3.5/cstring:92: error: `strtok' not declared
+/usr/include/c++/3.3.5/cstring:94: error: `strerror' not declared
+/usr/include/c++/3.3.5/cstring:95: error: `strlen' not declared
+/usr/include/c++/3.3.5/cstring:97: error: `memchr' not declared
+/usr/include/c++/3.3.5/cstring:100: error: type specifier omitted for parameter
+   `size_t'
+/usr/include/c++/3.3.5/cstring:100: error: syntax error before `)' token
+/usr/include/c++/3.3.5/cstring: In function `void* std::memchr(...)':
+/usr/include/c++/3.3.5/cstring:101: error: `__p' undeclared (first use this
+   function)
+/usr/include/c++/3.3.5/cstring:101: error: `__c' undeclared (first use this
+   function)
+/usr/include/c++/3.3.5/cstring: At global scope:
+/usr/include/c++/3.3.5/cstring:103: error: `strchr' not declared
+/usr/include/c++/3.3.5/cstring:109: error: `strpbrk' not declared
+/usr/include/c++/3.3.5/cstring:115: error: `strrchr' not declared
+/usr/include/c++/3.3.5/cstring:121: error: `strstr' not declared
+In file included from /usr/include/c++/3.3.5/bits/stl_algobase.h:67,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/cstdlib:105: error: `mbstowcs' not declared
+/usr/include/c++/3.3.5/cstdlib:115: error: `wcstombs' not declared
+In file included from /usr/include/c++/3.3.5/bits/stl_algobase.h:69,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/new:82: error: `size_t' undeclared in namespace `std'
+/usr/include/c++/3.3.5/new:82: error: declaration of `operator new' as
+   non-function
+/usr/include/c++/3.3.5/new:82: error: invalid declarator
+/usr/include/c++/3.3.5/new:83: error: `size_t' undeclared in namespace `std'
+/usr/include/c++/3.3.5/new:83: error: declaration of `operator new []' as
+   non-function
+/usr/include/c++/3.3.5/new:83: error: invalid declarator
+/usr/include/c++/3.3.5/new:86: error: `size_t' undeclared in namespace `std'
+/usr/include/c++/3.3.5/new:86: error: syntax error before `::' token
+/usr/include/c++/3.3.5/new:86: error: `operator new' takes type `size_t' (`long
+   unsigned int') as first parameter
+/usr/include/c++/3.3.5/new:87: error: `size_t' undeclared in namespace `std'
+/usr/include/c++/3.3.5/new:87: error: syntax error before `::' token
+/usr/include/c++/3.3.5/new:87: error: `operator new' takes type `size_t' (`long
+   unsigned int') as first parameter
+/usr/include/c++/3.3.5/new:92: error: `size_t' undeclared in namespace `std'
+/usr/include/c++/3.3.5/new:92: error: syntax error before `*' token
+/usr/include/c++/3.3.5/new:92: error: `operator new' takes type `size_t' (`long
+   unsigned int') as first parameter
+/usr/include/c++/3.3.5/new: In function `void* operator new(long unsigned int,
+   ...)':
+/usr/include/c++/3.3.5/new:92: error: `__p' undeclared (first use this
+   function)
+/usr/include/c++/3.3.5/new: At global scope:
+/usr/include/c++/3.3.5/new:93: error: `size_t' undeclared in namespace `std'
+/usr/include/c++/3.3.5/new:93: error: syntax error before `*' token
+/usr/include/c++/3.3.5/new:93: error: `operator new' takes type `size_t' (`long
+   unsigned int') as first parameter
+In file included from /usr/include/c++/3.3.5/x86_64-suse-linux/bits/c++locale.h:43,
+                 from /usr/include/c++/3.3.5/iosfwd:46,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/iconv.h:43: error: syntax error before `(' token
+In file included from /usr/include/c++/3.3.5/iosfwd:47,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/cctype:68: error: `isalnum' not declared
+/usr/include/c++/3.3.5/cctype:69: error: `isalpha' not declared
+/usr/include/c++/3.3.5/cctype:70: error: `iscntrl' not declared
+/usr/include/c++/3.3.5/cctype:71: error: `isdigit' not declared
+/usr/include/c++/3.3.5/cctype:72: error: `isgraph' not declared
+/usr/include/c++/3.3.5/cctype:73: error: `islower' not declared
+/usr/include/c++/3.3.5/cctype:74: error: `isprint' not declared
+/usr/include/c++/3.3.5/cctype:75: error: `ispunct' not declared
+/usr/include/c++/3.3.5/cctype:76: error: `isspace' not declared
+/usr/include/c++/3.3.5/cctype:77: error: `isupper' not declared
+/usr/include/c++/3.3.5/cctype:78: error: `isxdigit' not declared
+/usr/include/c++/3.3.5/cctype:79: error: `tolower' not declared
+/usr/include/c++/3.3.5/cctype:80: error: `toupper' not declared
+In file included from /usr/include/c++/3.3.5/x86_64-suse-linux/bits/c++io.h:35,
+                 from /usr/include/c++/3.3.5/bits/fpos.h:44,
+                 from /usr/include/c++/3.3.5/iosfwd:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/cstdio:114: error: `fread' not declared
+/usr/include/c++/3.3.5/cstdio:120: error: `fwrite' not declared
+In file included from /usr/include/c++/3.3.5/bits/fpos.h:44,
+                 from /usr/include/c++/3.3.5/iosfwd:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/x86_64-suse-linux/bits/c++io.h:43: error: syntax error
+   before `;' token
+/usr/include/c++/3.3.5/x86_64-suse-linux/bits/c++io.h:45: error: syntax error
+   before `;' token
+In file included from /usr/include/c++/3.3.5/cwchar:51,
+                 from /usr/include/c++/3.3.5/bits/fpos.h:45,
+                 from /usr/include/c++/3.3.5/iosfwd:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/ctime:66: error: `clock_t' not declared
+/usr/include/c++/3.3.5/ctime:67: error: `time_t' not declared
+/usr/include/c++/3.3.5/ctime:68: error: `tm' not declared
+/usr/include/c++/3.3.5/ctime:70: error: `clock' not declared
+/usr/include/c++/3.3.5/ctime:71: error: `difftime' not declared
+/usr/include/c++/3.3.5/ctime:72: error: `mktime' not declared
+/usr/include/c++/3.3.5/ctime:73: error: `time' not declared
+/usr/include/c++/3.3.5/ctime:74: error: `asctime' not declared
+/usr/include/c++/3.3.5/ctime:75: error: `ctime' not declared
+/usr/include/c++/3.3.5/ctime:76: error: `gmtime' not declared
+/usr/include/c++/3.3.5/ctime:77: error: `localtime' not declared
+/usr/include/c++/3.3.5/ctime:78: error: `strftime' not declared
+In file included from /usr/include/c++/3.3.5/cwchar:54,
+                 from /usr/include/c++/3.3.5/bits/fpos.h:45,
+                 from /usr/include/c++/3.3.5/iosfwd:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/wchar.h:40:21: stdarg.h: No such file or directory
+In file included from /usr/include/c++/3.3.5/cwchar:54,
+                 from /usr/include/c++/3.3.5/bits/fpos.h:45,
+                 from /usr/include/c++/3.3.5/iosfwd:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/wchar.h:137: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:137: error: syntax error before `)' token
+/usr/include/wchar.h:145: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:145: error: syntax error before `)' token
+/usr/include/wchar.h:152: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:152: error: syntax error before `)' token
+/usr/include/wchar.h:162: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:162: error: syntax error before `)' token
+/usr/include/wchar.h:172: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:172: error: syntax error before `,' token
+/usr/include/wchar.h:182: error: syntax error before `(' token
+/usr/include/wchar.h:198: error: syntax error before `(' token
+/usr/include/wchar.h:224: error: syntax error before `(' token
+/usr/include/wchar.h:228: error: syntax error before `(' token
+/usr/include/wchar.h:243: error: syntax error before `(' token
+/usr/include/wchar.h:254: error: syntax error before `(' token
+/usr/include/wchar.h:261: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:261: error: syntax error before `)' token
+/usr/include/wchar.h:266: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:266: error: syntax error before `)' token
+/usr/include/wchar.h:271: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:271: error: syntax error before `)' token
+/usr/include/wchar.h:275: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:275: error: syntax error before `)' token
+/usr/include/wchar.h:279: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:279: error: syntax error before `)' token
+/usr/include/wchar.h:286: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:286: error: syntax error before `)' token
+/usr/include/wchar.h:306: error: syntax error before `(' token
+/usr/include/wchar.h:311: error: syntax error before `(' token
+/usr/include/wchar.h:315: error: syntax error before `(' token
+/usr/include/wchar.h:317: error: syntax error before `(' token
+/usr/include/wchar.h:324: error: syntax error before `(' token
+/usr/include/wchar.h:333: error: syntax error before `(' token
+/usr/include/wchar.h:339: error: syntax error before `(' token
+/usr/include/wchar.h:348: error: syntax error before `(' token
+/usr/include/wchar.h:354: error: syntax error before `(' token
+/usr/include/wchar.h:368: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:368: error: syntax error before `)' token
+/usr/include/wchar.h:575: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:575: error: syntax error before `)' token
+/usr/include/wchar.h:602: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:602: error: syntax error before `,' token
+/usr/include/wchar.h:612: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/wchar.h:612: error: syntax error before `)' token
+/usr/include/wchar.h:619: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/wchar.h:619: error: syntax error before `)' token
+/usr/include/wchar.h:623: error: type specifier omitted for parameter `size_t'
+/usr/include/wchar.h:623: error: syntax error before `,' token
+/usr/include/wchar.h:659: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/wchar.h:659: error: syntax error before `)' token
+/usr/include/wchar.h:666: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/wchar.h:666: error: syntax error before `)' token
+/usr/include/wchar.h:671: error: type specifier omitted for parameter `
+   __gnuc_va_list'
+/usr/include/wchar.h:671: error: syntax error before `)' token
+/usr/include/wchar.h:793: error: syntax error before `(' token
+/usr/include/wchar.h:803: error: syntax error before `(' token
+In file included from /usr/include/c++/3.3.5/bits/fpos.h:45,
+                 from /usr/include/c++/3.3.5/iosfwd:49,
+                 from /usr/include/c++/3.3.5/bits/stl_algobase.h:70,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/cwchar:147: error: `mbrlen' not declared
+/usr/include/c++/3.3.5/cwchar:148: error: `mbrtowc' not declared
+/usr/include/c++/3.3.5/cwchar:150: error: `mbsrtowcs' not declared
+/usr/include/c++/3.3.5/cwchar:162: error: `wcrtomb' not declared
+/usr/include/c++/3.3.5/cwchar:167: error: `wcscspn' not declared
+/usr/include/c++/3.3.5/cwchar:168: error: `wcsftime' not declared
+/usr/include/c++/3.3.5/cwchar:169: error: `wcslen' not declared
+/usr/include/c++/3.3.5/cwchar:173: error: `wcsrtombs' not declared
+/usr/include/c++/3.3.5/cwchar:174: error: `wcsspn' not declared
+/usr/include/c++/3.3.5/cwchar:180: error: `wcsxfrm' not declared
+/usr/include/c++/3.3.5/cwchar:216: error: type specifier omitted for parameter
+   `size_t'
+/usr/include/c++/3.3.5/cwchar:216: error: syntax error before `)' token
+/usr/include/c++/3.3.5/cwchar: In function `wchar_t* std::wmemchr(...)':
+/usr/include/c++/3.3.5/cwchar:217: error: `wchar_t* std::wmemchr(...)'
+   conflicts with previous using declaration `wchar_t* wmemchr(...)'
+In file included from /usr/include/c++/3.3.5/bits/stl_algobase.h:73,
+                 from /usr/include/c++/3.3.5/algorithm:66,
+                 from /upp/uppsrc/Core/Core.h:299,
+                 from /upp/uppsrc/Web/Web.h:4,
+                 from /upp/uppsrc/Web/TServ/tserv.cpp:1:
+/usr/include/c++/3.3.5/bits/stl_iterator_base_types.h: At global scope:
+/usr/include/c++/3.3.5/bits/stl_iterator_base_types.h:102: error: syntax error
+   before `,' token
+/usr/include/c++/3.3.5/bits/stl_iterator_base_types.h:109: error: template
+   declaration of `typedef _Tp std::value_type'
+/usr/include/c++/3.3.5/bits/stl_iterator_base_types.h:109: confused by earlier errors, bailing out
+make: *** [/uppout/Web/TServ/GCC33-Gcc-Linux-Main/tserv.o] Error 1

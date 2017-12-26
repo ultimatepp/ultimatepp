@@ -1,0 +1,27 @@
+acceptflags
+	IDERW;
+
+uses
+	CtrlLib;
+
+file
+	Designer.h,
+	Designer.lay,
+	Designer.cpp,
+	DesignerFile.cpp,
+	DesignerLayt.cpp,
+	DesignerWin.cpp,
+	iderw.h,
+	Alias.cpp,
+	ItemCtrl.cpp,
+	Lang.cpp,
+	StdCtrls.cpp,
+	Util.cpp,
+	rw.iml,
+	rw.rc,
+	Info readonly separator,
+	Copying;
+
+mainconfig
+	"" = "";
+
