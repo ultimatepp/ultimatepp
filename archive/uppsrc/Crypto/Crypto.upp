@@ -1,0 +1,10 @@
+uses
+	Core;
+
+file
+	Crypto.h,
+	BscF.cpp,
+	Sha1.cpp,
+	Info readonly separator,
+	Copying;
+

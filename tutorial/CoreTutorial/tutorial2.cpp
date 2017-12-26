@@ -56,6 +56,7 @@ GUI_APP_MAIN
 	DO(CoWorkTutorial);
 	DO(AsyncTutorial);
 	DO(CoPartitionTutorial);
+	DO(CoLoopTutorial);
 	DO(CoAlgoTutorial);
 
 	MakeTutorial();
