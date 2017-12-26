@@ -26,7 +26,7 @@ void CoPartition(Iter begin, Iter end, const Lambda& lambda, int min_chunk = CO_
 template <class Range, class Lambda>
 void CoPartition(Range& r, const Lambda& lambda)
 {
-	size_t chunk = CoChunk__(r.GetCount());
+	size_t chunk = CoChunk__(r.GetCount(), CO_PARTITION_MIN);
 	CoWork co;
 	auto begin = r.begin();
 	auto end = r.end();
