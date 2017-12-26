@@ -1,4 +1,0 @@
-LAYOUT(VolumeCtrlDemoLayout, 200, 100)
-	ITEM(VolumeCtrl, volume, LeftPosZ(20, 140).TopPosZ(24, 32))
-END_LAYOUT
-
