@@ -80,6 +80,31 @@ not specified. In certain situations (no scheduling slot available),
 Do can perform scheduled job immediately in calling thread.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:CoWork`:`:Loop`(Upp`:`:Function`<void`(`)`>`&`&`): [@(0.0.255) void]_[* Loop](
+[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:Loop`(const Upp`:`:Function`<void`(`)`>`&`): [@(0.0.255) void]_[* L
+oop]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`*`(const Upp`:`:Function`<void`(`)`>`&`): [_^Upp`:`:CoWork^ C
+oWork][@(0.0.255) `&]_[* operator`*]([@(0.0.255) const]_[_^Upp`:`:Function^ Function]<[@(0.0.255) v
+oid]_()>`&_[*@3 fn])&]
+[s5;:Upp`:`:CoWork`:`:operator`*`(Upp`:`:Function`<void`(`)`>`&`&`): [_^Upp`:`:CoWork^ C
+oWork][@(0.0.255) `&]_[* operator`*]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
+`&_[*@3 fn])&]
+[s2;%% Schedules [%-*@3 fn] to be run on all worker threads. After 
+the first thread returns from [%-*@3 fn], all other scheduled [%-*@3 fn] 
+jobs that has not started yet are unscheduled. Waits for all 
+started jobs to finish. The function also sets internal index 
+counter to zero in CoWork before starting any worker thread. 
+Worker thread should acquire job quantum in internal loop `- 
+internal CoWork index can be used for this purpose.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:CoWork`:`:Next`(`): [@(0.0.255) int]_[* Next]()&]
+[s2;%% Atomically increments internal index counter and returns its 
+previous value (thus the first value returned is 0). Supposed 
+to be used with Loop.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:CoWork`:`:FinLock`(`): [@(0.0.255) static] [@(0.0.255) void]_[* FinLock]()&]
 [s2;%% This functions is to be called in scheduled routine. Its purpose 
 is to serialize access to shared data at the end of the routine. 
