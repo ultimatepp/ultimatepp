@@ -8,7 +8,11 @@ namespace Upp {
 
 #include "HeapImp.h"
 
+#ifdef HEAP256
+int   Heap::BinSz[LBINS];
+#else
 word  Heap::BinSz[LBINS];
+#endif
 byte  Heap::SzBin[MAXBLOCK / 8 + 1]; // Minimal bin for size (request -> bin)
 byte  Heap::BlBin[MAXBLOCK / 8 + 1]; // Largest bin less or equal to size (free -> bin)
 
@@ -69,7 +73,11 @@ Heap::DLink *Heap::AddChunk(int reqsize)
 		LLOG("Retrieved empty large " << (void *)ml);
 	}
 	else {
+	#ifdef HEAP256
+		ml = (DLink *)AllocRaw256KB(reqsize);
+	#else
 		ml = (DLink *)AllocRaw64KB(reqsize);
+	#endif
 		LLOG("AllocRaw64KB " << (void *)ml);
 	}
 	lcount++;
@@ -97,7 +105,7 @@ void *Heap::DivideBlock(DLink *b, int size)
 { // unlink from free and truncate block, move truncated part back to free blocks
 	b->Unlink();
 	Header *bh = b->GetHeader();
-	ASSERT(bh->size >= size && size > 0);
+	ASSERT(bh->size >= (dword)size && size > 0);
 	bh->free = false;
 	int sz2 = bh->size - size - sizeof(Header);
 	if(sz2 >= 48) {
