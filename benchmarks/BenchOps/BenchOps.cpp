@@ -109,6 +109,12 @@ CONSOLE_APP_MAIN
 		}
 	}
 	{
+		for(int i = 0; i < N; i++) {
+			RTIMING("Alloc/Free 128K");
+			delete[] new byte[128*1024];
+		}
+	}
+	{
 		RTIMING("Alloc/Free large");
 		for(int i = 0; i < N; i++) {
 			delete[] new byte[3000];
