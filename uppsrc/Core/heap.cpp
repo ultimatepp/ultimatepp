@@ -161,7 +161,11 @@ void Heap::Check() {
 	while(l != large) {
 		Header *bh = (Header *)((byte *)l + LARGEHDRSZ);
 		while(bh->size) {
+		#ifdef HEAP256
+			Assert((byte *)bh >= (byte *)l + LARGEHDRSZ && (byte *)bh < (byte *)l + 256*1024);
+		#else
 			Assert((byte *)bh >= (byte *)l + LARGEHDRSZ && (byte *)bh < (byte *)l + 65536);
+		#endif
 			if(bh->free)
 				DbgFreeCheck(bh->GetBlock() + 1, bh->size - sizeof(DLink));
 			bh = bh->Next();
