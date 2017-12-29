@@ -96,6 +96,7 @@ void  SysFreeRaw(void *ptr, size_t size)
 
 int s4kb__;
 int s64kb__;
+int s256kb__;
 
 #ifdef MEMORY_SHRINK
 void *AllocRaw4KB(int reqsize)
@@ -175,6 +176,25 @@ void *AllocRaw64KB(int reqsize)
 	ptr += 65536;
 	left--;
 	s64kb__++;
+	DoPeakProfile();
+	return p;
+}
+
+void *AllocRaw256KB(int reqsize)
+{
+	static int   left;
+	static byte *ptr;
+	static int   n = 32;
+	if(left == 0) {
+		left = n >> 5;
+		ptr = (byte *)SysAllocRaw(left * 256*1024, reqsize);
+	}
+	n = n + 1;
+	if(n > 64) n = 64;
+	void *p = ptr;
+	ptr += 256*1024;
+	left--;
+	s256kb__++;
 	DoPeakProfile();
 	return p;
 }
