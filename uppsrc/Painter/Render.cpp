@@ -143,7 +143,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		return newclip;
 	}
 
-	if(width < 0)
+	if(width == FILL)
 		Close();
 	
 	if(co && width != CLIP && width != ONPATH && !ss && !alt && mode == MODE_ANTIALIASED) {
