@@ -51,14 +51,7 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 		Add((*(Examples()[i].ctrl())).HSizePosZ(180, 4).VSizePosZ(4, 8));
 		examplesRects.Add(Examples()[i].ctrl());
 	}
-/*	for (int i = 0; i < Examples().GetCount(); ++i) {
-		if (Examples()[i].name == "User equation") {
-			TabUserEquation &tab = dynamic_cast<TabUserEquation&>(*Examples()[i].ctrl());
-			EditString &equation = tab.equation;
-			equation.SetText("HELLO WORLD");
-		}
-	}*/
-		
+
 	examplesList.Add("Pie chart");
 	tabPie.Init();
 	Add(tabPie.HSizePosZ(180, 4).VSizePosZ(4, 8));
@@ -87,7 +80,7 @@ ScatterCtrl_Demo::ScatterCtrl_Demo()
 	SetMode();
 
 	examplesList.WhenSel = THISBACK(OnSel);
-	examplesList.SetCursor(13);
+	examplesList.SetCursor(14);
 	OnSel();
 
 	Sizeable().Zoomable().Icon(MyImages::i1());

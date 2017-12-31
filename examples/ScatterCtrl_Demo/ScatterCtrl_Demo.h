@@ -226,8 +226,22 @@ private:
 	Vector<int> idsRange;
 	Vector<Pointf> sdata, smin, smax;
 	VectorPointf dmin, dmax;
-	DataReverse rev;
-	DataAppend app;
+	DataRange range;
+};
+
+class TabStackedPlot : public WithTabStackedPlot<ScatterDemo> {
+public:
+	typedef TabStackedPlot CLASSNAME;
+	
+	void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+	
+	void OnPlot();
+	
+private:
+	Vector<Pointf> s1, s2, s3;
+	VectorPointf ds1, ds2, ds3;
+	DataStackedY stacked;
 };
 
 class TabBubblePlot : public WithTabBubblePlot<ScatterDemo> {

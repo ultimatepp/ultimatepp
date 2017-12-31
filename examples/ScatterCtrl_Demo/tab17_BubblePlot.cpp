@@ -21,12 +21,12 @@ void TabBubblePlot::Init()
 	scatter.ZoomToFit(true, true, 0.2);
 }
 
-ScatterDemo *Construct16()
+ScatterDemo *Construct17()
 {
 	static TabBubblePlot tab;
 	return &tab;
 }
 
 INITBLOCK {
-	RegisterExample("BubblePlot", Construct16, __FILE__);
+	RegisterExample("BubblePlot", Construct17, __FILE__);
 }
