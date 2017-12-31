@@ -25,8 +25,9 @@ file
 	tab12_Linked.cpp,
 	tab14_UserEquation.cpp,
 	tab15_RangePlot.cpp,
-	tab16_BubblePlot.cpp,
-	tab17_UserPaint.cpp,
+	tab16_StackedPlot.cpp,
+	tab17_BubblePlot.cpp,
+	tab18_UserPaint.cpp,
 	tab20_Pie.cpp,
 	symbol.iml;
 
