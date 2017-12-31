@@ -19,7 +19,7 @@ static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int al
 		double dxy = (x-ix)*(x-ix) + (y-iy)*(y-iy);
 		if(dxy < 0.1 || i == 0 || i == n) 
 			vP << Point(ix,iy);
-		if(w.IsGui() && !IsNull(background)) 
+		if(w.IsGui()) 
 			w.DrawRect(ix, iy, 1, 1, Blend(fill, background, 150));			
 	}
 	vP << centre;	
@@ -80,8 +80,7 @@ Color PieDraw::GetCatColor(const int& index) const {
 void PieDraw::PaintPie(Draw& w, int scale) {
 	Size sz = scale*GetSize();	
 	
-	if (!IsNull(backColor)) 
-		w.DrawRect(sz, backColor);	
+	w.DrawRect(sz, backColor);	
 	
 	Size textsize;
 	textsize.cx = 0;
