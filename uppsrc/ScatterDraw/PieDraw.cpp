@@ -19,7 +19,7 @@ static void DrawPie(Draw& w, double c_x, double c_y, double r, int start, int al
 		double dxy = (x-ix)*(x-ix) + (y-iy)*(y-iy);
 		if(dxy < 0.1 || i == 0 || i == n) 
 			vP << Point(ix,iy);
-		if(w.IsGui()) 
+		if(w.IsGui() && !IsNull(background)) 
 			w.DrawRect(ix, iy, 1, 1, Blend(fill, background, 150));			
 	}
 	vP << centre;	
@@ -80,7 +80,8 @@ Color PieDraw::GetCatColor(const int& index) const {
 void PieDraw::PaintPie(Draw& w, int scale) {
 	Size sz = scale*GetSize();	
 	
-	w.DrawRect(sz, backColor);	
+	if (!IsNull(backColor)) 
+		w.DrawRect(sz, backColor);	
 	
 	Size textsize;
 	textsize.cx = 0;
@@ -92,7 +93,7 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 		FontTitle6.Width(scale*titleFont.GetWidth());
 		textsize = GetTextSize(title, FontTitle6);
 		if(titlePos == TOP) 
-			w.DrawText((scale*GetSize().cx - textsize.cx)/2, scale*titleGap, title, FontTitle6,titleColor);
+			w.DrawText((scale*GetSize().cx - textsize.cx)/2, scale*titleGap, title, FontTitle6, titleColor);
 		else  
 			w.DrawText((scale*GetSize().cx - textsize.cx)/2, scale*(GetSize().cy - titleFont.GetHeight() - titleGap), 
 						title, FontTitle6,titleColor);
@@ -130,15 +131,9 @@ void PieDraw::PaintPie(Draw& w, int scale) {
 	circ_y *= scale;
 	circ_r *= scale;
 	
-	Color bc;
-	if (IsNull(backColor)) 
-		bc = LtGray;
-	else 
-		bc = backColor;
-
 	for(int i = 0; i < vValues.GetCount(); i++) {
 		DrawPie(w, circ_x*scale, circ_y*scale, circ_r*scale, alfa0, fround(3600.0*vValues.At(i)/sum),
-					  1*scale, vColors.At(i), vColors.At(i), 0, bc);
+					  1*scale, vColors.At(i), vColors.At(i), 0, backColor);
 		alfa0 += fround(3600.0*vValues[i]/sum);
 	}
 	if(showPercent) {
