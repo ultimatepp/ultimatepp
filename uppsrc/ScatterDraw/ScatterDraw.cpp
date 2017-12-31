@@ -368,11 +368,6 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 	return *this;
 }
 
-// Deprecated
-/*void ScatterDraw::FitToData(bool vertical, double factor) {
-	ZoomToFit(true, vertical, factor);
-}*/
-
 void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	if (linkedMaster) {
 		linkedMaster->ZoomToFit(horizontal, vertical);
@@ -384,70 +379,7 @@ void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
 	    	linkedCtrls[i]->DoFitToData(horizontal, vertical, factor);
 	}
 }
-
-
-
-/*
-double ScatterDraw::GetXMin() {
-	double minx = -DOUBLE_NULL;
-	
-	for (int j = 0; j < series.GetCount(); j++) {
-		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-			continue;
-		double smin = series[j].PointsData()->MinX();
-		if (!IsNull(smin) && smin < minx)
-			minx = smin;
-	}
-	if (minx == -DOUBLE_NULL)
-		return Null;
-	return minx;
-}
-
-double ScatterDraw::GetXMax() {
-	double maxx = DOUBLE_NULL;
-	
-	for (int j = 0; j < series.GetCount(); j++) {
-		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-			continue;
-		double smax = series[j].PointsData()->MaxX();
-		if (!IsNull(smax) && smax > maxx)
-			maxx = smax;
-	}
-	if (maxx == DOUBLE_NULL)
-		return Null;
-	return maxx;
-}
-
-double ScatterDraw::GetYMin() {
-	double miny = -DOUBLE_NULL;
-	
-	for (int j = 0; j < series.GetCount(); j++) {
-		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-			continue;
-		double smin = series[j].PointsData()->MinY();
-		if (!IsNull(smin) && smin < miny)
-			miny = smin;
-	}
-	if (miny == -DOUBLE_NULL)
-		return Null;
-	return miny;
-}
-
-double ScatterDraw::GetYMax() {
-	double maxy = DOUBLE_NULL;
-	
-	for (int j = 0; j < series.GetCount(); j++) {
-		if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-			continue;
-		double smax = series[j].PointsData()->MaxY();
-		if (!IsNull(smax) && smax > maxy)
-			maxy = smax;
-	}
-	if (maxy == DOUBLE_NULL)
-		return Null;
-	return maxy;
-}
-*/			
+		
 void ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
 	double minx, maxx, miny, miny2, maxy, maxy2;
 	minx = miny = miny2 = -DOUBLE_NULL;

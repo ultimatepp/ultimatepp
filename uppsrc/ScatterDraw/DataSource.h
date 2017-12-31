@@ -212,7 +212,7 @@ public:
 };
 
 class DataAppend : public DataSource {
-private:
+protected:
 	DataSource *data1, *data2;
 
 public:
@@ -238,6 +238,83 @@ public:
 	virtual int64 GetCount()			{return data1->GetCount() + data2->GetCount();}
 };
 
+class DataRange : public DataAppend {
+public:
+	DataRange() : DataAppend() {}
+	DataRange(DataSource &data1, DataSource &data2) {Init(data1, data2);}
+	void Init(DataSource &data1, DataSource &data2) {
+		ASSERT(!data1.IsExplicit() && !data1.IsParam() && !data2.IsExplicit() && !data2.IsParam());
+		this->data1 = &data1;
+		rev.Init(data2);
+		this->data2 = &rev;
+	}
+private:
+	DataReverse rev;	
+};
+	
+class DataStackedY {
+public:
+	DataStackedY() : is100(false) {}
+	void Set100(bool is100)	  	 {this->is100 = is100;}
+	DataStackedY &Add(DataSource &data) {
+		EachDataStackedY &each = eachData.Add();
+		each.Init(data, eachData.GetCount() -1, this);
+		return *this;
+	}
+	double Get100Y(int index, int64 id) {
+		double acc = 0;
+		for (int i = 0; i < eachData.GetCount(); ++i)
+			acc += eachData[i].RealY(id);
+		if (acc == 0)
+			return 0;
+		else
+			return 100*eachData[index].RealY(id)/acc;
+	}
+	double GetY(int index, int64 id) {
+		double res = 0;
+		for (int i = 0; i <= index; ++i) {
+			if (is100) 
+				res += Get100Y(i, id);
+			else
+				res += eachData[i].RealY(id);
+		}
+		return res;
+	}
+	
+	class EachDataStackedY : public DataSource {
+	public:
+		EachDataStackedY() : data(0), index(-1), parent(0) {}
+		void Init(DataSource &data, int index, DataStackedY *parent) {
+			ASSERT(!data.IsExplicit() && !data.IsParam());
+			this->data = &data;
+			this->index = index;
+			this->parent = parent;
+		}
+		virtual inline double y(int64 id) {
+			return parent->GetY(index, id);	
+		}
+		double RealY(int64 id) {
+			return data->y(id);	
+		}
+		virtual inline double x(int64 id) {
+			return data->x(id);	
+		}
+		virtual int64 GetCount() {
+			return data->GetCount();
+		}
+	private:
+		DataSource *data;
+		int index;
+		DataStackedY *parent;
+	};
+	
+	EachDataStackedY &Get(int id) {return eachData[id];}
+
+protected:
+	Array<EachDataStackedY> eachData;
+	bool is100;
+};
+	
 class CArray : public DataSource {
 private:
 	double *yData, *xData, *zData;
