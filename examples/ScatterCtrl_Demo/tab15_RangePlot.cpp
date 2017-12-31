@@ -24,11 +24,10 @@ void TabRangePlot::Init()
 		smax << Pointf(sdata[i].x, sdata[i].y + 5 + Random(10));
 		smin << Pointf(sdata[i].x, sdata[i].y - 5 - Random(10));
 	}
-	dmin.Init(smin);
-	rev.Init(dmin);
 	dmax.Init(smax);
-	app.Init(dmax, rev);
-	scatter.AddSeries(app).Legend("Range").Closed(true).Stroke(0).Fill(LtCyan()).Opacity(0.5).NoMark();
+	dmin.Init(smin);
+	range.Init(dmax, dmin);
+	scatter.AddSeries(range).Legend("Range").Closed(true).Stroke(0).Fill(LtCyan()).Opacity(0.5).NoMark();
 	scatter.AddSeries(smax).Legend("Max").Stroke(1, Blue()).NoMark();
 	scatter.AddSeries(smin).Legend("Min").Stroke(1, Blue()).NoMark();
 	scatter.AddSeries(sdata).Legend("Data").Stroke(4, Blue()).NoMark();

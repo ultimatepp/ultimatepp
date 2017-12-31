@@ -94,12 +94,13 @@ LAYOUT(Tab12Linked, 456, 464)
 	ITEM(Option, link, SetLabel(t_("Link")).RightPosZ(4, 56).TopPosZ(4, 16))
 END_LAYOUT
 
-LAYOUT(Tab13, 420, 236)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Polar Plot")).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
-END_LAYOUT
-
 LAYOUT(TabRangePlot, 420, 236)
 	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(TabStackedPlot, 420, 244)
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Stacked Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 20))
+	ITEM(Switch, type, SetLabel(t_("Stacked\nStacked100")).LeftPosZ(4, 160).BottomPosZ(2, 16))
 END_LAYOUT
 
 LAYOUT(TabBubblePlot, 420, 236)

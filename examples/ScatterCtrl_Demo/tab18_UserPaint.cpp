@@ -18,12 +18,12 @@ void Tab_UserPaint::Init()
 	scatter.WhenDraw = THISBACK(OnDraw);
 }	
 
-ScatterDemo *Construct17()
+ScatterDemo *Construct18()
 {
 	static Tab_UserPaint tab;
 	return &tab;
 }
 
 INITBLOCK {
-	RegisterExample("User paint", Construct17, __FILE__);
+	RegisterExample("User paint", Construct18, __FILE__);
 }
