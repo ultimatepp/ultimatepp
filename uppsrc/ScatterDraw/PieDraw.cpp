@@ -80,7 +80,8 @@ Color PieDraw::GetCatColor(const int& index) const {
 void PieDraw::PaintPie(Draw& w, int scale) {
 	Size sz = scale*GetSize();	
 	
-	w.DrawRect(sz, backColor);	
+	if (!IsNull(backColor))
+		w.DrawRect(sz, backColor);	
 	
 	Size textsize;
 	textsize.cx = 0;
@@ -202,6 +203,8 @@ Image PieDraw::GetImage(int scale) {
 	
 	bp.LineCap(LINECAP_BUTT);
 	bp.LineJoin(LINEJOIN_MITER);
+	if(IsNull(backColor))
+		bp.Clear(RGBAZero());
 	PaintPie(bp, scale);
 
 	return ib;
