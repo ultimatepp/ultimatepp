@@ -3,7 +3,8 @@
 
 namespace Upp {
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)   // DLOG(x)
+#define LDUMP(x)  // DDUMP(x)
 
 void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
 
@@ -138,7 +139,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 {
 	PAINTER_TIMING("RenderPath");
 	Buffer<ClippingLine> newclip;
-	if(width == 0) {
+	if(width == 0 || !ss && color.a == 0 && width >= FILL) {
 		current = Null;
 		return newclip;
 	}
@@ -146,7 +147,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	if(width == FILL)
 		Close();
 	
-	if(co && width != CLIP && width != ONPATH && !ss && !alt && mode == MODE_ANTIALIASED) {
+	if(co && width >= FILL && !ss && !alt && mode == MODE_ANTIALIASED) {
 		for(const String& p : path) {
 			while(jobcount >= cojob.GetCount())
 				cojob.Add().rasterizer.Create(ib.GetWidth(), ib.GetHeight(), false);
@@ -159,8 +160,10 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 			job.path_min = path_min;
 			job.path_max = path_max;
 			current = Null;
-			if(jobcount >= 64)
+			if(jobcount >= 64) {
+				LDUMP("Finish A");
 				Finish();
+			}
 		}
 		return newclip;
 	}
@@ -288,7 +291,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 
 void BufferPainter::CoJob::DoPath(const BufferPainter& sw)
 {
-	TIMING("DoPath");
 	rasterizer.Reset();
 
 	PathJob j(rasterizer, width, ischar, sw.dopreclip, path_min, path_max, attr);
@@ -300,7 +302,6 @@ void BufferPainter::Finish()
 {
 	if(jobcount == 0)
 		return;
-	RTIMING("Finish");
 	CoWork co;
 	const int TH = 3;
 	if(jobcount >= TH)
