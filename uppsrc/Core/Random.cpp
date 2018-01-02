@@ -198,6 +198,14 @@ thread__ MTrand *sRng;
 thread__ byte    sRb[sizeof(MTrand)];
 #endif
 
+void SeedRandom()
+{
+	if(!sRng) {
+		sRng = new(sRb) MTrand;
+	}
+	sRng->seed();
+}
+
 void SeedRandom(dword *seed, int len){
 	if(!sRng) {
 		sRng = new(sRb) MTrand;
@@ -205,7 +213,7 @@ void SeedRandom(dword *seed, int len){
 	sRng->init_by_array(seed, len);
 }
 
-void SeedRandom(dword seed){
+void SeedRandom(dword seed) {
 	if(!sRng) {
 		sRng = new(sRb) MTrand;
 	}

@@ -94,10 +94,15 @@ word]_`*[*@3 seed],[@(0.0.255) int]_[*@3 len])&]
 [s3;%% &]
 [s4; &]
 [s5;:SeedRandom`(dword`): [@(0.0.255) void]_[* SeedRandom]([_^topic`:`/`/Core`/src`/PrimitiveDataTypes`$en`-us`#Upp`:`:dword`:`:typedef^ d
-word]_[*@3 seed]_`=_[@3 0])&]
+word]_[*@3 seed])&]
 [s2;%% Seeds random with single value [%-*@3 seed]. This is good to 
 get always the same sequence of numbers (for the same seed).&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:SeedRandom`(`): [@(0.0.255) void]_[* SeedRandom]()&]
+[s2;%% Seeds random using the host platform entropy. Good to `"re`-randomize`" 
+Random after seeding it with fixed value.&]
+[s3; &]
 [s4; &]
 [s5;:ZeroArray`(x`): [* ZeroArray]([*@3 x])&]
 [s2;%% Fills C array [%-*@3 x] with zeros.&]
