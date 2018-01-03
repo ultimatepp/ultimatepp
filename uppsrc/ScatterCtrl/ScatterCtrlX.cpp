@@ -1,5 +1,7 @@
-#include <CtrlCore/CtrlCore.h>
+//#BLITZ_PROHIBIT
+// Need to prohibit BLITZ for this file as Xos.h defines some nasty macros like 'index'
 
+#include <CtrlCore/CtrlCore.h>
 
 #ifdef PLATFORM_POSIX
 
