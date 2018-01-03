@@ -4,7 +4,7 @@ namespace Upp {
 
 #ifdef _MULTITHREADED
 
-#define LLOG(x)       // DLOG(x)
+#define LLOG(x)       // RLOG(x)
 #define LDUMP(x)      // DDUMP(x)
 
 #define LHITCOUNT(x)  // RHITCOUNT(x)
@@ -193,12 +193,13 @@ void CoWork::Do0(Function<void ()>&& fn, bool looper)
 		LLOG("Stack full: running in the originating thread");
 		LHITCOUNT("CoWork: Stack full: Running in originating thread");
 		p.lock.Leave();
+		Pool::finlock = false;
 		fn();
 		if(Pool::finlock)
 			p.lock.Leave();
 		return;
 	}
-	p.PushJob(pick(fn), this);
+	p.PushJob(pick(fn), this, looper);
 	todo++;
 	p.lock.Leave();
 }
