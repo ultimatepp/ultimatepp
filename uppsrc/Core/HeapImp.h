@@ -4,11 +4,7 @@ void *SysAllocRaw(size_t size, size_t reqsize);
 void  SysFreeRaw(void *ptr, size_t size);
 
 void *AllocRaw4KB(int reqsize);
-#ifdef HEAP256
-void *AllocRaw256KB(int reqsize);
-#else
 void *AllocRaw64KB(int reqsize);
-#endif
 void *LAlloc(size_t& size);
 void  LFree(void *ptr);
 
@@ -73,16 +69,10 @@ struct Heap {
 	};
 
 	struct Header { // Large block header
-	#ifdef HEAP256
-		dword   prev:31;
-		dword   free:1;
-		dword   size;
-	#else
 		byte    free;
 		byte    filler1, filler2, filler3;
 		word    size;
 		word    prev;
-	#endif
 		Heap   *heap;
 	#ifdef CPU_32
 		dword   filler4;
@@ -103,13 +93,8 @@ struct Heap {
 		BIGHDRSZ = 48, // size of huge block header
 		REMOTE_OUT_SZ = 2000, // maximum size of remote frees to be buffered to flush at once
 
-	#ifdef HEAP256
-		MAXBLOCK = 256*1024 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
-		LBINS = 95, // number of large size bins
-	#else
 		MAXBLOCK = 65536 - 2 * sizeof(Header) - LARGEHDRSZ, // maximum size of large block
 		LBINS = 77, // number of large size bins
-	#endif
 	};
 
 	static_assert(sizeof(Header) == 16, "Wrong sizeof(Header)");
@@ -126,11 +111,7 @@ struct Heap {
 
 	bool      initialized;
 
-#ifdef HEAP256
-	static int   BinSz[LBINS];   // block size for bin
-#else
 	static word  BinSz[LBINS];   // block size for bin
-#endif
 	static byte  SzBin[MAXBLOCK / 8 + 1]; // maps size/8 to bin
 	static byte  BlBin[MAXBLOCK / 8 + 1]; // Largest bin less or equal to size/8 (free -> bin)
 

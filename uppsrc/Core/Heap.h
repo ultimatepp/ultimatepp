@@ -1,7 +1,5 @@
 #ifdef UPP_HEAP
 
-#define HEAP256
-
 void *MemoryAllocPermanent(size_t size);
 
 void *MemoryAllocSz(size_t& size);
