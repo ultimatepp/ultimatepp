@@ -27,9 +27,6 @@ IconDes::EditPos IconDes::GetEditPos()
 			es.selection = StoreImageAsString(c.selection);
 		es.undo = c.undo;
 		es.redo = c.redo;
-		es.supersampling = c.supersampling;
-		if(c.supersampling)
-			es.supersample = StoreImageAsString(c.image);
 	}
 	return e;
 }
@@ -40,9 +37,6 @@ void IconDes::SetEditPos(const EditPos& e)
 		for(int i = 0; i < slot.GetCount(); i++) {
 			const EditPosSlot& es = e.slot[i];
 			Slot& c = slot[i];
-			c.supersampling = es.supersampling;
-			if(c.supersampling)
-				c.image = LoadImageFromString(es.supersample);
 			Image sel = LoadImageFromString(es.selection);
 			if(sel.GetSize() == c.image.GetSize())
 				c.selection = sel;

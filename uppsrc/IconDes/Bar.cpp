@@ -130,14 +130,6 @@ void IconDes::ImageBar(Bar& bar)
 {
 	using namespace IconDesKeys;
 	Slot *c = IsCurrent() ? &Current() : NULL;
-	if(c && c->supersampling)
-		bar.Add(c, "Smooth resize 3x down", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
-		   .Key(AK_SUPERSAMPLING);
-	else
-		bar.Add(c && c->image.GetLength() < 256 * 256, "Resize 3x up (supersampling)",
-	    	    IconDesImg::ResizeUp(), THISBACK(ResizeUp))
-	       .Key(AK_SUPERSAMPLING);
-	bar.Separator();
 	bar.Add(c, AK_SETCOLOR, IconDesImg::SetColor(), THISBACK(SetColor));
 	bar.Add(c, AK_EMPTY, IconDesImg::Delete(), THISBACK(DoDelete));
 	bar.Add(c, AK_INTERPOLATE, IconDesImg::Interpolate(), THISBACK(Interpolate));
@@ -161,6 +153,24 @@ void IconDes::DrawBar(Bar& bar)
 {
 	using namespace IconDesKeys;
 	bool notpasting = !IsPasting();
+	Slot *c = IsCurrent() ? &Current() : NULL;
+	bar.Add(c && c->image.GetLength() < 256 * 256, "Smart Upscale 2x",
+	        IconDesImg::Upscale(), THISBACK(Upscale))
+	   .Key(AK_RESIZEUP2);
+	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 2x",
+	        IconDesImg::ResizeUp2(), THISBACK(ResizeUp2))
+	   .Key(AK_RESIZEUP2);
+	bar.Add(c, "Supersample 2x", IconDesImg::ResizeDown2(), THISBACK(ResizeDown2))
+	   .Key(AK_RESIZEDOWN2);
+	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 3x",
+	        IconDesImg::ResizeUp(), THISBACK(ResizeUp))
+       .Key(AK_RESIZEUP3);
+	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
+	   .Key(AK_RESIZEDOWN3);
+	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
+	        [=] { show_small = !show_small; SetBar(); SyncShow(); })
+	   .Check(show_small);
+	bar.Separator();
 	bar.Add(AK_FREEHAND, IconDesImg::FreeHand(), THISBACK1(SetTool, &IconDes::FreehandTool))
 	   .Check(tool == &IconDes::FreehandTool && notpasting);
 	bar.Add(AK_LINES, IconDesImg::Lines(), THISBACK1(SetTool, &IconDes::LineTool))
@@ -243,7 +253,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 2;
+	int version = 3;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -261,6 +271,8 @@ void IconDes::SerializeSettings(Stream& s)
 	SetBar();
 	if(version >= 2)
 		s % ImgFile();
+	if(version >= 3)
+		s % paste_opaque % show_small;
 }
 
 IconDes::IconDes()
@@ -268,6 +280,7 @@ IconDes::IconDes()
 	sb.WhenScroll = THISBACK(Scroll);
 
 	paste_opaque = false;
+	show_small = false;
 	doselection = false;
 
 	tool = &IconDes::FreehandTool;

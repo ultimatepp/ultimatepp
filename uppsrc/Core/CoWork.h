@@ -82,6 +82,7 @@ public:
 
 	int      Next()                                           { return ++index - 1; }
 
+	int  GetScheduledCount() const                            { return todo; }
 	void Pipe(int stepi, Function<void ()>&& lambda); // experimental
 
 	static void FinLock();
