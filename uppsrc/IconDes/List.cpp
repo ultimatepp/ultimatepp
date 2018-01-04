@@ -439,7 +439,7 @@ Image IconDes::GetImage(int ii) const
 {
 	const Slot& c = slot[ii];
 	Image m = slot[ii].image;
-	return c.supersampling ? DownSample3x(m) : m;
+	return m;
 }
 
 String IconDes::GetName(int ii) const

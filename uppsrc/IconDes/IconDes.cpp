@@ -5,7 +5,6 @@ namespace Upp {
 IconDes::Slot::Slot()
 {
 	pastepos = Null;
-	supersampling = false;
 	exp = false;
 	ImageBuffer b;
 	b.SetResolution(IMAGE_RESOLUTION_STANDARD);
@@ -44,14 +43,15 @@ void IconDes::SyncShow()
 	if(IsCurrent()) {
 		Slot& c = Current();
 		Image image = c.image;
-		if(c.supersampling) {
+/*		if(c.supersampling) {
 			int l = c.image.GetLength();
 			if(l > 0 && l <= 256 * 256)
 				image = DownSample3x(image);
 			else
 				image = IconDesImg::LargeImage();
-		}
+		}*/
 		iconshow.image = image;
+		iconshow.show_small = show_small;
 		ilist.Set(2, image);
 	}
 	iconshow.Refresh();
@@ -408,30 +408,6 @@ void IconDes::SelectRect()
 	SetBar();
 }
 
-static void sSetSsFlag(Image& m, bool ss)
-{
-	if(ss) {
-		Point p = m.GetHotSpot();
-		p.x |= 0x8000;
-		ImageBuffer ib(m);
-		ib.SetHotSpot(p);
-		m = ib;
-	}
-}
-
-static bool sRemoveSsFlag(Image& m)
-{
-	Point p = m.GetHotSpot();
-	if(p.x & 0x8000) {
-		p.x &= 0x7fff;
-		ImageBuffer ib(m);
-		ib.SetHotSpot(p);
-		m = ib;
-		return true;
-	}
-	return false;
-}
-
 void IconDes::SaveUndo()
 {
 	if(!IsCurrent())
@@ -443,13 +419,11 @@ void IconDes::SaveUndo()
 		undo.Remove(0);
 	if(undo.GetCount() && undo.Top() == c.image)
 		return;
-	sSetSsFlag(c.image, c.supersampling);
 	undo.Add(c.image);
 	c.undo = PackImlData(undo);
 	c.redo.Clear();
 	SetBar();
 	undo.Clear();
-	sRemoveSsFlag(c.image);
 }
 
 void IconDes::Undo()
@@ -463,7 +437,6 @@ void IconDes::Undo()
 	Vector<Image> redo = UnpackImlData(c.redo);
 	redo.Add(c.image);
 	c.image = undo.Pop();
-	c.supersampling = sRemoveSsFlag(c.image);
 	c.undo = PackImlData(undo);
 	c.redo = PackImlData(redo);
 	SyncImage();
@@ -479,10 +452,8 @@ void IconDes::Redo()
 	if(redo.GetCount() == 0)
 		return;
 	Vector<Image> undo = UnpackImlData(c.undo);
-	sSetSsFlag(c.image, c.supersampling);
 	undo.Add(c.image);
 	c.image = redo.Pop();
-	c.supersampling = sRemoveSsFlag(c.image);
 	c.undo = PackImlData(undo);
 	c.redo = PackImlData(redo);
 	SyncImage();
@@ -571,7 +542,6 @@ void IconDes::ResizeUp()
 	Slot& c = Current();
 	BeginResize();
 	c.image = Magnify(c.image, 3, 3);
-	c.supersampling = true;
 	Reset();
 }
 
@@ -583,7 +553,37 @@ void IconDes::ResizeDown()
 	BeginResize();
 	c.image = (c.image.GetSize() / 3).IsEmpty() ? CreateImage(Size(1, 1), White)
 	                                            : DownSample3x(c.image);
-	c.supersampling = false;
+	Reset();
+}
+
+void IconDes::ResizeUp2()
+{
+	if(!IsCurrent())
+		return;
+	Slot& c = Current();
+	BeginResize();
+	c.image = Magnify(c.image, 2, 2);
+	Reset();
+}
+
+void IconDes::ResizeDown2()
+{
+	if(!IsCurrent())
+		return;
+	Slot& c = Current();
+	BeginResize();
+	c.image = (c.image.GetSize() / 3).IsEmpty() ? CreateImage(Size(1, 1), White)
+	                                            : DownSample2x(c.image);
+	Reset();
+}
+
+void IconDes::Upscale()
+{
+	if(!IsCurrent())
+		return;
+	Slot& c = Current();
+	BeginResize();
+	c.image = Upscale2x(c.image);
 	Reset();
 }
 

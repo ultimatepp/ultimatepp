@@ -89,6 +89,7 @@ public:
 
 struct IconShow : public Ctrl {
 	Image image;
+	bool  show_small;
 
 	void Paint(Draw& w);
 
@@ -101,6 +102,7 @@ void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
 String PackImlData(const Vector<Image>& image);
 Image  DownSample3x(const Image& src);
+Image  DownSample2x(const Image& src);
 
 /*
 struct IconDraw : ImagePainter {
@@ -145,7 +147,6 @@ private:
 		Image           paste_image;
 		String          undo;
 		String          redo;
-		bool            supersampling;
 		bool            exp;
 
 		Slot();
@@ -162,6 +163,7 @@ private:
 	bool         doselection;
 	bool         selectrect;
 	bool         paste_opaque;
+	bool         show_small;
 
 	ScrollBars   sb;
 	Scroller     scroller;
@@ -302,6 +304,9 @@ private:
 	void  BeginResize();
 	void  ResizeUp();
 	void  ResizeDown();
+	void  ResizeUp2();
+	void  ResizeDown2();
+	void  Upscale();
 
 	void  PlaceDlg(TopWindow& dlg);
 	Image ImageStart();
@@ -354,7 +359,6 @@ public:
 		String          redo;
 		String          selection;
 		bool            supersampling;
-		String          supersample;
 	};
 
 	struct EditPos {
