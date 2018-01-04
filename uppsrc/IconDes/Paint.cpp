@@ -11,14 +11,27 @@ void IconShow::Paint(Draw& w)
 	Size sz = GetSize();
 	static Color color[] = { White(), WhiteGray(), LtGray(), Gray(), Black(),
 	                         Yellow(), Brown(), Red(), Green(), Blue(), Cyan(), Magenta() };
-	Size isz = image.GetSize();
-	int n = isz.cx ? minmax(sz.cx / isz.cx, 1, __countof(color)) : 1;
+	Size msz = image.GetSize();
+	Size isz = msz;
+	if(show_small)
+		isz.cx += isz.cx / 2 + DPI(4);
+	int n = msz.cx ? minmax(sz.cx / isz.cx, 1, __countof(color)) : 1;
+	Image m2, m3;
+	if(msz.cx && show_small) {
+		m2 = DownSample2x(image);
+		m3 = DownSample3x(image);
+	}
 	for(int i = 0; i < n; i++) {
 		int x = i * sz.cx / n;
 		int cx = (i + 1) * sz.cx / n - x;
 		w.DrawRect(x, 0, cx, sz.cy, color[i]);
-		if(isz.cx)
+		if(msz.cx) {
 			w.DrawImage(x + (cx - isz.cx) / 2, (sz.cy - isz.cy) / 2, image);
+			if(show_small) {
+				w.DrawImage(x + (cx - isz.cx) / 2 + msz.cx + DPI(4), (sz.cy - isz.cy) / 2, m2);
+				w.DrawImage(x + (cx - isz.cx) / 2 + msz.cx + DPI(4), (sz.cy - isz.cy) / 2 + 2 * msz.cy / 3, m3);
+			}
+		}
 	}
 }
 

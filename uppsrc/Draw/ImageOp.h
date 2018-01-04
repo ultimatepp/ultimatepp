@@ -196,6 +196,8 @@ Image CachedRescalePaintOnly(const Image& m, Size sz, int filter = Null);
 Image CachedSetColorKeepAlpha(const Image& img, Color color);
 Image CachedSetColorKeepAlphaPaintOnly(const Image& img, Color color);
 
+Image Upscale2x(const Image& src);
+
 void SetUHDMode(bool b = true);
 bool IsUHDMode();
 void SyncUHDMode();

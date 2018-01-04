@@ -202,4 +202,32 @@ Image DownSample3x(const Image& src)
 	return ib;
 }
 
+Image DownSample2x(const Image& src)
+{
+	Size tsz = src.GetSize() / 2;
+	ImageBuffer ib(tsz);
+	int w = src.GetSize().cx;
+	for(int y = 0; y < tsz.cy; y++) {
+		RGBA *t = ib[y];
+		RGBA *e = t + tsz.cx;
+		const RGBA *s = src[2 * y];
+		while(t < e) {
+			int r, g, b, a;
+			const RGBA *q;
+			r = g = b = a = 0;
+#define S__SUM(delta) q = s + delta; r += q->r; g += q->g; b += q->b; a += q->a;
+			S__SUM(0) S__SUM(1)
+			S__SUM(w + 0) S__SUM(w + 1)
+#undef  S__SUM
+			t->a = a / 4;
+			t->r = r / 4;
+			t->g = g / 4;
+			t->b = b / 4;
+			t++;
+			s += 2;
+		}
+	}
+	return ib;
+}
+
 }

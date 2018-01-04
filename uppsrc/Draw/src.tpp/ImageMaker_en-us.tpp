@@ -132,4 +132,10 @@ in Image with [%-*@3 color] while not changing the alpha value,
 with results being cached, that can only be used with Draw`::DrawImage(this 
 is optimization hint that can save some memory in certain situations).&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Upscale2x`(const Upp`:`:Image`&`): [_^Upp`:`:Image^ Image]_[* Upscale2x]([@(0.0.255) c
+onst]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 src])&]
+[s2;%% Doubles the resolution of image, using smart heuristics algorithm 
+designed for upscaling synthetic images (like icons).&]
+[s3;%% &]
 [s0;%% ]]
