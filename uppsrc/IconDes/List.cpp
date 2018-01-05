@@ -108,7 +108,9 @@ void IconDes::InsertRemoved(int q)
 void SetRes(Image& m, int resolution)
 {
 	ImageBuffer ib(m);
-	ib.SetResolution(decode(resolution, 0, IMAGE_RESOLUTION_STANDARD, 1, IMAGE_RESOLUTION_UHD, IMAGE_RESOLUTION_NONE));
+	ib.SetResolution(findarg(resolution, IMAGE_RESOLUTION_STANDARD, IMAGE_RESOLUTION_UHD,
+	                         IMAGE_RESOLUTION_NONE)
+	                 >= 0 ? resolution : IMAGE_RESOLUTION_STANDARD);
 	m = ib;
 }
 
