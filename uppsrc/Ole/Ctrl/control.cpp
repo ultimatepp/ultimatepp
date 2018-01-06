@@ -1123,7 +1123,7 @@ void OcxConnectionPoint::FireEvent(int method_id, const Vector<Value>& values)
 		out.vt = VT_EMPTY;
 		VariantCopy(&out, &ValueToVariant(values[nargs - i - 1]));
 	}
-	DISPPARAMS disp = { args, 0, nargs, 0 };
+	DISPPARAMS disp = { args, 0, (UINT)nargs, 0 };
 	for(i = 0; i < conn_map.GetCount(); i++)
 		conn_map[i]->Invoke(method_id, IID_NULL, 0, DISPATCH_METHOD, &disp, NULL,  NULL, NULL);
 	for(i = 0; i < nargs; i++)
