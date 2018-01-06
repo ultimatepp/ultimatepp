@@ -1,6 +1,6 @@
 #include "LionBenchmark.h"
 
-double tm[2];
+double tm[4];
 
 struct MyApp : public TopWindow {
 	bool co = true;
@@ -26,7 +26,9 @@ struct MyApp : public TopWindow {
 		w.DrawText(500, 0, Format("Standard %.4f", tm[0]));
 		w.DrawText(500, 50, Format("Multithreaded %.4f", tm[1]));
 		w.DrawText(500, 100, Format("Standard / Multithreaded %.4f", tm[0] / tm[1]));
-		w.DrawText(500, 150, co ? "MT" : "");
+		w.DrawText(500, 150, Format("Preclipped Standard %.4f", tm[2]));
+		w.DrawText(500, 200, Format("Preclipped Multithreaded %.4f", tm[3]));
+		w.DrawText(500, 250, co ? "MT" : "");
 	}
 };
 
@@ -38,13 +40,14 @@ GUI_APP_MAIN
 	ImageBuffer ib(1000, 1000);
 	BufferPainter sw(ib);
 	PaintLion(sw);
-	for(int pass = 0; pass < 2; pass++) {
+	for(int pass = 0; pass < 4; pass++) {
 		int time0 = msecs();
 		int n = 0;
 		while(msecs(time0) < 1000) {
 			n++;
 			BufferPainter sw(ib);
-			sw.Co(pass);
+			sw.Co(pass & 1);
+			sw.PreClip(pass & 2);
 //			sw.Scale(2);
 //			sw.Opacity(0.3);
 			PaintLion(sw);
