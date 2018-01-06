@@ -10,27 +10,37 @@ struct sFloodFill {
 	RGBA         scolor;
 	RGBA         color;
 	bool         done;
+	int          tolerance;
 
 	RGBA& At(int x, int y)         { return ib[y + rc.top][x + rc.left]; }
-	bool  Eq(int x, int y, RGBA c) { RGBA& q = At(x, y); return (q.a | c.a) == 0 || c == q; }
+	bool  Eq(int x, int y);
 	byte& Flag(int x, int y) { return flag[y * sz.cx + x]; }
-	void  Fill(RGBA color, Point pt, const Rect& rc);
+	void  Fill(RGBA color, Point pt, const Rect& rc, int tolerance_);
 	void  Try(int x, int y);
 
-	sFloodFill(ImageBuffer& ib) : ib(ib) {}
+	sFloodFill(ImageBuffer& ib) : ib(ib) { tolerance = 0; }
 };
+
+force_inline
+bool sFloodFill::Eq(int x, int y)
+{
+	const RGBA& q = At(x, y);
+	if((q.a | scolor.a) == 0) return true;
+	return abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
+}
 
 void sFloodFill::Try(int x, int y)
 {
-	if(x >= 0 && x < sz.cx && y >= 0 && y < sz.cy && Flag(x, y) == 0 && Eq(x, y, scolor)) {
+	if(x >= 0 && x < sz.cx && y >= 0 && y < sz.cy && Flag(x, y) == 0 && Eq(x, y)) {
 		Flag(x, y) = 1;
 		At(x, y) = color;
 		done = false;
 	}
 }
 
-void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc)
+void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc, int tolerance_)
 {
+	tolerance = tolerance_;
 	rc = _rc & ib.GetSize();
 	if(!rc.Contains(pt))
 		return;
@@ -57,9 +67,9 @@ void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc)
 	while(!done);
 }
 
-void FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc)
+void FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tolerance)
 {
-	sFloodFill(img).Fill(color, pt, rc);
+	sFloodFill(img).Fill(color, pt, rc, tolerance);
 }
 
 struct InterpolateFilter : ImageFilter9 {

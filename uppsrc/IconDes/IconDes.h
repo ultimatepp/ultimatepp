@@ -96,7 +96,7 @@ struct IconShow : public Ctrl {
 	IconShow() { BackPaint(); }
 };
 
-void   FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc);
+void   FloodFill(ImageBuffer& img, RGBA color, Point pt, const Rect& rc, int tolerance);
 void   InterpolateImage(Image& img, const Rect& _rc);
 void   MirrorHorz(Image& img, const Rect& rect);
 void   MirrorVert(Image& img, const Rect& rect);
@@ -133,6 +133,7 @@ public:
 	virtual void  LeftDown(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
 	virtual void  LeftUp(Point p, dword keyflags);
+	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
 	virtual bool  Key(dword key, int count);
 	virtual Image CursorImage(Point p, dword keyflags);
@@ -179,7 +180,7 @@ private:
 	RGBACtrl       rgbactrl;
 	IconShow       iconshow;
 	Image          cursor_image;
-	Image          fill_cursor;
+	Image          fill_cursor, fill_cursor2, fill_cursor3;
 	bool           single_mode;
 	ParentCtrl     single;
 	Label          info;
