@@ -238,6 +238,8 @@ void IconDes::ColorChanged()
 {
 	cursor_image = MakeIconDesCursor(IconDesImg::Arrow(), IconDesImg::ArrowColor());
 	fill_cursor = MakeIconDesCursor(IconDesImg::Fill(), IconDesImg::FillColor());
+	fill_cursor2 = MakeIconDesCursor(IconDesImg::Fill2(), IconDesImg::FillColor());
+	fill_cursor3 = MakeIconDesCursor(IconDesImg::Fill3(), IconDesImg::FillColor());
 	PasteText();
 }
 

@@ -20,14 +20,15 @@ void IconDes::LeftDown(Point p, dword flags)
 	}
 	SetCapture();
 	Current().base_image = CurrentImage();
-	if(flags & K_SHIFT) {
+	int fill = flags & K_SHIFT ? 0 : flags & K_CTRL ? 20 : flags & K_ALT ? 40 : -1;
+	if(fill >= 0) {
 		ImageBuffer ib(CurrentImage());
 		if(!doselection) {
 			RGBA c = CurrentColor();
 			c.r += 127;
 			MaskFill(ib, c, 0);
 		}
-		FloodFill(ib, CurrentColor(), startpoint, ib.GetSize());
+		FloodFill(ib, CurrentColor(), startpoint, ib.GetSize(), fill);
 		SetCurrentImage(ib);
 		if(!doselection)
 			MaskSelection();
@@ -55,6 +56,14 @@ void IconDes::MouseMove(Point p, dword keyflags)
 	else
 	if(tool)
 		(this->*tool)(p, keyflags);
+}
+
+void Upp::IconDes::MouseWheel(Point, int zdelta, dword)
+{
+	if(zdelta < 0)
+		ZoomOut();
+	else
+		ZoomIn();
 }
 
 void IconDes::LeftUp(Point p, dword keyflags)
@@ -106,7 +115,9 @@ Image IconDes::CursorImage(Point p, dword flags)
 		return HasCapture() ? IconDesImg::MoveMove()
 		       : Rect(Current().pastepos, Current().paste_image.GetSize()).Contains(GetPos(p)) ? IconDesImg::MoveCursor()
 		       : IconDesImg::MoveOk();
-	return flags & K_SHIFT ? fill_cursor : cursor_image;
+	return flags & K_SHIFT ? fill_cursor :
+	       flags & K_CTRL ? fill_cursor2 :
+	       flags & K_ALT ? fill_cursor3 : cursor_image;
 }
 
 }
