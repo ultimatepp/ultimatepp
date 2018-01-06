@@ -339,7 +339,7 @@ private:
 	int                        mode;
 	Buffer<int16>              subpixel;
 	int                        render_cx;
-	bool                       dopreclip;
+	int                        dopreclip;
 
 	Attr                       attr;
 	Array<Attr>                attrstack;
@@ -401,7 +401,7 @@ private:
 
 		LinearPathConsumer *g;
 
-		PathJob(Rasterizer& r, double width, bool ischar, bool dopreclip, Pointf path_min, Pointf path_max, const Attr& attr);
+		PathJob(Rasterizer& r, double width, bool ischar, int dopreclip, Pointf path_min, Pointf path_max, const Attr& attr);
 	};
 	
 	struct CoJob {
@@ -457,6 +457,7 @@ public:
 	void               Finish();
 	
 	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; return *this; }
+	BufferPainter&     PreClipDashed()                         { dopreclip = 2; return *this; }
 	BufferPainter&     Co(bool b = true)                       { co = b; return *this; }
 
 	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
