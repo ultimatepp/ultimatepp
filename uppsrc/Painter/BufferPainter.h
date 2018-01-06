@@ -397,6 +397,7 @@ private:
 		bool          evenodd;
 		bool          regular;
 		double        tolerance;
+		bool          preclipped;
 
 		LinearPathConsumer *g;
 

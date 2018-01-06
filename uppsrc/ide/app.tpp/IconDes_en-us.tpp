@@ -7,18 +7,25 @@ topic "Iml designer";
 [s1; Icon Designer&]
 [s2; 1. Fundamental controls&]
 [s0; &]
-[ {{3462:6538 [s3; [* Right mouse button]]
+[ {{3462:6538 [s3; [* Left mouse button]]
+:: [s3; Draws the current color.]
+:: [s3; [* Right mouse button]]
 :: [s3; Picks current color.]
 :: [s3; [* Shift`+Left mouse button]]
 :: [s3; Flood fill.]
+:: [s3; [* Ctrl`+Left mouse button]]
+:: [s3; Flood fill with color tolerance.]
+:: [s3; [* Alt`+Left mouse button]]
+:: [s3; Flood fill with larger color tolerance.]
 :: [s3; [* Shift`+cursor keys]]
-:: [s3; Move selection if any, scroll image otherwise.]}}&]
-[s2; 2. Supersampling mode&]
+:: [s3; Move selection if any, scroll image otherwise.]
+:: [s3; [* Mouse wheel]]
+:: [s3; Zoom in / out]}}&]
+[s2; 2. Supersampling&]
 [s3; 
 @@image:118&118
 (AxMAEwAAAAAAAAAAAHice/PyxpsRgxoYGOBsBjAgUhcEIQsS1AtRj0wia2TAEMHjVKzqcTmgAUOcoF0ENRJvI3KokupH8uKRJAPxKMCvF54GcCEq+oIWumiBAOu9VuA=)
- icon switches designer to `"supersampling`" mode. Image is scaled 
-3 times by repeating pixels in this mode:&]
+ icon scales 3 times by repeating pixels:&]
 [s0;= [* 
 @@image:725&731
 (A3QAdQAAAAAAAAAAAHic7dhBakMxEATRf9qcI9fwaZ1sPBiiReBrZLV4RRamEBgVgRa+Lkzm+eL389eLxwvyjtRW20T53rZ8nSTvSG21TZTvbTEXW9YntdU2UdqyPqmttonSG6wPW9YntdU2UdqyPqmttonSG6yPj2zZdX3/+WuRy240lNpqm962fJ1sksvaLrvRUGqrbXpbzKV7y5b9i/5fdlxzKLXVNr1t+Tp5X27YtuOaQ6mttultMZfNt6zjizquOZTaapvetnydvC+X7c7mW6attoltMZfuLeuQy/bxptRW2/S25evknnLZPt6U2mqb3hZz2XzLUmZrKLXVNr1t+Tr5cZkyW0OprbbpbTGXfbYseraGUltt09uWr5MrZfRsDaW22qa3xVxsWZ/UVtv0tuXr5Ep59pZpq21iW8xlny07T2qrbaLcZ8vOk9pqmyi9wfrYZ8vO/j1BW20T25avkyvl2b8naKttYlvMxZb1SW21TW9bvk6ulGdvmbbaJrbFXPbZsvOkttomyn227DyprbaJ0husD1vWJ7XVNlHasj6prbaJ0husD1vWJ7XVNlHasj6prbaJ0husjycAYC0/+ktIYA==)
@@ -26,8 +33,11 @@ topic "Iml designer";
 @@image:1694&1694
 (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)
 ]&]
-[s3; In supersampling mode, you can draw detailed content that will 
-get smooth antialiased appearance when rescaled down again:&]
+[s3; After drawing detailed content that will get smooth antialiased 
+appearance when rescaled down again using 
+@@image:100&100
+(BBAAEAAAAAAAAAAAAHicrZLRCQAgCERvM6do/1GMIENIRVRB/Ijn3ZHAdK0FMPfYMyt12Gx39KN8mfzfO9+mmAv16e6Y4LUXY6/JWwzBzJXy77Ap3tGXv9XzeddaTn5hpCt32r3x2dpmDFha)
+:&]
 [s0;= [* 
 @@image:1689&1689
 (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)
@@ -38,6 +48,18 @@ get smooth antialiased appearance when rescaled down again:&]
 [s3; Scaling up and down algorithms are paired in a way that is loss`-less 
 for unaltered parts of image. It is therefore possible to edit 
 parts of already supersampled Image without problems.&]
+[s3; 
+@@image:100&100
+(BBAAEAAAAAAAAAAAAHicY2AYeKDFwBDawMDwH0RDhQqB+D8U2xOjF4ahZsDMsYeagRPA9CDTSNLI+v/jM7cBuz3I7rdH4mP4C4v+VVCMDLDqxaKfkF5C9v9Hw7j8gs/9JAFC+htQ0wfJ+rGkMRRQj5SGCGF89pBrPyFAiV58AAD5t0q5)
+ and 
+@@image:100&100
+(BBAAEAAAAAAAAAAAAHicrZIBCsAgDAPzs77Ch+xb+6Sj0LK6ReesgSAoVxstsFulALXmWF1XpOysM/eP8s3kb84P3TDLmKO89ypW4y/vinzshdSlPGMENNeLP82sH/ImDf/Fhhr+t3HF070suBn3ypxmZ3yvLjutWws=)
+ provide identical function scaling two times.&]
+[s3; 
+@@image:100&100
+(BBAAEAAAAAAAAAAAAHicY2AY8uA/ERiXOrC4zP//ODEudeTqZ2hggGAy9MP14tGPoqaBOP9j6MGuH3f4E6cf3V6S9aOFB0I/6fE/CqAAADJ3voA=)
+ button activates `"supersampled preview`" `- in addition to 
+the real size, preview also shows 2x and 3x downscaled images.&]
 [s2; 3. Interpolation&]
 [s3; Interpolation 
 @@image:125&125

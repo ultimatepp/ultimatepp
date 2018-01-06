@@ -22,6 +22,7 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, bool ischa
 
 	g = &rasterizer;
 	Rectf preclip = Null;
+	preclipped = false;
 	if(dopreclip && width != ONPATH) {
 		preclip = rasterizer.GetClip();
 		Xform2D imx = Inverse(attr.mtx);
@@ -41,6 +42,7 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, bool ischa
 		if(!preclip.Intersects(
 				Rectf(path_min, path_max).Inflated(max(width, 0.0) * (1 + attr.miter_limit)))) {
 			LLOG("Preclipped " << preclip << ", min " << path_min << ", max " << path_max);
+			preclipped = true;
 			return;
 		}
 	}
@@ -173,6 +175,8 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	rasterizer.Reset();
 
 	PathJob j(rasterizer, width, ischar, dopreclip, path_min, path_max, pathattr);
+	if(j.preclipped)
+		return newclip;
 	
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {
@@ -294,6 +298,8 @@ void BufferPainter::CoJob::DoPath(const BufferPainter& sw)
 	rasterizer.Reset();
 
 	PathJob j(rasterizer, width, ischar, sw.dopreclip, path_min, path_max, attr);
+	if(j.preclipped)
+		return;
 	evenodd = j.evenodd;
 	BufferPainter::RenderPathSegments(j.g, path, j.regular ? &attr : NULL, j.tolerance);
 }
