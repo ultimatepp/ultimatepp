@@ -13,7 +13,7 @@ void BufferPainter::ClearOp(const RGBA& color)
 	UPP::Fill(~ib, color, ib.GetLength());
 }
 
-BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, bool ischar, bool dopreclip,
+BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, bool ischar, int dopreclip,
                                 Pointf path_min, Pointf path_max, const Attr& attr)
 :	trans(attr.mtx)
 {
@@ -23,7 +23,7 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, bool ischa
 	g = &rasterizer;
 	Rectf preclip = Null;
 	preclipped = false;
-	if(dopreclip && width != ONPATH) {
+	if((dopreclip == 1 || dopreclip == 2 && attr.dash.GetCount()) && width != ONPATH) {
 		preclip = rasterizer.GetClip();
 		Xform2D imx = Inverse(attr.mtx);
 		Pointf tl, br, a;
