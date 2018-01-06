@@ -2,6 +2,9 @@
 
 #ifdef PLATFORM_WIN32
 
+#define LDUMP(x)
+#define LLOG(x)
+
 namespace Upp {
 
 enum { HIMETRIC_INCH = 2540 }; // HIMETRIC units per inch
@@ -189,16 +192,16 @@ HRESULT OcxObject::RawInvoke(IRef<ITypeInfo>& typeinfo, IDispatch *dispatch, DIS
 //	HRESULT res = typeinfo->Invoke(dispatch, dispid, flags, params, result, excep, arg_err);
 	HRESULT res = DispInvoke(dispatch, ~typeinfo, dispid, flags, params, result, excep, arg_err);
 	if(FAILED(res)) {
-		RLOG("failure: dispid = " << (int)dispid << ", #args = " << (int)params->cArgs
+		LLOG("failure: dispid = " << (int)dispid << ", #args = " << (int)params->cArgs
 			<< ", #named args = " << (int)params->cNamedArgs << ", return " << FormatIntHex(result));
 		for(int i = 0; i < (int)params->cArgs; i++) {
-			RLOG("arg[" << i << "] (vt = " << (int)params->rgvarg[i].vt << "): " << StdFormat(AsValue(params->rgvarg[i])));
+			LLOG("arg[" << i << "] (vt = " << (int)params->rgvarg[i].vt << "): " << StdFormat(AsValue(params->rgvarg[i])));
 		}
-		RLOG("#funcs = " << attr->cFuncs);
+		LLOG("#funcs = " << attr->cFuncs);
 		for(int i = 0; i < attr->cFuncs; i++) {
 			FUNCDESC *func;
 			typeinfo->GetFuncDesc(i, &func);
-			RLOG("memid = " << func->memid << ", cParams " << func->cParams
+			LLOG("memid = " << func->memid << ", cParams " << func->cParams
 			<< ", cParamsOpt = " << func->cParamsOpt << ", cScodes " << func->cScodes
 			<< ", funckind = " << (int)func->funckind << ", invkind " << (int)func->invkind
 			<< ", flags = " << FormatIntHex(func->wFuncFlags));
@@ -248,30 +251,29 @@ OcxTypeInfo::OcxTypeInfo(const GUID& coclass_guid, /*const GUID& dispatch_guid,*
 , registration(0)
 #endif
 {
-	RLOG("OcxTypeInfo ctr (" << name << ", " << Guid(coclass_guid) << ")");
+	LLOG("OcxTypeInfo ctr (" << name << ", " << Guid(coclass_guid) << ")");
 	OcxTypeLib::Get().Add(*this);
 }
 
 bool OcxTypeInfo::CanUnload() const
 {
-	RLOG("OcxTypeInfo::CanUnload(" << name << ", " << Guid(coclass_guid) << ")");
-	RDUMP(object_count);
-	RDUMP(refcount);
-	RDUMP(lock_count);
+	LLOG("OcxTypeInfo::CanUnload(" << name << ", " << Guid(coclass_guid) << ")");
+	LDUMP(object_count);
+	LDUMP(refcount);
 	return object_count == 0 && refcount <= 2 && lock_count <= 0;
 }
 
 int OcxTypeInfo::IncRef()
 {
 	int res = InterlockedIncrement(&refcount);
-	RLOG("OcxTypeInfo::IncRef(" << name << " -> " << res << ")");
+	LLOG("OcxTypeInfo::IncRef(" << name << " -> " << res << ")");
 	return res;
 }
 
 int OcxTypeInfo::DecRef()
 {
 	int res = InterlockedDecrement(&refcount);
-	RLOG("OcxTypeInfo::DecRef(" << name << " -> " << res << ")");
+	LLOG("OcxTypeInfo::DecRef(" << name << " -> " << res << ")");
 	VERIFY(res > 0); // if this throws, the factory has been over-released
 	return res;
 }
@@ -306,7 +308,7 @@ void DoLateExit()
 
 HRESULT OcxTypeInfo::CreateInstance(IUnknown *outer, REFIID iid, void **object)
 {
-	RLOG("OcxTypeInfo::CreateInstance(" << name << ", iid = " << Guid(iid) << ", outer = " << FormatIntHex(outer) << ")");
+	LLOG("OcxTypeInfo::CreateInstance(" << name << ", iid = " << Guid(iid) << ", outer = " << FormatIntHex(outer) << ")");
 	if(outer && iid != IID_IUnknown)
 		return CLASS_E_NOAGGREGATION;
 	try {
@@ -320,7 +322,7 @@ HRESULT OcxTypeInfo::CreateInstance(IUnknown *outer, REFIID iid, void **object)
 		return hr;
 	}
 	catch(Exc e) {
-		RLOG("OcxTypeInfo::CreateInstance error: " << e);
+		LLOG("OcxTypeInfo::CreateInstance error: " << e);
 		return E_OUTOFMEMORY;
 	}
 	catch(...) {
@@ -330,7 +332,7 @@ HRESULT OcxTypeInfo::CreateInstance(IUnknown *outer, REFIID iid, void **object)
 
 HRESULT OcxTypeInfo::LockServer(BOOL lock)
 {
-	RLOG("OcxTypeInfo::LockServer(" << name << ", " << lock << ")");
+	LLOG("OcxTypeInfo::LockServer(" << name << ", " << lock << ")");
 	if(lock)
 		AtomicInc(lock_count);
 	else
@@ -340,7 +342,7 @@ HRESULT OcxTypeInfo::LockServer(BOOL lock)
 
 HRESULT OcxTypeInfo::GetLicInfo(/* [out] */ LICINFO *pLicInfo)
 {
-	RLOG("OcxTypeInfo::GetLicInfo(" << name << ")");
+	LLOG("OcxTypeInfo::GetLicInfo(" << name << ")");
 	if(!pLicInfo)
 		return E_INVALIDARG;
 	pLicInfo->fLicVerified = TRUE;
@@ -350,7 +352,7 @@ HRESULT OcxTypeInfo::GetLicInfo(/* [out] */ LICINFO *pLicInfo)
 
 HRESULT OcxTypeInfo::RequestLicKey(/* [in] */ DWORD dwReserved, /* [out] */ BSTR *pBstrKey)
 {
-	RLOG("OcxTypeInfo::RequestLicKey(" << name << ")");
+	LLOG("OcxTypeInfo::RequestLicKey(" << name << ")");
 	if(!pBstrKey) return E_INVALIDARG;
 	*pBstrKey = 0;
 	return S_OK;
@@ -363,7 +365,7 @@ HRESULT OcxTypeInfo::CreateInstanceLic(
 	/* [in] */ BSTR bstrKey,
 	/* [iid_is][out] */ PVOID *ppvObj)
 {
-	RLOG("OcxTypeInfo::CreateInstanceLic(" << name << ")");
+	LLOG("OcxTypeInfo::CreateInstanceLic(" << name << ")");
 	return CreateInstance(pUnkOuter, riid, ppvObj);
 }
 
@@ -590,15 +592,15 @@ HRESULT OcxTypeLib::GetFactory(REFCLSID rclsid, REFIID iid, void **ppv)
 {
 	Guid clsid = rclsid;
 	LOGSYSOCX("OcxTypeLib::GetFactory(clsid = " << clsid << ", iid = " << Guid(iid) << ")");
-	RLOG("#ocx_init = " << ocx_init.GetCount());
+	LLOG("#ocx_init = " << ocx_init.GetCount());
 
 	for(int i = 0; i < ocx_init.GetCount(); i++)
 		ocx_init[i]();
 	ocx_init.Clear();
 
-	RLOG("#objects = " << objects.GetCount());
+	LLOG("#objects = " << objects.GetCount());
 	for(int i = 0; i < objects.GetCount(); i++)
-		RLOG("object[" << i << "] = " << Guid(objects.GetKey(i)));
+		LLOG("object[" << i << "] = " << Guid(objects.GetKey(i)));
 
 	*ppv = 0;
 	int f = objects.Find(clsid);
