@@ -326,7 +326,9 @@ private:
 	void  ListCursor();
 	void  PrepareImageDlg(WithImageLayout<TopWindow>& dlg);
 	void  PrepareImageSizeDlg(WithImageSizeLayout<TopWindow>& dlg);
+	void  ImageInsert(int ii, const String& name, const Image& m, bool exp = false);
 	void  ImageInsert(const String& name, const Image& m, bool exp = false);
+	void  Slice();
 	void  InsertImage();
 	void  InsertRemoved(int ii);
 	void  EditImageSize();
