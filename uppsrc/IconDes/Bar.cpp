@@ -153,24 +153,6 @@ void IconDes::DrawBar(Bar& bar)
 {
 	using namespace IconDesKeys;
 	bool notpasting = !IsPasting();
-	Slot *c = IsCurrent() ? &Current() : NULL;
-	bar.Add(c && c->image.GetLength() < 256 * 256, "Smart Upscale 2x",
-	        IconDesImg::Upscale(), THISBACK(Upscale))
-	   .Key(AK_RESIZEUP2);
-	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 2x",
-	        IconDesImg::ResizeUp2(), THISBACK(ResizeUp2))
-	   .Key(AK_RESIZEUP2);
-	bar.Add(c, "Supersample 2x", IconDesImg::ResizeDown2(), THISBACK(ResizeDown2))
-	   .Key(AK_RESIZEDOWN2);
-	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 3x",
-	        IconDesImg::ResizeUp(), THISBACK(ResizeUp))
-       .Key(AK_RESIZEUP3);
-	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
-	   .Key(AK_RESIZEDOWN3);
-	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
-	        [=] { show_small = !show_small; SetBar(); SyncShow(); })
-	   .Check(show_small);
-	bar.Separator();
 	bar.Add(AK_FREEHAND, IconDesImg::FreeHand(), THISBACK1(SetTool, &IconDes::FreehandTool))
 	   .Check(tool == &IconDes::FreehandTool && notpasting);
 	bar.Add(AK_LINES, IconDesImg::Lines(), THISBACK1(SetTool, &IconDes::LineTool))
@@ -192,6 +174,26 @@ void IconDes::DrawBar(Bar& bar)
 		bar.Add("Pen " + AsString(i), IconDesImg::Get(IconDesImg::I_Pen1 + i - 1), THISBACK1(SetPen, i))
 		   .Check(pen == i)
 		   .Key(K_1 + i - 1);
+	bar.Separator();
+	Slot *c = IsCurrent() ? &Current() : NULL;
+	bar.Add(c && c->image.GetLength() < 256 * 256, "Smart Upscale 2x",
+	        IconDesImg::Upscale(), THISBACK(Upscale))
+	   .Key(AK_RESIZEUP2);
+	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 2x",
+	        IconDesImg::ResizeUp2(), THISBACK(ResizeUp2))
+	   .Key(AK_RESIZEUP2);
+	bar.Add(c, "Supersample 2x", IconDesImg::ResizeDown2(), THISBACK(ResizeDown2))
+	   .Key(AK_RESIZEDOWN2);
+	bar.Add(c && c->image.GetLength() < 256 * 256, "Resize Up 3x",
+	        IconDesImg::ResizeUp(), THISBACK(ResizeUp))
+       .Key(AK_RESIZEUP3);
+	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
+	   .Key(AK_RESIZEDOWN3);
+	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
+	        [=] { show_small = !show_small; SetBar(); SyncShow(); })
+	   .Check(show_small);
+	bar.Separator();
+	bar.Add(c, AK_SLICE, IconDesImg::Slice(), THISBACK(Slice));
 }
 
 void IconDes::MainToolBar(Bar& bar)

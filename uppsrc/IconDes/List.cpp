@@ -114,17 +114,22 @@ void SetRes(Image& m, int resolution)
 	m = ib;
 }
 
-void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
+void IconDes::ImageInsert(int ii, const String& name, const Image& m, bool exp)
 {
-	int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
-	if(ii == slot.GetCount() - 1)
-		ii = slot.GetCount();
 	Slot& c = slot.Insert(ii);
 	c.name = name;
 	c.image = m;
 	c.exp = exp;
 	SyncList();
 	GoTo(ii);
+}
+
+void IconDes::ImageInsert(const String& name, const Image& m, bool exp)
+{
+	int ii = ilist.IsCursor() ? (int)ilist.GetKey() : 0;
+	if(ii == slot.GetCount() - 1)
+		ii = slot.GetCount();
+	ImageInsert(ii, name, m, exp);
 }
 
 void IconDes::InsertImage()
@@ -140,6 +145,38 @@ void IconDes::InsertImage()
 	Image m = CreateImage(Size(~dlg.cx, ~dlg.cy), Null);
 	SetRes(m, ~dlg.resolution);
 	ImageInsert(~dlg.name, m, dlg.exp);
+}
+
+void IconDes::Slice()
+{
+	if(!IsCurrent())
+		return;
+	Image src = Current().image;
+	Size isz = src.GetSize();
+	int cc = min(isz.cx, isz.cy);
+	if(!cc)
+		return;
+	WithImageLayout<TopWindow> dlg;
+	PrepareImageDlg(dlg);
+	dlg.name <<= Current().name;
+	dlg.cx <<= cc;
+	dlg.cy <<= cc;
+	dlg.Title("Slice image");
+	dlg.resolution <<= IMAGE_RESOLUTION_STANDARD;
+	do {
+		if(dlg.Run() != IDOK)
+			return;
+	}
+	while(!CheckName(dlg));
+	String s = ~dlg.name;
+	int n = 0;
+	int ii = ilist.GetKey();
+	for(int y = 0; y < isz.cy; y += (int)~dlg.cy)
+		for(int x = 0; x < isz.cx; x += (int)~dlg.cx) {
+			Image m = Crop(src, x, y, ~dlg.cx, ~dlg.cy);
+			SetRes(m, ~dlg.resolution);
+			ImageInsert(++ii, s + AsString(n++), m, ~dlg.exp);
+		}
 }
 
 void IconDes::Duplicate()
