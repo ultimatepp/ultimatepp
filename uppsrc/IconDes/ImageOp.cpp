@@ -26,7 +26,7 @@ bool sFloodFill::Eq(int x, int y)
 {
 	const RGBA& q = At(x, y);
 	if((q.a | scolor.a) == 0) return true;
-	return abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
+	return q.a && abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
 }
 
 void sFloodFill::Try(int x, int y)
