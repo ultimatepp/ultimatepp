@@ -1310,11 +1310,13 @@ String ReadStdIn()
 	}
 }
 
+
 String ReadSecret()
 {
 	DisableEcho();
 	String s = ReadStdIn();
 	EnableEcho();
+	Cout().PutEol();
 	return s;
 }
 
@@ -1325,14 +1327,14 @@ void EnableEcho(bool b)
 	tcgetattr(STDIN_FILENO, &t);
 	if(b) t.c_lflag |=  ECHO;
 	else  t.c_lflag &= ~ECHO;
-	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+	tcsetattr(STDIN_FILENO, TCSADRAIN, &t);
 #elif PLATFORM_WIN32
-    	HANDLE h = GetStdHandle(STD_INPUT_HANDLE); 
-    	DWORD mode = 0;
-    	GetConsoleMode(h, &mode);
-    	if(b) mode |=  ENABLE_ECHO_INPUT;
-    	else  mode &= ~ENABLE_ECHO_INPUT;
-    	SetConsoleMode(h, mode);
+	HANDLE h = GetStdHandle(STD_INPUT_HANDLE);
+	DWORD mode = 0;
+	GetConsoleMode(h, &mode);
+	if(b) mode |=  ENABLE_ECHO_INPUT;
+	else  mode &= ~ENABLE_ECHO_INPUT;
+	SetConsoleMode(h, mode);
 #endif	
 }
 
