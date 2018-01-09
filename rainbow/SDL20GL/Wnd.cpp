@@ -124,7 +124,7 @@ Ctrl *Ctrl::GetActiveCtrl()
 
 // Vector<Callback> Ctrl::hotkey;
 
-int Ctrl::RegisterSystemHotKey(dword key, Callback cb)
+int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
 {
 /*	ASSERT(key >= K_DELTA);
 	int q = hotkey.GetCount();
