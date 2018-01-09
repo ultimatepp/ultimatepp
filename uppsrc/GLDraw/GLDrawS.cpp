@@ -241,10 +241,10 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 	gl_rect.Use();
 
 	GLshort vertex[] = {
-	    rect.left, rect.top,
-	    rect.left, rect.bottom,
-	    rect.right, rect.bottom,
-	    rect.right, rect.top,
+	    (GLshort)rect.left, (GLshort)rect.top,
+	    (GLshort)rect.left, (GLshort)rect.bottom,
+	    (GLshort)rect.right, (GLshort)rect.bottom,
+	    (GLshort)rect.right, (GLshort)rect.top,
 	};
 
 	bool inv = color == InvertColor();
@@ -303,10 +303,10 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	PutImagePixels += isz.cx * isz.cy;
 
 	GLshort vertex[] = {
-	    r.left, r.top,
-	    r.left, r.bottom,
-	    r.right, r.bottom,
-	    r.right, r.top,
+	    (GLshort)r.left, (GLshort)r.top,
+	    (GLshort)r.left, (GLshort)r.bottom,
+	    (GLshort)r.right, (GLshort)r.bottom,
+	    (GLshort)r.right, (GLshort)r.top,
 	};
 
 	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
@@ -368,10 +368,10 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 	PutImageCPixels += isz.cx * isz.cy;
 
 	GLshort vertex[] = {
-	    rect.left, rect.top,
-	    rect.left, rect.bottom,
-	    rect.right, rect.bottom,
-	    rect.right, rect.top,
+	    (GLshort)rect.left, (GLshort)rect.top,
+	    (GLshort)rect.left, (GLshort)rect.bottom,
+	    (GLshort)rect.right, (GLshort)rect.bottom,
+	    (GLshort)rect.right, (GLshort)rect.top,
 	};
 
 	GLubyte r = color.GetR();
