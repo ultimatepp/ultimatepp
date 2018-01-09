@@ -151,7 +151,7 @@ int CompareRanges(const Range1& a, const Range2& b)
 template <class Range, class V, class C>
 int FindMatch(const Range& r, const C& match, int from = 0)
 {
-	for(int i = from; i < r.GetCount(); i++)
+	for(int i = from, rCount = r.GetCount(); i < rCount; i++)
 		if(match(r[i])) return i;
 	return -1;
 }
@@ -159,7 +159,7 @@ int FindMatch(const Range& r, const C& match, int from = 0)
 template <class Range, class V>
 int FindIndex(const Range& r, const V& value, int from = 0)
 {
-	for(int i = from; i < r.GetCount(); i++)
+	for(int i = from, rCount = r.GetCount(); i < rCount; i++)
 		if(r[i] == value) return i;
 	return -1;
 }
@@ -168,7 +168,7 @@ template <class Range, class Predicate>
 Vector<int> FindAll(const Range& r, Predicate match, int from = 0)
 {
 	Vector<int> ndx;
-	for(int i = from; i < r.GetCount(); i++)
+	for(int i = from, rCount = r.GetCount(); i < rCount; i++)
 		if(match(r[i]))
 			ndx.Add(i);
 	return ndx;
