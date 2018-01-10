@@ -627,6 +627,10 @@ LazyUpdate::LazyUpdate()
 	dirty = true;
 }
 
+#ifdef CPU_X86
+#include <xmmintrin.h>
+#endif
+
 void SpinLock::Wait()
 {
 	volatile int n = 0;
