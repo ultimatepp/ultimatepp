@@ -26,7 +26,7 @@ Uint32 WakeCb(Uint32 interval, void *param)
 	return 0;
 }
 
-void ScheduleWakup()
+void WakeUpGuiThread()
 {
 	waketimer_id = SDL_AddTimer(20, WakeCb, NULL);
 }
