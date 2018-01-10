@@ -12,54 +12,138 @@ topic "Sorting template functions";
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Sorting template functions]]}}&]
 [s3; &]
-[s5;:Sort`(T`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
-[@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[@(0.0.255) void]_[* Sort]([*@4 T][@(0.0.255) `&]_[*@3 c
-], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
-[s2;%% Sorts container [%-*@3 c] with ordering is defined by [%-*@3 less]. 
-The order of elements with the same value can be changed (unstable 
-sort).&]
-[s6;%% IterSwap must be defined for IteratorOf<T>.&]
-[s3; &]
-[s4; &]
-[s5;:Sort`(T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T][@(0.0.255) >]_[@(0.0.255) v
-oid]_[* Sort]([*@4 T][@(0.0.255) `&]_[*@3 c])&]
-[s2;%% Sorts container [%-*@3 c] with ordering is determined by [*/ operator<]. 
-The order of elements with the same value can be changed (unstable 
-sort).&]
-[s6;%% IterSwap must be defined for IteratorOf<T>.&]
 [s3;%% &]
 [s4; &]
-[s5;:StableSort`(T`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T], 
-[@(0.0.255) class]_[*@4 Less]>_[@(0.0.255) void]_[* StableSort]([*@4 T][@(0.0.255) `&]_[*@3 c],
- [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
-[s2;%% Sorts container [%-*@3 c] with ordering is defined by [%-*@3 less]. 
+[s5;:Upp`:`:Sort`(Range`&`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 R
+ange], [@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:Sort`(Range`&`&`,const Less`&`): [@(0.0.255) void]_[* Sort]([*@4 Range][@(0.0.255) `&
+`&]_[*@3 c], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2;%% Sorts range [%-@3 c] with ordering is defined by [%-*@3 less]. 
+The order of elements with the same value can be changed (unstable 
+sort).&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Sort`(Range`&`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>&]
+[s5;:Upp`:`:Sort`(Range`&`&`): [@(0.0.255) void]_[* Sort]([*@4 Range][@(0.0.255) `&`&]_[*@3 c])
+&]
+[s2;%% Sorts range [%-@3 c] with ordering is defined by [*/ operator<]. 
+The order of elements with the same value can be changed (unstable 
+sort).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:StableSort`(Range`&`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) cla
+ss]_[*@4 Range], [@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:StableSort`(Range`&`&`,const Less`&`): [@(0.0.255) void]_[* StableSort]([*@4 Ra
+nge][@(0.0.255) `&`&]_[*@3 r], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2;%% Sorts container [%-@3 c] with ordering is defined by [%-*@3 less]. 
 The order of elements with the same value stays unchanged (stable 
 sort).&]
-[s6;%% IterSwap must be defined for IteratorOf<T>.&]
-[s3; &]
+[s6;%% &]
 [s4; &]
-[s5;:StableSort`(T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>_[@(0.0.255) void]_
-[* StableSort]([*@4 T][@(0.0.255) `&]_[*@3 c])&]
-[s2;%% Sorts container [%-*@3 c] with ordering is determined by [*/ operator<]. 
- The order of elements with the same value stays unchanged (stable 
+[s5;:Upp`:`:StableSort`(Range`&`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>
+&]
+[s5;:Upp`:`:StableSort`(Range`&`&`): [@(0.0.255) void]_[* StableSort]([*@4 Range][@(0.0.255) `&
+`&]_[*@3 r])&]
+[s2;%% Sorts container [%-@3 c] with ordering is defined by [*/ operator<]. 
+The order of elements with the same value stays unchanged (stable 
 sort).&]
-[s6;%% IterSwap must be defined for IteratorOf<T>.&]
+[s6;%% &]
+[s4; &]
+[s5;:Upp`:`:IndexSort`(MasterRange`&`&`,Range2`&`&`,const Less`&`): [@(0.0.255) templat
+e]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:IndexSort`(MasterRange`&`&`,Range2`&`&`,const Less`&`): [@(0.0.255) void]_[* I
+ndexSort]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_[*@3 r2],
+ [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s5;:Upp`:`:IndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3], [@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:IndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) v
+oid]_[* IndexSort2]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_
+[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_
+[*@3 less])&]
+[s5;:Upp`:`:IndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`,const Less`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3], [@(0.0.255) class]_[*@4 Range4], [@(0.0.255) class]_[*@4 Les
+s]>&]
+[s5;:Upp`:`:IndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`,const Less`&`): [@(0.0.255) v
+oid]_[* IndexSort3]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_
+[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], [*@4 Range4][@(0.0.255) `&`&]_[*@3 r4], 
+[@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s2;%% Sorts 2, 3 or 4 containers. All containers must have same 
+number of items. Resulting order is defined by the [%-*@3 r ]container. 
+Ordering is defined by [* less].&]
 [s3;%% &]
 [s4; &]
-[s5;:IndexSort`(KC`&`,VC`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 K
-C], [@(0.0.255) class]_[*@4 VC], [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]_[@(0.0.255) void
-]_[* IndexSort]([*@4 KC][@(0.0.255) `&]_[*@3 keys], [*@4 VC][@(0.0.255) `&]_[*@3 values], 
-[@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
-[s2;%% Sorts pair of containers. Both containers must have same number 
-of items. Resulting order is defined by the [* keys] container. 
-Ordering is defined by [* less].&]
-[s3; &]
+[s5;:Upp`:`:IndexSort`(MasterRange`&`&`,Range2`&`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2]>&]
+[s5;:Upp`:`:IndexSort`(MasterRange`&`&`,Range2`&`&`): [@(0.0.255) void]_[* IndexSort]([*@4 M
+asterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_[*@3 r2])&]
+[s5;:Upp`:`:IndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`): [@(0.0.255) template
+]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3]>&]
+[s5;:Upp`:`:IndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`): [@(0.0.255) void]_[* I
+ndexSort2]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_[*@3 r2],
+ [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3])&]
+[s5;:Upp`:`:IndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3], [@(0.0.255) class]_[*@4 Range4]>&]
+[s5;:Upp`:`:IndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`): [@(0.0.255) v
+oid]_[* IndexSort3]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_
+[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], [*@4 Range4][@(0.0.255) `&`&]_[*@3 r4])&]
+[s2;%% Sorts 2, 3 or 4 containers. All containers must have same 
+number of items. Resulting order is defined by the [%-*@3 r ]container. 
+Ordering is defined by [*/ operator<].&]
+[s3;%% &]
 [s4; &]
-[s5;:IndexSort`(KC`&`,VC`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 KC], 
-[@(0.0.255) class]_[*@4 VC][@(0.0.255) >]_[@(0.0.255) void]_[* IndexSort]([*@4 KC][@(0.0.255) `&
-]_[*@3 keys], [*@4 VC][@(0.0.255) `&]_[*@3 values])&]
+[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`,const Less`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`,const Less`&`): [@(0.0.255) v
+oid]_[* StableIndexSort]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
+[*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])
+&]
+[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3],[@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) v
+oid]_[* StableIndexSort2]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
+[*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], 
+[@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s5;:Upp`:`:StableIndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`,const Less`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3], [@(0.0.255) class]_[*@4 Range4], [@(0.0.255) class]_[*@4 Les
+s]>&]
+[s5;:Upp`:`:StableIndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`,const Less`&`): [@(0.0.255) v
+oid]_[* StableIndexSort3]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
+[*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], 
+[*@4 Range4][@(0.0.255) `&`&]_[*@3 r4], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])
+&]
+[s2;%% Sorts 2, 3 or 4 containers. All containers must have same 
+number of items. Resulting order is defined by the [%-*@3 r ]container. 
+Ordering is defined by [* less]. The order of elements with the 
+same value stays unchanged (stable sort).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2]>&]
+[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`): [@(0.0.255) void]_[* StableIn
+dexSort]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], [*@4 Range2][@(0.0.255) `&`&]_[*@3 r2])&]
+[s5;:Upp`:`:StableIndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`): [@(0.0.255) te
+mplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3]>&]
+[s5;:Upp`:`:StableIndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`): [@(0.0.255) vo
+id]_[* StableIndexSort2]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
+[*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3])&]
+[s5;:Upp`:`:StableIndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`): [@(0.0.255) t
+emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
+[@(0.0.255) class]_[*@4 Range3], [@(0.0.255) class]_[*@4 Range4]>&]
+[s5;:Upp`:`:StableIndexSort3`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,Range4`&`&`): [@(0.0.255) v
+oid]_[* StableIndexSort3]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
+[*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], 
+[*@4 Range4][@(0.0.255) `&`&]_[*@3 r4])&]
 [s2;%% Sorts pair of containers. Both containers must have same number 
-of items. Resulting order is determined by the [* keys] container. 
+of items. Resulting order is determined by the [%-*@3 r ]container. 
 Ordering is determined by [*/ operator<].&]
 [s3; &]
 [s4; &]
@@ -78,7 +162,6 @@ ntainer])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [*/ operator<]. The order of elements with the 
 same value can be changed (unstable sort).&]
-[s7;%% &]
 [s3;%% &]
 [s4; &]
 [s5;:GetStableSortOrder`(const C`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) cl

@@ -42,9 +42,6 @@ is smaller than zero and zero if [%-*@3 a] is zero.&]
 is smaller than ][*@3 b][%%  and zero if ][*@3 a][%%  is equal than ][*@3 b.]&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:Reverse`(Range`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_&]
-[s5;:Upp`:`:Reverse`(Range`&`): [@(0.0.255) void]_[* Reverse]([*@4 Range][@(0.0.255) `&]_[*@3 r
-])&]
 [s5;:Upp`:`:Reverse`(Range`&`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Range]>_&]
 [s5;:Upp`:`:Reverse`(Range`&`&`): [@(0.0.255) void]_[* Reverse]([*@4 Range][@(0.0.255) `&`&]_
 [*@3 r])&]

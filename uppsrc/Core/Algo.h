@@ -12,7 +12,7 @@ template <class T>
 inline int cmp(const T& a, const T& b) { return a > b ? 1 : a < b ? -1 : 0; }
 
 template <class Range>
-void Reverse(Range& r)
+void Reverse(Range&& r)
 {
 	auto start = r.begin();
 	auto end = r.end();
@@ -20,12 +20,6 @@ void Reverse(Range& r)
 		do
 			IterSwap(start, end);
 		while(++start != end && --end != start);
-}
-
-template <class Range>
-void Reverse(Range&& r)
-{
-	Reverse(r);
 }
 
 template <class Range, class Accumulator>
