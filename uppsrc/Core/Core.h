@@ -350,10 +350,6 @@ class JsonIO;
 
 #include "Huge.h"
 
-#ifdef CPU_X86
-#include <xmmintrin.h>
-#endif
-
 #ifdef PLATFORM_WIN32
 NTL_MOVEABLE(POINT)
 NTL_MOVEABLE(SIZE)
