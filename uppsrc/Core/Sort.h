@@ -116,14 +116,14 @@ template <class Range, class Less>
 void Sort(Range&& c, const Less& less) { Sort(c, less); }
 
 template <class Range>
-void Sort(Range& c)
+void Sort(Range&& c)
 {
 	Sort__(c.begin(), c.end(), std::less<ValueTypeOf<Range>>());
 }
-
+/*
 template <class Range>
-void Sort(Range&& c) { Sort(c); }
-
+void Sort(Range& c) { Sort(c); }
+*/
 template <class T>
 struct StableSortItem__ {
 	const T& value;

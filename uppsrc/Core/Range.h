@@ -1,5 +1,5 @@
 template <class Range>
-using ValueTypeOf = typename std::remove_reference<decltype(*((Range *)0)->begin())>::type;
+using ValueTypeOf = typename std::remove_reference<decltype(*((typename std::remove_reference<Range>::type *)0)->begin())>::type;
 
 template <class Range>
 using IteratorOf = decltype(((Range *)0)->begin());
@@ -47,13 +47,13 @@ SubRangeClass<I> SubRange(I l, int count)
 {
 	return SubRangeClass<I>(l, count);
 }
-
+/*
 template <class C>
 auto SubRange(C& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
 {
 	return SubRange(c.begin() + pos, count);
 }
-
+*/
 template <class C>
 auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
 {
