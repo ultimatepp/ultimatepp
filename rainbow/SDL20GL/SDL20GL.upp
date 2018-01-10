@@ -3,9 +3,12 @@ description "SDL20 U++ backend\377";
 uses
 	Painter,
 	CtrlLib,
-	GLDraw;
+	GLDraw,
+	PdfDraw;
 
 library(POSIX) "SDL2 SDL2main GL";
+
+library(WIN32) "SDL2.lib SDL2main.lib OpenGL32.lib";
 
 file
 	SDL20GL.h,

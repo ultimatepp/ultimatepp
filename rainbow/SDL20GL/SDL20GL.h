@@ -1,11 +1,15 @@
 #define GUI_SDL20GL
 
-#include <SDL2/SDL.h>
-
 #include <GLDraw/GLDraw.h>
 
 #ifdef PLATFORM_POSIX
 #include <CtrlCore/stdids.h>
+#endif
+
+#ifdef PLATFORM_POSIX
+#include <SDL2/SDL.h>
+#else
+#include <SDL.h>
 #endif
 
 NAMESPACE_UPP
