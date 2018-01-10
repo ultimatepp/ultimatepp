@@ -52,6 +52,8 @@ DirFinder::DirFinder()
 			RegCloseKey(key);
 		}
 	}
+	
+	DDUMPC(path);
 
 	Array<FileSystemInfo::FileInfo> root = StdFileSystemInfo().Find(Null);
 	for(int i = 0; i < root.GetCount(); i++) {
@@ -65,7 +67,7 @@ DirFinder::DirFinder()
 		}
 	}
 
-	DUMP(path);
+	DUMPC(path);
 
 	for(String s : path) {
 		s = ToLower(s);
@@ -165,7 +167,7 @@ void InstantSetup()
 				            x64 ? "bin/hostx64/x64/cl.exe;bin/hostx64/x64/mspdb140.dll"
 				                : "bin/hostx86/x86/cl.exe;bin/hostx86/x86/mspdb140.dll");
 
-			bin = df.Get(x64 ? "/windows kits/10/bin/x86" : "windows kits/10/bin/x86", "makecat.exe;accevent.exe");
+			bin = df.Get("/windows kits/10/bin", "x86/makecat.exe;x86/accevent.exe");
 			inc = df.Get("/windows kits/10", "um/adhoc.h");
 			lib = df.Get("/windows kits/10", "um/x86/kernel32.lib");
 			
@@ -184,7 +186,8 @@ void InstantSetup()
 	
 			if(vc.GetCount() && bin.GetCount() && (inc.GetCount() && lib.GetCount() || kit81.GetCount())) {
 				bins.At(0) = vc + (ver17 ? (x64 ? "/bin/hostx64/x64" : "/bin/hostx86/x86") : (x64 ? "/bin/amd64" : "/bin"));
-				bins.At(1) = bin;
+				bins.At(1) = bin + (x64 ? "/x64" : "/x86");
+
 				String& sslbin = bins.At(2);
 				if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
 					sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin" : "bin/OpenSSL-Win/bin32");
