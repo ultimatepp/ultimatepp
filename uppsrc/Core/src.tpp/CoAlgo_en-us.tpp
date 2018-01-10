@@ -17,25 +17,16 @@ topic "Parallel algorithms";
 tion]([*@4 Iter]_[*@3 begin], [*@4 Iter]_[*@3 end], [@(0.0.255) const]_[*@4 Lambda][@(0.0.255) `&
 ]_[*@3 lambda], [@(0.0.255) int]_[*@3 min`_chunk]_`=_CO`_PARTITION`_MIN, 
 [@(0.0.255) int]_[*@3 max`_chunk]_`=_CO`_PARTITION`_MAX)&]
-[s5;:Upp`:`:CoPartition`(Range`&`,const Lambda`&`): [@(0.0.255) template]_<[@(0.0.255) cl
-ass]_[*@4 Range], [@(0.0.255) class]_[*@4 Lambda]>_[@(0.0.255) void]_[* CoPartition]([*@4 Ran
-ge][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Lambda][@(0.0.255) `&]_[*@3 lambda])&]
-[s5;:Upp`:`:CoPartition`(const Range`&`,const Lambda`&`,int`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Lambda]>_[@(0.0.255) void]_[* CoPartition]([@(0.0.255) c
-onst]_[*@4 Range][@(0.0.255) `&]_[*@3 r], [@(0.0.255) const]_[*@4 Lambda][@(0.0.255) `&]_[*@3 l
-ambda], [@(0.0.255) int]_[*@3 max`_chunk]_`=_CO`_PARTITION`_MAX)&]
+[s5;:Upp`:`:CoPartition`(Range`&`&`,const Lambda`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Lambda]>_[@(0.0.255) void]_[* CoPartition]([*@4 Ra
+nge][@(0.0.255) `&`&]_[*@3 r], [@(0.0.255) const]_[*@4 Lambda][@(0.0.255) `&]_[*@3 lambda])&]
 [s2;%% Partitions a Range (possibly defined [%-*@3 begin] / [%-*@3 end] 
 pair) into several subranges, based on number of CPU cores, and 
 invokes [%-*@3 lambda] on them in parallel. [%-*@3 begin] / [%-*@3 end] 
 variant passes new begin / end pair as [%-*@3 lambda] parameters, 
 Range variant passes SubRange. Parallel processing is implemented 
 by CoWork, which means CoWork`::FinLock is available in [%-*@3 lambda].&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:CoAccumulate`(Range`,Accumulator`&`): [@(0.0.255) template]_<[@(0.0.255) clas
-s]_[*@4 Range], [@(0.0.255) class]_[*@4 Accumulator]>_[@(0.0.255) void]_[* CoAccumulate]([*@4 R
-ange]_[*@3 r], [*@4 Accumulator][@(0.0.255) `&]_[*@3 result])&]
-[s2;%%  [%-*@3 r] [%-*@3 result] .&]
+[s2;%%  [%-*@3 r] [%-*@3 lambda] .&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoSum`(const Range`&`,const Upp`:`:ValueTypeOf`<Range`>`&`): [@(0.0.255) te

@@ -2,10 +2,10 @@ template <class Range>
 using ValueTypeOf = typename std::remove_reference<decltype(*((typename std::remove_reference<Range>::type *)0)->begin())>::type;
 
 template <class Range>
-using IteratorOf = decltype(((Range *)0)->begin());
+using IteratorOf = decltype(((typename std::remove_reference<Range>::type *)0)->begin());
 
 template <class Range>
-using ConstIteratorOf = decltype(((const Range *)0)->begin());
+using ConstIteratorOf = decltype(((const typename std::remove_reference<Range>::type *)0)->begin());
 
 template <class I>
 class SubRangeClass {
@@ -47,13 +47,7 @@ SubRangeClass<I> SubRange(I l, int count)
 {
 	return SubRangeClass<I>(l, count);
 }
-/*
-template <class C>
-auto SubRange(C& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
-{
-	return SubRange(c.begin() + pos, count);
-}
-*/
+
 template <class C>
 auto SubRange(C&& c, int pos, int count) -> decltype(SubRange(c.begin() + pos, count))
 {
@@ -105,7 +99,7 @@ ConstRangeClass<T> ConstRange(int count)
 
 template <class BaseRange>
 struct ReverseRangeClass {
-	BaseRange&  r;
+	typename std::remove_reference<BaseRange>::type& r;
 	
 	typedef typename BaseRange::value_type               value_type;
 	typedef value_type                                   ValueType;
@@ -138,12 +132,6 @@ struct ReverseRangeClass {
 };
 
 template <class BaseRange>
-ReverseRangeClass<BaseRange> ReverseRange(BaseRange& r)
-{
-	return ReverseRangeClass<BaseRange>(r);
-}
-
-template <class BaseRange>
 ReverseRangeClass<BaseRange> ReverseRange(BaseRange&& r)
 {
 	return ReverseRangeClass<BaseRange>(r);
@@ -151,10 +139,10 @@ ReverseRangeClass<BaseRange> ReverseRange(BaseRange&& r)
 
 template <class BaseRange>
 struct ViewRangeClass {
-	BaseRange  *r;
+	typename std::remove_reference<BaseRange>::type *r;
 	Vector<int> ndx;
 	
-	typedef typename BaseRange::value_type value_type;
+	typedef ValueTypeOf<BaseRange> value_type;
 	typedef value_type ValueType;
 	
 	const value_type& operator[](int i) const { return (*r)[ndx[i]]; }
@@ -185,49 +173,25 @@ struct ViewRangeClass {
 };
 
 template <class BaseRange>
-ViewRangeClass<BaseRange> ViewRange(BaseRange& r, Vector<int>&& ndx)
-{
-	return ViewRangeClass<BaseRange>(r, pick(ndx));
-}
-
-template <class BaseRange>
 ViewRangeClass<BaseRange> ViewRange(BaseRange&& r, Vector<int>&& ndx)
 {
-	return ViewRange(r, pick(ndx));
-}
-
-template <class BaseRange, class Predicate>
-ViewRangeClass<BaseRange> FilterRange(BaseRange& r, Predicate p)
-{
-	return ViewRangeClass<BaseRange>(r, FindAll(r, p));
+	return ViewRangeClass<BaseRange>(r, pick(ndx));
 }
 
 template <class BaseRange, class Predicate>
 ViewRangeClass<BaseRange> FilterRange(BaseRange&& r, Predicate p)
 {
-	return FilterRange(r, p);
-}
-
-template <class BaseRange, class Predicate>
-ViewRangeClass<BaseRange> SortedRange(BaseRange& r, Predicate p)
-{
-	return ViewRangeClass<BaseRange>(r, GetSortOrder(r, p));
-}
-
-template <class BaseRange>
-ViewRangeClass<BaseRange> SortedRange(BaseRange& r)
-{
-	return SortedRange(r, std::less<ValueTypeOf<BaseRange>>());
+	return ViewRangeClass<BaseRange>(r, FindAll(r, p));
 }
 
 template <class BaseRange, class Predicate>
 ViewRangeClass<BaseRange> SortedRange(BaseRange&& r, Predicate p)
 {
-	return SortedRange(r, p);
+	return ViewRangeClass<BaseRange>(r, GetSortOrder(r, p));
 }
 
 template <class BaseRange>
 ViewRangeClass<BaseRange> SortedRange(BaseRange&& r)
 {
-	return SortedRange(r);
+	return SortedRange(r, std::less<ValueTypeOf<BaseRange>>());
 }

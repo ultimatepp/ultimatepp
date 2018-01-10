@@ -24,7 +24,7 @@ void CoPartition(Iter begin, Iter end, const Lambda& lambda, int min_chunk = CO_
 }
 
 template <class Range, class Lambda>
-void CoPartition(Range& r, const Lambda& lambda)
+void CoPartition(Range&& r, const Lambda& lambda)
 {
 	size_t chunk = CoChunk__(r.GetCount(), CO_PARTITION_MIN);
 	CoWork co;
@@ -40,25 +40,8 @@ void CoPartition(Range& r, const Lambda& lambda)
 	}
 }
 
-template <class Range, class Lambda>
-void CoPartition(const Range& r, const Lambda& lambda, int max_chunk = INT_MAX)
-{
-	size_t chunk = CoChunk__(r.GetCount(), max_chunk);
-	CoWork co;
-	auto begin = r.begin();
-	auto end = r.end();
-	while(begin < end) {
-		auto e = begin + min(chunk, size_t(end - begin));
-		co & [=] {
-			auto sr = SubRange(begin, e); // we need l-value
-			lambda(sr);
-		};
-		begin = e;
-	}
-}
-
 template <class Range, class Accumulator>
-void CoAccumulate(Range r, Accumulator& result)
+void CoAccumulate(const Range& r, Accumulator& result)
 {
 	typedef ConstIteratorOf<Range> I;
 	CoPartition(r.begin(), r.end(),
