@@ -419,7 +419,7 @@ Vector<int> GetSortOrder(const Range& r, const Less& less)
 }
 
 template <class Range>
-inline Vector<int> GetSortOrder(const Range& r)
+Vector<int> GetSortOrder(const Range& r)
 {
 	return GetSortOrder(r, std::less<ValueTypeOf<Range>>());
 }

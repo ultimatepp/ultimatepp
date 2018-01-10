@@ -10,10 +10,8 @@ topic "Sorting template functions";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [{_} 
-[ {{10000@(113.42.0) [s0;%% [*@7;4 Sorting template functions]]}}&]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 Sorting Template Functions]]}}&]
 [s3; &]
-[s3;%% &]
-[s4; &]
 [s5;:Upp`:`:Sort`(Range`&`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 R
 ange], [@(0.0.255) class]_[*@4 Less]>&]
 [s5;:Upp`:`:Sort`(Range`&`&`,const Less`&`): [@(0.0.255) void]_[* Sort]([*@4 Range][@(0.0.255) `&
@@ -103,10 +101,10 @@ emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2],
 oid]_[* StableIndexSort]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
 [*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])
 &]
-[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) t
+[s5;:Upp`:`:StableIndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) t
 emplate]_<[@(0.0.255) class]_[*@4 MasterRange], [@(0.0.255) class]_[*@4 Range2], 
 [@(0.0.255) class]_[*@4 Range3],[@(0.0.255) class]_[*@4 Less]>&]
-[s5;:Upp`:`:StableIndexSort`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) v
+[s5;:Upp`:`:StableIndexSort2`(MasterRange`&`&`,Range2`&`&`,Range3`&`&`,const Less`&`): [@(0.0.255) v
 oid]_[* StableIndexSort2]([*@4 MasterRange][@(0.0.255) `&`&]_[*@3 r], 
 [*@4 Range2][@(0.0.255) `&`&]_[*@3 r2], [*@4 Range3][@(0.0.255) `&`&]_[*@3 r3], 
 [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
@@ -147,39 +145,41 @@ of items. Resulting order is determined by the [%-*@3 r ]container.
 Ordering is determined by [*/ operator<].&]
 [s3; &]
 [s4; &]
-[s5;:GetSortOrder`(const C`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C
-], [@(0.0.255) class]_[*@4 Less][@(0.0.255) >]&]
-[s5;:GetSortOrder`(const C`&`,const Less`&`): Vector[@(0.0.255) <int>]_[* GetSortOrder]([@(0.0.255) c
-onst]_[*@4 C][@(0.0.255) `&]_[*@3 container], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 l
-ess])&]
+[s5;:Upp`:`:GetSortOrder`(const Range`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:GetSortOrder`(const Range`&`,const Less`&`): [_^Upp`:`:Vector^ Vector]<[@(0.0.255) i
+nt]>_[* GetSortOrder]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r], 
+[@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [%-*@3 less]. The order of elements with the same 
 value can be changed (unstable sort).&]
 [s3; &]
 [s4; &]
-[s5;:GetSortOrder`(const C`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C][@(0.0.255) >
-]&]
-[s5;:GetSortOrder`(const C`&`): Vector[@(0.0.255) <int>]_[* GetSortOrder]([@(0.0.255) const
-]_[*@4 C][@(0.0.255) `&]_[*@3 container])&]
+[s5;:Upp`:`:GetSortOrder`(const Range`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 R
+ange]>&]
+[s5;:Upp`:`:GetSortOrder`(const Range`&`): [_^Upp`:`:Vector^ Vector]<[@(0.0.255) int]>_[* G
+etSortOrder]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [*/ operator<]. The order of elements with the 
 same value can be changed (unstable sort).&]
 [s3;%% &]
+[s3;%% &]
 [s4; &]
-[s5;:GetStableSortOrder`(const C`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) cl
-ass]_[*@4 C], [@(0.0.255) class]_[*@4 Less]>_[_^Vector^ Vector]<[@(0.0.255) int]>&]
-[s5;:GetStableSortOrder`(const C`&`,const Less`&`): [* GetStableSortOrder]([@(0.0.255) co
-nst]_[*@4 C][@(0.0.255) `&]_[*@3 container], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 l
-ess])&]
+[s5;:Upp`:`:GetStableSortOrder`(const Range`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 Range], [@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Upp`:`:GetStableSortOrder`(const Range`&`,const Less`&`): [_^Upp`:`:Vector^ Vector
+]<[@(0.0.255) int]>_[* GetStableSortOrder]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r
+], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [%-*@3 less]. The order of elements with the same 
 value stays unchanged (stable sort).&]
 [s3;%% &]
+[s3;%% -|&]
 [s4; &]
-[s5;:GetStableSortOrder`(const C`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 C]>_[_^Vector^ V
-ector]<[@(0.0.255) int]>&]
-[s5;:GetStableSortOrder`(const C`&`): [* GetStableSortOrder]([@(0.0.255) const]_[*@4 C][@(0.0.255) `&
-]_[*@3 container])&]
+[s5;:Upp`:`:GetStableSortOrder`(const Range`&`): [@(0.0.255) template]_<[@(0.0.255) class
+]_[*@4 Range]>&]
+[s5;:Upp`:`:GetStableSortOrder`(const Range`&`): [_^Upp`:`:Vector^ Vector]<[@(0.0.255) in
+t]>_[* GetStableSortOrder]([@(0.0.255) const]_[*@4 Range][@(0.0.255) `&]_[*@3 r])&]
 [s2;%% Creates ascending order of values in [%-*@3 container]. Ordering 
 is determined by [*/ operator<]. The order of elements with the 
 same value stays unchanged (stable sort).&]
