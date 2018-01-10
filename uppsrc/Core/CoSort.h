@@ -92,7 +92,7 @@ void CoStableSort(Range&& r)
 }
 
 template <class MasterRange, class Range2, class Less>
-void CoIndexSort(MasterRange&& r, Range2& r2, const Less& less)
+void CoIndexSort(MasterRange&& r, Range2&& r2, const Less& less)
 {
 	ASSERT(r.GetCount() == r2.GetCount());
 	typedef decltype(r.begin()) I;
@@ -103,12 +103,6 @@ void CoIndexSort(MasterRange&& r, Range2& r2, const Less& less)
 	CoSort__(IndexSortIterator__<I, I2, VT>(r.begin(), r2.begin()),
 	         IndexSortIterator__<I, I2, VT>(r.end(), r2.end()),
 		     less);
-}
-
-template <class MasterRange, class Range2, class Less>
-void CoIndexSort(MasterRange&& r, Range2&& r2, const Less& less)
-{
-	CoIndexSort(r, r2, less);
 }
 
 template <class MasterRange, class Range2>
@@ -224,7 +218,7 @@ void CoStableIndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4&& r4, 
 }
 
 template <class MasterRange, class Range2, class Range3, class Range4>
-void CoStableIndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4& r4)
+void CoStableIndexSort3(MasterRange&& r, Range2&& r2, Range3&& r3, Range4&& r4)
 {
 	CoStableIndexSort3(r, r2, r3, r4, std::less<ValueTypeOf<MasterRange>>());
 }
@@ -243,7 +237,7 @@ Vector<int> CoGetSortOrder(const Range& r, const Less& less)
 }
 
 template <class Range>
-inline Vector<int> CoGetSortOrder(const Range& r)
+Vector<int> CoGetSortOrder(const Range& r)
 {
 	return CoGetSortOrder(r, std::less<ValueTypeOf<Range>>());
 }
@@ -263,7 +257,7 @@ Vector<int> CoGetStableSortOrder(const Range& r, const Less& less)
 }
 
 template <class Range>
-inline Vector<int> CoGetStableSortOrder(const Range& r)
+Vector<int> CoGetStableSortOrder(const Range& r)
 {
 	return CoGetSortOrder(r, std::less<ValueTypeOf<Range>>());
 }
