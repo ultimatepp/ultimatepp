@@ -101,7 +101,7 @@ template <class BaseRange>
 struct ReverseRangeClass {
 	typename std::remove_reference<BaseRange>::type& r;
 	
-	typedef typename BaseRange::value_type               value_type;
+	typedef ValueTypeOf<BaseRange>                       value_type;
 	typedef value_type                                   ValueType;
 	
 	const value_type& operator[](int i) const            { return r[r.GetCount() - i - 1]; }
@@ -193,5 +193,5 @@ ViewRangeClass<BaseRange> SortedRange(BaseRange&& r, Predicate p)
 template <class BaseRange>
 ViewRangeClass<BaseRange> SortedRange(BaseRange&& r)
 {
-	return SortedRange(r, std::less<ValueTypeOf<BaseRange>>());
+	return ViewRangeClass<BaseRange>(r, GetSortOrder(r));
 }

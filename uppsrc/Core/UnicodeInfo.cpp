@@ -219,12 +219,12 @@ bool IsLetter_(dword c)
 
 bool IsLower_(dword c)
 {
-	return c != ToUpper((int)c) || Single<UnicodeInfo>().islower.Find(c) >= 0;
+	return c != (dword)ToUpper((int)c) || Single<UnicodeInfo>().islower.Find(c) >= 0;
 }
 
 bool IsUpper_(dword c)
 {
-	return c != ToLower((int)c) || Single<UnicodeInfo>().isupper.Find(c) >= 0;
+	return c != (dword)ToLower((int)c) || Single<UnicodeInfo>().isupper.Find(c) >= 0;
 }
 
 bool IsMark_(dword c)
