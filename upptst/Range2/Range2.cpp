@@ -15,7 +15,7 @@ CONSOLE_APP_MAIN
 	Sort(SortedRange(MakeIota(10)));
 
 	// Testing const argument
-	auto h = MakeIota(10);
+	auto h = MakeIota(20);
 	const auto& x = h;
 
 	DUMP(SubRange(x, 1, 4));
@@ -24,4 +24,5 @@ CONSOLE_APP_MAIN
 	DUMP(ViewRange(x, MakeIota(3)));
 	DUMP(FilterRange(x, [=](int x) { return x > 4; }));
 	DUMP(SortedRange(x));
+	DUMP(FilterRange(ReverseRange(SortedRange(x)), [] (int x) { return x & 1; }));
 }
