@@ -53,8 +53,6 @@ DirFinder::DirFinder()
 		}
 	}
 	
-	DDUMPC(path);
-
 	Array<FileSystemInfo::FileInfo> root = StdFileSystemInfo().Find(Null);
 	for(int i = 0; i < root.GetCount(); i++) {
 		if(root[i].root_style == FileSystemInfo::ROOT_FIXED) {
@@ -66,8 +64,6 @@ DirFinder::DirFinder()
 				GatherDirs(path, pf);
 		}
 	}
-
-	DUMPC(path);
 
 	for(String s : path) {
 		s = ToLower(s);
