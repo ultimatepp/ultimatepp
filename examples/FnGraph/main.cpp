@@ -75,6 +75,18 @@ double ExpressionEvaluator::Factor()
 		return acos(Factor());
 	if(p.Id("atan"))
 		return atan(Factor());
+	if(p.Id("sinh"))
+		return sinh(Factor());
+	if(p.Id("cosh"))
+		return cosh(Factor());
+	if(p.Id("tanh"))
+		return tanh(Factor());
+	if(p.Id("asinh"))
+		return asinh(Factor());
+	if(p.Id("acosh"))
+		return acosh(Factor());
+	if(p.Id("atanh"))
+		return atanh(Factor());
 	if(p.Id("x")) // our variable
 		return x;
 	if(p.Id("e")) // e constant
