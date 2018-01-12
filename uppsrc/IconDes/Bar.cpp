@@ -190,7 +190,7 @@ void IconDes::DrawBar(Bar& bar)
 	bar.Add(c, "Supersample 3x", IconDesImg::ResizeDown(), THISBACK(ResizeDown))
 	   .Key(AK_RESIZEDOWN3);
 	bar.Add("Show downscaled", IconDesImg::ShowSmall(),
-	        [=] { show_small = !show_small; SetBar(); SyncShow(); })
+	        [=] { show_small = !show_small; SyncShow(); SetBar(); })
 	   .Check(show_small);
 	bar.Separator();
 	bar.Add(c, AK_SLICE, IconDesImg::Slice(), THISBACK(Slice));
