@@ -24,7 +24,7 @@ topic "U++ Core Tutorial";
 [H8;b73;*+150 $$22,5#07864147445237544204111237153677:subtitle]
 [{_} 
 [s2;%% U`+`+ Core Tutorial&]
-[s0;3 &]
+[s22; Table of contents&]
 [s0;3 &]
 [s0; [^`#Chapter`_1^ 1. Basics]&]
 [s0; ___[^`#Section`_1`_1^ 1.1 Logging]&]
