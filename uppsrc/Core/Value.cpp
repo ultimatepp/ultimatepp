@@ -336,12 +336,10 @@ void Value::Serialize(Stream& s) {
 	dword type;
 	if(s.IsLoading()) {
 		s / type;
-		ASSERT(type < 0x8000000); // only Values with assigned real type ID can be serialized
+		if(type >= 0x8000000)
+			s.LoadError();
 		Free();
 		int st = type == VOID_V ? VOIDV : type == STRING_V ? STRING : type;
-		if(st < 0)
-			s.LoadError();
-		else
 		if(st == STRING)
 			s % data;
 		else
