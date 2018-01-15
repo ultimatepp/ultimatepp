@@ -63,7 +63,7 @@ void FBInit()
 	videoflags = SDL_HWSURFACE | SDL_HWACCEL | SDL_DOUBLEBUF | SDL_RESIZABLE;// | SDL_NOFRAME | SDL_FULLSCREEN;
 #endif
 	screen_size = Size(1500, 900);
-	screen.Create(screen_size, "First test");
+	screen.Create(Rect(Point(20, 20), screen_size), "First test");
 
 	Ctrl::SetDesktopSize(screen_size);
 }

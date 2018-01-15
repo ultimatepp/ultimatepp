@@ -50,7 +50,7 @@ void  Ctrl::SetMouseCursor(const Image& image)
 			if(sdl_cursor_surface)
 				SDL_FreeSurface(sdl_cursor_surface);
 			
-			int a = image.GetAuxData();
+			int64 a = image.GetAuxData();
 			if(a)
 				sdl_cursor = SDL_CreateSystemCursor(SDL_SystemCursor(a - 1));
 			else {
