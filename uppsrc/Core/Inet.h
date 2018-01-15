@@ -489,7 +489,8 @@ public:
 	HttpRequest&  Authorization(const String& h)         { authorization = h; return *this; }
 	HttpRequest&  User(const String& u, const String& p) { username = u; password = p; return *this; }
 	HttpRequest&  Digest()                               { force_digest = true; return *this; }
-	HttpRequest&  Digest(const String& d)                { return Authorization("Digest " + d); return *this; }
+	HttpRequest&  Digest(const String& u, const String& p) { User(u, p); return Digest(); }
+	HttpRequest&  SetDigest(const String& d)             { return Authorization("Digest " + d); }
 	HttpRequest&  Url(const char *url);
 	HttpRequest&  UrlVar(const char *id, const String& data);
 	HttpRequest&  operator()(const char *id, const String& data) { return UrlVar(id, data); }

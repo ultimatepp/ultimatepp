@@ -830,7 +830,7 @@ bool HttpRequest::ResolveDigestAuthentication()
 {
 	String authenticate = header["www-authenticate"];
 	if(authenticate.StartsWith("Digest")) {
-		Digest(CalculateDigest(authenticate));
+		SetDigest(CalculateDigest(authenticate));
 		return true;
 	}
 	return false;
