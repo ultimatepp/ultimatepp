@@ -184,9 +184,16 @@ asic access authentication]. Returns `*this.&]
 igest access authentication]. `- not to send Basic access authentication. 
 Returns `*this.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:HttpRequest`:`:Digest`(const String`&`): [_^HttpRequest^ HttpRequest][@(0.0.255) `&]_
-[* Digest]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 d])&]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:Digest`(const Upp`:`:String`&`,const Upp`:`:String`&`): [_^Upp`:`:HttpRequest^ H
+ttpRequest][@(0.0.255) `&]_[* Digest]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 u], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 p])&]
+[s2;%% Same as User([%-*@3 u] , [%-*@3 p]).Digest().&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:SetDigest`(const Upp`:`:String`&`): [_^Upp`:`:HttpRequest^ H
+ttpRequest][@(0.0.255) `&]_[* SetDigest]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 d])&]
 [s2;%% Sets digest. This is usually done by HttpRequest when processing 
 401 response code. Returns `*this.&]
 [s3;%% &]
