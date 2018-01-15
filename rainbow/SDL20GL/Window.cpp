@@ -7,7 +7,7 @@ NAMESPACE_UPP
 bool SDLWindow::Create(const Rect& rect, const char *title)
 {
 	win = SDL_CreateWindow(title, rect.left, rect.top, rect.GetWidth(), rect.GetHeight(),
-	                       SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+	                       SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL|SDL_WINDOW_BORDERLESS);
 	if(!win)
 		return false;
 	MemoryIgnoreLeaksBegin();
@@ -20,7 +20,7 @@ bool SDLWindow::Create(const Rect& rect, const char *title)
 	INTERLOCKED {
 		static int64 h;
 		serial = h++;
-	}	
+	}
 	return true;
 }
 
