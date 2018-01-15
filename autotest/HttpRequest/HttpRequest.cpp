@@ -64,7 +64,7 @@ CONSOLE_APP_MAIN
 	}
 	{
 		HttpRequest r("http://httpbin.org/digest-auth/auth/usr/pwd");
-		r.User("usr", "pwd");
+		r.Digest("usr", "pwd");
 		String h = r.Execute();
 		DUMP(r.GetContent());
 		ASSERT(h.Find("\"authenticated\": true") >= 0);
