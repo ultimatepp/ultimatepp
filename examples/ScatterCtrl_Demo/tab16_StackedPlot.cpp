@@ -17,9 +17,9 @@ void TabStackedPlot::Init()
 	ds3.Init(s3);
 	stacked.Add(ds1).Add(ds2).Add(ds3);
 	
-	scatter.AddSeries(stacked.Get(2)).Legend("s1").Fill();
+	scatter.AddSeries(stacked.Get(2)).Legend("s3").Fill();
 	scatter.AddSeries(stacked.Get(1)).Legend("s2").Fill();
-	scatter.AddSeries(stacked.Get(0)).Legend("s3").Fill();
+	scatter.AddSeries(stacked.Get(0)).Legend("s1").Fill();
 									
 	scatter.SetLabelY("Data").SetLabelX("time [seg]");
 	scatter.ShowButtons();
