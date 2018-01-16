@@ -141,14 +141,15 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 {
 	PAINTER_TIMING("RenderPath");
 	Buffer<ClippingLine> newclip;
+
+	if(width == FILL)
+		Close();
+
 	if(width == 0 || !ss && color.a == 0 && width >= FILL) {
 		current = Null;
 		return newclip;
 	}
 
-	if(width == FILL)
-		Close();
-	
 	if(co && width >= FILL && !ss && !alt && mode == MODE_ANTIALIASED) {
 		for(const String& p : path) {
 			while(jobcount >= cojob.GetCount())
