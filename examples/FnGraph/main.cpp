@@ -116,7 +116,9 @@ double Evaluate(const char *s, double x)
 
 struct FnGraph : public TopWindow {
 	virtual void Paint(Draw& w);
-	
+	virtual void MouseWheel(Point p, int zdelta, dword keyflags);
+
+	int        zoom = 9;
 	EditString expression; // function to display
 	
 	void RefreshExpression() { Refresh(); }
@@ -134,6 +136,12 @@ FnGraph::FnGraph()
 	Sizeable().Zoomable(); // make the window resizable
 }
 
+void FnGraph::MouseWheel(Point, int zdelta, dword keyflags)
+{
+	zoom = clamp(zoom + -sgn(zdelta), 1, 20);
+	Refresh();
+}
+
 void FnGraph::Paint(Draw& w_)
 {
 	Size sz = GetSize();
@@ -145,7 +153,7 @@ void FnGraph::Paint(Draw& w_)
 	if(sz.cy < 1) // if too small, do nothing (avoid div by zero)
 		return;
 	sz = sz / 2 * 2 - 1; // this trick will force axes to .5, results in sharper AA rendering
-	double pixels_per_unit = sz.cy / 9; // we want to display y range -4.5 .. 4.5
+	double pixels_per_unit = sz.cy / zoom; // we want to display y range -4.5 .. 4.5
 	double xaxis = sz.cy / 2.0; // vertical position of x axis
 	double yaxis = sz.cx / 2.0; // horizontal position of y axis
 	w.Move(0, xaxis).Line(sz.cx, xaxis).Stroke(1, Blue()); // draw x axis
@@ -165,20 +173,23 @@ void FnGraph::Paint(Draw& w_)
 				w.Move(yaxis - 5, y).Line(yaxis + 5, y).Stroke(1, Blue());
 				w.Text(int(yaxis + 6), int(y - tsz.cy / 2.0), n, font).Fill(Blue());
 			}
-	double y0 = Null; // store previous value
-	for(int i = 0; i < sz.cx; i++) { // now iterate through all x pointes and draw the graph
-		double x = (i - sz.cx / 2.0) / pixels_per_unit;
-		double y = Evaluate(~~expression, x);
-		if(!IsNull(y)) {
-			double gy = sz.cy / 2.0 - y * pixels_per_unit;
-			if(IsNull(y0)) // previous value was defined
-				w.Move(i, gy);
-			else
-				w.Line(i, gy);
+	Vector<String> xp = Split(~~expression, ';'); // get individual functions
+	for(int ii = 0; ii < xp.GetCount(); ii++) {
+		double y0 = Null; // store previous value
+		for(int i = 0; i < sz.cx; i++) { // now iterate through all x pointes and draw the graph
+			double x = (i - sz.cx / 2.0) / pixels_per_unit;
+			double y = Evaluate(xp[ii], x);
+			if(!IsNull(y)) {
+				double gy = sz.cy / 2.0 - y * pixels_per_unit;
+				if(IsNull(y0)) // previous value was defined
+					w.Move(i, gy);
+				else
+					w.Line(i, gy);
+			}
+			y0 = y;
 		}
-		y0 = y;
+		w.Stroke(1, Color(!!(ii & 1) * 150, !!(ii & 2) * 150, !!(ii & 4) * 150)); // finally paint the graph line
 	}
-	w.Stroke(1, Black()); // finally paint the graph line
 }
 
 GUI_APP_MAIN
