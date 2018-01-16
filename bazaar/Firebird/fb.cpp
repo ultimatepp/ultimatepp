@@ -10,7 +10,7 @@
 	#define DLLFILENAME "fbclient.dll"
 	#define DLLCALL     __stdcall
 #else
-	#define DLLFILENAME "fbclient.so"
+	#define DLLFILENAME "libfbclient.so"
 #endif
 #define DLIMODULE   FB
 #define DLIHEADER   <Firebird/Firebird.dli>

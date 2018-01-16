@@ -297,18 +297,20 @@ isc_event_block, (ISC_UCHAR**, \
                                 ISC_UCHAR**, \
                                 ISC_USHORT, ...))
 
-FN(ISC_USHORT, \
-isc_event_block_a, (ISC_SCHAR**, \
-                            ISC_SCHAR**, \
-                            ISC_USHORT, 
-                            ISC_SCHAR**))
+// Doesn't exists anymore.
+//FN(ISC_USHORT, \
+//isc_event_block_a, (ISC_SCHAR**, \
+//                            ISC_SCHAR**, \
+//                            ISC_USHORT, 
+//                            ISC_SCHAR**))
 
-FN(void, \
-isc_event_block_s, (ISC_SCHAR**, \
-                ISC_SCHAR**, \
-                ISC_USHORT, \
-                ISC_SCHAR**, \
-                ISC_USHORT*))
+// Doesn't exists anymore.
+//FN(void, \
+//isc_event_block_s, (ISC_SCHAR**, \
+//                ISC_SCHAR**, \
+//                ISC_USHORT, \
+//                ISC_SCHAR**, \
+//                ISC_USHORT*))
 
 FN(void, \
 isc_event_counts, (ISC_ULONG*, \
@@ -794,9 +796,10 @@ isc_embed_dsql_fetch_a, (ISC_STATUS*, \
                                         ISC_USHORT, \
                                         XSQLDA*))
 
-FN(void, \
-isc_embed_dsql_length, (const ISC_UCHAR*, \
-                        ISC_USHORT*))
+// Doesn't exists anymore.
+//FN(void, \
+//isc_embed_dsql_length, (const ISC_UCHAR*, \
+//                        ISC_USHORT*))
 
 FN(ISC_STATUS , \
 isc_embed_dsql_open, (ISC_STATUS*, \
@@ -937,12 +940,14 @@ void*))
 FN(ISC_LONG, \
 isc_reset_fpe, (ISC_USHORT))
 
-FN(uintptr_t, \
-isc_baddress, (ISC_SCHAR*))
+// Doesn't exists anymore.
+//FN(uintptr_t, \
+//isc_baddress, (ISC_SCHAR*))
 
-FN(void, \
-isc_baddress_s, (const ISC_SCHAR*, \
-                uintptr_t*))
+// Doesn't exists anymore.
+//FN(void, \
+//isc_baddress_s, (const ISC_SCHAR*, \
+//                uintptr_t*))
 
 /*****************************************/
 /* Service manager functions             */
