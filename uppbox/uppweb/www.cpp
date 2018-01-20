@@ -642,9 +642,9 @@ void ExportPage(int i)
 	String pageTitle = tt[i].title;
 	if(IsNull(pageTitle))
 		pageTitle = "Ultimate++";
-	if(StartsWith(topicTitle, "examples$"))
+	if(StartsWith(topicTitle, "examples_"))
 		pageTitle = "Demos / " + pageTitle;
-	else if(StartsWith(topicTitle, "reference$"))
+	else if(StartsWith(topicTitle, "reference_"))
 		pageTitle = "Examples / " + pageTitle;
 
 	if(pageTitle != "Ultimate++")
@@ -900,9 +900,9 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("overview", lang), t_("Overview"), false);
 		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
-			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
+			int di = tt.Find("topic://uppweb/www/examples_" + ToLower(LNGAsText(lang)));
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
-			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
+			tt[di].text << GetTopic("topic://uppweb/www/reference_" + ToLower(LNGAsText(lang))).text << '\n';
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
 
