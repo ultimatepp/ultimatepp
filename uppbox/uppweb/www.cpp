@@ -911,7 +911,7 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("apps", lang), t_("Applications"));
 		bi << BarLink(Www("download", lang), t_("Download"));
 
-		bi << BarLink(Www("documentation", lang), t_("Documentation"));			
+		bi << BarLink(Www("documentation", lang), t_("Documentation"));
 		{
 			int di = tt.Find("topic://uppweb/www/documentation$" + ToLower(LNGAsText(lang)));
 			if (di >= 0) {
