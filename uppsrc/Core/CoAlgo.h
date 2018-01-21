@@ -6,38 +6,47 @@ enum {
 template <class C, class MC>
 inline size_t CoChunk__(C count, MC min_chunk = CO_PARTITION_MIN, MC max_chunk = CO_PARTITION_MAX)
 {
-	return clamp(count / CPU_Cores() / 2, (C)min_chunk, (C)max_chunk);
+	int n = min(count / CPU_Cores(), (C)max_chunk);
+	return n < (C)min_chunk ? 0 : n;
 }
 
 template <class Iter, class Lambda>
 void CoPartition(Iter begin, Iter end, const Lambda& lambda, int min_chunk = CO_PARTITION_MIN, int max_chunk = CO_PARTITION_MAX)
 {
 	size_t chunk = CoChunk__(end - begin, min_chunk, max_chunk);
-	CoWork co;
-	while(begin < end) {
-		Iter e = Iter(begin + min(chunk, size_t(end - begin)));
-		co & [=] {
-			lambda(begin, e);
-		};
-		begin = e;
+	if(chunk) {
+		CoWork co;
+		while(begin < end) {
+			Iter e = Iter(begin + min(chunk, size_t(end - begin)));
+			co & [=] {
+				lambda(begin, e);
+			};
+			begin = e;
+		}
 	}
+	else
+		lambda(begin, end);
 }
 
 template <class Range, class Lambda>
 void CoPartition(Range&& r, const Lambda& lambda)
 {
 	size_t chunk = CoChunk__(r.GetCount(), CO_PARTITION_MIN);
-	CoWork co;
-	auto begin = r.begin();
-	auto end = r.end();
-	while(begin < end) {
-		auto e = begin + min(chunk, size_t(end - begin));
-		co & [=] {
-			auto sr = SubRange(begin, e); // we need l-value
-			lambda(sr);
-		};
-		begin = e;
+	if(chunk) {
+		CoWork co;
+		auto begin = r.begin();
+		auto end = r.end();
+		while(begin < end) {
+			auto e = begin + min(chunk, size_t(end - begin));
+			co & [=] {
+				auto sr = SubRange(begin, e); // we need l-value
+				lambda(sr);
+			};
+			begin = e;
+		}
 	}
+	else
+		lambda(SubRange(r.begin(), r.end()));
 }
 
 template <class Range, class Accumulator>

@@ -25,8 +25,10 @@ pair) into several subranges, based on number of CPU cores, and
 invokes [%-*@3 lambda] on them in parallel. [%-*@3 begin] / [%-*@3 end] 
 variant passes new begin / end pair as [%-*@3 lambda] parameters, 
 Range variant passes SubRange. Parallel processing is implemented 
-by CoWork, which means CoWork`::FinLock is available in [%-*@3 lambda].&]
-[s2;%%  [%-*@3 r] [%-*@3 lambda] .&]
+by CoWork, which means CoWork`::FinLock is available in [%-*@3 lambda]. 
+If the input range has less than [%-*@3 min`_chunk] elements, the 
+operation is performed in callers thread. [%-*@3 max`_chunk] limits 
+the size of subrange passed to [%-*@3 lambda].&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoSum`(const Range`&`,const Upp`:`:ValueTypeOf`<Range`>`&`): [@(0.0.255) te
