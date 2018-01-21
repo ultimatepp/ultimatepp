@@ -392,7 +392,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 							AppendFileName(uppbox, "uppweb"),
 							String(www) + ".tpp"
 						),
-						topic.title + "$" + ToLower(LNGAsText(language))  + ".tpp"
+						topic.title + "_" + ToLower(LNGAsText(language))  + ".tpp"
 					);
 		String h = ReadTopic(LoadFile(fn)).text;
 		Package p;
@@ -900,9 +900,9 @@ CONSOLE_APP_MAIN
 		bi << BarLink(Www("overview", lang), t_("Overview"), false);
 		bi << BarLink(Www("examples", lang), t_("Examples"));
 		{
-			int di = tt.Find("topic://uppweb/www/examples_" + ToLower(LNGAsText(lang)));
+			int di = tt.Find("topic://uppweb/www/examples$" + ToLower(LNGAsText(lang)));
 			tt[di].text << MakeExamples(examples, "examples", lang, String("/") + FormatInt(di));
-			tt[di].text << GetTopic("topic://uppweb/www/reference_" + ToLower(LNGAsText(lang))).text << '\n';
+			tt[di].text << GetTopic("topic://uppweb/www/reference$" + ToLower(LNGAsText(lang))).text << '\n';
 			tt[di].text << MakeExamples(reference, "reference", lang, String("/") + FormatInt(di));
 		}
 
