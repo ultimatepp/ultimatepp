@@ -1,3 +1,5 @@
+description "Obtaining additional information from URL\377";
+
 uses
 	Core;
 
