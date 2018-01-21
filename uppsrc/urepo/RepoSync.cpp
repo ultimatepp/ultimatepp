@@ -414,7 +414,7 @@ bool RepoSync::SvnFile(UrepoConsole& sys, String& filelist, int action, const St
 			sys.CheckSystem("svn revert \"" + path + "\"");
 		return false;
 	}
-	if(action >= 0)
+	if(action >= 0 || action == SVN_ACTION)
 		filelist << " \"" << path << "\"";   // <-- add the file to the list
 	switch(action) {
 	case ADD:
