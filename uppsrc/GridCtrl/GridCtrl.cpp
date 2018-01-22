@@ -4155,7 +4155,7 @@ bool GridCtrl::Recalc(bool horizontal, RectItems &its, int resize_mode)
 			if(!its[i].hidden)
 				sumprop += its[i].prop;
 
-		double ics = cs / sumprop;
+		double ics = sumprop <= 0 ? 0 : cs / sumprop;
 		sumprop = 0;
 
 		for(int i = fixed; i < cnt; i++)
