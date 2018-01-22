@@ -79,14 +79,16 @@ Label::Label() {
 
 Label::~Label() {}
 
-CH_COLOR(LabelBoxTextColor, IsDark(SColorFace()) ? Blend(LtBlue(), White) : LtBlue());
-CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
 CH_COLOR(LabelBoxColor, SColorShadow());
+
+// these are not used now
+CH_COLOR(LabelBoxTextColor, IsDark(SColorFace()) ? White() : Black());
+CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
 
 LabelBox::LabelBox()
 {
 	color = Null;
-	LabelBase::SetInk(LabelBoxTextColor, LabelBoxDisabledTextColor);
+	LabelBase::SetInk(SColorText(), SColorDisabled());
 	SetVAlign(ALIGN_TOP);
 	#if defined(flagWINGL) || defined(flagLINUXGL)
 	ClipToBounds(false);
