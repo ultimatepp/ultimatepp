@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	ZoomedTopWindow.h,
+	main.cpp,
+	ZoomedTopWindow.lay;
+
+mainconfig
+	"" = "GUI";
+
