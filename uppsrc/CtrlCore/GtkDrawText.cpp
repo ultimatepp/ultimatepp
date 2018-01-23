@@ -23,6 +23,8 @@ struct FontSysData {
 void FontSysData::Init(Font font, int angle)
 {
 	LLOG("FontSysData::Init " << font << ", " << angle);
+	Std(font);
+
 	FcPattern *p = CreateFcPattern(font);
 	cairo_font_face_t *font_face = cairo_ft_font_face_create_for_pattern(p);
 	FcPatternDestroy(p);
