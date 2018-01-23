@@ -164,7 +164,7 @@ void TopWindow::SyncCaption()
 	style |= WS_CAPTION;
 	if(hasdhctrl)
 		style |= WS_CLIPSIBLINGS|WS_CLIPCHILDREN;
-	if(minimizebox)
+	if(minimizebox && !GetOwner())
 		style |= WS_MINIMIZEBOX;
 	if(maximizebox)
 		style |= WS_MAXIMIZEBOX;
