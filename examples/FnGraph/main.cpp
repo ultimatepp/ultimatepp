@@ -57,6 +57,8 @@ double ExpressionEvaluator::Factor()
 		return fabs(Factor());
 	if(p.Id("sqrt"))
 		return sqrt(Factor());
+	if(p.Id("exp"))
+		return exp(Factor());
 	if(p.Id("ln"))
 		return log(Factor());
 	if(p.Id("log"))
@@ -93,12 +95,26 @@ double ExpressionEvaluator::Factor()
 		return M_E;
 	if(p.Id("pi")) // pi constant
 		return M_PI;
+	double x;
 	if(p.Char('(')) { // resolve parenthesis - recurse back to Sum (+ - operators)
-		double y = Expression();
+		x = Expression();
 		p.PassChar(')'); // make sure there is closing parenthesis
-		return y;
 	}
-	return p.ReadDouble(); // last possibility is that we are at number...
+	else
+		x = p.ReadDouble(); // last possibility is that we are at number...
+	if(p.Char('!')) { // compute factorial
+		if(x >= 0 && x < 120) {
+			int n = (int)x;
+			if(n == x) {
+				x = 1;
+				for(int q = 1; q <= n; q++)
+					x *= q;
+				return x;
+			}
+		}
+		p.ThrowError("invalid argument");
+	}
+	return x;
 }
 
 double Evaluate(const char *s, double x)
