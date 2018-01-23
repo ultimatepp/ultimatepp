@@ -173,7 +173,7 @@ void TopWindow::SyncCaption()
 	if(frameless)
 		style = (style & ~WS_CAPTION) | WS_POPUP;
 	else
-	if(/*IsNull(icon) && */!maximizebox && !minimizebox || noclosebox) { // icon ignored because of FixIcons
+	if(!maximizebox && !minimizebox || noclosebox) { // icon ignored because of FixIcons
 		style |= WS_POPUPWINDOW|WS_DLGFRAME;
 		exstyle |= WS_EX_DLGMODALFRAME;
 		if(noclosebox)
