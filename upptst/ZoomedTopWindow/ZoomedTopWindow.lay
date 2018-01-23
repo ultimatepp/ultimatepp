@@ -1,0 +1,5 @@
+LAYOUT(ZoomedTopWindowLayout, 200, 100)
+	ITEM(Button, modal, SetLabel(t_("Modal")).LeftPosZ(8, 56).TopPosZ(4, 24))
+	ITEM(Button, modeless, SetLabel(t_("Modeless")).LeftPosZ(8, 56).TopPosZ(32, 24))
+END_LAYOUT
+

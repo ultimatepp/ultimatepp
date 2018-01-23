@@ -11,9 +11,9 @@ CONSOLE_APP_MAIN
 	SeedRandom(0);
 
 	Vector<int> h = { 10, 9, 8, 7, 6, 5, 4, 3, 2, 1 };
-	Sort(SubRange(h, 2, 5).Write());
+	Sort(SubRange(h, 2, 5));
 	DDUMP(h);
-	Sort(SubRange(h.begin() + 1, h.end()).Write());
+	Sort(SubRange(h.begin() + 1, h.end()));
 	DDUMP(h);
 //	Sort(Range(h.begin(), 5), std::greater<int>());
 	DDUMP(h);
@@ -26,8 +26,8 @@ CONSOLE_APP_MAIN
 	DDUMP(FilterRange(h, [=](int x) { return x & 1; }));
 	DDUMP(FilterRange(h, [=](int x) { return !(x & 1); }));
 
-	Sort(FilterRange(h, [=](int x) { return x & 1; }).Write());
-	Sort(FilterRange(h, [=](int x) { return !(x & 1); }).Write(), std::greater<int>());
+	Sort(FilterRange(h, [=](int x) { return x & 1; }));
+	Sort(FilterRange(h, [=](int x) { return !(x & 1); }), std::greater<int>());
 	DDUMP(h);
 
 	DDUMPC(ConstRange(12, 5));
@@ -51,7 +51,7 @@ CONSOLE_APP_MAIN
 	
 	Sort(h);
 	DDUMP(h);
-	Reverse(SubRange(h, 5, 5).Write());
+	Reverse(SubRange(h, 5, 5));
 	DDUMP(h);
 	
 	DDUMP(FindMin(h));
