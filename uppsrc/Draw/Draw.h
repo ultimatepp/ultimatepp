@@ -250,20 +250,20 @@ Font StdFont();
 
 inline Font StdFont(int h)                          { return StdFont().Height(h); }
 
-inline Font Serif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
-inline Font SansSerif(int n = 0) { return Font(Font::SCREEN_SANS, n); }
-inline Font Monospace(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
+inline Font Serif(int n = -32000) { return Font(Font::SCREEN_SERIF, n); }
+inline Font SansSerif(int n = -32000) { return Font(Font::SCREEN_SANS, n); }
+inline Font Monospace(int n = -32000) { return Font(Font::SCREEN_FIXED, n); }
 
-inline Font Roman(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
-inline Font Arial(int n = 0) { return Font(Font::SCREEN_SANS, n); }
-inline Font Courier(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
+inline Font Roman(int n = -32000) { return Font(Font::SCREEN_SERIF, n); }
+inline Font Arial(int n = -32000) { return Font(Font::SCREEN_SANS, n); }
+inline Font Courier(int n = -32000) { return Font(Font::SCREEN_FIXED, n); }
 
-inline Font ScreenSerif(int n = 0) { return Font(Font::SCREEN_SERIF, n); }
-inline Font ScreenSans(int n = 0) { return Font(Font::SCREEN_SANS, n); }
-inline Font ScreenFixed(int n = 0) { return Font(Font::SCREEN_FIXED, n); }
+inline Font ScreenSerif(int n = -32000) { return Font(Font::SCREEN_SERIF, n); }
+inline Font ScreenSans(int n = -32000) { return Font(Font::SCREEN_SANS, n); }
+inline Font ScreenFixed(int n = -32000) { return Font(Font::SCREEN_FIXED, n); }
 
 #ifdef PLATFORM_WIN32 // backward comaptibility
-inline Font Tahoma(int n = 0) { return Font(Font::TAHOMA, n); }
+inline Font Tahoma(int n = -32000) { return Font(Font::TAHOMA, n); }
 #endif
 
 Size GetTextSize(const wchar *text, Font font, int n = -1);
