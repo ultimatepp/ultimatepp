@@ -45,6 +45,9 @@ additional information such as:&]
 [s5;l160;i150;O0; a short description that explains what the application 
 is doing&]
 [s5;l160;i150;O0; the screen`-shot of a working application&]
+[s5; All source code packages that are listed on this site are available 
+in standard Ultimate`+`+ distribution. So, you can easily select 
+example that you are interested in and build it in TheIDE.&]
 [s3;:2: 2. Sample applications&]
 [s5; This section contains the source code of complex applications 
 written in U`+`+.]]
