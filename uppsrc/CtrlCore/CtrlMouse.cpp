@@ -631,7 +631,7 @@ bool Ctrl::ReleaseCtrlCapture() {
 	if(captureCtrl) {
 		captureCtrl->CancelMode();
 		Ctrl *w = captureCtrl->GetTopCtrl();
-		captureCtrl = NULL;
+		captureCtrl = mouseCtrl = NULL;
 		if(w->HasWndCapture()) {
 			w->ReleaseWndCapture();
 			return true;
