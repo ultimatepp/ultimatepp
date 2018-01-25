@@ -419,7 +419,7 @@ String MakeExamples(const char *dir, const char *www, int language, String paren
 		if(b) {
 			if(next)
 				ttxt << "\n::^ ";
-			ttxt << "[^" << link << "^ " << DeQtf(topic.title) << "]::^ "
+			ttxt << "[^ " << link << "^* " << DeQtf(topic.title) << "]::^ "
 			     << DeQtf(p.description);
 			next = true;
 		}
