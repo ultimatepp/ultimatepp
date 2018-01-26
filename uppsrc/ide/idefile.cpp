@@ -17,9 +17,9 @@ String ViewFileHash(const String& path)
 	return Null;
 }
 
-void ViewFile(LineEdit& edit, Stream& view_file, const String& path)
+void ViewFile(LineEdit& edit, Stream& view_file, const String& path, byte charset)
 {
-	edit.View(view_file);
+	edit.View(view_file, charset);
 	String f = ViewFileHash(path);
 	if(f.GetCount())
 		LoadFromFile([&](Stream& s) { edit.SerializeViewMap(s); }, f);
@@ -570,7 +570,7 @@ void Ide::EditFile0(const String& path, byte charset, int spellcheck_comments, c
 					view_file.Close();
 				}
 				else
-					ViewFile(editor, view_file, editfile);
+					ViewFile(editor, view_file, editfile, charset);
 				
 				editfile_line_endings = le == TextCtrl::LE_CRLF ? CRLF : le == TextCtrl::LE_LF ? LF : (int)Null;
 			}
@@ -950,7 +950,7 @@ void Ide::PassEditor()
 	view_file2.Close();
 	if(editor.IsView()) {
 		view_file2.Open(editfile2);
-		ViewFile(editor2, view_file2, editfile2);
+		ViewFile(editor2, view_file2, editfile2, charset);
 	}
 	else
 		editor2.Set(editor.Get(charset), charset);

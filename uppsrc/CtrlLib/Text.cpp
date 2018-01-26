@@ -127,14 +127,13 @@ bool   TextCtrl::IsUnicodeCharset(byte charset)
 	                        CHARSET_UTF16_LE_BOM, CHARSET_UTF16_BE_BOM) >= 0;
 }
 
-int   TextCtrl::Load0(Stream& in, byte charset, bool view) {
+int   TextCtrl::Load0(Stream& in, byte charset_, bool view) {
 	GuiLock __;
 	Clear();
 	lin.Clear();
 	ClearLines();
 	total = 0;
-	SetCharset(charset);
-	charset = ResolveCharset(charset);
+	SetCharset(charset_);
 	truncated = false;
 	viewlines = 0;
 	this->view = NULL;
