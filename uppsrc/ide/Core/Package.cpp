@@ -230,6 +230,7 @@ bool Package::Load(const char *path)
 		if(IsNull(time))
 			return false;
 		CParser p(f);
+		p.NoSkipComments(); // allow file path like //home/user/project/something.cpp
 		try {
 			while(!p.IsEof()) {
 				if(!LoadOpt(p, "options", option) &&
@@ -288,53 +289,55 @@ bool Package::Load(const char *path)
 					if(p.Id("file")) {
 						do {
 							File fv(ReadValue(p));
-							File& f = file.Add();
-							f = pick(fv);
-							while(!p.IsChar(',') && !p.IsChar(';')) {
-								if(!LoadFOpt(p, "options", f.option) &&
-								   !LoadFOpt(p, "depends", f.depends)) {
-									if(p.Id("optimize_speed"))
-										; // Legacy option ignored
-									else
-									if(p.Id("optimize_size"))
-										; // Legacy option ignored
-									else
-									if(p.Id("pch"))
-										f.pch = true;
-									else
-									if(p.Id("nopch"))
-										f.nopch = true;
-									else
-									if(p.Id("noblitz"))
-										f.noblitz = true;
-									else
-									if(p.Id("readonly"))
-										f.readonly = true;
-									else
-									if(p.Id("separator"))
-										f.separator = true;
-									else
-									if(p.Id("charset"))
-										f.charset = CharsetByNameX(p.ReadString());
-									else
-									if(p.Id("tabsize"))
-										f.tabsize = minmax(p.ReadInt(), 1, 20);
-									else
-									if(p.Id("font"))
-										f.font = minmax(p.ReadInt(), 0, 3);
-									else
-									if(p.Id("highlight"))
-										f.highlight = p.ReadId();
-									else
-									if(p.Id("spellcheck_comments"))
-										f.spellcheck_comments = LNGFromText(p.ReadString());
-									else
-										p.SkipTerm();
+							if(fv.GetCount()) {
+								File& f = file.Add();
+								f = pick(fv);
+								while(!p.IsChar(',') && !p.IsChar(';') && !p.IsEof()) {
+									if(!LoadFOpt(p, "options", f.option) &&
+									   !LoadFOpt(p, "depends", f.depends)) {
+										if(p.Id("optimize_speed"))
+											; // Legacy option ignored
+										else
+										if(p.Id("optimize_size"))
+											; // Legacy option ignored
+										else
+										if(p.Id("pch"))
+											f.pch = true;
+										else
+										if(p.Id("nopch"))
+											f.nopch = true;
+										else
+										if(p.Id("noblitz"))
+											f.noblitz = true;
+										else
+										if(p.Id("readonly"))
+											f.readonly = true;
+										else
+										if(p.Id("separator"))
+											f.separator = true;
+										else
+										if(p.Id("charset"))
+											f.charset = CharsetByNameX(p.ReadString());
+										else
+										if(p.Id("tabsize"))
+											f.tabsize = minmax(p.ReadInt(), 1, 20);
+										else
+										if(p.Id("font"))
+											f.font = minmax(p.ReadInt(), 0, 3);
+										else
+										if(p.Id("highlight"))
+											f.highlight = p.ReadId();
+										else
+										if(p.Id("spellcheck_comments"))
+											f.spellcheck_comments = LNGFromText(p.ReadString());
+										else
+											p.SkipTerm();
+									}
 								}
+								Option(f.pch, "PCH");
+								Option(f.nopch, "NOPCH");
+								Option(f.noblitz, "NOBLITZ");
 							}
-							Option(f.pch, "PCH");
-							Option(f.nopch, "NOPCH");
-							Option(f.noblitz, "NOBLITZ");
 						}
 						while(p.Char(','));
 					}
