@@ -7,5 +7,6 @@ file
 	Events.cpp;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI X11";
 
