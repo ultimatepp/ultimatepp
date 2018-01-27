@@ -141,8 +141,8 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 				   ev1->xkey.state != event->xkey.state ||
 				   ev1->xkey.keycode != event->xkey.keycode ||
 				   !IsWaitingEvent()) {
-				   	XPutBackEvent(Xdisplay, ev1);
-				   	break;
+					XPutBackEvent(Xdisplay, ev1);
+					break;
 				}
 				do
 					XNextEvent(Xdisplay, ev2);
@@ -260,8 +260,13 @@ void Ctrl::EventProc(XWindow& w, XEvent *event)
 						return;
 					}
 			}
-			if(keysym >= 48 && keysym <= 57 && chr == 0) {
-				DispatchKey(KEYtoK(keysym - 48 + K_0)|up, count);
+			if(GetCtrl() || GetAlt()) { // fix Ctrl+Shift+1 etc...
+				keysym = decode(event->xkey.keycode, 0xa, '1', 0xb, '2', 0xc, '3', 0xd, '4',
+				                0xe, '5', 0xf, '6', 0x10, '7', 0x11, '8', 0x12, '9', 0x13, '0',
+				                keysym);
+			}
+			if(keysym >= '0' && keysym <= '9' && (chr == 0 || GetCtrl() || GetAlt())) {
+				DispatchKey(KEYtoK(keysym - '0' + K_0)|up, count);
 				return;
 			}
 			if(chr >= 1 && chr < 32) {
