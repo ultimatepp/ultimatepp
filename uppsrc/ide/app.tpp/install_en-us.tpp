@@ -1,5 +1,4 @@
 topic "Ultimate++ installation guide";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*2 $$3,5#07864147445237544204411237157677:title]
@@ -18,6 +17,7 @@ topic "Ultimate++ installation guide";
 [l321;*C$7;2 $$16,16#03451589433145915344929335295360:result]
 [l321;b83;a83;*C$7;2 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2;= Ultimate`+`+ Windows releases&]
 [s5; Windows release a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
@@ -28,7 +28,7 @@ does not write anything to registry or outside its directory.&]
 [s5;l160;i150;O0; [* upp`-mingw] contains mingw64 compiler system for 
 out of the box operation&]
 [s5;l160;i150;O0; [* upp`-win] comes without compiler/SDK,&]
-[s0; Both variants are able (on first install, when installation 
+[s5; Both variants are able (on first install, when installation 
 is moved or on demand `- menu Setup/Instant setup) to detect 
 and use Miscrosoft Windows SDK and C`+`+ compiler, either 2017 
 or 2015 version. The most convenient way is to install Visual 
