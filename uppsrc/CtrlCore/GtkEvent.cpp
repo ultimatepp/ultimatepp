@@ -446,8 +446,26 @@ void Ctrl::Proc()
 			Tuple2<int, int> *x = FindTuple(cv, __countof(cv), kv);
 			if(x)
 				kv = x->b;
-			else
+			else {
+				if(GetCtrl() | GetAlt()) {// fix Ctrl+Shift+1 etc...
+					static VectorMap<int, int> hwkv;
+					ONCELOCK {
+						for(int k : { GDKEY(0), GDKEY(1), GDKEY(2), GDKEY(3), GDKEY(4),
+						              GDKEY(5), GDKEY(6), GDKEY(7), GDKEY(8), GDKEY(9) }) {
+							GdkKeymapKey *keys;
+							gint n_keys;
+							if(gdk_keymap_get_entries_for_keyval(NULL, k, &keys, &n_keys)) {
+								for(int j = 0; j < n_keys; j++)
+									if(keys[j].group == 0)
+										hwkv.Add(keys[j].keycode, k);
+								g_free(keys);
+							}
+						}
+					};
+					kv = hwkv.Get(hw, kv);
+				}
 				kv += K_DELTA;
+			}
 			if(GetShift() && kv != K_SHIFT_KEY)
 				kv |= K_SHIFT;
 			if(GetCtrl() && kv != K_CTRL_KEY)
