@@ -497,7 +497,8 @@ String   AsQTF(const RichText& text, byte charset, dword options)
 		qtf << "^F" << ftr << "^^\r\n";
 
 	if(!(options & QTF_NOSTYLES))
-		for(i = 0; i < sm.GetCount(); i++) {
+		for(int j = 1; j < sm.GetCount() + 1; j++) { // we need to store default style last as it immediately sets
+			int i = j % sm.GetCount();
 			Uuid id = sm[i];
 			const RichStyle& s = text.GetStyle(id);
 			qtf << '[';
