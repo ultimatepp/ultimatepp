@@ -1,11 +1,11 @@
 topic "Android builder";
-[# $$0,0#00000000000000000000000000000000:Default]
 [#a83;*R6 $$1,0#31310162474203024125188417583966:caption]
-[#b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [#b83;*4 $$3,2#07864147445237544204411237157677:title]
 [=b83;*R6 $$4,4#6A74CB453EB7CE8DFD488A3B779BFC66:Image]
 [=b42;a67;1 $$5,5#F40424D1E3D034230FCED72E1FBFF1B7:Image description]
-[#b42;a42;ph2 $$6,6#2B3312EDFCF5DDA907D8823BB2222FBD:TextEnumaration]
+[b42;a42;ph2 $$6,6#2B3312EDFCF5DDA907D8823BB2222FBD:TextEnumaration]
+[# $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; Working with Android builder&]
 [s3; 1. Introduction&]
@@ -15,9 +15,9 @@ its development tools inside TheIDE.&]
 [s2; We will use abbreviations and terms that may be unknown for 
 beginners and new users. Below is the list with the most important 
 ones:&]
-[s6;l160;i150;O0; Android SDK `- Android software development kit&]
-[s6;l160;i150;O0; Android NDK `- Android native development kit&]
-[s6;l160;i150;O0; JDK `- Java development kit&]
+[s6;l160;i150;O0; [* Android SDK] `- Android software development kit&]
+[s6;l160;i150;O0; [* Android NDK] `- Android native development kit&]
+[s6;l160;i150;O0; [* JDK] `- Java development kit&]
 [s2; This tutorial is divided into nine chapters. The second and 
 third chapters describe things related to Android SDK. Fourth 
 chapter shows how to create Android builder. Next chapter is 
