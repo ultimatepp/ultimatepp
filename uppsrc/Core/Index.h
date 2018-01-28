@@ -96,16 +96,26 @@ public:
 	unsigned hashfn(const T& x) const       { return GetHashValue(x); }
 
 	T&       Add(const T& x, unsigned _hash);
+	T&       Add(T&& x, unsigned _hash);
 	T&       Add(const T& x);
+	T&       Add(T&& x);
 	Index&   operator<<(const T& x)         { Add(x); return *this; }
+	Index&   operator<<(T&& x)              { Add(pick(x)); return *this; }
 
 	int      FindAdd(const T& key, unsigned _hash);
 	int      FindAdd(const T& key);
+	int      FindAdd(T&& key, unsigned _hash);
+	int      FindAdd(T&& key);
 
 	int      Put(const T& x, unsigned _hash);
 	int      Put(const T& x);
+	int      Put(T&& x, unsigned _hash);
+	int      Put(T&& x);
+
 	int      FindPut(const T& key, unsigned _hash);
 	int      FindPut(const T& key);
+	int      FindPut(T&& key, unsigned _hash);
+	int      FindPut(T&& key);
 
 	int      Find(const T& x, unsigned _hash) const;
 	int      Find(const T& x) const;
@@ -116,6 +126,8 @@ public:
 
 	T&       Set(int i, const T& x, unsigned _hash);
 	T&       Set(int i, const T& x);
+	T&       Set(int i, T&& x, unsigned _hash);
+	T&       Set(int i, T&& x);
 
 	const T& operator[](int i) const         { return key[i]; }
 	int      GetCount() const                { return key.GetCount(); }
