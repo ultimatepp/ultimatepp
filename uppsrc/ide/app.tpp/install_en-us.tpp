@@ -34,5 +34,4 @@ and use Miscrosoft Windows SDK and C`+`+ compiler, either 2017
 or 2015 version. The most convenient way is to install Visual 
 Studio Build Tools. Please check this [^https`:`/`/blogs`.msdn`.microsoft`.com`/vcblog`/2016`/11`/16`/introducing`-the`-visual`-studio`-build`-tools`/`?`_`_hstc`=268264337`.c396ab304e96089050275a79b106ba49`.1512810082757`.1512810082757`.1512810082757`.1`&`_`_hssc`=268264337`.2`.1512810082757`&`_`_hsfp`=2574008961^ b
 log entry] about this option. When installing, make sure that 
-support for Win32 applications is installed as well.&]
-[s0; ]]
+support for Win32 applications is installed as well.]]
