@@ -1,0 +1,11 @@
+description "Demosntrates how to synchronize ArrayCtrl scroll position with LineEdit\377";
+
+uses
+	CtrlLib;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
