@@ -1,5 +1,4 @@
 topic "ArrayMap";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "ArrayMap";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 ArrayMap]]}}&]
 [s3; &]
@@ -78,69 +78,64 @@ of type derived from T.&]
 [s7; [*C@3 s]-|Source ArrayMap.&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayMap`:`:ArrayMap`(pick`_ Index`<K`,HashFn`>`&`,pick`_ Array`<T`>`&`):%- [* Arr
-ayMap]([@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Indext`$en`-us`#Index`:`:class^ I
-ndex][@(0.0.255) <][*@4 K], [*@4 HashFn][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
-rray][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
+[s5;:Upp`:`:ArrayMap`:`:ArrayMap`(Upp`:`:Index`<K`>`&`&`,Upp`:`:Array`<T`>`&`&`):%- [* A
+rrayMap]([_^Upp`:`:Index^ Index]<[*@4 K]>`&`&_[*@3 ndx], [_^Upp`:`:Array^ Array]<[*@4 T]>`&
+`&_[*@3 val])&]
 [s2; Pick`-constructs ArrayMap from Index of keys and Array of values. 
 The source containers should have equal number of elements.&]
-[s7; [*C@3 ndx]-|Source Index.&]
-[s7; [*C@3 val]-|Source Array.&]
 [s3; &]
 [s4;%- &]
-[s5;:ArrayMap`:`:ArrayMap`(pick`_ Vector`<K`>`&`,pick`_ Array`<T`>`&`):%- [* ArrayMap](
-[@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ Vecto
-r][@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[_^topic`:`/`/Core`/src`/Array`$en`-us`#Array`:`:class^ A
-rray][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
+[s5;:Upp`:`:ArrayMap`:`:ArrayMap`(Upp`:`:Vector`<K`>`&`&`,Upp`:`:Array`<T`>`&`&`):%- [* A
+rrayMap]([_^Upp`:`:Vector^ Vector]<[*@4 K]>`&`&_[*@3 ndx], [_^Upp`:`:Array^ Array]<[*@4 T]>
+`&`&_[*@3 val])&]
 [s2; Pick`-constructs ArrayMap from Vector of keys and Array of values. 
 The source containers should have equal number of elements.&]
-[s7; [*C@3 ndx]-|Source Index.&]
-[s7; [*C@3 val]-|Source Array.&]
-[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
 [s3;%- &]
 [s5;:ArrayMap`:`:Add`(const K`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) co
 nst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Adds a key and value pair to the ArrayMap. This method has to 
-be reimplemented in ArrayMap (using simple forwarding) due to 
-overloading of Add in other forms.Returns a reference to the 
-element.&]
-[s6; T must have deep copy constructor.&]
-[s6; Invalidates iterators to the ArrayMap.&]
-[s6; Invalidates references to keys.&]
-[s7; [*C@3 k]-|Key.&]
-[s7; [*C@3 x]-|Value.&]
-[s3; &]
-[s4;%- &]
+[s5;:Upp`:`:ArrayMap`:`:Add`(const K`&`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) c
+onst]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
 [s5;:ArrayMap`:`:Add`(const K`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&
 ]_[*@3 k])&]
-[s2; Adds a key to the ArrayMap and returns a reference to the corresponding 
-default constructed value. This method has to be reimplemented 
-in ArrayMap (using simple forwarding) due to overloading of [* Add] 
-in other forms.&]
-[s6; T must have default constructor.&]
-[s6; Invalidates iterators to the ArrayMap.&]
-[s6; Invalidates references to keys.&]
-[s7; [*@3 k]-|Key.&]
-[s7; [*/ Return value]-|Reference to value.&]
-[s3; &]
-[s4;%- &]
 [s5;:ArrayMap`:`:Add`(const K`&`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Add]([@(0.0.255) const]_[*@4 K
 ][@(0.0.255) `&]_[*@3 k], [*@4 T]_`*[*@3 newt])&]
-[s2; Adds a key`-value pair to the ArrayMap. The value is specified 
-by a pointer to the object. ArrayMap takes over ownership of 
+[s5;:Upp`:`:ArrayMap`:`:Add`(K`&`&`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 K][@(0.0.255) `&
+`&]_[*@3 k], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
+[s5;:Upp`:`:ArrayMap`:`:Add`(K`&`&`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 K][@(0.0.255) `&
+`&]_[*@3 k], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s5;:Upp`:`:ArrayMap`:`:Add`(K`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 K][@(0.0.255) `&`&]_
+[*@3 k])&]
+[s5;:Upp`:`:ArrayMap`:`:Add`(K`&`&`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Add]([*@4 K][@(0.0.255) `&
+`&]_[*@3 k], [*@4 T]_`*[*@3 newt])&]
+[s2; Adds a key`-value pair to the ArrayMap. [%-*@3 newt] specifies 
+the new value as a pointer to the object created using default 
+`'new`' operator of the heap. ArrayMap takes over ownership of 
 this object. This variant allows use of ArrayMap as polymorphic 
 container, because type of added element can be also derived 
-from T as well. No constructor is applied.&]
-[s7; [*@3 k]-|Key.&]
-[s7; [%-*@3 newt]-|Value.&]
+from T as well. Value can be also copied picked from [%-*@3 x] 
+or default constructed.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:ArrayMap`:`:Insert`(int`,const K`&`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Insert](
+[@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], 
+[*@4 T]_`*[*@3 newt])&]
+[s5;:Upp`:`:ArrayMap`:`:Insert`(int`,K`&`&`,T`*`):%- [*@4 T][@(0.0.255) `&]_[* Insert]([@(0.0.255) i
+nt]_[*@3 i], [*@4 K][@(0.0.255) `&`&]_[*@3 k], [*@4 T]_`*[*@3 newt])&]
+[s2; Inserts a key`-value pair to the ArrayMap. [%-*@3 newt] specifies 
+the new value as a pointer to the object created using default 
+`'new`' operator of the heap. ArrayMap takes over ownership of 
+this object.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:ArrayMap`:`:Create`(const K`&`,Args`&`&`.`.`.args`):%- [@(0.0.255) template
 ]_<[@(0.0.255) class]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Cr
 eate]([@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[*@3 k], [*@4 Args][@(0.0.255) `&`&...]_args)
 &]
+[s5;:Upp`:`:ArrayMap`:`:Create`(K`&`&`,Args`&`&`.`.`.args`):%- [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 TT], [@(0.0.255) class...]_[*@4 Args]>_[*@4 TT][@(0.0.255) `&]_[* Create]([*@4 K][@(0.0.255) `&
+`&]_[*@3 k], [*@4 Args][@(0.0.255) `&`&...]_args)&]
 [s2;%- [%% Adds a new key ][*@3 k][%%  with value element of type ][*@4 TT][%%  
 (must be derived from ][*@4 T]). Value is constructd in`-place, 
 with args as constructor parameters.&]
@@ -151,8 +146,6 @@ with args as constructor parameters.&]
 [s2; Sets value at specified index. Value is specified by a pointer 
 to the object. ArrayMap takes over ownership of this object. 
 Returns a reference to the element.&]
-[s7; [*C@3 i]-|Index.&]
-[s7; [*C@3 ptr]-|Value.&]
 [s3; &]
 [s4;%- &]
 [s5;:ArrayMap`:`:PopDetach`(`):%- [*@4 T]_`*[* PopDetach]()&]

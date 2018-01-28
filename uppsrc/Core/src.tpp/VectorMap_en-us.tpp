@@ -1,5 +1,4 @@
 topic "VectorMap";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "VectorMap";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 VectorMap]]}}&]
 [s3; &]
@@ -77,26 +77,20 @@ constructor.&]
 [s7; [%-*@3 s][%- -|]Source [* VectorMap].&]
 [s3; &]
 [s4;%- &]
-[s5;:VectorMap`:`:VectorMap`(pick`_ Index`<K`,HashFn`>`&`,pick`_ Vector`<T`>`&`):%- [* V
-ectorMap]([@(0.128.128) pick`_]_[_^Index^ Index][@(0.0.255) <][*@4 K], 
-[*@4 HashFn][@(0.0.255) >`&]_[*@3 ndx], [@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) <
-][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
+[s5;:Upp`:`:VectorMap`:`:VectorMap`(Upp`:`:Index`<K`>`&`&`,Upp`:`:Vector`<T`>`&`&`):%- [* V
+ectorMap]([_^Upp`:`:Index^ Index]<[*@4 K]>`&`&_[*@3 ndx], [_^Upp`:`:Vector^ Vector]<[*@4 T]>
+`&`&_[*@3 val])&]
 [s2; Pick`-constructs [* VectorMap] from [* Index] of keys and [* Vector] 
 of values. Both source containers should have the same number 
 of elements.&]
-[s7; [%-*@3 ndx][%- -|]Source Index.&]
-[s7; [%-*@3 val][%- -|]Source Vector.&]
 [s3; &]
 [s4;%- &]
-[s5;:VectorMap`:`:VectorMap`(pick`_ Vector`<K`>`&`,pick`_ Vector`<T`>`&`):%- [* VectorM
-ap]([@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) <][*@4 K][@(0.0.255) >`&]_[*@3 ndx], 
-[@(0.128.128) pick`_]_[_^Vector^ Vector][@(0.0.255) <][*@4 T][@(0.0.255) >`&]_[*@3 val])&]
+[s5;:Upp`:`:VectorMap`:`:VectorMap`(Upp`:`:Vector`<K`>`&`&`,Upp`:`:Vector`<T`>`&`&`):%- [* V
+ectorMap]([_^Upp`:`:Vector^ Vector]<[*@4 K]>`&`&_[*@3 ndx], [_^Upp`:`:Vector^ Vector]<[*@4 T
+]>`&`&_[*@3 val])&]
 [s2; Pick`-constructs [* VectorMap] from [* Vector] of keys and [* Vector] 
 of values. Both source containers should have the same number 
 of elements.&]
-[s7; [%-*@3 ndx][%- -|]Source Vector of keys.&]
-[s7; [%-*@3 val][%- -|]Source Vector of values.&]
-[s3; &]
 [s0; &]
 [ {{10000F(128)G(128)t/25b/25@1 [s0;%- [* Public Member List]]}}&]
 [s3;%- &]

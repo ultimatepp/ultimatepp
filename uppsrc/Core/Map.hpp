@@ -473,6 +473,42 @@ int AMap<K, T, V>::FindAdd(const K& k, T&& x) {
 }
 
 template <class K, class T, class V>
+int AMap<K, T, V>::FindAdd(K&& k) {
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i < 0) {
+		i = GetCount();
+		key.Add(pick(k), hash);
+		value.Add();
+	}
+	return i;
+}
+
+template <class K, class T, class V>
+int AMap<K, T, V>::FindAdd(K&& k, const T& x) {
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i < 0) {
+		i = GetCount();
+		key.Add(pick(k), hash);
+		value.Add(x);
+	}
+	return i;
+}
+
+template <class K, class T, class V>
+int AMap<K, T, V>::FindAdd(K&& k, T&& x) {
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i < 0) {
+		i = GetCount();
+		key.Add(pick(k), hash);
+		value.Add(pick(x));
+	}
+	return i;
+}
+
+template <class K, class T, class V>
 int AMap<K, T, V>::Put(const K& k, const T& x)
 {
 	int i = key.Put(k);
@@ -529,6 +565,62 @@ T&  AMap<K, T, V>::Put(const K& k)
 }
 
 template <class K, class T, class V>
+int AMap<K, T, V>::Put(K&& k, const T& x)
+{
+	int i = key.Put(pick(k));
+	if(i < value.GetCount())
+		value[i] = x;
+	else {
+		ASSERT(i == value.GetCount());
+		value.Add(x);
+	}
+	return i;
+}
+
+template <class K, class T, class V>
+int AMap<K, T, V>::PutDefault(K&& k)
+{
+	int i = key.Put(pick(k));
+	if(i >= value.GetCount()) {
+		ASSERT(i == value.GetCount());
+		value.Add();
+	}
+	else {
+		Destroy(&value[i], &value[i] + 1);
+		Construct(&value[i], &value[i] + 1);
+	}
+	return i;
+}
+
+template <class K, class T, class V>
+int AMap<K, T, V>::Put(K&& k, T&& x)
+{
+	int i = key.Put(pick(k));
+	if(i < value.GetCount())
+		value[i] = pick(x);
+	else {
+		ASSERT(i == value.GetCount());
+		value.Add(pick(x));
+	}
+	return i;
+}
+
+template <class K, class T, class V>
+T&  AMap<K, T, V>::Put(K&& k)
+{
+	int i = key.Put(pick(k));
+	if(i < value.GetCount()) {
+		Destroy(&value[i], &value[i] + 1);
+		Construct(&value[i], &value[i] + 1);
+		return value[i];
+	}
+	else {
+		ASSERT(i == value.GetCount());
+		return value.Add();
+	}
+}
+
+template <class K, class T, class V>
 int AMap<K, T, V>::FindPut(const K& k)
 {
 	unsigned hash = key.hashfn(k);
@@ -567,6 +659,44 @@ int AMap<K, T, V>::FindPut(const K& k, T&& init)
 }
 
 template <class K, class T, class V>
+int AMap<K, T, V>::FindPut(K&& k)
+{
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	return i < 0 ? PutDefault(pick(k)) : i;
+}
+
+template <class K, class T, class V>
+int AMap<K, T, V>::FindPut(K&& k, const T& init)
+{
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i < 0) {
+		i = key.Put(pick(k), hash);
+		if(i >= value.GetCount()) {
+			ASSERT(i == value.GetCount());
+			i = value.GetCount();
+			value.Add(init);
+		}
+		else
+			value[i] = init;
+	}
+	return i;
+}
+
+template <class K, class T, class V>
+int AMap<K, T, V>::FindPut(K&& k, T&& init)
+{
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i < 0) {
+		i = key.Put(pick(k), hash);
+		value.At(i) = pick(init);
+	}
+	return i;
+}
+
+template <class K, class T, class V>
 T&  AMap<K, T, V>::GetAdd(const K& k) {
 	unsigned hash = key.hashfn(k);
 	int i = key.Find(k, hash);
@@ -597,6 +727,36 @@ T&  AMap<K, T, V>::GetAdd(const K& k, T&& x) {
 }
 
 template <class K, class T, class V>
+T&  AMap<K, T, V>::GetAdd(K&& k) {
+	unsigned hash = key.hashfn(k);
+	int i = key.Find(k, hash);
+	if(i >= 0)
+		return value[i];
+	key.Add(pick(k), hash);
+	return value.Add();
+}
+
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetAdd(K&& k, const T& x) {
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i >= 0) return value[i];
+	key.Add(pick(k), hash);
+	value.Add(x);
+	return value.Top();
+}
+
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetAdd(K&& k, T&& x) {
+	unsigned hash = key.hashfn(k);
+	int i = Find(k, hash);
+	if(i >= 0) return value[i];
+	key.Add(pick(k), hash);
+	value.Add(pick(x));
+	return value.Top();
+}
+
+template <class K, class T, class V>
 T&  AMap<K, T, V>::GetPut(const K& k) {
 	return value[FindPut(k)];
 }
@@ -609,6 +769,21 @@ T&  AMap<K, T, V>::GetPut(const K& k, const T& x) {
 template <class K, class T, class V>
 T&  AMap<K, T, V>::GetPut(const K& k, T&& x) {
 	return value[FindPut(k, pick(x))];
+}
+
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetPut(K&& k) {
+	return value[FindPut(pick(k))];
+}
+
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetPut(K&& k, const T& x) {
+	return value[FindPut(pick(k), x)];
+}
+
+template <class K, class T, class V>
+T&  AMap<K, T, V>::GetPut(K&& k, T&& x) {
+	return value[FindPut(pick(k), pick(x))];
 }
 
 #ifdef UPP
