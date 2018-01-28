@@ -39,6 +39,9 @@ public:
 	T&       Add(const K& k, const T& x)            { key.Add(k); return value.Add(x); }
 	T&       Add(const K& k, T&& x)                 { key.Add(k); return value.Add(pick(x)); }
 	T&       Add(const K& k)                        { key.Add(k); return value.Add(); }
+	T&       Add(K&& k, const T& x)                 { key.Add(pick(k)); return value.Add(x); }
+	T&       Add(K&& k, T&& x)                      { key.Add(pick(k)); return value.Add(pick(x)); }
+	T&       Add(K&& k)                             { key.Add(pick(k)); return value.Add(); }
 
 	int      Find(const K& k, unsigned h) const     { return key.Find(k, h); }
 	int      Find(const K& k) const                 { return key.Find(k); }
@@ -50,47 +53,69 @@ public:
 	int      FindAdd(const K& k);
 	int      FindAdd(const K& k, const T& init);
 	int      FindAdd(const K& k, T&& init);
+	int      FindAdd(K&& k);
+	int      FindAdd(K&& k, const T& init);
+	int      FindAdd(K&& k, T&& init);
+
+	T&       Put(const K& k);
+	T&       Put(K&& k);
 
 	int      Put(const K& k, const T& x);
-	int      PutDefault(const K& k);
 	int      Put(const K& k, T&& x);
-	T&       Put(const K& k);
+	int      Put(K&& k, const T& x);
+	int      Put(K&& k, T&& x);
+
+	int      PutDefault(const K& k);
+	int      PutDefault(K&& k);
 
 	int      FindPut(const K& k);
 	int      FindPut(const K& k, const T& init);
 	int      FindPut(const K& k, T&& init);
+	int      FindPut(K&& k);
+	int      FindPut(K&& k, const T& init);
+	int      FindPut(K&& k, T&& init);
 
 	T&       Get(const K& k)                     { return value[Find(k)]; }
 	const T& Get(const K& k) const               { return value[Find(k)]; }
 	const T& Get(const K& k, const T& d) const   { int i = Find(k); return i >= 0 ? value[i] : d; }
 
 	T&       GetAdd(const K& k);
-
 	T&       GetAdd(const K& k, const T& x);
 	T&       GetAdd(const K& k, T&& x);
+	T&       GetAdd(K&& k);
+	T&       GetAdd(K&& k, const T& x);
+	T&       GetAdd(K&& k, T&& x);
 
 	T&       GetPut(const K& k);
-
 	T&       GetPut(const K& k, const T& x);
 	T&       GetPut(const K& k, T&& x);
+	T&       GetPut(K&& k);
+	T&       GetPut(K&& k, const T& x);
+	T&       GetPut(K&& k, T&& x);
 
-	void     SetKey(int i, const K& k)           { key.Set(i, k); }
+	void     SetKey(int i, const K& k)            { key.Set(i, k); }
+	void     SetKey(int i, K&& k)                 { key.Set(i, pick(k)); }
 
-	T       *FindPtr(const K& k)       { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
-	const T *FindPtr(const K& k) const { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
+	T       *FindPtr(const K& k)                  { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
+	const T *FindPtr(const K& k) const            { int i = Find(k); return i >= 0 ? &value[i] : NULL; }
 
-	T       *FindLastPtr(const K& k)       { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
-	const T *FindLastPtr(const K& k) const { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
+	T       *FindLastPtr(const K& k)              { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
+	const T *FindLastPtr(const K& k) const        { int i = FindLast(k); return i >= 0 ? &value[i] : NULL; }
 
-	void     Unlink(int i)                            { key.Unlink(i); }
-	int      UnlinkKey(const K& k, unsigned h)        { return key.UnlinkKey(k, h); }
-	int      UnlinkKey(const K& k)                    { return key.UnlinkKey(k); }
-	bool     IsUnlinked(int i) const                  { return key.IsUnlinked(i); }
+	void     Unlink(int i)                        { key.Unlink(i); }
+	int      UnlinkKey(const K& k, unsigned h)    { return key.UnlinkKey(k, h); }
+	int      UnlinkKey(const K& k)                { return key.UnlinkKey(k); }
+	bool     IsUnlinked(int i) const              { return key.IsUnlinked(i); }
 	void     Sweep();
-	bool     HasUnlinked() const                      { return key.HasUnlinked(); }
+	bool     HasUnlinked() const                  { return key.HasUnlinked(); }
 
 	T&       Insert(int i, const K& k)             { key.Insert(i, k); return value.Insert(i); }
 	T&       Insert(int i, const K& k, const T& x) { key.Insert(i, k); return value.Insert(i, x); }
+	T&       Insert(int i, const K& k, T&& x)      { key.Insert(i, k); return value.Insert(i, pick(x)); }
+	T&       Insert(int i, K&& k)                  { key.Insert(i, pick(k)); return value.Insert(i); }
+	T&       Insert(int i, K&& k, const T& x)      { key.Insert(i, pick(k)); return value.Insert(i, x); }
+	T&       Insert(int i, K&& k, T&& x)           { key.Insert(i, pick(k)); return value.Insert(i, pick(x)); }
+
 	void     Remove(int i)                         { key.Remove(i); value.Remove(i); }
 	void     Remove(int i, int count)              { key.Remove(i, count); value.Remove(i, count); }
 	void     Remove(const int *sl, int n)          { key.Remove(sl, n); value.Remove(sl, n); }
@@ -217,12 +242,22 @@ class ArrayMap : public MoveableAndDeepCopyOption<ArrayMap<K, T>>,
 	typedef AMap<K, T, Array<T>> B;
 public:
 	T&        Add(const K& k, const T& x)          { return B::Add(k, x); }
+	T&        Add(const K& k, T&& x)               { return B::Add(k, pick(x)); }
 	T&        Add(const K& k)                      { return B::Add(k); }
 	T&        Add(const K& k, T *newt)             { B::key.Add(k); return B::value.Add(newt); }
+	T&        Add(K&& k, const T& x)               { return B::Add(pick(k), x); }
+	T&        Add(K&& k, T&& x)                    { return B::Add(pick(k), pick(x)); }
+	T&        Add(K&& k)                           { return B::Add(pick(k)); }
+	T&        Add(K&& k, T *newt)                  { B::key.Add(pick(k)); return B::value.Add(newt); }
+
 	T&        Insert(int i, const K& k, T *newt)   { B::key.Insert(i, k); return B::value.Insert(i, newt); }
+	T&        Insert(int i, K&& k, T *newt)        { B::key.Insert(i, pick(k)); return B::value.Insert(i, newt); }
 	using B::Insert;
+
 	template <class TT, class... Args>
 	TT& Create(const K& k, Args&&... args)         { TT *q = new TT(std::forward<Args>(args)...); B::key.Add(k); return static_cast<TT&>(B::value.Add(q)); }
+	template <class TT, class... Args>
+	TT& Create(K&& k, Args&&... args)              { TT *q = new TT(std::forward<Args>(args)...); B::key.Add(pick(k)); return static_cast<TT&>(B::value.Add(q)); }
 
 	T&        Set(int i, T *ptr)                   { return B::value.Set(i, ptr); }
 	T        *PopDetach()                          { B::key.Drop(); return B::value.PopDetach(); }
