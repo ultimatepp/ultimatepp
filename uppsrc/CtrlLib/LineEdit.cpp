@@ -843,6 +843,7 @@ void LineEdit::Scroll() {
 	scroller.Scroll(*this, GetSize(), sb.Get(), GetFontSize());
 	SetHBar();
 	NewScrollPos();
+	WhenScroll();
 }
 
 int64 LineEdit::GetMousePos(Point p) const {

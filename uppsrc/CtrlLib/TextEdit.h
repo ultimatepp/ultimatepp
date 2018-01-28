@@ -369,6 +369,8 @@ protected:
 	int    GetMousePos32(Point p) const       { return (int)GetMousePos(p); }
 
 public:
+	Event<> WhenScroll;
+	
 	Size   GetFontSize() const;
 	int64  GetGPos(int ln, int cl) const;
 	int64  GetMousePos(Point p) const;
