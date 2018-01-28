@@ -2,20 +2,11 @@
 
 using namespace Upp;
 
-force_inline double Sum(const String& s)
-{
-	CParser p(s);
-	double sum = 0;
-	while(!p.IsEof())
-		sum += p.ReadDouble();
-	return sum;
-}
-
 CONSOLE_APP_MAIN
 {
 	SeedRandom(0);
 	Vector<String> data;
-	for(int i = 0; i < 10000000; i++) {
+	for(int i = 0; i < 1000; i++) {
 		int n = Random(7);
 		data.Add();
 		for(int j = 0; j < n; j++)
@@ -27,8 +18,11 @@ CONSOLE_APP_MAIN
 	co * [&] {
 		double m = 0;
 		int i;
-		while((i = co.Next()) < data.GetCount())
-			m += Sum(data[i]);
+		while((i = co.Next()) < data.GetCount()) {
+			CParser p(data[i]);
+			while(!p.IsEof())
+				m += p.ReadDouble();
+		}
 		CoWork::FinLock();
 		sum += m;
 	};
