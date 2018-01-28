@@ -33,7 +33,7 @@ one more space character than is the count of characters in the
 line; this additional character can be used to set the appearance 
 of the rest of line after the last character. You also add more 
 characters to the [%-*@3 h]. Default implementation is empty.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:LineEdit`:`:NewScrollPos`(`): [@(0.0.255) virtual] [@(0.0.255) void]_[* NewScrollPos](
 )&]
@@ -41,8 +41,12 @@ characters to the [%-*@3 h]. Default implementation is empty.&]
 is empty.&]
 [s3; &]
 [s0; &]
-[ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
+[ {{10000F(128)G(128)@1 [s0;%% [* Public Member List]]}}&]
+[s3;%% &]
+[s5;:Upp`:`:LineEdit`:`:WhenScroll: [_^Upp`:`:Event^ Event]<>_[* WhenScroll]&]
+[s2;%% Invoked when scrollbar gets new position.&]
 [s3; &]
+[s4; &]
 [s5;:LineEdit`:`:GetFontSize`(`)const: [_^Size^ Size]_[* GetFontSize]()_[@(0.0.255) const]&]
 [s2;%% Returns the size of font character cell (LineEdit expects 
 monospace glyphs `-  the width of character is constant).&]
