@@ -91,7 +91,7 @@ QtfDlg::QtfDlg()
 	SetMinSize(Size(min(640, r.GetWidth() - 100), min(480, r.GetHeight() - 200)));
 
 	help.Margins(Rect(12, 0, 12, 0));
-	String path = AppendFileName(AppendFileName(PackageDirectory("RichText"), "srcdoc.tpp"), "QTF$en-us.tpp");
+	String path = AppendFileName(AppendFileName(PackageDirectory("RichText"), "srcdoc.tpp"), "QTF_en-us.tpp");
 	if(FileExists(path))
 		help.SetQTF(ReadTopic(LoadFile(path)).text);
 	else
