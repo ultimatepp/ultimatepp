@@ -112,12 +112,42 @@ T& Index<T>::Add(const T& x) {
 }
 
 template <class T>
+T& Index<T>::Add(T&& x, unsigned _hash)
+{
+	T& t = key.Add(pick(x));
+	hash.Add(_hash);
+	return t;
+}
+
+template <class T>
+T& Index<T>::Add(T&& x)
+{
+	return Add(pick(x), hashfn(x));
+}
+
+template <class T>
 int  Index<T>::FindAdd(const T& _key, unsigned _hash) {
 	int i = Find(_key, _hash);
 	if(i >= 0) return i;
 	i = key.GetCount();
 	Add(_key, _hash);
 	return i;
+}
+
+template <class T>
+int Index<T>::FindAdd(T&& _key, unsigned _hash)
+{
+	int i = Find(_key, _hash);
+	if(i >= 0) return i;
+	i = key.GetCount();
+	Add(pick(_key), _hash);
+	return i;
+}
+
+template <class T>
+int Index<T>::FindAdd(T&& key)
+{
+	return FindAdd(pick(key), hashfn(key));
 }
 
 template <class T>
@@ -140,6 +170,25 @@ int Index<T>::Put(const T& x)
 }
 
 template <class T>
+int Index<T>::Put(T&& x, unsigned _hash)
+{
+	int q = hash.Put(_hash);
+	if(q < 0) {
+		q = key.GetCount();
+		Add(pick(x), _hash);
+	}
+	else
+		key[q] = pick(x);
+	return q;
+}
+
+template <class T>
+int Index<T>::Put(T&& x)
+{
+	return Put(pick(x), hashfn(x));
+}
+
+template <class T>
 int  Index<T>::FindPut(const T& _key, unsigned _hash)
 {
 	int i = Find(_key, _hash);
@@ -151,6 +200,20 @@ template <class T>
 int  Index<T>::FindPut(const T& key)
 {
 	return FindPut(key, hashfn(key));
+}
+
+template <class T>
+int Index<T>::FindPut(T&& key, unsigned hash)
+{
+	int i = Find(key, hash);
+	if(i >= 0) return i;
+	return Put(pick(key), hash);
+}
+
+template <class T>
+int Index<T>::FindPut(T&& key)
+{
+	return FindPut(pick(key), hashfn(key));
 }
 
 template <class T>
@@ -209,6 +272,21 @@ T&  Index<T>::Set(int i, const T& x, unsigned _hash) {
 template <class T>
 T&  Index<T>::Set(int i, const T& x) {
 	return Set(i, x, hashfn(x));
+}
+
+template <class T>
+T& Index<T>::Set(int i, T&& x, unsigned _hash)
+{
+	T& t = key[i];
+	t = pick(x);
+	hash.Set(i, _hash);
+	return t;
+}
+
+template <class T>
+T& Index<T>::Set(int i, T&& x)
+{
+	return Set(i, pick(x), hashfn(x));
 }
 
 #ifdef UPP
