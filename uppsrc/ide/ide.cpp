@@ -288,6 +288,9 @@ void Ide::UscProcessDirDeep(const String& dir)
 void Ide::SyncUsc()
 {
 	CleanUsc();
+	UscProcessDir(GetLocalDir());
+	UscProcessDir(GetFileFolder(ConfigFile("x")));
+
 	if(IsNull(main))
 		return;
 	::Workspace wspc;
@@ -301,8 +304,6 @@ void Ide::SyncUsc()
 				UscFile(file);
 		}
 	}
-	UscProcessDir(GetLocalDir());
-	UscProcessDir(GetFileFolder(ConfigFile("x")));
 }
 
 void Ide::CodeBaseSync()

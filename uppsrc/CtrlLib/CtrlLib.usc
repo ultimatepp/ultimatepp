@@ -349,6 +349,8 @@ ctrl Option {
 	Text   SetLabel @1 ? "Option text";
 	Font   SetFont = StdFont() @1;
 	Frame  SetFrame @2;
+	bool   Box;
+	bool   AutoBox;
 	bool   BlackEdge;
 	bool   SwitchImage;
 	bool   SetEditable = true @1 ? "Editable";
@@ -370,16 +372,43 @@ ctrl Option {
 	}
 
 	Paint(w) {
-		x = self;
 		sz = ViewSize(w);
 		img = .SwitchImage ? "ClassicCtrlsImg::S0"
 		                   : .ThreeState ? "ClassicCtrlsImg::O2"
 		                                 : "ClassicCtrlsImg::O0";
 		imagesize = GetImageSize(img);
 		textsize = GetSmartTextSize(.SetLabel, .SetFont);
-		w.DrawImage(0, (sz.cy - imagesize.cy) / 2, img);
-		w.DrawSmartText(imagesize.cx + 4, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont);
+		
+		if(.Box || .AutoBox) {
+			w.DrawImage(10, (textsize.cy - imagesize.cy) / 2, img);
+			w.DrawSmartText(imagesize.cx + 14, 0, .SetLabel, .SetFont);
+
+			d = textsize.cy / 2;
+			w.DrawRect(0, d + 2, 1, sz.cy - d - 4, :SGray);
+			w.DrawRect(1, d + 2, 1, sz.cy - d - 4, :SWhite);
+			w.DrawRect(sz.cx - 2, d, 1, sz.cy - d - 2, :SGray);
+			w.DrawRect(sz.cx - 1, d, 1, sz.cy - d - 2, :SWhite);
+			w.DrawRect(0, sz.cy - 2, sz.cx - 1, 1, :SGray);
+			w.DrawRect(0, sz.cy - 1, sz.cx - 1, 1, :SWhite);
+			w.DrawRect(sz.cx - 1, sz.cy - 2, 1, 2, :SWhite);
+			w.DrawRect(1, d, d - 1, 1, :SGray);
+			w.DrawRect(1, d + 1, d - 1, 1, :SWhite);
+			w.DrawRect(0, d, 1, 2, :SGray);
+			x = textsize.cx + imagesize.cx + 8;
+			w.DrawRect(d + x, d, sz.cx - d - x, 1, :SGray);
+			w.DrawRect(d + x, d + 1, sz.cx - d - x, 1, :SWhite);
+		}
+		else {
+			w.DrawImage(0, (sz.cy - imagesize.cy) / 2, img);
+			w.DrawSmartText(imagesize.cx + 4, (sz.cy - textsize.cy) / 2, .SetLabel, .SetFont);
+		}
 	}
+}
+
+ctrl OptionBox {
+	> Option;
+	
+	bool   Box = true;
 }
 
 ctrl Switch {

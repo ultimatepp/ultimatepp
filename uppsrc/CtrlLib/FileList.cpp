@@ -58,7 +58,7 @@ void DrawFileName(Draw& ww, int x0, int y, int wcx0, int cy, const WString& mnam
 			ww.DrawText(x, y, name, font, ink, (int)(ext - name));
 			ww.DrawText(x + GetTextSize(fi, name, ext), y, ext, font, extink, (int)(mname.End() - ext));
 			if(!IsEmpty(desc) && pass)
-				DrawTextEllipsis(ww, x + fi.GetHeight(), y, wcx - txtcx,
+				DrawTextEllipsis(ww, x + GetTextSize(fi, name), y, wcx - txtcx,
 				                 desc, "...", descfont, extink);
 			x += txtcx;
 			return;

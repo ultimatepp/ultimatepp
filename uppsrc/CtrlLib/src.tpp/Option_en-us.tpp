@@ -1,5 +1,4 @@
 topic "Option";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Option";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0;%% [*@(229)4 Option]]}}&]
 [s3; &]
@@ -18,6 +18,9 @@ er]&]
 [s2;%% 
 @@image:712&131
 (A3IAFQAAAOv/AAAAAHic7ZhtioNADIa9U++059hTLsMigiwiYhFZytKfDQkVm8xk4li7FBJeZD7UZB6T/PA8hLPL5XK5DtDp9GHRv8f5XgJiX2ghhG+0pmnatv252zAMTvWJVIEnTKNUq0c7Ljx6+fr6AklHW10DsYAGAOu6Xidq9VmlqJb52nmWl1Hdf1IgRilKSJfCB6REdRxHp1pAFXgCPWDIkIIgUed5tlNlPUGOoyvyZrbCOoDSeeQ7ZbQpv8ydJWaFKqQoUSWwa6RbqbIt5XT6iuSgPBidWrykgrQ/q1ClDrDAJEHhA89ftIJctVBN3ZylKlMo5SWKLhukQjXlWlKVhT+iAc8LmpGqJQ2iMSvfKEo1dRYjVd2LTlUhKal2Xdf3PdQ7Q/qHdjTVrblqD8AyLqOazdUejbroUviE9Iq2vwPIrfVKllKqiqMhyS05ZWEog2zMWaqAdJomO9Uy2evofXXcfwCWtMav7HK5XC7XohsrJCxc)
+ 
+@@image:1543&475
+(A/cATAAAAAAAAAAAAHic7dpBbptAAIZR36mSz8NtOIzv4l3XXXWfG7Q2xYChhDBJBP55TyyIzeBJ9BkNKG9vAAAAAAAA0PvxMVtPE8rdAv6zROS8tNWRX6pTq7psN+2xa30+nevr1tNgl9ZFfm/p0fa1rjeu/PZ9EzbL1kW+r6z2NRt2a+Vy5b5YGYd1v7yPVjBNfpf29duL3SH92H7UZNmzdMLmJP2yqTloEPzc8Loaz4EgP3/9Hm3dW+tvPNuGBv089vuFcVPgZHdw7KDJS/Vc3dIJn17shnb788O7T37+Wk3/OLattk8WPvdu4dOVpvR7K8NVelNQ88N/8xvsDy6242v58gnf/ZR182FHijtfHFj8CLGtqTzymYczyyfsjhB5mrLOF4esvPGsh6V1a+PB8mCyGplfVMykNnfCx/ELn7JqPuzO9pGPb/ca/drj/bCf94crltFFfeaEVXUeHd7OZvbGc3E+7M4OIt+KMo/imyL/+P+unCZKfo0SIj+K74j8RYj8KA4cOUchcuKJnHgiJ57IiSdy4omceCInnsiJJ3LiiZx4IieeyIkncuKJnHgiJ57IiSdy4omceCInnsiJJ3LiiZx4IieeyIkncuKJnHgiJ57IiSdy4omceCInnsiJJ3LiiZx4IieeyIkncuKJnHgiJ57IiSdy4pVFrnNeRXGuOuclfDLUf8Nttp1vX/iVAQAAAACASH8BOEK7+g==)
 &]
 [s0;%% &]
 [s9;%% Widget providing the selection of 2 or alternatively 3 states 
@@ -48,7 +51,7 @@ and standard appearance.&]
 [s5;:Option`:`:Set`(int`): [_^Option^ Option][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 b])&]
 [s2;%% Sets Option to the specified state (0, 1 or Null).&]
 [s7;%% [%-*C@3 b]-|State.&]
-[s3;%% &]
+[s3; &]
 [s4; &]
 [s5;:Option`:`:Get`(`)const: [@(0.0.255) int]_[* Get]()_[@(0.0.255) const]&]
 [s7;%% [*/ Return value]-|Current state of Option.&]
@@ -123,6 +126,18 @@ st]&]
 the default color.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Option`:`:Box`(bool`): [_^Upp`:`:Option^ Option][@(0.0.255) `&]_[* Box]([@(0.0.255) b
+ool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Changes the visual representation to `"checked box`".&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Option`:`:AutoBox`(bool`): [_^Upp`:`:Option^ Option][@(0.0.255) `&]_[* AutoBox](
+[@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
+[s2;%% Calls Box([%-*@3 b]) and activates mode where all widgets that 
+are children of Option`'s parent and are intersecting Option 
+rectangle are enabled / disabled based on the status of the Option.&]
+[s3;%% &]
+[s4; &]
 [s5;:Option`:`:ShowLabel`(bool`): [_^Option^ Option][@(0.0.255) `&]_[* ShowLabel]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Toggles the display of the option`'s label.&]
@@ -131,4 +146,11 @@ ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s5;:Upp`:`:Option`:`:IsShowLabel`(`)const: [@(0.0.255) bool]_[* IsShowLabel]()_[@(0.0.255) c
 onst]&]
 [s2;%% Returns true if ShowLabel is active.&]
+[s0; &]
+[s0; &]
+[ {{10000@3 [s0;%% [*@(229)4 OptionBox]]}}&]
+[s0; &]
+[s1;:Upp`:`:OptionBox`:`:class: [@(0.0.255)3 class][3 _][*3 OptionBox][3 _:_][@(0.0.255)3 public
+][3 _][*@3;3 Option]&]
+[s2;%% Option with Box modifier active.&]
 [s0; ]]
