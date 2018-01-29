@@ -1,0 +1,7 @@
+LAYOUT(TestLayout, 232, 92)
+	ITEM(OptionBox, dv___0, AutoBox(true).SetLabel(t_("Autodisabling OptionBox")).LeftPosZ(8, 216).TopPosZ(8, 48))
+	ITEM(Button, dv___1, SetLabel(t_("Some button")).LeftPosZ(16, 96).TopPosZ(28, 20))
+	ITEM(Option, dv___2, SetLabel(t_("Some option")).LeftPosZ(116, 100).TopPosZ(28, 20))
+	ITEM(Button, exit, SetLabel(t_("Close")).LeftPosZ(156, 68).TopPosZ(64, 20))
+END_LAYOUT
+
