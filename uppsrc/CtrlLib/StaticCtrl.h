@@ -51,6 +51,8 @@ public:
 	LabelBox& operator=(const char *s)   { SetText(s); return *this; }
 };
 
+void PaintLabelBox(Draw& w, Size sz, Color color, int d);
+
 Color LabelBoxTextColor();
 Color LabelBoxColor();
 

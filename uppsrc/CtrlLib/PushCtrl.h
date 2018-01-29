@@ -170,6 +170,7 @@ public:
 	virtual Value  GetData() const;
 	virtual void   MouseEnter(Point, dword);
 	virtual void   MouseLeave();
+	virtual void   State(int);
 
 protected:
 	virtual void  RefreshPush();
@@ -184,7 +185,11 @@ protected:
 	bool   notnull;
 	bool   blackedge;
 	bool   showlabel;
+	bool   box;
+	bool   autobox;
 	Color  color;
+	
+	void   AutoSync();
 
 public:
 	Option& Set(int b);
@@ -205,9 +210,16 @@ public:
 	Option& NoNotNull()                           { return NotNull(false); }
 	bool    IsNotNull() const                     { return notnull; }
 	Option& SetColor(Color c)                     { color = c; Refresh(); return *this; }
+	Option& Box(bool b = true)                    { box = b; return *this; }
+	Option& AutoBox(bool b = true)                { Box(autobox = b); return *this; }
 
 	Option();
 	virtual ~Option();
+};
+
+class OptionBox : public Option {
+public:
+	OptionBox() { Box(); }
 };
 
 class ButtonOption : public Ctrl {

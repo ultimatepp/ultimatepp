@@ -112,19 +112,10 @@ Rect LabelBox::GetVoidRect() const
 	return r;
 }
 
-void LabelBox::Paint(Draw& w)
+void PaintLabelBox(Draw& w, Size sz, Color color, int d)
 {
-	Size sz = GetSize();
-	if(!IsTransparent())
-		w.DrawRect(sz, SColorFace);
-	Size lsz = GetLabelSize();
-	int d = lsz.cy >> 1;
 	bool hline = sz.cy < 2 * Draw::GetStdFontCy();
 	bool vline = sz.cx < 2 * Draw::GetStdFontCy();
-	int ty = hline ? (sz.cy - lsz.cy) / 2 : 0;
-	Size ts = PaintLabel(w, d + 2, ty, sz.cx, lsz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
-	w.Begin();
-	w.ExcludeClip(d, ty, ts.cx + 4, ts.cy);
 	if(GUI_GlobalStyle() >= GUISTYLE_XP || !IsNull(color)) {
 		if(hline) {
 			d = sz.cy / 2;
@@ -185,6 +176,20 @@ void LabelBox::Paint(Draw& w)
 			w.DrawRect(1, sz.cy - 1, sz.cx - 2, 1, SColorLight);
 		}
 	}
+}
+
+void LabelBox::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	if(!IsTransparent())
+		w.DrawRect(sz, SColorFace);
+	Size lsz = GetLabelSize();
+	int d = lsz.cy >> 1;
+	int ty = sz.cy < 2 * Draw::GetStdFontCy() ? (sz.cy - lsz.cy) / 2 : 0;
+	Size ts = PaintLabel(w, d + DPI(2), ty, sz.cx, lsz.cy, !IsShowEnabled(), false, false, VisibleAccessKeys());
+	w.Begin();
+	w.ExcludeClip(d, ty, ts.cx + DPI(4), ts.cy);
+	PaintLabelBox(w, sz, color, d);
 	w.End();
 }
 

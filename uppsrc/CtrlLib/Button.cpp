@@ -543,11 +543,33 @@ void Option::RefreshFocus() {
 	Refresh();
 }
 
+void  Option::State(int s)
+{
+	AutoSync();
+	Pusher::State(s);
+}
+
 void Option::RefreshPush() {
+	if(box)
+		Refresh(0, 0, GetSize().cx, GetSmartTextSize(label, font).cy);
+	else
 	if(showlabel)
 		Refresh(0, 0, CtrlsImg::O0().GetSize().cx, GetSize().cy);
 	else
 		Pusher::RefreshPush();
+}
+
+void Option::AutoSync()
+{
+	if(!autobox)
+		return;
+	Ctrl *p = GetParent();
+	if(!p)
+		return;
+	Rect r = GetScreenRect();
+	for(Ctrl *q = p->GetFirstChild(); q; q = q->GetNext())
+		if(q != this && r.Intersects(q->GetScreenRect()))
+			q->Enable(option);
 }
 
 Size Option::GetMinSize() const {
@@ -563,14 +585,25 @@ void Option::Paint(Draw& w) {
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
 	
 	Size isz = CtrlsImg::O0().GetSize();
-	Size tsz(0, 0);
-	int ix = 0, iy = 0, ty = 0;
-	
-	if(showlabel) {
-		tsz = GetSmartTextSize(label, font);
-		ty = (sz.cy - tsz.cy) / 2;
-		iy = (tsz.cy - isz.cy) / 2 + ty;
-	} else {
+	Size tsz = GetSmartTextSize(label, font);
+	int ix = 0;
+	int d = tsz.cy >> 1;
+	int ty = (sz.cy - tsz.cy) / 2;
+	int iy = (tsz.cy - isz.cy) / 2 + ty;
+
+	if(box) {
+		ix = d + DPI(4);
+		if(tsz.cy > isz.cy) {
+			ty = 0;
+			iy = (tsz.cy - isz.cy) / 2;
+		}
+		else {
+			iy = 0;
+			ty = (isz.cy - tsz.cy) / 2;
+		}
+	}
+	else
+	if(!showlabel) {
 		ix = (sz.cx - isz.cx) / 2;
 		iy = (sz.cy - isz.cy) / 2;
 	}
@@ -586,11 +619,18 @@ void Option::Paint(Draw& w) {
 	
 	if(showlabel) {
 		bool ds = !IsShowEnabled();
-		DrawSmartText(w, isz.cx + 4, ty, tsz.cx, label, font,
+		DrawSmartText(w, ix + isz.cx + DPI(2), ty, tsz.cx, label, font,
 		              ds || IsReadOnly() ? SColorDisabled : Nvl(color, GetLabelTextColor(this)),
 		              VisibleAccessKeys() ? accesskey : 0);
 		if(HasFocus())
-			DrawFocus(w, RectC(isz.cx + 2, ty - 1, tsz.cx + 3, tsz.cy + 2) & sz);
+			DrawFocus(w, RectC(isz.cx + DPI(2), ty - DPI(1), tsz.cx + DPI(3), tsz.cy + DPI(2)) & sz);
+	}
+	
+	if(box) {
+		w.Begin();
+		w.ExcludeClip(ix - DPI(3), 0, isz.cx + DPI(8) + tsz.cx, tsz.cy);
+		PaintLabelBox(w, sz, Null, d);
+		w.End();
 	}
 }
 
@@ -614,6 +654,7 @@ void  Option::PerformAction() {
 		option = 1;
 	UpdateAction();
 	RefreshPush();
+	AutoSync();
 }
 
 Option& Option::Set(int b)
@@ -622,6 +663,7 @@ Option& Option::Set(int b)
 		option = b;
 		Update();
 		RefreshPush();
+		AutoSync();
 	}
 	return *this;
 }
@@ -632,6 +674,7 @@ Option::Option() {
 	switchimage = threestate = false;
 	blackedge = false;
 	showlabel = true;
+	autobox = box = false;
 	Transparent();
 	font = StdFont();
 	color = Null;
