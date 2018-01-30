@@ -511,6 +511,19 @@ void Ide::FilePropertiesMenu(Bar& menu)
 						bar.Add("Compare current <-> theirs", [=] { DiffFiles("current", editfile, "theirs", theirs); });
 					if(original.GetCount())
 						bar.Add("Compare current <-> original", [=] { DiffFiles("current", editfile, "original", original); });
+					bar.Separator();
+					bar.Add("Use mine", [=] {
+						if(PromptYesNo("Do you want to overwrite current with [* mine]?")) {
+							SaveFile();
+							Upp::SaveFile(editfile, LoadFile(mine));
+						}
+					});
+					bar.Add("Use theirs", [=] {
+						if(PromptYesNo("Do you want to overwrite current with [* theirs]?")) {
+							SaveFile();
+							Upp::SaveFile(editfile, LoadFile(theirs));
+						}
+					});
 				});
 			}
 		}
