@@ -482,6 +482,38 @@ void Ide::FilePropertiesMenu(Bar& menu)
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of file";
 		menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Text(txt + "..").Help(txt);
+		if(editfile.GetCount() && editfile_repo == SVN_DIR && editfile.GetCount()) {
+			String mine;
+			String theirs;
+			String original;
+			for(FindFile ff(editfile + ".*"); ff; ff.Next()) {
+				if(ff.IsFile()) {
+					String p = ff.GetPath();
+					if(p.Find(".merge-left.r") >= 0)
+						original = p;
+					if(p.Find(".merge-right.r") >= 0)
+						theirs = p;
+					if(p.Find(".working") >= 0)
+						mine = p;
+				}
+			}
+			if(mine.GetCount() || theirs.GetCount() || original.GetCount()) {
+				menu.Sub("SVN Conflict", [=] (Bar& bar) {
+					if(mine.GetCount() && theirs.GetCount())
+						bar.Add("Compare mine <-> theirs", [=] { DiffFiles("mine", mine, "theirs", theirs); });
+					if(mine.GetCount() && original.GetCount())
+						bar.Add("Compare mine <-> original", [=] { DiffFiles("mine", mine, "original", original); });
+					if(theirs.GetCount() && original.GetCount())
+						bar.Add("Compare theirs <-> original", [=] { DiffFiles("theirs", theirs, "original", original); });
+					if(mine.GetCount())
+						bar.Add("Compare current <-> mine", [=] { DiffFiles("current", editfile, "mine", mine); });
+					if(theirs.GetCount())
+						bar.Add("Compare current <-> theirs", [=] { DiffFiles("current", editfile, "theirs", theirs); });
+					if(original.GetCount())
+						bar.Add("Compare current <-> original", [=] { DiffFiles("current", editfile, "original", original); });
+				});
+			}
+		}
 	}
 }
 
