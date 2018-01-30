@@ -666,6 +666,42 @@ void Ide::Diff()
 	diffdlg.Execute(editfile);
 }
 
+struct ConflictDiff : TopWindow {
+	Label        left, right;
+	TextDiffCtrl diff;
+	
+	virtual void Layout()
+	{
+		Size sz = GetSize();
+		int  fy = GetStdFont().GetCy() + DPI(5);
+		left.LeftPos(0, sz.cx / 2).TopPos(0, fy);
+		right.RightPos(0, sz.cx / 2).TopPos(0, fy);
+		diff.HSizePos().VSizePos(fy, 0);
+	}
+	
+	void Set(const char *lname, const String& l, const char *rname, const String& r)
+	{
+		left = "\1[=* \1" + String(lname);
+		right = "\1[=* \1" + String(rname);
+		diff.Set(LoadFile(l), LoadFile(r));
+	}
+	
+	ConflictDiff() {
+		SetRect(GetWorkArea().Deflated(DPI(32)));
+		Sizeable().Zoomable();
+		Add(left);
+		Add(right);
+		Add(diff);
+	}
+};
+
+void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const String& r)
+{
+	ConflictDiff diff;
+	diff.Set(lname, l, rname, r);
+	diff.Execute();
+}
+
 void Ide::Patch()
 {
 	if(IsNull(editfile))
