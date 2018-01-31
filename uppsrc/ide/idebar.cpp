@@ -115,11 +115,18 @@ void Ide::OnlineSearchMenu(Bar& menu)
 	menu.Add(b, AK_GOOGLEUPP, IdeImg::GoogleUpp(), THISBACK(OnlineSearchOnTheOfficialSite));
 }
 
+void Ide::AssistEdit(Bar& menu)
+{
+	bool b = !editor.IsReadOnly() && !designer;
+	menu.Add(b, "Insert", THISBACK(InsertMenu));
+	menu.Add(b, "Insert #include", THISBACK(InsertInclude));
+	menu.Add(b, "Remove debugging logs (DDUMP...)", [=] { RemoveDs(); });
+}
+
 void Ide::InsertAdvanced(Bar& bar)
 {
 	bool b = !editor.IsReadOnly();
-	bar.Add(b, "Insert", THISBACK(InsertMenu));
-	bar.Add(b, "Insert #include", THISBACK(InsertInclude));
+	AssistEdit(bar);
 	bar.Add(b, "Advanced", THISBACK(EditSpecial));
 }
 
@@ -680,7 +687,7 @@ void Ide::BrowseMenu(Bar& menu)
 			menu.Add(!designer, AK_COMPLETE, callback(&editor, &AssistEditor::Complete));
 			menu.Add(!designer, AK_ABBR, callback(&editor, &AssistEditor::Abbr));
 			menu.Add(!designer, AK_GO_TO_LINE, THISBACK(GoToLine));
-			menu.Add(!designer, "Insert", THISBACK(InsertMenu));
+			AssistEdit(menu);
 			menu.MenuSeparator();
 		}
 		

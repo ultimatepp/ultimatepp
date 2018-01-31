@@ -518,6 +518,38 @@ void Ide::AsErrors()
 	SetErrorEditor();
 }
 
+void Ide::RemoveDs()
+{
+	if(designer || editor.IsReadOnly())
+		return;
+	static Index<String> ds = { "DLOG", "DDUMP", "DDUMPC", "DDUMPM", "DTIMING",
+	                            "DLOGHEX", "DDUMPHEX", "DTIMESTOP", "DHITCOUNT" };
+	editor.NextUndo();
+	int l = 0;
+	int h = editor.GetLineCount() - 1;
+	int ll, hh;
+	if(editor.GetSelection(ll, hh)) {
+		l = editor.GetLine(ll);
+		h = editor.GetLine(hh);
+	}
+	for(int i = h; i >= l; i--) {
+		String ln = editor.GetUtf8Line(i);
+		try {
+			CParser p(ln);
+			if(p.IsId()) {
+				String id = p.ReadId();
+				if(ds.Find(id) >= 0 && p.Char('(')) {
+					int pos = editor.GetPos(i);
+					int end = min(editor.GetLength(), editor.GetPos(i) + editor.GetLineLength(i) + 1);
+					editor.Remove(editor.GetPos(i), end - pos);
+				}
+			}
+		}
+		catch(CParser::Error) {}
+	}
+	editor.GotoLine(l);
+}
+
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
 {
 	One<Host> host = CreateHost(false);

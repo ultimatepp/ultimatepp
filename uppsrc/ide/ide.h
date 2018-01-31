@@ -812,6 +812,7 @@ public:
 		void  InsertMenu(Bar& bar);
 		void  InsertInclude(Bar& bar);
 		void  InsertAdvanced(Bar& bar);
+		void  AssistEdit(Bar& menu);
 		void  EditorMenu(Bar& bar);
 		void  ToggleWordwrap();
 	
@@ -943,6 +944,7 @@ public:
 		void  GotoDirDiffRight(int line, DirDiffDlg *df);
 		void  DoDirDiff();
 		void  AsErrors();
+		void  RemoveDs();
 
 	void      HelpMenu(Bar& menu);
 	    void  ViewIdeLogFile();
