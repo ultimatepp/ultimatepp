@@ -72,7 +72,7 @@ void MacroManagerWindow::InitButtons()
 	
 	editLabel.Tip(t_("Edit currently selected macro inside TheIde.."));
 	exportLabel.Tip(t_("Export selected macro file.."));
-	newGlobalLabel.Tip(t_("Create file that stores global macros.."));
+	newGlobalLabel.Tip(t_("Create new file that stores global macros.."));
 	importGlobalsLabel.Tip(t_("Install file/files containing macros.."));
 	exportGlobalsLabel.Tip(t_("Export all global macros files.."));
 }
