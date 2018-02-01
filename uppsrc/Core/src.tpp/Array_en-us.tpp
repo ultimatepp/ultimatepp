@@ -142,6 +142,15 @@ or`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s7; [*/ Return value]-|Reference to the element.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Array`:`:Get`(int`,const T`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[* Get]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 def])_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:Array`:`:Get`(int`,T`&`):%- [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) int]_[*@3 i],
+ [*@4 T][@(0.0.255) `&]_[*@3 def])&]
+[s2; If [%-*@3 i] is valid index (it is >`= 0 and < GetCount()), returns 
+the reference to the element at [%-*@3 i], otherwiser returns [%-*@3 def].&]
+[s3; &]
+[s4;%- &]
 [s5;:Array`:`:GetCount`(`)const:%- [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
 [s2; Returns the number of elements in the Array.&]
 [s7; [*/ Return value]-|Actual number of elements.&]
@@ -280,8 +289,10 @@ to the Array.&]
 [s4;%- &]
 [s5;:Array`:`:Set`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i],
  [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Sets the element at [%-*@3 i] to [%-*@3 x] and returns a reference 
-to this element.&]
+[s5;:Upp`:`:Array`:`:Set`(int`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i
+], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s2; Sets the element at [%-*@3 i] to [%-*@3 x] (adds default constructed 
+elements as necessary) and returns a reference to this element.&]
 [s3; &]
 [s4;%- &]
 [s5;:Array`:`:Remove`(int`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i], 

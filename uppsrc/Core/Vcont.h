@@ -94,16 +94,18 @@ class Vector : public MoveableAndDeepCopyOption< Vector<T> > {
 	void     RawInsert(int q, int count);
 
 public:
-	T&       Add()                   { if(items >= alloc) GrowF(); return *(::new(Rdd()) T); }
-	T&       Add(const T& x)         { return items < alloc ? *(new(Rdd()) T(clone(x))) : GrowAdd(x); }
-	T&       Add(T&& x)              { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
+	T&       Add()                           { if(items >= alloc) GrowF(); return *(::new(Rdd()) T); }
+	T&       Add(const T& x)                 { return items < alloc ? *(new(Rdd()) T(clone(x))) : GrowAdd(x); }
+	T&       Add(T&& x)                      { return items < alloc ? *(::new(Rdd()) T(pick(x))) : GrowAddPick(pick(x)); }
 	template <class... Args>
-	T&       Create(Args&&... args)    { if(items >= alloc) GrowF(); return *(::new(Rdd()) T(std::forward<Args>(args)...)); }
+	T&       Create(Args&&... args)          { if(items >= alloc) GrowF(); return *(::new(Rdd()) T(std::forward<Args>(args)...)); }
 	void     AddN(int n);
-	const T& operator[](int i) const { return Get(i); }
-	T&       operator[](int i)       { return Get(i); }
-	int      GetCount() const        { return items; }
-	bool     IsEmpty() const         { return items == 0; }
+	const T& operator[](int i) const         { return Get(i); }
+	T&       operator[](int i)               { return Get(i); }
+	const T& Get(int i, const T& def) const  { return i >= 0 && i < GetCount() ? Get(i) : def; }
+	T&       Get(int i, T& def)              { return i >= 0 && i < GetCount() ? Get(i) : def; }
+	int      GetCount() const                { return items; }
+	bool     IsEmpty() const                 { return items == 0; }
 	void     Trim(int n);
 	void     SetCount(int n);
 	void     SetCount(int n, const T& init);
@@ -120,6 +122,7 @@ public:
 
 	void     Set(int i, const T& x, int count);
 	T&       Set(int i, const T& x)     { Set(i, x, 1); return Get(i); }
+	T&       Set(int i, T&& x)          { return At(i) = pick(x); }
 	template <class Range>
 	void     SetRange(int i, const Range& r);
 
@@ -238,16 +241,18 @@ protected:
 	void     Init(PointerType *ptr, PointerType *lim, const T& x) { while(ptr < lim) *ptr++ = new T(clone(x)); }
 
 public:
-	T&       Add()                      { T *q = new T; vector.Add(q); return *q; }
-	T&       Add(const T& x)            { T *q = new T(clone(x)); vector.Add(q); return *q; }
-	T&       Add(T&& x)                 { T *q = new T(pick(x)); vector.Add(q); return *q; }
-	T&       Add(T *newt)               { vector.Add(newt); return *newt; }
+	T&       Add()                           { T *q = new T; vector.Add(q); return *q; }
+	T&       Add(const T& x)                 { T *q = new T(clone(x)); vector.Add(q); return *q; }
+	T&       Add(T&& x)                      { T *q = new T(pick(x)); vector.Add(q); return *q; }
+	T&       Add(T *newt)                    { vector.Add(newt); return *newt; }
 	template<class TT, class... Args>
-	TT& Create(Args&&... args)          { TT *q = new TT(std::forward<Args>(args)...); Add(q); return *q; }
-	const T& operator[](int i) const    { return Get(i); }
-	T&       operator[](int i)          { return Get(i); }
-	int      GetCount() const           { return vector.GetCount(); }
-	bool     IsEmpty() const            { return vector.IsEmpty(); }
+	TT& Create(Args&&... args)               { TT *q = new TT(std::forward<Args>(args)...); Add(q); return *q; }
+	const T& operator[](int i) const         { return Get(i); }
+	T&       operator[](int i)               { return Get(i); }
+	const T& Get(int i, const T& def) const  { return i >= 0 && i < GetCount() ? Get(i) : def; }
+	T&       Get(int i, T& def)              { return i >= 0 && i < GetCount() ? Get(i) : def; }
+	int      GetCount() const                { return vector.GetCount(); }
+	bool     IsEmpty() const                 { return vector.IsEmpty(); }
 	void     Trim(int n);
 	void     SetCount(int n);
 	void     SetCount(int n, const T& init);
@@ -264,6 +269,7 @@ public:
 
 	void     Set(int i, const T& x, int count);
 	T&       Set(int i, const T& x)     { Set(i, x, 1); return Get(i); }
+	T&       Set(int i, T&& x)          { return At(i) = pick(x); }
 	void     Remove(int i, int count = 1);
 	void     Remove(const int *sorted_list, int n);
 	void     Remove(const Vector<int>& sorted_list);
