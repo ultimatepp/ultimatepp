@@ -1,0 +1,11 @@
+description "Vector/Array Get Set tests\377";
+
+uses
+	Core;
+
+file
+	GetSet.cpp;
+
+mainconfig
+	"" = "";
+
