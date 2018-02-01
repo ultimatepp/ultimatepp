@@ -1,5 +1,4 @@
 topic "Copyright (C) 2005 Mirek Fidler, Tomas Rylek and various contributors (see AUTHORS)";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*2 $$3,5#07864147445237544204411237157677:title]
@@ -18,8 +17,9 @@ topic "Copyright (C) 2005 Mirek Fidler, Tomas Rylek and various contributors (se
 [l321;*C$7;2 $$16,16#03451589433145915344929335295360:result]
 [l321;b83;a83;*C$7;2 $$17,17#07531550463529505371228428965313:result`-line]
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
-[s0;%% [*+117 Copyright © 1998, 2017 Ultimate`+`+ team]&]
+[s0;%% [*+117 Copyright © 1998, 2018 Ultimate`+`+ team]&]
 [s0;%% All rights reserved.&]
 [s0;%% &]
 [s0;%% Redistribution and use in source and binary forms, with or 
