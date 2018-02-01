@@ -291,7 +291,7 @@ void WorkspaceWork::PackageCursor()
 		actual.file.AddPick(Package::File(String(HELPNAME)));
 		Vector<String> d = GetUppDirs();
 		for(int i = 0; i < d.GetCount(); i++)
-			actual.file.AddPick(Package::File(AppendFileName(d[i], "$.tpp")));
+			actual.file.AddPick(Package::File(AppendFileName(d[i], "_.tpp")));
 		actual.file.AddPick(Package::File(ConfigFile("global.defs")));
 	}
 	else {
