@@ -196,8 +196,8 @@ file
 	core.upt,
 	core.defs,
 	Info readonly separator,
-	src.tpp,
 	srcdoc.tpp,
+	src.tpp,
 	srcimp.tpp,
 	Copying;
 

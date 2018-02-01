@@ -1,5 +1,4 @@
 topic "Vector";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Vector";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Vector]]}}&]
 [s3; &]
@@ -132,6 +132,15 @@ tor`[`]]([@(0.0.255) int]_[*@3 i])_[@(0.0.255) const]&]
 [s7; [*C@3 i]-|Position of element.&]
 [s7; [*/ Return value]-|Reference to the element.&]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Vector`:`:Get`(int`,const T`&`)const:%- [@(0.0.255) const]_[*@4 T][@(0.0.255) `&
+]_[* Get]([@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 def])_[@(0.0.255) c
+onst]&]
+[s5;:Upp`:`:Vector`:`:Get`(int`,T`&`):%- [*@4 T][@(0.0.255) `&]_[* Get]([@(0.0.255) int]_[*@3 i
+], [*@4 T][@(0.0.255) `&]_[*@3 def])&]
+[s2; If [%-*@3 i] is valid index (it is >`= 0 and < GetCount()), returns 
+the reference to the element at [%-*@3 i], otherwiser returns [%-*@3 def].&]
+[s3; &]
 [s4;%- &]
 [s5;:Vector`:`:GetCount`(`)const:%- [@(0.0.255) int]_[* GetCount]()_[@(0.0.255) const]&]
 [s2; Return the number of elements in Vector.&]
@@ -267,8 +276,10 @@ existing elements of Vector then elements are added to Vector.&]
 [s4;%- &]
 [s5;:Vector`:`:Set`(int`,const T`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i],
  [@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 x])&]
-[s2; Sets element at [%-*@3 i] to [%-*@3 x].and returns a reference to 
-the element.&]
+[s5;:Upp`:`:Vector`:`:Set`(int`,T`&`&`):%- [*@4 T][@(0.0.255) `&]_[* Set]([@(0.0.255) int]_[*@3 i
+], [*@4 T][@(0.0.255) `&`&]_[*@3 x])&]
+[s2; Sets the element at [%-*@3 i] to [%-*@3 x] (adds default constructed 
+elements as necessary) and returns a reference to this element.&]
 [s3; &]
 [s4;%- &]
 [s5;:Vector`:`:Remove`(int`,int`):%- [@(0.0.255) void]_[* Remove]([@(0.0.255) int]_[*@3 i], 
