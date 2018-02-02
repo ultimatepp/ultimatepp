@@ -6,7 +6,7 @@ namespace Upp {
 
 String AndroidSDK::GetDownloadUrl()
 {
-	return "https://developer.android.com/sdk/index.html";
+	return "https://developer.android.com/studio/index.html";
 }
 
 AndroidSDK::AndroidSDK()
