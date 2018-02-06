@@ -142,7 +142,7 @@ int CompareRanges(const Range1& a, const Range2& b)
 	return SgnCompare(a.GetCount(), b.GetCount());
 }
 
-template <class Range, class V, class C>
+template <class Range, class C>
 int FindMatch(const Range& r, const C& match, int from = 0)
 {
 	for(int i = from; i < r.GetCount(); i++)
