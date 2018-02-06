@@ -231,8 +231,10 @@ Size GetTextSize(const wchar *text, Font font, int n)
 	sz.cx = 0;
 	const wchar *wtext = (const wchar *)text;
 	while(n > 0) {
-		sz.cx += fi[*wtext++];
+		if(*wtext >= ' ')
+			sz.cx += fi[*wtext];
 		n--;
+		wtext++;
 	}
 	sz.cy = fi.GetHeight();
 	return sz;

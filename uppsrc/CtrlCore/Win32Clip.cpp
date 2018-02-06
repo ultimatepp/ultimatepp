@@ -63,7 +63,7 @@ void ClipboardLog(const char *txt)
 
 void ClipboardError(const char *txt)
 {
-	if(!DebugClipboard()) 
+	if(!DebugClipboard())
 		return;
 	String s = txt;
 	s << "\n" << GetLastErrorMessage();
@@ -75,7 +75,7 @@ String FromWin32CF(int cf);
 
 void ClipboardError(const char *txt, int format)
 {
-	if(!DebugClipboard()) 
+	if(!DebugClipboard())
 		return;
 	ClipboardError(String().Cat() << txt << ' ' << FromWin32CF(format));
 }
