@@ -6,11 +6,7 @@ namespace Upp {
 
 static int64 UPP_SSL_alloc = 0;
 
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
-static void *SslAlloc(size_t size, const char *, int)
-#else
-static void *SslAlloc(size_t size)
-#endif
+static void *SslAlloc0(size_t size)
 {
 	LLOG("Alloc " << size);
 	size_t alloc = size + sizeof(int64);
@@ -19,6 +15,15 @@ static void *SslAlloc(size_t size)
 	UPP_SSL_alloc += alloc;
 	LLOG("UPP_SSL_MALLOC(" << (int64)size << ", alloc " << alloc << ") -> " << FormatIntHex(aptr) << ", total = " << UPP_SSL_alloc);
 	return aptr;
+}
+
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+static void *SslAlloc(size_t size, const char *, int)
+#else
+static void *SslAlloc(size_t size)
+#endif
+{
+	return SslAlloc0(size);
 }
 
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
@@ -41,8 +46,9 @@ static void *SslRealloc(void *ptr, size_t size, const char *, int)
 static void *SslRealloc(void *ptr, size_t size)
 #endif
 {
+	LLOG("SslRealloc " << ptr << ", " << size);
 	if(!ptr)
-		return NULL;
+		return SslAlloc0(size);
 	int64 *aptr = (int64 *)ptr - 1;
 	if((int64)(size + sizeof(int64)) <= *aptr) {
 		LLOG("UPP_SSL_REALLOC(" << ptr << ", " << (int64)size << ", alloc " << *aptr << ") -> keep same block");
@@ -82,13 +88,12 @@ EXITBLOCK
 	ENGINE_cleanup();
 	CRYPTO_cleanup_all_ex_data();
 #if OPENSSL_VERSION_NUMBER < 0x10100000L
-	ERR_remove_state(0);
-#endif
-	ERR_free_strings();
-	
 	STACK_OF(SSL_COMP) *pCOMP = SSL_COMP_get_compression_methods();
 	if(pCOMP)
 		sk_SSL_COMP_free( pCOMP );
+	ERR_remove_state(0);
+#endif
+	ERR_free_strings();
 }
 
 #if defined(_MULTITHREADED) && OPENSSL_VERSION_NUMBER < 0x10100000L
