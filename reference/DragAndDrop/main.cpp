@@ -13,7 +13,9 @@ struct MyApp : TopWindow {
 	{
 		tree.AdjustAction(parent, d);
 		if(d.Accept(MyDnDName)) {
-			tree.SetCursor(tree.Insert(parent, ii, Image(), ~d));
+			String s = ~d;
+			s.Trim((int)strlen(~s)); // raw data can be padded with zeroes
+			tree.SetCursor(tree.Insert(parent, ii, Image(), s));
 			tree.SetFocus();
 		}
 	}
@@ -30,7 +32,7 @@ struct MyApp : TopWindow {
 		iw.DrawText(0, 0, text);
 		
 		VectorMap<String, ClipData> clip;
-		clip.Add(MyDnDName, text);
+		clip.Add(MyDnDName, text); // we are putting raw binary data here
 
 		if(DoDragAndDrop(clip, iw) == DND_MOVE)
 			tree.Remove(id);
