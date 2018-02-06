@@ -267,7 +267,7 @@ String GetString(PasteClip& clip)
 
 WString GetWString(PasteClip& clip)
 {
-	GuiLock __; 
+	GuiLock __;
 	if(clip.Accept("UTF8_STRING"))
 		return FromUtf8(~clip);
 	if(clip.Accept("text/unicode"))
@@ -279,7 +279,7 @@ WString GetWString(PasteClip& clip)
 
 String GetTextClip(const WString& text, const String& fmt)
 {
-	GuiLock __; 
+	GuiLock __;
 	if(fmt == "STRING" || fmt == "text/plain")
 		return text.ToString();
 	if(fmt == "UTF8_STRING")
@@ -291,7 +291,7 @@ String GetTextClip(const WString& text, const String& fmt)
 
 String GetTextClip(const String& text, const String& fmt)
 {
-	GuiLock __; 
+	GuiLock __;
 	if(fmt == "STRING" || fmt == "text/plain")
 		return text;
 	if(fmt == "UTF8_STRING")
@@ -303,13 +303,13 @@ String GetTextClip(const String& text, const String& fmt)
 
 bool AcceptText(PasteClip& clip)
 {
-	GuiLock __; 
+	GuiLock __;
 	return clip.Accept(ClipFmtsText());
 }
 
 void Append(VectorMap<String, ClipData>& data, const String& text) // optimize
 {
-	GuiLock __; 
+	GuiLock __;
 	data.GetAdd("STRING", text);
 	data.GetAdd("text/plain", text);
 	data.GetAdd("UTF8_STRING", ToUtf8(text.ToWString()));
@@ -318,7 +318,7 @@ void Append(VectorMap<String, ClipData>& data, const String& text) // optimize
 
 void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
 {
-	GuiLock __; 
+	GuiLock __;
 	data.GetAdd("STRING", text.ToString());
 	data.GetAdd("text/plain", text.ToString());
 	data.GetAdd("UTF8_STRING", ToUtf8(text));
@@ -327,13 +327,13 @@ void Append(VectorMap<String, ClipData>& data, const WString& text) // optimize
 
 bool IsClipboardAvailable(const char *fmt)
 {
-	GuiLock __; 
+	GuiLock __;
 	return Ctrl::xclipboard().IsAvailable(XAtom(fmt), "CLIPBOARD");
 }
 
 bool IsClipboardAvailableText()
 {
-	GuiLock __; 
+	GuiLock __;
 	return IsClipboardAvailable("STRING") ||
 	       IsClipboardAvailable("UTF8_STRING") ||
 	       IsClipboardAvailable("text/plain") ||
@@ -342,13 +342,13 @@ bool IsClipboardAvailableText()
 
 bool AcceptFiles(PasteClip& clip)
 {
-	GuiLock __; 
+	GuiLock __;
 	return clip.Accept("text/uri-list");
 }
 
 bool IsAvailableFiles(PasteClip& clip)
 {
-	GuiLock __; 
+	GuiLock __;
 	return clip.IsAvailable("text/uri-list");
 }
 
