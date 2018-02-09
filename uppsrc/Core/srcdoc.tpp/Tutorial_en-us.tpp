@@ -1,5 +1,4 @@
 topic "U++ Core Tutorial";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -22,6 +21,7 @@ topic "U++ Core Tutorial";
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
 [H8;b73;*+150 $$22,5#07864147445237544204111237153677:subtitle]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [s2;%% U`+`+ Core Tutorial&]
 [s22; Table of contents&]
@@ -82,7 +82,6 @@ topic "U++ Core Tutorial";
 [s0; ___[^`#Section`_7`_6^ 7.6 CoPartition]&]
 [s0; ___[^`#Section`_7`_7^ 7.7 CoWork loop method]&]
 [s0; ___[^`#Section`_7`_8^ 7.8 Parallel algorithms]&]
-[s0;^`#Section`_7`_8^ &]
 [s22;:Chapter`_1: 1. Basics&]
 [s3;:Section`_1`_1: 1.1 Logging&]
 [s5; Logging is a useful technique to trace the flow of the code 
@@ -125,9 +124,9 @@ variable name and value:&]
 [s7; DUMPHEX(h);&]
 [s0; &]
 [s17; x `= 0x7b&]
-[s17; h `= Memory at 0x0218FDB4, size 0x3 `= 3&]
-[s17;     `+0 0x0218FDB4 66 6F 6F                                 
-           foo             &]
+[s17; h `= Memory at 0x000000E30D31FA10, size 0x3 `= 3&]
+[s17;     `+0 0x000000E30D31FA10 66 6F 6F                         
+                   foo             &]
 [s0; &]
 [s5; To log the value of a container (or generic Range), you can 
 either use normal [*C@5 LOG] / [*C@5 DUMP]:&]
@@ -370,9 +369,9 @@ data, including zeroes:&]
 [s7; &]
 [s7; DUMPHEX(a);&]
 [s0; &]
-[s17; a `= Memory at 0x0218FE14, size 0x5 `= 5&]
-[s17;     `+0 0x0218FE14 31 32 33 34 00                           
-           1234.           &]
+[s17; a `= Memory at 0x000000E30D31F970, size 0x5 `= 5&]
+[s17;     `+0 0x000000E30D31F970 31 32 33 34 00                   
+                   1234.           &]
 [s0; &]
 [s3;H4;:Section`_1`_3: 1.3 StringBuffer&]
 [s5; If you need a direct write access to [*C@5 String]`'s C`-string 
@@ -474,7 +473,7 @@ concrete types.&]
 [s7; &]
 [s7; DUMP(date);&]
 [s0; &]
-[s17; date `= 01/08/2018&]
+[s17; date `= 02/09/2018&]
 [s0; &]
 [s5; All data members of [*C@5 Date] structure are public:&]
 [s0; &]
@@ -485,8 +484,8 @@ would log&]
 [s7; DUMP((int)date.day); // as characters&]
 [s0; &]
 [s17; (int)date.year `= 2018&]
-[s17; (int)date.month `= 1&]
-[s17; (int)date.day `= 8&]
+[s17; (int)date.month `= 2&]
+[s17; (int)date.day `= 9&]
 [s0; &]
 [s5; Dates can be compared:&]
 [s0; &]
@@ -501,15 +500,15 @@ ing goes to the next/previous day:&]
 [s7; DUMP(`-`-date);&]
 [s7; DUMP(`+`+date);&]
 [s0; &]
-[s17; date `+ 1 `= 01/09/2018&]
-[s17; `-`-date `= 01/07/2018&]
-[s17; `+`+date `= 01/08/2018&]
+[s17; date `+ 1 `= 02/10/2018&]
+[s17; `-`-date `= 02/08/2018&]
+[s17; `+`+date `= 02/09/2018&]
 [s0; &]
 [s5; Subtraction of dates yields a number of days between them:&]
 [s0; &]
 [s7; DUMP(date `- Date(2000, 1, 1));&]
 [s0; &]
-[s17; date `- Date(2000, 1, 1) `= 6582&]
+[s17; date `- Date(2000, 1, 1) `= 6614&]
 [s0; &]
 [s5; There are several [*C@5 Date] and calendar related functions:&]
 [s0; &]
@@ -535,7 +534,7 @@ ing goes to the next/previous day:&]
 [s0; &]
 [s7; DUMP(DayOfWeek(date)); // 0 is Sunday&]
 [s0; &]
-[s17; DayOfWeek(date) `= 1&]
+[s17; DayOfWeek(date) `= 5&]
 [s0; &]
 [s0; &]
 [s7; DUMP(LastDayOfMonth(date));&]
@@ -545,11 +544,11 @@ ing goes to the next/previous day:&]
 [s7; DUMP(DayOfYear(date)); // number of days since Jan`-1 `+ 1&]
 [s7; DUMP(DayOfYear(Date(2016, 1, 1)));&]
 [s0; &]
-[s17; LastDayOfMonth(date) `= 01/31/2018&]
-[s17; FirstDayOfMonth(date) `= 01/01/2018&]
+[s17; LastDayOfMonth(date) `= 02/28/2018&]
+[s17; FirstDayOfMonth(date) `= 02/01/2018&]
 [s17; LastDayOfYear(date) `= 12/31/2018&]
 [s17; FirstDayOfYear(date) `= 01/01/2018&]
-[s17; DayOfYear(date) `= 8&]
+[s17; DayOfYear(date) `= 40&]
 [s17; DayOfYear(Date(2016, 1, 1)) `= 1&]
 [s0; &]
 [s0; &]
@@ -560,10 +559,10 @@ between two dates&]
 partial months`' between two dates&]
 [s7; DUMP(AddYears(date, 2));&]
 [s0; &]
-[s17; AddMonths(date, 20) `= 09/08/2019&]
+[s17; AddMonths(date, 20) `= 10/09/2019&]
 [s17; GetMonths(date, date `+ 100) `= 3&]
 [s17; GetMonthsP(date, date `+ 100) `= 4&]
-[s17; AddYears(date, 2) `= 01/08/2020&]
+[s17; AddYears(date, 2) `= 02/09/2020&]
 [s0; &]
 [s0; &]
 [s7; DUMP(GetWeekDate(2015, 1));&]
@@ -603,11 +602,11 @@ time:&]
 [s7; DUMP((int)time.minute);&]
 [s7; DUMP((int)time.second);&]
 [s0; &]
-[s17; time `= 01/08/2018 10:46:53&]
-[s17; (Date)time `= 01/08/2018&]
-[s17; (int)time.hour `= 10&]
-[s17; (int)time.minute `= 46&]
-[s17; (int)time.second `= 53&]
+[s17; time `= 02/09/2018 12:56:36&]
+[s17; (Date)time `= 02/09/2018&]
+[s17; (int)time.hour `= 12&]
+[s17; (int)time.minute `= 56&]
+[s17; (int)time.second `= 36&]
 [s0; &]
 [s5; Times can be compared:&]
 [s0; &]
@@ -634,10 +633,10 @@ but numbers represent seconds (using [*C@5 int64] datatype):&]
 is in days&]
 [s7; DUMP(time `- ToTime(date)); // Time `- Time is in seconds&]
 [s0; &]
-[s17; time `+ 1 `= 01/08/2018 10:46:54&]
-[s17; time `+ 24 `* 3600 `= 01/09/2018 10:46:53&]
+[s17; time `+ 1 `= 02/09/2018 12:56:37&]
+[s17; time `+ 24 `* 3600 `= 02/10/2018 12:56:36&]
 [s17; time `- date `= 0&]
-[s17; time `- ToTime(date) `= 38813&]
+[s17; time `- ToTime(date) `= 46596&]
 [s0; &]
 [s5; [*C@5 Time] defines era limits too:&]
 [s0; &]
@@ -692,9 +691,9 @@ items predefined by U`+`+:&]
 [s7; DUMP(LoadFile(ConfigFile(`"test.txt`")));&]
 [s7; DUMP(sout);&]
 [s0; &]
-[s17; LoadFile(ConfigFile(`"test.txt`")) `= 1.23 01/08/2018 01/08/2018 
-10:46:53&]
-[s17; sout `= 1.23 01/08/2018 01/08/2018 10:46:53&]
+[s17; LoadFile(ConfigFile(`"test.txt`")) `= 1.23 02/09/2018 02/09/2018 
+12:56:36&]
+[s17; sout `= 1.23 02/09/2018 02/09/2018 12:56:36&]
 [s0; &]
 [s5; Getting client types involved into this schema is not too difficult, 
 all you need to do is to add [*C@5 ToString] method:&]
@@ -1069,9 +1068,10 @@ in both little`-endian and big`-endian modes:&]
 [s7; ss.Put32be(0x12345678);&]
 [s7; DUMPHEX(ss.GetResult());&]
 [s0; &]
-[s17; ss.GetResult() `= Memory at 0x0218F8E4, size 0x8 `= 8&]
-[s17;     `+0 0x0218F8E4 78 56 34 12 12 34 56 78                  
-           xV4..4Vx        &]
+[s17; ss.GetResult() `= Memory at 0x000000E30D31F770, size 0x8 `= 
+8&]
+[s17;     `+0 0x000000E30D31F770 78 56 34 12 12 34 56 78          
+                   xV4..4Vx        &]
 [s0; &]
 [s0; &]
 [s7; StringStream ss2(ss.GetResult());&]
@@ -1119,12 +1119,12 @@ them via [*C@5 Out] virtual method:&]
 [s7; os << `"This is a test `" << 12345;&]
 [s7; os.Close();&]
 [s0; &]
-[s17; String((const char `*)data, size) `= Memory at 0x07CE1DD0, size 
-0x14 `= 20&]
-[s17;     `+0 0x07CE1DD0 54 68 69 73 20 69 73 20 61 20 74 65 73 74 
-20 31     This is a test 1&]
-[s17;    `+16 0x07CE1DE0 32 33 34 35                              
-           2345            &]
+[s17; String((const char `*)data, size) `= Memory at 0x0000025E6A3C0360, 
+size 0x14 `= 20&]
+[s17;     `+0 0x0000025E6A3C0360 54 68 69 73 20 69 73 20 61 20 74 
+65 73 74 20 31     This is a test 1&]
+[s17;    `+16 0x0000025E6A3C0370 32 33 34 35                      
+                   2345            &]
 [s0; &]
 [s5; [*C@5 TeeStream] sends output data to two separate streams:&]
 [s0; &]
@@ -1147,12 +1147,12 @@ block to stream data:&]
 [s7; while(!ms.IsEof())&]
 [s7; -|DUMPHEX(ms.GetLine());&]
 [s0; &]
-[s17; ms.GetLine() `= Memory at 0x0218F768, size 0x9 `= 9&]
-[s17;     `+0 0x0218F768 53 6F 6D 65 20 6C 69 6E 65               
-           Some line       &]
-[s17; ms.GetLine() `= Memory at 0x0218F768, size 0xC `= 12&]
-[s17;     `+0 0x0218F768 41 6E 6F 74 68 65 72 20 6C 69 6E 65      
-           Another line    &]
+[s17; ms.GetLine() `= Memory at 0x000000E30D31F3D8, size 0x9 `= 9&]
+[s17;     `+0 0x000000E30D31F3D8 53 6F 6D 65 20 6C 69 6E 65       
+                   Some line       &]
+[s17; ms.GetLine() `= Memory at 0x000000E30D31F3D8, size 0xC `= 12&]
+[s17;     `+0 0x000000E30D31F3D8 41 6E 6F 74 68 65 72 20 6C 69 6E 
+65                 Another line    &]
 [s0; &]
 [s3;H4;:Section`_2`_3: 2.3 Binary serialization&]
 [s5; Serialization is a mechanism that converts structured data to/from 
@@ -1264,7 +1264,7 @@ original [*C@5 MyFoo], we can branch on previously stored [*C@5 version]:&]
 [s7; DUMP(foo3.number);&]
 [s7; DUMP(foo3.color);&]
 [s0; &]
-[s17; foo3.number `= 0&]
+[s17; foo3.number `= 1782092368&]
 [s17; foo3.color `= Color(Null)&]
 [s0; &]
 [s5; Note: [*C@5 operator/] is Stream method with several overloads 
@@ -1384,11 +1384,11 @@ of Vector (O(n) complexity):&]
 [s0; &]
 [s17; v `= `[6, 5, 1, 10, 2`]&]
 [s0; &]
-[s5; At method returns element at specified position ensuring that 
-such a position exists. If there is not enough elements in [*C@5 Vector], 
-required number of elements is added. If second parameter of 
-[*C@5 At] is present, newly added elements are initialized to this 
-value.&]
+[s5; [*C@5 At] method returns element at specified position ensuring 
+that such a position exists. If there is not enough elements 
+in [*C@5 Vector], required number of elements is added. If second 
+parameter of [*C@5 At] is present, newly added elements are initialized 
+to this value.&]
 [s0; &]
 [s7; v.Clear();&]
 [s7; for(int i `= 0; i < 10000; i`+`+)&]
@@ -1396,7 +1396,20 @@ value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[987, 1039, 1032, 958, 1008, 986, 960, 1083, 988, 959`]&]
+[s17; v `= `[1027, 975, 1030, 1035, 977, 964, 972, 1023, 996, 1001`]&]
+[s0; &]
+[s5; Referencing invalid index is undefined operation. Sometimes 
+however it is useful to return the element value if index is 
+valid and some default value if it is not. This can be achieved 
+with two parameter Get method:&]
+[s0; &]
+[s7; DUMP(v.Get(4, 0));&]
+[s7; DUMP(v.Get(`-10, 0));&]
+[s7; DUMP(v.Get(13, `-1));&]
+[s0; &]
+[s17; v.Get(4, 0) `= 977&]
+[s17; v.Get(`-10, 0) `= 0&]
+[s17; v.Get(13, `-1) `= `-1&]
 [s0; &]
 [s5; You can apply algorithms on containers, e.g. Sort&]
 [s0; &]
@@ -1404,7 +1417,7 @@ value.&]
 [s7; &]
 [s7; DUMP(v);&]
 [s0; &]
-[s17; v `= `[958, 959, 960, 986, 987, 988, 1008, 1032, 1039, 1083`]&]
+[s17; v `= `[964, 972, 975, 977, 996, 1001, 1023, 1027, 1030, 1035`]&]
 [s0; &]
 [s3;H4;:Section`_3`_3: 3.3 Transfer issues&]
 [s5; Often you need to pass content of one container to another of 
@@ -1510,15 +1523,15 @@ to it:&]
 [s7; DUMPC(dist);&]
 [s0; &]
 [s17; dist:&]
-[s17; -|`[0`] `= Test 5: `[1998, 1997, 2042, 2021, 1942`]&]
-[s17; -|`[1`] `= Test 6: `[1648, 1606, 1676, 1732, 1692, 1646`]&]
-[s17; -|`[2`] `= Test 7: `[1476, 1360, 1446, 1415, 1452, 1426, 1425`]&]
-[s17; -|`[3`] `= Test 8: `[1208, 1272, 1251, 1245, 1248, 1202, 1300, 
-1274`]&]
-[s17; -|`[4`] `= Test 9: `[1130, 1098, 1101, 1042, 1104, 1149, 1111, 
-1154, 1111`]&]
-[s17; -|`[5`] `= Test 10: `[956, 992, 1005, 1008, 1056, 979, 964, 1054, 
-948, 1038`]&]
+[s17; -|`[0`] `= Test 5: `[1995, 1951, 1997, 2092, 1965`]&]
+[s17; -|`[1`] `= Test 6: `[1664, 1675, 1657, 1592, 1640, 1772`]&]
+[s17; -|`[2`] `= Test 7: `[1377, 1491, 1405, 1446, 1354, 1492, 1435`]&]
+[s17; -|`[3`] `= Test 8: `[1260, 1261, 1266, 1248, 1243, 1219, 1259, 
+1244`]&]
+[s17; -|`[4`] `= Test 9: `[1126, 1117, 1079, 1123, 1099, 1125, 1087, 
+1081, 1163`]&]
+[s17; -|`[5`] `= Test 10: `[1012, 1040, 933, 972, 993, 1036, 949, 1022, 
+1031, 1012`]&]
 [s0; &]
 [s5; Another possibility is to use [*C@5 Vector`::Add(T`&`&)] method, 
 which uses pick`-constructor instead of deep`-copy constructor. 
@@ -2427,11 +2440,11 @@ easier:&]
 [s0; &]
 [s17; typeid(ValueTypeOf<decltype(x)>).name() `= int&]
 [s17; typeid(ValueTypeOf<decltype(SubRange(x, 1, 1))>).name() `= int&]
-[s17; typeid(IteratorOf<decltype(x)>).name() `= int `*&]
+[s17; typeid(IteratorOf<decltype(x)>).name() `= int `* `_`_ptr64&]
 [s17; typeid(ConstIteratorOf<decltype(SubRange(x, 1, 1))>).name() 
-`= int `*&]
+`= int `* `_`_ptr64&]
 [s17; typeid(SubRangeOf<Vector<int>>).name() `= class Upp`::SubRangeClass<int 
-`*>&]
+`* `_`_ptr64>&]
 [s0; &]
 [s5; While containers themselves and SubRange are the two most common 
 range types, U`+`+ has two special ranges. [*C@5 ConstRange] simply 
@@ -2683,11 +2696,11 @@ is for the most part seamless:&]
 [s0; &]
 [s17; a `= 1&]
 [s17; b `= 2.34&]
-[s17; c `= 01/08/2018&]
+[s17; c `= 02/09/2018&]
 [s17; d `= hello&]
 [s17; x `= 1&]
 [s17; y `= 2.34&]
-[s17; z `= 01/08/2018&]
+[s17; z `= 02/09/2018&]
 [s17; s `= hello&]
 [s0; &]
 [s5; As for primitive types, Value seamlessly works with [*C@5 int], 
@@ -2719,7 +2732,7 @@ as it is supported by these types):&]
 [s0; &]
 [s17; i `= 1&]
 [s17; j `= 2&]
-[s17; k `= 01/08/2018 00:00:00&]
+[s17; k `= 02/09/2018 00:00:00&]
 [s17; t `= hello&]
 [s0; &]
 [s5; To determine type of value stored in [*C@5 Value], you can use 
@@ -3346,16 +3359,16 @@ thread to [*C@5 Wait] for its completion:&]
 [s0; &]
 [s17; In the main thread 0&]
 [s17; In the thread 0&]
-[s17; In the main thread 1&]
 [s17; In the thread 1&]
-[s17; In the thread 2&]
+[s17; In the main thread 1&]
 [s17; In the main thread 2&]
+[s17; In the thread 2&]
 [s17; In the main thread 3&]
 [s17; In the thread 3&]
 [s17; In the thread 4&]
 [s17; In the main thread 4&]
-[s17; In the thread 5&]
 [s17; About to wait for thread to finish&]
+[s17; In the thread 5&]
 [s17; In the thread 6&]
 [s17; In the thread 7&]
 [s17; In the thread 8&]
@@ -3403,7 +3416,7 @@ code demonstrates why:&]
 [s7; t.Wait();&]
 [s7; DUMP(sum);&]
 [s0; &]
-[s17; sum `= 1087631&]
+[s17; sum `= 1052016&]
 [s0; &]
 [s5; While the expected value is 2000000, produced value is different. 
 The problem is that both thread read / modify / write [*C@5 sum] 
@@ -3528,13 +3541,13 @@ testing data&]
 [s7; DUMP(w);&]
 [s0; &]
 [s17; w `= `[Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, 
-elit, sed, do, eiusmod, tempor, incididunt, ut, labore, et, dolore, 
-magna, Duis, aute, irure, in, reprehenderit, voluptate, velit, 
-officia, deserunt, mollit, anim, id, est, laborum, sint, occaecat, 
-cupidatat, non, proident, sunt, culpa, qui, aliqua, Ut, enim, 
-ad, minim, veniam, quis, nostrud, exercitation, esse, cillum, 
-eu, fugiat, nulla, pariatur, Excepteur, ullamco, laboris, nisi, 
-aliquip, ex, ea, commodo, consequat`]&]
+elit, ullamco, laboris, nisi, ut, aliquip, ex, ea, commodo, consequat, 
+aliqua, Ut, enim, ad, minim, veniam, quis, nostrud, exercitation, 
+esse, cillum, dolore, eu, fugiat, nulla, pariatur, Excepteur, 
+sint, occaecat, cupidatat, non, proident, sunt, in, culpa, qui, 
+sed, do, eiusmod, tempor, incididunt, labore, et, magna, Duis, 
+aute, irure, reprehenderit, voluptate, velit, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Adding words to [*C@5 w] requires [*C@5 Mutex]. Alternative to this 
 `'result gathering`' [*C@5 Mutex] is [*C@5 CoWork`::FinLock]. The 
@@ -3562,13 +3575,13 @@ end of CoWork job&]
 [s7; DUMP(w);&]
 [s0; &]
 [s17; w `= `[Lorem, ipsum, dolor, sit, amet, consectetur, adipiscing, 
-elit, sed, do, eiusmod, tempor, incididunt, ut, labore, et, dolore, 
-magna, Duis, aute, irure, in, reprehenderit, voluptate, velit, 
-officia, deserunt, mollit, anim, id, est, laborum, sint, occaecat, 
-cupidatat, non, proident, sunt, culpa, qui, aliqua, Ut, enim, 
-ad, minim, veniam, quis, nostrud, exercitation, esse, cillum, 
-eu, fugiat, nulla, pariatur, Excepteur, ullamco, laboris, nisi, 
-aliquip, ex, ea, commodo, consequat`]&]
+elit, ullamco, laboris, nisi, ut, aliquip, ex, ea, commodo, consequat, 
+aliqua, Ut, enim, ad, minim, veniam, quis, nostrud, exercitation, 
+esse, cillum, dolore, eu, fugiat, nulla, pariatur, Excepteur, 
+sint, occaecat, cupidatat, non, proident, sunt, in, culpa, qui, 
+sed, do, eiusmod, tempor, incididunt, labore, et, magna, Duis, 
+aute, irure, reprehenderit, voluptate, velit, officia, deserunt, 
+mollit, anim, id, est, laborum`]&]
 [s0; &]
 [s5; Of course, the code performed after [*C@5 FinLock] should not 
 take long, otherwise there is negative impact on all [*C@5 CoWork] 
