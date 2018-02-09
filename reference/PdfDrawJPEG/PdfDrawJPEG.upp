@@ -1,0 +1,14 @@
+description "Putting JPEG compressed images to PDF\377";
+
+uses
+	CtrlLib,
+	PdfDraw,
+	Report,
+	plugin/jpg;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
