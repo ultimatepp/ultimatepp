@@ -24,6 +24,7 @@ private:
 public:
 	Stream                      *in;
 	Event<const void *, int>     Filter;
+	Gate<>                       FilterEof;
 	Event<>                      End;
 	Gate<>                       More;
 	void                         Out(const void *ptr, int size);

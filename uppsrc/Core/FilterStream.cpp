@@ -88,8 +88,10 @@ void InFilterStream::Fetch()
 				End();
 				eof = true;
 			}
-			else
+			else {
 				Filter(~inbuffer, n);
+				eof = FilterEof();
+			}
 		}
 	}
 	Stream::buffer = ptr = buffer.begin();
