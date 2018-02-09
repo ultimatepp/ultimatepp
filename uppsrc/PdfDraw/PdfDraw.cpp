@@ -614,7 +614,11 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		const Image& m = images[i];
 		if(m.GetSerialId() == JPEGDummy().GetSerialId()) {
 			String jpg = jpeg[jpegi++];
-			Size isz = StreamRaster::LoadStringAny(jpg).GetSize();
+			StringStream ss(jpg);
+			One<StreamRaster> r = StreamRaster::OpenAny(ss);
+			Size isz(1, 1);
+			if(r)
+				isz = r->GetSize();
 			BeginObj();
 			out << "<< " << " /Width " << isz.cx << " /Height " << isz.cy
 			    << " /Length " << jpg.GetLength()
