@@ -9,6 +9,7 @@ namespace Upp {
 
 #define PDF_COMPRESS
 
+
 dword PdfDraw::GetInfo() const
 {
 	return DOTS|DRAWTEXTLINES;
@@ -380,6 +381,8 @@ void PdfDraw::Escape(const String& data)
 {
 	if(data.StartsWith("url:"))
 		url = data.Mid(4);
+	if(data.StartsWith("data:"))
+		this->data = data.Mid(5);
 }
 
 Image RenderGlyph(int cx, int x, Font font, int chr, int py, int pcy);
@@ -436,6 +439,18 @@ void PdfDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 	}
 }
 
+Image JPEGDummy()
+{
+	static Image h = CreateImage(Size(1, 1), Cyan);
+	return h;
+}
+
+void DrawJPEG(Draw& w, int x, int y, int cx, int cy, const String& jpeg_data)
+{
+	w.Escape("data:" + jpeg_data);
+	w.DrawImage(x, y, cx, cy, JPEGDummy());
+}
+
 void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const Rect& src, Color c)
 {
 	Image img = _img;
@@ -448,6 +463,9 @@ void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const
 		q = images.GetCount();
 		images.Add(key, img);
 	}
+	
+	if(img.GetSerialId() == JPEGDummy().GetSerialId())
+		jpeg.Add(data);
 	
 	page << "q "
 	     << Pt(cx) << " 0 0 " << Pt(cy) << ' '
@@ -586,6 +604,7 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 	int pagecount = offset.GetCount();
 
 	Vector<int> imageobj;
+	int jpegi = 0;
 	for(int i = 0; i < images.GetCount(); i++) {
 		Size sz = images[i].GetSize();
 		Rect sr = images.GetKey(i).b & sz;
@@ -593,70 +612,87 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		String wh;
 		wh << " /Width " << sr.Width() << " /Height " << sr.Height();
 		const Image& m = images[i];
-		int mask = -1;
-		int smask = -1;
-		if(m.GetKind() == IMAGE_MASK) {
-			for(int y = sr.top; y < sr.bottom; y++) {
-				const RGBA *p = m[y] + sr.left;
-				const RGBA *e = m[y] + sr.right;
-				while(p < e) {
-					int bit = 0x80;
-					byte b = 0;
-					while(bit && p < e) {
-						if(p->a != 255)
-							b |= bit;
-						bit >>= 1;
-						p++;
-					}
-					data.Cat(b);
-				}
-			}
-			mask = PutStream(data, String().Cat()
-			                    << "/Type /XObject /Subtype /Image" << wh
-				                << " /BitsPerComponent 1 /ImageMask true /Decode [0 1] ");
+		if(m.GetSerialId() == JPEGDummy().GetSerialId()) {
+			String jpg = jpeg[jpegi++];
+			Size isz = StreamRaster::LoadStringAny(jpg).GetSize();
+			BeginObj();
+			out << "<< " << " /Width " << isz.cx << " /Height " << isz.cy
+			    << " /Length " << jpg.GetLength()
+				<< "/Type/XObject "
+				   "/ColorSpace/DeviceRGB "
+				   "/Subtype/Image "
+				   "/BitsPerComponent 8 "
+			       "/Filter/DCTDecode >>\r\n"
+			    << "stream\r\n" << jpg << "\r\nendstream\n";
+			EndObj();
+			imageobj << offset.GetCount();
 		}
-		if(m.GetKind() == IMAGE_ALPHA) {
-			for(int y = sr.top; y < sr.bottom; y++) {
-				const RGBA *p = m[y] + sr.left;
-				const RGBA *e = m[y] + sr.right;
-				while(p < e)
-					data.Cat((p++)->a);
-			}
-			smask = PutStream(data, String().Cat()
-			                    << "/Type /XObject /Subtype /Image" << wh
-				                << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ");
-		}
-		String imgobj;
-		data = GetMonoPdfImage(m, sr);
-		if(data.GetCount())
-			imgobj << "/Type /XObject /Subtype /Image" << wh
-			       << " /BitsPerComponent 1 /Decode [0 1] /ColorSpace /DeviceGray ";
 		else {
-			data = GetGrayPdfImage(m, sr);
-			if(data.GetCount())
-				imgobj << "/Type /XObject /Subtype /Image" << wh
-				       << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ";
-			else {
-				data.Clear();
+			int mask = -1;
+			int smask = -1;
+			if(m.GetKind() == IMAGE_MASK) {
 				for(int y = sr.top; y < sr.bottom; y++) {
 					const RGBA *p = m[y] + sr.left;
 					const RGBA *e = m[y] + sr.right;
 					while(p < e) {
-						data.Cat(p->r);
-						data.Cat(p->g);
-						data.Cat(p->b);
-						p++;
+						int bit = 0x80;
+						byte b = 0;
+						while(bit && p < e) {
+							if(p->a != 255)
+								b |= bit;
+							bit >>= 1;
+							p++;
+						}
+						data.Cat(b);
 					}
 				}
-				imgobj << "/Type /XObject /Subtype /Image" << wh
-				       << " /BitsPerComponent 8 /ColorSpace /DeviceRGB /Intent /Perceptual";
+				mask = PutStream(data, String().Cat()
+				                    << "/Type /XObject /Subtype /Image" << wh
+					                << " /BitsPerComponent 1 /ImageMask true /Decode [0 1] ");
 			}
+			if(m.GetKind() == IMAGE_ALPHA) {
+				for(int y = sr.top; y < sr.bottom; y++) {
+					const RGBA *p = m[y] + sr.left;
+					const RGBA *e = m[y] + sr.right;
+					while(p < e)
+						data.Cat((p++)->a);
+				}
+				smask = PutStream(data, String().Cat()
+				                    << "/Type /XObject /Subtype /Image" << wh
+					                << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ");
+			}
+			String imgobj;
+			data = GetMonoPdfImage(m, sr);
+			if(data.GetCount())
+				imgobj << "/Type /XObject /Subtype /Image" << wh
+				       << " /BitsPerComponent 1 /Decode [0 1] /ColorSpace /DeviceGray ";
+			else {
+				data = GetGrayPdfImage(m, sr);
+				if(data.GetCount())
+					imgobj << "/Type /XObject /Subtype /Image" << wh
+					       << " /BitsPerComponent 8 /ColorSpace /DeviceGray /Decode [0 1] ";
+				else {
+					data.Clear();
+					for(int y = sr.top; y < sr.bottom; y++) {
+						const RGBA *p = m[y] + sr.left;
+						const RGBA *e = m[y] + sr.right;
+						while(p < e) {
+							data.Cat(p->r);
+							data.Cat(p->g);
+							data.Cat(p->b);
+							p++;
+						}
+					}
+					imgobj << "/Type /XObject /Subtype /Image" << wh
+					       << " /BitsPerComponent 8 /ColorSpace /DeviceRGB /Intent /Perceptual";
+				}
+			}
+			if(mask >= 0)
+				imgobj << " /Mask " << mask << " 0 R";
+			if(smask >= 0)
+				imgobj << " /SMask " << smask << " 0 R";
+			imageobj << PutStream(data, imgobj);
 		}
-		if(mask >= 0)
-			imgobj << " /Mask " << mask << " 0 R";
-		if(smask >= 0)
-			imgobj << " /SMask " << smask << " 0 R";
-		imageobj << PutStream(data, imgobj);
 	}
 
 	int patcsobj = -1;
