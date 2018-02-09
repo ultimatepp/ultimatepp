@@ -52,7 +52,7 @@ namespace bz2 {
 		if (mode == INFLATE) {
 			z.avail_out = chunk;
 			z.next_out = output;
-			while (z.avail_in) {
+			while (z.avail_in && !IsEOS()) {
 				const int code = BZ2_bzDecompress(&z);
 				const int count = chunk - z.avail_out;
 				if(count) {
@@ -111,9 +111,10 @@ namespace bz2 {
 	{
 		if(error)
 			return;
+//			return false;
 		LLOG("BZLIB Put " << size);
 		const char *p = reinterpret_cast<const char *>(ptr);
-		while(size) {
+		while(size && !IsEOS()) {
 			int psz = (int) min(size, INT_MAX / 4);
 			if(mode == DEFLATE)
 				total += size;
@@ -123,6 +124,7 @@ namespace bz2 {
 			size -= psz;
 			p += psz;
 		}
+//		return !IsEOS();
 	}
 	
 	void Lib::PutOut(const void *ptr, int size)

@@ -75,12 +75,12 @@ namespace bz2 {
 		Lib z;
 	
 	public:
-		void Open(Stream& in)                  { z.Decompress(); Set(in, z); }
+		void Open(Stream& in, bool all = true) { z.Decompress(all); Set(in, z); FilterEof = [=]() -> bool { return z.IsEOS(); }; }
 		Lib& ChunkSize(int n)                  { return z.ChunkSize(n); }
 	
-		DecompressStream()                     {}
-		DecompressStream(Stream& out)          { Open(out); }
-		~DecompressStream()                    { Close(); }
+		DecompressStream()                             {}
+		DecompressStream(Stream& out, bool all = true) { Open(out, all); }
+		~DecompressStream()                            { Close(); }
 	};
 }
 
