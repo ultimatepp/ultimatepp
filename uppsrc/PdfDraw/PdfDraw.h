@@ -69,8 +69,8 @@ class TTFReader {
 	struct GlyphInfo : Moveable<GlyphInfo> {
 		int    offset;
 		int    size;
-    	uint16 advanceWidth;
-    	int16  leftSideBearing;
+		uint16 advanceWidth;
+		int16  leftSideBearing;
 	};
 
 	Vector<GlyphInfo> glyphinfo;
@@ -137,8 +137,8 @@ public:
 		dword   fontRevision;
 		uint32  checkSumAdjustment;
 		uint32  magicNumber;
-		uint16 	flags;
-		uint16 	unitsPerEm;
+		uint16  flags;
+		uint16  unitsPerEm;
 		byte    created[8];
 		byte    modified[8];
 		int16   xMin;
@@ -291,11 +291,13 @@ private:
 	};
 
 	VectorMap<Font, OutlineInfo>                outline_info;
-	VectorMap<Font, Vector<wchar> >             pdffont;
-	VectorMap<Font, VectorMap<wchar, CharPos> > fontchars;
+	VectorMap<Font, Vector<wchar>>              pdffont;
+	VectorMap<Font, VectorMap<wchar, CharPos>>  fontchars;
 	Index<uint64>                               patterns;
-	VectorMap< Tuple2<int64, Rect>, Image>      images;
-	Array< Array<UrlInfo> >                     page_url;
+	VectorMap<Tuple2<int64, Rect>, Image>       images;
+	Array<Array<UrlInfo>>                       page_url;
+	String                                      data; // temporary escape data, e.g. JPEG
+	Vector<String>                              jpeg;
 	
 	Vector<int>  offset;
 	StringBuffer out;
@@ -371,6 +373,8 @@ public:
 	PdfDraw(int pagecx, int pagecy, bool pdfa = false)       { Init(pagecx, pagecy, 0, pdfa); }
 	PdfDraw(Size pgsz = Size(5100, 6600), bool pdfa = false) { Init(pgsz.cx, pgsz.cy, 0, pdfa); }
 };
+
+void DrawJPEG(Draw& w, int x, int y, int cx, int cy, const String& jpeg_data);
 
 String Pdf(const Array<Drawing>& report, Size pagesize, int margin, bool pdfa = false,
            const PdfSignatureInfo *sign = NULL);
