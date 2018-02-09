@@ -15,5 +15,13 @@ CONSOLE_APP_MAIN
 	String s = BZ2Compress(data);
 	DUMP(s.GetCount());
 	ASSERT(BZ2Decompress(s) == data);
+	
+	StringStream ss(s);
+	BZ2DecompressStream in(ss);
+	String s2;
+	while(!in.IsEof())
+		s2.Cat(in.Get());
+	ASSERT(s2 == data);
+	
 	LOG("============= OK");
 }
