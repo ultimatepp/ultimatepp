@@ -165,7 +165,7 @@ Image RichPNG::ToImage(const Value& data, Size sz, void *) const
 	if(IsString(data)) {
 		ImageAnyDraw iw(sz);
 		Paint(data, iw, sz);
-		return iw;	
+		return iw;
 	}
 	Image x = Image(data);
 	Size outsz(min(sz.cx, 4 * x.GetWidth()), min(sz.cy, 4 * x.GetHeight()));
