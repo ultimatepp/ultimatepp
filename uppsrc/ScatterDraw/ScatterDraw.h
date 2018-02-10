@@ -369,6 +369,10 @@ public:
 	
 	//void FitToData(bool vertical = false, double factor = 0);		// Deprecated
 	void ZoomToFit(bool horizontal = true, bool vertical = false, double factor = 0);
+	void ZoomToFit(bool horizontal, double minx, double maxx, bool vertical, double minxy, double maxy, 
+					bool vertical2, double miny2, double maxy2, double factor);
+	void ZoomToFitSmart(bool horizontal, double minx, double maxx, bool vertical, double minxy, double maxy, 
+					bool vertical2, double miny2, double maxy2, double factor);
 	void Zoom(double scale, bool hor = true, bool ver = true); 
 	void Scroll(double factorX, double factorY);
 	
@@ -377,9 +381,6 @@ public:
 	ScatterDraw &SetZoomStyleY(ZoomStyle style = TO_CENTER) {zoomStyleY = style; return *this;}
 
 	ScatterDraw& SetRange(double rx, double ry = Null, double ry2 = Null);
-	//double GetRangeX() {return xRange;}
-	//double GetRangeY() {return yRange;}
-	//double GetRangeY2() {return yRange2;}
 	ScatterDraw& SetRangeLinked(double rx, double ry, double ry2 = 100);
 	double GetXRange()const {return xRange;}
 	double GetYRange()const {return yRange;}
@@ -827,6 +828,10 @@ public:
 			s % series;
 	}
 	
+	String VariableFormatX(double d) const  {return VariableFormat(xRange, d);}
+	String VariableFormatY(double d) const  {return VariableFormat(yRange, d);} 
+	String VariableFormatY2(double d) const {return VariableFormat(yRange2, d);}
+		
 protected:
 	ScatterDraw &_AddSeries(DataSource *data);
 	virtual void Refresh() {};
@@ -895,9 +900,6 @@ protected:
 	void DyFormat(String& s, int i, double d)	{s = Format("%Dy", int(d));}
 	
 	static String VariableFormat(double range, double d);	
-	String VariableFormatX(double d) const  {return VariableFormat(xRange, d);}
-	String VariableFormatY(double d) const  {return VariableFormat(yRange, d);} 
-	String VariableFormatY2(double d) const {return VariableFormat(yRange2, d);}
 
 	template<class T>
 	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = false);
@@ -927,10 +929,16 @@ private:
 	static void ParseTextMultiline(const String &text, Upp::Font fnt, 
 								   Upp::Array <String> &texts, Upp::Array <Size> &sizes);
 	
-	void DoFitToData(bool horizontal, bool vertical, double factor = 0);
+	void DoFitToData(bool horizontal, double minx, double maxx, bool vertical, double minxy, double maxy, 
+					bool vertical2, double miny2, double maxy2, double factor = 0);
+	void DoFitToDataSmart(bool horizontal, double minx, double maxx, bool vertical, double minxy, double maxy, 
+					bool vertical2, double miny2, double maxy2, double factor = 0);
 	void DoZoom(double scale, bool hor, bool ver); 
 	void DoScroll(double factorX, double factorY);
 	
+	void SetXYMinLinkedEach(double xmin, double xmin0, double ymin, double ymin0, double ymin2, double ymin20);
+	void SetRangeLinkedEach(double rx, double rx0, double ry, double ry0, double ry2, double ry20);
+		
 	int plotW, plotH;
 	bool labelsChanged;
 	bool stacked;
