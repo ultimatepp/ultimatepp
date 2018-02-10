@@ -369,70 +369,138 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 }
 
 void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
+	ZoomToFit(horizontal, Null, Null, vertical, Null, Null, vertical, Null, Null, factor);
+}
+
+void ScatterDraw::ZoomToFit(bool horizontal, double minx, double maxx, bool vertical, double miny, 
+		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
 	if (linkedMaster) {
 		linkedMaster->ZoomToFit(horizontal, vertical);
 		return;
 	}
-	DoFitToData(horizontal, vertical, factor);
+	DoFitToData(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
 	if (!linkedCtrls.IsEmpty()) {
 		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
-	    	linkedCtrls[i]->DoFitToData(horizontal, vertical, factor);
+	    	linkedCtrls[i]->DoFitToData(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
 	}
 }
 		
-void ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
-	double minx, maxx, miny, miny2, maxy, maxy2;
-	minx = miny = miny2 = -DOUBLE_NULL;
-	maxx = maxy = maxy2 = DOUBLE_NULL;
+void ScatterDraw::DoFitToData(bool horizontal, double minx, double maxx, bool vertical, double miny, 
+		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
+	bool calcminx, calcmaxx, calcminy, calcminy2, calcmaxy, calcmaxy2;
+	if (IsNull(minx)) {
+		minx = -DOUBLE_NULL;
+		calcminx = true;
+	} else
+		calcminx = false;
+	if (IsNull(miny)) {
+		miny = -DOUBLE_NULL;
+		calcminy = true;
+	} else
+		calcminy = false;
+	if (IsNull(miny2)) {
+		miny2 = -DOUBLE_NULL;
+		calcminy2 = true;
+	} else
+		calcminy2 = false;
+	if (IsNull(maxx)) {
+		maxx = DOUBLE_NULL;
+		calcmaxx = true;
+	} else
+		calcmaxx = false;
+	if (IsNull(maxy)) {
+		maxy = DOUBLE_NULL;
+		calcmaxy = true;
+	} else
+		calcmaxy = false;
+	if (IsNull(maxy2)) {
+		maxy2 = DOUBLE_NULL;
+		calcmaxy2 = true;
+	} else
+		calcmaxy2 = false;
 	
 	try {
 		if (horizontal) {
 			for (int j = 0; j < series.GetCount(); j++) {
 				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 					continue;
-				minx = min(minx, series[j].PointsData()->MinX());
-				maxx = max(maxx, series[j].PointsData()->MaxX());
+				if (calcminx) {
+					double mn = series[j].PointsData()->MinX();
+					if (!IsNull(mn))
+						minx = min(minx, mn);
+				}
+				if (calcmaxx) {
+					double mx = series[j].PointsData()->MaxX();
+					if (!IsNull(mx))
+						maxx = max(maxx, mx);
+				}
 			}
-			if (minx != -DOUBLE_NULL) {
+			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
+				if (maxx < minx)
+					Swap(maxx, minx);
 				double deltaX = (maxx - minx)*factor;
-				minx -= deltaX;
-				maxx += deltaX;
+				if (calcminx)
+					minx -= deltaX;
+				if (calcmaxx)
+					maxx += deltaX;
 			}
 		}
 		if (vertical) {
 			for (int j = 0; j < series.GetCount(); j++) {
 				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 					continue;
-				for (int64 i = 0; i < series[j].PointsData()->GetCount(); i++) {
-					double py = series[j].PointsData()->y(i);
-					if (IsNull(py))
-						continue;
-					if (series[j].primaryY) {
-						if (py < miny)
-							miny = py;
-						if (py > maxy)
-							maxy = py;
-					} else {
-						if (py < miny2)
-							miny2 = py;
-						if (py > maxy2)
-							maxy2 = py;
+				if (series[j].primaryY) {
+					if (calcminy) {
+						double mn = series[j].PointsData()->MinY();
+						if (!IsNull(mn))
+							miny = min(miny, mn);
+					}
+					if (calcmaxx) {
+						double mx = series[j].PointsData()->MaxY();
+						if (!IsNull(mx))
+							maxy = max(maxy, mx);
 					}
 				}
 			}
-			if (miny != -DOUBLE_NULL) {
+			if (maxy != DOUBLE_NULL && miny != -DOUBLE_NULL) {
+				if (maxy < miny)
+					Swap(maxy, miny);
 				double deltaY = (maxy - miny)*factor;
-				miny -= deltaY;
-				maxy += deltaY;		
+				if (calcminy)
+					miny -= deltaY;
+				if (calcmaxy)
+					maxy += deltaY;		
 			}
-			if (miny2 != -DOUBLE_NULL) {
+		}
+		if (vertical2) {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+					continue;
+				if (!series[j].primaryY) {
+					if (calcminy2) {
+						double mn = series[j].PointsData()->MinY();
+						if (!IsNull(mn))
+							miny2 = min(miny2, mn);
+					}
+					if (calcmaxy2) {
+						double mx = series[j].PointsData()->MaxY();
+						if (!IsNull(mx))
+							maxy2 = max(maxy2, mx);
+					}
+				}
+			}
+			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {
+				if (maxy2 < miny2)
+					Swap(maxy2, miny2);
 				double deltaY2 = (maxy2 - miny2)*factor;
-				miny2 -= deltaY2;
-				maxy2 += deltaY2;		
+				if (calcminy2)
+					miny2 -= deltaY2;
+				if (calcmaxy2)
+					maxy2 += deltaY2;		
 			}
 		}
 		if (horizontal) {
-			if (minx != -DOUBLE_NULL) {
+			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
 				if (maxx == minx) {
 					if (maxx == 0) {
 						xRange = 2;
@@ -449,7 +517,7 @@ void ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
 			}
 		}
 		if (vertical) {
-			if (miny != -DOUBLE_NULL) {
+			if (maxy != DOUBLE_NULL && miny != -DOUBLE_NULL) {
 				if (maxy == miny) 
 					yRange = maxy > 0 ? 2*maxy : 1;
 				else	
@@ -460,7 +528,185 @@ void ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
 				yMajorUnit = yRange/10; 
 				AdjustMinUnitY();
 			}
-			if (miny2 != -DOUBLE_NULL) {	
+		}
+		if (vertical2) {
+			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {	
+				if (maxy2 == miny2) 
+					yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
+				else	
+					yRange2 = maxy2 - miny2;
+				double deltaY2 = yMin2 - miny2;
+				yMin2 -= deltaY2;
+				yMinUnit2 += deltaY2;
+				yMajorUnit2 = yRange2/10; 
+				AdjustMinUnitY2();
+			}
+		}	
+	} catch (ValueTypeError err) {
+		ASSERT_(true, err);
+		return;
+	}
+	WhenSetRange();
+	WhenSetXYMin();
+	Refresh();
+}
+
+void ScatterDraw::ZoomToFitSmart(bool horizontal, double minx, double maxx, bool vertical, double miny, 
+		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
+	if (linkedMaster) {
+		linkedMaster->ZoomToFit(horizontal, vertical);
+		return;
+	}
+	DoFitToDataSmart(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
+	    	linkedCtrls[i]->DoFitToDataSmart(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
+	}
+}
+		
+void ScatterDraw::DoFitToDataSmart(bool horizontal, double minx, double maxx, bool vertical, double miny, 
+		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
+	bool calcminx, calcmaxx, calcminy, calcminy2, calcmaxy, calcmaxy2;
+	if (IsNull(minx)) {
+		minx = -DOUBLE_NULL;
+		calcminx = true;
+	} else
+		calcminx = false;
+	if (IsNull(miny)) {
+		miny = -DOUBLE_NULL;
+		calcminy = true;
+	} else
+		calcminy = false;
+	if (IsNull(miny2)) {
+		miny2 = -DOUBLE_NULL;
+		calcminy2 = true;
+	} else
+		calcminy2 = false;
+	if (IsNull(maxx)) {
+		maxx = DOUBLE_NULL;
+		calcmaxx = true;
+	} else
+		calcmaxx = false;
+	if (IsNull(maxy)) {
+		maxy = DOUBLE_NULL;
+		calcmaxy = true;
+	} else
+		calcmaxy = false;
+	if (IsNull(maxy2)) {
+		maxy2 = DOUBLE_NULL;
+		calcmaxy2 = true;
+	} else
+		calcmaxy2 = false;
+	
+	try {
+		if (horizontal) {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+					continue;
+				double av = series[j].PointsData()->AvgX();
+				if (calcminx) {
+					if (!IsNull(av))
+						minx = min(minx, av);
+				}
+				if (calcmaxx) {
+					if (!IsNull(av))
+						maxx = max(maxx, av);
+				}
+			}
+			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
+				if (maxx < minx)
+					Swap(maxx, minx);
+				double deltaX = (maxx - minx)*factor;
+				if (calcminx)
+					minx -= deltaX;
+				if (calcmaxx)
+					maxx += deltaX;
+			}
+		}
+		if (vertical) {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+					continue;
+				if (series[j].primaryY) {
+					double av = series[j].PointsData()->AvgY();
+					if (calcminy) {
+						if (!IsNull(av))
+							miny = min(miny, av);
+					}
+					if (calcmaxx) {
+						if (!IsNull(av))
+							maxy = max(maxy, av);
+					}
+				}
+			}
+			if (maxy != DOUBLE_NULL && miny != -DOUBLE_NULL) {
+				if (maxy < miny)
+					Swap(maxy, miny);
+				double deltaY = (maxy - miny)*factor;
+				if (calcminy)
+					miny -= deltaY;
+				if (calcmaxy)
+					maxy += deltaY;		
+			}
+		}
+		if (vertical2) {
+			for (int j = 0; j < series.GetCount(); j++) {
+				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
+					continue;
+				if (!series[j].primaryY) {
+					double av = series[j].PointsData()->AvgY();
+					if (calcminy2) {
+						if (!IsNull(av))
+							miny2 = min(miny2, av);
+					}
+					if (calcmaxy2) {
+						if (!IsNull(av))
+							maxy2 = max(maxy2, av);
+					}
+				}
+			}
+			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {
+				if (maxy2 < miny2)
+					Swap(maxy2, miny2);
+				double deltaY2 = (maxy2 - miny2)*factor;
+				if (calcminy2)
+					miny2 -= deltaY2;
+				if (calcmaxy2)
+					maxy2 += deltaY2;		
+			}
+		}
+		if (horizontal) {
+			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
+				if (maxx == minx) {
+					if (maxx == 0) {
+						xRange = 2;
+						xMin = -1;
+					} else	
+						xRange = 2*maxx;
+				} else	
+					xRange = maxx - minx;
+				double deltaX = xMin - minx;
+				xMin -= deltaX;
+				xMinUnit += deltaX;
+				xMajorUnit = xRange/10;
+				AdjustMinUnitX();
+			}
+		}
+		if (vertical) {
+			if (maxy != DOUBLE_NULL  && miny != -DOUBLE_NULL) {
+				if (maxy == miny) 
+					yRange = maxy > 0 ? 2*maxy : 1;
+				else	
+					yRange = maxy - miny;
+				double deltaY = yMin - miny;
+				yMin -= deltaY;
+				yMinUnit += deltaY;
+				yMajorUnit = yRange/10; 
+				AdjustMinUnitY();
+			}
+		}
+		if (vertical2) {
+			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {	
 				if (maxy2 == miny2) 
 					yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
 				else	
@@ -1237,35 +1483,69 @@ double ScatterDraw::GetYPointByValue(double y) {
 
 
 ScatterDraw &ScatterDraw::SetRangeLinked(double rx, double ry, double ry2) {
-	if (linkedMaster) {
-		linkedMaster->SetRangeLinked(rx, ry, ry2);
-		linkedMaster->Refresh();
-		return *this;
-	}
-	SetRange(rx, ry, ry2);
-	if (!linkedCtrls.IsEmpty()) {
-		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
-	    	linkedCtrls[i]->SetRange(rx, ry, ry2);
-	    	linkedCtrls[i]->Refresh();
-		}
-	}
+	double actual_rx = GetXRange();
+	double actual_ry = GetYRange();
+	double actual_ry2 = GetY2Range();
+	SetRangeLinkedEach(rx, actual_rx, ry, actual_ry, ry2, actual_ry2);
 	return *this;
 }
 
-ScatterDraw &ScatterDraw::SetXYMinLinked(double xmin, double ymin, double ymin2) {
+void ScatterDraw::SetRangeLinkedEach(double rx, double rx0, double ry, double ry0, double ry2, double ry20) {	
 	if (linkedMaster) {
-		linkedMaster->SetXYMinLinked(xmin, ymin, ymin2);
+		linkedMaster->SetRangeLinkedEach(rx, rx0, ry, ry0, ry2, ry20);
 		linkedMaster->Refresh();
-		return *this;
 	}
-	SetXYMin(xmin, ymin, ymin2);
+	double actual_rx = GetXRange();
+	double actual_ry = GetYRange();
+	double actual_ry2 = GetY2Range();
+	SetRange(actual_rx == rx0   ? rx  : Null, 
+			 actual_ry == ry0   ? ry  : Null, 
+			 actual_ry2 == ry20 ? ry2 : Null);
 	if (!linkedCtrls.IsEmpty()) {
 		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
-	    	linkedCtrls[i]->SetXYMin(xmin, ymin, ymin2);
+			double linked_rx = linkedCtrls[i]->GetXRange();
+			double linked_ry = linkedCtrls[i]->GetYRange();
+			double linked_ry2 = linkedCtrls[i]->GetY2Range();
+	
+	    	linkedCtrls[i]->SetRange(rx0 == linked_rx   ? rx  : Null, 
+									 ry0 == linked_ry   ? ry  : Null, 
+									 ry20 == linked_ry2 ? ry2 : Null);
 	    	linkedCtrls[i]->Refresh();
 		}
 	}
+}
+
+ScatterDraw &ScatterDraw::SetXYMinLinked(double xmin, double ymin, double ymin2) {
+	double actual_xmin = GetXMin();
+	double actual_ymin = GetYMin();
+	double actual_ymin2 = GetY2Min();
+	SetXYMinLinkedEach(xmin, actual_xmin, ymin, actual_ymin, ymin2, actual_ymin2);
 	return *this;
+}
+
+void ScatterDraw::SetXYMinLinkedEach(double xmin, double xmin0, double ymin, double ymin0, double ymin2, double ymin20) {
+	if (linkedMaster) {
+		linkedMaster->SetXYMinLinkedEach(xmin, xmin0, ymin, ymin0, ymin2, ymin20);
+		linkedMaster->Refresh();
+	}
+	double actual_xmin = GetXMin();
+	double actual_ymin = GetYMin();
+	double actual_ymin2 = GetY2Min();
+	SetXYMin(actual_xmin == xmin0   ? xmin  : Null, 
+			 actual_ymin == ymin0   ? ymin  : Null, 
+			 actual_ymin2 == ymin20 ? ymin2 : Null);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
+			double linked_xmin = linkedCtrls[i]->GetXMin();
+			double linked_ymin = linkedCtrls[i]->GetYMin();
+			double linked_ymin2 = linkedCtrls[i]->GetY2Min();
+		
+	    	linkedCtrls[i]->SetXYMin(xmin0 == linked_xmin   ? xmin  : Null, 
+									 ymin0 == linked_ymin   ? ymin  : Null, 
+									 ymin20 == linked_ymin2 ? ymin2 : Null);
+	    	linkedCtrls[i]->Refresh();
+		}
+	}
 }
 
 ScatterDraw &ScatterDraw::SetMouseHandling(bool valx, bool valy) 
