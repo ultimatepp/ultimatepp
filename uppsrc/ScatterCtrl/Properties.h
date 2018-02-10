@@ -6,6 +6,8 @@ class MeasuresTab : public WithMeasures<StaticRect> {
 public:
 	typedef MeasuresTab CLASSNAME;
 	
+	virtual ~MeasuresTab() {};
+	
 	void Init(ScatterCtrl &scatter);
 	void Change();
 
@@ -16,6 +18,8 @@ private:
 class TextsTab : public WithTexts<StaticRect> {
 public:
 	typedef TextsTab CLASSNAME;
+	
+	virtual ~TextsTab() {};
 	
 	void Init(ScatterCtrl &scatter);
 	void DoShowText();
@@ -29,6 +33,8 @@ private:
 class LegendTab : public WithLegend<StaticRect> {
 public:
 	typedef LegendTab CLASSNAME;
+	
+	virtual ~LegendTab() {};
 	
 	void Init(ScatterCtrl &scatter);
 
@@ -44,7 +50,7 @@ public:
 	typedef SeriesTab CLASSNAME;
 	
 	SeriesTab() : dashCount(DashStyle::GetCount()) {}
-	~SeriesTab() {
+	virtual ~SeriesTab() {
 		DashStyle::UnregisterFrom(dashCount);
 	}
 	void Init(ScatterCtrl& scatter);
@@ -65,6 +71,8 @@ public:
 	void OnClose();
 	
 	DataDlg(ScatterCtrl& scatter);
+	virtual ~DataDlg() {};
+	
 	void OnTab(); 
 	void OnArrayBar(Bar &menu);
 	void ArrayCopy();
@@ -97,6 +105,8 @@ public:
 	typedef PropertiesDlg CLASSNAME;
 	
 	PropertiesDlg(ScatterCtrl& scatter, int tab = 0);
+	virtual ~PropertiesDlg() {};
+	
 	void OnTab(); 
 	void OnClose();
 		
@@ -114,6 +124,8 @@ public:
 	typedef ProcessingTab CLASSNAME;
 
 	ProcessingTab();
+	virtual ~ProcessingTab() {};
+	
 	void Init(ScatterCtrl& scatter) {pscatter = &scatter;}
 	void UpdateField(const String name, int id);
 	void OnFFT();
@@ -166,6 +178,8 @@ public:
 	typedef ProcessingDlg CLASSNAME;
 
 	ProcessingDlg(ScatterCtrl& scatter);
+	virtual ~ProcessingDlg() {};
+	
 	void OnClose();
 	
 private:
@@ -180,6 +194,8 @@ public:
 	typedef TextDlg CLASSNAME;
 	
 	TextDlg(ScatterCtrl& scatter);
+	virtual ~TextDlg() {};
+	
 	void Change();
 	void OnClose();
 	

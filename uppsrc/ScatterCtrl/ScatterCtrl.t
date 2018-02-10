@@ -404,13 +404,13 @@ frFR("")
 
 T_("Best fit")
 caES("")
-esES("")
+esES("Mejor ajuste")
 euES("")
 frFR("")
 
 T_("Copy selected rows")
 caES("")
-esES("")
+esES("Copiar files selecc.")
 euES("")
 frFR("")
 
@@ -500,7 +500,7 @@ frFR("")
 
 T_("Sinusoidal tend")
 caES("")
-esES("")
+esES("Tend. sinusoidal")
 euES("")
 frFR("")
 
@@ -605,7 +605,7 @@ frFR("")
 
 T_("Attach")
 caES("")
-esES("")
+esES("Fijar")
 euES("")
 frFR("")
 
@@ -851,7 +851,7 @@ frFR("Fermer")
 
 T_("Sin. tend.")
 caES("")
-esES("")
+esES("Tend. sin.")
 euES("")
 frFR("")
 
@@ -1073,7 +1073,7 @@ frFR("")
 
 T_("Coefficients")
 caES("")
-esES("")
+esES("Coeficientes")
 euES("")
 frFR("")
 
@@ -1115,5 +1115,3 @@ caES("")
 esES("Gr\303\241fico de tarta")
 euES("")
 frFR("")
-
-

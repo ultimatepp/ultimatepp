@@ -407,6 +407,8 @@ DataDlg::DataDlg(ScatterCtrl& scatter)
 	tab <<= THISBACK(OnTab);
 }
 
+//DataDlg::~DataDlg() {}
+
 Value DataDlg::DataSourceX::Format(const Value& q) const 
 {
 	Value ret = pscatter->GetStringX(index, q);
