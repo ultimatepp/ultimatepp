@@ -439,7 +439,7 @@ void PdfDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 	}
 }
 
-Image JPEGDummy()
+static Image sJPEGDummy()
 {
 	static Image h = CreateImage(Size(1, 1), Cyan);
 	return h;
@@ -448,7 +448,7 @@ Image JPEGDummy()
 void DrawJPEG(Draw& w, int x, int y, int cx, int cy, const String& jpeg_data)
 {
 	w.Escape("data:" + jpeg_data);
-	w.DrawImage(x, y, cx, cy, JPEGDummy());
+	w.DrawImage(x, y, cx, cy, sJPEGDummy());
 }
 
 void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const Rect& src, Color c)
@@ -464,7 +464,7 @@ void PdfDraw::DrawImageOp(int x, int y, int cx, int cy, const Image& _img, const
 		images.Add(key, img);
 	}
 	
-	if(img.GetSerialId() == JPEGDummy().GetSerialId())
+	if(img.GetSerialId() == sJPEGDummy().GetSerialId())
 		jpeg.Add(data);
 	
 	page << "q "
@@ -612,7 +612,7 @@ String PdfDraw::Finish(const PdfSignatureInfo *sign)
 		String wh;
 		wh << " /Width " << sr.Width() << " /Height " << sr.Height();
 		const Image& m = images[i];
-		if(m.GetSerialId() == JPEGDummy().GetSerialId()) {
+		if(m.GetSerialId() == sJPEGDummy().GetSerialId()) {
 			String jpg = jpeg[jpegi++];
 			StringStream ss(jpg);
 			One<StreamRaster> r = StreamRaster::OpenAny(ss);
