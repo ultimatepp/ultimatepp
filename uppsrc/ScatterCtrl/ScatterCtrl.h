@@ -146,7 +146,9 @@ public:
 class ScatterCtrl : public Ctrl, public ScatterDraw {
 public:
 	typedef ScatterCtrl CLASSNAME;
+	
 	ScatterCtrl();
+	virtual ~ScatterCtrl() {};
 	
 	enum ScatterAction {NO_ACTION = 0, SCROLL, ZOOM_H_ENL, ZOOM_H_RED, ZOOM_V_ENL, ZOOM_V_RED, SHOW_COORDINATES, CONTEXT_MENU, ZOOM_WINDOW, 
 					  SCROLL_LEFT, SCROLL_RIGHT, SCROLL_UP, SCROLL_DOWN, ZOOM_FIT};
