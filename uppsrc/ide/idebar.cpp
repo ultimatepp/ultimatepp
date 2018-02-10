@@ -120,7 +120,6 @@ void Ide::AssistEdit(Bar& menu)
 	bool b = !editor.IsReadOnly() && !designer;
 	menu.Add(b, "Insert", THISBACK(InsertMenu));
 	menu.Add(b, "Insert #include", THISBACK(InsertInclude));
-	menu.Add(b, "Remove debugging logs (DDUMP...)", [=] { RemoveDs(); });
 }
 
 void Ide::InsertAdvanced(Bar& bar)
@@ -171,6 +170,7 @@ void Ide::EditSpecial(Bar& menu)
 		.Help("Uncomment code");
 	menu.Add(b, AK_REFORMAT_COMMENT, THISBACK(ReformatComment))
 	    .Help("Reformat multiline comment into paragraph");
+	menu.Add(b, "Remove debugging logs (DDUMP...)", [=] { RemoveDs(); });
 }
 
 void Ide::SearchMenu(Bar& menu)
