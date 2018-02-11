@@ -33,7 +33,7 @@ void ImageGLData::Init(const Image& img)
 	SysImageRealized(img);
 }
 
-static LRUCache<ImageGLData, Tuple2<uint64, uint64> > sTextureCache;
+static LRUCache<ImageGLData, Tuple<uint64, uint64> > sTextureCache;
 static bool sReset;
 
 ImageGLData::~ImageGLData()
