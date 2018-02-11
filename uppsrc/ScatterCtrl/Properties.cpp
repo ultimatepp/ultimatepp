@@ -357,7 +357,7 @@ void SeriesTab::UpdateFields()
 
 void DataDlg::OnClose() {
 	RejectBreak(IDOK);
-	Close();	Close();
+	Close();
 }
 
 DataDlg::DataDlg(ScatterCtrl& scatter) 
@@ -578,7 +578,7 @@ void PropertiesDlg::OnClose()
 	measures.Change();
 	
 	RejectBreak(IDOK);
-	Close();	Close();
+	Close();	
 }
 
 ProcessingDlg::ProcessingDlg(ScatterCtrl& scatter) : scatter(scatter) 
@@ -620,7 +620,7 @@ ProcessingDlg::ProcessingDlg(ScatterCtrl& scatter) : scatter(scatter)
 void ProcessingDlg::OnClose() 
 {
 	RejectBreak(IDOK);
-	Close();	Close();
+	Close();
 }
 
 void ProcessingDlg::UpdateFields() 
@@ -935,14 +935,15 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 		int64 idmx;
 		double val;
 		val = data.MaxY(idmx);
-		if (!IsNull(val))
+		if (!IsNull(val)) {
 			tabFit.eMax = Format("(%f,%f)", data.x(idmx), val);
-		Pointf p = data.MaxSubDataImpY(idmx, 3);
-		if (!IsNull(p))
-			tabFit.eMaxImp = Format("(%f,%f)", p.x, p.y);
-		val = data.MinY(idmx);
-		if (!IsNull(val))
-			tabFit.eMin = Format("(%f,%f)", data.x(idmx), val);
+			Pointf p = data.MaxSubDataImpY(idmx, 3);
+			if (!IsNull(p))
+				tabFit.eMaxImp = Format("(%f,%f)", p.x, p.y);
+			val = data.MinY(idmx);
+			if (!IsNull(val))
+				tabFit.eMin = Format("(%f,%f)", data.x(idmx), val);
+		}
 	}
 	if (!data.IsParam() && !data.IsExplicit()) {	
 		tabFit.width <<= pscatter->GetXRange()/15.;
