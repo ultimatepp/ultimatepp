@@ -98,6 +98,8 @@ Pointf DataSource::MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64
 	const Vector<double> &coeff = polyFit.GetCoeff();
 	double b = coeff[1];
 	double a = coeff[2];
+	if (IsNull(a) || a < 1E-10)
+		return Null;
 	return Pointf(-b/2/a, polyFit.f(-b/2/a));
 }
 
@@ -159,7 +161,7 @@ double DataSource::Variance(Getdatafun getdata, double avg) {
 			count++;
 		}
 	}
-	if (count <= 0)
+	if (count <= 1)
 		return Null;
 	return ret/(count - 1);
 }
@@ -647,6 +649,8 @@ void DataSource::GetSpectralMoments(Getdatafun getdataY, Getdatafun getdataX, bo
 			
 bool DataSource::SameX(DataSource &data) {
 	int64 num = GetCount();
+	if (num == 0)
+		return false;
 	if (data.GetCount() != num)
 		return false;
 	for (int64 i = 0; i < num; ++i) {
