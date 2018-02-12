@@ -99,14 +99,14 @@ LAYOUT(Series, 420, 228)
 	ITEM(ArrayCtrl, list, LeftPosZ(4, 120).VSizePosZ(4, 4))
 END_LAYOUT
 
-LAYOUT(Data, 436, 252)
-	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
-	ITEM(Button, close, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
-END_LAYOUT
-
 LAYOUT(DataSeries, 400, 200)
 	ITEM(ArrayCtrl, data, HSizePosZ(0, 0).VSizePosZ(0, 0))
 	ITEM(EditInt, scatterIndex, LeftPosZ(12, 64).TopPosZ(168, 19))
+END_LAYOUT
+
+LAYOUT(Data, 436, 252)
+	ITEM(TabCtrl, tab, HSizePosZ(0, 0).VSizePosZ(0, 28))
+	ITEM(Button, close, SetLabel(t_("Close")).Tip(t_("Close this dialog")).RightPosZ(4, 68).BottomPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(Processing, 700, 412)

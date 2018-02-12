@@ -12,17 +12,30 @@
 
 void ScatterCtrl::DoShowEditDlg(int itab) 
 {
-	PropertiesDlg(*this, itab).Run(true);
+	static PropertiesDlg dlg;
+	ONCELOCK {
+		dlg.Init(*this);
+	}
+	dlg.Set(itab);
+	dlg.Run(true);
 }
 
 void ScatterCtrl::DoShowData() 
 {
-	DataDlg(*this).Run(true);
+	static DataDlg dlg;
+	ONCELOCK {
+		dlg.Init(*this);
+	}
+	dlg.Run(true);
 }
 
 void ScatterCtrl::DoProcessing() 
 {
-	ProcessingDlg(*this).Run(true);
+	static ProcessingDlg dlg;
+	ONCELOCK {
+		dlg.Init(*this);
+	}
+	dlg.Run(true);
 }
 
 void MeasuresTab::Init(ScatterCtrl& scatter) 
@@ -355,12 +368,7 @@ void SeriesTab::UpdateFields()
 }
 
 
-void DataDlg::OnClose() {
-	RejectBreak(IDOK);
-	Close();
-}
-
-DataDlg::DataDlg(ScatterCtrl& scatter) 
+void DataDlg::Init(ScatterCtrl& scatter) 
 {
 	CtrlLayout(*this);
 	Sizeable().Zoomable();
@@ -369,7 +377,7 @@ DataDlg::DataDlg(ScatterCtrl& scatter)
 	close <<= THISBACK(OnClose);
 	close.Exit();
 	
-	pscatter = &scatter;
+	this->pscatter = &scatter;
 
 	tab.Reset();
 	series.Clear();
@@ -407,10 +415,21 @@ DataDlg::DataDlg(ScatterCtrl& scatter)
 	tab <<= THISBACK(OnTab);
 }
 
-//DataDlg::~DataDlg() {}
+void DataDlg::Close()
+{	
+	RejectBreak(IDOK);
+	TopWindow::Close();
+}
+
+void DataDlg::OnClose() 
+{
+	Close();	
+}
 
 Value DataDlg::DataSourceX::Format(const Value& q) const 
 {
+	if (int(q) >= pscatter->GetSeries(index).GetCount())
+		return Null;
 	Value ret = pscatter->GetStringX(index, q);
 	if (ret.Is<String>()) {
 		String sret = ret;
@@ -422,6 +441,8 @@ Value DataDlg::DataSourceX::Format(const Value& q) const
 
 Value DataDlg::DataSourceY::Format(const Value& q) const 
 {
+	if (int(q) >= pscatter->GetSeries(index).GetCount())
+		return Null;
 	Value ret = pscatter->GetStringY(index, q);
 	if (ret.Is<String>()) {
 		String sret = ret;
@@ -509,7 +530,6 @@ void DataDlg::ArraySaveToFile(String fileName) {
 								"\r\n", pscatter->GetDefaultCSVSeparator(), "\r\n"));
 }
 
-
 void DataDlg::ArraySelect() 
 {
 	int index = tab.Get();
@@ -542,10 +562,12 @@ void DataDlg::OnArrayBar(Bar &menu)
 	}
 }
 
-PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter, int itab) : scatter(scatter) 
+void PropertiesDlg::Init(ScatterCtrl& scatter) 
 {
 	CtrlLayout(*this);
 	Sizeable().Zoomable();
+
+	this->scatter = &scatter;
 	
 	Title(t_("Scatter properties"));
 	
@@ -553,7 +575,6 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter, int itab) : scatter(scatter)
 	tab.Add(texts, t_("Texts"));
 	tab.Add(legend, t_("Legend"));
 	tab.Add(series, t_("Series"));
-	tab.Set(itab);
 	OnTab(); 
 	
 	tab <<= THISBACK(OnTab);
@@ -561,30 +582,44 @@ PropertiesDlg::PropertiesDlg(ScatterCtrl& scatter, int itab) : scatter(scatter)
 	close.Exit();
 }
 
+void PropertiesDlg::Set(int itab)
+{	
+	tab.Set(itab); 
+	OnTab();
+}
+
 void PropertiesDlg::OnTab() 
 {
 	if (tab.IsAt(measures))
-		measures.Init(scatter);
+		measures.Init(*scatter);
 	else if (tab.IsAt(texts))
-		texts.Init(scatter);
+		texts.Init(*scatter);
 	else if (tab.IsAt(legend))
-		legend.Init(scatter);
+		legend.Init(*scatter);
 	else if (tab.IsAt(series))
-		series.Init(scatter);
+		series.Init(*scatter);
 }
 
-void PropertiesDlg::OnClose() 
+void PropertiesDlg::Close()
 {
 	measures.Change();
 	
 	RejectBreak(IDOK);
+	TopWindow::Close();
+}
+
+
+void PropertiesDlg::OnClose() 
+{
 	Close();	
 }
 
-ProcessingDlg::ProcessingDlg(ScatterCtrl& scatter) : scatter(scatter) 
+void ProcessingDlg::Init(ScatterCtrl& scatter) 
 {
 	CtrlLayout(*this);
 	Sizeable().Zoomable();
+	
+	this->scatter = &scatter;
 	
 	String title;
 	if (scatter.GetTitle().IsEmpty())
@@ -617,9 +652,14 @@ ProcessingDlg::ProcessingDlg(ScatterCtrl& scatter) : scatter(scatter)
 	close.Exit();
 }
 
-void ProcessingDlg::OnClose() 
+void ProcessingDlg::Close() 
 {
 	RejectBreak(IDOK);
+	TopWindow::Close();
+}
+
+void ProcessingDlg::OnClose() 
+{
 	Close();
 }
 
