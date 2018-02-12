@@ -68,10 +68,11 @@ class DataDlg : public WithData<TopWindow> {
 public:
 	typedef DataDlg CLASSNAME;
 	
-	void OnClose();
-	
-	DataDlg(ScatterCtrl& scatter);
+	void Init(ScatterCtrl& scatter);
 	virtual ~DataDlg() {};
+	
+	virtual void Close();
+	void OnClose();
 	
 	void OnTab(); 
 	void OnArrayBar(Bar &menu);
@@ -104,14 +105,16 @@ class PropertiesDlg : public WithProperties<TopWindow> {
 public:
 	typedef PropertiesDlg CLASSNAME;
 	
-	PropertiesDlg(ScatterCtrl& scatter, int tab = 0);
+	void Init(ScatterCtrl& scatter);
 	virtual ~PropertiesDlg() {};
 	
+	void Set(int tab);
 	void OnTab(); 
+	virtual void Close();
 	void OnClose();
 		
 private:
-	ScatterCtrl& scatter;
+	ScatterCtrl* scatter;
 	MeasuresTab measures;
 	TextsTab texts;
 	LegendTab legend;
@@ -177,13 +180,14 @@ class ProcessingDlg : public WithProcessing<TopWindow> {
 public:
 	typedef ProcessingDlg CLASSNAME;
 
-	ProcessingDlg(ScatterCtrl& scatter);
+	void Init(ScatterCtrl& scatter);
 	virtual ~ProcessingDlg() {};
 	
 	void OnClose();
+	virtual void Close();
 	
 private:
-	ScatterCtrl& scatter;	
+	ScatterCtrl* scatter;	
 	Array<ProcessingTab> tabs;
 	
 	void UpdateFields();
