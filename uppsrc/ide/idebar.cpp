@@ -489,21 +489,39 @@ void Ide::FilePropertiesMenu(Bar& menu)
 		String txt = String("Show ") + (editfile_repo == SVN_DIR ? "svn" : "git") + " history of file";
 		menu.AddMenu(IsActiveFile() && !editfile_isfolder && !designer, AK_SVNDIFF, IdeImg::SvnDiff(), THISBACK(SvnHistory))
 		    .Text(txt + "..").Help(txt);
-		if(editfile.GetCount() && editfile_repo == SVN_DIR && editfile.GetCount()) {
+		if(editfile.GetCount()) {
 			String mine;
 			String theirs;
 			String original;
-			for(FindFile ff(editfile + ".*"); ff; ff.Next()) {
-				if(ff.IsFile()) {
-					String p = ff.GetPath();
-					if(p.Find(".merge-left.r") >= 0)
-						original = p;
-					if(p.Find(".merge-right.r") >= 0)
-						theirs = p;
-					if(p.Find(".working") >= 0)
-						mine = p;
+			if(editfile_repo == SVN_DIR)
+				for(FindFile ff(editfile + ".*"); ff; ff.Next()) {
+					if(ff.IsFile()) {
+						String p = ff.GetPath();
+						if(p.Find(".merge-left.r") >= 0)
+							original = p;
+						if(p.Find(".merge-right.r") >= 0)
+							theirs = p;
+						if(p.Find(".working") >= 0)
+							mine = p;
+					}
+				}
+			else {
+				bool a = false, b = false, c = false;
+				int n = min(editor.GetLineCount(), 10000);
+				for(int i = 0; i < n; i++) { // check that we are in git conflict
+					const String& s = editor.GetUtf8Line(i);
+					int ch = *s;
+					a = a || ch == '<' && s.StartsWith("<<<<<<<");
+					b = b || ch == '=' && s.StartsWith("=======");
+					c = c || ch == '>' && s.StartsWith(">>>>>>>");
+				}
+				if(a && b && c) {
+					original = "1";
+					mine = "2";
+					theirs = "3";
 				}
 			}
+				
 			if(mine.GetCount() || theirs.GetCount() || original.GetCount()) {
 				menu.Sub("SVN Conflict", [=] (Bar& bar) {
 					if(mine.GetCount() && theirs.GetCount())
@@ -522,17 +540,19 @@ void Ide::FilePropertiesMenu(Bar& menu)
 					bar.Add("Use mine", [=] {
 						if(PromptYesNo("Do you want to overwrite current with [* mine]?")) {
 							SaveFile();
-							Upp::SaveFile(editfile, LoadFile(mine));
+							Upp::SaveFile(editfile, LoadConflictFile(mine));
 						}
 					});
 					bar.Add("Use theirs", [=] {
 						if(PromptYesNo("Do you want to overwrite current with [* theirs]?")) {
 							SaveFile();
-							Upp::SaveFile(editfile, LoadFile(theirs));
+							Upp::SaveFile(editfile, LoadConflictFile(theirs));
 						}
 					});
 				});
 			}
+		}
+		if(editfile.GetCount() && editfile_repo == GIT_DIR) {
 		}
 	}
 }

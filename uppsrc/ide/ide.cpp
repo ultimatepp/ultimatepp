@@ -678,12 +678,12 @@ struct ConflictDiff : TopWindow {
 		right.RightPos(0, sz.cx / 2).TopPos(0, fy);
 		diff.HSizePos().VSizePos(fy, 0);
 	}
-	
+
 	void Set(const char *lname, const String& l, const char *rname, const String& r)
 	{
 		left = "\1[=* \1" + String(lname);
 		right = "\1[=* \1" + String(rname);
-		diff.Set(LoadFile(l), LoadFile(r));
+		diff.Set(l, r);
 	}
 	
 	ConflictDiff() {
@@ -695,10 +695,16 @@ struct ConflictDiff : TopWindow {
 	}
 };
 
+String Ide::LoadConflictFile(const String& n)
+{
+	return n.GetCount() == 1 ? GitCmd(GetFileFolder(editfile), "show :" + n + ":./" + GetFileName(editfile))
+	                         : LoadFile(n);
+}
+
 void Ide::DiffFiles(const char *lname, const String& l, const char *rname, const String& r)
 {
 	ConflictDiff diff;
-	diff.Set(lname, l, rname, r);
+	diff.Set(lname, LoadConflictFile(l), rname, LoadConflictFile(r));
 	diff.Execute();
 }
 
