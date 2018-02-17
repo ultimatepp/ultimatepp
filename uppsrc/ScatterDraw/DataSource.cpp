@@ -94,11 +94,12 @@ Pointf DataSource::MaxSubDataImp(Getdatafun getdataY, Getdatafun getdataX, int64
 	}
 	VectorPointf pf(p);
 	PolynomialEquation2 polyFit;
-	polyFit.Fit(pf);
+	if (ExplicitEquation::NoError != polyFit.Fit(pf))
+		return Null;
 	const Vector<double> &coeff = polyFit.GetCoeff();
 	double b = coeff[1];
 	double a = coeff[2];
-	if (IsNull(a) || a < 1E-10)
+	if (IsNull(a) || fabs(a) < 1E-10)
 		return Null;
 	return Pointf(-b/2/a, polyFit.f(-b/2/a));
 }
