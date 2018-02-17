@@ -1,5 +1,4 @@
 topic "WebSocket";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "WebSocket";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 WebSocket]]}}&]
 [s3; &]
@@ -85,6 +85,11 @@ calls Do, so there is no need to call it separately.&]
 [s5;:Upp`:`:WebSocket`:`:SendBinary`(const Upp`:`:String`&`): [@(0.0.255) void]_[* SendBi
 nary]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Sends a single frame (non`-fragmented) binary message.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:Ping`(const Upp`:`:String`&`): [@(0.0.255) void]_[* Ping]([@(0.0.255) c
+onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2;%% Sends PING.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:BeginText`(const Upp`:`:String`&`): [@(0.0.255) void]_[* BeginTe
