@@ -692,6 +692,7 @@ public:
 
 	void   SendText(const String& data)                 { SendRaw(FIN|TEXT, data); }
 	void   SendBinary(const String& data)               { SendRaw(FIN|BINARY, data); }
+	void   Ping(const String& data)                     { SendRaw(FIN|PING, data); }
 
 	void   BeginText(const String& data)                { SendRaw(TEXT, data); }
 	void   BeginBinary(const String& data)              { SendRaw(BINARY, data); }

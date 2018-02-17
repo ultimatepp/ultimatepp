@@ -294,7 +294,7 @@ void WebSocket::FrameHeader()
 void WebSocket::Close(const String& msg)
 {
 	LLOG("Sending CLOSE");
-	SendRaw(CLOSE, msg);
+	SendRaw(CLOSE|FIN, msg);
 	close_sent = true;
 	if(IsBlocking())
 		while(!IsClosed() && !IsError() && socket->IsOpen())
@@ -320,7 +320,7 @@ void WebSocket::FrameData()
 	switch(op) {
 	case PING:
 		LLOG("PING");
-		SendRaw(PONG, data);
+		SendRaw(PONG|FIN, data);
 		break;
 	case CLOSE:
 		LLOG("CLOSE received");
@@ -402,7 +402,7 @@ String WebSocket::Receive()
 void WebSocket::Out(const String& s)
 {
 	out_queue.AddTail(s);
-	while(IsBlocking()  && socket->IsOpen() && !IsError() && out_queue.GetCount())
+	while((IsBlocking() || close_sent) && socket->IsOpen() && !IsError() && out_queue.GetCount())
 		Output();
 }
 
