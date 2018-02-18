@@ -17,7 +17,7 @@ void ScatterCtrl::DoShowEditDlg(int itab)
 		dlg.Init(*this);
 	}
 	dlg.Set(itab);
-	dlg.Run(true);
+	dlg.Run();
 }
 
 void ScatterCtrl::DoShowData() 
@@ -26,7 +26,7 @@ void ScatterCtrl::DoShowData()
 	ONCELOCK {
 		dlg.Init(*this);
 	}
-	dlg.Run(true);
+	dlg.Run();
 }
 
 void ScatterCtrl::DoProcessing() 
@@ -35,7 +35,7 @@ void ScatterCtrl::DoProcessing()
 	ONCELOCK {
 		dlg.Init(*this);
 	}
-	dlg.Run(true);
+	dlg.Run();
 }
 
 void MeasuresTab::Init(ScatterCtrl& scatter) 
