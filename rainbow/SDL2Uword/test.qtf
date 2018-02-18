@@ -1,0 +1,2998 @@
+[ $$0,0#00000000000000000000000000000000:Default]
+[{_} 
+[s0;2 &]
+[ {{10000t/25b/25@3 [s0; [*@(229)4 ArrayCtrl]]}}&]
+[s0;i448;a25;kO9;2 &]
+[s0; &]
+[s0;*@3 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:class: [@(0.0.255) class]_[* ArrayCtrl]_:_[@(0.0.255) public
+]_[*@3 Ctrl]&]
+[s0;i448;a25;kKO9;2 &]
+[s0;* &]
+[s0;* &]
+[s0; [* ArrayCtrl] implements basic grid functionality. It is typically 
+used for display and editing of arrays of values or (heterogeneous) 
+records. The records correspond to rows in the array, the individual 
+fields within each record can be either bound to columns or to 
+any generic [* Ctrl]`'s, thus supporting basic master`-detail functionality 
+with practically no additional cost.&]
+[s0; &]
+[s0; The standard derived classes extend various aspects of the ArrayCtrl 
+functionality. [* SqlArray] adds the nuts and bolts needed for 
+editing SQL`-based tables, whereas [* PopupTable] couples the ArrayCtrl 
+functionality with the drop`-down mechanism very similar to the 
+one used in popup menus. This opens the door for implementing 
+drop`-down controls like [* DropList] (aka [/ combo box]) or [* DropChoice] 
+(usually used together with a control of the [* EditField ]or [* DataPusher] 
+family to support coupling native data editing with drop`-down 
+selection, widely used for history or commonly used predefined 
+values. The [* ArrayPair] is, as its name implies, a pair of [* ArrayCtrl]`'s 
+with arrow buttons between them allowing to visually select subsets 
+of a certain set by moving its elements between the two lists.&]
+[s0; &]
+[s0; [*+117 The array data organization: indices and columns]&]
+[s0; &]
+[s0; There is a great deal of genericity supported by the ArrayCtrl 
+with respect both to its source data and its visual presentation. 
+Conceptually, the source array data is a matrix of [* Value]`'s. 
+There is a series of methods for accessing this source data, 
+the basic ones being [* Set] and [* Get]. The rows are addressed 
+by integer indices (zero based), the columns can be addressed 
+either by integer indices as well, or alternatively any source 
+column can be assigned an [* Id] identifier and addressed by it. 
+This is especially helpful in SQL`-based tables, where the table 
+column names can be used for the [* Id]`'s. A pair of methods, 
+[* GetPos] and [* GetId], can be used to translate these two column 
+addressing modes. In the code terminology, the columns in the 
+source data matrix are called [/ indices] whereas the visual (output) 
+columns are called simply [/ columns].&]
+[s0; &]
+[s0; The visual ArrayCtrl structure can be entirely independent of 
+the source data structure (although it`'s seldom helpful to make 
+the mapping completely arbitrary). Basically, each column can 
+have an arbitrary number of indices defining its source data. 
+Of course, the most common case is one index per column. This 
+is also simplest to address, because the column indices are equal 
+to the source data indices. However, many other combinations 
+are possible, each of which can be handy in certain situations:&]
+[s0; &]
+[s0;i150;O0; Index without a column: the most common of the `"special`" 
+cases is used mainly for row id`'s or other internally important 
+data without visual representation. The same behaviour can be 
+obtained by making a column invisible.&]
+[s0;i150;O0; Column without an index (a [/ rownum column]): this less 
+common case can be used to display external data (not stored 
+in the table). &]
+[s0;i150;O0; Multiple columns sharing the same index: this can be 
+used to display various aspects of a complex data object or to 
+display the same source data in multiple ways (e.g., a temperature 
+reading in Celsius and Fahrenheit degrees).&]
+[s0;i150;O0; Column with multiple indices: can be used to display 
+information gathered from multiple source data columns. This 
+is used for instance in IconDes in TheIDE to display image identifiers 
+together with their sizes in the list. This is the most complicated 
+case because you have to implement a specific [* Display] for such 
+a multi`-index column.&]
+[s0; &]
+[s0; [* Note:] in the current U`+`+ version, the implementation of index`-less 
+columns (arrays with external data not stored in the source matrix) 
+is rather awkward. It is planned to enhance this feature in the 
+future by adding support for access to external data via a data 
+accessor interface object. &]
+[s0; &]
+[s0; [*+117 ArrayCtrl GUI: selection, editing, and local menu]&]
+[s0; &]
+[s0; Array rows can be selected using the mouse or keyboard. ArrayCtrl`'s 
+support both single`-selection (plain cursor) and multiselection 
+model. Of course, row selection can be controlled via the programmatic 
+array interface as well. The selection and cursor always spans 
+entire rows, it is not possible (without substantial patchwork) 
+to select only certain columns or individual cells.&]
+[s0; &]
+[s0; The ArrayCtrl rows can be inserted, edited and deleted either 
+programmatically, or via common GUI elements (mouse and keyboard 
+selection, local menu). It is possible to alter the standard 
+ArrayCtrl local menu using the [* WhenBar] callback.&]
+[s0; &]
+[s0; [* Note:] it is worth noting that the standard editing keys ([* Insert] 
+`= row insertion, [* Ctrl`+Enter] `= editing and [* Ctrl`+Delete] 
+`= deletion) are not hardcoded in the ArrayCtrl`'s [* Key] method, 
+they are mere hotkeys for the relevant local menu items. When 
+you change the ArrayCtrl`'s local menu, the editing hotkeys change 
+accordingly.&]
+[s0; &]
+[s0; A special but rather important case of array editing is [/ sorting]: 
+there is no specific standard GUI for that. If you aren`'t content 
+with programmatic sorting (e.g. after opening a dialog or after 
+loading the array data), you have to implement some GUI for that 
+as well. In certain cases, it is cool to use the [* HeaderCtrl] 
+[* WhenAction] method to allow sorting the array by clicking on 
+the header columns; alternatively you can add a sort function 
+to the array local menu or possibly somewhere else (like a standalone 
+button in the dialog).&]
+[s0; &]
+[s0; [* Insertion tricks: before, after, and the secrets of the AppendLine]&]
+[s0; &]
+[s0; In todays text editors, when you type a new letter, it is trivial 
+to see where in the text will the new letter go. This is so because 
+the caret is always positioned between a pair of successive letters 
+and thus is well defines the insertion spot. Additionally, the 
+caret can be placed in front of the first letter or after the 
+last letter, which naturally allows typing some text at the very 
+beginning or end.&]
+[s0; &]
+[s0; When inserting new rows into the array controls, things are 
+a bit more tricky. This is so because, unlike in the text editor, 
+the cursor is not placed [/ between] two successive rows, but [/ over] 
+a certain row. This is of course necessary to make row editing 
+possible (note that in the aforementioned text editor analogy, 
+a single letter is an atomic object whereas in the array it is 
+a potentially complex structure consisting of many columns and 
+data items). However, when it comes to row insertion, it has 
+two main troubles as its implication:&]
+[s0; &]
+[s0;i150;O9; [* 1.]-|It is necessary to decide somehow whether the new 
+row will go [/ above] or [/ below] the cursor row.&]
+[s0;i150;O9; [* 2.]-|In an array with [/ n] rows, there are [/ n`+1] possible 
+locations for a new row (before the row #0, #1 ... #([/ n`-1]) 
+and after the last row), but only [/ n] distinct cursor locations.&]
+[s0; &]
+[s0; Over the years, during the development of U`+`+, we experimented 
+with multiple ways to overcome these logical problems. As a result 
+of this, the ArrayCtrl supports a few methods allowing to fine`-tune 
+the row insertion mechanism. It is also worth noting that there 
+are cases, like in the case of SQL`-based tables, where the row 
+ordering is arbitrary or implicit and the exact `'location`' 
+of a new row doesn`'t make any sense. In such cases, it is possible 
+to replace array [/ insertion] function with the [/ append] function 
+emphasizing the fact that the visual row order is unimportant 
+and that insertion means merely adding a new record to the record 
+set.&]
+[s0; &]
+[s0; For arrays in which the order is important, there are two ways 
+to solve the [/ n`+1] row positions dilemma:&]
+[s0; &]
+[s0;i150;O9; [* 1.]-|Replacing the Insert function with a pair of functions 
+for inserting a new row [/ before] / [/ after] the current row.&]
+[s0;i150;O9; [* 2.]-|Visually extending the array by adding a pseudo`-row 
+with no real data at its end; this creates the [/ n`+1]`-th cursor 
+position necessary to denote all the available row insertion 
+locations.&]
+[s0; &]
+[s0; In the first case, it is also possible to select which of the 
+insertion functions (before / after) takes precedence (which 
+of the two actions should be bound to the standard [* Insert] hotkey). 
+This corresponds to the [* BeforeAfterInserting] and [* AfterBeforeInserting] 
+methods. The second case is called the [* AppendLine] and is activated 
+by setting the property with the same name.&]
+[s0; &]
+[s0; To make all this even more interesting, a special mechanism 
+called [* InsertAppend] is available to make array filling as easy 
+as possible. When activated and the user appends a new row at 
+the table end, after pressing [* Enter] (to commit the inserted 
+row) another row is automatically added after it and opened for 
+editing. This mechanism is turned on by default, but it can be 
+disable by setting the [* NoInsertAppend] property to true.&]
+[s0;0 &]
+[s0; &]
+[s0; &]
+[ {{10000t/25b/25@3 [s0; [*@(229)4 Categorized method summary]]}}&]
+[s0;b42; [2 The following table summarizes ArrayCtrl methods according 
+to the aspect of functionality they support together with a very 
+brief description. For more thorough documentation of the individual 
+methods see below.]&]
+[s0; &]
+[ {{2337:7663-1 [s0; [* Initialization and configuration]]
+:: [s0; ]
+:: [s0; Reset]
+:: [s0; clears column `& index definition and restores all ArrayCtrl 
+default properties]
+:: [s0; IsEdit]
+:: [s0; true `= array state automaton is currently in row editing mode]
+:: [s0; IsInsert]
+:: [s0; true `= array state automaton is currently in row insertion 
+mode]
+:: [s0; SetLineCy]
+:: [s0; sets array row height (global or individual for a single row)]
+:: [s0; GetLineCy]
+:: [s0; returns logical array row height (value set by preceding SetLineCy)]
+:: [s0; GetLineY]
+:: [s0; returns [/ y] position of given row (relative to table beginning)]
+:: [s0; `[No`]AppendLine]
+:: [s0; `[do not`] display an additional pseudo`-row used for row insertion]
+:: [s0; IsAppendLine]
+:: [s0; returns actual value of the [* AppendLine] property]
+:: [s0; ShowAppendLine]
+:: [s0; scrolls the table view to display the appending line]
+:: [s0; `[No`]Inserting]
+:: [s0; `[do not`] allow inserting new rows]
+:: [s0; IsInserting]
+:: [s0; returns actual value of the [* Inserting] property]
+:: [s0; BeforeAfterInserting]
+:: [s0; allow inserting rows before / after current row (default `= 
+before)]
+:: [s0; AfterBeforeInserting]
+:: [s0; allow inserting rows before / after current row (default `= 
+after)]
+:: [s0; NoInsertAppend]
+:: [s0; do not autoinsert another row after committing last row insertion]
+:: [s0; IsEditing]
+:: [s0; true `= (at least one column of the) ArrayCtrl supports editing]
+:: [s0; `[No`]Duplicating]
+:: [s0; `[do not`] allow row duplication]
+:: [s0; IsDuplicating]
+:: [s0; returns actual value of the [* Duplicating] property]
+:: [s0; Appending]
+:: [s0; allow appending new row at the table end]
+:: [s0; IsAppending]
+:: [s0; returns actual state of the [* Appending] property]
+:: [s0; AutoAppending]
+:: [s0; allow appending new row at the table end, Enter appends another 
+one]
+:: [s0; IsAutoAppending]
+:: [s0; returns actual state of [* AutoAppending] property]
+:: [s0; `[No`]Removing]
+:: [s0; `[do not`] allow table row removing]
+:: [s0; IsRemoving]
+:: [s0; returns actual state of the [* Removing] property]
+:: [s0; `[No`]AskRemove]
+:: [s0; `[do not`] prompt user to confirm row removal]
+:: [s0; IsAskRemove]
+:: [s0; returns actual state of the [* AskRemove] property]
+:: [s0; Moving]
+:: [s0; allow row swapping (moving a row before / after neighbouring 
+row)]
+:: [s0; IsMoving]
+:: [s0; returns actual state of the [* Moving] property]
+:: [s0; `[No`]Header]
+:: [s0; `[do not`] display table header]
+:: [s0; `[No`]Track]
+:: [s0; `[do not`] animate tracking table column widths]
+:: [s0; `[No`]VertGrid]
+:: [s0; `[do not`] display column breaks]
+:: [s0; `[No`]HorzGrid]
+:: [s0; `[do not`] display row breaks]
+:: [s0; `[No`]Grid]
+:: [s0; `[do not`] display both grids (VertGrid `+ HorzGrid)]
+:: [s0; GridColor]
+:: [s0; set grid line color]
+:: [s0; EvenRowColor]
+:: [s0; background color for even rows]
+:: [s0; OddRowColor]
+:: [s0; background color for odd rows]
+:: [s0; RowFormat]
+:: [s0; formats menu items substituting given word for the term `'row`']
+:: [s0; RowName]
+:: [s0; sets the context`-relevant word to substitute for `'row`' in 
+the local menu texts]
+:: [s0; NoCursor]
+:: [s0; do not highlight cursor row]
+:: [s0; `[No`]MouseMoveCursor]
+:: [s0; automatically move cursor as the mouse moves (used e.g. in PopupTable)]
+:: [s0; `[No`]AutoHideSb]
+:: [s0; `[do not`] display scroll bar only when necessary]
+:: [s0; MultiSelect]
+:: [s0; enable selecting multiple rows at the same time]
+:: [s0; ColumnWidths]
+:: [s0; sets logical column widths using a formatted string, e.g. `"1 
+5 10 10 5 1`"]}}&]
+[s0; &]
+[ {{2337:7663-1 [s0; [* Array index `& column structure management]]
+:: [s0; ]
+:: [s0; IndexInfo]
+:: [s0; returns the [* IdInfo] structure describing an index (see below)]
+:: [s0; AddIndex]
+:: [s0; adds a new index to the source data matrix]
+:: [s0; GetIndexCount]
+:: [s0; returns number of index columns (columns in the source data 
+matrix)]
+:: [s0; GetId]
+:: [s0; returns identifier of a given index (given by its integral index)]
+:: [s0; GetPos]
+:: [s0; returns integral index of source matrix column ([/ index]) identified 
+by an [* Id]]
+:: [s0; SetId]
+:: [s0; sets the [* Id] identifier for a given index (column of the source 
+matrix)]
+:: [s0; AddKey]
+:: [s0; sets up the first index to act as primary key (often used for 
+SQL tables)]
+:: [s0; GetKeyId]
+:: [s0; returns primary key identifier (equal to [* GetId(0)])]
+:: [s0; AddColumn]
+:: [s0; adds a column`-index pair to the table (one data column, one 
+output column)]
+:: [s0; AddColumnAt]
+:: [s0; adds a column bound to a given index]
+:: [s0; AddRowNumColumn]
+:: [s0; adds a column without an index (used for external data)]
+:: [s0; GetColumnCount]
+:: [s0; returns number of (visual) columns in the table]
+:: [s0; FindColumnWithPos]
+:: [s0; locates table column according to given index number]
+:: [s0; FindColumnWithId]
+:: [s0; locates table column according to index identifier]
+:: [s0; ColumnAt]
+:: [s0; returns the [* ArrayCtrl`::Column] structure describing given column]
+:: [s0; HeaderTab]
+:: [s0; returns the [* HeaderCtrl`::Column] structure for the given column]
+:: [s0; HeaderObject]
+:: [s0; returns a reference to the [* HeaderCtrl] object for this table]
+:: [s0; SerializeHeader]
+:: [s0; serialize header layout information (column widths etc.)]
+:: [s0; AddCtrl]
+:: [s0; adds an outer control`-index pair to the table (one data column, 
+one outer Ctrl)]
+:: [s0; AddCtrlAt]
+:: [s0; adds an outer control bound to a given index]
+:: [s0; AddRowNumCtrl]
+:: [s0; adds an outer control without an index `- used ([/ seldom])  for 
+external data]
+:: [s0; SetDisplay]
+:: [s0; sets display for a given table column or cell]
+:: [s0; GetDisplay]
+:: [s0; returns column / cell display]
+:: [s0; SetCtrl]
+:: [s0; sets a [* Ctrl] object for custom editing of a given cell]
+:: [s0; GetTotalCy]
+:: [s0; returns total row height]
+:: [s0; GetLineAt]
+:: [s0; locate table row when given an [/ y] position (relative to table 
+top)]
+:: [s0; GetClickColumn]
+:: [s0; returns column number of last clicked column (Null if clicked 
+outside existing rows)]
+:: [s0; GetClickRow]
+:: [s0; returns row number of last clicked row (Null if clicked outside 
+existing rows)]
+:: [s0; GetClickPos]
+:: [s0; returns Point(GetClickColumn(), GetClickRow())]}}&]
+[s0; &]
+[ {{2337:7663-1 [s0; [* Data setting `& retrieval]]
+:: [s0; ]
+:: [s0; SetCount]
+:: [s0; sets number of rows in the array]
+:: [s0; SetVirtualCount]
+:: [s0; sets number of rows in the array with external data]
+:: [s0; GetCount]
+:: [s0; returns number of rows]
+:: [s0; Clear]
+:: [s0; clears array data, identical to [* SetCount(0)]]
+:: [s0; Shrink]
+:: [s0; shrinks source data matrix to the minimum necessary size]
+:: [s0; Get]
+:: [s0; returns given Value element of the source data matrix]
+:: [s0; GetOriginal]
+:: [s0; returns given element of source data matrix before editing]
+:: [s0; Set]
+:: [s0; sets given element of the source data matrix]
+:: [s0; GetKey]
+:: [s0; returns given primary key (column #0 in the data matrix)]
+:: [s0; GetOriginalKey]
+:: [s0; returns `'old`' value of primary key before editing]
+:: [s0; GetColumn]
+:: [s0; returns value of a given output column (according to its index 
+mapping)]
+:: [s0; GetConvertedColumn]
+:: [s0; returns value of a given output column after applying its [* Convert]]
+:: [s0; ReadRow]
+:: [s0; returns a row of the source data matrix]
+:: [s0; Add]
+:: [s0; adds a new row at the end of table]
+:: [s0; Insert]
+:: [s0; inserts a new row into the table]
+:: [s0; Remove]
+:: [s0; removes a given table row]
+:: [s0; SwapUp]
+:: [s0; exchanges a table row with the preceding row]
+:: [s0; SwapDown]
+:: [s0; exchanges a table row with the next row]
+:: [s0; Sort]
+:: [s0; sorts table rows using a given predicate]
+:: [s0; ClearCache]
+:: [s0; clears data conversion cache]
+:: [s0; InvalidateCache]
+:: [s0; invalidates given table row in the conversion cache]}}&]
+[s0; &]
+[ {{2337:7663-1 [s0; [* Cursor `& selection management]]
+:: [s0; ]
+:: [s0; GetSelectCount]
+:: [s0; returns number of currently selected rows]
+:: [s0; IsSelection]
+:: [s0; checks whether any rows are selected (identical to [* GetSelectCount() 
+> 0])]
+:: [s0; Select]
+:: [s0; selects / unselects given row or a series of rows]
+:: [s0; IsSelected]
+:: [s0; checks whether given row is selected]
+:: [s0; ClearSelection]
+:: [s0; clears the current selection]
+:: [s0; SetCursor]
+:: [s0; moves array cursor to a new row]
+:: [s0; KillCursor]
+:: [s0; removes the cursor away from the table]
+:: [s0; CancelCursor]
+:: [s0; cancels editing of current row]
+:: [s0; IsCursor]
+:: [s0; checks whether cursor is in the table (identical to [* GetCursor() 
+>`= 0])]
+:: [s0; GetCursor]
+:: [s0; returns current cursor row, `-1 when none]
+:: [s0; GoBegin]
+:: [s0; moves the cursor to the first table row]
+:: [s0; GoEnd]
+:: [s0; moves the cursor to the last table row]
+:: [s0; GetCursorSc]
+:: [s0; returns the location of the cursor row within the table view 
+area]
+:: [s0; ScCursor]
+:: [s0; scrolls the table to move the cursor row to given location within 
+the table view]
+:: [s0; CenterCursor]
+:: [s0; scrolls the table to move cursor into the middle of the current 
+view]
+:: [s0; ScrollInto]
+:: [s0; scrolls the table by minimum amount necessary to make given 
+row visible]
+:: [s0; ScrollIntoCursor]
+:: [s0; scrolls the table by minimum amount necessary to make cursor 
+row visible]
+:: [s0; GetScroll]
+:: [s0; returns current table scrollbar location]
+:: [s0; ScrollTo]
+:: [s0; sets table scrollbar location]
+:: [s0; Find]
+:: [s0; locates table row containing a given element]
+:: [s0; FindSetCursor]
+:: [s0; moves the cursor to table row containing a given element]}}&]
+[s0; &]
+[s0; &]
+[s0; &]
+[ {{2337:7663-1 [s0; [* GUI elements]]
+:: [s0; ]
+:: [s0; StdBar]
+:: [s0; the default array local menu]
+:: [s0; IsModified]
+:: [s0; checks modification state of given array cell]
+:: [s0; StartEdit]
+:: [s0; open current array row for editing]
+:: [s0; GetEditColumn]
+:: [s0; returns the column being currently edited]
+:: [s0; DoEdit]
+:: [s0; corresponds to the local menu `'Edit`' function]
+:: [s0; DoInsert]
+:: [s0; corresponds to the local menu `'Insert`' function]
+:: [s0; DoInsertBefore]
+:: [s0; corresponds to the local menu `'Insert before`' function]
+:: [s0; DoInsertAfter]
+:: [s0; corresponds to the local menu `'Insert after`' function]
+:: [s0; DoAppend]
+:: [s0; corresponds to the local menu `'Append`' function]
+:: [s0; DoRemove]
+:: [s0; corresponds to the local menu `'Remove`' function]
+:: [s0; DoDuplicate]
+:: [s0; corresponds to the local menu `'Duplicate`' function]
+:: [s0; DoSelectAll]
+:: [s0; selects the entire array]
+:: [s0; AcceptEnter]
+:: [s0; commits the currently edited row and possibly begins insertion 
+of another row]}}&]
+[s0; &]
+[ {{2337:7663-1 [s0; [* Notification callbacks]]
+:: [s0; ]
+:: [s0; WhenLeftClick]
+:: [s0; left mouse click within the array]
+:: [s0; WhenLeftDouble]
+:: [s0; left mouse doubleclick within the array]
+:: [s0; WhenSel]
+:: [s0; called when cursor or selection status of widget changes]
+:: [s0; WhenCursor]
+:: [s0; called whenever the cursor location changes [/ (deprecated, use 
+WhenSel)]]
+:: [s0; WhenKillCursor]
+:: [s0; called when the cursor moves away from the table [/ (deprecated, 
+use WhenSel)]]
+:: [s0; WhenSelection]
+:: [s0; called whenever current selection changes [/ (deprecated, use 
+WhenSel)]]
+:: [s0; WhenEnterRow]
+:: [s0; called whenever the cursor moves to a new row [/ (deprecated, 
+use WhenSel)]]
+:: [s0; WhenUpdateRow]
+:: [s0; called after updating a row]
+:: [s0; WhenAcceptRow]
+:: [s0; additional row validation callback]
+:: [s0; WhenStartEdit]
+:: [s0; called after initiating row editing]
+:: [s0; WhenAcceptEdit]
+:: [s0; called after accepting changes to a given row]
+:: [s0; WhenArrayAction]
+:: [s0; called whenever array source data changes (after insert / delete 
+/ edit)]
+:: [s0; WhenBar]
+:: [s0; can be used to supply custom local menu for the array]
+:: [s0; WhenCtrlsAction]
+:: [s0; called by [* WhenAction] callbacks of internally created controls]}}&]
+[s0;0 &]
+[s0; &]
+[s0; &]
+[s0; &]
+[ {{10000t/25b/25@3 [s0; [*@(229)4 Detailed method description]]}}&]
+[s0; &]
+[s0; [* Initialization and configuration]&]
+[s0;0 &]
+[s0; &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Reset`(`): [@(0.0.255)2 void][2 _][*2 Reset][2 ()]&]
+[s0;l288; [2 Clears table rows and resets all array properties to their 
+default values.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ShowAppendLine`(`): [@(0.0.255)2 void][2 _][*2 ShowAppendLi
+ne][2 ()]&]
+[s0;l288; [2 Show an additional pseudo`-row at the table end. When 
+clicked, a new row is appended to the array.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsEdit`(`)const: [@(0.0.255)2 bool][2 _][*2 IsEdit][2 ()_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Checks whether the array is currently being edited.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= a 
+row is currently open for editing, ][*2 false][2  `= array is in 
+normal browsing mode]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsInsert`(`)const: [@(0.0.255)2 bool][2 _][*2 IsInsert][2 ()_
+][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks whether a new row is currently being inserted.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= newly 
+inserted row is currently being edited, ][*2 false][2  when not]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetLineCy`(int`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 SetLineCy][2 (][@(0.0.255)2 int][2 _][*@3;2 cy][2 )]&]
+[s0;l288; [2 Sets the (default) array row height. For certain rows, 
+this can be overriden by the two`-parameter version of this method.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 cy][2 -|row height in pixels]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetLineCy`(int`,int`): [@(0.0.255)2 void][2 _][*2 SetLineCy
+][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 int][2 _][*@3;2 cy][2 )]&]
+[s0;l288; [2 Sets row height for a given row. This overrides the default 
+value set by the one`-parameter version of this method.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|row index (zero based)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 cy][2 -|row height in pixels, 
+][*2 Null][2  `= use default row height]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetLineCy`(`)const: [@(0.0.255)2 int][2 _][*2 GetLineCy][2 ()
+_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns default array row height.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|row height in pixels]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetLineY`(int`)const: [@(0.0.255)2 int][2 _][*2 GetLineY][2 (
+][@(0.0.255)2 int][2 _][*@3;2 i][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns ][/2 y][2  position of given array row (the pixel 
+distance between the top of first array row and ][/2 i][2 `-th row, 
+i.e. sum of heights of all rows above this row).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|row index (zero based)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|Vertical position 
+of row top in pixels (relative to array beginning)]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetLineCy`(int`)const: [@(0.0.255)2 int][2 _][*2 GetLineCy][2 (
+][@(0.0.255)2 int][2 _][*@3;2 i][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the height of a given row (either the row`-specific 
+row height, or, when Null, the default row height).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|row index (zero based)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|row height in pixels]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AppendLine`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 AppendLine][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 The AppendLine property controls whether the array displays 
+an additional `'append`' row after its last (real) row. ]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= display appending 
+row, ][*2 false][2  `= hide it]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoAppendLine`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoAppendLine][2 ()]&]
+[s0;l288; [2 Hide the appending line (identical to ][*2 AppendLine(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsAppendLine`(`)const: [@(0.0.255)2 bool][2 _][*2 IsAppendL
+ine][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of the ][*2 AppendLine][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= display 
+appending pseudo`-row at the end of the array]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Inserting`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 Inserting][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enable / disable inserting new rows in the array (no matter 
+which insertion mechanism is selected).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= enable insertion, 
+][*2 false][2  `= disable it]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoInserting`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoInserting][2 ()]&]
+[s0;l288; [2 Disables row insertion (identical to ][*2 Inserting(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsInserting`(`)const: [@(0.0.255)2 bool][2 _][*2 IsInsertin
+g][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of the ][*2 Inserting][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= row 
+insertion is enabled, ][*2 false][2  when not]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Appending`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 Appending][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enable / disable adding new rows at the table end.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= enable row 
+appending, ][*2 false][2  `= disable it]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsAppending`(`)const: [@(0.0.255)2 bool][2 _][*2 IsAppendin
+g][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of the ][*2 Appending][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= appending 
+rows is enabled, ][*2 false][2  when not.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AutoAppending`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 AutoAppending][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Same as ][*2 Appending][2  but Enter pressed when editing 
+a new row accepts it and adds another one at the table end.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true ][2 to enable the 
+mode]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsAutoAppending`(`)const: [@(0.0.255)2 bool][2 _][*2 IsAuto
+Appending][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of ][*2 AutoAppending][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= ][*2 AutoAppending 
+][2 is active]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:BeforeAfterInserting`(int`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 BeforeAfterInserting][2 (][@(0.0.255)2 int][2 _][*@3;2 q][2 _`=_][@3;2 1][2 )]&]
+[s0;l288; [2 Activate before / after row insertion mechanism (][*2 Insert][2  
+hotkey `= before).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AfterBeforeInserting`(int`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 AfterBeforeInserting][2 (][@(0.0.255)2 int][2 _][*@3;2 q][2 _`=_][@3;2 2][2 )]&]
+[s0;l288; [2 Activate before / after row insertion mechanism (][*2 Insert][2  
+hotkey `= after)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Duplicating`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 Duplicating][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enable / disable row duplication. Note that this property 
+only controls whether the `'Duplicate`' item should be present 
+in the array local menu. Of course, nothing can prevent you from 
+supporting duplication in some other way, or from calling the 
+][*2 DoDuplicate][2  method as you see fit.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= enable duplication, 
+][*2 false][2  `= disable it]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoDuplicating`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoDuplicating][2 ()]&]
+[s0;l288; [2 Disable row duplication (identical to ][*2 Duplicating(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsDuplicating`(`)const: [@(0.0.255)2 bool][2 _][*2 IsDuplic
+ating][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the state of the ][*2 Duplicating][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= local 
+menu offers row duplication, ][*2 false][2  when not]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoInsertAppend`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoInsertAppend][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enables / disables the auto`-append mechanism (see above 
+section on inserting rows).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= disable InsertAppend 
+mechanism, ][*2 false][2  `= enable it (the default)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsEditing`(`)const: [@(0.0.255)2 bool][2 _][*2 IsEditing][2 (
+)_][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks whether at least one array column supports editing 
+(whether it is possible to ][/2 open][2  a row for editing).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= row 
+editing is possible, ][*2 false][2  when not]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Removing`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 Removing][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enable / disable deleting rows from the table.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= enable deletion, 
+][*2 false][2  `= disable it]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoRemoving`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 NoRemoving][2 ()]&]
+[s0;l288; [2 Disable deleting table rows (identical to ][*2 Removing(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsRemoving`(`)const: [@(0.0.255)2 bool][2 _][*2 IsRemoving][2 (
+)_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of the ][*2 Removing][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= row 
+deletion is enabled, ][*2 false ][2 when not]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AskRemove`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 AskRemove][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Sets whether the user must manually confirm array row 
+deletion. When set to ][*2 true][2 , every time a row is to be deleted, 
+a confirmation dialog pops up. When set to ][*2 false][2 , rows are 
+deleted automatically without any further confirmation.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= prompt user 
+to confirm row deletion, ][*2 false][2  `= delete rows instantly]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoAskRemove`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoAskRemove][2 ()]&]
+[s0;l288; [2 Disables user confirmation of row deletion (equivalent 
+to ][*2 AskRemove(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsAskRemove`(`)const: [@(0.0.255)2 bool][2 _][*2 IsAskRemov
+e][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of the ][*2 AskRemove][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= user 
+confirmation is needed to delete rows, ][*2 false][2  `= rows are 
+deleted immediately]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Moving`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 Moving][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enable / disable row swapping. When set to ][*2 true][2 , 
+it is possible to move an array row up and down by swapping it 
+with the previous / next row. This can be used to reorder array 
+rows in a visually straightforward manner.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= offer row 
+moving in the local menu, ][*2 false][2  `= don`'t]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsMoving`(`)const: [@(0.0.255)2 bool][2 _][*2 IsMoving][2 ()_
+][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns current state of the ][*2 Moving][2  property.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= local 
+menu supports row swapping, ][*2 false][2  `= it doesn`'t]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Header`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 Header][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Show / hide the ][*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us^2 HeaderCtrl
+][2  object for this table.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= show table 
+header, ][*2 false][2  `= hide it]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoHeader`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 NoHeader][2 ()]&]
+[s0;l288; [2 Hide table header (equivalent to ][*2 Header(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Track`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 Track][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Animate array column resizing. This is equivalent to setting 
+the ][*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Track`(bool`)^2 T
+rack][2  property in the array HeaderCtrl.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= repaint the 
+array repeatedly while dragging column widths, ][*2 false][2  `= 
+regenerate everything only after drag `& drop is finished.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoTrack`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _][*2 N
+oTrack][2 ()]&]
+[s0;l288; [2 Do not animate array column resizing (equivalent to ][*2 Track(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:VertGrid`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 VertGrid][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Show / hide vertical array grid lines (separating array 
+columns).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= show vertical 
+grid lines, ][*2 false][2  `= hide them]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoVertGrid`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 NoVertGrid][2 ()]&]
+[s0;l288; [2 Hide vertical grid lines (equivalent to ][*2 VertGrid(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HorzGrid`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 HorzGrid][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Show / hide horizontal grid lines (separating array rows).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= show horizontal 
+grid lines, ][*2 false][2  `= hide them]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoHorzGrid`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 NoHorzGrid][2 ()]&]
+[s0;l288; [2 Hide horizontal grid lines (equivalent to ][*2 HorzGrid(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Grid`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 Grid][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Show / hide both horizontal and vertical grid lines (equivalent 
+to ][*2 HorzGrid(b).VertGrid(b)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= show grid 
+line matrix, ][*2 false][2  `= hide all grid lines]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoGrid`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _][*2 N
+oGrid][2 ()]&]
+[s0;l288; [2 Hide horizontal and vertical grid lines (equivalent to 
+][*2 Grid(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GridColor`(Color`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 GridColor][2 (][_^Color^2 Color][2 _][*@3;2 c][2 )]&]
+[s0;l288; [2 Sets the color for grid lines.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 c][2 -|new grid line color]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:EvenRowColor`(Color`,Color`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 EvenRowColor][2 (][_^Color^2 Color][2 _][*@3;2 paper][2 _`=_Blend(SColorMark, 
+SColorPaper, ][@3;2 220][2 ), ][_^Color^2 Color][2 _][*@3;2 ink][2 _`=_SColorText)]&]
+[s0;l288; [2 Sets the paper and ink (background and foreground) color 
+for even array rows. In certain cases setting a different background 
+color for odd and even rows helps to simplify visual orientation 
+in the arrays (especially when the array has many columns).]&]
+[s0;l288; [*2 Note:][2  the even / odd row terminology refers to the natural 
+array row numbering, so first array row is ][/2 odd][2  and the second 
+is ][/2 even][2 . This is in contrast to the zero`-baesd integral 
+row indexing, where the first array row has index 0.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 paper][2 -|background color to 
+use for second, fourth, sixth etc. array row]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ink][2 -|foreground color for 
+even rows]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:OddRowColor`(Color`,Color`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 OddRowColor][2 (][_^Color^2 Color][2 _][*@3;2 paper][2 _`=_SColorInfo, 
+][_^Color^2 Color][2 _][*@3;2 ink][2 _`=_SColorText)]&]
+[s0;l288; [2 Sets the paper and ink (background and foreground) color 
+for odd array rows.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 paper][2 -|background color to 
+use for first, third, fifth etc. array row]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ink][2 -|foreground color for 
+odd rows]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoCursor`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoCursor][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Turns on / off highlighting cursor row.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= do not highlight 
+cursor row, ][*2 false][2  `= default behaviour (cursor row is shown 
+in inverse colors)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:MouseMoveCursor`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 MouseMoveCursor][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enables / disables automatical cursor row switching as 
+the mouse cursor moves over the array rows.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= automatically 
+switch cursor row, ][*2 false][2  `= only upon clicks and keyboard 
+navigation]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoMouseMoveCursor`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoMouseMoveCursor][2 ()]&]
+[s0;l288; [2 Disable automatical cursor row switching (equivalent to 
+][*2 MouseMoveCursor(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AutoHideSb`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 AutoHideSb][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 When set to ][*2 true][2 , the vertical scrollbar at the right 
+array edge is displayed only when the total row height exceeds 
+the array view height. When set to ][*2 false][2 , the scrollbar 
+is shown all the time.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= show / hide 
+the scrollbar as necessary, ][*2 false][2  `= display it unconditionally]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoAutoHideSb`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoAutoHideSb][2 ()]&]
+[s0;l288; [2 Display vertical scrollbar all the time (equivalent to 
+][*2 AutoHideSb(false)][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HideSb`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 HideSb][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Hides vertical scrollbar (even if it would be needed).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AutoHideHorzSb`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 AutoHideHorzSb][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Makes horizontal scroll bar (active if HeaderCtrl is in 
+absolute mode only) to autohide. Default is on.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoAutoHideHorzSb`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoAutoHideHorzSb][2 ()]&]
+[s0;l288; [2 Same as AutoHideHorzSb(false).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HideHorzSb`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 HideHorzSb][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Unconditionally hides horizontal scrollbar (active if 
+HeaderCtrl is in absolute mode only).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:MultiSelect`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 MultiSelect][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Enable / disable multiple row selection. ]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 b][2 -|][*2 true][2  `= allow selecting 
+multiple rows at the same time, ][*2 false][2  `= only one row at 
+a time]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsMultiSelect`(`)const: [@(0.0.255)2 bool][2 _][*2 IsMultiS
+elect][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns true if ArrayCtrl is in multiselect mode.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoBackground`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoBackground][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Sets the widget into transparent mode `- background is 
+not painted and Transparent is activated `- a result, anything 
+painted behind the widget is visible, allowing client code to 
+provide any background it needs.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:PopUpEx`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 PopUpEx][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Activates showing small popup windows with cell content 
+when mouse is over and cell is to big to fit current dimensions. 
+Default is activated.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoPopUpEx`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 NoPopUpEx][2 ()]&]
+[s0;l288; [2 Same as PopUpEx(false).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoFocusSetCursor`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoFocusSetCursor][2 ()]&]
+[s0;l288; [2 Normally, when ArrayCtrl gets a focus and no cursor is 
+set (and cursor is allowed and there is at least one line), ArrayCtrl 
+a sets the cursor to the first line. This modifier deactivates 
+this feature.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:MovingHeader`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 MovingHeader][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 )]&]
+[s0;l288; [2 Activates dragging columns in header. Default is active.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoMovingHeader`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoMovingHeader][2 ()]&]
+[s0;l288; [2 Same as MovingHeader(false).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnSortFindKey`(bool`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 ColumnSortFindKey][2 (][@(0.0.255)2 bool][2 _][*@3;2 b][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Before ColumnSort orders the ArrayCtrl, the key of current 
+row (with cursor) is stored and after sorting, it is restored.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AllSorting`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&][2 _
+][*2 AllSorting][2 ()]&]
+[s0;l288; [2 If set, Sorting() is invoked for all columns (added either 
+before or after this modifier is called).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnSortSecondary`(const ArrayCtrl`:`:Order`&`): [_^ArrayCtrl^2 A
+rrayCtrl][@(0.0.255)2 `&][2 _][*2 ColumnSortSecondary][2 (][@(0.0.255)2 const][2 _][_^ArrayCtrl`:`:Order^2 O
+rder][@(0.0.255)2 `&][2 _][*@3;2 order][2 )]&]
+[s0;l288; [2 Sets secondary sorting predicate for column sorts (see 
+ColumnSort, Sorting) `- if two cells are equal when performing 
+sort by column, they are ordered by this predicate.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoColumnSortSecondary`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoColumnSortSecondary][2 ()]&]
+[s0;l288; [2 Same as ColumnSortSecondary(false).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnWidths`(const char`*`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 ColumnWidths][2 (][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 s][2 )]&]
+[s0;l288; [2 Initializes column widths based on a text string containing 
+blank`-separated decimal numbers, e.g. `"1 4 6 4 1`".]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 s][2 -|control string defining 
+column widths]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetColumnWidths`(`): [_^String^2 String][2 _][*2 GetColumnW
+idths][2 ()]&]
+[s0;l288; [2 Returns current column widths in format compatible with 
+ColumnWidths.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:CursorOverride`(const Image`&`): [_^ArrayCtrl^2 ArrayCt
+rl][@(0.0.255)2 `&][2 _][*2 CursorOverride][2 (][@(0.0.255)2 const][2 _][_^Image^2 Image][@(0.0.255)2 `&
+][2 _][*@3;2 arrow][2 )]&]
+[s0;l288; [2 Overrides mouse cursor to ][*@3;2 arrow][2 . Setting Null 
+ends override.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:NoCursorOverride`(`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 NoCursorOverride][2 ()]&]
+[s0;l288; [2 Same as CursorOverride(Null).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:RowFormat`(const char`*`): [_^String^2 String][2 _][*2 RowF
+ormat][2 (][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 s][2 )]&]
+[s0;l288; [2 Formats a text by substituting ][*2 %s][2  with the array`-specific 
+term for `'row`' (as set by the ][*2 RowName][2  property). This 
+is used for array local menu items.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 s][2 -|][*2 Format][2 `-like string 
+to substitute.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:RowName`(const char`*`): [_^ArrayCtrl^2 ArrayCtrl][@(0.0.255)2 `&
+][2 _][*2 RowName][2 (][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 s][2 )]&]
+[s0;l288; [2 Sets the array`-specific term for `'row`'. This can be 
+used to customize the local menu terminology according to the 
+logical content of the array. For instance, when you have an 
+array with the list of employees, you can call ][*2 RowName(`"employee`")][2  
+and the menu items will then read ][/2 `'Insert new employee`', 
+`'Delete employee`'][2  etc.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 s][2 -|the term to substitute 
+for `'array row`' in menu items]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;* &]
+[s0; [* Column structure programming]&]
+[s0;0 &]
+[s0; &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IndexInfo`(int`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo][@(0.0.255)2 `&
+][2 _][*2 IndexInfo][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 )]&]
+[s0;l288; [2 Returns a reference to the ][*2 IdInfo][2  structure describing 
+a given array index (column in the source data matrix).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the array index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|IdInfo reference 
+for the given index]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IndexInfo`(const Id`&`): [_^ArrayCtrl`:`:IdInfo^2 IdInf
+o][@(0.0.255)2 `&][2 _][*2 IndexInfo][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Returns a reference to the ][*2 IdInfo][2  structure describing 
+a given array index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|the ][*2 Id][2  index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|IdInfo reference 
+for the given index]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddIndex`(const Id`&`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo
+][@(0.0.255)2 `&][2 _][*2 AddIndex][2 (][@(0.0.255)2 const][2  ][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Adds a new index to the array and assign it a given ][*2 Id][2  
+identifier.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|new index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 IdInfo ][2 structure describing the newly added index. The 
+reference can be used to set additional index properties.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddIndex`(`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo][@(0.0.255)2 `&
+][2 _][*2 AddIndex][2 ()]&]
+[s0;l288; [2 Adds a new index (without an identifier) to the array.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 IdInfo][2  structure describing the newly added index.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetIndexCount`(`)const: [@(0.0.255)2 int][2 _][*2 GetIndexC
+ount][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns number of indices in the array.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|index count]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetId`(int`)const: [_^Id^2 Id][2 _][*2 GetId][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 ii][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the identifier of a given index (addresses by 
+its zero`-based ordinal number).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the queried index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|index identifier 
+or ][*2 Null][2  if the index has no identifier]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetPos`(const Id`&`)const: [@(0.0.255)2 int][2 _][*2 GetPos
+][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the zero`-based positional number of the array 
+index with a given identifier.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|array index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based index 
+number, `-1 when not found]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetId`(int`,const Id`&`): [_^ArrayCtrl`:`:IdInfo^2 IdIn
+fo][@(0.0.255)2 `&][2 _][*2 SetId][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 , ][@(0.0.255)2 const 
+][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Sets the identifier for a given array index. This can 
+be used to set or modify the identifier for a previously added 
+index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the index to set the identifier for]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|new index identifier (][*2 Null][2  
+when none)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 IdInfo][2  descriptive structure for the ][/2 ii][2 `-th index. 
+The reference can be used to set additional properties of the 
+altered index.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddKey`(const Id`&`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo][@(0.0.255)2 `&
+][2 _][*2 AddKey][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Adds a ][/2 primary key][2  index to the table. The ][/2 primary 
+key][2  is just another name for the first index (index with ordinal 
+number 0). This is just a handy convention often used for SQL`-based 
+tables. ][*2 AddKey][2  must be called only once after array initialization 
+or ][*2 Reset][2  and before calling any other functions adding indices 
+(like ][*2 AddIndex][2 , ][*2 AddColumn][2  or ][*2 AddCtrl][2 ). When ][*2 GetIndexCount() 
+> 0 ][2 before the call to this function, this method fails with 
+an ][*2 ASSERT][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|primary key identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the descriptive ][*2 IdInfo][2  structure for the primary key index.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddKey`(`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo][@(0.0.255)2 `&
+][2 _][*2 AddKey][2 ()]&]
+[s0;l288; [2 Adds a primary key index without an identifier to the 
+table. This is equivalent to ][*2 AddKey(Null)][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 IdInfo][2  structure describing the primary key index.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetKeyId`(`)const: [_^Id^2 Id][2 _][*2 GetKeyId][2 ()_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns primary key identifier for this table. This is 
+equivalent to calling ][*2 GetId(0)][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|primary key index 
+identifier]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddColumn`(const char`*`,int`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 AddColumn][2 (][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 t
+ext][2 _`=_NULL, ][@(0.0.255)2 int][2 _][*@3;2 w][2 _`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Add a new column`-index pair to the table. The function 
+adds a (source) index and an (output) column and sets the index 
+as the data source for the column. This is the most common method 
+for adding columns to the array.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 text][2 -|column name (displayed 
+in the array header)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 w][2 -|logical relative column 
+width]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 Column][2  structure describing the newly added column. 
+This can be used to set additional properties for the newly added 
+column and the corresponding header tab.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddColumn`(const Id`&`,const char`*`,int`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 AddColumn][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , 
+][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 text][2 , ][@(0.0.255)2 int][2 _][*@3;2 w][2 _
+`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Adds a new column`-index pair to the table. This is equivalent 
+to the above two`-parameter version but, in addition, the method 
+sets the ][*2 Id][2  identifier for the newly created index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|new index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 text][2 -|column name (displayed 
+in the header)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 w][2 -|logical relative column 
+width]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 Column][2  structure describing the newly added array column.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddColumnAt`(int`,const char`*`,int`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 AddColumnAt][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 , 
+][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 text][2 , ][@(0.0.255)2 int][2 _][*@3;2 w][2 _
+`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Adds a new column to the table and binds it to a given 
+source data index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the index to use as source for this column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 text][2 -|column name (displayed 
+in the header)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 w][2 -|logical relative column 
+width]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 Column][2  structure describing the newly added array column.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddColumnAt`(const Id`&`,const char`*`,int`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 AddColumnAt][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 ,
+ ][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 text][2 , ][@(0.0.255)2 int][2 _][*@3;2 w
+][2 _`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Adds a new column to the table and binds it to a given 
+source data index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the index 
+to use as source for the newly added column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 text][2 -|column name (displayed 
+in the header)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 w][2 -|logical relative column 
+width]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 Column][2  structure describing the newly added array column.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddRowNumColumn`(const char`*`,int`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 AddRowNumColumn][2 (][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _
+`*][*@3;2 text][2 , ][@(0.0.255)2 int][2 _][*@3;2 w][2 _`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Adds a new column to the table. The newly added column 
+has no source index, it is assumed to have an external data source. 
+Instead of the source data ][*2 Value][2  object, the current zero`-based 
+row number is passed to the column`'s ][*2 Convert][2  / ][*2 Display][2 . 
+This allows the host application to decode somehow the external 
+data based on the row number. In the current U`+`+ version, the 
+][/2 RowNum columns][2  cannot be edited (using the standard array 
+inline editing mechanism).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 text][2 -|column name (displayed 
+in the header)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 w][2 -|logical relative column 
+width]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A reference to 
+the ][*2 Column][2  structure describing the newly added array column.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddCtrl`(Ctrl`&`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo][@(0.0.255)2 `&
+][2 _][*2 AddCtrl][2 (][_^Ctrl^2 Ctrl][@(0.0.255)2 `&][2 _][*@3;2 ctrl][2 )]&]
+[s0;l288; [2 Adds a new index`-control pair to the table; the index 
+keeps the source data and the external control is used to edit 
+it. The ArrayCtrl handles data transfer between the source data 
+matrix and the external control. The method returns a reference 
+the ][*2 IdInfo][2  descriptive structure for the newly added index.]&]
+[s0;l288; [*2 Note:][2  it is good to keep in mind that there are a few 
+differences between the ordinary array cell editors and the freestanding 
+edit controls. In contrast with the cell editors, which appear 
+only when the row is opened for editing, the freestanding controls 
+are present all the time. For instance, the ArrayCtrl automatically 
+disables the controls when the cursor moves away from the table 
+(using ][*2 KillCursor][2 ) and re`-enables them after it comes back. 
+This is important e.g. if you want to implement an additional 
+logic enabling some of the controls only depending on the circumstances; 
+in such case, you have to use one of the notification callbacks 
+(like  ][*2 WhenEnterRow][2 ) to force your additional behaviour 
+on the controls.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ctrl][2 -|control to attach to 
+the given index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the IdInfo structure describing the newly added index]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddCtrl`(const Id`&`,Ctrl`&`): [_^ArrayCtrl`:`:IdInfo^2 I
+dInfo][@(0.0.255)2 `&][2 _][*2 AddCtrl][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , 
+][_^Ctrl^2 Ctrl][@(0.0.255)2 `&][2 _][*@3;2 ctrl][2 )]&]
+[s0;l288; [2 Adds a new index`-control pair to the table. This is identical 
+to the above version with the only difference that the newly 
+added index is assigned an ][*2 Id][2  identifier at the same time.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|the identifier to assign 
+to the newly created index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ctrl][2 -|freestanding control 
+used to edit the given index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the IdInfo structure describing the newly added index]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddCtrlAt`(int`,Ctrl`&`): [@(0.0.255)2 void][2 _][*2 AddCtr
+lAt][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 , ][_^Ctrl^2 Ctrl][@(0.0.255)2 `&][2 _][*@3;2 ctrl][2 )]&]
+[s0;l288; [2 Adds a new control to the table and binds it to the index 
+with given ordinal number. You can use this method to create 
+the binding between the control and an arbitrary source index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the index to bind to this control]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ctrl][2 -|freestanding control 
+used to edit the ][/2 ii][2 `-th data index]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddCtrlAt`(const Id`&`,Ctrl`&`): [@(0.0.255)2 void][2 _][*2 A
+ddCtrlAt][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , ][_^Ctrl^2 Ctrl][@(0.0.255)2 `&
+][2 _][*@3;2 ctrl][2 )]&]
+[s0;l288; [2 Adds a new control to the table and binds it to the index 
+with given identifier.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the index 
+to bind to this control]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ctrl][2 -|freestanding control 
+used to edit the index with identifier ][/2 id]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AddRowNumCtrl`(Ctrl`&`): [@(0.0.255)2 void][2 _][*2 AddRowN
+umCtrl][2 (][_^Ctrl^2 Ctrl][@(0.0.255)2 `&][2 _][*@3;2 ctrl][2 )]&]
+[s0;l288; [2 Adds a new freestanding control to the table. The control 
+is not bound to any source data index. During cursor movement 
+in the array, array uses the control`'s ][*2 SetData][2  method to 
+set it to the current row number. The control must be ready for 
+that and it can use the row number value to decode some externally 
+located data for display. In the current U`+`+ version, such 
+controls cannot be used for editing (there is currently no clean 
+way to store the edited data back to its external storage).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ctrl][2 -|][/2 RowNum][2 `-based freestanding 
+editor control]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetColumnCount`(`)const: [@(0.0.255)2 int][2 _][*2 GetColum
+nCount][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the current number of (output) columns in the 
+array.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|number of columns]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:FindColumnWithPos`(int`)const: [@(0.0.255)2 int][2 _][*2 Fi
+ndColumnWithPos][2 (][@(0.0.255)2 int][2 _][*@3;2 pos][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the zero`-based index of a column based on its 
+source data index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 pos][2 -|ordinal number of the 
+source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|ordinal number 
+of the column having the given index as its source, `-1 when 
+not found]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:FindColumnWithId`(const Id`&`)const: [@(0.0.255)2 int][2 _
+][*2 FindColumnWithId][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 con
+st]&]
+[s0;l288; [2 Returns the zero`-based index of a column based on its 
+source data index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|ordinal number 
+of the column having the given index as its source, `-1 when 
+not found]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnAt`(int`): [_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&
+][2 _][*2 ColumnAt][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )]&]
+[s0;l288; [2 Returns the ][*2 Column][2  structure describing a given column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the ][*2 Column][2  structure describing the given column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnAt`(const Id`&`): [_^ArrayCtrl`:`:Column^2 Column
+][@(0.0.255)2 `&][2 _][*2 ColumnAt][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Returns the ][*2 Column][2  structure describing a given column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a constant reference 
+to the ][*2 Column][2  structure describing the given column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnAt`(int`)const: [@(0.0.255)2 const][2 _][_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 ColumnAt][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )_][@(0.0.255)2 cons
+t]&]
+[s0;l288; [2 Returns the ][*2 Column][2  structure describing a column 
+with given source index. This is merely the const version of 
+the above method; it can be used to query properties for the 
+column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the index 
+used as source for the column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the ][*2 Column][2  structure describing the given column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnAt`(const Id`&`)const: [@(0.0.255)2 const][2 _][_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 ColumnAt][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns a constant reference to the ][*2 Column][2  structure 
+describing a column with given source index. This is the constant 
+version of the above method; it can be used to query properties 
+for the column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the index 
+used as source for the column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a constant reference 
+to the ][*2 Column][2  structure describing the given column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HeaderTab`(int`): [_^HeaderCtrl`:`:Column^2 HeaderCtrl`:
+:Column][@(0.0.255)2 `&][2 _][*2 HeaderTab][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )]&]
+[s0;l288; [2 Returns the ][*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Column`:`:Min`(int`)^2 H
+eaderCtrl`::Column][2  descriptive structure for the given column. 
+The correspondence between the array columns and the header tabs 
+is 1:1, so that the indices of both are always the same (][*2 array.GetColumnCount()
+ `=`= array.HeaderObject().GetCount()][2  holds all the time).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the ][*2 HeaderCtrl`::Column][2  structure. This can be used to set 
+additional properties of the header column (e.g. column width 
+constraints, font and icon for the column title etc.)]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HeaderTab`(int`)const: [@(0.0.255)2 const][2 _][_^HeaderCtrl`:`:Column^2 H
+eaderCtrl`::Column][@(0.0.255)2 `&][2 _][*2 HeaderTab][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns a constant reference to the ][*2 HeaderCtrl`::Column][2  
+structure for the given column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the ][*2 HeaderCtrl`::Column][2  structure. This can be used to set 
+additional properties of the header column (e.g. column width 
+constraints, font and icon for the column title etc.)]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HeaderTab`(const Id`&`): [_^HeaderCtrl`:`:Column^2 Head
+erCtrl`::Column][@(0.0.255)2 `&][2 _][*2 HeaderTab][2 (][@(0.0.255)2 const 
+][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Returns the ][*2 HeaderCtrl`::Column][2  descriptive structure 
+for the column bound to a given source index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the index 
+used as source for the column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the ][*2 HeaderCtrl`::Column][2  structure]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HeaderTab`(const Id`&`)const: [@(0.0.255)2 const][2 _][_^HeaderCtrl`:`:Column^2 H
+eaderCtrl`::Column][@(0.0.255)2 `&][2 _][*2 HeaderTab][2 (][@(0.0.255)2 const 
+][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns a constant reference to the ][*2 HeaderCtrl`::Column][2  
+descriptive structure for the column bound to a given source 
+index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the index 
+used as source for the column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a constant reference 
+to the ][*2 HeaderCtrl`::Column][2  structure]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HeaderObject`(`)const: [@(0.0.255)2 const][2 _][_^HeaderCtrl^2 H
+eaderCtrl][@(0.0.255)2 `&][2 _][*2 HeaderObject][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns a non`-constant reference to the ][*2 HeaderCtrl][2  
+object for this table. The reference can be further used to alter 
+properties of the table header (tab visibility, header visual 
+mode and so on).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A non`-constant 
+reference to the table HeaderCtrl object.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:HeaderObject`(`): [_^HeaderCtrl^2 HeaderCtrl][@(0.0.255)2 `&
+][2 _][*2 HeaderObject][2 ()]&]
+[s0;l288; [2 This is just the constant version of the above method; 
+when called on a constant ][*2 ArrayCtrl][2  reference, it returns 
+a constant reference to its underlying HeaderCtrl object which 
+can be then used to query additional header information.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|A constant reference 
+to the table HeaderCtrl object.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SerializeHeader`(Stream`&`): [@(0.0.255)2 void][2 _][*2 Ser
+ializeHeader][2 (][_^Stream^2 Stream][@(0.0.255)2 `&][2 _][*@3;2 s][2 )]&]
+[s0;l288; [2 Serializes all information pertaining to the array header 
+(mainly the user`-set column widths). This is equivalent to calling 
+][*2 HeaderObject().Serialize(s)][2 . The main purpose of this function 
+is to allow storing header configuration to be restored upon 
+opening the dialog or the application for the next time. This 
+function is now deprecated in favor of SerializeSettings.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 s][2 -|the ][*^topic`:`/`/Core`/src`/Stream`$en`-us^2 S
+tream][2  object to serialize the header to/from]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SerializeSettings`(Stream`&`): [@(0.0.255)2 void][2 _][*2 S
+erializeSettings][2 (][_^Stream^2 Stream][@(0.0.255)2 `&][2 _][*@3;2 s][2 )]&]
+[s0;l288; [2 Serializes all information pertaining to the array header 
+(mainly the user`-set column widths) and the setting of sort 
+column. The main purpose of this function is to allow storing 
+configuration to be restored upon opening the dialog or the application 
+for the next time.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetDisplay`(int`,int`,const Display`&`): [@(0.0.255)2 v
+oid][2 _][*2 SetDisplay][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 int][2 _][*@3;2 col][2 ,
+ ][@(0.0.255)2 const][2 _][_^Display^2 Display][@(0.0.255)2 `&][2 _][*@3;2 d][2 )]&]
+[s0;l288; [2 Sets the ][*2 Display][2  object for a given array cell.]&]
+[s0;l288;*2 &]
+[s0;l288; [*2 Note:][2  the ownership to the Display object is not transferred 
+by this call. The ArrayCtrl stores a mere pointer to it and it 
+is the responsibility of the programmer to keep the Display object 
+alive as long as necessary (until the array is shut down or the 
+cell display changed via another call to SetDisplay). In fact, 
+most Display`-based objects don`'t support data copying at all. 
+In any case, copying Displays is not a very good practice and 
+is very prone to slicing (as most actual Displays are actually 
+derived classes with additional data members).]&]
+[s0;l288;2 &]
+[s0;l288; [2 In many cases it would be relatively safe to assume that 
+the Display is not used unless the array is actually painted 
+(e.g., when the control is not bound to a parent or when its 
+view has zero size), but it is not a very wise practice and it 
+can fail in very weird ways under special circumstances (like 
+making screenshots or graphical exports from the array control).]&]
+[s0;l288;2 &]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 j][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 d][2 -|display to use]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetDisplay`(int`,int`): [@(0.0.255)2 const][2 _][_^Display^2 D
+isplay][@(0.0.255)2 `&][2 _][*2 GetDisplay][2 (][@(0.0.255)2 int][2 _][*@3;2 row][2 , 
+][@(0.0.255)2 int][2 _][*@3;2 col][2 )]&]
+[s0;l288; [2 Returns a reference to the Display object for the given 
+array cell.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 row][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 col][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|a reference to 
+the Display object.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetDisplay`(int`): [@(0.0.255)2 const][2 _][_^Display^2 Dis
+play][@(0.0.255)2 `&][2 _][*2 GetDisplay][2 (][@(0.0.255)2 int][2 _][*@3;2 col][2 )]&]
+[s0;l288; [2 Returns a reference to the Display object for the given 
+array column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 col][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|constant reference 
+to the column Display]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetCtrl`(int`,int`,Ctrl`&`,bool`): [@(0.0.255)2 void][2 _
+][*2 SetCtrl][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 int][2 _][*@3;2 col][2 , 
+][_^Ctrl^2 Ctrl][@(0.0.255)2 `&][2 _][*@3;2 ctrl][2 , ][@(0.0.255)2 bool][2 _][*@3;2 value][2 _`=_][@(0.0.255)2 t
+rue][2 )]&]
+[s0;l288; [2 Sets an external control to use as the editor for a single 
+array cell. Naturally, the same Ctrl object cannot be used as 
+the editor for multiple array cells. If the position of Ctrl 
+is equivalent to `'SetRect(0, 0, 0, 0)`', which is the default 
+value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
+otherwise the position represents the position within the cell. 
+If ][*@3;2 value][2  is true, then the Ctrl represents the value 
+of the cell, otherwise it is independent of it.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetTotalCy`(`)const: [@(0.0.255)2 int][2 _][*2 GetTotalCy][2 (
+)_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns total height of the array (sum of the individual 
+line heights for all array rows)]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|array height in 
+pixels]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetLineAt`(int`)const: [@(0.0.255)2 int][2 _][*2 GetLineAt][2 (
+][@(0.0.255)2 int][2 _][*@3;2 y][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Locates the array row according to given ][/2 y][2  coordinate 
+(such array row ][/2 r][2  for which ][*2 GetLineY(r) <`= y `&`& GetLineY(r) 
+`+ GetLineCy(r) > y][2 ).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 y][2 -|vertical pixel coordinate 
+to locate]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based row 
+number or `-1 when not found]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetClickColumn`(`)const: [@(0.0.255)2 int][2 _][*2 GetClick
+Column][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns column index of the last clicked column in the 
+array. If the click happens past the last row of array, returns 
+Null.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based index 
+of the relevant column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetClickRow`(`)const: [@(0.0.255)2 int][2 _][*2 GetClickRow
+][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns column index of the last clicked row in the array. 
+If the click happens past the last row of array, returns Null.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based index 
+of the relevant column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetClickPos`(`)const: [_^Point^2 Point][2 _][*2 GetClickPos
+][2 ()_][@(0.0.255)2 const]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 Point(GetClickColumn(), 
+GetClickRow())][2 .]&]
+[s0;0 &]
+[s0;* &]
+[s0; [* Data setting and retrieval]&]
+[s0;0 &]
+[s0; &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetCount`(int`): [@(0.0.255)2 void][2 _][*2 SetCount][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 c][2 )]&]
+[s0;l288; [2 Sets the number of rows in the array. This extends or 
+trims the source matrix as necessary. When using the Ctrl`-based 
+individual cell editors, as a side`-effect of this call some 
+controls can be constructed or destroyed.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 c][2 -|new row count]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetVirtualCount`(int`): [@(0.0.255)2 void][2 _][*2 SetVirtu
+alCount][2 (][@(0.0.255)2 int][2 _][*@3;2 c][2 )]&]
+[s0;l288; [2 Sets the number of rows in an array with external data. 
+This makes sense only when all the ][/2 Column`'s][2  and ][/2 Ctrl`'s][2  
+of the array are ][/2 rownum][2 `-based. The function doesn`'t physically 
+allocate any source data matrix space, it just makes the array 
+`'think`' it has ][/2 c][2  rows (this is of course necessary for 
+the Paint routine, for cursor / selection management and so on).]&]
+[s0;l288; [*2 Note:][2  in the current implementation, selection flags 
+for the individual rows are kept in the row objects. Therefore 
+it is not very wise to use multiselection for arrays with external 
+data, because as soon as the last row is selected, all row storage 
+structures are allocated as a side effect to keep the selection 
+flags.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 c][2 -|new `'virtual`' number 
+of rows]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetCount`(`)const: [@(0.0.255)2 int][2 _][*2 GetCount][2 ()_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns the number of rows in the array. In fact, this 
+returns the maximum of the number of `'real`' source matrix rows 
+(as set by the SetCount / Add / Insert methods) and the `'virtual`' 
+row count (as se by SetVirtualCount). By checking the implementation 
+of this method, you can easily find that, simply,]&]
+[s0;l288;2 &]
+[s0;l288; [C2 int ArrayCtrl`::GetCount() const `{]&]
+[s0;l288; [C2 -|-|return max(virtualcount, array.GetCount());]&]
+[s0;l288; [C2 `}]&]
+[s0;l288;2 &]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|Number of rows 
+in the array.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Clear`(`): [@(0.0.255)2 void][2 _][*2 Clear][2 ()]&]
+[s0;l288; [2 Clears the array source data matrix and sets the virtual 
+row count to 0.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Shrink`(`): [@(0.0.255)2 void][2 _][*2 Shrink][2 ()]&]
+[s0;l288; [2 Shrinks the source data array, i.e. reallocates the data 
+to the minimum required memory space.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Get`(int`,int`)const: [_^Value^2 Value][2 _][*2 Get][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 i][2 , ][@(0.0.255)2 int][2 _][*@3;2 ii][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the value at a given location in the source data 
+matrix.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based index ordinal 
+number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the given 
+location in the source data matrix]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Get`(int`,const Id`&`)const: [_^Value^2 Value][2 _][*2 Get][2 (
+][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns the value at a given location in the source data 
+matrix. In this version, the source indices are addressed by 
+their identifiers.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the given 
+location in the source data matrix]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Get`(int`)const: [_^Value^2 Value][2 _][*2 Get][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 ii][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the value of a given source index at the currently 
+active cursor row. This is equivalent to ][*2 Get(GetCursor(), 
+ii)][2 . When the row is currently being edited, the function returns 
+the `'new`' value (the current value of the respective editor 
+control, i.e. potentially edited).]&]
+[s0;l288; [*2 Note:][2  when the cursor row is not set (when ][*2 !IsCursor()][2 ), 
+the function fails with an ][*2 ASSERT][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based index ordinal 
+number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at a given 
+location in the cursor row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Get`(const Id`&`)const: [_^Value^2 Value][2 _][*2 Get][2 (][@(0.0.255)2 c
+onst ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the value of a given source index at the currently 
+active cursor row. This is equivalent to ][*2 Get(GetCursor(), 
+id)][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the given 
+location in the cursor row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetOriginal`(int`)const: [_^Value^2 Value][2 _][*2 GetOrigi
+nal][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the `'original`' value of a given source index 
+at the currently active cursor row. When the row is open for 
+editing, this function returns the `'old`' value before any editing 
+took place.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based index ordinal 
+number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the given 
+location in the cursor row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetOriginal`(const Id`&`)const: [_^Value^2 Value][2 _][*2 G
+etOriginal][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the `'original`' value (i.e., without any editing 
+changed applied) of a given source index at the currently active 
+cursor row.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the given 
+location in the cursor row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetKey`(`)const: [_^Value^2 Value][2 _][*2 GetKey][2 ()_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns the value of the current row`'s primary key. This 
+is equivalent to ][*2 Get(0)][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the index 
+#0 in the cursor row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetOriginalKey`(`)const: [_^Value^2 Value][2 _][*2 GetOrigi
+nalKey][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the original value of the current row`'s primary 
+key. During editing, the function returns the value at the time 
+of opening the row for editing, i.e. without any editing changes 
+applied. This is equivalent to ][*2 GetOriginal(0)][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value at the index 
+#0 in the cursor row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(int`,int`,const Value`&`): [@(0.0.255)2 void][2 _][*2 S
+et][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 int][2 _][*@3;2 ii][2 , 
+][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _][*@3;2 v][2 )]&]
+[s0;l288; [2 Sets the value at a given location in the source data 
+matrix.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based index ordinal 
+number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|value to set to the given 
+cell]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(int`,const Id`&`,const Value`&`): [@(0.0.255)2 voi
+d][2 _][*2 Set][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 i
+d][2 , ][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _][*@3;2 v][2 )]&]
+[s0;l288; [2 Sets the value at a given location in the source data 
+matrix. ]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|value to set to the given 
+cell]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(int`,const Value`&`): [@(0.0.255)2 void][2 _][*2 Set][2 (
+][@(0.0.255)2 int][2 _][*@3;2 ii][2 , ][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _
+][*@3;2 v][2 )]&]
+[s0;l288; [2 Modifies the value at a given location in the cursor row. 
+When the row is open for editing, the function immediately changes 
+the value in the appropriate editor control.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based index ordinal 
+number]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|value to set]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(const Id`&`,const Value`&`): [@(0.0.255)2 void][2 _][*2 S
+et][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , ][@(0.0.255)2 const][2 _][_^Value^2 Va
+lue][@(0.0.255)2 `&][2 _][*@3;2 v][2 )]&]
+[s0;l288; [2 Modifies the value at a given location in the cursor row. 
+This overloaded version uses the ][*2 Id][2  identifier to address 
+the relevant index.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|value to set]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetColumn`(int`,int`)const: [_^Value^2 Value][2 _][*2 GetCo
+lumn][2 (][@(0.0.255)2 int][2 _][*@3;2 row][2 , ][@(0.0.255)2 int][2 _][*@3;2 col][2 )_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Returns the value of a given column. This depends on the 
+column`-index mapping established when adding columns to the 
+table. When the column is a ][/2 rownum][2  type (it is bound to 
+no source indices), the function just returns the ][/2 row][2  parameter. 
+For columns with a single source index, the function returns 
+the value of the mapped source index. For columns with multiple 
+source indices, the function returns a ][*2 ValueArray ][2 containing 
+the values of its source indices.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 row][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 col][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|value of the given 
+column]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetConvertedColumn`(int`,int`): [_^Value^2 Value][2 _][*2 G
+etConvertedColumn][2 (][@(0.0.255)2 int][2 _][*@3;2 row][2 , ][@(0.0.255)2 int][2 _][*@3;2 col][2 )
+]&]
+[s0;l288; [2 Returns the value of a given column after application 
+of its ][*2 Convert][2 . For performance reasons, the values obtained 
+by calls to the ][*2 Convert`::Format][2  methods are cached internally 
+within the ArrayCtrl object. You can manipulate the conversion 
+cache using the methods ][*^topic`:`/`/CtrlLib`/src`/ArrayCtrl`$en`-us`#`:`:ArrayCtrl`:`:ClearCache`(`)^2 C
+learCache][2  and][*2  ][*^topic`:`/`/CtrlLib`/src`/ArrayCtrl`$en`-us`#`:`:ArrayCtrl`:`:InvalidateCache`(int`)^2 I
+nvalidateCache][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 row][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 col][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|the converted cell 
+value]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ReadRow`(int`)const: [_^Vector^2 Vector][2 <][_^Value^2 Val
+ue][2 >_][*2 ReadRow][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns a ][*2 Vector][2  containing the values of all source 
+indices in the given row. Invariantly, the ][*2 GetCount()][2  of 
+the returned array is equal to the ][*2 GetIndexCount()][2  of the 
+source ArrayCtrl.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|an array of all 
+source values in the given row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(int`,const Vector`<Value`>`&`): [@(0.0.255)2 void][2 _
+][*2 Set][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 const][2 _][_^Vector^2 Vector][2 <][_^Value^2 V
+alue][2 >`&_][*@3;2 v][2 )]&]
+[s0;l288; [2 Modified a given row by setting all source index values 
+to values passed in the parameter ][/2 v][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|an array of values to set 
+to the source data matrix row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Add`(`): [@(0.0.255)2 void][2 _][*2 Add][2 ()]&]
+[s0;l288; [2 Adds an empty row to the source data matrix.]&]
+[s0;l288; [*2 Note:][2  the ][*2 InsertValue][2  property of the ][*2 IdInfo][2  
+structure defines a method to generate / retrieve default values 
+for newly inserted rows. However, these values are only used 
+during the GUI`-based ][*2 DoInsert][2  method and do not apply to 
+the ][*2 Add][2  method. If you need to set the newly added source 
+matrix row to some non`-null defaults, you have to modify the 
+relevant cells manually.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Add`(const Vector`<Value`>`&`): [@(0.0.255)2 void][2 _][*2 A
+dd][2 (][@(0.0.255)2 const][2 _][_^Vector^2 Vector][2 <][_^Value^2 Value][2 >`&_][*@3;2 v][2 )]&]
+[s0;l288; [2 Adds a new row at the end of the source data matrix. The 
+][*^topic`:`/`/Core`/src`/Vector`$en`-us^2 Vector][2  parameter contains 
+the values to be used to initialize the new row of the matrix.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|new matrix row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(int`,const VectorMap`<String`,Value`>`&`): [@(0.0.255)2 v
+oid][2 _][*2 Set][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 const][2 _][_^VectorMap^2 Vec
+torMap][2 <][_^String^2 String][2 , ][_^Value^2 Value][2 >`&_][*@3;2 m][2 )]&]
+[s0;l288; [2 Sets the row based on map. Keys are matched to row Ids, 
+keys that are not found are ignored, those found are assigned 
+correspoding map values.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Set`(int`,const ValueMap`&`): [@(0.0.255)2 void][2 _][*2 Se
+t][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 const][2 _][_^ValueMap^2 ValueMap][@(0.0.255)2 `&
+][2 _][*@3;2 m][2 )]&]
+[s0;l288; [2 Sets the row based on map. Keys are matched to row Ids, 
+keys that are not found are ignored, those found are assigned 
+correspoding map values.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Add`(const VectorMap`<String`,Value`>`&`): [@(0.0.255)2 v
+oid][2 _][*2 Add][2 (][@(0.0.255)2 const][2 _][_^VectorMap^2 VectorMap][2 <][_^String^2 String][2 ,
+ ][_^Value^2 Value][2 >`&_][*@3;2 m][2 )]&]
+[s0;l288; [2 Adds the row based on map. Keys are matched to row Ids, 
+keys that are not found are ignored, those found are assigned 
+correspoding map values.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Add`(const ValueMap`&`): [@(0.0.255)2 void][2 _][*2 Add][2 (][@(0.0.255)2 c
+onst][2 _][_^ValueMap^2 ValueMap][@(0.0.255)2 `&][2 _][*@3;2 m][2 )]&]
+[s0;l288; [2 Adds the row based on map. Keys are matched to row Ids, 
+keys that are not found are ignored, those found are assigned 
+correspoding map values.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Add`(const Value`&`[`,const Value`&`]`.`.`.`): [@(0.0.255)2 v
+oid][2 _][*2 Add][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _`[, 
+][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _`]...)]&]
+[s0;l288; [2 Adds a new row at the bottom of the source data matrix. 
+This is in fact a series of functions (generated automatically 
+using the ][*2 Expand][2  macro) which takes an arbitrary number 
+of arguments. Its arguments are used to initialize the source 
+indices in the newly added row.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Add`(const Nuller`&`): [@(0.0.255)2 void][2 _][*2 Add][2 (][@(0.0.255)2 c
+onst][2 _][_^Nuller^2 Nuller][@(0.0.255)2 `&][2 _][*@3;2 null][2 )]&]
+[s0;l288; [2 This is helper method required for correct overloading 
+resolution of Add(Null).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Insert`(int`): [@(0.0.255)2 void][2 _][*2 Insert][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 i][2 )]&]
+[s0;l288; [2 Inserts a new row into the source array. All indices are 
+initialized to ][*2 Null][2  values. The ][*2 InsertValue][2  property 
+doesn`'t apply; if you need to set the newly created row to some 
+non`-trivial values, you have to do so manually.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based position of 
+the newly created row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Insert`(int`,const Vector`<Value`>`&`): [@(0.0.255)2 vo
+id][2 _][*2 Insert][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 const][2 _][_^Vector^2 Vect
+or][2 <][_^Value^2 Value][2 >`&_][*@3;2 v][2 )]&]
+[s0;l288; [2 Inserts a new row into the array at a given position. 
+The second parameter, ][/2 v][2 , is used to initialize the source 
+indices of the newly created row.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|a vector of values used 
+to initialize the source indices of the given row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Remove`(int`): [@(0.0.255)2 void][2 _][*2 Remove][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 i][2 )]&]
+[s0;l288; [2 Removes the given source data row.]&]
+[s0;l288; [*2 Note:][2  the ][*2 AskRemove][2  property of the ][*2 ArrayCtrl][2  
+object tells whether a confirmation dialog should pop up every 
+time the user wants to remove a row. However, this method applies 
+only to the GUI`-based row removal; the ][*2 Remove][2  method always 
+removes the requested row unconditionally without popping up 
+any confirmation dialog.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based index of the 
+row to remove]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SwapUp`(`): [@(0.0.255)2 void][2 _][*2 SwapUp][2 ()]&]
+[s0;l288; [2 Exchanges the cursor row with the preceding row, effectively 
+moving it up.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SwapDown`(`): [@(0.0.255)2 void][2 _][*2 SwapDown][2 ()]&]
+[s0;l288; [2 Exchanges the cursor row with following row, effectively 
+moving it down.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Sort`(const ArrayCtrl`:`:Order`&`): [@(0.0.255)2 void][2 _
+][*2 Sort][2 (][@(0.0.255)2 const][2 _][_^ArrayCtrl`:`:Order^2 ArrayCtrl`::Order][@(0.0.255)2 `&
+][2 _][*@3;2 order][2 )]&]
+[s0;l288; [2 Sorts the array rows according to a given ordering predicate. 
+The ][*2 ArrayCtrl`::Order][2  object defines the ordering predicate; 
+its ][*2 operator ()][2  should return ][*2 true][2  whenever its first 
+parameter (a vector containing the values of all source indices 
+in a row) is less than its second parameter.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 order][2 -|]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Sort`(int`,int`,const ArrayCtrl`:`:Order`&`): [@(0.0.255)2 v
+oid][2 _][*2 Sort][2 (][@(0.0.255)2 int][2 _][*@3;2 from][2 , ][@(0.0.255)2 int][2 _][*@3;2 count][2 , 
+][@(0.0.255)2 const][2 _][_^ArrayCtrl`:`:Order^2 ArrayCtrl`::Order][@(0.0.255)2 `&][2 _][*@3;2 o
+rder][2 )]&]
+[s0;l288; [2 Sorts a portion of the array using a given ordering predicate.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 from][2 -|zero`-based index of 
+the first row to sort]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 count][2 -|number of rows to be 
+sorted]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 order][2 -|the ordering predicate 
+object. The object should be derived from ][*2 ArrayCtrl`::Order][2  
+and should override the ][*2 operator ()][2  method. This method 
+should return ][*2 true ][2 whenever its first parameter (a vector 
+containing all source index values for a certain row) is less 
+than its second parameter.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Sort`(int`(`*`)`(const Vector`<Value`>`&v1`,const Vector`<Value`>`&v2`)`): [@(0.0.255)2 v
+oid][2 _][*2 Sort][2 (][@(0.0.255)2 int][2 _(`*][*@3;2 compare][2 )(][@(0.0.255)2 const][2 _Vector<
+Value>`&_v1, ][@(0.0.255)2 const][2 _Vector<Value>`&_v2))]&]
+[s0;l288; [2 Sorts the array rows according to the order defined by 
+the specified ordering predicate ][/2 compare][2 . This is supposed 
+to be a global function returning ][*2 true][2  whenever its first 
+parameter (][/2 v1][2 , an array consisting of all source indices 
+within a row) is less than the second parameter ][/2 v2][2  (according 
+to the desired ordering).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 compare][2 -|the ordering predicate; 
+_the function is supposed to return ][*2 true][2  whenever its first 
+parameter (][/2 v1][2 ) is less than the second parameter (][/2 v2][2 ) 
+according to the desired ordering.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Sort`(int`,int`(`*`)`(const Value`&v1`,const Value`&v2`)`): [@(0.0.255)2 v
+oid][2 _][*2 Sort][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 , ][@(0.0.255)2 int][2 _(`*][*@3;2 compare][2 )
+(][@(0.0.255)2 const][2 _Value][@(0.0.255)2 `&][2 _v1, ][@(0.0.255)2 const][2 _Value][@(0.0.255)2 `&
+][2 _v2)_`=_StdValueCompare)]&]
+[s0;l288; [2 Sorts the array rows according to the given ordering predicate 
+for the source index with a given ordinal number. When not explicitly 
+specified, the ][*2 StdValueCompare][2  function is used as the default 
+comparison predicate.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the source index used for sorting]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 compare][2 -|the sorting predicate 
+function: the function is supposed to return ][*2 true][2  whenever 
+its first parameter (][/2 v1][2 ) is less than the second parameter 
+(][/2 v2][2 ) according to the desired ordering.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Sort`(const Id`&`,int`(`*`)`(const Value`&v1`,const Value`&v2`)`): [@(0.0.255)2 v
+oid][2 _][*2 Sort][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , ][@(0.0.255)2 int][2 _(`*
+][*@3;2 compare][2 )(][@(0.0.255)2 const][2 _Value][@(0.0.255)2 `&][2 _v1, 
+][@(0.0.255)2 const][2 _Value][@(0.0.255)2 `&][2 _v2)_`=_StdValueCompare)]&]
+[s0;l288; [2 Sorts the array rows according to the given ordering predicate 
+for the source index with a given identifier. When not explicitly 
+specified, the ][*2 StdValueCompare][2  function is used as the default 
+comparison predicate.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|identifier of the source 
+index used for sorting]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 compare][2 -|the sorting predicate 
+function: the function is supposed to return ][*2 true][2  whenever 
+its first parameter (][/2 v1][2 ) is less than the second parameter 
+(][/2 v2][2 ) according to the desired ordering .]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Sort`(`): [@(0.0.255)2 void][2 _][*2 Sort][2 ()]&]
+[s0;l288; [2 Sorts the array according to the default ordering predicate 
+for the first source index. This is equivalent to calling ][*2 Sort(0)][2 .]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ColumnSort`(int`,const ValueOrder`&`): [@(0.0.255)2 voi
+d][2 _][*2 ColumnSort][2 (][@(0.0.255)2 int][2 _][*@3;2 column][2 , ][@(0.0.255)2 const][2 _][_^ValueOrder^2 V
+alueOrder][@(0.0.255)2 `&][2 _][*@3;2 order][2 )]&]
+[s0;l288; [2 Sorts by the column. Note that this is different from 
+Sort, because the final converted value of column is used (which 
+can even be combination of more indexes).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetSortColumn`(int`,bool`): [@(0.0.255)2 void][2 _][*2 SetS
+ortColumn][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 , ][@(0.0.255)2 bool][2 _][*@3;2 descending][2 _`=
+_][@(0.0.255)2 false][2 )]&]
+[s0;l288; [2 Sets the `"sorting`" column and calls DoColumnSort. This 
+setting is used by DoColumnSort.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ToggleSortColumn`(int`): [@(0.0.255)2 void][2 _][*2 ToggleS
+ortColumn][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 )]&]
+[s0;l288; [2 Similar to SetSortColumn, but if the column is already 
+set, descending flag is inverted; otherwise descending flag is 
+set to false (indicating ascending sort).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoColumnSort`(`): [@(0.0.255)2 void][2 _][*2 DoColumnSort][2 (
+)]&]
+[s0;l288; [2 Sorts the array by sorting column and indicates it by 
+setting an image in the header.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ClearCache`(`): [@(0.0.255)2 void][2 _][*2 ClearCache][2 ()]&]
+[s0;l288; [2 Invalidates the whole ][/2 convert cache][2 . The convert 
+cache keeps the results of the ][*2 Convert`::Format][2  method applied 
+to individual array data cells for performance reasons. Whenever 
+you call the ][*2 ClearCache][2  method, all cache entries are marked 
+as obsolete and the ][*2 Convert][2 `'s ][*2 Format][2  method will be 
+called as soon as the converted value of a table cell is required 
+(usually during the next ][*2 Paint][2 ).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:InvalidateCache`(int`): [@(0.0.255)2 void][2 _][*2 Invalida
+teCache][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )]&]
+[s0;l288; [2 Invalidates a given row in the ][/2 convert cache][2 . For 
+performance reasons, the results of the ][*2 Convert`::Format][2  
+method applied to the individual data cells are kept in a cache. 
+This function marks a given row of the cache as obsolete; this 
+means the next time the converted values are to be used (usually 
+within the ][*2 Paint][2  routine or when setting up the row editor 
+controls), the ][*2 Convert][2  objects are used again to generate 
+the actualized output values.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;0 &]
+[s0; &]
+[s0; [* Cursor and selection management]&]
+[s0;0 &]
+[s0; &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollUp`(`): [@(0.0.255)2 void][2 _][*2 ScrollUp][2 ()]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollDown`(`): [@(0.0.255)2 void][2 _][*2 ScrollDown][2 ()]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollPageUp`(`): [@(0.0.255)2 void][2 _][*2 ScrollPageUp][2 (
+)]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollPageDown`(`): [@(0.0.255)2 void][2 _][*2 ScrollPageDo
+wn][2 ()]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollEnd`(`): [@(0.0.255)2 void][2 _][*2 ScrollEnd][2 ()]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollBegin`(`): [@(0.0.255)2 void][2 _][*2 ScrollBegin][2 ()
+]&]
+[s0;l288; [2 Scrolls the content of ArrayCtrl.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetSelectCount`(`)const: [@(0.0.255)2 int][2 _][*2 GetSelec
+tCount][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the number of selected row within the table.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|number of selected 
+records (in the range ][/2 `[0 .. GetCount()`]][2 )]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsSelection`(`)const: [@(0.0.255)2 bool][2 _][*2 IsSelectio
+n][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks whether any rows are selected. Equivalent to ][*2 GetSelectCount() 
+> 0][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= there 
+is at least one selected row, ][*2 false][2  `= there is none.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Select`(int`,bool`): [@(0.0.255)2 void][2 _][*2 Select][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 i][2 , ][@(0.0.255)2 bool][2 _][*@3;2 sel][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Selects / unselects a given row.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 sel][2 -|][*2 true][2  `= add row 
+to the current selection, ][*2 false][2  `= remove row from selection]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Select`(int`,int`,bool`): [@(0.0.255)2 void][2 _][*2 Select
+][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 , ][@(0.0.255)2 int][2 _][*@3;2 count][2 , 
+][@(0.0.255)2 bool][2 _][*@3;2 sel][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Selects / unselects a given row range.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based index of the 
+first row to select / unselect]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 count][2 -|number of rows to select 
+/ unselect]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 sel][2 -|][*2 true][2  `= select the 
+rows, ][*2 false][2  `= unselect the rows]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsSelected`(int`)const: [@(0.0.255)2 bool][2 _][*2 IsSelect
+ed][2 (][@(0.0.255)2 int][2 _][*@3;2 i][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks whether a given row is selected. For tables without 
+the multiselection option, this is equal to the check ][*2 GetCursor() 
+`=`= i][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index to 
+check for selection]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= row 
+is selected, ][*2 false][2  `= not selected]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsSel`(int`)const: [@(0.0.255)2 bool][2 _][*2 IsSel][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 i][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 If there is selection in the widget, returns true if ][*@3;2 i][2  
+is selected, otherwise returns true if cursor is at ][*@3;2 i][2 .]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ClearSelection`(`): [@(0.0.255)2 void][2 _][*2 ClearSelecti
+on][2 ()]&]
+[s0;l288; [2 Clears the current selection (unselects all selected rows).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsCursor`(`)const: [@(0.0.255)2 bool][2 _][*2 IsCursor][2 ()_
+][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks whether the cursor is within the table. This is 
+equivalent to ][*2 GetCursor()_>`=_0][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetCursor`(int`): [@(0.0.255)2 bool][2 _][*2 SetCursor][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 i][2 )]&]
+[s0;l288; [2 Sets the current cursor row. When an array row is open 
+for editing, the function first commits the edited row, then 
+moved the cursor to the new row. When the edited row cannot be 
+commited, the function returns ][*2 false][2  and doesn`'t change 
+the cursor location.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 i][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= cursor 
+has been moved, ][*2 false ][2 when not (when committing the previously 
+edited row failed)]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:KillCursor`(`): [@(0.0.255)2 bool][2 _][*2 KillCursor][2 ()]&]
+[s0;l288; [2 Moves the cursor away from the array. When an array row 
+is open for editing, the function first commits the edited row, 
+then moved the cursor away from the array. When the edited row 
+cannot be commited, the function returns ][*2 false][2  and doesn`'t 
+change the cursor location.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= cursor 
+has been moved away from the array, ][*2 false][2  when not (when 
+committing the previously edited row failed)]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:CancelCursor`(`): [@(0.0.255)2 void][2 _][*2 CancelCursor][2 (
+)]&]
+[s0;l288; [2 Cancels editing of the row being currently edited. All 
+changes made in the individual column editors are rejected.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetCursor`(`)const: [@(0.0.255)2 int][2 _][*2 GetCursor][2 ()
+_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the current cursor row, `-1 when none.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based cursor 
+row index, `-1 `= cursor is not in the array]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GoBegin`(`): [@(0.0.255)2 void][2 _][*2 GoBegin][2 ()]&]
+[s0;l288; [2 Moves the cursor to the first row in the array (equivalent 
+to ][*2 SetCursor(0)][2 ).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GoEnd`(`): [@(0.0.255)2 void][2 _][*2 GoEnd][2 ()]&]
+[s0;l288; [2 Moves the cursor to the last array row (equivalent to 
+][*2 SetCursor(GetCount() `- 1)][2 ).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetCursorSc`(`)const: [@(0.0.255)2 int][2 _][*2 GetCursorSc
+][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the visual vertical position of the cursor row 
+relative to the current view. This method, in combination with 
+][*2 ScCursor][2 , can be used to reposition the cursor row while 
+maintaining the same visual position of the row within the array 
+view.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|an integer describing 
+the vertical position of the cursor row relative to the array 
+view]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScCursor`(int`): [@(0.0.255)2 void][2 _][*2 ScCursor][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 a][2 )]&]
+[s0;l288; [2 Modifies the scrollbar position so that the current cursor 
+row appears at a given vertical position relative to the array 
+view. By doing the following sequence of operations: ][*2 GetCursorSc][2 , 
+then reposition the cursor row, then ][*2 ScCursor][2 , you can achieve 
+cursor relocation while maintaining its visual location within 
+the array view.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 a][2 -|an integer describing the 
+vertical position of the cursor row (typically a number returned 
+by a previous call to ][*2 GetCursorSc][2 )]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:CenterCursor`(`): [@(0.0.255)2 void][2 _][*2 CenterCursor][2 (
+)]&]
+[s0;l288; [2 Modifies the scrollbar position so that the current cursor 
+row appears in the middle of the array view.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollInto`(int`): [@(0.0.255)2 void][2 _][*2 ScrollInto][2 (
+][@(0.0.255)2 int][2 _][*@3;2 line][2 )]&]
+[s0;l288; [2 Moves the scrollbar by the least possible amount in order 
+to make the given array row visible. When the given array row 
+is already visible, the function does nothing.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 line][2 -|zero`-based row index 
+of the array row to make visible]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollIntoCursor`(`): [@(0.0.255)2 void][2 _][*2 ScrollInto
+Cursor][2 ()]&]
+[s0;l288; [2 Moves the scrollbar by the least possible amount in order 
+to make the cursor row visible. This is equivalent to ][*2 ScrollInto(GetCursor())][2 .
+]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetCursor`(`)const: [@(0.0.255)2 int][2 _][*2 GetCursor][2 ()
+_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the current vertical scrollbar position.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|Pixel position 
+of the vertical scrollbar. Position 0 is at the very top (the 
+top row of the array is fully visible).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:ScrollTo`(int`): [@(0.0.255)2 void][2 _][*2 ScrollTo][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 sc][2 )]&]
+[s0;l288; [2 Moves the vertical array scrollbar to a given position.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 sc][2 -|Pixel position of the 
+scrollbar. The visible portion of the array can be obtained conceptually 
+by taking the stack of array rows with its top aligned at the 
+top of the view and moving it ][/2 sc][2  pixels upwards.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Find`(const Value`&`,int`,int`)const: [@(0.0.255)2 int][2 _
+][*2 Find][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _][*@3;2 v][2 , 
+][@(0.0.255)2 int][2 _][*@3;2 ii][2 _`=_][@3;2 0][2 , ][@(0.0.255)2 int][2 _][*@3;2 from][2 _`=_][@3;2 0
+][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [*C@3;2 v][2 -|value to look for in the given source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the source index to search]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 from][2 -|zero`-based row index 
+to start the search from]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based number 
+of the matched row, `-1 when none]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Find`(const Value`&`,const Id`&`,int`)const: [@(0.0.255)2 i
+nt][2 _][*2 Find][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _][*@3;2 v][2 , 
+][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , ][@(0.0.255)2 int][2 _][*@3;2 from][2 _`=_][@3;2 0
+][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Locates the row (using linear search beginning at the 
+row ][/2 from][2 ) in which the source index value identified by 
+][/2 id][2  equals ][/2 val][2 . If such a row is found, the function 
+returns its zero`-based index. When not matched, the function 
+returns `-1.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|value to look for in the 
+given source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 from][2 -|zero`-based row index 
+to start the search from]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based number 
+of the matched row, `-1 when none]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:FindSetCursor`(const Value`&`,int`,int`): [@(0.0.255)2 b
+ool][2 _][*2 FindSetCursor][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _][*@3;2 v
+al][2 , ][@(0.0.255)2 int][2 _][*@3;2 ii][2 _`=_][@3;2 0][2 , ][@(0.0.255)2 int][2 _][*@3;2 from][2 _`=
+_][@3;2 0][2 )]&]
+[s0;l288; [2 Locates the row (using linear search beginning at the 
+row ][/2 from][2 ) in which the source index value identified by 
+its ordinal number ][/2 ii][2  equals ][/2 val][2 . If such a row is 
+found, the ][*2 SetCursor][2  is called automatically to move the 
+cursor to such a row.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 val][2 -|value to look for in 
+the given source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based ordinal number 
+of the source index to search]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 from][2 -|zero`-based row index 
+to start the search from]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based number 
+of the matched row, `-1 when none]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:FindSetCursor`(const Value`&`,const Id`&`,int`): [@(0.0.255)2 b
+ool][2 _][*2 FindSetCursor][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&][2 _][*@3;2 v
+al][2 , ][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 , ][@(0.0.255)2 int][2 _][*@3;2 from][2 _
+`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Locates the row (using linear search beginning at the 
+row ][/2 from][2 ) in which the source index value identified by 
+][/2 id][2  equals ][/2 val][2 . If such a row is found, the ][*2 SetCursor][2  
+is called automatically to move the cursor to such a row.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 val][2 -|value to look for in 
+the given source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 from][2 -|zero`-based row index 
+to start the search from]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= the 
+desired row was found (and the cursor set), ][*2 false][2  when not]&]
+[s0;0 &]
+[s0;* &]
+[s0; [* User interface elements]&]
+[s0;0 &]
+[s0; &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:StdBar`(Bar`&`): [@(0.0.255)2 void][2 _][*2 StdBar][2 (][_^Bar^2 B
+ar][@(0.0.255)2 `&][2 _][*@3;2 menu][2 )]&]
+[s0;l288; [2 The default array local menu. The default local menu consists 
+of the standard editing actions (inserting / appending / duplicating 
+a row, editing a row, removing a row, moving a row, select all 
+rows) filtered by the array properties enabling / disabling the 
+various GUI elements (item insertion / deletion etc.). ]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 menu][2 -|the ][*2 Bar][2  object 
+representing the menu being generated]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsModified`(int`)const: [@(0.0.255)2 bool][2 _][*2 IsModifi
+ed][2 (][@(0.0.255)2 int][2 _][*@3;2 ii][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks a source index in the currently edited row for 
+changes.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 ii][2 -|zero`-based row index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= the 
+index has been modified, ][*2 false][2  `= the index is in its original 
+state]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IsModified`(const Id`&`)const: [@(0.0.255)2 bool][2 _][*2 I
+sModified][2 (][@(0.0.255)2 const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Checks a source index in the currently edited array row 
+for changes.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|source index identifier]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= the 
+source index has been modified, ][*2 false ][2 when not]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:StartEdit`(int`): [@(0.0.255)2 bool][2 _][*2 StartEdit][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 d][2 _`=_][@3;2 0][2 )]&]
+[s0;l288; [2 Opens the current cursor row for editing and sets focus 
+to the ][/2 d][2 `-th column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 d][2 -|zero`-based column index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= editing 
+successfully initiated, ][*2 false][2  when not (when the array is 
+in ][*2 ReadOnly][2  mode or it has no editable columns)]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:GetEditColumn`(`)const: [@(0.0.255)2 int][2 _][*2 GetEditCo
+lumn][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the column being currently edited.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|zero`-based index 
+of the column being edited, `-1 `= none]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoEdit`(`): [@(0.0.255)2 void][2 _][*2 DoEdit][2 ()]&]
+[s0;l288; [2 Opens the current cursor row for editing.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoInsert`(int`): [@(0.0.255)2 void][2 _][*2 DoInsert][2 (][@(0.0.255)2 i
+nt][2 _][*@3;2 cursor][2 )]&]
+[s0;l288; [2 Begins the GUI insertion of a new row at a given location.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 cursor][2 -|zero`-based location 
+of the new row]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoInsertBefore`(`): [@(0.0.255)2 void][2 _][*2 DoInsertBefo
+re][2 ()]&]
+[s0;l288; [2 Begins the GUI insertion of a new row above the current 
+row.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoInsertAfter`(`): [@(0.0.255)2 void][2 _][*2 DoInsertAfter
+][2 ()]&]
+[s0;l288; [2 Begins the GUI insertion of a new row below the current 
+row.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoAppend`(`): [@(0.0.255)2 void][2 _][*2 DoAppend][2 ()]&]
+[s0;l288; [2 Begins the GUI insertion of a new row at the end of the 
+array.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoRemove`(`): [@(0.0.255)2 virtual][2  
+][@(0.0.255)2 bool][2 _][*2 DoRemove][2 ()]&]
+[s0;l288; [2 Performs the GUI`-based removal of the current cursor 
+row. When the ][*2 AskRemove][2  property is set to ][*2 true][2  and 
+the user cancels the confirmation dialog, the function returns 
+][*2 false][2  and the current row is not removed.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= row 
+has been removed successfully, ][*2 false][2  `=  user has canceled 
+the row removal]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoDuplicate`(`): [@(0.0.255)2 void][2 _][*2 DoDuplicate][2 ()
+]&]
+[s0;l288; [2 Duplicates the current row and opens it for editing.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:DoSelectAll`(`): [@(0.0.255)2 void][2 _][*2 DoSelectAll][2 ()
+]&]
+[s0;l288; [2 Marks all array row as selected.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AcceptEnter`(`): [@(0.0.255)2 bool][2 _][*2 AcceptEnter][2 ()
+]&]
+[s0;l288; [2 Performs all necessary GUI actions equivalent to when 
+the user presses the ][*2 Enter][2  key. The row being currently 
+edited is committed and, in the case it was a newly appended 
+line and the ][*2 NoInsertAppend][2  property is not set, an additional 
+row is added to the array and opened for editing.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= the 
+current row has been successfully committed, ][*2 false][2  when 
+not]&]
+[s0;0 &]
+[s0; &]
+[s0; &]
+[s0; [* Content export]&]
+[s0;* &]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AsText`(String`(`*`)`(const Value`&`)`,bool`,const char`*`,const char`*`,const char`*`,const char`*`)const: [_^String^2 S
+tring][2 _][*2 AsText][2 (][_^String^2 String][2 _(`*][*@3;2 format][2 )(][@(0.0.255)2 const][2 _Va
+lue][@(0.0.255)2 `&][2 ), ][@(0.0.255)2 bool][2 _][*@3;2 sel][2 _`=_][@(0.0.255)2 false][2 , 
+][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 tab][2 _`=_`"`\t`", 
+][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 row][2 _`=_`"`\r`\n`", 
+][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 hdrtab][2 _`=_`"`\t`", 
+][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 hdrrow][2 _`=_`"`\r`\n`")_][@(0.0.255)2 c
+onst]&]
+[s0;l288; [2 Generic function for conversion of ArrayCtrl content to 
+text. The content visible on screen is exported (means, it exports 
+columns defined using AddColumn, not indicies). Cells are converted 
+to output format using ][*@3;2 format][2  function. If ][*@3;2 sel][2  
+is true, only rows with IsSel true are exported. ][*@3;2 tab][2  
+represents a separator text between cells in a row, ][*@3;2 row][2  
+separator of rows. ][*@3;2 hdrtab][2  is separator of header cells 
+(those are texts of ArrayCtrl header) `- if NULL, no header is 
+exported. ][*@3;2 hdrrow][2 .is separator of header and data rows.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:SetClipboard`(bool`,bool`)const: [@(0.0.255)2 void][2 _][*2 S
+etClipboard][2 (][@(0.0.255)2 bool][2 _][*@3;2 sel][2 _`=_][@(0.0.255)2 false][2 , 
+][@(0.0.255)2 bool][2 _][*@3;2 hdr][2 _`=_][@(0.0.255)2 true][2 )_][@(0.0.255)2 const]&]
+[s0;l288; [2 Puts ArrayCtrl content to clipboard in text format, `"`\t`" 
+and `"`\r`\n`" as separators. If ][*@3;2 sel][2  is true, only rows 
+with IsSel true are exported, ][*@3;2 hdr][2  controls whether header 
+is exported.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AsQtf`(bool`,bool`): [_^String^2 String][2 _][*2 AsQtf][2 (][@(0.0.255)2 b
+ool][2 _][*@3;2 sel][2 _`=_][@(0.0.255)2 false][2 , ][@(0.0.255)2 bool][2 _][*@3;2 hdr][2 _`=_][@(0.0.255)2 t
+rue][2 )]&]
+[s0;l288; [2 Returns ArrayCtrl content in QTF format. If ][*@3;2 sel][2  
+is true, only rows with IsSel true are exported, ][*@3;2 hdr][2  
+controls whether header is exported.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:AsCsv`(bool`,int`,bool`): [_^String^2 String][2 _][*2 AsCsv
+][2 (][@(0.0.255)2 bool][2 _][*@3;2 sel][2 _`=_][@(0.0.255)2 false][2 , ][@(0.0.255)2 int][2 _][*@3;2 s
+ep][2 _`=_`';`', ][@(0.0.255)2 bool][2 _][*@3;2 hdr][2 _`=_][@(0.0.255)2 true][2 )]&]
+[s0;l288; [2 Returns ArrayCtrl content in csv format, using ][*@3;2 sep][2  
+as separator. If ][*@3;2 sel][2  is true, only rows with IsSel true 
+are exported, ][*@3;2 hdr][2  controls whether header is exported.]&]
+[s0; &]
+[s0; &]
+[s0; [* Notification callbacks]&]
+[s0;0 &]
+[s0; &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenLeftClick: [_^Callback^2 Callback][2 _][*2 WhenLeftClic
+k]&]
+[s0;l288; [2 This callback is called whenever the user clicks an array 
+cell.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenLeftDouble: [_^Callback^2 Callback][2 _][*2 WhenLeftDou
+ble]&]
+[s0;l288; [2 This callback is called whenever the user doubleclicks 
+an array cell.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenBar: [_^Callback1^2 Callback1][2 <Bar][@(0.0.255)2 `&][2 >
+_][*2 WhenBar]&]
+[s0;l288; [2 This callback is called whenever the local array menu 
+has to be regenerated. By setting this callback to a different 
+function / method you can supply a custom local menu for the 
+array. The ][*2 Bar`&][2  argument is a reference to the menu to 
+be generated.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenEnterRow: [_^Callback^2 Callback][2 _][*2 WhenEnterRow]&]
+[s0;l288; [2 This callback is called every time the cursor location 
+changes to a different row of the array.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenAcceptRow: [_^Gate^2 Gate][2 _][*2 WhenAcceptRow]&]
+[s0;l288; [2 This gate is called every time an array row (open for 
+editing) needs to be validated. When the gate returns ][*2 false][2 , 
+the validation process is assumed to have failed, when it returns 
+][*2 true][2 , it is assumed to have succeeded. You can use this 
+callback to add your own validation algorithms relevant to the 
+array context within your application.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenUpdateRow: [_^Callback^2 Callback][2 _][*2 WhenUpdateRo
+w]&]
+[s0;l288; [2 This callback is called whenever an array row has been 
+updated. You can use this callback e.g. to project the changes 
+to a database or generally to an external data source.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenKillCursor: [_^Callback^2 Callback][2 _][*2 WhenKillCur
+sor]&]
+[s0;l288; [2 This callback is called whenever the cursor is moved away 
+from the table.]&]
+[s0;l288; [*2 Note:][2  internally, when moving the cursor (e.g. by calling 
+the ][*2 SetCursor ][2 method), after committing the previous row 
+the cursor is removed from the table using ][*2 KillCursor][2  and 
+placed to the new location afterwards. Therefore every time the 
+cursor is moved, the ][*2 WhenKillCursor][2  callback is called as 
+a by`-product.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenCursor: [_^Callback^2 Callback][2 _][*2 WhenCursor]&]
+[s0;l288; [2 This callback is called every time the cursor row number 
+changes (either when the cursor is removed from the table, or 
+when it has been moved to a different row).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenArrayAction: [_^Callback^2 Callback][2 _][*2 WhenArrayA
+ction]&]
+[s0;l288; [2 This callback is called every time the source array data 
+changes (typically after accepting changes to a certain row or 
+after deleting a row).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenStartEdit: [_^Callback^2 Callback][2 _][*2 WhenStartEdi
+t]&]
+[s0;l288; [2 This callback is called whenever the array row editing 
+process is initiated. It can be used e.g. to set up some additional 
+properties of the column editor objects, to fill in drop`-down 
+lists pertaining to certain column editors etc.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenAcceptEdit: [_^Callback^2 Callback][2 _][*2 WhenAcceptE
+dit]&]
+[s0;l288; [2 This callback is called whenever the currently edited 
+line has been committed.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenSelection: [_^Callback^2 Callback][2 _][*2 WhenSelectio
+n]&]
+[s0;l288; [2 This callback is called whenever the current array selection 
+changes. This includes changes to the cursor location as the 
+cursor is automatically considered part of the selection.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenCtrlsAction: [_^Callback^2 Callback][2 _][*2 WhenCtrlsA
+ction]&]
+[s0;l288; [2 This callback is called whenever some of the editor controls 
+constructed automatically via the column editing ][/2 factory][2  
+calls its ][*2 WhenAction][2  method. It can be used to watch out 
+for changes in the cell editors and react to specific situations 
+accordingly.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenSel: [_^Callback^2 Callback][2 _][*2 WhenSel]&]
+[s0;l288; [2 Called whenever cursor or selection changes.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenScroll: [_^Callback^2 Callback][2 _][*2 WhenScroll]&]
+[s0;l288; [2 Called when scrolling of ArrayCtrl content happened.]&]
+[s0;0 &]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:WhenHeaderLayout: [_^Callback^2 Callback][2 _][*2 WhenHeade
+rLayout]&]
+[s0;l288; [2 Called when header changes.]&]
+[s0; &]
+[s0; &]
+[ {{10000t/25b/25@3 [s0; [*@(229)4 ArrayCtrl`::IdInfo]]}}&]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IdInfo`:`:struct: [@(0.0.255) struct]_[* IdInfo]&]
+[s0;b42; [2 The ][*2 IdInfo][2  structure contains properties of all source 
+array indices. It can be used to set additional properties pertaining 
+to source array data.]&]
+[s0;0 &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(const Value`&`): [_^ArrayCtrl`:`:IdInfo^2 I
+dInfo][@(0.0.255)2 `&][2 _][*2 InsertValue][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&
+][2 _][*@3;2 v][2 )]&]
+[s0;l288; [2 The method sets up the default source index value for 
+newly created rows. This is used only when the row insertion 
+is GUI`-based (like using the ][*2 DoInsert][2  method for instance). 
+When a row is added to the array programmatically (e.g. using 
+][*2 Add][2  or ][*2 Insert][2 ), these default values are not used.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|default source index value]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IdInfo`:`:InsertValue`(ValueGen`&`): [_^ArrayCtrl`:`:IdInfo^2 I
+dInfo][@(0.0.255)2 `&][2 _][*2 InsertValue][2 (][_^ValueGen^2 ValueGen][@(0.0.255)2 `&][2 _][*@3;2 g
+][2 )]&]
+[s0;l288; [2 The method sets up a factory for generating default index 
+values for newly created rows. This is used only when the row 
+insertion is GUI`-based (like using the ][*2 DoInsert][2  method 
+for instance). When a row is added to the array programmatically 
+(e.g. using ][*2 Add][2  or ][*2 Insert][2 ), the ][*2 InserValue][2  property 
+is not consulted.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 g][2 -|a reference to the value 
+generation factory. The ownership to the factory is not passed 
+by this call; the caller must insure the existence of the factory 
+object throughout the array duration.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IdInfo`:`:Accel`(int`(`*`)`(int`)`): [_^ArrayCtrl`:`:IdInfo^2 I
+dInfo][@(0.0.255)2 `&][2 _][*2 Accel][2 (][@(0.0.255)2 int][2 _(`*][*@3;2 filter][2 )(][@(0.0.255)2 i
+nt][2 ))]&]
+[s0;l288; [2 This method sets up the source index accelerator function. 
+The accelerator is used to quickly locate rows using the keyboard 
+key presses.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 filter][2 -|a ][*2 CharFilter ][2 function 
+for keypress filtering]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IdInfo`:`:Accel`(`): [_^ArrayCtrl`:`:IdInfo^2 IdInfo][@(0.0.255)2 `&
+][2 _][*2 Accel][2 ()]&]
+[s0;l288; [2 This method sets up keyboard acceleration for the given 
+source index. The `'trivial`' ][/2 CharConvert][2  is used for character 
+translation.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:IdInfo`:`:GetInsertValue`(`): [_^Value^2 Value][2 _][*2 Get
+InsertValue][2 ()]&]
+[s0;l288; [2 Uses the ][*2 InsertValue][2  property to generate a new source 
+index value (either using a fixed default value or the value 
+creation factory).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|the generated value 
+to be used as the default for the newly inserted row.]&]
+[s0;0 &]
+[s0; &]
+[s0; &]
+[s0; &]
+[ {{10000t/25b/25@3 [s0; [*@(229)4 ArrayCtrl`::Column]]}}&]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:class: [@(0.0.255) class]_[* Column]_:_[@(0.0.255) p
+rivate]_[*@3 FormatConvert]&]
+[s0;l288;2 &]
+[s0; [%%/ Derived from][%%  ]FormatConvert&]
+[s0; &]
+[s0; The [* ArrayCtrl`::Column] structure describes an output array 
+column. Its methods can be used to set or query its properties, 
+some of which are also settable via ArrayCtrl methods.&]
+[s0;0 &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Add`(int`): [_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&
+][2 _][*2 Add][2 (][@(0.0.255)2 int][2 _][*@3;2 `_pos][2 )]&]
+[s0;l288; [2 Adds another source data index to the list of source indices 
+used as the data for the given output column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 `_pos][2 -|zero`-based ordinal 
+number of the source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this][2 .]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Add`(const Id`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Add][2 (const ][_^Id^2 Id][2 `&_][*@3;2 id][2 )]&]
+[s0;l288; [2 Adds another source data index to the list of source indices 
+used as the data for the given output column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|the ][*2 Id][2  identifier 
+of the source index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:AddIndex`(const Id`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 AddIndex][2 (][@(0.0.255)2 const][2 _][_^Id^2 Id][@(0.0.255)2 `&][2 _
+][*@3;2 id][2 )]&]
+[s0;l288; [2 Adds another source index to the array and adds it to 
+the list of source indices bound to this output column. The newly 
+created index is assigned the given identifier.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 id][2 -|the identifier for the 
+newly created index]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:AddIndex`(`): [_^ArrayCtrl`:`:Column^2 Column
+][@(0.0.255)2 `&][2 _][*2 AddIndex][2 ()]&]
+[s0;l288; [2 Adds another source index to the array and adds it to 
+the list of source indices bound to this output column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:SetConvert`(const Convert`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 SetConvert][2 (][@(0.0.255)2 const][2 _][_^Convert^2 Convert][@(0.0.255)2 `&
+][2 _][*@3;2 c][2 )]&]
+[s0;l288; [2 Sets the ][*2 Convert][2  object for the given column. This 
+object is used to convert the source values (obtained from the 
+source data matrix) to the values displayable and/or editable 
+by the respective column display / editor object.]&]
+[s0;l288; [*2 Note:][2  the ownership of the ][*2 Convert][2  object is not 
+transferred by this function. The array merely stores a pointer 
+to the Convert object. It is up to the host application to keep 
+the Convert object alive as long as necessary (until the ArrayCtrl 
+object is destroyed or all references to the Convert object obliterated 
+by new calls to the ][*2 SetConvert][2  method). In any case, most 
+Convert`-based object do not support copying at all; moreover, 
+as the Convert`-based objects are mostly derived from the basic 
+class, their copying is normally prone to slicing.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 c][2 -|a constant reference to 
+the Convert object to use for the given column]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:SetFormat`(const char`*`): [@(0.0.255)2 virtu
+al][2  ][_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&][2 _][*2 SetFormat][2 (][@(0.0.255)2 co
+nst][2 _][@(0.0.255)2 char][2 _`*][*@3;2 fmt][2 )]&]
+[s0;l288; [2 Sets the format string to use for the default value formatting. 
+When no Convert object is set for the column, the source value 
+is normally passed to the ][*2 NFormat][2  function where the ][/2 fmt][2  
+argument defines the desired formatting pattern.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 fmt][2 -|a ][*2 NFormat][2 `-compatible 
+formatting pattern]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:SetDisplay`(const Display`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 SetDisplay][2 (][@(0.0.255)2 const][2 _][_^Display^2 Display][@(0.0.255)2 `&
+][2 _][*@3;2 d][2 )]&]
+[s0;l288; [2 Sets the default Display to use for this column. The column 
+Display can be overridden for certain array cells by calls to 
+the ][*^topic`:`/`/CtrlLib`/src`/ArrayCtrl`$en`-us`#`:`:ArrayCtrl`:`:SetDisplay`(int`,int`,const Display`&`)^2 A
+rrayCtrl`::SetDisplay][2  method.]&]
+[s0;l288; [*2 Note:][2  the ownership to the Display object is not transferred 
+by this function. The array merely stores a pointer to the Display; 
+it is up to the host application to keep the Display object alive 
+as long as necessary.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 d][2 -|a reference to the Display 
+object]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Edit`(Ctrl`&`): [_^ArrayCtrl`:`:Column^2 Colu
+mn][@(0.0.255)2 `&][2 _][*2 Edit][2 (][_^Ctrl^2 Ctrl][@(0.0.255)2 `&][2 _][*@3;2 e][2 )]&]
+[s0;l288; [2 Sets up the Ctrl`-based object to use for inline array 
+column editing.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 e][2 -|a reference to the editor 
+control object]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Ctrls`(Callback1`<One`<Ctrl`>`&`>`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Ctrls][2 (][_^Callback1^2 Callback1][2 <][_^One^2 One][2 <][_^Ctrl^2 C
+trl][2 >`&>_][*@3;2 factory][2 )]&]
+[s0;l288; [2 The methods sets up a factory which the ArrayCtrl uses 
+as necessary to create new Ctrl`'s for editing a given column. 
+The argument of this function is a callback, which, upon execution, 
+should allocate (normally using the ][*2 new][2  operator) the desired 
+editor object and set it to its argument. If the position of 
+Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', which is the default 
+value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
+otherwise the position represents the position within the cell.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 factory][2 -|callback used for 
+new control creation]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Ctrls`(void`(`*`)`(One`<Ctrl`>`&`)`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Ctrls][2 (][@(0.0.255)2 void][2 _(`*][*@3;2 factory][2 )(One<Ctrl>
+`&))]&]
+[s0;l288; [2 This method sets up a factory which the ArrayCtrl uses 
+as necessary to create new Ctrl`'s for editing a given column. 
+The argument, a global function, is supposed to allocate a new 
+editor control (normally using the ][*2 new][2  operator) and set 
+it to its argument. If the position of Ctrl is equivalent to 
+`'SetRect(0, 0, 0, 0)`', which is the default value, Ctrl is 
+resized to fit the ArrayCtrl cell accurately, otherwise the position 
+represents the position within the cell. If the position of Ctrl 
+is equivalent to `'SetRect(0, 0, 0, 0)`', which is the default 
+value, Ctrl is resized to fit the ArrayCtrl cell accurately, 
+otherwise the position represents the position within the cell.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 factory][2 -|a global function 
+used for editor control creation]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Ctrls`(`): [@(0.0.255)2 template][2 _<][@(0.0.255)2 c
+lass][2 _][*@4;2 T][2 >_][_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&][2 _][*2 Ctrls][2 ()]&]
+[s0;l288; [2 This member template sets up a default factory for creating 
+editor controls of a given type. Every time the ArrayCtrl needs 
+to create a new editor control, an object of the type ][*2 T][2  
+is created automatically (using the ][*2 new][2  operator). If the 
+position of Ctrl is equivalent to `'SetRect(0, 0, 0, 0)`', which 
+is the default value, Ctrl is resized to fit the ArrayCtrl cell 
+accurately, otherwise the position represents the position within 
+the cell.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@4;2 T][2 -|the desired object editor 
+type ]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:InsertValue`(const Value`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 InsertValue][2 (][@(0.0.255)2 const][2 _][_^Value^2 Value][@(0.0.255)2 `&
+][2 _][*@3;2 v][2 )]&]
+[s0;l288; [2 Instructs the ArrayCtrl object to initialize this column 
+in newly created rows to the given value ][/2 v][2 . (This applies 
+only to GUI`-based row insertion using methods like ][*2 DoInsert][2  
+etc., the low`-level, programmer`-controlled row insertion methods 
+like ][*2 Add][2  or ][*2 Insert][2  always initialize the source data 
+matrix with ][*2 Null][2 `'s).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 v][2 -|the value to use as the 
+default for newly inserted rows]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:InsertValue`(ValueGen`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 InsertValue][2 (][_^ValueGen^2 ValueGen][@(0.0.255)2 `&][2 _][*@3;2 g
+][2 )]&]
+[s0;l288; [2 Programs the ArrayCtrl object to use the given ][*2 ValueGen][2  
+factory for default value generation for newly created rows. 
+This can be used e.g. to generate unique UUID`'s or primary keys 
+using an Oracle SEQUENCE object for a primary key column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 g][2 -|a reference to the ValueGen 
+object used for default value generation]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:NoClickEdit`(`): [_^ArrayCtrl`:`:Column^2 Col
+umn][@(0.0.255)2 `&][2 _][*2 NoClickEdit][2 ()]&]
+[s0;l288; [2 Disables entering the editing mode when clicking the respective 
+column.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Cache`(`): [_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&
+][2 _][*2 Cache][2 ()]&]
+[s0;l288; [2 Enables using the cache to store the converted values 
+of this column. By default, converted value caching is turned 
+off to make cell value conversion entirely dynamic; however, 
+very often it is advisable to enable using the cache, especially 
+when the conversion is relatively slow (for instance, when the 
+conversion queries a database connection to convert the value).]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Accel`(int`(`*`)`(int`)`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Accel][2 (][@(0.0.255)2 int][2 _(`*][*@3;2 filter][2 )(][@(0.0.255)2 i
+nt][2 ))]&]
+[s0;l288; [2 Sets up the accelerator for the given column. A given 
+filtering function is used to convert keystrokes before acceleration.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 filter][2 -|a ][*2 CharConvert][2 `-style 
+function to use for keystroke conversion]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Accel`(`): [_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&
+][2 _][*2 Accel][2 ()]&]
+[s0;l288; [2 Sets up the accelerator for the given column. No keystroke 
+conversion is performed.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Margin`(int`): [_^ArrayCtrl`:`:Column^2 Colum
+n][@(0.0.255)2 `&][2 _][*2 Margin][2 (][@(0.0.255)2 int][2 _][*@3;2 m][2 )]&]
+[s0;l288; [2 Sets up the margin width for the given column. This is 
+equivalent to calling the ][*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Column`:`:SetMargin`(int`)^2 S
+etMargin][2  method of the underlying ][*2 HeaderTab][2 .]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 m][2 -|]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 `*this]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Sorting`(const ValueOrder`&`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Sorting][2 (][@(0.0.255)2 const][2 _][_^ValueOrder^2 ValueOrder][@(0.0.255)2 `&
+][2 _][*@3;2 o][2 )]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Sorting`(int`(`*`)`(const Value`&a`,const Value`&b`)`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Sorting][2 (][@(0.0.255)2 int][2 _(`*][*@3;2 c][2 )(][@(0.0.255)2 co
+nst][2 _Value][@(0.0.255)2 `&][2 _a, ][@(0.0.255)2 const][2 _Value][@(0.0.255)2 `&][2 _b))]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Sorting`(`): [_^ArrayCtrl`:`:Column^2 Column][@(0.0.255)2 `&
+][2 _][*2 Sorting][2 ()]&]
+[s0;l288; [2 Activates sorting of ArrayCtrl column by clicking on its 
+header tab. Parameterless version uses default Value ordering 
+using StdValueCompare.]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:SortDefault`(`): [_^ArrayCtrl`:`:Column^2 Col
+umn][@(0.0.255)2 `&][2 _][*2 SortDefault][2 ()]&]
+[s0;l288; [2 Sets this column to be initial sorting column (calls SetSortColumn 
+of ArrayCtrl).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:HeaderTab`(`): [_^HeaderCtrl`:`:Column^2 Head
+erCtrl`::Column][@(0.0.255)2 `&][2 _][*2 HeaderTab][2 ()]&]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:HeaderTab`(`)const: [@(0.0.255)2 const][2 _][_^HeaderCtrl`:`:Column^2 H
+eaderCtrl`::Column][@(0.0.255)2 `&][2 _][*2 HeaderTab][2 ()_][@(0.0.255)2 const]&]
+[s0;l288; [2 Returns the ][*2 HeaderCtrl`::Column][2  object describing 
+the given column. This object can be used to set up additional 
+column properties (like column width constraints or the ][*^topic`:`/`/CtrlLib`/src`/HeaderCtrl`$en`-us`#`:`:HeaderCtrl`:`:Column`:`:Callback WhenAction^2 W
+henAction][2  callback).]&]
+[s0;0 &]
+[s0;H6;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Column`:`:Tip`(const char`*`): [_^ArrayCtrl`:`:Column^2 C
+olumn][@(0.0.255)2 `&][2 _][*2 Tip][2 (][@(0.0.255)2 const][2 _][@(0.0.255)2 char][2 _`*][*@3;2 tip
+][2 )]&]
+[s0;l288; [2 Assigns a ][*@3;2 tip][2  to header tab column.]&]
+[s0;0 &]
+[s0; &]
+[ {{10000t/25b/25@3 [s0; [*@(229)4 ArrayCtrl`::Order]]}}&]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Order`:`:struct: [@(0.0.255) struct]_[* Order]&]
+[s0;b42; [2 The ][*2 Order][2  object is used for array row sorting. The 
+overloaded ][*2 operator ()][2  acts as the sorting predicate, which 
+is consulted within the sorting method to determine which of 
+a given pair of row is `'less`' according to the desired sorting.]&]
+[s0;0 &]
+[s0; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Member List]]}}&]
+[s0;0 &]
+[s0;i448;a25;kKO9;:ArrayCtrl`:`:Order`:`:operator`(`)`(const Vector`<Value`>`&`,const Vector`<Value`>`&`)const: [@(0.0.255)2 v
+irtual][2  ][@(0.0.255)2 bool][2 _][*2 operator()][2 (][@(0.0.255)2 const][2 _][_^Vector^2 Vector
+][2 <][_^Value^2 Value][2 >`&_][*@3;2 row1][2 , ][@(0.0.255)2 const][2 _][_^Vector^2 Vector][2 <][_^Value^2 V
+alue][2 >`&_][*@3;2 row2][2 )_][@(0.0.255)2 const][2 _`=_][@3;2 0]&]
+[s0;l288; [2 The sorting predicate. This method should return ][*2 true][2  
+when its first argument (][/2 row1][2 ) is less than the second argument 
+(][/2 row2][2 ) according to the desired ordering.]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 row1][2 -|an array of source data 
+index values for the first of the rows to compare]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*C@3;2 row2][2 -|an array of source data 
+index values for the other row to compare]&]
+[s0;l288;i1121;b17;O9;~~~.1408; [*/2 Return value][2 -|][*2 true][2  `= row1 
+< row2, ][*2 false][2  `= row1 >`= row2]&]
+[s0;0 &]
+[s0; ]]
