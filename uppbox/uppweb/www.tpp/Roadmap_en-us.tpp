@@ -1,5 +1,4 @@
 topic "Roadmap";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -24,8 +23,48 @@ topic "Roadmap";
 [b125;a21;*2 $$22,22#72A57D7B347482931820FBB21B426750:subtitle]
 [l42;b42;a42;phO0;2 $$23,23#42C8ED58A1FE5FAB0FCEA41746BFF560:point]
 [b83;*_2 $$24,24#F44F66EA0BD27C61EACACB2D8ED88A05:release]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Roadmap&]
+[s24; Upcoming release&]
+[s3; 2018.1 (Mar 2018)&]
+[s22; Core&]
+[s5;l160;i150;O0; New low`-overhead CoWork [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_7`_7^ p
+arallelization method / pattern `- Loop]&]
+[s5;l160;i150;O0; Throughout the Core, many rvalue / universal reference 
+related optimizations&]
+[s5;l160;i150;O0; CoPartition optimized to perform the work in calling 
+thread if data size is small&]
+[s5;l160;i150;O0; SeedRandom without parameter now reseeds the random 
+with host enthropy&]
+[s5;l160;i150;O0; Array/Vector new [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_3`_2^ G
+et/Set] methods&]
+[s5; &]
+[s5; [* plugin/bz2]&]
+[s5;l160;i150;O0; plugin/bz2: Streaming support&]
+[s5; &]
+[s5; [* Painter]&]
+[s5;l160;i150;O0; Co Option to run parallel&]
+[s5;l160;i150;O0; BufferPainter`::PreClipDashed&]
+[s5; &]
+[s5; [* PdfDraw]&]
+[s5;l160;i150;O0; PdfDraw: DrawJPEG to directly embed JPEG compressed 
+images into PDF&]
+[s5; &]
+[s5; [* GUI programming]&]
+[s5;l160;i150;O0; In Windows, owned windows now have minimize box 
+disabled (as minimizing of owned windows leads to strange behaviour)&]
+[s5;l160;i150;O0; LineEdit`::WhenScroll event&]
+[s5; &]
+[s5; [* TheIDE]&]
+[s5;* &]
+[s5;l160;i150;O0; Very long files (>400MB) are now opened for view 
+rather than edit.&]
+[s5;l160;i150;O0; Some trivial merge conflict helper tools&]
+[s5;l160;i150;O0; IconDes improvements&]
+[s5;l160;i150;O0; Esc scripting language now has `'continue`' statement&]
+[s5; &]
+[s5; &]
 [s24; Current release&]
 [s3; 2017.2 (rev 11540) (Dec 2017)&]
 [s22; Core&]
