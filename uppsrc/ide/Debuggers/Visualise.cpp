@@ -102,7 +102,13 @@ void Pdb::Visualise(Visual& result, Pdb::Val val, int expandptr, int slen)
 			if(IsNull(val.fval))
 				result.Cat("Null", Magenta);
 			else
-				result.Cat(FormatDouble(val.fval, 20), Red);
+			if(IsInf(val.fval))
+				result.Cat("INF", Magenta);
+			else
+			if(IsNaN(val.fval))
+				result.Cat("NAN", Magenta);
+			else
+				result.Cat(AsString(val.fval), Red);
 			break;
 		case PFUNC: {
 			result.Cat(Hex(val.address), Red);
