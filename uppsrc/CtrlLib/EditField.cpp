@@ -290,6 +290,7 @@ void EditField::Paints(Draw& w, int& x, int fcy, const wchar *&txt,
 		if(showspaces) {
 			int xx = x;
 			Size sz = GetTextSize(" ", fnt) / 2;
+			e = txts + n;
 			for(const wchar *q = txts; q < e; q++) {
 				if(*q == ' ')
 					w.DrawRect(xx + sz.cx, sz.cy, 2, 2, Blend(SColorHighlight(), SColorPaper()));
