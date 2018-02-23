@@ -546,7 +546,11 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		GEvent& e = Events.Head();
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
-		CurrentState = e.state;
+		if(e.type == GDK_MOTION_NOTIFY) // mouse flags unreliable with touchscreen
+			CurrentState = (e.state & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON1_MASK)) |
+			               (CurrentState & (GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON1_MASK));
+		else
+			CurrentState = e.state;
 		CurrentEvent = e;
 		Value val = e.value;
 		Events.DropHead();
