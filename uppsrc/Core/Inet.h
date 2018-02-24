@@ -607,6 +607,7 @@ class WebSocket {
 	String     host;
 	IpAddrInfo addrinfo;
 	bool       ssl;
+	String     request_header;
 
 	String     data;
 	int        data_pos;
@@ -646,6 +647,8 @@ class WebSocket {
 		CLOSE = 0x8,
 		PING = 0x9,
 		PONG = 0xa,
+		
+		MASK = 0x80,
 	};
 
 	void Clear();
@@ -667,13 +670,14 @@ class WebSocket {
 
 	int GetFinIndex() const;
 
-	void   SendRaw(int hdr, const String& data);
+	void   SendRaw(int hdr, const String& data, dword mask = 0);
 	void   Do0();
 	
 	static String FormatBlock(const String& s);
 
 public:
 	WebSocket& NonBlocking(bool b = true)               { socket->Timeout(b ? 0 : Null); return *this; }
+	WebSocket& RequestHeader(const String& s)           { request_header = s; return *this; }
 	
 	bool   IsBlocking() const                           { return IsNull(socket->GetTimeout()); }
 	
@@ -691,6 +695,7 @@ public:
 	bool   IsBinary() const                             { return current_opcode & BINARY; }
 
 	void   SendText(const String& data)                 { SendRaw(FIN|TEXT, data); }
+	void   SendTextMasked(const String& data)           { SendRaw(FIN|TEXT, data, MASK); }
 	void   SendBinary(const String& data)               { SendRaw(FIN|BINARY, data); }
 	void   Ping(const String& data)                     { SendRaw(FIN|PING, data); }
 
@@ -699,7 +704,7 @@ public:
 	void   Continue(const String& data)                 { SendRaw(0, data); }
 	void   Fin(const String& data)                      { SendRaw(FIN, data); }
 
-	void   Close(const String& msg = Null);
+	void   Close(const String& msg = Null, bool wait_reply = false);
 	bool   IsOpen() const                               { return socket->IsOpen(); }
 	bool   IsClosed() const                             { return !IsOpen(); }
 

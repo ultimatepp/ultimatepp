@@ -104,17 +104,18 @@ void WebSocket::SendRequest()
 	for(int i = 0; i < 20; i++)
 		h.Cat(Random());
 	Out( // needs to be the first thing to sent after the connection is established
-		"GET " + uri + " HTTP/1.1\r\n"
-		"Host: " + host + "\r\n"
-		"Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
-		"Accept-Language: cs,en-US;q=0.7,en;q=0.3\r\n"
-		"Sec-WebSocket-Version: 13\r\n"
-		"Sec-WebSocket-Extensions: permessage-deflate\r\n"
-		"Sec-WebSocket-Key: " + Base64Encode(h) + "\r\n"
-		"Connection: keep-alive, Upgrade\r\n"
-		"Pragma: no-cache\r\n"
-		"Cache-Control: no-cache\r\n"
-		"Upgrade: websocket\r\n\r\n"
+	    Nvl(request_header,
+		    "GET " + uri + " HTTP/1.1\r\n"
+		    "Host: " + host + "\r\n"
+		    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+		    "Accept-Language: cs,en-US;q=0.7,en;q=0.3\r\n"
+		    "Sec-WebSocket-Version: 13\r\n"
+		    "Sec-WebSocket-Extensions: permessage-deflate\r\n"
+		    "Sec-WebSocket-Key: " + Base64Encode(h) + "\r\n"
+		    "Connection: keep-alive, Upgrade\r\n"
+		    "Pragma: no-cache\r\n"
+		    "Cache-Control: no-cache\r\n"
+		    "Upgrade: websocket\r\n\r\n")
 	);
 	opcode = HTTP_RESPONSE_HEADER;
 }
@@ -291,13 +292,13 @@ void WebSocket::FrameHeader()
 	}
 }
 
-void WebSocket::Close(const String& msg)
+void WebSocket::Close(const String& msg, bool wait_reply)
 {
 	LLOG("Sending CLOSE");
 	SendRaw(CLOSE|FIN, msg);
 	close_sent = true;
 	if(IsBlocking())
-		while(!IsClosed() && !IsError() && socket->IsOpen())
+		while((wait_reply ? IsOpen() : out_queue.GetCount()) && !IsError() && socket->IsOpen())
 			Do0();
 }
 
@@ -425,7 +426,7 @@ void WebSocket::Output()
 	}
 }
 
-void WebSocket::SendRaw(int hdr, const String& data)
+void WebSocket::SendRaw(int hdr, const String& data, dword mask)
 {
 	if(IsError())
 		return;
@@ -437,7 +438,7 @@ void WebSocket::SendRaw(int hdr, const String& data)
 	header.Cat(hdr);
 	int len = data.GetCount();
 	if(len > 65535) {
-		header.Cat(127);
+		header.Cat(127 | mask);
 		header.Cat(0);
 		header.Cat(0);
 		header.Cat(0);
@@ -456,11 +457,28 @@ void WebSocket::SendRaw(int hdr, const String& data)
 	else
 		header.Cat((int)len);
 
-	Out(header);
+	if(mask) {
+		byte Cle[4];
+		for(int i = 0; i < 4; i++)
+			header.Cat(Cle[i] = (byte)Random());
 
-	if(data.GetCount() == 0)
-		return;
-	Out(data);
+		Out(header);
+
+		if(data.GetCount()) {
+			StringBuffer buf(data.GetCount());
+			int n = data.GetCount();
+			for(int i = 0; i < n; i++)
+				buf[i] = data[i] ^ Cle[i & 3];
+			Out(buf);
+		}
+	}
+	else {
+		Out(header);
+	
+		if(data.GetCount() == 0)
+			return;
+		Out(data);
+	}
 }
 
 bool WebSocket::WebAccept(TcpSocket& socket_, HttpHeader& hdr)
