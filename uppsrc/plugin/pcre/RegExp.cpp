@@ -197,13 +197,13 @@ bool RegExp::ReplacePos(String& t, int p, int q, const String& r)
 }
 
 Vector<String> RegExp::Make_rv(const String& r)
-{	
-	RegExp reg("\\((.*?)\\)");
+{
+	RegExp reg("\\(((\r|\n|.)*?)\\)");
 	
 	Vector<String> rv;
 	
 	while(reg.GlobalMatch(r)){
-		rv.Add(reg.GetString(0));	
+		rv.Add(reg.GetString(0));
 	}
 	
 	return rv;
