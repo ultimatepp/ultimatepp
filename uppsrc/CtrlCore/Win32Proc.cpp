@@ -395,7 +395,7 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 				if(focusCtrlWnd && focusCtrlWnd->IsEnabled()) {
 					if(!IsEnabled())
 						MessageBeep(MB_OK);
-					LLOG("WM_SETFOCUS -> ::SetFocus for " << UPP::Name(focusCtrlWnd));
+					LLOG("WM_SETFOCUS -> ::SetFocus for " << UPP::Name(focusCtrlWnd) << ", this: " << UPP::Name(this));
 					::SetFocus(focusCtrlWnd->GetHWND());
 				}
 				else

@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-#define LLOG(x)   //   DLOG(x)
+#define LLOG(x)    //   DLOG(x)
 #define LOGTIMING 0
 
 #ifdef _DEBUG
@@ -551,8 +551,11 @@ void Ctrl::WndFree()
 	LLOG("Ctrl::WndDestroy owner " << (void *)owner
 	     << " focus " << focus
 	     << " ::GetFocus() " << (void *)::GetFocus());
-	if(owner && focus) { // CXL 7.11.2003 presun - melo by to fungovat take a neblikat...
+	if(owner && focus) {
 		LLOG("Ctrl::WndFree->SetFocus " << UPP::Name(Ctrl::CtrlFromHWND(owner)));
+		Ctrl *o = GetOwner();
+		if(o && !o->IsEnabled()) // owner needs to be enabled, otherwise SetFocus bounces back
+			o->Enable();
 		::SetFocus(owner);
 	}
 	LLOG(LOG_END << "//Ctrl::WndFree() in " <<UPP::Name(this));
@@ -566,7 +569,7 @@ void Ctrl::WndDestroy()
 	if(top && top->hwnd) {
 		HWND hwnd = top->hwnd;
 		WndFree(); // CXL 2007-06-04 to avoid loosing focus with maximize box owned dialogs
-		bool result = ::DestroyWindow(hwnd);
+		::DestroyWindow(hwnd);
 	}
 }
 
@@ -1125,10 +1128,10 @@ bool Ctrl::IsWndForeground() const
 void Ctrl::WndEnable(bool b)
 {
 	GuiLock __;
-	LLOG("Ctrl::WndEnable(" << (b && *b) << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
+	LLOG("Ctrl::WndEnable(" << b << ") in " << UPP::Name(this) << ", focusCtrlWnd = " << UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 	if(b)
 		ReleaseCapture();
-	LLOG("//Ctrl::WndEnable(" << (b && *b) << ") -> false " <<UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
+	LLOG("//Ctrl::WndEnable(" << b << ") -> false " <<UPP::Name(this) << ", focusCtrlWnd = " <<UPP::Name(~focusCtrlWnd) << ", raw = " << (void *)::GetFocus());
 }
 
 bool Ctrl::SetWndFocus()
