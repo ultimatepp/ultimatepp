@@ -1,12 +1,16 @@
 #ifndef _ScatterCtrl_Properties_h_
 #define _ScatterCtrl_Properties_h_
 
+#define  LAYOUTFILE <ScatterCtrl/ScatterCtrl.lay>
+#include <CtrlCore/lay.h>
+
+#define IMAGECLASS ScatterImgP
+#define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
+#include <Draw/iml_header.h>
 
 class MeasuresTab : public WithMeasures<StaticRect> {
 public:
 	typedef MeasuresTab CLASSNAME;
-	
-	virtual ~MeasuresTab() {};
 	
 	void Init(ScatterCtrl &scatter);
 	void Change();
@@ -18,8 +22,6 @@ private:
 class TextsTab : public WithTexts<StaticRect> {
 public:
 	typedef TextsTab CLASSNAME;
-	
-	virtual ~TextsTab() {};
 	
 	void Init(ScatterCtrl &scatter);
 	void DoShowText();
@@ -33,8 +35,6 @@ private:
 class LegendTab : public WithLegend<StaticRect> {
 public:
 	typedef LegendTab CLASSNAME;
-	
-	virtual ~LegendTab() {};
 	
 	void Init(ScatterCtrl &scatter);
 
@@ -56,7 +56,7 @@ public:
 	void Init(ScatterCtrl& scatter);
 	
 private:
-	ScatterCtrl *pscatter;	
+	ScatterCtrl *pscatter;
 	int dashCount;
 	
 	void Change();
@@ -69,12 +69,8 @@ public:
 	typedef DataDlg CLASSNAME;
 	
 	void Init(ScatterCtrl& scatter);
-	virtual ~DataDlg() {};
 	
-	virtual void Close();
-	void OnClose();
-	
-	void OnTab(); 
+	void OnTab();
 	void OnArrayBar(Bar &menu);
 	void ArrayCopy();
 	void ArraySelect();
@@ -96,7 +92,7 @@ public:
 	Array<DataSourceY> dataSourceYArr;
 	
 private:
-	ScatterCtrl *pscatter;	
+	ScatterCtrl *pscatter;
 	
 	Array <WithDataSeries <StaticRect> > series;
 };
@@ -109,9 +105,8 @@ public:
 	virtual ~PropertiesDlg() {};
 	
 	void Set(int tab);
-	void OnTab(); 
-	virtual void Close();
-	void OnClose();
+	void OnTab();
+	void Perform();
 		
 private:
 	ScatterCtrl* scatter;
@@ -146,7 +141,7 @@ private:
 	ScatterCtrl* pscatter;
 	int id;
 	
-	WithProcessingTabFit<StaticRect> tabFit;	
+	WithProcessingTabFit<StaticRect> tabFit;
 	WithProcessingTabFrequency<StaticRect> tabFreq;
 	WithProcessingTabOp<StaticRect> tabOp;
 	WithProcessingTabBestFit<StaticRect> tabBestFit;
@@ -181,13 +176,9 @@ public:
 	typedef ProcessingDlg CLASSNAME;
 
 	void Init(ScatterCtrl& scatter);
-	virtual ~ProcessingDlg() {};
-	
-	void OnClose();
-	virtual void Close();
-	
+
 private:
-	ScatterCtrl* scatter;	
+	ScatterCtrl* scatter;
 	Array<ProcessingTab> tabs;
 	
 	void UpdateFields();
@@ -198,13 +189,11 @@ public:
 	typedef TextDlg CLASSNAME;
 	
 	TextDlg(ScatterCtrl& scatter);
-	virtual ~TextDlg() {};
 	
 	void Change();
-	void OnClose();
-	
+
 private:
-	ScatterCtrl& scatter;	
+	ScatterCtrl& scatter;
 };
 	
 

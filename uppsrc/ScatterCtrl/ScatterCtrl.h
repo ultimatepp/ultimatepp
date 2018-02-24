@@ -9,7 +9,6 @@ using namespace Upp;
 
 #include "PopUpText.h"
 
-
 class EditDoubleLostFocus : public EditDouble {
 public:
 	Callback WhenLostFocus;
@@ -378,5 +377,6 @@ void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale, bool ctrl) {
 	} 
 }
 
+#include "Properties.h"
 
 #endif
