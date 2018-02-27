@@ -13,6 +13,7 @@ Point         Ctrl::CurrentMousePos;
 guint         Ctrl::CurrentState;
 guint32       Ctrl::CurrentTime;
 Ctrl::GEvent  Ctrl::CurrentEvent;
+guint         Ctrl::MouseState;
 
 bool  GetShift() { return Ctrl::CurrentState & GDK_SHIFT_MASK; }
 bool  GetCtrl() { return Ctrl::CurrentState & GDK_CONTROL_MASK; }
@@ -184,11 +185,10 @@ int Ctrl::DoButtonEvent(GdkEvent *event, bool press)
 	static int mask[] = { GDK_BUTTON1_MASK, GDK_BUTTON2_MASK, GDK_BUTTON3_MASK };
 	if(e->button >= 1 && e->button <= 3) {
 		int m = mask[e->button - 1];
-		int state = e->state;
-		if(press) // gtk seems to provide state "before" the event, so buttons are wrong
-			state |= m;
+		if(press)
+			MouseState |= m;
 		else
-			state &= ~m;
+			MouseState &= ~m;
 		return e->button;
 	}
 	return Null;
@@ -243,7 +243,7 @@ void Ctrl::AddEvent(gpointer user_data, int type, const Value& value, GdkEvent *
 	GdkModifierType mod;
 	gdk_window_get_pointer(gdk_get_default_root_window(), &x, &y, &mod);
 	e.mousepos = Point(x, y);
-	e.state = mod;
+	e.state = (mod & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON3_MASK)) | MouseState;
 	e.count = 1;
 	e.event = NULL;
 	if(event) {
@@ -546,11 +546,7 @@ bool Ctrl::ProcessEvent0(bool *quit, bool fetch)
 		GEvent& e = Events.Head();
 		CurrentTime = e.time;
 		CurrentMousePos = e.mousepos;
-		if(e.type == GDK_MOTION_NOTIFY) // mouse flags unreliable with touchscreen
-			CurrentState = (e.state & ~(GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON1_MASK)) |
-			               (CurrentState & (GDK_BUTTON1_MASK|GDK_BUTTON2_MASK|GDK_BUTTON1_MASK));
-		else
-			CurrentState = e.state;
+		CurrentState = e.state;
 		CurrentEvent = e;
 		Value val = e.value;
 		Events.DropHead();
