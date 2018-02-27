@@ -167,6 +167,7 @@ public: // really private:
 	static Vector<Event<> > hotkey;
 	static Vector<dword>    keyhot;
 	static Vector<dword>    modhot;
+	static guint            MouseState;
             
 public:
 	static void      EndSession()              {}
