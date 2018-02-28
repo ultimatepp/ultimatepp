@@ -69,6 +69,7 @@ public:
 	typedef DataDlg CLASSNAME;
 	
 	void Init(ScatterCtrl& scatter);
+	virtual ~DataDlg() {};
 	
 	void OnTab();
 	void OnArrayBar(Bar &menu);
@@ -107,6 +108,11 @@ public:
 	void Set(int tab);
 	void OnTab();
 	void Perform();
+	virtual void Close() {	
+		if (scatter->GetCount() == 0)
+			RejectBreak(IDOK);
+		TopWindow::Close();
+	}
 		
 private:
 	ScatterCtrl* scatter;
@@ -176,6 +182,7 @@ public:
 	typedef ProcessingDlg CLASSNAME;
 
 	void Init(ScatterCtrl& scatter);
+	virtual ~ProcessingDlg() {};
 
 private:
 	ScatterCtrl* scatter;

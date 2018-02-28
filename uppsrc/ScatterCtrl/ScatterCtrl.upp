@@ -7,11 +7,11 @@ uses
 	GridCtrl;
 
 file
-	ScatterCtrl.h,
 	ScatterCtrl.cpp,
+	ScatterCtrl.h,
 	ScatterCtrlX.cpp,
-	Properties.h,
 	Properties.cpp,
+	Properties.h,
 	Processing.cpp,
 	Data.cpp,
 	ScatterCtrl.iml,
