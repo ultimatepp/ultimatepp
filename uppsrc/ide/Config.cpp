@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define METHOD_NAME "Ide::" << UPP_FUNCTION_NAME << "(): "
+
 void Ide::SerializeWorkspace(Stream& s) {
 	int i;
 	int version = 16;
@@ -127,6 +129,8 @@ void Ide::SerializeLastMain(Stream& s)
 
 void Ide::EditorMode()
 {
+	Logd() << METHOD_NAME;
+	
 	editormode = true;
 	main = Null;
 	pocfg = Null;

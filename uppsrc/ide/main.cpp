@@ -1,5 +1,7 @@
 #include "ide.h"
 
+#define FUNCTION_NAME UPP_FUNCTION_NAME << "(): "
+
 void DelTemps()
 {
 	FindFile ff(ConfigFile("*.tmp"));
@@ -88,7 +90,11 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 		ide.UscProcessDirDeep(dir[i]);
 	for(int i = 0; i < args.GetCount(); i++) {
 		if(args[i] != "-f") {
-			ide.EditFile(NormalizePath(args[i]));
+			String file_path = NormalizePath(args[i]);
+			
+			Logd() << FUNCTION_NAME << "Opening file \"" << file_path << "\".";
+			
+			ide.EditFile(file_path);
 			ide.FileSelected();
 		}
 	}
