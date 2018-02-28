@@ -882,8 +882,8 @@ String formatSeconds(double seconds, int dec, bool fill) {
 		ret << "." << FormatIntDec((int)(decs*pow(10, dec)), dec, '0');
 	return ret;
 }
-
-String HMSToString(int hour, int min, double seconds, bool units, int dec) {
+/*
+String HMSToString0(int hour, int min, double seconds, bool units, int dec) {
 	String sunits;
 	if (units) {
 		if (hour >= 1)
@@ -907,15 +907,42 @@ String HMSToString(int hour, int min, double seconds, bool units, int dec) {
 	if (units)
 		ret << " " << sunits;
 	return ret;
+}*/
+
+String HMSToString(int hour, int min, double seconds, int dec, bool units, bool space, bool longUnits) {
+	String ret;
+	
+	if (hour > 0) {
+		ret << hour;
+		if (space)
+			ret << " ";
+		if (units)
+			ret << (longUnits ? ((hour > 1) ? t_("hours") : t_("hour")) : t_("h"));
+	}
+	if (min > 0) {
+		ret << (ret.IsEmpty() ? "" : " ") << min;
+		if (space)
+			ret << " ";
+		if (units)
+			ret << (longUnits ? ((min > 1) ? t_("mins") : t_("min")) : t_("m"));
+	}
+	if (hour == 0 && (seconds > 1 || (seconds > 0 && dec > 0))) {
+		ret << (ret.IsEmpty() ? "" : " ") << formatSeconds(seconds, dec, false);
+		if (space)
+			ret << " ";
+		if (units)
+ 			ret << (longUnits ? ((seconds > 1) ? t_("secs") : t_("sec")) : t_("s"));
+	}
+	return ret;
 }
 
-String SecondsToString(double seconds, bool units, int dec) {
+String SecondsToString(double seconds, int dec, bool units, bool space, bool longUnits) {
 	int hour, min;
 	hour = (int)(seconds/3600.);
 	seconds -= hour*3600;
 	min = (int)(seconds/60.);
 	seconds -= min*60;	
-	return HMSToString(hour, min, seconds, units, dec);
+	return HMSToString(hour, min, seconds, dec, units, space, longUnits);
 }
 
 String SeasonName(int iseason) {
@@ -1218,7 +1245,7 @@ Vector<Vector <Value> > ReadCSV(const String strFile, char separator, bool bycol
 	if (bycols) {
 		line = GetLine(strFile, posLine);
 		while (pos >= 0) {
-			Value name = GetField(line, pos, separator, decimalSign, /*onlyStrings*/true);
+			Value name = GetField(line, pos, separator, decimalSign, onlyStrings);
 			if (/*pos >= 0 && */!IsNull(name)) {
 				Vector<Value> &data = result.Add();
 				data.Add(name);
@@ -1327,12 +1354,18 @@ String WriteCSV(Vector<Vector <Value> > &data, char separator, bool bycols, char
 	String _decimalSign(decimalSign, 1);
 	
 	if (bycols) {
-		for (int r = 0; r < data[0].GetCount(); ++r) {
+		int maxr = 0;
+		for (int c = 0; c < data.GetCount(); ++c) 
+			maxr = max(maxr, data[c].GetCount());
+			
+		for (int r = 0; r < maxr; ++r) {
 			if (r > 0)
 				ret << "\n";
 			for (int c = 0; c < data.GetCount(); ++c) {
 				if (c > 0)
 					ret << separator;
+				if (r >= data[c].GetCount())
+					continue;
 				String str = ToStringDecimalSign(data[c][r], _decimalSign);
 				if (str.Find(separator) >= 0)
 					ret << '\"' << str << '\"';
@@ -1584,14 +1617,18 @@ bool RenameDeepWildcardsX(const char *path, const char *namewc, const char *newn
 	return true;
 }
 
-bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, bool replaceOnlyNew, String filesToExclude)
+void DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, bool replaceOnlyNew, String filesToExclude, String &errorList)
 {
 	String dirPath = AppendFileName(dir, relPath);
 	String newPath = AppendFileName(newPlace, relPath);
+	LOG(dirPath);
+	LOG(newPath);
+	LOG (AppendFileName(dirPath, "*.*"));
 	FindFile ff(AppendFileName(dirPath, "*.*"));
-	while(ff) {
+	while(ff) { 
+		String name = ff.GetName();
+		String newFullPath = AppendFileName(newPath, name);
 		if(ff.IsFile()) {
-			String newFullPath = AppendFileName(newPath, ff.GetName());
 			bool copy = !replaceOnlyNew;
 			if (replaceOnlyNew) {
 				Time newPathTime = FileGetTime(newFullPath);
@@ -1599,27 +1636,27 @@ bool DirectoryCopy_Each(const char *dir, const char *newPlace, String relPath, b
 					copy = true;
 			}
 			if (copy) {
-				if (!PatternMatchMulti(filesToExclude, ff.GetName())) {
+				if (!PatternMatchMulti(filesToExclude, name)) {
 					if (!FileCopy(ff.GetPath(), newFullPath))
-						return false;
+						errorList << "\n" << Format(t_("Impossible to copy '%s' to '%s': %s"), ff.GetPath(), newFullPath, GetLastErrorMessage());
 				}
 			} 
 		} else if (ff.IsFolder()) {
-			DirectoryCreate(AppendFileName(newPath, ff.GetName()));
-			if (!FolderIsEmpty(ff.GetPath())) {
-				if (!DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, ff.GetName()), replaceOnlyNew, filesToExclude))
-				return false;
-		}
+			if (!DirectoryExists(newFullPath)) {
+				if (!DirectoryCreate(newFullPath))
+					errorList << "\n" << Format(t_("Impossible to create directory '%s': %s"), newFullPath, GetLastErrorMessage());
+			}
+			DirectoryCopy_Each(dir, newPlace, AppendFileName(relPath, name), replaceOnlyNew, filesToExclude, errorList);
 		}
 		ff.Next();
 	}
-	return true;
 }
 
-bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew, String filesToExclude) {
-	if (!DirectoryExists(dir))
-		return false;
-	return DirectoryCopy_Each(dir, newPlace, "", replaceOnlyNew, filesToExclude);
+void DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew, String filesToExclude, String &errorList) {
+	if (!DirectoryExists(dir)) 
+		errorList << "\n" << Format(t_("Directory '%s' does not exist"), dir);
+	else
+		DirectoryCopy_Each(dir, newPlace, "", replaceOnlyNew, filesToExclude, errorList);
 }
 
 bool FolderIsEmpty(const char *path) {
@@ -1768,7 +1805,7 @@ Vector<String> SearchFile(String dir, const Vector<String> &condFiles, const Vec
 								 const Vector<String> &extFiles,  const Vector<String> &extFolders, 
 								 const String text, Vector<String> &errorList) {
 	Vector<String> files;								     
-	//errorList.Clear();
+	errorList.Clear();
 
 	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	
 	
@@ -1778,7 +1815,7 @@ Vector<String> SearchFile(String dir, const Vector<String> &condFiles, const Vec
 Vector<String> SearchFile(String dir, String condFile, String text, Vector<String> &errorList)
 {
 	Vector<String> condFiles, condFolders, extFiles, extFolders, files;
-	//errorList.Clear();
+	errorList.Clear();
 
 	condFiles.Add(condFile);
 	SearchFile_Each(dir, condFiles, condFolders, extFiles, extFolders, text, files, errorList);	

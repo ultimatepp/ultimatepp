@@ -51,7 +51,7 @@ String Tokenize2(const String &str, const String &token);
 	
 /////////
 bool DirectoryExistsX(const char *path, EXT_FILE_FLAGS flags = NO_FLAG); 
-bool DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew = false, String filesToExclude = "");
+void DirectoryCopyX(const char *dir, const char *newPlace, bool replaceOnlyNew, String filesToExclude, String &erroList);
 bool DirectoryMove(const char *dir, const char *newPlace);
 bool DeleteDeepWildcardsX(const char *path, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
 bool DeleteDeepWildcardsX(const char *pathwc, const char *namewc, bool filefolder, EXT_FILE_FLAGS flags = NO_FLAG);
@@ -211,8 +211,8 @@ Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes, bool units = true);
 
-String SecondsToString(double seconds, bool units = false, int dec = 2);
-String HMSToString(int hour, int min, double seconds, bool units = false, int dec = 2); 
+String SecondsToString(double seconds, int dec = 2, bool units = false, bool space = false, bool longUnits = false);
+String HMSToString(int hour, int min, double seconds, int dec = 2, bool units = false, bool space = false, bool longUnits = false); 
 double StringToSeconds(String str);		
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
@@ -237,9 +237,15 @@ inline int Sign(T a) 				{return (a > 0) - (a < 0);}
 template<class T>
 inline T Average(T a, T b) 			{return T(a+b)/2;}
 template<class T>
+inline T Avg(T a, T b) 				{return Average(a, b);}
+template<class T>
 inline T Average(T a, T b, T c)		{return T(a+b+c)/3;}
 template<class T>
+inline T Avg(T a, T b, T c) 		{return Average(a, b, c);}
+template<class T>
 inline T Average(T a, T b, T c, T d){return T(a+b+c+d)/4;}
+template<class T>
+inline T Avg(T a, T b, T c, T d)	{return Average(a, b, c, d);}
 template<class T>
 inline T pow2(T a) {return a*a;}
 template<class T>
@@ -577,20 +583,20 @@ private:
 class RealTimeStop {
 public:
 	RealTimeStop() {
-#ifdef CTRLLIB_H	
+/*#ifdef CTRLLIB_H	
 		callbackOn = false;
 		lastTick = -1;
-#endif 
+#endif */
 		Start();
 	}
 	void Reset() {
-		timeElapsed = 0;
-#ifdef CTRLLIB_H
+		timeElapsed = lastTimeElapsed = 0;
+/*#ifdef CTRLLIB_H
 		if (!callbackOn) {
 			SetTimeCallback(-5*1000, callback(this, &RealTimeStop::Tick), this);
 			callbackOn = true;
 		}
-#endif
+#endif*/
 		isPaused = true;
 		Continue();
 	}
@@ -619,6 +625,12 @@ public:
 		else
 			return timeElapsed + (tmGetTimeX() - time0);
 	}
+	double Elapsed() {
+		double t = Seconds();
+		double elapsed = t - lastTimeElapsed;
+		lastTimeElapsed = t;
+		return elapsed;
+	}
 	void SetBack(double secs) {
 		timeElapsed -= secs;
 	}
@@ -627,10 +639,12 @@ public:
 private:
 	double timeElapsed;				// Time elapsed
 	double time0;					// Time of last Continue()
+	double lastTimeElapsed;
 	bool isPaused;
-#ifdef CTRLLIB_H
+/*ifdef CTRLLIB_H
 	bool callbackOn;
 	double lastTick;
+
 	void Tick() {
 		double tActual = tmGetTimeX();
 		if (!isPaused && lastTick > -1) {
@@ -640,14 +654,14 @@ private:
 		}
 		lastTick = tActual;
 	}
-#endif
+#endif*/
 };
 
 class LocalProcessX {
 public:
 	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
 	~LocalProcessX() 				  {Stop();}
-	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2};
+	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
 	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, 
 		double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
 		status = STOP_OK;
@@ -681,7 +695,7 @@ public:
 			if (!p.IsPaused()) {
 #endif
 				if (maxTimeWithoutOutput > 0 && timeWithoutOutput.Seconds() > maxTimeWithoutOutput) 
-					status = STOP_TIMEOUT;
+					status = STOP_NORESPONSE;
 				else if (maxRunTime > 0 && timeElapsed.Seconds() > maxRunTime) 
 					status = STOP_TIMEOUT;
 #ifdef PLATFORM_WIN32				
@@ -778,6 +792,14 @@ public:
 		mutex.Leave();
 		return ret;
 	}
+	Value GetData() {
+		Value ret;
+		mutex.Enter();
+		ret = val;
+		mutex.Leave();
+		return ret;		
+	}
+	Value operator~() const 		{return GetData();}
 	inline ThreadSafe& operator++() {
 		mutex.Enter();
 		val++;

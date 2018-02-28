@@ -146,6 +146,7 @@ int GetEditWidth(const String str) {
 	return ret;
 }
 
+
 END_UPP_NAMESPACE
 
 #endif
