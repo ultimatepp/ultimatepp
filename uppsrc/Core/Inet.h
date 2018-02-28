@@ -607,7 +607,7 @@ class WebSocket {
 	String     host;
 	IpAddrInfo addrinfo;
 	bool       ssl;
-	String     request_header;
+	String     request_headers;
 
 	String     data;
 	int        data_pos;
@@ -677,7 +677,9 @@ class WebSocket {
 
 public:
 	WebSocket& NonBlocking(bool b = true)               { socket->Timeout(b ? 0 : Null); return *this; }
-	WebSocket& RequestHeader(const String& s)           { request_header = s; return *this; }
+	WebSocket& RequestHeaders(const String& s)          { request_headers = s; return *this; }
+
+	String StandardHeaders();
 	
 	bool   IsBlocking() const                           { return IsNull(socket->GetTimeout()); }
 	

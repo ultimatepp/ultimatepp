@@ -97,25 +97,31 @@ bool WebSocket::Connect(const String& url)
 	return true;
 }
 
-void WebSocket::SendRequest()
+String WebSocket::StandardHeaders()
 {
-	LLOG("Sending connection request");
 	String h;
 	for(int i = 0; i < 20; i++)
 		h.Cat(Random());
+    return
+	    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+		"Accept-Language: cs,en-US;q=0.7,en;q=0.3\r\n"
+		"Sec-WebSocket-Version: 13\r\n"
+		"Sec-WebSocket-Extensions: permessage-deflate\r\n"
+		"Sec-WebSocket-Key: " + Base64Encode(h) + "\r\n"
+		"Connection: keep-alive, Upgrade\r\n"
+		"Pragma: no-cache\r\n"
+		"Cache-Control: no-cache\r\n"
+		"Upgrade: websocket\r\n";
+}
+
+void WebSocket::SendRequest()
+{
+	LLOG("Sending connection request");
 	Out( // needs to be the first thing to sent after the connection is established
-	    Nvl(request_header,
-		    "GET " + uri + " HTTP/1.1\r\n"
-		    "Host: " + host + "\r\n"
-		    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
-		    "Accept-Language: cs,en-US;q=0.7,en;q=0.3\r\n"
-		    "Sec-WebSocket-Version: 13\r\n"
-		    "Sec-WebSocket-Extensions: permessage-deflate\r\n"
-		    "Sec-WebSocket-Key: " + Base64Encode(h) + "\r\n"
-		    "Connection: keep-alive, Upgrade\r\n"
-		    "Pragma: no-cache\r\n"
-		    "Cache-Control: no-cache\r\n"
-		    "Upgrade: websocket\r\n\r\n")
+	    "GET " + uri + " HTTP/1.1\r\n"
+	    "Host: " + host + "\r\n" +
+	    Nvl(request_headers, StandardHeaders())
+	    + "\r\n"
 	);
 	opcode = HTTP_RESPONSE_HEADER;
 }
@@ -450,7 +456,7 @@ void WebSocket::SendRaw(int hdr, const String& data, dword mask)
 	}
 	else
 	if(len > 125) {
-		header.Cat(126);
+		header.Cat(126 | mask);
 		header.Cat(byte(len >> 8));
 		header.Cat(byte(len));
 	}
