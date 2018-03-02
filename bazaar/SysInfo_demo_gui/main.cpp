@@ -40,7 +40,7 @@ void SpecialFolders::Fill() {
 	const char *ext[] = {".html", ".doc", ".png", ".pdf", ".txt", ".xyz", ""};
 	for (int i = 0; *ext[i] != 0; ++i) 
 		DefaultExes.Add(ext[i], GetExtExecutable(ext[i]));
-#if defined(PLATFORM_WIN32) 	
+#if defined(PLATFORM_WIN32)	
 	ButInstalledSoftware.WhenPush = THISBACK(ButInstalledSoftware_Push);
 #else
 	SoftwareInstalled.Enable(false);
@@ -356,13 +356,18 @@ void WindowsList_::Fill() {
 	}
 	Windows.SetEditable();
 	ButUpdate.WhenPush = THISBACK(ButUpdate_Push);
+	#if defined(PLATFORM_WIN32)	
 	ButTopmost.WhenPush = THISBACK(ButTopmost_Push);
+	#else
+	ButTopmost.Disable();
+	#endif
 	static MenuBar bar;
 	//GetList().StdToolBar(bar); //bar(2).Remove();bar(1).Remove();
 	//GetList().WhenToolBar=THISBACK(cb);
 	Windows.WhenBar = THISBACK(MenuCallback);
 }
 
+#if defined(PLATFORM_WIN32)	
 void WindowsList_::ButTopmost_Push() {
 	int row = Windows.GetCursor();
 	if (row < 0)
@@ -370,6 +375,7 @@ void WindowsList_::ButTopmost_Push() {
 	int64 id = ScanInt64(String(Windows.Get(row, 1)));
 	Window_TopMost(id);
 }
+#endif
 
 void WindowsList_::CbCopy() {
 	String text;
@@ -631,7 +637,7 @@ SysInfoDemo::SysInfoDemo()
 	menu.Set(THISBACK(MainMenu));
 	menu.WhenHelp = info;
 
-	SetTimeCallback(-500, THISBACK(TimerFun));
+	timeCallback.Set(-500, THISBACK(TimerFun));
 
 	Sizeable().Zoomable();
 }
