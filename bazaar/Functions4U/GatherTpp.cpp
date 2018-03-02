@@ -7,7 +7,8 @@
 #include "GatherTpp.h"
 #include <Functions4U/Html/htmld.h>
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
+using namespace Upp;
 
 static Topic ReadTopic(const char *text)
 {
@@ -428,6 +429,5 @@ String GatherTpp::Www(const char *topic, int lang, String topicLocation) {
 	return GatherTopics(String().Cat() << topicLocation << topic << "$" << "en-us");
 }
 
-END_UPP_NAMESPACE
 
 #endif

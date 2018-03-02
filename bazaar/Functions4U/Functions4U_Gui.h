@@ -1,7 +1,10 @@
 #ifndef _Functions4U_Functions4U_Gui_h_
 #define _Functions4U_Functions4U_Gui_h_
 
-#ifdef CTRLLIB_H
+#include <Functions4U/Functions4U.h>
+
+using namespace Upp;
+
 
 inline const RGBA *GetPixel(const Image &img, int x, int y) {
 	return &img[y][x];
@@ -91,5 +94,4 @@ void DrawRectLine(Draw& w, Rect &r, int lineWidth, const Color &color);
 
 int GetEditWidth(const String str);
 
-#endif
 #endif

@@ -1,7 +1,7 @@
 #ifndef _Functions4U_LocalProcess2_h
 #define _Functions4U_LocalProcess2_h
 
-NAMESPACE_UPP
+using namespace Upp;
 
 class LocalProcess2 : public AProcess {
 public:
@@ -81,6 +81,5 @@ public:
 	virtual ~LocalProcess2()                                                                 { Kill(); }
 };
 
-END_UPP_NAMESPACE
 
 #endif

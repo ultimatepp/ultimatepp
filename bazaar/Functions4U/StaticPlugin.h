@@ -1,7 +1,8 @@
 #ifndef _Functions4U_StaticPlugin_h_
 #define _Functions4U_StaticPlugin_h_
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
+using namespace Upp;
 
 #define PluginRegister(a, b, c)	 	a::Register<b>(c, typeid(a).name())
 #define PluginInit(a, b)			(a)._Init(b, typeid(a).name())
@@ -56,6 +57,5 @@ public:
 	String &GetName() {return name;};
 };
 
-END_UPP_NAMESPACE
 
 #endif

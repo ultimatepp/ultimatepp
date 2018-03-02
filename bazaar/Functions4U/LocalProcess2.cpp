@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include "LocalProcess2.h"
 
-namespace Upp {
+using namespace Upp;
 
 #ifdef PLATFORM_WIN32
 #include <TlHelp32.h>
@@ -710,4 +710,4 @@ void LocalProcess2::Pause() {
 }
 #endif
 
-}
+

@@ -1,6 +1,8 @@
 #include <Core/Core.h>
-
 #include "Functions4U.h"
+
+using namespace Upp;
+
 
 #ifdef PLATFORM_WIN32 // || defined (PLATFORM_WIN64)
 	#define Ptr Ptr_
@@ -19,7 +21,7 @@
 	#undef CY
 #endif
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
 
 #define TFILE <Functions4U/Functions4U.t>
 #include <Core/t.h>
@@ -2120,7 +2122,7 @@ bool FileDataArray::SaveFile(const char *fileName) {
 }
 
 bool FileDataArray::AppendFile(const char *fileName) {
-	return Upp::AppendFile(fileName, GetFileText());
+	return ::AppendFile(fileName, GetFileText());
 }
 
 bool FileDataArray::LoadFile(const char *fileName)
@@ -2652,7 +2654,6 @@ int SysX(const char *cmd, String& out, String& err, double timeOut,
 	return IsNull(ret) ? 0 : ret;
 }
 
-END_UPP_NAMESPACE
 
 // Dummy functions added after TheIDE change
 Upp::String GetCurrentMainPackage() {return "dummy";}

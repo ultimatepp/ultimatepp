@@ -2,7 +2,8 @@
 
 #include "../bsdiff.h"
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
+using namespace Upp;
 
 String errMsg;
 
@@ -15,4 +16,3 @@ bool Err(String str) {
 	return false;
 }
 
-END_UPP_NAMESPACE

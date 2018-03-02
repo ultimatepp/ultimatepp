@@ -6,9 +6,10 @@
 #include <plugin/gif/gif.h>
 #include <plugin/bmp/bmp.h>
 
-#include "Functions4U.h"
+#include <Functions4U/Functions4U_Gui.h>
 
-NAMESPACE_UPP
+using namespace Upp;
+
 
 Image NativePathIconX(const char *path, bool folder, int flags)
 {
@@ -146,7 +147,5 @@ int GetEditWidth(const String str) {
 	return ret;
 }
 
-
-END_UPP_NAMESPACE
 
 #endif

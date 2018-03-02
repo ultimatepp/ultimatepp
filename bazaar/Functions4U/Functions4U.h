@@ -4,7 +4,7 @@
 #include <float.h>
 #include <Draw/Draw.h>
 #ifdef flagGUI
-///#include <ide/Browser/Browser.h>
+//#include <CtrlLib/CtrlLib.h>
 #include <Web/Web.h>
 #include "GatherTpp.h"
 #endif
@@ -14,7 +14,8 @@
 #include "LocalProcess2.h"
 #include <random>
 
-NAMESPACE_UPP
+using namespace Upp;
+
 
 enum EXT_FILE_FLAGS {NO_FLAG = 0, 
 					 USE_TRASH_BIN = 1,
@@ -205,8 +206,7 @@ int ReverseFind(const String& s, const String& toFind, int from = 0);
 
 String FormatLong(long a); 
 	
-// const char *StrToTime(struct Upp::Time& d, const char *s);	Now included in TimeDate
-Time StrToTime(const char *s);
+Upp::Time StrToTime(const char *s);
 Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes, bool units = true);
@@ -498,9 +498,9 @@ Value GetVARIANT(VARIANT &result);
 String WideToString(LPCWSTR wcs, int len = -1);
 #endif
  
-#ifdef CTRLLIB_H
-	#include "Functions4U/Functions4U_Gui.h"
-#endif
+//#ifdef CTRLLIB_H
+//	#include "Functions4U/Functions4U_Gui.h"
+//#endif
 
 String GetExtExecutable(const String ext);
 
@@ -580,190 +580,6 @@ private:
 								return v
 
 
-class RealTimeStop {
-public:
-	RealTimeStop() {
-/*#ifdef CTRLLIB_H	
-		callbackOn = false;
-		lastTick = -1;
-#endif */
-		Start();
-	}
-	void Reset() {
-		timeElapsed = lastTimeElapsed = 0;
-/*#ifdef CTRLLIB_H
-		if (!callbackOn) {
-			SetTimeCallback(-5*1000, callback(this, &RealTimeStop::Tick), this);
-			callbackOn = true;
-		}
-#endif*/
-		isPaused = true;
-		Continue();
-	}
-	void Start() {Reset();}
-	void Pause(bool pause) {
-		if (pause)
-			Pause();
-		else
-			Continue();
-	}
-	void Pause() {
-		if (!isPaused) { 		
-			timeElapsed += (tmGetTimeX() - time0);
-			isPaused = true;
-		}
-	}
-	void Continue() {
-		if (isPaused) {
-			time0 = tmGetTimeX();
-			isPaused = false;
-		}
-	}
-	double Seconds() {
-		if (isPaused)
-			return timeElapsed;
-		else
-			return timeElapsed + (tmGetTimeX() - time0);
-	}
-	double Elapsed() {
-		double t = Seconds();
-		double elapsed = t - lastTimeElapsed;
-		lastTimeElapsed = t;
-		return elapsed;
-	}
-	void SetBack(double secs) {
-		timeElapsed -= secs;
-	}
-	bool IsPaused()		{return isPaused;}
-		
-private:
-	double timeElapsed;				// Time elapsed
-	double time0;					// Time of last Continue()
-	double lastTimeElapsed;
-	bool isPaused;
-/*ifdef CTRLLIB_H
-	bool callbackOn;
-	double lastTick;
-
-	void Tick() {
-		double tActual = tmGetTimeX();
-		if (!isPaused && lastTick > -1) {
-			double deltaLastTick = tActual - lastTick;
-			if (deltaLastTick > 5*10) 	// Some external issue has stopped normal running
-				SetBack(deltaLastTick);	// Timeout timer is fixed accordingly
-		}
-		lastTick = tActual;
-	}
-#endif*/
-};
-
-class LocalProcessX {
-public:
-	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
-	~LocalProcessX() 				  {Stop();}
-	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
-	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, 
-		double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
-		status = STOP_OK;
-		p.ConvertCharset(convertcharset);
-		timeElapsed.Start();
-		timeWithoutOutput.Start();
-		if(!p.Start(cmd, envptr, dir))
-			return false;
-		status = RUNNING;
-		this->maxTimeWithoutOutput = maxTimeWithoutOutput;
-		this->maxRunTime = maxRunTime;
-		this->refreshTime = refreshTime;
-	
-#ifdef CTRLLIB_H
-		if (refreshTime > 0) {
-			if (!callbackOn) {
-				SetTimeCallback(-int(refreshTime*1000), callback(this, &LocalProcessX::Perform), this);
-				callbackOn = true;
-			}
-		}
-#endif
-		return true;
-	}
-	void Perform() {
-		if (status <= 0)
-			return;
-		String out;
-		p.Read(out);
-		if(p.IsRunning()) {
-#ifdef PLATFORM_WIN32			
-			if (!p.IsPaused()) {
-#endif
-				if (maxTimeWithoutOutput > 0 && timeWithoutOutput.Seconds() > maxTimeWithoutOutput) 
-					status = STOP_NORESPONSE;
-				else if (maxRunTime > 0 && timeElapsed.Seconds() > maxRunTime) 
-					status = STOP_TIMEOUT;
-#ifdef PLATFORM_WIN32				
-			}
-#endif
-		} else 
-			status = STOP_OK;
-		
-		bool resetTimeout = false;
-		if (!out.IsEmpty())
-			resetTimeout = true;
-		
-		if (!WhenTimer(timeElapsed.Seconds(), out, status <= 0, resetTimeout))
-			status = STOP_USER;
-		
-		if (resetTimeout)
-			timeWithoutOutput.Reset();
-		
-		if (status < 0)
-			p.Kill();
-
-#ifdef CTRLLIB_H		
-		if (callbackOn) {
-			KillTimeCallback(this);
-			callbackOn = false;
-		}
-#endif
-	}
-	void Stop(ProcessStatus status = STOP_USER) {
-		if (!IsRunning())
-			return;
-		this->status = status;
-		p.Kill();		
-#ifdef CTRLLIB_H		
-		if (callbackOn) {
-			KillTimeCallback(this);
-			callbackOn = false;
-		}
-#endif		
-	}
-#ifdef PLATFORM_WIN32
-	void Pause() {
-		p.Pause();
-		if (p.IsRunning()) {
-			timeElapsed.Pause(p.IsPaused());
-			timeWithoutOutput.Pause(p.IsPaused());
-		}
-	}
-	bool IsPaused()			{return p.IsPaused();}
-	double Seconds()		{return timeElapsed.Seconds();}
-#endif
-	void Write(String str) 	{p.Write(str);}
-	int GetStatus()  		{return status;}
-	bool IsRunning() 		{return status > 0;}
-	Gate4<double, String&, bool, bool&> WhenTimer;
-	#ifdef PLATFORM_WIN32
-	DWORD GetPid()	{return p.GetPid();}
-	#endif
-	
-private:
-	LocalProcess2 p;
-	RealTimeStop timeElapsed, timeWithoutOutput;
-	ProcessStatus status;
-	double maxTimeWithoutOutput, maxRunTime;
-	double refreshTime;
-	double lastPerform, lastPause;
-	bool callbackOn;
-};
 
 template <class T>
 class ThreadSafe {
@@ -845,6 +661,204 @@ void Shuffle(C &data, int randomSeed = Null) {
 	ShuffleDescending(data, generator);	
 }
 
-END_UPP_NAMESPACE
+class RealTimeStop
+#ifdef CTRLLIB_H	
+ : public Ctrl 
+ #endif
+ {  
+typedef RealTimeStop CLASSNAME;
+public:
+	RealTimeStop() {
+#ifdef CTRLLIB_H	
+		callbackOn = false;
+		lastTick = -1;
+#endif 
+		Start();
+	}
+	void Reset() {
+		timeElapsed = lastTimeElapsed = 0;
+#ifdef CTRLLIB_H
+		if (!callbackOn) {
+			timeCallback.Set(-5*1000, THISBACK(Tick));
+			callbackOn = true;
+		}
+#endif
+		isPaused = true;
+		Continue();
+	}
+	void Start() {Reset();}
+	void Pause(bool pause) {
+		if (pause)
+			Pause();
+		else
+			Continue();
+	}
+	void Pause() {
+		if (!isPaused) { 		
+			timeElapsed += (tmGetTimeX() - time0);
+			isPaused = true;
+		}
+	}
+	void Continue() {
+		if (isPaused) {
+			time0 = tmGetTimeX();
+			isPaused = false;
+		}
+	}
+	double Seconds() {
+		if (isPaused)
+			return timeElapsed;
+		else
+			return timeElapsed + (tmGetTimeX() - time0);
+	}
+	double Elapsed() {
+		double t = Seconds();
+		double elapsed = t - lastTimeElapsed;
+		lastTimeElapsed = t;
+		return elapsed;
+	}
+	void SetBack(double secs) {
+		timeElapsed -= secs;
+	}
+	bool IsPaused()		{return isPaused;}
+		
+private:
+	double timeElapsed;				// Time elapsed
+	double time0;					// Time of last Continue()
+	double lastTimeElapsed;
+	bool isPaused;
+#ifdef CTRLLIB_H
+	bool callbackOn;
+	double lastTick;
+	TimeCallback timeCallback;
+	
+	void Tick() {
+		double tActual = tmGetTimeX();
+		if (!isPaused && lastTick > -1) {
+			double deltaLastTick = tActual - lastTick;
+			if (deltaLastTick > 5*10) 	// Some external issue has stopped normal running
+				SetBack(deltaLastTick);	// Timeout timer is fixed accordingly
+		}
+		lastTick = tActual;
+	}
+#endif
+};
+
+class LocalProcessX
+#ifdef CTRLLIB_H	
+ : public Ctrl 
+ #endif
+ {
+typedef LocalProcessX CLASSNAME;
+public:
+	LocalProcessX() : status(STOP_OK), callbackOn(false) {}
+	~LocalProcessX() 				  {Stop();}
+	enum ProcessStatus {RUNNING = 1, STOP_OK = 0, STOP_TIMEOUT = -1, STOP_USER = -2, STOP_NORESPONSE = -3};
+	bool Start(const char *cmd, const char *envptr = 0, const char *dir = 0, double refreshTime = -1, 
+		double maxTimeWithoutOutput = -1, double maxRunTime = -1, bool convertcharset = true) {
+		status = STOP_OK;
+		p.ConvertCharset(convertcharset);
+		timeElapsed.Start();
+		timeWithoutOutput.Start();
+		if(!p.Start(cmd, envptr, dir))
+			return false;
+		status = RUNNING;
+		this->maxTimeWithoutOutput = maxTimeWithoutOutput;
+		this->maxRunTime = maxRunTime;
+		this->refreshTime = refreshTime;
+	
+#ifdef CTRLLIB_H
+		if (refreshTime > 0) {
+			if (!callbackOn) {
+				timeCallback.Set(-int(refreshTime*1000), THISBACK(Perform));
+				callbackOn = true;
+			}
+		}
+#endif
+		return true;
+	}
+	void Perform() {
+		if (status <= 0)
+			return;
+		String out;
+		p.Read(out);
+		if(p.IsRunning()) {
+#ifdef PLATFORM_WIN32			
+			if (!p.IsPaused()) {
+#endif
+				if (maxTimeWithoutOutput > 0 && timeWithoutOutput.Seconds() > maxTimeWithoutOutput) 
+					status = STOP_NORESPONSE;
+				else if (maxRunTime > 0 && timeElapsed.Seconds() > maxRunTime) 
+					status = STOP_TIMEOUT;
+#ifdef PLATFORM_WIN32				
+			}
+#endif
+		} else 
+			status = STOP_OK;
+		
+		bool resetTimeout = false;
+		if (!out.IsEmpty())
+			resetTimeout = true;
+		
+		if (!WhenTimer(timeElapsed.Seconds(), out, status <= 0, resetTimeout))
+			status = STOP_USER;
+		
+		if (resetTimeout)
+			timeWithoutOutput.Reset();
+		
+		if (status < 0)
+			p.Kill();
+
+#ifdef CTRLLIB_H		
+		if (callbackOn) {
+			timeCallback.Kill();
+			callbackOn = false;
+		}
+#endif
+	}
+	void Stop(ProcessStatus status = STOP_USER) {
+		if (!IsRunning())
+			return;
+		this->status = status;
+		p.Kill();		
+#ifdef CTRLLIB_H		
+		if (callbackOn) {
+			timeCallback.Kill();
+			callbackOn = false;
+		}
+#endif		
+	}
+#ifdef PLATFORM_WIN32
+	void Pause() {
+		p.Pause();
+		if (p.IsRunning()) {
+			timeElapsed.Pause(p.IsPaused());
+			timeWithoutOutput.Pause(p.IsPaused());
+		}
+	}
+	bool IsPaused()			{return p.IsPaused();}
+	double Seconds()		{return timeElapsed.Seconds();}
+#endif
+	void Write(String str) 	{p.Write(str);}
+	int GetStatus()  		{return status;}
+	bool IsRunning() 		{return status > 0;}
+	Gate4<double, String&, bool, bool&> WhenTimer;
+	#ifdef PLATFORM_WIN32
+	DWORD GetPid()	{return p.GetPid();}
+	#endif
+	
+private:
+	LocalProcess2 p;
+	RealTimeStop timeElapsed, timeWithoutOutput;
+	ProcessStatus status;
+	double maxTimeWithoutOutput, maxRunTime;
+	double refreshTime;
+	double lastPerform, lastPause;
+	bool callbackOn;
+#ifdef CTRLLIB_H	
+	TimeCallback timeCallback;
+#endif
+};
+
 
 #endif

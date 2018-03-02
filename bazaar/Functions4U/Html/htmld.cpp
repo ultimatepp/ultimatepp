@@ -1,7 +1,7 @@
 #include <Core/Core.h>
 #include "htmld.h"
 
-NAMESPACE_UPP
+using namespace Upp;
 
 String ToHtmlD(const char *s)
 {
@@ -656,4 +656,3 @@ HtmlTagD HtmlFntSizeD(int size)
 	return HtmlTagD("span").Attr("style", Sprintf("font-size: %dpt", size));
 }
 
-END_UPP_NAMESPACE

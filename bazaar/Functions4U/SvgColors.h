@@ -1,7 +1,8 @@
 #ifndef _Functions4U_SvgColors_h_
 #define _Functions4U_SvgColors_h_
 
-NAMESPACE_UPP
+//NAMESPACE_UPP
+using namespace Upp;
 
 struct ColorDef {
 	const char *name;
@@ -158,6 +159,5 @@ inline Color Whitesmoke()		{return Color(245,245,245);}
 //inline Color Yellow()			{return Color(255,255,0);}
 inline Color Yellowgreen()		{return Color(154,205,50);}
 
-END_UPP_NAMESPACE	
 
 #endif

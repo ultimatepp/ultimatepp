@@ -4,7 +4,8 @@
 #define ftello 	ftell
 #define fseeko 	fseek
 
-NAMESPACE_UPP
+using namespace Upp;
+
 
 extern String errMsg;
 String BsGetLastError();
@@ -28,6 +29,5 @@ bool Err(String str);
 	#endif
 #endif
 
-END_UPP_NAMESPACE
 
 #endif

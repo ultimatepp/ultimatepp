@@ -1,11 +1,11 @@
 #ifdef flagGUI
 
 #include <CtrlLib/CtrlLib.h>
-
-#include "Functions4U.h"
 #include "Functions4U_Gui.h"
 
-NAMESPACE_UPP
+using namespace Upp;
+
+//NAMESPACE_UPP
 
 inline bool iscidplus(int c) {
 	return iscib(c) || c == '.' || (c >= '0' && c <= '9');
@@ -463,7 +463,6 @@ QtfRichObject QtfEquation(const String &str) {
 	return QtfRichObject(CreateDrawingObject(dw.GetResult(), sz, sz));
 }
 
-END_UPP_NAMESPACE
 
 #endif
 
