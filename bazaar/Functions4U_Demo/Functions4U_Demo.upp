@@ -1,3 +1,5 @@
+description "Functions4U demo console\377";
+
 uses
 	Core,
 	Functions4U;

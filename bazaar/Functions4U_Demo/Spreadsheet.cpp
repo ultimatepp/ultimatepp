@@ -6,8 +6,8 @@ using namespace Upp;
 #include "Spreadsheet.h"
 
 
-bool SpreadsheetAPI::Open(const char *filename) 				{return false;};
-void SpreadsheetAPI::SetData(int row, int col, Value val) 	{};
+bool SpreadsheetAPI::Open(const char *filename) 			{return false;}
+void SpreadsheetAPI::SetData(int row, int col, Value val) 	{}
 
 
 bool Spreadsheet::Open(const char *filename) 			{return (static_cast<SpreadsheetAPI *>(GetData()))->Open(filename);}
