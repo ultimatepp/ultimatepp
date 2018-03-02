@@ -459,7 +459,7 @@ MSSheet::~MSSheet() {
 		Books = 0;
 	}
 	if (App) {
-		HRESULT res;
+		HRESULT res = 0;
 		DWORD pid;
 		if (killProcess)
 			res = CoGetServerPID(App, &pid);
@@ -598,23 +598,41 @@ bool MSSheet::MatrixSetSelection() {
 	return ret;
 }
 
-bool MSSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {
+bool MSSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data, bool colRow) {
 	if (data.IsEmpty())
 		return false;
-	int height = data.GetCount();
-	int width = data[0].GetCount();
-	int toX = fromX + width - 1;	
-	int toY = fromY + height - 1;
-	if (!Select(fromX, fromY, toX, toY)) return false;
-	if (!MatrixAllocate(width, height)) return false;
-	try {
-		for (int row = 0; row < height; ++row)
-			for (int col = 0; col < width; ++col)
-				if (!MatrixSetValue(col + 1, row + 1, data[row][col]))  throw;
-		if (!MatrixSetSelection()) throw;
-	} catch (...) {
-		MatrixDelete();
-		return false;
+	if (!colRow) {
+		int height = data.GetCount();
+		int width = data[0].GetCount();
+		int toX = fromX + width - 1;	
+		int toY = fromY + height - 1;
+		if (!Select(fromX, fromY, toX, toY)) return false;
+		if (!MatrixAllocate(width, height)) return false;
+		try {
+			for (int row = 0; row < height; ++row)
+				for (int col = 0; col < width; ++col)
+					if (!MatrixSetValue(col + 1, row + 1, data[row][col]))  throw;
+			if (!MatrixSetSelection()) throw;
+		} catch (...) {
+			MatrixDelete();
+			return false;
+		}
+	} else {
+		int height = data[0].GetCount();
+		int width = data.GetCount();
+		int toX = fromX + width - 1;	
+		int toY = fromY + height - 1;
+		if (!Select(fromX, fromY, toX, toY)) return false;
+		if (!MatrixAllocate(width, height)) return false;
+		try {
+			for (int row = 0; row < height; ++row)
+				for (int col = 0; col < width; ++col)
+					if (!MatrixSetValue(col + 1, row + 1, data[col][row]))  throw;
+			if (!MatrixSetSelection()) throw;
+		} catch (...) {
+			MatrixDelete();
+			return false;
+		}
 	}
 	return MatrixDelete();
 }
@@ -1509,9 +1527,9 @@ class OOo {
 public:
 	static ObjectOle MakePropertyValue(String name, ::Value value) {
     	ObjectOle ServiceManager;
-    	if (!(ServiceManager = Ole::CreateObject("com.sun.star.ServiceManager")))
+    	if (!(ServiceManager = Ole::CreateObject("com.sun.star.ServiceManager"))) {
     		return NULL;
-    	
+    	}
 		ObjectOle Struct;
 		VariantOle vstr;
 		vstr.BString("com.sun.star.beans.PropertyValue");
@@ -1529,9 +1547,9 @@ public:
 	}
 	static ObjectOle MakePropertyValue(String name, VariantOle &vvalue) {
     	ObjectOle ServiceManager;
-    	if (!(ServiceManager = Ole::CreateObject("com.sun.star.ServiceManager")))
+    	if (!(ServiceManager = Ole::CreateObject("com.sun.star.ServiceManager"))) {
     		return NULL;
-    	
+    	}
 		ObjectOle Struct;
 		VariantOle vstr;
 		vstr.BString("com.sun.star.beans.PropertyValue");
@@ -1873,14 +1891,22 @@ bool OPENSheet::MatrixSetSelection() {
 	return false;
 }
 
-bool OPENSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {
+bool OPENSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data, bool colRow) {
 	if (data.IsEmpty())
 		return false;
-	int height = data.GetCount();
-	int width = data[0].GetCount();
-	for (int row = 0; row < height; ++row)
-		for (int col = 0; col < width; ++col)
-			SetValue(col + fromX, row + fromY, data[row][col]);	
+	if (!colRow) {
+		int height = data.GetCount();
+		int width = data[0].GetCount();
+		for (int row = 0; row < height; ++row)
+			for (int col = 0; col < width; ++col)
+				SetValue(col + fromX, row + fromY, data[row][col]);	
+	} else {
+		int width = data.GetCount();
+		int height = data[0].GetCount();
+		for (int row = 0; row < height; ++row)
+			for (int col = 0; col < width; ++col)
+				SetValue(col + fromX, row + fromY, data[col][row]);	
+	}
 	return true;
 }
 

@@ -62,7 +62,7 @@
 	virtual bool MatrixAllocate(int width, int height);			\
 	virtual bool MatrixDelete();								\
 	virtual bool MatrixSetSelection();							\
-	virtual bool MatrixSet(int fromX, int fromY, Vector<Vector < ::Value> > &data);		\
+	virtual bool MatrixSet(int fromX, int fromY, Vector<Vector < ::Value> > &data, bool colRow = false);		\
 	virtual bool MatrixSetValue(int i, int j, ::Value value);							\
 	virtual bool MatrixGet(int fromX, int fromY, int width, int height, Vector<Vector < ::Value> > &data);		\
 	virtual bool MatrixGetValue(int i, int j, ::Value &value);							\

@@ -44,7 +44,7 @@ class MSSheet : public OfficeSheet
 {
 public:
 	MSSheet();
-	~MSSheet();
+	virtual ~MSSheet();
 	
 	virtual bool IsAvailable();					
 	
@@ -71,7 +71,7 @@ class MSDoc : public OfficeDoc
 {
 public:
 	MSDoc();
-	~MSDoc();
+	virtual ~MSDoc();
 	
 	virtual bool IsAvailable();
 	
@@ -99,7 +99,7 @@ class OPENSheet : public OfficeSheet
 {
 public:
 	OPENSheet();
-	~OPENSheet();
+	virtual ~OPENSheet();
 	
 	virtual bool IsAvailable();			
 	
@@ -127,7 +127,7 @@ class OPENDoc : public OfficeDoc
 {
 public:
 	OPENDoc();
-	~OPENDoc();
+	virtual ~OPENDoc();
 	
 	virtual bool IsAvailable();
 	

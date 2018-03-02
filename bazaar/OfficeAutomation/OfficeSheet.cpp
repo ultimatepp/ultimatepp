@@ -247,8 +247,8 @@ bool OfficeSheet::MatrixDelete() {return (static_cast<SheetPlugin *>(GetData()))
 bool SheetPlugin::MatrixSetSelection() {return false;}
 bool OfficeSheet::MatrixSetSelection() {return (static_cast<SheetPlugin *>(GetData()))->MatrixSetSelection();}
 
-bool SheetPlugin::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {return false;}
-bool OfficeSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data) {return (static_cast<SheetPlugin *>(GetData()))->MatrixSet(fromX, fromY, data);}
+bool SheetPlugin::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data, bool colRow) {return false;}
+bool OfficeSheet::MatrixSet(int fromX, int fromY, Vector<Vector<Value> > &data, bool colRow) {return (static_cast<SheetPlugin *>(GetData()))->MatrixSet(fromX, fromY, data, colRow);}
 
 bool SheetPlugin::MatrixSetValue(int i, int j, ::Value value) {return false;}
 bool OfficeSheet::MatrixSetValue(int i, int j, ::Value value) {return (static_cast<SheetPlugin *>(GetData()))->MatrixSetValue(i, j, value);}
