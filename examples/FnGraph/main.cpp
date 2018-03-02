@@ -59,6 +59,8 @@ double ExpressionEvaluator::Factor()
 		return sqrt(Factor());
 	if(p.Id("exp"))
 		return exp(Factor());
+	if(p.Id("exp2"))
+		return exp2(Factor());
 	if(p.Id("ln"))
 		return log(Factor());
 	if(p.Id("log"))
