@@ -22,7 +22,7 @@
 #include "StarIndicator.h"
 
 using namespace Upp;
-//NAMESPACE_UPP
+
 
 #define IMAGECLASS StarsImg
 #define IMAGEFILE <Controls4U/StarIndicator.iml>
@@ -181,4 +181,3 @@ StarIndicator&	StarIndicator::SetVotes(int n)
 	return *this;
 }
 
-//END_UPP_NAMESPACE

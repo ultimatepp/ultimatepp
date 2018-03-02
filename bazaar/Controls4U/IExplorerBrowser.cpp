@@ -4,7 +4,6 @@
 #include "ActiveX.h" 
 
 using namespace Upp;
-//NAMESPACE_UPP
 
 bool InternetExplorerBrowser::Browse(const String &strurl) {
 	IIWebBrowser webBrowser(this);
@@ -183,6 +182,5 @@ bool InternetExplorerBrowser::SetSilent(bool val) {
 	return false;
 }
 
-//END_UPP_NAMESPACE
 
 #endif

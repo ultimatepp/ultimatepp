@@ -4,7 +4,6 @@
 #include "ActiveX.h"
 
 using namespace Upp;
-//NAMESPACE_UPP
 
 bool BSTRSet(const String str, BSTR &bstr) {
 	wchar_t *buffer;
@@ -373,7 +372,5 @@ HRESULT STDMETHODCALLTYPE AXClientSite::DeactivateAndUndo() {
 HRESULT STDMETHODCALLTYPE AXClientSite::OnPosRectChange(LPCRECT lprcPosRect) {
 	return S_OK;
 }
-
-//END_UPP_NAMESPACE
 
 #endif

@@ -1,13 +1,13 @@
 #ifndef _Controls4U_SplitterButton_h_
 #define _Controls4U_SplitterButton_h_
 
-//NAMESPACE_UPP
 
 class SplitterButton : public StaticRect {
 public:
 	typedef SplitterButton CLASSNAME;
 
 	SplitterButton();
+	virtual ~SplitterButton() {};
 	
 	SplitterButton& Horz(Ctrl &left, Ctrl &right);
 	SplitterButton& Vert(Ctrl& top, Ctrl& bottom);
@@ -49,6 +49,5 @@ private:
 	void SetArrows();
 };
 
-//END_UPP_NAMESPACE
 
 #endif

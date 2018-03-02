@@ -2,7 +2,6 @@
 #define _hdIE_ActiveX_Support_h_
 
 using namespace Upp;
-//NAMESPACE_UPP
 
 bool BSTRSet(const String str, BSTR &bstr);
 String BSTRGet(BSTR &bstr);
@@ -120,6 +119,5 @@ private:
 	AXClientSite pClientSite;
 };
 
-//END_UPP_NAMESPACE
 
 #endif

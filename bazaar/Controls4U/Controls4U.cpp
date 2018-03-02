@@ -14,7 +14,6 @@ using namespace Upp;
 #include <Core/topic_group.h>
 
 
-
 void PaintCenterText(Painter &w, double x, double y, String text, Font fnt, Color color) {
 	Size sz = GetTextSize(text, fnt);
 	w.Text(x - sz.cx / 2., y - sz.cy / 2., text, fnt).Fill(color);

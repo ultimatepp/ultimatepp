@@ -4,7 +4,6 @@ using namespace Upp;
 
 #include "SplitterButton.h"
 
-//NAMESPACE_UPP
 
 SplitterButton::SplitterButton() {
 	Add(splitter.SizePos());
@@ -171,4 +170,3 @@ void SplitterButton::SetArrows() {
 	}
 }
 		
-//END_UPP_NAMESPACE

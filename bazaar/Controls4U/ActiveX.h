@@ -16,14 +16,14 @@
 #include <Exdisp.h> 
 #include "plugin/vlc/axvlc_idl.h"
 
-//NAMESPACE_UPP
 
 static const CLSID CLSID_MozillaBrowser = {0x1339B54C, 0x3453, 0x11D2, {0x93, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};	//http://www.iol.ie/~locka/mozilla/control.htm
 
 class FirefoxBrowser : public DHCtrlActiveX {
 public:
 	FirefoxBrowser(bool status = true) : DHCtrlActiveX(CLSID_MozillaBrowser, "Firefox", status) {};
-
+	virtual ~FirefoxBrowser() {};
+	
 	bool Browse(const String &url);
 	bool ShowHTML(const String &html);
 	bool GoForward();
@@ -60,6 +60,7 @@ private:
 class InternetExplorerBrowser : public DHCtrlActiveX {
 public:
 	InternetExplorerBrowser(bool status = true) : DHCtrlActiveX(CLSID_WebBrowser, "IExplorer", status) {};
+	virtual ~InternetExplorerBrowser() {};
 
 	bool Browse(const String &url);
 	bool ShowHTML(const String &html);
@@ -100,6 +101,7 @@ static const CLSID CLSID_VLCPLayer = {0x9BE31822, 0xFDAD, 0x461B, {0xAD, 0x51, 0
 class VLCPlayer : public DHCtrlActiveX {
 public:
 	VLCPlayer(bool status = true) : DHCtrlActiveX(CLSID_VLCPLayer, "VLCPlayer", status) {};
+	virtual ~VLCPlayer() {};
 
 	bool AddTarget(const String movie);
 	bool Play();
@@ -136,7 +138,5 @@ private:
 		IVLCControl *vlc;
 	};
 };
-
-//END_UPP_NAMESPACE
 
 #endif

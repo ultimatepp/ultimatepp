@@ -1,7 +1,7 @@
 #include <CtrlLib/CtrlLib.h>
 
 using namespace Upp;
-//NAMESPACE_UPP
+
 
 class StarIndicator : public ProgressIndicator {
 private:
@@ -36,4 +36,3 @@ public:
 	virtual StarIndicator&	ShowVotes(bool b)		{ m_bVotes=b; return *this; }
 };
 
-//END_UPP_NAMESPACE

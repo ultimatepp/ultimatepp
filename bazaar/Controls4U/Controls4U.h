@@ -3,7 +3,7 @@
 
 #include <PolyXML/PolyXML.h>
 #include <Painter/Painter.h>
-#include <Functions4U/Functions4U.h>
+#include <Functions4U/Functions4U_Gui.h>
 #if defined(PLATFORM_WIN32) 
 #include "Controls4U/ActiveX.h"
 #endif
@@ -12,7 +12,6 @@
 #include "Controls4U/StarIndicator.h"
 #include "Controls4U/SplitterButton.h"
 
-//NAMESPACE_UPP
 using namespace Upp;
 
 double AngAdd(double ang, double val);
@@ -24,6 +23,7 @@ public:
 
 class EditFileFolder : public EditString {
 typedef EditFileFolder CLASSNAME;
+
 protected:
 	FrameLeft<Button> butBrowseLeft, butLeft, butRight, butUp;
 	FrameRight<Button> butBrowseRight;
@@ -40,7 +40,7 @@ protected:
 		
 public:
 	EditFileFolder() 								{Init();};
-	~EditFileFolder();
+	virtual ~EditFileFolder();
 	
 	void Init();
 	void DoLeft(), DoRight(), DoUp();
@@ -73,16 +73,22 @@ public:
 };
 
 class EditFile : public EditFileFolder {
-typedef EditFile CLASSNAME;		
+typedef EditFile CLASSNAME;	
+	
 public:
 	EditFile();
+	virtual ~EditFile() {};
+	
 	using EditFileFolder::operator=;
 };
 
 class EditFolder : public EditFileFolder {
-typedef EditFolder CLASSNAME;		
+typedef EditFolder CLASSNAME;	
+	
 public:
 	EditFolder();
+	virtual ~EditFolder() {};
+	
 	using EditFileFolder::operator=;
 };
 
@@ -91,6 +97,8 @@ class ImagePopUp : public Ctrl {
 		Ctrl* ctrl;
 
 		ImagePopUp() {}
+		virtual ~ImagePopUp() {};
+		
 		Point Offset(Point p);
 
 		virtual void  Paint(Draw &w);
@@ -113,7 +121,8 @@ class ImagePopUp : public Ctrl {
 };
 
 class StaticImage : public Ctrl {
-typedef StaticImage CLASSNAME;		
+typedef StaticImage CLASSNAME;
+		
 public:
 	enum ImageAngle {Angle_0, Angle_90, Angle_180, Angle_270};
 	enum ImageFit   {BestFit, FillFrame, NoScale, RepeatToFill};
@@ -153,6 +162,7 @@ public:
 	StaticImage& SetPopUp(bool pop = true)		{isPopUp = pop;	return *this;}
 	StaticImage& SetPopUpSize(Size sz);
 	StaticImage();
+	virtual ~StaticImage() {};
 	
 	Callback WhenLeftDouble;
 	Callback WhenLeftDown;
@@ -160,7 +170,8 @@ public:
 };
 
 class StaticImageSet : public Ctrl {
-typedef StaticImageSet CLASSNAME;		
+typedef StaticImageSet CLASSNAME;
+		
 protected:
 	virtual void Paint(Draw& draw);
 	virtual void LeftDown(Point pos, dword keyflags);
@@ -185,12 +196,14 @@ public:
 	void Next()								{id++; if(id >= images.GetCount()) id = 0;}
 	
 	StaticImageSet();
+	virtual ~StaticImageSet() {};
 };
 
 #ifndef flagNOPAINTER
 
 class StaticRectangle : public Ctrl {
 typedef StaticRectangle CLASSNAME;	
+
 public:
 	virtual void Paint(Draw& draw);
 	virtual void MouseEnter(Point p, dword keyflags) 	{WhenMouseEnter(p, keyflags);};
@@ -216,10 +229,12 @@ public:
 	Callback2<Point, dword> WhenLeftUp; 
 	
 	StaticRectangle();
+	virtual ~StaticRectangle() {};
 };
 
 class StaticEllipse : public Ctrl {
-typedef StaticEllipse CLASSNAME;	
+typedef StaticEllipse CLASSNAME;
+	
 public:
 	virtual void   Paint(Draw& draw);
 	
@@ -234,10 +249,12 @@ public:
 	StaticEllipse& SetBackground(Color c) 	{background = c; Refresh(); return *this;}
 
 	StaticEllipse();
+	virtual ~StaticEllipse() {};
 };
 
 class StaticFrame : public Ctrl {
 typedef StaticFrame CLASSNAME;	
+
 public:
 	virtual void Paint(Draw& draw);
 
@@ -248,10 +265,12 @@ public:
 	StaticFrame& SetBackground(Color c) {background = c; Refresh(); return *this;}
 	
 	StaticFrame();
+	virtual ~StaticFrame() {};
 };
 
 class StaticLine : public Ctrl, public CtrlFrame {
-typedef StaticLine CLASSNAME;	
+typedef StaticLine CLASSNAME;
+	
 public:
 	virtual void FrameAddSize(Size& sz) {}
 	virtual void FrameLayout(Rect& r) {}
@@ -272,6 +291,7 @@ public:
 	StaticLine& SetOrientation(int o) 		{orientation = o; Refresh(); return *this;}
 	
 	StaticLine();
+	virtual ~StaticLine() {};
 };
 
 class StaticArrow : public Ctrl, public CtrlFrame  {
@@ -300,6 +320,7 @@ public:
 	StaticArrow& SetEnds(String e);
 
 	StaticArrow();
+	virtual ~StaticArrow() {};
 };
 
 class StaticClock : public Ctrl {
@@ -341,7 +362,7 @@ public:
 	void SetTime(int h, int n, int s);
 
 	StaticClock();
-	~StaticClock();	
+	virtual ~StaticClock();	
 };
 
 class Meter : public Ctrl {
@@ -395,10 +416,12 @@ public:
 	void SetData(const Value& v);
 
 	Meter();
-	~Meter();
+	virtual ~Meter();
 };
 
 class Knob : public Ctrl {
+typedef Knob CLASSNAME;
+
 private:
 	double value;
 	double minv, maxv;
@@ -434,11 +457,10 @@ private:
 	Image img, imgMark;
 	
 public:
-	typedef Knob CLASSNAME;
-
 	Callback WhenSlideFinish;
 	
 	Knob();
+	virtual ~Knob() {};
 
 	virtual void  SetData(const Value& value);
 	virtual Value GetData() const;
@@ -469,7 +491,8 @@ public:
 #endif
 
 class FileBrowser : public StaticRect {
-	typedef FileBrowser CLASSNAME;	
+typedef FileBrowser CLASSNAME;	
+
 public:
 	struct EditStringLostFocus : public EditString {
 		String file;
@@ -615,6 +638,8 @@ private:
 	
 public: 
 	FileBrowser();
+	virtual ~FileBrowser() {};
+	
  	String GetFile();
  	String operator~()    {return GetFile();}	
  	String GetFolder();
@@ -633,20 +658,25 @@ public:
 };
 
 struct AboutUpp : StaticRect {
-	RichTextView about;
-
-	typedef AboutUpp CLASSNAME;
+typedef AboutUpp CLASSNAME;
 
 	AboutUpp();
+	virtual ~AboutUpp() {};
+	
+	RichTextView about;
 };
 
 
 class HyperlinkLabel : public Label {
+typedef HyperlinkLabel CLASSNAME;
+
 public:
 	HyperlinkLabel() {
 		NoIgnoreMouse();
 		SetInk(LtBlue());
 	}
+	virtual ~HyperlinkLabel() {};
+	
 	HyperlinkLabel& SetHyperlink(const char* str) 		{hyperlink = str; return *this;}
 
 private:
@@ -656,8 +686,11 @@ private:
 };
 
 class BarDisplay : public Display {
+typedef BarDisplay CLASSNAME;	
+	
 public:
 	BarDisplay() : ink(SColorText), value(0), align(ALIGN_LEFT) {}
+	virtual ~BarDisplay() {};
 
 	virtual void Paint(Draw& w, const Rect& r, const Value& , Color, Color, dword) const {
 		int width = int(r.Width()*value);
@@ -676,7 +709,7 @@ public:
 			           text, StdFont(), ink);
 		}
 	}
-	BarDisplay &SetValue(double _value) {value = _value;return *this;}
+	BarDisplay &SetValue(double _value) {value = _value;return *this;}		// Between 0 and 1
 	BarDisplay &SetText(const char *str){text = str;	return *this;}
 	BarDisplay &SetColor(Color _color, Color _paper = Null, Color _ink = SColorText) {
 		color = _color; 
@@ -694,8 +727,11 @@ private:
 };
 
 class TextDisplay : public Display {
+typedef TextDisplay CLASSNAME;
+	
 public:
 	TextDisplay() : ink(SColorText), align(ALIGN_LEFT) {}
+	virtual ~TextDisplay() {};
 	
 	virtual void Paint(Draw& w, const Rect& r, const Value&, Color, Color, dword) const {
 	    w.DrawRect(r.left, r.top, r.right, r.bottom, paper);
@@ -723,11 +759,15 @@ private:
 };
 
 class InfoCtrlBar : public InfoCtrl {
+typedef InfoCtrlBar CLASSNAME;
+
 public:
 	InfoCtrlBar() {
 		Set(PaintRect(bar));
 		SetColor(SColorFace);
 	}
+	virtual ~InfoCtrlBar() {};
+	
 	InfoCtrlBar &SetValue(double value) 											{bar.SetValue(value);				return *this;}	
 	InfoCtrlBar &SetText(const char *str) 											{bar.SetText(str);					return *this;}
 	InfoCtrlBar &SetColor(Color color, Color paper = Null, Color ink = SColorText)	{bar.SetColor(color, paper, ink);	return *this;}
@@ -738,8 +778,11 @@ private:
 };
 
 class InfoCtrlText : public InfoCtrl {
+typedef InfoCtrlText CLASSNAME;
+
 public:
 	InfoCtrlText() {Set(PaintRect(text));}
+	virtual ~InfoCtrlText() {};
 
 	InfoCtrlText &SetText(const char *str) 					{text.SetText(str);			return *this;}
 	InfoCtrlText &SetColor(Color ink, Color paper = Null)	{text.SetColor(ink, paper);	return *this;}
@@ -752,6 +795,4 @@ private:
 };
 	
 	
-//END_UPP_NAMESPACE
-
 #endif

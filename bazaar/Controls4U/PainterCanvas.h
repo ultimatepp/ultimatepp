@@ -187,6 +187,7 @@ public:
 	}
 	LineElem(double x1, double y1, double x2, double y2) : x1(x1), y1(y1), x2(x2), y2(y2) {SetLimits();}
 	LineElem() {x1 = x2 = y1 = y2 = 0;}
+	virtual ~LineElem() {};
 	
 	void Xmlize(XmlIO &xml) 		{xml ("x1", x1)("y1", y1)("x2", x2)("y2", y2); }
 	
@@ -213,6 +214,7 @@ public:
 	RectElem(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {SetLimits();}
 	RectElem(const Rect &rect) : x(rect.left), y(rect.top), width(rect.right - rect.left), height(rect.bottom - rect.top) {SetLimits();}
 	RectElem() {x = y = width = height = 0;}
+	virtual ~RectElem() {};
 
 	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("width", width)("height", height);}
 	
@@ -238,6 +240,7 @@ public:
 	}
 	EllipseElem(double x, double y, double width, double height) : x(x), y(y), width(width), height(height) {SetLimits();} 
 	EllipseElem() {x = y = width = height = 0;}
+	virtual ~EllipseElem() {};
 
 	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("width", width)("height", height);}
 	
@@ -266,6 +269,7 @@ public:
 	ImageElem(double x, double y, double width, double height, String fileName) : x(x), y(y), 
 					width(width), height(height), fileName(fileName) {img = Null; SetLimits();}
 	ImageElem() {x = y = width = height = 0; img = Null;}
+	virtual ~ImageElem() {};
 
 	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("width", width)("height", height)
 										("fileName", fileName)("img", img);}
@@ -294,6 +298,7 @@ public:
 			limits.UpdateLimits(points[i]);
 	}
 	PolygonElem() {}
+	virtual ~PolygonElem() {};
 
 	void Xmlize(XmlIO &xml) 		{xml ("points", points);}
 
@@ -330,6 +335,7 @@ public:
 		f.Face(Font::ARIAL);
 		f.Height(12);
 	}
+	virtual ~TextElem() {};
 
 	void Xmlize(XmlIO &xml) 		{xml ("x", x)("y", y)("text", text)("font", font)("f", f)("factor", factor);}
 	
@@ -452,6 +458,7 @@ public:
 		}
 	}
 	PathElem() {}
+	virtual ~PathElem() {};
 
 	void Xmlize(XmlIO &xml) 		{xml ("path", path);}
 
@@ -528,6 +535,8 @@ class PainterCanvas : public Ctrl {
 typedef PainterCanvas CLASSNAME;		
 public:
 	PainterCanvas();
+	virtual ~PainterCanvas() {};
+	
 	void SetCanvasSize(Size sz)	{canvasSize = sz;};
 	Size GetCanvasSize() const	{return canvasSize;};
 	void Zoom(double factor);
