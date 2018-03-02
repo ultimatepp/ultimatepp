@@ -62,5 +62,3 @@ int GetCpuSpeed()
   	return int((end-start)/10000);
 }
 #endif
-
-//END_UPP_NAMESPACE

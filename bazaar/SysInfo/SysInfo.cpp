@@ -1,5 +1,6 @@
 #include "SysInfo_in.h"
 
+
 #if defined (PLATFORM_POSIX)
 #ifdef flagGUI
 	//#define SetX11ErrorHandler() {}
@@ -2014,7 +2015,6 @@ bool Serial_Check(String hdSerial, String other_hdSerial) {
 	otherList << other_hdSerial << Serial_ReorderInPairs(other_hdSerial) << toStrOther << Serial_ReorderInPairs(toStrOther);
 	
 	// Check them all
-	//bool hdSerialMatch = false;
 	for (int i = 0; i < list.GetCount(); ++i) {
 		for (int j = 0; j < otherList.GetCount(); ++j) 
 			if (list[i] == otherList[j]) 
@@ -2035,7 +2035,7 @@ bool SystemSignature::operator==(const SystemSignature &other) const {
 	
 	// hdSerial check
 	if (Odd(hdSerial.GetCount()))		
-			return false;
+		return false;
 	
 	if (!Serial_Check(hdSerial, other.hdSerial))
 		return false;				
@@ -2053,6 +2053,8 @@ bool SystemSignature::operator==(const SystemSignature &other) const {
 Vector<String> SystemSignature::GetDiff(const SystemSignature &other) const {
 	Vector<String> list;
 	
+	if (userName != other.userName)
+		list << Format("User name: %s != %s", userName, other.userName);
 	if (manufacturer != other.manufacturer)
 		list << Format("Manufacturer: %s != %s", manufacturer, other.manufacturer);
 	if (productName != other.productName)
@@ -2253,4 +2255,3 @@ bool IsPortFree(int port) {
     return ret;
 }
 
-//END_UPP_NAMESPACE

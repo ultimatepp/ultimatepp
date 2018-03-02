@@ -631,4 +631,3 @@ Image Snap_Window(int64 handle)
 	return Window_SaveCapture(handle);
 }
 
-//END_UPP_NAMESPACE

@@ -15,9 +15,9 @@ library(POSIX) Xtst;
 options(MSC) "/D PSAPI_VERSION=1";
 
 file
+	SysInfo.cpp,
 	SysInfo.h,
 	SysInfo_in.h,
-	SysInfo.cpp,
 	OS.cpp,
 	srcdoc.tpp,
 	ScreenGrab.cpp,

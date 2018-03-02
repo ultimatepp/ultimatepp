@@ -170,4 +170,3 @@ bool CloseCDTray(String drive)
 
 #endif
 
-//END_UPP_NAMESPACE

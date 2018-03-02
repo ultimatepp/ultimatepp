@@ -64,9 +64,11 @@ Rect GetDesktopRect();
 	
 bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom);
 bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom);
+#if defined(PLATFORM_WIN32) 
 void Window_Bottom(int64 windowId);
 void Window_Top(int64 windowId);
 void Window_TopMost(int64 windowId);
+#endif
 
 enum WINDOW_STATUS {
 	WINDOW_MAXIMIZED, WINDOW_MINIMIZED, WINDOW_NORMAL};
@@ -222,7 +224,6 @@ struct SystemOverview : DeepCopyOption<SystemOverview> {
 	void Serialize(Stream &stream);
 };
 
-//END_UPP_NAMESPACE
 
 #endif
 

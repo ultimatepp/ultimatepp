@@ -2,6 +2,7 @@
 
 using namespace Upp;
 
+
 #if defined(PLATFORM_WIN32) || defined (PLATFORM_WIN64)
 
 #ifndef PRODUCT_UNLICENSED
@@ -274,12 +275,6 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
    	BOOL bOsVersionInfoEx;
 
    	ZeroMemory(&si, sizeof(SYSTEM_INFO));
-   	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-
-   	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-
-   	if(!(bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO *)&osvi)))
-      	return false;
 
    	// Call GetNativeSystemInfo if supported or GetSystemInfo otherwise.
    	pGNSI = (PGNSI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetNativeSystemInfo");
@@ -287,15 +282,24 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
    		pGNSI(&si);
    	else 
    		GetSystemInfo(&si);
-
-	kerVersion = Format("%d.%d", (int)osvi.dwMajorVersion, (int)osvi.dwMinorVersion);
-	kernel = "Windows";
+	
 	switch(si.wProcessorArchitecture) {
 	case PROCESSOR_ARCHITECTURE_AMD64:	kerArchitecture = "64 bits";			break;
 	case PROCESSOR_ARCHITECTURE_IA64:	kerArchitecture = "Itanium 64 bits";	break;
    	case PROCESSOR_ARCHITECTURE_INTEL:	kerArchitecture = "32 bits";			break;
 	default:							kerArchitecture = "Unknown";
 	}
+
+   	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+
+   	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+
+   	if(!(bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO *)&osvi)))
+      	return false;
+      		
+	kerVersion = Format("%d.%d", (int)osvi.dwMajorVersion, (int)osvi.dwMinorVersion);
+	kernel = "Windows";
+
    	if (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId && osvi.dwMajorVersion > 4) {
    		if (osvi.dwMajorVersion == 10 && osvi.dwMinorVersion == 0) {
    			if (osvi.wProductType == VER_NT_WORKSTATION)
@@ -679,4 +683,3 @@ bool GetOsInfo(String &kernel, String &kerVersion, String &kerArchitecture, Stri
 
 #endif
 
-//END_UPP_NAMESPACE
