@@ -461,7 +461,7 @@ void WebSocket::SendRaw(int hdr, const String& data, dword mask)
 		header.Cat(byte(len));
 	}
 	else
-		header.Cat((int)len);
+		header.Cat((int)len | mask);
 
 	if(mask) {
 		byte Cle[4];
