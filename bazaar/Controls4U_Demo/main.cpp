@@ -45,7 +45,7 @@ Controls4U_Demo::Controls4U_Demo() {
 	OnGridSel();
 	
 	timerOn = false;
-	SetTimeCallback(-100, THISBACK(Timer));
+	timeCallback.Set(-100, THISBACK(Timer));
 }
 
 void Controls4U_Demo::Timer() {

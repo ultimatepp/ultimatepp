@@ -110,6 +110,7 @@ public:
 	
 private:
 	Vector<StaticRect *> controls;
+	TimeCallback timeCallback;
 	void OnGridSel();
 };
 
