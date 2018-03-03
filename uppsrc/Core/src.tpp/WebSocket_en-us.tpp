@@ -22,17 +22,6 @@ topic "WebSocket";
 ]_[* NonBlocking]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% If [%-*@3 b] is true, activates non`-blocking mode. Default 
 is blocking mode.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:WebSocket`:`:RequestHeaders`(const Upp`:`:String`&`): [_^Upp`:`:WebSocket^ W
-ebSocket][@(0.0.255) `&]_[* RequestHeaders]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 s])&]
-[s2;%% Overrides HTTP headers used with Connect.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:WebSocket`:`:StandardHeaders`(`): [_^Upp`:`:String^ String]_[* StandardHeader
-s]()&]
-[s2;%% Returns standard HTTP headers to be used with Connect.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:IsBlocking`(`)const: [@(0.0.255) bool]_[* IsBlocking]()_[@(0.0.255) c

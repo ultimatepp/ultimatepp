@@ -19,6 +19,17 @@ String WebSocket::FormatBlock(const String& s)
 WebSocket::WebSocket()
 {
 	Clear();
+
+	static String request_headers_const =
+	    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
+		"Accept-Language: cs,en-US;q=0.7,en;q=0.3\r\n"
+		"Sec-WebSocket-Version: 13\r\n"
+		"Sec-WebSocket-Extensions: permessage-deflate\r\n"
+		"Connection: keep-alive, Upgrade\r\n"
+		"Pragma: no-cache\r\n"
+		"Cache-Control: no-cache\r\n"
+		"Upgrade: websocket\r\n";
+    request_headers = request_headers_const;
 }
 
 void WebSocket::Clear()
@@ -54,15 +65,16 @@ bool WebSocket::Accept(TcpSocket& listen_socket)
 	return true;
 }
 
+WebSocket& WebSocket::Header(const char *id, const String& data)
+{
+	request_headers << id << ": " << data << "\r\n";
+	return *this;
+}
+
 bool WebSocket::Connect(const String& url)
 {
-	Clear();
-	
-	client = true;
-
-	uri = url;
 	const char *u = url;
-	ssl = memcmp(u, "wss", 3) == 0;
+	bool ssl = memcmp(u, "wss", 3) == 0;
 	const char *t = u;
 	while(*t && *t != '?')
 		if(*t++ == '/' && *t == '/') {
@@ -72,10 +84,23 @@ bool WebSocket::Connect(const String& url)
 	t = u;
 	while(*u && *u != ':' && *u != '/' && *u != '?')
 		u++;
-	host = String(t, u);
+	String host = String(t, u);
 	int port = ssl ? 443 : 80;
 	if(*u == ':')
 		port = ScanInt(u + 1, &u);
+	
+	return Connect(url, host, ssl, port);
+}
+
+bool WebSocket::Connect(const String& uri_, const String& host_, bool ssl_, int port)
+{
+	Clear();
+	
+	client = true;
+	
+	uri = uri_;
+	host = host_;
+	ssl = ssl_;
 	
 	if(socket->IsBlocking()) {
 		if(!addrinfo.Execute(host, port)) {
@@ -97,31 +122,18 @@ bool WebSocket::Connect(const String& url)
 	return true;
 }
 
-String WebSocket::StandardHeaders()
-{
-	String h;
-	for(int i = 0; i < 20; i++)
-		h.Cat(Random());
-    return
-	    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8\r\n"
-		"Accept-Language: cs,en-US;q=0.7,en;q=0.3\r\n"
-		"Sec-WebSocket-Version: 13\r\n"
-		"Sec-WebSocket-Extensions: permessage-deflate\r\n"
-		"Sec-WebSocket-Key: " + Base64Encode(h) + "\r\n"
-		"Connection: keep-alive, Upgrade\r\n"
-		"Pragma: no-cache\r\n"
-		"Cache-Control: no-cache\r\n"
-		"Upgrade: websocket\r\n";
-}
-
 void WebSocket::SendRequest()
 {
 	LLOG("Sending connection request");
+	String h;
+	for(int i = 0; i < 20; i++)
+		h.Cat(Random());
 	Out( // needs to be the first thing to sent after the connection is established
 	    "GET " + uri + " HTTP/1.1\r\n"
 	    "Host: " + host + "\r\n" +
-	    Nvl(request_headers, StandardHeaders())
-	    + "\r\n"
+		"Sec-WebSocket-Key: " + Base64Encode(h) + "\r\n" +
+	    request_headers +
+	    "\r\n"
 	);
 	opcode = HTTP_RESPONSE_HEADER;
 }

@@ -677,9 +677,13 @@ class WebSocket {
 
 public:
 	WebSocket& NonBlocking(bool b = true)               { socket->Timeout(b ? 0 : Null); return *this; }
-	WebSocket& RequestHeaders(const String& s)          { request_headers = s; return *this; }
 
-	String StandardHeaders();
+	WebSocket&  Headers(const String& h)              { request_headers = h; return *this; }
+	WebSocket&  ClearHeaders()                        { return Headers(Null); }
+	WebSocket&  AddHeaders(const String& h)           { request_headers.Cat(h); return *this; }
+	WebSocket&  Header(const char *id, const String& data);
+
+	String GetHeaders()                                 { return request_headers; }
 	
 	bool   IsBlocking() const                           { return IsNull(socket->GetTimeout()); }
 	
@@ -688,6 +692,8 @@ public:
 	
 	bool   Accept(TcpSocket& listener_socket);
 	bool   Connect(const String& url);
+	bool   Connect(const String& uri, const String& host, bool ssl, int port);
+	bool   Connect(const String& uri, const String& host, bool ssl) { return Connect(uri, host, ssl, ssl ? 440 : 80); }
 	
 	void   Do();
 
