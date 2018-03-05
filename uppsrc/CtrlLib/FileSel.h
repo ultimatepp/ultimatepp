@@ -204,6 +204,9 @@ protected:
 	bool        appmodal;
 	bool        loaded;
 
+	Ctrl       *file_ctrl = NULL;
+	int         file_ctrl_cx;
+
 #ifdef _MULTITHREADED
 	static StaticMutex li_mutex;
 	static void      (*li_current)(const String& path, Image& result);
@@ -319,6 +322,8 @@ public:
 	FileSel& AddPlace(const String& path, const char* group = NULL, int row = -1);
 	FileSel& AddPlaceSeparator();
 	FileSel& AddStandardPlaces();
+	FileSel& FileCtrl(Ctrl& ext, int cx)         { file_ctrl = &ext; file_ctrl_cx = cx; return *this; }
+	FileSel& FileCtrl(Ctrl& ext)                 { return FileCtrl(ext, ext.GetMinSize().cx); }
 
 	FileSel();
 	virtual ~FileSel();

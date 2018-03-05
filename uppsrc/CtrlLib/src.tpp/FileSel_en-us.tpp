@@ -1,5 +1,4 @@
 topic "FileSel";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "FileSel";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0;%% [*@(229)4 FileSel]]}}&]
 [s3; &]
@@ -305,4 +305,14 @@ aces]()&]
 [s2;%% Adds default special folders to the list. Called by FileSel 
 constructor.&]
 [s3; &]
-[s0; ]]
+[s4; &]
+[s5;:Upp`:`:FileSel`:`:FileCtrl`(Upp`:`:Ctrl`&`,int`): [_^Upp`:`:FileSel^ FileSel][@(0.0.255) `&
+]_[* FileCtrl]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ext], [@(0.0.255) int]_[*@3 cx])&]
+[s5;:Upp`:`:FileSel`:`:FileCtrl`(Upp`:`:Ctrl`&`): [_^Upp`:`:FileSel^ FileSel][@(0.0.255) `&
+]_[* FileCtrl]([_^Upp`:`:Ctrl^ Ctrl][@(0.0.255) `&]_[*@3 ext])&]
+[s2;%% Provides a way to extend the FileSel: Adds a widget after the 
+filename widget. The height of widget is set to be the same as 
+the filename, width is [%-*@3 cx.] Variant without [%-*@3 cx] gets 
+the width from GetMinSize().&]
+[s3;%% &]
+[s3;%% ]]
