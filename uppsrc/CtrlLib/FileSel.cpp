@@ -1684,6 +1684,15 @@ bool FileSel::Execute(int _mode) {
 		ArrangeOKCancel(ok, cancel);
 		SetRect(r);
 	}
+
+	if(file_ctrl) {
+		LogPos sp = search.GetPos();
+		LogPos fp = file.GetPos();
+		file.HSizePos(fp.x.GetA(), 2 * sp.x.GetA() + file_ctrl_cx);
+		AddChild(file_ctrl, &file);
+		file_ctrl->BottomPos(fp.y.GetA(), fp.y.GetB()).RightPos(sp.x.GetA(), file_ctrl_cx);
+	}
+
 	readonly.Show(rdonly && mode == OPEN);
 	list.Multi(multi && (mode == OPEN || mode == SELECTDIR));
 	list.SelectDir(multi && mode == SELECTDIR);
