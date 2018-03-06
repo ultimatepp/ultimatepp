@@ -158,6 +158,24 @@ bool Thread::Run(Function<void ()> _cb, bool noshutdown)
 	return handle;
 }
 
+bool Thread::RunNice(Function<void ()> cb, bool noshutdown)
+{
+	if(Run(cb, noshutdown)) {
+		Nice();
+		return true;
+	}
+	return false;
+}
+
+bool Thread::RunCritical(Function<void ()> cb, bool noshutdown)
+{
+	if(Run(cb, noshutdown)) {
+		Critical();
+		return true;
+	}
+	return false;
+}
+
 Thread::~Thread()
 {
 	Detach();
@@ -360,6 +378,22 @@ void Thread::Start(Function<void ()> cb, bool noshutdown)
 {
 	Thread t;
 	t.Run(cb);
+	t.Detach();
+}
+
+void Thread::StartNice(Function<void ()> cb, bool noshutdown)
+{
+	Thread t;
+	t.Run(cb);
+	t.Nice();
+	t.Detach();
+}
+
+void Thread::StartCritical(Function<void ()> cb, bool noshutdown)
+{
+	Thread t;
+	t.Run(cb);
+	t.Critical();
 	t.Detach();
 }
 

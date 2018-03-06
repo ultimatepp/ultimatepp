@@ -50,6 +50,8 @@ class Thread : NoCopy {
 #endif
 public:
 	bool       Run(Function<void ()> cb, bool noshutdown = false);
+	bool       RunNice(Function<void ()> cb, bool noshutdown = false);
+	bool       RunCritical(Function<void ()> cb, bool noshutdown = false);
 
 	void       Detach();
 	int        Wait();
@@ -72,8 +74,13 @@ public:
 	Handle      GetHandle() const              { return handle; }
 	
 	bool        Priority(int percent); // 0 = lowest, 100 = normal
+	
+	void        Nice()                         { Priority(25); }
+	void        Critical()                     { Priority(150); }
 
 	static void Start(Function<void ()> cb, bool noshutdown = false);
+	static void StartNice(Function<void ()> cb, bool noshutdown = false);
+	static void StartCritical(Function<void ()> cb, bool noshutdown = false);
 
 	static void Sleep(int ms);
 
