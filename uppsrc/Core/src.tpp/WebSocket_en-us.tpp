@@ -24,6 +24,38 @@ topic "WebSocket";
 is blocking mode.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:WebSocket`:`:Headers`(const Upp`:`:String`&`): [_^Upp`:`:WebSocket^ WebSock
+et][@(0.0.255) `&]_[* Headers]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_
+[*@3 h])&]
+[s2;%% Replaces HTTP request headers for Connect method with [%-*@3 h]. 
+Note that `"Host:`" and `"Sec`-WebSocket`-Key:`" headers are fixed, 
+as they have to be generated during Connect and so should not 
+be in [%-*@3 h]. Headers are supplied as text, should be `"`\r`\n`" 
+separated. The whole text should end with `"`\r`\n`".&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:ClearHeaders`(`): [_^Upp`:`:WebSocket^ WebSocket][@(0.0.255) `&]_
+[* ClearHeaders]()&]
+[s2;%% Clears HTTP request headers for Connect.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:AddHeaders`(const Upp`:`:String`&`): [_^Upp`:`:WebSocket^ WebS
+ocket][@(0.0.255) `&]_[* AddHeaders]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 h])&]
+[s2;%% Adds text to HTTP request headers for Connect.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:Header`(const char`*`,const Upp`:`:String`&`): [_^Upp`:`:WebSocket^ W
+ebSocket][@(0.0.255) `&]_[* Header]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 data])&]
+[s2;%% Adds single header [%-*@3 id] with value [%-*@3 data] to HTTP 
+request headers for Connect.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WebSocket`:`:GetHeaders`(`): [_^Upp`:`:String^ String]_[* GetHeaders]()&]
+[s2;%% Returns current HTTP request headers for Connect.&]
+[s3; &]
+[s4; &]
 [s5;:Upp`:`:WebSocket`:`:IsBlocking`(`)const: [@(0.0.255) bool]_[* IsBlocking]()_[@(0.0.255) c
 onst]&]
 [s2;%% Returns true if WebSocket is in the blocking mode.&]
@@ -45,10 +77,21 @@ cpSocket][@(0.0.255) `&]_[*@3 listen`_socket])&]
 on success.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:WebSocket`:`:Connect`(const Upp`:`:String`&`,const Upp`:`:String`&`,bool`,int`): [@(0.0.255) b
+ool]_[* Connect]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 uri`_], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 host], 
+[@(0.0.255) bool]_[*@3 ssl], [@(0.0.255) int]_[*@3 port])&]
+[s5;:Upp`:`:WebSocket`:`:Connect`(const Upp`:`:String`&`,const Upp`:`:String`&`,bool`): [@(0.0.255) b
+ool]_[* Connect]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 uri], 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 host], 
+[@(0.0.255) bool]_[*@3 ssl])&]
 [s5;:Upp`:`:WebSocket`:`:Connect`(const Upp`:`:String`&`): [@(0.0.255) bool]_[* Connect](
 [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 url])&]
 [s2;%% Initiates connection to [%-*@3 url]. In blocking mode returns 
-false if connection cannot be established, otherwise true.&]
+false if connection cannot be established, otherwise true. Variant 
+where [%-*@3 port] is not specified uses 440 if [%-*@3 ssl] and 80 
+if not. Variant with single [%-*@3 url] parameter derives all other 
+parameters from [%-*@3 url].&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:Do`(`): [@(0.0.255) void]_[* Do]()&]
@@ -119,9 +162,11 @@ onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 data])&]
 message.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:WebSocket`:`:Close`(const Upp`:`:String`&`): [@(0.0.255) void]_[* Close]([@(0.0.255) c
-onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 msg])&]
-[s2;%% Initiates standard close of connection, sending CLOSE [%-*@3 msg].&]
+[s5;:Upp`:`:WebSocket`:`:Close`(const Upp`:`:String`&`,bool`): [@(0.0.255) void]_[* Close
+]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 msg], 
+[@(0.0.255) bool]_[*@3 wait`_reply])&]
+[s2;%% Initiates standard close of connection, sending CLOSE [%-*@3 msg]. 
+If [%-*@3 wait`_reply] is true, waits for the reply from the server.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WebSocket`:`:IsOpen`(`)const: [@(0.0.255) bool]_[* IsOpen]()&]
