@@ -91,6 +91,7 @@ void CoWork::Pool::DoJob(MJob& job)
 	Function<void ()> fn = pick(job.fn);
 	CoWork *work = job.work;
 	CoWork::current = work;
+	bool looper = job.looper;
 	Free(job);
 	lock.Leave();
 	std::exception_ptr exc;
@@ -112,7 +113,7 @@ void CoWork::Pool::DoJob(MJob& job)
 		work->exc = exc;
 	}
 	else
-	if(job.looper)
+	if(looper)
 		work->Cancel0();
 	if(--work->todo == 0) {
 		LLOG("Releasing waitforfinish of (CoWork " << FormatIntHex(work) << ")");
