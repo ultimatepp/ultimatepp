@@ -92,7 +92,7 @@ void CoWork::Pool::DoJob(MJob& job)
 	CoWork *work = job.work;
 	CoWork::current = work;
 	bool looper = job.looper;
-	Free(job);
+	Free(job); // using 'job' after this point is grave error....
 	lock.Leave();
 	std::exception_ptr exc;
 	try {
