@@ -27,7 +27,7 @@ topic "Roadmap";
 [{_}%EN-US 
 [s2; Roadmap&]
 [s24; Upcoming release&]
-[s3; 2018.1 (Mar 2018)&]
+[s3; 2018.1 (rev 11834) (Mar 2018)&]
 [s22; Core&]
 [s5;l160;i150;O0; New low`-overhead CoWork [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_7`_7^ p
 arallelization method / pattern `- Loop]&]
