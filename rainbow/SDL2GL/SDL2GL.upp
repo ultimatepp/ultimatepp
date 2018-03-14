@@ -11,7 +11,7 @@ library(POSIX) "SDL2 SDL2main GL";
 library(WIN32) "SDL2.lib SDL2main.lib OpenGL32.lib";
 
 file
-	SDL20GL.h,
+	SDL2GL.h,
 	Keys.h,
 	Local.h,
 	After.h,

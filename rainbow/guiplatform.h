@@ -59,3 +59,9 @@
 #define GUIPLATFORM_INCLUDE          <Turtle/Turtle.h>
 #define GUIPLATFORM_NOSCROLL
 #endif
+
+#ifdef flagSDL2GL
+#define GUIPLATFORM_KEYCODES_INCLUDE <SDL2GL/Keys.h>
+//need to make SDL_keysym.h known before K_ enum
+#define GUIPLATFORM_INCLUDE          <SDL2GL/SDL2GL.h>
+#endif

@@ -2,7 +2,8 @@ uses
 	CtrlLib,
 	RichEdit,
 	plugin/DroidFonts,
-	SDL2Uword;
+	SDL2Uword,
+	SDL2GL;
 
 file
 	test.cpp,
@@ -11,5 +12,5 @@ file
 	help.txt;
 
 mainconfig
-	"" = "GUI SDL20GL";
+	"" = "GUI SDL2GL";
 
