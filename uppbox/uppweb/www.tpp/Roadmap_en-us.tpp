@@ -36,9 +36,10 @@ related optimizations&]
 [s5;l160;i150;O0; CoPartition optimized to perform the work in calling 
 thread if data size is small&]
 [s5;l160;i150;O0; SeedRandom without parameter now reseeds the random 
-with host enthropy&]
+with host entropy&]
 [s5;l160;i150;O0; Array/Vector new [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_3`_2^ G
 et/Set] methods&]
+[s5;l160;i150;O0; New features for WebSocket client mode&]
 [s5; &]
 [s5; [* plugin/bz2]&]
 [s5;l160;i150;O0; plugin/bz2: Streaming support&]
@@ -55,6 +56,11 @@ images into PDF&]
 [s5;l160;i150;O0; In Windows, owned windows now have minimize box 
 disabled (as minimizing of owned windows leads to strange behaviour)&]
 [s5;l160;i150;O0; LineEdit`::WhenScroll event&]
+[s5;l160;i150;O0; New OptionBox widget (Option with LabelBox like 
+graphics, also able to automatically enable/disable contained 
+widgets)&]
+[s5;l160;i150;O0; FileSel now has option to add widgets into the 
+dialog (e.g. to specify save format)&]
 [s5; &]
 [s5; [* TheIDE]&]
 [s5;* &]
