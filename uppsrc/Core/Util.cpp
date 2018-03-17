@@ -163,6 +163,7 @@ void    AssertFailed(const char *file, int line, const char *cond)
 #	endif
 #else
 #endif
+
 	__BREAK__;
 	abort();
 }

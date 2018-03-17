@@ -109,7 +109,7 @@ public:
 		Column& Sorting(const ValueOrder& o);
 		Column& SortingLined(Gate<int, int> line_order);
 		Column& SortingBy(Function<int (const Value& a, const Value& b)> cmp);
-		Column& SortDefault();
+		Column& SortDefault(bool desc = false);
 
 		Column& Margin(int m)                      { margin = m; return *this; }
 
