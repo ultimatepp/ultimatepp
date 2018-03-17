@@ -1,5 +1,8 @@
 #include "ScatterDraw.h"
 
+#define TFILE <ScatterDraw/ScatterDraw.t>
+#include <Core/t.h>
+
 ScatterDraw& ScatterDraw::SetColor(const Color& _color) {
 	graphColor = _color;
 	return *this;
@@ -1943,6 +1946,7 @@ ScatterDraw::ScatterDraw() {
 	stacked = false;
 	serializeFormat = true;
 	mouseHandlingX = mouseHandlingY = false;
+	selectedSeries = Null;
 }
 
 void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color) {

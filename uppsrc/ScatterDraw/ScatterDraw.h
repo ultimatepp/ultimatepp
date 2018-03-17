@@ -943,6 +943,7 @@ private:
 	bool labelsChanged;
 	bool stacked;
 	bool serializeFormat;
+	int selectedSeries;
 };
 
 template <class T>
