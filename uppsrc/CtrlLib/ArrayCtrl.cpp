@@ -136,11 +136,11 @@ ArrayCtrl::Column& ArrayCtrl::Column::Sorting()
 	return SortingBy(StdValueCompare);
 }
 
-ArrayCtrl::Column& ArrayCtrl::Column::SortDefault()
+ArrayCtrl::Column& ArrayCtrl::Column::SortDefault(bool desc)
 {
 	if(!cmp && !order && !line_order)
 		Sorting();
-	arrayctrl->SetSortColumn(index);
+	arrayctrl->SetSortColumn(index, desc);
 	return *this;
 }
 

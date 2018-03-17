@@ -1,5 +1,4 @@
 topic "ArrayCtrl";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "ArrayCtrl";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000t/25b/25@3 [s0; [*@(229)4 ArrayCtrl]]}}&]
 [s5;K &]
@@ -2983,13 +2983,14 @@ nt]_([@(0.0.255) const]_Value[@(0.0.255) `&]_a, [@(0.0.255) const]_Value[@(0.0.2
 tab, using [%-*@3 c] to compare values of column. [%-*@3 c] should 
 return `-1, 0, 1 for <, `=, >.&]
 [s3; &]
-[s4; &]
-[s5;:ArrayCtrl`:`:Column`:`:SortDefault`(`): [_^ArrayCtrl`:`:Column^ Column][@(0.0.255) `&
-]_[* SortDefault]()&]
-[s2; Sets this column to be initial sorting column (calls SetSortColumn 
+[s4;%- &]
+[s5;:Upp`:`:ArrayCtrl`:`:Column`:`:SortDefault`(bool`):%- [_^Upp`:`:ArrayCtrl`:`:Column^ A
+rrayCtrl`::Column][@(0.0.255) `&]_[* SortDefault]([@(0.0.255) bool]_[*@3 desc] 
+`= [@(0.0.255) false])&]
+[s2;%- [%% Sets this column to be initial sorting column (calls SetSortColumn 
 of ArrayCtrl). If none of Sorting/SortingBy/SortingLines methods 
 was called on this column yet, calls default Sorting for the 
-column too.&]
+column too. If ][*@3 desc] is true, sorting is in descending order.&]
 [s3; &]
 [s4; &]
 [s5;:ArrayCtrl`:`:Column`:`:HeaderTab`(`): [_^HeaderCtrl`:`:Column^ HeaderCtrl`::Column][@(0.0.255) `&
