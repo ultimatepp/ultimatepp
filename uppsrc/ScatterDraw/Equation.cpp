@@ -89,6 +89,8 @@ int ExplicitEquation::maxFitFunctionEvaluations = 1000;
 
 
 double PolynomialEquation::f(double x) {
+	if (x < 0)
+		return Null;
 	double y = 0;
 	for (int i = 0; i < coeff.GetCount(); ++i) 
 		y += coeff[i]*pow(x, i);
@@ -133,8 +135,8 @@ String FourierEquation::GetEquation(int numDigits) {
 	return ret;
 }
 
-static double DegToRad(double deg) {return deg*M_PI/180.;}
-static double RadToDeg(double rad) {return rad*180./M_PI;}
+static inline double DegToRad(double deg) {return deg*M_PI/180.;}
+static inline double RadToDeg(double rad) {return rad*180./M_PI;}
 
 void EvalExpr::EvalThrowError(CParser &p, const char *s) {
 	CParser::Pos pos = p.GetPos();
@@ -152,8 +154,7 @@ EvalExpr::EvalExpr() {
 	noCase = false;
 	errorIfUndefined = false;
 	
-	constants.Add("PI", M_PI);
-	constants.Add("M_PI", M_PI);
+	constants.Add("pi", M_PI);
 	constants.Add("e", M_E);
 	
 	functions.Add("abs", fabs);
@@ -190,7 +191,7 @@ double EvalExpr::Term(CParser& p) {
 		}	
 		String strsearch;
 		if (noCase)
-			strsearch = ToUpper(strId);
+			strsearch = ToLower(strId);
 		else
 			strsearch = strId;
 		double ret = constants.Get(strsearch, Null);
@@ -198,7 +199,7 @@ double EvalExpr::Term(CParser& p) {
 			ret = variables.Get(strsearch, Null);
 			if (IsNull(ret)) {
 				if (errorIfUndefined)
-					EvalThrowError(p, Format(t_("Unknown var '%s'"), strId));	
+					EvalThrowError(p, Format(t_("Unknown identifier '%s'"), strId));	
 				ret = variables.GetAdd(strsearch, 0);
 			}
 		}
@@ -214,9 +215,11 @@ double EvalExpr::Term(CParser& p) {
 double EvalExpr::Pow(CParser& p) {
 	double x = Term(p);
 	for(;;) {
-		if(p.Char('^'))
+		if(p.Char('^')) {
+			if (x < 0)
+				EvalThrowError(p, t_("Complex number"));
 			x = pow(x, Term(p));
-		else
+		} else
 			return x;
 	}
 }
@@ -263,7 +266,7 @@ double EvalExpr::Eval(String line) {
 			if(p.Char('=')) {
 				double ret = Exp(p);
 				if (noCase)
-					var = ToUpper(var);
+					var = ToLower(var);
 				variables.GetAdd(var) = ret;
 				return ret;
 			} else {
@@ -289,7 +292,7 @@ String EvalExpr::TermStr(CParser& p, int numDigits) {
 			return strId + "(" + x + ")";
 		}
 		if (noCase)
-			strId = ToUpper(strId);
+			strId = ToLower(strId);
 		if (IsNull(numDigits)) {
 			if (constants.Find(strId) < 0)
 				variables.GetAdd(strId, 0);

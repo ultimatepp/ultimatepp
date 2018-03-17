@@ -99,7 +99,9 @@ class LinearEquation : public ExplicitEquation {
 public:
 	LinearEquation() 					{SetCoeff(0, 0);}
 	LinearEquation(double c0, double c1){SetCoeff(c0, c1);}
-	double f(double x) 					{return coeff[0] + x*coeff[1];}
+	double f(double x) 					{
+		return coeff[0] + x*coeff[1];
+	}
 	virtual String GetName() 			{return t_("Linear");}
 	virtual String GetEquation(int numDigits = 3) {	
 		String ret = Format("%s + %s*x", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits));
@@ -278,7 +280,11 @@ class RealExponentEquation : public ExplicitEquation {
 public:
 	RealExponentEquation() 						{SetCoeff(1, 1);}
 	RealExponentEquation(double a, double b)	{SetCoeff(a, b);}
-	double f(double x) 							{return coeff[0]*pow(x, coeff[1]);}
+	double f(double x) 							{
+		if (x < 0)
+			return Null;
+		return coeff[0]*pow(x, coeff[1]);
+	}
 	virtual String GetName() 					{return t_("RealExponent");}
 	virtual String GetEquation(int numDigits = 3) {
 		String ret = Format("%s*x^%s", FormatCoeff(0, numDigits), FormatCoeff(1, numDigits));
@@ -334,15 +340,15 @@ public:
 	const String &GetFunction(int id) 						{return functions.GetKey(id);}
 	int GetFunctionsCount() 								{return functions.GetCount();}
 	
-	void SetConstant(String name, double value = 0)			{constants.GetAdd(name, value);}
+	void SetConstant(String name, double value = 0)			{constants.GetAdd(name) = value;}
 	void SetConstant(int id, double value = 0)				{constants[id] = value;}
 	double GetConstant(String name)							{return constants.Get(name, Null);}
 	void GetConstant(int id, String &name, double &value)	{name = constants.GetKey(id); value = constants[id];}
 	int GetConstantsCount() 								{return constants.GetCount();}
 
-	void SetVariable(String name, double value = 0)			{variables.GetAdd(name, value);}
+	void SetVariable(String name, double value = 0)			{variables.GetAdd(name) = value;}
 	void SetVariable(int id, double value = 0)				{variables[id] = value;}
-	double GetVariable(String name)							{return variables.Get(name, Null);}	
+	double GetVariable(String name)							{return variables.GetAdd(name);}	
 	void GetVariable(int id, String &name, double &value)	{name = variables.GetKey(id); value = variables[id];}
 	int GetVariablesCount() 								{return variables.GetCount();}
 	void ClearVariables();
@@ -353,7 +359,7 @@ public:
 
 	CParser p;
 
-static void EvalThrowError(CParser &p, const char *s);
+	static void EvalThrowError(CParser &p, const char *s);
 	
 protected:
 	double Exp(CParser& p);
@@ -362,6 +368,9 @@ protected:
 	String lastError;
 	VectorMap<String, double> variables;
 	bool errorIfUndefined;
+	
+	bool IsFunction(String str)								{return functions.Get(str, 0);}
+	bool IsConstant(String str)								{return !IsNull(GetConstant(str));}
 	
 private:
 	void *Functions_Get(CParser& p);
@@ -381,22 +390,46 @@ public:
 	UserEquation(String _name, String _strEquation, String varHoriz = "x")	{Init(_name, _strEquation, varHoriz);}
 	void Init(String _name, String _strEquation, String varHoriz = "x") {
 		name = _name;
-		strEquation = _strEquation;
+		_strEquation.Replace(" ", "");
+		StringStream str(_strEquation);
+		Vector<String> parts = GetCsvLine(str, ';', CHARSET_DEFAULT);
+		if (parts.IsEmpty())
+			return;
+		strEquation = parts[0];
 		eval.Init();
 		eval.SetConstant(varHoriz);
 		idx = eval.GetConstantsCount() - 1;
 		eval.EvalStr(strEquation);
-		coeff.SetCount(eval.GetVariablesCount());
-		for (int i = 0; i < coeff.GetCount(); ++i)
-			coeff[i] = 0.1;
+		coeff.Clear();
+		varNames.Clear();
+		for (int i = 0; i < eval.GetVariablesCount(); ++i) {
+			String varName;
+			double dummy;
+			eval.GetVariable(i, varName, dummy);
+			varNames << varName;
+			int istr;
+			for (istr = 1; istr < parts.GetCount(); ++istr) {
+				String strVar = varName + "=";
+				int ifound = parts[istr].Find(strVar);
+				if (ifound >= 0) {
+					double val = ScanDouble(parts[istr].Mid(strVar.GetCount()));
+					coeff << val;
+					break;
+				}
+			}
+			if (istr == parts.GetCount())
+				coeff << 0.1;	
+		}
 	}
 	double f(double x) {
 		eval.SetConstant(idx, x);
-		for (int i = 0; i < coeff.GetCount(); ++i)
-			eval.SetVariable(i, coeff[i]);
+		for (int i = 0; i < coeff.GetCount(); ++i) {
+			eval.SetVariable(varNames[i], coeff[i]);
+			double ret = eval.GetVariable(varNames[i]);
+		}
 		return eval.Eval(strEquation);
 	}
-	void SetName(String _name) 					     {name = _name;}
+	void SetName(String _name) 					    {name = _name;}
 	virtual String GetName() 						{return name;}
 	virtual String GetEquation(int numDigits = 3)	{return eval.EvalStr(strEquation, numDigits);}
 	virtual void GuessCoeff(DataSource &series) 	{}
@@ -405,6 +438,7 @@ public:
 private:
 	String name;
 	String strEquation;
+	Vector<String> varNames;
 	EvalExpr eval;
 	int idx;
 };

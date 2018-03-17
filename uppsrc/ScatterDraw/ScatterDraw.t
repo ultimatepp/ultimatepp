@@ -24,9 +24,15 @@ esES("Error en %s(%f)")
 euES("")
 frFR("")
 
-T_("Unknown var '%s'")
+T_("Unknown identifier '%s'")
 caES("")
-esES("Variable '%s' desconocida")
+esES("Identificador desconocido '%s'")
+euES("")
+frFR("")
+
+T_("Complex number")
+caES("")
+esES("N\303\272mero complejo")
 euES("")
 frFR("")
 
