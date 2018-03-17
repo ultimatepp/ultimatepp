@@ -45,7 +45,7 @@ private:
 	void ChangeAnchor(Option *op);
 };
 
-class SeriesTab : public WithSeries<StaticRect> {
+class SeriesTab : public Splitter {
 public:
 	typedef SeriesTab CLASSNAME;
 	
@@ -62,6 +62,9 @@ private:
 	void Change();
 	void ChangeMark();
 	void UpdateFields();
+	
+	WithSeriesLeft<StaticRect> left;
+	WithSeriesRight<StaticRect> right;
 };
 
 class DataDlg : public WithData<TopWindow> {
@@ -147,10 +150,18 @@ private:
 	ScatterCtrl* pscatter;
 	int id;
 	
-	WithProcessingTabFit<StaticRect> tabFit;
-	WithProcessingTabFrequency<StaticRect> tabFreq;
-	WithProcessingTabOp<StaticRect> tabOp;
-	WithProcessingTabBestFit<StaticRect> tabBestFit;
+	WithProcessingTabFitLeft<StaticRect> tabFitLeft;
+	WithProcessingTabFitRight<StaticRect> tabFitRight;
+	Splitter splitterTabFit;
+	WithProcessingTabFrequencyLeft<StaticRect> tabFreqLeft;
+	WithProcessingTabFrequencyRight<StaticRect> tabFreqRight;
+	Splitter splitterTabFreq;
+	WithProcessingTabOpLeft<StaticRect> tabOpLeft;
+	WithProcessingTabOpRight<StaticRect> tabOpRight;
+	Splitter splitterTabOp;
+	WithProcessingTabBestFitLeft<StaticRect> tabBestFitLeft;
+	WithProcessingTabBestFitRight<StaticRect> tabBestFitRight;
+	Splitter splitterTabBestFit;
 	
 	void ArrayCopy();
 	void ArraySelect();
@@ -177,7 +188,7 @@ private:
 	double newWidthMax, newWidthMin, newWidthMovAvg;
 };
 
-class ProcessingDlg : public WithProcessing<TopWindow> {
+class ProcessingDlg : public TopWindow {
 public:
 	typedef ProcessingDlg CLASSNAME;
 
@@ -187,6 +198,9 @@ public:
 private:
 	ScatterCtrl* scatter;
 	Array<ProcessingTab> tabs;
+	WithProcessingLeft<StaticRect> list; 
+	WithProcessingRight<StaticRect> right;
+	Splitter splitter;
 	
 	void UpdateFields();
 };

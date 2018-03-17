@@ -216,98 +216,101 @@ void LegendTab::Change()
 
 void SeriesTab::Init(ScatterCtrl& scatter) 
 {
-	CtrlLayout(*this);
+	CtrlLayout(left);
+	CtrlLayout(right);
+	Horz(left.SizePos(), right.SizePos());
+	SetPos(3000, 0);
 	SizePos();
 	
 	pscatter = &scatter;
 	
-	list.Reset();
-	list.SetLineCy(EditField::GetStdHeight());
-	list.AddColumn(t_("Name"));
+	left.list.Reset();
+	left.list.SetLineCy(EditField::GetStdHeight());
+	left.list.AddColumn(t_("Name"));
 	for(int i = 0; i < scatter.GetCount(); i++)
-		list.Add(scatter.GetLegend(i));
-	list.SetCursor(0);
-	list.WhenSel = THISBACK(UpdateFields);
+		left.list.Add(scatter.GetLegend(i));
+	left.list.SetCursor(0);
+	left.list.WhenSel = THISBACK(UpdateFields);
 
-	marktype.Clear();
+	right.marktype.Clear();
 
-	markstyle.Add(t_("No mark"));
+	right.markstyle.Add(t_("No mark"));
 	for(int i = 0; i < MarkPlot::GetCount(); i++)
-		markstyle.Add(MarkPlot::TypeName(i));
+		right.markstyle.Add(MarkPlot::TypeName(i));
 	
-	markstyle.SetIndex(0);
+	right.markstyle.SetIndex(0);
 	
 	for(int i = 0; i < DashStyle::GetCount(); i++)
-		dashStyle.Add(DashStyle::TypeName(i));
+		right.dashStyle.Add(DashStyle::TypeName(i));
 	
 	UpdateFields();
 
-	linecolor <<= THISBACK(Change);
-	fillcolor <<= THISBACK(Change);
-	visible <<= THISBACK(Change);
-	dashStyle.WhenAction = THISBACK(Change);
-	linethickness <<= THISBACK(Change);
+	right.linecolor <<= THISBACK(Change);
+	right.fillcolor <<= THISBACK(Change);
+	right.visible <<= THISBACK(Change);
+	right.dashStyle.WhenAction = THISBACK(Change);
+	right.linethickness <<= THISBACK(Change);
 
-	markstyle.WhenAction = THISBACK(Change);
-	markcolor <<= THISBACK(Change);
-	markwidth <<= THISBACK(Change);
-	marktype.WhenAction = THISBACK(Change);
+	right.markstyle.WhenAction = THISBACK(Change);
+	right.markcolor <<= THISBACK(Change);
+	right.markwidth <<= THISBACK(Change);
+	right.marktype.WhenAction = THISBACK(Change);
 	
-	unitsY <<= THISBACK(Change);
-	unitsX <<= THISBACK(Change);
+	right.unitsY <<= THISBACK(Change);
+	right.unitsX <<= THISBACK(Change);
 
-	name <<= THISBACK(Change);
-	primary <<= THISBACK(Change);
+	right.name <<= THISBACK(Change);
+	right.primary <<= THISBACK(Change);
 	
-	name.SetFocus();
+	right.name.SetFocus();
 }
 
 void SeriesTab::ChangeMark() {
-	int index = list.GetCursor();
+	int index = left.list.GetCursor();
 	if (index < 0)
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
 	
-	int id = MarkPlot::TypeIndex(~markstyle);
+	int id = MarkPlot::TypeIndex(~right.markstyle);
 	
-	marktype.Clear();
+	right.marktype.Clear();
 	
 	if (id >= 0) {
 		for (int i = 0; i < MarkPlot::GetTypeCount(id); ++i)
-			marktype.Add(MarkPlot::TypeString(id, i));
+			right.marktype.Add(MarkPlot::TypeString(id, i));
 	}
-	if (marktype.GetCount() > 0)
-		marktype.SetIndex(0);
+	if (right.marktype.GetCount() > 0)
+		right.marktype.SetIndex(0);
 	int idStyle = scatter.GetMarkStyleType(index);
-	if (idStyle >= 0 && idStyle < marktype.GetCount())
-		marktype.SetIndex(idStyle);
+	if (idStyle >= 0 && idStyle < right.marktype.GetCount())
+		right.marktype.SetIndex(idStyle);
 }
 
 void SeriesTab::Change() 
 {
-	int index = list.GetCursor();
+	int index = left.list.GetCursor();
 	if (index < 0)
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
 	
-	scatter.SetFillColor(index, ~fillcolor);
-	scatter.ScatterDraw::Show(index, ~visible);
-	scatter.Dash(index, DashStyle::Style(DashStyle::TypeIndex(~dashStyle)));
-	scatter.Stroke(index, ~linethickness, Upp::Color(~linecolor));
+	scatter.SetFillColor(index, ~right.fillcolor);
+	scatter.ScatterDraw::Show(index, ~right.visible);
+	scatter.Dash(index, DashStyle::Style(DashStyle::TypeIndex(~right.dashStyle)));
+	scatter.Stroke(index, ~right.linethickness, Upp::Color(~right.linecolor));
 	
-	scatter.MarkStyle(index, String(~markstyle));
-	scatter.SetMarkColor(index, Upp::Color(~markcolor));
-	scatter.SetMarkWidth(index, ~markwidth);
+	scatter.MarkStyle(index, String(~right.markstyle));
+	scatter.SetMarkColor(index, Upp::Color(~right.markcolor));
+	scatter.SetMarkWidth(index, ~right.markwidth);
 	ChangeMark();
 	
-	scatter.Units(index, ~unitsY, ~unitsX);
+	scatter.Units(index, ~right.unitsY, ~right.unitsX);
                          
-	scatter.SetDataPrimaryY(index, ~primary);
+	scatter.SetDataPrimaryY(index, ~right.primary);
       
-	list.Set(index, ~name);
-	scatter.Legend(index, ~name);
+	left.list.Set(index, ~right.name);
+	scatter.Legend(index, ~right.name);
                    
 	scatter.SetModify();
 	scatter.Refresh();
@@ -315,36 +318,36 @@ void SeriesTab::Change()
 
 void SeriesTab::UpdateFields() 
 {
-	int index = list.GetCursor();
+	int index = left.list.GetCursor();
 	if (index < 0)
 		return;
 	
 	ScatterCtrl &scatter = *pscatter;
 	
-	name <<= list.Get(0);
+	right.name <<= left.list.Get(0);
 	
-	fillcolor <<= scatter.GetFillColor(index);
-	visible <<= scatter.ScatterDraw::IsVisible(index);
+	right.fillcolor <<= scatter.GetFillColor(index);
+	right.visible <<= scatter.ScatterDraw::IsVisible(index);
 	int id = DashStyle::StyleIndex(scatter.GetDash(index));
 	if (id < 0) {
 		id = DashStyle::Register(Format(t_("Dash \"%s\""), scatter.GetDash(index)), scatter.GetDash(index));
-		dashStyle.Add(DashStyle::TypeName(id));
+		right.dashStyle.Add(DashStyle::TypeName(id));
 	}
-	dashStyle <<= DashStyle::TypeName(id);
+	right.dashStyle <<= DashStyle::TypeName(id);
 	
 	Upp::Color color;
 	double thickness;
 	
 	scatter.GetStroke(index, thickness, color);
-	linethickness <<= thickness;
-	linecolor <<= color;
-	markstyle <<= scatter.GetMarkStyleName(index);
-	markcolor <<= scatter.GetMarkColor(index);
-	markwidth <<= scatter.GetMarkWidth(index);
+	right.linethickness <<= thickness;
+	right.linecolor <<= color;
+	right.markstyle <<= scatter.GetMarkStyleName(index);
+	right.markcolor <<= scatter.GetMarkColor(index);
+	right.markwidth <<= scatter.GetMarkWidth(index);
 	ChangeMark();
 	
-	unitsY <<= scatter.GetUnitsY(index);
-	unitsX <<= scatter.GetUnitsX(index);
+	right.unitsY <<= scatter.GetUnitsY(index);
+	right.unitsX <<= scatter.GetUnitsX(index);
 	
-	primary <<= scatter.IsDataPrimaryY(index);
+	right.primary <<= scatter.IsDataPrimaryY(index);
 }

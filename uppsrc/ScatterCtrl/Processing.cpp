@@ -43,40 +43,47 @@ void PropertiesDlg::OnTab()
 
 void ProcessingDlg::Init(ScatterCtrl& scatter) 
 {
-	CtrlLayoutExit(*this, Nvl(scatter.GetTitle(), "Data") + " processing");
+	Title(Nvl(scatter.GetTitle(), "Data") + " processing");
+	Acceptor(right.exit, IDEXIT);
+	right.exit.Exit();
+	Add(splitter.SizePos());
+	CtrlLayout(list);
+	CtrlLayout(right);
+	splitter.Horz(list.SizePos(), right.SizePos());
+	splitter.SetPos(1500, 0);
 	Sizeable().Zoomable();
 	
 	this->scatter = &scatter;
 	
-	list.Reset();
-	list.SetLineCy(EditField::GetStdHeight());
-	list.AddColumn(t_("Name"));
-	list.AddColumn(t_("Id"));
-	list.ColumnWidths("1 0");
+	list.list.Reset();
+	list.list.SetLineCy(EditField::GetStdHeight());
+	list.list.AddColumn(t_("Name"));
+	list.list.AddColumn(t_("Id"));
+	list.list.ColumnWidths("1 0");
 	for(int i = 0; i < scatter.GetCount(); i++) {
 		if (scatter.ScatterDraw::IsVisible(i)) {
-			list.Add(scatter.GetLegend(i), i);
+			list.list.Add(scatter.GetLegend(i), i);
 			ProcessingTab& tab = tabs.Add();
 			tab.Init(scatter);
 			CtrlLayout(tab);
-			Add(tab.HSizePosZ(128, 4).VSizePosZ(4, 28));
+			right.rect.Add(tab.SizePos());
 		}
 	}
-	if (list.GetCount() > 0)
-		list.SetCursor(0);
-	list.WhenSel = THISBACK(UpdateFields);
+	if (list.list.GetCount() > 0)
+		list.list.SetCursor(0);
+	list.list.WhenSel = THISBACK(UpdateFields);
 	UpdateFields();
 }
 
 void ProcessingDlg::UpdateFields() 
 {
-	int index = list.GetCursor();
+	int index = list.list.GetCursor();
 	if (index < 0)
 		return;
 	
-	for (int i = 0; i < list.GetCount(); ++i)
+	for (int i = 0; i < list.list.GetCount(); ++i)
 		tabs[i].Hide();
-	tabs[index].UpdateField(~list.Get(0), int(list.Get(1)));
+	tabs[index].UpdateField(~list.list.Get(0), int(list.list.Get(1)));
 }
 
 int r2Compare(const Vector<Value>& v1, const Vector<Value>& v2) {return double(v1[2]) > double(v2[2]);}
@@ -85,68 +92,84 @@ ProcessingTab::ProcessingTab()
 {
 	CtrlLayout(*this);
 	
-	CtrlLayout(tabFit);
-	CtrlLayout(tabFreq);
-	CtrlLayout(tabOp);
-	CtrlLayout(tabBestFit);
-	tab.Add(tabFit.SizePos(), t_("Data fit"));
-	tab.Add(tabFreq.SizePos(), t_("Frequency"));
-	tab.Add(tabOp.SizePos(), t_("Operations"));
-	tab.Add(tabBestFit.SizePos(), t_("Best fit"));
+	CtrlLayout(tabFitLeft);
+	CtrlLayout(tabFitRight);
+	splitterTabFit.Horz(tabFitLeft.SizePos(), tabFitRight.SizePos());
+	splitterTabFit.SetPos(7000, 0);
+	CtrlLayout(tabFreqLeft);
+	CtrlLayout(tabFreqRight);
+	splitterTabFreq.Horz(tabFreqLeft.SizePos(), tabFreqRight.SizePos());
+	splitterTabFreq.SetPos(8000, 0);
+	CtrlLayout(tabOpLeft);
+	CtrlLayout(tabOpRight);
+	splitterTabOp.Horz(tabOpLeft.SizePos(), tabOpRight.SizePos());
+	splitterTabOp.SetPos(8500, 0);
+	CtrlLayout(tabBestFitLeft);
+	CtrlLayout(tabBestFitRight);
+	splitterTabBestFit.Horz(tabBestFitLeft.SizePos(), tabBestFitRight.SizePos());
+	splitterTabBestFit.SetPos(6000, 0);
+	tab.Add(splitterTabFit.SizePos(), t_("Data fit"));
+	tab.Add(splitterTabFreq.SizePos(), t_("Frequency"));
+	tab.Add(splitterTabOp.SizePos(), t_("Operations"));
+	tab.Add(splitterTabBestFit.SizePos(), t_("Best fit"));
 	tab.WhenSet = THISBACK(OnSet);
 	
-	tabFreq.butFFT.WhenAction = THISBACK(OnFFT);
-	tabFreq.opXAxis = 0;
-	tabFreq.opXAxis.WhenAction = THISBACK(OnFFT);
-	tabFreq.type.WhenAction = THISBACK(OnFFT);
-	tabFreq.type = 0;
+	tabFreqRight.butFFT.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.opXAxis = 0;
+	tabFreqRight.opXAxis.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.type.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.type = 0;
 	
 	for (int i = 0; i < DataSource::GetFFTWindowCount(); ++i)
-		tabFreq.window.Add(InitCaps(DataSource::GetFFTWindowStr(i)));
-	tabFreq.window.SetIndex(0);
-	tabFreq.window.WhenAction = THISBACK(OnFFT);
-	tabFreq.num <<= 1;
-	tabFreq.overlapping <<= 0.1;
+		tabFreqRight.window.Add(InitCaps(DataSource::GetFFTWindowStr(i)));
+	tabFreqRight.window.SetIndex(0);
+	tabFreqRight.window.WhenAction = THISBACK(OnFFT);
+	tabFreqRight.num <<= 1;
+	tabFreqRight.overlapping <<= 0.1;
 	
-	tabFit.opSeries = true;
-	tabFit.opSeries.WhenAction = THISBACK(OnOp);
-	tabFit.opAverage.WhenAction = THISBACK(OnOp);
-	tabFit.opLinear.WhenAction = THISBACK(OnOp);
-	tabFit.opCuadratic.WhenAction = THISBACK(OnOp);
-	tabFit.opCubic.WhenAction = THISBACK(OnOp);
-	tabFit.opSinus.WhenAction = THISBACK(OnOp);
-	tabFit.opSinusTend.WhenAction = THISBACK(OnOp);
-	tabFit.opSpline.WhenAction = THISBACK(OnOp);
-	tabFit.opMax.WhenAction = THISBACK(OnOp);
-	tabFit.opMin.WhenAction = THISBACK(OnOp);
-	tabFit.opMovAvg.WhenAction = THISBACK(OnOp);
-	tabFit.opSecAvg.WhenAction = THISBACK(OnOp);
-	tabFit.butAutoSensSector.WhenAction = THISBACK(OnAutoSensSector);
-	tabFit.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
-	tabFit.width.WhenAction = THISBACK(OnUpdateSensitivity);
+	tabFitRight.opSeries = true;
+	tabFitRight.opSeries.WhenAction = THISBACK(OnOp);
+	tabFitRight.opAverage.WhenAction = THISBACK(OnOp);
+	tabFitRight.opLinear.WhenAction = THISBACK(OnOp);
+	tabFitRight.opCuadratic.WhenAction = THISBACK(OnOp);
+	tabFitRight.opCubic.WhenAction = THISBACK(OnOp);
+	tabFitRight.opSinus.WhenAction = THISBACK(OnOp);
+	tabFitRight.opSinusTend.WhenAction = THISBACK(OnOp);
+	tabFitRight.opSpline.WhenAction = THISBACK(OnOp);
+	tabFitRight.opMax.WhenAction = THISBACK(OnOp);
+	tabFitRight.opMin.WhenAction = THISBACK(OnOp);
+	tabFitRight.opMovAvg.WhenAction = THISBACK(OnOp);
+	tabFitRight.opSecAvg.WhenAction = THISBACK(OnOp);
+	tabFitRight.butAutoSensSector.WhenAction = THISBACK(OnAutoSensSector);
+	tabFitRight.width.WhenLostFocus = THISBACK(OnUpdateSensitivity);
+	tabFitRight.width.WhenAction = THISBACK(OnUpdateSensitivity);
 	
-	tabFit.numDecimals <<= 3;
-	tabFit.numDecimals.WhenAction = THISBACK(UpdateEquations);
-	tabFit.showEquation.WhenAction = THISBACK(OnShowEquation);
+	tabFitRight.numDecimals <<= 3;
+	tabFitRight.numDecimals.WhenAction = THISBACK(UpdateEquations);
+	tabFitRight.showEquation.WhenAction = THISBACK(OnShowEquation);
 	
-	tabOp.xLow.WhenLostFocus = THISBACK(OnOperation);
-	tabOp.xHigh.WhenLostFocus = THISBACK(OnOperation);
+	tabOpRight.xLow.WhenLostFocus = THISBACK(OnOperation);
+	tabOpRight.xHigh.WhenLostFocus = THISBACK(OnOperation);
 	
-	tabBestFit.coefficients = 0;
-	tabBestFit.minR2 = 0.6;
-	tabBestFit.userFormula <<= "c0 + c1*x^2";
-	tabBestFit.gridTrend.AddColumn("Type", 10);
-	tabBestFit.gridTrend.AddColumn("Equation", 40);
-	tabBestFit.gridTrend.AddColumn("R2", 5);
-	tabBestFit.gridTrend.SetLineCy(EditField::GetStdHeight()).MultiSelect();
-	tabBestFit.gridTrend.WhenBar = THISBACK(OnArrayBar);
-	tabBestFit.gridTrend.Sort(r2Compare);
+	tabBestFitRight.coefficients = 0;
+	tabBestFitRight.coefficients.Tip(t_("To show real equation coefficients with different precisions or just in text"));
+	tabBestFitRight.minR2 = 0.6;
+	tabBestFitRight.minR2.Tip(t_("Min. R2 to plot the equation"));
+	tabBestFitRight.userFormula <<= "c0 + c1*x^2; c0=0; c1=1";
+	tabBestFitRight.userFormula.Tip(t_("User suppled equation. Initial guess values separated with ';'"));
+	tabBestFitRight.gridTrend.AddColumn(t_("Type"), 10);
+	tabBestFitRight.gridTrend.AddColumn(t_("Equation"), 30);
+	tabBestFitRight.gridTrend.AddColumn(t_("R2"), 5);
+	tabBestFitRight.gridTrend.SetLineCy(EditField::GetStdHeight()).MultiSelect();
+	tabBestFitRight.gridTrend.WhenBar = THISBACK(OnArrayBar);
+	tabBestFitRight.gridTrend.Sort(r2Compare);
 	for (int i = 0; i < ExplicitEquation::GetEquationCount(); ++i) 
-		/*ExplicitEquation &equation = */equationTypes.Add(ExplicitEquation::Create(i));
+		equationTypes.Add(ExplicitEquation::Create(i));
 	userEquation = new UserEquation;
 	equationTypes.Add(userEquation);
 	
-	tabBestFit.butFit.WhenPush = THISBACK(OnFit);
+	tabBestFitRight.butFit.Tip(t_("It tries to fit the series with the supported equations"));
+	tabBestFitRight.butFit.WhenPush = THISBACK(OnFit);
 	
 	tabFreqFirst = tabOpFirst = tabBestFitFirst = true;
 	avgFirst = linearFirst = cuadraticFirst = cubicFirst = sinusFirst = sinusTendFirst = splineFirst = true;
@@ -156,11 +179,11 @@ ProcessingTab::ProcessingTab()
 }
 
 void ProcessingTab::ArrayCopy() {
-	tabBestFit.gridTrend.SetClipboard(true, true);
+	tabBestFitRight.gridTrend.SetClipboard(true, true);
 }
 
 void ProcessingTab::ArraySelect() {
-	tabBestFit.gridTrend.Select(0, tabBestFit.gridTrend.GetCount(), true);
+	tabBestFitRight.gridTrend.Select(0, tabBestFitRight.gridTrend.GetCount(), true);
 }
 
 void ProcessingTab::OnArrayBar(Bar &menu) {
@@ -169,10 +192,11 @@ void ProcessingTab::OnArrayBar(Bar &menu) {
 }
 
 void ProcessingTab::OnFit() {
-	//ds.Init(pscatter->GetSeries(id));
+	WaitCursor waitcursor;
+	
 	DataSource &ds = pscatter->GetSeries(id);
 	
-	userEquation->Init("User", ~tabBestFit.userFormula, "x");
+	userEquation->Init("User", ~tabBestFitRight.userFormula, "x");
 	
 	Array<double> r2;
 	r2.SetCount(equationTypes.GetCount());
@@ -181,69 +205,69 @@ void ProcessingTab::OnFit() {
 		equationTypes[i].GuessCoeff(ds);
 		equationTypes[i].Fit(ds, r2[i]);
 	}
-	tabBestFit.scatter.RemoveAllSeries();
-	tabBestFit.scatter.AddSeries(ds).Legend("Series").NoMark();
+	tabBestFitLeft.scatter.RemoveAllSeries();
+	tabBestFitLeft.scatter.AddSeries(ds).Legend("Series").NoMark();
 	for (int i = 0; i < equationTypes.GetCount(); ++i) {
-		if (r2[i] >= tabBestFit.minR2)
-			tabBestFit.scatter.AddSeries(equationTypes[i]).Legend(equationTypes[i].GetFullName()).NoMark().Stroke(2);
+		if (r2[i] >= tabBestFitRight.minR2)
+			tabBestFitLeft.scatter.AddSeries(equationTypes[i]).Legend(equationTypes[i].GetFullName()).NoMark().Stroke(2);
 	}
-	tabBestFit.scatter.ZoomToFit(true, true);
+	tabBestFitLeft.scatter.ZoomToFit(true, true);
 	
 	int numDecimals = 3;
-	switch (tabBestFit.coefficients) {
+	switch (tabBestFitRight.coefficients) {
 	case 1:	numDecimals = 40;	break;
 	case 2:	numDecimals = Null;	break;
 	}
-	tabBestFit.gridTrend.Clear();
+	tabBestFitRight.gridTrend.Clear();
 	for (int i = 0; i < equationTypes.GetCount(); ++i) 
-		tabBestFit.gridTrend.Add(equationTypes[i].GetFullName(), equationTypes[i].GetEquation(numDecimals), r2[i]);
-	tabBestFit.gridTrend.SetSortColumn(2, true);
+		tabBestFitRight.gridTrend.Add(equationTypes[i].GetFullName(), equationTypes[i].GetEquation(numDecimals), r2[i]);
+	tabBestFitRight.gridTrend.SetSortColumn(2, true);
 }
 
 void ProcessingTab::OnOp() 
 {
-	DataSource &data = tabFit.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetSeries(0);
 	
 	if (data.IsParam() || data.IsExplicit()) 
 		return;
 	
-	if (tabFit.opAverage && avgFirst) {	
+	if (tabFitRight.opAverage && avgFirst) {	
 		double r2;
 		average.Fit(data, r2);
 		avgFirst = false;
 	}
-	if (tabFit.opLinear && linearFirst) {	
+	if (tabFitRight.opLinear && linearFirst) {	
 		if (linear.Fit(data, r2Linear) < 0) {
-			tabFit.opLinear = false;
-			tabFit.opLinear.Enable(false);
+			tabFitRight.opLinear = false;
+			tabFitRight.opLinear.Enable(false);
 		} else
 			linearFirst = false;
 	}
-	if (tabFit.opCuadratic && cuadraticFirst) {		
+	if (tabFitRight.opCuadratic && cuadraticFirst) {		
 		cuadratic.GuessCoeff(data);
 		if (cuadratic.Fit(data, r2Cuadratic) < 0) {
-			tabFit.opCuadratic = false;
-			tabFit.opCuadratic.Enable(false);
+			tabFitRight.opCuadratic = false;
+			tabFitRight.opCuadratic.Enable(false);
 		} else
 			cuadraticFirst = false;
 	}
-	if (tabFit.opCubic && cubicFirst) {		
+	if (tabFitRight.opCubic && cubicFirst) {		
 		cubic.GuessCoeff(data);
 		if (cubic.Fit(data, r2Cubic) < 0) {
-			tabFit.opCubic = false;
-			tabFit.opCubic.Enable(false);
+			tabFitRight.opCubic = false;
+			tabFitRight.opCubic.Enable(false);
 		} else
 			cubicFirst = false;
 	}
-	if (tabFit.opSinus && sinusFirst) {		
+	if (tabFitRight.opSinus && sinusFirst) {		
 		sinus.GuessCoeff(data);
 		if (sinus.Fit(data, r2Sinus) < 0) {
-			tabFit.opSinus = false;
-			tabFit.opSinus.Enable(false);
+			tabFitRight.opSinus = false;
+			tabFitRight.opSinus.Enable(false);
 		} else
 			sinusFirst = false;
 	}
-	if (tabFit.opSinusTend && sinusTendFirst) {
+	if (tabFitRight.opSinusTend && sinusTendFirst) {
 		DataXRange dataXRange;
 		dataXRange.Init(data, Null, Null);		
 		double r2SinusTendBest = Null;
@@ -260,35 +284,35 @@ void ProcessingTab::OnOp()
 			sinusTendBest = sinusTend;
 		}
 		if (IsNull(r2SinusTendBest)) {
-			tabFit.opSinusTend = false;
-			tabFit.opSinusTend.Enable(false);
+			tabFitRight.opSinusTend = false;
+			tabFitRight.opSinusTend.Enable(false);
 		} else {
 			splineFirst = false;
 			r2SinusTend = r2SinusTendBest;
 			sinusTend = sinusTendBest;
 		}
 	} 
-	if (tabFit.opSpline && splineFirst) {		
+	if (tabFitRight.opSpline && splineFirst) {		
 		if (spline.Fit(data) < 0) {
-			tabFit.opSpline = false;
-			tabFit.opSpline.Enable(false);
+			tabFitRight.opSpline = false;
+			tabFitRight.opSpline.Enable(false);
 		} else
 			splineFirst = false;
 	}
 	OnUpdateSensitivity();
 	
-	tabFit.scatter.ScatterDraw::Show(0, tabFit.opSeries);
-	tabFit.scatter.ScatterDraw::Show(1, tabFit.opAverage);
-	tabFit.scatter.ScatterDraw::Show(2, tabFit.opLinear);
-	tabFit.scatter.ScatterDraw::Show(3, tabFit.opCuadratic);
-	tabFit.scatter.ScatterDraw::Show(4, tabFit.opCubic);
-	tabFit.scatter.ScatterDraw::Show(5, tabFit.opSinus);
-	tabFit.scatter.ScatterDraw::Show(6, tabFit.opSinusTend);
-	tabFit.scatter.ScatterDraw::Show(7, tabFit.opSpline);
-	tabFit.scatter.ScatterDraw::Show(8, tabFit.opMax);
-	tabFit.scatter.ScatterDraw::Show(9, tabFit.opMin);
-	tabFit.scatter.ScatterDraw::Show(10,tabFit.opMovAvg);
-	tabFit.scatter.ScatterDraw::Show(11,tabFit.opSecAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(0, tabFitRight.opSeries);
+	tabFitLeft.scatter.ScatterDraw::Show(1, tabFitRight.opAverage);
+	tabFitLeft.scatter.ScatterDraw::Show(2, tabFitRight.opLinear);
+	tabFitLeft.scatter.ScatterDraw::Show(3, tabFitRight.opCuadratic);
+	tabFitLeft.scatter.ScatterDraw::Show(4, tabFitRight.opCubic);
+	tabFitLeft.scatter.ScatterDraw::Show(5, tabFitRight.opSinus);
+	tabFitLeft.scatter.ScatterDraw::Show(6, tabFitRight.opSinusTend);
+	tabFitLeft.scatter.ScatterDraw::Show(7, tabFitRight.opSpline);
+	tabFitLeft.scatter.ScatterDraw::Show(8, tabFitRight.opMax);
+	tabFitLeft.scatter.ScatterDraw::Show(9, tabFitRight.opMin);
+	tabFitLeft.scatter.ScatterDraw::Show(10,tabFitRight.opMovAvg);
+	tabFitLeft.scatter.ScatterDraw::Show(11,tabFitRight.opSecAvg);
 	
 	UpdateEquations();
 	OnShowEquation();
@@ -297,7 +321,7 @@ void ProcessingTab::OnOp()
 
 void ProcessingTab::OnAutoSensSector() 
 {
-	DataSource &data = tabFit.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetSeries(0);
 	Vector<Pointf> secAvg;
 	double baseWidth;
 	
@@ -314,11 +338,11 @@ void ProcessingTab::OnAutoSensSector()
 		Vector<int64> ids;
 		sector.MaxListY(ids, 10*baseWidth);
 		if (ids.GetCount() < 5) {
-			tabFit.width <<= width;
+			tabFitRight.width <<= width;
 			return;
 		}
 	}
-	tabFit.scatter.Refresh();
+	tabFitLeft.scatter.Refresh();
 }
 
 void ProcessingTab::OnOperation()
@@ -326,16 +350,16 @@ void ProcessingTab::OnOperation()
 	if (exclamationOpened)	// To avoid WhenLostFocus to be called when Exclamation() is opened
 		return;
 	exclamationOpened = true;
-	if (!IsNull(tabOp.xLow) && !IsNull(tabOp.xHigh)) {
-		if (tabOp.xLow >= tabOp.xHigh) {
+	if (!IsNull(tabOpRight.xLow) && !IsNull(tabOpRight.xHigh)) {
+		if (tabOpRight.xLow >= tabOpRight.xHigh) {
 			Exclamation(t_("'x >' has to be lower than 'x <'"));
 			exclamationOpened = false;
 			return;
 		}
 	}
 	exclamationOpened = false;
-	dataXRange.Init(pscatter->GetSeries(id), tabOp.xLow, tabOp.xHigh);
-	tabOp.scatter.Refresh();
+	dataXRange.Init(pscatter->GetSeries(id), tabOpRight.xLow, tabOpRight.xHigh);
+	tabOpLeft.scatter.Refresh();
 }
 
 void ProcessingTab::UpdateField(const String _name, int _id) 
@@ -343,85 +367,85 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	id = _id;
 	name.SetText(_name);
 	
-	tabFit.scatter.RemoveAllSeries();
-	tabFit.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
+	tabFitLeft.scatter.RemoveAllSeries();
+	tabFitLeft.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
 				   .Legend(pscatter->GetLegend(id));
-	tabFit.scatter.SetFastViewX(pscatter->GetFastViewX());
+	tabFitLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
-	tabFit.scatter.SetFillColor(0, pscatter->GetFillColor(id));
-	tabFit.scatter.Dash(0, pscatter->GetDash(id));
+	tabFitLeft.scatter.SetFillColor(0, pscatter->GetFillColor(id));
+	tabFitLeft.scatter.Dash(0, pscatter->GetDash(id));
 	
 	Upp::Color color;
 	double thickness;
 	pscatter->GetStroke(0, thickness, color);
-	tabFit.scatter.Stroke(0, thickness, color);
-	tabFit.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
-	tabFit.scatter.SetMarkColor(0, pscatter->GetMarkColor(id));
-	tabFit.scatter.SetMarkWidth(0, pscatter->GetMarkWidth(id));
-	tabFit.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
-	tabFit.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
+	tabFitLeft.scatter.Stroke(0, thickness, color);
+	tabFitLeft.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
+	tabFitLeft.scatter.SetMarkColor(0, pscatter->GetMarkColor(id));
+	tabFitLeft.scatter.SetMarkWidth(0, pscatter->GetMarkWidth(id));
+	tabFitLeft.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
+	tabFitLeft.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
 	
-	tabFit.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
+	tabFitLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 	
 	bool primary = pscatter->IsDataPrimaryY(id);
-    tabFit.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
-	tabFit.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
-	tabFit.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
+    tabFitLeft.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
+	tabFitLeft.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
+	tabFitLeft.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 	
-	tabFit.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
+	tabFitLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
 	
-	DataSource &data = tabFit.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetSeries(0);
 	
 	if (!data.IsParam()/* && !data.IsExplicit()*/) {	
 		double avg = data.AvgY();
-		tabFit.eAverage = avg;
-		tabFit.eRMS = data.RMSY();
-		tabFit.eStdDev = data.StdDevY(avg);
+		tabFitRight.eAverage = avg;
+		tabFitRight.eRMS = data.RMSY();
+		tabFitRight.eStdDev = data.StdDevY(avg);
 		int64 idmx;
 		double val;
 		val = data.MaxY(idmx);
 		if (!IsNull(val)) {
-			tabFit.eMax = Format("(%f,%f)", data.x(idmx), val);
+			tabFitRight.eMax = Format("(%f,%f)", data.x(idmx), val);
 			Pointf p = data.MaxSubDataImpY(idmx, 3);
 			if (!IsNull(p))
-				tabFit.eMaxImp = Format("(%f,%f)", p.x, p.y);
+				tabFitRight.eMaxImp = Format("(%f,%f)", p.x, p.y);
 			val = data.MinY(idmx);
 			if (!IsNull(val))
-				tabFit.eMin = Format("(%f,%f)", data.x(idmx), val);
+				tabFitRight.eMin = Format("(%f,%f)", data.x(idmx), val);
 		}
 	}
 	if (!data.IsParam() && !data.IsExplicit()) {	
-		tabFit.width <<= pscatter->GetXRange()/15.;
-		tabFit.width.SetInc(pscatter->GetXRange()/15./2.);
+		tabFitRight.width <<= pscatter->GetXRange()/15.;
+		tabFitRight.width.SetInc(pscatter->GetXRange()/15./2.);
 		
-		tabFit.scatter.AddSeries(average).NoMark().Stroke(1.5);
-		tabFit.scatter.AddSeries(linear).NoMark().Stroke(1.5);
-		tabFit.scatter.AddSeries(cuadratic).NoMark().Stroke(1.5);
-		tabFit.scatter.AddSeries(cubic).NoMark().Stroke(1.5);		
-		tabFit.scatter.AddSeries(sinus).NoMark().Stroke(1.5);
-		tabFit.scatter.AddSeries(sinusTend).NoMark().Stroke(1.5);
-		tabFit.scatter.AddSeries(spline).NoMark().Dash(LINE_SOLID).Stroke(1.5);
-		tabFit.scatter.AddSeries(upperEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Max"))
+		tabFitLeft.scatter.AddSeries(average).NoMark().Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(linear).NoMark().Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(cuadratic).NoMark().Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(cubic).NoMark().Stroke(1.5);		
+		tabFitLeft.scatter.AddSeries(sinus).NoMark().Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(sinusTend).NoMark().Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(spline).NoMark().Dash(LINE_SOLID).Stroke(1.5);
+		tabFitLeft.scatter.AddSeries(upperEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Max"))
 						.NoMark().Dash(LINE_DASHED).Stroke(1.5).SetSequentialX(true);
-		tabFit.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Min"))
+		tabFitLeft.scatter.AddSeries(lowerEnvelope).Legend(pscatter->GetLegend(id) + String("-") + t_("Min"))
 						.NoMark().Dash(LINE_DASHED).SetSequentialX(true);
-		tabFit.scatter.AddSeries(movAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("MovAvg")).NoMark();		
-		tabFit.scatter.AddSeries(secAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("SecAvg")).NoMark();		
+		tabFitLeft.scatter.AddSeries(movAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("MovAvg")).NoMark();		
+		tabFitLeft.scatter.AddSeries(secAvg).Stroke(1.5).Legend(pscatter->GetLegend(id) + String("-") + t_("SecAvg")).NoMark();		
 					
 		OnOp();
 	} else {
-		tabFit.opSeries.Enable(false);
-		tabFit.opAverage.Enable(false);
-		tabFit.opLinear.Enable(false);
-		tabFit.opCuadratic.Enable(false);
-		tabFit.opCubic.Enable(false);
-		tabFit.opSinus.Enable(false);
-		tabFit.opSinusTend.Enable(false);
-		tabFit.opSpline.Enable(false);
-		tabFit.opMax.Enable(false);
-		tabFit.opMin.Enable(false);
-		tabFit.opMovAvg.Enable(false);
-		tabFit.opSecAvg.Enable(false);
+		tabFitRight.opSeries.Enable(false);
+		tabFitRight.opAverage.Enable(false);
+		tabFitRight.opLinear.Enable(false);
+		tabFitRight.opCuadratic.Enable(false);
+		tabFitRight.opCubic.Enable(false);
+		tabFitRight.opSinus.Enable(false);
+		tabFitRight.opSinusTend.Enable(false);
+		tabFitRight.opSpline.Enable(false);
+		tabFitRight.opMax.Enable(false);
+		tabFitRight.opMin.Enable(false);
+		tabFitRight.opMovAvg.Enable(false);
+		tabFitRight.opSecAvg.Enable(false);
 	}
 	
 	Show();	
@@ -429,56 +453,56 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 
 void ProcessingTab::OnUpdateSensitivity() 
 {
-	DataSource &data = tabFit.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetSeries(0);
 	
 	bool refresh = false;
-	if (tabFit.opMax && newWidthMax != tabFit.width) {
-		newWidthMax = tabFit.width;
+	if (tabFitRight.opMax && newWidthMax != tabFitRight.width) {
+		newWidthMax = tabFitRight.width;
 		
 		upperEnvelope.Clear();
-		Vector<int64> idsUpper = data.UpperEnvelopeY(tabFit.width);
+		Vector<int64> idsUpper = data.UpperEnvelopeY(tabFitRight.width);
 		for (int i = 0; i < idsUpper.GetCount(); ++i) 
 			upperEnvelope << Pointf(data.x(idsUpper[i]), data.y(idsUpper[i]));
 		refresh = true;
 	}
-	if (tabFit.opMin && newWidthMin != tabFit.width) {
-		newWidthMin = tabFit.width;
+	if (tabFitRight.opMin && newWidthMin != tabFitRight.width) {
+		newWidthMin = tabFitRight.width;
 		
 		lowerEnvelope.Clear();
-		Vector<int64> idsLower = data.LowerEnvelopeY(tabFit.width);
+		Vector<int64> idsLower = data.LowerEnvelopeY(tabFitRight.width);
 		for (int i = 0; i < idsLower.GetCount(); ++i) 
 			lowerEnvelope << Pointf(data.x(idsLower[i]), data.y(idsLower[i]));
 		refresh = true;
 	}
-	if (tabFit.opMovAvg && newWidthMovAvg != tabFit.width) {
-		newWidthMovAvg = tabFit.width;
+	if (tabFitRight.opMovAvg && newWidthMovAvg != tabFitRight.width) {
+		newWidthMovAvg = tabFitRight.width;
 		
-		movAvg = data.MovingAverageY(tabFit.width);
+		movAvg = data.MovingAverageY(tabFitRight.width);
 		refresh = true;
 	}
-	if (tabFit.opSecAvg && newWidthMovAvg != tabFit.width) {
-		newWidthMovAvg = tabFit.width;
+	if (tabFitRight.opSecAvg && newWidthMovAvg != tabFitRight.width) {
+		newWidthMovAvg = tabFitRight.width;
 		
-		secAvg = data.SectorAverageY(tabFit.width);
+		secAvg = data.SectorAverageY(tabFitRight.width);
 		refresh = true;
 	}
 		
 	if (refresh)
-		tabFit.scatter.Refresh();
+		tabFitLeft.scatter.Refresh();
 }
 
 void ProcessingTab::OnSet() 
 {
-	DataSource &data = tabFit.scatter.GetSeries(0);
+	DataSource &data = tabFitLeft.scatter.GetSeries(0);
 	
 	if (tabFreqFirst && tab.Get() == 1) {
 		tabFreqFirst = false;
 		if (data.IsParam() || data.IsExplicit()) {
-			tabFreq.comments.SetText(t_("Impossible to calculate FFT from a not sampled series"));
-			tabFreq.butFFT.Enable(false);
+			tabFreqLeft.comments.SetText(t_("Impossible to calculate FFT from a not sampled series"));
+			tabFreqRight.butFFT.Enable(false);
 		} else if (data.GetCount() < 5) {
-			tabFreq.comments.SetText(t_("Insufficient data to calculate FFT"));
-			tabFreq.butFFT.Enable(false);
+			tabFreqLeft.comments.SetText(t_("Insufficient data to calculate FFT"));
+			tabFreqRight.butFFT.Enable(false);
 		} else {
 			double mindT, maxdT = Null;
 			mindT = -maxdT;
@@ -492,104 +516,104 @@ void ProcessingTab::OnSet()
 				}
 			}
 			if ((maxdT - mindT)/maxdT > 0.00001) 
-				tabFreq.comments.SetText(Format(t_("Sampling time changes from %f to %f"), mindT, maxdT));
+				tabFreqLeft.comments.SetText(Format(t_("Sampling time changes from %f to %f"), mindT, maxdT));
 			else 
-				tabFreq.comments.SetText("");
-			tabFreq.samplingTime = (maxdT + mindT)/2.;
+				tabFreqLeft.comments.SetText("");
+			tabFreqRight.samplingTime = (maxdT + mindT)/2.;
 		}
 	} else if (tabOpFirst && tab.Get() == 2) {
 		tabOpFirst = false; 
 		
-		tabOp.scatter.RemoveAllSeries();
+		tabOpLeft.scatter.RemoveAllSeries();
 		String legend = pscatter->GetLegend(id);
 		double xLow = pscatter->GetSeries(id).MinX();
 		if (IsNull(xLow))
 			xLow = pscatter->GetXMin();
-		tabOp.xLow <<= xLow;
+		tabOpRight.xLow <<= xLow;
 		double xHigh = pscatter->GetSeries(id).MaxX();
 		if (IsNull(xHigh))
 			xHigh = pscatter->GetXMin() + pscatter->GetXRange();
-		tabOp.xHigh <<= xHigh;
+		tabOpRight.xHigh <<= xHigh;
 		dataXRange.Init(pscatter->GetSeries(id), xLow, xHigh);
-		tabOp.scatter.AddSeries(dataXRange).SetSequentialX(pscatter->GetSequentialX())
+		tabOpLeft.scatter.AddSeries(dataXRange).SetSequentialX(pscatter->GetSequentialX())
 					   .Legend(legend + String("-") + t_("Processed")).NoMark()
 					   .Stroke(8, Upp::Color(115, 214, 74));				   
-		tabOp.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
+		tabOpLeft.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
 					   .Legend(legend).NoMark().Stroke(2, Blue());				   
-		tabOp.scatter.SetFastViewX(pscatter->GetFastViewX());
+		tabOpLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
-		tabOp.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
+		tabOpLeft.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
 		
-		tabOp.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
+		tabOpLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 		
 		bool primary = pscatter->IsDataPrimaryY(id);
-		tabOp.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
-		tabOp.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
-		tabOp.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
+		tabOpLeft.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
+		tabOpLeft.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
+		tabOpLeft.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
-		tabOp.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
+		tabOpLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
 	} else if (tabBestFitFirst && tab.Get() == 3) {
 		tabBestFitFirst = false; 
 		
-		tabBestFit.scatter.RemoveAllSeries();
+		tabBestFitLeft.scatter.RemoveAllSeries();
 		String legend = pscatter->GetLegend(id);
 		
-		tabBestFit.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
+		tabBestFitLeft.scatter.AddSeries(pscatter->GetSeries(id)).SetSequentialX(pscatter->GetSequentialX())
 					   .Legend(legend).NoMark().Stroke(2);				   
-		tabBestFit.scatter.SetFastViewX(pscatter->GetFastViewX());
+		tabBestFitLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
-		tabBestFit.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
+		tabBestFitLeft.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
 		
-		tabBestFit.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
+		tabBestFitLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 		
 		bool primary = pscatter->IsDataPrimaryY(id);
-		tabBestFit.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
-		tabBestFit.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
-		tabBestFit.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
+		tabBestFitLeft.scatter.SetRange(pscatter->GetXRange(), primary ? pscatter->GetYRange() : pscatter->GetY2Range());
+		tabBestFitLeft.scatter.SetMajorUnits(pscatter->GetMajorUnitsX(), primary ? pscatter->GetMajorUnitsY() : pscatter->GetMajorUnitsY2());
+		tabBestFitLeft.scatter.SetXYMin(pscatter->GetXMin(), primary ? pscatter->GetYMin() : pscatter->GetY2Min());
 		
-		tabBestFit.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
+		tabBestFitLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);	
 	}
 }
 
 void ProcessingTab::UpdateEquations()
 {
-	tabFit.eqAverage = tabFit.opAverage ? average.GetEquation(tabFit.numDecimals) : "";
-	tabFit.eqLinear = tabFit.opLinear ? linear.GetEquation(tabFit.numDecimals) : "";
-	tabFit.r2Linear = tabFit.opLinear ? r2Linear : Null;
-	tabFit.eqCuadratic = tabFit.opCuadratic ? cuadratic.GetEquation(tabFit.numDecimals) : "";
-	tabFit.r2Cuadratic = tabFit.opCuadratic ? r2Cuadratic : Null;
-	tabFit.eqCubic = tabFit.opCubic ? cubic.GetEquation(tabFit.numDecimals) : "";
-	tabFit.r2Cubic = tabFit.opCubic ? r2Cubic : Null;
-	tabFit.eqSinus = tabFit.opSinus ? sinus.GetEquation(tabFit.numDecimals) : "";
-	tabFit.r2Sinus = tabFit.opSinus ? r2Sinus : Null;
-	tabFit.eqSinusTend = tabFit.opSinusTend ? sinusTend.GetEquation(tabFit.numDecimals) : "";
-	tabFit.r2SinusTend = tabFit.opSinusTend ? r2SinusTend : Null;
+	tabFitRight.eqAverage = tabFitRight.opAverage ? average.GetEquation(tabFitRight.numDecimals) : "";
+	tabFitRight.eqLinear = tabFitRight.opLinear ? linear.GetEquation(tabFitRight.numDecimals) : "";
+	tabFitRight.r2Linear = tabFitRight.opLinear ? r2Linear : Null;
+	tabFitRight.eqCuadratic = tabFitRight.opCuadratic ? cuadratic.GetEquation(tabFitRight.numDecimals) : "";
+	tabFitRight.r2Cuadratic = tabFitRight.opCuadratic ? r2Cuadratic : Null;
+	tabFitRight.eqCubic = tabFitRight.opCubic ? cubic.GetEquation(tabFitRight.numDecimals) : "";
+	tabFitRight.r2Cubic = tabFitRight.opCubic ? r2Cubic : Null;
+	tabFitRight.eqSinus = tabFitRight.opSinus ? sinus.GetEquation(tabFitRight.numDecimals) : "";
+	tabFitRight.r2Sinus = tabFitRight.opSinus ? r2Sinus : Null;
+	tabFitRight.eqSinusTend = tabFitRight.opSinusTend ? sinusTend.GetEquation(tabFitRight.numDecimals) : "";
+	tabFitRight.r2SinusTend = tabFitRight.opSinusTend ? r2SinusTend : Null;
 }
 
 void ProcessingTab::OnShowEquation()
 {
-	bool show = tabFit.showEquation;
-	tabFit.scatter.Legend(1, pscatter->GetLegend(id) + String("-") + 
-						(show && tabFit.opAverage ? average.GetEquation(tabFit.numDecimals) : String(t_("Average"))));
-	tabFit.scatter.Legend(2, pscatter->GetLegend(id) + String("-") + 
-						(show && tabFit.opLinear ? linear.GetEquation(tabFit.numDecimals) : String(t_("Linear"))));
-	tabFit.scatter.Legend(3, pscatter->GetLegend(id) + String("-") + 
-						(show && tabFit.opCuadratic ? cuadratic.GetEquation(tabFit.numDecimals) : String(t_("Cuadratic"))));
-	tabFit.scatter.Legend(4, pscatter->GetLegend(id) + String("-") + 
-						(show && tabFit.opCubic ? cubic.GetEquation(tabFit.numDecimals) : String(t_("Cubic"))));
-	tabFit.scatter.Legend(5, pscatter->GetLegend(id) + String("-") + 
-						(show && tabFit.opSinus ? sinus.GetEquation(tabFit.numDecimals) : String(t_("Sinusoidal"))));
-	tabFit.scatter.Legend(6, pscatter->GetLegend(id) + String("-") + 
-						(show && tabFit.opSinusTend ? sinusTend.GetEquation(tabFit.numDecimals) : String(t_("Sinusoidal tend"))));
-	tabFit.scatter.Legend(7, pscatter->GetLegend(id) + String("-") + String(t_("Spline")));
-	tabFit.scatter.Refresh();
+	bool show = tabFitRight.showEquation;
+	tabFitLeft.scatter.Legend(1, pscatter->GetLegend(id) + String("-") + 
+						(show && tabFitRight.opAverage ? average.GetEquation(tabFitRight.numDecimals) : String(t_("Average"))));
+	tabFitLeft.scatter.Legend(2, pscatter->GetLegend(id) + String("-") + 
+						(show && tabFitRight.opLinear ? linear.GetEquation(tabFitRight.numDecimals) : String(t_("Linear"))));
+	tabFitLeft.scatter.Legend(3, pscatter->GetLegend(id) + String("-") + 
+						(show && tabFitRight.opCuadratic ? cuadratic.GetEquation(tabFitRight.numDecimals) : String(t_("Cuadratic"))));
+	tabFitLeft.scatter.Legend(4, pscatter->GetLegend(id) + String("-") + 
+						(show && tabFitRight.opCubic ? cubic.GetEquation(tabFitRight.numDecimals) : String(t_("Cubic"))));
+	tabFitLeft.scatter.Legend(5, pscatter->GetLegend(id) + String("-") + 
+						(show && tabFitRight.opSinus ? sinus.GetEquation(tabFitRight.numDecimals) : String(t_("Sinusoidal"))));
+	tabFitLeft.scatter.Legend(6, pscatter->GetLegend(id) + String("-") + 
+						(show && tabFitRight.opSinusTend ? sinusTend.GetEquation(tabFitRight.numDecimals) : String(t_("Sinusoidal tend"))));
+	tabFitLeft.scatter.Legend(7, pscatter->GetLegend(id) + String("-") + String(t_("Spline")));
+	tabFitLeft.scatter.Refresh();
 }
 
 void ProcessingTab::OnFFT() 
 {
 	String errText;
-	tabFreq.scatter.RemoveAllSeries();
-	double samplingTime = tabFreq.samplingTime;
+	tabFreqLeft.scatter.RemoveAllSeries();
+	double samplingTime = tabFreqRight.samplingTime;
 	if (samplingTime < 0) {
 		Exclamation(t_("Incorrect sampling time"));
 		return;
@@ -598,7 +622,7 @@ void ProcessingTab::OnFFT()
 	{
 		WaitCursor waitcursor;
 		
-		DataSource &data = tabFit.scatter.GetSeries(0);
+		DataSource &data = tabFitLeft.scatter.GetSeries(0);
 		
 		Vector<Pointf> orderedSeries;
 		for (int64 i = 0; i < data.GetCount(); ++i) {		// Clean Nulls
@@ -629,48 +653,48 @@ void ProcessingTab::OnFFT()
 			resampledSeries << orderedSeries[orderedSeries.GetCount() - 1].y;
 	
 		VectorY<double> series(resampledSeries, 0, samplingTime);
-		fft = series.FFTY(samplingTime, tabFreq.opXAxis == 1, tabFreq.type, 
-							tabFreq.window.GetIndex(), tabFreq.num, tabFreq.overlapping);
+		fft = series.FFTY(samplingTime, tabFreqRight.opXAxis == 1, tabFreqRight.type, 
+							tabFreqRight.window.GetIndex(), tabFreqRight.num, tabFreqRight.overlapping);
 		VectorPointf fftData(fft);
 		fftData.MaxY(idMaxFFT);
 		Pointf p = fftData.MaxSubDataImpY(idMaxFFT, 3);
 		if (!IsNull(p))
-			tabFreq.eMax = Format("(%f,%f)", p.x, p.y);
+			tabFreqRight.eMax = Format("(%f,%f)", p.x, p.y);
 		
-		if (tabFreq.type == DataSource::T_PSD) {
+		if (tabFreqRight.type == DataSource::T_PSD) {
 			double m_1, m0, m1, m2;
-			fftData.GetSpectralMomentsY(tabFreq.opXAxis == 1, m_1, m0, m1, m2);
-			tabFreq.m_1 <<= FormatDouble(m_1);
-			tabFreq.m0  <<= FormatDouble(m0);
-			tabFreq.m1  <<= FormatDouble(m1);
-			tabFreq.m2  <<= FormatDouble(m2);
+			fftData.GetSpectralMomentsY(tabFreqRight.opXAxis == 1, m_1, m0, m1, m2);
+			tabFreqRight.m_1 <<= FormatDouble(m_1);
+			tabFreqRight.m0  <<= FormatDouble(m0);
+			tabFreqRight.m1  <<= FormatDouble(m1);
+			tabFreqRight.m2  <<= FormatDouble(m2);
 		} else {
-			tabFreq.m_1 <<= "";
-			tabFreq.m0  <<= "";
-			tabFreq.m1  <<= "";
-			tabFreq.m2  <<= "";
+			tabFreqRight.m_1 <<= "";
+			tabFreqRight.m0  <<= "";
+			tabFreqRight.m1  <<= "";
+			tabFreqRight.m2  <<= "";
 		}
 	}
 	if (fft.IsEmpty()) {
-		tabFreq.comments.SetText(errText);
+		tabFreqLeft.comments.SetText(errText);
 		Exclamation(t_("Error obtaining FFT"));
 		return;
 	}
 	
 	String strtype;
-	switch(tabFreq.type) {
+	switch(tabFreqRight.type) {
 	case DataSource::T_FFT:		strtype = t_("FFT");					break;
 	case DataSource::T_PHASE:	strtype = t_("FFT-phase [rad]");		break;
 	case DataSource::T_PSD:		strtype = t_("Power Spectral Density");	break;
 	}
-	String legend = tabFit.scatter.GetLegend(0) + String("-") + strtype;
-	tabFreq.scatter.AddSeries(fft).Legend(legend);
-	tabFreq.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
-	tabFreq.scatter.SetLabelX(tabFreq.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
-	tabFreq.scatter.SetLabelY(legend);
-	tabFreq.scatter.ZoomToFit(true, true);
+	String legend = tabFitLeft.scatter.GetLegend(0) + String("-") + strtype;
+	tabFreqLeft.scatter.AddSeries(fft).Legend(legend);
+	tabFreqLeft.scatter.ShowInfo().ShowContextMenu().ShowProcessDlg().ShowPropertiesDlg().SetMouseHandlingLinked(true, true);
+	tabFreqLeft.scatter.SetLabelX(tabFreqRight.opXAxis == 1 ? t_("Frequency [Hz]") : t_("Period [sec]"));
+	tabFreqLeft.scatter.SetLabelY(legend);
+	tabFreqLeft.scatter.ZoomToFit(true, true);
 	if (idMaxFFT > 0 && fft[int(idMaxFFT)].x < (fft[fft.GetCount() - 1].x)/2)
-		tabFreq.scatter.SetRange(fft[int(idMaxFFT)].x*2, Null);
+		tabFreqLeft.scatter.SetRange(fft[int(idMaxFFT)].x*2, Null);
 	
-	tabFreq.comments.SetText(errText);
+	tabFreqLeft.comments.SetText(errText);
 }
