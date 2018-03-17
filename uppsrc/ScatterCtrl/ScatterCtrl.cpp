@@ -1,6 +1,5 @@
 #include "ScatterCtrl.h"
 
-
 #define IMAGECLASS ScatterImg
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml.h>
