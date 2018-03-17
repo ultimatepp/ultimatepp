@@ -661,11 +661,7 @@ void Shuffle(C &data, int randomSeed = Null) {
 	ShuffleDescending(data, generator);	
 }
 
-class RealTimeStop
-#ifdef CTRLLIB_H	
- : public Ctrl 
- #endif
- {  
+class RealTimeStop {  
 typedef RealTimeStop CLASSNAME;
 public:
 	RealTimeStop() {
