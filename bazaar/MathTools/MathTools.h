@@ -1,5 +1,5 @@
-#ifndef _ScatterCtrl_Demo_ScatterCtrl_Demo_h
-#define _ScatterCtrl_Demo_ScatterCtrl_Demo_h
+#ifndef _MathTools_MathTools_h
+#define _MathTools_MathTools_h
 
 #include <CodeEditor/CodeEditor.h>
 #include <ScatterCtrl/ScatterCtrl.h>
@@ -11,13 +11,26 @@ class Calculator : public CodeEditor {
 typedef Calculator CLASSNAME;
 
 public:
-	Callback WhenEnter;
+	Calculator() : actualLine(-1) {};
+	
+	Callback WhenChange;
 	String GetLine();
 	
 private:
+	int actualLine;
 	virtual bool Key(dword key, int count) {
-		if (key == K_ENTER) 
-			WhenEnter();
+		if (actualLine < 0)
+			actualLine = GetCursorLine();
+		else if (actualLine != GetCursorLine()) {
+			actualLine = GetCursorLine();
+			if (IsModified())
+				WhenChange();
+		}
+		if (key == K_ENTER) {
+			key = K_DOWN;
+			if (GetCursorLine() == GetLineCount() - 1)
+				Insert(GetLength(), "\n");
+		}
 		return CodeEditor::Key(key, count);
 	}
 };
@@ -34,15 +47,16 @@ struct Tool : StaticRect {
 	virtual void Init() {};
 	virtual void End() {};
 	//virtual ScatterCtrl &Scatter() = 0;
+	String name;
 };
  
-void RegisterExample(const char *name, Tool* (*ctrl)(), String fileName);
+void RegisterExample(Tool* (*ctrl)(), String fileName);
 
 class MathTools : public WithMathTools<TopWindow> {
 typedef MathTools CLASSNAME;
 	
 public:
-	MathTools();
+	void Init();
 	void End();
 	
 private:
@@ -51,71 +65,119 @@ private:
 	Vector<StaticRect *> examplesRects;
 };
 
-class TabRegression : public Tool {
+class TabData : public Tool {
 public:
-	typedef TabRegression CLASSNAME;
+	typedef TabData CLASSNAME;
 
-	TabRegression() : notFirstTime(false) {};	
-	//virtual ScatterCtrl &Scatter()	{return scatter;};
+	TabData() : notFirstTime(false) {};	
 	void Jsonize(JsonIO& json) {
 		json
 			("scatter", up.scatter)
-			("gridTrend", down.gridTrend)
-			//("gridDef", gridDef)
-			//("grid", grid)
-			("minR2", down.minR2)
-			("switchColsRows", down.switchColsRows)
-			("yBesideX", down.yBesideX)
-			("firstCellIsName", down.firstCellIsName)
-			("coefficients", down.coefficients)
+			("gridDef", downL.gridDef)
+			("nIsHeader", downL.nIsHeader)
 			("notFirstTime", notFirstTime)
+			("editFile", down.editFile)
+			("butFitPM", down.butFitPM)
+			("butSetPM", down.butFitPM)
+			("splitter_SetPos", splitterPos)
+			("splitterDown_SetPos", splitterDownPos)
 		;
 	}
-	UserEquation *userEquation;
 	
 private:
 	void Init();
 	void End();
 	void Fit();
-	void OnButtons();
 	void OnClear();
+	void OnClearDef();
 	void OnAutoset();
 	void OnUpdate();
+	void OnOpen(bool force, bool updateButtons);
+	void OnChangeFile(int delta);
 	void ArrayCopy();
 	void ArraySelect();
 	void OnArrayBar(Bar &menu);
-	
+	void OnShowAll();
+	void OnNIsheader();
+		
 	Splitter splitter;
-	WithTabRegression_Up<StaticRect> up;
-	WithTabRegression_Down<StaticRect> down;
+	WithTabData_Up<StaticRect> up;
+	WithTabData_Down<StaticRect> down;
+	WithTabData_Down_L<StaticRect> downL;
+	WithTabData_Down_R<StaticRect> downR;
 	
-	Array<ExplicitEquation> equationTypes;
-
 	Array<EditString> editGrid;
 	EditInt xCell, xFrom, xTo, yCell, yFrom, yTo;
-	GridCtrlSource ds;
+	Option option;
+	Array<GridCtrlSource> ds;
 	bool notFirstTime;
+	
+	OpenFileButton openMenuButton;
+	FrameRight<Button> butUp, butDown, openButton;
+	
+	int splitterPos, splitterDownPos;
+};
+
+class Unit {
+public:
+	Unit() : M(0), L(0), T(0) {}
+	Unit(double m, double l, double t) {
+		M = m;
+		L = l;
+		T = t;
+	}
+	Value GetString() {
+		String ret;
+		if (M != 0) 
+			ret << "Kg" << "^" << M;
+		if (L != 0) {
+			if (!ret.IsEmpty())
+				ret << "*";
+			ret << "m" << "^" << L;
+		}
+		if (T != 0) {
+			if (!ret.IsEmpty())
+				ret << "*";
+			ret << "sec" << "^" << T;
+		}
+		return ret;
+	}
+	void pow(double val) {
+		M = ::pow(M, val);
+		L = ::pow(L, val);
+		T = ::pow(T, val);
+	}
+private:
+	double M, L, T;	
+};
+
+class EvalExpr2 : public EvalExpr {
+public:
+	String Eval2(String line, int numDecimals, int tabChars);
+
+private:
+	double TermUnit(CParser& p);
 };
 
 class TabCalculator : public WithTabCalculator<Tool> {
 public:
 	typedef TabCalculator CLASSNAME;
 	
-	void OnEnter();
+	void OnChange();
 	void OnFunction();
 	void OnConstant();
 	void UpdateVars();
 		
-	void Jsonize(JsonIO& json) {
+/*	void Jsonize(JsonIO& json) {
 		json
 		;
-	}
+	}*/
 	
 private:
 	void Init();
 	void End() {};
 	
-	EvalExpr eval;
+	EvalExpr2 eval;
 };
 
 

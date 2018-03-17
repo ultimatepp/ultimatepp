@@ -1,4 +1,4 @@
-TOPIC("MathTools_en-us")
-#include "MathTools_en-us.tppi"
+TOPIC("MathTools$en-us")
+#include "MathTools$en-us.tppi"
 END_TOPIC
 

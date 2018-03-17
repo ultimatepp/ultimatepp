@@ -2,52 +2,57 @@
 
 #include <Report/Report.h>
 #include <PdfDraw/PdfDraw.h>
+#include <Theme/Theme.h>
 
 #define IMAGECLASS MyImages
 #define IMAGEFILE <MathTools/MathTools.iml>
 #include <Draw/iml_source.h>
 
+#define TFILE <MathTools/MathTools.t>
+#include <Core/t.h>
 
 struct Example {
 	Tool* (*ctrl)();
-	String name;
 };
 
+	
 Array<Example>& Examples() {
 	static Array<Example> x;
 	return x;
-};
+}
 
-void RegisterExample(const char *name, Tool* (*ctrl)(), String fileName) {
+void RegisterExample(Tool* (*ctrl)(), String fileName) {
 	Example& x = Examples().Add();
-	x.name = name;
 	x.ctrl = ctrl;
 }
 
-bool CompareExamples(Example &a, Example &b) {return a.name < b.name;}
+bool CompareExamples(Example &a, Example &b) {return a.ctrl()->name < b.ctrl()->name;}
+
 
 GUI_APP_MAIN
 {
-	Sort(Examples(), CompareExamples);
+	SetLanguage(SetLNGCharset(GetSystemLNG(), CHARSET_UTF8));	
 	
 	MathTools tools;
-	
+	tools.Init();
 	tools.Run();
-	
 	tools.End();
 }
 
-MathTools::MathTools() {
+void MathTools::Init() {
 	CtrlLayout(*this, "MathTools");
-
-	for (int i = 0; i < Examples().GetCount(); ++i)
-		Examples()[i].ctrl()->Init();
-			
-	examplesList.NoHorzGrid().NoVertGrid();
-	examplesList.AddColumn("Tool");
+	
+	Sort(Examples(), CompareExamples);
+	
 	for (int i = 0; i < Examples().GetCount(); ++i) {
-		examplesList.Add(Examples()[i].name);
-		Add((*(Examples()[i].ctrl())).HSizePosZ(130, 4).VSizePosZ(4, 8));
+		Examples()[i].ctrl()->Init();
+		Examples()[i].ctrl()->SetFrame(ThinInsetFrame());
+	}
+	examplesList.NoHorzGrid().NoVertGrid();
+	examplesList.AddColumn(t_("Tool"));
+	for (int i = 0; i < Examples().GetCount(); ++i) {
+		examplesList.Add(Examples()[i].ctrl()->name);
+		Add((*(Examples()[i].ctrl())).HSizePosZ(102, 2).VSizePosZ(2, 2));
 		examplesRects.Add(Examples()[i].ctrl());
 	}
 		

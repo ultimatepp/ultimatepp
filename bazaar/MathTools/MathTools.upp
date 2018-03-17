@@ -6,7 +6,8 @@ uses
 	PdfDraw,
 	ScatterCtrl,
 	GridCtrl,
-	CodeEditor;
+	CodeEditor,
+	Theme;
 
 file
 	main.cpp,
@@ -14,9 +15,10 @@ file
 	MathTools.lay,
 	MathTools.iml,
 	Calculator.cpp,
-	Regression.cpp,
+	DataHandling.cpp,
 	rc.rc,
-	srcdoc.tpp;
+	srcdoc.tpp,
+	MathTools.t;
 
 mainconfig
 	"" = "GUI";
