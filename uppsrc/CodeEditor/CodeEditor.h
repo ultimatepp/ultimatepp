@@ -296,6 +296,8 @@ protected:
 	bool          search_canceled;
 	int           search_time0;
 	One<Progress> search_progress;
+	
+	String        refresh_info; // serialized next line syntax context to detect the need of full Refresh
 
 	struct HlSt;
 	
@@ -346,6 +348,8 @@ protected:
 	bool   SearchProgress(int line);
 	bool   SearchCanceled();
 	void   EndSearchProgress();
+
+	String GetRefreshInfo(int pos);
 
 public:
 	struct MouseTip {

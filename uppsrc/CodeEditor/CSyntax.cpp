@@ -39,6 +39,7 @@ void CSyntax::Clear() {
 	macro = MACRO_OFF;
 	stmtline = endstmtline = seline = -1;
 	was_namespace = false;
+	raw_string = false;
 	ifstack.Clear();
 }
 
@@ -204,9 +205,28 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 				p++;
 			}
 		}
+		else
+		if(raw_string.GetCount()) {
+			const wchar *s = p;
+			const wchar *r = raw_string;
+			while(*s && *r) {
+				if(*s != *r)
+					break;
+				s++;
+				r++;
+			}
+			if(*r == '\0') {
+				p = s;
+				raw_string.Clear();
+			}
+			else
+				p++;
+			if(p >= e) return;
+		}
 		else {
 			int pc = 0;
 			for(;;) {
+				int raw_n;
 				if(p >= e) return;
 				const wchar *pp;
 				if(!iscidl(pc) && (pp = isstmt(p)) != NULL) {
@@ -215,6 +235,9 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 					pc = 0;
 					p = pp;
 				}
+				else
+				if(RawString(p, raw_n))
+					p += raw_n;
 				else
 				if(!iscidl(pc) && p[0] == 'n' && p[1] == 'a' && p[2] == 'm' && p[3] == 'e' &&
 				   p[4] == 's' && p[5] == 'p' && p[6] == 'a' && p[7] == 'c' && p[8] == 'e' &&
@@ -330,6 +353,7 @@ void CSyntax::Serialize(Stream& s)
 	s % linecont;
 	s % was_namespace;
 	s % macro;
+	s % raw_string;
 
 	s % cl % bl % pl;
 

@@ -18,6 +18,7 @@ protected:
 	bool        string;        // we are in string (becase it can be continued by '\')
 	bool        linecont;      // line ended with '\'
 	bool        was_namespace; // true if there was 'namespace', until '{' or ';' (not in ( [ brackets)
+	WString     raw_string;    // we are in C++11 raw string literal, this is end delimiter, e.g. )"
 	char        macro;         // can be one of:
 	enum        {
 		MACRO_OFF = 0,  // last line was not #define
@@ -65,6 +66,8 @@ protected:
 	bool CheckBracket(CodeEditor& e, int li, int64 pos, int64 ppos, int64 pos0, WString ln, int d, int limit, int64& bpos0, int64& bpos);
 	bool CheckLeftBracket(CodeEditor& e, int64 pos, int64& bpos0, int64& bpos);
 	bool CheckRightBracket(CodeEditor& e, int64 pos, int64& bpos0, int64& bpos);
+
+	bool RawString(const wchar *p, int& n);
 	
 public:
 	static int  LoadSyntax(const char *keywords[], const char *names[]);

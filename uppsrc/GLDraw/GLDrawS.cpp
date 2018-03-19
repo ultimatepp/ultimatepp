@@ -23,6 +23,34 @@ void initializeGL()
 {
 	glewInit();
 
+
+	gl_image.Create(R"(
+		attribute vec4 a_position;
+		attribute vec2 a_texCoord;
+		uniform mat4 u_projection;
+		varying vec2 v_texCoord;
+		void main()
+		{
+		   gl_Position = u_projection * a_position;
+		   v_texCoord = a_texCoord;
+		}
+		)", R"(
+		#ifdef GL_ES
+			precision mediump float;
+			precision mediump int;
+		#endif
+			varying vec2 v_texCoord;
+			uniform sampler2D s_texture;
+			void main()
+			{
+				gl_FragColor = texture2D(s_texture, v_texCoord);
+			}
+		)",
+		ATTRIB_VERTEX, "a_position",
+		ATTRIB_TEXPOS, "a_texCoord"
+	);
+
+/*
 	gl_image.Create(
 		"attribute vec4 a_position; \n"
 		"attribute vec2 a_texCoord; \n"
@@ -47,7 +75,7 @@ void initializeGL()
 		ATTRIB_VERTEX, "a_position",
 		ATTRIB_TEXPOS, "a_texCoord"
 	);
-
+*/
 	glUniform1i(gl_image.GetUniform("s_texture"), 0);
 
 	gl_image_colored.Create(

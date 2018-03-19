@@ -113,6 +113,29 @@ const wchar *CSyntax::DoComment(HighlightOutput& hls, const wchar *p, const wcha
 	return p + n;
 }
 
+bool CSyntax::RawString(const wchar *p, int& n) {
+	if(highlight != HIGHLIGHT_CPP)
+		return false;
+	const wchar *s = p;
+	if(*s++ != 'R')
+		return false;
+	while(*s == ' ' || *s == '\t')
+		s++;
+	if(*s++ != '\"')
+		return false;
+	WString rs;
+	while(*s != '(') {
+		if(*s == '\0')
+			return false;
+		rs.Cat(*s++);
+	}
+	raw_string = ")";
+	raw_string.Cat(rs);
+	raw_string.Cat('\"');
+	n = s + 1 - p;
+	return true;
+};
+
 void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls, CodeEditor *editor, int line, int64 pos)
 {
 	ONCELOCK {
@@ -200,6 +223,7 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 	Color lbcolor = Null;
 	bool is_comment = false;
 	while(p < e) {
+		int  raw_n = 0;
 		int pair = MAKELONG(p[0], p[1]);
 		if(pair == MAKELONG('/', '*') && highlight != HIGHLIGHT_JSON || comment) {
 			if(!comment) {
@@ -220,6 +244,28 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 			comment = is_comment = true;
 			break;
 		comment_ended:;
+		}
+		else
+		if(raw_string.GetCount() || RawString(p, raw_n)) {
+			const wchar *b = p;
+			p += raw_n;
+			while(p < e) {
+				const wchar *s = p;
+				const wchar *r = raw_string;
+				while(*s && *r) {
+					if(*s != *r)
+						break;
+					s++;
+					r++;
+				}
+				if(*r == '\0') {
+					p = s;
+					raw_string.Clear();
+					break;
+				}
+				p++;
+			}
+			hls.Put(int(p - b), hl_style[INK_RAW_STRING]);
 		}
 		else
 		if(linecomment && linecont || pair == MAKELONG('/', '/') &&
