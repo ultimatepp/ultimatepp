@@ -23,7 +23,6 @@ void initializeGL()
 {
 	glewInit();
 
-
 	gl_image.Create(R"(
 		attribute vec4 a_position;
 		attribute vec2 a_texCoord;
@@ -35,76 +34,51 @@ void initializeGL()
 		   v_texCoord = a_texCoord;
 		}
 		)", R"(
-		#ifdef GL_ES
-			precision mediump float;
-			precision mediump int;
-		#endif
-			varying vec2 v_texCoord;
-			uniform sampler2D s_texture;
-			void main()
-			{
-				gl_FragColor = texture2D(s_texture, v_texCoord);
-			}
+	#ifdef GL_ES
+		precision mediump float;
+		precision mediump int;
+	#endif
+		varying vec2 v_texCoord;
+		uniform sampler2D s_texture;
+		void main()
+		{
+			gl_FragColor = texture2D(s_texture, v_texCoord);
+		}
 		)",
 		ATTRIB_VERTEX, "a_position",
 		ATTRIB_TEXPOS, "a_texCoord"
 	);
 
-/*
-	gl_image.Create(
-		"attribute vec4 a_position; \n"
-		"attribute vec2 a_texCoord; \n"
-		"uniform mat4 u_projection; \n"
-		"varying vec2 v_texCoord; \n"
-		"void main() \n"
-		"{ \n"
-		"   gl_Position = u_projection * a_position; \n"
-		"   v_texCoord = a_texCoord; \n"
-		"} \n"
-		,
-		"#ifdef GL_ES\n"
-		"precision mediump float; \n"
-		"precision mediump int; \n"
-		"#endif\n"
-		"varying vec2 v_texCoord; \n"
-		"uniform sampler2D s_texture; \n"
-		"void main() \n"
-		"{ \n"
-		"   gl_FragColor = texture2D(s_texture, v_texCoord); \n"
-		"} \n",
-		ATTRIB_VERTEX, "a_position",
-		ATTRIB_TEXPOS, "a_texCoord"
-	);
-*/
 	glUniform1i(gl_image.GetUniform("s_texture"), 0);
 
-	gl_image_colored.Create(
-		"attribute vec4 a_position; \n"
-		"attribute vec2 a_texCoord; \n"
-		"attribute vec4 a_color; \n"
-		"uniform mat4 u_projection; \n"
-		"varying vec2 v_texCoord; \n"
-		"varying vec4 v_color; \n"
-		"void main() \n"
-		"{ \n"
-		"   gl_Position = u_projection * a_position; \n"
-		"   v_texCoord = a_texCoord; \n"
-		"   v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1); \n"
-		"} \n"
-		,
-		"#ifdef GL_ES\n"
-		"precision mediump float; \n"
-		"precision mediump int; \n"
-		"#endif\n"
-		"varying vec2 v_texCoord; \n"
-		"varying vec4 v_color; \n"
-		"uniform sampler2D s_texture; \n"
-		"void main() \n"
-		"{ \n"
-		"   gl_FragColor = texture2D(s_texture, v_texCoord); \n"
-		"   gl_FragColor = v_color;\n"
-		"   gl_FragColor[3] = texture2D(s_texture, v_texCoord)[3]; \n"
-		"} \n",
+	gl_image_colored.Create(R"(
+		attribute vec4 a_position;
+		attribute vec2 a_texCoord;
+		attribute vec4 a_color;
+		uniform mat4 u_projection;
+		varying vec2 v_texCoord;
+		varying vec4 v_color;
+		void main()
+		{
+		   gl_Position = u_projection * a_position;
+		   v_texCoord = a_texCoord;
+		   v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1);
+		}
+		)", R"(
+	#ifdef GL_ES
+		precision mediump float;
+		precision mediump int;
+	#endif
+		varying vec2 v_texCoord;
+		varying vec4 v_color;
+		uniform sampler2D s_texture;
+		void main()
+		{
+		   gl_FragColor = texture2D(s_texture, v_texCoord);
+		   gl_FragColor = v_color;
+		   gl_FragColor[3] = texture2D(s_texture, v_texCoord)[3];
+		}
+		)",
 		ATTRIB_VERTEX, "a_position",
 		ATTRIB_TEXPOS, "a_texCoord",
 		ATTRIB_COLOR, "a_color"
@@ -112,26 +86,27 @@ void initializeGL()
 
 	glUniform1i(gl_image_colored.GetUniform("s_texture"), 0);
 
-	gl_rect.Create(
-		"attribute vec4 a_position; \n"
-		"attribute vec4 a_color; \n"
-		"uniform mat4 u_projection; \n"
-		"varying vec4 v_color; \n"
-		"void main() \n"
-		"{ \n"
-		" gl_Position = u_projection * a_position; \n"
-		" v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1); \n"
-		"}"
-		,
-		"#ifdef GL_ES\n"
-		"precision mediump float;\n"
-		"precision mediump int;\n"
-		"#endif\n"
-		"varying vec4 v_color;\n"
-		"void main()\n"
-		"{\n"
-		"    gl_FragColor = v_color;\n"
-		"}",
+	gl_rect.Create(R"(
+		attribute vec4 a_position;
+		attribute vec4 a_color;
+		uniform mat4 u_projection;
+		varying vec4 v_color;
+		void main()
+		{
+		 gl_Position = u_projection * a_position;
+		 v_color = a_color * vec4((1.0 / 255.0), (1.0 / 255.0), (1.0 / 255.0), 1);
+		}
+		)", R"(
+	#ifdef GL_ES
+		precision mediump float;
+		precision mediump int;
+	#endif
+		varying vec4 v_color;
+		void main()
+		{
+		    gl_FragColor = v_color;
+		}
+		)",
 		ATTRIB_VERTEX, "a_position",
 		ATTRIB_COLOR, "a_color"
 	);
