@@ -84,12 +84,14 @@ inline bool IsComment(int a, int b) {
 	return a == '/' && b == '*' || a == '*' && b == '/' || a == '/' && b == '/';
 }
 
-void CodeEditor::PreInsert(int pos, const WString& text)
-{
-}
-
 inline bool RBR(int c) {
 	return isbrkt(c);
+}
+
+String CodeEditor::GetRefreshInfo(int pos)
+{
+	int ii = GetLine(pos) + 1;
+	return ii < GetLineCount() ? GetSyntax(ii)->Get() : String();
 }
 
 void CodeEditor::CheckSyntaxRefresh(int64 pos, const WString& text)
@@ -97,11 +99,16 @@ void CodeEditor::CheckSyntaxRefresh(int64 pos, const WString& text)
 	GetSyntax(GetLine(pos))->CheckSyntaxRefresh(*this, pos, text);
 }
 
+void CodeEditor::PreInsert(int pos, const WString& text)
+{
+	refresh_info = GetRefreshInfo(pos);
+}
+
 void CodeEditor::PostInsert(int pos, const WString& text) {
 	if(check_edited)
 		bar.SetEdited(GetLine(pos));
 	if(!IsFullRefresh()) {
-		if(text.GetCount() > 200 || text.Find('\n') >= 0)
+		if(text.GetCount() > 200 || GetRefreshInfo(pos) != refresh_info || text.Find('\n') >= 0)
 			Refresh();
 		else
 			CheckSyntaxRefresh(pos, text);
@@ -118,8 +125,10 @@ void CodeEditor::PreRemove(int pos, int size) {
 		WString text = GetW(pos, size);
 		if(text.Find('\n') >= 0)
 			Refresh();
-		else
+		else {
 			CheckSyntaxRefresh(pos, text);
+			refresh_info = GetRefreshInfo(pos);
+		}
 	}
 }
 
@@ -128,6 +137,8 @@ void CodeEditor::PostRemove(int pos, int size) {
 		bar.SetEdited(GetLine(pos));
 	WhenUpdate();
 	EditorBarLayout();
+	if(GetRefreshInfo(pos) != refresh_info)
+		Refresh();
 }
 
 void CodeEditor::ClearLines() {

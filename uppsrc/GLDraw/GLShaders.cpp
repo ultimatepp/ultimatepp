@@ -39,6 +39,9 @@ void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
 
 	program = glCreateProgram();
 
+	DDUMP(vertex_shader_);
+	DDUMP(fragment_shader_);
+
 	vertex_shader = LoadShader(vertex_shader_, GL_VERTEX_SHADER);
 	fragment_shader = LoadShader(fragment_shader_, GL_FRAGMENT_SHADER);
 	
