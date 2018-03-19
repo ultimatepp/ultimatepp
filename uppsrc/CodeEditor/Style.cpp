@@ -117,7 +117,7 @@ void HighlightSetup::DarkTheme()
 	SetHlStyle(INK_COMMENT_WORD, Blue, true, true);
 	SetHlStyle(PAPER_COMMENT_WORD, Yellow);
 	SetHlStyle(INK_CONST_STRING, Color(255, 255, 150));
-	SetHlStyle(INK_RAW_STRING,Color(134, 25, 70));
+	SetHlStyle(INK_RAW_STRING, Color(255, 240, 150));
 	SetHlStyle(INK_CONST_STRINGOP, LtBlue);
 	SetHlStyle(INK_OPERATOR, White, true);
 	SetHlStyle(INK_KEYWORD, Color(255, 42, 150), true, true);
@@ -167,7 +167,7 @@ void HighlightSetup::WhiteTheme()
 	SetHlStyle(PAPER_COMMENT_WORD, Yellow, false, false);
 	SetHlStyle(INK_COMMENT_WORD, Blue, true, true);
 	SetHlStyle(INK_CONST_STRING, Red);
-
+	SetHlStyle(INK_RAW_STRING, Color(134, 25, 70));
 	SetHlStyle(INK_CONST_STRINGOP, LtBlue);
 	SetHlStyle(INK_CONST_INT, Red);
 	SetHlStyle(INK_CONST_FLOAT, Magenta);
