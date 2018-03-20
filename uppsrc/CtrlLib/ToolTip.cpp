@@ -63,9 +63,9 @@ void EndShowMode()
 void ShowToolTip()
 {
 	LLOG("ShowToolTip");
+	CloseToolTip();
 	if(!GUI_ToolTips())
 		return;
-	CloseToolTip();
 	if(tipctrl) {
 		String text = tipctrl->GetTip();
 		LLOG("-> showing tip: " << text << " tipctrl: " << UPP::Name(tipctrl));
