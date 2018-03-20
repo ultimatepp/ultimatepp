@@ -205,24 +205,6 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 				p++;
 			}
 		}
-		else
-		if(raw_string.GetCount()) {
-			const wchar *s = p;
-			const wchar *r = raw_string;
-			while(*s && *r) {
-				if(*s != *r)
-					break;
-				s++;
-				r++;
-			}
-			if(*r == '\0') {
-				p = s;
-				raw_string.Clear();
-			}
-			else
-				p++;
-			if(p >= e) return;
-		}
 		else {
 			int pc = 0;
 			for(;;) {
@@ -238,6 +220,24 @@ void CSyntax::ScanSyntax(const wchar *ln, const wchar *e, int line, int tab_size
 				else
 				if(RawString(p, raw_n))
 					p += raw_n;
+				else
+				if(raw_string.GetCount()) {
+					const wchar *s = p;
+					const wchar *r = raw_string;
+					while(*s && *r) {
+						if(*s != *r)
+							break;
+						s++;
+						r++;
+					}
+					if(*r == '\0') {
+						p = s;
+						raw_string.Clear();
+					}
+					else
+						p++;
+					if(p >= e) return;
+				}
 				else
 				if(!iscidl(pc) && p[0] == 'n' && p[1] == 'a' && p[2] == 'm' && p[3] == 'e' &&
 				   p[4] == 's' && p[5] == 'p' && p[6] == 'a' && p[7] == 'c' && p[8] == 'e' &&

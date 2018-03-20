@@ -132,7 +132,7 @@ bool CSyntax::RawString(const wchar *p, int& n) {
 	raw_string = ")";
 	raw_string.Cat(rs);
 	raw_string.Cat('\"');
-	n = s + 1 - p;
+	n = int(s + 1 - p);
 	return true;
 };
 
@@ -247,8 +247,9 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 		}
 		else
 		if(raw_string.GetCount() || RawString(p, raw_n)) {
-			const wchar *b = p;
+			hls.Put(raw_n, hl_style[INK_CONST_STRING]);
 			p += raw_n;
+			const wchar *b = p;
 			while(p < e) {
 				const wchar *s = p;
 				const wchar *r = raw_string;
@@ -259,13 +260,16 @@ void CSyntax::Highlight(const wchar *ltext, const wchar *e, HighlightOutput& hls
 					r++;
 				}
 				if(*r == '\0') {
-					p = s;
+					hls.Put(int(p - b), hl_style[INK_RAW_STRING]);
+					hls.Put(int(s - p), hl_style[INK_CONST_STRING]);
+					b = p = s;
 					raw_string.Clear();
 					break;
 				}
 				p++;
 			}
-			hls.Put(int(p - b), hl_style[INK_RAW_STRING]);
+			if(p != b)
+				hls.Put(int(p - b), hl_style[INK_RAW_STRING]);
 		}
 		else
 		if(linecomment && linecont || pair == MAKELONG('/', '/') &&
