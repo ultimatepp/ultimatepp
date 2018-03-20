@@ -39,7 +39,7 @@ void CSyntax::Clear() {
 	macro = MACRO_OFF;
 	stmtline = endstmtline = seline = -1;
 	was_namespace = false;
-	raw_string = false;
+	raw_string.Clear();
 	ifstack.Clear();
 }
 
