@@ -96,6 +96,7 @@ Pdb::FnInfo Pdb::GetFnInfo0(adr_t address)
 	f->SizeOfStruct = sizeof(SYMBOL_INFO);
 	f->MaxNameLen = MAX_SYMB_NAME;
 
+	LLOG("GetFnInfo " << Format64Hex(address));
 	FnInfo fn;
 	if(SymFromAddr(hProcess, address, &h, f)) {
 		LLOG("GetFnInfo " << f->Name
@@ -232,6 +233,7 @@ BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCo
 
 	if(pSym->Tag != SymTagData)
 		return TRUE;
+
 	LLOG("GLOBAL: " << pSym->Name << " " << Format64Hex(pSym->Address));
 
 #if 0
@@ -253,7 +255,6 @@ BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCo
 		DLOG("GetSymLineFromAddr failed!");
 	DLOG("=========================");
 #endif
-
 	Val& v = c.pdb->global.GetAdd(pSym->Name);
 	v.address = (adr_t)pSym->Address;
 	c.pdb->TypeVal(v, pSym->TypeIndex, (adr_t)pSym->ModBase);
@@ -262,7 +263,6 @@ BOOL CALLBACK Pdb::EnumGlobals(PSYMBOL_INFO pSym, ULONG SymbolSize, PVOID UserCo
 
 void Pdb::LoadGlobals(DWORD64 base)
 {
-	static IMAGEHLP_STACK_FRAME f;
 	LocalsCtx c;
 	c.pdb = this;
 	c.context = &context;
