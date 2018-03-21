@@ -42,9 +42,9 @@ void Pdb::Locals()
 	if(q >= 0 && q < frame.GetCount()) {
 		Frame& f = frame[q];
 		for(int i = 0; i < f.param.GetCount(); i++)
-			Vis(locals, f.param.GetKey(i), prev, Visualise(f.param[i]));
+			Vis(locals, f.param.GetKey(i), prev, Visualise(f.param[i], Current()));
 		for(int i = 0; i < f.local.GetCount(); i++)
-			Vis(locals, f.local.GetKey(i), prev, Visualise(f.local[i]));
+			Vis(locals, f.local.GetKey(i), prev, Visualise(f.local[i], Current()));
 	}
 }
 
@@ -55,7 +55,7 @@ void Pdb::AddThis(const VectorMap<String, Val>& m, adr_t address, const VectorMa
 		mv.address += address;
 		Visual vis;
 		try {
-			vis = Visualise(mv);
+			vis = Visualise(mv, Current());
 		}
 		catch(CParser::Error e) {
 			vis.Cat(e, SColorDisabled);
@@ -85,7 +85,7 @@ void Pdb::This()
 				Val val = f.local[i];
 				if(val.ref > 0 || val.type < 0)
 					try {
-						val = GetRVal(val);
+						val = GetRVal(val, Current());
 					}
 					catch(CParser::Error) {}
 				AddThis(val.type, val.address, prev);
@@ -101,8 +101,8 @@ void Pdb::TryAuto(const String& exp, const VectorMap<String, Value>& prev)
 		Visual r;
 		try {
 			CParser p(exp);
-			Val v = Exp(p);
-			Visualise(r, v, 2);
+			Val v = Exp(p, Current());
+			Visualise(r, v, Current(), 2);
 		}
 		catch(CParser::Error) {
 			r.Clear();
@@ -152,7 +152,7 @@ void Pdb::Watches()
 	for(int i = 0; i < watches.GetCount(); i++) {
 		bool ch;
 		watches.Set(i, 1, Vis((String)watches.Get(i, 0),
-		            prev, Visualise((String)watches.Get(i, 0)), ch));
+		            prev, Visualise((String)watches.Get(i, 0), Current()), ch));
 		if(ch)
 			watches.SetDisplay(i, 0, Single<RedDisplay>());
 		else
@@ -166,15 +166,15 @@ void Pdb::Explore(const Val& val, const VectorMap<String, Value>& prev)
 	for(int i = 0; i < t.base.GetCount(); i++) {
 		Val b = t.base[i];
 		b.address += val.address;
-		Vis(explorer, ':' + GetType(b.type).name, prev, Visualise(b));
+		Vis(explorer, ':' + GetType(b.type).name, prev, Visualise(b, Current()));
 	}
 	for(int i = 0; i < t.member.GetCount(); i++) {
 		Val r = t.member[i];
 		r.address += val.address;
-		Vis(explorer, '.' + t.member.GetKey(i), prev, Visualise(r));
+		Vis(explorer, '.' + t.member.GetKey(i), prev, Visualise(r, Current()));
 	}
 	for(int i = 0; i < t.static_member.GetCount(); i++)
-		Vis(explorer, "::" + t.static_member.GetKey(i), prev, Visualise(t.static_member[i]));
+		Vis(explorer, "::" + t.static_member.GetKey(i), prev, Visualise(t.static_member[i], Current()));
 }
 
 void Pdb::Explorer()
@@ -185,13 +185,13 @@ void Pdb::Explorer()
 		String x = ~expexp;
 		if(!IsNull(x)) {
 			CParser p(x);
-			Val v = Exp(p);
-			Vis(explorer, "=", prev, Visualise(v));
+			Val v = Exp(p, Current());
+			Vis(explorer, "=", prev, Visualise(v, Current()));
 			if(v.type >= 0 && v.ref == 0 && !v.rvalue)
 				Explore(v, prev);
-			if(v.ref > 0 && GetRVal(v).address)
+			if(v.ref > 0 && GetRVal(v, Current()).address)
 				for(int i = 0; i < 20; i++)
-					Vis(explorer, Format("[%d]", i), prev, Visualise(DeRef(Compute(v, RValue(i), '+'))));
+					Vis(explorer, Format("[%d]", i), prev, Visualise(DeRef(Compute(v, RValue(i), '+', Current()), Current()), Current()));
 		}
 	}
 	catch(CParser::Error e) {
@@ -283,8 +283,8 @@ bool Pdb::Tip(const String& exp, CodeEditor::MouseTip& mt)
 	Visual r;
 	try {
 		CParser p(exp);
-		Val v = Exp(p);
-		Visualise(r, v, 2);
+		Val v = Exp(p, Current());
+		Visualise(r, v, Current(), 2);
 		if(r.part.GetCount()) {
 			mt.sz = r.GetSize() + Size(4, 4);
 			mt.value = RawPickToValue(pick(r));
@@ -314,13 +314,13 @@ void Pdb::MemoryGoto(const String& exp)
 {
 	try {
 		CParser p(exp);
-		Val v = Exp(p);
+		Val v = Exp(p, Current());
 		adr_t adr = 0;
 		if(v.ref > 0)
-			adr = GetRVal(v).address;
+			adr = GetRVal(v, Current()).address;
 		else
 		if(v.rvalue)
-			adr = (adr_t)GetInt(v);
+			adr = (adr_t)GetInt(v, Current());
 		else
 			adr = v.address;
 		memory.SetCursor(adr);
@@ -339,7 +339,7 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 		return;
 	try {
 		CParser p(exp);
-		Val v = Exp(p);
+		Val v = Exp(p, Current());
 		bool sep = true;
 		if(v.ref > 0) {
 			if(sep)
@@ -352,7 +352,7 @@ void Pdb::MemMenu(ArrayCtrl& array, Bar& bar, const String& exp)
 			if(sep)
 				bar.Separator();
 			sep = false;
-			bar.Add("Memory at 0x" + FormatIntHex((dword)GetInt(v)), THISBACK1(MemoryGoto, "&" + exp));
+			bar.Add("Memory at 0x" + FormatIntHex((dword)GetInt(v, Current())), THISBACK1(MemoryGoto, "&" + exp));
 		}
 		if(!v.rvalue) {
 			if(sep)

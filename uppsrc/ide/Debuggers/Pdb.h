@@ -119,6 +119,7 @@ struct Pdb : Debugger, ParentCtrl {
 		FnInfo                 fn;
 		VectorMap<String, Val> param;
 		VectorMap<String, Val> local;
+		String                 text;
 	};
 
 	struct VisualPart : Moveable<VisualPart> {
@@ -300,40 +301,42 @@ struct Pdb : Debugger, ParentCtrl {
 // exp
 	void       ThrowError(const char *s);
 	int        SizeOfType(int ti);
-	Val        GetRVal(Val v);
-	Val        DeRef(Val v);
+	Val        GetRVal(Val v, Thread& ctx);
+	Val        DeRef(Val v, Thread& ctx);
 	Val        Ref(Val v);
-	int64      GetInt(Val v);
-	double     GetFlt(Val v);
+	int64      GetInt(Val v, Thread& ctx);
+	double     GetFlt(Val v, Thread& ctx);
 	void       ZeroDiv(double x);
-	Val        Compute(Val v1, Val v2, int oper);
+	Val        Compute(Val v1, Val v2, int oper, Thread& ctx);
 	Val        RValue(int64 v);
 	Val        Field0(Pdb::Val v, const String& field);
 	Val        Field(Pdb::Val v, const String& field);
-	Val        Term(CParser& p);
-	Val        Post(CParser& p);
-	Val        Unary(CParser& p);
-	Val        Additive(CParser& p);
-	Val        Multiplicative(CParser& p);
-	Val        Compare(Val v, CParser& p, int r1, int r2);
-	void       GetBools(Val v1, Val v2, bool& a, bool& b);
-	Val        LogAnd(CParser& p);
-	Val        LogOr(CParser& p);
-	Val        Comparison(CParser& p);
-	Val        Exp0(CParser& p);
-	Val        Exp(CParser& p);
+	Val        Term(CParser& p, Thread& ctx);
+	Val        Post(CParser& p, Thread& ctx);
+	Val        Unary(CParser& p, Thread& ctx);
+	Val        Additive(CParser& p, Thread& ctx);
+	Val        Multiplicative(CParser& p, Thread& ctx);
+	Val        Compare(Val v, CParser& p, int r1, int r2, Thread& ctx);
+	void       GetBools(Val v1, Val v2, bool& a, bool& b, Thread& ctx);
+	Val        LogAnd(CParser& p, Thread& ctx);
+	Val        LogOr(CParser& p, Thread& ctx);
+	Val        Comparison(CParser& p, Thread& ctx);
+	Val        Exp0(CParser& p, Thread& ctx);
+	Val        Exp(CParser& p, Thread& ctx);
+
 	void       CatInt(Visual& result, int64 val);
-	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, int expandptr, int slen, bool& cm, int depth);
-	void       Visualise(Visual& result, Pdb::Val val, int expandptr, int slen);
-	void       Visualise(Visual& result, Pdb::Val val, int expandptr);
-	Visual     Visualise(Val v);
-	Visual     Visualise(const String& rexp);
+	void       BaseFields(Visual& result, const Type& t, Pdb::Val val, Thread& ctx, int expandptr, int slen, bool& cm, int depth);
+	void       Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr, int slen);
+	void       Visualise(Visual& result, Pdb::Val val, Thread& ctx, int expandptr);
+	Visual     Visualise(Val v, Thread& ctx);
+	Visual     Visualise(const String& rexp, Thread& ctx);
 
 // code
 	Thread&    Current();
+	Array<Frame> Backtrace(Thread& ctx, bool single_frame = false);
 	int        Disassemble(adr_t ip);
 	bool       IsValidFrame(adr_t eip);
-	void       Sync0(Thread& ctx, Frame *single_frame);
+	void       Sync0(Thread& ctx);
 	void       Sync();
 	void       SetThread();
 	void       SetFrame();
@@ -390,6 +393,7 @@ struct Pdb : Debugger, ParentCtrl {
 	void      ExpandTreeType(int parent, CParser& p);
 
 	void      CopyStack();
+	void      CopyStackAll();
 	void      CopyDisas();
 
 	void      MemoryGoto(const String& exp);
