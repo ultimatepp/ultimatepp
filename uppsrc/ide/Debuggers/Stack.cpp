@@ -93,7 +93,7 @@ void Pdb::Sync0(Thread& ctx)
 
 	frame = Backtrace(ctx);
 	for(const Frame& f : frame)
-		framelist.Add(framelist.GetCount() - 1, f.text);
+		framelist.Add(framelist.GetCount(), f.text);
 	framelist.GoBegin();
 }
 

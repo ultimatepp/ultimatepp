@@ -9,7 +9,7 @@
 #define STATUS_WX86_EXCEPTION_LASTCHANCE 0x40000021
 #define STATUS_WX86_EXCEPTION_CHAIN      0x40000022
 
-#define LLOG(x)   // DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 String Pdb::Hex(adr_t a)
 {
@@ -82,13 +82,11 @@ void Pdb::LoadModuleInfo()
 				char name[MAX_PATH];
 				if(GetModuleFileNameEx(hProcess, m[i], name, MAX_PATH)) {
 					f.path = name;
-					if(FileExists(ForceExt(f.path, ".pdb"))) {
-						adr_t w = (adr_t)SymLoadModule64(hProcess, NULL, name, 0, f.base, f.size);
-						if(w) {
-							LLOG("Loading symbols " << Hex(f.base) << '/' << hProcess << " returned base " << Hex(w));
-							f.symbols = true;
-							LoadGlobals(w);
-						}
+					adr_t w = (adr_t)SymLoadModule64(hProcess, NULL, name, 0, f.base, f.size);
+					if(w) {
+						LLOG("Loading symbols " << name << ' ' << Hex(f.base) << '/' << hProcess << " returned base " << Hex(w));
+						f.symbols = true;
+						LoadGlobals(w);
 					}
 				}
 				LLOG(Hex(f.base) << " (" << Hex(f.size) << "): " << f.path);
