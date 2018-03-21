@@ -66,7 +66,7 @@ void Pdb::Sync()
 	}
 	threadlist <<= (int)debug_threadid;
 	Thread& ctx = Current();
-	Sync0(ctx, NULL);
+	Sync0(ctx);
 	const VectorMap<int, CpuRegister>& reg = Pdb::GetRegisterList();
 	cpu.Clear();
 	for(int i = 0; i < reg.GetCount(); i++) {
@@ -82,7 +82,7 @@ void Pdb::Sync()
 
 void Pdb::SetThread()
 {
-	Sync0(Current(), NULL);
+	Sync0(Current());
 	SetFrame();
 	IdeActivateBottom();
 }
@@ -174,11 +174,11 @@ bool Pdb::ConditionalPass()
 			try {
 				q = threads.Find((int)debug_threadid);
 				if(q >= 0) {
-					Frame frame;
-					Sync0(threads[q], &frame);
-					current_frame = &frame;
+					Thread& ctx = threads[q];
+					Array<Frame> frame = Backtrace(ctx, true);
+					current_frame = &frame[0];
 					CParser p(exp);
-					if(!GetInt(Exp(p))) {
+					if(!GetInt(Exp(p, ctx), ctx)) {
 						current_frame = NULL;
 						return true;
 					}
@@ -214,7 +214,7 @@ bool Pdb::RunTo()
 		if(!Continue())
 			return false;
 	}
-	while(ConditionalPass());		
+	while(ConditionalPass());
 	return true;
 }
 

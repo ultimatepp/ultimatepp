@@ -38,6 +38,7 @@ void Pdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_MEMORY, THISBACK1(SetTab, 6));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
+	bar.Add(b, "Copy backtrace of all threads", THISBACK(CopyStackAll));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
 }
 
@@ -324,6 +325,22 @@ void Pdb::CopyStack()
 	WriteClipboardText(s);
 }
 
+void Pdb::CopyStackAll()
+{
+	String s;
+
+	threadlist.Clear();
+	for(int i = 0; i < threads.GetCount(); i++) {
+		int thid = threads.GetKey(i);
+		s << "----------------------------------\r\n"
+		  << "Thread ID: " << FormatIntHex(Format("0x%x", thid)) << "\r\n\r\n";
+		for(const auto& f : Backtrace(threads[i]))
+			s << f.text << "\r\n";
+		s << "\r\n";
+	}
+	WriteClipboardText(s);
+}
+
 void Pdb::CopyDisas()
 {
 	disas.WriteClipboard();
@@ -393,7 +410,7 @@ struct PDBExpressionDlg : WithEditPDBExpressionLayout<TopWindow> {
 void PDBExpressionDlg::Sync()
 {
 	if(pdb)
-		value <<= RawPickToValue(pick(pdb->Visualise(~text)));
+		value <<= RawPickToValue(pick(pdb->Visualise(~text, pdb->Current())));
 }
 
 PDBExpressionDlg::PDBExpressionDlg(const char *title, String& brk, Pdb *pdb)
