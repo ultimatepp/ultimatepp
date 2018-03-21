@@ -203,6 +203,7 @@ public:
 	void      TreeExpand(int node);
 
 	void      CopyStack();
+	void      CopyStackAll();
 	void      CopyDisas();
 
 	bool      Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);

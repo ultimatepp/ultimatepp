@@ -152,7 +152,6 @@ String Gdb::FastCmd(const char *command)
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
 	bool lock = false;
 	if(command) {
-		LLOG("FastCmd: " << command);
 		dbg->Write(String(command) + "\n");
 		PutVerbose(command);
 	}

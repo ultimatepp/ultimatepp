@@ -27,7 +27,39 @@ void Gdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_CPU, THISBACK1(SetTab, 4));
 	bar.MenuSeparator();
 	bar.Add(b, "Copy backtrace", THISBACK(CopyStack));
+	bar.Add(b, "Copy backtrace of all threads", THISBACK(CopyStackAll));
 	bar.Add(b, "Copy dissassembly", THISBACK(CopyDisas));
+}
+
+String FormatFrame(const char *s)
+{
+	if(*s++ != '#')
+		return Null;
+	while(IsDigit(*s))
+		s++;
+	while(*s == ' ')
+		s++;
+	if(s[0] == '0' && ToUpper(s[1]) == 'X') {
+		s += 2;
+		while(IsXDigit(*s))
+			s++;
+		while(*s == ' ')
+			s++;
+		if(s[0] != 'i' && s[1] != 'n')
+			return Null;
+		s += 2;
+		while(*s == ' ')
+			s++;
+	}
+	if(!IsAlpha(*s))
+		return Null;
+	const char *w = strchr(s, '\r');
+	if(w)
+		return String(s, w);
+	w = strchr(s, '\n');
+	if(w)
+		return String(s, w);
+	return s;
 }
 
 void Gdb::CopyStack()
@@ -39,6 +71,40 @@ void Gdb::CopyStack()
 	for(int i = 0; i < frame.GetCount(); i++)
 		s << frame.GetValue(i) << "\n";
 	WriteClipboardText(s);
+}
+
+void Gdb::CopyStackAll()
+{
+	String s = FastCmd("info threads");
+	StringStream ss(s);
+	String r;
+	while(!ss.IsEof()) {
+		String s = ss.GetLine();
+		CParser p(s);
+		try {
+			bool active = p.Char('*');
+			if(p.IsNumber()) {
+				int id = p.ReadInt();
+				r << "----------------------------------\r\n"
+				  << "Thread: " << id << "\r\n\r\n";
+
+				FastCmd(Sprintf("thread %d", id));
+
+				int i = 0;
+				int q = ~frame;
+				frame.Clear();
+				for(;;) {
+					String s = FormatFrame(FastCmd("frame " + AsString(i++)));
+					if(IsNull(s)) break;
+					r << s << "\r\n";
+				}
+				r << "\r\n";
+			}
+		}
+		catch(CParser::Error) {}
+	}
+	FastCmd(Sprintf("thread %d", ~threads));
+	WriteClipboardText(r);
 }
 
 void Gdb::CopyDisas()
@@ -114,37 +180,6 @@ void Gdb::SyncDisas(bool fr)
 		SetDisas(FastCmd("disas"));
 	disas.SetCursor(addr);
 	disas.SetIp(addr, fr ? DbgImg::FrameLinePtr() : DbgImg::IpLinePtr());
-}
-
-String FormatFrame(const char *s)
-{
-	if(*s++ != '#')
-		return Null;
-	while(IsDigit(*s))
-		s++;
-	while(*s == ' ')
-		s++;
-	if(s[0] == '0' && ToUpper(s[1]) == 'X') {
-		s += 2;
-		while(IsXDigit(*s))
-			s++;
-		while(*s == ' ')
-			s++;
-		if(s[0] != 'i' && s[1] != 'n')
-			return Null;
-		s += 2;
-		while(*s == ' ')
-			s++;
-	}
-	if(!IsAlpha(*s))
-		return Null;
-	const char *w = strchr(s, '\r');
-	if(w)
-		return String(s, w);
-	w = strchr(s, '\n');
-	if(w)
-		return String(s, w);
-	return s;
 }
 
 bool ParsePos(const String& s, String& fn, int& line, adr_t & adr)
