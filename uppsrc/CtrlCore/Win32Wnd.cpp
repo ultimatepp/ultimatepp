@@ -568,7 +568,7 @@ void Ctrl::WndDestroy()
 	GuiLock __;
 	if(top && top->hwnd) {
 		HWND hwnd = top->hwnd;
-		WndFree(); // CXL 2007-06-04 to avoid loosing focus with maximize box owned dialogs
+		WndFree();
 		::DestroyWindow(hwnd);
 	}
 }
@@ -675,7 +675,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			}
 #endif
 	LRESULT l = 0;
-	if(w) {
+	if(w && w->GetHWND()) {
 #if defined(_DEBUG) && LOGTIMING
 			int ticks = msecs();
 			String wname = w->Name();
