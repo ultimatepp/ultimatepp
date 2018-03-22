@@ -155,6 +155,6 @@ T *tiny_new(Args... args)
 template <class T>
 void tiny_delete(T *ptr)
 {
-	ptr->T::~T();
+	ptr->~T();
 	TinyFree(sizeof(T), ptr);
 }

@@ -256,7 +256,7 @@ void Mitor<T>::Clear()
 	if(count > 2)
 		delete vector;
 	if(count && count != 2)
-		((T*)elem0)->T::~T();
+		((T*)elem0)->~T();
 	count = 0;
 }
 
