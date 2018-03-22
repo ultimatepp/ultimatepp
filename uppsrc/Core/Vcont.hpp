@@ -240,7 +240,7 @@ void Vector<T>::Remove(const int *sorted_list, int n)
 	for(;;) {
 		ASSERT(pos < items);
 		if(pos == *sorted_list) {
-			(vector + pos)->T::~T();
+			(vector + pos)->~T();
 			pos++;
 			sorted_list++;
 			if(--n == 0) break;

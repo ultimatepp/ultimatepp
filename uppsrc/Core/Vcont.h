@@ -25,7 +25,7 @@ template <class T>
 inline void Destroy(T *t, const T *end)
 {
 	while(t != end) {
-		t->T::~T();
+		t->~T();
 		t++;
 	}
 }

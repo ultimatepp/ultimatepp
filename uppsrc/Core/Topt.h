@@ -210,7 +210,7 @@ class DeepCopyOption : public B {
 public:
 #ifdef DEPRECATED
 	friend T& operator<<=(T& dest, const T& src)
-	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
+	{ if(&dest != &src) { (&dest)->~T(); ::new(&dest) T(src, 1); } return dest; }
 #endif
 	friend T  do_clone(const T& src) { T c(src, 1); return c; }
 };
@@ -220,7 +220,7 @@ class MoveableAndDeepCopyOption : public B {
 	friend void AssertMoveable0(T *) {}
 #ifdef DEPRECATED
 	friend T& operator<<=(T& dest, const T& src)
-	{ if(&dest != &src) { (&dest)->T::~T(); ::new(&dest) T(src, 1); } return dest; }
+	{ if(&dest != &src) { (&dest)->~T(); ::new(&dest) T(src, 1); } return dest; }
 #endif
 	friend T  clone(const T& src) { T c(src, 1); return c; }
 };

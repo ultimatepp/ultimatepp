@@ -35,8 +35,8 @@ public:
 	T&       Tail()                  { ASSERT(items > 0); return vector[EI()]; }
 	const T& Head() const            { ASSERT(items > 0); return vector[start]; }
 	const T& Tail() const            { ASSERT(items > 0); return vector[EI()]; }
-	void     DropHead()              { (&Head())->T::~T(); items--; start = Ix(1); }
-	void     DropTail()              { (&Tail())->T::~T(); items--; }
+	void     DropHead()              { (&Head())->~T(); items--; start = Ix(1); }
+	void     DropTail()              { (&Tail())->~T(); items--; }
 	T        PopHead()               { T x = Head(); DropHead(); return x; }
 	T        PopTail()               { T x = Tail(); DropTail(); return x; }
 	void     DropHead(int n)         { while(n-- > 0) BiVector<T>::DropHead(); }
