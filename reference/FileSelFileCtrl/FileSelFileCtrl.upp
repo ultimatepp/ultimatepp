@@ -1,0 +1,12 @@
+description "Uses FileSel::FileCtrl to add widgets to FileSel\377";
+
+uses
+	CtrlLib;
+
+file
+	format.lay,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
