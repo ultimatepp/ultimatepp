@@ -103,7 +103,7 @@ void Gdb::CopyStackAll()
 		}
 		catch(CParser::Error) {}
 	}
-	FastCmd(Sprintf("thread %d", ~threads));
+	FastCmd("thread " + ~~threads);
 	WriteClipboardText(r);
 }
 
