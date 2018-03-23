@@ -1,0 +1,5 @@
+LAYOUT(FormatCtrlLayout, 164, 16)
+	ITEM(Label, dv___0, SetLabel(t_("Encoding")).LeftPosZ(0, 52).TopPosZ(0, 19))
+	ITEM(DropList, list, LeftPosZ(52, 112).TopPosZ(0, 19))
+END_LAYOUT
+
