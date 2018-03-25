@@ -9,11 +9,11 @@ IplImage *ImageToCv(Image &img, bool iscolor) {
 	for (int y = 0; y < img.GetHeight(); y++) {
 		uchar* ptr = (uchar*) (src->imageData + y * src->widthStep);
 		for (int x = 0; x < img.GetWidth(); x++) {
-			if (iscolor) {
+			if (iscolor) { 
 				ptr[3*x] = img[y][x].r;
 				ptr[3*x+1] = img[y][x].g;
 				ptr[3*x+2] = img[y][x].b;
-			} else
+			} else 
 				ptr[x] = Grayscale(img[y][x]);
 		}
 	}

@@ -1,6 +1,6 @@
 topic "OpenCV";
-[ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,0#31310162474203024125188417583966:caption]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; [+184 OpenCV]&]
 [s0;# [^http`:`/`/opencv`.org`/^2 OpenCV][2  is a C library for real 
@@ -11,24 +11,26 @@ U`+`+ and the necessary libraries.]&]
 [s0;#2 &]
 [s0;# [2 To install it please remember to set `"Build methods`" menu:]&]
 [s0;i150;O0; [2 INCLUDE directories]&]
-[s0;l288; [2 `\plugin`\OpenCV`\include]&]
-[s0;l288; [2 `\plugin`\OpenCV`\include`\opencv]&]
+[s0;l288; [2 plugin`\OpenCV`\include]&]
+[s0;l288; [2 plugin`\OpenCV`\include`\opencv]&]
 [s0;l288;2 &]
 [s0;i150;O0; [2 LIB directories]&]
-[s0;l288; [2 `\plugin`\OpenCV`\lib]&]
+[s0;l288; [2 plugin`\OpenCV`\lib]&]
 [s0;2 &]
 [s0;i150;O0; [2 PATH `- executable directories]&]
-[s0;#l288; [2 `\plugin`\OpenCV`\bin]&]
+[s0;#l288; [2 plugin`\OpenCV`\bin]&]
 [s0;#2 &]
 [s0;#2 &]
-[s0;# [2 To ease the install there is ][^https`:`/`/sourceforge`.net`/projects`/upp`/files`/GPL`-sources`/OpenCV`_2`_2`_0`%20plugin`_BSD`.7z`/download^2 h
-ere][2  a packaged 2.2.0 version (OpenCV`_2`_2`_0 plugin`_BSD.7z) 
-with the basic folders. Just download and copy it in your /uppsrc/plugin 
-folder.]&]
+[s0;# [2 To ease the install there is ][^https`:`/`/sourceforge`.net`/projects`/opencvlibrary`/files`/opencv`-win`/3`.4`.1`/opencv`-3`.4`.1`-vc14`_vc15`.exe`/download^2 h
+ere][2  a packaged 3.4.1 version. For Visual Studio 2015, download 
+and copy in your uppsrc/plugin folder:]&]
+[s0;#i150;O0; [2 build`\include to plugin`\OpenCV`\include]&]
+[s0;#i150;O0; [2 build`\x64`\vc15`\bin to plugin`\OpenCV`\bin]&]
+[s0;#i150;O0; [2 build`\x64`\vc15`\lib to plugin`\OpenCV`\lib]&]
 [s0;2 &]
-[s0;# [2 There is also a sample package (OpenCV`_demo) to ease even 
-more its use for U`+`+ users. It uses the Hough Transform to 
-detect straight lines in an image.]&]
+[s0;# [2 There is a sample package (OpenCV`_demo) to ease its use for 
+U`+`+ users. It uses the Hough Transform to detect straight lines 
+in an image.]&]
 [s0;2 &]
 [s0;i150;O0; [2 Original image:]&]
 [s0;2 &]

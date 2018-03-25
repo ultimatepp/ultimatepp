@@ -3,7 +3,7 @@ uses
 	plugin\jpg,
 	Controls4U;
 
-library(WIN32) "opencv_core240d opencv_highgui240d opencv_calib3d240d opencv_features2d240d opencv_imgproc240d  opencv_video240d opencv_videostab240d vfw32 libjasperd libjpegd libpngd libtiffd ";
+library(WIN32) opencv_world341.lib;
 
 library(!WIN32) "opencv_core opencv_highgui opencv_calib3d opencv_features2d opencv_imgproc opencv_video";
 
