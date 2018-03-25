@@ -15,7 +15,7 @@ void demo(Image &img) {
     for(i = 0; i < lines->total; i++) {
         CvPoint* line = (CvPoint*)cvGetSeqElem(lines,i);
         cvLine( color_dst, line[0], line[1], CV_RGB(255,0,0), 3, 8);
-    }
+    } 
 
     cvNamedWindow("Source", 1);
     cvShowImage("Source", src);
