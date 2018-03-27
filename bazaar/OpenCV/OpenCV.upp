@@ -5,7 +5,7 @@ uses
 
 library(WIN32) opencv_world341.lib;
 
-library(!WIN32) "opencv_core opencv_highgui opencv_calib3d opencv_features2d opencv_imgproc opencv_video";
+library(!WIN32) "libopencv_core.so libopencv_highgui.so libopencv_calib3d.so libopencv_features2d.so libopencv_imgproc.so libopencv_video.so";
 
 file
 	OpenCV.cpp,
