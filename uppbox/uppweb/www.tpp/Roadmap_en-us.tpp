@@ -27,7 +27,7 @@ topic "Roadmap";
 [{_}%EN-US 
 [s2; Roadmap&]
 [s24; Upcoming release&]
-[s3; 2018.1 (rev 11834) (Mar 2018)&]
+[s3; 2018.1 (rev 11868) (Mar 2018)&]
 [s22; Core&]
 [s5;l160;i150;O0; New low`-overhead CoWork [^https`:`/`/www`.ultimatepp`.org`/srcdoc`$Core`$Tutorial`$en`-us`.html`#Section`_7`_7^ p
 arallelization method / pattern `- Loop]&]
@@ -69,6 +69,8 @@ rather than edit.&]
 [s5;l160;i150;O0; Some trivial merge conflict helper tools&]
 [s5;l160;i150;O0; IconDes improvements&]
 [s5;l160;i150;O0; Esc scripting language now has `'continue`' statement&]
+[s5;l160;i150;O0; Debugger now can copy the back`-trace of [/ all] 
+threads to the clipboard&]
 [s5; &]
 [s5; &]
 [s24; Current release&]
