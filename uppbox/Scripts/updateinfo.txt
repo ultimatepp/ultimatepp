@@ -180,13 +180,6 @@ replace Eigen folder without CMakeLists.txt files
 replace unsupported folder without CMakeLists.txt files
 
 current version 1.2.59
-------------------------------------------------------------------
-plugin/FT_fontsys
-
-lz4plugin/astyle
-plugin/box2d
-plugin/glew
-plugin/ndisasm
 
 ------------------------------------------------------------------
 plugin/sqlite3
@@ -194,3 +187,11 @@ plugin/sqlite3
 https://www.sqlite.org/download.html
 
 Download amalgamation, replace files
+
+------------------------------------------------------------------
+plugin/FT_fontsys
+
+lz4plugin/astyle
+plugin/box2d
+plugin/glew
+plugin/ndisasm
