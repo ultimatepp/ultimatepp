@@ -418,15 +418,17 @@ void Time::Serialize(Stream& s)
 }
 
 #ifdef PLATFORM_WIN32
-Time::Time(FileTime filetime) {
-	SYSTEMTIME tm;
+Time::Time(FileTime filetime)
+{
+	SYSTEMTIME tm, tml;
 	FileTime ft;
-	FileTimeToLocalFileTime(&filetime, &ft);
-	FileTimeToSystemTime(&ft, &tm);
-	*this = Time(tm.wYear, tm.wMonth, tm.wDay, tm.wHour, tm.wMinute, tm.wSecond);
+	FileTimeToSystemTime(&filetime, &tm);
+	SystemTimeToTzSpecificLocalTime(NULL, &tm, &tml);
+	*this = Time(tml.wYear, tml.wMonth, tml.wDay, tml.wHour, tml.wMinute, tml.wSecond);
 }
 
-FileTime Time::AsFileTime() const {
+FileTime Time::AsFileTime() const
+{
 	SYSTEMTIME tm;
 	tm.wYear = year;
 	tm.wMonth = month;
