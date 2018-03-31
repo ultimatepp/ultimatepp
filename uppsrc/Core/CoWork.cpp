@@ -270,7 +270,7 @@ bool CoWork::IsFinished()
 {
 	Pool& p = GetPool();
 	p.lock.Enter();
-	bool b = jobs.IsEmpty(1);
+	bool b = todo == 0;
 	p.lock.Leave();
 	return b;
 }
