@@ -234,6 +234,7 @@ void StoreJsonValue(XmlIO& xio, const Value& v)
 		for(int i = 0; i < m.GetCount(); i++) {
 			Value h = m.GetValue(i);
 			XmlIO io = xio.Add((String)m.GetKey(i));
+			DDUMP(h.GetTypeName());
 			StoreJsonValue(io, h);
 		}
 		return;
@@ -261,6 +262,16 @@ void StoreJsonValue(XmlIO& xio, const Value& v)
 	else
 	if(IsString(v)) {
 		String h = v;
+		Xmlize(xio, h);
+	}
+	else
+	if(v.Is<Date>()) {
+		Date h = v;
+		Xmlize(xio, h);
+	}
+	else
+	if(v.Is<Time>()) {
+		Time h = v;
 		Xmlize(xio, h);
 	}
 	else
