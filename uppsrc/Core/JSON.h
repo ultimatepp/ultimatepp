@@ -102,6 +102,9 @@ public:
 
 	template <class T>
 	JsonIO& operator()(const char *key, T& value);
+
+	template <class T>
+	JsonIO& operator()(const char *key, T& value, const T& defvalue);
 	
 	JsonIO(const Value& src) : src(&src)         {}
 	JsonIO()                                     { src = NULL; }
@@ -123,6 +126,32 @@ JsonIO& JsonIO::operator()(const char *key, T& value)
 	if(IsLoading()) {
 		const Value& v = (*src)[key];
 		if(!v.IsVoid()) {
+			JsonIO jio(v);
+			Jsonize(jio, value);
+		}
+	}
+	else {
+		ASSERT(tgt.IsVoid());
+		if(!map)
+			map.Create();
+		JsonIO jio;
+		Jsonize(jio, value);
+		if(jio.map)
+			map->Add(key, *jio.map);
+		else
+			map->Add(key, jio.tgt);
+	}
+	return *this;
+}
+
+template <class T>
+JsonIO& JsonIO::operator()(const char *key, T& value, const T& defvalue)
+{
+	if(IsLoading()) {
+		const Value& v = (*src)[key];
+		if(v.IsVoid())
+			value = defvalue;
+		else {
 			JsonIO jio(v);
 			Jsonize(jio, value);
 		}
