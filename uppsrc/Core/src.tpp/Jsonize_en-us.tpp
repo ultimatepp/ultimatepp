@@ -1,5 +1,4 @@
 topic "JsonIO and Jsonize framework";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "JsonIO and Jsonize framework";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 JsonIO and Jsonize framework]]}}&]
 [s3; &]
@@ -58,7 +58,18 @@ har]_`*[*@3 key], [*@4 T][@(0.0.255) `&]_[*@3 value])&]
 [s2;%% Sets the JsonIO to represent JSON object (if it does not already), 
 creates member [%-*@3 key] and jsonizes [%-*@3 value] into it (by 
 calling global Jsonize function, whose general form invokes Jsonize 
-method)..&]
+method).&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:JsonIO`:`:operator`(`)`(const char`*`,T`&`,const T`&`): [@(0.0.255) templat
+e]_<[@(0.0.255) class]_[*@4 T]>_[_^Upp`:`:JsonIO^ JsonIO][@(0.0.255) `&]_[* operator()]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 key], [*@4 T][@(0.0.255) `&]_[*@3 value], 
+[@(0.0.255) const]_[*@4 T][@(0.0.255) `&]_[*@3 defvalue])&]
+[s2;%% Sets the JsonIO to represent JSON object (if it does not already), 
+creates member [%-*@3 key] and jsonizes [%-*@3 value] into it (by 
+calling global Jsonize function, whose general form invokes Jsonize 
+method). When loading and [%-*@3 key] is missing in source data, 
+[%-*@3 defvalue] is assigned to [%-*@3 value].&]
 [s3;%% &]
 [s4;%% &]
 [s5;:JsonIO`:`:JsonIO`(const Value`&`): [* JsonIO]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
