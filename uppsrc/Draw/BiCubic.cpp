@@ -16,7 +16,7 @@ double BicubicKernel(double x)
 		r += 6 * x * x * x;
 	if(xm1 > 0)
 		r -= 4 * xm1 * xm1 * xm1;
-	return 1 / 6.0 * r;
+	return 0.16666666666666666 * r;
 }
 
 Image RescaleBicubic(const Image& img, Size sz, const Rect& sr, Gate<int, int> progress)
@@ -49,7 +49,7 @@ Image RescaleBicubic(const Image& img, Size sz, const Rect& sr, Gate<int, int> p
 					blue  += weight * s.b;
 					alpha += weight * s.a;
 				}
-    		}
+			}
 			t->r = (int)fround(red);
 			t->g = (int)fround(green);
 			t->b = (int)fround(blue);
