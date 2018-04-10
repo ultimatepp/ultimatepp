@@ -8373,6 +8373,9 @@ void GridCtrl::UpdateHighlighting(int mode, Point p)
 		return;
 
 	bool refresh = false;
+	
+	if(hcol >= hitems.GetCount())
+		hcol = -1;
 
 	if(mode == GS_UP)
 	{
