@@ -102,6 +102,24 @@ int sChrf(int c)
 
 StaticMutex sM;
 
+ArrayMap<String, Array<SchColumnInfo>> GetSchAll()
+{
+	ArrayMap<String, Array<SchColumnInfo>> r;
+	Mutex::Lock __(sM);
+	for(int i = 0; i < sSchTableInfo().GetCount(); i++)
+		if(sSchTableInfo()[i].is_table) {
+			Array<SchColumnInfo>& cf = r.Add(sSchTableInfo().GetKey(i));
+			const SchTableInfo& h = sSchTableInfo()[i];
+			for(int j = 0; j < h.column.GetCount(); j++) {
+				SchColumnInfo& f = cf.Add();
+				f.name = h.column[j];
+				f.references = h.ref_table[j];
+				f.foreign_key = Nvl(h.ref_column[j], f.name);
+			}
+		}
+	return r;
+}
+
 Vector<String> GetSchTables()
 {
 	Mutex::Lock __(sM);
@@ -115,7 +133,7 @@ Vector<String> GetSchTables()
 Vector<String> GetSchColumns(const String& table)
 {
 	Mutex::Lock __(sM);
-	return Vector<String>(GetSchTableInfo(table).column, 0);
+	return clone(GetSchTableInfo(table).column);
 }
 
 SqlBool FindSchJoin(const String& tables)

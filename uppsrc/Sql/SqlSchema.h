@@ -120,8 +120,16 @@ void SchDbInfoReferences(const char *table, const char *column);
 
 SqlBool FindSchJoin(const String& tables);
 
-Vector<String>  GetSchTables();
-Vector<String>  GetSchColumns(const String& table);
+Vector<String>   GetSchTables();
+Vector<String>   GetSchColumns(const String& table);
+
+struct SchColumnInfo {
+	String name;
+	String references;
+	String foreign_key;
+};
+
+ArrayMap< String, Array<SchColumnInfo> > GetSchAll();
 
 String ExportSch(SqlSession& session, const String& database);
 String ExportIds(SqlSession& session, const String& database);
