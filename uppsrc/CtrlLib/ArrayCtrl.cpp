@@ -1423,9 +1423,9 @@ bool ArrayCtrl::SetCursor0(int i, bool dosel) {
 		sel = true;
 	}
 	if(dosel && multiselect) {
-		ClearSelection();
+		ClearSelection(false);
 		anchor = cursor;
-		Select(cursor);
+		Select(cursor, true, false);
 		sel = true;
 	}
 	if(sel)
@@ -1489,13 +1489,15 @@ int ArrayCtrl::GetSelectCount() const
 	return selectcount;
 }
 
-void ArrayCtrl::Select(int i, bool sel)
+void ArrayCtrl::Select(int i, bool sel, bool raise)
 {
 	array.At(i).select = sel;
 	selectiondirty = true;
 	RefreshRow(i);
-	WhenSelection();
-	WhenSel();
+	if(raise) {
+		WhenSelection();
+		WhenSel();
+	}
 	SyncInfo();
 }
 
@@ -1541,7 +1543,7 @@ void ArrayCtrl::Select(int i, int count, bool sel)
 	SyncInfo();
 }
 
-void ArrayCtrl::ClearSelection()
+void ArrayCtrl::ClearSelection(bool raise)
 {
 	if(IsSelection()) {
 		for(int i = 0; i < array.GetCount(); i++)
@@ -1551,8 +1553,10 @@ void ArrayCtrl::ClearSelection()
 			}
 		selectiondirty = false;
 		selectcount = 0;
-		WhenSelection();
-		WhenSel();
+		if(raise) {
+			WhenSelection();
+			WhenSel();
+		}
 		SyncInfo();
 	}
 }
@@ -1650,16 +1654,16 @@ void ArrayCtrl::ClickSel(dword flags)
 {
 	if(cursor >= 0 && multiselect) {
 		if(flags & K_CTRL) {
-			Select(cursor, !IsSelected(cursor));
+			Select(cursor, !IsSelected(cursor), false);
 			anchor = cursor;
 		}
 		else {
-			ClearSelection();
+			ClearSelection(false);
 			if((flags & K_SHIFT) && anchor >= 0)
 				Select(min(anchor, cursor), abs(anchor - cursor) + 1, true);
 			else {
 				anchor = cursor;
-				Select(cursor, true);
+				Select(cursor, true, false);
 			}
 		}
 		Action();
