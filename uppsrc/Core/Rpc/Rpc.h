@@ -50,7 +50,7 @@ void ValueGet(Array<T>& x, const Value& v)
 	ValueArray va = v;
 	x.SetCount(va.GetCount());
 	for(int i = 0; i < va.GetCount(); i++)
-		ValueGet(x[i], va[i]);	
+		ValueGet(x[i], va[i]);
 }
 
 template <class T>
@@ -60,7 +60,7 @@ void ValueGet(Vector<T>& x, const Value& v)
 	ValueArray va = v;
 	x.SetCount(va.GetCount());
 	for(int i = 0; i < va.GetCount(); i++)
-		ValueGet(x[i], va[i]);	
+		ValueGet(x[i], va[i]);
 }
 
 template <class T>
@@ -72,7 +72,7 @@ void ValueGet(ArrayMap<String, T>& x, const Value& v)
 	ValueArray va = vm.GetValues();
 	x.Clear();
 	for(int i = 0; i < k.GetCount(); i++)
-		x.Add(k[i], va[i]);
+		ValueGet(x.Add(k[i]), va[i]);
 }
 
 template <class T>
@@ -84,7 +84,7 @@ void ValueGet(VectorMap<String, T>& x, const Value& v)
 	ValueArray va = vm.GetValues();
 	x.Clear();
 	for(int i = 0; i < k.GetCount(); i++)
-		x.Add(k[i], va[i]);
+		ValueGet(x.Add(k[i]), va[i]);
 }
 
 template <class T>
@@ -96,7 +96,7 @@ void ValueGet(ArrayMap<int, T>& x, const Value& v)
 	ValueArray va = vm.GetValues();
 	x.Clear();
 	for(int i = 0; i < k.GetCount(); i++)
-		x.Add(atoi(AsString(k[i])), va[i]);
+		ValueGet(x.Add(atoi(AsString(k[i]))), va[i]);
 }
 
 template <class T>
@@ -108,7 +108,7 @@ void ValueGet(VectorMap<int, T>& x, const Value& v)
 	ValueArray va = vm.GetValues();
 	x.Clear();
 	for(int i = 0; i < k.GetCount(); i++)
-		x.Add(atoi(AsString(k[i])), va[i]);
+		ValueGet(x.Add(atoi(AsString(k[i]))), va[i]);
 }
 
 void ValuePut(Value& v, int n);
