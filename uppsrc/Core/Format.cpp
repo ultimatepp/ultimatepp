@@ -92,14 +92,12 @@ String FormatIntAlpha(int i, bool upper)
 		out << '-';
 		i = -i;
 	}
-	char temp[10], *p = temp;
-	i--;
-	char start = (upper ? 'A' : 'a');
+	char temp[10], *p = temp + 10;
+	const char *itoc = upper ? "ZABCDEFGHIJKLMNOPQRSTUVWXYZ" : "zabcdefghijklmnopqrstuvwxyz";
 	do
-		*p++ = start + (i % 26);
+		*--p = itoc[i-- % 26];
 	while(i /= 26);
-	while(p > temp)
-		out << *--p;
+	out.Cat(p, temp + 10);
 	return out;
 }
 
