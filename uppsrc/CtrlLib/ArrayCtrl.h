@@ -452,10 +452,10 @@ public:
 
 	int        GetSelectCount() const;
 	bool       IsSelection() const                              { return GetSelectCount(); }
-	void       Select(int i, bool sel = true);
+	void       Select(int i, bool sel = true, bool raise = true);
 	void       Select(int i, int count, bool sel = true);
 	bool       IsSelected(int i) const                          { return i < array.GetCount() && array[i].select; }
-	void       ClearSelection();
+	void       ClearSelection(bool raise = true);
 	bool       IsSel(int i) const;
 	Vector<int> GetSelKeys() const;
 
