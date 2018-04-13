@@ -646,7 +646,8 @@ class SortedVectorMap : public SortedAMap<K, T, Less, Slaved_InVector__<T> >,
     
 public:
 	T&       Add(const K& k)                        { B::key.Add(k); return *B::value.res; }
-	T&       Add(const K& k, const T& x)            { B::key.Add(k); *B::value.res = x; return *B::value.res; }
+	T&       Add(const K& k, const T& x)            { B::key.Add(k); *B::value.res = clone(x); return *B::value.res; }
+	T&       Add(const K& k, T&& x)                 { B::key.Add(k); *B::value.res = pick(x); return *B::value.res; }
 
 	int      FindAdd(const K& k)                    { return B::key.FindAdd(k); }
 	int      FindAdd(const K& k, const T& init);
@@ -724,6 +725,7 @@ class SortedArrayMap : public MoveableAndDeepCopyOption<SortedArrayMap<K, T, Les
 
 public:
 	T&       Add(const K& k, const T& x)          { B::value.res = new T(clone(x)); B::key.Add(k); return *(T*)B::value.res; }
+	T&       Add(const K& k, T&& x)               { B::value.res = new T(pick(x)); B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k)                      { B::value.res = NULL; B::key.Add(k); return *(T*)B::value.res; }
 	T&       Add(const K& k, T *newt)             { B::value.res = newt; B::key.Add(k); return *newt; }
 	template <class TT, class... Args>
