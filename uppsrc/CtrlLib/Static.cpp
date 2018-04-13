@@ -2,6 +2,29 @@
 
 namespace Upp {
 
+void StaticText::SetData(const Value& v)
+{
+	SetText(~v);
+}
+
+Value StaticText::GetData() const
+{
+	return GetText();
+}
+
+void StaticText::Serialize(Stream& s)
+{
+	GuiLock __;
+	Value x;
+	s % x;
+	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext())
+		q->Serialize(s);
+}
+
+void StaticText::Jsonize(JsonIO& jio) {}
+
+void StaticText::Xmlize(XmlIO& xio) {}
+
 void StaticText::Paint(Draw& w)
 {
 	Size sz = GetSize();
