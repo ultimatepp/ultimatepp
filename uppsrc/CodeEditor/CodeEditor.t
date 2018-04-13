@@ -17,7 +17,15 @@ T_("Read only background")
 
 T_("Comment text")
 
-T_("String constant text")
+T_("FIXME/TODO text in comment")
+
+T_("FIXME/TODO paper in comment")
+
+T_("String literal")
+
+T_("Format field")
+
+T_("Raw string literal")
 
 T_("Operator text")
 
@@ -45,8 +53,6 @@ T_("Hexadecimal constant")
 
 T_("Octal constant")
 
-T_("Format field")
-
 T_("Cursor bracket")
 
 T_("Matching bracket")
@@ -61,7 +67,7 @@ T_("Block level 4")
 
 T_("#preprocesor text")
 
-T_("#define background")
+T_("#define/#undef/#pragma background")
 
 T_("#if/#else/#endif background")
 
@@ -79,11 +85,27 @@ T_("U++ macros")
 
 T_("U++ log macros")
 
-T_("Selected word through file")
+T_("Diff file information")
+
+T_("Diff header line")
+
+T_("Diff added line")
+
+T_("Diff removed line")
+
+T_("Diff comment")
+
+T_("Found/selected matches")
 
 T_("Error in compiler messages")
 
 T_("Warning in compiler messages")
+
+T_("Current line highlight")
+
+T_("Whitespaces")
+
+T_("Misplaced tabs and spaces")
 
 
 // FindReplace.cpp
@@ -118,6 +140,8 @@ T_("Matched number")
 
 T_("Matched any character")
 
+T_("Matched wildcard %d")
+
 T_("0-based replace index")
 
 T_("1-based replace index")
@@ -140,23 +164,25 @@ T_("Set word/selection (Ctrl+I)")
 
 // CodeEditor.lay
 
-T_("&Find")
-
-T_("&Replace")
+T_("&Whole word")
 
 T_("Wild&cards")
-
-T_("&Whole word")
 
 T_("&Ignore case")
 
 T_("RegExp")
 
-T_("&Incremental")
+T_("Incremental")
 
-T_("from cursor")
+T_("From cursor")
+
+T_("All")
+
+T_("Rest")
 
 T_("Mimic case")
+
+T_("Replace\nRemove lines without pattern\nRemove line with pattern")
 
 T_("Find")
 
@@ -165,3 +191,20 @@ T_("Replace")
 T_("RegEx")
 
 T_("Cancel")
+
+
+// Obsolete
+
+T_("String constant text")
+
+T_("#define background")
+
+T_("Selected word through file")
+
+T_("&Find")
+
+T_("&Replace")
+
+T_("&Incremental")
+
+T_("from cursor")
