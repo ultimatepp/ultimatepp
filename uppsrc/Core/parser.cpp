@@ -32,6 +32,8 @@ CParser& CParser::NestComments(bool b)
 
 bool CParser::Spaces0() {
 	LTIMING("Spaces");
+	if(!term)
+		return false;
 	if((byte)*term > ' ' &&
 	   !(term[0] == '/' && term[1] == '/') &&
 	   !(term[0] == '/' && term[1] == '*'))
