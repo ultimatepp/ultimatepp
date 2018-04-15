@@ -65,9 +65,12 @@ struct ImageGLDataMaker : LRUCache<ImageGLData, Tuple2<uint64, uint64> >::Maker 
 	virtual int                     Make(ImageGLData& object) const  { object.Init(img); return img.GetLength(); }
 };
 
+int max_texture_memory = 4 * 1024 * 768;
+int max_texture_count = 1000;
+
 GLuint GetTextureForImage(const Image& img, uint64 context)
 {
-	sTextureCache.Shrink(4 * 1024 * 768, 1000);
+	sTextureCache.Shrink(max_texture_memory, max_texture_count);
 	ImageGLDataMaker m;
 	m.img = img;
 	m.context = context;
