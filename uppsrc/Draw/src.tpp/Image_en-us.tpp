@@ -1,5 +1,4 @@
 topic "Image and ImageBuffer";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Image and ImageBuffer";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Image]]}}&]
 [s3; &]
@@ -310,6 +310,12 @@ mage][@(0.0.255) `&]_[*@3 dest], [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.
 ]_[*@3 dest], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]_[*@3 rect], 
 [_^RGBA^ RGBA]_[*@3 color])&]
 [s2;%% Fills rectangular are [%-*@3 rect] with [%-*@3 color].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Copy`(const Upp`:`:Image`&`,const Upp`:`:Rect`&`): [_^Upp`:`:Image^ Image]_
+[* Copy]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 src], 
+[@(0.0.255) const]_[_^Upp`:`:Rect^ Rect][@(0.0.255) `&]_[*@3 srect])&]
+[s2;%% Returns [%-*@3 srect] area of [%-*@3 src].&]
 [s3;%% &]
 [s4; &]
 [s5;:OverStraightOpaque`(ImageBuffer`&`,Point`,const Image`&`,const Rect`&`): [@(0.0.255) v
