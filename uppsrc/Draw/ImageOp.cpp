@@ -75,6 +75,13 @@ Image GetOver(const Image& dest, const Image& src)
 	return r;
 }
 
+Image Copy(const Image& src, const Rect& srect)
+{
+	ImageBuffer ib(srect.GetSize());
+	Copy(ib, Point(0, 0), src, srect);
+	return ib;
+}
+
 void Fill(ImageBuffer& dest, const Rect& rect, RGBA color)
 {
 	Rect r = dest.GetSize() & rect;

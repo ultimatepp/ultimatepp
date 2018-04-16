@@ -15,6 +15,8 @@ void  Over(Image& dest, Point p, const Image& src, const Rect& srect);
 Image GetOver(const Image& dest, const Image& src);
 void  Fill(Image& dest, const Rect& rect, RGBA color);
 
+Image Copy(const Image& src, const Rect& srect);
+
 void  OverStraightOpaque(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void  OverStraightOpaque(Image& dest, Point p, const Image& _src, const Rect& srect);
 
