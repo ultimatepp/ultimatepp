@@ -136,8 +136,10 @@ void IconDes::Rotate()
 		c.paste_image = RotateClockwise(c.paste_image);
 		MakePaste();
 	}
-	else
+	else {
 		c.image = RotateClockwise(c.image);
+		SetSelect(255);
+	}
 	SyncShow();
 }
 

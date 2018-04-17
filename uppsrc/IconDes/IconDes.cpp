@@ -43,13 +43,6 @@ void IconDes::SyncShow()
 	if(IsCurrent()) {
 		Slot& c = Current();
 		Image image = c.image;
-/*		if(c.supersampling) {
-			int l = c.image.GetLength();
-			if(l > 0 && l <= 256 * 256)
-				image = DownSample3x(image);
-			else
-				image = IconDesImg::LargeImage();
-		}*/
 		iconshow.image = image;
 		iconshow.show_small = show_small;
 		ilist.Set(2, image);
