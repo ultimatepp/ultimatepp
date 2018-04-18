@@ -4,12 +4,6 @@ public:
 	virtual Size   GetMinSize() const;
 	virtual void   LabelUpdate();
 
-	virtual void   SetData(const Value& v);
-	virtual Value  GetData() const;
-	virtual void   Serialize(Stream& s);
-	virtual void   Jsonize(JsonIO& jio);
-	virtual void   Xmlize(XmlIO& xio);
-
 public:
 	StaticText& SetFont(Font font)                      { LabelBase::SetFont(font); return *this; }
 	StaticText& SetInk(Color color)                     { LabelBase::SetInk(color); return *this; }
