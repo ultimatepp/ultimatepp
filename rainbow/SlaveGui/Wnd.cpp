@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SDL20GL
+#ifdef GUI_SLAVE
 
 NAMESPACE_UPP
 
@@ -61,9 +61,12 @@ void Ctrl::ExitFB()
 	TopWindow::ShutdownWindows();
 	Ctrl::CloseTopCtrls();
 	if(fbEndSession) {
+		SlaveGuiPtr->Quit();
+	#if 0
 		SDL_Event event;
 		event.type = SDL_QUIT;
 		SDL_PushEvent(&event);
+	#endif
 	}
 }
 
@@ -156,9 +159,12 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 bool Ctrl::IsWaitingEvent()
 {
+	return SlaveGuiPtr->IsWaitingEvent();
+#if 0
 	SDL_PumpEvents();
 	SDL_Event events;
 	return SDL_PeepEvents(&events, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT) > 0;
+#endif
 }
 
 void Ctrl::SyncTopWindows()

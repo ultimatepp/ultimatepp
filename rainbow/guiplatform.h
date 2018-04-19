@@ -47,6 +47,12 @@
 #define GUIPLATFORM_INCLUDE          <SDL20GL/SDL20GL.h>
 #endif
 
+#ifdef flagSLAVEGUI
+#define GUIPLATFORM_KEYCODES_INCLUDE <SlaveGui/Keys.h>
+//need to make SDL_keysym.h known before K_ enum
+#define GUIPLATFORM_INCLUDE          <SlaveGui/SlaveGui.h>
+#endif
+
 #ifdef flagTELPP
 #define GUIPLATFORM_KEYCODES_INCLUDE <Telpp/Keys.h>
 //need to make SDL_keysym.h known before K_ enum

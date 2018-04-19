@@ -1,0 +1,14 @@
+uses
+	CtrlLib,
+	RichEdit,
+	plugin/DroidFonts,
+	SlaveGui;
+
+file
+	main.cpp,
+	test.qtf,
+	help.txt;
+
+mainconfig
+	"" = "GUI SLAVEGUI";
+
