@@ -120,7 +120,7 @@ Rect TopWindowFrame::ComputeClient(Rect r)
 
 void TopWindowFrame::SetClient(Rect r)
 {
-	SetRect(ComputeClient(r));	
+	SetRect(ComputeClient(r));
 }
 
 Point TopWindowFrame::GetDragMode(Point p)
