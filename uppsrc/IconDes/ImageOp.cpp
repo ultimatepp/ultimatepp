@@ -25,6 +25,8 @@ force_inline
 bool sFloodFill::Eq(int x, int y)
 {
 	const RGBA& q = At(x, y);
+	if(tolerance < 0 && q.a)
+		return q.a != scolor.a || q.r != scolor.r || q.g != scolor.g || q.b != scolor.b;
 	if((q.a | scolor.a) == 0) return true;
 	return abs(q.a - scolor.a) <= tolerance && abs(q.r - scolor.r) + abs(q.g - scolor.g) + abs(q.b - scolor.b) <= tolerance;
 }
@@ -44,8 +46,8 @@ void sFloodFill::Fill(RGBA _color, Point pt, const Rect& _rc, int tolerance_)
 	rc = _rc & ib.GetSize();
 	if(!rc.Contains(pt))
 		return;
-	scolor = ib[pt.y][pt.x];
-	color = _color;
+	scolor = tolerance < 0 ? _color : ib[pt.y][pt.x];
+	color = tolerance < 0 ? RGBAZero() : _color;
 	sz = rc.GetSize();
 	flag.Alloc(sz.cx * sz.cy, 0);
 	pt -= rc.TopLeft();

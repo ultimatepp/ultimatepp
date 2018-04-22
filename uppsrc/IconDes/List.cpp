@@ -331,6 +331,7 @@ void IconDes::EditImageSize()
 			return;
 		case IDOK:
 			Reset();
+			SyncList();
 			return;
 		}
 		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
@@ -376,6 +377,7 @@ void IconDes::EditImage()
 			GoTo(q);
 			return;
 		}
+		int r = c.image.GetResolution();
 		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
 		UPP::Copy(c.image, Point(0, 0), img, img.GetSize());
 		Reset();

@@ -128,6 +128,7 @@ Image RescaleFilter(const Image& img, Size sz, const Rect& sr,
 			t++;
 		}
 	}
+	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -159,7 +160,7 @@ static double sBiCubic_(double x, double B, double C)
 	return
 		1 / 6.0 * (x < 1 ? (12 - 9*B - 6*C) * x3 + (-18 + 12*B + 6*C) * x2 + (6 - 2*B) :
 		           x < 2 ? (-B - 6*C) * x3 + (6*B + 30*C) * x2 + (-12*B - 48*C) *x + (8*B + 24*C) :
-	    	       0);
+	               0);
 }
 
 static double sBspline(double x)

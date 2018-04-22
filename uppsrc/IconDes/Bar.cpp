@@ -203,6 +203,8 @@ void IconDes::MainToolBar(Bar& bar)
 	SelectBar(bar);
 	bar.Separator();
 	ImageBar(bar);
+	bar.Separator();
+	bar.Add(status, INT_MAX, GetStdFontCy());
 	bar.Break();
 	DrawBar(bar);
 	ToolEx(bar);
@@ -277,6 +279,16 @@ void IconDes::SerializeSettings(Stream& s)
 		s % paste_opaque % show_small;
 }
 
+void IconDes::SyncStatus()
+{
+	Point p = GetPos(GetMousePos() - GetScreenView().TopLeft());
+	Size sz = Current().image.GetSize();
+	String s;
+	if(Rect(sz).Contains(p))
+		s << "x: " << p.x << ':' << sz.cx - p.x - 1 << ", y: " << p.y << ':' << sz.cy - p.y - 1;
+	status.SetLabel(s);
+}
+
 IconDes::IconDes()
 {
 	sb.WhenScroll = THISBACK(Scroll);
@@ -331,6 +343,9 @@ IconDes::IconDes()
 	pen = 1;
 	
 	single_mode = false;
+
+	status.Width(200);
+	status.NoTransparent();
 }
 
 }
