@@ -121,8 +121,14 @@ void IconDes::MakePaste()
 		return;
 	Slot& c = Current();
 	c.image = c.base_image;
-	if(paste_opaque)
+	if(paste_mode == PASTE_OPAQUE)
 		UPP::Copy(c.image, c.pastepos, c.paste_image, c.paste_image.GetSize());
+	else
+	if(paste_mode == PASTE_BACK) {
+		Image h = c.image;
+		UPP::Copy(c.image, c.pastepos, c.paste_image, c.paste_image.GetSize());
+		UPP::Over(c.image, c.pastepos, h, c.paste_image.GetSize());
+	}
 	else
 		UPP::Over(c.image, c.pastepos, Premultiply(c.paste_image), c.paste_image.GetSize());
 	MaskSelection();
@@ -196,6 +202,40 @@ void IconDes::FreehandTool(Point p, dword flags)
 	startpoint = p;
 }
 
+void IconDes::DoFill(int tolerance)
+{
+	ImageBuffer ib(CurrentImage());
+	if(!doselection) {
+		RGBA c = CurrentColor();
+		c.r += 127;
+		MaskFill(ib, c, 0);
+	}
+	FloodFill(ib, CurrentColor(), startpoint, ib.GetSize(), tolerance);
+	SetCurrentImage(ib);
+	if(!doselection)
+		MaskSelection();
+}
+
+void IconDes::FillTool(Point p, dword flags)
+{
+	DoFill(0);
+}
+
+void IconDes::Fill2Tool(Point p, dword flags)
+{
+	DoFill(20);
+}
+
+void IconDes::Fill3Tool(Point p, dword flags)
+{
+	DoFill(40);
+}
+
+void IconDes::AntiFillTool(Point p, dword flags)
+{
+	DoFill(-1);
+}
+
 void IconDes::HotSpotTool(Point p, dword f)
 {
 	if(p != Current().image.GetHotSpot()) {
@@ -233,7 +273,9 @@ void IconDes::ColorChanged()
 	fill_cursor = MakeIconDesCursor(IconDesImg::Fill(), IconDesImg::FillColor());
 	fill_cursor2 = MakeIconDesCursor(IconDesImg::Fill2(), IconDesImg::FillColor());
 	fill_cursor3 = MakeIconDesCursor(IconDesImg::Fill3(), IconDesImg::FillColor());
+	antifill_cursor = MakeIconDesCursor(IconDesImg::Fill(), IconDesImg::AntiFill());
 	PasteText();
+	SetBar();
 }
 
 void IconDes::SetTool(void (IconDes::*_tool)(Point p, dword flags))
@@ -311,13 +353,6 @@ Image IconDes::Copy(const Rect& r)
 void IconDes::Delete()
 {
 	SetColor0(RGBAZero());
-}
-
-void IconDes::TogglePaste()
-{
-	paste_opaque = !paste_opaque;
-	MakePaste();
-	SetBar();
 }
 
 void IconDes::SetSelect(int a)
