@@ -154,6 +154,10 @@ private:
 
 		Slot();
 	};
+	
+	enum {
+		PASTE_TRANSPARENT, PASTE_OPAQUE, PASTE_BACK
+	};
 
 	Array<Slot>  slot;
 	Slot         dummy;
@@ -165,7 +169,7 @@ private:
 	void        (IconDes::*tool)(Point p, dword flags);
 	bool         doselection;
 	bool         selectrect;
-	bool         paste_opaque;
+	int          paste_mode;
 	bool         show_small;
 
 	ScrollBars   sb;
@@ -182,7 +186,7 @@ private:
 	RGBACtrl       rgbactrl;
 	IconShow       iconshow;
 	Image          cursor_image;
-	Image          fill_cursor, fill_cursor2, fill_cursor3;
+	Image          fill_cursor, fill_cursor2, fill_cursor3, antifill_cursor;
 	bool           single_mode;
 	ParentCtrl     single;
 	Label          info;
@@ -217,6 +221,12 @@ private:
 	void  EmptyRectTool(Point p, dword f);
 
 	void  HotSpotTool(Point p, dword f);
+
+	void  DoFill(int tolerance);
+	void  FillTool(Point p, dword flags);
+	void  Fill2Tool(Point p, dword flags);
+	void  Fill3Tool(Point p, dword flags);
+	void  AntiFillTool(Point p, dword flags);
 
 	void  Text();
 	void  PasteText();
@@ -273,8 +283,6 @@ private:
 	void  SetMagnify(int mag);
 	void  ZoomIn();
 	void  ZoomOut();
-
-	void  TogglePaste();
 
 	void  SetPen(int pen);
 

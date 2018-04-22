@@ -106,10 +106,12 @@ void IconDes::SettingBar(Bar& bar)
 		.Enable(magnify > 1);
 	bar.Add(c, AK_ZOOM_OUT,  IconDesImg::ZoomPlus(), THISBACK(ZoomIn))
 		.Enable(magnify < 27);
-	bar.Add(AK_PASTE_MODE,
-	        paste_opaque ? IconDesImg::PasteOpaque()
-	                     : IconDesImg::PasteTransparent(),
-	        THISBACK(TogglePaste));
+	bar.Add(AK_PASTE_MODE, IconDesImg::PasteOpaque(),
+	        [=] { paste_mode = paste_mode == PASTE_OPAQUE ? PASTE_TRANSPARENT : PASTE_OPAQUE; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_OPAQUE);
+	bar.Add(AK_PASTE_BACK, IconDesImg::PasteBack(),
+	        [=] { paste_mode = paste_mode == PASTE_BACK ? PASTE_TRANSPARENT : PASTE_BACK; MakePaste(); SetBar(); })
+	   .Check(paste_mode == PASTE_BACK);
 }
 
 void IconDes::SelectBar(Bar& bar)
@@ -169,6 +171,18 @@ void IconDes::DrawBar(Bar& bar)
 	   .Check(tool == &IconDes::HotSpotTool);
 	bar.Add(AK_TEXT, IconDesImg::Text(), THISBACK(Text))
 	   .Check(textdlg.IsOpen());
+	bar.Add("Fill", fill_cursor, [=] { SetTool(&IconDes::FillTool); })
+	   .Check(tool == &IconDes::FillTool && notpasting)
+	   .Tip("Fill (Shift+Click)");
+	bar.Add("Fill with small tolerance", fill_cursor2, [=] { SetTool(&IconDes::Fill2Tool); })
+	   .Check(tool == &IconDes::Fill2Tool && notpasting)
+	   .Tip("Fill with small tolerance (Ctrl+Click)");
+	bar.Add("Fill with large tolerance", fill_cursor3, [=] { SetTool(&IconDes::Fill3Tool); })
+	   .Check(tool == &IconDes::Fill3Tool && notpasting)
+	   .Tip("Fill with large tolerance (Alt+Click)");
+	bar.Add("Antifill", antifill_cursor, [=] { SetTool(&IconDes::AntiFillTool); })
+	   .Check(tool == &IconDes::AntiFillTool && notpasting)
+	   .Tip("Antifill (Shift+Ctrl+Click)");
 	bar.Separator();
 	for(int i = 1; i <= 6; i++)
 		bar.Add("Pen " + AsString(i), IconDesImg::Get(IconDesImg::I_Pen1 + i - 1), THISBACK1(SetPen, i))
@@ -257,7 +271,7 @@ void IconDes::SerializeSettings(Stream& s)
 		&IconDes::HotSpotTool,
 	};
 
-	int version = 3;
+	int version = 4;
 	s / version;
 	s / magnify;
 	s % leftpane % bottompane;
@@ -275,8 +289,12 @@ void IconDes::SerializeSettings(Stream& s)
 	SetBar();
 	if(version >= 2)
 		s % ImgFile();
-	if(version >= 3)
-		s % paste_opaque % show_small;
+	if(version >= 3) {
+		bool b;
+		s % b % show_small;
+	}
+	if(version >= 4)
+		s % paste_mode;
 }
 
 void IconDes::SyncStatus()
@@ -293,7 +311,7 @@ IconDes::IconDes()
 {
 	sb.WhenScroll = THISBACK(Scroll);
 
-	paste_opaque = false;
+	paste_mode = PASTE_TRANSPARENT;
 	show_small = false;
 	doselection = false;
 
