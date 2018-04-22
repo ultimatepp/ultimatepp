@@ -317,8 +317,8 @@ private:
 	KeyMaster          km;
 	Splitter           lsplit, isplit, rsplit;
 	FrameTop<Splitter> twsplit;
-	ScrollBars        sb;
-	FrameRight<Label> status;
+	ScrollBars         sb;
+	FrameRight<Label>  status;
 
 	Array<LayoutData> layout;
 	int               currentlayout;

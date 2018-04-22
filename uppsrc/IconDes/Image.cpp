@@ -153,6 +153,7 @@ void IconDes::SmoothRescale()
 	Slot& c = Current();
 	BeginTransform();
 	Image bk = IsPasting() ? c.paste_image : c.image;
+	int r = c.paste_image.GetResolution();
 	dlg.cx <<= bk.GetWidth();
 	dlg.cy <<= bk.GetHeight();
 	dlg.keep <<= true;
@@ -170,6 +171,7 @@ void IconDes::SmoothRescale()
 	for(;;) {
 		Size sz(minmax((int)~dlg.cx, 1, 9999), minmax((int)~dlg.cy, 1, 9999));
 		Image m = RescaleFilter(bk, sz, ~dlg.method);
+		SetRes(m, bk.GetResolution());
 		if(IsPasting()) {
 			c.paste_image = m;
 			MakePaste();
@@ -194,6 +196,7 @@ void IconDes::SmoothRescale()
 			SyncShow();
 			return;
 		case IDOK:
+			SyncList();
 			return;
 		}
 		if(dlg.keep) {

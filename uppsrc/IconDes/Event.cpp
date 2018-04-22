@@ -20,8 +20,8 @@ void IconDes::LeftDown(Point p, dword flags)
 	}
 	SetCapture();
 	Current().base_image = CurrentImage();
-	int fill = flags & K_SHIFT ? 0 : flags & K_CTRL ? 20 : flags & K_ALT ? 40 : -1;
-	if(fill >= 0) {
+	int fill = (flags & (K_SHIFT|K_CTRL)) == (K_SHIFT|K_CTRL) ? -1 : flags & K_SHIFT ? 0 : flags & K_CTRL ? 20 : flags & K_ALT ? 40 : Null;
+	if(!IsNull(fill)) {
 		ImageBuffer ib(CurrentImage());
 		if(!doselection) {
 			RGBA c = CurrentColor();
@@ -43,6 +43,7 @@ void IconDes::LeftDown(Point p, dword flags)
 
 void IconDes::MouseMove(Point p, dword keyflags)
 {
+	SyncStatus();
 	if(!HasCapture() || !IsCurrent())
 		return;
 	p = GetPos(p);

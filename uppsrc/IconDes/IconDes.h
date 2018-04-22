@@ -132,6 +132,8 @@ public:
 	virtual void  Paint(Draw& w);
 	virtual void  LeftDown(Point p, dword keyflags);
 	virtual void  MouseMove(Point p, dword keyflags);
+	virtual void  MouseEnter()                             { SyncStatus(); }
+	virtual void  MouseLeave()                             { SyncStatus(); }
 	virtual void  LeftUp(Point p, dword keyflags);
 	virtual void  MouseWheel(Point p, int zdelta, dword keyflags);
 	virtual void  RightDown(Point p, dword keyflags);
@@ -187,6 +189,8 @@ private:
 	Button         resize;
 
 	Array<Slot>    removed;
+
+	FrameRight<Label> status;
 
 
 	struct TextDlg : WithIconDesTextLayout<TopWindow> {
@@ -378,6 +382,8 @@ public:
 	bool   FindName(const String& name);
 
 	String GetCurrentName() const;
+	
+	void    SyncStatus();
 
 	EditPos GetEditPos();
 	void    SetEditPos(const EditPos& o);
@@ -400,6 +406,8 @@ struct ImlImage {
 
 bool   LoadIml(const String& data, Array<ImlImage>& img, int& format);
 String SaveIml(const Array<ImlImage>& iml, int format);
+
+void SetRes(Image& m, int resolution);
 
 }
 
