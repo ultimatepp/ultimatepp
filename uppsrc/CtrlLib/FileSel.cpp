@@ -1631,6 +1631,7 @@ void FileSel::Set(const String& s)
 void FileSel::GoToPlace()
 {
 	if(places.IsCursor()) {
+		netnode.Clear();
 		dir <<= places.GetKey();
 		Load();
 	}
