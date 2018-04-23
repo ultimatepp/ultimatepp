@@ -29,6 +29,15 @@ void EnterGuiMutex(int n)
 	LLOG("EnterGuiMutex " << sGLockLevel << ' ' << IsMainThread());
 }
 
+bool TryEnterGuiMutex()
+{
+	if(sGLockLevel == 0 && sGLock.TryEnter()) {
+		sGLockLevel++;
+		return true;
+	}
+	return false;
+}
+
 void LeaveGuiMutex()
 {
 	LLOG(">LeaveGuiMutex " << sGLockLevel << ' ' << IsMainThread());

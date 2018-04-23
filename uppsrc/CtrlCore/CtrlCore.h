@@ -42,6 +42,7 @@ INITIALIZE(CtrlCore)
 
 #ifdef _MULTITHREADED
 void EnterGuiMutex();
+bool TryEnterGuiMutex();
 void LeaveGuiMutex();
 
 int  LeaveGuiMutexAll();
@@ -51,6 +52,7 @@ bool ThreadHasGuiLock();
 #else
 inline void EnterGuiMutex() {}
 inline void LeaveGuiMutex() {}
+inline bool TryEnterGuiMutex() { return true; }
 
 inline int  LeaveGuiMutexAll() { return 0; }
 inline void EnterGuiMutex(int) {}
