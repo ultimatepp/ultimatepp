@@ -14,8 +14,7 @@ public:
 */
 class DHCtrl : Ctrl {};
 
-void FBInit();
-void FBDeInit();
+#if 0
 
 #ifdef PLATFORM_WIN32
 #define GUI_APP_MAIN \
@@ -48,4 +47,6 @@ extern "C" int main(int argc, const char **argv, const char **envptr) { \
 } \
 \
 void GuiMainFn_()
+#endif
+
 #endif

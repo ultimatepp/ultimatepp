@@ -6,7 +6,6 @@ private:
 
 	static Point fbCursorPos;
 	static Image fbCursorImage;
-	static bool  sdlMouseIsIn;
 	
 	static Rect  fbCaretRect;
 	static int   fbCaretTm;
@@ -35,7 +34,6 @@ private:
 	static void DragRectDraw0(const Vector<Rect>& clip, const Rect& rect, int n,
 	                          const byte *pattern, int animation);
 
-	friend struct PaintProxy__;
 	friend class TopWindowFrame;
 	friend class SystemDraw;
 	friend struct DnDLoop;
@@ -52,6 +50,8 @@ public:
 	static void InitFB();
 	static void ExitFB();
 	static void EndSession();
+	
+	static void PaintAll()                     { DoPaint(); }
 
 	static void  SetDesktop(Ctrl& q);
 	static Ctrl *GetDesktop()                  { return desktop; }

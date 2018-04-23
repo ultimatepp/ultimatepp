@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SLAVE
+#ifdef VIRTUALGUI
 
 NAMESPACE_UPP
 
@@ -13,8 +13,6 @@ Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 
 bool           Ctrl::invalid;
-
-bool           Ctrl::sdlMouseIsIn;
 
 Point          Ctrl::fbCursorPos = Null;
 Image          Ctrl::fbCursorImage;
@@ -61,7 +59,7 @@ void Ctrl::ExitFB()
 	TopWindow::ShutdownWindows();
 	Ctrl::CloseTopCtrls();
 	if(fbEndSession) {
-		SlaveGuiPtr->Quit();
+		VirtualGuiPtr->Quit();
 	#if 0
 		SDL_Event event;
 		event.type = SDL_QUIT;
@@ -159,12 +157,7 @@ void Ctrl::UnregisterSystemHotKey(int id)
 
 bool Ctrl::IsWaitingEvent()
 {
-	return SlaveGuiPtr->IsWaitingEvent();
-#if 0
-	SDL_PumpEvents();
-	SDL_Event events;
-	return SDL_PeepEvents(&events, 1, SDL_PEEKEVENT, SDL_FIRSTEVENT, SDL_LASTEVENT) > 0;
-#endif
+	return VirtualGuiPtr->IsWaitingEvent();
 }
 
 void Ctrl::SyncTopWindows()
@@ -218,7 +211,6 @@ void Ctrl::PaintScene(SystemDraw& draw)
 		return;
 	LLOG("@ DoPaint");
 	LTIMING("DoPaint paint");
-	draw.Init(screen_size, (uint64)screen.glcontext);
 	draw.Begin();
 	Vector<Rect> invalid;
 	invalid.Add(screen_size);
@@ -243,7 +235,7 @@ void Ctrl::PaintCaretCursor(SystemDraw& draw)
 {
 	if(!IsNull(fbCaretRect))
 		draw.DrawRect(fbCaretRect, InvertColor);
-	if(sdlMouseIsIn && !SystemCursor)
+	if(VirtualGuiPtr->IsMouseIn() && !SystemCursor)
 		draw.DrawImage(fbCursorPos.x, fbCursorPos.y, fbCursorImage);
 }
 
@@ -252,11 +244,10 @@ void Ctrl::DoPaint()
 	if(!PaintLock) {
 		if(invalid && desktop) {
 			invalid = false;
-			SystemDraw draw;
+			SystemDraw& draw = VirtualGuiPtr->BeginDraw();
 			PaintScene(draw);
 			PaintCaretCursor(draw);
-			draw.Finish();
-			SDL_GL_SwapWindow(screen.win);
+			VirtualGuiPtr->CommitDraw();
 		}
 	}
 }

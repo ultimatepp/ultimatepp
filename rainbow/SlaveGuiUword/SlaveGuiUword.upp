@@ -2,7 +2,8 @@ uses
 	CtrlLib,
 	RichEdit,
 	plugin/DroidFonts,
-	SlaveGui;
+	VirtualGui,
+	SDL2GUI;
 
 file
 	main.cpp,
@@ -10,5 +11,5 @@ file
 	help.txt;
 
 mainconfig
-	"" = "GUI SLAVEGUI";
+	"" = "GUI VIRTUALGUI";
 
