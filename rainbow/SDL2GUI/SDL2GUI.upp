@@ -1,0 +1,7 @@
+file
+	SDL2GUI.h,
+	Window.cpp,
+	Draw.cpp,
+	Event.cpp,
+	Cursor.cpp;
+

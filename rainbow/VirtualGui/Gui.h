@@ -1,4 +1,4 @@
-#define GUI_SLAVE
+#define VIRTUALGUI
 
 NAMESPACE_UPP
 

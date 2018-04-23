@@ -1,36 +1,55 @@
-#define GUI_SLAVE
+#define VIRTUALGUI
 
 #ifdef PLATFORM_POSIX
 #include <CtrlCore/stdids.h>
 #endif
 
-NAMESPACE_UPP
+namespace Upp {
 
 #define IMAGECLASS FBImg
-#define IMAGEFILE <SlaveGui/FB.iml>
+#define IMAGEFILE <VirtualGui/FB.iml>
 #include <Draw/iml_header.h>
 
-/*
-struct SDLWindow {
-	SDL_Window   *win;
-	SDL_GLContext glcontext;
-	int64         serial;
-
-	bool Create(const Rect& rect, const char *title);
-	void Destroy();
-	
-	operator bool() const { return win; }
-	
-	SDLWindow();
-	~SDLWindow();
-};
-*/
-
-class SystemDraw/* : public GLDraw*/ {
+class SystemDraw : public DrawProxy {
 public:
 	bool    CanSetSurface()                         { return false; }
 	static void Flush()                             {}
 };
+
+enum KM {
+	KM_NONE  = 0x00,
+
+	KM_LSHIFT= 0x01,
+	KM_RSHIFT= 0x02,
+	KM_LCTRL = 0x04,
+	KM_RCTRL = 0x08,
+	KM_LALT  = 0x10,
+	KM_RALT  = 0x20,
+
+	KM_CAPS  = 0x40,
+	KM_NUM   = 0x80,
+	
+	KM_CTRL = KM_LCTRL | KM_RCTRL,
+	KM_SHIFT = KM_LSHIFT | KM_RSHIFT,
+	KM_ALT = KM_LALT | KM_RALT,
+};
+
+struct VirtualGui {
+	virtual Size        GetSize() = 0;
+	virtual dword       GetMouseButtons() = 0;
+	virtual dword       GetModKeys() = 0;
+	virtual bool        IsMouseIn() = 0;
+	virtual bool        ProcessEvent(bool *quit) = 0;
+	virtual void        WaitEvent(int ms) = 0;
+	virtual void        WakeUpGuiThread() = 0;
+	virtual void        SetMouseCursor(const Image& image) = 0;
+	virtual void        Quit() = 0;
+	virtual bool        IsWaitingEvent() = 0;
+	virtual SystemDraw& BeginDraw() = 0;
+	virtual void        CommitDraw() = 0;
+};
+
+extern VirtualGui *VirtualGuiPtr;
 
 struct BackDraw__ : public SystemDraw {
 	BackDraw__() : SystemDraw() {}
@@ -59,7 +78,7 @@ public:
 	~BackDraw();
 };
 
-class ImageDraw : public SImageDraw {
+class ImageDraw : public SImageDraw { // using software renderer
 public:
 	ImageDraw(Size sz) : SImageDraw(sz) {}
 	ImageDraw(int cx, int cy) : SImageDraw(cx, cy) {}
@@ -72,13 +91,13 @@ class TopWindowFrame;
 
 #define GUIPLATFORM_CTRL_TOP_DECLS   Ctrl *owner_window;
 
-#define GUIPLATFORM_CTRL_DECLS_INCLUDE <SlaveGui/Ctrl.h>
+#define GUIPLATFORM_CTRL_DECLS_INCLUDE <VirtualGui/Ctrl.h>
 
 #define GUIPLATFORM_PASTECLIP_DECLS \
 	bool dnd; \
 	friend struct DnDLoop; \
 
-#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <SlaveGui/Top.h>
+#define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <VirtualGui/Top.h>
 
 class PrinterJob { // Dummy only...
 	NilDraw             nil;
@@ -103,16 +122,6 @@ public:
 	~PrinterJob()                                       {}
 };
 
-struct SlaveGui {
-	bool ProcessEvent(bool *quit);
-	void WaitEvent(int ms);
-	void SetMouseCursor(const Image& image);
-	void Quit();
-	bool IsWaitingEvent();
-};
+}
 
-extern SlaveGui *SlaveGuiPtr;
-
-END_UPP_NAMESPACE
-
-#define GUIPLATFORM_INCLUDE_AFTER <SDL20/After.h>
+#define GUIPLATFORM_INCLUDE_AFTER <VirtualGui/After.h>

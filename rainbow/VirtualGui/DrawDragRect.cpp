@@ -48,7 +48,7 @@ void DrawDragFrame(SystemDraw& w, const Rect& r, int n, const int *pattern, int 
 
 void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
 {
-	SystemDraw w;
+	SystemDraw& w = VirtualGuiPtr->BeginDraw();
 	Ctrl::PaintScene(w);
 	w.Clip(f.clip);
 	static int dashes[3][3] = {
@@ -61,7 +61,7 @@ void DrawDragRect(Ctrl& q, const DrawDragRectInfo& f)
 	DrawDragFrame(w, f.rect2, f.n, dash, f.animation);
 	w.End();
 	Ctrl::PaintCaretCursor(w);
-	SDL_GL_SwapWindow(screen.win);
+	VirtualGuiPtr->CommitDraw();
 }
 
 void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
@@ -83,10 +83,10 @@ void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& cli
 
 void FinishDragRect(Ctrl& q)
 {
-	SystemDraw w;
+	SystemDraw& w = VirtualGuiPtr->BeginDraw();
 	Ctrl::PaintScene(w);
 	Ctrl::PaintCaretCursor(w);
-	SDL_GL_SwapWindow(screen.win);
+	VirtualGuiPtr->CommitDraw();
 }
 
 END_UPP_NAMESPACE

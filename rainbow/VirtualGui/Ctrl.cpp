@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SLAVE
+#ifdef VIRTUALGUI
 
 #define LLOG(x) // DLOG(x)
 

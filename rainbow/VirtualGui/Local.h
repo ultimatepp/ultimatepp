@@ -1,6 +1,6 @@
 #include <CtrlLib/CtrlLib.h>
 
-#ifdef GUI_SLAVE
+#ifdef VIRTUALGUI
 
 NAMESPACE_UPP
 

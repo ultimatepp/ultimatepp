@@ -11,24 +11,21 @@ library(POSIX) "SDL2 SDL2main GL";
 library(WIN32) "SDL2.lib SDL2main.lib OpenGL32.lib";
 
 file
-	SlaveGui.h,
-	Keys.h,
 	Local.h,
+	VirtualGui.h,
+	Keys.h,
 	After.h,
-	Window.cpp,
 	Image.cpp,
 	FB.iml,
 	Ctrl.h,
 	DrawDragRect.cpp,
 	Ctrl.cpp,
 	Wnd.cpp,
-	Cursor.cpp,
 	Event.cpp,
 	Top.h,
 	TopFrame.cpp,
 	Top.cpp,
 	Clip.cpp,
 	DnD.cpp,
-	ChSysInit.cpp,
-	SDL.cpp;
+	ChSysInit.cpp;
 

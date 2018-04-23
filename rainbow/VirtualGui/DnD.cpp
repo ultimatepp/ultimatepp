@@ -1,6 +1,6 @@
 #include "Local.h"
 
-#ifdef GUI_SLAVE
+#ifdef VIRTUALGUI
 
 NAMESPACE_UPP
 
@@ -92,7 +92,7 @@ void DnDLoop::Sync()
 
 void DnDLoop::LeftUp(Point, dword)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("DnDLoop::LeftUp");
 	DnD(true);
 	EndLoop();
@@ -100,14 +100,14 @@ void DnDLoop::LeftUp(Point, dword)
 
 void DnDLoop::MouseMove(Point p, dword)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("DnDLoop::MouseMove");
 	Sync();
 }
 
 bool DnDLoop::Key(dword, int)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("DnDLoop::Key");
 	Sync();
 	return false;
@@ -115,14 +115,14 @@ bool DnDLoop::Key(dword, int)
 
 Image DnDLoop::CursorImage(Point, dword)
 {
-	GuiLock __; 
+	GuiLock __;
 	return action == DND_MOVE ? move : action == DND_COPY ? copy : reject;
 }
 
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
-	GuiLock __; 
+	GuiLock __;
 	DnDLoop d;
 	d.actions = (byte)actions;
 	d.reject = actions & DND_EXACTIMAGE ? CtrlCoreImg::DndNone() : MakeDragImage(CtrlCoreImg::DndNone(), sample);
