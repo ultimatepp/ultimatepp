@@ -1631,7 +1631,9 @@ void FileSel::Set(const String& s)
 void FileSel::GoToPlace()
 {
 	if(places.IsCursor()) {
+#ifdef PLATFORM_WIN32
 		netnode.Clear();
+#endif
 		dir <<= places.GetKey();
 		Load();
 	}
