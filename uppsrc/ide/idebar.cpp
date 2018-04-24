@@ -493,7 +493,9 @@ void Ide::FilePropertiesMenu(Bar& menu)
 			String mine;
 			String theirs;
 			String original;
-			if(editfile_repo == SVN_DIR)
+			Vector<String> r;
+			Vector<int> rn;
+			if(editfile_repo == SVN_DIR) {
 				for(FindFile ff(editfile + ".*"); ff; ff.Next()) {
 					if(ff.IsFile()) {
 						String p = ff.GetPath();
@@ -501,10 +503,28 @@ void Ide::FilePropertiesMenu(Bar& menu)
 							original = p;
 						if(p.Find(".merge-right.r") >= 0)
 							theirs = p;
-						if(p.Find(".working") >= 0)
+						if(p.Find(".working") >= 0 || p.Find(".mine") >= 0)
 							mine = p;
+						try {
+							CParser q(GetFileExt(~p));
+							q.PassChar('.');
+							q.PassChar('r');
+							int n = q.ReadInt();
+							if(q.IsEof()) {
+								r.Add(p);
+								rn.Add(n);
+							}
+						}
+						catch(CParser::Error) {}
 					}
 				}
+				if(IsNull(original) && IsNull(theirs) && r.GetCount() == 2) {
+					original = r[0];
+					theirs = r[1];
+					if(rn[1] > rn[0])
+						Swap(original, theirs);
+				}
+			}
 			else {
 				bool a = false, b = false, c = false;
 				int n = min(editor.GetLineCount(), 10000);
