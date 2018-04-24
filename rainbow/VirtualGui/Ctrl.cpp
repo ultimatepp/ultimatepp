@@ -76,6 +76,12 @@ String Ctrl::Name() const {
 	return s;
 }
 
+void  Ctrl::SetMouseCursor(const Image& image)
+{
+	GuiLock __;
+	VirtualGuiPtr->SetMouseCursor(image);
+}
+
 END_UPP_NAMESPACE
 
 #endif

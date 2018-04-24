@@ -1,5 +1,6 @@
 #include <RichEdit/RichEdit.h>
 #include <PdfDraw/PdfDraw.h>
+#include <SDL2GUI/SDL2GUI.h>
 
 using namespace Upp;
 
@@ -240,9 +241,11 @@ void UWord::SerializeApp(Stream& s)
 		s % lrufile();
 }
 
-GUI_APP_MAIN
+void AppMain()
 {
-	Ctrl::SystemCursor = true;
+//	Ctrl::SystemCursor = true;
+
+	DUMPHEX(K_PAGEDOWN);
 
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
@@ -255,4 +258,25 @@ GUI_APP_MAIN
 	UWord uword;
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));
+}
+
+extern "C" int main(int argc, char *argv[]) {
+	AppInit__(argc, (const char **)argv);
+	
+	SDL2GUI gui;
+	
+	gui.Create(Rect(0, 0, 2000, 1000), "Virtual Gui Test");
+	
+	VirtualGuiPtr = &gui;
+	
+	Ctrl::InitFB();
+
+	Ctrl::SetDesktopSize(gui.GetSize());
+	
+	AppMain();
+	
+	Ctrl::ExitFB();
+	Ctrl::CloseTopCtrls();
+
+	return GetExitCode();
 }

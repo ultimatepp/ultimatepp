@@ -4,7 +4,7 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)  LOG(x)
+#define LLOG(x)  // LOG(x)
 #define LDUMP(x) //DDUMP(x)
 
 static Point fbmousepos;
@@ -87,7 +87,7 @@ void Ctrl::DoMouseFB(int event, Point p, int zdelta)
 bool Ctrl::DoKeyFB(dword key, int cnt)
 {
 	LLOG("DoKeyFB " << GetKeyDesc(key) << ", " << cnt);
-
+	
 	bool b = DispatchKey(key, cnt);
 	SyncCaret();
 	Ctrl *desktop = GetDesktop();

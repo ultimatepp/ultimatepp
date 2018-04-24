@@ -43,7 +43,7 @@ void SDL2GUI::SetMouseCursor(const Image& image)
 	if(image.GetSerialId() != fbCursorImage.GetSerialId()) {
 		fbCursorImage = image;
 		fbCursorPos = Null;
-		SDL_ShowCursor(trye);
+		SDL_ShowCursor(true);
 		if(sdl_cursor)
 			SDL_FreeCursor(sdl_cursor);
 		if(sdl_cursor_surface)
