@@ -58,8 +58,6 @@ public:
 	TopWindowFrame();
 };
 
-extern Size screen_size;
-
 END_UPP_NAMESPACE
 
 #endif

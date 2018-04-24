@@ -9,6 +9,8 @@ NAMESPACE_UPP
 #define LDUMPC(x) //DDUMPC(x)
 #define LTIMING(x)  RTIMING(x)
 
+VirtualGui *VirtualGuiPtr;
+
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 
@@ -213,7 +215,7 @@ void Ctrl::PaintScene(SystemDraw& draw)
 	LTIMING("DoPaint paint");
 	draw.Begin();
 	Vector<Rect> invalid;
-	invalid.Add(screen_size);
+	invalid.Add(VirtualGuiPtr->GetSize());
 	for(int i = topctrl.GetCount() - 1; i >= 0; i--) {
 		Rect r = topctrl[i]->GetRect();
 		Rect ri = GetClipBound(invalid, r);

@@ -13,13 +13,20 @@ dword fbKEYtoK(dword chr) {
 	else
 	if(chr == SDLK_RETURN)
 		chr = K_RETURN;
-	else
-		chr = chr + K_DELTA;
+	else {
+		extern Tuple<int, int> SDL_key_map[];
+		for(int i = 0; SDL_key_map[i].a; i++)
+			if(chr == SDL_key_map[i].b) {
+				chr = SDL_key_map[i].a;
+				break;
+			}
+	}
 	if(chr == K_ALT_KEY || chr == K_CTRL_KEY || chr == K_SHIFT_KEY)
 		return chr;
 	if(GetCtrl()) chr |= K_CTRL;
 	if(GetAlt()) chr |= K_ALT;
 	if(GetShift()) chr |= K_SHIFT;
+
 	return chr;
 }
 

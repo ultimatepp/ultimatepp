@@ -74,6 +74,8 @@ public:
 
 	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
 
+	Point GetOffset() const                            { return Point(0, 0); }
+
 	BackDraw();
 	~BackDraw();
 };
