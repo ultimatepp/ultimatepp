@@ -151,6 +151,42 @@ Ctrl * Ctrl::GetIndexChild(int ii) const
 	return c;
 }
 
+int Ctrl::GetViewChildIndex(const Ctrl *child) const
+{
+	GuiLock __;
+	int i = 0;
+	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
+		if(!c->InFrame()) {
+			if(c == child) return i;
+			i++;
+		}
+	return -1;
+}
+
+int Ctrl::GetViewChildCount() const
+{
+	GuiLock __;
+	int n = 0;
+	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
+		if(!c->InFrame())
+			n++;
+	return n;
+}
+
+Ctrl * Ctrl::GetViewIndexChild(int ii) const
+{
+	GuiLock __;
+	Ctrl *c = GetFirstChild();
+	int i = 0;
+	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
+		if(!c->InFrame()) {
+			if(i == ii)
+				return c;
+			i++;
+		}
+	return NULL;
+}
+
 bool Ctrl::HasChild(Ctrl *q) const
 {
 	GuiLock __;

@@ -11,6 +11,9 @@
 #include <guiplatform.h>
 
 #ifndef GUIPLATFORM_INCLUDE
+	#ifdef flagVIRTUALGUI
+		#define VIRTUALGUI 1
+	#endif
 
 	#ifdef flagTURTLE
 		#define GUIPLATFORM_KEYCODES_INCLUDE <Turtle/Keys.h>
@@ -19,6 +22,9 @@
 		#define GUIPLATFORM_NOSCROLL
 		#define PLATFORM_TURTLE
 		#define TURTLE
+	#elif flagVIRTUALGUI
+		#define GUIPLATFORM_KEYCODES_INCLUDE <VirtualGui/Keys.h>
+		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else
@@ -31,7 +37,7 @@
 			#define GUIPLATFORM_INCLUDE "Gtk.h"
 		#endif
 	#endif
-
+	
 #endif
 
 #include GUIPLATFORM_INCLUDE
@@ -898,6 +904,10 @@ public:
 	int              GetChildIndex(const Ctrl *child) const;
 	Ctrl            *GetIndexChild(int i) const;
 	int              GetChildCount() const;
+
+	int              GetViewChildIndex(const Ctrl *child) const;
+	int              GetViewChildCount() const;
+	Ctrl            *GetViewIndexChild(int ii) const;
 
 	bool             IsChild() const             { return parent; }
 

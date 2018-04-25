@@ -23,7 +23,7 @@ int Splitter::PosToClient(int pos) const
 
 void Splitter::Layout() {
 	Size sz = GetSize();
-	int count = GetChildCount();
+	int count = GetViewChildCount();
 	if(count == 0)
 		return;
 	mins.SetCount(count, 0);
@@ -37,11 +37,13 @@ void Splitter::Layout() {
 	if(style >= 0) {
 		int i = 0;
 		for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
-			if(style == i)
-				q->SizePos().Show();
-			else
-				q->Hide();
-			i++;
+			if(!q->InFrame()) {
+				if(style == i)
+					q->SizePos().Show();
+				else
+					q->Hide();
+				i++;
+			}
 		}
 		return;
 	}
@@ -51,14 +53,16 @@ void Splitter::Layout() {
 	
 	int i = 0;
 	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
-		int lo = i > 0 ? PosToClient(pos[i - 1]) + rw : 0;
-		int hi = i < count ? PosToClient(pos[i]) - lw : vert ? sz.cy : sz.cx;
-		q->Show();
-		if(vert)
-			q->SetRect(0, lo, sz.cx, hi - lo);
-		else
-			q->SetRect(lo, 0, hi - lo, sz.cy);
-		i++;
+		if(!q->InFrame()) {
+			int lo = i > 0 ? PosToClient(pos[i - 1]) + rw : 0;
+			int hi = i < count ? PosToClient(pos[i]) - lw : vert ? sz.cy : sz.cx;
+			q->Show();
+			if(vert)
+				q->SetRect(0, lo, sz.cx, hi - lo);
+			else
+				q->SetRect(lo, 0, hi - lo, sz.cy);
+			i++;
+		}
 	}
 }
 
@@ -232,7 +236,7 @@ void Splitter::Serialize(Stream& s) {
 				pos.Clear();
 				s.LoadError();
 			}
-		if(style >= GetChildCount()) {
+		if(style >= GetViewChildCount()) {
 			style = -1;
 			s.LoadError();
 		}
@@ -244,7 +248,7 @@ void Splitter::Remove(Ctrl& ctrl)
 {
 	int n = 0;
 	Ctrl *c = GetFirstChild();
-	while(c){
+	while(c) {
 		if(c == &ctrl){
 			if(c->GetNext())
 				pos.Remove(n);
@@ -253,7 +257,7 @@ void Splitter::Remove(Ctrl& ctrl)
 				pos.Remove(n-1);
 			mins.Remove(n);
 			minpx.Remove(n);
-			RemoveChild(c); 
+			RemoveChild(c);
 			break;
 		}
 		c = c->GetNext();
