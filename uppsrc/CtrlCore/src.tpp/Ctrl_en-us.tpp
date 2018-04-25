@@ -986,13 +986,38 @@ of child (results in O(n) complexity).&]
 st]&]
 [s2; Returns the number of child ctrls. Note that this function performs 
 sequential scan of child (results in O(n) complexity).&]
-[s3;%- &]
+[s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:GetIndexChild`(int`)const:%- [_^Ctrl^ Ctrl]_`*[* GetIndexChild]([@(0.0.255) in
 t]_[*@3 i])_[@(0.0.255) const]&]
 [s2; Retruns child at index [%-*@3 i] or NULL if there is none. Note 
 that this function performs sequential scan of child (results 
 in O(n) complexity).&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:GetViewChildIndex`(const Upp`:`:Ctrl`*`)const:%- [@(0.0.255) int]_[* G
+etViewChildIndex]([@(0.0.255) const]_[_^Upp`:`:Ctrl^ Ctrl]_`*[*@3 child])_[@(0.0.255) con
+st]&]
+[s2; Returns the index of view [%-*@3 child] (first child has index 
+0, second child 1 etc...). If [%-*@3 child] is not present in this 
+Ctrl or is in frame, returns `-1. Note that this function performs 
+sequential scan of child (results in O(n) complexity). This is 
+similar to GetChildIndex, but frame widgets are ignored.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:GetViewChildCount`(`)const:%- [@(0.0.255) int]_[* GetViewChildCount](
+)_[@(0.0.255) const]&]
+[s2; Returns the number of child ctrls. Note that this function performs 
+sequential scan of child (results in O(n) complexity). This is 
+similar to GetChildCount, but frame widgets are ignored.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:GetViewIndexChild`(int`)const:%- [_^Upp`:`:Ctrl^ Ctrl]_`*[* GetViewIn
+dexChild]([@(0.0.255) int]_[*@3 ii])_[@(0.0.255) const]&]
+[s2; Retruns view child at index [%-*@3 i] or NULL if there is none. 
+Note that this function performs sequential scan of child (results 
+in O(n) complexity). This is similar to GetIndexChild, but frame 
+widgets are ignored.&]
 [s3; &]
 [s4;%- &]
 [s5;:Ctrl`:`:IsChild`(`)const:%- [@(0.0.255) bool]_[* IsChild]()_[@(0.0.255) const]&]
