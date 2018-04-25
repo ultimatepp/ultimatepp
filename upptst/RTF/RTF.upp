@@ -1,0 +1,10 @@
+uses
+	CtrlLib;
+
+file
+	Sample.qtf,
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
