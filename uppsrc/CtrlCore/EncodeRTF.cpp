@@ -9,7 +9,7 @@ namespace Upp {
 static int GetParaHeight(const Array<RichPara::Part>& parts)
 {
 	int ht = 0;
- 	for(int i = 0; i < parts.GetCount(); i++) {
+	for(int i = 0; i < parts.GetCount(); i++) {
 		int pht = 0;
 		const RichPara::Part& part = parts[i];
 		if(part.object)
@@ -308,7 +308,7 @@ bool RTFEncoder::PutParaFormat(const RichPara::Format& pf, const RichPara::Forma
 		nlm += nind;
 		nind = -nind;
 	}
-	if(nind      != oind)         Command("fi", DotTwips(nind));
+//	if(nind      != oind)         Command("fi", DotTwips(nind));
 	if(nlm       != olm)          Command("li", DotTwips(nlm));
 	if(pf.rm     != difpf.rm)     Command("ri", DotTwips(pf.rm));
 	if(pf.newpage)
@@ -316,6 +316,7 @@ bool RTFEncoder::PutParaFormat(const RichPara::Format& pf, const RichPara::Forma
 	if(pf.before != difpf.before) Command("sb", DotTwips(pf.before));
 	if(pf.after  != difpf.after)  Command("sa", DotTwips(pf.after));
 	if(pf.tab    != difpf.tab)    PutTabs(pf.tab);
+	Command("fi", DotTwips(nind)); // we always put number last as quick patch to "space at bullet" problem
 	return stream.GetPos() != pos;
 }
 
