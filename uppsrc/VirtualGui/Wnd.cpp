@@ -536,11 +536,11 @@ void Ctrl::ExitFB()
 	VirtualGuiPtr = NULL;
 }
 
-void RunVirtualGui(VirtualGui *gui, Event<> app_main)
+void RunVirtualGui(VirtualGui& gui, Event<> app_main)
 {
-	VirtualGuiPtr = gui;
+	VirtualGuiPtr = &gui;
 	Ctrl::InitFB();
-	Ctrl::SetDesktopSize(gui->GetSize());
+	Ctrl::SetDesktopSize(gui.GetSize());
 	app_main();
 	Ctrl::ExitFB();
 }

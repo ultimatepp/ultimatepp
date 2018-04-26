@@ -474,6 +474,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 				RealizePath(path);
 				SaveChangedFile(path, main_conf);
 				PutConsole("Saving " + path);
+				PutVerbose(main_conf);
 				add_includes << outdir << ';';
 			}
 		}

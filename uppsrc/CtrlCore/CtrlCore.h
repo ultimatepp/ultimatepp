@@ -22,7 +22,7 @@
 		#define GUIPLATFORM_NOSCROLL
 		#define PLATFORM_TURTLE
 		#define TURTLE
-	#elif flagVIRTUALGUI
+	#elif VIRTUALGUI
 		#define GUIPLATFORM_KEYCODES_INCLUDE <VirtualGui/Keys.h>
 		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
 	#elif PLATFORM_WIN32
