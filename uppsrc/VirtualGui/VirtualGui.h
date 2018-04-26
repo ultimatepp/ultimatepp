@@ -47,7 +47,7 @@ struct VirtualGui {
 	virtual void        CommitDraw() = 0;
 };
 
-void RunVirtualGui(VirtualGui *gui, Event<> app_main);
+void RunVirtualGui(VirtualGui& gui, Event<> app_main);
 
 struct BackDraw__ : public SystemDraw {
 	BackDraw__() : SystemDraw() {}
