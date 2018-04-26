@@ -79,6 +79,7 @@ String Ctrl::Name() const {
 void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
+	fbCursorImage = image;
 	VirtualGuiPtr->SetMouseCursor(image);
 }
 
