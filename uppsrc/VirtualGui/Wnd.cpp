@@ -260,7 +260,6 @@ Rect Ctrl::GetWorkArea(Point pt)
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	DDUMP(desktop->GetRect());
 	return desktop ? desktop->GetRect() : Rect(0, 0, 0, 0);
 }
 
@@ -479,7 +478,6 @@ void Ctrl::SysEndLoop()
 void Ctrl::DeleteDesktopTop()
 {
 	if(desktop && desktop->top) {
-		DLOG("delete desktop->top " << desktop->top);
 		delete desktop->top;
 		desktop->top = NULL;
 	}
@@ -487,7 +485,6 @@ void Ctrl::DeleteDesktopTop()
 
 void Ctrl::SetDesktop(Ctrl& q)
 {
-	DLOG("SetDesktop " << &q);
 	DeleteDesktopTop();
 	desktop = &q;
 	desktop->SetOpen(true);
