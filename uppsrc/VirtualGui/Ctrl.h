@@ -25,7 +25,7 @@ private:
 
 	void DestroyWnd();
 
-	void NewTop()                       { DDUMP(this); top = new Top; top->owner_window = NULL; }
+	void NewTop()                       { top = new Top; top->owner_window = NULL; }
 	void PutForeground();
 	static void MouseEventFB(Ptr<Ctrl> t, int event, Point p, int zdelta);
 
