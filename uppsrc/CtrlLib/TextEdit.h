@@ -210,6 +210,10 @@ public:
 	int     Insert(int pos, const char *txt)     { return Insert(pos, WString(txt)); }
 	void    Remove(int pos, int size);
 
+	int     Append(const WString& txt)           { return Insert(GetLength(), txt); }
+	int     Append(const String& txt, byte charset = CHARSET_DEFAULT) { return Insert(GetLength(), txt, charset); }
+	int     Append(const char *txt)              { return Append(WString(txt)); }
+
 	void      NextUndo();
 	void      Undo();
 	void      Redo();
