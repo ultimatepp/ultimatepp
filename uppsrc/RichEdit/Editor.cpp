@@ -313,6 +313,13 @@ void RichEdit::SetupUnits()
 	}
 }
 
+void RichEdit::ZoomView(int d)
+{
+	zoom = clamp(zoom + d * 10, 10, 100);
+	Refresh();
+	FinishNF();
+}
+
 int  RichEdit::GetNearestPos(int x, PageY py)
 {
 	int c = text.GetPos(x, py, pagesz);

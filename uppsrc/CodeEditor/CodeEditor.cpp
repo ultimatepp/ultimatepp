@@ -953,6 +953,12 @@ bool CodeEditor::Key(dword code, int count) {
 	case K_CTRL_LBRACKET:
 		MovePrevBrk(sel);
 		return true;
+	case K_CTRL_ADD:
+		Zoom(1);
+		return true;
+	case K_CTRL_SUBTRACT:
+		Zoom(-1);
+		return true;
 	case K_TAB:
 		if(!IsReadOnly()) {
 			if(IsSelection()) {
@@ -1100,16 +1106,20 @@ void CodeEditor::PutI(WithDropChoice<EditString>& edit)
 	    <<= THISBACK1(SetI, &edit);
 }
 
+void CodeEditor::Zoom(int d)
+{
+	Font f = GetFont();
+	int h = f.GetCy();
+	int q = f.GetHeight();
+	while(f.GetCy() == h && (d < 0 ? f.GetCy() > 5 : f.GetCy() < 40))
+		f.Height(q += d);
+	SetFont(f);
+	EditorBarLayout();
+}
+
 void CodeEditor::MouseWheel(Point p, int zdelta, dword keyFlags) {
 	if(keyFlags & K_CTRL) {
-		Font f = GetFont();
-		int h = f.GetCy();
-		int q = f.GetHeight();
-		int d = sgn(zdelta);
-		while(f.GetCy() == h && (d < 0 ? f.GetCy() > 5 : f.GetCy() < 40))
-			f.Height(q += d);
-		SetFont(f);
-		EditorBarLayout();
+		Zoom(sgn(zdelta));
 	}
 	else
 		LineEdit::MouseWheel(p, zdelta, keyFlags);

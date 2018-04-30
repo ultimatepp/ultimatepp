@@ -18,9 +18,13 @@ void RichEdit::CancelMode()
 
 void RichEdit::MouseWheel(Point p, int zdelta, dword keyflags)
 {
-	if(keyflags == K_CTRL && !IsNull(floating_zoom)) {
-		floating_zoom = minmax(floating_zoom + zdelta / 480.0, 0.5, 10.0);
-		RefreshLayoutDeep();
+	if(keyflags == K_CTRL) {
+		if(IsNull(floating_zoom))
+			ZoomView(sgn(zdelta));
+		else {
+			floating_zoom = minmax(floating_zoom + zdelta / 480.0, 0.5, 10.0);
+			RefreshLayoutDeep();
+		}
 	}
 	else
 		sb.Wheel(zdelta);

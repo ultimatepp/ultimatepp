@@ -573,6 +573,7 @@ private:
 	void ParaFormat();
 	void ToPara();
 
+	void ZoomView(int d);
 	void SetupUnits();
 	void SpellCheck();
 
