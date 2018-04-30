@@ -211,6 +211,14 @@ void RichEdit::SelCell(int dx, int dy)
 bool RichEdit::CursorKey(dword key, int count)
 {
 	bool select = key & K_SHIFT;
+	if(key == K_CTRL_ADD) {
+		ZoomView(1);
+		return true;
+	}
+	if(key == K_CTRL_SUBTRACT) {
+		ZoomView(-1);
+		return true;
+	}
 	if(select && tablesel)
 		switch(key & ~K_SHIFT) {
 		case K_LEFT:

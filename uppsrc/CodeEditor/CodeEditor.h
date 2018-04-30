@@ -519,6 +519,8 @@ public:
 	
 	void     Illuminate(const WString& text)          { illuminated = text; Refresh(); }
 
+	void     Zoom(int d);
+
 	One<EditorSyntax> GetSyntax(int line);
 	bool IsCursorBracket(int64 pos) const;
 	bool IsMatchingBracket(int64 pos) const;
