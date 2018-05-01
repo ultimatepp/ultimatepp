@@ -175,11 +175,13 @@ void Ide::InsertInclude(Bar& bar)
 	String all;
 	for(int i = 0; i < w.GetCount(); i++) {
 		const Package& p = w.GetPackage(i);
-		if(p.GetCount() && findarg(ToLower(GetFileExt(p[0])), ".h", ".hpp") >= 0) {
-			String h; h << "#include <" << w[i] << "/" << p[0] << '>';
-			bar.Add(h, THISBACK1(InsertText, h + '\n'));
-			all << h << '\n';
-		}
+		for(int j = 0; j < p.GetCount(); j++)
+			if(findarg(ToLower(GetFileExt(p[j])), ".h", ".hpp") >= 0) {
+				String h; h << "#include <" << w[i] << "/" << p[j] << '>';
+				bar.Add(h, THISBACK1(InsertText, h + '\n'));
+				all << h << '\n';
+				break;
+			}
 	}
 	bar.Add("All #includes", THISBACK1(InsertText, all));
 }
