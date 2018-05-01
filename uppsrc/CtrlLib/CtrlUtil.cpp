@@ -274,6 +274,12 @@ Event<> CtrlRetriever::operator<<(Event<> cb)
 	return cb;
 }
 
+void CtrlRetriever::Set()
+{
+	for(int i = 0; i < item.GetCount(); i++)
+		item[i].Set();
+}
+
 void CtrlRetriever::Retrieve()
 {
 	for(int i = 0; i < item.GetCount(); i++)
