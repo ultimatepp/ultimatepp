@@ -230,6 +230,7 @@ void IconDes::SetBar()
 {
 	toolbar.Set(THISBACK(MainToolBar));
 	SetSb();
+	SyncStatus();
 }
 
 struct CachedIconImage : public Display {
@@ -300,10 +301,12 @@ void IconDes::SerializeSettings(Stream& s)
 void IconDes::SyncStatus()
 {
 	Point p = GetPos(GetMousePos() - GetScreenView().TopLeft());
-	Size sz = Current().image.GetSize();
+	Size sz = IsCurrent() ? Current().image.GetSize() : Size(0, 0);
 	String s;
 	if(Rect(sz).Contains(p))
-		s << "x: " << p.x << ':' << sz.cx - p.x - 1 << ", y: " << p.y << ':' << sz.cy - p.y - 1;
+		s << "(" << p.x << ", " << p.y << ") : (" << sz.cx - p.x - 1 << ", " << sz.cy - p.y - 1 << ")";
+	if(!IsNull(rect) && (doselection || IsPasting()))
+		MergeWith(s, ", ", AsString(rect));
 	status.SetLabel(s);
 }
 

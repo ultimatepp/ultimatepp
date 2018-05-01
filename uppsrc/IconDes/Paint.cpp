@@ -92,7 +92,7 @@ void IconDes::Paint(Draw& w)
 		w.DrawRect(r.right, 0, 1, r.bottom + 1, LtRed());
 		w.DrawRect(0, r.bottom, r.right, 1, LtRed());
 		m1refresh = Null;
-		if(IsPasting() && IsPasting())
+		if(IsPasting())
 			DrawFrame(w, Rect(Current().pastepos - spos, Current().paste_image.GetSize()), LtRed);
 		return;
 	}

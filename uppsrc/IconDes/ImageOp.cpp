@@ -211,6 +211,7 @@ Image DownSample3x(const Image& src)
 			s += 3;
 		}
 	}
+	ib.SetResolution(src.GetResolution());
 	return ib;
 }
 
@@ -239,6 +240,7 @@ Image DownSample2x(const Image& src)
 			s += 2;
 		}
 	}
+	ib.SetResolution(src.GetResolution());
 	return ib;
 }
 

@@ -5,7 +5,6 @@
 #include <Painter/Painter.h>
 #include <RichEdit/RichEdit.h>
 
-
 namespace Upp {
 
 #define IMAGECLASS IconDesImg
@@ -196,6 +195,9 @@ private:
 
 	FrameRight<Label> status;
 
+	int syncinglist = 0;
+	
+	Rect           rect;
 
 	struct TextDlg : WithIconDesTextLayout<TopWindow> {
 		typedef TextDlg CLASSNAME;

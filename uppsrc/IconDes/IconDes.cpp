@@ -127,7 +127,7 @@ void IconDes::MakePaste()
 	if(paste_mode == PASTE_BACK) {
 		Image h = c.image;
 		UPP::Copy(c.image, c.pastepos, c.paste_image, c.paste_image.GetSize());
-		UPP::Over(c.image, c.pastepos, h, c.paste_image.GetSize());
+		UPP::Over(c.image, Point(0, 0), h, c.image.GetSize());
 	}
 	else
 		UPP::Over(c.image, c.pastepos, Premultiply(c.paste_image), c.paste_image.GetSize());
@@ -178,10 +178,10 @@ void IconDes::RectTool0(Point p, dword flags, bool empty)
 	Size isz = GetImageSize();
 	IconDraw iw(isz);
 	iw.DrawRect(isz, GrayColor(0));
-	Rect r = Rect(startpoint, p + 1).Normalized();
+	rect = Rect(startpoint, p + 1).Normalized();
 	if(empty)
-		iw.DrawRect(r.Deflated(pen, pen), GrayColor(128));
-	DrawFatFrame(iw, r, GrayColor(255), pen);
+		iw.DrawRect(rect.Deflated(pen, pen), GrayColor(128));
+	DrawFatFrame(iw, rect, GrayColor(255), pen);
 	ApplyDraw(iw, flags);
 }
 
@@ -297,6 +297,7 @@ void IconDes::Paste(const Image& img)
 	FinishPaste();
 	if(!IsCurrent())
 		return;
+	SaveUndo();
 	Slot& c = Current();
 	c.base_image = c.image;
 	c.paste_image = img;
@@ -435,6 +436,7 @@ void IconDes::SelectRect()
 	doselection = false;
 	Select();
 	selectrect = true;
+	rect = Null;
 	SetBar();
 }
 
@@ -504,6 +506,7 @@ void IconDes::SyncImage()
 			info.SetLabel(Format("%d x %d", c.image.GetWidth(), c.image.GetHeight()));
 	}
 	selectrect = false;
+	SyncList();
 	SetBar();
 	Refresh();
 }
