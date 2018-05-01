@@ -394,6 +394,7 @@ public:
 class CtrlRetriever {
 public:
 	struct Item {
+		virtual void Set() = 0;
 		virtual void Retrieve() = 0;
 		virtual ~Item() {}
 	};
@@ -407,6 +408,7 @@ private:
 	struct CtrlItem : CtrlItem0 {
 		T     *value;
 
+		virtual void Set()       { *ctrl <<= *value; }
 		virtual void Retrieve()  { *value = ~*ctrl; }
 		virtual ~CtrlItem() {}
 	};
@@ -422,6 +424,7 @@ public:
 	template <class T>
 	CtrlRetriever& operator()(Ctrl& ctrl, T& val) { Put(ctrl, val); return *this; }
 
+	void Set();
 	void Retrieve();
 
 	Event<>  operator^=(Event<> cb);
@@ -439,7 +442,7 @@ void CtrlRetriever::Put(Ctrl& ctrl, T& val)
 	CtrlItem<T> *m = new CtrlItem<T>();
 	m->ctrl = &ctrl;
 	m->value = &val;
-	ctrl <<= val;
+	m->Set();
 	Put(m);
 }
 
