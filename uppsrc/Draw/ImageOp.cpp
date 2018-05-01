@@ -11,6 +11,19 @@ Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2)
 	return b;
 }
 
+Image WithResolution(const Image& m, int res)
+{
+	Image h = m;
+	ImageBuffer b(h);
+	b.SetResolution(res);
+	return b;
+}
+
+Image WithResolution(const Image& m, const Image& res)
+{
+	return WithResolution(m, res.GetResolution());
+}
+
 Image WithHotSpot(const Image& m, int x1, int y1)
 {
 	Image h = m;
@@ -51,6 +64,7 @@ force_inline Size DstSrc(ImageBuffer& dest, Point& p, const Image& src, Rect& sr
 void DstSrcOp(ImageBuffer& dest, Point p, const Image& src, const Rect& srect,
                            void (*op)(RGBA *t, const RGBA *s, int n))
 {
+	dest.SetResolution(src.GetResolution());
 	Rect sr = srect;
 	Size sz = DstSrc(dest, p, src, sr);
 	if(sz.cx > 0)
@@ -149,7 +163,7 @@ Image Crop(const Image& img, const Rect& rc)
 	ImageRaster  src(img);
 	ImageEncoder tgt;
 	Crop(tgt, src, rc);
-	return tgt;
+	return WithResolution(tgt, img);
 }
 
 Image Crop(const Image& img, int x, int y, int cx, int cy)
@@ -191,6 +205,7 @@ Image AutoCrop(const Image& m, RGBA c)
 Image ColorMask(const Image& src, Color key)
 {
 	ImageBuffer ib(src.GetSize());
+	ib.SetResolution(src.GetResolution());
 	const RGBA *s = src;
 	const RGBA *e = src + src.GetLength();
 	RGBA *t = ~ib;
@@ -229,7 +244,7 @@ Image CanvasSize(const Image& img, int cx, int cy)
 	ImageRaster  src(img);
 	ImageEncoder tgt;
 	CanvasSize(tgt, src, cx, cy);
-	return tgt;
+	return WithResolution(tgt, img);
 }
 
 Image AssignAlpha(const Image& img, const Image& alpha)
@@ -250,6 +265,7 @@ Image AssignAlpha(const Image& img, const Image& alpha)
 		}
 	}
 	ib.SetHotSpots(img);
+	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -293,6 +309,7 @@ Image Equalight(const Image& img, int thold)
 		t++;
 	}
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -312,6 +329,7 @@ Image Grayscale(const Image& img)
 		s++;
 	}
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -332,6 +350,7 @@ Image Grayscale(const Image& img, int amount)
 		s++;
 	}
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -358,6 +377,7 @@ Image Colorize(const Image& img, Color color, int alpha)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -397,6 +417,7 @@ Image AdjustForDarkBk(const Image& img)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -423,6 +444,7 @@ Image Contrast(const Image& img, int amount)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -497,7 +519,7 @@ Image Filter(const Image& img, ImageFilter9& filter)
 	ImageEncoder tgt;
 	ImageRaster src(img);
 	Filter(tgt, src, filter);
-	return tgt;
+	return WithResolution(tgt, img);
 }
 
 struct RGBAI {
@@ -555,7 +577,7 @@ Image Sharpen(const Image& img, int amount)
 	ImageEncoder tgt;
 	ImageRaster src(img);
 	Sharpen(tgt, src, amount);
-	return tgt;
+	return WithResolution(tgt, img);
 }
 
 struct sEtchFilter : ImageFilter9 {
@@ -600,6 +622,7 @@ Image SetColorKeepAlpha(const Image& img, Color c)
 	}
 	Premultiply(w);
 	w.SetHotSpots(img);
+	w.SetResolution(img.GetResolution());
 	return w;
 }
 
@@ -666,6 +689,7 @@ Image  RotateClockwise(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, sz.cy - p1.y - 1, p1.x, sz.cy - p2.y - 1, p2.x);
+	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -680,6 +704,7 @@ Image  RotateAntiClockwise(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, p1.y, sz.cx - p1.x - 1, p2.y, sz.cx - p2.x - 1);
+	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -693,6 +718,7 @@ Image Rotate180(const Image& orig)
 	Point p1 = orig.GetHotSpot();
 	Point p2 = orig.Get2ndSpot();
 	SetNormalizedHotSpots(dest, sz.cy - p1.y - 1, sz.cx - p1.x - 1, sz.cy - p2.y - 1, sz.cx - p2.x - 1);
+	dest.SetResolution(dest.GetResolution());
 	return dest;
 }
 
@@ -713,6 +739,7 @@ Image MirrorHorz(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, sz.cx - p1.x - 1, p1.y, sz.cx - p2.x - 1, p2.y);
+	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -734,6 +761,7 @@ Image MirrorVert(const Image& img)
 	Point p1 = img.GetHotSpot();
 	Point p2 = img.Get2ndSpot();
 	SetNormalizedHotSpots(ib, p1.x, sz.cy - p1.y - 1, p2.x, sz.cy - p2.y - 1);
+	ib.SetResolution(img.GetResolution());
 	return ib;
 }
 
@@ -765,6 +793,7 @@ Image Magnify(const Image& img, int nx, int ny)
 		}
 		t = q;
 	}
+	b.SetResolution(img.GetResolution());
 	return b;
 }
 
@@ -806,6 +835,7 @@ Image Rotate(const Image& m, int angle)
 			*t++ = xs >= 0 && xs < isz.cx && ys >= 0 && ys < isz.cy ? m[ys][xs] : RGBAZero();
 		}
 	}
+	ib.SetResolution(m.GetResolution());
 	return ib;
 }
 
@@ -831,6 +861,7 @@ Image Dither(const Image& m, int dival)
 			int g = Grayscale(*s++) * 100 / dival;
 			*t++ = g > dither[y & 7][x & 7] ? White() : Black();
 		}
+	ib.SetResolution(m.GetResolution());
 	return ib;
 }
 

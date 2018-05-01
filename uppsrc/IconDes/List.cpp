@@ -16,6 +16,9 @@ static String sFormatImageName(const String& name, const Image& img, bool exp)
 
 void IconDes::SyncList()
 {
+	if(syncinglist)
+		return;
+	syncinglist++;
 	int sc = ilist.GetScroll();
 	int q = ilist.GetKey();
 	ilist.Clear();
@@ -27,6 +30,7 @@ void IconDes::SyncList()
 	}
 	ilist.ScrollTo(sc);
 	ilist.FindSetCursor(q);
+	syncinglist--;
 }
 
 void IconDes::Search()
