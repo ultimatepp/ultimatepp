@@ -394,7 +394,7 @@ public:
 class CtrlRetriever {
 public:
 	struct Item {
-		virtual void Set() = 0;
+		virtual void Set() {}
 		virtual void Retrieve() = 0;
 		virtual ~Item() {}
 	};
