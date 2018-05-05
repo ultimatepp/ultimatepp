@@ -1,6 +1,6 @@
 #include "GLDraw.h"
 
-#define LTIMING(x) RTIMING(x)
+#define LTIMING(x) // RTIMING(x)
 
 #ifndef GL_USE_SHADERS
 
