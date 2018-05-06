@@ -18,7 +18,6 @@ bool LoadTopics(Vector<String>& topics, const String& grouppath)
 {
 	bool renamed = false;
 	
-	topics.Clear();
 	for(int pass = 0; pass < 2; pass++) {
 		FindFile ff(AppendFileName(grouppath, "*.*"));
 		for(; ff; ff.Next()) {
