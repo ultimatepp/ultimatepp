@@ -57,6 +57,7 @@ public:
 	Adb MakeAdb() const { return Adb(AdbPath()); }
 	
 public:
+	String BinDir() const;
 	String BuildToolsDir() const;
 	String PlatformsDir() const;
 	String ConcreteBuildToolsDir() const;

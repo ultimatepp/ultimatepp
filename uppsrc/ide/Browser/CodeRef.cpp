@@ -79,14 +79,14 @@ void TopicEditor::FindBrokenRef()
 				}
 			}
 		}
-		if(!topic.IsCursor())
+		if(!topics_list.IsCursor())
 			break;
-		c = topic.GetCursor() + 1;
-		if(c >= topic.GetCount()) {
+		c = topics_list.GetCursor() + 1;
+		if(c >= topics_list.GetCount()) {
 			PromptOK("No more invalid references.");
 			break;
 		}
-		topic.SetCursor(c);
+		topics_list.SetCursor(c);
 		if(!IsNull(topicpath))
 			editor.Move(0);
 	}
@@ -355,7 +355,7 @@ void TopicEditor::InsertNew(const String& coderef)
 
 void TopicEditor::GoTo(const String& _topic, const String& link, const String& create, bool before)
 {
-	if(topic.FindSetCursor(_topic) && !IsNull(link)) {
+	if(topics_list.FindSetCursor(_topic) && !IsNull(link)) {
 		editor.Select(editor.GetLength(), 0);
 		if(!editor.GotoLabel(link)) {
 			String l = link;

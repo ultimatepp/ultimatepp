@@ -207,6 +207,11 @@ String AndroidSDK::FindDefaultBuildToolsRelease() const
 
 // ---------------------------------------------------------------
 
+String AndroidSDK::BinDir() const
+{
+	return path + DIR_SEPS + "bin";
+}
+
 String AndroidSDK::BuildToolsDir() const
 {
 	return path + DIR_SEPS + "build-tools";

@@ -230,7 +230,8 @@ Vector<String> GatherLabels(const RichText& text);
 String WriteTopic(const char *title, const RichText& text);
 String WriteTopicI(const char *title, const RichText& text);
 
-bool LoadTopics(FileList& topic, const String& dir);
+bool LoadTopics(Vector<String>& topics, const String& dir);
+void FillTopicsList(FileList& list, const Vector<String>& topics);
 
 TopicLink ParseTopicFilePath(const String& path);
 String    TopicFilePath(const TopicLink& tl);
@@ -274,15 +275,18 @@ public:
 
 protected:
 	ToolBar           tool;
-
-	FileList          topic;
+	
+	Vector<String>    topics;
+	ParentCtrl        topics_parent;
+	FileList          topics_list;
+	EditString        topics_search;
 
 	EditString        title;
 	RichEdit          editor;
 
 	StaticRect        right;
 	Splitter          left_right;
-
+	
 	String            grouppath;
 	String            topicpath;
 	String            singlefilepath;
@@ -303,6 +307,7 @@ protected:
 	static VectorMap<String, String>  grouptopic;
 	static ArrayMap<String, FileInfo> editstate;
 
+protected:
 	void   FormatMenu(Bar& bar);
 	void   TableMenu(Bar& bar);
 	void   TopicMenu(Bar& bar);
@@ -344,7 +349,6 @@ protected:
 
 	void   Tools(Bar& bar);
 	void   Label(String&);
-//	String CreateQtf(const String& item, const String& name, const CppItem& m, bool onlyhdr = false);
 	void   InsertItem();
 
 	void   FindBrokenRef();
@@ -352,7 +356,10 @@ protected:
 	String GetLang() const;
 
 	void   FixTopic();
-
+	
+	void   OnSearch();
+	void   DoSearch();
+	
 public:
 	Event<Bar&> WhenTemplatesMenu;
 
