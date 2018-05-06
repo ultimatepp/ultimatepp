@@ -14,13 +14,14 @@ public:
 	}
 };
 
-bool LoadTopics(FileList& topic, const String& grouppath)
+bool LoadTopics(Vector<String>& topics, const String& grouppath)
 {
 	bool renamed = false;
+	
+	topics.Clear();
 	for(int pass = 0; pass < 2; pass++) {
-		topic.Clear();
 		FindFile ff(AppendFileName(grouppath, "*.*"));
-		while(ff) {
+		for(; ff; ff.Next()) {
 			if(ff.IsFile() && GetFileExt(ff.GetName()) == ".tppi") {
 				String n = ff.GetName();
 				int q = n.ReverseFind('$');
@@ -42,47 +43,94 @@ bool LoadTopics(FileList& topic, const String& grouppath)
 					FileMove(AppendFileName(grouppath, nn), AppendFileName(grouppath, n));
 					renamed = true;
 				}
-				topic.Add(GetFileTitle(n), TopicImg::Topic());
+				
+				topics.Add(GetFileTitle(n));
 			}
-			ff.Next();
 		}
 		if(!renamed)
 			break;
 	}
-	topic.Sort(ListOrder());
-	topic.Enable();
+	
 	return renamed;
 }
 
-void TopicEditor::Open(const String& _grouppath)
+void FillTopicsList(FileList& list, const Vector<String>& topics)
 {
-	grouppath = _grouppath;
+	list.Clear();
+	
+	for (const auto& topic : topics) {
+		list.Add(topic, TopicImg::Topic());
+	}
+	
+	list.Sort(ListOrder());
+	list.Enable();
+}
+
+void TopicEditor::Open(const String& group_path)
+{
+	String search_phase = topics_search.GetData().ToString();
+	
+	grouppath = group_path;
 	if(FileExists(grouppath))
 		DeleteFile(grouppath);
 	DirectoryCreate(grouppath);
-	if(LoadTopics(topic, grouppath))
+	
+	bool renamed;
+	if(LoadTopics(topics, grouppath))
 		SaveInc();
+	FillTopicsList(topics_list, topics);
+	
 	int q = grouptopic.Find(grouppath);
 	if(q >= 0)
-		topic.FindSetCursor(grouptopic[q]);
+		topics_list.FindSetCursor(grouptopic[q]);
 	else
-		topic.SetCursor(0);
+		topics_list.SetCursor(0);
 }
 
 void TopicEditor::OpenFile(const String& path)
 {
 	grouppath.Clear();
 	singlefilepath = path;
-	topic.Clear();
-	topic.Add(GetFileTitle(path), TopicImg::Topic());
-	topic.Enable();
-	topic.SetCursor(0);
+	topics_list.Clear();
+	topics_list.Add(GetFileTitle(path), TopicImg::Topic());
+	topics_list.Enable();
+	topics_list.SetCursor(0);
+}
+
+void TopicEditor::OnSearch()
+{
+	auto current_topic = topics_list.GetCurrentName();
+	auto topic_list_sel_callback = topics_list.WhenSel;
+	topics_list.WhenSel = {};
+	
+	DoSearch();
+	
+	auto idx = topics_list.Find(current_topic);
+	if (idx >= 0) {
+		topics_list.SetCursor(idx);
+	}
+	
+	topics_list.WhenSel = topic_list_sel_callback;
+}
+
+void TopicEditor::DoSearch()
+{
+	auto search_phase = ToLower(topics_search.GetData().ToString());
+		
+	auto found_topics = Vector<String>();
+	for (const auto& topic : topics) {
+		const auto normalized_topic = ToLower(topic);
+		if (normalized_topic.Find(search_phase) >= 0) {
+			found_topics.Add(topic);
+		}
+	}
+	FillTopicsList(topics_list, found_topics);
 }
 
 String TopicEditor::GetCurrentTopicPath()
 {
-	if(topic.IsCursor())
-		return NormalizePath(AppendFileName(grouppath, topic.GetCurrentName() + ".tpp"));
+	if(topics_list.IsCursor())
+		return NormalizePath(AppendFileName(grouppath, topics_list.GetCurrentName() + ".tpp"));
 	else
 		return Null;
 }
@@ -104,7 +152,7 @@ void TopicEditor::TopicCursor()
 		h = singlefilepath;
 	}
 	else {
-		if(!topic.IsCursor())
+		if(!topics_list.IsCursor())
 			return;
 		h = GetCurrentTopicPath();
 	}
@@ -121,7 +169,7 @@ void TopicEditor::Load(const String& fn)
 	Topic t = ReadTopic(LoadFile(fn));
 	if(t.text.IsVoid()) {
 		Exclamation("Error loading the topic file:&[* " + DeQtf(fn));
-		topic.KillCursor();
+		topics_list.KillCursor();
 		return;
 	}
 

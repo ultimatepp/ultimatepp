@@ -36,7 +36,7 @@ String TopicEditor::ChooseTemplate(const char *title)
 
 void TopicEditor::ApplyStylesheet()
 {
-	if(!topic.IsCursor())
+	if(!topics_list.IsCursor())
 		return;
 	String t = ChooseTemplate("Apply template stylesheet");
 	if(t.GetCount())
@@ -49,11 +49,11 @@ void TopicEditor::ApplyStylesheetGroup()
 	if(IsNull(t))
 		return;
 	RichText ss = ParseQTF(LoadFile(t));
-	int c = topic.GetCursor();
+	int c = topics_list.GetCursor();
 	Progress pi("Applying stylesheet");
-	for(int i = 0; i < topic.GetCount(); i++) {
-		topic.SetCursor(i);
+	for(int i = 0; i < topics_list.GetCount(); i++) {
+		topics_list.SetCursor(i);
 		editor.ApplyStylesheet(ss);
 	}
-	topic.SetCursor(c);
+	topics_list.SetCursor(c);
 }

@@ -50,8 +50,13 @@ void TopicLinkDlg::Package()
 void TopicLinkDlg::Group()
 {
 	topic.Clear();
-	if(package.IsCursor() && group.IsCursor())
-		LoadTopics(topic, PackageGroup(group.GetCurrentName()));
+	
+	if(package.IsCursor() && group.IsCursor()) {
+		Vector<String> topics;
+		LoadTopics(topics, PackageGroup(group.GetCurrentName()));
+		
+		FillTopicsList(topic, topics);
+	}
 }
 
 String TopicLinkDlg::LinkString()
@@ -67,7 +72,7 @@ void TopicLinkDlg::Topic()
 		RichText txt = ParseQTF(ReadTopic(LoadFile(
 						NormalizePath(
 							AppendFileName(PackageGroup(group.GetCurrentName()),
-		        			               topic.GetCurrentName() + ".tpp")
+							topic.GetCurrentName() + ".tpp")
 		               ))).text);
 		Vector<String> ref = GatherLabels(txt);
 		label.Clear();
@@ -98,7 +103,7 @@ void TopicEditor::Hyperlink(String& link, WString& text)
 	if(IsNull(tl.topic)) {
 		d.package.FindSetCursor(GetFileTitle(GetFileFolder(grouppath))) &&
 		d.group.FindSetCursor(GetFileTitle(grouppath)) &&
-		d.topic.FindSetCursor(topic.GetCurrentName());
+		d.topic.FindSetCursor(topics_list.GetCurrentName());
 	}
 	else {
 		d.package.FindSetCursor(tl.package) &&

@@ -17,15 +17,23 @@ TopicEditor::TopicEditor()
 	title.Tip("Topic title");
 	title.NullText("Topic title", tf().Italic(), SColorDisabled());
 	right.Add(editor.VSizePos(dcy + 4, 0).HSizePos());
-	Add(left_right.Horz(topic, right));
+	Add(left_right.Horz(topics_parent, right));
 	left_right.SetPos(1200);
+	
+	const auto edit_string_cy = EditString::GetStdHeight();
+	topics_parent.Add(topics_search.HSizePos().TopPos(0, edit_string_cy));
+	topics_parent.Add(topics_list.HSizePos().VSizePos(edit_string_cy, 0));
+	
+	topics_list.NoRoundSize().Columns(1);
 
-	topic.NoRoundSize().Columns(1);
-
-	topic.WhenSel = THISBACK(TopicCursor);
-	topic.WhenBar = THISBACK(TopicMenu);
-	topic.NoWantFocus();
-
+	topics_list.WhenSel = THISBACK(TopicCursor);
+	topics_list.WhenBar = THISBACK(TopicMenu);
+	topics_list.NoWantFocus();
+	
+	topics_search.NullText(String(t_("Search")) + " " + "(Ctrl+Alt+F)");
+	topics_search.WhenAction = THISBACK(OnSearch);
+	topics_search.SetFilter(CharFilterToUpper);
+	
 	editor.SetPage(TopicPage());
 	editor.WhenRefreshBar = THISBACK(SetBar);
 	editor.WhenHyperlink = THISBACK(Hyperlink);
@@ -58,7 +66,7 @@ void TopicEditor::Serialize(Stream& s)
 	s / version;
 	editor.SerializeSettings(s);
 	s % left_right;
-	topic.SerializeSettings(s);
+	topics_list.SerializeSettings(s);
 	s % allfonts;
 	SyncFonts();
 }
@@ -124,7 +132,7 @@ void TopicEditor::ExportGroupPdf()
 				SaveFile(path, pdfdata);
 		}
 		ff.Next();
-	}	
+	}
 }
 
 String MakeHtml(const char *title, String css, String body)
@@ -153,7 +161,6 @@ void TopicEditor::ExportHTML()
 	                         VectorMap<String, String>(), VectorMap<String, String>(),
 	                         GetFileFolder(path));
 	SaveFile(path, MakeHtml((String)~title, AsCss(css), html));
-//	SaveFile(ForceExt(path, ".css"), AsCss(css));
 }
 
 void TopicEditor::ExportGroupHTML()
@@ -209,13 +216,13 @@ void TopicEditor::TopicMenu(Bar& bar)
 		return;
 	bar.Add("New topic..", THISBACK(NewTopic))
 	   .Key(K_CTRL_N).Key(K_ALT_INSERT);
-	bar.Add(topic.IsCursor(), "Move topic..", THISBACK(MoveTopic));
-	bar.Add(topic.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
+	bar.Add(topics_list.IsCursor(), "Move topic..", THISBACK(MoveTopic));
+	bar.Add(topics_list.IsCursor(), "Delete topic", THISBACK(RemoveTopic))
 	   .Key(K_ALT_DELETE);
 	bar.Separator();
-	bar.Add(topic.IsCursor() && GetFileTitle(topicpath) != "$.tpp",
+	bar.Add(topics_list.IsCursor() && GetFileTitle(topicpath) != "$.tpp",
 	        "Save as template..", THISBACK(SaveAsTemplate));
-	bar.Add(topic.IsCursor(), "Apply template stylesheet..", THISBACK(ApplyStylesheet));
+	bar.Add(topics_list.IsCursor(), "Apply template stylesheet..", THISBACK(ApplyStylesheet));
 	bar.Add("Apply template stylesheet to group..", THISBACK(ApplyStylesheetGroup));
 	editor.StyleKeysTool(bar);
 }
@@ -328,7 +335,7 @@ bool TopicEditor::NewTopicEx(const String& iname, const String& create)
 	Open(grouppath);
 	Load(fn);
 	SaveInc();
-	topic.FindSetCursor(GetFileTitle(fn));
+	topics_list.FindSetCursor(GetFileTitle(fn));
 	editor.SetFocus();
 	serial++;
 	if(create.GetCount())
@@ -343,16 +350,16 @@ void TopicEditor::NewTopic()
 
 void TopicEditor::RemoveTopic()
 {
-	if(!topic.IsCursor() ||
-	   !PromptYesNo("Delete topic [* " + DeQtf(topic.GetCurrentName()) + "] ?"))
+	if(!topics_list.IsCursor() ||
+	   !PromptYesNo("Delete topic [* " + DeQtf(topics_list.GetCurrentName()) + "] ?"))
 		return;
 	String p = GetCurrentTopicPath();
-	int q = topic.GetCursor();
+	int q = topics_list.GetCursor();
 	Flush();
 	DeleteFile(p);
 	Open(grouppath);
 	SaveInc();
-	topic.SetCursor(q);
+	topics_list.SetCursor(q);
 	if(q >= 0)
 		editor.SetFocus();
 	InvalidateTopicInfoPath(p);
@@ -389,9 +396,12 @@ bool TopicEditor::Key(dword key, int cnt)
 		FixTopic();
 		return true;
 	case K_ALT_UP:
-		return topic.Key(K_UP, 0);
+		return topics_list.Key(K_UP, 0);
 	case K_ALT_DOWN:
-		return topic.Key(K_DOWN, 0);
+		return topics_list.Key(K_DOWN, 0);
+	case K_CTRL|K_ALT_F:
+		topics_search.SetFocus();
+		return true;
 	}
 	return false;
 }
