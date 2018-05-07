@@ -214,7 +214,7 @@ void Progress::Set(int apos, int atotal) {
 	pos = apos;
 	total = atotal;
 	dword t = GetTickCount();
-	if((int)(t - set_time) < granularity)
+	if(abs((int)(t - set_time)) < granularity)
 		return;
 	set_time = t;
 	while(atotal > 30000) {
