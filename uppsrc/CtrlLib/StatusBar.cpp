@@ -298,7 +298,7 @@ ProgressInfo& ProgressInfo::Set(int _pos, int _total)
 	total = _total;
 
 	dword t = GetTickCount();
-	if((int)(t - set_time) >= granularity) {
+	if(abs((int)(t - set_time)) >= granularity) {
 		set_time = t;
 	
 		Refresh();
