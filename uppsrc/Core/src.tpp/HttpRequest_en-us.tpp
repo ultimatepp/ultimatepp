@@ -1,5 +1,4 @@
 topic "HttpRequest";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "HttpRequest";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 HttpRequest]]}}&]
 [s3; &]
@@ -451,6 +451,11 @@ onst]_[@(0.0.255) char]_`*[*@3 id])&]
 [s5;:HttpRequest`:`:GetRedirectUrl`(`): [_^String^ String]_[* GetRedirectUrl]()&]
 [s2;%% Returns processed Location field of HTTP response header.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:HttpRequest`:`:HasContentLength`(`): [@(0.0.255) bool]_[* HasContentLength]()
+&]
+[s2;%% Returns true if received HTTP header has content`-length field.&]
+[s3; &]
 [s4;%% &]
 [s5;:HttpRequest`:`:GetContentLength`(`): [@(0.0.255) int64]_[* GetContentLength]()&]
 [s2;%% Returns the content length as specified in HTTP response header 

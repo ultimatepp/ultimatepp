@@ -65,6 +65,7 @@ void HttpRequest::Init()
 	poststream = NULL;
 	postlen = Null;
 	has_content_length = false;
+	content_length = 0;
 	chunked_encoding = false;
 	waitevents = 0;
 }
@@ -719,6 +720,11 @@ String HttpRequest::GetRedirectUrl()
 	return h;
 }
 
+bool HttpRequest::HasContentLength()
+{
+	return header.HasContentLength();
+}
+
 int64 HttpRequest::GetContentLength()
 {
 	return header.GetContentLength();
@@ -741,8 +747,9 @@ void HttpRequest::StartBody()
 	
 	LLOG("HTTP status code: " << status_code);
 
-	count = GetContentLength();
-	has_content_length = count;
+	content_length = count = GetContentLength();
+	has_content_length = HasContentLength();
+	
 	
 	if(method == METHOD_HEAD)
 		phase = FINISHED;
@@ -784,8 +791,12 @@ void HttpRequest::Out(const void *ptr, int size)
 bool HttpRequest::ReadingBody()
 {
 	LLOG("HTTP reading body " << count);
-	String s = TcpSocket::Get(has_content_length || chunked_encoding ? (int)min((int64)chunk, count)
-	                                                                 : chunk);
+
+	if(has_content_length && content_length == 0)
+		return false;
+
+	String s = TcpSocket::Get(has_content_length && content_length > 0 || chunked_encoding ?
+	                          (int)min((int64)chunk, count) : chunk);
 	if(s.GetCount()) {
 	#ifndef ENDZIP
 		if(gzip)

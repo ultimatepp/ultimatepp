@@ -329,6 +329,7 @@ struct HttpHeader {
 	String GetURI() const                                    { return f2; }
 	String GetVersion() const                                { return f3; }
 
+	bool   HasContentLength() const;
 	int64  GetContentLength() const;
 
 	void   Clear();
@@ -355,6 +356,7 @@ class HttpRequest : public TcpSocket {
 
 	String       error;
 	String       body;
+	int64        content_length;
 	bool         has_content_length;
 	bool         chunked_encoding;
 
@@ -546,6 +548,7 @@ public:
 	String       GetHeader(const char *id)                { return header[id]; }
 	String       operator[](const char *id)               { return GetHeader(id); }
 	String       GetRedirectUrl();
+	bool         HasContentLength();
 	int64        GetContentLength();
 	int          GetStatusCode() const                    { return status_code; }
 	String       GetReasonPhrase() const                  { return reason_phrase; }

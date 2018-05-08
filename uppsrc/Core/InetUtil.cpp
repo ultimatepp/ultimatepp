@@ -468,6 +468,11 @@ void HttpHeader::Clear()
 	scgi = false;
 }
 
+bool  HttpHeader::HasContentLength() const
+{
+	return !IsNull((*this)["content-length"]);
+}
+
 int64 HttpHeader::GetContentLength() const
 {
 	return Nvl(ScanInt64((*this)["content-length"]), (int64)0);
