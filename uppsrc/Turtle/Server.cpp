@@ -10,8 +10,8 @@
 
 namespace Upp {
 
-#define LLOG(x)     // DLOG(x)
-#define LDUMP(x)    // DDUMP(x)
+#define LLOG(x)    //  DLOG(x)
+#define LDUMP(x)   //  DDUMP(x)
 #define LTIMING(x)
 
 int         Ctrl::main_pid;
@@ -71,7 +71,7 @@ bool Ctrl::StartSession()
 #endif
 
 	LLOG("Starting to listen on " << port << ", pid: " << getpid());
-	socket.Timeout(2000); // TODO: Not quite ideal way to make quit work..
+	socket.Timeout(0); // TODO: Not quite ideal way to make quit work..
 	for(;;) {
 		if(quit)
 			return false;
@@ -108,7 +108,7 @@ bool Ctrl::StartSession()
 						socket.Close();
 						continue;
 					}
-	#else
+#else
 					break;
 #endif
 				}
@@ -128,9 +128,7 @@ bool Ctrl::StartSession()
 	Ctrl::GlobalBackBuffer();
 	Ctrl::InitTimer();
 
-#ifdef PLATFORM_POSIX
 	SetStdFont(ScreenSans(12)); //FIXME general handling
-#endif
 	ChStdSkin();
 
 	DesktopRect().Color(Cyan());
@@ -138,9 +136,13 @@ bool Ctrl::StartSession()
 	SetDesktop(Desktop());
 	
 	stat_started = GetSysTime();
+
+	LLOG("Waiting for the event");
 	
 	while(!IsWaitingEvent())
 		GuiSleep(10);
+	
+	LLOG("Starting the server");
 	
 	ProcessEvents();
 

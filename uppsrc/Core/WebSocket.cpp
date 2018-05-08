@@ -516,6 +516,7 @@ bool WebSocket::WebAccept(TcpSocket& socket_, HttpHeader& hdr)
 		"Sec-WebSocket-Accept: " + Base64Encode((char *)sha1, 20) + "\r\n\r\n"
 	);
 
+	LLOG("HTTP request header received, sending response");
 	data.Clear();
 	opcode = READING_FRAME_HEADER;
 	return true;
