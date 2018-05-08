@@ -4,8 +4,8 @@
 
 namespace Upp {
 
-#define LLOG(x)     // LLOG(x)
-#define LDUMP(x)    // RDUMP(x)
+#define LLOG(x)     // DLOG(x)
+#define LDUMP(x)    // DDUMP(x)
 #define LTIMING(x)
 
 int   Ctrl::serial_time0 = Null;
@@ -51,15 +51,17 @@ bool Ctrl::IsWaitingEvent()
 		EndSession();
 		Exit(0);
 	}
-	while(socket.Timeout(0).WaitRead()) {
-		socket.Timeout(20000);
+	websocket.Do();
+	for(;;) {
 		String s = websocket.Receive();
-		if(s.IsVoid()) { // No data returned -> means EOF was reached
+		if(websocket.IsClosed()) {
 			WhenDisconnect();
 			EndSession();
 			Exit(0);
 		}
-		LLOG("Recieved data " << s);
+		if(s.GetCount() == 0)
+			break;
+		LLOG("Received data " << s);
 		StringStream ss(s);
 		while(!ss.IsEof()) {
 			String s = ss.GetLine();
@@ -82,7 +84,6 @@ bool Ctrl::IsWaitingEvent()
 			serial_time0 = Null;
 		}
 	}
-	socket.Timeout(20000);
 	if(socket.IsError())
 		LLOG("ERROR: " << socket.GetErrorDesc());
 	return event_queue.GetCount();
@@ -92,10 +93,11 @@ void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
-//	LLOG("GuiSleep");
+	LLOG("GuiSleep " << ms);
+	websocket.Do();
 	int level = LeaveGuiMutexAll();
 	socket.Timeout(ms).WaitRead();
-	socket.Timeout(20000);
+	socket.Timeout(0);
 	EnterGuiMutex(level);
 }
 

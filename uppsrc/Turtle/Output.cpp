@@ -54,7 +54,6 @@ void Turtle_PutLink(const String& link)
 
 void Ctrl::Output()
 {
-	socket.Timeout(20000);
 	if(turtle_stream.HasData()) {
 		websocket.SendBinary(ZCompress(String(DISABLESENDING, 1))); // Do not send events until data transfered and processed
 		int64 x = ++update_serial;
