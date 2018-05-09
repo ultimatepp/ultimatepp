@@ -53,6 +53,7 @@ void IconDes::Paint(Draw& w)
 	scroller.Set(spos);
 	Size isz = image.GetSize();
 	bool pastepaint = HasCapture() && IsPasting();
+	magnify = max(magnify, 1);
 	if(magnify == 1) {
 		w.DrawRect(sz, SColorPaper());
 		ImageBuffer pb(isz);

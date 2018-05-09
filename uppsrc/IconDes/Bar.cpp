@@ -44,12 +44,12 @@ void IconDes::SetMagnify(int mag)
 
 void IconDes::ZoomIn()
 {
-	SetMagnify(magnify+2);
+	SetMagnify(max(magnify, 1) + 2);
 }
 
 void IconDes::ZoomOut()
 {
-	SetMagnify(magnify-2);
+	SetMagnify(max(magnify, 1) - 2);
 }
 
 void IconDes::DoPaste()
