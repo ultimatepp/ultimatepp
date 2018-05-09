@@ -52,14 +52,16 @@ void IconDes::SyncShow()
 
 void IconDes::SetSb()
 {
+	magnify = max(magnify, 1);
 	if(IsCurrent()) {
 		sb.SetTotal(GetImageSize());
-		sb.SetPage(GetSize() / max(magnify, 1));
+		sb.SetPage(GetSize() / magnify);
 	}
 }
 
 void IconDes::Scroll()
 {
+	magnify = max(magnify, 1);
 	scroller.Scroll(*this, GetSize(), sb, Size(magnify, magnify));
 }
 
@@ -101,7 +103,7 @@ void IconDes::SetCurrentImage(ImageBuffer& ib)
 
 Point IconDes::GetPos(Point p)
 {
-	return p / magnify + sb;
+	return p / max(magnify, 1) + sb;
 }
 
 void IconDes::FinishPaste()
