@@ -1,8 +1,8 @@
 topic "Subversion Install and Permissions";
-[ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,2#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
 [b83;*4 $$3,2#07864147445237544204411237157677:title]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1;a0; Subversion Install and Permissions&]
 [s2;>b0;a83;*R^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 &]
@@ -11,8 +11,8 @@ topic "Subversion Install and Permissions";
 and latest releases are available through [^http`:`/`/subversion`.tigris`.org`/^ Su
 bversion]. This is an Open Source version control system.&]
 [s2; So first of all you will have to install a Subversion (SVN) 
-client like TortoiseSVN, SmartSVN, SlikSVN, kdesvn or just a 
-`"apt`-get install subversion`" in Linux. Be sure that in Windows 
+client like TortoiseSVN, SmartSVN, SlikSVN, kdesvn or just an 
+`"apt install subversion`" in Linux. Be sure that in Windows 
 the svn client is in PATH environment variable although this 
 is usually done by installer.&]
 [s3; Upload Permissions&]
@@ -44,11 +44,11 @@ to enter a comment following this format:&]
 [s0;l256;%- [%%C$7;2 `"][C$7;2 My`_Cool`_Package: Added X an Y. Fixed 
 bug Z`"]&]
 [s0;2%- &]
-[s2;%- You can monitor that your changes is correctly commited by 
+[s2;%- You can monitor that your changes are correctly commited by 
 observing following site: [^https`:`/`/github`.com`/ultimatepp`/mirror`/commits`/master^ h
 ttps://github.com/ultimatepp/mirror/commits/master].&]
-[s2; And do not put many different features into single commit. It 
-is better to separate them if they do different things.&]
+[s2; And do not put many different features into a single commit. 
+It is better to separate them if they do different things.&]
 [s3; Generating patch&]
 [s2; Sometimes you need to deliver patch for the whole library, but 
 you don`'t have permission to commit. In this case it is good 
