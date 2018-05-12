@@ -14,6 +14,10 @@ TOPIC("Funding_en-us")
 #include "Funding_en-us.tppi"
 END_TOPIC
 
+TOPIC("GITMirror_en-us")
+#include "GITMirror_en-us.tppi"
+END_TOPIC
+
 TOPIC("LearnCpp_en-us")
 #include "LearnCpp_en-us.tppi"
 END_TOPIC

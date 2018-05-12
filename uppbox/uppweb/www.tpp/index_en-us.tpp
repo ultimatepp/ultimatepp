@@ -103,6 +103,7 @@ is your place]]
 management (Redmine)]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ SVN install 
 and permissions]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us^ GIT Mirror]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/bugreports`$en`-us^ Bug report. 
 Submitting a patch]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/contribweb`$en`-us^ Web page]&]

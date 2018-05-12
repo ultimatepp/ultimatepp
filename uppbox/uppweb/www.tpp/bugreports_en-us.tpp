@@ -1,5 +1,4 @@
 topic "Bug reports and patch submission";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,6 +20,7 @@ topic "Bug reports and patch submission";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Bug reports and patch submission&]
 [s3; Reporting bugs&]
@@ -29,8 +29,8 @@ effective way how to proceed is to post a message in the [^http`:`/`/ultimatepp`
 orum]. The usual ethics apply here the same way as on most of 
 the forums all over the Internet: Before posting, [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=search`&^ c
 heck] if the problem isn`'t already reported. Please, make sure 
-that you are posting to the correct forum section. If you experience 
-problem with library, make sure to post to [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=index`&cat`=16`&^ U
+that you are posting in the correct forum section. If you experience 
+a problem with the library, make sure to post in [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=index`&cat`=16`&^ U
 `+`+ Library support]. Problems with TheIDE should be reported 
 to [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=index`&cat`=10`&^ U`+`+
  TheIDE]. Note that some sections have sticky posts, please read 
@@ -38,30 +38,29 @@ them before posting, they usually contain important information.&]
 [s5; You should always provide the information about your system, 
 as it often helps when reproducing your problem. Usually writing 
 down the version of U`+`+, your operating system and compiler 
-is enough. If the problem is TheIDE related, include also the 
+are enough. If the problem is TheIDE related, include also the 
 version of TheIDE `- it can be found in the About`-box (Assist 
 > About ...). In some special cases we might ask for more details 
 if it is necessary.&]
-[s5; Also please [*/ DO NOT] post bugs to [*/ Bugs (`& fixes)] forum 
+[s5; Also, please [*/ DO NOT] post bugs to [*/ Bugs (`& fixes)] forum 
 directly. Use the category best describing your problem, they 
 will be moved later if necessary.&]
-[s5; Whenever possible, please add a simple piece of code (a `"[*/ testcase]`") 
-that demonstrates the problem to your report. When the developers 
-know how to reproduce the problem, there is much higher probability 
-that fix will be released soon. In simple words: Problem reproduced 
-is usually a problem solved. If the test case is single file 
-only, just post the code into the forum post. If it is more complex, 
-you can use .zip attachment.&]
-[s5; One picture is worthed thousand words, as the old saying goes. 
+[s5; Whenever possible, please add a simple piece of code (a `"[*/ test 
+case]`") that demonstrates the problem which you report. When 
+the developers know how to reproduce the problem, there is a 
+much higher probability that fix will be released soon. In simple 
+words, problem reproduced is usually a problem solved. If the 
+test case is single file only, just paste the code into the forum 
+post. If it is more complex, you can use .zip attachment.&]
+[s5; One picture is worth a thousand words, as the old saying goes. 
 If you experience any kind of rendering problems, including a 
 [*/ screenshot] helps very much and saves you some typing.&]
-[s5; &]
 [s3; Submitting patches&]
-[s5; If you are find a bug and you also happen to be capable of solving 
+[s5; If you find a bug and you also happen to be capable of solving 
 it, we would be very thankful if you post your solution. The 
-same also applies if you find a solution to bug reported by someone 
-else.&]
-[s5; If the patch changes only small part of code, the preferred 
+same also applies if you find a solution to the bug reported 
+by someone else.&]
+[s5; If the patch changes only a small part of the code, the preferred 
 method is to post only changed functions or classes in the post 
 text. To make it easier for people reviewing the patch, you should 
 also write in which files the changed code resides. If there 
@@ -70,5 +69,4 @@ files in .zip as attachment.&]
 [s5; You can generate `*.diff or `*.patch file by only using SVN. 
 Please notice, that firstly you need to checkout repository. 
 More information about whole process you can find in following 
-[^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ article].&]
-[s0; ]]
+[^topic`:`/`/uppweb`/www`/svnInstall`$en`-us^ article].]]
