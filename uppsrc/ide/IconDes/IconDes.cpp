@@ -18,7 +18,6 @@ bool IdeIconDes::Load(const char *_filename)
 	return true;
 }
 
-
 void IdeIconDes::Save()
 {
 	if(format == 1) {

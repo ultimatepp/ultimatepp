@@ -139,11 +139,6 @@ void AndroidBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
 	map.Add("NDK_COMMON_C_OPTIONS",    &ndk_common_c_options);
 }
 
-AndroidBuilderSetup::~AndroidBuilderSetup()
-{
-	
-}
-
 void AndroidBuilderSetup::New(const String& builder)
 {
 	OnLoad();
@@ -381,11 +376,6 @@ DefaultBuilderSetup::DefaultBuilderSetup()
 	debug_info.Add("0", "None");
 	debug_info.Add("1", "Minimal");
 	debug_info.Add("2", "Full");
-}
-
-DefaultBuilderSetup::~DefaultBuilderSetup()
-{
-	
 }
 
 void DefaultBuilderSetup::InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map)
