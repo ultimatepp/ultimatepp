@@ -62,16 +62,15 @@ public:
 	FrameRight<Button> jdkBrowse;
 	FrameRight<Button> jdkDownload;
 	
-public:
+public: /* BuilderSetupInterface */
 	AndroidBuilderSetup();
-	virtual ~AndroidBuilderSetup();
 	
-	virtual void New(const String& builder);
-	virtual void OnLoad();
-	virtual void OnCtrlLoad(const String& ctrlKey, const String& value);
-	virtual void OnShow();
+	void New(const String& builder) override;
+	void OnLoad() override;
+	void OnCtrlLoad(const String& ctrlKey, const String& value) override;
+	void OnShow() override;
 	
-	virtual void InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map);
+	void InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map) override;
 
 private:
 	void OnSdkShow();
@@ -112,16 +111,15 @@ public:
 	DirTable   include;
 	DirTable   lib;
 	
-public:
+public: /* BuilderSetupInterface */
 	DefaultBuilderSetup();
-	virtual ~DefaultBuilderSetup();
 	
-	virtual void New(const String& builder);
-	virtual void OnLoad() {}
-	virtual void OnCtrlLoad(const String& ctrlKey, const String& value) {}
-	virtual void OnShow() {}
+	void New(const String& builder) override;
+	void OnLoad() override {}
+	void OnCtrlLoad(const String& ctrlKey, const String& value) override {}
+	void OnShow() override {}
 	
-	virtual void InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map);
+	void InitSetupCtrlsMap(VectorMap<Id, Ctrl*>& map) override;
 };
 
 class BuildMethods : public WithBuildMethodsLayout<TopWindow> {
