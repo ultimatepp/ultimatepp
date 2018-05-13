@@ -26,6 +26,7 @@ void  RichTextView::Paint(Draw& w)
 	pi.indexentry = Null;
 	pi.highlightpara = highlight;
 	pi.zoom = GetZoom();
+	pi.textcolor = textcolor;
 	int q = sb * pi.zoom;
 	scroller.Set(q);
 	w.Offset(0, -q);
@@ -372,6 +373,13 @@ RichTextView& RichTextView::Background(Color c)
 	return *this;
 }
 
+RichTextView& RichTextView::TextColor(Color _color)
+{
+	textcolor = _color;
+	Refresh();
+	return *this;
+}
+
 RichTextView& RichTextView::VCenter(bool b)
 {
 	vcenter = b;
@@ -416,6 +424,7 @@ RichTextView::RichTextView()
 	sb.WhenScroll = THISBACK(Scroll);
 	zoom = Null;
 	background = SColorPaper;
+	textcolor = Null;
 	vcenter = false;
 	margin = Rect(0, 0, 0, 0);
 	highlight = -1;
