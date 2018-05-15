@@ -140,7 +140,7 @@ String GetExeTitle()
 
 String GetTempDirectory()
 {
-	return GetTempPath()
+	return GetTempPath();
 }
 
 String TempFile(const char *filename)
