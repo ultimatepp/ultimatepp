@@ -12,9 +12,13 @@ void    SetHomeDirectory(const char *dir);
 
 void    UseHomeDirectoryConfig(bool b = true);
 
+String  GetTempDirectory();
+String  TempFile(const char *filename);
+
 String  GetConfigFolder();
 String  ConfigFile(const char *file);
 String  ConfigFile();
+
 
 const Vector<String>& CommandLine();
 const VectorMap<String, String>& Environment();
