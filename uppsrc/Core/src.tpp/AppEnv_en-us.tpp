@@ -1,5 +1,4 @@
 topic "Application & environment utility";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Application & environment utility";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Application `& environment utility]]}}&]
 [s9;%% A number of utility functions to obtain information about 
@@ -52,6 +52,15 @@ name of the file&]
 [* GetExeTitle]()&]
 [s2;%% Returns the title of the application.&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:GetTempDirectory`(`): [_^Upp`:`:String^ String]_[* GetTempDirectory]()&]
+[s2;%% Return the temporary directory.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:TempFile`(const char`*`): [_^Upp`:`:String^ String]_[* TempFile]([@(0.0.255) co
+nst]_[@(0.0.255) char]_`*[*@3 filename])&]
+[s2;%% Returns the absolute path of a file in temporary directory.&]
+[s3;%% &]
 [s4; &]
 [s5;:Upp`:`:GetExeFolder`(`): [_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
 tring]_[* GetExeFolder]()&]

@@ -138,6 +138,16 @@ String GetExeTitle()
 	return GetFileTitle(GetExeFilePath());
 }
 
+String GetTempDirectory()
+{
+	return GetTempPath()
+}
+
+String TempFile(const char *filename)
+{
+	return AppendFileName(GetTempDirectory(), filename);
+}
+
 #ifdef PLATFORM_POSIX
 
 String  GetHomeDirectory() {
