@@ -255,7 +255,7 @@ void AppMain()
 	         .DefaultExt("qtf");
 
 	LoadFromFile(callback(UWord::SerializeApp));
-	UWord uword;
+	new UWord;
 	Ctrl::EventLoop();
 	StoreToFile(callback(UWord::SerializeApp));
 }

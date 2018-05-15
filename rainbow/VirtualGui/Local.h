@@ -2,7 +2,7 @@
 
 #ifdef VIRTUALGUI
 
-NAMESPACE_UPP
+namespace Upp {
 
 class TopWindowFrame : public Ctrl {
 public:
@@ -58,6 +58,6 @@ public:
 	TopWindowFrame();
 };
 
-END_UPP_NAMESPACE
+}
 
 #endif
