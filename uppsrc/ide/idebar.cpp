@@ -134,6 +134,9 @@ void Ide::EditSpecial(Bar& menu)
 	bool b = !editor.IsReadOnly();
 	menu.Add(AK_WORDWRAP, THISBACK(ToggleWordwrap))
 	    .Check(wordwrap);
+	    
+	menu.Separator();
+	
 	menu.Add(b, AK_SPACESTOTABS, THISBACK(EditMakeTabs))
 		.Help("Convert leading blanks on each line to tabs");
 	menu.Add(b, AK_TABSTOSPACES, THISBACK(EditMakeSpaces))
