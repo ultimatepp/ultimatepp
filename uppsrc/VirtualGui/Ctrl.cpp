@@ -80,7 +80,8 @@ void  Ctrl::SetMouseCursor(const Image& image)
 {
 	GuiLock __;
 	fbCursorImage = image;
-	VirtualGuiPtr->SetMouseCursor(image);
+	if(SystemCursor)
+		VirtualGuiPtr->SetMouseCursor(image);
 }
 
 END_UPP_NAMESPACE
