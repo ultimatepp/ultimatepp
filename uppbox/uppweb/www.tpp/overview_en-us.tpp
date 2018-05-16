@@ -1,8 +1,7 @@
 topic "Ultimate++ Overview";
-[ $$0,0#00000000000000000000000000000000:Default]
 [l288;i704;a17;O9;~~~.992; $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*4 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [b167;a42;C $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17; $$6,6#27521748481378242620020725143825:desc]
@@ -21,10 +20,31 @@ topic "Ultimate++ Overview";
 [b117;*+117 $$19,20#27457433418004101424360058862402:Caption]
 [b50;2 $$20,20#03324558446220344731010354752573:Par]
 [i128;*C@(28.42.150)2 $$21,21#90519220486603166734501227306500:code]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Ultimate`+`+ Overview&]
 [s19;>b0;R^topic`:`/`/uppweb`/www`/overview`$ru`-ru^1 &]
-[s3; Whetting your appetite&]
+[s3; Table of contents&]
+[s0; &]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#1^2 1. Whetting your 
+appetite]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#2^2 2. Everything 
+belongs somewhere]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#3^2 3. Ultimate`+`+ 
+containers]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#4^2 4. Who owns widgets]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#5^2 5. Dialog templates 
+are C`+`+ templates]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#6^2 6. Value and Null]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#7^2 7. Display and 
+Convert]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#8^2 8. Function]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#9^2 9. Ultimate`+`+ 
+set of widgets]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#10^2 10. SQL programming]&]
+[s0; [^topic`:`/`/uppweb`/www`/overview`_en`-us`#11^2 11. Summary]&]
+[s0; &]
+[s3;:1: 1. Whetting your appetite&]
 [s5; Ultimate`+`+ promises radical reduction of code complexity of 
 typical desktop applications. Let us start with a_simple example 
 `- an application that displays the number of days between two 
@@ -77,7 +97,7 @@ and %```", abs(Date(`~date1) `- Date(`~date2)), `~date1, `~date2);]&]
 [s7;l128;*3 &]
 [s0;i128;*C@(28.42.150)2 &]
 [s0;i128;*C@(28.42.150) &]
-[s3; Everything belongs somewhere&]
+[s3;:2: 2. Everything belongs somewhere&]
 [s5; In Ultimate`+`+, most objects are bound to some logical scope. 
 As a result, you will not see many [*/ new ]operators in code using 
 Ultimate`+`+ and almost no [*/ delete ]operators outside the implementation 
@@ -96,7 +116,8 @@ than garbage collected languages like Java or C#. While those
 languages are able to provide automatic management of heap resources, 
 U`+`+ approach provides very deterministic automatic management 
 of [/ all] resources.&]
-[s3; Ultimate`+`+ containers&]
+[s5; &]
+[s3;:3: 3. Ultimate`+`+ containers&]
 [s5; One aspect of Ultimate`+`+ is bringing a lot of criticism: [/ Ultimate`+`+ 
 is not using much of standard C`+`+ library]. There are, however, 
 serious reasons for this. STL, with its devastating requirement 
@@ -120,7 +141,8 @@ in STL ([*C@(28.42.150) std`::vector<EditInt `*>]) or alternatively
 some sort of smart pointers (soon to be std`:: boost`::shared`_ptr), 
 but both increase code complexity and break the Ultimate`+`+ 
 rule according to which [/ everything belongs somewhere].&]
-[s3; Who owns widgets&]
+[s5; &]
+[s3;:4: 4. Who owns widgets&]
 [s5; One of the things we discovered over our countless experiments 
 with C`+`+ GUI is the fact that the GUI toolkit should not own 
 widget objects. GUI objects should be always owned by the client, 
@@ -154,7 +176,8 @@ in a very effective way, instead of&]
 on the life cycle of MyDialog GUI `- MyDialog can be closed or 
 not yet open, but attributes of widgets are accessible all the 
 time.&]
-[s3; Dialog templates are C`+`+ templates&]
+[s5; &]
+[s3;:5: 5. Dialog templates are C`+`+ templates&]
 [s5; Now that we have laid down the foundations, it is time to introduce 
 the coolest aspect of Ultimate`+`+ GUI programming `- layout 
 templates:&]
@@ -187,7 +210,8 @@ annoying things that seem to be necessary to identify widgets
 in client code (like widget IDs or names) are simply gone for 
 good. All you have to deal with in Ultimate`+`+ are your instance 
 variables.&]
-[s3; Value and Null&]
+[s5; &]
+[s3;:6: 6. Value and Null&]
 [s5; One aspect that makes development in Ultimate`+`+ very orthogonal 
 is the existence of Value `- the polymorphic value type. Any 
 of Ultimate`+`+ basic types (int, double, String, Color, Rect, 
@@ -208,7 +232,8 @@ either true or false according to its state) and Ultimate`+`+
 provides uniform access to these values via Value and GetData 
 / SetData virtual methods. For example, clearing a dialog can 
 be usually done by assigning Null to all of its widgets.&]
-[s3; Display and Convert&]
+[s5; &]
+[s3;:7: 7. Display and Convert&]
 [s5; Display and Convert based classes further enhance Ultimate`+`+ 
 flexibility using Value.&]
 [s5; Convert classes act as bidirectional Value to Value converters. 
@@ -231,7 +256,8 @@ Display attribute to DisplayColor (remember, Color is Value compatible
 and DropList`'s list consists of Values). Meanwhile, you can 
 use the same DisplayColor as the property of many other widget 
 classes.&]
-[s3; Function&]
+[s5; &]
+[s3;:8: 8. Function&]
 [s5; While virtual methods provide a great way to organize the [/ input] 
 interface of GUI widgets (like mouse or keyboard input), each 
 GUI toolkit has to provide effective means for [/ output] interfaces 
@@ -243,7 +269,8 @@ Upp`::Function. All output actions then can be defined as C`+`+
 lambdas. The reason for not using std`::function is that in GUI, 
 a lot of output events remain unassigned and std`::functions throws 
 when invoked empty `- Upp`::Function simply does nothing.&]
-[s3; Ultimate`+`+ set of widgets&]
+[s5; &]
+[s3;:9: 9. Ultimate`+`+ set of widgets&]
 [s5; While the standard set of U`+`+ widgets is less important to 
 us than the general principles, partly due to the fact that creating 
 new widget classes is often a trivial task in U`+`+, any description 
@@ -332,7 +359,8 @@ package, readily available to any U`+`+ application.&]
 [s5; &]
 [s5; You can find complete alphabetical list of basic U`+`+ widgets 
 [^topic`:`/`/CtrlLib`/src`/index`$en`-us^ here].&]
-[s3; SQL programming&]
+[s5; &]
+[s3;:10: 10. SQL programming&]
 [s5; One of the motivations behind Ultimate`+`+ always used to be 
 the development of enterprise class client`-server SQL applications. 
 Using general Ultimate`+`+ philosophy we believe to have achieved 
@@ -410,8 +438,8 @@ data interchange between dialog widgets and database records:&]
 [s21; -|if(dlg.Run() `=`= IDOK)&]
 [s21; -|-|SQL `* ctrls.Update(PERSON).Where(PERSONID `=`= personid);&]
 [s21; `}&]
-[s21; &]
-[s3; Summary&]
+[s5; &]
+[s3;:11: 11. Summary&]
 [s5; In this overview we have tried to summarize the most exciting 
 features of Ultimate`+`+. There are of course many more important 
 features including certain interesting implementation techniques 
@@ -433,6 +461,6 @@ department.&]
 nothing stays in your way to [^topic`:`/`/uppweb`/www`/download`$en`-us^ downloadin
 g] it. But be careful there: you should be prepared to throw away 
 some old habits and usual ways of thinking about how `"things 
-are always done`", or they might maime your opportunity to receive 
+are always done`", or they might ruin your opportunity to receive 
 a lot in the reward, together with a healthy disrespect to certain 
 honorable, well`-established development tools.]]

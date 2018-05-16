@@ -23,14 +23,13 @@ topic "GIT Mirror";
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; GIT Mirror&]
-[s3;:1: 1. Table of contents&]
+[s3;:1: Table of contents&]
+[s0;^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#1^ &]
+[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#2^ 1. Introduction]&]
+[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#3^ 2. Cloning repository]&]
+[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#4^ 3. Useful links]&]
 [s0; &]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#1^ 1. Table of contents]&]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#2^ 2. Introduction]&]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#3^ 3. Cloning repository]&]
-[s0; [^topic`:`/`/uppweb`/www`/GITMirror`_en`-us`#4^ 4. Useful links]&]
-[s0; &]
-[s3;:2: 2. Introduction&]
+[s3;:1: 1. Introduction&]
 [s5; Currently, our main source control version tool is SVN. However, 
 we provide a [^https`:`/`/github`.com`/ultimatepp`/mirror^ GIT 
 mirror] on GitHub that is in accordance with SVN trunk. The synchronization 
@@ -38,7 +37,7 @@ is being done after each commit.&]
 [s5; More information related to U`+`+`'s SVN is located in this 
 [^topic`:`/`/uppweb`/www`/svnInstall`_en`-us^ article].&]
 [s5; Please, do not forget to star our project on GitHub!&]
-[s3;:3: 3. Cloning repository&]
+[s3;:2: 2. Cloning repository&]
 [s5; To clone our GIT mirror, you have to execute the following command 
 in your terminal:&]
 [s0; &]
@@ -46,7 +45,7 @@ in your terminal:&]
 [s5; &]
 [s5; The repository is visible for everyone, so there is not need 
 to provide any credentials.&]
-[s3;:4: 4. Useful links&]
+[s3;:3: 3. Useful links&]
 [s5; External links:&]
 [s5;l160;i150;O0; [^https`:`/`/github`.com`/ultimatepp^ https://github.com/ultimatepp] 
 `- Ultimate`+`+ project on GitHub&]
