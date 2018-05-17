@@ -1,5 +1,4 @@
-topic "";
-[2 $$0,0#00000000000000000000000000000000:Default]
+topic "Parallel Sorting Template Functions";
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Parallel Sorting Template Functions]]}}&]
 [s3; &]
@@ -258,32 +258,29 @@ operator< as sorting predicate. Stable: retains the order of equal
 elements.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoSortIndex`(Upp::Index`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) clas
-s]_[*@4 Index], [@(0.0.255) class]_[*@4 Less]>&]
-[s5;:Upp`:`:CoSortIndex`(Upp::Index`&`,const Less`&`): [@(0.0.255) void]_[* CoSortIndex]([*@4 In
-dex][@(0.0.255) `&]_[*@3 index], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
+[s5;:Index`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index], 
+[@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Index`&`,const Less`&`): [@(0.0.255) void]_[* CoSortIndex]([*@4 Index][@(0.0.255) `&]_[*@3 i
+ndex], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
 [s2;%% Sorts Index or ArrayIndex using [%-*@3 less] as sorting predicate.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoSortIndex`(Upp::Index`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index]>&]
-[s5;:Upp`:`:CoSortIndex`(Upp::Index`&`): [@(0.0.255) void]_[* CoSortIndex]([*@4 Index][@(0.0.255) `&
-]_[*@3 index])&]
+[s5;:Index`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index]>&]
+[s5;:Index`&`): [@(0.0.255) void]_[* CoSortIndex]([*@4 Index][@(0.0.255) `&]_[*@3 index])&]
 [s2;%% Sorts Index or ArrayIndex.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoStableSortIndex`(Upp::Index`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) c
-lass]_[*@4 Index], [@(0.0.255) class]_[*@4 Less]>&]
-[s5;:Upp`:`:CoStableSortIndex`(Upp::Index`&`,const Less`&`): [@(0.0.255) void]_[* CoStableSort
-Index]([*@4 Index][@(0.0.255) `&]_[*@3 index], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 l
-ess])&]
+[s5;:Index`&`,const Less`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index], 
+[@(0.0.255) class]_[*@4 Less]>&]
+[s5;:Index`&`,const Less`&`): [@(0.0.255) void]_[* CoStableSortIndex]([*@4 Index][@(0.0.255) `&
+]_[*@3 index], [@(0.0.255) const]_[*@4 Less][@(0.0.255) `&]_[*@3 less])&]
 [s2;%% Sorts Index or ArrayIndex using [%-*@3 less] as sorting predicate. 
 Stable: retains the order of equal elements.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:CoStableSortIndex`(Upp::Index`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 In
-dex]>&]
-[s5;:Upp`:`:CoStableSortIndex`(Upp::Index`&`): [@(0.0.255) void]_[* CoStableSortIndex]([*@4 Inde
-x][@(0.0.255) `&]_[*@3 index])&]
+[s5;:Index`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 Index]>&]
+[s5;:Index`&`): [@(0.0.255) void]_[* CoStableSortIndex]([*@4 Index][@(0.0.255) `&]_[*@3 index])
+&]
 [s2;%% Sorts Index or ArrayIndex.  Stable: retains the order of equal 
 elements.&]
 [s0;%% ]]
