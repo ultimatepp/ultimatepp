@@ -27,6 +27,8 @@ like code completion, navigation and transformation.&]
 [s2;r58;%% TheIDE can work with GCC, Clang, MinGW and Visual C`+`+ 
 and contains a full featured debugger. TheIDE can also be used 
 to develop non`-U`+`+ applications.&]
+[s2;r58;%% U`+`+ supports following platforms on the production level: 
+Windows, GNU/Linux `& FreeBSD.&]
 [s2;r58;%% [* What you can get with the Ultimate`+`+ download in plain 
 English?]&]
 [s2;l160;r58;i150;O0;%% Very effective C`+`+ library for cross`-platform 
@@ -42,9 +44,7 @@ designed for developing large C`+`+ applications.&]
 &]
 [s2;l64;%% &]
 [s2;l64;%% [3 Current release: ][*3 2018.1 (rev 11873)]&]
-[s2;l64;%% [3 License: ][*3 BSD]&]
-[s2;l64;%% [3 Platforms: ][*3 Windows][3 , ][*3 GNU/Linux][3  `& ][*3 FreeBSD]&]
-[s0;*%% ]}}&]
+[s2;l64;%% [3 License: ][*3 BSD]]}}&]
 [s0; &]
 [ {{10000f0;g0;l8/25r8/25t8/25b8/25@(240)R(165) [s0;=%% [* U`+`+ Resources]]}}&]
 [s0;0 &]
