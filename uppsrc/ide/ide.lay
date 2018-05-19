@@ -470,18 +470,6 @@ LAYOUT(AddLangLayout, 148, 68)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(76, 64).TopPosZ(36, 24))
 END_LAYOUT
 
-LAYOUT(XInstallLayout, 348, 176)
-	ITEM(Option, uppsrc, SetLabel(t_("Create user copy of uppsrc package (Ultimate++)")).HSizePosZ(8, 8).TopPosZ(8, 17))
-	ITEM(Option, reference, SetLabel(t_("Create user copy of reference package (reference examples)")).HSizePosZ(8, 8).TopPosZ(28, 17))
-	ITEM(Option, tutorial, SetLabel(t_("Create user copy of tutorials package")).HSizePosZ(8, 8).TopPosZ(68, 17))
-	ITEM(Option, examples, SetLabel(t_("Create user copy of examples package")).HSizePosZ(8, 8).TopPosZ(48, 17))
-	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
-	ITEM(EditField, path, HSizePosZ(92, 8).TopPosZ(116, 17))
-	ITEM(Label, out, SetLabel(t_("Output Folder:")).LeftPosZ(8, 80).TopPosZ(116, 17))
-	ITEM(Option, bazaar, SetLabel(t_("Create user copy of bazaar package")).HSizePosZ(8, 8).TopPosZ(88, 16))
-END_LAYOUT
-
 LAYOUT(StatLayout, 732, 552)
 	ITEM(RichTextView, stat, HSizePosZ(8, 8).VSizePosZ(8, 40))
 	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(8, 64).BottomPosZ(8, 24))

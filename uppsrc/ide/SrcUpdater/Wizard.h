@@ -32,7 +32,9 @@ public:
 	Event<>  WhenFinish;
 	Event<>  WhenCancel;
 	Event<int> WhenStep;
+	
 	Wizard();
+	
 	void NextStep();
 	void PrevStep();
 	void SetStep(int n);
@@ -40,6 +42,7 @@ public:
 	void Unblock(int n)               {allowed[n]=true; UpdateButtons();}
 	bool IsBlocked(int n)             {return !allowed[n];}
 	int GetCount()                    {return count;}
+	
 private:
 	void CountStep(const NullStep&)             {}
 	template<class T> void CountStep(const T&)  {count++;}
@@ -64,7 +67,10 @@ template <class T0,class T1,class T2,class T3,class T4,class T5,class T6,class T
 //$+
 
 template <class T0,class T1,class T2,class T3,class T4,class T5,class T6,class T7,class T8,class T9>\
-Wizard<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>::Wizard():step(0),count(0){
+Wizard<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>::Wizard()
+	:step(0),
+	count(0)
+{
 	SetRect(0,0, HorzLayoutZoom(600),VertLayoutZoom(400));
 	*this << cancel.SetLabel(t_("Cancel")).RightPosZ(244, 72).BottomPosZ(4, 24)
 	      << prev.SetLabel(String("< ")+t_("Previous")).RightPosZ(164, 72).BottomPosZ(4, 24)
@@ -83,52 +89,78 @@ Wizard<T0,T1,T2,T3,T4,T5,T6,T7,T8,T9>::Wizard():step(0),count(0){
 	next.SetFocus();
 	DoStep();
 }
-WIZMEM(void)::NextStep(){
+
+WIZMEM(void)::NextStep()
+{
 	while(!allowed[++step]){}
 	DoStep();
 }
-WIZMEM(void)::PrevStep(){
+
+WIZMEM(void)::PrevStep()
+{
 	while(!allowed[--step]){}
 	DoStep();
 }
-WIZMEM(void)::SetStep(int n){
+
+WIZMEM(void)::SetStep(int n)
+{
 	ASSERT(n<count);
 	step=n;
 	DoStep();
 }
-WIZMEM(void)::AddStep(Ctrl& sN){
+
+WIZMEM(void)::AddStep(Ctrl& sN)
+{
 	Add(sN.HSizePosZ(4,4).VSizePosZ(4,28));
 }
-WIZMEM(bool)::IsFirst(int step){
+
+
+WIZMEM(bool)::IsFirst(int step)
+{
 	if(step==0) return true;
 	for(int i=step-1; i>=0; i--)
 		if(allowed[i]) return false;
 	return true;
 }
-WIZMEM(bool)::IsLast(int step){
+
+WIZMEM(bool)::IsLast(int step)
+{
 	if(step==count-1) return true;
 	for(int i=step+1; i<count; i++)
 		if(allowed[i]) return false;
 	return true;
 }
-WIZMEM(void)::SetVisibility(Ctrl& sN,int n){
+
+WIZMEM(void)::SetVisibility(Ctrl& sN,int n)
+{
 	sN.Show(step==n);
 }
-WIZMEM(void)::UpdateButtons(){
+
+WIZMEM(void)::UpdateButtons()
+{
+	bool last = IsLast(step);
+	
 	prev.Enable(!IsFirst(step));
-	next.Enable(!IsLast(step));
+	next.Enable(!last);
+	finish.Enable(last);
 }
-WIZMEM(void)::DoStep(){
+
+WIZMEM(void)::DoStep()
+{
 	WhenStep(step);
 	UpdateButtons();
 	MAP_FN2_ON_STEPS(SetVisibility);
 }
-WIZMEM(void)::PerformChanges(){
+
+WIZMEM(void)::PerformChanges()
+{
 	Hide();
 	WhenFinish();
 	Close();
 }
-WIZMEM(void)::Cancel(){
+
+WIZMEM(void)::Cancel()
+{
 	Hide();
 	WhenCancel();
 	Close();

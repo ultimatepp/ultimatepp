@@ -11,7 +11,8 @@ bool HasSvn(){
 	return Sys("svn",tmp)>=0;
 }
 
-InstallWizard::InstallWizard(){
+InstallWizard::InstallWizard()
+{
 	Title("TheIDE - Initial setting wizard");
 	Sizeable();
 	Icon(IdeImg::Package(), IdeImg::PackageLarge());
@@ -19,21 +20,25 @@ InstallWizard::InstallWizard(){
 	s0.text<<="[ [ [/ Welcome to TheIDE !]&][ &][ [1 This short wizard dialogue will help you to set up everything you need to get a full working Integrated Development Environment. Clicking ][/1 Finish][1  at any time will save the values to your hard disk (using default values for unfilled fields), while ][/1 Cancel][1  leaves this wizard without doing anything.]]";
 	s1.text<<="[ [ [/ Source code handling methods]&][ &][ [1 There is several ways how to access the U`+`+ source codes. Choose the method that best suits your needs. You can always change the settings later if necessary.]]";
 	s1.src<<=THISBACK(SrcChange);
-	bool usrshare=!UpdaterCfg().globalsrc.IsEmpty();
-	if(usrshare){
+	bool usrshare = !UpdaterCfg().globalsrc.IsEmpty();
+	if(usrshare) {
 		s1.src.EnableCase(0);
 		s1.src.EnableCase(1);
-		s1.src.SetLabel(0,"Local copy of sources from "+UpdaterCfg().globalsrc+" [recommended]");
-		s1.src.SetLabel(1,"Read only repositories in "+UpdaterCfg().globalsrc);
+		s1.src.SetLabel(0,"Local copy of sources from " + UpdaterCfg().globalsrc+" [recommended]");
+		s1.src.SetLabel(1,"Read only sources in " + UpdaterCfg().globalsrc);
+	} else {
+		s1.src.SetLabel(0,"Local copy of sources [recommended]");
+		s1.src.DisableCase(1);
 	}
-	bool hassvn=HasSvn();
-	s1.src.EnableCase(2,hassvn);
-	if((UpdaterCfg().method<2&&usrshare)
-	 ||(UpdaterCfg().method==2&&hassvn)
-	 ||(UpdaterCfg().method==3)){
-		s1.src<<=UpdaterCfg().method;
-	}else{
-		s1.src<<=(usrshare?0:(hassvn?2:3));
+	bool hassvn = HasSvn();
+	s1.src.EnableCase(2, hassvn);
+	
+	if((UpdaterCfg().method < 2 && usrshare)
+	 ||(UpdaterCfg().method == 2 && hassvn)
+	 ||(UpdaterCfg().method == 3)) {
+		s1.src = UpdaterCfg().method;
+	} else {
+		s1.src = 0;
 	}
 	s1.unit.Add(1,    "minute(s)")
 	       .Add(60,   "hour(s)")
@@ -61,7 +66,7 @@ InstallWizard::InstallWizard(){
 	s2.text<<="[ [ [/ SVN options]&][ &][ [1 Since you have chosen to use SVN working copy for assemblies, you can now specify which server to use and what sychronization scheme you want to use. Default server is the read only mirror on Google Code, but you can also use any other server (e.g. if you are a developer with commit rights) using the custom setup.]]";
 	if(UpdaterCfg().svnserver==""||UpdaterCfg().svnserver=="http://upp-mirror.googlecode.com/svn/trunk/"){
 		s2.server<<=0;
-	}else{
+	} else {
 		s2.server<<=1;
 		svndlg.readonly<<=UpdaterCfg().svnreadonly;
 	}
@@ -195,7 +200,7 @@ void InstallWizard::OnAsmRemove(){
 void InstallWizard::SrcChange(){
 	int s=s1.src;
 	
-	bool check=s!=3 && s!=1;
+	bool check = s == 2;
 	s1.period.Enable(check);
 	s1.unit.Enable(check);
 	s1.startup.Enable(check);
@@ -249,7 +254,8 @@ String InstallWizard::ReplaceVars(String str,const VectorMap<String,String>& var
 	return str;
 }
 
-void InstallWizard::Perform(){
+void InstallWizard::Perform()
+{
 	Progress p;
 	p.AlignText(LEFT);
 	p.Title("Installation");
@@ -261,13 +267,13 @@ void InstallWizard::Perform(){
 		UpdaterCfg().period=bool(s1.startup)?0:int(Null);
 	}
 	UpdaterCfg().localsrc=~s3.srcpath;
-	if(s2.server==0){
+	if(s2.server==0) {
 		//defualt SVN server
 		UpdaterCfg().svnserver="http://upp-mirror.googlecode.com/svn/trunk/";
 		UpdaterCfg().svnuser="";
 		UpdaterCfg().svnpass="";
 		UpdaterCfg().svnreadonly=true;
-	}else{
+	} else {
 		//custom SVN server
 		UpdaterCfg().svnserver=~svndlg.url;
 		UpdaterCfg().svnuser=~svndlg.usr;
