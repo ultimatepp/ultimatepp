@@ -18,7 +18,7 @@ String DefaultInstallFolder()
 {
 	String DefaultFolder;
 	String ExeTitle = ToUpper(GetExeTitle());
-	for(int i = 0 ; i < ExeTitle.GetCount();i++) {
+	for(int i = 0; i < ExeTitle.GetCount(); i++) {
 		if(ExeTitle[i] >= 'a' && ExeTitle[i] <= 'z')
 			ExeTitle.Set(i, ExeTitle[i] + 'A'-'a');
 	}
@@ -34,50 +34,14 @@ String DefaultInstallFolder()
 	return DefaultFolder;
 }
 
-struct XInstallDlg : public WithXInstallLayout<TopWindow> {
-
-private:
-
-	FrameRight<Button> pathbrowse;
-
-	void	FindInstFolder();
-
-public:
-
-	typedef XInstallDlg CLASSNAME;
-
-	XInstallDlg();
-};
-
-void XInstallDlg::FindInstFolder() {
-	FileSel *fs = &OutputFs();
-	fs->Set(~path);
-	if(! fs->ExecuteSelectDir("Select output directory ..."))
-		return;
-	path <<= ~(*fs);
-}
-
-XInstallDlg::XInstallDlg() {
-	CtrlLayoutOKCancel(*this, "Ultimate++ user setup");
-	pathbrowse <<= THISBACK(FindInstFolder);
-	pathbrowse.SetMonoImage(CtrlImg::smallright()).NoWantFocus();
-	uppsrc = true;
-	reference = true;
-	examples = true;
-	tutorial = true;
-	bazaar = true;
-	path.AddFrame(pathbrowse);
-	if(FileExists(ConfigFile("installpath")))
-		path <<= LoadFile(ConfigFile("installpath"));
-	else
-		path <<= AppendFileName(FromSystemCharset(getenv("HOME")), DefaultInstallFolder());
-}
-
 bool Install()
 {
-	if(!(InstallWizard().Run()&(IDOK|IDCANCEL))) return false;
+	int status = InstallWizard().Run();
+	if (status == IDCANCEL) {
+		return false;
+	}
 
-	String supp=UpdaterCfg().globalsrc;
+	String supp = UpdaterCfg().globalsrc;
 	FindFile ff(ConfigFile("*.bm"));
 	if(!ff) {
 		ff.Search(AppendFileName(supp, "*.bm"));
@@ -91,10 +55,8 @@ bool Install()
 	if(IsNull(LoadFile(ValgSupp)))
 		SaveFile(ValgSupp, LoadFile(AppendFileName(supp, "uppsrc/ide/valgrind.supp")));
 	// 2008/06/01 -- END
-	//PromptOK("Ultimate`+`+ user setup was finished.&Press OK to launch TheIDE.");
+	
 	return true;
 }
-
-//void Uninstall() {}
 
 #endif

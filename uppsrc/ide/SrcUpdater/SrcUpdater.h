@@ -48,11 +48,17 @@ typedef Wizard<WithTextOnlyLayout<ParentCtrl>,
                WithSourceLayout<ParentCtrl>,
                WithSvnLayout<ParentCtrl>,
                WithAssembliesLayout<ParentCtrl>,
-               WithTextOnlyLayout<ParentCtrl> 
+               WithTextOnlyLayout<ParentCtrl>
               > SrcWiz;
 
 class InstallWizard : public SrcWiz {
-	String src,out;
+	typedef InstallWizard CLASSNAME;
+	
+public:
+	WithCustomSvnLayout<TopWindow> svndlg;
+	InstallWizard();
+	
+private:
 	void SrcChange();
 	void RepoChange();
 	void RepoEdit();
@@ -62,11 +68,12 @@ class InstallWizard : public SrcWiz {
 	void OnAsmEdit();
 	void OnAsmRemove();
 	void RestoreAsm();
+	
 	String ReplaceVars(String str,const VectorMap<String,String>& vars);
-public:
-	typedef InstallWizard CLASSNAME;
-	WithCustomSvnLayout<TopWindow> svndlg;
-	InstallWizard();
+	
+private:
+	String src;
+	String out;
 };
 
 //storage and access to triplets of crc hashes (in moveable struct)

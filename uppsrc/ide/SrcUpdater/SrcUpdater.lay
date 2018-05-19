@@ -17,7 +17,7 @@ END_LAYOUT
 LAYOUT(SourceLayout, 400, 236)
 	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).TopPosZ(4, 76))
 	ITEM(Label, dv___1, SetLabel(t_("How to access U++ sources?")).HSizePosZ(4, 4).TopPosZ(84, 16))
-	ITEM(Switch, src, SetLabel(t_("Local copy of sources from /usr/share/upp [recommended]\nRead only access to /usr/share/upp\nSVN repository [developers and advanced users]\nManual setup [experts only]")).HSizePosZ(16, 12).TopPosZ(104, 68))
+	ITEM(Switch, src, SetLabel(t_("Local copy of sources from /usr/share/upp [recommended]\nRead only sources in /usr/share/upp\nSVN repository [developers and advanced users]\nManual setup [experts only]")).HSizePosZ(16, 12).TopPosZ(104, 68))
 	ITEM(Label, dv___3, SetLabel(t_("How often should TheIDE check for updates?")).LeftPosZ(4, 392).TopPosZ(172, 16))
 	ITEM(Label, dv___4, SetLabel(t_("Every")).LeftPosZ(28, 38).TopPosZ(192, 20))
 	ITEM(EditInt, period, Min(1).LeftPosZ(64, 52).TopPosZ(192, 19))
