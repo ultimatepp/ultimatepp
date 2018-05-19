@@ -29,7 +29,7 @@ END_LAYOUT
 LAYOUT(SvnLayout, 476, 236)
 	ITEM(RichTextCtrl, text, HSizePosZ(4, 4).VSizePosZ(4, 136))
 	ITEM(Label, dv___1, SetLabel(t_("SVN repository server:")).HSizePosZ(4, 4).BottomPosZ(114, 18))
-	ITEM(Switch, server, SetLabel(t_("Public read only mirror on google code [recommended]\nCustom repository")).HSizePosZ(12, 8).BottomPosZ(76, 36))
+	ITEM(Switch, server, SetLabel(t_("Public read only official U++ repository [recommended]\nCustom repository")).HSizePosZ(12, 8).BottomPosZ(76, 36))
 	ITEM(Button, svnsetup, SetLabel(t_("Setup custom repository ...")).LeftPosZ(136, 144).BottomPosZ(76, 20))
 	ITEM(Switch, syncmethod, SetLabel(t_("Always get the newest version available\nKeep the working copy synchronized with the version of TheIDE\nNo checks, I will synchronize manualy ")).HSizePosZ(16, 4).BottomPosZ(4, 48))
 	ITEM(Label, dv___5, SetLabel(t_("Synchronization scheme:")).HSizePosZ(4, 4).BottomPosZ(54, 18))

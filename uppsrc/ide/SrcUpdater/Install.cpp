@@ -24,8 +24,8 @@ InstallWizard::InstallWizard()
 	if(usrshare) {
 		s1.src.EnableCase(0);
 		s1.src.EnableCase(1);
-		s1.src.SetLabel(0,"Local copy of sources from " + UpdaterCfg().globalsrc+" [recommended]");
-		s1.src.SetLabel(1,"Read only sources in " + UpdaterCfg().globalsrc);
+		s1.src.SetLabel(0,"Local copy of sources from " + UpdaterCfg().globalsrc);
+		s1.src.SetLabel(1,"Read only sources in " + UpdaterCfg().globalsrc + " [recommended]");
 	} else {
 		s1.src.SetLabel(0,"Local copy of sources [recommended]");
 		s1.src.DisableCase(1);
@@ -33,11 +33,10 @@ InstallWizard::InstallWizard()
 	bool hassvn = HasSvn();
 	s1.src.EnableCase(2, hassvn);
 	
-	if((UpdaterCfg().method < 2 && usrshare)
-	 ||(UpdaterCfg().method == 2 && hassvn)
-	 ||(UpdaterCfg().method == 3)) {
-		s1.src = UpdaterCfg().method;
-	} else {
+	if (usrshare) {
+		s1.src = 1;
+	}
+	else {
 		s1.src = 0;
 	}
 	s1.unit.Add(1,    "minute(s)")
@@ -63,7 +62,11 @@ InstallWizard::InstallWizard()
 	}
 	SrcChange();
 
-	s2.text<<="[ [ [/ SVN options]&][ &][ [1 Since you have chosen to use SVN working copy for assemblies, you can now specify which server to use and what sychronization scheme you want to use. Default server is the read only mirror on Google Code, but you can also use any other server (e.g. if you are a developer with commit rights) using the custom setup.]]";
+	s2.text <<=
+	R"([ [ [/ SVN options]&][ &][ [1 Since you have chosen to use SVN working copy for assemblies,
+		 you can now specify which server to use and what sychronization scheme you want to use.
+		 Default server is the read only official Upp mirror,
+		 but you can also use any other server (e.g. if you are a developer with commit rights) using the custom setup.]])";
 	if(UpdaterCfg().svnserver==""||UpdaterCfg().svnserver=="http://upp-mirror.googlecode.com/svn/trunk/"){
 		s2.server<<=0;
 	} else {
@@ -269,7 +272,7 @@ void InstallWizard::Perform()
 	UpdaterCfg().localsrc=~s3.srcpath;
 	if(s2.server==0) {
 		//defualt SVN server
-		UpdaterCfg().svnserver="http://upp-mirror.googlecode.com/svn/trunk/";
+		UpdaterCfg().svnserver="svn://www.ultimatepp.org/upp/trunk/";
 		UpdaterCfg().svnuser="";
 		UpdaterCfg().svnpass="";
 		UpdaterCfg().svnreadonly=true;
