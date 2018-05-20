@@ -13,7 +13,8 @@
 #define LAYOUTFILE <ide/SrcUpdater/SrcUpdater.lay>
 #include <CtrlCore/lay.h>
 
-struct UpdaterConfig{
+struct UpdaterConfig
+{
 	int method,sync,ignored,period;
 	String localsrc,globalsrc;
 	String svnserver,svnuser,svnpass;

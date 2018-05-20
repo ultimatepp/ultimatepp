@@ -6,7 +6,8 @@
 
 bool LoadVarFile(const char *name, VectorMap<String, String>& _var);
 
-bool HasSvn(){
+bool HasSvn()
+{
 	String tmp;
 	return Sys("svn",tmp)>=0;
 }
@@ -82,9 +83,9 @@ InstallWizard::InstallWizard()
 	s2.svnsetup<<=THISBACK(RepoEdit);
 	s2.syncmethod<<=UpdaterCfg().sync;
 	RepoChange();
-	s3.text<<="[ [ [/ Set up assemblies]&][ &][ [1 You can choose which assemblies should be set up for you. Assembly is a set of directories (called nests) containing packages. You can find more about assemblies, nests and package managment in U`+`+ in the ][^http`:`/`/ultimatepp`.org`/app`$ide`$PackagesAssembliesAndNests`$en`-us`.html^1 manual][1 . To edit assemblies double-click or right`-click on them.]]";
-	s3.srcpath<<=UpdaterCfg().localsrc;
-	s3.outpath<<=GetHomeDirFile(".upp/_out");
+	s3.text <<= "[ [ [/ Set up assemblies]&][ &][ [1 You can choose which assemblies should be set up for you. Assembly is a set of directories (called nests) containing packages. You can find more about assemblies, nests and package managment in U`+`+ in the ][^http`:`/`/ultimatepp`.org`/app`$ide`$PackagesAssembliesAndNests`$en`-us`.html^1 manual][1 . To edit assemblies double-click or right`-click on them.]]";
+	s3.srcpath <<= UpdaterCfg().localsrc;
+	s3.outpath <<= GetHomeDirFile(".upp/_out");
 	s3.asmbls.AddColumn("Name");
 	s3.asmbls.AddColumn("Paths");
 	s3.asmbls.AddColumn("Output");
@@ -98,11 +99,12 @@ InstallWizard::InstallWizard()
 	WhenFinish=THISBACK(Perform);
 }
 
-void InstallWizard::RestoreAsm(){
+void InstallWizard::RestoreAsm()
+{
 	if(s1.src==1)
-		s3.srcpath<<=UpdaterCfg().globalsrc;
+		s3.srcpath <<= UpdaterCfg().globalsrc;
 	else if(UpdaterCfg().localsrc.StartsWith("/usr"))
-		s3.srcpath<<=GetHomeDirFile("upp");
+		s3.srcpath <<= GetHomeDirFile("upp");
 	else
 		s3.srcpath<<=UpdaterCfg().localsrc;
 	s3.outpath<<=GetHomeDirFile(".upp/_out");
@@ -194,13 +196,15 @@ void InstallWizard::OnAsmEdit(){
 	}
 }
 
-void InstallWizard::OnAsmRemove(){
+void InstallWizard::OnAsmRemove()
+{
 	int c = s3.asmbls.GetCursor();
 	if(c < 0) return;
 	s3.asmbls.Remove(c);
 }
 
-void InstallWizard::SrcChange(){
+void InstallWizard::SrcChange()
+{
 	int s=s1.src;
 	
 	bool check = s == 2;
@@ -209,10 +213,10 @@ void InstallWizard::SrcChange(){
 	s1.startup.Enable(check);
 	
 	int i=s3.asmbls.Find("uppbox",0);
-	if(s==2&&i<0){
+	if(s==2 && i<0) {
 		s3.asmbls.Add("uppbox","$(SRC)/uppbox;$(SRC)/uppsrc","$(OUT)","U++ infrastructure (web, packaging)");
 	}
-	if(s!=2&&i>=0&&s3.asmbls.Get(i,1)=="$(SRC)/uppbox;$(SRC)/uppsrc"&&!FileExists(ConfigFile("uppbox.var"))){
+	if(s!=2 && i>=0 && s3.asmbls.Get(i,1) == "$(SRC)/uppbox;$(SRC)/uppsrc" && !FileExists(ConfigFile("uppbox.var"))) {
 		s3.asmbls.Remove(i);
 	}
 	
@@ -222,24 +226,27 @@ void InstallWizard::SrcChange(){
 	if(s==1){
 		s3.srcpath.Disable();
 		s3.srcpath<<=UpdaterCfg().globalsrc;
-	}else{
+	} else {
 		s3.srcpath.Enable();
-		if(UpdaterCfg().localsrc==UpdaterCfg().globalsrc)
-			s3.srcpath<<=GetHomeDirFile("upp");
+		if(UpdaterCfg().localsrc == UpdaterCfg().globalsrc)
+			s3.srcpath <<= GetHomeDirFile("upp");
 		else
-			s3.srcpath<<=UpdaterCfg().localsrc;
+			s3.srcpath <<= UpdaterCfg().localsrc;
 	}
 }
 
-void InstallWizard::RepoChange(){
+void InstallWizard::RepoChange()
+{
 	s2.svnsetup.Enable(s2.server==1);
 }
 
-void InstallWizard::RepoEdit(){
+void InstallWizard::RepoEdit()
+{
 	svndlg.ExecuteOK();
 }
 
-String InstallWizard::ReplaceVars(String str,const VectorMap<String,String>& vars){
+String InstallWizard::ReplaceVars(String str,const VectorMap<String,String>& vars)
+{
 	String tmp;
 	int o,p;
 	for(int i=0;i<vars.GetCount();i++){
@@ -259,9 +266,9 @@ String InstallWizard::ReplaceVars(String str,const VectorMap<String,String>& var
 
 void InstallWizard::Perform()
 {
-	Progress p;
-	p.AlignText(LEFT);
-	p.Title("Installation");
+	Progress progress;
+	progress.AlignText(LEFT);
+	progress.Title("Installation");
 	UpdaterCfg().method=s1.src;
 	UpdaterCfg().sync=s2.syncmethod;
 	if(!IsNull(~s1.period)){
@@ -269,7 +276,7 @@ void InstallWizard::Perform()
 	}else{
 		UpdaterCfg().period=bool(s1.startup)?0:int(Null);
 	}
-	UpdaterCfg().localsrc=~s3.srcpath;
+	UpdaterCfg().localsrc = ~s3.srcpath;
 	if(s2.server==0) {
 		//defualt SVN server
 		UpdaterCfg().svnserver="svn://www.ultimatepp.org/upp/trunk/";
@@ -286,8 +293,8 @@ void InstallWizard::Perform()
 	switch(UpdaterCfg().method) {
 		case 0:{
 			// local copy of files from /usr/share/upp
-			p.SetText("Copying files ...");
-			if(!CopyFolder(UpdaterCfg().localsrc,UpdaterCfg().globalsrc,&p)){
+			progress.SetText("Copying files ...");
+			if(!CopyFolder(UpdaterCfg().localsrc, UpdaterCfg().globalsrc, &progress)){
 				Exclamation(DeQtf("Failed to copy "+UpdaterCfg().globalsrc+" to "+UpdaterCfg().localsrc));
 			}
 			FindFile ff(AppendFileName(UpdaterCfg().globalsrc, "*.bm"));
@@ -304,7 +311,7 @@ void InstallWizard::Perform()
 		}
 		case 2: {
 			// SVN assemblies
-			p.SetText("Downloading sources from svn (This may take a while) ...");
+			progress.SetText("Downloading sources from svn (This may take a while) ...");
 			String cmd="svn checkout --non-interactive --force ";
 			if(!UpdaterCfg().svnuser.IsEmpty()){cmd+="--username \""+UpdaterCfg().svnuser+"\" ";}
 			if(!UpdaterCfg().svnpass.IsEmpty()){cmd+="--password \""+UpdaterCfg().svnpass+"\" ";}
@@ -314,7 +321,7 @@ void InstallWizard::Perform()
 			LocalProcess svn(cmd);
 			int count=0;
 			while(svn.IsRunning()){
-				p.Step();
+				progress.Step();
 				Sleep(50);
 				//we better assure user that something is happening, downloading all the files is rather long...
 				String out=svn.Get();
@@ -323,7 +330,7 @@ void InstallWizard::Perform()
 					i=out.Find('\n',i+1);
 					count++;
 				}
-				p.SetText(Format("%i files downloaded",count));
+				progress.SetText(Format("%i files downloaded",count));
 			}
 			String err;
 			SaveFile(AppendFileName(~s3.srcpath,"uppsrc/ide/version.h"),"#define IDE_VERSION    \""+GetSvnVersion(UpdaterCfg().localsrc,false,err)+"\"\n");
@@ -362,7 +369,8 @@ void InstallWizard::Perform()
 	StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 }
 
-void Uninstall(){
+void Uninstall()
+{
 	DeleteFile(ConfigFile("updater.cfg"));
 	DeleteFile(ConfigFile("uppsrc.var"));
 	DeleteFile(ConfigFile("bazaar.var"));
@@ -374,4 +382,3 @@ void Uninstall(){
 	if(UpdaterCfg().localsrc!=UpdaterCfg().globalsrc)
 		DeleteFolderDeep(UpdaterCfg().localsrc);
 }
-

@@ -17,8 +17,8 @@ void LoadUpdaterCfg(){
 		UpdaterCfg().period=0;
 		UpdaterCfg().last=Null;
 		UpdaterCfg().ignored=0;
-		UpdaterCfg().localsrc=GetHomeDirFile("upp");
-		UpdaterCfg().svnserver="http://upp-mirror.googlecode.com/svn/trunk/";
+		UpdaterCfg().localsrc= GetExeFolder();
+		UpdaterCfg().svnserver="svn://www.ultimatepp.org/upp/trunk/";
 		UpdaterCfg().svnuser="";
 		UpdaterCfg().svnpass="";
 	}
