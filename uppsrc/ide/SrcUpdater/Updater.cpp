@@ -3,27 +3,23 @@
 #define LLOG(x)  //RLOG(x)
 #define LDUMP(x) //RDUMP(x)
 
-//#define IMAGECLASS IdeImg
-//#define IMAGEFILE <ide/ide.iml>
-//#include <Draw/iml_header.h>
-
 void LoadUpdaterCfg(){
 	String cfg=ConfigFile("updates.xml");
-	if(FileExists(cfg)){
-		LoadFromXMLFile(UpdaterCfg(),cfg);
-	}else{
-		UpdaterCfg().method=0;
-		UpdaterCfg().sync=0;
-		UpdaterCfg().period=0;
-		UpdaterCfg().last=Null;
-		UpdaterCfg().ignored=0;
-		UpdaterCfg().localsrc= GetExeFolder();
-		UpdaterCfg().svnserver="svn://www.ultimatepp.org/upp/trunk/";
-		UpdaterCfg().svnuser="";
-		UpdaterCfg().svnpass="";
+	if(FileExists(cfg)) {
+		LoadFromXMLFile(UpdaterCfg(), cfg);
+	} else {
+		UpdaterCfg().method   = 0;
+		UpdaterCfg().sync     = 0;
+		UpdaterCfg().period   = 0;
+		UpdaterCfg().last     = Null;
+		UpdaterCfg().ignored  = 0;
+		UpdaterCfg().localsrc = GetHomeDirFile("upp");
+		UpdaterCfg().svnserver= "svn://www.ultimatepp.org/upp/trunk/";
+		UpdaterCfg().svnuser  = "";
+		UpdaterCfg().svnpass  = "";
 	}
-	UpdaterCfg().globalsrc=FindGlobalSrc();
-	UpdaterCfg().available=false;
+	UpdaterCfg().globalsrc = FindGlobalSrc();
+	UpdaterCfg().available = false;
 }
 
 String GetSrcVersion(const char* dir,String& error){
