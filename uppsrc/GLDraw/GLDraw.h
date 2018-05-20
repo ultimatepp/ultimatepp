@@ -25,6 +25,7 @@ enum {
 	ATTRIB_VERTEX = 1,
 	ATTRIB_COLOR,
 	ATTRIB_TEXPOS,
+	ATTRIB_ALPHA,
 };
 
 class GLProgram {
@@ -88,6 +89,8 @@ public:
 
 	~GLDraw();
 };
+
+void GLOrtho(float left, float right, float bottom, float top, float near_, float far_, GLuint u_projection);
 
 };
 
