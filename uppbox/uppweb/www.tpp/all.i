@@ -138,10 +138,6 @@ TOPIC("ssposix_en-us")
 #include "ssposix_en-us.tppi"
 END_TOPIC
 
-TOPIC("svnInstall_en-us")
-#include "svnInstall_en-us.tppi"
-END_TOPIC
-
 TOPIC("ubuntuinstall_en-us")
 #include "ubuntuinstall_en-us.tppi"
 END_TOPIC

@@ -1,5 +1,4 @@
 topic "Learn C/C++ with TheIDE";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,6 +20,7 @@ topic "Learn C/C++ with TheIDE";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Learn C/C`+`+ with TheIDE&]
 [s3; 
@@ -70,7 +70,7 @@ that`'s looking for gaining experience in open source word. You
 can start your professional software development, career directly 
 with U`+`+ and TheIDE. We are open to new people that can support 
 us with their skills and bring fresh ideas to our framework.&]
-[s5; Why experience in open source is so important? First of all, 
+[s5; Why experience in open source is so important?  First of all, 
 it allows you to obtain several critical skills that will be 
 needed in your further carer. In this case you will learn how 
 to work with big code base. In meanwhile, you understand how 
