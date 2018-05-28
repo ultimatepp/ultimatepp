@@ -109,7 +109,7 @@ void Color::Jsonize(JsonIO& jio)
 	if(IsNull(r))
 		*this = Null;
 	else
-		*this = Color(r, g, b);	
+		*this = Color(r, g, b);
 }
 
 void Color::Xmlize(XmlIO& xio)
