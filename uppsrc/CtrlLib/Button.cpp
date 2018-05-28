@@ -559,6 +559,17 @@ void Option::RefreshPush() {
 		Pusher::RefreshPush();
 }
 
+void Option::EnableBox(bool b)
+{
+	Ctrl *p = GetParent();
+	if(!p)
+		return;
+	Rect r = GetScreenRect();
+	for(Ctrl *q = p->GetFirstChild(); q; q = q->GetNext())
+		if(q != this && r.Intersects(q->GetScreenRect()))
+			q->Enable(b);
+}
+
 void Option::AutoSync()
 {
 	if(!autobox)
