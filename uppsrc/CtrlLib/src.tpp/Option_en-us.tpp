@@ -68,6 +68,18 @@ et]()&]
 [s7;%% [%-*C@3 b]-|State.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:Option`:`:EnableBox`(bool`): [@(0.0.255) void]_[* EnableBox]([@(0.0.255) bool]_
+[*@3 b])&]
+[s2;%% Enables/disables all widgets that are children of Option`'s 
+parent and are intersecting Option rectangle.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Option`:`:EnableBox`(`): [@(0.0.255) void]_[* EnableBox]()&]
+[s2;%% Enables/disables all widgets that are children of Option`'s 
+parent and are intersecting Option rectangle based on the status 
+of the Option.&]
+[s3; &]
+[s4; &]
 [s5;:Option`:`:BlackEdge`(bool`): [_^Option^ Option][@(0.0.255) `&]_[* BlackEdge]([@(0.0.255) b
 ool]_[*@3 b]_`=_[@(0.0.255) true])&]
 [s2;%% Activates visual appearance suitable for placing Option on 

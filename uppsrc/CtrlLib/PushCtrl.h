@@ -197,6 +197,9 @@ public:
 
 	operator int() const                          { return option; }
 	void operator=(int b)                         { Set(b); }
+	
+	void    EnableBox(bool b);
+	void    EnableBox()                           { EnableBox(option); }
 
 	Option& BlackEdge(bool b = true)              { blackedge = b; Refresh(); return *this; }
 	bool    IsBlackEdge() const                   { return blackedge; }
