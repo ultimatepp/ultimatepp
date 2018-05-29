@@ -1,9 +1,9 @@
 topic "Tutorials";
-[ $$0,0#00000000000000000000000000000000:Default]
 [a83;*R6 $$1,3#31310162474203024125188417583966:caption]
 [b83;*4 $$2,3#07864147445237544204411237157677:title]
 [b42;a42;ph2 $$3,3#45413000475342174754091244180557:text]
 [a25;ph2 $$4,4#49211DBAE19D880B74F16648D25AF532:resource]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1; Tutorials&]
 [s2; 
@@ -39,19 +39,19 @@ started with TheIDE] `- the introduction to the concepts of TheIDE&]
 [s3; Use the whole power provided by the U`+`+ framework. Learn how 
 to use it`'s most important features.&]
 [s3;l160;i150;O0; [*^topic`:`/`/Core`/srcdoc`/Tutorial`$en`-us^ Core 
-tutorial] `- the introduction to the foundations behind the framework&]
+Tutorial] `- the introduction to the foundations behind the framework&]
 [s3;l160;i150;O0; [*^topic`:`/`/CtrlLib`/srcdoc`/Tutorial`$en`-us^ GUI 
-tutorial] `- learn how to build graphical user interfaces with 
+Tutorial] `- learn how to build graphical user interfaces with 
 the U`+`+&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/DrawTutorial`$en`-us^ Draw 
-tutorial] `- get knowledge about drawing custom content inside 
+Tutorial] `- get knowledge about drawing custom content inside 
 window or control&]
 [s3;l160;i150;O0; [*^topic`:`/`/Draw`/srcdoc`/ImgTutorial`$en`-us^ Image 
-tutorial] `- check out the mechanism behind the image manipulation&]
+Tutorial] `- check out the mechanism behind the image manipulation&]
 [s3;l160;i150;O0; [*^topic`:`/`/Sql`/srcdoc`/tutorial`$en`-us^ Sql 
 Tutorial] `- introduction to using databases within U`+`+ framework&]
 [s3;l160;i150;O0; [*^topic`:`/`/Skylark`/srcdoc`/Tutorial`$en`-us^ Skylark 
-tutorial] `- web framework tutorial&]
+Tutorial] `- web framework tutorial&]
 [s2; Video tutorials&]
 [s3; The list of video tutorials are available on the separate [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ p
 age].]]
