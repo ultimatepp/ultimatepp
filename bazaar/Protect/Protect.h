@@ -46,7 +46,7 @@ using namespace Upp;
 			__init: \
 				asm volatile( \
 					"\tjmp 1f\n" \
-					"\t.ascii \""PROTECT_START_MARKER"\"\n" \
+					"\t.ascii \"" PROTECT_START_MARKER "\"\n" \
 					"1:\n" \
 				); \
 		} \
@@ -96,7 +96,7 @@ using namespace Upp;
 		__end: \
 		asm volatile ( \
 			"\tjmp 2f\n" \
-			"\t.ascii \""PROTECT_END_MARKER"\"\n" \
+			"\t.ascii \"" PROTECT_END_MARKER "\"\n" \
 			"2:\n" \
 			::: \
 		); \
@@ -119,7 +119,7 @@ using namespace Upp;
 			__init: \
 			asm __volatile__( \
 				"\tjmp 1f\n" \
-				"\t.ascii \""OBFUSCATE_START_MARKER"\"\n" \
+				"\t.ascii \"" OBFUSCATE_START_MARKER "\"\n" \
 				"\t.ascii \"0123456789\"\n" \
 				"1:\n" \
 			); \
@@ -134,7 +134,7 @@ using namespace Upp;
 		__end: \
 			asm __volatile__( \
 				"\tjmp 1f\n" \
-				"\t.ascii \""OBFUSCATE_END_MARKER"\"\n" \
+				"\t.ascii \"" OBFUSCATE_END_MARKER "\"\n" \
 				"1:\n" \
 			); \
 			PROTECT_OBFUSCATE((byte *)&&__start, (byte *)&&__end - (byte *)&&__start + 2, (byte *)&&__init + 2, 16 /* sizeof(OBFUSCATE_START_MARKER) + sizeof("0123456789") */);
