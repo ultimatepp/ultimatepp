@@ -146,3 +146,7 @@ TOPIC("uppx11_en-us")
 #include "uppx11_en-us.tppi"
 END_TOPIC
 
+TOPIC("videotutorials_en-us")
+#include "videotutorials_en-us.tppi"
+END_TOPIC
+
