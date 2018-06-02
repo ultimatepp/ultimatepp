@@ -107,9 +107,12 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	alist.SetLineCy(max(Zy(16), Draw::GetStdFontCy()));
 	list.Add(clist.SizePos());
 	list.Add(alist.SizePos());
-	splitter.Horz(base, list);
-	splitter.SetPos(2000);
-	splitter.Zoom(selectvars ? -1 : 1);
+	
+	parent.Add(list.SizePos());
+	parent.AddFrame(splitter.Left(base, 170));
+	if (!selectvars)
+		splitter.Hide();
+	
 	newu <<= THISBACK(OnNew);
 	filter <<= THISBACK(OnFilter);
 	filter.Add(MAIN|FIRST, "Main packages of first nest");
