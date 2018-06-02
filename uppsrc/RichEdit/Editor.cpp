@@ -593,12 +593,12 @@ void StdLinkDlg(String& s, WString&)
 
 void StdLabelDlg(String& s)
 {
-	EditText(s, t_("Paragraph label"), t_("Label"), CharFilterAscii128, 100);
+	EditText(s, t_("Paragraph label"), t_("Label"), CharFilterAscii128, 1000);
 }
 
 void StdIndexEntryDlg(String& s)
 {
-	EditText(s, t_("Index Entry"), t_("Index entry"), CharFilterAscii128, 100);
+	EditText(s, t_("Index Entry"), t_("Index entry"), CharFilterAscii128, 1000);
 }
 
 RichEdit::RichEdit()
