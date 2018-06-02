@@ -1,5 +1,5 @@
-LAYOUT(ListLayout, 740, 432)
-	ITEM(Splitter, splitter, HSizePosZ(4, 4).VSizePosZ(4, 60))
+LAYOUT(SelectPackageLayout, 740, 432)
+	ITEM(ParentCtrl, parent, HSizePosZ(4, 4).VSizePosZ(4, 60))
 	ITEM(DataPusher, description, HSizePosZ(4, 4).BottomPosZ(36, 20))
 	ITEM(ProgressIndicator, progress, HSizePosZ(380, 240).BottomPosZ(9, 15))
 	ITEM(DropList, filter, LeftPosZ(4, 156).BottomPosZ(9, 19))

@@ -126,7 +126,7 @@ inline bool PackageLess(String a, String b)
 	return a < b;
 };
 
-struct SelectPackageDlg : public WithListLayout<TopWindow> {
+struct SelectPackageDlg : public WithSelectPackageLayout<TopWindow> {
 	virtual bool Key(dword key, int count);
 
 	typedef SelectPackageDlg CLASSNAME;
@@ -137,6 +137,7 @@ struct SelectPackageDlg : public WithListLayout<TopWindow> {
 
 	void           Serialize(Stream& s);
 
+	SplitterFrame  splitter;
 	ArrayCtrl      base;
 	ParentCtrl     list;
 	FileList       clist;
