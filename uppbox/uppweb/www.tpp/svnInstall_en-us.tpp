@@ -19,15 +19,19 @@ is usually done by installer.&]
 [s2; Well. You have svn installed so that you could get the latest 
 source code from official repository with just this command line:&]
 [s0;2 &]
-[s0;l256; [C$7;2 svn checkout svn://www.ultimatepp.org/upp/trunk/ my`-upp`-mirror]&]
+[s0;l256; [C$7;2 svn checkout svn://www.ultimatepp.org/upp/trunk/ my`-upp]&]
 [s0;2 &]
 [s2; To get upload permissions you will have to send a post to Forum/Bazaar, 
 explain as much details as possible about your project and ask 
-for permission to upload it to Bazaar. &]
+for permission to upload it to Bazaar.&]
 [s2; If the project is accepted (as usual), [^http`:`/`/www`.ultimatepp`.org`/forums`/index`.php`?t`=usrinfo`&id`=3`&^ U
 pp administrator] will contact you and give you the address where 
 you have to upload your new package, username (your Upp Forum 
 nick) and password.&]
+[s2; However, if you are not interested in creating your own package 
+and you want to help in U`+`+ development throw writing documentation 
+or new features for TheIDE. Please contact Upp administrator 
+directly.&]
 [s2;%- [%% For example, if the svn base address is `"]svn://192.168.0.1/upp`", 
 you should have to upload your package to `"svn://192.168.0.1/upp/trunk/bazaar/My`_
 Cool`_Package`". &]
@@ -63,4 +67,10 @@ diff file. At command line described history looks like this:&]
 [s0;2 &]
 [s2; In the above scenario the diff file will be stored in `~/upp 
 directory. Now, all you need to do is post your patch.&]
-[s0;2 ]]
+[s3; Mirrors&]
+[s2; Besides the official U`+`+ official repository there are following 
+mirrors:&]
+[s0;2 &]
+[s0;l256; [C$7;2 svn checkout `"https://github.com/ultimatepp/mirror`" 
+my`-upp`-mirror]&]
+[s2; ]]
