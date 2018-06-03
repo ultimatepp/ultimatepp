@@ -69,8 +69,7 @@ Plan]]
 ::r8/25t/25b/25R(165) [s0;>@(114)2%% ]
 ::^t8/25b8/25-2 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/documentation`$en`-us^ Documentation]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/examples`$en`-us^ Examples]&]
-[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/videotutorials`$en`-us^ Video 
-Tutorials]&]
+[s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/Tutorials`_en`-us^ Tutorials]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/SupportedPlatforms`$en`-us^ Supported 
 Platforms]&]
 [s4;i150;O0;%% [^topic`:`/`/uppweb`/www`/UppTechnologies`$en`-us^ U`+`+ 
