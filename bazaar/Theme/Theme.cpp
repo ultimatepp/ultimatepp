@@ -469,25 +469,149 @@ Theme& Theme::Apply() {
 		else if (group == "headerctrl" && useHeader) 
 			LoadHeader(HeaderCtrl::StyleDefault().Write(), set, MakePath(folder, "HeaderCtrl"), "Header");
 		else if (group  == "colors") {
-			String cf = GetMap(set, "colorface");
-			if (!cf.IsEmpty())
-				SColorFace_Write(StringToObject(cf));
 			
-			String cs = GetMap(set, "colorshadow");
-			if (!cs.IsEmpty())
-				SColorShadow_Write(StringToObject(cs));
+			String c;
+
+			c = GetMap(set, "colorface");
+			if (!c.IsEmpty())
+				SColorFace_Write(StringToObject(c));
 			
-			String cl = GetMap(set, "colorlight");
-			if (!cl.IsEmpty())
-				SColorLight_Write(StringToObject(cl));
+			c = GetMap(set, "colorshadow");
+			if (!c.IsEmpty())
+				SColorShadow_Write(StringToObject(c));
 			
-			String cm = GetMap(set, "colormark");
-			if (!cm.IsEmpty())
-				SColorMark_Write(StringToObject(cm));
+			c = GetMap(set, "colorlight");
+			if (!c.IsEmpty())
+				SColorLight_Write(StringToObject(c));
 			
-			String cd = GetMap(set, "colordissabled");
-			if (!cd.IsEmpty())
-				SColorDisabled_Write(StringToObject(cd));
+			c = GetMap(set, "colormark");
+			if (!c.IsEmpty())
+				SColorMark_Write(StringToObject(c));
+			
+			c = GetMap(set, "colordissabled");
+			if (!c.IsEmpty())
+				SColorDisabled_Write(StringToObject(c));
+
+			c = GetMap(set, "colorpaper");
+			if (!c.IsEmpty())
+				SColorPaper_Write(StringToObject(c));
+
+			c = GetMap(set, "colortext");
+			if (!c.IsEmpty())
+				SColorText_Write(StringToObject(c));
+
+			c = GetMap(set, "colorhighlight");
+			if (!c.IsEmpty())
+				SColorHighlight_Write(StringToObject(c));
+
+			c = GetMap(set, "colorhighlighttext");
+			if (!c.IsEmpty())
+				SColorHighlightText_Write(StringToObject(c));
+
+			c = GetMap(set, "colormenu");
+			if (!c.IsEmpty())
+				SColorMenu_Write(StringToObject(c));
+
+			c = GetMap(set, "colormenutext");
+			if (!c.IsEmpty())
+				SColorMenuText_Write(StringToObject(c));
+
+			c = GetMap(set, "colorinfo");
+			if (!c.IsEmpty())
+				SColorInfo_Write(StringToObject(c));
+
+			c = GetMap(set, "colorinfotext");
+			if (!c.IsEmpty())
+				SColorInfoText_Write(StringToObject(c));
+
+			c = GetMap(set, "colormenumark");
+			if (!c.IsEmpty())
+				SColorMenuMark_Write(StringToObject(c));
+
+			c = GetMap(set, "colorlabel");
+			if (!c.IsEmpty())
+				SColorLabel_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltface");
+			if (!c.IsEmpty())
+				SColorLtFace_Write(StringToObject(c));
+
+			c = GetMap(set, "colordkshadow");
+			if (!c.IsEmpty())
+				SColorDkShadow_Write(StringToObject(c));
+
+			c = GetMap(set, "colorblack");
+			if (!c.IsEmpty())
+				SBlack_Write(StringToObject(c));
+
+			c = GetMap(set, "colorgray");
+			if (!c.IsEmpty())
+				SGray_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltgray");
+			if (!c.IsEmpty())
+				SLtGray_Write(StringToObject(c));
+
+			c = GetMap(set, "colorwhitegray");
+			if (!c.IsEmpty())
+				SWhiteGray_Write(StringToObject(c));
+
+			c = GetMap(set, "colorwhite");
+			if (!c.IsEmpty())
+				SWhite_Write(StringToObject(c));
+
+			c = GetMap(set, "colorred");
+			if (!c.IsEmpty())
+				SRed_Write(StringToObject(c));
+
+			c = GetMap(set, "colorgreen");
+			if (!c.IsEmpty())
+				SGreen_Write(StringToObject(c));
+
+			c = GetMap(set, "colorbrown");
+			if (!c.IsEmpty())
+				SBrown_Write(StringToObject(c));
+
+			c = GetMap(set, "colorblue");
+			if (!c.IsEmpty())
+				SBlue_Write(StringToObject(c));
+
+			c = GetMap(set, "colormagenta");
+			if (!c.IsEmpty())
+				SMagenta_Write(StringToObject(c));
+
+			c = GetMap(set, "colorcyan");
+			if (!c.IsEmpty())
+				SCyan_Write(StringToObject(c));
+
+			c = GetMap(set, "coloryellow");
+			if (!c.IsEmpty())
+				SYellow_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltred");
+			if (!c.IsEmpty())
+				SLtRed_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltgreen");
+			if (!c.IsEmpty())
+				SLtGreen_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltyellow");
+			if (!c.IsEmpty())
+				SLtYellow_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltblue");
+			if (!c.IsEmpty())
+				SLtBlue_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltmagenta");
+			if (!c.IsEmpty())
+				SLtMagenta_Write(StringToObject(c));
+
+			c = GetMap(set, "colorltcyan");
+			if (!c.IsEmpty())
+				SLtCyan_Write(StringToObject(c));
+
 		}
 	}
 	return *this;
