@@ -449,7 +449,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 						res.Add("ERROR", PROTECT_MAIL_SEND_ERROR);
 				}
 				// otherwise we shall check if license expired
-				else if(userRec.Get("EXPIRATION") <= GetSysTime())
+				else if((Time)userRec.Get("EXPIRATION") <= GetSysTime())
 				{
 					// signals expiration and leave
 					res.Add("ERROR", PROTECT_MAIL_ALREADY_USED);
@@ -516,7 +516,7 @@ VectorMap<String, Value> ProtectServer::ProcessRequest(int reason, VectorMap<Str
 			}
 			
 			// ok, product registered and activated... is license expired ?
-			if(userRec.Get("EXPIRATION") < GetSysTime())
+			if((Time)userRec.Get("EXPIRATION") < GetSysTime())
 			{
 				res.Add("ERROR", PROTECT_LICENSE_EXPIRED);
 				return res;
