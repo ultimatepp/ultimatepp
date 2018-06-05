@@ -66,7 +66,7 @@ void ProtectClientDemo::onAction(int reason)
 		.SetUserZip(~zipEdit)
 		.SetUserPhone(~phoneEdit)
 		.SetUserFax(~faxEdit)
-		.SetUserCell(cellEdit)
+		.SetUserCell(~cellEdit)
 		.SetUserEMail(~emailEdit)
 		.SetActivationKey(~activationKey)
 	;
