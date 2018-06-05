@@ -104,10 +104,10 @@ bool Updater::ShellLink(void)
 		"</mime-info>\n"
 	;
 	success &= SaveFile("/usr/share/mime/packages/" + appName + ".xml", mime);
-	success &= (SysStart("update-mime-database",  "/usr/share/mime") != -1);
+	success &= (SysStart("update-mime-database",  "/usr/share/mime"));
 	
 	// updates desktop database to make it sense the changes in mimetype and application
-	success &= (SysStart("update-desktop-database", "") != -1);
+	success &= (SysStart("update-desktop-database", ""));
 	
 	return success;
 }
