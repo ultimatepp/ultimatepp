@@ -20,7 +20,7 @@ uses
 file
 	Tests readonly separator<:?mainPackage == 0:>;<:.:><:?mainPackage:>,
 	Init readonly separator,
-	<:PACKAGE:>.cpp
+	<:PACKAGE:>.cpp;
 
 mainconfig
 	"" = "";
