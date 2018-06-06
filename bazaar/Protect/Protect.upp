@@ -1,12 +1,10 @@
-description "Copy protection Protect package - code encryption\377";
-
 uses
-	Core,
 	Cypher,
-	ProductVersion;
+	Xed;
 
 file
 	Protect.h,
 	Protect.cpp,
+	Doc readonly separator,
 	srcdoc.tpp;
 

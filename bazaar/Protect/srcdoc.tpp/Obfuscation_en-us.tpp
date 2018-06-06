@@ -1,4 +1,4 @@
-topic "Code Obfuscation";
+topic "Obfuscation";
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s0;%- [*R6 Code Obfuscation]&]
@@ -6,7 +6,7 @@ topic "Code Obfuscation";
 [s0; As you can easily understand, the [^topic`:`/`/Protect`/srcdoc`/HowItWorks`$en`-us^ e
 ncryption method proposed earlier] has 2 flaws :&]
 [s0; &]
-[s0;i150;O0; The decrypting code is visible and traceable&]
+[s0;i150;O0; The decrypting code/key is visible and traceable&]
 [s0; &]
 [s0;i150;O0; You must obtain the key [*/ before ]the decryption phase&]
 [s0; &]
@@ -38,11 +38,12 @@ somehow also sensitive parts of code with a random key.&]
 [s0;l160;/ &]
 [s0;l160; [/ `}]&]
 [s0; &]
-[s0; You can notice that the [* decrFunc ]parameter is gone. The macro 
-generates a random, 16 byte long key, different for each obfuscated 
-function. The key is stored into the executable and automatically 
-used to decrypt the code on the fly when needed [*/ and ]to reencrypt 
-it at function exit.&]
+[s0; You can notice that the [* GetCypher ]parameter is gone. The macro 
+generates automatically a Snow2 Cypher object and a random, 16 
+byte long key, different for each obfuscated function. The key 
+is stored into the executable and automatically used to decrypt 
+the code on the fly when needed [*/ and ]to reencrypt it at function 
+exit.&]
 [s0; The code will run anyways, it won`'t check any key, so what`'s 
 the purpose ?&]
 [s0; Is simply to defeat  disassemblers and to make function tracing 
@@ -57,14 +58,10 @@ to decrypt the [* Protected ]parts, mostly on code startup and
 on some sensitive parts which needs to be executed [/ before ]the 
 key is available.&]
 [s0; &]
-[s0; A note : as opposite as [* PROTECT`_xxx`_FUNC()] macro block, the 
-[* OBFUSCATE`_xxx`_FUNC] one [/ doesn`'t] create an enclosed code 
-block, so the visibility of variable is [/ global ]to function; 
-more important, the code [*/ MUST ]reach the end macro in order 
-to [*/ re`-obfuscate] itself. That means that you [*/ can`'t] put 
-[*/ any] return statement inside the obfuscation block. If you 
-do, your app will crash if the obfuscated function is executed 
-twice. So :&]
+[s0; A note : the code [*/ MUST ]reach the end macro in order to [*/ re`-obfuscate] 
+itself. That means that you [*/ can`'t] put [*/ any] return statement 
+inside the obfuscation block. If you do, your app will crash 
+if the obfuscated function is executed twice. So :&]
 [s0; &]
 [s0;l160; [/ -|][*/ OBFUSCATE`_START`_FUNC;]&]
 [s0;l160; [*/ -|][/ <some code here>]&]
@@ -79,5 +76,8 @@ invocation; the right approach is :&]
 [s0;l160; [/ -|][*/ OBFUSCATE`_END`_FUNC;]&]
 [s0;l160; [/ -|return;]&]
 [s0; &]
-[s0; A note : [* OBFUSCATE`_START`_FUNC ]is, by now, [* NOT ]thread safe, 
-so [* DON`'T] obfuscate multithreaded routines.]
+[s0; The non`-MT limitation of obfuscation should be removed, as 
+the whole block is enclosed into a Mutex object.&]
+[s0; As the block is decoded AND re`-encoded on each execution, don`'t 
+use this kind of protection for time`-sensitive code sections, 
+as they would be slowed down quite a lot.]]
