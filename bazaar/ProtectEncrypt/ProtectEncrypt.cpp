@@ -1,102 +1,256 @@
 #include <Core/Core.h>
 
 #include <Protect/Protect.h>
+#include <Xed/Xed.h>
+
+// uncomment this line to see encryption details
+//#define ENCRYPT_DEBUG
 
 using namespace Upp;
 
-// search a buffer for a matching pattern
-// returns position of pattern
-byte *ProtectSearchBuf(byte *buf, byte *bufEnd, const byte *pattern, size_t patternLen)
+// search a buffer for code sequence
+// returns starting position and length of requested sequence in parameters
+// return a sequence code if found, SEQ_NONE if not
+// the sequence is ALWAYS composed by 6 call instructions directed to 2 dummy functions
+// the sequence encodes the start and end of code or data parts to be encrypted
+CodeSequence ProtectSearchBuf(byte *buf, byte *bufEnd, uint8_t *&seqStart, uint8_t *&blockStart, uint8_t *&blockEnd, uint8_t *&seqEnd)
 {
-	while(buf < bufEnd - patternLen)
+	int maxPatternSize = PROTECT_PatternSize(SEQ_CODE_START);
+	
+	while(buf <= bufEnd - maxPatternSize)
 	{
-		if(*buf != *pattern)
+		// check for a sequence
+		CodeSequence seq = PROTECT_CheckPattern(buf);
+		
+		// found; it should be a start sequence, otherwise we've got a problem
+		CodeSequence requestedEndSeq = SEQ_NONE;
+		switch(seq)
 		{
-			buf++;
-			continue;
+			case SEQ_CODE_END:
+			case SEQ_DATA_END:
+			case SEQ_OBFUSCATE_END:
+				Cerr() << "UNEXPECTED END SEQUENCE\n";
+			case SEQ_NONE:
+				buf++;
+				continue;
+				
+			case SEQ_CODE_START:
+				requestedEndSeq = SEQ_CODE_END;
+				break;
+				
+			case SEQ_DATA_START:
+				requestedEndSeq = SEQ_DATA_END;
+				break;
+				
+			case SEQ_OBFUSCATE_START:
+				requestedEndSeq = SEQ_OBFUSCATE_END;
+				break;
 		}
-		if(!memcmp(buf, pattern, patternLen))
-		   return buf;
-		buf++;
+		
+		// store sequence start
+		seqStart = buf;
+		
+		// skip starting sequence
+		buf += PROTECT_PatternSize(seq);
+		
+		// store block start
+		blockStart = buf;
+		
+		// look for corresponding end sequence; it should be the first sequence found
+		// after this one
+		while(buf <= bufEnd - maxPatternSize)
+		{
+			// check for a sequence
+			CodeSequence endSeq = PROTECT_CheckPattern(buf);
+			
+			// if no sequence found, go on
+			if(endSeq == SEQ_NONE)
+			{
+				buf++;
+				continue;
+			}
+			
+			// it the requested end sequence was found, all ok
+			else if(endSeq == requestedEndSeq)
+			{
+				// store end sequence position
+				blockEnd = buf;
+				
+				// store pointer after end sequence
+				seqEnd = buf + PROTECT_PatternSize(endSeq);
+				
+				// return found sequence
+				return seq;
+			}
+			
+			// unexpected sequence... return null sequence
+			Cerr() << "Unexpected END sequence '" << (int)endSeq << " for start sequence " << (int)seq << "\n";
+			return SEQ_NONE;
+		
+		}
 	}
-	return NULL;
+	
+	// no sequence found
+	return SEQ_NONE;
 }
 
-// encrypts code inside buffer
-int CryptBuf(byte *buf, byte *bufEnd, String const &key)
+// replace the start marker with a jmp and a NONCE random key
+static int mkCodeNonce(uint8_t *buf)
 {
-	int patches = 0;
+	int nonceSize = PROTECT_PatternSize(SEQ_CODE_START) - 2;
 	
-	byte *bStart = buf;
-	while( (bStart = ProtectSearchBuf(bStart, bufEnd, (const byte *)PROTECT_START_MARKER, strlen(PROTECT_START_MARKER))) != NULL)
-	{
-		// overwrite start pattern, just to fool a bit
-		// simple pattern search and use it as the encrypt init vector
-		byte *nonce = bStart;
-		for(unsigned i = 0; i < strlen(PROTECT_START_MARKER); i++)
-			*bStart++ = (byte)(Random() & 0xff);
-		// locate end pattern
-		byte *bEnd = ProtectSearchBuf(bStart, bufEnd, (const byte *)PROTECT_END_MARKER, strlen(PROTECT_END_MARKER));
-		if(!bEnd)
-		{
-			Cerr() << "Missing PROTECT_END_MARKER block\n";
-			return 0;
-		}
-		
-		// get size of chunk to patch
-		size_t size = bEnd - bStart;
-
-		// overwrite end pattern, just to fool a bit
-		// symple pattern search
-		for(unsigned i = 0; i < strlen(PROTECT_END_MARKER); i++)
-			*bEnd++ = (byte)(Random() & 0xff);
-		
-		// crypt buffer
-		Snow2 snow2((byte const *)~key, key.GetCount(), nonce, strlen(PROTECT_START_MARKER));
-		snow2(bStart, size);
-		patches++;
-	}
-	
-	return patches;
+	// modify start code adding a relative jump and embedding
+	// a NONCE key after it
+	// (also randomize code size area, it will be filled if needed
+	// by remaining code
+	buf[0] = 0xeb; // JMP REL, with 8 bit displacement
+	buf[1] = (uint8_t)nonceSize;
+	for(int i = 0; i < nonceSize; i++)
+		buf[i + 2] = (uint8_t)Random();
+	return nonceSize;
 }
 
-// obfuscates code inside buffer
-int ObfuscateBuf(byte *buf, byte *bufEnd)
+static int mkDataNonce(uint8_t *buf)
 {
-	int patches = 0;
+	int nonceSize = PROTECT_PatternSize(SEQ_DATA_START);
 	
-	byte *bStart = buf;
-	while( (bStart = ProtectSearchBuf(bStart, bufEnd, (const byte *)OBFUSCATE_START_MARKER, strlen(OBFUSCATE_START_MARKER))) != NULL)
-	{
-		// builds a random key, overwriting start pattern and following 10 bytes
-		String key;
-		for(unsigned i = 0; i < strlen(OBFUSCATE_START_MARKER) + 10; i++)
-		{
-			byte k = (byte)(Random() & 0xff);
-			*bStart++ = k;
-			key += (char)k;
-		}
-		
-		// locate end pattern
-		byte *bEnd = ProtectSearchBuf(bStart, bufEnd, (const byte *)OBFUSCATE_END_MARKER, strlen(OBFUSCATE_END_MARKER));
-		if(!bEnd)
-			return 0;
-		
-		// get size of chunk to patch
-		size_t size = bEnd - bStart;
+	for(int i = 0; i < nonceSize; i++)
+		buf[i] = (uint8_t)Random();
+	return nonceSize;
+}
 
-		// overwrite end pattern, just to fool a bit
-		// symple pattern search
-		for(unsigned i = 0; i < strlen(OBFUSCATE_END_MARKER); i++)
-			*bEnd++ = (byte)(Random() & 0xff);
-		
-		// obfuscate buffer
-		Snow2 snow2(key, "12345678");
-		snow2(bStart, size);
-		patches++;
+// encrypts code and data inside buffer
+void CryptBuf(byte *buf, byte *bufEnd, String const &key)
+{
+	int codePatches = 0;
+	int dataPatches = 0;
+	int obfuscatePatches = 0;
+	
+	// scan all code and patch found sequences
+	CodeSequence seq;
+	uint8_t *seqStart, *blockStart, *blockEnd, *seqEnd;
+	while( (seq = ProtectSearchBuf(buf, bufEnd, seqStart, blockStart, blockEnd, seqEnd)) != SEQ_NONE)
+	{
+		switch(seq)
+		{
+			case SEQ_CODE_START:
+			{
+#ifdef ENCRYPT_DEBUG
+				Cerr() << "Encrypt code block\n";
+#endif
+				// replace the start sequence with a relative jump
+				// and the nonce random encryption key
+				int nonceSize = mkCodeNonce(seqStart);
+				
+				// replace first nonce part with block size
+				*(uint32_t *)(seqStart + 2) = (uint32_t)(blockEnd - blockStart);
+				
+				// replace end sequence with a relative jump and some random data
+				// so hackers can't easily find it
+				mkCodeNonce(blockEnd);
+				
+				// create the encrypter
+				Snow2 snow2((uint8_t const *)~key, key.GetCount(), seqStart + 2, nonceSize);
+				
+				// encrypt first byte of each instruction
+				while(blockStart < blockEnd)
+				{
+					int len = XED.InstructionLength(blockStart);
+					Cerr() << "LEN:" << len << "   " << XED.DisassembleInstruction(blockStart, true) << "\n";
+					snow2(blockStart, 1);
+					blockStart += len;
+				}
+				codePatches++;
+				
+#ifdef ENCRYPT_DEBUG
+				Cerr() << "END encrypt code block\n";
+#endif
+				break;
+			}
+
+			case SEQ_OBFUSCATE_START:
+			{
+#ifdef ENCRYPT_DEBUG
+				Cerr() << "Obfuscate code block\n";
+#endif
+				// replace the start sequence with a relative jump
+				// and the nonce random encryption key + encryption key itself
+				// (obfuscation don't need an external key, it will embed it into code start)
+				int nonceSize = mkCodeNonce(seqStart);
+
+				// replace first nonce part with block size
+				*(uint32_t *)(seqStart + 2) = (uint32_t)(blockEnd - blockStart);
+				
+				// replace end sequence with a relative jump and some random data
+				// so hackers can't easily find it
+				int keySize = mkCodeNonce(blockEnd);
+				
+				// snow keys must be 16 or 32 bytes long
+				// we've an area of 5*6 - 2 = 28 bytes, so we shall use 16 bytes key
+				uint8_t const *key = blockEnd + 2 + (keySize - 16);
+				keySize = 16;
+				
+				// store relative position of seqStart from blockEnd to end sequence block
+				// this will also be part of obfuscation key
+				*(uint32_t *)(blockEnd + 2) = (uint32_t)(blockEnd - seqStart);
+				
+				// use last random data as an encryption key -- obfuscation doesn't
+				// need an external key
+								
+				// create the encrypter
+				Snow2 snow2(key, keySize, seqStart + 2, nonceSize);
+				
+				// encrypt first byte of each instruction
+				while(blockStart < blockEnd)
+				{
+					int len = XED.InstructionLength(blockStart);
+					Cerr() << "LEN:" << len << "   " << XED.DisassembleInstruction(blockStart, true) << "\n";
+					snow2(blockStart, 1);
+					blockStart += len;
+				}
+				obfuscatePatches++;
+#ifdef ENCRYPT_DEBUG
+				Cerr() << "END obfuscate code block\n";
+#endif
+				break;
+			}
+
+			case SEQ_DATA_START:
+			{
+#ifdef ENCRYPT_DEBUG
+				Cerr() << "Encrypt data block\n";
+#endif
+				// randomize data start and use it as a NONCE
+				mkDataNonce(seqStart);
+				
+				// replace first 4 bytes of start sequence with 32 bit data size block
+				*(uint32_t *)seqStart = blockEnd - blockStart;
+				
+				// randomize data end and use it as a NONCE
+				int nonceSize = mkDataNonce(blockEnd);
+				
+				// create the encrypter
+				Snow2 snow2((uint8_t const *)~key, key.GetCount(), blockEnd, nonceSize);
+				
+				snow2(blockStart, blockEnd - blockStart);
+				dataPatches++;
+#ifdef ENCRYPT_DEBUG
+				Cerr() << "END encrypt data block\n";
+#endif
+				break;
+			}
+			
+			default:
+				Cerr() << "OPS! UNEXPECTED SEQUENCE!\n";
+				return;
+		}
+		buf = seqEnd;
 	}
 	
-	return patches;
+	Cout() << "ENCRYPT RESULTS:\n";
+	Cout() << "Code sequences      : " << codePatches << "\n";
+	Cout() << "Data sequences      : " << dataPatches << "\n";
+	Cout() << "Obfuscate sequences : " << obfuscatePatches << "\n";
 }
 
 CONSOLE_APP_MAIN
@@ -165,29 +319,13 @@ CONSOLE_APP_MAIN
 	f.GetAll(buf, size);
 	f.Close();
 	
-	// crypt part
-	int cryptPoints = CryptBuf(buf, buf + size, key);
-	if(cryptPoints)
-		Cerr() << "Successfully encrypted " << cryptPoints << " functions\n";
-	else
-		Cerr() << "No encrypt points found\n";
+	// encrypt the application
+	CryptBuf(buf, buf + size, key);
 
-	// obfuscation part
-	int obfuscatePoints = ObfuscateBuf(buf, buf + size);
-	if(obfuscatePoints)
-		Cerr() << "Successfully obfuscated " << obfuscatePoints << " functions\n";
-	else
-		Cerr() << "No obfuscate points found\n";
-
-	if(cryptPoints || obfuscatePoints)
-	{
-		FileOut f(fName);
-		f.Put(buf, size);
-	}
+	// save the encrypted file
+	FileOut fOut(fName);
+	fOut.Put(buf, size);
 
 	// sets up exit code
 	SetExitCode(0);
-	
-
 }
-
