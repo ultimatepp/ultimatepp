@@ -1,0 +1,20 @@
+description "X86-X86-64 instruction decoder\377";
+
+uses
+	Core;
+
+options
+	-DXED_ENCODER,
+	-DXED_DECODER,
+	-DXED_AVX,
+	-DXED_SUPPORTS_AVX512;
+
+include
+	xed/generated,
+	xed/include/public/xed;
+
+file
+	import.ext,
+	Xed.h,
+	Xed.cpp;
+
