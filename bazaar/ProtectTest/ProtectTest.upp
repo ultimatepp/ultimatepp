@@ -1,23 +1,19 @@
-description "Test software protection module\377";
-
 uses
-	CtrlLib,
+	Core,
 	Protect;
 
 file
-	main.cpp;
+	ProtectTest.cpp;
 
 mainconfig
-	"" = "GUI USE_SQLITE",
-	"" = "GUI PROTECT USE_SQLITE",
-	"" = "GUI",
-	"" = "GUI PROTECT";
+	"" = "",
+	"" = "PROTECT";
 
 custom(POSIX PROTECT) "post-link",
 	"ProtectEncrypt $(EXEPATH) AABBCCDDEEFF00112233445566778899",
 	"";
 
 custom(WIN32 PROTECT) "post-link",
-	"ProtectEncrypt $(EXEPATH) AABBCCDDEEFF00112233445566778899",
+	"ProtectEncrypt.exe $(EXEPATH) AABBCCDDEEFF00112233445566778899",
 	"";
 
