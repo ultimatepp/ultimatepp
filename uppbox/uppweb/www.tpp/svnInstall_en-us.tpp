@@ -1,12 +1,21 @@
 topic "Subversion Install and Permissions";
 [a83;*R6 $$1,2#31310162474203024125188417583966:caption]
 [b42;a42;ph2 $$2,2#45413000475342174754091244180557:text]
-[b83;*4 $$3,2#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,2#07864147445237544204411237157677:title]
 [ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s1;a0; Subversion Install and Permissions&]
 [s2;>b0;a83;*R^topic`:`/`/uppweb`/www`/comparison`$ru`-ru^1 &]
-[s3; Subversion Install&]
+[s3; Table of contents&]
+[s0;2 &]
+[s0; [^topic`:`/`/uppweb`/www`/svnInstall`_en`-us`#1^2 1. Subversion 
+Install]&]
+[s0; [^topic`:`/`/uppweb`/www`/svnInstall`_en`-us`#2^2 2. Upload Permissions]&]
+[s0; [^topic`:`/`/uppweb`/www`/svnInstall`_en`-us`#3^2 3. Generating 
+patch]&]
+[s0; [^topic`:`/`/uppweb`/www`/svnInstall`_en`-us`#4^2 4. Mirrors]&]
+[s0;2 &]
+[s3;:1: 1. Subversion Install&]
 [s2; Upp project and Bazaar packages are hosted in Upp hosting system 
 and latest releases are available through [^http`:`/`/subversion`.tigris`.org`/^ Su
 bversion]. This is an Open Source version control system.&]
@@ -15,7 +24,7 @@ client like TortoiseSVN, SmartSVN, SlikSVN, kdesvn or just an
 `"apt install subversion`" in Linux. Be sure that in Windows 
 the svn client is in PATH environment variable although this 
 is usually done by installer.&]
-[s3; Upload Permissions&]
+[s3;:2: 2. Upload Permissions&]
 [s2; Well. You have svn installed so that you could get the latest 
 source code from official repository with just this command line:&]
 [s0;2 &]
@@ -53,7 +62,7 @@ observing following site: [^https`:`/`/github`.com`/ultimatepp`/mirror`/commits`
 ttps://github.com/ultimatepp/mirror/commits/master].&]
 [s2; And do not put many different features into a single commit. 
 It is better to separate them if they do different things.&]
-[s3; Generating patch&]
+[s3;:3: 3. Generating patch&]
 [s2; Sometimes you need to deliver patch for the whole library, but 
 you don`'t have permission to commit. In this case it is good 
 to consider generating a diff file that can be easily applied 
@@ -67,7 +76,7 @@ diff file. At command line described history looks like this:&]
 [s0;2 &]
 [s2; In the above scenario the diff file will be stored in `~/upp 
 directory. Now, all you need to do is post your patch.&]
-[s3; Mirrors&]
+[s3;:4: 4. Mirrors&]
 [s2; Besides the official U`+`+ official repository there are following 
 mirrors:&]
 [s0;2 &]
