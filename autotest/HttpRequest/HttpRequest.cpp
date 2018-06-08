@@ -60,14 +60,14 @@ CONSOLE_APP_MAIN
 		r.User("user", "passw0rd");
 		String h = r.Execute();
 		DUMP(h);
-		ASSERT(h.Find("\"authenticated\": true") >= 0);
+		ASSERT(h.Find("\"authenticated\":true") >= 0);
 	}
 	{
 		HttpRequest r("http://httpbin.org/digest-auth/auth/usr/pwd");
 		r.Digest("usr", "pwd");
 		String h = r.Execute();
 		DUMP(r.GetContent());
-		ASSERT(h.Find("\"authenticated\": true") >= 0);
+		ASSERT(h.Find("\"authenticated\":true") >= 0);
 	}
 	{
 		HttpRequest r("https://httpbin.org/bytes/0");
