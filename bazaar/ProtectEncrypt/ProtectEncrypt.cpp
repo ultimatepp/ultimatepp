@@ -319,6 +319,27 @@ CONSOLE_APP_MAIN
 	f.GetAll(buf, size);
 	f.Close();
 	
+	// on windows, identify automatically the executable type
+	// (32 or 64 bit) and configure correctly the XED module
+	// so it's possible to use any build to encrypt both kinds
+#ifdef WIN32 // Tom added
+	int coffindex=*(unsigned int*)&buf[0x3c];
+	unsigned short machine=*(unsigned short*)&buf[coffindex+4];
+	switch(machine){
+		case 0x14c: //i386
+			Cout() << "Processing 32-bit i386 executable\n";
+			XED.Set32bitMode();
+			break;
+		case 0x8664: // AMD64
+			Cout() << "Processing 64-bit AMD64 executable\n";
+			XED.Set64bitMode();
+			break;
+		default:
+			Cout() << "Unknown executable - Cannot process\n";
+			return;
+	}
+#endif
+
 	// encrypt the application
 	CryptBuf(buf, buf + size, key);
 
