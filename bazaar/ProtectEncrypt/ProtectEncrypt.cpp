@@ -323,26 +323,61 @@ CONSOLE_APP_MAIN
 	f.GetAll(buf, size);
 	f.Close();
 	
-	// on windows, identify automatically the executable type
+	// identify automatically the executable type
 	// (32 or 64 bit) and configure correctly the XED module
 	// so it's possible to use any build to encrypt both kinds
-#ifdef WIN32 // Tom added
-	int coffindex=*(unsigned int*)&buf[0x3c];
-	unsigned short machine=*(unsigned short*)&buf[coffindex+4];
-	switch(machine){
-		case 0x14c: //i386
-			Cout() << "Processing 32-bit i386 executable\n";
+	// thanx Tom - works both for PE and ELF executables
+	
+	// Unknown machine
+	unsigned short machine = 0;
+	
+	if((*(unsigned int*)~buf) == 0x464c457f)
+	{
+		// ELF machine ID
+		machine = *(unsigned short*)&buf[0x12];
+	}
+	else if((*(unsigned short*)~buf) == 0x5a4d)
+	{
+		// DOS header
+		
+		// Coff header
+		int coffindex = *(unsigned int*)&buf[0x3c];
+		
+		// Machine ID
+		machine = *(unsigned short*)&buf[coffindex+4];
+	}
+	
+	switch(machine)
+	{
+		// x86 ELF
+		case 0x03:
+			Cout() << "Processing 32-bit i386 ELF\n";
 			XED.Set32bitMode();
 			break;
-		case 0x8664: // AMD64
-			Cout() << "Processing 64-bit AMD64 executable\n";
+		
+		// x86-64 ELF	
+		case 0x3e:
+			Cout() << "Processing 64-bit AMD64 ELF\n";
 			XED.Set64bitMode();
 			break;
+			
+		//i386 PE
+		case 0x14c:
+			Cout() << "Processing 32-bit i386 COFF/PE\n";
+			XED.Set32bitMode();
+			break;
+			
+		// AMD64 PE	
+		case 0x8664:
+			Cout() << "Processing 64-bit AMD64 COFF/PE\n";
+			XED.Set64bitMode();
+			break;
+			
+		// failed to identify executable format, abort
 		default:
 			Cout() << "Unknown executable - Cannot process\n";
 			return;
 	}
-#endif
 
 	// encrypt the application
 	CryptBuf(buf, buf + size, key);
