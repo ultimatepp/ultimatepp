@@ -156,7 +156,9 @@ void CryptBuf(byte *buf, byte *bufEnd, String const &key)
 				while(blockStart < blockEnd)
 				{
 					int len = XED.InstructionLength(blockStart);
+#ifdef ENCRYPT_DEBUG
 					Cerr() << "LEN:" << len << "   " << XED.DisassembleInstruction(blockStart, true) << "\n";
+#endif
 					snow2(blockStart, 1);
 					blockStart += len;
 				}
@@ -204,7 +206,9 @@ void CryptBuf(byte *buf, byte *bufEnd, String const &key)
 				while(blockStart < blockEnd)
 				{
 					int len = XED.InstructionLength(blockStart);
+#ifdef ENCRYPT_DEBUG
 					Cerr() << "LEN:" << len << "   " << XED.DisassembleInstruction(blockStart, true) << "\n";
+#endif
 					snow2(blockStart, 1);
 					blockStart += len;
 				}
