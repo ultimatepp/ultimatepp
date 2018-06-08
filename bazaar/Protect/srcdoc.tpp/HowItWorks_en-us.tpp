@@ -18,9 +18,9 @@ to use it is enough to :&]
 [s0;i150;O0; Build the [* ProtectEncrypt ]package and put its executable 
 in some easy to locate place (system32 windows directory or /usr/bin 
 for linux systems, for example).&]
-[s0;l160; [* BEWARE ]: you [* MUST ]build the [* ProtectEncrypt ]application 
-with the same bit width as your final application; so, [* 32 bit 
-for 32 bit apps], [* 64 bit for 64 bit apps].&]
+[s0;l160; You can use a 32 bit or 64 bit ProtectEncrypt build on 
+any executable, it will detect the executable type (32 or 64 
+bit) and configure itself correctly.&]
 [s0; &]
 [s0;i150;O0; In main package configuration of application to protect, 
 add a PROTECT flag; you can, for example, make 2 main configurations, 
