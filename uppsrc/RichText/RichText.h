@@ -36,6 +36,8 @@ struct Zoom {
 
 	bool operator==(Zoom a)      { return m == a.m && d == a.d; }
 	bool operator!=(Zoom a)      { return m != a.m || d != a.d; }
+	
+	String ToString() const      { return String() << m << "/" << d; }
 
 	friend int operator/(int x, Zoom z)  { return z.m ? iscale(x, z.d, z.m) : 0; }
 };

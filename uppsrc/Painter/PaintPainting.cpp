@@ -317,7 +317,8 @@ static Image sRenderGlyph(Point at, int angle, int chr, Font fnt, Color color, S
 	BufferPainter sw(ib);
 	sw.Clear(RGBAZero());
 	sw.DrawText(at.x, at.y, angle, WString(chr, 1), fnt, color);
-	return ib;
+	Image h = ib;
+	return Premultiply(h);
 }
 
 INITIALIZER(PaintPainting)

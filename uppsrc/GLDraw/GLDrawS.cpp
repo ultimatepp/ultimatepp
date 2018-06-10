@@ -116,7 +116,8 @@ void initializeGL()
 	glEnableVertexAttribArray(ATTRIB_VERTEX);
 
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GLOrtho(float left, float right, float bottom, float top, float near_, float far_, GLuint u_projection)
@@ -278,11 +279,6 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
 	glDisableVertexAttribArray(ATTRIB_COLOR);
-
-	if(inv)
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	else
-		glEnable(GL_BLEND);
 #endif
 }
 
@@ -341,6 +337,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 		tc = partial;
 	}
 
+	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	glEnableVertexAttribArray(ATTRIB_TEXPOS);
 	glVertexAttribPointer(ATTRIB_TEXPOS, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), tc);
 	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
@@ -417,6 +414,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 		tc = partial;
 	}
 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnableVertexAttribArray(ATTRIB_TEXPOS);
 	glVertexAttribPointer(ATTRIB_TEXPOS, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), tc);
 	glEnableVertexAttribArray(ATTRIB_COLOR);
