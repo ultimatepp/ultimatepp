@@ -233,6 +233,7 @@ void Ctrl::UpdateRect0(bool sync)
 		static Rect pwa;
 		ONCELOCK {
 			pwa = GetPrimaryWorkArea();
+			DDUMP(pwa);
 		}
 		rect = CalcRect(pwa, pwa);
 	}
@@ -343,7 +344,7 @@ Ctrl& Ctrl::SetFrame(int i, CtrlFrame& fr) {
 	frame[i].frame->FrameRemove();
 	frame[i].frame = &fr;
 	fr.FrameAdd(*this);
-	SyncLayout();	
+	SyncLayout();
 	RefreshFrame();
 	return *this;
 }

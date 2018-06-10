@@ -11,6 +11,7 @@ NAMESPACE_UPP
 
 VirtualGui *VirtualGuiPtr;
 
+Size           desktop_size;
 Ptr<Ctrl>      Ctrl::desktop;
 Vector<Ctrl *> Ctrl::topctrl;
 
@@ -260,7 +261,10 @@ Rect Ctrl::GetWorkArea(Point pt)
 Rect Ctrl::GetVirtualScreenArea()
 {
 	GuiLock __;
-	return desktop ? desktop->GetRect() : Rect(0, 0, 0, 0);
+	return desktop_size;
+//	if(desktop)
+//		DLOG("GET " << desktop->GetRect());
+//	return desktop ? desktop->GetRect() : Rect(0, 0, 0, 0);
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
@@ -496,8 +500,11 @@ void Ctrl::SetDesktop(Ctrl& q)
 
 void Ctrl::SetDesktopSize(Size sz)
 {
-	if(desktop)
+	desktop_size = sz;
+	if(desktop) {
 		desktop->SetRect(sz);
+		DLOG("Set " << desktop->GetRect());
+	}
 	invalid = true;
 	SyncTopWindows();
 }
