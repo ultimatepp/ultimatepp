@@ -501,10 +501,8 @@ void Ctrl::SetDesktop(Ctrl& q)
 void Ctrl::SetDesktopSize(Size sz)
 {
 	desktop_size = sz;
-	if(desktop) {
+	if(desktop)
 		desktop->SetRect(sz);
-		DLOG("Set " << desktop->GetRect());
-	}
 	invalid = true;
 	SyncTopWindows();
 }
