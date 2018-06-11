@@ -233,7 +233,6 @@ void Ctrl::UpdateRect0(bool sync)
 		static Rect pwa;
 		ONCELOCK {
 			pwa = GetPrimaryWorkArea();
-			DDUMP(pwa);
 		}
 		rect = CalcRect(pwa, pwa);
 	}
