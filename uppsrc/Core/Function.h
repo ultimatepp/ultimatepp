@@ -91,7 +91,7 @@ template <typename... ArgTypes>
 using Gate = Function<bool (ArgTypes...)>;
 
 template <class Ptr, class Class, class Res, class... ArgTypes>
-Event<ArgTypes...> MemFn(Ptr object, Res (Class::*method)(ArgTypes...))
+Function<Res (ArgTypes...)> MemFn(Ptr object, Res (Class::*method)(ArgTypes...))
 {
 	return [=](ArgTypes... args) { return (object->*method)(args...); };
 }
