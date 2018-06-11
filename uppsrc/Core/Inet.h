@@ -720,8 +720,8 @@ public:
 	bool   IsClosed() const                             { return !IsOpen(); }
 
 	dword  GetWaitEvents() const                        { return WAIT_READ|(!!out_queue.GetCount() * WAIT_WRITE); }
-	SOCKET GetSOCKET() const                            { return socket ? socket->GetSOCKET() : 0; }
-	
+	SOCKET GetSOCKET() const                            { return socket ? socket->GetSOCKET() : INVALID_SOCKET; }
+	String GetPeerAddr() const                          { return socket ? socket->GetPeerAddr() : ""; }
 	void   AddTo(SocketWaitEvent& e)                    { e.Add(*socket, GetWaitEvents()); }
 
 	static void Trace(bool b = true);
