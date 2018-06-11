@@ -462,6 +462,27 @@ void TabBar::ContextMenu(Bar& bar)
 		bar.Add(t_("Close right tabs"), [=] { CloseAll(-1, ii + 1); });
 	if (mintabcount <= 0 && crosses)
 		bar.Add(t_("Close all"), [=] { CloseAll(-1); });
+	bar.Add(false, t_("Dock"), [=] {});
+	if(ii >= 1)
+		bar.Sub(t_("Move left before"), [=](Bar& bar) {
+			for(int i = 0; i < ii; i++)
+			   bar.Add(tabs[i].value.ToString(), [=] {
+				tabs.Move(ii,i);
+				SetCursor0(i);
+				Repos();
+				Refresh();
+			});;
+		});
+	if(tabs.GetCount() - 2 >= ii)
+		bar.Sub(t_("Move right after"),  [=](Bar& bar)  {
+			for(int i = ii+1; i < tabs.GetCount(); i++)
+				bar.Add(tabs[i].value.ToString(),[=] {
+				tabs.Move(ii,i+1);
+				SetCursor0(i);
+				Repos();
+				Refresh();
+			});
+		});
 	if(grouping && ii >= 0) {
 		if(group > 0)
 			bar.Add(t_("Close group"), THISBACK(CloseGroup));
