@@ -67,7 +67,7 @@ void FillTopicsList(FileList& list, const Vector<String>& topics)
 
 void TopicEditor::Open(const String& group_path)
 {
-	String search_phase = topics_search.GetData().ToString();
+	topics_search.Clear();
 	
 	grouppath = group_path;
 	if(FileExists(grouppath))
