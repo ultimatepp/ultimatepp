@@ -33,6 +33,7 @@ CH_STYLE(ScrollBar, Style, StyleDefault)
 	Sb(right2, CtrlsImg::RA());
 	isup2 = isdown2 = isleft2 = isright2 = false;
 	thumbwidth = Null;
+	bgcolor = SColorPaper();
 }
 
 ScrollBar::ScrollBar() {
@@ -135,7 +136,7 @@ Rect ScrollBar::GetPartRect(int p) const {
 }
 
 void ScrollBar::Paint(Draw& w) {
-	w.DrawRect(GetSize(), SColorPaper());
+	w.DrawRect(GetSize(), style->bgcolor);
 	int cc;
 	Size sz = style->through ? GetSize() : Slider(cc).GetSize();
 	light = GetMousePart();

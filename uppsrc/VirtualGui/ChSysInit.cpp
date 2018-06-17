@@ -6,8 +6,6 @@ NAMESPACE_UPP
 
 void ChSysInit()
 {
-	CtrlImg::Reset();
-	CtrlsImg::Reset();
 	ChReset();
 }
 
