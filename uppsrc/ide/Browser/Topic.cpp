@@ -74,6 +74,7 @@ void TopicEditor::Open(const String& group_path)
 		DeleteFile(grouppath);
 	DirectoryCreate(grouppath);
 	
+	topics.Clear();
 	if(LoadTopics(topics, grouppath))
 		SaveInc();
 	FillTopicsList(topics_list, topics);
