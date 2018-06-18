@@ -51,7 +51,7 @@ public:
 	void   Reset();
 	void   New()                         { Reset(); }
 	
-	Sha1Stream(); 
+	Sha1Stream();
 	~Sha1Stream();
 };
 
