@@ -30,15 +30,18 @@ String  MD5String(const String& data);
 String  MD5StringS(const void *data, dword size);
 String  MD5StringS(const String& data);
 
+typedef struct {
+    uint32_t state[5];
+    uint32_t count[2];
+    unsigned char buffer[64];
+} UPP_SHA1_CTX;
+
 class Sha1Stream : public OutStream {
-	dword state[5];
-	byte  buffer[64];
-	int   pos;
-	dword size;
+	UPP_SHA1_CTX ctx[1];
 
 	virtual  void  Out(const void *data, dword size);
 
-	void  Cleanup();
+	void  Cleanup()                      { memset(ctx, 0, sizeof(ctx)); }
 
 public:
 	void   Finish(byte *hash20);
