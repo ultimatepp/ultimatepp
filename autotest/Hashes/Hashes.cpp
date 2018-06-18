@@ -2,7 +2,7 @@
 
 using namespace Upp;
 
-#define TEST(x, ref) DDUMP(x), LOG("reference: " << ref), ASSERT(x == ref), LOG("----");
+#define TEST(x, ref) { auto h = x; DDUMP(h), LOG("reference: " << ref), ASSERT(h == ref), LOG("----"); }
 
 CONSOLE_APP_MAIN
 {
@@ -15,6 +15,13 @@ CONSOLE_APP_MAIN
 	TEST(SHA1String(""), "da39a3ee5e6b4b0d3255bfef95601890afd80709");
 	TEST(SHA1StringS(""), "da39a3ee 5e6b4b0d 3255bfef 95601890 afd80709");
 	TEST(SHA1String("Hello world"), "7b502c3a1f48c8609ae212cdfb639dee39673f5e");
+	
+	{
+		Sha1Stream sha1;
+		for(const char *s = "Hello world"; *s; s++)
+			sha1.Put(*s);
+		TEST(sha1.FinishString(), "7b502c3a1f48c8609ae212cdfb639dee39673f5e");
+	}
 
 	TEST(SHA256String(""), "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 	TEST(SHA256StringS(""), "e3b0c442 98fc1c14 9afbf4c8 996fb924 27ae41e4 649b934c a495991b 7852b855");
