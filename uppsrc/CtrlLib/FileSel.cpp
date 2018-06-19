@@ -2038,7 +2038,7 @@ void FileSel::AddSystemPlaces(int row)
 		if(*fn != '.' && fn.Find("floppy") < 0)
 			AddPlace("/media/" + fn, fn, "PLACES:SYSTEM", row++);
 	}
-	AddPlace("/", t_("Computer"), "PLACES:SYSTEM");
+	AddPlace("/", t_("Computer"), "PLACES:SYSTEM", row++);
 #endif
 }
 
