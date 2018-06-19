@@ -100,7 +100,6 @@ struct TemplateDlg : public WithNewPackageLayout<TopWindow> {
 int FilterPackageName(int c);
 
 struct NestEditorDlg : public WithNestEditorLayout<TopWindow> {
-    typedef NestEditorDlg CLASSNAME;
     NestEditorDlg();
     
 	void   Set(const String& nests);
