@@ -99,25 +99,39 @@ struct TemplateDlg : public WithNewPackageLayout<TopWindow> {
 
 int FilterPackageName(int c);
 
+struct NestEditorDlg : public WithNestEditorLayout<TopWindow> {
+    typedef NestEditorDlg CLASSNAME;
+    NestEditorDlg();
+    
+	void   Set(const String& nests);
+	String Get() const;
+
+    void Sync();
+    void RemoveEmptyRows();
+    bool IsRowEmpty() const { return IsNull(nests.Get(nests.GetCursor(), 0)); }
+};
+
 class BaseSetupDlg : public WithBaseSetupLayout<TopWindow>
 {
 public:
-	typedef BaseSetupDlg CLASSNAME;
-	BaseSetupDlg();
+    typedef BaseSetupDlg CLASSNAME;
+    BaseSetupDlg();
 
-	bool Run(String& vars);
-
-private:
-	void OnUpp();
-	void OnBrowseUpp();
+    bool Run(String& vars);
 
 private:
-	FrameRight<Button> browse_upp;
-	SelectDirButton    browse_out;
-	bool               new_base;
+    void OnUpp();
+    void OnBrowseUpp();
+
+private:
+    FrameRight<Button> browse_upp;
+    SelectDirButton    browse_out;
+    bool               new_base;
 };
 
+
 bool BaseSetup(String& vars);
+void AddAssemblyPaths(FileSel& dir);
 
 inline bool PackageLess(String a, String b)
 {
