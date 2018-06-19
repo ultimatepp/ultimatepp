@@ -117,7 +117,6 @@ void initializeGL()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void GLOrtho(float left, float right, float bottom, float top, float near_, float far_, GLuint u_projection)
@@ -282,12 +281,6 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 #endif
 }
 
-int PutImagePixels;
-
-EXITBLOCK {
-	RDUMP(PutImagePixels);
-}
-
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	LTIMING("PutImage");
@@ -299,8 +292,6 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	Rect s = src & isz;
 	Rect r(p, s.GetSize());
 	
-	PutImagePixels += isz.cx * isz.cy;
-
 	GLshort vertex[] = {
 	    (GLshort)r.left, (GLshort)r.top,
 	    (GLshort)r.left, (GLshort)r.bottom,
@@ -348,24 +339,15 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	glDisableVertexAttribArray(ATTRIB_TEXPOS);
 }
 
-int PutImageCPixels;
-
-EXITBLOCK {
-	RDUMP(PutImageCPixels);
-}
-
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 {
 	FlushPutRect();
 
-	RTIMING("PutImage colored");
 	gl_image_colored.Use();
 
 	Size isz = img.GetSize();
 	Rect s = src & isz;
 	Rect rect(p, s.GetSize());
-
-	PutImageCPixels += isz.cx * isz.cy;
 
 	GLshort vertex[] = {
 	    (GLshort)rect.left, (GLshort)rect.top,
@@ -433,7 +415,7 @@ void GLDraw::Init(Size sz, uint64 context_)
 	SDraw::Init(sz);
 
 	ONCELOCK {
-		initializeGL();	
+		initializeGL();
 	}
 
 	gl_image.Use();
