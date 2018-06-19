@@ -158,8 +158,11 @@ NestEditorDlg::NestEditorDlg()
 
 void NestEditorDlg::Sync()
 {
-	edit.Enable(nests.GetCount());
-	remove.Enable(nests.GetCount());
+	bool b = nests.GetCount();
+	edit.Enable(b);
+	remove.Enable(b);
+	up.Enable(b);
+	down.Enable(b);
 }
 
 bool BaseSetup(String& vars) { return BaseSetupDlg().Run(vars); }

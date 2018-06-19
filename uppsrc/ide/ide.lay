@@ -813,8 +813,8 @@ END_LAYOUT
 
 LAYOUT(NestEditorLayout, 420, 388)
 	ITEM(Button, add, SetLabel(t_("Insert path")).Tip(t_("Add row")).RightPosZ(256, 88).TopPosZ(8, 23))
-	ITEM(Button, down, Tip(t_("Add row")).RightPosZ(36, 24).TopPosZ(8, 23))
-	ITEM(Button, up, Tip(t_("Add row")).RightPosZ(8, 24).TopPosZ(8, 23))
+	ITEM(Button, down, Tip(t_("Move down")).RightPosZ(36, 24).TopPosZ(8, 23))
+	ITEM(Button, up, Tip(t_("Move up")).RightPosZ(8, 24).TopPosZ(8, 23))
 	ITEM(Button, edit, SetLabel(t_("Edit path")).Tip(t_("Edit row")).RightPosZ(168, 84).TopPosZ(8, 23))
 	ITEM(Button, remove, SetLabel(t_("Remove path")).Tip(t_("Delete row")).RightPosZ(64, 100).TopPosZ(8, 23))
 	ITEM(ArrayCtrl, nests, LeftPosZ(4, 408).TopPosZ(36, 312))
