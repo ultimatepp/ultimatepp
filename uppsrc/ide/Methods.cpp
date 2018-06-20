@@ -605,20 +605,12 @@ bool BuildMethods::Save()
 	return true;
 }
 
-struct BoldDisplay : Display {
-	virtual void Paint(Draw& w, const Rect& r, const Value& q,
-					   Color ink, Color paper, dword style) const {
-		w.DrawRect(r, paper);
-		DrawSmartText(w, r.left, r.top, r.Width(), (String)q, StdFont().Bold(), ink);
-	}
-};
-
 void BuildMethods::ShowDefault()
 {
 	String m = GetDefaultMethod();
 	for(int i = 0; i < method.GetCount(); i++)
 		if((String)method.Get(i, 0) == m)
-			method.SetDisplay(i, 0, Single<BoldDisplay>());
+			method.SetDisplay(i, 0, BoldDisplay());
 		else
 			method.SetDisplay(i, 0, StdDisplay());
 }

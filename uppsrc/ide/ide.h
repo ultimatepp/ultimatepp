@@ -53,6 +53,8 @@ bool IsTextFile(const String& file, int maxline = INT_MAX);
 
 void Puts(const char *s);
 
+Display& BoldDisplay();
+
 class Console : public LineEdit {
 public:
 	virtual bool Key(dword key, int count);

@@ -156,6 +156,19 @@ NestEditorDlg::NestEditorDlg()
 	Sync();
 }
 
+struct BoldDisplayClass : Display {
+	virtual void Paint(Draw& w, const Rect& r, const Value& q,
+					   Color ink, Color paper, dword style) const {
+		w.DrawRect(r, paper);
+		DrawSmartText(w, r.left, r.top, r.Width(), (String)q, StdFont().Bold(), ink);
+	}
+};
+
+Display& BoldDisplay()
+{
+	return Single<BoldDisplayClass>();
+}
+
 void NestEditorDlg::Sync()
 {
 	bool b = nests.GetCount();
@@ -163,6 +176,8 @@ void NestEditorDlg::Sync()
 	remove.Enable(b);
 	up.Enable(b);
 	down.Enable(b);
+	for(int i = 0; i < nests.GetCount(); i++)
+		nests.SetDisplay(i, 0, i == 0 ? BoldDisplay() : StdDisplay());
 }
 
 bool BaseSetup(String& vars) { return BaseSetupDlg().Run(vars); }
