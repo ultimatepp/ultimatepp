@@ -92,7 +92,7 @@ NestEditorDlg::NestEditorDlg()
 {
 	static FileSel dir;
 
-	CtrlLayoutOKCancel(*this, "Nests Editor");
+	CtrlLayoutOKCancel(*this, "Nests editor");
 	Sizeable().Zoomable();
 
 	add.SetImage(IdeImg::add()) << [=] {
