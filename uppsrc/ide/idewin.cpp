@@ -269,7 +269,11 @@ bool Ide::IdeDebugLock()
 {
 	if(debuglock == 0) {
 		debuglock = 1;
+	#ifdef PLATFORM_POSIX
+		if(debugger)
+	#else
 		if(debugger && !dynamic_cast<Pdb *>(~debugger))
+	#endif
 			editor.DisableBreakpointing();
 		MakeTitle();
 		SetBar();
