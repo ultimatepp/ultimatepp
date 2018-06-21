@@ -369,7 +369,7 @@ void Ide::OnBreakpoint(int i)
 		String q = editor.GetBreakpoint(i);
 		if(q[0] != 0xe && !debugger->SetBreakpoint(editfile, i, q))
 			if(!q.IsEmpty())
-				editor.SetBreakpoint(i, "\xe");
+				editor.SetBreakpoint(i, q);
 	}
 }
 

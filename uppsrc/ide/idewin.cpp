@@ -269,7 +269,8 @@ bool Ide::IdeDebugLock()
 {
 	if(debuglock == 0) {
 		debuglock = 1;
-		editor.DisableBreakpointing();
+		if(debugger && !dynamic_cast<Pdb *>(~debugger))
+			editor.DisableBreakpointing();
 		MakeTitle();
 		SetBar();
 		Sync();

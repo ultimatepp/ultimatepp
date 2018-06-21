@@ -4,10 +4,10 @@
 
 NAMESPACE_UPP
 
-#define LLOG(x)     LOG(x)
+#define LLOG(x)    // LOG(x)
 #define LDUMP(x)  //DDUMP(x)
 #define LDUMPC(x) //DDUMPC(x)
-#define LTIMING(x)  RTIMING(x)
+#define LTIMING(x)  // RTIMING(x)
 
 VirtualGui *VirtualGuiPtr;
 

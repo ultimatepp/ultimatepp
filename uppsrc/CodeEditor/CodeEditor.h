@@ -88,9 +88,9 @@ private:
 
 public:
 	Event<int> WhenBreakpoint;
-	Event<>        WhenAnnotationMove;
-	Event<>        WhenAnnotationClick;
-	Event<>        WhenAnnotationRightClick;
+	Event<>    WhenAnnotationMove;
+	Event<>    WhenAnnotationClick;
+	Event<>    WhenAnnotationRightClick;
 
 	void InsertLines(int i, int count);
 	void RemoveLines(int i, int count);
@@ -369,6 +369,7 @@ public:
 	Event<>            WhenOpenFindReplace;
 	Event<String&>     WhenPaste;
 	Event<>            WhenUpdate;
+	Event<int>         WhenBreakpoint;
 
 	Event<const Vector<Tuple<int64, int>>&> WhenFindAll;
 
@@ -441,9 +442,6 @@ public:
 	bool   GetLineSelection(int& l, int& h);
 	void   TabRight();
 	void   TabLeft();
-
-	Event<int> WhenBreakpoint;
-
 
 	void    CheckEdited(bool e = true)                { check_edited = e; }
 	bool    GetCheckEdited()                          { return check_edited; }
