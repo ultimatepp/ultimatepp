@@ -134,9 +134,9 @@ void ThisbacksDlg::Generate(String& ins, String& clip, const String& scope)
 			String method = list.Get(i, 4);
 			int q = name.Find('.');
 			if((String)list.Get(i, 5) == "WhenAction" && q >= 0)
-				ins << name.Mid(0, q) << " <<= THISBACK(" << method;
+				ins << name.Mid(0, q) << " <<= THISFN(" << method;
 			else
-				ins << name << " = THISBACK(" << method;
+				ins << name << " = THISFN(" << method;
 			ins << ");\n";
 			if(nname.Find(method) < 0) {
 				String param;
