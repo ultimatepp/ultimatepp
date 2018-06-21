@@ -68,7 +68,7 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 	if(IsNull(scope))
 		return;
 	String h = pfx + scope;
-	if(done.Find(h) >= 0)
+	if(done.Find(h) >= 0 || list.GetCount() > 300)
 		return;
 	done.Add(h);
 	Vector<String> tparam;
@@ -116,7 +116,7 @@ void ThisbacksDlg::GatherCallbacks(const String& pfx, Index<String>& done,
 	}
 	for(int i = 0; i < n.GetCount(); i++) {
 		const CppItem& m = n[i];
-		if(m.IsData() && !IsCb(m.qtype)
+		if(m.kind == INSTANCEVARIABLE && !IsCb(m.qtype)
 		   && m.natural.Find('&') < 0 && m.natural.Find('*') < 0
 		   && m.access <= access
 		   && !m.name.StartsWith("dv___"))
