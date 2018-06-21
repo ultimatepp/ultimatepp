@@ -134,7 +134,7 @@ bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 	String bi = Bpoint(*host, filename, line);
 	if(bp.IsEmpty())
 		FastCmd("clear " + bi);
-	else if(bp[0]==0xe)
+	else if(bp[0]==0xe || bp == "1")
 		FastCmd("b " + bi);
 	else
 		FastCmd("b " + bi + " if " + bp);
