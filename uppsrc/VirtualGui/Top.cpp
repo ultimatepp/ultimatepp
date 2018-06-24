@@ -68,12 +68,13 @@ void TopWindow::Open(Ctrl *owner)
 	if(r.IsEmpty())
 		SetRect(GetDefaultWindowRect());
 	else
-	if(r.left == 0 && r.top == 0)
+	if(r.left == 0 && r.top == 0) {
 		if(owner && center == 1)
 			SetRect(owner->GetRect().CenterRect(r.GetSize()));
 		else
 		if(center)
 			SetRect(GetWorkArea().CenterRect(r.GetSize()));
+	}
 	frame->SetClient(GetRect());
 	frame->window = this;
 	frame->PopUp(owner, false, true);
