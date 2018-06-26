@@ -324,6 +324,9 @@ void Gdb::BreakRunning()
 		CloseHandle(h);
 	}
 #endif
+#ifdef PLATFORM_POSIX
+	kill(pid, SIGINT);
+#endif
 }
 
 void Gdb::Run()
