@@ -8,7 +8,7 @@ namespace Upp {
 #define LOGTIMING 0
 
 #ifdef _DEBUG
-// #define LOGMESSAGES 1
+#define LOGMESSAGES 1
 #endif
 
 #define ELOGW(x)   // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
@@ -675,7 +675,7 @@ LRESULT CALLBACK Ctrl::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 			}
 #endif
 	LRESULT l = 0;
-	if(w && w->GetHWND()) {
+	if(w && (w->GetHWND() || w->isdhctrl)) {
 #if defined(_DEBUG) && LOGTIMING
 			int ticks = msecs();
 			String wname = w->Name();
