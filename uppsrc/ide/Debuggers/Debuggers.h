@@ -152,6 +152,10 @@ public:
 	String             autoline;
 	bool               firstrun;
 	
+	int                pid = 0; // debugee pid
+
+	String DoRun();
+	
 	bool Result(String& result, const String& s);
 
 	void      AddReg(const char *reg, Label *lbl) { regname.Add(reg); reglbl.Add(lbl); }
@@ -205,6 +209,8 @@ public:
 	void      CopyStack();
 	void      CopyStackAll();
 	void      CopyDisas();
+	
+	void      BreakRunning();
 
 	bool      Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
 
