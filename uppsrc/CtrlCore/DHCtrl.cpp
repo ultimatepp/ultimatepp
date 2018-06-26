@@ -64,12 +64,11 @@ void DHCtrl::OpenHWND()
 	GuiLock __;
 	CloseHWND();
 	HWND phwnd = GetTopCtrl()->GetHWND();
-	if(phwnd) {
+	if(phwnd)
 		CreateWindowEx(0, "UPP-CLASS-A", "",
 		               WS_CHILD|WS_DISABLED|WS_VISIBLE,
 		               0, 0, 20, 20,
 		               phwnd, NULL, hInstance, this);
-	}
 }
 
 void DHCtrl::SyncHWND()
@@ -102,6 +101,7 @@ DHCtrl::DHCtrl()
 {
 	hwnd = NULL;
 	isdhctrl = true;
+	BackPaint(EXCLUDEPAINT);
 }
 
 DHCtrl::~DHCtrl()
