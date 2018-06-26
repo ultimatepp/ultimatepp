@@ -16,7 +16,7 @@ void Gdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_RUNTO, DbgImg::RunTo(), THISBACK(DoRunTo));
 	bar.Add(b, AK_RUN, DbgImg::Run(), THISBACK(Run));
 //	bar.Add(b, AK_SETIP, DbgImg::SetIp(), THISBACK(SetIp));
-//	bar.Add(!b, AK_STOP, DbgImg::Stop(), THISBACK(BreakRunning));
+	bar.Add(!b && pid, AK_BREAK, DbgImg::Stop(), THISBACK(BreakRunning));
 	bar.MenuSeparator();
 	bar.Add(b, AK_AUTOS, THISBACK1(SetTab, 0));
 	bar.Add(b, AK_LOCALS, THISBACK1(SetTab, 1));
@@ -276,6 +276,19 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 	return s;
 }
 
+String Gdb::DoRun()
+{
+	if(firstrun) {
+		firstrun = false;
+		Cmd("start");
+		String s = Cmd("info inferior");
+		int q = s.FindAfter("process");
+		pid = atoi(~s + q);
+		IdeSetBar();
+	}
+	return Cmdp("continue");
+}
+
 bool Gdb::RunTo()
 {
 	if(IdeIsDebugLock())
@@ -293,8 +306,7 @@ bool Gdb::RunTo()
 		Exclamation("No code at chosen location !");
 		return false;
 	}
-	String e = Cmdp(firstrun ? "run" : "continue");
-	firstrun = false;
+	String e = DoRun();
 	FastCmd("clear " + bi);
 	if(df)
 		disas.SetFocus();
@@ -303,12 +315,23 @@ bool Gdb::RunTo()
 	return true;
 }
 
+void Gdb::BreakRunning()
+{
+#ifdef PLATFORM_WIN32
+	HANDLE h = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+	if(h) {
+		DebugBreakProcess(h);
+		CloseHandle(h);
+	}
+#endif
+}
+
 void Gdb::Run()
 {
 	if(IdeIsDebugLock())
 		return;
-	CheckEnd(Cmdp(firstrun ? "run" : "continue"));
-	firstrun = false;
+	String s = DoRun();
+	CheckEnd(s);
 	IdeActivateBottom();
 }
 
