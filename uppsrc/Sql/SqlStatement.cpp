@@ -386,6 +386,11 @@ SqlDelete& SqlDelete::Where(const SqlBool& b) {
 	return *this;
 }
 
+SqlDelete& SqlDelete::Returning(const SqlSet& set) {
+	text << " returning " + ~set;
+	return *this;
+}
+
 // -------------------------------
 #ifdef NEWINSERTUPDATE
 
@@ -407,6 +412,8 @@ SqlInsert::operator SqlStatement() const {
 		if(!set2.IsEmpty())
 			s << " values " << set2();
 	}
+	if(!ret.IsEmpty())
+		s << " returning " << ~ret;
 	return SqlStatement(s);
 }
 
@@ -445,6 +452,12 @@ SqlInsert& SqlInsert::Where(const SqlBool& w)
 	if(!sel.IsValid())
 		From();
 	sel.Where(w);
+	return *this;
+}
+
+SqlInsert& SqlInsert::Returning(const SqlSet& set)
+{
+	ret = set;
 	return *this;
 }
 
@@ -577,6 +590,12 @@ SqlUpdate& SqlUpdate::Where(SqlBool w)
 	return *this;
 }
 
+SqlUpdate& SqlUpdate::Returning(const SqlSet& set)
+{
+	ret = set;
+	return *this;
+}
+
 SqlUpdate::operator SqlStatement() const {
 	StringBuffer stmt;
 	stmt << "update " << table.Quoted() << " set " << ~set;
@@ -585,6 +604,8 @@ SqlUpdate::operator SqlStatement() const {
 	else
 	if(!where.IsEmpty())
 		stmt << " where " << ~where;
+	if(!ret.IsEmpty())
+		stmt << " returning " << ~ret;
 	return SqlStatement(stmt);
 }
 
