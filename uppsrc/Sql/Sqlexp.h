@@ -673,9 +673,14 @@ __Expand(E__QSelect);
 
 class SqlDelete {
 	String text;
+	SqlSet ret;
 
 public:
 	SqlDelete& Where(const SqlBool& b);
+	SqlDelete& Returning(const SqlSet& set);
+	SqlDelete& Returning(SqlVal a)                    { return Returning(SqlSet(a)); }
+	SqlDelete& Returning(SqlVal a, SqlVal b)          { return Returning(SqlSet(a, b)); }
+	SqlDelete& Returning(SqlVal a, SqlVal b, SqlVal c){ return Returning(SqlSet(a, b, c)); }
 
 	operator SqlStatement() const                     { return SqlStatement(text); }
 
@@ -703,6 +708,7 @@ class SqlInsert {
 	SqlSet    set1;
 	SqlSet    set2;
 	SqlSelect sel;
+	SqlSet    ret;
 
 public:
 	void Column(const SqlId& column, SqlVal val);
@@ -744,6 +750,7 @@ public:
 	SqlInsert& GroupBy(const SqlSet& columnset)      { sel.GroupBy(columnset); return *this; }
 	SqlInsert& Having(const SqlBool& exp)            { sel.Having(exp); return *this; }
 	SqlInsert& OrderBy(const SqlSet& columnset)      { sel.OrderBy(columnset); return *this; }
+	SqlInsert& Returning(const SqlSet& set);
 
 	SqlInsert& GroupBy(SqlVal a)                     { sel.GroupBy(SqlSet(a)); return *this; }
 	SqlInsert& GroupBy(SqlVal a, SqlVal b)           { sel.GroupBy(SqlSet(a, b)); return *this; }
@@ -751,6 +758,9 @@ public:
 	SqlInsert& OrderBy(SqlVal a)                     { sel.OrderBy(SqlSet(a)); return *this; }
 	SqlInsert& OrderBy(SqlVal a, SqlVal b)           { sel.OrderBy(SqlSet(a, b)); return *this; }
 	SqlInsert& OrderBy(SqlVal a, SqlVal b, SqlVal c) { sel.OrderBy(SqlSet(a, b, c)); return *this; }
+	SqlInsert& Returning(SqlVal a)                   { return Returning(SqlSet(a)); }
+	SqlInsert& Returning(SqlVal a, SqlVal b)         { return Returning(SqlSet(a, b)); }
+	SqlInsert& Returning(SqlVal a, SqlVal b, SqlVal c){ return Returning(SqlSet(a, b, c)); }
 	SqlInsert& Limit(int limit)                      { sel.Limit(limit); return *this; }
 	SqlInsert& Limit(int64 offset, int limit)        { sel.Limit(offset, limit); return *this; }
 	SqlInsert& Offset(int64 offset)                  { sel.Offset(offset); return *this; }
@@ -838,6 +848,7 @@ class SqlUpdate {
 	SqlSet    set;
 	SqlBool   where;
 	SqlSelect sel;
+	SqlSet    ret;
 
 public:
 	void Column(const SqlId& column, SqlVal val);
@@ -871,6 +882,10 @@ public:
 	SqlUpdate& On(const SqlBool& exp)                { sel.On(exp); return *this; }
 
 	SqlUpdate& Where(SqlBool w);
+	SqlUpdate& Returning(const SqlSet& set);
+	SqlUpdate& Returning(SqlVal a)                   { return Returning(SqlSet(a)); }
+	SqlUpdate& Returning(SqlVal a, SqlVal b)         { return Returning(SqlSet(a, b)); }
+	SqlUpdate& Returning(SqlVal a, SqlVal b, SqlVal c){ return Returning(SqlSet(a, b, c)); }
 
 	operator SqlStatement() const;
 
