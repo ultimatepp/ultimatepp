@@ -733,8 +733,12 @@ Pointf Mid(const Pointf& a, const Pointf& b);
 Pointf Orthogonal(const Pointf& p);
 double Squared(const Pointf& p);
 double Length(const Pointf& p);
-double Bearing(const Pointf& p);
+double Direction(const Pointf& p);
 double Distance(const Pointf& p1, const Pointf& p2);
 double SquaredDistance(const Pointf& p1, const Pointf& p2);
 Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
+
+// deprecated because of confusing name:
+	
+inline double Bearing(const Pointf& p) { return Direction(p); }

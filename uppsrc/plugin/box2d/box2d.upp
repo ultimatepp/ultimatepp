@@ -1,7 +1,5 @@
 description "Box2D\3770,128,128";
 
-optimize_speed;
-
 file
 	Box2D.h,
 	Collision readonly separator,

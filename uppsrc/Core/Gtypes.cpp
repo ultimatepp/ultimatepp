@@ -156,7 +156,7 @@ Pointf Polar(const Pointf& p, double r, double a)
 	return p + r * Polar(a);
 }
 
-double Bearing(const Pointf& p)
+double Direction(const Pointf& p)
 {
 	return atan2(p.y, p.x);
 }
