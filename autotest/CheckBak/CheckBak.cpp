@@ -38,7 +38,7 @@ CONSOLE_APP_MAIN
 		LOG(fn << ", last time: " << tm << ", size " << len << " MB");
 	
 		ASSERT(tm >= GetSysDate() - 1);
-		ASSERT(len > 2000 && len < 3500);
+		ASSERT(len > 2000 && len < 4000);
 
 		String h = Sys("tar -tvf " + fn);
 		int q = h.Find("root/website.bak/root/bak/forum.fud");
