@@ -129,6 +129,8 @@ void Ide::LoadAbbr()
 		abbr.Add("sw", "switch(@) {\r\ncase :\r\n\tbreak;\r\ndefault:\r\n\tbreak;\r\n}");
 		abbr.Add("w", "while(@)\r\n\t;");
 		abbr.Add("wb", "while(@) {\r\n\t\r\n}");
+		abbr.Add("ff", "for(FindFile ff(@); ff; ff.Next())");
+		abbr.Add("ffb", "for(FindFile ff(@); ff; ff.Next()) {\r\n\t\r\n}");
 	}
 }
 
