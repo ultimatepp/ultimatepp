@@ -184,7 +184,9 @@ public:
 	void      DisasCursor();
 	void      DisasFocus();
 	void      DropFrames();
-
+	
+	String    ObtainFrame(int frame_idx);
+	
 	void      SwitchFrame();
 	void      SwitchThread();
 
