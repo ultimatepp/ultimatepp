@@ -392,14 +392,29 @@ void Gdb::DropFrames()
 	int i = 0;
 	int q = ~frame;
 	frame.Clear();
-	while(i < max_stack_trace_size) {
-		String s = FormatFrame(FastCmd(Sprintf("frame %d", i)));
+	while(i <= max_stack_trace_size) {
+		auto s = ObtainFrame(i);
 		if(IsNull(s)) {
 			break;
 		}
+		
+		if (i == max_stack_trace_size) {
+			auto msg = Sprintf(
+				"More entries.. (Only first %d elements had been printed)", max_stack_trace_size);
+			
+			frame.Add(i, msg);
+			break;
+		}
+		
 		frame.Add(i++, s);
 	}
+	
 	frame <<= q;
+}
+
+String Gdb::ObtainFrame(int frame_idx)
+{
+	return FormatFrame(FastCmd(Sprintf("frame %d", frame_idx)));
 }
 
 void Gdb::SwitchFrame()
