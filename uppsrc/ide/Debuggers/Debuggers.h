@@ -227,6 +227,9 @@ public:
 	
 private:
 	bool CreateDbg(One<Host>& host, const String& exeFile, bool console);
+	
+private:
+	const int max_stack_trace_size;
 };
 
 #include "Gdb_MI2.h"
