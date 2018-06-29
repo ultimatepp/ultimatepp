@@ -4,6 +4,8 @@
 #include <Core/Core.h>
 
 #define UPP_FUNCTION_NAME String(__func__)
+#define UPP_METHOD_NAME(ClassName) \
+	String(ClassName) << "::" << UPP_FUNCTION_NAME << "(this = " << this << "): "
 
 namespace Upp {
 

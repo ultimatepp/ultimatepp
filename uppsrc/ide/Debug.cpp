@@ -367,9 +367,17 @@ void Ide::OnBreakpoint(int i)
 {
 	if(!editfile.IsEmpty() && !designer && debugger) {
 		String q = editor.GetBreakpoint(i);
-		if(q[0] != 0xe && !debugger->SetBreakpoint(editfile, i, q))
+		if(q[0] != 0xe && !debugger->SetBreakpoint(editfile, i, q)) {
+			auto event = editor.WhenBreakpoint;
+			editor.WhenBreakpoint = {};
+			
 			if(!q.IsEmpty())
-				editor.SetBreakpoint(i, q);
+				editor.SetBreakpoint(i, Null);
+			else
+				editor.SetBreakpoint(i, "1");
+			
+			editor.WhenBreakpoint = event;
+		}
 	}
 }
 

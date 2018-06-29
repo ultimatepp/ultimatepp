@@ -1,5 +1,7 @@
 #include "Debuggers.h"
 
+#define METHOD_NAME UPP_METHOD_NAME("Gdb")
+
 void Gdb::DebugBar(Bar& bar)
 {
 	using namespace PdbKeys;
@@ -15,7 +17,6 @@ void Gdb::DebugBar(Bar& bar)
 	bar.Add(b, AK_STEPOUT, DbgImg::StepOut(), THISBACK1(Step, "finish"));
 	bar.Add(b, AK_RUNTO, DbgImg::RunTo(), THISBACK(DoRunTo));
 	bar.Add(b, AK_RUN, DbgImg::Run(), THISBACK(Run));
-//	bar.Add(b, AK_SETIP, DbgImg::SetIp(), THISBACK(SetIp));
 	bar.Add(!b && pid, AK_BREAK, DbgImg::Stop(), THISBACK(BreakRunning));
 	bar.MenuSeparator();
 	bar.Add(b, AK_AUTOS, THISBACK1(SetTab, 0));
@@ -132,13 +133,16 @@ bool Gdb::TryBreak(const char *text)
 bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 {
 	String bi = Bpoint(*host, filename, line);
+	
+	String command;
 	if(bp.IsEmpty())
-		FastCmd("clear " + bi);
+		command = "clear " + bi;
 	else if(bp[0]==0xe || bp == "1")
-		FastCmd("b " + bi);
+		command = "b " + bi;
 	else
-		FastCmd("b " + bi + " if " + bp);
-	return true;
+		command = "b " + bi + " if " + bp;
+	
+	return !FastCmd(command).IsEmpty();
 }
 
 void Gdb::SetDisas(const String& text)
@@ -303,7 +307,7 @@ bool Gdb::RunTo()
 	else
 		bi = Bpoint(*host, IdeGetFileName(), IdeGetFileLine());
 	if(!TryBreak("b " + bi)) {
-		Exclamation("No code at chosen location !");
+		Exclamation("No code at chosen location!");
 		return false;
 	}
 	String e = DoRun();
@@ -319,13 +323,27 @@ void Gdb::BreakRunning()
 {
 #ifdef PLATFORM_WIN32
 	HANDLE h = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	if(h) {
-		DebugBreakProcess(h);
-		CloseHandle(h);
+	if(!h) {
+		auto error = t_("Failed to open debugge process.");
+
+		Loge() << METHOD_NAME << error;
+		ErrorOK(error);
+		
+		return;
 	}
+	
+	DebugBreakProcess(h);
+	CloseHandle(h);
 #endif
 #ifdef PLATFORM_POSIX
-	kill(pid, SIGINT);
+	if (kill(pid, SIGINT) == -1) {
+		auto error = t_("Failed to send SIGINT signal to debugge process.");
+		
+		Loge() << METHOD_NAME << error;
+		ErrorOK(error);
+		
+		return;
+	}
 #endif
 }
 
@@ -369,12 +387,16 @@ void Gdb::DisasFocus()
 
 void Gdb::DropFrames()
 {
+	const int max_stack_trace_size = 200;
+	
 	int i = 0;
 	int q = ~frame;
 	frame.Clear();
-	for(;;) {
+	while(i < max_stack_trace_size) {
 		String s = FormatFrame(FastCmd(Sprintf("frame %d", i)));
-		if(IsNull(s)) break;
+		if(IsNull(s)) {
+			break;
+		}
 		frame.Add(i++, s);
 	}
 	frame <<= q;
