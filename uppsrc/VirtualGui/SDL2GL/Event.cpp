@@ -52,7 +52,7 @@ dword SDL2GUI::GetModKeys()
 	return modkeys;
 }
 
-void HandleSDLEvent(SDL_Event* event)
+void SDL2GUI::HandleSDLEvent(SDL_Event* event)
 {
 	LLOG("HandleSDLEvent " << event->type);
 	SDL_Event next_event;
