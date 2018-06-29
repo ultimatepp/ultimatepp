@@ -26,6 +26,7 @@ struct SDL2GUI : VirtualGui {
 	virtual void        CommitDraw();
 
 	virtual void        Quit();
+	virtual void        HandleSDLEvent(SDL_Event* event);
 
 	SDL_Window   *win;
 	SDL_GLContext glcontext;
