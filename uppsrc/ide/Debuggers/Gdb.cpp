@@ -387,8 +387,6 @@ void Gdb::DisasFocus()
 
 void Gdb::DropFrames()
 {
-	const int max_stack_trace_size = 200;
-	
 	int i = 0;
 	int q = ~frame;
 	frame.Clear();
@@ -419,7 +417,11 @@ String Gdb::ObtainFrame(int frame_idx)
 
 void Gdb::SwitchFrame()
 {
-	int i = (int)~frame;
+	auto i = static_cast<int>(~frame);
+	if (i == max_stack_trace_size) {
+		i = 0;
+	}
+	
 	Cmdp(Sprintf("frame %d", i), i);
 }
 
@@ -510,6 +512,7 @@ void Gdb::Periodic()
 }
 
 Gdb::Gdb()
+	: max_stack_trace_size(200)
 {
 	locals.NoHeader();
 	locals.AddColumn("", 1);
