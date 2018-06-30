@@ -48,6 +48,8 @@ void Ide::SyncCh()
 
 void Ide::ToggleVerboseBuild() {
 	console.verbosebuild = !console.verbosebuild;
+	
+	SetToolBar();
 }
 
 void Ide::ToggleStopOnErrors() {
