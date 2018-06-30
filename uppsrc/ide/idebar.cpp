@@ -594,7 +594,7 @@ void Ide::BuildFileMenu(Bar& menu)
 			.Key(AK_ASSEMBLERCODE)
 			.Help("Compile the file into assembler code");
 	if(console.verbosebuild)
-		menu.Add(b, "Internal Preprocess " + GetFileName(editfile), IdeImg::Header(), THISBACK(PreprocessInternal));
+		menu.Add(b, "Internal Preprocess " + GetFileName(editfile), IdeImg::HeaderInternal(), THISBACK(PreprocessInternal));
 }
 
 void Ide::BuildPackageMenu(Bar& menu)
