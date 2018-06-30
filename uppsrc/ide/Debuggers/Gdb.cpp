@@ -290,6 +290,9 @@ String Gdb::DoRun()
 		pid = atoi(~s + q);
 		IdeSetBar();
 	}
+	
+	threads.Clear();
+	
 	return Cmdp("continue");
 }
 
