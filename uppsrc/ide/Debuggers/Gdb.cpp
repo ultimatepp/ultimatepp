@@ -388,7 +388,7 @@ void Gdb::DisasFocus()
 void Gdb::DropFrames()
 {
 	int i = 0;
-	int q = ~frame;
+	
 	frame.Clear();
 	while(i <= max_stack_trace_size) {
 		auto s = ObtainFrame(i);
@@ -407,7 +407,11 @@ void Gdb::DropFrames()
 		frame.Add(i++, s);
 	}
 	
-	frame <<= q;
+	if (frame_idx == -1 && frame.GetCount() >= 0) {
+		frame_idx = 0;
+	}
+	
+	RestoreFramePos();
 }
 
 String Gdb::ObtainFrame(int frame_idx)
@@ -419,15 +423,20 @@ void Gdb::SwitchFrame()
 {
 	auto i = static_cast<int>(~frame);
 	if (i == max_stack_trace_size) {
-		i = 0;
+		RestoreFramePos();
+		return;
 	}
+	
+	frame_idx = i;
 	
 	Cmdp(Sprintf("frame %d", i), i);
 }
 
 void Gdb::SwitchThread()
 {
-	int i = (int)~threads;
+	frame_idx = -1;
+	
+	int i = static_cast<int>(~threads);
 	Cmdp(Sprintf("thread %d", i), i);
 }
 
@@ -441,6 +450,13 @@ bool Gdb::Key(dword key, int count)
 		return true;
 	}
 	return Ctrl::Key(key, count);
+}
+
+void Gdb::RestoreFramePos()
+{
+	if (frame_idx >= 0 && frame_idx < frame.GetCount()) {
+		frame <<= frame_idx;
+	}
 }
 
 bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
@@ -512,7 +528,8 @@ void Gdb::Periodic()
 }
 
 Gdb::Gdb()
-	: max_stack_trace_size(200)
+	: frame_idx(-1)
+	, max_stack_trace_size(200)
 {
 	locals.NoHeader();
 	locals.AddColumn("", 1);
@@ -573,10 +590,9 @@ Gdb::Gdb()
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
 {
-	Gdb *dbg = new Gdb;
+	One<Gdb> dbg = MakeOne<Gdb>();
 	if(!dbg->Create(pick(host), exefile, cmdline, console)) {
-		delete dbg;
-		return NULL;
+		return nullptr;
 	}
 	return dbg;
 }
