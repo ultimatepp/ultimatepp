@@ -152,6 +152,8 @@ public:
 	String             autoline;
 	bool               firstrun;
 	
+	int                frame_idx;
+	
 	int                pid = 0; // debugee pid
 
 	String DoRun();
@@ -226,6 +228,8 @@ public:
 	Gdb();
 	
 private:
+	void RestoreFramePos();
+	
 	bool CreateDbg(One<Host>& host, const String& exeFile, bool console);
 	
 private:
