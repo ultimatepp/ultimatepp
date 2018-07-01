@@ -154,6 +154,10 @@ public:
 	
 	int                pid = 0; // debugee pid
 
+	String             bp_filename;
+	int                bp_line;
+	String             bp_val;
+
 	String DoRun();
 	
 	bool Result(String& result, const String& s);
