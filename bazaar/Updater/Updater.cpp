@@ -584,6 +584,8 @@ ProductVersions Updater::FetchVersions(void)
 	if(isWebServer)
 	{
 		http.Timeout(1000);
+		http.RequestTimeout(2000);
+		http.MaxRetries(0);
 		http.Url(GetPlatformRoot() + "versions");
 		http.WhenDo.Clear();
 
