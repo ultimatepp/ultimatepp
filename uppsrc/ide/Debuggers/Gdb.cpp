@@ -83,7 +83,6 @@ void Gdb::CopyStackAll()
 		String s = ss.GetLine();
 		CParser p(s);
 		try {
-			bool active = p.Char('*');
 			if(p.IsNumber()) {
 				int id = p.ReadInt();
 				r << "----------------------------------\r\n"
@@ -92,7 +91,6 @@ void Gdb::CopyStackAll()
 				FastCmd(Sprintf("thread %d", id));
 
 				int i = 0;
-				int q = ~frame;
 				frame.Clear();
 				for(;;) {
 					String s = FormatFrame(FastCmd("frame " + AsString(i++)));
@@ -223,7 +221,7 @@ void Gdb::CheckEnd(const char *s)
 	}
 }
 
-String Gdb::Cmdp(const char *cmdline, bool fr)
+String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 {
 	expression_cache.Clear();
 	IdeHidePtr();
@@ -250,9 +248,11 @@ String Gdb::Cmdp(const char *cmdline, bool fr)
 		catch(CParser::Error) {}
 		SyncDisas(fr);
 	}
-	frame.Clear();
-	frame.Add(0, FormatFrame(FastCmd("frame")));
-	frame <<= 0;
+	if(setframe) {
+		frame.Clear();
+		frame.Add(0, FormatFrame(FastCmd("frame")));
+		frame <<= 0;
+	}
 	threads.Clear();
 	s = FastCmd("info threads");
 	StringStream ss(s);
@@ -326,28 +326,19 @@ void Gdb::BreakRunning()
 {
 #ifdef PLATFORM_WIN32
 	HANDLE h = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	if(!h) {
-		auto error = t_("Failed to open debugge process.");
-
-		Loge() << METHOD_NAME << error;
-		ErrorOK(error);
-		
+	if(h) {
+		DebugBreakProcess(h);
+		CloseHandle(h);
 		return;
 	}
-	
-	DebugBreakProcess(h);
-	CloseHandle(h);
 #endif
 #ifdef PLATFORM_POSIX
-	if (kill(pid, SIGINT) == -1) {
-		auto error = t_("Failed to send SIGINT signal to debugge process.");
-		
-		Loge() << METHOD_NAME << error;
-		ErrorOK(error);
-		
+	if(kill(pid, SIGINT) != -1)
 		return;
-	}
 #endif
+	const char *error = t_("Failed to interrupt debugee process.");
+	Loge() << METHOD_NAME << error;
+	ErrorOK(error);
 }
 
 void Gdb::Run()
@@ -390,57 +381,43 @@ void Gdb::DisasFocus()
 
 void Gdb::DropFrames()
 {
-	int i = 0;
-	
-	frame.Clear();
-	while(i <= max_stack_trace_size) {
-		auto s = ObtainFrame(i);
-		if(IsNull(s)) {
-			break;
-		}
-		
-		if (i == max_stack_trace_size) {
-			auto msg = Sprintf(
-				"More entries.. (Only first %d elements had been printed)", max_stack_trace_size);
-			
-			frame.Add(i, msg);
-			break;
-		}
-		
-		frame.Add(i++, s);
-	}
-	
-	if (frame_idx == -1 && frame.GetCount() >= 0) {
-		frame_idx = 0;
-	}
-	
-	RestoreFramePos();
+	if(frame.GetCount() < 2)
+		LoadFrames();
 }
 
-String Gdb::ObtainFrame(int frame_idx)
+void Gdb::LoadFrames()
 {
-	return FormatFrame(FastCmd(Sprintf("frame %d", frame_idx)));
+	if(frame.GetCount())
+		frame.Trim(frame.GetCount() - 1);
+	int i = frame.GetCount();
+	int n = 0;
+	for(;;) {
+		String s = FormatFrame(FastCmd(Sprintf("frame %d", i)));
+		if(IsNull(s))
+			break;
+		if(n++ >= max_stack_trace_size) {
+			frame.Add(Null, Sprintf("<load more> (%d loaded)", frame.GetCount()));
+			break;
+		}
+		frame.Add(i++, s);
+	}
 }
 
 void Gdb::SwitchFrame()
 {
-	auto i = static_cast<int>(~frame);
-	if (i == max_stack_trace_size) {
-		RestoreFramePos();
-		return;
+	int i = ~frame;
+	if(IsNull(i)) {
+		i = frame.GetCount() - 1;
+		LoadFrames();
+		frame <<= i;
 	}
-	
-	frame_idx = i;
-	
-	Cmdp(Sprintf("frame %d", i), i);
+	Cmdp("frame " + AsString(i), i, false);
 }
 
 void Gdb::SwitchThread()
 {
-	frame_idx = -1;
-	
-	int i = static_cast<int>(~threads);
-	Cmdp(Sprintf("thread %d", i), i);
+	int i = ~threads;
+	Cmdp("thread " + AsString(i));
 }
 
 bool Gdb::Key(dword key, int count)
@@ -455,18 +432,13 @@ bool Gdb::Key(dword key, int count)
 	return Ctrl::Key(key, count);
 }
 
-void Gdb::RestoreFramePos()
-{
-	if (frame_idx >= 0 && frame_idx < frame.GetCount()) {
-		frame <<= frame_idx;
-	}
-}
-
 bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline, bool console)
 {
 	host = pick(_host);
-	
-	if (!CreateDbg(host, exefile, console)) {
+
+	dbg = host->StartProcess(GdbCommand(console) + host->NormalizeExecutablePath(exefile));
+
+	if (!dbg) {
 		ErrorOK("Error while invoking gdb!");
 		return false;
 	}
@@ -509,14 +481,6 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	return true;
 }
 
-bool Gdb::CreateDbg(One<Host>& host, const String& exeFile, bool console)
-{
-	const auto& hostTools = host->GetTools();
-	dbg = host->StartProcess(GdbCommand(console) + hostTools.NormalizeExecutablePath(exeFile));
-
-	return static_cast<bool>(dbg);
-}
-
 Gdb::~Gdb()
 {
 	IdeRemoveBottom(*this);
@@ -531,8 +495,6 @@ void Gdb::Periodic()
 }
 
 Gdb::Gdb()
-	: frame_idx(-1)
-	, max_stack_trace_size(200)
 {
 	locals.NoHeader();
 	locals.AddColumn("", 1);
@@ -593,9 +555,8 @@ Gdb::Gdb()
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
 {
-	One<Gdb> dbg = MakeOne<Gdb>();
-	if(!dbg->Create(pick(host), exefile, cmdline, console)) {
+	auto dbg = MakeOne<Gdb>();
+	if(!dbg->Create(pick(host), exefile, cmdline, console))
 		return nullptr;
-	}
-	return dbg;
+	return pick(dbg);
 }

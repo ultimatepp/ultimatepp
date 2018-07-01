@@ -148,7 +148,6 @@ void      IdeSetBar();
 
 void      IdeGotoFileAndId(const String& path, const String& id);
 
-#include "HostTools.h"
 #include "Host.h"
 
 struct IdeMacro {

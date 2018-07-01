@@ -152,8 +152,6 @@ public:
 	String             autoline;
 	bool               firstrun;
 	
-	int                frame_idx;
-	
 	int                pid = 0; // debugee pid
 
 	String DoRun();
@@ -176,7 +174,7 @@ public:
 
 	void      Step(const char *cmd);
 
-	String    Cmdp(const char *cmdline, bool fr = false);
+	String    Cmdp(const char *cmdline, bool fr = false, bool setframe = true);
 
 	void      DoRunTo() { RunTo(); }
 
@@ -186,8 +184,7 @@ public:
 	void      DisasCursor();
 	void      DisasFocus();
 	void      DropFrames();
-	
-	String    ObtainFrame(int frame_idx);
+	void      LoadFrames();
 	
 	void      SwitchFrame();
 	void      SwitchThread();
@@ -217,9 +214,8 @@ public:
 	void      BreakRunning();
 
 	bool      Create(One<Host>&& host, const String& exefile, const String& cmdline, bool console);
-
-	// Period check for killed console
-	TimeCallback periodic;
+	
+	TimeCallback periodic; // Period check for killed console
 	void Periodic();
 
 	typedef Gdb CLASSNAME;
@@ -227,13 +223,7 @@ public:
 	virtual ~Gdb();
 	Gdb();
 	
-private:
-	void RestoreFramePos();
-	
-	bool CreateDbg(One<Host>& host, const String& exeFile, bool console);
-	
-private:
-	const int max_stack_trace_size;
+	const int max_stack_trace_size = 400;
 };
 
 #include "Gdb_MI2.h"

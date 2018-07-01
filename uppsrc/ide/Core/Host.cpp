@@ -5,7 +5,6 @@
 #include <plugin/bz2/bz2.h>
 
 LocalHost::LocalHost()
-	: tools(MakeOne<LocalHostTools>())
 {
 }
 
@@ -27,6 +26,11 @@ String LocalHost::GetLocalPath(const String& path)
 String LocalHost::NormalizePath(const String& path)
 {
 	return ::NormalizePath(path);
+}
+
+String LocalHost::NormalizeExecutablePath(const String& path)
+{
+	return NormalizeExePath(path);
 }
 
 Vector<Host::FileInfo> LocalHost::GetFileInfo(const Vector<String>& path)
@@ -362,11 +366,6 @@ void LocalHost::AddFlags(Index<String>& cfg)
 const Vector<String>& LocalHost::GetExecutablesDirs() const
 {
 	return exedirs;
-}
-
-const HostTools& LocalHost::GetTools() const
-{
-	return *tools.Get();
 }
 
 bool LocalHost::HasPlatformFlag(const Index<String>& cfg)

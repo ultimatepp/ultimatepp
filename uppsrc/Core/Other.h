@@ -69,7 +69,8 @@ public:
 	One(T *newt)                           { ptr = newt; }
 	template <class TT>
 	One(One<TT>&& p)                       { Pick(pick(p)); }
-	One(MakeOne<T>&&);
+	template <class TT>
+	One(MakeOne<TT>&&);
 	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : DeepCopyNew(*p); }
 	One(const One<T>& p) = delete;
 	~One()                                 { Free(); }
@@ -83,9 +84,10 @@ struct MakeOne : One<T> {
 };
 
 template <class T>
-One<T>::One(MakeOne<T>&& p)
+template <class TT>
+One<T>::One(MakeOne<TT>&& p)
 {
-	Pick(pick(p));
+	Attach(p.Detach());
 }
 
 class Any : Moveable<Any> {

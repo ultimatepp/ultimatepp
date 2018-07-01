@@ -249,6 +249,7 @@ struct OneFileHost : Host {
 	virtual String GetHostPath(const String& path) { return host->GetHostPath(path); }
 	virtual String GetLocalPath(const String& path) { return host->GetLocalPath(path); }
 	virtual String NormalizePath(const String& path) { return host->NormalizePath(path); }
+	virtual String NormalizeExecutablePath(const String& path) { return host->NormalizeExecutablePath(path); }
 	virtual void   DeleteFile(const Vector<String>& path) { host->DeleteFile(path); }
 	virtual void   DeleteFolderDeep(const String& folder) { host->DeleteFolderDeep(folder); }
 	virtual void   ChDir(const String& path) { host->ChDir(path); }
@@ -268,7 +269,6 @@ struct OneFileHost : Host {
 	virtual void   Launch(const char *cmdline, bool) { host->Launch(cmdline); }
 	virtual void   AddFlags(Index<String>& cfg) { host->AddFlags(cfg); }
 	virtual const  Vector<String>& GetExecutablesDirs() const { return host->GetExecutablesDirs(); }
-	virtual const  HostTools& GetTools() const { return host->GetTools(); }
 
 	virtual Vector<FileInfo> GetFileInfo(const Vector<String>& path) {
 		Vector<FileInfo> fi = host->GetFileInfo(path);
