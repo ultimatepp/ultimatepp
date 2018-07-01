@@ -25,7 +25,9 @@ ProtectClient::ProtectClient()
 	
 	// setup timeout for http server
 	// a couple of seconds should be enough !
-	client.Timeout(2000);
+//	client.Timeout(200);
+	client.RequestTimeout(2000);
+	client.MaxRetries(1);
 }
 
 ProtectClient::~ProtectClient()
@@ -129,6 +131,13 @@ VectorMap<String, Value> ProtectClient::SendMap(VectorMap<String, Value> const &
 	// and put it in result map
 	VectorMap<String, Value> resMap;
 
+	if(client.IsTimeout())
+	{
+		resMap.Add("ERROR", PROTECT_HTTP_ERROR);
+		resMap.Add("ERRORMSG", ProtectMessage(PROTECT_HTTP_ERROR));
+		return resMap;
+	}
+
 	// if contents don't start with IV field signals it
 	if(!contents.StartsWith("IV="))
 	{
@@ -171,7 +180,8 @@ bool ProtectClient::Connect(void)
 	lastError = 0;
 	
 	// disconnect first, im case we're already connected
-	Disconnect();
+	if(!Disconnect())
+		return false;
 	
 	// load config, if not already done so
 	// this loads previous clientID (reused if still active)
@@ -227,16 +237,16 @@ bool ProtectClient::Disconnect(void)
 	v.Add("CLIENTID", (int)clientID);
 	VectorMap<String, Value> res = SendMap(v);
 
-	// stores config on server; it will try to reuse clientID
-	// on next server connection
-	StoreConfig();
-
 	// check for errors
 	if(res.Find("ERROR") >= 0)
 	{
 		lastError = res.Get("ERROR");
 		return false;
 	}
+
+	// stores config on server; it will try to reuse clientID
+	// on next server connection
+	StoreConfig();
 
 	return true;
 }
