@@ -14,6 +14,7 @@ public:
 	virtual String                GetHostPath(const String& path) = 0;
 	virtual String                GetLocalPath(const String& path) = 0;
 	virtual String                NormalizePath(const String& path) = 0;
+	virtual String                NormalizeExecutablePath(const String& path) = 0;
 	virtual Vector<FileInfo>      GetFileInfo(const Vector<String>& path) = 0;
 	virtual void                  DeleteFile(const Vector<String>& path) = 0;
 	virtual void                  DeleteFolderDeep(const String& dir) = 0;
@@ -35,7 +36,6 @@ public:
 	virtual void                  AddFlags(Index<String>& cfg) = 0;
 	
 	virtual const Vector<String>& GetExecutablesDirs() const = 0;
-	virtual const HostTools&      GetTools() const = 0;
 };
 
 class LocalHost : public Host {
@@ -53,6 +53,7 @@ public: /* Host */
 	String                GetHostPath(const String& path) override;
 	String                GetLocalPath(const String& path) override;
 	String                NormalizePath(const String& path) override;
+	String                NormalizeExecutablePath(const String& path) override;
 	Vector<FileInfo>      GetFileInfo(const Vector<String>& path) override;
 	void                  DeleteFile(const Vector<String>& path) override;
 	void                  DeleteFolderDeep(const String& dir) override;
@@ -74,13 +75,9 @@ public: /* Host */
 	void                  AddFlags(Index<String>& cfg) override;
 	
 	const Vector<String>& GetExecutablesDirs() const override;
-	const HostTools&      GetTools() const override;
 	
 private:
 	bool HasPlatformFlag(const Index<String>& cfg);
-	
-private:
-	One<HostTools> tools;
 };
 
 /*

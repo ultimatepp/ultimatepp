@@ -19,8 +19,6 @@ file
 	Host readonly separator,
 	Host.h,
 	Host.cpp,
-	HostTools.h,
-	HostTools.cpp,
 	Logger readonly separator,
 	Logger.cpp,
 	Logger.h,
