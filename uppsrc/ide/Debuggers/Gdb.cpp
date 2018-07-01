@@ -130,6 +130,14 @@ bool Gdb::TryBreak(const char *text)
 
 bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 {
+	if(IdeIsDebugLock()) {
+		BreakRunning();
+		bp_filename = filename;
+		bp_line = line;
+		bp_val = bp;
+		return true;
+	}
+
 	String bi = Bpoint(*host, filename, line);
 	
 	String command;
@@ -292,8 +300,16 @@ String Gdb::DoRun()
 	}
 	
 	threads.Clear();
-	
-	return Cmdp("continue");
+	String s;
+	for(;;) {
+		s = Cmdp("continue");
+		if(IsNull(bp_filename))
+			break;
+		if(!IdeIsDebugLock())
+			SetBreakpoint(bp_filename, bp_line, bp_val);
+		bp_filename.Clear();
+	}
+	return s;
 }
 
 bool Gdb::RunTo()
@@ -555,8 +571,8 @@ Gdb::Gdb()
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
 {
-	auto dbg = MakeOne<Gdb>();
+	auto dbg = new Gdb;
 	if(!dbg->Create(pick(host), exefile, cmdline, console))
 		return nullptr;
-	return pick(dbg);
+	return dbg;
 }
