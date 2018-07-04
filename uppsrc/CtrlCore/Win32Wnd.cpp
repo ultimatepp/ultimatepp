@@ -8,7 +8,7 @@ namespace Upp {
 #define LOGTIMING 0
 
 #ifdef _DEBUG
-#define LOGMESSAGES 1
+#define LOGMESSAGES 0
 #endif
 
 #define ELOGW(x)   // RLOG(GetSysTime() << ": " << x) // Only activate in MT!
