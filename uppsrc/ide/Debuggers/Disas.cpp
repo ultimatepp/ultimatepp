@@ -115,6 +115,8 @@ void DbgDisas::Clear()
 	addr.Clear();
 	opfont = StdFontZ(12);
 	codecx = GetTextSize("movlmo", opfont).cx;
+	
+	Refresh();
 }
 
 void  DbgDisas::Add(adr_t adr, const String& code, const String& args, const String& bytes)

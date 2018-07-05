@@ -300,6 +300,8 @@ String Gdb::DoRun()
 	}
 	
 	threads.Clear();
+	disas.Clear();
+	
 	String s;
 	for(;;) {
 		s = Cmdp("continue");
