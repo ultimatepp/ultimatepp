@@ -1,5 +1,5 @@
 #include "Core.h"
-
+	
 namespace Upp {
 
 void RGBtoHSV(double r, double g, double b, double& h, double& s, double& v)

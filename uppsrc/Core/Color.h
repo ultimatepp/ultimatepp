@@ -5,7 +5,7 @@ struct RGBA : Moveable<RGBA> {
 #endif
 
 #ifdef PLATFORM_POSIX
-#ifdef CPU_BE
+#if defined(CPU_BE) || defined(PLATFORM_MACOS)
 struct RGBA : Moveable<RGBA> {
         byte a, r, g, b;
 };

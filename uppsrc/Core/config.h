@@ -35,6 +35,7 @@
 			#define PLATFORM_OSX11 1
 			#define PLATFORM_BSD 1
 			#define flagNOGTK
+			#define PLATFORM_MACOS
 		#else
 			// zvzv mod
 			// was: #if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __APPLE__
