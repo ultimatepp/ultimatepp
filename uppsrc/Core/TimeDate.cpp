@@ -622,7 +622,7 @@ bool SetSysTime(Time time)
 	tmp_time.tm_year = time.year-1900;
 	time_t raw_time  = mktime(&tmp_time);
 
-	struct timespec sys_time;
+	struct ::timespec sys_time;
 	sys_time.tv_sec  = raw_time;
 	sys_time.tv_nsec = 0;
 
