@@ -243,8 +243,12 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					exec << Join(" -x c", c_options) << ' ';
 				else if(ext == ".s" || ext == ".S")
 					exec << " -x assembler-with-cpp ";
-				else if (ext == ".m" || ext == ".mm")
-					exec << fuse_cxa_atexit << " -x objective-c++ ";
+				else
+				if (ext == ".m")
+					exec << fuse_cxa_atexit << " -x objective-c ";
+				else
+				if (ext == ".mm")
+					exec << fuse_cxa_atexit << Join(" -x objective-c++ ", cpp_options) << ' ';
 				else {
 					exec << fuse_cxa_atexit << Join(" -x c++", cpp_options) << ' ';
 					exec << pch_use;
