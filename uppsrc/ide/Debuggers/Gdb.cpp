@@ -299,8 +299,7 @@ String Gdb::DoRun()
 		IdeSetBar();
 	}
 	
-	threads.Clear();
-	disas.Clear();
+	ClearCtrls();
 	
 	String s;
 	for(;;) {
@@ -436,6 +435,20 @@ void Gdb::SwitchThread()
 {
 	int i = ~threads;
 	Cmdp("thread " + AsString(i));
+}
+
+void Gdb::ClearCtrls()
+{
+	threads.Clear();
+	disas.Clear();
+	
+	locals.Clear();
+	watches.Clear();
+	autos.Clear();
+	self.Clear();
+	cpu.Clear();
+	
+	tree.Clear();
 }
 
 bool Gdb::Key(dword key, int count)

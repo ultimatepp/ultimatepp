@@ -192,7 +192,9 @@ public:
 	
 	void      SwitchFrame();
 	void      SwitchThread();
-
+	
+	void      ClearCtrls();
+	
 	static void ReadGdbValues(CParser& p, VectorMap<String, String>& val);
 	static void ReadGdbValues(const String& h, VectorMap<String, String>& val);
 
