@@ -19,11 +19,6 @@ CONSOLE_APP_MAIN
 		DumpFile(s);
 	}
 	{
-		MakeOne<FileIn> in(fn);
-		One<Stream> s = pick(in);
-		DumpFile(s);
-	}
-	{
 		One<Stream> s = MakeOne<FileIn>(fn);
 		DumpFile(s);
 	}
