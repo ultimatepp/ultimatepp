@@ -19,9 +19,6 @@ int StaticTypeNo() {
 }
 
 template <class T>
-struct MakeOne;
-
-template <class T>
 class One : MoveableAndDeepCopyOption< One<T> > {
 	mutable T  *ptr;
 
@@ -69,25 +66,16 @@ public:
 	One(T *newt)                           { ptr = newt; }
 	template <class TT>
 	One(One<TT>&& p)                       { Pick(pick(p)); }
-	template <class TT>
-	One(MakeOne<TT>&&);
 	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : DeepCopyNew(*p); }
 	One(const One<T>& p) = delete;
 	~One()                                 { Free(); }
 };
 
-template <class T>
-struct MakeOne : One<T> {
-	template <class... Args>
-	MakeOne(Args... args)                  { One<T>::Create(args...); }
-	MakeOne()                              { One<T>::Create(); }
-};
-
-template <class T>
-template <class TT>
-One<T>::One(MakeOne<TT>&& p)
-{
-	Attach(p.Detach());
+template <class T, class... Args>
+One<T> MakeOne(Args... args) {
+	One<T> r;
+	r.Create(args...);
+	return r;
 }
 
 class Any : Moveable<Any> {
