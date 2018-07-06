@@ -6,3 +6,6 @@ uses
 file
 	One.cpp;
 
+mainconfig
+	"" = "";
+
