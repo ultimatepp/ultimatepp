@@ -586,7 +586,7 @@ Gdb::Gdb()
 
 One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& cmdline, bool console)
 {
-	auto dbg = new Gdb;
+	auto dbg = MakeOne<Gdb>();
 	if(!dbg->Create(pick(host), exefile, cmdline, console))
 		return nullptr;
 	return dbg;
