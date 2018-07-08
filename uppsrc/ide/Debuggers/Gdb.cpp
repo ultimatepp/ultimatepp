@@ -589,5 +589,5 @@ One<Debugger> GdbCreate(One<Host>&& host, const String& exefile, const String& c
 	auto dbg = MakeOne<Gdb>();
 	if(!dbg->Create(pick(host), exefile, cmdline, console))
 		return nullptr;
-	return dbg;
+	return pick(dbg); // CLANG does not like this without pick
 }
