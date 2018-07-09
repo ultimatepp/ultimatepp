@@ -24,7 +24,8 @@ Index<String> MakeBuild::PackageConfig(const Workspace& wspc, int package,
 	String packagepath = PackagePath(wspc[package]);
 	const Package& pkg = wspc.package[package];
 	cfg.Clear();
-	mainparam << ' ' << bm.Get(targetmode ? "RELEASE_FLAGS" : "DEBUG_FLAGS", NULL);
+	MergeWith(mainparam, " ", bm.Get(targetmode ? "RELEASE_FLAGS" : "DEBUG_FLAGS", String()),
+	                          bm.Get("COMMON_FLAGS", String()));
 	cfg = SplitFlags(mainparam, package == 0, wspc.GetAllAccepts(package));
 	cfg.FindAdd(bm.Get("BUILDER", "GCC"));
 	const TargetMode& m = GetTargetMode();

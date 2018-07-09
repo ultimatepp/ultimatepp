@@ -186,7 +186,7 @@ void InstantSetup()
 
 				String& sslbin = bins.At(2);
 				if(IsNull(sslbin) || ToLower(sslbin).Find("openssl") >= 0)
-					sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin" : "bin/OpenSSL-Win/bin32");
+					sslbin = GetExeDirFile(x64 ? "bin/OpenSSL-Win/bin64" : "bin/OpenSSL-Win/bin");
 				
 				incs.At(0) = vc + "/include";
 				int ii = 1;
@@ -216,7 +216,7 @@ void InstantSetup()
 				}
 				String& ssllib = libs.At(3);
 				if(IsNull(ssllib) || ToLower(ssllib).Find("openssl") >= 0)
-					ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib/VC" : "bin/OpenSSL-Win/lib32/VC");
+					ssllib = GetExeDirFile(x64 ? "bin/OpenSSL-Win/lib64" : "bin/OpenSSL-Win/lib");
 			
 				bm.GetAdd("BUILDER") = builder;
 				bmSet(bm, "COMPILER", "");
