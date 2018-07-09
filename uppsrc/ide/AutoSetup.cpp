@@ -149,7 +149,7 @@ void AutoSetup()
 	msc8.method64 <<= "MSC8x64";
 	String sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
 		                                       "SOFTWARE\\Microsoft\\Microsoft SDKs\\Windows\\v7.0",
-		                                       HKEY_LOCAL_MACHINE));  
+		                                       HKEY_LOCAL_MACHINE));
 	if(IsNull(sdk9))
 		sdk9 = NormalizePathNN(GetWinRegString("InstallationFolder",
 	                                           "Software\\Microsoft\\Microsoft SDKs\\Windows\\v6.1",
