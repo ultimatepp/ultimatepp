@@ -12,7 +12,6 @@ CONSOLE_APP_MAIN
 	const Tuple2<const char *, const char *> x[] = {
 		{ "https://www.servis24.cz", "" },
 		{ "rcmania.cz", "</html>" },
-	//	{ "http://www.facebook.com/pages/Upp", "" },
 		{ "www.oexchange.org", "" },
 		{ "http://pagead2.googlesyndication.com/pagead/show_ads.js", "" },
 		{ "www.ultimatepp.org", "</script></BODY>" },
