@@ -148,6 +148,9 @@ public:
 protected:
 	Date minval, maxval, defaultval;
 	bool notnull;
+	
+	static Date& default_min();
+	static Date& default_max();
 
 public:
 	ConvertDate& MinMax(Date _min, Date _max)      { minval = _min; maxval = _max; return *this; }
@@ -156,15 +159,15 @@ public:
 	ConvertDate& NotNull(bool b = true)            { notnull = b; return *this; }
 	ConvertDate& NoNotNull()                       { return NotNull(false); }
 	ConvertDate& Default(Date d)                   { defaultval = d; return *this; }
-	Date         GetMin() const                    { return minval; }
-	Date         GetMax() const                    { return maxval; }
 	bool         IsNotNull() const                 { return notnull; }
+	Date         GetMin() const                    { return max(GetDefaultMin(), minval); }
+	Date         GetMax() const                    { return min(GetDefaultMax(), maxval); }
 
-	static Date  GetDefaultMin()                   { return Date::Low(); }
-	static Date  GetDefaultMax()                   { return Date::High(); }
+	static void  SetDefaultMinMax(Date min, Date max);
+	static Date  GetDefaultMin()                   { return default_min(); }
+	static Date  GetDefaultMax()                   { return default_max(); }
 
 	ConvertDate(Date minval = Date::Low(), Date maxval = Date::High(), bool notnull = false);
-	virtual ~ConvertDate();
 };
 
 const ConvertDate& StdConvertDate();
@@ -191,18 +194,19 @@ public:
 	ConvertTime& NoNotNull()                       { return NotNull(false); }
 	ConvertTime& Seconds(bool b = true)            { seconds = b; return *this; }
 	ConvertTime& NoSeconds()                       { return Seconds(false); }
-	ConvertTime& TimeAlways(bool b = true)         { timealways = b; return *this; }
-	ConvertTime& DayEnd(bool b = true)             { dayend = b; return *this; }
-	ConvertTime& Default(Time d)                   { defaultval = d; return *this; }
-	Time         GetMin() const                    { return minval; }
-	Time         GetMax() const                    { return maxval; }
-	bool         IsNotNull() const                 { return notnull; }
 	bool         IsSeconds() const                 { return seconds; }
+	ConvertTime& TimeAlways(bool b = true)         { timealways = b; return *this; }
 	bool         IsTimeAlways() const              { return timealways; }
+	ConvertTime& DayEnd(bool b = true)             { dayend = b; return *this; }
 	bool         IsDayEnd() const                  { return dayend; }
+	ConvertTime& Default(Time d)                   { defaultval = d; return *this; }
+	bool         IsNotNull() const                 { return notnull; }
 
-	static Time  GetDefaultMin()                   { return ToTime(Date::Low()); }
-	static Time  GetDefaultMax()                   { return ToTime(Date::High()); }
+	Time         GetMin() const                    { return max(minval, GetDefaultMin()); }
+	Time         GetMax() const                    { return min(maxval, GetDefaultMax()); }
+
+	static Time  GetDefaultMin()                   { return ToTime(ConvertDate::GetDefaultMin()); }
+	static Time  GetDefaultMax()                   { return ToTime(ConvertDate::GetDefaultMax()); }
 
 	ConvertTime(Time minval = ToTime(Date::Low()), Time maxval = ToTime(Date::High()), bool notnull = false);
 	virtual ~ConvertTime();
