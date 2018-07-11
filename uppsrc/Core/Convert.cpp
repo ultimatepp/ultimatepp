@@ -412,13 +412,27 @@ ConvertDouble& ConvertDouble::Pattern(const char *p)
 ConvertDouble::~ConvertDouble() {}
 #endif
 
+Date& ConvertDate::default_min()
+{
+	static Date v = Date::Low();
+	return v;
+}
+
+Date& ConvertDate::default_max()
+{
+	static Date v = Date::High();
+	return v;
+}
+
+void ConvertDate::SetDefaultMinMax(Date min, Date max)
+{
+	default_min() = min;
+	default_max() = max;
+}
+
 ConvertDate::ConvertDate(Date minval, Date maxval, bool notnull)
 : minval(minval), maxval(maxval), notnull(notnull) {
 	defaultval = Null;
-}
-
-ConvertDate::~ConvertDate()
-{
 }
 
 Value ConvertDate::Format(const Value& q) const
@@ -428,12 +442,13 @@ Value ConvertDate::Format(const Value& q) const
 	return Convert::Format(q);
 }
 
-
 Value ConvertDate::Scan(const Value& text) const {
 	Value v = UPP::Scan(DATE_V, text, defaultval);
 	if(IsError(v)) return v;
 	if(IsNull(v)) return notnull ? NotNullError() : v;
 	Date m = v;
+	Date minval = GetMin();
+	Date maxval = GetMax();
 	if(m >= minval && m <= maxval) return v;
 	return ErrorValue(t_("Date must be between ") + UPP::Format(minval) + t_("range\v and ") + UPP::Format(maxval) + ".");
 }
@@ -466,6 +481,8 @@ Value ConvertTime::Scan(const Value& text) const
 		m.second = 59;
 		v = m;
 	}
+	Time minval = GetMin();
+	Time maxval = GetMax();
 	if(m >= minval && m <= maxval) return v;
 	return ErrorValue(t_("Time must be between ") + UPP::Format(minval) + t_("range\v and ") + UPP::Format(maxval) + ".");
 }
