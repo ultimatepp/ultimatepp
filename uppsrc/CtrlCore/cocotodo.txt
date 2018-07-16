@@ -1,0 +1,10 @@
+- PrinterJob
+- DrawDragRect
+- CT_Font caching
+- CommonFontInfo GetFontInfoSys(Font font) metrics
+- ROTATED TEXT
+- GetGlyphInfoSys metrics
+- Default gui font (also in GetAllFacesSys)
+- EndSession ?
+- Image::Arrow etc...
+

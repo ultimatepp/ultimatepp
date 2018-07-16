@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_SKELETON
+#ifdef GUI_COCO
 
 NAMESPACE_UPP
 

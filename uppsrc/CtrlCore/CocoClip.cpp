@@ -1,7 +1,7 @@
 #include <CtrlCore/CtrlCore.h>
 #include <plugin/bmp/bmp.h>
 
-#ifdef GUI_SKELETON
+#ifdef GUI_COCO
 
 NAMESPACE_UPP
 
