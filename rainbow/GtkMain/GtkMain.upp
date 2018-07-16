@@ -1,7 +1,8 @@
 uses
 	CtrlLib,
 	Gtk,
-	RichEdit;
+	RichEdit,
+	Skeleton;
 
 file
 	main.cpp;
