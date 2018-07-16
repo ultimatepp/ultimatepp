@@ -1,11 +1,27 @@
-#include <CtrlCore/CtrlCore.h>
+#include "CocoMM.h"
 
-#ifdef GUI_SKELETON
+#ifdef GUI_COCO
 
-NAMESPACE_UPP
+namespace Upp {
+
+WString ToWString(CFStringRef s)
+{
+	if(!s) return Null;
+	CFIndex l = CFStringGetLength(s);
+	if(!l) return Null;
+	WStringBuffer b(l);
+    CFStringGetCharacters(s, CFRangeMake(0, l), (UniChar *)~b);
+    return b;
+}
+
+String ToString(CFStringRef s)
+{
+	return ToWString(s).ToString();
+}
 
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n, Color color, uint64 pattern)
 {
+	// TODO
 }
 
 /*
@@ -35,6 +51,6 @@ void DrawDragRect(Ctrl& q, const Rect& rect1, const Rect& rect2, const Rect& cli
 	DrawDragRect(w, rect1, rect2, clip, n, color, sGetAniPat(pattern, animation));
 }
 
-END_UPP_NAMESPACE
+};
 
 #endif

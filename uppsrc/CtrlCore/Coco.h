@@ -1,11 +1,11 @@
-#define GUI_SKELETON
+#define GUI_COCO
 
 NAMESPACE_UPP
 
+struct RectCG;
+
 class SystemDraw : public Draw {
-public:
 	virtual dword GetInfo() const;
-	virtual Size  GetPageSize() const;
 
 	virtual void BeginOp();
 	virtual void EndOp();
@@ -18,7 +18,7 @@ public:
 	virtual Rect GetPaintRect() const;
 
 	virtual	void DrawRectOp(int x, int y, int cx, int cy, Color color);
-	virtual void SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color);
+	virtual void SysDrawImageOp(int x, int y, const Image& img, Color color);
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
 
 	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count,
@@ -34,58 +34,97 @@ public:
 	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
 	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font,
 		                    Color ink, int n, const int *dx);
+
+private:
+	Vector<Point> offset;
+	Vector<Rect>  clip;
+
+	int   top;
+	Color fill = Null;
 	
-	virtual Size GetNativeDpi() const;
-	virtual void BeginNative();
-	virtual void EndNative();
+	void   Push();
+	void   Pop();
+	
+	void  *handle;
+	
+	void   ClipCG(const Rect& r);
+	void   FlipY(int& y)           { y = top - y; }
+	Rect   GetClip() const         { return clip.GetCount() ? clip.Top() : Rect(-999999, -999999, 999999, 999999); }
+	Point  GetOffset() const       { return offset.GetCount() ? offset.Top() : Point(0, 0); }
+	RectCG Convert(int x, int y, int cx, int cy);
+	RectCG Convert(const Rect& r);
 
-	virtual int  GetCloffLevel() const;
+	void  Set(Color c);
 
+	void Init(void *cgContext, int cy);
 
-	virtual ~SystemDraw();
+	SystemDraw() {}
+	
+	friend class ImageDraw;
+	friend class BackDraw;
+	friend class ViewDraw;
+	friend class BackDraw__;
 
-	Point    GetOffset() const                             { return Point(0, 0); }
-	bool     CanSetSurface()                               { return false; }
-	static void Flush()                                    {}
+public:
+	bool     CanSetSurface()          { return false; }
+	static void Flush()               {} // TODO?
+
+	SystemDraw(void *cgContext, int cy);
+	~SystemDraw();
 };
 
-class BackDraw : public SystemDraw {
+ 
+inline void SetSurface(SystemDraw& w, const Rect& dest, const RGBA *pixels, Size srcsz, Point poff)
+{ // TODO: Unless we can do this...
+	NEVER();
+}
+
+class ImageDraw : public SystemDraw {
+	ImageBuffer ib;
+	
+	One<ImageDraw> alpha;
+
+	void Init(int cx, int cy);
+
+public:
+	Draw& Alpha();
+
+	operator Image();
+
+	Image GetStraight();
+
+	ImageDraw(Size sz);
+	ImageDraw(int cx, int cy);
+	~ImageDraw();
+};
+
+struct BackDraw__ : public SystemDraw {
+	BackDraw__() : SystemDraw() {}
+};
+
+class BackDraw : public BackDraw__ { // Dummy only, as we are running in GlobalBackBuffer mode
 	Size        size;
 	Draw       *painting;
 	Point       painting_offset;
+	ImageBuffer ib;
 	
 public:
 	virtual bool  IsPaintingOp(const Rect& r) const;
 
 public:
-	void  Put(SystemDraw& w, int x, int y);
+	void  Put(SystemDraw& w, int x, int y)             {}
 	void  Put(SystemDraw& w, Point p)                  { Put(w, p.x, p.y); }
 
-	void Create(SystemDraw& w, int cx, int cy);
+	void Create(SystemDraw& w, int cx, int cy)         {}
 	void Create(SystemDraw& w, Size sz)                { Create(w, sz.cx, sz.cy); }
-	void Destroy();
+	void Destroy()                                     {}
 
 	void SetPaintingDraw(Draw& w, Point off)           { painting = &w; painting_offset = off; }
 
+	Point GetOffset() const                            { return Point(0, 0); }
+
 	BackDraw();
 	~BackDraw();
-};
-
-class ImageDraw : public SystemDraw {
-	SystemDraw  alpha;
-	bool        has_alpha;
-	Size        size;
-
-public:
-	Draw& Alpha();
-
-	operator Image() const;
-	
-	Image GetStraight() const;
-	
-	ImageDraw(Size sz);
-	ImageDraw(int cx, int cy);
-	~ImageDraw();
 };
 
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
@@ -106,11 +145,11 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <CtrlCore/CocoTop.h>
 
 class PrinterJob {
-	NilDraw             nil;
+	NilDraw             nild;
 	Vector<int>         pages;
 
 public:
-	Draw&               GetDraw()                       { return nil; }
+	Draw&               GetDraw()                       { return nild; }
 	operator            Draw&()                         { return GetDraw(); }
 	const Vector<int>&  GetPages() const                { return pages; }
 	int                 operator[](int i) const         { return 0; }
