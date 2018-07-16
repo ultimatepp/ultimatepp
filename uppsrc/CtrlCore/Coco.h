@@ -136,7 +136,9 @@ void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rec
 
 #define GUIPLATFORM_KEYCODES_INCLUDE <CtrlCore/CocoKeys.h>
 
-#define GUIPLATFORM_CTRL_TOP_DECLS
+struct CocoTop;
+
+#define GUIPLATFORM_CTRL_TOP_DECLS CocoTop *coco = NULL;
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/CocoCtrl.h>
 

@@ -51,4 +51,22 @@ struct RectCG {
 
 }
 
+@interface CocoView : NSView <NSWindowDelegate>
+{
+	@public
+	Upp::Ctrl *ctrl;
+}
+@end
+
+struct Upp::CocoTop {
+	NSWindow *window = NULL;
+	CocoView *view = NULL;
+};
+
+void SyncRect(CocoView *view);
+
+inline Upp::Rect MakeRect(const CGRect& r) {
+	return Upp::RectC(r.origin.x, r.origin.y, r.size.width, r.size.height);
+}
+
 #endif
