@@ -25,6 +25,9 @@
 	#elif VIRTUALGUI
 		#define GUIPLATFORM_KEYCODES_INCLUDE <VirtualGui/Keys.h>
 		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
+	#elif COCO
+		#define GUIPLATFORM_KEYCODES_INCLUDE <Coco/Keys.h>
+		#define GUIPLATFORM_INCLUDE          <Coco/Coco.h>
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else

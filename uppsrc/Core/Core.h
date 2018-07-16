@@ -390,8 +390,4 @@ void      FreeDll__(DLLHANDLE dllhandle);
 using Upp::byte; // Dirty solution to Windows.h typedef byte...
 #endif
 
-#ifdef MAIN_CONF
-#include <main.conf.h>
-#endif
-
 #endif //CORE_H

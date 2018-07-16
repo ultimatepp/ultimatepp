@@ -3,6 +3,10 @@
 
 #include <uppconfig.h>
 
+#ifdef MAIN_CONF
+#include <main.conf.h>
+#endif
+
 #if __GNUC__
 
 	#define GCC_VERSION (__GNUC__ * 10000 \
@@ -32,7 +36,9 @@
 		#elif __APPLE__
 			// zvzv note
 			// s/b MACOSX
-			#define PLATFORM_OSX11 1
+			#ifndef COCO
+				#define PLATFORM_OSX11 1
+			#endif
 			#define PLATFORM_BSD 1
 			#define flagNOGTK
 			#define PLATFORM_MACOS
