@@ -6,6 +6,15 @@
 
 NAMESPACE_UPP
 
+bool  GetShift() { return false; }
+bool  GetCtrl() { return false; }
+bool  GetAlt() { return false; }
+bool  GetCapsLock() { return false; }
+bool  GetMouseLeft() { return false; }
+bool  GetMouseRight() { return false; }
+bool  GetMouseMiddle() { return false; }
+Point GetMousePos() { return Point(0, 0); }
+
 void ChHostSkin(void)
 {
 }

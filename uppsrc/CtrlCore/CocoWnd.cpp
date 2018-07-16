@@ -232,7 +232,7 @@ Rect Ctrl::GetPrimaryScreenArea()
 
 int Ctrl::GetKbdDelay()
 {
-	GuiLock __;
+	GuiLock __;  
 	return 500;
 }
 
@@ -240,10 +240,6 @@ int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
 	return 1000 / 32;
-}
-
-void Ctrl::WndDestroy()
-{
 }
 
 void Ctrl::SetWndForeground()
@@ -292,11 +288,6 @@ bool Ctrl::HasWndCapture() const
 {
 	GuiLock __;
 	return false;
-}
-
-void Ctrl::WndInvalidateRect(const Rect& r)
-{
-	GuiLock __;
 }
 
 void Ctrl::WndSetPos(const Rect& rect)

@@ -7,4 +7,6 @@
 - Default gui font (also in GetAllFacesSys)
 - EndSession ?
 - Image::Arrow etc...
+- ignoreclick
+- event flags
 
