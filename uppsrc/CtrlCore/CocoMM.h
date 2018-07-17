@@ -1,6 +1,8 @@
 #ifndef _CtrlCore_CocoMM_h_
 #define _CtrlCore_CocoMM_h_
 
+#ifdef flagCOCOA
+
 #define Point NS_Point
 #define Rect  NS_Rect
 #define Size  NS_Size
@@ -68,5 +70,7 @@ void SyncRect(CocoView *view);
 inline Upp::Rect MakeRect(const CGRect& r) {
 	return Upp::RectC(r.origin.x, r.origin.y, r.size.width, r.size.height);
 }
+
+#endif
 
 #endif
