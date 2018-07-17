@@ -4,6 +4,12 @@
 
 #define LLOG(x)
 
+void Upp::MMCtrl::SyncRect(CocoView *view)
+{
+	NSWindow *win = [view window];
+	view->ctrl->SetWndRect(MakeRect([win contentRectForFrameRect: [win frame]]));
+}
+
 void Upp::Ctrl::Create(const Upp::Rect& r, const char *title)
 {
 	NSRect frame = NSMakeRect(r.left, r.top, r.GetWidth(), r.GetHeight());
@@ -31,7 +37,8 @@ void Upp::Ctrl::Create(const Upp::Rect& r, const char *title)
 	top->coco = new CocoTop;
 	top->coco->window = window;
 	top->coco->view = view;
-	SyncRect(view);
+	MMCtrl::SyncRect(view);
+	isopen = true;
 }
 
 void Upp::Ctrl::WndDestroy()
@@ -42,26 +49,20 @@ void Upp::Ctrl::WndDestroy()
 	delete top->coco;
 	delete top;
 	top = NULL;
+	isopen = false;
 }
 
 void Upp::Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
+	DLOG("InvalidateRect " << r);
 	[top->coco->view setNeedsDisplay:YES];
 	// - (BOOL)needsToDrawRect:(NSRect)rect;
 }
 
-void Upp::Ctrl::NewRect__(const Rect& r)
-{
-	DLOG("NewRect " << r);
-	SetWndRect(r);
+bool Upp::Ctrl::IsWndOpen() const {
+	GuiLock __;
+	return top;
 }
-
-/*
-Upp::Size CocoWindow::GetSize() const
-{
-	return top ? top->ns_size : Size(0, 0);
-}
-*/
 
 #endif

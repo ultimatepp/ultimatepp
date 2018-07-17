@@ -182,11 +182,6 @@ void Ctrl::WndUpdate()
 	GuiLock __;
 }
 
-bool Ctrl::IsWndOpen() const {
-	GuiLock __;
-	return false;
-}
-
 void Ctrl::SetAlpha(byte alpha)
 {
 	GuiLock __;

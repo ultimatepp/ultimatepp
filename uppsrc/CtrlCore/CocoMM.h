@@ -60,6 +60,10 @@ struct RectCG {
 }
 @end
 
+struct Upp::MMCtrl {
+	static void SyncRect(CocoView *view);
+};
+
 struct Upp::CocoTop {
 	NSWindow *window = NULL;
 	CocoView *view = NULL;
