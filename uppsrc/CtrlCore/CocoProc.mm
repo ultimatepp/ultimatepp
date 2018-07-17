@@ -6,6 +6,7 @@
 
 void DoMouseEvent(CocoView *view, NSEvent *e, int event)
 {
+	DLOG("MOUSE");
 	NSPoint p = [view convertPoint:[e locationInWindow] fromView:nil];
 	int zd = 0; // TODO: MouseWheel
 	view->ctrl->CocoDispatchMouse__(event, Upp::Point(p.x, p.y), zd);
