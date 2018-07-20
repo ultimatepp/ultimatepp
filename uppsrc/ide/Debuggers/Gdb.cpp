@@ -271,7 +271,7 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 String Gdb::ObtainThreadsInfo()
 {
 	threads.Clear();
-	auto output = FastCmd("info threads");
+	String output = FastCmd("info threads");
 	StringStream ss(output);
 	int active_thread = -1;
 	while(!ss.IsEof()) {
@@ -292,7 +292,7 @@ String Gdb::ObtainThreadsInfo()
 	if(active_thread >= 0)
 		threads <<= active_thread;
 	if(threads.GetCount() == 0) {
-		auto error = t_("Failed to obtain information about threads. The debugger process will be stoped!");
+		String error = t_("Failed to obtain information about threads. The debugger process will be stoped!");
 		
 		Loge() << METHOD_NAME << error;
 		ErrorOK(error);
