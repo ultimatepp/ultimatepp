@@ -176,7 +176,6 @@ int Ctrl::GetViewChildCount() const
 Ctrl * Ctrl::GetViewIndexChild(int ii) const
 {
 	GuiLock __;
-	Ctrl *c = GetFirstChild();
 	int i = 0;
 	for (Ctrl *c = GetFirstChild(); c; c = c->GetNext())
 		if(!c->InFrame()) {
