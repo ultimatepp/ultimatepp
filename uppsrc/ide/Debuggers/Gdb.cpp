@@ -261,9 +261,18 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 		frame.Add(0, FormatFrame(FastCmd("frame")));
 		frame <<= 0;
 	}
+	
+	s = ObtainThreadsInfo();
+	
+	Data();
+	return s;
+}
+
+String Gdb::ObtainThreadsInfo()
+{
 	threads.Clear();
-	s = FastCmd("info threads");
-	StringStream ss(s);
+	auto output = FastCmd("info threads");
+	StringStream ss(output);
 	int active_thread = -1;
 	while(!ss.IsEof()) {
 		String s = ss.GetLine();
@@ -282,10 +291,16 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 	}
 	if(active_thread >= 0)
 		threads <<= active_thread;
-	if(threads.GetCount() == 0)
+	if(threads.GetCount() == 0) {
+		auto error = t_("Failed to obtain information about threads. The debugger process will be stoped!");
+		
+		Loge() << METHOD_NAME << error;
+		ErrorOK(error);
+		
 		Stop();
-	Data();
-	return s;
+	}
+	
+	return output;
 }
 
 String Gdb::DoRun()
