@@ -172,7 +172,9 @@ public:
 
 	String    Cmd(const char *command);
 	String    FastCmd(const char *command);
-
+	
+	String    ObtainThreadsInfo();
+	
 	bool      TryBreak(const char *command);
 	void      CheckEnd(const char *result);
 
