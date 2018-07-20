@@ -622,6 +622,7 @@ int   TextCtrl::GetLinePos64(int64& pos) const {
 			}
 		}
 	}
+	return 0; // just silencing GCC warning, cannot get here
 }
 
 int64  TextCtrl::GetPos64(int ln, int lpos) const {
