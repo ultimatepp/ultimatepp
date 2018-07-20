@@ -266,7 +266,7 @@ void Gdb::Cpu()
 	}
 }
 
-void Gdb::Data()
+void Gdb::ObtainData()
 {
 	switch(tab.Get()) {
 	case 0: Autos(); break;
@@ -282,7 +282,7 @@ void Gdb::SetTab(int q)
 	if(IdeIsDebugLock())
 		return;
 	tab.Set(q);
-	Data();
+	ObtainData();
 }
 
 void Gdb::ClearWatches()

@@ -262,10 +262,23 @@ String Gdb::Cmdp(const char *cmdline, bool fr, bool setframe)
 		frame <<= 0;
 	}
 	
-	s = ObtainThreadsInfo();
+	if (dbg->IsRunning()) {
+		if (IsProcessExitedNormally(s))
+			Stop();
+		else {
+			s = ObtainThreadsInfo();
+			
+			ObtainData();
+		}
+	}
 	
-	Data();
 	return s;
+}
+
+bool Gdb::IsProcessExitedNormally(const String& cmd_output) const
+{
+	const auto phrase = String().Cat() << "(process " << pid << ") exited normally";
+	return cmd_output.Find(phrase) >= 0;
 }
 
 String Gdb::ObtainThreadsInfo()
@@ -407,8 +420,6 @@ void Gdb::DisasCursor()
 
 void Gdb::DisasFocus()
 {
-//	if(!disas.HasFocus())
-//		IdeSetDebugPos(file, 0, Null, 1);
 }
 
 void Gdb::DropFrames()
@@ -499,8 +510,8 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	
 	threads <<= THISBACK(SwitchThread);
 
-	watches.WhenAcceptEdit = THISBACK(Data);
-	tab <<= THISBACK(Data);
+	watches.WhenAcceptEdit = THISBACK(ObtainData);
+	tab <<= THISBACK(ObtainData);
 
 	Cmd("set prompt " GDB_PROMPT);
 	Cmd("set disassembly-flavor intel");
