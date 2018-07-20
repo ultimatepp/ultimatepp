@@ -173,6 +173,7 @@ public:
 	String    Cmd(const char *command);
 	String    FastCmd(const char *command);
 	
+	bool      IsProcessExitedNormally(const String& cmd_output) const;
 	String    ObtainThreadsInfo();
 	
 	bool      TryBreak(const char *command);
@@ -206,7 +207,7 @@ public:
 	void      Watches();
 	void      TryAuto(Index<String>& tested, const String& exp);
 	void      Autos();
-	void      Data();
+	void      ObtainData();
 	void      Self();
 	void      Cpu();
 	void      ClearWatches();
