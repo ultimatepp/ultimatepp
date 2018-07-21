@@ -371,29 +371,81 @@ String GetKeyDesc(dword key)
 
 	if(key == 0)
 		return desc;
+	
+	DDUMPHEX(key);
+	DDUMPHEX(K_A);
+	DDUMPHEX(K_DELTA);
 
+	if(key & K_KEYUP) desc << t_("key\vUP ");
 	if(key & K_CTRL)  desc << t_("key\vCtrl+");
 	if(key & K_ALT)   desc << t_("key\vAlt+");
 	if(key & K_SHIFT) desc << t_("key\vShift+");
-	if(key & K_KEYUP) desc << t_("key\vUP ");
+#ifdef flagCOCOA
+	if(key & K_OPTION) desc << t_("key\vOption+");
+#endif
 
 
 	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
+#ifdef flagCOCOA
+	key &= ~(K_OPTION);
+#endif
 	if(key < K_DELTA && key > 32 && key != K_DELETE)
 		return desc + ToUtf8((wchar)key);
 	if(key >= K_NUMPAD0 && key <= K_NUMPAD9)
 		desc << "Num " << (char)(key - K_NUMPAD0 + '0');
-	else if(key >= K_0 && key <= K_9)
-		desc << (char)('0' + key - K_0);
-	else if(key >= K_A && key <= K_Z)
-		desc << (char)('A' + key - K_A);
-	else if(key >= K_F1 && key <= K_F12)
-		desc << Format("F%d", (int)key - K_F1 + 1);
 	else {
 		static struct {
 			dword key;
 			const char *name;
 		} nkey[] = {
+			{ K_A, tt_("key\vA") },
+			{ K_B, tt_("key\vB") },
+			{ K_C, tt_("key\vC") },
+			{ K_D, tt_("key\vD") },
+			{ K_E, tt_("key\vE") },
+			{ K_F, tt_("key\vF") },
+			{ K_G, tt_("key\vG") },
+			{ K_H, tt_("key\vH") },
+			{ K_I, tt_("key\vI") },
+			{ K_J, tt_("key\vJ") },
+			{ K_K, tt_("key\vK") },
+			{ K_L, tt_("key\vL") },
+			{ K_M, tt_("key\vM") },
+			{ K_N, tt_("key\vN") },
+			{ K_O, tt_("key\vO") },
+			{ K_P, tt_("key\vP") },
+			{ K_Q, tt_("key\vQ") },
+			{ K_R, tt_("key\vR") },
+			{ K_S, tt_("key\vS") },
+			{ K_T, tt_("key\vT") },
+			{ K_U, tt_("key\vU") },
+			{ K_V, tt_("key\vV") },
+			{ K_W, tt_("key\vW") },
+			{ K_X, tt_("key\vX") },
+			{ K_Y, tt_("key\vY") },
+			{ K_Z, tt_("key\vZ") },
+			{ K_0, tt_("key\v0") },
+			{ K_1, tt_("key\v1") },
+			{ K_2, tt_("key\v2") },
+			{ K_3, tt_("key\v3") },
+			{ K_4, tt_("key\v4") },
+			{ K_5, tt_("key\v5") },
+			{ K_6, tt_("key\v6") },
+			{ K_7, tt_("key\v7") },
+			{ K_8, tt_("key\v8") },
+			{ K_9, tt_("key\v9") },
+			{ K_F1, tt_("key\vF1") },
+			{ K_F2, tt_("key\vF2") },
+			{ K_F3, tt_("key\vF3") },
+			{ K_F4, tt_("key\vF4") },
+			{ K_F5, tt_("key\vF5") },
+			{ K_F6, tt_("key\vF6") },
+			{ K_F7, tt_("key\vF7") },
+			{ K_F8, tt_("key\vF8") },
+			{ K_F9, tt_("key\vF9") },
+			{ K_F10, tt_("key\vF10") },
+			{ K_F11, tt_("key\vF11") },
+			{ K_F12, tt_("key\vF12") },
 			{ K_TAB, tt_("key\vTab") }, { K_SPACE, tt_("key\vSpace") },
 			{ K_RETURN, tt_("key\vEnter") }, { K_BACKSPACE, tt_("key\vBackspace") },
 			{ K_CAPSLOCK, tt_("key\vCaps Lock") }, { K_ESCAPE, tt_("key\vEsc") },
@@ -411,6 +463,9 @@ String GetKeyDesc(dword key)
 		};
 		for(int i = 0; nkey[i].key; i++)
 			if(nkey[i].key == key) {
+				DDUMP(i);
+				DDUMP(nkey[i].name);
+				DDUMP(GetLngString(nkey[i].name));
 				desc << GetLngString(nkey[i].name);
 				return desc;
 			}

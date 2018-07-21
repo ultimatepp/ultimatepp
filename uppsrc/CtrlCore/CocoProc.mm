@@ -13,7 +13,9 @@ namespace Upp {
 bool  GetShift() { return coco_flags & NSEventModifierFlagShift; }
 bool  GetCtrl() { return coco_flags & NSEventModifierFlagCommand; }
 bool  GetAlt() { return coco_flags & NSEventModifierFlagControl; }
+bool  GetOption() { return coco_flags & NSEventModifierFlagOption; }
 bool  GetCapsLock() { return coco_flags & NSEventModifierFlagCapsLock; }
+
 /*
 NSEventModifierFlagOption
 NSEventModifierFlagNumericPad
@@ -51,6 +53,31 @@ struct MMImp {
 		ctrl->fullrefresh = false;
 		ctrl->UpdateArea(w, r);
 	}
+
+	static void KeyEvent(Upp::Ctrl *ctrl, NSEvent *e, int up) {
+		Flags(e);
+		Upp::dword k = e.keyCode|K_DELTA|up;
+		if(GetCtrl())
+			k |= K_CTRL;
+		if(GetShift())
+			k |= K_SHIFT;
+		if(GetAlt())
+			k |= K_ALT;
+		if(GetOption()) // TODO
+			k |= K_OPTION;
+		ctrl->DispatchKey(k, 1);
+		if(!up) {
+			WString x = ToWString((CFStringRef)(e.characters));
+			for(wchar c : x)
+				if(c < 0xF700)
+					ctrl->DispatchKey(c, 1);
+		}
+	}
+	
+	static void GotFocus(Upp::Ctrl *ctrl)
+	{
+		ctrl->ActivateWnd();
+	}
 };
 
 };
@@ -69,12 +96,11 @@ struct MMImp {
 - (void)rightMouseUp:(NSEvent*)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTUP); coco_mouse_right = false; }
 
 - (void)keyDown:(NSEvent *)e {
-//	ctrl->Text("keyDown flag: " + AsString(e.modifierFlags) + ", characters: " +
-//	             ToString((CFStringRef)(e.characters)) + ", keycode: " + AsString(e.keyCode));
+	Upp::MMImp::KeyEvent(ctrl, e, 0);
 }
 
 - (void)keyUp:(NSEvent *)e {
-//	ctrl->Text("keyUp ");
+	Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP);
 }
 
 - (void)windowDidResize:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }
@@ -83,7 +109,8 @@ struct MMImp {
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
-	// THIS IS "GOT FOCUS"
+	DLOG("DidBecomeKey");
+	Upp::MMImp::GotFocus(ctrl);
 }
 
 - (BOOL)acceptsFirstResponder {	return YES; }
