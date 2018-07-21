@@ -54,7 +54,6 @@ bool Upp::Ctrl::ProcessEvent(bool *)
 	                  dequeue:YES];
 	
 	[NSApp sendEvent:event];
-	[NSApp updateWindows];
 
 	return true;
 }
@@ -66,6 +65,7 @@ bool Upp::Ctrl::ProcessEvents(bool *quit)
 	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
 		TimerProc(GetTickCount());
+		[NSApp updateWindows];
 		SweepMkImageCache();
 		return true;
 	}
@@ -110,27 +110,10 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 
 void Upp::Ctrl::GuiSleep(int ms)
 {
+	ASSERT(IsMainThread());
 	GuiLock __;
-	Sleep(ms); // TODO!
-/*	ASSERT(IsMainThread());
-	ELOG("GuiSleep");
-	if(EndSession())
-		return;
-	ELOG("GuiSleep 2");
-	int level = LeaveGMutexAll();
-#if !defined(flagDLL) && !defined(PLATFORM_WINCE)
-	if(!OverwatchThread) {
-		DWORD dummy;
-		OverwatchThread = CreateThread(NULL, 0x100000, Win32OverwatchThread, NULL, 0, &dummy);
-		ELOG("ExitLoopEventWait 1");
-		ExitLoopEvent.Wait();
-	}
-	HANDLE h[1];
-	*h = ExitLoopEvent.GetHandle();
-	ELOG("ExitLoopEventWait 2 " << (void *)*h);
-	MsgWaitForMultipleObjects(1, h, FALSE, ms, QS_ALLINPUT);
-#else
-	MsgWaitForMultipleObjects(0, NULL, FALSE, ms, QS_ALLINPUT);
-#endif
-	EnterGMutex(level);*/
+	Upp::AutoreleasePool ___;
+	[NSApp nextEventMatchingMask:NSEventMaskAny
+	       untilDate:[NSDate dateWithTimeIntervalSinceNow:ms / 1000.0]
+	       inMode:NSDefaultRunLoopMode dequeue:NO];
 }
