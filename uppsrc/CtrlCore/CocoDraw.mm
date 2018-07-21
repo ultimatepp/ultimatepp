@@ -6,6 +6,7 @@ namespace Upp {
 
 void SystemDraw::Init(void *cgContext, int cy)
 {
+	DDUMP(cgContext);
 	handle = cgContext;
 	top = cy;
 	Push();
@@ -20,6 +21,7 @@ SystemDraw::SystemDraw(void *cgContext, int cy)
 
 SystemDraw::~SystemDraw()
 {
+	DLOG("~SystemDraw");
 	Pop();
 }
 
@@ -38,6 +40,7 @@ dword SystemDraw::GetInfo() const
 
 void SystemDraw::Push()
 {
+	DDUMP(cgHandle);
 	CGContextSaveGState(cgHandle);
 	offset.Add(GetOffset());
 	clip.Add(GetClip());

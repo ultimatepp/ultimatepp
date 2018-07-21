@@ -4,20 +4,34 @@
 
 #define LLOG(x)
 
+@interface CocoWindow : NSWindow
+{
+}
+@end
+
+@implementation CocoWindow
+- (BOOL)canBecomeKeyWindow {
+    return YES;
+}
+@end
+
 void Upp::MMCtrl::SyncRect(CocoView *view)
 {
 	NSWindow *win = [view window];
 	view->ctrl->SetWndRect(MakeRect([win contentRectForFrameRect: [win frame]]));
 }
 
-void Upp::Ctrl::Create(const Upp::Rect& r, const char *title)
+void Upp::Ctrl::Create(const Upp::Rect& r, const char *title, bool popup)
 {
 	NSRect frame = NSMakeRect(r.left, r.top, r.GetWidth(), r.GetHeight());
-	NSWindow *window = [[NSWindow alloc] initWithContentRect:frame
-	                   styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask
-	                             | NSWindowStyleMaskResizable
-	                   backing:NSBackingStoreBuffered
-	                   defer:false];
+	
+	Upp::dword style = popup ? NSWindowStyleMaskBorderless :
+	                    NSWindowStyleMaskTitled | NSWindowStyleMaskClosable
+	                             | NSWindowStyleMaskMiniaturizable
+	                             | NSWindowStyleMaskResizable;
+	
+	NSWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
+	                                       backing:NSBackingStoreBuffered defer:false];
 	
 	// TODO: Move title
 	CFRef<CFStringRef> s = CFStringCreateWithCString(NULL, title, kCFStringEncodingUTF8);

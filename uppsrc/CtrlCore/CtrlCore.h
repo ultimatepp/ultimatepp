@@ -95,6 +95,10 @@ enum {
 	K_MOUSETRIPLE  = 0x2000000,
 
 	K_SHIFT_CTRL = K_SHIFT|K_CTRL,
+
+#ifdef flagCOCOA
+	K_OPTION       = 0x4000000,
+#endif
 };
 
 #include "MKeys.h"
@@ -106,6 +110,10 @@ bool GetCapsLock();
 bool GetMouseLeft();
 bool GetMouseRight();
 bool GetMouseMiddle();
+
+#ifdef flagCOCOA
+bool GetOption();
+#endif
 
 enum {
 	DELAY_MINIMAL = 0

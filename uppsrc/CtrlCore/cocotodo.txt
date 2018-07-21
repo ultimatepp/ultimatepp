@@ -10,3 +10,19 @@
 - ignoreclick
 - event flags
 
+- CachedSetColorKeepAlpha optimize out
+- use NSView:needsToDrawRect: for IsPaintingOp
+- implement missing Draw ops
+- fix rotated text
+- fix link options (joining link options missing space)
+- set application icons
+- fix resizing arrows
+- implement cursor shape
+- implement caret
+- RenderCharacterSys
+
+- flagCOCOA
+
+done:
+
+
