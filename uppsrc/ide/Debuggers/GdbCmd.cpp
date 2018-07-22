@@ -141,8 +141,9 @@ String Gdb::Cmd(const char *command)
 	}
 	Unlock();
 #ifdef _DEBUG
-	if(command)
+	if(command) {
 		LLOG("Cmd Time of `" << command <<"` " << ts);
+	}
 #endif
 	return result;
 }
@@ -190,8 +191,9 @@ String Gdb::FastCmd(const char *command)
 	if(lock)
 		Unlock();
 #ifdef _DEBUG
-	if(command)
-		LLOG("Fast cmd Time of `" << command <<"` " << ts);
+	if(command) {
+		LLOG("Fast cmd Time of `" << command << "` " << ts);
+	}
 #endif
 	return result;
 }
