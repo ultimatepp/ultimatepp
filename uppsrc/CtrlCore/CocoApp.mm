@@ -1,5 +1,7 @@
 #include "CocoMM.h"
 
+#ifdef GUI_COCO
+
 #define LLOG(x)
 
 NSAutoreleasePool *main_coco_pool;
@@ -117,3 +119,5 @@ void Upp::Ctrl::GuiSleep(int ms)
 	       untilDate:[NSDate dateWithTimeIntervalSinceNow:ms / 1000.0]
 	       inMode:NSDefaultRunLoopMode dequeue:NO];
 }
+
+#endif
