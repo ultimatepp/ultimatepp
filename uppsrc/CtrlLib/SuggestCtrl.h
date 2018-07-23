@@ -26,7 +26,11 @@ public:
 	void AddList(const WString& s)                    { data.Add(s); }
 	void AddList(const String& s)                     { data.Add(s.ToWString()); }
 	void AddList(const char *s)                       { data.Add(s); }
+	void FindAddList(const WString& s)                { if(FindIndex(data,s) < 0) data.Add(s); }
+	void FindAddList(const String& s)                 { FindAddList(s.ToWString()); }
+	void FindAddList(const char *s)                   { FindAddList(s); }
 
+	const Vector<WString>& GetList()                  { return data; }
 	void Pick(Vector<WString>&& list)                 { data = pick(list); }
 	
 	SuggestCtrl& SetDropLines(int n)                  { droplines = n; return *this; }

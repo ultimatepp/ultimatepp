@@ -1,5 +1,4 @@
 topic "SuggestCtrl";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "SuggestCtrl";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 SuggestCtrl]]}}&]
 [s0;i448;a25;kKO9; &]
@@ -37,9 +37,23 @@ nst]_[_^String^ String][@(0.0.255) `&]_[*@3 s])&]
 t]_[@(0.0.255) char]_`*[*@3 s])&]
 [s2;%% Adds [%-*@3 s] to suggestions list.&]
 [s3;%% &]
-[s4;%% &]
-[s5;:SuggestCtrl`:`:Pick`(Vector`<WString`>rval`_`): [@(0.0.255) void]_[* Pick]([_^Vector^ V
-ector]<[_^WString^ WString]>_[@(0.0.255) rval`_]_[*@3 list])&]
+[s4; &]
+[s5;:Upp`:`:SuggestCtrl`:`:FindAddList`(const Upp`:`:WString`&`): [@(0.0.255) void]_[* Fi
+ndAddList]([@(0.0.255) const]_[_^Upp`:`:WString^ WString][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Upp`:`:SuggestCtrl`:`:FindAddList`(const Upp`:`:String`&`): [@(0.0.255) void]_[* Fin
+dAddList]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 s])&]
+[s5;:Upp`:`:SuggestCtrl`:`:FindAddList`(const char`*`): [@(0.0.255) void]_[* FindAddList](
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s])&]
+[s2;%% Adds [%-*@3 s] to suggestions list if it is not there already.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:SuggestCtrl`:`:GetList`(`): [@(0.0.255) const]_[_^Upp`:`:Vector^ Vector]<[_^Upp`:`:WString^ W
+String]>`&_[* GetList]()&]
+[s2;%% Returns the current list of suggestions.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:SuggestCtrl`:`:Pick`(Upp`:`:Vector`<Upp`:`:WString`>`&`&`): [@(0.0.255) voi
+d]_[* Pick]([_^Upp`:`:Vector^ Vector]<[_^Upp`:`:WString^ WString]>`&`&_[*@3 list])&]
 [s2;%% Picks [%-*@3 list] to replace suggestions list.&]
 [s3;%% &]
 [s4;%% &]
