@@ -105,8 +105,8 @@ bool SuggestCtrl::Key(dword key, int count)
 			Rect cr = GetCaretRect(h) + GetScreenView().TopLeft();
 			Rect wr = GetWorkArea();
 			int c = droplines * Draw::GetStdFontCy();
-			Rect r(cr.BottomLeft(), Size(c, c));
-			r.SetSize(c, c);
+			Rect r = Rect(cr.BottomLeft(), Size(c, c));
+			r.right = GetScreenRect().right;
 			if(r.bottom > wr.bottom) {
 				r.top = cr.top - c;
 				r.bottom = r.top + c;
@@ -116,7 +116,7 @@ bool SuggestCtrl::Key(dword key, int count)
 				r.right = r.left + c;
 			}
 			list.SetRect(r);
-			if(!list.IsOpen()) 
+			if(!list.IsOpen())
 				list.Ctrl::PopUp(GetParent(), false, false, true);
 		}
 		else
