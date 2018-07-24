@@ -65,27 +65,85 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	cg_image_cache.Shrink(4 * 1024 * 768, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
-// TODO:
-Image Image::Arrow() { return Image(); }
-Image Image::Wait() { return Image(); }
-Image Image::IBeam() { return Image(); }
-Image Image::No() { return Image(); }
-Image Image::SizeAll() { return Image(); }
-Image Image::SizeHorz() { return Image(); }
-Image Image::SizeVert() { return Image(); }
-Image Image::SizeTopLeft() { return Image(); }
-Image Image::SizeTop() { return Image(); }
-Image Image::SizeTopRight() { return Image(); }
-Image Image::SizeLeft() { return Image(); }
-Image Image::SizeRight() { return Image(); }
-Image Image::SizeBottomLeft() { return Image(); }
-Image Image::SizeBottom() { return Image(); }
-Image Image::SizeBottomRight() { return Image(); }
-Image Image::Cross() { return Image(); }
-Image Image::Hand() { return Image(); }
+// TODO: https://stackoverflow.com/questions/10733228/native-osx-lion-resize-cursor-for-custom-nswindow-or-nsview
 
-void Ctrl::SetImageCursor(const Image& img)
+enum {
+	MM_Arrow = 1,
+	MM_Wait,
+	MM_IBeam,
+	MM_No,
+	MM_SizeAll,
+	MM_SizeHorz,
+	MM_SizeVert,
+	MM_SizeTopLeft,
+	MM_SizeTop,
+	MM_SizeTopRight,
+	MM_SizeLeft,
+	MM_SizeRight,
+	MM_SizeBottomLeft,
+	MM_SizeBottom,
+	MM_SizeBottomRight,
+	MM_Cross,
+	MM_Hand,
+};
+
+
+#define FCURSOR_(x) { static Image h; ONCELOCK { h = CreateImage(Size(1, 1), Black); h.SetAuxData(x); } return h; }
+
+Image Image::Arrow() FCURSOR_(MM_Arrow)
+Image Image::Wait() FCURSOR_(MM_Wait)
+Image Image::IBeam() FCURSOR_(MM_IBeam)
+Image Image::No() FCURSOR_(MM_No)
+Image Image::SizeAll() FCURSOR_(MM_SizeAll)
+Image Image::SizeHorz() FCURSOR_(MM_SizeHorz)
+Image Image::SizeVert() FCURSOR_(MM_SizeVert)
+Image Image::SizeTopLeft() FCURSOR_(MM_SizeTopLeft)
+Image Image::SizeTop() FCURSOR_(MM_SizeTop)
+Image Image::SizeTopRight() FCURSOR_(MM_SizeTopRight)
+Image Image::SizeLeft() FCURSOR_(MM_SizeLeft)
+Image Image::SizeRight() FCURSOR_(MM_SizeRight)
+Image Image::SizeBottomLeft() FCURSOR_(MM_SizeBottomLeft)
+Image Image::SizeBottom() FCURSOR_(MM_SizeBottom)
+Image Image::SizeBottomRight() FCURSOR_(MM_SizeBottomRight)
+Image Image::Cross() FCURSOR_(MM_Cross)
+Image Image::Hand() FCURSOR_(MM_Hand)
+
+// TODO: Missing kinds (sizers mostly)
+
+NSCursor *GetNSCursor(int kind)
 {
+	switch(kind) {
+	case MM_IBeam: return [NSCursor IBeamCursor];
+	case MM_Cross: return [NSCursor crosshairCursor];
+	// case MM_: return [NSCursor closedHandCursor];
+	// case MM_Hand: return [NSCursor openHandCursor];
+	case MM_Hand: return [NSCursor pointingHandCursor];
+	// case MM_: return [NSCursor resizeLeftCursor];
+	// case MM_: return [NSCursor resizeRightCursor];
+	case MM_SizeRight:
+	case MM_SizeLeft: return [NSCursor resizeLeftRightCursor];
+	// case MM_: return [NSCursor resizeUpCursor];
+	// case MM_: return [NSCursor resizeDownCursor];
+	case MM_SizeTop:
+	case MM_SizeBottom:
+		return [NSCursor resizeUpDownCursor];
+	// case MM_: return [NSCursor IBeamCursorForVerticalLayout];.
+	case MM_No:
+		return [NSCursor operationNotAllowedCursor];
+	// case MM_: return [NSCursor dragLinkCursor];.
+	// case MM_: return [NSCursor dragCopyCursor];.
+	// case MM_: return [NSCursor contextualMenuCursor];
+	}
+	return [NSCursor arrowCursor];
+}
+
+void  Ctrl::SetMouseCursor(const Image& img)
+{
+	int64 h = img.GetAuxData();
+	if(h) {
+		[GetNSCursor(h) set];
+		return;
+	}
 	ImageSysDataMaker m;
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = img;
