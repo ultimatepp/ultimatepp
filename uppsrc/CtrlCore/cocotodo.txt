@@ -1,10 +1,11 @@
 sooner:
-- workarea and window placement
 - backspace and delete not working
 - implement standard cursors
 - minimize, maximaze
 - fullscreen
 - Open/OpenMain variants
+- Enter Up
+- missing cursors (add to iml)
 
 later:
 - PrinterJob
@@ -39,3 +40,4 @@ done:
 - window minmax
 - caret
 - implement caret
+- workarea and window placement

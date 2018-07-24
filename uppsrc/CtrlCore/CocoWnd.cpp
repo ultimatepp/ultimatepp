@@ -30,11 +30,6 @@ Vector<Ctrl *> Ctrl::GetTopCtrls()
 	return h;
 }
 
-void  Ctrl::SetMouseCursor(const Image& image)
-{
-	GuiLock __;
-}
-
 Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;

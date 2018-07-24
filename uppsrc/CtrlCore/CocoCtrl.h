@@ -1,7 +1,5 @@
 //$ class Ctrl {
 private:
-	void SetImageCursor(const Image& img);
-	
 	friend struct MMCtrl;
 	friend struct MMImp;
 
