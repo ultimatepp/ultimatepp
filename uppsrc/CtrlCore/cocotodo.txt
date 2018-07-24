@@ -1,3 +1,12 @@
+sooner:
+- workarea and window placement
+- backspace and delete not working
+- implement standard cursors
+- minimize, maximaze
+- fullscreen
+- Open/OpenMain variants
+
+later:
 - PrinterJob
 - DrawDragRect
 - CT_Font caching
@@ -17,12 +26,16 @@
 - fix link options (joining link options missing space)
 - set application icons
 - fix resizing arrows
-- implement cursor shape
-- implement caret
 - RenderCharacterSys
 
 - flagCOCOA
+- USEMALLOC
+- multimonitor support
 
 done:
 
-
+- window close button
+- window maximize / minimize buttons
+- window minmax
+- caret
+- implement caret

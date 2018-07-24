@@ -35,11 +35,10 @@ struct MMImp {
 	static void MouseEvent(CocoView *view, NSEvent *e, int event)
 	{
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
-		Upp::Point p(np.x, np.y);
+		Upp::Point p(np.x, view->ctrl->GetRect().GetHeight() - np.y);
 		int zd = 0; // TODO: MouseWheel
 		coco_mouse_pos = p + view->ctrl->GetRect().TopLeft();
 		view->ctrl->DispatchMouse(event, p, zd);
-		DLOG("MOUSE " << Upp::Point(p.x, p.y));
 	}
 	
 	static void Flags(NSEvent *e)
@@ -78,14 +77,22 @@ struct MMImp {
 	{
 		ctrl->ActivateWnd();
 	}
+	
+	static void DoClose(Upp::Ctrl *ctrl)
+	{
+		DLOG("DoClose");
+		ctrl->MMClose();
+	}
 };
 
 };
 
 @implementation CocoView
--(void)drawRect:(NSRect)rect {
-	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], [self bounds].size.height);
-	Upp::MMImp::Paint(ctrl, w, MakeRect(rect));
+-(void)drawRect:(NSRect)r {
+	int h = ctrl->GetRect().GetHeight();
+	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], h);
+	Upp::MMImp::Paint(ctrl, w, Upp::RectC(r.origin.x, h - r.origin.y - r.size.height,
+	                                      r.size.width, r.size.height));
 }
 
 - (void)mouseDown:(NSEvent *)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTDOWN); coco_mouse_left = true; }
@@ -95,13 +102,10 @@ struct MMImp {
 - (void)rightMouseDown:(NSEvent*)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTDOWN); coco_mouse_right = true; }
 - (void)rightMouseUp:(NSEvent*)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTUP); coco_mouse_right = false; }
 
-- (void)keyDown:(NSEvent *)e {
-	Upp::MMImp::KeyEvent(ctrl, e, 0);
-}
+- (void)keyDown:(NSEvent *)e { Upp::MMImp::KeyEvent(ctrl, e, 0); }
+- (void)keyUp:(NSEvent *)e { Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP); }
 
-- (void)keyUp:(NSEvent *)e {
-	Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP);
-}
+- (BOOL)windowShouldClose:(NSWindow *)sender { DLOG("SHOULD CLOSE"); Upp::MMImp::DoClose(ctrl); return NO; }
 
 - (void)windowDidResize:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }
 - (void)windowDidMove:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }

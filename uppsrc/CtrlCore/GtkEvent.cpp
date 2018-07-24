@@ -581,7 +581,7 @@ bool Ctrl::ProcessEvents0(bool *quit, bool fetch)
 	bool r = false;
 	while(IsWaitingEvent0(fetch) && (!LoopCtrl || LoopCtrl->InLoop()))
 		r = ProcessEvent0(quit, fetch) || r;
-	TimerProc(GetTickCount());
+	TimerProc(GetTickCount());	
 	AnimateCaret();
 	if(quit)
 		*quit = IsEndSession();

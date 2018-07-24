@@ -6,31 +6,6 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
-void    TopWindow::SyncSizeHints() {}
-
-void TopWindow::SyncTitle()
-{
-	GuiLock __;
-}
-
-void TopWindow::SyncCaption()
-{
-	GuiLock __;
-}
-
-void TopWindow::Open(Ctrl *owner)
-{
-	GuiLock __;
-}
-
-void TopWindow::Open()
-{
-}
-
-void TopWindow::OpenMain()
-{
-}
-
 void TopWindow::Minimize(bool effect)
 {
 	state = MINIMIZED;

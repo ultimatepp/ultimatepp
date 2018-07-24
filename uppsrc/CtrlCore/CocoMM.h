@@ -75,6 +75,14 @@ inline Upp::Rect MakeRect(const CGRect& r) {
 	return Upp::RectC(r.origin.x, r.origin.y, r.size.width, r.size.height);
 }
 
+inline Upp::Rect MakeRect(const CGRect& r, int h) {
+	return Upp::RectC(r.origin.x, h - r.origin.y - r.size.height, r.size.width, r.size.height);
+}
+
+inline CGRect MakeCGRect(const Upp::Rect& r, int h) {
+	return CGRectMake(r.left, h - r.top - r.GetHeight(), r.GetWidth(), r.GetHeight());
+}
+
 #endif
 
 #endif
