@@ -101,44 +101,6 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
-Rect Ctrl::GetWorkArea() const
-{
-	GuiLock __;
-	return Rect();
-}
-
-void Ctrl::GetWorkArea(Array<Rect>& rc)
-{
-	GuiLock __;
-}
-
-Rect Ctrl::GetVirtualWorkArea()
-{
-	Rect out = GetPrimaryWorkArea();
-	Array<Rect> rc;
-	GetWorkArea(rc);
-	for(int i = 0; i < rc.GetCount(); i++)
-		out |= rc[i];
-	return out;
-}
-
-Rect Ctrl::GetVirtualScreenArea()
-{
-	GuiLock __;
-	return Rect();
-}
-
-Rect Ctrl::GetPrimaryWorkArea()
-{
-	Rect r;
-	return r;
-}
-
-Rect Ctrl::GetPrimaryScreenArea()
-{
-	return Size();
-}
-
 int Ctrl::GetKbdDelay()
 {
 	GuiLock __;  
@@ -213,10 +175,6 @@ void Ctrl::WndUpdate(const Rect& r)
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-}
-
-void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
-{
 }
 
 Rect Ctrl::GetDefaultWindowRect() {

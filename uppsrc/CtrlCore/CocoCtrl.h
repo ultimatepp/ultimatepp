@@ -5,10 +5,16 @@ private:
 	friend struct MMCtrl;
 	friend struct MMImp;
 
-public:
-// TODO: Temp only, remove!
-	void Create(const Upp::Rect& r, const char *title, bool popup);
+	static int                 WndCaretTime;
+	static bool                WndCaretVisible;
+	static void AnimateCaret();
 
+protected:
+	virtual void MMClose() { DLOG("MMClose"); }
+
+	void Create(dword style);
+
+public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }
 //$ };

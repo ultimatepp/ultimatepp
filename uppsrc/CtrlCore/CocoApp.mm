@@ -2,12 +2,36 @@
 
 #ifdef GUI_COCO
 
-#define LLOG(x)
+#define LLOG(x) DLOG(x)
 
-NSAutoreleasePool *main_coco_pool;
+int  Upp::Ctrl::WndCaretTime;
+bool Upp::Ctrl::WndCaretVisible;
+
+static NSAutoreleasePool *main_coco_pool;
+static NSEvent           *current_event;
+
+static NSEvent *GetNextEvent(NSDate *until)
+{
+	if(!current_event) {
+		current_event = [NSApp nextEventMatchingMask:NSEventMaskAny
+		                 untilDate:until
+		                 inMode:NSDefaultRunLoopMode dequeue:YES];
+		[current_event retain];
+	}
+	return current_event;
+}
+
+void ReleaseCurrentEvent()
+{
+	if(current_event) {
+		[current_event release];
+		current_event = nil;
+	}
+}
 
 void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 {
+	Ctrl::GlobalBackBuffer();
     main_coco_pool = [NSAutoreleasePool new];
 
     [NSApplication sharedApplication];
@@ -28,16 +52,13 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 
 void Upp::CocoExit()
 {
+	ReleaseCurrentEvent();
 	[main_coco_pool release];
 }
 
 bool Upp::Ctrl::IsWaitingEvent()
 {
-	Upp::AutoreleasePool __;
-	bool b = [NSApp nextEventMatchingMask:NSEventMaskAny
-	                untilDate:[NSDate date]
-	                inMode:NSDefaultRunLoopMode dequeue:NO];
-	return b;
+	return GetNextEvent(nil);
 }
 
 bool Upp::Ctrl::ProcessEvent(bool *)
@@ -50,12 +71,12 @@ bool Upp::Ctrl::ProcessEvent(bool *)
 		[NSApp finishLaunching];
 	}
 	
-	NSEvent *event = [NSApp nextEventMatchingMask:NSEventMaskAny
-	                  untilDate:[NSDate distantFuture]
-	                  inMode:NSDefaultRunLoopMode
-	                  dequeue:YES];
+	NSEvent *event = GetNextEvent(nil);
+	if(!event)
+		return false;
 	
 	[NSApp sendEvent:event];
+	ReleaseCurrentEvent();
 
 	return true;
 }
@@ -67,6 +88,7 @@ bool Upp::Ctrl::ProcessEvents(bool *quit)
 	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
 		TimerProc(GetTickCount());
+		AnimateCaret();
 		[NSApp updateWindows];
 		SweepMkImageCache();
 		return true;
@@ -83,7 +105,7 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 	ASSERT(IsMainThread());
 	ASSERT(LoopLevel == 0 || ctrl);
 	LoopLevel++;
-	LLOG("Entering event loop at level " << LoopLevel << BeginIndent);
+	LLOG("Entering event loop at level " << LoopLevel);
 	Ptr<Ctrl> ploop;
 	if(ctrl) {
 		ploop = LoopCtrl;
@@ -97,7 +119,9 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 	{
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / GuiSleep");
 		SyncCaret();
-		GuiSleep(1000);
+		AnimateCaret();
+		GuiSleep(20);
+		DDUMP(GetTickCount());
 //		if(EndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
@@ -107,17 +131,101 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 	if(ctrl)
 		LoopCtrl = ploop;
 	LoopLevel--;
-	LLOG(EndIndent << "Leaving event loop ");
+	LLOG("Leaving event loop ");
 }
 
 void Upp::Ctrl::GuiSleep(int ms)
 {
 	ASSERT(IsMainThread());
+	GetNextEvent([NSDate dateWithTimeIntervalSinceNow:ms / 1000.0]);
+}
+
+void  Upp::Ctrl::AnimateCaret()
+{
 	GuiLock __;
-	Upp::AutoreleasePool ___;
-	[NSApp nextEventMatchingMask:NSEventMaskAny
-	       untilDate:[NSDate dateWithTimeIntervalSinceNow:ms / 1000.0]
-	       inMode:NSDefaultRunLoopMode dequeue:NO];
+	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	if(v != WndCaretVisible) {
+		DDUMP(WndCaretVisible);
+		WndCaretVisible = v;
+		RefreshCaret();
+	}
+}
+
+void Upp::Ctrl::PaintCaret(SystemDraw& w)
+{
+	GuiLock __;
+	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
+	if(this == caretCtrl && WndCaretVisible)
+		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
+}
+
+void Upp::Ctrl::SetCaret(int x, int y, int cx, int cy)
+{
+	GuiLock __;
+	LLOG("SetCaret " << Name());
+	if(this == caretCtrl)
+		RefreshCaret();
+	caretx = x;
+	carety = y;
+	caretcx = cx;
+	caretcy = cy;
+	if(this == caretCtrl) {
+		WndCaretTime = GetTickCount();
+		RefreshCaret();
+		AnimateCaret();
+	}
+}
+
+void Upp::Ctrl::SyncCaret() {
+	GuiLock __;
+	LLOG("SyncCaret");
+	if(focusCtrl != caretCtrl) {
+		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
+		RefreshCaret();
+		caretCtrl = focusCtrl;
+		RefreshCaret();
+	}
+}
+
+Upp::Rect Upp::Ctrl::GetWorkArea() const
+{
+	return GetPrimaryWorkArea();
+}
+
+void Upp::Ctrl::GetWorkArea(Array<Rect>& rc)
+{
+	GuiLock __;
+	rc.Add(GetPrimaryWorkArea());
+}
+
+Upp::Rect Upp::Ctrl::GetVirtualWorkArea()
+{
+	return GetPrimaryWorkArea();
+}
+
+Upp::Rect Upp::Ctrl::GetVirtualScreenArea()
+{
+	return GetPrimaryWorkArea();
+}
+
+Upp::Rect Upp::Ctrl::GetPrimaryWorkArea()
+{
+	for (NSScreen *screen in [NSScreen screens]) {
+		Rect f = MakeRect([screen frame]);
+		Rect v = MakeRect([screen visibleFrame], f.GetHeight());
+//		double scale = [screen backingScaleFactor];
+		return v;
+	}
+	return Rect(0, 0, 1024, 768);
+}
+
+Upp::Rect Upp::Ctrl::GetPrimaryScreenArea()
+{
+	for (NSScreen *screen in [NSScreen screens]) {
+		Rect f = MakeRect([screen frame]);
+		return f;
+	}
+	return Rect(0, 0, 1024, 768);
 }
 
 #endif
