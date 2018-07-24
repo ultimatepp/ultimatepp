@@ -147,15 +147,12 @@ void TopWindow::RejectBreak(int ID)
 
 void TopWindow::SetupRect(Ctrl *owner)
 {
-	DLOG("SetupRect");
 	Rect r = GetRect();
-	DDUMP(r);
 	if(r.IsEmpty())
 	   SetRect(GetDefaultWindowRect());
 	else
 	if(r.left == 0 && r.top == 0 && center == 1) {
 		Rect area = owner ? owner->GetWorkArea() : Ctrl::GetWorkArea();
-		DDUMP(area);
 		SetRect(area.CenterRect(min(area.Size(), r.Size())));
 	}
 }
