@@ -357,7 +357,6 @@ LabelBase& LabelBase::SetVAlign(int valign) {
 
 Size LabelBase::PaintLabel(Ctrl *ctrl, Draw& w, const Rect& r, bool disabled, bool push, bool focus, bool vak)
 {
-	DLOG("Paint label!");
 	DrawLabel lbl1 = lbl;
 	lbl1.disabled = disabled;
 	lbl1.push = push;

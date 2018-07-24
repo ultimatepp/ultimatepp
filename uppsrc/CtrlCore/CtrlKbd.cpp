@@ -372,10 +372,6 @@ String GetKeyDesc(dword key)
 	if(key == 0)
 		return desc;
 	
-	DDUMPHEX(key);
-	DDUMPHEX(K_A);
-	DDUMPHEX(K_DELTA);
-
 	if(key & K_KEYUP) desc << t_("key\vUP ");
 	if(key & K_CTRL)  desc << t_("key\vCtrl+");
 	if(key & K_ALT)   desc << t_("key\vAlt+");
@@ -463,9 +459,6 @@ String GetKeyDesc(dword key)
 		};
 		for(int i = 0; nkey[i].key; i++)
 			if(nkey[i].key == key) {
-				DDUMP(i);
-				DDUMP(nkey[i].name);
-				DDUMP(GetLngString(nkey[i].name));
 				desc << GetLngString(nkey[i].name);
 				return desc;
 			}

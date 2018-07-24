@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)     DLOG(x)
+#define LLOG(x)     // DLOG(x)
 #define LTIMING(x)  // TIMING(x)
 
 bool Ctrl::globalbackpaint;
