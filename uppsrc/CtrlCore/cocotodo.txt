@@ -1,12 +1,12 @@
 sooner:
 - minimize, maximaze
 - Open/OpenMain variants
-- LabelBox is wrong
+- closing it
 - initial focus
 - SerializePlacement
+- Switch does not seem to work for some reason
 
 later:
-DrawDragRect
 - fullscreen
 - missing cursors (add to iml, use undocumented cursor)
 - X11 on option
@@ -16,7 +16,6 @@ DrawDragRect
 - CommonFontInfo GetFontInfoSys(Font font) metrics
 - ROTATED TEXT
 - GetGlyphInfoSys metrics
-- Default gui font (also in GetAllFacesSys)
 - EndSession ?
 - Image::Arrow etc...
 - ignoreclick
@@ -46,3 +45,5 @@ done:
 - implement standard cursors
 - backspace and delete not working
 - Enter Up
+- LabelBox is wrong
+- Default gui font (also in GetAllFacesSys)

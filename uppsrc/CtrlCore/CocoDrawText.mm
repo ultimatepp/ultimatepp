@@ -132,7 +132,7 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
                             int n, const int *dx)
 {
-	DLOG("angle " << angle << ", text " << text << ", ink " << ink);
+//	DLOG("angle " << angle << ", text " << text << ", ink " << ink);
 	Set(ink); // needs to be here because rotation saves context...
 	if(angle) {
 		// TODO: Fix this!

@@ -2,7 +2,7 @@
 
 #ifdef PLATFORM_COCOA
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 int  Upp::Ctrl::WndCaretTime;
 bool Upp::Ctrl::WndCaretVisible;
@@ -51,10 +51,6 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
     
     Font::SetDefaultFont(Arial(12)); // TODO: Read from NSFont!
     NSFont *sysfont = [NSFont systemFontOfSize:0];
-    DDUMP(Upp::ToString((CFStringRef)[sysfont familyName]));
-    DDUMP(Upp::ToString((CFStringRef)[sysfont displayName]));
-    DDUMP(Upp::ToString((CFStringRef)[sysfont fontName]));
-    DDUMP([sysfont pointSize]);
     Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
     Font::SetDefaultFont(StdFont(fround([sysfont pointSize]))); // TODO: Read from NSFont!
 }

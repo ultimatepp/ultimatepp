@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)     // DLOG(x)
+#define LLOG(x)      DLOG(x)
 #define LTIMING(x)  // TIMING(x)
 
 bool Ctrl::globalbackpaint;
@@ -351,8 +351,12 @@ void Ctrl::CtrlPaint(SystemDraw& w, const Rect& clip) {
 	LTIMING("CtrlPaint");
 	Rect rect = GetRect().GetSize();
 	Rect orect = rect.Inflated(overpaint);
+	DDUMP(Name());
+	DDUMP(orect);
+	DDUMP(clip);
 	if(!IsShown() || orect.IsEmpty() || clip.IsEmpty() || !clip.Intersects(orect))
 		return;
+	DLOG("2");
 	Ctrl *q;
 	Rect view = rect;
 	for(int i = 0; i < frame.GetCount(); i++) {
@@ -592,7 +596,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 {
 	GuiLock __;
 	LTIMING("UpdateArea");
-	LLOG("========== UPDATE AREA " << UPP::Name(this) << " ==========");
+	LLOG("========== UPDATE AREA " << UPP::Name(this) << " " << clip << " ==========");
 	ExcludeDHCtrls(draw, GetRect().GetSize(), clip);
 	if(globalbackbuffer) {
 		CtrlPaint(draw, clip);

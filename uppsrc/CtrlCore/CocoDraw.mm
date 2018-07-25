@@ -98,11 +98,16 @@ RectCG SystemDraw::Convert(const Rect& r)
 	return Convert(r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
+RectCG SystemDraw::MakeRectCG(const Rect& r)
+{
+	Size sz = r.GetSize();
+	return RectCG(r.left, top - r.top - sz.cy, sz.cx, sz.cy);
+}
 
 void SystemDraw::ClipCG(const Rect& r)
 {
-	Size sz = r.GetSize();
-	CGContextClipToRect(cgHandle, CGRectMake(r.left, top - r.top - sz.cy, sz.cx, sz.cy));
+	DLOG("ClipCG " << r);
+	CGContextClipToRect(cgHandle, MakeRectCG(r));
 }
 
 bool SystemDraw::ClipOp(const Rect& r)
@@ -122,9 +127,15 @@ bool SystemDraw::ClipoffOp(const Rect& r)
 	return true;
 }
 
-bool SystemDraw::ExcludeClipOp(const Rect& r)
+bool SystemDraw::ExcludeClipOp(const Rect& r_)
 {
-	// TODO, perhaps use CGContextClipToRects
+	CGRect cgr[4];
+	Rect r = r_.Offseted(GetOffset());
+	cgr[0] = MakeRectCG(Rect(0, 0, 9999, r.top));
+	cgr[1] = MakeRectCG(Rect(0, r.bottom, 9999, 9999));
+	cgr[2] = MakeRectCG(Rect(0, 0, r.left, 9999));
+	cgr[3] = MakeRectCG(Rect(r.right, 0, 9999, 9999));
+	CGContextClipToRects(cgHandle, cgr, 4);
 	return true;
 }
 
@@ -149,6 +160,8 @@ Rect SystemDraw::GetPaintRect() const
 
 void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
+	if(IsNull(color))
+		return;
 	CGRect cgr = Convert(x, y, cx, cy);
 	if(color == InvertColor()) {
 		Set(White());
