@@ -1,4 +1,5 @@
 #include "ide.h"
+#include "CommandLineHandler.h"
 
 #define FUNCTION_NAME UPP_FUNCTION_NAME << "(): "
 
@@ -116,12 +117,10 @@ void AppMain___()
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 
-	Vector<String> arg = clone(CommandLine());
-	if(arg.GetCount() && arg[0].StartsWith("--scale=")) {
-		int scale = atoi(Filter(arg[0], CharFilterDigit));
-		Font::SetStdFont(StdFont().Height(GetStdFontCy() * minmax(scale, 50, 400) / 100));
-		arg.Remove(0);
-	}
+	CommandLineHandler cmd_handler(CommandLine());
+	if (cmd_handler.Handle())
+		return;
+	auto arg = cmd_handler.GetArgs();
 
 	bool first_install = false;
 
@@ -161,12 +160,6 @@ void AppMain___()
 		ResetBlitz();
 
 	for(int i = 0; i < arg.GetCount(); i++) {
-/*		if(arg[i] == "-uninstall") {
-			Uninstall();
-			return;
-		}
-		if(!firstinstall && arg[i] == "-install" && !Install()) return;
-*/
 	#ifdef PLATFORM_WIN32
 		if(arg[i] == "!") {
 			String cmdline;
@@ -226,19 +219,11 @@ void AppMain___()
 		Ide ide;
 		ide.Maximize();
 		bool clset = false;
-		if(arg.GetCount() && findarg(arg[0], "?", "--help", "-?", "/?") >= 0) {
-			Cout() << "Usage: theide assembly package\n"
-			          "       theide assembly package build_method [-[a][b][e][r][s][S][v][1][2][m][d][M][l][x][X][Hn]] [+FLAG[,FLAG]...] [out]\n"
-			          "       theide -f [file..]\n"
-			          "       theide [file..] // autodetection mode\n"
-			;
-			return;
-		}
 		if(arg.GetCount() >= 2 && IsAlpha(arg[0][0]) && IsAlpha(arg[1][0]) && IsAssembly(arg[0]) && arg[0] != "-f") {
 			bool build = arg.GetCount() >= 3 && IsAlpha(arg[2][0]);
 		#ifdef PLATFORM_WIN32
 			if(build) {
-				HMODULE hDLL = LoadLibrary ("kernel32");
+				HMODULE hDLL = LoadLibrary("kernel32");
 				bool attach = false;
 				if(hDLL) {
 					typedef BOOL (WINAPI *AttachConsoleType)(DWORD dwProcessId);
@@ -484,16 +469,16 @@ void AppMain___()
 #ifndef _DEBUG
 	}
 	catch(const CParser::Error& e) {
-		Exclamation("Parser error " + e);
+		ErrorOK("Parser error " + e);
 		LOG("!!!!! Parser error " + e);
 	}
 	catch(const Exc& e) {
-		Exclamation("Exception " + e);
+		ErrorOK("Exception " + e);
 		LOG("!!!!! Exception " << e);
 	}
 #ifdef PLATFORM_POSIX
 	catch(...) {
-		Exclamation("Unknown exception !");
+		ErrorOK("Unknown exception !");
 		LOG("!!!!! Unknown exception");
 	}
 #endif
