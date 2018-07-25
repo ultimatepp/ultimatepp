@@ -72,6 +72,8 @@ file
 	idebar.cpp,
 	idewin.cpp,
 	main.cpp,
+	CommandLineHandler.h,
+	CommandLineHandler.cpp,
 	About.h,
 	About.cpp,
 	Macro.cpp,
