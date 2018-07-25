@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-#define LLOG(x) // DLOG(x)
+#define LLOG(x)  DLOG(x)
 
 namespace Upp {
 
@@ -118,6 +118,7 @@ void Font::SyncStdFont()
 {
 	Mutex::Lock __(sFontLock);
 	StdFontSize = Size(AStdFont.GetAveWidth(), AStdFont().Bold().GetCy());
+	LLOG("SyncStdFont " << StdFontSize);
 	SyncUHDMode();
 }
 

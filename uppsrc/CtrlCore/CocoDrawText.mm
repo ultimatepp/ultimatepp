@@ -1,6 +1,6 @@
 #include "CocoMM.h"
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 #define LLOG(x)
 #define LTIMING(x)
@@ -18,7 +18,8 @@ CTFontRef CT_Font(Font fnt)
 	    if(fnt.IsItalic())
 			symbolicTraits |= kCTFontItalicTrait;
 		CGAffineTransform transform = CGAffineTransformIdentity;
-		return CTFontCreateCopyWithSymbolicTraits(ctfont0, 32, &transform, symbolicTraits, symbolicTraits);
+		return CTFontCreateCopyWithSymbolicTraits(ctfont0, fnt.GetHeight(),
+		                                          &transform, symbolicTraits, symbolicTraits);
 	}
 	return ctfont0.Detach();
 }
@@ -85,6 +86,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 Vector<FaceInfo> GetAllFacesSys()
 {
 	Index<String> facename;
+
 	facename.Add("Arial"); // TODO: This should be default GUI font
 	facename.Add("Times New Roman");
 	facename.Add("Arial");
@@ -109,7 +111,7 @@ Vector<FaceInfo> GetAllFacesSys()
 	for(String s : facename) {
         FaceInfo& fi = r.Add();
 		fi.name = s;
-		fi.info = 0;
+		fi.info = Font::TTF;
     }
     
     return r;

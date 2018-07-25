@@ -1,6 +1,6 @@
 #include "CocoMM.h"
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 #define LLOG(x) DLOG(x)
 
@@ -21,7 +21,7 @@ static NSEvent *GetNextEvent(NSDate *until)
 	return current_event;
 }
 
-void ReleaseCurrentEvent()
+static void ReleaseCurrentEvent()
 {
 	if(current_event) {
 		[current_event release];
@@ -48,6 +48,15 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
     [appMenu addItem:quitMenuItem];
     [appMenuItem setSubmenu:appMenu];
     [NSApp activateIgnoringOtherApps:YES];
+    
+    Font::SetDefaultFont(Arial(12)); // TODO: Read from NSFont!
+    NSFont *sysfont = [NSFont systemFontOfSize:0];
+    DDUMP(Upp::ToString((CFStringRef)[sysfont familyName]));
+    DDUMP(Upp::ToString((CFStringRef)[sysfont displayName]));
+    DDUMP(Upp::ToString((CFStringRef)[sysfont fontName]));
+    DDUMP([sysfont pointSize]);
+    Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
+    Font::SetDefaultFont(StdFont(fround([sysfont pointSize]))); // TODO: Read from NSFont!
 }
 
 void Upp::CocoExit()
@@ -75,8 +84,9 @@ bool Upp::Ctrl::ProcessEvent(bool *)
 	if(!event)
 		return false;
 	
+	current_event = nil;
 	[NSApp sendEvent:event];
-	ReleaseCurrentEvent();
+	[event release];
 
 	return true;
 }
@@ -86,7 +96,7 @@ void SweepMkImageCache();
 bool Upp::Ctrl::ProcessEvents(bool *quit)
 {
 	if(ProcessEvent(quit)) {
-		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop())); // LoopCtrl-MF 071008
+		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
 		TimerProc(GetTickCount());
 		AnimateCaret();
 		[NSApp updateWindows];
@@ -121,7 +131,6 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 		SyncCaret();
 		AnimateCaret();
 		GuiSleep(20);
-		DDUMP(GetTickCount());
 //		if(EndSession()) break;
 //		LLOG(GetSysTime() << " % " << (unsigned)msecs() % 10000 << ": EventLoop / ProcessEvents");
 		ProcessEvents(&quit);
@@ -145,7 +154,6 @@ void  Upp::Ctrl::AnimateCaret()
 	GuiLock __;
 	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
 	if(v != WndCaretVisible) {
-		DDUMP(WndCaretVisible);
 		WndCaretVisible = v;
 		RefreshCaret();
 	}
@@ -178,7 +186,7 @@ void Upp::Ctrl::SetCaret(int x, int y, int cx, int cy)
 
 void Upp::Ctrl::SyncCaret() {
 	GuiLock __;
-	LLOG("SyncCaret");
+//	LLOG("SyncCaret");
 	if(focusCtrl != caretCtrl) {
 		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
 		RefreshCaret();
@@ -226,6 +234,37 @@ Upp::Rect Upp::Ctrl::GetPrimaryScreenArea()
 		return f;
 	}
 	return Rect(0, 0, 1024, 768);
+}
+
+bool Upp::Ctrl::IsCompositedGui()
+{
+	return true;
+}
+
+Upp::Rect Upp::Ctrl::GetDefaultWindowRect()
+{
+	GuiLock __;
+	Rect r  = GetPrimaryWorkArea();
+	Size sz = r.GetSize();
+	
+	static int pos = min(sz.cx / 10, 50);
+	pos += 10;
+	int cx = sz.cx * 2 / 3;
+	int cy = sz.cy * 2 / 3;
+	if(pos + cx + 50 > sz.cx || pos + cy + 50 > sz.cy)
+		pos = 0;
+	return RectC(r.left + pos + 20, r.top + pos + 20, cx, cy);
+}
+
+void Upp::Ctrl::GuiPlatformGetTopRect(Rect& r) const
+{
+}
+
+void Upp::MMCtrl::SyncRect(CocoView *view)
+{
+	NSWindow *win = [view window];
+	view->ctrl->SetWndRect(
+		MakeRect([win contentRectForFrameRect: [win frame]], [[win screen] frame].size.height));
 }
 
 #endif

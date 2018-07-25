@@ -1,6 +1,6 @@
 #include "CocoMM.h"
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 #define LLOG(x)
 
@@ -35,7 +35,6 @@ void ImageSysData::Init(const Image& m)
 
 ImageSysData::~ImageSysData()
 {
-	DLOG("destruct");
 	SysImageReleased(img);
     CGImageRelease(cgimg);
 }

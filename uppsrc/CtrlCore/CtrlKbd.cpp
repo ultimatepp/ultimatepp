@@ -372,17 +372,20 @@ String GetKeyDesc(dword key)
 	if(key == 0)
 		return desc;
 	
+	DDUMPHEX(key);
+	DDUMPHEX(K_DELETE);
+	
 	if(key & K_KEYUP) desc << t_("key\vUP ");
 	if(key & K_CTRL)  desc << t_("key\vCtrl+");
 	if(key & K_ALT)   desc << t_("key\vAlt+");
 	if(key & K_SHIFT) desc << t_("key\vShift+");
-#ifdef flagCOCOA
+#ifdef PLATFORM_COCOA
 	if(key & K_OPTION) desc << t_("key\vOption+");
 #endif
 
 
 	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
-#ifdef flagCOCOA
+#ifdef PLATFORM_COCOA
 	key &= ~(K_OPTION);
 #endif
 	if(key < K_DELTA && key > 32 && key != K_DELETE)
@@ -457,11 +460,14 @@ String GetKeyDesc(dword key)
 			{ K_BACKSLASH, tt_("key\v[\\]") }, { K_RBRACKET, tt_("key\v[]]") }, { K_QUOTEDBL, tt_("key\v[']") },
 			{ 0, NULL }
 		};
-		for(int i = 0; nkey[i].key; i++)
+		for(int i = 0; nkey[i].key; i++) {
+			DDUMPHEX(nkey[i].key);
+			DDUMP(nkey[i].name);
 			if(nkey[i].key == key) {
 				desc << GetLngString(nkey[i].name);
 				return desc;
 			}
+		}
 		desc << Format("%04x", (int)key);
 	}
 	return desc;

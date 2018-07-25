@@ -1,6 +1,6 @@
 #include "CocoMM.h"
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 namespace Upp {
 

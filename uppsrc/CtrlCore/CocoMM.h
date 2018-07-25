@@ -1,7 +1,9 @@
 #ifndef _CtrlCore_CocoMM_h_
 #define _CtrlCore_CocoMM_h_
 
-#ifdef flagCOCOA
+#include <Core/config.h>
+
+#ifdef PLATFORM_COCOA
 
 #define Point NS_Point
 #define Rect  NS_Rect

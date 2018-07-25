@@ -33,6 +33,8 @@ library(POSIX !NOGTK !RAINBOW GUI !OSX11) notify;
 
 library(DRAGONFLY) "Xext Xinerama";
 
+link(MACOSX) " -framework Foundation -framework Cocoa";
+
 file
 	Core readonly separator,
 	CtrlCore.h options(BUILDER_OPTION) PCH,

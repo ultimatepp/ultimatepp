@@ -3,7 +3,7 @@
 #define LLOG(x)     //  LOG(x)
 #define LTIMING(x)  //  TIMING(x)
 
-#if !defined(CUSTOM_FONTSYS) && !defined(flagCOCOA)
+#if !defined(CUSTOM_FONTSYS) && !defined(PLATFORM_COCOA)
 
 #ifdef PLATFORM_POSIX
 
