@@ -48,9 +48,10 @@ void Upp::Ctrl::Create(dword style)
 
 void Upp::Ctrl::WndDestroy()
 {
+	DLOG("WndDestroy " << this);
 	if(!top)
 		return;
-	[top->coco->window release];
+	[top->coco->window close];
 	delete top->coco;
 	delete top;
 	top = NULL;
