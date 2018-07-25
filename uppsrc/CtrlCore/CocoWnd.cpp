@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 NAMESPACE_UPP
 
@@ -17,17 +17,6 @@ NAMESPACE_UPP
 bool Ctrl::IsAlphaSupported()
 {
 	return false;
-}
-
-bool Ctrl::IsCompositedGui()
-{
-	return false;
-}
-
-Vector<Ctrl *> Ctrl::GetTopCtrls()
-{
-	Vector<Ctrl *> h;
-	return h;
 }
 
 Ctrl *Ctrl::GetOwner()
@@ -170,10 +159,6 @@ void Ctrl::WndUpdate(const Rect& r)
 void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
-}
-
-Rect Ctrl::GetDefaultWindowRect() {
-	return Rect(0, 0, 100, 100);
 }
 
 ViewDraw::ViewDraw(Ctrl *ctrl)

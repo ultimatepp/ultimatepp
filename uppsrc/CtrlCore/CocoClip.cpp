@@ -1,7 +1,7 @@
 #include <CtrlCore/CtrlCore.h>
 #include <plugin/bmp/bmp.h>
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 NAMESPACE_UPP
 

@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 NAMESPACE_UPP
 

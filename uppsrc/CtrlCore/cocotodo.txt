@@ -1,13 +1,15 @@
 sooner:
-- backspace and delete not working
-- implement standard cursors
 - minimize, maximaze
-- fullscreen
 - Open/OpenMain variants
-- Enter Up
-- missing cursors (add to iml)
+- LabelBox is wrong
+- initial focus
+- SerializePlacement
 
 later:
+DrawDragRect
+- fullscreen
+- missing cursors (add to iml, use undocumented cursor)
+- X11 on option
 - PrinterJob
 - DrawDragRect
 - CT_Font caching
@@ -41,3 +43,6 @@ done:
 - caret
 - implement caret
 - workarea and window placement
+- implement standard cursors
+- backspace and delete not working
+- Enter Up

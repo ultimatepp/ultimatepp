@@ -1,6 +1,6 @@
 #include "CocoMM.h"
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 #define LLOG(x)
 
@@ -15,11 +15,7 @@
 }
 @end
 
-void Upp::MMCtrl::SyncRect(CocoView *view)
-{
-	NSWindow *win = [view window];
-	view->ctrl->SetWndRect(MakeRect([win contentRectForFrameRect: [win frame]], 1000));
-}
+static Upp::Vector<Upp::Ptr<Upp::Ctrl>> mmtopctrl; // should work without Ptr, but let us be defensive....
 
 void Upp::Ctrl::Create(dword style)
 {
@@ -47,17 +43,29 @@ void Upp::Ctrl::Create(dword style)
 	top->coco->view = view;
 	MMCtrl::SyncRect(view);
 	isopen = true;
+	mmtopctrl.Add(this);
 }
 
 void Upp::Ctrl::WndDestroy()
 {
-	// TODO: Destroy window...
 	if(!top)
 		return;
+	[top->coco->window release];
 	delete top->coco;
 	delete top;
 	top = NULL;
 	isopen = false;
+	int ii = FindIndex(mmtopctrl, this);
+	if(ii >= 0)
+		mmtopctrl.Remove(ii);
+}
+
+Upp::Vector<Upp::Ctrl *> Upp::Ctrl::GetTopCtrls()
+{
+	Vector<Ctrl *> h;
+	for(Ctrl *p : mmtopctrl)
+		if(p) h.Add(p);
+	return h;
 }
 
 void Upp::Ctrl::WndInvalidateRect(const Rect& r)

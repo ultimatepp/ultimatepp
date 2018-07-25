@@ -1,6 +1,6 @@
 #include "CocoMM.h"
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 #define LLOG(x)
 
@@ -65,10 +65,10 @@ struct MMImp {
 		if(GetOption()) // TODO
 			k |= K_OPTION;
 		ctrl->DispatchKey(k, 1);
-		if(!up) {
+		if(!up && !(k & (K_CTRL|K_ALT))) {
 			WString x = ToWString((CFStringRef)(e.characters));
 			for(wchar c : x)
-				if(c < 0xF700)
+				if(c < 0xF700 && c >= 32 && c != 127)
 					ctrl->DispatchKey(c, 1);
 		}
 	}

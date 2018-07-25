@@ -1,6 +1,6 @@
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_COCO
+#ifdef PLATFORM_COCOA
 
 #define LLOG(x) // DLOG(x)
 
@@ -23,10 +23,6 @@ void Ctrl::GuiPlatformDestruct()
 }
 
 void Ctrl::GuiPlatformRemove()
-{
-}
-
-void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 {
 }
 

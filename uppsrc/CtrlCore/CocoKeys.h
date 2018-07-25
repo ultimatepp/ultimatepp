@@ -1,11 +1,11 @@
-K_BACK = 53000,
-K_BACKSPACE,
+K_BACK = kVK_Delete|K_DELTA,
+K_BACKSPACE = K_BACK,
 
-K_TAB = 9,
+K_TAB = kVK_Tab|K_DELTA,
 
-K_SPACE = 32,
+K_SPACE = kVK_Space|K_DELTA,
 
-K_RETURN = 13,
+K_RETURN = kVK_Return|K_DELTA,
 K_ENTER = K_RETURN,
 
 K_SHIFT_KEY,
@@ -24,8 +24,8 @@ K_LEFT = kVK_LeftArrow|K_DELTA,
 K_UP = kVK_UpArrow|K_DELTA,
 K_RIGHT = kVK_RightArrow|K_DELTA,
 K_DOWN = kVK_DownArrow|K_DELTA,
-K_INSERT = 0, // kVK_Insert|K_DELTA, // TODO
-K_DELETE = kVK_Delete|K_DELTA,
+K_INSERT = 999999999, // kVK_Insert|K_DELTA, // TODO
+K_DELETE = kVK_ForwardDelete|K_DELTA,
 
 K_NUMPAD0 = kVK_ANSI_Keypad0|K_DELTA,
 K_NUMPAD1 = kVK_ANSI_Keypad1|K_DELTA,
@@ -96,28 +96,28 @@ K_7 = kVK_ANSI_7|K_DELTA,
 K_8 = kVK_ANSI_8|K_DELTA,
 K_9 = kVK_ANSI_9|K_DELTA,
 
-K_CTRL_LBRACKET,
-K_CTRL_RBRACKET,
-K_CTRL_MINUS,
-K_CTRL_GRAVE,
-K_CTRL_SLASH,
-K_CTRL_BACKSLASH,
-K_CTRL_COMMA,
-K_CTRL_PERIOD,
-K_CTRL_SEMICOLON,
-K_CTRL_EQUAL,
+K_CTRL_LBRACKET = kVK_ANSI_LeftBracket|K_DELTA|K_CTRL,
+K_CTRL_RBRACKET = kVK_ANSI_RightBracket|K_DELTA|K_CTRL,
+K_CTRL_MINUS = kVK_ANSI_Minus|K_DELTA|K_CTRL,
+K_CTRL_GRAVE = kVK_ANSI_Grave|K_DELTA|K_CTRL,
+K_CTRL_SLASH = kVK_ANSI_Slash|K_DELTA|K_CTRL,
+K_CTRL_BACKSLASH = kVK_ANSI_Backslash|K_DELTA|K_CTRL,
+K_CTRL_COMMA = kVK_ANSI_Comma|K_DELTA|K_CTRL,
+K_CTRL_PERIOD = kVK_ANSI_Period|K_DELTA|K_CTRL,
+K_CTRL_SEMICOLON = kVK_ANSI_Semicolon|K_DELTA|K_CTRL,
+K_CTRL_EQUAL = kVK_ANSI_Equal|K_DELTA|K_CTRL,
 K_CTRL_APOSTROPHE,
 
 K_BREAK,
 
-K_PLUS       = 0, // not yet defined
-K_MINUS      = 0, // not yet defined
-K_COMMA      = 0, // not yet defined
-K_PERIOD     = 0, // not yet defined
-K_SEMICOLON  = 0, // not yet defined
-K_SLASH      = 0, // not yet defined
-K_GRAVE      = 0, // not yet defined
-K_LBRACKET   = 0, // not yet defined
-K_BACKSLASH  = 0, // not yet defined
-K_RBRACKET   = 0, // not yet defined
-K_QUOTEDBL   = 0, // not yet defined
+K_PLUS       = 999999999,
+K_MINUS      = kVK_ANSI_Minus|K_DELTA,
+K_COMMA      = kVK_ANSI_Comma|K_DELTA,
+K_PERIOD     = kVK_ANSI_Period|K_DELTA,
+K_SEMICOLON  = kVK_ANSI_Semicolon|K_DELTA,
+K_SLASH      = kVK_ANSI_Slash|K_DELTA,
+K_GRAVE      = kVK_ANSI_Grave|K_DELTA,
+K_LBRACKET   = kVK_ANSI_LeftBracket|K_DELTA,
+K_BACKSLASH  = kVK_ANSI_Backslash|K_DELTA,
+K_RBRACKET   = kVK_ANSI_RightBracket|K_DELTA,
+K_QUOTEDBL   = 999999999,

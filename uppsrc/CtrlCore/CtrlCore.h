@@ -25,7 +25,7 @@
 	#elif VIRTUALGUI
 		#define GUIPLATFORM_KEYCODES_INCLUDE <VirtualGui/Keys.h>
 		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
-	#elif flagCOCOA
+	#elif PLATFORM_COCOA
 		#define GUIPLATFORM_INCLUDE          "Coco.h"
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
@@ -96,7 +96,7 @@ enum {
 
 	K_SHIFT_CTRL = K_SHIFT|K_CTRL,
 
-#ifdef flagCOCOA
+#ifdef PLATFORM_COCOA
 	K_OPTION       = 0x4000000,
 #endif
 };
@@ -111,7 +111,7 @@ bool GetMouseLeft();
 bool GetMouseRight();
 bool GetMouseMiddle();
 
-#ifdef flagCOCOA
+#ifdef PLATFORM_COCOA
 bool GetOption();
 #endif
 

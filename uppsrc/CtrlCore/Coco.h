@@ -1,6 +1,4 @@
-#define GUI_COCO
-
-NAMESPACE_UPP
+namespace Upp {
 
 struct RectCG;
 
@@ -173,6 +171,6 @@ public:
 	~PrinterJob()                                       {}
 };
 
-END_UPP_NAMESPACE
+};
 
 #define GUIPLATFORM_INCLUDE_AFTER <CtrlCore/CocoAfter.h>
