@@ -8,17 +8,18 @@
 {
 	@public
 	Upp::Ptr<Upp::Ctrl> ctrl;
+	bool active;
 }
 @end
 
 @implementation CocoWindow
 
 - (BOOL)canBecomeKeyWindow {
-    return ctrl && ctrl->IsEnabled();
+    return active && ctrl && ctrl->IsEnabled();
 }
 
 - (BOOL)canBecomeMainWindow {
-    return ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
+    return active && ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
 }
 
 @end
@@ -71,7 +72,7 @@ bool Upp::Ctrl::IsWndForeground() const
 	return HasWndFocus();
 }
 
-void Upp::Ctrl::Create(Ctrl *owner, dword style)
+void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 {
 	Rect r = GetRect();
 	
@@ -81,6 +82,7 @@ void Upp::Ctrl::Create(Ctrl *owner, dword style)
 	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
 	                                         backing:NSBackingStoreBuffered defer:false];
 	window->ctrl = this;
+	window->active = active;
 	window.backgroundColor = nil;
 		
 	CocoView *view = [[[CocoView alloc] initWithFrame:frame] autorelease];
@@ -144,7 +146,7 @@ bool Upp::Ctrl::IsWndOpen() const {
 
 void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	Create(owner, NSWindowStyleMaskBorderless);
+	Create(owner, NSWindowStyleMaskBorderless, activate);
 }
 
 Upp::dword Upp::TopWindow::GetMMStyle() const
@@ -165,7 +167,7 @@ void Upp::TopWindow::Open(Ctrl *owner)
 		SetRect((center == 1 ? owner->GetRect() : owner ? owner->GetWorkArea()
 		                                                : GetPrimaryWorkArea())
 		        .CenterRect(GetRect().GetSize()));
-	Create(owner, GetMMStyle());
+	Create(owner, GetMMStyle(), true);
 	SyncCaption();
 	SyncSizeHints();
 }
