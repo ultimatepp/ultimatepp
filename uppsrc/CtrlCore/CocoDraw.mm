@@ -31,6 +31,11 @@ void SystemDraw::Set(Color c)
 	}
 }
 
+void SystemDraw::SetStroke(Color c)
+{
+    CGContextSetRGBStrokeColor(cgHandle, c.GetR() / 255.0, c.GetG() / 255.0, c.GetB() / 255.0, 1.0);
+}
+
 dword SystemDraw::GetInfo() const
 {
 	return DRAWTEXTLINES;
@@ -84,6 +89,13 @@ CGRect SystemDraw::AsCG(const Rect& r)
 }
 #endif
 
+PointCG SystemDraw::Convert(int x, int y)
+{
+	Point p = GetOffset(); // TODO: Optimize
+	x += p.x;
+	y += p.y;
+	return PointCG(x, top - y);
+}
 
 RectCG SystemDraw::Convert(int x, int y, int cx, int cy)
 {

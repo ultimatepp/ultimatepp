@@ -1,12 +1,18 @@
 sooner:
 - minimize, maximaze
 - Open/OpenMain variants
-- closing it
 - initial focus
 - SerializePlacement
 - Switch does not seem to work for some reason
+- rect loop
+- capture
+- focus
+- disable
+- wheel
 
 later:
+
+- void WakeUpGuiThread(void)
 - fullscreen
 - missing cursors (add to iml, use undocumented cursor)
 - X11 on option
@@ -34,6 +40,10 @@ later:
 - USEMALLOC
 - multimonitor support
 
+void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
+void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
+void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
+
 done:
 
 - window close button
@@ -47,3 +57,4 @@ done:
 - Enter Up
 - LabelBox is wrong
 - Default gui font (also in GetAllFacesSys)
+- closing it

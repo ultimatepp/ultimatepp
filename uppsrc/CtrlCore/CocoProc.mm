@@ -8,6 +8,7 @@ static Upp::Point coco_mouse_pos;
 static bool       coco_mouse_left;
 static bool       coco_mouse_right;
 static int        coco_flags;
+static Upp::Ptr<Upp::Ctrl> coco_capture;
 
 namespace Upp {
 bool  GetShift() { return coco_flags & NSEventModifierFlagShift; }
@@ -30,15 +31,43 @@ bool  GetMouseMiddle() { return false; } // TODO
 
 Point GetMousePos() { return coco_mouse_pos; } // TODO: read it if no mouse events
 
+void Ctrl::WndEnable(bool)
+{
+	GuiLock __;
+	// empty - we are testing the status in events....
+}
+
+bool Ctrl::SetWndCapture()
+{
+	GuiLock __;
+	coco_capture = this;
+	return true; // TODO: Always?
+}
+
+bool Ctrl::HasWndCapture() const
+{
+	GuiLock __;
+	return coco_capture == this;
+}
+
+bool Ctrl::ReleaseWndCapture()
+{
+	GuiLock __;
+	coco_capture = NULL;
+	return true;
+}
 
 struct MMImp {
-	static void MouseEvent(CocoView *view, NSEvent *e, int event)
+	static bool MouseEvent(CocoView *view, NSEvent *e, int event)
 	{
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
-		Upp::Point p(np.x, view->ctrl->GetRect().GetHeight() - np.y);
+		Rect r = view->ctrl->GetRect();
+		Upp::Point p(np.x, r.GetHeight() - np.y);
 		int zd = 0; // TODO: MouseWheel
-		coco_mouse_pos = p + view->ctrl->GetRect().TopLeft();
-		view->ctrl->DispatchMouse(event, p, zd);
+		coco_mouse_pos = p + r.TopLeft();
+		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
+			view->ctrl->DispatchMouse(event, p, zd);
+		return false;
 	}
 	
 	static void Flags(NSEvent *e)
@@ -53,8 +82,10 @@ struct MMImp {
 		ctrl->UpdateArea(w, r);
 	}
 
-	static void KeyEvent(Upp::Ctrl *ctrl, NSEvent *e, int up) {
+	static bool KeyEvent(Upp::Ctrl *ctrl, NSEvent *e, int up) {
 		Flags(e);
+		if(!ctrl->IsEnabled())
+			return false;
 		Upp::dword k = e.keyCode|K_DELTA|up;
 		if(GetCtrl())
 			k |= K_CTRL;
@@ -64,6 +95,10 @@ struct MMImp {
 			k |= K_ALT;
 		if(GetOption()) // TODO
 			k |= K_OPTION;
+		
+		if(e.keyCode == kVK_Help) // TODO: This is Insert key, but all this is dubious
+			ctrl->DispatchKey(k & ~K_KEYUP, 1);
+
 		ctrl->DispatchKey(k, 1);
 		if(!up && !(k & (K_CTRL|K_ALT))) {
 			WString x = ToWString((CFStringRef)(e.characters));
@@ -71,11 +106,17 @@ struct MMImp {
 				if(c < 0xF700 && c >= 32 && c != 127)
 					ctrl->DispatchKey(c, 1);
 		}
+		return true;
 	}
 	
-	static void GotFocus(Upp::Ctrl *ctrl)
+	static void BecomeKey(Upp::Ctrl *ctrl)
 	{
 		ctrl->ActivateWnd();
+	}
+
+	static void ResignKey(Upp::Ctrl *ctrl)
+	{
+		ctrl->KillFocusWnd();
 	}
 	
 	static void DoClose(Upp::Ctrl *ctrl)
@@ -83,11 +124,13 @@ struct MMImp {
 		DLOG("DoClose");
 		ctrl->MMClose();
 	}
+	
 };
 
 };
 
 @implementation CocoView
+
 -(void)drawRect:(NSRect)r {
 	int h = ctrl->GetRect().GetHeight();
 	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], h);
@@ -95,30 +138,76 @@ struct MMImp {
 	                                      r.size.width, r.size.height));
 }
 
-- (void)mouseDown:(NSEvent *)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTDOWN); coco_mouse_left = true; }
-- (void)mouseUp:(NSEvent *)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTUP); coco_mouse_left = false; }
-- (void)mouseMoved:(NSEvent *)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEMOVE); }
-- (void)mouseDragged:(NSEvent *)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEMOVE); } // TODO?
-- (void)rightMouseDown:(NSEvent*)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTDOWN); coco_mouse_right = true; }
-- (void)rightMouseUp:(NSEvent*)e { Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTUP); coco_mouse_right = false; }
+- (void)mouseDown:(NSEvent *)e {
+	coco_mouse_left = true;
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTDOWN))
+		[super mouseDown:e];
+}
 
-- (void)keyDown:(NSEvent *)e { Upp::MMImp::KeyEvent(ctrl, e, 0); }
-- (void)keyUp:(NSEvent *)e { Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP); }
+- (void)mouseUp:(NSEvent *)e {
+	coco_mouse_left = false;
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTUP))
+		[super mouseUp:e];
+}
 
-- (BOOL)windowShouldClose:(NSWindow *)sender { DLOG("SHOULD CLOSE"); Upp::MMImp::DoClose(ctrl); return NO; }
+- (void)mouseMoved:(NSEvent *)e {
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEMOVE))
+		[super mouseMoved:e];
+}
+
+- (void)mouseDragged:(NSEvent *)e {
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEMOVE))
+		[super mouseDragged:e];
+}
+
+- (void)rightMouseDown:(NSEvent*)e {
+	coco_mouse_right = true;
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTDOWN))
+		[super rightMouseDown:e];
+}
+
+- (void)rightMouseUp:(NSEvent*)e {
+	coco_mouse_right = false;
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTUP))
+		[super rightMouseUp:e];
+}
+
+- (void)keyDown:(NSEvent *)e {
+	if(!Upp::MMImp::KeyEvent(ctrl, e, 0))
+		[super keyDown:e];
+}
+
+- (void)keyUp:(NSEvent *)e {
+	if(!Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP))
+		[super keyUp:e];
+}
+
+- (BOOL)windowShouldClose:(NSWindow *)sender {
+	Upp::MMImp::DoClose(ctrl);
+	return NO;
+}
 
 - (void)windowDidResize:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }
 - (void)windowDidMove:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }
 //TODO: more layout changes
 
-- (void)windowDidBecomeKey:(NSNotification *)notification
-{
+- (void)windowDidBecomeKey:(NSNotification *)notification {
 	DLOG("DidBecomeKey");
-	Upp::MMImp::GotFocus(ctrl);
+	Upp::MMImp::BecomeKey(ctrl);
 }
 
-- (BOOL)acceptsFirstResponder {	return YES; }
-- (BOOL)canBecomeKeyView { return YES; }
+- (void)windowDidResignKey:(NSNotification *)notification {
+	DLOG("DidResignKey");
+	Upp::MMImp::ResignKey(ctrl);
+}
+
+- (BOOL)acceptsFirstResponder {
+	return YES;
+}
+
+- (BOOL)canBecomeKeyView {
+	return ctrl->IsEnabled();
+}
 
 @end
 

@@ -19,18 +19,6 @@ bool Ctrl::IsAlphaSupported()
 	return false;
 }
 
-Ctrl *Ctrl::GetOwner()
-{
-	GuiLock __;
-	return NULL;
-}
-
-Ctrl *Ctrl::GetActiveCtrl()
-{
-	GuiLock __;
-	return NULL;
-}
-
 // Vector<Callback> Ctrl::hotkey;
 
 int Ctrl::RegisterSystemHotKey(dword key, Function<void ()> cb)
@@ -95,54 +83,6 @@ int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
 	return 1000 / 32;
-}
-
-void Ctrl::SetWndForeground()
-{
-	GuiLock __;
-}
-
-bool Ctrl::IsWndForeground() const
-{
-	GuiLock __;
-	return true;
-}
-
-void Ctrl::WndEnable(bool)
-{
-	GuiLock __;
-}
-
-bool Ctrl::SetWndFocus()
-{
-	GuiLock __;
-	return true;
-}
-
-bool Ctrl::HasWndFocus() const
-{
-	GuiLock __;
-	return false;
-}
-
-bool Ctrl::SetWndCapture()
-{
-	GuiLock __;
-	ASSERT(IsMainThread());
-	return false;
-}
-
-bool Ctrl::ReleaseWndCapture()
-{
-	GuiLock __;
-	ASSERT(IsMainThread());
-	return false;
-}
-
-bool Ctrl::HasWndCapture() const
-{
-	GuiLock __;
-	return false;
 }
 
 void Ctrl::WndSetPos(const Rect& rect)

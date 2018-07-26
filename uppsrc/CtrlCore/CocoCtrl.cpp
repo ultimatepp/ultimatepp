@@ -12,6 +12,7 @@ void ChHostSkin(void)
 
 void WakeUpGuiThread(void)
 {
+	
 }
 
 void Ctrl::GuiPlatformConstruct()
