@@ -74,21 +74,6 @@ void SystemDraw::OffsetOp(Point p)
 	offset.Top() += p;
 }
 
-#if 0
-CGRect SystemDraw::AsCG(const Rect& r)
-{
-	Point p = r.TopLeft();
-	Size sz = r.GetSize();
-	Convert(p.x, p.y);
-	CGRect cgr;
-	cgr.origin.x = p.x;
-	cgr.origin.y = p.y;
-	cgr.size.width = sz.cx;
-	cgr.size.height = sz.cy;
-	return cgr;
-}
-#endif
-
 PointCG SystemDraw::Convert(int x, int y)
 {
 	Point p = GetOffset(); // TODO: Optimize
@@ -118,7 +103,6 @@ RectCG SystemDraw::MakeRectCG(const Rect& r)
 
 void SystemDraw::ClipCG(const Rect& r)
 {
-	DLOG("ClipCG " << r);
 	CGContextClipToRect(cgHandle, MakeRectCG(r));
 }
 

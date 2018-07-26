@@ -44,6 +44,7 @@ Upp::Ctrl *Upp::Ctrl::GetActiveCtrl()
 bool Upp::Ctrl::SetWndFocus()
 {
 	GuiLock __;
+	DLOG("SetWndFocus " << Name());
 	if(top && top->coco) {
 		[top->coco->window orderFront:top->coco->window];
 		[top->coco->window makeKeyWindow];
@@ -107,7 +108,7 @@ void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 
 void Upp::Ctrl::WndDestroy()
 {
-	DLOG("WndDestroy " << this);
+	DLOG("WndDestroy " << Name());
 	if(!top)
 		return;
 	Ptr<Ctrl> owner = GetOwner();
@@ -146,7 +147,7 @@ bool Upp::Ctrl::IsWndOpen() const {
 
 void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	Create(owner, NSWindowStyleMaskBorderless, activate);
+	Create(owner, NSWindowStyleMaskBorderless, false);
 }
 
 Upp::dword Upp::TopWindow::GetMMStyle() const

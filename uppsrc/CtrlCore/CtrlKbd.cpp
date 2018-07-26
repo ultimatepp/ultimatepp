@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)  DLOG(x)
 
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
@@ -238,7 +238,11 @@ bool Ctrl::SetFocus0(bool activate)
 	Ptr<Ctrl> topwindow = GetTopWindow();
 	Ptr<Ctrl> topctrl = GetTopCtrl();
 	Ptr<Ctrl> _this = this;
+#ifdef PLATFORM_COCOA
+	topwindow = topctrl;
+#else
 	if(!topwindow) topwindow = topctrl;
+#endif
 	LLOG("SetFocus -> SetWndFocus: topwindow = " << UPP::Name(topwindow) << ", focusCtrlWnd = " << UPP::Name(focusCtrlWnd));
 	if(!topwindow->HasWndFocus() && !topwindow->SetWndFocus()) return false;// cxl 31.1.2004
 #ifdef PLATFORM_OSX11 // ugly temporary hack - popups not behaving right in MacOS
@@ -372,9 +376,6 @@ String GetKeyDesc(dword key)
 	if(key == 0)
 		return desc;
 	
-	DDUMPHEX(key);
-	DDUMPHEX(K_DELETE);
-	
 	if(key & K_KEYUP) desc << t_("key\vUP ");
 	if(key & K_CTRL)  desc << t_("key\vCtrl+");
 	if(key & K_ALT)   desc << t_("key\vAlt+");
@@ -383,8 +384,7 @@ String GetKeyDesc(dword key)
 	if(key & K_OPTION) desc << t_("key\vOption+");
 #endif
 
-
-	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
+	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_OPTION | K_KEYUP);
 #ifdef PLATFORM_COCOA
 	key &= ~(K_OPTION);
 #endif
@@ -460,14 +460,11 @@ String GetKeyDesc(dword key)
 			{ K_BACKSLASH, tt_("key\v[\\]") }, { K_RBRACKET, tt_("key\v[]]") }, { K_QUOTEDBL, tt_("key\v[']") },
 			{ 0, NULL }
 		};
-		for(int i = 0; nkey[i].key; i++) {
-			DDUMPHEX(nkey[i].key);
-			DDUMP(nkey[i].name);
+		for(int i = 0; nkey[i].key; i++)
 			if(nkey[i].key == key) {
 				desc << GetLngString(nkey[i].name);
 				return desc;
 			}
-		}
 		desc << Format("%04x", (int)key);
 	}
 	return desc;
