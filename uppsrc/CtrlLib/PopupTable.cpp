@@ -27,7 +27,7 @@ void PopUpTable::DoClose() {
 }
 
 void PopUpTable::PopupDeactivate() {
-	if(open) {
+	if(open) {DLOG("Deactivate");
 		DoClose();
 		IgnoreMouseClick();
 		WhenCancel();

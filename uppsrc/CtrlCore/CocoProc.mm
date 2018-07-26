@@ -77,7 +77,6 @@ struct MMImp {
 	
 	static void Paint(Upp::Ctrl *ctrl, Upp::SystemDraw& w, const Rect& r)
 	{
-		DLOG("MMPaint " << r);
 		ctrl->fullrefresh = false;
 		ctrl->UpdateArea(w, r);
 	}
@@ -121,10 +120,8 @@ struct MMImp {
 	
 	static void DoClose(Upp::Ctrl *ctrl)
 	{
-		DLOG("DoClose");
 		ctrl->MMClose();
 	}
-	
 };
 
 };
@@ -192,12 +189,12 @@ struct MMImp {
 //TODO: more layout changes
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
-	DLOG("DidBecomeKey");
+	DLOG("DidBecomeKey" << ctrl->Name());
 	Upp::MMImp::BecomeKey(ctrl);
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
-	DLOG("DidResignKey");
+	DLOG("DidResignKey " << ctrl->Name());
 	Upp::MMImp::ResignKey(ctrl);
 }
 
