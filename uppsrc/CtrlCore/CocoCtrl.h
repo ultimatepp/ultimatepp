@@ -10,7 +10,7 @@ private:
 protected:
 	virtual void MMClose() { DLOG("MMClose"); }
 
-	void Create(dword style);
+	void   Create(Ctrl *owner, dword style);
 
 public:
 	static void      EndSession()              {}

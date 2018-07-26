@@ -1,6 +1,7 @@
 namespace Upp {
 
-struct RectCG;
+struct PointCG; // represents CGPoint, used to isolate Cocoa/AppKit includes
+struct RectCG; // represents CGRect, used to isolate Cocoa/AppKit includes
 
 class SystemDraw : public Draw {
 	virtual dword GetInfo() const;
@@ -52,8 +53,10 @@ private:
 	Point  GetOffset() const       { return offset.GetCount() ? offset.Top() : Point(0, 0); }
 	RectCG Convert(int x, int y, int cx, int cy);
 	RectCG Convert(const Rect& r);
+	PointCG Convert(int x, int y);
 
 	void  Set(Color c);
+	void  SetStroke(Color c);
 
 	void Init(void *cgContext, int cy);
 

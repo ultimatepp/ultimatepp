@@ -44,6 +44,15 @@ String ToString(CFStringRef s);
 
 #define      cgHandle   (CGContextRef)handle
 
+struct PointCG {
+	int x, y;
+
+	operator CGPoint() const { return CGPointMake(x, y); }
+	
+	PointCG(int x, int y) : x(x), y(y) {}
+	PointCG();
+};
+
 struct RectCG {
 	int x, y, cx, cy;
 
@@ -69,6 +78,7 @@ struct Upp::MMCtrl {
 struct Upp::CocoTop {
 	NSWindow *window = NULL;
 	CocoView *view = NULL;
+	Ptr<Ctrl> owner;
 };
 
 void SyncRect(CocoView *view);

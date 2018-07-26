@@ -6,27 +6,81 @@
 
 @interface CocoWindow : NSWindow
 {
+	@public
+	Upp::Ptr<Upp::Ctrl> ctrl;
 }
 @end
 
 @implementation CocoWindow
+
 - (BOOL)canBecomeKeyWindow {
-    return YES;
+    return ctrl && ctrl->IsEnabled();
 }
+
+- (BOOL)canBecomeMainWindow {
+    return ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
+}
+
 @end
 
 static Upp::Vector<Upp::Ptr<Upp::Ctrl>> mmtopctrl; // should work without Ptr, but let us be defensive....
 
-void Upp::Ctrl::Create(dword style)
+Upp::Ctrl *Upp::Ctrl::GetOwner()
+{
+	GuiLock __;
+	return top && top->coco ? top->coco->owner : NULL;
+}
+
+Upp::Ctrl *Upp::Ctrl::GetActiveCtrl()
+{
+	GuiLock __;
+	for(Ctrl *p : mmtopctrl)
+		if(p && p->top && p->top->coco && p->top->coco->window.keyWindow)
+			return p;
+	return NULL;
+}
+
+bool Upp::Ctrl::SetWndFocus()
+{
+	GuiLock __;
+	if(top && top->coco) {
+		[top->coco->window orderFront:top->coco->window];
+		[top->coco->window makeKeyWindow];
+		if(dynamic_cast<TopWindow *>(this))
+			[top->coco->window makeMainWindow];
+	}
+	return true;
+}
+
+bool Upp::Ctrl::HasWndFocus() const
+{
+	GuiLock __;
+	return GetActiveCtrl() == this;
+}
+
+
+void Upp::Ctrl::SetWndForeground()
+{
+	GuiLock __;
+	SetWndFocus();
+}
+
+bool Upp::Ctrl::IsWndForeground() const
+{
+	GuiLock __;
+	return HasWndFocus();
+}
+
+void Upp::Ctrl::Create(Ctrl *owner, dword style)
 {
 	Rect r = GetRect();
 	
 	NSRect frame = NSMakeRect(r.left, GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight(),
 	                          r.GetWidth(), r.GetHeight());
 		
-	NSWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
-	                                       backing:NSBackingStoreBuffered defer:false];
-	
+	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
+	                                         backing:NSBackingStoreBuffered defer:false];
+	window->ctrl = this;
 	window.backgroundColor = nil;
 		
 	CocoView *view = [[[CocoView alloc] initWithFrame:frame] autorelease];
@@ -41,9 +95,12 @@ void Upp::Ctrl::Create(dword style)
 	top->coco = new CocoTop;
 	top->coco->window = window;
 	top->coco->view = view;
+	top->coco->owner = owner;
 	MMCtrl::SyncRect(view);
 	isopen = true;
 	mmtopctrl.Add(this);
+	if(owner && owner->top && owner->top->coco)
+		[owner->top->coco->window addChildWindow:window ordered:NSWindowAbove];
 }
 
 void Upp::Ctrl::WndDestroy()
@@ -51,6 +108,7 @@ void Upp::Ctrl::WndDestroy()
 	DLOG("WndDestroy " << this);
 	if(!top)
 		return;
+	Ptr<Ctrl> owner = GetOwner();
 	[top->coco->window close];
 	delete top->coco;
 	delete top;
@@ -59,6 +117,8 @@ void Upp::Ctrl::WndDestroy()
 	int ii = FindIndex(mmtopctrl, this);
 	if(ii >= 0)
 		mmtopctrl.Remove(ii);
+	if(owner)
+		owner->SetWndFocus();
 }
 
 Upp::Vector<Upp::Ctrl *> Upp::Ctrl::GetTopCtrls()
@@ -82,10 +142,9 @@ bool Upp::Ctrl::IsWndOpen() const {
 	return top;
 }
 
-
 void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	Create(NSWindowStyleMaskBorderless);
+	Create(owner, NSWindowStyleMaskBorderless);
 }
 
 Upp::dword Upp::TopWindow::GetMMStyle() const
@@ -98,23 +157,22 @@ Upp::dword Upp::TopWindow::GetMMStyle() const
 	return style;
 }
 
-void Upp::TopWindow::Open(Ctrl *owner_)
+void Upp::TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
-	owner = owner_;
 	SetupRect(owner);
 	if((owner && center == 1) || center == 2)
 		SetRect((center == 1 ? owner->GetRect() : owner ? owner->GetWorkArea()
 		                                                : GetPrimaryWorkArea())
 		        .CenterRect(GetRect().GetSize()));
-	Create(GetMMStyle());
+	Create(owner, GetMMStyle());
 	SyncCaption();
 	SyncSizeHints();
 }
 
 void Upp::TopWindow::Open()
 {
-	Open(NULL);
+	Open(GetActiveCtrl());
 }
 
 void Upp::TopWindow::OpenMain()
