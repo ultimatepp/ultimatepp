@@ -27,6 +27,7 @@
 		#define GUIPLATFORM_INCLUDE          <VirtualGui/VirtualGui.h>
 	#elif PLATFORM_COCOA
 		#define GUIPLATFORM_INCLUDE          "Coco.h"
+		#define GUIPLATFORM_NOSCROLL
 	#elif PLATFORM_WIN32
 		#define GUIPLATFORM_INCLUDE "Win32Gui.h"
 	#else

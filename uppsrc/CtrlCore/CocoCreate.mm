@@ -44,7 +44,7 @@ Upp::Ctrl *Upp::Ctrl::GetActiveCtrl()
 bool Upp::Ctrl::SetWndFocus()
 {
 	GuiLock __;
-	DLOG("SetWndFocus " << Name());
+	LLOG("SetWndFocus " << Name());
 	if(top && top->coco) {
 		[top->coco->window orderFront:top->coco->window];
 		[top->coco->window makeKeyWindow];
@@ -108,7 +108,7 @@ void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 
 void Upp::Ctrl::WndDestroy()
 {
-	DLOG("WndDestroy " << Name());
+	LLOG("WndDestroy " << Name());
 	if(!top)
 		return;
 	Ptr<Ctrl> owner = GetOwner();
@@ -135,9 +135,18 @@ Upp::Vector<Upp::Ctrl *> Upp::Ctrl::GetTopCtrls()
 void Upp::Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
-	[top->coco->view
-	      setNeedsDisplayInRect:(NSRect)CGRectMake(r.left, GetRect().GetHeight() - r.top - r.GetHeight(),
-	                                               r.GetWidth(), r.GetHeight())];
+	LLOG("Invalidate Rect " << r);
+	if(top)
+		[top->coco->view
+		      setNeedsDisplayInRect:(NSRect)CGRectMake(r.left, GetRect().GetHeight() - r.top - r.GetHeight(),
+		                                               r.GetWidth(), r.GetHeight())];
+}
+
+void Upp::Ctrl::WndScrollView(const Rect& r, int dx, int dy)
+{
+	GuiLock __;
+	LLOG("Scroll View " << r);
+	WndInvalidateRect(r);
 }
 
 bool Upp::Ctrl::IsWndOpen() const {
@@ -187,7 +196,7 @@ void Upp::TopWindow::SyncTitle()
 {
 	GuiLock __;
 	if(top) {
-		DLOG("SyncTitle " << title);
+		LLOG("SyncTitle " << title);
 		CFRef<CFStringRef> s = CFStringCreateWithCString(NULL, (const char *)~title.ToString(), kCFStringEncodingUTF8);
 		[top->coco->window setTitle:(NSString *)~s];
 	}

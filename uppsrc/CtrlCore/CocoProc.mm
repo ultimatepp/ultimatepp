@@ -58,16 +58,22 @@ bool Ctrl::ReleaseWndCapture()
 }
 
 struct MMImp {
-	static bool MouseEvent(CocoView *view, NSEvent *e, int event)
+	static bool MouseEvent(CocoView *view, NSEvent *e, int event, double zd = 0)
 	{
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(np.x, r.GetHeight() - np.y);
-		int zd = 0; // TODO: MouseWheel
 		coco_mouse_pos = p + r.TopLeft();
 		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
-			view->ctrl->DispatchMouse(event, p, zd);
+			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
 		return false;
+	}
+	static bool MouseDownEvent(CocoView *view, NSEvent *e, int button)
+	{
+		static int clicktime = msecs() - 100000;
+		bool b = MouseEvent(view, e, button|(msecs(clicktime) < 250 ? Upp::Ctrl::DOUBLE : Upp::Ctrl::DOWN));
+		clicktime = msecs();
+		return b;
 	}
 	
 	static void Flags(NSEvent *e)
@@ -137,7 +143,7 @@ struct MMImp {
 
 - (void)mouseDown:(NSEvent *)e {
 	coco_mouse_left = true;
-	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTDOWN))
+	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::LEFT))
 		[super mouseDown:e];
 }
 
@@ -159,7 +165,7 @@ struct MMImp {
 
 - (void)rightMouseDown:(NSEvent*)e {
 	coco_mouse_right = true;
-	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTDOWN))
+	if(!Upp::MMImp::MouseDownEvent(self, e, Upp::Ctrl::RIGHT))
 		[super rightMouseDown:e];
 }
 
@@ -167,6 +173,11 @@ struct MMImp {
 	coco_mouse_right = false;
 	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::RIGHTUP))
 		[super rightMouseUp:e];
+}
+
+- (void)scrollWheel:(NSEvent *)e {
+	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::MOUSEWHEEL, [e deltaY]))
+		[super scrollWheel:e];
 }
 
 - (void)keyDown:(NSEvent *)e {
@@ -189,12 +200,10 @@ struct MMImp {
 //TODO: more layout changes
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
-	DLOG("DidBecomeKey" << ctrl->Name());
 	Upp::MMImp::BecomeKey(ctrl);
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
-	DLOG("DidResignKey " << ctrl->Name());
 	Upp::MMImp::ResignKey(ctrl);
 }
 

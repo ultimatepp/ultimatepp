@@ -40,7 +40,10 @@ struct AutoreleasePool {
 };
 
 WString ToWString(CFStringRef s);
-String ToString(CFStringRef s);
+String  ToString(CFStringRef s);
+
+inline WString ToWString(NSString *s) { return ToWString((CFStringRef)s); }
+inline String  ToString(NSString *s)  { return ToString((CFStringRef)s); }
 
 #define      cgHandle   (CGContextRef)handle
 

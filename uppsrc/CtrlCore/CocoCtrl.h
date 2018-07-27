@@ -8,7 +8,7 @@ private:
 	static void AnimateCaret();
 
 protected:
-	virtual void MMClose() { DLOG("MMClose"); }
+	virtual void MMClose() {}
 
 	void   Create(Ctrl *owner, dword style, bool active);
 

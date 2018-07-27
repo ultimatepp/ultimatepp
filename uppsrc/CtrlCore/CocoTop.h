@@ -2,5 +2,5 @@
 protected:
 	dword GetMMStyle() const;
 
-	virtual void MMClose() { DLOG("Top::MMClose"); WhenClose(); }
+	virtual void MMClose() { WhenClose(); }
 //$ };

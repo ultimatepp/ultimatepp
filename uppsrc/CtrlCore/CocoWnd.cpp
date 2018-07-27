@@ -96,11 +96,6 @@ void Ctrl::WndUpdate(const Rect& r)
 
 }
 
-void  Ctrl::WndScrollView(const Rect& r, int dx, int dy)
-{
-	GuiLock __;
-}
-
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
 	EnterGuiMutex();
