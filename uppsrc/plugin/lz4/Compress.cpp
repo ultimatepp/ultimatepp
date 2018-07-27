@@ -95,7 +95,6 @@ void LZ4CompressStream::FlushOut()
 
 void LZ4CompressStream::Close()
 {
-	ASSERT(compress >= 0);
 	if(out) {
 		FlushOut();
 		out->Put32le(0);
@@ -117,8 +116,6 @@ void LZ4CompressStream::_Put(int w)
 
 void LZ4CompressStream::_Put(const void *data, dword size)
 {
-	ASSERT(compress >= 0);
-	
 	const char *s = reinterpret_cast<const char *>(data);
 
 	while(size > 0) {

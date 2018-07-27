@@ -263,4 +263,38 @@ void Upp::MMCtrl::SyncRect(CocoView *view)
 		MakeRect([win contentRectForFrameRect: [win frame]], [[win screen] frame].size.height));
 }
 
+bool Upp::IsClipboardAvailableText()
+{
+	return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSPasteboardTypeString, nil]];
+}
+
+Upp::String Upp::ReadClipboardText()
+{
+	if(IsClipboardAvailableText())
+		return ToString([[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString]);
+	return Null;
+}
+
+Upp::WString Upp::ReadClipboardUnicodeText()
+{
+	return ReadClipboardText().ToWString();
+}
+
+void Upp::ClearClipboard()
+{
+	GuiLock __;
+	[[NSPasteboard generalPasteboard] clearContents];
+}
+
+void Upp::AppendClipboardText(const String& s)
+{
+	CFRef<CFStringRef> cs = CFStringCreateWithCString(NULL, (const char *)~s.ToString(), kCFStringEncodingUTF8);
+    [[NSPasteboard generalPasteboard] setString:(NSString *)~cs forType:NSPasteboardTypeString];
+}
+
+void Upp::AppendClipboardUnicodeText(const WString& s)
+{
+	AppendClipboardText(s.ToString());
+}
+
 #endif

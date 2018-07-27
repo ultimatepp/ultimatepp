@@ -7,11 +7,6 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
-void ClearClipboard()
-{
-	GuiLock __;
-}
-
 void AppendClipboard(int format, const byte *data, int length)
 {
 	GuiLock __;
@@ -37,16 +32,6 @@ String ReadClipboard(const char *format)
 {
 	GuiLock __;
 	return Null;
-}
-
-void AppendClipboardText(const String& s)
-{
-	AppendClipboard("text", ToSystemCharset(s));
-}
-
-void AppendClipboardUnicodeText(const WString& s)
-{
-	AppendClipboard("wtext", (byte *)~s, 2 * s.GetLength());
 }
 
 const char *ClipFmtsText()
@@ -124,22 +109,7 @@ String GetTextClip(const String& text, const String& fmt)
 	return Null;
 }
 
-String ReadClipboardText()
-{
-	return ReadClipboardUnicodeText().ToString();
-}
-
-WString ReadClipboardUnicodeText()
-{
-	return Null;
-}
-
 bool IsClipboardAvailable(const char *id)
-{
-	return false;
-}
-
-bool IsClipboardAvailableText()
 {
 	return false;
 }

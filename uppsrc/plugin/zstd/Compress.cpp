@@ -80,7 +80,6 @@ void ZstdCompressStream::FlushOut()
 
 void ZstdCompressStream::Close()
 {
-	ASSERT(compress >= 0);
 	if(out) {
 		FlushOut();
 		out = NULL;
@@ -100,8 +99,6 @@ void ZstdCompressStream::_Put(int w)
 
 void ZstdCompressStream::_Put(const void *data, dword size)
 {
-	ASSERT(compress >= 0);
-	
 	const char *s = reinterpret_cast<const char *>(data);
 
 	while(size > 0) {

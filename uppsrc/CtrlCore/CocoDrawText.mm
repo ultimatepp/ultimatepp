@@ -48,9 +48,9 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.maxwidth = 99999; // TODO?
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
-		fi.fixedpitch = false; _DBG_ // TODO!
+		fi.fixedpitch = false; // TODO!
 		fi.ttf = true;
-		_DBG_ // TODO: PATH for data
+// TODO: PATH for data
 //		if(path.GetCount() < 250)
 //			strcpy(fi.path, ~path);
 //		else
@@ -76,7 +76,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 		    CGSize advance;
 			CTFontGetAdvancesForGlyphs(ctfont, kCTFontOrientationHorizontal, &glyph_index, &advance, 1);
 			gi.width = ceil(advance.width);
-			gi.lspc = gi.rspc = 0; _DBG_ // TODO! (using bounding box?)
+			gi.lspc = gi.rspc = 0; // TODO! (using bounding box?)
 			gi.glyphi = glyph_index;
 		}
 	}
@@ -118,15 +118,13 @@ Vector<FaceInfo> GetAllFacesSys()
 }
 
 String GetFontDataSys(Font font)
-{// TODO! CFUrl?
-	_DBG_
+{	// TODO! CFUrl?
 	return Null;
 }
 
 void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt)
 {
 	// TODO!
-	_DBG_
 }
 
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,

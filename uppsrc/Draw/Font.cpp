@@ -1,6 +1,6 @@
 #include "Draw.h"
 
-#define LLOG(x)  DLOG(x)
+#define LLOG(x)  // DLOG(x)
 
 namespace Upp {
 
