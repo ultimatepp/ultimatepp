@@ -5,10 +5,9 @@ sooner:
 - SerializePlacement
 - Switch does not seem to work for some reason
 - rect loop
-- capture
-- focus
-- disable
-- wheel
+- ide: Tab does not work
+- menubar does not loose focus after click outside (or rather ActiveFocus does not work)
+- invalid ide icon in main package selector
 
 later:
 
@@ -46,6 +45,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- wheel
 - window close button
 - window maximize / minimize buttons
 - window minmax
@@ -58,3 +58,6 @@ done:
 - LabelBox is wrong
 - Default gui font (also in GetAllFacesSys)
 - closing it
+- disable
+- capture
+- focus
