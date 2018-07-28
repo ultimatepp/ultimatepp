@@ -1,6 +1,8 @@
 #include "CommandLineHandler.h"
 
 #include <Draw/Draw.h>
+#include <ide/Common/CommandLineOptions.h>
+#include <ide/Debuggers/GdbUtils.h>
 
 using namespace Upp;
 
@@ -16,6 +18,9 @@ bool CommandLineHandler::Handle()
 	if(HandleHelp())
 		return true;
 	
+	if(HandleDebugBreakProcess())
+		return true;
+	
 	return false;
 }
 
@@ -29,7 +34,7 @@ bool CommandLineHandler::HandleManipulators()
 
 bool CommandLineHandler::HandleScale()
 {
-	if(args.GetCount() < 2 || args[0].Compare("--scale") != 0)
+	if(args.GetCount() < 2 || !args[0].IsEqual(COMMAND_LINE_SCALE_OPTION))
 		return false;
 	
 	int scale = StrInt(args[1]);
@@ -59,10 +64,31 @@ bool CommandLineHandler::HandleHelp() const
 			  "    -h or --help - displays this site.\n\n";
 	
 	Cout() << "Advanced options:\n"
-			  "    --scale $percent - scale interface by \"percent\" represented by parameter x.\n\n";
+			  "    " << COMMAND_LINE_SCALE_OPTION << " $percent - scale interface by \"percent\" represented by parameter x.\n\n";
 	
 	Cout() << "Internal options (Should not be called by the user):\n"
-	          "    --debug_break_process $pid - breaks debug process represented by \"pid\" (MS Windows only).\n";
+	          "    " << COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_OPTION << " $pid - breaks debug process represented by \"pid\".\n";
+	
+	return true;
+}
+
+bool CommandLineHandler::HandleDebugBreakProcess() const
+{
+	if(args.GetCount() < 2 || !args[0].IsEqual(COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_OPTION))
+		return false;
+	
+	int pid = StrInt(args[1]);
+	if(IsNull(pid)) {
+		Cout() << "PID should be numeric value.";
+		return true;
+	}
+	
+	auto utils = GdbUtilsFactory().Create();
+	auto error = utils->BreakRunning(pid);
+	if(!error.IsEmpty()) {
+		Cout() << error << "\n";
+		SetExitCode(COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_FAILURE_STATUS);
+	}
 	
 	return true;
 }

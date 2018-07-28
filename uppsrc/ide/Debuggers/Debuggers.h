@@ -3,6 +3,8 @@
 
 #define DR_LOG(x) // RLOG(x)
 
+#include "GdbUtils.h"
+
 #include <ide/Common/Common.h>
 
 #include <HexView/HexView.h>
@@ -233,6 +235,9 @@ public:
 	Gdb();
 	
 	const int max_stack_trace_size = 400;
+	
+private:
+	One<IGdbUtils> gdb_utils;
 };
 
 #include "Gdb_MI2.h"

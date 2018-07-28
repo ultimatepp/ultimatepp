@@ -305,7 +305,7 @@ String Gdb::ObtainThreadsInfo()
 	if(active_thread >= 0)
 		threads <<= active_thread;
 	if(threads.GetCount() == 0) {
-		String error = t_("Failed to obtain information about threads. The debugger process will be stoped!");
+		String error =  t_("Failed to obtain information about threads. The debugger process will be stoped!");
 		
 		Loge() << METHOD_NAME << error;
 		ErrorOK(error);
@@ -369,21 +369,13 @@ bool Gdb::RunTo()
 
 void Gdb::BreakRunning()
 {
-#ifdef PLATFORM_WIN32
-	HANDLE h = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
-	if(h) {
-		DebugBreakProcess(h);
-		CloseHandle(h);
-		return;
+	Logd() << METHOD_NAME << "PID: " << pid << "\n";
+	
+	auto error = gdb_utils->BreakRunning(pid);
+	if(!error.IsEmpty()) {
+		Loge() << METHOD_NAME << error;
+		ErrorOK(error);
 	}
-#endif
-#ifdef PLATFORM_POSIX
-	if(kill(pid, SIGINT) != -1)
-		return;
-#endif
-	const char *error = t_("Failed to interrupt debugee process.");
-	Loge() << METHOD_NAME << error;
-	ErrorOK(error);
 }
 
 void Gdb::Run()
@@ -552,6 +544,7 @@ void Gdb::Periodic()
 }
 
 Gdb::Gdb()
+	: gdb_utils(GdbUtilsFactory().Create())
 {
 	locals.NoHeader();
 	locals.AddColumn("", 1);

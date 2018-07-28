@@ -21,6 +21,8 @@ private:
 	
 	bool HandleHelp() const;
 	
+	bool HandleDebugBreakProcess() const;
+	
 private:
 	Vector<String> args;
 };
