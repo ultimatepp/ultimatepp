@@ -116,11 +116,11 @@ void Upp::Ctrl::WndDestroy()
 	delete top->coco;
 	delete top;
 	top = NULL;
-	isopen = false;
+	popup = isopen = false;
 	int ii = FindIndex(mmtopctrl, this);
 	if(ii >= 0)
 		mmtopctrl.Remove(ii);
-	if(owner)
+	if(owner && owner->IsOpen())
 		owner->SetWndFocus();
 }
 
@@ -157,6 +157,7 @@ bool Upp::Ctrl::IsWndOpen() const {
 void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
 	Create(owner, NSWindowStyleMaskBorderless, false);
+	popup = true;
 }
 
 Upp::dword Upp::TopWindow::GetMMStyle() const

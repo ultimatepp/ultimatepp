@@ -530,7 +530,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 	if(p.y + sz.cy > r.bottom) {
 		if(p.y - r.top > r.bottom - p.y) {
 			int y0;
-			if (parentmenu && parentmenu->GetActiveSubmenu() && parentmenu->submenuitem) 
+			if (parentmenu && parentmenu->GetActiveSubmenu() && parentmenu->submenuitem)
 				y0 = parentmenu->submenuitem->GetScreenRect().BottomRight().y + 2 + rsz.cy;
 			else
 				y0 = p.y + rsz.cy;
