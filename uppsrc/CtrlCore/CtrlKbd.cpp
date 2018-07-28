@@ -382,9 +382,10 @@ String GetKeyDesc(dword key)
 	if(key & K_SHIFT) desc << t_("key\vShift+");
 #ifdef PLATFORM_COCOA
 	if(key & K_OPTION) desc << t_("key\vOption+");
+	key &= ~K_OPTION;
 #endif
+	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
 
-	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_OPTION | K_KEYUP);
 #ifdef PLATFORM_COCOA
 	key &= ~(K_OPTION);
 #endif

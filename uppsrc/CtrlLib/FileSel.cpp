@@ -702,6 +702,7 @@ void SortByExt(FileList& list)
 
 String FileSel::GetDir() {
 	String s = ~dir;
+	DLOG("GetDir " << s);
 	if(s.IsEmpty()) return basedir;
 	if(basedir.IsEmpty()) return s;
 	return AppendFileName(basedir, s);
@@ -1652,8 +1653,12 @@ bool FileSel::Execute(int _mode) {
 	AddSystemPlaces(system_row);
 		
 	if(mode == SELECTDIR) {
-		if(!fn.IsEmpty())
+		if(!fn.IsEmpty()) {
+			String h = ~dir;
 			dir <<= NormalizePath(fn[0]);
+			if(!DirectoryExists(~~dir))
+				dir <<= h;
+		}
 		type.Hide();
 		type_lbl.Hide();
 		file.Hide();
