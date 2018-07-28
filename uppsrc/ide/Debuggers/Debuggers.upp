@@ -18,6 +18,8 @@ file
 	GdbCmd.cpp,
 	GdbData.cpp,
 	Gdb.cpp,
+	GdbUtils.h,
+	GdbUtils.cpp,
 	GDB_MI2 readonly separator,
 	MIValue.h,
 	MIValue.cpp,
