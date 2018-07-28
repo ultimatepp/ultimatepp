@@ -49,10 +49,9 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
     [appMenuItem setSubmenu:appMenu];
     [NSApp activateIgnoringOtherApps:YES];
     
-    Font::SetDefaultFont(Arial(12)); // TODO: Read from NSFont!
-    NSFont *sysfont = [NSFont systemFontOfSize:0];
-    Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
-    Font::SetDefaultFont(StdFont(fround([sysfont pointSize]))); // TODO: Read from NSFont!
+	NSFont *sysfont = [NSFont systemFontOfSize:0];
+	Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
+	Font::SetDefaultFont(StdFont(fround([sysfont pointSize])));
 }
 
 void Upp::CocoExit()

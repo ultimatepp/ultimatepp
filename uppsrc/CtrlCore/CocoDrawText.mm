@@ -37,6 +37,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 	    DDUMP(CTFontGetLeading(ctfont));
 	    DDUMP(CTFontGetXHeight(ctfont));
 	    DDUMP(CTFontGetUnderlinePosition(ctfont));
+		DDUMPHEX(CTFontGetSymbolicTraits(ctfont));
 	#endif
 		fi.ascent = ceil(CTFontGetAscent(ctfont));
 		fi.descent = ceil(CTFontGetDescent(ctfont));
@@ -48,7 +49,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.maxwidth = 99999; // TODO?
 		fi.avewidth = fi.maxwidth;
 		fi.default_char = '?';
-		fi.fixedpitch = false; // TODO!
+		fi.fixedpitch = CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait;
 		fi.ttf = true;
 // TODO: PATH for data
 //		if(path.GetCount() < 250)
@@ -86,6 +87,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 Vector<FaceInfo> GetAllFacesSys()
 {
 	Index<String> facename;
+	Index<bool>   fixedpitch;
 
 	facename.Add("Arial"); // TODO: This should be default GUI font
 	facename.Add("Times New Roman");
@@ -112,6 +114,10 @@ Vector<FaceInfo> GetAllFacesSys()
         FaceInfo& fi = r.Add();
 		fi.name = s;
 		fi.info = Font::TTF;
+		CFRef<CFStringRef> fs = CFStringCreateWithCString(NULL, ~s, kCFStringEncodingUTF8);
+	    CFRef<CTFontRef> ctfont = CTFontCreateWithName(fs, 12, NULL);
+	    if(CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait)
+	        fi.info |= Font::FIXEDPITCH;
     }
     
     return r;

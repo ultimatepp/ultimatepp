@@ -38,11 +38,11 @@
 			// s/b MACOSX
 			#ifdef flagX11
 				#define PLATFORM_OSX11 1
+				#define flagNOGTK
 			#else
 				#define PLATFORM_COCOA 1
 			#endif
 			#define PLATFORM_BSD 1
-			#define flagNOGTK
 			#define PLATFORM_MACOS
 		#else
 			// zvzv mod

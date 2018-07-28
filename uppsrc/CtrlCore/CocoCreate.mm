@@ -19,7 +19,7 @@
 }
 
 - (BOOL)canBecomeMainWindow {
-    return active && ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
+	return active && ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
 }
 
 @end
@@ -44,11 +44,11 @@ Upp::Ctrl *Upp::Ctrl::GetActiveCtrl()
 bool Upp::Ctrl::SetWndFocus()
 {
 	GuiLock __;
-	LLOG("SetWndFocus " << Name());
 	if(top && top->coco) {
 		[top->coco->window orderFront:top->coco->window];
-		[top->coco->window makeKeyWindow];
-		if(dynamic_cast<TopWindow *>(this))
+		if([top->coco->window canBecomeKeyWindow])
+			[top->coco->window makeKeyWindow];
+		if(dynamic_cast<TopWindow *>(this) && [top->coco->window canBecomeMainWindow])
 			[top->coco->window makeMainWindow];
 	}
 	return true;
