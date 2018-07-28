@@ -217,7 +217,7 @@ Upp::Rect Upp::Ctrl::GetPrimaryWorkArea()
 	for (NSScreen *screen in [NSScreen screens]) {
 		Rect f = MakeRect([screen frame]);
 		Rect v = MakeRect([screen visibleFrame], f.GetHeight());
-//		double scale = [screen backingScaleFactor];
+//		double scale = [screen backingScaleFactor]; // TODO DPI
 		return v;
 	}
 	return Rect(0, 0, 1024, 768);

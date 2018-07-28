@@ -108,33 +108,59 @@ Image Image::Cross() FCURSOR_(MM_Cross)
 Image Image::Hand() FCURSOR_(MM_Hand)
 
 // TODO: Missing kinds (sizers mostly)
+// https://stackoverflow.com/questions/10733228/native-osx-lion-resize-cursor-for-custom-nswindow-or-nsview/21786835#21786835
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+
+#define XCURSOR(id) \
+	if([NSCursor respondsToSelector:@selector(id)]) return [NSCursor performSelector:@selector(id)];
 
 NSCursor *GetNSCursor(int kind)
 {
 	switch(kind) {
+	case MM_SizeAll:
+		XCURSOR(_moveCursor);
+		break;
+	case MM_SizeHorz:
+		XCURSOR(_windowResizeEastWestCursor);
+		break;
+	case MM_SizeVert:
+		XCURSOR(_windowResizeNorthSouthCursor);
+		break;
+	case MM_SizeTopLeft:
+		XCURSOR(_windowResizeNorthWestCursor);
+		break;
+	case MM_SizeTop:
+		XCURSOR(_windowResizeNorthCursor);
+		break;
+	case MM_SizeTopRight:
+		XCURSOR(_windowResizeNorthEastCursor);
+		break;
+	case MM_SizeLeft:
+		XCURSOR(_windowResizeWestCursor);
+		break;
+	case MM_SizeRight:
+		XCURSOR(_windowResizeEastCursor);
+		break;
+	case MM_SizeBottomLeft:
+		XCURSOR(_windowResizeSouthWestCursor);
+		break;
+	case MM_SizeBottom:
+		XCURSOR(_windowResizeSouthCursor);
+		break;
+	case MM_SizeBottomRight:
+		XCURSOR(_windowResizeSouthEastCursor);
+		break;
 	case MM_IBeam: return [NSCursor IBeamCursor];
 	case MM_Cross: return [NSCursor crosshairCursor];
-	// case MM_: return [NSCursor closedHandCursor];
-	// case MM_Hand: return [NSCursor openHandCursor];
-	case MM_Hand: return [NSCursor pointingHandCursor];
-	// case MM_: return [NSCursor resizeLeftCursor];
-	// case MM_: return [NSCursor resizeRightCursor];
-	case MM_SizeRight:
-	case MM_SizeLeft: return [NSCursor resizeLeftRightCursor];
-	// case MM_: return [NSCursor resizeUpCursor];
-	// case MM_: return [NSCursor resizeDownCursor];
-	case MM_SizeTop:
-	case MM_SizeBottom:
-		return [NSCursor resizeUpDownCursor];
-	// case MM_: return [NSCursor IBeamCursorForVerticalLayout];.
-	case MM_No:
-		return [NSCursor operationNotAllowedCursor];
-	// case MM_: return [NSCursor dragLinkCursor];.
-	// case MM_: return [NSCursor dragCopyCursor];.
-	// case MM_: return [NSCursor contextualMenuCursor];
+	case MM_Hand:  return [NSCursor pointingHandCursor];
+	case MM_No:    return [NSCursor operationNotAllowedCursor];
 	}
 	return [NSCursor arrowCursor];
 }
+
+#pragma clang diagnostic pop
 
 void  Ctrl::SetMouseCursor(const Image& img)
 {
