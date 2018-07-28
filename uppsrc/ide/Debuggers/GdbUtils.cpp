@@ -19,7 +19,7 @@ One<IGdbUtils> GdbUtilsFactory::Create()
 
 #define METHOD_NAME UPP_METHOD_NAME("GdbWindowsUtils")
 
-using DeleteHandleFun = std::function<void(void *)>;
+using DeleteHandleFun = std::function<void(HANDLE)>;
 
 static void DeleteHandle(HANDLE handle)
 {
@@ -39,10 +39,11 @@ String GdbWindowsUtils::BreakRunning(int pid)
 		auto path = String().Cat() << GetExeFolder() << "\\" << GetExeTitle() << "32.exe";
 		auto cmd = String().Cat() << path << " " << COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_OPTION << " " << pid;
 		
-		if(system(cmd) == COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_FAILURE_STATUS) {
+		String out;
+		if(Sys(cmd, out) == COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_FAILURE_STATUS) {
 			Logd() << METHOD_NAME << cmd;
 			
-			return String().Cat() << "Failed to interrupt process via 32-bit TheIDE.";
+			return String().Cat() << "Failed to interrupt process via 32-bit TheIDE. Output from command is \"" << out << "\".";
 		}
 		
 		return "";

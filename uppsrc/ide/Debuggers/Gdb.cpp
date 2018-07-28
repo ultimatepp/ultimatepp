@@ -305,7 +305,10 @@ String Gdb::ObtainThreadsInfo()
 	if(active_thread >= 0)
 		threads <<= active_thread;
 	if(threads.GetCount() == 0) {
-		String error =  t_("Failed to obtain information about threads. The debugger process will be stoped!");
+		String error = t_(
+			"Failed to obtain information about threads. "
+			"Make sure your application posses debug info. "
+			"The debugger and debugge proceses will be stoped!");
 		
 		Loge() << METHOD_NAME << error;
 		ErrorOK(error);
