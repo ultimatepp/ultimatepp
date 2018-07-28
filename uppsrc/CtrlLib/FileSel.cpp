@@ -702,7 +702,6 @@ void SortByExt(FileList& list)
 
 String FileSel::GetDir() {
 	String s = ~dir;
-	DLOG("GetDir " << s);
 	if(s.IsEmpty()) return basedir;
 	if(basedir.IsEmpty()) return s;
 	return AppendFileName(basedir, s);

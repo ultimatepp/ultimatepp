@@ -68,6 +68,7 @@ public:
 	One(One<TT>&& p)                       { Pick(pick(p)); }
 	One(const One<T>& p, int)              { ptr = p.IsEmpty() ? NULL : DeepCopyNew(*p); }
 	One(const One<T>& p) = delete;
+	void operator=(const One<T>& p) = delete;
 	~One()                                 { Free(); }
 };
 
@@ -110,6 +111,9 @@ public:
 
 	void operator=(Any&& s)                       { if(this != &s) { Clear(); Pick(pick(s)); } }
 	Any(Any&& s)                                  { Pick(pick(s)); }
+	
+	Any(const Any& s) = delete;
+	void operator=(const Any& s) = delete;
 
 	Any()                                         { ptr = NULL; }
 	~Any()                                        { Clear(); }
@@ -155,6 +159,9 @@ public:
 
 	Bits(Bits&& b)                        { alloc = b.alloc; bp = b.bp; b.bp = NULL; }
 	void operator=(Bits&& b)              { if(this != &b) { Clear(); alloc = b.alloc; bp = b.bp; b.bp = NULL; } }
+	
+	Bits(const Bits&) = delete;
+	void operator=(const Bits&) = delete;
 };
 
 //# System dependent
