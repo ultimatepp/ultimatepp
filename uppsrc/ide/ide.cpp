@@ -173,14 +173,13 @@ void Ide::Exit()
 
 bool Ide::OpenMainPackage()
 {
+	String version = SplashCtrl::GenerateVersionNumber();
 	String tt = "Select main package";
-//	tt << " (IDE " << IDE_VER_MAJOR << "." << IDE_VER_MINOR << ".r" << IDE_VER_BUILD
-//	<< ", " << ::AsString(IDE_VER_DATE) << ")";
 #ifdef bmYEAR
-	tt << " (TheIDE " << IDE_VERSION
+	tt << " (TheIDE " << version
 	   << Format(" %d-%02d-%02d %d:%02d)", bmYEAR , bmMONTH, bmDAY, bmHOUR, bmMINUTE);
 #else
-	tt << " (TheIDE " << IDE_VERSION << ')';
+	tt << " (TheIDE " << version << ')';
 #endif
 	String p = SelectPackage(tt, main, true, true);
 	if(p.IsEmpty()) return false;

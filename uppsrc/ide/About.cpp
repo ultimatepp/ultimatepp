@@ -15,12 +15,7 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 {
 	String h;
 	
-	h << "Version: ";
-#ifdef bmSVN_REVISION
-	h << bmSVN_REVISION;
-#else
-	h << IDE_VERSION;
-#endif
+	h << "Version: " << GenerateVersionNumber();
 	h << separator;
 	if(sizeof(void *) == 8)
 		h << "(64 bit)";
@@ -48,6 +43,15 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #endif
 
 	return h;
+}
+
+String SplashCtrl::GenerateVersionNumber()
+{
+#ifdef bmSVN_REVISION
+	return bmSVN_REVISION;
+#else
+	return IDE_VERSION;
+#endif
 }
 
 Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
