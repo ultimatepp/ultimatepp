@@ -686,7 +686,7 @@ void WorkspaceWork::DelFile()
 		DeleteFolderDeep(file);
 	}
 	else {
-		if(!PromptYesNo("Remove the file from package and discard it ?")) return;
+		if(!PromptYesNo("Remove the file from package and discard it?")) return;
 		RemoveFile();
 		::DeleteFile(file);
 	}
