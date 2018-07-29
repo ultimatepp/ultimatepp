@@ -9,6 +9,7 @@ class SplashCtrl final : public Ctrl
 {
 public:
 	static String GenerateVersionInfo(char separator = '\n');
+	static String GenerateVersionNumber();
 	static Size   MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl);
 	
 public:
