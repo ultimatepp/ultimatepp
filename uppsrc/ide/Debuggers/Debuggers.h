@@ -240,8 +240,6 @@ private:
 	One<IGdbUtils> gdb_utils;
 };
 
-#include "Gdb_MI2.h"
-
 #define KEYGROUPNAME "Debugger"
 #define KEYNAMESPACE PdbKeys
 #define KEYFILE      <ide/Debuggers/Pdb.key>
@@ -250,7 +248,5 @@ private:
 #ifdef PLATFORM_WIN32
 #include "Pdb.h"
 #endif
-
-INITIALIZE(UppSimplifiers)
 
 #endif

@@ -386,8 +386,6 @@ Ide::Ide()
 	build_start_time = Null;
 	hydra1_threads = CPU_Cores();
 	
-	gdbSelector = 0;
-
 	chstyle = 0;
 
 	Sizeable().Zoomable();

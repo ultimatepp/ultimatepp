@@ -174,7 +174,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 13;
+	int version = 14;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -261,7 +261,10 @@ void Ide::Serialize(Stream& s)
 	s % hydra1_threads;
 	if(s.IsLoading())
 		console.SetSlots(hydra1_threads);
-	s % gdbSelector;
+	if(version < 14) {
+		int dummy_gdb_selector;
+		s % dummy_gdb_selector;
+	}
 	s % doc;
 	s % chstyle;
 	s % astyle_BracketIndent;

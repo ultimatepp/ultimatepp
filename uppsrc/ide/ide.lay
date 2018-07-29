@@ -589,9 +589,7 @@ LAYOUT(SetupIdeLayout, 512, 264)
 	ITEM(Label, dv___16, SetLabel(t_("HYDRA threads")).LeftPosZ(212, 80).TopPosZ(4, 19))
 	ITEM(EditIntSpin, hydra1_threads, Max(64).Min(1).LeftPosZ(344, 48).TopPosZ(4, 19))
 	ITEM(Option, output_per_assembly, SetLabel(t_("Use unique output directory per assembly (append assembly name to output directory)")).HSizePosZ(4, 4).TopPosZ(224, 16))
-	ITEM(Switch, gdbSelector, SetLabel(t_("Standard\nGDB_MI2 (experimental)")).LeftPosZ(344, 176).TopPosZ(28, 36))
-	ITEM(Label, dv___20, SetLabel(t_("GDB Debugger interface")).LeftPosZ(212, 188).TopPosZ(24, 20))
-	ITEM(Label, dv___21, SetLabel(t_("In editor mode, path for .usc files")).LeftPosZ(4, 192).TopPosZ(244, 20))
+	ITEM(Label, dv___19, SetLabel(t_("In editor mode, path for .usc files")).LeftPosZ(4, 192).TopPosZ(244, 20))
 	ITEM(EditString, uscpath, LeftPosZ(172, 336).TopPosZ(244, 19))
 END_LAYOUT
 
