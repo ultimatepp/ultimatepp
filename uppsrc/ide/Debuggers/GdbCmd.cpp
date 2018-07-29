@@ -134,8 +134,9 @@ String Gdb::Cmd(const char *command)
 			ProcessEvents();
 			ms0 = msecs();
 		}
-//		if(s.GetCount() == 0)
-			GuiSleep(0);
+		
+		GuiSleep(50);
+		
 		if(TTYQuit())
 			Stop();
 	}

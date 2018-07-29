@@ -330,10 +330,9 @@ String Gdb::DoRun()
 		IdeSetBar();
 	}
 	
-	ClearCtrls();
-	
 	String s;
 	for(;;) {
+		ClearCtrls();
 		s = Cmdp("continue");
 		if(IsNull(bp_filename))
 			break;
