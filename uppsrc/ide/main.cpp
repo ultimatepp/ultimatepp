@@ -125,9 +125,6 @@ void AppMain___()
 	bool first_install = false;
 
 	SetVppLogSizeLimit(200000000);
-#ifdef _DEBUG
-//	MemoryLimitKb(1000000);
-#endif
 
 #ifdef PLATFORM_POSIX
 	LoadUpdaterCfg();
@@ -143,12 +140,6 @@ void AppMain___()
 		first_install = true;
 	}
 #endif
-
-#ifdef _DEBUG
-//	Ctrl::ShowRepaint(20);
-#endif
-
-	// _DBG_ InstantSetup(); return;
 
 #ifdef PLATFORM_WIN32
 	if(!CheckLicense())

@@ -62,12 +62,12 @@ bool GdbWindowsUtils::Is64BitIde() const
 
 bool GdbWindowsUtils::Is64BitProcess(HANDLE handle) const
 {
-	BOOL b_wow_64 = FALSE;
-	if(IsWow64Process(handle, &b_wow_64)) {
-		Loge() << METHOD_NAME << "Failed to check that process is under wow64 emulaton layer.";
+	BOOL is_wow_64 = FALSE;
+	if(!IsWow64Process(handle, &is_wow_64)) {
+		Loge() << METHOD_NAME << "Failed to check that process is under wow64 emulation layer.";
 	}
 	
-	return !b_wow_64;
+	return !is_wow_64;
 }
 
 #undef METHOD_NAME
