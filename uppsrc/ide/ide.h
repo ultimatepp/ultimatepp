@@ -430,8 +430,6 @@ public:
 	int        debuglock;
 	int        hydra1_threads;
 	
-	int        gdbSelector;
-
 	int        chstyle;
 
 	One<IdeDesigner> designer;
