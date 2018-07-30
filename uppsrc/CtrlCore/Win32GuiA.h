@@ -18,9 +18,9 @@ void GuiMainFn_();\
 \
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPTSTR lpCmdLine, int nCmdShow) \
 { \
-	UPP::Ctrl::InitWin32(hInstance); \
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
+	UPP::Ctrl::InitWin32(hInstance); \
 	try { \
 		GuiMainFn_(); \
 	} \
@@ -38,9 +38,9 @@ void GuiMainFn_();\
 \
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR lpCmdLine, int nCmdShow) \
 { \
-	UPP::Ctrl::InitWin32(hInstance); \
 	UPP::coreCmdLine__() = UPP::SplitCmdLine__(UPP::FromSystemCharset(lpCmdLine)); \
 	UPP::AppInitEnvironment__(); \
+	UPP::Ctrl::InitWin32(hInstance); \
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::CloseTopCtrls(); \
 	UPP::Ctrl::ExitWin32(); \
@@ -56,8 +56,8 @@ void _DllMainAppInit(); \
 BOOL WINAPI DllMain(HINSTANCE hinstDll, DWORD fdwReason, LPVOID lpReserved) \
 { \
 	if(fdwReason == DLL_PROCESS_ATTACH) { \
-		Ctrl::InitWin32(AppGetHandle()); \
 		AppInitEnvironment__(); \
+		Ctrl::InitWin32(AppGetHandle()); \
 		UPP::AppExecute__(_DllMainAppInit); \
 	} \
 	else \
