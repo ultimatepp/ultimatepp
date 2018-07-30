@@ -19,6 +19,7 @@ private:
 	bool HandleManipulators();
 	bool HandleScale();
 	
+	bool HandleVersion() const;
 	bool HandleHelp() const;
 	
 	bool HandleDebugBreakProcess() const;

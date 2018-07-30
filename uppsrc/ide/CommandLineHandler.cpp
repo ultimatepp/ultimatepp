@@ -1,5 +1,7 @@
 #include "CommandLineHandler.h"
 
+#include "About.h"
+
 #include <Draw/Draw.h>
 #include <ide/Common/CommandLineOptions.h>
 #include <ide/Debuggers/GdbUtils.h>
@@ -15,6 +17,8 @@ bool CommandLineHandler::Handle()
 	if(HandleManipulators())
 		return true;
 	
+	if(HandleVersion())
+		return true;
 	if(HandleHelp())
 		return true;
 	
@@ -39,7 +43,7 @@ bool CommandLineHandler::HandleScale()
 	
 	int scale = StrInt(args[1]);
 	if(IsNull(scale)) {
-		Cout() << "Scale should be numeric value.";
+		Cout() << "Scale should be numeric value.\n";
 		return true;
 	}
 	
@@ -48,6 +52,16 @@ bool CommandLineHandler::HandleScale()
 	args.Remove(0, 2);
 	
 	return false;
+}
+
+bool CommandLineHandler::HandleVersion() const
+{
+	if(args.IsEmpty() || findarg(args[0], "-v", "--version") < 0)
+		return false;
+	
+	Cout() << SplashCtrl::GenerateVersionInfo(' ') << "\n";
+	
+	return true;
 }
 
 bool CommandLineHandler::HandleHelp() const
@@ -59,7 +73,8 @@ bool CommandLineHandler::HandleHelp() const
 			  "       theide [file..] // autodetection mode\n\n";
 	
 	Cout() << "Common options:\n"
-			  "    -h or --help - displays this site.\n\n";
+	          "    -v or --version - displays information about version.\n"
+			  "    -h or --help    - displays this site.\n\n";
 	
 	Cout() << "Advanced options:\n"
 			  "    " << COMMAND_LINE_SCALE_OPTION << " $percent - scale interface by \"percent\" represented by parameter x.\n\n";
@@ -77,7 +92,7 @@ bool CommandLineHandler::HandleDebugBreakProcess() const
 	
 	int pid = StrInt(args[1]);
 	if(IsNull(pid)) {
-		Cout() << "PID should be numeric value.";
+		Cout() << "PID should be numeric value.\n";
 		return true;
 	}
 	
