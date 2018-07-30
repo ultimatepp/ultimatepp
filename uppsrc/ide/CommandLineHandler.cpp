@@ -55,9 +55,7 @@ bool CommandLineHandler::HandleHelp() const
 	if(args.IsEmpty() || findarg(args[0], "?", "--help", "-h", "-?", "/?") < 0)
 		return false;
 		
-	Cout() << "Usage: theide assembly package\n"
-			  "       theide assembly package build_method [-[a][b][e][r][s][S][v][1][2][m][d][M][l][x][X][Hn]] [+FLAG[,FLAG]...] [out]\n"
-			  "       theide -f [file..]\n"
+	Cout() << "Usage: theide -f [file..]\n"
 			  "       theide [file..] // autodetection mode\n\n";
 	
 	Cout() << "Common options:\n"
