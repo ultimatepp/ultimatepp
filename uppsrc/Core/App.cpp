@@ -21,7 +21,7 @@
 
 namespace Upp {
 
-static StaticCriticalSection sHlock;
+static StaticMutex sHlock;
 
 String& sHomeDir() {
 	static String s;
@@ -425,7 +425,7 @@ void AppInitEnvironment__()
 
 void AppInit__(int argc, const char **argv)
 {
-	SetLanguage(LNG_ENGLISH);
+	SetLanguage(LNG_('E', 'N', 'U', 'S'));
 	Vector<WString>& cmd = coreCmdLine__();
 	for(int i = 1; i < argc; i++)
 		cmd.Add(argv[i]);

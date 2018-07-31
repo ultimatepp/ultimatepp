@@ -70,12 +70,12 @@ struct Formatting
 
 typedef String (*Formatter)(const Formatting& fmt);
 
-void RegisterFormatter(int type, const char *id, Formatter f) init_;
-void RegisterNullFormatter(const char *id, Formatter f) init_;
-void RegisterNumberFormatter(const char *id, Formatter f) init_;
-void RegisterStringFormatter(const char *id, Formatter f) init_;
-void RegisterDateTimeFormatter(const char *id, Formatter f) init_;
-void RegisterValueFormatter(const char *id, Formatter f) init_;
+void RegisterFormatter(int type, const char *id, Formatter f);
+void RegisterNullFormatter(const char *id, Formatter f);
+void RegisterNumberFormatter(const char *id, Formatter f);
+void RegisterStringFormatter(const char *id, Formatter f);
+void RegisterDateTimeFormatter(const char *id, Formatter f);
+void RegisterValueFormatter(const char *id, Formatter f);
 
 #define E__NFValue(I)  const Value& COMBINE(p, I)
 #define E__NFBody(I) \

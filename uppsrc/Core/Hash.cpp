@@ -26,7 +26,11 @@ unsigned PrimeBound(unsigned n)
 		4194301, 8388617, 16777213, 33554467, 67108859, 134217757,
 		268435459, 536870909, 1073741827, 2147483647u, 4294967291u
 	};
+#ifdef DEPRECATED
 	return *FindUpperBoundIter(prime_tab, prime_tab + __countof(prime_tab), n);
+#else
+	return prime_tab[FindUpperBound(SubRange(prime_tab, prime_tab + __countof(prime_tab)), n)];
+#endif
 }
 
 #ifdef FOLDHASH
@@ -94,7 +98,7 @@ HashBase::HashBase(const HashBase& b, int)
 void HashBase::operator<<=(const HashBase& b)
 {
 	ClearIndex();
-	hash <<= b.hash;
+	hash = clone(b.hash);
 	Reindex();
 }
 

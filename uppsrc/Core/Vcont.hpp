@@ -87,6 +87,7 @@ void Vector<T>::Pick(Vector<T>&& v)
 	v.Zero();
 }
 
+#ifdef DEPRECATED
 template <class T>
 int  Vector<T>::GetIndex(const T& item) const
 {
@@ -94,6 +95,7 @@ int  Vector<T>::GetIndex(const T& item) const
 	int n = &item - vector;
 	return n >= 0 && n < items ? n : -1;
 }
+#endif
 
 template <class T>
 void Vector<T>::Reserve(int n)
@@ -445,7 +447,7 @@ template <class T>
 void  Array<T>::Trim(int n)
 {
 	ASSERT(n >= 0 && n <= GetCount());
-	Del(vector.Begin() + n, vector.End());
+	Del(vector.begin() + n, vector.end());
 	vector.Trim(n);
 }
 
@@ -453,44 +455,46 @@ template <class T>
 void Array<T>::SetCount(int n) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.Begin() + n, vector.End());
+	Del(vector.begin() + n, vector.end());
 	vector.SetCount(n);
-	Init(vector.Begin() + lc, vector.Begin() + n);
+	Init(vector.begin() + lc, vector.begin() + n);
 }
 
 template <class T>
 void Array<T>::SetCount(int n, const T& init) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.Begin() + n, vector.End());
+	Del(vector.begin() + n, vector.end());
 	vector.SetCount(n);
-	Init(vector.Begin() + lc, vector.Begin() + n, init);
+	Init(vector.begin() + lc, vector.begin() + n, init);
 }
 
 template <class T>
 void Array<T>::SetCountR(int n) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.Begin() + n, vector.End());
+	Del(vector.begin() + n, vector.end());
 	vector.SetCountR(n);
-	Init(vector.Begin() + lc, vector.Begin() + n);
+	Init(vector.begin() + lc, vector.begin() + n);
 }
 
 template <class T>
 void Array<T>::SetCountR(int n, const T& init) {
 	ASSERT(n >= 0);
 	int  lc = vector.GetCount();
-	Del(vector.Begin() + n, vector.End());
+	Del(vector.begin() + n, vector.end());
 	vector.SetCountR(n);
-	Init(vector.Begin() + lc, vector.Begin() + n, init);
+	Init(vector.begin() + lc, vector.begin() + n, init);
 }
 
+#ifdef DEPRECATED
 template <class T>
 int  Array<T>::GetIndex(const T& item) const {
-	for(PointerType const *ptr = vector.Begin(); ptr < vector.End(); ptr++)
-		if(*ptr == (PointerType)&item) return (int)(ptr - vector.Begin());
+	for(PointerType const *ptr = vector.begin(); ptr < vector.end(); ptr++)
+		if(*ptr == (PointerType)&item) return (int)(ptr - vector.begin());
 	return -1;
 }
+#endif
 
 template <class T>
 void Array<T>::Move(int i1, int i2) {
@@ -502,7 +506,7 @@ void Array<T>::Move(int i1, int i2) {
 template <class T>
 void Array<T>::Remove(int i, int count) {
 	ASSERT(i + count <= GetCount() && count >= 0 && i >= 0);
-	Del(vector.Begin() + i, vector.Begin() + i + count);
+	Del(vector.begin() + i, vector.begin() + i + count);
 	vector.Remove(i, count);
 }
 
@@ -529,7 +533,7 @@ void Array<T>::Set(int i, const T& x, int count) {
 	ASSERT(i >= 0 && count >= 0);
 	if(i + count >= GetCount())
 		SetCountR(i + count);
-	for(PointerType *ptr = vector.Begin() + i; ptr < vector.Begin() + i + count; ptr++) {
+	for(PointerType *ptr = vector.begin() + i; ptr < vector.begin() + i + count; ptr++) {
 		delete (T *) *ptr;
 		*ptr = new T(x);
 	}
@@ -539,13 +543,13 @@ template <class T>
 void Array<T>::InsertN(int i, int count) {
 	ASSERT(i >= 0 && count >= 0);
 	vector.InsertN(i, count);
-	Init(vector.Begin() + i, vector.Begin() + i + count);
+	Init(vector.begin() + i, vector.begin() + i + count);
 }
 
 template <class T>
 void Array<T>::Insert(int i, const T& x, int count) {
 	vector.InsertN(i, count);
-	Init(vector.Begin() + i, vector.Begin() + i + count, x);
+	Init(vector.begin() + i, vector.begin() + i + count, x);
 }
 
 template <class T>

@@ -19,7 +19,7 @@ namespace Upp {
 extern bool PanicMode;
 void HeapPanic(const char *text, void *pos, int size);
 
-static StaticCriticalSection sHeapLock2;
+static StaticMutex sHeapLock2;
 
 struct alignas(16) DbgBlkHeader {
 	size_t        size;
@@ -60,17 +60,17 @@ static void DbgHeapPanic(const char *text, DbgBlkHeader *p)
 static DbgBlkHeader dbg_live = { 0, &dbg_live, &dbg_live, 0 };
 
 static dword s_allocbreakpoint;
-static thread__ dword s_ignoreleaks;
+static thread_local dword s_ignoreleaks;
 
 void MemoryIgnoreLeaksBegin()
 {
-	CriticalSection::Lock __(sHeapLock2);
+	Mutex::Lock __(sHeapLock2);
 	s_ignoreleaks++;
 }
 
 void MemoryIgnoreLeaksEnd()
 {
-	CriticalSection::Lock __(sHeapLock2);
+	Mutex::Lock __(sHeapLock2);
 	s_ignoreleaks--;
 }
 
@@ -130,7 +130,7 @@ void MemoryFree(void *ptr)
 		return;
 	if(!ptr) return;
 #ifdef _MULTITHREADED
-	CriticalSection::Lock __(sHeapLock2);
+	Mutex::Lock __(sHeapLock2);
 #endif
 	DbgBlkHeader *p = (DbgBlkHeader *)ptr - 1;
 	if((dword)Peek32le((byte *)(p + 1) + p->size) != p->serial) {
@@ -162,7 +162,7 @@ void  MemoryFree48(void *ptr)     { return MemoryFree(ptr); }
 void MemoryCheckDebug()
 {
 	MemoryCheck();
-	CriticalSection::Lock __(sHeapLock2);
+	Mutex::Lock __(sHeapLock2);
 	DbgBlkHeader *p = dbg_live.next;
 	while(p != &dbg_live) {
 		if((dword)Peek32le((byte *)(p + 1) + p->size) != p->serial) {

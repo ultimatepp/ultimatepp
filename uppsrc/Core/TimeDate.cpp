@@ -68,7 +68,7 @@ String MonName(int i, int lang)
 	return i >= 0 && i < 12 ? Nvl(GetLngString(lang, month[i]), GetENUS(month[i])) : String();
 }
 
-static thread__ char s_date_format_thread[64];
+static thread_local char s_date_format_thread[64];
 static char s_date_format_main[64] = "%2:02d/%3:02d/%1:4d";
 
 void   SetDateFormat(const char *fmt)
@@ -87,7 +87,7 @@ String   Format(Date date) {
 	return Format(*s_date_format_thread ? s_date_format_thread : s_date_format_main, date.year, date.month, date.day, DayOfWeek(date));
 }
 
-static thread__ char s_date_scan_thread[64];
+static thread_local char s_date_scan_thread[64];
 static char s_date_scan_main[64] = "mdy";
 
 void   SetDateScan(const char *scan)
@@ -186,7 +186,7 @@ Date ScanDate(const char *s, Date def)
 	return def;
 }
 
-static thread__ char s_date_seps_thread[64];
+static thread_local char s_date_seps_thread[64];
 static char s_date_seps_main[64] = "A/\a .-";
 
 void   SetDateFilter(const char *seps)

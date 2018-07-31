@@ -474,7 +474,7 @@ public:
 	STL_ITERATOR_COMPATIBILITY
 };
 
-template <class T, class Less = StdLess<T> >
+template <class T, class Less = std::less<T> >
 class SortedIndex : MoveableAndDeepCopyOption< SortedIndex<T, Less> > {
 	InVector<T> iv;
 	

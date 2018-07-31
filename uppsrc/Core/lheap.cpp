@@ -16,8 +16,8 @@ Heap::DLink Heap::lempty[1];
 
 const char *asString(int i)
 {
-	static thread__ char h[4][1024];
-	static thread__ int ii;
+	static thread_local char h[4][1024];
+	static thread_local int ii;
 	ii = (ii + 1) & 3;
 	sprintf(h[ii], "%d", i);
 	return h[ii];

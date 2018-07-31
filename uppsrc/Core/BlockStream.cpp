@@ -325,9 +325,10 @@ bool FileStream::Open(const char *name, dword mode) {
 	int iomode = mode & ~SHAREMASK;
 	handle = CreateFileW(ToSystemCharsetW(name),
 		iomode == READ ? GENERIC_READ : GENERIC_READ|GENERIC_WRITE,
-		(mode & NOREADSHARE ? 0 : FILE_SHARE_READ)
-		| (mode & NOWRITESHARE ? 0 : FILE_SHARE_WRITE)
-		| (mode & DELETESHARE ? FILE_SHARE_DELETE : 0),
+	#ifdef DEPRECATED
+		(mode & NOREADSHARE ? 0 : FILE_SHARE_READ) | (mode & DELETESHARE ? FILE_SHARE_DELETE : 0) |
+	#endif
+		(mode & NOWRITESHARE ? 0 : FILE_SHARE_WRITE),
 		NULL,
 		iomode == READ ? OPEN_EXISTING : iomode == CREATE ? CREATE_ALWAYS : OPEN_ALWAYS,
 		FILE_ATTRIBUTE_NORMAL|FILE_FLAG_SEQUENTIAL_SCAN,

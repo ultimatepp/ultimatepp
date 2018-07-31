@@ -279,19 +279,18 @@ public:
 
 	friend void Swap(Value& a, Value& b)  { Swap(a.data, b.data); }
 
-	typedef Vector<Value>::ConstIterator ConstIterator;
-	ConstIterator          Begin() const;
-	ConstIterator          End() const;
+	typedef ConstIteratorOf<Vector<Value>> const_iterator;
 
+	const_iterator         begin() const                      { return GetVA().begin(); }
+	const_iterator         end() const                        { return GetVA().end(); }
+
+#ifdef DEPRECATED
 	typedef Value          value_type;
-	typedef ConstIterator  const_iterator;
+	typedef const_iterator ConstIterator;
 	typedef const Value&   const_reference;
 	typedef int            size_type;
 	typedef int            difference_type;
-	const_iterator         begin() const                      { return Begin(); }
-	const_iterator         end() const                        { return End(); }
 
-#ifdef DEPRECATED
 	static  void Register(dword w, Void* (*c)(), const char *name = NULL);
 #endif
 };

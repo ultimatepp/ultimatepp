@@ -23,11 +23,11 @@ PteBase::PteBase()
 }
 */
 
-static StaticCriticalSection sPteLock;
+static StaticMutex sPteLock;
 
 PteBase::Prec *PteBase::PtrAdd()
 {
-	CriticalSection::Lock __(sPteLock);
+	Mutex::Lock __(sPteLock);
 	if(prec)
 		++prec->n;
 	else {
@@ -40,7 +40,7 @@ PteBase::Prec *PteBase::PtrAdd()
 
 void PteBase::PtrRelease(Prec *prec)
 {
-	CriticalSection::Lock __(sPteLock);
+	Mutex::Lock __(sPteLock);
 	if(prec && --prec->n == 0) {
 		if(prec->ptr)
 			prec->ptr->prec = NULL;
@@ -55,7 +55,7 @@ PteBase::PteBase()
 
 PteBase::~PteBase()
 {
-	CriticalSection::Lock __(sPteLock);
+	Mutex::Lock __(sPteLock);
 	if(prec)
 		prec->ptr = NULL;
 }

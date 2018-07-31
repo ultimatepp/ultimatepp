@@ -552,7 +552,7 @@ void Value::Jsonize(JsonIO& jio)
 	}
 }
 
-void Value::Register(dword w, Void* (*c)(), const char *name) init_ {
+void Value::Register(dword w, Void* (*c)(), const char *name) {
 #ifdef flagCHECKINIT
 	RLOG("Register valuetype " << w);
 #endif
@@ -606,16 +606,6 @@ const Vector<Value>& Value::GetVA() const
 			return ((ValueArray::Data *)ptr())->data;
 	}
 	return ValueArray::VoidData;
-}
-
-Value::ConstIterator Value::Begin() const
-{
-	return GetVA().Begin();
-}
-
-Value::ConstIterator Value::End() const
-{
-	return GetVA().End();
 }
 
 force_inline

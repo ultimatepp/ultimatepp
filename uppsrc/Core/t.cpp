@@ -5,7 +5,7 @@ namespace Upp {
 #define TFILE <Core/Core.t>
 #include <Core/t.h>
 
-static StaticCriticalSection slng;
+static StaticMutex slng;
 
 static int sIdLen(const char *txt)
 {
@@ -95,7 +95,7 @@ const char *GetENUSc(const char *txt)
 
 void AddModule(const LngEntry__* l, const char *name)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	Array<LngModule>& ma = sMod();
 	LngModule& m = ma.Add();
 	m.name = name;
@@ -206,7 +206,7 @@ static Array< VectorMap<const char *, const char *> >& sLangMap()
 }
 
 VectorMap<const char *, const char *> *sMainCurrentLangMapPtr;
-thread__ VectorMap<const char *, const char *> *sCurrentLangMapPtr;
+thread_local VectorMap<const char *, const char *> *sCurrentLangMapPtr;
 
 VectorMap<const char *, const char *>& sCurrentLangMap()
 {
@@ -224,7 +224,7 @@ static Array< VectorMap<String, String> >& sSLangMap()
 }
 
 VectorMap<String, String>          *sMainCurrentSLangMapPtr;
-thread__ VectorMap<String, String> *sCurrentSLangMapPtr;
+thread_local VectorMap<String, String> *sCurrentSLangMapPtr;
 
 VectorMap<String, String>& sCurrentSLangMap()
 {
@@ -235,7 +235,7 @@ VectorMap<String, String>& sCurrentSLangMap()
 	return sSLangMap().At(0);
 }
 
-thread__ int thread_current_lang;
+thread_local int thread_current_lang;
 
 int GetCurrentLanguage()
 {
@@ -245,7 +245,7 @@ int GetCurrentLanguage()
 void SetCurrentLanguage(int lang)
 {
 	{
-		CriticalSection::Lock __(slng);
+		Mutex::Lock __(slng);
 		thread_current_lang = lang;
 		int ii = sLangIndex().FindAdd(lang);
 		sCurrentLangMapPtr = &sLangMap().At(ii);
@@ -300,7 +300,7 @@ const char *t_GetLngString_(const char *id)
 
 const char *t_GetLngString(const char *id)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	return t_GetLngString_(id);
 }
 
@@ -321,13 +321,13 @@ String GetLngString_(int lang, const char *id)
 
 String GetLngString(int lang, const char *id)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	return GetLngString_(lang, id);
 }
 
 String GetLngString(const char *id)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	VectorMap<String, String>& map = sCurrentSLangMap();
 	int q = map.Find(id);
 	if(q >= 0)
@@ -339,7 +339,7 @@ String GetLngString(const char *id)
 
 Index<int> GetLngSet()
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	Index<int> ndx;
 	Array<LngModule>& ma = sMod();
 	for(int i = 0; i < ma.GetCount(); i++) {
@@ -355,7 +355,7 @@ Index<int> GetLngSet()
 
 Index<int> GetLngSet(const String& module)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	Index<int> ndx;
 	Array<LngModule>& ma = sMod();
 	for(int i = 0; i < ma.GetCount(); i++) {
@@ -375,7 +375,7 @@ Index<int> GetLngSet(const String& module)
 
 void    SaveLngFile(FileOut& out, int lang, int lang2)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	out << "LANGUAGE " << AsCString(LNGAsText(lang)) << ";\r\n";
 	Array<LngModule>& ma = sMod();
 	for(int i = 0; i < ma.GetCount(); i++) {
@@ -394,7 +394,7 @@ void    SaveLngFile(FileOut& out, int lang, int lang2)
 
 void LngSetAdd(const char *id, int lang, const char *txt, bool addid)
 {
-	CriticalSection::Lock __(slng);
+	Mutex::Lock __(slng);
 	CharS ids;
 	ids.s = PermanentCopy(id);
 	String text = ToCharset(CHARSET_UTF8, txt, GetLNGCharset(lang));
