@@ -120,7 +120,7 @@ public:
 		Column();
 
 // deprecated (due to overloading issues)
-		Column& Ctrls(Callback1<One<Ctrl>&> factory); // deprecated
+		Column& Ctrls(Callback1<One<Ctrl>&> factory);
 		Column& Ctrls(void (*factory)(One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int, One<Ctrl>& h) { factory(h); })); }
 		Column& Ctrls(Event<int, One<Ctrl>&> factory);
 		Column& Ctrls(void (*factory)(int, One<Ctrl>&)) { return Ctrls(Event<int, One<Ctrl>&>([=](int a, One<Ctrl>& b){ factory(a, b); })); }
