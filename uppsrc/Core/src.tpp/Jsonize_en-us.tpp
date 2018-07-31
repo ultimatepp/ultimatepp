@@ -134,6 +134,9 @@ returns false in case of error. If [%-*@3 file] is NULL, ConfigFile(GetExeTitle(
 [s3; &]
 [s5;:Jsonize`(JsonIO`&`,int`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ J
 sonIO][@(0.0.255) `&]_[*@3 io], [@(0.0.255) int`&]_[*@3 var])&]
+[s5;:Upp`:`:Jsonize`(Upp`:`:JsonIO`&`,Upp`:`:byte`&`): [@(0.0.255) template]_<>_[@(0.0.255) v
+oid]_[* Jsonize]([_^Upp`:`:JsonIO^ JsonIO][@(0.0.255) `&]_[*@3 io], [_^Upp`:`:byte^ byte][@(0.0.255) `&
+]_[*@3 var])&]
 [s5;:Jsonize`(JsonIO`&`,int16`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ J
 sonIO][@(0.0.255) `&]_[*@3 io], [_^int16^ int16][@(0.0.255) `&]_[*@3 var])&]
 [s5;:Jsonize`(JsonIO`&`,int64`&`): [@(0.0.255) template]_<>_[@(0.0.255) void]_[* Jsonize]([_^JsonIO^ J
@@ -166,6 +169,7 @@ data type.&]
 which leads to somewhat unnatural results when key [%-*@4 K] is 
 String or WString. [%-* StringMap ]alternative variant encodes 
 map as JSON object with keys equal to map keys.&]
+[s3;%% &]
 [s3;%% &]
 [s4;%% &]
 [s5;:JsonizeBySerialize`(JsonIO`&`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>

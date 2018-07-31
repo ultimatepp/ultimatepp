@@ -203,6 +203,18 @@ template<> void Jsonize(JsonIO& io, int& var)
 	}
 }
 
+template<> void Jsonize(JsonIO& io, byte& var)
+{
+	double v = var;
+	Jsonize(io, v);
+	if(io.IsLoading()) {
+		if(v >= 0 && v <= 255 && (int)v == v)
+			var = (byte)v;
+		else
+			throw JsonizeError("integer 0-255 expected");
+	}
+}
+
 template<> void Jsonize(JsonIO& io, int16& var)
 {
 	double v = var;
