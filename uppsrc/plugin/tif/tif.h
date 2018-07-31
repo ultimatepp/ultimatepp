@@ -15,6 +15,8 @@ struct tiff;
 #undef uint16
 #undef int32
 #undef uint32
+#undef int64
+#undef uint64
 
 #undef HAVE_INT8
 #undef HAVE_INT16
