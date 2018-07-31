@@ -504,14 +504,22 @@ int CompareNoCase(const String& a, const String& b, byte encoding)
 {
 	if(encoding == CHARSET_DEFAULT) encoding = GetDefaultCharset();
 	if(encoding == CHARSET_UTF8) return CompareNoCase(FromUtf8(a), FromUtf8(b));
+#ifdef DEPRECATED
 	return IterCompare(a.Begin(), a.End(), b.Begin(), b.End(), StringICompare__(encoding));
+#else
+	return CompareRanges(a, b, StringICompare__(encoding));
+#endif
 }
 
 int CompareNoCase(const String& a, const char *b, byte encoding)
 {
 	if(encoding == CHARSET_DEFAULT) encoding = GetDefaultCharset();
 	if(encoding == CHARSET_UTF8) return CompareNoCase(FromUtf8(a), FromUtf8(b, (int)strlen(b)));
+#ifdef DEPRECATED
 	return IterCompare(a.Begin(), a.End(), b, b + strlen(b), StringICompare__(encoding));
+#else
+	return CompareRanges(a, SubRange(b, b + strlen(b)), StringICompare__(encoding));
+#endif
 }
 
 }

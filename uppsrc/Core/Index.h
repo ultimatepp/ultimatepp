@@ -70,8 +70,8 @@ public:
 	HashBase(const HashBase& b, int);
 	void operator<<=(const HashBase& b);
 
-	const unsigned *Begin() const           { return hash.Begin(); }
-	const unsigned *End() const             { return hash.End(); }
+	const unsigned *begin() const           { return hash.begin(); }
+	const unsigned *end() const             { return hash.end(); }
 
 	void Swap(HashBase& b);
 };

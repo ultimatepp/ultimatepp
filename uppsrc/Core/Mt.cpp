@@ -46,7 +46,7 @@ void Thread::Detach()
 
 static Atomic sThreadCount;
 
-static thread__  void (*sExit)(void);
+static thread_local void (*sExit)(void);
 
 void (*Thread::AtExit(void (*exitfn)()))()
 {
@@ -102,7 +102,7 @@ sThreadRoutine(void *arg)
 
 static bool threadr; //indicates if *any* Thread instance is running (having called its Run()), upon first call of Run
 #ifndef CPU_BLACKFIN
-static thread__  bool sMain;
+static thread_local  bool sMain;
 #else
 #ifdef PLATFORM_POSIX
 static Index<pthread_t> threadsv; //a threads id vector, sMain=true ==>> 'pthread_self() pthread_t beeing present in vector, problem, wont be cleared when thread exits
@@ -519,7 +519,7 @@ void ConditionVariable::Wait(Mutex& m)
 	if(InitializeConditionVariable)
 		SleepConditionVariableCS(cv, &m.section, INFINITE);
 	else { // WindowsXP implementation
-		static thread__ byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
+		static thread_local byte buffer[sizeof(WaitingThread)]; // only one Wait per thread is possible
 		WaitingThread *w = new(buffer) WaitingThread;
 		{
 			Mutex::Lock __(mutex);

@@ -953,10 +953,10 @@ XmlNode::XmlNode(const XmlNode& n, int)
 {
 	type = n.type;
 	text = n.text;
-	node <<= n.node;
+	node = clone(n.node);
 	if(n.attr) {
 		attr.Create();
-		*attr <<= *n.attr;
+		*attr = clone(*n.attr);
 	}
 }
 

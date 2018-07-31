@@ -398,12 +398,20 @@ struct WStringICompare__
 
 int CompareNoCase(const WString& a, const WString& b)
 {
+#ifdef DEPRECATED
 	return IterCompare(a.Begin(), a.End(), b.Begin(), b.End(), WStringICompare__());
+#else
+	return CompareRanges(a, b, WStringICompare__());
+#endif
 }
 
 int CompareNoCase(const WString& a, const wchar *b)
 {
+#ifdef DEPRECATED
 	return IterCompare(a.Begin(), a.End(), b, b + wstrlen(b), WStringICompare__());
+#else
+	return CompareRanges(a, SubRange(b, b + wstrlen(b)), WStringICompare__());
+#endif
 }
 
 }

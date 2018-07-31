@@ -132,7 +132,7 @@ ValueArray::ValueArray(Vector<Value>&& v)
 
 ValueArray::ValueArray(const Vector<Value>& v, int deep)
 {
-	Create() <<= v;
+	Create() = clone(v);
 }
 
 ValueArray::operator Value() const {
@@ -143,7 +143,7 @@ ValueArray::operator Value() const {
 ValueArray::ValueArray(const Value& src)
 {
 	if(!UPP::IsNull(src)) {
-		if(IsType<ValueMap>(src)) {
+		if(src.Is<ValueMap>()) {
 			ValueArray v = ValueMap(src);
 			data = v.data;
 			data->Retain();
@@ -414,7 +414,7 @@ ValueMap::Data& ValueMap::Create()
 void ValueMap::Clone(Data *&ptr)
 {
 	Data *d = new Data;
-	d->key <<= ptr->key;
+	d->key = clone(ptr->key);
 	d->value = ptr->value;
 	ptr->Release();
 	ptr = d;
@@ -449,7 +449,7 @@ ValueMap::ValueMap(VectorMap<Value, Value>&& m)
 ValueMap::ValueMap(const Index<Value>& k, const Vector<Value>& v, int deep)
 {
 	Data& d = Create();
-	d.key <<= k;
+	d.key = clone(k);
 	d.value = ValueArray(v, 0);
 }
 
@@ -483,7 +483,7 @@ void ValueMap::FromArray(const ValueArray& va)
 ValueMap::ValueMap(const Value& src)
 {
 	if(!IsNull(src)) {
-		if(IsType<ValueArray>(src)) {
+		if(src.Is<ValueArray>()) {
 			FromArray(src);
 			return;
 		}

@@ -194,8 +194,8 @@ void MTrand::seed()
 MTrand *sRng;
 byte    sRb[sizeof(MTrand)];
 #else
-thread__ MTrand *sRng;
-thread__ byte    sRb[sizeof(MTrand)];
+thread_local MTrand *sRng;
+thread_local byte    sRb[sizeof(MTrand)];
 #endif
 
 void SeedRandom()

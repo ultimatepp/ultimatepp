@@ -184,6 +184,7 @@ String GetModuleFileName(HINSTANCE instance) {
 	return FromSystemCharsetW(h);
 }
 
+#ifdef DEPRECATED
 bool SyncObject::Wait(int ms)
 {
 	return WaitForSingleObject(handle, ms);
@@ -213,6 +214,7 @@ void Win32Event::Set()
 {
 	SetEvent(handle);
 }
+#endif
 
 #endif
 

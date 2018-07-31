@@ -34,10 +34,10 @@ void InVector<T>::Clear()
 	ClearCache();
 }
 
-extern thread__ int64 invector_cache_serial_;
-extern thread__ int   invector_cache_blki_;
-extern thread__ int   invector_cache_offset_;
-extern thread__ int   invector_cache_end_;
+extern thread_local int64 invector_cache_serial_;
+extern thread_local int   invector_cache_blki_;
+extern thread_local int   invector_cache_offset_;
+extern thread_local int   invector_cache_end_;
 
 template <class T>
 force_inline void InVector<T>::SetCache(int blki, int offset) const

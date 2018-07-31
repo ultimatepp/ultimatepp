@@ -414,10 +414,10 @@ public:
 	};
 
 // Standard container interface
-	Iterator         begin()                    { return (T **)vector.Begin(); }
-	Iterator         end()                      { return (T **)vector.End(); }
-	ConstIterator    begin() const              { return (T **)vector.Begin(); }
-	ConstIterator    end() const                { return (T **)vector.End(); }
+	Iterator         begin()                    { return (T **)vector.begin(); }
+	Iterator         end()                      { return (T **)vector.end(); }
+	ConstIterator    begin() const              { return (T **)vector.begin(); }
+	ConstIterator    end() const                { return (T **)vector.end(); }
 
 // Optimalization
 	friend void Swap(Array& a, Array& b)                   { UPP::Swap(a.vector, b.vector); }

@@ -130,6 +130,18 @@ bool IsEqualRange(const Range1& a, const Range2& b)
 	return true;
 }
 
+template <class Range1, class Range2, class Cmp>
+int CompareRanges(const Range1& a, const Range2& b, Cmp cmp)
+{
+	int n = min(a.GetCount(), b.GetCount());
+	for(int i = 0; i < n; i++) {
+		int q = cmp(a[i], b[i]);
+		if(q)
+			return q;
+	}
+	return cmp(a.GetCount(), b.GetCount());
+}
+
 template <class Range1, class Range2>
 int CompareRanges(const Range1& a, const Range2& b)
 {

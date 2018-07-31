@@ -292,7 +292,7 @@ T& Index<T>::Set(int i, T&& x)
 #ifdef UPP
 template <class T>
 void Index<T>::Serialize(Stream& s) {
-	if(s.IsLoading()) ClearIndex();
+	if(s.IsLoading()) hash.ClearIndex();
 	key.Serialize(s);
 	hash.Serialize(s);
 }

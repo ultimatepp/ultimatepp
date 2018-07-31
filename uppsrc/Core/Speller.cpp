@@ -170,14 +170,14 @@ Speller *sGetSpeller(int lang)
 			f.SetOld(LoadFile(path));
 		else {
 			f.path = path;
-			int n = in.GetL();
+			int n = in.Get32();
 			LLOG("Found scd file " << path << " blocks " << n);
 			if(n > 0 && n < 100000) {
 				for(int i = 0; i < n; i++) {
 					SpellBlock& b = f.block.Add();
 					b.first = in.Get(in.Get());
-					b.ctrl_len = in.GetL();
-					b.text_len = in.GetL();
+					b.ctrl_len = in.Get32();
+					b.text_len = in.Get32();
 				}
 				if(in.IsEof())
 					f.block.Clear();

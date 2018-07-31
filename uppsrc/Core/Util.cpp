@@ -630,7 +630,7 @@ String FromSystemCharset(const String& src)
 #endif
 
 
-static StaticCriticalSection sGCfgLock;
+static StaticMutex sGCfgLock;
 
 static VectorMap<String, String>& sGCfg()
 {

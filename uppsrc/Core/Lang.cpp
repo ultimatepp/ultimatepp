@@ -102,7 +102,7 @@ int GetSystemLNG()
 	ONCELOCK {
 		lang = LNGFromText(GetUserLocale(LOCALE_SISO639LANGNAME) + GetUserLocale(LOCALE_SISO3166CTRYNAME));
 		if(!lang)
-			lang = LNG_ENGLISH;
+			lang = LNG_('E', 'N', 'U', 'S');
 		int cs = atoi(GetUserLocale(LOCALE_IDEFAULTANSICODEPAGE));
 		if(cs >= 1250 && cs <= 1258)
 			lang = SetLNGCharset(lang, CHARSET_WIN1250 + cs - 1250);

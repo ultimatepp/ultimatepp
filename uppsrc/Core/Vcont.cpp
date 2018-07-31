@@ -78,10 +78,10 @@ int64 NewInVectorSerial()
 	return x;
 }
 
-thread__ int64 invector_cache_serial_;
-thread__ int   invector_cache_blki_;
-thread__ int   invector_cache_offset_;
-thread__ int   invector_cache_end_;
+thread_local int64 invector_cache_serial_;
+thread_local int   invector_cache_blki_;
+thread_local int   invector_cache_offset_;
+thread_local int   invector_cache_end_;
 
 void Bits::Clear()
 {

@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-StaticCriticalSection log_mutex;
+StaticMutex log_mutex;
 
 #ifdef PLATFORM_WINCE
 const char *FromSysChrSet(const wchar *s)
@@ -242,7 +242,7 @@ struct ThreadLog {
 	void  Put(int w);
 };
 
-static thread__ ThreadLog sTh;
+static thread_local ThreadLog sTh;
 
 void ThreadLog::Put(int w)
 {

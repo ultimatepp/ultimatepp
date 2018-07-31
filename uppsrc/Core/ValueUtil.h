@@ -281,17 +281,18 @@ public:
 	bool     operator<(const ValueArray& x) const  { return Compare(x) < 0; }
 	bool     operator>(const ValueArray& x) const  { return Compare(x) > 0; }
 
-	typedef Vector<Value>::ConstIterator ConstIterator;
-	ConstIterator          Begin() const                      { return Get().Begin(); }
-	ConstIterator          End() const                        { return Get().End(); }
+	typedef ConstIteratorOf<Vector<Value>> const_iterator;
 
+#ifdef DEPRECATED
 	typedef Value          value_type;
-	typedef ConstIterator  const_iterator;
+	typedef const_iterator ConstIterator;
 	typedef const Value&   const_reference;
 	typedef int            size_type;
 	typedef int            difference_type;
-	const_iterator         begin() const                      { return Begin(); }
-	const_iterator         end() const                        { return End(); }
+#endif
+
+	const_iterator         begin() const                      { return Get().begin(); }
+	const_iterator         end() const                        { return Get().end(); }
 };
 
 template<>
