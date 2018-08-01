@@ -143,7 +143,7 @@ bool TextComparator::Find(int start1, int end1, int start2, int end2, int& best_
 	int last = max(best_count - chunk + 1, 0);
 	const HashBase *hp1 = &hash1[lvl];
 	const HashBase *hp2 = &hash2[lvl];
-	const unsigned *h1 = hp1->Begin() + start1;
+	const unsigned *h1 = hp1->begin() + start1;
 
 	int i = hp2->Find(*h1);
 	while(i >= 0)
@@ -152,8 +152,8 @@ bool TextComparator::Find(int start1, int end1, int start2, int end2, int& best_
 		else {
 			if(i >= start2 && h1[last] == (*hp2)[i + last]) {
 				int top = min(len1, end2 - i);
-				int hc = CompareGetCount(h1, hp2->Begin() + i, top) + chunk - 1;
-				int cnt = CompareGetCount(f1, file2.Begin() + i, min(hc, top));
+				int hc = CompareGetCount(h1, hp2->begin() + i, top) + chunk - 1;
+				int cnt = CompareGetCount(f1, file2.begin() + i, min(hc, top));
 				if(cnt > best_count) {
 					best_count = cnt;
 					best_match = i;
@@ -166,7 +166,7 @@ bool TextComparator::Find(int start1, int end1, int start2, int end2, int& best_
 						last = best_count - chunk + 1;
 						hp1 = &hash1[lvl];
 						hp2 = &hash2[lvl];
-						h1 = hp1->Begin() + start1;
+						h1 = hp1->begin() + start1;
 						int oi = i;
 						for(i = hp2->Find(*h1); i >= 0 && i <= oi; i = hp2->FindNext(i))
 							;
