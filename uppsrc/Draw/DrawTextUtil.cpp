@@ -91,7 +91,7 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
 		if(*s == '\n' || *s == '\0') {
 			int a = x;
 			const wchar *q = t;
-			const wchar *start = NULL; 
+			const wchar *start = NULL;
 			while(q < s) {
 				while(q < s && *q < ' ') {
 					if(*q == '\t')
