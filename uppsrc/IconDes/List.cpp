@@ -384,6 +384,7 @@ void IconDes::EditImage()
 		int r = c.image.GetResolution();
 		c.image = CreateImage(Size(minmax((int)~dlg.cx, 1, 8192), minmax((int)~dlg.cy, 1, 8192)), Null);
 		UPP::Copy(c.image, Point(0, 0), img, img.GetSize());
+		SetRes(c.image, r);
 		Reset();
 	}
 }
@@ -482,9 +483,7 @@ int IconDes::GetCount() const
 
 Image IconDes::GetImage(int ii) const
 {
-	const Slot& c = slot[ii];
-	Image m = slot[ii].image;
-	return m;
+	return slot[ii].image;
 }
 
 String IconDes::GetName(int ii) const

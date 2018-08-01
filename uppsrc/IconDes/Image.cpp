@@ -153,7 +153,6 @@ void IconDes::SmoothRescale()
 	Slot& c = Current();
 	BeginTransform();
 	Image bk = IsPasting() ? c.paste_image : c.image;
-	int r = c.paste_image.GetResolution();
 	dlg.cx <<= bk.GetWidth();
 	dlg.cy <<= bk.GetHeight();
 	dlg.keep <<= true;
