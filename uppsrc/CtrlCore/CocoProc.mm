@@ -108,9 +108,30 @@ struct MMImp {
 		if(!up && !(k & (K_CTRL|K_ALT))) {
 			WString x = ToWString((CFStringRef)(e.characters));
 			for(wchar c : x)
-				if(c < 0xF700 && c >= 32 && c != 127)
+				if(c < 0xF700 && (c >= 32 && c != 127 || c == 9))
 					ctrl->DispatchKey(c, 1);
 		}
+		return true;
+	}
+
+	static bool KeyFlags(Upp::Ctrl *ctrl, NSEvent *e) {
+		bool alt = GetAlt();
+		bool ctl = GetCtrl();
+		bool sht = GetShift();
+		bool opt = GetOption();
+		Flags(e);
+		if(!ctrl->IsEnabled())
+			return false;
+		
+		if(alt != GetAlt())
+			ctrl->DispatchKey(K_ALT_KEY|(alt * K_KEYUP), 1);
+		if(ctl != GetCtrl())
+			ctrl->DispatchKey(K_CTRL_KEY|(ctl * K_KEYUP), 1);
+		if(sht != GetShift())
+			ctrl->DispatchKey(K_SHIFT_KEY|(sht * K_KEYUP), 1);
+		if(opt != GetOption())
+			ctrl->DispatchKey(K_OPTION_KEY|(opt * K_KEYUP), 1);
+
 		return true;
 	}
 	
@@ -188,6 +209,11 @@ struct MMImp {
 - (void)keyUp:(NSEvent *)e {
 	if(!Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP))
 		[super keyUp:e];
+}
+
+- (void)flagsChanged:(NSEvent *)e {
+	if(!Upp::MMImp::KeyFlags(ctrl, e))
+		[super flagsChanged:e];
 }
 
 - (BOOL)windowShouldClose:(NSWindow *)sender {
