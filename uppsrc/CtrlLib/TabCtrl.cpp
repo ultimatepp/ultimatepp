@@ -489,10 +489,18 @@ void TabCtrl::Go(int d)
 bool TabCtrl::Key(dword key, int repcnt)
 {
 	switch(key) {
+#ifdef PLATFORM_COCOA
+	case K_ALT|K_TAB:
+	case K_OPTION|K_TAB:
+#endif
 	case K_CTRL_TAB:
 		GoNext();
 		Action();
 		return true;
+#ifdef PLATFORM_COCOA
+	case K_SHIFT|K_ALT|K_TAB:
+	case K_SHIFT|K_OPTION|K_TAB:
+#endif
 	case K_SHIFT_CTRL_TAB:
 		GoPrev();
 		Action();
@@ -504,10 +512,18 @@ bool TabCtrl::Key(dword key, int repcnt)
 bool TabCtrl::HotKey(dword key)
 {
 	switch(key) {
+#ifdef PLATFORM_COCOA
+	case K_ALT|K_TAB:
+	case K_OPTION|K_TAB:
+#endif
 	case K_CTRL_TAB:
 		GoNext();
 		Action();
 		return true;
+#ifdef PLATFORM_COCOA
+	case K_SHIFT|K_ALT|K_TAB:
+	case K_SHIFT|K_OPTION|K_TAB:
+#endif
 	case K_SHIFT_CTRL_TAB:
 		GoPrev();
 		Action();
