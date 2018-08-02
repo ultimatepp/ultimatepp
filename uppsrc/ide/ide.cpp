@@ -422,6 +422,10 @@ bool Ide::Key(dword key, int count)
 	case K_SHIFT|K_CTRL_O:
 		AddFile(WorkspaceWork::ANY_FILE);
 		return true;
+#ifdef PLATFORM_COCOA
+	case K_ALT_KEY|K_KEYUP:
+	case K_OPTION_KEY|K_KEYUP:
+#endif
 	case K_CTRL_KEY|K_KEYUP:
 		if(tabi) {
 			tabi = 0;
@@ -429,6 +433,10 @@ bool Ide::Key(dword key, int count)
 		}
 		return true;
 	case K_CTRL_TAB:
+#ifdef PLATFORM_COCOA
+	case K_ALT|K_TAB:
+	case K_OPTION|K_TAB:
+#endif
 		CycleFiles();
 		return true;
 	case K_ALT_C|K_SHIFT:
