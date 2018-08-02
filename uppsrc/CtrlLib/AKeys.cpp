@@ -277,6 +277,7 @@ dword ParseKeyDesc(CParser& p)
 		throw CParser::Error("");
 	}
 	String kid = p.ReadId();
+	/*
 	if(kid.GetLength() == 1 && *kid >= 'A' && *kid <= 'Z')
 		return f | (K_A + *kid - 'A');
 	if(kid.GetLength() == 2 && kid[0] == 'F' && IsDigit(kid[1]) && kid[1] != '0')
@@ -294,10 +295,18 @@ dword ParseKeyDesc(CParser& p)
 		{ K_F10, "F10" }, { K_F11, "F11" }, { K_F12, "F12" }, { K_PAGEUP, "PageUp" }, { K_PAGEDOWN, "PageDown" },
 		{ 0, NULL }
 	};
+	*/
+	
 	static VectorMap<String, int> map;
-	if(map.GetCount() == 0) {
-		for(int i = 0; i < __countof(nkey); i++)
-			map.Add(nkey[i].name, nkey[i].key);
+	ONCELOCK  {
+		extern Tuple<dword, const char *> KeyNames__[];
+		for(int i = 0; KeyNames__[i].a; i++) {
+			String n = KeyNames__[i].b;
+			int q = n.Find('\v');
+			if(q)
+				n = n.Mid(q + 1);
+			map.Add(n, KeyNames__[i].a);
+		}
 	}
 	int q = map.Find(kid);
 	if(q >= 0)
@@ -325,7 +334,7 @@ void RestoreKeys(const String& data)
 				p.PassChar('-');
 				String group;
 				if(p.IsId())
-				 	group = p.ReadId();
+					group = p.ReadId();
 				else
 					group = p.ReadString();
 				p.PassChar(';');

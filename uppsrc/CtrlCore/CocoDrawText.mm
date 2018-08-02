@@ -24,6 +24,27 @@ CTFontRef CT_Font(Font fnt)
 	return ctfont0.Detach();
 }
 
+GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr)
+{
+	GlyphInfo gi;
+	gi.lspc = gi.rspc = 0;
+	gi.width = 0x8000;
+	if(ctfont) {
+		LTIMING("GetGlyphInfoSys 2");
+	    CGGlyph glyph_index;
+	    UniChar h = chr;
+		CTFontGetGlyphsForCharacters(ctfont, &h, &glyph_index, 1);
+		if(glyph_index) {
+		    CGSize advance;
+			CTFontGetAdvancesForGlyphs(ctfont, kCTFontOrientationHorizontal, &glyph_index, &advance, 1);
+			gi.width = ceil(advance.width);
+			gi.lspc = gi.rspc = 0; // TODO! (using bounding box?)
+			gi.glyphi = glyph_index;
+		}
+	}
+	return gi;
+}
+
 CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
@@ -46,8 +67,8 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.external = 0;
 		fi.internal = 0;
 		fi.overhang = 0;
-		fi.maxwidth = 99999; // TODO?
-		fi.avewidth = fi.maxwidth;
+		fi.maxwidth = GetGlyphInfoSys(ctfont, 'M').width; // TODO?
+		fi.avewidth = GetGlyphInfoSys(ctfont, 'e').width;
 		fi.default_char = '?';
 		fi.fixedpitch = CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait;
 		fi.ttf = true;
@@ -63,25 +84,8 @@ CommonFontInfo GetFontInfoSys(Font font)
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
-	GlyphInfo gi;
-	gi.lspc = gi.rspc = 0;
-	gi.width = 0x8000;
-
 	CFRef<CTFontRef> ctfont = CT_Font(font);
-	if(ctfont) {
-		LTIMING("GetGlyphInfoSys 2");
-	    CGGlyph glyph_index;
-	    UniChar h = chr;
-		CTFontGetGlyphsForCharacters(ctfont, &h, &glyph_index, 1);
-		if(glyph_index) {
-		    CGSize advance;
-			CTFontGetAdvancesForGlyphs(ctfont, kCTFontOrientationHorizontal, &glyph_index, &advance, 1);
-			gi.width = ceil(advance.width);
-			gi.lspc = gi.rspc = 0; // TODO! (using bounding box?)
-			gi.glyphi = glyph_index;
-		}
-	}
-	return gi;
+	return GetGlyphInfoSys(ctfont, chr);
 }
 
 Vector<FaceInfo> GetAllFacesSys()
