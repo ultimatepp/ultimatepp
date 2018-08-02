@@ -6,10 +6,8 @@ sooner:
 
 - minimize, maximaze
 - Ctrl+Shift+F wrong initial focus
-- ide: Alt+Tab does not work
 - menubar does not loose focus after click outside (or rather ActiveFocus does not work)
 - not all additional cursors are correct
-- Ctrl+Tab
 - Synthetise fonts
 - Sort fonts
 
@@ -51,6 +49,8 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- ide: Alt+Tab does not work
+- Ctrl+Tab
 - Ctrl+Mouse wheel
 - Ctrl+F5
 - Shift+Space - double space...
