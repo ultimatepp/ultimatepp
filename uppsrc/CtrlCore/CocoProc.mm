@@ -107,9 +107,11 @@ struct MMImp {
 		ctrl->DispatchKey(k, 1);
 		if(!up && !(k & (K_CTRL|K_ALT))) {
 			WString x = ToWString((CFStringRef)(e.characters));
-			for(wchar c : x)
-				if(c < 0xF700 && (c >= 32 && c != 127 || c == 9 && (k & K_OPTION) == 0))
+			for(wchar c : x) {
+				if(c < 0xF700 &&
+				   (c > 32 && c != 127 || c == 9 && (k & K_OPTION) == 0 || c == 32 && (k &  K_SHIFT) == 0))
 					ctrl->DispatchKey(c, 1);
+			}
 		}
 		return true;
 	}

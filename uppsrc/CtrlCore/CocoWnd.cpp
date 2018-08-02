@@ -51,13 +51,6 @@ void Ctrl::UnregisterSystemHotKey(int id)
 	}*/
 }
 
-Rect Ctrl::GetWndScreenRect() const
-{
-	GuiLock __;
-	Rect r;
-	return r;
-}
-
 void Ctrl::WndShow(bool b)
 {
 	GuiLock __;
@@ -83,11 +76,6 @@ int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
 	return 1000 / 32;
-}
-
-void Ctrl::WndSetPos(const Rect& rect)
-{
-	GuiLock __;
 }
 
 void Ctrl::WndUpdate(const Rect& r)
