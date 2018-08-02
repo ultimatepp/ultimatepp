@@ -1,9 +1,14 @@
 sooner:
 
+- X11 on option
 - OSX flag
-- SerializePlacement
-- rect loop (ViewDraw)
+- flagCOCOA
+- USEMALLOC
 
+- triple click, hold...
+
+- package organizer initial size too small
+- rect loop (ViewDraw)
 - minimize, maximaze
 - Ctrl+Shift+F wrong initial focus
 - menubar does not loose focus after click outside (or rather ActiveFocus does not work)
@@ -14,9 +19,8 @@ sooner:
 later:
 
 - void WakeUpGuiThread(void)
-- fullscreen
+- fullscreen mode issues
 - missing cursors (add to iml, use undocumented cursor)
-- X11 on option
 - PrinterJob
 - DrawDragRect
 - CT_Font caching
@@ -37,9 +41,9 @@ later:
 - fix resizing arrows
 - RenderCharacterSys
 
-- flagCOCOA
-- USEMALLOC
 - multimonitor support
+
+- SerializePlacement - probably improve
 
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
 void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)

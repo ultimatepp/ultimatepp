@@ -135,13 +135,14 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	cc << ' ' << Gather(pkg.option, config.GetKeys());
 	cc << " -fexceptions";
 
-	if (HasFlag("OSX11")) {
+#if 0
+	if (HasFlag("OSX")) {
 	  if (HasFlag("POWERPC"))
 		cc << " -arch ppc";
 	  if (HasFlag("X86"))
 		cc << " -arch i386";
 	}
-
+#endif
 //	if(HasFlag("SSE2")) {
 //		cc << " -msse2";
 //		if(!HasFlag("CLANG"))
@@ -477,11 +478,11 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
 				lnk << " -ggdb";
 			else
-				lnk << (!HasFlag("OSX11") && !HasFlag("COCOA") ? " -Wl,-s" : "");
+				lnk << (!HasFlag("OSX") ? " -Wl,-s" : "");
 			for(i = 0; i < libpath.GetCount(); i++)
 				lnk << " -L" << GetHostPathQ(libpath[i]);
 //			lnk << " -Wl,--gc-sections,-O,2 ";
-			if(!HasFlag("OSX11") && !HasFlag("COCOA"))
+			if(!HasFlag("OSX") && !HasFlag("COCOA"))
 				lnk << " -Wl,-O,2 ";
 			lnk << linkoptions;
 /*
@@ -518,10 +519,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					else
 						lib.Add(linkfile[i]);
 				}
-#ifndef PLATFORM_MACOS
-			if(!HasFlag("SOLARIS") && !HasFlag("OSX11") && !HasFlag("OBJC"))
+			if(!HasFlag("SOLARIS") && !HasFlag("OSX") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
-#endif
 			for(int pass = 0; pass < 2; pass++) {
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];
@@ -552,10 +551,8 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 								lnk << " -l" << ln;
 						}
 				}
-#ifndef PLATFORM_MACOS
-				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX11"))
+				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX"))
 					lnk << " -Wl,--end-group";
-#endif
 			}
 			PutConsole("Linking...");
 			bool error = false;

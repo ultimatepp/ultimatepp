@@ -46,11 +46,6 @@ void TopWindow::GuiPlatformDestruct()
 {
 }
 
-void TopWindow::SerializePlacement(Stream& s, bool reminimize)
-{
-	GuiLock __;
-}
-
 END_UPP_NAMESPACE
 
 #endif
