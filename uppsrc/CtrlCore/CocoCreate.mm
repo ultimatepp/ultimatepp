@@ -73,12 +73,15 @@ bool Upp::Ctrl::IsWndForeground() const
 	return HasWndFocus();
 }
 
+NSRect DesktopRect(const Upp::Rect& r)
+{
+	return NSMakeRect(r.left, Upp::Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight(),
+	                  r.GetWidth(), r.GetHeight());
+}
+
 void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 {
-	Rect r = GetRect();
-	
-	NSRect frame = NSMakeRect(r.left, GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight(),
-	                          r.GetWidth(), r.GetHeight());
+	NSRect frame = DesktopRect(GetRect());
 		
 	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
 	                                         backing:NSBackingStoreBuffered defer:false];
@@ -240,6 +243,22 @@ void Upp::TopWindow::SyncSizeHints()
 			sz = GetMaxSize();
 		[window setMaxSize:MMFrameSize(sz, style)];
 	}
+}
+
+Upp::Rect Upp::Ctrl::GetWndScreenRect() const
+{ // THIS IS NOT NEEDED
+	GuiLock __;
+	Rect r = GetRect();
+	return r;
+}
+
+void Upp::Ctrl::WndSetPos(const Upp::Rect& rect)
+{
+	GuiLock __;
+	if(top)
+		[top->coco->window setFrame:
+			[top->coco->window frameRectForContentRect:DesktopRect(rect)]
+		 display:YES];
 }
 
 #endif

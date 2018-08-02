@@ -2,24 +2,19 @@ sooner:
 
 - OSX flag
 - SerializePlacement
-- keyboard shortcuts are not stored
 - rect loop (ViewDraw)
 
 - minimize, maximaze
-- SetWndPos
 - Ctrl+Shift+F wrong initial focus
 - ide: Alt+Tab does not work
 - menubar does not loose focus after click outside (or rather ActiveFocus does not work)
 - not all additional cursors are correct
-- Ctrl+Mouse wheel
-- Ctrl+F5
 - Ctrl+Tab
 - Synthetise fonts
 - Sort fonts
 
 later:
 
-- ide console - wrong wordwrap
 - void WakeUpGuiThread(void)
 - fullscreen
 - missing cursors (add to iml, use undocumented cursor)
@@ -56,6 +51,12 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- Ctrl+Mouse wheel
+- Ctrl+F5
+- Shift+Space - double space...
+- keyboard shortcuts are not stored
+- SetWndPos
+- ide console - wrong wordwrap
 - invalid ide icon in main package selector (caused by caching)
 - wheel
 - window close button
