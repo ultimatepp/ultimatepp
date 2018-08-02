@@ -338,6 +338,10 @@ void LocalHost::AddFlags(Index<String>& cfg)
 	cfg.Add("BSD");
 #endif
 
+#ifdef PLATFORM_OSX
+	cfg.Add("OSX");
+#endif
+
 #ifdef PLATFORM_FREEBSD
 	cfg.Add("FREEBSD");
 #endif

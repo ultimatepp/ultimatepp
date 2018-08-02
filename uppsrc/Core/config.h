@@ -43,7 +43,11 @@
 				#define PLATFORM_COCOA 1
 			#endif
 			#define PLATFORM_BSD 1
-			#define PLATFORM_MACOS
+			#define PLATFORM_MACOS 1
+			#define PLATFORM_OSX 1
+			#ifndef flagUSEMALLOC
+				#define flagUSEMALLOC // TODO: investigate why is this necessary...
+			#endif
 		#else
 			// zvzv mod
 			// was: #if __FreeBSD__ || __OpenBSD__ || __NetBSD__ || __APPLE__

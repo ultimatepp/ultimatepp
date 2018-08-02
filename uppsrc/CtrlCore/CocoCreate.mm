@@ -261,4 +261,15 @@ void Upp::Ctrl::WndSetPos(const Upp::Rect& rect)
 		 display:YES];
 }
 
+void Upp::TopWindow::SerializePlacement(Stream& s, bool reminimize)
+{
+	GuiLock __;
+	int version = 0;
+	s / version;
+	Rect rect = GetRect();
+	s % rect;
+	if(s.IsLoading())
+		SetRect(rect);
+}
+
 #endif
