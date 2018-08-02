@@ -1,16 +1,25 @@
 sooner:
-- minimize, maximaze
-- Open/OpenMain variants
-- initial focus
+
+- OSX flag
 - SerializePlacement
-- Switch does not seem to work for some reason
-- rect loop
-- ide: Tab does not work
+- keyboard shortcuts are not stored
+- rect loop (ViewDraw)
+
+- minimize, maximaze
+- SetWndPos
+- Ctrl+Shift+F wrong initial focus
+- ide: Alt+Tab does not work
 - menubar does not loose focus after click outside (or rather ActiveFocus does not work)
-- invalid ide icon in main package selector
+- not all additional cursors are correct
+- Ctrl+Mouse wheel
+- Ctrl+F5
+- Ctrl+Tab
+- Synthetise fonts
+- Sort fonts
 
 later:
 
+- ide console - wrong wordwrap
 - void WakeUpGuiThread(void)
 - fullscreen
 - missing cursors (add to iml, use undocumented cursor)
@@ -43,8 +52,11 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, con
 void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 
+- keynames apple style
+
 done:
 
+- invalid ide icon in main package selector (caused by caching)
 - wheel
 - window close button
 - window maximize / minimize buttons
@@ -61,3 +73,6 @@ done:
 - disable
 - capture
 - focus
+- Open/OpenMain variants
+- initial focus
+- Switch does not seem to work for some reason

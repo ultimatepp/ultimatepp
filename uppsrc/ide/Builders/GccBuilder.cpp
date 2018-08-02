@@ -477,21 +477,21 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			if(HasFlag("DEBUG_MINIMAL") || HasFlag("DEBUG_FULL"))
 				lnk << " -ggdb";
 			else
-				lnk << (!HasFlag("OSX11") ? " -Wl,-s" : "");
+				lnk << (!HasFlag("OSX11") && !HasFlag("COCOA") ? " -Wl,-s" : "");
 			for(i = 0; i < libpath.GetCount(); i++)
 				lnk << " -L" << GetHostPathQ(libpath[i]);
 //			lnk << " -Wl,--gc-sections,-O,2 ";
-			if(!HasFlag("OSX11"))
+			if(!HasFlag("OSX11") && !HasFlag("COCOA"))
 				lnk << " -Wl,-O,2 ";
 			lnk << linkoptions;
-
+/*
 			if (HasFlag("OSX11")) {
 				if (HasFlag("POWERPC"))
 					lnk << " -arch ppc";
 				if (HasFlag("X86"))
 					lnk << " -arch i386";
 			}
-
+*/
 			String lfilename;
 			if(HasFlag("OBJC")) {
 				String lfilename;
@@ -518,9 +518,10 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 					else
 						lib.Add(linkfile[i]);
 				}
-
+#ifndef PLATFORM_MACOS
 			if(!HasFlag("SOLARIS") && !HasFlag("OSX11") && !HasFlag("OBJC"))
 				lnk << " -Wl,--start-group ";
+#endif
 			for(int pass = 0; pass < 2; pass++) {
 				for(i = 0; i < lib.GetCount(); i++) {
 					String ln = lib[i];
@@ -551,8 +552,10 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 								lnk << " -l" << ln;
 						}
 				}
+#ifndef PLATFORM_MACOS
 				if(pass == 1 && !HasFlag("SOLARIS") && !HasFlag("OSX11"))
 					lnk << " -Wl,--end-group";
+#endif
 			}
 			PutConsole("Linking...");
 			bool error = false;
