@@ -71,8 +71,15 @@ struct MMImp {
 	static bool MouseDownEvent(CocoView *view, NSEvent *e, int button)
 	{
 		static int clicktime = msecs() - 100000;
-		bool b = MouseEvent(view, e, button|(msecs(clicktime) < 250 ? Upp::Ctrl::DOUBLE : Upp::Ctrl::DOWN));
-		clicktime = msecs();
+		bool b;
+		if(msecs(clicktime) < 250) {
+			b = MouseEvent(view, e, button|Upp::Ctrl::DOUBLE);
+			clicktime = msecs() - 999999;
+		}
+		else {
+			b = MouseEvent(view, e, button|Upp::Ctrl::DOWN);
+			clicktime = msecs();
+		}
 		return b;
 	}
 	
