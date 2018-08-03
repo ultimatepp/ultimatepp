@@ -1,20 +1,23 @@
 sooner:
 
-- triple click, hold...
-- Ctrl+Space assist
+- rect loop (ViewDraw)
 
 - package organizer initial size too small
-- rect loop (ViewDraw)
 - minimize, maximaze
+
 - Ctrl+Shift+F wrong initial focus
 - menubar does not loose focus after click outside (or rather ActiveFocus does not work)
+
 - not all additional cursors are correct
 - Synthetise fonts
 - Sort fonts
 - fix link options (joining link options missing space)
 
+- progress for assist opens too much, probably problem with delay?
+
 later:
 
+- doubleclick interval: https://developer.apple.com/documentation/appkit/nsevent/1528384-doubleclickinterval?language=objc
 - void WakeUpGuiThread(void)
 - fullscreen mode issues
 - PrinterJob
@@ -45,6 +48,8 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- triple click, hold...
+- Ctrl+Space assist
 - CT_Font caching
 - X11 on option
 - OSX flag
