@@ -7,8 +7,8 @@
 
 namespace Upp {
 
-CTFontRef CT_Font(Font fnt)
-{ // TODO: Caching (?)
+CTFontRef CT_Font0(Font fnt, bool& synth)
+{
 	CFRef<CFStringRef> s = CFStringCreateWithCString(NULL, ~fnt.GetFaceName(), kCFStringEncodingUTF8);
     CFRef<CTFontRef> ctfont0 = CTFontCreateWithName(s, fnt.GetHeight(), NULL);
 	if(fnt.IsItalic() || fnt.IsBold()) {
@@ -18,10 +18,38 @@ CTFontRef CT_Font(Font fnt)
 	    if(fnt.IsItalic())
 			symbolicTraits |= kCTFontItalicTrait;
 		CGAffineTransform transform = CGAffineTransformIdentity;
-		return CTFontCreateCopyWithSymbolicTraits(ctfont0, fnt.GetHeight(),
+		CFRef<CTFontRef> ctfont = CTFontCreateCopyWithSymbolicTraits(ctfont0, fnt.GetHeight(),
 		                                          &transform, symbolicTraits, symbolicTraits);
+		if(ctfont)
+			return ctfont.Detach();
+		synth = true;
 	}
 	return ctfont0.Detach();
+}
+
+CTFontRef CT_Font(Font fnt)
+{
+	struct Entry {
+		Font      font;
+		CTFontRef ctfont = NULL;
+		bool      synth = false;
+		
+		void Free() { if(ctfont) CFRelease(ctfont); ctfont = NULL; }
+		
+		Entry() { font.Height(-22222); }
+		~Entry() { Free(); }
+	};
+
+	const int FONTCACHE = 64;
+	static Entry cache[FONTCACHE];
+	for(int i = 0; i < FONTCACHE; i++)
+		if(cache[i].font == fnt)
+			return cache[i].ctfont;
+	Entry& e = cache[Random(FONTCACHE)];
+	e.Free();
+	e.font = fnt;
+	e.ctfont = CT_Font0(fnt, e.synth);
+	return e.ctfont;
 }
 
 GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr)
@@ -49,7 +77,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
 	String path;
-	CFRef<CTFontRef> ctfont = CT_Font(font);
+	CTFontRef ctfont = CT_Font(font);
 	if(ctfont) {
 	#if 0
 		DDUMP(font);
@@ -84,7 +112,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
-	CFRef<CTFontRef> ctfont = CT_Font(font);
+	CTFontRef ctfont = CT_Font(font);
 	return GetGlyphInfoSys(ctfont, chr);
 }
 
@@ -151,9 +179,8 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	    CGContextRestoreGState(cgHandle);
 		return;
 	}
-	
-	CFRef<CTFontRef> ctfont = CT_Font(font);
-	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(ctfont, NULL);
+
+	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(CT_Font(font), NULL);
    
 	CGContextSetFont(cgHandle, cgFont);
 	
