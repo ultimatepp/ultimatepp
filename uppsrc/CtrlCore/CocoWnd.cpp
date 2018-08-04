@@ -72,16 +72,6 @@ void Ctrl::WndUpdate(const Rect& r)
 
 }
 
-ViewDraw::ViewDraw(Ctrl *ctrl)
-{
-	EnterGuiMutex();
-}
-
-ViewDraw::~ViewDraw()
-{
-	LeaveGuiMutex();
-}
-
 Vector<WString> SplitCmdLine__(const char *cmd)
 {
 	Vector<WString> out;
@@ -104,10 +94,6 @@ Vector<WString> SplitCmdLine__(const char *cmd)
 }
 
 void Ctrl::SysEndLoop()
-{
-}
-
-void FinishDragRect(Ctrl& q)
 {
 }
 

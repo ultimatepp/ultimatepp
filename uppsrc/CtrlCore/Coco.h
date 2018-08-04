@@ -129,6 +129,15 @@ public:
 	~BackDraw();
 };
 
+
+struct DrawDragRectInfo {
+	Rect  rect1, rect2, clip;
+	int   n;
+	Color color;
+	int   type;
+	int   animation;
+};
+
 void DrawDragRect(SystemDraw& w, const Rect& rect1, const Rect& rect2, const Rect& clip, int n,
                   Color color, uint64 pattern);
 
@@ -144,7 +153,7 @@ struct CocoTop;
 struct MMCtrl;
 struct MMImp;
 
-#define GUIPLATFORM_CTRL_TOP_DECLS CocoTop *coco = NULL;
+#define GUIPLATFORM_CTRL_TOP_DECLS CocoTop *coco = NULL; One<DrawDragRectInfo> dr;
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/CocoCtrl.h>
 

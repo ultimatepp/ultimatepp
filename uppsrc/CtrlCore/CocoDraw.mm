@@ -9,6 +9,7 @@ void SystemDraw::Init(void *cgContext, int cy)
 	handle = cgContext;
 	top = cy;
 	Push();
+	CGContextSetBlendMode(cgHandle, kCGBlendModeNormal);
 	CGContextSetTextPosition(cgHandle, 0, 0);
     CGContextSetTextDrawingMode(cgHandle, kCGTextFill);
 }
