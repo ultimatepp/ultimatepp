@@ -52,6 +52,8 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	Font::SetDefaultFont(StdFont(fround([sysfont pointSize])));
+	
+	GUI_DblClickTime_Write(NSEvent.doubleClickInterval);
 }
 
 void Upp::CocoExit()
