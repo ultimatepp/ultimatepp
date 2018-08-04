@@ -66,18 +66,6 @@ void Ctrl::SetAlpha(byte alpha)
 	GuiLock __;
 }
 
-int Ctrl::GetKbdDelay()
-{
-	GuiLock __;  
-	return 500;
-}
-
-int Ctrl::GetKbdSpeed()
-{
-	GuiLock __;
-	return 1000 / 32;
-}
-
 void Ctrl::WndUpdate(const Rect& r)
 {
 	GuiLock __;

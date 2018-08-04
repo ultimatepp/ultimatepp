@@ -14,6 +14,8 @@ sooner:
 - Sort fonts
 - fix link options (joining link options missing space)
 
+- numpad Enter does not do K_ENTER
+
 - progress for assist opens too much, probably problem with delay?
 
 later:
