@@ -1,6 +1,7 @@
 sooner:
 
 - rect loop (ViewDraw)
+- DrawDragRect
 
 - package organizer initial size too small
 - minimize, maximaze
@@ -21,7 +22,6 @@ later:
 - void WakeUpGuiThread(void)
 - fullscreen mode issues
 - PrinterJob
-- DrawDragRect
 - CommonFontInfo GetFontInfoSys(Font font) metrics
 - ROTATED TEXT
 - GetGlyphInfoSys metrics

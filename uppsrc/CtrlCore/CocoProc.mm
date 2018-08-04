@@ -72,7 +72,7 @@ struct MMImp {
 	{
 		static int clicktime = msecs() - 100000;
 		bool b;
-		if(msecs(clicktime) < 250) {
+		if(msecs(clicktime) < GUI_DblClickTime()) {
 			b = MouseEvent(view, e, button|Upp::Ctrl::DOUBLE);
 			clicktime = msecs() - 999999;
 		}
