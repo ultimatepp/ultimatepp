@@ -53,7 +53,7 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	Font::SetDefaultFont(StdFont(fround([sysfont pointSize])));
 	
-	GUI_DblClickTime_Write(NSEvent.doubleClickInterval);
+	GUI_DblClickTime_Write(1000 * NSEvent.doubleClickInterval);
 }
 
 void Upp::CocoExit()
@@ -308,6 +308,24 @@ void Upp::AppendClipboardText(const String& s)
 void Upp::AppendClipboardUnicodeText(const WString& s)
 {
 	AppendClipboardText(s.ToString());
+}
+
+Upp::ViewDraw::ViewDraw(Ctrl *ctrl)
+{
+	EnterGuiMutex();
+	ASSERT(ctrl->top->coco);
+	Rect tr = ctrl->GetTopCtrl()->GetScreenRect();
+	Rect r = ctrl->GetScreenView();
+	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithWindow:ctrl->top->coco->window];
+	Init([gc CGContext], tr.GetHeight());
+	Clipoff(Rect(r.TopLeft() - tr.TopLeft(), r.GetSize()));
+}
+
+Upp::ViewDraw::~ViewDraw()
+{
+	End();
+	CGContextFlush(cgHandle);
+	LeaveGuiMutex();
 }
 
 #endif

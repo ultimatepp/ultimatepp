@@ -1,7 +1,6 @@
 sooner:
 
-- rect loop (ViewDraw)
-- DrawDragRect
+- opening FindInFiles, then selecting folder - pushing buttons does not exit dialog
 
 - package organizer initial size too small
 - minimize, maximaze
@@ -20,7 +19,6 @@ sooner:
 
 later:
 
-- doubleclick interval: https://developer.apple.com/documentation/appkit/nsevent/1528384-doubleclickinterval?language=objc
 - void WakeUpGuiThread(void)
 - fullscreen mode issues
 - PrinterJob
@@ -50,6 +48,9 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- doubleclick interval: https://developer.apple.com/documentation/appkit/nsevent/1528384-doubleclickinterval?language=objc
+- rect loop (ViewDraw)
+- DrawDragRect
 - triple click, hold...
 - Ctrl+Space assist
 - CT_Font caching
