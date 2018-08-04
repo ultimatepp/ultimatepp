@@ -62,6 +62,18 @@ void Upp::CocoExit()
 	[main_coco_pool release];
 }
 
+int Upp::Ctrl::GetKbdDelay()
+{
+	GuiLock __;
+	return int(1000 * NSEvent.keyRepeatDelay);
+}
+
+int Upp::Ctrl::GetKbdSpeed()
+{
+	GuiLock __;
+	return int(1000 * NSEvent.keyRepeatInterval);
+}
+
 bool Upp::Ctrl::IsWaitingEvent()
 {
 	return GetNextEvent(nil);
