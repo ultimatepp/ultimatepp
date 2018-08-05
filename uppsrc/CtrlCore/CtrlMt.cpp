@@ -74,7 +74,6 @@ struct Ctrl::CallBox {
 void Ctrl::PerformCall(Ctrl::CallBox *cbox)
 {
 	cbox->cb();
-	LLOG("Sem release");
 	cbox->sem.Release();
 }
 

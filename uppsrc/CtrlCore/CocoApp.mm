@@ -84,12 +84,15 @@ bool Upp::Ctrl::ProcessEvent(bool *)
 	ASSERT(IsMainThread());
 
 	Upp::AutoreleasePool __;
-
+	
 	ONCELOCK {
 		[NSApp finishLaunching];
 	}
 	
 	NSEvent *event = GetNextEvent(nil);
+
+	// DLOG("ProcessEvent " << ToString(event.description));
+
 	if(!event)
 		return false;
 	
@@ -152,11 +155,28 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 	LLOG("Leaving event loop ");
 }
 
+static std::atomic<bool> sGuiSleep;
+
 void Upp::Ctrl::GuiSleep(int ms)
 {
 	ASSERT(IsMainThread());
+	sGuiSleep = true;
 	GetNextEvent([NSDate dateWithTimeIntervalSinceNow:ms / 1000.0]);
+	sGuiSleep = false;
 }
+
+namespace Upp {
+void WakeUpGuiThread(void)
+{
+	if(sGuiSleep) {
+		sGuiSleep = false;
+		[NSApp postEvent:[NSEvent otherEventWithType:NSEventTypeApplicationDefined
+		                          location:NSMakePoint(0, 0) modifierFlags:0 timestamp:0.0
+		                          windowNumber:0 context:nil subtype: 0 data1:0 data2:0]
+		       atStart:YES];
+	}
+}
+};
 
 void  Upp::Ctrl::AnimateCaret()
 {

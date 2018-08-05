@@ -611,6 +611,30 @@ RWMutex::~RWMutex()
 	pthread_rwlock_destroy(rwlock);
 }
 
+#ifdef PLATFORM_OSX
+
+void Semaphore::Release()
+{
+	dispatch_semaphore_signal(sem);
+}
+
+void Semaphore::Wait()
+{
+	dispatch_semaphore_wait(sem, DISPATCH_TIME_FOREVER);
+}
+
+Semaphore::Semaphore()
+{
+	sem = dispatch_semaphore_create(0);
+}
+
+Semaphore::~Semaphore()
+{
+	dispatch_release(sem);
+}
+
+#else
+
 void Semaphore::Release()
 {
 	sem_post(&sem);
@@ -630,6 +654,8 @@ Semaphore::~Semaphore()
 {
 	sem_destroy(&sem);
 }
+
+#endif
 
 #endif
 

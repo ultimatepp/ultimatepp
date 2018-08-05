@@ -91,6 +91,9 @@
 	#else
 		#include <stdint.h>
 	#endif
+	#ifdef PLATFORM_OSX
+		#include <dispatch/dispatch.h>
+	#endif
 #endif //PLATFORM_POSIX
 
 #ifdef PLATFORM_POSIX
