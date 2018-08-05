@@ -13,28 +13,34 @@ XMLToolBarItem::XMLToolBarItem()
 	icon		= Null;
 	tooltip		= "";
 	isSeparator	= false;
+	internalCb.Clear();
 	subMenu.Clear();
 }
 		
 // copy constructor
-XMLToolBarItem::XMLToolBarItem(const XMLToolBarItem &item, int dummy)
+XMLToolBarItem::XMLToolBarItem(const XMLToolBarItem &item, int)
 {
 	commandId	= item.commandId;
 	label		= item.label;
 	icon		= item.icon;
 	tooltip		= item.tooltip;
 	isSeparator	= item.isSeparator;
-	subMenu		<<= item.subMenu;
+	internalCb	= item.internalCb;
+	if(!item.subMenu.IsEmpty())
+		subMenu		= One<XMLToolBar>(new XMLToolBar(*item.subMenu, 1)); // @@ it was <<= deep copy....
+	else
+		subMenu.Clear();
 }
 
 // pick constructor
-XMLToolBarItem::XMLToolBarItem(XMLToolBarItem rval_ item)
+XMLToolBarItem::XMLToolBarItem(XMLToolBarItem &&item)
 {
 	commandId	= item.commandId;
 	label		= item.label;
 	icon		= item.icon;
 	tooltip		= item.tooltip;
 	isSeparator	= item.isSeparator;
+	internalCb	= item.internalCb;
 	subMenu		= pick(item.subMenu);
 }
 
@@ -113,7 +119,7 @@ XMLToolBar::XMLToolBar()
 }
 
 // pick constructor
-XMLToolBar::XMLToolBar(XMLToolBar pick_ &tb)
+XMLToolBar::XMLToolBar(XMLToolBar &&tb)
 {
 	name = tb.name;
 	items = pick(tb.items);
@@ -122,20 +128,31 @@ XMLToolBar::XMLToolBar(XMLToolBar pick_ &tb)
 }
 
 // copy constructor
-XMLToolBar::XMLToolBar(XMLToolBar const &tb, int dummy)
+XMLToolBar::XMLToolBar(XMLToolBar const &tb, int)
 {
 	name = tb.name;
-	items <<= tb.items;
+	items = clone(tb.items);
 	state = tb.state;
 	prevState = tb.prevState;
 	position = tb.position;
 }
 		
-// copy operator
-XMLToolBar &XMLToolBar::operator=(XMLToolBar pick_ &tb)
+// pick operator =
+XMLToolBar &XMLToolBar::operator=(XMLToolBar &&tb)
 {
 	name = tb.name;
 	items = pick(tb.items);
+	state = tb.state;
+	prevState = tb.prevState;
+	position = tb.position;
+	return *this;
+}
+
+// copy operator =
+XMLToolBar const &XMLToolBar::operator=(XMLToolBar const &tb)
+{
+	name = tb.name;
+	items = clone(tb.items);
 	state = tb.state;
 	prevState = tb.prevState;
 	position = tb.position;
@@ -228,22 +245,22 @@ XMLToolBar &XMLToolBar::Add(String const &commandId, String const &label, Image 
 }
 
 // add a submenu entry
-XMLToolBar &XMLToolBar::Add(String const &subLabel, XMLToolBar pick_ &subMenu)
+XMLToolBar &XMLToolBar::Add(String const &subLabel, XMLToolBar const &subMenu)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->label = subLabel;
-	item->subMenu = new XMLToolBar(subMenu);
+	item->subMenu = new XMLToolBar(clone(subMenu));
 	item->subMenu->name = subLabel;
 	items.Add(item);
 	return *this;
 }
 
-XMLToolBar &XMLToolBar::Add(String const &subLabel, Image const &icon, XMLToolBar pick_ &subMenu)
+XMLToolBar &XMLToolBar::Add(String const &subLabel, Image const &icon, XMLToolBar const &subMenu)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->label = subLabel;
 	item->icon = icon;
-	item->subMenu = new XMLToolBar(subMenu);
+	item->subMenu = new XMLToolBar(clone(subMenu));
 	item->subMenu->name = subLabel;
 	items.Add(item);
 	return *this;
@@ -260,7 +277,7 @@ XMLToolBar &XMLToolBar::Add(Callback1<XMLToolBar &> bar)
 {
 	XMLToolBar tb;
 	bar(tb);
-	items.Append(tb.items);
+	items.AppendPick(pick(tb.items));
 	return *this;
 }
 

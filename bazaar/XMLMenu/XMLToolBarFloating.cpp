@@ -7,9 +7,17 @@ NAMESPACE_UPP
 // handler for window drag events
 void XMLToolBarFloating::WindowDragged(DragWindow::DragEvent e, Point p)
 {
+	// avoid re-entering - caused a sigseg error
+	static bool inside = false;
+	if(inside)
+		return;
+	inside = true;
+
 	XMLMenuInterface *iFace = toolBar->GetInterface();
 	if(iFace && e == DragWindow::DRAG_DRAG)
 		iFace->FloatingDraggedEvent(*toolBar, p);
+	
+	inside = false;
 }
 
 XMLToolBarFloating::XMLToolBarFloating(XMLToolBarCtrl &tb, Point p)

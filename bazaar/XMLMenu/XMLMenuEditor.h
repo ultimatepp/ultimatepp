@@ -97,7 +97,7 @@ class XMLBarAdd : public WithBarAddLayout<TopWindow>
 				Exclamation(t_("Invalid empty bar name"));
 				return;
 			}
-			if(bars.Find(barName) >= 0)
+			if(bars.Find(~barName) >= 0)
 			{
 				Exclamation(Format(t_("Bar '%s' already present"), ~barName));
 				return;
@@ -191,7 +191,7 @@ class XMLCmdEdit : public WithCmdEditLayout<TopWindow>
 				Exclamation(t_("Invalid empty command Id"));
 				return;
 			}
-			if(adding && cmds.Has(cmdId))
+			if(adding && cmds.Has(~cmdId))
 			{
 				Exclamation(Format(t_("Command '%s' already present"), ~cmdId));
 				return;

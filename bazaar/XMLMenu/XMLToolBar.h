@@ -100,13 +100,16 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		XMLToolBar();
 		
 		// pick constructor
-		XMLToolBar(XMLToolBar pick_ &tb);
+		XMLToolBar(XMLToolBar &&tb);
 		
 		// copy constructor
-		XMLToolBar(XMLToolBar const &tb, int dummy);
+		XMLToolBar(XMLToolBar const &tb, int);
 		
-		// copy operator
-		XMLToolBar &operator=(XMLToolBar pick_ &tb);
+		// pick operator =
+		XMLToolBar &operator=(XMLToolBar &&tb);
+		
+		// copy operator =
+		XMLToolBar const &operator=(XMLToolBar const &tb);
 		
 		// add an entry, various ways
 		XMLToolBar &SetName(String const &_name)		{ name = _name; return *this; }
@@ -123,8 +126,8 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		XMLToolBar &Add(String const &commandId, String const &label, Image const &icon, String const &tooltip);
 
 		// add a submenu entry
-		XMLToolBar &Add(String const &subLabel, XMLToolBar pick_ &subMenu);
-		XMLToolBar &Add(String const &subLabel, Image const &icon, XMLToolBar pick_ &subMenu);
+		XMLToolBar &Add(String const &subLabel, XMLToolBar const &subMenu);
+		XMLToolBar &Add(String const &subLabel, Image const &icon, XMLToolBar const &subMenu);
 		
 		// creates a submenu entry
 		XMLToolBar SubMenu(void);
@@ -162,7 +165,7 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		// debugging stuff -- dumps bar content
 		void Dump(int level = 0);
 #endif
-		rval_default(XMLToolBar);
+//		rval_default(XMLToolBar);
 };
 
 ////////////////////////////////////////////////////////////////////////////////////

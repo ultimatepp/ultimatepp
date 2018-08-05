@@ -219,15 +219,15 @@ void XMLBarEditor::fieldsModCb(void)
 		return;
 	if(i == 0)
 	{
-		bar->SetName(itemPane.label);
+		bar->SetName(~itemPane.label);
 		barTree.SetRoot(Null, itemPane.label);
 		return;
 	}
 
 	XMLToolBarItem item(ValueTo<XMLToolBarItem>(barTree.Get(i)), 0);
-	item.label		= itemPane.label;
-	item.commandId	= itemPane.cmdId;
-	item.tooltip	= itemPane.tooltip;
+	item.label		= ~itemPane.label;
+	item.commandId	= ~itemPane.cmdId;
+	item.tooltip	= ~itemPane.tooltip;
 	item.icon		= curIcon;
 	TreeCtrl::Node node(item.GetIcon(), RawDeepToValue(item), item.GetLabel());
 	barTree.SetNode(i, node);
@@ -469,7 +469,7 @@ void XMLBarsEditor::barContextAddCb(void)
 	add.Close();
 	if(res == IDOK)
 	{
-		toolBars.Add(~add.barName, XMLToolBar());
+		toolBars.AddPick(~add.barName, XMLToolBar());
 		barListPane.barList.Add(~add.barName);
 		barListPane.barList.SetCursor(barListPane.barList.GetCount() - 1);
 	}
@@ -646,7 +646,7 @@ void XMLMenuEditor::cmdContextAddCb(void)
 	edit.Close();
 	if(res == IDOK)
 	{
-		commands.Add(edit.cmdId, edit.cmdStr);
+		commands.Add(~edit.cmdId, ~edit.cmdStr);
 		FillCmdList();
 		cmdPane.commandList.SetCursor(cmdPane.commandList.Find(~edit.cmdId));
 	}
@@ -662,7 +662,7 @@ void XMLMenuEditor::cmdContextEditCb(void)
 	if(res == IDOK)
 	{
 		int idx = commands.Find(~edit.cmdId);
-		commands[idx].SetCommandString(edit.cmdStr);
+		commands[idx].SetCommandString(~edit.cmdStr);
 		FillCmdList();
 		cmdPane.commandList.SetCursor(cmdPane.commandList.Find(~edit.cmdId));
 	}
