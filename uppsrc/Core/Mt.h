@@ -119,6 +119,8 @@ inline void AssertST() { ASSERT(Thread::IsST()); }
 class Semaphore : NoCopy {
 #ifdef PLATFORM_WIN32
 	HANDLE     handle;
+#elif PLATFORM_OSX
+	dispatch_semaphore_t    sem;
 #else
 	sem_t      sem;
 #endif
