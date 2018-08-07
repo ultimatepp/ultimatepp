@@ -18,7 +18,7 @@ namespace Upp {
 
 INITIALIZE(SSH);
 
-using SFtpHandle = LIBSSH2_SFTP_HANDLE;
+using SFtpHandle = LIBSSH2_SFTP_HANDLE*;
 using SFtpAttrs  = LIBSSH2_SFTP_ATTRIBUTES;
 using SshHost    = libssh2_knownhost;
 using SshAgent   = LIBSSH2_AGENT;
