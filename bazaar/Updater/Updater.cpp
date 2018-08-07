@@ -584,8 +584,12 @@ ProductVersions Updater::FetchVersions(void)
 	if(isWebServer)
 	{
 		http.Timeout(1000);
-		http.RequestTimeout(2000);
-		http.MaxRetries(0);
+		
+		// those gave timeout when updating a large file
+		// removed on 2018_08_07
+//		http.RequestTimeout(2000);
+//		http.MaxRetries(0);
+
 		http.Url(GetPlatformRoot() + "versions");
 		http.WhenDo.Clear();
 
