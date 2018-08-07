@@ -39,6 +39,8 @@ struct LogOut {
 	
 	bool  line_begin;
 	
+	int   prev_msecs;
+	
 	void  Create(bool append);
 	void  Create()                                     { Create(options & LOG_APPEND); }
 	void  Close();
@@ -180,9 +182,18 @@ void LogOut::Line(const char *s, int len, int depth)
 	char h[600];
 	char *p = h;
 	int   ll = 0;
+	if(options & LOG_ELAPSED) {
+		int t = msecs();
+		int e = prev_msecs ? t - prev_msecs : 0;
+		ll = sprintf(p, "[+%6d ms] ", e);
+		if(ll < 0)
+			return;
+		p += ll;
+		prev_msecs = t;
+	}
 	if((options & (LOG_TIMESTAMP|LOG_TIMESTAMP_UTC)) && line_begin) {
 		Time t = (options & LOG_TIMESTAMP_UTC) ? GetUtcTime() : GetSysTime();
-		ll = sprintf(h, "%02d.%02d.%04d %02d:%02d:%02d ",
+		ll = sprintf(p, "%02d.%02d.%04d %02d:%02d:%02d ",
 		                t.day, t.month, t.year, t.hour, t.minute, t.second);
 		if(ll < 0)
 			return;
