@@ -85,23 +85,23 @@ public:
     Value                   GetResult() const                                       { return sftp->value; }
 
     // File
-    SFtpHandle*             Open(const String& path, dword flags, long mode);
-    SFtpHandle*             OpenRead(const String& path)                            { return Open(path, READ, IRALL); }
-    SFtpHandle*             OpenWrite(const String& path)                           { return Open(path, CREATE | WRITE, IRALL | IWUSR); }
-    bool                    Close(SFtpHandle* handle);
+    SFtpHandle              Open(const String& path, dword flags, long mode);
+    SFtpHandle              OpenRead(const String& path)                            { return Open(path, READ, IRALL); }
+    SFtpHandle              OpenWrite(const String& path)                           { return Open(path, CREATE | WRITE, IRALL | IWUSR); }
+    bool                    Close(SFtpHandle handle);
     bool                    Rename(const String& oldpath, const String& newpath);
     bool                    Delete(const String& path);
-    bool                    Sync(SFtpHandle* handle);
-    SFtp&                   Seek(SFtpHandle* handle, int64 position);
-    int64                   GetPos(SFtpHandle* handle);
+    bool                    Sync(SFtpHandle handle);
+    SFtp&                   Seek(SFtpHandle handle, int64 position);
+    int64                   GetPos(SFtpHandle handle);
 
     // Read/Write
-    bool                    Get(SFtpHandle* handle, Stream& out);
+    bool                    Get(SFtpHandle handle, Stream& out);
     bool                    Get(const String& path, Stream& out);
     bool                    Get(const String& path, Stream& out, int64 offset);
-    String                  Get(SFtpHandle* handle);
+    String                  Get(SFtpHandle handle);
     String                  Get(const String& path);
-    bool                    Put(SFtpHandle* handle, Stream& in);
+    bool                    Put(SFtpHandle handle, Stream& in);
     bool                    Put(Stream& in, const String& path);
     bool                    Put(Stream& in, const String& path, dword flags, long mode);
     bool                    Put(Stream& in, const String& path, int64 offset);
@@ -111,10 +111,10 @@ public:
     bool                    Poke(const String& data, const String& path, int64 offset, int64 length);
 
     // Directory
-    SFtpHandle*             OpenDir(const String& path);
+    SFtpHandle              OpenDir(const String& path);
     bool                    MakeDir(const String& path, long mode);
     bool                    RemoveDir(const String& path);
-    bool                    ListDir(SFtpHandle* handle, DirList& list);
+    bool                    ListDir(SFtpHandle handle, DirList& list);
     bool                    ListDir(const String& path, DirList& list);
     String                  GetWorkDir();
 
@@ -124,9 +124,9 @@ public:
     bool                    RealizePath(const String& path, String& target)         { return SymLink(path, &target, LIBSSH2_SFTP_REALPATH); }
 
     // Attributes
-    bool                    GetAttrs(SFtpHandle* handle, SFtpAttrs& attrs);
+    bool                    GetAttrs(SFtpHandle handle, SFtpAttrs& attrs);
     bool                    GetAttrs(const String& path, SFtpAttrs& attrs);
-    bool                    SetAttrs(SFtpHandle* handle, const SFtpAttrs& attrs);
+    bool                    SetAttrs(SFtpHandle handle, const SFtpAttrs& attrs);
     bool                    SetAttrs(const String& path, const SFtpAttrs& attrs);
     DirEntry                GetInfo(const String& path);
     bool                    SetInfo(const DirEntry& entry)                          { return SetAttrs(entry.GetName(), ~entry); }
@@ -172,20 +172,20 @@ private:
     void                    Exit() override;
     bool                    Cleanup(Error& e) override;
 
-    inline SFtpHandle*      HANDLE(SFtpHandle* h)                                   { return h ? h : sftp->handle; }
-    int                     FStat(SFtpHandle* handle, SFtpAttrs& a, bool set);
+    SFtpHandle              HANDLE(SFtpHandle h)                                   { return h ? h : sftp->handle; }
+    int                     FStat(SFtpHandle handle, SFtpAttrs& a, bool set);
     int                     LStat(const String& path, SFtpAttrs& a, int type);
     bool                    QueryAttr(const String& path, int attr);
     bool                    ModifyAttr(const String& path, int attr, const Value& v);
     bool                    SymLink(const String& path, String* target, int type);
-    bool                    DataRead(SFtpHandle* handle, int64 size, Event<const void*, int>&& fn, bool str = false);
-    bool                    DataWrite(SFtpHandle* handle, Stream& out, int64 size);
+    bool                    DataRead(SFtpHandle handle, int64 size, Event<const void*, int>&& fn, bool str = false);
+    bool                    DataWrite(SFtpHandle handle, Stream& out, int64 size);
     static void             StartAsync(int cmd, SshSession& session, const String& path, Stream& io,
                                         Gate<int64, int64, int64> progress, Event<int64, const void*, int> consumer = Null);
 
     struct SFtpData {
         LIBSSH2_SFTP*       session;
-        SFtpHandle*         handle;
+        SFtpHandle          handle;
         DirEntry            finfo;
         Value               value;
         StringStream        stream;

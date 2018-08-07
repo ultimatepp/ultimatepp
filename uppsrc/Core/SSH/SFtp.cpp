@@ -48,7 +48,7 @@ void SFtp::Exit()
 	});
 }
 
-int SFtp::FStat(SFtpHandle* handle, SFtpAttrs& a, bool set)
+int SFtp::FStat(SFtpHandle handle, SFtpAttrs& a, bool set)
 {
 	auto rc = libssh2_sftp_fstat_ex(HANDLE(handle), &a, set);
 	return WouldBlock(rc) ?  1 : rc;
@@ -60,7 +60,7 @@ int SFtp::LStat(const String& path, SFtpAttrs& a, int type)
 	return WouldBlock(rc) ?  1 : rc;
 }
 
-SFtpHandle* SFtp::Open(const String& path, dword flags, long mode)
+SFtpHandle SFtp::Open(const String& path, dword flags, long mode)
 {
 	auto b = Cmd(SFTP_OPEN, [=]() mutable {
 		ASSERT(sftp->session);
@@ -74,7 +74,7 @@ SFtpHandle* SFtp::Open(const String& path, dword flags, long mode)
 	return b ? sftp->handle : NULL;
 }
 
-bool SFtp::Close(SFtpHandle* handle)
+bool SFtp::Close(SFtpHandle handle)
 {
 	return Cmd(SFTP_CLOSE, [=]() mutable {
 		auto rc = libssh2_sftp_close_handle(HANDLE(handle));
@@ -114,7 +114,7 @@ bool SFtp::Delete(const String& path)
 	});
 }
 
-bool SFtp::Sync(SFtpHandle* handle)
+bool SFtp::Sync(SFtpHandle handle)
 {
 	return Cmd(SFTP_SYNC, [=]() mutable {
 		auto rc = libssh2_sftp_fsync(HANDLE(handle));
@@ -126,7 +126,7 @@ bool SFtp::Sync(SFtpHandle* handle)
 	});
 }
 
-SFtp& SFtp::Seek(SFtpHandle* handle, int64 position)
+SFtp& SFtp::Seek(SFtpHandle handle, int64 position)
 {
 	Cmd(SFTP_SEEK, [=]() mutable {
 		LLOG("Seeking to offset " << position);
@@ -136,7 +136,7 @@ SFtp& SFtp::Seek(SFtpHandle* handle, int64 position)
 	return *this;
 }
 
-int64 SFtp::GetPos(SFtpHandle* handle)
+int64 SFtp::GetPos(SFtpHandle handle)
 {
 	Cmd(SFTP_TELL, [=]() mutable {
 		sftp->value = (int64) libssh2_sftp_tell64(HANDLE(handle));
@@ -146,7 +146,7 @@ int64 SFtp::GetPos(SFtpHandle* handle)
 	return !IsBlocking() ? Null : pick(sftp->value);
 }
 
-bool SFtp::DataRead(SFtpHandle* handle, int64 size, Event<const void*, int>&& fn, bool str)
+bool SFtp::DataRead(SFtpHandle handle, int64 size, Event<const void*, int>&& fn, bool str)
 {
 	if(OpCode() == SFTP_START) {
 		if(FStat(HANDLE(handle), *sftp->finfo, false) <= 0) OpCode() = SFTP_GET;
@@ -186,7 +186,7 @@ bool SFtp::DataRead(SFtpHandle* handle, int64 size, Event<const void*, int>&& fn
 	return true;
 }
 
-bool SFtp::DataWrite(SFtpHandle* handle, Stream& in, int64 size)
+bool SFtp::DataWrite(SFtpHandle handle, Stream& in, int64 size)
 {
 	auto poke = size > 0;
 	ssize_t write_size = poke ? size : in.GetSize();
@@ -212,7 +212,7 @@ bool SFtp::DataWrite(SFtpHandle* handle, Stream& in, int64 size)
 	return true;
 }
 
-bool SFtp::Get(SFtpHandle* handle, Stream& out)
+bool SFtp::Get(SFtpHandle handle, Stream& out)
 {
 	sftp->done  = 0;
 	sftp->finfo = Null;
@@ -221,7 +221,7 @@ bool SFtp::Get(SFtpHandle* handle, Stream& out)
 	});
 }
 
-String SFtp::Get(SFtpHandle* handle)
+String SFtp::Get(SFtpHandle handle)
 {
 	sftp->done  = 0;
 	sftp->finfo = Null;
@@ -261,7 +261,7 @@ String SFtp::Get(const String& path)
 	return !IsBlocking() ? Null : pick(sftp->value);
 }
 
-bool SFtp::Put(SFtpHandle* handle, Stream& in)
+bool SFtp::Put(SFtpHandle handle, Stream& in)
 {
 	sftp->done = 0;
 	return Cmd(SFTP_PUT, [=, &in]() mutable {
@@ -330,7 +330,7 @@ bool SFtp::Poke(const String& data, const String& path, int64 offset, int64 leng
 	});
 }
 
-SFtpHandle*	 SFtp::OpenDir(const String& path)
+SFtpHandle	 SFtp::OpenDir(const String& path)
 {
 	auto b = Cmd(SFTP_OPENDIR, [=]() mutable {
 		ASSERT(sftp->session);
@@ -370,7 +370,7 @@ bool SFtp::RemoveDir(const String& path)
 	});
 }
 
-bool SFtp::ListDir(SFtpHandle* handle, DirList& list)
+bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 {
 	return Cmd(SFTP_LISTDIR, [=, &list]() mutable {
 		char label[512];
@@ -465,7 +465,7 @@ bool SFtp::SymLink(const String& path, String* target, int type)
 		});
 }
 
-bool SFtp::GetAttrs(SFtpHandle* handle, SFtpAttrs& attrs)
+bool SFtp::GetAttrs(SFtpHandle handle, SFtpAttrs& attrs)
 {
 	return Cmd(SFTP_GET_STAT, [=, &attrs]() mutable {
 		auto rc = FStat(handle, attrs, false);
@@ -485,7 +485,7 @@ bool SFtp::GetAttrs(const String& path, SFtpAttrs& attrs)
 	});
 }
 
-bool SFtp::SetAttrs(SFtpHandle* handle, const SFtpAttrs& attrs)
+bool SFtp::SetAttrs(SFtpHandle handle, const SFtpAttrs& attrs)
 {
 	return Cmd(SFTP_SET_STAT, [=, &attrs]() mutable {
 		auto rc = FStat(handle, const_cast<SFtpAttrs&>(attrs), true);

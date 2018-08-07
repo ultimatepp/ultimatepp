@@ -136,9 +136,10 @@ bool Ssh::Do()
 dword Ssh::GetWaitEvents()
 {
 	ssh->events = 0;
-	if(ssh->socket  && ssh->session)
+	if(ssh->socket && ssh->session)
 		ssh->events = libssh2_session_block_directions(ssh->session);
-	return ssh->events;
+	return !!(ssh->events & LIBSSH2_SESSION_BLOCK_INBOUND) * WAIT_READ +
+	       !!(ssh->events & LIBSSH2_SESSION_BLOCK_OUTBOUND) * WAIT_WRITE;
 }
 
 bool Ssh::Cleanup(Error& e)
