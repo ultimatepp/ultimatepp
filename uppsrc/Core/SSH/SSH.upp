@@ -46,6 +46,7 @@ file
 	src.tpp,
 	Info readonly separator,
 	Copying,
+	issues,
 	ReadMe;
 
 mainconfig
