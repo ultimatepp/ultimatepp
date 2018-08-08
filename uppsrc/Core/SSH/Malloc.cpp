@@ -2,7 +2,7 @@
 
 namespace Upp {
 	
-#define MLOG(x)  // RLOG(x)
+#define MLOG(x)   RLOG(x)
 
 static std::atomic<int64> UPP_SSH_alloc;
 

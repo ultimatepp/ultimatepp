@@ -95,6 +95,9 @@ public:
     SFtp&                   Seek(SFtpHandle handle, int64 position);
     int64                   GetPos(SFtpHandle handle);
 
+    int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
+    bool                    Put(SFtpHandle handle, const void *ptr, int size);
+
     // Read/Write
     bool                    Get(SFtpHandle handle, Stream& out);
     bool                    Get(const String& path, Stream& out);
@@ -109,7 +112,7 @@ public:
     bool                    Append(Stream& in, const String& path, long mode);
     String                  Peek(const String& path, int64 offset, int64 length);
     bool                    Poke(const String& data, const String& path, int64 offset, int64 length);
-
+    
     // Directory
     SFtpHandle              OpenDir(const String& path);
     bool                    MakeDir(const String& path, long mode);
