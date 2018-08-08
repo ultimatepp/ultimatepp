@@ -512,8 +512,8 @@ template <typename T>
 SqlSet SqlSetFrom(const T& cont)
 {
 	SqlSet set;
-	typename T::ConstIterator e = cont.End();
-	for(typename T::ConstIterator it = cont.Begin(); it != e; it++)
+	typename T::ConstIterator e = cont.end();
+	for(typename T::ConstIterator it = cont.begin(); it != e; it++)
 		set.Cat(*it);
 	return set;
 }
@@ -522,7 +522,7 @@ template <typename T>
 SqlSet SqlSetFrom(const T& cont, int pos, int count)
 {
 	SqlSet set;
-	typename T::ConstIterator it = cont.Begin() + pos;
+	typename T::ConstIterator it = cont.begin() + pos;
 	typename T::ConstIterator e = it + count;
 	for(; it != e; it++)
 		set.Cat(*it);
