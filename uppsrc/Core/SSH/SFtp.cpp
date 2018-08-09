@@ -212,42 +212,71 @@ bool SFtp::DataWrite(SFtpHandle handle, Stream& in, int64 size)
 	return true;
 }
 
-int SFtp::Get(SFtpHandle handle, void *ptr_, int size0)
+int SFtp::Get(SFtpHandle handle, void *ptr_, int size)
 {
 	int done = 0;
 	char *ptr = (char *)ptr_;
-	Cmd(SFTP_START, [=, &done]() mutable {
-		int size = size0;
+	return Cmd(SFTP_START, [=, &done]() mutable {
 		if(OpCode() == SFTP_START) {
 			if(FStat(HANDLE(handle), *sftp->finfo, false) <= 0) OpCode() = SFTP_GET;
 			else return false;
 		}
-		while(size) {
-			int rc = libssh2_sftp_read(HANDLE(handle), ptr, min(size, ssh->chunk_size));
-			if(rc < 0) {
-				if(!WouldBlock(rc))
-					SetError(rc);
+		while(done < size) {
+			int sz = min(ssh->chunk_size, size - done);
+			int rc = libssh2_sftp_read(handle, ptr, sz);
+			if(WouldBlock(rc))
 				return false;
-			}
-			else {
-				if(rc == 0)
-					break;
-				size -= rc;
-				done += rc;
-				if(WhenProgress(done, size0))
-					SetError(-1, "Read aborted.");
-				ssh->start_time = msecs();
-			}
+			if(rc < 0)
+				SetError(rc);
+			done += rc;
+			if(rc != sz)
+				break;
+			if(WhenProgress(done, size))
+				SetError(-1, "Read aborted.");
+			ssh->start_time = msecs();
 		}
-		LLOG(Format("%d of %d bytes successfully read.", done, size0));
+		LLOG(Format("%d of %d bytes successfully read.", done, size));
 		return true;
-	});
-	return done;
+	}) ? done : -1;
 }
 
-bool SFtp::Put(SFtpHandle handle, const void *ptr, int size)
+bool SFtp::Put(SFtpHandle handle, const void *ptr_, int size)
 {
-	return true; //TODO
+	char *ptr = (char *)ptr_;
+	return Cmd(SFTP_START, [=]() mutable {
+		int rc = 0;
+		int done = 0;
+		while(done < size) {
+			int sz = min(ssh->chunk_size, size - done);
+			int rc = libssh2_sftp_write(handle, ptr, sz);
+			if(WouldBlock(rc))
+				return false;
+			if(rc != sz)
+				if(rc >= 0)
+					SetError(-1, "Out of space");
+				else
+					SetError(rc);
+			ptr += sz;
+			done += sz;
+			if(WhenProgress(done, size))
+				SetError(-1, "File write aborted");
+			ssh->start_time = msecs();
+		}
+		LLOG(Format("%d of %d bytes successfully written.", done, size));
+		return true;
+	});
+}
+
+bool SFtp::SaveFile(const char *path, const String& data)
+{
+	SFtpFileOut out(*this, path);
+	return SaveStream(out, data);
+}
+
+String SFtp::LoadFile(const char *path)
+{
+	SFtpFileIn in(*this, path);
+	return LoadStream(in);
 }
 
 bool SFtp::Get(SFtpHandle handle, Stream& out)
