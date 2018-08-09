@@ -279,6 +279,18 @@ String SFtp::LoadFile(const char *path)
 	return LoadStream(in);
 }
 
+bool SFtp::SaveFile(const char *path, Stream& in)
+{
+	SFtpFileOut out(*this, path);
+	return CopyStream(out, in) >= 0;
+}
+
+void SFtp::LoadFile(Stream& out, const char *path)
+{
+	SFtpFileIn in(*this, path);
+	return CopyStream(in, out) >= 0;
+}
+
 bool SFtp::Get(SFtpHandle handle, Stream& out)
 {
 	sftp->done  = 0;
