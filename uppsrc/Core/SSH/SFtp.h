@@ -95,10 +95,12 @@ public:
     SFtp&                   Seek(SFtpHandle handle, int64 position);
     int64                   GetPos(SFtpHandle handle);
 
-    int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
-    bool                    Put(SFtpHandle handle, const void *ptr, int size);
-    bool                    SaveFile(const char *path, const String& data);
-    String                  LoadFile(const char *path);
+	int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
+	bool                    Put(SFtpHandle handle, const void *ptr, int size);
+	bool                    SaveFile(const char *path, const String& data);
+	String                  LoadFile(const char *path);
+	bool                    SaveFile(const char *path, Stream& in);
+	void                    LoadFile(Stream& out, const char *path);
 
     // Read/Write
     bool                    Get(SFtpHandle handle, Stream& out);
