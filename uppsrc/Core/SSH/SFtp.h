@@ -97,6 +97,8 @@ public:
 
     int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
     bool                    Put(SFtpHandle handle, const void *ptr, int size);
+    bool                    SaveFile(const char *path, const String& data);
+    String                  LoadFile(const char *path);
 
     // Read/Write
     bool                    Get(SFtpHandle handle, Stream& out);
@@ -239,4 +241,55 @@ private:
         SFTP_ATTR_LAST_MODIFIED,
         SFTP_ATTR_LAST_ACCESSED
     };
+};
+
+class SFtpStream : public BlockStream {
+protected:
+	virtual  void  SetStreamSize(int64 size);
+	virtual  dword Read(int64 at, void *ptr, dword size);
+	virtual  void  Write(int64 at, const void *data, dword size);
+
+public:
+	virtual  void  Close();
+	virtual  bool  IsOpen() const;
+
+protected:
+	SFtp       *sftp;
+	SFtpHandle  handle;
+
+	void      SetPos(int64 pos);
+	void      Init(int64 size);
+
+public:
+	operator  bool() const                 { return IsOpen(); }
+
+	bool       Open(SFtp& sftp, const char *filename, dword mode, int acm = 0644);
+	SFtpStream(SFtp& sftp, const char *filename, dword mode, int acm = 0644);
+	SFtpStream();
+	~SFtpStream();
+	SFtpHandle GetHandle() const            { return handle; }
+};
+
+class SFtpFileOut : public SFtpStream {
+public:
+	bool Open(SFtp& sftp, const char *fn, int acm = 0644) { return SFtpStream::Open(sftp, fn, CREATE|NOWRITESHARE, acm); }
+
+	SFtpFileOut(SFtp& sftp, const char *fn)    { Open(sftp, fn); }
+	SFtpFileOut()                              {}
+};
+
+class SFtpFileAppend : public SFtpStream {
+public:
+	bool Open(SFtp& sftp, const char *fn)      { return SFtpStream::Open(sftp, fn, APPEND|NOWRITESHARE); }
+
+	SFtpFileAppend(SFtp& sftp, const char *fn) { Open(sftp, fn); }
+	SFtpFileAppend()                           {}
+};
+
+class SFtpFileIn : public SFtpStream {
+public:
+	bool Open(SFtp& sftp, const char *fn)      { return SFtpStream::Open(sftp, fn, READ); }
+
+	SFtpFileIn(SFtp& sftp, const char *fn)     { Open(sftp, fn); }
+	SFtpFileIn()                               {}
 };

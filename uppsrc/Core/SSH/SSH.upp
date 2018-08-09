@@ -29,6 +29,7 @@ file
 	Session.cpp,
 	SFtp.h,
 	SFtp.cpp,
+	SFtpStream.cpp,
 	Channels.h,
 	Channels.cpp,
 	Scp.cpp,
