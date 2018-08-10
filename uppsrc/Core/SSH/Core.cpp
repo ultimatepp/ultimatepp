@@ -44,122 +44,68 @@ String GetName(int type, int64 id)
 #define LDUMPHEX(x)	  do { if(SSH::sTraceVerbose) RDUMPHEX(x); } while(false)
 
 // Ssh: SSH objects core class.
-void Ssh::Exit()
-{
-	ssh->timeout = 5000;
-	ssh->start_time = 0;
-	ssh->ccmd = -1;
-	ssh->queue.Clear();
-}
-
 void Ssh::Check()
 {
+	auto sock = ssh->socket;
+		
 	if(IsTimeout())
-		SetError(-1000, "Operation timed out.");
-	if(ssh->status == CANCELLED)
-		SetError(-1001, "Operation cancelled.");
+		SetError(-1, "Operation timed out.");
+	
+	if(ssh->status == ABORTED || (sock && ssh->socket->IsAbort()))
+		SetError(-1, "Operation aborted.");
+
+	if(sock && ssh->socket->IsError())
+		SetError(-1, "Socket error. " << ssh->socket->GetErrorDesc());
 }
 
-// TODO: Merge Cmd & ComplexCmd.
-bool Ssh::Cmd(int code, Function<bool()>&& fn)
-{
-	if(ssh->status != CLEANUP)
-		ssh->status = WORKING;
-	if(!IsComplexCmd())
-		ssh->queue.Clear();
-	ssh->queue.AddTail() = MakeTuple<int, Gate<>>(code, pick(fn));
-	if(IsBlocking() && !IsComplexCmd())
-		while(Do0());
-	return !IsError();
-}
-
-bool Ssh::ComplexCmd(int code, Function<void()>&& fn)
-{
-	bool b = IsComplexCmd(); // Is this complex command a part of another complex command?
-	ssh->ccmd = code;
-	if(ssh->status != CLEANUP)
-		ssh->status = WORKING;
-	if(!b)
-		ssh->queue.Clear();
-	fn();
-	if(!b && IsBlocking())
-		while(Do0());
-	return !IsError();
-}
-
-bool Ssh::Do0()
+bool Ssh::Run(Gate<>&& fn)
 {
 	try {
-		if(ssh->start_time == 0)
-			ssh->start_time = msecs();
-INTERLOCKED {
-		if(!ssh->init) {
-			ssh->init = Init();
-		}
-		else
-		if(!ssh->queue.IsEmpty()) {
-			auto cmd = ssh->queue.Head().Get<Gate<>>();
-			if(cmd())
-				ssh->queue.DropHead();
-			else
-				Wait();
-		}
-}
-		if(ssh->queue.IsEmpty()) {
-			switch(ssh->status) {
-				case CLEANUP:
-					ssh->status = FAILED;
-					break;
-				case WORKING:
-					ssh->status = FINISHED;
-					break;
-				case FAILED:
-					break;
-			}
-			ssh->ccmd = -1;
-			ssh->start_time =  0;
-		}
-		else Check();
-	}
-	catch(Error& e) {
-		Cleanup(e);
-	}
-	return IsWorking();
-}
+		if(InProgress())
+			SetError(-1, "An operation is already in progress.");
+		
+		ssh->status = WORKING;
+		ssh->start_time = msecs();
+	
 
-bool Ssh::Do()
-{
-	ASSERT(!IsBlocking());
-	return Do0();
+		while(InProgress()) {
+			Mutex::Lock __m(StaticMutex);
+			if(!ssh->init)
+				ssh->init = Init();
+			if(ssh->init && fn())
+				break;
+			Wait();
+			Check();
+		}
+		ssh->status = IDLE;
+	}
+	catch(const Error& e) {
+		ssh->status  = FAILED;
+		ssh->error.a = e.code;
+		ssh->error.b = e;
+		if(ssh->socket) {
+			ssh->socket->ClearAbort();
+			ssh->socket->ClearError();
+		}
+		LLOG("Failed. Code = " << e.code << ", " << e);
+	}
+	return !IsError();
 }
 
 dword Ssh::GetWaitEvents()
 {
-	ssh->events = 0;
+	dword events = 0;
 	if(ssh->socket && ssh->session)
-		ssh->events = libssh2_session_block_directions(ssh->session);
-	return !!(ssh->events & LIBSSH2_SESSION_BLOCK_INBOUND) * WAIT_READ +
-	       !!(ssh->events & LIBSSH2_SESSION_BLOCK_OUTBOUND) * WAIT_WRITE;
-}
-
-bool Ssh::Cleanup(Error& e)
-{
-	ssh->queue.Clear();
-	ssh->start_time = 0;
-	auto b = ssh->status == CLEANUP;
-	ssh->status = FAILED;
-	if(b)
-		return false;
-	ssh->error  = MakeTuple<int, String>(e.code, e);
-	LLOG("Failed." << " Code = " << e.code << ", " << e);
-	return !b && e.code != -1000; // Make sure we don't loop on timeout errors.
+		events = libssh2_session_block_directions(ssh->session);
+	return !!(events & LIBSSH2_SESSION_BLOCK_INBOUND) * WAIT_READ +
+	       !!(events & LIBSSH2_SESSION_BLOCK_OUTBOUND) * WAIT_WRITE;
 }
 
 void Ssh::Wait()
 {
 	while(!IsTimeout()) {
 		ssh->wait();
-		if(!IsBlocking() || !ssh->socket)
+		if(!ssh->socket)
 			return;
 		SocketWaitEvent we;
 		AddTo(we);
@@ -172,7 +118,7 @@ void Ssh::SetError(int rc, const String& reason)
 {
 	if(IsNull(reason) && ssh && ssh->session) {
 		Buffer<char*> libmsg(256);
-		rc = libssh2_session_last_error(ssh->session, libmsg, NULL, 0);
+		rc = libssh2_session_last_error(ssh->session, libmsg, nullptr, 0);
 		throw Error(rc, *libmsg);
 	}
 	else
@@ -188,19 +134,17 @@ int64 Ssh::GetNewId()
 Ssh::Ssh()
 {
     ssh.Create();
-    ssh->session        = NULL;
-    ssh->socket         = NULL;
+    ssh->session        = nullptr;
+    ssh->socket         = nullptr;
     ssh->init           = false;
     ssh->noloop			= false;
     ssh->timeout        = Null;
     ssh->start_time     = 0;
     ssh->waitstep       = 10;
     ssh->chunk_size     = CHUNKSIZE;
-    ssh->status         = FINISHED;
-    ssh->ccmd           = -1;
+    ssh->status         = IDLE;
     ssh->oid            = GetNewId();
-    ssh->otype          = 0;
-    ssh->events         = WAIT_READ | WAIT_WRITE;
+    ssh->otype          = CORE;
 }
 
 Ssh::~Ssh()

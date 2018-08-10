@@ -1,7 +1,7 @@
 #include "SSH.h"
 
 namespace Upp {
-
+/*
 #define LLOG(x)       do { if(SSH::sTrace) RLOG(SSH::GetName(ssh->otype, ssh->oid) << x); } while(false)
 #define LDUMPHEX(x)	  do { if(SSH::sTraceVerbose) RDUMPHEX(x); } while(false)
 
@@ -180,5 +180,5 @@ AsyncWork<void> Scp::AsyncConsumerGet(SshSession& session, const String& path, E
 		Scp::StartAsync(SshChannel::CHANNEL_SCP_GET, session, path, NilStream(), 0, Null, consumer);
 	});
 }
-
+*/
 }

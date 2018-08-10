@@ -1,3 +1,4 @@
+/*
 class SshChannel : public Ssh {
 public:
     SshChannel&         Timeout(int ms)                                             { ssh->timeout = ms; return *this;  }
@@ -259,3 +260,4 @@ private:
     Vector<Tuple<SshX11Connection*, SOCKET>> xrequests;
 #endif
 };
+*/

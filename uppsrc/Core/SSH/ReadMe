@@ -29,8 +29,6 @@ Features and Highlights:
   interface. 
 - Uses U++ memory allocators (Native allocators is also a compile-time option)
 - Uses OpenSSL by default. 
-- Supports time-constrained, blocking and non-blocking operation modes.
-- Supoorts multithreaded file transfers and remote command execution (exec), using worker threads.
 - Supports 3rd-party network proxies. (Such as NetProxy)
 - Supports known hosts verification mechanism.
 - Supports password, public key, host-based, and keyboard-interactive authentication methods.
@@ -72,6 +70,13 @@ Reference examples:
 
 History:
 --------------------
+2018-08-10:  SSH package: Third iteration.
+             SSH package is now officially a part of Ultimate++.
+             Full non-blocking mode and MT convenience methods removed in favor of simple an robust interface.
+             Ssh, SFtp and SshSession classes are refactored accordingly.
+             SFtpStream variants are added to the package (Thanks Mirek!).
+             Memory footprint slightly reduced.
+
 2018-06-15:  Critical fix: SshChannel and SFtp data read and write methods fixed: The recently introduced
              socket wait mechanism was causing a constant I/O blocking. This is now fixed.   
              Cosmetics & cleanup.

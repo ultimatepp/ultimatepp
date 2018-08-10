@@ -1,7 +1,7 @@
 #include "SSH.h"
 
 namespace Upp {
-
+/*
 #define LLOG(x)       do { if(SSH::sTrace) RLOG(SSH::GetName(ssh->otype, ssh->oid) << x); } while(false)
 #define VLOG(x)       if(SSH::sTraceVerbose) LLOG(x);
 #define LDUMPHEX(x)	  do { if(SSH::sTraceVerbose) RDUMPHEX(x); } while(false)
@@ -564,5 +564,5 @@ SshChannel::~SshChannel()
 		Unlock();
 		Exit();
 	}
-}
+}*/
 }
