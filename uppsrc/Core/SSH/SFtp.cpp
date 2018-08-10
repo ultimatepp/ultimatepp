@@ -288,7 +288,7 @@ bool SFtp::SaveFile(const char *path, Stream& in)
 void SFtp::LoadFile(Stream& out, const char *path)
 {
 	SFtpFileIn in(*this, path);
-	return CopyStream(in, out) >= 0;
+	CopyStream(in, out) >= 0;
 }
 
 bool SFtp::Get(SFtpHandle handle, Stream& out)
