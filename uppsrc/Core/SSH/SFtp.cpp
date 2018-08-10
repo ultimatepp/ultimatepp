@@ -23,7 +23,7 @@ void SFtp::Exit()
 {
 	if(!sftp_session)
 		return;
-	
+
 	Run([=]() mutable {
 		if(WouldBlock(libssh2_sftp_shutdown(*sftp_session)))
 			return false;
@@ -49,7 +49,7 @@ int SFtp::LStat(const String& path, SFtpAttrs& a, int type)
 SFtpHandle SFtp::Open(const String& path, dword flags, long mode)
 {
 	SFtpHandle h = nullptr;
-	
+
 	Run([=, &h] () mutable {
 		h = libssh2_sftp_open(*sftp_session, path, flags, mode);
 		if(!h && !WouldBlock())
@@ -58,7 +58,7 @@ SFtpHandle SFtp::Open(const String& path, dword flags, long mode)
 			LLOG(Format("File '%s' is successfully opened.", path));
 		return h;
 	});
-	
+
 	return h;
 }
 
@@ -123,7 +123,7 @@ SFtp& SFtp::Seek(SFtpHandle handle, int64 position)
 int64 SFtp::GetPos(SFtpHandle handle)
 {
 	int64 pos = 0;
-	
+
 	return Run([=, &pos] () mutable {
 		pos = libssh2_sftp_tell64(handle);
 		LLOG("File position: " << pos);
@@ -131,9 +131,10 @@ int64 SFtp::GetPos(SFtpHandle handle)
 	});
 	return pos;
 }
+
 bool SFtp::Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size, int& done)
 {
-	int sz = min(size, ssh->chunk_size);
+	int sz = min(size - done, ssh->chunk_size);
 	Buffer<char> buffer(sz);
 
 	int rc = libssh2_sftp_read(handle, buffer, sz);
@@ -146,15 +147,18 @@ bool SFtp::Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size,
 			SetError(-1, "Read aborted.");
 		ssh->start_time = msecs();
 	}
-	if(!rc)
+	
+	auto b = !rc || done == size;
+
+	if(b)
 		LLOG("EOF received.");
-	return rc == 0 || done == size;
+	return b;
 }
 
 bool SFtp::Write(SFtpHandle handle, const void* buffer, int size, int& done)
 {
 	int sz = min(size - done, ssh->chunk_size);
-	
+
 	int rc = libssh2_sftp_write(handle, (const char*) buffer + done, sz);
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
@@ -164,16 +168,18 @@ bool SFtp::Write(SFtpHandle handle, const void* buffer, int size, int& done)
 			SetError(-1, "Write aborted.");
 		ssh->start_time = msecs();
 	}
-	if(done == size)
-		LLOG("EOF");
-	return rc == 0 || done == size;
+	auto b = !rc || done == size;
+
+	if(b)
+		LLOG("EOF received.");
+	return b;
 }
 
 int SFtp::Get(SFtpHandle handle, void *ptr, int size)
 {
 	int done = 0;
-	
-	Run([=, &done]{
+
+	Run([=, &done]() mutable {
 		return Read(
 			handle,
 			[=, &done](const void* p, int sz) {
@@ -191,7 +197,7 @@ bool SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 {
 	int done = 0;
 
-	Run([=, &done]{
+	Run([=, &done]() mutable {
 		return Write(handle, (char*) ptr, size, done);
 	});
 
@@ -225,7 +231,7 @@ void SFtp::LoadFile(Stream& out, const char *path)
 SFtpHandle	 SFtp::OpenDir(const String& path)
 {
 	SFtpHandle h = nullptr;
-	
+
 	Run([=, &h] () mutable {
 		h = libssh2_sftp_opendir(*sftp_session, path);
 		if(!h && !WouldBlock())
@@ -273,7 +279,7 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 
 		do {
 			Zero(attrs);
-		
+
 			rc = libssh2_sftp_readdir_ex(
 						handle,
 						label, sizeof(label),
@@ -297,7 +303,7 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 		while(rc > 0);
 		LLOG(Format("Directory listing is successful. (%d entries)", list.GetCount()));
 		return true;
-		
+
 	});
 }
 
@@ -310,7 +316,7 @@ bool SFtp::ListDir(const String& path, DirList& list)
 bool SFtp::SymLink(const String& path, String* target, int type)
 {
 	Buffer<char> buffer(512);
-	
+
 	if(type == LIBSSH2_SFTP_SYMLINK)
 		return Run([=, &buffer] () mutable {
 			int rc = libssh2_sftp_symlink_ex(
@@ -347,6 +353,19 @@ bool SFtp::SymLink(const String& path, String* target, int type)
 			}
 			return rc > 0;
 		});
+}
+
+SFtp::DirEntry SFtp::GetInfo(const String& path)
+{
+	DirEntry finfo;
+	
+	if(!GetAttrs(path, *finfo))
+		return pick(Null);
+
+	finfo.filename = path;
+	finfo.valid = true;
+	
+	return pick(finfo);
 }
 
 bool SFtp::GetAttrs(SFtpHandle handle, SFtpAttrs& attrs)
@@ -393,12 +412,10 @@ Value SFtp::QueryAttr(const String& path, int attr)
 {
 	DirEntry finfo;
 	Value v;
-	
+
 	if(!GetAttrs(path, *finfo))
 		return Null;
 
-	finfo.filename = path;
-	
 	switch(attr) {
 		case SFTP_ATTR_FILE:
 			v = finfo.IsFile();
@@ -430,11 +447,6 @@ Value SFtp::QueryAttr(const String& path, int attr)
 		case SFTP_ATTR_LAST_ACCESSED:
 			v = finfo.GetLastAccessed();
 			break;
-		case SFTP_ATTR_INFO:
-			finfo.valid = true;
-			v = RawPickToValue(pick(finfo));
-			finfo = Null;
-			break;
 		default:
 			break;
 	}
@@ -449,7 +461,7 @@ bool SFtp::ModifyAttr(const String& path, int attr, const Value& v)
 		return false;
 
 	SFtpAttrs& attrs = *finfo;
-	
+
 	switch(attr) {
 		case SFTP_ATTR_SIZE:
 			attrs.flags |= LIBSSH2_SFTP_ATTR_SIZE;
@@ -466,7 +478,7 @@ bool SFtp::ModifyAttr(const String& path, int attr, const Value& v)
 		default:
 			break;
 	}
-	
+
 	return SetAttrs(path, ~finfo);;
 }
 

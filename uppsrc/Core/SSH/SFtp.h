@@ -62,8 +62,8 @@ public:
             DirEntry()                              { Zero();  }
             DirEntry(const Nuller&)                 { Zero();  }
 
-            DirEntry(DirEntry&& e) = default;
-            DirEntry& operator=(DirEntry&& e) = default;
+            DirEntry(DirEntry&&) = default;
+            DirEntry& operator=(DirEntry&&) = default;
 
         private:
             bool CanMode(dword u, dword g, dword o) const;
@@ -78,7 +78,7 @@ public:
 public:
     SFtp&                   Timeout(int ms)                                         { ssh->timeout = ms; return *this; }
     SFtp&                   WaitStep(int ms)                                        { ssh->waitstep = clamp(ms, 0, INT_MAX); return *this; }
-    SFtp&                   ChunkSize(int sz)                                       { ssh->chunk_size = clamp(sz, 128, INT_MAX); return *this; }
+    SFtp&                   ChunkSize(int sz)                                       { ssh->chunk_size = clamp(sz, 1, INT_MAX); return *this; }
 
     // File
     SFtpHandle              Open(const String& path, dword flags, long mode);
@@ -92,12 +92,12 @@ public:
     int64                   GetPos(SFtpHandle handle);
 
     // Read/Write
-	int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
-	bool                    Put(SFtpHandle handle, const void *ptr, int size);
-	bool                    SaveFile(const char *path, const String& data);
-	String                  LoadFile(const char *path);
-	bool                    SaveFile(const char *path, Stream& in);
-	void                    LoadFile(Stream& out, const char *path);
+    int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
+    bool                    Put(SFtpHandle handle, const void *ptr, int size);
+    bool                    SaveFile(const char *path, const String& data);
+    String                  LoadFile(const char *path);
+    bool                    SaveFile(const char *path, Stream& in);
+    void                    LoadFile(Stream& out, const char *path);
     
     // Directory
     SFtpHandle              OpenDir(const String& path);
@@ -115,7 +115,7 @@ public:
     bool                    GetAttrs(const String& path, SFtpAttrs& attrs);
     bool                    SetAttrs(SFtpHandle handle, const SFtpAttrs& attrs);
     bool                    SetAttrs(const String& path, const SFtpAttrs& attrs);
-//    DirEntry                GetInfo(const String& path)                             { return QueryAttr(path, SFTP_ATTR_INFO); }
+    DirEntry                GetInfo(const String& path);
     bool                    SetInfo(const DirEntry& entry)                          { return SetAttrs(entry.GetName(), ~entry); }
     int64                   GetSize(const String& path)                             { return QueryAttr(path, SFTP_ATTR_SIZE); }
     bool                    SetSize(const String& path, int64 size)                 { return ModifyAttr(path, SFTP_ATTR_SIZE, size); }
@@ -163,7 +163,6 @@ private:
         SFTP_ATTR_PIPE,
         SFTP_ATTR_BLOCK,
         SFTP_ATTR_SPECIAL,
-        SFTP_ATTR_INFO,
         SFTP_ATTR_UID,
         SFTP_ATTR_GID,
         SFTP_ATTR_PERMISSIONS,
@@ -175,51 +174,51 @@ private:
 
 class SFtpStream : public BlockStream {
 protected:
-	virtual  void  SetStreamSize(int64 size);
-	virtual  dword Read(int64 at, void *ptr, dword size);
-	virtual  void  Write(int64 at, const void *data, dword size);
+    virtual  void  SetStreamSize(int64 size);
+    virtual  dword Read(int64 at, void *ptr, dword size);
+    virtual  void  Write(int64 at, const void *data, dword size);
 
 public:
-	virtual  void  Close();
-	virtual  bool  IsOpen() const;
+    virtual  void  Close();
+    virtual  bool  IsOpen() const;
 
 protected:
-	SFtp       *sftp;
-	SFtpHandle  handle;
+    SFtp       *sftp;
+    SFtpHandle  handle;
 
-	void      SetPos(int64 pos);
-	void      Init(int64 size);
+    void      SetPos(int64 pos);
+    void      Init(int64 size);
 
 public:
-	operator  bool() const                 { return IsOpen(); }
+    operator  bool() const                 { return IsOpen(); }
 
-	bool       Open(SFtp& sftp, const char *filename, dword mode, int acm = 0644);
-	SFtpStream(SFtp& sftp, const char *filename, dword mode, int acm = 0644);
-	SFtpStream();
-	~SFtpStream();
-	SFtpHandle GetHandle() const            { return handle; }
+    bool       Open(SFtp& sftp, const char *filename, dword mode, int acm = 0644);
+    SFtpStream(SFtp& sftp, const char *filename, dword mode, int acm = 0644);
+    SFtpStream();
+    ~SFtpStream();
+    SFtpHandle GetHandle() const            { return handle; }
 };
 
 class SFtpFileOut : public SFtpStream {
 public:
-	bool Open(SFtp& sftp, const char *fn, int acm = 0644) { return SFtpStream::Open(sftp, fn, CREATE|NOWRITESHARE, acm); }
+    bool Open(SFtp& sftp, const char *fn, int acm = 0644) { return SFtpStream::Open(sftp, fn, CREATE|NOWRITESHARE, acm); }
 
-	SFtpFileOut(SFtp& sftp, const char *fn)    { Open(sftp, fn); }
-	SFtpFileOut()                              {}
+    SFtpFileOut(SFtp& sftp, const char *fn)    { Open(sftp, fn); }
+    SFtpFileOut()                              {}
 };
 
 class SFtpFileAppend : public SFtpStream {
 public:
-	bool Open(SFtp& sftp, const char *fn)      { return SFtpStream::Open(sftp, fn, APPEND|NOWRITESHARE); }
+    bool Open(SFtp& sftp, const char *fn)      { return SFtpStream::Open(sftp, fn, APPEND|NOWRITESHARE); }
 
-	SFtpFileAppend(SFtp& sftp, const char *fn) { Open(sftp, fn); }
-	SFtpFileAppend()                           {}
+    SFtpFileAppend(SFtp& sftp, const char *fn) { Open(sftp, fn); }
+    SFtpFileAppend()                           {}
 };
 
 class SFtpFileIn : public SFtpStream {
 public:
-	bool Open(SFtp& sftp, const char *fn)      { return SFtpStream::Open(sftp, fn, READ); }
+    bool Open(SFtp& sftp, const char *fn)      { return SFtpStream::Open(sftp, fn, READ); }
 
-	SFtpFileIn(SFtp& sftp, const char *fn)     { Open(sftp, fn); }
-	SFtpFileIn()                               {}
+    SFtpFileIn(SFtp& sftp, const char *fn)     { Open(sftp, fn); }
+    SFtpFileIn()                               {}
 };
