@@ -47,10 +47,10 @@ String GetName(int type, int64 id)
 void Ssh::Check()
 {
 	auto sock = ssh->socket;
-		
+
 	if(IsTimeout())
 		SetError(-1, "Operation timed out.");
-	
+
 	if(ssh->status == ABORTED || (sock && ssh->socket->IsAbort()))
 		SetError(-1, "Operation aborted.");
 
@@ -63,10 +63,10 @@ bool Ssh::Run(Gate<>&& fn)
 	try {
 		if(InProgress())
 			SetError(-1, "An operation is already in progress.");
-		
+
 		ssh->status = WORKING;
 		ssh->start_time = msecs();
-	
+
 
 		while(InProgress()) {
 			Mutex::Lock __m(StaticMutex);

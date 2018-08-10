@@ -2,7 +2,7 @@ class Ssh {
 public:
     void                Abort()                                 { if(ssh) ssh->status = ABORTED; }
     int                 GetTimeout() const                      { return ssh->timeout; }
-    int					GetWaitStep() const						{ return ssh->waitstep; }
+    int                 GetWaitStep() const                     { return ssh->waitstep; }
     bool                InProgress() const                      { return ssh->status == WORKING; }
     bool                IsError() const                         { return ssh->status == FAILED || ssh->status == ABORTED; }
     int                 GetError() const                        { return ssh->error.Get<int>(); }
@@ -12,7 +12,7 @@ public:
     template <class T>  T&   To()                               { auto* t = dynamic_cast<T*>(this); ASSERT(t); return *t; }
     template <class T>  bool Is() const                         { return dynamic_cast<const T*>(this); }
 
-    operator bool()												{ return ssh; }
+    operator bool() const                                       { return ssh; }
 
     static void         Trace(bool b = true)                    { SSH::sTrace = b; }
     static void         TraceVerbose(int level)                 { Trace((bool)level); SSH::sTraceVerbose = level; }
@@ -45,7 +45,7 @@ protected:
         int                 waitstep;
         int                 chunk_size;
         int                 status;
-        bool				noloop;
+        bool                noloop;
     };
     One<CoreData> ssh;
 
@@ -60,7 +60,7 @@ protected:
     bool                Run(Gate<>&& fn);
     bool                WouldBlock(int rc)                      { return rc == LIBSSH2_ERROR_EAGAIN; }
     bool                WouldBlock()                            { return ssh->session && WouldBlock(libssh2_session_last_errno(ssh->session)); }
-    bool                IsTimeout() const                       { return ssh->timeout > 0 && msecs(ssh->start_time) >= ssh->timeout; }
+    bool                IsTimeout() const                       { return !IsNull(ssh->timeout) && ssh->timeout > 0 &&  msecs(ssh->start_time) >= ssh->timeout; }
     void                SetError(int rc, const String& reason = Null);
 
     void                AddTo(SocketWaitEvent& e)               { e.Add(*ssh->socket, GetWaitEvents()); }

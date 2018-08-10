@@ -13,7 +13,6 @@ public:
 
 public:
     SshSession&         Timeout(int ms)                         { ssh->timeout = ms; return *this; }
-    SshSession&         NonBlocking(bool b = true)              { return Timeout(b ? 0 : Null);}
     SshSession&         WaitStep(int ms)                        { ssh->waitstep = clamp(ms, 0, INT_MAX); return *this; }
 
     SshSession&         Keys(const String& prikey, const String& pubkey, const String& phrase = Null, bool fromfile = true);
