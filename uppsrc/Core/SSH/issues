@@ -1,10 +1,10 @@
 
-WhenContent - confusing, when using Get, I would remove it
+WhenContent - confusing, when using Get, I would remove it [Fixed]
 
-nonblocking behaviour with NULL handles is weird
+nonblocking behaviour with NULL handles is weird           [Fixed]
 
-SFtp etc.... should be derived from the session (as it is unlikely and unnecessary that single session is used by more protocols at the same time)
+SFtp etc.... should be derived from the session (as it is unlikely and unnecessary that single session is used by more protocols at the same time) [
 
-bool SFtp::DataRead(SFtpHandle handle, int64 size, Event<const void*, int>&& fn, bool str)
+bool SFtp::DataRead(SFtpHandle handle, int64 size, Event<const void*, int>&& fn, bool str) [Fixed]
  implementation is wrong - it reads past requested size and it also gives wrong size to fn
 

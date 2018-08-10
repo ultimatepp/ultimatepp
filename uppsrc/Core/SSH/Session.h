@@ -32,20 +32,18 @@ public:
     Vector<String>      GetAuthMethods()                        { return pick(Split(session->authmethods, ' ')); }
     TcpSocket&          GetSocket()                             { return session->socket;  }
     ValueMap            GetMethods();
-    std::atomic<int64>* GetLockPtr()                            { return &session->lock; }
 
     SFtp                CreateSFtp();
-    SshChannel          CreateChannel();
-    SshExec             CreateExec();
-    Scp                 CreateScp();
-    SshTunnel           CreateTcpTunnel();
-    SshShell            CreateShell();
+//    SshChannel          CreateChannel();
+//    SshExec             CreateExec();
+//    Scp                 CreateScp();
+//    SshTunnel           CreateTcpTunnel();
+//    SshShell            CreateShell();
 
     bool                Connect(const String& url);
     bool                Connect(const String& host, int port, const String& user, const String& password);
     void                Disconnect();
     
-//    Event<>             WhenDo;
     Event<>             WhenWait;
     Event<>             WhenConfig;
     Event<>             WhenAuth;
@@ -62,14 +60,12 @@ public:
 
 private:
     void                Exit() override;
-    void                Check() override;
     String              GetMethodNames(int type);
     int                 TryAgent(const String& username);
     void                FreeAgent(SshAgent* agent);
     
     struct SessionData {
         TcpSocket       socket;
-        IpAddrInfo      ipinfo;
         String          fingerprint;
         String          authmethods;
         int             authmethod;
@@ -79,7 +75,6 @@ private:
         String          phrase;
         ValueMap        iomethods;
         bool            connected;
-        std::atomic<int64>   lock;
     };
     One<SessionData> session;
 
