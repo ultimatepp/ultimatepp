@@ -3,29 +3,47 @@
 
 #include <Core/Core.h>
 
+// TODO: All TheIDE command line arguments should be consume in this file.
+
 namespace Upp {
 
-// TODO: All TheIDE command line arguments should be handle in this class.
-class CommandLineHandler {
+class ACommandLineHandler {
 public:
-	CommandLineHandler(const Vector<String>& args);
+	ACommandLineHandler(const Vector<String>& args);
 	
-	bool Handle();
-	
-public:
 	Vector<String> GetArgs() { return clone(args); }
 	
-private:
-	bool HandleManipulators();
-	bool HandleScale();
+public:
+	virtual bool Handle() = 0;
 	
+protected:
+	Vector<String> args;
+};
+
+class BaseCommandLineHandler final : public ACommandLineHandler {
+public:
+	BaseCommandLineHandler(const Vector<String>& args);
+	
+public:
+	bool Handle() override;
+	
+private:
 	bool HandleVersion() const;
 	bool HandleHelp() const;
 	
 	bool HandleDebugBreakProcess() const;
+};
+
+class MainCommandLineHandler final : public ACommandLineHandler {
+public:
+	MainCommandLineHandler(const Vector<String>& args);
+	
+public:
+	bool Handle() override;
 	
 private:
-	Vector<String> args;
+	bool HandleManipulators();
+	bool HandleScale();
 };
 
 }
