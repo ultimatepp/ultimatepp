@@ -58,7 +58,6 @@ SFtpHandle SFtp::Open(const String& path, dword flags, long mode)
 			LLOG(Format("File '%s' is successfully opened.", path));
 		return h;
 	});
-
 	return h;
 }
 
@@ -70,7 +69,7 @@ bool SFtp::Close(SFtpHandle handle)
 			SetError(-1, "Unable to close file handle.");
 		if(rc == 0)
 			LLOG("File handle freed.");
-		return rc == 0;
+		return !rc;
 	});
 }
 
@@ -147,12 +146,9 @@ bool SFtp::Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size,
 			SetError(-1, "Read aborted.");
 		ssh->start_time = msecs();
 	}
-	
-	auto b = !rc || done == size;
-
-	if(b)
+	if(!rc)
 		LLOG("EOF received.");
-	return b;
+	return !rc || done == size;
 }
 
 bool SFtp::Write(SFtpHandle handle, const void* buffer, int size, int& done)
@@ -168,11 +164,9 @@ bool SFtp::Write(SFtpHandle handle, const void* buffer, int size, int& done)
 			SetError(-1, "Write aborted.");
 		ssh->start_time = msecs();
 	}
-	auto b = !rc || done == size;
-
-	if(b)
+	if(!rc)
 		LLOG("EOF received.");
-	return b;
+	return !rc || done == size;;
 }
 
 int SFtp::Get(SFtpHandle handle, void *ptr, int size)
@@ -200,7 +194,6 @@ bool SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 	Run([=, &done]() mutable {
 		return Write(handle, (char*) ptr, size, done);
 	});
-
 	return done;
 }
 
@@ -240,7 +233,6 @@ SFtpHandle	 SFtp::OpenDir(const String& path)
 			LLOG(Format("Directory '%s' is successfully opened.", path));
 		return h;
 	});
-
 	return h;
 }
 
@@ -303,7 +295,6 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 		while(rc > 0);
 		LLOG(Format("Directory listing is successful. (%d entries)", list.GetCount()));
 		return true;
-
 	});
 }
 
@@ -313,7 +304,7 @@ bool SFtp::ListDir(const String& path, DirList& list)
 	return h && ListDir(h, list) && Close(h);
 }
 
-bool SFtp::SymLink(const String& path, String* target, int type)
+bool SFtp::SymLink(const String& path, String& target, int type)
 {
 	Buffer<char> buffer(512);
 
@@ -330,7 +321,7 @@ bool SFtp::SymLink(const String& path, String* target, int type)
 			if(!WouldBlock(rc) && rc != 0)
 				SetError(rc);
 			if(!rc) {
-				target->Set((const char*) buffer, rc);
+				target.Set(buffer, rc);
 				LLOG(Format("Symbolic link '%s' for path '%s' is successfult created.", target, path));
 			}
 			return !rc;
@@ -349,7 +340,7 @@ bool SFtp::SymLink(const String& path, String* target, int type)
 				SetError(rc);
 			if(rc > 0) {
 				LLOG("Symbolic link operation is successful.");
-				target->Set(buffer, rc);
+				target.Set(buffer, rc);
 			}
 			return rc > 0;
 		});
@@ -478,7 +469,6 @@ bool SFtp::ModifyAttr(const String& path, int attr, const Value& v)
 		default:
 			break;
 	}
-
 	return SetAttrs(path, ~finfo);;
 }
 
@@ -490,7 +480,7 @@ SFtp::SFtp(SshSession& session)
 	ssh->socket		= &session.GetSocket();
 	ssh->timeout	= session.GetTimeout();
 	ssh->waitstep   = session.GetWaitStep();
-	ssh->wait       = Proxy(session.WhenWait);
+	ssh->whenwait   = Proxy(session.WhenWait);
 }
 
 SFtp::~SFtp()

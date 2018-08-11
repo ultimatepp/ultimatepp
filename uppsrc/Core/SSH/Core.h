@@ -36,7 +36,7 @@ protected:
         LIBSSH2_SESSION*    session;
         TcpSocket*          socket;
         Tuple<int, String>  error;
-        Event<>             wait;
+        Event<>             whenwait;
         bool                init;
         int64               oid;
         int                 otype;
@@ -55,8 +55,8 @@ protected:
 
     virtual bool        Init()                                  { return true; }
     virtual void        Exit()                                  {}
-    virtual void        Check();
     void                Wait();
+    void                Check();
     bool                Run(Gate<>&& fn);
     bool                WouldBlock(int rc)                      { return rc == LIBSSH2_ERROR_EAGAIN; }
     bool                WouldBlock()                            { return ssh->session && WouldBlock(libssh2_session_last_errno(ssh->session)); }
