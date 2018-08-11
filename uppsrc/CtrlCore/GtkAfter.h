@@ -16,6 +16,7 @@ void GuiMainFn_(); \
 \
 int main(int argc, char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, (const char **)argv, envptr); \
+	GUI_APP_MAIN_HOOK \
 	UPP::InitGtkApp(argc, argv, envptr); \
 	GuiMainFn_(); \
 	UPP::Ctrl::CloseTopCtrls(); \

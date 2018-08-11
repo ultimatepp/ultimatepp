@@ -43,6 +43,8 @@
 	
 #endif
 
+#define GUI_APP_MAIN_HOOK
+
 #include GUIPLATFORM_INCLUDE
 
 namespace Upp {
