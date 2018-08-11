@@ -13,6 +13,7 @@ void GuiMainFn_(); \
 \
 int main(int argc, const char **argv, const char **envptr) { \
 	UPP::AppInit__(argc, argv, envptr); \
+	GUI_APP_MAIN_HOOK \
 	UPP::Ctrl::InitX11(NULL); \
 	UPP::AppExecute__(GuiMainFn_); \
 	UPP::Ctrl::ExitX11(); \
