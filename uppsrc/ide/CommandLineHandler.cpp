@@ -8,15 +8,16 @@
 
 using namespace Upp;
 
-CommandLineHandler::CommandLineHandler(const Vector<String>& args)
+ACommandLineHandler::ACommandLineHandler(const Vector<String>& args)
 	: args(clone(args))
 {}
 
-bool CommandLineHandler::Handle()
+BaseCommandLineHandler::BaseCommandLineHandler(const Vector<String>& args)
+	: ACommandLineHandler(args)
+{}
+
+bool BaseCommandLineHandler::Handle()
 {
-	if(HandleManipulators())
-		return true;
-	
 	if(HandleVersion())
 		return true;
 	if(HandleHelp())
@@ -28,33 +29,7 @@ bool CommandLineHandler::Handle()
 	return false;
 }
 
-bool CommandLineHandler::HandleManipulators()
-{
-	if(HandleScale())
-		return true;
-	
-	return false;
-}
-
-bool CommandLineHandler::HandleScale()
-{
-	if(args.GetCount() < 2 || !args[0].IsEqual(COMMAND_LINE_SCALE_OPTION))
-		return false;
-	
-	int scale = StrInt(args[1]);
-	if(IsNull(scale)) {
-		Cout() << "Scale should be numeric value.\n";
-		return true;
-	}
-	
-	Font::SetStdFont(StdFont().Height(GetStdFontCy() * minmax(scale, 50, 400) / 100));
-	
-	args.Remove(0, 2);
-	
-	return false;
-}
-
-bool CommandLineHandler::HandleVersion() const
+bool BaseCommandLineHandler::HandleVersion() const
 {
 	if(args.IsEmpty() || findarg(args[0], "-v", "--version") < 0)
 		return false;
@@ -64,7 +39,7 @@ bool CommandLineHandler::HandleVersion() const
 	return true;
 }
 
-bool CommandLineHandler::HandleHelp() const
+bool BaseCommandLineHandler::HandleHelp() const
 {
 	if(args.IsEmpty() || findarg(args[0], "?", "--help", "-h", "-?", "/?") < 0)
 		return false;
@@ -85,7 +60,7 @@ bool CommandLineHandler::HandleHelp() const
 	return true;
 }
 
-bool CommandLineHandler::HandleDebugBreakProcess() const
+bool BaseCommandLineHandler::HandleDebugBreakProcess() const
 {
 	if(args.GetCount() < 2 || !args[0].IsEqual(COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_OPTION))
 		return false;
@@ -104,4 +79,42 @@ bool CommandLineHandler::HandleDebugBreakProcess() const
 	}
 	
 	return true;
+}
+
+MainCommandLineHandler::MainCommandLineHandler(const Vector<String>& args)
+	: ACommandLineHandler(args)
+{}
+
+bool MainCommandLineHandler::Handle()
+{
+	if(HandleManipulators())
+		return true;
+	
+	return false;
+}
+
+bool MainCommandLineHandler::HandleManipulators()
+{
+	if(HandleScale())
+		return true;
+	
+	return false;
+}
+
+bool MainCommandLineHandler::HandleScale()
+{
+	if(args.GetCount() < 2 || !args[0].IsEqual(COMMAND_LINE_SCALE_OPTION))
+		return false;
+	
+	int scale = StrInt(args[1]);
+	if(IsNull(scale)) {
+		Cout() << "Scale should be numeric value.\n";
+		return true;
+	}
+	
+	Font::SetStdFont(StdFont().Height(GetStdFontCy() * minmax(scale, 50, 400) / 100));
+	
+	args.Remove(0, 2);
+	
+	return false;
 }

@@ -104,6 +104,19 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 	ide.EditorMode();
 }
 
+
+// TODO: I do not like that we need to define macro here.
+// I opt for std::function version. We need to fix that API
+// in 2018.2 release. #1901
+//
+// This method generates warning GUI_APP_MAIN_HOOCK redefined!!!
+#define GUI_APP_MAIN_HOOK \
+{ \
+	BaseCommandLineHandler cmd_handler(CommandLine()); \
+	if (cmd_handler.Handle()) \
+		return Upp::GetExitCode(); \
+}
+
 #ifdef flagMAIN
 GUI_APP_MAIN
 #else
@@ -117,7 +130,7 @@ void AppMain___()
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 
-	CommandLineHandler cmd_handler(CommandLine());
+	MainCommandLineHandler cmd_handler(CommandLine());
 	if (cmd_handler.Handle())
 		return;
 	auto arg = cmd_handler.GetArgs();
