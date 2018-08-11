@@ -150,7 +150,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	if(!Run([=] () mutable {
 #ifdef flagUSEMALLOC
 			LLOG("Using libssh2's memory managers.");
-			ssh->session = libssh2_session_init_ex(NULL, NULL, NULL, this);
+			ssh->session = libssh2_session_init_ex(nullptr, nullptr, nullptr, this);
 #else
 			LLOG("Using Upp's memory managers.");
 			ssh->session = libssh2_session_init_ex((*ssh_malloc), (*ssh_free), (*ssh_realloc), this);
@@ -318,7 +318,7 @@ ValueMap SshSession::GetMethods()
 	ValueMap methods;
 	if(ssh->session) {
 		for(int i = METHOD_EXCHANGE; i < METHOD_SCOMPRESSION; i++) {
-			const char **p = NULL;
+			const char **p = nullptr;
 			auto rc = libssh2_session_supported_algs(ssh->session, i, &p);
 			if(rc > 0) {
 				auto& v = methods(i);
@@ -355,7 +355,7 @@ int SshSession::TryAgent(const String& username)
 		FreeAgent(agent);
 		SetError(-1, "Couldn't request identities to ssh-agent.");
 	}
-	libssh2_agent_publickey *id = NULL, *previd = NULL;
+	libssh2_agent_publickey *id = nullptr, *previd = nullptr;
 	
 	for(;;) {
 		auto rc = libssh2_agent_get_identity(agent, &id, previd);
@@ -369,7 +369,7 @@ int SshSession::TryAgent(const String& username)
 							username, id->comment));
 			}
 			else {
-				LLOG(Format("Authentication with username %s and public key %s succeeded.",
+				LLOG(Format("Authentication with username %s and public key %s succeesful.",
 							username, id->comment));
 				break;
 			}
@@ -405,7 +405,7 @@ SshSession::SshSession()
 {
     session.Create();
     ssh->otype          = SESSION;
-    ssh->wait           = Proxy(WhenWait);
+    ssh->whenwait       = Proxy(WhenWait);
     session->authmethod = PASSWORD;
     session->connected  = false;
     session->keyfile    = true;

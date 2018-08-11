@@ -55,7 +55,7 @@ void Ssh::Check()
 		SetError(-1, "Operation aborted.");
 
 	if(sock && ssh->socket->IsError())
-		SetError(-1, "Socket error. " << ssh->socket->GetErrorDesc());
+		SetError(-1, "[Socket error]: " << ssh->socket->GetErrorDesc());
 }
 
 bool Ssh::Run(Gate<>&& fn)
@@ -104,7 +104,7 @@ dword Ssh::GetWaitEvents()
 void Ssh::Wait()
 {
 	while(!IsTimeout()) {
-		ssh->wait();
+		ssh->whenwait();
 		if(!ssh->socket)
 			return;
 		SocketWaitEvent we;

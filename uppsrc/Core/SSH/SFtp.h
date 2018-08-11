@@ -106,9 +106,9 @@ public:
     bool                    ListDir(SFtpHandle handle, DirList& list);
     bool                    ListDir(const String& path, DirList& list);
     // Symlink
-    bool                    MakeLink(const String& orig, const String& link)        { return SymLink(orig, const_cast<String*>(&link), LIBSSH2_SFTP_SYMLINK); }
-    bool                    ReadLink(const String& path, String& target)            { return SymLink(path, &target, LIBSSH2_SFTP_READLINK); }
-    bool                    RealizePath(const String& path, String& target)         { return SymLink(path, &target, LIBSSH2_SFTP_REALPATH); }
+    bool                    MakeLink(const String& orig, String& target)            { return SymLink(orig, target, LIBSSH2_SFTP_SYMLINK); }
+    bool                    ReadLink(const String& path, String& target)            { return SymLink(path, target, LIBSSH2_SFTP_READLINK); }
+    bool                    RealizePath(const String& path, String& target)         { return SymLink(path, target, LIBSSH2_SFTP_REALPATH); }
 
     // Attributes
     bool                    GetAttrs(SFtpHandle handle, SFtpAttrs& attrs);
@@ -149,7 +149,7 @@ private:
     int                     LStat(const String& path, SFtpAttrs& a, int type);
     Value                   QueryAttr(const String& path, int attr);
     bool                    ModifyAttr(const String& path, int attr, const Value& v);
-    bool                    SymLink(const String& path, String* target, int type);
+    bool                    SymLink(const String& path, String& target, int type);
     bool                    Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size, int& done);
     bool                    Write(SFtpHandle handle, const void* buffer, int size, int& done);
   
