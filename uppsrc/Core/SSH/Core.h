@@ -1,6 +1,6 @@
 class Ssh {
 public:
-    void                Abort()                                 { if(ssh) ssh->status = ABORTED; }
+    void                Abort()                                 { ssh->status = ABORTED; }
     int                 GetTimeout() const                      { return ssh->timeout; }
     int                 GetWaitStep() const                     { return ssh->waitstep; }
     bool                InProgress() const                      { return ssh->status == WORKING; }
@@ -29,7 +29,7 @@ public:
         Error(const String& reason) : Exc(reason), code(-1) {}
         Error(int rc, const String& reason) : Exc(reason), code(rc) {}
     };
-    enum Type  { CORE, SESSION, SFTP, CHANNEL, SCP, EXEC, SHELL, TCPTUNNEL };
+    enum Type  { CORE, SESSION, SFTP, CHANNEL, SCP, EXEC, SHELL, TUNNEL };
 
 protected:
     struct CoreData {
@@ -57,12 +57,14 @@ protected:
     virtual void        Exit()                                  {}
     void                Wait();
     void                Check();
+    bool                Do(Gate<>& fn);
     bool                Run(Gate<>&& fn);
     bool                WouldBlock(int rc)                      { return rc == LIBSSH2_ERROR_EAGAIN; }
     bool                WouldBlock()                            { return ssh->session && WouldBlock(libssh2_session_last_errno(ssh->session)); }
     bool                IsTimeout() const                       { return !IsNull(ssh->timeout) && ssh->timeout > 0 &&  msecs(ssh->start_time) >= ssh->timeout; }
     void                SetError(int rc, const String& reason = Null);
-
+    void                ReportError(int rc, const String& reason);
+    
     void                AddTo(SocketWaitEvent& e)               { e.Add(*ssh->socket, GetWaitEvents()); }
     dword               GetWaitEvents();
     

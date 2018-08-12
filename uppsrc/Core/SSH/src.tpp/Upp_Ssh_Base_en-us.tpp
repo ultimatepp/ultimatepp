@@ -14,19 +14,18 @@ topic "Base";
 [s3; &]
 [s1;:Upp`:`:Ssh`:`:class: [@(0.0.255)3 class][3 _][*3 Ssh]&]
 [s2;#%% This is the base class of SSH2 session and channel related 
-classes. It provides support for time`-constrained blocking and 
-non`-blocking operations, polymorphism, [^https`:`/`/en`.wikipedia`.org`/wiki`/Run`-time`_type`_information`?oldformat`=true^ R
+classes. It provides support for time`-constrained or blocking 
+operations, polymorphism, [^https`:`/`/en`.wikipedia`.org`/wiki`/Run`-time`_type`_information`?oldformat`=true^ R
 TTI], error management, and logging.&]
 [s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
-[s3;%% &]
-[s5;:Upp`:`:Ssh`:`:Do`(`): [@(0.0.255) bool]_[* Do]()&]
-[s2;%% Progresses the request in non`-blocking mode. Cannot be called 
-in blocking mode. Returns true if the request is still in progress.&]
+[s3; &]
+[s5;:Upp`:`:Ssh`:`:operator bool`(`)const: [* operator_bool]()_[@(0.0.255) const]&]
+[s2;%% Tests whether the object is picked (moved).&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:Ssh`:`:Cancel`(`): [@(0.0.255) void]_[* Cancel]()&]
-[s2;%% Cancels the current request.&]
+[s5;:Upp`:`:Ssh`:`:Abort`(`): [@(0.0.255) void]_[* Abort]()&]
+[s2;%% Aborts the current operation.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:GetTimeout`(`)const: [@(0.0.255) int]_[* GetTimeout]()_[@(0.0.255) const
@@ -39,14 +38,10 @@ st]&]
 [s2;%% Returns current periodicity of calling WhenWait.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:Ssh`:`:IsWorking`(`)const: [@(0.0.255) bool]_[* IsWorking]()_[@(0.0.255) const]&]
+[s5;:Upp`:`:Ssh`:`:InProgress`(`)const: [@(0.0.255) bool]_[* InProgress]()_[@(0.0.255) cons
+t]&]
 [s2;%% Returns true if a command or data transfer is currently in 
 progress.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:Ssh`:`:IsBlocking`(`)const: [@(0.0.255) bool]_[* IsBlocking]()_[@(0.0.255) cons
-t]&]
-[s2;%% Returns true if the ssh object is in blocking mode.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:IsError`(`)const: [@(0.0.255) bool]_[* IsError]()_[@(0.0.255) const]&]
@@ -54,24 +49,12 @@ t]&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:GetError`(`)const: [@(0.0.255) int]_[* GetError]()_[@(0.0.255) const]&]
-[s2;%% Returns the last error code if any.&]
+[s2;%% Returns the last error code, if any.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:GetErrorDesc`(`)const: [_^Upp`:`:String^ String]_[* GetErrorDesc]()_[@(0.0.255) c
 onst]&]
-[s2;%% Returns the last error message if any.&]
-[s3; &]
-[s4; &]
-[s5;:Upp`:`:Ssh`:`:AddTo`(Upp`:`:SocketWaitEvent`&`): [@(0.0.255) void]_[* AddTo]([_^Upp`:`:SocketWaitEvent^ S
-ocketWaitEvent][@(0.0.255) `&]_[*@3 e])&]
-[s2;%% Adds the Ssh`-derived object to [%-_^Upp`:`:SocketWaitEvent^ SocketWaitEvent] 
-for waiting on it.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:Ssh`:`:GetWaitEvents`(`): [_^Upp`:`:dword^ dword]_[* GetWaitEvents]()&]
-[s2;%% Returns a combination of WAIT`_READ and WAIT`_WRITE flags 
-to indicate what is blocking the operation of Ssh object. Can 
-be used with SocketWaitEvent.&]
+[s2;%% Returns the last error message, if any.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:GetId`(`)const: [_^Upp`:`:int64^ int64]_[* GetId]()_[@(0.0.255) const]&]
@@ -146,8 +129,9 @@ or a combination of the following constants:&]
 [s3; &]
 [s1;:Upp`:`:Ssh`:`:Error`:`:struct: [@(0.0.255)3 struct][3 _][*3 Error][3 _:_][@(0.0.255)3 publi
 c][3 _][*@3;3 Exc]&]
-[s0;l288;%% Type used as Ssh exception. This helper struct is externally 
-used by Ssh worker threads to halt jobs, and report errors.&]
+[s0;l288;%% Type used as Ssh exception. This helper is internally 
+used by the Ssh`-based classes, bu can be used externally by 
+client code to halt jobs, and report errors (e.g. in worker threads).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:Error`:`:code: [@(0.0.255) int]_[* code]&]
