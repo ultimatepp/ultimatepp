@@ -30,8 +30,8 @@ String GetName(int type, int64 id)
 		case Ssh::SHELL:
 			s = "Shell";
 			break;
-		case Ssh::TCPTUNNEL:
-			s = "TCP Tunnel";
+		case Ssh::TUNNEL:
+			s = "Tunnel";
 			break;
 		default:
 			return "";
@@ -58,47 +58,37 @@ void Ssh::Check()
 		SetError(-1, "[Socket error]: " << ssh->socket->GetErrorDesc());
 }
 
+bool Ssh::Do(Gate<>& fn)
+{
+	Mutex::Lock m_(StaticMutex);
+	
+	Check();
+	if(!ssh->init)
+		ssh->init = Init();
+	if(ssh->init && fn())
+		return false;
+	Wait();
+	return true;
+}
+
 bool Ssh::Run(Gate<>&& fn)
 {
 	try {
-		if(InProgress())
-			SetError(-1, "An operation is already in progress.");
-
 		ssh->status = WORKING;
 		ssh->start_time = msecs();
+		
+		while(Do(fn))
+			;
 
-
-		while(InProgress()) {
-			Mutex::Lock __m(StaticMutex);
-			if(!ssh->init)
-				ssh->init = Init();
-			if(ssh->init && fn())
-				break;
-			Wait();
-			Check();
-		}
 		ssh->status = IDLE;
 	}
 	catch(const Error& e) {
-		ssh->status  = FAILED;
-		ssh->error.a = e.code;
-		ssh->error.b = e;
-		if(ssh->socket) {
-			ssh->socket->ClearAbort();
-			ssh->socket->ClearError();
-		}
-		LLOG("Failed. Code = " << e.code << ", " << e);
+		ReportError(e.code, e);
+	}
+	catch(...) {
+		ReportError(-1, "Unhandled exception.");
 	}
 	return !IsError();
-}
-
-dword Ssh::GetWaitEvents()
-{
-	dword events = 0;
-	if(ssh->socket && ssh->session)
-		events = libssh2_session_block_directions(ssh->session);
-	return !!(events & LIBSSH2_SESSION_BLOCK_INBOUND) * WAIT_READ +
-	       !!(events & LIBSSH2_SESSION_BLOCK_OUTBOUND) * WAIT_WRITE;
 }
 
 void Ssh::Wait()
@@ -114,6 +104,15 @@ void Ssh::Wait()
 	}
 }
 
+dword Ssh::GetWaitEvents()
+{
+	dword events = 0;
+	if(ssh->socket && ssh->session)
+		events = libssh2_session_block_directions(ssh->session);
+	return !!(events & LIBSSH2_SESSION_BLOCK_INBOUND) * WAIT_READ +
+	       !!(events & LIBSSH2_SESSION_BLOCK_OUTBOUND) * WAIT_WRITE;
+}
+
 void Ssh::SetError(int rc, const String& reason)
 {
 	if(IsNull(reason) && ssh && ssh->session) {
@@ -123,6 +122,18 @@ void Ssh::SetError(int rc, const String& reason)
 	}
 	else
 		throw Error(rc, reason);
+}
+
+void Ssh::ReportError(int rc, const String& reason)
+{
+	ssh->status  = FAILED;
+	ssh->error.a = rc;
+	ssh->error.b = reason;
+	if(ssh->socket) {
+		ssh->socket->ClearAbort();
+		ssh->socket->ClearError();
+	}
+	LLOG("Failed. Code = " << rc << ", " << reason);
 }
 
 int64 Ssh::GetNewId()

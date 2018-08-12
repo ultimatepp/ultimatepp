@@ -26,6 +26,7 @@ public:
     SshSession&         AgentAuth()                             { session->authmethod = SSHAGENT;  return *this; }
 
     LIBSSH2_SESSION*    GetHandle()                             { return ssh->session; }
+    
     String              GetBanner() const                       { return ssh->session ? pick(String(libssh2_session_banner_get(ssh->session))) : Null; }
     String              GetFingerprint() const                  { return session->fingerprint; }
     Vector<String>      GetAuthMethods()                        { return pick(Split(session->authmethods, ' ')); }

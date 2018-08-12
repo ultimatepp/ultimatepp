@@ -99,6 +99,8 @@ public:
     bool                    SaveFile(const char *path, Stream& in);
     void                    LoadFile(Stream& out, const char *path);
     
+    int                     GetDone() const                                         { return done; }
+    
     // Directory
     SFtpHandle              OpenDir(const String& path);
     bool                    MakeDir(const String& path, long mode);
@@ -133,8 +135,6 @@ public:
     bool                    BlockExists(const String& path)                         { return QueryAttr(path, SFTP_ATTR_BLOCK); }
     bool                    SpecialFileExists(const String& path)                   { return QueryAttr(path, SFTP_ATTR_SPECIAL); }
 
-    Gate<int64, int64>      WhenProgress;
-
     SFtp(SshSession& session);
     virtual ~SFtp();
 
@@ -150,10 +150,11 @@ private:
     Value                   QueryAttr(const String& path, int attr);
     bool                    ModifyAttr(const String& path, int attr, const Value& v);
     bool                    SymLink(const String& path, String& target, int type);
-    bool                    Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size, int& done);
-    bool                    Write(SFtpHandle handle, const void* buffer, int size, int& done);
+    bool                    Read(SFtpHandle handle, void* ptr, int size);
+    bool                    Write(SFtpHandle handle, const void* ptr, int size);
   
     One<LIBSSH2_SFTP*>      sftp_session;
+    int                     done;
 
     enum FileAttributes {
         SFTP_ATTR_FILE,

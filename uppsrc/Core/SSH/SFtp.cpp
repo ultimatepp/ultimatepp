@@ -131,7 +131,7 @@ int64 SFtp::GetPos(SFtpHandle handle)
 	return pos;
 }
 
-bool SFtp::Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size, int& done)
+bool SFtp::Read(SFtpHandle handle, void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
 	Buffer<char> buffer(sz);
@@ -140,10 +140,8 @@ bool SFtp::Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size,
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
 	if(rc > 0) {
-		consumer(buffer, rc);
+		memcpy((char*) ptr + done, (const char*) buffer, rc);
 		done += rc;
-		if(WhenProgress(done, size))
-			SetError(-1, "Read aborted.");
 		ssh->start_time = msecs();
 	}
 	if(!rc)
@@ -151,17 +149,15 @@ bool SFtp::Read(SFtpHandle handle, Event<const void*, int>&& consumer, int size,
 	return !rc || done == size;
 }
 
-bool SFtp::Write(SFtpHandle handle, const void* buffer, int size, int& done)
+bool SFtp::Write(SFtpHandle handle, const void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
-	int rc = libssh2_sftp_write(handle, (const char*) buffer + done, sz);
+	int rc = libssh2_sftp_write(handle, (const char*) ptr + done, sz);
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
 	if(rc > 0) {
 		done += rc;
-		if(WhenProgress(done, size))
-			SetError(-1, "Write aborted.");
 		ssh->start_time = msecs();
 	}
 	if(!rc)
@@ -171,30 +167,15 @@ bool SFtp::Write(SFtpHandle handle, const void* buffer, int size, int& done)
 
 int SFtp::Get(SFtpHandle handle, void *ptr, int size)
 {
-	int done = 0;
-
-	Run([=, &done]() mutable {
-		return Read(
-			handle,
-			[=, &done](const void* p, int sz) {
-				memcpy((char*) ptr + done, (char*) p, sz);
-			},
-			size,
-			done
-		);
-	});
-
-	return done;
+	done = 0;
+	Run([=]() mutable { return Read(handle, ptr, size); });
+	return GetDone();
 }
 
 bool SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 {
-	int done = 0;
-
-	Run([=, &done]() mutable {
-		return Write(handle, (char*) ptr, size, done);
-	});
-	return done;
+	done = 0;
+	return Run([=]() mutable { return Write(handle, ptr, size); });
 }
 
 bool SFtp::SaveFile(const char *path, const String& data)
@@ -267,12 +248,11 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 		char label[512];
 		char longentry[512];
 
-		int rc = 0;
+		while(InProgress()) {
 
-		do {
 			Zero(attrs);
 
-			rc = libssh2_sftp_readdir_ex(
+			int rc = libssh2_sftp_readdir_ex(
 						handle,
 						label, sizeof(label),
 						longentry, sizeof(longentry),
@@ -281,7 +261,7 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 			if(rc < 0) {
 				if(!WouldBlock(rc))
 					SetError(rc);
-				return false;
+				break;
 			}
 			else
 			if(rc > 0) {
@@ -291,10 +271,12 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 				entry.valid		= true;
 //				DUMP(entry);
 			}
+			if(rc == 0) {
+				LOG(Format("Directory listing is successful. (%d entries)", list.GetCount()));
+				return true;
+			}
 		}
-		while(rc > 0);
-		LLOG(Format("Directory listing is successful. (%d entries)", list.GetCount()));
-		return true;
+		return false;
 	});
 }
 
@@ -481,6 +463,7 @@ SFtp::SFtp(SshSession& session)
 	ssh->timeout	= session.GetTimeout();
 	ssh->waitstep   = session.GetWaitStep();
 	ssh->whenwait   = Proxy(session.WhenWait);
+	done            = 0;
 }
 
 SFtp::~SFtp()

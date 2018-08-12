@@ -31,12 +31,6 @@ that ssh subsystems and channels inherit their default timeout
 values from their session.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:SshSession`:`:NonBlocking`(bool`): [_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&
-]_[* NonBlocking]([@(0.0.255) bool]_[*@3 b]_`=_[@(0.0.255) true])&]
-[s2;%% Activates or deactivates non`-blocking mode. Default is blocking 
-mode. Returns `*this for methods chaining.&]
-[s3;%% &]
-[s4; &]
 [s5;:Upp`:`:SshSession`:`:WaitStep`(int`): [_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&
 ]_[* WaitStep]([@(0.0.255) int]_[*@3 ms])&]
 [s2;%% Sets the periodicity of calling [^topic`:`/`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:WhenWait^ W
