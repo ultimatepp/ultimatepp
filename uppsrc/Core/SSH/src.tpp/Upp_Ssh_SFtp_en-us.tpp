@@ -346,7 +346,7 @@ ile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [_^Upp`:`:Stream^ Stream
 [s2;%%  [%-*@3 path] [%-*@3 in] .&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:SFtp`:`:LoadFile`(Upp`:`:Stream`&`,const char`*`): [@(0.0.255) void]_[* LoadF
+[s5;:Upp`:`:SFtp`:`:LoadFile`(Upp`:`:Stream`&`,const char`*`): [@(0.0.255) bool]_[* LoadF
 ile]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 path])&]
 [s2;%%  [%-*@3 out] [%-*@3 path] .&]

@@ -49,7 +49,7 @@ protected:
     };
     One<CoreData> ssh;
 
-    constexpr static int CHUNKSIZE = 1024 * 64;
+    const int           CHUNKSIZE = 1024 * 64;
 
     enum Status         { IDLE, WORKING, FAILED, ABORTED };
 

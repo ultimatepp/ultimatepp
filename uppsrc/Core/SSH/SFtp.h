@@ -97,7 +97,7 @@ public:
     bool                    SaveFile(const char *path, const String& data);
     String                  LoadFile(const char *path);
     bool                    SaveFile(const char *path, Stream& in);
-    void                    LoadFile(Stream& out, const char *path);
+    bool                    LoadFile(Stream& out, const char *path);
     
     int                     GetDone() const                                         { return done; }
     
