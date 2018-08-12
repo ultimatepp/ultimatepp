@@ -1,0 +1,12 @@
+description "Demonstrates basic SSH remote command execution .\377";
+
+uses
+	Core,
+	Core/SSH;
+
+file
+	SshExec.cpp;
+
+mainconfig
+	"" = "";
+
