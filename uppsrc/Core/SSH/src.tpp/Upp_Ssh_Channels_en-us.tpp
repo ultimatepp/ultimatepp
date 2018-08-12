@@ -177,36 +177,20 @@ insead. SshExec class is derived from SshChannel class, and has
 pick semantics. &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s3;%- &]
-[s5;:Upp`:`:SshExec`:`:Execute`(const Upp`:`:String`&`,Upp`:`:Stream`&`,Upp`:`:Stream`&`):%- [@(0.0.255) i
+[s4;%- &]
+[s5;:Upp`:`:SshExec`:`:Execute`(const Upp`:`:String`&`,Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) i
 nt]_[* Execute]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&
+[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:String^ String][@(0.0.255) `&
 ]_[*@3 err])&]
-[s5;:Upp`:`:SshExec`:`:operator`(`)`(const Upp`:`:String`&`,Upp`:`:Stream`&`,Upp`:`:Stream`&`):%- [@(0.0.255) i
+[s5;:Upp`:`:SshExec`:`:operator`(`)`(const Upp`:`:String`&`,Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) i
 nt]_[* operator()]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&
+[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:String^ String][@(0.0.255) `&
 ]_[*@3 err])&]
-[s0;l288; Executes remote process defined by [%-*@3 cmd] command line, 
-returns its standard output in [%-*@3 out], its standard error 
-output in [%-*@3 err], and its exit code as return value. In non`-blocking 
-mode, SshChannel`::GetExitCode() and SshChannel`::GetExitSignal() 
-methods can be used to retrieve the exit code and message of 
-the executed command. &]
-[s3;%- &]
-[s3;%- &]
-[ {{10000F(128)G(128)@1 [s0; [* Multithreaded Execution Method]]}}&]
-[s3;%- &]
-[s5;:Upp`:`:SshExec`:`::%- [@(0.0.255) static] [_^Upp`:`:AsyncWork^ AsyncWork]<[_^Upp`:`:Tuple^ T
-uple]<[@(0.0.255) int], [_^Upp`:`:String^ String], [_^Upp`:`:String^ String]>>_[* AsyncRu
-n]([_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&]_[*@3 session], 
-[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd])&]
-[s2; Executes a remote process defined by [%-*@3 cmd] command line 
-asynchronously, and returns a tuple containing the exit code 
-(int), standard output (String), and standard error output (String) 
-of the executed process. Throws [^topic`:`/`/SSH`/src`/Upp`_Ssh`_Base`$en`-us`#Upp`:`:Ssh`:`:Error`:`:struct^ S
-sh`::Error] on failure. Requires a valid ssh [%-*@3 session] during 
-the operation &]
-[s3; &]
+[s0;l288; Executes a remote process defined by the [%-*@3 cmd] command 
+line,returns its standard output in [%-*@3 out], its standard error 
+output in [%-*@3 err], and its exit code as the return value. If 
+the remote process exits successfully the return code will be 
+0.&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]

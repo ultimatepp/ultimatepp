@@ -34,8 +34,8 @@ public:
     ValueMap            GetMethods();
 
     SFtp                CreateSFtp();
-//    SshChannel          CreateChannel();
-//    SshExec             CreateExec();
+    SshChannel          CreateChannel();
+    SshExec             CreateExec();
 //    Scp                 CreateScp();
 //    SshTunnel           CreateTcpTunnel();
 //    SshShell            CreateShell();

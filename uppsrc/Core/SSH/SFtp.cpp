@@ -196,10 +196,10 @@ bool SFtp::SaveFile(const char *path, Stream& in)
 	return CopyStream(out, in) >= 0;
 }
 
-void SFtp::LoadFile(Stream& out, const char *path)
+bool SFtp::LoadFile(Stream& out, const char *path)
 {
 	SFtpFileIn in(*this, path);
-	CopyStream(in, out) >= 0;
+	return CopyStream(in, out) >= 0;
 }
 
 SFtpHandle	 SFtp::OpenDir(const String& path)

@@ -283,17 +283,17 @@ SFtp SshSession::CreateSFtp()
 	return pick(SFtp(*this));
 }
 
-//SshChannel SshSession::CreateChannel()
-//{
-//	ASSERT(ssh && ssh->session);
-//	return pick(SshChannel(*this));
-//}
-//
-//SshExec SshSession::CreateExec()
-//{
-//	ASSERT(ssh && ssh->session);
-//	return pick(SshExec(*this));
-//}
+SshChannel SshSession::CreateChannel()
+{
+	ASSERT(ssh && ssh->session);
+	return pick(SshChannel(*this));
+}
+
+SshExec SshSession::CreateExec()
+{
+	ASSERT(ssh && ssh->session);
+	return pick(SshExec(*this));
+}
 //
 //Scp SshSession::CreateScp()
 //{
