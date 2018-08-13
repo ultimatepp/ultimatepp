@@ -159,8 +159,8 @@ hannel]()&]
 [s2;%% Creates an scp channel instance.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:SshSession`:`:CreateTcpTunnel`(`): [_^Upp`:`:SshTunnel^ SshTunnel]_[* CreateT
-cpTunnel]()&]
+[s5;:Upp`:`:SshSession`:`:CreateTunnel`(`): [_^Upp`:`:SshTunnel^ SshTunnel]_[* CreateTunn
+el]()&]
 [s2;%% Creates a tcp`-ip and port forwarding channel instance.&]
 [s3; &]
 [s4; &]

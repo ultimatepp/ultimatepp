@@ -320,81 +320,45 @@ Intended to be called from WhenWait routine.&]
 [s5;:Upp`:`:SFtp`:`:Get`(Upp`:`:SFtpHandle`,void`*`,int`): [@(0.0.255) int]_[* Get]([_^Upp`:`:SFtpHandle^ S
 FtpHandle]_[*@3 handle], [@(0.0.255) void]_`*[*@3 ptr], [@(0.0.255) int]_[*@3 size]_`=_INT`_
 MAX)&]
-[s2;%%  [%-*@3 handle] [%-*@3 ptr] [%-*@3 size] .&]
+[s2;%% Reads at most [%-*@3 size] bytes data from the remote file object 
+associated with [%-*@3 handle] into the buffer pointed by [%-*@3 ptr], 
+trying to do so at most for a specified timeout. Returns the 
+number of bytes actually written.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:SFtpHandle`,const void`*`,int`): [@(0.0.255) bool]_[* Put
 ]([_^Upp`:`:SFtpHandle^ SFtpHandle]_[*@3 handle], [@(0.0.255) const]_[@(0.0.255) void]_`*
 [*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
-[s2;%%  [%-*@3 handle] [%-*@3 ptr] [%-*@3 size] .&]
+[s2;%% Writes at most [%-*@3 size] bytes from buffer pointed by [%-*@3 ptr] 
+into the remote file object associated with [%-*@3 handle], trying 
+to do so at most for a specified timeout. Returns the number 
+of bytes actually written.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:SaveFile`(const char`*`,const Upp`:`:String`&`): [@(0.0.255) bool]_
 [* SaveFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[_^Upp`:`:String^ S
 tring][@(0.0.255) `&]_[*@3 data])&]
-[s2;%%  [%-*@3 path] [%-*@3 data] .&]
+[s2;%% Saves the content of [%-*@3 data ]to remote [%-*@3 path]. Returns 
+true on success.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:LoadFile`(const char`*`): [_^Upp`:`:String^ String]_[* LoadFile]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path])&]
-[s2;%%  [%-*@3 path] .&]
+[s2;%% Returns the content of the remote [%-*@3 path].&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:SaveFile`(const char`*`,Upp`:`:Stream`&`): [@(0.0.255) bool]_[* SaveF
 ile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&
 ]_[*@3 in])&]
-[s2;%%  [%-*@3 path] [%-*@3 in] .&]
+[s2;%% Saves the content of [%-*@3 in] to remote [%-*@3 path] . Returns 
+true on success.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:LoadFile`(Upp`:`:Stream`&`,const char`*`): [@(0.0.255) bool]_[* LoadF
 ile]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 path])&]
-[s2;%%  [%-*@3 out] [%-*@3 path] .&]
-[s3;%% &]
-[s3; &]
-[s5;:Upp`:`:SFtp`:`:Get`(Upp`:`:SFtpHandle`*`,Upp`:`:Stream`&`): [@(0.0.255) bool]_[* Get
-]([_^Upp`:`:SFtpHandle^ SFtpHandle][@(0.0.255) `*]_[*@3 handle], [_^Upp`:`:Stream^ Stream
-][@(0.0.255) `&]_[*@3 out])&]
-[s5;:Upp`:`:SFtp`:`:Get`(const Upp`:`:String`&`,Upp`:`:Stream`&`): [@(0.0.255) bool]_[* G
-et]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out])&]
-[s5;:Upp`:`:SFtp`:`:Get`(const Upp`:`:String`&`,Upp`:`:Stream`&`,Upp`:`:int64`): [@(0.0.255) b
-ool]_[* Get]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:int64^ int64]_[*@3 offset])&]
-[s2;%% Downloads the content of remote file pointed by  [%-*@3 handle] 
-or [%-*@3 path] to [%-*@3 out]. Returns true on success. [%-*@3 offset] 
-can be used to start or restart a partial download. Setting [%-*@3 offset] 
-to zero or a negative value will result in full download.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:SFtp`:`:Get`(Upp`:`:SFtpHandle`*`): [_^Upp`:`:String^ String]_[* Get]([_^Upp`:`:SFtpHandle^ S
-FtpHandle][@(0.0.255) `*]_[*@3 handle])&]
-[s5;:Upp`:`:SFtp`:`:Get`(const Upp`:`:String`&`): [_^Upp`:`:String^ String]_[* Get]([@(0.0.255) c
-onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path])&]
-[s2;%% Downloads the content of remote file pointed by [%-*@3 handle] 
-or [%-*@3 path ]as string. Returns an empty string on failure.&]
-[s2;%% In non`-blocking mode, the result of this operation can be 
-obtained using GetResult() method.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:SFtpHandle`*`,Upp`:`:Stream`&`): [@(0.0.255) bool]_[* Put
-]([_^Upp`:`:SFtpHandle^ SFtpHandle][@(0.0.255) `*]_[*@3 handle], [_^Upp`:`:Stream^ Stream
-][@(0.0.255) `&]_[*@3 in])&]
-[s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:Stream`&`,const Upp`:`:String`&`): [@(0.0.255) bool]_[* P
-ut]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [@(0.0.255) const]_[_^Upp`:`:String^ S
-tring][@(0.0.255) `&]_[*@3 path])&]
-[s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:Stream`&`,const Upp`:`:String`&`,Upp`:`:dword`,long`): [@(0.0.255) b
-ool]_[* Put]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [@(0.0.255) const]_[_^Upp`:`:String^ S
-tring][@(0.0.255) `&]_[*@3 path], [_^Upp`:`:dword^ dword]_[*@3 flags], 
-[@(0.0.255) long]_[*@3 mode])&]
-[s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:Stream`&`,const Upp`:`:String`&`,Upp`:`:int64`): [@(0.0.255) b
-ool]_[* Put]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [@(0.0.255) const]_[_^Upp`:`:String^ S
-tring][@(0.0.255) `&]_[*@3 path], [_^Upp`:`:int64^ int64]_[*@3 offset])&]
-[s2;%% Uploads [%-*@3 in] to remote file pointed by [%-*@3 handle]. or 
-[%-*@3 path], optionally with access [%-*@3 flags] and [%-*@3 mode]. 
-Returns true on success. [%-*@3 offset ]can be used to start or 
-restart a partial upload. Setting [%-*@3 offset] to zero or a negative 
-value will result in full upload. Returns true on success.&]
+[s2;%% Returns the content of remote [%-*@3 path ]into [%-*@3 out]. Returns 
+true on success.&]
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]
