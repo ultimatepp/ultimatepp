@@ -93,7 +93,7 @@ public:
 
     // Read/Write
     int                     Get(SFtpHandle handle, void *ptr, int size = INT_MAX);
-    bool                    Put(SFtpHandle handle, const void *ptr, int size);
+    int                     Put(SFtpHandle handle, const void *ptr, int size);
     bool                    SaveFile(const char *path, const String& data);
     String                  LoadFile(const char *path);
     bool                    SaveFile(const char *path, Stream& in);
@@ -135,6 +135,8 @@ public:
     bool                    BlockExists(const String& path)                         { return QueryAttr(path, SFTP_ATTR_BLOCK); }
     bool                    SpecialFileExists(const String& path)                   { return QueryAttr(path, SFTP_ATTR_SPECIAL); }
 
+    Gate<int64, int64>      WhenProgress;
+    
     SFtp(SshSession& session);
     virtual ~SFtp();
 
@@ -152,6 +154,7 @@ private:
     bool                    SymLink(const String& path, String& target, int type);
     bool                    Read(SFtpHandle handle, void* ptr, int size);
     bool                    Write(SFtpHandle handle, const void* ptr, int size);
+    bool                    CopyData(Stream& dest, Stream& src);
   
     One<LIBSSH2_SFTP*>      sftp_session;
     int                     done;

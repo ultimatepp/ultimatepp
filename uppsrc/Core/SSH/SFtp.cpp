@@ -112,7 +112,7 @@ bool SFtp::Sync(SFtpHandle handle)
 SFtp& SFtp::Seek(SFtpHandle handle, int64 position)
 {
 	Run([=] () mutable {
-		LLOG("Seeking to offset: " << position);
+		//LLOG("Seeking to offset: " << position);
 		libssh2_sftp_seek64(handle, position);
 		return true;
 	});
@@ -125,7 +125,7 @@ int64 SFtp::GetPos(SFtpHandle handle)
 
 	return Run([=, &pos] () mutable {
 		pos = libssh2_sftp_tell64(handle);
-		LLOG("File position: " << pos);
+		//LLOG("File position: " << pos);
 		return true;
 	});
 	return pos;
@@ -172,37 +172,51 @@ int SFtp::Get(SFtpHandle handle, void *ptr, int size)
 	return GetDone();
 }
 
-bool SFtp::Put(SFtpHandle handle, const void *ptr, int size)
+int SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 {
 	done = 0;
-	return Run([=]() mutable { return Write(handle, ptr, size); });
+	Run([=]() mutable { return Write(handle, ptr, size); });
+	return GetDone();
+}
+
+bool SFtp::CopyData(Stream& dest, Stream& src)
+{
+	if(CopyStream(dest, src,src.GetSize(), WhenProgress) < 0) {
+		src.Close();
+		dest.Close();
+		ReportError(-1, "File transfer is aborted.");
+	}
+	return !IsError();
 }
 
 bool SFtp::SaveFile(const char *path, const String& data)
 {
+	StringStream in(data);
 	SFtpFileOut out(*this, path);
-	return SaveStream(out, data);
+	return CopyData(out, in);
 }
 
 String SFtp::LoadFile(const char *path)
 {
+	StringStream out;
 	SFtpFileIn in(*this, path);
-	return LoadStream(in);
+	CopyData(out, in);
+	return pick(out.GetResult());
 }
 
 bool SFtp::SaveFile(const char *path, Stream& in)
 {
 	SFtpFileOut out(*this, path);
-	return CopyStream(out, in) >= 0;
+	return CopyData(out, in);
 }
 
 bool SFtp::LoadFile(Stream& out, const char *path)
 {
 	SFtpFileIn in(*this, path);
-	return CopyStream(in, out) >= 0;
+	return CopyData(out, in);
 }
 
-SFtpHandle	 SFtp::OpenDir(const String& path)
+SFtpHandle SFtp::OpenDir(const String& path)
 {
 	SFtpHandle h = nullptr;
 
@@ -247,11 +261,9 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 	return Run([=, &attrs, &list] () mutable {
 		char label[512];
 		char longentry[512];
-
+		
 		while(InProgress()) {
-
 			Zero(attrs);
-
 			int rc = libssh2_sftp_readdir_ex(
 						handle,
 						label, sizeof(label),
@@ -272,7 +284,7 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 //				DUMP(entry);
 			}
 			if(rc == 0) {
-				LOG(Format("Directory listing is successful. (%d entries)", list.GetCount()));
+				LLOG(Format("Directory listing is successful. (%d entries)", list.GetCount()));
 				return true;
 			}
 		}

@@ -42,7 +42,7 @@ bool SshChannel::Open()
 {
 	if(IsOpen())
 		Close();
-	return Run([=]() mutable { return true; });
+	return Run([=]() mutable { return Init(); });
 }
 
 bool SshChannel::Close()
@@ -193,8 +193,8 @@ String SshChannel::GetExitSignal()
 	INTERLOCKED
 	{
 		libssh2_channel_get_exit_signal(*channel, sig, &len, nullptr, nullptr, nullptr, nullptr);
-		s.Set(*sig, len);
 	}
+	s.Set(*sig, len);
 	LLOG("Exit signal: " << s);
 	return s;
 }
@@ -230,8 +230,10 @@ String SshChannel::GetLine(int maxlen, int sid)
 			if(line.GetLength() >= maxlen)
 				line = Null;
 			eol = c == '\n';
-			if(!eol)
+			if(!eol) {
 				line.Cat(c);
+				done++;
+			}
 		}
 		while(!eol && !IsEof() && !IsTimeout() && InProgress());
 		return eol || IsEof();
