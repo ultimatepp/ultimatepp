@@ -6,13 +6,13 @@ public:
 
     LIBSSH2_CHANNEL*    GetHandle() const                                                   { return channel ? *channel : nullptr; }
     int                 GetDone() const                                                     { return done; }
-    
+
     bool                IsOpen() const                                                      { return channel; }
-    
+
     bool                Open();
     bool                Close();
     bool                WaitClose();
-    
+
     bool                Request(const String& request, const String& params = Null);
     bool                RequestExec(const String& cmdline)                                  { return Request("exec", cmdline); }
     bool                RequestShell()                                                      { return Request("shell", Null); }
@@ -20,7 +20,7 @@ public:
     bool                RequestTerminal(const String& term, int width, int height);
     bool                RequestTerminal(const String& term, Size sz)                        { return RequestTerminal(term, sz.cx, sz.cy); }
     bool                SetEnv(const String& variable, const String& value);
-  
+
     int                 Get(void *ptr, int size, int sid = 0);
     String              Get(int size, int sid = 0);
     String              GetLine(int maxlen = 65536, int sid = 0);
@@ -41,19 +41,20 @@ public:
     uint32              GetWriteWindowSize()                                                { return libssh2_channel_window_write(*channel); }
     int                 GetExitCode();
     String              GetExitSignal();
-    
+
     SshChannel(SshSession& session);
     virtual ~SshChannel();
-    
+
     SshChannel(SshChannel&&) = default;
     SshChannel& operator=(SshChannel&&) = default;
-    
+
 protected:
     bool                Init() override;
     void                Exit() override;
     bool                Read(void *ptr, int size, int sid = 0);
     int                 Read(int sid = 0);
     bool                Write(const void *ptr, int size, int sid = 0);
+    bool                Write(char c, int sid = 0);
     bool                SetWndSz(uint32 size, bool force = false);
     int                 SetPtySz(int w, int h);
     int                 SetPtySz(Size sz)                                                   { return SetPtySz(sz.cx, sz.cy); }
@@ -62,8 +63,8 @@ protected:
     dword               EventWait(int fd, dword events, int tv = 10);
     bool                ProcessEvents(String& input);
     virtual void        ReadWrite(String& in, const void* out, int out_len)                 {}
-    
-    
+
+
     One<LIBSSH2_CHANNEL*>  channel;
     int                    done;
 };
@@ -84,29 +85,35 @@ public:
     bool   LoadFile(Stream& out, const char *path);
 
     Scp(SshSession& session) : SshChannel(session)                                          { ssh->otype = SCP; ssh->init = true; }
+
 private:
     bool   Open(int cmd, const String& path, libssh2_struct_stat* fs,
                 int64 size, dword flags, long mode);
 
 };
-/*
+
 class SshTunnel : public SshChannel {
 public:
-    bool        Connect(const String& host, int port);
-    bool        Connect(const String& url);
-    bool        Listen(int port, int listen_count = 5)                                                  { return Listen(Null, port, NULL, listen_count); }
-    bool        Listen(const String& host, int port, int* bound_port, int listen_count = 5);
-    bool        Accept(SshTunnel& listener);
+    bool Connect(const String& host, int port);
+    bool Connect(const String& url);
+    bool Listen(int port, int listen_count = 5)                                             { return Listen(Null, port, nullptr, listen_count); }
+    bool Listen(const String& host, int port, int* bound_port, int listen_count = 5);
+    bool Accept(SshTunnel& listener);
 
-    SshTunnel(SshSession& session) : SshChannel(session)                                                { ssh->otype = TCPTUNNEL; mode = -1; }
-    SshTunnel() : SshChannel()                                                                          {}
+    SshTunnel(SshSession& session) : SshChannel(session)                                    { ssh->otype = TUNNEL; mode = NONE; ssh->init = true; }
+    virtual ~SshTunnel()                                                                    { Exit(); }
 
 private:
-    bool         Init() override                                                                        { return true; }
-    void         Validate();
-    int mode;
+    void Exit() override;
+    bool IsValid();
+
+    int  mode;
+    One<LIBSSH2_LISTENER*>  listener;
+
+    enum Modes { NONE, CONNECT, LISTEN, ACCEPT };
 };
 
+/*
 class SshShell : public SshChannel {
 public:
     bool        Run(const String& terminal, Size pagesize)                                              { return Run(GENERIC, terminal, pagesize); }

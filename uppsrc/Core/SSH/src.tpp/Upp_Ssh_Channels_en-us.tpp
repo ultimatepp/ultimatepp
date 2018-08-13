@@ -41,123 +41,28 @@ class, and has pick semantics.&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
-[s5;:Upp`:`:Scp`:`:Get`(const Upp`:`:String`&`,Upp`:`:Stream`&`):%- [@(0.0.255) bool]_[* G
-et]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out])&]
-[s5;:Upp`:`:Scp`:`:operator`(`)`(const Upp`:`:String`&`,Upp`:`:Stream`&`):%- [@(0.0.255) b
-ool]_[* operator()]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path],
- [_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out])&]
-[s2; Downloads the remote file at [%-*@3 path] and returns it as a 
-String. Returns an empty string on failure.&]
+[s5;:Upp`:`:Scp`:`:SaveFile`(const char`*`,const Upp`:`:String`&`):%- [@(0.0.255) bool]_
+[* SaveFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[_^Upp`:`:String^ S
+tring][@(0.0.255) `&]_[*@3 data])&]
+[s2;  [%-*@3 path] [%-*@3 data] .&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Scp`:`:Get`(const Upp`:`:String`&`):%- [_^Upp`:`:String^ String]_[* Get]([@(0.0.255) c
-onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path])&]
-[s5;:Upp`:`:Scp`:`:operator`(`)`(const Upp`:`:String`&`):%- [_^Upp`:`:String^ String]_[* o
-perator()]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path])&]
-[s2; Downloads the content of remote file pointed by [%-*@3 path ]as 
-string. Returns an empty string on failure.&]
-[s2; In non`-blocking mode, the result of this operation can be obtained 
-using GetResult() method.&]
+[s5;:Upp`:`:Scp`:`:LoadFile`(const char`*`):%- [_^Upp`:`:String^ String]_[* LoadFile]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 path])&]
+[s2;  [%-*@3 path] .&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Scp`:`:Put`(Upp`:`:Stream`&`,const Upp`:`:String`&`,long`):%- [@(0.0.255) b
-ool]_[* Put]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], [@(0.0.255) const]_[_^Upp`:`:String^ S
-tring][@(0.0.255) `&]_[*@3 path], [@(0.0.255) long]_[*@3 mode ]`=_[@3 0744])&]
-[s5;:Upp`:`:Scp`:`:Put`(const Upp`:`:String`&`,const Upp`:`:String`&`,long`):%- [@(0.0.255) b
-ool]_[* Put]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 in], 
-[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[@(0.0.255) long]_[*@3 mode ]`=_[@3 0744])&]
-[s5;:Upp`:`:Scp`:`:operator`(`)`(Upp`:`:Stream`&`,const Upp`:`:String`&`,long`):%- [@(0.0.255) b
-ool]_[* operator()]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in], 
-[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[@(0.0.255) long]_[*@3 mode]_`=_[@3 0744])&]
-[s5;:Upp`:`:Scp`:`:operator`(`)`(const Upp`:`:String`&`,const Upp`:`:String`&`,long`):%- [@(0.0.255) b
-ool]_[* operator()]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 in], 
-[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[@(0.0.255) long]_[*@3 mode]_`=_[@3 0744])&]
-[s2; Uploads [%-*@3 in] to remote file pointed by [%-*@3 path], with 
-access [%-*@3 mode]. Returns true on success.&]
-[s3; &]
-[ {{10000F(128)G(128)@1 [s0; [* Multithreaded Transfer Methods]]}}&]
-[s2;#%- &]
-[s2;# [%- The following convenience methods use high performance worker 
-threads to transfer data. They all require a valid ssh ][%-*@3 session][%-  
-during the operation, and throw ][%-^topic`:`/`/SSH`/src`/Upp`_Ssh`_Base`_en`-us`#Upp`:`:Ssh`:`:Error`:`:struct^ S
-Sh`::Error][%-  on failures. In all of these methods, except AsyncConsumerGet(), 
-][%-*@3 progress] gate can be used to track the progress of the 
-transfer: The first parameter of this gate indicates a unique 
-id. The second parameter provides the amount of data that has 
-already been transferred. The third parameter may provide the 
-total amount of data to be transferred, but is allowed to be 
-0. Returning true will abort the current data transfer. Note 
-that these worker threads will use their session`'s waitstep 
-value to wait.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:Scp`:`:AsyncGet`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`,Upp`:`:int64`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[_^Upp`:`:String^ String]>_[* AsyncGet]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 path], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64], 
-[_^Upp`:`:int64^ int64]>_[*@3 progress])&]
-[s2; Downloads the remote file at [%-*@3 path] as string.&]
+[s5;:Upp`:`:Scp`:`:SaveFile`(const char`*`,Upp`:`:Stream`&`):%- [@(0.0.255) bool]_[* Save
+File]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&
+]_[*@3 in])&]
+[s2;  [%-*@3 path] [%-*@3 in] .&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:Scp`:`:AsyncGet`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,Upp`:`:Stream`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`,Upp`:`:int64`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncGet]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 path], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ i
-nt64], [_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
-[s2;  Downloads the remote file pointed by the [%-*@3 path] to [%-*@3 out].&]
+[s5;:Upp`:`:Scp`:`:LoadFile`(Upp`:`:Stream`&`,const char`*`):%- [@(0.0.255) bool]_[* Load
+File]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 path])&]
+[s2;  [%-*@3 out] [%-*@3 path] .&]
 [s3; &]
-[s4;%- &]
-[s5;:Upp`:`:Scp`:`:AsyncPut`(Upp`:`:SshSession`&`,Upp`:`:String`&`,const Upp`:`:String`&`,long`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`,Upp`:`:int64`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncPut]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 in],
- [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[@(0.0.255) long]_[*@3 mode], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
-[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
-[s5;:Upp`:`:Scp`:`:AsyncPut`(Upp`:`:SshSession`&`,Upp`:`:Stream`&`,const Upp`:`:String`&`,long`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`,Upp`:`:int64`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncPut]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 in],
- [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], 
-[@(0.0.255) long]_[*@3 mode], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
-[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
-[s2;  Uploads [%-*@3 in] to the [%-*@3 path].with access [%-*@3 mode].&]
-[s3; &]
-[s4;%- &]
-[s5;:Upp`:`:Scp`:`:AsyncGetToFile`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,const Upp`:`:String`&`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`,Upp`:`:int64`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncGetToFile]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 src], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 dest], 
-[_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64], 
-[_^Upp`:`:int64^ int64]>_[*@3 progress])&]
-[s2; Downloads the remote file pointed by [%-*@3 src ]to local file 
-pointed by [%-*@3 dest]. Note that, in case of failure this method 
-[/ does not] automatically delete the partially downloaded file. 
-&]
-[s3; &]
-[s4;%- &]
-[s5;:Upp`:`:Scp`:`:AsyncPutToFile`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,const Upp`:`:String`&`,long`,Upp`:`:Gate`<Upp`:`:int64`,Upp`:`:int64`,Upp`:`:int64`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncPutToFile]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 src], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 dest], 
-[@(0.0.255) long]_[*@3 mode], [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
-[_^Upp`:`:int64^ int64], [_^Upp`:`:int64^ int64]>_[*@3 progress])&]
-[s2; Uploads the local file pointed by [%-*@3 src] to the remote path 
-pointed by [%-*@3 dest].with access [%-*@3 mode].&]
-[s3; &]
-[s4;%- &]
-[s5;:Upp`:`:Scp`:`:AsyncConsumerGet`(Upp`:`:SshSession`&`,const Upp`:`:String`&`,Upp`:`:Event`<Upp`:`:int64`,const void`*`,int`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncConsumerGet]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 path], [_^Upp`:`:Event^ Event]<[_^Upp`:`:int64^ int64], [@(0.0.255) const]_[@(0.0.255) v
-oid`*], [@(0.0.255) int]>_[*@3 consumer])&]
-[s2; Downloads the remote file pointed by [%-*@3 path], using a user`-defined 
-[%-*@3 consumer] function. The first parameter of the consumer 
-function is the unique id of the given scp worker.&]
-[s3; &]
-[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]
 [s5;:Upp`:`:Scp`:`:Scp`(Upp`:`:SshSession`&`):%- [* Scp]([_^Upp`:`:SshSession^ SshSession
@@ -351,24 +256,6 @@ possible. Send() method can be used to send data over the channel.&]
 [s5;:Upp`:`:SshShell`:`:WhenOutput:%- [_^Upp`:`:Event^ Event]<[@(0.0.255) const]_[@(0.0.255) v
 oid`*], [@(0.0.255) int]>_[* WhenOutput]&]
 [s2; This event is emitted whenever data is read from the shell.&]
-[s3;%- &]
-[ {{10000F(128)G(128)@1 [s0; [* Multithreaded Method]]}}&]
-[s3;%- &]
-[s5;:Upp`:`:SshShell`:`:AsyncRun`(Upp`:`:SshSession`&`,Upp`:`:String`,Upp`:`:Size`,Upp`:`:Event`<Upp`:`:SshShell`&`>`,Upp`:`:Event`<const Upp`:`:String`&`>`):%- [@(0.0.255) s
-tatic] [_^Upp`:`:AsyncWork^ AsyncWork]<[@(0.0.255) void]>_[* AsyncRun]([_^Upp`:`:SshSession^ S
-shSession][@(0.0.255) `&]_[*@3 session], [_^Upp`:`:String^ String]_[*@3 terminal], 
-[_^Upp`:`:Size^ Size]_[*@3 pagesize], [_^Upp`:`:Event^ Event]<SshShell[@(0.0.255) `&]>_[*@3 i
-n], [_^Upp`:`:Event^ Event]<[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]>_
-[*@3 out])&]
-[s2; Runs a generic remote command line interface asynchronously. 
-[%-*@3 terminal] should be set to preferred terminal emulation 
-(ansi, vt100, xterm, etc.). The dimensions of the terminal view 
-(as character cells) can be set using the [%-*@3 pagesize] parameter. 
-[%-*@3 in] event should be used to send data. [%-*@3 out] event should 
-be used to receive data. Throws [^topic`:`/`/SSH`/src`/Upp`_Ssh`_Base`$en`-us`#Upp`:`:Ssh`:`:Error`:`:struct^ S
-sh`::Error] on failure. Requires a valid ssh [%-*@3 session] during 
-the operation.&]
-[s3;%- &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]

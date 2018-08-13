@@ -236,7 +236,7 @@ bool SFtp::RemoveDir(const String& path)
 		if(!WouldBlock(rc) && rc != 0)
 			SetError(rc);
 		if(!rc)
-			LOG(Format("Directory '%s' is succesfully deleted.", path));
+			LLOG(Format("Directory '%s' is succesfully deleted.", path));
 		return !rc;
 	});
 }
