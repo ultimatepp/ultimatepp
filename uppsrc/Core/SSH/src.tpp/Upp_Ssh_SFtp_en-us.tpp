@@ -160,9 +160,9 @@ onst]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path])&]
 [s5;:Upp`:`:SFtp`:`:ListDir`(Upp`:`:SFtpHandle`,Upp`:`:SFtp`:`:DirList`&`): [@(0.0.255) b
 ool]_[* ListDir]([_^Upp`:`:SFtpHandle^ SFtpHandle]_[*@3 handle], [_^Upp`:`:SFtp`:`:DirList^ D
 irList][@(0.0.255) `&]_[*@3 list])&]
-[s2;%% [%-*@3 list]s the content of remote directory pointed by file 
-[%-*@3 handle]. Returns true on success. This method will return 
-true even when the remote directory is empty. &]
+[s2;%% [%-*@3 list]s the content of remote directory pointed by the 
+file [%-*@3 handle]. Returns true on success. This method will 
+return true even when the remote directory is empty. &]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:ListDir`(const Upp`:`:String`&`,Upp`:`:SFtp`:`:DirList`&`): [@(0.0.255) b
@@ -315,6 +315,15 @@ file.&]
 [s2;%% Returns the number of bytes processed during a data transfer. 
 Intended to be called from WhenWait routine.&]
 [s3; &]
+[s4; &]
+[s5;:Upp`:`:SFtp`:`:WhenProgress: [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
+[_^Upp`:`:int64^ int64]>_[* WhenProgress]&]
+[s2;%% If defined, this gate allows tracking of data transfers. The 
+first parameter provides the amount of data that has already 
+been transferred. The second parameter may provide the total 
+amount of data to be transferred, but is allowed to be 0. Returning 
+true will abort the current data transfer.&]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Transfer Methods]]}}&]
 [s3;  &]
 [s5;:Upp`:`:SFtp`:`:Get`(Upp`:`:SFtpHandle`,void`*`,int`): [@(0.0.255) int]_[* Get]([_^Upp`:`:SFtpHandle^ S
@@ -326,39 +335,43 @@ trying to do so at most for a specified timeout. Returns the
 number of bytes actually written.&]
 [s3;%% &]
 [s4; &]
-[s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:SFtpHandle`,const void`*`,int`): [@(0.0.255) bool]_[* Put
-]([_^Upp`:`:SFtpHandle^ SFtpHandle]_[*@3 handle], [@(0.0.255) const]_[@(0.0.255) void]_`*
-[*@3 ptr], [@(0.0.255) int]_[*@3 size])&]
-[s2;%% Writes at most [%-*@3 size] bytes from buffer pointed by [%-*@3 ptr] 
-into the remote file object associated with [%-*@3 handle], trying 
-to do so at most for a specified timeout. Returns the number 
-of bytes actually written.&]
+[s5;:Upp`:`:SFtp`:`:Put`(Upp`:`:SFtpHandle`,const void`*`,int`): [@(0.0.255) int]_[* Put](
+[_^Upp`:`:SFtpHandle^ SFtpHandle]_[*@3 handle], [@(0.0.255) const]_[@(0.0.255) void]_`*[*@3 p
+tr], [@(0.0.255) int]_[*@3 size])&]
+[s2;%% Writes at most [%-*@3 size] bytes data from the buffer pointed 
+by [%-*@3 ptr] into the remote file object associated with [%-*@3 handle], 
+trying to do so at most for a specified timeout. Returns the 
+number of bytes actually written.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:SaveFile`(const char`*`,const Upp`:`:String`&`): [@(0.0.255) bool]_
 [* SaveFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[_^Upp`:`:String^ S
 tring][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Saves the content of [%-*@3 data ]to remote [%-*@3 path]. Returns 
-true on success.&]
+true on success. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:LoadFile`(const char`*`): [_^Upp`:`:String^ String]_[* LoadFile]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path])&]
-[s2;%% Returns the content of the remote [%-*@3 path].&]
+[s2;%% Returns the content of the remote [%-*@3 path]. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:SaveFile`(const char`*`,Upp`:`:Stream`&`): [@(0.0.255) bool]_[* SaveF
 ile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&
 ]_[*@3 in])&]
 [s2;%% Saves the content of [%-*@3 in] to remote [%-*@3 path] . Returns 
-true on success.&]
+true on success. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SFtp`:`:LoadFile`(Upp`:`:Stream`&`,const char`*`): [@(0.0.255) bool]_[* LoadF
 ile]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[@(0.0.255) cha
 r]_`*[*@3 path])&]
 [s2;%% Returns the content of remote [%-*@3 path ]into [%-*@3 out]. Returns 
-true on success.&]
+true on success. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3;%% &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Constructor detail]]}}&]
 [s3; &]

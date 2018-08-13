@@ -21,7 +21,8 @@ dword SFtpStream::Read(int64 at, void *ptr, dword size)
 void SFtpStream::Write(int64 at, const void *data, dword size)
 {
 	SetPos(at);
-	if(!sftp->Put(handle, data, size))
+	sftp->Put(handle, data, size);
+	if(sftp->IsError())
 		SetError();
 }
 

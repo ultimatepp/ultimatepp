@@ -347,37 +347,6 @@ bool SshShell::AcceptX11(SshX11Connection* x11conn)
 	return false;
 }
 
-AsyncWork<void> SshShell::AsyncRun(SshSession& session, String terminal, Size pagesize, Event<SshShell&> in, Event<const String&> out)
-{
-	auto work = Async([=, &session, in = pick(in), out = pick(out)]{
-		SshShell worker(session);
-		worker.NonBlocking();
-	
-		bool cancelled = false;
-		int  waitstep  = worker.GetWaitStep();
-		
-		worker.WhenInput = [&worker, &in]() {
-			in(worker);
-		};
-		worker.WhenOutput = [&out](const void* buf, int len) {
-			String s((const char*) buf, len);
-			out(s);
-		};
-
-		worker.Run(terminal, pagesize);
-		
-		while(worker.Do()) {
-			if(!cancelled && CoWork::IsCanceled()) {
-				worker.Cancel();
-				cancelled = true;
-			}
-			Sleep(waitstep);
-		}
-		if(worker.IsError())
-			throw Ssh::Error(worker.GetError(), worker.GetErrorDesc());
-	});
-	return pick(work);
-}
 
 SshShell::SshShell(SshSession& session)
 : SshChannel(session)
@@ -393,8 +362,8 @@ SshShell::SshShell(SshSession& session)
 	xenabled	= false;
 	xbuflen		= 1024 * 1024;
 #elif PLATFORM_WIN32
-	stdinput	= NULL;
-	stdoutput	= NULL;
+	stdinput	= nullptr;
+	stdoutput	= nullptr;
 #endif
 
 	Zero(tflags);
@@ -403,5 +372,5 @@ SshShell::SshShell(SshSession& session)
 SshShell::~SshShell()
 {
 	ConsoleRawMode(false);
-}*/
+*/
 }

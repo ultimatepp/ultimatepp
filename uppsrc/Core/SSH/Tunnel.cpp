@@ -16,7 +16,7 @@ bool SshTunnel::IsValid()
 		default: NEVER();
 	}
 	if(b)
-		ReportError(-1, "Invalid channelinstance.");
+		ReportError(-1, "Invalid channel instance.");
 	return !b;
 }
 

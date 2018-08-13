@@ -113,8 +113,8 @@ private:
     enum Modes { NONE, CONNECT, LISTEN, ACCEPT };
 };
 
-/*
-class SshShell : public SshChannel {
+
+/*class SshShell : public SshChannel {
 public:
     bool        Run(const String& terminal, Size pagesize)                                              { return Run(GENERIC, terminal, pagesize); }
     bool        Run(const String& terminal, int width, int height)                                      { return Run(GENERIC, terminal, {width, height}); }
