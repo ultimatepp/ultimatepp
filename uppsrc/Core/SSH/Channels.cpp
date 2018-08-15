@@ -9,7 +9,7 @@ namespace Upp {
 bool SshChannel::Init()
 {
 	ASSERT(!IsOpen());
-	
+
 	LIBSSH2_CHANNEL *ch = libssh2_channel_open_session(ssh->session);
 	if(!ch && !WouldBlock())
 		SetError(-1);
@@ -24,7 +24,7 @@ void SshChannel::Exit()
 {
 	if(!channel)
 		return;
-	
+
 	Run([=]() mutable {
 		int rc = libssh2_channel_free(*channel);
 		if(!WouldBlock(rc) && rc < 0)
@@ -202,7 +202,14 @@ String SshChannel::GetExitSignal()
 int SshChannel::Get(void *ptr, int size, int sid)
 {
 	done = 0;
-	Run([=]() mutable { return Read(ptr, size, sid); });
+	Run([=]() mutable {
+		while(done < size && InProgress() && !IsEof() && !IsTimeout()) {
+			int rc = Read(ptr, size, sid);
+			if(rc > 0) RefreshUI();
+			if(rc < 0) return false;
+		}
+		return true;
+	});
 	return GetDone();
 }
 
@@ -244,36 +251,40 @@ String SshChannel::GetLine(int maxlen, int sid)
 int SshChannel::Put(const void *ptr, int size, int sid)
 {
 	done = 0;
-	Run([=]() mutable { return Write(ptr, size, sid); });
+	Run([=]() mutable {
+		while(done < size && InProgress() && !IsEof() && !IsTimeout()) {
+			int rc = Write(ptr, size, sid);
+			if(rc > 0) RefreshUI();
+			if(rc < 0) return false;
+		}
+		return true;
+	});
 	return GetDone();
 }
 
-bool SshChannel::Read(void *ptr, int size, int sid)
+int SshChannel::Read(void *ptr, int size, int sid)
 {
 	int sz = min(size - done, ssh->chunk_size);
-	Buffer<char> buffer(sz);
 
-	int rc = libssh2_channel_read_ex(*channel, sid, buffer, sz);
+	int rc = libssh2_channel_read_ex(*channel, sid, (char*) ptr + done, sz);
 	if(rc < 0 && !WouldBlock(rc))
 		SetError(rc);
 	if(rc > 0) {
-		memcpy((char*) ptr + done, (const char*) buffer, rc);
 		done += rc;
 		ssh->start_time = msecs();
-		VLOG("Read stream #" << sid << ": " << rc << " bytes read.");
+		LLOG("Read stream #" << sid << ": " << rc << " bytes read.");
 	}
-	return IsEof() || done == size || !rc;
+	return rc;
 }
 
 int SshChannel::Read(int sid)
 {
 	char c;
-	int rc = libssh2_channel_read_ex(*channel, sid, &c, 1);
-	if(!WouldBlock(rc) && rc < 0) SetError(rc);
-	return rc == 1 ? int(c) : -1;
+	done = 0;
+	return Read(&c, 1, sid) == 1 ? int(c) : -1;
 }
 
-bool SshChannel::Write(const void *ptr, int size, int sid)
+int SshChannel::Write(const void *ptr, int size, int sid)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
@@ -283,16 +294,15 @@ bool SshChannel::Write(const void *ptr, int size, int sid)
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();
-		VLOG("Write stream #" << sid << ": " << rc << " bytes written.");
+		LLOG("Write stream #" << sid << ": " << rc << " bytes written.");
 	}
-	return IsEof() || done == size;;
+	return rc;
 }
 
 bool SshChannel::Write(char c, int sid)
 {
-	int rc = libssh2_channel_write_ex(*channel, sid, &c, 1);
-	if(!WouldBlock(rc) && rc < 0) SetError(rc);
-	return rc == 1;
+	done = 0;
+	return Write(&c, 1, sid) == 1;
 }
 
 dword SshChannel::EventWait(int fd, dword events, int tv)
@@ -304,22 +314,34 @@ dword SshChannel::EventWait(int fd, dword events, int tv)
 
 bool SshChannel::ProcessEvents(String& input)
 {
-	Buffer<char> buffer(ssh->chunk_size);
-	int len = Read(buffer, ssh->chunk_size);
+	Buffer<char> buffer(ssh->chunk_size, 0);
 
-	ReadWrite(input, buffer, len);
-	
-	while(!input.IsEmpty() && InProgress()) {
-		len = Write(~input, input.GetLength());
-		if(len == input.GetLength())
-			input.Clear();
-		else
-		if(len > 0)
+	return Run([=, &buffer, &input]{
+		done = 0;
+		int len = Read(buffer, ssh->chunk_size);
+
+		ReadWrite(input, buffer, len);
+
+		while(!input.IsEmpty() && InProgress()) {
+			done = 0;
+			len = Write(~input, input.GetLength());
+			if(len <= 0)
+				break;
 			input.Remove(0, len);
-		else
-			break;
-	}
-	return IsEof();
+		}
+		return IsEof();
+	});
+}
+
+
+bool SshChannel::Shut(const String& msg)
+{
+	PutGetEof();
+	if(Close())
+		WaitClose();
+	if(!IsNull(msg))
+		ReportError(-1, msg);
+	return !IsError();
 }
 
 SshChannel::SshChannel(SshSession& session)

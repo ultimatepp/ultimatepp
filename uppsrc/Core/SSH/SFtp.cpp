@@ -134,13 +134,11 @@ int64 SFtp::GetPos(SFtpHandle handle)
 bool SFtp::Read(SFtpHandle handle, void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
-	Buffer<char> buffer(sz);
 
-	int rc = libssh2_sftp_read(handle, buffer, sz);
+	int rc = libssh2_sftp_read(handle, (char*) ptr + done, sz);
 	if(!WouldBlock(rc) && rc < 0)
 		SetError(rc);
 	if(rc > 0) {
-		memcpy((char*) ptr + done, (const char*) buffer, rc);
 		done += rc;
 		ssh->start_time = msecs();
 	}
@@ -179,14 +177,26 @@ int SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 	return GetDone();
 }
 
-bool SFtp::CopyData(Stream& dest, Stream& src)
+bool SFtp::CopyData(Stream& dest, Stream& src, int64 maxsize)
 {
-	if(CopyStream(dest, src,src.GetSize(), WhenProgress) < 0) {
-		src.Close();
-		dest.Close();
-		ReportError(-1, "File transfer is aborted.");
+	int64 size = src.GetSize();
+	String err;
+
+	if(size < 0 || size >= maxsize) {
+		err = Format("Buffer overflow. size = %d (allowed size >= 0 && < %d", size, maxsize);
+		goto Bailout;
+	}
+	if(CopyStream(dest, src, src.GetSize(), Proxy(WhenProgress)) < 0) {
+		err = "File transfer is aborted.";
+		goto Bailout;
 	}
 	return !IsError();
+
+Bailout:
+	src.Close();
+	dest.Close();
+	ReportError(-1, err);
+	return false;
 }
 
 bool SFtp::SaveFile(const char *path, const String& data)
@@ -200,7 +210,7 @@ String SFtp::LoadFile(const char *path)
 {
 	StringStream out;
 	SFtpFileIn in(*this, path);
-	CopyData(out, in);
+	CopyData(out, in, INT_MAX);
 	return pick(out.GetResult());
 }
 
@@ -261,7 +271,7 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 	return Run([=, &attrs, &list] () mutable {
 		char label[512];
 		char longentry[512];
-		
+
 		while(InProgress()) {
 			Zero(attrs);
 			int rc = libssh2_sftp_readdir_ex(
@@ -300,10 +310,10 @@ bool SFtp::ListDir(const String& path, DirList& list)
 
 bool SFtp::SymLink(const String& path, String& target, int type)
 {
-	Buffer<char> buffer(512);
+	Buffer<char> buffer(512, 0);
 
 	if(type == LIBSSH2_SFTP_SYMLINK)
-		return Run([=, &buffer] () mutable {
+		return Run([=, &path, &buffer, &target] () mutable {
 			int rc = libssh2_sftp_symlink_ex(
 						*sftp_session,
 						path,
@@ -321,7 +331,8 @@ bool SFtp::SymLink(const String& path, String& target, int type)
 			return !rc;
 		});
 	else
-		return Run([=, &buffer] () mutable {
+		return Run([=, &path, &buffer, &target] () mutable {
+			Buffer<char> sbuf(512, 0);
 			int rc = libssh2_sftp_symlink_ex(
 						*sftp_session,
 						path,
@@ -330,11 +341,11 @@ bool SFtp::SymLink(const String& path, String& target, int type)
 						512,
 						type
 					);
-			if(!WouldBlock(rc) && rc <= 0)
+			if(!WouldBlock(rc) && rc < 0)
 				SetError(rc);
 			if(rc > 0) {
-				LLOG("Symbolic link operation is successful.");
 				target.Set(buffer, rc);
+				LLOG("Symbolic link operation is successful. Target: " << target);
 			}
 			return rc > 0;
 		});
@@ -343,13 +354,13 @@ bool SFtp::SymLink(const String& path, String& target, int type)
 SFtp::DirEntry SFtp::GetInfo(const String& path)
 {
 	DirEntry finfo;
-	
+
 	if(!GetAttrs(path, *finfo))
-		return pick(Null);
+		return Null;
 
 	finfo.filename = path;
 	finfo.valid = true;
-	
+
 	return pick(finfo);
 }
 
@@ -365,7 +376,7 @@ bool SFtp::GetAttrs(SFtpHandle handle, SFtpAttrs& attrs)
 
 bool SFtp::GetAttrs(const String& path, SFtpAttrs& attrs)
 {
-	return Run([=, &attrs] () mutable {
+	return Run([=, &path, &attrs] () mutable {
 		int rc = LStat(path, attrs, LIBSSH2_SFTP_STAT);
 		if(rc < 0)	SetError(rc);
 		if(!rc) LLOG(Format("File attributes of '%s' is successfully retrieved.", path));

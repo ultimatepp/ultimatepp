@@ -1,6 +1,7 @@
 class Ssh {
 public:
     void                Abort()                                 { ssh->status = ABORTED; }
+    Ssh&                WaitStep(int ms)                        { ssh->waitstep = clamp(ms, 0, INT_MAX); return *this; }
     int                 GetTimeout() const                      { return ssh->timeout; }
     int                 GetWaitStep() const                     { return ssh->waitstep; }
     bool                InProgress() const                      { return ssh->status == WORKING; }
@@ -14,6 +15,8 @@ public:
 
     operator bool() const                                       { return ssh; }
 
+    Event<>             WhenWait;
+    
     static void         Trace(bool b = true)                    { SSH::sTrace = b; }
     static void         TraceVerbose(int level)                 { Trace((bool)level); SSH::sTraceVerbose = level; }
 
@@ -45,7 +48,7 @@ protected:
         int                 waitstep;
         int                 chunk_size;
         int                 status;
-        bool                noloop;
+        bool                noblock;
     };
     One<CoreData> ssh;
 
@@ -64,9 +67,9 @@ protected:
     bool                IsTimeout() const                       { return !IsNull(ssh->timeout) && ssh->timeout > 0 &&  msecs(ssh->start_time) >= ssh->timeout; }
     void                SetError(int rc, const String& reason = Null);
     void                ReportError(int rc, const String& reason);
-    
     void                AddTo(SocketWaitEvent& e)               { e.Add(*ssh->socket, GetWaitEvents()); }
     dword               GetWaitEvents();
+    inline void         RefreshUI()                             { WhenWait ? WhenWait() : ssh->whenwait(); }
     
 private:
     static int64        GetNewId();
