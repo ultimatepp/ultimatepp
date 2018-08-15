@@ -15,20 +15,20 @@ topic "Channels: Scp, Exec, Tunnel, Shell";
 [s2; Secure shell protocol (version 2) predefines several channel 
 types.&]
 [s2;  &]
-[s2;i150;O9; -|[^topic`:`/`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:Scp`:`:class^ 1
+[s2;i150;O9; -|[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:Scp`:`:class^ 1
 . Secure data copy channel.]&]
-[s2;i150;O9; -|[^topic`:`/`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshExec`:`:class^ 2
+[s2;i150;O9; -|[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshExec`:`:class^ 2
 . Remote command execution channel.]&]
-[s2;i150;O9; -|[^topic`:`/`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshTunnel`:`:class^ 3
+[s2;i150;O9; -|[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshTunnel`:`:class^ 3
 . TCP`-IP and port forwarding (network proxy) channel.]&]
-[s2;i150;O9; -|[^topic`:`/`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ 4
+[s2;i150;O9; -|[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ 4
 . Real`-time, interactive remote shell (command line interface) 
 channel.]&]
-[s2;i150;O9; -|[^topic`:`/`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ 5
+[s2;i150;O9; -|[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ 5
 . Real`-time X11 forwarding channel (on machines running X server).]&]
 [s2;i150;O9; &]
-[s2; Below classes wrap the generic SshChannel class to provide easy`-to`-use 
-interfaces to these specialized channels.&]
+[s2; Below classes wrap up the generic SshChannel class to provide 
+easy`-to`-use interfaces to these specialized channels.&]
 [s0; &]
 [ {{10000@(113.42.0) [s0; [*@7;4 Scp]]}}&]
 [s3; &]
@@ -44,25 +44,41 @@ class, and has pick semantics.&]
 [s5;:Upp`:`:Scp`:`:SaveFile`(const char`*`,const Upp`:`:String`&`):%- [@(0.0.255) bool]_
 [* SaveFile]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [@(0.0.255) const]_[_^Upp`:`:String^ S
 tring][@(0.0.255) `&]_[*@3 data])&]
-[s2;  [%-*@3 path] [%-*@3 data] .&]
+[s2; Saves the content of [%-*@3 data ]to remote [%-*@3 path]. Returns 
+true on success. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Scp`:`:LoadFile`(const char`*`):%- [_^Upp`:`:String^ String]_[* LoadFile]([@(0.0.255) c
 onst]_[@(0.0.255) char]_`*[*@3 path])&]
-[s2;  [%-*@3 path] .&]
+[s2; Returns the content of the remote [%-*@3 path]. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Scp`:`:SaveFile`(const char`*`,Upp`:`:Stream`&`):%- [@(0.0.255) bool]_[* Save
 File]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 path], [_^Upp`:`:Stream^ Stream][@(0.0.255) `&
 ]_[*@3 in])&]
-[s2;  [%-*@3 path] [%-*@3 in] .&]
+[s2; Saves the content of [%-*@3 in] to remote [%-*@3 path] . Returns 
+true on success. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:Scp`:`:LoadFile`(Upp`:`:Stream`&`,const char`*`):%- [@(0.0.255) bool]_[* Load
 File]([_^Upp`:`:Stream^ Stream][@(0.0.255) `&]_[*@3 out], [@(0.0.255) const]_[@(0.0.255) ch
 ar]_`*[*@3 path])&]
-[s2;  [%-*@3 out] [%-*@3 path] .&]
+[s2; Returns the content of remote [%-*@3 path ]into [%-*@3 out]. Returns 
+true on success. [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:WhenProgress^ W
+henProgress ]gate can be used to track data transfer.&]
 [s3; &]
+[s4;%- &]
+[s5;:Upp`:`:Scp`:`:WhenProgress:%- [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:int64^ int64], 
+[_^Upp`:`:int64^ int64]>_[* WhenProgress]&]
+[s2; If defined, this gate allows tracking of data transfers. The 
+first parameter provides the amount of data that has already 
+been transferred. The second parameter provides the total amount 
+of data to be transferred. Returning true will abort the current 
+data transfer.&]
+[s0; &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]
 [s5;:Upp`:`:Scp`:`:Scp`(Upp`:`:SshSession`&`):%- [* Scp]([_^Upp`:`:SshSession^ SshSession
@@ -77,12 +93,12 @@ ar]_`*[*@3 path])&]
 [s0;#l288; This class encapsulates an SSH2 remote process execution 
 (exec) channel. It provides a means for executing a single shell 
 command on a remote host. If you need to run a real`-time, interactive 
-command line interface, you should consider using SshShell class 
-insead. SshExec class is derived from SshChannel class, and has 
-pick semantics. &]
+command line interface, you should consider using [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshShell`:`:class^ S
+shShell] class instead. SshExec class is derived from SshChannel 
+class, and has pick semantics. &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
-[s4;%- &]
+[s3;%- &]
 [s5;:Upp`:`:SshExec`:`:Execute`(const Upp`:`:String`&`,Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) i
 nt]_[* Execute]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 cmd], 
 [_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 out], [_^Upp`:`:String^ String][@(0.0.255) `&
@@ -93,9 +109,7 @@ nt]_[* operator()]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[
 ]_[*@3 err])&]
 [s0;l288; Executes a remote process defined by the [%-*@3 cmd] command 
 line,returns its standard output in [%-*@3 out], its standard error 
-output in [%-*@3 err], and its exit code as the return value. If 
-the remote process exits successfully the return code will be 
-0.&]
+output in [%-*@3 err], and its exit code as the return value.&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]
@@ -169,7 +183,9 @@ providing a means for secure interaction with a remote command
 line interface in real`-time with X11 forwarding support. SshShell 
 class is derived from SshChannel class, and has pick semantics. 
 If you need to execute a single command with no interaction, 
-you should consider using SshExec class.&]
+you should consider using [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Channels`_en`-us`#Upp`:`:SshExec`:`:class^ S
+shExec] class. Also note that the shell object needs to be put 
+into blocking mode if it is not planned to run as a timed session.&]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
@@ -211,12 +227,12 @@ may result in smoother performance). Returns `*this for method
 chaining.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:SshShell`:`:AcceptX11`(Upp`:`:SshX11Connection`*`):%- [@(0.0.255) bool]_[* Ac
-ceptX11]([_^Upp`:`:SshX11Connection^ SshX11Connection][@(0.0.255) `*]_[*@3 x11conn])&]
+[s5;:Upp`:`:SshShell`:`:AcceptX11`(Upp`:`:SshX11Handle`):%- [@(0.0.255) bool]_[* AcceptX1
+1]([_^Upp`:`:SshX11Handle^ SshX11Handle]_[*@3 xhandle])&]
 [s6;%- POSIX only. Requires a running X server.&]
 [s2; Accepts an X11 connection. Return true on success. This method 
 requires X11 forwarding to be enabled, and is meant to be used 
-with [^topic`:`/`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:WhenX11^ S
+with [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:WhenX11^ S
 shSession:WhenX11] event. Note that each shell instance can forward 
 multiple X11 connections.&]
 [s3; &]

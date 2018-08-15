@@ -36,7 +36,7 @@ static void ssh_keyboard_callback(const char *name, int name_len, const char *in
 
 static void ssh_x11_request(LIBSSH2_SESSION *session, LIBSSH2_CHANNEL *channel, char *shost, int sport, void **abstract)
 {
-	static_cast<SshSession*>(*abstract)->WhenX11((SshX11Connection*) channel);
+	static_cast<SshSession*>(*abstract)->WhenX11((SshX11Handle) channel);
 }
 
 // ssh_session_libtrace: Allows full-level logging (redirection) of libsssh2 diagnostic messages.
@@ -294,24 +294,24 @@ SshExec SshSession::CreateExec()
 	ASSERT(ssh && ssh->session);
 	return pick(SshExec(*this));
 }
-//
-//Scp SshSession::CreateScp()
-//{
-//	ASSERT(ssh && ssh->session);
-//	return pick(Scp(*this));
-//}
-//
-//SshTunnel SshSession::CreateTcpTunnel()
-//{
-//	ASSERT(ssh && ssh->session);
-//	return pick(SshTunnel(*this));
-//}
-//
-//SshShell SshSession::CreateShell()
-//{
-//	ASSERT(ssh && ssh->session);
-//	return pick(SshShell(*this));
-//}
+
+Scp SshSession::CreateScp()
+{
+	ASSERT(ssh && ssh->session);
+	return pick(Scp(*this));
+}
+
+SshTunnel SshSession::CreateTunnel()
+{
+	ASSERT(ssh && ssh->session);
+	return pick(SshTunnel(*this));
+}
+
+SshShell SshSession::CreateShell()
+{
+	ASSERT(ssh && ssh->session);
+	return pick(SshShell(*this));
+}
 
 ValueMap SshSession::GetMethods()
 {

@@ -8,7 +8,7 @@ int SshExec::Execute(const String& cmd, String& out, String& err)
 		int size = max(ssh->chunk_size,  1024);
 		out = Get(size);
 		err = GetStdErr(size);
-		if(!IsError() && PutGetEof() &&	Close()	&& WaitClose())
+		if(Shut(IsError() ? GetErrorDesc() : Null))
 			return  GetExitCode();
 	}
 	return GetError();

@@ -61,7 +61,7 @@ void Ssh::Check()
 bool Ssh::Do(Gate<>& fn)
 {
 	Mutex::Lock m_(StaticMutex);
-	
+
 	Check();
 	if(!ssh->init)
 		ssh->init = Init();
@@ -76,7 +76,7 @@ bool Ssh::Run(Gate<>&& fn)
 	try {
 		ssh->status = WORKING;
 		ssh->start_time = msecs();
-		
+
 		while(Do(fn))
 			;
 
@@ -94,12 +94,12 @@ bool Ssh::Run(Gate<>&& fn)
 void Ssh::Wait()
 {
 	while(!IsTimeout()) {
-		ssh->whenwait();
+		RefreshUI();
 		if(!ssh->socket)
 			return;
 		SocketWaitEvent we;
 		AddTo(we);
-		if(we.Wait(ssh->waitstep) || ssh->noloop)
+		if(we.Wait(ssh->waitstep) || ssh->noblock)
 			return;
 	}
 }
@@ -148,7 +148,7 @@ Ssh::Ssh()
     ssh->session        = nullptr;
     ssh->socket         = nullptr;
     ssh->init           = false;
-    ssh->noloop			= false;
+    ssh->noblock		= false;
     ssh->timeout        = Null;
     ssh->start_time     = 0;
     ssh->waitstep       = 10;

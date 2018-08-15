@@ -24,8 +24,27 @@ TTI], error management, and logging.&]
 [s2;%% Tests whether the object is picked (moved).&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:Ssh`:`:Abort`(`): [@(0.0.255) void]_[* Abort]()&]
-[s2;%% Aborts the current operation.&]
+[s5;:Upp`:`:Ssh`:`:WhenWait: [_^Upp`:`:Event^ Event]<>_[* WhenWait]&]
+[s2;%% If this event is defined, it is invoked periodically while 
+the ssh client performs any socket operations, with the default 
+frequency of 100Hz. This is intended to give user feedback in 
+interactive applications. Each ssh object can have a separate 
+WhenWait call. But when left undefined, calls to this method 
+will be redirected to the object`'s session`'s WhenWait callback.&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:Ssh`:`:WaitStep`(int`): [_^Upp`:`:Ssh^ Ssh][@(0.0.255) `&]_[* WaitStep]([@(0.0.255) i
+nt]_[*@3 ms])&]
+[s2;%% Sets the periodicity of calling [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Base`_en`-us`#Upp`:`:Ssh`:`:WhenWait^ W
+henWait] in millisecond between calls. Default value is 10ms 
+(100hz). Returns `*this for method chaining. Note that ssh subsystems 
+and channels inherit their default waitstep values from their 
+session.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Ssh`:`:GetWaitStep`(`)const: [@(0.0.255) int]_[* GetWaitStep]()_[@(0.0.255) con
+st]&]
+[s2;%% Returns current periodicity of calling WhenWait.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:GetTimeout`(`)const: [@(0.0.255) int]_[* GetTimeout]()_[@(0.0.255) const
@@ -33,9 +52,8 @@ TTI], error management, and logging.&]
 [s2;%% Returns the timeout value.&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:Ssh`:`:GetWaitStep`(`)const: [@(0.0.255) int]_[* GetWaitStep]()_[@(0.0.255) con
-st]&]
-[s2;%% Returns current periodicity of calling WhenWait.&]
+[s5;:Upp`:`:Ssh`:`:Abort`(`): [@(0.0.255) void]_[* Abort]()&]
+[s2;%% Aborts the current operation.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:InProgress`(`)const: [@(0.0.255) bool]_[* InProgress]()_[@(0.0.255) cons

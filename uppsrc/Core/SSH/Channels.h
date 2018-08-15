@@ -1,7 +1,6 @@
 class SshChannel : public Ssh {
 public:
     SshChannel&         Timeout(int ms)                                                     { ssh->timeout = ms; return *this; }
-    SshChannel&         WaitStep(int ms)                                                    { ssh->waitstep = clamp(ms, 0, INT_MAX); return *this; }
     SshChannel&         ChunkSize(int sz)                                                   { ssh->chunk_size = clamp(sz, 1, INT_MAX); return *this; }
 
     LIBSSH2_CHANNEL*    GetHandle() const                                                   { return channel ? *channel : nullptr; }
@@ -51,9 +50,9 @@ public:
 protected:
     bool                Init() override;
     void                Exit() override;
-    bool                Read(void *ptr, int size, int sid = 0);
+    int                 Read(void *ptr, int size, int sid = 0);
     int                 Read(int sid = 0);
-    bool                Write(const void *ptr, int size, int sid = 0);
+    int                 Write(const void *ptr, int size, int sid = 0);
     bool                Write(char c, int sid = 0);
     bool                SetWndSz(uint32 size, bool force = false);
     int                 SetPtySz(int w, int h);
@@ -64,7 +63,8 @@ protected:
     bool                ProcessEvents(String& input);
     virtual void        ReadWrite(String& in, const void* out, int out_len)                 {}
 
-
+    bool                Shut(const String& msg);
+    
     One<LIBSSH2_CHANNEL*>  channel;
     int                    done;
 };
@@ -84,12 +84,15 @@ public:
     bool   SaveFile(const char *path, Stream& in);
     bool   LoadFile(Stream& out, const char *path);
 
+    Gate<int64, int64> WhenProgress;
+    
     Scp(SshSession& session) : SshChannel(session)                                          { ssh->otype = SCP; ssh->init = true; }
 
 private:
-    bool   Open(int cmd, const String& path, libssh2_struct_stat* fs,
-                int64 size, dword flags, long mode);
-
+    bool   OpenRead(const String& path, ScpAttrs& attrs);
+    bool   OpenWrite(const String& path, int64 size, long mode = 0644);
+    bool   Load(Stream& s, ScpAttrs a, int64 maxlen = INT64_MAX);
+    bool   Save(Stream& s);
 };
 
 class SshTunnel : public SshChannel {
@@ -103,6 +106,9 @@ public:
     SshTunnel(SshSession& session) : SshChannel(session)                                    { ssh->otype = TUNNEL; mode = NONE; ssh->init = true; }
     virtual ~SshTunnel()                                                                    { Exit(); }
 
+    SshTunnel(SshTunnel&&) = default;
+    SshTunnel& operator=(SshTunnel&&) = default;
+
 private:
     void Exit() override;
     bool IsValid();
@@ -114,7 +120,7 @@ private:
 };
 
 
-/*class SshShell : public SshChannel {
+class SshShell : public SshChannel {
 public:
     bool        Run(const String& terminal, Size pagesize)                                              { return Run(GENERIC, terminal, pagesize); }
     bool        Run(const String& terminal, int width, int height)                                      { return Run(GENERIC, terminal, {width, height}); }
@@ -122,7 +128,7 @@ public:
     bool        Console(const String& terminal)                                                         { return Run(CONSOLE, terminal, GetConsolePageSize()); }
 
     SshShell&   ForwardX11(const String& host = Null, int display = 0, int screen = 0, int bufsize = 1024 * 1024);
-    bool        AcceptX11(SshX11Connection* x11conn);
+    bool        AcceptX11(SshX11Handle xhandle);
 
     void        Send(int c)                     { queue.Cat(c);   }
     void        Send(const char* s)             { Send(String(s));}
@@ -134,9 +140,6 @@ public:
 
     Event<>                  WhenInput;
     Event<const void*, int>  WhenOutput;
-
-    static AsyncWork<void> AsyncRun(SshSession& session, String terminal, Size pagesize,
-                                        Event<SshShell&> in, Event<const String&> out);
 
     SshShell(SshSession& session);
     virtual ~SshShell();
@@ -160,8 +163,6 @@ protected:
     enum Modes { GENERIC, CONSOLE };
 
 private:
-    bool    Init() override                                                                        { return Lock(); }
-
     String  queue;
     Size    psize;
     int     mode;
@@ -179,7 +180,6 @@ private:
     String  xhost;
     Buffer<char> xbuffer;
     int          xbuflen;
-    Vector<Tuple<SshX11Connection*, SOCKET>> xrequests;
+    Vector<Tuple<SshX11Handle, SOCKET>> xrequests;
 #endif
 };
-*/

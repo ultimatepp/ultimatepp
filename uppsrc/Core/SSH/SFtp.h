@@ -77,7 +77,6 @@ public:
 
 public:
     SFtp&                   Timeout(int ms)                                         { ssh->timeout = ms; return *this; }
-    SFtp&                   WaitStep(int ms)                                        { ssh->waitstep = clamp(ms, 0, INT_MAX); return *this; }
     SFtp&                   ChunkSize(int sz)                                       { ssh->chunk_size = clamp(sz, 1, INT_MAX); return *this; }
 
     // File
@@ -154,7 +153,7 @@ private:
     bool                    SymLink(const String& path, String& target, int type);
     bool                    Read(SFtpHandle handle, void* ptr, int size);
     bool                    Write(SFtpHandle handle, const void* ptr, int size);
-    bool                    CopyData(Stream& dest, Stream& src);
+    bool                    CopyData(Stream& dest, Stream& src, int64 maxsize = INT64_MAX);
   
     One<LIBSSH2_SFTP*>      sftp_session;
     int                     done;

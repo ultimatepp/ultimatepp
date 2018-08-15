@@ -36,20 +36,19 @@ public:
     SFtp                CreateSFtp();
     SshChannel          CreateChannel();
     SshExec             CreateExec();
-//    Scp                 CreateScp();
+    Scp                 CreateScp();
     SshTunnel           CreateTunnel();
-//    SshShell            CreateShell();
+    SshShell            CreateShell();
 
     bool                Connect(const String& url);
     bool                Connect(const String& host, int port, const String& user, const String& password);
     void                Disconnect();
     
-    Event<>             WhenWait;
     Event<>             WhenConfig;
     Event<>             WhenAuth;
     Gate<>              WhenVerify;
     Gate<>              WhenProxy;
-    Event<SshX11Connection*> WhenX11;
+    Event<SshX11Handle> WhenX11;
     Function<String(String, String, String)>  WhenKeyboard;
 
     SshSession();
