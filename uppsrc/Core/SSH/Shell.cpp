@@ -9,7 +9,6 @@ bool SshShell::Run(int mode_, const String& terminal, Size pagesize)
 {
 	mode  = mode_;
 	psize = pagesize;
-	ssh->noblock = mode == CONSOLE; // FIXME: Not very pretty, but currently required for console i/o to work.
 	
 	if(RequestTerminal(terminal, psize) && X11Init() && RequestShell() && ConsoleInit())
 		ProcessEvents(queue);
@@ -350,6 +349,7 @@ SshShell::SshShell(SshSession& session)
 : SshChannel(session)
 {
     ssh->otype  = SHELL;
+    ssh->noblock = true;
     mode        = GENERIC;
     rawmode     = false;
     resized     = false;

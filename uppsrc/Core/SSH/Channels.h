@@ -91,7 +91,7 @@ public:
 private:
     bool   OpenRead(const String& path, ScpAttrs& attrs);
     bool   OpenWrite(const String& path, int64 size, long mode = 0644);
-    bool   Load(Stream& s, ScpAttrs a, int64 maxlen = INT64_MAX);
+    bool   Load(Stream& s, ScpAttrs a, int64 maxsize = INT64_MAX);
     bool   Save(Stream& s);
 };
 

@@ -38,14 +38,14 @@ bool Scp::OpenWrite(const String& path, int64 size, long mode)
 	});
 }
 
-bool Scp::Load(Stream& s, ScpAttrs a, int64 maxlen)
+bool Scp::Load(Stream& s, ScpAttrs a, int64 maxsize)
 {
 	int64 done_ = 0;
 	int64 size  = a.st_size;
 	String msg;
 
-	if(size >= INT_MAX) {
-		msg = "Max size exceeded.";
+	if(size < 0 && size >= maxsize) {
+		msg = "Invald stream size.";
 	}
 	else
 	while(done_ < size && !IsEof() && !IsError()) {
@@ -69,6 +69,7 @@ bool Scp::Save(Stream& s)
 	int64 done_ = 0;
 	int64 size  = s.GetSize();
 	String msg;
+
 	Buffer<char> chunk(ssh->chunk_size, 0);
 
 	while(done_ < size && !IsEof() && !IsError()) {
