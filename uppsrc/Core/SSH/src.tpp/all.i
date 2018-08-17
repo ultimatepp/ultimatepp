@@ -10,6 +10,10 @@ TOPIC("Upp_Ssh_Hosts_en-us")
 #include "Upp_Ssh_Hosts_en-us.tppi"
 END_TOPIC
 
+TOPIC("Upp_Ssh_SFtpStream_en-us")
+#include "Upp_Ssh_SFtpStream_en-us.tppi"
+END_TOPIC
+
 TOPIC("Upp_Ssh_SFtp_en-us")
 #include "Upp_Ssh_SFtp_en-us.tppi"
 END_TOPIC

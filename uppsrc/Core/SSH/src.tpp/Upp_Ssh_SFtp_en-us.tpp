@@ -380,7 +380,8 @@ ublic][3 _][*@3;3 Moveable][3 <][*3 DirEntry][3 >_]&]
 of file system objects (files, directories, symbolic links, etc.) 
 returned by the SFtp class. DirEntry class has pick semantics.&]
 [s3;%- &]
-[s4;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
+[s3;%- &]
 [s5;:Upp`:`:SFtp`:`:DirEntry`:`:GetName`(`)const:%- [_^Upp`:`:String^ String]_[* GetName](
 )_[@(0.0.255) const]&]
 [s2; Returns the name (path) of the file system object on success, 
