@@ -319,9 +319,7 @@ bool SshChannel::ProcessEvents(String& input)
 	return Run([=, &buffer, &input]{
 		done = 0;
 		int len = Read(buffer, ssh->chunk_size);
-
 		ReadWrite(input, buffer, len);
-
 		while(!input.IsEmpty() && InProgress()) {
 			done = 0;
 			len = Write(~input, input.GetLength());
