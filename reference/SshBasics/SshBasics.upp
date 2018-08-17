@@ -1,0 +1,24 @@
+description "Demonstrates the basic capabilities of the SSH package.\377";
+
+uses
+	Core,
+	Core/SSH;
+
+file
+	SshBasics.h,
+	main.cpp,
+	"Core examples" readonly separator,
+	SFtp.cpp,
+	SFtpStream.cpp,
+	Exec.cpp,
+	Scp.cpp,
+	Shell.cpp,
+	X11Shell.cpp,
+	Tunnel.cpp,
+	"Misc. examples" readonly separator,
+	PickSemantics.cpp,
+	VerboseLogging.cpp;
+
+mainconfig
+	"" = "";
+
