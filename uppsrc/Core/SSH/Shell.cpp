@@ -40,12 +40,12 @@ void SshShell::ReadWrite(String& in, const void* out, int out_len)
 			sigset_t set;
 			sigemptyset(&set);
 			sigaddset(&set, SIGWINCH);
-			sigprocmask(SIG_BLOCK, &set, NULL);
+			sigprocmask(SIG_BLOCK, &set, nullptr);
 
 			struct timespec timeout;
 			Zero(timeout); // Instead of waiting, we simply poll.
 
-			auto rc = sigtimedwait(&set, NULL, &timeout);
+			auto rc = sigtimedwait(&set, nullptr, &timeout);
 			if(rc < 0 && errno != EAGAIN)
 				SetError(-1, "sigtimedwait() failed.");
 			if(rc > 0)
@@ -331,6 +331,7 @@ bool SshShell::AcceptX11(SshX11Handle xhandle)
 		if(connect(sock, (struct sockaddr*) &addr, sizeof(addr)) == -1) {
 			LLOG("Couldn't connect to " << path);
 			close(sock);
+			return false;
 		}
 
 		LLOG("X11 connection accepted.");
