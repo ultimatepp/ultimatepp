@@ -15,6 +15,9 @@ file
 	Shell.cpp,
 	X11Shell.cpp,
 	Tunnel.cpp,
+	"Core MT examples" readonly separator,
+	SFtpMT.cpp,
+	ExecMT.cpp,
 	"Misc. examples" readonly separator,
 	PickSemantics.cpp,
 	VerboseLogging.cpp;
