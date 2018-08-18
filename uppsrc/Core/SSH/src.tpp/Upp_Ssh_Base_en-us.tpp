@@ -148,8 +148,9 @@ or a combination of the following constants:&]
 [s1;:Upp`:`:Ssh`:`:Error`:`:struct: [@(0.0.255)3 struct][3 _][*3 Error][3 _:_][@(0.0.255)3 publi
 c][3 _][*@3;3 Exc]&]
 [s0;l288;%% Type used as Ssh exception. This helper is internally 
-used by the Ssh`-based classes, bu can be used externally by 
-client code to halt jobs, and report errors (e.g. in worker threads).&]
+used by the Ssh`-based classes, but can also be used externally 
+by client code to halt jobs, and report errors (e.g. in worker 
+threads).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:Ssh`:`:Error`:`:code: [@(0.0.255) int]_[* code]&]
