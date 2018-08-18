@@ -38,8 +38,12 @@ CONSOLE_APP_MAIN
 		SFtpGet(session);
 #elif defined(SSH_SFTP_STREAM)
 		SFtpStreamGet(session);
+#elif defined(SSH_SFTP_MT)
+		SFtpAsyncGet(session);
 #elif defined(SSH_EXEC)
 		ExecListDir(session);
+#elif defined(SSH_EXEC_MT)
+		ExecAsyncListDir(session);
 #elif defined(SSH_SCP)
 		ScpGet(session);
 #elif defined(SSH_SHELL)

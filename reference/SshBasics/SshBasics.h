@@ -8,7 +8,9 @@ using namespace Upp;
 
 void SFtpGet(SshSession& session);
 void SFtpStreamGet(SshSession& session);
+void SFtpAsyncGet(SshSession& session);
 void ExecListDir(SshSession& session);
+void ExecAsyncListDir(SshSession& session);
 void ShellConsole(SshSession& session);
 void ScpGet(SshSession& session);
 void ForwardTcpIp(SshSession& session);
