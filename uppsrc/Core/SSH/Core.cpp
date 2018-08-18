@@ -44,6 +44,9 @@ String GetName(int type, int64 id)
 #define LDUMPHEX(x)	  do { if(SSH::sTraceVerbose) RDUMPHEX(x); } while(false)
 
 // Ssh: SSH objects core class.
+
+StaticMutex ssh_mutex;
+
 void Ssh::Check()
 {
 	auto sock = ssh->socket;
@@ -60,7 +63,7 @@ void Ssh::Check()
 
 bool Ssh::Do(Gate<>& fn)
 {
-	Mutex::Lock m_(StaticMutex);
+	Mutex::Lock m_(ssh_mutex);
 
 	Check();
 	if(!ssh->init)
