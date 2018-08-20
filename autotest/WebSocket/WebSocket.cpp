@@ -6,6 +6,9 @@ CONSOLE_APP_MAIN
 {
 	StdLogSetup(LOG_COUT|LOG_FILE);
 
+	HttpRequest::Trace();
+	WebSocket::Trace();
+
 	for(int ssl = 0; ssl < 2; ssl++)
 		for(int blocking = 0; blocking < 2; blocking++) {
 			DDUMP(ssl);
