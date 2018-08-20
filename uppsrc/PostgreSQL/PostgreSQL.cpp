@@ -638,10 +638,12 @@ void PostgreSQLConnection::GetColumn(int i, Ref f) const
 			f.SetValue(ScanInt64(s));
 			break;
 		case INT_V:
-			f.SetValue(atoi(s));
+			f.SetValue(ScanInt(s));
 			break;
-		case DOUBLE_V:
-			f.SetValue(Atof(s));
+		case DOUBLE_V: {
+				double d = ScanDouble(s);
+				f.SetValue(IsNull(d) ? NAN : d);
+			}
 			break;
 		case BOOL_V:
 			f.SetValue(*s == 't' ? "1" : "0");
