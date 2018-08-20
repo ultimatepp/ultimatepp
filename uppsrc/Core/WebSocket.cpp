@@ -89,7 +89,9 @@ bool WebSocket::Connect(const String& url)
 	if(*u == ':')
 		port = ScanInt(u + 1, &u);
 	
-	return Connect(url, host, ssl, port);
+	return Connect(url.StartsWith("wss:") ? "https:" + url.Mid(4)
+	               : url.StartsWith("ws:") ? "http:" + url.Mid(3) : url,
+	               host, ssl, port);
 }
 
 bool WebSocket::Connect(const String& uri_, const String& host_, bool ssl_, int port)
