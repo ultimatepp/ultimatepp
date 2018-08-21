@@ -1,7 +1,5 @@
 sooner:
 
-- reference/Reports - missing text
-
 - opening FindInFiles, then selecting folder - pushing buttons does not exit dialog
 
 - package organizer initial size too small
@@ -13,7 +11,7 @@ sooner:
 - not all additional cursors are correct
 - Synthetise fonts
 - Sort fonts
-- fix link options (joining link options missing space)
+- fix package organiser link options (joining link options missing space)
 
 - numpad Enter does not do K_ENTER
 
@@ -25,8 +23,8 @@ later:
 - fullscreen mode issues
 - PrinterJob
 - CommonFontInfo GetFontInfoSys(Font font) metrics
-- ROTATED TEXT
 - GetGlyphInfoSys metrics
+- ROTATED TEXT
 - EndSession ?
 - ignoreclick
 - event flags
@@ -50,6 +48,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- reference/Reports - missing text
 - doubleclick interval: https://developer.apple.com/documentation/appkit/nsevent/1528384-doubleclickinterval?language=objc
 - rect loop (ViewDraw)
 - DrawDragRect

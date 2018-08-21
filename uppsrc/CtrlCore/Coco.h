@@ -163,29 +163,6 @@ struct MMImp;
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <CtrlCore/CocoTop.h>
 
-class PrinterJob {
-	NilDraw             nild;
-	Vector<int>         pages;
-
-public:
-	Draw&               GetDraw()                       { return nild; }
-	operator            Draw&()                         { return GetDraw(); }
-	const Vector<int>&  GetPages() const                { return pages; }
-	int                 operator[](int i) const         { return 0; }
-	int                 GetPageCount() const            { return 0; }
-
-	bool                Execute()                       { return false; }
-
-	PrinterJob& Landscape(bool b = true)                { return *this; }
-	PrinterJob& MinMaxPage(int minpage, int maxpage)    { return *this; }
-	PrinterJob& PageCount(int n)                        { return *this; }
-	PrinterJob& CurrentPage(int currentpage)            { return *this; }
-	PrinterJob& Name(const char *_name)                 { return *this; }
-
-	PrinterJob(const char *name = NULL)                 {}
-	~PrinterJob()                                       {}
-};
-
 };
 
 #define GUIPLATFORM_INCLUDE_AFTER <CtrlCore/CocoAfter.h>
