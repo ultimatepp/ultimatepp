@@ -153,7 +153,9 @@ struct CocoTop;
 struct MMCtrl;
 struct MMImp;
 
-#define GUIPLATFORM_CTRL_TOP_DECLS CocoTop *coco = NULL; One<DrawDragRectInfo> dr;
+#define GUIPLATFORM_CTRL_TOP_DECLS \
+	CocoTop *coco = NULL; \
+	One<DrawDragRectInfo> dr; \
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/CocoCtrl.h>
 

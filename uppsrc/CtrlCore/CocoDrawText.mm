@@ -52,6 +52,14 @@ CTFontRef CT_Font(Font fnt)
 	return e.ctfont;
 }
 
+CGGlyph GetCharGlyph(CTFontRef ctfont, int chr)
+{
+    CGGlyph glyph_index;
+    UniChar h = chr;
+	CTFontGetGlyphsForCharacters(ctfont, &h, &glyph_index, 1);
+	return glyph_index;
+}
+
 GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr)
 {
 	GlyphInfo gi;
@@ -59,9 +67,7 @@ GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr)
 	gi.width = 0x8000;
 	if(ctfont) {
 		LTIMING("GetGlyphInfoSys 2");
-	    CGGlyph glyph_index;
-	    UniChar h = chr;
-		CTFontGetGlyphsForCharacters(ctfont, &h, &glyph_index, 1);
+	    CGGlyph glyph_index = GetCharGlyph(ctfont, chr);
 		if(glyph_index) {
 		    CGSize advance;
 			CTFontGetAdvancesForGlyphs(ctfont, kCTFontOrientationHorizontal, &glyph_index, &advance, 1);
@@ -100,10 +106,15 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.default_char = '?';
 		fi.fixedpitch = CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait;
 		fi.ttf = true;
-// TODO: PATH for data
-//		if(path.GetCount() < 250)
-//			strcpy(fi.path, ~path);
-//		else
+
+		CFRef<CTFontDescriptorRef> fd = CTFontCopyFontDescriptor(ctfont);
+	    CFRef<CFURLRef> url = (CFURLRef)CTFontDescriptorCopyAttribute(fd, kCTFontURLAttribute);
+		CFRef<CFStringRef> path = CFURLCopyFileSystemPath(url, kCFURLPOSIXPathStyle);
+		String p = ToString(path);
+
+		if(p.GetCount() < 250)
+			strcpy(fi.path, ~p);
+		else
 			*fi.path = 0;
 	}
 	return fi;
@@ -156,13 +167,53 @@ Vector<FaceInfo> GetAllFacesSys()
 }
 
 String GetFontDataSys(Font font)
-{	// TODO! CFUrl?
-	return Null;
+{
+	return LoadFile(font.Fi().path);
 }
 
-void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt)
+struct sCGPathTarget {
+	double x, y;
+	FontGlyphConsumer *sw;
+};
+
+static void convertCGPathToQPainterPath(void *info, const CGPathElement *e)
 {
-	// TODO!
+	auto t = (sCGPathTarget *)info;
+	switch(e->type) {
+	case kCGPathElementMoveToPoint:
+		t->sw->Move(Pointf(e->points[0].x + t->x, e->points[0].y + t->y));
+		break;
+	case kCGPathElementAddLineToPoint:
+		t->sw->Line(Pointf(e->points[0].x + t->x, e->points[0].y + t->y));
+		break;
+	case kCGPathElementAddQuadCurveToPoint:
+		t->sw->Quadratic(Pointf(e->points[0].x + t->x, e->points[0].y + t->y),
+	                     Pointf(e->points[1].x + t->x, e->points[1].y + t->y));
+		break;
+	case kCGPathElementAddCurveToPoint:
+		t->sw->Cubic(Pointf(e->points[0].x + t->x, e->points[0].y + t->y),
+	                 Pointf(e->points[1].x + t->x, e->points[1].y + t->y),
+	                 Pointf(e->points[2].x + t->x, e->points[2].y + t->y));
+		break;
+	case kCGPathElementCloseSubpath:
+		t->sw->Close();
+		break;
+	}
+}
+
+void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int chr, Font font)
+{
+	CGAffineTransform cgMatrix = CGAffineTransformIdentity;
+	cgMatrix = CGAffineTransformScale(cgMatrix, 1, -1);
+
+	CTFontRef ctfont = CT_Font(font);
+    CGGlyph glyph_index = GetCharGlyph(ctfont, chr);
+    CFRef<CGPathRef> cgpath = CTFontCreatePathForGlyph(ctfont, glyph_index, &cgMatrix);
+    sCGPathTarget t;
+    t.x = x;
+    t.y = y + font.GetAscent();
+    t.sw = &sw;
+    CGPathApply(cgpath, &t, convertCGPathToQPainterPath);
 }
 
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,

@@ -24,7 +24,11 @@ BorderFrame& XPMenuFrame()
 
 CtrlFrame& MenuFrame()
 {
+#ifdef PLATFORM_COCOA
+	return NullFrame();
+#else
 	return GUI_GlobalStyle() >= GUISTYLE_XP ? (CtrlFrame&)XPMenuFrame() : (CtrlFrame&)OutsetFrame();
+#endif
 }
 
 CH_STYLE(MenuBar, Style, StyleDefault)
@@ -447,6 +451,7 @@ void MenuBar::SetActiveSubmenu(MenuBar *sm, Ctrl *item)
 
 void MenuBar::SubmenuClose()
 {
+	LLOG("SubmenuClose");
 	if(parentmenu && parentmenu->GetActiveSubmenu() == this)
 		parentmenu->SetActiveSubmenu(NULL, NULL);
 	else {

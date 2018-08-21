@@ -391,11 +391,16 @@ struct CharEntry {
 
 CharEntry fc_cache_global[4093];
 
+inline dword GlyphHash(Font font, int chr)
+{
+	return FoldHash(CombineHash(font.GetHashValue(), chr));
+}
+
 bool IsNormal(Font font, int chr)
 {
 	Mutex::Lock __(sFontLock);
 	font.RealizeStd();
-	CharEntry& e = fc_cache_global[CombineHash(font.GetHashValue(), chr) % 4093];
+	CharEntry& e = fc_cache_global[GlyphHash(font, chr) % 4093];
 	if(e.font == font.AsInt64() || e.chr == chr)
 		return e.info.IsNormal();
 	return GetGlyphInfoSys(font, chr).IsNormal();
@@ -433,7 +438,7 @@ thread__ CharEntry fc_cache[512];
 GlyphInfo GetGlyphInfo(Font font, int chr)
 {
 	font.RealizeStd();
-	unsigned hash = CombineHash(font.GetHashValue(), chr);
+	unsigned hash = GlyphHash(font, chr);
 	CharEntry& e = fc_cache[hash & 511];
 	if(e.font != font.AsInt64() || e.chr != chr)
 		e = GetGlyphEntry(font, chr, hash);
@@ -499,12 +504,12 @@ struct FontEntry {
 	int64          font;
 };
 
-thread__ FontEntry fi_cache[64];
+thread__ FontEntry fi_cache[63];
 
 const CommonFontInfo& GetFontInfo(Font font)
 {
 	font.RealizeStd();
-	unsigned hash = font.GetHashValue() & 63;
+	unsigned hash = FoldHash(font.GetHashValue()) % 63;
 	FontEntry& e = fi_cache[hash];
 	if(e.font != font.AsInt64()) {
 		Mutex::Lock __(sFontLock);

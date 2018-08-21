@@ -68,6 +68,7 @@ struct MMImp {
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
 		return false;
 	}
+
 	static bool MouseDownEvent(CocoView *view, NSEvent *e, int button)
 	{
 		static int clicktime = msecs() - 100000;
@@ -146,7 +147,13 @@ struct MMImp {
 	
 	static void BecomeKey(Upp::Ctrl *ctrl)
 	{
+		LLOG("Become key " << Upp::Name(ctrl));
 		ctrl->ActivateWnd();
+/*		auto tw = dynamic_cast<TopWindow *>(ctrl);
+		if(tw && ctrl->top && ctrl->top->placefocus) {
+			tw->PlaceFocus();
+			ctrl->top->placefocus = false;
+		}*/
 	}
 
 	static void ResignKey(Upp::Ctrl *ctrl)
