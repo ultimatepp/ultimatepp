@@ -268,7 +268,7 @@ void Ctrl::ProcessEvent(XEvent *event)
 			xclipboard().Clear();
 		if(event->xselectionrequest.selection == XAtom("XdndSelection"))
 			DnDClear();
-	   	return;
+		return;
 	}
 	int q = xmap.Find(event->xany.window);
 #ifdef _DEBUG
