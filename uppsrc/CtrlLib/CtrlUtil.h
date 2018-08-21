@@ -52,14 +52,14 @@ struct Win32PrintDlg_;
 
 #ifndef PLATFORM_WINCE
 
-#if defined(GUI_WIN) || defined(PLATFORM_X11)
+#if defined(GUI_WIN) || defined(PLATFORM_POSIX)
 
 class PrinterJob {
 #ifdef GUI_WIN
 	One<Win32PrintDlg_> pdlg;
 	bool Execute0(bool dodlg);
 #endif
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 	Size                pgsz;
 	Size                GetDefaultPageSize(String *name = NULL);
 #endif

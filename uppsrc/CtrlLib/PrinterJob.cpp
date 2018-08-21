@@ -154,7 +154,7 @@ PrinterJob& PrinterJob::CurrentPage(int i)
 
 #endif
 
-#ifdef PLATFORM_X11
+#ifdef PLATFORM_POSIX
 
 struct PageSizeName {
 	const char *name;
@@ -376,7 +376,7 @@ PrinterJob::PrinterJob(const char *_name)
 	from = to = 0;
 	current = 0;
 	pgsz = GetDefaultPageSize();
-	dlgSuccess = false;
+	dlgSuccess = true;
 }
 
 PrinterJob::~PrinterJob()
@@ -394,6 +394,7 @@ bool PrinterJob::Execute0()
 	dlg.to.Enable(from != to);
 	dlg.range.EnableCase(1, from != to);
 	dlg.range.EnableCase(2, from != to);
+	dlg.landscape <<= landscape;
 	String h;
 	GetDefaultPageSize(&h);
 	h.IsEmpty() ? dlg.paper <<= "A4" : dlg.paper <<= h;
@@ -406,8 +407,7 @@ bool PrinterJob::Execute0()
 	options << "-d " << ~dlg.printer;
 	options << " -o media=";
 	dlg.paper.GetIndex() < 0 ? options << ~dlg.slot : options << ~dlg.paper << "," << ~dlg.slot;
-	if(dlg.landscape)
-		options << " -o landscape";
+	landscape = dlg.landscape;
 	options << " -o number-up=" << ~dlg.npage;
 	options << " -n " << ~dlg.copies;
 	if(dlg.collate)
@@ -456,9 +456,11 @@ struct PrinterDraw : PdfDraw {
 Draw& PrinterJob::GetDraw()
 {
 	if(!draw) {
-		PrinterDraw *pd = new PrinterDraw(pgsz);
+		PrinterDraw *pd = new PrinterDraw(landscape ? Size(pgsz.cy, pgsz.cx) : pgsz);
 		pd->canceled = !dlgSuccess;
 		pd->options = options;
+		if(landscape)
+			pd->options << " -o landscape";
 		draw = pd;
 	}
 	return *draw;
