@@ -14,11 +14,16 @@
 
 @implementation CocoWindow
 
+- (void)becomeKeyWindow {
+	[super becomeKeyWindow];
+}
+
 - (BOOL)canBecomeKeyWindow {
     return active && ctrl && ctrl->IsEnabled();
 }
 
 - (BOOL)canBecomeMainWindow {
+	LLOG("canBecomeMainWindow " << Upp::Name(ctrl) << ", owner " << Upp::Name(ctrl->GetOwner()));
 	return active && ctrl && ctrl->IsEnabled() && dynamic_cast<Upp::TopWindow *>(~ctrl) && !ctrl->GetOwner();
 }
 
@@ -81,32 +86,33 @@ NSRect DesktopRect(const Upp::Rect& r)
 
 void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 {
+	top = new Top;
+	top->coco = new CocoTop;
+	top->coco->owner = owner;
+
 	NSRect frame = DesktopRect(GetRect());
-		
 	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
 	                                         backing:NSBackingStoreBuffered defer:false];
+	top->coco->window = window;
+	if(owner && owner->top && owner->top->coco)
+		[owner->top->coco->window addChildWindow:window ordered:NSWindowAbove];
+
 	window->ctrl = this;
 	window->active = active;
 	window.backgroundColor = nil;
 		
 	CocoView *view = [[[CocoView alloc] initWithFrame:frame] autorelease];
 	view->ctrl = this;
+	top->coco->view = view;
 	[window setContentView:view];
 	[window setDelegate:view];
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:view];
 	[window makeKeyAndOrderFront:view];
 
-	top = new Top;
-	top->coco = new CocoTop;
-	top->coco->window = window;
-	top->coco->view = view;
-	top->coco->owner = owner;
 	MMCtrl::SyncRect(view);
 	isopen = true;
 	mmtopctrl.Add(this);
-	if(owner && owner->top && owner->top->coco)
-		[owner->top->coco->window addChildWindow:window ordered:NSWindowAbove];
 }
 
 void Upp::Ctrl::WndDestroy()
@@ -159,8 +165,27 @@ bool Upp::Ctrl::IsWndOpen() const {
 
 void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	Create(owner, NSWindowStyleMaskBorderless, false);
+	Create(owner, NSWindowStyleMaskBorderless, 0*activate);
 	popup = true;
+	if(activate) {
+	#if 0
+		NSWindow *window = top->coco->window;
+		[window setBackgroundColor:[NSColor clearColor]];
+		[window setOpaque:NO];
+		[window setStyleMask:NSResizableWindowMask | NSTitledWindowMask | NSFullSizeContentViewWindowMask];
+		[window setMovableByWindowBackground:YES];
+		[window setTitlebarAppearsTransparent:YES];
+		[window setTitleVisibility:NSWindowTitleHidden];
+		[window setShowsToolbarButton:NO];
+		[window standardWindowButton:NSWindowFullScreenButton].hidden = YES;
+		[window standardWindowButton:NSWindowMiniaturizeButton].hidden = YES;
+		[window standardWindowButton:NSWindowCloseButton].hidden = YES;
+		[window standardWindowButton:NSWindowZoomButton].hidden = YES;
+		[window makeKeyWindow];
+	//	[window setHasShadow:YES];
+	#endif
+		ActivateWnd();
+	}
 }
 
 Upp::dword Upp::TopWindow::GetMMStyle() const
@@ -182,8 +207,12 @@ void Upp::TopWindow::Open(Ctrl *owner)
 		                                                : GetPrimaryWorkArea())
 		        .CenterRect(GetRect().GetSize()));
 	Create(owner, GetMMStyle(), true);
+	ActivateWnd();
 	SyncCaption();
 	SyncSizeHints();
+	PlaceFocus();
+//	if(top)
+//		top->placefocus = true;
 }
 
 void Upp::TopWindow::Open()

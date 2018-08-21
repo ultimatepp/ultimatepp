@@ -283,3 +283,8 @@ int fast_memcmp(const char *a, const char *b, size_t len)
 	return memcmp(a, b, len);
 }
 #endif
+
+inline dword FoldHash(dword h)
+{
+	return h - SwapEndian32((dword)h);
+}

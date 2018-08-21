@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 Ptr<Ctrl> Ctrl::eventCtrl;
 Ptr<Ctrl> Ctrl::mouseCtrl;

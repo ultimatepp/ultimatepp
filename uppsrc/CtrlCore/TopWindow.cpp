@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)   // DLOG(x)
+#define LLOG(x)    // DLOG(x)
 
 String TopWindow::GetDesc() const
 {

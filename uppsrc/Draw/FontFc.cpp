@@ -357,9 +357,9 @@ bool RenderOutline(const FT_Outline& outline, FontGlyphConsumer& path, double xx
 				FT_Vector vec1, vec2;
 				if(point + 1 > limit || FT_CURVE_TAG(tags[1]) != FT_CURVE_TAG_CUBIC)
 				    return false;
-				vec1.x = point[0].x; 
+				vec1.x = point[0].x;
 				vec1.y = point[0].y;
-				vec2.x = point[1].x; 
+				vec2.x = point[1].x;
 				vec2.y = point[1].y;
 				point += 2;
 				tags  += 2;

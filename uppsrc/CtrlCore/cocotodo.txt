@@ -1,5 +1,7 @@
 sooner:
 
+- reference/Reports - missing text
+
 - opening FindInFiles, then selecting folder - pushing buttons does not exit dialog
 
 - package organizer initial size too small
