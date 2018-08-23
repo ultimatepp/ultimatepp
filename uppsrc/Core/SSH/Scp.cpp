@@ -44,7 +44,7 @@ bool Scp::Load(Stream& s, ScpAttrs a, int64 maxsize)
 	int64 size  = a.st_size;
 	String msg;
 
-	if(size < 0 && size >= maxsize) {
+	if(size < 0 || size >= maxsize) {
 		msg = "Invald stream size.";
 	}
 	else
@@ -73,7 +73,7 @@ bool Scp::Save(Stream& s)
 	Buffer<char> chunk(ssh->chunk_size, 0);
 
 	while(done_ < size && !IsEof() && !IsError()) {
-		int l = s.Get(chunk, min<int64>(size - done_, ssh->chunk_size));
+		int l = s.Get(chunk, (int) min<int64>(size - done_, ssh->chunk_size));
 		int n = Put(chunk, l);
 		if(n > 0) {
 			done_ += n;

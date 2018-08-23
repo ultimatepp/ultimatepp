@@ -2,6 +2,8 @@
 
 namespace Upp {
 	
+#define LLOG(x)       do { if(SSH::sTrace) RLOG("SshHosts: " << x); } while(false)
+	
 bool SshHosts::Add(const String& host, int port, const Info& info, const String& comment)
 {
 	return Add(Format("[%s]:%d", host, port), info, comment);
@@ -10,6 +12,7 @@ bool SshHosts::Add(const String& host, int port, const Info& info, const String&
 bool SshHosts::Add(const String& host, const Info& info, const String& comment)
 {
 	ASSERT(ssh_session);
+	Clear();
 	bool b = handle &&
 		libssh2_knownhost_addc(
 			handle,
@@ -28,6 +31,7 @@ bool SshHosts::Add(const String& host, const Info& info, const String& comment)
 bool SshHosts::Remove(SshHost* host)
 {
 	ASSERT(ssh_session);
+	Clear();
 	auto b = handle && libssh2_knownhost_del(handle, host) == 0;
 	return b ? b : Error();
 }
@@ -35,6 +39,7 @@ bool SshHosts::Remove(SshHost* host)
 bool SshHosts::Load(const String& filename)
 {
 	ASSERT(ssh_session);
+	Clear();
 	file_path = filename;
 	auto b = libssh2_knownhost_readfile(handle, ~file_path, LIBSSH2_KNOWNHOST_FILE_OPENSSH) >= 0;
 	return b ? b : Error();
@@ -48,6 +53,7 @@ bool SshHosts::Save()
 bool SshHosts::SaveAs(const String& filename)
 {
 	ASSERT(ssh_session);
+	Clear();
 	auto b = handle && libssh2_knownhost_writefile(handle, ~filename, LIBSSH2_KNOWNHOST_FILE_OPENSSH) == 0;
 	return b ? b : Error();
 }
@@ -55,6 +61,7 @@ bool SshHosts::SaveAs(const String& filename)
 SshHosts::Info SshHosts::Check(const String& host, int port)
 {
 	ASSERT(ssh_session);
+	Clear();
 	Info info;
 	if(handle) {
 		int	   type   = 0;
@@ -73,7 +80,7 @@ SshHosts::Info SshHosts::Check(const String& host, int port)
 			length,
 			LIBSSH2_KNOWNHOST_TYPE_PLAIN |
 			LIBSSH2_KNOWNHOST_KEYENC_RAW,
-			NULL
+			nullptr
 		);
 		info.key.Set(p, length);
 		switch(type) {
@@ -96,9 +103,10 @@ SshHosts::Info SshHosts::Check(const String& host, int port)
 Vector<SshHost*> SshHosts::GetHosts()
 {
 	ASSERT(ssh_session);
+	Clear();
 	Vector<SshHost*> v;
-	SshHost *prev = NULL, *next = NULL;
-	int rc = libssh2_knownhost_get(handle, &prev, NULL);
+	SshHost *prev = nullptr, *next = nullptr;
+	int rc = libssh2_knownhost_get(handle, &prev, nullptr);
 	if(rc >= 0) {
 		v.Add(prev);
 		if(rc == 0)
@@ -116,8 +124,11 @@ Vector<SshHost*> SshHosts::GetHosts()
 bool SshHosts::Error()
 {
 	ASSERT(ssh_session);
-	String msg = !handle ? "Invalid host handle." : "";
-	//_error = ssh_liberror(ssh_session, handle ? 0 : -1, msg);
+	Buffer<char*> libmsg(256, 0);
+	int rc = libssh2_session_last_error(ssh_session, libmsg, nullptr, 0);
+	error.a = rc;
+	error.b = String(*libmsg);
+	LLOG("Failed. " << error.b);
 	return false;
 }
 
@@ -133,5 +144,4 @@ SshHosts::~SshHosts()
 	if(ssh_session && handle)
 		libssh2_knownhost_free(handle);
 }
-
 }

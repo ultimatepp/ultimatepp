@@ -93,11 +93,11 @@ on failure. File handles obtained using this method must be released
 using the Close() method when finished.&]
 [s3; &]
 [s4;%- &]
-[s5;:Upp`:`:SFtp`:`:Close`(Upp`:`:SFtpHandle`):%- [@(0.0.255) bool]_[* Close]([_^Upp`:`:SFtpHandle^ S
+[s5;:Upp`:`:SFtp`:`:Close`(Upp`:`:SFtpHandle`):%- [@(0.0.255) void]_[* Close]([_^Upp`:`:SFtpHandle^ S
 FtpHandle]_[*@3 handle])&]
-[s2; Closes the file [%-*@3 handle]. Return true on success. File handles 
-obtained with Open() or OpenDir() methods must be released using 
-this method when finished.&]
+[s2; Closes the file [%-*@3 handle]. File handles obtained with Open() 
+or OpenDir() methods must be released using this method when 
+finished.&]
 [s3; &]
 [s4;%- &]
 [s5;:Upp`:`:SFtp`:`:Rename`(const Upp`:`:String`&`,const Upp`:`:String`&`):%- [@(0.0.255) b

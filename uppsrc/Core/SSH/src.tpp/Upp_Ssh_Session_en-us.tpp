@@ -30,6 +30,13 @@ to Null puts the SshSession object into blocking mode. Returns
 inherit their default timeout values from their session.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:SshSession`:`:HashType`(Hash`): [_^Upp`:`:SshSession^ SshSession][@(0.0.255) `&
+]_[* HashType](Hash_[*@3 h])&]
+[s2;%% Sets the requested hash type for server fingerprint. Can be 
+[C HASH`_MD5 ]or [C HASH`_SHA1]. SHA1 is the default hash algorithm. 
+Returns `*this for method chaining.&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:SshSession`:`:Keys`(const Upp`:`:String`&`,const Upp`:`:String`&`,const Upp`:`:String`&`,bool`): [_^Upp`:`:SshSession^ S
 shSession][@(0.0.255) `&]_[* Keys]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
 ]_[*@3 prikey], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 pubkey], 
@@ -109,7 +116,10 @@ onst]&]
 [s5;:Upp`:`:SshSession`:`:GetFingerprint`(`)const: [_^Upp`:`:String^ String]_[* GetFinger
 print]()_[@(0.0.255) const]&]
 [s2;%% Returns the computed digest of the server`'s host key (in 
-raw bytes) on success, or an empty String on failure.&]
+raw bytes) on success, or an empty String on failure (e.g. requested 
+hash algorithm might not be available). Hash type can be set 
+using the [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Session`_en`-us`#Upp`:`:SshSession`:`:HashType`(Hash`)^ H
+ashType()] method.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:GetSocket`(`): [_^Upp`:`:TcpSocket^ TcpSocket][@(0.0.255) `&]_[* G
@@ -191,10 +201,12 @@ authentication phase to allow user to query or set the authentication
 method(s)&]
 [s3; &]
 [s4; &]
-[s5;:Upp`:`:SshSession`:`:WhenVerify: [_^Upp`:`:Gate^ Gate]<>_[* WhenVerify]&]
+[s5;:Upp`:`:SshSession`:`:WhenVerify: [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:String^ String], 
+[@(0.0.255) int]>_[* WhenVerify]&]
 [s0;l288;%% This gate is invoked after a successful protocol handshake 
 to allow user to verify the host against a list of known (trusted) 
-hosts. Returning false halts the connection process.&]
+hosts. Passes the target hostname and port number as its parameters. 
+Returning false halts the connection process.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:WhenProxy: [_^Upp`:`:Gate^ Gate]<>_[* WhenProxy]&]

@@ -83,7 +83,7 @@ public:
     SFtpHandle              Open(const String& path, dword flags, long mode);
     SFtpHandle              OpenRead(const String& path)                            { return Open(path, READ, IRALL); }
     SFtpHandle              OpenWrite(const String& path)                           { return Open(path, CREATE | WRITE, IRALL | IWUSR); }
-    bool                    Close(SFtpHandle handle);
+    void                    Close(SFtpHandle handle);
     bool                    Rename(const String& oldpath, const String& newpath);
     bool                    Delete(const String& path);
     bool                    Sync(SFtpHandle handle);
