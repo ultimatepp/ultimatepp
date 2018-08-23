@@ -108,8 +108,8 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 // TODO: I do not like that we need to define macro here.
 // I opt for std::function version. We need to fix that API
 // in 2018.2 release. #1901
-//
-// This method generates warning GUI_APP_MAIN_HOOCK redefined!!!
+
+#undef  GUI_APP_MAIN_HOOK
 #define GUI_APP_MAIN_HOOK \
 { \
 	BaseCommandLineHandler cmd_handler(CommandLine()); \
