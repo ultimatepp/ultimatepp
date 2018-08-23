@@ -1,6 +1,6 @@
 class SshSession : public Ssh {
 public:
-  enum Methods {
+    enum Methods {
         METHOD_EXCHANGE = 0,
         METHOD_HOSTKEY,
         METHOD_CENCRYPTION,
@@ -11,9 +11,14 @@ public:
         METHOD_SCOMPRESSION
     };
 
+    enum Hash {
+        HASH_MD5,
+        HASH_SHA1
+    };
+    
 public:
     SshSession&         Timeout(int ms)                         { ssh->timeout = ms; return *this; }
-    SshSession&         WaitStep(int ms)                        { ssh->waitstep = clamp(ms, 0, INT_MAX); return *this; }
+    SshSession&         HashType(Hash h)                        { session->hashtype = h == HASH_SHA1 ? LIBSSH2_HOSTKEY_HASH_SHA1 : LIBSSH2_HOSTKEY_HASH_MD5; return *this; }
 
     SshSession&         Keys(const String& prikey, const String& pubkey, const String& phrase = Null, bool fromfile = true);
     SshSession&         Method(int type, Value method)          { session->iomethods(type) = pick(method); return *this; }
@@ -46,7 +51,7 @@ public:
     
     Event<>             WhenConfig;
     Event<>             WhenAuth;
-    Gate<>              WhenVerify;
+    Gate<String, int>   WhenVerify;
     Gate<>              WhenProxy;
     Event<SshX11Handle> WhenX11;
     Function<String(String, String, String)>  WhenKeyboard;
@@ -66,6 +71,7 @@ private:
     struct SessionData {
         TcpSocket       socket;
         String          fingerprint;
+        int             hashtype;
         String          authmethods;
         int             authmethod;
         String          prikey;

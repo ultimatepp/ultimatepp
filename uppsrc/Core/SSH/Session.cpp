@@ -188,10 +188,10 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	})) goto Bailout;
 	
 	if(!Run([=] () mutable {
-			session->fingerprint = libssh2_hostkey_hash(ssh->session, LIBSSH2_HOSTKEY_HASH_SHA1);
+			session->fingerprint = libssh2_hostkey_hash(ssh->session, session->hashtype);
 			if(session->fingerprint.IsEmpty()) LLOG("Warning: Fingerprint is not available!.");
 			LDUMPHEX(session->fingerprint);
-			if(WhenVerify && !WhenVerify())
+			if(WhenVerify && !WhenVerify(host, port))
 				SetError(-1);
 			return true;
 	})) goto Bailout;
@@ -201,7 +201,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			if(session->authmethods.IsEmpty()) { if(!WouldBlock()) SetError(-1); return false; }
 			LLOG("Authentication methods successfully retrieved.");
 			WhenAuth();
-			if(session->phrase.IsEmpty())
+			if(IsNull(session->phrase))
 				session->phrase = password;
 			return true;
 	})) goto Bailout;
@@ -409,6 +409,7 @@ SshSession::SshSession()
     session->authmethod = PASSWORD;
     session->connected  = false;
     session->keyfile    = true;
+    session->hashtype   = LIBSSH2_HOSTKEY_HASH_SHA1;
  }
 
 SshSession::~SshSession()

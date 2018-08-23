@@ -61,13 +61,14 @@ SFtpHandle SFtp::Open(const String& path, dword flags, long mode)
 	return h;
 }
 
-bool SFtp::Close(SFtpHandle handle)
+void SFtp::Close(SFtpHandle handle)
 {
-	return Run([=] () mutable {
+	if(!handle)
+		return;
+	
+	Run([=] () mutable {
 		int rc = libssh2_sftp_close_handle(handle);
-		if(!WouldBlock(rc) && rc < 0)
-			SetError(-1, "Unable to close file handle.");
-		if(rc == 0)
+		if(!rc)
 			LLOG("File handle freed.");
 		return !rc;
 	});
@@ -305,7 +306,12 @@ bool SFtp::ListDir(SFtpHandle handle, DirList& list)
 bool SFtp::ListDir(const String& path, DirList& list)
 {
 	SFtpHandle h = OpenDir(path);
-	return h && ListDir(h, list) && Close(h);
+	if(h) {
+		bool b = ListDir(h, list);
+		Close(h);
+		if(!b) ssh->status = FAILED;
+	}
+	return !IsError();
 }
 
 bool SFtp::SymLink(const String& path, String& target, int type)

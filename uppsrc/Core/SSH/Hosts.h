@@ -26,14 +26,15 @@ public:
 
     Vector<SshHost*>    GetHosts();
 
-    int                 GetError() const                { return error.Get<int>();    }
-    String              GetErrorDesc() const            { return error.Get<String>(); }
+    int                 GetError() const                { return error.a; }
+    String              GetErrorDesc() const            { return error.b; }
 
     SshHosts(SshSession& session);
     virtual ~SshHosts();
 
 private:
     bool                Error();
+    void				Clear()							{ error.a = 0; error.b = Null; }
 
     String              file_path;
     Tuple<int,String>   error;

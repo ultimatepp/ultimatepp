@@ -119,7 +119,7 @@ dword Ssh::GetWaitEvents()
 void Ssh::SetError(int rc, const String& reason)
 {
 	if(IsNull(reason) && ssh && ssh->session) {
-		Buffer<char*> libmsg(256);
+		Buffer<char*> libmsg(256, 0);
 		rc = libssh2_session_last_error(ssh->session, libmsg, nullptr, 0);
 		throw Error(rc, *libmsg);
 	}
