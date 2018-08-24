@@ -1,7 +1,7 @@
 topic "Ultimate++ installation guide";
 [l288;i704;a17;O9;~~~.992;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
-[b83;*2 $$3,5#07864147445237544204411237157677:title]
+[H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
 [b167;a42;C2 $$4,6#40027414424643823182269349404212:item]
 [b42;a42;ph2 $$5,5#45413000475342174754091244180557:text]
 [l288;a17;2 $$6,6#27521748481378242620020725143825:desc]
@@ -19,7 +19,8 @@ topic "Ultimate++ installation guide";
 [l160;t4167;*C+117 $$18,5#88603949442205825958800053222425:package`-title]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s2;= Ultimate`+`+ Windows releases&]
+[s2; Ultimate`+`+ Windows releases&]
+[s3; 1. Installation&]
 [s5; Windows release a simple archive [^http`:`/`/www`.7`-zip`.org`/^ .7z] 
 archive. Unpack to directory of your preference, then just run 
 theide.exe (or theide32.exe if you have 32`-bit windows). U`+`+ 
@@ -34,4 +35,14 @@ and use Miscrosoft Windows SDK and C`+`+ compiler, either 2017
 or 2015 version. The most convenient way is to install Visual 
 Studio Build Tools. Please check this [^https`:`/`/blogs`.msdn`.microsoft`.com`/vcblog`/2016`/11`/16`/introducing`-the`-visual`-studio`-build`-tools`/`?`_`_hstc`=268264337`.c396ab304e96089050275a79b106ba49`.1512810082757`.1512810082757`.1512810082757`.1`&`_`_hssc`=268264337`.2`.1512810082757`&`_`_hsfp`=2574008961^ b
 log entry] about this option. When installing, make sure that 
-support for Win32 applications is installed as well.]]
+support for Win32 applications is installed as well.&]
+[s3; 2. Troubleshooting&]
+[s5; The list of common problems related to Windows installation:&]
+[s5;l160;i150;O0; [* Compilation with MinGW causes `"There were errors`" 
+error message.]&]
+[s5;l320; To solve this problem please make sure your upp installation 
+path doesn`'t posses any special characters like diacritical 
+marks (á, ą etc.). To avoid problems, we highly recommended 
+to keep MinGW installation in relatively simply location (ASCII 
+path) like `"C:`\Prototable`\upp`".&]
+[s5;~~~320; ]]
