@@ -29,6 +29,18 @@ static void ReleaseCurrentEvent()
 	}
 }
 
+void SyncPopupFocus(NSWindow *win)
+{
+	Upp::Ctrl *q = Upp::Ctrl::GetFocusCtrl();
+	if(q) {
+		q = q->GetTopCtrl();
+		if(q->IsPopUp() && q->GetNSWindow() != win) {
+			q = q->GetOwner();
+			if(q) q->SetFocus();
+		}
+	}
+}
+
 void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 {
 	Ctrl::GlobalBackBuffer();
@@ -54,6 +66,16 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	Font::SetDefaultFont(StdFont(fround([sysfont pointSize])));
 	
 	GUI_DblClickTime_Write(1000 * NSEvent.doubleClickInterval);
+
+	[NSEvent addGlobalMonitorForEventsMatchingMask:(NSEventMaskLeftMouseDown)
+	  handler:^(NSEvent *e) {
+	      SyncPopupFocus(NULL);
+    }];
+	[NSEvent addLocalMonitorForEventsMatchingMask:(NSEventMaskLeftMouseDown)
+	  handler:^NSEvent *(NSEvent *e) {
+	      SyncPopupFocus([e window]);
+	      return e;
+    }];
 }
 
 void Upp::CocoExit()

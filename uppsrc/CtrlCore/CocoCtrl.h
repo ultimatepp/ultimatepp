@@ -19,4 +19,7 @@ protected:
 public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }
+	
+	void  *GetNSWindow() const;
+	void  *GetNSView() const;
 //$ };

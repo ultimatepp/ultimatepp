@@ -84,8 +84,21 @@ NSRect DesktopRect(const Upp::Rect& r)
 	                  r.GetWidth(), r.GetHeight());
 }
 
+void *Upp::Ctrl::GetNSWindow() const
+{
+	return top && top->coco ? top->coco->window : NULL;
+}
+
+void *Upp::Ctrl::GetNSView() const
+{
+	return top && top->coco ? top->coco->view : NULL;
+}
+
 void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 {
+	if(owner)
+		owner = owner->GetTopCtrl();
+
 	top = new Top;
 	top->coco = new CocoTop;
 	top->coco->owner = owner;
@@ -99,7 +112,7 @@ void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 
 	window->ctrl = this;
 	window->active = active;
-	window.backgroundColor = nil;
+	window.backgroundColor = [NSColor clearColor];
 		
 	CocoView *view = [[[CocoView alloc] initWithFrame:frame] autorelease];
 	view->ctrl = this;
@@ -165,9 +178,10 @@ bool Upp::Ctrl::IsWndOpen() const {
 
 void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
-	Create(owner, NSWindowStyleMaskBorderless, 0*activate);
+	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), NSWindowStyleMaskBorderless, 0);
 	popup = true;
-	if(activate) {
+	if(activate && IsEnabled())
+		SetFocus();
 	#if 0
 		NSWindow *window = top->coco->window;
 		[window setBackgroundColor:[NSColor clearColor]];
@@ -183,9 +197,9 @@ void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow
 		[window standardWindowButton:NSWindowZoomButton].hidden = YES;
 		[window makeKeyWindow];
 	//	[window setHasShadow:YES];
-	#endif
 		ActivateWnd();
 	}
+	#endif
 }
 
 Upp::dword Upp::TopWindow::GetMMStyle() const

@@ -238,7 +238,7 @@ bool Ctrl::SetFocus0(bool activate)
 	Ptr<Ctrl> topwindow = GetTopWindow();
 	Ptr<Ctrl> topctrl = GetTopCtrl();
 	Ptr<Ctrl> _this = this;
-#ifdef PLATFORM_COCOA
+#ifdef PLATFORM_COCOA0 // hopefully no needed
 	topwindow = topctrl;
 #else
 	if(!topwindow) topwindow = topctrl;
