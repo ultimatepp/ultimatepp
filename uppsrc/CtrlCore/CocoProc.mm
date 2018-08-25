@@ -237,9 +237,13 @@ struct MMImp {
 	return NO;
 }
 
-- (void)windowDidResize:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }
-- (void)windowDidMove:(NSNotification *)notification { Upp::MMCtrl::SyncRect(self); }
-//TODO: more layout changes
+- (void)windowDidResize:(NSNotification *)notification {
+	Upp::MMCtrl::SyncRect(self);
+}
+
+- (void)windowDidMove:(NSNotification *)notification {
+	Upp::MMCtrl::SyncRect(self);
+}
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
 	Upp::MMImp::BecomeKey(ctrl);
