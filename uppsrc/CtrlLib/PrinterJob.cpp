@@ -154,7 +154,7 @@ PrinterJob& PrinterJob::CurrentPage(int i)
 
 #endif
 
-#ifdef PLATFORM_POSIX
+#if defined(PLATFORM_X11) || defined(PLATFORM_COCOA)
 
 struct PageSizeName {
 	const char *name;
