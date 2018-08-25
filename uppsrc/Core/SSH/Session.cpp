@@ -167,6 +167,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 #endif
 			libssh2_session_set_blocking(ssh->session, 0);
 			ssh->socket = &session->socket;
+			LLOG("Session successfully initialized.");
 			WhenConfig();
 			return true;
 	})) goto Bailout;
