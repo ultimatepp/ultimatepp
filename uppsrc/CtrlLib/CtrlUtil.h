@@ -52,7 +52,7 @@ struct Win32PrintDlg_;
 
 #ifndef PLATFORM_WINCE
 
-#if defined(GUI_WIN) || defined(PLATFORM_POSIX)
+#if defined(GUI_WIN) || defined(PLATFORM_X11) || defined(PLATFORM_COCOA)
 
 class PrinterJob {
 #ifdef GUI_WIN
