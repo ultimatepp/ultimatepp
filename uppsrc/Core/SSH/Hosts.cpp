@@ -17,13 +17,13 @@ bool SshHosts::Add(const String& host, const Info& info, const String& comment)
 		libssh2_knownhost_addc(
 			handle,
 			~host,
-			NULL,
+			nullptr,
 			~info.key, info.key.GetLength(),
 			~comment, comment.GetLength(),
 			info.type |
 			LIBSSH2_KNOWNHOST_TYPE_PLAIN |
 			LIBSSH2_KNOWNHOST_KEYENC_RAW,
-			NULL
+			nullptr
 		) == 0;
 	return b ? b : Error();
 }

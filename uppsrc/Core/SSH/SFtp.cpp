@@ -187,7 +187,7 @@ bool SFtp::CopyData(Stream& dest, Stream& src, int64 maxsize)
 		err = Format("Buffer overflow. size = %d (allowed size >= 0 && < %d", size, maxsize);
 		goto Bailout;
 	}
-	if(CopyStream(dest, src, src.GetSize(), Proxy(WhenProgress)) < 0) {
+	if(CopyStream(dest, src) < 0) {
 		err = "File transfer is aborted.";
 		goto Bailout;
 	}
@@ -198,6 +198,28 @@ Bailout:
 	dest.Close();
 	ReportError(-1, err);
 	return false;
+}
+
+int64 SFtp::CopyStream(Stream& dest, Stream& src)
+{
+	// Note: This is a modified version of Upp::CopyStream (Core/Stream.cpp, ln: 1397-1412.
+	// This variant reports the correct size via WhenProgress & allows us to adjsut the chunk size.
+
+	int64 count = src.GetSize();
+	int block = (int)min<int64>(count, ssh->chunk_size);
+	Buffer<byte> temp(block);
+	int loaded;
+	int64 done_ = 0;
+	int64 total_ = count;
+	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
+		dest.Put(~temp, loaded);
+		count -= loaded;
+		done_ += loaded;
+		if(WhenProgress(done_, total_))
+			return -1;
+	}
+	LLOG(Format("%d of %d bytes successfully transferred.", done_, total_));
+	return done_;
 }
 
 bool SFtp::SaveFile(const char *path, const String& data)

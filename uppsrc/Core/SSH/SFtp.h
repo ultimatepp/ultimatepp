@@ -154,6 +154,7 @@ private:
     bool                    Read(SFtpHandle handle, void* ptr, int size);
     bool                    Write(SFtpHandle handle, const void* ptr, int size);
     bool                    CopyData(Stream& dest, Stream& src, int64 maxsize = INT64_MAX);
+    int64					CopyStream(Stream& dest, Stream& src);
   
     One<LIBSSH2_SFTP*>      sftp_session;
     int                     done;
