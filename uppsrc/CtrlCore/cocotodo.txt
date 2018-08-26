@@ -1,11 +1,11 @@
 sooner:
 
+- default GUI font
 - minimize, maximaze
 - numpad Enter does not do K_ENTER
 - Sort fonts
 
 - not all additional cursors are correct
-- Synthetise fonts
 - fix package organiser link options (joining link options missing space)
 
 - progress for assist opens too much, probably problem with delay?
@@ -39,6 +39,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- Synthetise fonts
 - RenderCharacterSys
 - ROTATED TEXT
 - opening FindInFiles, then selecting folder - pushing buttons does not exit dialog
