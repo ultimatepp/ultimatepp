@@ -137,40 +137,44 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 Vector<FaceInfo> GetAllFacesSys()
 {
 	Index<String> facename;
-	Index<bool>   fixedpitch;
 
 	facename.Add("Arial"); // TODO: This should be default GUI font
 	facename.Add("Times New Roman");
 	facename.Add("Arial");
 	facename.Add("Courier New");
 
+	int oi = facename.GetCount();
+
 	AutoreleasePool __;
 
-    CFRef<CTFontCollectionRef> collection = CTFontCollectionCreateFromAvailableFonts(0);
-    if(collection) {
-	    CFRef<CFArrayRef> fonts = CTFontCollectionCreateMatchingFontDescriptors(collection);
-	    if(fonts) {
+	CFRef<CTFontCollectionRef> collection = CTFontCollectionCreateFromAvailableFonts(0);
+	if(collection) {
+		CFRef<CFArrayRef> fonts = CTFontCollectionCreateMatchingFontDescriptors(collection);
+		if(fonts) {
 			int count = CFArrayGetCount(fonts);
-		    for(int i = 0; i < count; ++i) {
+			for(int i = 0; i < count; ++i) {
 				CTFontDescriptorRef font = (CTFontDescriptorRef)CFArrayGetValueAtIndex(fonts, i);
 				CFRef<CFStringRef> family_name = (CFStringRef)CTFontDescriptorCopyAttribute(font, kCTFontFamilyNameAttribute);
 				facename.FindAdd(ToString(family_name));
-		    }
+			}
 		}
-    }
-    
+	}
+
+	Vector<String> h = facename.PickKeys();
+	Sort(SubRange(h, oi, h.GetCount() - oi));
+
 	Vector<FaceInfo> r;
-	for(String s : facename) {
-        FaceInfo& fi = r.Add();
+	for(String s : h) {
+		FaceInfo& fi = r.Add();
 		fi.name = s;
 		fi.info = Font::TTF;
 		CFRef<CFStringRef> fs = CFStringCreateWithCString(NULL, ~s, kCFStringEncodingUTF8);
-	    CFRef<CTFontRef> ctfont = CTFontCreateWithName(fs, 12, NULL);
-	    if(CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait)
-	        fi.info |= Font::FIXEDPITCH;
-    }
-    
-    return r;
+		CFRef<CTFontRef> ctfont = CTFontCreateWithName(fs, 12, NULL);
+		if(CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait)
+			fi.info |= Font::FIXEDPITCH;
+	}
+
+	return r;
 }
 
 String GetFontDataSys(Font font)
