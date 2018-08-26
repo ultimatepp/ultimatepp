@@ -7,17 +7,18 @@
 
 namespace Upp {
 
-CTFontRef CT_Font0(Font fnt, bool& synth)
+CTFontRef CT_Font0(Font fnt, int angle, bool& synth)
 {
 	CFRef<CFStringRef> s = CFStringCreateWithCString(NULL, ~fnt.GetFaceName(), kCFStringEncodingUTF8);
-    CFRef<CTFontRef> ctfont0 = CTFontCreateWithName(s, fnt.GetHeight(), NULL);
+	CGAffineTransform transform = angle ? CGAffineTransformMakeRotation(M_2PI * angle / 3600)
+	                                    : CGAffineTransformIdentity;
+    CFRef<CTFontRef> ctfont0 = CTFontCreateWithName(s, fnt.GetHeight(), &transform);
 	if(fnt.IsItalic() || fnt.IsBold()) {
 	    CTFontSymbolicTraits symbolicTraits = 0;
 	    if(fnt.IsBold())
 		    symbolicTraits |= kCTFontBoldTrait;
 	    if(fnt.IsItalic())
 			symbolicTraits |= kCTFontItalicTrait;
-		CGAffineTransform transform = CGAffineTransformIdentity;
 		CFRef<CTFontRef> ctfont = CTFontCreateCopyWithSymbolicTraits(ctfont0, fnt.GetHeight(),
 		                                          &transform, symbolicTraits, symbolicTraits);
 		if(ctfont)
@@ -27,10 +28,11 @@ CTFontRef CT_Font0(Font fnt, bool& synth)
 	return ctfont0.Detach();
 }
 
-CTFontRef CT_Font(Font fnt)
+CTFontRef CT_Font(Font fnt, int angle = 0)
 {
 	struct Entry {
 		Font      font;
+		int       angle;
 		CTFontRef ctfont = NULL;
 		bool      synth = false;
 		
@@ -43,12 +45,12 @@ CTFontRef CT_Font(Font fnt)
 	const int FONTCACHE = 64;
 	static Entry cache[FONTCACHE];
 	for(int i = 0; i < FONTCACHE; i++)
-		if(cache[i].font == fnt)
+		if(cache[i].font == fnt && cache[i].angle == angle)
 			return cache[i].ctfont;
 	Entry& e = cache[Random(FONTCACHE)];
 	e.Free();
 	e.font = fnt;
-	e.ctfont = CT_Font0(fnt, e.synth);
+	e.ctfont = CT_Font0(fnt, angle, e.synth);
 	return e.ctfont;
 }
 
@@ -219,25 +221,24 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int chr, Font
 void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink,
                             int n, const int *dx)
 {
-//	DLOG("angle " << angle << ", text " << text << ", ink " << ink);
-	Set(ink); // needs to be here because rotation saves context...
-	if(angle) {
-		// TODO: Fix this!
-		CGContextSaveGState(cgHandle);
-		CGContextRotateCTM(cgHandle, 3 * M_PI * angle / 1800);
-		CGContextTranslateCTM(cgHandle, x, -y);
-		DrawTextOp(0, 0, 0, text, font, ink, n, dx);
-	    CGContextRestoreGState(cgHandle);
-		return;
-	}
+	Set(ink);
 
-	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(CT_Font(font), NULL);
+	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(CT_Font(font, 0), NULL);
    
 	CGContextSetFont(cgHandle, cgFont);
-	
+
 	Point off = GetOffset();
-	x += off.x;
-	y = top - y - font.GetAscent() - off.y;
+	if(angle) {
+		CGAffineTransform tm = CGAffineTransformMakeTranslation(x + off.x, top - y - off.y);
+		tm = CGAffineTransformRotate(tm, M_2PI * angle / 3600);
+		CGContextSetTextMatrix(cgHandle, tm);
+		x = 0;
+		y = -font.GetAscent();
+	}
+	else {
+		x += off.x;
+		y = top - y - font.GetAscent() - off.y;
+	}
 
 	Buffer<CGGlyph> g(n);
 	Buffer<CGPoint> p(n);
@@ -252,6 +253,9 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 
 	CGContextSetFontSize(cgHandle, font.GetHeight());
     CGContextShowGlyphsAtPositions(cgHandle, g, p, n);
+    
+    if(angle)
+		CGContextSetTextMatrix(cgHandle, CGAffineTransformIdentity);
 }
 
 };

@@ -1,44 +1,36 @@
 sooner:
 
-- opening FindInFiles, then selecting folder - pushing buttons does not exit dialog
-
-- package organizer initial size too small
 - minimize, maximaze
-
-- Ctrl+Shift+F wrong initial focus
-- menubar does not loose focus after click outside (or rather ActiveFocus does not work)
+- numpad Enter does not do K_ENTER
+- Sort fonts
 
 - not all additional cursors are correct
 - Synthetise fonts
-- Sort fonts
 - fix package organiser link options (joining link options missing space)
-
-- numpad Enter does not do K_ENTER
 
 - progress for assist opens too much, probably problem with delay?
 
 later:
 
+- package organizer initial size too small
 - void WakeUpGuiThread(void)
 - fullscreen mode issues
 - CommonFontInfo GetFontInfoSys(Font font) metrics
 - GetGlyphInfoSys metrics
-- ROTATED TEXT
 - EndSession ?
 - ignoreclick
 - event flags
 
 - CachedSetColorKeepAlpha optimize out
 - use NSView:needsToDrawRect: for IsPaintingOp
-- implement missing Draw ops
 - set application icons
 - fix resizing arrows
-- RenderCharacterSys
 
 - multimonitor support
 
 - SerializePlacement - probably improve
 
+- implement missing Draw ops
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
 void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
@@ -47,6 +39,11 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- RenderCharacterSys
+- ROTATED TEXT
+- opening FindInFiles, then selecting folder - pushing buttons does not exit dialog
+- menubar does not loose focus after click outside (or rather ActiveFocus does not work)
+- Ctrl+Shift+F wrong initial focus
 - PrinterJob
 - reference/Reports - missing text
 - doubleclick interval: https://developer.apple.com/documentation/appkit/nsevent/1528384-doubleclickinterval?language=objc
