@@ -226,6 +226,11 @@ void XMLToolBarCtrl::Layout(void)
 Size XMLToolBarCtrl::GetHorzSize(void)
 {
 	SizeToolBar *t = (SizeToolBar *)&toolBar;
+
+	// needed to re-layout correctly the toolbar
+	// before getting size
+	t->Top();
+	
 	Size sz = t->GetPaneSize(true);
 	dragFrame.Align(ToolBar::BAR_TOP);
 	dragFrame.FrameAddSize(sz);
@@ -237,6 +242,11 @@ Size XMLToolBarCtrl::GetHorzSize(void)
 Size XMLToolBarCtrl::GetVertSize(void)
 {
 	SizeToolBar *t = (SizeToolBar *)&toolBar;
+	
+	// needed to re-layout correctly the toolbar
+	// before getting size
+	t->Left();
+	
 	Size sz = t->GetPaneSize(false);
 	dragFrame.Align(ToolBar::BAR_LEFT);
 	dragFrame.FrameAddSize(sz);
