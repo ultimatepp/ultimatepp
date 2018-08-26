@@ -7,20 +7,19 @@
 
 namespace Upp {
 
-CTFontRef CT_Font0(Font fnt, int angle, bool& synth)
+CTFontRef CT_Font0(Font fnt, bool& synth)
 {
 	CFRef<CFStringRef> s = CFStringCreateWithCString(NULL, ~fnt.GetFaceName(), kCFStringEncodingUTF8);
-	CGAffineTransform transform = angle ? CGAffineTransformMakeRotation(M_2PI * angle / 3600)
-	                                    : CGAffineTransformIdentity;
-    CFRef<CTFontRef> ctfont0 = CTFontCreateWithName(s, fnt.GetHeight(), &transform);
+    CFRef<CTFontRef> ctfont0 = CTFontCreateWithName(s, fnt.GetHeight(), NULL);
+    synth = false;
 	if(fnt.IsItalic() || fnt.IsBold()) {
-	    CTFontSymbolicTraits symbolicTraits = 0;
+	    CTFontSymbolicTraits t = 0;
 	    if(fnt.IsBold())
-		    symbolicTraits |= kCTFontBoldTrait;
+		    t |= kCTFontBoldTrait;
 	    if(fnt.IsItalic())
-			symbolicTraits |= kCTFontItalicTrait;
+			t |= kCTFontItalicTrait;
 		CFRef<CTFontRef> ctfont = CTFontCreateCopyWithSymbolicTraits(ctfont0, fnt.GetHeight(),
-		                                          &transform, symbolicTraits, symbolicTraits);
+		                                                             NULL, t, t);
 		if(ctfont)
 			return ctfont.Detach();
 		synth = true;
@@ -28,11 +27,10 @@ CTFontRef CT_Font0(Font fnt, int angle, bool& synth)
 	return ctfont0.Detach();
 }
 
-CTFontRef CT_Font(Font fnt, int angle = 0)
+CTFontRef CT_Font(Font fnt, bool& synth)
 {
 	struct Entry {
 		Font      font;
-		int       angle;
 		CTFontRef ctfont = NULL;
 		bool      synth = false;
 		
@@ -45,12 +43,15 @@ CTFontRef CT_Font(Font fnt, int angle = 0)
 	const int FONTCACHE = 64;
 	static Entry cache[FONTCACHE];
 	for(int i = 0; i < FONTCACHE; i++)
-		if(cache[i].font == fnt && cache[i].angle == angle)
+		if(cache[i].font == fnt) {
+			synth = cache[i].synth;
 			return cache[i].ctfont;
+		}
 	Entry& e = cache[Random(FONTCACHE)];
 	e.Free();
 	e.font = fnt;
-	e.ctfont = CT_Font0(fnt, angle, e.synth);
+	e.ctfont = CT_Font0(fnt, synth);
+	e.synth = synth;
 	return e.ctfont;
 }
 
@@ -62,7 +63,7 @@ CGGlyph GetCharGlyph(CTFontRef ctfont, int chr)
 	return glyph_index;
 }
 
-GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr)
+GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr, bool bold_synth)
 {
 	GlyphInfo gi;
 	gi.lspc = gi.rspc = 0;
@@ -76,6 +77,8 @@ GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr)
 			gi.width = ceil(advance.width);
 			gi.lspc = gi.rspc = 0; // TODO! (using bounding box?)
 			gi.glyphi = glyph_index;
+			if(bold_synth)
+				gi.width++;
 		}
 	}
 	return gi;
@@ -85,7 +88,8 @@ CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
 	String path;
-	CTFontRef ctfont = CT_Font(font);
+	bool synth;
+	CTFontRef ctfont = CT_Font(font, synth);
 	if(ctfont) {
 	#if 0
 		DDUMP(font);
@@ -103,8 +107,8 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.external = 0;
 		fi.internal = 0;
 		fi.overhang = 0;
-		fi.maxwidth = GetGlyphInfoSys(ctfont, 'M').width; // TODO?
-		fi.avewidth = GetGlyphInfoSys(ctfont, 'e').width;
+		fi.maxwidth = GetGlyphInfoSys(ctfont, 'W', synth && font.IsBold()).width; // TODO?
+		fi.avewidth = GetGlyphInfoSys(ctfont, 'e', synth && font.IsBold()).width;
 		fi.default_char = '?';
 		fi.fixedpitch = CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait;
 		fi.ttf = true;
@@ -125,8 +129,9 @@ CommonFontInfo GetFontInfoSys(Font font)
 GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 {
 	LTIMING("GetGlyphInfoSys");
-	CTFontRef ctfont = CT_Font(font);
-	return GetGlyphInfoSys(ctfont, chr);
+	bool synth;
+	CTFontRef ctfont = CT_Font(font, synth);
+	return GetGlyphInfoSys(ctfont, chr, synth && font.IsBold());
 }
 
 Vector<FaceInfo> GetAllFacesSys()
@@ -207,8 +212,8 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int chr, Font
 {
 	CGAffineTransform cgMatrix = CGAffineTransformIdentity;
 	cgMatrix = CGAffineTransformScale(cgMatrix, 1, -1);
-
-	CTFontRef ctfont = CT_Font(font);
+	bool synth;
+	CTFontRef ctfont = CT_Font(font, synth);
     CGGlyph glyph_index = GetCharGlyph(ctfont, chr);
     CFRef<CGPathRef> cgpath = CTFontCreatePathForGlyph(ctfont, glyph_index, &cgMatrix);
     sCGPathTarget t;
@@ -223,38 +228,52 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 {
 	Set(ink);
 
-	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(CT_Font(font, 0), NULL);
-   
+	bool synth;
+	CFRef<CGFontRef> cgFont = CTFontCopyGraphicsFont(CT_Font(font, synth), NULL);
+	
 	CGContextSetFont(cgHandle, cgFont);
 
 	Point off = GetOffset();
-	if(angle) {
+	if(angle || synth) {
 		CGAffineTransform tm = CGAffineTransformMakeTranslation(x + off.x, top - y - off.y);
 		tm = CGAffineTransformRotate(tm, M_2PI * angle / 3600);
-		CGContextSetTextMatrix(cgHandle, tm);
 		x = 0;
 		y = -font.GetAscent();
+		if(font.IsItalic() && synth) {
+			x += font.GetDescent();
+			tm = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0.2, 1, 0, 0), tm);
+		}
+		CGContextSetTextMatrix(cgHandle, tm);
 	}
 	else {
 		x += off.x;
 		y = top - y - font.GetAscent() - off.y;
 	}
 
-	Buffer<CGGlyph> g(n);
-	Buffer<CGPoint> p(n);
+	int nn = (1 + (synth && font.IsBold())) * n;
+	Buffer<CGGlyph> g(nn);
+	Buffer<CGPoint> p(nn);
+	int ti = 0;
 	for(int i = 0; i < n; i++) {
 		int chr = text[i];
 		GlyphInfo f = GetGlyphInfo(font, chr);
-		p[i].y = y;
-		p[i].x = x;
-		g[i] = f.glyphi;
+		p[ti].y = y;
+		p[ti].x = x;
+		g[ti] = f.glyphi;
+		ti++;
+		if(synth && font.IsBold()) {
+			p[ti].y = y;
+			p[ti].x = ++x;
+			g[ti] = f.glyphi;
+			ti++;
+		}
 		x += dx ? *dx++ : f.width;
 	}
 
 	CGContextSetFontSize(cgHandle, font.GetHeight());
-    CGContextShowGlyphsAtPositions(cgHandle, g, p, n);
+    CGContextShowGlyphsAtPositions(cgHandle, g, p, nn);
     
-    if(angle)
+    if(angle || synth)
 		CGContextSetTextMatrix(cgHandle, CGAffineTransformIdentity);
 }
 
