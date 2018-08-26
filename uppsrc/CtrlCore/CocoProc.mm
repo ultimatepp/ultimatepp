@@ -99,14 +99,14 @@ struct MMImp {
 		Flags(e);
 		if(!ctrl->IsEnabled())
 			return false;
-		Upp::dword k = e.keyCode|K_DELTA|up;
+		Upp::dword k = (e.keyCode == kVK_ANSI_KeypadEnter ? K_ENTER : e.keyCode)|K_DELTA|up;
 		if(GetCtrl())
 			k |= K_CTRL;
 		if(GetShift())
 			k |= K_SHIFT;
 		if(GetAlt())
 			k |= K_ALT;
-		if(GetOption()) // TODO
+		if(GetOption())
 			k |= K_OPTION;
 		
 		if(e.keyCode == kVK_Help) // TODO: This is Insert key, but all this is dubious
@@ -117,9 +117,11 @@ struct MMImp {
 			WString x = ToWString((CFStringRef)(e.characters));
 			for(wchar c : x) {
 				if(c < 0xF700 &&
-				   (c > 32 && c != 127 || c == 9 && (k & K_OPTION) == 0 || c == 32 && (k &  K_SHIFT) == 0))
+				   (c > 32 && c != 127 || c == 9 && !GetOption() || c == 32 && !GetShift()))
 					ctrl->DispatchKey(c, 1);
 			}
+			if(e.keyCode == kVK_ANSI_KeypadEnter && *x != 13)
+				ctrl->DispatchKey(13, 1);
 		}
 		return true;
 	}
