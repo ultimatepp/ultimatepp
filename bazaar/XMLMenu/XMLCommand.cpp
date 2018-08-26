@@ -12,7 +12,10 @@ XMLCommand::XMLCommand(XMLCommand const &c, int)
 	ctrlSize				= c.ctrlSize;
 	callback				= c.callback;
 	menuCallback			= c.menuCallback;
-	menuTb					= One<XMLToolBar>(new XMLToolBar(*c.menuTb, 1)); // @@ was deep copy operator <<=
+	if(!c.menuTb.IsEmpty())
+		menuTb				= One<XMLToolBar>(new XMLToolBar(*c.menuTb, 1)); // @@ was deep copy operator <<=
+	else
+		menuTb.Clear();
 	enabled					= c.enabled;
 	custom					= c.custom;
 	commandString			= c.commandString;

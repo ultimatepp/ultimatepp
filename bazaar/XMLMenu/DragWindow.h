@@ -31,14 +31,18 @@ class DragWindow : public TopWindow
 
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
-#elif defined(PLATFORM_X11)
+#elif defined(flagX11)
 
 		virtual void    EventProc(XWindow& w, XEvent *event);
 
-#else
+#elif defined(flagGTK)
 
-#error("Unsupported platform")
-
+		gulong handlerId;
+		GtkWindow *gtkWindow;
+		void connectInternalHandler(void);
+		static gboolean DragWindowGtkEvent(GtkWidget *widget, GdkEvent *event, gpointer user_data);
+		virtual void EventProc(GdkEvent *event);
+		
 #endif
 	
 		// handler for window drag events
