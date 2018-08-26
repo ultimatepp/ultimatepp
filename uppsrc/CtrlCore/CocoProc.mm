@@ -60,6 +60,10 @@ bool Ctrl::ReleaseWndCapture()
 struct MMImp {
 	static bool MouseEvent(CocoView *view, NSEvent *e, int event, double zd = 0)
 	{
+		if((event & Ctrl::ACTION) == Ctrl::UP && Ctrl::ignoreclick) {
+			Ctrl::EndIgnore();
+			return false;
+		}
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(np.x, r.GetHeight() - np.y);
@@ -71,6 +75,13 @@ struct MMImp {
 
 	static bool MouseDownEvent(CocoView *view, NSEvent *e, int button)
 	{
+		if(Ctrl::ignoremouseup) {
+			Ctrl::KillRepeat();
+			Ctrl::ignoreclick = false;
+			Ctrl::ignoremouseup = false;
+		}
+		if(Ctrl::ignoreclick)
+			return false;
 		static int clicktime = msecs() - 100000;
 		bool b;
 		if(msecs(clicktime) < GUI_DblClickTime()) {
