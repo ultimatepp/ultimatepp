@@ -2,9 +2,7 @@ sooner:
 
 - default GUI font
 - minimize, maximaze
-- numpad Enter does not do K_ENTER
 - Sort fonts
-
 - not all additional cursors are correct
 - fix package organiser link options (joining link options missing space)
 
@@ -12,6 +10,7 @@ sooner:
 
 later:
 
+- apple debugger
 - package organizer initial size too small
 - void WakeUpGuiThread(void)
 - fullscreen mode issues
@@ -39,6 +38,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- numpad Enter does not do K_ENTER
 - Synthetise fonts
 - RenderCharacterSys
 - ROTATED TEXT
