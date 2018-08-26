@@ -129,13 +129,13 @@ NSCursor *GetNSCursor(int kind)
 		XCURSOR(_windowResizeNorthSouthCursor);
 		break;
 	case MM_SizeTopLeft:
-		XCURSOR(_windowResizeNorthWestCursor);
+		XCURSOR(_windowResizeNorthWestSouthEastCursor);
 		break;
 	case MM_SizeTop:
 		XCURSOR(_windowResizeNorthCursor);
 		break;
 	case MM_SizeTopRight:
-		XCURSOR(_windowResizeNorthEastCursor);
+		XCURSOR(_windowResizeNorthEastSouthWestCursor);
 		break;
 	case MM_SizeLeft:
 		XCURSOR(_windowResizeWestCursor);
@@ -144,13 +144,13 @@ NSCursor *GetNSCursor(int kind)
 		XCURSOR(_windowResizeEastCursor);
 		break;
 	case MM_SizeBottomLeft:
-		XCURSOR(_windowResizeSouthWestCursor);
+		XCURSOR(_windowResizeNorthEastSouthWestCursor);
 		break;
 	case MM_SizeBottom:
 		XCURSOR(_windowResizeSouthCursor);
 		break;
 	case MM_SizeBottomRight:
-		XCURSOR(_windowResizeSouthEastCursor);
+		XCURSOR(_windowResizeNorthWestSouthEastCursor);
 		break;
 	case MM_IBeam: return [NSCursor IBeamCursor];
 	case MM_Cross: return [NSCursor crosshairCursor];

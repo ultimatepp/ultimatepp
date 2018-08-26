@@ -1,10 +1,12 @@
 sooner:
 
-- default GUI font
 - minimize, maximaze
-- not all additional cursors are correct
 - fix package organiser link options (joining link options missing space)
-- ignoreclick
+
+- implement missing Draw ops
+void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
+void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
+void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 
 later:
 
@@ -26,11 +28,6 @@ later:
 
 - SerializePlacement - probably improve
 
-- implement missing Draw ops
-void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
-void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
-void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
-
 - keynames apple style
 
 - Mac menu
@@ -41,6 +38,8 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 done:
 
+- not all additional cursors are correct
+- ignoreclick
 - Sort fonts
 - numpad Enter does not do K_ENTER
 - Synthetise fonts
