@@ -207,8 +207,10 @@ DragWindow::DragWindow()
 
 DragWindow::~DragWindow()
 {
+#ifdef flagGTK
 	if(g_signal_handler_is_connected(gtkWindow, handlerId))
 		g_signal_handler_disconnect(gtkWindow, handlerId);
+#endif
 }
 
 // handler for window drag events
