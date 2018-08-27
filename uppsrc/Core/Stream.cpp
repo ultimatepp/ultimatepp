@@ -1402,11 +1402,11 @@ int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate<int64, int64> prog
 	int64 done = 0;
 	int64 total = count;
 	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
+		count -= loaded;
+		done += loaded;
 		if(progress(done, total))
 			return -1;
 		dest.Put(~temp, loaded);
-		count -= loaded;
-		done += loaded;
 	}
 	return done;
 }
