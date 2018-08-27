@@ -75,6 +75,13 @@ struct GuiLock {
 	~GuiLock() { LeaveGuiMutex(); }
 };
 
+struct GuiUnLock {
+	int n;
+	
+	GuiUnLock()  { n = LeaveGuiMutexAll(); }
+	~GuiUnLock() { EnterGuiMutex(n); }
+};
+
 bool ScreenInPaletteMode(); // Deprecated
 
 typedef ImageDraw SystemImageDraw;
