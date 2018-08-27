@@ -75,11 +75,11 @@ struct GuiLock {
 	~GuiLock() { LeaveGuiMutex(); }
 };
 
-struct GuiUnLock {
+struct GuiUnlock {
 	int n;
 	
-	GuiUnLock()  { n = LeaveGuiMutexAll(); }
-	~GuiUnLock() { EnterGuiMutex(n); }
+	GuiUnlock()  { n = LeaveGuiMutexAll(); }
+	~GuiUnlock() { EnterGuiMutex(n); }
 };
 
 bool ScreenInPaletteMode(); // Deprecated
