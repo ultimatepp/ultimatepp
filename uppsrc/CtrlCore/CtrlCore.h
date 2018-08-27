@@ -75,9 +75,10 @@ struct GuiLock {
 	~GuiLock() { LeaveGuiMutex(); }
 };
 
-struct GuiUnlock {
+class GuiUnlock {
 	int n;
-	
+
+public:
 	GuiUnlock()  { n = LeaveGuiMutexAll(); }
 	~GuiUnlock() { EnterGuiMutex(n); }
 };
