@@ -1381,32 +1381,26 @@ bool SaveFile(const char *filename, const String& data) {
 	return SaveStream(out, data);
 }
 
-int64 CopyStream(Stream& dest, Stream& src, int64 count) {
-	int block = (int)min<int64>(count, 65536);
-	Buffer<byte> temp(block);
-	int loaded;
-	int64 done = 0;
-	while(count > 0 && (loaded = src.Get(temp, (int)min<int64>(count, block))) > 0) {
-		dest.Put(temp.operator const byte *(), loaded);
-		count -= loaded;
-		done += loaded;
-	}
-	return done;
+int64 CopyStream(Stream& dest, Stream& src, int64 count)
+{
+	return CopyStream(dest, src, count, Null);
 }
 
-int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate<int64, int64> progress)
+int64 CopyStream(Stream& dest, Stream& src, int64 count, Gate<int64, int64> progress, int chunk_size)
 {
-	int block = (int)min<int64>(count, 32768);
+	int block = (int)min<int64>(count, chunk_size);
 	Buffer<byte> temp(block);
 	int loaded;
 	int64 done = 0;
 	int64 total = count;
 	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
+		dest.Put(~temp, loaded);
+		if(dest.IsError())
+			return -1;
 		count -= loaded;
 		done += loaded;
 		if(progress(done, total))
 			return -1;
-		dest.Put(~temp, loaded);
 	}
 	return done;
 }

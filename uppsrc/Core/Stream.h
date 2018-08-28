@@ -616,7 +616,7 @@ private:
 String LoadStream(Stream& in);
 bool   SaveStream(Stream& out, const String& data);
 
-int64        CopyStream(Stream& dest, Stream& src, int64 count = INT64_MAX);
+int64 CopyStream(Stream& dest, Stream& src, int64 count = INT64_MAX);
 
 #ifndef PLATFORM_WINCE
 void    CoutUTF8();
