@@ -120,7 +120,7 @@ public:
 	~ZDecompressStream()                   { Close(); }
 };
 
-int64  CopyStream(Stream& dest, Stream& src, int64 count, Gate<int64, int64> progress);
+int64  CopyStream(Stream& dest, Stream& src, int64 count, Gate<int64, int64> progress, int chunk_size = 65536);
 
 int64  ZCompress(Stream& out, Stream& in, int64 size, Gate<int64, int64> progress = Null, bool hdr = true);
 int64  ZCompress(Stream& out, Stream& in, Gate<int64, int64> progress = Null);
