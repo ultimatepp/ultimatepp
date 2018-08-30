@@ -18,7 +18,10 @@ sh]&]
 for a range of operations on remote file system objects, such 
 as file/directory creation, deletion, renaming, file transfers, 
 directory listings etc. SFtp class is derived from [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Base`_en`-us`#Upp`:`:Ssh`:`:class^ S
-sh] base class, and has pick semantics.&]
+sh] base class, and has pick semantics. See also [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtpStream`_en`-us`#Upp`:`:SFtpStream`:`:class^ S
+FtpStream], and [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:DirEntry`:`:class^ S
+Ftp`::DirEntry] classes. &]
+[s0;#l288; &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
 [s3;%- &]
@@ -539,7 +542,7 @@ irEntry]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path],
 [s3; &]
 [s0;%- &]
 [ {{10000@(113.42.0) [s0; [*@7;4 SFtp`::DirList]]}}&]
-[s4;%- &]
+[s3;%- &]
 [s5;:Upp`:`:SFtp`:`:DirList`:`:typedef:%- [@(0.0.255) typedef]_[_^Upp`:`:Vector^ Vector]<
 [_^Upp`:`:SFtp`:`:DirEntry^ DirEntry]>_[* DirList]&]
 [s2; SFtp`::DirList is a Vector containing SFtp`::DirEntry elements.&]

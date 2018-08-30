@@ -63,7 +63,7 @@ protected:
     bool                ProcessEvents(String& input);
     virtual void        ReadWrite(String& in, const void* out, int out_len)                 {}
 
-    bool                Shut(const String& msg);
+    bool                Shut(const String& msg, bool nowait = true);
     
     One<LIBSSH2_CHANNEL*>  channel;
     int                    done;

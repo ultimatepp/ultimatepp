@@ -18,11 +18,11 @@ namespace Upp {
 
 INITIALIZE(SSH);
 
-using SFtpHandle = LIBSSH2_SFTP_HANDLE*;
-using SFtpAttrs  = LIBSSH2_SFTP_ATTRIBUTES;
-using ScpAttrs   = libssh2_struct_stat;
-using SshHost    = libssh2_knownhost;
-using SshAgent   = LIBSSH2_AGENT;
+using SFtpHandle   = LIBSSH2_SFTP_HANDLE*;
+using SFtpAttrs    = LIBSSH2_SFTP_ATTRIBUTES;
+using ScpAttrs     = libssh2_struct_stat;
+using SshHost      = libssh2_knownhost;
+using SshAgent     = LIBSSH2_AGENT;
 using SshX11Handle = LIBSSH2_CHANNEL*;
 
 namespace SSH {

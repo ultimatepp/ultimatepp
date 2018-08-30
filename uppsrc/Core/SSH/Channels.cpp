@@ -130,7 +130,7 @@ bool SshChannel::GetEof()
 	return Run([=]() mutable {
 		int rc = libssh2_channel_wait_eof(*channel);
 		if(!WouldBlock(rc) && rc < 0) SetError(rc);
-		if(!rc) LLOG("EOF message is acknowledged by the server.");
+		if(!rc) LLOG("EOF message is acknowledged by the server.");;
 		return !rc;
 	});
 }
@@ -272,7 +272,7 @@ int SshChannel::Read(void *ptr, int size, int sid)
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();
-		LLOG("Read stream #" << sid << ": " << rc << " bytes read.");
+		VLOG("Read stream #" << sid << ": " << rc << " bytes read.");
 	}
 	return rc;
 }
@@ -294,7 +294,7 @@ int SshChannel::Write(const void *ptr, int size, int sid)
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();
-		LLOG("Write stream #" << sid << ": " << rc << " bytes written.");
+		VLOG("Write stream #" << sid << ": " << rc << " bytes written.");
 	}
 	return rc;
 }
@@ -332,10 +332,12 @@ bool SshChannel::ProcessEvents(String& input)
 }
 
 
-bool SshChannel::Shut(const String& msg)
+bool SshChannel::Shut(const String& msg, bool nowait)
 {
-	PutGetEof();
-	if(Close())
+	bool eof = false;
+	if(PutEof() && !nowait)
+		eof = GetEof();
+	if(Close() && eof)
 		WaitClose();
 	if(!IsNull(msg))
 		ReportError(-1, msg);
