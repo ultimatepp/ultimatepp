@@ -182,12 +182,15 @@ bool SFtp::CopyData(Stream& dest, Stream& src, int64 maxsize)
 {
 	int64 size = src.GetSize();
 	String err;
-
+	
+	if(IsError())
+		return false;
+	
 	if(size < 0 || size >= maxsize) {
 		err = Format("Buffer overflow. size = %d (allowed size >= 0 && < %d", size, maxsize);
 		goto Bailout;
 	}
-	if(CopyStream(dest, src) < 0) {
+	if(CopyStream(dest, src, src.GetSize(), WhenProgress, ssh->chunk_size) < 0) {
 		err = "File transfer is aborted.";
 		goto Bailout;
 	}
@@ -198,28 +201,6 @@ Bailout:
 	dest.Close();
 	ReportError(-1, err);
 	return false;
-}
-
-int64 SFtp::CopyStream(Stream& dest, Stream& src)
-{
-	// Note: This is a modified version of Upp::CopyStream (Core/Stream.cpp, ln: 1397-1412.
-	// This variant reports the correct size via WhenProgress & allows us to adjsut the chunk size.
-
-	int64 count = src.GetSize();
-	int block = (int)min<int64>(count, ssh->chunk_size);
-	Buffer<byte> temp(block);
-	int loaded;
-	int64 done_ = 0;
-	int64 total_ = count;
-	while(count > 0 && (loaded = src.Get(~temp, (int)min<int64>(count, block))) > 0) {
-		dest.Put(~temp, loaded);
-		count -= loaded;
-		done_ += loaded;
-		if(WhenProgress(done_, total_))
-			return -1;
-	}
-	LLOG(Format("%d of %d bytes successfully transferred.", done_, total_));
-	return done_;
 }
 
 bool SFtp::SaveFile(const char *path, const String& data)
@@ -585,6 +566,23 @@ String SFtp::DirEntry::ToXml() const
 			.Text(GetName());
 }
 
+FileSystemInfo::FileInfo SFtp::DirEntry::ToFileInfo() const
+{
+	FileSystemInfo::FileInfo fi;
+	fi.filename         = GetName();
+	fi.length           = GetSize();
+	fi.unix_mode        = GetPermissions();
+	fi.creation_time    = GetLastModified();
+	fi.last_access_time = GetLastAccessed();
+	fi.last_write_time  = GetLastModified();
+	fi.is_file          = IsFile();
+	fi.is_directory     = IsDirectory();
+	fi.is_symlink       = IsSymLink();
+	fi.is_read_only     = IsReadOnly();
+	fi.root_style       = FileSystemInfo::ROOT_FIXED;
+	return pick(fi);
+}
+
 bool SFtp::DirEntry::CanMode(dword u, dword g, dword o) const
 {
 	return a->flags & LIBSSH2_SFTP_ATTR_PERMISSIONS &&
@@ -611,5 +609,49 @@ SFtp::DirEntry::DirEntry(const String& path, const SFtpAttrs& attrs)
 {
 	filename = path;
 	*a = attrs;
+}
+
+// Experimental stuff!
+Array<FileSystemInfo::FileInfo> SFtpFileSystemInfo::Find(String mask, int max_count, bool unmounted) const
+{
+	ASSERT(browser);
+
+	// TODO: Handle wildcards and "root" properly.
+	
+	Array<FileInfo> fi;
+	if(!browser->InProgress()) {
+		if(IsNull(mask)) { // || mask.StartsWith("/media/*")) {
+			String dir;
+			if(!browser->RealizePath(".", dir))
+				return pick(fi);
+			mask = dir;
+		}
+		mask.Replace("*", "");
+		auto e = browser->GetInfo(mask);
+		if(e) {
+			if(e.IsDirectory()) {
+				if(max_count == 1) {
+					fi.Add(e.ToFileInfo());
+				}
+				else {
+					SFtp::DirList ls;
+					if(browser->ListDir(mask, ls))
+						for(const auto& ee : ls)
+							fi.Add(ee.ToFileInfo());
+				}
+			}
+			else
+				fi.Add(e.ToFileInfo());
+		}
+	}
+	return pick(fi);
+}
+
+bool SFtpFileSystemInfo::CreateFolder(String path, String& error) const
+{
+	ASSERT(browser);
+	if(!browser->MakeDir(path, 0))
+		error = browser->GetErrorDesc();
+	return !browser->IsError();
 }
 }

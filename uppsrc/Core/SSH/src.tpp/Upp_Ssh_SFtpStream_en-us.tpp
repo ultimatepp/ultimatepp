@@ -60,7 +60,7 @@ object. &]
 [s1;:Upp`:`:SFtpFileIn`:`:class: [@(0.0.255)3 class][3 _][*3 SFtpFileIn][3 _:_][@(0.0.255)3 publ
 ic][3 _][*@3;3 SFtpStream]&]
 [s2;%% A simple helper class that represents SFtpStream in read mode.&]
-[s0; &]
+[s3; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3; &]
 [s5;:Upp`:`:SFtpFileIn`:`:Open`(Upp`:`:SFtp`&`,const char`*`): [@(0.0.255) bool]_[* Open](

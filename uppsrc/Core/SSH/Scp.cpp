@@ -40,6 +40,7 @@ bool Scp::OpenWrite(const String& path, int64 size, long mode)
 
 bool Scp::Load(Stream& s, ScpAttrs a, int64 maxsize)
 {
+	bool nowait = false;
 	int64 done_ = 0;
 	int64 size  = a.st_size;
 	String msg;
@@ -55,21 +56,22 @@ bool Scp::Load(Stream& s, ScpAttrs a, int64 maxsize)
 		if(n > 0) {
 			done_ += n;
 			s.Put(chunk, n);
-			if(WhenProgress(done_, size)) {
+			if((nowait = WhenProgress(done_, size))) {
 				msg = "File transfer aborted.";
 				break;
 			}
 		}
 	}
-	return Shut(msg);
+	return Shut(msg, nowait);
 }
 
 bool Scp::Save(Stream& s)
 {
+	bool nowait = false;
 	int64 done_ = 0;
 	int64 size  = s.GetSize();
 	String msg;
-
+	
 	Buffer<char> chunk(ssh->chunk_size, 0);
 
 	while(done_ < size && !IsEof() && !IsError()) {
@@ -79,13 +81,13 @@ bool Scp::Save(Stream& s)
 			done_ += n;
 			if(n < l)
 				s.Seek(n);
-			if(WhenProgress(done_, size)) {
+			if((nowait = WhenProgress(done_, size))) {
 				msg = "File transfer aborted.";;
 				break;
 			}
 		}
 	}
-	return Shut(msg);
+	return Shut(msg, nowait);
 }
 
 bool Scp::SaveFile(const char *path, const String& data)

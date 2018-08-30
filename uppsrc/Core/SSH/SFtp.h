@@ -37,10 +37,12 @@ public:
             int64  GetSize() const                  { return a->flags & LIBSSH2_SFTP_ATTR_SIZE ? a->filesize : -1; }
             Time   GetLastModified() const          { return a->flags & LIBSSH2_SFTP_ATTR_ACMODTIME ? TimeFromUTC(a->mtime) : Null; }
             Time   GetLastAccessed() const          { return a->flags & LIBSSH2_SFTP_ATTR_ACMODTIME ? TimeFromUTC(a->atime) : Null; }
+            dword  GetPermissions() const           { return a->permissions; }
             SFtpAttrs& GetAttrs()                   { return *a; }
 
             const SFtpAttrs& operator~() const      { return *a; }
             SFtpAttrs&  operator*()                 { return *a; }
+            operator bool() const                   { return valid; }
 
             bool IsFile() const                     { return LIBSSH2_SFTP_S_ISREG(a->permissions); }
             bool IsDirectory() const                { return LIBSSH2_SFTP_S_ISDIR(a->permissions); }
@@ -56,6 +58,7 @@ public:
 
             String ToString() const;
             String ToXml() const;
+            FileSystemInfo::FileInfo ToFileInfo() const;
 
             DirEntry(const String& path);
             DirEntry(const String& path, const SFtpAttrs& attrs);
@@ -154,7 +157,6 @@ private:
     bool                    Read(SFtpHandle handle, void* ptr, int size);
     bool                    Write(SFtpHandle handle, const void* ptr, int size);
     bool                    CopyData(Stream& dest, Stream& src, int64 maxsize = INT64_MAX);
-    int64					CopyStream(Stream& dest, Stream& src);
   
     One<LIBSSH2_SFTP*>      sftp_session;
     int                     done;
@@ -226,3 +228,20 @@ public:
     SFtpFileIn(SFtp& sftp, const char *fn)     { Open(sftp, fn); }
     SFtpFileIn()                               {}
 };
+
+// Experimental stuff!
+
+class SFtpFileSystemInfo : public FileSystemInfo {
+public:
+    SFtpFileSystemInfo& Mount(SFtp& sftp)       { browser = &sftp; return *this; }
+    int                 GetStyle() const final  { return STYLE_POSIX; }
+    operator            FileSystemInfo&()       { return static_cast<FileSystemInfo&>(*this); }
+    bool                CreateFolder(String path, String& error) const final;
+    Array<FileSystemInfo::FileInfo> Find(String mask, int max_count = INT_MAX, bool unmounted = false) const final;
+    
+    SFtpFileSystemInfo(SFtp& sftp)  { Mount(sftp); }
+    SFtpFileSystemInfo()            { browser = nullptr; }
+private:
+    SFtp *browser = nullptr;
+};
+
