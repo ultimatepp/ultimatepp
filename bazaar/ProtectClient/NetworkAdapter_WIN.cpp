@@ -8,6 +8,8 @@
 // Link with Iphlpapi.lib
 #pragma comment(lib, "IPHLPAPI.lib")
 
+NAMESPACE_UPP
+
 Vector <NetworkAdapter> GetNetworkAdaptersInfo(void)
 {
 	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
@@ -74,5 +76,7 @@ Vector <NetworkAdapter> GetNetworkAdaptersInfo(void)
 	}
 	return ret;
 }
+
+END_UPP_NAMESPACE
 
 #endif

@@ -3,7 +3,7 @@
 
 #include <Core/Core.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 struct NetworkAdapter : Moveable<NetworkAdapter>
 {
@@ -14,5 +14,7 @@ struct NetworkAdapter : Moveable<NetworkAdapter>
 };
 
 Vector<NetworkAdapter> GetNetworkAdaptersInfo(void);
+
+END_UPP_NAMESPACE
 
 #endif

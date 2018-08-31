@@ -5,6 +5,8 @@
 #include <sys/ioctl.h>
 #include <net/if.h>
 
+NAMESPACE_UPP
+
 Vector<NetworkAdapter> GetNetworkAdaptersInfo(void)
 {
 	Vector<NetworkAdapter> res;
@@ -217,5 +219,7 @@ Vector<NetworkAdapter> GetNetworkAdaptersInfo(void)
 
 	return res;
 }
+
+END_UPP_NAMESPACE
 
 #endif
