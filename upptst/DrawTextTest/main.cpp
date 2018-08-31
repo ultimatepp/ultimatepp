@@ -19,7 +19,7 @@ void MyApp::Paint(Draw& w)
 	int x = 0;
 	int y = 0;
 	
-	Font fnt = StdFont();
+	Font fnt = Arial();
 	fnt = monaco().Italic();
 	while(angle < 360) {
 		w.DrawText(x, y, AsString(angle));
