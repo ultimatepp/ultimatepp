@@ -6,21 +6,26 @@ struct MyApp : TopWindow {
 	DropList fontlist;
 
 	void Paint(Draw& w) {
-		w.DrawRect(GetSize(), White);
+		Size sz = GetSize();
+		w.DrawRect(sz, White);
+		Font fnt(~fontlist, 50);
+		w.DrawText(Zx(220), 0, String() << fnt.GetFaceName()
+		                                << ", ascent: " << fnt.GetAscent()
+		                                << ", descent: " << fnt.GetDescent()
+		                                << ", external: " << fnt.GetExternal());
+		RTIMING("Draw");
 		int y = 50;
-		for(int p = 32; p < 8192; p += 64) {
-			Font fnt(~fontlist, 30);
-			FontInfo fi = fnt.Info();
+		for(int p = 32; p < 8192 && y < sz.cy; p += 64) {
 			int x = 0;
 			for(int ch = p; ch < p + 64; ch++) {
-				int width = fi[ch];
-				w.DrawRect(x, y, width - 1, fi.GetAscent(), Color(255, 255, 200));
-				w.DrawRect(x, y + fi.GetAscent(), width - 1, fi.GetDescent(), Color(255, 200, 255));
-				w.DrawRect(x + width - 1, y, 1, fi.GetHeight(), Black());
+				int width = fnt[ch];
+				w.DrawRect(x, y, width - 1, fnt.GetAscent(), Color(255, 255, 200));
+				w.DrawRect(x, y + fnt.GetAscent(), width - 1, fnt.GetDescent(), Color(255, 200, 255));
+				w.DrawRect(x + width - 1, y, 1, fnt.GetHeight(), Black());
 				w.DrawText(x, y, WString(ch, 1), fnt);
 				x += width;
 			}
-			y += fi.GetHeight() + 20;
+			y += fnt.GetLineHeight();
 		}
 	}
 
