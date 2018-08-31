@@ -8,8 +8,10 @@ NAMESPACE_UPP
 bool Uniq::SendCmdLine(int pipe)
 {
 	char buf[256];
+	
 	Vector<String>v;
 
+	v.Clear();
 	fd_set rfds;
 	struct timeval tv;
 	FD_ZERO(&rfds);
@@ -40,7 +42,7 @@ bool Uniq::SendCmdLine(int pipe)
 	}
 	fclose(f);
 	// posts the callback to handle new instance's command line
-	PostCallback([=, &v]() { WhenInstance(v); } );
+	PostCallback([=, v{pick(v)}]() { WhenInstance(v); } );
 	return true;
 
 }
