@@ -1,7 +1,5 @@
 sooner:
 
-- replacement fonts
-- minimize, maximaze
 - fix package organiser link options (joining link options missing space)
 
 - implement missing Draw ops
@@ -30,14 +28,16 @@ later:
 
 - keynames apple style
 
-- Mac menu
-- Clipboard types
-- Drag&Drop
-- System colors
-- Chameleon
+* Mac menu
+* Clipboard types
+* Drag&Drop
+* System colors
+* Chameleon
 
 done:
 
+- replacement fonts
+- minimize, maximaze
 - void WakeUpGuiThread(void)
 - not all additional cursors are correct
 - ignoreclick
