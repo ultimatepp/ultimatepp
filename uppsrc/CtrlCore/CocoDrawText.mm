@@ -170,8 +170,22 @@ Vector<FaceInfo> GetAllFacesSys()
 		fi.info = Font::TTF;
 		CFRef<CFStringRef> fs = CFStringCreateWithCString(NULL, ~s, kCFStringEncodingUTF8);
 		CFRef<CTFontRef> ctfont = CTFontCreateWithName(fs, 12, NULL);
-		if(CTFontGetSymbolicTraits(ctfont) & kCTFontMonoSpaceTrait)
+		dword traits = CTFontGetSymbolicTraits(ctfont);
+		if(traits & kCTFontMonoSpaceTrait)
 			fi.info |= Font::FIXEDPITCH;
+		switch(traits & kCTFontClassMaskTrait) {
+		case kCTFontOldStyleSerifsClass:
+		case kCTFontTransitionalSerifsClass:
+		case kCTFontModernSerifsClass:
+		case kCTFontClarendonSerifsClass:
+		case kCTFontSlabSerifsClass:
+		case kCTFontFreeformSerifsClass:
+			fi.info |= Font::SERIFSTYLE;
+		    break;
+		case kCTFontScriptsClass:
+			fi.info |= Font::SCRIPTSTYLE;
+		    break;
+		}
 	}
 
 	return r;

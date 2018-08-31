@@ -1,5 +1,6 @@
 sooner:
 
+- replacement fonts
 - minimize, maximaze
 - fix package organiser link options (joining link options missing space)
 
@@ -13,7 +14,6 @@ later:
 - apple debugger
 - progress for assist opens too much, probably problem with delay?
 - package organizer initial size too small
-- void WakeUpGuiThread(void)
 - fullscreen mode issues
 - CommonFontInfo GetFontInfoSys(Font font) metrics
 - GetGlyphInfoSys metrics
@@ -38,6 +38,7 @@ later:
 
 done:
 
+- void WakeUpGuiThread(void)
 - not all additional cursors are correct
 - ignoreclick
 - Sort fonts
