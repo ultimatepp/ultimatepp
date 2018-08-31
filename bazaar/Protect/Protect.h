@@ -4,11 +4,13 @@
 #include <Core/Core.h>
 #include <Cypher/Cypher.h>
 
-using namespace Upp;
+NAMESPACE_UPP
 
 // 2 dummy functions used to mark encrypted code blocks
 void PROTECT_DUMMY1(void);
 void PROTECT_DUMMY2(void);
+
+extern volatile bool __PROTECT_DUMMY_BOOL;
 
 // nonce used in cryptography
 extern String PROTECT_NONCE;
@@ -131,5 +133,7 @@ int PROTECT_PatternSize(CodeSequence seq);
 #define ON_PROTECT_BAD_KEY(GetCypher) if(false)
 
 #endif
+
+END_UPP_NAMESPACE
 
 #endif

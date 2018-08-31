@@ -7,6 +7,8 @@
 	#pragma intrinsic(_ReturnAddress)
 #endif
 
+NAMESPACE_UPP
+
 // uncomment this if you want debug messages
 //#define PROTECT_DEBUG
 
@@ -44,6 +46,8 @@ void PROTECT_DUMMY2(void)
 {
 	__dummy2_val++;
 }
+
+volatile bool __PROTECT_DUMMY_BOOL = false;
 
 // nonce used in cryptography
 String PROTECT_NONCE = "12345678";
@@ -475,3 +479,5 @@ void PROTECT_OBFUSCATE(uint8_t *&hdr)
 	RLOG("END OBFUSCATE");
 #endif
 }
+
+END_UPP_NAMESPACE
