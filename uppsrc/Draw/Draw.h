@@ -73,6 +73,8 @@ public:
 		SCALEABLE   = 0x0002,
 		TTF         = 0x0004,
 		SPECIAL     = 0x0010,
+		SERIFSTYLE  = 0x0020,
+		SCRIPTSTYLE = 0x0040,
 	};
 
 	static int    GetFaceCount();
@@ -173,6 +175,8 @@ public:
 	bool  IsScaleable() const                { return Fi().scaleable; }
 	bool  IsSpecial() const                  { return GetFaceInfo() & SPECIAL; }
 	bool  IsTrueType() const                 { return Fi().ttf; }
+	bool  IsSerif() const                    { return GetFaceInfo() & SERIFSTYLE; }
+	bool  IsScript() const                   { return GetFaceInfo() & SCRIPTSTYLE; }
 
 	String GetTextFlags() const;
 	void   ParseTextFlags(const char *s);

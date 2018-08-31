@@ -308,6 +308,7 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 					f = cache[q].mdst;
 			}
 			rfnt = f;
+//			LOG(fnt.GetFaceName() << " -> " << rfnt.GetFaceName());
 			return true;
 		}
 	}
