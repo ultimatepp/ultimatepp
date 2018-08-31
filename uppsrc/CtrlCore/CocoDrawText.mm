@@ -93,18 +93,18 @@ CommonFontInfo GetFontInfoSys(Font font)
 	if(ctfont) {
 	#if 0
 		DDUMP(font);
+	    DDUMP(CTFontGetSize(ctfont));
 	    DDUMP(CTFontGetAscent(ctfont));
 	    DDUMP(CTFontGetDescent(ctfont));
-	    DDUMP(CTFontGetLeading(ctfont));
+	    DDUMP();
 	    DDUMP(CTFontGetXHeight(ctfont));
 	    DDUMP(CTFontGetUnderlinePosition(ctfont));
+	    DDUMP(MakeRect(CTFontGetBoundingBox(ctfont)));
 		DDUMPHEX(CTFontGetSymbolicTraits(ctfont));
 	#endif
-		fi.ascent = ceil(CTFontGetAscent(ctfont));
 		fi.descent = ceil(CTFontGetDescent(ctfont));
-		fi.height = fi.ascent + fi.descent;
-		fi.lineheight = fi.height; // TODO!
-		fi.external = 0;
+		fi.ascent = ceil(CTFontGetAscent(ctfont));
+		fi.external = ceil(CTFontGetLeading(ctfont));
 		fi.internal = 0;
 		fi.overhang = 0;
 		fi.maxwidth = GetGlyphInfoSys(ctfont, 'W', synth && font.IsBold()).width; // TODO?
