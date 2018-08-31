@@ -173,6 +173,10 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 		f.info = Font::SCALEABLE;
 	if((logfont->lfPitchAndFamily & 3) == FIXED_PITCH)
 		f.info |= Font::FIXEDPITCH;
+	if(logfont->lfPitchAndFamily & FF_ROMAN)
+		f.info |= Font::SERIFSTYLE;
+	if(logfont->lfPitchAndFamily & FF_SCRIPT)
+		f.info |= Font::SCRIPTSTYLE;
 	if(!(type & TRUETYPE_FONTTYPE))
 		f.info &= ~Font::SCALEABLE;
 	if(logfont->lfCharSet == SYMBOL_CHARSET || logfont->lfCharSet == OEM_CHARSET)

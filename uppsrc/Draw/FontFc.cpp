@@ -202,7 +202,7 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 			   FT_Load_Glyph(face, glyph_index, FT_LOAD_DEFAULT) == 0) {
 				FT_Glyph_Metrics& m = face->glyph->metrics;
 				int left  = FLOOR(m.horiBearingX);
-				int width = TRUNC(CEIL(m.horiBearingX + m.width) - left);				
+				int width = TRUNC(CEIL(m.horiBearingX + m.width) - left);
 				gi.width = TRUNC(ROUND(face->glyph->advance.x));
 				gi.lspc = TRUNC(left);
 				gi.rspc = gi.width - width - gi.lspc;
