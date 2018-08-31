@@ -225,6 +225,10 @@ void Upp::TopWindow::Open(Ctrl *owner)
 	SyncCaption();
 	SyncSizeHints();
 	PlaceFocus();
+	if(state == MAXIMIZED)
+		Maximize();
+	if(state == MINIMIZED)
+		Minimize();
 //	if(top)
 //		top->placefocus = true;
 }
@@ -314,5 +318,37 @@ void Upp::TopWindow::SerializePlacement(Stream& s, bool reminimize)
 	if(s.IsLoading())
 		SetRect(rect);
 }
+
+void Upp::TopWindow::Maximize(bool effect)
+{
+	state = MAXIMIZED;
+	if(top && top->coco && top->coco->window && !top->coco->window.zoomed) {
+		if(effect)
+			[top->coco->window performZoom:top->coco->window];
+		else
+			[top->coco->window zoom:top->coco->window];
+	}
+}
+
+void Upp::TopWindow::Minimize(bool effect)
+{
+	state = MINIMIZED;
+	if(top && top->coco && top->coco->window && !top->coco->window.miniaturized) {
+		if(effect)
+			[top->coco->window performMiniaturize:top->coco->window];
+		else
+			[top->coco->window miniaturize:top->coco->window];
+	}
+}
+
+void Upp::TopWindow::Overlap(bool effect)
+{
+	state = OVERLAPPED;
+	if(top && top->coco && top->coco->window && top->coco->window.zoomed)
+		[top->coco->window zoom:top->coco->window];
+	if(top && top->coco && top->coco->window && top->coco->window.miniaturized)
+		[top->coco->window deminiaturize:top->coco->window];
+}
+
 
 #endif

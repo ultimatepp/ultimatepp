@@ -6,25 +6,9 @@ NAMESPACE_UPP
 
 #define LLOG(x)  // LOG(x)
 
-void TopWindow::Minimize(bool effect)
-{
-	state = MINIMIZED;
-}
-
 TopWindow& TopWindow::FullScreen(bool b)
 {
 	return *this;
-}
-
-void TopWindow::Maximize(bool effect)
-{
-	state = MAXIMIZED;
-}
-
-void TopWindow::Overlap(bool effect)
-{
-	GuiLock __;
-	state = OVERLAPPED;
 }
 
 TopWindow& TopWindow::TopMost(bool b, bool stay_top)
