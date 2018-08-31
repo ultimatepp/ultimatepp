@@ -12,8 +12,9 @@ struct MyApp : TopWindow {
 		w.DrawText(Zx(220), 0, String() << fnt.GetFaceName()
 		                                << ", ascent: " << fnt.GetAscent()
 		                                << ", descent: " << fnt.GetDescent()
-		                                << ", external: " << fnt.GetExternal());
-		RTIMING("Draw");
+		                                << ", external: " << fnt.GetExternal()
+		                                << (fnt.IsSerif() ? ", [serif]" : "")
+		                                << (fnt.IsScript() ? ", [script]" : ""));
 		int y = 50;
 		for(int p = 32; p < 8192 && y < sz.cy; p += 64) {
 			int x = 0;
