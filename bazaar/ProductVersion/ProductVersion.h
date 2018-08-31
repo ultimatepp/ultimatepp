@@ -62,6 +62,9 @@ class ProductVersion : public Moveable<ProductVersion>
 		ProductVersion &IncMajor(int delta = 1) { major += delta; return *this; }
 		ProductVersion &IncMinor(int delta = 1) { minor += delta; return *this; }
 		ProductVersion &IncDevel(int delta = 1) { devel += delta; return *this; }
+		
+		// xml support
+		void Xmlize(XmlIO &xml);
 };
 
 class ProductVersions : public Vector<ProductVersion>

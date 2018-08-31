@@ -157,6 +157,17 @@ ProductVersion::operator bool(void)
 	return major != 0 || minor != 0 || devel != 0;
 }
 
+// xml support
+void ProductVersion::Xmlize(XmlIO &xml)
+{
+	String s;
+	if(xml.IsStoring())
+		s = ToString();
+	Upp::Xmlize(xml, s);
+	if(xml.IsLoading())
+		operator=(s);
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////////
 // CLASS ProductVersions
 //////////////////////////////////////////////////////////////////////////////////////////////
