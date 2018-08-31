@@ -60,6 +60,8 @@ private:
 
 	void Init(void *cgContext, int cy);
 
+	void Stroke(int width, Color color);
+
 	SystemDraw() {}
 	
 	friend class ImageDraw;

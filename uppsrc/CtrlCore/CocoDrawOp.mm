@@ -4,6 +4,27 @@
 
 namespace Upp {
 
+void SystemDraw::Stroke(int width, Color color)
+{
+	static double dash[] = { 18, 6 };
+	static double dot[] = { 3, 3 };
+	static double dashdot[] = { 9, 6, 3, 6 };
+	static double dashdotdot[] = { 9, 3, 3, 3, 3, 3 };
+	switch(width) {
+	case PEN_NULL:       return;
+	case PEN_DASH:       CGContextSetLineDash(cgHandle, 0, dash, __countof(dash)); break;
+	case PEN_DOT:        CGContextSetLineDash(cgHandle, 0, dot, __countof(dot)); break;
+	case PEN_DASHDOT:    CGContextSetLineDash(cgHandle, 0, dashdot, __countof(dashdot)); break;
+	case PEN_DASHDOTDOT: CGContextSetLineDash(cgHandle, 0, dashdotdot, __countof(dashdotdot)); break;
+	default:             break;
+	}
+    CGContextSetLineWidth(cgHandle, width > 0 ? width : 1);
+    SetStroke(color);
+    CGContextDrawPath(cgHandle, kCGPathStroke);
+    if(width < 0)
+        CGContextSetLineDash(cgHandle, 0, NULL, 0);
+}
+
 void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	if(IsNull(color))
@@ -11,10 +32,8 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 	CGPoint p[2];
 	p[0] = Convert(x1, y1);
 	p[1] = Convert(x2, y2);
-    CGContextSetLineWidth(cgHandle, width > 0 ? width : 1);
 	CGContextAddLines(cgHandle, p, 2);
-    SetStroke(color);
-    CGContextDrawPath(cgHandle, kCGPathStroke);
+	Stroke(width, color);
 }
 
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
