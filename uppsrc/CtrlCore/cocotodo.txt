@@ -7,6 +7,9 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, con
 void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor)
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 
+- topmost
+- fullscreen
+
 later:
 
 - apple debugger
