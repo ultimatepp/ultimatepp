@@ -13,8 +13,6 @@ struct CommonFontInfo {
 	int  descent;
 	int  external;
 	int  internal;
-	int  height;
-	int  lineheight;
 	int  overhang;
 	int  avewidth;
 	int  maxwidth;

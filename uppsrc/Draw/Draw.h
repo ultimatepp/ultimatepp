@@ -155,10 +155,10 @@ public:
 
 	int   GetAscent() const                  { return Fi().ascent; }
 	int   GetDescent() const                 { return Fi().descent; }
-	int   GetCy() const                      { return Fi().height; }
+	int   GetCy() const                      { return GetAscent() + GetDescent(); }
 	int   GetExternal() const                { return Fi().external; }
 	int   GetInternal() const                { return Fi().internal; }
-	int   GetLineHeight() const              { return Fi().lineheight; }
+	int   GetLineHeight() const              { return GetCy() + GetExternal(); }
 	int   GetOverhang() const                { return Fi().overhang; }
 	int   GetAveWidth() const                { return Fi().avewidth; }
 	int   GetMaxWidth() const                { return Fi().maxwidth; }

@@ -113,8 +113,6 @@ CommonFontInfo GetFontInfoSys(Font font)
 		fi.descent = tm.tmDescent;
 		fi.external = tm.tmExternalLeading;
 		fi.internal = tm.tmInternalLeading;
-		fi.height = fi.ascent + fi.descent;
-		fi.lineheight = fi.height + fi.external;
 		fi.overhang = tm.tmOverhang;
 		fi.avewidth = tm.tmAveCharWidth;
 		fi.maxwidth = tm.tmMaxCharWidth;
