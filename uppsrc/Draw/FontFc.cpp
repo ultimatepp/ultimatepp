@@ -225,7 +225,11 @@ Vector<FaceInfo> GetAllFacesSys()
 	for(int i = 0; i < __countof(basic_fonts); i++) {
 		FaceInfo& fi = list.Add();
 		fi.name = basic_fonts[i];
-		fi.info = (i == 3) ? Font::SCALEABLE|Font::FIXEDPITCH : Font::SCALEABLE;
+		fi.info = Font::SCALEABLE;
+		if(i == Font::SERIF)
+			fi.info |= Font::SERIFSTYLE;
+		if(i == Font::MONOSPACE)
+			fi.info |= Font::FIXEDPITCH;
 	}
 	FcPattern *p = FcPatternCreate();
 	FcObjectSet *os = FcObjectSetBuild(FC_FAMILY, FC_SPACING, FC_SCALABLE, (void *)0);
@@ -245,6 +249,11 @@ Vector<FaceInfo> GetAllFacesSys()
 			FcBool bv;
 			if(FcPatternGetBool(pt, FC_SCALABLE, 0, &bv) == 0 && bv)
 				fi.info |= Font::SCALEABLE;
+			String h = ToLower(fi.name);
+			if(h.Find("serif") >= 0 && h.Find("sans") < 0)
+				fi.info |= Font::SERIFSTYLE;
+			if(h.Find("script") >= 0)
+				fi.info |= Font::SCRIPTSTYLE;
 		}
 	}
 	FcFontSetDestroy(fs);
