@@ -47,9 +47,9 @@ void MyApp::Paint(Draw& w)
 		lcounts[0], sizeof(lcounts) / sizeof(int),
 		4, Color(0, 192, 0));
 		
-	Point tr[] = { Point(50, 5), Point(80, 50), Point(0, 50) };
+	Point tr[] = { Point(50, 5), Point(80, 50), Point(20, 50) };
 	w.DrawPolygon(tr, 3, Green());
-	w.DrawPolyline(tr, 3, Magenta());
+	w.DrawPolyline(tr, 3, 2, Magenta());
 }
 
 GUI_APP_MAIN
