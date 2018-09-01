@@ -59,7 +59,6 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, con
 	while(--count_count >= 0) {
 		const Point *pp = vertices;
 		vertices += *counts++;
-		CGContextMoveToPoint(cgHandle, pp->x, pp->y);
 		DoPath(pp, vertices);
 		Stroke(width, color, false);
 	}
@@ -91,7 +90,13 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 	double ang1 = Bearing((Pointf(start) - center) / radius);
 	double ang2 = Bearing((Pointf(end) - center) / radius);
 
-
+	CGContextSaveGState(cgHandle);
+	CGPoint p = Convert(rc.left + radius.cx, rc.top + radius.cy);
+	CGContextTranslateCTM(cgHandle, p.x, p.y);
+	CGContextScaleCTM(cgHandle, radius.cx, -radius.cy);
+	CGContextAddArc(cgHandle, 0, 0, 1, ang1, ang2, 1);
+	CGContextRestoreGState(cgHandle);
+	Stroke(width, color, false);
 }
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
