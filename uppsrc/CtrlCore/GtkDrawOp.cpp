@@ -154,6 +154,7 @@ void SystemDraw::DrawRectOp(int x, int y, int cx, int cy, Color color)
 		SetColor(color);
 		cairo_fill(cr);
 	}
+	cairo_new_path(cr);
 }
 
 static void sDrawLineStroke(cairo_t *cr, int width)
@@ -162,6 +163,8 @@ static void sDrawLineStroke(cairo_t *cr, int width)
 	static double dot[] = { 3, 3 };
 	static double dashdot[] = { 9, 6, 3, 6 };
 	static double dashdotdot[] = { 9, 3, 3, 3, 3, 3 };
+	if(IsNull(width))
+		return;
 	switch(width) {
 	case PEN_NULL:       return;
 	case PEN_DASH:       cairo_set_dash(cr, dash, __countof(dash), 0); break;
@@ -209,6 +212,7 @@ void SystemDraw::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color col
 		}
 		sDrawLineStroke(cr, width);
 	}
+	cairo_new_path(cr);
 }
 
 void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts,
@@ -217,15 +221,16 @@ void SystemDraw::DrawPolyPolylineOp(const Point *vertices, int vertex_count, con
 	if(vertex_count < 2 || IsNull(color))
 		return;
 	FlushText();
+	SetColor(color);
 	while(--count_count >= 0) {
 		const Point *pp = vertices;
 		vertices += *counts++;
 		cairo_move_to(cr, pp->x, pp->y);
 		while(++pp < vertices)
 			cairo_line_to(cr, pp->x, pp->y);
-		SetColor(color);
 		sDrawLineStroke(cr, width);
 	}
+	cairo_new_path(cr);
 }
 
 cairo_surface_t *CreateCairoSurface(const Image& img);
@@ -274,7 +279,7 @@ void SystemDraw::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count,
 			sDrawLineStroke(cr, width);
 		}
 	}
-	
+	cairo_new_path(cr);
 }
 
 void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
@@ -296,6 +301,7 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 
 	SetColor(color);
 	sDrawLineStroke(cr, width);
+	cairo_new_path(cr);
 }
 
 void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
@@ -315,6 +321,7 @@ void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencol
 		SetColor(pencolor);
 		sDrawLineStroke(cr, pen);
 	}
+	cairo_new_path(cr);
 }
 
 }
