@@ -18,7 +18,10 @@ void SystemDraw::Stroke(int width, Color color, bool fill)
 	case PEN_DASHDOTDOT: CGContextSetLineDash(cgHandle, 0, dashdotdot, __countof(dashdotdot)); break;
 	default:             break;
 	}
-    CGContextSetLineWidth(cgHandle, width > 0 ? width : 1);
+	if(fill && width == 0)
+		width = PEN_NULL;
+	else
+	    CGContextSetLineWidth(cgHandle, width > 0 ? width : 1);
     SetStroke(color);
     CGContextDrawPath(cgHandle, fill ? width == PEN_NULL ? kCGPathFill : kCGPathFillStroke
                                      : kCGPathStroke);
