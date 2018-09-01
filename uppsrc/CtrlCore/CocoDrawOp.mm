@@ -10,6 +10,8 @@ void SystemDraw::Stroke(int width, Color color, bool fill)
 	static double dot[] = { 3, 3 };
 	static double dashdot[] = { 9, 6, 3, 6 };
 	static double dashdotdot[] = { 9, 3, 3, 3, 3, 3 };
+	if(IsNull(width))
+		width = PEN_NULL;
 	switch(width) {
 	case PEN_NULL:       if(!fill) return;
 	case PEN_DASH:       CGContextSetLineDash(cgHandle, 0, dash, __countof(dash)); break;
