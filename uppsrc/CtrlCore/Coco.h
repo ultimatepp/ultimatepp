@@ -60,7 +60,8 @@ private:
 
 	void Init(void *cgContext, int cy);
 
-	void Stroke(int width, Color color);
+	void Stroke(int width, Color color, bool fill);
+	void DoPath(const Point *pp, const Point *end);
 
 	SystemDraw() {}
 	
