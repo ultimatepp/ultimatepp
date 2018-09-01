@@ -50,6 +50,9 @@ void MyApp::Paint(Draw& w)
 	Point tr[] = { Point(50, 5), Point(80, 50), Point(20, 50) };
 	w.DrawPolygon(tr, 3, Green());
 	w.DrawPolyline(tr, 3, 2, Magenta());
+	
+	w.DrawEllipse(5, 70, 70, 40, Green(), 2, Magenta());
+	w.DrawEllipse(5, 150, 70, 40, Green());
 }
 
 GUI_APP_MAIN
