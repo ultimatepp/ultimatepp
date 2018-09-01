@@ -3,7 +3,8 @@ description "GUI core system\377B0,0,255";
 uses
 	Draw,
 	plugin\bmp,
-	RichText;
+	RichText,
+	Painter;
 
 library(WIN32 !MSC8ARM) "advapi32 comdlg32 comctl32";
 
