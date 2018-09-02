@@ -294,16 +294,16 @@ Size  ToolButton::GetMinSize() const
 	Size sz = image.GetSize();
 	if(sz.IsEmpty())
 		sz = Size(16, 16);
-	sz += 6;
+	sz += DPI(6);
 	if(text.GetCount()) {
 		Size tsz = GetTextSize(text, style->font);
 		if(kind == BOTTOMLABEL) {
-			sz.cy += tsz.cy + 3;
-			sz.cx = max(sz.cx, tsz.cx + 9);
+			sz.cy += tsz.cy + DPI(3);
+			sz.cx = max(sz.cx, tsz.cx + DPI(9));
 		}
 		if(kind == RIGHTLABEL) {
-			sz.cx += tsz.cx + 6;
-			sz.cy = max(sz.cy, tsz.cy + 6);
+			sz.cx += tsz.cx + DPI(6);
+			sz.cy = max(sz.cy, tsz.cy + DPI(6));
 		}
 	}
 	return max(sz, minsize);
