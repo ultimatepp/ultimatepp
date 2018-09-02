@@ -1,9 +1,10 @@
-#ifndef _ProductVersion_ProductVersion_h
-#define _ProductVersion_ProductVersion_h
+#ifndef _ProductVersion_h
+#define _ProductVersion_h
 
 #include <Core/Core.h>
 
-NAMESPACE_UPP
+namespace Upp
+{
 
 // Application version handling - holds a version
 // with subversion and devel field
@@ -96,7 +97,7 @@ class ProductVersions : public Vector<ProductVersion>
 		ProductVersion FindMax(ProductVersion const &v, ProductVersion const &maxv, bool devel) const;
 };
 
-END_UPP_NAMESPACE
+}; // end upp namespace
 
 #endif
 
