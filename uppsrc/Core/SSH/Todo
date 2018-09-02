@@ -1,0 +1,6 @@
+TODO:
+-----
+
+- Override libssh2 send and recv callbacks to do raw sends/recvs with U++ TcpSocket.
+- Accordingly, move Ssh::Wait() to SshSession.
+- Improve SFtpFileSystemInfo.

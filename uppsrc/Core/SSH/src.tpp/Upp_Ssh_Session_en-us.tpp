@@ -40,16 +40,16 @@ Returns `*this for method chaining.&]
 [s5;:Upp`:`:SshSession`:`:Keys`(const Upp`:`:String`&`,const Upp`:`:String`&`,const Upp`:`:String`&`,bool`): [_^Upp`:`:SshSession^ S
 shSession][@(0.0.255) `&]_[* Keys]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&
 ]_[*@3 prikey], [@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 pubkey], 
-[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 phrase]_`=_Null, 
+[@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 phrase], 
 [@(0.0.255) bool]_[*@3 fromfile]_`=_[@(0.0.255) true])&]
 [s2;%% Sets the asymmetric encryption keys to be used to authenticate 
 the session. [%-*@3 phrase] can be used to decipher the private 
-key. If phrase is not specified, supplied password will be used 
-instead. Returns `*this for method chaining. Note that when the 
-[%-*@3 fromfile] parameter is true, [%-*@3 prikey] and [%-*@3 pubkey] 
-strings will be treated as file paths to the respective key files. 
-This is the default behaviour. Otherwise they will be treated 
-as memory buffers containing the actual keys.&]
+key, or it can be empty (not recommended). Returns `*this for 
+method chaining. Note that when the [%-*@3 fromfile] parameter 
+is true, [%-*@3 prikey] and [%-*@3 pubkey] strings will be treated 
+as file paths to the respective key files. This is the default 
+behaviour. Otherwise they will be treated as memory buffers containing 
+the actual keys.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:Method`(int`,Upp`:`:Value`): [_^Upp`:`:SshSession^ SshSession
@@ -199,6 +199,14 @@ phase to allow user to query or set the transport methods.&]
 [s0;l288;%% This event is emitted at the beginning of the session 
 authentication phase to allow user to query or set the authentication 
 method(s)&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:SshSession`:`:WhenPhase: [_^Upp`:`:Event^ Event]<[@(0.0.255) int]>_[* WhenPhase
+]&]
+[s2;%% This event is invoked at certain phases of connection process, 
+and is meant to be informational. Possible values of its parameter 
+are: [*C PHASE`_DNS, PHASE`_CONNECTION, PHASE`_HANDSHAKE, PHASE`_AUTHORIZATION, 
+PHASE`_SUCCESS]&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SshSession`:`:WhenVerify: [_^Upp`:`:Gate^ Gate]<[_^Upp`:`:String^ String], 

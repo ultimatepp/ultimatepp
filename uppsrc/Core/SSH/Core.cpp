@@ -45,7 +45,7 @@ String GetName(int type, int64 id)
 
 // Ssh: SSH objects core class.
 
-StaticMutex ssh_mutex;
+static StaticMutex sLoopLock;
 
 void Ssh::Check()
 {
@@ -54,7 +54,7 @@ void Ssh::Check()
 	if(IsTimeout())
 		SetError(-1, "Operation timed out.");
 
-	if(ssh->status == ABORTED || (sock && ssh->socket->IsAbort()))
+	if(ssh->status == ABORTED)
 		SetError(-1, "Operation aborted.");
 
 	if(sock && ssh->socket->IsError())
@@ -63,7 +63,7 @@ void Ssh::Check()
 
 bool Ssh::Do(Gate<>& fn)
 {
-	Mutex::Lock m_(ssh_mutex);
+	Mutex::Lock __(sLoopLock);
 
 	Check();
 	if(!ssh->init)
