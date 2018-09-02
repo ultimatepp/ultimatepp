@@ -51,7 +51,7 @@ void RGBACtrl::Layout()
 	alpha.TopPos(y, ah).HSizePos(1, 0);
 	text.TopPos((y -= 4 + th), th).HSizePos(1, 0);
 	cbox.cx = (sz.cx - 3) / 18;
-	cbox.cy = minmax(cbox.cx, 4, 16);
+	cbox.cy = minmax(cbox.cx, 4, Zy(16));
 	int ch = 14 * cbox.cy;
 	cs.x = (sz.cx - 18 * cbox.cx) / 2 + 1;
 	cs.y = (y -= ch + 4);
