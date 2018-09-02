@@ -1,9 +1,9 @@
-#ifndef _Uniq_Uniq_h
-#define _Uniq_Uniq_h
+#ifndef _Uniq_h
+#define _Uniq_h
 
 #include <CtrlLib/CtrlLib.h>
 
-NAMESPACE_UPP
+namespace Upp {
 
 class Uniq
 {
@@ -65,7 +65,7 @@ class Uniq
 	operator bool() { return isFirstInstance; }
 };
 
-END_UPP_NAMESPACE
+}; // end upp namespace
 
 #endif
 
