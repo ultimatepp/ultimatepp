@@ -22,7 +22,7 @@ void ClientHandler::OnLoadingStateChange(CefRefPtr<CefBrowser> browser, bool isL
 }
 
 
-bool ClientHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser, const CefString& message, const CefString& source, int line)
+bool ClientHandler::OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_severity_t level, const CefString& message, const CefString& source, int line)
 {
 	ASSERT(CefCurrentlyOn(TID_UI));
 	PostCallback(callback3(WhenConsoleMessage, source.ToString(), line, message.ToString()));
