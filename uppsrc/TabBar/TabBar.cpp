@@ -967,7 +967,7 @@ void TabBar::ComposeTab(Tab& tab, const Font &font, Color ink, int style)
 	if(PaintIcons() && tab.HasIcon())
 	{
 		tab.AddImage(tab.img);
-		tab.AddSpace(TB_SPACEICON);
+		tab.AddSpace(DPI(TB_SPACEICON));
 	}
 	tab.AddValue(tab.value, font, ink).Clickable();
 }
@@ -1055,7 +1055,7 @@ void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
 			p = GetTextPosition(align, rn, ti.size.cy, pos);
 			w.DrawText(p.x, p.y, GetTextAngle(), ti.text, ti.font, ti.ink);
 		}
-
+		
 		if(ti.cross)
 		{
 			t.cross_size = ti.size;
@@ -1085,13 +1085,13 @@ void TabBar::PaintTabItems(Tab& t, Draw &w, const Rect& rn, int align)
 			#ifdef TABBAR_DEBUG
 			DrawFrame(w, Rect(st.tab_pos, st.tab_size), Red);
 			#endif
-		}		
+		}
 				
 		if(ti.side == LEFT)
 			pos_left += ti.size.cx;
 		else
 			pos_right -= ti.size.cx;
-	}	
+	}
 }
 
 void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsample)
@@ -1171,7 +1171,7 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 		ti.side = crosses_side;
 		ti.cross = true;
 		ti.size = s.crosses[0].GetSize();
-		t.AddSpace(3, crosses_side);		
+		t.AddSpace(DPI(3), crosses_side);
 	}
 	
 	ComposeTab(t, s.font, s.text_color[ndx], ndx);
@@ -1180,8 +1180,8 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 		int ix = n + 1;
 
 		while (ix < tabs.GetCount() && tabs[ix].stack == t.stack) {
-			Tab &q = tabs[ix];			
-			int ndx = !enable ? CTRL_DISABLED : 
+			Tab &q = tabs[ix];
+			int ndx = !enable ? CTRL_DISABLED :
 					   highlight == ix ? CTRL_HOT : CTRL_NORMAL;
 
 			int sn = t.itn;
@@ -1190,7 +1190,7 @@ void TabBar::PaintTab(Draw &w, const Size &sz, int n, bool enable, bool dragsamp
 				for(; sn < t.itn; sn++)
 					t.items[sn].stacked_tab = ix;
 			
-			ix++;					
+			ix++;
 		}
 	}
 	
@@ -1363,7 +1363,7 @@ int TabBar::GetWidth(int n)
 
 int TabBar::GetExtraWidth()
 {
-	return TB_MARGIN * 2 + (TB_SPACE + GetStyle().crosses[0].GetSize().cx) * crosses;	
+	return DPI(TB_MARGIN) * 2 + (DPI(TB_SPACE) + GetStyle().crosses[0].GetSize().cx) * crosses;	
 }
 
 Size TabBar::GetStdSize(const Value &q)
