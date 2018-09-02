@@ -65,11 +65,10 @@ void SFtp::Close(SFtpHandle handle)
 {
 	if(!handle)
 		return;
-	
+
 	Run([=] () mutable {
 		int rc = libssh2_sftp_close_handle(handle);
-		if(!rc)
-			LLOG("File handle freed.");
+		if(!rc)	LLOG("File handle freed.");
 		return !rc;
 	});
 }
@@ -132,7 +131,7 @@ int64 SFtp::GetPos(SFtpHandle handle)
 	return pos;
 }
 
-bool SFtp::Read(SFtpHandle handle, void* ptr, int size)
+int SFtp::Read(SFtpHandle handle, void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
@@ -142,13 +141,14 @@ bool SFtp::Read(SFtpHandle handle, void* ptr, int size)
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();
+		RefreshUI();
 	}
 	if(!rc)
 		LLOG("EOF received.");
-	return !rc || done == size;
+	return rc;
 }
 
-bool SFtp::Write(SFtpHandle handle, const void* ptr, int size)
+int SFtp::Write(SFtpHandle handle, const void* ptr, int size)
 {
 	int sz = min(size - done, ssh->chunk_size);
 
@@ -158,23 +158,38 @@ bool SFtp::Write(SFtpHandle handle, const void* ptr, int size)
 	if(rc > 0) {
 		done += rc;
 		ssh->start_time = msecs();
+		RefreshUI();
 	}
 	if(!rc)
 		LLOG("EOF received.");
-	return !rc || done == size;;
+	return rc;
 }
 
 int SFtp::Get(SFtpHandle handle, void *ptr, int size)
 {
 	done = 0;
-	Run([=]() mutable { return Read(handle, ptr, size); });
+	Run([=]() mutable {
+		while(done < size && !IsTimeout() && InProgress()) {
+			int rc = Read(handle, ptr, size);
+			if(rc < 0) return false;
+			if(!rc) break;
+		}
+		return true;
+	});
 	return GetDone();
 }
 
 int SFtp::Put(SFtpHandle handle, const void *ptr, int size)
 {
 	done = 0;
-	Run([=]() mutable { return Write(handle, ptr, size); });
+	Run([=]() mutable {
+		while(done < size && !IsTimeout() && InProgress()) {
+			int rc = Write(handle, ptr, size);
+			if(rc < 0) return false;
+			if(!rc) break;
+		}
+		return true;
+	});
 	return GetDone();
 }
 
@@ -190,6 +205,7 @@ bool SFtp::CopyData(Stream& dest, Stream& src, int64 maxsize)
 		err = Format("Buffer overflow. size = %d (allowed size >= 0 && < %d", size, maxsize);
 		goto Bailout;
 	}
+	LLOG("Transfer chunk size: " << ssh->chunk_size);
 	if(CopyStream(dest, src, src.GetSize(), WhenProgress, ssh->chunk_size) < 0) {
 		err = "File transfer is aborted.";
 		goto Bailout;
@@ -620,12 +636,8 @@ Array<FileSystemInfo::FileInfo> SFtpFileSystemInfo::Find(String mask, int max_co
 	
 	Array<FileInfo> fi;
 	if(!browser->InProgress()) {
-		if(IsNull(mask)) { // || mask.StartsWith("/media/*")) {
-			String dir;
-			if(!browser->RealizePath(".", dir))
-				return pick(fi);
-			mask = dir;
-		}
+		if(IsNull(mask))
+			mask = browser->GetDefaultDir();
 		mask.Replace("*", "");
 		auto e = browser->GetInfo(mask);
 		if(e) {

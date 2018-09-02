@@ -114,6 +114,8 @@ public:
     bool                    ReadLink(const String& path, String& target)            { return SymLink(path, target, LIBSSH2_SFTP_READLINK); }
     bool                    RealizePath(const String& path, String& target)         { return SymLink(path, target, LIBSSH2_SFTP_REALPATH); }
 
+    String                  GetDefaultDir()                                         { String s; RealizePath(".", s); return s; }
+    
     // Attributes
     bool                    GetAttrs(SFtpHandle handle, SFtpAttrs& attrs);
     bool                    GetAttrs(const String& path, SFtpAttrs& attrs);
@@ -154,8 +156,8 @@ private:
     Value                   QueryAttr(const String& path, int attr);
     bool                    ModifyAttr(const String& path, int attr, const Value& v);
     bool                    SymLink(const String& path, String& target, int type);
-    bool                    Read(SFtpHandle handle, void* ptr, int size);
-    bool                    Write(SFtpHandle handle, const void* ptr, int size);
+    int                     Read(SFtpHandle handle, void* ptr, int size);
+    int                     Write(SFtpHandle handle, const void* ptr, int size);
     bool                    CopyData(Stream& dest, Stream& src, int64 maxsize = INT64_MAX);
   
     One<LIBSSH2_SFTP*>      sftp_session;

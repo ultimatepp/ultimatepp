@@ -69,7 +69,7 @@ protected:
     void                ReportError(int rc, const String& reason);
     void                AddTo(SocketWaitEvent& e)               { e.Add(*ssh->socket, GetWaitEvents()); }
     dword               GetWaitEvents();
-    inline void         RefreshUI()                             { WhenWait ? WhenWait() : ssh->whenwait(); }
+    inline void         RefreshUI()                             { WhenWait  ? WhenWait() : ssh->whenwait(); }
     
 private:
     static int64        GetNewId();

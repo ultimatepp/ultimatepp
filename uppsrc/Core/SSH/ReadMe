@@ -45,5 +45,5 @@ Todo:
 Reference examples:
 -------------------
 
-- SshBasics: Demonstrates basic capabilities of SSH package.
-- SFtpGUI:   Demonstrates a simple sftp browser with GUI.                
+- SshBasics:    Demonstrates basic capabilities of SSH package.
+- SFtpBrowser:  Demonstrates a basic sftp browser with GUI.                

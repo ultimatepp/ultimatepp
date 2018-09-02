@@ -112,6 +112,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 		}
 		else
 			LLOG("Proxy plugin found. Attempting to connect via proxy...");
+		WhenPhase(WhenProxy ? PHASE_CONNECTION : PHASE_DNS);
 		return true;
 	})) goto Bailout;
 	
@@ -121,6 +122,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 				return false;
 			if(!ipinfo.GetResult())
 				SetError(-1, "DNS lookup failed.");
+			WhenPhase(PHASE_CONNECTION);
 			return true;
 		})) goto Bailout;
 		
@@ -169,6 +171,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			ssh->socket = &session->socket;
 			LLOG("Session successfully initialized.");
 			WhenConfig();
+			WhenPhase(PHASE_HANDSHAKE);
 			return true;
 	})) goto Bailout;
 
@@ -184,7 +187,10 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 	if(!Run([=] () mutable {
 			int rc = libssh2_session_handshake(ssh->session, session->socket.GetSOCKET());
 			if(!WouldBlock(rc) && rc < 0) SetError(rc);
-			if(!rc)	LLOG("Handshake successful.");
+			if(!rc) {
+				LLOG("Handshake successful.");
+				WhenPhase(PHASE_AUTHORIZATION);
+			}
 			return !rc;
 	})) goto Bailout;
 	
@@ -202,8 +208,6 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			if(session->authmethods.IsEmpty()) { if(!WouldBlock()) SetError(-1); return false; }
 			LLOG("Authentication methods successfully retrieved.");
 			WhenAuth();
-			if(IsNull(session->phrase))
-				session->phrase = password;
 			return true;
 	})) goto Bailout;
 	
@@ -261,6 +265,7 @@ bool SshSession::Connect(const String& host, int port, const String& user, const
 			LLOG("X11 dispatcher is set.");
 #endif
 				session->connected = true;
+				WhenPhase(PHASE_SUCCESS);
 			}
 			return	session->connected;
 	})) goto Bailout;
