@@ -109,7 +109,7 @@ SelectPackageDlg::SelectPackageDlg(const char *title, bool selectvars_, bool mai
 	list.Add(alist.SizePos());
 	
 	parent.Add(list.SizePos());
-	parent.AddFrame(splitter.Left(base, 170));
+	parent.AddFrame(splitter.Left(base, Zx(170)));
 	if (!selectvars)
 		splitter.Hide();
 	
