@@ -47,6 +47,8 @@ extern "C" {
 
 };
 
+using namespace Upp;
+
 // constructor
 XEDClass::XEDClass()
 {

@@ -3,8 +3,6 @@
 
 #include <Core/Core.h>
 
-using namespace Upp;
-
 #define XED __getXED()
 
 class XEDClass
@@ -36,10 +34,10 @@ class XEDClass
 		int InstructionLength(void const *buf);
 		
 		// disassemble instruction at pointer
-		String DisassembleInstruction(void const *buf, bool bytes = false);
+		Upp::String DisassembleInstruction(void const *buf, bool bytes = false);
 
 		// dump all instruction info
-		String DumpInstruction(void const *buf);
+		Upp::String DumpInstruction(void const *buf);
 };
 
 XEDClass &__getXED(void);
