@@ -616,9 +616,9 @@ void SizeGrip::Paint(Draw& w)
 SizeGrip::SizeGrip()
 {
 	Transparent();
-	RightPos(0, 12).BottomPos(0, 12);
+	RightPos(0, DPI(12)).BottomPos(0, DPI(12));
 	NoWantFocus();
-	Width(14);
+	Width(DPI(14));
 }
 
 SizeGrip::~SizeGrip() {}
