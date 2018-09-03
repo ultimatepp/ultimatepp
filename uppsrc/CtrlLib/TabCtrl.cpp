@@ -140,8 +140,9 @@ void TabCtrl::Layout()
 		ScrollInto(sel);
 	pane.VSizePos(style->tabheight + style->edge.top, style->edge.bottom)
 	    .HSizePos(style->edge.left, style->edge.right);
-	left.LeftPos(0, 16).TopPos(th - 16, 16);
-	right.RightPos(0, 16).TopPos(th - 16, 16);
+	int sx = DPI(16);
+	left.LeftPos(0, sx).TopPos(th - sx, sx);
+	right.RightPos(0, sx).TopPos(th - sx, sx);
 	SyncTabs();
 	Refresh();
 }
