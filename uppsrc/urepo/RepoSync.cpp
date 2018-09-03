@@ -15,7 +15,7 @@ RepoSync::RepoSync()
 	list.AddColumn("Changes");
 	list.ColumnWidths("220 500 100");
 	list.NoCursor().EvenRowColor();
-	list.SetLineCy(max(Draw::GetStdFontCy(), 20));
+	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
 	Sizeable().Zoomable();
 	BackPaint();
 }
@@ -101,7 +101,7 @@ bool RepoSync::ListSvn(const String& path)
 							list.SetCtrl(ii, 0, revert.Add().SetLabel(an + (action == ADD ? "\nSkip" : "\nRevert")).NoWantFocus());
 							revert.Top() <<= 0;
 							Ctrl& b = diff.Add().SetLabel("Changes..").SizePos().NoWantFocus();
-							b <<= THISBACK1(DoDiff, ii);
+							b << [=] { DoDiff(ii); };
 							list.SetCtrl(ii, 2, b);
 						}
 					}
