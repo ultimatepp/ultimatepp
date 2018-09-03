@@ -596,8 +596,6 @@ void ChSysInit()
 	ChReset();
 	XpClear();
 
-	DLOG("ChSysInit");
-	DDUMP(Ctrl::IsUHDEnabled());
 	if(Ctrl::IsUHDEnabled()) {
 		HRESULT (STDAPICALLTYPE *SetProcessDpiAwareness)(int);
 		DllFn(SetProcessDpiAwareness, "Shcore.dll", "SetProcessDpiAwareness");
