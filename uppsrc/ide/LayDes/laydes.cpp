@@ -49,7 +49,7 @@ Rect LayDes::CtrlRectZ(Ctrl::LogPos pos, Size sz)
 
 void LayDes::AddHandle(Draw& w, int x, int y)
 {
-	w.DrawRect(x, y, 6, 6, SColorMark);
+	w.DrawRect(x, y, DPI(6), DPI(6), SColorMark);
 	handle.Add(Point(x, y));
 }
 
@@ -111,10 +111,12 @@ void LayDes::GetSprings(Rect& l, Rect& t, Rect& r, Rect& b)
 	Rect ir = CtrlRectZ(CurrentItem().pos, CurrentLayout().size);
 	int h4 = ir.Height() / 4;
 	int w4 = ir.Width() / 4;
-	l = RectC(-MARGIN, ir.top + h4 - 5, ir.left + MARGIN, 10);
-	t = RectC(ir.left + w4 - 5, -MARGIN, 10, ir.top + MARGIN);
-	r = RectC(ir.right, ir.bottom - h4 - 5, 9999, 10);
-	b = RectC(ir.right - w4 - 5, ir.bottom, 10, 9999);
+	int fv = DPI(5);
+	int tn = DPI(10);
+	l = RectC(-MARGIN, ir.top + h4 - fv, ir.left + MARGIN, tn);
+	t = RectC(ir.left + w4 - fv, -MARGIN, tn, ir.top + MARGIN);
+	r = RectC(ir.right, ir.bottom - h4 - fv, 9999, tn);
+	b = RectC(ir.right - w4 - fv, ir.bottom, tn, 9999);
 }
 
 void LayDes::DrawSpring(Draw& w, const Rect& r, bool horz, bool hard)
@@ -195,7 +197,7 @@ void LayDes::Paint(Draw& w)
 	Size sz = GetSize();
 	w.DrawRect(sz, SColorPaper);
 	if(!IsNull(fileerror))
-		w.DrawText(16, 16, "FILE ERROR: " + fileerror, Arial(14).Bold(), Red);
+		w.DrawText(16, 16, "FILE ERROR: " + fileerror, ArialZ(14).Bold(), Red);
 	if(IsNull(currentlayout))
 		return;
 	w.Offset(-sb.Get());
@@ -212,8 +214,8 @@ void LayDes::Paint(Draw& w)
 	}
 	DrawFrame(w, -1, -1, lsz.cx + 2, lsz.cy + 2, SColorText);
 	handle.Clear();
-	AddHandle(w, lsz.cx, lsz.cy / 2 - 3);
-	AddHandle(w, lsz.cx / 2 - 3, lsz.cy);
+	AddHandle(w, lsz.cx, lsz.cy / 2 - DPI(3));
+	AddHandle(w, lsz.cx / 2 - DPI(3), lsz.cy);
 	AddHandle(w, lsz.cx, lsz.cy);
 	int i;
 	Index<int> passed;
@@ -228,16 +230,16 @@ void LayDes::Paint(Draw& w)
 		for(i = 0; i < cursor.GetCount(); i++) {
 			LayoutItem& m = l.item[cursor[i]];
 			Rect r = CtrlRectZ(m.pos, l.size);
-			DrawFatFrame(w, r, i == cursor.GetCount() - 1 ? Cyan : Brown, -3);
+			DrawFatFrame(w, r, i == cursor.GetCount() - 1 ? Cyan : Brown, DPI(-3));
 			if(i == cursor.GetCount() - 1) {
-				int lrm = r.left + r.Width() / 2 - 3;
-				int tbm = r.top + r.Height() / 2 - 3;
-				AddHandle(w, r.left - 6, r.top - 6);
-				AddHandle(w, lrm, r.top - 6);
-				AddHandle(w, r.right, r.top - 6);
-				AddHandle(w, r.left - 6, tbm);
+				int lrm = r.left + r.Width() / 2 - DPI(3);
+				int tbm = r.top + r.Height() / 2 - DPI(3);
+				AddHandle(w, r.left - DPI(6), r.top - DPI(6));
+				AddHandle(w, lrm, r.top - DPI(6));
+				AddHandle(w, r.right, r.top - DPI(6));
+				AddHandle(w, r.left - DPI(6), tbm);
 				AddHandle(w, r.right, tbm);
-				AddHandle(w, r.left - 6, r.bottom);
+				AddHandle(w, r.left - DPI(6), r.bottom);
 				AddHandle(w, lrm, r.bottom);
 				AddHandle(w, r.right, r.bottom);
 			}
@@ -287,7 +289,7 @@ int   LayDes::FindHandle(Point p)
 {
 	for(int i = 0; i < handle.GetCount(); i++) {
 		Point h = handle[i];
-		if(p.x >= h.x - 1 && p.x < h.x + 7 && p.y >= h.y - 1 && p.y < h.y + 7)
+		if(p.x >= h.x - DPI(1) && p.x < h.x + DPI(7) && p.y >= h.y - DPI(1) && p.y < h.y + DPI(7))
 			return i;
 	}
 	return -1;
