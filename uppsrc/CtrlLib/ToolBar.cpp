@@ -115,7 +115,7 @@ void ToolBar::Post(Event<Bar&> bar)
 int ToolBar::GetStdHeight()
 {
 	Size sz = StyleDefault().maxiconsize;
-	return sz.cy > 10000 ? 22 + 3 : sz.cy + 6 + 3;
+	return sz.cy > 10000 ? DPI(22) + 3 : sz.cy + DPI(6) + 3;
 }
 
 StaticBarArea::StaticBarArea()
