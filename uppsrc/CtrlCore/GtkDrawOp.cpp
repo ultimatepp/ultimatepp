@@ -291,6 +291,9 @@ void SystemDraw::DrawArcOp(const Rect& rc, Point start, Point end, int width, Co
 	Pointf center = Pointf(rc.TopLeft()) + radius;
 	double ang1 = Bearing((Pointf(start) - center) / radius);
 	double ang2 = Bearing((Pointf(end) - center) / radius);
+
+	if(ang1 == ang2)
+		ang1 -= 0.000001;
 	
 	cairo_move_to(cr, center.x + radius.cx * cos(ang1), center.y + radius.cy * sin(ang1));
 	cairo_save(cr);
