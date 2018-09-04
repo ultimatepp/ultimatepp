@@ -478,9 +478,11 @@ int HeaderCtrl::GetSplit(int px) {
 	double rs = Denominator();
 	int n = col.GetCount();
 	int l = GetLastVisibleTab();
-	if(mode != SCROLL && abs(px - cx) <= 4 && n > 0 && l >= 0 && GetTabWidth(l) < 4)
+	int D3 = DPI(3);
+	int D4 = DPI(4);
+	if(mode != SCROLL && abs(px - cx) <= D4 && n > 0 && l >= 0 && GetTabWidth(l) < D4)
 		while(--n >= 0)
-			if(GetTabWidth(n) >= 4)
+			if(GetTabWidth(n) >= D4)
 				return n;
 	double rr = 0;
 	int x = 0;
@@ -505,13 +507,13 @@ int HeaderCtrl::GetSplit(int px) {
 			}
 			if(mode == SCROLL) {
 				x += (int)col[i].ratio;
-				if(canmove && px >= x - 3 && px < x + 3 && (i >= n - 1 || GetNextTabWidth(i) >= 4 || px < x))
+				if(canmove && px >= x - D3 && px < x + D3 && (i >= n - 1 || GetNextTabWidth(i) >= D4 || px < x))
 					return i;
 			}
 			else {
 				rr += rs ? col[i].ratio : 1;
 				x = int(rr * cx / (rs ? rs : col.GetCount()));
-				if(canmove && px >= x - 3 && px < x + 3 && i < n - 1 && (i >= n - 1 || GetNextTabWidth(i) >= 4 || px < x))
+				if(canmove && px >= x - D3 && px < x + D3 && i < n - 1 && (i >= n - 1 || GetNextTabWidth(i) >= D4 || px < x))
 					return i;
 			}
 			if(px < x)
