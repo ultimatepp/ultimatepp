@@ -104,7 +104,6 @@ void StartEditorMode(const Vector<String>& args, Ide& ide, bool& clset)
 	ide.EditorMode();
 }
 
-
 // TODO: I do not like that we need to define macro here.
 // I opt for std::function version. We need to fix that API
 // in 2018.2 release. #1901

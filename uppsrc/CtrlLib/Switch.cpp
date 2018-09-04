@@ -155,7 +155,8 @@ void Switch::Paint(Draw& w) {
 	if(!IsTransparent())
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
 	int tcy = GetTextSize("W", font).cy;
-	linecy = max(mincy, max(16, tcy + 2));
+	Size isz = CtrlsImg::S0().GetSize();
+	linecy = max(mincy, max(isz.cy, tcy));
 	int y = 0;
 	int x = 0;
 	bool horz = linecy * cs.GetCount() > sz.cy;
@@ -177,7 +178,6 @@ void Switch::Paint(Draw& w) {
 		Case& v = cs[i];
 		bool dv = ds || !v.enabled;
 
-		Size isz = CtrlsImg::S0().GetSize();
 		Size tsz = GetSmartTextSize(v.label, font);
 		int iy = (linecy - isz.cy) / 2;
 

@@ -1,5 +1,4 @@
 topic "Reacting to resolution";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [l288;i1120;a17;O9;~~~.1408;2 $$1,0#10431211400427159095818037425705:param]
 [a83;*R6 $$2,5#31310162474203024125188417583966:caption]
 [H4;b83;*4 $$3,5#07864147445237544204411237157677:title]
@@ -21,6 +20,7 @@ topic "Reacting to resolution";
 [2 $$19,0#53580023442335529039900623488521:gap]
 [C2 $$20,20#70211524482531209251820423858195:class`-nested]
 [b50;2 $$21,21#03324558446220344731010354752573:Par]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [s2; Reacting to actual resolution, UHD support&]
 [s0; While all widgets coordinates are always in pixels, applications 
@@ -63,17 +63,24 @@ algorithm is used so that it looks quite fine on UHD display).
 Correspondingly, in standard mode, UHD resolution icons are downscaled. 
 Icons with `"None`" resolution are left intact.&]
 [s0; &]
+[s0; It is also possible and preferable to have both standard and 
+UHD variants in the same .iml file. If this the case, UHD variant 
+[/ name] is changed to [/ name]`_`_UHD in C`+`+ code (to avoid name 
+clash). Also, in UHD mode, UHD variant is used to actually overwrite 
+standard resolution variant.&]
+[s0; &]
 [s0; UHD is normally activated when standard icon height is greater 
 than 22.&]
 [s0; &]
 [s0; In addition to Zx/Zy/Zsz functions, U`+`+ also provides set 
 of [^topic`:`/`/Draw`/src`/UHD`$en`-us^ DPI functions] which simply 
 double arguments when UHD mode is active `- this is sometimes 
-better approach for scaling things that are related to icons.&]
+better approach for scaling things that are related to images.&]
 [s0; &]
 [s0; Last but not least, some host platforms (Windows) need to be 
 specifically informed that the application is able to handle 
 UHD, otherwise they enter into mode when application is rendered 
 in standard resolution and upscaled by windows (which looks quite 
 terrible). Normally, U`+`+ is in this `"HiDPI`" mode by default. 
-You can revert to ugly upscaling mode by calling Ctrl`::SetUHDEnabled(false).]]
+You can revert to ugly upscaling mode by calling Ctrl`::SetUHDEnabled(false) 
+in INITIBLOCK.]]

@@ -1,4 +1,4 @@
-description "Simple svn GUI frontend, also a module that can be used in other applications\377";
+description "GUI for GIT and SVN synchronization\377";
 
 uses
 	TextDiffCtrl;
@@ -15,5 +15,5 @@ file
 	Copying;
 
 mainconfig
-	"" = "GUI";
+	"" = "";
 

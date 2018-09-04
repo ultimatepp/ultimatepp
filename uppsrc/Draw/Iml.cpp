@@ -77,6 +77,14 @@ Image Iml::Get(int i)
 							for(int i = 0; i < cached.GetCount(); i++)
 								cached[i] = Premultiply(cached[i]);
 					}
+					if(IsUHDMode() && cached[i].GetResolution() == IMAGE_RESOLUTION_STANDARD) {
+						int q = Find(GetId(i) + "__UHD");
+						if(q >= 0) {
+							m.image = Get(q);
+							if(m.image.GetResolution() == IMAGE_RESOLUTION_UHD)
+								break;
+						}
+					}
 					m.image = DPI(cached[i]);
 					break;
 				}

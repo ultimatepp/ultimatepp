@@ -246,6 +246,8 @@ bool LoadIml(const String& data, Array<ImlImage>& img, int& format)
 				c.name = name[ii];
 				c.exp = exp[ii++];
 				c.image = m[i];
+				if(c.image.GetResolution() == IMAGE_RESOLUTION_UHD)
+					c.name.TrimEnd("__UHD");
 				if(premultiply)
 					c.image = Premultiply(c.image);
 			}
@@ -334,9 +336,18 @@ String SaveIml(const Array<ImlImage>& iml, int format) {
 	}
 	else {
 		out << "PREMULTIPLIED\r\n";
+		Index<String> std_name;
 		for(int i = 0; i < iml.GetCount(); i++) {
 			const ImlImage& c = iml[i];
-			out << "IMAGE_ID(" << c.name << ")";
+			if(c.image.GetResolution() == IMAGE_RESOLUTION_STANDARD)
+				std_name.Add(c.name);
+		}
+		for(int i = 0; i < iml.GetCount(); i++) {
+			const ImlImage& c = iml[i];
+			out << "IMAGE_ID(" << c.name;
+			if(c.image.GetResolution() == IMAGE_RESOLUTION_UHD && std_name.Find(c.name) >= 0)
+				out << "__UHD";
+			out << ")";
 			if(c.exp)
 				out << " IMAGE_META(\"exp\", \"\")\r\n";
 			out << "\r\n";
