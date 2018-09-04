@@ -34,6 +34,9 @@ String SplashCtrl::GenerateVersionInfo(char separator)
 #if __cplusplus >= 201100
 	h << " (C++11)";
 #endif
+#if __cplusplus >= 201400
+	h << " (C++14)";
+#endif
 #ifdef GUI_GTK
 	h << " (Gtk)";
 #endif
@@ -71,6 +74,8 @@ Size SplashCtrl::MakeLogo(Ctrl& parent, Array<Ctrl>& ctrl)
 	h << "Using: " << MemoryUsedKb() << " KB\n";
 	if(cpp.GetCount())
 		h << "CodeBase: " << cpp.GetCount() << " classes, " << total << " items\n";
+	if(IsUHDMode())
+		h << "UHD mode\n";
 	v1 = h;
 	v1.HSizePos(DPI(220), DPI(10)).BottomPos(DPI(20), Arial(DPI(20)).GetHeight() * 5);
 	v1.SetFont(Arial(DPI(10)));

@@ -1,5 +1,4 @@
 topic "Ultra High Definition Displays support";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Ultra High Definition Displays support";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Ultra High Definition Displays support]]}}&]
 [s0;i448;a25;kKO9;@(0.0.255) &]
@@ -23,7 +23,9 @@ topic "Ultra High Definition Displays support";
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:SyncUHDMode`(`): [@(0.0.255) void]_[* SyncUHDMode]()&]
-[s2;%% Sets the UHD mode if current GUI font is bigger than 22 pixels.&]
+[s2;%% Sets the UHD mode if current GUI font is bigger than 27 pixels 
+(in windows, that corresponds to text size bigger than approximately 
+160%).&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:DPI`(const Upp`:`:Image`&`): [_^Upp`:`:Image^ Image]_[* DPI]([@(0.0.255) const]_

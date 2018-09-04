@@ -411,7 +411,7 @@ struct PackageDisplay : Display {
 			icon = DPI(icon, 16);
 		w.DrawRect(r, paper);
 		w.DrawImage(r.left, r.top + (r.Height() - icon.GetHeight()) / 2, icon);
-		w.DrawText(r.left + Zx(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
+		w.DrawText(r.left + DPI(20), r.top + (r.Height() - Draw::GetStdFontCy()) / 2, txt, fnt, ink);
 	}
 
 	PackageDisplay() { fnt = StdFont(); }
@@ -452,7 +452,7 @@ void SelectPackageDlg::SyncList(const String& find)
 		Image icon = pkg.icon;
 		if(IsNull(icon))
 			icon = pkg.main ? IdeImg::MainPackage() : IdeImg::Package();
-		clist.Add(pkg.package, icon);
+		clist.Add(pkg.package, DPI(icon, 16));
 		alist.Add(pkg.package, pkg.nest, pkg.description, icon);
 		alist.SetDisplay(alist.GetCount() - 1, 0, pkg.main ? bpd : pd);
 	}
