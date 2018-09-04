@@ -72,7 +72,10 @@ void IconDes::PrepareImageDlg(WithImageLayout<TopWindow>& dlg)
 		int resolution = IMAGE_RESOLUTION_STANDARD;
 		if(IsCurrent())
 			resolution = Current().image.GetResolution();
-		dlg.resolution <<= decode(resolution, IMAGE_RESOLUTION_STANDARD, 0, IMAGE_RESOLUTION_UHD, 1, 2);
+		dlg.resolution.Set(0, IMAGE_RESOLUTION_STANDARD);
+		dlg.resolution.Set(1, IMAGE_RESOLUTION_UHD);
+		dlg.resolution.Set(2, IMAGE_RESOLUTION_NONE);
+		dlg.resolution <<= resolution;
 	}
 	dlg.name.SetFilter(sCharFilterCid);
 }

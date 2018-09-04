@@ -3,7 +3,11 @@
 
 #include <Draw/Draw.h>
 
+#ifdef flagTIMING
+#define PAINTER_TIMING(x)     RTIMING(x)
+#else
 #define PAINTER_TIMING(x)  // RTIMING(x)
+#endif
 
 namespace Upp {
 

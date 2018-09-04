@@ -10,21 +10,27 @@ struct ImageGLData {
 	Image        img;
 	GLuint       texture_id;
 	
-	void Init(const Image& img);
+	void Init(const Image& img, dword flags);
 	~ImageGLData();
 };
 
-void ImageGLData::Init(const Image& img)
+void ImageGLData::Init(const Image& img_, dword flags)
 {
 	LTIMING("CreateTexture");
+	Image img = img_;
 	Size sz = img.GetSize();
 
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
+	if(flags & TEXTURE_MIPMAP)
+		glGenerateMipmap(GL_TEXTURE_2D);
 	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, flags & TEXTURE_LINEAR ? GL_LINEAR : GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, flags & TEXTURE_LINEAR ?
+																flags & TEXTURE_MIPMAP ? GL_LINEAR_MIPMAP_LINEAR
+																                       : GL_LINEAR
+																                 : GL_NEAREST);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -33,7 +39,7 @@ void ImageGLData::Init(const Image& img)
 	SysImageRealized(img);
 }
 
-static LRUCache<ImageGLData, Tuple<uint64, uint64> > sTextureCache;
+static LRUCache<ImageGLData, Tuple<uint64, uint64, dword> > sTextureCache;
 static bool sReset;
 
 ImageGLData::~ImageGLData()
@@ -57,23 +63,25 @@ void GLDraw::ResetCache()
 	sReset = false;
 }
 
-struct ImageGLDataMaker : LRUCache<ImageGLData, Tuple2<uint64, uint64> >::Maker {
+struct ImageGLDataMaker : LRUCache<ImageGLData, Tuple<uint64, uint64, dword> >::Maker {
 	Image         img;
 	uint64        context;
+	dword         flags;
 
-	virtual Tuple2<uint64, uint64>  Key() const                      { return MakeTuple<uint64, uint64>(img.GetSerialId(), context); }
-	virtual int                     Make(ImageGLData& object) const  { object.Init(img); return img.GetLength(); }
+	virtual Tuple<uint64, uint64, dword>  Key() const                      { return MakeTuple(img.GetSerialId(), context, flags); }
+	virtual int                           Make(ImageGLData& object) const  { object.Init(img, flags); return img.GetLength(); }
 };
 
 int max_texture_memory = 4 * 1024 * 768;
 int max_texture_count = 1000;
 
-GLuint GetTextureForImage(const Image& img, uint64 context)
+GLuint GetTextureForImage(dword flags, const Image& img, uint64 context)
 {
 	sTextureCache.Shrink(max_texture_memory, max_texture_count);
 	ImageGLDataMaker m;
 	m.img = img;
 	m.context = context;
+	m.flags = flags;
 	return sTextureCache.Get(m).texture_id;
 }
 
