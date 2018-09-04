@@ -48,6 +48,8 @@ void ChromiumBrowser::ChildProcess()
 
 #elif defined(PLATFORM_WIN32)
 
+	//Uninitialize COM, Chromium will take care of it
+	CoUninitialize();
 	CefMainArgs main_args(Ctrl::hInstance);
 
 #else
