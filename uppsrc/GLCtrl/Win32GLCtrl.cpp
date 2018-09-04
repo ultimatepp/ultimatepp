@@ -92,6 +92,7 @@ LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		BeginPaint(GetHWND(), &ps);
 		ActivateContext();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		ctrl->GLPaint();
 		if(ctrl->doubleBuffering)
 			SwapBuffers(hDC);

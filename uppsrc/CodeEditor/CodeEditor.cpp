@@ -1111,7 +1111,7 @@ void CodeEditor::Zoom(int d)
 	Font f = GetFont();
 	int h = f.GetCy();
 	int q = f.GetHeight();
-	while(f.GetCy() == h && (d < 0 ? f.GetCy() > 5 : f.GetCy() < 40))
+	while(f.GetCy() == h && (d < 0 ? f.GetCy() > 5 : f.GetCy() < 80))
 		f.Height(q += d);
 	SetFont(f);
 	EditorBarLayout();

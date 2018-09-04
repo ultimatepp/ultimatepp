@@ -37,7 +37,7 @@ Vector<int> GLCtrl::GLPicking::Pick(int x, int y, Callback resizeCallback, Callb
 	
 	if (hits == 0)
 		return Vector<int>();
-	else 
+	else
 		return ParseHits(buffer, hits);
 }
 

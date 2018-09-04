@@ -16,8 +16,18 @@
 #include <GL/gl.h>
 
 namespace Upp {
-	
-GLuint GetTextureForImage(const Image& img, uint64 context = 0);
+
+enum {
+	TEXTURE_LINEAR = 0x01,
+	TEXTURE_MIPMAP = 0x02,
+};
+
+GLuint GetTextureForImage(dword flags, const Image& img, uint64 context = 0);
+
+inline
+GLuint GetTextureForImage(const Image& img, uint64 context = 0) {
+	return GetTextureForImage(0, img, context);
+}
 
 #ifdef GL_USE_SHADERS
 
@@ -55,6 +65,8 @@ public:
 	GLProgram();
 };
 
+extern GLProgram gl_image, gl_image_colored, gl_rect;
+
 #endif
 
 class GLDraw : public SDraw {
@@ -73,6 +85,8 @@ class GLDraw : public SDraw {
 	void FlushPutRect();
 
 public:
+	void    Flush()                   { FlushPutRect(); }
+
 	virtual void  PutImage(Point p, const Image& img, const Rect& src);
 #ifdef GL_USE_SHADERS
 	virtual void  PutImage(Point p, const Image& img, const Rect& src, Color color);

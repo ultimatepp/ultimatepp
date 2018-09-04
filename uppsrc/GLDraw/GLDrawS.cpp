@@ -419,13 +419,15 @@ void GLDraw::Init(Size sz, uint64 context_)
 	}
 
 	gl_image.Use();
-	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, gl_image.GetUniform("u_projection"));
+	static int uni1 = gl_image.GetUniform("u_projection");
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, uni1);
 
 	gl_image_colored.Use();
-	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, gl_image_colored.GetUniform("u_projection"));
-
+	static int uni2 = gl_image_colored.GetUniform("u_projection");
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, uni2);
 	gl_rect.Use();
-	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, gl_rect.GetUniform("u_projection"));
+	static int uni3 = gl_rect.GetUniform("u_projection");
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, uni3);
 }
 
 void GLDraw::Finish()

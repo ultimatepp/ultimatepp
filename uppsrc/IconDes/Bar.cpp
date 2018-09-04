@@ -241,9 +241,15 @@ struct CachedIconImage : public Display {
 		Image m = q;
 		if(IsNull(m))
 			return;
+		Size rsz = r.GetSize();
 		Size isz = m.GetSize();
 		if(isz.cx > 200 || isz.cy > 200)
 			m = IconDesImg::LargeImage();
+		else
+		if(2 * isz.cx <= rsz.cx && 2 * isz.cy < rsz.cy) {
+			int n = min(rsz.cx / isz.cx, rsz.cy / isz.cy);
+			m = Magnify(m, n, n); // TODO: Cached!
+		}
 		else
 		if(isz.cx > r.GetWidth() || isz.cy > r.GetHeight())
 			m = CachedRescale(m, GetFitSize(m.GetSize(), r.GetSize()));
