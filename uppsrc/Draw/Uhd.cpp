@@ -107,7 +107,7 @@ bool IsUHDMode()
 
 void SyncUHDMode()
 {
-	bool uhd = GetStdFontCy() > 22;
+	bool uhd = GetStdFontCy() > 27;
 	if(uhd != IsUHDMode())
 		SetUHDMode(uhd);
 }
