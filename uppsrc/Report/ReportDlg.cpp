@@ -202,7 +202,7 @@ ReportWindow::ReportWindow()
 	sw <<= THISBACK(Pages);
 	numbers <<= THISBACK(Numbers);
 	pg.WhenGoPage = THISBACK(GoPage);
-	lbl.SetFont(Arial(20).Italic());
+	lbl.SetFont(ArialZ(20).Italic());
 	lbl.SetAlign(ALIGN_CENTER);
 	pg.WhenAction = THISBACK(ShowPage);
 	Sizeable();
