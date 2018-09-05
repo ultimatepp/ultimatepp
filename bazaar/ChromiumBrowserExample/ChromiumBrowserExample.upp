@@ -20,6 +20,8 @@ file
 	Utils.h,
 	Utils.cpp,
 	Main readonly separator,
+	ChromiumBrowserExample.exe.manifest,
+	ChromiumBrowserExample.rc,
 	ChromiumBrowserExample.iml,
 	ChromiumBrowserExample.lay,
 	ChromiumBrowserExample.h,

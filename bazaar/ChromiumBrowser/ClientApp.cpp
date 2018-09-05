@@ -15,13 +15,17 @@ void ClientApp::OnBeforeCommandLineProcessing(const CefString& process_type, Cef
 	command_line->AppendSwitch("disable-pinch");
 
 #ifdef PLATFORM_LINUX
-	Upp::String fp = Upp::GetExeDirFile("libpepflashplayer.so");
-	if (Upp::FileExists(fp)) command_line->AppendSwitchWithValue("ppapi-flash-path", ~fp);
+	const char flash_name[] = "libpepflashplayer.so";
 #elif defined(PLATFORM_WIN32)
-	Upp::String fp = Upp::GetExeDirFile("pepflashplayer.dll");
-	if (Upp::FileExists(fp)) command_line->AppendSwitchWithValue("ppapi-flash-path", ~fp);
+	const char flash_name[] = "pepflashplayer.dll";
 #endif
 
+	Upp::String fp = Upp::GetExeDirFile(flash_name);
+	if (Upp::FileExists(fp)){
+		command_line->AppendSwitchWithValue("ppapi-flash-path", ~fp);
+		Upp::String fv = ParseJSON(LoadFile(Upp::GetExeDirFile("manifest.json")))["version"];
+		command_line->AppendSwitchWithValue("ppapi-flash-version", fv.IsEmpty() ? "30.0.0.154" : ~fv);
+	}
 }
 
 
