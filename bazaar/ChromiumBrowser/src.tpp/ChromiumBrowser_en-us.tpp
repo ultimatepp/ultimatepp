@@ -1,5 +1,4 @@
 topic "";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 ChromiumBrowser]]}}&]
 [s0;i448;a25;kKO9;%- [@(0.0.255)3 class][3 _][*3 ChromiumBrowser][3 _:_][@(0.0.255)3 public][3 _][*@3;3 C
@@ -74,7 +74,12 @@ and [C Resources] subdirectories from CEF to see the list of required
 files&]
 [s0;i150;O0; if you need Flash plugin, install google chrome browser 
 and copy [C libpepflashplayer.so] and [C manifest.json] from [C `~/.config/google`-chro
-me/PepperFlash/] to the output directory&]
+me/PepperFlash/] to the output directory. Alternatively flash 
+can be downloaded directly from Adobe web page: [C http://fpdownload.adobe.com/pub/fl
+ashplayer/pdc/XX.X.X.XXX/flash`_player`_ppapi`_linux.x86`_64.tar.gz], 
+where XX.X.X.XXX is version number. Current version is listed 
+in section PPAPI`_linuxchrome in the file: [C https://fpdownload.macromedia.com/pub/f
+lashplayer/masterversion/masterversion.xml]&]
 [s0;* &]
 [ {{10000F(128)G(128)@1 [s0; [* Building CEF application on Windows]]}}&]
 [s0; &]
