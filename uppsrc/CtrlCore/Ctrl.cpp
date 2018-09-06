@@ -790,6 +790,12 @@ int  Ctrl::HorzLayoutZoom(int cx)
 	return Csize.cx * cx / Dsize.cx;
 }
 
+double  Ctrl::HorzLayoutZoomf(double cx)
+{
+	Csizeinit();
+	return Csize.cx * cx / Dsize.cx;
+}
+
 int  Ctrl::VertLayoutZoom(int cy)
 {
 	Csizeinit();

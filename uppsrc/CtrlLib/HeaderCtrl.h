@@ -135,7 +135,7 @@ public:
 	void          HideTab(int i)                          { ShowTab(i, false); }
 	bool          IsTabVisible(int i)                     { return col[i].visible; }
 	void          SetTabRatio(int i, double ratio);
-	double        GetTabRatio(int i) const                { return col[i].ratio; }
+	double        GetTabRatio(int i) const                { return InvZxf(col[i].ratio); }
 	void          SetTabWidth(int i, int cx);
 	int           GetTabWidth(int i);
 	

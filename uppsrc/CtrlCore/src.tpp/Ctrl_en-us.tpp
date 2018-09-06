@@ -2560,6 +2560,11 @@ m]([@(0.0.255) int]_[*@3 cx])&]
 [s7;i1120;a17; [*/ Return value]-|Scaled distance.&]
 [s3;%- &]
 [s4;%- &]
+[s5;:Upp`:`:Ctrl`:`:HorzLayoutZoomf`(double`):%- [@(0.0.255) double]_[* HorzLayoutZoomf](
+[@(0.0.255) double]_[*@3 cx])&]
+[s2; Similar to HorzLayoutZoom, but with double precision.&]
+[s3; &]
+[s4;%- &]
 [s5;:Ctrl`:`:VertLayoutZoom`(int`):%- [@(0.0.255) static] [@(0.0.255) int]_[* VertLayoutZoo
 m]([@(0.0.255) int]_[*@3 cy])&]
 [s2;b17;a17; Performs vertical scaling by actual scaling factor.&]

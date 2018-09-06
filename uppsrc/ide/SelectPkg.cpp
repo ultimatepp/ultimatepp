@@ -557,7 +557,11 @@ void SelectPackageDlg::Load(const String& find)
 					else
 						d.ispackage = true;
 					if(d.ispackage) {
-						String icon_path = AppendFileName(path, "icon16x16.png");
+						String icon_path;
+						if(IsUHDMode())
+							icon_path = AppendFileName(path, "icon32x32.png");
+						if(IsNull(icon_path) || !FileExists(icon_path))
+							icon_path = AppendFileName(path, "icon16x16.png");
 						tm = FileGetTime(icon_path);
 						if(IsNull(tm)) // package icon does not exist
 							d.icon = Null;

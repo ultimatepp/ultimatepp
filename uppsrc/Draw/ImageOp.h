@@ -210,6 +210,8 @@ Image DPI(const Image& img, int expected);
 inline int   DPI(int a)   { return IsUHDMode() ? 2 * a : a; }
 inline Size  DPI(Size sz) { return IsUHDMode() ? 2 * sz : sz; }
 
+inline Image DPI(const Image& a, const Image& b) { return IsUHDMode() ? b : a; }
+
 // Obsolete, replace with RescaleFilter!
 Image RescaleBicubic(const Image& src, Size sz, const Rect& src_rc, Gate<int, int> progress = Null);
 Image RescaleBicubic(const Image& img, Size sz, Gate<int, int> progress = Null);
