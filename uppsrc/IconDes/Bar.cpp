@@ -246,7 +246,7 @@ struct CachedIconImage : public Display {
 		if(isz.cx > 200 || isz.cy > 200)
 			m = IconDesImg::LargeImage();
 		else
-		if(2 * isz.cx <= rsz.cx && 2 * isz.cy < rsz.cy) {
+		if(2 * isz.cx <= rsz.cx && 2 * isz.cy <= rsz.cy) {
 			int n = min(rsz.cx / isz.cx, rsz.cy / isz.cy);
 			m = Magnify(m, n, n); // TODO: Cached!
 		}
@@ -349,6 +349,7 @@ IconDes::IconDes()
 	ilist.AddColumn("", 4);
 	ilist.AddColumn("").SetDisplay(Single<CachedIconImage>());
 	ilist.NoHeader().NoVertGrid();
+	ilist.SetLineCy(max(GetStdFontCy(), DPI(16)));
 	ilist.WhenBar = THISBACK(ListMenu);
 	ilist.WhenCursor = THISBACK(ListCursor);
 	ilist.WhenLeftDouble = THISBACK(EditImage);

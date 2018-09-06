@@ -1238,6 +1238,7 @@ public:
 	static const char *GetZoomText();
 	static void SetZoomSize(Size sz, Size bsz = Size(0, 0));
 	static int  HorzLayoutZoom(int cx);
+	static double HorzLayoutZoomf(double cx);
 	static int  VertLayoutZoom(int cy);
 	static Size LayoutZoom(int cx, int cy);
 	static Size LayoutZoom(Size sz);
@@ -1310,9 +1311,12 @@ Color  GuiPlatformGetScreenPixel(int x, int y);
 void   GuiPlatformAfterMenuPopUp();
 
 inline int  Zx(int cx) { return Ctrl::HorzLayoutZoom(cx); }
+inline double Zxf(double cx) { return Ctrl::HorzLayoutZoomf(cx); }
 inline int  Zy(int cy) { return Ctrl::VertLayoutZoom(cy); }
 inline Size Zsz(int cx, int cy) { return Size(Zx(cx), Zy(cy)); }
 inline Size Zsz(Size sz) { return Zsz(sz.cx, sz.cy); }
+inline int  InvZx(int cx) { return 100000 * cx / Zx(100000); }
+inline double InvZxf(double cx) { return 100000 * cx / Zx(100000); }
 
 Font FontZ(int face, int height = 0);
 

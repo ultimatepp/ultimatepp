@@ -113,7 +113,7 @@ HeaderCtrl::Column& HeaderCtrl::Add()
 HeaderCtrl::Column& HeaderCtrl::Add(const char *text, double ratio)
 {
 	HeaderCtrl::Column& c = Add();
-	c.ratio = ratio ? ratio : 1;
+	c.ratio = ratio ? Zxf(ratio) : 1;
 	c.SetText(text);
 	SbTotal();
 	return c;
@@ -121,7 +121,7 @@ HeaderCtrl::Column& HeaderCtrl::Add(const char *text, double ratio)
 
 void HeaderCtrl::SetTabRatio(int i, double ratio)
 {
-	col[i].ratio = ratio;
+	col[i].ratio = Zxf(ratio);
 	oszcx = -1;
 	SbTotal();
 	Refresh();
@@ -539,7 +539,7 @@ void HeaderCtrl::LeftDown(Point p, dword keyflags) {
 	if(keyflags & K_CTRL) {
 		String text;
 		for(int i = 0; i < col.GetCount(); i++)
-			text += Format(i ? " %d" : "%d", GetTabWidth(i));
+			text += Format(i ? " %d" : "%d", InvZx(GetTabWidth(i)));
 		WriteClipboardText(".ColumnWidths(\"" + text + "\");");
 		BeepExclamation();
 	}
