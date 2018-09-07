@@ -109,8 +109,16 @@ bool DropChoice::DoKey(dword key) {
 	return false;
 }
 
-void DropChoice::Add(const Value& s) {
+void DropChoice::Add(const Value& s)
+{
 	list.Add(s);
+	EnableDrop(true);
+}
+
+void DropChoice::FindAdd(const Value& s)
+{
+	if (list.Find(s) < 0)
+		list.Add(s);
 	EnableDrop(true);
 }
 

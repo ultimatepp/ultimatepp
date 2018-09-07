@@ -1,5 +1,4 @@
 topic "WithDropChoice";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "WithDropChoice";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@3 [s0; [*@(229)4 WithDropChoice]]}}&]
 [s3; &]
@@ -46,6 +46,12 @@ list and this value was assigned to the base widget.&]
 [s5;:WithDropChoice`:`:AddList`(const Value`&`): [@(0.0.255) void]_[* AddList]([@(0.0.255) c
 onst]_[_^Value^ Value][@(0.0.255) `&]_[*@3 data])&]
 [s2;%% Adds [%-*@3 data] to the drop`-down list.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:WithDropChoice`:`:FindAddList`(const Upp`:`:Value`&`): [@(0.0.255) void]_[* F
+indAddList]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 data])&]
+[s2;%% Adds [%-*@3 data] to the drop`-down list, by only if it is not 
+already there.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:WithDropChoice`:`:Set`(int`,const Upp`:`:Value`&`): [@(0.0.255) void]_[* Set](
