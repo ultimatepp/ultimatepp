@@ -74,6 +74,21 @@ Image Upscale2x(const Image& src)
 	Size isz = src.GetSize();
 	Image s = RecreateAlpha(Upscale2x(GetOver(CreateImage(isz, White()), src), White()),
 	                        Upscale2x(GetOver(CreateImage(isz, Black()), src), Black()));
+
+	struct SFilter : ImageFilter9 { // Improve contours
+		virtual RGBA operator()(const RGBA **mx) {
+			RGBA s = mx[1][1];
+			int l = mx[0][1].a;
+			int r = mx[2][1].a;
+			int t = mx[1][0].a;
+			int b = mx[1][2].a;
+			int l1 = 110;
+			int l2 = 230;
+			return l * r * t * b || s.a > l1 || mx[0][1].a > l2 || mx[2][1].a > l2 || mx[1][0].a > l2 || mx[1][2].a > l2 ? s
+			       : RGBAZero();
+		}
+	} ef;
+	s = Filter(s, ef);
 	ImageBuffer h(s);
 	h.SetResolution(IMAGE_RESOLUTION_UHD);
 	h.SetHotSpot(src.GetHotSpot() * 2);
