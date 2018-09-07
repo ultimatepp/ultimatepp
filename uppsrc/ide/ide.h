@@ -545,6 +545,7 @@ public:
 	bool      runexternal;
 	bool      console_utf8;
 	int       consolemode;
+	bool      disable_uhd;
 	String    stdout_file;
 	String    recent_stdout_file;
 

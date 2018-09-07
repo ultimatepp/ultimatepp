@@ -829,6 +829,8 @@ void Ctrl::SetUHDEnabled(bool set)
 
 bool Ctrl::IsUHDEnabled()
 {
+	if(GetEnv("UPP_DISABLE_UHD__") == "1")
+		return false;
 	return ApplicationUHDEnabled;
 }
 

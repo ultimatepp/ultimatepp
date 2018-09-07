@@ -47,7 +47,7 @@ void Ide::BeginBuilding(bool sync_files, bool clear_console)
 	if(clear_console)
 		console.Clear();
 	build_time = GetTickCount();
-	CreateHost(sync_files);
+	CreateHost(sync_files, disable_uhd);
 	cmdout.Clear();
 }
 
@@ -56,7 +56,7 @@ void Ide::EndBuilding(bool ok)
 	console.EndGroup();
 	console.Wait();
 	Vector<String> errors = console.PickErrors();
-	CreateHost(false)->DeleteFile(errors);
+	CreateHost(false, disable_uhd)->DeleteFile(errors);
 	if(!errors.IsEmpty())
 		ok = false;
 	PutConsole("");
@@ -183,7 +183,7 @@ void Ide::Preprocess(bool asmout) {
 	const Workspace& wspc = IdeWorkspace();
 	if(pi >= wspc.GetCount())
 		return;
-	One<Host> host = CreateHost(true);
+	One<Host> host = CreateHost(true, disable_uhd);
 	One<Builder> b = CreateBuilder(~host);
 	Vector<String> linkfile;
 	String linkopt;

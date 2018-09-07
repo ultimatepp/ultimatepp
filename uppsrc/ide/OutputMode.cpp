@@ -314,7 +314,7 @@ void OutMode::CmdOptions()
 		PromptOK("Invalid build method");
 		return;
 	}
-	One<Host> host = ide.CreateHost(false);
+	One<Host> host = ide.CreateHost(false, false);
 	One<Builder> b = ide.CreateBuilder(~host);
 	const String& p = wspc[pi];
 	String output = NativePath(ide.OutDir(ide.PackageConfig(wspc, pi, bm, ~config, *host, *b), p, bm, true));
