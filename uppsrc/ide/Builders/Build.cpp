@@ -89,7 +89,7 @@ String NoCr(const char *s)
 	return out;
 }
 
-One<Host> MakeBuild::CreateHost(bool sync_files)
+One<Host> MakeBuild::CreateHost(bool sync_files, bool disable_uhd)
 {
 	SetupDefaultMethod();
 	VectorMap<String, String> bm = GetMethodVars(method);
@@ -101,6 +101,8 @@ One<Host> MakeBuild::CreateHost(bool sync_files)
 		env.GetAdd("PATH") = Join(host.exedirs, ";");
 		env.GetAdd("UPP_MAIN__") = GetFileDirectory(PackagePath(GetMain()));
 		env.GetAdd("UPP_ASSEMBLY__") = GetVar("UPP");
+		if(disable_uhd)
+			env.GetAdd("UPP_DISABLE_UHD__") = "1";
 		
 		// setup LD_LIBRARY_PATH on target dir, needed for all shared builds on posix
 #ifdef PLATFORM_POSIX
@@ -295,7 +297,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 		ConsoleShow();
 		return false;
 	}
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, false);
 	if(!IsNull(onefile)) {
 		OneFileHost *h = new OneFileHost;
 		h->host = pick(host);
@@ -466,7 +468,7 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 
 		if(main_conf.GetCount()) {
 			VectorMap<String, String> bm = GetMethodVars(method);
-			One<Host> host = CreateHost(false);
+			One<Host> host = CreateHost(false, false);
 			One<Builder> b = CreateBuilder(~host);
 			if(b) {
 				Index<String> mcfg = PackageConfig(wspc, 0, bm, mainparam, *host, *b, NULL);
@@ -551,7 +553,7 @@ bool MakeBuild::Build()
 		ConsoleShow();
 		return false;
 	}
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, false);
 	One<Builder> builder = CreateBuilder(~host);
 	if(!builder)
 		return false;
@@ -565,7 +567,7 @@ bool MakeBuild::Build()
 void MakeBuild::CleanPackage(const Workspace& wspc, int package)
 {
 	PutConsole(NFormat("Cleaning %s", wspc[package]));
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, false);
 	One<Builder> builder = CreateBuilder(~host);
 	if(!builder)
 		return;
@@ -581,7 +583,7 @@ void MakeBuild::Clean()
 {
 	ConsoleClear();
 
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, false);
 	One<Builder> builder = CreateBuilder(~host);
 	if(!builder)
 		return;
@@ -607,7 +609,7 @@ void MakeBuild::SaveMakeFile(const String& fn, bool exporting)
 	BeginBuilding(false, true);
 
 	VectorMap<String, String> bm = GetMethodVars(method);
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, false);
 	One<Builder> b = CreateBuilder(~host);
 	
 	if(!b)

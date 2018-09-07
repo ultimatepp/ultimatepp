@@ -552,18 +552,18 @@ void Ide::RemoveDs()
 
 void Ide::LaunchAndroidSDKManager(const AndroidSDK& androidSDK)
 {
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, disable_uhd);
 	IGNORE_RESULT(host->Execute(androidSDK.GetLauchSDKManagerCmd()));
 }
 
 void Ide::LaunchAndroidAVDManager(const AndroidSDK& androidSDK)
 {
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, disable_uhd);
 	IGNORE_RESULT(host->Execute(androidSDK.GetLauchAVDManagerCmd()));
 }
 
 void Ide::LauchAndroidDeviceMonitor(const AndroidSDK& androidSDK)
 {
-	One<Host> host = CreateHost(false);
+	One<Host> host = CreateHost(false, disable_uhd);
 	IGNORE_RESULT(host->Execute(androidSDK.MonitorPath()));
 }
