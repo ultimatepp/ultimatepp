@@ -48,8 +48,8 @@ void Ide::MakeTitle()
 }
 
 void Ide::MakeIcon() {
-	Image li = IdeImg::PackageLarge();
 #ifdef PLATFORM_WIN32
+	Image li = IdeImg::PackageLarge();
 	String mp = main;
 	if(!IsNull(mp))
 	{
@@ -70,8 +70,8 @@ void Ide::MakeIcon() {
 		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
 		li = idraw;
 	}
-#endif
 	LargeIcon(li);
+#endif
 }
 
 bool Ide::CanToggleReadOnly()
@@ -601,10 +601,10 @@ void Ide::SetIcon()
 	}
 #else
 	switch(state_icon) {
-	case 1:  Icon(IdeImg::IconDebugging()); break;
-	case 2:  Icon(IdeImg::IconRunning()); break;
-	case 3:  Icon(IdeImg::IconBuilding()); break;
-	default: Icon(IdeImg::Icon());
+	case 1:  Icon(IdeImg::IconDebugging(), IdeImg::IconDebuggingLarge()); break;
+	case 2:  Icon(IdeImg::IconRunning(), IdeImg::IconRunningLarge()); break;
+	case 3:  Icon(IdeImg::IconBuilding(), IdeImg::IconBuildingLarge()); break;
+	default: Icon(IdeImg::Icon(), IdeImg::PackageLarge());
 	}
 #endif
 }
