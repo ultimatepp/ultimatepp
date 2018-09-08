@@ -48,9 +48,9 @@ void Ide::MakeTitle()
 }
 
 void Ide::MakeIcon() {
+	Image li = IdeImg::PackageLarge();
 #ifdef PLATFORM_WIN32
 	String mp = main;
-	Image li = IdeImg::PackageLarge();
 	if(!IsNull(mp))
 	{
 		Size isz = li.GetSize();
@@ -70,8 +70,8 @@ void Ide::MakeIcon() {
 		DrawFrame(idraw, x, y, sz.cx, sz.cy, LtBlue);
 		li = idraw;
 	}
-	LargeIcon(li);
 #endif
+	LargeIcon(li);
 }
 
 bool Ide::CanToggleReadOnly()
