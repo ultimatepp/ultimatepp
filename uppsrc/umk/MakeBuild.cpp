@@ -39,7 +39,7 @@ void Ide::EndBuilding(bool ok)
 	console.EndGroup();
 	console.Wait();
 	Vector<String> errors = console.PickErrors();
-	CreateHost(false)->DeleteFile(errors);
+	CreateHost(false, false)->DeleteFile(errors);
 	if(!errors.IsEmpty())
 		ok = false;
 	PutConsole("");
