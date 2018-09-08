@@ -112,6 +112,13 @@ void SystemDraw::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencol
     Stroke(pen, pencolor, true);
 }
 
+/*
+void SystemDraw::Flush()
+{
+	CGContextSynchronize(cgHandle);
+}
+*/
+
 };
 
 #endif

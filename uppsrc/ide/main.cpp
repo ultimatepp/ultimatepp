@@ -122,6 +122,8 @@ GUI_APP_MAIN
 void AppMain___()
 #endif
 {
+	Ctrl::ShowRepaint(50);
+
 	Logi() << UPP_FUNCTION_NAME << "(): " << SplashCtrl::GenerateVersionInfo(' ');
 	
 	Ctrl::SetUHDEnabled();

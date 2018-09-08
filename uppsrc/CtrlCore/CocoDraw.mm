@@ -4,9 +4,10 @@
 
 namespace Upp {
 
-void SystemDraw::Init(void *cgContext, int cy)
+void SystemDraw::Init(void *cgContext, int cy, void *view)
 {
 	handle = cgContext;
+	nsview = view;
 	top = cy;
 	Push();
 	CGContextSetBlendMode(cgHandle, kCGBlendModeNormal);
@@ -14,9 +15,9 @@ void SystemDraw::Init(void *cgContext, int cy)
     CGContextSetTextDrawingMode(cgHandle, kCGTextFill);
 }
 
-SystemDraw::SystemDraw(void *cgContext, int cy)
+SystemDraw::SystemDraw(void *cgContext, int cy, void *nsview)
 {
-	Init(cgContext, cy);
+	Init(cgContext, cy, nsview);
 }
 
 SystemDraw::~SystemDraw()
@@ -96,7 +97,7 @@ RectCG SystemDraw::Convert(const Rect& r)
 	return Convert(r.left, r.top, r.GetWidth(), r.GetHeight());
 }
 
-RectCG SystemDraw::MakeRectCG(const Rect& r)
+RectCG SystemDraw::MakeRectCG(const Rect& r) const
 {
 	Size sz = r.GetSize();
 	return RectCG(r.left, top - r.top - sz.cy, sz.cx, sz.cy);
@@ -144,10 +145,11 @@ bool SystemDraw::IntersectClipOp(const Rect& r)
 
 bool SystemDraw::IsPaintingOp(const Rect& r) const
 {
-	// TODO
 	Rect cr = r.Offseted(GetOffset());
 	cr.Intersect(GetClip());
-	return !cr.IsEmpty();
+	if(cr.IsEmpty())
+		return false;
+	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(cr)] : true;
 }
 
 Rect SystemDraw::GetPaintRect() const

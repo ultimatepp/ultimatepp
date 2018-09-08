@@ -359,7 +359,7 @@ Upp::ViewDraw::ViewDraw(Ctrl *ctrl)
 	Rect tr = ctrl->GetTopCtrl()->GetScreenRect();
 	Rect r = ctrl->GetScreenView();
 	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithWindow:ctrl->top->coco->window];
-	Init([gc CGContext], tr.GetHeight());
+	Init([gc CGContext], tr.GetHeight(), NULL);
 	Clipoff(Rect(r.TopLeft() - tr.TopLeft(), r.GetSize()));
 }
 
