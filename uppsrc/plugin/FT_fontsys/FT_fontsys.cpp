@@ -215,9 +215,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 	if(face) {
 		fi.ascent = face->size->metrics.ascender >> 6;
 		fi.descent = -(face->size->metrics.descender >> 6);
-		fi.height = fi.ascent + fi.descent;
-		fi.lineheight = face->size->metrics.height >> 6;
-		fi.external = 0;
+		fi.external = (face->size->metrics.height >> 6) - fi.ascent - fi.descent;
 		fi.internal = 0;
 		fi.overhang = 0;
 		fi.maxwidth = face->size->metrics.max_advance >> 6;
