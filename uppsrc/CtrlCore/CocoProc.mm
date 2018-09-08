@@ -186,7 +186,7 @@ struct MMImp {
 
 -(void)drawRect:(NSRect)r {
 	int h = ctrl->GetRect().GetHeight();
-	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], h);
+	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], h, self);
 	Upp::MMImp::Paint(ctrl, w, Upp::RectC(r.origin.x, h - r.origin.y - r.size.height,
 	                                      r.size.width, r.size.height));
 }

@@ -197,7 +197,7 @@ void ImageDraw::Init(int cx, int cy)
 
 	SystemDraw::Init(CGBitmapContextCreateWithData(~ib, cx, cy, 8, cx * sizeof(RGBA),
 	                                               colorSpace, kCGImageAlphaPremultipliedFirst,
-	                                               NULL, NULL), cy);
+	                                               NULL, NULL), cy, NULL);
 }
 
 ImageDraw::ImageDraw(Size sz)

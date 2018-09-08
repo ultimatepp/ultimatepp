@@ -45,8 +45,9 @@ private:
 	void   Pop();
 	
 	void  *handle;
+	void  *nsview;
 	
-	RectCG MakeRectCG(const Rect& r);
+	RectCG MakeRectCG(const Rect& r) const;
 	void   ClipCG(const Rect& r);
 	void   FlipY(int& y)           { y = top - y; }
 	Rect   GetClip() const         { return clip.GetCount() ? clip.Top() : Rect(-999999, -999999, 999999, 999999); }
@@ -58,7 +59,7 @@ private:
 	void  Set(Color c);
 	void  SetStroke(Color c);
 
-	void Init(void *cgContext, int cy);
+	void Init(void *cgContext, int cy, void *nsview);
 
 	void Stroke(int width, Color color, bool fill);
 	void DoPath(const Point *pp, const Point *end);
@@ -72,9 +73,9 @@ private:
 
 public:
 	bool     CanSetSurface()          { return false; }
-	static void Flush()               {} // TODO?
+	static void Flush() {}
 
-	SystemDraw(void *cgContext, int cy);
+	SystemDraw(void *cgContext, int cy, void *nsview);
 	~SystemDraw();
 };
 
