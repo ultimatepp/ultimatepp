@@ -45,6 +45,8 @@ String  ToString(CFStringRef s);
 inline WString ToWString(NSString *s) { return ToWString((CFStringRef)s); }
 inline String  ToString(NSString *s)  { return ToString((CFStringRef)s); }
 
+inline CGContextRef GetCG(SystemDraw& w) { return (CGContextRef)w.GetCGHandle(); }
+
 #define      cgHandle   (CGContextRef)handle
 
 struct PointCG {

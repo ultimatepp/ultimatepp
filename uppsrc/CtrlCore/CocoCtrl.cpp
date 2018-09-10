@@ -6,10 +6,6 @@
 
 NAMESPACE_UPP
 
-void ChHostSkin(void)
-{
-}
-
 void Ctrl::GuiPlatformConstruct()
 {
 }

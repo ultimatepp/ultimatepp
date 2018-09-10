@@ -408,15 +408,20 @@ String GetKeyDesc(dword key)
 	if(key == 0)
 		return desc;
 	// TODO: Cocoa graphics https://tech.karbassi.com/2009/05/27/command-option-shift-symbols-in-unicode/
+#ifdef PLATFORM_COCOA
+	if(key & K_KEYUP) desc << t_("key\vUP ");
+	if(key & K_CTRL)  desc << t_("key\v⌘");
+	if(key & K_ALT)   desc << t_("key\v⌃");
+	if(key & K_SHIFT) desc << t_("key\v⇧");
+	if(key & K_OPTION) desc << t_("key\v⌥");
+	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP | K_OPTION);
+#else
 	if(key & K_KEYUP) desc << t_("key\vUP ");
 	if(key & K_CTRL)  desc << t_("key\vCtrl+");
 	if(key & K_ALT)   desc << t_("key\vAlt+");
 	if(key & K_SHIFT) desc << t_("key\vShift+");
-#ifdef PLATFORM_COCOA
-	if(key & K_OPTION) desc << t_("key\vOption+");
-	key &= ~K_OPTION;
-#endif
 	key &= ~(K_CTRL | K_ALT | K_SHIFT | K_KEYUP);
+#endif
 
 #ifdef PLATFORM_COCOA
 	key &= ~(K_OPTION);

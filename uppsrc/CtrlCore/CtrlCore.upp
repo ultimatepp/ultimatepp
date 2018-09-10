@@ -34,7 +34,7 @@ library(POSIX !NOGTK !RAINBOW GUI !OSX11) notify;
 
 library(DRAGONFLY) "Xext Xinerama";
 
-link(OSX !X11) " -framework Foundation -framework Cocoa";
+link(OSX !X11) " -framework Foundation -framework Cocoa -framework Carbon ";
 
 file
 	Core readonly separator,
