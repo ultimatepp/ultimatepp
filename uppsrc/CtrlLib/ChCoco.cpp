@@ -1,5 +1,7 @@
 #include "ChCoco.h"
 
+#ifdef PLAFORM_COCOA
+
 namespace Upp {
 
 Image Coco_ThemeImage(int cx, int cy, int margin, int type, int value, int state, bool focus, Color bg)
@@ -123,3 +125,5 @@ void ChHostSkin()
 }
 
 };
+
+#endif
