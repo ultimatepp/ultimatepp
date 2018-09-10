@@ -156,7 +156,7 @@ void Switch::Paint(Draw& w) {
 		w.DrawRect(0, 0, sz.cx, sz.cy, SColorFace);
 	int tcy = GetTextSize("W", font).cy;
 	Size isz = CtrlsImg::S0().GetSize();
-	linecy = max(mincy, max(isz.cy, tcy));
+	linecy = max(mincy, max(isz.cy + DPI(2), tcy));
 	int y = 0;
 	int x = 0;
 	bool horz = linecy * cs.GetCount() > sz.cy;

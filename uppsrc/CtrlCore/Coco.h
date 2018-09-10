@@ -72,6 +72,8 @@ private:
 	friend class BackDraw__;
 
 public:
+	void    *GetCGHandle() const      { return handle; }
+
 	bool     CanSetSurface()          { return false; }
 	static void Flush() {}
 

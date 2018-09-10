@@ -181,25 +181,44 @@ bool IsUniform(const RGBA *s, RGBA c, int add, int n)
 	return true;
 }
 
-Image AutoCrop(const Image& m, RGBA c)
+Rect FindBounds(const Image& m, RGBA bg)
 {
 	Size isz = m.GetSize();
 	Rect r = isz;
-	for(r.top = 0; r.top < isz.cy && IsUniform(m[r.top], c, 1, isz.cx); r.top++)
+	for(r.top = 0; r.top < isz.cy && IsUniform(m[r.top], bg, 1, isz.cx); r.top++)
 		;
-	for(r.bottom = isz.cy; r.bottom > r.top && IsUniform(m[r.bottom - 1], c, 1, isz.cx); r.bottom--)
+	for(r.bottom = isz.cy; r.bottom > r.top && IsUniform(m[r.bottom - 1], bg, 1, isz.cx); r.bottom--)
 		;
 	if(r.bottom <= r.top)
 		return Null;
 	int h = r.GetHeight();
 	const RGBA *p = m[r.top];
-	for(r.left = 0; r.left < isz.cy && IsUniform(p + r.left, c, isz.cx, h); r.left++)
+	for(r.left = 0; r.left < isz.cy && IsUniform(p + r.left, bg, isz.cx, h); r.left++)
 		;
-	for(r.right = isz.cx; r.right > r.left && IsUniform(p + r.right - 1, c, isz.cx, h); r.right--)
+	for(r.right = isz.cx; r.right > r.left && IsUniform(p + r.right - 1, bg, isz.cx, h); r.right--)
 		;
-	Point p1 = m.GetHotSpot() - r.TopLeft();
-	Point p2 = m.Get2ndSpot() - r.TopLeft();
-	return WithHotSpots(Crop(m, r), p1.x, p1.y, p2.x, p2.y);
+	return r;
+}
+
+void AutoCrop(Image *m, int count, RGBA bg)
+{
+	if(!count)
+		return;
+	Rect r = FindBounds(m[0]);
+	for(int i = 1; i < count; i++)
+		r.Union(FindBounds(m[i], bg));
+	for(int i = 0; i < count; i++) {
+		Point p1 = m[i].GetHotSpot() - r.TopLeft();
+		Point p2 = m[i].Get2ndSpot() - r.TopLeft();
+		m[i] = WithHotSpots(Crop(m[i], r), p1.x, p1.y, p2.x, p2.y);
+	}
+}
+
+Image AutoCrop(const Image& m, RGBA bg)
+{
+	Image mm = m;
+	AutoCrop(&mm, 1, bg);
+	return mm;
 }
 
 Image ColorMask(const Image& src, Color key)

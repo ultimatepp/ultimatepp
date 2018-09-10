@@ -8,7 +8,7 @@ namespace Upp {
 void CtrlSetDefaultSkin(void (*fn1)(), void (*fn2)());
 
 INITIALIZER(CtrlLib) {
-#if defined(GUI_WIN) || defined(PLATFORM_X11)
+#if defined(GUI_WIN) || defined(PLATFORM_X11) || defined(PLATFORM_COCOA)
 	CtrlSetDefaultSkin(ChStdSkin, ChHostSkin);
 #else
 	CtrlSetDefaultSkin(ChStdSkin, ChStdSkin);

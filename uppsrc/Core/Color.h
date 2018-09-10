@@ -125,6 +125,7 @@ Color  ColorFromText(const char *s);
 
 int  Grayscale(const Color& c);
 bool IsDark(Color c);
+bool IsLight(Color c);
 
 
 inline bool operator==(const Value& v, Color x)        { return v == x.operator Value(); }
