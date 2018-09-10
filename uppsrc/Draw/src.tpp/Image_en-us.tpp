@@ -351,23 +351,24 @@ mage][@(0.0.255) `&]_[*@3 img], [@(0.0.255) const]_[_^Rect^ Rect][@(0.0.255) `&]
 [s5;:Upp`:`:FindBounds`(const Upp`:`:Image`&`,Upp`:`:RGBA`): [_^Upp`:`:Rect^ Rect]_[* Fin
 dBounds]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m], 
 [_^Upp`:`:RGBA^ RGBA]_[*@3 bg]_`=_RGBAZero())&]
-[s2;%% Finds the minimal rectangle within source image so that the 
-rest of image is margin with uniform color [%-*@3 bg].&]
-[s3;%% &]
-[s2;%% Detects rectangular margin with uniform color [%-*@3 c] and 
-then crops this margin out.&]
-[s3;%% &]
-[s4; &]
-[s5;:Upp`:`:AutoCrop`(Upp`:`:Image`*`,int`,Upp`:`:RGBA`): [@(0.0.255) void]_[* AutoCrop](
-[_^Upp`:`:Image^ Image]_`*[*@3 m], [@(0.0.255) int]_[*@3 count], [_^Upp`:`:RGBA^ RGBA]_[*@3 c
-])&]
-[s2;%%  [%-*@3 m] [%-*@3 count] [%-*@3 c] .&]
+[s2;%% Detects rectangular margin with uniform color [%-*@3 bg] and 
+returns the rectangle with the image with pixels inside this 
+margin.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:AutoCrop`(const Upp`:`:Image`&`,Upp`:`:RGBA`): [_^Upp`:`:Image^ Image]_[* Aut
 oCrop]([@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m], 
 [_^Upp`:`:RGBA^ RGBA]_[*@3 bg]_`=_RGBAZero())&]
-[s2;%%  [%-*@3 m] [%-*@3 bg] .&]
+[s2;%% Detects rectangular margin with uniform color [%-*@3 bg] and 
+then crops this margin out.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:AutoCrop`(Upp`:`:Image`*`,int`,Upp`:`:RGBA`): [@(0.0.255) void]_[* AutoCrop](
+[_^Upp`:`:Image^ Image]_`*[*@3 m], [@(0.0.255) int]_[*@3 count], [_^Upp`:`:RGBA^ RGBA]_[*@3 b
+g])&]
+[s2;%% Finds the maximal rectangular margin with uniform color [%-*@3 bg] 
+of all images and then crops this margin out. All images must 
+have the same size and will have the same size after the operation.&]
 [s3;%% &]
 [s4; &]
 [s5;:ColorMask`(const Image`&`,Color`): [_^Image^ Image]_[* ColorMask]([@(0.0.255) const]_[_^Image^ I
