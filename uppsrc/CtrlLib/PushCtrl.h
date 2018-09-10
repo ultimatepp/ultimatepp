@@ -261,7 +261,7 @@ public:
 	void operator=(const Image& img)                          { SetImage(img); }
 	
 	ButtonOption& SetLabel(const String& text);
-	String GetLabel() const                                   { return label; }        
+	String GetLabel() const                                   { return label; }
 	
 	void Set(bool b)                                          { option = b; UpdateRefresh(); }
 	bool Get() const                                          { return option; }
