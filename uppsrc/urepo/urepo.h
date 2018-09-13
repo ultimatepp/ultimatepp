@@ -30,7 +30,7 @@ public:
 
 String SvnCmd(const char *cmd);
 
-enum { NOT_REPO_DIR, SVN_DIR, GIT_DIR };
+enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
 
 int    GetRepoKind(const String& p);
 

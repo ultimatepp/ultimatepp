@@ -871,20 +871,6 @@ void AutoSetup()
 		SaveFile(AppendFileName(dir, "default_method"), m);
 	}
 }
-#endif
-
-#ifdef PLATFORM_POSIX
-
-void AutoSetup() {
-	InstallWizard iw;
-	iw.Title("TheIDE - Source management settings");
-	iw.Block(0);
-	iw.Block(4);
-	iw.SetStep(1);
-	iw.Run();
-}
-
-#endif
 
 void Ide::AutoSetup()
 {
@@ -892,3 +878,6 @@ void Ide::AutoSetup()
 	SyncBuildMode();
 	SetBar();
 }
+
+#endif
+

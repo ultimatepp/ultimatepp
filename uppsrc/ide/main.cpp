@@ -136,13 +136,9 @@ void AppMain___()
 		return;
 	auto arg = cmd_handler.GetArgs();
 
-	bool first_install = false;
-
 	SetVppLogSizeLimit(200000000);
 
 #ifdef PLATFORM_POSIX
-	LoadUpdaterCfg();
-
 	String home = Environment().Get("UPP_HOME", Null);
 	if(!IsNull(home))
 		SetHomeDirectory(home);
@@ -151,7 +147,6 @@ void AppMain___()
 		if(!Install())
 			return;
 		SaveFile(ConfigFile("version"), IDE_VERSION);
-		first_install = true;
 	}
 #endif
 
@@ -262,17 +257,6 @@ void AppMain___()
 			Ctrl::ProcessEvents();
 		}
 
-	#ifdef PLATFORM_POSIX
-		int p=UpdaterCfg().period;
-		if(!IsNull(p)) {
-			int next=GetUtcTime()-UpdaterCfg().last+abs(p)*60;
-			if(p <= 0 || next <= 0)
-				ide.PostCallback(callback1(&ide,&Ide::CheckUpdates,false),0);
-			if(p != 0)
-				ide.SetTimeCallback(max(0, next),callback1(&ide,&Ide::SetUpdateTimer,abs(p)));
-		}
-	#endif
-			
 		ide.editor_bottom.Zoom(0);
 		ide.right_split.Zoom(0);
 		if(FileExists(ConfigFile("developide"))) {
@@ -310,9 +294,7 @@ void AppMain___()
 			}
 		}
 		while(IdeAgain);
-	#ifdef PLATFORM_POSIX
-		StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
-	#endif
+
 		SaveCodeBase();
 		DelTemps();
 		DeletePCHFiles();

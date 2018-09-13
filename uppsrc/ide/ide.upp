@@ -20,10 +20,7 @@ uses
 	ide/Android,
 	ide/Java,
 	ide/MacroManager,
-	urepo,
-	usvn;
-
-uses(POSIX) ide\SrcUpdater;
+	urepo;
 
 link(WIN32 MSC) /MAP;
 
@@ -87,7 +84,6 @@ file
 	Xml.cpp,
 	Json.cpp,
 	MacroManager.cpp,
-	Update.cpp,
 	SetupSVN.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,

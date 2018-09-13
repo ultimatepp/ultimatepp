@@ -898,8 +898,8 @@ void WorkspaceWork::FileMenu(Bar& menu)
 		if(ext == ".tpp" && IsFolder(p)) {
 			menu.Add("Includeable topic group", THISBACK(ToggleIncludeable))
 			    .Check(FileExists(AppendFileName(p, "all.i")));
-			if(IsSvnDir(p))
-				menu.Add("Svn Synchronize " + p, THISBACK1(SyncSvnDir, p));
+			if(GetRepoKind(p))
+				menu.Add("Repo Synchronize " + p, THISBACK1(SyncSvnDir, p));
 		}
 		else {
 			if(IsHeaderExt(ext))

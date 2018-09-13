@@ -1,7 +1,10 @@
-#include <Carbon/Carbon.h> 
 #include <CtrlCore/CocoMM.h>
-#include <CtrlLib/CtrlLib.h>
+
+#ifdef PLATFORM_COCOA
+
+#include <Carbon/Carbon.h> 
 #include "ChCocoMM.h"
+#include <CtrlLib/CtrlLib.h>
 
 void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, int state, bool focus)
 {
@@ -67,3 +70,4 @@ int   Coco_Metric(int k)
 	return m;
 }
 
+#endif

@@ -388,13 +388,7 @@ void Ide::Setup(Bar& menu)
 #ifdef PLATFORM_WIN32
 	menu.Add("Automatic build methods setup..", callback(InstantSetup))
 	    .Help("Setups/fixes build methods and basic assemblies..");
-//	menu.Add("Legacy compilers automatic setup..", THISBACK(AutoSetup))
-//	    .Help("Automatic setup of build methods for legacy compilers..");
 #endif
-//#ifdef PLATFORM_POSIX
-//	menu.Add("Source managment..", THISBACK(AutoSetup))
-//	    .Help("Source code updater settings..");
-//#endif
 	menu.Add("Checkout and setup U++ SVN trunk sources..", [=] {
 		SetupSVNTrunk();
 		IdeAgain = true;
@@ -402,17 +396,6 @@ void Ide::Setup(Bar& menu)
 	});
 	if(menu.IsMenuBar())
 		SetupMobilePlatforms(menu);
-#ifdef PLATFORM_POSIX
-	if(UpdaterCfg().method%2==0) { //local copy or svn
-		menu.Separator();
-		if(UpdaterCfg().available)
-			menu.Add("Install updates..", IdeImg::install_updates(), THISBACK(CheckUpdatesManual))
-			    .Help("Install newer version of source codes..");
-		else
-			menu.Add("Check for updates..", IdeImg::check_updates(), THISBACK(CheckUpdatesManual))
-			    .Help("Check for availability of newer source codes..");
-	}
-#endif
 }
 
 void Ide::SetupMobilePlatforms(Bar& menu)
