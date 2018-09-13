@@ -310,7 +310,7 @@ Vector<String> SelectPackageDlg::GetSvnDirs()
 	Vector<String> dirs = SplitDirs(GetVar("UPP"));
 	for(int i = 0; i < dirs.GetCount(); i++) {
 		String d = NormalizePath(dirs[i]);
-		if(IsSvnDir(d))
+		if(GetRepoKind(d))
 			r.Add(d);
 	}
 	return r;

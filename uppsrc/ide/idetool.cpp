@@ -415,10 +415,44 @@ INITBLOCK {
 	RegisterGlobalConfig("svn-msgs");
 }
 
+/*
+bool CheckSvn()
+{
+	String h;
+	if(Sys("svn", h) >= 0)
+		return true;
+#ifdef PLATFORM_WIN32
+	Exclamation("Unable to execute svn.exe!&"
+	            "You can download svn client here: [^http://www.sliksvn.com/en/download^ http://www.sliksvn.com/en/download]");
+#else
+	Exclamation("Unable to execute 'svn' binary!&Please install svn client.");
+#endif
+	return false;
+}
+
+bool IsSvnDir(const String& p)
+{
+	if(IsNull(p))
+		return false;
+	if(DirectoryExists(AppendFileName(p, ".svn")) || DirectoryExists(AppendFileName(p, "_svn")))
+		return true;
+	String path = p;
+	String path0;
+	while(path != path0) {
+		path0 = path;
+		DirectoryUp(path);
+		if(DirectoryExists(AppendFileName(path, ".svn")))
+			return true;
+	}
+	return false;
+}
+
+*/ _DBG_
+
 void RepoSyncDirs(const Vector<String>& working)
 {
-	if(!CheckSvn())
-		return;
+//	if(!CheckSvn())
+//		return;
 	Ptr<Ctrl> f = Ctrl::GetFocusCtrl();
 	RepoSync repo;
 	String msgs;

@@ -76,9 +76,9 @@ void SetupSVNTrunk()
 	String ass = GetExeFolder();
 	String myapps = GetExeDirFile("MyApps");
 #else
-	String out = GetHomeDirectoryFile("out");
+	String out = GetHomeDirFile("out");
 	String ass = GetConfigFolder();
-	String myapps = GetExeDirFile("MyApps");
+	String myapps = GetHomeDirFile("MyApps");
 #endif
 	RealizeDirectory(out);
 	

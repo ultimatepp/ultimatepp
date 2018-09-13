@@ -8,7 +8,6 @@
 #include <ide/Browser/Browser.h>
 #include <TabBar/TabBar.h>
 #include <CodeEditor/CodeEditor.h>
-#include <usvn/usvn.h>
 #include <urepo/urepo.h>
 #include <ide/IconDes/IconDes.h>
 #include <ide/Java/Java.h>
@@ -38,10 +37,6 @@
 #include <plugin/astyle/astyle.h>
 
 #include <ide/Builders/Builders.h>
-
-#ifdef PLATFORM_POSIX
-#include <ide/SrcUpdater/SrcUpdater.h>
-#endif
 
 const char *FindTag(const char *txt, const char *tag);
 const char *FindAfter(const char *txt, const char *tag);
@@ -227,8 +222,6 @@ struct IdeCalc : CodeEditor {
 
 	IdeCalc();
 };
-
-void AutoSetup();
 
 extern bool splash_screen;
 void HideSplash();
@@ -439,9 +432,6 @@ public:
 	FileIn           view_file2;
 	EditorTabBar     tabs;
 	EscValue         macro_api;
-#ifdef PLATFORM_POSIX
-	SourceUpdater    su;
-#endif
 
 	RightTabs   btabs;
 	StaticRect  bottom;
