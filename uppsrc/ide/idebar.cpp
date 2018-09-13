@@ -391,10 +391,15 @@ void Ide::Setup(Bar& menu)
 //	menu.Add("Legacy compilers automatic setup..", THISBACK(AutoSetup))
 //	    .Help("Automatic setup of build methods for legacy compilers..");
 #endif
-#ifdef PLATFORM_POSIX
-	menu.Add("Source managment..", THISBACK(AutoSetup))
-	    .Help("Source code updater settings..");
-#endif
+//#ifdef PLATFORM_POSIX
+//	menu.Add("Source managment..", THISBACK(AutoSetup))
+//	    .Help("Source code updater settings..");
+//#endif
+	menu.Add("Checkout and setup U++ SVN trunk sources..", [=] {
+		SetupSVNTrunk();
+		IdeAgain = true;
+		Break();
+	});
 	if(menu.IsMenuBar())
 		SetupMobilePlatforms(menu);
 #ifdef PLATFORM_POSIX

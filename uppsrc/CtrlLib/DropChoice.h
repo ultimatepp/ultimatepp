@@ -181,6 +181,7 @@ public:
 
 	void        Clear();
 	void        Add(const Value& data);
+	int         Find(const Value& data) const         { return list.Find(data); }
 	void        FindAdd(const Value& data);
 	void        Set(int i, const Value& data)         { list.Set(i, 0, data); }
 	void        Remove(int i);
@@ -245,6 +246,7 @@ public:
 	void            ClearList()                           { select.Clear(); }
 	void            AddList(const Value& data)            { select.Add(data); }
 	void            FindAddList(const Value& data)        { select.FindAdd(data); }
+	int             Find(const Value& data) const         { return select.Find(data); }
 	void            Set(int i, const Value& data)         { select.Set(i, data); }
 	void            Remove(int i)                         { select.Remove(i); }
 	void            SerializeList(Stream& s)              { select.SerializeList(s); }

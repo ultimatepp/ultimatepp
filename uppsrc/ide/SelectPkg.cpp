@@ -343,6 +343,14 @@ void SelectPackageDlg::ToolBase(Bar& bar)
 			bar.Add("Synchronize " + d[i], IdeImg::svn_dir(), THISBACK1(SyncSvnDir, d[i]));
 		bar.Add("Synchronize everything..", IdeImg::svn(), THISBACK(SyncSvnDirs));
 	}
+	if(HasSvn()) {
+		bar.Separator();
+		bar.Add("Checkout and setup U++ SVN trunk sources..", [=] {
+			String vars = base.Get(0);
+			SetupSVNTrunk();
+			SyncBase(vars);
+		});
+	}
 }
 
 void SelectPackageDlg::OnBaseAdd()

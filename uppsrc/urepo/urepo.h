@@ -13,12 +13,17 @@ class UrepoConsole : public WithUrepoConsoleLayout<TopWindow> {
 	
 	Font font;
 	void AddResult(const String& out);
+	bool withcancel = false;
+	bool canceled = false;
 
 public:
 	int  System(const char *s);
 	int  CheckSystem(const char *s);
 	int  Git(const char *dir, const char *command);
+	void Log(const Value& s, Color ink = SColorText());
 	void Perform()	                            { exit.Show(); Execute(); }
+	void WithCancel(bool b = true)              { withcancel = b; }
+	void Clear()                                { list.Clear(); }
 
 	UrepoConsole();
 };

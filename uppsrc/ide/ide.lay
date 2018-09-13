@@ -821,3 +821,17 @@ LAYOUT(NestEditorLayout, 420, 388)
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
+LAYOUT(SetupSVNLayout, 536, 112)
+	ITEM(Label, dv___0, SetLabel(t_("Target directory")).LeftPosZ(4, 160).TopPosZ(4, 19))
+	ITEM(EditString, dir, LeftPosZ(164, 364).TopPosZ(4, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).RightPosZ(76, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+	ITEM(Option, all, SetLabel(t_("Also checkout development and auxiliary packages")).LeftPosZ(4, 296).TopPosZ(28, 20))
+	ITEM(Label, dv___5, SetLabel(t_("Add prefix to assembly names")).LeftPosZ(4, 160).TopPosZ(52, 19))
+	ITEM(Label, dv___6, SetLabel(t_("Add postfix to assembly names")).LeftPosZ(304, 160).TopPosZ(52, 19))
+	ITEM(EditString, prefix, LeftPosZ(164, 64).TopPosZ(52, 19))
+	ITEM(EditString, postfix, LeftPosZ(464, 64).TopPosZ(52, 19))
+	ITEM(WithDropChoice<EditInt>, revision, LeftPosZ(464, 64).TopPosZ(28, 19))
+	ITEM(Label, dv___10, SetLabel(t_("Revision to checkout")).LeftPosZ(304, 160).TopPosZ(28, 19))
+END_LAYOUT
+

@@ -291,20 +291,25 @@ void AppMain___()
 		SetPPDefs(LoadFile(ppdefs));
 		
 		ide.LoadLastMain();
-		if(clset || ide.OpenMainPackage()) {
-			ide.SaveLastMain();
-			ide.isscanning++;
-			ide.MakeTitle();
-			if(!ide.IsEditorMode())
-				SyncRefs();
-			ide.FileSelected();
-			ide.isscanning--;
-			ide.MakeTitle();
-			if(!IdeExit)
-				ide.Run();
-			ide.SaveConfigOnTime();
-			ide.SaveLastMain();
+		do {
+			IdeAgain = false;
+			if(clset || ide.OpenMainPackage()) {
+				ide.SaveLastMain();
+				ide.isscanning++;
+				ide.MakeTitle();
+				if(!ide.IsEditorMode())
+					SyncRefs();
+				ide.FileSelected();
+				ide.isscanning--;
+				ide.MakeTitle();
+				if(!IdeExit)
+					ide.Run();
+				ide.SaveConfigOnTime();
+				ide.SaveLastMain();
+				ide.Close();
+			}
 		}
+		while(IdeAgain);
 	#ifdef PLATFORM_POSIX
 		StoreAsXMLFile(UpdaterCfg(),"SourceUpdater",ConfigFile("updates.xml"));
 	#endif

@@ -1193,4 +1193,6 @@ inline void ShowConsole() { if(TheIde()) ((Ide *)TheIde())->ShowConsole(); }
 
 void InstantSetup();
 
+void SetupSVNTrunk();
+
 #endif

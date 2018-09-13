@@ -7,6 +7,8 @@ UrepoConsole::UrepoConsole()
 	font = Courier(Ctrl::VertLayoutZoom(12));
 	list.SetLineCy(font.Info().GetHeight());
 	exit.Hide();
+	cancel.Hide();
+	cancel << [=] { canceled = true; };
 }
 
 void UrepoConsole::AddResult(const String& out)
@@ -17,6 +19,11 @@ void UrepoConsole::AddResult(const String& out)
 		list.Add(AttrText(s).SetFont(font), s);
 	}
 	list.GoEnd();
+}
+
+void UrepoConsole::Log(const Value& s, Color ink)
+{
+	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
 }
 
 int UrepoConsole::System(const char *cmd)
@@ -31,7 +38,9 @@ int UrepoConsole::System(const char *cmd)
 	if(!p.Start(cmd))
 		return -1;
 	String out;
-	while(p.IsRunning()) {
+	canceled = false;
+	cancel.Show(withcancel);
+	while(p.IsRunning() && IsOpen()) {
 		String h = p.Get();
 		out.Cat(h);
 		int lf = out.ReverseFind('\n');
@@ -41,11 +50,14 @@ int UrepoConsole::System(const char *cmd)
 		}
 		ProcessEvents();
 		Sleep(h.GetCount() == 0); // p.Wait would be much better here!
+		if(canceled)
+			break;
 	}
+	cancel.Hide();
 	out.Cat(p.Get());
 	AddResult(out);
 	ProcessEvents();
-	int code = p.GetExitCode();
+	int code = canceled ? -1 : p.GetExitCode();
 	if(code)
 		while(ii < list.GetCount()) {
 			list.Set(ii, 0, AttrText((String)list.Get(ii, 1)).SetFont(font).Ink(LtRed));

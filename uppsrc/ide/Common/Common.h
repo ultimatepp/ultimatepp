@@ -98,7 +98,10 @@ void StoreToWorkspace(T& x, const char *name)
 void SerializeWorkspaceConfigs(Stream& s);
 
 extern bool IdeExit;
+extern bool IdeAgain; // Used to restart theide after checking out SVN (SetupSVNTrunk)
 
 bool CopyFolder(const char *dst, const char *src, Progress *pi = NULL);
+
+bool HasSvn();
 
 #endif

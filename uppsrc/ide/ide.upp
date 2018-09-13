@@ -88,6 +88,7 @@ file
 	Json.cpp,
 	MacroManager.cpp,
 	Update.cpp,
+	SetupSVN.cpp,
 	Compile readonly separator,
 	MethodsCtrls.h,
 	MethodsCtrls.cpp,

@@ -54,6 +54,11 @@ indAddList]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 data]
 already there.&]
 [s3;%% &]
 [s4; &]
+[s5;:Upp`:`:WithDropChoice`:`:Find`(const Upp`:`:Value`&`)const: [@(0.0.255) int]_[* Find
+]([@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 data])_[@(0.0.255) const]&]
+[s2;%% Finds the index of first list entry equal to [%-*@3 data].&]
+[s3;%% &]
+[s4; &]
 [s5;:Upp`:`:WithDropChoice`:`:Set`(int`,const Upp`:`:Value`&`): [@(0.0.255) void]_[* Set](
 [@(0.0.255) int]_[*@3 i], [@(0.0.255) const]_[_^Upp`:`:Value^ Value][@(0.0.255) `&]_[*@3 data
 ])&]

@@ -1,5 +1,4 @@
 topic "File path utilities";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "File path utilities";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [s0;%% [*@3;4 File path utilities]&]
 [s3; &]
@@ -228,7 +228,8 @@ st]_[@(0.0.255) char]_`*[*@3 oldpath], [@(0.0.255) const]_[@(0.0.255) char]_`*[*
 st]_[@(0.0.255) char]_`*[*@3 oldpath], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 newpath])
 &]
 [s2;%% Moves a file at [%-*@3 oldpath] to a new file at [%-*@3 newpath] 
-(if already exists, overwrites it). Returns true on success.&]
+(if already exists, overwrites it). Returns true on success. 
+Works on directories too.&]
 [s3;%% &]
 [s4; &]
 [s5;:FileDelete`(const char`*`): [@(0.0.255) bool]_[* FileDelete]([@(0.0.255) const]_[@(0.0.255) c
@@ -326,4 +327,4 @@ nst]_[@(0.0.255) char]_`*[*@3 prefix]_`=_NULL)&]
 [s2;%% Returns a unique path of temporary file. If [%-*@3 prefix ]is 
 not NULL, it is prepended to the filename.&]
 [s3;%% &]
-[s0; ]
+[s0; ]]
