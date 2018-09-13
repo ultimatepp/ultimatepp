@@ -219,6 +219,7 @@ INITBLOCK {
 }
 
 bool IdeExit;
+bool IdeAgain;
 
 bool CopyFolder(const char *dst, const char *src, Progress *pi)
 {
@@ -242,4 +243,11 @@ bool CopyFolder(const char *dst, const char *src, Progress *pi)
 		ff.Next();
 	}
 	return true;
+}
+
+bool HasSvn()
+{
+	String dummy;
+	static bool b = Sys("svn", dummy) >= 0;
+	return b;
 }

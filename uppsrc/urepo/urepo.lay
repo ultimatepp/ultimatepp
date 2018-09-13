@@ -7,6 +7,7 @@ END_LAYOUT
 LAYOUT(UrepoConsoleLayout, 680, 660)
 	ITEM(ArrayCtrl, list, HSizePosZ(4, 4).VSizePosZ(4, 40))
 	ITEM(Button, exit, SetLabel(t_("Close")).RightPosZ(4, 64).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(612, 64).BottomPosZ(8, 24))
 END_LAYOUT
 
 LAYOUT(SvnOptionsLayout, 140, 16)

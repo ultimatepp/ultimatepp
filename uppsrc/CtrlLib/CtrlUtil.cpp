@@ -390,8 +390,14 @@ void FileSelButton::OnAction()
 	Ctrl *owner = button.GetParent();
 	ASSERT(owner);
 	String old = ~*owner;
-	if(mode == MODE_DIR)
+	if(mode == MODE_DIR) {
+		for(int i = 0; i < 4; i++) {
+			if(DirectoryExists(old))
+				break;
+			old = GetFileFolder(old);
+		}
 		ActiveDir(old);
+	}
 	else
 		Set(old);
 	if(mode == MODE_OPEN ? ExecuteOpen(title) : mode == MODE_SAVE ? ExecuteSaveAs(title) : ExecuteSelectDir(title))

@@ -6,12 +6,6 @@
 
 bool LoadVarFile(const char *name, VectorMap<String, String>& _var);
 
-bool HasSvn()
-{
-	String tmp;
-	return Sys("svn",tmp)>=0;
-}
-
 InstallWizard::InstallWizard()
 {
 	Title("TheIDE - Initial setting wizard");
