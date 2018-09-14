@@ -312,6 +312,7 @@ public:
 		int   leftgap, textgap;
 		int   lsepm, rsepm;
 		Point pullshift;
+		bool  opaquetest; // If true, topmenu item can change hot text color
 	};
 
 private:

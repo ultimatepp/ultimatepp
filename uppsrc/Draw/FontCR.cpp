@@ -228,6 +228,8 @@ struct sRFace {
 	const char *name;
 	dword l, h;
 } sFontReplacements[] = {
+	{ "Lucida Grande", 0, 0 },
+	{ "Apple Symbols", 0, 0 },
 	{ "sans-serif", 0xffee0008, 0xdc000801 },
 	{ "Arial", 0xfffe0000, 0x9c000801 },
 	{"\346\226\260\345\256\213\344\275\223", 0xfd800000, 0x9ffff00d },//SimSun (or New Song Ti)
@@ -287,20 +289,18 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 	}
 
 	Font f = fnt;
-//	dword tl = chr < 4096 ? 0x80000000 >> (chr >> 7) : 0;
-//	dword th = 0x80000000 >> ((dword)chr >> 11);
 	for(int i = 0; i < rface.GetCount(); i++) {
-		if(/*((l[i] & tl) || (h[i] & th)) && */IsNormal(f.Face(rface[i]), chr)) {
+		if(IsNormal(f.Face(rface[i]), chr)) {
 			int a = fnt.GetAscent();
-			int d = fnt.GetDescent();
-			if(f.GetAscent() > a || f.GetDescent() > d) {
+			static WString apple_kbd = "⌘⌃⇧⌥"; // do not make these smaller it looks ugly...
+			if(f.GetAscent() > a && apple_kbd.Find(chr) < 0) {
 				static sFontMetricsReplacement cache[256];
 				int q = CombineHash(fnt, f) & 255;
 				if(cache[q].src != fnt || cache[q].dst != f) {
 					cache[q].src = fnt;
 					cache[q].dst = f;
-					while((f.GetAscent() > a || f.GetDescent() > d) && f.GetHeight() > 1) {
-						f.Height(max(1, min(f.GetHeight() - 1, f.GetHeight() * 9 / 10)));
+					while(f.GetAscent() > a && f.GetHeight() > 1) {
+						f.Height(max(1, f.GetHeight() - max(1, f.GetHeight() / 20)));
 					}
 					cache[q].mdst = f;
 				}
@@ -308,7 +308,6 @@ bool Replace(Font fnt, int chr, Font& rfnt)
 					f = cache[q].mdst;
 			}
 			rfnt = f;
-//			LOG(fnt.GetFaceName() << " -> " << rfnt.GetFaceName());
 			return true;
 		}
 	}
