@@ -10,6 +10,40 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 {
 	auto cg = (CGContextRef) cgcontext;
 	CGRect cr = CGRectMake(r.left, r.top, r.Width(), r.Height());
+	int st = Upp::decode(state,
+	                     Upp::CTRL_PRESSED, kThemeStatePressed,
+	                     Upp::CTRL_DISABLED, kThemeStateInactive,
+	                     kThemeStateActive);
+
+	if(type == COCO_BACKGROUND) {
+		HIThemeBackgroundDrawInfo bgi;
+		bgi.version = 0;
+		bgi.kind = value;
+		bgi.state = st;
+		HIThemeDrawBackground(&cr, &bgi, cg, kHIThemeOrientationNormal);
+	}
+	else
+	if(type == COCO_MENUITEM) {
+		HIThemeMenuItemDrawInfo mdi;
+		mdi.version = 0;
+		mdi.itemType = kThemeMenuItemPlain|kThemeMenuItemPopUpBackground;
+		if(state == Upp::CTRL_DISABLED)
+			mdi.state = kThemeMenuDisabled;
+		else {
+			mdi.state = kThemeMenuActive;
+            if(state != Upp::CTRL_NORMAL)
+                mdi.state |= kThemeMenuSelected;
+		}
+		HIThemeDrawMenuItem(&cr, &cr, &mdi, cg, kHIThemeOrientationNormal, &cr);
+	}
+	else
+	if(type == COCO_MENU) {
+        HIThemeMenuDrawInfo mni;
+		mni.version = 0;
+		mni.menuType = kThemeMenuTypePopUp;
+		HIThemeDrawMenuBackground(&cr, &mni, cg, kHIThemeOrientationNormal);
+	}
+	else
 	if(type == COCO_NSCOLOR) {
 		CGContextSaveGState(cg);
 		CGContextSetFillColorWithColor(cg, Upp::decode(value,
@@ -17,6 +51,8 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 			COCO_SELECTEDTEXT, [NSColor selectedTextColor].CGColor,
 			COCO_SELECTEDPAPER, [NSColor selectedTextBackgroundColor].CGColor,
 			COCO_DISABLED, [NSColor disabledControlTextColor].CGColor,
+			COCO_WINDOW, [NSColor windowBackgroundColor].CGColor,
+			COCO_SELECTEDMENUTEXT, [NSColor selectedMenuItemTextColor].CGColor,
 			[NSColor textColor].CGColor
 		));
 		CGContextFillRect(cg, cr);
@@ -30,10 +66,10 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 		CGContextRestoreGState(cg);
 	}
 	else
-	if(type == COCO_SCROLLTHUMB || type ==COCO_SCROLLTRACK) {
+	if(type == COCO_SCROLLTHUMB || type == COCO_SCROLLTRACK) {
 		HIThemeTrackDrawInfo tdi;
 		memset(&tdi, 0, sizeof(tdi));
-		tdi.kind = kThemeMediumScrollBar;
+		tdi.kind = kThemeScrollBarMedium;
 	    tdi.bounds = cr;
 		tdi.min = 0;
 		tdi.max = 100;
@@ -50,10 +86,7 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 		HIThemeButtonDrawInfo bdi;
 		memset(&bdi, 0, sizeof(bdi));
 	    bdi.value = Upp::decode(value, 0, kThemeButtonOff, 1, kThemeButtonOn, kThemeButtonMixed);
-	    bdi.state = Upp::decode(state,// Upp::CTRL_HOT, kThemeStateRollover,
-	                                   Upp::CTRL_PRESSED, kThemeStatePressed,
-	                                   Upp::CTRL_DISABLED, kThemeStateInactive,
-	                                   kThemeStateActive);
+	    bdi.state = st;
 	    bdi.kind = Upp::decode(type, COCO_CHECKBOX, (int)kThemeCheckBox,
 	                                 COCO_RADIOBUTTON, (int)kThemeRadioButton,
 	                                 (int)kThemePushButtonNormal);

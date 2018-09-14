@@ -56,6 +56,7 @@ CH_STYLE(MenuBar, Style, StyleDefault)
 	lsepm = rsepm = Zx(2);
 	pullshift.x = 0;
 	pullshift.y = -1;
+	opaquetest = true;
 }
 
 MenuBar::MenuBar()

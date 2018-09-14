@@ -159,8 +159,10 @@ bool EqColumn(const Image& m, int c1, int c2)
 	return EqColumn(m, c1, c2, 0, m.GetHeight());
 }
 
-int ClassifyContent(const Image& m, const Rect& rect)
+int ClassifyContent(const Image& m, const Rect& rect_)
 {
+	Rect rect = rect_;
+	rect.Intersect(m.GetSize());
 	if(IsNull(rect))
 		return 0;
 	bool vdup = true;

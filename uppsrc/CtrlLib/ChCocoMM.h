@@ -9,6 +9,9 @@ enum ChCocoControlTypes {
 	COCO_SCROLLTRACK,
 	COCO_BRUSH,
 	COCO_NSCOLOR,
+	COCO_MENU,
+	COCO_MENUITEM,
+	COCO_BACKGROUND,
 };
 
 enum ChCocoNSColor {
@@ -17,6 +20,8 @@ enum ChCocoNSColor {
 	COCO_SELECTEDTEXT,
 	COCO_SELECTEDPAPER,
 	COCO_DISABLED,
+	COCO_WINDOW,
+	COCO_SELECTEDMENUTEXT,
 };
 	
 void Coco_ThemePaint(void *cgcontext, const Upp::Rect& where, int type,

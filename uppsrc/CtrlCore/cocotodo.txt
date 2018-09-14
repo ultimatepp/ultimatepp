@@ -1,11 +1,15 @@
 sooner:
 
+- Information etc.. Images
+
 - fix package organiser link options (joining link options missing space)
-- topmost
-- fullscreen
 
 later:
 
+- topmost
+- fullscreen
+
+- ide seems to by slowing down (or is slow sometimes?)
 - apple debugger
 - progress for assist opens too much, probably problem with delay?
 - package organizer initial size too small

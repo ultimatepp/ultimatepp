@@ -208,8 +208,9 @@ void AutoCrop(Image *m, int count, RGBA bg)
 	for(int i = 1; i < count; i++)
 		r.Union(FindBounds(m[i], bg));
 	for(int i = 0; i < count; i++) {
-		Point p1 = m[i].GetHotSpot() - r.TopLeft();
-		Point p2 = m[i].Get2ndSpot() - r.TopLeft();
+		Rect rr = r.GetSize();
+		Point p1 = rr.Bind(m[i].GetHotSpot() - r.TopLeft());
+		Point p2 = rr.Bind(m[i].Get2ndSpot() - r.TopLeft());
 		m[i] = WithHotSpots(Crop(m[i], r), p1.x, p1.y, p2.x, p2.y);
 	}
 }
