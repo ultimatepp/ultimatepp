@@ -1,10 +1,11 @@
-#include <CtrlCore/CocoMM.h>
+#include <Core/config.h>
 
 #ifdef PLATFORM_COCOA
 
 #include <Carbon/Carbon.h> 
-#include "ChCocoMM.h"
 #include <CtrlLib/CtrlLib.h>
+#include <CtrlCore/CocoMM.h>
+#include "ChCocoMM.h"
 
 void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, int state, bool focus)
 {
@@ -72,13 +73,15 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 		tdi.kind = kThemeScrollBarMedium;
 	    tdi.bounds = cr;
 		tdi.min = 0;
-		tdi.max = 100;
+		tdi.max = 1;
 		tdi.value = 0;
 		tdi.attributes = kThemeTrackNoScrollBarArrows|
-		                 (type == COCO_SCROLLTHUMB ? kThemeTrackHideTrack|kThemeTrackShowThumb : 0);
+		                 (type == COCO_SCROLLTHUMB ? kThemeTrackHideTrack|kThemeTrackShowThumb : 0)|
+		                 (value * kThemeTrackHorizontal);
 		tdi.enableState = state == Upp::CTRL_DISABLED ? kThemeTrackDisabled : kThemeTrackActive;
-        tdi.trackInfo.scrollbar.viewsize = 50;
-        tdi.trackInfo.scrollbar.pressState = state == Upp::CTRL_PRESSED ? kThemeThumbPressed : 0;
+        tdi.trackInfo.scrollbar.viewsize = 200;
+        if(type == COCO_SCROLLTHUMB && state == Upp::CTRL_HOT || state == Upp::CTRL_PRESSED)
+	        tdi.trackInfo.scrollbar.pressState |= kThemeThumbPressed;
 
         HIThemeDrawTrack(&tdi, &cr, cg, kHIThemeOrientationNormal);
 	}
@@ -89,7 +92,13 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 	    bdi.state = st;
 	    bdi.kind = Upp::decode(type, COCO_CHECKBOX, (int)kThemeCheckBox,
 	                                 COCO_RADIOBUTTON, (int)kThemeRadioButton,
+	                                 COCO_BEVELBUTTON, (int)kThemeBevelButtonMedium,
+	                                 COCO_ROUNDEDBUTTON, (int)kThemeRoundedBevelButton,
 	                                 (int)kThemePushButtonNormal);
+	#ifdef _DEBUG
+		if(type < 0)
+			bdi.kind = -type;
+	#endif
 	    bdi.adornment = focus ? kThemeAdornmentFocus : kThemeAdornmentNone;
 	
 		HIThemeDrawButton(&cr, &bdi, cg, kHIThemeOrientationNormal, 0);

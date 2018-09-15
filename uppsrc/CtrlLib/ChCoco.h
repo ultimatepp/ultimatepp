@@ -6,6 +6,8 @@
 
 namespace Upp {
 
+Image Coco_ThemeImage(Color bg, int cx, int cy, int margin, int type,
+                      int value = 0, int state = CTRL_NORMAL, bool focus = false);
 Image Coco_ThemeImage(int cx, int cy, int margin, int type,
                       int value = 0, int state = CTRL_NORMAL, bool focus = false);
 

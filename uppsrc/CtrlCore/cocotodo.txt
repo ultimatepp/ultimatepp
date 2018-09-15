@@ -1,7 +1,7 @@
 sooner:
 
 - Information etc.. Images
-
+- Ctrl gets stuck
 - fix package organiser link options (joining link options missing space)
 
 later:
