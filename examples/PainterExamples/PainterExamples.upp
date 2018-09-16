@@ -38,6 +38,6 @@ file
 	Test.iml;
 
 mainconfig
-	"" = "GUI MT",
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI TIMING";
 

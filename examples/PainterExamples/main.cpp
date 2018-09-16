@@ -57,7 +57,7 @@ void App::Print()
 void App::Benchmark()
 {
 	double tm[2];
-	for(int pass = 0; pass < 2; pass++) {
+	for(int pass = 0; pass < 1 + !!ctrl.mt; pass++) {
 		int time0 = GetTickCount();
 		int n = 0;
 		int time;
@@ -72,7 +72,10 @@ void App::Benchmark()
 		}
 		tm[pass] = double(time - time0) / n;
 	}
-	PromptOK(Format("ST %.2f ms, MT %.2f ms, ST/MT %.2f", tm[0], tm[1], tm[0] / tm[1]));
+	if(ctrl.mt)
+		PromptOK(Format("ST %.2f ms, MT %.2f ms, ST/MT %.2f", tm[0], tm[1], tm[0] / tm[1]));
+	else
+		PromptOK(Format("%.2f ms", tm[0]));
 }
 
 void App::Paint(Draw& w)
