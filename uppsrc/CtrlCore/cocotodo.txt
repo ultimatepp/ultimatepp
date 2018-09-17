@@ -1,5 +1,8 @@
 sooner:
 
+- Assist popup has vertically missaligned text
+- initial focus in uword
+- clang install
 - Information etc.. Images
 - Ctrl gets stuck
 - fix package organiser link options (joining link options missing space)

@@ -21,26 +21,27 @@ public:
 		Value edge[4];
 		bool  activeedge;
 		Value look[4];
-		Value left[4];
-		Value lmiddle[4];
-		Value right[4];
-		Value rmiddle[4];
+		Value left[4]; // leftmost button on the left side
+		Value lmiddle[4]; // other buttons on the left size
+		Value right[4]; // rightmost button on the right side
+		Value rmiddle[4]; // other buttons on the right size
 		Value simple[4];
 		int   border;
 		Value trivial[4];
 		int   trivialborder;
-		Color monocolor[4];
-		Color fmonocolor[4];
-		Point pressoffset;
+		Color monocolor[4]; // color of mono images and text in nonframe situation
+		Color fmonocolor[4]; // color of mono images and text in frame situation
+		Point pressoffset; // offset of images and text if button is pressed
 		Value sep1, sep2;
 		int   sepm;
-		int   stdwidth;
+		int   stdwidth; // standard width of button
 		bool  trivialsep;
 		bool  usetrivial;
 		Rect  margin;
 		int   overpaint;
 		int   loff, roff;
 		Color error;
+		bool  clipedge; // Clip border edge so that it does not paint area where are buttons
 	};
 
 	class SubButton {
@@ -109,6 +110,7 @@ private:
 	int  FindButton(int px);
 	void Margins(int& l, int& r);
 	Rect ContentRect();
+	void GetLR(int& lx, int& rx);
 	bool GetPos(SubButton& b,  int& lx, int& rx, int& x, int& cx, int px = -1);
 	void GetPos(int ii, int& x, int& cx);
 	int  ChState(int i);

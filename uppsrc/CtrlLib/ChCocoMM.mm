@@ -94,6 +94,7 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 	                                 COCO_RADIOBUTTON, (int)kThemeRadioButton,
 	                                 COCO_BEVELBUTTON, (int)kThemeBevelButtonMedium,
 	                                 COCO_ROUNDEDBUTTON, (int)kThemeRoundedBevelButton,
+	                                 COCO_COMBOBOX, (int)kThemeComboBox,
 	                                 (int)kThemePushButtonNormal);
 	#ifdef _DEBUG
 		if(type < 0)

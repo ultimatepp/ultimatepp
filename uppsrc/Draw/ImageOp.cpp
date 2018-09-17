@@ -166,6 +166,15 @@ Image Crop(const Image& img, const Rect& rc)
 	return WithResolution(tgt, img);
 }
 
+Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color)
+{
+	Size sz = img.GetSize();
+	ImageBuffer ib(sz.cx + left + right, sz.cy + top + bottom);
+	Fill(ib, color, ib.GetLength());
+	Copy(ib, Point(left, top), img, img.GetSize());
+	return ib;
+}
+
 Image Crop(const Image& img, int x, int y, int cx, int cy)
 {
 	return Crop(img, RectC(x, y, cx, cy));

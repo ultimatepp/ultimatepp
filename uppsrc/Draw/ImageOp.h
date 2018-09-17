@@ -24,6 +24,8 @@ void  Crop(RasterEncoder& tgt, Raster& img, const Rect& rc);
 Image Crop(const Image& img, const Rect& rc);
 Image Crop(const Image& img, int x, int y, int cx, int cy);
 
+Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGBA color);
+
 Rect  FindBounds(const Image& m, RGBA bg = RGBAZero());
 Image AutoCrop(const Image& m, RGBA bg = RGBAZero());
 void  AutoCrop(Image *m, int count, RGBA bg = RGBAZero());
