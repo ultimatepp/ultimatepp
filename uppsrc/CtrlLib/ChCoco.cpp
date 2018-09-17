@@ -85,7 +85,7 @@ void CocoButton(Button::Style& s, int type, int value)
 		s.look[i] = h[i];
 		Image gg = CreateImage(h[i].GetSize(), SColorFace());
 		Over(gg, h[i]);
-		s.textcolor[i] = i == CTRL_DISABLED ? SColorDisabled()
+		s.monocolor[i] = s.textcolor[i] = i == CTRL_DISABLED ? SColorDisabled()
 		                 : Grayscale(AvgColor(gg, h[i].GetSize().cy / 3)) > 160 ? SColorText()
 		                                                                        : White();
 	}
@@ -103,6 +103,25 @@ Color CocoColor(int k, Color bg = SColorFace())
 	return AvgColor(Coco_ThemeImage(bg, 16, 16, 0, COCO_NSCOLOR, k));
 }
 
+Color GetInkColor(const Image& m)
+{
+	int x = m.GetSize().cx / 2;
+	bool dark = !IsDark(SColorText());
+	int best = 1000;
+	Color bestc = SColorText();
+	for(int y = 0; y < m.GetHeight(); y++) {
+		Color c = m[y][x];
+		int g = Grayscale(c);
+		if(dark)
+			g = 255 - g;
+		if(g < best) {
+			best = g;
+			bestc = c;
+		}
+	}
+	return bestc;
+}
+
 void ChHostSkin()
 {
 	CtrlImg::Reset();
@@ -115,6 +134,8 @@ void ChHostSkin()
 	DUMP(Coco_Metric(0)); // kThemeMetricScrollBarWidth
 	DUMP(Coco_Metric(7)); // kThemeMetricFocusRectOutset
 	DUMP(Coco_Metric(19)); // kThemeMetricPushButtonHeight
+
+	int button_height = Coco_Metric(19); // kThemeMetricPushButtonHeight
 	
 
 	SwapOKCancel_Write(true);
@@ -185,6 +206,7 @@ void ChHostSkin()
 			Image thumb = Coco_ThemeImage(s.barsize, 50, 0, COCO_SCROLLTHUMB, 0, status);
 			Rect bounds = FindBounds(thumb);
 			thumb = Crop(thumb, Rect(0, bounds.top, thumb.GetWidth(), bounds.bottom));
+			thumb = AddMargins(thumb, 0, 1, 0, 1, RGBAZero());
 			s.vthumb[status] = Hot3(thumb);
 
 			s.hupper[status] = s.hlower[status] =
@@ -192,9 +214,45 @@ void ChHostSkin()
 			thumb = Coco_ThemeImage(50, s.barsize, 0, COCO_SCROLLTHUMB, 1, status);
 			bounds = FindBounds(thumb);
 			thumb = Crop(thumb, Rect(bounds.left, 0, bounds.right, thumb.GetHeight()));
+			thumb = AddMargins(thumb, 1, 0, 1, 0 , RGBAZero());
 			s.hthumb[status] = Hot3(thumb);
 		}
 	}
+
+	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml());
+	
+	{
+		
+		Color e = GetInkColor(Coco_ThemeImage(SColorFace(), 100, 50, 10, COCO_COMBOBOX));
+		CtrlsImg::Set(CtrlsImg::I_EFE,
+		    WithHotSpots(AddMargins(CreateImage(Size(1, 1), SColorPaper()), 1, 1, 1, 1, e),
+		                 1, 1, 0, 0));
+
+		CtrlsImg::Set(CtrlsImg::I_VE,
+		    WithHotSpots(AddMargins(CreateImage(Size(3, 3), SColorPaper()), 1, 1, 1, 1, e),
+		                 2, 2, 0, 0));
+
+		MultiButton::Style& s = MultiButton::StyleDefault().Write();
+//		s.trivialsep = true;
+//		s.edge[0] = Null;
+		s.clipedge = true;
+		s.border = s.trivialborder = 0;
+
+		for(int i = CTRL_NORMAL; i <= CTRL_DISABLED; i++) {
+			Image m = Coco_ThemeImage(150, button_height + 1, 0, COCO_BUTTON, 1, i); // TODO: ChWithOffset...
+			Size isz = m.GetSize();
+			int x3 = isz.cx / 3;
+			s.left[i] = Hot3(Crop(m, 0, 0, x3, isz.cy));
+			s.trivial[i] = s.look[i] = s.right[i] = Hot3(Crop(m, 2 * x3, 0, isz.cx - 2 * x3, isz.cy));
+			m = Crop(m, x3, 0, x3, isz.cy);
+			s.lmiddle[i] = Hot3(AddMargins(m, 1, 0, 0, 0, SColorPaper()));
+			s.rmiddle[i] = Hot3(AddMargins(m, 0, 0, 1, 0, SColorPaper()));
+			
+			s.monocolor[i] = s.fmonocolor[i] = Button::StyleOk().monocolor[i];
+			// Win32Look(s.look[i], XP_COMBOBOX, 4, i + 1);
+		}
+	}
+
 	
 //	DDUMP(Coco_ThemeColor(1));
 

@@ -24,6 +24,7 @@ struct CommonFontInfo {
 	bool fixedpitch;
 	bool scaleable;
 	bool ttf;
+	int  aux;
 
 	char path[256]; // optional
 };

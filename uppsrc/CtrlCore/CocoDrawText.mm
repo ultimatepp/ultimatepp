@@ -63,7 +63,7 @@ CGGlyph GetCharGlyph(CTFontRef ctfont, int chr)
 	return glyph_index;
 }
 
-GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr, bool bold_synth)
+GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr, bool bold_synth, CGRect *bounds = NULL)
 {
 	GlyphInfo gi;
 	gi.lspc = gi.rspc = 0;
@@ -79,6 +79,10 @@ GlyphInfo GetGlyphInfoSys(CTFontRef ctfont, int chr, bool bold_synth)
 			gi.glyphi = glyph_index;
 			if(bold_synth)
 				gi.width++;
+			if(bounds)
+				CTFontGetBoundingRectsForGlyphs(ctfont, kCTFontOrientationHorizontal,
+				                                &glyph_index, bounds, 1);
+
 		}
 	}
 	return gi;
@@ -101,10 +105,33 @@ CommonFontInfo GetFontInfoSys(Font font)
 	    DDUMP(CTFontGetUnderlinePosition(ctfont));
 	    DDUMP(MakeRect(CTFontGetBoundingBox(ctfont)));
 		DDUMPHEX(CTFontGetSymbolicTraits(ctfont));
+		DDUMP(font);
+		CGRect cr = CTFontGetBoundingBox(ctfont);
+		DDUMP(cr.origin.y);
+		DDUMP(cr.size.height);
+		DDUMP(cr.origin.y + cr.size.height);
 	#endif
 		fi.descent = ceil(CTFontGetDescent(ctfont));
 		fi.ascent = ceil(CTFontGetAscent(ctfont));
 		fi.external = ceil(CTFontGetLeading(ctfont));
+		
+		// Some MacOS fonts have really weird ascent/descents (namely stadard GUI font...)
+		// let us fix it by testing typical charactes bounding boxes
+		
+		static WString descent_test = "yjgp";
+		CGRect bb;
+		for(int i = 0; i < descent_test.GetCount(); i++)
+			if(GetGlyphInfoSys(ctfont, descent_test[i], synth && font.IsBold(), &bb).IsNormal())
+				fi.descent = max(fi.descent, (int)ceil(-bb.origin.y));
+		
+		int ascent = fi.ascent;
+		static WString ascent_test = "ÀÁÂÃÄË";
+		for(int i = 0; i < ascent_test.GetCount(); i++)
+			if(GetGlyphInfoSys(ctfont, ascent_test[i], synth && font.IsBold(), &bb).IsNormal())
+				ascent = max(ascent, (int)ceil(bb.origin.y + bb.size.height));
+		
+		fi.ascent = ascent;
+
 		fi.internal = 0;
 		fi.overhang = 0;
 		fi.maxwidth = GetGlyphInfoSys(ctfont, 'W', synth && font.IsBold()).width; // TODO?
@@ -138,7 +165,7 @@ Vector<FaceInfo> GetAllFacesSys()
 {
 	Index<String> facename;
 
-	facename.Add("Arial"); // TODO: This should be default GUI font
+	facename.Add("Arial"); // This is default GUI font, changed afterward
 	facename.Add("Times New Roman");
 	facename.Add("Arial");
 	facename.Add("Courier New");

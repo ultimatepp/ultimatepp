@@ -234,7 +234,7 @@ bool MultiButton::GetPos(SubButton& b, int& lx, int& rx, int& x, int& cx, int px
 	if(b.visible) {
 		cx = Nvl(b.cx, style->stdwidth + tsz.cx);
 		if(IsNull(b.cx) && tsz.cx > 0 && !IsNull(b.img))
-			cx += LB_IMAGE + LB_MARGIN;
+			cx += DPI(LB_IMAGE + LB_MARGIN);
 	}
 	else
 		cx = 0;
@@ -258,6 +258,18 @@ void MultiButton::GetPos(int ii, int& x, int& cx)
 	int border, lx, rx;
 	Metrics(border, lx, rx);
 	for(int i = 0; i <= ii; i++) {
+		SubButton& b = button[i];
+		GetPos(b, lx, rx, x, cx);
+	}
+}
+
+void MultiButton::GetLR(int& lx, int& rx)
+{
+	int border;
+	Metrics(border, lx, rx);
+	int x = 0;
+	int cx = 0;
+	for(int i = 0; i < button.GetCount(); i++) {
 		SubButton& b = button[i];
 		GetPos(b, lx, rx, x, cx);
 	}
@@ -343,8 +355,16 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 	int border, lx, rx;
 	bool frm = Metrics(border, lx, rx);
 	int mst = ChState(MAIN);
-	if(frm && !nobg && !getcr)
+	if(frm && !nobg && !getcr) {
+		if(style->clipedge) {
+			int l, r;
+			GetLR(l, r);
+			w.Clip(l, 0, r - l, sz.cy);
+		}
 		ChPaint(w, sz, style->edge[style->activeedge ? mst : 0]);
+		if(style->clipedge)
+			w.End();
+	}
 	bool left = false;
 	bool right = false;
 	for(int i = 0; i < button.GetCount(); i++) {
@@ -394,22 +414,24 @@ Rect MultiButton::Paint0(Draw& w, bool getcr)
 			Image m = tsz.cx > 0 ? b.img : (Image)Nvl(b.img, CtrlsImg::DA());
 			Size isz = m.GetSize();
 			Point p = (st == CTRL_PRESSED) * style->pressoffset;
-			p.x += x + (cx - isz.cx - tsz.cx - (tsz.cx > 0 && isz.cx > 0 ? LB_IMAGE : 0)) / 2;
+			p.x += x + (cx - isz.cx - tsz.cx - (tsz.cx > 0 && isz.cx > 0 ? DPI(LB_IMAGE) : 0)) / 2;
 			p.y += (sz.cy - isz.cy) / 2;
 			if(b.left) {
 				if(!left) p.x += style->loff;
 			}
 			else
 				if(!right) p.x += style->roff;
+				
+			Color ink = frm ? style->fmonocolor[st] : style->monocolor[st];
 			if(b.monoimg || IsNull(b.img))
-				w.DrawImage(p.x, p.y, m, frm ? style->fmonocolor[st] : style->monocolor[st]);
+				w.DrawImage(p.x, p.y, m, ink);
 			else
 				w.DrawImage(p.x, p.y, m);
 
 			if(tsz.cx > 0) {
 				if(isz.cx > 0)
-					p.x += isz.cx + LB_IMAGE;
-				w.DrawText(p.x, (sz.cy - tsz.cy) / 2, b.label);
+					p.x += isz.cx + DPI(LB_IMAGE);
+				w.DrawText(p.x, (sz.cy - tsz.cy) / 2, b.label, StdFont(), ink);
 			}
 		}
 		(b.left ? left : right) = true;
