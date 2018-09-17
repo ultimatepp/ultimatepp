@@ -364,6 +364,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 				}
 
 				String tmpFileName;
+			#if defined(PLATFORM_LINUX) || defined(PLATFORM_WIN32)
 				if(lib.GetCount() + llib.GetCount() >= 8192)
 				{
 					tmpFileName = GetTempFileName();
@@ -397,6 +398,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 					lib << " @" << tmpFileName;
 				}
 				else
+			#endif
 					lib << llib;
 
 				int res = Execute(lib);

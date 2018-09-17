@@ -1,5 +1,6 @@
 sooner:
 
+- Bazaar GetAdapterInfo
 - Assist popup has vertically missaligned text
 - initial focus in uword
 - clang install
