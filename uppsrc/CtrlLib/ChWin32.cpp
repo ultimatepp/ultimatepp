@@ -647,7 +647,7 @@ void ChSysInit()
 	CtrlImg::Set(CtrlImg::I_exclamation, Win32Icon(IDI_EXCLAMATION));
 	CtrlImg::Set(CtrlImg::I_error, Win32Icon(IDI_ERROR));
 
-	FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
+		FrameButtonWidth_Write(GetSystemMetrics(SM_CYHSCROLL));
 	ScrollBarArrowSize_Write(GetSystemMetrics(SM_CXHSCROLL));
 	for(sysColor *s = sSysColor; s < sSysColor + __countof(sSysColor); s++)
 		(*s->set)(Color::FromCR(GetSysColor(s->syscolor)));

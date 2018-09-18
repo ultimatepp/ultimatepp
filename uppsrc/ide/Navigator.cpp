@@ -19,8 +19,9 @@ int CharFilterNavigator(int c)
 
 void PaintTeXt(Draw& w, int& x, int y, const String& text, Font font, Color ink)
 {
+	static int maxascent = MaxAscent(StdFont());
 	Size sz = GetTextSize(text, font);
-	w.DrawText(x, y, text, font, ink);
+	w.DrawText(x, y + maxascent - font.GetAscent(), text, font, ink);
 	x += sz.cx;
 }
 

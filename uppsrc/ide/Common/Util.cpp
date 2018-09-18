@@ -251,3 +251,9 @@ bool HasSvn()
 	static bool b = Sys("svn", dummy) >= 0;
 	return b;
 }
+
+int MaxAscent(Font f)
+{
+	return max(f.GetAscent(), f().Bold().GetAscent(),
+	           f().Italic().GetAscent(), f().Bold().Italic().GetAscent());
+}

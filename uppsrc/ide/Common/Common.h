@@ -104,4 +104,6 @@ bool CopyFolder(const char *dst, const char *src, Progress *pi = NULL);
 
 bool HasSvn();
 
+int  MaxAscent(Font f);
+
 #endif

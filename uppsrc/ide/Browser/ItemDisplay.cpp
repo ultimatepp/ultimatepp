@@ -3,6 +3,7 @@
 void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPart>& n,
            int starti, int count, bool focuscursor, Color _ink, bool italic)
 {
+	static int maxascent = MaxAscent(BrowserFont());
 	bool dark = IsDark(SColorPaper());
 	for(int i = starti; i < count; i++) {
 		const ItemTextPart& p = n[i];
@@ -31,7 +32,8 @@ void PaintText(Draw& w, int& x, int y, const char *text, const Vector<ItemTextPa
 		if(italic)
 			f.Italic();
 		Size fsz = GetTextSize(text + p.pos, f, p.len);
-		w.DrawText(x, y, text + p.pos, f, focuscursor ? _ink : ink, p.len);
+		w.DrawText(x, y + maxascent - f.GetAscent(), text + p.pos,
+		           f, focuscursor ? _ink : ink, p.len);
 		x += fsz.cx;
 	}
 }

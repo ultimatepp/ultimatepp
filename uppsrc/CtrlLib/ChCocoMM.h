@@ -15,6 +15,7 @@ enum ChCocoControlTypes {
 	COCO_MENU,
 	COCO_MENUITEM,
 	COCO_BACKGROUND,
+	COCO_NSIMAGE,
 };
 
 enum ChCocoNSColor {
