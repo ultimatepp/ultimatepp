@@ -85,6 +85,15 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 
         HIThemeDrawTrack(&tdi, &cr, cg, kHIThemeOrientationNormal);
 	}
+	else
+	if(type == COCO_NSIMAGE) {
+		NSImage *img = [NSImage imageNamed:(value ? NSImageNameInfo : NSImageNameCaution)];
+	    NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithCGContext:cg flipped:YES];
+	    NSGraphicsContext* cgc = [NSGraphicsContext currentContext];
+	    [NSGraphicsContext setCurrentContext:gc];
+	    [img drawInRect:NSMakeRect(0, 0, 48, 48)];
+		[NSGraphicsContext setCurrentContext:cgc];
+	}
 	else {
 		HIThemeButtonDrawInfo bdi;
 		memset(&bdi, 0, sizeof(bdi));

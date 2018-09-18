@@ -253,6 +253,12 @@ void ChHostSkin()
 		}
 	}
 
+
+	auto nsimg = [](int ii) { return AutoCrop(Coco_ThemeImage(48, 48, 10, COCO_NSIMAGE, ii)); };
+	CtrlImg::Set(CtrlImg::I_information, nsimg(1));
+	CtrlImg::Set(CtrlImg::I_question, nsimg(0));
+	CtrlImg::Set(CtrlImg::I_exclamation, nsimg(0));
+	CtrlImg::Set(CtrlImg::I_error, nsimg(0));
 	
 //	DDUMP(Coco_ThemeColor(1));
 
