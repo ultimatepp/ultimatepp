@@ -211,21 +211,14 @@ Vector<WString>& coreCmdLine__()
 
 const Vector<String>& CommandLine()
 {
-	Vector<String> *ptr;
-	INTERLOCKED {
-		static ArrayMap< byte, Vector<String> > charset_cmd;
+	static Vector<String> cmd;
+	ONCELOCK {
 		byte cs = GetDefaultCharset();
-		int f = charset_cmd.Find(cs);
-		if(f >= 0)
-			ptr = &charset_cmd[f];
-		else {
-			ptr = &charset_cmd.Add(cs);
-			const Vector<WString>& src = coreCmdLine__();
-			for(int i = 0; i < src.GetCount(); i++)
-				ptr->Add(src[i].ToString());
-		}
+		auto& src = coreCmdLine__();
+		for(int i = 0; i < src.GetCount(); i++)
+			cmd.Add(src[i].ToString());
 	}
-	return *ptr;
+	return cmd;
 }
 
 VectorMap<WString, WString>& EnvMap()
@@ -401,7 +394,15 @@ void AppInit__(int argc, const char **argv, const char **envptr)
 
 void AppInitEnvironment__()
 {
-#ifndef PLATFORM_WINCE
+	SetLanguage(LNG_('E', 'N', 'U', 'S'));
+	int nArgs;
+    LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+	if(szArglist) {
+		for(int i = 1; i < nArgs; i++)
+			coreCmdLine__().Add(szArglist[i]);
+		LocalFree(szArglist);
+    }
+		
 	wchar *env = GetEnvironmentStringsW();
 	for(wchar *ptr = env; *ptr; ptr++)
 	{
@@ -419,16 +420,12 @@ void AppInitEnvironment__()
 		EnvMap().GetAdd(ToUpper(varname)) = WString(b, ptr);
 	}
 	FreeEnvironmentStringsW(env);
-#endif
+
 	CommonInit();
 }
 
 void AppInit__(int argc, const char **argv)
 {
-	SetLanguage(LNG_('E', 'N', 'U', 'S'));
-	Vector<WString>& cmd = coreCmdLine__();
-	for(int i = 1; i < argc; i++)
-		cmd.Add(argv[i]);
 	AppInitEnvironment__();
 }
 #endif
@@ -648,18 +645,18 @@ String GetPathDataXdg(String fileConfig, const char *folder)
 
 String GetShellFolder(const char *local, const char *users) 
 {
- 	String xdgConfigHome = GetEnv("XDG_CONFIG_HOME");
-  	if (xdgConfigHome == "")		// By default
-  		xdgConfigHome = AppendFileName(GetHomeDirectory(), ".config");
-  	String xdgConfigDirs = GetEnv("XDG_CONFIG_DIRS");
-  	if (xdgConfigDirs == "")			// By default
-  		xdgConfigDirs = "/etc/xdg";
-  	String xdgFileConfigData = GetPathXdg(xdgConfigHome, xdgConfigDirs);
-  	String ret = GetPathDataXdg(xdgFileConfigData, local);
-  	if (ret == "" && *users != '\0')
-  		return GetPathDataXdg(xdgFileConfigData, users);
-  	else
-  		return ret;
+	String xdgConfigHome = GetEnv("XDG_CONFIG_HOME");
+	if (xdgConfigHome == "")		// By default
+		xdgConfigHome = AppendFileName(GetHomeDirectory(), ".config");
+	String xdgConfigDirs = GetEnv("XDG_CONFIG_DIRS");
+	if (xdgConfigDirs == "")			// By default
+		xdgConfigDirs = "/etc/xdg";
+	String xdgFileConfigData = GetPathXdg(xdgConfigHome, xdgConfigDirs);
+	String ret = GetPathDataXdg(xdgFileConfigData, local);
+	if (ret == "" && *users != '\0')
+		return GetPathDataXdg(xdgFileConfigData, users);
+	else
+		return ret;
 }
 
 String GetDesktopFolder()

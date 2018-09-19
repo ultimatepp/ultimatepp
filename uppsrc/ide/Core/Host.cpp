@@ -204,23 +204,11 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 #ifdef PLATFORM_WIN32
 	if(console)
 		cmdline = GetExeFilePath() + " ! " + cmdline;
-	int n = cmdline.GetLength() + 1;
-	Buffer<char> cmd(n);
-	memcpy(cmd, cmdline, n);
-	SECURITY_ATTRIBUTES sa;
-	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-	sa.lpSecurityDescriptor = NULL;
-	sa.bInheritHandle = TRUE;
 	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
-	ZeroMemory(&si, sizeof(STARTUPINFO));
-	si.cb = sizeof(STARTUPINFO);
-	String ev = ToSystemCharset(environment);
-	Buffer<char> env(ev.GetCount() + 1);
-	memcpy(env, ev, ev.GetCount() + 1);
-	if(CreateProcess(NULL, cmd, &sa, &sa, TRUE,
-		             NORMAL_PRIORITY_CLASS|CREATE_NEW_CONSOLE,
-	                ~env, NULL, &si, &pi)) {
+	STARTUPINFOW si;
+	ZeroMemory(&si, sizeof(STARTUPINFOW));
+	si.cb = sizeof(STARTUPINFOW);
+	if(Win32CreateProcess(cmdline, ~environment, si, pi)) {
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 	}
