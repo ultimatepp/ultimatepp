@@ -137,13 +137,15 @@ void AppMain___()
 	auto arg = cmd_handler.GetArgs();
 
 	SetVppLogSizeLimit(200000000);
+	
+	bool hasvars = FindFile(ConfigFile("*.var"));
 
 #ifdef PLATFORM_POSIX
 	String home = Environment().Get("UPP_HOME", Null);
 	if(!IsNull(home))
 		SetHomeDirectory(home);
 	FindFile ff(ConfigFile("*.var"));
-	if(!ff) {
+	if(!hasvar) {
 		if(!Install())
 			return;
 		SaveFile(ConfigFile("version"), IDE_VERSION);
@@ -155,6 +157,9 @@ void AppMain___()
 		return;
 	AutoInstantSetup();
 #endif
+
+	if(!hasvars)
+		SetupSVNTrunk();
 
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();
