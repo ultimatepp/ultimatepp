@@ -18,7 +18,8 @@ static GLuint LoadShader(const char *src, GLenum type) {
 	// Check the compile status
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
 	if(!compiled) {
-		String error = "shader failed to compile ";
+		String error = type == GL_VERTEX_SHADER ? "Vertex" : "Fragment";
+		error << " shader failed to compile ";
 		GLint infoLen = 0;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
 		if(infoLen > 1) {

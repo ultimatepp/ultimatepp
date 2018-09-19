@@ -29,7 +29,7 @@ END_LAYOUT
 LAYOUT(ProgressLayout, 320, 72)
 	ITEM(Button, stop, SetLabel(t_("Cancel")).HCenterPosZ(68, 0).BottomPosZ(4, 24))
 	UNTYPED(pi, HSizePosZ(4, 4).TopPosZ(28, 12))
-	ITEM(Label, info, HSizePosZ(4, 4).TopPosZ(4, 15))
+	ITEM(Label, info, HSizePosZ(4, 4).TopPosZ(4, 20))
 END_LAYOUT
 
 LAYOUT(CommentLayout, 400, 204)
