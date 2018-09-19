@@ -65,6 +65,29 @@ static void sNoBlock(int fd)
 }
 #endif
 
+#ifdef PLATFORM_WIN32
+bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi)
+{ // provides conversion of charset for cmdline and envptr
+	WString wcmd(command);
+	int n = wcmd.GetCount() + 1;
+	Buffer<wchar> cmd(n);
+	memcpy(cmd, wcmd, n * sizeof(wchar));
+#if 0 // unicode environment not necessary for now
+	wchar wenvptr = NULL;
+	Buffer<wchar> env(n);
+	if(envptr) {
+		int len = 0;
+		while(envptr[len] || envptr[len + 1])
+			len++;
+		WString wenv(envptr, len + 1);
+		env.Alloc(len + 2);
+		memcpy(env, wenv, (len + 2) * sizeof(wchar));
+	}
+#endif
+	return CreateProcessW(NULL, cmd, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr, NULL, &si, &pi);
+}
+#endif
+
 bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool spliterr, const char *envptr)
 {
 	LLOG("LocalProcess::Start(\"" << command << "\")");
@@ -79,24 +102,19 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	HANDLE hOutputReadTmp, hOutputWrite;
 	HANDLE hInputWriteTmp, hInputRead;
 	HANDLE hErrorReadTmp, hErrorWrite;
-	SECURITY_ATTRIBUTES sa;
-
-	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
-	sa.lpSecurityDescriptor = NULL;
-	sa.bInheritHandle = TRUE;
 
 	HANDLE hp = GetCurrentProcess();
 
-	CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0);
+	CreatePipe(&hInputRead, &hInputWriteTmp, NULL, 0);
 	DuplicateHandle(hp, hInputWriteTmp, hp, &hInputWrite, 0, FALSE, DUPLICATE_SAME_ACCESS);
 	CloseHandle(hInputWriteTmp);
 
-	CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0);
+	CreatePipe(&hOutputReadTmp, &hOutputWrite, NULL, 0);
 	DuplicateHandle(hp, hOutputReadTmp, hp, &hOutputRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
 	CloseHandle(hOutputReadTmp);
 
 	if(spliterr) {
-		CreatePipe(&hErrorReadTmp, &hErrorWrite, &sa, 0);
+		CreatePipe(&hErrorReadTmp, &hErrorWrite, NULL, 0);
 		DuplicateHandle(hp, hErrorReadTmp, hp, &hErrorRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
 		CloseHandle(hErrorReadTmp);
 	}
@@ -104,8 +122,8 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 		DuplicateHandle(hp, hOutputWrite, hp, &hErrorWrite, 0, TRUE, DUPLICATE_SAME_ACCESS);
 
 	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
-	ZeroMemory(&si, sizeof(STARTUPINFO));
+	STARTUPINFOW si;
+	ZeroMemory(&si, sizeof(STARTUPINFOW));
 	si.cb = sizeof(STARTUPINFO);
 	si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
 	si.wShowWindow = SW_HIDE;
@@ -149,11 +167,15 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	    }
 		command = cmdh;
 	}
+#if 0
 	int n = (int)strlen(command) + 1;
 	Buffer<char> cmd(n);
 	memcpy(cmd, command, n);
-	bool h = CreateProcess(NULL, cmd, &sa, &sa, TRUE,
+	bool h = CreateProcess(NULL, cmd, NULL, NULL /*&sa, &sa*/, TRUE,
 	                       NORMAL_PRIORITY_CLASS, (void *)envptr, NULL, &si, &pi);
+#else
+	bool h = Win32CreateProcess(command, envptr, si, pi);
+#endif
 	LLOG("CreateProcess " << (h ? "succeeded" : "failed"));
 	CloseHandle(hErrorWrite);
 	CloseHandle(hInputRead);
