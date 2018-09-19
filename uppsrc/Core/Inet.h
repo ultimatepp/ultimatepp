@@ -598,8 +598,6 @@ bool HttpResponse(TcpSocket& socket, bool scgi, int code, const char *phrase,
 
 #include <Core/Core.h>
 
-using namespace Upp;
-
 class WebSocket {
 	String     error;
 
