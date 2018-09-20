@@ -145,7 +145,7 @@ void AppMain___()
 	if(!IsNull(home))
 		SetHomeDirectory(home);
 	FindFile ff(ConfigFile("*.var"));
-	if(!hasvar) {
+	if(!hasvars) {
 		if(!Install())
 			return;
 		SaveFile(ConfigFile("version"), IDE_VERSION);
