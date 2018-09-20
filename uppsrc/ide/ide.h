@@ -903,6 +903,7 @@ public:
 		void  SetUpdateTimer(int period);
 		void  Abbreviations();
 		void  DoMacroManager();
+		void  UpgradeTheIDE();
 	
 	void      SetupMobilePlatforms(Bar& bar);
 		void  SetupAndroidMobilePlatform(Bar& bar, const AndroidSDK& androidSDK);
