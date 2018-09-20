@@ -238,21 +238,35 @@ void ChHostSkin()
 		s.clipedge = true;
 		s.border = s.trivialborder = 0;
 
+
 		for(int i = CTRL_NORMAL; i <= CTRL_DISABLED; i++) {
 			Image m = Coco_ThemeImage(150, button_height + 1, 0, COCO_BUTTON, 1, i); // TODO: ChWithOffset...
 			Size isz = m.GetSize();
 			int x3 = isz.cx / 3;
 			s.left[i] = Hot3(Crop(m, 0, 0, x3, isz.cy));
 			s.trivial[i] = s.look[i] = s.right[i] = Hot3(Crop(m, 2 * x3, 0, isz.cx - 2 * x3, isz.cy));
-			m = Crop(m, x3, 0, x3, isz.cy);
-			s.lmiddle[i] = Hot3(AddMargins(m, 1, 0, 0, 0, SColorPaper()));
-			s.rmiddle[i] = Hot3(AddMargins(m, 0, 0, 1, 0, SColorPaper()));
+			
+			Image mm = Crop(m, x3, 0, x3, isz.cy);
+			s.lmiddle[i] = Hot3(AddMargins(mm, 1, 0, 0, 0, SColorPaper()));
+			s.rmiddle[i] = Hot3(AddMargins(mm, 0, 0, 1, 0, SColorPaper()));
 			
 			s.monocolor[i] = s.fmonocolor[i] = Button::StyleOk().monocolor[i];
-			// Win32Look(s.look[i], XP_COMBOBOX, 4, i + 1);
+			
 		}
 	}
-
+	{
+		SpinButtons::Style& sp = SpinButtons::StyleDefault().Write();
+		sp.dec = sp.inc = Button::StyleNormal();
+		
+		for(int i = CTRL_NORMAL; i <= CTRL_DISABLED; i++) {
+			Image m = AutoCrop(Coco_ThemeImage(50, button_height + 1, 0, COCO_BUTTON, 0, i));
+			Size isz = m.GetSize();
+			int cy = isz.cy / 2;
+			Color c = Button::StyleNormal().monocolor[i];
+			sp.inc.look[i] = ChLookWith(Hot3(Crop(m, 0, 0, isz.cx, cy)), CtrlImg::spinup(), c);
+			sp.dec.look[i] = ChLookWith(Hot3(Crop(m, 0, cy, isz.cx, isz.cy - cy)), CtrlImg::spindown(), c);
+		}
+	}
 
 	auto nsimg = [](int ii) { return AutoCrop(Coco_ThemeImage(48, 48, 10, COCO_NSIMAGE, ii)); };
 	CtrlImg::Set(CtrlImg::I_information, nsimg(1));

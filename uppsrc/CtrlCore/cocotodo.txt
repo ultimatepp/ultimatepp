@@ -1,10 +1,7 @@
 sooner:
 
 - Bazaar GetAdapterInfo
-- Assist popup has vertically missaligned text
 - initial focus in uword
-- clang install
-- Information etc.. Images
 - Ctrl gets stuck
 - fix package organiser link options (joining link options missing space)
 
@@ -30,8 +27,6 @@ later:
 
 - SerializePlacement - probably improve
 
-- keynames apple style
-
 * Mac menu
 * Clipboard types
 * Drag&Drop
@@ -42,6 +37,10 @@ later:
 
 done:
 
+- keynames apple style
+- clang install
+- Information etc.. Images
+- Assist popup has vertically missaligned text
 - use NSView:needsToDrawRect: for IsPaintingOp
 - implement missing Draw ops
 - replacement fonts
