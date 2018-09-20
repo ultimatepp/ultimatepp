@@ -105,16 +105,22 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 
 	HANDLE hp = GetCurrentProcess();
 
-	CreatePipe(&hInputRead, &hInputWriteTmp, NULL, 0);
+	SECURITY_ATTRIBUTES sa;
+
+	sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+	sa.lpSecurityDescriptor = NULL;
+	sa.bInheritHandle = TRUE;
+
+	CreatePipe(&hInputRead, &hInputWriteTmp, &sa, 0);
 	DuplicateHandle(hp, hInputWriteTmp, hp, &hInputWrite, 0, FALSE, DUPLICATE_SAME_ACCESS);
 	CloseHandle(hInputWriteTmp);
 
-	CreatePipe(&hOutputReadTmp, &hOutputWrite, NULL, 0);
+	CreatePipe(&hOutputReadTmp, &hOutputWrite, &sa, 0);
 	DuplicateHandle(hp, hOutputReadTmp, hp, &hOutputRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
 	CloseHandle(hOutputReadTmp);
 
 	if(spliterr) {
-		CreatePipe(&hErrorReadTmp, &hErrorWrite, NULL, 0);
+		CreatePipe(&hErrorReadTmp, &hErrorWrite, &sa, 0);
 		DuplicateHandle(hp, hErrorReadTmp, hp, &hErrorRead, 0, FALSE, DUPLICATE_SAME_ACCESS);
 		CloseHandle(hErrorReadTmp);
 	}
@@ -167,15 +173,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	    }
 		command = cmdh;
 	}
-#if 0
-	int n = (int)strlen(command) + 1;
-	Buffer<char> cmd(n);
-	memcpy(cmd, command, n);
-	bool h = CreateProcess(NULL, cmd, NULL, NULL /*&sa, &sa*/, TRUE,
-	                       NORMAL_PRIORITY_CLASS, (void *)envptr, NULL, &si, &pi);
-#else
 	bool h = Win32CreateProcess(command, envptr, si, pi);
-#endif
 	LLOG("CreateProcess " << (h ? "succeeded" : "failed"));
 	CloseHandle(hErrorWrite);
 	CloseHandle(hInputRead);
@@ -511,6 +509,8 @@ bool LocalProcess::Read2(String& reso, String& rese)
 	   ReadFile(hErrorRead, buffer, sizeof(buffer), &n, NULL) && n)
 		rese.Cat(buffer, n);
 
+	DDUMPHEX(reso);
+	DDUMPHEX(rese);
 	if(convertcharset) {
 		reso = FromOEMCharset(reso);
 		rese = FromOEMCharset(rese);
