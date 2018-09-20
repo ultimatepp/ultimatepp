@@ -509,8 +509,6 @@ bool LocalProcess::Read2(String& reso, String& rese)
 	   ReadFile(hErrorRead, buffer, sizeof(buffer), &n, NULL) && n)
 		rese.Cat(buffer, n);
 
-	DDUMPHEX(reso);
-	DDUMPHEX(rese);
 	if(convertcharset) {
 		reso = FromOEMCharset(reso);
 		rese = FromOEMCharset(rese);
