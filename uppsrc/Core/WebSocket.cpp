@@ -128,7 +128,7 @@ void WebSocket::SendRequest()
 {
 	LLOG("Sending connection request");
 	String h;
-	for(int i = 0; i < 20; i++)
+	for(int i = 0; i < 16; i++)
 		h.Cat(Random());
 	Out( // needs to be the first thing to sent after the connection is established
 	    "GET " + uri + " HTTP/1.1\r\n"
@@ -315,7 +315,7 @@ void WebSocket::FrameHeader()
 void WebSocket::Close(const String& msg, bool wait_reply)
 {
 	LLOG("Sending CLOSE");
-	SendRaw(CLOSE|FIN, msg);
+	SendRaw(CLOSE|FIN, msg, MASK);
 	close_sent = true;
 	if(IsBlocking())
 		while((wait_reply ? IsOpen() : out_queue.GetCount()) && !IsError() && socket->IsOpen())
@@ -341,7 +341,7 @@ void WebSocket::FrameData()
 	switch(op) {
 	case PING:
 		LLOG("PING");
-		SendRaw(PONG|FIN, data);
+		SendRaw(PONG|FIN, data, MASK);
 		break;
 	case CLOSE:
 		LLOG("CLOSE received");
