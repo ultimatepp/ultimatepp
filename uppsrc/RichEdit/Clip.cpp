@@ -2,8 +2,6 @@
 
 namespace Upp {
 
-#define RTFS "Rich Text Format;text/rtf;application/rtf"
-
 void RichEdit::InsertImage()
 {
 	if(!imagefs.ExecuteOpen(t_("Open image from file")))
@@ -55,8 +53,8 @@ bool RichEdit::Accept(PasteClip& d, RichText& clip, String& fmt)
 		clip = ParseQTF(~d, 0, context);
 		return true;
 	}
-	if(d.Accept(RTFS)) {
-		fmt = RTFS;
+	if(d.Accept(ClipFmtsRTF())) {
+		fmt = ClipFmtsRTF();
 		clip = ParseRTF(~d);
 		return true;
 	}
@@ -203,7 +201,7 @@ void AppendClipboard(RichText&& txt)
 	AppendClipboardUnicodeText(txt.GetPlainText());
 	Value clip = RawPickToValue(pick(txt));
 	AppendClipboard("text/QTF", clip, sQTF);
-	AppendClipboard(RTFS, clip, sRTF);
+	AppendClipboard(ClipFmtsRTF(), clip, sRTF);
 }
 
 void RichEdit::Copy()
@@ -236,7 +234,7 @@ String RichEdit::GetSelectionData(const String& fmt) const
 		ZoomClip(clip);
 		if(f == "text/QTF")
 			return AsQTF(clip);
-		if(InScList(f, RTFS))
+		if(InScList(f, ClipFmtsRTF()))
 			return EncodeRTF(clip);
 		return GetTextClip(clip.GetPlainText(), fmt);
 	}
@@ -260,7 +258,7 @@ void RichEdit::LeftDrag(Point p, dword flags)
 		iw.DrawRect(0, 0, ssz.cx, ssz.cy, White);
 		sample.Paint(iw, 0, 0, 128);
 		NextUndo();
-		if(DoDragAndDrop(String().Cat() << "text/QTF;" RTFS ";" << ClipFmtsText(),
+		if(DoDragAndDrop(String().Cat() << "text/QTF;" << ClipFmtsRTF() << ";" << ClipFmtsText(),
 		                 ColorMask(iw, White)) == DND_MOVE && !IsReadOnly()) {
 			RemoveSelection();
 			Action();

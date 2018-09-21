@@ -1,6 +1,6 @@
 #include "Debuggers.h"
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)   // DLOG(x)
 
 #define IMAGECLASS DbgImg
 #define IMAGEFILE  <ide/Debuggers/Debuggers.iml>
