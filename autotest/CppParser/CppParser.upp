@@ -95,7 +95,9 @@ file
 	test44.in,
 	test44.out,
 	test45.in,
-	test45.out;
+	test45.out,
+	test46.in,
+	test46.out;
 
 mainconfig
 	"" = "",

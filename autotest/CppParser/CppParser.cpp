@@ -48,7 +48,7 @@ void Test(const char *path, int filetype)
 		const Array<CppItem>& ma = base[i];
 		for(int j = 0; j < ma.GetCount(); j++) {
 			const CppItem& m = ma[j];
-			out << '\t' << CppItemKindAsString(m.kind) << ", name: " << m.name << ", qitem: " << m.qitem 
+			out << '\t' << CppItemKindAsString(m.kind) << ", name: " << m.name << ", qitem: " << m.qitem
 			            << ", qtype: " << m.qtype
 			            << ", qptype: " << m.qptype
 			            << ", natural: " << m.natural
@@ -56,7 +56,7 @@ void Test(const char *path, int filetype)
 			            << ", using " << m.using_namespaces;
 			if(m.isptr)
 				out << ", pointer";
-		 	out << "\n";
+			out << "\n";
 		}
 		out << "}\n";
 	}
@@ -89,6 +89,12 @@ void Test(const char *path, int filetype)
 
 CONSOLE_APP_MAIN {
 	StdLogSetup(LOG_COUT|LOG_FILE);
+	
+	if(CommandLine().GetCount()) {
+		int ii = atoi(CommandLine()[0]);
+		String p = GetDataFile("test" + AsString(ii) + ".in");
+		Test(p, FILE_H);
+	}
 
 	for(int i = 0; i < 10000; i++) {
 		String p = GetDataFile("test" + AsString(i) + ".in");
