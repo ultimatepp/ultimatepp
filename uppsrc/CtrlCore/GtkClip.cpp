@@ -43,7 +43,7 @@ void Ctrl::GtkGetClipData(GtkClipboard *clipboard, GtkSelectionData *selection_d
 {
 	VectorMap<String, ClipData>& target = ((Gclipboard *)user_data)->target;
 	LLOG("GtkGetClipData for " << target.GetKey(info));
-	GtkSelectionDataSet(selection_data, target.GetKey(info), target[info].Render());	
+	GtkSelectionDataSet(selection_data, target.GetKey(info), target[info].Render());
 }
 
 void ClearClipData(GtkClipboard *clipboard, gpointer) {}
@@ -77,7 +77,7 @@ GtkTargetList *Ctrl::CreateTargetList(const VectorMap<String, ClipData>& target)
 
 void Ctrl::Gclipboard::Put(const String& fmt, const ClipData& data)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("Gclipboard::Put " << fmt);
 
 	target.GetAdd(fmt) = data;
@@ -160,7 +160,7 @@ void PasteClip::GuiPlatformConstruct()
 void Ctrl::Gclipboard::Clear()
 {
 	gtk_clipboard_clear(clipboard);
-	target.Clear();
+	target.Clear();	
 }
 
 void ClearClipboard()
@@ -404,12 +404,17 @@ String Ctrl::RenderPrimarySelection(const Value& fmt)
 
 void Ctrl::SetSelectionSource(const char *fmts)
 {
-	GuiLock __; 
+	GuiLock __;
 	LLOG("SetSelectionSource " << UPP::Name(this) << ": " << fmts);
 	Vector<String> s = Split(fmts, ';');
 	sel_ctrl = this;
 	for(int i = 0; i < s.GetCount(); i++)
 		gselection().Put(s[i], ClipData(s[i], RenderPrimarySelection));
+}
+
+const char *ClipFmtsRTF()
+{
+	return "Rich Text Format;text/rtf;application/rtf";
 }
 
 }

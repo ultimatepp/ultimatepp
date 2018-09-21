@@ -310,7 +310,7 @@ String GetTextClip(const String& text, const String& fmt)
 	return Null;
 }
 
-String ReadClipboardText()
+	String ReadClipboardText()
 {
 #ifdef PLATFORM_WINCE
 	return ReadClipboardUnicodeText().ToString();
@@ -536,6 +536,12 @@ void PasteClip::GuiPlatformConstruct()
 {
 	dt = NULL;
 }
+
+const char *ClipFmtsRTF()
+{
+	return "Rich Text Format;text/rtf;application/rtf";
+}
+
 
 }
 

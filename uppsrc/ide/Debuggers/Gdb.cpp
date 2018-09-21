@@ -507,6 +507,9 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	watches.WhenAcceptEdit = THISBACK(ObtainData);
 	tab <<= THISBACK(ObtainData);
 
+#ifdef PLATFORM_OSX_0
+	Cmd("settings set prompt " GDB_PROMPT);
+#else
 	Cmd("set prompt " GDB_PROMPT);
 	Cmd("set disassembly-flavor intel");
 	Cmd("set exec-done-display off");
@@ -519,6 +522,7 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	Cmd("set print vtbl off");
 	Cmd("set print repeat 0");
 	Cmd("set print null-stop");
+#endif
 
 #ifdef PLATFORM_WIN32
 	Cmd("set new-console on");
