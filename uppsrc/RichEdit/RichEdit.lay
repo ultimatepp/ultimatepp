@@ -1,6 +1,6 @@
 LAYOUT(ParaLayout, 488, 380)
 	ITEM(LabelBox, dv___0, SetLabel(t_("Alignment")).LeftPosZ(8, 100).TopPosZ(8, 104))
-	ITEM(Switch, align, SetLabel(t_("Left\nCenter\nRight\nJustify")).LeftPosZ(16, 84).TopPosZ(24, 68))
+	ITEM(Switch, align, SetLabel(t_("Left\nCenter\nRight\nJustify")).LeftPosZ(16, 84).TopPosZ(24, 84))
 	ITEM(LabelBox, dv___2, SetLabel(t_("Spacing")).LeftPosZ(116, 176).TopPosZ(8, 104))
 	ITEM(Label, dv___3, SetLabel(t_("Before")).LeftPosZ(128, 88).TopPosZ(24, 19))
 	ITEM(UnitEdit, before, LeftPosZ(216, 68).TopPosZ(24, 19))

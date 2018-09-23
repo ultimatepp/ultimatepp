@@ -14,8 +14,8 @@ Image Coco_ThemeImage(Color bg, int cx, int cy, int margin, int type,
                       int value, int state, bool focus)
 {
 	Size isz(cx + 2 * margin, cy + 2 * margin);
-	ImageDraw iw(isz);
-	iw.DrawRect(isz, bg);
+	ImageDraw iw(DPI(isz));
+	iw.DrawRect(DPI(isz), bg);
 	Coco_ThemePaint(iw.GetCGHandle(), Rect(margin, margin, cx, cy), type, value, state, focus);
 	return Hot3(iw);
 }
@@ -52,10 +52,10 @@ Color AvgColor(const Image& m, int margin = 0)
 void SOImages(int imli, int type, int value)
 {
 	Image h[4];
-	h[0] = Coco_ThemeImage(DPI(20), DPI(20), 10, type, value, CTRL_NORMAL);
-	h[1] = Coco_ThemeImage(DPI(20), DPI(20), 10, type, value, CTRL_HOT); // same as Normal
-	h[2] = Coco_ThemeImage(DPI(20), DPI(20), 10, type, value, CTRL_PRESSED);
-	h[3] = Coco_ThemeImage(DPI(20), DPI(20), 10, type, value, CTRL_DISABLED);
+	h[0] = Coco_ThemeImage(20, 20, 10, type, value, CTRL_NORMAL);
+	h[1] = Coco_ThemeImage(20, 20, 10, type, value, CTRL_HOT); // same as Normal
+	h[2] = Coco_ThemeImage(20, 20, 10, type, value, CTRL_PRESSED);
+	h[3] = Coco_ThemeImage(20, 20, 10, type, value, CTRL_DISABLED);
 	
 	AutoCrop(h, 4);
 	
@@ -65,10 +65,10 @@ void SOImages(int imli, int type, int value)
 
 void CocoButton(Image *h, int type, int value)
 {
-	h[0] = Coco_ThemeImage(DPI(40), DPI(32), 10, type, value, CTRL_NORMAL);
-	h[1] = Coco_ThemeImage(DPI(40), DPI(32), 10, type, value, CTRL_HOT); // same as Normal
-	h[2] = Coco_ThemeImage(DPI(40), DPI(32), 10, type, value, CTRL_PRESSED);
-	h[3] = Coco_ThemeImage(DPI(40), DPI(32), 10, type, value, CTRL_DISABLED);
+	h[0] = Coco_ThemeImage(40, 32, 10, type, value, CTRL_NORMAL);
+	h[1] = Coco_ThemeImage(40, 32, 10, type, value, CTRL_HOT); // same as Normal
+	h[2] = Coco_ThemeImage(40, 32, 10, type, value, CTRL_PRESSED);
+	h[3] = Coco_ThemeImage(40, 32, 10, type, value, CTRL_DISABLED);
 
 	AutoCrop(h, 4);
 	
@@ -135,7 +135,6 @@ void ChHostSkin()
 	DUMP(Coco_Metric(19)); // kThemeMetricPushButtonHeight
 
 	int button_height = Coco_Metric(19); // kThemeMetricPushButtonHeight
-	
 
 	SwapOKCancel_Write(true);
 
@@ -198,19 +197,20 @@ void ChHostSkin()
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		s.arrowsize = 0; // no arrows
 		s.through = true;
-		s.barsize = s.thumbwidth = Coco_Metric(0); // kThemeMetricScrollBarWidth
+		int sz = Coco_Metric(0);
+		s.barsize = s.thumbwidth = DPI(sz); // kThemeMetricScrollBarWidth
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
 			s.vupper[status] = s.vlower[status] =
-				Hot3(Coco_ThemeImage(SColorFace(), s.barsize, 40, 0, COCO_SCROLLTRACK, 0, status));
-			Image thumb = Coco_ThemeImage(s.barsize, 50, 0, COCO_SCROLLTHUMB, 0, status);
+				Hot3(Coco_ThemeImage(SColorFace(), sz, 40, 0, COCO_SCROLLTRACK, 0, status));
+			Image thumb = Coco_ThemeImage(sz, 50, 0, COCO_SCROLLTHUMB, 0, status);
 			Rect bounds = FindBounds(thumb);
 			thumb = Crop(thumb, Rect(0, bounds.top, thumb.GetWidth(), bounds.bottom));
 			thumb = AddMargins(thumb, 0, 1, 0, 1, RGBAZero());
 			s.vthumb[status] = Hot3(thumb);
 
 			s.hupper[status] = s.hlower[status] =
-				Hot3(Coco_ThemeImage(SColorFace(), 40, s.barsize, 0, COCO_SCROLLTRACK, 1, status));
-			thumb = Coco_ThemeImage(50, s.barsize, 0, COCO_SCROLLTHUMB, 1, status);
+				Hot3(Coco_ThemeImage(SColorFace(), 40, sz, 0, COCO_SCROLLTRACK, 1, status));
+			thumb = Coco_ThemeImage(50, sz, 0, COCO_SCROLLTHUMB, 1, status);
 			bounds = FindBounds(thumb);
 			thumb = Crop(thumb, Rect(bounds.left, 0, bounds.right, thumb.GetHeight()));
 			thumb = AddMargins(thumb, 1, 0, 1, 0 , RGBAZero());

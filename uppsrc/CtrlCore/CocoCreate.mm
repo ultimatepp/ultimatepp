@@ -80,7 +80,7 @@ bool Upp::Ctrl::IsWndForeground() const
 
 NSRect DesktopRect(const Upp::Rect& r)
 {
-	double scalei = Upp::Ctrl::InvScale();
+	double scalei = 1.0 / Upp::DPI(1);
 	return NSMakeRect(scalei * r.left,
 	                  scalei * (Upp::Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight()),
 	                  scalei * r.GetWidth(), scalei * r.GetHeight());
@@ -161,7 +161,7 @@ void Upp::Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 	LLOG("Invalidate Rect " << r);
 	if(top)
-		[top->coco->view setNeedsDisplayInRect:(NSRect)MakeCGRect(r)];
+		[top->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r)];
 }
 
 void Upp::Ctrl::WndScrollView(const Rect& r, int dx, int dy)
@@ -266,7 +266,9 @@ void Upp::TopWindow::SyncCaption()
 
 CGSize MMFrameSize(Upp::Size sz, Upp::dword style)
 {
-	return [NSWindow frameRectForContentRect:(NSRect)CGRectMake(100, 100, sz.cx, sz.cy) styleMask:style].size;
+	double scale = 1.0 / Upp::DPI(1);
+	return [NSWindow frameRectForContentRect:
+				(NSRect)CGRectMake(100, 100, scale * sz.cx, scale * sz.cy) styleMask:style].size;
 }
 
 void Upp::TopWindow::SyncSizeHints()

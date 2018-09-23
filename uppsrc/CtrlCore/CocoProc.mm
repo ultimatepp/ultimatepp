@@ -190,7 +190,7 @@ struct MMImp {
 
 -(void)drawRect:(NSRect)r {
 	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
-	Upp::MMImp::Paint(ctrl, w, MakeRect(r));
+	Upp::MMImp::Paint(ctrl, w, Upp::DPI(1) * MakeRect(r));
 }
 
 - (void)mouseDown:(NSEvent *)e {

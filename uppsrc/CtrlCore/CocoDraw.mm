@@ -151,7 +151,7 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 	if(cr.IsEmpty())
 		return false;
 	return true;
-	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(Ctrl::InvScale() * cr)] : true;
+	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(1.0 / DPI(1) * cr)] : true;
 }
 
 Rect SystemDraw::GetPaintRect() const
