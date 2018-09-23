@@ -26,18 +26,17 @@ void Ide::UpgradeTheIDE()
 	targetmode = 1;
 
 	Clean();
-	if(!Build())
-		return;
-
-	FileDelete(bakpath);
-	if(FileExists(bakpath))
-		Exclamation("Unable to delete&" + bakpath);
-	else {
-		PutVerbose("Moving " + idepath + " to " + bakpath);
-		FileMove(idepath, bakpath);
-		PutVerbose("Moving " + newpath + " to " + idepath);
-		FileMove(newpath, idepath);
-		PutConsole("Upgrade finished, please restart theide.");
+	if(Build()) {
+		FileDelete(bakpath);
+		if(FileExists(bakpath))
+			Exclamation("Unable to delete&" + bakpath);
+		else {
+			PutVerbose("Moving " + idepath + " to " + bakpath);
+			FileMove(idepath, bakpath);
+			PutVerbose("Moving " + newpath + " to " + idepath);
+			FileMove(newpath, idepath);
+			PutConsole("Upgrade finished, please restart theide.");
+		}
 	}
 
 	LoadFromString(release, tmbak);

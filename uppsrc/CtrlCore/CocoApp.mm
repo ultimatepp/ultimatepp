@@ -7,9 +7,6 @@
 int  Upp::Ctrl::WndCaretTime;
 bool Upp::Ctrl::WndCaretVisible;
 
-int    Upp::Ctrl::scale;
-double Upp::Ctrl::scalei;
-
 static NSAutoreleasePool *main_coco_pool;
 static NSEvent           *current_event;
 
@@ -44,6 +41,10 @@ void SyncPopupFocus(NSWindow *win)
 	}
 }
 
+namespace Upp {
+	extern const char *sClipFmtsRTF;
+};
+
 void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 {
 	Ctrl::GlobalBackBuffer();
@@ -67,18 +68,15 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	
-	Ctrl::scale = Ctrl::scalei = 1;
-
-/*	Ctrl::SetUHDEnabled(true);
+	Ctrl::SetUHDEnabled(true);
 
 	for (NSScreen *screen in [NSScreen screens])
-		if([screen backingScaleFactor] > 1) {
+		if([screen backingScaleFactor] > 1 && Ctrl::IsUHDEnabled()) {
 			SetUHDMode(true);
-			Ctrl::scale = 2;
-			Ctrl::scalei = 0.5;
 			break;
 		}
-*/	Font::SetDefaultFont(StdFont(fceil(DPI([sysfont pointSize]))));
+
+	Font::SetDefaultFont(StdFont(fceil(DPI([sysfont pointSize]))));
 	
 	GUI_DblClickTime_Write(1000 * NSEvent.doubleClickInterval);
 
@@ -92,7 +90,9 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	      return e;
     }];
     
-    extern const char *Upp::sClipFmtsRTF; Upp::sClipFmtsRTF = "rtf";
+    Upp::sClipFmtsRTF = "rtf";
+    
+    Upp::Ctrl::Csizeinit();
 }
 
 void Upp::CocoExit()
@@ -293,14 +293,14 @@ Upp::Rect MakeScreenRect(NSScreen *screen, CGRect r)
 Upp::Rect Upp::Ctrl::GetPrimaryWorkArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
-		return scale * MakeScreenRect(screen, [screen visibleFrame]);
+		return DPI(1) * MakeScreenRect(screen, [screen visibleFrame]);
 	return Rect(0, 0, 1024, 768);
 }
 
 Upp::Rect Upp::Ctrl::GetPrimaryScreenArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
-		return scale * MakeScreenRect(screen, [screen frame]);
+		return DPI(1) * MakeScreenRect(screen, [screen frame]);
 	return Rect(0, 0, 1024, 768);
 }
 
@@ -331,7 +331,7 @@ void Upp::Ctrl::GuiPlatformGetTopRect(Rect& r) const
 void Upp::MMCtrl::SyncRect(CocoView *view)
 {
 	NSWindow *win = [view window];
-	view->ctrl->SetWndRect(Ctrl::Scale() *
+	view->ctrl->SetWndRect(DPI(1) *
 	                       MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
 }
 

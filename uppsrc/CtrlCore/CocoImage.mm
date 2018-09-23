@@ -204,7 +204,12 @@ void ImageDraw::Init(int cx, int cy)
 	                                               colorSpace, kCGImageAlphaPremultipliedFirst,
 	                                               NULL, NULL), NULL);
 	CGContextTranslateCTM(cgHandle, 0, cy);
-	CGContextScaleCTM(cgHandle, 1, -1);
+	if(IsUHDMode()) {
+		CGContextScaleCTM(cgHandle, 2, -2);
+		CGContextTranslateCTM(cgHandle, 0, -cy / 2.0);
+	}
+	else
+		CGContextScaleCTM(cgHandle, 1, -1);
 }
 
 ImageDraw::ImageDraw(Size sz)
