@@ -80,43 +80,43 @@ int PROTECT_PatternSize(CodeSequence seq);
 #define PROTECT_START_FUNC(GetCypher) \
 	volatile static bool __decrypted = false; \
 	PROTECT_DECRYPT_CODE(__decrypted, GetCypher); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY1()
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY1()
 	
 #define PROTECT_END_FUNC \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1()
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1()
 
 #define OBFUSCATE_START_FUNC \
 	Mutex __mutex; \
 	__mutex.Enter(); \
 	uint8_t *__hdr = NULL; \
 	PROTECT_DEOBFUSCATE(__hdr); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1()
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1()
 	
 #define  OBFUSCATE_END_FUNC \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY2(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY1(); \
-	PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY2(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY1(); \
+	Upp::PROTECT_DUMMY2(); \
 	PROTECT_OBFUSCATE(__hdr); \
 	__mutex.Leave()
 
