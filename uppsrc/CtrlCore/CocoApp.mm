@@ -76,6 +76,8 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	      SyncPopupFocus([e window]);
 	      return e;
     }];
+    
+    extern const char *Upp::sClipFmtsRTF; Upp::sClipFmtsRTF = "rtf";
 }
 
 void Upp::CocoExit()

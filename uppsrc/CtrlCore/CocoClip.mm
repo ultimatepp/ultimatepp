@@ -273,11 +273,6 @@ Vector<String> GetFiles(PasteClip& clip)
 	return f;
 }
 
-const char *ClipFmtsRTF()
-{
-	return "rtf";
-}
-
 };
 
 #endif

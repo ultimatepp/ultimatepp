@@ -289,4 +289,11 @@ INITBLOCK {
 	InitRichImage(GetImageClip, AcceptImage, GetImage, ClipFmtsImage);
 }
 
+const char *sClipFmtsRTF = "Rich Text Format;text/rtf;application/rtf";
+
+const char *ClipFmtsRTF()
+{
+	return sClipFmtsRTF;
+}
+
 }
