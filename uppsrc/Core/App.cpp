@@ -213,7 +213,6 @@ const Vector<String>& CommandLine()
 {
 	static Vector<String> cmd;
 	ONCELOCK {
-		byte cs = GetDefaultCharset();
 		auto& src = coreCmdLine__();
 		for(int i = 0; i < src.GetCount(); i++)
 			cmd.Add(src[i].ToString());

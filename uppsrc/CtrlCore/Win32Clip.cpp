@@ -537,12 +537,6 @@ void PasteClip::GuiPlatformConstruct()
 	dt = NULL;
 }
 
-const char *ClipFmtsRTF()
-{
-	return "Rich Text Format;text/rtf;application/rtf";
-}
-
-
 }
 
 #endif

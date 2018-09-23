@@ -304,14 +304,12 @@ bool Ctrl::ProcessEvent(const String& event)
 		}
 		if(p.Id("M")) {
 			Point pt = ReadPoint(p);
-			int64 tm = p.ReadInt64();
 			DoMouseFB(MOUSEMOVE, pt, 0, p);
 		}
 		else
 		if(p.Id("W")) {
 			double w = p.ReadDouble();
 			Point pt = ReadPoint(p);
-			int64 tm = p.ReadInt64();
 			DoMouseFB(MOUSEWHEEL, pt, w < 0 ? 120 : -120, p);
 		}
 		else
