@@ -4,20 +4,21 @@
 
 namespace Upp {
 
-void SystemDraw::Init(void *cgContext, int cy, void *view)
+void SystemDraw::Init(void *cgContext, void *view)
 {
 	handle = cgContext;
 	nsview = view;
-	top = cy;
 	Push();
 	CGContextSetBlendMode(cgHandle, kCGBlendModeNormal);
 	CGContextSetTextPosition(cgHandle, 0, 0);
     CGContextSetTextDrawingMode(cgHandle, kCGTextFill);
+	if(IsUHDMode())
+		CGContextScaleCTM(cgHandle, 0.5, 0.5);
 }
 
-SystemDraw::SystemDraw(void *cgContext, int cy, void *nsview)
+SystemDraw::SystemDraw(void *cgContext, void *nsview)
 {
-	Init(cgContext, cy, nsview);
+	Init(cgContext, nsview);
 }
 
 SystemDraw::~SystemDraw()
@@ -81,7 +82,7 @@ PointCG SystemDraw::Convert(int x, int y)
 	Point p = GetOffset(); // TODO: Optimize
 	x += p.x;
 	y += p.y;
-	return PointCG(x, top - y);
+	return PointCG(x, y);
 }
 
 RectCG SystemDraw::Convert(int x, int y, int cx, int cy)
@@ -89,7 +90,7 @@ RectCG SystemDraw::Convert(int x, int y, int cx, int cy)
 	Point p = GetOffset(); // TODO: Optimize
 	x += p.x;
 	y += p.y;
-	return RectCG(x, top - y - cy, cx, cy);
+	return RectCG(x, y, cx, cy);
 }
 
 RectCG SystemDraw::Convert(const Rect& r)
@@ -100,7 +101,7 @@ RectCG SystemDraw::Convert(const Rect& r)
 RectCG SystemDraw::MakeRectCG(const Rect& r) const
 {
 	Size sz = r.GetSize();
-	return RectCG(r.left, top - r.top - sz.cy, sz.cx, sz.cy);
+	return RectCG(r.left, r.top, sz.cx, sz.cy);
 }
 
 void SystemDraw::ClipCG(const Rect& r)
@@ -149,7 +150,8 @@ bool SystemDraw::IsPaintingOp(const Rect& r) const
 	cr.Intersect(GetClip());
 	if(cr.IsEmpty())
 		return false;
-	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(cr)] : true;
+	return true;
+	return nsview ? [(NSView *)nsview needsToDrawRect:MakeRectCG(Ctrl::InvScale() * cr)] : true;
 }
 
 Rect SystemDraw::GetPaintRect() const

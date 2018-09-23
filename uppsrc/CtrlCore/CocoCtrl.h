@@ -7,9 +7,13 @@ private:
                              Color color, int type, int animation);
 	friend void FinishDragRect(Ctrl& q);
 
+	static int                 scale;
+	static double              scalei;
 	static int                 WndCaretTime;
 	static bool                WndCaretVisible;
 	static void AnimateCaret();
+	
+	friend void CocoInit(int argc, const char **argv, const char **envptr);
 
 protected:
 	virtual void MMClose() {}
@@ -19,6 +23,8 @@ protected:
 public:
 	static void      EndSession()              {}
 	static bool      IsEndSession()            { return false; }
+	static int       Scale()                   { return scale; }
+	static double    InvScale()                { return scalei; }
 	
 	void  *GetNSWindow() const;
 	void  *GetNSView() const;

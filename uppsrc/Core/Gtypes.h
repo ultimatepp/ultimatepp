@@ -343,6 +343,7 @@ struct Rect_ : Moveable< Rect_<T> > {
 	friend Rect_ operator-(Rect_ a, Pt b)                   { return a -= b; }
 	friend Rect_ operator-(Rect_ a, const Rect_& b)         { return a -= b; }
 	friend Rect_ operator*(Rect_ a, T t)                    { return a *= t; }
+	friend Rect_ operator*(T t, Rect_ a)                    { return a *= t; }
 	friend Rect_ operator/(Rect_ a, T t)                    { return a /= t; }
 	friend Rect_ operator|(Rect_ a, Rect_ b)                { a.Union(b); return a; }
 	friend Rect_ operator&(Rect_ a, Rect_ b)                { a.Intersect(b); return a; }

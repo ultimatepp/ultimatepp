@@ -80,8 +80,10 @@ bool Upp::Ctrl::IsWndForeground() const
 
 NSRect DesktopRect(const Upp::Rect& r)
 {
-	return NSMakeRect(r.left, Upp::Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight(),
-	                  r.GetWidth(), r.GetHeight());
+	double scalei = Upp::Ctrl::InvScale();
+	return NSMakeRect(scalei * r.left,
+	                  scalei * (Upp::Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight()),
+	                  scalei * r.GetWidth(), scalei * r.GetHeight());
 }
 
 void *Upp::Ctrl::GetNSWindow() const
@@ -159,9 +161,7 @@ void Upp::Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 	LLOG("Invalidate Rect " << r);
 	if(top)
-		[top->coco->view
-		      setNeedsDisplayInRect:(NSRect)CGRectMake(r.left, GetRect().GetHeight() - r.top - r.GetHeight(),
-		                                               r.GetWidth(), r.GetHeight())];
+		[top->coco->view setNeedsDisplayInRect:(NSRect)MakeCGRect(r)];
 }
 
 void Upp::Ctrl::WndScrollView(const Rect& r, int dx, int dy)
@@ -264,14 +264,9 @@ void Upp::TopWindow::SyncCaption()
 	}
 }
 
-CGRect MMFrameRect(const Upp::Rect& r, Upp::dword style)
-{// TODO: Revert Y
-	return [NSWindow frameRectForContentRect:(NSRect)MakeCGRect(r, 1000) styleMask:style];
-}
-
 CGSize MMFrameSize(Upp::Size sz, Upp::dword style)
 {
-	return MMFrameRect(Upp::RectC(100, 100, sz.cx, sz.cy), style).size;
+	return [NSWindow frameRectForContentRect:(NSRect)CGRectMake(100, 100, sz.cx, sz.cy) styleMask:style].size;
 }
 
 void Upp::TopWindow::SyncSizeHints()
@@ -280,15 +275,9 @@ void Upp::TopWindow::SyncSizeHints()
 	if(top) {
 		NSWindow *window = top->coco->window;
 		Upp::dword style = GetMMStyle();
-		Size sz0 = GetRect().GetSize();
-		Size sz = sz0;
-		if(sizeable)
-			sz = GetMinSize();
-		[window setMinSize:MMFrameSize(sz, style)];
-		sz = sz0;
-		if(sizeable)
-			sz = GetMaxSize();
-		[window setMaxSize:MMFrameSize(sz, style)];
+		Size sz = GetRect().GetSize();
+		[window setMinSize:MMFrameSize(sizeable ? GetMinSize() : sz, style)];
+		[window setMaxSize:MMFrameSize(sizeable ? GetMaxSize() : sz, style)];
 	}
 }
 
@@ -305,7 +294,7 @@ void Upp::Ctrl::WndSetPos(const Upp::Rect& rect)
 	if(top)
 		[top->coco->window setFrame:
 			[top->coco->window frameRectForContentRect:DesktopRect(rect)]
-		 display:YES];
+			display:YES];
 }
 
 void Upp::TopWindow::SerializePlacement(Stream& s, bool reminimize)

@@ -60,7 +60,12 @@ void SystemDraw::SysDrawImageOp(int x, int y, const Image& img, Color color)
 	m.img = IsNull(color) ? img : CachedSetColorKeepAlpha(img, color); // TODO: Can setcolor be optimized out? By masks e.g.?
 	ImageSysData& sd = cg_image_cache.Get(m);
 	Size isz = img.GetSize();
-	CGContextDrawImage(cgHandle, Convert(x, y, isz.cx, isz.cy), sd.cgimg);
+	CGContextSaveGState(cgHandle);
+	Point off = GetOffset();
+	CGContextTranslateCTM(cgHandle, x + off.x, y + off.y);
+	CGContextScaleCTM(cgHandle, 1.0, -1.0);
+	CGContextDrawImage(cgHandle, CGRectMake(0, -isz.cy, isz.cx, isz.cy), sd.cgimg);
+    CGContextRestoreGState(cgHandle);
 	cg_image_cache.Shrink(4 * 1024 * 768, 1000); // Cache must be after Paint because of PaintOnly!
 }
 
@@ -197,7 +202,9 @@ void ImageDraw::Init(int cx, int cy)
 
 	SystemDraw::Init(CGBitmapContextCreateWithData(~ib, cx, cy, 8, cx * sizeof(RGBA),
 	                                               colorSpace, kCGImageAlphaPremultipliedFirst,
-	                                               NULL, NULL), cy, NULL);
+	                                               NULL, NULL), NULL);
+	CGContextTranslateCTM(cgHandle, 0, cy);
+	CGContextScaleCTM(cgHandle, 1, -1);
 }
 
 ImageDraw::ImageDraw(Size sz)

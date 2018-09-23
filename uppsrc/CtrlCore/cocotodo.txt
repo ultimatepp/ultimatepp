@@ -1,11 +1,24 @@
 sooner:
 
-- Bazaar GetAdapterInfo
+* UHD
+- ClipFmt<Image>
 - initial focus in uword
-- Ctrl gets stuck
+- Ctrl key gets stuck
 - fix package organiser link options (joining link options missing space)
+- perhaps better UTI names
+- improve spinbuttons
+- Find in files - wrong ascent in results	
+- GetPrimaryScreenArea
 
 later:
+
+- ch progress
+- ch slider
+- ch tabctrl
+
+- Warning: Terminal '/usr/bin/xterm' not found, executing in background.
+
+- Bazaar GetAdapterInfo
 
 - theide about scrollbar right bottom position capture trouble
 
@@ -13,11 +26,9 @@ later:
 - fullscreen
 
 - ide seems to by slowing down (or is slow sometimes?)
-- apple debugger
 - progress for assist opens too much, probably problem with delay?
 - package organizer initial size too small
 - fullscreen mode issues
-- CommonFontInfo GetFontInfoSys(Font font) metrics
 - GetGlyphInfoSys metrics
 - EndSession ?
 - event flags
@@ -29,16 +40,18 @@ later:
 
 - SerializePlacement - probably improve
 
+* apple debugger
 * Mac menu
-* Clipboard types
 * Drag&Drop
-* System colors
 * Chameleon
 
 - implement DrawPoly... patterns
 
 done:
 
+- CommonFontInfo GetFontInfoSys(Font font) metrics
+* System colors
+- Clipboard types
 - keynames apple style
 - clang install
 - Information etc.. Images

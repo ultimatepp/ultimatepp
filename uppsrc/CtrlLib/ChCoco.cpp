@@ -17,7 +17,7 @@ Image Coco_ThemeImage(Color bg, int cx, int cy, int margin, int type,
 	ImageDraw iw(isz);
 	iw.DrawRect(isz, bg);
 	Coco_ThemePaint(iw.GetCGHandle(), Rect(margin, margin, cx, cy), type, value, state, focus);
-	return Hot3(MirrorVert(iw));
+	return Hot3(iw);
 }
 
 Image Coco_ThemeImage(int cx, int cy, int margin, int type, int value, int state, bool focus)
@@ -129,7 +129,6 @@ void ChHostSkin()
 	ChReset();
 
 	GUI_GlobalStyle_Write(GUISTYLE_XP);
-
 
 	DUMP(Coco_Metric(0)); // kThemeMetricScrollBarWidth
 	DUMP(Coco_Metric(7)); // kThemeMetricFocusRectOutset

@@ -66,7 +66,7 @@ struct MMImp {
 		}
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
 		Rect r = view->ctrl->GetRect();
-		Upp::Point p(np.x, r.GetHeight() - np.y);
+		Upp::Point p(DPI(np.x), DPI(np.y));
 		coco_mouse_pos = p + r.TopLeft();
 		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
@@ -184,11 +184,13 @@ struct MMImp {
 
 @implementation CocoView
 
+-(BOOL)isFlipped {
+	return YES;
+}
+
 -(void)drawRect:(NSRect)r {
-	int h = ctrl->GetRect().GetHeight();
-	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], h, self);
-	Upp::MMImp::Paint(ctrl, w, Upp::RectC(r.origin.x, h - r.origin.y - r.size.height,
-	                                      r.size.width, r.size.height));
+	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
+	Upp::MMImp::Paint(ctrl, w, MakeRect(r));
 }
 
 - (void)mouseDown:(NSEvent *)e {
@@ -237,7 +239,7 @@ struct MMImp {
 
 - (void)keyUp:(NSEvent *)e {
 	if(!Upp::MMImp::KeyEvent(ctrl, e, Upp::K_KEYUP))
-		[super keyUp:e];
+			[super keyUp:e];
 }
 
 - (void)flagsChanged:(NSEvent *)e {
