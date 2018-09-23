@@ -38,8 +38,7 @@ private:
 	Vector<Point> offset;
 	Vector<Rect>  clip;
 
-	int   top;
-	Color fill = Null;
+	Color  fill = Null;
 	
 	void   Push();
 	void   Pop();
@@ -49,7 +48,6 @@ private:
 	
 	RectCG MakeRectCG(const Rect& r) const;
 	void   ClipCG(const Rect& r);
-	void   FlipY(int& y)           { y = top - y; }
 	Rect   GetClip() const         { return clip.GetCount() ? clip.Top() : Rect(-999999, -999999, 999999, 999999); }
 	Point  GetOffset() const       { return offset.GetCount() ? offset.Top() : Point(0, 0); }
 	RectCG Convert(int x, int y, int cx, int cy);
@@ -59,7 +57,7 @@ private:
 	void  Set(Color c);
 	void  SetStroke(Color c);
 
-	void Init(void *cgContext, int cy, void *nsview);
+	void Init(void *cgContext, void *nsview);
 
 	void Stroke(int width, Color color, bool fill);
 	void DoPath(const Point *pp, const Point *end);
@@ -77,7 +75,7 @@ public:
 	bool     CanSetSurface()          { return false; }
 	static void Flush() {}
 
-	SystemDraw(void *cgContext, int cy, void *nsview);
+	SystemDraw(void *cgContext, void *nsview);
 	~SystemDraw();
 };
 

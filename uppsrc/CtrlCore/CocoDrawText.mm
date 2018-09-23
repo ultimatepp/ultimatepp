@@ -279,21 +279,16 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	CGContextSetFont(cgHandle, cgFont);
 
 	Point off = GetOffset();
-	if(angle || synth) {
-		CGAffineTransform tm = CGAffineTransformMakeTranslation(x + off.x, top - y - off.y);
-		tm = CGAffineTransformRotate(tm, M_2PI * angle / 3600);
-		x = 0;
-		y = -font.GetAscent();
-		if(font.IsItalic() && synth) {
-			x += font.GetDescent();
-			tm = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0.2, 1, 0, 0), tm);
-		}
-		CGContextSetTextMatrix(cgHandle, tm);
+	CGAffineTransform tm = CGAffineTransformMakeTranslation(x + off.x, y + off.y);
+	tm = CGAffineTransformScale(tm, 1, -1);
+	tm = CGAffineTransformRotate(tm, M_2PI * angle / 3600);
+	x = 0;
+	y = -font.GetAscent();
+	if(font.IsItalic() && synth) {
+		x += font.GetDescent();
+		tm = CGAffineTransformConcat(CGAffineTransformMake(1, 0, 0.2, 1, 0, 0), tm);
 	}
-	else {
-		x += off.x;
-		y = top - y - font.GetAscent() - off.y;
-	}
+	CGContextSetTextMatrix(cgHandle, tm);
 
 	int nn = (1 + (synth && font.IsBold())) * n;
 	Buffer<CGGlyph> g(nn);
@@ -316,12 +311,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 	}
 
 	CGContextSetFontSize(cgHandle, font.GetHeight());
-    CGContextShowGlyphsAtPositions(cgHandle, g, p, nn);
-    
-    if(angle || synth)
-		CGContextSetTextMatrix(cgHandle, CGAffineTransformIdentity);
-}
-
+    CGContextShowGlyphsAtPositions(cgHandle, g, p, nn); }
 };
 
 #endif

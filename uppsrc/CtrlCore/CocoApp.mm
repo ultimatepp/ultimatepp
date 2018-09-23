@@ -7,6 +7,9 @@
 int  Upp::Ctrl::WndCaretTime;
 bool Upp::Ctrl::WndCaretVisible;
 
+int    Upp::Ctrl::scale;
+double Upp::Ctrl::scalei;
+
 static NSAutoreleasePool *main_coco_pool;
 static NSEvent           *current_event;
 
@@ -63,7 +66,19 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
     
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
-	Font::SetDefaultFont(StdFont(fround([sysfont pointSize])));
+	
+	Ctrl::scale = Ctrl::scalei = 1;
+
+/*	Ctrl::SetUHDEnabled(true);
+
+	for (NSScreen *screen in [NSScreen screens])
+		if([screen backingScaleFactor] > 1) {
+			SetUHDMode(true);
+			Ctrl::scale = 2;
+			Ctrl::scalei = 0.5;
+			break;
+		}
+*/	Font::SetDefaultFont(StdFont(fceil(DPI([sysfont pointSize]))));
 	
 	GUI_DblClickTime_Write(1000 * NSEvent.doubleClickInterval);
 
@@ -269,23 +284,23 @@ Upp::Rect Upp::Ctrl::GetVirtualScreenArea()
 	return GetPrimaryWorkArea();
 }
 
+Upp::Rect MakeScreenRect(NSScreen *screen, CGRect r)
+{
+	r.origin.y = [screen frame].size.height - r.origin.y - r.size.height;
+	return MakeRect(r);
+}
+
 Upp::Rect Upp::Ctrl::GetPrimaryWorkArea()
 {
-	for (NSScreen *screen in [NSScreen screens]) {
-		Rect f = MakeRect([screen frame]);
-		Rect v = MakeRect([screen visibleFrame], f.GetHeight());
-//		double scale = [screen backingScaleFactor]; // TODO DPI
-		return v;
-	}
+	for (NSScreen *screen in [NSScreen screens])
+		return scale * MakeScreenRect(screen, [screen visibleFrame]);
 	return Rect(0, 0, 1024, 768);
 }
 
 Upp::Rect Upp::Ctrl::GetPrimaryScreenArea()
 {
-	for (NSScreen *screen in [NSScreen screens]) {
-		Rect f = MakeRect([screen frame]);
-		return f;
-	}
+	for (NSScreen *screen in [NSScreen screens])
+		return scale * MakeScreenRect(screen, [screen frame]);
 	return Rect(0, 0, 1024, 768);
 }
 
@@ -316,8 +331,8 @@ void Upp::Ctrl::GuiPlatformGetTopRect(Rect& r) const
 void Upp::MMCtrl::SyncRect(CocoView *view)
 {
 	NSWindow *win = [view window];
-	view->ctrl->SetWndRect(
-		MakeRect([win contentRectForFrameRect: [win frame]], [[win screen] frame].size.height));
+	view->ctrl->SetWndRect(Ctrl::Scale() *
+	                       MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
 }
 
 void Upp::AppendClipboardText(const String& s)
@@ -338,7 +353,11 @@ Upp::ViewDraw::ViewDraw(Ctrl *ctrl)
 	Rect tr = ctrl->GetTopCtrl()->GetScreenRect();
 	Rect r = ctrl->GetScreenView();
 	NSGraphicsContext *gc = [NSGraphicsContext graphicsContextWithWindow:ctrl->top->coco->window];
-	Init([gc CGContext], tr.GetHeight(), NULL);
+	Init([gc CGContext], NULL);
+
+	CGContextTranslateCTM(cgHandle, 0, tr.GetHeight());
+	CGContextScaleCTM(cgHandle, 1, -1);
+
 	Clipoff(Rect(r.TopLeft() - tr.TopLeft(), r.GetSize()));
 }
 
