@@ -1,6 +1,6 @@
 #include "ide.h"
 
-void SetupSVNTrunk()
+bool SetupSVNTrunk()
 {
 	WithSetupSVNLayout<TopWindow> dlg;
 	CtrlLayoutOKCancel(dlg, "Checkout U++ trunk");
@@ -34,7 +34,7 @@ void SetupSVNTrunk()
 	String dir, tempdir;
 	for(;;) {
 		if(dlg.Run() != IDOK)
-			return;
+			return false;
 		console.Clear();
 		dir = ~dlg.dir;
 		tempdir = AppendFileName(GetFileFolder(dir), "temp");
@@ -105,4 +105,5 @@ void SetupSVNTrunk()
 	MakeAssembly(myapps, "MyApps-bazaar");
 
 	console.Perform();
+	return true;
 }
