@@ -17,10 +17,10 @@ class XMLCommand : DeepCopyOption<XMLCommand>
 		Size ctrlSize;
 		
 		// associated callback, if any
-		Callback callback;
+		Function<void()> callback;
 		
 		// generated menu, if any
-		Callback1<XMLToolBar &> menuCallback;
+		Function<void(XMLToolBar &)> menuCallback;
 		
 		// a plece to store the generated menu toolbar
 		// it MUJST be persistent, as system require it after generation
@@ -44,17 +44,17 @@ class XMLCommand : DeepCopyOption<XMLCommand>
 		XMLCommand(XMLCommand rval_ c);
 		XMLCommand(XMLCommand const &c, int);
 		
-		Ctrl *GetCtrl(void) const									{ return control;		}
-		Size const &GetCtrlSize(void) const							{ return ctrlSize;		}
-		Callback const &GetCallback(void) const						{ return callback;		}
-		Callback1<XMLToolBar &> const &GetMenuCallback(void) const	{ return menuCallback;	}
+		Ctrl *GetCtrl(void) const										{ return control;		}
+		Size const &GetCtrlSize(void) const								{ return ctrlSize;		}
+		Function<void()> const &GetCallback(void) const					{ return callback;		}
+		Function<void(XMLToolBar &)> const &GetMenuCallback(void) const	{ return menuCallback;	}
 		XMLToolBar const &GetMenuTb(void);
 
-		bool GetIsEnabled(void) const								{ return enabled;		}
-		bool GetIsCustom(void) const								{ return custom;		}
+		bool GetIsEnabled(void) const									{ return enabled;		}
+		bool GetIsCustom(void) const									{ return custom;		}
 
-		String const &GetCommandString(void) const					{ return commandString; }
-		XMLCommand &SetCommandString(String const &s)				{ commandString = s; return *this; }
+		String const &GetCommandString(void) const						{ return commandString; }
+		XMLCommand &SetCommandString(String const &s)					{ commandString = s; return *this; }
 		
 		bool operator==(XMLCommand &other) const;
 		

@@ -436,7 +436,7 @@ template<class T> void WithXMLMenu<T>::SetMenuBar0(Bar &bar, int mnIdx, Array<XM
 		if(id.IsEmpty() && item.GetInternal())
 		{
 			String label = item.GetLabel();
-			Callback handler = item.GetInternal();
+			Function<void()> handler = item.GetInternal();
 			Image const &img = item.GetIcon();
 			bar.Add(label, img, handler);
 			continue;
@@ -451,7 +451,7 @@ template<class T> void WithXMLMenu<T>::SetMenuBar0(Bar &bar, int mnIdx, Array<XM
 		XMLCommand &cmd = commands.Get(id);
 		
 		// check wether it's a generated menu "command"
-		Callback1<XMLToolBar &> menuCallback = cmd.GetMenuCallback();
+		Function<void(XMLToolBar &)> menuCallback = cmd.GetMenuCallback();
 		if(menuCallback)
 		{
 			SetMenuBar0(bar, mnIdx, &cmd.GetMenuTb().GetItems());
@@ -460,7 +460,7 @@ template<class T> void WithXMLMenu<T>::SetMenuBar0(Bar &bar, int mnIdx, Array<XM
 		
 		// get callback from command
 		bool isCustom = cmd.GetIsCustom();
-		Callback handler;
+		Function<void()> handler;
 		if(isCustom)
 		{
 			String cmds = cmd.GetCommandString();
@@ -522,7 +522,7 @@ template<class T> void WithXMLMenu<T>::SetToolBar0(Bar &bar, int tbIdx, Array<XM
 		
 		// get callback from command
 		bool isCustom = cmd.GetIsCustom();
-		Callback handler;
+		Function<void()> handler;
 		if(isCustom)
 			handler = THISBACK1(callUserHandler, cmd.GetCommandString());
 		else

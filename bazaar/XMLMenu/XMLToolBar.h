@@ -47,18 +47,18 @@ class XMLToolBarItem : DeepCopyOption<XMLToolBarItem>
 		
 		// internal command, if any
 		// if set, the item is generated on the fly and not tied to a command
-		Callback internalCb;
+		Function<void()> internalCb;
 		
 	public:
-		String const &GetId(void) const				{ return commandId; }
-		String const &GetLabel(void) const			{ return label; }
-		Image const &GetIcon(void) const			{ return icon; }
-		String const &GetTooltip(void) const		{ return tooltip; }
-		XMLToolBar const &GetSubMenu(void) const	{ return *subMenu; }
-		bool IsSubMenu(void) const					{ return !subMenu.IsEmpty(); }
-		bool IsSeparator(void) const				{ return isSeparator; }
-		bool IsInternal(void) const					{ return internalCb; }
-		Callback const &GetInternal(void) const		{ return internalCb; }
+		String const &GetId(void) const					{ return commandId; }
+		String const &GetLabel(void) const				{ return label; }
+		Image const &GetIcon(void) const				{ return icon; }
+		String const &GetTooltip(void) const			{ return tooltip; }
+		XMLToolBar const &GetSubMenu(void) const		{ return *subMenu; }
+		bool IsSubMenu(void) const						{ return !subMenu.IsEmpty(); }
+		bool IsSeparator(void) const					{ return isSeparator; }
+		bool IsInternal(void) const						{ return internalCb; }
+		Function<void()> const &GetInternal(void) const	{ return internalCb; }
 		
 		// xml support
 		void Xmlize(XmlIO xml);
