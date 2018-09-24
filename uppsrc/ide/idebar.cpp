@@ -390,9 +390,10 @@ void Ide::Setup(Bar& menu)
 	    .Help("Setups/fixes build methods and basic assemblies..");
 #endif
 	menu.Add("Checkout and setup U++ SVN trunk sources..", [=] {
-		SetupSVNTrunk();
-		IdeAgain = true;
-		Break();
+		if(SetupSVNTrunk()) {
+			IdeAgain = true;
+			Break();
+		}
 	});
 
 	const Workspace& wspc = IdeWorkspace();
