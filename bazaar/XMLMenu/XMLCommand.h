@@ -81,29 +81,52 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		
 		// adds a custom command
 		XMLCommands &Add(String const &id, String const &cmd);
+		XMLCommands &Add(const char *id, const char *cmd)
+			{ return Add(String(id), String(cmd)); }
 		
 		// adds a built-in command with given callback
-		XMLCommands &Add(String const &id, Callback cb);
+		XMLCommands &Add(String const &id, Function<void()> cb);
+		XMLCommands &Add(const char *id, Function<void()> cb)
+			{ return Add(String(id), cb); }
 		
 		// adds a generated submenu "command"
-		XMLCommands &Add(String const &id, Callback1<XMLToolBar &> mc);
+		XMLCommands &Add(String const &id, Function<void(XMLToolBar &)> mc);
+		XMLCommands &Add(const char *id, Function<void(XMLToolBar &)> mc)
+			{ return Add(String(id), mc); }
 		
 		// adds a control
 		XMLCommands &Add(String const &id, Ctrl &ctrl);
+		XMLCommands &Add(const char *id, Ctrl &ctrl)
+			{ return Add(String(id), ctrl); }
 		XMLCommands &Add(String const &id, Ctrl &ctrl, Size const &size);
+		XMLCommands &Add(const char *id, Ctrl &ctrl, Size const &size)
+			{ return Add(String(id), ctrl, size); }
 		
 		// adds a custom command, allows enable/disable item
 		XMLCommands &Add(bool enabled, String const &id, String const &cmd);
+		XMLCommands &Add(bool enabled, const char *id, String const &cmd)
+			{ return Add(enabled, String(id), cmd); }
+		XMLCommands &Add(bool enabled, String const &id, const char *cmd)
+			{ return Add(enabled, id, String(cmd)); }
 		
 		// adds a built-in command with given callback, allows enable/disable item
-		XMLCommands &Add(bool enabled, String const &id, Callback cb);
+		XMLCommands &Add(bool enabled, String const &id, Function<void()> cb);
+		XMLCommands &Add(bool enabled, const char *id, Function<void()> cb)
+			{ return Add(enabled, String(id), cb); }
 		
 		// adds a generated submenu "command", allows enable/disable item
-		XMLCommands &Add(bool enabled, String const &id, Callback1<XMLToolBar &> mc);
+		XMLCommands &Add(bool enabled, String const &id, Function<void(XMLToolBar &)> mc);
+		XMLCommands &Add(bool enabled, const char *id, Function<void(XMLToolBar &)> mc)
+			{ return Add(enabled, String(id), mc); }
 		
 		// adds a control, allows enable/disable item
 		XMLCommands &Add(bool enabled, String const &id, Ctrl &ctrl);
+		XMLCommands &Add(bool enabled, const char *id, Ctrl &ctrl)
+			{ return Add(enabled, String(id), ctrl); }
+
 		XMLCommands &Add(bool enabled, String const &id, Ctrl &ctrl, Size const &size);
+		XMLCommands &Add(bool enabled, const char *id, Ctrl &ctrl, Size const &size)
+			{ return Add(enabled, String(id), ctrl, size); }
 		
 		// removes a command
 		XMLCommands &Remove(int idx) { commands.Remove(idx); return *this; }
@@ -119,7 +142,7 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		int Find(String const &id) const { return commands.Find(id); }
 		
 		// sets the commands by a callback
-		void Set(Callback1<XMLCommands &> commands);
+		void Set(Function<void(XMLCommands &)> commands);
 		
 		// checks wether a command is present given its id
 		bool Has(String const &id) const { return commands.Find(id) >= 0; }

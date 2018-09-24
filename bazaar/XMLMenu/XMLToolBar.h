@@ -118,31 +118,115 @@ class XMLToolBar : DeepCopyOption<XMLToolBar>
 		XMLToolBar &SetPosition(Point p)				{ position = p; return *this; }
 
 		XMLToolBar &Add(String const &commandId);
+		XMLToolBar &Add(const char *commandId)
+			{ return Add(String(commandId)); }
+			
 		XMLToolBar &Add(String const &commandId, String const &label);
+		XMLToolBar &Add(const char *commandId, const char *label)
+			{ return Add(String(commandId), String(label)); }
+		XMLToolBar &Add(String const &commandId, const char *label)
+			{ return Add(commandId, String(label)); }
+		XMLToolBar &Add(const char *commandId, String const &label)
+			{ return Add(String(commandId), label); }
+			
 		XMLToolBar &Add(String const &commandId, Image const &icon);
+		XMLToolBar &Add(const char *commandId, Image const &icon)
+			{ return Add(String(commandId), icon); }
+		
 		XMLToolBar &Add(String const &commandId, String const &label, Image const &icon);
+		XMLToolBar &Add(const char *commandId, String const &label, Image const &icon)
+			{ return Add(String(commandId), label, icon); }
+		XMLToolBar &Add(String const &commandId, const char *label, Image const &icon)
+			{ return Add(commandId, String(label), icon); }
+		XMLToolBar &Add(const char *commandId, const char *label, Image const &icon)
+			{ return Add(String(commandId), String(label), icon); }
+		
 		XMLToolBar &Add(String const &commandId, Image const &icon, String const &tooltip);
+		XMLToolBar &Add(const char *commandId, Image const &icon, String const &tooltip)
+			{ return Add(String(commandId), icon, tooltip); }
+		XMLToolBar &Add(String const &commandId, Image const &icon, const char *tooltip)
+			{ return Add(commandId, icon, String(tooltip)); }
+		XMLToolBar &Add(const char *commandId, Image const &icon, const char *tooltip)
+			{ return Add(String(commandId), icon, String(tooltip)); }
+		
 		XMLToolBar &Add(String const &commandId, String const &label, String const &tooltip);
+		XMLToolBar &Add(const char *commandId, String const &label, String const &tooltip)
+			{ return Add(String(commandId), label, tooltip); }
+		XMLToolBar &Add(String const &commandId, const char *label, String const &tooltip)
+			{ return Add(commandId, String(label), tooltip); }
+		XMLToolBar &Add(String const &commandId, String const &label, const char *tooltip)
+			{ return Add(commandId, label, String(tooltip)); }
+		XMLToolBar &Add(const char *commandId, const char *label, String const &tooltip)
+			{ return Add(String(commandId), String(label), tooltip); }
+		XMLToolBar &Add(const char *commandId, String const &label, const char *tooltip)
+			{ return Add(String(commandId), label, String(tooltip)); }
+		XMLToolBar &Add(String const &commandId, const char *label, const char *tooltip)
+			{ return Add(commandId, String(label), String(tooltip)); }
+		XMLToolBar &Add(const char *commandId, const char *label, const char *tooltip)
+			{ return Add(String(commandId), String(label), String(tooltip)); }
+		
 		XMLToolBar &Add(String const &commandId, String const &label, Image const &icon, String const &tooltip);
+		XMLToolBar &Add(const char *commandId, String const &label, Image const &icon, String const &tooltip)
+			{ return Add(String(commandId), label, icon, tooltip); }
+		XMLToolBar &Add(String const &commandId, const char *label, Image const &icon, String const &tooltip)
+			{ return Add(commandId, String(label), icon, tooltip); }
+		XMLToolBar &Add(String const &commandId, String const &label, Image const &icon, const char *tooltip)
+			{ return Add(commandId, label, icon, String(tooltip)); }
+		XMLToolBar &Add(const char *commandId, const char *label, Image const &icon, String const &tooltip)
+			{ return Add(String(commandId), String(label), icon, tooltip); }
+		XMLToolBar &Add(const char *commandId, String const &label, Image const &icon, const char *tooltip)
+			{ return Add(String(commandId), label, icon, String(tooltip)); }
+		XMLToolBar &Add(String const &commandId, const char *label, Image const &icon, const char *tooltip)
+			{ return Add(commandId, String(label), icon, String(tooltip)); }
+		XMLToolBar &Add(const char *commandId, const char *label, Image const &icon, const char *tooltip)
+			{ return Add(String(commandId), String(label), icon, String(tooltip)); }
 
 		// add a submenu entry
 		XMLToolBar &Add(String const &subLabel, XMLToolBar const &subMenu);
+		XMLToolBar &Add(const char *subLabel, XMLToolBar const &subMenu)
+			{ return Add(String(subLabel), subMenu); }
+					
 		XMLToolBar &Add(String const &subLabel, Image const &icon, XMLToolBar const &subMenu);
+		XMLToolBar &Add(const char *subLabel, Image const &icon, XMLToolBar const &subMenu)
+			{ return Add(String(subLabel), icon, subMenu); }
 		
 		// creates a submenu entry
 		XMLToolBar SubMenu(void);
 		
 		// add a submenu entry by callback
-		XMLToolBar &Add(Callback1<XMLToolBar &> bar);
+		XMLToolBar &Add(Function<void(XMLToolBar &)> bar);
 		
 		// add a fixed, unnamed internal command
 		// used for on-the-fly built menus
-		XMLToolBar &Add(String const &label, Callback cb);
-		XMLToolBar &Add(Image const &icon, Callback cb);
-		XMLToolBar &Add(String const &label, Image const &icon, Callback cb);
-		XMLToolBar &Add(String const &label, String const &tooltip, Callback cb);
-		XMLToolBar &Add(Image const &icon, String const &tooltip, Callback cb);
-		XMLToolBar &Add(String const &label, Image const &icon, String const &tooltip, Callback cb);
+		XMLToolBar &Add(String const &label, Function<void()> cb);
+		XMLToolBar &Add(const char *label, Function<void()> cb)
+			{ return Add(String(label), cb); }
+		
+		XMLToolBar &Add(Image const &icon, Function<void()> cb);
+		
+		XMLToolBar &Add(String const &label, Image const &icon, Function<void()> cb);
+		XMLToolBar &Add(const char *label, Image const &icon, Function<void()> cb)
+			{ return Add(String(label), icon, cb); }
+		
+		XMLToolBar &Add(String const &label, String const &tooltip, Function<void()> cb);
+		XMLToolBar &Add(const char *label, String const &tooltip, Function<void()> cb)
+			{ return Add(String(label), tooltip, cb); }
+		XMLToolBar &Add(String const &label, const char *tooltip, Function<void()> cb)
+			{ return Add(label, String(tooltip), cb); }
+		XMLToolBar &Add(const char *label, const char *tooltip, Function<void()> cb)
+			{ return Add(String(label), String(tooltip), cb); }
+		
+		XMLToolBar &Add(Image const &icon, String const &tooltip, Function<void()> cb);
+		XMLToolBar &Add(Image const &icon, const char *tooltip, Function<void()> cb)
+			{ return Add(icon, String(tooltip), cb); }
+		
+		XMLToolBar &Add(String const &label, Image const &icon, String const &tooltip, Function<void()> cb);
+		XMLToolBar &Add(const char *label, Image const &icon, String const &tooltip, Function<void()> cb)
+			{ return Add(String(label), icon, tooltip, cb); }
+		XMLToolBar &Add(String const &label, Image const &icon, const char *tooltip, Function<void()> cb)
+			{ return Add(label, icon, String(tooltip), cb); }
+		XMLToolBar &Add(const char *label, Image const &icon, const char *tooltip, Function<void()> cb)
+			{ return Add(String(label), icon, String(tooltip), cb); }
 		
 		// add a separator
 		XMLToolBar &Separator(void);

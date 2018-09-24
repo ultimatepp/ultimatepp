@@ -273,7 +273,7 @@ XMLToolBar XMLToolBar::SubMenu(void)
 }
 
 // add a submenu entry by callback
-XMLToolBar &XMLToolBar::Add(Callback1<XMLToolBar &> bar)
+XMLToolBar &XMLToolBar::Add(Function<void(XMLToolBar &)> bar)
 {
 	XMLToolBar tb;
 	bar(tb);
@@ -283,7 +283,7 @@ XMLToolBar &XMLToolBar::Add(Callback1<XMLToolBar &> bar)
 
 // add a fixed, unnamed internal command
 // used for on-the-fly built menus
-XMLToolBar &XMLToolBar::Add(String const &label, Callback cb)
+XMLToolBar &XMLToolBar::Add(String const &label, Function<void()> cb)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->internalCb = cb;
@@ -295,7 +295,7 @@ XMLToolBar &XMLToolBar::Add(String const &label, Callback cb)
 	return *this;
 }
 
-XMLToolBar &XMLToolBar::Add(Image const &icon, Callback cb)
+XMLToolBar &XMLToolBar::Add(Image const &icon, Function<void()> cb)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->internalCb = cb;
@@ -309,7 +309,7 @@ XMLToolBar &XMLToolBar::Add(Image const &icon, Callback cb)
 }
 
 
-XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, Callback cb)
+XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, Function<void()> cb)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->internalCb = cb;
@@ -322,7 +322,7 @@ XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, Callback cb)
 	return *this;
 }
 
-XMLToolBar &XMLToolBar::Add(String const &label, String const &tooltip, Callback cb)
+XMLToolBar &XMLToolBar::Add(String const &label, String const &tooltip, Function<void()> cb)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->internalCb = cb;
@@ -334,7 +334,7 @@ XMLToolBar &XMLToolBar::Add(String const &label, String const &tooltip, Callback
 	return *this;
 }
 
-XMLToolBar &XMLToolBar::Add(Image const &icon, String const &tooltip, Callback cb)
+XMLToolBar &XMLToolBar::Add(Image const &icon, String const &tooltip, Function<void()> cb)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->internalCb = cb;
@@ -347,7 +347,7 @@ XMLToolBar &XMLToolBar::Add(Image const &icon, String const &tooltip, Callback c
 	return *this;
 }
 
-XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, String const &tooltip, Callback cb)
+XMLToolBar &XMLToolBar::Add(String const &label, Image const &icon, String const &tooltip, Function<void()> cb)
 {
 	XMLToolBarItem *item = new XMLToolBarItem;
 	item->internalCb = cb;

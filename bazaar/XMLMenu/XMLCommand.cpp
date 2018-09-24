@@ -79,7 +79,7 @@ XMLCommands &XMLCommands::Add(String const &id, String const &cmdStr)
 }
 
 // adds a built-in command with given callback
-XMLCommands &XMLCommands::Add(String const &id, Callback cb)
+XMLCommands &XMLCommands::Add(String const &id, Function<void()> cb)
 {
 	bool has = Has(id);
 	XMLCommand *cmd;
@@ -98,7 +98,7 @@ XMLCommands &XMLCommands::Add(String const &id, Callback cb)
 }
 
 // adds a generated submenu "command"
-XMLCommands &XMLCommands::Add(String const &id, Callback1<XMLToolBar &> mc)
+XMLCommands &XMLCommands::Add(String const &id, Function<void(XMLToolBar &)> mc)
 {
 	bool has = Has(id);
 	XMLCommand *cmd;
@@ -161,7 +161,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, String const &cmdS
 }
 
 // adds a built-in command with given callback, allows enable/disable item
-XMLCommands &XMLCommands::Add(bool enabled, String const &id, Callback cb)
+XMLCommands &XMLCommands::Add(bool enabled, String const &id, Function<void()> cb)
 {
 	bool has = Has(id);
 	XMLCommand *cmd;
@@ -180,7 +180,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Callback cb)
 }
 
 // adds a generated submenu "command", allows enable/disable item
-XMLCommands &XMLCommands::Add(bool enabled, String const &id, Callback1<XMLToolBar &> mc)
+XMLCommands &XMLCommands::Add(bool enabled, String const &id, Function<void(XMLToolBar &)> mc)
 {
 	bool has = Has(id);
 	XMLCommand *cmd;

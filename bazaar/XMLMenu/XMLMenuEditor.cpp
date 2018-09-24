@@ -646,7 +646,7 @@ void XMLMenuEditor::cmdContextAddCb(void)
 	edit.Close();
 	if(res == IDOK)
 	{
-		commands.Add(~edit.cmdId, ~edit.cmdStr);
+		commands.Add(~edit.cmdId, String(~edit.cmdStr));
 		FillCmdList();
 		cmdPane.commandList.SetCursor(cmdPane.commandList.Find(~edit.cmdId));
 	}
