@@ -227,8 +227,8 @@ struct Rect_ : Moveable< Rect_<T> > {
 	void   Clear()                          { left = top = right = bottom = 0; }
 
 	bool   IsEmpty() const                  { return right <= left || bottom <= top; }
-	void   SetNull();
-	bool   IsNullInstance() const;
+	void   SetNull()                        { left = right = top = bottom = Null; }
+	bool   IsNullInstance() const           { return IsNull(left); }
 
 	Pt     TopLeft() const                  { return Pt(left, top); }
 	Pt     TopCenter() const                { return Pt(GHalf_(left + right), top); }
@@ -393,29 +393,6 @@ struct Rect_ : Moveable< Rect_<T> > {
 	Rect_(const RECT& rc)        { Set((T)rc.left, (T)rc.top, (T)rc.right, (T)rc.bottom); }
 #endif
 };
-
-template <class T>
-inline void Rect_<T>::SetNull()
-{
-	left = right = top = bottom = Null;
-}
-
-template <>
-inline void Rect_<double>::SetNull()
-{
-	left = top = 0;
-	right = bottom = -1;
-}
-
-template <class T>
-bool Rect_<T>::IsNullInstance() const {
-	return IsNull(left);
-}
-
-template <>
-inline bool Rect_<double>::IsNullInstance() const {
-	return left > right || top > bottom;
-}
 
 template <class T>
 Point_<T> Rect_<T>::CenterPos(T cx, T cy) const {
