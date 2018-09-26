@@ -253,7 +253,7 @@ struct ClipData : Moveable<ClipData> {
 	Value  data;
 	String (*render)(const Value& data);
 
-	String  Render() const                   { return (*render)(data); }
+	String  Render() const                   { return render ? (*render)(data) : ~data; }
 
 	ClipData(const Value& data, String (*render)(const Value& data));
 	ClipData(const String& data);
