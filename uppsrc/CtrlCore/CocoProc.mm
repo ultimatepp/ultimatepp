@@ -1,5 +1,7 @@
 #include "CocoMM.h"
 
+NSEvent *sCurrentMouseEvent__; // needed for drag operation
+
 #ifdef PLATFORM_COCOA
 
 #define LLOG(x)
@@ -60,6 +62,7 @@ bool Ctrl::ReleaseWndCapture()
 struct MMImp {
 	static bool MouseEvent(CocoView *view, NSEvent *e, int event, double zd = 0)
 	{
+		sCurrentMouseEvent__ = e;
 		if((event & Ctrl::ACTION) == Ctrl::UP && Ctrl::ignoreclick) {
 			Ctrl::EndIgnore();
 			return false;
@@ -70,6 +73,7 @@ struct MMImp {
 		coco_mouse_pos = p + r.TopLeft();
 		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
+		sCurrentMouseEvent__ = NULL;
 		return false;
 	}
 

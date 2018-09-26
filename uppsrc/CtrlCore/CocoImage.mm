@@ -6,7 +6,7 @@
 
 namespace Upp {
 
-CGImageRef createCGImage(const Image &img)
+CGImageRef createCGImage(const Image& img)
 {
 	CGDataProvider *dataProvider = CGDataProviderCreateWithData(NULL, ~img, img.GetLength() * sizeof(RGBA), NULL);
 	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); // TODO: This is probably wrong...
@@ -181,12 +181,13 @@ void  Ctrl::SetMouseCursor(const Image& img)
 
 	Point p = img.GetHotSpot();
 	Size isz = img.GetSize();
+	double scale = 1.0 / DPI(1);
 	NSSize size;
-	size.width = isz.cx;
-	size.height = isz.cy;
+	size.width = scale * isz.cx;
+	size.height = scale * isz.cy;
 	NSPoint hot;
-	hot.x = p.x;
-	hot.y = p.y;
+	hot.x = scale * p.x;
+	hot.y = scale * p.y;
 	NSImage *nsimg = [[NSImage alloc] initWithCGImage:sd.cgimg size:size];
 	NSCursor *cursor = [[NSCursor alloc] initWithImage:nsimg hotSpot:hot];
 	[cursor set];

@@ -1,20 +1,37 @@
 sooner:
 
-* UHD
 - ClipFmt<Image>
+- Find in files - wrong ascent in results
+- scrollbar minimal thumb issue
+
+- UHD problem with tabbar
+- UHD problem with FileSel
+- UHD problem with Prompt text size ([g ?)
+- UHD test cursor size issue
 - initial focus in uword
 - Ctrl key gets stuck
 - fix package organiser link options (joining link options missing space)
 - perhaps better UTI names
 - improve spinbuttons
-- Find in files - wrong ascent in results	
-- GetPrimaryScreenArea
+- Delete CocoClip.mm -> crash
+- tabbat weird image
+- cursor trouble osscilation
+- after mouse up, cursor changes to arrow
+- icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
+- bool SystemDraw::IsPaintingOp(const Rect& r) const
+
 
 later:
+
+* apple debugger
+* Mac menu
+* Drag&Drop
 
 - ch progress
 - ch slider
 - ch tabctrl
+- ch improve button matching to viewedge
+- ch focus
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
@@ -40,15 +57,13 @@ later:
 
 - SerializePlacement - probably improve
 
-* apple debugger
-* Mac menu
-* Drag&Drop
-* Chameleon
-
 - implement DrawPoly... patterns
 
 done:
 
+- GetPrimaryScreenArea
+* Chameleon
+* UHD
 - CommonFontInfo GetFontInfoSys(Font font) metrics
 * System colors
 - Clipboard types

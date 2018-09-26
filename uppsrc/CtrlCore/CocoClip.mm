@@ -4,6 +4,8 @@
 
 #define LLOG(x)  // LOG(x)
 
+extern NSEvent *sCurrentMouseEvent__;
+
 namespace Upp {
 
 NSString *PasteboardType(const String& fmt)
@@ -14,11 +16,19 @@ NSString *PasteboardType(const String& fmt)
 	                   [NSString stringWithUTF8String:~fmt]);
 }
 
+
+NSPasteboard *Pasteboard(bool dnd = false)
+{
+	return dnd ? [NSPasteboard pasteboardWithName:NSPasteboardNameDrag] : [NSPasteboard generalPasteboard];
+}
+
 };
 
 @interface CocoClipboardOwner : NSObject {
 	@public
 	Upp::VectorMap<Upp::String, Upp::ClipData> data;
+	Upp::Ptr<Upp::Ctrl> source;
+	bool dnd;
 }
 @end
 
@@ -32,17 +42,21 @@ NSString *PasteboardType(const String& fmt)
 		return data[q].Render();
 	};
 	
-	id pasteboard = [NSPasteboard generalPasteboard];
-  
+	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
+
 	if([type isEqualTo:NSPasteboardTypeString]) {
 	    [pasteboard setString:[NSString stringWithUTF8String:~render("text")]
 	                forType:type];
 		return;
 	}
+	
+	Upp::String fmt = [type isEqualTo:NSPasteboardTypePNG] ? "image" :
+	                  [type isEqualTo:NSPasteboardTypeRTF] ? "rtf" :
+	                                                          Upp::ToString(type);
+	Upp::String raw = render(fmt);
+	if(raw.GetCount() == 0 && source)
+		raw = source->GetDropData(fmt);
 
-	Upp::String raw = render([type isEqualTo:NSPasteboardTypePNG] ? "image" :
-	                         [type isEqualTo:NSPasteboardTypeRTF] ? "rtf" :
-	                                                                Upp::ToString(type));
 	[pasteboard setData:[NSData dataWithBytes:~raw length:raw.GetCount()] forType:type];
 }
 
@@ -57,25 +71,33 @@ NSString *PasteboardType(const String& fmt)
 
 namespace Upp {
 	
-CocoClipboardOwner *ClipboardOwner()
+CocoClipboardOwner *ClipboardOwner(bool dnd = false)
+{
+	GuiLock __; 
+	static CocoClipboardOwner *general = [[CocoClipboardOwner alloc] init];
+	static CocoClipboardOwner *drag = [[CocoClipboardOwner alloc] init];
+	general->dnd = false;
+	drag->dnd = true;
+	return dnd ? drag : general;
+}
+
+void ClearClipboard(bool dnd)
 {
 	GuiLock __;
-	static CocoClipboardOwner *owner = [[CocoClipboardOwner alloc] init];
-	return owner;
+	[Pasteboard(dnd) clearContents];
+	ClipboardOwner()->data.Clear();
 }
 
 void ClearClipboard()
 {
-	GuiLock __;
-	[[NSPasteboard generalPasteboard] clearContents];
-	ClipboardOwner()->data.Clear();
+	ClearClipboard(false);
 }
 
-void AppendClipboard(const char *format, const Value& value, String (*render)(const Value& data))
+void AppendClipboard(bool dnd, const char *format, const Value& value, String (*render)(const Value& data))
 {
 	GuiLock __;
 
-	auto& data = ClipboardOwner()->data;
+	auto& data = ClipboardOwner(dnd)->data;
 
 	for(String fmt : Split(format, ';'))
 		data.GetAdd(fmt) = ClipData(value, render);
@@ -87,10 +109,15 @@ void AppendClipboard(const char *format, const Value& value, String (*render)(co
 	for(auto id : data.GetKeys())
 		[types addObject:PasteboardType(id)];
 
-	[[NSPasteboard generalPasteboard] declareTypes:[types allObjects] owner:ClipboardOwner()];
+	[Pasteboard(dnd) declareTypes:[types allObjects] owner:ClipboardOwner(dnd)];
 
 	[types release];
 	[pool release];
+}
+
+void AppendClipboard(const char *format, const Value& value, String (*render)(const Value& data))
+{
+	AppendClipboard(false, format, value, render);
 }
 
 void AppendClipboard(const char *format, const String& data)
@@ -231,6 +258,11 @@ String GetImageClip(const Image& img, const String& fmt)
 	return sImage(img);
 }
 
+void Append(VectorMap<String, ClipData>& data, const Image& img)
+{
+	data.GetAdd("image", ClipData(img, sImage));
+}
+
 void AppendClipboardImage(const Image& img)
 {
 	GuiLock __;
@@ -272,6 +304,60 @@ Vector<String> GetFiles(PasteClip& clip)
 		}
 	return f;
 }
+
+Ctrl * Ctrl::GetDragAndDropSource()
+{
+	return ClipboardOwner(true)->source;
+}
+
+int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
+                        const VectorMap<String, ClipData>& data)
+{
+	ASSERT_(sCurrentMouseEvent__, "Drag can only start within LeftDrag!");
+	if(!sCurrentMouseEvent__)
+		return DND_NONE;
+	NSWindow *nswindow = (NSWindow *)GetTopCtrl()->GetNSWindow();
+	ASSERT_(nswindow, "Ctrl is not in open window");
+	if(!nswindow)
+		return DND_NONE;
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	ClearClipboard(true);
+	for(int i = 0; i < data.GetCount(); i++)
+		AppendClipboard(true, data.GetKey(i), data[i].data, data[i].render);
+	for(String fmt : Split(fmts, ';')) // GetDropData formats
+		AppendClipboard(true, fmt, String(), NULL);
+
+	CGImageRef cgimg = createCGImage(sample);
+
+	Size isz = sample.GetSize();
+	NSSize size;
+	double scale = 1.0 / DPI(1);
+	size.width = scale * isz.cx;
+	size.height = scale * isz.cy;
+
+	NSImage *nsimg = [[[NSImage alloc] initWithCGImage:cgimg size:size] autorelease];
+
+	ClipboardOwner(true)->source = this;
+	
+	[nswindow dragImage:nsimg
+	               at:[sCurrentMouseEvent__ locationInWindow]
+	           offset:NSMakeSize(0, 0)
+	            event:sCurrentMouseEvent__
+	       pasteboard:Pasteboard(true)
+	           source:nswindow
+	        slideBack:YES];
+
+	ClipboardOwner(true)->source = NULL;
+
+	[pool release];
+
+    CGImageRelease(cgimg);
+    
+	return DND_NONE;
+}
+
+void Ctrl::SetSelectionSource(const char *fmts) {}
 
 };
 
