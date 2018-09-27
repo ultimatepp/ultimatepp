@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	LabelBox.h,
+	main.cpp,
+	LabelBox.lay;
+
+mainconfig
+	"" = "GUI";
+

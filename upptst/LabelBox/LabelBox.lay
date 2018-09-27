@@ -1,0 +1,5 @@
+LAYOUT(LabelBoxLayout, 340, 252)
+	ITEM(LabelBox, dv___0, SetLabel(t_("Standard")).LeftPosZ(4, 324).TopPosZ(4, 36))
+	ITEM(LabelBox, dv___1, SetLabel(t_("Magenta")).SetInk(LtMagenta).LeftPosZ(4, 324).TopPosZ(44, 36))
+END_LAYOUT
+
