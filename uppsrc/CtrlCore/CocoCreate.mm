@@ -15,7 +15,7 @@
 @implementation CocoWindow
 
 - (void)becomeKeyWindow {
-	[super becomeKeyWindow];
+	[super becomeKeyWindow];	
 }
 
 - (BOOL)canBecomeKeyWindow {

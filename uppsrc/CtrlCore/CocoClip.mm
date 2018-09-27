@@ -73,7 +73,7 @@ namespace Upp {
 	
 CocoClipboardOwner *ClipboardOwner(bool dnd = false)
 {
-	GuiLock __; 
+	GuiLock __;
 	static CocoClipboardOwner *general = [[CocoClipboardOwner alloc] init];
 	static CocoClipboardOwner *drag = [[CocoClipboardOwner alloc] init];
 	general->dnd = false;
@@ -330,6 +330,31 @@ Ctrl * Ctrl::GetDragAndDropSource()
 	return ClipboardOwner(true)->source;
 }
 
+};
+
+@interface DNDSource : NSObject
+{
+	@public
+	int actions;
+	int result;
+}
+@end
+
+@implementation DNDSource
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+{
+    return actions;
+}
+
+- (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
+{ // TODO: Looks like between apps, it is always move (?!)
+	result = operation;
+}
+
+@end
+
+namespace Upp {
+
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
 {
@@ -343,6 +368,7 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
 	ClearClipboard(true);
+	ClipboardOwner(true)->source = this;
 	for(int i = 0; i < data.GetCount(); i++)
 		AppendClipboard(true, data.GetKey(i), data[i].data, data[i].render);
 	for(String fmt : Split(fmts, ';')) // GetDropData formats
@@ -358,14 +384,20 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 
 	NSImage *nsimg = [[[NSImage alloc] initWithCGImage:cgimg size:size] autorelease];
 
-	ClipboardOwner(true)->source = this;
+	static DNDSource *src = [[DNDSource alloc] init];
 	
+	src->actions = 0;
+	if(actions & DND_COPY)
+		src->actions |= NSDragOperationCopy;
+	if(actions & DND_MOVE)
+		src->actions |= NSDragOperationMove;
+
 	[nswindow dragImage:nsimg
 	               at:[sCurrentMouseEvent__ locationInWindow]
 	           offset:NSMakeSize(0, 0)
 	            event:sCurrentMouseEvent__
 	       pasteboard:Pasteboard(true)
-	           source:nswindow
+	           source:src
 	        slideBack:YES];
 
 	ClipboardOwner(true)->source = NULL;
@@ -374,7 +406,9 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 
     CGImageRelease(cgimg);
     
-	return DND_NONE;
+	return decode(src->result, NSDragOperationCopy, DND_COPY,
+	                           NSDragOperationMove, DND_MOVE,
+	                           DND_NONE);
 }
 
 void Ctrl::SetSelectionSource(const char *fmts) {}

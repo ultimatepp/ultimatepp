@@ -1,7 +1,5 @@
 sooner:
 
-- UHD problem with FileSel
-
 - UHD problem with tabbar
 - UHD problem with Prompt text size ([g ?)
 - initial focus in uword
@@ -25,6 +23,7 @@ later:
 * Mac menu
 * Drag&Drop
 
+- Draw move ?
 - ch disabled option looks weird
 - ch progress
 - ch slider
@@ -64,6 +63,7 @@ later:
 
 done:
 
+- UHD problem with FileSel
 - Find in files - wrong ascent in results
 - scrollbar minimal thumb issue
 - tabctrl weird image
