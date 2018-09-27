@@ -310,7 +310,7 @@ void GuiPlatformAdjustDragImage(ImageBuffer& b);
 Image MakeDragImage(const Image& arrow, Image sample);
 
 const char *ClipFmtsText();
-bool        AcceptText(PasteClip& clip);
+bool        AcceptText	(PasteClip& clip);
 String      GetString(PasteClip& clip);
 WString     GetWString(PasteClip& clip);
 String      GetTextClip(const String& text, const String& fmt);
@@ -1218,6 +1218,8 @@ public:
 	static PasteClip& Selection();
 
 	void   SetSelectionSource(const char *fmts);
+	
+	static void RegisterDropFormats(const char *fmts); // MacOS requires drop formats to be registered
 
 	int    DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 	                     const VectorMap<String, ClipData>& data);

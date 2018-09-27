@@ -13,6 +13,7 @@ static int        coco_flags;
 static Upp::Ptr<Upp::Ctrl> coco_capture;
 
 namespace Upp {
+
 bool  GetShift() { return coco_flags & NSEventModifierFlagShift; }
 bool  GetCtrl() { return coco_flags & NSEventModifierFlagCommand; }
 bool  GetAlt() { return coco_flags & NSEventModifierFlagControl; }
@@ -182,6 +183,27 @@ struct MMImp {
 	{
 		ctrl->MMClose();
 	}
+
+	static int  DnD(Upp::Ctrl *ctrl, id<NSDraggingInfo> info, bool paste = false)
+	{
+		NSView *nsview = (NSView *)ctrl->GetNSView();
+		PasteClip clip;
+		clip.nspasteboard = info.draggingPasteboard;
+		clip.paste = paste;
+		clip.accepted = false;
+		clip.allowed = DND_MOVE|DND_COPY; // TODO: Use draggingSourceOperationMask
+		NSPoint np = [nsview convertPoint:[info draggingLocation] fromView:nil];
+		ctrl->DnD(Upp::Point(DPI(np.x), DPI(np.y)) + ctrl->GetScreenView().TopLeft(), clip);
+		// TODO: Resolve allowed actions
+		return clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? NSDragOperationMove
+		                                                        : NSDragOperationCopy
+		                         : NSDragOperationNone;
+	}
+	
+	static void DnDLeave(Ctrl *ctrl)
+	{
+		ctrl->DnDLeave();
+	}
 };
 
 };
@@ -278,6 +300,31 @@ struct MMImp {
 
 - (BOOL)canBecomeKeyView {
 	return ctrl->IsEnabled();
+}
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	return Upp::MMImp::DnD(ctrl, sender);
+}
+
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
+{
+	return Upp::MMImp::DnD(ctrl, sender);
+}
+
+- (void)draggingEnded:(id <NSDraggingInfo>)sender
+{
+	return Upp::MMImp::DnDLeave(ctrl);
+}
+
+- (void)draggingExited:(id <NSDraggingInfo>)sender
+{
+	return Upp::MMImp::DnDLeave(ctrl);
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
+{
+	return Upp::MMImp::DnD(ctrl, sender, true);
 }
 
 @end

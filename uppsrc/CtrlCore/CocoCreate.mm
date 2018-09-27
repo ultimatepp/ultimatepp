@@ -15,7 +15,7 @@
 @implementation CocoWindow
 
 - (void)becomeKeyWindow {
-	[super becomeKeyWindow];	
+	[super becomeKeyWindow];
 }
 
 - (BOOL)canBecomeKeyWindow {
@@ -29,15 +29,17 @@
 
 @end
 
-static Upp::Vector<Upp::Ptr<Upp::Ctrl>> mmtopctrl; // should work without Ptr, but let us be defensive....
+namespace Upp {
 
-Upp::Ctrl *Upp::Ctrl::GetOwner()
+static Vector<Ptr<Ctrl>> mmtopctrl; // should work without Ptr, but let us be defensive....
+
+Ctrl *Ctrl::GetOwner()
 {
 	GuiLock __;
 	return top && top->coco ? top->coco->owner : NULL;
 }
 
-Upp::Ctrl *Upp::Ctrl::GetActiveCtrl()
+Ctrl *Ctrl::GetActiveCtrl()
 {
 	GuiLock __;
 	for(Ctrl *p : mmtopctrl)
@@ -46,7 +48,7 @@ Upp::Ctrl *Upp::Ctrl::GetActiveCtrl()
 	return NULL;
 }
 
-bool Upp::Ctrl::SetWndFocus()
+bool Ctrl::SetWndFocus()
 {
 	GuiLock __;
 	if(top && top->coco) {
@@ -59,44 +61,44 @@ bool Upp::Ctrl::SetWndFocus()
 	return true;
 }
 
-bool Upp::Ctrl::HasWndFocus() const
+bool Ctrl::HasWndFocus() const
 {
 	GuiLock __;
 	return GetActiveCtrl() == this;
 }
 
 
-void Upp::Ctrl::SetWndForeground()
+void Ctrl::SetWndForeground()
 {
 	GuiLock __;
 	SetWndFocus();
 }
 
-bool Upp::Ctrl::IsWndForeground() const
+bool Ctrl::IsWndForeground() const
 {
 	GuiLock __;
 	return HasWndFocus();
 }
 
-NSRect DesktopRect(const Upp::Rect& r)
+NSRect DesktopRect(const Rect& r)
 {
-	double scalei = 1.0 / Upp::DPI(1);
+	double scalei = 1.0 / DPI(1);
 	return NSMakeRect(scalei * r.left,
-	                  scalei * (Upp::Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight()),
+	                  scalei * (Ctrl::GetPrimaryScreenArea().GetHeight() - r.top - r.GetHeight()),
 	                  scalei * r.GetWidth(), scalei * r.GetHeight());
 }
 
-void *Upp::Ctrl::GetNSWindow() const
+void *Ctrl::GetNSWindow() const
 {
 	return top && top->coco ? top->coco->window : NULL;
 }
 
-void *Upp::Ctrl::GetNSView() const
+void *Ctrl::GetNSView() const
 {
 	return top && top->coco ? top->coco->view : NULL;
 }
 
-void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
+void Ctrl::Create(Ctrl *owner, dword style, bool active)
 {
 	if(owner)
 		owner = owner->GetTopCtrl();
@@ -128,9 +130,11 @@ void Upp::Ctrl::Create(Ctrl *owner, dword style, bool active)
 	MMCtrl::SyncRect(view);
 	isopen = true;
 	mmtopctrl.Add(this);
+
+	RegisterCocoaDropFormats();
 }
 
-void Upp::Ctrl::WndDestroy()
+void Ctrl::WndDestroy()
 {
 	LLOG("WndDestroy " << Name());
 	if(!top)
@@ -148,7 +152,7 @@ void Upp::Ctrl::WndDestroy()
 		owner->SetWndFocus();
 }
 
-Upp::Vector<Upp::Ctrl *> Upp::Ctrl::GetTopCtrls()
+Vector<Ctrl *> Ctrl::GetTopCtrls()
 {
 	Vector<Ctrl *> h;
 	for(Ctrl *p : mmtopctrl)
@@ -156,7 +160,7 @@ Upp::Vector<Upp::Ctrl *> Upp::Ctrl::GetTopCtrls()
 	return h;
 }
 
-void Upp::Ctrl::WndInvalidateRect(const Rect& r)
+void Ctrl::WndInvalidateRect(const Rect& r)
 {
 	GuiLock __;
 	LLOG("Invalidate Rect " << r);
@@ -164,19 +168,19 @@ void Upp::Ctrl::WndInvalidateRect(const Rect& r)
 		[top->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r)];
 }
 
-void Upp::Ctrl::WndScrollView(const Rect& r, int dx, int dy)
+void Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 {
 	GuiLock __;
 	LLOG("Scroll View " << r);
 	WndInvalidateRect(r);
 }
 
-bool Upp::Ctrl::IsWndOpen() const {
+bool Ctrl::IsWndOpen() const {
 	GuiLock __;
 	return top;
 }
 
-void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
+void Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow, bool topmost)
 {
 	Create(owner ? owner->GetTopCtrl() : GetActiveCtrl(), NSWindowStyleMaskBorderless, 0);
 	popup = true;
@@ -202,9 +206,9 @@ void Upp::Ctrl::PopUp(Ctrl *owner, bool savebits, bool activate, bool dropshadow
 	#endif
 }
 
-Upp::dword Upp::TopWindow::GetMMStyle() const
+dword TopWindow::GetMMStyle() const
 {
-	Upp::dword style = NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskResizable;
+	dword style = NSWindowStyleMaskTitled|NSWindowStyleMaskClosable|NSWindowStyleMaskResizable;
 	if(minimizebox)
 		style |= NSWindowStyleMaskMiniaturizable;
 //	if(maximizebox)
@@ -212,7 +216,7 @@ Upp::dword Upp::TopWindow::GetMMStyle() const
 	return style;
 }
 
-void Upp::TopWindow::Open(Ctrl *owner)
+void TopWindow::Open(Ctrl *owner)
 {
 	GuiLock __;
 	SetupRect(owner);
@@ -233,17 +237,17 @@ void Upp::TopWindow::Open(Ctrl *owner)
 //		top->placefocus = true;
 }
 
-void Upp::TopWindow::Open()
+void TopWindow::Open()
 {
 	Open(GetActiveCtrl());
 }
 
-void Upp::TopWindow::OpenMain()
+void TopWindow::OpenMain()
 {
 	Open(NULL);
 }
 
-void Upp::TopWindow::SyncTitle()
+void TopWindow::SyncTitle()
 {
 	GuiLock __;
 	if(top) {
@@ -253,7 +257,7 @@ void Upp::TopWindow::SyncTitle()
 	}
 }
 
-void Upp::TopWindow::SyncCaption()
+void TopWindow::SyncCaption()
 {
 	GuiLock __;
 	if(top) {
@@ -264,33 +268,33 @@ void Upp::TopWindow::SyncCaption()
 	}
 }
 
-CGSize MMFrameSize(Upp::Size sz, Upp::dword style)
+CGSize MMFrameSize(Size sz, dword style)
 {
-	double scale = 1.0 / Upp::DPI(1);
+	double scale = 1.0 / DPI(1);
 	return [NSWindow frameRectForContentRect:
 				(NSRect)CGRectMake(100, 100, scale * sz.cx, scale * sz.cy) styleMask:style].size;
 }
 
-void Upp::TopWindow::SyncSizeHints()
+void TopWindow::SyncSizeHints()
 {
 	GuiLock __;
 	if(top) {
 		NSWindow *window = top->coco->window;
-		Upp::dword style = GetMMStyle();
+		dword style = GetMMStyle();
 		Size sz = GetRect().GetSize();
 		[window setMinSize:MMFrameSize(sizeable ? GetMinSize() : sz, style)];
 		[window setMaxSize:MMFrameSize(sizeable ? GetMaxSize() : sz, style)];
 	}
 }
 
-Upp::Rect Upp::Ctrl::GetWndScreenRect() const
+Rect Ctrl::GetWndScreenRect() const
 { // THIS IS NOT NEEDED
 	GuiLock __;
 	Rect r = GetRect();
 	return r;
 }
 
-void Upp::Ctrl::WndSetPos(const Upp::Rect& rect)
+void Ctrl::WndSetPos(const Rect& rect)
 {
 	GuiLock __;
 	if(top)
@@ -299,7 +303,7 @@ void Upp::Ctrl::WndSetPos(const Upp::Rect& rect)
 			display:YES];
 }
 
-void Upp::TopWindow::SerializePlacement(Stream& s, bool reminimize)
+void TopWindow::SerializePlacement(Stream& s, bool reminimize)
 {
 	GuiLock __;
 	int version = 0;
@@ -310,7 +314,7 @@ void Upp::TopWindow::SerializePlacement(Stream& s, bool reminimize)
 		SetRect(rect);
 }
 
-void Upp::TopWindow::Maximize(bool effect)
+void TopWindow::Maximize(bool effect)
 {
 	state = MAXIMIZED;
 	if(top && top->coco && top->coco->window && !top->coco->window.zoomed) {
@@ -321,7 +325,7 @@ void Upp::TopWindow::Maximize(bool effect)
 	}
 }
 
-void Upp::TopWindow::Minimize(bool effect)
+void TopWindow::Minimize(bool effect)
 {
 	state = MINIMIZED;
 	if(top && top->coco && top->coco->window && !top->coco->window.miniaturized) {
@@ -332,7 +336,7 @@ void Upp::TopWindow::Minimize(bool effect)
 	}
 }
 
-void Upp::TopWindow::Overlap(bool effect)
+void TopWindow::Overlap(bool effect)
 {
 	state = OVERLAPPED;
 	if(top && top->coco && top->coco->window && top->coco->window.zoomed)
@@ -341,5 +345,6 @@ void Upp::TopWindow::Overlap(bool effect)
 		[top->coco->window deminiaturize:top->coco->window];
 }
 
+}
 
 #endif

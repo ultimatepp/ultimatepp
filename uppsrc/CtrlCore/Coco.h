@@ -163,7 +163,9 @@ struct MMImp;
 
 #define GUIPLATFORM_CTRL_DECLS_INCLUDE <CtrlCore/CocoCtrl.h>
 
-#define GUIPLATFORM_PASTECLIP_DECLS
+#define GUIPLATFORM_PASTECLIP_DECLS \
+void *nspasteboard; \
+friend struct MMImp;
 
 #define GUIPLATFORM_TOPWINDOW_DECLS_INCLUDE <CtrlCore/CocoTop.h>
 
