@@ -2,23 +2,25 @@ sooner:
 
 - Find in files - wrong ascent in results
 - scrollbar minimal thumb issue
+- tabctrl weird image
 
 - UHD problem with tabbar
 - UHD problem with FileSel
 - UHD problem with Prompt text size ([g ?)
-- UHD test cursor size issue
 - initial focus in uword
 - Ctrl key gets stuck
 - fix package organiser link options (joining link options missing space)
 - perhaps better UTI names
-- improve spinbuttons
+- CH improve spinbuttons
 - Delete CocoClip.mm -> crash
-- tabbat weird image
-- cursor trouble osscilation
-- after mouse up, cursor changes to arrow
-- icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
-- bool SystemDraw::IsPaintingOp(const Rect& r) const
 
+* cursor trouble osscilation
+* after mouse up, cursor changes to arrow
+* icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
+
+- bool SystemDraw::IsPaintingOp(const Rect& r) const
+- download .scd files
+- IconDes could show hotspots always
 
 later:
 
@@ -29,7 +31,7 @@ later:
 - ch progress
 - ch slider
 - ch tabctrl
-- ch improve button matching to viewedge
+- ch improve button matching to viewedge in droplist / UHD
 - ch focus
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
@@ -60,6 +62,7 @@ later:
 
 done:
 
+- UHD test cursor size issue
 - ClipFmt<Image>
 - GetPrimaryScreenArea
 * Chameleon

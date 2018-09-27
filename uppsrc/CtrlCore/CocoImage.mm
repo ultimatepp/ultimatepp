@@ -168,7 +168,7 @@ NSCursor *GetNSCursor(int kind)
 #pragma clang diagnostic pop
 
 void  Ctrl::SetMouseCursor(const Image& img)
-{
+{return; // until ugly oscillation issue is fixed....
 	int64 h = img.GetAuxData();
 	if(h) {
 		[GetNSCursor(h) set];

@@ -169,6 +169,9 @@ void ChHostSkin()
 		s.look[CTRL_HOTCHECKED] = h[CTRL_HOT];
 	}
 
+//	ColoredOverride(CtrlsImg::Iml(), CtrlsImg::Iml()); return _DBG_;
+
+
 	{
 		Color menuink = CocoColor(COCO_SELECTEDMENUTEXT);
 		SColorMenu_Write(AvgColor(AutoCrop(Coco_ThemeImage(30, 20, 10, COCO_MENU, 0, CTRL_NORMAL))));
