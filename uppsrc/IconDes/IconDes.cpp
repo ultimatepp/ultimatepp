@@ -334,8 +334,10 @@ Image IconDes::Copy(const Rect& r)
 {
 	if(!IsCurrent() || r.IsEmpty())
 		return Image();
-	ImageBuffer ib(r.GetSize());
 	Slot& c = Current();
+	if(Rect(GetImageSize()) == r) // return whole image with correct hotspots
+		return c.image;
+	ImageBuffer ib(r.GetSize());
 	for(int y = r.top; y < r.bottom; y++) {
 		const RGBA *s = c.image[y] + r.left;
 		const RGBA *e = c.image[y] + r.right;

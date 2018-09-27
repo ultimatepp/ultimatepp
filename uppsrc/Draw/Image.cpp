@@ -221,12 +221,17 @@ int Image::GetKind() const
 
 void Image::Serialize(Stream& s)
 {
-	int version = 0;
+	int version = 1;
 	s / version;
 	Size sz = GetSize();
 	Point p = GetHotSpot();
 	Size dots = GetDots();
 	s % sz % p % dots;
+	Point p2(0, 0);
+	if(version >= 1) {
+		p2 = Get2ndSpot();
+		s % p2;
+	}
 	int64 len = (int64)sz.cx * (int64)sz.cy * (int64)sizeof(RGBA);
 	if(s.IsLoading()) {
 		if(len) {
@@ -252,6 +257,7 @@ void Image::Serialize(Stream& s)
 
 			b.SetDots(dots);
 			b.SetHotSpot(p);
+			b.Set2ndSpot(p2);
 			*this = b;
 		}
 		else

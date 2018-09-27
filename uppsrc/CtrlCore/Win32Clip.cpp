@@ -310,7 +310,7 @@ String GetTextClip(const String& text, const String& fmt)
 	return Null;
 }
 
-	String ReadClipboardText()
+String ReadClipboardText()
 {
 #ifdef PLATFORM_WINCE
 	return ReadClipboardUnicodeText().ToString();
@@ -360,7 +360,7 @@ Image GetImage(PasteClip& clip)
 		LoadFromString(m, ~clip);
 		if(!m.IsEmpty())
 			return m;
-	}
+				}
 	if(clip.Accept("dib")) {
 		String data = ~clip;
 		if((unsigned)data.GetCount() < sizeof(BITMAPINFO)) return Null;
