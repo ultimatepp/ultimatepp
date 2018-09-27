@@ -23,3 +23,4 @@ Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
 END_UPP_NAMESPACE
 
 #endif
+	
