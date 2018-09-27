@@ -22,7 +22,7 @@ struct MyApp : TopWindow {
 				int width = fnt[ch];
 				w.DrawRect(x, y, width - 1, fnt.GetAscent(), Color(255, 255, 200));
 				w.DrawRect(x, y + fnt.GetAscent(), width - 1, fnt.GetDescent(), Color(255, 200, 255));
-				w.DrawRect(x + width - 1, y, 1, fnt.GetHeight(), Black());
+				w.DrawRect(x + width - 1, y, 1, fnt.GetCy(), Black());
 				w.DrawText(x, y, WString(ch, 1), fnt);
 				x += width;
 			}
