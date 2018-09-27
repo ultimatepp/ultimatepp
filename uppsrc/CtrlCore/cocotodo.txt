@@ -1,11 +1,8 @@
 sooner:
 
-- Find in files - wrong ascent in results
-- scrollbar minimal thumb issue
-- tabctrl weird image
+- UHD problem with FileSel
 
 - UHD problem with tabbar
-- UHD problem with FileSel
 - UHD problem with Prompt text size ([g ?)
 - initial focus in uword
 - Ctrl key gets stuck
@@ -28,11 +25,14 @@ later:
 * Mac menu
 * Drag&Drop
 
+- ch disabled option looks weird
 - ch progress
 - ch slider
 - ch tabctrl
 - ch improve button matching to viewedge in droplist / UHD
 - ch focus
+
+- filesel icons
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
@@ -60,8 +60,13 @@ later:
 
 - implement DrawPoly... patterns
 
+- FileSelector
+
 done:
 
+- Find in files - wrong ascent in results
+- scrollbar minimal thumb issue
+- tabctrl weird image
 - UHD test cursor size issue
 - ClipFmt<Image>
 - GetPrimaryScreenArea

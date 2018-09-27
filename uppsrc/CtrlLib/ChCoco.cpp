@@ -200,8 +200,9 @@ void ChHostSkin()
 		ScrollBar::Style& s = ScrollBar::StyleDefault().Write();
 		s.arrowsize = 0; // no arrows
 		s.through = true;
-		int sz = Coco_Metric(0);
-		s.barsize = s.thumbwidth = DPI(sz); // kThemeMetricScrollBarWidth
+		int sz = Coco_Metric(0); // kThemeMetricScrollBarWidth
+		s.barsize = s.thumbwidth = DPI(sz);
+		s.thumbmin = 3 * s.barsize / 2;
 		for(int status = CTRL_NORMAL; status <= CTRL_DISABLED; status++) {
 			s.vupper[status] = s.vlower[status] =
 				Hot3(Coco_ThemeImage(SColorFace(), sz, 40, 0, COCO_SCROLLTRACK, 0, status));
