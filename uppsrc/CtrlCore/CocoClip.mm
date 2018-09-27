@@ -10,7 +10,7 @@ namespace Upp {
 
 NSString *PasteboardType(const String& fmt)
 {
-	return decode(fmt, "text", NSPasteboardTypeString, "image", NSPasteboardTypePNG,
+	return decode(fmt, "text", NSPasteboardTypeString, "png", NSPasteboardTypePNG,
 	                   "files", NSFilenamesPboardType, "url", NSURLPboardType,
 	                   "rtf", NSPasteboardTypeRTF,
 	                   [NSString stringWithUTF8String:~fmt]);
@@ -50,7 +50,7 @@ NSPasteboard *Pasteboard(bool dnd = false)
 		return;
 	}
 	
-	Upp::String fmt = [type isEqualTo:NSPasteboardTypePNG] ? "image" :
+	Upp::String fmt = [type isEqualTo:NSPasteboardTypePNG] ? "png" :
 	                  [type isEqualTo:NSPasteboardTypeRTF] ? "rtf" :
 	                                                          Upp::ToString(type);
 	Upp::String raw = render(fmt);
@@ -222,7 +222,7 @@ String GetTextClip(const String& text, const String& fmt)
 
 const char *ClipFmtsImage()
 {
-	return "image";
+	return "image;png";
 }
 
 bool AcceptImage(PasteClip& clip)
@@ -234,7 +234,15 @@ bool AcceptImage(PasteClip& clip)
 Image GetImage(PasteClip& clip)
 {
 	GuiLock __;
-	return PNGRaster().LoadString(clip.Get("image"));
+	if(clip.Accept("image")) {
+		Image m;
+		LoadFromString(m, ~clip);
+		if(!m.IsEmpty())
+			return m;
+	}
+	if(clip.Accept("png"))
+		return PNGRaster().LoadString(~clip);
+	return Null;
 }
 
 Image ReadClipboardImage()
@@ -244,18 +252,28 @@ Image ReadClipboardImage()
 	return GetImage(d);
 }
 
-String sImage(const Value& image)
+String sPng(const Value& image)
 {
 	if(IsNull(image))
 		return Null;
+	return PNGEncoder().SaveString(image);
+}
+
+String sImage(const Value& image)
+{
 	Image img = image;
-	return PNGEncoder().SaveString(img);
+	return StoreAsString(img);
 }
 
 String GetImageClip(const Image& img, const String& fmt)
 {
 	GuiLock __;
-	return sImage(img);
+	if(img.IsEmpty()) return Null;
+	if(fmt == "image")
+		return sImage(img);
+	if(fmt == "png")
+		return sPng(img);
+	return Null;
 }
 
 void Append(VectorMap<String, ClipData>& data, const Image& img)
@@ -266,8 +284,10 @@ void Append(VectorMap<String, ClipData>& data, const Image& img)
 void AppendClipboardImage(const Image& img)
 {
 	GuiLock __;
-	if(img.IsEmpty()) return;
+	if(img.IsEmpty())
+		return;
 	AppendClipboard("image", img, sImage);
+	AppendClipboard("png", img, sPng);
 }
 
 bool AcceptFiles(PasteClip& clip)

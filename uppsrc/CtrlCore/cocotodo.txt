@@ -1,6 +1,5 @@
 sooner:
 
-- ClipFmt<Image>
 - Find in files - wrong ascent in results
 - scrollbar minimal thumb issue
 
@@ -61,6 +60,7 @@ later:
 
 done:
 
+- ClipFmt<Image>
 - GetPrimaryScreenArea
 * Chameleon
 * UHD
