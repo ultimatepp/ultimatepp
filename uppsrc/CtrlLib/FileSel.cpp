@@ -83,11 +83,11 @@ Image GetFileIcon(const char *path, bool dir, bool force, bool large, bool quick
 
 #if defined(PLATFORM_X11) && !defined(flagNOGTK)
 
-Image GtkThemeIcon(const char *name, bool large);
+Image GtkThemeIcon(const char *name, int sz);
 
 Image GnomeImage(const char *s, bool large = false)
 {
-	return GtkThemeIcon(String("gnome-") + s, large);
+	return GtkThemeIcon(String("gnome-") + s, DPI(large ? 48 : 16));
 }
 
 Image SystemImage(const char *s, bool large = false)
