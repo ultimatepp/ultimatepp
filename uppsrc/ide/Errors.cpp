@@ -716,10 +716,12 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 			int x = r.left;
 			for(int i = 0; i < hln.GetCount(); i++) {
 				Font fnt = StdFont();
+				int a = fnt.GetAscent();
 				LineEdit::Highlight& h = hln[i];
 				fnt.Bold(h.font.IsBold());
 				fnt.Italic(h.font.IsItalic());
 				fnt.Underline(h.font.IsUnderline());
+				a -= fnt.GetAscent();
 				int cw = fnt[h.chr];
 				if(h.chr == '\t')
 					cw = 4 * fnt[' '];
@@ -732,7 +734,7 @@ void Ide::FoundDisplay::Paint(Draw& w, const Rect& r, const Value& q, Color ink,
 				if(i >= sl && i < sh && !(style & (CURSOR|SELECT|READONLY)) && !text)
 					w.DrawRect(x, y, cw, fcy, hpaper);
 				if(h.chr != '\t' && text)
-					w.DrawText(x, y, &h.chr, fnt, hink, 1);
+					w.DrawText(x, y + a, &h.chr, fnt, hink, 1);
 				x += cw;
 			}
 		}

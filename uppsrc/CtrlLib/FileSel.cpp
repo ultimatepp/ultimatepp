@@ -2094,7 +2094,7 @@ FileSel::FileSel()
 	ArrangeOKCancel(ok, cancel);
 	Acceptor(ok, IDOK); ok.Ok();
 	Rejector(cancel, IDCANCEL); cancel.Cancel();
-	list.IconWidth(16).Renaming().Columns(3).ClickKill();
+	list.IconWidth(DPI(16)).Renaming().Columns(3).ClickKill();
 	list.WhenLeftDouble = THISBACK(OpenItem2);
 	dirup <<= THISBACK(DirUp);
 	Add(dirup);
