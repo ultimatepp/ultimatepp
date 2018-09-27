@@ -32,11 +32,11 @@ void    AssertFailed(const char *file, int line, const char *cond);
 void    InstallPanicMessageBox(void (*mb)(const char *title, const char *text));
 void    PanicMessageBox(const char *title, const char *text);
 
-#define VERIFY(x)        ((x) ? (void)0 : UPP::AssertFailed(__FILE__, __LINE__, #x))
+#define VERIFY(x)        ((x) ? (void)0 : ::Upp::AssertFailed(__FILE__, __LINE__, #x))
 
 #ifdef _DEBUG
 
-#define ASSERT_(x, msg)  ((x) ? (void)0 : UPP::AssertFailed(__FILE__, __LINE__, msg))
+#define ASSERT_(x, msg)  ((x) ? (void)0 : ::Upp	::AssertFailed(__FILE__, __LINE__, msg))
 #define ASSERT(x)        ASSERT_(x, #x)
 
 #else

@@ -1,11 +1,13 @@
 #include "CocoMM.h"
 
-#ifdef PLATFORM_COCOA
-
 #define LLOG(x) // DLOG(x)
 
-int  Upp::Ctrl::WndCaretTime;
-bool Upp::Ctrl::WndCaretVisible;
+#ifdef PLATFORM_COCOA
+
+namespace Upp {
+
+int  Ctrl::WndCaretTime;
+bool Ctrl::WndCaretVisible;
 
 static NSAutoreleasePool *main_coco_pool;
 static NSEvent           *current_event;
@@ -31,7 +33,7 @@ static void ReleaseCurrentEvent()
 
 void SyncPopupFocus(NSWindow *win)
 {
-	Upp::Ctrl *q = Upp::Ctrl::GetFocusCtrl();
+	Ctrl *q = Ctrl::GetFocusCtrl();
 	if(q) {
 		q = q->GetTopCtrl();
 		if(q->IsPopUp() && q->GetNSWindow() != win) {
@@ -41,11 +43,9 @@ void SyncPopupFocus(NSWindow *win)
 	}
 }
 
-namespace Upp {
-	extern const char *sClipFmtsRTF;
-};
+extern const char *sClipFmtsRTF;
 
-void Upp::CocoInit(int argc, const char **argv, const char **envptr)
+void CocoInit(int argc, const char **argv, const char **envptr)
 {
 	Ctrl::GlobalBackBuffer();
     main_coco_pool = [NSAutoreleasePool new];
@@ -66,7 +66,7 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
     [NSApp activateIgnoringOtherApps:YES];
     
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
-	Font::SetFace(0, Upp::ToString((CFStringRef)[sysfont familyName]), Font::TTF);
+	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	
 	Ctrl::SetUHDEnabled(true);
 
@@ -90,39 +90,39 @@ void Upp::CocoInit(int argc, const char **argv, const char **envptr)
 	      return e;
     }];
     
-    Upp::sClipFmtsRTF = "rtf";
+    sClipFmtsRTF = "rtf";
     
-    Upp::Ctrl::Csizeinit();
+    Ctrl::Csizeinit();
 }
 
-void Upp::CocoExit()
+void CocoExit()
 {
 	ReleaseCurrentEvent();
 	[main_coco_pool release];
 }
 
-int Upp::Ctrl::GetKbdDelay()
+int Ctrl::GetKbdDelay()
 {
 	GuiLock __;
 	return int(1000 * NSEvent.keyRepeatDelay);
 }
 
-int Upp::Ctrl::GetKbdSpeed()
+int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
 	return int(1000 * NSEvent.keyRepeatInterval);
 }
 
-bool Upp::Ctrl::IsWaitingEvent()
+bool Ctrl::IsWaitingEvent()
 {
 	return GetNextEvent(nil);
 }
 
-bool Upp::Ctrl::ProcessEvent(bool *)
+bool Ctrl::ProcessEvent(bool *)
 {
 	ASSERT(IsMainThread());
 
-	Upp::AutoreleasePool __;
+	AutoreleasePool __;
 	
 	ONCELOCK {
 		[NSApp finishLaunching];
@@ -144,7 +144,7 @@ bool Upp::Ctrl::ProcessEvent(bool *)
 
 void SweepMkImageCache();
 
-bool Upp::Ctrl::ProcessEvents(bool *quit)
+bool Ctrl::ProcessEvents(bool *quit)
 {
 	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
@@ -160,7 +160,7 @@ bool Upp::Ctrl::ProcessEvents(bool *quit)
 }
 
 
-void Upp::Ctrl::EventLoop(Ctrl *ctrl)
+void Ctrl::EventLoop(Ctrl *ctrl)
 {
 	GuiLock __;
 	ASSERT(IsMainThread());
@@ -196,7 +196,7 @@ void Upp::Ctrl::EventLoop(Ctrl *ctrl)
 
 static std::atomic<bool> sGuiSleep;
 
-void Upp::Ctrl::GuiSleep(int ms)
+void Ctrl::GuiSleep(int ms)
 {
 	ASSERT(IsMainThread());
 	sGuiSleep = true;
@@ -204,20 +204,24 @@ void Upp::Ctrl::GuiSleep(int ms)
 	sGuiSleep = false;
 }
 
-namespace Upp {
 void WakeUpGuiThread(void)
 {
 	if(sGuiSleep) {
 		sGuiSleep = false;
 		[NSApp postEvent:[NSEvent otherEventWithType:NSEventTypeApplicationDefined
-		                          location:NSMakePoint(0, 0) modifierFlags:0 timestamp:0.0
-		                          windowNumber:0 context:nil subtype: 0 data1:0 data2:0]
-		       atStart:YES];
+		                                    location:NSMakePoint(0, 0)
+		                               modifierFlags:0
+		                                   timestamp:0.0
+		                                windowNumber:0
+		                                     context:nil
+		                                     subtype:0
+		                                       data1:0
+		                                       data2:0]
+		         atStart:YES];
 	}
 }
-};
 
-void  Upp::Ctrl::AnimateCaret()
+void  Ctrl::AnimateCaret()
 {
 	GuiLock __;
 	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
@@ -227,7 +231,7 @@ void  Upp::Ctrl::AnimateCaret()
 	}
 }
 
-void Upp::Ctrl::PaintCaret(SystemDraw& w)
+void Ctrl::PaintCaret(SystemDraw& w)
 {
 	GuiLock __;
 	LLOG("PaintCaret " << Name() << ", caretCtrl: " << caretCtrl << ", WndCaretVisible: " << WndCaretVisible);
@@ -235,7 +239,7 @@ void Upp::Ctrl::PaintCaret(SystemDraw& w)
 		w.DrawRect(caretx, carety, caretcx, caretcy, InvertColor);
 }
 
-void Upp::Ctrl::SetCaret(int x, int y, int cx, int cy)
+void Ctrl::SetCaret(int x, int y, int cx, int cy)
 {
 	GuiLock __;
 	LLOG("SetCaret " << Name());
@@ -252,64 +256,64 @@ void Upp::Ctrl::SetCaret(int x, int y, int cx, int cy)
 	}
 }
 
-void Upp::Ctrl::SyncCaret() {
+void Ctrl::SyncCaret() {
 	GuiLock __;
 //	LLOG("SyncCaret");
 	if(focusCtrl != caretCtrl) {
-		LLOG("SyncCaret DO " << Upp::Name(caretCtrl) << " -> " << Upp::Name(focusCtrl));
+		LLOG("SyncCaret DO " << Name(caretCtrl) << " -> " << Name(focusCtrl));
 		RefreshCaret();
 		caretCtrl = focusCtrl;
 		RefreshCaret();
 	}
 }
 
-Upp::Rect Upp::Ctrl::GetWorkArea() const
+Rect Ctrl::GetWorkArea() const
 {
 	return GetPrimaryWorkArea();
 }
 
-void Upp::Ctrl::GetWorkArea(Array<Rect>& rc)
+void Ctrl::GetWorkArea(Array<Rect>& rc)
 {
 	GuiLock __;
 	rc.Add(GetPrimaryWorkArea());
 }
 
-Upp::Rect Upp::Ctrl::GetVirtualWorkArea()
+Rect Ctrl::GetVirtualWorkArea()
 {
 	return GetPrimaryWorkArea();
 }
 
-Upp::Rect Upp::Ctrl::GetVirtualScreenArea()
+Rect Ctrl::GetVirtualScreenArea()
 {
 	return GetPrimaryWorkArea();
 }
 
-Upp::Rect MakeScreenRect(NSScreen *screen, CGRect r)
+Rect MakeScreenRect(NSScreen *screen, CGRect r)
 {
 	r.origin.y = [screen frame].size.height - r.origin.y - r.size.height;
 	return MakeRect(r);
 }
 
-Upp::Rect Upp::Ctrl::GetPrimaryWorkArea()
+Rect Ctrl::GetPrimaryWorkArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
 		return DPI(1) * MakeScreenRect(screen, [screen visibleFrame]);
 	return Rect(0, 0, 1024, 768);
 }
 
-Upp::Rect Upp::Ctrl::GetPrimaryScreenArea()
+Rect Ctrl::GetPrimaryScreenArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
 		return DPI(1) * MakeScreenRect(screen, [screen frame]);
 	return Rect(0, 0, 1024, 768);
 }
 
-bool Upp::Ctrl::IsCompositedGui()
+bool Ctrl::IsCompositedGui()
 {
 	return true;
 }
 
-Upp::Rect Upp::Ctrl::GetDefaultWindowRect()
+Rect Ctrl::GetDefaultWindowRect()
 {
 	GuiLock __;
 	Rect r  = GetPrimaryWorkArea();
@@ -324,29 +328,29 @@ Upp::Rect Upp::Ctrl::GetDefaultWindowRect()
 	return RectC(r.left + pos + 20, r.top + pos + 20, cx, cy);
 }
 
-void Upp::Ctrl::GuiPlatformGetTopRect(Rect& r) const
+void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 {
 }
 
-void Upp::MMCtrl::SyncRect(CocoView *view)
+void MMCtrl::SyncRect(CocoView *view)
 {
 	NSWindow *win = [view window];
 	view->ctrl->SetWndRect(DPI(1) *
 	                       MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
 }
 
-void Upp::AppendClipboardText(const String& s)
+void AppendClipboardText(const String& s)
 {
 	CFRef<CFStringRef> cs = CFStringCreateWithCString(NULL, (const char *)~s.ToString(), kCFStringEncodingUTF8);
     [[NSPasteboard generalPasteboard] setString:(NSString *)~cs forType:NSPasteboardTypeString];
 }
 
-void Upp::AppendClipboardUnicodeText(const WString& s)
+void AppendClipboardUnicodeText(const WString& s)
 {
 	AppendClipboardText(s.ToString());
 }
 
-Upp::ViewDraw::ViewDraw(Ctrl *ctrl)
+ViewDraw::ViewDraw(Ctrl *ctrl)
 {
 	EnterGuiMutex();
 	ASSERT(ctrl->top->coco);
@@ -361,11 +365,13 @@ Upp::ViewDraw::ViewDraw(Ctrl *ctrl)
 	Clipoff(Rect(r.TopLeft() - tr.TopLeft(), r.GetSize()));
 }
 
-Upp::ViewDraw::~ViewDraw()
+ViewDraw::~ViewDraw()
 {
 	End();
 	CGContextFlush(cgHandle);
 	LeaveGuiMutex();
 }
+
+};
 
 #endif

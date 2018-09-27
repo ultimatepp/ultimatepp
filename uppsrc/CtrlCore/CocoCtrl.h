@@ -24,4 +24,6 @@ public:
 	
 	void  *GetNSWindow() const;
 	void  *GetNSView() const;
+	
+	void   RegisterCocoaDropFormats();
 //$ };

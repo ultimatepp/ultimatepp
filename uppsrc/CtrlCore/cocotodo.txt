@@ -1,5 +1,6 @@
 sooner:
 
+- fix modifier keys (read before each event)
 - UHD problem with tabbar
 - UHD problem with Prompt text size ([g ?)
 - initial focus in uword
@@ -7,7 +8,7 @@ sooner:
 - fix package organiser link options (joining link options missing space)
 - perhaps better UTI names
 - CH improve spinbuttons
-- Delete CocoClip.mm -> crash
+- Delete CocoDnD.cpp -> crash
 
 * cursor trouble osscilation
 * after mouse up, cursor changes to arrow
@@ -30,6 +31,8 @@ later:
 - ch tabctrl
 - ch improve button matching to viewedge in droplist / UHD
 - ch focus
+
+- improve dnd protocol - allow macstyle images and offsets
 
 - filesel icons
 

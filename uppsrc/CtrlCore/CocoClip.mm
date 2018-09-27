@@ -93,6 +93,14 @@ void ClearClipboard()
 	ClearClipboard(false);
 }
 
+NSMutableSet *PasteboardTypes(const Vector<String>& fmt)
+{
+	NSMutableSet *types = [[[NSMutableSet alloc] init] autorelease];
+	for(auto id : fmt)
+		[types addObject:PasteboardType(id)];
+	return types;
+}
+
 void AppendClipboard(bool dnd, const char *format, const Value& value, String (*render)(const Value& data))
 {
 	GuiLock __;
@@ -102,17 +110,31 @@ void AppendClipboard(bool dnd, const char *format, const Value& value, String (*
 	for(String fmt : Split(format, ';'))
 		data.GetAdd(fmt) = ClipData(value, render);
 
-	NSAutoreleasePool *pool;
-	pool = [[NSAutoreleasePool alloc] init];
+	AutoreleasePool ___;
 
-	NSMutableSet *types = [[NSMutableSet alloc] init];
-	for(auto id : data.GetKeys())
-		[types addObject:PasteboardType(id)];
+	[Pasteboard(dnd) declareTypes:[PasteboardTypes(data.GetKeys()) allObjects]
+	                        owner:ClipboardOwner(dnd)];
+}
 
-	[Pasteboard(dnd) declareTypes:[types allObjects] owner:ClipboardOwner(dnd)];
+Index<String> drop_formats;
 
-	[types release];
-	[pool release];
+void Ctrl::RegisterCocoaDropFormats()
+{
+	AutoreleasePool ___;
+	NSView *nsview = (NSView *)GetNSView();
+	[nsview registerForDraggedTypes:[PasteboardTypes(drop_formats.GetKeys()) allObjects]];
+}
+
+void RegisterDropFormats(const char *formats)
+{
+	for(String fmt : Split(formats, ';'))
+		drop_formats.FindAdd(fmt);
+	for(Ctrl *q : Ctrl::GetTopCtrls())
+		q->RegisterCocoaDropFormats();
+}
+
+INITBLOCK {
+	RegisterDropFormats("text;png;image;rtf;files;url");
 }
 
 void AppendClipboard(const char *format, const Value& value, String (*render)(const Value& data))
@@ -132,34 +154,44 @@ void AppendClipboard(const char *format, const byte *data, int length)
 	AppendClipboard(format, String(data, length));
 }
 
+bool IsFormatAvailable(NSPasteboard *pasteboard, const char *fmt)
+{
+	return [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:PasteboardType(fmt), nil]];
+}
+
+String ReadFormat(NSPasteboard *pasteboard, const char *fmt)
+{
+	NSData *data = [pasteboard dataForType:PasteboardType(fmt)];
+	return String((const char *)[data bytes], [data length]);
+}
+	
 bool PasteClip::IsAvailable(const char *fmt) const
 {
-	return IsClipboardAvailable(fmt);
+	return nspasteboard ? IsFormatAvailable((NSPasteboard *)nspasteboard, fmt)
+	                    : IsClipboardAvailable(fmt);
 }
 
 String PasteClip::Get(const char *fmt) const
 {
-	return ReadClipboard(fmt);
+	return nspasteboard ? ReadFormat((NSPasteboard *)nspasteboard, fmt)
+	                    : ReadClipboard(fmt);
 }
 
 void PasteClip::GuiPlatformConstruct()
 {
+	nspasteboard = NULL;
 }
 
-bool IsClipboardAvailable(const char *id)
+bool IsClipboardAvailable(const char *fmt)
 {
-	return [[NSPasteboard generalPasteboard]
-	        availableTypeFromArray:[NSArray arrayWithObjects:PasteboardType(id), nil]];
+	return IsFormatAvailable([NSPasteboard generalPasteboard], fmt);
 }
 
-String ReadClipboard(const char *fmt_)
+String ReadClipboard(const char *fmt)
 {
-	String fmt = fmt_;
-	if(fmt == "text")
-		return ToString([[NSPasteboard generalPasteboard] stringForType:NSPasteboardTypeString]);
-	NSData *data = [[NSPasteboard generalPasteboard] dataForType:PasteboardType(fmt)];
-	return String((const char *)[data bytes], [data length]);
+	return ReadFormat([NSPasteboard generalPasteboard], fmt);
 }
+
 
 bool IsClipboardAvailableText()
 {
