@@ -556,9 +556,8 @@ bool IsEmptyImage(const Image& m)
 	return true;
 }
 
-Image GtkThemeIcon(const char *name, bool large)
+Image GtkThemeIcon(const char *name, int rsz)
 {
-	int rsz = large ? 48 : 16;
 	Image m = GetGTK(gtk__parent(), rsz, 0, name, GTK_THEMEICON, 0, 0);
 	Size sz = m.GetSize();
 	if(sz.cx > rsz || sz.cy > rsz)

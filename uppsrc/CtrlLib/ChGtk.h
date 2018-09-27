@@ -145,7 +145,7 @@ void GtkChImgWith(Value& look, int shadow, int state, const Image& img, Color c,
 void GtkChImgWith(Value *look, const Image& img, int kind, Point offset = Point(0, 0));
 bool IsEmptyImage(const Image& m);
 
-Image  GtkThemeIcon(const char *name, bool large);
+Image  GtkThemeIcon(const char *name, int sz);
 
 int    GtkStyleInt(const char *name);
 String GtkStyleString(const char *name);
