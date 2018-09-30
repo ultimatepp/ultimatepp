@@ -85,7 +85,7 @@ bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& s
 		memcpy(env, wenv, (len + 2) * sizeof(wchar));
 	}
 #endif
-	return CreateProcessW(NULL, cmd, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr, wcd, &si, &pi);
+	return CreateProcessW(NULL, cmd, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr, cd ? ~wcd : NULL, &si, &pi);
 }
 #endif
 
