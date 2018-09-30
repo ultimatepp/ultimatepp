@@ -204,6 +204,11 @@ struct MMImp {
 	{
 		ctrl->DnDLeave();
 	}
+	
+	static void DoCursorShape()
+	{
+		Ctrl::DoCursorShape();
+	}
 };
 
 };
@@ -271,6 +276,10 @@ struct MMImp {
 - (void)flagsChanged:(NSEvent *)e {
 	if(!Upp::MMImp::KeyFlags(ctrl, e))
 		[super flagsChanged:e];
+}
+
+- (void)cursorUpdate:(NSEvent *)event {
+	Upp::MMImp::DoCursorShape();
 }
 
 - (BOOL)windowShouldClose:(NSWindow *)sender {
