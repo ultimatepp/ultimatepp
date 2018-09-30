@@ -208,7 +208,7 @@ void LocalHost::Launch(const char *_cmdline, bool console)
 	STARTUPINFOW si;
 	ZeroMemory(&si, sizeof(STARTUPINFOW));
 	si.cb = sizeof(STARTUPINFOW);
-	if(Win32CreateProcess(cmdline, ~environment, si, pi)) {
+	if(Win32CreateProcess(cmdline, ~environment, si, pi, NULL)) {
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
 	}

@@ -38,7 +38,7 @@ void   DllFn(T& x, const char *dll, const char *fn)
 	x = (T)GetDllFn(dll, fn);
 }
 
-bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi);
+bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi, const char *cd);
 
 #ifndef PLATFORM_WINCE
 String GetSystemDirectory();

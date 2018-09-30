@@ -66,10 +66,11 @@ static void sNoBlock(int fd)
 #endif
 
 #ifdef PLATFORM_WIN32
-bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi)
+bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& si, PROCESS_INFORMATION& pi, const char *cd)
 { // provides conversion of charset for cmdline and envptr
 	WString wcmd(command);
 	int n = wcmd.GetCount() + 1;
+	WString wcd(cd);
 	Buffer<wchar> cmd(n);
 	memcpy(cmd, wcmd, n * sizeof(wchar));
 #if 0 // unicode environment not necessary for now
@@ -84,11 +85,11 @@ bool Win32CreateProcess(const char *command, const char *envptr, STARTUPINFOW& s
 		memcpy(env, wenv, (len + 2) * sizeof(wchar));
 	}
 #endif
-	return CreateProcessW(NULL, cmd, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr, NULL, &si, &pi);
+	return CreateProcessW(NULL, cmd, NULL, NULL, TRUE, NORMAL_PRIORITY_CLASS, (void *)envptr, wcd, &si, &pi);
 }
 #endif
 
-bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool spliterr, const char *envptr)
+bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool spliterr, const char *envptr, const char *cd)
 {
 	LLOG("LocalProcess::Start(\"" << command << "\")");
 
@@ -173,7 +174,7 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	    }
 		command = cmdh;
 	}
-	bool h = Win32CreateProcess(command, envptr, si, pi);
+	bool h = Win32CreateProcess(command, envptr, si, pi, cd);
 	LLOG("CreateProcess " << (h ? "succeeded" : "failed"));
 	CloseHandle(hErrorWrite);
 	CloseHandle(hInputRead);
@@ -337,6 +338,9 @@ bool LocalProcess::DoStart(const char *command, const Vector<String> *arg, bool 
 	for(int a = 0; a < args.GetCount(); a++)
 		LLOG("[" << a << "]: <" << (args[a] ? args[a] : "NULL") << ">");
 #endif//DO_LLOG
+
+	if(cd)
+		chdir(cd);
 
 	LLOG("running execve, app = " << app << ", #args = " << args.GetCount());
 	if(envptr) {

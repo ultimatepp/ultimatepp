@@ -1,5 +1,4 @@
 topic "AProcess and LocalProcess";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "AProcess and LocalProcess";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 AProcess]]}}&]
 [s3; &]
@@ -100,40 +100,45 @@ output of process. If anything went wrong, returns String`::GetVoid().&]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Public Method List]]}}&]
 [s3;%% &]
-[s5;:LocalProcess`:`:Start`(const char`*`,const char`*`): [@(0.0.255) bool]_[* Start]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr
-]_`=_NULL)&]
+[s5;:Upp`:`:LocalProcess`:`:Start`(const char`*`,const char`*`,const char`*`): [@(0.0.255) b
+ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmdline], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 cd]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmdline], [%-*@3 envptr 
 ]can provide a new environment for the process, if NULL, then 
-the new process inherits caller`'s environment.&]
+the new process inherits caller`'s environment. [%-*@3 cd] can 
+be used to specify the new current directory for the process.&]
 [s3;%% &]
 [s4; &]
-[s5;:LocalProcess`:`:Start2`(const char`*`,const char`*`): [@(0.0.255) bool]_[* Start2]([@(0.0.255) c
-onst]_[@(0.0.255) char]_`*[*@3 cmdline], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr
-]_`=_NULL)&]
+[s5;:Upp`:`:LocalProcess`:`:Start2`(const char`*`,const char`*`,const char`*`): [@(0.0.255) b
+ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmdline], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 cd]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmdline], [%-*@3 envptr 
 ]can provide a new environment for the process, if NULL, then 
 the new process inherits caller`'s environment. This variant 
 activates mode when standard output and standard error output 
-are read separately using Read2 method.&]
+are read separately using Read2 method. [%-*@3 cd] can be used 
+to specify the new current directory for the process.&]
 [s3;%% &]
 [s4; &]
-[s5;:LocalProcess`:`:Start`(const char`*`,const Vector`<String`>`&`,const char`*`): [@(0.0.255) b
-ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
-ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
- [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL)&]
+[s5;:Upp`:`:LocalProcess`:`:Start`(const char`*`,const Upp`:`:Vector`<Upp`:`:String`>`&`,const char`*`,const char`*`): [@(0.0.255) b
+ool]_[* Start]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Upp`:`:Vector^ V
+ector]<[_^Upp`:`:String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 e
+nvptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cd]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
 envptr ]can provide a new environment for the process, if NULL, 
 then the new process inherits caller`'s environment. This variant 
 passes individual arguments instead of whole commandline, this 
 has advantage that arguments are in POSIX passed directly to 
-execv, without parsing the commandline.&]
+execv, without parsing the commandline. [%-*@3 cd] can be used 
+to specify the new current directory for the process.&]
 [s3;%% &]
 [s4; &]
-[s5;:LocalProcess`:`:Start2`(const char`*`,const Vector`<String`>`&`,const char`*`): [@(0.0.255) b
-ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^topic`:`/`/Core`/src`/Vector`$en`-us`#Vector`:`:class^ V
-ector]<[_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ String]>`&_[*@3 arg],
- [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 envptr]_`=_NULL)&]
+[s5;:Upp`:`:LocalProcess`:`:Start2`(const char`*`,const Upp`:`:Vector`<Upp`:`:String`>`&`,const char`*`,const char`*`): [@(0.0.255) b
+ool]_[* Start2]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cmd], [@(0.0.255) const]_[_^Upp`:`:Vector^ V
+ector]<[_^Upp`:`:String^ String]>`&_[*@3 arg], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 e
+nvptr]_`=_NULL, [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 cd]_`=_NULL)&]
 [s2;%% Starts a new process defined by [%-*@3 cmd], [%-*@3 arg].[%-*@3  
 envptr ]can provide a new environment for the process, if NULL, 
 then the new process inherits caller`'s environment. This variant 
@@ -141,7 +146,8 @@ activates mode when standard output and standard error output
 are read separately using Read2 method. This variant passes individual 
 arguments instead of whole commandline, this has advantage that 
 arguments are in POSIX passed directly to execv, without parsing 
-the commandline.&]
+the commandline. [%-*@3 cd] can be used to specify the new current 
+directory for the process.&]
 [s3; &]
 [s4; &]
 [s5;:Upp`:`:LocalProcess`:`:Finish`(Upp`:`:String`&`): [@(0.0.255) int]_[* Finish]([_^topic`:`/`/Core`/src`/String`$en`-us`#String`:`:class^ S
