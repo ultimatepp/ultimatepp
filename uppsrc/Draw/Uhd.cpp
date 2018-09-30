@@ -71,37 +71,44 @@ Image Upscale2x(const Image& src, RGBA bg)
 
 Image Upscale2x(const Image& src)
 {
-	Size isz = src.GetSize();
-	Image s = RecreateAlpha(Upscale2x(GetOver(CreateImage(isz, White()), src), White()),
-	                        Upscale2x(GetOver(CreateImage(isz, Black()), src), Black()));
+	Size s2 = src.Get2ndSpot();
+	Image s;
+	if(s2.cx > 0 || s2.cy > 0)  // When 2nd spot is defined, it is likely Chameleon rescaling item (e.g. button)
+		s = Magnify(src, 2, 2); // in that case, filtering by smart rescale methods could lead to artifacts
+	else {
+		Size isz = src.GetSize();
+		s = RecreateAlpha(Upscale2x(GetOver(CreateImage(isz, White()), src), White()),
+		                  Upscale2x(GetOver(CreateImage(isz, Black()), src), Black()));
 
-	struct SFilter : ImageFilter9 { // Improve contours
-		virtual RGBA operator()(const RGBA **mx) {
-			RGBA s = mx[1][1];
-			int l = mx[0][1].a;
-			int r = mx[2][1].a;
-			int t = mx[1][0].a;
-			int b = mx[1][2].a;
-			int l1 = 110;
-			int l2 = 230;
-			return l * r * t * b || s.a > l1 || mx[0][1].a > l2 || mx[2][1].a > l2 || mx[1][0].a > l2 || mx[1][2].a > l2 ? s
-			       : RGBAZero();
-		}
-	} ef;
-	s = Filter(s, ef);
+		struct SFilter : ImageFilter9 { // Improve contours
+			virtual RGBA operator()(const RGBA **mx) {
+				RGBA s = mx[1][1];
+				int l = mx[0][1].a;
+				int r = mx[2][1].a;
+				int t = mx[1][0].a;
+				int b = mx[1][2].a;
+				int l1 = 110;
+				int l2 = 230;
+				return l * r * t * b || s.a > l1 || mx[0][1].a > l2 || mx[2][1].a > l2 || mx[1][0].a > l2 || mx[1][2].a > l2 ? s
+				       : RGBAZero();
+			}
+		} ef;
+		s = Filter(s, ef);
+	}
 	ImageBuffer h(s);
 	h.SetResolution(IMAGE_RESOLUTION_UHD);
 	h.SetHotSpot(src.GetHotSpot() * 2);
-	h.Set2ndSpot(src.Get2ndSpot() * 2);
+	h.Set2ndSpot(s2 * 2);
 	return h;
 }
 
 Image Downscale2x(const Image& src)
 {
-	Image m = RescaleFilter(src, src.GetSize() / 2, FILTER_LANCZOS3);
+	Size s2 = src.Get2ndSpot(); // see above...
+	Image m = RescaleFilter(src, src.GetSize() / 2, s2.cx > 0 || s2.cy > 0 ? FILTER_BILINEAR : FILTER_LANCZOS3);
 	ImageBuffer h(m);
 	h.SetResolution(IMAGE_RESOLUTION_STANDARD);
-	h.SetHotSpot(src.GetHotSpot() / 2);
+	h.SetHotSpot(s2 / 2);
 	h.Set2ndSpot(src.Get2ndSpot() / 2);
 	return h;
 }
