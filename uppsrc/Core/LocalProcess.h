@@ -58,14 +58,14 @@ private:
 
 	typedef LocalProcess CLASSNAME;
 
-	bool DoStart(const char *cmdline, const Vector<String> *arg, bool spliterr, const char *envptr = NULL);
+	bool DoStart(const char *cmdline, const Vector<String> *arg, bool spliterr, const char *envptr, const char *cd);
 
 public:
-	bool Start(const char *cmdline, const char *envptr = NULL)        { return DoStart(cmdline, NULL, false, envptr); }
-	bool Start2(const char *cmdline, const char *envptr = NULL)       { return DoStart(cmdline, NULL, true, envptr); }
+	bool Start(const char *cmdline, const char *envptr = NULL, const char *cd = NULL)                         { return DoStart(cmdline, NULL, false, envptr, cd); }
+	bool Start2(const char *cmdline, const char *envptr = NULL, const char *cd = NULL)                        { return DoStart(cmdline, NULL, true, envptr, cd); }
 
-	bool Start(const char *cmd, const Vector<String>& arg, const char *envptr = NULL)        { return DoStart(cmd, &arg, false, envptr); }
-	bool Start2(const char *cmd, const Vector<String>& arg, const char *envptr = NULL)       { return DoStart(cmd, &arg, true, envptr); }
+	bool Start(const char *cmd, const Vector<String>& arg, const char *envptr = NULL, const char *cd = NULL)  { return DoStart(cmd, &arg, false, envptr, cd); }
+	bool Start2(const char *cmd, const Vector<String>& arg, const char *envptr = NULL, const char *cd = NULL) { return DoStart(cmd, &arg, true, envptr, cd); }
 	
 #ifdef PLATFORM_POSIX
 	LocalProcess& DoubleFork(bool b = true)                           { doublefork = b; return *this; }
