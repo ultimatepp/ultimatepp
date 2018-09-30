@@ -203,6 +203,7 @@ void Ide::EditorMenu(Bar& bar)
         dlg.diff.left.RemoveFrame(dlg.p);
         dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
                                                                : editor.Get());
+		dlg.Title("Compare with clipboard");
         dlg.Run();
     });
 	bar.MenuSeparator();
