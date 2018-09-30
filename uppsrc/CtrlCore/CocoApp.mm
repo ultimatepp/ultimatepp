@@ -48,23 +48,25 @@ extern const char *sClipFmtsRTF;
 void CocoInit(int argc, const char **argv, const char **envptr)
 {
 	Ctrl::GlobalBackBuffer();
-    main_coco_pool = [NSAutoreleasePool new];
+	main_coco_pool = [NSAutoreleasePool new];
+	
+	[NSApplication sharedApplication];
+	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
-    [NSApplication sharedApplication];
-    [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-    id menubar = [[NSMenu new] autorelease];
-    id appMenuItem = [[NSMenuItem new] autorelease];
-    [menubar addItem:appMenuItem];
-    [NSApp setMainMenu:menubar];
-    id appMenu = [[NSMenu new] autorelease];
-    id appName = [[NSProcessInfo processInfo] processName];
-    id quitTitle = [@"Quit " stringByAppendingString:appName];
-    id quitMenuItem = [[[NSMenuItem alloc] initWithTitle:quitTitle
-        action:@selector(terminate:) keyEquivalent:@"q"] autorelease];
-    [appMenu addItem:quitMenuItem];
-    [appMenuItem setSubmenu:appMenu];
-    [NSApp activateIgnoringOtherApps:YES];
-    
+	id menubar = [[NSMenu new] autorelease];
+	id appMenuItem = [[NSMenuItem new] autorelease];
+	[menubar addItem:appMenuItem];
+	[NSApp setMainMenu:menubar];
+	id appMenu = [[NSMenu new] autorelease];
+	id appName = [[NSProcessInfo processInfo] processName];
+	id quitTitle = [@"Quit " stringByAppendingString:appName];
+	id quitMenuItem = [[[NSMenuItem alloc] initWithTitle:quitTitle
+	                                              action:@selector(terminate:)
+	                                       keyEquivalent:@"q"] autorelease];
+	[appMenu addItem:quitMenuItem];
+	[appMenuItem setSubmenu:appMenu];
+	[NSApp activateIgnoringOtherApps:YES];
+	
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);
 	

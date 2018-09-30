@@ -179,20 +179,26 @@ void  Ctrl::SetMouseCursor(const Image& img)
 	m.img = img;
 	ImageSysData& sd = cg_image_cache.Get(m);
 
-	Point p = img.GetHotSpot();
-	Size isz = img.GetSize();
-	double scale = 1.0 / DPI(1);
-	NSSize size;
-	size.width = scale * isz.cx;
-	size.height = scale * isz.cy;
-	NSPoint hot;
-	hot.x = scale * p.x;
-	hot.y = scale * p.y;
-	NSImage *nsimg = [[NSImage alloc] initWithCGImage:sd.cgimg size:size];
-	NSCursor *cursor = [[NSCursor alloc] initWithImage:nsimg hotSpot:hot];
+	static CGImageRef cgimg;
+	static NSCursor  *cursor;
+	if(sd.cgimg != cgimg) {
+		cgimg = sd.cgimg;
+		if(cursor)
+			[cursor release];
+		Point p = img.GetHotSpot();
+		Size isz = img.GetSize();
+		double scale = 1.0 / DPI(1);
+		NSSize size;
+		size.width = scale * isz.cx;
+		size.height = scale * isz.cy;
+		NSPoint hot;
+		hot.x = scale * p.x;
+		hot.y = scale * p.y;
+		NSImage *nsimg = [[NSImage alloc] initWithCGImage:cgimg size:size];
+		cursor = [[NSCursor alloc] initWithImage:nsimg hotSpot:hot];
+		[nsimg release];
+	}
 	[cursor set];
-	[cursor release];
-	[nsimg release];
 }
 
 void ImageDraw::Init(int cx, int cy)

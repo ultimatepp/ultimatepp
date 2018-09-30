@@ -3,7 +3,6 @@ sooner:
 - fix modifier keys (read before each event)
 - Ctrl key gets stuck
 - initial focus in uword
-- after mouse up, cursor changes to arrow
 - icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
 
 * Mac menu
@@ -65,7 +64,7 @@ later:
 
 done:
 
-
+- after mouse up, cursor changes to arrow
 - IconDes could show hotspots always
 * cursor trouble osscilation
 - UHD problem with FileSel

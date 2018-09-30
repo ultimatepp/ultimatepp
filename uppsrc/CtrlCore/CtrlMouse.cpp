@@ -628,16 +628,17 @@ bool Ctrl::ReleaseCapture() {
 
 bool Ctrl::ReleaseCtrlCapture() {
 	GuiLock __;
+	LLOG("ReleaseCtrlCapture");
 	if(captureCtrl) {
 		captureCtrl->CancelMode();
 		Ctrl *w = captureCtrl->GetTopCtrl();
-		captureCtrl = mouseCtrl = NULL;
+		captureCtrl = NULL;
+		CheckMouseCtrl();
 		if(w->HasWndCapture()) {
 			w->ReleaseWndCapture();
 			return true;
 		}
 	}
-	captureCtrl = NULL;
 	return false;
 }
 
@@ -701,7 +702,6 @@ Image& Ctrl::CursorOverride()
 
 Image Ctrl::OverrideCursor(const Image& m)
 {
-	LLOG("OverrideCursor");
 	GuiLock __;
 	Image om = CursorOverride();
 	CursorOverride() = m;
