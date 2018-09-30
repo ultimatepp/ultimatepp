@@ -197,6 +197,14 @@ void Ide::EditorMenu(Bar& bar)
 	InsertAdvanced(bar);
 	bar.MenuSeparator();
 	OnlineSearchMenu(bar);
+    bar.Add(IsClipboardAvailableText() && (editor.IsSelection() || editor.GetLength() < 1024*1024),
+            "Compare with clipboard..", [=]() {
+        DiffDlg dlg;
+        dlg.diff.left.RemoveFrame(dlg.p);
+        dlg.diff.Set(ReadClipboardText(), editor.IsSelection() ? editor.GetSelection()
+                                                               : editor.Get());
+        dlg.Run();
+    });
 	bar.MenuSeparator();
 	editor.StdBar(bar);
 }
