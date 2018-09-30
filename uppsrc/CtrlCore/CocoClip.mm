@@ -164,7 +164,7 @@ String ReadFormat(NSPasteboard *pasteboard, const char *fmt)
 	NSData *data = [pasteboard dataForType:PasteboardType(fmt)];
 	return String((const char *)[data bytes], [data length]);
 }
-	
+
 bool PasteClip::IsAvailable(const char *fmt) const
 {
 	return nspasteboard ? IsFormatAvailable((NSPasteboard *)nspasteboard, fmt)
