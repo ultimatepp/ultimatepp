@@ -1026,7 +1026,7 @@ void   TextCtrl::SetSelection(int64 l, int64 h) {
 }
 
 bool   TextCtrl::GetSelection(int64& l, int64& h) const {
-	if(anchor < 0) {
+	if(anchor < 0 || anchor == cursor) {
 		l = h = cursor;
 		return false;
 	}
@@ -1057,7 +1057,8 @@ bool   TextCtrl::RemoveSelection() {
 	if(IsRectSelection())
 		l = RemoveRectSelection();
 	else {
-		GetSelection(l, h);
+		if(!GetSelection(l, h))
+			return false;
 		Remove((int)l, int(h - l));
 	}
 	anchor = -1;
