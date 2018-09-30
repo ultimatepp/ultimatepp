@@ -99,10 +99,6 @@ void IconDes::Paint(Draw& w)
 	}
 	Point hotspot = image.GetHotSpot();
 	Point spot2 = image.Get2ndSpot();
-	if(!IsHotSpot()) {
-		hotspot = Null;
-		spot2 = Null;
-	}
 	int m = isz.cx * magnify + 1;
 	Point mpos = magnify * spos;
 	for(int y = isz.cy * magnify; y >= 0; y -= magnify)
@@ -110,6 +106,10 @@ void IconDes::Paint(Draw& w)
 	m = isz.cy * magnify + 1;
 	for(int x = isz.cx * magnify; x >= 0; x -= magnify)
 		w.DrawRect(x - mpos.x, -mpos.y, 1, m, Black());
+	if(!IsHotSpot()) {
+		hotspot = Null;
+		spot2 = Null;
+	}
 	w.DrawRect(isz.cx * magnify - mpos.x + 1, 0, 9999, 9999, SColorPaper());
 	w.DrawRect(0, isz.cy * magnify - mpos.y + 1, 9999, 9999, SColorPaper());
 	int my0 = -magnify * spos.y;
@@ -132,7 +132,7 @@ void IconDes::Paint(Draw& w)
 					for(int x = x0; x < ex; x++) {
 						if(s->a == 255)
 							w.DrawRect(mx + 1, my + 1, magnify - 1, magnify - 1, *s);
-						else {
+						else { // paint chequered background
 							Color c = StraightColor(*s);
 							Color c1 = Blend(GrayColor(102), c, s->a);
 							w.DrawRect(mx + 1, my + 1, magnify - 1, magnify - 1, c1);
@@ -184,6 +184,15 @@ void IconDes::Paint(Draw& w)
 		DrawFatFrame(w, Rect(magnify * (Current().pastepos - spos),
 		                     magnify * Current().paste_image.GetSize() + Size(1, 1)),
 		             Color(200, 200, 255), 3);
+
+	if(magnify < 9)
+		return;
+	auto PaintHotSpot = [&](Point hotspot, Color c) { // Show hotspots even if not designing them
+		if(hotspot.x > 0 || hotspot.y > 0)
+			DrawFatFrame(w, hotspot.x * magnify, hotspot.y * magnify, magnify + 1, magnify + 1, c, 1 + magnify / 8);
+	};
+	PaintHotSpot(image.GetHotSpot(), LtRed());
+	PaintHotSpot(image.Get2ndSpot(), LtBlue());
 }
 
 }
