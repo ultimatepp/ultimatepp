@@ -61,6 +61,32 @@ bool Ctrl::ReleaseWndCapture()
 }
 
 struct MMImp {
+	static bool KeyFlags(Upp::Ctrl *ctrl, NSEvent *e) {
+		bool alt = GetAlt();
+		bool ctl = GetCtrl();
+		bool sht = GetShift();
+		bool opt = GetOption();
+		Flags(e);
+		if(!ctrl->IsEnabled())
+			return false;
+		
+		if(alt != GetAlt())
+			ctrl->DispatchKey(K_ALT_KEY|(alt * K_KEYUP), 1);
+		if(ctl != GetCtrl())
+			ctrl->DispatchKey(K_CTRL_KEY|(ctl * K_KEYUP), 1);
+		if(sht != GetShift())
+			ctrl->DispatchKey(K_SHIFT_KEY|(sht * K_KEYUP), 1);
+		if(opt != GetOption())
+			ctrl->DispatchKey(K_OPTION_KEY|(opt * K_KEYUP), 1);
+
+		return true;
+	}
+
+	static void Flags(NSEvent *e)
+	{
+		coco_flags = [e modifierFlags];
+	}
+	
 	static bool MouseEvent(CocoView *view, NSEvent *e, int event, double zd = 0)
 	{
 		sCurrentMouseEvent__ = e;
@@ -72,6 +98,7 @@ struct MMImp {
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(DPI(np.x), DPI(np.y));
 		coco_mouse_pos = p + r.TopLeft();
+		Flags(e);
 		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
 		sCurrentMouseEvent__ = NULL;
@@ -98,11 +125,6 @@ struct MMImp {
 			clicktime = msecs();
 		}
 		return b;
-	}
-	
-	static void Flags(NSEvent *e)
-	{
-		coco_flags = [e modifierFlags];
 	}
 	
 	static void Paint(Upp::Ctrl *ctrl, Upp::SystemDraw& w, const Rect& r)
@@ -142,27 +164,6 @@ struct MMImp {
 		return true;
 	}
 
-	static bool KeyFlags(Upp::Ctrl *ctrl, NSEvent *e) {
-		bool alt = GetAlt();
-		bool ctl = GetCtrl();
-		bool sht = GetShift();
-		bool opt = GetOption();
-		Flags(e);
-		if(!ctrl->IsEnabled())
-			return false;
-		
-		if(alt != GetAlt())
-			ctrl->DispatchKey(K_ALT_KEY|(alt * K_KEYUP), 1);
-		if(ctl != GetCtrl())
-			ctrl->DispatchKey(K_CTRL_KEY|(ctl * K_KEYUP), 1);
-		if(sht != GetShift())
-			ctrl->DispatchKey(K_SHIFT_KEY|(sht * K_KEYUP), 1);
-		if(opt != GetOption())
-			ctrl->DispatchKey(K_OPTION_KEY|(opt * K_KEYUP), 1);
-
-		return true;
-	}
-	
 	static void BecomeKey(Upp::Ctrl *ctrl)
 	{
 		LLOG("Become key " << Upp::Name(ctrl));
@@ -192,9 +193,12 @@ struct MMImp {
 		clip.paste = paste;
 		clip.accepted = false;
 		clip.allowed = DND_MOVE|DND_COPY; // TODO: Use draggingSourceOperationMask
+		clip.action = info.draggingSourceOperationMask & NSDragOperationMove ? DND_MOVE
+		                                                                     : DND_COPY;
 		NSPoint np = [nsview convertPoint:[info draggingLocation] fromView:nil];
-		ctrl->DnD(Upp::Point(DPI(np.x), DPI(np.y)) + ctrl->GetScreenView().TopLeft(), clip);
-		// TODO: Resolve allowed actions
+		ctrl->DnD(Upp::Point(DPI(np.x), DPI(np.y)) + ctrl->GetScreenRect().TopLeft(), clip);
+		if(paste && clip.IsAccepted() && clip.GetAction() == DND_COPY)
+			Ctrl::local_dnd_copy = true;
 		return clip.IsAccepted() ? clip.GetAction() == DND_MOVE ? NSDragOperationMove
 		                                                        : NSDragOperationCopy
 		                         : NSDragOperationNone;
@@ -279,6 +283,7 @@ struct MMImp {
 }
 
 - (void)cursorUpdate:(NSEvent *)event {
+	Upp::MMImp::Flags(event);
 	Upp::MMImp::DoCursorShape();
 }
 
@@ -323,17 +328,17 @@ struct MMImp {
 
 - (void)draggingEnded:(id <NSDraggingInfo>)sender
 {
-	return Upp::MMImp::DnDLeave(ctrl);
+	Upp::MMImp::DnDLeave(ctrl);
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-	return Upp::MMImp::DnDLeave(ctrl);
+	Upp::MMImp::DnDLeave(ctrl);
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-	return Upp::MMImp::DnD(ctrl, sender, true);
+	return Upp::MMImp::DnD(ctrl, sender, true) != NSDragOperationNone;
 }
 
 @end

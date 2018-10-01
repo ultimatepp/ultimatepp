@@ -169,6 +169,9 @@ NSCursor *GetNSCursor(int kind)
 
 void  Ctrl::SetMouseCursor(const Image& img)
 {
+	if(GetDragAndDropSource())
+		return;
+
 	int64 h = img.GetAuxData();
 	if(h) {
 		[GetNSCursor(h) set];
@@ -205,7 +208,7 @@ void ImageDraw::Init(int cx, int cy)
 {
 	ib.Create(cx, cy);
 
-	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB(); // TODO: This is probably wrong...
+	static CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
 
 	SystemDraw::Init(CGBitmapContextCreateWithData(~ib, cx, cy, 8, cx * sizeof(RGBA),
 	                                               colorSpace, kCGImageAlphaPremultipliedFirst,

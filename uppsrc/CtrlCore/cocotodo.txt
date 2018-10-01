@@ -2,6 +2,7 @@ sooner:
 
 - fix modifier keys (read before each event)
 - Ctrl key gets stuck
+
 - initial focus in uword
 - icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
 
