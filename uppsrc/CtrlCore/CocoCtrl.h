@@ -9,6 +9,7 @@ private:
 
 	static int                 WndCaretTime;
 	static bool                WndCaretVisible;
+	static bool                local_dnd_copy;
 	static void AnimateCaret();
 	
 	friend void CocoInit(int argc, const char **argv, const char **envptr);

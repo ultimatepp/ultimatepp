@@ -341,17 +341,6 @@ void MMCtrl::SyncRect(CocoView *view)
 	                       MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
 }
 
-void AppendClipboardText(const String& s)
-{
-	CFRef<CFStringRef> cs = CFStringCreateWithCString(NULL, (const char *)~s.ToString(), kCFStringEncodingUTF8);
-    [[NSPasteboard generalPasteboard] setString:(NSString *)~cs forType:NSPasteboardTypeString];
-}
-
-void AppendClipboardUnicodeText(const WString& s)
-{
-	AppendClipboardText(s.ToString());
-}
-
 ViewDraw::ViewDraw(Ctrl *ctrl)
 {
 	EnterGuiMutex();

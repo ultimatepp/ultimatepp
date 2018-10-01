@@ -210,6 +210,19 @@ WString ReadClipboardUnicodeText()
 	return ReadClipboardText().ToWString();
 }
 
+void AppendClipboardText(const String& s)
+{
+	AppendClipboard("text", s);
+	// TODO Remove:
+//	CFRef<CFStringRef> cs = CFStringCreateWithCString(NULL, (const char *)~s.ToString(), kCFStringEncodingUTF8);
+  //  [[NSPasteboard generalPasteboard] setString:(NSString *)~cs forType:NSPasteboardTypeString];
+}
+
+void AppendClipboardUnicodeText(const WString& s)
+{
+	AppendClipboardText(s.ToString());
+}
+
 const char *ClipFmtsText()
 {
 	return "text";
@@ -379,13 +392,15 @@ Ctrl * Ctrl::GetDragAndDropSource()
 }
 
 - (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
-{ // TODO: Looks like between apps, it is always move (?!)
+{
 	result = operation;
 }
 
 @end
 
 namespace Upp {
+
+bool Ctrl::local_dnd_copy;
 
 int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
                         const VectorMap<String, ClipData>& data)
@@ -423,20 +438,28 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 		src->actions |= NSDragOperationCopy;
 	if(actions & DND_MOVE)
 		src->actions |= NSDragOperationMove;
+	
+	NSPoint p = [sCurrentMouseEvent__ locationInWindow];
+	p.y -= size.height;
+	
+	local_dnd_copy = false; // macos does not have ability to change action in performDragOperation
 
 	[nswindow dragImage:nsimg
-	               at:[sCurrentMouseEvent__ locationInWindow]
-	           offset:NSMakeSize(0, 0)
-	            event:sCurrentMouseEvent__
-	       pasteboard:Pasteboard(true)
-	           source:src
-	        slideBack:YES];
+	                 at:p
+	             offset:NSMakeSize(0, 0)
+	              event:sCurrentMouseEvent__
+	         pasteboard:Pasteboard(true)
+	             source:src
+	          slideBack:YES];
 
 	ClipboardOwner(true)->source = NULL;
 
 	[pool release];
 
     CGImageRelease(cgimg);
+    
+    if(local_dnd_copy) // action was local and changed to copy in DragAndDrop
+        return DND_COPY;
     
 	return decode(src->result, NSDragOperationCopy, DND_COPY,
 	                           NSDragOperationMove, DND_MOVE,

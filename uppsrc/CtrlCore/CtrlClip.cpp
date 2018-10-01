@@ -215,7 +215,7 @@ void Ctrl::DnDRepeat()
 		UPP::KillTimeCallback(&dndpos);
 }
 
-	void Ctrl::DnD(Point p, PasteClip& clip)
+void Ctrl::DnD(Point p, PasteClip& clip)
 {
 	GuiLock __;
 	UPP::KillTimeCallback(&dndpos);
