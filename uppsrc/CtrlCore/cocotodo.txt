@@ -1,9 +1,9 @@
 sooner:
 
-- fix modifier keys (read before each event)
-- Ctrl key gets stuck
+- modal disabled window can be closed
 
-- initial focus in uword
+- Uword cursor is blinking even in background
+
 - icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
 
 * Mac menu
@@ -65,6 +65,13 @@ later:
 
 done:
 
+
+[uword] CGContextRestoreGState: invalid context
+
+- fix modifier keys (read before each event)
+- Ctrl key gets stuck
+
+- initial focus in uword
 - after mouse up, cursor changes to arrow
 - IconDes could show hotspots always
 * cursor trouble osscilation

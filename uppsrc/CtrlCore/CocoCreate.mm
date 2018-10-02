@@ -106,7 +106,7 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	top = new Top;
 	top->coco = new CocoTop;
 	top->coco->owner = owner;
-
+	
 	NSRect frame = DesktopRect(GetRect());
 	CocoWindow *window = [[CocoWindow alloc] initWithContentRect:frame styleMask: style
 	                                         backing:NSBackingStoreBuffered defer:false];
@@ -117,6 +117,8 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	window->ctrl = this;
 	window->active = active;
 	window.backgroundColor = [NSColor clearColor];
+
+	isopen = true;
 		
 	CocoView *view = [[[CocoView alloc] initWithFrame:frame] autorelease];
 	view->ctrl = this;
@@ -125,10 +127,9 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	[window setDelegate:view];
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:view];
-	[window makeKeyAndOrderFront:view];
+	[window makeKeyAndOrderFront:window];
 
 	MMCtrl::SyncRect(view);
-	isopen = true;
 	mmtopctrl.Add(this);
 
 	RegisterCocoaDropFormats();
@@ -177,6 +178,7 @@ void Ctrl::WndScrollView(const Rect& r, int dx, int dy)
 
 bool Ctrl::IsWndOpen() const {
 	GuiLock __;
+//	DLOG("IsWndOpen " << Upp::Name(this) << ": " << (bool)top);
 	return top;
 }
 
@@ -224,17 +226,15 @@ void TopWindow::Open(Ctrl *owner)
 		SetRect((center == 1 ? owner->GetRect() : owner ? owner->GetWorkArea()
 		                                                : GetPrimaryWorkArea())
 		        .CenterRect(GetRect().GetSize()));
+	placefocus = true;
 	Create(owner, GetMMStyle(), true);
-	ActivateWnd();
 	SyncCaption();
 	SyncSizeHints();
-	PlaceFocus();
 	if(state == MAXIMIZED)
 		Maximize();
 	if(state == MINIMIZED)
 		Minimize();
-//	if(top)
-//		top->placefocus = true;
+	// Note: window is activated and PlaceFocus invoked by event, later
 }
 
 void TopWindow::Open()

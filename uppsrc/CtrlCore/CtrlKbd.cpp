@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-#define LLOG(x)  // DLOG(x)
+#define LLOG(x)   // DLOG(x)
 
 Ptr<Ctrl> Ctrl::focusCtrl;
 Ptr<Ctrl> Ctrl::focusCtrlWnd;
@@ -228,7 +228,7 @@ bool Ctrl::SetFocus0(bool activate)
 {
 	GuiLock __;
 	USRLOG("      SETFOCUS " << Desc(this));
-	LLOG("Ctrl::SetFocus " << Desc(this));
+	LLOG("Ctrl::SetFocus " << Desc(this) << ", activate: " << activate);
 	LLOG("focusCtrlWnd " << UPP::Name(focusCtrlWnd));
 	LLOG("Ctrl::SetFocus0 -> deferredSetFocus = NULL; was: " << UPP::Name(defferedSetFocus));
 	defferedSetFocus = NULL;

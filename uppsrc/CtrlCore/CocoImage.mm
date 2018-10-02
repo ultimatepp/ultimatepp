@@ -171,7 +171,6 @@ void  Ctrl::SetMouseCursor(const Image& img)
 {
 	if(GetDragAndDropSource())
 		return;
-
 	int64 h = img.GetAuxData();
 	if(h) {
 		[GetNSCursor(h) set];
@@ -242,6 +241,7 @@ Draw& ImageDraw::Alpha()
 ImageDraw::~ImageDraw()
 {
 	CGContextRelease(cgHandle);
+	handle = NULL; // avoid releasing invalid handle in ~SystemDraw
 }
 
 Image ImageDraw::GetStraight()

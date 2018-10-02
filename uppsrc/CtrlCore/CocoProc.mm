@@ -168,11 +168,11 @@ struct MMImp {
 	{
 		LLOG("Become key " << Upp::Name(ctrl));
 		ctrl->ActivateWnd();
-/*		auto tw = dynamic_cast<TopWindow *>(ctrl);
-		if(tw && ctrl->top && ctrl->top->placefocus) {
+		auto tw = dynamic_cast<TopWindow *>(ctrl);
+		if(tw && tw->placefocus) {
 			tw->PlaceFocus();
-			ctrl->top->placefocus = false;
-		}*/
+			tw->placefocus = false;
+		}
 	}
 
 	static void ResignKey(Upp::Ctrl *ctrl)
@@ -339,6 +339,22 @@ struct MMImp {
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	return Upp::MMImp::DnD(ctrl, sender, true) != NSDragOperationNone;
+}
+
+- (void)updateTrackingAreas
+{
+	for(NSTrackingArea *t in [self trackingAreas])
+		[self removeTrackingArea:t];
+
+	Upp::Size sz = ctrl->GetScreenRect().GetSize();
+	NSTrackingArea *ta = [[NSTrackingArea alloc]
+		initWithRect:NSMakeRect(0, 0, sz.cx, sz.cy)
+	         options:NSTrackingMouseEnteredAndExited|NSTrackingActiveAlways|
+	                 NSTrackingInVisibleRect|NSTrackingMouseMoved|NSTrackingCursorUpdate
+	           owner:self
+	        userInfo:nil];
+	[self addTrackingArea:ta];
+	[ta release];
 }
 
 @end

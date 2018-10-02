@@ -57,7 +57,8 @@ void SystemDraw::Pop()
 		offset.Drop();
 	if(clip.GetCount())
 		clip.Drop();
-    CGContextRestoreGState(cgHandle);
+	if(cgHandle)
+	    CGContextRestoreGState(cgHandle);
     fill = Null;
 }
 

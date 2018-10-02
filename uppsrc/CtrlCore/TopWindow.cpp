@@ -23,7 +23,9 @@ void TopWindow::ActiveFocus0(Ctrl& ctrl)
 {
 	if(IsChild()) return;
 	activefocus = &ctrl;
-	if(IsForeground()) ctrl.SetWantFocus();
+	LLOG("ActiveFocus0");
+	if(IsForeground())
+		ctrl.SetWantFocus();
 }
 
 void TopWindow::Activate()
@@ -55,6 +57,7 @@ void TopWindow::Deactivate()
 
 void TopWindow::PlaceFocus()
 {
+	LLOG("PlaceFocus " << Upp::Name(this));
 	if(activefocus)
 		activefocus->SetFocus();
 	else
