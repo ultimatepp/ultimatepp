@@ -272,7 +272,7 @@ bool Ctrl::IsOpen() const
 {
 	GuiLock __;
 	const Ctrl *q = GetTopCtrl();
-	return q->IsWndOpen() && q->isopen;
+	return q->isopen && q->IsWndOpen();
 }
 
 void Ctrl::Show(bool ashow) {

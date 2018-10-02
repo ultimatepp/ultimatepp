@@ -39,7 +39,7 @@ private:
 	Vector<Rect>  clip;
 
 	Color  fill = Null;
-	
+
 	void   Push();
 	void   Pop();
 	

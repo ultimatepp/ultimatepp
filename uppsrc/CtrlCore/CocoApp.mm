@@ -10,26 +10,6 @@ int  Ctrl::WndCaretTime;
 bool Ctrl::WndCaretVisible;
 
 static NSAutoreleasePool *main_coco_pool;
-static NSEvent           *current_event;
-
-static NSEvent *GetNextEvent(NSDate *until)
-{
-	if(!current_event) {
-		current_event = [NSApp nextEventMatchingMask:NSEventMaskAny
-		                 untilDate:until
-		                 inMode:NSDefaultRunLoopMode dequeue:YES];
-		[current_event retain];
-	}
-	return current_event;
-}
-
-static void ReleaseCurrentEvent()
-{
-	if(current_event) {
-		[current_event release];
-		current_event = nil;
-	}
-}
 
 void SyncPopupFocus(NSWindow *win)
 {
@@ -97,12 +77,6 @@ void CocoInit(int argc, const char **argv, const char **envptr)
     Ctrl::Csizeinit();
 }
 
-void CocoExit()
-{
-	ReleaseCurrentEvent();
-	[main_coco_pool release];
-}
-
 int Ctrl::GetKbdDelay()
 {
 	GuiLock __;
@@ -113,6 +87,34 @@ int Ctrl::GetKbdSpeed()
 {
 	GuiLock __;
 	return int(1000 * NSEvent.keyRepeatInterval);
+}
+
+static NSEvent *current_event;
+
+static NSEvent *GetNextEvent(NSDate *until)
+{
+	if(!current_event) {
+		current_event = [NSApp nextEventMatchingMask:NSEventMaskAny
+		                                   untilDate:until
+		                                      inMode:NSDefaultRunLoopMode
+		                                     dequeue:YES];
+		[current_event retain];
+	}
+	return current_event;
+}
+
+static void ReleaseCurrentEvent()
+{
+	if(current_event) {
+		[current_event release];
+		current_event = nil;
+	}
+}
+
+void CocoExit()
+{
+	ReleaseCurrentEvent();
+	[main_coco_pool release];
 }
 
 bool Ctrl::IsWaitingEvent()

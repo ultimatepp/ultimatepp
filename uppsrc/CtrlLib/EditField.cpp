@@ -396,7 +396,7 @@ Rect EditField::GetCaretRect(int pos) const
 {
 	return RectC(GetCaret(pos) - sc + 2 * !no_internal_margin
 	               - font.GetRightSpace('o') + font.GetLeftSpace('o'), GetTy(),
-	             1, min(GetSize().cy - 2 * GetTy(), font.GetCy()));
+	             DPI(1), min(GetSize().cy - 2 * GetTy(), font.GetCy()));
 }
 
 void EditField::SyncCaret()
