@@ -1,8 +1,8 @@
 #include "CocoMM.h"
 
-NSEvent *sCurrentMouseEvent__; // needed for drag operation
-
 #ifdef PLATFORM_COCOA
+
+NSEvent *sCurrentMouseEvent__; // needed for drag operation
 
 #define LLOG(x)
 
