@@ -18,6 +18,8 @@ protected:
 	virtual void MMClose() {}
 
 	void   Create(Ctrl *owner, dword style, bool active);
+	static void SetNSAppImage(const Image& img);
+	static void SyncAppIcon();
 
 public:
 	static void      EndSession()              {}

@@ -45,7 +45,6 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	                                       keyEquivalent:@"q"] autorelease];
 	[appMenu addItem:quitMenuItem];
 	[appMenuItem setSubmenu:appMenu];
-	[NSApp activateIgnoringOtherApps:YES];
 	
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);
