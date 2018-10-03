@@ -128,6 +128,10 @@ void Ctrl::Create(Ctrl *owner, dword style, bool active)
 	[window setAcceptsMouseMovedEvents:YES];
 	[window makeFirstResponder:view];
 	[window makeKeyAndOrderFront:window];
+	
+	ONCELOCK {
+		[NSApp activateIgnoringOtherApps:YES];
+	}
 
 	MMCtrl::SyncRect(view);
 	mmtopctrl.Add(this);
@@ -257,6 +261,22 @@ void TopWindow::SyncTitle()
 	}
 }
 
+void Ctrl::SyncAppIcon()
+{
+	Ctrl *q = GetFocusCtrl();
+	if(q) {
+		q = q->GetTopWindow();
+		while(q->GetOwner())
+			q = q->GetOwner();
+		TopWindow *w = dynamic_cast<TopWindow *>(q);
+		if(w) {
+			Image m = Nvl(w->GetLargeIcon(), w->GetIcon());
+			if(!IsNull(m))
+				SetNSAppImage(m);
+		}
+	}
+}
+
 void TopWindow::SyncCaption()
 {
 	GuiLock __;
@@ -266,6 +286,7 @@ void TopWindow::SyncCaption()
 		[[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:!minimizebox];
 		[[window standardWindowButton:NSWindowZoomButton] setHidden:!maximizebox];
 	}
+	SyncAppIcon();
 }
 
 CGSize MMFrameSize(Size sz, dword style)

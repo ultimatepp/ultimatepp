@@ -167,6 +167,32 @@ NSCursor *GetNSCursor(int kind)
 
 #pragma clang diagnostic pop
 
+void Ctrl::SetNSAppImage(const Image& img)
+{
+	ImageSysDataMaker m;
+	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
+	m.img = img;
+	ImageSysData& sd = cg_image_cache.Get(m);
+	static CGImageRef cgimg;
+	static NSImage   *nsimg;
+	if(sd.cgimg != cgimg) {
+		cgimg = sd.cgimg;
+		if(nsimg)
+			[nsimg release];
+		Point p = img.GetHotSpot();
+		Size isz = img.GetSize();
+		double scale = 1.0 / DPI(1);
+		NSSize size;
+		size.width = scale * isz.cx;
+		size.height = scale * isz.cy;
+		NSPoint hot;
+		hot.x = scale * p.x;
+		hot.y = scale * p.y;
+		nsimg = [[NSImage alloc] initWithCGImage:cgimg size:size];
+	}
+	[NSApp setApplicationIconImage:nsimg];
+}
+
 void  Ctrl::SetMouseCursor(const Image& img)
 {
 	if(GetDragAndDropSource())
@@ -180,7 +206,6 @@ void  Ctrl::SetMouseCursor(const Image& img)
 	LLOG("SysImage cache pixels " << cache.GetSize() << ", count " << cache.GetCount());
 	m.img = img;
 	ImageSysData& sd = cg_image_cache.Get(m);
-
 	static CGImageRef cgimg;
 	static NSCursor  *cursor;
 	if(sd.cgimg != cgimg) {
