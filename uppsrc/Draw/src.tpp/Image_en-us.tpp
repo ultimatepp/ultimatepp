@@ -113,12 +113,10 @@ mage][@(0.0.255) `&]_[@3 img])_[@(0.0.255) const]&]
 [s4; &]
 [s5;:Image`:`:operator`=`=`(const Image`&`)const: [@(0.0.255) bool]_operator`=`=([@(0.0.255) c
 onst]_[_^Image^ Image][@(0.0.255) `&]_[@3 img])_[@(0.0.255) const]&]
-[s3; &]
-[s4; &]
 [s5;:Image`:`:operator`!`=`(const Image`&`)const: [@(0.0.255) bool]_operator!`=([@(0.0.255) c
 onst]_[_^Image^ Image][@(0.0.255) `&]_[@3 img])_[@(0.0.255) const]&]
 [s2;%% Tests whether two Images are equal (or not equal). Dimensions, 
-hot`-spot, dots and all pixels are compared. Note that the comparison 
+hot`-spots, dots and all pixels are compared. Note that the comparison 
 can be slow.&]
 [s3; &]
 [s4; &]
