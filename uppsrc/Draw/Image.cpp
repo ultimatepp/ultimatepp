@@ -272,9 +272,13 @@ INITBLOCK {
 
 bool Image::operator==(const Image& img) const
 {
-	if(GetLength() != img.GetLength())
-		return false;
-	return memcmp(~*this, ~img, GetLength() * sizeof(RGBA)) == 0;
+	return IsSame(img) ||
+	   GetSize() == img.GetSize() &&
+	   GetHotSpot() == img.GetHotSpot() &&
+	   Get2ndSpot() == img.Get2ndSpot() &&
+	   GetDots() == img.GetDots() &&
+	   GetResolution() == img.GetResolution() &&
+	   memcmp(~*this, ~img, GetLength() * sizeof(RGBA)) == 0;
 }
 
 bool Image::operator!=(const Image& img) const
