@@ -736,11 +736,20 @@ Size Ctrl::Dsize;
 Size Ctrl::Csize;
 bool Ctrl::IsNoLayoutZoom;
 
+/*
 void InitRichTextZoom()
 {
 	SetRichTextStdScreenZoom(96 * GetTextSize(sZoomText, StdFont()).cy / 13, 600);
 	Ctrl::ReSkin();
 }
+*/
+void InitRichTextZoom()
+{
+	Size h = 96 * Ctrl::Bsize / Ctrl::Dsize;
+	SetRichTextStdScreenZoom(min(h.cx, h.cy), 600);
+	Ctrl::ReSkin();
+}
+
 
 void Ctrl::Csizeinit()
 {
