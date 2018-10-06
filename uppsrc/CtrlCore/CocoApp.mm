@@ -25,6 +25,8 @@ void SyncPopupFocus(NSWindow *win)
 
 extern const char *sClipFmtsRTF;
 
+id menubar;
+
 void CocoInit(int argc, const char **argv, const char **envptr)
 {
 	Ctrl::GlobalBackBuffer();
@@ -33,10 +35,9 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	[NSApplication sharedApplication];
 	[NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
 
-	id menubar = [[NSMenu new] autorelease];
+	menubar = [[NSMenu new] autorelease];
 	id appMenuItem = [[NSMenuItem new] autorelease];
 	[menubar addItem:appMenuItem];
-	[NSApp setMainMenu:menubar];
 	id appMenu = [[NSMenu new] autorelease];
 	id appName = [[NSProcessInfo processInfo] processName];
 	id quitTitle = [@"Quit " stringByAppendingString:appName];
@@ -45,6 +46,8 @@ void CocoInit(int argc, const char **argv, const char **envptr)
 	                                       keyEquivalent:@"q"] autorelease];
 	[appMenu addItem:quitMenuItem];
 	[appMenuItem setSubmenu:appMenu];
+
+	[NSApp setMainMenu:menubar];
 	
 	NSFont *sysfont = [NSFont systemFontOfSize:0];
 	Font::SetFace(0, ToString((CFStringRef)[sysfont familyName]), Font::TTF);

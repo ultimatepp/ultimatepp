@@ -13,6 +13,9 @@ static int        coco_flags;
 static Upp::Ptr<Upp::Ctrl> coco_capture;
 
 namespace Upp {
+	
+extern id menubar;
+
 
 bool  GetShift() { return coco_flags & NSEventModifierFlagShift; }
 bool  GetCtrl() { return coco_flags & NSEventModifierFlagCommand; }
