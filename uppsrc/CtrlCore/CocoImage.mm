@@ -167,6 +167,57 @@ NSCursor *GetNSCursor(int kind)
 
 #pragma clang diagnostic pop
 
+NSImage *CreateNSImage(const Image& img, CGImageRef cgimg)
+{
+	Size isz = img.GetSize();
+	double scale = 1.0 / DPI(1);
+	NSSize size;
+	size.width = scale * isz.cx;
+	size.height = scale * isz.cy;
+	NSImage *nsimage = [[NSImage alloc] initWithCGImage:cgimg size:size];
+	cg_image_cache.Shrink(4 * 1024 * 768, 1000); // Cache must be after Paint because of PaintOnly!
+	return nsimage;
+}
+
+struct NSImageSysData {
+	Image            img;
+	NSImage         *nsimage = NULL;
+	
+	void Init(const Image& img);
+	~NSImageSysData();
+};
+
+void NSImageSysData::Init(const Image& img)
+{
+	ImageSysDataMaker m;
+	m.img = img;
+	nsimage = CreateNSImage(img, cg_image_cache.Get(m).cgimg);
+}
+
+NSImageSysData::~NSImageSysData()
+{
+	if(nsimage)
+		[nsimage release];
+}
+
+struct NSImageSysDataMaker : LRUCache<NSImageSysData, int64>::Maker {
+	Image img;
+
+	virtual int64  Key() const                        { return img.GetSerialId(); }
+	virtual int    Make(NSImageSysData& object) const { object.Init(img); return img.GetLength(); }
+};
+
+static LRUCache<NSImageSysData, int64> nsimage_cache;
+
+NSImage *GetNSImage(const Image& img)
+{
+	NSImageSysDataMaker m;
+	m.img = img;
+	NSImage *nsimage = nsimage_cache.Get(m).nsimage;
+	nsimage_cache.Shrink(4 * 1024*768, 1000);
+	return nsimage;
+}
+
 void Ctrl::SetNSAppImage(const Image& img)
 {
 	ImageSysDataMaker m;
@@ -179,16 +230,7 @@ void Ctrl::SetNSAppImage(const Image& img)
 		cgimg = sd.cgimg;
 		if(nsimg)
 			[nsimg release];
-		Point p = img.GetHotSpot();
-		Size isz = img.GetSize();
-		double scale = 1.0 / DPI(1);
-		NSSize size;
-		size.width = scale * isz.cx;
-		size.height = scale * isz.cy;
-		NSPoint hot;
-		hot.x = scale * p.x;
-		hot.y = scale * p.y;
-		nsimg = [[NSImage alloc] initWithCGImage:cgimg size:size];
+		nsimg = CreateNSImage(img, cgimg);
 	}
 	[NSApp setApplicationIconImage:nsimg];
 }
@@ -212,16 +254,12 @@ void  Ctrl::SetMouseCursor(const Image& img)
 		cgimg = sd.cgimg;
 		if(cursor)
 			[cursor release];
-		Point p = img.GetHotSpot();
-		Size isz = img.GetSize();
+		NSImage *nsimg = CreateNSImage(img, cgimg);
 		double scale = 1.0 / DPI(1);
-		NSSize size;
-		size.width = scale * isz.cx;
-		size.height = scale * isz.cy;
+		Point p = img.GetHotSpot();
 		NSPoint hot;
 		hot.x = scale * p.x;
 		hot.y = scale * p.y;
-		NSImage *nsimg = [[NSImage alloc] initWithCGImage:cgimg size:size];
 		cursor = [[NSCursor alloc] initWithImage:nsimg hotSpot:hot];
 		[nsimg release];
 	}

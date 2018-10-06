@@ -41,6 +41,8 @@ struct AutoreleasePool {
 
 CGImageRef createCGImage(const Image& img);
 
+NSImage *GetNSImage(const Image& img);
+
 WString ToWString(CFStringRef s);
 String  ToString(CFStringRef s);
 

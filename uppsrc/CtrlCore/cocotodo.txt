@@ -1,5 +1,9 @@
 sooner:
 
+- drag&drop in theide does not work
+
+- ctrl tab does not work
+
 - modal disabled window can be closed
 
 - Uword cursor is blinking even in background
