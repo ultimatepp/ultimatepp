@@ -26,7 +26,7 @@ public:
 
 protected:
 	RichEdit   editor;
-	MenuBar    menubar;
+	MenuBar    menubar	;
 	ToolBar    toolbar;
 	StatusBar  statusbar;
 	String     filename;
@@ -245,7 +245,11 @@ void UWord::SetBar()
 
 UWord::UWord()
 {
+#ifdef PLATFORM_COCOA
+	SetMainMenu(THISBACK(MainMenu));
+#else
 	AddFrame(menubar);
+#endif
 	AddFrame(TopSeparatorFrame());
 	AddFrame(toolbar);
 	AddFrame(statusbar);
