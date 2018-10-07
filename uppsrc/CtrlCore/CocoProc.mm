@@ -177,6 +177,7 @@ struct MMImp {
 			tw->placefocus = false;
 		}
 		Upp::Ctrl::SyncAppIcon();
+		Upp::TopWindow::SyncMainMenu(false);
 	}
 
 	static void ResignKey(Upp::Ctrl *ctrl)

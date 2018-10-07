@@ -482,7 +482,7 @@ void MenuBar::Set(const Event<Bar&> menu)
 	lock++;
 	menu(*this);
 	SyncBar();
-	DistributeAccessKeys();
+	DistributeAccessKeys();	
 	lock--;
 }
 
