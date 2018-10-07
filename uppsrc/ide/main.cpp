@@ -254,8 +254,10 @@ void AppMain___()
 		ide.SyncCh();
 
 		DelTemps();
-		
+
+#ifndef PLATFORM_COCOA // MacOS sends some weird things to app bundle - disable editor mode for now
 		StartEditorMode(arg, ide, clset);
+#endif
 
 		if(splash_screen && !ide.IsEditorMode()) {
 			ShowSplash();
