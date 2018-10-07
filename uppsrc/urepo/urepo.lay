@@ -21,3 +21,12 @@ LAYOUT(GitOptionsLayout, 164, 16)
 	ITEM(Option, pull, SetLabel(t_("Pull")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
 END_LAYOUT
 
+LAYOUT(UsrPwdLayout, 168, 92)
+	ITEM(Label, dv___0, SetLabel(t_("Username")).LeftPosZ(4, 60).TopPosZ(4, 19))
+	ITEM(EditString, usr, LeftPosZ(68, 92).TopPosZ(4, 19))
+	ITEM(Label, dv___2, SetLabel(t_("Password")).LeftPosZ(4, 60).TopPosZ(28, 19))
+	ITEM(EditString, pwd, LeftPosZ(68, 92).TopPosZ(28, 19))
+	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, -24).BottomPosZ(8, 24))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
+END_LAYOUT
+
