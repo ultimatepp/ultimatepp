@@ -36,6 +36,16 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	String& linkoptions, const Vector<String>& all_uses, const Vector<String>& all_libraries,
 	int opt)
 {
+	if(HasFlag("OSX") && HasFlag("GUI")) {
+		String folder;
+		String name = GetFileName(target);
+		if(GetFileExt(target) == ".app")
+			target = target + "/Contents/MacOS/" + GetFileTitle(target);
+		else
+			target = target + ".app/Contents/MacOS/" + GetFileName(target);
+		RealizePath(target);
+	}
+
 	SaveBuildInfo(package);
 	
 	int i;
@@ -216,6 +226,8 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		bool brc = (ext == ".brc");
 		bool init = (i >= first_ifile);
 		String objfile = CatAnyPath(outdir, GetFileTitle(fn) + (rc ? "$rc.o" : brc ? "$brc.o" : ".o"));
+		if(GetFileName(fn) == "Info.plist")
+			Info_plist = LoadFile(fn);
 		if(HdependFileTime(fn) > GetFileTime(GetHostPath(objfile))) {
 			PutConsole(GetFileName(fn));
 			int time = GetTickCount();
@@ -463,8 +475,6 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << " -shared";
 			if(!HasFlag("SHARED") && !HasFlag("SO"))
 				lnk << " -static";
-//			else if(!HasFlag("WIN32")) // TRC 05/03/08: see above
-//				lnk << " -dynamic -fPIC"; // TRC 05/03/30: dynamic fPIC doesn't seem to work in GCC either :-)
 			if(HasFlag("WINCE"))
 				lnk << " -mwindowsce";
 			else if(HasFlag("WIN32") && !HasFlag("CLANG")) {
@@ -483,18 +493,9 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				lnk << (!HasFlag("OSX") ? " -Wl,-s" : "");
 			for(i = 0; i < libpath.GetCount(); i++)
 				lnk << " -L" << GetHostPathQ(libpath[i]);
-//			lnk << " -Wl,--gc-sections,-O,2 ";
 			if(!HasFlag("OSX") && !HasFlag("COCOA"))
 				lnk << " -Wl,-O,2 ";
 			lnk << linkoptions;
-/*
-			if (HasFlag("OSX11")) {
-				if (HasFlag("POWERPC"))
-					lnk << " -arch ppc";
-				if (HasFlag("X86"))
-					lnk << " -arch i386";
-			}
-*/
 			String lfilename;
 			if(HasFlag("OBJC")) {
 				String lfilename;
@@ -560,6 +561,23 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			bool error = false;
 			CustomStep(".pre-link", Null, error);
 			if(!error && Execute(lnk) == 0) {
+				if(HasFlag("OSX") && HasFlag("GUI")) {
+					if(IsNull(Info_plist)) {
+						Info_plist
+						<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+						<< "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+						<< "<plist version=\"1.0\">\n"
+						<< "<dict>\n"
+						<< "    <key>CFBundleExecutable</key>\n"
+						<< "    <string>" << GetFileName(target) << "</string>\n"
+						<< "</dict>\n"
+						<< "</plist>\n"
+						;
+					}
+					String Info_plist_path = GetFileFolder(GetFileFolder(target)) + "/Info.plist";
+					PutConsole("Saving " << Info_plist_path);
+					SaveFile(Info_plist_path, Info_plist);
+				}
 				CustomStep(".post-link", Null, error);
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));

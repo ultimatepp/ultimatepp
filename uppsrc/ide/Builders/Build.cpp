@@ -358,6 +358,7 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 		                      GetAllUses(wspc, pkindex, bm, mainparam, *host, *b),
 		                      GetAllLibraries(wspc, pkindex, bm, mainparam, *host, *b),
 		                      targetmode - 1);
+	target = b->target; // apple app bundel can change target
 	Vector<String> errors = PickErrors();
 	host->DeleteFile(errors);
 	if(!ok || !errors.IsEmpty())
