@@ -1,5 +1,9 @@
 sooner:
 
+- support bundle icons
+
+- correctly reload plist
+
 - drag&drop in theide does not work
 
 - ctrl tab does not work

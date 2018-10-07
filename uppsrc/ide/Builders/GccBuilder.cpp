@@ -570,13 +570,16 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 						<< "<dict>\n"
 						<< "    <key>CFBundleExecutable</key>\n"
 						<< "    <string>" << GetFileName(target) << "</string>\n"
+						<< "    <key>NSHighResolutionCapable</key>\n"
+					    << "    <string>True</string>\n"
 						<< "</dict>\n"
 						<< "</plist>\n"
 						;
 					}
 					String Info_plist_path = GetFileFolder(GetFileFolder(target)) + "/Info.plist";
 					PutConsole("Saving " << Info_plist_path);
-					SaveFile(Info_plist_path, Info_plist);
+					if(SaveChangedFile(Info_plist_path, Info_plist))
+						Execute("defaults read " + Info_plist_path); // Force MacOS to reload plist
 				}
 				CustomStep(".post-link", Null, error);
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
