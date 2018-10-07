@@ -25,11 +25,7 @@ bool TopWindow::IsTopMost() const
 void TopWindow::GuiPlatformConstruct()
 {
 }
-
-void TopWindow::GuiPlatformDestruct()
-{
-}
-
+	
 END_UPP_NAMESPACE
 
 #endif

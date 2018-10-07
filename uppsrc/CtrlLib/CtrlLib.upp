@@ -65,6 +65,8 @@ file
 	MenuImp.h,
 	MenuItem.cpp,
 	MenuBar.cpp,
+	NSMenuKeys.i,
+	MacMenu.mm,
 	ToolButton.cpp,
 	ToolBar.cpp,
 	ToolTip.cpp,
