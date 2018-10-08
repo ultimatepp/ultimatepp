@@ -117,6 +117,16 @@ GLProgram::GLProgram()
 	vertex_shader = fragment_shader = program = 0;
 }
 
+GLProgram::~GLProgram()
+{
+	if(program)
+		glDeleteProgram(program);
+	if(vertex_shader)
+		glDeleteShader(vertex_shader);
+	if(fragment_shader)
+		glDeleteShader(fragment_shader);
+}
+
 };
 
 #endif
