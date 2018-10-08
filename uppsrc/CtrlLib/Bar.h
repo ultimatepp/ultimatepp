@@ -77,6 +77,8 @@ protected:
 	virtual void   AddCtrl(Ctrl *ctrl, Size sz) = 0;
 
 	class ScanKeys;
+	
+	friend class MenuBar;
 
 public:
 	virtual bool   IsEmpty() const = 0;
@@ -296,9 +298,10 @@ public:
 	virtual bool  IsMenuBar() const                  { return true; }
 
 protected:
-	virtual Item& AddItem(Event<>  cb);
+	virtual Item& AddItem(Event<> cb);
 	virtual Item& AddSubMenu(Event<Bar&> proc);
 	virtual Value GetBackground() const;
+	virtual bool  IsEmpty() const;
 
 public:
 	struct Style : ChStyle<Style> {
@@ -331,6 +334,12 @@ private:
 	Size         maxiconsize;
 	LookFrame    frame;
 	bool         nodarkadjust;
+
+#ifdef PLATFORM_COCOA
+	One<Bar>     host_bar;
+	void ExecuteHostBar(Ctrl *owner, Point p);
+	void CreateHostBar(One<Bar>& bar);
+#endif
 
 	friend class MenuItemBase;
 	friend class SubMenuBase;
@@ -381,7 +390,6 @@ public:
 	static void Execute(Event<Bar&> proc, Point p) { Execute(GetActiveCtrl(), proc, p); }
 	static void Execute(Event<Bar&> proc)          { Execute(proc, GetMousePos()); }
 
-	bool     IsEmpty() const                         { return item.IsEmpty(); }
 	void     Clear();
 
 	static const Style& StyleDefault();
@@ -394,6 +402,9 @@ public:
 	MenuBar& MaxIconSize(Size sz)                   { maxiconsize = sz; return *this; }
 	Size     GetMaxIconSize() const                 { return maxiconsize; }
 	MenuBar& NoDarkAdjust(bool b = true)            { nodarkadjust = b; return *this; }
+#ifdef PLATFORM_COCOA
+	MenuBar& UppMenu()                              { host_bar.Clear(); return *this; }
+#endif
 
 	typedef MenuBar CLASSNAME;
 

@@ -72,6 +72,9 @@ MenuBar::MenuBar()
 	arealook = -1;
 	maxiconsize = Null;
 	nodarkadjust = false;
+#ifdef PLATFORM_COCOA
+	CreateHostBar(host_bar);
+#endif
 }
 
 MenuBar& MenuBar::SetStyle(const Style& s)
@@ -116,9 +119,13 @@ void MenuBar::Clear()
 	lock--;
 }
 
-Bar::Item& MenuBar::AddItem(Event<>  cb)
+Bar::Item& MenuBar::AddItem(Event<> cb)
 {
 	LLOG("MenuBar::AddItem " << Name());
+#ifdef PLATFORM_COCOA
+	if(host_bar)
+		return host_bar->AddItem(cb);
+#endif
 	MenuItemBase *q;
 	if(IsChild())
 		q = new TopMenuItem;
@@ -139,6 +146,10 @@ Bar::Item& MenuBar::AddItem(Event<>  cb)
 Bar::Item& MenuBar::AddSubMenu(Event<Bar&> proc)
 {
 	LLOG("MenuBar::AddSubMenu " << Name());
+#ifdef PLATFORM_COCOA
+	if(host_bar)
+		return host_bar->AddSubMenu(proc);
+#endif
 	SubMenuBase *w;
 	MenuItemBase *q;
 	if(IsChild()) {
@@ -573,6 +584,15 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 		Animate(*this, p.x, p.y, sz.cx, sz.cy);
 }
 
+bool MenuBar::IsEmpty() const
+{
+#ifdef PLATFORM_COCOA
+	if(host_bar)
+		return host_bar->IsEmpty();
+#endif
+	return item.IsEmpty();
+}
+
 void MenuBar::Execute(Ctrl *owner, Point p)
 {
 	static Vector<Ctrl *> ows; // Used to prevent another open local menu for single owner to be opened (repeated right-click)
@@ -580,9 +600,16 @@ void MenuBar::Execute(Ctrl *owner, Point p)
 	if(IsEmpty() || FindIndex(ows, owner) >= 0)
 		return;
 	ows.Add(owner);
-	PopUp(owner, p);
-	EventLoop(this);
-	CloseMenu();
+#ifdef PLATFORM_COCOA
+	if(host_bar)
+		ExecuteHostBar(owner, p);
+	else
+#endif
+	{
+		PopUp(owner, p);
+		EventLoop(this);
+		CloseMenu();
+	}
 	ows.SetCount(level);
 }
 

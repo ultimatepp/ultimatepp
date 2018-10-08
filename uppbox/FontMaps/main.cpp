@@ -14,20 +14,23 @@ GUI_APP_MAIN
 		Font fnt;
 		fnt.FaceName(f);
 		dword l = 0;
+		int n = 0;
 		for(int ch = 32; ch < 4096; ch++) {
 			if(GetGlyphInfo(fnt, ch).IsNormal()) {
 				l |= (0x80000000 >> (ch / 128));
-				ch = (ch + 127) & ~127;
+		//		ch = (ch + 127) & ~127;
+				n++;
 			}
 		}
 		dword h = 0;
 		for(int ch = 32; ch < 65536; ch++) {
 			if(GetGlyphInfo(fnt, ch).IsNormal()) {
 				h |= (0x80000000 >> (ch / 2048));
-				ch = (ch + 2047) & ~2047;
+		//		ch = (ch + 2047) & ~2047;
+				n++;
 			}
 		}
-		LOG("{ " << AsCString(f) << ", 0x" << FormatIntHex(l) << ", 0x" << FormatIntHex(h) << " },");
+		LOG("{ " << AsCString(f) << ", 0x" << FormatIntHex(l) << ", 0x" << FormatIntHex(h) << " }, // " << n);
 	}
 	PromptOK("OK");
 }
