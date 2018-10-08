@@ -95,7 +95,7 @@ void UWord::MainMenu(Bar& bar)
 {
 	bar.Add("File", THISBACK(FileBar));
 	bar.Add("Window", callback(WindowsMenu));
-	bar.Add("Help", THISBACK(AboutMenu));
+	bar.Add("Helping", THISBACK(AboutMenu));
 }
 
 void UWord::New()
