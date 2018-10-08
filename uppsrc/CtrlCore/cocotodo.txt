@@ -1,5 +1,7 @@
 sooner:
 
+- cursor problem after local menu invocation
+
 - support bundle icons
 
 - correctly reload plist

@@ -1,6 +1,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include <CtrlCore/CocoMM.h>
 
+#ifdef PLATFORM_COCOA
+
 namespace Upp {
 
 struct CocoMenuBar;
@@ -243,4 +245,31 @@ void TopWindow::SyncMainMenu(bool force)
 	}
 }
 
+void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
+{
+	if(host_bar) {
+		CocoMenuBar& bar = *(CocoMenuBar *)~host_bar;
+
+		owner = owner->GetTopCtrl();
+		
+		p -= owner->GetScreenRect().TopLeft();
+		
+		double scale = 1.0 / DPI(1);
+		NSPoint np;
+		np.x = scale * p.x;
+		np.y = scale * p.y;
+		
+		[bar.cocomenu popUpMenuPositioningItem:bar.item[0].nsitem
+	                                atLocation:np
+	                                    inView:(NSView *)owner->GetNSView()];
+	}
+}
+
+void MenuBar::CreateHostBar(One<Bar>& bar)
+{
+	host_bar.Create<CocoMenuBar>();
+}
+
 };
+
+#endif

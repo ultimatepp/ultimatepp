@@ -684,6 +684,8 @@ Array <NetAdapter> GetAdapterInfo() {
 }
 */
 
+#ifndef PLATFORM_OSX
+
 Array<NetAdapter> GetAdapterInfo() {
 	Array<NetAdapter> res;
 	
@@ -819,7 +821,7 @@ Array<NetAdapter> GetAdapterInfo() {
   	}	
 	return res;
 }
-
+#endif
 
 // Not implemented yet in Linux
 String GetHDSerial() {
@@ -1589,6 +1591,7 @@ bool GetDriveSpace(String drive,
 	return true;
 }
 
+#ifndef PLATFORM_OSX
 // return true if mounted
 bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &serial, */int &maxName, String &fileSystem)
 {
@@ -1625,6 +1628,7 @@ bool GetDriveInformation(String drive, String &type, String &volume, /*uint64 &s
 	
 	return true;	
 }
+#endif
 
 #endif
 
@@ -1688,7 +1692,7 @@ bool Shutdown(String action) {
 }
 #endif
 
-#ifdef PLATFORM_POSIX
+#ifdef PLATFORM_LINUX
 bool Shutdown(String action) {
 	if (action == "logoff") {
 		kill(1, SIGTSTP);
@@ -1992,7 +1996,9 @@ void SystemSignature::Load() {
 	GetSystemInfo(manufacturer, productName, version, numberOfProcessors, mbSerial);
 	hdSerial = GetHDSerial();
 	userName = GetUserName();
+#ifndef PLATFORM_OSX
 	netAdapters = GetAdapterInfo();	
+#endif
 }
 
 

@@ -34,7 +34,9 @@
 	#include <fcntl.h>
 	#include <sys/types.h>
 	#include <sys/stat.h>
-	#include <sys/vfs.h> 
+#ifndef PLATFORM_OSX
+	#include <sys/vfs.h>
+#endif
 	#include <sys/utsname.h>
 	#include <dirent.h>
 	#include <pwd.h>
