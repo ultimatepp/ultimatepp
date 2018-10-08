@@ -39,6 +39,7 @@ enum {
 };
 
 class GLProgram {
+protected:
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 	GLuint program;
@@ -63,6 +64,7 @@ public:
 	void Use()                                 { glUseProgram(program); }
 
 	GLProgram();
+	~GLProgram();
 };
 
 extern GLProgram gl_image, gl_image_colored, gl_rect;
