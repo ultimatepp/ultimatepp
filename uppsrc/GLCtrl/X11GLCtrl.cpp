@@ -30,7 +30,7 @@ XVisualInfo *GLCtrl::GLPane::CreateVisual(void)
 	if( ctrl->doubleBuffering )
 		visual << GLX_DOUBLEBUFFER;
 
-	if( ctrl->multiSampleBuffering && ctrl->numberOfSamples > 1 )
+	if(ctrl->numberOfSamples > 1 )
 	{
 		visual << GLX_SAMPLE_BUFFERS_ARB << 1 << GLX_SAMPLES_ARB << ctrl->numberOfSamples;
 	}

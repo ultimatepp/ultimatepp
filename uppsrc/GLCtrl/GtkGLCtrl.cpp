@@ -8,6 +8,8 @@
 
 namespace Upp {
 
+void InitializeGlew() {}
+
 GdkGLConfig *sGlconfig;
 
 EXITBLOCK {

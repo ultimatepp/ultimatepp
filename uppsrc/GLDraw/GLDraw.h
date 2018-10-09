@@ -22,12 +22,10 @@ enum {
 	TEXTURE_MIPMAP = 0x02,
 };
 
-GLuint GetTextureForImage(dword flags, const Image& img, uint64 context = 0);
+GLuint CreateGLTexture(const Image& img, dword flags);
 
-inline
-GLuint GetTextureForImage(const Image& img, uint64 context = 0) {
-	return GetTextureForImage(0, img, context);
-}
+GLuint GetTextureForImage(dword flags, const Image& img, uint64 context = 0); // cached
+inline GLuint GetTextureForImage(const Image& img, uint64 context = 0) { return GetTextureForImage(0, img, context); }
 
 #ifdef GL_USE_SHADERS
 

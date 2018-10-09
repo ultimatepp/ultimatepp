@@ -5,21 +5,11 @@
 #define LLOG(x) // DLOG(x)
 
 namespace Upp {
-
-struct ImageGLData {
-	Image        img;
-	GLuint       texture_id;
 	
-	void Init(const Image& img, dword flags);
-	~ImageGLData();
-};
-
-void ImageGLData::Init(const Image& img_, dword flags)
+GLuint CreateGLTexture(const Image& img, dword flags)
 {
-	LTIMING("CreateTexture");
-	Image img = img_;
 	Size sz = img.GetSize();
-
+	GLuint texture_id;
 	glGenTextures(1, &texture_id);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
@@ -34,6 +24,22 @@ void ImageGLData::Init(const Image& img_, dword flags)
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	return texture_id;
+}
+
+struct ImageGLData {
+	Image        img;
+	GLuint       texture_id;
+	
+	void Init(const Image& img, dword flags);
+	~ImageGLData();
+};
+
+void ImageGLData::Init(const Image& img, dword flags)
+{
+	LTIMING("CreateTexture");
+
+	texture_id = CreateGLTexture(img, flags);
 
 	LLOG("Texture id created: " << texture_id);
 	SysImageRealized(img);

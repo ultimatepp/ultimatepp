@@ -772,7 +772,7 @@ String GetErrorMessage(DWORD dwError) {
 }
 
 String GetLastErrorMessage() {
-	return GetErrorMessage(GetLastError());
+	return GetErrorMessage(GetLastError()) + " (" + AsString(GetLastError()) + ")";
 }
 
 #endif
@@ -789,7 +789,7 @@ String GetErrorMessage(int errorno)
 }
 
 String GetLastErrorMessage() {
-	return GetErrorMessage(errno);
+	return GetErrorMessage(errno) + " (" + AsString(errno) + ")";
 }
 
 #endif

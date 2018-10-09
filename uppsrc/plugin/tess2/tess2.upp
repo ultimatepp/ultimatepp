@@ -1,0 +1,30 @@
+description "Polygon tesselator, original code from GLUT\3770,128,128";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	tess2.h,
+	tess2.cpp,
+	Source readonly separator,
+	tesselator.h,
+	bucketalloc.c,
+	bucketalloc.h,
+	dict.c,
+	dict.h,
+	geom.c,
+	geom.h,
+	mesh.c,
+	mesh.h,
+	priorityq.c,
+	priorityq.h,
+	sweep.c,
+	sweep.h,
+	tess.c,
+	tess.h,
+	Copying;
+
+mainconfig
+	"" = "GUI";
+

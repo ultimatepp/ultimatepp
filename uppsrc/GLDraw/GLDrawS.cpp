@@ -420,8 +420,7 @@ void GLDraw::Init(Size sz, uint64 context_)
 
 	gl_image.Use();
 	static int uni1 = gl_image.GetUniform("u_projection");
-	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, uni1);
-
+	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, un
 	gl_image_colored.Use();
 	static int uni2 = gl_image_colored.GetUniform("u_projection");
 	GLOrtho(0, (float)sz.cx, (float)sz.cy, 0, 0.0f, 1.0f, uni2);
