@@ -14,7 +14,7 @@ void stdFree(void* userData, void* ptr)
 	delete[] (byte *)ptr;
 }
 
-void Tesselate(Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex,
+void Tesselate(const Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex,
                Vector<Tuple<int, int, int>> *triangle, Vector<int> *index,
                bool evenodd)
 {
@@ -75,13 +75,13 @@ void Tesselate(Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex,
 	tessDeleteTess(tess);
 }
 
-void Tesselate(Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex, Vector<Tuple<int, int, int>>& triangle,
+void Tesselate(const Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex, Vector<Tuple<int, int, int>>& triangle,
                bool evenodd)
 {
 	Tesselate(shape, vertex, &triangle, NULL, evenodd);
 }
 
-void Tesselate(Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex, Vector<int>& index,
+void Tesselate(const Vector<Vector<Pointf>>& shape, Vector<Pointf>& vertex, Vector<int>& index,
                bool evenodd)
 {
 	Tesselate(shape, vertex, NULL, &index, evenodd);
