@@ -157,7 +157,7 @@ public:
 	GLCtrl& DoubleBuffering(bool b = true) { doubleBuffering = b; return *this; }
 	GLCtrl& MSAA(int n = 4)                { numberOfSamples = n; return *this; }
 
-	GLCtrl(int  depthsize = 24, int  stencilsize = 0, bool doublebuffer = true,
+	GLCtrl(int  depthsize = 24, int  stencilsize = 8, bool doublebuffer = true,
 	       bool multisamplebuffering = false, int  numberofsamples = 0)
 		: depthSize(depthsize),
 	      stencilSize(stencilsize),
