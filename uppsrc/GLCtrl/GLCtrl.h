@@ -11,6 +11,12 @@
 #define Status  int
 #endif
 
+#include <plugin/glew/glew.h>
+
+#ifdef PLATFORM_WIN32
+#include <plugin/glew/wglew.h>
+#endif
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 
@@ -26,6 +32,8 @@
 #endif
 
 namespace Upp {
+
+void InitializeGlew();
 
 #ifdef GUI_GTK
 
@@ -143,13 +151,17 @@ protected:
 
 public:
 	Callback WhenGLPaint;
+	
+	GLCtrl& DepthBits(int n)               { depthSize = n; return *this; }
+	GLCtrl& StencilBits(int n)             { stencilSize = n; return *this; }
+	GLCtrl& DoubleBuffering(bool b = true) { doubleBuffering = b; return *this; }
+	GLCtrl& MSAA(int n = 4)                { numberOfSamples = n; return *this; }
 
 	GLCtrl(int  depthsize = 24, int  stencilsize = 0, bool doublebuffer = true,
 	       bool multisamplebuffering = false, int  numberofsamples = 0)
 		: depthSize(depthsize),
-		  stencilSize(stencilsize), 
-		  doubleBuffering(doublebuffer), 
-		  multiSampleBuffering(multisamplebuffering), 
+	      stencilSize(stencilsize),
+	      doubleBuffering(doublebuffer),
 		  numberOfSamples(numberofsamples)
 	{
 		NoWantFocus();

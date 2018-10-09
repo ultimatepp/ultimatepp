@@ -1,5 +1,6 @@
 uses
-	CtrlCore;
+	CtrlCore,
+	plugin/glew;
 
 library(WIN32 GCC) "glaux glu32 opengl32";
 
