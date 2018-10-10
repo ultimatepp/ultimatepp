@@ -2,8 +2,14 @@ Image CreateImage(Size sz, const RGBA& rgba);
 Image CreateImage(Size sz, Color color);
 Image SetColorKeepAlpha(const Image& img, Color c);
 
+void  SetHotSpots(Image& m, Point hotspot, Point hotspot2 = Point(0, 0));
+Image WithHotSpots(const Image& m, Point hotspot, Point hotspot2 = Point(0, 0));
 Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2);
 Image WithHotSpot(const Image& m, int x1, int y1);
+
+void  SetResolution(Image& m, int res);
+Image WithResolution(const Image& m, int res);
+Image WithResolution(const Image& m, const Image& res);
 
 void Over(ImageBuffer& dest, Point p, const Image& src, const Rect& srect);
 void Over(Image& dest, const Image& src);
@@ -29,6 +35,8 @@ Image AddMargins(const Image& img, int left, int top, int right, int bottom, RGB
 Rect  FindBounds(const Image& m, RGBA bg = RGBAZero());
 Image AutoCrop(const Image& m, RGBA bg = RGBAZero());
 void  AutoCrop(Image *m, int count, RGBA bg = RGBAZero());
+
+void  ClampHotSpots(Image& m);
 
 Image ColorMask(const Image& src, Color transparent);
 
