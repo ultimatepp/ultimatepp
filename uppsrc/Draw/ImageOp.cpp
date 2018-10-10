@@ -1,27 +1,25 @@
 #include "Draw.h"
 
 namespace Upp {
+	
+void  SetHotSpots(Image& m, Point hotspot, Point hotspot2)
+{
+	ImageBuffer b(m);
+	b.SetHotSpot(hotspot);
+	b.Set2ndSpot(hotspot2);
+	m = b;
+}
+
+Image WithHotSpots(const Image& m, Point hotspot, Point hotspot2)
+{
+	Image h = m;
+	SetHotSpots(h, hotspot, hotspot2);
+	return h;
+}
 
 Image WithHotSpots(const Image& m, int x1, int y1, int x2, int y2)
 {
-	Image h = m;
-	ImageBuffer b(h);
-	b.SetHotSpot(Point(x1, y1));
-	b.Set2ndSpot(Point(x2, y2));
-	return b;
-}
-
-Image WithResolution(const Image& m, int res)
-{
-	Image h = m;
-	ImageBuffer b(h);
-	b.SetResolution(res);
-	return b;
-}
-
-Image WithResolution(const Image& m, const Image& res)
-{
-	return WithResolution(m, res.GetResolution());
+	return WithHotSpots(m, Point(x1, y1), Point(x2, y2));
 }
 
 Image WithHotSpot(const Image& m, int x1, int y1)
@@ -30,6 +28,25 @@ Image WithHotSpot(const Image& m, int x1, int y1)
 	ImageBuffer b(h);
 	b.SetHotSpot(Point(x1, y1));
 	return b;
+}
+
+void  SetResolution(Image& m, int res)
+{
+	ImageBuffer b(m);
+	b.SetResolution(res);
+	m = b;
+}
+
+Image WithResolution(const Image& m, int res)
+{
+	Image h = m;
+	SetResolution(h, res);
+	return h;
+}
+
+Image WithResolution(const Image& m, const Image& res)
+{
+	return WithResolution(m, res.GetResolution());
 }
 
 Image CreateImage(Size sz, const RGBA& rgba)
@@ -218,8 +235,8 @@ void AutoCrop(Image *m, int count, RGBA bg)
 		r.Union(FindBounds(m[i], bg));
 	for(int i = 0; i < count; i++) {
 		Rect rr = r.GetSize();
-		Point p1 = rr.Bind(m[i].GetHotSpot() - r.TopLeft());
-		Point p2 = rr.Bind(m[i].Get2ndSpot() - r.TopLeft());
+		Point p1 = m[i].GetHotSpot() - r.TopLeft();
+		Point p2 = m[i].Get2ndSpot() - r.TopLeft();
 		m[i] = WithHotSpots(Crop(m[i], r), p1.x, p1.y, p2.x, p2.y);
 	}
 }
@@ -230,6 +247,40 @@ Image AutoCrop(const Image& m, RGBA bg)
 	AutoCrop(&mm, 1, bg);
 	return mm;
 }
+
+void ClampHotSpots(Image& m)
+{
+	Point p1 = m.GetHotSpot();
+	Point p2 = m.Get2ndSpot();
+	Rect clamp = m.GetSize();
+	Point p1a = clamp.Bind(p1);
+	Point p2a = clamp.Bind(p2);
+	if(p1 != p1a || p2 != p2a)
+		SetHotSpots(m, p1a, p2a);
+}
+
+/*
+Image AutoCrop(const Image& m, RGBA c)
+{
+	Size isz = m.GetSize();
+	Rect r = isz;
+	for(r.top = 0; r.top < isz.cy && IsUniform(m[r.top], c, 1, isz.cx); r.top++)
+		;
+	for(r.bottom = isz.cy; r.bottom > r.top && IsUniform(m[r.bottom - 1], c, 1, isz.cx); r.bottom--)
+		;
+	if(r.bottom <= r.top)
+		return Null;
+	int h = r.GetHeight();
+	const RGBA *p = m[r.top];
+	for(r.left = 0; r.left < isz.cy && IsUniform(p + r.left, c, isz.cx, h); r.left++)
+		;
+	for(r.right = isz.cx; r.right > r.left && IsUniform(p + r.right - 1, c, isz.cx, h); r.right--)
+		;
+	Point p1 = m.GetHotSpot() - r.TopLeft();
+	Point p2 = m.Get2ndSpot() - r.TopLeft();
+	return WithHotSpots(Crop(m, r), p1.x, p1.y, p2.x, p2.y);
+}
+*/
 
 Image ColorMask(const Image& src, Color key)
 {

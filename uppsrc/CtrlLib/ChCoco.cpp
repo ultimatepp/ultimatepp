@@ -49,6 +49,20 @@ Color AvgColor(const Image& m, int margin = 0)
 	return AvgColor(m, Rect(m.GetSize()).Deflated(margin));
 }
 
+void ClampedAutoCrop(Image *h, int count)
+{
+	AutoCrop(h, count);
+	for(int i = 0; i < count; i++)
+		ClampHotSpots(h[i]);
+}
+
+void ClampedAutoCrop(const Image& m)
+{
+	Image h = m;
+	ClampedAutoCrop(&h, 1);
+	return h;
+}
+
 void SOImages(int imli, int type, int value)
 {
 	Image h[4];
@@ -57,7 +71,7 @@ void SOImages(int imli, int type, int value)
 	h[2] = Coco_ThemeImage(20, 20, 10, type, value, CTRL_PRESSED);
 	h[3] = Coco_ThemeImage(20, 20, 10, type, value, CTRL_DISABLED);
 	
-	AutoCrop(h, 4);
+	ClampedAutoCrop(h, 4);
 	
 	for(int i = 0; i < 4; i++)
 		CtrlsImg::Set(imli++, Hot3(h[i]));
@@ -70,7 +84,7 @@ void CocoButton(Image *h, int type, int value)
 	h[2] = Coco_ThemeImage(40, 32, 10, type, value, CTRL_PRESSED);
 	h[3] = Coco_ThemeImage(40, 32, 10, type, value, CTRL_DISABLED);
 
-	AutoCrop(h, 4);
+	ClampedAutoCrop(h, 4);
 	
 	for(int i = 0; i < 4; i++)
 		h[i] = Hot3(h[i]);
@@ -174,7 +188,7 @@ void ChHostSkin()
 
 	{
 		Color menuink = CocoColor(COCO_SELECTEDMENUTEXT);
-		SColorMenu_Write(AvgColor(AutoCrop(Coco_ThemeImage(30, 20, 10, COCO_MENU, 0, CTRL_NORMAL))));
+		SColorMenu_Write(AvgColor(ClampedAutoCrop(Coco_ThemeImage(30, 20, 10, COCO_MENU, 0, CTRL_NORMAL))));
 		SColorMenuText_Write(SColorText());
 
 		MenuBar::Style& s = MenuBar::StyleDefault().Write();
@@ -184,7 +198,7 @@ void ChHostSkin()
 		
 		s.topitem[1] = s.topitem[0] = SColorFace();
 		s.topitemtext[1] = SColorText();
-		Image m = AutoCrop(Coco_ThemeImage(50, 50, 10, COCO_MENUITEM, 0, CTRL_HOT));
+		Image m = ClampedAutoCrop(Coco_ThemeImage(50, 50, 10, COCO_MENUITEM, 0, CTRL_HOT));
 		Rect r = m.GetSize();
 		if(r.GetWidth() > 10 && r.GetHeight() > 10)
 			r.Deflate(5);
@@ -262,7 +276,7 @@ void ChHostSkin()
 		sp.dec = sp.inc = Button::StyleNormal();
 		
 		for(int i = CTRL_NORMAL; i <= CTRL_DISABLED; i++) {
-			Image m = AutoCrop(Coco_ThemeImage(50, button_height + 1, 0, COCO_BUTTON, 0, i));
+			Image m = ClampedAutoCrop(Coco_ThemeImage(50, button_height + 1, 0, COCO_BUTTON, 0, i));
 			Size isz = m.GetSize();
 			int cy = isz.cy / 2;
 			Color c = Button::StyleNormal().monocolor[i];
@@ -271,7 +285,7 @@ void ChHostSkin()
 		}
 	}
 
-	auto nsimg = [](int ii) { return AutoCrop(Coco_ThemeImage(48, 48, 10, COCO_NSIMAGE, ii)); };
+	auto nsimg = [](int ii) { return ClampedAutoCrop(Coco_ThemeImage(48, 48, 10, COCO_NSIMAGE, ii)); };
 	CtrlImg::Set(CtrlImg::I_information, nsimg(1));
 	CtrlImg::Set(CtrlImg::I_question, nsimg(0));
 	CtrlImg::Set(CtrlImg::I_exclamation, nsimg(0));
