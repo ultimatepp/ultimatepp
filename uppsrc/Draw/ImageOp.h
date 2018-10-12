@@ -113,6 +113,10 @@ Image Rotate180(const Image& orig);
 Image MirrorHorz(const Image& img);
 Image MirrorVert(const Image& img);
 Image Rotate(const Image& m, int angle);
+Image Transpose(const Image& img);
+Image Transverse(const Image& img);
+
+Image FlipImage(const Image& m, int mode);
 
 Image Colorize(const Image& img, Color color, int alpha = 100);
 Image Equalight(const Image& img, int thold = 10);
