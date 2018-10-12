@@ -30,24 +30,21 @@ public:
 
 void ImageView::Load(const char *filename)
 {
-	img.SetImage(Null);
-	FileIn in(filename);
-	One<StreamRaster> r = StreamRaster::OpenAny(in);
-	if(!r)
+	Image m = StreamRaster::LoadFileAny(filename);
+	if(IsNull(m))
 		return;
 	Size rsz = img.GetSize();
-	Size isz = r->GetSize();
+	Size isz = m.GetSize();
 	if(isz.cx >= rsz.cx || isz.cy >= rsz.cy) {
 		if(isz.cx * rsz.cx < rsz.cy * isz.cy)
 			rsz.cx = isz.cx * rsz.cy / isz.cy;
 		else
 			rsz.cy = isz.cy * rsz.cx / isz.cx;
-		ImageEncoder m;
-		Rescale(m, rsz, *r, isz);
-		img.SetImage(m);
+		m = Rescale(m, rsz);
+		img.SetImage(Rescale(m, rsz));
 	}
-	else
-		img.SetImage(r->GetImage());
+
+	img.SetImage(m);
 }
 
 void ImageView::LoadDir(const char *d)
