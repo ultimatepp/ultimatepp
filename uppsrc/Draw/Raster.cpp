@@ -9,6 +9,7 @@ Raster::Info::Info()
 	dots = Size(0, 0);
 	hotspot = Point(0, 0);
 	kind = IMAGE_OPAQUE;
+	orientation = FLIP_NONE;
 }
 
 const RasterFormat *Raster::GetFormat()
@@ -121,7 +122,11 @@ Image Raster::GetImage(int x, int y, int cx, int cy, const Gate<int, int> progre
 	b.SetHotSpot(f.hotspot - Point(x, y0));
 	if(size.cx && size.cy)
 		b.SetDots(Size(f.dots.cx * cx / size.cx, f.dots.cy * cy / size.cy));
-	return IsError() ? Image() : Image(b);
+	if(IsError())
+		return Image();
+	
+	Image img = b;
+	return FlipImage(img, f.orientation);
 }
 
 Image Raster::GetImage(const Gate<int, int> progress)

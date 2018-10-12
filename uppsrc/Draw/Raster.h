@@ -121,6 +121,7 @@ public:
 		Size  dots;
 		Point hotspot;
 		int   kind;
+		int   orientation;
 		
 		Info();
 	};

@@ -1,5 +1,4 @@
 topic "Raster";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Raster";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 Raster]]}}&]
 [s3; &]
@@ -126,6 +126,14 @@ For convenience, this class is also typedefed as RasterInfo.&]
 [s5;:Raster`:`:Info`:`:kind: [@(0.0.255) int]_[* kind]&]
 [s2;%% The kind of image, one of [* IMAGE`_EMPTY], [* IMAGE`_ALPHA], 
 [* IMAGE`_MASK], [* IMAGE`_OPAQUE]. Default value is [* IMAGE`_OPAQUE].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Raster`:`:Info`:`:orientation: [@(0.0.255) int]_[* orientation]&]
+[s2;%% Orientation of image. This is one of FLIP`_NONE, FLIP`_MIRROR`_HORZ, 
+FLIP`_ROTATE`_180, FLIP`_MIRROR`_VERT, FLIP`_TRANSPOSE, FLIP`_ROTATE`_CLOCKWISE, 
+FLIP`_TRANSVERSE, FLIP`_ROTATE`_ANTICLOCKWISE. This value is 
+intended to flip Image to correct orientation (usually JPEG from 
+digital camera).&]
 [s3; &]
 [s0; &]
 [ {{10000F(128)G(128)@1 [s0;%% [* Raster public methods]]}}&]
@@ -135,7 +143,7 @@ nt]_[*@3 page])&]
 [s2;%% Provides Raster with ability to handle sources that contain 
 more than single image (e.g. animated GIFs). Sets Raster to image 
 no [%-*@3 page], first image is 0. Default implementation is empty.&]
-[s3;%% &]
+[s3; &]
 [s4;%% &]
 [s5;:Raster`:`:GetPageCount`(`): [@(0.0.255) virtual] [@(0.0.255) int]_[* GetPageCount]()&]
 [s2;%% Returns a number of images in Raster. Default implementation 
@@ -212,4 +220,4 @@ is number of step to do) and also to cancel the operation (if
 it returns true; empty Image is returned in that case). Default 
 value for the parameter means no progress feedback is provided.&]
 [s3; &]
-[s0; ]
+[s0; ]]

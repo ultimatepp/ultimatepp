@@ -319,7 +319,7 @@ but implemented effectively in single step.&]
 [@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 mode
 ])&]
 [s2;%% Transforms Image based on flip [%-*@3 mode], which can be one 
-of FLIP`_NONE, FLIP`_MIRROR`_HORZ, -|FLIP`_ROTATE`_180, FLIP`_MIRROR`_VERT, 
+of FLIP`_NONE, FLIP`_MIRROR`_HORZ, FLIP`_ROTATE`_180, FLIP`_MIRROR`_VERT, 
 FLIP`_TRANSPOSE, FLIP`_ROTATE`_CLOCKWISE, FLIP`_TRANSVERSE, FLIP`_ROTATE`_ANTICLO
 CKWISE. Flip mode values are compatible with Raster`::GetOrientation 
 and are equal to EXIF orientation `- 1. This function is intended 
