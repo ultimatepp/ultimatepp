@@ -259,29 +259,6 @@ void ClampHotSpots(Image& m)
 		SetHotSpots(m, p1a, p2a);
 }
 
-/*
-Image AutoCrop(const Image& m, RGBA c)
-{
-	Size isz = m.GetSize();
-	Rect r = isz;
-	for(r.top = 0; r.top < isz.cy && IsUniform(m[r.top], c, 1, isz.cx); r.top++)
-		;
-	for(r.bottom = isz.cy; r.bottom > r.top && IsUniform(m[r.bottom - 1], c, 1, isz.cx); r.bottom--)
-		;
-	if(r.bottom <= r.top)
-		return Null;
-	int h = r.GetHeight();
-	const RGBA *p = m[r.top];
-	for(r.left = 0; r.left < isz.cy && IsUniform(p + r.left, c, isz.cx, h); r.left++)
-		;
-	for(r.right = isz.cx; r.right > r.left && IsUniform(p + r.right - 1, c, isz.cx, h); r.right--)
-		;
-	Point p1 = m.GetHotSpot() - r.TopLeft();
-	Point p2 = m.Get2ndSpot() - r.TopLeft();
-	return WithHotSpots(Crop(m, r), p1.x, p1.y, p2.x, p2.y);
-}
-*/
-
 Image ColorMask(const Image& src, Color key)
 {
 	ImageBuffer ib(src.GetSize());
@@ -802,6 +779,34 @@ Image Rotate180(const Image& orig)
 	return dest;
 }
 
+Image Transpose(const Image& img)
+{
+	Size sz = img.GetSize();
+	ImageBuffer ib(sz.cy, sz.cx);
+	for(int x = 0; x < sz.cx; x++)
+		for(int y = 0; y < sz.cy; y++)
+			ib[x][y] = img[y][x];
+	Point p1 = img.GetHotSpot();
+	Point p2 = img.Get2ndSpot();
+	SetNormalizedHotSpots(ib, p1.y, p1.x, p2.y, p2.x);
+	ib.SetResolution(img.GetResolution());
+	return ib;
+}
+
+Image Transverse(const Image& img)
+{
+	Size sz = img.GetSize();
+	ImageBuffer ib(sz.cy, sz.cx);
+	for(int x = 0; x < sz.cx; x++)
+		for(int y = 0; y < sz.cy; y++)
+			ib[x][y] = img[sz.cy - y - 1][sz.cx - x - 1];
+	Point p1 = img.GetHotSpot();
+	Point p2 = img.Get2ndSpot();
+	SetNormalizedHotSpots(ib, sz.cy - p1.y - 1, sz.cx - p1.x - 1, sz.cy - p2.y - 1, sz.cx - p2.x - 1);
+	ib.SetResolution(img.GetResolution());
+	return ib;
+}
+
 Image MirrorHorz(const Image& img)
 {
 	Size sz = img.GetSize();
@@ -843,6 +848,19 @@ Image MirrorVert(const Image& img)
 	SetNormalizedHotSpots(ib, p1.x, sz.cy - p1.y - 1, p2.x, sz.cy - p2.y - 1);
 	ib.SetResolution(img.GetResolution());
 	return ib;
+}
+
+Image FlipImage(const Image& m, int mode)
+{
+	return decode(mode,
+	              FLIP_MIRROR_HORZ, MirrorHorz(m),
+	              FLIP_ROTATE_180, Rotate180(m),
+	              FLIP_MIRROR_VERT, MirrorVert(m),
+	              FLIP_TRANSPOSE, Transpose(m),
+	              FLIP_ROTATE_CLOCKWISE, RotateClockwise(m),
+	              FLIP_TRANSVERSE, Transverse(m),
+	              FLIP_ROTATE_ANTICLOCKWISE, RotateAntiClockwise(m),
+	              m);
 }
 
 Image Magnify(const Image& img, int nx, int ny)

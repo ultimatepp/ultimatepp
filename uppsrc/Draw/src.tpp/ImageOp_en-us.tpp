@@ -302,4 +302,28 @@ mage][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 angle])&]
 [s2;%% Returns a new Image based on Image [%-*@3 m] rotated [%-*@3 angle] 
 by its center where the full rotation (2[%- π) ]is 3600.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Transpose`(const Upp`:`:Image`&`): [_^Upp`:`:Image^ Image]_[* Transpose]([@(0.0.255) c
+onst]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s2;%% Result is the same as MirrorHorz(RotateClockwise([%-*@3 img])), 
+but implemented effectively in single step.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:Transverse`(const Upp`:`:Image`&`): [_^Upp`:`:Image^ Image]_[* Transverse]([@(0.0.255) c
+onst]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 img])&]
+[s2;%% Result is the same as MirrorHorz(RotateAntiClockwise([%-*@3 img])), 
+but implemented effectively in single step.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:FlipImage`(const Upp`:`:Image`&`,int`): [_^Upp`:`:Image^ Image]_[* FlipImage](
+[@(0.0.255) const]_[_^Upp`:`:Image^ Image][@(0.0.255) `&]_[*@3 m], [@(0.0.255) int]_[*@3 mode
+])&]
+[s2;%% Transforms Image based on flip [%-*@3 mode], which can be one 
+of FLIP`_NONE, FLIP`_MIRROR`_HORZ, -|FLIP`_ROTATE`_180, FLIP`_MIRROR`_VERT, 
+FLIP`_TRANSPOSE, FLIP`_ROTATE`_CLOCKWISE, FLIP`_TRANSVERSE, FLIP`_ROTATE`_ANTICLO
+CKWISE. Flip mode values are compatible with Raster`::GetOrientation 
+and are equal to EXIF orientation `- 1. This function is intended 
+to flip Image to correct orientation (usually JPEG from digital 
+camera).&]
+[s2;%% &]
 [s0;%% ]]

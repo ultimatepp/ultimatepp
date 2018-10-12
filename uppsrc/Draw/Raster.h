@@ -72,6 +72,17 @@ public:
 	void Write(byte *t, const RGBA *s, int cx, const PaletteCv *palcv) const;
 };
 
+enum FlipMode {
+	FLIP_NONE                 = 0,
+	FLIP_MIRROR_HORZ          = 1,
+	FLIP_ROTATE_180           = 2,
+	FLIP_MIRROR_VERT          = 3,
+	FLIP_TRANSPOSE            = 4,
+	FLIP_ROTATE_CLOCKWISE     = 5,
+	FLIP_TRANSVERSE           = 6,
+	FLIP_ROTATE_ANTICLOCKWISE = 7,
+};
+
 class Raster {
 public:
 	class Line {
@@ -118,9 +129,9 @@ public:
 	virtual void    SeekPage(int page);
 	virtual int     GetActivePage() const;
 	virtual int     GetPageCount();
-	virtual int  	GetPageAspect(int n);
-	virtual int  	GetPageDelay(int n);
-	virtual Rect   	GetPageRect(int n);
+	virtual int     GetPageAspect(int n);
+	virtual int     GetPageDelay(int n);
+	virtual Rect    GetPageRect(int n);
 	virtual int		GetPageDisposal(int n);
 
 	virtual bool    Create();
