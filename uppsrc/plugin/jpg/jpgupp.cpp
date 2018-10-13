@@ -575,7 +575,7 @@ Raster::Info JPGRaster::GetInfo()
 	info.hotspot = Null;
 	Value v = GetMetaData("orientation");
 	if(IsNumber(v))
-		info.orientation = clamp((int)v, 0, 7);
+		info.orientation = clamp((int)v - 1, 0, 7);
 	return info;
 }
 
