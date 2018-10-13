@@ -5,7 +5,7 @@ void Ide::UpgradeTheIDE()
 	String idepath = GetExeFilePath();
 	String newpath = idepath + ".new";
 	String bakpath(~idepath, GetFileExtPos(idepath));
-	bakpath << ".bak.exe";
+	bakpath << ".bak" << GetExeExt();
 	
 	int tbak = targetmode;
 	String tmbak = StoreAsString(release);

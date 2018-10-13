@@ -389,6 +389,7 @@ void Ide::Setup(Bar& menu)
 	menu.Add("Automatic build methods setup..", callback(InstantSetup))
 	    .Help("Setups/fixes build methods and basic assemblies..");
 #endif
+	menu.MenuSeparator();
 	menu.Add("Checkout and setup U++ SVN trunk sources..", [=] {
 		if(SetupSVNTrunk()) {
 			IdeAgain = true;
@@ -400,7 +401,7 @@ void Ide::Setup(Bar& menu)
 	if(wspc[0] == "ide")
 		for(int i = 0; i < wspc.GetCount(); i++)
 			if(wspc[i] == "ide/Core")
-				menu.Add("Upgrade theide..", [=] { UpgradeTheIDE(); });
+				menu.Add("Upgrade TheIDE..", [=] { UpgradeTheIDE(); });
 
 	if(menu.IsMenuBar())
 		SetupMobilePlatforms(menu);
