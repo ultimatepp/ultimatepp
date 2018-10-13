@@ -192,13 +192,7 @@ effective [%-*@3 target]. Returns true on success.&]
 [s4;%- &]
 [s5;:Upp`:`:SFtp`:`:GetDefaultDir`(`):%- [_^Upp`:`:String^ String]_[* GetDefaultDir]()&]
 [s2; Returns the path of default directory  (e.g. [C /home/][C@3 username]) 
-on success, and an empty string on failure.&]
-[s3;%- &]
-[s4;%- &]
-[s5;:Upp`:`:SFtp`:`:GetCurrentDir`(`):%- [_^Upp`:`:String^ String]_[* GetCurrentDir]()&]
-[s2; Returns the path of the current directory on success, and an 
-empty string on failure. Note that the current dir is always 
-&]
+on success, and String`::GetVoid() on failure.&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Upp`:`:SFtp`:`:GetAttrs`(Upp`:`:SFtpHandle`,Upp`:`:SFtpAttrs`&`):%- [@(0.0.255) bo

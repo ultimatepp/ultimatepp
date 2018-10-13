@@ -114,7 +114,7 @@ public:
     bool                    ReadLink(const String& path, String& target)            { return SymLink(path, target, LIBSSH2_SFTP_READLINK); }
     bool                    RealizePath(const String& path, String& target)         { return SymLink(path, target, LIBSSH2_SFTP_REALPATH); }
 
-    String                  GetDefaultDir()                                         { String s; RealizePath(".", s); return s; }
+    String                  GetDefaultDir()                                         { String s; return RealizePath(".", s) ? s : String::GetVoid(); }
     
     // Attributes
     bool                    GetAttrs(SFtpHandle handle, SFtpAttrs& attrs);
