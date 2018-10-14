@@ -25,6 +25,3 @@ file
 	tess.h,
 	Copying;
 
-mainconfig
-	"" = "GUI";
-
