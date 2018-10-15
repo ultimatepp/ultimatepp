@@ -19,7 +19,7 @@ void RichEdit::FinishNF()
 		else
 		if(p.table != anchorp.table) {
 			if(anchor == 0 && anchorp.level == 1 && text.GetRichPos(anchor, 1).table == 1 && anchor < cursor) {
-				while(cursor > 0 && cursorp.level) // selection must at at plain text
+				while(cursor > 0 && cursorp.level) // selection must be at plain text
 					cursorp = text.GetRichPos(--cursor);
 				begtabsel = true;
 				anchor = 0;

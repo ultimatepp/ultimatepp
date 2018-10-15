@@ -295,7 +295,7 @@ int RichTxt::GetVertMove(int pos, int gx, RichContext rc, int dir) const
 	else {
 		pi = dir > 0 ? 0 : GetPartCount() - 1;
 		p = -1;
-		pos = 0;
+		pos = GetPartPos(pi);
 	}
 	while(pi < GetPartCount()) {
 		int q = IsTable(pi) ? GetTable(pi).GetVertMove(p, gx, rc, dir)
