@@ -45,7 +45,7 @@ CONSOLE_APP_MAIN
 		ASSERT(h.IsError());
 		LDUMP(h.GetError());
 	}
-	if(GetSysDate() > Date(2018, 10, 1)) { // Because "Resource temporarily unavailable", but let us recheck later
+	if(GetSysDate() > Date(2018, 12, 1)) { // Because "Resource temporarily unavailable", but let us recheck later
 		HttpRequest h("http://dev.alt.cloudappsportal.com/_api/web/lists");
 		h.KeepAlive();
 		h.Execute();
