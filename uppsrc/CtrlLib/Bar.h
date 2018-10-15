@@ -296,12 +296,12 @@ public:
 	virtual void  CancelMode();
 	virtual void  Paint(Draw& w);
 	virtual bool  IsMenuBar() const                  { return true; }
+	virtual bool  IsEmpty() const;
 
 protected:
 	virtual Item& AddItem(Event<> cb);
 	virtual Item& AddSubMenu(Event<Bar&> proc);
 	virtual Value GetBackground() const;
-	virtual bool  IsEmpty() const;
 
 public:
 	struct Style : ChStyle<Style> {
