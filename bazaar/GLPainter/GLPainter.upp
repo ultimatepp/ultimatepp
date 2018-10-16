@@ -1,0 +1,17 @@
+description "OpenGL based GLDraw demo\377";
+
+uses
+	CtrlLib,
+	GLDraw,
+	GLCtrl,
+	plugin/jpg,
+	plugin/tess2;
+
+file
+	GLPainter.h,
+	Code.cpp,
+	Mesh.cpp,
+	Image.cpp,
+	Polygon.cpp,
+	StencilPolygon.cpp;
+
