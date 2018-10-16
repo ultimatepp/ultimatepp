@@ -62,21 +62,28 @@ void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 void GLDrawImage(Sizef vs, const Rect& rect, const Image& img, double alpha);
 
 class GLMesh {
-	GLuint  VAO, EBO;
+	GLuint   VAO = 0;
+	GLuint   EBO = 0;
 	int      elements;
     
 	Vector<GLuint> VBO;
+	
+	void     Make();
 
 public:
 	GLMesh& Add(const void *data, int type, int ntuple, int count);
-	GLMesh& Add(const float *data, int ntuple, int count)                      { return Add(data, GL_FLOAT, ntuple, count); }
+	GLMesh& Add(const float *data, int ntuple, int count)           { return Add(data, GL_FLOAT, ntuple, count); }
 	GLMesh& Add(const Vector<Pointf>& pt);
 	GLMesh& Index(const int *indices, int count);
-	GLMesh& Index(const Vector<int>& indices)                                  { return Index(indices, indices.GetCount()); }
+	GLMesh& Index(const Vector<int>& indices)                       { return Index(indices, indices.GetCount()); }
 	
-	void Draw(int mode = GL_TRIANGLES) const;
+	void    Draw(int mode = GL_TRIANGLES) const;
 
-	void Draw(GLCode& shaders, int mode = GL_TRIANGLES) const;
+	void    Draw(GLCode& shaders, int mode = GL_TRIANGLES) const;
+	
+	void    Clear();
+	
+	bool    IsEmpty() const                                         { return VAO == 0; }
 
 	GLMesh();
 	~GLMesh();
@@ -87,8 +94,25 @@ const GLMesh& GLRectMesh();
 void GLMakePolygon(GLMesh& mesh, const Vector<Vector<Pointf>>& polygon);
 void GLDrawPolygon(Sizef vs, Point at, const GLMesh& mesh, Sizef scale, Color color, double alpha);
 
-void GLStencilPolygon(GLMesh& mesh, const Vector<Vector<Pointf>>& polygon);
-void GLDrawStencilPolygon(Sizef vs, Point at, const GLMesh& mesh, Sizef scale, Color color, double alpha);
+template <typename Src>
+void GLStencilPolygon(GLMesh& mesh, const Src& polygon)
+{
+	Vector<Pointf> vertex; // todo: Optimize!
+	Vector<int> ndx;
+	
+	for(const auto& p: polygon) {
+		int i0 = vertex.GetCount();
+		for(int i = 0; i < p.GetCount(); i++) {
+			if(i > 1)
+				ndx << i0 << i0 + i - 1 << i0 + i;
+			vertex.Add(p[i]);
+		}
+	}
+	
+	mesh.Add(vertex).Index(ndx);
+}
+
+void GLDrawStencilPolygon(Sizef vs, Pointf at, const GLMesh& mesh, Sizef scale, Color color, double alpha);
 
 };
 

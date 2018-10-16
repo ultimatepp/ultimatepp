@@ -2,35 +2,47 @@
 
 namespace Upp {
 
-GLMesh::GLMesh()
+GLMesh::GLMesh() {}
+
+void GLMesh::Make()
 {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &EBO);
+	if(!VAO) {
+	    glGenVertexArrays(1, &VAO);
+	    glGenBuffers(1, &EBO);
+	}
 }
 
-GLMesh::~GLMesh()
+void GLMesh::Clear()
 {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &EBO);
     for(auto h : VBO)
         glDeleteBuffers(1, &h);
+	VAO = EBO = 0;
+	VBO.Clear();
+}
+
+GLMesh::~GLMesh()
+{
+	Clear();
 }
 
 GLMesh& GLMesh::Add(const void *data, int type, int ntuple, int count)
 {
+	Make();
     glBindVertexArray(VAO);
     int ii = VBO.GetCount();
 	GLuint& vbo = VBO.Add();
 	glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    int sz = decode(type, GL_FLOAT, sizeof(float),
-	                      GL_BYTE, sizeof(byte),
-	                      GL_UNSIGNED_BYTE, sizeof(byte),
-	                      GL_SHORT, sizeof(int16),
-	                      GL_UNSIGNED_SHORT, sizeof(uint16),
-	                      GL_INT, sizeof(int32),
-	                      GL_UNSIGNED_INT, sizeof(uint32),
-	                      (int)sizeof(double));
+    int sz = (int)decode(type, GL_FLOAT, sizeof(float),
+	                           GL_BYTE, sizeof(byte),
+	                           GL_UNSIGNED_BYTE, sizeof(byte),
+	                           GL_SHORT, sizeof(int16),
+	                           GL_UNSIGNED_SHORT, sizeof(uint16),
+	                           GL_INT, sizeof(int32),
+	                           GL_UNSIGNED_INT, sizeof(uint32),
+	                           sizeof(double));
 	glBufferData(GL_ARRAY_BUFFER, sz * ntuple * count, data, GL_STATIC_DRAW);
 	glVertexAttribPointer(ii, ntuple, type, GL_FALSE, ntuple * sz, (void*)0);
     glEnableVertexAttribArray(ii);
@@ -41,6 +53,7 @@ GLMesh& GLMesh::Add(const void *data, int type, int ntuple, int count)
 
 GLMesh& GLMesh::Index(const int *indices, int count)
 {
+	Make();
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * count, indices, GL_STATIC_DRAW);
@@ -52,7 +65,8 @@ GLMesh& GLMesh::Index(const int *indices, int count)
 
 void GLMesh::Draw(int mode) const
 {
-	glBindVertexArray(VAO);
+	if(VAO)
+		glBindVertexArray(VAO);
 	glDrawElements(mode, elements, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
