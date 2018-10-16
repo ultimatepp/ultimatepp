@@ -2,6 +2,14 @@
 
 namespace Upp {
 
+Image GLCtrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
+{
+	if(mouseTarget) {
+		return mouseTarget->MouseEvent(event, p + GetScreenView().TopLeft() - mouseTarget->GetScreenView().TopLeft(), zdelta, keyflags);
+	}
+	return Ctrl::MouseEvent(event, p, zdelta, keyflags);
+}
+
 void GLCtrl::GLResize(int w, int h)
 {
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);

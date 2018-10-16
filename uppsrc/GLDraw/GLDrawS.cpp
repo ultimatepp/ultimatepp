@@ -74,9 +74,8 @@ void initializeGL()
 		uniform sampler2D s_texture;
 		void main()
 		{
-//		   gl_FragColor = texture2D(s_texture, v_texCoord);
 		   gl_FragColor = v_color;
-		   gl_FragColor[3] = texture2D(s_texture, v_texCoord)[3];
+		   gl_FragColor.a = texture2D(s_texture, v_texCoord).a;
 		}
 		)",
 		ATTRIB_VERTEX, "a_position",
@@ -108,7 +107,7 @@ void initializeGL()
 		}
 		)",
 		ATTRIB_VERTEX, "a_position",
-		ATTRIB_COLOR, "a_color"
+		ATTRIB_COLOR, "a_color" // we need this per vertex because we want to group rects
 	);
 
 	u_color = gl_rect.GetUniform("u_color");
@@ -284,6 +283,7 @@ void GLDraw::PutRect(const Rect& rect, Color color)
 void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 {
 	LTIMING("PutImage");
+
 	FlushPutRect();
 
 	gl_image.Use();
@@ -334,7 +334,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
 	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(img));
 
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
 	glDisableVertexAttribArray(ATTRIB_TEXPOS);
 }
@@ -370,7 +370,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src, Color color)
 	static GLushort indices[] = { 0, 1, 2, 0, 2, 3 };
 
 	const float *tc;
-
+	
 	if(src == img.GetSize()) {
 		static float fixed[] = {
 			0.0, 0.0,
@@ -438,6 +438,7 @@ void GLDraw::Finish()
 
 GLDraw::~GLDraw()
 {
+	FlushPutRect();
 }
 
 };

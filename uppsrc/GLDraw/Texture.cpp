@@ -15,7 +15,6 @@ GLuint CreateGLTexture(const Image& img, dword flags)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_BGRA, GL_UNSIGNED_BYTE, ~img);
 	if(flags & TEXTURE_MIPMAP)
 		glGenerateMipmap(GL_TEXTURE_2D);
-	
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, flags & TEXTURE_LINEAR ? GL_LINEAR : GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, flags & TEXTURE_LINEAR ?
 																flags & TEXTURE_MIPMAP ? GL_LINEAR_MIPMAP_LINEAR

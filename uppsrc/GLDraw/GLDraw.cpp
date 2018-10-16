@@ -57,7 +57,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 		glEnd();
 	}
 
-   	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_TEXTURE_2D);
 }
 
 void GLDraw::SetColor(Color c)
