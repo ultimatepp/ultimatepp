@@ -42,7 +42,7 @@ public:
 	virtual void Paint(Draw& w);
 
 public:
-	Callback WhenGLPaint;
+	Event<> WhenGLPaint;
 
 	virtual void GLPaint();
 	virtual void GLResize(int w, int h);
@@ -54,6 +54,9 @@ public:
 
 class GLCtrl : public Ctrl {
 	typedef GLCtrl CLASSNAME;
+
+public:
+	virtual Image  MouseEvent(int event, Point p, int zdelta, dword keyflags);
 	
 private:
 	class GLPicking
@@ -134,6 +137,7 @@ private:
 	bool doubleBuffering;
 	bool multiSampleBuffering;
 	int numberOfSamples;
+	Ctrl *mouseTarget = NULL;
 
 protected:
 	// Called after succesful OpenGL initialization
@@ -156,6 +160,7 @@ public:
 	GLCtrl& StencilBits(int n)             { stencilSize = n; return *this; }
 	GLCtrl& DoubleBuffering(bool b = true) { doubleBuffering = b; return *this; }
 	GLCtrl& MSAA(int n = 4)                { numberOfSamples = n; return *this; }
+	GLCtrl& RedirectMouse(Ctrl *target)    { mouseTarget = target; return *this; }
 
 	GLCtrl(int  depthsize = 24, int  stencilsize = 8, bool doublebuffer = true,
 	       bool multisamplebuffering = false, int  numberofsamples = 0)

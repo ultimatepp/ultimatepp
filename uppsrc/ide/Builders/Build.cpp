@@ -535,9 +535,9 @@ bool MakeBuild::Build(const Workspace& wspc, String mainparam, String outfile, b
 			                  mainparam, outfile, linkfile, immfile, linkopt, ok) && ok;
 			// Set the time of target and intermediates to start-time, so that if any file
 			// changes during compilation, it is recompiled during next build
-			SetFileTime(target, start_time);
-			for(int i = 0; i < immfile.GetCount(); i++)
-				SetFileTime(immfile[i], start_time);
+//			SetFileTime(target, start_time);
+//			for(int i = 0; i < immfile.GetCount(); i++)
+//				SetFileTime(immfile[i], start_time);
 		}
 	}
 	EndBuilding(ok);

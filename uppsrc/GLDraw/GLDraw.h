@@ -99,7 +99,8 @@ public:
 	static void ClearCache();
 	static void ResetCache();
 	
-	GLDraw()  { context = 0; }
+	GLDraw()        { context = 0; }
+	GLDraw(Size sz) { Init(sz); }
 
 	~GLDraw();
 };
