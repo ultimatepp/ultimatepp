@@ -164,10 +164,10 @@ public: // really private:
 	static Gclipboard& gselection();
 	static String      RenderPrimarySelection(const Value& fmt);
 
-	static Vector<Event<> > hotkey;
-	static Vector<dword>    keyhot;
-	static Vector<dword>    modhot;
-	static guint            MouseState;
+	static Vector<Event<>> hotkey;
+	static Vector<dword>   keyhot;
+	static Vector<dword>   modhot;
+	static guint           MouseState;
             
 public:
 	static void      EndSession()              {}
