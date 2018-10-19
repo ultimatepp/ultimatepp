@@ -21,7 +21,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	LLOG("RefreshRect " << Name() << ' ' << r);
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
-	if(!top) {
+	if(!top && !isdhctrl) {
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
@@ -168,6 +168,10 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 #else
 	if(IsFullRefresh() || !IsVisible())
 		return;
+	if(isdhctrl) {
+		Refresh(_r);
+		return;
+	}
 	Size vsz = GetSize();
 	dx = sgn(dx) * min(abs(dx), vsz.cx);
 	dy = sgn(dy) * min(abs(dy), vsz.cy);

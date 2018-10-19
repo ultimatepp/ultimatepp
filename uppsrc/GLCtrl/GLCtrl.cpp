@@ -43,7 +43,7 @@ Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 
 Vector<int> GLCtrl::Pick(int x, int y)
 {
-	pane.ActivateContext();
+//	pane.ActivateContext();
 	return picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
 }
 

@@ -18,8 +18,9 @@
 namespace Upp {
 
 enum {
-	TEXTURE_LINEAR = 0x01,
-	TEXTURE_MIPMAP = 0x02,
+	TEXTURE_LINEAR     = 0x01,
+	TEXTURE_MIPMAP     = 0x02,
+	TEXTURE_COMPRESSED = 0x04,
 };
 
 GLuint CreateGLTexture(const Image& img, dword flags);

@@ -112,6 +112,8 @@ LRESULT Ctrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) {
 	#endif
 			}
 			EndPaint(hwnd, &ps);
+			
+			UpdateDHCtrls(); // so that they are displayed withing the same WM_PAINT - looks better
 		}
 		return 0L;
 #ifndef PLATFORM_WINCE
