@@ -91,6 +91,9 @@ private:
 
 	static bool PreprocessMessageAll(MSG& msg);
 	
+	Rect current_pos = Null;
+	int  current_visible = Null;
+
 	friend class Ctrl;
 
 protected:

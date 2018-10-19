@@ -22,6 +22,8 @@ private:
 	static void RenderAllFormats();
 	static void DestroyClipboard();
 
+	void UpdateDHCtrls();
+
 public:
 	static Win32Event ExitLoopEvent;
 	static bool       endsession;

@@ -188,7 +188,7 @@ void Ctrl::SetPos0(LogPos p, bool _inframe)
 {
 	GuiLock __;
 	if(p == pos && inframe == _inframe) return;
-	if(parent) {
+	if(parent && !isdhctrl) {
 		if(!globalbackbuffer) {
 			Rect from = GetRect().Size();
 			Top *top = GetTopRect(from, true)->top;

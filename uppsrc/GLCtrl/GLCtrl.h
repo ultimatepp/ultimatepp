@@ -111,13 +111,12 @@ private:
 	struct GLPane : DHCtrl {
 		friend class GLCtrl;
 		
-		HDC    hDC;
-		HGLRC  hRC;
+	//	HDC    hDC;
+	//	HGLRC  hRC;
 		GLCtrl *ctrl;
 		
 	public:
-		GLPane() : hDC(NULL), hRC(NULL) { NoWantFocus(); }
-		~GLPane() { Destroy(); }
+		GLPane()/* : hDC(NULL), hRC(NULL)*/ { NoWantFocus(); }
 		
 		virtual void    State(int reason);
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);

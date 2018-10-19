@@ -46,6 +46,8 @@ void DHCtrl::NcDestroy()
 LRESULT DHCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	GuiLock __;
+	if(message == WM_ERASEBKGND)
+		return 1L;
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
@@ -76,11 +78,14 @@ void DHCtrl::SyncHWND()
 	GuiLock __;
 	HWND phwnd = GetTopCtrl()->GetHWND();
 	if(phwnd) {
-		Rect r = GetScreenView();
-		Rect pr = GetScreenClient(phwnd);
-		SetWindowPos(hwnd, NULL, r.left - pr.left, r.top - pr.top, r.Width(), r.Height(),
-		             SWP_NOACTIVATE|SWP_NOZORDER);
-		ShowWindow(hwnd, IsVisible() ? SW_SHOW : SW_HIDE);
+		Rect r = GetScreenView() - GetScreenClient(phwnd).TopLeft();
+		if(r != current_pos || IsVisible() != (bool)current_visible) {
+			SetWindowPos(hwnd, NULL, r.left, r.top, r.Width(), r.Height(), SWP_NOACTIVATE|SWP_NOZORDER);
+			ShowWindow(hwnd, IsVisible() ? SW_SHOW : SW_HIDE);
+			Refresh();
+			current_pos = r;
+			current_visible = IsVisible();
+		}
 	}
 }
 
@@ -88,6 +93,8 @@ void DHCtrl::State(int reason)
 {
 	switch(reason) {
 	case OPEN:
+		current_pos = Null;
+		current_visible = Null;
 		OpenHWND();
 	default:
 		SyncHWND();
@@ -110,6 +117,17 @@ DHCtrl::~DHCtrl()
 	BackPaint(EXCLUDEPAINT);
 	RemoveActive();
 }
+
+void Ctrl::UpdateDHCtrls()
+{ // we call this in WM_PAINT to force updating in single WM_PAINT, this makes things smoother e.g. with OpenGL in splitter
+	for(Ctrl *q = GetFirstChild(); q; q = q->GetNext()) {
+		DHCtrl *dh = dynamic_cast<DHCtrl *>(q);
+		if(dh)
+			UpdateWindow(dh->GetHWND());
+		q->UpdateDHCtrls();
+	}
+}
+
 
 #endif
 
