@@ -2,19 +2,47 @@
 
 namespace Upp {
 
+void GLTexture::Clear()
+{
+	if(data && --data->refcount == 0) {
+		glDeleteTextures(1, &data->textureid);
+		delete data;
+	}
+	data = NULL;
+}
+
+void GLTexture::Set(const Image& img, dword flags)
+{
+	Clear();
+	data = new Data;
+	data->sz = img.GetSize();
+	data->textureid = CreateGLTexture(img, flags);
+}
+
+GLTexture::GLTexture(const GLTexture& src)
+{
+	data = src.data;
+	data->refcount++;
+}
+
+GLTexture& GLTexture::operator=(const GLTexture& src)
+{
+	if(data != src.data) {
+		if(data) Clear();
+		data = src.data;
+		data->refcount++;
+	}
+	return *this;
+}
+
 void GLBind(const Image& img, dword style)
 {
 	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(style, img));
 }
 
-Sizef GLMakeViewScale(Size view_size)
+const GLVertexData& GLRectMesh()
 {
-	return Sizef(2.0 / view_size.cx, -2.0 / view_size.cy);
-}
-
-const GLMesh& GLRectMesh()
-{
-	static GLMesh mesh;
+	static GLVertexData mesh;
 	ONCELOCK {
 		static const float box[] = {
 			0, 0, // 0
@@ -30,7 +58,7 @@ const GLMesh& GLRectMesh()
 	return mesh;
 }
 
-void GLDrawImage(Sizef vs, const Rect& rect, const Image& img, double alpha)
+void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, double alpha)
 {
 	static GLCode program(R"(
 		#version 330 core
@@ -61,14 +89,22 @@ void GLDrawImage(Sizef vs, const Rect& rect, const Image& img, double alpha)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLBind(img);
+	glBindTexture(GL_TEXTURE_2D, textureid);
 	GLRectMesh().Draw(
-		program(offset, vs * rect.TopLeft() + Sizef(-1, 1))
-		       (scale, vs * rect.GetSize())
-		       (ialpha, alpha)
+		program(offset, dd.vs * rect.TopLeft() + Sizef(-1, 1))
+		       (scale, dd.vs * rect.GetSize())
+		       (ialpha, dd.alpha * alpha)
 	);
 }
 
+void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const GLTexture& img, double alpha)
+{
+	GLDrawTexture(dd, rect, img.GetID(), alpha);
+}
+
+void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha)
+{
+	GLDrawTexture(dd, rect, GetTextureForImage(img), alpha);
+}
+
 };
-
-

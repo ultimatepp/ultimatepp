@@ -9,9 +9,12 @@ uses
 
 file
 	GLPainter.h,
+	GLPainter.hpp,
 	Code.cpp,
-	Mesh.cpp,
+	VertexData.cpp,
 	Image.cpp,
 	Polygon.cpp,
-	StencilPolygon.cpp;
+	StencilPolygon.cpp,
+	Line.cpp,
+	Ellipse.cpp;
 

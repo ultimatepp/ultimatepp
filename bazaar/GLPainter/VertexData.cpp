@@ -2,9 +2,9 @@
 
 namespace Upp {
 
-GLMesh::GLMesh() {}
+GLVertexData::GLVertexData() {}
 
-void GLMesh::Make()
+void GLVertexData::Make()
 {
 	if(!VAO) {
 	    glGenVertexArrays(1, &VAO);
@@ -12,7 +12,7 @@ void GLMesh::Make()
 	}
 }
 
-void GLMesh::Clear()
+void GLVertexData::Clear()
 {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &EBO);
@@ -22,12 +22,12 @@ void GLMesh::Clear()
 	VBO.Clear();
 }
 
-GLMesh::~GLMesh()
+GLVertexData::~GLVertexData()
 {
 	Clear();
 }
 
-GLMesh& GLMesh::Add(const void *data, int type, int ntuple, int count)
+GLVertexData& GLVertexData::Add(const void *data, int type, int ntuple, int count)
 {
 	Make();
     glBindVertexArray(VAO);
@@ -51,7 +51,7 @@ GLMesh& GLMesh::Add(const void *data, int type, int ntuple, int count)
 	return *this;
 }
 
-GLMesh& GLMesh::Index(const int *indices, int count)
+GLVertexData& GLVertexData::Index(const int *indices, int count)
 {
 	Make();
 	glBindVertexArray(VAO);
@@ -63,7 +63,7 @@ GLMesh& GLMesh::Index(const int *indices, int count)
 	return *this;
 }
 
-void GLMesh::Draw(int mode) const
+void GLVertexData::Draw(int mode) const
 {
 	if(VAO)
 		glBindVertexArray(VAO);
@@ -71,13 +71,13 @@ void GLMesh::Draw(int mode) const
 	glBindVertexArray(0);
 }
 
-void GLMesh::Draw(GLCode& shaders, int mode) const
+void GLVertexData::Draw(GLCode& shaders, int mode) const
 {
 	shaders.Use();
 	Draw(mode);
 }
 
-GLMesh& GLMesh::Add(const Vector<Pointf>& pt)
+GLVertexData& GLVertexData::Add(const Vector<Pointf>& pt)
 {
 	Buffer<float> f(2 * pt.GetCount());
 	float *t = f;

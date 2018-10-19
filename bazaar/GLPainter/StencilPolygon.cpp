@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-void GLDrawStencilPolygon(Sizef vs, Pointf at, const GLMesh& mesh, Sizef scale, Color color, double alpha)
+void GLDrawPolygon(const GLContext2D& dd, bool generic, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
 {
 	static GLCode program(R"(
 		#version 330 core
@@ -21,38 +21,52 @@ void GLDrawStencilPolygon(Sizef vs, Pointf at, const GLMesh& mesh, Sizef scale, 
 			gl_FragColor = color;
 		}
 	)");
+	
+	static int ioffset = program["offset"];
+	static int iscale = program["iscale"];
+	static int icolor = program["color"];
 
-	RTIMING("Stencil");
-	
-	
-	program("offset", Pointf(vs) * at + Sizef(-1, 1))
-	       ("scale", vs * scale)
-	       ("color", color.GetR() / 255.0f, color.GetG() / 255.0f, color.GetB() / 255.0f, alpha);
-	
-	glDisable(GL_BLEND);
-	glDisable(GL_CULL_FACE);
+	program("offset", Pointf(dd.vs) * at + Sizef(-1, 1))
+	       ("scale", dd.vs * scale)
+	       ("color", color.GetR() / 255.0f, color.GetG() / 255.0f, color.GetB() / 255.0f, dd.alpha * alpha);
 
-//	glClearStencil(0);
-	glEnable(GL_STENCIL_TEST);
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-	glStencilFunc(GL_NEVER, 0, 1);
-	glStencilOp(GL_INVERT, GL_INVERT, GL_INVERT);
+	if(generic) {
+		glDisable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
 	
-	mesh.Draw(program);
-
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glStencilFunc(GL_EQUAL, 1, 1);
-	glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
+		glEnable(GL_STENCIL_TEST);
+		glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+		glStencilFunc(GL_NEVER, 0, 1);
+		glStencilOp(GL_INVERT, GL_INVERT, GL_INVERT);
+		
+		mesh.Draw(program);
+	
+		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+		glStencilFunc(GL_EQUAL, 1, 1);
+		glStencilOp(GL_ZERO, GL_ZERO, GL_ZERO);
+	}
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	GLRectMesh().Draw(
-		program("offset", -1, -1)
-		       ("scale", 2, 2)
-	);
+	program("offset", Pointf(dd.vs) * at + Sizef(-1, 1))
+	       ("scale", dd.vs * scale)
+	       ("color", color.GetR() / 255.0f, color.GetG() / 255.0f, color.GetB() / 255.0f, dd.alpha * alpha);
 
-	glDisable(GL_STENCIL_TEST);
+	GLRectMesh().Draw(program("offset", -1, -1)("scale", 2, 2));
+
+	if(generic)
+		glDisable(GL_STENCIL_TEST);
+}
+
+void GLDrawPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+{
+	GLDrawPolygon(dd, true, at, mesh, scale, color, alpha);
+}
+
+void GLDrawConvexPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+{
+	GLDrawPolygon(dd, false, at, mesh, scale, color, alpha);
 }
 
 };

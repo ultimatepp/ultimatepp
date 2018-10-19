@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-void GLMakePolygon(GLMesh& mesh, const Vector<Vector<Pointf>>& polygon)
+void GLMakePolygon(GLVertexData& mesh, const Vector<Vector<Pointf>>& polygon)
 {
 	Vector<Pointf> vertex;
 	Vector<int> ndx;
@@ -11,7 +11,7 @@ void GLMakePolygon(GLMesh& mesh, const Vector<Vector<Pointf>>& polygon)
 	mesh.Add(vertex).Index(ndx);
 }
 
-void GLDrawPolygon(Sizef vs, Point at, const GLMesh& mesh, Sizef scale, Color color, double alpha)
+void GLDrawPolygon(Sizef vs, Point at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
 {
 	static GLCode program(R"(
 		#version 330 core
