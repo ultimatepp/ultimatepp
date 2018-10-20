@@ -21,7 +21,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	LLOG("RefreshRect " << Name() << ' ' << r);
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
-	if(!top && !isdhctrl) {
+	if(!top && !hasdhctrl) {
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
