@@ -26,7 +26,7 @@ enum {
 GLuint CreateGLTexture(const Image& img, dword flags);
 
 GLuint GetTextureForImage(dword flags, const Image& img, uint64 context = 0); // cached
-inline GLuint GetTextureForImage(const Image& img, uint64 context = 0) { return GetTextureForImage(0, img, context); }
+inline GLuint GetTextureForImage(const Image& img, uint64 context = 0) { return GetTextureForImage(TEXTURE_LINEAR|TEXTURE_MIPMAP, img, context); }
 
 #ifdef GL_USE_SHADERS
 
