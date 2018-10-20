@@ -126,6 +126,11 @@ Pointf Orthogonal(const Pointf& p)
 	return Pointf(-p.y, p.x);
 }
 
+Pointf Unit(const Pointf& p)
+{
+	return p / Length(p);
+}
+
 double Squared(const Pointf& p)
 {
 	return p.x * p.x + p.y * p.y;
