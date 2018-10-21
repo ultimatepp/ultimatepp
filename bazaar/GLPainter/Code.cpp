@@ -94,4 +94,15 @@ GLCode& GLCode::Uniform(const char *id, double a, double b, double c, double d)
 	return *this;
 }
 
+
+GLCode& GLCode::operator()(const char *id, Color c, double alpha)
+{
+	return Uniform(GetUniform(id), c, alpha);
+}
+
+GLCode& GLCode::operator()(int i, Color c, double alpha)
+{
+	return Uniform(i, c.GetR() / 255.0f, c.GetG() / 255.0f, c.GetB() / 255.0f, alpha);
+}
+
 };

@@ -43,6 +43,8 @@ struct GLCode : GLProgram {
 	GLCode& operator()(int i, Pointf p)                                        { return Uniform(i, p.x, p.y); }
 	GLCode& operator()(const char *id, Sizef sz)                               { return Uniform(id, sz.cx, sz.cy); }
 	GLCode& operator()(int i, Sizef sz)                                        { return Uniform(i, sz.cx, sz.cy); }
+	GLCode& operator()(const char *id, Color c, double alpha = 1);
+	GLCode& operator()(int i, Color c, double alpha = 1);
 };
 
 class GLTexture {
@@ -78,31 +80,41 @@ void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const Image& img, do
 void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha);
 
 class GLVertexData {
-	GLuint   VAO = 0;
-	GLuint   EBO = 0;
-	int      elements;
-    
-	Vector<GLuint> VBO;
+	struct Data {
+		int            refcount = 1;
+		GLuint         VAO = 0;
+		GLuint         EBO = 0;
+		int            elements = 0;
+	    
+		Vector<GLuint> VBO;
+	};
 	
-	void     Make();
+	Data    *data = NULL;
+	
+	void     Do();
 
 public:
+	void    Clear();
+
 	GLVertexData& Add(const void *data, int type, int ntuple, int count);
-	GLVertexData& Add(const float *data, int ntuple, int count)           { return Add(data, GL_FLOAT, ntuple, count); }
+	GLVertexData& Add(const float *data, int ntuple, int count) { return Add(data, GL_FLOAT, ntuple, count); }
+	GLVertexData& Add(const Vector<float>& data, int ntuple)    { return Add(data, ntuple, data.GetCount() / ntuple); }
 	GLVertexData& Add(const Vector<Pointf>& pt);
 	GLVertexData& Index(const int *indices, int count);
-	GLVertexData& Index(const Vector<int>& indices)                       { return Index(indices, indices.GetCount()); }
+	GLVertexData& Index(const Vector<int>& indices)             { return Index(indices, indices.GetCount()); }
 	
 	void    Draw(int mode = GL_TRIANGLES) const;
 
 	void    Draw(GLCode& shaders, int mode = GL_TRIANGLES) const;
 	
-	void    Clear();
-	
-	bool    IsEmpty() const                                         { return VAO == 0; }
+	operator bool() const                                       { return data; }
+	bool    IsEmpty() const                                     { return !data; }
 
-	GLVertexData();
-	~GLVertexData();
+	GLVertexData()                                              {}
+	~GLVertexData()                                             { Clear(); }
+
+	GLVertexData(const GLVertexData& src);
+	GLVertexData& operator=(const GLVertexData& src);
 };
 
 const GLVertexData& GLRectMesh();
@@ -121,7 +133,9 @@ void GLDrawConvexPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& m
 template <typename Src>
 void GLPolyline(GLVertexData& data, const Src& polygon);
 
-void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double width, double alpha);
+void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, double scale, double width, Color color, double alpha);
+
+void GLDrawStencil(Color color, double alpha);
 
 void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color color, double alpha);
 

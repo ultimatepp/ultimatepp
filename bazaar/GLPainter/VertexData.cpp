@@ -2,37 +2,50 @@
 
 namespace Upp {
 
-GLVertexData::GLVertexData() {}
-
-void GLVertexData::Make()
+GLVertexData::GLVertexData(const GLVertexData& src)
 {
-	if(!VAO) {
-	    glGenVertexArrays(1, &VAO);
-	    glGenBuffers(1, &EBO);
+	data = src.data;
+	data->refcount++;
+}
+
+GLVertexData& GLVertexData::operator=(const GLVertexData& src)
+{
+	if(data != src.data) {
+		if(data) Clear();
+		data = src.data;
+		data->refcount++;
 	}
+	return *this;
 }
 
 void GLVertexData::Clear()
 {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &EBO);
-    for(auto h : VBO)
-        glDeleteBuffers(1, &h);
-	VAO = EBO = 0;
-	VBO.Clear();
+	if(data && --data->refcount == 0) {
+	    glDeleteVertexArrays(1, &data->VAO);
+	    glDeleteBuffers(1, &data->EBO);
+	    for(auto h : data->VBO)
+	        glDeleteBuffers(1, &h);
+		delete data;
+	}
+	data = NULL;
 }
 
-GLVertexData::~GLVertexData()
+void GLVertexData::Do()
 {
-	Clear();
+	if(!data) {
+		data = new Data;
+	    glGenVertexArrays(1, &data->VAO);
+	    glGenBuffers(1, &data->EBO);
+	}
+	ASSERT(data->refcount == 1); // Changes are only allowed before copied
 }
 
-GLVertexData& GLVertexData::Add(const void *data, int type, int ntuple, int count)
+GLVertexData& GLVertexData::Add(const void *values, int type, int ntuple, int count)
 {
-	Make();
-    glBindVertexArray(VAO);
-    int ii = VBO.GetCount();
-	GLuint& vbo = VBO.Add();
+	Do();
+    glBindVertexArray(data->VAO);
+    int ii = data->VBO.GetCount();
+	GLuint& vbo = data->VBO.Add();
 	glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     int sz = (int)decode(type, GL_FLOAT, sizeof(float),
@@ -43,7 +56,7 @@ GLVertexData& GLVertexData::Add(const void *data, int type, int ntuple, int coun
 	                           GL_INT, sizeof(int32),
 	                           GL_UNSIGNED_INT, sizeof(uint32),
 	                           sizeof(double));
-	glBufferData(GL_ARRAY_BUFFER, sz * ntuple * count, data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sz * ntuple * count, values, GL_STATIC_DRAW);
 	glVertexAttribPointer(ii, ntuple, type, GL_FALSE, ntuple * sz, (void*)0);
     glEnableVertexAttribArray(ii);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -53,22 +66,23 @@ GLVertexData& GLVertexData::Add(const void *data, int type, int ntuple, int coun
 
 GLVertexData& GLVertexData::Index(const int *indices, int count)
 {
-	Make();
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	Do();
+	glBindVertexArray(data->VAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data->EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * count, indices, GL_STATIC_DRAW);
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	elements = count;
+	data->elements = count;
 	return *this;
 }
 
 void GLVertexData::Draw(int mode) const
 {
-	if(VAO)
-		glBindVertexArray(VAO);
-	glDrawElements(mode, elements, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+	if(data) {
+		glBindVertexArray(data->VAO);
+		glDrawElements(mode, data->elements, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 }
 
 void GLVertexData::Draw(GLCode& shaders, int mode) const
