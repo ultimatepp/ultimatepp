@@ -150,7 +150,8 @@ LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
 		glEnable(GL_MULTISAMPLE);
 		Size sz = GetSize();
-		glViewport(0, 0, (GLsizei)sz.cx, (GLsizei)sz.cy);
+		current_viewport = sz;
+		SetCurrentViewport();
 		ctrl->GLPaint();
 		if(ctrl->doubleBuffering)
 			SwapBuffers(hDC);

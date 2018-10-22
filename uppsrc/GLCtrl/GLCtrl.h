@@ -45,7 +45,6 @@ public:
 	Event<> WhenGLPaint;
 
 	virtual void GLPaint();
-	virtual void GLResize(int w, int h);
 
 	void StdView();
 };
@@ -131,55 +130,55 @@ private:
 	
 	GLPicking picking;
 	GLPane pane;
-	int depthSize;
-	int stencilSize;
-	bool doubleBuffering;
-	bool multiSampleBuffering;
-	int numberOfSamples;
-	Ctrl *mouseTarget = NULL;
+
+	static int  depthSize;
+	static int  stencilSize;
+	static bool doubleBuffering;
+	static int  numberOfSamples;
+	
+	static Size current_viewport; // because we need to set different viewports in drawing code
+
+	Ptr<Ctrl> mouseTarget = NULL;
 
 protected:
-	// Called after succesful OpenGL initialization
-	virtual void GLInit() {}
-
-	// Called just before OpenGL termination
-	virtual void GLDone() {}
-
-	// Called on resize events, defaults to setting proper view-port
-	virtual void GLResize(int w, int h);
-
 	// Called on paint events
 	virtual void GLPaint() { WhenGLPaint(); }
 	virtual void GLPickingPaint() {}
+	
+	void Init();
 
 public:
 	Callback WhenGLPaint;
+
+	static void SetDepthBits(int n)               { depthSize = n; }
+	static void SetStencilBits(int n)             { stencilSize = n; }
+	static void SetDoubleBuffering(bool b = true) { doubleBuffering = b; }
+	static void SetMSAA(int n = 4)                { numberOfSamples = n; }
 	
-	GLCtrl& DepthBits(int n)               { depthSize = n; return *this; }
-	GLCtrl& StencilBits(int n)             { stencilSize = n; return *this; }
-	GLCtrl& DoubleBuffering(bool b = true) { doubleBuffering = b; return *this; }
-	GLCtrl& MSAA(int n = 4)                { numberOfSamples = n; return *this; }
+	static Size CurrentViewport()                 { return current_viewport; }
+	static void SetCurrentViewport(); // intended to restore viewport after changing it in e.g. TextureDraw
+	
 	GLCtrl& RedirectMouse(Ctrl *target)    { mouseTarget = target; return *this; }
 
-	GLCtrl(int  depthsize = 24, int  stencilsize = 8, bool doublebuffer = true,
-	       bool multisamplebuffering = false, int  numberofsamples = 0)
-		: depthSize(depthsize),
-	      stencilSize(stencilsize),
-	      doubleBuffering(doublebuffer),
-		  numberOfSamples(numberofsamples)
-	{
-		NoWantFocus();
-		Transparent();
-		pane.ctrl = this;
-		Add(pane.SizePos());
-	}
+	GLCtrl()                                      { Init(); }
 
-	void StdView();
-	
 	void InitPickMatrix() { picking.InitPickMatrix(); }
 	void Refresh()        { pane.Refresh(); }
 	
 	Vector<int> Pick(int x, int y);
+
+	// deprecated (these settings are now static, as we have just single context)
+	GLCtrl& DepthBits(int n)               { depthSize = n; return *this; }
+	GLCtrl& StencilBits(int n)             { stencilSize = n; return *this; }
+	GLCtrl& DoubleBuffering(bool b = true) { doubleBuffering = b; return *this; }
+	GLCtrl& MSAA(int n = 4)                { numberOfSamples = n; return *this; }
+
+	GLCtrl(int  depthsize, int  stencilsize = 8, bool doublebuffer = true,
+	       bool multisamplebuffering = false, int  numberofsamples = 0)
+	{ Init(); DepthBits(depthsize).StencilBits(stencilsize).DoubleBuffering(doublebuffer).MSAA(numberofsamples); }
+
+	// deprecated (fixed pipeline is so out of fashion...)
+	void StdView();
 };
 
 #endif
