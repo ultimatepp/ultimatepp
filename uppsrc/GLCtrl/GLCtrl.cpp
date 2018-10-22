@@ -2,6 +2,23 @@
 
 namespace Upp {
 
+int  GLCtrl::depthSize = 24;
+int  GLCtrl::stencilSize = 8;
+bool GLCtrl::doubleBuffering = true;
+int  GLCtrl::numberOfSamples = 1;
+Size GLCtrl::current_viewport;
+
+extern void (*restore_gl_viewport__)(); // in Draw/DrawUtil.cpp
+
+void GLCtrl::Init()
+{
+	NoWantFocus();
+	Transparent();
+	pane.ctrl = this;
+	Add(pane.SizePos());
+	restore_gl_viewport__ = SetCurrentViewport;
+}
+
 Image GLCtrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 {
 	if(mouseTarget) {
@@ -10,9 +27,9 @@ Image GLCtrl::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 	return Ctrl::MouseEvent(event, p, zdelta, keyflags);
 }
 
-void GLCtrl::GLResize(int w, int h)
+void GLCtrl::SetCurrentViewport()
 {
-	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	glViewport(0, 0, (GLsizei)current_viewport.cx, (GLsizei)current_viewport.cy);
 }
 
 void GLCtrl::StdView()
@@ -44,7 +61,9 @@ Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
 Vector<int> GLCtrl::Pick(int x, int y)
 {
 //	pane.ActivateContext();
-	return picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
+//	return picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
+	Vector<int> h;
+	return h;
 }
 
 #endif

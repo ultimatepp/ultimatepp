@@ -582,4 +582,11 @@ void SetRenderGlyph(Image (*f)(int cx, int x, Font font, int chr, int py, int pc
 	render_glyph = f;
 }
 
+
+// this is nasty solution: We need to be able to restore GL viewport in GLTextureDraw for GLCtrl
+// Draw is package used by both GLDraw and GLCtrl, so let us hide a little global function
+// pointer here...
+
+void (*restore_gl_viewport__)() = [] {};
+
 }
