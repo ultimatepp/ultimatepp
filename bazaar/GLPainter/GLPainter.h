@@ -9,7 +9,7 @@ namespace Upp {
 #define GLCHK(x) do { \
 	x; \
 	int err = glGetError(); \
-	if(err) LOG("ERROR " << __LINE__ << ": " << #x); \
+	if(err) LOG("ERROR " << err << " (" << __LINE__ << "): " << #x); \
 	LOG((const char *)gluErrorString(err)); \
 } while(0)
 
@@ -154,15 +154,15 @@ void GLDrawPolygon(Sizef vs, Point at, const GLVertexData& mesh, Sizef scale, Co
 #endif
 
 template <typename Src>
-void GLPolygon(GLVertexData& mesh, const Src& polygon);
+void GLPolygons(GLVertexData& mesh, const Src& polygon);
 
-void GLDrawPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
-void GLDrawConvexPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
+void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
+void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
 
 template <typename Src>
-void GLPolyline(GLVertexData& data, const Src& polygon, bool closed = false);
+void GLPolylines(GLVertexData& data, const Src& polygon);
 
-void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha);
+void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha);
 
 void GLDrawStencil(Color color, double alpha);
 

@@ -4,8 +4,7 @@ uses
 	CtrlLib,
 	GLDraw,
 	GLCtrl,
-	plugin/jpg,
-	plugin/tess2;
+	plugin/jpg;
 
 file
 	GLPainter.h,

@@ -2,7 +2,7 @@
 
 namespace Upp {
 
-void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale,
+void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale,
                     double width, Color color, double alpha)
 {
 	static GLCode program(R"(
@@ -37,8 +37,6 @@ void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, 
 	       (iscale, dd.vs)
 	       (iscale2, scale)
 	       (iwidth, Sizef(width / 2, width / 2))
-//	       (iwidth, Sizef(width / scale.cx / 2, width / scale.cy / 2))
-//	       (iwidth, width / scale / 2)
 	       (icolor, color, alpha)
 	;
 	

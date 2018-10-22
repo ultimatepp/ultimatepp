@@ -44,7 +44,7 @@ void GLDrawStencil(Color color, double alpha)
 	glDisable(GL_STENCIL_TEST);
 }
 
-void GLDrawPolygon(const GLContext2D& dd, bool generic, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+void GLDrawPolygons(const GLContext2D& dd, bool generic, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
 {
 	GLCode& program = GLSimpleCode();
 
@@ -75,14 +75,14 @@ void GLDrawPolygon(const GLContext2D& dd, bool generic, Pointf at, const GLVerte
 	}
 }
 
-void GLDrawPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
 {
-	GLDrawPolygon(dd, true, at, mesh, scale, color, alpha);
+	GLDrawPolygons(dd, true, at, mesh, scale, color, alpha);
 }
 
-void GLDrawConvexPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
 {
-	GLDrawPolygon(dd, false, at, mesh, scale, color, alpha);
+	GLDrawPolygons(dd, false, at, mesh, scale, color, alpha);
 }
 
 };
