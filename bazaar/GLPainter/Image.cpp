@@ -11,12 +11,17 @@ void GLTexture::Clear()
 	data = NULL;
 }
 
-void GLTexture::Set(const Image& img, dword flags)
+void GLTexture::Set(GLuint id, Size sz)
 {
 	Clear();
 	data = new Data;
-	data->sz = img.GetSize();
-	data->textureid = CreateGLTexture(img, flags);
+	data->sz = sz;
+	data->textureid = id;
+}
+
+void GLTexture::Set(const Image& img, dword flags)
+{
+	Set(CreateGLTexture(img, flags), img.GetSize());
 }
 
 GLTexture::GLTexture(const GLTexture& src)

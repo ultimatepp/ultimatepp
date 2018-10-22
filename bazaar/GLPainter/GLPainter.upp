@@ -13,6 +13,7 @@ file
 	Code.cpp,
 	VertexData.cpp,
 	Image.cpp,
+	DrawTexture.cpp,
 	TessPolygon.cpp,
 	StencilPolygon.cpp,
 	Line.cpp,

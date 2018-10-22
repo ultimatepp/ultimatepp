@@ -56,6 +56,10 @@ class GLTexture {
 	
 	Data    *data = NULL;
 	
+	void Set(GLuint texture, Size sz);
+	
+	friend class GLTextureDraw;
+	
 public:
 	void     Clear();
 	void     Set(const Image& img, dword flags = TEXTURE_LINEAR|TEXTURE_MIPMAP);
@@ -75,9 +79,26 @@ public:
 
 void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 
-void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, double alpha);
-void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha);
-void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha);
+void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, double alpha = 1);
+void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha = 1);
+void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha = 1);
+
+class GLTextureDraw {
+	GLuint framebuffer = 0;
+    GLuint texture = 0;
+	GLuint rbo = 0;
+	Size   sz;
+
+public:
+	void      Clear();
+	void      Create(Size sz);
+	GLTexture GetResult();
+	operator  GLTexture()  { return GetResult(); }
+	
+	GLTextureDraw()        {}
+	GLTextureDraw(Size sz) { Create(sz); }
+	~GLTextureDraw()       { Clear(); }
+};
 
 class GLVertexData {
 	struct Data {

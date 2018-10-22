@@ -1,5 +1,6 @@
 #include "GLPainter.h"
 
+#if 0
 namespace Upp {
 
 void GLMakePolygon(GLVertexData& mesh, const Vector<Vector<Pointf>>& polygon)
@@ -44,3 +45,4 @@ void GLDrawPolygon(Sizef vs, Point at, const GLVertexData& mesh, Sizef scale, Co
 }
 
 }
+#endif
