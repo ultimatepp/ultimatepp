@@ -22,7 +22,7 @@ void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fil
 		GLDrawPolygons(dd, center, fill, r, fill_color, dd.alpha * alpha);
 	r = radius - Sizef(width / 2, width / 2);
 	if(width > 0 && !IsNull(line_color))
-		GLDrawPolylines(dd, center, line, r, width, line_color, dd.alpha * alpha); // todo! radius
+		GLDrawPolylines(dd, center, line, r, width, line_color, dd.alpha * alpha);
 }
 
 };

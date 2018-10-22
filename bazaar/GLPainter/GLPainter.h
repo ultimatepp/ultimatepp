@@ -90,6 +90,10 @@ void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, doubl
 void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha = 1);
 void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha = 1);
 
+void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, Size tsz, const Rect& src, double alpha);
+void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const GLTexture& img, const Rect& src, double alpha);
+void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, const Rect& src, double alpha);
+
 class GLTextureDraw {
 	GLuint framebuffer = 0;
     GLuint texture = 0;
