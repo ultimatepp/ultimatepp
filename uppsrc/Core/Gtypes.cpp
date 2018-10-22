@@ -126,7 +126,7 @@ Pointf Orthogonal(const Pointf& p)
 	return Pointf(-p.y, p.x);
 }
 
-Pointf Unit(const Pointf& p)
+Pointf Normalize(const Pointf& p)
 {
 	return p / Length(p);
 }

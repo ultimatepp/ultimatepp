@@ -714,7 +714,7 @@ double Distance(const Pointf& p1, const Pointf& p2);
 double SquaredDistance(const Pointf& p1, const Pointf& p2);
 Pointf Mid(const Pointf& a, const Pointf& b);
 Pointf Orthogonal(const Pointf& p);
-Pointf Unit(const Pointf& p);
+Pointf Normalize(const Pointf& p);
 Pointf Polar(double a);
 Pointf Polar(const Pointf& p, double r, double a);
 
