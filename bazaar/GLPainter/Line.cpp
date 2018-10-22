@@ -2,18 +2,20 @@
 
 namespace Upp {
 
-void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, double scale,
+void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale,
                     double width, Color color, double alpha)
 {
 	static GLCode program(R"(
 		#version 330 core
-	    in      vec4  pos;
-		uniform vec2  offset;
-		uniform vec2  scale;
-		uniform float width;
+	    in      vec4 pos;
+		uniform vec2 offset;
+		uniform vec2 scale;
+		uniform vec2 scale2;
+		uniform vec2 width;
 	    void main()
 	    {
-			gl_Position = vec4(scale * (pos.xy + width * pos.zw) + offset, 0, 1);
+			vec2 v = scale2 * pos.zw;
+			gl_Position = vec4(scale * (scale2 * pos.xy + width * normalize(vec2(-v.y, v.x))) + offset, 0, 1);
 	    }
 	)", R"(
 		#version 330 core
@@ -26,13 +28,17 @@ void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, 
 
 	static int ioffset = program["offset"];
 	static int iscale = program["scale"];
+	static int iscale2 = program["scale2"];
 	static int iwidth = program["width"];
 	static int icolor = program["color"];
 
 	alpha *= dd.alpha;
 	program(ioffset, Pointf(dd.vs) * at + Sizef(-1, 1))
-	       (iscale, dd.vs * scale)
-	       (iwidth, width / scale / 2)
+	       (iscale, dd.vs)
+	       (iscale2, scale)
+	       (iwidth, Sizef(width / 2, width / 2))
+//	       (iwidth, Sizef(width / scale.cx / 2, width / scale.cy / 2))
+//	       (iwidth, width / scale / 2)
 	       (icolor, color, alpha)
 	;
 	

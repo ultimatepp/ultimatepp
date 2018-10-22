@@ -19,8 +19,6 @@ void GLTextureDraw::Clear()
 	(*restore_gl_viewport__)();
 }
 
-#define GLCHK(x) do { x; { int err = glGetError(); if(err) DLOG("ERROR " << __LINE__ << ": " << #x); DLOG((const char *)gluErrorString(err)); } } while(0)
-
 GLTexture GLTextureDraw::GetResult()
 {
 	ASSERT(texture);

@@ -5,7 +5,14 @@
 #include <plugin/tess2/tess2.h>
 
 namespace Upp {
-	
+
+#define GLCHK(x) do { \
+	x; \
+	int err = glGetError(); \
+	if(err) LOG("ERROR " << __LINE__ << ": " << #x); \
+	LOG((const char *)gluErrorString(err)); \
+} while(0)
+
 struct GLContext2D { // TODO: This should be changed to regular matrix (later)
 	Sizef  vs;
 	double alpha = 1;
@@ -153,13 +160,19 @@ void GLDrawPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, S
 void GLDrawConvexPolygon(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
 
 template <typename Src>
-void GLPolyline(GLVertexData& data, const Src& polygon);
+void GLPolyline(GLVertexData& data, const Src& polygon, bool closed = false);
 
-void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, double scale, double width, Color color, double alpha);
+void GLDrawPolyline(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha);
 
 void GLDrawStencil(Color color, double alpha);
 
-void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color color, double alpha);
+void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fill_color,
+                   double width = 0, Color line_color = Null, double alpha = 1);
+
+/*
+void GLDrawArc(const GLContext2D& dd, Pointf center, Sizef radius, Color color, double alpha);
+	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color) = 0;
+*/
 
 #include "GLPainter.hpp"
 

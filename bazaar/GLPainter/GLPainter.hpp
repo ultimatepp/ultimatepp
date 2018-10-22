@@ -19,7 +19,7 @@ void GLPolygon(GLVertexData& mesh, const Src& polygon)
 }
 
 template <typename Src>
-void GLPolyline(GLVertexData& data, const Src& polygon)
+void GLPolyline(GLVertexData& data, const Src& polygon, bool closed)
 {
 	Vector<float> vertex;
 	Vector<int> ndx;
@@ -27,10 +27,10 @@ void GLPolyline(GLVertexData& data, const Src& polygon)
 	int ii = 0;
 	for(const auto& p: polygon) {
 		int i0 = vertex.GetCount();
-		for(int i = 0; i < p.GetCount() - 1; i++) {
+		for(int i = 0; i < p.GetCount() - !closed; i++) {
 			Pointf p1 = p[i];
 			Pointf p2 = p[i + 1 < p.GetCount() ? i + 1 : 0];
-			Pointf un = Unit(Orthogonal(p1 - p2));
+			Pointf un = p1 - p2;
 			
 			DDUMP(p1);
 			DDUMP(p2);
