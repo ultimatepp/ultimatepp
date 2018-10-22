@@ -88,16 +88,17 @@ class GLTextureDraw {
     GLuint texture = 0;
 	GLuint rbo = 0;
 	Size   sz;
+	int    msaa = 0;
 
 public:
 	void      Clear();
-	void      Create(Size sz);
+	void      Create(Size sz, int msaa = 0);
 	GLTexture GetResult();
-	operator  GLTexture()  { return GetResult(); }
-	
-	GLTextureDraw()        {}
-	GLTextureDraw(Size sz) { Create(sz); }
-	~GLTextureDraw()       { Clear(); }
+	operator  GLTexture()                { return GetResult(); }
+
+	GLTextureDraw()                      {}
+	GLTextureDraw(Size sz, int msaa = 0) { Create(sz, msaa); }
+	~GLTextureDraw()                     { Clear(); }
 };
 
 class GLVertexData {
