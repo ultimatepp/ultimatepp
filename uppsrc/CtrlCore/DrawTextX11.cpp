@@ -115,8 +115,6 @@ CommonFontInfo XftGetFontInfoSys(Font font)
 	if(xftfont) {
 		fi.ascent = (int16)xftfont->ascent;
 		fi.descent = (int16)xftfont->descent;
-		fi.height = fi.ascent + fi.descent;
-		fi.lineheight = (int16)xftfont->height;
 		fi.external = 0;
 		fi.internal = 0;
 		fi.overhang = 0;
