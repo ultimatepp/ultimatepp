@@ -149,6 +149,8 @@ struct Point_ : Moveable< Point_<T> > {
 	friend Sz     operator-(Sz a, Point_ b)         { return Point_(a) - b; }
 	friend Sz&    operator-=(Sz& a, Point_ b)       { return a = a - b; }
 	friend Point_ operator*(Point_ a, Point_ b)     { return a *= b; }
+	friend Point_ operator*(Sz a, Point_ b)         { return a *= (Sz)b; }
+	friend Point_ operator*(Point_ a, Sz b)         { return a *= (Point_)b; }
 	friend Point_ operator*(Point_ a, T b)          { return a *= b; }
 	friend Point_ operator*(T a, Point_ b)          { return b *= a; }
 	friend Point_ operator/(Point_ a, Sz b)         { return a /= b; }
