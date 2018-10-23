@@ -168,7 +168,7 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 #else
 	if(IsFullRefresh() || !IsVisible())
 		return;
-	if(isdhctrl) {
+	if(hasdhctrl) {
 		Refresh(_r);
 		return;
 	}
