@@ -42,7 +42,7 @@ void GLPolylines(GLVertexData& data, const Src& polygon)
 			ndx << ii << ii + 1 << ii + 2
 			    << ii + 3 << ii + 2 << ii + 1;
 			
-			if(ii) // if line is not first, draw bevel join between current and previous line
+			if(i) // if line is not first, draw bevel join between current and previous line
 				ndx << ii << ii + 1 << ii - 4 + 3
 				    << ii - 4 + 2 << ii - 4 + 3 << ii;
 
@@ -56,4 +56,3 @@ void GLPolylines(GLVertexData& data, const Src& polygon)
 	
 	data.Add(vertex, 4).Index(ndx);
 }
-

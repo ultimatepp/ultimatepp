@@ -60,4 +60,28 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 	}
 }
 
+void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
+                  const Vector<double>& pattern, double distance = 0)
+{
+	struct LineStore : LinearPathConsumer {
+		Vector<Vector<Pointf>>& polyline;
+	
+		void Move(const Pointf& p) override { DLOG("MOVE " << p); polyline.Add().Add(p); }
+		void Line(const Pointf& p) override { DLOG("LINE " << p); polyline.Top().Add(p); }
+		
+		LineStore(Vector<Vector<Pointf>>& polyline) : polyline(polyline) {}
+	};
+	
+	LineStore st(polyline);
+	Dasher dasher;
+	dasher.target = &st;
+	dasher.Init(pattern, distance);
+	for(int i = 0; i < line.GetCount(); i++)
+		if(i)
+			dasher.Line(line[i]);
+		else
+			dasher.Move(line[i]);
+	dasher.End();
+}
+
 };

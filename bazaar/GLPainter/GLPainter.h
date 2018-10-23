@@ -21,7 +21,9 @@ struct GLContext2D { // TODO: This should be changed to regular matrix (later)
 	Sizef  vs;
 	double alpha = 1;
 	
-	GLContext2D(Size sz) { vs = Sizef(2.0 / sz.cx, -2.0 / sz.cy); }
+	void Set(Size sz)    { vs = Sizef(2.0 / sz.cx, -2.0 / sz.cy); }
+	
+	GLContext2D(Size sz) { Set(sz); }
 	GLContext2D()        {}
 };
 
@@ -96,9 +98,9 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, doub
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha = 1);
 void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha = 1);
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src, double alpha);
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src, double alpha);
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src, double alpha);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src, double alpha = 1);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src, double alpha = 1);
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src, double alpha = 1);
 
 class GLTextureDraw {
 	GLuint framebuffer = 0;
@@ -166,23 +168,24 @@ void GLDrawPolygon(Sizef vs, Point at, const GLVertexData& mesh, Sizef scale, Co
 template <typename Src>
 void GLPolygons(GLVertexData& mesh, const Src& polygon);
 
-void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
-void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
+void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha = 1);
+void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha = 1);
 
 template <typename Src>
 void GLPolylines(GLVertexData& data, const Src& polygon);
 
-void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha);
+void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
+                  const Vector<double>& pattern, double distance);
+
+void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha = 1);
 
 void GLDrawStencil(Color color, double alpha);
 
 void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fill_color,
                    double width = 0, Color line_color = Null, double alpha = 1);
 
-/*
-void GLDrawArc(const GLContext2D& dd, Pointf center, Sizef radius, Color color, double alpha);
-	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color) = 0;
-*/
+void GLDrawArc(const GLContext2D& dd, const Rectf& rc, Pointf start, Pointf end, int width,
+               Color color, double alpha = 1);
 
 GLTexture GetGlyphGLTextureCached(double angle, int chr, Font font, Color color);
 
@@ -190,6 +193,56 @@ void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *te
                 Color ink, int n = -1, const int *dx = NULL, double alpha = 1);
 
 #include "GLPainter.hpp"
+
+class DrawGL : public Draw {
+public:
+	virtual dword GetInfo() const;
+
+	virtual void BeginOp();
+	virtual bool ClipOp(const Rect& r);
+	virtual bool ClipoffOp(const Rect& r);
+	virtual bool IntersectClipOp(const Rect& r);
+	virtual void OffsetOp(Point p);
+	virtual bool ExcludeClipOp(const Rect& r);
+	virtual void EndOp();
+	virtual bool IsPaintingOp(const Rect& r) const;
+
+	virtual void SysDrawImageOp(int x, int y, const Image& img, Color color);
+	virtual void SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color);
+	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
+
+	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx);
+
+	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color);
+	virtual void DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor);
+	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
+	virtual void DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor);
+	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor);
+
+private:
+	struct Cloff : Moveable<Cloff> {
+		Rect   clip;
+		Pointf offset;
+	};
+	
+	Vector<Cloff> cloff;
+	GLContext2D   dd;
+	Size          view_size;
+	
+	Pointf Offset(int x, int y);
+	Pointf Offset(Point p) { return Offset(p.x, p.y); }
+	Rectf  Offset(int x, int y, int cx, int cy);
+	Rectf  Offset(int x, int y, Size sz);
+	void   SyncScissor();
+	void   DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end);
+
+public:
+	void Init(Size sz, double alpha = 1);
+
+	DrawGL() {}
+	DrawGL(Size sz, double alpha = 1) { Init(sz, alpha); }
+	~DrawGL();
+};
 
 };
 

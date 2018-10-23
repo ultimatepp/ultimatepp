@@ -17,6 +17,8 @@ file
 	StencilPolygon.cpp,
 	Line.cpp,
 	Ellipse.cpp,
+	Arc.cpp,
 	Text.cpp,
+	DrawGL.cpp,
 	todo.txt;
 

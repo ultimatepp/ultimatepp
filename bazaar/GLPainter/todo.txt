@@ -1,4 +1,13 @@
 - make banded glyphs
 - make alpha textures
 - colored texture paints
+- ARC
+- DASHER
+- optimize draw rect
+- circle pen should be able to 'dash'
+- arc pen should be able to 'dash'
+- polygon pen should be able to 'dash'
+
+DONE:
+
 - Texture change Rect -> Rectf

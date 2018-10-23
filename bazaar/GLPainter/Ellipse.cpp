@@ -13,7 +13,8 @@ void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fil
 		for(int i = 0; i < N; i++)
 			p.Top().Add(Polar(i * M_2PI / N));
 		GLPolygons(fill, p);
-		p.Add(p[0]);
+		Pointf f = p.Top()[0];
+		p.Top().Add(f);
 		GLPolylines(line, p);
 	}
 	
