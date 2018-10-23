@@ -4,4 +4,5 @@ using namespace Upp;
 
 GUI_APP_MAIN
 {
+	PromptOK("ok....");
 }
