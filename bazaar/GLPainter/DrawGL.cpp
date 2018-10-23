@@ -139,14 +139,33 @@ void DrawGL::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, C
 	GLDrawText(dd, Offset(x, y), angle * M_2PI / 3600, text, font, ink, n, dx);
 }
 
-void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
+void DrawGL::ApplyDash(Vector<Vector<Pointf>>& polyline, int& width)
 {
-	// TODO...
-}
+	if(width == 0)
+		width = 1;
+	if(width > 0)
+		return;
+	if(width == PEN_NULL) {
+		width = 0;
+		return;
+	}
 
-void DrawGL::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
-{
-	GLDrawEllipse(dd, Offset(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor);
+	static Vector<double> dash = { 18, 6 };
+	static Vector<double> dot = { 3, 3 };
+	static Vector<double> dashdot = { 9, 6, 3, 6 };
+	static Vector<double> dashdotdot = { 9, 3, 3, 3, 3, 3 };
+	
+	Vector<double>& d = *decode(width, PEN_DASH, &dash,
+	                                   PEN_DOT, &dot,
+	                                   PEN_DASHDOT, &dashdot,
+	                                   &dashdotdot);
+
+	Vector<Vector<Pointf>> r;
+	for(auto& l : polyline)
+		DashPolyline(r, l, d);
+	
+	polyline = pick(r);
+	width = 1;
 }
 
 void DrawGL::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
@@ -155,10 +174,29 @@ void DrawGL::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 	poly.Add().Add(Offset(x1, y1));
 	poly.Top().Add(Offset(x2, y2));
 	
+	ApplyDash(poly, width);
+	
 	GLVertexData data;
 	GLPolylines(data, poly);
 	
-	GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), max(width, 1), color);
+	if(width > 0)
+		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, color);
+}
+
+void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
+{
+	Vector<Vector<Pointf>> poly;
+	GLArc(poly, rc, start, end);
+	ApplyDash(poly, width);
+	GLVertexData data;
+	GLPolylines(data, poly);
+	if(width > 0)
+		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, color);
+}
+
+void DrawGL::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
+{
+	GLDrawEllipse(dd, Offset(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor);
 }
 
 void DrawGL::DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end)
@@ -180,8 +218,10 @@ void DrawGL::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const i
 	}
 	
 	GLVertexData data;
+	ApplyDash(poly, width);
 	GLPolylines(data, poly);
-	GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), max(width, 1), color);
+	if(width > 0)
+		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, color);
 }
 
 void DrawGL::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc,
@@ -208,8 +248,10 @@ void DrawGL::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, cons
 		GLVertexData data;
 		for(auto& pl : poly)
 			pl.Add(pl[0]);
+		ApplyDash(poly, width);
 		GLPolylines(data, poly);
-		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), max(width, 1), outline);
+		if(width > 0)
+			GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, outline);
 	}
 }
 

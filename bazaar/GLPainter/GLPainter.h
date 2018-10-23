@@ -175,7 +175,7 @@ template <typename Src>
 void GLPolylines(GLVertexData& data, const Src& polygon);
 
 void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
-                  const Vector<double>& pattern, double distance);
+                  const Vector<double>& pattern, double distance = 0);
 
 void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha = 1);
 
@@ -184,13 +184,12 @@ void GLDrawStencil(Color color, double alpha);
 void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fill_color,
                    double width = 0, Color line_color = Null, double alpha = 1);
 
-void GLDrawArc(const GLContext2D& dd, const Rectf& rc, Pointf start, Pointf end, int width,
-               Color color, double alpha = 1);
-
 GLTexture GetGlyphGLTextureCached(double angle, int chr, Font font, Color color);
 
 void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *text, Font font,
                 Color ink, int n = -1, const int *dx = NULL, double alpha = 1);
+
+void GLArc(Vector<Vector<Pointf>>& line, const Rectf& rc, Pointf start, Pointf end);
 
 #include "GLPainter.hpp"
 
@@ -235,6 +234,7 @@ private:
 	Rectf  Offset(int x, int y, Size sz);
 	void   SyncScissor();
 	void   DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end);
+	void   ApplyDash(Vector<Vector<Pointf>>& polyline, int& width);
 
 public:
 	void Init(Size sz, double alpha = 1);
