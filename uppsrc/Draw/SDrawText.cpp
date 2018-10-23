@@ -36,6 +36,8 @@ struct sMakeTextGlyph : public ImageMaker
 		Point at(font[chr], font.GetLineHeight());
 		if(IsNull(yy)) {
 			int n = 2 * (at.x + at.y);
+			at.x = max(at.x, at.y);
+			at.y = max(at.x, at.y);
 			return AutoCrop(WithHotSpot(draw->RenderGlyph(at, angle, chr, font, color, Size(n, n)), at.x, at.y), RGBAZero());
 		}
 		else {
