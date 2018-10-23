@@ -35,24 +35,21 @@ GLTexture GLTextureDraw::GetResult()
 	
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		GLCHK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0));
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		
 		glGenRenderbuffers(1, &rbo2);
 		glBindRenderbuffer(GL_RENDERBUFFER, rbo2);
-		GLCHK(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, sz.cx, sz.cy));
-		GLCHK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo2));
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, sz.cx, sz.cy);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo2);
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 		
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		    NEVER_("Failed to create final texture draw framebuffer");
 
-		GLCHK(glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer));
-		DLOG((const char *)gluErrorString(glGetError()));
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer2);
-		DLOG((const char *)gluErrorString(glGetError()));
 		glBlitFramebuffer(0, 0, sz.cx, sz.cy, 0, 0, sz.cx, sz.cy, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		DLOG((const char *)gluErrorString(glGetError()));
 
 		t.Set(texture2, sz);
 		
@@ -95,16 +92,16 @@ void GLTextureDraw::Create(Size sz_, int msaa_)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	GLCHK(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, msaa > 1 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D, texture, 0));
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, msaa > 1 ? GL_TEXTURE_2D_MULTISAMPLE : GL_TEXTURE_2D, texture, 0);
 	
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	if(msaa > 1)
-		GLCHK(glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaa, GL_DEPTH24_STENCIL8, sz.cx, sz.cy));
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaa, GL_DEPTH24_STENCIL8, sz.cx, sz.cy);
 	else
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, sz.cx, sz.cy);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	GLCHK(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo));
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 	    NEVER_("Failed to create texture draw framebuffer");

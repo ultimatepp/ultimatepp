@@ -1,0 +1,4 @@
+- make banded glyphs
+- make alpha textures
+- colored texture paints
+- Texture change Rect -> Rectf

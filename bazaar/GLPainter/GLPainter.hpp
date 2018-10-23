@@ -54,7 +54,6 @@ void GLPolylines(GLVertexData& data, const Src& polygon)
 			    << ii - 4 + 2 << ii - 4 + 3 << ii0;
 	}
 	
-	DDUMP(vertex);
 	data.Add(vertex, 4).Index(ndx);
 }
 

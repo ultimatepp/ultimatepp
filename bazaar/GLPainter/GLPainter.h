@@ -2,16 +2,20 @@
 #define _GLDrawDemo_Ugl_h_
 
 #include <GLDraw/GLDraw.h>
-#include <plugin/tess2/tess2.h>
+#include <Painter/Painter.h>
 
 namespace Upp {
+	
+#define GL_TIMING(x) RTIMING(x)
 
+#ifdef _DEBUG
 #define GLCHK(x) do { \
 	x; \
 	int err = glGetError(); \
 	if(err) LOG("ERROR " << err << " (" << __LINE__ << "): " << #x); \
 	LOG((const char *)gluErrorString(err)); \
 } while(0)
+#endif
 
 struct GLContext2D { // TODO: This should be changed to regular matrix (later)
 	Sizef  vs;
@@ -58,12 +62,13 @@ class GLTexture {
 	struct Data {
 		int     refcount = 1;
 		GLuint  textureid = 0;
+		Point   hotspot = Point(0, 0);
 		Size    sz = Size(0, 0);
 	};
 	
 	Data    *data = NULL;
 	
-	void Set(GLuint texture, Size sz);
+	void Set(GLuint texture, Size sz, Point hotspot = Point(0, 0));
 	
 	friend class GLTextureDraw;
 	
@@ -75,6 +80,7 @@ public:
 	int      GetID() const      { return data ? data->textureid : 0; }
 	operator GLuint() const     { return GetID(); }
 	Size     GetSize() const    { return data ? data->sz : Size(0, 0); }
+	Point    GetHotSpot() const { return data ? data->hotspot : Point(0, 0); }
 
 	GLTexture()                 {}
 	GLTexture(const Image& img, dword flags = TEXTURE_LINEAR|TEXTURE_MIPMAP) { Set(img, flags); }
@@ -86,13 +92,13 @@ public:
 
 void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 
-void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, double alpha = 1);
-void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha = 1);
-void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, double alpha = 1);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, double alpha = 1);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha = 1);
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha = 1);
 
-void GLDrawTexture(const GLContext2D& dd, const Rect& rect, int textureid, Size tsz, const Rect& src, double alpha);
-void GLDrawTexture(const GLContext2D& dd, const Rect& rect, const GLTexture& img, const Rect& src, double alpha);
-void GLDrawImage(const GLContext2D& dd, const Rect& rect, const Image& img, const Rect& src, double alpha);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src, double alpha);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src, double alpha);
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src, double alpha);
 
 class GLTextureDraw {
 	GLuint framebuffer = 0;
@@ -177,6 +183,11 @@ void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fil
 void GLDrawArc(const GLContext2D& dd, Pointf center, Sizef radius, Color color, double alpha);
 	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color) = 0;
 */
+
+GLTexture GetGlyphGLTextureCached(double angle, int chr, Font font, Color color);
+
+void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *text, Font font,
+                Color ink, int n = -1, const int *dx = NULL, double alpha = 1);
 
 #include "GLPainter.hpp"
 

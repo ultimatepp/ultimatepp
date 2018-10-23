@@ -11,10 +11,12 @@ file
 	GLPainter.hpp,
 	Code.cpp,
 	VertexData.cpp,
-	Image.cpp,
+	Texture.cpp,
 	DrawTexture.cpp,
 	TessPolygon.cpp,
 	StencilPolygon.cpp,
 	Line.cpp,
-	Ellipse.cpp;
+	Ellipse.cpp,
+	Text.cpp,
+	todo.txt;
 
