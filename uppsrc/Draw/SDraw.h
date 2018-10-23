@@ -1,6 +1,6 @@
 struct SDraw : Draw, DDARasterizer {
 	virtual dword GetInfo() const;
-
+	
 	virtual void BeginOp();
 	virtual bool ClipOp(const Rect& r);
 	virtual bool ClipoffOp(const Rect& r);
