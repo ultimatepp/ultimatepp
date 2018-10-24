@@ -66,6 +66,7 @@ const GLVertexData& GLRectMesh()
 
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid)
 {
+	GL_TIMING("GLDrawTexture");
 	static GLCode program(R"(
 		#version 330 core
 		uniform vec2 offset;
@@ -115,6 +116,7 @@ void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img)
 
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src)
 {
+	GL_TIMING("GLDrawTexture src");
 	static GLCode program(R"(
 		#version 330 core
 		uniform vec2 offset;

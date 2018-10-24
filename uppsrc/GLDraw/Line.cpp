@@ -64,6 +64,8 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
                   const Vector<double>& pattern, double distance)
 {
+	GL_TIMING("DashPolyline");
+
 	struct LineStore : LinearPathConsumer {
 		Vector<Vector<Pointf>>& polyline;
 	
