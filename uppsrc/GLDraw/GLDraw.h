@@ -2,6 +2,7 @@
 #define _GlDraw_GlDraw_h_
 
 #include <Draw/Draw.h>
+#include <Painter/Painter.h>
 
 #include <plugin/glew/glew.h>
 
@@ -109,5 +110,7 @@ public:
 void GLOrtho(float left, float right, float bottom, float top, float near_, float far_, GLuint u_projection);
 
 };
+
+#include "GLPainter.h"
 
 #endif
