@@ -21,6 +21,7 @@ void GLTextureDraw::Clear()
 
 GLTexture GLTextureDraw::GetResult()
 {
+	GL_TIMING("GLTextureDraw::GetResult");
 	ASSERT(texture);
 	GLTexture t;
 	if(msaa > 1) {
@@ -70,6 +71,8 @@ GLTexture GLTextureDraw::GetResult()
 
 void GLTextureDraw::Create(Size sz_, int msaa_)
 {
+	GL_TIMING("GLTextureDraw::Create");
+
 	sz = sz_;
 	msaa = msaa_;
 

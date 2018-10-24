@@ -155,6 +155,8 @@ public:
 	static void SetDoubleBuffering(bool b = true) { doubleBuffering = b; }
 	static void SetMSAA(int n = 4)                { numberOfSamples = n; }
 	
+	static void CreateContext();
+	
 	static Size CurrentViewport()                 { return current_viewport; }
 	static void SetCurrentViewport(); // intended to restore viewport after changing it in e.g. TextureDraw
 	

@@ -4,6 +4,7 @@ namespace Upp {
 
 void GLArc(Vector<Vector<Pointf>>& line, const Rectf& rc, Pointf start, Pointf end)
 {
+	GL_TIMING("GLArc");
 	if(rc.Width() <= 0 || rc.Height() <= 0)
 		return;
 	Sizef radius = Sizef(rc.Size()) / 2.0;

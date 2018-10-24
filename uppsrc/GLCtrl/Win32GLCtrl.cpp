@@ -11,7 +11,7 @@ static HGLRC                 s_openGLContext; // we only have single OpenGL cont
 static PIXELFORMATDESCRIPTOR s_pfd;
 static int                   s_pixelFormatID;
 
-void MakeGLContext(HWND hwnd, int depthBits, int stencilBits, int samples)
+void MakeGLContext(int depthBits, int stencilBits, int samples)
 {
 	ONCELOCK {
 		for(int pass = 0; pass < 2; pass++) {
@@ -81,47 +81,9 @@ void MakeGLContext(HWND hwnd, int depthBits, int stencilBits, int samples)
 	}
 }
 
-
-void InitializeGlew()
+void GLCtrl::CreateContext()
 {
-	ONCELOCK { // create temporary window to initialize glew
-		HWND hWND = CreateWindow("UPP-CLASS-A", "Fake Window",
-		                         WS_CAPTION|WS_SYSMENU|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
-		                         0, 0, 1, 1, NULL, NULL,
-		                         NULL, NULL);
-		if(!hWND)
-			return;
-		HDC hDC = ::GetDC(hWND);
-		if(!hDC)
-			return;
-		PIXELFORMATDESCRIPTOR s_pfd;
-		memset(&s_pfd, 0, sizeof(s_pfd));
-		s_pfd.nSize = sizeof(s_pfd);
-		s_pfd.nVersion = 1;
-		s_pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_GENERIC_ACCELERATED | PFD_GENERIC_FORMAT;
-//		if (ctrl->doubleBuffering) s_pfd.dwFlags |= PFD_DOUBLEBUFFER;
-		s_pfd.iPixelType = PFD_TYPE_RGBA;
-		s_pfd.cColorBits = 32;
-		s_pfd.cAlphaBits = 8;
-		s_pfd.cDepthBits = 24;
-		s_pfd.cStencilBits = 8;
-		s_pfd.iLayerType = PFD_MAIN_PLANE;
-		int pixelFormatID = ChoosePixelFormat(hDC, &s_pfd);
-	
-		DescribePixelFormat(hDC, pixelFormatID, sizeof(PIXELFORMATDESCRIPTOR), &s_pfd);
-		SetPixelFormat(hDC, pixelFormatID, &s_pfd);
-
-		HGLRC hRC = wglCreateContext(hDC);
-		
-		wglMakeCurrent(hDC, hRC);
-	
-		glewInit();
-	
-		wglMakeCurrent(NULL, NULL);
-	    wglDeleteContext(hRC);
-	    ReleaseDC(hWND, hDC);
-	    DestroyWindow(hWND);
-	}
+	MakeGLContext(depthSize, stencilSize, numberOfSamples);
 }
 
 void GLCtrl::GLPane::State(int reason)
@@ -130,7 +92,7 @@ void GLCtrl::GLPane::State(int reason)
 	
 	if(reason == OPEN) {
 		HWND hwnd = GetHWND();
-		MakeGLContext(hwnd, ctrl->depthSize, ctrl->stencilSize, ctrl->numberOfSamples);
+		GLCtrl::CreateContext();
 		HDC hDC = GetDC(hwnd);
 		if(!SetPixelFormat(hDC, s_pixelFormatID, &s_pfd))
 			return;

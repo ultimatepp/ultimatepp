@@ -86,6 +86,7 @@ void DrawGL::EndOp()
 
 void DrawGL::SyncScissor()
 {
+	GL_TIMING("SyncScissor");
 	Rect clip = cloff.Top().clip;
 	Size sz = clip.GetSize();
 	glScissor(clip.left, view_size.cy - sz.cy - clip.top, sz.cx, sz.cy);
@@ -151,7 +152,7 @@ const Vector<double>& DrawGL::GetDash(int& width)
 		width = 1;
 	if(width > 0)
 		return nodash;
-	if(width == PEN_NULL) {
+	if(width == PEN_NULL || IsNull(width)) {
 		width = 0;
 		return nodash;
 	}
@@ -193,6 +194,7 @@ void DrawGL::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 
 void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
 {
+	GL_TIMING("DrawGL::DrawArcOp");
 	Vector<Vector<Pointf>> poly;
 	GLArc(poly, rc, start, end);
 	ApplyDash(poly, width);
@@ -217,6 +219,7 @@ void DrawGL::DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *
 
 void DrawGL::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
 {
+	GL_TIMING("DrawGL::DrawPolyPolylineOp");
 	if(vertex_count < 2 || IsNull(color))
 		return;
 	Vector<Vector<Pointf>> poly;
@@ -237,6 +240,7 @@ void DrawGL::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, cons
                                    const int *disjunct_polygon_counts, int dpcc, Color color,
                                    int width, Color outline, uint64 pattern, Color doxor)
 {
+	GL_TIMING("DrawGL::DrawPolyPolyPolygonOp");
 	Vector<Vector<Pointf>> poly;
 	while(--dpcc >= 0) {
 		const Point *sp = vertices;

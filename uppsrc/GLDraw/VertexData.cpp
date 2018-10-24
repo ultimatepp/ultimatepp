@@ -21,6 +21,7 @@ GLVertexData& GLVertexData::operator=(const GLVertexData& src)
 void GLVertexData::Clear()
 {
 	if(data && --data->refcount == 0) {
+		GL_TIMING("Delete vertex data");
 	    glDeleteVertexArrays(1, &data->VAO);
 	    glDeleteBuffers(1, &data->EBO);
 	    for(auto h : data->VBO)
@@ -81,6 +82,7 @@ GLVertexData& GLVertexData::Index(const int *indices, int count)
 void GLVertexData::Draw(int mode) const
 {
 	if(data) {
+		GL_TIMING("GLVertexData::Draw");
 		glBindVertexArray(data->VAO);
 		glDrawElements(mode, data->elements, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
