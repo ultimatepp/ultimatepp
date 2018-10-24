@@ -8,5 +8,19 @@ file
 	Texture.cpp,
 	GLDraw.cpp,
 	GLShaders.cpp,
-	GLDrawS.cpp;
+	GLDrawS.cpp,
+	"HW accelerated" readonly separator,
+	GLPainter.h,
+	GLPainter.hpp,
+	Code.cpp,
+	VertexData.cpp,
+	GLTexture.cpp,
+	DrawTexture.cpp,
+	Polygon.cpp,
+	Line.cpp,
+	Ellipse.cpp,
+	Arc.cpp,
+	Text.cpp,
+	DrawGL.cpp,
+	todo.txt;
 
