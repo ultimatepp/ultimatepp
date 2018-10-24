@@ -42,6 +42,7 @@ void GLVertexData::Do()
 
 GLVertexData& GLVertexData::Add(const void *values, int type, int ntuple, int count)
 {
+	GL_TIMING("GLVertexData::Add");
 	Do();
     glBindVertexArray(data->VAO);
     int ii = data->VBO.GetCount();
@@ -66,6 +67,7 @@ GLVertexData& GLVertexData::Add(const void *values, int type, int ntuple, int co
 
 GLVertexData& GLVertexData::Index(const int *indices, int count)
 {
+	GL_TIMING("GLVertexData::Index");
 	Do();
 	glBindVertexArray(data->VAO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, data->EBO);

@@ -61,7 +61,7 @@ GLTexture GetGlyphGLTextureCached(double angle, int chr, Font font, Color color)
 
 
 void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *text, Font font,
-                Color ink, int n, const int *dx, double alpha)
+                Color ink, int n, const int *dx)
 {
 	GL_TIMING("GLDrawText");
 	int x = 0;
@@ -74,7 +74,7 @@ void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *te
 		GLTexture m = GetGlyphGLTextureCached(-angle, text[i], font, ink);
 		Point h = m.GetHotSpot();
 		Pointf p = (angle ? pos + x * u : Pointf(x + pos.x, pos.y)) - (Pointf)m.GetHotSpot();
-		GLDrawTexture(dd, Rectf((Point)p, m.GetSize()), m, alpha);
+		GLDrawTexture(dd, Rectf((Point)p, m.GetSize()), m);
 		x += dx ? *dx++ : font[text[i]];
 	}
 }

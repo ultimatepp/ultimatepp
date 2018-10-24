@@ -5,8 +5,10 @@
 #include <Painter/Painter.h>
 
 namespace Upp {
-	
-#define GL_TIMING(x) RTIMING(x)
+
+struct GL_TIMING_FINISH__ { ~GL_TIMING_FINISH__() { glFinish(); } };
+
+#define GL_TIMING(x)     GL_TIMING_FINISH__ COMBINE(sGlTiming, __LINE__); RTIMING(x)
 
 #ifdef _DEBUG
 #define GLCHK(x) do { \
@@ -94,13 +96,13 @@ public:
 
 void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, double alpha = 1);
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha = 1);
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha = 1);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const Image& img);
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img);
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src, double alpha = 1);
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src, double alpha = 1);
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src, double alpha = 1);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src);
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src);
 
 class GLTextureDraw {
 	GLuint framebuffer = 0;
@@ -160,16 +162,11 @@ public:
 
 const GLVertexData& GLRectMesh();
 
-#if 0 // this is polygon draw by tesselation - for now abandoned
-void GLMakePolygon(GLVertexData& mesh, const Vector<Vector<Pointf>>& polygon);
-void GLDrawPolygon(Sizef vs, Point at, const GLVertexData& mesh, Sizef scale, Color color, double alpha);
-#endif
-
 template <typename Src>
 void GLPolygons(GLVertexData& mesh, const Src& polygon);
 
-void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha = 1);
-void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha = 1);
+void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color);
+void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color);
 
 template <typename Src>
 void GLPolylines(GLVertexData& data, const Src& polygon);
@@ -177,17 +174,19 @@ void GLPolylines(GLVertexData& data, const Src& polygon);
 void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
                   const Vector<double>& pattern, double distance = 0);
 
-void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color, double alpha = 1);
+void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, double width, Color color);
 
 void GLDrawStencil(Color color, double alpha);
 
 void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fill_color,
-                   double width = 0, Color line_color = Null, double alpha = 1);
+                   double width, Color line_color, const Vector<double>& dash, double distance);
+void GLDrawEllipse(const GLContext2D& dd, Pointf center, Sizef radius, Color fill_color,
+                   double width, Color line_color);
 
 GLTexture GetGlyphGLTextureCached(double angle, int chr, Font font, Color color);
 
 void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *text, Font font,
-                Color ink, int n = -1, const int *dx = NULL, double alpha = 1);
+                Color ink, int n = -1, const int *dx = NULL);
 
 void GLArc(Vector<Vector<Pointf>>& line, const Rectf& rc, Pointf start, Pointf end);
 
@@ -234,6 +233,7 @@ private:
 	Rectf  Offset(int x, int y, Size sz);
 	void   SyncScissor();
 	void   DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end);
+	static const Vector<double>& GetDash(int& width);
 	void   ApplyDash(Vector<Vector<Pointf>>& polyline, int& width);
 
 public:

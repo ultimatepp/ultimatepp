@@ -64,7 +64,7 @@ const GLVertexData& GLRectMesh()
 	return mesh;
 }
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, double alpha)
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid)
 {
 	static GLCode program(R"(
 		#version 330 core
@@ -99,21 +99,21 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, doub
 	GLRectMesh().Draw(
 		program(offset, dd.vs * rect.TopLeft() + Sizef(-1, 1))
 		       (scale, dd.vs * rect.GetSize())
-		       (ialpha, dd.alpha * alpha)
+		       (ialpha, dd.alpha)
 	);
 }
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, double alpha)
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img)
 {
-	GLDrawTexture(dd, rect, img.GetID(), alpha);
+	GLDrawTexture(dd, rect, img.GetID());
 }
 
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, double alpha)
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img)
 {
-	GLDrawTexture(dd, rect, GetTextureForImage(img), alpha);
+	GLDrawTexture(dd, rect, GetTextureForImage(img));
 }
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src, double alpha)
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src)
 {
 	static GLCode program(R"(
 		#version 330 core
@@ -154,20 +154,20 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size
 	GLRectMesh().Draw(
 		program(ioffset, dd.vs * rect.TopLeft() + Sizef(-1, 1))
 		       (iscale, dd.vs * rect.GetSize())
-		       (ialpha, dd.alpha * alpha)
+		       (ialpha, dd.alpha)
 		       (itoffset, Sizef((float)src.left / tsz.cx, (float)src.top / tsz.cy))
 		       (itscale, Sizef((float)src.GetWidth() / tsz.cx, (float)src.GetHeight() / tsz.cy))
 	);
 }
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src, double alpha)
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src)
 {
-	GLDrawTexture(dd, rect, img.GetID(), img.GetSize(), src, alpha);
+	GLDrawTexture(dd, rect, img.GetID(), img.GetSize(), src);
 }
 
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src, double alpha)
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src)
 {
-	GLDrawTexture(dd, rect, GetTextureForImage(img), img.GetSize(), src, alpha);
+	GLDrawTexture(dd, rect, GetTextureForImage(img), img.GetSize(), src);
 }
 
 };

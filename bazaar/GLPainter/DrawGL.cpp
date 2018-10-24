@@ -6,7 +6,7 @@ void DrawGL::Init(Size sz, double alpha)
 {
 	Cloff& c = cloff.Add();
 	c.clip = view_size = sz;
-	c.offset = Pointf(0.5, 0.5);
+	c.offset = Pointf(0, 0);
 	dd.Set(sz);
 	dd.alpha = alpha;
 	glEnable(GL_SCISSOR_TEST);
@@ -139,33 +139,41 @@ void DrawGL::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, C
 	GLDrawText(dd, Offset(x, y), angle * M_2PI / 3600, text, font, ink, n, dx);
 }
 
-void DrawGL::ApplyDash(Vector<Vector<Pointf>>& polyline, int& width)
+const Vector<double>& DrawGL::GetDash(int& width)
 {
-	if(width == 0)
-		width = 1;
-	if(width > 0)
-		return;
-	if(width == PEN_NULL) {
-		width = 0;
-		return;
-	}
-
+	static Vector<double> nodash;
 	static Vector<double> dash = { 18, 6 };
 	static Vector<double> dot = { 3, 3 };
 	static Vector<double> dashdot = { 9, 6, 3, 6 };
 	static Vector<double> dashdotdot = { 9, 3, 3, 3, 3, 3 };
-	
-	Vector<double>& d = *decode(width, PEN_DASH, &dash,
-	                                   PEN_DOT, &dot,
-	                                   PEN_DASHDOT, &dashdot,
-	                                   &dashdotdot);
 
-	Vector<Vector<Pointf>> r;
-	for(auto& l : polyline)
-		DashPolyline(r, l, d);
-	
-	polyline = pick(r);
+	if(width == 0)
+		width = 1;
+	if(width > 0)
+		return nodash;
+	if(width == PEN_NULL) {
+		width = 0;
+		return nodash;
+	}
+	int w = width;
 	width = 1;
+	return *decode(w, PEN_DASH, &dash,
+	                  PEN_DOT, &dot,
+	                  PEN_DASHDOT, &dashdot,
+	                  PEN_DASHDOTDOT, &dashdotdot,
+	                  &nodash);
+}
+
+void DrawGL::ApplyDash(Vector<Vector<Pointf>>& polyline, int& width)
+{
+	const Vector<double>& dash = GetDash(width);
+	GetDash(width);
+	if(dash.GetCount()) {
+		Vector<Vector<Pointf>> r;
+		for(auto& l : polyline)
+			DashPolyline(r, l, dash);
+		polyline = pick(r);
+	}
 }
 
 void DrawGL::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
@@ -196,7 +204,8 @@ void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color 
 
 void DrawGL::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
-	GLDrawEllipse(dd, Offset(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor);
+	const Vector<double>& dash = GetDash(pen);
+	GLDrawEllipse(dd, Offset(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor, dash, 0);
 }
 
 void DrawGL::DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end)

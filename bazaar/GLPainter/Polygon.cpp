@@ -44,8 +44,10 @@ void GLDrawStencil(Color color, double alpha)
 	glDisable(GL_STENCIL_TEST);
 }
 
-void GLDrawPolygons(const GLContext2D& dd, bool generic, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+void GLDrawPolygons(const GLContext2D& dd, bool generic, Pointf at, const GLVertexData& mesh, Sizef scale, Color color)
 {
+	GL_TIMING("GLDrawPolygons");
+
 	GLCode& program = GLSimpleCode();
 
 	static int ioffset = program["offset"];
@@ -66,23 +68,23 @@ void GLDrawPolygons(const GLContext2D& dd, bool generic, Pointf at, const GLVert
 		
 		mesh.Draw(program);
 		
-		GLDrawStencil(color, dd.alpha * alpha);
+		GLDrawStencil(color, dd.alpha);
 	}
 	else {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		mesh.Draw(program(icolor, color, dd.alpha * alpha));
+		mesh.Draw(program(icolor, color, dd.alpha));
 	}
 }
 
-void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color)
 {
-	GLDrawPolygons(dd, true, at, mesh, scale, color, alpha);
+	GLDrawPolygons(dd, true, at, mesh, scale, color);
 }
 
-void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color, double alpha)
+void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color)
 {
-	GLDrawPolygons(dd, false, at, mesh, scale, color, alpha);
+	GLDrawPolygons(dd, false, at, mesh, scale, color);
 }
 
 };

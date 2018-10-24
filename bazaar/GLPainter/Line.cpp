@@ -3,8 +3,10 @@
 namespace Upp {
 
 void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale,
-                    double width, Color color, double alpha)
+                    double width, Color color)
 {
+	GL_TIMING("GLDrawPolylines");
+
 	static GLCode program(R"(
 		#version 330 core
 	    in      vec4 pos;
@@ -32,15 +34,14 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 	static int iwidth = program["width"];
 	static int icolor = program["color"];
 
-	alpha *= dd.alpha;
 	program(ioffset, Pointf(dd.vs) * at + Sizef(-1, 1))
 	       (iscale, dd.vs)
 	       (iscale2, scale)
 	       (iwidth, Sizef(width / 2, width / 2))
-	       (icolor, color, alpha)
+	       (icolor, color, dd.alpha)
 	;
 	
-	if(alpha == 1) {
+	if(dd.alpha == 1) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		mesh.Draw(program);
@@ -56,7 +57,7 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 		
 		mesh.Draw(program);
 		
-		GLDrawStencil(color, dd.alpha * alpha);
+		GLDrawStencil(color, dd.alpha);
 	}
 }
 
@@ -66,8 +67,8 @@ void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
 	struct LineStore : LinearPathConsumer {
 		Vector<Vector<Pointf>>& polyline;
 	
-		void Move(const Pointf& p) override { DLOG("MOVE " << p); polyline.Add().Add(p); }
-		void Line(const Pointf& p) override { DLOG("LINE " << p); polyline.Top().Add(p); }
+		void Move(const Pointf& p) override { polyline.Add().Add(p); }
+		void Line(const Pointf& p) override { polyline.Top().Add(p); }
 		
 		LineStore(Vector<Vector<Pointf>>& polyline) : polyline(polyline) {}
 	};
