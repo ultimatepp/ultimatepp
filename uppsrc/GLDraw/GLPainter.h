@@ -3,7 +3,7 @@
 
 namespace Upp {
 
-#define GL_TIMING(x)    //  RTIMING(x); GL_TIMING_FINISH__ COMBINE(sGlTiming, __LINE__)
+#define GL_TIMING(x)      // RTIMING(x); GL_TIMING_FINISH__ COMBINE(sGlTiming, __LINE__)
 struct GL_TIMING_FINISH__ { ~GL_TIMING_FINISH__() { glFinish(); } };
 
 #ifdef _DEBUG
@@ -26,6 +26,8 @@ struct GLContext2D { // TODO: This should be changed to regular matrix (later)
 };
 
 struct GLCode : GLProgram {
+	int64 serialid;
+
 	GLCode(const char *vertex_shader, const char *pixel_shader);
 
 	int operator[](const char *id)                                             { return GetUniform(id); }
@@ -56,6 +58,10 @@ struct GLCode : GLProgram {
 	GLCode& operator()(int i, Sizef sz)                                        { return Uniform(i, sz.cx, sz.cy); }
 	GLCode& operator()(const char *id, Color c, double alpha = 1);
 	GLCode& operator()(int i, Color c, double alpha = 1);
+
+	void Use();
+	
+	GLCode();
 };
 
 class GLTexture {
