@@ -112,8 +112,19 @@ void GLProgram::Clear()
 		glDeleteShader(fragment_shader);
 }
 
+void GLProgram::Use()
+{
+	static int64 currentid;
+	if(currentid != serialid) {
+		currentid = serialid;
+		glUseProgram(program);
+	}
+}
+
 GLProgram::GLProgram()
 {
+	static int64 h;
+	serialid = ++h;
 	vertex_shader = fragment_shader = program = 0;
 }
 
