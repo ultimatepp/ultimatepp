@@ -105,4 +105,19 @@ GLCode& GLCode::operator()(int i, Color c, double alpha)
 	return Uniform(i, c.GetR() / 255.0f, c.GetG() / 255.0f, c.GetB() / 255.0f, alpha);
 }
 
+GLCode::GLCode()
+{
+	static int64 h;
+	serialid = ++h;
+}
+
+void GLCode::Use()
+{
+	static int64 currentid;
+	if(currentid != serialid) {
+		serialid = currentid;
+		glUseProgram(program);
+	}
+}
+
 };
