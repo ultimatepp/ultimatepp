@@ -1,0 +1,13 @@
+description "Benchmarks GDI vs Painter vs OpenGL Draw\377";
+
+uses
+	CtrlLib,
+	GLCtrl,
+	GLDraw;
+
+file
+	main.cpp;
+
+mainconfig
+	"" = "GUI";
+
