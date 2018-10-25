@@ -3,9 +3,8 @@
 
 namespace Upp {
 
+#define GL_TIMING(x)    //  RTIMING(x); GL_TIMING_FINISH__ COMBINE(sGlTiming, __LINE__)
 struct GL_TIMING_FINISH__ { ~GL_TIMING_FINISH__() { glFinish(); } };
-
-#define GL_TIMING(x)    // RTIMING(x); GL_TIMING_FINISH__ COMBINE(sGlTiming, __LINE__)
 
 #ifdef _DEBUG
 #define GLCHK(x) do { \
