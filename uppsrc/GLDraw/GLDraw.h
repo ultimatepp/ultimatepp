@@ -43,6 +43,7 @@ protected:
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 	GLuint program;
+	int64  serialid;
 
 public:
 	void Create(const char *vertex_shader, const char *fragment_shader,
@@ -61,7 +62,7 @@ public:
 	int  GetAttrib(const char *name)           { return glGetAttribLocation(program, name); }
 	int  GetUniform(const char *name)          { return glGetUniformLocation(program, name); }
 	
-	void Use()                                 { glUseProgram(program); }
+	void Use();
 
 	GLProgram();
 	~GLProgram();
