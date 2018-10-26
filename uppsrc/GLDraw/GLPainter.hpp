@@ -33,7 +33,7 @@ void GLPolylines(GLVertexData& data, const Src& polygon)
 		for(const auto& p: polygon) {
 			int i0 = vertex.GetCount();
 			int ii0 = ii;
-			for(int i = 0; i < p.GetCount() - 1; i++) {
+			for(int i = 0; i < p.GetCount(); i++) {
 				Pointf p1 = p[i];
 				Pointf p2 = p[i + 1 < p.GetCount() ? i + 1 : 0];
 				Pointf un = p1 - p2;

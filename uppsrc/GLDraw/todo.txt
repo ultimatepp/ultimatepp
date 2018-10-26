@@ -1,5 +1,6 @@
 - make banded glyphs
 - make alpha textures
+- alpha atlas
 - colored texture paints (optimize text)
 - optimize draw rect
 
