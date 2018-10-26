@@ -6,6 +6,9 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
                     double width, Color color)
 {
 	GL_TIMING("GLDrawPolylines");
+	
+	if(IsNull(color))
+		return;
 
 	static GLCode program(R"(
 		#version 330 core

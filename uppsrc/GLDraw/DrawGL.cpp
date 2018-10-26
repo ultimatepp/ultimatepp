@@ -11,6 +11,9 @@ void DrawGL::Init(Size sz, double alpha)
 	dd.alpha = alpha;
 	glEnable(GL_SCISSOR_TEST);
 	SyncScissor();
+	
+	prev = Point(0, 0);
+	path_done = false;
 }
 
 DrawGL::~DrawGL()
@@ -23,10 +26,19 @@ dword DrawGL::GetInfo() const
 	return DRAWTEXTLINES;
 }
 
+void DrawGL::Push()
+{
+	auto& s = state.Add();
+	s.dash = clone(dash);
+	s.dash_start = clone(dash_start);
+	s.alpha = dd.alpha;
+}
+
 void DrawGL::BeginOp()
 {
 	Cloff c = cloff.Top();
 	cloff.Add(c);
+	Push();
 }
 
 bool DrawGL::ClipOp(const Rect& r)
@@ -36,6 +48,7 @@ bool DrawGL::ClipOp(const Rect& r)
 	c1.clip = c.clip & (r + c.offset);
 	c1.offset = c.offset;
 	SyncScissor();
+	Push();
 	return !c1.clip.IsEmpty();
 }
 
@@ -46,6 +59,7 @@ bool DrawGL::ClipoffOp(const Rect& r)
 	c1.clip = c.clip & (r + c.offset);
 	c1.offset = c.offset + (Pointf)r.TopLeft();
 	SyncScissor();
+	Push();
 	return !c1.clip.IsEmpty();
 }
 
@@ -54,6 +68,7 @@ bool DrawGL::IntersectClipOp(const Rect& r)
 	Cloff& c = cloff.Top();
 	c.clip = c.clip & (r + c.offset);
 	SyncScissor();
+	Push();
 	return !c.clip.IsEmpty();
 }
 
@@ -74,6 +89,7 @@ void DrawGL::OffsetOp(Point p)
 	Cloff& c1 = cloff.Add();
 	c1.clip = c.clip;
 	c1.offset = c.offset + (Pointf)p;
+	Push();
 }
 
 void DrawGL::EndOp()
@@ -81,6 +97,13 @@ void DrawGL::EndOp()
 	ASSERT(cloff.GetCount());
 	if(cloff.GetCount())
 		cloff.Drop();
+	if(state.GetCount()) {
+		auto& s = state.Top();
+		dash = pick(s.dash);
+		dash_start = s.dash_start;
+		dd.alpha = s.alpha;
+		state.Drop();
+	}
 	SyncScissor();
 }
 
@@ -92,42 +115,42 @@ void DrawGL::SyncScissor()
 	glScissor(clip.left, view_size.cy - sz.cy - clip.top, sz.cx, sz.cy);
 }
 
-Pointf DrawGL::Offset(int x, int y)
+Pointf DrawGL::Off(int x, int y)
 {
 	Pointf o = cloff.Top().offset;
 	return Pointf(x + o.x, y + o.y);
 }
 
-Rectf DrawGL::Offset(int x, int y, int cx, int cy)
+Rectf DrawGL::Off(int x, int y, int cx, int cy)
 {
 	Point o = cloff.Top().offset;
 	return RectfC(x + o.x, y + o.y, cx, cy);
 }
 
-Rectf DrawGL::Offset(int x, int y, Size sz)
+Rectf DrawGL::Off(int x, int y, Size sz)
 {
-	return Offset(x, y, sz.cx, sz.cy);
+	return Off(x, y, sz.cx, sz.cy);
 }
 
 void DrawGL::SysDrawImageOp(int x, int y, const Image& img, Color color)
 {
-	GLDrawImage(dd, Offset(x, y, img.GetSize()),
+	GLDrawImage(dd, Off(x, y, img.GetSize()),
 	            IsNull(color) ? img : CachedSetColorKeepAlpha(img, color));
 }
 
 void DrawGL::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
 {
-	GLDrawImage(dd, Offset(x, y, img.GetSize()), IsNull(color) ? img : CachedSetColorKeepAlpha(img, color),
+	GLDrawImage(dd, Off(x, y, img.GetSize()), IsNull(color) ? img : CachedSetColorKeepAlpha(img, color),
 	            src);
 }
 
 void DrawGL::DrawRectOp(int x, int y, int cx, int cy, Color color)
 {
 	Vector<Vector<Pointf>> polygon;
-	polygon.Add().Add(Offset(x, y));
-	polygon.Top().Add(Offset(x + cx, y));
-	polygon.Top().Add(Offset(x + cx, y + cy));
-	polygon.Top().Add(Offset(x, y + cy));
+	polygon.Add().Add(Off(x, y));
+	polygon.Top().Add(Off(x + cx, y));
+	polygon.Top().Add(Off(x + cx, y + cy));
+	polygon.Top().Add(Off(x, y + cy));
 
 	GLVertexData data;
 	GLPolygons(data, polygon);
@@ -137,7 +160,7 @@ void DrawGL::DrawRectOp(int x, int y, int cx, int cy, Color color)
 
 void DrawGL::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
 {
-	GLDrawText(dd, Offset(x, y), angle * M_2PI / 3600, text, font, ink, n, dx);
+	GLDrawText(dd, Off(x, y), angle * M_2PI / 3600, text, font, ink, n, dx);
 }
 
 const Vector<double>& DrawGL::GetDash(int& width)
@@ -180,8 +203,8 @@ void DrawGL::ApplyDash(Vector<Vector<Pointf>>& polyline, int& width)
 void DrawGL::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	Vector<Vector<Pointf>> poly;
-	poly.Add().Add(Offset(x1, y1));
-	poly.Top().Add(Offset(x2, y2));
+	poly.Add().Add(Off(x1, y1));
+	poly.Top().Add(Off(x2, y2));
 	
 	ApplyDash(poly, width);
 	
@@ -207,14 +230,14 @@ void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color 
 void DrawGL::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
 	const Vector<double>& dash = GetDash(pen);
-	GLDrawEllipse(dd, Offset(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor, dash, 0);
+	GLDrawEllipse(dd, Off(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor, dash, 0);
 }
 
 void DrawGL::DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end)
 {
-	poly.Add().Add(Offset(*pp++));
+	poly.Add().Add(Off(*pp++));
 	while(pp < end)
-		poly.Top().Add(Offset(*pp++));
+		poly.Top().Add(Off(*pp++));
 }
 
 void DrawGL::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
