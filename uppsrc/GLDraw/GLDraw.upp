@@ -21,6 +21,8 @@ file
 	Ellipse.cpp,
 	Arc.cpp,
 	Text.cpp,
+	Triangles.cpp,
 	DrawGL.cpp,
+	PainterGL.cpp,
 	todo.txt;
 

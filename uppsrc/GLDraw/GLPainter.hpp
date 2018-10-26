@@ -22,7 +22,7 @@ void GLPolygons(GLVertexData& mesh, const Src& polygon)
 }
 
 template <typename Src>
-void GLPolylines(GLVertexData& data, const Src& polygon)
+void GLPolylines(GLVertexData& data, const Src& polygon, bool close)
 {
 	Vector<float> vertex;
 	Vector<int> ndx;
@@ -33,7 +33,11 @@ void GLPolylines(GLVertexData& data, const Src& polygon)
 		for(const auto& p: polygon) {
 			int i0 = vertex.GetCount();
 			int ii0 = ii;
-			for(int i = 0; i < p.GetCount(); i++) {
+			int m = 1;
+			
+			if(p.GetCount() && close && p[0] != p.Top())
+				m = 0;
+			for(int i = 0; i < p.GetCount() - m; i++) {
 				Pointf p1 = p[i];
 				Pointf p2 = p[i + 1 < p.GetCount() ? i + 1 : 0];
 				Pointf un = p1 - p2;
@@ -54,7 +58,7 @@ void GLPolylines(GLVertexData& data, const Src& polygon)
 				ii += 4;
 			}
 	
-			if(p.GetCount() > 2 && p.Top() == p[0]) // Line loop is closed, draw bevel join
+			if(p.GetCount() > 2 && (p.Top() == p[0] || close)) // Line loop is closed, draw bevel join
 				ndx << ii0 << ii0 + 1 << ii - 4 + 3
 				    << ii - 4 + 2 << ii - 4 + 3 << ii0;
 		}

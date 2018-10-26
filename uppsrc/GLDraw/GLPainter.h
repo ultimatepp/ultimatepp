@@ -167,7 +167,7 @@ void GLDrawPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, 
 void GLDrawConvexPolygons(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale, Color color);
 
 template <typename Src>
-void GLPolylines(GLVertexData& data, const Src& polygon);
+void GLPolylines(GLVertexData& data, const Src& polygon, bool close_loops = false);
 
 void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
                   const Vector<double>& pattern, double distance = 0);
@@ -188,9 +188,22 @@ void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *te
 
 void GLArc(Vector<Vector<Pointf>>& line, const Rectf& rc, Pointf start, Pointf end);
 
+class GLTriangles {
+	Vector<float>   pos;
+	Vector<GLubyte> color;
+	Vector<GLint>   elements;
+	int             ii = 0;
+
+public:
+	int  Vertex(Pointf p, Color c, double alpha = 1) { pos << (float)p.x << (float)p.y << (float)alpha; color << c.GetR() << c.GetG() << c.GetB(); return ii++; }
+	void Triangle(int a, int b, int c)               { elements << a << b << c; }
+	
+	void Draw(const GLContext2D& dd);
+};
+
 #include "GLPainter.hpp"
 
-class DrawGL : public Draw {
+class DrawGL : public NilPainter {
 public:
 	virtual dword GetInfo() const;
 
@@ -214,6 +227,15 @@ public:
 	virtual void DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color);
 	virtual void DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc, const int *disjunct_polygon_counts, int dpcc, Color color, int width, Color outline, uint64 pattern, Color doxor);
 	virtual void DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor);
+	
+	virtual void MoveOp(const Pointf& p, bool rel);
+	virtual void LineOp(const Pointf& p, bool rel);
+	virtual void OpacityOp(double o);
+	virtual void CloseOp();
+	virtual void StrokeOp(double width, const RGBA& rgba);
+	virtual void FillOp(const RGBA& color);
+	virtual void DashOp(const Vector<double>& dash, double start);
+
 
 private:
 	struct Cloff : Moveable<Cloff> {
@@ -221,14 +243,28 @@ private:
 		Pointf offset;
 	};
 	
+	struct State {
+		double alpha;
+		double dash_start;
+		Vector<double> dash;
+	};
+	
 	Vector<Cloff> cloff;
+	Array<State>  state;
 	GLContext2D   dd;
 	Size          view_size;
-	
-	Pointf Offset(int x, int y);
-	Pointf Offset(Point p) { return Offset(p.x, p.y); }
-	Rectf  Offset(int x, int y, int cx, int cy);
-	Rectf  Offset(int x, int y, Size sz);
+
+	Pointf prev;
+	Vector<Vector<Pointf>> path;
+	bool path_done;
+	double dash_start;
+	Vector<double> dash;
+
+	void   Push();
+	Pointf Off(int x, int y);
+	Pointf Off(Point p)                      { return Off(p.x, p.y); }
+	Rectf  Off(int x, int y, int cx, int cy);
+	Rectf  Off(int x, int y, Size sz);
 	void   SyncScissor();
 	void   DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end);
 	static const Vector<double>& GetDash(int& width);
@@ -236,9 +272,11 @@ private:
 
 public:
 	void Init(Size sz, double alpha = 1);
+	
+	operator const GLContext2D&() const     { return dd; }
 
 	DrawGL() {}
-	DrawGL(Size sz, double alpha = 1) { Init(sz, alpha); }
+	DrawGL(Size sz, double alpha = 1)       { Init(sz, alpha); }
 	~DrawGL();
 };
 

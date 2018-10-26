@@ -48,6 +48,9 @@ void GLDrawPolygons(const GLContext2D& dd, bool generic, Pointf at, const GLVert
 {
 	GL_TIMING("GLDrawPolygons");
 
+	if(IsNull(color))
+		return;
+
 	GLCode& program = GLSimpleCode();
 
 	static int ioffset = program["offset"];
