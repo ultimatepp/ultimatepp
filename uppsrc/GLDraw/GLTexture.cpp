@@ -72,7 +72,7 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid)
 		uniform vec2 offset;
 		uniform vec2 scale;
 	    in      vec2 aPos;
-		out vec2 tPos;
+		out     vec2 tPos;
 	    void main()
 	    {
 			gl_Position = vec4(scale * aPos + offset, 0, 1);

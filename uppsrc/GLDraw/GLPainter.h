@@ -139,7 +139,9 @@ public:
 
 	GLVertexData& Add(const void *data, int type, int ntuple, int count);
 	GLVertexData& Add(const float *data, int ntuple, int count) { return Add(data, GL_FLOAT, ntuple, count); }
+	GLVertexData& Add(const byte *data, int ntuple, int count)  { return Add(data, GL_UNSIGNED_BYTE, ntuple, count); }
 	GLVertexData& Add(const Vector<float>& data, int ntuple)    { return Add(data, ntuple, data.GetCount() / ntuple); }
+	GLVertexData& Add(const Vector<byte>& data, int ntuple)     { return Add(data, ntuple, data.GetCount() / ntuple); }
 	GLVertexData& Add(const Vector<Pointf>& pt);
 	GLVertexData& Index(const int *indices, int count);
 	GLVertexData& Index(const Vector<int>& indices)             { return Index(indices, indices.GetCount()); }
@@ -189,10 +191,10 @@ void GLDrawText(const GLContext2D& dd, Pointf pos, double angle, const wchar *te
 void GLArc(Vector<Vector<Pointf>>& line, const Rectf& rc, Pointf start, Pointf end);
 
 class GLTriangles {
-	Vector<float>   pos;
-	Vector<GLubyte> color;
-	Vector<GLint>   elements;
-	int             ii = 0;
+	Vector<float>  pos;
+	Vector<byte>   color;
+	Vector<GLint>  elements;
+	int            ii = 0;
 
 public:
 	int  Vertex(Pointf p, Color c, double alpha = 1) { pos << (float)p.x << (float)p.y << (float)alpha; color << c.GetR() << c.GetG() << c.GetB(); return ii++; }
