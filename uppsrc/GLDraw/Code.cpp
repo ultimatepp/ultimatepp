@@ -21,11 +21,8 @@ GLCode::GLCode(const char *vertex_shader, const char *pixel_shader)
 	while(!p.IsEof() && !p.Char('{'))
 		if(p.Id("attribute") || p.Id("in")) {
 			String id = readID();
-			if(id.GetCount()) {
-				DDUMP(ii);
-				DDUMP(id);
+			if(id.GetCount())
 				glBindAttribLocation(program, ii++, id);
-			}
 		}
 		else
 			p.SkipTerm();
