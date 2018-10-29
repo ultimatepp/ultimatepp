@@ -6,6 +6,8 @@
 
 #include <plugin/glew/glew.h>
 
+#include <plugin/tess2/tess2.h>
+
 #ifdef PLATFORM_WIN32
 #include <plugin/glew/wglew.h>
 #endif

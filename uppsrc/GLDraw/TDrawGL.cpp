@@ -10,14 +10,15 @@ void DrawGL::Init(Size sz, double alpha)
 	dd.Set(sz);
 	dd.alpha = alpha;
 	glEnable(GL_SCISSOR_TEST);
+	scissor = Null;
 	SyncScissor();
-	
 	prev = Point(0, 0);
 	path_done = false;
 }
 
 DrawGL::~DrawGL()
 {
+	Flush();
 	glDisable(GL_SCISSOR_TEST);
 }
 
@@ -36,6 +37,7 @@ void DrawGL::Push()
 
 void DrawGL::BeginOp()
 {
+	Flush();
 	Cloff c = cloff.Top();
 	cloff.Add(c);
 	Push();
@@ -111,8 +113,11 @@ void DrawGL::SyncScissor()
 {
 	GL_TIMING("SyncScissor");
 	Rect clip = cloff.Top().clip;
-	Size sz = clip.GetSize();
-	glScissor(clip.left, view_size.cy - sz.cy - clip.top, sz.cx, sz.cy);
+	if(clip != scissor) {
+		Flush();
+		Size sz = clip.GetSize();
+		glScissor(clip.left, view_size.cy - sz.cy - clip.top, sz.cx, sz.cy);
+	}
 }
 
 Pointf DrawGL::Off(int x, int y)
@@ -132,35 +137,29 @@ Rectf DrawGL::Off(int x, int y, Size sz)
 	return Off(x, y, sz.cx, sz.cy);
 }
 
-void DrawGL::SysDrawImageOp(int x, int y, const Image& img, Color color)
+void DrawGL::DrawImageOp(int x, int y, int cx, int cy, const Image& image, const Rect& src, Color color)
 {
-	GLDrawImage(dd, Off(x, y, img.GetSize()),
-	            IsNull(color) ? img : CachedSetColorKeepAlpha(img, color));
-}
-
-void DrawGL::SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color)
-{
-	GLDrawImage(dd, Off(x, y, img.GetSize()), IsNull(color) ? img : CachedSetColorKeepAlpha(img, color),
+	Flush();
+	GLDrawImage(dd, Off(x, y, cx, cy), IsNull(color) ? image : CachedSetColorKeepAlpha(image, color),
 	            src);
-}
-
-void DrawGL::DrawRectOp(int x, int y, int cx, int cy, Color color)
-{
-	Vector<Vector<Pointf>> polygon;
-	polygon.Add().Add(Off(x, y));
-	polygon.Top().Add(Off(x + cx, y));
-	polygon.Top().Add(Off(x + cx, y + cy));
-	polygon.Top().Add(Off(x, y + cy));
-
-	GLVertexData data;
-	GLPolygons(data, polygon);
-	
-	GLDrawConvexPolygons(dd, Pointf(0, 0), data, Sizef(1, 1), color);
 }
 
 void DrawGL::DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx)
 {
+	Flush();
 	GLDrawText(dd, Off(x, y), angle * M_2PI / 3600, text, font, ink, n, dx);
+}
+
+void DrawGL::DrawRectOp(int x, int y, int cx, int cy, Color color)
+{
+	Point off = cloff.Top().offset;
+	int a = Vertex(x + off.x, y + off.y, color, dd.alpha);
+	int b = Vertex(x + off.x + cx, y + off.y, color, dd.alpha);
+	int c = Vertex(x + off.x + cx, y + off.y + cy, color, dd.alpha);
+	int d = Vertex(x + off.x, y + off.y + cy, color, dd.alpha);
+
+	Triangle(a, b, c);
+	Triangle(a, c, d);
 }
 
 const Vector<double>& DrawGL::GetDash(int& width)
@@ -200,19 +199,19 @@ void DrawGL::ApplyDash(Vector<Vector<Pointf>>& polyline, int& width)
 	}
 }
 
+void DrawGL::DoDrawPolylines(Vector<Vector<Pointf>>& poly, int width, Color color, bool close)
+{
+	ApplyDash(poly, width);
+	for(const auto& p : poly)
+		Polyline(*this, p, width, color, dd.alpha, close);
+}
+
 void DrawGL::DrawLineOp(int x1, int y1, int x2, int y2, int width, Color color)
 {
 	Vector<Vector<Pointf>> poly;
 	poly.Add().Add(Off(x1, y1));
 	poly.Top().Add(Off(x2, y2));
-	
-	ApplyDash(poly, width);
-	
-	GLVertexData data;
-	GLPolylines(data, poly);
-	
-	if(width > 0)
-		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, color);
+	DoDrawPolylines(poly, width, color);
 }
 
 void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color)
@@ -220,17 +219,15 @@ void DrawGL::DrawArcOp(const Rect& rc, Point start, Point end, int width, Color 
 	GL_TIMING("DrawGL::DrawArcOp");
 	Vector<Vector<Pointf>> poly;
 	GLArc(poly, rc, start, end);
-	ApplyDash(poly, width);
-	GLVertexData data;
-	GLPolylines(data, poly);
-	if(width > 0)
-		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, color);
+	DoDrawPolylines(poly, width, color);
 }
 
 void DrawGL::DrawEllipseOp(const Rect& r, Color color, int pen, Color pencolor)
 {
-	const Vector<double>& dash = GetDash(pen);
-	GLDrawEllipse(dd, Off(r.CenterPoint()), Sizef(r.GetSize()) / 2, color, pen, pencolor, dash, 0);
+	// TODO: Dash, ellipse stroke
+	if(!r.IsEmpty())
+		Upp::Ellipse(*this, Pointf(r.CenterPoint()) + cloff.Top().offset,
+		             Sizef(r.GetSize()) / 2, color, pen, pencolor, dd.alpha);
 }
 
 void DrawGL::DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end)
@@ -242,7 +239,6 @@ void DrawGL::DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *
 
 void DrawGL::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const int *counts, int count_count, int width, Color color, Color doxor)
 {
-	GL_TIMING("DrawGL::DrawPolyPolylineOp");
 	if(vertex_count < 2 || IsNull(color))
 		return;
 	Vector<Vector<Pointf>> poly;
@@ -252,18 +248,41 @@ void DrawGL::DrawPolyPolylineOp(const Point *vertices, int vertex_count, const i
 		DoPath(poly, pp, vertices);
 	}
 	
-	GLVertexData data;
-	ApplyDash(poly, width);
-	GLPolylines(data, poly);
-	if(width > 0)
-		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, color);
+	DoDrawPolylines(poly, width, color);
+}
+
+void DrawGL::DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color)
+{
+	const int TESS_LIMIT = 200;
+	int n = 0;
+	for(const auto& p : path) {
+		n += p.GetCount();
+		if(n > TESS_LIMIT) {
+			Flush();
+			RTIMING("StencilPolygon");
+			GLVertexData data;
+			GLPolygons(data, path);
+			GLDrawPolygons(dd, Pointf(0, 0), data, Sizef(1, 1), color);
+			return;
+		}
+	}
+	Vector<Pointf> vertex;
+	Vector<Tuple<int, int, int>> triangle;
+	RTIMING("Tesselate");
+	Tesselate(path, vertex, triangle, false);
+	int ii0;
+	for(int i = 0; i < vertex.GetCount(); i++) {
+		int q = Vertex(vertex[i], color, dd.alpha);
+		if(i == 0) ii0 = q;
+	}
+	for(const auto& t : triangle)
+		Triangle(t.a + ii0, t.b + ii0, t.c + ii0);
 }
 
 void DrawGL::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, const int *subpolygon_counts, int scc,
                                    const int *disjunct_polygon_counts, int dpcc, Color color,
                                    int width, Color outline, uint64 pattern, Color doxor)
 {
-	GL_TIMING("DrawGL::DrawPolyPolyPolygonOp");
 	Vector<Vector<Pointf>> poly;
 	while(--dpcc >= 0) {
 		const Point *sp = vertices;
@@ -275,20 +294,21 @@ void DrawGL::DrawPolyPolyPolygonOp(const Point *vertices, int vertex_count, cons
 		}
 	}
 
-	if(!IsNull(color)) {
-		GLVertexData data;
-		GLPolygons(data, poly);
-		GLDrawPolygons(dd, Pointf(0, 0), data, Sizef(1, 1), color);
-	}
-	if(!IsNull(outline)) {
-		GLVertexData data;
-		for(auto& pl : poly)
-			pl.Add(pl[0]);
-		ApplyDash(poly, width);
-		GLPolylines(data, poly);
-		if(width > 0)
-			GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, outline);
-	}
+	if(poly.GetCount() == 0)
+		return;
+
+	if(!IsNull(color))
+		DoDrawPolygons(poly, color);
+
+	if(!IsNull(outline))
+		DoDrawPolylines(poly, width, outline, true);
+}
+
+
+void DrawGL::Flush()
+{
+	GLTriangles::Draw(dd);
+	GLTriangles::Clear();
 }
 
 };

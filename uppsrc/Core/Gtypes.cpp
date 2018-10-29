@@ -128,7 +128,8 @@ Pointf Orthogonal(const Pointf& p)
 
 Pointf Normalize(const Pointf& p)
 {
-	return p / Length(p);
+	double l = Length(p);
+	return l < 1e-150 ? Pointf(0, 0) : p / l;
 }
 
 double Squared(const Pointf& p)

@@ -6,7 +6,8 @@ void DrawGL::MoveOp(const Pointf& p_, bool rel)
 {
 	if(path_done) {
 		path.Clear();
-		path_done = false;
+		path_done = close_path = false;
+		path_dash = clone(dash);
 	}
 	Pointf p = p_;
 	if(rel)
@@ -19,7 +20,7 @@ void DrawGL::LineOp(const Pointf& p_, bool rel)
 {
 	if(path_done) {
 		path.Clear();
-		path_done = false;
+		path_done = close_path = false;
 	}
 	if(path.GetCount() == 0)
 		path.Add();
@@ -37,40 +38,38 @@ void DrawGL::OpacityOp(double o)
 
 void DrawGL::CloseOp()
 {
-	if(path.GetCount() && path.Top().GetCount())
-		if(path.Top().Top() != path.Top()[0])
-			path.Add(path[0]);
+	close_path = true;
 }
 
-void DrawGL::StrokeOp(double width, const RGBA& rgba)
+void DrawGL::StrokeOp(double width, const RGBA& color)
 {
-	if(width > 0) {
+	if(width > 0 && color.a) {
 		GLVertexData data;
-		if(dash.GetCount()) {
+		if(path_dash.GetCount()) {
 			Vector<Vector<Pointf>> r;
 			for(auto& l : path)
-				DashPolyline(r, l, dash);
-			GLPolylines(data, r);
+				DashPolyline(r, l, path_dash);
+			for(const auto& p : r)
+				Polyline(*this, p, width, color, dd.alpha, close_path);
 		}
 		else
-			GLPolylines(data, path);
-		GLDrawPolylines(dd, Pointf(0, 0), data, Sizef(1, 1), width, rgba);
-		path_done = true;
+			for(const auto& p : path)
+				Polyline(*this, p, width, color, dd.alpha, close_path);
 	}
+	path_done = true;
 }
 
 void DrawGL::FillOp(const RGBA& color)
 {
-	GLVertexData data;
-	GLPolygons(data, path);
-	GLDrawPolygons(dd, Pointf(0, 0), data, Sizef(1, 1), color);
+	if(color.a)
+		DoDrawPolygons(path, color);
 	CloseOp();
 	path_done = true;
 }
 
 void DrawGL::DashOp(const Vector<double>& dash_, double start)
 {
-	dash = clone(dash_);
+	(path.GetCount() ? path_dash : dash) = clone(dash_);
 	dash_start = start;
 }
 

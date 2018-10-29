@@ -5,8 +5,6 @@ namespace Upp {
 void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale,
                     double width, Color color)
 {
-	GL_TIMING("GLDrawPolylines");
-	
 	if(IsNull(color))
 		return;
 
@@ -19,8 +17,9 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 		uniform vec2 width;
 	    void main()
 	    {
+			vec2 p = scale * scale2 * pos.xy + offset; // avoiding precision problems
 			vec2 v = scale2 * pos.zw;
-			gl_Position = vec4(scale * (scale2 * pos.xy + width * normalize(vec2(-v.y, v.x))) + offset, 0, 1);
+			gl_Position = vec4(p + scale * width * normalize(vec2(-v.y, v.x)), 0, 1);
 	    }
 	)", R"(
 		#version 330 core
@@ -67,7 +66,7 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 void DashPolyline(Vector<Vector<Pointf>>& polyline, const Vector<Pointf>& line,
                   const Vector<double>& pattern, double distance)
 {
-	GL_TIMING("DashPolyline");
+	RTIMING("DashPolyline");
 
 	struct LineStore : LinearPathConsumer {
 		Vector<Vector<Pointf>>& polyline;

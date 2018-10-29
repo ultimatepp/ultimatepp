@@ -176,8 +176,10 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	rasterizer.Reset();
 
 	PathJob j(rasterizer, width, ischar, dopreclip, path_min, path_max, pathattr);
-	if(j.preclipped)
+	if(j.preclipped) {
+		current = Null;
 		return newclip;
+	}
 	
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {

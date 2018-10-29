@@ -1,7 +1,8 @@
 uses
 	Draw,
 	Painter,
-	plugin/glew;
+	plugin/glew,
+	plugin/tess2;
 
 file
 	GLDraw.h,
@@ -22,7 +23,10 @@ file
 	Arc.cpp,
 	Text.cpp,
 	Triangles.cpp,
-	DrawGL.cpp,
+	Tellipse.cpp,
+	Tpolyline.cpp,
+	Tpolygon.cpp,
+	TDrawGL.cpp,
 	PainterGL.cpp,
 	todo.txt;
 

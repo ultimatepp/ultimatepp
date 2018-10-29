@@ -1,7 +1,11 @@
+- fix ellipse line issue
+- colored texture paints (optimize text)
+- colored alpha texture paints
+- unify texture draw code
+
 - make banded glyphs
 - make alpha textures
 - alpha atlas
-- colored texture paints (optimize text)
 - optimize draw rect
 
 DONE:
