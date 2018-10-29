@@ -93,13 +93,12 @@ public:
 
 void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid);
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const Image& img);
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img);
 
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src);
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src);
 void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src);
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img);
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img);
 
 class GLTextureDraw {
 	GLuint framebuffer = 0;

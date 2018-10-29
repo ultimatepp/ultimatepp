@@ -5,7 +5,7 @@ namespace Upp {
 void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh, Sizef scale,
                     double width, Color color)
 {
-	if(IsNull(color))
+	if(IsNull(color) || width <= 0)
 		return;
 
 	static GLCode program(R"(

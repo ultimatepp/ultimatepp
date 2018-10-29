@@ -64,56 +64,6 @@ const GLVertexData& GLRectMesh()
 	return mesh;
 }
 
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid)
-{
-	static GLCode program(R"(
-		#version 330 core
-		uniform vec2 offset;
-		uniform vec2 scale;
-	    in      vec2 aPos;
-		out     vec2 tPos;
-	    void main()
-	    {
-			gl_Position = vec4(scale * aPos + offset, 0, 1);
-			tPos = aPos;
-	    }
-	)", R"(
-		#version 330 core
-		in vec2 tPos;
-		uniform float alpha;
-		uniform sampler2D s_texture;
-		void main()
-		{
-			vec4 v = texture2D(s_texture, tPos);
-			gl_FragColor = alpha * clamp(v, vec4(0, 0, 0, 0), v.aaaa); // clamp fixes non-premultiplied textures
-		}
-	)");
-
-	static int offset = program["offset"];
-	static int scale = program["scale"];
-	static int ialpha = program["alpha"];
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-	glBindTexture(GL_TEXTURE_2D, textureid);
-	GLRectMesh().Draw(
-		program(offset, dd.vs * rect.TopLeft() + Sizef(-1, 1))
-		       (scale, dd.vs * rect.GetSize())
-		       (ialpha, dd.alpha)
-	);
-}
-
-void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img)
-{
-	GLDrawTexture(dd, rect, img.GetID());
-}
-
-void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img)
-{
-	GLDrawTexture(dd, rect, GetTextureForImage(img));
-}
-
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src)
 {
 	static GLCode program(R"(
@@ -173,6 +123,16 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& im
 void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src)
 {
 	GLDrawTexture(dd, rect, GetTextureForImage(img), img.GetSize(), src);
+}
+
+void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img)
+{
+	GLDrawTexture(dd, rect, img, img.GetSize());
+}
+
+void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img)
+{
+	GLDrawTexture(dd, rect, img, img.GetSize());
 }
 
 };
