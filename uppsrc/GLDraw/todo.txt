@@ -2,6 +2,7 @@
 - colored texture paints (optimize text)
 - colored alpha texture paints
 - unify texture draw code
+- GLTextureDraw - correct RGBA handling
 
 - make banded glyphs
 - make alpha textures

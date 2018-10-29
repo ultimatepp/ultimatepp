@@ -57,7 +57,7 @@ void GLDrawPolygons(const GLContext2D& dd, bool generic, Pointf at, const GLVert
 	static int iscale = program["scale"];
 	static int icolor = program["color"];
 
-	program(ioffset, Pointf(dd.vs) * at + Sizef(-1, 1))
+	program(ioffset, Pointf(dd.vs) * at + dd.off)
 	       (iscale, dd.vs * scale);
 
 	if(generic) {

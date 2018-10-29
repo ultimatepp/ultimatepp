@@ -16,7 +16,6 @@ file
 	Code.cpp,
 	VertexData.cpp,
 	GLTexture.cpp,
-	DrawTexture.cpp,
 	Polygon.cpp,
 	Line.cpp,
 	Ellipse.cpp,
@@ -28,5 +27,6 @@ file
 	Tpolygon.cpp,
 	TDrawGL.cpp,
 	PainterGL.cpp,
+	TextureDraw.cpp,
 	todo.txt;
 

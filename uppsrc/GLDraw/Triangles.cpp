@@ -43,7 +43,7 @@ void GLTriangles::Draw(const GLContext2D& dd)
 	glDisable(GL_DEPTH_TEST);
 //	glDepthFunc(GL_LEQUAL);
 	
-	program(ioffset, Sizef(-1, 1))
+	program(ioffset, dd.off)
 	       (iscale, dd.vs)
 	;
 	

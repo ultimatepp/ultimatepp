@@ -18,7 +18,7 @@ void Ellipse(GLTriangles& tr, Pointf center, Sizef radius, Color color,
 			step[i] = 256 / min(s, 256);
 		}
 	}
-	int rmin = min(radius.cx, radius.cy);
+	double rmin = min(radius.cx, radius.cy);
 	if(rmin <= 1e-100)
 		return;
 

@@ -22,6 +22,7 @@ void GLTextureDraw::Clear()
 GLTexture GLTextureDraw::GetResult()
 {
 	ASSERT(texture);
+	Flush();
 	GLTexture t;
 	if(msaa > 1) {
 		GLuint framebuffer2, texture2, rbo2;
@@ -31,7 +32,7 @@ GLTexture GLTextureDraw::GetResult()
 		glGenTextures(1, &texture2);
 		
 		glBindTexture(GL_TEXTURE_2D, texture2);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -80,13 +81,13 @@ void GLTextureDraw::Create(Size sz_, int msaa_)
 	
 	if(msaa > 1) {
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texture);
-		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RGBA, sz.cx, sz.cy, GL_TRUE);
+		glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, msaa, GL_RGB, sz.cx, sz.cy, GL_TRUE);
 		glEnable(GL_MULTISAMPLE);
 		glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 	}
 	else {
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sz.cx, sz.cy, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -109,6 +110,10 @@ void GLTextureDraw::Create(Size sz_, int msaa_)
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glViewport(0, 0, sz.cx, sz.cy);
+	
+	DrawGL::Init(sz, 1);
+	dd.vs.cy *= -1;
+	dd.off = Sizef(-1, -1);
 }
 
 };
