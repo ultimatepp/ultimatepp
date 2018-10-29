@@ -95,7 +95,7 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size
 
 	if(tsz.cx * tsz.cy == 0)
 		return;
-
+	
 	static int ioffset = program["offset"];
 	static int iscale = program["scale"];
 	static int ialpha = program["alpha"];
@@ -107,7 +107,7 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size
 
 	glBindTexture(GL_TEXTURE_2D, textureid);
 	GLRectMesh().Draw(
-		program(ioffset, dd.vs * rect.TopLeft() + Sizef(-1, 1))
+		program(ioffset, dd.vs * rect.TopLeft() + dd.off)
 		       (iscale, dd.vs * rect.GetSize())
 		       (ialpha, dd.alpha)
 		       (itoffset, Sizef((float)src.left / tsz.cx, (float)src.top / tsz.cy))

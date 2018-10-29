@@ -36,7 +36,7 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 	static int iwidth = program["width"];
 	static int icolor = program["color"];
 
-	program(ioffset, Pointf(dd.vs) * at + Sizef(-1, 1))
+	program(ioffset, Pointf(dd.vs) * at + dd.off)
 	       (iscale, dd.vs)
 	       (iscale2, scale)
 	       (iwidth, Sizef(width / 2, width / 2))

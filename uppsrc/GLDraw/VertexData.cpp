@@ -79,7 +79,6 @@ GLVertexData& GLVertexData::Index(const int *indices, int count)
 void GLVertexData::Draw(int mode) const
 {
 	if(data) {
-//		RTIMING("GLVertexData::Draw");
 		GL_TIMING("GLVertexData::Draw");
 		glBindVertexArray(data->VAO);
 		glDrawElements(mode, data->elements, GL_UNSIGNED_INT, 0);

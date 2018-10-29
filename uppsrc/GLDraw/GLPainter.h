@@ -16,11 +16,12 @@ namespace Upp {
 
 struct GLContext2D { // TODO: This should be changed to regular matrix (later)
 	Sizef  vs;
+	Sizef  off = Sizef(-1, 1);
 	double alpha = 1;
 	
 	void Set(Size sz)    { vs = Sizef(2.0 / sz.cx, -2.0 / sz.cy); }
 	
-	GLContext2D(Size sz) { Set(sz); }
+	GLContext2D(Size sz) { Set(vs); }
 	GLContext2D()        {}
 };
 
@@ -93,30 +94,11 @@ public:
 
 void GLBind(const Image& img, dword style = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 
-
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src);
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img, const Rect& src);
 void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img, const Rect& src);
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, const GLTexture& img);
 void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img);
-
-class GLTextureDraw {
-	GLuint framebuffer = 0;
-    GLuint texture = 0;
-	GLuint rbo = 0;
-	Size   sz;
-	int    msaa = 0;
-
-public:
-	void      Clear();
-	void      Create(Size sz, int msaa = 0);
-	GLTexture GetResult();
-	operator  GLTexture()                { return GetResult(); }
-
-	GLTextureDraw()                      {}
-	GLTextureDraw(Size sz, int msaa = 0) { Create(sz, msaa); }
-	~GLTextureDraw()                     { Clear(); }
-};
 
 class GLVertexData {
 	struct Data {
@@ -284,6 +266,8 @@ private:
 	void   ApplyDash(Vector<Vector<Pointf>>& polyline, int& width);
 	void   DoDrawPolylines(Vector<Vector<Pointf>>& poly, int width, Color color, bool close = false);
 	void   DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color);
+	
+	friend class GLTextureDraw;
 
 public:
 	using Draw::Clip;
@@ -297,6 +281,24 @@ public:
 	DrawGL() {}
 	DrawGL(Size sz, double alpha = 1)       { Init(sz, alpha); }
 	~DrawGL();
+};
+
+class GLTextureDraw : public DrawGL {
+	GLuint framebuffer = 0;
+    GLuint texture = 0;
+	GLuint rbo = 0;
+	Size   sz;
+	int    msaa = 0;
+
+public:
+	void      Clear();
+	void      Create(Size sz, int msaa = 0);
+	GLTexture GetResult();
+	operator  GLTexture()                { return GetResult(); }
+
+	GLTextureDraw()                      {}
+	GLTextureDraw(Size sz, int msaa = 0) { Create(sz, msaa); }
+	~GLTextureDraw()                     { Clear(); }
 };
 
 };
