@@ -2,9 +2,8 @@
 #define _GLDrawDemo_Ugl_h_
 
 namespace Upp {
-
-#define GL_TIMING(x)      // RTIMING(x); GL_TIMING_FINISH__ COMBINE(sGlTiming, __LINE__)
-struct GL_TIMING_FINISH__ { ~GL_TIMING_FINISH__() { glFinish(); } };
+	
+#define GL_TIMING(x)
 
 #ifdef _DEBUG
 #define GLCHK(x) do { \
@@ -197,15 +196,29 @@ class GLTriangles {
 	int            ii = 0;
 
 public:
-	int  Vertex(Pointf p, Color c, double alpha = 1) { pos << (float)p.x << (float)p.y << (float)alpha; color << c.GetR() << c.GetG() << c.GetB(); return ii++; }
-	void Triangle(int a, int b, int c)               { elements << a << b << c; }
+	int  Vertex(float x, float y, byte r, byte g, byte b, double alpha) {
+		pos << x << y << (float)alpha;
+		color << r << g << b;
+		return ii++;
+	}
+
+	int  Vertex(float x, float y, Color c, double alpha)  { return Vertex(x, y, c.GetR(), c.GetG(), c.GetB(), alpha); }
+	int  Vertex(Pointf p, Color c, double alpha)          { return Vertex((float)p.x, (float)p.y, c, alpha); }
+	int  Vertex(int x, int y, Color c, double alpha)      { return Vertex((float)x, (float)y, c, alpha); }
+
+	void Triangle(int a, int b, int c)                    { elements << a << b << c; }
 	
+	void Clear()                                          { elements.Clear(); pos.Clear(); color.Clear(); ii = 0; }
+
 	void Draw(const GLContext2D& dd);
 };
 
+void Ellipse(GLTriangles& tr, Pointf center, Sizef radius, Color color, double width, Color line_color, double alpha);
+void Polyline(GLTriangles& tr, const Vector<Pointf>& p, double width, Color color, double alpha, bool close);
+
 #include "GLPainter.hpp"
 
-class DrawGL : public NilPainter {
+class DrawGL : public NilPainter, GLTriangles {
 public:
 	virtual dword GetInfo() const;
 
@@ -218,10 +231,8 @@ public:
 	virtual void EndOp();
 	virtual bool IsPaintingOp(const Rect& r) const;
 
-	virtual void SysDrawImageOp(int x, int y, const Image& img, Color color);
-	virtual void SysDrawImageOp(int x, int y, const Image& img, const Rect& src, Color color);
 	virtual void DrawRectOp(int x, int y, int cx, int cy, Color color);
-
+	virtual void DrawImageOp(int x, int y, int cx, int cy, const Image& image, const Rect& src, Color color);
 	virtual void DrawTextOp(int x, int y, int angle, const wchar *text, Font font, Color ink, int n, const int *dx);
 
 	virtual void DrawArcOp(const Rect& rc, Point start, Point end, int width, Color color);
@@ -237,7 +248,6 @@ public:
 	virtual void StrokeOp(double width, const RGBA& rgba);
 	virtual void FillOp(const RGBA& color);
 	virtual void DashOp(const Vector<double>& dash, double start);
-
 
 private:
 	struct Cloff : Moveable<Cloff> {
@@ -255,12 +265,14 @@ private:
 	Array<State>  state;
 	GLContext2D   dd;
 	Size          view_size;
+	Rect          scissor;
 
 	Pointf prev;
 	Vector<Vector<Pointf>> path;
-	bool path_done;
+	bool   path_done;
+	bool   close_path;
 	double dash_start;
-	Vector<double> dash;
+	Vector<double> dash, path_dash;
 
 	void   Push();
 	Pointf Off(int x, int y);
@@ -271,11 +283,17 @@ private:
 	void   DoPath(Vector<Vector<Pointf>>& poly, const Point *pp, const Point *end);
 	static const Vector<double>& GetDash(int& width);
 	void   ApplyDash(Vector<Vector<Pointf>>& polyline, int& width);
+	void   DoDrawPolylines(Vector<Vector<Pointf>>& poly, int width, Color color, bool close = false);
+	void   DoDrawPolygons(const Vector<Vector<Pointf>>& path, Color color);
 
 public:
+	using Draw::Clip;
+
 	void Init(Size sz, double alpha = 1);
 	
-	operator const GLContext2D&() const     { return dd; }
+	void Flush();
+	
+	operator const GLContext2D&()           { Flush(); return dd; }
 
 	DrawGL() {}
 	DrawGL(Size sz, double alpha = 1)       { Init(sz, alpha); }

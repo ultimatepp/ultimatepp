@@ -74,6 +74,8 @@ void Painter::DrawRectOp(int x, int y, int cx, int cy, Color color)
 
 void Painter::DrawImageOp(int x, int y, int cx, int cy, const Image& image, const Rect& src, Color color)
 {
+	if(src.GetWidth() * src.GetHeight() == 0)
+		return;
 	Image img = IsNull(color) ? image : SetColorKeepAlpha(image, color);
 	RectPath(x, y, cx, cy);
 	double sw = (double)cx / src.GetWidth();
@@ -88,25 +90,25 @@ void Painter::DrawLineStroke(int width, Color color)
 	Begin();
 	LineCap(LINECAP_ROUND);
 	switch(width) {
-		case PEN_NULL:
-			Stroke(0, color);
-			End();
-			return;
-		case PEN_SOLID:
-			Stroke(1, color);
-			break;
-		case PEN_DASH:
-			Dash("18 6");
-			break;
-		case PEN_DOT:
-			Dash("3 3");
-			break;
-		case PEN_DASHDOT:
-			Dash("9 6 3 6");
-			break;
-		case PEN_DASHDOTDOT:
-			Dash("9 3 3 3 3 3");
-			break;
+	case PEN_NULL:
+		Stroke(0, color);
+		End();
+		return;
+	case PEN_SOLID:
+		Stroke(1, color);
+		break;
+	case PEN_DASH:
+		Dash("18 6");
+		break;
+	case PEN_DOT:
+		Dash("3 3");
+		break;
+	case PEN_DASHDOT:
+		Dash("9 6 3 6");
+		break;
+	case PEN_DASHDOTDOT:
+		Dash("9 3 3 3 3 3");
+		break;
 	default:
 		Stroke(width == 0 ? 1 : width, color);
 		End();

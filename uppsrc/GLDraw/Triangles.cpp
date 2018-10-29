@@ -4,6 +4,9 @@ namespace Upp {
 
 void GLTriangles::Draw(const GLContext2D& dd)
 {
+	if(elements.GetCount() == 0)
+		return;
+
 	static GLCode program(R"(
 		#version 330 core
 	    in vec3 p;
@@ -33,9 +36,12 @@ void GLTriangles::Draw(const GLContext2D& dd)
 	va.Add(color, 3);
 	va.Index(elements);
 	
-	glDisable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glDisable(GL_DEPTH_TEST);
+//	glDepthFunc(GL_LEQUAL);
 	
 	program(ioffset, Sizef(-1, 1))
 	       (iscale, dd.vs)

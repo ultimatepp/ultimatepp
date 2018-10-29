@@ -66,7 +66,6 @@ const GLVertexData& GLRectMesh()
 
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid)
 {
-	GL_TIMING("GLDrawTexture");
 	static GLCode program(R"(
 		#version 330 core
 		uniform vec2 offset;
@@ -85,7 +84,8 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid)
 		uniform sampler2D s_texture;
 		void main()
 		{
-		   gl_FragColor = alpha * texture2D(s_texture, tPos);
+			vec4 v = texture2D(s_texture, tPos);
+			gl_FragColor = alpha * clamp(v, vec4(0, 0, 0, 0), v.aaaa); // clamp fixes non-premultiplied textures
 		}
 	)");
 
@@ -116,7 +116,6 @@ void GLDrawImage(const GLContext2D& dd, const Rectf& rect, const Image& img)
 
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src)
 {
-	GL_TIMING("GLDrawTexture src");
 	static GLCode program(R"(
 		#version 330 core
 		uniform vec2 offset;
@@ -139,9 +138,13 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size
 		uniform sampler2D s_texture;
 		void main()
 		{
-		   gl_FragColor = alpha * texture2D(s_texture, tPos);
+			vec4 v = texture2D(s_texture, tPos);
+			gl_FragColor = alpha * clamp(v, vec4(0, 0, 0, 0), v.aaaa); // clamp fixes non-premultiplied textures
 		}
 	)");
+
+	if(tsz.cx * tsz.cy == 0)
+		return;
 
 	static int ioffset = program["offset"];
 	static int iscale = program["scale"];
