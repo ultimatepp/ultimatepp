@@ -160,7 +160,7 @@ DirDiffDlg::DirDiffDlg()
 	clearFind.RightPosZ(1, 16).VSizePosZ(1, 1);
 	find.AddChild(&clearFind);
 	
-	files_pane.Add(info.SetAlign(ALIGN_RIGHT).TopPos(3 * cy + 3 * div, bcy).RightPos(1, 70));
+	files_pane.Add(info.SetAlign(ALIGN_RIGHT).TopPos(3 * cy + 3 * div, bcy).RightPos(1, Zx(70)));
 	files_pane.Add(compare.TopPos(2 * cy + 2 * div, bcy).RightPos(0, bcx));
 	files_pane.Add(files.VSizePos(3 * cy + bcy + 4 * div, 22).HSizePos());
 	files_pane.Add(find.HSizePosZ(4, 4).BottomPosZ(4, 19));
