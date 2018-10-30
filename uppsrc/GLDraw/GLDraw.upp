@@ -13,6 +13,7 @@ file
 	"HW accelerated" readonly separator,
 	GLPainter.h,
 	GLPainter.hpp,
+	PerfCounters.cpp,
 	Code.cpp,
 	VertexData.cpp,
 	GLTexture.cpp,

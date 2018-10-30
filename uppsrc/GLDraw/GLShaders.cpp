@@ -112,12 +112,15 @@ void GLProgram::Clear()
 		glDeleteShader(fragment_shader);
 }
 
+extern int sProgramCounter;
+
 void GLProgram::Use()
 {
 	static int64 currentid;
 	if(currentid != serialid) {
 		currentid = serialid;
 		glUseProgram(program);
+		sProgramCounter++;
 	}
 }
 
