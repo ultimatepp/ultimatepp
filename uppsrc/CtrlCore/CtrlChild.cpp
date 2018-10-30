@@ -4,25 +4,11 @@ namespace Upp {
 
 #define LLOG(x)   // DLOG(x)
 
-bool Ctrl::HasDHCtrl() const
-{
-	GuiLock __;
-	if(dynamic_cast<const DHCtrl *>(this))
-		return true;
-	for(Ctrl *q = GetFirstChild(); q; q = q->next)
-		if(q->HasDHCtrl())
-			return true;
-	return false;
+bool Ctrl::IsDHCtrl() const {
+	return dynamic_cast<const DHCtrl *>(this);
 }
 
-void Ctrl::SyncDHCtrl()
-{
-	GuiLock __;
-	Ctrl *p = GetTopCtrl();
-	p->hasdhctrl = p->HasDHCtrl();
-}
-
-void  Ctrl::AddChild(Ctrl *q, Ctrl *p)
+void Ctrl::AddChild(Ctrl *q, Ctrl *p)
 {
 	GuiLock __;
 	ASSERT(q);
@@ -68,8 +54,6 @@ void  Ctrl::AddChild(Ctrl *q, Ctrl *p)
 	q->ParentChange();
 	if(updaterect && GetTopCtrl()->IsOpen())
 		q->StateH(OPEN);
-	if(dynamic_cast<DHCtrl *>(q))
-		SyncDHCtrl();
 }
 
 void Ctrl::AddChild(Ctrl *child)
@@ -100,8 +84,6 @@ void  Ctrl::RemoveChild0(Ctrl *q)
 	if(q->next)
 		q->next->prev = q->prev;
 	q->next = q->prev = NULL;
-	if(dynamic_cast<DHCtrl *>(q))
-		SyncDHCtrl();
 }
 
 void  Ctrl::RemoveChild(Ctrl *q)

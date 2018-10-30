@@ -171,8 +171,8 @@ void RichTextView::RefreshRange(int a, int b)
 	int h = min(max(a, b) + 1, GetLength());
 	if(l == h)
 		return;
-	Rect r1 = text.GetCaret(l, GetPage());
-	Rect r2 = text.GetCaret(h, GetPage());
+	Rect r1 = text.GetCaret(l, GetPage()) + margin.TopLeft();
+	Rect r2 = text.GetCaret(h, GetPage()) + margin.TopLeft();
 	Zoom zoom = GetZoom();
 	Refresh(Rect(0, zoom * (r1.top - sb), GetSize().cx, zoom * (r2.bottom - sb + zoom.d - 1)));
 }

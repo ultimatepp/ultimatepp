@@ -507,7 +507,6 @@ private:
 	bool         popup:1;
 	bool         popupgrab:1;
 	byte         backpaint:2;//2
-	bool         hasdhctrl:1;
 
 	bool         akv:1;
 	bool         destroying:1;
@@ -635,8 +634,6 @@ private:
 	void    UpdateArea(SystemDraw& draw, const Rect& clip);
 	Ctrl   *GetTopRect(Rect& r, bool inframe, bool clip = true);
 	void    DoSync(Ctrl *q, Rect r, bool inframe);
-	bool    HasDHCtrl() const;
-	void    SyncDHCtrl();
 	void    SetInfoPart(int i, const char *txt);
 	String  GetInfoPart(int i) const;
 
@@ -725,6 +722,8 @@ private:
 #endif
 
 	static void InstallPanicBox();
+	
+	bool IsDHCtrl() const;
 
 private:
 			void    DoRemove();

@@ -21,7 +21,7 @@ void Ctrl::RefreshFrame(const Rect& r) {
 	LLOG("RefreshRect " << Name() << ' ' << r);
 	if(GuiPlatformRefreshFrameSpecial(r))
 		return;
-	if(!top && !hasdhctrl) {
+	if(!top && !IsDHCtrl()) {
 		if(InFrame())
 			parent->RefreshFrame(r + GetRect().TopLeft());
 		else
@@ -168,7 +168,7 @@ void  Ctrl::ScrollView(const Rect& _r, int dx, int dy)
 #else
 	if(IsFullRefresh() || !IsVisible())
 		return;
-	if(hasdhctrl) {
+	if(IsDHCtrl()) {
 		Refresh(_r);
 		return;
 	}
@@ -603,7 +603,7 @@ void Ctrl::UpdateArea0(SystemDraw& draw, const Rect& clip, int backpaint)
 		LLOG("========== END (TARGET IS BACKBUFFER)");
 		return;
 	}
-	if(backpaint == FULLBACKPAINT || globalbackpaint/* && !hasdhctrl && !dynamic_cast<DHCtrl *>(this)*/) {
+	if(backpaint == FULLBACKPAINT || globalbackpaint) {
 		ShowRepaintRect(draw, clip, LtRed());
 		BackDraw bw;
 		bw.Create(draw, clip.GetSize());
