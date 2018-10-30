@@ -78,7 +78,7 @@ public:
 	void     Clear();
 	void     Set(const Image& img, dword flags = TEXTURE_LINEAR|TEXTURE_MIPMAP);
 	
-	void     Bind() const       { if(data) glBindTexture(GL_TEXTURE_2D, data->textureid); }
+	void     Bind() const;
 	int      GetID() const      { return data ? data->textureid : 0; }
 	operator GLuint() const     { return GetID(); }
 	Size     GetSize() const    { return data ? data->sz : Size(0, 0); }
@@ -300,6 +300,12 @@ public:
 	GLTextureDraw(Size sz, int msaa = 0) { Create(sz, msaa); }
 	~GLTextureDraw()                     { Clear(); }
 };
+
+void GLClearCounters();
+int  GLElementCounter();
+int  GLTextureCounter();
+int  GLProgramCounter();
+int  GLDrawCounter();
 
 };
 

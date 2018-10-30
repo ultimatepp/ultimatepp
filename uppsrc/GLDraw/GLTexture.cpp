@@ -1,7 +1,7 @@
 #include "GLDraw.h"
 
 namespace Upp {
-
+	
 void GLTexture::Clear()
 {
 	if(data && --data->refcount == 0) {
@@ -25,6 +25,16 @@ void GLTexture::Set(const Image& img, dword flags)
 	Set(CreateGLTexture(img, flags), img.GetSize(), img.GetHotSpot());
 }
 
+extern int sTextureCounter;
+
+void GLTexture::Bind() const
+{
+	if(data) {
+		glBindTexture(GL_TEXTURE_2D, data->textureid);
+		sTextureCounter++;
+	}
+}
+
 GLTexture::GLTexture(const GLTexture& src)
 {
 	data = src.data;
@@ -43,7 +53,9 @@ GLTexture& GLTexture::operator=(const GLTexture& src)
 
 void GLBind(const Image& img, dword style)
 {
+	extern int sTextureCounter;
 	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(style, img));
+	sTextureCounter++;
 }
 
 const GLVertexData& GLRectMesh()
@@ -106,6 +118,7 @@ void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size
 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 	glBindTexture(GL_TEXTURE_2D, textureid);
+	sTextureCounter++;
 	GLRectMesh().Draw(
 		program(ioffset, dd.vs * rect.TopLeft() + dd.off)
 		       (iscale, dd.vs * rect.GetSize())

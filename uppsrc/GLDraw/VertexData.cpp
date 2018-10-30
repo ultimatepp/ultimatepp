@@ -76,6 +76,9 @@ GLVertexData& GLVertexData::Index(const int *indices, int count)
 	return *this;
 }
 
+extern int sDrawCounter;
+extern int sElementCounter;
+
 void GLVertexData::Draw(int mode) const
 {
 	if(data) {
@@ -83,6 +86,8 @@ void GLVertexData::Draw(int mode) const
 		glBindVertexArray(data->VAO);
 		glDrawElements(mode, data->elements, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
+		sDrawCounter++;
+		sElementCounter += data->elements;
 	}
 }
 
