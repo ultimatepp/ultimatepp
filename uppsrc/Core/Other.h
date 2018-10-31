@@ -436,7 +436,7 @@ T& LRUCache<T, K>::GetLRU()
 }
 
 template <class T, class K>
-const K& LRUCacheKeyRet<T, K>::GetLRUKey()
+const K& LRUCache<T, K>::GetLRUKey()
 {
 	int tail = data[head].prev;
 	return key[tail].key;

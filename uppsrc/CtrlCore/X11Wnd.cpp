@@ -536,7 +536,7 @@ void Ctrl::WndDestroy()
 	LLOG("WndDestroy " << Name());
 	if(!top || !isopen) return;
 	AddGlobalRepaint();
-	bool revertfocus = HasWndFocus();
+	bool revertfocus = HasWndFocus() || !GetFocusCtrl();
 	for(int i = 0; i < Xwindow().GetCount(); i++) {
 		LOGBEGIN();
 		XWindow& w = Xwindow()[i];
