@@ -1,6 +1,6 @@
 SSH package for U++
 --------------------
-SSH package is a flexible and easy-to-use libssh2 wrapper for Ultimate++.
+SSH package is a flexible, easy-to-use, yet powerful libssh2 wrapper for Ultimate++.
 It supports both console and GUI-based applications on POSIX-compliant operating systems and
 MS Windows (tm).
 
@@ -10,37 +10,37 @@ Classes:
 - Base (core) class  -> Ssh
   - Ssh session        -----> SshSession
   - Sftp subsystem     -----> SFtp
+     -  SFtp Stream interface       -----> SFtpStream
+     -  File system transparency    -----> SFtpFileSystemInfo 
   - Ssh channel        -----> SshChannel
       - Scp channel                 -----> Scp
       - Exec channel                -----> SshExec
       - Real-time interactive shell -----> SshShell
       - X11 forwarding              -----> SshShell (as operation mode)      
       - Tcp/IP and port forwarding  -----> SshTunnel
-
 - Known hosts manager -> SshHosts
 
 Features and Highlights:
 --------------------
 
 - Ssh-derived classes have pick semantics, based on RAII principle, support RTTI, and allow
-  polymorphism (i.e. different classes can be stored in the same arrays, etc.) through a common
+  polymorphism (i.e. different classes can be stored in the same array, etc.) through a common
   interface. 
-- Uses U++ memory allocators (Native allocators is also a compile-time option)
+- Uses U++'s memory manager (Native manager (malloc) is also a compile-time option)
 - Uses OpenSSL by default. 
+- Supports multithreading.
 - Supports 3rd-party network proxies.
 - Supports known hosts verification mechanism.
 - Supports password, public key, host-based, and keyboard-interactive authentication methods.
 - Supports ssh-agents.
 - Supports real-time interactive command line (shell) interface with both console and GUI integration
-  (works on both Windows and Posix-compliant OS'es)
-- Supports multiple X11 connection forwarding.
+  (SshShell works on both Windows and Posix-compliant OSes)
+- Supports X11 forwarding. 
+  (A single SShShell instance is capable of handling multiple X11 requests simultaneously.)
 - Supports Tcp/IP and port forwarding.
+- Supports stream operations on SFTP objects.
+- Supports access to sftp folder hiearcy in a file-system-agnostic (transparent) way.
 - Supports detailed (full) debug logging.
-
-Todo:
---------------------
-
-- Improve documentation.
 
 Reference examples:
 -------------------

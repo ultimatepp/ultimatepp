@@ -627,33 +627,38 @@ SFtp::DirEntry::DirEntry(const String& path, const SFtpAttrs& attrs)
 	*a = attrs;
 }
 
-// Experimental stuff!
 Array<FileSystemInfo::FileInfo> SFtpFileSystemInfo::Find(String mask, int max_count, bool unmounted) const
 {
 	ASSERT(browser);
-
-	// TODO: Handle wildcards and "root" properly.
-	
 	Array<FileInfo> fi;
+	String dir;
 	if(!browser->InProgress()) {
 		if(IsNull(mask))
-			mask = browser->GetDefaultDir();
-		mask.Replace("*", "");
-		auto e = browser->GetInfo(mask);
-		if(e) {
-			if(e.IsDirectory()) {
-				if(max_count == 1) {
-					fi.Add(e.ToFileInfo());
-				}
-				else {
-					SFtp::DirList ls;
-					if(browser->ListDir(mask, ls))
-						for(const auto& ee : ls)
-							fi.Add(ee.ToFileInfo());
+			dir = browser->GetDefaultDir();
+		else {
+			String s;
+			dir = GetFileDirectory(browser->RealizePath(mask, s) ? s : mask);
+		}
+		bool haswc = HasWildcards(mask);
+		if(!haswc && max_count == 1) {
+			const SFtp::DirEntry& e = browser->GetInfo(mask);
+			if(e)
+				fi.Add(e.ToFileInfo());
+		}
+		else {
+			String pattern;
+			SFtp::DirList ls;
+			if(browser->ListDir(dir, ls)) {
+				if(haswc)
+					pattern = GetFileName(mask);
+				for(int i = 0, j = 0; i < ls.GetCount() && j < max_count; i++) {
+					const SFtp::DirEntry& e = ls[i];
+					if(!haswc || (haswc && PatternMatch(pattern, e.GetName()))) {
+						fi.Add(e.ToFileInfo());
+						j++;
+					}
 				}
 			}
-			else
-				fi.Add(e.ToFileInfo());
 		}
 	}
 	return pick(fi);
