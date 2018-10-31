@@ -38,6 +38,8 @@ CONSOLE_APP_MAIN
 		SFtpGet(session);
 #elif defined(SSH_SFTP_STREAM)
 		SFtpStreamGet(session);
+#elif defined(SSH_SFTP_TRANSPARENCY)
+		SFtpTransparency(session);
 #elif defined(SSH_SFTP_MT)
 		SFtpAsyncGet(session);
 #elif defined(SSH_EXEC)
