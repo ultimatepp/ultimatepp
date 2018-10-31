@@ -10,6 +10,7 @@ file
 	"Core examples" readonly separator,
 	SFtp.cpp,
 	SFtpStream.cpp,
+	SFtpFileSystemInfo.cpp,
 	Exec.cpp,
 	Scp.cpp,
 	Shell.cpp,
