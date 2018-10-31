@@ -21,7 +21,7 @@ directory listings etc. SFtp class is derived from [^topic`:`/`/Core`/SSH`/src`/
 sh] base class, and has pick semantics. See also [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:DirEntry`:`:class^ S
 Ftp`::DirEntry], [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtpFileSystemInfo`:`:class^ S
 FtpFileSystemInfo], and [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtpStream`_en`-us`#Upp`:`:SFtpStream`:`:class^ S
-FtpStream],  classes.&]
+FtpStream]  classes.&]
 [s0;#l288; &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
@@ -530,6 +530,14 @@ other]]
 :: [s0; [C rwxrwxrwx]]}}&]
 [s3;%- &]
 [s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:SFtp`:`:DirEntry`:`:ToFileInfo`(`)const:%- [_^Upp`:`:FileSystemInfo`:`:FileInfo^ F
+ileSystemInfo`::FileInfo]_[* ToFileInfo]()_[@(0.0.255) const]&]
+[s2; Converts the DirEntry object to FileSystemInfo:FileInfo object. 
+See[^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtpFileSystemInfo`:`:class^  
+SFtpFileSystemInfo].&]
+[s3;%- &]
+[s0;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
 [s3;%- &]
 [s5;:Upp`:`:SFtp`:`:DirEntry`:`:DirEntry`(`):%- [* DirEntry]()&]

@@ -640,8 +640,8 @@ Array<FileSystemInfo::FileInfo> SFtpFileSystemInfo::Find(String mask, int max_co
 			dir = GetFileDirectory(browser->RealizePath(mask, s) ? s : mask);
 		}
 		bool haswc = HasWildcards(mask);
-		if(!haswc && max_count == 1) {
-			const SFtp::DirEntry& e = browser->GetInfo(mask);
+		if(!haswc && max_count == 1) { // A small optimization.
+			SFtp::DirEntry e = browser->GetInfo(mask);
 			if(e)
 				fi.Add(e.ToFileInfo());
 		}
