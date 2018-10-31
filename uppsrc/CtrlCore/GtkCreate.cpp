@@ -103,7 +103,7 @@ void Ctrl::WndDestroy()
 				LLOG("Changing owner");
 				gtk_window_set_transient_for((GtkWindow *)wins[i].gtk, owner->gtk());
 			}
-		if(HasFocusDeep())
+		if(HasFocusDeep() || !GetFocusCtrl())
 			activeCtrl = owner;
 	}
 	g_object_unref(top->im_context);
