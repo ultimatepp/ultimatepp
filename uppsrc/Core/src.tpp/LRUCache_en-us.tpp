@@ -1,5 +1,4 @@
 topic "LRUCache";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "LRUCache";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 LRUCache]]}}&]
 [s1;@(0.0.255)3 &]
@@ -73,6 +73,12 @@ parameter) to retrieve the size of individual data items.&]
 [s5;:LRUCache`:`:GetLRU`(`): [*@4 T][@(0.0.255) `&]_[* GetLRU]()&]
 [s2;%% Returns a reference to the least recently used data item in 
 the cache (candidate for removal).&]
+[s3; &]
+[s4; &]
+[s5;:Upp`:`:LRUCache`:`:GetLRUKey`(`): [@(0.0.255) const]_[*@4 K][@(0.0.255) `&]_[* GetLRUKey
+]()&]
+[s2;%% Returns the key of the least recently used data item in the 
+cache (candidate for removal).&]
 [s3; &]
 [s4; &]
 [s5;:LRUCache`:`:DropLRU`(`): [@(0.0.255) void]_[* DropLRU]()&]

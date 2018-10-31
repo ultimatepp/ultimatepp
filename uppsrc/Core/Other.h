@@ -376,9 +376,10 @@ public:
 
 	template <class P> void AdjustSize(P getsize);
 
-	T&   GetLRU();
-	void DropLRU();
-	void Shrink(int maxsize, int maxcount = 30000);
+	T&       GetLRU();
+	const K& GetLRUKey();
+	void     DropLRU();
+	void     Shrink(int maxsize, int maxcount = 30000);
 
 	template <class P> int  Remove(P predicate);
 	template <class P> bool RemoveOne(P predicate);
@@ -432,6 +433,13 @@ T& LRUCache<T, K>::GetLRU()
 {
 	int tail = data[head].prev;
 	return *data[tail].data;
+}
+
+template <class T, class K>
+const K& LRUCacheKeyRet<T, K>::GetLRUKey()
+{
+	int tail = data[head].prev;
+	return key[tail].key;
 }
 
 template <class T, class K>
