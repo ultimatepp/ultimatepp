@@ -144,6 +144,7 @@ void Ctrl::WndDestroy()
 	LLOG("WndDestroy " << Name());
 	if(!top)
 		return;
+	bool focus = HasFocusDeep();
 	Ptr<Ctrl> owner = GetOwner();
 	[top->coco->window close];
 	delete top->coco;
@@ -153,7 +154,7 @@ void Ctrl::WndDestroy()
 	int ii = FindIndex(mmtopctrl, this);
 	if(ii >= 0)
 		mmtopctrl.Remove(ii);
-	if(owner && owner->IsOpen())
+	if(owner && owner->IsOpen() && (focus || !GetFocusCtrl()))
 		owner->SetWndFocus();
 }
 
