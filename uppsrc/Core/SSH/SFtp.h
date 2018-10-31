@@ -231,18 +231,18 @@ public:
     SFtpFileIn()                               {}
 };
 
-// Experimental stuff!
-
 class SFtpFileSystemInfo : public FileSystemInfo {
 public:
     SFtpFileSystemInfo& Mount(SFtp& sftp)       { browser = &sftp; return *this; }
-    int                 GetStyle() const final  { return STYLE_POSIX; }
-    operator            FileSystemInfo&()       { return static_cast<FileSystemInfo&>(*this); }
-    bool                CreateFolder(String path, String& error) const final;
-    Array<FileSystemInfo::FileInfo> Find(String mask, int max_count = INT_MAX, bool unmounted = false) const final;
+    int GetStyle() const override               { return STYLE_POSIX; }
+    operator FileSystemInfo&()                  { return static_cast<FileSystemInfo&>(*this); }
+    bool CreateFolder(String path, String& error) const override;
+    Array<FileSystemInfo::FileInfo> Find(String mask, int max_count = INT_MAX, bool unmounted = false) const override;
     
-    SFtpFileSystemInfo(SFtp& sftp)  { Mount(sftp); }
-    SFtpFileSystemInfo()            { browser = nullptr; }
+    SFtpFileSystemInfo()                        { browser = nullptr; }
+    SFtpFileSystemInfo(SFtp& sftp)              { Mount(sftp); }
+    virtual ~SFtpFileSystemInfo()               {}
+    
 private:
     SFtp *browser = nullptr;
 };

@@ -18,9 +18,10 @@ sh]&]
 for a range of operations on remote file system objects, such 
 as file/directory creation, deletion, renaming, file transfers, 
 directory listings etc. SFtp class is derived from [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_Base`_en`-us`#Upp`:`:Ssh`:`:class^ S
-sh] base class, and has pick semantics. See also [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtpStream`_en`-us`#Upp`:`:SFtpStream`:`:class^ S
-FtpStream], and [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:DirEntry`:`:class^ S
-Ftp`::DirEntry] classes. &]
+sh] base class, and has pick semantics. See also [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtp`:`:DirEntry`:`:class^ S
+Ftp`::DirEntry], [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtp`_en`-us`#Upp`:`:SFtpFileSystemInfo`:`:class^ S
+FtpFileSystemInfo], and [^topic`:`/`/Core`/SSH`/src`/Upp`_Ssh`_SFtpStream`_en`-us`#Upp`:`:SFtpStream`:`:class^ S
+FtpStream],  classes.&]
 [s0;#l288; &]
 [s3;%- &]
 [ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
@@ -552,4 +553,65 @@ irEntry]([@(0.0.255) const]_[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path],
 [_^Upp`:`:SFtp`:`:DirEntry^ DirEntry]>_[* DirList]&]
 [s2; SFtp`::DirList is a Vector containing SFtp`::DirEntry elements.&]
 [s3;%- &]
-[s3; ]]
+[s0;%- &]
+[ {{10000@(113.42.0) [s0; [*@7;4 SFtpFileSystemInfo]]}}&]
+[s3; &]
+[s1;:Upp`:`:SFtpFileSystemInfo`:`:class:%- [@(0.0.255)3 class][3 _][*3 SFtpFileSystemInfo][3 _
+:_][@(0.0.255)3 public][3 _][*@3;3 FileSystemInfo]&]
+[s2; This helper class is a FileSystemInfo adapter for the SFtp objects. 
+It allows SFtp objects to be used with FileSystemInfo class that 
+provides uniform access to folder hierarchies in a file`-system 
+agnostic (`"transparent`") way.&]
+[s3; &]
+[ {{10000F(128)G(128)@1 [s0; [* Public Method List]]}}&]
+[s3;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:Mount`(Upp`:`:SFtp`&`):%- [_^Upp`:`:SFtpFileSystemInfo^ S
+FtpFileSystemInfo][@(0.0.255) `&]_[* Mount]([_^Upp`:`:SFtp^ SFtp][@(0.0.255) `&]_[*@3 sftp])
+&]
+[s2; Mounts a valid [%-*@3 sftp] file system to be enumerated. Returns 
+`*this for method chaining.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:operator FileSystemInfo`&`(`):%- [* operator_FileSyst
+emInfo`&]()&]
+[s2; Operator support for direct SFtpFileSystemInfo `-> FileSystemInfo 
+conversion.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:Find`(Upp`:`:String`,int`,bool`)const override:%- [_^Upp`:`:Array^ A
+rray]<[_^Upp`:`:FileSystemInfo`:`:FileInfo^ FileSystemInfo`::FileInfo]>_[* Find]([_^Upp`:`:String^ S
+tring]_[*@3 mask], [@(0.0.255) int]_[*@3 max`_count]_`=_`_`_INT`_MAX`_`_, 
+[@(0.0.255) bool]_[*@3 unmounted]_`=_[@(0.0.255) false])_[@(0.0.255) const]_override&]
+[s2; Searches for the given [%-*@3 mask] in the mounted sftp file system. 
+Returns an array of FileInfo objects on success, and an empty 
+array on failure. Mask can be a full or relative path, and may 
+contain wildcards (`*, ?). When the mask is null or empty, this 
+method will return the content of the user`'s default directory. 
+[%-*@3 max`_count] can be used to limit the number of returned 
+FileInfos. The [%-*@3 unmounted] flag is unused.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:CreateFolder`(Upp`:`:String`,Upp`:`:String`&`)const override:%- [@(0.0.255) b
+ool]_[* CreateFolder]([_^Upp`:`:String^ String]_[*@3 path], [_^Upp`:`:String^ String][@(0.0.255) `&
+]_[*@3 error])_[@(0.0.255) const]_override&]
+[s0;l288; Attempts to create a new folder at [%-*@3 path]. Returns 
+true on success, and the [%-*@3 error]  buffer will be filled with 
+specific error message on failure.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:GetStyle`(`)const override:%- [@(0.0.255) int]_[* GetSt
+yle]()_[@(0.0.255) const]_override&]
+[s0;l288; Returns the file system style. This method returns the 
+[C FileSystemInfo`::STYLE`_POSIX] constant.&]
+[s3;%- &]
+[ {{10000F(128)G(128)@1 [s0; [* Constructor detail]]}}&]
+[s3;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:SFtpFileSystemInfo`(`):%- [* SFtpFileSystemInfo]()&]
+[s2; Default constructor.&]
+[s3;%- &]
+[s4;%- &]
+[s5;:Upp`:`:SFtpFileSystemInfo`:`:SFtpFileSystemInfo`(Upp`:`:SFtp`&`):%- [* SFtpFileSys
+temInfo]([_^Upp`:`:SFtp^ SFtp][@(0.0.255) `&]_[*@3 sftp])&]
+[s2; Constructor. Mounts a valid [%-*@3 sftp] file system to be enumerated.&]
+[s3; &]
+[s0; ]]
