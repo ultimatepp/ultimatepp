@@ -97,27 +97,15 @@ struct TupleN<4, A, B, C, D> : public TupleN<3, A, B, C>
 #define GET_FROM_TUPLE(M, I) \
  \
 template <typename T> \
-auto GetFromTuple(const T& t, const IndexI__<I>&) -> const decltype(t.M)& \
+auto GetFromTuple(const T& t, const IndexI__<I>&) -> decltype(t.M)& \
 { \
-	return t.M; \
+	return const_cast<T&>(t).M; \
 } \
  \
 template <typename T> \
-auto GetFromTupleByType(const T& t, decltype(t.M)*, const IndexI__<I>* = NULL) -> const decltype(t.M)& \
+auto GetFromTupleByType(const T& t, decltype(t.M)*, const IndexI__<I>* = NULL) -> decltype(t.M)& \
 { \
-	return t.M; \
-} \
- \
-template <typename T> \
-auto GetFromTuple(T& t, const IndexI__<I>&) -> decltype(t.M)& \
-{ \
-	return t.M; \
-} \
- \
-template <typename T> \
-auto GetFromTupleByType(T& t, decltype(t.M)*, const IndexI__<I>* = NULL) -> decltype(t.M)& \
-{ \
-	return t.M; \
+	return const_cast<T&>(t).M; \
 }
 
 GET_FROM_TUPLE(a, 0)
