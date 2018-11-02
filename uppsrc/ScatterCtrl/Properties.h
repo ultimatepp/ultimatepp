@@ -8,6 +8,84 @@
 #define IMAGEFILE <ScatterCtrl/ScatterCtrl.iml>
 #include <Draw/iml_header.h>
 
+class FontSelect : public WithFontSelector<TopWindow> {
+typedef FontSelect CLASSNAME;
+public:
+	Event<Font> WhenAction;
+
+	FontSelect() {
+		CtrlLayoutExit(*this, t_("Font"));
+		FrameLess(true);
+		
+		face.WhenAction = THISBACK(Select);
+		height.WhenAction = THISBACK(Select);
+		bold.WhenAction = THISBACK(Select);
+		italic.WhenAction = THISBACK(Select);
+		naa.WhenAction = THISBACK(Select);
+		face.Clear();
+		Upp::Index<String> fni;
+		for(int i = 0; i < Font::GetFaceCount(); i++) {
+			if(Font::GetFaceInfo(i)) {
+				String n = Font::GetFaceName(i);
+				if(fni.Find(n) < 0) {
+					fni.Add(n);
+					face.Add(i, n);
+				}
+			}
+		}
+		face.SetIndex(0);
+		height.ClearList();
+		for(int i = 6; i < 64; i++)
+			height.Add(i);
+		Select();
+	}
+	void Set(Font f) {
+		int fi = f.GetFace();
+		if(!face.HasKey(fi)) {
+			fi = face.FindValue(f.GetFaceName());
+			if(fi < 0)
+				fi = Font::COURIER;
+			else
+				fi = face.GetKey(fi);
+		}
+		face.SetData(fi);
+		Select();
+		height.SetData(f.GetHeight());
+		for(int i = 0; i < height.GetCount(); i++) {
+			int q = height.GetKey(i);
+			if(f.GetHeight() <= q) {
+				height.SetData(q);
+				break;
+			}
+		}
+		bold = f.IsBold();
+		italic = f.IsItalic();
+		naa = f.IsNonAntiAliased();
+	}
+	Font Get() {
+		Font f(face.GetData(), height.GetData());
+		f.Bold(bold);
+		f.Italic(italic);
+		f.NonAntiAliased(naa);
+		return f;
+	}
+	void Execute(Ctrl &parent) {
+		Open(this);
+		Rect rec = GetRect();
+		Size sz = rec.GetSize();
+		rec.left = parent.GetScreenRect().left;
+		rec.top = parent.GetScreenRect().bottom;
+		rec.right = rec.left + sz.cx;
+		rec.bottom = rec.top + sz.cy;
+		SetRect(rec);
+		Run();
+	}
+	
+private:
+	void Select() {WhenAction(Get());}
+};	
+
+
 class MeasuresTab : public WithMeasures<StaticRect> {
 public:
 	typedef MeasuresTab CLASSNAME;
@@ -30,6 +108,10 @@ private:
 	ScatterCtrl *pscatter;
 	
 	void Change();
+	void OnFontTitle();
+	void OnChangeFontTitle(Font font);
+	void OnFontLabel();
+	void OnChangeFontLabel(Font font);
 };
 
 class LegendTab : public WithLegend<StaticRect> {
@@ -62,9 +144,26 @@ private:
 	void Change();
 	void ChangeMark();
 	void UpdateFields();
+	void OnMoveUp(); 
+	void OnMoveDown();
+	void OnDelete();
+	
+	void Init0();
 	
 	WithSeriesLeft<StaticRect> left;
 	WithSeriesRight<StaticRect> right;
+};
+
+class GeneralTab : public WithGeneral<StaticRect> {
+public:
+	typedef GeneralTab CLASSNAME;
+	
+	void Init(ScatterCtrl &scatter);
+
+private:
+	ScatterCtrl *pscatter;
+	
+	void Change();
 };
 
 class DataDlg : public WithData<TopWindow> {
@@ -93,12 +192,12 @@ public:
 		ScatterDraw *pscatter;
 		int index;
 	};
-	Array<DataSourceY> dataSourceYArr;
+	Upp::Array<DataSourceY> dataSourceYArr;
 	
 private:
 	ScatterCtrl *pscatter;
 	
-	Array <WithDataSeries <StaticRect> > series;
+	Upp::Array <WithDataSeries <StaticRect> > series;
 };
 
 class PropertiesDlg : public WithProperties<TopWindow> {
@@ -123,6 +222,7 @@ private:
 	TextsTab texts;
 	LegendTab legend;
 	SeriesTab series;
+	GeneralTab general;
 };
 
 
@@ -166,7 +266,7 @@ private:
 	void ArrayCopy();
 	void ArraySelect();
 	void OnArrayBar(Bar &menu);
-	Array<ExplicitEquation> equationTypes;
+	Upp::Array<ExplicitEquation> equationTypes;
 	UserEquation *userEquation;
 	//GridCtrlSource ds;
 	
@@ -197,25 +297,12 @@ public:
 
 private:
 	ScatterCtrl* scatter;
-	Array<ProcessingTab> tabs;
+	Upp::Array<ProcessingTab> tabs;
 	WithProcessingLeft<StaticRect> list; 
 	WithProcessingRight<StaticRect> right;
 	Splitter splitter;
 	
 	void UpdateFields();
 };
-
-class TextDlg : public WithText<TopWindow> {
-public:
-	typedef TextDlg CLASSNAME;
-	
-	TextDlg(ScatterCtrl& scatter);
-	
-	void Change();
-
-private:
-	ScatterCtrl& scatter;
-};
-	
 
 #endif

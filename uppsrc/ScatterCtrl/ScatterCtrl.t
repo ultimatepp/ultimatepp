@@ -3,6 +3,48 @@
 #endif
 // ScatterCtrl.cpp
 
+T_("%s data file")
+caES("")
+esES("Fichero de datos %s")
+euES("")
+frFR("")
+
+T_("Scatter plot data")
+caES("")
+esES("Datos del gr\303\241fico")
+euES("")
+frFR("")
+
+T_("Loading plot data from file")
+caES("")
+esES("Leyendo gr\303\241fico del fichero")
+euES("")
+frFR("")
+
+T_("Plot has not been loaded")
+caES("")
+esES("Gr\303\241fico no ha sido leido")
+euES("")
+frFR("")
+
+T_("File format \"%s\" not found")
+caES("Format \"%s\" no trobat")
+esES("Formato \"%s\" no encontrado")
+euES("Formatua \"%s\" ez da aurkitu")
+frFR("Format de fichier \"%s\" est introuvable")
+
+T_("Saving plot data to file")
+caES("")
+esES("Salvando gr\303\241fico a fichero")
+euES("")
+frFR("")
+
+T_("Plot has not been saved")
+caES("El gr\303\240fic no s'ha desat")
+esES("El gr\303\241fico no ha sido guardado")
+euES("Lurzatia ez da gorde")
+frFR("Plot n'a pas \303\251t\303\251 enregistr\303\251")
+
 T_("\316\224")
 caES("")
 esES("\342\210\206")
@@ -153,11 +195,11 @@ esES("Di\303\241logo para procesado de datos")
 euES("")
 frFR("")
 
-T_("Copy")
-caES("Copiar")
-esES("Copiar")
-euES("Kopiatu")
-frFR("Copier")
+T_("Copy image")
+caES("")
+esES("Copiar imagen")
+euES("")
+frFR("")
 
 T_("Copy image to clipboard")
 caES("")
@@ -165,15 +207,51 @@ esES("Copiar imagen al portapapeles")
 euES("")
 frFR("")
 
-T_("Save to file")
-caES("Guardar a fitxer")
-esES("Guardar en fichero")
-euES("Gorde fitxategira")
-frFR("Enregistrer dans un fichier")
+T_("Save image")
+caES("")
+esES("Guardar imagen")
+euES("")
+frFR("")
 
 T_("Save image to file")
 caES("")
 esES("Guardar imagen en un fichero")
+euES("")
+frFR("")
+
+T_("Load plot")
+caES("")
+esES("Leer gr\303\241fico")
+euES("")
+frFR("")
+
+T_("Load plot from file")
+caES("")
+esES("Leer gr\303\241fico de fichero")
+euES("")
+frFR("")
+
+T_("Save plot")
+caES("")
+esES("Salvar gr\303\241fico")
+euES("")
+frFR("")
+
+T_("Save plot to file")
+caES("")
+esES("Salvar gr\303\241fico a fichero")
+euES("")
+frFR("")
+
+T_("%s bitmap file")
+caES("")
+esES("Fichero de mapa de bits %s")
+euES("")
+frFR("")
+
+T_("%s vector file")
+caES("")
+esES("Fichero vectorial %s")
 euES("")
 frFR("")
 
@@ -183,29 +261,11 @@ esES("Gr\303\241fico")
 euES("")
 frFR("")
 
-T_("%s file")
-caES("Fitxer %s")
-esES("Fichero %s")
-euES("Fitxategia %s")
-frFR("Fichier %s")
-
-T_("Saving plot to PNG or JPEG file")
-caES("Guardant gr\303\240fic en fitxer PNG o JPEG")
-esES("Guardando gr\303\241fico en fichero PNG o JPEG")
-euES("Aurrezteko grafikoa PNG edo JPEG fitxategia")
-frFR("Enregistrement plot visant \303\240 fichier PNG ou JPEG")
-
-T_("Plot has not been saved")
-caES("El gr\303\240fic no s'ha desat")
-esES("El gr\303\241fico no ha sido guardado")
-euES("Lurzatia ez da gorde")
-frFR("Plot n'a pas \303\251t\303\251 enregistr\303\251")
-
-T_("File format \"%s\" not found")
-caES("Format \"%s\" no trobat")
-esES("Formato \"%s\" no encontrado")
-euES("Formatua \"%s\" ez da aurkitu")
-frFR("Format de fichier \"%s\" est introuvable")
+T_("Saving plot image to file")
+caES("")
+esES("Salvando imagen del gr\303\241fico a fichero")
+euES("")
+frFR("")
 
 T_("x")
 caES("")
@@ -261,6 +321,21 @@ frFR("Sans marque")
 T_("Dash \"%s\"")
 caES("")
 esES("Guiones \"%s\"")
+euES("")
+frFR("")
+
+T_("You are going to delete '%s' series.&Do you agree?")
+caES("")
+esES("Vas a borrar la serie '%s'.&\302\277Est\303\241s de acuerdo?")
+euES("")
+frFR("")
+
+
+// Properties.h
+
+T_("Font")
+caES("")
+esES("Fuente")
 euES("")
 frFR("")
 
@@ -336,25 +411,25 @@ frFR("")
 
 T_("Min. R2 to plot the equation")
 caES("")
-esES("")
+esES("M\303\255n. R2 para mostrar ecuaci\303\263n")
 euES("")
 frFR("")
 
 T_("User suppled equation. Initial guess values separated with ';'")
 caES("")
-esES("")
+esES("Ecuaci\303\263n de usuario. Valores iniciales estimados separados con ';'")
 euES("")
 frFR("")
 
 T_("Type")
 caES("")
-esES("")
+esES("Tipo")
 euES("")
 frFR("")
 
 T_("Equation")
 caES("")
-esES("")
+esES("Ecuaci\303\263n")
 euES("")
 frFR("")
 
@@ -366,7 +441,7 @@ frFR("")
 
 T_("It tries to fit the series with the supported equations")
 caES("")
-esES("")
+esES("Intenta ajustar la serie con las ecuaciones incluidas")
 euES("")
 frFR("")
 
@@ -381,6 +456,12 @@ caES("Seleccionar totes les files")
 esES("Seleccionar todas las filas")
 euES("Hautatu errenkada guztiak")
 frFR("S\303\251lectionnez toutes les lignes")
+
+T_("Copy")
+caES("Copiar")
+esES("Copiar")
+euES("Kopiatu")
+frFR("Copier")
 
 T_("Copy selected rows")
 caES("")
@@ -541,11 +622,11 @@ esES("Todo")
 euES("")
 frFR("")
 
-T_("Scatter plot data")
-caES("")
-esES("Datos del gr\303\241fico")
-euES("")
-frFR("")
+T_("%s file")
+caES("Fitxer %s")
+esES("Fichero %s")
+euES("Fitxategia %s")
+frFR("Fichier %s")
 
 T_("Comma separated values (.csv)")
 caES("")
@@ -583,6 +664,12 @@ esES("Copiar filas seleccionadas al portapapeles")
 euES("")
 frFR("")
 
+T_("Save to file")
+caES("Guardar a fitxer")
+esES("Guardar en fichero")
+euES("Gorde fitxategira")
+frFR("Enregistrer dans un fichier")
+
 T_("Save to .csv file")
 caES("")
 esES("Salvar a fichero .csv")
@@ -593,8 +680,8 @@ frFR("")
 // ScatterCtrl.lay
 
 T_("OK")
-caES("Continuar")
-esES("")
+caES("")
+esES("Continuar")
 euES("")
 frFR("")
 
@@ -637,6 +724,12 @@ frFR("")
 T_("X min")
 caES("")
 esES("")
+euES("")
+frFR("")
+
+T_("Reticle")
+caES("")
+esES("Ret\303\255cula")
 euES("")
 frFR("")
 
@@ -789,6 +882,24 @@ caES("Taula")
 esES("Tabla")
 euES("Taula")
 frFR("Table")
+
+T_("Remove")
+caES("")
+esES("Borrar")
+euES("")
+frFR("")
+
+T_("Down")
+caES("")
+esES("Abajo")
+euES("")
+frFR("")
+
+T_("Up")
+caES("")
+esES("Arriba")
+euES("")
+frFR("")
 
 T_("Primary")
 caES("Prim\303\240ria")
@@ -1104,7 +1215,7 @@ frFR("")
 
 T_("Min R2:")
 caES("")
-esES("")
+esES("M\303\255n R2:")
 euES("")
 frFR("")
 
@@ -1116,7 +1227,7 @@ frFR("")
 
 T_("User equation:")
 caES("")
-esES("")
+esES("Ecuacion usuario:")
 euES("")
 frFR("")
 
@@ -1131,6 +1242,30 @@ caES("")
 esES("Cursiva")
 euES("")
 frFR("")
+
+T_("NonAntiAliased")
+caES("")
+esES("NoAntialiased")
+euES("")
+frFR("")
+
+
+// PieCtrl.cpp
+
+T_("Pie plot")
+caES("")
+esES("Gr\303\241fico de tarta")
+euES("")
+frFR("")
+
+T_("Saving plot to PNG or JPEG file")
+caES("Guardant gr\303\240fic en fitxer PNG o JPEG")
+esES("Guardando gr\303\241fico en fichero PNG o JPEG")
+euES("Aurrezteko grafikoa PNG edo JPEG fitxategia")
+frFR("Enregistrement plot visant \303\240 fichier PNG ou JPEG")
+
+
+// Obsolete
 
 T_("Size:")
 caES("")
@@ -1149,18 +1284,6 @@ caES("")
 esES("Texto:")
 euES("")
 frFR("")
-
-
-// PieCtrl.cpp
-
-T_("Pie plot")
-caES("")
-esES("Gr\303\241fico de tarta")
-euES("")
-frFR("")
-
-
-// Obsolete
 
 T_("Data processing")
 caES("")

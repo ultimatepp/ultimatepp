@@ -13,8 +13,9 @@ void ScatterCtrl::SaveAsMetafile(const char* file)
 {
 	GuiLock __;
 	WinMetaFileDraw wmfd;	
-	wmfd.Create(copyRatio*ScatterDraw::GetSize().cx, copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart", file);
-	SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), copyRatio);	
+	wmfd.Create(saveSize.cx, saveSize.cy, "ScatterCtrl", "chart", file);
+	ScatterDraw::SetSize(saveSize);
+	ScatterDraw::SetDrawing<Draw>(wmfd);	
 	wmfd.Close();	
 }
 
@@ -23,12 +24,14 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 	GuiLock __;
 	if (saveAsMetafile) {
 		WinMetaFileDraw wmfd;	
-		wmfd.Create(8*copyRatio*ScatterDraw::GetSize().cx, 8*copyRatio*ScatterDraw::GetSize().cy, "ScatterCtrl", "chart");
-		SetDrawing<Draw>(wmfd, ScatterDraw::GetSize(), 8*copyRatio, false);	
+		wmfd.Create(saveSize.cx, saveSize.cy, "ScatterCtrl", "chart");
+		ScatterDraw::SetSize(saveSize);
+		ScatterDraw::SetDrawing<Draw>(wmfd, false);	
 		WinMetaFile wmf = wmfd.Close();	 
 		wmf.WriteClipboard();
 	} else {
-		Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
+		ScatterDraw::SetSize(saveSize);
+		Image img = GetImage();
 		WriteClipboardImage(img);	
 	}
 }
@@ -37,12 +40,158 @@ void ScatterCtrl::SaveToClipboard(bool saveAsMetafile)
 void ScatterCtrl::SaveToClipboard(bool) 
 {
 	GuiLock __;
-	Image img = GetImage(ScatterDraw::GetSize(), copyRatio);
+	ScatterDraw::SetSize(saveSize);
+	Image img = GetImage();
 	WriteClipboardImage(img);
 }
 
 #endif
 
+#ifdef PLATFORM_WIN32
+
+String FixPathName(const String &path) {
+	const char *forbstr[] = {"CON", "PRN", "AUX", "NUL", "COM", "LPT", ""};
+	for (int i = 0; forbstr[i][0] != '\0'; ++i) {
+		if (path.StartsWith(forbstr[i])) 
+			return String("_") + path;  
+	}
+	
+	String ret;	
+	const char *forbchar = "<>:\"/\\|?*";
+	for (int i = 0; i < path.GetCount(); ++i) {
+		int ch = path[i];
+		if (strchr(forbchar, ch))
+			ret << "_";
+		else
+			ret << String(ch, 1);
+	}
+	ret.Replace("..", ".");
+	
+	return ret;
+}
+
+#else
+
+String FixPathName(const String &path) {
+	String ret = path;	
+
+	ret.Replace("/", "_");
+	
+	return ret;
+}
+
+#endif
+
+void ScatterCtrl::LoadControl() {
+	GuiLock __;
+	
+	FileSel fs;
+	fs.Type(Format(t_("%s data file"), "json"), "*.json");
+	fs.Type(Format(t_("%s data file"), "xml"), "*.xml");
+	fs.Type(Format(t_("%s data file"), "bin"), "*.bin");
+	fs.AllFilesType();
+	if (!defaultDataFile.IsEmpty())
+		fs = defaultDataFile;
+	else if (!GetTitle().IsEmpty())
+		fs = FixPathName(GetTitle()) + ".json";
+	else
+		fs = String(t_("Scatter plot data")) + ".json";
+	
+	String ext = GetFileExt(~fs);
+	fs.DefaultExt(ext);
+	int idt = 0;
+	if (ext == ".json")
+		idt = 0;
+	else if (ext == ".xml")
+		idt = 1;
+	else if (ext == ".bin")
+		idt = 2;
+	fs.ActiveType(idt);
+	
+	fs.ActiveDir(GetFileFolder(defaultDataFile));
+	fs.type.WhenAction = THISBACK1(OnTypeDataFile, &fs); 
+    if(!fs.ExecuteOpen(t_("Loading plot data from file"))) {
+        Exclamation(t_("Plot has not been loaded"));
+        return;
+    }
+    String fileName = defaultDataFile = ~fs;
+    
+	if (GetFileExt(fileName) == ".json") {
+		if (!LoadFromJsonFile(*this, fileName)) {
+			if (!LoadFromJsonFile(*static_cast<ScatterDraw*>(this), fileName))
+				Exclamation(t_("Plot has not been loaded"));
+		}
+	} else if (GetFileExt(fileName) == ".xml") {	
+		if (!LoadFromXMLFile(*this, fileName))
+			Exclamation(t_("Plot has not been loaded"));
+	} else if (GetFileExt(fileName) == ".bin") {	
+		if (!LoadFromFile(*this, fileName))
+			Exclamation(t_("Plot has not been loaded"));
+	} else
+		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
+}
+
+void ScatterCtrl::OnTypeDataFile(FileSel *_fs) 
+{
+	FileSel &fs = *_fs;
+	int id = fs.type.GetIndex();
+	
+	if (id == 0)
+		fs.file = ForceExt(~fs, ".json");
+	else if (id == 1)
+		fs.file = ForceExt(~fs, ".xml");
+	else if (id == 2)
+		fs.file = ForceExt(~fs, ".bin");
+	
+}
+
+void ScatterCtrl::SaveControl() {
+	GuiLock __; 
+
+	FileSel fs;
+	fs.Type(Format(t_("%s data file"), "json"), "*.json");
+	fs.Type(Format(t_("%s data file"), "xml"), "*.xml");
+	fs.Type(Format(t_("%s data file"), "bin"), "*.bin");
+	fs.AllFilesType();
+	if (!defaultDataFile.IsEmpty())
+		fs = defaultDataFile;
+	else if (!GetTitle().IsEmpty())
+		fs = FixPathName(GetTitle()) + ".json";
+	else
+		fs = String(t_("Scatter plot data")) + ".json";
+	
+	String ext = GetFileExt(~fs);
+	fs.DefaultExt(ext);
+	int idt = 0;
+	if (ext == ".json")
+		idt = 0;
+	else if (ext == ".xml")
+		idt = 1;
+	else if (ext == ".bin")
+		idt = 2;
+	fs.ActiveType(idt);
+	
+	fs.ActiveDir(GetFileFolder(defaultDataFile));
+	fs.type.WhenAction = THISBACK1(OnTypeDataFile, &fs); 
+    if(!fs.ExecuteSaveAs(t_("Saving plot data to file"))) {
+        Exclamation(t_("Plot has not been saved"));
+        return;
+    }
+    String fileName = defaultDataFile = ~fs;
+        
+	if (GetFileExt(fileName) == ".json") {
+		if (!StoreAsJsonFile(*this, fileName, true))
+			Exclamation(t_("Plot has not been saved"));
+	} else if (GetFileExt(fileName) == ".xml") {
+		if (!StoreAsXMLFile(*this, fileName))
+			Exclamation(t_("Plot has not been saved"));
+	} else if (GetFileExt(fileName) == ".bin") {	
+		if (!StoreToFile(*this, fileName))
+			Exclamation(t_("Plot has not been saved"));
+	} else
+		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
+}
+				
 void ScatterCtrl::Paint(Draw& w) 
 {
 	GuiLock __;
@@ -58,16 +207,16 @@ void ScatterCtrl::Paint(Draw& w)
 	lastRefresh0_ms = GetTickCount();
 	if (IsEnabled()) {
 		if (mode == MD_DRAW) {
-			ScatterCtrl::SetDrawing(w, GetSize(), 1);
-			PlotTexts(w, GetSize(), 1, !mouseHandlingX, !mouseHandlingY);
+			ScatterCtrl::SetDrawing(w);
+			PlotTexts(w, !mouseHandlingX, !mouseHandlingY);
 		} else {
 			ImageBuffer ib(GetSize());
 			BufferPainter bp(ib, mode);
 			bp.LineCap(LINECAP_BUTT);
 			bp.LineJoin(LINEJOIN_MITER);
-			ScatterCtrl::SetDrawing(bp, GetSize(), 1);
+			ScatterCtrl::SetDrawing(bp);
 			w.DrawImage(0, 0, ib);
-			PlotTexts(w, GetSize(), 1, !mouseHandlingX, !mouseHandlingY);
+			PlotTexts(w, !mouseHandlingX, !mouseHandlingY);
 		}
 		if (HasFocus()) {
 			w.DrawLine(0, 0, GetSize().cx, 0, 2, LtGray());
@@ -87,14 +236,14 @@ void ScatterCtrl::TimerCallback() {
 	Refresh();
 }
 
-void ScatterCtrl::ProcessPopUp(const Point & pt)
+void ScatterCtrl::ProcessPopUp(const Point &pt)
 {
-	double _x  = (popLT.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
-	double _y  = -(popLT.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
-	double _y2 = -(popLT.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
-	double x   = (pt.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
-	double y   = -(pt.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
-	double y2  = -(pt.y - vPlotTop - titleHeight)*yRange2/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin2 + yRange2;		
+	double _x  = GetRealPosX(popLT.x);
+	double _y  = GetRealPosY(popLT.y);
+	double _y2 = GetRealPosY2(popLT.y);
+	double x   = GetRealPosX(pt.x);
+	double y   = GetRealPosY(pt.y);
+	double y2  = GetRealPosY2(pt.y);
 	
 	double dx  = fabs(x  - _x);
 	double dy  = fabs(y  - _y);
@@ -158,10 +307,30 @@ void ScatterCtrl::ProcessPopUp(const Point & pt)
 		if (stry2 != _stry2)		
 			str << "; " + popTextY2 + ": " + stry2 + "; " + t_("Δ") + popTextY2 + ": " + dstry2;
 	}
+	if (surf) {
+		double _z  = surf->z(_x, _y);
+		if (!IsNull(_z)) {
+			str << "\n" << popTextZ << ": " << VariableFormatZ(_z);
+			if (strx != _strx || stry != _stry) {
+				double z = surf->z(x, y);
+				if (!IsNull(z)) 
+					str << "; " << popTextZ << "': " << VariableFormatZ(z) << "; " 
+								<< t_("Δ") << popTextZ << ": " << VariableFormatZ(z - _z);	
+			}
+		}
+	}
 	const Point p2 = pt + offset;
 	popText.SetText(str).Move(this, p2.x, p2.y);
 }
 
+void ScatterCtrl::ProcessClickSeries(const Point &pt)
+{
+	double posx = GetRealPosX(pt.x);
+	double posy = GetRealPosY(pt.y);
+	double dx = 2*GetPixelThickX();
+	double dy = 2*GetPixelThickY();
+}
+						
 void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int value)
 {
 	if (!down) {
@@ -302,12 +471,13 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 			if (IsNull(popLT))
 				popLT = pt;
 			popRB = pt;
-			Rect wa = GetWorkArea();
+			/*Rect wa = GetWorkArea();
 			Rect rc = GetScreenRect();
 			if (wa.right - (rc.left + pt.x) < 200)
 				pt.x -= 200;
 			if (wa.bottom - (rc.top + pt.y) < 200)
-				pt.y -= 200;
+				pt.y -= 200;*/
+			//ProcessClickSeries(pt); TBD
 			ProcessPopUp(pt);		
 		} 
 	} else {
@@ -334,7 +504,7 @@ void ScatterCtrl::ZoomWindow(bool down, Point &pt)
 			isLabelPopUp = isZoomWindow = false;
 			
 			if (popLT.x > popRB.x)
-				Swap(popLT, popRB);
+				::Swap(popLT, popRB);
 			double LTx, LTy, LTy2, RBx, RBy, RBy2;
 			LTx = (popLT.x - hPlotLeft)*xRange/(GetSize().cx - (hPlotLeft + hPlotRight)-1) + xMin;		
 			LTy = -(popLT.y - vPlotTop - titleHeight)*yRange/(GetSize().cy - (vPlotTop + vPlotBottom + titleHeight)+1) + yMin + yRange;		
@@ -541,7 +711,7 @@ Image ScatterCtrl::CursorImage(Point p, dword keyflags)
 void ScatterCtrl::ContextMenu(Bar& bar)
 {
 	if (mouseHandlingX || mouseHandlingY) {
-		bar.Add(t_("Fit to data"), ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0)).Key(K_CTRL_F)
+		bar.Add(t_("Fit to data"), ScatterImg::ShapeHandles(), THISBACK3(ZoomToFit, mouseHandlingX, mouseHandlingY, 0.)).Key(K_CTRL_F)
 									.Help(t_("Zoom to fit visible all data"));
 		bar.Add(t_("Zoom +"), 	   ScatterImg::ZoomPlus(), THISBACK3(Zoom, 1/1.2, true, mouseHandlingY)).Key(K_CTRL|K_ADD)
 										.Help(t_("Zoom in (closer)"));
@@ -588,46 +758,85 @@ void ScatterCtrl::ContextMenu(Bar& bar)
 	{
 		bar.Separator();
 	}
-	bar.Add(t_("Copy"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, true)).Key(K_CTRL_C)
+	bar.Add(t_("Copy image"), ScatterImg::Copy(), 		THISBACK1(SaveToClipboard, false)).Key(K_CTRL_C)
 									.Help(t_("Copy image to clipboard"));
-	bar.Add(t_("Save to file"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S)
+	bar.Add(t_("Save image"), ScatterImg::Save(), THISBACK1(SaveToFile, Null)).Key(K_CTRL_S)
 									.Help(t_("Save image to file"));
+#ifndef _DEBUG
+	if (showLoadData || showSaveData)
+#endif
+	{
+		bar.Separator();
+	}
+	bar.Add(t_("Load plot"), THISBACK(LoadControl)).Help(t_("Load plot from file"));
+	bar.Add(t_("Save plot"), THISBACK(SaveControl)).Help(t_("Save plot to file"));
 }
 
-void ScatterCtrl::OnFileToSave() {
-	String name = ~fileToSave;
-	int ext = fileToSave.GetActiveType();
-	if (ext == 0) 
-		fileToSave.file = ForceExt(name, ".jpg");
-	else
-		fileToSave.file = ForceExt(name, ".png");
+void ScatterCtrl::OnTypeImage(FileSel *_fs)
+{
+	FileSel &fs = *_fs;
+	int id = fs.type.GetIndex();
+	
+	if (id == 0)
+		fs.file = ForceExt(GetFileName(~fs), ".jpg");
+	else if (id == 1)
+		fs.file = ForceExt(GetFileName(~fs), ".png");
+	else if (id == 2)
+		fs.file = ForceExt(GetFileName(~fs), ".pdf");
 }
 
 void ScatterCtrl::SaveToFile(String fileName)
 {
 	GuiLock __;
 	if (IsNull(fileName)) {
-		String name = GetTitle();
-		if (name.IsEmpty())
-			name = t_("Scatter plot");
-		fileToSave.PreSelect(ForceExt(name, ".jpg"));
-		fileToSave.ClearTypes();
-		fileToSave.Type(Format(t_("%s file"), "JPEG"), "*.jpg");
-		fileToSave.Type(Format(t_("%s file"), "PNG"), "*.png");
-		fileToSave.type.WhenAction = THISBACK(OnFileToSave);
-	    if(!fileToSave.ExecuteSaveAs(t_("Saving plot to PNG or JPEG file"))) {
+		FileSel fs;
+		fs.Type(Format(t_("%s bitmap file"), "jpeg"), "*.jpg");
+		fs.Type(Format(t_("%s bitmap file"), "png"), "*.png");
+		fs.Type(Format(t_("%s vector file"), "pdf"), "*.pdf");
+		fs.AllFilesType();
+		if (!defaultFileNamePlot.IsEmpty())
+			fs = defaultFileNamePlot;
+		else if (!GetTitle().IsEmpty())
+			fs = FixPathName(GetTitle()) + ".jpg";
+		else
+			fs = String(t_("Scatter plot")) + ".jpg";
+		
+		String ext = GetFileExt(~fs);
+		fs.DefaultExt(ext);
+		int idt = 0;
+		if (ext == ".jpg" || ext == ".jpeg")
+			idt = 0;
+		else if (ext == ".png")
+			idt = 1;
+		else if (ext == ".pdf")
+			idt = 2;
+		fs.ActiveType(idt);
+	
+		fs.ActiveDir(GetFileFolder(defaultFileNamePlot));
+		fs.type.WhenAction = THISBACK1(OnTypeImage, &fs); 
+	    if(!fs.ExecuteSaveAs(t_("Saving plot image to file"))) {
 	        Exclamation(t_("Plot has not been saved"));
 	        return;
 	    }
-        fileName = ~fileToSave;
+        fileName = defaultFileNamePlot = ~fs;
 	} 
 	if (GetFileExt(fileName) == ".png") {
+		WaitCursor waitcursor;
 		PNGEncoder encoder;
-		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio));
+		ScatterDraw::SetSize(saveSize);
+		encoder.SaveFile(fileName, GetImage());
 	} else if (GetFileExt(fileName) == ".jpg") {	
-		JPGEncoder encoder(90);
-		encoder.SaveFile(fileName, GetImage(ScatterDraw::GetSize(), copyRatio));		
-	} else
+		WaitCursor waitcursor;
+		JPGEncoder encoder(jpgQuality);
+		ScatterDraw::SetSize(saveSize);
+		encoder.SaveFile(fileName, GetImage());		
+	} else if (GetFileExt(fileName) == ".pdf") {	
+		WaitCursor waitcursor;
+		PdfDraw pdf(saveSize.cx, saveSize.cy);
+		ScatterDraw::SetSize(saveSize);
+		ScatterDraw::SetDrawing(pdf, false);
+		SaveFile(fileName, pdf.Finish());		
+	} else 
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }
 
@@ -659,23 +868,28 @@ void ScatterCtrl::CheckButtonVisible() {
 	propertiesButton.Show(showButtons && showPropDlg);
 }
 	
-ScatterCtrl::ScatterCtrl() : offset(10,12), copyRatio(1), isLeftDown(false)
+ScatterCtrl::ScatterCtrl() : offset(10,12), isLeftDown(false)
 {
 	showInfo = isScrolling = isLabelPopUp = isZoomWindow = false;
 	WantFocus();
 	popTextX = t_("x");
 	popTextY = t_("y1");
 	popTextY2 = t_("y2");
+	popTextZ = t_("z");
 	popLT = popRB = Null;
 	showContextMenu = false;
 	showPropDlg = false;
 	showProcessDlg = false;
 	showButtons = false;
+	showLoadData = showSaveData = false;
 	defaultCSVseparator = ";";
 	Color(graphColor);	
 	BackPaint();
 	popText.SetColor(SColorFace);        
 
+	saveSize = Size(1000, 800);
+	jpgQuality = 90;
+	
 	lastRefresh_ms = Null;
 	maxRefresh_ms = 500;
 	highlighting = false;

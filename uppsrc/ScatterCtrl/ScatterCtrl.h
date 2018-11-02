@@ -3,6 +3,7 @@
 
 #include <ScatterDraw/ScatterDraw.h>
 #include <plugin/jpg/jpg.h>
+#include <PdfDraw/PdfDraw.h>
 #include <GridCtrl/GridCtrl.h>
 
 using namespace Upp;
@@ -201,10 +202,18 @@ public:
 	}
 	void CheckButtonVisible();
 	
-	ScatterCtrl& SetPopText(const String x, const String y1, const String y2) 	
-															{popTextX = x; popTextY = y1; popTextY2 = y2; return *this;}
+	ScatterCtrl& ShowLoadData(bool showLoadData) {
+		this->showLoadData = showLoadData;
+		return *this;
+	}
+	ScatterCtrl& ShowSaveData(bool showSaveData) {
+		this->showSaveData = showSaveData;
+		return *this;
+	}
+	
+	ScatterCtrl& SetPopText(const String x, const String y1, const String y2, const String z = "z") 	
+							{popTextX = x; popTextY = y1; popTextY2 = y2; popTextZ = z; return *this;}
 
-public:
 	ScatterCtrl& ShowInfo(bool show = true)					{showInfo = show;		 return *this;}
 	
 #ifdef PLATFORM_WIN32
@@ -213,12 +222,16 @@ public:
 	void SaveToClipboard(bool saveAsMetafile = false);
 	void SaveToFile(String fileName = Null);
 	
+	void LoadControl();
+	void SaveControl();
+	void OnChangeSaveCtrl();
+	
 	virtual void Refresh() {Ctrl::Refresh();};
 	virtual Size GetSize() const {return Ctrl::GetSize();};
 	
 	ScatterCtrl& SetColor(const Upp::Color& _color)				{ScatterDraw::SetColor(_color);				return *this;};
 	ScatterCtrl& SetGridColor(const Upp::Color& grid_color)		{ScatterDraw::SetGridColor(grid_color);		return *this;};
-	ScatterCtrl& SetGridWidth(int grid_width) 					{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
+	ScatterCtrl& SetGridWidth(double grid_width) 				{ScatterDraw::SetGridWidth(grid_width); 	return *this;};
 	ScatterCtrl& SetPlotAreaColor(const Upp::Color& p_a_color)	{ScatterDraw::SetPlotAreaColor(p_a_color); 	return *this;};
 	ScatterCtrl& SetAxisColor(const Upp::Color& axis_color)		{ScatterDraw::SetAxisColor(axis_color);		return *this;};
 	ScatterCtrl& SetAxisWidth(int axis_width)					{ScatterDraw::SetAxisWidth(axis_width);		return *this;};
@@ -265,52 +278,40 @@ public:
 	void InsertSeries(int id, ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	void InsertSeries(int id, GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);	
 	
-	ScatterCtrl& SetCopyRatio(int ratio)				{copyRatio = ratio; return *this;}
-	int GetCopyRatio()									{return copyRatio;}
-	
 	ScatterCtrl& SetMaxRefreshTime(int _maxRefresh_ms) 	{maxRefresh_ms = _maxRefresh_ms; return *this;}
 	int GetMaxRefreshTime() 							{return maxRefresh_ms;}
 	
 	ScatterCtrl& SetDefaultCSVSeparator(String sep) 	{defaultCSVseparator = sep;	return *this;}
 	String GetDefaultCSVSeparator() 					{return defaultCSVseparator;}
 	
-	ScatterCtrl &SetMouseHandling(bool valx = true, bool valy = false)			{ScatterDraw::SetMouseHandling(valx, valy);	return *this;} 
+	ScatterCtrl &SetMouseHandling(bool valx = true, bool valy = false)			{ScatterDraw::SetMouseHandling(valx, valy);			return *this;} 
 	ScatterCtrl &SetMouseHandlingLinked(bool valx = true, bool valy = false) 	{ScatterDraw::SetMouseHandlingLinked(valx, valy);	return *this;}
 	
-	void Jsonize(JsonIO& json) {
-		ScatterDraw::Jsonize(json);
+	ScatterCtrl &SetSaveSize(Size &size) 	{saveSize = size; return *this;}
+	Size &GetSaveSize() 					{return saveSize;}
+	ScatterCtrl &SetJPGQuality(int quality) {jpgQuality = quality; return *this;}
+	int GetJPGQuality() 					{return jpgQuality;}
+	
+	template <class T>
+	void Ize(T& io) { 
+		ScatterDraw::Ize(io);
+		io
+			("defaultFileNamePlot", defaultFileNamePlot)
+			("defaultDataFile", defaultDataFile)
+			("saveSize", saveSize)
+			("jpgQuality", jpgQuality)
+		;
 	}
+	void Xmlize(XmlIO& xml) 	{Ize(xml);}
+	void Jsonize(JsonIO& json) 	{Ize(json);}
 	
-private:
-	bool showInfo;
-	Point clickPoint;
-	PopUpInfo popText;
-	String popTextX, popTextY, popTextY2;
-	Point popLT, popRB;
-	bool isZoomWindow;
-	const Point offset;
-	int copyRatio;
-	bool isLeftDown;
-	
-	int butDownX, butDownY;
-	bool isScrolling, isLabelPopUp;
-	
-	bool showContextMenu;
-	bool showPropDlg;
-	bool showProcessDlg;
-	bool showButtons;
-	
-	int lastRefresh_ms;
-	dword lastRefresh0_ms;
-	int maxRefresh_ms;
-	
-	bool highlighting;
-	
-	Upp::Array<MouseBehavior> mouseBehavior; 
-	Upp::Array<KeyBehavior> keyBehavior;
-	
-	void ProcessPopUp(const Point & pt);
-
+	void Serialize(Stream& s) {
+		s % defaultFileNamePlot
+		  % defaultDataFile
+		  % saveSize
+		  % jpgQuality
+		;
+	}
 	virtual void Paint(Draw& w);
 	virtual void LeftDown(Point, dword);
 	virtual void LeftDouble(Point p, dword);
@@ -325,6 +326,36 @@ private:
 	virtual bool Key(dword key, int count);
 	virtual void GotFocus();
 	virtual void LostFocus();
+		
+private:
+	bool showInfo;
+	PopUpInfo popText;
+	String popTextX, popTextY, popTextY2, popTextZ;
+	Point popLT, popRB;
+	bool isZoomWindow;
+	const Point offset;
+	bool isLeftDown;
+	
+	int butDownX, butDownY;
+	bool isScrolling, isLabelPopUp;
+	
+	bool showContextMenu;
+	bool showPropDlg;
+	bool showProcessDlg;
+	bool showButtons;
+	bool showLoadData, showSaveData;
+	
+	int lastRefresh_ms;
+	dword lastRefresh0_ms;
+	int maxRefresh_ms;
+	
+	bool highlighting;
+	
+	Upp::Array<MouseBehavior> mouseBehavior; 
+	Upp::Array<KeyBehavior> keyBehavior;
+	
+	void ProcessPopUp(const Point &pt);
+	void ProcessClickSeries(const Point &pt);
 	
 	void DoMouseAction(bool down, Point pt, ScatterAction action, int value);
 	void DoKeyAction(ScatterAction action);
@@ -343,20 +374,27 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
-	void SetDrawing(T& w, const Size &size, int scale, bool ctrl = true);	
+	void SetDrawing(T& w, bool ctrl = true);	
 	void TimerCallback();	
 	
 	String defaultCSVseparator;
+
+	String defaultFileNamePlot;	
+	void OnTypeImage(FileSel *_fs);
 	
-	FileSel fileToSave;
-	void OnFileToSave();
+	String defaultDataFile;
+	void OnTypeDataFile(FileSel *_fs);
 	
 	Button processButton, dataButton, propertiesButton;
+	
+	Size saveSize;
+	int jpgQuality;
 };
 
 template <class T>
-void ScatterCtrl::SetDrawing(T& w, const Size &size, int scale, bool ctrl) {
-	ScatterDraw::SetDrawing(w, size, scale, ctrl);
+void ScatterCtrl::SetDrawing(T& w, bool ctrl) {
+	ScatterDraw::SetSize(GetSize());
+	ScatterDraw::SetDrawing(w, ctrl);
 	if (!IsNull(popLT) && popLT != popRB) {
 		if (isZoomWindow) {
 			DrawLine(w, popLT.x, popLT.y, popLT.x, popRB.y, 1, SColorHighlight());
