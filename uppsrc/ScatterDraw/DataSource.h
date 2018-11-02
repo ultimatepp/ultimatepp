@@ -9,7 +9,7 @@ public:
 	typedef double (DataSource::*Getdatafun)(int64 id);
 
 	DataSource() : isParam(false), isExplicit(false), key(111111) {}
-	virtual ~DataSource() 				{key = 0;}	
+	virtual ~DataSource() 					{key = 0;}	
 	virtual double y(int64 id)				{/*NEVER();*/	return Null;}
 	virtual double x(int64 id)				{/*NEVER();*/	return Null;}
 	virtual double znx(int n, int64 id)		{/*NEVER();*/	return Null;}
@@ -546,14 +546,14 @@ public:
 
 class FuncSourcePara : public DataSource {
 private:
-	Pointf (*function)(double);
+	Function <Pointf(double)> function;
 	Pointf lastPointf;
 	double lastT;
 	int numPoints;
 	double minT, maxT;
 	
 public:
-	FuncSourcePara(Pointf (*function)(double), int np, double from, double to) : 
+	FuncSourcePara(Function <Pointf(double)> function, int np, double from, double to) : 
 							function(function), numPoints(np), minT(from), maxT(to) {
 		isParam = true; 
 		lastT = Null;
@@ -576,7 +576,7 @@ public:
 };	
 
 typedef Event<double&, double> PlotExplicFunc; 
-typedef Event<Pointf&, double> PlotParamFunc;
+typedef Function<void(Pointf&, double)> PlotParamFunc;
 
 
 class PlotExplicFuncSource : public DataSource {
@@ -623,6 +623,114 @@ struct PointfLess {
 	bool operator () (const Pointf& a, const Pointf& b) const { return a.x < b.x; }
 };
 
+class DataSourceSurf {
+public:
+	DataSourceSurf() : isExplicit(false), key(1212121) {}
+	virtual ~DataSourceSurf() 			{key = 0;}	
+	virtual double z(double x, double y)= 0;
+	
+	virtual bool IsEmpty()				= 0;
+	bool IsDeleted()					{return key != 1212121;}
+	bool IsExplicit()					{return isExplicit;}
+	
+	virtual double MinX()				= 0;
+	virtual double MaxX()				= 0;
+	virtual double MinY()				= 0;
+	virtual double MaxY()				= 0;
+	virtual double MinZ()				= 0;
+	virtual double MaxZ()				= 0;
+
+	Vector<Pointf> GetIsoline(double thres, const Rectf &area, double deltaX, double deltaY);
+	Vector<Pointf> GetIsolines(const Vector<double> &vals, const Rectf &area, double deltaX, double deltaY);
+
+protected:
+	bool isExplicit;
+	
+private:
+	int key;
+};
+
+class TableData : public DataSourceSurf {
+public:
+	enum Interpolate {NO, BILINEAR};	
+	TableData() : pdata(0), pxAxis(0), pyAxis(0), areas(false) {}
+	TableData(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter, bool areas) {Init(data, xAxis, yAxis, inter, areas);}
+	void Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter, bool areas);
+		
+	double z(double x, double y);
+	
+	bool IsEmpty();
+	
+	double MinX();
+	double MaxX();
+	double MinY();
+	double MaxY();
+	double MinZ();
+	double MaxZ();
+	
+	Interpolate Inter()				{return inter;}
+	void Inter(Interpolate inter)	{this->inter = inter;}
+	
+private:
+	Vector<double> *pdata;
+	Vector<double> *pxAxis;
+	Vector<double> *pyAxis;
+	Interpolate inter;
+	
+	double z_area(double x, double y);
+	double z_point(double x, double y);
+	
+protected:
+	bool areas;
+};
+
+class TableDataAreas : public TableData {
+public:
+	TableDataAreas() : TableData() {areas = true;}
+	TableDataAreas(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, true);}
+	void Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, true);}
+};
+
+class TableDataPoints : public TableData {
+public:
+	TableDataPoints() : TableData() {areas = false;}
+	TableDataPoints(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, false);}
+	void Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, false);}
+};
+
+class ExplicitData : public DataSourceSurf {
+public:
+	ExplicitData() {}
+	ExplicitData(Function<double (double x, double y)> funz, double minX, double maxX, double minY, double maxY) {
+		Init(funz, minX, maxX, minY, maxY);
+	}
+	void Init(Function<double (double x, double y)> funz, double minX, double maxX, double minY, double maxY);
+		
+	double z(double x, double y)	{return funz ? funz(x, y) : Null;}
+	
+	bool IsEmpty() 	{return funz;}
+	
+	double MinX()	{return minX;}
+	double MaxX()	{return maxX;}
+	double MinY()	{return minY;}
+	double MaxY()	{return maxY;}
+	double MinZ()	{return minZ;}
+	double MaxZ()	{return maxZ;}
+		
+private:
+	double minX, maxX, minY, maxY, minZ, maxZ;
+	Function<double (double x, double y)> funz;
+};
+
+Vector<Pointf> Intersection(Vector<Pointf> &poly1, Vector<Pointf> &poly2);
+void Simplify(Vector<Pointf> &poly, double dx, double dy);
+	
 }
 
 #endif

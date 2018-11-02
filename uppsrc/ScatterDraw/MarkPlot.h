@@ -5,16 +5,16 @@ class MarkPlot {
 public:
 	MarkPlot() : multiPlot(false), type(0) {}
 	virtual ~MarkPlot() {};	
-	virtual void Paint(Draw &p, const int& scale, const Point& cp, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {};
-	virtual void Paint(Draw &p, const int& scale, int x, int y, const Vector<int>& dataX, 
+	virtual void Paint(Draw &p, const double& scale, const Point& cp, const double& size, 
+		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const = 0;
+	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {};
-	virtual void Paint(Painter &p, const int& scale, const Point& cp, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {};
-	virtual void Paint(Painter &p, const int& scale, int x, int y, const Vector<int>& dataX, 
+		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {NEVER();};
+	virtual void Paint(Painter &p, const double& scale, const Point& cp, const double& size, 
+		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const = 0;
+	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
-		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {};
+		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const {NEVER();};
 	template<class T>
 	static void Register(const String& name)
 	{
@@ -47,7 +47,7 @@ public:
 	virtual int GetTypeCount()							{return 0;}
 	virtual const char **TypeString()					{return NULL;}
 	
-	//void SetTypeType(int _type) {type = _type;}
+	void SetTypeType(int type) 							{this->type = type;}
 	int GetTypeType() 									{return type;}
  
 protected:
@@ -67,7 +67,7 @@ protected:
 class CircleMarkPlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor, 
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor, 
 		const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		int radius = fround(scale*size);		
@@ -76,12 +76,12 @@ private:
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor, markBorderWidth, markBorderColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor, markBorderWidth, markBorderColor);
@@ -91,7 +91,7 @@ public:
 class SquareMarkPlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		Vector <Point> p;
@@ -104,12 +104,12 @@ private:
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor, markBorderWidth, markBorderColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor, markBorderWidth, markBorderColor);
@@ -119,7 +119,7 @@ public:
 class TriangleMarkPlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		Vector <Point> p;
@@ -133,12 +133,12 @@ private:
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, cp, size, markColor, markBorderWidth, markBorderColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor, markBorderWidth, markBorderColor);
@@ -148,21 +148,21 @@ public:
 class CrossMarkPlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor) const
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor) const
 	{
 		int side2l = int((size*scale)/2.);
 		int side2r = int(size*scale - side2l);
-		w.DrawLine(cp.x - side2l, cp.y, cp.x + side2r, cp.y, scale, markColor);
-		w.DrawLine(cp.x, cp.y - side2l, cp.x, cp.y + side2r, scale, markColor);
+		w.DrawLine(cp.x - side2l, cp.y, cp.x + side2r, cp.y, fround(scale), markColor);
+		w.DrawLine(cp.x, cp.y - side2l, cp.x, cp.y + side2r, fround(scale), markColor);
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, cp, size, markColor);
@@ -172,21 +172,21 @@ public:
 class XMarkPlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor) const
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor) const
 	{
 		int side2l = int((size*scale)/2.);
 		int side2r = int(size*scale - side2l);
-		w.DrawLine(cp.x - side2l, cp.y - side2l, cp.x + side2r, cp.y + side2r, scale, markColor);
-		w.DrawLine(cp.x + side2r, cp.y - side2l, cp.x - side2l, cp.y + side2r, scale, markColor);
+		w.DrawLine(cp.x - side2l, cp.y - side2l, cp.x + side2r, cp.y + side2r, fround(scale), markColor);
+		w.DrawLine(cp.x + side2r, cp.y - side2l, cp.x - side2l, cp.y + side2r, fround(scale), markColor);
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const  
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		DoPaint(p, scale, cp, size, markColor);
@@ -196,7 +196,7 @@ public:
 class RhombMarkPlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor) const
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor) const
 	{
 		Vector <Point> p;
 		int side2l = int((size*scale)/2.);
@@ -204,16 +204,16 @@ private:
 		p << Point(cp.x, cp.y - side2l) << Point(cp.x + side2r, cp.y)
 		  << Point(cp.x, cp.y + side2r) << Point(cp.x - side2l, cp.y)
 		  << Point(cp.x, cp.y - side2l);
-		w.DrawPolygon(p, markColor, scale/2, markColor); 
+		w.DrawPolygon(p, markColor, fround(scale/2.), markColor); 
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, cp, size, markColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor,
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
 		const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, cp, size, markColor);
@@ -237,7 +237,7 @@ public:
 	
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, int x, int y, const Vector<int>& dataX, 
+	void DoPaint(T& w, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const double& size, const Color& markColor) const
 	{
 		int side2l = int((size*scale)/2.);
@@ -266,70 +266,83 @@ private:
 		if (!dataY.IsEmpty()) {	
 			if (type == ALL) {
 				for (int i = 0; i < dataY.GetCount(); ++i) 
-					w.DrawLine(x - side2l, dataY[i], x + side2r, dataY[i], scale, markColor);
+					w.DrawLine(x - side2l, dataY[i], x + side2r, dataY[i], fround(scale), markColor);
 			} else {
-				w.DrawLine(x - side2l, min, x + side2r, min, scale, markColor);			
-				w.DrawLine(x - side2l, max, x + side2r, max, scale, markColor);			
+				w.DrawLine(x - side2l, min, x + side2r, min, fround(scale), markColor);			
+				w.DrawLine(x - side2l, max, x + side2r, max, fround(scale), markColor);			
 				if (type == MIN_AVG_MAX) 
-					w.DrawLine(x - side2l, avg, x + side2r, avg, scale*4, markColor);			
+					w.DrawLine(x - side2l, avg, x + side2r, avg, fround(scale*4), markColor);			
 			}
-			w.DrawLine(x, min, x, max, scale, markColor);
+			w.DrawLine(x, min, x, max, fround(scale), markColor);
 		} else {
 			if (type == ALL) {
 				for (int i = 0; i < dataX.GetCount(); ++i) 
-					w.DrawLine(dataX[i], y - side2l, dataX[i], y + side2r, scale, markColor);
+					w.DrawLine(dataX[i], y - side2l, dataX[i], y + side2r, fround(scale), markColor);
 			} else {
-				w.DrawLine(min, y - side2l, min, y + side2r, scale, markColor);
-				w.DrawLine(max, y - side2l, max, y + side2r, scale, markColor);
+				w.DrawLine(min, y - side2l, min, y + side2r, fround(scale), markColor);
+				w.DrawLine(max, y - side2l, max, y + side2r, fround(scale), markColor);
 				if (type == MIN_AVG_MAX) 
-					w.DrawLine(avg, y - side2l, avg, y + side2r, scale*4, markColor);
+					w.DrawLine(avg, y - side2l, avg, y + side2r, fround(scale*4), markColor);
 			}
-			w.DrawLine(min, y, max, y, scale, markColor);
+			w.DrawLine(min, y, max, y, fround(scale), markColor);
 		}
 	}
 	
 public:
-	virtual void Paint(Draw &p, const int& scale, int x, int y, const Vector<int>& dataX, 
+	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		DoPaint(p, scale, x, y, dataX, dataY, size, markColor);
 	}
-	virtual void Paint(Painter &p, const int& scale, int x, int y, const Vector<int>& dataX, 
+	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, x, y, dataX, dataY, size, markColor);
 	}
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
+		const double& markBorderWidth, const Color& markBorderColor) const 
+	{}
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
+		const double& markBorderWidth, const Color& markBorderColor) const  
+	{}
 };	
 
 class BubblePlot : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, int x, int y, const Vector<double>& dataFixed, const double& size, 
+	void DoPaint(T& w, const double& scale, int x, int y, const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
 	{
-		int diameter = int(dataFixed[0]);
-		int radius = int(dataFixed[0]/2);		
+		if (dataFixed.IsEmpty())
+			return;
+		int diameter = int(scale*dataFixed[0]);
+		int radius = int(scale*dataFixed[0]/2.);		
 		w.DrawEllipse(x - radius, y - radius, diameter, diameter, markColor, fround(markBorderWidth), markBorderColor);
 	}
 	
 public:
 	BubblePlot() {multiPlot = true;}
-	virtual void Paint(Draw &p, const int& scale, int x, int y, const Vector<int>& dataX, 
+	virtual void Paint(Draw &p, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const
 	{
 		DoPaint(p, scale, x, y, dataFixed, size, markColor, markBorderWidth, markBorderColor);
 	}
-	virtual void Paint(Painter &p, const int& scale, int x, int y, const Vector<int>& dataX, 
+	virtual void Paint(Painter &p, const double& scale, int x, int y, const Vector<int>& dataX, 
 		const Vector<int>& dataY, const Vector<double>& dataFixed, const double& size, 
 		const Color& markColor, const double& markBorderWidth, const Color& markBorderColor) const 
 	{
 		DoPaint(p, scale, x, y, dataFixed, size, markColor, markBorderWidth, markBorderColor);
 	}
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
+		const double& markBorderWidth, const Color& markBorderColor) const 
+	{}
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor,
+		const double& markBorderWidth, const Color& markBorderColor) const  
+	{}
 };	
-
-						
+					
 
 #endif

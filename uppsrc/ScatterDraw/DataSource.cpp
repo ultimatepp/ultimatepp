@@ -661,4 +661,400 @@ bool DataSource::SameX(DataSource &data) {
 	return true;
 }
 
+void TableData::Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+					Interpolate inter, bool areas) {
+	ASSERT(areas ?  (data.GetCount() == (xAxis.GetCount() - 1)*(yAxis.GetCount() - 1)) : true);
+	ASSERT(!areas ? (data.GetCount() == xAxis.GetCount()*yAxis.GetCount()) : true);
+	this->pdata = &data;
+	this->pxAxis = &xAxis;
+	this->pyAxis = &yAxis;
+	this->inter = inter;
+	this->areas = areas;
+}
+
+
+double BilinearInterpolate(double x, double y, double x1, double x2, double y1, double y2, 
+									 		   double z11, double z12, double z21, double z22) {
+	double x_x1 = x - x1;
+	double x2_x = x2 - x;
+	double y_y1 = y - y1;
+	double y2_y = y2 - y;
+	return (z11*x2_x*y2_y + z21*x_x1*y2_y + z12*x2_x*y_y1 + z22*x_x1*y_y1)/(x2 - x1)/(y2 - y1);
+}
+
+double TableData::z_area(double x, double y) {
+	if (inter == NO) {
+		int ix, iy;
+		for (ix = 0; ix < pxAxis->GetCount(); ++ix) {
+			if ((*pxAxis)[ix] > x) {
+				if (ix == 0) 
+					return Null;
+				else {
+					ix--;
+					break;
+				}
+			}
+		}
+		if (ix == pxAxis->GetCount()) 
+			return Null;
+		for (iy = 0; iy < pyAxis->GetCount(); ++iy) {
+			if ((*pyAxis)[iy] > y) {
+				if (iy == 0) 
+					return Null;
+				else {
+					iy--;
+					break;
+				}
+			}
+		}
+		if (iy == pyAxis->GetCount()) 
+			return Null;
+		return (*pdata)[ix + iy*(pxAxis->GetCount() - 1)];
+	} else if (inter == BILINEAR) {
+		int ix, iy;
+		for (ix = 0; ix < pxAxis->GetCount()-1; ++ix) {
+			if ((((*pxAxis)[ix]+(*pxAxis)[ix+1])/2.) > x) {
+				if (ix == 0) 
+					return Null;
+				else {
+					ix--;
+					break;
+				}
+			}
+		}
+		if (ix == pxAxis->GetCount()-1)
+			return Null;
+		for (iy = 0; iy < pyAxis->GetCount()-1; ++iy) {
+			if ((((*pyAxis)[iy]+(*pyAxis)[iy+1])/2.) > y) {
+				if (iy == 0) 
+					return Null;
+				else {
+					iy--;
+					break;
+				}
+			}
+		}
+		if (iy == pyAxis->GetCount()-1)
+			return Null;
+		
+		int width = pxAxis->GetCount() - 1;
+		double x1 = ((*pxAxis)[ix] + (*pxAxis)[ix+1])/2.;
+		double x2 = ((*pxAxis)[ix+1] + (*pxAxis)[ix+2])/2.;
+		double y1 = ((*pyAxis)[iy] + (*pyAxis)[iy+1])/2.;
+		double y2 = ((*pyAxis)[iy+1] + (*pyAxis)[iy+2])/2.;
+		double z11 = (*pdata)[ix + iy*width];
+		double z12 = (*pdata)[ix + (iy+1)*width];
+		double z21 = (*pdata)[ix+1+ iy*width];
+		double z22 = (*pdata)[ix+1 + (iy+1)*width];
+		if (IsNull(z11) || IsNull(z12) || IsNull(z21) || IsNull(z22))
+			return Null;
+		return BilinearInterpolate(x, y, x1, x2, y1, y2, z11, z12, z21, z22);
+	} else
+		return Null;
+}
+
+double TableData::z_point(double x, double y) {
+	if (x < (*pxAxis)[0] || x > pxAxis->Top() ||
+		y < (*pyAxis)[0] || y > pyAxis->Top())
+		return Null;
+	
+	if (inter == NO) {
+		int ix, iy;
+		if (x < ((*pxAxis)[0] + (*pxAxis)[1])/2.)
+			ix = 0;
+		else if (x >= ((*pxAxis)[pxAxis->GetCount()-1] + (*pxAxis)[pxAxis->GetCount()-2])/2.)
+			ix = pxAxis->GetCount()-1;
+		else {
+			for (ix = 1; ix < pxAxis->GetCount()-1; ++ix) {
+				if (((*pxAxis)[ix] + (*pxAxis)[ix+1])/2. > x) 
+					break;
+			}
+		}
+		if (y < ((*pyAxis)[0] + (*pyAxis)[1])/2.)
+			iy = 0;
+		else if (y >= ((*pyAxis)[pyAxis->GetCount()-1] + (*pyAxis)[pyAxis->GetCount()-2])/2.)
+			iy = pyAxis->GetCount()-1;
+		else {
+			for (iy = 1; iy < pyAxis->GetCount()-1; ++iy) {
+				if (((*pyAxis)[iy] + (*pyAxis)[iy+1])/2. > y) 
+					break;
+			}
+		}
+		return (*pdata)[ix + iy*pxAxis->GetCount()];
+	} else if (inter == BILINEAR) {
+		int ix, iy;
+		for (ix = 0; ix < pxAxis->GetCount()-1; ++ix) {
+			if ((*pxAxis)[ix+1] >= x) 
+				break;
+		}
+		if (ix == pxAxis->GetCount()-1)
+			return Null;
+		for (iy = 0; iy < pyAxis->GetCount()-1; ++iy) {
+			if ((*pyAxis)[iy+1] >= y) 
+				break;
+		}
+		if (iy == pyAxis->GetCount()-1)
+			return Null;
+		int width = pxAxis->GetCount();
+		double x1 = (*pxAxis)[ix];
+		double x2 = (*pxAxis)[ix+1];
+		double y1 = (*pyAxis)[iy];
+		double y2 = (*pyAxis)[iy+1];
+		double z11 = (*pdata)[ix + iy*width];
+		double z12 = (*pdata)[ix + (iy+1)*width];
+		double z21 = (*pdata)[ix+1 + iy*width];
+		double z22 = (*pdata)[ix+1 + (iy+1)*width];
+		if (IsNull(z11) || IsNull(z12) || IsNull(z21) || IsNull(z22))
+			return Null;
+		return BilinearInterpolate(x, y, x1, x2, y1, y2, z11, z12, z21, z22);
+	} else
+		return Null;
+}
+
+double TableData::z(double x, double y) {
+	if (areas)
+		return z_area(x, y);
+	else
+		return z_point(x, y);
+}
+
+bool TableData::IsEmpty() {
+	if (!pdata || !pxAxis || !pyAxis)
+		return true;
+	return pdata->IsEmpty() || pxAxis->IsEmpty() || pyAxis->IsEmpty();
+}
+
+double TableData::MinX() {
+	return (*pxAxis)[0];
+}
+
+double TableData::MaxX() {
+	return pxAxis->Top();
+}
+
+double TableData::MinY() {
+	return (*pyAxis)[0];
+}
+
+double TableData::MaxY() {
+	return pyAxis->Top();
+}
+
+double TableData::MinZ() {
+	Vector<double> &data = *pdata;
+	double ret = -DOUBLE_NULL;
+	for (int i = 0; i < data.GetCount(); ++i) {
+		double &d = data[i];
+		if (!IsNull(d)) {
+			if (ret > d)
+				ret = d;
+		}
+	}
+	if (ret == -DOUBLE_NULL)
+		return Null;
+	return ret;
+}
+
+double TableData::MaxZ() {
+	Vector<double> &data = *pdata;
+	double ret = DOUBLE_NULL;
+	for (int i = 0; i < data.GetCount(); ++i) {
+		double &d = data[i];
+		if (!IsNull(d)) {
+			if (ret < d)
+				ret = d;
+		}
+	}
+	if (ret == DOUBLE_NULL)
+		return Null;
+	return ret;
+}
+
+void ExplicitData::Init(Function<double (double x, double y)> funz, double minX, double maxX, double minY, double maxY) {
+	ASSERT(maxX >= minX && maxY >= minY);
+	this->funz = funz;
+	this->minX = minX;
+	this->maxX = maxX;
+	this->minY = minY;
+	this->maxY = maxY;
+	
+	minZ = -DOUBLE_NULL_LIM;
+	maxZ = DOUBLE_NULL_LIM;
+	double deltax = (maxX - minX)/100.;
+	double deltay = (maxY - minY)/100.;
+	for (double x = minX; x <= maxX; x += deltax) {
+		for (double y = minY; y <= maxY; y += deltay) {
+			double z = funz(x, y);
+			if (!IsNull(z)) {
+				minZ = min(minZ, z);
+				maxZ = max(maxZ, z);
+			}
+		}
+	}
+}
+
+int FindClosest(Pointf &p, Vector<Pointf> &points, double deltaX, double deltaY, double &d) {
+	double dxmin = -DOUBLE_NULL, dymin = -DOUBLE_NULL;
+	int imin = -1;
+	for (int i = 0; i < points.GetCount(); ++i) {
+		double dx = abs(p.x - points[i].x);		
+		double dy = abs(p.y - points[i].y);		
+		if (dx*dx + dy*dy < dxmin*dxmin + dymin*dymin) {
+			dxmin = dx;
+			dymin = dy;
+			imin = i;
+		}
+	}
+	if ((dxmin > deltaX*1.00000000001) || (dymin > deltaY*1.00000000001)) 
+		return Null;
+	d = sqrt(dxmin*dxmin + dymin*dymin);
+	return imin;
+}
+
+Vector<Pointf> DataSourceSurf::GetIsolines(const Vector<double> &vals, const Rectf &area, double deltaX, double deltaY) {	
+	Vector<Pointf> isolines;
+	for (int i = 0; i < vals.GetCount(); ++i) {
+		if (i > 0)
+			isolines << Null;
+		Vector<Pointf> isoaux = GetIsoline(vals[i], area, deltaX, deltaY);
+		isolines.Append(isoaux);
+	}
+	return isolines;
+}
+
+Vector<Pointf> DataSourceSurf::GetIsoline(double thres, const Rectf &area, double deltaX, double deltaY) {
+	Vector<double> zp;
+
+	int width = (int)(area.GetWidth()/deltaX) + 1;
+	int height = -(int)(area.GetHeight()/deltaY) + 1;
+	zp.SetCount(width*height);
+	int iy = 0;
+	for (double y = area.bottom; iy < height; y += deltaY, iy++) {
+		int ix = 0;
+		for (double x = area.left; ix < width; x += deltaX, ix++) 
+			zp[ix + iy*width] = z(x, y);
+	}
+	
+	Vector<Pointf> points;
+	for (int iy = 0; iy < height; iy++) {
+		for (int ix = 0; ix < width-1; ix++) {
+			double z0 = zp[ix + iy*width];
+			double z1 = zp[ix+1 + iy*width];
+			if (IsNull(z0) || IsNull(z1))
+				continue;
+			if ((z1 > thres && z0 <= thres) || (z0 > thres && z1 <= thres)) {
+				double delta = abs(thres - z0)/abs(z1 - z0);
+				points << Pointf(area.left + (ix + delta)*deltaX, area.bottom + iy*deltaY);
+			}
+		}
+	}
+	for (int ix = 0; ix < width; ix++) {
+		for (int iy = 0; iy < height-1; iy++) {
+			double z0 = zp[ix + iy*width];
+			double z1 = zp[ix + (iy+1)*width];
+			if (IsNull(z0) || IsNull(z1))
+				continue;
+			if ((z1 > thres && z0 <= thres) || (z0 > thres && z1 <= thres)) {
+				double delta = abs(thres - z0)/abs(z1 - z0);
+				points << Pointf(area.left + ix*deltaX, area.bottom + (iy + delta)*deltaY);
+			}
+		}
+	}
+	if (points.IsEmpty())
+		return points;
+	
+	Vector<Pointf> isoline;
+	isoline << points[0];
+	points.Remove(0);
+	while (!points.IsEmpty()) {
+		int imin;
+		double dt, d0;
+		int iminT = FindClosest(isoline.Top(), points, deltaX, deltaY, dt);
+		int imin0 = FindClosest(isoline[0], points, deltaX, deltaY, d0);
+		if (IsNull(iminT) && IsNull(imin0)) {	
+			isoline << Null;
+			imin = 0;
+		} else if (IsNull(iminT)) {
+			Reverse(isoline);
+			imin = imin0;
+		} else if (IsNull(imin0))
+			imin = iminT;
+		else {
+			if (dt > d0) {
+		 		Reverse(isoline);
+				imin = imin0;
+			} else
+				imin = iminT;
+		}
+		isoline << points[imin];
+		points.Remove(imin);
+	}
+	return isoline;
+}
+  
+Pointf Intersection(Pointf &a, Pointf &b, Pointf &c, Pointf &d) {
+    // Line AB represented as a1x + b1y = c1
+    double a1 = b.y - a.y;
+    double b1 = a.x - b.x;
+    double c1 = a1*(a.x) + b1*(a.y);
+ 
+    // Line CD represented as a2x + b2y = c2
+    double a2 = d.y - c.y;
+    double b2 = c.x - d.x;
+    double c2 = a2*(c.x)+ b2*(c.y);
+ 
+    double det = a1*b2 - a2*b1;
+ 
+    if (det == 0) // Parallel
+        return Null;
+    else {
+        double x = (b2*c1 - b1*c2)/det;
+        double y = (a1*c2 - a2*c1)/det;
+        return Pointf(x, y);
+    }
+}
+ 
+Pointf SegIntersection(Pointf &a, Pointf &b, Pointf &c, Pointf &d) {
+	Pointf inter = Intersection(a, b, c, d); 	
+	if (IsNull(inter))
+		return Null;
+    if (((a.x <= inter.x && b.x >= inter.x) || (b.x <= inter.x && a.x >= inter.x)) &&
+    	((a.y <= inter.y && b.y >= inter.y) || (b.y <= inter.y && a.y >= inter.y)) &&
+    	((c.x <= inter.x && d.x >= inter.x) || (d.x <= inter.x && c.x >= inter.x)) &&
+    	((c.y <= inter.y && d.y >= inter.y) || (d.y <= inter.y && c.y >= inter.y)))
+    	return inter;
+	return Null;
+}
+
+Vector<Pointf> Intersection(Vector<Pointf> &poly1, Vector<Pointf> &poly2) {
+	Vector<Pointf> listInter;
+	for (int i1 = 0; i1 < poly1.GetCount() - 1; ++i1) {
+		for (int i2 = 0; i2 < poly2.GetCount() - 1; ++i2) {
+			Pointf inter = SegIntersection(poly1[i1], poly1[i1+1], poly2[i2], poly2[i2+1]);
+			if (!IsNull(inter)) {
+				bool found = false;
+				for (int i = 0; i < listInter.GetCount(); ++i) {
+					if (abs((inter.x - listInter[i].x)/inter.x) < 0.000001 && 
+						abs((inter.y - listInter[i].y)/inter.y) < 0.000001) {	
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+					listInter << inter;
+			}
+		}
+	}
+	return listInter;
+}
+
+void Simplify(Vector<Pointf> &poly, double dx, double dy) {
+	for (int i = 1; i < poly.GetCount(); ++i) {
+		if (abs(poly[i].x - poly[i-1].x) < dx && abs(poly[i].y - poly[i-1].y) < dy) {
+			poly.Remove(i, 1);		
+			i--;
+		}
+	}
+}
+
 }

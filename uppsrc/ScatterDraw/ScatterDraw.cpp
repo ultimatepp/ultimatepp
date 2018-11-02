@@ -1,7 +1,79 @@
 #include "ScatterDraw.h"
 
-#define TFILE <ScatterDraw/ScatterDraw.t>
-#include <Core/t.h>
+ScatterDraw::ScatterDraw() {
+	mode = MD_ANTIALIASED;
+	size = Size(800, 400);
+	titleColor = SColorText();
+	graphColor = White();
+	titleFont = Roman(20);
+	labelsFont = GetStdFont();
+	labelsColor = SColorText();
+	plotAreaColor = White();
+	axisColor = SColorText();
+	axisWidth = 6;
+	hPlotLeft = hPlotRight = vPlotTop = vPlotBottom = 30;
+	xRange = yRange = yRange2 = 100.0;
+	xMin = yMin = yMin2 = xMinUnit = yMinUnit = yMinUnit2 = 0;
+	gridColor = SColorDkShadow();
+	gridWidth = 0.5;
+	gridDash = LINE_DOTTED_FINE;
+	//gridColor2 = SColorDkShadow();
+	//gridWidth2 = 0.5;
+	//gridDash2 = LINE_DOTTED_FINER;
+	drawXReticle = drawYReticle = true;
+	drawY2Reticle = false;
+	reticleFont = GetStdFont();
+	reticleColor = Black;
+	drawVGrid = drawHGrid = showLegend = true;
+	//drawVGrid2 = drawHGrid2 = true;
+	//freqGrid2 = 5;
+	minXRange = maxXRange = minYRange = maxYRange = -1;
+	minXmin = minYmin = maxXmax = maxYmax = Null;
+	fastViewX = false;
+	sequentialXAll = false;
+	zoomStyleX = zoomStyleY = TO_CENTER;
+	maxMajorUnitsX = maxMajorUnitsY = 10;
+	SetMajorUnitsNum(5, 10);
+	Color(graphColor);	
+	isPolar = false;
+	lastxRange = xRange;
+	lastyRange = yRange;
+	highlight_0 = Null;
+	labelsChanged = false;
+	legendAnchor = RIGHT_TOP;
+	legendPos = Point(5, 5);
+	legendNumCols = 1;
+	legendFillColor = White();
+	legendBorderColor = Black();
+	legendRowSpacing = 5;
+	legendFont = GetStdFont();
+	linkedMaster = 0;
+	//multiPlot = false;
+	plotW = plotH = Null;
+	stacked = false;
+	serializeFormat = true;
+	responsive = false;
+	responsivenessFactor = 1;
+	surf = 0;
+	surfRainbow = BLUE_YELLOW_RED;
+	surfNumColor = 4;
+	continuousColor = true;
+	surfMinZ = surfMaxZ = Null;
+	surfUnitsPos = UNITS_TOP;
+	surfLegendPos = LEGEND_RIGHT;
+	
+	showRainbow = true;;
+	rainbowPos = Point(5, 5);
+	rainbowSize = Size(10, 50);
+	rainbowAnchor = RIGHT_BOTTOM;
+	rainbowBorderColor = Black;
+	rainbowPaletteFont = StdFont();
+	rainbowPaletteTextColor = Black;
+}
+
+void debug_h() {
+	;			// It does nothing. Just to set a breakpoint in templated functions
+}
 
 ScatterDraw& ScatterDraw::SetColor(const Color& _color) {
 	graphColor = _color;
@@ -27,11 +99,12 @@ ScatterDraw& ScatterDraw::SetTitleColor(const Color& colorTitle) {
 	return *this;
 }
 
-void ScatterDraw::SetLabels(const String& _xLabel, const String& _yLabel, const String& _yLabel2) {
+ScatterDraw& ScatterDraw::SetLabels(const String& _xLabel, const String& _yLabel, const String& _yLabel2) {
 	xLabel_base = _xLabel;
 	yLabel_base = _yLabel;
 	yLabel2_base = _yLabel2;
-	labelsChanged = true;	
+	labelsChanged = true;
+	return *this;	
 }
 
 ScatterDraw& ScatterDraw::SetLabelX(const String& _xLabel) {
@@ -105,40 +178,30 @@ ScatterDraw& ScatterDraw::SetAxisWidth(int axis_width) {
 	return *this;
 }
 
-ScatterDraw& ScatterDraw::SetGridColor(const Color& grid_color) {
-	gridColor = grid_color;
-	return *this;
-}
-
-ScatterDraw& ScatterDraw::SetGridWidth(int grid_width) {
-	gridWidth = grid_width;
-	return *this;
-}
-
 ScatterDraw& ScatterDraw::ShowHGrid(bool show) {
 	drawHGrid = show;
 	return *this;
 }
+
+/*ScatterDraw& ScatterDraw::ShowHGrid2(bool show) {
+	drawHGrid2 = show;
+	return *this;
+}*/
 
 ScatterDraw& ScatterDraw::ShowVGrid(bool show) {
 	drawVGrid = show;
 	return *this;
 }
 
-ScatterDraw &ScatterDraw::SetDrawXReticle(bool set) {
-	drawXReticle = set;
+/*ScatterDraw& ScatterDraw::ShowVGrid2(bool show) {
+	drawVGrid2 = show;
 	return *this;
 }
 
-ScatterDraw &ScatterDraw::SetDrawYReticle(bool set) {
-	drawYReticle = set;
+ScatterDraw& ScatterDraw::FreqGrid2(double freq) {
+	freqGrid2 = freq;
 	return *this;
-}
-
-ScatterDraw &ScatterDraw::SetDrawY2Reticle(bool set) {
-	drawY2Reticle = set;
-	return *this;
-}
+}*/
 
 bool ScatterDraw::PointInPlot(Point &pt) 
 {
@@ -155,115 +218,6 @@ bool ScatterDraw::PointInLegend(Point &pt)
 {
 	return false;
 }
-
-void ScatterDraw::DrawLegend(Draw& w, const Size &size, int scale) const {
-	if (series.IsEmpty())
-		return;
-	Upp::Font scaledFont = GetStdFont();
-	int rowHeight = scale*GetStdFont().GetHeight();
-	int rowAscent = scale*GetStdFont().GetAscent();
-	scaledFont.Height(rowHeight);
-	int xWidth = scaledFont.GetWidth('X');
-	int lineLen = 4*xWidth;
-	
-	Vector<String> legends;
-	int legendWidth = 0;
-	for (int i = 0; i < series.GetCount(); ++i) {
-		String legend = series[i].legend;
-		if (!series[i].unitsY.IsEmpty())
-			legend += " [" + series[i].unitsY + "]";
-		legends.Add(legend);
-		legendWidth = max<int>(legendWidth, GetTextSize(legend, scaledFont).cx);
-	}
-	legendWidth += lineLen + 4*xWidth;
-	
-	int rowIncSign;
-	int plotW, plotH;
-	int nlr;					
-	int topClip;
-	int nlab = series.GetCount();		
-	int plotLeft, plotTop, rectWidth, rectHeight;	
-	int loclegendRowSpacing;
-	if (legendAnchor == LEGEND_TOP) {
-		plotLeft = plotTop = 0;
-		plotW = (size.cx - hPlotLeft - hPlotRight)*scale;
-		plotH = scale*(vPlotTop - 1) + titleHeight;		
-		rowIncSign = -1;
-		rectWidth = plotW;
-		rectHeight = plotH;
-		topClip = 0;
-		nlr = fround(rectWidth/legendWidth);	
-		loclegendRowSpacing = 0;
-	} else {
-		plotW = (size.cx - hPlotLeft)*scale;
-		plotH = (size.cy - vPlotTop - vPlotBottom)*scale - titleHeight;
-		rowIncSign = 1;
-		if (IsNull(legendPos))
-			return;
-		
-		plotLeft = scale*hPlotLeft;
-		plotTop = scale*vPlotTop + titleHeight;
-		rectWidth = legendWidth*legendNumCols;
-		topClip = scale*vPlotTop + titleHeight;
-		nlr = legendNumCols;	
-		loclegendRowSpacing = legendRowSpacing*scale;
-	}
-	if (nlr <= 0) 
-		return;
-	
-	int nrows = fceil(double(nlab)/nlr);	
-
-	if (legendAnchor != LEGEND_TOP) 
-		rectHeight = int(rowHeight*(nrows + 0.2)) + loclegendRowSpacing*nrows;
-	
-	int left = plotLeft + legendPos.x*scale;
-	int right = plotLeft + plotW - (hPlotRight + legendPos.x)*scale - rectWidth;
-	int top = plotTop + legendPos.y*scale;
-	int bottom = plotTop + plotH - legendPos.y*scale - rectHeight;
-	Rect rect;
-	switch(legendAnchor) {
-	case LEGEND_TOP:				rect.Set(scale*hPlotLeft, 0, rectWidth, rectHeight); 			break;
-	case LEGEND_ANCHOR_LEFT_TOP: 	rect.Set(left, top, left + rectWidth, top + rectHeight);		break;
-	case LEGEND_ANCHOR_RIGHT_TOP:	rect.Set(right, top, right + rectWidth, top + rectHeight);		break;
-	case LEGEND_ANCHOR_LEFT_BOTTOM: rect.Set(left, bottom, left + rectWidth, bottom + rectHeight);	break; 
-	case LEGEND_ANCHOR_RIGHT_BOTTOM:rect.Set(right, bottom, right + rectWidth, bottom + rectHeight);break; 
-	}
-	
-	w.Clip(scale*hPlotLeft, topClip, plotW, plotH);
-	
-	if (legendAnchor != LEGEND_TOP) {
-		if (!IsNull(legendFillColor))
-			w.DrawRect(rect, legendFillColor);
-		if (!IsNull(legendBorderColor)) {
-			w.DrawLine(rect.left, rect.top, rect.right, rect.top, 1, legendBorderColor);
-			w.DrawLine(rect.right, rect.top, rect.right, rect.bottom, 1, legendBorderColor);
-			w.DrawLine(rect.right, rect.bottom, rect.left, rect.bottom, 1, legendBorderColor);
-			w.DrawLine(rect.left, rect.bottom, rect.left, rect.top, 1, legendBorderColor);
-		}
-	}
-	Upp::Font italic = scaledFont;
-	italic.Italic();
-	scaledFont.Bold();
-	for(int row = 0, start = 0; row <= nrows; row++) {
-		for(int i = start; i < min(start + nlr, nlab); i++) {
-			double lx = rect.left + (i - start)*legendWidth + xWidth;
-			double ly = (rowIncSign >= 0 ? rect.top : rect.bottom) +
-					 rowIncSign*int(rowHeight*(row + 0.6) + loclegendRowSpacing*(row + 0.5));
-			Vector <Pointf> line;
-			line << Pointf(lx, ly) << Pointf(lx + lineLen, ly);
-			if (series[i].opacity > 0 && series[i].seriesPlot)
-				DrawPolylineOpa(w, line, scale, 1, series[i].thickness, series[i].color, series[i].dash);
-			Pointf mark_p(lx + xWidth/*scale*7*/, ly);
-			if (series[i].markWidth >= 1 && series[i].markPlot)
-				series[i].markPlot->Paint(w, scale, mark_p, series[i].markWidth, series[i].markColor, 
-					series[i].markBorderWidth, series[i].markBorderColor);   
-			Upp::Font &font = series[i].primaryY ? scaledFont : italic;
-			DrawText(w, lx + lineLen + xWidth, ly - int((2*rowAscent)/3)/*scale*6*/, 0, legends[i], font, series[i].color);                   
-		}
-		start += nlr;
-	}
-	w.End();
-}	
 
 void ScatterDraw::AdjustMinUnitX() {
 	if (xMajorUnit > 0) {
@@ -372,138 +326,79 @@ ScatterDraw &ScatterDraw::SetXYMin(double xmin, double ymin, double ymin2) {
 }
 
 void ScatterDraw::ZoomToFit(bool horizontal, bool vertical, double factor) {
-	ZoomToFit(horizontal, Null, Null, vertical, Null, Null, vertical, Null, Null, factor);
-}
-
-void ScatterDraw::ZoomToFit(bool horizontal, double minx, double maxx, bool vertical, double miny, 
-		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
 	if (linkedMaster) {
-		linkedMaster->ZoomToFit(horizontal, vertical);
+		linkedMaster->ZoomToFit(horizontal, vertical, factor);
 		return;
 	}
-	DoFitToData(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
+	DoFitToData(horizontal, vertical, factor);
 	if (!linkedCtrls.IsEmpty()) {
 		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
-	    	linkedCtrls[i]->DoFitToData(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
+	    	linkedCtrls[i]->DoFitToData(horizontal, vertical, factor);
 	}
+	WhenZoomToFit();
 }
-		
-void ScatterDraw::DoFitToData(bool horizontal, double minx, double maxx, bool vertical, double miny, 
-		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
-	bool calcminx, calcmaxx, calcminy, calcminy2, calcmaxy, calcmaxy2;
-	if (IsNull(minx)) {
-		minx = -DOUBLE_NULL;
-		calcminx = true;
-	} else
-		calcminx = false;
-	if (IsNull(miny)) {
-		miny = -DOUBLE_NULL;
-		calcminy = true;
-	} else
-		calcminy = false;
-	if (IsNull(miny2)) {
-		miny2 = -DOUBLE_NULL;
-		calcminy2 = true;
-	} else
-		calcminy2 = false;
-	if (IsNull(maxx)) {
-		maxx = DOUBLE_NULL;
-		calcmaxx = true;
-	} else
-		calcmaxx = false;
-	if (IsNull(maxy)) {
-		maxy = DOUBLE_NULL;
-		calcmaxy = true;
-	} else
-		calcmaxy = false;
-	if (IsNull(maxy2)) {
-		maxy2 = DOUBLE_NULL;
-		calcmaxy2 = true;
-	} else
-		calcmaxy2 = false;
+			
+ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double factor) {
+	double minx, maxx, miny, miny2, maxy, maxy2;
+	minx = miny = miny2 = -DOUBLE_NULL;
+	maxx = maxy = maxy2 = DOUBLE_NULL;
 	
 	try {
 		if (horizontal) {
 			for (int j = 0; j < series.GetCount(); j++) {
 				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 					continue;
-				if (calcminx) {
-					double mn = series[j].PointsData()->MinX();
-					if (!IsNull(mn))
-						minx = min(minx, mn);
-				}
-				if (calcmaxx) {
-					double mx = series[j].PointsData()->MaxX();
-					if (!IsNull(mx))
-						maxx = max(maxx, mx);
-				}
+				minx = min(minx, series[j].PointsData()->MinX());
+				maxx = max(maxx, series[j].PointsData()->MaxX());
 			}
-			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
-				if (maxx < minx)
-					Swap(maxx, minx);
+			if (minx != -DOUBLE_NULL) {
 				double deltaX = (maxx - minx)*factor;
-				if (calcminx)
-					minx -= deltaX;
-				if (calcmaxx)
-					maxx += deltaX;
+				minx -= deltaX;
+				maxx += deltaX;
+			}
+			if (surf) {
+				minx = min(minx, surf->MinX());
+				maxx = max(maxx, surf->MaxX());
 			}
 		}
 		if (vertical) {
 			for (int j = 0; j < series.GetCount(); j++) {
 				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
 					continue;
-				if (series[j].primaryY) {
-					if (calcminy) {
-						double mn = series[j].PointsData()->MinY();
-						if (!IsNull(mn))
-							miny = min(miny, mn);
-					}
-					if (calcmaxx) {
-						double mx = series[j].PointsData()->MaxY();
-						if (!IsNull(mx))
-							maxy = max(maxy, mx);
+				for (int64 i = 0; i < series[j].PointsData()->GetCount(); i++) {
+					double py = series[j].PointsData()->y(i);
+					if (IsNull(py))
+						continue;
+					if (series[j].primaryY) {
+						if (py < miny)
+							miny = py;
+						if (py > maxy)
+							maxy = py;
+					} else {
+						if (py < miny2)
+							miny2 = py;
+						if (py > maxy2)
+							maxy2 = py;
 					}
 				}
 			}
-			if (maxy != DOUBLE_NULL && miny != -DOUBLE_NULL) {
-				if (maxy < miny)
-					Swap(maxy, miny);
+			if (miny != -DOUBLE_NULL) {
 				double deltaY = (maxy - miny)*factor;
-				if (calcminy)
-					miny -= deltaY;
-				if (calcmaxy)
-					maxy += deltaY;		
+				miny -= deltaY;
+				maxy += deltaY;		
 			}
-		}
-		if (vertical2) {
-			for (int j = 0; j < series.GetCount(); j++) {
-				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-					continue;
-				if (!series[j].primaryY) {
-					if (calcminy2) {
-						double mn = series[j].PointsData()->MinY();
-						if (!IsNull(mn))
-							miny2 = min(miny2, mn);
-					}
-					if (calcmaxy2) {
-						double mx = series[j].PointsData()->MaxY();
-						if (!IsNull(mx))
-							maxy2 = max(maxy2, mx);
-					}
-				}
-			}
-			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {
-				if (maxy2 < miny2)
-					Swap(maxy2, miny2);
+			if (miny2 != -DOUBLE_NULL) {
 				double deltaY2 = (maxy2 - miny2)*factor;
-				if (calcminy2)
-					miny2 -= deltaY2;
-				if (calcmaxy2)
-					maxy2 += deltaY2;		
+				miny2 -= deltaY2;
+				maxy2 += deltaY2;		
+			}
+			if (surf) {
+				miny = min(miny, surf->MinY());
+				maxy = max(maxy, surf->MaxY());
 			}
 		}
 		if (horizontal) {
-			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
+			if (minx != -DOUBLE_NULL) {
 				if (maxx == minx) {
 					if (maxx == 0) {
 						xRange = 2;
@@ -520,7 +415,7 @@ void ScatterDraw::DoFitToData(bool horizontal, double minx, double maxx, bool ve
 			}
 		}
 		if (vertical) {
-			if (maxy != DOUBLE_NULL && miny != -DOUBLE_NULL) {
+			if (miny != -DOUBLE_NULL) {
 				if (maxy == miny) 
 					yRange = maxy > 0 ? 2*maxy : 1;
 				else	
@@ -531,9 +426,7 @@ void ScatterDraw::DoFitToData(bool horizontal, double minx, double maxx, bool ve
 				yMajorUnit = yRange/10; 
 				AdjustMinUnitY();
 			}
-		}
-		if (vertical2) {
-			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {	
+			if (miny2 != -DOUBLE_NULL) {	
 				if (maxy2 == miny2) 
 					yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
 				else	
@@ -547,187 +440,12 @@ void ScatterDraw::DoFitToData(bool horizontal, double minx, double maxx, bool ve
 		}	
 	} catch (ValueTypeError err) {
 		ASSERT_(true, err);
-		return;
+		return *this;
 	}
 	WhenSetRange();
 	WhenSetXYMin();
 	Refresh();
-}
-
-void ScatterDraw::ZoomToFitSmart(bool horizontal, double minx, double maxx, bool vertical, double miny, 
-		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
-	if (linkedMaster) {
-		linkedMaster->ZoomToFit(horizontal, vertical);
-		return;
-	}
-	DoFitToDataSmart(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
-	if (!linkedCtrls.IsEmpty()) {
-		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
-	    	linkedCtrls[i]->DoFitToDataSmart(horizontal, minx, maxx, vertical, miny, maxy, vertical2, miny2, maxy2, factor);
-	}
-}
-		
-void ScatterDraw::DoFitToDataSmart(bool horizontal, double minx, double maxx, bool vertical, double miny, 
-		double maxy, bool vertical2, double miny2, double maxy2, double factor) {
-	bool calcminx, calcmaxx, calcminy, calcminy2, calcmaxy, calcmaxy2;
-	if (IsNull(minx)) {
-		minx = -DOUBLE_NULL;
-		calcminx = true;
-	} else
-		calcminx = false;
-	if (IsNull(miny)) {
-		miny = -DOUBLE_NULL;
-		calcminy = true;
-	} else
-		calcminy = false;
-	if (IsNull(miny2)) {
-		miny2 = -DOUBLE_NULL;
-		calcminy2 = true;
-	} else
-		calcminy2 = false;
-	if (IsNull(maxx)) {
-		maxx = DOUBLE_NULL;
-		calcmaxx = true;
-	} else
-		calcmaxx = false;
-	if (IsNull(maxy)) {
-		maxy = DOUBLE_NULL;
-		calcmaxy = true;
-	} else
-		calcmaxy = false;
-	if (IsNull(maxy2)) {
-		maxy2 = DOUBLE_NULL;
-		calcmaxy2 = true;
-	} else
-		calcmaxy2 = false;
-	
-	try {
-		if (horizontal) {
-			for (int j = 0; j < series.GetCount(); j++) {
-				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-					continue;
-				double av = series[j].PointsData()->AvgX();
-				if (calcminx) {
-					if (!IsNull(av))
-						minx = min(minx, av);
-				}
-				if (calcmaxx) {
-					if (!IsNull(av))
-						maxx = max(maxx, av);
-				}
-			}
-			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
-				if (maxx < minx)
-					Swap(maxx, minx);
-				double deltaX = (maxx - minx)*factor;
-				if (calcminx)
-					minx -= deltaX;
-				if (calcmaxx)
-					maxx += deltaX;
-			}
-		}
-		if (vertical) {
-			for (int j = 0; j < series.GetCount(); j++) {
-				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-					continue;
-				if (series[j].primaryY) {
-					double av = series[j].PointsData()->AvgY();
-					if (calcminy) {
-						if (!IsNull(av))
-							miny = min(miny, av);
-					}
-					if (calcmaxx) {
-						if (!IsNull(av))
-							maxy = max(maxy, av);
-					}
-				}
-			}
-			if (maxy != DOUBLE_NULL && miny != -DOUBLE_NULL) {
-				if (maxy < miny)
-					Swap(maxy, miny);
-				double deltaY = (maxy - miny)*factor;
-				if (calcminy)
-					miny -= deltaY;
-				if (calcmaxy)
-					maxy += deltaY;		
-			}
-		}
-		if (vertical2) {
-			for (int j = 0; j < series.GetCount(); j++) {
-				if (series[j].opacity == 0 || series[j].PointsData()->IsExplicit())
-					continue;
-				if (!series[j].primaryY) {
-					double av = series[j].PointsData()->AvgY();
-					if (calcminy2) {
-						if (!IsNull(av))
-							miny2 = min(miny2, av);
-					}
-					if (calcmaxy2) {
-						if (!IsNull(av))
-							maxy2 = max(maxy2, av);
-					}
-				}
-			}
-			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {
-				if (maxy2 < miny2)
-					Swap(maxy2, miny2);
-				double deltaY2 = (maxy2 - miny2)*factor;
-				if (calcminy2)
-					miny2 -= deltaY2;
-				if (calcmaxy2)
-					maxy2 += deltaY2;		
-			}
-		}
-		if (horizontal) {
-			if (maxx != DOUBLE_NULL && minx != -DOUBLE_NULL) {
-				if (maxx == minx) {
-					if (maxx == 0) {
-						xRange = 2;
-						xMin = -1;
-					} else	
-						xRange = 2*maxx;
-				} else	
-					xRange = maxx - minx;
-				double deltaX = xMin - minx;
-				xMin -= deltaX;
-				xMinUnit += deltaX;
-				xMajorUnit = xRange/10;
-				AdjustMinUnitX();
-			}
-		}
-		if (vertical) {
-			if (maxy != DOUBLE_NULL  && miny != -DOUBLE_NULL) {
-				if (maxy == miny) 
-					yRange = maxy > 0 ? 2*maxy : 1;
-				else	
-					yRange = maxy - miny;
-				double deltaY = yMin - miny;
-				yMin -= deltaY;
-				yMinUnit += deltaY;
-				yMajorUnit = yRange/10; 
-				AdjustMinUnitY();
-			}
-		}
-		if (vertical2) {
-			if (maxy2 != DOUBLE_NULL && miny2 != -DOUBLE_NULL) {	
-				if (maxy2 == miny2) 
-					yRange2 = maxy2 > 0 ? 2*maxy2 : 1;
-				else	
-					yRange2 = maxy2 - miny2;
-				double deltaY2 = yMin2 - miny2;
-				yMin2 -= deltaY2;
-				yMinUnit2 += deltaY2;
-				yMajorUnit2 = yRange2/10; 
-				AdjustMinUnitY2();
-			}
-		}	
-	} catch (ValueTypeError err) {
-		ASSERT_(true, err);
-		return;
-	}
-	WhenSetRange();
-	WhenSetXYMin();
-	Refresh();
+	return *this;
 }
 
 ScatterDraw &ScatterDraw::Graduation_FormatX(Formats fi) {
@@ -853,10 +571,16 @@ ScatterDraw::ScatterBasicSeries::ScatterBasicSeries() {
 	markBorderWidth = 1;
 	markBorderColor = Null;
 	fillColor = Null;
-	barWidth = 10;
+	labels = 0;
 	isClosed = false;
+	barWidth = 10;
+	labelsFont = StdFont();
+	labelsColor = Null;
+	labelsDx = labelsDy = 0;
+	labelsAlign = ALIGN_CENTER;
+	showLegend = true;
 }
-
+		
 void ScatterDraw::ScatterBasicSeries::Init(int index) {
 	color = GetNewColor(index);
 	markColor = Color(max(color.GetR()-30, 0), max(color.GetG()-30, 0), max(color.GetB()-30, 0));
@@ -880,7 +604,7 @@ DataSource &ScatterDraw::GetSeries(int index) {
 ScatterDraw &ScatterDraw::_AddSeries(DataSource *data) {
 	ScatterSeries &s = series.Add();
 	s.Init(series.GetCount()-1);
-	s.SetDataSource(data, true);
+	s.SetDataSource(data);
 	Refresh();
 	return *this;	
 }
@@ -929,7 +653,7 @@ ScatterDraw &ScatterDraw::_InsertSeries(int index, DataSource *data) {
 	ASSERT(IsValid(index));
 	ScatterSeries &s = series.Insert(index);
 	s.Init(index);
-	s.SetDataSource(data, true);
+	s.SetDataSource(data);
 	Refresh();	
 	return *this;
 }
@@ -1005,34 +729,12 @@ ScatterDraw &ScatterDraw::SetNoPlot(int index) {
  	series[index].seriesPlot = NULL;
  	return *this;
 }	
-	
-	
+
 ScatterDraw &ScatterDraw::PlotStyle(int index, SeriesPlot *data) {
 	ASSERT(IsValid(index));
 	
 	series[index].seriesPlot = data;
-	return *this;
-}
-
-ScatterDraw &ScatterDraw::PlotStyle(int index, const String name) {
-	ASSERT(IsValid(index));
-	
-	int typeidx = SeriesPlot::TypeIndex(name);
-	
-	if (typeidx >= 0)
-		series[index].seriesPlot = SeriesPlot::Create(typeidx);
-	else
-		series[index].seriesPlot = 0;
-	return *this;
-}
-
-const String ScatterDraw::GetPlotStyleName(int index) {
-	ASSERT(IsValid(index));
-	
-	if (series[index].seriesPlot)
-		return SeriesPlot::TypeName(series[index].seriesPlot->GetType());
-	else
-		return t_("No series");
+	return *this;	
 }
 
 ScatterDraw &ScatterDraw::MarkStyle(int index, MarkPlot *data) {
@@ -1043,12 +745,9 @@ ScatterDraw &ScatterDraw::MarkStyle(int index, MarkPlot *data) {
 }
 
 ScatterDraw &ScatterDraw::MarkStyle(int index, const String name) {
-	int typeidx = MarkPlot::TypeIndex(name);
-	return MarkStyle(index, typeidx);
-}
-
-ScatterDraw &ScatterDraw::MarkStyle(int index, int typeidx) {
 	ASSERT(IsValid(index));
+	
+	int typeidx = MarkPlot::TypeIndex(name);
 	
 	if (typeidx >= 0)
 		series[index].markPlot = MarkPlot::Create(typeidx);
@@ -1075,63 +774,29 @@ int ScatterDraw::GetMarkStyleType(int index) {
 		return -1;
 }
 
-/*ScatterDraw &ScatterDraw::SetMarkStyleType(int index, int type) {
+ScatterDraw &ScatterDraw::SetMarkStyleType(int index, int type) {
 	ASSERT(IsValid(index));
 	
 	if (series[index].markPlot)
 		series[index].markPlot->SetTypeType(type);
 	
 	return *this;	
-}*/
+}
 
 ScatterDraw &ScatterDraw::Stroke(int index, double thickness, Color color) {
-	ASSERT(IsValid(index));
-	
-	series[index].thickness = thickness;
 	if (IsNull(color))
 		color = GetNewColor(index);
 	series[index].color = color;
+	series[index].thickness = thickness;
 	//series[index].dash = GetNewDash(index);
 	
 	Refresh();
-	return *this;		
+	return *this;	
 }
 
 void ScatterDraw::GetStroke(int index, double &thickness, Color &color) {
-	ASSERT(IsValid(index));
-	
 	color = series[index].color;
-	thickness = series[index].thickness;
-}
-
-ScatterDraw &ScatterDraw::Closed(int index, bool closed) {
-	ASSERT(IsValid(index));
-	
-	series[index].isClosed = closed;
-	
-	Refresh();
-	return *this;
-}
-
-bool ScatterDraw::IsClosed(int index) {
-	ASSERT(IsValid(index));
-	
-	return series[index].isClosed;
-}
-
-ScatterDraw &ScatterDraw::BarWidth(int index, double width) {
-	ASSERT(IsValid(index));
-	
-	series[index].barWidth = width;
-	
-	Refresh();
-	return *this;
-}
-
-double ScatterDraw::GetBarWidth(int index) {
-	ASSERT(IsValid(index));
-	
-	return series[index].barWidth;
+	thickness  = series[index].thickness;
 }
 
 ScatterDraw &ScatterDraw::Fill(Color color) {
@@ -1191,6 +856,33 @@ ScatterDraw &ScatterDraw::MarkBorderWidth(double markWidth) {
 	return *this;
 }
 
+ScatterDraw &ScatterDraw::ShowSeriesLegend(int index, bool show) {
+	series[index].showLegend = show;
+	
+	Refresh();
+	return *this;
+}
+
+ScatterDraw &ScatterDraw::Closed(int index, bool closed) {
+	ASSERT(IsValid(index));
+	
+	series[index].isClosed = closed;
+	Refresh();
+	return *this;
+}
+
+bool ScatterDraw::IsClosed(int index) {
+	return series[index].isClosed;
+}
+	
+ScatterDraw &ScatterDraw::BarWidth(int index, double width) {
+	ASSERT(IsValid(index));
+	
+	series[index].barWidth = width;
+	Refresh();
+	return *this;		
+}
+	
 ScatterDraw &ScatterDraw::Dash(const char *dash) {
 	int index = series.GetCount() - 1;
 	
@@ -1254,7 +946,6 @@ const String ScatterDraw::GetUnitsY(int index) {
 	ASSERT(IsValid(index));
 	return series[index].unitsY;
 }
-
 /*
 ScatterDraw& ScatterDraw::SetDataColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
@@ -1278,8 +969,8 @@ ScatterDraw& ScatterDraw::SetDataThickness(int index, double thickness) {
 double ScatterDraw::GetDataThickness(int index) const {
 	ASSERT(IsValid(index));
 	return series[index].thickness;
-}*/
-
+}
+*/
 ScatterDraw& ScatterDraw::SetFillColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].fillColor = color;
@@ -1328,10 +1019,11 @@ Color ScatterDraw::GetMarkColor(int index) const {
 	return series[index].markColor;
 }
 
-void ScatterDraw::SetMarkBorderColor(int index, const Color& color) {
+ScatterDraw &ScatterDraw::SetMarkBorderColor(int index, const Color& color) {
 	ASSERT(IsValid(index));
 	series[index].markBorderColor = color;
 	Refresh();
+	return *this;
 }
 
 Color ScatterDraw::GetMarkBorderColor(int index) const {
@@ -1343,11 +1035,11 @@ void ScatterDraw::NoMark(int index) {
 	ASSERT(IsValid(index));
 	series[index].markWidth = 0;
 }
-
-bool ScatterDraw::IsShowMark(int index) {
+/*
+bool ScatterDraw::IsShowMark(int index) const throw (Exc) {
 	ASSERT(IsValid(index));
 	return series[index].markWidth > 0;
-}
+}*/
 
 
 void ScatterDraw::SetDataPrimaryY(int index, bool primary) {
@@ -1358,6 +1050,17 @@ void ScatterDraw::SetDataPrimaryY(int index, bool primary) {
 
 ScatterDraw &ScatterDraw::SetDataPrimaryY(bool primary) {
 	SetDataPrimaryY(series.GetCount()-1, primary);
+	return *this;
+}
+
+void ScatterDraw::SetDataSecondaryY(int index, bool secondary) {
+	ASSERT(IsValid(index));
+	series[index].primaryY = !secondary;
+	Refresh();
+}
+
+ScatterDraw &ScatterDraw::SetDataSecondaryY(bool secondary) {
+	SetDataSecondaryY(series.GetCount()-1, secondary);
 	return *this;
 }
 
@@ -1436,33 +1139,29 @@ void ScatterDraw::RemoveAllSeries() {
 	Refresh();
 }
 
-Drawing ScatterDraw::GetDrawing(const Size _size, int scale) {
-	Size size = IsNull(_size) ? GetSize() : _size;
-	DrawingDraw ddw(scale*size);
+Drawing ScatterDraw::GetDrawing() {
+	DrawingDraw ddw(size);
 	
-	SetDrawing(ddw, size, scale, true);
-	PlotTexts(ddw, size, scale);
+	SetDrawing(ddw, true);
+	PlotTexts(ddw);
 
 	return ddw;
 }
 
-Image ScatterDraw::GetImage(const Size &size, int scale) {
+Image ScatterDraw::GetImage() {
 #ifndef flagGUI
 	ASSERT(mode != MD_DRAW);
 #endif
-	ImageBuffer ib(scale*size);	
+	ImageBuffer ib(size);	
 	BufferPainter bp(ib, mode);	
 	
-	bp.LineCap(LINECAP_BUTT);
+	bp.LineCap(LINECAP_SQUARE);
 	bp.LineJoin(LINEJOIN_MITER);
-	SetDrawing(bp, size, scale, false);
+	SetDrawing(bp, false);
 
 	return ib;
 }
 
-Image ScatterDraw::GetImage(int scale) {
-	return GetImage(GetSize(), scale);
-}
 
 double ScatterDraw::GetXByPoint(double x) {
 	return (x - hPlotLeft)*GetXRange()/(GetSize().cx - (hPlotLeft + hPlotRight) - 1) + GetXMin();		
@@ -1486,88 +1185,31 @@ double ScatterDraw::GetYPointByValue(double y) {
 
 
 ScatterDraw &ScatterDraw::SetRangeLinked(double rx, double ry, double ry2) {
-	double actual_rx = GetXRange();
-	double actual_ry = GetYRange();
-	double actual_ry2 = GetY2Range();
-	SetRangeLinkedEach(rx, actual_rx, ry, actual_ry, ry2, actual_ry2);
-	return *this;
-}
-
-void ScatterDraw::SetRangeLinkedEach(double rx, double rx0, double ry, double ry0, double ry2, double ry20) {	
 	if (linkedMaster) {
-		linkedMaster->SetRangeLinkedEach(rx, rx0, ry, ry0, ry2, ry20);
-		linkedMaster->Refresh();
-	}
-	double actual_rx = GetXRange();
-	double actual_ry = GetYRange();
-	double actual_ry2 = GetY2Range();
-	SetRange(actual_rx == rx0   ? rx  : Null, 
-			 actual_ry == ry0   ? ry  : Null, 
-			 actual_ry2 == ry20 ? ry2 : Null);
-	if (!linkedCtrls.IsEmpty()) {
-		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
-			double linked_rx = linkedCtrls[i]->GetXRange();
-			double linked_ry = linkedCtrls[i]->GetYRange();
-			double linked_ry2 = linkedCtrls[i]->GetY2Range();
-	
-	    	linkedCtrls[i]->SetRange(rx0 == linked_rx   ? rx  : Null, 
-									 ry0 == linked_ry   ? ry  : Null, 
-									 ry20 == linked_ry2 ? ry2 : Null);
-	    	linkedCtrls[i]->Refresh();
-		}
-	}
-}
-
-ScatterDraw &ScatterDraw::SetXYMinLinked(double xmin, double ymin, double ymin2) {
-	double actual_xmin = GetXMin();
-	double actual_ymin = GetYMin();
-	double actual_ymin2 = GetY2Min();
-	SetXYMinLinkedEach(xmin, actual_xmin, ymin, actual_ymin, ymin2, actual_ymin2);
-	return *this;
-}
-
-void ScatterDraw::SetXYMinLinkedEach(double xmin, double xmin0, double ymin, double ymin0, double ymin2, double ymin20) {
-	if (linkedMaster) {
-		linkedMaster->SetXYMinLinkedEach(xmin, xmin0, ymin, ymin0, ymin2, ymin20);
-		linkedMaster->Refresh();
-	}
-	double actual_xmin = GetXMin();
-	double actual_ymin = GetYMin();
-	double actual_ymin2 = GetY2Min();
-	SetXYMin(actual_xmin == xmin0   ? xmin  : Null, 
-			 actual_ymin == ymin0   ? ymin  : Null, 
-			 actual_ymin2 == ymin20 ? ymin2 : Null);
-	if (!linkedCtrls.IsEmpty()) {
-		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
-			double linked_xmin = linkedCtrls[i]->GetXMin();
-			double linked_ymin = linkedCtrls[i]->GetYMin();
-			double linked_ymin2 = linkedCtrls[i]->GetY2Min();
-		
-	    	linkedCtrls[i]->SetXYMin(xmin0 == linked_xmin   ? xmin  : Null, 
-									 ymin0 == linked_ymin   ? ymin  : Null, 
-									 ymin20 == linked_ymin2 ? ymin2 : Null);
-	    	linkedCtrls[i]->Refresh();
-		}
-	}
-}
-
-ScatterDraw &ScatterDraw::SetMouseHandling(bool valx, bool valy) 
-{
-	mouseHandlingX = valx;
-	mouseHandlingY = valy;
-	return *this;
-}
-
-ScatterDraw &ScatterDraw::SetMouseHandlingLinked(bool valx, bool valy) {
-	if (linkedMaster) {
-		linkedMaster->SetMouseHandlingLinked(valx, valy);
+		linkedMaster->SetRangeLinked(rx, ry, ry2);
 		linkedMaster->Refresh();
 		return *this;
 	}
-	SetMouseHandling(valx, valy);
+	SetRange(rx, ry, ry2);
 	if (!linkedCtrls.IsEmpty()) {
 		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
-	    	linkedCtrls[i]->SetMouseHandling(valx, valy);
+	    	linkedCtrls[i]->SetRange(rx, ry, ry2);
+	    	linkedCtrls[i]->Refresh();
+		}
+	}
+	return *this;
+}
+
+ScatterDraw &ScatterDraw::SetXYMinLinked(double xmin, double ymin, double ymin2) {
+	if (linkedMaster) {
+		linkedMaster->SetXYMinLinked(xmin, ymin, ymin2);
+		linkedMaster->Refresh();
+		return *this;
+	}
+	SetXYMin(xmin, ymin, ymin2);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i) {
+	    	linkedCtrls[i]->SetXYMin(xmin, ymin, ymin2);
 	    	linkedCtrls[i]->Refresh();
 		}
 	}
@@ -1799,86 +1441,6 @@ void ScatterDraw::DoScroll(double factorX, double factorY) {
 	}
 }
 
-Pointf PointAtLen(const Pointf &p0, const Pointf &p1, double len) {
-	Pointf ret;
-	if (p1.y == p0.y) {
-		ret.x = p0.x + ((p0.x < p1.x) ? len : -len);
-		ret.y = p0.y;
-	} else if (p1.x == p0.x) {
-		ret.x = p0.x;
-		ret.y = p0.y + ((p0.y < p1.y) ? len : -len);
-	} else {
-		double k = sqr((p1.x-p0.x)/(p1.y-p0.y));
-		double deltax = len/sqrt(1/k + 1);
-		double deltay = len/sqrt(k + 1);
-		ret.x = p0.x + ((p0.x < p1.x) ? deltax : -deltax);
-		ret.y = p0.y + ((p0.y < p1.y) ? deltay : -deltay);
-	}
-	return ret;
-}
-
-inline bool Even(int val)	  	{return !(val%2);}
-
-Vector <double> GetLineDash(String dash) {
-	Vector<double> d;
-	CParser p(dash);
-	try {
-		while(!p.IsEof())
-			if(!p.Char(':')) {
-				double data = p.ReadDouble();
-				if (data > 0)
-					d.Add(p.ReadDouble());
-			}
-	}
-	catch(CParser::Error) {}
-
-	if(d.GetCount() & 1) {
-		Vector<double> dash1;
-		dash1.Append(d);
-		dash1.Append(d);
-		return dash1;
-	}		
-	return d;
-}
-
-Vector <double> &GetDashedArray(String dash) {
-	static VectorMap <String, Vector <double> > pats;
-	
-	int pos = pats.Find(dash);
-	if (pos < 0) {
-		pats.Add(dash, GetLineDash(dash));
-		pos = pats.GetCount()-1;
-	} 
-	return pats.GetValues()[pos];
-}
-
-void ScatterDraw::ParseTextMultiline(const String &text, Upp::Font fnt, Upp::Array <String> &texts, 
-		Upp::Array <Size> &sizes) {
-	Size ret(0, 0);
-	int npos = 0;
-	for (int pos = 0; npos != -1; pos = npos+1) {
-		npos = text.Find('\n', pos);
-		String &t = texts.Add();
-		if (npos != -1)
-			t = text.Mid(pos, npos-pos);
-		else
-			t = text.Mid(pos);
-		Size &s = sizes.Add();
-		s.cx = GetTextSize(t, fnt).cx;
-		s.cy = GetTextSize(t, fnt).cy;
-	}
-}
-
-Size GetTextSizeMultiline(Upp::Array <Size> &sizes) {
-	Size ret(0, 0);
-	for (int i = 0; i < sizes.GetCount(); ++i) {
-		if (sizes[i].cx > ret.cx)
-			ret.cx = sizes[i].cx;
-		ret.cy += sizes[i].cy;
-	}
-	return ret;
-}
-
 ScatterDraw &ScatterDraw::LinkedWith(ScatterDraw &ctrl) {
 	Unlinked();
 
@@ -1902,290 +1464,25 @@ void ScatterDraw::Unlinked() {
 		linkedMaster = 0;
 	}
 }
+
+ScatterDraw& ScatterDraw::SetMouseHandling(bool valx, bool valy) {
+	mouseHandlingX = valx;
+	mouseHandlingY = valy;
+	return *this;
+}
+
+ScatterDraw& ScatterDraw::SetMouseHandlingLinked(bool valx, bool valy) {
+	if (linkedMaster) 
+		return linkedMaster->SetMouseHandlingLinked(valx, valy);
 	
-ScatterDraw::ScatterDraw() {
-	mode = MD_ANTIALIASED;
-	size = Size(800, 400);
-	titleColor = SColorText();
-	graphColor = White();
-	titleFont = Roman(20);
-	labelsFont = GetStdFont();
-	labelsColor = SColorText();
-	plotAreaColor = White();//SColorLtFace();
-	axisColor = SColorText();
-	axisWidth = 6;
-	hPlotLeft = hPlotRight = vPlotTop = vPlotBottom = 30;
-	xRange = yRange = yRange2 = 100.0;
-	xMin = yMin = yMin2 = xMinUnit = yMinUnit = yMinUnit2 = 0;
-	gridColor = SColorDkShadow();
-	gridWidth = 1;
-	drawXReticle = true; drawYReticle = true;
-	drawY2Reticle = false;
-	drawVGrid = drawHGrid = showLegend = true;
-	minXRange = maxXRange = minYRange = maxYRange = -1;
-	minXmin = minYmin = maxXmax = maxYmax = Null;
-	fastViewX = false;
-	sequentialXAll = false;
-	zoomStyleX = zoomStyleY = TO_CENTER;
-	maxMajorUnitsX = maxMajorUnitsY = 10;
-	SetMajorUnitsNum(5, 10);
-	//Color(graphColor);	
-	isPolar = false;
-	lastxRange = xRange;
-	lastyRange = yRange;
-	highlight_0 = Null;
-	labelsChanged = false;
-	legendAnchor = LEGEND_ANCHOR_RIGHT_TOP;
-	legendPos = Point(5, 5);
-	legendNumCols = 1;
-	legendAnchor = LEGEND_TOP;
-	legendFillColor = White();
-	legendBorderColor = Black();
-	legendRowSpacing = 5;
-	linkedMaster = 0;
-	stacked = false;
-	serializeFormat = true;
-	mouseHandlingX = mouseHandlingY = false;
-	selectedSeries = Null;
-}
-
-void DrawLine(Draw &w, double x0, double y0, double x1, double y1, double width, const Color &color) {
-	w.DrawLine(fround(x0), fround(y0), fround(x1), fround(y1), fround(width), color);
-}
-
-void DrawLine(Painter &w, double x0, double y0, double x1, double y1, double width, const Color &color) {
-	w.Move(x0, y0).Line(x0, y0).Line(x1, y1).Stroke(width, color);
-}
-
-void DrawVArrow(Draw &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color) {
-	DrawLine(w, x0, y0, x1, y1, width, color);
-	if (fabs(y0 - y1) > 2*aHeight) {
-		if (x0 > x1)
-			Swap(x0, x1);
-		if (y0 > y1)
-			Swap(y0, y1);
-		Vector <Point> arrowU, arrowL;
-		arrowU << Point(fround(x0), fround(y0)) << Point(fround(x0-aWidth), fround(y0+aHeight)) << Point(fround(x0+aWidth), fround(y0+aHeight));
-		w.DrawPolygon(arrowU, SColorHighlight());
-		arrowL << Point(fround(x0), fround(y1)) << Point(fround(x0-aWidth), fround(y1-aHeight)) << Point(fround(x0+aWidth), fround(y1-aHeight));
-		w.DrawPolygon(arrowL, SColorHighlight());
+	SetMouseHandling(valx, valy);
+	if (!linkedCtrls.IsEmpty()) {
+		for (int i = 0; i < linkedCtrls.GetCount(); ++i)
+	    	linkedCtrls[i]->SetMouseHandling(valx, valy);
 	}
+	return *this;
 }
 
-void DrawVArrow(Painter &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color) {
-	DrawLine(w, x0, y0, x1, y1, width, color);
-	if (fabs(y0 - y1) > 2*aHeight) {
-		if (x0 > x1)
-			Swap(x0, x1);
-		if (y0 > y1)
-			Swap(y0, y1);
-		w.Move(x0, y0).Line(x0-aWidth, y0+aHeight).Line(x0+aWidth, y0+aHeight).Fill(SColorHighlight());
-		w.Move(x0, y1).Line(x0-aWidth, y1-aHeight).Line(x0+aWidth, y1-aHeight).Fill(SColorHighlight());
-	}
-}
-
-void DrawHArrow(Draw &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color) {
-	DrawLine(w, x0, y0, x1, y1, width, color);
-	if (fabs(x0 - x1) > 2*aHeight) {
-		if (x0 > x1)
-			Swap(x0, x1);
-		if (y0 > y1)
-			Swap(y0, y1);
-		Vector <Point> arrowL, arrowR;
-		arrowL << Point(fround(x0), fround(y0)) << Point(fround(x0+aHeight), fround(y0+aWidth)) << Point(fround(x0+aHeight), fround(y0-aWidth));
-		w.DrawPolygon(arrowL, SColorHighlight());
-		arrowR << Point(fround(x1), fround(y0)) << Point(fround(x1-aHeight), fround(y0+aWidth)) << Point(fround(x1-aHeight), fround(y0-aWidth));
-		w.DrawPolygon(arrowR, SColorHighlight());
-	}
-}
-
-void DrawHArrow(Painter &w, double x0, double y0, double x1, double y1, double width, double aWidth, double aHeight, const Color &color) {
-	DrawLine(w, x0, y0, x1, y1, width, color);
-	if (fabs(x0 - x1) > 2*aHeight) {
-		if (x0 > x1)
-			Swap(x0, x1);
-		if (y0 > y1)
-			Swap(y0, y1);
-		w.Move(x0, y0).Line(x0+aHeight, y0+aWidth).Line(x0+aHeight, y0-aWidth).Fill(SColorHighlight());
-		w.Move(x1, y0).Line(x1-aHeight, y0+aWidth).Line(x1-aHeight, y0-aWidth).Fill(SColorHighlight());
-	}
-}
-
-void DrawText(Draw &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
-	w.DrawText(fround(x), fround(y), angle, text, font, color);
-}
-
-void DrawText(Painter &w, double x, double y, int angle, const String &text, Upp::Font font, Color color) {
-	w.Begin();
-	w.Translate(x, y).Rotate(-angle*M_PI/1800.);
-	w.Text(0, 0, text, font).Fill(color);
-	w.End();
-}
-
-void Clip(Draw &w, double x, double y, double cx, double cy) {
-	w.Clip(fround(x), fround(y), fround(cx), fround(cy));	
-}
-
-void Clip(Painter &w, double x, double y, double cx, double cy) {
-	w.Rectangle(x, y, cx, cy).Clip();	
-}
-
-void ClipEnd(Draw &w) {
-	w.End();	
-}
-
-void ClipEnd(Painter &w) {
-	;	
-}
-
-void DrawLineOpa(Draw& w, double x0, double y0, double x1, double y1, int scale, double opacity, 
-				double thick, const Color &_color, String dash, const Color &background) {
-	Vector<Pointf> p;
-	p << Pointf(x0, y0) << Pointf(x1, y1);
-	DrawPolylineOpa(w, p, scale, opacity, thick, _color, dash, background);
-}
-
-void DrawCircleOpa(Draw& w, double x, double y, double r, int scale, double opacity, 
-				double thick, const Color &_color, String dash, const Color &background) {
-	Vector<Pointf> p;
-	for (double ang = 0; ang <= 2*M_PI; ang += 2*M_PI/50) 
-		p << Pointf(fround(x + r*cos(ang)), fround(y + r*sin(ang)));
-	DrawPolylineOpa(w, p, scale, opacity, thick, _color, dash, background);
-}
-
-void DashScaled(Painter& w, const String dash, double scale) {
-	if (!dash.IsEmpty()) {		
-		Vector<double> d;
-		double start = 0;
-		CParser p(dash);
-		try {
-			while(!p.IsEof())
-				if(p.Char(':'))
-					start = p.ReadDouble();
-				else
-					d.Add(scale*p.ReadDouble());
-		}
-		catch(CParser::Error) {}
-		w.Dash(d, scale*start);
-	}
-}
-
-void DrawLineOpa(Painter& w, double x0, double y0, double x1, double y1, int scale, 
-				double opacity, double thick, const Color &color, String dash, 
-				const Color &background) {	
-	w.Move(Pointf(x0, y0));
-	w.Line(Pointf(x1, y1));
-	DashScaled(w, dash, scale);
-	w.Opacity(opacity);				// Before Stroke()
-	w.Stroke(thick*scale, color);
-}
-
-void DrawCircleOpa(Painter& w, double x, double y, double r, int scale, 
-				double opacity, double thick, const Color &color, String dash, 
-				const Color &background) {	
-	w.Circle(x, y, r);
-	DashScaled(w, dash, scale);
-	w.Opacity(opacity);				// Before Stroke()
-	w.Stroke(thick*scale, color);
-}
-
-void FillRectangleOpa(Draw &w, double x0, double y0, double x1, double y1, int scale, 
-					double opacity, const Color &background, const Color &color) {
-	if (IsNull(color))
-		return;
-	Color opacolor = GetOpaqueColor(color, background, opacity);
-	if (x0 > x1) 
-		Swap(x0, x1);
-	if (y0 > y1) 
-		Swap(y0, y1);
-	w.DrawRect(int(x0), int(y0), abs(int(x1 - x0)), abs(int(y1 - y0)), opacolor);
-}
-
-void FillRectangleOpa(Painter &w, double x0, double y0, double x1, double y1, int scale, 
-					double opacity, const Color &background, const Color &color) {
-	if (IsNull(color))
-		return;
-	w.Rectangle(x0, y0, x1 - x0, y1 - y0).Opacity(opacity).Fill(color);
-}
-
-void DrawPolylineOpa(Draw& w, const Vector<Pointf> &p, int scale, double opacity, 
-				double thick, const Color &_color, String dash, const Color &background) {
-	ASSERT(!p.IsEmpty());
-	Color color = GetOpaqueColor(_color, background, opacity) ;
-	if (dash == LINE_SOLID) {
-		//w.DrawPolyline(p, fround(thick*scale), color);
-		for (int i = 1; i < p.GetCount(); ++i) 
-			w.DrawLine(p[i-1], p[i], fround(thick*scale), color);
-	} else {
-		Vector <double> &pat = GetDashedArray(dash);
-		if (pat.IsEmpty())
-			return;
-		int iPat = 0; 
-		
-		double len = pat[0]*scale;			// Pixels per bar
-		Pointf begin, end;
-		begin = p[0];
-		for (int i = 1; i < p.GetCount();) {
-			double d = Distance(begin, p[i]);
-			if (d >= len) 
-				end = PointAtLen(begin, p[i], len);
-			else {
-				end = p[i];
-				len -= d;
-				++i;
-			}
-			if (Even(iPat)) 
-				w.DrawLine(begin, end, fround(thick*scale), color);
-			if (d >= len) {
-				iPat++;
-				if (iPat == pat.GetCount())
-					iPat = 0;				 
-				len = pat[iPat]*scale;
-			}
-			begin = end;
-		}
-	}		
-}
-
-void DrawPolylineOpa(Painter& w, const Vector<Pointf> &p, int scale, double opacity, 
-				double thick, const Color &color, String dash, const Color &background) {	
-	ASSERT(!p.IsEmpty());
-	w.Move(p[0]);
-	for (int i = 1; i < p.GetCount(); ++i) 
-		w.Line(p[i]);
-	DashScaled(w, dash, scale);
-	w.Opacity(opacity);				// Before Stroke()
-	w.Stroke(thick*scale, color);
-}
-
-void FillPolylineOpa(Draw& w, const Vector<Pointf> &p, int scale, double opacity, 
-				const Color &background, const Color &fillColor) {
-	ASSERT(!p.IsEmpty());
-	Color opacolor = GetOpaqueColor(fillColor, background, opacity) ;
-
-	Vector<Point> pi;
-	pi.SetCount(p.GetCount());
-	for (int i = 0; i < pi.GetCount(); ++i) {
-		pi[i].x = (int)p[i].x;
-		pi[i].y = (int)p[i].y;
-	}
-	w.DrawPolygon(pi, opacolor);
-}
-
-void FillPolylineOpa(Painter& w, const Vector<Pointf> &p, int scale, double opacity, 
-				const Color &background, const Color &fillColor) {	
-	ASSERT(!p.IsEmpty());
-	w.Move(p[0]);
-	for (int i = 1; i < p.GetCount(); ++i) 
-		w.Line(p[i]);
-	w.Opacity(opacity);
-	w.Fill(fillColor);		// Before Stroke()
-}
-
-void debug_h() {
-	;			// It does nothing. Just to set a breakpoint in templated functions
-}
-	
 INITBLOCK {
 	SeriesPlot::Register<LineSeriesPlot>("Line");
 	SeriesPlot::Register<StaggeredSeriesPlot>("Staggered");
@@ -2200,9 +1497,11 @@ INITBLOCK {
 	MarkPlot::Register<RangePlot>("Range");
 	MarkPlot::Register<BubblePlot>("Bubble");
 	
-	DashStyle::Register("LINE_SOLID", "");
-	DashStyle::Register("LINE_DOTTED", "4 10");
-	DashStyle::Register("LINE_DOTTED_SEP", "4 20");
-	DashStyle::Register("LINE_DASHED", "12 12");
-	DashStyle::Register("LINE_DASH_DOT", "20 10 5 10");
+	DashStyle::Register("LINE_SOLID", LINE_SOLID);
+	DashStyle::Register("LINE_DOTTED_FINER", LINE_DOTTED_FINER);
+	DashStyle::Register("LINE_DOTTED_FINE", LINE_DOTTED_FINE);
+	DashStyle::Register("LINE_DOTTED", LINE_DOTTED);
+	DashStyle::Register("LINE_DOTTED_SEP", LINE_DOTTED_SEP);
+	DashStyle::Register("LINE_DASHED", LINE_DASHED);
+	DashStyle::Register("LINE_DASH_DOT", LINE_DASH_DOT);
 }
