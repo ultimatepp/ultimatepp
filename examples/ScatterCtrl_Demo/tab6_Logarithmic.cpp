@@ -17,7 +17,7 @@ void Tab6_Logarithmic::Init()
 
 void Tab6_Logarithmic::FormatX(String& s, int i, double d)
 {
-	s = FormatDoubleExp(pow(10., d), 1);
+	s = FormatDouble(pow(10., d), 0);
 }
 
 ScatterDemo *Construct6()

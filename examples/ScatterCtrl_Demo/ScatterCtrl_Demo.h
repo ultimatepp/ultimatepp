@@ -254,6 +254,7 @@ public:
 private:
 	Vector<Vector <double> > s1;
 	Vector<int> idsBubble;
+	Vector<String> labels;
 };
 
 class Tab_UserPaint : public WithTabUserPaint<ScatterDemo> {
@@ -275,7 +276,7 @@ public:
 		String text = "Fixed text";
 		Font font = Arial(30);
 		Size sz = GetTextSize(text, font);
-		FillRectangleOpa(w, plotW - sz.cx - 10, 10, plotW - 10, 10 + sz.cy, 1, 0.3, Null, LtGreen());
+		FillRectangleOpa(w, plotW - sz.cx - 10, 10, plotW - 10, 10 + sz.cy, 0.3, Null, LtGreen());
 		DrawText(w, plotW - sz.cx - 10, 10, 0, text, font, Black());
 		
 		if (scatter.GetXMin() < 1 && scatter.GetXMax() > 1) {
@@ -292,7 +293,7 @@ public:
 				double sizex = scatter.GetSizeX(0.2);
 				FillRectangleOpa(w, posx - sizex/2., posy - sizex/2., 
 									posx + sizex/2., posy + sizex/2., 
-									1, 0.8, Null, LtGreen());
+									0.8, Null, LtGreen());
 				Vector<Pointf> s;
 				s << Pointf(posx - sizex/2., posy - sizex/2.) 
 				  << Pointf(posx + sizex/2., posy - sizex/2.) 
@@ -310,6 +311,29 @@ public:
 
 private:
 	Vector<Pointf> s1;
+};
+
+class Tab19_Surf : public WithTabSurf<ScatterDemo> {
+public:
+	typedef Tab19_Surf CLASSNAME;
+	
+	virtual void Init();
+	virtual ScatterCtrl &Scatter()	{return scatter;};
+	
+	void OnChange();
+	void Init_DatasetSimple();
+	void Init_Dataset();
+	void Init_DataExplicit();
+	
+private:
+	ExplicitData funData;
+	TableDataPoints data;
+	TableDataAreas dataFun;
+	Vector<double> zData, xAxis, yAxis;
+	Vector<double> zDataFun, xAxisFun, yAxisFun;
+	
+	Vector<Pointf> isolines, numbersPos;
+	Vector<String> labels;
 };
 
 class TabPie : public WithTabPie<StaticRect> {

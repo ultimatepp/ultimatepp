@@ -21,8 +21,8 @@ void TabStackedPlot::Init()
 	scatter.AddSeries(stacked.Get(1)).Legend("s2").Fill();
 	scatter.AddSeries(stacked.Get(0)).Legend("s1").Fill();
 									
-	scatter.SetLabelY("Data").SetLabelX("time [seg]");
-	scatter.ShowButtons();
+	scatter.SetLabelY("Data").SetLabelX("time [seg]")
+		   .ShowButtons().Responsive();
 	
 	type = 0;
 	type.WhenAction = THISBACK(OnPlot);

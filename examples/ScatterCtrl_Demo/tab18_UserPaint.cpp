@@ -12,7 +12,7 @@ void Tab_UserPaint::Init()
 	
 	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg().
 			SetMouseHandling(true, true);
-	scatter.SetLegendPos(Point(20, 20)).SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_BOTTOM);
+	scatter.SetLegendPos(Point(20, 20)).SetLegendAnchor(ScatterDraw::RIGHT_BOTTOM);
 	scatter.ZoomToFit(true, true);
 	scatter.WhenPainter = THISBACK(OnPainter);
 	scatter.WhenDraw = THISBACK(OnDraw);

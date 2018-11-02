@@ -17,7 +17,7 @@ void Tab8_Secondary::Init()
 	scatter.AddSeries(s1).Legend("Temperature").Units("ºC").Stroke(3, Null).Dash(LINE_DASHED).MarkStyle<SquareMarkPlot>();
 	
 	s2 <<Pointf(1,1008)<<Pointf(2,1012)<<Pointf(3,1016)<<Pointf(4,1012)<<Pointf(5,1008)<<Pointf(6,1016)<<Pointf(7,1012)<<Pointf(8,1004)<<Pointf(9,1000)<<Pointf(10,1001)<<Pointf(11,1000)<<Pointf(12,1002);
-	scatter.AddSeries(s2).Legend("Pressure").Units("mBar").Stroke(3, Null).Dash("15 6 6 6 3 6 6 6").SetDataPrimaryY(false);
+	scatter.AddSeries(s2).Legend("Pressure").Units("mBar").Stroke(3, Null).Dash("15 6 6 6 3 6 6 6").SetDataSecondaryY();
 	scatter.SetDrawY2Reticle();
 	
 	scatter.cbModifFormatX = THISBACK(MyFormat);
