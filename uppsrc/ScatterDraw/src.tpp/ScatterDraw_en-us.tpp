@@ -1,5 +1,4 @@
 topic "1 ScatterDraw";
-[ $$0,0#00000000000000000000000000000000:Default]
 [0 $$1,0#96390100711032703541132217272105:end]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483380:class]
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
@@ -7,6 +6,7 @@ topic "1 ScatterDraw";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
 [H6;0 $$6,0#05600065144404261032431302351956:begin]
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 ScatterDraw]]}}&]
 [s1; &]
@@ -46,43 +46,42 @@ there is an overview of control possibilities.]&]
 [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatX]&]
 [s3; If set this callback will give the String to be painted beside 
 every X axis grid line and in the pop window. The input values 
-are the X axis value set as int and double.&]
+are the X axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatDeltaX:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&],
  [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaX]&]
 [s3; If set this callback will give the String to be painted in the 
 pop window representing the delta between two X axis points. 
-The input values are the X axis value set as int and double.&]
+The input values are the X axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatY:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
 [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY]&]
 [s3; If set this callback will give the String to be painted beside 
 every main Y axis grid line and in the pop window. The input 
-values are the Y axis value set as int and double.&]
+values are the Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatDeltaY:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&],
  [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaY]&]
 [s3; If set this callback will give the String to be painted in the 
 pop window representing the delta between two Y axis points. 
-The input values are the Y axis value set as int and double.&]
+The input values are the Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatY2:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
 [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY2]&]
 [s3; If set this callback will give the String to be painted beside 
 every secondary and in the pop window Y axis grid line. The input 
-values are the Y axis value set as int and double.&]
+values are the Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatDeltaY2:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&
 ], [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaY2]&]
 [s3; If set this callback will give the String to be painted in the 
 pop window representing the secondary delta between two Y axis 
-points. The input values are the Y axis value set as int and 
-double.&]
+points. The input values are the Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:WhenZoomScroll:%- [_^Callback^ Callback]_[* WhenZoomScroll]&]
@@ -97,8 +96,24 @@ double.&]
 [s3; Callback called when scatter plot origin is changed.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetSize`(Size`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* SetSi
-ze]([_^Size^ Size]_[*@3 sz])&]
+[s5;:ScatterDraw`:`:WhenPainter:%- [_^Upp`:`:Callback1^ Callback1]<Painter[@(0.0.255) `&]>
+_[* WhenPainter]&]
+[s3; Callback called before control Paint with Painter to draw additional 
+graphics.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:WhenDraw:%- [_^Upp`:`:Callback1^ Callback1]<Draw[@(0.0.255) `&]>_[* Whe
+nDraw]&]
+[s3; Callback called before control Paint with Draw to draw additional 
+graphics&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:WhenZoomToFit:%- [_^Upp`:`:Callback^ Callback]_[* WhenZoomToFit]&]
+[s3; Callback called after ZoomToFit() function.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetSize`(const Upp`:`:Size`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetSize]([_^Size^ Size]_[*@3 sz])&]
 [s3; Sets the control size with [%-*@3 sz]. Functions like GetImage() 
 will return a bitmap of [%-*@3 sz] size.&]
 [s1; &]
@@ -109,12 +124,12 @@ onst]&]
 a bitmap of [%-*@3 sz] size.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:SetColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 color])&]
 [s3; Sets [%-*@3 color] .as graph background color.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetTitle`(const String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:SetTitle`(const Upp`:`:String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetTitle]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 title])&]
 [s3; Sets [%-*@3 title] as graph title.&]
 [s1; &]
@@ -124,21 +139,27 @@ etTitle]()&]
 [s3; Returns graph title.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetTitleFont`(const Font`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:SetTitleFont`(const Upp`:`:Font`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetTitleFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontTitle])&]
 [s3; Sets [%-*@3 fontTitle] as title font.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetTitleColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetTitleColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 colorTitle])&]
+[s5;:ScatterDraw`:`:SetTitleColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterDra
+w][@(0.0.255) `&]_[* SetTitleColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 c
+olorTitle])&]
 [s3; Sets [%-*@3 colorTitle] as title text color.&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetTitleColor`(`):%- [_^Upp`:`:Color^ Upp`::Color][@(0.0.255) `&]_[* Get
+TitleColor]()&]
+[s3; Returns the title color.&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetTitleFont`(`):%- [_^Font^ Font][@(0.0.255) `&]_[* GetTitleFont]()&]
 [s3; Returns the title font.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLabels`(const String`&`,const String`&`,const String`&`):%- [@(0.0.255) v
+[s5;:ScatterDraw`:`:SetLabels`(const Upp`:`:String`&`,const Upp`:`:String`&`,const Upp`:`:String`&`):%- [@(0.0.255) v
 oid]_[* SetLabels]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xLabel], 
 [@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel], [@(0.0.255) const]_[_^String^ S
 tring][@(0.0.255) `&]_[*@3 yLabel2]_`=_`"`")&]
@@ -146,7 +167,7 @@ tring][@(0.0.255) `&]_[*@3 yLabel2]_`=_`"`")&]
 axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLabelX`(const String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:SetLabelX`(const Upp`:`:String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetLabelX]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xLabel])&]
 [s3; Sets [%-*@3 xLabel] as the label of the horizontal axis.&]
 [s1; &]
@@ -156,7 +177,7 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s3; Returns the label of the horizontal axis.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLabelY`(const String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:SetLabelY`(const Upp`:`:String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetLabelY]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
 [s3; Sets [%-*@3 yLabel] as the label of the vertical axis.&]
 [s1; &]
@@ -166,7 +187,7 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s3; Returns the label of the vertical axis.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLabelY2`(const String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:SetLabelY2`(const Upp`:`:String`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetLabelY2]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
 [s3; Sets [%-*@3 yLabel] as the label of the secondary vertical axis.&]
 [s1; &]
@@ -176,8 +197,9 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s3; Returns the label of the secondary vertical axis.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLabelsFont`(const Font`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetLabelsFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontLabels])&]
+[s5;:ScatterDraw`:`:SetLabelsFont`(const Upp`:`:Font`&`):%- [_^ScatterDraw^ ScatterDraw
+][@(0.0.255) `&]_[* SetLabelsFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 font
+Labels])&]
 [s3; Sets [%-*@3 fontLabels] as the labels font.&]
 [s1; &]
 [s6;%- &]
@@ -185,8 +207,9 @@ axis ([%-*@3 yLabel]) and secondary vertical axis ([%-*@3 yLabel2]).&]
 [s3; Returns the font of the labels.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLabelsColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetLabelsColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 colorLabels])&]
+[s5;:ScatterDraw`:`:SetLabelsColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterDr
+aw][@(0.0.255) `&]_[* SetLabelsColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 c
+olorLabels])&]
 [s3; Sets [%-*@3 colorLabels] as the color of the labels.&]
 [s1; &]
 [s6;%- &]
@@ -242,9 +265,9 @@ argin]()&]
 [s3; Returns the plot area bottom margin.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetPlotAreaColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 p`_a`_color])
-&]
+[s5;:ScatterDraw`:`:SetPlotAreaColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ Scatter
+Draw][@(0.0.255) `&]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&
+]_[*@3 p`_a`_color])&]
 [s3; Sets [%-*@3 p`_a`_color] as the plot area background color.&]
 [s1; &]
 [s6;%- &]
@@ -253,8 +276,9 @@ olor]()&]
 [s3; Returns the plot area background color.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetAxisColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 axis`_color])&]
+[s5;:ScatterDraw`:`:SetAxisColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterDraw
+][@(0.0.255) `&]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 axi
+s`_color])&]
 [s3; Sets [%-*@3 axis`_color] as the color of the axis.&]
 [s0; -|
 @@image:756&406
@@ -267,8 +291,9 @@ etAxisWidth]([@(0.0.255) int]_[*@3 axis`_width])&]
 [s3; Sets [%-*@3 axis`_width] as the width of the axis in pixels.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetGridColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetGridColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 grid`_color])&]
+[s5;:ScatterDraw`:`:SetGridColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterDraw
+][@(0.0.255) `&]_[* SetGridColor]([@(0.0.255) const]_[_^Color^ Color][@(0.0.255) `&]_[*@3 gri
+d`_color])&]
 [s3; Sets [%-*@3 grid`_color] as the color of the grid.&]
 [s0; -|
 @@image:737&400
@@ -308,8 +333,8 @@ are described legend details.&]
 are described legend details.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLegendPos`(const Point`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetLegendPos]([@(0.0.255) const]_[_^Point^ Point]_`&[*@3 pos])&]
+[s5;:ScatterDraw`:`:SetLegendPos`(const Upp`:`:Point`&`):%- [_^ScatterDraw^ ScatterDraw
+][@(0.0.255) `&]_[* SetLegendPos]([@(0.0.255) const]_[_^Point^ Point]_`&[*@3 pos])&]
 [s3; Sets the coordinates ([%-*@3 pos]) of the legend table corner 
 relative to the plot corner.&]
 [s3; [^topic`:`/`/ScatterDraw`/srcdoc`/LegendTable`$en`-us^ Here ]there 
@@ -414,8 +439,8 @@ END`_ANCHOR`_RIGHT`_BOTTOM]&]
 &]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLegendAnchor`(int`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
-[* SetLegendAnchor]([@(0.0.255) int]_[*@3 anchor])&]
+[s5;:ScatterDraw`:`:SetLegendAnchor`(LEGEND`_POS`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetLegendAnchor]([@(0.0.255) LEGEND`_POS]_[*@3 anchor])&]
 [s3; Sets with [%-*@3 anchor ]the legend table position:&]
 [s3;i150;O0; LEGEND`_TOP,&]
 [s3;i150;O0; LEGEND`_ANCHOR`_LEFT`_TOP, &]
@@ -429,12 +454,14 @@ END`_ANCHOR`_RIGHT`_BOTTOM]&]
 &]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:GetLegendAnchor`(`):%- [@(0.0.255) int]_[* GetLegendAnchor]()&]
+[s5;:ScatterDraw`:`:GetLegendAnchor`(`):%- [@(0.0.255) LEGEND`_POS]_[* GetLegendAnchor]()
+&]
 [s3; Returns the legend table position.&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLegendFillColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
-]_[* SetLegendFillColor]([@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color])&]
+[s5;:ScatterDraw`:`:SetLegendFillColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ Scatt
+erDraw][@(0.0.255) `&]_[* SetLegendFillColor]([@(0.0.255) const]_[_^Color^ Color]_`&[*@3 co
+lor])&]
 [s3; Sets with [%-*@3 color] the legend background color.&]
 [s1; &]
 [s6;%- &]
@@ -469,6 +496,14 @@ e]([@(0.0.255) int]_[*@3 `_mode]_`=_MD`_ANTIALIASED)&]
 [s3; Returns the drawing mode as documented in SetMode().&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:ZoomToFit`(bool`,bool`,double`):%- [@(0.0.255) void]_[* ZoomToFit]([@(0.0.255) b
+ool]_[*@3 horizontal], [@(0.0.255) bool]_[*@3 vertical]_`=_[@(0.0.255) false], 
+[@(0.0.255) double]_[*@3 factor]_`=_[@3 0])&]
+[s3; Rescales the x axis if [%-*@3 horizontal ]is true and y axis if 
+[%-*@3 vertical] is true to show all graphs data.on the control. 
+[%-*@3 factor] indicates the fit factor (0 fills the control) .&]
+[s1; &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:Zoom`(double`,bool`,bool`):%- [@(0.0.255) void]_[* Zoom]([@(0.0.255) do
 uble]_[*@3 scale], [@(0.0.255) bool]_[*@3 hor]_`=_[@(0.0.255) true], 
 [@(0.0.255) bool]_[*@3 ver]_`=_[@(0.0.255) true])&]
@@ -493,6 +528,74 @@ other control.&]
 (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)
 &]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:Unlinked`(`):%- [@(0.0.255) void]_[* Unlinked]()&]
+[s3; Unlinks series.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:AddSurf`(Upp`:`:DataSourceSurf`&`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* AddSurf]([_^Upp`:`:DataSourceSurf^ DataSourceSurf]_`&[*@3 surf])&]
+[s3; Adds the 2D surface [%-*@3 surf].&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetSurfMinZ`(double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
+[* SetSurfMinZ]([@(0.0.255) double]_[*@3 val])&]
+[s3; Sets [%-*@3 val] as the minimum 2D surface Z value.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetSurfMinZ`(`)const:%- [@(0.0.255) double]_[* GetSurfMinZ]()_[@(0.0.255) c
+onst]&]
+[s3; Returns the minimum 2D surface Z value.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetSurfMaxZ`(double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_
+[* SetSurfMaxZ]([@(0.0.255) double]_[*@3 val])&]
+[s3; Sets [%-*@3 val] as the maximum 2D surface Z value.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetSurfMaxZ`(`)const:%- [@(0.0.255) double]_[* GetSurfMaxZ]()_[@(0.0.255) c
+onst]&]
+[s3; Returns the maximum 2D surface Z value.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:ZoomToFitZ`(`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* ZoomTo
+FitZ]()&]
+[s3; Calculates the minimum and maximum 2D surface Z values and sets 
+them as minimum ans maximum values to be plotted.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:ShowRainbowPalette`(bool`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* ShowRainbowPalette]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
+[s3; If [%-*@3 show] is true 2D surface rainbow color palette will 
+be shown.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetShowRainbowPalette`(`):%- [@(0.0.255) bool]_[* GetShowRainbowPalet
+te]()&]
+[s3; Returns true if 2D surface rainbow color palette is shown.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetRainbowPalettePos`(const Upp`:`:Point`&`):%- [_^ScatterDraw^ Sca
+tterDraw][@(0.0.255) `&]_[* SetRainbowPalettePos]([@(0.0.255) const]_[_^Upp`:`:Point^ Poi
+nt]_`&[*@3 p])&]
+[s3; Sets [%-*@3 p] as the position of 2D surface rainbow color palette.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetRainbowPalettePos`(`):%- [_^Upp`:`:Point^ Point][@(0.0.255) `&]_[* G
+etRainbowPalettePos]()&]
+[s3; Returns the 2D surface rainbow color palette position.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetRainbowPaletteSize`(const Upp`:`:Size`&`):%- [_^ScatterDraw^ Sca
+tterDraw][@(0.0.255) `&]_[* SetRainbowPaletteSize]([@(0.0.255) const]_[_^Upp`:`:Size^ Siz
+e]_`&[*@3 sz])&]
+[s3; Sets  [%-*@3 sz] as the Size of 2D surface rainbow color palette.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetRainbowPaletteSize`(`):%- [_^Upp`:`:Size^ Size][@(0.0.255) `&]_[* Ge
+tRainbowPaletteSize]()&]
+[s3; Returns the 2D surface rainbow color palette size.&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetZoomStyleX`(ZoomStyle`):%- [_^ScatterDraw^ ScatterDraw]_`&[* SetZo
 omStyleX](ZoomStyle_[*@3 style]_`=_TO`_CENTER)&]
@@ -551,11 +654,11 @@ MaxMajorUnits]([@(0.0.255) int]_[*@3 maxX], [@(0.0.255) int]_[*@3 maxY])&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetMajorUnitsX`(`):%- [@(0.0.255) double]_[* GetMajorUnitsX]()&]
-[s3; Returns the maximum number of horizontal grid lines.&]
+[s3; Returns the distance between grid lines in X axis.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetMajorUnitsY`(`):%- [@(0.0.255) double]_[* GetMajorUnitsY]()&]
-[s3; Returns the maximum number of vertical grid lines.&]
+[s3; Returns the distance between grid lines in Y axis.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetMinUnits`(double`,double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
@@ -585,15 +688,7 @@ le]_[*@3 ymin2]_`=_[@3 0])&]
 [s3; Sets with [%-*@3 xmin], [%-*@3 ymin] and [%-*@3 ymin2] the X, Y and 
 secondary Y axis origin.&]
 [s1; &]
-[s6;%- &]
-[s5;:Upp`:`:ScatterDraw`:`:ZoomToFit`(bool`,bool`,double`):%- [@(0.0.255) void]_[* ZoomTo
-Fit]([@(0.0.255) bool]_[*@3 horizontal]_`=_[@(0.0.255) true], [@(0.0.255) bool]_[*@3 vertic
-al]_`=_[@(0.0.255) false], [@(0.0.255) double]_[*@3 factor]_`=_[@3 0])&]
-[s3; Rescales the x axis if [%-*@3 horizontal ]is true and y axis if 
-[%-*@3 vertical] is true to show all graphs data.on the control. 
-[%-*@3 factor] indicates the fit factor (0 fills the control).&]
-[s1; &]
-[s6;%- &]
+[s6; &]
 [s5;:ScatterDraw`:`:GetXMin`(`)const:%- [@(0.0.255) double]_[* GetXMin]_()_[@(0.0.255) cons
 t]&]
 [s3; Returns the X axis origin.&]
@@ -613,13 +708,7 @@ nst]&]
 nst]&]
 [s3; Returns the secondary Y axis origin.&]
 [s1;%- &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:SetPolar`(bool`):%- [_^ScatterDraw^ ScatterDraw]_`&[* SetPolar]([@(0.0.255) b
-ool]_[*@3 polar]_`=_[@(0.0.255) true])&]
-[s3; If [%-*@3 polar] is true, ScatterDraw is converted into a Polar 
-plot..&]
-[s1; &]
-[s6;%- &]
+[s6; &]
 [s5;:ScatterDraw`:`:AddSeries`(double`*`,int`,double`,double`):%- [_^ScatterDraw^ Scatt
 erDraw]_`&[* AddSeries]([@(0.0.255) double]_`*[*@3 yData], [@(0.0.255) int]_[*@3 numData], 
 [@(0.0.255) double]_[*@3 x0]_`=_[@3 0], [@(0.0.255) double]_[*@3 deltaX]_`=_[@3 1])&]
@@ -639,7 +728,7 @@ with [%-*@3 numData].&]
 location during ScatterDraw life to avoid memory problems.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:AddSeries`(Vector`<double`>`&`,Vector`<double`>`&`):%- [_^ScatterDraw^ S
+[s5;:ScatterDraw`:`:AddSeries`(Upp`:`:Vector`<double`>`&`,Upp`:`:Vector`<double`>`&`):%- [_^ScatterDraw^ S
 catterDraw]_`&[* AddSeries]([_^Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 xData], 
 [_^Vector^ Vector]<[@(0.0.255) double]>_`&[*@3 yData])&]
 [s3; Adds a new series stored in [%-*@3 xData] and [%-*@3 yData] [%-_^Vector^ Vector][%- <][%-@(0.0.255) d
@@ -648,7 +737,7 @@ ouble][%- >].&]
 location during ScatterDraw life to avoid memory problems.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:AddSeries`(Array`<double`>`&`,Array`<double`>`&`):%- [_^ScatterDraw^ S
+[s5;:ScatterDraw`:`:AddSeries`(Upp`:`:Array`<double`>`&`,Upp`:`:Array`<double`>`&`):%- [_^ScatterDraw^ S
 catterDraw]_`&[* AddSeries]([_^Array^ Array]<[@(0.0.255) double]>_`&[*@3 xData], 
 [_^Array^ Array]<[@(0.0.255) double]>_`&[*@3 yData])&]
 [s3; Adds a new series stored in [%-*@3 xData] and [%-*@3 yData] [%-_^Vector^ Array][%- <][%-@(0.0.255) d
@@ -657,16 +746,16 @@ ouble][%- >].&]
 location during ScatterDraw life to avoid memory problems.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:AddSeries`(Vector`<Pointf`>`&`):%- [_^ScatterDraw^ ScatterDraw]_`&[* A
-ddSeries]([_^Vector^ Vector]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
+[s5;:ScatterDraw`:`:AddSeries`(Upp`:`:Vector`<Upp`:`:Pointf`>`&`):%- [_^ScatterDraw^ Sc
+atterDraw]_`&[* AddSeries]([_^Vector^ Vector]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
 [s3; Adds a new series stored in [%-*@3 points] [%-_^Vector^ Vector][%- <][%-_^Pointf^ Pointf
 ][%- >].&]
 [s3; [%-*@3 points] has to be stored in a permanent location during 
 ScatterDraw life to avoid memory problems.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:AddSeries`(Array`<Pointf`>`&`):%- [_^ScatterDraw^ ScatterDraw]_`&[* A
-ddSeries]([_^Array^ Array]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
+[s5;:ScatterDraw`:`:AddSeries`(Upp`:`:Array`<Upp`:`:Pointf`>`&`):%- [_^ScatterDraw^ Sca
+tterDraw]_`&[* AddSeries]([_^Array^ Array]<[_^Pointf^ Pointf]>_`&[*@3 points])&]
 [s3; Adds a new series stored in [%-*@3 points] [%-_^Vector^ Array][%- <][%-_^Pointf^ Pointf][%- >
 ].&]
 [s3; [%-*@3 points] has to be stored in a permanent location during 
@@ -684,12 +773,12 @@ ouble]_[*@3 opacity]_`=_[@3 1])&]
 [s3; Sets the series [%-*@3 opacity] .from 1 (opaque) to 0 (transparent/invisible).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:Legend`(const String`):%- [_^ScatterDraw^ ScatterDraw]_`&[* Legend]([@(0.0.255) c
-onst]_[_^String^ String]_[*@3 legend])&]
+[s5;:ScatterDraw`:`:Legend`(const Upp`:`:String`):%- [_^ScatterDraw^ ScatterDraw]_`&[* Le
+gend]([@(0.0.255) const]_[_^String^ String]_[*@3 legend])&]
 [s3; Sets the series [%-*@3 legend].&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:Legend`(int`,const String`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+[s5;:ScatterDraw`:`:Legend`(int`,const Upp`:`:String`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* Legend]([@(0.0.255) int]_[*@3 index], [@(0.0.255) const]_[_^String^ String]_[*@3 legend])
 &]
 [s3; Sets the [%-*@3 legend] for [%-*@3 index] series.&]
@@ -700,15 +789,15 @@ onst]_[_^String^ String]_[*@3 legend])&]
 [s3; Returns the legend for [%-*@3 index] series.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:Units`(const String`,const String`):%- [_^ScatterDraw^ ScatterDraw]_
-`&[* Units]([@(0.0.255) const]_[_^String^ String]_[*@3 unitsY], [@(0.0.255) const]_[_^String^ S
-tring]_[*@3 unitsX]_`=_`"`")&]
+[s5;:ScatterDraw`:`:Units`(const Upp`:`:String`,const Upp`:`:String`):%- [_^ScatterDraw^ S
+catterDraw]_`&[* Units]([@(0.0.255) const]_[_^String^ String]_[*@3 unitsY], 
+[@(0.0.255) const]_[_^String^ String]_[*@3 unitsX]_`=_`"`")&]
 [s3; Sets the series units for Y axis ([%-*@3 unitsY]) and X axis ([%-*@3 unitsX]).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:Units`(int`,const String`,const String`):%- [_^ScatterDraw^ Scatter
-Draw]_`&[* Units]([@(0.0.255) int]_[*@3 index], [@(0.0.255) const]_[_^String^ String]_[*@3 un
-itsY], [@(0.0.255) const]_[_^String^ String]_[*@3 unitsX]_`=_`"`")&]
+[s5;:ScatterDraw`:`:Units`(int`,const Upp`:`:String`,const Upp`:`:String`):%- [_^ScatterDraw^ S
+catterDraw]_`&[* Units]([@(0.0.255) int]_[*@3 index], [@(0.0.255) const]_[_^String^ String]_
+[*@3 unitsY], [@(0.0.255) const]_[_^String^ String]_[*@3 unitsX]_`=_`"`")&]
 [s3; Sets the [%-*@3 index] series units for Y axis ([%-*@3 unitsY]) 
 and X axis ([%-*@3 unitsX]).&]
 [s1; &]
@@ -723,6 +812,11 @@ and X axis ([%-*@3 unitsX]).&]
 [s3; Returns the Y axis units for [%-*@3 index] series.&]
 [s1; &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:IsValid`(int`)const:%- [@(0.0.255) bool]_[* IsValid]([@(0.0.255) int]_[*@3 i
+ndex])_[@(0.0.255) const]&]
+[s3; Returns true if [%-*@3 index] is between 0 and GetCount()`-1..&]
+[s1; &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:SetDrawXReticle`(bool`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetDrawXReticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 set] is true the small lines and texts beside every 
@@ -732,34 +826,65 @@ X grid line are shown.&]
 [s5;:ScatterDraw`:`:SetDrawYReticle`(bool`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetDrawYReticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 set] is true the small lines and texts to the left of 
- every Y grid line are shown.&]
+every Y grid line are shown.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetDrawY2Reticle`(bool`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetDrawY2Reticle]([@(0.0.255) bool]_[*@3 set]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 set] is true the small lines and texts to the right 
-of  every Y grid line are shown.&]
+of every Y grid line are shown.&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetDrawXReticle`(`):%- [@(0.0.255) bool]_[* GetDrawXReticle]()&]
+[s3; Returns true if the the small lines and texts beside every X 
+grid line are shown.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetDrawYReticle`(`):%- [@(0.0.255) bool]_[* GetDrawYReticle]()&]
+[s3; Returns true if the the small lines and texts to the left of 
+every Y grid line are shown.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetDrawY2Reticle`(`):%- [@(0.0.255) bool]_[* GetDrawY2Reticle]()&]
+[s3; Returns true if the the small lines and texts to the right of 
+every Y grid line are shown.&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetDataPrimaryY`(int`,bool`):%- [@(0.0.255) void]_[* SetDataPrimaryY](
 [@(0.0.255) int]_[*@3 index], [@(0.0.255) bool]_[*@3 primary]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 primary] is true, [%-*@3 index] series is considered to 
 be a primary series so it uses the left vertical axis. If false 
-it uses right vertical axis.&]
+it uses the right vertical axis.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetDataPrimaryY`(bool`):%- [_^ScatterDraw^ ScatterDraw]_`&[* SetDataP
 rimaryY]([@(0.0.255) bool]_[*@3 primary])&]
 [s3; If [%-*@3 primary] is true, last added series is considered to 
-be a primary series so it uses the left vertical axis. If false 
-it uses right vertical axis..&]
+be a primary series so it uses the left vertical axis. &]
+[s3; If false it uses the right vertical axis.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:IsDataPrimaryY`(int`)const throw`(Exc`):%- [@(0.0.255) bool]_[* IsDat
-aPrimaryY]([@(0.0.255) int]_[*@3 index])_[@(0.0.255) const]_[@(0.0.255) throw]_(Exc)&]
-[s3; Returns true if [%-*@3 index] series is primary.&]
+[s5;:ScatterDraw`:`:SetDataSecondaryY`(int`,bool`):%- [@(0.0.255) void]_[* SetDataSeconda
+ryY]([@(0.0.255) int]_[*@3 index], [@(0.0.255) bool]_[*@3 secondary])&]
+[s3; Opposed to SetDataPrimaryY() if [%-*@3 secondary] is true, [%-*@3 index] 
+series is considered to be a secondary series so it uses the 
+right vertical axis. &]
+[s3; If false it uses the left vertical axis.&]
 [s1; &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:SetDataSecondaryY`(bool`):%- [_^ScatterDraw^ ScatterDraw]_`&[* SetDat
+aSecondaryY]([@(0.0.255) bool]_[*@3 secondary])&]
+[s3; Opposed to SetDataPrimaryY() if [%-*@3 secondary] is true, last 
+added series is considered to be a secondary series so it uses 
+the right vertical axis.&]
+[s3; If false it uses the left vertical axis.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:IsDataPrimaryY`(int`):%- [@(0.0.255) bool]_[* IsDataPrimaryY]([@(0.0.255) i
+nt]_[*@3 index])&]
+[s3; Returns true if [%-*@3 index] series is primary..&]
+[s1; &]
+[s6; &]
 [s5;:ScatterDraw`:`:SetSequentialX`(int`,bool`):%- [@(0.0.255) void]_[* SetSequentialX]([@(0.0.255) i
 nt]_[*@3 index], [@(0.0.255) bool]_[*@3 sequential]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 sequential] is true, [%-*@3 index] series is considered 
@@ -779,6 +904,17 @@ uentialXAll]([@(0.0.255) bool]_[*@3 sequential]_`=_[@(0.0.255) true])&]
 [s3; If [%-*@3 sequential] is true all series are considered to be 
 sequential so all data points are ordered following the X axis.&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetSequentialX`(int`):%- [@(0.0.255) bool]_[* GetSequentialX]([@(0.0.255) i
+nt]_[*@3 index])&]
+[s3; Returns true if [%-*@3 index] data series is considered to be 
+sequential so all data points are ordered following the X axis.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetSequentialX`(`):%- [@(0.0.255) bool]_[* GetSequentialX]()&]
+[s3; Returns true if  the last added series is considered to be sequential 
+so all data points are ordered following the X axis.&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:Show`(int`,bool`):%- [@(0.0.255) void]_[* Show]([@(0.0.255) int]_[*@3 ind
 ex], [@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
@@ -809,6 +945,10 @@ the series data.&]
 series data.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:GetImage`(`):%- [_^Upp`:`:Image^ Image]_[* GetImage]()&]
+[s3; Returns the scatter plot as an Image.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:Id`(int`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* Id]([@(0.0.255) i
 nt]_[*@3 id])&]
 [s3; Sets the [%-*@3 id] of the last added data series.&]
@@ -823,15 +963,10 @@ nt]_[*@3 index], [@(0.0.255) int]_[*@3 id])&]
 [s3; Returns the id of [%-*@3 index] data series.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:GetDrawing`(bool`):%- [_^Drawing^ Drawing]_[* GetDrawing]()&]
+[s5;:ScatterDraw`:`:GetDrawing`(`):%- [_^Drawing^ Drawing]_[* GetDrawing]()&]
 [s3; Returns the control Drawing.&]
 [s1;%- &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:GetImage`(int`):%- [_^Image^ Image]_[* GetImage]([@(0.0.255) int]_[*@3 sc
-ale]_`=_[@3 1])&]
-[s3; Returns the control Image scaled at [%-*@3 scale].&]
-[s1; &]
-[s6;%- &]
+[s6; &]
 [s5;:ScatterDraw`:`:GetXByPoint`(double`):%- [@(0.0.255) double]_[* GetXByPoint]([@(0.0.255) d
 ouble]_[*@3 x])&]
 [s3; Returns the X axis value of pixel [%-*@3 x] in data set units.&]
@@ -898,6 +1033,10 @@ points between two pixels.&]
 [s3; In case of big datasets and zoom in with big detail, this option 
 can accelerate strongly the control refresh.&]
 [s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetFastViewX`(`):%- [@(0.0.255) bool]_[* GetFastViewX]()&]
+[s3; Returns true if FastViewX has been set.&]
+[s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetCount`(`):%- [@(0.0.255) int]_[* GetCount]()&]
 [s3; Returns the number of series loaded.&]

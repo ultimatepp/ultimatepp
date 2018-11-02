@@ -36,15 +36,21 @@ esES("N\303\272mero complejo")
 euES("")
 frFR("")
 
-T_("Divide by zero")
-caES("")
-esES("Divisi\303\263n entre cero")
-euES("")
-frFR("")
-
 T_("Error evaluating '%s': %s")
 caES("")
 esES("Error evaluando '%s': %s")
+euES("")
+frFR("")
+
+T_("Error: %s")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Unknown error")
+caES("")
+esES("")
 euES("")
 frFR("")
 
@@ -114,5 +120,44 @@ frFR("")
 T_("Spline")
 caES("")
 esES("")
+euES("")
+frFR("")
+
+T_("Units does not match in summation")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Units does not match in substraction")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Division by zero")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Exponent cannot have units")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+T_("Negative number sqrt")
+caES("")
+esES("")
+euES("")
+frFR("")
+
+
+// Obsolete
+
+T_("Divide by zero")
+caES("")
+esES("Divisi\303\263n entre cero")
 euES("")
 frFR("")

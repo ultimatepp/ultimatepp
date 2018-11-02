@@ -23,8 +23,8 @@ public:
 	virtual void GuessCoeff(DataSource &series)	= 0;
 
 	virtual double f(double x1) 			= 0;
-	virtual double f(double x1, double x2) 	{NEVER();	return Null;}
-	virtual double f(Vector <double> x) 	{NEVER();	return Null;}
+	virtual double f(double x1, double x2) 	{NEVER(); return Null;}
+	virtual double f(Vector <double> x) 	{NEVER(); return Null;}
 	virtual String GetName() = 0;
 	virtual String GetFullName()			{return GetName();}
 	virtual String GetEquation(int numDigits = 3) = 0;
@@ -328,11 +328,117 @@ private:
 };
 
 
+class Unit : public Moveable<Unit> {
+public:
+	Unit() 							{SetNull();}
+	Unit(const Nuller&)	: Unit()	{}
+	Unit(double m, double l, double t) : m(m), l(l), t(t) {}
+	String GetString() {
+		if (IsNullInstance())
+			return String();
+		String ret;
+		if (m != 0) {
+			ret << "Kg";
+			if (m != 1)
+				ret << "^" << m;
+		}
+		if (l != 0) {
+			if (!ret.IsEmpty())
+				ret << "*";
+			ret << "m";
+			if (l != 1) 
+				ret << "^" << l;
+		}
+		if (t != 0) {
+			if (!ret.IsEmpty())
+				ret << "*";
+			ret << "sec";
+			if (t != 1)
+				ret << "^" << t;
+		}
+		return ret;
+	}
+	bool IsEqual(const Unit &un) {return m == un.m && l == un.l && t == un.t;}
+	void Mult(const Unit &un) {
+		m += un.m;
+		l += un.l;
+		t += un.t;
+	}
+	void Div(const Unit &un) {
+		m -= un.m;
+		l -= un.l;
+		t -= un.t;
+	}
+	void Exp(double exp) {
+		m *= exp;
+		l *= exp;
+		t *= exp; 
+	}
+	void Sqrt() {
+		m /= 2.;
+		l /= 2.;
+		t /= 2.; 
+	}
+	
+	void SetNull()             	{m = Null;}
+	bool IsNullInstance() const	{return Upp::IsNull(m);}
+	bool IsAdim() const			{return (m == 0) && (l == 0) && (t == 0);}
+	
+	double m, l, t;	
+};
+
+class doubleUnit : public Moveable<doubleUnit> {
+public:
+	doubleUnit() : doubleUnit(0)						{}
+	doubleUnit(double val) : val(val), unit(0, 0, 0)	{}
+	doubleUnit(const Nuller&) 							{SetNull();}
+	
+	double val;
+	Unit unit;
+	
+	void Sum(const doubleUnit &d) {
+		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
+			throw(t_("Units does not match in summation"));
+		val += d.val;
+	}
+	void Sub(const doubleUnit &d) {
+		if (!(unit.IsEqual(d.unit) || IsNull(unit) || IsNull(d.unit)))
+			throw(t_("Units does not match in substraction"));
+		val -= d.val;
+	}
+	void Mult(const doubleUnit &d) {
+		unit.Mult(d.unit);
+		val *= d.val;
+	}
+	void Div(const doubleUnit &d) {
+		unit.Div(d.unit);
+		if (d.val < 1e-100)
+			throw(t_("Division by zero"));
+		val /= d.val;
+	}
+	void Exp(const doubleUnit &d) {
+		if (!(IsNull(d.unit) || d.unit.IsAdim()))
+			throw(t_("Exponent cannot have units"));
+		unit.Mult(d.unit);
+		val = pow(val, d.val);
+	}
+	void Sqrt() {
+		if (val < 0) 
+			throw(t_("Negative number sqrt"));
+		val = sqrt(val);
+		unit.Sqrt();
+	}
+	void SetNull()                 {val = Null;}
+	bool IsNullInstance() const    {return IsNull(unit) && IsNull(val);}
+};
+
+
+
 class EvalExpr {
 public:
 	EvalExpr();
 	void Init()									  {variables.Clear();}
-	double Eval(String line);
+	doubleUnit Eval(String line);
 	String EvalStr(String line, int numDigits = 3);
 	EvalExpr &SetCaseSensitivity(bool val = true) {noCase = !val;			return *this;}
 	EvalExpr &SetErrorUndefined(bool val = true)  {errorIfUndefined = val;	return *this;}
@@ -340,33 +446,34 @@ public:
 	const String &GetFunction(int id) 						{return functions.GetKey(id);}
 	int GetFunctionsCount() 								{return functions.GetCount();}
 	
-	void SetConstant(String name, double value = 0)			{constants.GetAdd(name) = value;}
-	void SetConstant(int id, double value = 0)				{constants[id] = value;}
-	double GetConstant(String name)							{return constants.Get(name, Null);}
-	void GetConstant(int id, String &name, double &value)	{name = constants.GetKey(id); value = constants[id];}
+	void SetConstant(String name, doubleUnit value)			{constants.GetAdd(name) = value;}
+	void SetConstant(int id, doubleUnit value)				{constants[id] = value;}
+	const doubleUnit &GetConstant(String name) 				{return constants.Get(name, Null);}
+	void GetConstant(int id, String &name, doubleUnit &val)	{name = constants.GetKey(id); val = constants[id];}
+	int GetConstantId(String &name)							{return constants.Find(name);}
 	int GetConstantsCount() 								{return constants.GetCount();}
 
-	void SetVariable(String name, double value = 0)			{variables.GetAdd(name) = value;}
-	void SetVariable(int id, double value = 0)				{variables[id] = value;}
-	double GetVariable(String name)							{return variables.GetAdd(name);}	
-	void GetVariable(int id, String &name, double &value)	{name = variables.GetKey(id); value = variables[id];}
+	void SetVariable(String name, doubleUnit value)			{variables.GetAdd(name) = value;}
+	void SetVariable(int id, doubleUnit value)				{variables[id] = value;}
+	doubleUnit GetVariable(String name)						{return variables.GetAdd(name);}	
+	void GetVariable(int id, String &name, doubleUnit &val)	{name = variables.GetKey(id); val = variables[id];}
 	int GetVariablesCount() 								{return variables.GetCount();}
 	void ClearVariables();
 	String &GetLastError()									{return lastError;}
 	
-	VectorMap<String, double> constants;
-	VectorMap<String, double (*)(double)> functions;
+	VectorMap<String, doubleUnit> constants;
+	VectorMap<String, doubleUnit (*)(doubleUnit)> functions;
 
 	CParser p;
 
 	static void EvalThrowError(CParser &p, const char *s);
 	
 protected:
-	double Exp(CParser& p);
+	doubleUnit Exp(CParser& p);
 	
 	bool noCase;
 	String lastError;
-	VectorMap<String, double> variables;
+	VectorMap<String, doubleUnit> variables;
 	bool errorIfUndefined;
 	
 	bool IsFunction(String str)								{return functions.Get(str, 0);}
@@ -374,9 +481,9 @@ protected:
 	
 private:
 	void *Functions_Get(CParser& p);
-	double Term(CParser& p);
-	double Pow(CParser& p);
-	double Mul(CParser& p);
+	doubleUnit Term(CParser& p);
+	doubleUnit Pow(CParser& p);
+	doubleUnit Mul(CParser& p);
 	
 	String TermStr(CParser& p, int numDigits);
 	String PowStr(CParser& p, int numDigits);
@@ -397,14 +504,14 @@ public:
 			return;
 		strEquation = parts[0];
 		eval.Init();
-		eval.SetConstant(varHoriz);
+		eval.SetConstant(varHoriz, doubleUnit(23));
 		idx = eval.GetConstantsCount() - 1;
 		eval.EvalStr(strEquation);
 		coeff.Clear();
 		varNames.Clear();
 		for (int i = 0; i < eval.GetVariablesCount(); ++i) {
 			String varName;
-			double dummy;
+			doubleUnit dummy;
 			eval.GetVariable(i, varName, dummy);
 			varNames << varName;
 			int istr;
@@ -422,18 +529,16 @@ public:
 		}
 	}
 	double f(double x) {
-		eval.SetConstant(idx, x);
-		for (int i = 0; i < coeff.GetCount(); ++i) {
+		eval.SetConstant(idx, doubleUnit(x));
+		for (int i = 0; i < coeff.GetCount(); ++i) 
 			eval.SetVariable(varNames[i], coeff[i]);
-			double ret = eval.GetVariable(varNames[i]);
-		}
-		return eval.Eval(strEquation);
+		return eval.Eval(strEquation).val;
 	}
 	void SetName(String _name) 					    {name = _name;}
 	virtual String GetName() 						{return name;}
 	virtual String GetEquation(int numDigits = 3)	{return eval.EvalStr(strEquation, numDigits);}
-	virtual void GuessCoeff(DataSource &series) 	{}
-	void SetDegree(int num)							{NEVER();}
+	virtual void GuessCoeff(DataSource &        ) 	{}
+	void SetDegree(int    )							{NEVER();}
 
 private:
 	String name;

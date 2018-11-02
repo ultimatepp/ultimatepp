@@ -144,49 +144,161 @@ void EvalExpr::EvalThrowError(CParser &p, const char *s) {
 	throw err;
 }
 
-double safe_sqrt(double val) {
-	if (val < 0) 
+doubleUnit usqrt(doubleUnit val) {
+	val.Sqrt();
+	return val;
+}
+
+doubleUnit ufabs(doubleUnit val) {
+	val.val = fabs(val.val);
+	return val;
+}
+
+doubleUnit uceil(doubleUnit val) {
+	val.val = ceil(val.val);
+	return val;
+}
+
+doubleUnit ufloor(doubleUnit val) {
+	val.val = floor(val.val);
+	return val;
+}
+
+doubleUnit usin(doubleUnit val) {
+	if (!val.unit.IsAdim())
 		return Null;
-	return sqrt(val);
+	val.val = sin(val.val);
+	return val;
+}
+
+doubleUnit ucos(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = cos(val.val);
+	return val;
+}
+
+doubleUnit utan(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = tan(val.val);
+	return val;
+}
+
+doubleUnit uasin(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = asin(val.val);
+	return val;
+}
+
+doubleUnit uacos(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = acos(val.val);
+	return val;
+}
+
+doubleUnit uatan(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = atan(val.val);
+	return val;
+}
+
+doubleUnit usinh(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = sinh(val.val);
+	return val;
+}
+
+doubleUnit ucosh(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = cosh(val.val);
+	return val;
+}
+
+doubleUnit utanh(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = tanh(val.val);
+	return val;
+}
+
+doubleUnit uexp(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = exp(val.val);
+	return val;
+}
+
+doubleUnit uDegToRad(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = DegToRad(val.val);
+	return val;
+}
+
+doubleUnit uRadToDeg(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = RadToDeg(val.val);
+	return val;
+}
+
+doubleUnit ulog(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = log(val.val);
+	return val;
+}
+
+doubleUnit ulog10(doubleUnit val) {
+	if (!val.unit.IsAdim())
+		return Null;
+	val.val = log10(val.val);
+	return val;
 }
 
 EvalExpr::EvalExpr() {
 	noCase = false;
 	errorIfUndefined = false;
 	
-	constants.Add("pi", M_PI);
-	constants.Add("e", M_E);
+	constants.Add("pi", doubleUnit(M_PI));
+	constants.Add("e", doubleUnit(M_E));
 	
-	functions.Add("abs", fabs);
-	functions.Add("ceil", ceil);
-	functions.Add("floor", floor);
-	functions.Add("sqrt", safe_sqrt);
-	functions.Add("sin", sin);
-	functions.Add("cos", cos);
-	functions.Add("tan", tan);
-	functions.Add("asin", asin);
-	functions.Add("acos", acos);
-	functions.Add("atan", atan);
-	functions.Add("sinh", sinh);
-	functions.Add("cosh", cosh);
-	functions.Add("tanh", tanh);
-	functions.Add("log", log);
-	functions.Add("log10", log10);
-	functions.Add("exp", exp);
-	functions.Add("degToRad", DegToRad);
-	functions.Add("radToDeg", RadToDeg);
+	functions.Add("abs", ufabs);
+	functions.Add("ceil", uceil);
+	functions.Add("floor", ufloor);
+	functions.Add("sqrt", usqrt);
+	functions.Add("sin", usin);
+	functions.Add("cos", ucos);
+	functions.Add("tan", utan);
+	functions.Add("asin", uasin);
+	functions.Add("acos", uacos);
+	functions.Add("atan", uatan);
+	functions.Add("sinh", usinh);
+	functions.Add("cosh", ucosh);
+	functions.Add("tanh", utanh);
+	functions.Add("log", ulog);
+	functions.Add("log10", ulog10);
+	functions.Add("exp", uexp);
+	functions.Add("degToRad", uDegToRad);
+	functions.Add("radToDeg", uRadToDeg);
 }
 
-double EvalExpr::Term(CParser& p) {
+doubleUnit EvalExpr::Term(CParser& p) {
 	if(p.IsId()) {
 		String strId = p.ReadId();
-		if(double (*function)(double) = functions.Get(strId, 0)) {
+		if(doubleUnit (*function)(doubleUnit) = functions.Get(strId, 0)) {
 			p.PassChar('(');
-			double x = Exp(p);
+			doubleUnit x = Exp(p);
 			p.PassChar(')');
-			double ret = function(x);
+			doubleUnit ret = function(x);
 			if (IsNull(ret))
-				EvalThrowError(p, Format(t_("Error in %s(%f)"), strId, x));	
+				EvalThrowError(p, Format(t_("Error in %s(%f)"), strId, x.val));	
 			return ret;
 		}	
 		String strsearch;
@@ -194,7 +306,7 @@ double EvalExpr::Term(CParser& p) {
 			strsearch = ToLower(strId);
 		else
 			strsearch = strId;
-		double ret = constants.Get(strsearch, Null);
+		doubleUnit ret = constants.Get(strsearch, Null);
 		if (IsNull(ret)) {
 			ret = variables.Get(strsearch, Null);
 			if (IsNull(ret)) {
@@ -205,55 +317,65 @@ double EvalExpr::Term(CParser& p) {
 		}
 		return ret;
 	} else if(p.Char('(')) {
-		double x = Exp(p);
+		doubleUnit x = Exp(p);
 		p.PassChar(')');
 		return x;
 	} else
-		return p.ReadDouble();
+		return doubleUnit(p.ReadDouble());
 }
 
-double EvalExpr::Pow(CParser& p) {
-	double x = Term(p);
+doubleUnit EvalExpr::Pow(CParser& p) {
+	doubleUnit x = Term(p);
 	for(;;) {
 		if(p.Char('^')) {
-			if (x < 0)
+			if (x.val < 0)
 				EvalThrowError(p, t_("Complex number"));
-			x = pow(x, Term(p));
+			x.Exp(Term(p));
 		} else
 			return x;
 	}
 }
 
-double EvalExpr::Mul(CParser& p) {
-	double x = Pow(p);
+doubleUnit EvalExpr::Mul(CParser& p) {
+	doubleUnit x = Pow(p);
 	for(;;) {
 		if(p.Char('*'))
-			x = x * Mul(p);
-		else if(p.Char('/')) {
-			double y = Pow(p);
-			if(y == 0)
-				EvalThrowError(p, t_("Divide by zero"));
-			x = x / y;
+			x.Mult(Pow(p));
+		else if(memcmp(p.GetPtr(), "·", strlen("·")) == 0) {
+			CParser::Pos pos = p.GetPos();
+			pos.ptr += strlen("·");
+			p.SetPos(pos);
+			p.Spaces();
+			x.Mult(Pow(p));
+		} else if(p.Char('/')) {
+			x.Div(Pow(p));
+		} else if(memcmp(p.GetPtr(), "º", strlen("º")) == 0) { 
+			CParser::Pos pos = p.GetPos();
+			pos.ptr += strlen("º");
+			p.SetPos(pos);
+			p.Spaces();
+			x.Mult(doubleUnit(M_PI/180.));
 		} else
 			return x;
 	}
 }
 
-double EvalExpr::Exp(CParser& p) {
-	double x = Mul(p);
+doubleUnit EvalExpr::Exp(CParser& p) {
+	doubleUnit x = Mul(p);
 	for(;;) {
 		if(p.Char('+'))
-			x = x + Mul(p);
+			x.Sum(Mul(p));
 		else if(p.Char('-'))
-			x = x - Mul(p);
-		else if(p.Char(':'))
-			x = x*60 + Mul(p);
-		else
+			x.Sub(Mul(p));
+		else if(p.Char(':')) {
+			x.Mult(doubleUnit(60));
+			x.Sum(Mul(p));
+		} else
 			return x;
 	}
 }
 
-double EvalExpr::Eval(String line) {
+doubleUnit EvalExpr::Eval(String line) {
 	line = TrimBoth(line);
 	if (line.IsEmpty())
 		return Null;
@@ -264,10 +386,10 @@ double EvalExpr::Eval(String line) {
 			CParser::Pos pos = p.GetPos();
 			String var = p.ReadId();
 			if(p.Char('=')) {
-				double ret = Exp(p);
+				doubleUnit ret = Exp(p);
 				if (noCase)
 					var = ToLower(var);
-				variables.GetAdd(var) = ret;
+				SetVariable(var, ret);
 				return ret;
 			} else {
 				p.SetPos(pos);
@@ -301,7 +423,7 @@ String EvalExpr::TermStr(CParser& p, int numDigits) {
 			if (constants.Find(strId) >= 0)
 				return strId;
 			else {
-				double dat = variables.GetAdd(strId, 0);
+				double dat = variables.GetAdd(strId, 0).val;
 				return FormatDoubleFix(dat, numDigits);
 			}
 		}
@@ -370,9 +492,14 @@ String EvalExpr::EvalStr(String line, int numDigits) {
 			}
 		} else
 			return ExpStr(p, numDigits);
-	}
-	catch(CParser::Error e) {
+	} catch(CParser::Error e) {
 		lastError = Format(t_("Error evaluating '%s': %s"), line, e);
+		return Null;
+	} catch(String e) {
+		lastError = Format(t_("Error: %s"), e);
+		return Null;
+	} catch(...) {
+		lastError = t_("Unknown error");
 		return Null;
 	}
 }
