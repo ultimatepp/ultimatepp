@@ -15,7 +15,7 @@ LAYOUT(Tab1Basic, 428, 296)
 END_LAYOUT
 
 LAYOUT(Tab2Functions, 380, 292)
-	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetPlotAreaRightMargin(110).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetGridWidth(2).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(-107).SetLegendPosY(0).HSizePosZ(16, 12).VSizePosZ(16, 16))
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("Functions")).SetPlotAreaRightMargin(130).SetPlotAreaTopMargin(20).SetLabelsFont(StdFontZ(11)).SetGridWidth(2).SetTitleFont(SansSerifZ(14).Bold()).SetLegendAnchor(2).SetLegendPosX(-120).SetLegendPosY(0).HSizePosZ(16, 12).VSizePosZ(16, 16))
 END_LAYOUT
 
 LAYOUT(Tab3ParametricFunctions, 384, 284)
@@ -96,6 +96,20 @@ END_LAYOUT
 
 LAYOUT(TabRangePlot, 420, 236)
 	ITEM(ScatterCtrl, scatter, SetTitle(t_("Range Plot")).SetPlotAreaLeftMargin(40).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(4, 4).VSizePosZ(4, 4))
+END_LAYOUT
+
+LAYOUT(TabSurf, 468, 236)
+	ITEM(ScatterCtrl, scatter, SetTitle(t_("2D Surface")).SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(20).SetPlotAreaTopMargin(20).SetPlotAreaBottomMargin(40).SetLabelsFont(StdFontZ(11)).SetTitleFont(SansSerifZ(14).Bold()).HSizePosZ(132, 4).VSizePosZ(4, 4))
+	ITEM(LabelBox, dv___1, SetLabel(t_("Data source")).LeftPosZ(4, 124).TopPosZ(0, 64))
+	ITEM(Switch, dataType, SetLabel(t_("Data set simple\nData set\nExplicit equation")).LeftPosZ(12, 108).TopPosZ(16, 48))
+	ITEM(EditIntSpin, numColor, Min(0).NotNull(true).LeftPosZ(72, 56).TopPosZ(112, 19))
+	ITEM(Label, labelInterpolation, SetLabel(t_("Data set interpolation")).LeftPosZ(4, 120).TopPosZ(68, 19))
+	ITEM(Label, dv___5, SetLabel(t_("Num. color:")).LeftPosZ(4, 68).TopPosZ(112, 19))
+	ITEM(DropList, interpolation, LeftPosZ(4, 124).TopPosZ(88, 19))
+	ITEM(Label, dv___7, SetLabel(t_("Rainbow style")).LeftPosZ(4, 100).TopPosZ(156, 19))
+	ITEM(DropList, rainbow, LeftPosZ(4, 124).TopPosZ(176, 19))
+	ITEM(Option, zoom, SetLabel(t_("Zoom to fit")).LeftPosZ(4, 104).TopPosZ(200, 16))
+	ITEM(Option, opContinuous, SetLabel(t_("Continuous")).LeftPosZ(4, 88).TopPosZ(136, 16))
 END_LAYOUT
 
 LAYOUT(TabStackedPlot, 420, 244)

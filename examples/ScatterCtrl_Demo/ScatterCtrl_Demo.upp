@@ -28,9 +28,10 @@ file
 	tab16_StackedPlot.cpp,
 	tab17_BubblePlot.cpp,
 	tab18_UserPaint.cpp,
+	tab19_Surf.cpp,
 	tab20_Pie.cpp,
 	symbol.iml;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI MT";
 

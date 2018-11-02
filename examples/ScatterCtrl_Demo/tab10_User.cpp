@@ -7,9 +7,9 @@
 class MyPlot : public SeriesPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, Vector<Point> &p, const int &scale, const double opacity, 
+	void DoPaint(T& w, const double &scale, Vector<Pointf> &p, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, int y0) const {
+				const Color &fillColor, double y0) const {
 		Vector<Pointf> t;
 		t.SetCount(3);
 		for (int i = 0; i < p.GetCount(); ++i) {
@@ -25,31 +25,34 @@ private:
 	}
 	
 public:
-	void Paint(Draw& w, Vector<Point> &p, const int &scale, const double opacity, 
+	void Paint(Draw& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const {
-		DoPaint(w, p, scale, opacity, fround(thick), color, pattern, background, fillColor, y0);		
+				const Color &fillColor, double fx, double fy, double y0, double width, 
+				bool isClosed) const {
+		DoPaint(w, scale, p, opacity, fround(thick), color, pattern, background, fillColor, y0);		
 	}
-	void Paint(Painter& w, Vector<Point> &p, const int &scale, const double opacity, 
+	void Paint(Painter& w, Vector<Pointf> &p, const double &scale, const double opacity, 
 				double thick, const Color &color, String pattern, const Color &background, 
-				const Color &fillColor, double fx, double fy, int y0) const {
-		DoPaint(w, p, scale, opacity, fround(thick), color, pattern, background, fillColor, y0);		
+				const Color &fillColor, double fx, double fy, double y0, double width, 
+				bool isClosed) const {
+		DoPaint(w, scale, p, opacity, fround(thick), color, pattern, background, fillColor, y0);		
 	}
 };
 
 class MyMark : public MarkPlot {
 private:
 	template <class T>
-	void DoPaint(T& w, const int& scale, const Point& cp, const double& size, const Color& markColor) const {
-		w.DrawImage(cp.x-8, cp.y-8, Symbol::bug());
+	void DoPaint(T& w, const double& scale, const Point& cp, const double& size, const Color& markColor) const {
+		Size bugSize = Symbol::bug().GetSize()*scale;
+		w.DrawImage(cp.x - bugSize.cx/2, cp.y - bugSize.cy/2, bugSize.cx, bugSize.cy, Symbol::bug());
 	}
 
 public:
-	void Paint(Draw &p, const int& scale, const Point& cp, const double& size, const Color& markColor, 
+	void Paint(Draw &p, const double& scale, const Point& cp, const double& size, const Color& markColor, 
 				const double&, const Color&) const {
 		DoPaint(p, scale, cp, size, markColor);
 	}
-	void Paint(Painter &p, const int& scale, const Point& cp, const double& size, const Color& markColor, 
+	void Paint(Painter &p, const double& scale, const Point& cp, const double& size, const Color& markColor, 
 				const double&, const Color&) const {
 		DoPaint(p, scale, cp, size, markColor);
 	}
@@ -62,10 +65,11 @@ void Tab10_User::Init()
 	
 	sy[0] = 18; sy[1] = 29; sy[2] = 23; sy[3] = 25; sy[4] = 20;
 	sx[0] = 10; sx[1] = 20; sx[2] = 30; sx[3] = 40; sx[4] = 50;
-	scatter.AddSeries(sx, sy, 5).Legend("Series").PlotStyle<MyPlot>().MarkStyle<MyMark>().Stroke(3, LtGreen()).Fill(LtGray());
+	scatter.AddSeries(sx, sy, 5).Legend("Series").PlotStyle<MyPlot>().MarkStyle<MyMark>()
+		   .Stroke(3, LtGreen()).Fill(LtGray());
 	
 	scatter.SetRange(60, 50).SetMajorUnits(10, 10);
-	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
+	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg().Responsive();
 }
 
 ScatterDemo *Construct10()
