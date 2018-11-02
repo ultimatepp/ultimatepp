@@ -50,7 +50,7 @@ CONSOLE_APP_MAIN
 		scatter.SetPlotAreaLeftMargin(40).SetPlotAreaRightMargin(30).SetPlotAreaTopMargin(40).SetPlotAreaBottomMargin(50);
 		scatter.SetSize(Size(1000, 500));
 		scatter.SetMode(ScatterDraw::MD_ANTIALIASED);
-		scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP);
+		scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP);
 	}
 	PNGEncoder().SaveFile(fileName + ".png", scatter.GetImage());
 	StoreAsJsonFile(scatter, fileName + ".json", true); 
