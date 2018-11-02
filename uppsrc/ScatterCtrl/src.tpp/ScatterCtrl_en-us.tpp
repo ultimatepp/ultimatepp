@@ -1,5 +1,4 @@
 topic "1 ScatterCtrl";
-[ $$0,0#00000000000000000000000000000000:Default]
 [0 $$1,0#96390100711032703541132217272105:end]
 [i448;a25;kKO9;2 $$2,0#37138531426314131252341829483380:class]
 [l288;2 $$3,0#27521748481378242620020725143825:desc]
@@ -7,6 +6,7 @@ topic "1 ScatterCtrl";
 [i448;a25;kKO9;2 $$5,0#37138531426314131252341829483370:item]
 [H6;0 $$6,0#05600065144404261032431302351956:begin]
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
+[ $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@3 [s0; [*@(229)4 ScatterCtrl]]}}&]
 [s1; &]
@@ -173,31 +173,31 @@ onst]&]
 return the Size of Image to be get by functions like GetImage().&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+[s5;:ScatterCtrl`:`:SetColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 color])&]
 [s3; Calls to ScatterDraw`::SetColor(color).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetGridColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetGridColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 grid`_color
-])&]
+[s5;:ScatterCtrl`:`:SetGridColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ ScatterCtrl
+][@(0.0.255) `&]_[* SetGridColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 g
+rid`_color])&]
 [s3; Calls to ScatterDraw`::SetGridColor(grid`_color).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetGridWidth`(int`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_[* S
-etGridWidth]([@(0.0.255) int]_[*@3 grid`_width])&]
+[s5;:ScatterCtrl`:`:SetGridWidth`(double`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&]_
+[* SetGridWidth]([@(0.0.255) double]_[*@3 grid`_width])&]
 [s3; Calls to ScatterDraw`::SetGridWidth(grid`_width).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetPlotAreaColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 p`_a`_c
-olor])&]
+[s5;:ScatterCtrl`:`:SetPlotAreaColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ Scatter
+Ctrl][@(0.0.255) `&]_[* SetPlotAreaColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&
+]_[*@3 p`_a`_color])&]
 [s3; Calls to ScatterDraw`::SetPlotAreaColor(p`_a`_color).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetAxisColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 axis`_color
-])&]
+[s5;:ScatterCtrl`:`:SetAxisColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ ScatterCtrl
+][@(0.0.255) `&]_[* SetAxisColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 a
+xis`_color])&]
 [s3; Calls to ScatterDraw`::SetAxisColor(axis`_color).&]
 [s1; &]
 [s6;%- &]
@@ -206,44 +206,45 @@ etAxisWidth]([@(0.0.255) int]_[*@3 axis`_width])&]
 [s3; ScatterDraw`::SetAxisWidth(axis`_width)&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetTitle`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+[s5;:ScatterCtrl`:`:SetTitle`(const Upp`:`:String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetTitle]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 title])&]
 [s3; Calls to ScatterDraw`::SetTitle(title); &]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetTitleFont`(const Font`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+[s5;:ScatterCtrl`:`:SetTitleFont`(const Upp`:`:Font`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetTitleFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontTitle])&]
 [s3; Calls to ScatterDraw`::SetTitleFont(fontTitle).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetTitleColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetTitleColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 colorTitle
-])&]
+[s5;:ScatterCtrl`:`:SetTitleColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ ScatterCtr
+l][@(0.0.255) `&]_[* SetTitleColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_
+[*@3 colorTitle])&]
 [s3; Calls to ScatterDraw`::SetTitleColor(colorTitle).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLabelsFont`(const Font`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetLabelsFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 fontLabels])&]
+[s5;:ScatterCtrl`:`:SetLabelsFont`(const Upp`:`:Font`&`):%- [_^ScatterCtrl^ ScatterCtrl
+][@(0.0.255) `&]_[* SetLabelsFont]([@(0.0.255) const]_[_^Font^ Font][@(0.0.255) `&]_[*@3 font
+Labels])&]
 [s3; Calls to ScatterDraw`::SetLabelsFont(fontLabels).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLabelsColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetLabelsColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&]_[*@3 colorLabe
-ls])&]
+[s5;:ScatterCtrl`:`:SetLabelsColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ ScatterCt
+rl][@(0.0.255) `&]_[* SetLabelsColor]([@(0.0.255) const]_[_^Color^ Upp`::Color][@(0.0.255) `&
+]_[*@3 colorLabels])&]
 [s3; Calls to ScatterDraw`::SetLabelsColor(colorLabels).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLabelX`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+[s5;:ScatterCtrl`:`:SetLabelX`(const Upp`:`:String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetLabelX]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 xLabel])&]
 [s3; Calls to ScatterDraw`::SetLabelX(xLabel).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLabelY`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+[s5;:ScatterCtrl`:`:SetLabelY`(const Upp`:`:String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetLabelY]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
 [s3; Calls to ScatterDraw`::SetLabelY(yLabel).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLabelY2`(const String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
+[s5;:ScatterCtrl`:`:SetLabelY2`(const Upp`:`:String`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
 ]_[* SetLabelY2]([@(0.0.255) const]_[_^String^ String][@(0.0.255) `&]_[*@3 yLabel])&]
 [s3; Calls to ScatterDraw`::SetLabelY(yLabel).&]
 [s1; &]
@@ -304,8 +305,8 @@ owLegend]([@(0.0.255) bool]_[*@3 show]_`=_[@(0.0.255) true])&]
 [s3; Returns ScatterDraw`::GetShowLegend().&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLegendPos`(const Point`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetLegendPos]([@(0.0.255) const]_[_^Point^ Point]_`&[*@3 pos])&]
+[s5;:ScatterCtrl`:`:SetLegendPos`(const Upp`:`:Point`&`):%- [_^ScatterCtrl^ ScatterCtrl
+][@(0.0.255) `&]_[* SetLegendPos]([@(0.0.255) const]_[_^Point^ Point]_`&[*@3 pos])&]
 [s3;%- [%% Calls to ScatterDraw`::]SetLegendPos(pos).&]
 [s1; &]
 [s6;%- &]
@@ -351,14 +352,15 @@ etLegendPosY]([@(0.0.255) int]_[*@3 y])&]
 [s3;%- [%% Returns ScatterDraw`::]GetLegendAnchor().&]
 [s1;%- &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLegendFillColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtrl][@(0.0.255) `&
-]_[* SetLegendFillColor]([@(0.0.255) const]_[_^Color^ Upp`::Color]_`&[*@3 fill])&]
+[s5;:ScatterCtrl`:`:SetLegendFillColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ Scatt
+erCtrl][@(0.0.255) `&]_[* SetLegendFillColor]([@(0.0.255) const]_[_^Color^ Upp`::Color]_`&
+[*@3 fill])&]
 [s3; Calls to ScatterDraw`::SetLegendFillColor(fill).&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SetLegendBorderColor`(const Color`&`):%- [_^ScatterCtrl^ ScatterCtr
-l][@(0.0.255) `&]_[* SetLegendBorderColor]([@(0.0.255) const]_[_^Color^ Upp`::Color]_`&[*@3 b
-order])&]
+[s5;:ScatterCtrl`:`:SetLegendBorderColor`(const Upp`:`:Color`&`):%- [_^ScatterCtrl^ Sca
+tterCtrl][@(0.0.255) `&]_[* SetLegendBorderColor]([@(0.0.255) const]_[_^Color^ Upp`::Color
+]_`&[*@3 border])&]
 [s3; Calls to ScatterDraw`::SetLegendBorderColor(border).&]
 [s1; &]
 [s6;^ScatterCtrl^%- &]

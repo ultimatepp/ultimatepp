@@ -18,6 +18,7 @@ void PropertiesDlg::Init(ScatterCtrl& scatter)
 	tab.Add(texts, t_("Texts"));
 	tab.Add(legend, t_("Legend"));
 	tab.Add(series, t_("Series"));
+	tab.Add(general, t_("General"));
 	OnTab();
 	
 	tab <<= THISBACK(OnTab);
@@ -39,6 +40,8 @@ void PropertiesDlg::OnTab()
 		legend.Init(*scatter);
 	else if (tab.IsAt(series))
 		series.Init(*scatter);
+	else if (tab.IsAt(general))
+		general.Init(*scatter);
 }
 
 void ProcessingDlg::Init(ScatterCtrl& scatter) 
@@ -383,7 +386,7 @@ void ProcessingTab::UpdateField(const String _name, int _id)
 	tabFitLeft.scatter.SetMarkColor(0, pscatter->GetMarkColor(id));
 	tabFitLeft.scatter.SetMarkWidth(0, pscatter->GetMarkWidth(id));
 	tabFitLeft.scatter.MarkStyle(0, pscatter->GetMarkStyleName(id));
-	tabFitLeft.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
+	tabFitLeft.scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP).SetLegendFillColor(Null);
 	
 	tabFitLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 	
@@ -542,7 +545,7 @@ void ProcessingTab::OnSet()
 					   .Legend(legend).NoMark().Stroke(2, Blue());				   
 		tabOpLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
-		tabOpLeft.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
+		tabOpLeft.scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP).SetLegendFillColor(Null);
 		
 		tabOpLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 		
@@ -562,7 +565,7 @@ void ProcessingTab::OnSet()
 					   .Legend(legend).NoMark().Stroke(2);				   
 		tabBestFitLeft.scatter.SetFastViewX(pscatter->GetFastViewX());
 	
-		tabBestFitLeft.scatter.SetLegendAnchor(ScatterDraw::LEGEND_ANCHOR_RIGHT_TOP).SetLegendFillColor(Null);
+		tabBestFitLeft.scatter.SetLegendAnchor(ScatterDraw::RIGHT_TOP).SetLegendFillColor(Null);
 		
 		tabBestFitLeft.scatter.Units(0, pscatter->GetUnitsX(id), pscatter->GetUnitsY(id));
 		

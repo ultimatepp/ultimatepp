@@ -4,19 +4,20 @@ uses
 	CtrlLib,
 	plugin\jpg,
 	ScatterDraw,
-	GridCtrl;
+	GridCtrl,
+	PdfDraw;
 
 file
 	ScatterCtrl.cpp,
 	ScatterCtrl.h,
+	ScatterCtrl.lay,
 	ScatterCtrlX.cpp,
-	Properties.cpp,
 	Properties.h,
+	Properties.cpp,
 	Processing.cpp,
 	Data.cpp,
 	ScatterCtrl.iml,
 	PopUpText.cpp,
-	ScatterCtrl.lay,
 	PopUpText.h,
 	PieCtrl.cpp,
 	PieCtrl.h,
