@@ -418,7 +418,7 @@ EquationDraw::EquationDraw() {
 	symbols.GetAdd("rho")   = "Ρρ"; 	
 	symbols.GetAdd("zeta") 	= "Ζζ"; 	 	
 	symbols.GetAdd("sigma") = "Σσ"; 	
-	symbols.GetAdd("eta") 	= " Ηη"; 		
+	symbols.GetAdd("eta") 	= "Ηη"; 		
 	symbols.GetAdd("tau") 	= "Ττ"; 	
 	symbols.GetAdd("theta") = "Θθ"; 	 	
 	symbols.GetAdd("upsilon") = "Υυ"; 	

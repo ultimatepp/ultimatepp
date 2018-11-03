@@ -911,24 +911,32 @@ String HMSToString0(int hour, int min, double seconds, bool units, int dec) {
 	return ret;
 }*/
 
-String HMSToString(int hour, int min, double seconds, int dec, bool units, bool space, bool longUnits) {
+String HMSToString(int hour, int min, double seconds, int dec, bool units, bool space, bool tp, 
+					bool longUnits, bool forcesec) {
 	String ret;
 	
 	if (hour > 0) {
 		ret << hour;
 		if (space)
 			ret << " ";
+		if (tp)
+			ret << ":";
 		if (units)
 			ret << (longUnits ? ((hour > 1) ? t_("hours") : t_("hour")) : t_("h"));
 	}
+	
 	if (min > 0) {
 		ret << (ret.IsEmpty() ? "" : " ") << min;
 		if (space)
 			ret << " ";
+		if (tp)
+			ret << ":";
 		if (units)
 			ret << (longUnits ? ((min > 1) ? t_("mins") : t_("min")) : t_("m"));
-	}
-	if (hour == 0 && (seconds > 1 || (seconds > 0 && dec > 0))) {
+	} else if (tp)
+		ret << "00:";
+	
+	if (forcesec || (hour == 0 && (seconds > 1 || (seconds > 0 && dec > 0)))) {
 		ret << (ret.IsEmpty() ? "" : " ") << formatSeconds(seconds, dec, false);
 		if (space)
 			ret << " ";
@@ -938,13 +946,14 @@ String HMSToString(int hour, int min, double seconds, int dec, bool units, bool 
 	return ret;
 }
 
-String SecondsToString(double seconds, int dec, bool units, bool space, bool longUnits) {
+String SecondsToString(double seconds, int dec, bool units, bool space, bool tp, 
+					bool longUnits, bool forcesec) {
 	int hour, min;
 	hour = (int)(seconds/3600.);
 	seconds -= hour*3600;
 	min = (int)(seconds/60.);
 	seconds -= min*60;	
-	return HMSToString(hour, min, seconds, dec, units, space, longUnits);
+	return HMSToString(hour, min, seconds, dec, units, space, tp, longUnits, forcesec);
 }
 
 String SeasonName(int iseason) {
@@ -1309,7 +1318,7 @@ Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator, bool 
 	return ReadCSV(LoadFile(fileName), separator, bycols, removeRepeated,  decimalSign, onlyStrings, fromRow);
 }
 
-bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator, char decimalSign, bool onlyStrings, int fromRow) {
+bool ReadCSVFileByLine(const String fileName, Gate<int, Vector<Value>&, String &> WhenRow, char separator, char decimalSign, bool onlyStrings, int fromRow) {
 	Vector<Value> result;
 
 	FindFile ff(fileName);
@@ -1325,7 +1334,7 @@ bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow
 	for (int row = 0; true; row++) {
 		String line = in.GetLine();
 		if (line.IsVoid()) {
-			WhenRow(row, result);
+			WhenRow(row, result, line);
 			return true;
 		}
 		int pos = 0;
@@ -1336,7 +1345,7 @@ bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow
 			else
 				result << val;
 		}
-		if (!WhenRow(row, result))
+		if (!WhenRow(row, result, line))
 			return true;
 		result.Clear();
 	}
@@ -2655,6 +2664,73 @@ int SysX(const char *cmd, String& out, String& err, double timeOut,
 }
 
 
+int LevenshteinDistance(const char *s, const char *t) {
+	int lens = int(strlen(s));
+	int lent = int(strlen(t));
+	
+    Buffer<int> v0(lent + 1);
+    Buffer<int> v1(lent + 1);
+
+    for (int i = 0; i <= lent; ++i)
+        v0[i] = i;
+
+    for (int i = 0; i < lens; ++i) {
+        v1[0] = i + 1;
+
+        for (int j = 0; j < lent; ++j) {
+            int deletionCost = v0[j + 1] + 1;
+            int insertionCost = v1[j] + 1;
+            int substitutionCost;
+            if (s[i] == t[j])
+                substitutionCost = v0[j];
+            else
+                substitutionCost = v0[j] + 1;
+
+            v1[j + 1] = min(deletionCost, insertionCost, substitutionCost);
+        }
+        Swap(v0, v1);
+   	}
+    return v0[lent];
+}
+
+int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength) {
+	int lens = int(strlen(s));
+	int lent = int(strlen(t));
+	int lent2 = lent + 2;
+	Buffer<int> H((lens+2)*lent2);  
+	
+    int infinity = lens + lent;
+    H[0] = infinity;
+    for(int i = 0; i <= lens; i++) {
+		H[lent2*(i+1)+1] = i;
+		H[lent2*(i+1)+0] = infinity;
+    }
+    for(int j = 0; j <= lent; j++) {
+		H[lent2*1+(j+1)] = j;
+		H[lent2*0+(j+1)] = infinity;
+    }      
+    Buffer<int> DA(alphabetLength, 0);
+   
+    for(int i = 1; i <= lens; i++) {
+      	int DB = 0;
+      	for(int j = 1; j <= lent; j++) {
+	        int i1 = DA[t[j-1]];
+	        int j1 = DB;
+	        int cost = (s[i-1] == t[j-1]) ? 0 : 1;
+	        if(cost == 0) 
+	        	DB = j;
+	        H[lent2*(i+1)+j+1] =
+	          min(H[lent2*i     + j] + cost,
+	              H[lent2*(i+1) + j] + 1,
+	              H[lent2*i     + j+1] + 1, 
+	              H[lent2*i1    + j1] + (i-i1-1) + 1 + (j-j1-1));
+	  	}
+      	DA[s[i-1]] = i;
+    }
+    return H[lent2*(lens+1)+lent+1];
+}
+  
+  
 // Dummy functions added after TheIDE change
 Upp::String GetCurrentMainPackage() {return "dummy";}
 Upp::String GetCurrentBuildMethod()	{return "dummy";}

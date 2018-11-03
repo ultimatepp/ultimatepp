@@ -40,6 +40,7 @@ bool AppendFile(const char *filename, const char *str);
 String AppendFileName(const String& path1, const char *path2, const char *path3);
 	
 inline String Trim(const String& s) {return TrimBoth(s);}
+inline WString Trim(const WString& s) {return TrimLeft(TrimRight(s));}
 
 String FitFileName(String fileName, int len);
 
@@ -211,8 +212,10 @@ Date StrToDate(const char *s);
 
 String BytesToString(uint64 bytes, bool units = true);
 
-String SecondsToString(double seconds, int dec = 2, bool units = false, bool space = false, bool longUnits = false);
-String HMSToString(int hour, int min, double seconds, int dec = 2, bool units = false, bool space = false, bool longUnits = false); 
+String SecondsToString(double seconds, int dec = 2, bool units = false, bool space = false, 
+						bool tp = false, bool longUnits = false, bool forceSec = false);
+String HMSToString(int hour, int min, double seconds, int dec = 2, bool units = false, bool space = false, 
+						bool tp = false, bool longUnits = false, bool forceSec = false); 																
 double StringToSeconds(String str);		
 void StringToHMS(String durat, int &hour, int &min, double &seconds); 
 
@@ -306,7 +309,7 @@ inline const double Angle(const Point_<T>& p1, const Point_<T>& p2)  {
 
 Vector<Vector <Value> > ReadCSV(const String strFile, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
 Vector<Vector <Value> > ReadCSVFile(const String fileName, char separator = ',', bool bycols = true, bool removeRepeated = true, char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
-bool ReadCSVFileByLine(const String fileName, Gate2<int, Vector<Value>&> WhenRow, char separator = ',', char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
+bool ReadCSVFileByLine(const String fileName, Gate<int, Vector<Value>&, String &> WhenRow, char separator = ',', char decimalSign = '.', bool onlyStrings = false, int fromRow = 0);
 String WriteCSV(Vector<Vector <Value> > &data, char separator = ',', bool bycols = true, char decimalSign = '.');
 bool WriteCSVFile(const String fileName, Vector<Vector <Value> > &data, char separator = ',', bool bycols = true, char decimalSign = '.');
 
@@ -856,5 +859,7 @@ private:
 #endif
 };
 
+int LevenshteinDistance(const char *s, const char *t);
+int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength = 256);
 
 #endif

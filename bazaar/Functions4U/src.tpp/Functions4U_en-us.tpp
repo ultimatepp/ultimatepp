@@ -1,5 +1,4 @@
 topic "Functions4U. Reference";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Functions4U. Reference";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@7;4 Functions4U. Reference]]}}&]
 [s0;*@3;4 &]
@@ -663,7 +663,7 @@ and Color [%-*@3 color].&]
 [s2;l0;:RandomColor`(`):%- [_^Color^ Color]_[* RandomColor]()&]
 [s2; Returns a random color.&]
 [s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:GetRainbowColor`(int`):%- [_^Color^ Color]_[* GetRainbowColor]([@(0.0.255) int]_[*@3 val
 16])&]
 [s2; Returns a rainbow color from an input value [%-*@3 val16] from 
@@ -768,4 +768,25 @@ oid]_[* Shuffle]([*@4 C]_`&[*@3 data], [@(0.0.255) int]_[*@3 randomSeed]_`=_Null
 the random number generator.&]
 [s2; If [%-*@3 randomSeed] is Null or not included, a new random seed 
 is used every function call..&]
+[s3; &]
+[s4;%- &]
+[s5;:DamerauLevenshteinDistance`(const char`*`,const char`*`,int`):%- [@(0.0.255) int]_
+[* DamerauLevenshteinDistance]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], 
+[@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 t], [@(0.0.255) int]_[*@3 alphabetLength]_`=_[@3 2
+56])&]
+[s2; Calculates the Damerau Levenshtein distance between words [%-*@3 s] 
+and [%-*@3 t] considering an alphabet of length [%-*@3 alphabetLength] 
+.&]
+[s2; The algorithm are documented [^https`:`/`/en`.wikipedia`.org`/wiki`/Damerau`%E2`%80`%93Levenshtein`_distance^ h
+ere] and [^https`:`/`/stackoverflow`.com`/questions`/6033631`/levenshtein`-to`-damerau`-levenshtein`/6035519`#6035519^ h
+ere].&]
+[s4;%- &]
+[s5;:LevenshteinDistance`(const char`*`,const char`*`):%- [@(0.0.255) int]_[* Levenshtein
+Distance]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 s], [@(0.0.255) const]_[@(0.0.255) ch
+ar]_`*[*@3 t])&]
+[s2; Calculates the Levenshtein distance between words [%-*@3 s] and 
+[%-*@3 t].&]
+[s2; The algorithm is documented [^From https`:`/`/en`.wikipedia`.org`/wiki`/Levenshtein`_distance^ h
+ere].&]
+[s3; &]
 [s3; ]]
