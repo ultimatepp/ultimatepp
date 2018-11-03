@@ -16,9 +16,12 @@ double GetCpuTemperature();
 struct NetAdapter : DeepCopyOption<NetAdapter> {
 	String description;
 	String fullname;
+	String dnsSuffix;
 	String mac;
 	String type;
 	String ip4, ip6;
+	String gatewayip4, gatewayip6;
+	bool connected;
 	
 	void Xmlize(XmlIO &xml);
 	void Jsonize(JsonIO &json);
@@ -62,8 +65,8 @@ Upp::Array<int64> GetWindowsList();
 
 Rect GetDesktopRect();
 	
-bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom);
-bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom);
+bool Window_GetRect(int64 windowId, int &left, int &top, int &right, int &bottom);
+bool Window_SetRect(int64 windowId, int left, int top, int right, int bottom);
 #if defined(PLATFORM_WIN32) 
 void Window_Bottom(int64 windowId);
 void Window_Top(int64 windowId);
@@ -126,8 +129,8 @@ bool CloseCDTray(String drive);
 
 /////////////////////////////////////////////////////////////////////
 // Key and mouse keys
-bool Mouse_GetPos(long &x, long &y);
-bool Mouse_SetPos(long x, long y, int64 windowId = 0);
+bool Mouse_GetPos(int &x, int &y);
+bool Mouse_SetPos(int x, int y, int64 windowId = 0);
 
 #if defined(PLATFORM_WIN32) || !defined(flagNO_XTEST)
 void Mouse_LeftClick();

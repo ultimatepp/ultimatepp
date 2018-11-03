@@ -30,8 +30,8 @@ void Mouse_RightDown()	{mouse_event(MOUSEEVENTF_RIGHTDOWN, 0, 0, 0, 0);}
 void Mouse_RightUp()	{mouse_event(MOUSEEVENTF_RIGHTUP, 0, 0, 0, 0);}
 
 
-bool Mouse_SetPos(long xMove, long yMove, int64 windowId) {
-    long left, top, right, bottom;
+bool Mouse_SetPos(int xMove, int yMove, int64 windowId) {
+    int left, top, right, bottom;
     
     if (windowId != 0) {
         Window_GetRect(windowId, left, top, right, bottom);
@@ -43,7 +43,7 @@ bool Mouse_SetPos(long xMove, long yMove, int64 windowId) {
     return true;
 }
 
-bool Mouse_GetPos(long &x, long &y) {
+bool Mouse_GetPos(int &x, int &y) {
     POINT p;
     
     GetCursorPos (&p);
@@ -249,14 +249,14 @@ bool Mouse_GetPos(long &x, long &y) {
 	return ret;
 }
 
-bool Mouse_SetPos(long x, long y, int64 windowId) {
+bool Mouse_SetPos(int x, int y, int64 windowId) {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
 	if (!dpy) {
 		SetX11ErrorHandler();
 		return false;
 	}   
-    long left, top, right, bottom;
+    int left, top, right, bottom;
     Window r = DefaultRootWindow(dpy);
     if (windowId != 0) {
         Window_GetRect(windowId, left, top, right, bottom);

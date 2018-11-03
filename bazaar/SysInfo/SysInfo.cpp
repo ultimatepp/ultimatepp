@@ -157,7 +157,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	manufacturer = "";
 	Value vmanufacturer;
 	if (GetWMIInfo("Win32_ComputerSystem", "manufacturer", vmanufacturer)) 
-		manufacturer = Trim(vmanufacturer);
+		manufacturer = Trim(vmanufacturer.ToString());
 	if (manufacturer.IsEmpty()) 
 		manufacturer = FromSystemCharset(GetWinRegString("SystemManufacturer", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	if (manufacturer.IsEmpty()) {
@@ -168,7 +168,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	productName = "";
 	Value vproductName;
 	if (GetWMIInfo("Win32_ComputerSystem", "model", vproductName)) 
-		productName = Trim(vproductName);
+		productName = Trim(vproductName.ToString());
 	if (productName.IsEmpty())
 		productName = FromSystemCharset(GetWinRegString("SystemProductName", "HARDWARE\\DESCRIPTION\\System\\BIOS", HKEY_LOCAL_MACHINE));
 	if (productName.IsEmpty())
@@ -178,7 +178,7 @@ void GetSystemInfo(String &manufacturer, String &productName, String &version, i
 	numberOfProcessors = atoi(GetEnv("NUMBER_OF_PROCESSORS"));
 	Value vmbSerial;
 	if (GetWMIInfo("Win32_BaseBoard", "SerialNumber", vmbSerial)) 
-		mbSerial = Trim(vmbSerial);	
+		mbSerial = Trim(vmbSerial.ToString());	
 }
 
 void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial) { 
@@ -202,7 +202,7 @@ void GetBiosInfo(String &biosVersion, Date &biosReleaseDate, String &biosSerial)
 	SetLanguage(lang);
 	Value vmbSerial;
 	if (GetWMIInfo("Win32_BIOS", "SerialNumber", vmbSerial)) 
-		biosSerial = Trim(vmbSerial);	
+		biosSerial = Trim(vmbSerial.ToString());	
 }
 
 bool GetProcessorInfo(int number, String &vendor, String &identifier, String &architecture, int &speed)	{
@@ -293,7 +293,7 @@ String inet_ntop6(const unsigned char *src) {
 Array <NetAdapter> GetAdapterInfo() {
 	PIP_ADAPTER_ADDRESSES pAddresses = NULL;
 	ULONG family = AF_UNSPEC;
-	DWORD flags = GAA_FLAG_INCLUDE_PREFIX;
+	DWORD flags = GAA_FLAG_INCLUDE_PREFIX | GAA_FLAG_INCLUDE_GATEWAYS;
 	ULONG outBufLen = 0;
 	Buffer<BYTE> pBuffer;
 	Array <NetAdapter> ret;
@@ -318,7 +318,21 @@ Array <NetAdapter> GetAdapterInfo() {
 			adapter.mac = ToUpper(HexString(pAdd->PhysicalAddress, len, 1, ':'));
 		adapter.description = Trim(WideToString(pAdd->Description));
 		adapter.fullname = Trim(WideToString(pAdd->FriendlyName));
-   
+   		adapter.dnsSuffix = Trim(WideToString(pAdd->DnsSuffix));
+   		adapter.connected = pAdd->OperStatus == 1;
+   		PIP_ADAPTER_GATEWAY_ADDRESS_LH pGateway = pAdd->FirstGatewayAddress;
+   		if (pGateway != NULL) {
+   			for (int i = 0; pGateway != NULL; i++) {
+   				if (pGateway->Address.lpSockaddr->sa_family == AF_INET) {
+           			sockaddr_in *sa_in = (sockaddr_in *)pGateway->Address.lpSockaddr;
+					adapter.gatewayip4 = inet_ntop4((const unsigned char *)&(sa_in->sin_addr));
+               	} else if (pGateway->Address.lpSockaddr->sa_family == AF_INET6) {
+					sockaddr_in6 *sa_in6 = (sockaddr_in6 *)pGateway->Address.lpSockaddr;
+					adapter.gatewayip6 = inet_ntop6((const unsigned char *)&(sa_in6->sin6_addr));
+               	} 
+   				pGateway = pGateway->Next;
+   			}
+   		}
 		PIP_ADAPTER_UNICAST_ADDRESS pUnicast = pAdd->FirstUnicastAddress;
     	if (pUnicast != NULL) {
           	for (int i = 0; pUnicast != NULL; i++) {
@@ -382,7 +396,7 @@ String GetHDSerial() {
 	Value vmbSerial;
 	if (!GetWMIInfo("Win32_PhysicalMedia", "SerialNumber", vmbSerial)) 
 		return Null;
-	String serial = Trim(vmbSerial);	
+	String serial = Trim(vmbSerial.ToString());	
 	if (serial.GetCount() > 0)
 		return serial;
 	return Null;
@@ -1734,29 +1748,7 @@ bool Shutdown(String action) {
 
 
 void GetCompilerInfoAux(String &name, int &version, Upp::Time &time, String &mode, int &bits, const char *sdate, const char *stime) {	
-	/*const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
-	String date = sdate;
-	String month = date.Left(3);
-	int i;
-	for (i = 0; i < 12; i++) {
-		if (month == months[i]) {
-			time.month = i + 1;
-			break;
-		}
-	}
-	if (i == 12) 
-		time = ScanTime("mdy", String(sdate) + " " + stime);
-	else {
-		time.day = ScanInt(date.Mid(4, 2));
-		time.year = ScanInt(date.Mid(7, 4));
-		String tim = stime;
-		time.hour = ScanInt(tim.Left(2));
-		time.minute = ScanInt(tim.Mid(3, 2));
-		time.second = ScanInt(tim.Mid(6, 2));
-	}*/
-	
-	time = FileGetTime(GetExeFilePath());		// More reliable
+	time = FileGetTime(GetExeFilePath());		
 	
 	name = "";
 	version = 0;
@@ -1848,7 +1840,7 @@ int Window_GetStatus(int64 windowId)
     return Null;
 }
 
-bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom)
+bool Window_GetRect(int64 windowId, int &left, int &top, int &right, int &bottom)
 {
 	RECT rcNormalPosition = {0};
     POINT ptMinPosition, ptMaxPosition;
@@ -1864,7 +1856,7 @@ bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bo
 	return true;
 }
 
-bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom)
+bool Window_SetRect(int64 windowId, int left, int top, int right, int bottom)
 {
 	RECT rcNormalPosition;
     POINT ptMinPosition, ptMaxPosition;
@@ -1899,7 +1891,7 @@ void Window_TopMost(int64 windowId)
 
 #ifdef PLATFORM_POSIX
 
-bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bottom)
+bool Window_GetRect(int64 windowId, int &left, int &top, int &right, int &bottom)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
@@ -1923,7 +1915,7 @@ bool Window_GetRect(int64 windowId, long &left, long &top, long &right, long &bo
 	return ret; 
 }
 
-bool Window_SetRect(int64 windowId, long left, long top, long right, long bottom)
+bool Window_SetRect(int64 windowId, int left, int top, int right, int bottom)
 {
 	SetSysInfoX11ErrorHandler();
 	_XDisplay *dpy = XOpenDisplay (NULL);
