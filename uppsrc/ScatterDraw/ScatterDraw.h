@@ -665,12 +665,6 @@ public:
 	ScatterDraw &SetReticleColor(const Color &col)	{reticleColor = col;	return *this;}
 	Color &GetReticleColor()						{return reticleColor;}
 		
-	//ScatterDraw &SetDataColor(int index, const Color& pcolor);
-	//ScatterDraw &SetDataColor(const Color& pcolor) {return SetDataColor(series.GetCount() - 1, pcolor);}
-	//Color GetDataColor (int index) const;
-	//ScatterDraw &SetDataThickness(int index, double thick);
-	//ScatterDraw &SetDataThickness(double thick) {return SetDataThickness(series.GetCount() - 1, thick);}
-	//double GetDataThickness(int index) const;
 	ScatterDraw &SetFillColor(int index, const Color& color);
 	ScatterDraw &SetFillColor(const Color& color) {return SetFillColor(series.GetCount() - 1, color);}
 	Color GetFillColor(int index) const;
