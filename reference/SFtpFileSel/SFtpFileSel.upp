@@ -1,0 +1,12 @@
+description "Demonstrates FileSel integration of SFtp class, using FileSystemInfo interface.\377";
+
+uses
+	CtrlLib,
+	Core/SSH;
+
+file
+	SFtpFileSel.cpp;
+
+mainconfig
+	"" = "GUI";
+
