@@ -95,6 +95,42 @@ or].&]
 [s3; If [%-*@3 valy] mouse can scroll or zoom in Y axis.&]
 [s1; &]
 [s6;%- &]
+[s5;:ScatterCtrl`:`:SetSaveSize`(Upp`:`:Size`&`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* Set
+SaveSize]([_^Upp`:`:Size^ Size]_`&[*@3 size])&]
+[s3; Sets the Size [%-*@3 size] to save the control as a bitmap either 
+to file or to clipboard..&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetSaveSize`(`):%- [_^Upp`:`:Size^ Size]_`&[* GetSaveSize]()&]
+[s3; Returns control size to save as a bitmap either to file or to 
+clipboard..&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:SetJPGQuality`(int`):%- [_^ScatterCtrl^ ScatterCtrl]_`&[* SetJPGQuali
+ty]([@(0.0.255) int]_[*@3 quality])&]
+[s3; Sets the [%-*@3 quality] between 0 and 100 of the control when 
+saved as a JPEG bitmap..&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:GetJPGQuality`(`):%- [@(0.0.255) int]_[* GetJPGQuality]()&]
+[s3; Returns the JPEG bitmap quality.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:Xmlize`(Upp`:`:XmlIO`&`):%- [@(0.0.255) void]_[* Xmlize]([_^Upp`:`:XmlIO^ X
+mlIO][@(0.0.255) `&]_[*@3 xml])&]
+[s3; Serialize the control as an XML.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:Jsonize`(Upp`:`:JsonIO`&`):%- [@(0.0.255) void]_[* Jsonize]([_^Upp`:`:JsonIO^ J
+sonIO][@(0.0.255) `&]_[*@3 json])&]
+[s3; Serialize the control as JSON.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterCtrl`:`:Serialize`(Upp`:`:Stream`&`):%- [@(0.0.255) void]_[* Serialize]([_^Upp`:`:Stream^ S
+tream][@(0.0.255) `&]_[*@3 s])&]
+[s3; Serialize the control as a binary Stream.&]
+[s1; &]
+[s6;%- &]
 [s5;:ScatterCtrl`:`:GetMouseHandlingX`(`):%- [@(0.0.255) bool]_[* GetMouseHandlingX]()&]
 [s3; Returns true if mouse can scroll or zoom in X axis.&]
 [s1;%- &]
@@ -154,8 +190,8 @@ ool]_[*@3 saveAsMetafile]_`=_[@(0.0.255) false])&]
 [s3; If [%-*@3 saveAsMetafile] is true it saves a windows metafile.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterCtrl`:`:SaveToFile`(String`):%- [@(0.0.255) void]_[* SaveToFile]([_^String^ Str
-ing]_[*@3 fileName]_`=_Null)&]
+[s5;:ScatterCtrl`:`:SaveToFile`(Upp`:`:String`):%- [@(0.0.255) void]_[* SaveToFile]([_^String^ S
+tring]_[*@3 fileName]_`=_Null)&]
 [s3; Saves the control to [%-*@3 fileName] as a bitmap depending of 
 file extension.&]
 [s3; JPEG and PNG are supported&]
