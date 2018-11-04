@@ -357,6 +357,16 @@ d`_color])&]
 [s3; Returns the grid width.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:SetGridDash`(const char`*`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
+]_[* SetGridDash]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 dash])&]
+[s3; Sets [%-*@3 dash] as the grid dash style.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetGridDash`(`):%- [@(0.0.255) const]_[@(0.0.255) char]_`*[* GetGridDas
+h]()&]
+[s3; Gets grid dash style.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:SetGridWidth`(int`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&]_[* S
 etGridWidth]([@(0.0.255) int]_[*@3 grid`_width])&]
 [s3; Sets [%-*@3 grid`_width] as the width of the grid in pixels.&]
@@ -416,6 +426,15 @@ to the plot corner.&]
 [s5;:ScatterDraw`:`:GetLegendPos`(`):%- [_^Point^ Point][@(0.0.255) `&]_[* GetLegendPos]()&]
 [s3; Returns the pos of the legend corner relative to the plot corner.&]
 [s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetLegendFont`(const Upp`:`:Font`&`):%- [_^ScatterDraw^ ScatterDraw
+][@(0.0.255) `&]_[* SetLegendFont]([@(0.0.255) const]_[_^Upp`:`:Font^ Font]_`&[*@3 fnt])&]
+[s3; Sets [%-*@3 fnt] as the legend font.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetLegendFont`(`):%- [_^Upp`:`:Font^ Font]_`&[* GetLegendFont]()&]
+[s3; Gets legend font.&]
+[s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetLegendNumCols`(int`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetLegendNumCols]([@(0.0.255) int]_[*@3 num])&]
@@ -521,9 +540,9 @@ lor])&]
 [s3; Sets with [%-*@3 color] the legend background color.&]
 [s1; &]
 [s6;%- &]
-[s5;:ScatterDraw`:`:SetLegendBorderColor`(const Color`&`):%- [_^ScatterDraw^ ScatterDra
-w][@(0.0.255) `&]_[* SetLegendBorderColor]([@(0.0.255) const]_[_^Color^ Color]_`&[*@3 color
-])&]
+[s5;:ScatterDraw`:`:SetLegendBorderColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ Sca
+tterDraw][@(0.0.255) `&]_[* SetLegendBorderColor]([@(0.0.255) const]_[_^Color^ Color]_`&[*@3 c
+olor])&]
 [s3; Sets with [%-*@3 color] the legend border color.&]
 [s1; &]
 [s6;%- &]
@@ -717,6 +736,10 @@ MaxMajorUnits]([@(0.0.255) int]_[*@3 maxX], [@(0.0.255) int]_[*@3 maxY])&]
 [s3; Returns the distance between grid lines in Y axis.&]
 [s1;%- &]
 [s6;%- &]
+[s5;:ScatterDraw`:`:GetMajorUnitsY2`(`):%- [@(0.0.255) double]_[* GetMajorUnitsY2]()&]
+[s3; Returns the distance between grid lines in secondary Y axis.&]
+[s1;%- &]
+[s6;%- &]
 [s5;:ScatterDraw`:`:SetMinUnits`(double`,double`):%- [_^ScatterDraw^ ScatterDraw][@(0.0.255) `&
 ]_[* SetMinUnits]([@(0.0.255) double]_[*@3 ux], [@(0.0.255) double]_[*@3 uy])&]
 [s3; Sets with [%-*@3 ux] and [%-*@3 uy] the first X and Y axis grid 
@@ -763,6 +786,21 @@ nst]&]
 [s5;:ScatterDraw`:`:GetY2Min`(`)const:%- [@(0.0.255) double]_[* GetY2Min]_()_[@(0.0.255) co
 nst]&]
 [s3; Returns the secondary Y axis origin.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetXMax`(`)const:%- [@(0.0.255) double]_[* GetXMax]()_[@(0.0.255) const
+]&]
+[s3; Returns the X axis end.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetYMax`(`)const:%- [@(0.0.255) double]_[* GetYMax]()_[@(0.0.255) const
+]&]
+[s3; Returns the Y axis end.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetY2Max`(`)const:%- [@(0.0.255) double]_[* GetY2Max]()_[@(0.0.255) con
+st]&]
+[s3; Returns the secondary Y axis end.&]
 [s1;%- &]
 [s6; &]
 [s5;:ScatterDraw`:`:AddSeries`(double`*`,int`,double`,double`):%- [_^ScatterDraw^ Scatt
@@ -904,6 +942,25 @@ every Y grid line are shown.&]
 [s5;:ScatterDraw`:`:GetDrawY2Reticle`(`):%- [@(0.0.255) bool]_[* GetDrawY2Reticle]()&]
 [s3; Returns true if the the small lines and texts to the right of 
 every Y grid line are shown.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetReticleFont`(const Upp`:`:Font`&`):%- [_^ScatterDraw^ ScatterDra
+w]_`&[* SetReticleFont]([@(0.0.255) const]_[_^Upp`:`:Font^ Font]_`&[*@3 fnt])&]
+[s3; Sets [%-*@3 fnt] as reticle font..&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetReticleFont`(`):%- [_^Upp`:`:Font^ Font]_`&[* GetReticleFont]()&]
+[s3; Gets reticle font.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:SetReticleColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterD
+raw]_`&[* SetReticleColor]([@(0.0.255) const]_[_^Upp`:`:Color^ Color]_`&[*@3 col])&]
+[s3; Sets [%-*@3 col] as reticle color..&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetReticleColor`(`):%- [_^Upp`:`:Color^ Color]_`&[* GetReticleColor](
+)&]
+[s3; Gets reticle color.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetDataPrimaryY`(int`,bool`):%- [@(0.0.255) void]_[* SetDataPrimaryY](
@@ -1100,4 +1157,37 @@ can accelerate strongly the control refresh.&]
 [s6;%- &]
 [s5;:ScatterDraw`:`:IsEmpty`(`):%- [@(0.0.255) bool]_[* IsEmpty]()&]
 [s3; Returns true if there are no series.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:NoPlot`(`):%- [_^ScatterDraw^ ScatterDraw]_`&[* NoPlot]()&]
+[s3; Set to avoid showing the series. However the mar can be shown.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:Stacked`(bool`):%- [_^ScatterDraw^ ScatterDraw]_`&[* Stacked]([@(0.0.255) b
+ool]_[*@3 stacked]_`=_[@(0.0.255) true])&]
+[s3; If [%-*@3 stacked] is true it is considered that all series are 
+stacked.&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:NoMark`(`):%- [_^ScatterDraw^ ScatterDraw]_`&[* NoMark]()&]
+[s3; Set to avoid showing mark in series. However the series can 
+be shown.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:Stroke`(int`,double`,Upp`:`:Color`):%- [_^ScatterDraw^ ScatterDraw]_
+`&[* Stroke]([@(0.0.255) int]_[*@3 index], [@(0.0.255) double]_[*@3 thickness], 
+[_^Upp`:`:Color^ Color]_[*@3 color])&]
+[s3; Sets [%-*@3 index] series [%-*@3 thickness] and [%-*@3 color].&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:Stroke`(double`,Upp`:`:Color`):%- [_^ScatterDraw^ ScatterDraw]_`&[* S
+troke]([@(0.0.255) double]_[*@3 thickness], [_^Upp`:`:Color^ Color]_[*@3 color]_`=_Null)&]
+[s3; Sets the series line [%-*@3 thickness] and [%-*@3 color].&]
+[s1; &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:GetStroke`(int`,double`&`,Upp`:`:Color`&`):%- [@(0.0.255) void]_[* Ge
+tStroke]([@(0.0.255) int]_[*@3 index], [@(0.0.255) double]_`&[*@3 thickness], 
+[_^Upp`:`:Color^ Color]_`&[*@3 color])&]
+[s3; Gets [%-*@3 index] series [%-*@3 thickness] and [%-*@3 color].&]
+[s1; &]
 [s1;%- ]]
