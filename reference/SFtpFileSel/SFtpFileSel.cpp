@@ -61,7 +61,6 @@ GUI_APP_MAIN
 			pi.Reset();
 			refresh_gui = true;
 			String path = fsel.Get();
-			sftp.WhenWait = [&pi] { pi.ProcessEvent(); };
 			sftp.WhenProgress = [&pi] (int64 done, int64 total)
 			{
 				pi.SetText(
