@@ -120,7 +120,8 @@ protected:
 		bool showLegend;
 
 		int id;
-		
+	
+	private:
 		template <class T>
 		void Ize(T& io) {
 			int seriesP = Null;
@@ -167,6 +168,8 @@ protected:
 					seriesPlot = 0;
 			}
 		}
+	
+	public:
 		void Xmlize(XmlIO& xml) 	{Ize(xml);}
 		void Jsonize(JsonIO& json) 	{Ize(json);}
 
