@@ -291,7 +291,8 @@ public:
 	Size &GetSaveSize() 					{return saveSize;}
 	ScatterCtrl &SetJPGQuality(int quality) {jpgQuality = quality; return *this;}
 	int GetJPGQuality() 					{return jpgQuality;}
-	
+
+private:	
 	template <class T>
 	void Ize(T& io) { 
 		ScatterDraw::Ize(io);
@@ -302,6 +303,8 @@ public:
 			("jpgQuality", jpgQuality)
 		;
 	}
+
+public:
 	void Xmlize(XmlIO& xml) 	{Ize(xml);}
 	void Jsonize(JsonIO& json) 	{Ize(json);}
 	
