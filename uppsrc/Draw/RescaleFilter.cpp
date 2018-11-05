@@ -148,7 +148,7 @@ Image RescaleFilter(const Image& img, int cx, int cy,
 
 static double sNearest(double x)
 {
-	return x >= -0.5 && x <= 0.5;
+	return (double)(x >= -0.5 && x <= 0.5);
 }
 
 

@@ -16,11 +16,12 @@ INITIALIZE(PaintPainting)
 struct Xform2D {
 	Pointf x, y, t;
 	
+	Pointf Transform(double px, double py) const { return Pointf(px * x.x + py * x.y + t.x, px * y.x + py * y.y + t.y); }
+	Pointf Transform(const Pointf& f) const      { return Transform(f.x, f.y); }
+
 	Pointf GetScaleXY() const;
 	double GetScale() const;
 	bool   IsRegular() const;
-	Pointf Transform(const Pointf& f) const;
-	Pointf Transform(double x, double y) const;
 	
 	static Xform2D Identity();
 	static Xform2D Translation(double x, double y);
