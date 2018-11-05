@@ -6,7 +6,8 @@ uses
 	GLDraw;
 
 file
-	main.cpp;
+	main.cpp,
+	data.txt;
 
 mainconfig
 	"" = "GUI";

@@ -1,0 +1,11 @@
+description "Test for tesselator idea\377";
+
+uses
+	Core;
+
+file
+	InVector20000.cpp;
+
+mainconfig
+	"" = "";
+

@@ -5,7 +5,7 @@
 
 using namespace Upp;
 
-void GeomTest(Draw& w, Size sz)
+void GeomTest121(Draw& w, Size sz)
 {
 	w.DrawRect(sz, White());
 	for(int y = 0; y < sz.cy; y += 20)
@@ -24,13 +24,13 @@ void GeomTest1(Draw& w, Size sz)
 	w.DrawRect(sz, White());
 }
 
-void GeomTest3(Draw& w, Size sz)
+void GeomTest11(Draw& w, Size sz)
 {
 	w.DrawRect(sz, White());
 	w.DrawEllipse(0, 0, sz.cx, sz.cy, Blue());
 }
 
-void GeomTest4(Draw& w, Size sz)
+void GeomTest(Draw& w, Size sz)
 {
 	w.DrawRect(sz, White());
 	static const int d[] = { PEN_NULL, PEN_SOLID, PEN_DASH, PEN_DOT, PEN_DASHDOT, PEN_DASHDOTDOT, 1, 2, 3, 10 };
@@ -39,46 +39,6 @@ void GeomTest4(Draw& w, Size sz)
 		w.DrawLine(300, i * 10, 400, i * 10 + 15, d[i], Red());
 		w.DrawLine(450 + i * 10, 10, 450 + i * 10, 200, d[i], Red());
 	}
-/*
-	w.DrawRect(sz, White());
-	Point points[12][2][4];
-	int subpolygon_counts[12][2];
-	int disjunct_counts[12];
-	Point lpoints[12][5];
-	int lcounts[12][2];
-	Pointf center(300, 300);
-	static const double out_delta = 2 * M_PI / 24;
-	static const double in_delta = 2 * M_PI / 48;
-	for(int i = 0; i < 12; i++) {
-		double angle = i * 2 * M_PI / 12;
-		points[i][0][0] = Polar(center, 200, angle);
-		points[i][0][1] = Polar(center, 120, angle - out_delta);
-		points[i][0][2] = Polar(center, 40, angle);
-		points[i][0][3] = Polar(center, 120, angle + out_delta);
-		points[i][1][0] = Polar(center, 160, angle);
-		points[i][1][1] = Polar(center, 120, angle + in_delta);
-		points[i][1][2] = Polar(center, 80, angle);
-		points[i][1][3] = Polar(center, 120, angle - in_delta);
-		subpolygon_counts[i][0] = 4;
-		subpolygon_counts[i][1] = 4;
-		disjunct_counts[i] = subpolygon_counts[i][0] + subpolygon_counts[i][1];
-		
-		lpoints[i][0] = Polar(center, 260, angle + in_delta);
-		lpoints[i][1] = Polar(center, 230, angle);
-		lpoints[i][2] = Polar(center, 260, angle - in_delta);
-		lcounts[i][0] = 3;
-		lpoints[i][3] = Polar(center, 280, angle + in_delta);
-		lpoints[i][4] = Polar(center, 280, angle - in_delta);
-		lcounts[i][1] = 2;
-	}
-	w.DrawPolyPolyPolygon(points[0][0], sizeof(points) / sizeof(Point),
-		subpolygon_counts[0], sizeof(subpolygon_counts) / sizeof(int),
-		disjunct_counts, sizeof(disjunct_counts) / sizeof(int),
-		LtBlue(), 4, LtRed(), I64(0xF0F0F0F00F0F0F0F));
-	w.DrawPolyPolyline(lpoints[0], sizeof(lpoints) / sizeof(Point),
-		lcounts[0], sizeof(lcounts) / sizeof(int),
-		4, Color(0, 192, 0));
-*/
 }
 
 void GeomTest2(Draw& w, Size sz)
@@ -156,7 +116,7 @@ void GeomTest2(Draw& w, Size sz)
 }
 
 Size sz(1000, 1000);
-const int N = 10;
+const int N = 1000;
 
 struct Test : GLCtrl {
 	virtual void GLPaint() {
@@ -173,6 +133,7 @@ struct Test : GLCtrl {
 	//			glFinish();
 			}
 		}
+	/*
 		for(int i = 0; i < N; i++) {
 			ImagePainter tw(sz);
 			RTIMING("Painter");
@@ -183,7 +144,9 @@ struct Test : GLCtrl {
 			tw.Co();
 			RTIMING("Painter MT");
 			GeomTest(tw, sz);
+			tw.Finish();
 		}
+	*/
 		for(int i = 0; i < N; i++) {
 			ImageDraw tw(sz);
 			RTIMING("GDI");

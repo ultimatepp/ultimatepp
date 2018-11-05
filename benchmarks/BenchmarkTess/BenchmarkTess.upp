@@ -1,0 +1,11 @@
+uses
+	Core,
+	plugin/tess2;
+
+file
+	TestData.cpp,
+	BenchmarkTess.cpp;
+
+mainconfig
+	"" = "";
+
