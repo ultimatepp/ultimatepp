@@ -38,16 +38,16 @@ void GLTexture::Bind() const
 GLTexture::GLTexture(const GLTexture& src)
 {
 	data = src.data;
-	data->refcount++;
+	if(data)
+		data->refcount++;
 }
 
 GLTexture& GLTexture::operator=(const GLTexture& src)
 {
-	if(data != src.data) {
-		if(data) Clear();
-		data = src.data;
+	Clear();
+	data = src.data;
+	if(data)
 		data->refcount++;
-	}
 	return *this;
 }
 
