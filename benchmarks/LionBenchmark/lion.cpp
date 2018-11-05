@@ -185,7 +185,7 @@ void PaintLion(Painter& sw)
 		sw.Move(p[0].x, p[0].y);
 		for(int j = 1; j < p.GetCount(); j++)
 			sw.Line(p[j].x, p[j].y);
-		sw.Stroke(2, l[i].color);
-//		sw.Fill(l[i].color);
+//		sw.Stroke(2, l[i].color);
+		sw.Fill(l[i].color);
 	}
 }

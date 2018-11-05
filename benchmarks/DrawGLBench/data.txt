@@ -1,0 +1,10 @@
+
+TIMING GDI            : 82.00 ms - 819.97 us (82.00 ms / 100 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 100
+TIMING Painter MT     : 237.00 ms -  2.37 ms (237.00 ms / 100 ), min:  1.00 ms, max:  4.00 ms, nesting: 1 - 100
+TIMING Painter        : 102.00 ms -  1.02 ms (102.00 ms / 100 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 100
+TIMING OpenGL         : 116.00 ms -  1.16 ms (116.00 ms / 100 ), min:  0.00 ns, max: 10.00 ms, nesting: 1 - 100
+
+
+
+TIMING GDI            : 489.98 ms - 489.98 us (490.00 ms / 1000 ), min:  0.00 ns, max:  2.00 ms, nesting: 1 - 1000
+TIMING OpenGL         : 650.98 ms - 650.98 us (651.00 ms / 1000 ), min:  0.00 ns, max:  9.00 ms, nesting: 1 - 1000
