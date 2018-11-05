@@ -2,17 +2,6 @@
 
 namespace Upp {
 
-Pointf Xform2D::Transform(const Pointf& f) const
-{
-	PAINTER_TIMING("Transform");
-	return Pointf(f.x * x.x + f.y * x.y + t.x, f.x * y.x + f.y * y.y + t.y);
-}
-
-Pointf Xform2D::Transform(double x, double y) const
-{
-	return Transform(Pointf(x, y));
-}
-
 Pointf Xform2D::GetScaleXY() const
 {
 	return Pointf(sqrt(x.x * x.x + y.x * y.x), sqrt(x.y * x.y + y.y * y.y));
