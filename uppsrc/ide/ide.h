@@ -571,7 +571,7 @@ public:
 	bool      no_parenthesis_indent;
 	bool      hilite_if_endif;
 	bool      thousands_separator;
-	bool      hline;
+	bool      hline, vline;
 	bool      wrap_console_text;
 	bool      mute_sounds;
 	bool      line_numbers;

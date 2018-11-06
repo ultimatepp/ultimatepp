@@ -59,6 +59,7 @@ HL_COLOR(PAPER_SELWORD, t_("Found/selected matches"), 0)
 HL_COLOR(PAPER_ERROR, t_("Error in compiler messages"), 0)
 HL_COLOR(PAPER_WARNING, t_("Warning in compiler messages"), 0)
 HL_COLOR(SHOW_LINE, t_("Current line highlight"), 0)
+HL_COLOR(SHOW_COLUMN, t_("Current column highlight"), 0)
 
 HL_COLOR(WHITESPACE, t_("Whitespaces"), 1)
 HL_COLOR(WARN_WHITESPACE, t_("Misplaced tabs and spaces"), 1)
