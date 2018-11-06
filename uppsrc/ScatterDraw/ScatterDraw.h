@@ -417,7 +417,7 @@ public:
 	ScatterDraw& SetMode(int mode = MD_ANTIALIASED)			{this->mode = mode; Refresh(); return *this;};
 	int GetMode()											{return mode;};
 	
-	void ZoomToFit(bool horizontal, bool vertical = false, double factor = 0);
+	void ZoomToFit(bool horizontal = truee , bool vertical = false, double factor = 0);
 	//ScatterDraw &ZoomToFit(bool horizontal, double minx, double maxx, bool vertical, double minxy, double maxy, 
 	//				bool vertical2, double miny2, double maxy2, double factor);
 	//ScatterDraw &ZoomToFitSmart(bool horizontal, double minx, double maxx, bool vertical, double minxy, double maxy, 
@@ -634,6 +634,8 @@ public:
 	double GetBarWidth(int index);
 	ScatterDraw &Dash(const char *dash);
 	ScatterDraw &Dash(int index, const char *dash);
+	ScatterDraw &NoDash();
+	ScatterDraw &NoDash(int index);
 	const String GetDash(int index);
 	ScatterDraw &Fill(Color color = Null);
 	ScatterDraw &MarkColor(Color color = Null);
@@ -1296,9 +1298,6 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 	if (drawXReticle)
 		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) {
 			double reticleX = plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit);
-			w.DrawLine(fround(reticleX), plotH,   
-					   fround(reticleX), fround(plotH + plotScaleY*4.), 
-					   fround(gridWidth*plotScaleAvg), axisColor);             
 			double gridX = xMinUnit + i*xMajorUnit + xMin;
 			String gridLabelX;
 			if (cbModifFormatX)
@@ -1306,16 +1305,22 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 			else
 				gridLabelX = VariableFormatX(gridX);
 			
-			Upp::Vector <String> texts;
-			Upp::Vector <Size> sizes;
-			ParseTextMultiline(gridLabelX, fontXNum, texts, sizes);
-			for (int ii = 0; ii < texts.GetCount(); ++ii) {
-				int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
-				DrawText(w, reticleX - sizes[ii].cx/2., 
-							plotH + (4 + ii*cy), 0, texts[ii], fontXNum, reticleColor);
+			if (!gridLabelX.IsEmpty()) {
+				Upp::Vector <String> texts;
+				Upp::Vector <Size> sizes;
+				ParseTextMultiline(gridLabelX, fontXNum, texts, sizes);
+				for (int ii = 0; ii < texts.GetCount(); ++ii) {
+					int cy = ii == 0 ? 0 : sizes[ii - 1].cy;
+					DrawText(w, reticleX - sizes[ii].cx/2., 
+								plotH + (4 + ii*cy), 0, texts[ii], fontXNum, reticleColor);
+				}
+				w.DrawLine(fround(reticleX), plotH,   
+						   fround(reticleX), fround(plotH + plotScaleY*4.), 
+						   fround(gridWidth*plotScaleAvg), axisColor);             
 			}
 		}
 
+debug_h();
 	if (drawYReticle)
 		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			int reticleY = fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit));

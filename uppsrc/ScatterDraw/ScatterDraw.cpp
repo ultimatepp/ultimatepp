@@ -897,6 +897,20 @@ ScatterDraw &ScatterDraw::Dash(int index, const char *dash) {
 	return *this;		
 }
 
+ScatterDraw &ScatterDraw::NoDash() {
+	int index = series.GetCount() - 1;
+	
+	return NoDash(index);		
+}
+
+ScatterDraw &ScatterDraw::NoDash(int index) {
+	ASSERT(IsValid(index));
+	
+	series[index].dash = LINE_SOLID;
+	Refresh();
+	return *this;		
+}
+
 const String ScatterDraw::GetDash(int index) {
 	ASSERT(IsValid(index));
 	
