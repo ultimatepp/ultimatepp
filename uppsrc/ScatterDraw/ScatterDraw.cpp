@@ -54,6 +54,9 @@ ScatterDraw::ScatterDraw() {
 	serializeFormat = true;
 	responsive = false;
 	responsivenessFactor = 1;
+	plotScaleX = 1;
+	plotScaleY = 1;
+	plotScaleAvg = 1;
 	surf = 0;
 	surfRainbow = BLUE_YELLOW_RED;
 	surfNumColor = 4;
