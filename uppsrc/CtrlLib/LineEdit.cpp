@@ -24,7 +24,8 @@ LineEdit::LineEdit() {
 	showlines = false;
 	showreadonly = true;
 	dorectsel = false;
-	hline = Null;
+	hline = vline = Null;
+	vlinex = 0;
 	warnwhitespace = false;
 }
 
@@ -579,23 +580,27 @@ void   LineEdit::Paint0(Draw& w) {
 					            : (do_highlight ? hl.Top() : ih).paper);
 					if(bordercolumn > 0 && bordercolumn >= gp)
 						rw.DrawRect((bordercolumn - sc.x) * fsz.cx, y, 1, fsz.cy, bordercolor);
+					if((showlines || warn_whitespace)) {
+						int yy = 2 * fsz.cy / 3;
+						int x = (lgp >= 0 ? lgp : gp) * fsz.cx - scx;
+						rw.DrawRect(x, y + yy, fsz.cx / 2, 1, showcolor);
+						if(fsz.cx > 2)
+							rw.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
+						if(fsz.cx > 5)
+							rw.DrawRect(x + 2, y + yy - 2, 1, 5, showcolor);
+						rw.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
+					}
+					if(sell == selh) {
+						if(!IsNull(hline) && i == cursorline) {
+							rw.DrawRect(0, y, sz.cx, 1, hline);
+							rw.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
+						}
+						if(!IsNull(vline))
+							rw.DrawRect(caretpos.x, y, 1, fsz.cy, vline);
+					}
+					if(rectsel && rect.left == rect.right && i >= rect.top && i <= rect.bottom)
+						rw.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
 				}
-				if(pass == 0 && (showlines || warn_whitespace)) {
-					int yy = 2 * fsz.cy / 3;
-					int x = (lgp >= 0 ? lgp : gp) * fsz.cx - scx;
-					rw.DrawRect(x, y + yy, fsz.cx / 2, 1, showcolor);
-					if(fsz.cx > 2)
-						rw.DrawRect(x + 1, y + yy - 1, 1, 3, showcolor);
-					if(fsz.cx > 5)
-						rw.DrawRect(x + 2, y + yy - 2, 1, 5, showcolor);
-					rw.DrawRect(x + fsz.cx / 2, y + yy / 2, 1, yy - yy / 2, showcolor);
-				}
-				if(pass == 0 && !IsNull(hline) && sell == selh && i == cursorline) {
-					rw.DrawRect(0, y, sz.cx, 1, hline);
-					rw.DrawRect(0, y + fsz.cy - 1, sz.cx, 1, hline);
-				}
-				if(pass == 0 && rectsel && rect.left == rect.right && i >= rect.top && i <= rect.bottom)
-					rw.DrawRect(rect.left * fsz.cx - scx, y, 2, fsz.cy, Blend(color[PAPER_SELECTED], color[PAPER_NORMAL]));
 			}
 		}
 		y += fsz.cy;
@@ -603,9 +608,9 @@ void   LineEdit::Paint0(Draw& w) {
 		selh -= len + 1;
 		pos += len + 1;
 	}
-	
 	w.DrawRect(0, y, sz.cx, sz.cy - y, color[IsReadOnly() && showreadonly || !IsShowEnabled() ? PAPER_READONLY : PAPER_NORMAL]);
 	DrawTiles(w, DropCaret(), CtrlImg::checkers());
+	vlinex = caretpos.x;
 }
 
 void LineEdit::Paint(Draw& w)
@@ -820,6 +825,11 @@ int LineEdit::PlaceCaretNoG(int64 newcursor, bool sel) {
 	WhenSel();
 	if(IsAnySelection())
 		SetSelectionSource(ClipFmtsText());
+	if(!IsNull(hline)) {
+		Size sz = GetSize();
+		Refresh(vlinex, 0, 1, sz.cy);
+		Refresh(caretpos.x, 0, 1, sz.cy);
+	}
 	return p.x;
 }
 

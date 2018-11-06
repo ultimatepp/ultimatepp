@@ -339,7 +339,8 @@ protected:
 	int              tabsize;
 	int              bordercolumn;
 	Color            bordercolor;
-	Color            hline;
+	Color            hline, vline;
+	int              vlinex;
 	Scroller         scroller;
 	Point            caretpos;
 	bool             nohbar;
@@ -467,6 +468,7 @@ public:
 	LineEdit& NoShowReadOnly()                { return ShowReadOnly(false); }
 	bool      IsShowReadOnly()                { return showreadonly; }
 	LineEdit& ShowCurrentLine(Color color)    { hline = color; Refresh(); return *this; }
+	LineEdit& ShowCurrentColumn(Color color)  { vline = color; Refresh(); return *this; }
 	
 	LineEdit& SetScrollBarStyle(const ScrollBar::Style& s)   { sb.SetStyle(s); return *this; }
 
