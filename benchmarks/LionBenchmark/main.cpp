@@ -5,12 +5,17 @@ double tm[4];
 void Task(Painter& sw)
 {
 	RTIMING("Total");
+	sw.Begin();
 //	sw.Scale(2);
 //	sw.Opacity(0.3);
+//	sw.Translate(20, 0);
+//	sw.Rotate(0.1);
 //	PaintLion(sw);
 //	PythagorasTree(sw);
-	Demo(sw);
+//	Demo(sw);
 //	ClippingExample(sw);
+	PolyPolygon(sw);
+	sw.End();
 }
 
 struct MyApp : public TopWindow {
@@ -25,16 +30,17 @@ struct MyApp : public TopWindow {
 	virtual void Paint(Draw& w) {
 		w.DrawRect(GetSize(), White());
 
-		for(int pass = 0; pass < 2; pass++) {
-			ImageBuffer ib(1200, 1200);
+		for(int pass = 0; pass < 1; pass++) {
+			ImageBuffer ib(1200, 800);
 			{
 				BufferPainter sw(ib);
 				if(pass)
 					sw.Co();
+				sw.PreClip();
 				sw.Clear(White());
 				Task(sw);
 			}
-			w.DrawImage(0, 500 * pass, ib);
+			w.DrawImage(0, 800 * pass, ib);
 		}
 
 		int x = 1200;
@@ -48,8 +54,30 @@ struct MyApp : public TopWindow {
 	}
 };
 
+struct DashInfo {};
+
+	struct BaseAttr {
+		Xform2D                         mtx;
+		bool                            evenodd;
+		byte                            join;
+		byte                            cap;
+		bool                            invert;
+		double                          miter_limit;
+		double                          opacity;
+		DashInfo                       *dash;
+	};
+
+BaseAttr a, b;
+
 GUI_APP_MAIN
 {
+	RDUMP(sizeof(BaseAttr));
+	Array<BaseAttr> h;
+	__BREAK__;
+	
+	memcpy(&h.Add(), &a, sizeof(BaseAttr));
+	
+	return;
 #if 1 && !defined(_DEBUG)
 	RDUMP(MemoryUsedKb());
 	
@@ -61,7 +89,7 @@ GUI_APP_MAIN
 	sw.Co();
 //	for(int i = 0; i < 10; i++)
 		PaintLion(sw);
-	for(int pass = 0; pass < 2; pass++) {
+	for(int pass = 0; pass < 4; pass++) {
 		int time0 = msecs();
 		int n = 0;
 		BufferPainter sw(ib);

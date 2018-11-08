@@ -9,6 +9,7 @@ file
 	pythagoras.cpp,
 	demo.cpp,
 	Clipping.cpp,
+	PolyPolygon.cpp,
 	main.cpp,
 	info.txt;
 
