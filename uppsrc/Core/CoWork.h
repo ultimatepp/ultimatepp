@@ -105,6 +105,10 @@ public:
 	~CoWork() noexcept(false);
 };
 
+struct CoWorkNX : CoWork {
+	~CoWorkNX() noexcept(true) {}
+};
+
 template <class T>
 class CoWorkerResources {
 	int          workercount;

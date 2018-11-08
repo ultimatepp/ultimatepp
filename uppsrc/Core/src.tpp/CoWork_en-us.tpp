@@ -1,5 +1,4 @@
 topic "CoWork";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,7 +8,9 @@ topic "CoWork";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
+[s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWork]]}}&]
 [s3; &]
 [s1;:CoWork`:`:class: [@(0.0.255)3 class][3 _][*3 CoWork]&]
@@ -30,7 +31,10 @@ from various threads (CoWork is internally synchronized).&]
 [s9;%% If an exception is thrown in worker thread, which is not handled 
 by worker thread, it is caught and rethrown in CoWork thread 
 in Finish routine. Any such exception also causes the Cancel 
-of the CoWork.&]
+of the CoWork. For this reason, CoWork destructor [*/ CAN] throw 
+exceptions and CoWork should be usually used as automatick (stack) 
+variable. If you need CoWork that does not throw exceptions in 
+destructor, use CoWorkNX.&]
 [s9;%% [*/ Implementation notes: ]Current implementation has single 
 global FIFO stack for 2048 scheduled jobs. When there is no slot 
 available when scheduling the job, it is performed immediately 
@@ -176,6 +180,17 @@ This is useful if there is a need for per`-thread resources.&]
 nt]_[*@3 n])&]
 [s2;%% Adjusts the thread pool size (default pool size is CPU`_Cores() 
 `+ 2).&]
+[s0; &]
+[s0; &]
+[ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkNX]]}}&]
+[s0; &]
+[s1;:Upp`:`:CoWorkNX`:`:struct: [@(0.0.255)3 struct][3 _][*3 CoWorkNX][3 _:_][@(0.0.255)3 public
+][3 _][*@3;3 CoWork]&]
+[s2;%% This simple helper class just removes `"noexcept(false)`" 
+from CoWork destructor, removing exception throws from the destructor 
+and allowing it to be used as member variable. Obviously, if 
+exception handling is required, you need to use Finish (not depend 
+on destructor to call it).&]
 [s0; &]
 [s0; &]
 [ {{10000@(113.42.0) [s0;%% [*@7;4 CoWorkerResources]]}}&]

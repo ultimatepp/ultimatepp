@@ -163,7 +163,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 			job.path_min = path_min;
 			job.path_max = path_max;
 			current = Null;
-			if(jobcount >= 1024) {
+			if(jobcount >= 256) {
 				LDUMP("Finish A");
 				Finish();
 			}
