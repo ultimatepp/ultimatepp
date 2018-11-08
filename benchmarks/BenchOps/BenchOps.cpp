@@ -30,6 +30,8 @@ force_inline void SSEZero32(void *t)
 }
 */
 
+byte b10000[10000];
+
 CONSOLE_APP_MAIN
 {
 	{
@@ -108,7 +110,7 @@ CONSOLE_APP_MAIN
 			delete[] new byte[300000];
 		}
 	}
-	{
+	if(0) { // very slow
 		for(int i = 0; i < N; i++) {
 			RTIMING("Alloc/Free 128K");
 			delete[] new byte[128*1024];
@@ -205,6 +207,26 @@ CONSOLE_APP_MAIN
 		RTIMING("Mul");
 		for(int i = 0; i < N; i++) {
 			dst[i & 15].xxx = src[i & 15].xxx * n;
+		}
+	}
+	{
+		RTIMING("Zero 10000");
+		for(int i = 0; i < N; i++)
+			memset(b10000, 0, 10000);
+	}
+	{
+		RTIMING("new 10000, Zero, delete");
+		for(int i = 0; i < N; i++) {
+			byte *b = new byte[10000];
+			memset(b, 0, 10000);
+			delete[] b;
+		}
+	}
+	{
+		RTIMING("new 10000, delete");
+		for(int i = 0; i < N; i++) {
+			byte *b = new byte[10000];
+			delete[] b;
 		}
 	}
 }

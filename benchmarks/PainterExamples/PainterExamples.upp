@@ -1,0 +1,43 @@
+description "Antialiased renderer class, Painter, examples, version 2.0\377";
+
+uses
+	CtrlLib,
+	Painter;
+
+file
+	Examples.h,
+	main.cpp,
+	Image.cpp,
+	Lion.cpp,
+	Pythagoras.cpp,
+	Spiral.cpp,
+	Curves.cpp,
+	Clipping.cpp,
+	Gradient.cpp,
+	ColorStops.cpp,
+	Radial.cpp,
+	RadialFocus.cpp,
+	TextFillSolid.cpp,
+	TextFillGradient.cpp,
+	TextStrokeGradient.cpp,
+	Div.cpp,
+	MaskBlending.cpp,
+	RadialMaskBlending.cpp,
+	RichText.cpp,
+	Stroke.cpp,
+	OnPath.cpp,
+	Dash.cpp,
+	Path.cpp,
+	Arc.cpp,
+	ThinLine.cpp,
+	Shapes.cpp,
+	PolyPoly.cpp,
+	DrawArc.cpp,
+	Big.cpp,
+	Examples.lay,
+	Test.iml;
+
+mainconfig
+	"" = "GUI",
+	"" = "GUI TIMING";
+
