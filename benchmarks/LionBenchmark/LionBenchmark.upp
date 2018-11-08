@@ -4,10 +4,15 @@ uses
 
 file
 	LionBenchmark.h,
+	test.iml,
 	lion.cpp,
+	pythagoras.cpp,
+	demo.cpp,
+	Clipping.cpp,
 	main.cpp,
 	info.txt;
 
 mainconfig
-	"" = "GUI MT";
+	"" = "GUI MT",
+	"" = "GUI MT COWORKST";
 
