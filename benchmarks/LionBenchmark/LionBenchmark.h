@@ -10,5 +10,6 @@ void PaintLion(Painter& sw);
 void PythagorasTree(Painter& sw);
 void Demo(Painter& sw);
 void ClippingExample(Painter& sw);
+void PolyPolygon(Painter& sw);
 
 #endif

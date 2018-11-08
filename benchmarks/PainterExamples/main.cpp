@@ -57,7 +57,7 @@ void App::Print()
 void App::Benchmark()
 {
 	double tm[2];
-	ImageBuffer ib(1024, 768);
+	ImageBuffer ib(2000, 2000);
 	for(int pass = 0; pass < 1 + !!ctrl.mt; pass++) {
 		int time0 = GetTickCount();
 		int n = 0;
@@ -67,7 +67,9 @@ void App::Benchmark()
 			time = GetTickCount();
 			if(time - time0 > 1000) break;
 			sw.Co(pass);
+			sw.Begin();
 			DoPaint(sw);
+			sw.End();
 			n++;
 		}
 		tm[pass] = double(time - time0) / n;
