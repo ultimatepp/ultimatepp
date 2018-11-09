@@ -36,7 +36,7 @@ void PolyPolygon(Painter& sw)
 		subpolygon_counts[0], sizeof(subpolygon_counts) / sizeof(int),
 		disjunct_counts, sizeof(disjunct_counts) / sizeof(int),
 		LtBlue(), 4, LtRed(), I64(0xF0F0F0F00F0F0F0F));
-//	sw.DrawPolyPolyline(lpoints[0], sizeof(lpoints) / sizeof(Point),
-//		lcounts[0], sizeof(lcounts) / sizeof(int),
-//		4, Color(0, 192, 0));
+	sw.DrawPolyPolyline(lpoints[0], sizeof(lpoints) / sizeof(Point),
+		lcounts[0], sizeof(lcounts) / sizeof(int),
+		4, Color(0, 192, 0));
 }
