@@ -33,7 +33,7 @@ struct MyApp : public TopWindow {
 	virtual void Paint(Draw& w) {
 		w.DrawRect(GetSize(), White());
 
-		for(int pass = 0; pass < 2; pass++) {
+		for(int pass = 1; pass < 2; pass++) {
 			ImageBuffer ib(1200, 800);
 			{
 				BufferPainter sw(ib);
@@ -85,7 +85,7 @@ GUI_APP_MAIN
 	sw.Co();
 //	for(int i = 0; i < 10; i++)
 		PaintLion(sw);
-	for(int pass = 0; pass < 4; pass++) {
+	for(int pass = 0; pass < 2; pass++) {
 		int time0 = msecs();
 		int n = 0;
 		{
