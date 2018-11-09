@@ -6,10 +6,16 @@
 
 using namespace Upp;
 
+#define IMAGECLASS TestImg
+#define IMAGEFILE <LionBenchmark/test.iml>
+#include <Draw/iml_header.h>
+
 void PaintLion(Painter& sw);
 void PythagorasTree(Painter& sw);
 void Demo(Painter& sw);
 void ClippingExample(Painter& sw);
 void PolyPolygon(Painter& sw);
+void TextOnPath(Painter& sw);
+void Dash(Painter& sw);
 
 #endif

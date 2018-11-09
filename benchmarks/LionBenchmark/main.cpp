@@ -14,7 +14,10 @@ void Task(Painter& sw)
 //	PythagorasTree(sw);
 //	Demo(sw);
 //	ClippingExample(sw);
-	PolyPolygon(sw);
+//	PolyPolygon(sw);
+//	TextOnPath(sw);
+	Dash(sw);
+
 	sw.End();
 }
 
@@ -71,13 +74,6 @@ BaseAttr a, b;
 
 GUI_APP_MAIN
 {
-	RDUMP(sizeof(BaseAttr));
-	Array<BaseAttr> h;
-	__BREAK__;
-	
-	memcpy(&h.Add(), &a, sizeof(BaseAttr));
-	
-	return;
 #if 1 && !defined(_DEBUG)
 	RDUMP(MemoryUsedKb());
 	
@@ -89,15 +85,17 @@ GUI_APP_MAIN
 	sw.Co();
 //	for(int i = 0; i < 10; i++)
 		PaintLion(sw);
-	for(int pass = 0; pass < 4; pass++) {
+	for(int pass = 0; pass < 2; pass++) {
 		int time0 = msecs();
 		int n = 0;
-		BufferPainter sw(ib);
-		while(msecs(time0) < 1000) {
-			n++;
+		{
+			BufferPainter sw(ib);
 			sw.Co(pass & 1);
 			sw.PreClip(pass & 2);
-			Task(sw);
+			while(msecs(time0) < 1000) {
+				n++;
+				Task(sw);
+			}
 		}
 		tm[pass] = (double)msecs(time0) / n;
 		RLOG(pass << ": " << n << ", " << tm[pass] << " ms");

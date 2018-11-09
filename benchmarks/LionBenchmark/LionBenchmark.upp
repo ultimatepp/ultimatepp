@@ -10,6 +10,7 @@ file
 	demo.cpp,
 	Clipping.cpp,
 	PolyPolygon.cpp,
+	TextOnPath.cpp,
 	main.cpp,
 	info.txt;
 
