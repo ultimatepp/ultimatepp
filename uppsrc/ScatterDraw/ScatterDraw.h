@@ -307,10 +307,13 @@ protected:
 	
 public:	
 	Callback3<String&, int, double> cbModifFormatX;
+	Callback3<String&, int, double> cbModifFormatXGridUnits;
 	Callback3<String&, int, double> cbModifFormatDeltaX;
 	Callback3<String&, int, double> cbModifFormatY;
+	Callback3<String&, int, double> cbModifFormatYGridUnits;
 	Callback3<String&, int, double> cbModifFormatDeltaY;
 	Callback3<String&, int, double> cbModifFormatY2;
+	Callback3<String&, int, double> cbModifFormatY2GridUnits;
 	Callback3<String&, int, double> cbModifFormatDeltaY2;
 			
 	Callback WhenZoomScroll;
@@ -436,7 +439,6 @@ public:
 	double GetY2Range()const {return yRange2;}
 	ScatterDraw &SetMajorUnits(double ux, double uy = Null);
 	ScatterDraw &SetMajorUnitsNum(int nx, int ny = Null);
-	ScatterDraw &SetMaxMajorUnits(int maxX, int maxY)	{maxMajorUnitsX = maxX; maxMajorUnitsY = maxY; return *this;}
 	double GetMajorUnitsX() {return xMajorUnit;}
 	double GetMajorUnitsY() {return yMajorUnit;}
 	double GetMajorUnitsY2() {return yMajorUnit2;}
@@ -1066,7 +1068,9 @@ protected:
 	double xRange, yRange, yRange2;
 	double xMin, yMin, yMin2;
 	double xMajorUnit, yMajorUnit, yMajorUnit2;
+	double xMajorUnitNum, yMajorUnitNum;
 	double xMinUnit, yMinUnit, yMinUnit2;
+	double xMinUnit0, yMinUnit0, yMinUnit20;
 	double minXRange, maxXRange, minYRange, maxYRange;
 	double minXmin, minYmin, maxXmax, maxYmax;
 	double lastxRange, lastyRange;
@@ -1074,7 +1078,7 @@ protected:
 	Font reticleFont;
 	Color reticleColor;
 	
-	int maxMajorUnitsX, maxMajorUnitsY;
+	//int maxMajorUnitsX, maxMajorUnitsY;
 	
 	Color gridColor;
 	double gridWidth;
@@ -1256,17 +1260,17 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 					yUnits2.FindAdd(serie.unitsY);
 			}
 		}
-		if (!xUnits.IsEmpty()) {
+		if (xLabel.Find('[') < 0 && !xUnits.IsEmpty()) {
 			xLabel += " ";
 			for (int i = 0; i < xUnits.GetCount(); ++i)
 				xLabel += "[" + xUnits[i] + "]";
 		}
-		if (!yUnits.IsEmpty()) {
+		if (yLabel.Find('[') < 0 && !yUnits.IsEmpty()) {
 			yLabel += " ";
 			for (int i = 0; i < yUnits.GetCount(); ++i)
 				yLabel += "[" + yUnits[i] + "]";
 		}				
-		if (!yUnits2.IsEmpty()) {
+		if (yLabel2.Find('[') < 0 && !yUnits2.IsEmpty()) {
 			yLabel2 += " ";
 			for (int i = 0; i < yUnits2.GetCount(); ++i)
 				yLabel2 += "[" + yUnits2[i] + "]";
@@ -1295,12 +1299,15 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 	Upp::Font fontY2Num = fontYNum;
 	fontY2Num.Italic();
 
+debug_h();
 	if (drawXReticle)
 		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) {
 			double reticleX = plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit);
 			double gridX = xMinUnit + i*xMajorUnit + xMin;
 			String gridLabelX;
-			if (cbModifFormatX)
+			if (cbModifFormatXGridUnits)
+				cbModifFormatXGridUnits(gridLabelX, i, gridX);
+			else if (cbModifFormatX)
 				cbModifFormatX(gridLabelX, i, gridX);
 			else
 				gridLabelX = VariableFormatX(gridX);
@@ -1320,7 +1327,6 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 			}
 		}
 
-debug_h();
 	if (drawYReticle)
 		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			int reticleY = fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit));
@@ -1329,7 +1335,9 @@ debug_h();
 				w.DrawLine(fround(plotW + plotScaleX*4.), reticleY, plotW, reticleY, fround(gridWidth*plotScaleAvg), axisColor);
 			double gridY = yMinUnit + i*yMajorUnit + yMin;
 			String gridLabelY;
-			if (cbModifFormatY)
+			if (cbModifFormatYGridUnits)
+				cbModifFormatYGridUnits(gridLabelY, i, gridY);
+			else if (cbModifFormatY)
 				cbModifFormatY(gridLabelY, i, gridY);
 			else
 				gridLabelY = VariableFormatY(gridY);
@@ -1338,7 +1346,9 @@ debug_h();
 			if (drawY2Reticle) {
 				double gridY2 = (gridY - yMin)/yRange*yRange2 + yMin2;
 				String gridLabelY2;
-				if (cbModifFormatY2)
+				if (cbModifFormatY2GridUnits)
+					cbModifFormatY2GridUnits(gridLabelY2, i, gridY2);
+				else if (cbModifFormatY2)
 					cbModifFormatY2(gridLabelY2, i, gridY2);
 				else
 					gridLabelY2 = VariableFormatY2(gridY2);
@@ -1422,36 +1432,32 @@ void ScatterDraw::Plot(T& w)
 	if (drawVGrid) {
 		if (!isPolar) {
 			double x0 = plotW*xMinUnit/xRange;
-			if ((xRange - xMinUnit)/xMajorUnit > maxMajorUnitsX)
-				xMajorUnit = (xRange - xMinUnit)/maxMajorUnitsX;
 			for(int i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
-				int xg = fround(x0 + i*plotW/d1);
+				double xg = x0 + i*plotW/d1;
 				if (xg > 2*gridWidth*plotScaleAvg && xg < plotW - 2*gridWidth*plotScaleAvg)
-					DrawLineOpa(w, xg, 0, xg, fround(plotH), plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					DrawLineOpa(w, xg, 0, xg, plotH, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 			}
-		} else {
+		} /*else {
 			double ang0 = 2*M_PI*xMinUnit/xRange;
 			for(double i = 0; xMinUnit + i*xMajorUnit < xRange; i++) {
 				double ang = ang0 + i*2*M_PI*xMajorUnit/xRange;
-				DrawLineOpa(w, fround(x_c), fround(y_c), fround(x_c + r*cos(ang)), fround(y_c + r*sin(ang)), plotScaleAvg, 1, gridWidth*plotScaleAvg, gridColor, gridDash);
+				DrawLineOpa(w, x_c, y_c, x_c + r*cos(ang), y_c + r*sin(ang), plotScaleAvg, 1, gridWidth*plotScaleAvg, gridColor, gridDash);
 			}				
-		}
+		}*/
 	}
 	if (drawHGrid) {
 		if (!isPolar) {
 			double y0 = -plotH*yMinUnit/yRange + plotH;
-			if ((yRange - yMinUnit)/yMajorUnit > maxMajorUnitsY)
-				yMajorUnit = (yRange - yMinUnit)/maxMajorUnitsY;
 			for(int i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
-				int yg = fround(y0 - i*plotH/d2);
+				double yg = y0 - i*plotH/d2;
 				if (yg > 2*gridWidth*plotScaleAvg && yg < plotH - 2*gridWidth*plotScaleAvg) 
-					DrawLineOpa(w, 0, yg, fround(plotW), yg, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
+					DrawLineOpa(w, 0, yg, plotW, yg, plotScaleAvg, 1, gridWidth, gridColor, gridDash);
 			}
 		} /*else {
 			double y0 = -plotH*yMinUnit/r + plotH;
 			for(double i = 0; yMinUnit + i*yMajorUnit < yRange; i++) {
 				double yg = y0 + i*r*yRange/yMajorUnit;
-				DrawCircleOpa(w, fround(plotW/2), fround(plotH/2), yg, 1, 1, gridWidth, gridColor, gridDash);
+				DrawCircleOpa(w, plotW/2, plotH/2, yg, 1, 1, gridWidth, gridColor, gridDash);
 			}
 		}*/
 	}

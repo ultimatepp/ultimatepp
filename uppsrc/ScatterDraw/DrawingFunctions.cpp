@@ -24,6 +24,22 @@ Vector <double> GetLineDash(String dash) {
 	return d;
 }
 
+double GetDashLength(const char *dash) {
+	double len = 0;
+	CParser p(dash);
+	try {
+		while(!p.IsEof())
+			if(!p.Char(':')) {
+				double data = p.ReadDouble();
+				len += data;
+			}
+	}
+	catch(CParser::Error) {}
+	if (len == 0)
+		len = 100000;
+	return len;
+}
+
 Vector <double> &GetDashedArray(String dash) {
 	static VectorMap <String, Vector <double> > pats;
 	
