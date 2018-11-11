@@ -6,7 +6,7 @@ void Task(Painter& sw)
 {
 	RTIMING("Total");
 	sw.Begin();
-//	sw.Scale(2);
+//	sw.Scale(1.2);
 //	sw.Opacity(0.3);
 //	sw.Translate(20, 0);
 //	sw.Rotate(0.1);
@@ -33,7 +33,7 @@ struct MyApp : public TopWindow {
 	virtual void Paint(Draw& w) {
 		w.DrawRect(GetSize(), White());
 
-		for(int pass = 1; pass < 2; pass++) {
+		for(int pass = 0; pass < 1; pass++) {
 			ImageBuffer ib(1200, 800);
 			{
 				BufferPainter sw(ib);
@@ -83,8 +83,6 @@ GUI_APP_MAIN
 	ImageBuffer ib(1200, 1200);
 	BufferPainter sw(ib);
 	sw.Co();
-//	for(int i = 0; i < 10; i++)
-		PaintLion(sw);
 	for(int pass = 0; pass < 2; pass++) {
 		int time0 = msecs();
 		int n = 0;

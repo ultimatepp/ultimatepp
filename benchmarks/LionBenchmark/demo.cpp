@@ -6,7 +6,7 @@
 
 void Demo(Painter& sw)
 {
-//	PaintLion(sw);
+	PaintLion(sw);
 	String txt = "U++ Painter";
 	Font fnt = Roman(180).Bold();
 	Size tsz = GetTextSize(txt, fnt);
