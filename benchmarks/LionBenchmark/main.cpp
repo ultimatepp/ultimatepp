@@ -6,10 +6,10 @@ void Task(Painter& sw)
 {
 	RTIMING("Total");
 	sw.Begin();
-//	sw.Scale(1.2);
-//	sw.Opacity(0.3);
+	sw.Scale(1.2);
+	sw.Opacity(0.3);
 //	sw.Translate(20, 0);
-//	sw.Rotate(0.1);
+	sw.Rotate(0.1);
 	PaintLion(sw);
 //	PythagorasTree(sw);
 //	Demo(sw);
@@ -33,7 +33,7 @@ struct MyApp : public TopWindow {
 	virtual void Paint(Draw& w) {
 		w.DrawRect(GetSize(), White());
 
-		for(int pass = 0; pass < 1; pass++) {
+		for(int pass = 0; pass < 2; pass++) {
 			ImageBuffer ib(1200, 800);
 			{
 				BufferPainter sw(ib);
