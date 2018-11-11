@@ -181,9 +181,9 @@ void PaintLion(Painter& sw)
 	static Vector<ColorPolygon> l = Lion();
 	for(int i = 0; i < l.GetCount(); i++) {
 		Vector<Pointf>& p = l[i].point;
-		sw.Move(p[0].x, p[0].y);
+		sw.Move(p[0]);
 		for(int j = 1; j < p.GetCount(); j++)
-			sw.Line(p[j].x, p[j].y);
+			sw.Line(p[j]);
 		sw.Fill(l[i].color);
 	}
 }

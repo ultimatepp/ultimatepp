@@ -12,7 +12,7 @@ void RadialMaskBlending(Painter& sw)
 		sw.End();
 		for(int y = 0; y < tsz.cx; y += tsz.cy)
 			sw.Text(10, y, txt, Roman(40))
-			  .Fill(Blue());
+			  .Fill(Red());
 	sw.End();
 	sw.Begin();
 		sw.BeginMask();
