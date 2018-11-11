@@ -322,7 +322,7 @@ public:
 	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; preclip_mtx_serial = -1; return *this; }
 	BufferPainter&     PreClipDashed()                         { dopreclip = 2; preclip_mtx_serial = -1; return *this; }
 	BufferPainter&     ImageCache(bool b = true)               { imagecache = b; return *this; }
-	BufferPainter&     NoImageCache(bool b = true)             { ImageCache(false); }
+	BufferPainter&     NoImageCache(bool b = true)             { return ImageCache(false); }
 
 	BufferPainter(ImageBuffer& ib, int mode = MODE_ANTIALIASED);
 	BufferPainter(PainterTarget& t, double tolerance = Null);
