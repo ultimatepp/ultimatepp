@@ -295,7 +295,7 @@ String Gdb::ObtainThreadsInfo()
 			bool active = p.Char('*');
 			if(p.IsNumber()) {
 				int id = p.ReadInt();
-				AttrText text = String() << "Thread " << id;
+				AttrText text(String() << "Thread " << id);
 				if(active) {
 					active_thread = id;
 					text.Bold();
