@@ -57,25 +57,27 @@ void App::Print()
 void App::Benchmark()
 {
 	double tm[2];
+	ImageBuffer ib(2000, 2000);
 	for(int pass = 0; pass < 1 + !!ctrl.mt; pass++) {
 		int time0 = GetTickCount();
 		int n = 0;
 		int time;
+		BufferPainter sw(ib, ctrl.quality);
 		for(;;) {
 			time = GetTickCount();
 			if(time - time0 > 1000) break;
-			ImageBuffer ib(800, 600);
-			BufferPainter sw(ib, ctrl.quality);
 			sw.Co(pass);
+			sw.Begin();
 			DoPaint(sw);
+			sw.End();
 			n++;
 		}
 		tm[pass] = double(time - time0) / n;
 	}
 	if(ctrl.mt)
-		PromptOK(Format("ST %.2f ms, MT %.2f ms, ST/MT %.2f", tm[0], tm[1], tm[0] / tm[1]));
+		PromptOK(Format("ST %.3f ms, MT %.3f ms, ST/MT %.3f", tm[0], tm[1], tm[0] / tm[1]));
 	else
-		PromptOK(Format("%.2f ms", tm[0]));
+		PromptOK(Format("%.3f ms", tm[0]));
 }
 
 void App::Paint(Draw& w)
