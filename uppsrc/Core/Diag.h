@@ -162,7 +162,7 @@ struct DebugLogBlock
 #define LOG_(flag, x)       do { if(flag) RLOG(x); } while(false)
 #define LOGBEGIN_(flag)     do { if(flag) RLOGBEGIN(x); } while(false)
 #define LOGEND_(flag)       do { if(flag) RLOGEND(x); } while(false)
-#define DUMP_(flag, a)      do { if(flag) RDUMP(x); } while(false)
+#define DUMP_(flag, x)      do { if(flag) RDUMP(x); } while(false)
 #define LOGHEX_(flag, x)    do { if(flag) RLOGHEX(x); } while(false)
 #define DUMPHEX_(flag, x)   do { if(flag) RDUMPHEX(x); } while(false)
 	
