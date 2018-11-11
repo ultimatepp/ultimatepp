@@ -107,7 +107,7 @@ private:
 		
 		Cell *Get()         { return alloc == SVO_ALLOC ? svo : ptr; }
 		
-//		CellArray()         { count = 0; alloc = SVO_ALLOC; }
+		CellArray()         { count = 0; alloc = SVO_ALLOC; }
 	};
 
 	Rectf                   cliprect;
