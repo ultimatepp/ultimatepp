@@ -29,17 +29,16 @@ struct RGBAV {
 	}
 };
 
-Image DownScale(const Image& img, int nx, int ny)
+Image DownScale(const Image& img, int nx, int ny, bool co)
 {
+	RTIMING("DownScale");
 	ASSERT(nx > 0 && ny > 0);
 	Size ssz = img.GetSize();
 	Size tsz = Size((ssz.cx + nx - 1) / nx, (ssz.cy + ny - 1) / ny);
-	Buffer<RGBAV> b(tsz.cx);
 	ImageBuffer ib(tsz);
-	RGBA *it = ~ib;
 	int scx0 = ssz.cx / nx * nx;
-	Buffer<int> div(tsz.cx);
-	for(int yy = 0; yy < ssz.cy; yy += ny) {
+	auto do_line = [&](int ty, RGBAV *b, int *div) {
+		int yy = ny * ty;
 		for(int i = 0; i < tsz.cx; i++)
 			b[i].Clear();
 		memset(div, 0, tsz.cx * sizeof(int));
@@ -49,7 +48,7 @@ Image DownScale(const Image& img, int nx, int ny)
 				const RGBA *s = img[yy + yi];
 				const RGBA *e = s + scx0;
 				const RGBA *e2 = s + ssz.cx;
-				RGBAV *t = ~b;
+				RGBAV *t = b;
 				int *dv = div;
 				while(s < e) {
 					for(int n = nx; n--;) {
@@ -65,24 +64,83 @@ Image DownScale(const Image& img, int nx, int ny)
 				}
 			}
 		}
-		const RGBAV *s = ~b;
+		const RGBAV *s = b;
 		const int *dv = div;
+		RGBA *it = ~ib + ty * tsz.cx;
 		for(int x = 0; x < tsz.cx; x++)
 			*it++ = (s++)->Get(*dv++);
+	};
+	if(co) {
+		CoWork cw;
+		cw * [&] {
+			Buffer<int> div(tsz.cx);
+			Buffer<RGBAV> b(tsz.cx);
+			for(;;) {
+				int y = cw.Next();
+				if(y >= tsz.cy)
+					break;
+				do_line(y, b, div);
+			}
+		};
+	}
+	else {
+		Buffer<int> div(tsz.cx);
+		Buffer<RGBAV> b(tsz.cx);
+		for(int y = 0; y < tsz.cy; y++)
+			do_line(y, b, div);
 	}
 	return ib;
 }
 
-struct PainterImageSpan : SpanSource {
-	LinearInterpolator interpolator;
+struct DownscaleImageMaker : public ImageMaker {
+	Image image;
+	int   nx;
+	int   ny;
+	bool  co;
+
+	virtual String Key() const;
+	virtual Image  Make() const;
+};
+
+String DownscaleImageMaker::Key() const
+{
+	String key;
+	RawCat(key, image.GetSerialId());
+	RawCat(key, nx);
+	RawCat(key, ny);
+	// we are not adding co as that is just a hint for actual image making
+	return key;
+}
+
+Image DownscaleImageMaker::Make() const
+{
+	return DownScale(image, nx, ny, co);
+}
+
+Image DownScaleCached(const Image& img, int nx, int ny, bool co)
+{
+	DownscaleImageMaker m;
+	m.image = img;
+	m.nx = nx;
+	m.ny = ny;
+	m.co = co;
+	return MakeImage(m);
+}
+
+struct PainterImageSpanData {
 	int         ax, ay, cx, cy, maxx, maxy;
 	byte        style;
 	byte        hstyle, vstyle;
 	bool        fast;
 	bool        fixed;
 	Image       image;
-	
-	void Set(const Xform2D& m, const Image& img) {
+	Xform2D     xform;
+
+	PainterImageSpanData(dword flags, const Xform2D& m, const Image& img, bool co, bool imagecache) {
+		style = byte(flags & 15);
+		hstyle = byte(flags & 3);
+		vstyle = byte(flags & 12);
+		fast = flags & FILL_FAST;
 		image = img;
 		int nx = 1;
 		int ny = 1;
@@ -94,10 +152,10 @@ struct PainterImageSpan : SpanSource {
 			}
 		}
 		if(nx == 1 && ny == 1)
-			interpolator.Set(Inverse(m));
+			xform = Inverse(m);
 		else {
-			image = DownScale(image, nx, ny);
-			interpolator.Set(Inverse(m) * Xform2D::Scale(1.0 / nx, 1.0 / ny));			
+			image = (imagecache ? DownScaleCached : DownScale)(image, nx, ny, co);
+			xform = Inverse(m) * Xform2D::Scale(1.0 / nx, 1.0 / ny);
 		}
 		cx = image.GetWidth();
 		cy = image.GetHeight();
@@ -105,6 +163,18 @@ struct PainterImageSpan : SpanSource {
 		maxy = cy - 1;
 		ax = 6000000 / cx * cx * 2;
 		ay = 6000000 / cy * cy * 2;
+	}
+	
+	PainterImageSpanData() {}
+};
+
+
+struct PainterImageSpan : SpanSource, PainterImageSpanData {
+	LinearInterpolator interpolator;
+	
+	PainterImageSpan(const PainterImageSpanData& f)
+	:	PainterImageSpanData(f) {
+		interpolator.Set(xform);
 	}
 	
 	RGBA Pixel(int x, int y) { return image[y][x]; }
@@ -201,14 +271,9 @@ void BufferPainter::RenderImage(double width, const Image& image, const Xform2D&
 	current = Null;
 	if(image.GetWidth() == 0 || image.GetHeight() == 0)
 		return;
-	Xform2D m = transsrc * pathattr.mtx;
-	RenderPath(width, [=](One<SpanSource>& s) {
-		PainterImageSpan& ss = s.Create<PainterImageSpan>();
-		ss.style = byte(flags & 15);
-		ss.hstyle = byte(flags & 3);
-		ss.vstyle = byte(flags & 12);
-		ss.fast = flags & FILL_FAST;
-		ss.Set(m, image);
+	PainterImageSpanData f(flags, transsrc * pathattr.mtx, image, co, imagecache);
+	RenderPath(width, [&](One<SpanSource>& s) {
+		PainterImageSpan& ss = s.Create<PainterImageSpan>(f);
 	}, RGBAZero());
 }
 

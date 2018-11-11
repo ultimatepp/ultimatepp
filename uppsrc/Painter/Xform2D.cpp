@@ -13,10 +13,27 @@ double Xform2D::GetScale() const
 	return Length(d) / M_SQRT2;
 }
 
+inline bool Epsqual(double x, double y)
+{
+	return fabs(x - y) < 1e-10 * max(fabs(x), fabs(y));
+}
+
 bool Xform2D::IsRegular() const
 {
 	Pointf d = GetScaleXY();
-	return fabs(d.x - d.y) < 1e-10 * fabs(max(d.x, d.y));
+	return Epsqual(d.x, d.y);
+}
+
+byte Xform2D::GetClass() const
+{
+	if(x.y == 0 && y.x == 0) {
+		if(t.x == 0 && t.y == 0)
+			return XFORM_IDENTITY;
+		else
+			return XFORM_TRANSLATION;
+		return Epsqual(x.x, y.x) ?  XFORM_REGULAR_SCALE : XFORM_SCALE;
+	}
+	return IsRegular() ? XFORM_REGULAR : XFORM_ANY;
 }
 
 Xform2D::Xform2D()

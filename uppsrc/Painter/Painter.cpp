@@ -47,297 +47,6 @@ void PaintCharacter(Painter& sw, const Pointf& p, int chr, Font font)
 	sw.EvenOdd(true);
 }
 
-Painter& Painter::Move(const Pointf& p)
-{
-	Move(p, false);
-	return *this;
-}
-
-Painter& Painter::Line(const Pointf& p)
-{
-	Line(p, false);
-	return *this;
-}
-
-Painter& Painter::Quadratic(const Pointf& p1, const Pointf& p)
-{
-	QuadraticOp(p1, p, false);
-	return *this;
-}
-
-Painter& Painter::Quadratic(const Pointf& p)
-{
-	QuadraticOp(p, false);
-	return *this;
-}
-
-Painter& Painter::Cubic(const Pointf& p1, const Pointf& p2, const Pointf& p)
-{
-	CubicOp(p1, p2, p, false);
-	return *this;
-}
-
-Painter& Painter::Cubic(const Pointf& p2, const Pointf& p)
-{
-	CubicOp(p2, p, false);
-	return *this;
-}
-
-Painter& Painter::RelMove(const Pointf& p)
-{
-	MoveOp(p, true);
-	return *this;
-}
-
-Painter& Painter::RelLine(const Pointf& p)
-{
-	LineOp(p, true);
-	return *this;
-}
-
-Painter& Painter::RelQuadratic(const Pointf& p1, const Pointf& p)
-{
-	QuadraticOp(p1, p, true);
-	return *this;
-}
-
-Painter& Painter::RelQuadratic(const Pointf& p)
-{
-	QuadraticOp(p, true);
-	return *this;
-}
-
-Painter& Painter::RelCubic(const Pointf& p1, const Pointf& p2, const Pointf& p)
-{
-	CubicOp(p1, p2, p, true);
-	return *this;
-}
-
-Painter& Painter::RelCubic(const Pointf& p2, const Pointf& p)
-{
-	CubicOp(p2, p, true);
-	return *this;
-}
-
-Painter& Painter::Move(double x, double y, bool rel)
-{
-	MoveOp(Pointf(x, y), rel);
-	return *this;
-}
-
-Painter& Painter::Line(double x, double y, bool rel)
-{
-	LineOp(Pointf(x, y), rel);
-	return *this;
-}
-
-Painter& Painter::Quadratic(double x1, double y1, double x, double y, bool rel)
-{
-	QuadraticOp(Pointf(x1, y1), Pointf(x, y), rel);
-	return *this;
-}
-
-Painter& Painter::Quadratic(double x, double y, bool rel)
-{
-	QuadraticOp(Pointf(x, y), rel);
-	return *this;
-}
-
-Painter& Painter::Cubic(double x1, double y1, double x2, double y2, double x, double y, bool rel)
-{
-	CubicOp(Pointf(x1, y1), Pointf(x2, y2), Pointf(x, y), rel);
-	return *this;
-}
-
-Painter& Painter::Cubic(double x2, double y2, double x, double y, bool rel)
-{
-	CubicOp(Pointf(x2, y2), Pointf(x, y), rel);
-	return *this;
-}
-
-Painter& Painter::Move(double x, double y)
-{
-	Move(x, y, false);
-	return *this;
-}
-
-Painter& Painter::Line(double x, double y)
-{
-	Line(x, y, false);
-	return *this;
-}
-
-Painter& Painter::Quadratic(double x1, double y1, double x, double y)
-{
-	Quadratic(x1, y1, x, y, false);
-	return *this;
-}
-
-Painter& Painter::Quadratic(double x, double y)
-{
-	Quadratic(x, y, false);
-	return *this;
-}
-
-Painter& Painter::Cubic(double x1, double y1, double x2, double y2, double x, double y)
-{
-	Cubic(x1, y1, x2, y2, x, y, false);
-	return *this;
-}
-
-Painter& Painter::Cubic(double x2, double y2, double x, double y)
-{
-	Cubic(x2, y2, x, y, false);
-	return *this;
-}
-
-Painter& Painter::RelMove(double x, double y)
-{
-	Move(x, y, true);
-	return *this;
-}
-
-Painter& Painter::RelLine(double x, double y)
-{
-	Line(x, y, true);
-	return *this;
-}
-
-Painter& Painter::RelQuadratic(double x1, double y1, double x, double y)
-{
-	Quadratic(x1, y1, x, y, true);
-	return *this;
-}
-
-Painter& Painter::RelQuadratic(double x, double y)
-{
-	Quadratic(x, y, true);
-	return *this;
-}
-
-Painter& Painter::RelCubic(double x1, double y1, double x2, double y2, double x, double y)
-{
-	Cubic(x1, y1, x2, y2, x, y, true);
-	return *this;
-}
-
-Painter& Painter::RelCubic(double x2, double y2, double x, double y)
-{
-	Cubic(x2, y2, x, y, true);
-	return *this;
-}
-
-Painter& Painter::Arc(const Pointf& c, double rx, double ry, double angle, double sweep, bool rel)
-{
-	return Arc(c, Pointf(rx, ry), angle, sweep, rel);
-}
-
-Painter& Painter::Arc(const Pointf& c, double r, double angle, double sweep, bool rel)
-{
-	return Arc(c, Pointf(r, r), angle, sweep, rel);
-}
-
-Painter& Painter::Arc(double x, double y, double rx, double ry, double angle, double sweep, bool rel)
-{
-	return Arc(Pointf(x, y), rx, ry, angle, sweep, rel);
-}
-
-Painter& Painter::Arc(double x, double y, double r, double angle, double sweep, bool rel)
-{
-	return Arc(Pointf(x, y), r, angle, sweep, rel);
-}
-
-Painter& Painter::Arc(const Pointf& c, const Pointf& r, double angle, double sweep)
-{
-	return Arc(c, r, angle, sweep, false);
-}
-
-Painter& Painter::Arc(const Pointf& c, double rx, double ry, double angle, double sweep)
-{
-	return Arc(c, rx, ry, angle, sweep, false);
-}
-
-Painter& Painter::Arc(const Pointf& c, double r, double angle, double sweep)
-{
-	return Arc(c, r, angle, sweep, false);
-}
-
-Painter& Painter::Arc(double x, double y, double rx, double ry, double angle, double sweep)
-{
-	return Arc(x, y, rx, ry, angle, sweep, false);
-}
-
-Painter& Painter::Arc(double x, double y, double r, double angle, double sweep)
-{
-	return Arc(x, y, r, angle, sweep, false);
-}
-
-
-Painter& Painter::RelArc(const Pointf& c, const Pointf& r, double angle, double sweep)
-{
-	return Arc(c, r, angle, sweep, true);
-}
-
-Painter& Painter::RelArc(const Pointf& c, double rx, double ry, double angle, double sweep)
-{
-	return Arc(c, rx, ry, angle, sweep, true);
-}
-
-Painter& Painter::RelArc(const Pointf& c, double r, double angle, double sweep)
-{
-	return Arc(c, r, angle, sweep, true);
-}
-
-Painter& Painter::RelArc(double x, double y, double rx, double ry, double angle, double sweep)
-{
-	return Arc(x, y, rx, ry, angle, sweep, true);
-}
-
-Painter& Painter::RelArc(double x, double y, double r, double angle, double sweep)
-{
-	return Arc(x, y, r, angle, sweep, true);
-}
-
-Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p, bool rel)
-{
-	return SvgArc(Pointf(rx, ry), xangle, large, sweep, p, rel);
-}
-
-Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y, bool rel)
-{
-	return SvgArc(Pointf(rx, ry), xangle, large, sweep, Pointf(x, y), rel);
-}
-
-Painter& Painter::SvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p)
-{
-	return SvgArc(r, xangle, large, sweep, p, false);
-}
-
-Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p)
-{
-	return SvgArc(rx, ry, xangle, large, sweep, p, false);
-}
-
-Painter& Painter::SvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y)
-{
-	return SvgArc(rx, ry, xangle, large, sweep, x, y, false);
-}
-
-Painter& Painter::RelSvgArc(const Pointf& r, double xangle, bool large, bool sweep, const Pointf& p)
-{
-	return SvgArc(r, xangle, large, sweep, p, true);
-}
-
-Painter& Painter::RelSvgArc(double rx, double ry, double xangle, bool large, bool sweep, const Pointf& p)
-{
-	return SvgArc(rx, ry, xangle, large, sweep, p, true);
-}
-
-Painter& Painter::RelSvgArc(double rx, double ry, double xangle, bool large, bool sweep, double x, double y)
-{
-	return SvgArc(rx, ry, xangle, large, sweep, x, y, true);
-}
-
 Xform2D GetLineSzXform(const Pointf& p1, const Pointf& p2, const Sizef& sz)
 {
 	Xform2D m = Xform2D::Scale(Distance(p1, p2) / sz.cx);
@@ -460,7 +169,7 @@ Painter& Painter::Scale(double scale)
 	return *this;
 }
 
-Painter& Painter::Dash(const char *dash, double start)
+Vector<double> StringToDash(const String& dash, double& start)
 {
 	Vector<double> d;
 	CParser p(dash);
@@ -472,8 +181,19 @@ Painter& Painter::Dash(const char *dash, double start)
 				d.Add(p.ReadDouble());
 	}
 	catch(CParser::Error) {}
-	Dash(d, start);
-	return *this;
+	if(d.GetCount() & 1) {
+		Vector<double> dash1;
+		dash1.Append(d);
+		dash1.Append(d);
+		return dash1;
+	}
+	return d;
+}
+
+void Painter::DashOp(const String& dash, double start)
+{
+	Vector<double> h = StringToDash(dash, start);
+	DashOp(h, start);
 }
 
 Painter& Painter::Character(double x, double y, int ch, Font fnt)

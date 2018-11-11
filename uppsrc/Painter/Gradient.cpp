@@ -13,12 +13,12 @@ void BufferPainter::MakeGradient(RGBA color1, RGBA color2, int n)
 	RGBA *t = ib[0];
 	int l = 0;
 	RGBA cl = color1;
-	for(int i = 0; i <= pathattr.stop.GetCount(); i++) {
+	for(int i = 0; i <= pathattr.color_stop.GetCount(); i++) {
 		int h;
 		RGBA ch;
-		if(i < pathattr.stop.GetCount()) {
-			h = (int)(pathattr.stop[i] * (n - 1));
-			ch = pathattr.stop_color[i];
+		if(i < pathattr.color_stop.GetCount()) {
+			h = (int)(pathattr.color_stop[i].stop * (n - 1));
+			ch = pathattr.color_stop[i].color;
 		}
 		else {
 			h = n - 1;
