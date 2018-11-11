@@ -287,6 +287,7 @@ String Gdb::ObtainThreadsInfo()
 	String output = FastCmd("info threads");
 	StringStream ss(output);
 	int active_thread = -1;
+	bool main = true;
 	while(!ss.IsEof()) {
 		String s = ss.GetLine();
 		CParser p(s);
@@ -294,9 +295,16 @@ String Gdb::ObtainThreadsInfo()
 			bool active = p.Char('*');
 			if(p.IsNumber()) {
 				int id = p.ReadInt();
-				threads.Add(id, String().Cat() << "Thread " << id);
-				if(active)
+				AttrText text = String() << "Thread " << id;
+				if(active) {
 					active_thread = id;
+					text.Bold();
+				}
+				if(main) {
+					text.Underline();
+					main = false;
+				}
+				threads.Add(id, text);
 			}
 			threads.GoBegin();
 		}

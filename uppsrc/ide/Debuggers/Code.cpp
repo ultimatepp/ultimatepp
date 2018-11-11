@@ -60,8 +60,10 @@ void Pdb::Sync()
 	for(int i = 0; i < threads.GetCount(); i++) {
 		int thid = threads.GetKey(i);
 		AttrText x(Format("0x%x", thid));
+		if(thid == mainThreadId)
+			x.Underline();
 		if(thid == debug_threadid)
-			x.font = StdFont().Bold();
+			x.Bold();
 		threadlist.Add(thid, x);
 	}
 	threadlist <<= (int)debug_threadid;
