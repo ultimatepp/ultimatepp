@@ -31,7 +31,6 @@ struct RGBAV {
 
 Image DownScale(const Image& img, int nx, int ny, bool co)
 {
-	RTIMING("DownScale");
 	ASSERT(nx > 0 && ny > 0);
 	Size ssz = img.GetSize();
 	Size tsz = Size((ssz.cx + nx - 1) / nx, (ssz.cy + ny - 1) / ny);
