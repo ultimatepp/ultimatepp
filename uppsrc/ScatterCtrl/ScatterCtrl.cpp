@@ -280,12 +280,18 @@ void ScatterCtrl::ProcessPopUp(const Point &pt)
 	} else 
 		dstry = VariableFormatY(dy);
 	
-	String str = popTextX + ": " + _strx;
-	if (strx != _strx)
-		str << "; " + popTextX + "': " + strx + "; " + t_("Δ") + popTextX + ": " + dstrx;
-	str << "\n" + popTextY + ": " + _stry;
-	if (stry != _stry)	
- 		str << "; " + popTextY + "': " + stry + "; " + t_("Δ") + popTextY + ": " + dstry;
+	String _str, str, strdx, strdy;
+	
+	_str = popTextX + ": " + _strx;
+	if (strx != _strx) {
+		str = popTextX + ": " + strx;
+		strdx = popTextX + ": " + dstrx;
+	}
+	_str << "\n" + popTextY + ": " + _stry;
+	if (stry != _stry) {	
+ 		str << "\n" + popTextY + ": " + stry;
+ 		strdy = popTextY + ": " + dstry;
+	}
 	if (drawY2Reticle) {
 		String stry2, _stry2, dstry2;
 		if (cbModifFormatY2) {
@@ -303,24 +309,51 @@ void ScatterCtrl::ProcessPopUp(const Point &pt)
 		} else 
 			dstry2 = VariableFormatY(dy2);
 		
-		str << "\n" + popTextY2 + ": " + _stry2;
-		if (stry2 != _stry2)		
-			str << "; " + popTextY2 + ": " + stry2 + "; " + t_("Δ") + popTextY2 + ": " + dstry2;
+		_str << "\n" + popTextY2 + ": " + _stry2;
+		if (stry2 != _stry2) {		
+			str << "\n" + popTextY2 + ": " + stry2;
+			strdy << "\n" + popTextY2 + ": " + dstry2;
+		}
 	}
 	if (surf) {
 		double _z  = surf->z(_x, _y);
 		if (!IsNull(_z)) {
-			str << "\n" << popTextZ << ": " << VariableFormatZ(_z);
+			_str << "\n" << popTextZ << ": " << VariableFormatZ(_z);
 			if (strx != _strx || stry != _stry) {
 				double z = surf->z(x, y);
 				if (!IsNull(z)) 
-					str << "; " << popTextZ << "': " << VariableFormatZ(z) << "; " 
+					str << "\n" << popTextZ << ": " << VariableFormatZ(z) << "; " 
 								<< t_("Δ") << popTextZ << ": " << VariableFormatZ(z - _z);	
 			}
 		}
 	}
-	const Point p2 = pt + offset;
-	popText.SetText(str).Move(this, p2.x, p2.y);
+	const Point _popPoint = popLT - popOffset;
+	const Point popPointdy(popLT.x, popLT.y + (pt.y - popLT.y)/2);
+	const Point popPointdx(popLT.x + (pt.x - popLT.x)/2, pt.y);
+	const Point popPoint = pt + popOffset;
+	
+	popTextBegin.SetText(_str);
+	Size sz = popTextBegin.GetSize();
+	popTextBegin.Move(this, _popPoint.x - sz.cx, _popPoint.y - sz.cy);	
+	if (!strdx.IsEmpty()) {
+		popTextHoriz.Show();
+		popTextHoriz.SetText(strdx);
+		Size sz = popTextHoriz.GetSize();
+		popTextHoriz.Move(this, popPointdx.x - sz.cx/2, popPointdx.y - sz.cy/2);	
+	} else
+		popTextHoriz.Hide();
+	if (!strdy.IsEmpty()) {
+		popTextVert.Show();
+		popTextVert.SetText(strdy);
+		Size sz = popTextVert.GetSize();
+		popTextVert.Move(this, popPointdy.x - sz.cx/2, popPointdy.y - sz.cy/2);	
+	} else
+		popTextVert.Hide();
+	if (!str.IsEmpty()) {
+		popTextEnd.Show();
+		popTextEnd.SetText(str).Move(this, popPoint.x, popPoint.y);
+	}else
+		popTextEnd.Hide();
 }
 
 void ScatterCtrl::ProcessClickSeries(const Point &pt)
@@ -331,7 +364,7 @@ void ScatterCtrl::ProcessClickSeries(const Point &pt)
 	double dy = 2*GetPixelThickY();
 }
 						
-void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int value)
+void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int wheel)
 {
 	if (!down) {
 		Scrolling(false, pt);
@@ -341,11 +374,13 @@ void ScatterCtrl::DoMouseAction(bool down, Point pt, ScatterAction action, int v
 	switch (action) {
 	case SCROLL: 			Scrolling(down, pt);
 							break;
-	case ZOOM_H_ENL:	 
-	case ZOOM_H_RED:		MouseZoom(value, true, false); 
+	case ZOOM_H_ENL:	 	MouseZoom(wheel, true, false); 
 							break;
-	case ZOOM_V_ENL:
-	case ZOOM_V_RED:		MouseZoom(value, false, true); 
+	case ZOOM_H_RED:		MouseZoom(-wheel, true, false); 
+							break;
+	case ZOOM_V_ENL:		MouseZoom(wheel, false, true); 
+							break;
+	case ZOOM_V_RED:		MouseZoom(-wheel, false, true); 
 							break;
 	case SHOW_COORDINATES:	LabelPopUp(down, pt);
 							break;
@@ -436,8 +471,8 @@ void ScatterCtrl::ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool s
 		if (mouseBehavior[i].ctrl   == ctrl   && mouseBehavior[i].alt   == alt   &&
 		    mouseBehavior[i].shift  == shift  && mouseBehavior[i].left  == left  &&
 		    mouseBehavior[i].middle == middle && mouseBehavior[i].right == right &&
-		    ((mouseBehavior[i].middleWheel == 0) || mouseBehavior[i].middleWheel == ((middleWheel > 0) - (middleWheel < 0)))) {
-		    DoMouseAction(down, pt, mouseBehavior[i].action, middleWheel);
+		    ((mouseBehavior[i].middleWheel == 0) || sgn(mouseBehavior[i].middleWheel) == sgn(middleWheel))) {
+		    DoMouseAction(down, pt, mouseBehavior[i].action, mouseBehavior[i].middleWheel*middleWheel);
 			break;
 		}
 	}	
@@ -465,7 +500,10 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 {
 	if (down) {
 		if(showInfo && PointInPlot(pt)) {
-			popText.AppearOnly(this);
+			popTextBegin.AppearOnly(this);
+			popTextVert.AppearOnly(this);
+			popTextHoriz.AppearOnly(this);
+			popTextEnd.AppearOnly(this);
 			
 			isLabelPopUp = true;
 			if (IsNull(popLT))
@@ -482,7 +520,10 @@ void ScatterCtrl::LabelPopUp(bool down, Point &pt)
 		} 
 	} else {
 		if(showInfo && isLabelPopUp) {
-			popText.Close();
+			popTextBegin.Close();
+			popTextVert.Close();
+			popTextHoriz.Close(); 
+			popTextEnd.Close();
 			isLabelPopUp = isZoomWindow = false;
 			popLT = popRB = Null;
 			Refresh();
@@ -583,11 +624,12 @@ void ScatterCtrl::LeftDown(Point pt, dword keyFlags)
 {
 	if(!HasFocus()) 
 		SetFocus();
-	isLeftDown = true;
+	mouseAction = LEFT_DOWN;
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false);
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
-void ScatterCtrl::LeftDouble(Point pt, dword)
+void ScatterCtrl::LeftDouble(Point pt, dword keyFlags)
 {
 	if(!HasFocus()) 
 		SetFocus();
@@ -595,36 +637,46 @@ void ScatterCtrl::LeftDouble(Point pt, dword)
 		DoShowEditDlg(3);
 	else if (PointInBorder(pt))
 		DoShowEditDlg(0);
+	WhenMouseClick(pt, keyFlags, LEFT_DOUBLE);
 }
 
 void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
 {
-	isLeftDown = false;
+	mouseAction = LEFT_UP;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false); 
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
 void ScatterCtrl::MiddleDown(Point pt, dword keyFlags)
 {
 	if(!HasFocus()) 
 		SetFocus();
+	mouseAction = MIDDLE_DOWN;
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, true, 0, false);
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
 void ScatterCtrl::MiddleUp(Point pt, dword keyFlags)
 {
+	mouseAction = MIDDLE_UP;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, true, 0, false);
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
 void ScatterCtrl::RightDown(Point pt, dword keyFlags) 
 {
 	if(!HasFocus()) 
 		SetFocus();
+	mouseAction = RIGHT_DOWN;
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, 0, true);
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
 void ScatterCtrl::RightUp(Point pt, dword keyFlags)
 {
+	mouseAction = RIGHT_UP;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, 0, true); 
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
 void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags) 
@@ -636,7 +688,7 @@ void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags)
 	ProcessMouse(true, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, zdelta, false);
 }
 
-void ScatterCtrl::MouseMove(Point pt, dword)
+void ScatterCtrl::MouseMove(Point pt, dword keyFlags)
 {
 	if (isScrolling) {
 		double factorX = 0, factorY = 0;
@@ -657,7 +709,10 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 				popLT = pt;
 			popRB = pt;
 			ProcessPopUp(pt);
-			popText.AppearOnlyOpen(this);
+			popTextBegin.AppearOnlyOpen(this);
+			popTextHoriz.AppearOnlyOpen(this);
+			popTextVert.AppearOnlyOpen(this);
+			popTextEnd.AppearOnlyOpen(this);
 			Refresh();
 		}
 	} else if (isZoomWindow) {
@@ -668,15 +723,24 @@ void ScatterCtrl::MouseMove(Point pt, dword)
 			Refresh();
 		}
 	}
+	switch (mouseAction) {
+	case LEFT_DOWN:		mouseAction = LEFT_MOVE;	break;
+	case MIDDLE_DOWN:	mouseAction = MIDDLE_MOVE;	break;
+	case RIGHT_DOWN:	mouseAction = RIGHT_MOVE;	break;
+	}
+	WhenMouseClick(pt, keyFlags, mouseAction);
 }
 
 void ScatterCtrl::MouseLeave()
 {
 	Point p = Null;
 	Scrolling(false, p, true);
-	isLeftDown = false;
+	mouseAction = NONE;
 	if (isLabelPopUp || isZoomWindow) {
-		popText.Close();
+		popTextBegin.Close();
+		popTextVert.Close();
+		popTextHoriz.Close(); 
+		popTextEnd.Close();		
 		isLabelPopUp = isZoomWindow = false;
 		popLT = popRB = Null;
 		Refresh();
@@ -703,7 +767,7 @@ Image ScatterCtrl::CursorImage(Point p, dword keyflags)
 {
 	if (isZoomWindow)
 		return ScatterImg::ZoomPlus();
-	else if (isLeftDown)
+	else if (mouseAction == LEFT_DOWN)
 		return ScatterImg::cursor1();
 	return Image::Arrow();
 }
@@ -868,13 +932,13 @@ void ScatterCtrl::CheckButtonVisible() {
 	propertiesButton.Show(showButtons && showPropDlg);
 }
 	
-ScatterCtrl::ScatterCtrl() : offset(10,12), isLeftDown(false)
+ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
 {
 	showInfo = isScrolling = isLabelPopUp = isZoomWindow = false;
 	WantFocus();
 	popTextX = t_("x");
-	popTextY = t_("y1");
-	popTextY2 = t_("y2");
+	popTextY = t_("y");
+	popTextY2 = t_("y right");
 	popTextZ = t_("z");
 	popLT = popRB = Null;
 	showContextMenu = false;
@@ -885,7 +949,10 @@ ScatterCtrl::ScatterCtrl() : offset(10,12), isLeftDown(false)
 	defaultCSVseparator = ";";
 	Color(graphColor);	
 	BackPaint();
-	popText.SetColor(SColorFace);        
+	popTextBegin.SetColor(SColorFace);  
+	popTextVert.SetColor(SColorFace);  
+	popTextHoriz.SetColor(SColorFace);  
+	popTextEnd.SetColor(SColorFace);  
 
 	saveSize = Size(1000, 800);
 	jpgQuality = 90;

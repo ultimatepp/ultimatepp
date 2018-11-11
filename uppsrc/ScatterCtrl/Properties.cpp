@@ -308,11 +308,13 @@ void GeneralTab::Init(ScatterCtrl& scatter)
 	dropResolution <<= THISBACK(Change);
 	editWidth <<= scatter.GetSaveSize().cx;
 	editHeight <<= scatter.GetSaveSize().cy;
-	opResponsive = scatter.ScatterDraw::IsResponsive();
+	opResponsive <<= scatter.ScatterDraw::IsResponsive();
+	editSensitivity <<= scatter.ScatterDraw::GetResponsivenessFactor();
 	editJpgQ <<= scatter.GetJPGQuality();
 	editWidth <<= THISBACK(Change);
 	editHeight <<= THISBACK(Change);
 	opResponsive <<= THISBACK(Change);
+	editSensitivity <<= THISBACK(Change);
 	editJpgQ <<= THISBACK(Change);
 	
 	Change();
@@ -325,7 +327,7 @@ void GeneralTab::Change()
     scatter.SetMode(~dropResolution);
     Size size(~editWidth, ~editHeight);
     scatter.SetSaveSize(size);
-    scatter.ScatterDraw::Responsive(~opResponsive);
+    scatter.ScatterDraw::Responsive(~opResponsive, ~editSensitivity);
     scatter.SetJPGQuality(~editJpgQ);
     
 	scatter.SetModify();
