@@ -42,23 +42,9 @@ inline int tmGetTime() {
 }
 #endif
 
-static TimingInspector& s_zero()
-{
-	static TimingInspector *s_zero = NULL;
-	static bool init = false;
-	if(!init) {
-		init = true;
-		static TimingInspector s_zero_;
-		s_zero = &s_zero_;
-		int w = GetTickCount();
-		while(GetTickCount() - w < 200)
-			TimingInspector::Routine __(*s_zero);
-	}
-	return *s_zero;
-}
+static TimingInspector s_zero; // time of Start / End without actual body to measure
 
 TimingInspector::TimingInspector(const char *_name) {
-	s_zero(); //!! atexit
 	name = _name ? _name : "";
 	start_time = 0;
 	all_count = call_count = max_nesting = nesting_depth = min_time = max_time = total_time = 0;
@@ -73,7 +59,7 @@ TimingInspector::TimingInspector(const char *_name) {
 
 TimingInspector::~TimingInspector() {
 	Mutex::Lock __(mutex);
-	if(this == &s_zero()) return;
+	if(this == &s_zero) return;
 	StdLog() << Dump() << "\r\n";
 }
 
@@ -109,8 +95,13 @@ String TimingInspector::Dump() {
 	String s = Sprintf("TIMING %-15s: ", name);
 	if(call_count == 0)
 		return s + "No active hit";
+	ONCELOCK {
+		int w = GetTickCount();
+		while(GetTickCount() - w < 200)
+			TimingInspector::Routine __(s_zero);
+	}
 	double tm = max(0.0, double(total_time) / call_count / 1000 -
-		                 double(s_zero().total_time) / s_zero().call_count / 1000);
+			             double(s_zero.total_time) / s_zero.call_count / 1000);
 	return s
 	       + timeFormat(tm * call_count)
 	       + " - " + timeFormat(tm)

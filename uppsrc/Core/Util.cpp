@@ -187,7 +187,17 @@ dword GetTickCount() {
 }
 #endif
 
-int msecs(int from) { return GetTickCount() - (dword)from; }
+int64 usecs(int64 prev)
+{
+	auto p2 = std::chrono::high_resolution_clock::now();
+	return std::chrono::duration_cast<std::chrono::microseconds>(p2.time_since_epoch()).count() - prev;
+}
+
+int msecs(int prev)
+{
+	auto p2 = std::chrono::high_resolution_clock::now();
+	return (int)std::chrono::duration_cast<std::chrono::milliseconds>(p2.time_since_epoch()).count() - prev;
+}
 
 void TimeStop::Reset()
 {

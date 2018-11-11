@@ -177,6 +177,7 @@
 			#include <winuser.h>
 			#include <Wincon.h>
 			#include <float.h>
+			#include <mmsystem.h>
 		#define byte win32_byte_ // RpcNdr defines byte -> class with Upp::byte
 		#define CY win32_CY_
 			#include <objidl.h>
@@ -238,6 +239,7 @@ typedef int SOCKET;
 #include <complex>
 #include <type_traits>
 #include <atomic>
+#include <chrono>
 
 // fix MSC8 beta problem....
 #ifdef COMPILER_MSC
