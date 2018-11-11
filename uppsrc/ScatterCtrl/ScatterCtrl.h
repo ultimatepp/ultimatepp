@@ -169,7 +169,11 @@ public:
 	void AddMouseBehavior(bool ctrl, bool alt, bool shift, bool left, bool middle, int middlewheel, bool right, ScatterAction action);
 	void RemoveMouseBehavior(ScatterAction action);	
 	void ClearMouseBehavior();
-		
+	
+	enum MouseAction {NONE, LEFT_DOWN, LEFT_UP, LEFT_DOUBLE, LEFT_MOVE, MIDDLE_DOWN, MIDDLE_UP, MIDDLE_MOVE, 
+					  RIGHT_DOWN, RIGHT_UP, RIGHT_MOVE};
+	Callback3<Point, dword, MouseAction> WhenMouseClick;
+	
 	struct KeyBehavior {		
 		KeyBehavior(bool ctrl, bool alt, bool shift, int key, bool isVirtualKey, ScatterAction action) : 
 			ctrl(ctrl), alt(alt), shift(shift), key(key), isVirtualKey(isVirtualKey), action(action) {}
@@ -332,12 +336,12 @@ public:
 		
 private:
 	bool showInfo;
-	PopUpInfo popText;
+	PopUpInfo popTextBegin, popTextVert, popTextHoriz, popTextEnd;
 	String popTextX, popTextY, popTextY2, popTextZ;
 	Point popLT, popRB;
 	bool isZoomWindow;
-	const Point offset;
-	bool isLeftDown;
+	const Point popOffset;
+	MouseAction mouseAction;
 	
 	int butDownX, butDownY;
 	bool isScrolling, isLabelPopUp;
@@ -360,7 +364,7 @@ private:
 	void ProcessPopUp(const Point &pt);
 	void ProcessClickSeries(const Point &pt);
 	
-	void DoMouseAction(bool down, Point pt, ScatterAction action, int value);
+	void DoMouseAction(bool down, Point pt, ScatterAction action, int wheel);
 	void DoKeyAction(ScatterAction action);
 	void ProcessMouse(bool down, Point &pt, bool ctrl, bool alt, bool shift, bool left, bool middle, int middleWheel, bool right); 
 	bool ProcessKey(int key); 

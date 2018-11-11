@@ -26,7 +26,8 @@ public:
 	}
 	inline void AppearOnly(Ctrl *owner)
 	{
-		if(IsOpen()) Close();
+		if(IsOpen()) 
+			Close();
 		Ctrl::PopUp(owner);
 	}
 	inline void AppearOnlyOpen(Ctrl *owner)
