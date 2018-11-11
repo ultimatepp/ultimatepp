@@ -29,7 +29,7 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 	for (int i = 0; i < series.GetCount(); ++i) {
 		if (series[i].showLegend) {
 			String legend = series[i].legend;
-			if (!series[i].unitsY.IsEmpty())
+			if (legend.Find('[') < 0 && !series[i].unitsY.IsEmpty())
 				legend += " [" + series[i].unitsY + "]";
 			legends.Add(legend);
 			legendWidth = max<int>(legendWidth, GetTextSize(legend, scaledFont).cx);
@@ -106,7 +106,9 @@ void ScatterDraw::DrawLegend(Draw& w) const {
 				double ly = (rowIncSign >= 0 ? rect.top : rect.bottom) +
 						 rowIncSign*int(rowHeight*(row + 0.6) + loclegendRowSpacing*(row + 0.5));
 				Vector <Pointf> line;
-				line << Pointf(lx, ly) << Pointf(lx + lineLen, ly);
+				double dashLen = GetDashLength(series[i].dash);
+				double realLineLen = lineLen/dashLen > 1 ? dashLen*int(lineLen/dashLen) : lineLen;
+				line << Pointf(lx, ly) << Pointf(lx + realLineLen, ly);
 				if (series[i].opacity > 0 && series[i].seriesPlot)
 					DrawPolylineOpa(w, line, plotScaleAvg, 1, series[i].thickness, series[i].color, series[i].dash);
 				Pointf mark_p(lx + xWidth, ly);

@@ -32,7 +32,7 @@ ScatterDraw::ScatterDraw() {
 	fastViewX = false;
 	sequentialXAll = false;
 	zoomStyleX = zoomStyleY = TO_CENTER;
-	maxMajorUnitsX = maxMajorUnitsY = 10;
+	//maxMajorUnitsX = maxMajorUnitsY = 10;
 	SetMajorUnitsNum(5, 10);
 	Color(graphColor);	
 	isPolar = false;
@@ -208,8 +208,8 @@ ScatterDraw& ScatterDraw::FreqGrid2(double freq) {
 
 bool ScatterDraw::PointInPlot(Point &pt) 
 {
-	return 	hPlotLeft <= pt.x && 				pt.x <= (GetSize().cx - hPlotRight) && 
-		  	(vPlotTop + titleHeight) <= pt.y && pt.y <= (GetSize().cy - vPlotBottom);
+	return 	hPlotLeft*plotScaleX <= pt.x && pt.x <= (GetSize().cx - hPlotRight*plotScaleX) && 
+		  	(vPlotTop*plotScaleY + titleHeight) <= pt.y && pt.y <= (GetSize().cy - vPlotBottom*plotScaleY);
 }
 
 bool ScatterDraw::PointInBorder(Point &pt) 
@@ -225,8 +225,8 @@ bool ScatterDraw::PointInLegend(Point &pt)
 void ScatterDraw::AdjustMinUnitX() {
 	if (xMajorUnit > 0) {
 		if (xMinUnit < 0)
-			xMinUnit += (fabs(ceil(xMinUnit/xMajorUnit)) + 1)*xMajorUnit;
-		else if (xMinUnit >= xMajorUnit)
+			xMinUnit += (fabs(floor(xMinUnit/xMajorUnit)))*xMajorUnit;
+		else if (xMinUnit >= xMajorUnit) 
 			xMinUnit -= (fabs(floor(xMinUnit/xMajorUnit)))*xMajorUnit;
 	}
 }
@@ -256,17 +256,17 @@ ScatterDraw &ScatterDraw::SetRange(double rx, double ry, double ry2) {
 	
 	if (!IsNull(rx)) {
 		xRange = rx;
-		xMajorUnit = xRange/10;
+		xMajorUnit = xRange/xMajorUnitNum;
 		AdjustMinUnitX();
 	}
 	if (!IsNull(ry)) {
 		yRange = ry;
-		yMajorUnit = yRange/10;   
+		yMajorUnit = yRange/yMajorUnitNum;  
 		AdjustMinUnitY();
 	}
 	if (!IsNull(ry2)) {
 		yRange2 = ry2;
-		yMajorUnit2 = yRange2/10;   
+		yMajorUnit2 = yRange2/yMajorUnitNum;
 		AdjustMinUnitY2();
 	}
 	WhenSetRange();
@@ -276,11 +276,13 @@ ScatterDraw &ScatterDraw::SetRange(double rx, double ry, double ry2) {
 ScatterDraw &ScatterDraw::SetMajorUnits(double ux, double uy) {
 	if (!IsNull(ux)) {
 		xMajorUnit = ux;
+		xMajorUnitNum = int(xRange/ux);
 		AdjustMinUnitX();
 	}
 	if (!IsNull(uy)) {
 		yMajorUnit = uy;
 		yMajorUnit2 = yMajorUnit*yRange2/yRange;
+		yMajorUnitNum = int(yRange/uy);
 		AdjustMinUnitY();
 		AdjustMinUnitY2();
 	}
@@ -289,10 +291,12 @@ ScatterDraw &ScatterDraw::SetMajorUnits(double ux, double uy) {
 
 ScatterDraw &ScatterDraw::SetMajorUnitsNum(int nx, int ny) {
 	if (!IsNull(nx)) {
+		xMajorUnitNum = nx;
 		xMajorUnit = xRange/nx;
 		AdjustMinUnitX();
 	}
 	if (!IsNull(ny)) {
+		yMajorUnitNum = ny;
 		yMajorUnit = yRange/ny;
 		yMajorUnit2 = yMajorUnit*yRange2/yRange;
 		AdjustMinUnitY();
@@ -303,10 +307,10 @@ ScatterDraw &ScatterDraw::SetMajorUnitsNum(int nx, int ny) {
 
 ScatterDraw &ScatterDraw::SetMinUnits(double ux, double uy) {
 	if (!IsNull(ux))
-		xMinUnit = ux;
+		xMinUnit = xMinUnit0 = ux;
 	if (!IsNull(uy)) {	
-		yMinUnit = uy;
-		yMinUnit2 = yRange2*yMinUnit/yRange;
+		yMinUnit = yMinUnit0 = uy;
+		yMinUnit2 = yMinUnit20 = yRange2*yMinUnit/yRange;
 	}
 	if (!IsNull(ux))
 		AdjustMinUnitX();
@@ -413,7 +417,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 				double deltaX = xMin - minx;
 				xMin -= deltaX;
 				xMinUnit += deltaX;
-				xMajorUnit = xRange/10;
+				xMajorUnit = xRange/xMajorUnitNum;
 				AdjustMinUnitX();
 			}
 		}
@@ -426,7 +430,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 				double deltaY = yMin - miny;
 				yMin -= deltaY;
 				yMinUnit += deltaY;
-				yMajorUnit = yRange/10; 
+				yMajorUnit = yRange/yMajorUnitNum; 
 				AdjustMinUnitY();
 			}
 			if (miny2 != -DOUBLE_NULL) {	
@@ -437,7 +441,7 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 				double deltaY2 = yMin2 - miny2;
 				yMin2 -= deltaY2;
 				yMinUnit2 += deltaY2;
-				yMajorUnit2 = yRange2/10; 
+				yMajorUnit2 = yRange2/yMajorUnitNum; 
 				AdjustMinUnitY2();
 			}
 		}	
@@ -453,9 +457,9 @@ ScatterDraw &ScatterDraw::DoFitToData(bool horizontal, bool vertical, double fac
 
 ScatterDraw &ScatterDraw::Graduation_FormatX(Formats fi) {
 	switch (fi) {
-		case EXP: cbModifFormatX = THISBACK(ExpFormat); break;
-		case MON: cbModifFormatX = THISBACK(MonFormat);	break;
-		case DY:  cbModifFormatX = THISBACK(DyFormat);	break;
+		case EXP: cbModifFormatX = cbModifFormatXGridUnits = THISBACK(ExpFormat); break;
+		case MON: cbModifFormatX = cbModifFormatXGridUnits = THISBACK(MonFormat);	break;
+		case DY:  cbModifFormatX = cbModifFormatXGridUnits = THISBACK(DyFormat);	break;
 		default:break;
 	}
 	return *this;
@@ -463,9 +467,9 @@ ScatterDraw &ScatterDraw::Graduation_FormatX(Formats fi) {
 
 ScatterDraw &ScatterDraw::Graduation_FormatY(Formats fi) {
 	switch (fi) {
-		case EXP: cbModifFormatY = THISBACK(ExpFormat);	break;
-		case MON: cbModifFormatY = THISBACK(MonFormat);	break;
-		case DY:  cbModifFormatY = THISBACK(DyFormat);	break;
+		case EXP: cbModifFormatY = cbModifFormatYGridUnits = THISBACK(ExpFormat);	break;
+		case MON: cbModifFormatY = cbModifFormatYGridUnits = THISBACK(MonFormat);	break;
+		case DY:  cbModifFormatY = cbModifFormatYGridUnits = THISBACK(DyFormat);	break;
 		default:break;
 	}
 	return *this;
@@ -473,9 +477,9 @@ ScatterDraw &ScatterDraw::Graduation_FormatY(Formats fi) {
 
 ScatterDraw &ScatterDraw::Graduation_FormatY2(Formats fi) {
 	switch (fi) {
-		case EXP: cbModifFormatY2 = THISBACK(ExpFormat);	break;
-		case MON: cbModifFormatY2 = THISBACK(MonFormat);	break;
-		case DY:  cbModifFormatY2 = THISBACK(DyFormat);		break;
+		case EXP: cbModifFormatY2 = cbModifFormatY2GridUnits = THISBACK(ExpFormat);	break;
+		case MON: cbModifFormatY2 = cbModifFormatY2GridUnits = THISBACK(MonFormat);	break;
+		case DY:  cbModifFormatY2 = cbModifFormatY2GridUnits = THISBACK(DyFormat);		break;
 		default:break;
 	}
 	return *this;
@@ -1293,13 +1297,8 @@ void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 			} 
 		}
 	}
-	//double plotW = scale*(GetSize().cx - (hPlotLeft + hPlotRight));
-	//double plotH = scale*(GetSize().cy - (vPlotTop + vPlotBottom)) - titleHeight;
-	//double dw = plotW*xMajorUnit/double(xRange);
-	//double dh = plotH*yMajorUnit/double(yRange);
 	
-	bool can = true;//min<double>(dw, dh) > 20 || scale < 1;
-	if (mouseX && can) {
+	if (mouseX) {
 		if (zoomStyleX == TO_CENTER) {
 			if (!IsNull(minXmin) && xMin + xRange*(1-scale)/2. <= minXmin) {
 				highlight_0 = GetTickCount();
@@ -1317,16 +1316,18 @@ void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 			AdjustMinUnitX();
 		}
 		xRange *= scale;
-		if (!IsNull(maxMajorUnitsX)) {
-			if (xRange < 2*xMajorUnit)
-				xMajorUnit /= 5;
-			else if (xRange/xMajorUnit > maxMajorUnitsX)
-				xMajorUnit *= 5;
-			AdjustMinUnitX();
+		double xmun = xRange/xMajorUnit;
+		if (xmun > 2*xMajorUnitNum) {
+			xMajorUnit *= 2;
+			xMinUnit = xMinUnit0;
+		} else if (xmun < xMajorUnitNum/2) {
+			xMajorUnit /= 2;
+			xMinUnit = xMinUnit0;
 		}
+		AdjustMinUnitX();
 		lastxRange = xRange;
 	}
-	if (mouseY && can) {
+	if (mouseY) {
 		if (zoomStyleY == TO_CENTER) {
 			if (!IsNull(minYmin) && yMin + yRange*(1-scale)/2. <= minYmin) {
 				highlight_0 = GetTickCount();
@@ -1349,19 +1350,22 @@ void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 		}
 		yRange *= scale;
 		yRange2 *= scale;
-		if (!IsNull(maxMajorUnitsY)) {
-			if (yRange < 2*yMajorUnit) {
-				yMajorUnit /= 5;
-				yMajorUnit2 /= 5;
-			} else if (yRange/yMajorUnit > maxMajorUnitsY) {
-				yMajorUnit *= 5;
-				yMajorUnit2 *= 5;
-			}
-			AdjustMinUnitY();
-		}	
+		double ymun = yRange/yMajorUnit;
+		if (ymun > 2*yMajorUnitNum) {
+			yMajorUnit *= 2;
+			yMinUnit = yMinUnit0;
+			yMajorUnit2 *= 2;
+			yMinUnit2 = yMinUnit20;
+		} else if (ymun < yMajorUnitNum/2) {
+			yMajorUnit /= 2;
+			yMinUnit = yMinUnit0;
+			yMajorUnit2 /= 2;
+			yMinUnit2 = yMinUnit20;
+		}
+		AdjustMinUnitY();
 		lastyRange = yRange;	
 	}
-	if ((mouseX || mouseY) && can) {
+	if (mouseX || mouseY) {
 		WhenSetRange();
 		if (zoomStyleX == TO_CENTER || zoomStyleY == TO_CENTER)
 			WhenSetXYMin();

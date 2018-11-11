@@ -52,23 +52,37 @@ surfaces]&]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatX:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
 [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatX]&]
+[s3; If set this callback will give the String to be painted in the 
+pop window and table data to refer X axis data.&]
+[s3; The input values are the X axis value index and value.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:cbModifFormatXGridUnits:%- [_^Upp`:`:Callback3^ Callback3]<String[@(0.0.255) `&
+], [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatXGridUnits]&]
 [s3; If set this callback will give the String to be painted beside 
-every X axis grid line and in the pop window. The input values 
-are the X axis value index and value.&]
+every X axis grid line.&]
+[s3; The input values are the X axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatDeltaX:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&],
  [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatDeltaX]&]
 [s3; If set this callback will give the String to be painted in the 
-pop window representing the delta between two X axis points. 
-The input values are the X axis value index and value.&]
+pop window representing the delta between two X axis points.&]
+[s3; The input values are the X axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatY:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
 [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY]&]
+[s3; If set this callback will give the String to be painted in the 
+pop window and table data to refer Y axis data.&]
+[s3; The input values are the Y axis value index and value.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:cbModifFormatYGridUnits:%- [_^Upp`:`:Callback3^ Callback3]<String[@(0.0.255) `&
+], [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatYGridUnits]&]
 [s3; If set this callback will give the String to be painted beside 
-every main Y axis grid line and in the pop window. The input 
-values are the Y axis value index and value.&]
+every Y axis grid line.&]
+[s3; The input values are the Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatDeltaY:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&],
@@ -80,9 +94,16 @@ The input values are the Y axis value index and value.&]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatY2:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&], 
 [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY2]&]
+[s3; If set this callback will give the String to be painted in the 
+pop window and table data to refer secondary Y axis data.&]
+[s3; The input values are the Y axis value index and value.&]
+[s1;%- &]
+[s6;%- &]
+[s5;:ScatterDraw`:`:cbModifFormatY2GridUnits:%- [_^Upp`:`:Callback3^ Callback3]<String[@(0.0.255) `&
+], [@(0.0.255) int], [@(0.0.255) double]>_[* cbModifFormatY2GridUnits]&]
 [s3; If set this callback will give the String to be painted beside 
-every secondary and in the pop window Y axis grid line. The input 
-values are the Y axis value index and value.&]
+every secondary Y axis grid line.&]
+[s3; The input values are the secondary Y axis value index and value.&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:cbModifFormatDeltaY2:%- [_^Callback3^ Callback3]<String[@(0.0.255) `&
@@ -721,16 +742,6 @@ MajorUnitsNum]([@(0.0.255) int]_[*@3 nx], [@(0.0.255) int]_[*@3 ny])&]
 [s3; Sets the horizontal ([%-*@3 nx]) and vertical ([%-*@3 ny]) number 
 of grid lines.&]
 [s1; &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:SetMaxMajorUnits`(int`,int`):%- [_^ScatterDraw^ ScatterDraw]_`&[* Set
-MaxMajorUnits]([@(0.0.255) int]_[*@3 maxX], [@(0.0.255) int]_[*@3 maxY])&]
-[s3; Sets the maximum number of horizontal ([%-*@3 maxX]) and vertical 
-([%-*@3 maxY]) grid lines.&]
-[s1; &]
-[s6;%- &]
-[s5;:ScatterDraw`:`:GetMajorUnitsX`(`):%- [@(0.0.255) double]_[* GetMajorUnitsX]()&]
-[s3; Returns the distance between grid lines in X axis.&]
-[s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetMajorUnitsY`(`):%- [@(0.0.255) double]_[* GetMajorUnitsY]()&]
 [s3; Returns the distance between grid lines in Y axis.&]
