@@ -1127,6 +1127,10 @@ protected:
 	void AdjustMinUnitY();
 	void AdjustMinUnitY2();
 	
+	void AdjustMajorUnitX();
+	void AdjustMajorUnitY();
+	void AdjustMajorUnitY2();
+	
 	bool PointInPlot(Point &pt);
 	bool PointInBorder(Point &pt);
 	bool PointInLegend(Point &pt);
