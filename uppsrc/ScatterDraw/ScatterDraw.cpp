@@ -267,7 +267,7 @@ void ScatterDraw::AdjustMajorUnitY() {
 void ScatterDraw::AdjustMajorUnitY2() {
 	while (yRange2/yMajorUnit2 > 1.2*yMajorUnitNum) 
 		yMajorUnit2 *= 2;
-	while (yRange2/yMajorUnit2 < yMajorUnitNumScatterDraw/1.5) 
+	while (yRange2/yMajorUnit2 < yMajorUnitNum/1.5) 
 		yMajorUnit2 /= 2;
 }
 
