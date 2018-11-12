@@ -96,6 +96,7 @@ void App::Paint(Draw& w)
 		else
 			sw.Clear(White());
 		sw.Co(ctrl.mt);
+		sw.PreClip(ctrl.preclip);
 		DoPaint(sw);
 	}
 	w.DrawImage(0, 0, ib);
