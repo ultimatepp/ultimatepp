@@ -43,9 +43,7 @@ void PluginDemo() {
 void FilesDemo() {
 	{
 		String from = "/books/technology/computers"; 
-		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
 		String path = "/books/biology/mammals";
-		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
 		String ret;
 		if (!GetRelativePath(from, path, ret))
 			ret = "Null";
@@ -53,9 +51,7 @@ void FilesDemo() {
 	}
 	{
 		String from = "/books/technology/computers";
-		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
 		String path = "/books/technology/computers";
-		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
 		String ret;
 		if (!GetRelativePath(from, path, ret))
 			ret = "Null";
@@ -63,9 +59,7 @@ void FilesDemo() {
 	}
 	{
 		String from = "/books/technology/computers";
-		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
 		String path = "/books2/biology/mammals";
-		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
 		String ret;
 		if (!GetRelativePath(from, path, ret))
 			ret = "Null";
@@ -73,9 +67,7 @@ void FilesDemo() {
 	}
 	{
 		String from = "c:/books/technology/computers";
-		from.Replace("/", DIR_SEPS); from.Replace("\\", DIR_SEPS);
 		String path = "y:/books2/biology/mammals";
-		path.Replace("/", DIR_SEPS); path.Replace("\\", DIR_SEPS);
 		String ret;
 		if (!GetRelativePath(from, path, ret))
 			ret = "Null";
@@ -130,6 +122,13 @@ void NonReentrantDemo() {
 	NonReentrantDemo();
 }
 
+void DistanceDemo() {
+	Puts(Format("Distance between 'hello' and 'hello'  is %d", DamerauLevenshteinDistance("hello", "hello")));
+	Puts(Format("Distance between 'hello' and 'helo'   is %d", DamerauLevenshteinDistance("hello", "helo")));
+	Puts(Format("Distance between 'hello' and 'heloo'  is %d", DamerauLevenshteinDistance("hello", "helloo")));
+	Puts(Format("Distance between 'hello' and 'yellow' is %d", DamerauLevenshteinDistance("hello", "yellow")));
+}
+
 void Test() {
 	Puts("Files demo");
 	FilesDemo();
@@ -139,6 +138,9 @@ void Test() {
 
 	Puts("\nNonReentrant demo");
 	NonReentrantDemo();	
+	
+	Puts("\nDistance demo");
+	DistanceDemo();	
 	
 	Puts("\nPress enter to end...");	TestGetchar();
 }
