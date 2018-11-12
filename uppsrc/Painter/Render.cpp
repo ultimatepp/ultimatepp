@@ -10,7 +10,7 @@ void PainterTarget::Fill(double width, SpanSource *ss, const RGBA& color) {}
 
 void BufferPainter::ClearOp(const RGBA& color)
 {
-	UPP::Fill(~ib, color, ib.GetLength());
+	UPP::Fill(~*ip, color, ip->GetLength());
 }
 
 BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const PathInfo *path_info,
@@ -165,7 +165,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		if(width >= FILL && !ss && !alt && mode == MODE_ANTIALIASED) {
 			for(int i = 0; i < path_info->path.GetCount(); i++) {
 				while(jobcount >= cojob.GetCount())
-					cojob.Add().rasterizer.Create(ib.GetWidth(), ib.GetHeight(), false);
+					cojob.Add().rasterizer.Create(ip->GetWidth(), ip->GetHeight(), false);
 				CoJob& job = cojob[jobcount++];
 				job.path_info = path_info;
 				job.subpath = i;
@@ -209,19 +209,19 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		
 		if(doclip) {
 			rg = &clip_filler;
-			newclip.Alloc(ib.GetHeight());
+			newclip.Alloc(ip->GetHeight());
 		}
 		else
 		if(ss) {
 			ss(rss);
 			RGBA           *lspan;
 			if(co) {
-				co_span.Alloc((subpixel ? 3 : 1) * ib.GetWidth() + 3);
+				co_span.Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
 				lspan = co_span;
 			}
 			else {
 				if(!span)
-					span.Alloc((subpixel ? 3 : 1) * ib.GetWidth() + 3);
+					span.Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
 				lspan = span;
 			}
 			if(subpixel) {
@@ -263,8 +263,8 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 					int y = (co ? co->Next() : ii++) + rasterizer.MinY();
 					if(y > rasterizer.MaxY())
 						break;
-					solid_filler.t = subpixel_filler.t = span_filler.t = ib[y];
-					subpixel_filler.end = subpixel_filler.t + ib.GetWidth();
+					solid_filler.t = subpixel_filler.t = span_filler.t = (*ip)[y];
+					subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
 					span_filler.y = subpixel_filler.y = y;
 					Rasterizer::Filler *rf = rg;
 					if(clip.GetCount()) {
@@ -306,21 +306,14 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		pathlen = j.onpathtarget.len;
 	}
 	return newclip;
-}	
-
-void BufferPainter::CoRasterize(int from, int to)
-{
-//	DLOG("CoRasterize " << from << " " << to);
 }
 
 void BufferPainter::FinishPathJob()
 {
 	if(jobcount == 0)
 		return;
-//	RLOG("===== Finish");
-//	DDUMP(runningjobs);
-//	DDUMP(jobcount);
-//	RTIMING("Finish");
+	
+	RTIMING("Finish");
 
 	CoWork co;
 	co * [&] {
@@ -344,7 +337,7 @@ void BufferPainter::FinishPathJob()
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
 	
 	fill_job & [=] {
-		int miny = ib.GetHeight() - 1;
+		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
 		for(int i = 0; i < fillcount; i++) {
 			CoJob& j = cofill[i];
@@ -362,7 +355,7 @@ void BufferPainter::FinishPathJob()
 					if(j.rasterizer.NotEmpty(y)) {
 						solid_filler.c = j.c;
 						solid_filler.invert = j.attr.invert;
-						solid_filler.t = ib[y];
+						solid_filler.t = (*ip)[y];
 						if(clip.GetCount()) {
 							MaskFillerFilter mf;
 							const ClippingLine& s = clip.Top()[y];

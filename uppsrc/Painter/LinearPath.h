@@ -121,6 +121,7 @@ private:
 
 	void  Init();
 	Cell *AddCells(int y, int n);
+	void  AddCells2(CellArray& a, int n);
 	void  RenderHLine(int ey, int x1, int y1, int x2, int y2);
 	void  LineClip(double x1, double y1, double x2, double y2);
 	int   CvX(double x);
@@ -154,9 +155,9 @@ public:
 
 	void Create(int cx, int cy, bool subpixel);
 	
-	Rasterizer(int cx, int cy, bool subpixel);
-	Rasterizer() { sz = Size(0, 0); }
-	~Rasterizer();
+	Rasterizer(int cx, int cy, bool subpixel) { Create(cx, cy, subpixel); }
+	Rasterizer()                              { sz = Size(0, 0); }
+	~Rasterizer()                             { Free(); }
 };
 
 class LinearInterpolator {
