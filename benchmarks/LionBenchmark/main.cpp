@@ -6,10 +6,10 @@ void Task(Painter& sw)
 {
 	RTIMING("Total");
 	sw.Begin();
-	sw.Scale(1.2);
-	sw.Opacity(0.3);
+//	sw.Scale(1.2);
+//	sw.Opacity(0.3);
 //	sw.Translate(20, 0);
-	sw.Rotate(0.1);
+//	sw.Rotate(0.1);
 	PaintLion(sw);
 //	PythagorasTree(sw);
 //	Demo(sw);
