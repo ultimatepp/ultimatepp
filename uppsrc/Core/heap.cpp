@@ -246,6 +246,7 @@ void MemoryShrink()
 #pragma GCC diagnostic ignored "-Wdeprecated" // silence modern GCC warning about throw(std::bad_alloc)
 #endif
 
+/*
 void *operator new(size_t size) throw(std::bad_alloc)             { void *ptr = UPP::MemoryAlloc(size); return ptr; }
 void operator  delete(void *ptr) throw()                          { UPP::MemoryFree(ptr); }
 
@@ -257,5 +258,18 @@ void operator  delete(void *ptr, const std::nothrow_t&) throw()   { UPP::MemoryF
 
 void *operator new[](size_t size, const std::nothrow_t&) throw()  { void *ptr = UPP::MemoryAlloc(size); return ptr; }
 void operator  delete[](void *ptr, const std::nothrow_t&) throw() { UPP::MemoryFree(ptr); }
+*/
+
+void *operator new(size_t size)                                    { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete(void *ptr) noexcept(true)                    { UPP::MemoryFree(ptr); }
+
+void *operator new[](size_t size)                                  { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete[](void *ptr) noexcept(true)                  { UPP::MemoryFree(ptr); }
+
+void *operator new(size_t size, const std::nothrow_t&) noexcept    { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete(void *ptr, const std::nothrow_t&) noexcept   { UPP::MemoryFree(ptr); }
+
+void *operator new[](size_t size, const std::nothrow_t&) noexcept  { void *ptr = UPP::MemoryAlloc(size); return ptr; }
+void operator  delete[](void *ptr, const std::nothrow_t&) noexcept { UPP::MemoryFree(ptr); }
 
 #endif
