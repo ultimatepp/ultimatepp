@@ -9,8 +9,8 @@ void BufferPainter::ClearPath()
 	current = move = Null;
 	ccontrol = qcontrol = Pointf(0, 0);
 	path_info->ischar = false;
-	path_info->path_min = Pointf(DBL_MAX, DBL_MAX);
-	path_info->path_max = -Pointf(DBL_MAX, DBL_MAX);
+	path_info->path_min = Pointf(1e200, 1e200);
+	path_info->path_max = -Pointf(1e200, 1e200);
 	path_info->path.SetCount(1);
 	path_info->path.Top().Clear();
 	path_info->path.Top().Reserve(128);
