@@ -32,22 +32,11 @@ String GetTypeName(const char *s)
 
 bool TimingInspector::active = true;
 
-#if defined(PLATFORM_POSIX) || defined(PLATFORM_WINCE)
-inline int tmGetTime() {
-	return GetTickCount();
-}
-#else
-inline int tmGetTime() {
-	return timeGetTime();
-}
-#endif
-
 static TimingInspector s_zero; // time of Start / End without actual body to measure
 
 TimingInspector::TimingInspector(const char *_name) {
 	name = _name ? _name : "";
-	start_time = 0;
-	all_count = call_count = max_nesting = nesting_depth = min_time = max_time = total_time = 0;
+	all_count = call_count = max_nesting = min_time = max_time = total_time = 0;
 	static bool init;
 	if(!init) {
 #if defined(PLATFORM_WIN32) && !defined(PLATFORM_WINCE)
@@ -63,21 +52,15 @@ TimingInspector::~TimingInspector() {
 	StdLog() << Dump() << "\r\n";
 }
 
-void TimingInspector::Start() {
-	Mutex::Lock __(mutex);
-	if(!active) return;
-	if(!nesting_depth++)
-		start_time = tmGetTime();
-	if(nesting_depth > max_nesting)
-		max_nesting = nesting_depth;
-}
-
-void TimingInspector::End() {
+void TimingInspector::Add(dword time, int nesting)
+{
+	time = tmGetTime() - time;
 	Mutex::Lock __(mutex);
 	if(!active) return;
 	all_count++;
-	if(!--nesting_depth) {
-		dword time = tmGetTime() - start_time;
+	if(nesting > max_nesting)
+		max_nesting = nesting;
+	if(nesting == 0) {
 		total_time += time;
 		if(call_count++ == 0)
 			min_time = max_time = time;
@@ -97,8 +80,10 @@ String TimingInspector::Dump() {
 		return s + "No active hit";
 	ONCELOCK {
 		int w = GetTickCount();
-		while(GetTickCount() - w < 200)
-			TimingInspector::Routine __(s_zero);
+		while(GetTickCount() - w < 200) { // measure profiling overhead
+			thread_local int nesting = 0;
+			TimingInspector::Routine __(s_zero, nesting);
+		}
 	}
 	double tm = max(0.0, double(total_time) / call_count / 1000 -
 			             double(s_zero.total_time) / s_zero.call_count / 1000);

@@ -146,22 +146,28 @@ void BufferPainter::ClearStopsOp()
 		attr.color_stop.Clear();
 }
 
-BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
-:	ib(ib),
-	mode(mode),
-	rasterizer(ib.GetWidth(), ib.GetHeight(), mode == MODE_SUBPIXEL)
+void BufferPainter::Create(ImageBuffer& ib, int mode_)
 {
-	paths.Alloc(BATCH_SIZE);
-	path_info = paths;
-
-	ClearPath();
-
-	render_cx = ib.GetWidth();
-	if(mode == MODE_SUBPIXEL) {
-		render_cx *= 3;
-		subpixel.Alloc(render_cx + 30);
+	ip = &ib;
+	
+	if(mode_ != mode || (Size)size != ib.GetSize()) {
+		mode = mode_;
+	
+		rasterizer.Create(ib.GetWidth(), ib.GetHeight(), mode == MODE_SUBPIXEL);
+		paths.Alloc(BATCH_SIZE);
+		path_info = paths;
+	
+		ClearPath();
+	
+		render_cx = ib.GetWidth();
+		if(mode == MODE_SUBPIXEL) {
+			render_cx *= 3;
+			subpixel.Alloc(render_cx + 30);
+		}
+		size = ib.GetSize();
 	}
-	auto& a = attr;
+
+	Attr& a = attr;
 	a.cap = LINECAP_BUTT;
 	a.join = LINEJOIN_MITER;
 	a.miter_limit = 4;
@@ -175,10 +181,14 @@ BufferPainter::BufferPainter(ImageBuffer& ib, int mode)
 	
 	gradientn = Null;
 	
-	dopreclip = false;
-	jobcount = 0;
-	
-	size = ib.GetSize();
+	jobcount = fillcount = 0;
+	cojob.Clear();
+	cofill.Clear();
+	attrstack.Clear();
+	clip.Clear();
+	mask.Clear();
+	onpathstack.Clear();
+	pathlenstack.Clear();
 }
 
 BufferPainter::BufferPainter(PainterTarget& t, double tolerance)
