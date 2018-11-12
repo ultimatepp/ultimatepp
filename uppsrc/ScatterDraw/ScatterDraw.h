@@ -1299,8 +1299,7 @@ bool ScatterDraw::PlotTexts(T& w, const bool boldX, bool boldY)
 	Upp::Font fontY2Num = fontYNum;
 	fontY2Num.Italic();
 
-debug_h();
-	if (drawXReticle)
+	if (drawXReticle) 
 		for(int i = 0; xMinUnit + i*xMajorUnit <= xRange; i++) {
 			double reticleX = plotW*xMinUnit/xRange + i*plotW/(xRange/xMajorUnit);
 			double gridX = xMinUnit + i*xMajorUnit + xMin;
@@ -1326,7 +1325,7 @@ debug_h();
 						   fround(gridWidth*plotScaleAvg), axisColor);             
 			}
 		}
-
+	
 	if (drawYReticle)
 		for(int i = 0; yMinUnit + i*yMajorUnit <= yRange; i++) {
 			int reticleY = fround(-plotH*yMinUnit/yRange + plotH - i*plotH/(yRange/yMajorUnit));

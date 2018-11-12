@@ -1317,10 +1317,10 @@ void ScatterDraw::DoZoom(double scale, bool mouseX, bool mouseY) {
 		}
 		xRange *= scale;
 		double xmun = xRange/xMajorUnit;
-		if (xmun > 2*xMajorUnitNum) {
+		if (xmun > 1.2*xMajorUnitNum) {
 			xMajorUnit *= 2;
 			xMinUnit = xMinUnit0;
-		} else if (xmun < xMajorUnitNum/2) {
+		} else if (xmun < xMajorUnitNum/1.5) {
 			xMajorUnit /= 2;
 			xMinUnit = xMinUnit0;
 		}
