@@ -966,12 +966,12 @@ w]_`&[* SetReticleFont]([@(0.0.255) const]_[_^Upp`:`:Font^ Font]_`&[*@3 fnt])&]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetReticleColor`(const Upp`:`:Color`&`):%- [_^ScatterDraw^ ScatterD
 raw]_`&[* SetReticleColor]([@(0.0.255) const]_[_^Upp`:`:Color^ Color]_`&[*@3 col])&]
-[s3; Sets [%-*@3 col] as reticle color..&]
+[s3; Sets [%-*@3 col] as reticle color.&]
 [s1; &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:GetReticleColor`(`):%- [_^Upp`:`:Color^ Color]_`&[* GetReticleColor](
 )&]
-[s3; Gets reticle color.&]
+[s3; Gets reticle color&]
 [s1;%- &]
 [s6;%- &]
 [s5;:ScatterDraw`:`:SetDataPrimaryY`(int`,bool`):%- [@(0.0.255) void]_[* SetDataPrimaryY](
