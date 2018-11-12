@@ -321,14 +321,23 @@ bool IsFolder(const char *fileName) {
 	return false;
 }
 
-bool GetRelativePath(String& from, String& path, String& ret) {
+bool GetRelativePath(String from, String path, String& ret, bool normalize) {
+	if (normalize) {
+		String creplace = DIR_SEP == '\\' ? "/" : "\\";
+		from.Replace(creplace, DIR_SEPS);
+		path.Replace(creplace, DIR_SEPS);
+		if (!PLATFORM_PATH_HAS_CASE) {
+			from = ToLower(from);
+			path = ToLower(path);
+		}
+	}
 	ret.Clear();
 	int pos_from = 0, pos_path = 0;
 	bool first = true;
 	while (!IsNull(pos_from)) {
 		String f_from = Tokenize2(from, DIR_SEPS, pos_from);
 		String f_path = Tokenize2(path, DIR_SEPS, pos_path);
-		if (ToLower(f_from) != ToLower(f_path)) {
+		if (f_from != f_path) {
 			if (first) 
 				return false;
 			ret << f_path;	
@@ -339,6 +348,7 @@ bool GetRelativePath(String& from, String& path, String& ret) {
 				ret.Insert(0, String("..") + DIR_SEPS);
 				Tokenize2(from, DIR_SEPS, pos_from);		
 			}
+			ret.Insert(0, String("..") + DIR_SEPS);
 			return true;
 		}
 		first = false;
@@ -926,15 +936,21 @@ String HMSToString(int hour, int min, double seconds, int dec, bool units, bool 
 	}
 	
 	if (min > 0) {
-		ret << (ret.IsEmpty() ? "" : " ") << min;
+		if (tp)
+			ret << Format("%02d", min);
+		else
+			ret << (ret.IsEmpty() ? "" : " ") << min;
 		if (space)
 			ret << " ";
-		if (tp)
+		if (tp && forcesec)
 			ret << ":";
 		if (units)
 			ret << (longUnits ? ((min > 1) ? t_("mins") : t_("min")) : t_("m"));
-	} else if (tp)
-		ret << "00:";
+	} else if (tp) {
+		ret << "00";
+		if (forcesec)
+			ret << ":";
+	}
 	
 	if (forcesec || (hour == 0 && (seconds > 1 || (seconds > 0 && dec > 0)))) {
 		ret << (ret.IsEmpty() ? "" : " ") << formatSeconds(seconds, dec, false);
@@ -1346,7 +1362,7 @@ bool ReadCSVFileByLine(const String fileName, Gate<int, Vector<Value>&, String &
 				result << val;
 		}
 		if (!WhenRow(row, result, line))
-			return true;
+			return false;
 		result.Clear();
 	}
 	return false;

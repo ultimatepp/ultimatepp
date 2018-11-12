@@ -180,22 +180,7 @@ ar]_`*[*@3 fileName])&]
 har]_`*[*@3 fileName])&]
 [s2; Returns true id [%-*@3 fileName] is a folder.&]
 [s3; &]
-[s4;%- &]
-[s5;:Upp`:`:GetRelativePath`(Upp`:`:String`&`,Upp`:`:String`&`,Upp`:`:String`&`):%- [@(0.0.255) b
-ool]_[* GetRelativePath]([_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 from], 
-[_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 path], [_^Upp`:`:String^ String][@(0.0.255) `&
-]_[*@3 ret])&]
-[s2; Returns the relative path to go from [%-*@3 from] to [%-*@3 path 
-]in[%-*@3  ret] and returns true.&]
-[s0;l288; For example, if:&]
-[s0;l288;i150;O0; [%-*@3 from] `= `"/books/technology/computers`"&]
-[s0;l288;i150;O0; [%-*@3 path ]`= `"/books/biology/mammals`"&]
-[s0;l288; GetRelativePath() would return `"../../biology/mammals`".&]
-[s2; If there is no match between both paths it returns false.&]
-[s2; This is a changed version from original function as IsNull() 
-cannot distinguish String(`"`") and String(Null).&]
-[s3; &]
-[s4;%- &]
+[s4; &]
 [s5;:Upp`:`:SearchFile`(Upp`:`:String`,Upp`:`:String`,Upp`:`:String`,Upp`:`:Vector`<Upp`:`:String`>`&`):%- [_^Upp`:`:Vector^ V
 ector]<[_^Upp`:`:String^ String]>_[* SearchFile]([_^Upp`:`:String^ String]_[*@3 dir], 
 [_^Upp`:`:String^ String]_[*@3 condFile], [_^Upp`:`:String^ String]_[*@3 text], 
@@ -775,9 +760,8 @@ is used every function call..&]
 [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 t], [@(0.0.255) int]_[*@3 alphabetLength]_`=_[@3 2
 56])&]
 [s2; Calculates the Damerau Levenshtein distance between words [%-*@3 s] 
-and [%-*@3 t] considering an alphabet of length [%-*@3 alphabetLength] 
-.&]
-[s2; The algorithm are documented [^https`:`/`/en`.wikipedia`.org`/wiki`/Damerau`%E2`%80`%93Levenshtein`_distance^ h
+and [%-*@3 t] considering an alphabet of length [%-*@3 alphabetLength].&]
+[s2; The algorithm is documented [^https`:`/`/en`.wikipedia`.org`/wiki`/Damerau`%E2`%80`%93Levenshtein`_distance^ h
 ere] and [^https`:`/`/stackoverflow`.com`/questions`/6033631`/levenshtein`-to`-damerau`-levenshtein`/6035519`#6035519^ h
 ere].&]
 [s4;%- &]
@@ -788,5 +772,20 @@ ar]_`*[*@3 t])&]
 [%-*@3 t].&]
 [s2; The algorithm is documented [^From https`:`/`/en`.wikipedia`.org`/wiki`/Levenshtein`_distance^ h
 ere].&]
+[s3; &]
+[s4;%- &]
+[s5;:GetRelativePath`(Upp`:`:String`,Upp`:`:String`,Upp`:`:String`&`,bool`):%- [@(0.0.255) b
+ool]_[* GetRelativePath]([_^Upp`:`:String^ String]_[*@3 from], [_^Upp`:`:String^ String]_
+[*@3 path], [_^Upp`:`:String^ String][@(0.0.255) `&]_[*@3 ret], [@(0.0.255) bool]_[*@3 normal
+ize])&]
+[s2; Returns the relative path to go from [%-*@3 from] to [%-*@3 path 
+]in[%-*@3  ret] and returns true if there is a match.&]
+[s0;l288; For example, if:&]
+[s0;l288;i150;O0; [%-*@3 from] `= `"/books/technology/computers`"&]
+[s0;l288;i150;O0; [%-*@3 path ]`= `"/books/biology/mammals`"&]
+[s0;l288; GetRelativePath() would return `"../../biology/mammals`".&]
+[s2; If there is no match between both paths it returns false.&]
+[s2; If [%-*@3 normalize] is set, path separators and upper/lower letters 
+are normalized following OS standards.&]
 [s3; &]
 [s3; ]]

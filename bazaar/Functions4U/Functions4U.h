@@ -72,7 +72,7 @@ String GetNextFolder(const String &folder, const String &lastFolder);
 String FileRealName(const char *fileName);
 bool IsFile(const char *fileName);
 bool IsFolder(const char *fileName);
-bool GetRelativePath(String& from, String& path, String& ret);
+bool GetRelativePath(String from, String path, String& ret, bool normalize = true);
 	
 bool IsSymLink(const char *path);
 
