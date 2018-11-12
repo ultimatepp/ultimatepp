@@ -24,6 +24,7 @@ void RegisterExample(const char *name, void (*ex)(Painter& pw))
 
 void App::DoPaint0(Painter& sw)
 {
+	LOG("==== PAINT");
 	sw.Translate(~ctrl.translate_x, ~ctrl.translate_y);
 	sw.Rotate(~ctrl.rotate);
 	sw.Scale(~ctrl.scale, (double)~ctrl.scale * (double)~ctrl.scale_x);
@@ -159,6 +160,7 @@ void App::Serialize(Stream& s)
 		% ctrl.translate_y % ctrl.translate_y_slider
 		% ctrl.opacity % ctrl.opacity_slider
 		% ctrl.painting % ctrl.quality % ctrl.transparent
+		% ctrl.mt % ctrl.preclip
 	;
 }
 
@@ -188,7 +190,8 @@ App::App() {
 	ctrl.linejoin.Add(LINEJOIN_MITER, "Miter joins");
 	ctrl.linejoin.Add(LINEJOIN_ROUND, "Round joins");
 	ctrl.linejoin.Add(LINEJOIN_BEVEL, "Bevel joins");
-	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.quality <<= ctrl.transparent <<= ctrl.mt <<= THISBACK(Sync);
+	ctrl.linecap <<= ctrl.linejoin <<= ctrl.painting <<= ctrl.quality <<= ctrl.transparent <<= ctrl.mt <<=
+	                 ctrl.preclip <<= THISBACK(Sync);
 	ctrl.reset <<= THISBACK(Reset);
 	ctrl.benchmark <<= THISBACK(Benchmark);
 	ctrl.print <<= THISBACK(Print);
