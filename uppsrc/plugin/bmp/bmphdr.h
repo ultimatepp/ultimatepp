@@ -95,7 +95,7 @@ __attribute__((packed))
 #endif
 ;
 
-#ifdef COMPILER_MSC
+#if defined(COMPILER_MSC) || defined(COMPILER_GCC)
 #pragma pack(pop)
 #endif
 
