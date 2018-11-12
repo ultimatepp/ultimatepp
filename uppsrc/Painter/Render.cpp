@@ -22,10 +22,10 @@ BufferPainter::PathJob::PathJob(Rasterizer& rasterizer, double width, const Path
 
 	g = &rasterizer;
 
-	if(!IsNull(preclip.left)) {
+	if(!IsNull(preclip.left) && !path_info->ischar) {
 		double ex = max(width, 0.0) * (1 + attr.miter_limit);
 		if(path_info->path_max.y + ex < preclip.top || path_info->path_min.y - ex > preclip.bottom ||
-		   path_info->path_max.x + ex < preclip.left || path_info->path_min.x + ex > preclip.right) {
+		   path_info->path_max.x + ex < preclip.left || path_info->path_min.x - ex > preclip.right) {
 			preclipped = true;
 			return;
 		}
@@ -138,10 +138,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 
 	if(width == 0 || !ss && color.a == 0 && width >= FILL)
 		return newclip;
-
+	
 	if(pathattr.mtx_serial != preclip_mtx_serial) {
-		if(dopreclip && pathattr.mtx_serial != preclip_mtx_serial) {
-			preclip_mtx_serial = pathattr.mtx_serial;
+		if(dopreclip) {
 			Pointf tl, br, a;
 			Xform2D imx = Inverse(pathattr.mtx);
 			tl = br = imx.Transform(0, 0);
@@ -159,6 +158,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		else
 			preclip = Null;
 		regular = pathattr.mtx.IsRegular();
+		preclip_mtx_serial = pathattr.mtx_serial;
 	}
 
 	if(co) {
