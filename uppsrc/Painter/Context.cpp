@@ -178,17 +178,23 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 	a.dash = NULL;
 	a.mask = false;
 	a.invert = false;
+	a.mtx_serial = 0;
 	
 	gradientn = Null;
 	
 	jobcount = fillcount = 0;
 	cojob.Clear();
 	cofill.Clear();
+
 	attrstack.Clear();
 	clip.Clear();
 	mask.Clear();
 	onpathstack.Clear();
 	pathlenstack.Clear();
+	onpath.Clear();
+
+	preclip_mtx_serial = -1;
+	path_index = 0;
 }
 
 BufferPainter::BufferPainter(PainterTarget& t, double tolerance)
