@@ -168,20 +168,20 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 
 	path_info = paths;
 
-	ClearPath();
+	attr.mtx = Xform2D::Identity();
+	attr.cap = LINECAP_BUTT;
+	attr.join = LINEJOIN_MITER;
+	attr.miter_limit = 4;
+	attr.evenodd = false;
+	attr.hasclip = false;
+	attr.cliplevel = 0;
+	attr.opacity = 1;
+	attr.dash = NULL;
+	attr.mask = false;
+	attr.invert = false;
+	attr.mtx_serial = 0;
 
-	Attr& a = attr;
-	a.cap = LINECAP_BUTT;
-	a.join = LINEJOIN_MITER;
-	a.miter_limit = 4;
-	a.evenodd = false;
-	a.hasclip = false;
-	a.cliplevel = 0;
-	a.opacity = 1;
-	a.dash = NULL;
-	a.mask = false;
-	a.invert = false;
-	a.mtx_serial = 0;
+	ClearPath();
 	
 	gradientn = Null;
 	
