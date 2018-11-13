@@ -154,10 +154,6 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 		mode = mode_;
 	
 		rasterizer.Create(ib.GetWidth(), ib.GetHeight(), mode == MODE_SUBPIXEL);
-		paths.Alloc(BATCH_SIZE);
-		path_info = paths;
-	
-		ClearPath();
 	
 		render_cx = ib.GetWidth();
 		if(mode == MODE_SUBPIXEL) {
@@ -166,6 +162,13 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 		}
 		size = ib.GetSize();
 	}
+
+	if(!paths)
+		paths.Alloc(BATCH_SIZE);
+
+	path_info = paths;
+
+	ClearPath();
 
 	Attr& a = attr;
 	a.cap = LINECAP_BUTT;
