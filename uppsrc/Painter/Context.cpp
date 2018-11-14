@@ -183,8 +183,6 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 
 	ClearPath();
 	
-	gradientn = Null;
-	
 	jobcount = fillcount = 0;
 	cojob.Clear();
 	cofill.Clear();

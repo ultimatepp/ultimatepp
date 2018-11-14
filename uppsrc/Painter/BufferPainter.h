@@ -153,6 +153,7 @@ private:
 		RGBA   color;
 		
 		bool operator<(const ColorStop& b) const { return stop < b.stop; }
+		void Serialize(Stream& s)                { s % stop % color; }
 	};
 	struct SimpleAttr {
 		Xform2D                         mtx;
@@ -193,10 +194,6 @@ private:
 	int                        mtx_serial = 0;
 	ArrayMap<String, DashInfo> dashes;
 	
-	Image                      gradient;
-	RGBA                       gradient1, gradient2;
-	int                        gradientn;
-
 	Rectf                      preclip;
 	int                        preclip_mtx_serial = -1;
 	bool                       regular;
@@ -299,8 +296,12 @@ private:
 	                              const Xform2D& m, int style);
 	void             RenderRadial(double width, const Pointf& f, const RGBA& color1, const RGBA& color2,
 	                              const Xform2D& transsrc, int style);
-	void             MakeGradient(RGBA color1, RGBA color2, int cx);
-	void             Gradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
+
+	struct           GradientImageMaker;
+	static Image     MakeGradient(RGBA color1, Vector<ColorStop>& color_stop, RGBA color2, int n);
+	static Image     MakeGradientCached(RGBA color1, Vector<ColorStop>& color_stop, RGBA color2, int n);
+	Image            Gradient(const RGBA& color1, const RGBA& color2, int n);
+	Image            Gradient(const RGBA& color1, const RGBA& color2, const Pointf& p1, const Pointf& p2);
 	void             ColorStop0(Attr& a, double pos, const RGBA& color);
 	void             FinishMask();
 
