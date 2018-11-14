@@ -1,6 +1,6 @@
 #ifdef PLATFORM_WIN32
 struct RGBA : Moveable<RGBA> {
-        byte b, g, r, a;
+	byte b, g, r, a;
 };
 #endif
 
@@ -15,6 +15,11 @@ struct RGBA : Moveable<RGBA> {
 };
 #endif
 #endif
+
+inline Stream& operator%(Stream& s, RGBA& c)
+{
+	return s % c.r % c.g % c.b % c.a;
+}
 
 template <>
 String AsString(const RGBA& c);

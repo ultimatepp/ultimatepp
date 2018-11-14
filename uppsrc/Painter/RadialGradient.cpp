@@ -58,7 +58,7 @@ void BufferPainter::RenderRadial(double width, const Pointf& f, const RGBA& colo
                                  const Pointf& c, double r, const RGBA& color2,
                                  const Xform2D& m, int style)
 {
-	MakeGradient(color1, color2, 2048);
+	Image gradient = Gradient(color1, color2, 2048);
 	RenderPath(width, [=](One<SpanSource>& ss) {
 		PainterRadialSpan& sg = ss.Create<PainterRadialSpan>();
 		sg.interpolator.Set(Inverse(m));
