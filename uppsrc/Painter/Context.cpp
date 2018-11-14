@@ -17,7 +17,7 @@ void BufferPainter::EndOp()
 	}
 	pathattr = attr = attrstack.Top();
 	attrstack.Drop();
-	if(clip.GetCount() != attr.cliplevel || attr.mask || attr.onpath)
+	if(clip.GetCount() != attr.cliplevel || attr.mask)
 		Finish();
 	clip.SetCount(attr.cliplevel);
 	if(attr.mask)

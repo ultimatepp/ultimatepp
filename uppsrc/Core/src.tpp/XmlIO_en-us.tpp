@@ -1,5 +1,4 @@
 topic "XmlIO";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "XmlIO";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_} 
 [ {{10000@(113.42.0) [s0;%% [*@7;4 XmlIO and Xmlize framework]]}}&]
 [s3; &]
@@ -86,10 +86,10 @@ for it and calls global [* Xmlize ]function with this new XmlIO,
 ]is a template function that calls [* Xmlize ]method for [%-*@3 var] 
 with new XmlIO as parameter (but not [%-*@3 itemtag]) `- that way 
 the [* Xmlize ]can be defined either as global template function 
-specializastion for [%-*@4 T] or as method of [%-*@4 T] (usually 
-easier, but not always possible). [%-*@3 itemtag] is additional 
-parameter that can be used as name of embeded tags when collections 
-of items are Xmlized. [%-*@3 def] parameter can be used to provide 
+specialization for [%-*@4 T] or as method of [%-*@4 T] (usually easier, 
+but not always possible). [%-*@3 itemtag] is additional parameter 
+that can be used as name of embeded tags when collections of 
+items are Xmlized. [%-*@3 def] parameter can be used to provide 
 default value when there is no corresponding tag on loading. 
 Variant without [%-*@3 def] leaves [%-*@3 var] unchanged in this 
 case.&]
