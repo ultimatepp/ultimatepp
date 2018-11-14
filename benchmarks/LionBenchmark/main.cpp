@@ -10,12 +10,12 @@ void Task(Painter& sw)
 //	sw.Opacity(0.3);
 //	sw.Translate(20, 0);
 //	sw.Rotate(0.1);
-	PaintLion(sw);
+//	PaintLion(sw);
 //	PythagorasTree(sw);
 //	Demo(sw);
 //	ClippingExample(sw);
 //	PolyPolygon(sw);
-//	TextOnPath(sw);
+	TextOnPath(sw);
 //	Dash(sw);
 
 	sw.End();
