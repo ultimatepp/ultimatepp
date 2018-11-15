@@ -1,4 +1,4 @@
-description "Demonstrates the basic capabilities of the SSH package.\377";
+description "Demonstrates the basic capabilities of SSH package.\377";
 
 uses
 	Core,

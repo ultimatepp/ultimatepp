@@ -57,7 +57,7 @@ GUI_APP_MAIN
 		FileSel fsel;
 		fsel.Filesystem(sfsi);
 		fsel.BaseDir(sftp.GetDefaultDir());
-		while(fsel.ExecuteOpen("Select a file to download (Select cancel to quit)")) {
+		while(fsel.Asking(false).ExecuteOpen("Select a file to download (Select cancel to quit)")) {
 			pi.Reset();
 			refresh_gui = true;
 			String path = fsel.Get();
