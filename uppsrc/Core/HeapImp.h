@@ -36,7 +36,7 @@ struct Heap {
 		FreeLink *next;
 	};
 
-	struct Page { // small block Page, <= 32 bytes
+	struct Page { // small block Page
 		Heap        *heap;     // pointer to Heap
 		byte         klass;    // size class
 		word         active;   // number of used (active) blocks in this page

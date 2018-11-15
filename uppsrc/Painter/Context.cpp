@@ -184,8 +184,6 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 	ClearPath();
 	
 	jobcount = fillcount = 0;
-	cojob.Clear();
-	cofill.Clear();
 
 	attrstack.Clear();
 	clip.Clear();

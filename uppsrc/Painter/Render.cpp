@@ -313,8 +313,6 @@ void BufferPainter::FinishPathJob()
 	if(jobcount == 0)
 		return;
 	
-//	RTIMING("Finish");
-
 	CoWork co;
 	co * [&] {
 		for(;;) {
