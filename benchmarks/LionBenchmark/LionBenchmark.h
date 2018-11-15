@@ -17,5 +17,6 @@ void ClippingExample(Painter& sw);
 void PolyPolygon(Painter& sw);
 void TextOnPath(Painter& sw);
 void Dash(Painter& sw);
+void SomeRocks(Painter& sw);
 
 #endif
