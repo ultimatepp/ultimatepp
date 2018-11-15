@@ -651,6 +651,7 @@ void MainConfigDlg::FlagDlg()
 	cfg.accepts.AddColumn("Flag", 1);
 	cfg.accepts.AddColumn("Packages", 2);
 	cfg.accepts.SetCount(accepts.GetCount());
+	cfg.accepts.SetLineCy(Zy(20));
 	for(int i = 0; i < accepts.GetCount(); i++) {
 		String acc = accepts[i];
 		Vector<String> pkg;
