@@ -1,0 +1,11 @@
+description "Using single template method for both Jsonize and Xmlize, using lambda to define structure\377";
+
+uses
+	Core;
+
+file
+	IzeLambda.cpp;
+
+mainconfig
+	"" = "";
+

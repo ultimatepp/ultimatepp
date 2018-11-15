@@ -25,9 +25,9 @@ struct OpenGLExample : GLCtrl {
 		w.Clipoff(200, 50, 95, 100);
 		w.DrawText(0, 80, "CLIPPED", Roman(25));
 		w.End();
-
-		GLDraw::ClearCache(); // This is required because GLCtrl creates a new OpenGL context,
-		                      // invalidating all texture handles
+		
+		for(int angle = 0; angle < 360; angle += 30)
+			w.DrawText(sz.cx - sz.cx / 3, sz.cy - sz.cy / 3, angle * 10, "x   Text with angle " + AsString(angle));
 	}
 
 	virtual void MouseMove(Point p, dword) {
