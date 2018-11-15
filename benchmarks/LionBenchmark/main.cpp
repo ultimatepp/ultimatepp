@@ -15,8 +15,9 @@ void Task(Painter& sw)
 //	Demo(sw);
 //	ClippingExample(sw);
 //	PolyPolygon(sw);
-	TextOnPath(sw);
+//	TextOnPath(sw);
 //	Dash(sw);
+	SomeRocks(sw);
 
 	sw.End();
 }
