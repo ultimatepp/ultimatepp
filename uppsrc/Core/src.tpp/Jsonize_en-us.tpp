@@ -71,6 +71,34 @@ calling global Jsonize function, whose general form invokes Jsonize
 method). When loading and [%-*@3 key] is missing in source data, 
 [%-*@3 defvalue] is assigned to [%-*@3 value].&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:JsonIO`:`:List`(const char`*`,const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) c
+lass]_[*@4 T]>_[_^Upp`:`:JsonIO^ JsonIO][@(0.0.255) `&]_[* List]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 key], [@(0.0.255) const]_[@(0.0.255) char]_`*, [*@4 T][@(0.0.255) `&]_[*@3 var])&]
+[s2;%% Same as operator()([%-*@3 key], [%-*@3 var]). Provides compatibility 
+with Xmlize for common template routines that provide both Jsonize 
+and Xmlize code.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:JsonIO`:`:Var`(const char`*`,T`&`,X`): [@(0.0.255) template]_<[@(0.0.255) cla
+ss]_[*@4 T], [@(0.0.255) class]_[*@4 X]>_[_^Upp`:`:JsonIO^ JsonIO][@(0.0.255) `&]_[* Var]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 key], [*@4 T][@(0.0.255) `&]_[*@3 value], 
+[*@4 X]_[*@3 item`_jsonize])&]
+[s2;%% Similar to operator()([%-*@3 key], [%-*@3 value]), but instead 
+of using global Jsonize function, it uses [%-*@3 item`_jsonize] 
+to define the structure.&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:JsonIO`:`:Array`(const char`*`,T`&`,X`,const char`*`): [@(0.0.255) template
+]_<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 X]>_[_^Upp`:`:JsonIO^ JsonIO][@(0.0.255) `&
+]_[* Array]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 key], [*@4 T][@(0.0.255) `&]_[*@3 value
+], [*@4 X]_[*@3 item`_jsonize], [@(0.0.255) const]_[@(0.0.255) char]_`*_`=_NULL)&]
+[s2;%% Jsonizes array container (must have GetCount, Add and operator`[`] 
+methods), using [%-*@3 item`_jsonize] to define the structure of 
+elements. The last parameter is ignored and is included to provide 
+compatibility with Xmlize code for common template routines that 
+provide both Jsonize and Xmlize code.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:JsonIO`:`:JsonIO`(const Value`&`): [* JsonIO]([@(0.0.255) const]_[_^Value^ Value][@(0.0.255) `&
 ]_[*@3 src])&]

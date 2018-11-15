@@ -105,6 +105,15 @@ public:
 
 	template <class T>
 	JsonIO& operator()(const char *key, T& value, const T& defvalue);
+
+	template <class T>
+	JsonIO& List(const char *key, const char *, T& var) { return operator()(key, var); }
+
+	template <class T, class X>
+	JsonIO& Var(const char *key, T& value, X item_jsonize);
+
+	template <class T, class X>
+	JsonIO& Array(const char *key, T& value, X item_jsonize, const char * = NULL);
 	
 	JsonIO(const Value& src) : src(&src)         {}
 	JsonIO()                                     { src = NULL; }
@@ -136,6 +145,77 @@ JsonIO& JsonIO::operator()(const char *key, T& value)
 			map.Create();
 		JsonIO jio;
 		Jsonize(jio, value);
+		if(jio.map)
+			map->Add(key, *jio.map);
+		else
+			map->Add(key, jio.tgt);
+	}
+	return *this;
+}
+
+template <class T, class X>
+JsonIO& JsonIO::Var(const char *key, T& value, X jsonize)
+{
+	if(IsLoading()) {
+		const Value& v = (*src)[key];
+		if(!v.IsVoid()) {
+			JsonIO jio(v);
+			jsonize(jio, value);
+		}
+	}
+	else {
+		ASSERT(tgt.IsVoid());
+		if(!map)
+			map.Create();
+		JsonIO jio;
+		jsonize(jio, value);
+		if(jio.map)
+			map->Add(key, *jio.map);
+		else
+			map->Add(key, jio.tgt);
+	}
+	return *this;
+}
+
+
+template <class T, class X>
+void JsonizeArray(JsonIO& io, T& array, X item_jsonize)
+{
+	if(io.IsLoading()) {
+		const Value& va = io.Get();
+		array.SetCount(va.GetCount());
+		for(int i = 0; i < va.GetCount(); i++) {
+			JsonIO jio(va[i]);
+			item_jsonize(jio, array[i]);
+		}
+	}
+	else {
+		Vector<Value> va;
+		va.SetCount(array.GetCount());
+		for(int i = 0; i < array.GetCount(); i++) {
+			JsonIO jio;
+			item_jsonize(jio, array[i]);
+			jio.Put(va[i]);
+		}
+		io.Set(ValueArray(pick(va)));
+	}
+}
+
+template <class T, class X> JsonIO& JsonIO::Array(const char *key, T& value, X item_jsonize, const char *)
+{
+	if(IsLoading()) {
+		const Value& v = (*src)[key];
+		if(!v.IsVoid()) {
+			JsonIO jio(v);
+			JsonizeArray(jio, value, item_jsonize);
+		}
+	}
+	else {
+		ASSERT(tgt.IsVoid());
+		if(!map)
+			map.Create();
+		JsonIO jio;
+		JsonizeArray(jio, value, item_jsonize);
 		if(jio.map)
 			map->Add(key, *jio.map);
 		else
@@ -234,24 +314,7 @@ template<> void Jsonize(JsonIO& io, Time& var);
 template <class T>
 void JsonizeArray(JsonIO& io, T& array)
 {
-	if(io.IsLoading()) {
-		const Value& va = io.Get();
-		array.SetCount(va.GetCount());
-		for(int i = 0; i < va.GetCount(); i++) {
-			JsonIO jio(va[i]);
-			Jsonize(jio, array[i]);
-		}
-	}
-	else {
-		Vector<Value> va;
-		va.SetCount(array.GetCount());
-		for(int i = 0; i < array.GetCount(); i++) {
-			JsonIO jio;
-			Jsonize(jio, array[i]);
-			jio.Put(va[i]);
-		}
-		io.Set(ValueArray(pick(va)));
-	}
+	JsonizeArray(io, array, [](JsonIO& io, ValueTypeOf<T>& item) { Jsonize(io, item); });
 }
 
 template <class T, class K, class V>

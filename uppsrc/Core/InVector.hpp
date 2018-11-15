@@ -687,7 +687,6 @@ void InVector<T>::Swap(InVector& b)
 	Upp::Swap(slave, b.slave);
 }
 
-#ifdef UPP
 template <class T>
 void InVector<T>::Xmlize(XmlIO& xio, const char *itemtag)
 {
@@ -705,8 +704,6 @@ String InVector<T>::ToString() const
 {
 	return AsStringArray(*this);
 }
-
-#endif
 
 template <class T>
 void InVector<T>::DumpIndex() const

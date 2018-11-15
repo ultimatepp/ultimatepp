@@ -31,6 +31,8 @@ public:
 
 	template <class T> XmlIO operator()(const char *tag, T& var);
 	template <class T> XmlIO List(const char *tag, const char *itemtag, T& var);
+	template <class T, class X> XmlIO Var(const char *tag, T& var, X var_xmlize);
+	template <class T, class X> XmlIO Array(const char *tag, T& var, X item_xmlize, const char *itemtag = "item");
 
 	template <class T, class D> XmlIO operator()(const char *tag, T& var, const D& def);
 	template <class T, class D> XmlIO List(const char *tag, const char *itemtag, T& var, const D& def);
@@ -67,54 +69,6 @@ public:
 	XmlIO(XmlNode& xml, bool loading) : node(xml), loading(loading) {}
 	XmlIO(XmlIO xml, const char *tag) : node(xml.node.GetAdd(tag)), loading(xml.loading), userdata(xml.userdata) {}
 };
-
-template <class T>
-void Xmlize(XmlIO& xml, T& var)
-{
-	var.Xmlize(xml);
-}
-
-template <class T>
-void Xmlize(XmlIO& xml, const char* itemtag, T& var)
-{
-	var.Xmlize(xml, itemtag);
-}
-
-template <class T> XmlIO XmlIO::operator()(const char *tag, T& var) {
-	XmlIO n(*this, tag);
-	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
-		return *this;
-	Xmlize(n, var);
-	return *this;
-}
-
-template <class T> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& var) {
-	XmlIO n(*this, tag);
-	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
-		return *this;
-	Xmlize(n, itemtag, var);
-	return *this;
-}
-
-template <class T, class D> XmlIO XmlIO::operator()(const char *tag, T& var, const D& def)
-{
-	XmlIO n(*this, tag);
-	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
-		var = def;
-	else
-		Xmlize(n, var);
-	return *this;
-}
-
-template <class T, class D> XmlIO XmlIO::List(const char *tag, const char *itemtag, T& var, const D& def)
-{
-	XmlIO n(*this, tag);
-	if(IsLoading() && n.Node().GetCount() == 0 && n.Node().GetAttrCount() == 0)
-		var = def;
-	else
-		Xmlize(n, itemtag, var);
-	return *this;
-}
 
 template<> inline void XmlAttrLoad(String& var, const String& text) { var = text; }
 template<> inline String XmlAttrStore(const String& var)            { return var; }
@@ -155,100 +109,38 @@ template<> void Xmlize(XmlIO& xml, byte& var);
 void XmlizeLangAttr(XmlIO& xml, int& lang, const char *id = "lang");
 void XmlizeLang(XmlIO& xml, const char *tag, int& lang, const char *id = "id");
 
-template<class T>
-void XmlizeContainer(XmlIO& xml, const char *tag, T& data)
+template <class T>
+void Xmlize(XmlIO& xml, T& var)
 {
-	if(xml.IsStoring())
-		for(int i = 0; i < data.GetCount(); i++) {
-			XmlIO io = xml.Add(tag);
-			Xmlize(io, data[i]);
-		}
-	else {
-		data.Clear();
-		for(int i = 0; i < xml->GetCount(); i++)
-			if(xml->Node(i).IsTag(tag)) {
-				XmlIO io = xml.At(i);
-				Xmlize(io, data.Add());
-			}
-	}
+	var.Xmlize(xml);
 }
+
+template <class T>
+void Xmlize(XmlIO& xml, const char* itemtag, T& var)
+{
+	var.Xmlize(xml, itemtag);
+}
+
+template <class T, class X>
+void XmlizeContainer(XmlIO& xml, const char *tag, T& data, X item_xmlize);
+
+template<class T>
+void XmlizeContainer(XmlIO& xml, const char *tag, T& data);
+
+template<class K, class V, class T>
+void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data);
+
+template<class K, class V, class T>
+void XmlizeSortedMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data);
+
+template<class K, class T>
+void XmlizeIndex(XmlIO& xml, const char *keytag, T& data);
 
 template<class T>
 void XmlizeStore(XmlIO& xml, const T& data)
 {
 	ASSERT(xml.IsStoring());
 	Xmlize(xml, const_cast<T&>(data));
-}
-
-template<class K, class V, class T>
-void XmlizeMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
-{
-	if(xml.IsStoring()) {
-		for(int i = 0; i < data.GetCount(); i++)
-			if(!data.IsUnlinked(i)) {
-				XmlIO k = xml.Add(keytag);
-				XmlizeStore(k, data.GetKey(i));
-				XmlIO v = xml.Add(valuetag);
-				XmlizeStore(v, data[i]);
-			}
-	}
-	else {
-		data.Clear();
-		int i = 0;
-		while(i < xml->GetCount() - 1 && xml->Node(i).IsTag(keytag) && xml->Node(i + 1).IsTag(valuetag)) {
-			K key;
-			XmlIO k = xml.At(i++);
-			Xmlize(k, key);
-			XmlIO v = xml.At(i++);
-			Xmlize(v, data.Add(key));
-		}
-	}
-}
-
-template<class K, class V, class T>
-void XmlizeSortedMap(XmlIO& xml, const char *keytag, const char *valuetag, T& data)
-{
-	if(xml.IsStoring()) {
-		for(int i = 0; i < data.GetCount(); i++) {
-			XmlIO k = xml.Add(keytag);
-			XmlizeStore(k, data.GetKey(i));
-			XmlIO v = xml.Add(valuetag);
-			XmlizeStore(v, data[i]);
-		}
-	}
-	else {
-		data.Clear();
-		int i = 0;
-		while(i < xml->GetCount() - 1 && xml->Node(i).IsTag(keytag) && xml->Node(i + 1).IsTag(valuetag)) {
-			K key;
-			XmlIO k = xml.At(i++);
-			Xmlize(k, key);
-			XmlIO v = xml.At(i++);
-			Xmlize(v, data.Add(key));
-		}
-	}
-}
-
-template<class K, class T>
-void XmlizeIndex(XmlIO& xml, const char *keytag, T& data)
-{
-	if(xml.IsStoring()) {
-		for(int i = 0; i < data.GetCount(); i++)
-			if(!data.IsUnlinked(i)) {
-				XmlIO io = xml.Add(keytag);
-				XmlizeStore(io, data[i]);
-			}
-	}
-	else {
-		data.Clear();
-		int i = 0;
-		while(i < xml->GetCount() && xml->Node(i).IsTag(keytag)) {
-			K k;
-			XmlIO io = xml.At(i++);
-			Xmlize(io, k);
-			data.Add(k);
-		}
-	}
 }
 
 template <class T>
@@ -344,3 +236,5 @@ void XmlizeByJsonize(XmlIO& xio, T& x)
 		}
 	}
 }
+
+#include "Xmlize.hpp"
