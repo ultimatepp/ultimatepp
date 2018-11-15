@@ -154,6 +154,8 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 		mode = mode_;
 	
 		rasterizer.Create(ib.GetWidth(), ib.GetHeight(), mode == MODE_SUBPIXEL);
+		cojob.Clear();
+		cofill.Clear();
 	
 		render_cx = ib.GetWidth();
 		if(mode == MODE_SUBPIXEL) {
