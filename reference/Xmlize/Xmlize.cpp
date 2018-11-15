@@ -22,7 +22,7 @@ void Data::Xmlize(XmlIO& xml)
 	xml
 		("Dimension", sz)
 		("text", text)
-		("vector", vector)
+		.List("vector", "size", vector)
 		("Scores", score)
 		("map", map)
 		("sizemap", sizemap)
@@ -71,6 +71,9 @@ CONSOLE_APP_MAIN
 	x.sizemap.Add(10, Size(20, 30));
 	x.number = -1.235e-30;
 	x.option = true;
+
+	LOG(StoreAsXML(x));
+	LOG("====");
 
 	StoreAsXMLFile(x);
 
