@@ -94,6 +94,25 @@ default value when there is no corresponding tag on loading.
 Variant without [%-*@3 def] leaves [%-*@3 var] unchanged in this 
 case.&]
 [s3;%% &]
+[s4; &]
+[s5;:Upp`:`:XmlIO`:`:Var`(const char`*`,T`&`,X`): [@(0.0.255) template]_<[@(0.0.255) clas
+s]_[*@4 T], [@(0.0.255) class]_[*@4 X]>_[_^Upp`:`:XmlIO^ XmlIO]_[* Var]([@(0.0.255) const]_[@(0.0.255) c
+har]_`*[*@3 tag], [*@4 T][@(0.0.255) `&]_[*@3 var], [*@4 X]_[*@3 var`_xmlize])&]
+[s2;%% Creates subtag of current XmlNode [%-*@3 tag], forms a new XmlIO 
+for it and calls global [%-*@3 item`_xmlize][*  ]callable with this 
+new XmlIO and [%-*@3 var] as parameters. This allows for in`-place 
+definition of XML structure used to represent [%-*@3 var].&]
+[s3;%% &]
+[s4; &]
+[s5;:Upp`:`:XmlIO`:`:Array`(const char`*`,T`&`,X`,const char`*`): [@(0.0.255) template]_
+<[@(0.0.255) class]_[*@4 T], [@(0.0.255) class]_[*@4 X]>_[_^Upp`:`:XmlIO^ XmlIO]_[* Array]([@(0.0.255) c
+onst]_[@(0.0.255) char]_`*[*@3 tag], [*@4 T][@(0.0.255) `&]_[*@3 var], 
+[*@4 X]_[*@3 item`_xmlize], [@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 itemtag] 
+`=[*@3  `"item`"])&]
+[s2;%% Xmlizes array container (must have GetCount, Add and operator`[`] 
+methods), using [%-*@3 item`_xmlize] to define the structure of 
+elements. [%-*@3 itemtag] provides the tags of individual elements.&]
+[s3;%% &]
 [s4;%% &]
 [s5;:XmlIO`:`:Attr`(const char`*`,T`&`): [@(0.0.255) template]_<[@(0.0.255) class]_[*@4 T]>
 _[_^XmlIO^ XmlIO]_[* Attr]([@(0.0.255) const]_[@(0.0.255) char]_`*[*@3 id], 

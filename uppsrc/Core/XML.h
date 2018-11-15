@@ -8,7 +8,6 @@ String XmlDocType(const char *text);
 String XmlDoc(const char *name, const char *xmlbody);
 String XmlComment(const char *text);
 
-
 class XmlTag : Moveable<XmlTag> {
 	String tag;
 	String end;

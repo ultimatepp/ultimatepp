@@ -155,6 +155,7 @@ file
 	XML.h,
 	XML.cpp,
 	Xmlize.h,
+	Xmlize.hpp,
 	Xmlize.cpp,
 	JSON.h,
 	JSON.cpp,
