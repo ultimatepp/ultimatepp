@@ -607,7 +607,7 @@ Gdb::Gdb()
 	tab.Add(watches.SizePos(), "Watches");
 	tab.Add(self.SizePos(), "this");
 	tab.Add(cpu.SizePos(), "CPU");
-	pane.Add(threads.LeftPosZ(300, 100).TopPos(2));
+	pane.Add(threads.LeftPosZ(250, 150).TopPos(2));
 	pane.Add(frame.HSizePosZ(404, 0).TopPos(2));
 	split.Horz(pane, tree.SizePos());
 	split.SetPos(8000);
