@@ -1,5 +1,7 @@
 #include "Debuggers.h"
 
+#define METHOD_NAME UPP_METHOD_NAME("Gdb")
+
 void SkipGdbInfo(CParser& p)
 {
 	int level = 1;
@@ -359,14 +361,18 @@ Value Gdb::ObtainValueFromTreeCursor(int cursor) const
 		return {};
 	
 	Value val;
-	CParser parser(cursor_str);
-	while(!parser.IsEof()) {
-		if (parser.IsString()) {
-			val = parser.ReadString();
-			break;
+	try {
+		CParser parser(cursor_str);
+		while (!parser.IsEof()) {
+			if (parser.IsString()) {
+				val = parser.ReadString();
+				break;
+			}
+			
+			parser.SkipTerm();
 		}
-		
-		parser.SkipTerm();
+	} catch(CParser::Error e) {
+		Loge() << METHOD_NAME << e;
 	}
 	
 	return val;
