@@ -613,7 +613,8 @@ Gdb::Gdb()
 	split.SetPos(8000);
 	Add(split);
 
-	tree.WhenOpen = THISBACK(TreeExpand);
+	tree.WhenOpen = THISBACK(OnTreeExpand);
+	tree.WhenBar = THISBACK(OnTreeBar);
 
 	frame.Ctrl::Add(dlock.SizePos());
 	dlock = "  Running..";

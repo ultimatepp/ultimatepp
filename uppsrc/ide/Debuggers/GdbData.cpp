@@ -352,7 +352,48 @@ void Gdb::SetTree(ArrayCtrl *a)
 	}
 }
 
-void Gdb::TreeExpand(int node)
+Value Gdb::ObtainValueFromTreeCursor(int cursor) const
+{
+	auto cursor_str = tree.Get(cursor).ToString();
+	if (cursor_str.IsEmpty())
+		return {};
+	
+	Value val;
+	CParser parser(cursor_str);
+	while(!parser.IsEof()) {
+		if (parser.IsString()) {
+			val = parser.ReadString();
+			break;
+		}
+		
+		parser.SkipTerm();
+	}
+	
+	return val;
+}
+
+void Gdb::OnTreeBar(Bar& bar)
+{
+	auto cursor = tree.GetCursor();
+	if(cursor < 0)
+		return;
+	
+	if(tree.GetChildCount(cursor) > 0)
+		return;
+	
+	auto val = ObtainValueFromTreeCursor(cursor);
+	auto has_value = val.IsNull();
+	
+	bar.Add(t_("Copy value to clipboard"), [this, val]() { OnValueCopyToClipboard(val); }).Enable(!has_value);
+}
+
+void Gdb::OnValueCopyToClipboard(const Value& val)
+{
+	if (IsString(val))
+		AppendClipboardText(val.ToString());
+}
+
+void Gdb::OnTreeExpand(int node)
 {
 	if(tree.GetChildCount(node))
 		return;
