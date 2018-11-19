@@ -13,6 +13,8 @@ using namespace Upp;
 
 	
 GUI_APP_MAIN { 
+	String pepe = "frefre fproforwejifpoijrfoijrwopjwoerhghgihfdiuhiuwrgi rtgwiuhgiuh iwurhgiuhgiuwhreigu wuireh giwu ghowituhiuwthuiuohoi uhre";
+	
 	SysInfoDemo program;
 	
 	SetLanguage(LNGC_('E','N','U','S', CHARSET_UTF8));
@@ -562,7 +564,7 @@ void MouseKeyboard::OnButMouse()
 		Exclamation("Window not found");
 		return;
 	}
-	long left, top, right, bottom;
+	int left, top, right, bottom;
 	Window_GetRect(wnd, left, top, right, bottom);
 #ifdef PLATFORM_POSIX
 	top -= 10;	
