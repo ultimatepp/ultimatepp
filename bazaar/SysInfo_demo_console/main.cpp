@@ -184,12 +184,12 @@ void Test()
 		}
 		if (windowId != -1) {
 			Sleep(1000);
-			long left, top, right, bottom;
+			int left, top, right, bottom;
 			Window_GetRect(windowId, left, top, right, bottom);	
 			Puts(Format("Editor window is located at %d, %d, %d, %d", (int)left, (int)top, (int)right, (int)bottom));
 			Puts("Editor window id is " + Format64(windowId)); 
 			            
-			long x, y;
+			int x, y;
 			Mouse_GetPos(x, y);
 			Puts(Format("Mouse pos is %d, %d", (int)x, (int)y));
 			Mouse_SetPos(200, 200, windowId);
