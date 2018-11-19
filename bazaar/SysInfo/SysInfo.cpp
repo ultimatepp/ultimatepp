@@ -1,5 +1,12 @@
 #include "SysInfo_in.h"
 
+#include <iphlpapi.h>
+
+#define	IN6ADDRSZ	16
+#define	INT16SZ		 2
+
+#include <stdint.h>
+
 
 #if defined (PLATFORM_POSIX)
 #ifdef flagGUI
@@ -225,14 +232,6 @@ String GetMacAddressWMI() {
 	return Null;
 }
 */
-#include <iphlpapi.h>
-
-/* This is from the BIND 4.9.4 release, modified to compile by itself */
-
-#define	IN6ADDRSZ	16
-#define	INT16SZ		 2
-
-#include <stdint.h>
 
 String inet_ntop4(const unsigned char *src) {
 	return Format("%d.%d.%d.%d", src[0], src[1], src[2], src[3]);
@@ -320,7 +319,11 @@ Array <NetAdapter> GetAdapterInfo() {
 		adapter.fullname = Trim(WideToString(pAdd->FriendlyName));
    		adapter.dnsSuffix = Trim(WideToString(pAdd->DnsSuffix));
    		adapter.connected = pAdd->OperStatus == 1;
+#ifdef COMPILER_MSC
    		PIP_ADAPTER_GATEWAY_ADDRESS_LH pGateway = pAdd->FirstGatewayAddress;
+#else
+   		PIP_ADAPTER_UNICAST_ADDRESS_XP pGateway = pAdd->FirstUnicastAddress;
+#endif
    		if (pGateway != NULL) {
    			for (int i = 0; pGateway != NULL; i++) {
    				if (pGateway->Address.lpSockaddr->sa_family == AF_INET) {
