@@ -10,6 +10,18 @@ Size GLCtrl::current_viewport;
 
 extern void (*restore_gl_viewport__)(); // in Draw/DrawUtil.cpp
 
+void GLCtrl::DoGLPaint()
+{
+	glClearDepth(1);
+	glClearColor(1, 0, 0, 1);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_MULTISAMPLE);
+	Size sz = GetSize();
+	current_viewport = sz;
+	SetCurrentViewport();
+	GLPaint();
+}
+
 void GLCtrl::Init()
 {
 	NoWantFocus();
@@ -49,23 +61,5 @@ void GLCtrl::StdView()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-
-#ifndef GUI_GTK
-
-Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
-{
-	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
-	return ctrl->MouseEvent(event, p, zdelta, keyflags);
-}
-
-Vector<int> GLCtrl::Pick(int x, int y)
-{
-//	pane.ActivateContext();
-//	return picking.Pick(x, y, THISBACK2(GLResize, GetSize().cx, GetSize().cy), THISBACK(GLPickingPaint));
-	Vector<int> h;
-	return h;
-}
-
-#endif
 
 }

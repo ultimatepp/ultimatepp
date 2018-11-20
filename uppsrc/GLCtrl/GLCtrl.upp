@@ -10,7 +10,6 @@ library((LINUX | BSD) & !X11 & !NOGTK) "gdkglext-x11-1.0 gtkglext-x11-1.0";
 
 file
 	GLCtrl.h,
-	GLPicking.cpp,
 	Win32GLCtrl.cpp,
 	X11GLCtrl.cpp,
 	GtkGLCtrl.cpp,

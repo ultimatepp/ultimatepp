@@ -34,7 +34,7 @@ public:
 	class Routine {
 	public:
 		Routine(TimingInspector& stat, int& nesting)
-		: stat(stat), nesting(nesting) {
+		: nesting(nesting), stat(stat) {
 			start_time = tmGetTime();
 			nesting++;
 		}

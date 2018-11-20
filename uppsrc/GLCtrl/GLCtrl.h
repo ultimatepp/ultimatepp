@@ -79,43 +79,24 @@ private:
 		friend class GLCtrl;
 		
 		GLCtrl *ctrl;
-		GLXContext WindowContext;
 		
-		// Ovverridden method to choose the correct visual
-		virtual XVisualInfo *CreateVisual(void);
-		
-		// Overridden method for attribute setting
-		virtual void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &attr);
-		
-		// Overridden method to create and destroy OpenGL context
-		virtual void AfterInit(bool Error);
-		virtual void BeforeTerminate(void);
-		
-		// Overridden method to resize GL windows
-		virtual void Layout();
-		
-		// Paint method - with graphic context
-		// Called from DHCtrl - Graphic context is *not* used
-		virtual void Paint(Draw &/*draw*/);
+		void DoGLPaint();
+		void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes) override;
+		void Paint(Draw &draw) override;
 		
 	public:
-		GLPane() : WindowContext(NULL) { NoWantFocus(); }
-		~GLPane();
-		
-		virtual Image MouseEvent(int event, Point p, int zdelta, dword keyflags);
-		
-		void ActivateContext();
+		GLPane() { NoWantFocus(); }
 	};
 #else
 	struct GLPane : DHCtrl {
 		friend class GLCtrl;
 		
-	//	HDC    hDC;
-	//	HGLRC  hRC;
 		GLCtrl *ctrl;
+
+		void DoGLPaint();
 		
 	public:
-		GLPane()/* : hDC(NULL), hRC(NULL)*/ { NoWantFocus(); }
+		GLPane() { NoWantFocus(); }
 		
 		virtual void    State(int reason);
 		virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
@@ -128,14 +109,17 @@ private:
 	};
 #endif
 	
-	GLPicking picking;
 	GLPane pane;
 
 	static int  depthSize;
 	static int  stencilSize;
 	static bool doubleBuffering;
 	static int  numberOfSamples;
-	
+
+	Vector<int> MakeAttributes();
+	void        MakeGLContext();
+	void        DoGLPaint();
+
 	static Size current_viewport; // because we need to set different viewports in drawing code
 
 	Ptr<Ctrl> mouseTarget = NULL;
@@ -143,7 +127,6 @@ private:
 protected:
 	// Called on paint events
 	virtual void GLPaint() { WhenGLPaint(); }
-	virtual void GLPickingPaint() {}
 	
 	void Init();
 
@@ -164,7 +147,6 @@ public:
 
 	GLCtrl()                                      { Init(); }
 
-	void InitPickMatrix() { picking.InitPickMatrix(); }
 	void Refresh()        { pane.Refresh(); }
 	
 	Vector<int> Pick(int x, int y);

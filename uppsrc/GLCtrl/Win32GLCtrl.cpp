@@ -109,14 +109,7 @@ LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		BeginPaint(hwnd, &ps);
 		HDC hDC = ps.hdc;
 		wglMakeCurrent(hDC, s_openGLContext);
-		glClearDepth(1);
-		glClearColor(1, 0, 0, 1);
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-		glEnable(GL_MULTISAMPLE);
-		Size sz = GetSize();
-		current_viewport = sz;
-		SetCurrentViewport();
-		ctrl->GLPaint();
+		DoPaint();
 		if(ctrl->doubleBuffering)
 			SwapBuffers(hDC);
 		else
