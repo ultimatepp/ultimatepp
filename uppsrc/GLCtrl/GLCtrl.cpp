@@ -62,4 +62,15 @@ void GLCtrl::StdView()
 	glLoadIdentity();
 }
 
+#ifndef GUI_GTK
+
+Image GLCtrl::GLPane::MouseEvent(int event, Point p, int zdelta, dword keyflags)
+{
+	p = p - GetScreenView().TopLeft() + ctrl->GetScreenView().TopLeft();
+	return ctrl->MouseEvent(event, p, zdelta, keyflags);
+}
+
+#endif
+
+
 }
