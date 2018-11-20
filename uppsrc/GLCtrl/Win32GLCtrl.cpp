@@ -11,7 +11,7 @@ static HGLRC                 s_openGLContext; // we only have single OpenGL cont
 static PIXELFORMATDESCRIPTOR s_pfd;
 static int                   s_pixelFormatID;
 
-void MakeGLContext(int depthBits, int stencilBits, int samples)
+void MakeWGLContext(int depthBits, int stencilBits, int samples)
 {
 	ONCELOCK {
 		for(int pass = 0; pass < 2; pass++) {
@@ -83,7 +83,7 @@ void MakeGLContext(int depthBits, int stencilBits, int samples)
 
 void GLCtrl::CreateContext()
 {
-	MakeGLContext(depthSize, stencilSize, numberOfSamples);
+	MakeWGLContext(depthSize, stencilSize, numberOfSamples);
 }
 
 void GLCtrl::GLPane::State(int reason)
@@ -109,7 +109,7 @@ LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		BeginPaint(hwnd, &ps);
 		HDC hDC = ps.hdc;
 		wglMakeCurrent(hDC, s_openGLContext);
-		DoPaint();
+		ctrl->DoGLPaint();
 		if(ctrl->doubleBuffering)
 			SwapBuffers(hDC);
 		else
