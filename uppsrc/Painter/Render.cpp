@@ -384,7 +384,6 @@ void BufferPainter::FinishPathJob()
 						int y = N * co.Next() + miny;
 						if(y > maxy)
 							break;
-						int e = min(y + N - 1, maxy);
 						fill(y, min(y + N - 1, maxy));
 					#endif
 					}
