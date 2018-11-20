@@ -7,7 +7,7 @@ void Ide::RunArgs() {
 	
 #ifndef PLATFORM_POSIX
 	dlg.consolemode.Hide();
-	dlg.console_lable.Hide();
+	dlg.console_label.Hide();
 #endif
 
 	SelectDirButton dir_browse("Run in folder");
