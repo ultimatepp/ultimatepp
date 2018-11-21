@@ -754,13 +754,14 @@ void Ctrl::Csizeinit()
 {
 	GuiLock __;
 	if(Csize.cx == 0 || Dsize.cx == 0) {
+		bool bigger = GetStdFontCy() > 20;
 		if(Csize.cx == 0) {
 			Csize = GetTextSize(sZoomText, StdFont());
-			Csize.cy += 4; // this is intended to compensate for editfield / droplist edges - in any case looks better on UHD
+			Csize.cy += 4 * bigger; // this is intended to compensate for editfield / droplist edges - in any case looks better on UHD
 		}
 		Bsize = Csize;
 		if(Dsize.cx == 0)
-			Dsize = Size(99, 13 + 4);
+			Dsize = Size(99, 13 + 4 * bigger);
 		Csize.cx = max(Csize.cx, Dsize.cx);
 		Csize.cy = max(Csize.cy, Dsize.cy);
 		InitRichTextZoom();
