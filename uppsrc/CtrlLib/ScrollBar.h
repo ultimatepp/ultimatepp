@@ -63,7 +63,7 @@ private:
 	void    Position();
 	void    Uset(int a);
 
-	int     ScrollBarSize() const                 { return style->barsize; }
+	int     ScrollBarSize() const           { return style->barsize; }
 
 public:
 	Event<>  WhenScroll;

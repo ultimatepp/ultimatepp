@@ -975,6 +975,7 @@ void Ctrl::ReSkin()
 	if(lock)
 		return;
 	lock++;
+	ChReset();
 	if(s_chdefault)
 		(*s_chdefault)();
 	if(skin)
