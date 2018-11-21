@@ -270,6 +270,11 @@ void ChHostSkin()
 		s.thumbmin = GTK_RANGE(vscrollbar)->min_slider_size;
 		s.barsize = max(14, GtkInt("slider_width")); // 'max' - ugly fix for ThinIce theme
 		s.arrowsize = max(s.barsize, GtkInt("stepper_size")); // 'max' - ugly fix for ThinIce theme
+		
+		if(1.6 * s.barsize < GetStdFontCy()) { // GTK2 handles UHD not well, fix the biggest problem
+			s.barsize += s.barsize;
+			s.arrowsize += s.arrowsize;
+		}
 
 		/* The only theme with 3 buttons is Amaranth and it does not look good...
 		s.isright2 = s.isdown2 = GtkInt("has-secondary-forward-stepper");

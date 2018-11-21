@@ -37,7 +37,7 @@ CH_STYLE(ScrollBar, Style, StyleDefault)
 }
 
 ScrollBar::ScrollBar() {
-	minthumb = 16;
+	minthumb = DPI(16);
 	pagepos = pagesize = totalsize = 0;
 	linesize = 1;
 	autohide = false;
