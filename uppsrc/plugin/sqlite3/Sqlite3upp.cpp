@@ -352,7 +352,7 @@ int Sqlite3Session::CheckDBAccess() {
 	return retcode;
 }
 
-bool Sqlite3Session::Open(const char* filename, String password) {
+bool Sqlite3Session::Open(const char* filename, const String& password) {
 	// Only open db once.
 	ASSERT(NULL == db);
 	current_filename = filename;
