@@ -57,9 +57,9 @@ void Sqlite3Connection::Cancel()
 {
 	if (current_stmt) {
 //		if (sqlite3_reset(current_stmt) != SQLITE_OK)
-//			session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string);
+//			session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string, sqlite3_errcode(db));
 //		if (sqlite3_finalize(current_stmt) != SQLITE_OK)
-//			session.SetError(sqlite3_errmsg(db), "Finalizing statement: "+ current_stmt_string);
+//			session.SetError(sqlite3_errmsg(db), "Finalizing statement: "+ current_stmt_string, sqlite3_errcode(db));
 		//this seems to be the correct way how to do error recovery...
 		sqlite3_finalize(current_stmt);
 		current_stmt = NULL;
@@ -71,7 +71,7 @@ void Sqlite3Connection::Cancel()
 void Sqlite3Connection::Reset()
 {
 	if(current_stmt && sqlite3_reset(current_stmt) != SQLITE_OK)
-		session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string);
+		session.SetError(sqlite3_errmsg(db), "Resetting statement: " + current_stmt_string, sqlite3_errcode(db));
 }
 
 void Sqlite3Connection::SetParam(int i, const Value& r)
@@ -154,7 +154,7 @@ bool Sqlite3Connection::Execute() {
 	String utf8_stmt = ToCharset(CHARSET_UTF8, statement, CHARSET_DEFAULT);
 	if (SQLITE_OK != sqlite3_prepare(db,utf8_stmt,utf8_stmt.GetLength(),&current_stmt,NULL)) {
 		LLOG("Sqlite3Connection::Compile(" << statement << ") -> error");
-		session.SetError(sqlite3_errmsg(db), String("Preparing: ") + statement);
+		session.SetError(sqlite3_errmsg(db), String("Preparing: ") + statement, sqlite3_errcode(db));
 		return false;
 	}
 	current_stmt_string = statement;
@@ -182,7 +182,7 @@ bool Sqlite3Connection::Execute() {
 		if(sleep_ms<128) sleep_ms += sleep_ms;
 	}while(1);
 	if ((retcode != SQLITE_DONE) && (retcode != SQLITE_ROW)) {
-		session.SetError(sqlite3_errmsg(db), current_stmt_string);
+		session.SetError(sqlite3_errmsg(db), current_stmt_string, sqlite3_errcode(db));
 		return false;
 	}
 	got_first_row = got_row_data = (retcode==SQLITE_ROW);
@@ -264,7 +264,7 @@ bool Sqlite3Connection::Fetch() {
 	ASSERT(got_row_data);
 	int retcode = sqlite3_step(current_stmt);
 	if ((retcode != SQLITE_DONE) && (retcode != SQLITE_ROW))
-		session.SetError(sqlite3_errmsg(db), String("Fetching prepared statement: ")+current_stmt_string );
+		session.SetError(sqlite3_errmsg(db), String("Fetching prepared statement: ")+current_stmt_string, sqlite3_errcode(db));
 	got_row_data = (retcode==SQLITE_ROW);
 	return got_row_data;
 }
@@ -322,15 +322,37 @@ void Sqlite3Connection::GetColumn(int i, Ref f) const {
 	}
 	return;
 }
+
 SqlSession& Sqlite3Connection::GetSession() const { return session; }
 String Sqlite3Connection::ToString() const {
 	return statement;
 }
 
 //////////////////////////////////////////////////////////////////////
+int Sqlite3Session::ChangePassword(const String& password) {
+	int retcode = SQLITE_ERROR;
+#ifndef SQLITE_HAS_CODEC
+	SetError("SQLite Encryption Extension is not enabled", "", SQLITE_ERROR, "SQLite Encryption Extension is not enabled");
+#else
+	retcode = sqlite3_rekey(db, password, password.GetCount());
+	if(retcode)
+		SetError(sqlite3_errstr(retcode), "", retcode, sqlite3_errstr(retcode));
+#endif
+	return retcode;
+}
 
+int Sqlite3Session::CheckDBAccess() {
+	// if the db is encrypted and password is wrong or database file is corupted
+	// sqlite3_prepare_v2() function return error code SQLITE_NOTADB
+	// (File opened that is not a database file)
+	sqlite3_stmt *stmt;
+	int retcode = sqlite3_prepare_v2(db, "SELECT name FROM sqlite_master", -1, &stmt, 0);
+	if (SQLITE_OK == retcode)
+		sqlite3_finalize(stmt);
+	return retcode;
+}
 
-bool Sqlite3Session::Open(const char* filename) {
+bool Sqlite3Session::Open(const char* filename, String password) {
 	// Only open db once.
 	ASSERT(NULL == db);
 	current_filename = filename;
@@ -338,14 +360,23 @@ bool Sqlite3Session::Open(const char* filename) {
 	// However, using the ATTACH sql command, it can connect to more databases.
 	// I don't know how to get the list of attached databases from the API
 	current_dbname = "main";
-	if(SQLITE_OK == sqlite3_open(filename, &db))
+	int retcode = sqlite3_open(filename, &db);
+#ifdef SQLITE_HAS_CODEC
+	if(SQLITE_OK == retcode)
+		retcode = sqlite3_key(db, password, password.GetCount());
+#endif
+	if(SQLITE_OK == retcode)
+		retcode = CheckDBAccess();
+	if(SQLITE_OK == retcode)
 		return true;
 	if(db) {
+		SetError(sqlite3_errstr(retcode), "", retcode, sqlite3_errstr(retcode));
 		sqlite3_close(db);
 		db = NULL;
 	}
 	return false;
 }
+
 void Sqlite3Session::Close() {
 	sql.Clear();
 	if (NULL != db) {
@@ -362,6 +393,7 @@ void Sqlite3Session::Close() {
 		db = NULL;
 	}
 }
+
 SqlConnection *Sqlite3Session::CreateConnection() {
 	return new Sqlite3Connection(*this, db);
 }
@@ -403,6 +435,12 @@ Sqlite3Session::Sqlite3Session()
 	db = NULL;
 	Dialect(SQLITE3);
 	busy_timeout = 0;
+
+#ifndef SQLITE_HAS_CODEC
+	see = false;
+#else
+	see = true;
+#endif
 }
 
 Sqlite3Session::~Sqlite3Session()
@@ -416,7 +454,7 @@ void Sqlite3Session::Begin() {
 		*trace << begin << "\n";
 	Reset();
 	if(SQLITE_OK != SqlExecRetry(begin))
-		SetError(sqlite3_errmsg(db), begin);
+		SetError(sqlite3_errmsg(db), begin, sqlite3_errcode(db), sqlite3_errstr(sqlite3_errcode(db)));
 }
 
 void Sqlite3Session::Commit() {
@@ -426,7 +464,7 @@ void Sqlite3Session::Commit() {
 		*trace << commit << "\n";
 	Reset();
 	if(SQLITE_OK != SqlExecRetry(commit))
-		SetError(sqlite3_errmsg(db), commit);
+		SetError(sqlite3_errmsg(db), commit, sqlite3_errcode(db), sqlite3_errstr(sqlite3_errcode(db)));
 }
 
 void Sqlite3Session::Rollback() {
@@ -435,8 +473,9 @@ void Sqlite3Session::Rollback() {
 	if(trace)
 		*trace << rollback << "\n";
 	if(SQLITE_OK != SqlExecRetry(rollback))
-		SetError(sqlite3_errmsg(db), rollback);
+		SetError(sqlite3_errmsg(db), rollback, sqlite3_errcode(db), sqlite3_errstr(sqlite3_errcode(db)));
 }
+
 Vector<String> Sqlite3Session::EnumDatabases() {
 	Vector<String> out;
 	Sql sql(*this);
@@ -503,7 +542,6 @@ Vector<SqlColumnInfo> Sqlite3Session::EnumColumns(String database, String table)
 	}
 	return out;
 }
-
 
 //////////////////////////////////////////////////////////////////////
 
