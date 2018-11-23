@@ -79,23 +79,23 @@ const GLVertexData& GLRectMesh()
 void GLDrawTexture(const GLContext2D& dd, const Rectf& rect, int textureid, Size tsz, const Rect& src)
 {
 	static GLCode program(R"(
-		#version 330 core
+//		#version 330 core
 		uniform vec2 offset;
 		uniform vec2 scale;
 
 		uniform vec2 toffset;
 		uniform vec2 tscale;
 
-	    in      vec2 aPos;
-		out vec2 tPos;
+	    attribute vec2 aPos;
+		varying vec2 tPos;
 	    void main()
 	    {
 			gl_Position = vec4(scale * aPos + offset, 0, 1);
 			tPos = tscale * aPos + toffset;
 	    }
 	)", R"(
-		#version 330 core
-		in vec2 tPos;
+//		#version 330 core
+		varying vec2 tPos;
 		uniform float alpha;
 		uniform sampler2D s_texture;
 		void main()

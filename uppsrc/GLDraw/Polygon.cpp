@@ -5,8 +5,7 @@ namespace Upp {
 GLCode& GLSimpleCode()
 {
 	static GLCode program(R"(
-		#version 330 core
-	    in vec2 aPos;
+	    attribute vec2 aPos;
 		uniform vec2 offset;
 		uniform vec2 scale;
 	    void main()
@@ -14,7 +13,6 @@ GLCode& GLSimpleCode()
 			gl_Position = vec4(scale * aPos + offset, 0, 1);
 	    }
 	)", R"(
-		#version 330 core
 		uniform vec4 color;
 		void main()
 		{

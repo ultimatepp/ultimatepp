@@ -8,20 +8,19 @@ void GLTriangles::Draw(const GLContext2D& dd)
 		return;
 
 	static GLCode program(R"(
-		#version 330 core
-	    in vec3 p;
-	    in vec3 c;
+	#version 130
+	    attribute vec3 p;
+	    attribute vec3 c;
 		uniform vec2 offset;
 		uniform vec2 scale;
-		out vec4 v_color;
+		varying vec4 v_color;
 	    void main()
 	    {
 			gl_Position = vec4(scale * p.xy + offset, 0, 1);
 			v_color = vec4(1/255.0 * c.rgb, p.z);
 	    }
 	)", R"(
-		#version 330 core
-		in vec4 v_color;
+		varying vec4 v_color;
 		void main()
 		{
 			gl_FragColor = v_color;

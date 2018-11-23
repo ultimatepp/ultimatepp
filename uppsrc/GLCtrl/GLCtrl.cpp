@@ -26,8 +26,10 @@ void GLCtrl::Init()
 {
 	NoWantFocus();
 	Transparent();
+#ifndef GUI_GTK
 	pane.ctrl = this;
 	Add(pane.SizePos());
+#endif
 	restore_gl_viewport__ = SetCurrentViewport;
 }
 
