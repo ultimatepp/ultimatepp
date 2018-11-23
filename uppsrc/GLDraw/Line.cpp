@@ -9,8 +9,7 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 		return;
 
 	static GLCode program(R"(
-		#version 330 core
-	    in      vec4 pos;
+	    attribute vec4 pos;
 		uniform vec2 offset;
 		uniform vec2 scale;
 		uniform vec2 scale2;
@@ -22,7 +21,6 @@ void GLDrawPolylines(const GLContext2D& dd, Pointf at, const GLVertexData& mesh,
 			gl_Position = vec4(p + scale * width * normalize(vec2(-v.y, v.x)), 0, 1);
 	    }
 	)", R"(
-		#version 330 core
 		uniform vec4 color;
 		void main()
 		{

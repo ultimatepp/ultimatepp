@@ -159,13 +159,14 @@ bool DHCtrl::Init()
 		XChangeWindowAttributes(Xdisplay, hwnd, ValueMask, &winAttributes);
 	}
 
+/*
 	// Frees VisualInfo
     if (UserVisualInfo)
     {
         XFree( (char *)UserVisualInfo);
         UserVisualInfo = 0;
     }
-
+*/
     // If problem creating window, error
     if(!hwnd)
     {

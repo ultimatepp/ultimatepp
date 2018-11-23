@@ -20,7 +20,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#ifdef GUI_X11
+#if defined(GUI_X11) || defined(GUI_GTK)
 
 #include <GL/glx.h>
 
@@ -35,27 +35,15 @@ namespace Upp {
 
 void InitializeGlew();
 
-#ifdef GUI_GTK
-
-class GLCtrl : public Ctrl {
-public:
-	virtual void Paint(Draw& w);
-
-public:
-	Event<> WhenGLPaint;
-
-	virtual void GLPaint();
-
-	void StdView();
-};
-
-#else
 
 class GLCtrl : public Ctrl {
 	typedef GLCtrl CLASSNAME;
 
 public:
 	virtual Image  MouseEvent(int event, Point p, int zdelta, dword keyflags);
+#ifdef GUI_GTK
+	virtual void   Paint(Draw& w);
+#endif
 	
 private:
 	class GLPicking
@@ -83,11 +71,14 @@ private:
 		void DoGLPaint();
 		void SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes) override;
 		void Paint(Draw &draw) override;
+		XVisualInfo *CreateVisual() override;
+		virtual Image   MouseEvent(int event, Point p, int zdelta, dword keyflags);
 		
 	public:
 		GLPane() { NoWantFocus(); }
 	};
-#else
+#elif defined(PLATFORM_WIN32)
+
 	struct GLPane : DHCtrl {
 		friend class GLCtrl;
 		
@@ -108,16 +99,17 @@ private:
 		void ActivateContext();
 	};
 #endif
-	
+
+#ifndef GUI_GTK
 	GLPane pane;
+#endif
 
 	static int  depthSize;
 	static int  stencilSize;
 	static bool doubleBuffering;
 	static int  numberOfSamples;
 
-	Vector<int> MakeAttributes();
-	void        MakeGLContext();
+	static void MakeGLContext();
 	void        DoGLPaint();
 
 	static Size current_viewport; // because we need to set different viewports in drawing code
@@ -143,13 +135,13 @@ public:
 	static Size CurrentViewport()                 { return current_viewport; }
 	static void SetCurrentViewport(); // intended to restore viewport after changing it in e.g. TextureDraw
 	
-	GLCtrl& RedirectMouse(Ctrl *target)    { mouseTarget = target; return *this; }
+	GLCtrl& RedirectMouse(Ctrl *target)           { mouseTarget = target; return *this; }
 
 	GLCtrl()                                      { Init(); }
 
-	void Refresh()        { pane.Refresh(); }
-	
-	Vector<int> Pick(int x, int y);
+#ifndef GUI_GTK
+	void Refresh()                                { pane.Refresh(); }
+#endif
 
 	// deprecated (these settings are now static, as we have just single context)
 	GLCtrl& DepthBits(int n)               { depthSize = n; return *this; }
@@ -164,8 +156,6 @@ public:
 	// deprecated (fixed pipeline is so out of fashion...)
 	void StdView();
 };
-
-#endif
 
 }
 

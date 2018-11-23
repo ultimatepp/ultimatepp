@@ -26,6 +26,12 @@ void GLCtrl::MakeGLContext()
 	}
 }
 
+XVisualInfo *GLCtrl::GLPane::CreateVisual()
+{
+	MakeGLContext();
+	return s_XVisualInfo;
+}
+
 void GLCtrl::GLPane::SetAttributes(unsigned long &ValueMask, XSetWindowAttributes &winAttributes)
 {
 	ValueMask |=
