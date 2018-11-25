@@ -12,7 +12,6 @@ file
 	GLCtrl.h,
 	Win32GLCtrl.cpp,
 	X11GLCtrl.cpp,
-	GtkGLCtrl2.cpp,
 	GtkGLCtrl.cpp,
 	GLCtrl.cpp;
 
