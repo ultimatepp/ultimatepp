@@ -40,28 +40,12 @@ class GLCtrl : public Ctrl {
 	typedef GLCtrl CLASSNAME;
 
 public:
-	virtual Image  MouseEvent(int event, Point p, int zdelta, dword keyflags);
+	Image  MouseEvent(int event, Point p, int zdelta, dword keyflags) override;
 #ifdef GUI_GTK
-	virtual void   Paint(Draw& w);
+	void   Paint(Draw& w) override;
 #endif
 	
 private:
-	class GLPicking
-	{
-	private:
-		static int const _bufferSize = 512;
-		bool _isPicking;
-		Point _pickPoint;
-		
-		Vector<int> ParseHits(GLuint *buffer, int hits);
-		
-	public:
-		void InitPickMatrix();
-		Vector<int> Pick(int x, int y, Callback resizeCallback, Callback paintCallback);
-		
-		GLPicking() : _isPicking(false) {}
-	};
-	
 #ifdef GUI_X11
 	class GLPane : public DHCtrl {
 		friend class GLCtrl;
@@ -78,7 +62,6 @@ private:
 		GLPane() { NoWantFocus(); }
 	};
 #elif defined(PLATFORM_WIN32)
-
 	struct GLPane : DHCtrl {
 		friend class GLCtrl;
 		
@@ -100,7 +83,17 @@ private:
 	};
 #endif
 
-#ifndef GUI_GTK
+#ifdef GUI_GTK
+	unsigned long win = 0;
+	bool visible;
+	Rect position;
+
+	void Create();
+	void Sync();
+	void Destroy();
+	
+	void State(int reason) override;
+#else
 	GLPane pane;
 #endif
 

@@ -1,5 +1,7 @@
 #include "GLCtrl.h"
 
+#if 0
+
 #ifdef GUI_GTK
 
 #include <gtk/gtkgl.h>
@@ -74,5 +76,7 @@ void GLCtrl::Paint(Draw& w)
 }
 
 }
+
+#endif
 
 #endif

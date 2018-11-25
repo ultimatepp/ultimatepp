@@ -50,6 +50,10 @@ void GLCtrl::GLPane::Paint(Draw &draw)
 		return;
 
 	glXMakeCurrent( (XDisplay*)Xdisplay, GetWindow(), s_GLXContext);
+
+	ONCELOCK {
+		glewInit();
+	}
 	
 	ctrl->DoGLPaint();
 

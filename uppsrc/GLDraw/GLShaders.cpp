@@ -36,6 +36,8 @@ static GLuint LoadShader(const char *src, GLenum type) {
 void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
                        Tuple2<int, const char *> *bind_attr, int bind_count)
 {
+	MemoryIgnoreLeaksBlock __;
+
 	Clear();
 
 	program = glCreateProgram();
