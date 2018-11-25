@@ -1,82 +1,128 @@
 #include "GLCtrl.h"
 
-#if 0
-
 #ifdef GUI_GTK
 
-#include <gtk/gtkgl.h>
-#include <gdk/gdkgl.h>
-#include <gdk/gdkglconfig.h>
+#include <GL/glx.h>
+#include <GL/gl.h>
+#include <gdk/gdkx.h>
 
 namespace Upp {
-
-void InitializeGlew() {}
-
-void GLCtrl::Paint(Draw& w)
-{
-	static GdkGLConfig  *s_GdkGLConfig;
-	static GdkGLContext *s_GdkGLContext;
-
-	Size sz = GetSize();
 	
+static XVisualInfo *s_XVisualInfo;
+static Colormap     s_Colormap;
+static GLXContext   s_GLXContext;
+static ::Display   *s_Display;
+
+void GLCtrl::Create()
+{
 	Ctrl *top = GetTopCtrl();
 	if(!top)
 		return;
-
-	GtkWindow *gtk = top->gtk();
-	GdkWindow *win = top->gdk();
-
-	if(sz.cx <= 0 || sz.cy <= 0 || !win || !gtk)
+	
+	GdkWindow *gdk = top->gdk();
+	if(!gdk)
 		return;
 
+	Window w = gdk_x11_drawable_get_xid((GdkDrawable *)gdk);
+	
 	ONCELOCK {
+		s_Display = gdk_x11_drawable_get_xdisplay((GdkDrawable *)gdk);
 		int samples = numberOfSamples;
+		GLXFBConfig *fbc;
 		do {
 			Vector<int> attr;
 			attr << GLX_RGBA << GLX_DEPTH_SIZE << depthSize
 			     << GLX_STENCIL_SIZE << stencilSize;
-	//		if(doubleBuffering)
-	//			attr << GLX_DOUBLEBUFFER;
+			if(doubleBuffering)
+				attr << GLX_DOUBLEBUFFER;
 			if(samples > 1)
 				attr << GLX_SAMPLE_BUFFERS_ARB << 1 << GLX_SAMPLES_ARB << samples;
-
 			attr << 0;
-			s_GdkGLConfig = gdk_gl_config_new(attr);
+	
 			samples >>= 1;
+			int fbcount;
+			fbc = glXChooseFBConfig(s_Display, DefaultScreen(s_Display), attr, &fbcount);
 		}
-		while(s_GdkGLConfig == NULL && samples > 0);
+		while(!fbc && samples > 0);
+		
+		if(!fbc)
+			return;
+		s_XVisualInfo = glXGetVisualFromFBConfig(s_Display, fbc[0]);
+		s_Colormap = XCreateColormap(s_Display, RootWindow(s_Display, s_XVisualInfo->screen), s_XVisualInfo->visual, AllocNone);
+		s_GLXContext = glXCreateContext(s_Display, s_XVisualInfo, NULL, GL_TRUE);
 	}
+	
+	if(!s_GLXContext)
+		return;
 
-	GdkPixmap *pixmap = gdk_pixmap_new(win, sz.cx, sz.cy, -1);
-	if(pixmap) {
-		GdkGLDrawable *gldrawable = GDK_GL_DRAWABLE(gdk_pixmap_set_gl_capability(pixmap, s_GdkGLConfig, NULL));
-		if(gldrawable) {
-			ONCELOCK {
-				s_GdkGLContext = gdk_gl_context_new(gldrawable, NULL, TRUE, GDK_GL_RGBA_TYPE);
-			}
-			if(s_GdkGLContext) {
-				if(gdk_gl_drawable_gl_begin(gldrawable, s_GdkGLContext)) {
-					ONCELOCK {
-						glewInit();
-					}
-					DoGLPaint();
-					glFlush();
-					gdk_gl_drawable_gl_end(gldrawable);
+	XSetWindowAttributes swa;
+	swa.colormap = s_Colormap;
+	swa.border_pixel = 0;
+	swa.event_mask = 0;
+ 
+	win = XCreateWindow(s_Display, w, 0, 0, 1, 1, 0,
+                        s_XVisualInfo->depth, InputOutput, s_XVisualInfo->visual,
+                        CWBorderPixel|CWColormap|CWEventMask, &swa);
+	visible = false;
+	position = Null;
+}
 
-					Rect r = GetScreenView() - GetTopCtrl()->GetScreenView().TopLeft();
-					GtkWidget *widget = GTK_WIDGET(gtk);
-					gdk_draw_drawable(win, widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
-					                  pixmap, 0, 0, r.left, r.top, r.GetWidth(), r.GetHeight());
-				}
-			}
-			g_object_unref(G_OBJECT(gldrawable));
+void GLCtrl::Sync()
+{
+	if(win) {
+		Rect r = GetScreenView() - GetTopCtrl()->GetScreenRect().TopLeft();
+		bool b = IsVisible() && r.GetWidth() > 0 && r.GetHeight() > 0;
+		if(b != visible) {
+			visible = b;
+			position = Null;
+			if(b)
+			    XMapWindow(s_Display, win);
+			else
+			    XUnmapWindow(s_Display, win);
 		}
-		g_object_unref(G_OBJECT(pixmap));
+		if(r != position && visible) {
+			position = r;
+			XMoveResizeWindow(s_Display, win, r.left, r.top, r.Width(), r.Height());
+		}
 	}
 }
 
+void GLCtrl::State(int reason)
+{
+	switch(reason) {
+	case CLOSE:
+		XDestroyWindow(s_Display, win);
+		break;
+	case OPEN:
+		Create();
+	default:
+		Sync();
+		break;
+	}
 }
 
-#endif
+void GLCtrl::Paint(Draw& w)
+{
+	Size sz = GetSize();
+	if(!s_GLXContext || sz.cx == 0 || sz.cy == 0)
+		return;
+
+	glXMakeCurrent(s_Display, win, s_GLXContext);
+
+	ONCELOCK {
+		glewInit();
+	}
+
+	DoGLPaint();
+
+	if(doubleBuffering)
+		glXSwapBuffers(s_Display, win);
+	else
+		glFlush();
+
+	glXMakeCurrent(s_Display, win, NULL);
+}
+
+}
 
 #endif
