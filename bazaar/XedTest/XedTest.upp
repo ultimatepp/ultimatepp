@@ -1,0 +1,13 @@
+description "Test XED X86 opcode decoder\377";
+
+uses
+	Core,
+	Xed;
+
+file
+	XedTest.h,
+	XedTest.cpp;
+
+mainconfig
+	"" = "";
+
