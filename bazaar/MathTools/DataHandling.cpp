@@ -39,7 +39,8 @@ void TabData::Init() {
 	down.splitterDown.SetPos(splitterDownPos, 0);
 	
 	up.scatter.SetMouseHandling(true, true).ShowButtons().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();
-
+	up.scatter.SetMode(ScatterDraw::MD_ANTIALIASED);
+	
 	const int totalCols = 50;
 	
 	editGrid.SetCount(totalCols);
@@ -258,7 +259,7 @@ void TabData::OnOpen(bool force, bool updateButtons) {
 		return;
 	FindFile ff(fileName);
 	if(!ff || !ff.IsFile()) {
-		Exclamation(t_("File does not exist"));
+		Exclamation(Format(t_("File '%s' does not exist"), DeQtf(fileName)));
 		return;
 	}
 	openMenuButton.PreSelect(fileName);

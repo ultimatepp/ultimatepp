@@ -14,10 +14,12 @@ void TabCalculator::Init() {
 	
 	gridConstants.AddColumn(t_("Name"));
 	gridConstants.AddColumn(t_("Value"));
+	gridConstants.AddColumn(t_("Units"));
 	gridConstants.WhenLeftDouble = THISBACK(OnConstant);
 	
 	gridVariables.AddColumn(t_("Name"));
 	gridVariables.AddColumn(t_("Value"));
+	gridVariables.AddColumn(t_("Units"));
 	
 	code.SetFont(Courier(14));
 	code.DisableBreakpointing();
@@ -37,69 +39,81 @@ void TabCalculator::Init() {
 
 void TabCalculator::UpdateVars() {
 	String name;
-	double value;
+	doubleUnit value;
 	
 	gridConstants.Clear();
 	for (int i = 0; i < eval.GetConstantsCount(); ++i) {
 		eval.GetConstant(i, name, value);
-		gridConstants.Add(name, value);
+		gridConstants.Add(name, value.val, value.unit.GetString());
 	}
 	gridVariables.Clear();
 	for (int i = 0; i < eval.GetVariablesCount(); ++i) {
 		eval.GetVariable(i, name, value);
-		gridVariables.Add(name, value);
+		gridVariables.Add(name, value.val, value.unit.GetString());
 	}
 }
 
-/*double EvalExpr2::TermUnit(CParser& p) {
-	if(p.IsId()) {
-		//Estan almacenadas laslas unidades
-		String strId = p.ReadId();
-		String strsearch;
-		if (noCase)
-			strsearch = ToUpper(strId);
-		else
-			strsearch = strId;
-		double ret = constants.Get(strsearch, Null);
-		if (IsNull(ret)) {
-			ret = variables.Get(strsearch, Null);
-			if (IsNull(ret)) {
-				if (errorIfUndefined)
-					EvalThrowError(p, Format(t_("Unknown var '%s'"), strId));	
-				ret = variables.GetAdd(strsearch, 0);
-			}
-		}
-		return ret;
-	}  
-	EvalThrowError(p, t_("Unit id not found"));		
+EvalExpr2::EvalExpr2() {
+	units.Add("kg", 	Unit(1, 0, 0));
+	units.Add("kg2", 	Unit(2, 0, 0));
+	units.Add("kgm", 	Unit(1, 1, 0));
+	units.Add("m", 		Unit(0, 1, 0));
+	units.Add("m2", 	Unit(0, 2, 0));
+	units.Add("m3", 	Unit(0, 3, 0));
+	units.Add("seg", 	Unit(0, 0, 1));
+	units.Add("s", 		Unit(0, 0, 1));
+	units.Add("seg2", 	Unit(0, 0, 2));
+	units.Add("s2", 	Unit(0, 0, 2));
+	units.Add("N", 		Unit(1, 1, -2));
+	for (int i = 0; i < units.GetCount(); ++i)
+		units.SetKey(i, ToLower(units.GetKey(i)));
+}
+	
+Unit EvalExpr2::TermUnit(CParser& p) {
+	if(!p.IsId()) 
+		EvalThrowError(p, t_("Unit id not found"));		
+		
+	String strId = ToLower(p.ReadId());
+	int id = units.Find(strId);
+	if (id < 0) 
+		EvalThrowError(p, Format(t_("Unknown unit '%s'"), strId));	
+	return units[id]; 
 }
 
-double EvalExpr2::PowUnit(CParser& p) {
+Unit EvalExpr2::PowUnit(CParser& p) {
 	Unit x = TermUnit(p);
 	for(;;) {
 		if(p.Char('^'))
-			x = x.pow(p.ReadDouble());
+			x.Exp(p.ReadDouble());
 		else
 			return x;
 	}
 }
 
 Unit EvalExpr2::MulUnit(CParser& p) {
-	Unit x = Pow(p);
+	Unit x = PowUnit(p);
 	for(;;) {
-		if(p.Char('*'))
-			x = x * MulUnit(p);
-		else if(p.Char('/')) {
-			Unit y = PowUnit(p);
-			x = x / y;
+		if(p.Char('*')) {
+			Unit multp = MulUnit(p);
+			x.Mult(multp);
+		} else if(p.Char('/')) {
+			Unit multp = MulUnit(p);
+			x.Div(multp);
 		} else
 			return x;
 	}
 }
 
 Unit EvalExpr2::EvalUnit(CParser& p) {
-	return MulUnit(p);
-}*/
+	CParser::Pos pos = p.GetPos();
+	Unit res;
+	try {
+		res = MulUnit(p);
+	} catch(...) {
+		p.SetPos(pos);
+	}
+	return res;
+}
 
 String EvalExpr2::Eval2(String line, int numDecimals, int tabChars) {
 	line = TrimBoth(line);
@@ -111,7 +125,7 @@ String EvalExpr2::Eval2(String line, int numDecimals, int tabChars) {
 		p.Set(line);
 		String var, cte;
 		int expFrom;
-		double val;
+		doubleUnit val;
 		
 		if (p.IsId()) {
 			CParser::Pos pos = p.GetPos();
@@ -137,23 +151,47 @@ String EvalExpr2::Eval2(String line, int numDecimals, int tabChars) {
 			expFrom = int(p.GetPtr() - line.Begin());
 			val = Exp(p);
 		}
-		
+							
 		int expTo = int(p.GetPtr() - line.Begin() - 1);
 		String exp = TrimBoth(line.Mid(expFrom, expTo - expFrom + 1));
 		
-		String strVal = FormatDoubleFix(val, numDecimals);
+		String strVal = FormatDoubleFix(val.val, numDecimals);
 		bool expIsNum = exp == strVal;
 			
- 		if (!var.IsEmpty()) {
+ 		if (!var.IsEmpty()) 
 			newstr << var << " = ";
-			variables.GetAdd(var) = val;
-		} else if (!cte.IsEmpty())
+		else if (!cte.IsEmpty())
 			newstr << cte << " = ";
 			
 		if (!expIsNum)
 			newstr << exp << " = ";
 		newstr << strVal;
 			
+		String strUnit;
+		Unit unit = EvalUnit(p);
+		if (!IsNull(unit)) 
+			strUnit = unit.GetString();
+		
+		CParser::Pos pos = p.GetPos();	
+		if (p.Char('=')) {
+			if (p.IsDouble2()) {
+				p.ReadDouble();
+				unit = EvalUnit(p);
+				if (!IsNull(unit))
+					strUnit = unit.GetString();
+			} else
+				p.SetPos(pos);	
+		} else
+			p.SetPos(pos);
+		
+		newstr << " " << strUnit;
+		
+		if (!var.IsEmpty()) {
+			if (IsNull(val.unit))
+				val.unit = unit; 
+			SetVariable(var, val);
+		}
+		
 		newstr << " ";
 		int newstrlen = newstr.GetCount();	
 		int len;
@@ -162,15 +200,6 @@ String EvalExpr2::Eval2(String line, int numDecimals, int tabChars) {
 		for (; len - newstrlen > 0; --len)
 			newstr << " ";	
 		
-		CParser::Pos pos = p.GetPos();	
-		if (p.Char('=')) {
-			if (p.IsDouble2())
-				p.ReadDouble();
-			else
-				p.SetPos(pos);	
-		} else
-			p.SetPos(pos);
-
 		String comment = TrimBoth(line.Mid(int(p.GetPtr() - line.Begin())));
 		newstr << TrimBoth(comment);	
 	}
@@ -196,7 +225,8 @@ void TabCalculator::OnChange() {
 			continue;
 
 		int pos0 = code.GetPos(line, 0);
-		code.Remove(pos0, str.GetCount());
+		int pos1 = code.GetPos(line+1, 0);
+		code.Remove(pos0, pos1 - pos0 - 1);
 
 		int errPos = str.Find(t_("Error"));
 		if (errPos >= 0)

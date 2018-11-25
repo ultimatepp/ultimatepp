@@ -21,9 +21,6 @@ esES("Funciones")
 T_("Constants")
 esES("Constantes")
 
-T_("Case sensitivity")
-esES("Sensib. a may/min")
-
 T_("Tab. chars.")
 esES("Carac. tab.")
 
@@ -32,6 +29,9 @@ esES("Num. decimales:")
 
 T_("Just edit")
 esES("Solo editar")
+
+T_("Case sensitivity")
+esES("Sensib. a may/min")
 
 T_("Autoset")
 esES("Auto sel.")
@@ -66,8 +66,17 @@ esES("Nombre")
 T_("Value")
 esES("Valor")
 
-T_("Error %s")
+T_("Units")
 esES("")
+
+T_("Unit id not found")
+esES("Id de la unidad no encontrado")
+
+T_("Unknown unit '%s'")
+esES("Unidad '%s' desconocida")
+
+T_("Error %s")
+esES("Error %s")
 
 T_("Error")
 esES("")
@@ -112,8 +121,8 @@ esES("No se han encontrado datos&Quiz\303\241s '\302\272 fila es cabecera' no "
 T_("Series")
 esES("")
 
-T_("File does not exist")
-esES("El fichero no existe")
+T_("File '%s' does not exist")
+esES("El fichero '%s' no existe")
 
 T_("Problem reading binary file")
 esES("Problema abriendo fichero binario")

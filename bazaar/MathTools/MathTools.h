@@ -118,45 +118,20 @@ private:
 	int splitterPos, splitterDownPos;
 };
 
-class Unit {
-public:
-	Unit() : M(0), L(0), T(0) {}
-	Unit(double m, double l, double t) {
-		M = m;
-		L = l;
-		T = t;
-	}
-	Value GetString() {
-		String ret;
-		if (M != 0) 
-			ret << "Kg" << "^" << M;
-		if (L != 0) {
-			if (!ret.IsEmpty())
-				ret << "*";
-			ret << "m" << "^" << L;
-		}
-		if (T != 0) {
-			if (!ret.IsEmpty())
-				ret << "*";
-			ret << "sec" << "^" << T;
-		}
-		return ret;
-	}
-	void pow(double val) {
-		M = ::pow(M, val);
-		L = ::pow(L, val);
-		T = ::pow(T, val);
-	}
-private:
-	double M, L, T;	
-};
+
 
 class EvalExpr2 : public EvalExpr {
 public:
+	EvalExpr2();
 	String Eval2(String line, int numDecimals, int tabChars);
-
+	Unit EvalUnit(CParser& p);
+	
 private:
-	double TermUnit(CParser& p);
+	Unit TermUnit(CParser& p);
+	Unit PowUnit(CParser& p);
+	Unit MulUnit(CParser& p);
+	
+	VectorMap<String, Unit> units;	
 };
 
 class TabCalculator : public WithTabCalculator<Tool> {
