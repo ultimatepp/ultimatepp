@@ -10,5 +10,6 @@ file
 	TestXMLMenu.cpp;
 
 mainconfig
-	"" = "GUI";
+	"" = "GUI",
+	"" = "GUI NOGTK";
 
