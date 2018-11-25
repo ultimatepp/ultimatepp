@@ -18,6 +18,7 @@ class GrabScreen : public WithScreen<StaticRect> {
 public:
 	typedef GrabScreen CLASSNAME;
 	GrabScreen();
+	~GrabScreen();
 	
 	void Init(GrabYourScreen &program);
 	
@@ -29,6 +30,8 @@ private:
 	
 	GrabYourScreen *program;
 	Image canvasImage;
+	int keyId;
+	TimeCallback timeCallback;
 };
 
 class GrabBook : public WithBook<StaticRect> {
@@ -48,6 +51,7 @@ private:
 
 	int keyId;
 	String folder;
+	TimeCallback timeCallback;
 };
 
 class GrabYourScreen : public TopWindow {

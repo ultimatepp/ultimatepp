@@ -21,7 +21,7 @@ void GrabBook::Init() {
 	reset.WhenAction = THISBACK(OnReset);
 	capture.WhenAction = THISBACK(OnCapture);
 	savePDF.WhenAction = THISBACK(OnSavePDF);
-	SetTimeCallback(-1000, THISBACK(Timer));
+	timeCallback.Set(-1000, THISBACK(Timer));
 	
 	keyId = Ctrl::RegisterSystemHotKey(K_CTRL | K_F10, THISBACK(OnCapture));
 }
@@ -45,7 +45,7 @@ void GrabBook::OnReset() {
 void GrabBook::OnCapture() {
 	Rect rPdf(left, up, right, down);
 	Rect screenRect;
-	::GetWindowRect(GetHWND(), screenRect);
+	Window_GetRect((int64)GetHWND(), screenRect.left, screenRect.top, screenRect.right, screenRect.bottom);
 	if (rPdf.Intersects(screenRect)) {
 		Exclamation(t_("Program window interferes with image"));
 		return;

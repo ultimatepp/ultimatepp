@@ -6,6 +6,23 @@ GrabScreen::GrabScreen() {
 	CtrlLayout(*this);
 }
 
+String GetNextNumberName(String fileName) {
+	String folder = GetFileFolder(fileName);
+	String ext = GetFileExt(fileName);
+	String fileTitle = GetFileTitle(fileName);
+	int i;
+	for (i = fileTitle.GetCount() - 1; i >= 0; --i) {
+		const wchar c = fileTitle[i];
+		if (c < '0' || c > '9')
+			break;
+	}
+	String fileTitleNoNumber = fileTitle.Left(i+1);
+	int number = ScanInt(fileTitle.Mid(i+1));
+	if (IsNull(number))
+		number = 0;
+	return AppendFileName(folder, Format("%s%d%s", fileTitleNoNumber, number+1, ext));
+}
+		
 void GrabScreen::Init(GrabYourScreen &_program) {
 	program = &_program;
 	editFileNameGrab <<= AppendFileName(GetDesktopFolder(), "ScreenGrab.avi");
@@ -44,9 +61,13 @@ void GrabScreen::Init(GrabYourScreen &_program) {
 	editWidth <<= 1000;
 	editTop <<= 100;
 	editHeight <<= 900;
+	editQuality <<= 90;
 	
 	String extension;
-	editFileNameSnap <<= AppendFileName(GetDesktopFolder(), "ScreenSnap.jpg");
+	String screenSnapFileName = AppendFileName(GetDesktopFolder(), "ScreenSnap.jpg");
+	while(FileExists(screenSnapFileName))
+		screenSnapFileName = GetNextNumberName(screenSnapFileName);
+	editFileNameSnap <<= screenSnapFileName;
 	editFileNameSnap.Type(t_("Image file"), ".jpg");
 	butSnap.WhenPush = THISBACK(ButSnap_Push);
 	
@@ -60,7 +81,13 @@ void GrabScreen::Init(GrabYourScreen &_program) {
 	}
 	editWindowTitle.SetData(editWindowTitle.GetValue(0));
 	
-	SetTimeCallback(-1000, THISBACK(Timer));
+	timeCallback.Set(-1000, THISBACK(Timer));
+	
+	keyId = Ctrl::RegisterSystemHotKey(K_CTRL | K_F10, THISBACK(ButSnap_Push));
+}
+
+GrabScreen::~GrabScreen() {
+	Ctrl::UnregisterSystemHotKey(keyId);
 }
 
 void GrabScreen::SwGrabMode_Action() {
@@ -133,11 +160,15 @@ void GrabScreen::ButSnap_Push() {
 		if (!encoder.SaveFile(fileName, canvasImage))
 			Exclamation(Format(t_("Impossible to save %s"), fileName));
 	} else if (ext == ".jpg") {	
-		JPGEncoder encoder(90);
+		JPGEncoder encoder(editQuality);
 		if (!encoder.SaveFile(fileName, canvasImage))
 			Exclamation(Format(t_("Impossible to save %s"), fileName));
 	} else
 		Exclamation(Format(t_("File format \"%s\" not found"), ext));
+		
+	if (FileExists(fileName)) 
+		fileName = GetNextNumberName(fileName);
+	editFileNameSnap <<= fileName;
 }
 
 void GrabScreen::Timer() {
