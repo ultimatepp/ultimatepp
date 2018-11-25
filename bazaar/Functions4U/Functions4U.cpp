@@ -2745,7 +2745,23 @@ int DamerauLevenshteinDistance(const char *s, const char *t, int alphabetLength)
     }
     return H[lent2*(lens+1)+lent+1];
 }
-  
+
+int SentenceSimilitude(const char *s, const char *t) {
+	int ls = int(strlen(s));
+	int lt = int(strlen(t));
+	if (ls > lt) {
+		Swap(s, t);
+		Swap(ls, lt);
+	}
+	int mind = ls;
+	for (int i = 0; i < t - s; ++i) {
+		int d = DamerauLevenshteinDistance(s, String(t).Mid(i, ls));
+		if (d < mind)
+			mind = d;
+	}
+	return (100*mind)/ls;
+}
+
   
 // Dummy functions added after TheIDE change
 Upp::String GetCurrentMainPackage() {return "dummy";}
