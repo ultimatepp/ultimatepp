@@ -7,14 +7,14 @@ void demo(Image &img) {
     IplImage* color_dst = cvCreateImage(cvGetSize(src), 8, 3);
     CvMemStorage* storage = cvCreateMemStorage(0);
     CvSeq* lines = 0;
-    int i;
+    
     cvCanny(src, dst, 50, 200, 3);
     cvCvtColor(dst, color_dst, CV_GRAY2BGR);
 
     lines = cvHoughLines2(dst, storage, CV_HOUGH_PROBABILISTIC, 1, CV_PI/180, 80, 30, 10);
-    for(i = 0; i < lines->total; i++) {
+    for(int i = 0; i < lines->total; i++) {
         CvPoint* line = (CvPoint*)cvGetSeqElem(lines,i);
-        cvLine( color_dst, line[0], line[1], CV_RGB(255,0,0), 3, 8);
+        cvLine(color_dst, line[0], line[1], CV_RGB(255,0,0), 3, 8);
     } 
 
     cvNamedWindow("Source", 1);
