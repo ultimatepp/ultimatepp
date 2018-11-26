@@ -46,21 +46,25 @@ String FormatFrame(const char *s)
 			s++;
 		while(*s == ' ')
 			s++;
-		if(s[0] != 'i' && s[1] != 'n')
-			return Null;
-		s += 2;
+		if(s[0] == 'i' && s[1] == 'n')
+			s += 2;
 		while(*s == ' ')
 			s++;
 	}
-	if(!IsAlpha(*s))
-		return Null;
+	String result;
 	const char *w = strchr(s, '\r');
+	if(!w)
+		w = strchr(s, '\n');
 	if(w)
-		return String(s, w);
-	w = strchr(s, '\n');
-	if(w)
-		return String(s, w);
-	return s;
+		result = String(s, w);
+	else
+		result = s;
+	if(!IsAlpha(*s)) {
+		int q = result.ReverseFind(' ');
+		if(q >= 0)
+			result = result.Mid(q + 1);
+	}
+	return result.GetCount() > 2 ? result : Null;
 }
 
 void Gdb::CopyStack()
