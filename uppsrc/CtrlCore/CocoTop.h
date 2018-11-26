@@ -1,4 +1,4 @@
-//$ class TopWindow {
+//$ class Upp::TopWindow {
 protected:
 	friend struct MMImp;
 	
