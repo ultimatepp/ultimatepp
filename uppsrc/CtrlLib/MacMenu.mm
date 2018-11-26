@@ -3,6 +3,8 @@
 
 #ifdef PLATFORM_COCOA
 
+#define LLOG(x) DLOG(x)
+
 namespace Upp {
 
 struct CocoMenuBar;
@@ -259,6 +261,8 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 		np.x = scale * p.x;
 		np.y = scale * p.y;
 		
+		ReleaseCtrlCapture(); // Because we will not get "MouseUp" event...
+
 		[bar.cocomenu popUpMenuPositioningItem:bar.item[0].nsitem
 	                                atLocation:np
 	                                    inView:(NSView *)owner->GetNSView()];

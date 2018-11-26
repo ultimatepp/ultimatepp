@@ -4,7 +4,7 @@
 
 NSEvent *sCurrentMouseEvent__; // needed for drag operation
 
-#define LLOG(x)
+#define LLOG(x) // DLOG(x)
 
 static Upp::Point coco_mouse_pos;
 static bool       coco_mouse_left;
@@ -46,6 +46,7 @@ void Ctrl::WndEnable(bool)
 bool Ctrl::SetWndCapture()
 {
 	GuiLock __;
+	LLOG("SetWndCapture");
 	coco_capture = this;
 	return true; // TODO: Always?
 }
@@ -59,6 +60,7 @@ bool Ctrl::HasWndCapture() const
 bool Ctrl::ReleaseWndCapture()
 {
 	GuiLock __;
+	LLOG("ReleaseWndCapture");
 	coco_capture = NULL;
 	return true;
 }
@@ -92,6 +94,7 @@ struct MMImp {
 	
 	static bool MouseEvent(CocoView *view, NSEvent *e, int event, double zd = 0)
 	{
+		Flags(e);
 		sCurrentMouseEvent__ = e;
 		if((event & Ctrl::ACTION) == Ctrl::UP && Ctrl::ignoreclick) {
 			Ctrl::EndIgnore();
@@ -101,7 +104,6 @@ struct MMImp {
 		Rect r = view->ctrl->GetRect();
 		Upp::Point p(DPI(np.x), DPI(np.y));
 		coco_mouse_pos = p + r.TopLeft();
-		Flags(e);
 		if(view->ctrl->IsEnabled() && (view->ctrl->HasWndCapture() || r.Contains(coco_mouse_pos)))
 			view->ctrl->DispatchMouse(event, p, 120 * sgn(zd));
 		sCurrentMouseEvent__ = NULL;
@@ -182,6 +184,7 @@ struct MMImp {
 
 	static void ResignKey(Upp::Ctrl *ctrl)
 	{
+		LLOG("Resign key " << Upp::Name(ctrl));
 		ctrl->KillFocusWnd();
 	}
 	

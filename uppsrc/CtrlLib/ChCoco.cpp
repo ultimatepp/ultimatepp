@@ -56,7 +56,7 @@ void ClampedAutoCrop(Image *h, int count)
 		ClampHotSpots(h[i]);
 }
 
-void ClampedAutoCrop(const Image& m)
+Image ClampedAutoCrop(const Image& m)
 {
 	Image h = m;
 	ClampedAutoCrop(&h, 1);

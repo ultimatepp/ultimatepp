@@ -1,6 +1,6 @@
 sooner:
 
-- cursor problem after local menu invocation
+- cursor problem after local menu invocation (better, but still...)
 
 - support bundle icons
 
