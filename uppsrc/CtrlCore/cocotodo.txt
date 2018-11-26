@@ -1,5 +1,9 @@
 sooner:
 
+- id Esc is not closing botto
+
+- bottom menu issue
+
 - cursor problem after local menu invocation (better, but still...)
 
 - support bundle icons

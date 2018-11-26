@@ -410,6 +410,9 @@ void SubMenuBase::Pull(Ctrl *item, Point p, Size sz)
 {
 	if(!item->IsOpen() || menu.IsOpen()) return;
 	menu.Clear();
+#ifdef PLATFORM_COCOA
+	menu.UppMenu();
+#endif
 	if(parentmenu)
 		menu.SetStyle(*parentmenu->style);
 	proc(menu);
