@@ -123,7 +123,7 @@ Bar::Item& MenuBar::AddItem(Event<> cb)
 {
 	LLOG("MenuBar::AddItem " << Name());
 #ifdef PLATFORM_COCOA
-	if(host_bar)
+	if(host_bar && !IsChild())
 		return host_bar->AddItem(cb);
 #endif
 	MenuItemBase *q;
@@ -147,7 +147,7 @@ Bar::Item& MenuBar::AddSubMenu(Event<Bar&> proc)
 {
 	LLOG("MenuBar::AddSubMenu " << Name());
 #ifdef PLATFORM_COCOA
-	if(host_bar)
+	if(host_bar && !IsChild())
 		return host_bar->AddSubMenu(proc);
 #endif
 	SubMenuBase *w;
@@ -587,7 +587,7 @@ void MenuBar::PopUp(Ctrl *owner, Point p, Size rsz)
 bool MenuBar::IsEmpty() const
 {
 #ifdef PLATFORM_COCOA
-	if(host_bar)
+	if(host_bar && !IsChild())
 		return host_bar->IsEmpty();
 #endif
 	return item.IsEmpty();
@@ -601,7 +601,7 @@ void MenuBar::Execute(Ctrl *owner, Point p)
 		return;
 	ows.Add(owner);
 #ifdef PLATFORM_COCOA
-	if(host_bar)
+	if(host_bar && !IsChild())
 		ExecuteHostBar(owner, p);
 	else
 #endif
