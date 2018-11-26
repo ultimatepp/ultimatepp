@@ -125,7 +125,7 @@ void GLCtrl::Paint(Draw& w)
 	else
 		glFlush();
 
-	glXMakeCurrent(s_Display, win, NULL);
+	glXMakeCurrent(s_Display, NULL, NULL);
 }
 
 }
