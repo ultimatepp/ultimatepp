@@ -1,4 +1,4 @@
-//$ class Ctrl {
+//$ class Upp::Ctrl {
 private:
 	friend struct MMCtrl;
 	friend struct MMImp;
