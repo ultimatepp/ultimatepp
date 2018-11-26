@@ -13,6 +13,11 @@ static Colormap     s_Colormap;
 static GLXContext   s_GLXContext;
 static ::Display   *s_Display;
 
+EXITBLOCK {
+	if(s_GLXContext)
+		glXDestroyContext(s_Display, s_GLXContext);
+}
+
 void GLCtrl::Create()
 {
 	Ctrl *top = GetTopCtrl();

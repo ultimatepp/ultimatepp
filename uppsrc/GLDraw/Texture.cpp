@@ -8,7 +8,6 @@ namespace Upp {
 	
 GLuint CreateGLTexture(const Image& img, dword flags)
 {
-	MemoryIgnoreLeaksBlock __; // Linux drivers seem to be calling new without delete
 	Size sz = img.GetSize();
 	GLuint texture_id;
 	glGenTextures(1, &texture_id);
