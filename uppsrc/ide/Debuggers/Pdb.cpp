@@ -361,6 +361,10 @@ void Pdb::Stop()
 		if(hProcess != INVALID_HANDLE_VALUE) {
 			DebugActiveProcessStop(processid);
 			TerminateProcess(hProcess, 0);
+			dword exitcode;
+			int start = msecs();
+			while(GetExitCodeProcess(hProcess, &exitcode) && exitcode == STILL_ACTIVE && msecs(start) < 3000)
+				Sleep(1);
 			while(threads.GetCount())
 				RemoveThread(threads.GetKey(0)); // To CloseHandle
 			UnloadModuleSymbols();
