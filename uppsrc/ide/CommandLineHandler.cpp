@@ -52,7 +52,7 @@ bool BaseCommandLineHandler::HandleHelp() const
 			  "    -h or --help    - displays this site.\n\n";
 	
 	Cout() << "Advanced options:\n"
-			  "    " << COMMAND_LINE_SCALE_OPTION << " $percent - scale interface by \"percent\" represented by parameter x.\n\n";
+			  "    " << COMMAND_LINE_SCALE_OPTION << " $percent - scale interface by \"percent\" parameter.\n\n";
 	
 	Cout() << "Internal options (Should not be called by the user):\n"
 	          "    " << COMMAND_LINE_GDB_DEBUG_BREAK_PROCESS_OPTION << " $pid - breaks debug process represented by \"pid\".\n";
