@@ -971,12 +971,15 @@ String AssistEditor::MakeDefinition(const String& cls, const String& _n)
 				String id = p.ReadId();
 				if(p.Char('(')) {
 					String rp = RemoveDefPar(p.GetPtr());
+					auto merge = [](String a, String b) {
+						return IsAlNum(*a.Last()) && IsAlNum(*b) ? a + ' ' + b : a + b;
+					};
 					if(cls.GetCount() == 0)
-						return NormalizeSpaces(String(beg, b) + ' ' + id + '(' + rp);
+						return NormalizeSpaces(merge(String(beg, b), id) + '(' + rp);
 					if(dest)
 						return NormalizeSpaces(String(beg, b) + cls + "::~" + id + '(' + rp);
 					else
-						return NormalizeSpaces(String(beg, b) + ' ' + cls + "::" + id + '(' + rp);
+						return NormalizeSpaces(merge(String(beg, b), cls) + "::" + id + '(' + rp);
 				}
 			}
 			else
