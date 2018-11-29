@@ -19,7 +19,7 @@ String MakeLNG(int lang);
 bool   OldLang();
 
 String        PrintTime(int msecs);
-inline String GetPrintTime(dword time0) { return PrintTime(GetTickCount() - time0); }
+inline String GetPrintTime(dword time0) { return PrintTime(msecs() - time0); }
 
 bool   SaveChangedFile(const char *path, String data, bool delete_empty = false);
 

@@ -71,7 +71,7 @@ void RectTracker::DrawRect(Rect r1, Rect r2)
 	}
 	Rect c = clip & GetMaster().GetSize();
 	if(animation) {
-		int nanim = (GetTickCount() / animation) % 8;
+		int nanim = (msecs() / animation) % 8;
 		DrawDragRect(GetMaster(), Rect(0, 0, 0, 0), r2, c, width, color, pattern, nanim);
 		DrawDragRect(GetMaster(), r1, Rect(0, 0, 0, 0), c, width, color, pattern, panim);
 		panim = nanim;

@@ -15,14 +15,14 @@ void Animate(Ctrl& c, const Rect& target, int type)
 	if(type < 0)
 		type = GUI_PopUpEffect();
 	Rect r0 = c.GetRect();
-	dword time0 = GetTickCount();
+	dword time0 = msecs();
 	int anitime = 150;
 #ifdef SLOWANIMATION
 	anitime = 1500;
 #endif
 	if(type)
 		for(;;) {
-			int t = int(GetTickCount() - time0);
+			int t = int(msecs() - time0);
 			if(t > anitime)
 				break;
 			if(type == GUIEFFECT_SLIDE) {

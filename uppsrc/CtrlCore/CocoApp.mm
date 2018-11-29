@@ -154,14 +154,14 @@ bool Ctrl::ProcessEvents(bool *quit)
 {
 	if(ProcessEvent(quit)) {
 		while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
-		TimerProc(GetTickCount());
+		TimerProc(msecs());
 		AnimateCaret();
 		[NSApp updateWindows];
 		SweepMkImageCache();
 		return true;
 	}
 	SweepMkImageCache();
-	TimerProc(GetTickCount());
+	TimerProc(msecs());
 	return false;
 }
 
@@ -230,7 +230,7 @@ void WakeUpGuiThread(void)
 void  Ctrl::AnimateCaret()
 {
 	GuiLock __;
-	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	int v = !(((msecs() - WndCaretTime) / 500) & 1);
 	if(v != WndCaretVisible) {
 		WndCaretVisible = v;
 		RefreshCaret();
@@ -256,7 +256,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	caretcx = cx;
 	caretcy = cy;
 	if(this == caretCtrl) {
-		WndCaretTime = GetTickCount();
+		WndCaretTime = msecs();
 		RefreshCaret();
 		AnimateCaret();
 	}

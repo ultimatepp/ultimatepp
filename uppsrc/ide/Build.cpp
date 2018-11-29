@@ -46,7 +46,7 @@ void Ide::BeginBuilding(bool sync_files, bool clear_console)
 	ClearErrorsPane();
 	if(clear_console)
 		console.Clear();
-	build_time = GetTickCount();
+	build_time = msecs();
 	CreateHost(sync_files, disable_uhd);
 	cmdout.Clear();
 }

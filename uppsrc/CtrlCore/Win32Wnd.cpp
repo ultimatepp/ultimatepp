@@ -194,7 +194,7 @@ LRESULT CALLBACK Ctrl::UtilityProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 	sClipMap();
 	switch(message) {
 	case WM_TIMER:
-		TimerProc(GetTickCount());
+		TimerProc(msecs());
 		AnimateCaret();
 		break;
 	case WM_RENDERFORMAT:
@@ -909,7 +909,7 @@ bool Ctrl::WndCaretVisible;
 void  Ctrl::AnimateCaret()
 {
 	GuiLock __;
-	bool v = !(((GetTickCount() - WndCaretTime) / GetCaretBlinkTime()) & 1);
+	bool v = !(((msecs() - WndCaretTime) / GetCaretBlinkTime()) & 1);
 	if(v != WndCaretVisible) {
 		WndCaretVisible = v;
 		RefreshCaret();
@@ -935,7 +935,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	caretcx = cx;
 	caretcy = cy;
 	if(this == caretCtrl) {
-		WndCaretTime = GetTickCount();
+		WndCaretTime = msecs();
 		RefreshCaret();
 		AnimateCaret();
 	}

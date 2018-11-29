@@ -111,7 +111,7 @@ bool Sql::Execute() {
 
 	session.SetStatement(cn->statement);
 	session.SetStatus(SqlSession::BEFORE_EXECUTING);
-	cn->starttime = GetTickCount();
+	cn->starttime = msecs();
 	Stream *s = session.GetTrace();
 	if(s) {
 #ifndef NOAPPSQL
@@ -144,7 +144,7 @@ bool Sql::Execute() {
 	}
 	session.SetStatus(SqlSession::START_EXECUTING);
 	bool b = cn->Execute();
-	session.SetTime(GetTickCount() - cn->starttime);
+	session.SetTime(msecs() - cn->starttime);
 	session.SetStatus(SqlSession::END_EXECUTING);
 	if(!b)
 		session.SetStatus(SqlSession::EXECUTING_ERROR);
@@ -212,9 +212,9 @@ bool Sql::Fetch() {
 	SqlSession& session = GetSession();
 	session.SetStatus(SqlSession::START_FETCHING);
 
-	dword t0 = GetTickCount();
+	dword t0 = msecs();
 	bool b = cn->Fetch();
-	dword t = GetTickCount();
+	dword t = msecs();
 
 	dword total = cn->starttime == INT_MAX ? 0 : t - cn->starttime;
 	dword fetch = t - t0;

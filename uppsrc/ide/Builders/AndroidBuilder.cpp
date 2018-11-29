@@ -214,7 +214,7 @@ bool AndroidBuilder::Link(
 	if(linkfile.GetCount()) {
 		PutConsole("-----");
 		PutConsole("Compiling java sources...");
-		time = GetTickCount();
+		time = msecs();
 		for(int i = 0; i < linkfile.GetCount(); i++) {
 			if(Execute(linkfile[i], ss) != 0) {
 				PutConsole(ss.GetResult());
@@ -231,7 +231,7 @@ bool AndroidBuilder::Link(
 			return false;
 		}
 		
-		time = GetTickCount();
+		time = msecs();
 		PutConsole("-----");
 		PutConsole("Compiling native sources...");
 		

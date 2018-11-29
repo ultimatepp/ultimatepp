@@ -134,7 +134,7 @@ bool JavaBuilder::BuildPackage(const String& package, Vector<String>& linkfile, 
 	linkfile.Add(outdir);
 	if(ccount > 0)
 		PutConsole(String().Cat() << ccount << " file(s) preprocessed in " << GetPrintTime(time) <<
-		           " " << int(GetTickCount() - time) / ccount << " msec/file");
+		           " " << int(msecs() - time) / ccount << " msec/file");
 	linkoptions << ' ' << Gather(pkg.link, config.GetKeys());
 
 	if(!error && HasFlag("MAIN") && !sfile.IsEmpty())
@@ -189,7 +189,7 @@ bool JavaBuilder::PreprocessJava(String file, String target, String options,
 	else
 		cc = "cpp -C ";
 	cc << IncludesDefinesTargetTime(package, pkg);
-	int time = GetTickCount();
+	int time = msecs();
 	RealizePath(target);
 	String execpath;
 	execpath << cc << ' ' << options << ' ';
@@ -251,7 +251,7 @@ bool JavaBuilder::Link(const Vector<String>& linkfile, const String& linkoptions
 {
 	if(linkfile.GetCount() < ITEMCOUNT)
 		return false;
-	int time = GetTickCount();
+	int time = msecs();
 	String mainclass = linkfile[MAINCLASS];
 	String maindir = linkfile[MAINDIR];
 	String manifest = linkfile[MANIFEST];

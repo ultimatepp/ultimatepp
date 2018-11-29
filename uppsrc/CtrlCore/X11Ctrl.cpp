@@ -108,7 +108,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	carety = y;
 	caretcx = cx;
 	caretcy = cy;
-	WndCaretTime = GetTickCount();
+	WndCaretTime = msecs();
 	if(this == caretCtrl)
 		RefreshCaret();
 }

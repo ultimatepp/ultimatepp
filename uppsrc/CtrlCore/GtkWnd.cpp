@@ -142,7 +142,7 @@ void Ctrl::UnregisterSystemHotKey(int id)
 void  Ctrl::AnimateCaret()
 {
 	GuiLock __;
-	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	int v = !(((msecs() - WndCaretTime) / 500) & 1);
 	if(v != WndCaretVisible) {
 		WndCaretVisible = v;
 		RefreshCaret();
@@ -168,7 +168,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	caretcx = cx;
 	caretcy = cy;
 	if(this == caretCtrl) {
-		WndCaretTime = GetTickCount();
+		WndCaretTime = msecs();
 		RefreshCaret();
 		AnimateCaret();
 	}
