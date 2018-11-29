@@ -74,7 +74,7 @@ void Ctrl::Output()
 void Ctrl::TimerAndPaint()
 {
 	LLOG("TimerAndPaint " << msecs());
-	TimerProc(GetTickCount());
+	TimerProc(msecs());
 	DefferedFocusSync();
 	SyncCaret();
 	SyncTopWindows();

@@ -103,7 +103,7 @@ void Ctrl::SetCaret(int x, int y, int cx, int cy)
 	carety = y;
 	caretcx = cx;
 	caretcy = cy;
-	fbCaretTm = GetTickCount();
+	fbCaretTm = msecs();
 	SyncCaret();
 }
 
@@ -117,7 +117,7 @@ void Ctrl::CursorSync()
 	LLOG("@ CursorSync");
 	Point p = GetMousePos() - fbCursorImage.GetHotSpot();
 	Rect cr = Null;
-	if(focusCtrl && (((GetTickCount() - fbCaretTm) / 500) & 1) == 0)
+	if(focusCtrl && (((msecs() - fbCaretTm) / 500) & 1) == 0)
 		cr = (RectC(focusCtrl->caretx, focusCtrl->carety, focusCtrl->caretcx, focusCtrl->caretcy)
 		      + focusCtrl->GetScreenView().TopLeft()) & focusCtrl->GetScreenView();
 	if(fbCursorPos != p && !SystemCursor || cr != fbCaretRect) {
@@ -148,7 +148,7 @@ bool Ctrl::ProcessEvents(bool *quit)
 	while(ProcessEvent(quit) && (!LoopCtrl || LoopCtrl->InLoop()));
 	TimeStop tm;
 	LLOG("TimerProc invoked at " << msecs());
-	TimerProc(GetTickCount());
+	TimerProc(msecs());
 	LLOG("TimerProc elapsed: " << tm);
 	SweepMkImageCache();
 	DoPaint();

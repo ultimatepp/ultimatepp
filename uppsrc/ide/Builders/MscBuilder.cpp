@@ -352,7 +352,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 		bool init = (i >= first_ifile);
 		String objfile = CatAnyPath(outdir, GetFileTitle(fn) + (rc ? "$rc.obj" : brc ? "$brc.obj" : ".obj"));
 		if(HdependFileTime(fn) > GetFileTime(objfile)) {
-			int time = GetTickCount();
+			int time = msecs();
 			bool execerr = false;
 			if(rc) {
 				PutConsole(GetFileNamePos(fn));
@@ -433,7 +433,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 //	if(pch_file.GetCount())
 //		OnFinish(callback1(DeletePCHFile, pch_file));
 
-	int linktime = GetTickCount();
+	int linktime = msecs();
 	if(!HasFlag("MAIN")) {
 		if(HasFlag("BLITZ") || HasFlag("NOLIB")) {
 			linkfile.Append(obj);
@@ -588,7 +588,7 @@ bool MscBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 
 bool MscBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool createmap)
 {
-	int time = GetTickCount();
+	int time = msecs();
 	if(!Wait())
 		return false;
 	PutLinking();

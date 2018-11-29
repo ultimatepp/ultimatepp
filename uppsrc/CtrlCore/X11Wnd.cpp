@@ -278,8 +278,8 @@ void Ctrl::ProcessEvent(XEvent *event)
 		for(XEventMap *m = sXevent; m->ID; m++)
 			if(m->ID == event->type) {
 				if(!s_starttime)
-					s_starttime = GetTickCount();
-				int t = GetTickCount() - s_starttime;
+					s_starttime = msecs();
+				int t = msecs() - s_starttime;
 				VppLog() << Format("%d.%01d", t / 1000, t % 1000);
 				VppLog() << " EVENT " << Format("%-20.20s", m->name);
 				VppLog() << "[window: " << event->xany.window << "] ";
@@ -322,7 +322,7 @@ void Ctrl::ProcessEvent(XEvent *event)
 void Ctrl::TimerAndPaint() {
 	GuiLock __;
 	LTIMING("TimerAndPaint");
-	TimerProc(GetTickCount());
+	TimerProc(msecs());
 	for(int i = 0; i < Xwindow().GetCount(); i++) {
 		XWindow& xw = Xwindow()[i];
 		if(Xwindow().GetKey(i) && xw.exposed && xw.invalid.GetCount()) {
@@ -388,7 +388,7 @@ void WakeUpGuiThread()
 void Ctrl::GuiSleep(int ms)
 {
 	GuiLock __;
-	LLOG(GetTickCount() << " GUISLEEP " << ms);
+	LLOG(msecs() << " GUISLEEP " << ms);
 	ASSERT_(IsMainThread(), "Only main thread can perform GuiSleep");
 	timeval timeout;
 	timeout.tv_sec = ms / 1000;
@@ -403,7 +403,7 @@ void Ctrl::GuiSleep(int ms)
 	select((WakePipeOK ? max(WakePipe[0], Xconnection) : Xconnection) + 1, &fdset, NULL, NULL, &timeout);
 	char h;
 	while(WakePipeOK && read(WakePipe[0], &h, 1) > 0) // There might be relatively harmless race condition here causing delay in ICall
-		LLOG(GetTickCount() << " WakeUpGuiThread detected!"); // or "void" passes through timer & paint
+		LLOG(msecs() << " WakeUpGuiThread detected!"); // or "void" passes through timer & paint
 	EnterGuiMutex(level);
 }
 
@@ -974,7 +974,7 @@ void  Ctrl::SyncIMPosition()
 void  Ctrl::AnimateCaret()
 {
 	GuiLock __;
-	int v = !(((GetTickCount() - WndCaretTime) / 500) & 1);
+	int v = !(((msecs() - WndCaretTime) / 500) & 1);
 	if(v != WndCaretVisible) {
 		RefreshCaret();
 		WndCaretVisible = v;

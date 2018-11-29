@@ -155,7 +155,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 		Blitz b = BlitzStep(sfile, soptions, obj, ".o");
 		if(b.build) {
 			PutConsole("BLITZ:" + b.info);
-			int time = GetTickCount();
+			int time = msecs();
 			if(Execute(cc + " " + GetHostPathQ(b.path) + " -o " + GetHostPathQ(b.object)) == 0)
 				PutCompileTime(time, b.count);
 			else
@@ -163,7 +163,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 		}
 	}
 */
-	int time = GetTickCount();
+	int time = msecs();
 	int ccount = 0;
 	for(i = 0; i < sfile.GetCount() && !script_error; i++) {
 		if(!IdeIsBuilding())
@@ -178,7 +178,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 			objfile = CatAnyPath(outdir, GetFileTitle(fn) + ".o");
 		if(HdependFileTime(fn) > GetFileTime(GetHostPath(objfile))) {
 			PutConsole(GetFileName(fn));
-			int time = GetTickCount();
+			int time = msecs();
 			if(!ExecuteIf("compile", GetHostPathQ(fn), GetHostPathQ(objfile), soptions[i]).GetNumber()) {
 				DeleteFile(objfile);
 				error = true;
@@ -199,7 +199,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 	Vector<String> libs = Split(Gather(pkg.library, config.GetKeys()), ' ');
 	linkfile.Append(libs);
 
-	time = GetTickCount();
+	time = msecs();
 	if(!HasFlag("MAIN")) {
 		if(HasFlag("NOLIB")) {
 			linkfile.Append(obj);
@@ -239,7 +239,7 @@ bool ScriptBuilder::BuildPackage(const String& package, Vector<String>& linkfile
 bool ScriptBuilder::Link(const Vector<String>& linkfile, const String& linkoptions, bool)
 {
 	PutLinking();
-	int time = GetTickCount();
+	int time = msecs();
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) >= targettime) {
 			EscValue objlist;

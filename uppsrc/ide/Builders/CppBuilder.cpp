@@ -3,7 +3,7 @@
 void PutCompileTime(int time, int count)
 {
 	PutConsole(String().Cat() << count << " file(s) compiled in " << GetPrintTime(time)
-	           << " " << int(GetTickCount() - time) / count << " msec/file");
+	           << " " << int(msecs() - time) / count << " msec/file");
 }
 
 String CppBuilder::GetTargetExt() const

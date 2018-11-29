@@ -24,7 +24,7 @@ bool FinishSave(String tmpfile, String outfile)
 		return true;
 	}
 	Progress progress;
-	int time = GetTickCount();
+	int time = msecs();
 	for(;;) {
 		progress.SetTotal(10000);
 		progress.SetText("Saving '" + GetFileName(outfile) + "'");
@@ -35,7 +35,7 @@ bool FinishSave(String tmpfile, String outfile)
 			return true;
 		IdeConsoleFlush();
 		Sleep(200);
-		if(progress.SetPosCanceled((GetTickCount() - time) % progress.GetTotal())) {
+		if(progress.SetPosCanceled((msecs() - time) % progress.GetTotal())) {
 			int art = Prompt(Ctrl::GetAppName(), CtrlImg::exclamation(),
 				"Unable to save current file.&"
 				"Retry save, ignore it or save file to another location?",

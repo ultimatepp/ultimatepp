@@ -99,7 +99,7 @@ void ProgressIndicator::Set(int _actual, int _total) {
 	int p;
 	if(total <= 0) {
 		int l = max(1, max(sz.cx, sz.cy) & ~7);
-		int p = GetTickCount() / 15 % (l + l / 4);
+		int p = msecs() / 15 % (l + l / 4);
 		if(pxp != p) {
 			pxp = p;
 			Refresh();
@@ -135,7 +135,7 @@ void Progress::Reset() {
 	granularity = 50;
 	show_delay = 250;
 	
-	set_time = show_time = GetTickCount(); // + 300;
+	set_time = show_time = msecs(); // + 300;
 }
 
 void Progress::Init() {
@@ -192,7 +192,7 @@ void Progress::Create() {
 void Progress::Process()
 {
 	if(!IsOpen()) {
-		dword t = GetTickCount();
+		dword t = msecs();
 		if((int)(t - show_time) >= show_delay) {
 			Create();
 			show_time = t;
@@ -213,7 +213,7 @@ void Progress::Setxt()
 void Progress::Set(int apos, int atotal) {
 	pos = apos;
 	total = atotal;
-	dword t = GetTickCount();
+	dword t = msecs();
 	if(abs((int)(t - set_time)) < granularity)
 		return;
 	set_time = t;

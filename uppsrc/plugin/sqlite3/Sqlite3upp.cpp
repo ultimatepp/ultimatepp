@@ -166,17 +166,14 @@ bool Sqlite3Connection::Execute() {
 	// Make sure that compiling the statement never fails.
 	ASSERT(NULL != current_stmt);
 	int retcode;
-	dword ticks_start = GetTickCount();
+	dword ticks_start = msecs();
 	int sleep_ms = 1;
 	do{
 		retcode = sqlite3_step(current_stmt);
 		if(retcode!=SQLITE_BUSY && retcode!=SQLITE_LOCKED) break;
 		if(session.busy_timeout == 0) break;
-		if(session.busy_timeout>0){
-			if((int)(GetTickCount()-ticks_start)>session.busy_timeout){
-				break;
-			}
-		}//else infinite retry
+		if(session.busy_timeout > 0 && (int)(msecs() - ticks_start) > session.busy_timeout)
+			break;
 		if(retcode==SQLITE_LOCKED) sqlite3_reset(current_stmt);
 		Sleep(sleep_ms);
 		if(sleep_ms<128) sleep_ms += sleep_ms;
@@ -403,14 +400,14 @@ int Sqlite3Session::SqlExecRetry(const char *sql)
 	ASSERT(NULL != sql);
 	ASSERT(0 != *sql);
 	int retcode;
-	dword ticks_start = GetTickCount();
+	dword ticks_start = msecs();
 	int sleep_ms = 1;
 	do{
 		retcode = sqlite3_exec(db,sql,NULL,NULL,NULL);
 		if(retcode!=SQLITE_BUSY && retcode!=SQLITE_LOCKED) break;
 		if(busy_timeout == 0) break;
 		if(busy_timeout>0){
-			if((int)(GetTickCount()-ticks_start)>busy_timeout) break;
+			if((int)(msecs()-ticks_start)>busy_timeout) break;
 		}//else infinite retry
 		Sleep(sleep_ms);
 		if(sleep_ms<128) sleep_ms += sleep_ms;

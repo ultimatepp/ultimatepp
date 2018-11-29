@@ -230,7 +230,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 			Info_plist = LoadFile(fn);
 		if(HdependFileTime(fn) > GetFileTime(GetHostPath(objfile))) {
 			PutConsole(GetFileName(fn));
-			int time = GetTickCount();
+			int time = msecs();
 			bool execerr = false;
 			if(rc) {
 				String exec;
@@ -307,7 +307,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 	if(pch_file.GetCount())
 		OnFinish(callback1(DeletePCHFile, pch_file));
 
-	int libtime = GetTickCount();
+	int libtime = msecs();
 	if(!HasFlag("MAIN")) {
 		if(HasFlag("BLITZ") && !HasFlag("SO")  || HasFlag("NOLIB")) {
 			linkfile.Append(obj); // Simply link everything as .o files...
@@ -464,7 +464,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 	if(!Wait())
 		return false;
 	PutLinking();
-	int time = GetTickCount();
+	int time = msecs();
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;

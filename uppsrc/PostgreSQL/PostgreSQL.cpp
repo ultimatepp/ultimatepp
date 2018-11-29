@@ -528,7 +528,7 @@ bool PostgreSQLConnection::Execute()
 	Stream *trace = session.GetTrace();
 	dword time;
 	if(session.IsTraceTime())
-		time = GetTickCount();
+		time = msecs();
 
 	int itry = 0;
 	int stat;

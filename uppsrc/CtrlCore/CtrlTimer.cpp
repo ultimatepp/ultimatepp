@@ -43,7 +43,7 @@ void SetTimeCallback(int delay_ms, Function<void ()> cb, void *id) {
 	Mutex::Lock __(sTimerLock);
 	ASSERT(abs(delay_ms) < 0x40000000);
 	LLOG("SetTimeCallback " << delay_ms << " " << id);
-	sTimeCallback(GetTickCount() + abs(delay_ms), delay_ms, Event<> () << cb, id);
+	sTimeCallback(msecs() + abs(delay_ms), delay_ms, Event<> () << cb, id);
 }
 
 void KillTimeCallbacks(void *id, void *idlim) {
@@ -123,7 +123,7 @@ void Ctrl::TimerProc(dword time)
 		cb();
 		sTimerLock.Enter();
 	}
-	time = GetTickCount();
+	time = msecs();
 	LLOG("--- Rescheduling at " << time);
 	TimeEvent *e = list->GetNext();
 	while(e != list) {

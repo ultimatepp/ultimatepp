@@ -232,7 +232,7 @@ void SqlConsole::Execute(int type) {
 	String s = ~command;
 	while(*s.Last() == ';')
 		s.Trim(s.GetLength() - 1);
-	int ms0 = GetTickCount();
+	int ms0 = msecs();
 	cursor.ClearError();
 	lastquery = s;
 	String ttl = s;
@@ -259,7 +259,7 @@ void SqlConsole::Execute(int type) {
 	bool onecol = cursor.GetColumns() == 1;
 	record.Show(!onecol);
 	errortext.Show(onecol);
-	int ms1 = GetTickCount();
+	int ms1 = msecs();
 	cw.SetCount(cursor.GetColumns());
 	visible.SetCount(cw.GetCount(), true);
 	int margins;

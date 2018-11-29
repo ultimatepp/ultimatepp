@@ -508,7 +508,7 @@ int leftdbltime = Null, rightdbltime = Null, middledbltime = Null;
 
 bool sDblTime(int time)
 {
-	return !IsNull(time) && (int)GetTickCount() - time < GUI_DblClickTime();
+	return !IsNull(time) && (int)msecs() - time < GUI_DblClickTime();
 }
 
 Image Ctrl::DispatchMouse(int e, Point p, int zd) {
@@ -529,19 +529,19 @@ Image Ctrl::DispatchMouse(int e, Point p, int zd) {
 	}
 	repeatMousePos = p;
 	if(e == LEFTDOUBLE) {
-		leftdbltime = GetTickCount();
+		leftdbltime = msecs();
 		leftdblpos = p;
 		UPP::SetTimeCallback(GetKbdDelay(), callback(&Ctrl::LRep), &mousepos);
 		repeatTopCtrl = this;
 	}
 	if(e == RIGHTDOUBLE) {
-		rightdbltime = GetTickCount();
+		rightdbltime = msecs();
 		rightdblpos = p;
 		UPP::SetTimeCallback(GetKbdDelay(), callback(&Ctrl::RRep), &mousepos);
 		repeatTopCtrl = this;
 	}
 	if(e == MIDDLEDOUBLE) {
-		middledbltime = GetTickCount();
+		middledbltime = msecs();
 		middledblpos = p;
 		UPP::SetTimeCallback(GetKbdDelay(), callback(&Ctrl::MRep), &mousepos);
 		repeatTopCtrl = this;
@@ -684,11 +684,11 @@ Ctrl *Ctrl::GetVisibleChild(Ctrl *ctrl, Point p, bool pointinframe)
 }
 
 AutoWaitCursor::AutoWaitCursor(int& avg) : WaitCursor(avg >= 0), avg(avg) {
-	time0 = GetTickCount();
+	time0 = msecs();
 }
 
 AutoWaitCursor::~AutoWaitCursor() {
-	if(time0) avg = GetTickCount() - time0 - 500;
+	if(time0) avg = msecs() - time0 - 500;
 	if(avg < -10000) avg = -10000;
 	if(avg >  10000) avg = 10000;
 }
