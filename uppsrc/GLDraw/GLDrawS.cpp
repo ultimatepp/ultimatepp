@@ -334,7 +334,7 @@ void GLDraw::PutImage(Point p, const Image& img, const Rect& src)
 	glVertexAttribPointer(ATTRIB_VERTEX, 2, GL_SHORT, GL_FALSE, 2 * sizeof(GLshort), vertex);
 	glBindTexture(GL_TEXTURE_2D, GetTextureForImage(img));
 
-//	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
 	glDisableVertexAttribArray(ATTRIB_TEXPOS);
 }
