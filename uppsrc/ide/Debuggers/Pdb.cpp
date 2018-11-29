@@ -361,10 +361,12 @@ void Pdb::Stop()
 		if(hProcess != INVALID_HANDLE_VALUE) {
 			DebugActiveProcessStop(processid);
 			TerminateProcess(hProcess, 0);
-			dword exitcode;
+			dword exitcode = STILL_ACTIVE;
 			int start = msecs();
-			while(GetExitCodeProcess(hProcess, &exitcode) && exitcode == STILL_ACTIVE && msecs(start) < 3000)
+			while(GetExitCodeProcess(hProcess, &exitcode) && exitcode == STILL_ACTIVE && msecs(start) < 1000)
 				Sleep(1);
+			if(exitcode == STILL_ACTIVE)
+				Exclamation("Unable to kill debugee. Please restart theide.");
 			while(threads.GetCount())
 				RemoveThread(threads.GetKey(0)); // To CloseHandle
 			UnloadModuleSymbols();
