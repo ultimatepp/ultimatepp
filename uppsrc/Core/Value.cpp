@@ -343,7 +343,7 @@ void Value::Serialize(Stream& s) {
 		if(st == STRING)
 			s % data;
 		else
-		if(st < 255 && svo[st]) {
+		if(st >= 0 && st < 255 && svo[st]) {
 			data.SetSpecial((byte)type);
 			svo[st]->Serialize(&data, s);
 		}
