@@ -74,7 +74,7 @@ XMLCommands &XMLCommands::Add(String const &id, String const &cmdStr)
 	cmd->callback.Clear();
 	cmd->menuCallback.Clear();
 	cmd->commandString = cmdStr;
-	commands.Add(id, cmd);
+	commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 
@@ -84,7 +84,7 @@ XMLCommands &XMLCommands::Add(String const &id, Function<void()> cb)
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = NULL;
@@ -93,7 +93,7 @@ XMLCommands &XMLCommands::Add(String const &id, Function<void()> cb)
 	cmd->callback = cb;
 	cmd->menuCallback.Clear();
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 
@@ -103,7 +103,7 @@ XMLCommands &XMLCommands::Add(String const &id, Function<void(XMLToolBar &)> mc)
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = NULL;
@@ -112,7 +112,7 @@ XMLCommands &XMLCommands::Add(String const &id, Function<void(XMLToolBar &)> mc)
 	cmd->callback.Clear();
 	cmd->menuCallback = mc;
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 
@@ -122,7 +122,7 @@ XMLCommands &XMLCommands::Add(String const &id, Ctrl &ctrl, Size const &size)
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = &ctrl;
@@ -132,7 +132,7 @@ XMLCommands &XMLCommands::Add(String const &id, Ctrl &ctrl, Size const &size)
 	cmd->callback.Clear();
 	cmd->menuCallback.Clear();
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 XMLCommands &XMLCommands::Add(String const &id, Ctrl &ctrl)
@@ -146,7 +146,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, String const &cmdS
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = NULL;
@@ -156,7 +156,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, String const &cmdS
 	cmd->menuCallback.Clear();
 	cmd->commandString = cmdStr;
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 
@@ -166,7 +166,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Function<void()> c
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = NULL;
@@ -175,7 +175,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Function<void()> c
 	cmd->callback = cb;
 	cmd->menuCallback.Clear();
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 
@@ -185,7 +185,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Function<void(XMLT
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = NULL;
@@ -194,7 +194,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Function<void(XMLT
 	cmd->callback.Clear();
 	cmd->menuCallback = mc;
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 		
@@ -204,7 +204,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Ctrl &ctrl, Size c
 	bool has = Has(id);
 	XMLCommand *cmd;
 	if(has)
-		cmd = &commands.Get(id);
+		cmd = &commands.Get(ToUpper(id));
 	else
 		cmd = new XMLCommand;
 	cmd->control = &ctrl;
@@ -214,7 +214,7 @@ XMLCommands &XMLCommands::Add(bool enabled, String const &id, Ctrl &ctrl, Size c
 	cmd->callback.Clear();
 	cmd->menuCallback.Clear();
 	if(!has)
-		commands.Add(id, cmd);
+		commands.Add(ToUpper(id), cmd);
 	return *this;
 }
 XMLCommands &XMLCommands::Add(bool enabled, String const &id, Ctrl &ctrl)

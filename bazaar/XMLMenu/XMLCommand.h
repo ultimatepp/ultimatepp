@@ -135,17 +135,17 @@ class XMLCommands : DeepCopyOption<XMLCommands>
 		Vector<String> const &GetIds(void) const;
 		
 		// get a command for a given id
-		XMLCommand const &Get(String const &id) const { return commands.Get(id); }
-		XMLCommand &Get(String const &id) { return commands.Get(id); }
+		XMLCommand const &Get(String const &id) const { return commands.Get(ToUpper(id)); }
+		XMLCommand &Get(String const &id) { return commands.Get(ToUpper(id)); }
 
 		// find a command given its name
-		int Find(String const &id) const { return commands.Find(id); }
+		int Find(String const &id) const { return commands.Find(ToUpper(id)); }
 		
 		// sets the commands by a callback
 		void Set(Function<void(XMLCommands &)> commands);
 		
 		// checks wether a command is present given its id
-		bool Has(String const &id) const { return commands.Find(id) >= 0; }
+		bool Has(String const &id) const { return commands.Find(ToUpper(id)) >= 0; }
 		
 		// array access
 		XMLCommand const &operator[](int idx) const { return commands[idx]; }

@@ -656,7 +656,7 @@ void XMLMenuEditor::cmdContextEditCb(void)
 {
 	XMLCmdEdit edit(commands, false);
 	edit.cmdId <<= cmdPane.commandList.GetData();
-	edit.cmdStr <<= commands.Get(cmdPane.commandList.GetData()).GetCommandString();
+	edit.cmdStr <<= commands.Get(ToUpper(String(cmdPane.commandList.GetData()))).GetCommandString();
 	int res = edit.RunAppModal();
 	edit.Close();
 	if(res == IDOK)
