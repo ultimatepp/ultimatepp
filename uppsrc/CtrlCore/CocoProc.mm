@@ -180,12 +180,14 @@ struct MMImp {
 		}
 		Upp::Ctrl::SyncAppIcon();
 		Upp::TopWindow::SyncMainMenu(false);
+		Upp::Ctrl::ReleaseCtrlCapture();
 	}
 
 	static void ResignKey(Upp::Ctrl *ctrl)
 	{
 		LLOG("Resign key " << Upp::Name(ctrl));
 		ctrl->KillFocusWnd();
+		Upp::Ctrl::ReleaseCtrlCapture();
 	}
 	
 	static void DoClose(Upp::Ctrl *ctrl)
