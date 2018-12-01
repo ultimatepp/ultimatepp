@@ -92,10 +92,6 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		// the drag loop
 		void DragLoop(Point startP);
 		
-		// refresh menus and bars
-		void RefreshBarsDeep(void);
-		void RefreshBars(void);
-		
 		// sync bars from ctrls
 		void SyncBars(void);
 
@@ -141,6 +137,10 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		
 		// gets a context menu by name -- NULL if none
 		MenuBar *GetContextMenu(String const &name);
+		
+		// refresh menus and bars
+		void RefreshBarsDeep(void);
+		void RefreshBars(void);
 		
 		// xml supportbin
 		void Xmlize(XmlIO xml);
@@ -684,6 +684,7 @@ template<class T> void WithXMLMenu<T>::SetCommands(Callback1<XMLCommands &> cmds
 // sets menu entries
 template<class T> void WithXMLMenu<T>::SetMenuBars(Callback1<XMLToolBars &> tb)
 {
+	menuBars.Clear();
 	tb(menuBars);
 
 	// refresh toolbars
@@ -693,6 +694,7 @@ template<class T> void WithXMLMenu<T>::SetMenuBars(Callback1<XMLToolBars &> tb)
 // sets toolbars entries
 template<class T> void WithXMLMenu<T>::SetToolBars(Callback1<XMLToolBars &> tb)
 {
+	toolBars.Clear();
 	tb(toolBars);
 
 	// refresh toolbars
