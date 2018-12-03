@@ -678,7 +678,7 @@ void WorkspaceWork::RemoveFile()
 
 void WorkspaceWork::DelFile()
 {
-	if(!filelist.IsCursor() || filelist[fileindex[filelist.GetCursor()]].isdir) return;
+	if(!filelist.IsCursor() || filelist[filelist.GetCursor()].isdir) return;
 	String file = GetActiveFilePath();
 	if(IsFolder(file)) {
 		if(!PromptYesNo("Remove the topic group and discard ALL topics?")) return;

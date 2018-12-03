@@ -98,6 +98,7 @@ struct MMImp {
 		sCurrentMouseEvent__ = e;
 		if((event & Ctrl::ACTION) == Ctrl::UP && Ctrl::ignoreclick) {
 			Ctrl::EndIgnore();
+//			Upp::Ctrl::ReleaseCtrlCapture();
 			return false;
 		}
 		NSPoint np = [view convertPoint:[e locationInWindow] fromView:nil];
@@ -193,6 +194,7 @@ struct MMImp {
 	static void DoClose(Upp::Ctrl *ctrl)
 	{
 		ctrl->MMClose();
+		Upp::Ctrl::ReleaseCtrlCapture();
 	}
 
 	static int  DnD(Upp::Ctrl *ctrl, id<NSDraggingInfo> info, bool paste = false)
@@ -234,8 +236,10 @@ struct MMImp {
 }
 
 -(void)drawRect:(NSRect)r {
-	Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
-	Upp::MMImp::Paint(ctrl, w, Upp::DPI(1) * MakeRect(r));
+	if(ctrl) {
+		Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
+		Upp::MMImp::Paint(ctrl, w, Upp::DPI(1) * MakeRect(r));
+	}
 }
 
 - (void)mouseDown:(NSEvent *)e {
@@ -248,6 +252,7 @@ struct MMImp {
 	coco_mouse_left = false;
 	if(!Upp::MMImp::MouseEvent(self, e, Upp::Ctrl::LEFTUP))
 		[super mouseUp:e];
+	Upp::Ctrl::ReleaseCtrlCapture();
 }
 
 - (void)mouseMoved:(NSEvent *)e {

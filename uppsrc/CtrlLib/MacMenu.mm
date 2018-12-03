@@ -263,7 +263,7 @@ void MenuBar::ExecuteHostBar(Ctrl *owner, Point p)
 		
 		ReleaseCtrlCapture(); // Because we will not get "MouseUp" event...
 
-		[bar.cocomenu popUpMenuPositioningItem:bar.item[0].nsitem
+		[bar.cocomenu popUpMenuPositioningItem:nil//bar.item[0].nsitem
 	                                atLocation:np
 	                                    inView:(NSView *)owner->GetNSView()];
 	}

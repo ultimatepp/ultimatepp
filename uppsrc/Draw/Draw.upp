@@ -12,7 +12,7 @@ library(WIN32 !MSC8ARM) "user32 gdi32";
 
 library(LINUX) "dl freetype";
 
-library(BSD !XLFD) "fontconfig freetype expat";
+library(BSD !XLFD !OSX) "fontconfig freetype expat";
 
 library(LINUX !XLFD) "fontconfig expat";
 

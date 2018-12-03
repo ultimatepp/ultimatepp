@@ -7,7 +7,7 @@ protected:
 	dword GetMMStyle() const;
 
 	virtual void MMClose() { WhenClose(); }
-
+	
 	static TopWindow *GetMenuTopWindow();
 	static void SyncMainMenu(bool force);
 	
