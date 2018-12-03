@@ -351,9 +351,9 @@ void LangDlg::EnterFile()
 		lang.Add(tf.ls[i], LNGAsText(tf.ls[i]));
 	lang.GoBegin();
 
-	static FontAndColorDisplay normal(Arial(11)(), Null);
-	static FontAndColorDisplay added(Arial(11)().Bold(), Null);
-	static FontAndColorDisplay obsolete(Arial(11)().Italic(), Null);
+	static FontAndColorDisplay normal(ArialZ(11)(), Null);
+	static FontAndColorDisplay added(ArialZ(11)().Bold(), Null);
+	static FontAndColorDisplay obsolete(ArialZ(11)().Italic(), Null);
 
 	text.Clear();
 	for(int i = 0; i < tf.map.GetCount(); i++) {
