@@ -76,7 +76,7 @@ struct RectCG {
 @interface CocoView : NSView <NSWindowDelegate>
 {
 	@public
-	Upp::Ctrl *ctrl;
+	Upp::Ptr<Upp::Ctrl> ctrl;
 }
 @end
 

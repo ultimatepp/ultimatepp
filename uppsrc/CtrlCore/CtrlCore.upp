@@ -20,9 +20,9 @@ library(LINUX  !RAINBOW) dl;
 
 library(LINUX !XLFD  !RAINBOW GUI) Xft;
 
-library(BSD !RAINBOW) "X11  Xau Xdmcp";
+library(BSD !RAINBOW !OSX) "X11  Xau Xdmcp";
 
-library(BSD !XLFD  !RAINBOW) "Xft fontconfig Xrender freetype expat";
+library(BSD !XLFD  !RAINBOW !OSX) "Xft fontconfig Xrender freetype expat";
 
 library(LINUX !XLFD !SHARED  !RAINBOW GUI) "fontconfig Xrender freetype";
 
@@ -143,7 +143,6 @@ file
 	CocoClip.mm,
 	CocoCtrl.cpp,
 	CocoWnd.cpp,
-	CocoDnD.cpp,
 	CocoTop.cpp,
 	CocoChSysInit.cpp,
 	cocotodo.txt,

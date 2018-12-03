@@ -324,6 +324,7 @@ void FileList::Add(const String& name, const Image& icon, Font font, Color ink,
 
 const FileList::File& FileList::Get(int i) const
 {
+	RDUMP(i);
 	return ValueTo<File>(ColumnList::Get(i));
 }
 

@@ -45,7 +45,10 @@ NSPasteboard *Pasteboard(bool dnd = false)
 	NSPasteboard *pasteboard = Upp::Pasteboard(dnd);
 
 	if([type isEqualTo:NSPasteboardTypeString]) {
-	    [pasteboard setString:[NSString stringWithUTF8String:~render("text")]
+		Upp::String raw = render("text");
+		if(raw.GetCount() == 0 && source)
+			raw = source->GetDropData("text");
+	    [pasteboard setString:[NSString stringWithUTF8String:raw]
 	                forType:type];
 		return;
 	}
@@ -467,6 +470,18 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 }
 
 void Ctrl::SetSelectionSource(const char *fmts) {}
+
+Image MakeDragImage(const Image& arrow, Image sample);
+
+Image MakeDragImage(const Image& arrow, const Image& arrow98, Image sample)
+{
+#ifdef PLATFORM_WIN32
+	if(IsWin2K())
+		return MakeDragImage(arrow, sample);
+	else
+#endif
+		return arrow98;
+}
 
 };
 

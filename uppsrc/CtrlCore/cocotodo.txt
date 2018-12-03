@@ -1,16 +1,15 @@
 sooner:
 
-- id Esc is not closing botto
+- lineedit d&d leaves artifacts (at I cursor)
 
-- bottom menu issue
+- Topic++, menu at topics, New topic has wrong hotkey
+- New assembly - wrong hotkey (?)
 
 - cursor problem after local menu invocation (better, but still...)
 
 - support bundle icons
 
 - correctly reload plist
-
-- drag&drop in theide does not work
 
 - ctrl tab does not work
 
@@ -33,9 +32,9 @@ sooner:
 - bool SystemDraw::IsPaintingOp(const Rect& r) const
 - download .scd files
 
-later:
-
 * apple debugger
+
+later:
 
 - Draw move ?
 - ch disabled option looks weird
@@ -79,6 +78,11 @@ later:
 
 done:
 
+- drag&drop in theide does not work
+
+- id Esc is not closing bottom
+
+- bottom menu issue
 
 [uword] CGContextRestoreGState: invalid context
 
