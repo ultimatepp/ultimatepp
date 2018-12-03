@@ -23,24 +23,35 @@ bool RenamePackageFs(const String& upp, const String& newname, bool duplicate)
 		return false;
 	}
 	String pf = GetFileFolder(upp);
-	String npf = AppendFileName(GetFileFolder(pf), newname);
-	if(DirectoryExists(npf)) {
+	String npf = AppendFileName(GetPackagePathNest(pf), newname);
+	String nupp = npf + "/" + GetFileName(newname) + ".upp";
+	if(FileExists(nupp)) {
 		Exclamation("Package [* \1" + newname + "\1] already exists!");
 		return false;
 	}
+	String temp_pf = AppendFileName(GetFileFolder(pf), AsString(Random()) + AsString(Random()));
+	if(!FileMove(pf, temp_pf)) {
+		Exclamation("Operation has failed.");
+		return false;
+	}
+	RealizePath(GetFileFolder(npf));
 	if(duplicate) {
-		if(!CopyFolder(npf, pf)) {
+		bool b = CopyFolder(npf, temp_pf);
+		FileMove(temp_pf, pf);
+		if(!b) {
+			FileMove(temp_pf, pf);
 			DeleteFolderDeep(npf);
 			Exclamation("Duplicating package folder has failed.");
 			return false;
 		}
 	}
 	else
-	if(!FileMove(pf, npf)) {
+	if(!FileMove(temp_pf, npf)) {
+		FileMove(temp_pf, pf);
 		Exclamation("Renaming package folder has failed.");
 		return false;
 	}
-	if(!FileMove(npf + "/" + GetFileName(upp), npf + "/" + GetFileName(newname) + ".upp")) {
+	if(!FileMove(npf + "/" + GetFileName(upp), nupp)) {
 		FileMove(npf, pf);
 		Exclamation("Renaming .upp file has failed.");
 		return false;
