@@ -100,7 +100,7 @@ running so far).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Thread`:`:GetCount`(`):%- [@(0.0.255) static] [@(0.0.255) int]_[* GetCount]()&]
-[s2; Number of running threads.&]
+[s2; Number of running threads (started using Thread class).&]
 [s3;%- &]
 [s4;%- &]
 [s5;:Thread`:`:ShutdownThreads`(`):%- [@(0.0.255) static] [@(0.0.255) void]_[* ShutdownThre
