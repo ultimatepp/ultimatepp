@@ -445,6 +445,7 @@ void SubMenuItem::Pull()
 	Point p = r.TopRight();
 	p.x -= 3;
 	p.y -= 2;
+	SetFocus(); // avoid returning focus to window widgets by closing submenu
 	SubMenuBase::Pull(this, p, Size(-r.Width(), 0));
 	if(parentmenu)
 		parentmenu->SyncState();
@@ -523,6 +524,7 @@ void TopSubMenuItem::Pull()
 	Point p = r.BottomLeft();
 	if(GUI_GlobalStyle() >= GUISTYLE_XP)
 		p += style->pullshift;
+	SetFocus(); // avoid returning focus to window widgets by closing submenu
 	SubMenuBase::Pull(this, p, Size(r.Width(), -r.Height()));
 	if(parentmenu)
 		parentmenu->SyncState();
