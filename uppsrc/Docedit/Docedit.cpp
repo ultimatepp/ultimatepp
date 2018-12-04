@@ -533,8 +533,6 @@ void AppMain()
 		ff.Next();
 	}
 	doc_dir.Refresh("Core");
-	TimeStop();
-	RDUMP(TimeStop());
 	DocBrowser d;
 	d.Query();
 	d.Run();
