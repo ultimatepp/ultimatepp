@@ -408,6 +408,7 @@ bool MenuItem::Key(dword key, int count)
 
 void SubMenuBase::Pull(Ctrl *item, Point p, Size sz)
 {
+	menu.KillDelayedClose();
 	if(!item->IsOpen() || menu.IsOpen()) return;
 	menu.Clear();
 #ifdef PLATFORM_COCOA
@@ -425,6 +426,7 @@ void SubMenuBase::Pull(Ctrl *item, Point p, Size sz)
 		parentmenu->doeffect = false;
 		parentmenu->WhenSubMenuOpen();
 	}
+	menu.KillDelayedClose();
 }
 
 // ----------------------------------------------------
