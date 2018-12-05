@@ -287,12 +287,12 @@ void InstantSetup()
 			bmSet(bm, "DEBUG_LINKMODE", "0");
 			bmSet(bm, "DEBUG_OPTIONS", "-O0");
 			bmSet(bm, "DEBUG_FLAGS", "");
-			bmSet(bm, "DEBUG_LINK", "");
+			bmSet(bm, "DEBUG_LINK", "-Wl,--stack,20000000");
 			bmSet(bm, "RELEASE_BLITZ", "");
 			bmSet(bm, "RELEASE_LINKMODE", "0");
 			bmSet(bm, "RELEASE_OPTIONS", "-O2 -ffunction-sections");
 			bmSet(bm, "RELEASE_FLAGS", "");
-			bmSet(bm, "RELEASE_LINK", "");
+			bmSet(bm, "RELEASE_LINK", "-Wl,--stack,20000000");
 			bmSet(bm, "DEBUGGER", "gdb");
 			bmSet(bm, "ALLOW_PRECOMPILED_HEADERS", "1");
 			bmSet(bm, "DISABLE_BLITZ", "1");
