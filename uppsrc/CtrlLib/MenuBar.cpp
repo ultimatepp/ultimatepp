@@ -113,6 +113,7 @@ void MenuBar::Clear()
 {
 	if(lock) return;
 	lock++;
+	LLOG("Clear");
 	SetActiveSubmenu(NULL, NULL);
 	item.Clear();
 	BarCtrl::Clear();
@@ -482,6 +483,7 @@ void MenuBar::DelayedClose()
 
 void MenuBar::KillDelayedClose()
 {
+	LLOG("KillDelayedClose");
 	KillTimeCallback(TIMEID_SUBMENUCLOSE);
 	KillTimeCallback(TIMEID_STOP);
 }
@@ -493,7 +495,7 @@ void MenuBar::Set(const Event<Bar&> menu)
 	lock++;
 	menu(*this);
 	SyncBar();
-	DistributeAccessKeys();	
+	DistributeAccessKeys();
 	lock--;
 }
 
