@@ -28,6 +28,7 @@ Report& Report::SetPageSize(Size sz)
 	header = footer = Null;
 	headercy = footercy = headerspc = footerspc = 0;
 	pagei = -1;
+	Create(sz);
 	Page(0);
 	Create(sz);
 	StartPage(0);
