@@ -195,7 +195,7 @@ int64 usecs(int64 prev)
 
 int msecs(int prev)
 {
-	auto p2 = std::chrono::high_resolution_clock::now();
+	auto p2 = std::chrono::steady_clock::now();
 	return (int)std::chrono::duration_cast<std::chrono::milliseconds>(p2.time_since_epoch()).count() - prev;
 }
 
