@@ -1,5 +1,4 @@
-topic "Assist++ C++ parser directives";
-[2 $$0,0#00000000000000000000000000000000:Default]
+topic "Assist++ - C++ parser directives";
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,2#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -10,16 +9,18 @@ topic "Assist++ C++ parser directives";
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
 [b83;*4 $$10,11#07864147445237544204411237157677:title]
-[b42;a42;2 $$11,11#45413000475342174754091244180557:text]
+[b42;a42;ph2 $$11,11#45413000475342174754091244180557:text]
 [l321;t246;C@5;1 $$12,12#20902679421464641399138805415013:code]
 [a83;*R6 $$13,11#31310162474203024125188417583966:caption]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s13; Specifics of TheIDE C`+`+ parser&]
+[s13; Assist`+`+ `- C`+`+ parser directives&]
+[s10; 1. Introduction&]
 [s11; Assist`+`+ C`+`+ parser does not follow C/C`+`+ standards exactly, 
 for performance and practical reasons. This documents provides 
 information about deviations, heuristics and tricks that we use 
 to make the machinery fast and highly error resistant.&]
-[s10; Handling of source files, headers, macros and namespaces&]
+[s10; 2. Handling of source files, headers, macros and namespaces&]
 [s11; The main difference between C`+`+ compiler and theide C`+`+ 
 parser is that theide is handling any source file separately. 
 This is an absolute performance requirement if global database 
@@ -49,7 +50,7 @@ For example&]
 [s12; .....&]
 [s12; `}&]
 [s12; #endif&]
-[s11; both CloseWindow definitions will be in codebase.&]
+[s11; both CloseWindow definitions will be in the codebase.&]
 [s11;i150;O0; When expanding macro, last #define directive is used.&]
 [s12; #define FOO 1&]
 [s12; #define FOO 2&]
@@ -97,7 +98,7 @@ included/used. Consider&]
 [s12; &]
 [s11; This [* IS] supported: Fn will be in Foo namespace and will return 
 1.&]
-[s10; Macro overrides, namespace macros&]
+[s10; 3. Macro overrides, namespace macros&]
 [s11; It is possible to tell TheIDE overriding definition of specific 
 macros in special .defs files. One global.defs file resides in 
 TheIDE configuration and is accessible through `"<meta>`" package. 
@@ -126,7 +127,7 @@ meaning of NAMESPACE`_UPP/END`_UPP`_NAMESPACE when extracting
 macros from File.h). The solution is simple, putting those #defines 
 into .defs file fixes the issue, as such macros are detected 
 by special code and used when handling File.h.&]
-[s10; Grounding heuristics&]
+[s10; 4. Grounding heuristics&]
 [s11; It is a good idea to make parser highly resistant to bugs, including 
 code that it does not understand. For this reason parser is using 
 somewhat strange but very effective simple heuristics: If a line 
@@ -145,7 +146,7 @@ on `'global`' level. Consider&]
 miss the rest of file (because all would be considered to be 
 part of Fn1 body). However Fn2 definition invokes grounding heuristics 
 and parsing restarts at that point, not missing Fn2.&]
-[s10; Assist`+`+ C`+`+ parser directives&]
+[s10; 5. Assist`+`+ C`+`+ parser directives&]
 [s11; Assist supports simple directives that are passed to it via 
 `'//`' comments that can be used in cases that original code 
 is confusing:&]
