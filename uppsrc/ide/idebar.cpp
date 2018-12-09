@@ -871,7 +871,12 @@ void Ide::SetBar()
 
 void Ide::SetMenuBar()
 {
+#ifdef PLATFORM_COCOA
+	SetMainMenu(THISBACK(MainMenu));
+	menubar.Hide();
+#else
 	menubar.Set(THISBACK(MainMenu));
+#endif
 }
 
 void Ide::SetToolBar()

@@ -100,6 +100,7 @@ void CocoMenuBar::Set(Event<Bar&> bar)
 {
 	if(lock) return;
 	lock++;
+	[cocomenu removeAllItems];
 	bar(*this);
 	lock--;
 }
