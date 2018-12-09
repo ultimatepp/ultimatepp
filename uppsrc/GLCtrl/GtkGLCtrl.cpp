@@ -33,7 +33,7 @@ void GLCtrl::Create()
 	ONCELOCK {
 		s_Display = gdk_x11_drawable_get_xdisplay((GdkDrawable *)gdk);
 		int samples = numberOfSamples;
-		GLXFBConfig *fbc;
+
 		do {
 			Vector<int> attr;
 			attr << GLX_RGBA << GLX_DEPTH_SIZE << depthSize
@@ -43,16 +43,12 @@ void GLCtrl::Create()
 			if(samples > 1)
 				attr << GLX_SAMPLE_BUFFERS_ARB << 1 << GLX_SAMPLES_ARB << samples;
 			attr << 0;
-	
 			samples >>= 1;
-			int fbcount;
-			fbc = glXChooseFBConfig(s_Display, DefaultScreen(s_Display), attr, &fbcount);
+			s_XVisualInfo = glXChooseVisual(s_Display, DefaultScreen(s_Display), attr);
 		}
-		while(!fbc && samples > 0);
-		
-		if(!fbc)
+		while(!s_XVisualInfo && samples > 0);
+		if(!s_XVisualInfo)
 			return;
-		s_XVisualInfo = glXGetVisualFromFBConfig(s_Display, fbc[0]);
 		s_Colormap = XCreateColormap(s_Display, RootWindow(s_Display, s_XVisualInfo->screen), s_XVisualInfo->visual, AllocNone);
 		s_GLXContext = glXCreateContext(s_Display, s_XVisualInfo, NULL, GL_TRUE);
 	}
