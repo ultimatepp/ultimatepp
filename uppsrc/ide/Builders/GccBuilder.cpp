@@ -569,7 +569,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 							<< "<plist version=\"1.0\">\n"
 							<< "<dict>\n"
 							<< "    <key>CFBundleExecutable</key>\n"
-							<< "    <string>Test" << GetFileName(target) << "</string>\n"
+							<< "    <string>" << GetFileName(target) << "</string>\n"
 							<< "    <key>NSHighResolutionCapable</key>\n"
 						    << "    <string>True</string>\n"
 						    << "	<key>LSMinimumSystemVersion</key>\n"
