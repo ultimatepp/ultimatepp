@@ -42,6 +42,10 @@ template<class T> class WithXMLMenu : public T, public XMLMenuInterface
 		// or docking points changed
 		void RefreshFrames(void);
 		
+		// use ctrl+click to undock toolbars
+		// to avoid undocking when missing toolbar icon
+		bool ctrlToUndock;
+		
 		// dragging flag
 		bool dragging;
 
@@ -164,6 +168,9 @@ template<class T> WithXMLMenu<T>::WithXMLMenu() :
 
 	RefreshFrames();
 	
+	// by default, force usage of ctrl to undock toolbars
+	ctrlToUndock = true;
+	
 }
 
 template<class T> WithXMLMenu<T>::~WithXMLMenu()
@@ -281,6 +288,11 @@ template<class T> void WithXMLMenu<T>::ChildFrameMouseEvent(Ctrl *child, int eve
 
 	// handles just left down events
 	if(event != Ctrl::LEFTDOWN)
+		return;
+	
+	// if we choose to undock only with pressed CTRL key
+	// check it
+	if(ctrlToUndock && !(keyflags & K_CTRL))
 		return;
 	
 	// ignore re-entrant events
@@ -716,12 +728,19 @@ template<class T> void WithXMLMenu<T>::Xmlize(XmlIO xml)
 		("commands"		, commands)
 		("menubars"		, menuBars)
 		("toolbars"		, toolBars)
+		("CtrlToUndock"	, ctrlToUndock)
 	;
 	// here too, we use postcallback because we must
 	// wait that top window is opened before refreshing toolbars
 	// don't know if it's the right way, but.....
 	if(xml.IsLoading())
+	{
+		// backwards compatibility
+		if(IsNull(ctrlToUndock))
+			ctrlToUndock = true;
+		
 		T::PostCallback(THISBACK(RefreshBarsDeep));
+	}
 }
 
 // toggles bar visibility
@@ -757,6 +776,9 @@ template<class T> void WithXMLMenu<T>::XMLContextMenu(Bar& bar)
 	// allow open/close bars
 	if(!toolBars.GetCount())
 		return;
+	bar.Separator();
+	Bar::Item &item = bar.Add(t_("Ctrl+Click to undock"), [&]() { ctrlToUndock = !ctrlToUndock; });
+	item.Check(ctrlToUndock);
 	bar.Separator();
 	for(int iBar = 0; iBar < toolBars.GetCount(); iBar++)
 	{
