@@ -3,7 +3,7 @@
 
 #include <CtrlCore/CtrlCore.h>
 
-#ifdef GUI_X11
+#if defined(GUI_X11) || defined(GUI_GTK)
 #define Time    XTime
 #define Font    XFont
 #define Display XDisplay
