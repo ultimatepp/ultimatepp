@@ -1,8 +1,12 @@
 sooner:
 
+- .iml editor image kind switch
+
+- Ctrl+O does not work
+
 - tooltip in package organizer is too small
 
-- Esc does not work to close console area in theide
+- Esc does not work to close console area in theide, nor Assist popup
 
 - lineedit d&d leaves artifacts (at I cursor)
 
@@ -29,7 +33,7 @@ sooner:
 - Delete CocoDnD.cpp -> crash
 
 - bool SystemDraw::IsPaintingOp(const Rect& r) const
-- download .scd files
+- download .scd files (or put to bundle)
 
 * apple debugger
 

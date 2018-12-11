@@ -465,6 +465,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 		return false;
 	PutLinking();
 	int time = msecs();
+	CocoaAppBundle();
 	for(int i = 0; i < linkfile.GetCount(); i++)
 		if(GetFileTime(linkfile[i]) > targettime) {
 			Vector<String> lib;
@@ -561,30 +562,6 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 			bool error = false;
 			CustomStep(".pre-link", Null, error);
 			if(!error && Execute(lnk) == 0) {
-				if(HasFlag("OSX") && HasFlag("GUI")) {
-					if(IsNull(Info_plist))
-						Info_plist
-							<< "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-							<< "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
-							<< "<plist version=\"1.0\">\n"
-							<< "<dict>\n"
-							<< "    <key>CFBundleExecutable</key>\n"
-							<< "    <string>" << GetFileName(target) << "</string>\n"
-							<< "    <key>NSHighResolutionCapable</key>\n"
-						    << "    <string>True</string>\n"
-						    << "	<key>LSMinimumSystemVersion</key>\n"
-							<< "    <string>10.13</string>\n"
-							<< "</dict>\n"
-							<< "</plist>\n"
-						;
-					String Info_plist_path = GetFileFolder(GetFileFolder(target)) + "/Info.plist";
-					if(LoadFile(Info_plist_path) != Info_plist) {
-						if(FileExists(Info_plist_path))
-							Execute("defaults delete " + Info_plist_path); // Force MacOS to reload plist
-						SaveFile(Info_plist_path, Info_plist);
-						PutConsole("Saving " << Info_plist_path);
-					}
-				}
 				CustomStep(".post-link", Null, error);
 				PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 				           << " B) linked in " << GetPrintTime(time));
@@ -595,6 +572,7 @@ bool GccBuilder::Link(const Vector<String>& linkfile, const String& linkoptions,
 				return false;
 			}
 		}
+
 	PutConsole(String().Cat() << GetHostPath(target) << " (" << GetFileInfo(target).length
 	           << " B) is up to date.");
 	return true;

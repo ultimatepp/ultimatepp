@@ -18,6 +18,7 @@ file
 	MscBuilder.cpp,
 	JavaBuilder.cpp,
 	ScriptBuilder.cpp,
+	Cocoa.cpp,
 	Android readonly separator,
 	Android.h,
 	AndroidProject.cpp,
