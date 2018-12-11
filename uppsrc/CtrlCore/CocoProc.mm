@@ -303,7 +303,8 @@ struct MMImp {
 }
 
 - (BOOL)windowShouldClose:(NSWindow *)sender {
-	Upp::MMImp::DoClose(ctrl);
+	if(ctrl->IsEnabled())
+		Upp::MMImp::DoClose(ctrl);
 	return NO;
 }
 

@@ -400,7 +400,7 @@ bool GccBuilder::BuildPackage(const String& package, Vector<String>& linkfile, V
 						if(!found)
 							found = llib.GetCount();
 
-						// replace all '\' with '/'
+						// replace all '\' with '/'`
 						llib = UnixPath(llib);
 						
 						f.PutLine(llib.Left(found));
