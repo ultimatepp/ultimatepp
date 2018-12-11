@@ -4,14 +4,27 @@
 
 #include <GL/glx.h>
 #include <GL/gl.h>
+
+#define Time    XTime
+#define Font    XFont
+#define Display XDisplay
+#define Picture XPicture
+#define Status  int
+
 #include <gdk/gdkx.h>
+
+#undef Time
+#undef Font
+#undef Display
+#undef Picture
+#undef Status
 
 namespace Upp {
 	
 static XVisualInfo *s_XVisualInfo;
 static Colormap     s_Colormap;
 static GLXContext   s_GLXContext;
-static ::Display   *s_Display;
+static ::XDisplay  *s_Display;
 
 EXITBLOCK {
 	if(s_GLXContext)
@@ -47,6 +60,27 @@ void GLCtrl::Create()
 			s_XVisualInfo = glXChooseVisual(s_Display, DefaultScreen(s_Display), attr);
 		}
 		while(!s_XVisualInfo && samples > 0);
+
+/*
+		GLXFBConfig *fbc;
+		do {
+			Vector<int> attr;
+			attr << GLX_RGBA << GLX_DEPTH_SIZE << depthSize
+			     << GLX_STENCIL_SIZE << stencilSize;
+			if(doubleBuffering)
+				attr << GLX_DOUBLEBUFFER;
+			if(samples > 1)
+				attr << GLX_SAMPLE_BUFFERS_ARB << 1 << GLX_SAMPLES_ARB << samples;
+			attr << 0;
+			samples >>= 1;
+			int fbcount;
+			fbc = glXChooseFBConfig(s_Display, DefaultScreen(s_Display), attr, &fbcount);
+		}
+		while(!fbc && samples > 0);
+		
+		if(fbc)
+			s_XVisualInfo = glXGetVisualFromFBConfig(s_Display, fbc[0]);
+*/
 		if(!s_XVisualInfo)
 			return;
 		s_Colormap = XCreateColormap(s_Display, RootWindow(s_Display, s_XVisualInfo->screen), s_XVisualInfo->visual, AllocNone);
