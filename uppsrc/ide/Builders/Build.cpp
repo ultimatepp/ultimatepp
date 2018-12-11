@@ -329,6 +329,12 @@ bool MakeBuild::BuildPackage(const Workspace& wspc, int pkindex, int pknumber, i
 	if(!IsNull(outfile))
 		target = NormalizePath(outfile, tout);
 	else {
+	#ifdef PLATFORM_COCOA
+		if(m.target_override && !IsNull(m.target)
+		   && IsFolder(m.target) && GetFileExt(m.target) == ".app")
+			target = host->NormalizePath(m.target);
+		else
+	#endif
 		if(m.target_override && !IsNull(m.target) && IsFolder(m.target))
 			target = host->NormalizePath(AppendFileName(m.target, mainfn));
 		else

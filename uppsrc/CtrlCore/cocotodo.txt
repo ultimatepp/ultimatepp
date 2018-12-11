@@ -1,9 +1,15 @@
 sooner:
 
+- tooltip in package organizer is too small
+
+- Esc does not work to close console area in theide
+
 - lineedit d&d leaves artifacts (at I cursor)
 
 - Topic++, menu at topics, New topic has wrong hotkey
+
 - New assembly - wrong hotkey (?)
+- tpp new topic wrong hotkey
 
 - cursor problem after local menu invocation (better, but still...)
 
@@ -11,16 +17,9 @@ sooner:
 
 - correctly reload plist
 
-- ctrl tab does not work
-
-- modal disabled window can be closed
-
 - Uword cursor is blinking even in background
 
 - icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
-
-* Mac menu
-* Drag&Drop
 
 - UHD problem with tabbar
 - UHD problem with Prompt text size ([g ?)
@@ -77,6 +76,11 @@ later:
 - FileSelector
 
 done:
+
+* Mac menu
+* Drag&Drop
+
+- modal disabled window can be closed
 
 - drag&drop in theide does not work
 
