@@ -72,6 +72,7 @@ struct GccBuilder : CppBuilder {
 	String CompilerName() const;
 	String CmdLine(const String& package, const Package& pkg);
 	void BinaryToObject(String objfile, CParser& binscript, String basedir, const String& package, const Package& pkg);
+	void   CocoaAppBundle();
 
 	String Info_plist; // apple bundle Info.plist
 };
