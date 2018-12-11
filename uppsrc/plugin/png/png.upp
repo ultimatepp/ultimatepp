@@ -6,7 +6,7 @@ uses
 	Core,
 	Draw;
 
-library(!WIN32) png;
+library(!WIN32 !OSX) png;
 
 options
 	-DPNG_NO_READ_EXPAND,
