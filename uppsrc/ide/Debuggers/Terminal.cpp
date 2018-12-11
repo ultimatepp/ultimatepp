@@ -86,7 +86,7 @@ bool TTYQuit()          { return false; }
 
 String GdbCommand(bool console)
 {
-#ifdef PLATFORM_OSX_0
+#ifdef PLATFORM_COCOA
 	String gdb = "lldb ";
 #else
 	String gdb = "gdb ";
