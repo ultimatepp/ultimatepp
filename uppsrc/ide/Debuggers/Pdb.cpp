@@ -359,12 +359,16 @@ void Pdb::Stop()
 		Store(callback(this, &Pdb::SerializeSession), ss);
 		WorkspaceConfigData("pdb-debugger") = ss;
 		if(hProcess != INVALID_HANDLE_VALUE) {
-			DebugActiveProcessStop(processid);
+			for(int i = 0; i < 10; i++) {
+				if(DebugActiveProcessStop(processid))
+					break;
+				Sleep(100);
+			}
 			TerminateProcess(hProcess, 0);
 			dword exitcode = STILL_ACTIVE;
 			int start = msecs();
 			while(GetExitCodeProcess(hProcess, &exitcode) && exitcode == STILL_ACTIVE && msecs(start) < 1000)
-				Sleep(1);
+				Sleep(100);
 			if(exitcode == STILL_ACTIVE)
 				Exclamation("Unable to kill debugee. Please restart theide.");
 			while(threads.GetCount())
