@@ -44,9 +44,13 @@ void Ide::FileBookmark(Bar& menu)
 
 void Ide::File(Bar& menu)
 {
-	menu.Add(AK_SETMAIN, THISBACK(NewMainPackage))
-		.Help("Select global configuration (var), select / add main project package");
-
+	if (!IsEditorMode())
+	{
+		menu.Add(AK_SETMAIN, THISBACK(NewMainPackage))
+			.Enable(!IdeIsDebugLock())
+			.Help("Select global configuration (var), select / add main project package");
+	}
+	
 	menu.AddMenu(AK_EDITFILE, CtrlImg::open(), THISBACK(EditAnyFile))
 		.Help("Select any file in file selector and open it in editor");
 	menu.AddMenu(!IsNull(GetOpposite()), AK_OPPOSITE, IdeImg::opposite(), THISBACK(GoOpposite))
