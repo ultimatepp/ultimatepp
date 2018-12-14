@@ -12,8 +12,10 @@ protected:
 	static void SyncMainMenu(bool force);
 	
 	void *menubar = NULL;
+	Event<Bar&> MainMenu;
 
 public:
-	void SetMainMenu(Event<Bar&> menu);
+	virtual bool HotKey(dword key);
 
-//$ };
+	void SetMainMenu(Event<Bar&> menu);
+	//$ };

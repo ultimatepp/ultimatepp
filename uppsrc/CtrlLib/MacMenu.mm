@@ -3,7 +3,7 @@
 
 #ifdef PLATFORM_COCOA
 
-#define LLOG(x) DLOG(x)
+#define LLOG(x) // DLOG(x)
 
 namespace Upp {
 
@@ -195,6 +195,11 @@ bool CocoMenuBar::IsEmpty() const
 	}
 }
 
+- (void)menuDidClose:(NSMenu *)menu {
+	CocoMenu *m = (CocoMenu *)menu;
+	[m removeAllItems];
+}
+
 -(void)submenuAction:(id)sender {
 	if(ptr)
 		proc(*ptr);
@@ -218,6 +223,15 @@ void TopWindow::SetMainMenu(Event<Bar&> menu)
 	CocoMenuBar& bar = *(CocoMenuBar *)menubar;
 	bar.Set(menu);
 	SyncMainMenu(true);
+	MainMenu = menu;
+}
+
+bool TopWindow::HotKey(dword key)
+{
+	LLOG("TopWindow::HotKey " << GetKeyDesc(key));
+	if(Bar::Scan(MainMenu, key))
+		return true;
+	return Ctrl::HotKey(key);
 }
 
 TopWindow *TopWindow::GetMenuTopWindow()
