@@ -47,8 +47,7 @@ Packages and Assemblies]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Keys`$en`-us^ Keys]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Flags`$en`-us^ Build flags]&]
 [s0;l160; [^topic`:`/`/ide`/app`/Topic`$en`-us^ Topic`+`+]&]
-[s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+ `- code 
-completion, navigation and transformation]&]
+[s0;l160; [^topic`:`/`/ide`/app`/Assist`$en`-us^ Assist`+`+]&]
 [s0;l160; [^topic`:`/`/ide`/app`/AssistParserDirectives`_en`-us^ Assist`+`+ 
 `- parser directives]&]
 [s0;l160; [^topic`:`/`/ide`/app`/macros`$en`-us^ Macros]&]
