@@ -14,7 +14,7 @@ topic "Assist++ - C++ parser directives";
 [a83;*R6 $$13,11#31310162474203024125188417583966:caption]
 [2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
-[s13; Assist`+`+ `- C`+`+ parser directives&]
+[s13; Assist`+`+ `- parser directives&]
 [s10; 1. Introduction&]
 [s11; Assist`+`+ C`+`+ parser does not follow C/C`+`+ standards exactly, 
 for performance and practical reasons. This documents provides 
