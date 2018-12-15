@@ -1,14 +1,12 @@
 sooner:
 
+- drk tyheme
+
 - .iml editor image kind switch
 
-- Ctrl+O does not work
+- .iml D&D does not work
 
 - tooltip in package organizer is too small
-
-- Esc does not work to close console area in theide, nor Assist popup
-
-- lineedit d&d leaves artifacts (at I cursor)
 
 - Topic++, menu at topics, New topic has wrong hotkey
 
@@ -16,8 +14,6 @@ sooner:
 - tpp new topic wrong hotkey
 
 - cursor problem after local menu invocation (better, but still...)
-
-- support bundle icons
 
 - correctly reload plist
 
@@ -80,6 +76,11 @@ later:
 - FileSelector
 
 done:
+
+- support bundle icons
+- Esc does not work to close console area in theide, nor Assist popup
+- lineedit d&d leaves artifacts (at I cursor)
+- Ctrl+O does not work
 
 * Mac menu
 * Drag&Drop

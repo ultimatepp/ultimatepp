@@ -297,20 +297,20 @@ Rect Ctrl::GetVirtualScreenArea()
 Rect MakeScreenRect(NSScreen *screen, CGRect r)
 {
 	r.origin.y = [screen frame].size.height - r.origin.y - r.size.height;
-	return MakeRect(r);
+	return MakeRect(r, DPI(1));
 }
 
 Rect Ctrl::GetPrimaryWorkArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
-		return DPI(1) * MakeScreenRect(screen, [screen visibleFrame]);
+		return MakeScreenRect(screen, [screen visibleFrame]);
 	return Rect(0, 0, 1024, 768);
 }
 
 Rect Ctrl::GetPrimaryScreenArea()
 {
 	for (NSScreen *screen in [NSScreen screens])
-		return DPI(1) * MakeScreenRect(screen, [screen frame]);
+		return MakeScreenRect(screen, [screen frame]);
 	return Rect(0, 0, 1024, 768);
 }
 
@@ -341,8 +341,7 @@ void Ctrl::GuiPlatformGetTopRect(Rect& r) const
 void MMCtrl::SyncRect(CocoView *view)
 {
 	NSWindow *win = [view window];
-	view->ctrl->SetWndRect(DPI(1) *
-	                       MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
+	view->ctrl->SetWndRect(MakeScreenRect([win screen], [win contentRectForFrameRect: [win frame]]));
 }
 
 ViewDraw::ViewDraw(Ctrl *ctrl)

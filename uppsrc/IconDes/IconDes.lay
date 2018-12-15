@@ -9,7 +9,7 @@ LAYOUT(ImageLayout, 168, 188)
 	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(28, 64).TopPosZ(156, 24))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(96, 64).TopPosZ(156, 24))
 	ITEM(LabelBox, dv___9, SetLabel(t_("Resolution")).LeftPosZ(8, 152).TopPosZ(56, 68))
-	ITEM(Switch, resolution, SetLabel(t_("Standard\nUHD\nNone")).LeftPosZ(16, 144).TopPosZ(72, 52))
+	ITEM(Switch, resolution, SetLabel(t_("Standard\nUHD\nNone")).LeftPosZ(16, 144).TopPosZ(72, 56))
 END_LAYOUT
 
 LAYOUT(ImageSizeLayout, 168, 68)
