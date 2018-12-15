@@ -238,7 +238,7 @@ struct MMImp {
 -(void)drawRect:(NSRect)r {
 	if(ctrl) {
 		Upp::SystemDraw w([[NSGraphicsContext currentContext] CGContext], self);
-		Upp::MMImp::Paint(ctrl, w, Upp::DPI(1) * MakeRect(r));
+		Upp::MMImp::Paint(ctrl, w, MakeRect(r, Upp::DPI(1)));
 	}
 }
 

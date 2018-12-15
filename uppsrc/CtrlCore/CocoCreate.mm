@@ -171,7 +171,7 @@ void Ctrl::WndInvalidateRect(const Rect& r)
 	GuiLock __;
 	LLOG("Invalidate Rect " << r);
 	if(top)
-		[top->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r)];
+		[top->coco->view setNeedsDisplayInRect:(NSRect)CGRectDPI(r.Inflated(10, 10))];
 }
 
 void Ctrl::WndScrollView(const Rect& r, int dx, int dy)
