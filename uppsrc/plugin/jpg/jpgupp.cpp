@@ -200,7 +200,7 @@ public:
 	Raster::Info GetInfo();
 	Raster::Line GetLine(int line);
 	void ScanMetaData();
-	void ScanExifData(const char *begin);
+	void ScanExifData(const char *begin, const char *end);
 	Value GetMetaData(String id);
 	void EnumMetaData(Vector<String>& id_list);
 	String GetThumbnail();
@@ -208,12 +208,12 @@ public:
 private:
 	bool Init();
 
-	int     Exif16(const char *s) { return exif_big_endian ? Peek16be(s) : Peek16le(s); }
-	int     Exif32(const char *s) { return exif_big_endian ? Peek32be(s) : Peek32le(s); }
-	double  ExifF5(const char *s);
+	int     Exif16(const char *s, const char *end) { return s + 2 < end ? exif_big_endian ? Peek16be(s) : Peek16le(s) : 0; }
+	int     Exif32(const char *s, const char *end) { return s + 4 < end ? exif_big_endian ? Peek32be(s) : Peek32le(s) : 0; }
+	double  ExifF5(const char *s, const char *end);
 
 	enum IFD_TYPE { BASE_IFD, GPS_IFD };
-	int  ExifDir(const char *begin, int offset, IFD_TYPE type);
+	int  ExifDir(const char *begin, const char *end, int offset, IFD_TYPE type);
 
 private:
 	JPGRaster& owner;
@@ -294,7 +294,7 @@ void JPGRaster::Data::ScanMetaData()
 		else if(p->marker >= JPEG_APP0 && p->marker <= JPEG_APP0 + 15) {
 			key = NFormat("APP%d", p->marker - JPEG_APP0);
 			if(p->marker == JPEG_APP0 + 1 && !memcmp(data, "Exif\0\0", 6))
-				ScanExifData(data.GetIter(6));
+				ScanExifData(data.GetIter(6), data.end());
 		}
 		if(metadata.Find(key) >= 0) {
 			for(int i = 1;; i++) {
@@ -310,23 +310,23 @@ void JPGRaster::Data::ScanMetaData()
 	}
 }
 
-double JPGRaster::Data::ExifF5(const char *s)
+double JPGRaster::Data::ExifF5(const char *s, const char *end)
 {
-	unsigned num = Exif32(s + 0);
-	unsigned den = Exif32(s + 4);
+	unsigned num = Exif32(s + 0, end);
+	unsigned den = Exif32(s + 4, end);
 	return num / (double)(den ? den : 1);
 }
 
-int JPGRaster::Data::ExifDir(const char *begin, int offset, IFD_TYPE type)
+int JPGRaster::Data::ExifDir(const char *begin, const char *end, int offset, IFD_TYPE type)
 {
 	const char *e = begin + offset;
-	int nitems = Exif16(e);
+	int nitems = Exif16(e, end);
 //	puts(NFormat("directory %08x: %d items", dir, nitems));
 	e += 2;
 	for(int i = 0; i < nitems; i++, e += 12) {
-		int tag = Exif16(e);
-		int fmt = Exif16(e + 2);
-		int count = Exif32(e + 4);
+		int tag = Exif16(e, end);
+		int fmt = Exif16(e + 2, end);
+		int count = Exif32(e + 4, end);
 		static const int fmtlen[] = {
 			1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8
 		};
@@ -335,12 +335,12 @@ int JPGRaster::Data::ExifDir(const char *begin, int offset, IFD_TYPE type)
 			len = fmtlen[fmt - 1] * count;
 		const char *data = e + 8;
 		if(len > 4)
-			data = begin + Exif32(data);
+			data = begin + Exif32(data, end);
 //		puts(NFormat("[%d]: tag %04x fmt %d, count %d, data %s",
 //			i, tag, fmt, count, BinHexEncode(data, data + len)));
 		if(type == BASE_IFD) {
 			if(tag == 0x112)
-				metadata.Add("orientation", Exif16(data));
+				metadata.Add("orientation", Exif16(data, end));
 			if(tag == 0x132)
 				metadata.Add("DateTime", String(data, 20));
 			if(tag == 0x9003)
@@ -348,31 +348,31 @@ int JPGRaster::Data::ExifDir(const char *begin, int offset, IFD_TYPE type)
 			if(tag == 0x9004)
 				metadata.Add("DateTimeDigitized", String(data, 20));
 			if(tag == 0x8825) {
-				int offset = Exif32(data);
+				int offset = Exif32(data, end);
 	//			puts(NFormat("GPS IFD at %08x", offset));
-				ExifDir(begin, offset, GPS_IFD);
+				ExifDir(begin, end, offset, GPS_IFD);
 			}
 		}
 		else if(type == GPS_IFD) {
 			if((tag == 2 || tag == 4) && fmt == EXIF_RATIONAL && count == 3) {
 				metadata.Add(tag == 2 ? "GPSLatitude" : "GPSLongitude",
-					ExifF5(data + 0) + ExifF5(data + 8) / 60 + ExifF5(data + 16) / 3600);
+					ExifF5(data + 0, end) + ExifF5(data + 8, end) / 60 + ExifF5(data + 16, end) / 3600);
 //				puts(NFormat("GPSLatitude: %n %n %n", n1, n2, n3));
 			}
 			else if(tag == 6 && fmt == EXIF_RATIONAL && count == 1)
-				metadata.Add("GPSAltitude", ExifF5(data));
+				metadata.Add("GPSAltitude", ExifF5(data, end));
 			else if(tag == 16 && fmt == EXIF_ASCII && count == 2 && *data)
 				metadata.Add("GPSImgDirectionRef", String(*data, 1));
 			else if(tag == 17 && fmt == EXIF_RATIONAL && count == 1)
-				metadata.Add("GPSImgDirection", ExifF5(data + 0));
+				metadata.Add("GPSImgDirection", ExifF5(data + 0, end));
 		}
 	}
-	int nextoff = Exif32(e);
+	int nextoff = Exif32(e, end);
 //	puts(NFormat("next offset = %08x", nextoff));
 	return nextoff;
 }
 
-void JPGRaster::Data::ScanExifData(const char *begin)
+void JPGRaster::Data::ScanExifData(const char *begin, const char *end)
 {
 	const char *p = begin;
 	if(p[0] == 'I' && p[1] == 'I')
@@ -381,7 +381,7 @@ void JPGRaster::Data::ScanExifData(const char *begin)
 		exif_big_endian = true;
 	else
 		return;
-	for(int diroff = Exif32(p + 4); diroff; diroff = ExifDir(begin, diroff, BASE_IFD))
+	for(int diroff = Exif32(p + 4, end); diroff && begin + diroff < end; diroff = ExifDir(begin, end, diroff, BASE_IFD))
 		;
 }
 
@@ -405,32 +405,32 @@ String JPGRaster::Data::GetThumbnail()
 		return Null;
 	const char *begin = ~app1 + 6;
 	const char *end = app1.End();
-	const char *p = begin + Exif32(begin + 4);
+	const char *p = begin + Exif32(begin + 4, end);
 	if(p + 2 >= end) return Null;
-	p += Exif16(p) * 12 + 2;
+	p += Exif16(p, end) * 12 + 2;
 	if(p + 4 >= end) return Null;
-	p = begin + Exif32(p);
+	p = begin + Exif32(p, end);
 	if(p <= begin || p + 2 >= end) return Null;
-	word count = Exif16(p);
+	word count = Exif16(p, end);
 	p += 2;
 	dword offset = 0;
 	dword len = 0;
 	for(int n = 0; n < count; n++) {
 		if(p + 12 >= end) return Null;
-		if(Exif32(p + 4) == 1) {
+		if(Exif32(p + 4, end) == 1) {
 			dword val = 0;
-			switch(Exif16(p + 2)) {
+			switch(Exif16(p + 2, end)) {
 			case 4:
 			case 9:
-				val = Exif32(p + 8);
+				val = Exif32(p + 8, end);
 				break;
 			case 3:
 			case 8:
-				val = Exif16(p + 8);
+				val = Exif16(p + 8, end);
 				break;
 			}
 			if(val)
-				switch(Exif16(p)) {
+				switch(Exif16(p, end)) {
 				case 0x201:
 					offset = val;
 					break;
