@@ -6,10 +6,17 @@ struct OptionDisplay : Display {
 	{
 		WString txt = q;
 		w.DrawRect(r, paper);
-		w.Clipoff(r.left + 10, r.top, r.Width() - 20, r.Height());
+		w.Clipoff(r.left + Zx(10), r.top, r.Width() - Zx(20), r.Height());
 		int tcy = GetTLTextHeight(txt, StdFont());
 		DrawTLText(w, 0, max((r.Height() - tcy) / 2, 0), r.Width(), txt, StdFont(), ink);
 		w.End();
+	}
+	virtual Size GetStdSize(const Value& q) const
+	{
+		WString txt = q;
+		Size tsz = GetTLTextSize(txt, StdFont());
+		tsz.cx += Zx(20);
+		return tsz;
 	}
 };
 
@@ -19,11 +26,18 @@ struct OptionHeaderDisplay : Display {
 	{
 		WString txt = q;
 		w.DrawRect(r, SColorInfo);
-		w.Clipoff(r.left + 5, r.top, r.Width(), r.Height());
+		w.Clipoff(r.left + Zx(5), r.top, r.Width() - Zx(10), r.Height());
 		int tcy = GetTLTextHeight(txt, StdFont().Bold());
 		DrawTLText(w, 0, max((r.Height() - tcy) / 2, 0), r.Width(), txt,
 		           StdFont().Bold(), SColorText);
 		w.End();
+	}
+	virtual Size GetStdSize(const Value& q) const
+	{
+		WString txt = q;
+		Size tsz = GetTLTextSize(txt, StdFont());
+		tsz.cx += Zx(10);
+		return tsz;
 	}
 };
 
@@ -33,13 +47,23 @@ struct DependsDisplay : Display {
 	{
 		WString txt = q;
 		w.DrawRect(r, paper);
-		w.Clipoff(r.left + 10, r.top, r.Width() - 20, r.Height());
+		w.Clipoff(r.left + Zx(10), r.top, r.Width() - Zx(20), r.Height());
 		Image img = IdeFileImage(q, false, false);
 		Size isz = img.GetSize();
 		w.DrawImage(0, (r.Height() - isz.cy) / 2, img);
 		int tcy = GetTLTextHeight(txt, StdFont());
-		DrawTLText(w, isz.cx + 4, max((r.Height() - tcy) / 2, 0), r.Width(), txt, StdFont(), ink);
+		DrawTLText(w, isz.cx + Zx(4), max((r.Height() - tcy) / 2, 0), r.Width(), txt, StdFont(), ink);
 		w.End();
+	}
+	virtual Size GetStdSize(const Value& q) const
+	{
+		WString txt = q;
+		Size sz = GetTLTextSize(txt, StdFont());
+		sz.cx += Zx(24);
+		Size isz = IdeFileImage(q, false, false).GetSize();
+		sz.cy = max(isz.cy, sz.cy);
+		sz.cx += isz.cx;
+		return sz;
 	}
 };
 
@@ -49,12 +73,22 @@ struct UsesDisplay : Display {
 	{
 		WString txt = q;
 		w.DrawRect(r, paper);
-		w.Clipoff(r.left + 10, r.top, r.Width() - 20, r.Height());
+		w.Clipoff(r.left + Zx(10), r.top, r.Width() - Zx(20), r.Height());
 		Size isz = IdeImg::Package().GetSize();
 		w.DrawImage(0, (r.Height() - isz.cy) / 2, IdeImg::Package());
 		int tcy = GetTLTextHeight(txt, StdFont());
-		DrawTLText(w, isz.cx + 4, max((r.Height() - tcy) / 2, 0), r.Width(), txt, StdFont(), ink);
+		DrawTLText(w, isz.cx + Zx(4), max((r.Height() - tcy) / 2, 0), r.Width(), txt, StdFont(), ink);
 		w.End();
+	}
+	virtual Size GetStdSize(const Value& q) const
+	{
+		WString txt = q;
+		Size sz = GetTLTextSize(txt, StdFont());
+		sz.cx += Zx(24);
+		Size isz = IdeImg::Package().GetSize();
+		sz.cy = max(isz.cy, sz.cy);
+		sz.cx += isz.cx;
+		return sz;
 	}
 };
 
