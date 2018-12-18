@@ -2,38 +2,31 @@ sooner:
 
 - drk tyheme
 
-- .iml editor image kind switch
-
 - .iml D&D does not work
 
-- tooltip in package organizer is too small
-
 - Topic++, menu at topics, New topic has wrong hotkey
-
 - New assembly - wrong hotkey (?)
-- tpp new topic wrong hotkey
 
 - cursor problem after local menu invocation (better, but still...)
-
-- correctly reload plist
+- icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
 
 - Uword cursor is blinking even in background
-
-- icondes - rightclick on image in the list, then move mouse over color ramp - weird focus issue happens
 
 - UHD problem with tabbar
 - UHD problem with Prompt text size ([g ?)
 - fix package organiser link options (joining link options missing space)
 - perhaps better UTI names
 - CH improve spinbuttons
-- Delete CocoDnD.cpp -> crash
 
 - bool SystemDraw::IsPaintingOp(const Rect& r) const
 - download .scd files (or put to bundle)
 
+
 * apple debugger
 
 later:
+
+- correctly reload plist
 
 - Draw move ?
 - ch disabled option looks weird
@@ -76,6 +69,13 @@ later:
 - FileSelector
 
 done:
+
+
+- Delete CocoDnD.cpp -> crash
+
+- tooltip in package organizer is too small
+
+- .iml editor image kind switch
 
 - support bundle icons
 - Esc does not work to close console area in theide, nor Assist popup
