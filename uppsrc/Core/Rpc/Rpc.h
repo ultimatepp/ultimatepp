@@ -280,6 +280,7 @@ class RpcRequest : public HttpRequest {
 	int        faultCode;
 	bool       shouldExecute;
 	bool       json, notification;
+	String     protocol_version;
 	void       Init();
 
 public:
@@ -327,8 +328,9 @@ public:
 	
 	RpcRequest& Url(const char *url);
 	
-	RpcRequest& JsonRpc()                                    { json = true; return *this; }
-	RpcRequest& Notification()                               { notification = true; return *this; }
+	RpcRequest& JsonRpc()                                       { json = true; return *this; }
+	RpcRequest& Notification()                                  { notification = true; return *this; }
+	RpcRequest& ProtocolVersion(const char *s)                  { protocol_version = s; return *this; }
 	
 	RpcRequest(const char *url);
 	RpcRequest();
@@ -336,12 +338,12 @@ public:
 
 struct XmlRpcRequest : RpcRequest {
 	XmlRpcRequest(const char *url) : RpcRequest(url) {}
-	XmlRpcRequest() {}	
+	XmlRpcRequest() {}
 };
 
 struct JsonRpcRequest : RpcRequest {
 	JsonRpcRequest(const char *url) : RpcRequest(url) { JsonRpc(); }
-	JsonRpcRequest() { JsonRpc(); }	
+	JsonRpcRequest() { JsonRpc(); }
 };
 
 struct JsonRpcRequestNamed : RpcRequest {
