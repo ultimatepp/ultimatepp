@@ -151,6 +151,7 @@ public:
 	bool Finish();
 	
 	FileZip(const char *name)                 { Create(name); }
+	FileZip()                                 {}
 	~FileZip()                                { Finish(); }
 };
 
