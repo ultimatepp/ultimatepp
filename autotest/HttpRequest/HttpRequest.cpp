@@ -45,15 +45,6 @@ CONSOLE_APP_MAIN
 		ASSERT(h.IsError());
 		LDUMP(h.GetError());
 	}
-	if(GetSysDate() > Date(2018, 12, 1)) { // Because "Resource temporarily unavailable", but let us recheck later
-		HttpRequest h("http://dev.alt.cloudappsportal.com/_api/web/lists");
-		h.KeepAlive();
-		h.Execute();
-		ASSERT(h.GetStatusCode() == 401);
-		DUMP(h.GetReasonPhrase());
-		DUMP(h.GetContent());
-		ASSERT(h.GetContent().EndsWith(".</m:message></m:error>"));
-	}
 	{
 		HttpRequest r("http://httpbin.org/basic-auth/user/passw0rd");
 		r.User("user", "passw0rd");
