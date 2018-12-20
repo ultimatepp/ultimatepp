@@ -102,7 +102,7 @@ void DrawTLText(Draw& draw, int x, int y, int cx, const wchar *text,
 				bool ak = false;
 				start = q;
 				while(q < s && *q >= ' ') {
-					if(akey && ToUpper(ToAscii(*q)) == akey && (apos == 0 || q - start + 1 == apos)) {
+					if(akey && (int)ToUpper(ToAscii(*q)) == akey && (apos == 0 || q - start + 1 == apos)) {
 						ak = true;
 						akey = 0;
 						break;

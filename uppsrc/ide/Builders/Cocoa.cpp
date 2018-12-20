@@ -28,8 +28,6 @@ void GccBuilder::CocoaAppBundle()
 		RealizeDir(icons);
 		PutConsole("Exporting bundle icons to " + icons);
 		
-		bool icons_dirty = false;
-		
 		for(String fn : {
 			"icon_16x16.png",
 			"icon_16x16@2x.png",
