@@ -6,6 +6,16 @@ namespace Upp {
 #define IMAGEFILE <RichText/RichText.iml>
 #include <Draw/iml_source.h>
 
+Color PaintInfo::ResolveInk(Color ink) const
+{
+	return Nvl(textcolor, coloroverride ? SColorText() : Nvl(ink, SColorText()));
+}
+
+Color PaintInfo::ResolvePaper(Color paper) const
+{
+	return coloroverride ? SColorPaper() : Nvl(paper, SColorPaper());
+}
+
 RichPara::Lines RichPara::Begin(RichContext& rc) const
 {
 	Lines pl = FormatLines(rc.page.Width());
@@ -28,13 +38,12 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		if(!IsNull(f.indexentry) && !IsNull(pi.indexentry)) {
 			if(pi.indexentrybg)
 				draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y,
-				              pi.coloroverride ? SColorPaper() : pi.indexentry);
+				              pi.ResolvePaper(pi.indexentry));
 			else
 				draw.DrawRect(zx0, zy0, width, 2, pi.indexentry);
 		}
 		if(!IsNull(f.paper) && !highlight && IsNull(pi.textcolor))
-			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y,
-			              pi.coloroverride ? SColorPaper() : f.paper);
+			draw.DrawRect(zx0, z * y, width, z * (y + linecy) - z * y, pi.ResolvePaper(f.paper));
 		Font fnt = f;
 		int zht = z * tabs(f.GetHeight());
 		int ssa = 0;
@@ -47,7 +56,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		}
 		fnt.Height(zht ? zht : 1);
 		FontInfo fi = fnt.Info();
-		Color ink = Nvl(pi.textcolor, pi.coloroverride ? SColorText() : f.ink);
+		Color ink = pi.ResolveInk(f.ink);
 		if(f.dashed) {
 			int dx = max(fi.GetAscent() / 5, 2);
 			for(int i = 0; dx * i < width; i++)
@@ -314,18 +323,18 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 				r1.Deflate(max(1, q));
 				switch(format.bullet) {
 				case BULLET_BOX:
-					draw.DrawRect(r, pi.coloroverride ? SColorText() : format.ink);
+					draw.DrawRect(r, pi.ResolveInk(format.ink));
 					break;
 				case BULLET_BOXWHITE:
-					draw.DrawRect(r, pi.coloroverride ? SColorText() : format.ink);
-					draw.DrawRect(r1, White);
+					draw.DrawRect(r, pi.ResolveInk(format.ink));
+					draw.DrawRect(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUNDWHITE:
-					draw.DrawEllipse(r, pi.coloroverride ? SColorText() : format.ink);
-					draw.DrawEllipse(r1, pi.coloroverride ? SColorPaper() : White);
+					draw.DrawEllipse(r, pi.ResolveInk(format.ink));
+					draw.DrawEllipse(r1, pi.ResolvePaper(White()));
 					break;
 				case BULLET_ROUND:
-					draw.DrawEllipse(r, pi.coloroverride ? SColorText() : format.ink);
+					draw.DrawEllipse(r, pi.ResolveInk(format.ink));
 					break;
 				default:
 					String s = n.AsText(format);
@@ -334,7 +343,7 @@ void RichPara::Paint(PageDraw& pw, RichContext rc, const PaintInfo& pi,
 						cf.Height(z * cf.GetHeight());
 						draw.DrawText(r.left,
 						              z * y0 - cf.Info().GetAscent(),
-						              s, cf, pi.coloroverride ? SColorText() : cf.ink);
+						              s, cf, pi.ResolveInk(cf.ink));
 					}
 				}
 			}

@@ -140,12 +140,13 @@ void DrawCellBorder(Draw& w, const Rect& rect, const Rect& border, const Rect& m
 	w.DrawRect(x, rect.bottom - border.bottom, v, border.bottom, color);
 }
 
-void RichCell::DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border, const Rect& margin) const
+void RichCell::DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border,
+                        const Rect& margin, const PaintInfo& pi) const
 {
 	w.DrawRect(l + border.left, y + border.top,
 	           r - l - border.left - border.right, yy - y - border.top - border.bottom,
-	           format.color);
-	DrawCellBorder(w, Rect(l, y, r, yy), border, margin, format.bordercolor, format.round);
+	           pi.ResolvePaper(format.color));
+	DrawCellBorder(w, Rect(l, y, r, yy), border, margin, pi.ResolveInk(format.bordercolor), format.round);
 //	w.DrawRect(l, y, r - l, border.top, format.bordercolor);
 //	w.DrawRect(l, y, border.left, yy - y, format.bordercolor);
 //	w.DrawRect(r - border.right, y, border.right, yy - y, format.bordercolor);
@@ -180,12 +181,12 @@ void RichCell::Paint(PageDraw& pw, RichContext rc, PageY npy,
 	Rect margin(LineZoom(pi.zoom, format.margin.left), LineZoom(pi.zoom, format.margin.top),
 	            LineZoom(pi.zoom, format.margin.right), LineZoom(pi.zoom, format.margin.bottom));
 	if(rc.py.page == npy.page)
-		DrawCell(pw.Page(rc.py.page), xpg.left, xpg.right, y, ny, border, margin);
+		DrawCell(pw.Page(rc.py.page), xpg.left, xpg.right, y, ny, border, margin, pi);
 	else {
-		DrawCell(pw.Page(rc.py.page), xpg.left, xpg.right, y, xpg.bottom, border, margin);
+		DrawCell(pw.Page(rc.py.page), xpg.left, xpg.right, y, xpg.bottom, border, margin, pi);
 		for(int i = rc.py.page + 1; i < npy.page; i++)
-			DrawCell(pw.Page(i), nxpg.left, nxpg.right, nxpg.top, nxpg.bottom, border, margin);
-		DrawCell(pw.Page(npy.page), nxpg.left, nxpg.right, nxpg.top, ny, border, margin);
+			DrawCell(pw.Page(i), nxpg.left, nxpg.right, nxpg.top, nxpg.bottom, border, margin, pi);
+		DrawCell(pw.Page(npy.page), nxpg.left, nxpg.right, nxpg.top, ny, border, margin, pi);
 	}
 
 	rc.py = Align(rc, npy);

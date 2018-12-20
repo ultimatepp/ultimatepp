@@ -158,8 +158,8 @@ void RichTable::Paint(PageDraw& pw, RichContext rc, const PaintInfo& _pi, bool b
 		if(RowPaint(pw, rc, tab, false, i, ny, pg[0], pg[1], frr, pi, 0, sel))
 			break;
 
-	Color gc = format.gridcolor;
-	Color fc = format.framecolor;
+	Color gc = pi.ResolveInk(format.gridcolor);
+	Color fc = pi.ResolveInk(format.framecolor);
 	int fl = frameln;
 	if(!IsNull(pi.showcodes)) {
 		if(fl == 0 && !IsNull(pi.showcodes)) {

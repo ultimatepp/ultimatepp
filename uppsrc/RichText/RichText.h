@@ -288,6 +288,9 @@ struct PaintInfo {
 	void   *context;
 	bool    showlabels;
 	bool    shrink_oversized_objects;
+	
+	Color   ResolveInk(Color ink) const;
+	Color   ResolvePaper(Color paper) const;
 
 	PaintInfo();
 };
