@@ -1,0 +1,4 @@
+LAYOUT(EnableCaseLayout, 200, 100)
+	ITEM(Switch, sw, SetLabel(t_("One\nTwo\nThree")).LeftPosZ(28, 56).TopPosZ(8, 88))
+END_LAYOUT
+

@@ -11,12 +11,10 @@ struct OpenGLExample : GLCtrl {
 		DLOG("GLPaint");
 		Size sz = GetSize();
 	
-		GLDraw w;
+		DrawGL w(sz);
 		
 		Rect r = Rect(GetSize()).Deflated(20, 20);
 		
-		w.InitGL(GetSize());
-
 		w.DrawRect(sz, LtRed());
 		DrawFatFrame(w, r, LtBlue(), 2);
 
