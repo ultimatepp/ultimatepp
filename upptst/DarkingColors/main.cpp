@@ -2,38 +2,13 @@
 
 using namespace Upp;
 
-Color MakeDark0(Color c)
-{
-	int n = Grayscale(c);
-	if(n < 70)
-		return Color(min(c.GetR() + 128, 255), min(c.GetG() + 128, 255), min(c.GetB() + 128, 255));
-	if(n > 190)
-		return Color(max(c.GetR() - 128, 0), max(c.GetG() - 128, 0), max(c.GetB() - 128, 0));
-	return c;
-}
-
-Color MakeDark(Color c)
-{
-	double h, s, v;
-	const double m = 1/255.0;
-	RGBtoHSV(c.GetR() * m, c.GetG() * m, c.GetB() * m, h, s, v);
-	DDUMP(c);
-	DDUMP(h);
-	DDUMP(s);
-	DDUMP(v);
-	if(s > v)
-		return HsvColorf(h, 1 - s, v);
-	else
-		return HsvColorf(h, s, 1 - v);
-}
-
 struct ColorTest : TopWindow {
 	ColorSelector color;
 	
 	void Paint(Draw& w) override {
 		Size sz = GetSize();
 		w.DrawRect(0, 0, sz.cx, sz.cy / 2, ~color);
-		w.DrawRect(0, sz.cy / 2, sz.cx, sz.cy / 2 + 1, MakeDark(~color));
+		w.DrawRect(0, sz.cy / 2, sz.cx, sz.cy / 2 + 1, DarkTheme(~color));
 	}
 	
 	ColorTest() {
@@ -44,5 +19,22 @@ struct ColorTest : TopWindow {
 
 GUI_APP_MAIN
 {
+#ifndef _DEBUG
+	for(int i = 0; i < 10000000; i++) {
+		RTIMING("MakeDark");
+		DarkTheme(Color(30, 40, 5));
+		DarkTheme(Color(30, 40, 6));
+		DarkTheme(Color(30, 40, 7));
+		DarkTheme(Color(30, 40, 8));
+	}
+	for(int i = 0; i < 10000000; i++) {
+		RTIMING("DarkThemeCached");
+		DarkThemeCached(Color(30, 40, 5));
+		DarkThemeCached(Color(30, 40, 6));
+		DarkThemeCached(Color(30, 40, 7));
+		DarkThemeCached(Color(30, 40, 8));
+		DarkThemeCached(Color(30, 40, 9));
+	}
+#endif
 	ColorTest().Run();
 }
