@@ -209,9 +209,40 @@ bool IsDark(Color c)
 	return Grayscale(c) < 80;
 }
 
-bool IsLight(Color 	c)
+bool IsLight(Color c)
 {
 	return Grayscale(c) > 255 - 80;
+}
+
+Color DarkTheme(Color c)
+{
+	double h, s, v;
+	const double m = 1/255.0;
+	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
+	return HsvColorf(h, s, (1 + s * 0.3) - v);
+}
+
+Color DarkThemeCached(Color c)
+{
+	const int N = 8;
+	thread_local struct {
+		Color icolor[N];
+		Color ocolor[N];
+		int   ii = 0;
+	} cache;
+	ONCELOCK {
+		for(int i = 0; i < N; i++) {
+			cache.icolor[i] = Color(0, 0, 0);
+			cache.ocolor[i] = Color(255, 255, 255);
+		}
+	}
+	#define DO(i) if(cache.icolor[i] == c) return cache.ocolor[i];
+	DO(0); DO(1); DO(2); DO(3); DO(4); DO(5); DO(6); DO(7);
+	cache.ii = (cache.ii + 1) & (N - 1);
+	cache.icolor[cache.ii] = c;
+	c = DarkTheme(c);
+	cache.ocolor[cache.ii] = c;
+	return c;
 }
 
 }

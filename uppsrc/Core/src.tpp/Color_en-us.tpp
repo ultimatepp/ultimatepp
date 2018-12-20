@@ -1,5 +1,4 @@
 topic "Color";
-[2 $$0,0#00000000000000000000000000000000:Default]
 [i448;a25;kKO9;2 $$1,0#37138531426314131252341829483380:class]
 [l288;2 $$2,0#27521748481378242620020725143825:desc]
 [0 $$3,0#96390100711032703541132217272105:end]
@@ -9,6 +8,7 @@ topic "Color";
 [l288;i1121;b17;O9;~~~.1408;2 $$7,0#10431211400427159095818037425705:param]
 [i448;b42;O9;2 $$8,8#61672508125594000341940100500538:tparam]
 [b42;2 $$9,9#13035079074754324216151401829390:normal]
+[2 $$0,0#00000000000000000000000000000000:Default]
 [{_}%EN-US 
 [ {{10000@(113.42.0) [s0; [*@(229)4 Color]]}}&]
 [s3;%- &]
@@ -319,6 +319,17 @@ olor][@(0.0.255) `&]_[*@3 c])&]
 [s4;%- &]
 [s5;:IsLight`(Color`):%- [@(0.0.255) bool]_[* IsLight]([_^Color^ Color]_[*@3 c])&]
 [s2; True if [%-*@3 c] grayscale is higher than 175 (255 `- 80).&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:DarkTheme`(Upp`:`:Color`):%- [_^Upp`:`:Color^ Color]_[* DarkTheme]([_^Upp`:`:Color^ C
+olor]_[*@3 c])&]
+[s2; `'Dark Theme conversion`'. Converts dark colors to light ones 
+and vice versa, sustaining the color hue.&]
+[s3; &]
+[s4;%- &]
+[s5;:Upp`:`:DarkThemeCached`(Upp`:`:Color`):%- [_^Upp`:`:Color^ Color]_[* DarkThemeCached
+]([_^Upp`:`:Color^ Color]_[*@3 c])&]
+[s2; Cached variant of DarkTheme, caches up to 4 repeating colors.&]
 [s3; &]
 [s4;%- &]
 [s5;:StraightColor`(RGBA`):%- [_^Color^ Color]_[* StraightColor]([_^RGBA^ RGBA]_[*@3 rgba])&]
