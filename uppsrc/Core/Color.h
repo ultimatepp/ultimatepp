@@ -132,6 +132,8 @@ int  Grayscale(const Color& c);
 bool IsDark(Color c);
 bool IsLight(Color c);
 
+Color DarkTheme(Color c);
+Color DarkThemeCached(Color c);
 
 inline bool operator==(const Value& v, Color x)        { return v == x.operator Value(); }
 inline bool operator==(Color x, const Value& v)        { return v == x.operator Value(); }
