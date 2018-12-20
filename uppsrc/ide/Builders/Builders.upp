@@ -6,7 +6,9 @@ uses
 	ide\Core,
 	ide/Android,
 	ide/Java,
-	ide/Android;
+	ide/Android,
+	Draw,
+	plugin/png;
 
 file
 	Builders.h options(BUILDER_OPTION) PCH,
