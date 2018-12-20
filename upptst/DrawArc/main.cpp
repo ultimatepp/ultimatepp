@@ -1,4 +1,5 @@
 #include <CtrlLib/CtrlLib.h>
+#include <Painter/Painter.h>
 
 using namespace Upp;
 
@@ -6,9 +7,8 @@ struct MyApp : TopWindow {
 	virtual void Paint(Draw& w);
 };
 
-void MyApp::Paint(Draw& w)
+void Test(Draw& w)
 {
-	w.DrawRect(GetSize(), White());
 	Pointf center(350, 300);
 	for(int i = 0; i < 13; i++) {
 		double angle = (i - 3) * M_PI / 6;
@@ -27,6 +27,16 @@ void MyApp::Paint(Draw& w)
 		Sizef hand = Polar(Pointf(0, 0), 1, angle);
 		w.DrawArc(box, Point(box_center + radius * hand), box.TopCenter(), PEN_DASHDOT, LtRed());
 	}
+}
+
+void MyApp::Paint(Draw& w)
+{
+	w.DrawRect(GetSize(), White());
+	Test(w);
+	ImagePainter iw(700, 600);
+	iw.Clear(White());
+	Test(iw);
+	w.DrawImage(700, 0, iw);
 }
 
 GUI_APP_MAIN
