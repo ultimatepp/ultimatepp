@@ -20,7 +20,8 @@ public:
 private:
 	bool     Reduce(RichContext& rc) const;
 	PageY    Align(const RichContext& rc, PageY npy) const;
-	void     DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border, const Rect& margin) const;
+	void     DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border,
+	                  const Rect& margin, const PaintInfo& pi) const;
 
 	void        ClearText();
 	void        ClearText(const RichPara::Format& format, const RichStyles& style);
