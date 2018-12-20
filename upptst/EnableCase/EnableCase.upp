@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	EnableCase.h,
+	main.cpp,
+	EnableCase.lay;
+
+mainconfig
+	"" = "GUI";
+
