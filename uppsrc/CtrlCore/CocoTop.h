@@ -18,4 +18,4 @@ public:
 	virtual bool HotKey(dword key);
 
 	void SetMainMenu(Event<Bar&> menu);
-	//$ };
+//$ };

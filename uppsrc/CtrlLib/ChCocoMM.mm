@@ -101,7 +101,7 @@ void Coco_ThemePaint(void *cgcontext, const Upp::Rect& r, int type, int value, i
 		memset(&bdi, 0, sizeof(bdi));
 	    bdi.value = Upp::decode(value, 0, kThemeButtonOff, 1, kThemeButtonOn, kThemeButtonMixed);
 	    bdi.state = st;
-	    bdi.kind = Upp::decode(type, COCO_CHECKBOX, (int)kThemeCheckBox,
+	    bdi.kind = Upp::decode(type, COCO_CHECKBOX, (int)kThemeSmallCheckBox,
 	                                 COCO_RADIOBUTTON, (int)kThemeSmallRadioButton,
 	                                 COCO_BEVELBUTTON, (int)kThemeBevelButtonMedium,
 	                                 COCO_ROUNDEDBUTTON, (int)kThemeRoundedBevelButton,

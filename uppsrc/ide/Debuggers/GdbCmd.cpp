@@ -103,7 +103,7 @@ bool Gdb::Result(String& result, const String& s)
 	return false;
 }
 
-String Gdb::Cmd(const char *command)
+String Gdb::Cmd(const char *command, bool start)
 {
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
 #ifdef _DEBUG
@@ -125,10 +125,16 @@ String Gdb::Cmd(const char *command)
 			LLOG("Running: " << dbg->IsRunning());
 			break;
 		}
+		if(s.GetCount()) DDUMP(s);
 		if(!s.IsEmpty() && Result(result, s)) {
 			LLOG(result);
 			PutVerbose(result);
-			break;
+			if(start) {
+				start = false;
+				result = s.Mid(result.GetCount());
+			}
+			else
+				break;
 		}
 		if(ms0 != msecs()) {
 			ProcessEvents();
@@ -144,7 +150,9 @@ String Gdb::Cmd(const char *command)
 	if(command) {
 		PutVerbose(String() << "Time of `" << command <<"` " << ts);
 	}
-	PutVerbose("Result: " + result);
+	PutVerbose("=========== Result:");
+	PutVerbose(result);
+	PutVerbose("===================");
 	return result;
 }
 

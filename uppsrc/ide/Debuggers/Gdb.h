@@ -27,7 +27,7 @@ public:
 	void      Lock();
 	void      Unlock();
 
-	String    Cmd(const char *command);
+	String    Cmd(const char *command, bool start = false);
 	String    FastCmd(const char *command);
 	
 	bool      IsProcessExitedNormally(const String& cmd_output) const;
