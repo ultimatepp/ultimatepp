@@ -1,5 +1,8 @@
 sooner:
 
+- Warning: Terminal '/usr/bin/xterm' not found, executing in background.
+
+
 - drk tyheme
 
 - .iml D&D does not work
@@ -15,10 +18,7 @@ sooner:
 - UHD problem with tabbar
 - UHD problem with Prompt text size ([g ?)
 - fix package organiser link options (joining link options missing space)
-- perhaps better UTI names
-- CH improve spinbuttons
 
-- bool SystemDraw::IsPaintingOp(const Rect& r) const
 - download .scd files (or put to bundle)
 
 
@@ -26,6 +26,11 @@ sooner:
 
 later:
 
+
+- bool SystemDraw::IsPaintingOp(const Rect& r) const
+
+- perhaps better UTI names
+- CH improve spinbuttons
 - correctly reload plist
 
 - Draw move ?
@@ -39,8 +44,6 @@ later:
 - improve dnd protocol - allow macstyle images and offsets
 
 - filesel icons
-
-- Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
 - Bazaar GetAdapterInfo
 
