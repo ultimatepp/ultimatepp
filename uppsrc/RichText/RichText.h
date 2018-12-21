@@ -284,7 +284,7 @@ struct PaintInfo {
 	Bits  (*spellingchecker)(const RichPara& para);
 	int     highlightpara;
 	Color   highlight;
-	bool    coloroverride;
+	bool    darktheme;
 	void   *context;
 	bool    showlabels;
 	bool    shrink_oversized_objects;

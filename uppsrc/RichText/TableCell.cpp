@@ -147,10 +147,6 @@ void RichCell::DrawCell(Draw& w, int l, int r, int y, int yy, const Rect& border
 	           r - l - border.left - border.right, yy - y - border.top - border.bottom,
 	           pi.ResolvePaper(format.color));
 	DrawCellBorder(w, Rect(l, y, r, yy), border, margin, pi.ResolveInk(format.bordercolor), format.round);
-//	w.DrawRect(l, y, r - l, border.top, format.bordercolor);
-//	w.DrawRect(l, y, border.left, yy - y, format.bordercolor);
-//	w.DrawRect(r - border.right, y, border.right, yy - y, format.bordercolor);
-//	w.DrawRect(l, yy - border.bottom, r - l, border.bottom, format.bordercolor);
 }
 
 PageY RichCell::Align(const RichContext& rc, PageY npy) const

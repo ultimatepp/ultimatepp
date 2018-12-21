@@ -56,7 +56,7 @@ PaintInfo::PaintInfo()
 	highlight = Yellow();
 	indexentry = LtGreen();
 	indexentrybg = false;
-	coloroverride = false;
+	darktheme = false;
 	context = NULL;
 	showlabels = false;
 	shrink_oversized_objects = false;

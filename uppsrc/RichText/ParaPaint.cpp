@@ -8,12 +8,12 @@ namespace Upp {
 
 Color PaintInfo::ResolveInk(Color ink) const
 {
-	return Nvl(textcolor, coloroverride ? SColorText() : Nvl(ink, SColorText()));
+	return Nvl(textcolor, darktheme ? Nvl(DarkThemeCached(ink), SColorText()) : Nvl(ink, SColorText()));
 }
 
 Color PaintInfo::ResolvePaper(Color paper) const
 {
-	return coloroverride ? SColorPaper() : Nvl(paper, SColorPaper());
+	return darktheme ? Nvl(DarkThemeCached(paper), SColorPaper()) : Nvl(paper, SColorPaper());
 }
 
 RichPara::Lines RichPara::Begin(RichContext& rc) const
@@ -65,7 +65,7 @@ void RichPara::Flush(Draw& draw, const PaintInfo& pi, wchar *text,
 		}
 		if(!IsNull(f.link) && !IsNull(pi.hyperlink) && !(fnt.IsUnderline() || f.dashed)) {
 			fnt.Underline();
-			if(!pi.coloroverride && IsNull(pi.textcolor))
+			if(!pi.darktheme && IsNull(pi.textcolor))
 				ink = pi.hyperlink;
 		}
 		x = zx0;

@@ -216,10 +216,12 @@ bool IsLight(Color c)
 
 Color DarkTheme(Color c)
 {
+	if(IsNull(c))
+		return Null;
 	double h, s, v;
 	const double m = 1/255.0;
 	RGBtoHSV(m * c.GetR(), m * c.GetG(), m * c.GetB(), h, s, v);
-	return HsvColorf(h, s, (1 + s * 0.3) - v);
+	return HsvColorf(h, s, (1 + s * 0.5) - v);
 }
 
 Color DarkThemeCached(Color c)
