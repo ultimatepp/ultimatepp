@@ -1,0 +1,11 @@
+uses
+	CtrlLib;
+
+file
+	DarkTheme.h,
+	main.cpp,
+	DarkTheme.lay;
+
+mainconfig
+	"" = "GUI";
+
