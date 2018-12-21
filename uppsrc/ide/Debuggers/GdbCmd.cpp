@@ -106,9 +106,7 @@ bool Gdb::Result(String& result, const String& s)
 String Gdb::Cmd(const char *command, bool start)
 {
 	if(!dbg || !dbg->IsRunning() || IdeIsDebugLock()) return Null;
-#ifdef _DEBUG
 	TimeStop ts;
-#endif
 	Lock();
 	if(command) {
 		LLOG("========= Cmd: " << command);
@@ -125,7 +123,6 @@ String Gdb::Cmd(const char *command, bool start)
 			LLOG("Running: " << dbg->IsRunning());
 			break;
 		}
-		if(s.GetCount()) DDUMP(s);
 		if(!s.IsEmpty() && Result(result, s)) {
 			LLOG(result);
 			PutVerbose(result);
