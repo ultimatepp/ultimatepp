@@ -128,16 +128,18 @@ void Ctrl::RegisterCocoaDropFormats()
 	[nsview registerForDraggedTypes:[PasteboardTypes(drop_formats.GetKeys()) allObjects]];
 }
 
-void RegisterDropFormats(const char *formats)
+void Ctrl::RegisterDropFormats(const char *formats)
 {
+	int n = drop_formats.GetCount();
 	for(String fmt : Split(formats, ';'))
 		drop_formats.FindAdd(fmt);
-	for(Ctrl *q : Ctrl::GetTopCtrls())
-		q->RegisterCocoaDropFormats();
+	if(drop_formats.GetCount() != n)
+		for(Ctrl *q : Ctrl::GetTopCtrls())
+			q->RegisterCocoaDropFormats();
 }
 
 INITBLOCK {
-	RegisterDropFormats("text;png;image;rtf;files;url");
+	Ctrl::RegisterDropFormats("text;png;image;rtf;files;url");
 }
 
 void AppendClipboard(const char *format, const Value& value, String (*render)(const Value& data))
@@ -419,8 +421,10 @@ int Ctrl::DoDragAndDrop(const char *fmts, const Image& sample, dword actions,
 
 	ClearClipboard(true);
 	ClipboardOwner(true)->source = this;
-	for(int i = 0; i < data.GetCount(); i++)
+	for(int i = 0; i < data.GetCount(); i++) {
+		RegisterDropFormats(data.GetKey(i));
 		AppendClipboard(true, data.GetKey(i), data[i].data, data[i].render);
+	}
 	for(String fmt : Split(fmts, ';')) // GetDropData formats
 		AppendClipboard(true, fmt, String(), NULL);
 
