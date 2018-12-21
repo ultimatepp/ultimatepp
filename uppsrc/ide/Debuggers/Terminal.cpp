@@ -87,16 +87,16 @@ bool TTYQuit()          { return false; }
 String GdbCommand(bool console)
 {
 #ifdef PLATFORM_COCOA
-	String gdb = "lldb ";
+	String gdb = "/usr/local/bin/gdb ";
 #else
 	String gdb = "gdb ";
-#endif
 #ifdef PLATFORM_POSIX
 	if(console) {
 		String tty = CreateDebugTTY();
 		if(tty.GetCount())
 			gdb << "-tty=" << tty << ' ';
 	}
+#endif
 #endif
 	return gdb;
 }

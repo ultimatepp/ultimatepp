@@ -1,9 +1,9 @@
+brew install gdb
+
+
 sooner:
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
-
-
-- drk tyheme
 
 - .iml D&D does not work
 
@@ -20,7 +20,6 @@ sooner:
 - fix package organiser link options (joining link options missing space)
 
 - download .scd files (or put to bundle)
-
 
 * apple debugger
 
@@ -73,6 +72,8 @@ later:
 
 done:
 
+
+- drk tyheme
 
 - Delete CocoDnD.cpp -> crash
 

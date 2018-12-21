@@ -100,7 +100,7 @@ void CocoButton(Button::Style& s, int type, int value)
 		Image gg = CreateImage(h[i].GetSize(), SColorFace());
 		Over(gg, h[i]);
 		s.monocolor[i] = s.textcolor[i] = i == CTRL_DISABLED ? SColorDisabled()
-		                 : Grayscale(AvgColor(gg, h[i].GetSize().cy / 3)) > 160 ? SColorText()
+		                 : Grayscale(AvgColor(gg, h[i].GetSize().cy / 3)) > 160 ? Black()
 		                                                                        : White();
 	}
 	s.overpaint = 5;
