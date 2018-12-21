@@ -13,7 +13,7 @@ struct ColorTest : TopWindow {
 	
 	ColorTest() {
 		Add(color.LeftPosZ(0, 300).TopPosZ(0, 300));
-		color << [=] { Refresh(); };
+		color << [=] { Refresh(); Title(AsString(DarkTheme(~color))); };
 	}
 };
 
