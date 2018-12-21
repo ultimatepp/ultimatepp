@@ -280,6 +280,7 @@ void UWord::SerializeApp(Stream& s)
 
 GUI_APP_MAIN
 {
+	StdLogSetup(LOG_FILE|LOG_ELAPSED);
 	SetLanguage(LNG_ENGLISH);
 	SetDefaultCharset(CHARSET_UTF8);
 
