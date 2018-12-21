@@ -113,7 +113,7 @@ String Gdb::Cmd(const char *command)
 	if(command) {
 		LLOG("========= Cmd: " << command);
 		dbg->Write(String(command) + "\n");
-		PutVerbose(command);
+		PutVerbose(String() << "Command: " << command);
 	}
 	String result;
 	int ms0 = msecs();
@@ -141,11 +141,10 @@ String Gdb::Cmd(const char *command)
 			Stop();
 	}
 	Unlock();
-#ifdef _DEBUG
 	if(command) {
-		LLOG("Cmd Time of `" << command <<"` " << ts);
+		PutVerbose(String() << "Time of `" << command <<"` " << ts);
 	}
-#endif
+	PutVerbose("Result: " + result);
 	return result;
 }
 
@@ -155,7 +154,7 @@ String Gdb::FastCmd(const char *command)
 	bool lock = false;
 	if(command) {
 		dbg->Write(String(command) + "\n");
-		PutVerbose(command);
+		PutVerbose(String() << "Fast Command: " << command);
 	}
 	String result;
 	TimeStop ts;
@@ -193,9 +192,10 @@ String Gdb::FastCmd(const char *command)
 		Unlock();
 #ifdef _DEBUG
 	if(command) {
-		LLOG("Fast cmd Time of `" << command << "` " << ts);
+		PutVerbose(String() << "Time of `" << command <<"` " << ts);
 	}
 #endif
+	PutVerbose("Result: " + result);
 	return result;
 }
 

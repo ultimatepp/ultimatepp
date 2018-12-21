@@ -124,7 +124,11 @@ int CharFilterReSlash(int c)
 
 String Bpoint(Host& host, const String& file, int line)
 {
+#ifdef PLATFORM_COCOA
+	return String() << " -l " << line + " -f " << Filter(host.GetHostPath(NormalizePath(file)), CharFilterReSlash);
+#else
 	return String().Cat() << Filter(host.GetHostPath(NormalizePath(file)), CharFilterReSlash) << ":" << line + 1;
+#endif
 }
 
 bool Gdb::TryBreak(const char *text)
@@ -143,15 +147,23 @@ bool Gdb::SetBreakpoint(const String& filename, int line, const String& bp)
 	}
 
 	String bi = Bpoint(*host, filename, line);
-	
+
 	String command;
+#ifdef PLATFORM_COCOA
+	if(bp.IsEmpty())
+		command = "breakpoint clear " + bi;
+	else if(bp[0]==0xe || bp == "1")
+		command = "breakpoint set " + bi;
+	else
+		command = "breakpoint set " + bi + " if " + bp;
+#else
 	if(bp.IsEmpty())
 		command = "clear " + bi;
 	else if(bp[0]==0xe || bp == "1")
 		command = "b " + bi;
 	else
 		command = "b " + bi + " if " + bp;
-	
+#endif
 	return !FastCmd(command).IsEmpty();
 }
 
@@ -536,7 +548,7 @@ bool Gdb::Create(One<Host>&& _host, const String& exefile, const String& cmdline
 	watches.WhenAcceptEdit = THISBACK(ObtainData);
 	tab <<= THISBACK(ObtainData);
 
-#ifdef PLATFORM_OSX_0
+#ifdef PLATFORM_COCOA
 	Cmd("settings set prompt " GDB_PROMPT);
 #else
 	Cmd("set prompt " GDB_PROMPT);
