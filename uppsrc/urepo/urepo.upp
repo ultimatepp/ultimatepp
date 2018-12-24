@@ -6,6 +6,7 @@ uses
 file
 	urepo.h options(BUILDER_OPTION) PCH,
 	Console.cpp,
+	Credentials.cpp,
 	RepoSync.cpp,
 	Diff.cpp,
 	main.cpp,
@@ -15,5 +16,5 @@ file
 	Copying;
 
 mainconfig
-	"" = "";
+	"" = "GUI";
 

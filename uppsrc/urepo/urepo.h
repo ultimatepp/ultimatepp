@@ -33,6 +33,7 @@ String SvnCmd(const char *cmd);
 enum { NOT_REPO_DIR = 0, SVN_DIR, GIT_DIR };
 
 int    GetRepoKind(const String& p);
+String GetSvnDir(const String& p);
 
 String GitCmd(const char *dir, const char *command);
 
@@ -56,6 +57,10 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 	Array<DocEdit>           message;
 	Array<Button>            diff;
 	ArrayMap<String, String> msgmap;
+
+	Index<String>                            svndir;
+	VectorMap<String, Tuple<String, String>> svn_credentials;
+	bool                                     remember_credentials = true;
 	
 	struct SvnOptions : WithSvnOptionsLayout<ParentCtrl> {
 		SvnOptions() { CtrlLayout(*this); }
@@ -71,7 +76,8 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 	};
 	
 	Array<Work> work;
-	
+
+	String SvnCmd(const char *cmd, const String& dir);
 	bool ListGit(const String& path);
 	bool ListSvn(const String& path);
 	bool GitFile(UrepoConsole& sys, int action, const String& path, bool revert);
@@ -79,6 +85,7 @@ struct RepoSync : WithRepoSyncLayout<TopWindow> {
 	void SyncCommits();
 	void SyncList();
 	void DoDiff(int ii);
+	void Serialize(Stream& s);
 
 	typedef RepoSync CLASSNAME;
 
@@ -93,6 +100,8 @@ public:
 	RepoSync();
 };
 
+
+void EditCredentials(RepoSync& rs);
 
 void RunRepoDiff(const String& filepath);
 

@@ -1,10 +1,5 @@
 #include "urepo.h"
 
-String SvnCmd(const char *cmd)
-{
-	return String() << "svn " << cmd << " --non-interactive ";
-}
-
 RepoSync::RepoSync()
 {
 	CtrlLayoutOKCancel(*this, "Version control repository synchronize");
@@ -18,7 +13,24 @@ RepoSync::RepoSync()
 	list.SetLineCy(max(Draw::GetStdFontCy() + Zy(4), Zy(20)));
 	Sizeable().Zoomable();
 	BackPaint();
+	credentials << [=] {
+		EditCredentials(*this);
+	};
 }
+
+String RepoSync::SvnCmd(const char *svncmd, const String& dir)
+{
+	String cmd;
+	cmd << "svn " << svncmd << " --non-interactive ";
+	int q = svn_credentials.Find(GetSvnDir(dir));
+	if(q >= 0) {
+		Tuple<String, String> h = svn_credentials[q];
+		if(h.a.GetCount() && h.b.GetCount())
+			cmd << "--username " << h.a << " --password " << h.b << " ";
+	}
+	return cmd;
+}
+
 
 int CharFilterSvnMsgRepo(int c)
 {
@@ -183,6 +195,8 @@ void RepoSync::SyncCommits()
 void RepoSync::SyncList()
 {
 	list.Clear();
+	credentials.Show();
+	svndir.Clear();
 	for(const auto& w : work) {
 		String path = GetFullPath(w.dir);
 		int hi = list.GetCount();
@@ -203,6 +217,8 @@ void RepoSync::SyncList()
 				o.commit = false;
 				o.commit.Disable();
 			}
+			credentials.Show();
+			svndir.FindAdd(GetSvnDir(w.dir));
 		}
 		if(w.kind == GIT_DIR) {
 			auto& o = list.CreateCtrl<GitOptions>(hi, 0, false);
@@ -359,7 +375,7 @@ again:
 			if(svn && svn->commit) {
 				if(action == MESSAGE && commit) {
 					String msg = list.Get(l, 3);
-					if(sys.CheckSystem(SvnCmd("commit") << filelist << " -m \"" << msg << "\""))
+					if(sys.CheckSystem(SvnCmd("commit", repo_dir) << filelist << " -m \"" << msg << "\""))
 						msgmap.GetAdd(repo_dir) = msg;
 					l++;
 					break;
@@ -383,7 +399,7 @@ again:
 			l++;
 		}
 		if(svn && svn->update)
-			sys.CheckSystem(SvnCmd("update").Cat() << repo_dir);
+			sys.CheckSystem(SvnCmd("update", repo_dir).Cat() << repo_dir);
 		if(git && git->push)
 			sys.Git(repo_dir, "push");
 		if(git && git->pull)
@@ -432,7 +448,7 @@ bool RepoSync::SvnFile(UrepoConsole& sys, String& filelist, int action, const St
 			RepoSvnDel(path);
 			String tp = AppendFileName(GetFileFolder(path), Format(Uuid::Create()));
 			FileMove(path, tp);
-			sys.CheckSystem(SvnCmd("update") << " \"" << path << "\"");
+			sys.CheckSystem(SvnCmd("update", path) << " \"" << path << "\"");
 			RepoMoveSvn(path, tp);
 			sRepoDeleteFolderDeep(path);
 			FileMove(tp, path);
@@ -459,14 +475,24 @@ bool RepoSync::SvnFile(UrepoConsole& sys, String& filelist, int action, const St
 	return findarg(action, SVN_IGNORE, DELETEC) < 0;
 }
 
+void RepoSync::Serialize(Stream& s)
+{
+	int version = 0;
+	s / version;
+	s % msgmap;
+	s % remember_credentials;
+	if(remember_credentials)
+		s % svn_credentials;
+}
+
 void RepoSync::SetMsgs(const String& s)
 {
-	LoadFromString(msgmap, s);
+	LoadFromString(*this, Garble(s));
 }
 
 String RepoSync::GetMsgs()
 {
-	return StoreAsString(msgmap);
+	return Garble(StoreAsString(*this));
 }
 
 int GetRepoKind(const String& p)

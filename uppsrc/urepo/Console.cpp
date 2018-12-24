@@ -26,58 +26,42 @@ void UrepoConsole::Log(const Value& s, Color ink)
 	list.Add(AttrText(s).SetFont(font).NormalInk(ink), s);
 }
 
-int UrepoConsole::System(const char *cmd_)
+int UrepoConsole::System(const char *cmd)
 {
 	if(!IsOpen())
 		Open();
-	WithUsrPwdLayout<TopWindow> credentials;
-	CtrlLayoutOKCancel(credentials, "Credentials");
-	for(;;) {
-		String cmd = cmd_;
-		if(!IsNull(~credentials.usr) || !IsNull(~credentials.pwd)) {
-		//	cmd.Replace("--non-interactive ", "");
-			cmd << " --username " << ~credentials.usr << " --password " << ~credentials.pwd;
+	list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(LtBlue));
+	int ii = list.GetCount();
+	LocalProcess p;
+	if(!p.Start(cmd))
+		return -1;
+	String out;
+	canceled = false;
+	cancel.Show(withcancel);
+	while(p.IsRunning() && IsOpen()) {
+		String h = p.Get();
+		out.Cat(h);
+		int lf = out.ReverseFind('\n');
+		if(lf >= 0) {
+			AddResult(out.Mid(0, lf + 1));
+			out = out.Mid(lf + 1);
 		}
-		list.Add(AttrText(cmd).SetFont(font().Bold()).Ink(LtBlue));
-		int ii = list.GetCount();
-		LocalProcess p;
-		if(!p.Start(cmd))
-			return -1;
-		String out;
-		canceled = false;
-		cancel.Show(withcancel);
-		while(p.IsRunning() && IsOpen()) {
-			String h = p.Get();
-			out.Cat(h);
-			int lf = out.ReverseFind('\n');
-			if(lf >= 0) {
-				AddResult(out.Mid(0, lf + 1));
-				out = out.Mid(lf + 1);
-			}
-			ProcessEvents();
-			Sleep(h.GetCount() == 0); // p.Wait would be much better here!
-			if(canceled)
-				break;
-		}
-		cancel.Hide();
-		out.Cat(p.Get());
-		AddResult(out);
 		ProcessEvents();
-		int code = canceled ? -1 : p.GetExitCode();
-		bool auth_error = false;
-		if(code) {
-			while(ii < list.GetCount()) {
-				if(list.Get(ii, 0).ToString().Find("svn: E170001") >= 0)
-					auth_error = true;
-				list.Set(ii, 0, AttrText((String)list.Get(ii, 1)).SetFont(font).Ink(LtRed));
-				ii++;
-			}
-			if(!auth_error || credentials.Execute() != IDOK)
-				return code;
-		}
-		else
-			return code;
+		Sleep(h.GetCount() == 0); // p.Wait would be much better here!
+		if(canceled)
+			break;
 	}
+	cancel.Hide();
+	out.Cat(p.Get());
+	AddResult(out);
+	ProcessEvents();
+	int code = canceled ? -1 : p.GetExitCode();
+	if(code)
+		while(ii < list.GetCount()) {
+			list.Set(ii, 0, AttrText((String)list.Get(ii, 1)).SetFont(font).Ink(LtRed));
+			ii++;
+		}
+	return code;
 }
 
 int UrepoConsole::CheckSystem(const char *s)
