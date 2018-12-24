@@ -1,7 +1,17 @@
 LAYOUT(RepoSyncLayout, 680, 400)
 	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
 	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(4, 64).BottomPosZ(4, 24))
+	ITEM(Button, credentials, SetLabel(t_("Credentials..")).LeftPosZ(500, 84).BottomPosZ(4, 24))
 	ITEM(Button, ok, SetLabel(t_("Synchronize!")).RightPosZ(4, 84).BottomPosZ(4, 24))
+END_LAYOUT
+
+LAYOUT(CredentialsLayout, 680, 400)
+	ITEM(ArrayCtrl, list, AutoHideSb(true).HSizePosZ(4, 4).VSizePosZ(4, 36))
+	ITEM(Button, cancel, SetLabel(t_("Cancel")).LeftPosZ(544, 64).BottomPosZ(4, 24))
+	ITEM(Button, ok, SetLabel(t_("OK")).LeftPosZ(612, 64).BottomPosZ(4, 24))
+	ITEM(Option, remember, SetLabel(t_("Remember (credentials will be stored in configuration as clear text)")).LeftPosZ(120, 348).TopPosZ(372, 20))
+	ITEM(Option, show_passwords, SetLabel(t_("Show passwords")).LeftPosZ(4, 108).TopPosZ(372, 20))
+	ITEM(Button, clear, SetLabel(t_("Clear all")).LeftPosZ(476, 64).TopPosZ(372, 24))
 END_LAYOUT
 
 LAYOUT(UrepoConsoleLayout, 680, 660)
@@ -19,14 +29,5 @@ LAYOUT(GitOptionsLayout, 164, 16)
 	ITEM(Option, commit, SetLabel(t_("Commit")).LeftPosZ(0, 68).VCenterPosZ(16, 0))
 	ITEM(Option, push, SetLabel(t_("Push")).LeftPosZ(68, 48).VCenterPosZ(16, 0))
 	ITEM(Option, pull, SetLabel(t_("Pull")).LeftPosZ(116, 48).VCenterPosZ(16, 0))
-END_LAYOUT
-
-LAYOUT(UsrPwdLayout, 168, 92)
-	ITEM(Label, dv___0, SetLabel(t_("Username")).LeftPosZ(4, 60).TopPosZ(4, 19))
-	ITEM(EditString, usr, LeftPosZ(68, 92).TopPosZ(4, 19))
-	ITEM(Label, dv___2, SetLabel(t_("Password")).LeftPosZ(4, 60).TopPosZ(28, 19))
-	ITEM(EditString, pwd, LeftPosZ(68, 92).TopPosZ(28, 19))
-	ITEM(Button, ok, SetLabel(t_("OK")).HCenterPosZ(64, -24).BottomPosZ(8, 24))
-	ITEM(Button, cancel, SetLabel(t_("Cancel")).RightPosZ(8, 64).BottomPosZ(8, 24))
 END_LAYOUT
 

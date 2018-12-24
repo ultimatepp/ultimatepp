@@ -121,7 +121,7 @@ RpcGet RpcRequest::Execute()
 		ContentType("text/xml");
 		request = XmlHeader();
 		if(protocol_version.GetCount())
-			request << "<!--" << "protocolVersion=\\\"" << protocol_version << "\\\"" << "-->\r\n";
+			request << "<!--protocolVersion=\\\"" << protocol_version << "\\\"-->\r\n";
 		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
 	}
 	if(sLogRpcCalls) {
