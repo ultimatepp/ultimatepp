@@ -56,6 +56,11 @@ class ProtectServer : public Scgi
 		// key used to en/decrypt http data
 		String communicationKey;
 		
+		// smtp resets the From field on each New()
+		// so we shall store it here :-(
+		String fromMail;
+		String fromName;
+		
 		// welcome message sent on key activation e-mail
 		// a %ACTIVATIONKEY% string inside body will be
 		// replaced by current activation key
@@ -139,6 +144,9 @@ public:
 	
 	// gets mailer
 	Smtp &GetSmtp(void) { return smtp; }
+	
+	// sets smtp 'From' fields
+	ProtectServer &From(String const &mail, String const &name = Null) { fromMail = mail; fromName = name; return *this; }
 	
 	// sets application key (to be returned on auth success)
 	ProtectServer &SetAppKey(String const &k) { appKey = k; return *this; }

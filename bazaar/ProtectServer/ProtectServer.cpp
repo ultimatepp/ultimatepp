@@ -211,7 +211,7 @@ bool ProtectServer::SendMACAlert(String const &eMail, Vector<String> const &mail
 	smtp.TimeSent(GetSysTime());
 	smtp.To(alertMACEMail);
 	smtp.Subject(t_("PROTECT SERVER : ATTEMPT TO REGISTER WITH EXPIRED MAC"));
-//	smtp.From(serverVars.Get("SERVER_NAME"));
+	smtp.From(fromMail, fromName);
 	String body = "Attempt to register with e-mail : " + eMail + "\n";
 	body += "E-Mails connected to this one by MAC addresses :\n";
 	for(int i = 0; i < mails.GetCount(); i++)
@@ -774,7 +774,7 @@ bool ProtectServer::SendActivationMail(VectorMap<String, Value> const &userData,
 	smtp.TimeSent(GetSysTime());
 	smtp.To(userData.Get("EMAIL"));
 	smtp.Subject(subject);
-//	smtp.From(serverVars.Get("SERVER_NAME"));
+	smtp.From(fromMail, fromName);
 	smtp.Body(body, mime);
 	return smtp.Send();
 }
