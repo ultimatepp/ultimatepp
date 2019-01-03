@@ -40,6 +40,12 @@ void ValueGet(int& n, const Value& v)
 	n = v;
 }
 
+void ValueGet(int64& n, const Value& v)
+{
+	ValueCheck(IsNull(v) || IsNumber(v));
+	n = v;
+}
+
 void ValueGet(String& s, const Value& v)
 {
 	ValueCheck(IsNull(v) || IsString(v));
@@ -104,6 +110,11 @@ void ValueGet(ValueMap& vm, const Value& v)
 }
 
 void ValuePut(Value& v, int n)
+{
+	v = n;
+}
+
+void ValuePut(Value& v, int64 n)
 {
 	v = n;
 }

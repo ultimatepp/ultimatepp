@@ -34,6 +34,7 @@ struct RawJsonText {
 void ValueCheck(bool b);
 
 void ValueGet(int& n, const Value& v);
+void ValueGet(int64& n, const Value& v);
 void ValueGet(bool& b, const Value& v);
 void ValueGet(String& s, const Value& v);
 void ValueGet(double& x, const Value& v);
@@ -112,6 +113,7 @@ void ValueGet(VectorMap<int, T>& x, const Value& v)
 }
 
 void ValuePut(Value& v, int n);
+void ValuePut(Value& v, int64 n);
 void ValuePut(Value& v, const String& s);
 void ValuePut(Value& v, const char *s);
 void ValuePut(Value& v, double x);
@@ -248,9 +250,9 @@ private:
 	XmlRpcDo *rpc;
 };
 
-String FormatXmlRpcValue(const Value& value);
-String FormatXmlRpcParam(const Value& param);
-String FormatXmlRpcParams(const ValueArray& params);
+String FormatXmlRpcValue(const Value& _v, bool supports_i8);
+String FormatXmlRpcParam(const Value& param, bool supports_i8);
+String FormatXmlRpcParams(const ValueArray& params, bool supports_i8);
 
 String FormatXmlRpcError(int code, const char *text);
 
@@ -280,6 +282,7 @@ class RpcRequest : public HttpRequest {
 	int        faultCode;
 	bool       shouldExecute;
 	bool       json, notification;
+	bool       supports_i8;
 	String     protocol_version;
 	void       Init();
 
@@ -330,7 +333,7 @@ public:
 	
 	RpcRequest& JsonRpc()                                       { json = true; return *this; }
 	RpcRequest& Notification()                                  { notification = true; return *this; }
-	RpcRequest& ProtocolVersion(const char *s)                  { protocol_version = s; return *this; }
+	RpcRequest& SupportsI8()                                    { supports_i8 = true; protocol_version = "2.1"; return *this; }
 	
 	RpcRequest(const char *url);
 	RpcRequest();

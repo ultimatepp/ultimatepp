@@ -136,7 +136,7 @@ String XmlRpcDo::XmlResult()
 				*rpc_trace << "Processing error: " << e << '\n';
 			return FormatXmlRpcError(RPC_SERVER_PROCESSING_ERROR, "Processing error: " + e);
 		}
-		r << FormatXmlRpcParams(data.out);
+		r << FormatXmlRpcParams(data.out, false);
 	}
 	r << "\r\n</methodResponse>\r\n";
 	return r;

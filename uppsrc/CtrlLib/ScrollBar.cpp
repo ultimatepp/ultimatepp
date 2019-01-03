@@ -811,7 +811,7 @@ ScrollBars::~ScrollBars() {}
 
 void Scroller::Scroll(Ctrl& p, const Rect& rc, Point newpos, Size cellsize)
 {
-	if(!IsNull(psb)) {
+	if(!IsNull(psb) && !p.IsTransparent()) {
 		Point d = psb - newpos;
 		p.ScrollView(rc, d.x * cellsize.cx, d.y * cellsize.cy);
 	}

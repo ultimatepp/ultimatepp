@@ -45,8 +45,12 @@ String DeXml(const String& s, byte charset, bool escapelf)
 String XmlHeader(const char *encoding, const char *version, const char *standalone)
 {
 	StringBuffer r;
-	r << "<?xml version=\"" << version << "\" encoding=\"" << encoding << "\" standalone=\""
-	  << standalone << "\" ?>\r\n";
+	r << "<?xml version=\"" << version << "\"";
+	if(encoding)
+		r << " encoding=\"" << encoding << "\"";
+	if(standalone)
+		r << " standalone=\"" << standalone << "\"";
+	r << " ?>\r\n";
 	return r;
 }
 

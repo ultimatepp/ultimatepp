@@ -15,6 +15,14 @@ Value ParseXmlRpcValue(XmlParser& p)
 		r = p.ReadInt();
 	}
 	else
+	if(p.Tag("i8")) {
+		String s = p.ReadText();
+		CParser p(s);
+		if(!p.IsInt())
+			throw XmlError("integer expected");
+		r = p.ReadInt64();
+	}
+	else
 	if(p.Tag("boolean")) {
 		int n = StrInt(p.ReadText());
 		if(n != 0 && n != 1)
@@ -97,17 +105,20 @@ ValueArray ParseXmlRpcParams(XmlParser& p)
 	return va;
 }
 
-String FormatXmlRpcValue(const Value& _v)
+String FormatXmlRpcValue(const Value& _v, bool supports_i8)
 {
 	String r;
 	Value v = _v;
-	if(v.GetType() == INT64_V) {
+	if(v.GetType() == INT64_V && !supports_i8) {
 		int64 x = v;
 		if((int)x == x)
 			v = (int)x;
 	}
 	if(IsNull(v) && !IsString(v) && !IsValueArray(v))
 		r = XmlTag("nil")();
+	else
+	if(v.GetType() == INT64_V && supports_i8)
+		r = XmlTag("i8")(AsString((int64)v));
 	else
 	if(v.GetType() == INT_V)
 		r = XmlTag("int")(Format("%d", (int)v));
@@ -131,7 +142,7 @@ String FormatXmlRpcValue(const Value& _v)
 		const Index<Value>& k = vm.GetKeys();
 		ValueArray va = vm.GetValues();
 		for(int i = 0; i < k.GetCount(); i++)
-			r << XmlTag("member")(XmlTag("name")(k[i]) + FormatXmlRpcValue(va[i]));
+			r << XmlTag("member")(XmlTag("name")(k[i]) + FormatXmlRpcValue(va[i], supports_i8));
 		r << "</struct>";
 	}
 	else
@@ -139,7 +150,7 @@ String FormatXmlRpcValue(const Value& _v)
 		r = "<array><data>";
 		ValueArray va = v;
 		for(int i = 0; i < va.GetCount(); i++)
-			r << FormatXmlRpcValue(va[i]);
+			r << FormatXmlRpcValue(va[i], supports_i8);
 		r << "</data></array>";
 	}
 	else
@@ -150,17 +161,17 @@ String FormatXmlRpcValue(const Value& _v)
 	return XmlTag("value")(r);
 }
 
-String FormatXmlRpcParam(const Value& param)
+String FormatXmlRpcParam(const Value& param, bool supports_i8)
 {
-	return XmlTag("param")(FormatXmlRpcValue(param));
+	return XmlTag("param")(FormatXmlRpcValue(param, supports_i8));
 }
 
-String FormatXmlRpcParams(const ValueArray& params)
+String FormatXmlRpcParams(const ValueArray& params, bool supports_i8)
 {
 	String r;
 	r = "<params>";
 	for(int i = 0; i < params.GetCount(); i++)
-		r << FormatXmlRpcParam(params[i]);
+		r << FormatXmlRpcParam(params[i], supports_i8);
 	r << "</params>";
 	return r;
 }
