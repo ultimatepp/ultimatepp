@@ -44,6 +44,7 @@ void RpcRequest::Init()
 	RequestTimeout(30000);
 	MaxRetries(0);
 	json = false;
+	supports_i8 = false;
 }
 
 RpcRequest::RpcRequest(const char *url)
@@ -121,8 +122,8 @@ RpcGet RpcRequest::Execute()
 		ContentType("text/xml");
 		request = XmlHeader();
 		if(protocol_version.GetCount())
-			request << "<!--protocolVersion=\\\"" << protocol_version << "\\\"-->\r\n";
-		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out));
+			request << "<!--protocolVersion=\"" << protocol_version << "\"-->\r\n";
+		request << XmlTag("methodCall")(XmlTag("methodName")(method) + FormatXmlRpcParams(data.out, supports_i8));
 	}
 	if(sLogRpcCalls) {
 		if(sLogRpcCallsCompress)
@@ -202,6 +203,8 @@ RpcGet RpcRequest::Execute()
 		XmlParser p(response);
 		try {
 			p.ReadPI();
+			while(p.IsComment())
+				p.ReadComment();
 			p.PassTag("methodResponse");
 			if(p.Tag("fault")) {
 				Value m = ParseXmlRpcValue(p);
