@@ -81,18 +81,17 @@ Label::~Label() {}
 
 CH_COLOR(LabelBoxColor, SColorShadow());
 
-// these are not used now
-CH_COLOR(LabelBoxTextColor, IsDark(SColorFace()) ? White() : Black());
+CH_COLOR(LabelBoxTextColor, SColorText());
 CH_COLOR(LabelBoxDisabledTextColor, SColorDisabled());
 
 LabelBox::LabelBox()
 {
 	color = Null;
-	LabelBase::SetInk(SColorText(), SColorDisabled());
+	LabelBase::SetInk(LabelBoxTextColor(), LabelBoxDisabledTextColor());
 	SetVAlign(ALIGN_TOP);
-	#if defined(flagWINGL) || defined(flagLINUXGL)
+#if defined(flagWINGL) || defined(flagLINUXGL)
 	ClipToBounds(false);
-	#endif
+#endif
 }
 
 void  LabelBox::AssignAccessKeys(dword used)
