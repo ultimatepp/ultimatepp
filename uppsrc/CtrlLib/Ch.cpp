@@ -76,7 +76,7 @@ void ChClassicSkin()
 		s.popupbody = SColorFace();
 	}
 
-	LabelBoxTextColor_Write(SColorText());
+//	LabelBoxTextColor_Write(SColorText());
 }
 
 #ifdef PLATFORM_X11

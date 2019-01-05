@@ -555,8 +555,8 @@ void ChHostSkin()
 			                14, 26);
 		}
 
-		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
-		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));
+//		LabelBoxTextColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3803/*TMT_TEXTCOLOR*/));
+//		LabelBoxColor_Write(XpColor(XP_BUTTON, BP_GROUPBOX, GBS_NORMAL, 3822/*TMT_BORDERCOLORHINT*/));
 
 		ChLookFn(XpLookFn);
 	}
