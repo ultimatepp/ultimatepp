@@ -1,0 +1,13 @@
+description "Linux Frame Buffer backend implemented using VirtualGui\377";
+
+library(LINUX) "udev input";
+
+options(GCC) -Wreturn-type;
+
+file
+	LinuxFrameBuffer.h,
+	LinuxFrameBuffer.cpp,
+	Keys.cpp,
+	Events.cpp,
+	Draw.cpp;
+

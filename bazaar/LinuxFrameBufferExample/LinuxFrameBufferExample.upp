@@ -1,0 +1,17 @@
+description "Uword running on Linux Frame Buffer backend\377";
+
+uses
+	CtrlLib,
+	RichEdit,
+	plugin/DroidFonts,
+	VirtualGui,
+	LinuxFrameBuffer,
+	VirtualGui;
+
+file
+	main.cpp,
+	test.qtf;
+
+mainconfig
+	"" = "GUI VIRTUALGUI";
+
