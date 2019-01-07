@@ -34,6 +34,21 @@ LinuxFrameBuffer::~LinuxFrameBuffer()
 
 void LinuxFrameBuffer::Destroy()
 {
+	if (input.kb_state != nullptr){
+		xkb_state_unref(input.kb_state);
+		input.kb_state = nullptr;
+	}
+
+	if (input.kb_map != nullptr){
+		xkb_keymap_unref(input.kb_map);
+		input.kb_map = nullptr;
+	}
+
+	if (input.kb_ctx != nullptr){
+		xkb_context_unref(input.kb_ctx);
+		input.kb_ctx = nullptr;
+	}
+	
 	if (input.lib_inp != nullptr){
 		libinput_unref(input.lib_inp);
 		input.lib_inp = nullptr;
@@ -100,6 +115,27 @@ bool LinuxFrameBuffer::Create(const char * device)
 	
 	libinput_udev_assign_seat(input.lib_inp, "seat0");
 	libinput_dispatch(input.lib_inp);
+	 
+	input.kb_ctx = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+	if (input.kb_ctx == nullptr){
+		RLOG("xkb context error");
+		Destroy();
+		return false;
+	}
+	
+	input.kb_map = xkb_keymap_new_from_names(input.kb_ctx, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
+	if (input.kb_map == nullptr){
+		RLOG("xkb map error");
+		Destroy();
+		return false;
+	}
+	
+	input.kb_state = xkb_state_new(input.kb_map);
+	if (input.kb_state == nullptr){
+		RLOG("xkb state error");
+		Destroy();
+		return false;
+	}
 	
 	screen.image.Create(GetSize());
 	screen.painter.Create(screen.image, MODE_ANTIALIASED);

@@ -1,6 +1,9 @@
 description "Linux Frame Buffer backend implemented using VirtualGui\377";
 
-library(LINUX) "udev input";
+uses
+	VirtualGui;
+
+library(LINUX) "udev input xkbcommon";
 
 options(GCC) -Wreturn-type;
 

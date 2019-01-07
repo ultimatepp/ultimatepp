@@ -50,11 +50,15 @@ bool LinuxFrameBuffer::ProcessEvent(bool *quit)
 					case KEY_LEFTSHIFT:		CHMOD(input.keyboard.modkeys, KM_LSHIFT, pressed); break;
 					case KEY_RIGHTSHIFT:	CHMOD(input.keyboard.modkeys, KM_RSHIFT, pressed); break;
 				}
-				auto upp_key = TranslateKeyEvent(key);
-				RDUMPHEX(key);
-				RDUMPHEX(upp_key);
-				Ctrl::DoKeyFB(upp_key | (!pressed ? K_KEYUP : 0), 1);
-				
+
+				auto upp_scan = TranslateScanCode(key);
+				if (upp_scan) Ctrl::DoKeyFB(upp_scan | (!pressed ? K_KEYUP : 0), 1);
+				else { LOG(Format("Scan code %d was not translated to K_*, see input-event-codes.h", (int)key)); }
+
+				if (pressed){
+					WString txt = ScanCodeToUtf8(key).ToWString();
+					for (int i = 0; i < txt.GetCount(); i++) Ctrl::DoKeyFB(txt[i], 1);
+				}
 			}
 			break;
 				

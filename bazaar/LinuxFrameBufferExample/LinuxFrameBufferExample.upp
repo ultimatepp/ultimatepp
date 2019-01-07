@@ -4,9 +4,7 @@ uses
 	CtrlLib,
 	RichEdit,
 	plugin/DroidFonts,
-	VirtualGui,
-	LinuxFrameBuffer,
-	VirtualGui;
+	LinuxFrameBuffer;
 
 file
 	main.cpp,

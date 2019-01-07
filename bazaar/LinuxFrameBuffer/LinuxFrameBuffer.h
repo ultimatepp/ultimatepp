@@ -4,6 +4,8 @@
 #include <CtrlLib/CtrlLib.h>
 #include <Painter/Painter.h>
 #include <libinput.h>
+#include <xkbcommon/xkbcommon.h>
+
 
 namespace Upp {
 	
@@ -37,8 +39,12 @@ private:
 	}screen;
 	
 	struct input_t{
-		struct udev		*udev;
-		struct libinput	*lib_inp;
+		struct udev			*udev;
+		struct libinput		*lib_inp;
+		
+		struct xkb_context	*kb_ctx;
+		struct xkb_keymap	*kb_map;
+		struct xkb_state	*kb_state;
 		
 		struct mouse_t{
 			uint32		buttons;
@@ -53,10 +59,11 @@ private:
 			keyboard_t(): modkeys(0) {}
 		}keyboard;
 		
-		input_t(): udev(nullptr), lib_inp(nullptr) {}
+		input_t(): udev(nullptr), lib_inp(nullptr), kb_ctx(nullptr), kb_map(nullptr), kb_state(nullptr) {}
 	}input;
 	
-	uint32 TranslateKeyEvent(uint32 chr);
+	uint32 TranslateScanCode(uint32 chr);
+	String ScanCodeToUtf8(uint32 chr);
 	
 public:
 	bool Create(const char * device);
