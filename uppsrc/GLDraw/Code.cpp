@@ -4,7 +4,7 @@ namespace Upp {
 
 GLCode::GLCode(const char *vertex_shader, const char *pixel_shader)
 {
-	Create(vertex_shader, pixel_shader);
+	Compile(vertex_shader, pixel_shader);
 	Vector<Tuple2<int, const char *>> ins;
 	CParser p(vertex_shader);
 	int ii = 0;
@@ -36,6 +36,7 @@ GLCode::GLCode(const char *vertex_shader, const char *pixel_shader)
 		}
 		else
 			p.SkipTerm();
+	Link();
 }
 
 GLCode& GLCode::Uniform(int i, double a)
