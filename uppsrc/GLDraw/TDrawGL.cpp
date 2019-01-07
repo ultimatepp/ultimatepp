@@ -14,6 +14,9 @@ void DrawGL::Init(Size sz, double alpha)
 	SyncScissor();
 	prev = Point(0, 0);
 	path_done = false;
+	DLOG("DrawGL::Init");
+	DDUMP(dd.vs);
+	DDUMP(dd.off);
 }
 
 DrawGL::~DrawGL()

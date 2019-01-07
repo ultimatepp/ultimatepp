@@ -21,7 +21,7 @@ struct GLContext2D { // TODO: This should be changed to regular matrix (later)
 	
 	void Set(Size sz)    { vs = Sizef(2.0 / sz.cx, -2.0 / sz.cy); }
 	
-	GLContext2D(Size sz) { Set(vs); }
+	GLContext2D(Size sz) { Set(sz); }
 	GLContext2D()        {}
 };
 
