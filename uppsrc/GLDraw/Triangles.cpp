@@ -24,7 +24,6 @@ void GLTriangles::Draw(const GLContext2D& dd)
 		void main()
 		{
 			gl_FragColor = v_color;
-			gl_FragColor = vec4(0, 1, 0, 1);
 		}
 	)");
 
@@ -36,14 +35,9 @@ void GLTriangles::Draw(const GLContext2D& dd)
 	va.Add(color, 3);
 	va.Index(elements);
 	
-	DDUMP(pos);
-	DDUMP(color);
-	DDUMP(elements);
-	
-//	glEnable(GL_BLEND);
+	glEnable(GL_BLEND);
 	glDisable(GL_CULL_FACE);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glDisable(GL_DEPTH_TEST);
 //	glDepthFunc(GL_LEQUAL);

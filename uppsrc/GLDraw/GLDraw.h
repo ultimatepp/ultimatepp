@@ -47,6 +47,9 @@ protected:
 	GLuint program;
 	int64  serialid;
 
+	void Compile(const char *vertex_shader_, const char *fragment_shader_);
+	void Link();
+
 public:
 	void Create(const char *vertex_shader, const char *fragment_shader,
 	            Tuple2<int, const char *> *bind_attr = NULL, int bind_count = 0);

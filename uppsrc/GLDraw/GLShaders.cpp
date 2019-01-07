@@ -33,8 +33,7 @@ static GLuint LoadShader(const char *src, GLenum type) {
 	return shader;
 }
 
-void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
-                       Tuple2<int, const char *> *bind_attr, int bind_count)
+void GLProgram::Compile(const char *vertex_shader_, const char *fragment_shader_)
 {
 	Clear();
 
@@ -45,10 +44,10 @@ void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
 	
 	glAttachShader(program, vertex_shader);
 	glAttachShader(program, fragment_shader);
-	
-	for(int i = 0; i < bind_count; i++)
-		glBindAttribLocation(program, bind_attr[i].a, bind_attr[i].b);
+}
 
+void GLProgram::Link()
+{
 	glLinkProgram(program);
 
 	GLint linked;
@@ -65,6 +64,17 @@ void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
 		Panic("Failed to link");
 		Clear();
 	}
+}
+
+void GLProgram::Create(const char *vertex_shader_, const char *fragment_shader_,
+                       Tuple2<int, const char *> *bind_attr, int bind_count)
+{
+	Compile(vertex_shader_, fragment_shader_);
+	
+	for(int i = 0; i < bind_count; i++)
+		glBindAttribLocation(program, bind_attr[i].a, bind_attr[i].b);
+
+	Link();
 	
 	Use();
 }
