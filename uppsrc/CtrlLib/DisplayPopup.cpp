@@ -14,7 +14,6 @@ void DisplayPopup::LeftDown(Point p, dword flags)
 
 void DisplayPopup::LeftDrag(Point p, dword flags)
 {
-	Cancel();
 	ctrl->LeftDrag(Op(p), flags);
 }
 
@@ -137,7 +136,7 @@ void DisplayPopup::Sync()
 			}
 		}
 	}
-	if(IsOpen())
+	if(IsOpen() && !GetDragAndDropSource())
 		Close();
 }
 
