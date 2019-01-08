@@ -37,21 +37,24 @@ void Ellipse(GLTriangles& tr, Pointf center, Sizef radius, Color color,
 	int c = tr.Vertex(center, color, alpha);
 	int a, a0;
 	int la, lao, la0, lao0;
+	bool has_line = width > 0 && !IsNull(line_color);
+	bool has_interior = !IsNull(color);
 	for(int i = 0; i < 256; i += st) {
 		Pointf dir = radius * e[i];
 		int b, lb, lbo;
-		if(width > 0) { // we need to draw border line
+		if(has_line) { // we need to draw border line
 			lbo = tr.Vertex(center + dir, line_color, alpha); // outer point
 			dir -= circle ? width * dir : width * Normalize(dir);
 			lb = tr.Vertex(center + dir, line_color, alpha); // inner point
 		}
 		b = tr.Vertex(center + dir, color, alpha);
 		if(i) {
-			if(width > 0) {
+			if(has_line) {
 				tr.Triangle(la, lao, lbo);
 				tr.Triangle(lbo, lb, la);
 			}
-			tr.Triangle(c, a, b);
+			if(has_interior)
+				tr.Triangle(c, a, b);
 		}
 		else {
 			a0 = b;
@@ -62,8 +65,9 @@ void Ellipse(GLTriangles& tr, Pointf center, Sizef radius, Color color,
 		la = lb;
 		lao = lbo;
 	}
-	tr.Triangle(c, a, a0);
-	if(width > 0) {
+	if(has_interior)
+		tr.Triangle(c, a, a0);
+	if(has_line) {
 		tr.Triangle(la, lao, lao0);
 		tr.Triangle(lao0, la0, la);
 	}
