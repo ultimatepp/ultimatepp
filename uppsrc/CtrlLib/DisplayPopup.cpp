@@ -14,6 +14,7 @@ void DisplayPopup::LeftDown(Point p, dword flags)
 
 void DisplayPopup::LeftDrag(Point p, dword flags)
 {
+	DLOG("LeftDrag");
 	ctrl->LeftDrag(Op(p), flags);
 }
 
@@ -53,6 +54,8 @@ void DisplayPopup::Paint(Draw& w)
 {
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
+	DDUMP(display);
+	DDUMP(value);
 	if(display) {
 		display->PaintBackground(w, r, value, ink, paper, style);
 		r.left += margin;
@@ -172,6 +175,8 @@ bool DisplayPopup::MouseHook(Ctrl *, bool, int, Point, int, dword)
 
 void DisplayPopup::Cancel()
 {
+	if(GetDragAndDropSource())
+		return;
 	display = NULL;
 	Sync();
 }
@@ -190,7 +195,7 @@ void DisplayPopup::Set(Ctrl *_ctrl, const Rect& _item,
                        const Value& _value, const Display *_display,
                        Color _ink, Color _paper, dword _style, int _margin)
 {
-	if(!GUI_ToolTips())
+	if(!GUI_ToolTips() || GetDragAndDropSource())
 		return;
 	if(item != _item || ctrl != _ctrl || value != _value || display != _display || ink != _ink ||
 	   paper != _paper || style != _style) {
