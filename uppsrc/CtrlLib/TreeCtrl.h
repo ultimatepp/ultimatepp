@@ -367,7 +367,7 @@ public:
 
 	typedef OptionTree CLASSNAME;
 
-	OptionTree& ManualMode() 						{ manualmode = true; return *this; }
+	OptionTree& ManualMode()						{ manualmode = true; return *this; }
 
 	OptionTree();
 	~OptionTree();

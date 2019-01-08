@@ -2,6 +2,30 @@
 
 namespace Upp {
 
+TreeCtrl::TreeCtrl()
+{
+	display = &StdDisplay();
+	levelcx = DPI(16);
+	nocursor = false;
+	noroot = false;
+	dirty = true;
+	multiselect = false;
+	nobg = false;
+	popupex = true;
+	mousemove = false;
+	accel = false;
+	treesize = Size(0, 0);
+	multiroot = false;
+	Clear();
+	SetFrame(ViewFrame());
+	AddFrame(sb);
+	sb.WhenScroll = THISBACK(Scroll);
+	sb.Box(sb_box);
+	WhenLeftDouble = THISBACK(StdLeftDouble);
+	chldlck = false;
+	highlight_ctrl = false;
+}
+
 TreeCtrl::Node::Node()
 {
 	Init();
@@ -51,30 +75,6 @@ TreeCtrl::Node::Node(const Image& img, Ctrl& ctrl, int cx, int cy)
 		size.cx = cx;
 	if(cy > 0)
 		size.cy = cy;
-}
-
-TreeCtrl::TreeCtrl()
-{
-	display = &StdDisplay();
-	levelcx = DPI(16);
-	nocursor = false;
-	noroot = false;
-	dirty = true;
-	multiselect = false;
-	nobg = false;
-	popupex = true;
-	mousemove = false;
-	accel = false;
-	treesize = Size(0, 0);
-	multiroot = false;
-	Clear();
-	SetFrame(ViewFrame());
-	AddFrame(sb);
-	sb.WhenScroll = THISBACK(Scroll);
-	sb.Box(sb_box);
-	WhenLeftDouble = THISBACK(StdLeftDouble);
-	chldlck = false;
-	highlight_ctrl = false;
 }
 
 void TreeCtrl::StdLeftDouble()
