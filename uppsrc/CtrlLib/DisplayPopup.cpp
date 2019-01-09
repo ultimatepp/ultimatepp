@@ -14,7 +14,6 @@ void DisplayPopup::LeftDown(Point p, dword flags)
 
 void DisplayPopup::LeftDrag(Point p, dword flags)
 {
-	DLOG("LeftDrag");
 	ctrl->LeftDrag(Op(p), flags);
 }
 
@@ -54,8 +53,6 @@ void DisplayPopup::Paint(Draw& w)
 {
 	Rect r = GetSize();
 	w.DrawRect(r, SColorPaper);
-	DDUMP(display);
-	DDUMP(value);
 	if(display) {
 		display->PaintBackground(w, r, value, ink, paper, style);
 		r.left += margin;

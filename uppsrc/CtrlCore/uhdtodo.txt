@@ -3,7 +3,6 @@ UHD
 IconDes paste over
 CheckBox in layout designer
 Left-right cursor image weird miniborder (OpenWind only)
-GTK is total mess, question is whether we should fix it...
 
 ------------------------------------
 Progress cutoff of text
@@ -28,3 +27,4 @@ SetLabel for switch is too small (scale usc number)
 Nos Galerie CheckBox
 Non-UHD testing mode
 Select product Nos icons
+GTK is total mess, question is whether we should fix it...
