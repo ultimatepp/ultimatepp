@@ -363,56 +363,43 @@ Ctrl::LogPos MakeLogPos(Ctrl::LogPos p, const Rect& r, Size sz)
 
 struct IDisplay : public Display {
 	Color paper, ink;
+	Font  font;
+	
+	Size GetStdSize(const Value& q) const {
+		Size sz = GetSmartTextSize(~q, font);
+		sz.cx += 2 * DPI(4);
+		return sz;
+	}
+
 	void Paint(Draw& w, const Rect& r, const Value& q,
 	           Color, Color, dword s) const {
 		w.DrawRect(r, paper);
-		DrawSmartText(w, r.left + 8, r.top, r.Width(),
-					  String(IsString(q) ? q : StdConvert().Format(q)), StdFont(), ink);
+		DrawSmartText(w, r.left + DPI(4), r.top, r.Width(), ~q, font, ink);
 	}
-	IDisplay(Color paper, Color ink)
-		: paper(paper), ink(ink) {}
+	IDisplay(Color paper, Color ink, Font font = StdFont())
+		: paper(paper), ink(ink), font(font) {}
 };
 
 struct TDisplay : public Display {
 	Color paper, ink;
+	Font  font;
+
+	Size GetStdSize(const Value& q) const {
+		Size sz = GetSmartTextSize(~q, font);
+		sz.cx += 2 * DPI(4) + DPI(6) + sz.cy * 8 / 3;
+		return sz;
+	}
 
 	void Paint(Draw& w, const Rect& r, const Value& q,
 	           Color, Color, dword s) const {
 		w.DrawRect(r, paper);
 		int dx = r.Height() * 8 / 3;
 		Image icon = GetTypeIcon(String(q), dx, r.Height(), 1, paper);
-		w.DrawImage(r.left + 8, r.top + (r.Height() - icon.GetSize().cy) / 2, icon);
-		DrawSmartText(w, r.left + dx + 12, r.top, r.Width(), String(q), StdFont(), ink);
+		w.DrawImage(r.left + DPI(4), r.top + (r.Height() - icon.GetSize().cy) / 2, icon);
+		DrawSmartText(w, r.left + dx + DPI(6), r.top, r.Width(), ~q, font, ink);
 	}
-	TDisplay(Color paper, Color ink)
-		: paper(paper), ink(ink) {}
-};
-
-struct IDisplayH : public Display {
-	Color paper, ink;
-	void Paint(Draw& w, const Rect& r, const Value& q,
-	           Color, Color, dword s) const {
-		w.DrawRect(r, paper);
-		DrawSmartText(w, r.left + 8, r.top, r.Width(),
-					  String(IsString(q) ? q : StdConvert().Format(q)), StdFont().Italic(), ink);
-	}
-	IDisplayH(Color paper, Color ink)
-		: paper(paper), ink(ink) {}
-};
-
-struct TDisplayH : public Display {
-	Color paper, ink;
-
-	void Paint(Draw& w, const Rect& r, const Value& q,
-	           Color, Color, dword s) const {
-		w.DrawRect(r, paper);
-		int dx = r.Height() * 8 / 3;
-		Image icon = GetTypeIcon(String(q), dx, r.Height(), 1, paper);
-		w.DrawImage(r.left + 8, r.top + (r.Height() - icon.GetSize().cy) / 2, icon);
-		DrawSmartText(w, r.left + dx + 12, r.top, r.Width(), String(q), StdFont().Italic(), ink);
-	}
-	TDisplayH(Color paper, Color ink)
-		: paper(paper), ink(ink) {}
+	TDisplay(Color paper, Color ink, Font font = StdFont())
+		: paper(paper), ink(ink), font(font) {}
 };
 
 void LayDes::SyncItems()
@@ -438,15 +425,15 @@ void LayDes::SyncItems()
 void LayDes::SyncItem(int i, int style)
 {
 	if(CurrentLayout().item[i].hide) {
-		static IDisplayH dnormal(SColorPaper, SColorText);
-		static IDisplayH dselect(SColorLtFace, SColorText);
-		static IDisplayH dcursor(SColorFace, SColorText);
-		static TDisplayH tnormal(SColorPaper, SColorText);
-		static TDisplayH tselect(SColorLtFace, SColorText);
-		static TDisplayH tcursor(SColorFace, SColorText);
-		static IDisplayH lnormal(SColorPaper, Green);
-		static IDisplayH lselect(SColorLtFace, Green);
-		static IDisplayH lcursor(SColorFace, Green);
+		static IDisplay dnormal(SColorPaper, SColorText, StdFont().Italic());
+		static IDisplay dselect(SColorLtFace, SColorText, StdFont().Italic());
+		static IDisplay dcursor(SColorFace, SColorText, StdFont().Italic());
+		static TDisplay tnormal(SColorPaper, SColorText, StdFont().Italic());
+		static TDisplay tselect(SColorLtFace, SColorText, StdFont().Italic());
+		static TDisplay tcursor(SColorFace, SColorText, StdFont().Italic());
+		static IDisplay lnormal(SColorPaper, Green, StdFont().Italic());
+		static IDisplay lselect(SColorLtFace, Green, StdFont().Italic());
+		static IDisplay lcursor(SColorFace, Green, StdFont().Italic());
 		const Display *noicon[] = { &dnormal, &dselect, &dcursor };
 		const Display *isicon[] = { &tnormal, &tselect, &tcursor };
 		const Display *label[] = { &lnormal, &lselect, &lcursor };
