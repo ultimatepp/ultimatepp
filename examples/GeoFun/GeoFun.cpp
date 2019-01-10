@@ -15,11 +15,11 @@ void DrawCanvas::DoPaint0 ( T& sw, int idraw )
 	int cnt1, cnt2;
 	int RunTo ;
 
-	Size sz;
+	Sizef sz;
 
 	if ( idraw == 1 )
 	{
-		sz = Size ( 2 * Radius1 + 20, 2 * Radius1 + 20 );
+		sz = Sizef ( 2 * Radius1 + 20, 2 * Radius1 + 20 );
 	}
 
 	else
@@ -149,7 +149,7 @@ void DrawCanvas::Paint ( Draw& drw )
 
 Image GeoFun::GetImage()
 {
-	Size sz = Size ( dc1.Radius1 * 2 + 20, dc1.Radius1 * 2 + 20 );
+	Size sz = Size (int( dc1.Radius1 * 2 + 20 ), int( dc1.Radius1 * 2 + 20 ) );
 	ImageBuffer ib ( sz );
 	BufferPainter bp ( ib, MODE_ANTIALIASED );
 	dc1.DoPaint0 ( bp, 1 );
