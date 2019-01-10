@@ -167,8 +167,9 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 		size = ib.GetSize();
 
 		co_subpixel.Clear();
-		co_span.Clear();
 	}
+
+	SyncCo();
 
 	if(!paths)
 		paths.Alloc(BATCH_SIZE);

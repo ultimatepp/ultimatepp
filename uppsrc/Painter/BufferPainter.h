@@ -312,6 +312,8 @@ private:
 
 	void FinishPathJob();
 	void FinishFillJob()                                       { fill_job.Finish(); }
+
+	void SyncCo();
 	                               
 	enum { FILL = -1, CLIP = -2, ONPATH = -3 };
 
@@ -319,7 +321,7 @@ public:
 	ImageBuffer&       GetBuffer()                             { return *ip; }
 	const ImageBuffer& GetBuffer() const                       { return *ip; }
 	
-	BufferPainter&     Co(bool b = true)                       { Finish(); co = b; return *this; }
+	BufferPainter&     Co(bool b = true)                       { Finish(); co = b; SyncCo(); return *this; }
 	BufferPainter&     PreClip(bool b = true)                  { dopreclip = b; preclip_mtx_serial = -1; return *this; }
 	BufferPainter&     PreClipDashed()                         { dopreclip = 2; preclip_mtx_serial = -1; return *this; }
 	BufferPainter&     ImageCache(bool b = true)               { imagecache = b; return *this; }

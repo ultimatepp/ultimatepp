@@ -126,6 +126,16 @@ void BufferPainter::RenderPathSegments(LinearPathConsumer *g, const Vector<byte>
 	g->End();
 }
 
+void BufferPainter::SyncCo()
+{
+	if(co && subpixel && !co_subpixel) {
+		int n = CoWork::GetPoolSize();
+		co_subpixel.Alloc(n);
+		for(int i = 0; i < n; i++)
+			co_subpixel[i].Alloc(render_cx + 30);
+	}
+}
+
 Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSource>&> ss, const RGBA& color)
 {
 	PAINTER_TIMING("RenderPath");
@@ -162,10 +172,10 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	}
 
 	if(co) {
-		if(width >= FILL && !ss && !alt && mode == MODE_ANTIALIASED) {
+		if(width >= FILL && !ss && !alt && findarg(mode, MODE_ANTIALIASED, MODE_SUBPIXEL) >= 0) {
 			for(int i = 0; i < path_info->path.GetCount(); i++) {
 				while(jobcount >= cojob.GetCount())
-					cojob.Add().rasterizer.Create(ip->GetWidth(), ip->GetHeight(), false);
+					cojob.Add().rasterizer.Create(ip->GetWidth(), ip->GetHeight(), mode == MODE_SUBPIXEL);
 				CoJob& job = cojob[jobcount++];
 				job.path_info = path_info;
 				job.subpath = i;
@@ -189,14 +199,7 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	PathJob j(rasterizer, width, path_info, pathattr, preclip, regular);
 	if(j.preclipped)
 		return newclip;
-	
-	if(co && subpixel && !co_subpixel) {
-		int n = CoWork::GetPoolSize();
-		co_subpixel.Alloc(n);
-		for(int i = 0; i < n; i++)
-			co_subpixel[i].Alloc(render_cx + 30);
-	}
-	
+
 	if(co && ss && !co_span) {
 		int n = CoWork::GetPoolSize();
 		co_span.Alloc(n);
@@ -216,7 +219,6 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		ClipFiller          clip_filler;
 		NoAAFillerFilter    noaa_filler;
 		MaskFillerFilter    mf;
-		subpixel_filler.invert = pathattr.invert;
 		One<SpanSource>     rss;
 
 		if(subpixel) {
@@ -256,8 +258,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 		else {
 			if(subpixel) {
-				subpixel_filler.color = Mul8(color, opacity);
 				subpixel_filler.ss = NULL;
+				subpixel_filler.color = Mul8(color, opacity);
+				subpixel_filler.invert = pathattr.invert;
 				rg = &subpixel_filler;
 			}
 			else {
@@ -350,7 +353,7 @@ void BufferPainter::FinishPathJob()
 	
 	fillcount = jobcount;
 	Swap(cofill, cojob); // Swap to keep allocated rasters (instead of pick)
-	
+
 	fill_job & [=] {
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
@@ -362,27 +365,57 @@ void BufferPainter::FinishPathJob()
 			j.c = Mul8(j.color, int(256 * j.attr.opacity));
 		}
 		auto fill = [&](int ymin, int ymax) {
-			SolidFiller solid_filler;
-			for(int i = 0; i < fillcount; i++) {
-				CoJob& j = cofill[i];
-				int jymin = max(j.rasterizer.MinY(), ymin);
-				int jymax = min(j.rasterizer.MaxY(), ymax);
-				for(int y = jymin; y <= jymax; y++)
-					if(j.rasterizer.NotEmpty(y)) {
-						solid_filler.c = j.c;
-						solid_filler.invert = j.attr.invert;
-						solid_filler.t = (*ip)[y];
-						if(clip.GetCount()) {
-							MaskFillerFilter mf;
-							const ClippingLine& s = clip.Top()[y];
-							if(!s.IsEmpty() && !s.IsFull()) {
-								mf.Set(&solid_filler, s);
-								j.rasterizer.Render(y, mf, j.evenodd);
+			if(subpixel) {
+				SubpixelFiller subpixel_filler;
+				subpixel_filler.ss = NULL;
+				int ci = CoWork::GetWorkerIndex();
+				subpixel_filler.sbuffer = ci >= 0 ? co_subpixel[ci] : subpixel;
+				for(int i = 0; i < fillcount; i++) {
+					CoJob& j = cofill[i];
+					int jymin = max(j.rasterizer.MinY(), ymin);
+					int jymax = min(j.rasterizer.MaxY(), ymax);
+					for(int y = jymin; y <= jymax; y++)
+						if(j.rasterizer.NotEmpty(y)) {
+							subpixel_filler.color = j.c;
+							subpixel_filler.invert = j.attr.invert;
+							subpixel_filler.t = (*ip)[y];
+							subpixel_filler.end = subpixel_filler.t + ip->GetWidth();
+							if(clip.GetCount()) {
+								MaskFillerFilter mf;
+								const ClippingLine& s = clip.Top()[y];
+								if(!s.IsEmpty() && !s.IsFull()) {
+									mf.Set(&subpixel_filler, s);
+									j.rasterizer.Render(y, mf, j.evenodd);
+								}
 							}
+							else
+								j.rasterizer.Render(y, subpixel_filler, j.evenodd);
 						}
-						else
-							j.rasterizer.Render(y, solid_filler, j.evenodd);
-					}
+				}
+			}
+			else {
+				SolidFiller solid_filler;
+				for(int i = 0; i < fillcount; i++) {
+					CoJob& j = cofill[i];
+					int jymin = max(j.rasterizer.MinY(), ymin);
+					int jymax = min(j.rasterizer.MaxY(), ymax);
+					for(int y = jymin; y <= jymax; y++)
+						if(j.rasterizer.NotEmpty(y)) {
+							solid_filler.c = j.c;
+							solid_filler.invert = j.attr.invert;
+							solid_filler.t = (*ip)[y];
+							if(clip.GetCount()) {
+								MaskFillerFilter mf;
+								const ClippingLine& s = clip.Top()[y];
+								if(!s.IsEmpty() && !s.IsFull()) {
+									mf.Set(&solid_filler, s);
+									j.rasterizer.Render(y, mf, j.evenodd);
+								}
+							}
+							else
+								j.rasterizer.Render(y, solid_filler, j.evenodd);
+						}
+				}
 			}
 		};
 	
