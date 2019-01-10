@@ -67,7 +67,7 @@ struct ClipFiller : Rasterizer::Filler {
 	void   Clear();
 	void   Finish(ClippingLine& cl);
 	
-	ClipFiller(int cx);
+	void   Init(int cx);
 };
 
 struct MaskFillerFilter : Rasterizer::Filler {

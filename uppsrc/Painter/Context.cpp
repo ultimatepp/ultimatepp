@@ -149,7 +149,7 @@ void BufferPainter::ClearStopsOp()
 void BufferPainter::Create(ImageBuffer& ib, int mode_)
 {
 	ip = &ib;
-	
+
 	if(mode_ != mode || (Size)size != ib.GetSize()) {
 		mode = mode_;
 	
@@ -162,7 +162,12 @@ void BufferPainter::Create(ImageBuffer& ib, int mode_)
 			render_cx *= 3;
 			subpixel.Alloc(render_cx + 30);
 		}
+		else
+			subpixel.Clear();
 		size = ib.GetSize();
+
+		co_subpixel.Clear();
+		co_span.Clear();
 	}
 
 	if(!paths)
