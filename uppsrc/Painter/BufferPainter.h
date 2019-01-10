@@ -181,6 +181,7 @@ private:
 	ImageBuffer               *ip;
 	int                        mode = -1;
 	Buffer<int16>              subpixel;
+	Buffer<Buffer<int16>>      co_subpixel;
 	int                        render_cx;
 	int                        dopreclip = 0;
 	Sizef                      size = Sizef(0, 0); // = ib.GetSize()
@@ -213,8 +214,9 @@ private:
 
 	Pointf           current, ccontrol, qcontrol, move;
 	
-	Rasterizer       rasterizer;
-	Buffer<RGBA>     span;
+	Rasterizer           rasterizer;
+	Buffer<RGBA>         span;
+	Buffer<Buffer<RGBA>> co_span;
 
 	Vector<PathLine> onpath;
 	double           pathlen;
@@ -265,6 +267,7 @@ private:
 		PathInfo         *path_info;
 		Rectf             preclip;
 		double            width;
+		double            opacity;
 		Rasterizer        rasterizer;
 		RGBA              color;
 		RGBA              c;

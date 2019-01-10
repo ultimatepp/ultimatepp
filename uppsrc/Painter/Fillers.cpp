@@ -336,7 +336,7 @@ void SpanFiller::Render(int val, int len)
 	}
 }
 
-ClipFiller::ClipFiller(int _cx)
+void ClipFiller::Init(int _cx)
 {
 	cx = _cx;
 	buffer.Alloc(2 * cx);

@@ -190,6 +190,20 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 	if(j.preclipped)
 		return newclip;
 	
+	if(co && subpixel && !co_subpixel) {
+		int n = CoWork::GetPoolSize();
+		co_subpixel.Alloc(n);
+		for(int i = 0; i < n; i++)
+			co_subpixel[i].Alloc(render_cx + 30);
+	}
+	
+	if(co && ss && !co_span) {
+		int n = CoWork::GetPoolSize();
+		co_span.Alloc(n);
+		for(int i = 0; i < n; i++)
+			co_span[i].Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
+	}
+	
 	bool doclip = width == CLIP;
 	auto fill = [&](CoWork *co) {
 		int opacity = int(256 * pathattr.opacity);
@@ -199,15 +213,19 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		SpanFiller          span_filler;
 		SolidFiller         solid_filler;
 		SubpixelFiller      subpixel_filler;
-		ClipFiller          clip_filler(render_cx);
+		ClipFiller          clip_filler;
 		NoAAFillerFilter    noaa_filler;
 		MaskFillerFilter    mf;
-		subpixel_filler.sbuffer = subpixel;
 		subpixel_filler.invert = pathattr.invert;
-		Buffer<RGBA>        co_span;
 		One<SpanSource>     rss;
+
+		if(subpixel) {
+			int ci = CoWork::GetWorkerIndex();
+			subpixel_filler.sbuffer = co && ci >= 0 ? co_subpixel[ci] : subpixel;
+		}
 		
 		if(doclip) {
+			clip_filler.Init(render_cx);
 			rg = &clip_filler;
 			newclip.Alloc(ip->GetHeight());
 		}
@@ -215,10 +233,9 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		if(ss) {
 			ss(rss);
 			RGBA           *lspan;
-			if(co) {
-				co_span.Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
-				lspan = co_span;
-			}
+			int ci = CoWork::GetWorkerIndex();
+			if(co && ci >= 0)
+				lspan = co_span[ci];
 			else {
 				if(!span)
 					span.Alloc((subpixel ? 3 : 1) * ip->GetWidth() + 3);
@@ -286,12 +303,13 @@ Buffer<ClippingLine> BufferPainter::RenderPath(double width, Event<One<SpanSourc
 		}
 	};
 	PAINTER_TIMING("RenderPath2");
+	bool doco = co && !doclip && !alt && !(subpixel && clip.GetCount());
 	for(const auto& p : path_info->path) {
 		RenderPathSegments(j.g, p, j.regular ? &pathattr : NULL, j.tolerance);
 		if(width != ONPATH) {
 			int n = rasterizer.MaxY() - rasterizer.MinY();
 			if(n >= 0) {
-				if(co && !doclip && !alt && n > 6) {
+				if(doco && n > 6) {
 					CoWork co;
 					co * [&] { fill(&co); };
 				}
@@ -312,7 +330,6 @@ void BufferPainter::FinishPathJob()
 {
 	if(jobcount == 0)
 		return;
-	
 	CoWork co;
 	co * [&] {
 		for(;;) {
@@ -337,6 +354,7 @@ void BufferPainter::FinishPathJob()
 	fill_job & [=] {
 		int miny = ip->GetHeight() - 1;
 		int maxy = 0;
+
 		for(int i = 0; i < fillcount; i++) {
 			CoJob& j = cofill[i];
 			miny = min(miny, j.rasterizer.MinY());
@@ -374,18 +392,11 @@ void BufferPainter::FinishPathJob()
 				CoWork co;
 				co * [&] {
 					for(;;) {
-					#if 0
-						int y = co.Next() + miny;
-						if(y > maxy)
-							break;
-						fill(y);
-					#else
 						const int N = 4;
 						int y = N * co.Next() + miny;
 						if(y > maxy)
 							break;
 						fill(y, min(y + N - 1, maxy));
-					#endif
 					}
 				};
 			}
