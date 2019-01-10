@@ -1,8 +1,0 @@
-TIMING Reset M        : 10.48 ms - 551.63 ns (11.00 ms / 18992 ), min:  0.00 ns, max:  5.00 ms, nesting: 16 - 26000
-TIMING Add alloc      : 18.62 ms - 372.48 ns (20.00 ms / 49995 ), min:  0.00 ns, max:  1.00 ms, nesting: 3 - 50688
-TIMING Finish         :  1.68 s  - 17.53 ms ( 1.68 s  / 96 ), min:  0.00 ns, max: 252.00 ms, nesting: 1 - 96
-TIMING Add            :  1.67 s  - 13.70 us ( 1.67 s  / 121801 ), min:  0.00 ns, max: 191.00 ms, nesting: 18 - 1155176
-TIMING Render span    :  0.00 ns -  0.00 ns ( 0.00 ns / 320 ), min:  0.00 ns, max:  0.00 ns, nesting: 1 - 320
-TIMING Reset          : 15.67 ms -  1.29 us (16.00 ms / 12150 ), min:  0.00 ns, max:  5.00 ms, nesting: 18 - 12778
-TIMING Create         : 95.92 ms - 35.03 us (96.00 ms / 2738 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 2738
-TIMING Free           : 27.85 ms -  5.09 us (28.00 ms / 5476 ), min:  0.00 ns, max:  1.00 ms, nesting: 1 - 5476

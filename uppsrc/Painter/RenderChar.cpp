@@ -105,7 +105,7 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 	GlyphPainter chp;
 	chp.move = chp.pos = Null;
 	chp.tolerance = tolerance;
-	PaintCharacter(chp, ch.p, ch.ch, ch.fnt);
+	PaintCharacter(chp, Pointf(0, 0), ch, fnt);
 	Vector<float>& g = chp.glyph;
 #else
 	const Vector<float>& g = ValueTo< Vector<float> >(v);

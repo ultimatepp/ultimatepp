@@ -35,7 +35,6 @@ file
 	Gradient.cpp,
 	RadialGradient.cpp,
 	OnPath.cpp,
-	Todo.txt,
 	SVG readonly separator,
 	SvgInternal.h,
 	SvgUtil.cpp,
