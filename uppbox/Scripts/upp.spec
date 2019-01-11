@@ -1,25 +1,21 @@
-# How to build snapshots binary: rpmbuild -tb upp-x11-src-10621M.tar.gz
-# How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-10621M.tar.gz
-# If upp.spec inside the tarball comes from svn: rpmbuild -tb --define 'version 10621M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-10621M.tar.gz
+# How to build snapshots binary: rpmbuild -tb upp-x11-src-12662M.tar.gz
+# How to build snapshots src.rpm: rpmbuild -ts upp-x11-src-12662M.tar.gz
+# If upp.spec inside the tarball comes unmodified from svn: rpmbuild -tb --define 'version 12662M' --define "date $(LC_TIME=En date '+%a %b %d %Y')" upp-x11-src-12662M.tar.gz
  
-%define	project_name	upp
-#define	version	10621M
+#define	version	12662
 #define	date	$(LC_TIME=En date '+%a %b %d %Y')      
-%define	release	1
+
 %define	debug_package	%{nil}
 
-%define		title		Ultimate++
-%define		longtitle	C++ cross-platform rapid application development suite
-
-Summary:	%longtitle
-Name:		%project_name-devel
+Summary:	Ultimate C++ cross-platform rapid application development suite
+Name:		upp
 Version:	%version
-Release:	%release%{?dist}
+Release:	1%{?dist}
 License:	BSD-2-Clause
 Group:		Development/Tools
 URL:		http://www.ultimatepp.org
-Source0:	http://www.ultimatepp.org/downloads/%{project_name}-x11-src-%{version}.tar.gz
-Obsoletes:	upp
+Source0:	http://www.ultimatepp.org/downloads/%{name}-x11-src-%{version}.tar.gz
+Obsoletes:	upp-devel < %{version}-%{release}
 
 # Common BuildRequires
 BuildRequires:	gtk2-devel gnome-shell libnotify-devel pkgconfig
@@ -98,15 +94,27 @@ to C++ programming. It provides:
 	- BLITZ-build technology to speedup C++ rebuilds up to 4 times
 
 #----
+
+%package        devel
+Summary:        Development files for %{name}
+Group:          Development/Libraries
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
+%description    devel
+The %{name}-devel package contains source and header files for
+developing applications that use %{name}.
+
+
 %prep
 
-%setup -q -n %{project_name}-x11-src-%{version}
+%setup -q -n %{name}-x11-src-%{version}
 
 
 # ----
 %build
 
 make %{?_smp_mflags}
+
 
 #-------
 %install
@@ -192,20 +200,25 @@ rm -fr %{buildroot}
 %defattr(-,root,root,-)
 %license uppsrc/ide/Copying
 %doc readme.md
+%doc %{_mandir}/man1/*
 %{_bindir}/theide
 %{_bindir}/umk
 %{_datadir}/applications/theide.desktop
 %{_datadir}/icons/hicolor/48x48/apps/theide.png
 %{_datadir}/pixmaps/theide.png
+
+#-----
+%files devel
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*
-%{_datadir}/%{project_name}
-%{_mandir}/man1/*
+
 
 #---------
 %changelog
 * %date Amrein-Marie Christophe <camreinmarie@free.fr> %version-1
 - New snapshot
+- Rename main package (upp-devel -> upp)
+- Add devel package containing source only
 
 * Sat Dec 09 2017 Amrein-Marie Christophe <camreinmarie@free.fr> 2017.2-1
 - New release (rev 11540)

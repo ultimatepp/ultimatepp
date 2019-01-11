@@ -10,7 +10,8 @@
 ### Variables
 
 project_name="upp"
-package_name="$project_name-devel"
+#package_name="$project_name-devel"
+package_name="$project_name"
 
 show_debug_info="true"
 show_debug_warning="true"
@@ -350,17 +351,17 @@ log_debug_info "Copying theide and umk"
   install ./theide "$DESTDIR$bindir/theide"
   install ./umk    "$DESTDIR$bindir/umk"
 
-log_debug_info "Adding symbolic link ( $project_name -> $datadir/$package_name )"
-  if [ ! -e "$DESTDIR$datadir/$project_name" ]
-  then
-    ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
-  elif [ -h "$DESTDIR$datadir/$project_name" ]
-  then
-    rm -f "$DESTDIR$datadir/$project_name"
-    ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
-  else
-    log_debug_error "Already exist: $DESTDIR$datadir/$project_name"
-  fi
+# log_debug_info "Adding symbolic link ( $project_name -> $datadir/$package_name )"
+#   if [ ! -e "$DESTDIR$datadir/$project_name" ]
+#   then
+#     ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
+#   elif [ -h "$DESTDIR$datadir/$project_name" ]
+#   then
+#     rm -f "$DESTDIR$datadir/$project_name"
+#     ln -s "$datadir/$package_name" "$DESTDIR$datadir/$project_name"
+#   else
+#     log_debug_error "Already exist: $DESTDIR$datadir/$project_name"
+#   fi
 
 log_debug_info "Copying man pages"
   cp -p "uppsrc/ide/theide.1" "$DESTDIR$mandir/man1/"

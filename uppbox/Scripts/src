@@ -28,7 +28,7 @@ cp -p ~/Scripts/domake ~/upp.tmp/upp
 cp -p ~/Scripts/doinstall ~/upp.tmp/upp
 cp -p ~/Scripts/function_library ~/upp.tmp/upp
 cp -p ~/Scripts/readme.md ~/upp.tmp/upp
-cp -p ~/Scripts/upp-devel.spec ~/upp.tmp/upp
+cp -p ~/Scripts/upp.spec ~/upp.tmp/upp
 cp -p ~/Scripts/debian ~/upp.tmp/upp/buildrequires.debian
 cp -p ~/Scripts/fedora ~/upp.tmp/upp/buildrequires.fedora
 cp -p ~/Scripts/GCCMK.bm ~/upp.tmp/upp/GCC.bm.in
@@ -37,7 +37,7 @@ cp -p ~/Scripts/CLANGMK.bm ~/upp.tmp/upp/CLANG.bm.in
 svn_snapshot_version=$(svnversion ~/upp.src)
 current_date=$(LC_TIME=En date '+%a %b %d %Y')
 
-sed -i -e 's|%version|'"$svn_snapshot_version"'|g' -e 's|%date|'"$current_date"'|g' ~/upp.tmp/upp/upp-devel.spec
+sed -i -e 's|%version|'"$svn_snapshot_version"'|g' -e 's|%date|'"$current_date"'|g' ~/upp.tmp/upp/upp.spec
 
 cd ~/upp.tmp
 mv upp upp-x11-src-$svn_snapshot_version
