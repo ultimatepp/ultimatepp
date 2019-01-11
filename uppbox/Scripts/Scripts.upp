@@ -16,7 +16,7 @@ file
 	src,
 	upgrade.sh,
 	uppdeb,
-	upp-devel.spec,
+	upp.spec,
 	uppnighty2deb,
 	upp.xml,
 	win,
