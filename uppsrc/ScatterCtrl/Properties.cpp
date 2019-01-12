@@ -306,6 +306,13 @@ void GeneralTab::Init(ScatterCtrl& scatter)
 	dropResolution.Add(ScatterDraw::MD_SUBPIXEL, t_("Painter Subpixel"));
 	dropResolution = scatter.GetMode();
 	dropResolution <<= THISBACK(Change);
+	dropRotate.Clear();
+	dropRotate.Add(ScatterCtrl::Angle_0, t_("0º"));
+	dropRotate.Add(ScatterCtrl::Angle_90, t_("90º"));
+	dropRotate.Add(ScatterCtrl::Angle_180, t_("180º"));
+	dropRotate.Add(ScatterCtrl::Angle_270, t_("270º"));
+	dropRotate = scatter.GetRotate();
+	dropRotate <<= THISBACK(Change);
 	editWidth <<= scatter.GetSaveSize().cx;
 	editHeight <<= scatter.GetSaveSize().cy;
 	opResponsive <<= scatter.ScatterDraw::IsResponsive();
@@ -325,6 +332,7 @@ void GeneralTab::Change()
 	ScatterCtrl &scatter = *pscatter;
 	
     scatter.SetMode(~dropResolution);
+    scatter.Rotate((ScatterCtrl::Angle)(int)dropRotate.GetData());
     Size size(~editWidth, ~editHeight);
     scatter.SetSaveSize(size);
     scatter.ScatterDraw::Responsive(~opResponsive, ~editSensitivity);

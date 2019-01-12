@@ -19,10 +19,10 @@ public:
 
 	PopUpInfo();
 	
-	inline void Appear(Ctrl *owner, const int& x, const int& y, const int& gx=0, const int& gy=0) 
+	inline void Appear(Ctrl *owner, const Point& p, const int& gx=0, const int& gy=0) 
 	{
 		AppearOnly(owner);
-		Move(owner, x, y, gx, gy);	 
+		Move(owner, p, gx, gy);	 
 	}
 	inline void AppearOnly(Ctrl *owner)
 	{
@@ -37,9 +37,9 @@ public:
 		AppearOnly(owner);
 		opened = true;
 	}
-	inline void Move(Ctrl *owner, const int& x, const int& y, const int& gx=0, const int& gy=0)
+	inline void Move(Ctrl *owner, const Point& p, const int& gx=0, const int& gy=0)
 	{
-		SetRect(owner->GetScreenRect().left+x,owner->GetScreenRect().top+y,GetMinSize().cx+8+gx,GetMinSize().cy+4+gy);
+		SetRect(owner->GetScreenRect().left+p.x,owner->GetScreenRect().top+p.y,GetMinSize().cx+8+gx,GetMinSize().cy+4+gy);
 	}	
 };
 

@@ -34,7 +34,7 @@ public:
 	ArrayCtrlSource() : data(0), useCols(true), beginData(0), numData(Null) {ids << 0 << 1;}
 	ArrayCtrlSource(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int beginData = 0, int numData = Null) : 
 		data(&data), useCols(useCols), beginData(beginData), numData(numData) {
-		Init(data, ids, useCols, beginData, numData);
+		Init(data, idY, idX, useCols, beginData, numData);
 	}
 	void Init(ArrayCtrl &_data, Vector<int> &_ids, bool _useCols = true, int _beginData = 0, int _numData = Null) {
 		data = &_data;
@@ -58,7 +58,6 @@ public:
 		numData -= beginData;
 	}
 	void Init(ArrayCtrl &_data, int idY, int idX, bool _useCols = true, int _beginData = 0, int _numData = Null) {
-		//Vector<int> ids;
 		ids << idY << idX;
 		Init(_data, ids, _useCols, _beginData, _numData);
 	}
@@ -219,6 +218,7 @@ public:
 							{popTextX = x; popTextY = y1; popTextY2 = y2; popTextZ = z; return *this;}
 
 	ScatterCtrl& ShowInfo(bool show = true)					{showInfo = show;		 return *this;}
+	ScatterCtrl& ShowAllMenus()	{return ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg().ShowButtons();}
 	
 #ifdef PLATFORM_WIN32
 	void SaveAsMetafile(const char* file);
@@ -274,7 +274,7 @@ public:
 	ScatterCtrl& SetLegendBorderColor(const Upp::Color &border)	{ScatterDraw::SetLegendBorderColor(border);	return *this;}
 	Upp::Color& GetLegendFillColor() 							{return ScatterDraw::GetLegendFillColor();}
 	Upp::Color& GetLegendBorderColor() 							{return ScatterDraw::GetLegendBorderColor();}
-
+	
 	using ScatterDraw::AddSeries; 
 	ScatterCtrl &AddSeries(ArrayCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);
 	ScatterCtrl &AddSeries(GridCtrl &data, bool useCols = true, int idX = 0, int idY = 1, int idZ = 2, int beginData = 0, int numData = Null);
@@ -296,6 +296,10 @@ public:
 	ScatterCtrl &SetJPGQuality(int quality) {jpgQuality = quality; return *this;}
 	int GetJPGQuality() 					{return jpgQuality;}
 
+	enum Angle {Angle_0, Angle_90, Angle_180, Angle_270};
+	ScatterCtrl &Rotate(Angle angle)		{rotate = angle; Refresh(); return *this;}
+	Angle GetRotate()						{return (Angle)rotate;}
+
 private:	
 	template <class T>
 	void Ize(T& io) { 
@@ -305,6 +309,7 @@ private:
 			("defaultDataFile", defaultDataFile)
 			("saveSize", saveSize)
 			("jpgQuality", jpgQuality)
+			("rotate", rotate)
 		;
 	}
 
@@ -317,6 +322,7 @@ public:
 		  % defaultDataFile
 		  % saveSize
 		  % jpgQuality
+		  % rotate
 		;
 	}
 	virtual void Paint(Draw& w);
@@ -361,6 +367,8 @@ private:
 	Upp::Array<MouseBehavior> mouseBehavior; 
 	Upp::Array<KeyBehavior> keyBehavior;
 	
+	void Paint0(Draw& w, const Size &sz);
+	
 	void ProcessPopUp(const Point &pt);
 	void ProcessClickSeries(const Point &pt);
 	
@@ -381,7 +389,7 @@ private:
 	virtual Image CursorImage(Point p, dword keyflags);
 	
 	template <class T>
-	void SetDrawing(T& w, bool ctrl = true);	
+	void SetDrawing(T& w, const Size &sz, bool ctrl = true);	
 	void TimerCallback();	
 	
 	String defaultCSVseparator;
@@ -396,11 +404,15 @@ private:
 	
 	Size saveSize;
 	int jpgQuality;
+	
+	int rotate;
+	Point &MousePointRot(Point &pt);		
+	Point &MousePointUnrot(Point &pt);		
 };
 
 template <class T>
-void ScatterCtrl::SetDrawing(T& w, bool ctrl) {
-	ScatterDraw::SetSize(GetSize());
+void ScatterCtrl::SetDrawing(T& w, const Size &sz, bool ctrl) {
+	ScatterDraw::SetSize(sz);
 	ScatterDraw::SetDrawing(w, ctrl);
 	if (!IsNull(popLT) && popLT != popRB) {
 		if (isZoomWindow) {
