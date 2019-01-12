@@ -14,7 +14,7 @@ void Tab9_Big::Init()
 	}
 	scatter.AddSeries(s1).Legend("series1");
 	scatter.AddSeries(s2).Legend("series2");
-	scatter.ShowInfo().ShowContextMenu().ShowPropertiesDlg().ShowProcessDlg();	
+	scatter.ShowAllMenus();	
 	fastView.WhenAction = THISBACK(OnFastView);
 	sequentialX.WhenAction = THISBACK(OnSequentialX);
 	fastView = true;

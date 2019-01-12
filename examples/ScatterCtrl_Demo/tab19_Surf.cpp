@@ -17,8 +17,8 @@ void Tab19_Surf::Init()
 		   .Add(WHITE_BLACK, "WHITE_BLACK").Add(BLACK_WHITE, "BLACK_WHITE");
 	rainbow = scatter.SurfRainbow();
 	rainbow << THISBACK(OnChange);
-	interpolation.Add(TableData::NO, "NO").Add(TableData::BILINEAR, "BILINEAR");
-	interpolation = TableData::BILINEAR;
+	interpolation.Add(TableInterpolate::NO, "NO").Add(TableInterpolate::BILINEAR, "BILINEAR");
+	interpolation = TableInterpolate::BILINEAR;
 	interpolation << THISBACK(OnChange);
 	zoom = true;
 	zoom << THISBACK(OnChange);
@@ -49,7 +49,7 @@ void Tab19_Surf::Init()
 			<< 0 << 1741 << 9541  << 26098	<< 51917  << 67241
 			<< 0 << 1337 << 7783  << 21287 	<< 42703  << 55722;		
 	
-	data.Init(zData, xAxis, yAxis, TableData::BILINEAR);
+	data.Init(zData, xAxis, yAxis, TableInterpolate::BILINEAR, false);
 	
 	Vector<double> vals;
 	for (double val = 50000; val <= 250000; val += 50000)
@@ -75,7 +75,7 @@ void Tab19_Surf::Init()
 			zDataFun[ix + iy*(xAxisFun.GetCount() - 1)] = sin(sqrt(x*x + y*y + 64))/sqrt(x*x + y*y + 64);
 		}
 	}	
-	dataFun.Init(zDataFun, xAxisFun, yAxisFun, TableData::BILINEAR);
+	dataFun.Init(zDataFun, xAxisFun, yAxisFun, TableInterpolate::BILINEAR, true);
 	
 	funData.Init([=](double x, double y) {return sin(sqrt(x*x + y*y + 64))/sqrt(x*x + y*y + 64);}, -10, 10, -10, 10);
 	
@@ -104,7 +104,7 @@ void Tab19_Surf::Init_DatasetSimple() {
 	scatter.AddSeries(isolines).Legend("Isoline").Stroke(0.5, White).ShowSeriesLegend(false).NoMark();
 	scatter.AddSeries(numbersPos).Stroke(0).AddLabelSeries(labels, 0, 0, StdFont().Bold(), ALIGN_CENTER, White())
 								 .ShowSeriesLegend(false).NoMark();
-	data.Inter((TableData::Interpolate)int(interpolation.GetKey(interpolation.GetIndex())));
+	data.Inter((TableInterpolate::Interpolate)int(interpolation.GetKey(interpolation.GetIndex())));
 	scatter.AddSurf(data)
 		   .SetRainbowPaletteTextColor(White)
 		   .SetSurfMinZ(0).SetSurfMaxZ(300000);
@@ -112,7 +112,7 @@ void Tab19_Surf::Init_DatasetSimple() {
 
 void Tab19_Surf::Init_Dataset() {
 	scatter.RemoveAllSeries();
-	dataFun.Inter((TableData::Interpolate)int(interpolation.GetKey(interpolation.GetIndex())));
+	dataFun.Inter((TableInterpolate::Interpolate)int(interpolation.GetKey(interpolation.GetIndex())));
 	scatter.AddSurf(dataFun);
 	scatter.SetRainbowPaletteTextColor(Black);
 	scatter.ZoomToFitZ();

@@ -327,8 +327,8 @@ public:
 	
 private:
 	ExplicitData funData;
-	TableDataPoints data;
-	TableDataAreas dataFun;
+	TableDataVector data;
+	TableDataVector dataFun;
 	Vector<double> zData, xAxis, yAxis;
 	Vector<double> zDataFun, xAxisFun, yAxisFun;
 	
