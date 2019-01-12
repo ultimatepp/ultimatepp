@@ -37,7 +37,7 @@ double GetDashLength(const char *dash) {
 	catch(CParser::Error) {}
 	if (len == 0)
 		len = 100000;
-	return len;
+	return len-1;
 }
 
 Vector <double> &GetDashedArray(String dash) {
