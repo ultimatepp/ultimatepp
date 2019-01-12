@@ -191,9 +191,8 @@ void ScatterCtrl::SaveControl() {
 	} else
 		Exclamation(Format(t_("File format \"%s\" not found"), GetFileExt(fileName)));
 }
-				
-void ScatterCtrl::Paint(Draw& w) 
-{
+
+void ScatterCtrl::Paint0(Draw& w, const Size &sz) {
 	GuiLock __;
 	if (IsNull(highlight_0) && highlighting) {
 		highlighting = false;
@@ -207,29 +206,51 @@ void ScatterCtrl::Paint(Draw& w)
 	lastRefresh0_ms = GetTickCount();
 	if (IsEnabled()) {
 		if (mode == MD_DRAW) {
-			ScatterCtrl::SetDrawing(w);
+			ScatterCtrl::SetDrawing(w, sz);
 			PlotTexts(w, !mouseHandlingX, !mouseHandlingY);
 		} else {
-			ImageBuffer ib(GetSize());
+			ImageBuffer ib(sz);
 			BufferPainter bp(ib, mode);
 			bp.LineCap(LINECAP_BUTT);
 			bp.LineJoin(LINEJOIN_MITER);
-			ScatterCtrl::SetDrawing(bp);
+			ScatterCtrl::SetDrawing(bp, sz);
 			w.DrawImage(0, 0, ib);
 			PlotTexts(w, !mouseHandlingX, !mouseHandlingY);
 		}
 		if (HasFocus()) {
-			w.DrawLine(0, 0, GetSize().cx, 0, 2, LtGray());
-			w.DrawLine(0, 0, 0, GetSize().cy, 2, LtGray());
+			w.DrawLine(0, 0, sz.cx, 0, 2, LtGray());
+			w.DrawLine(0, 0, 0, sz.cy, 2, LtGray());
 			int delta = -2;
 #ifdef PLATFORM_WIN32
 			delta = 0;
 #endif
-			w.DrawLine(GetSize().cx+delta, 0, GetSize().cx+delta, GetSize().cy, 2, LtGray());
-			w.DrawLine(0, GetSize().cy+delta, GetSize().cx, GetSize().cy+delta, 2, LtGray());
+			w.DrawLine(sz.cx+delta, 0, sz.cx+delta, sz.cy, 2, LtGray());
+			w.DrawLine(0, sz.cy+delta, sz.cx, sz.cy+delta, 2, LtGray());
 		}
 	}
 	lastRefresh_ms = t.Elapsed();
+}
+		
+			
+void ScatterCtrl::Paint(Draw& w) {
+	if (rotate == Angle_0)
+		Paint0(w, GetSize());
+	else if (rotate == Angle_90) {
+		Size sz(GetSize().cy, GetSize().cx);
+		ImageDraw dw(sz);
+		Paint0(dw, sz);
+		w.DrawImage(0, 0, GetSize().cx, GetSize().cy, RotateClockwise(dw));
+	} else if (rotate == Angle_270) {
+		Size sz(GetSize().cy, GetSize().cx);
+		ImageDraw dw(sz);
+		Paint0(dw, sz);
+		w.DrawImage(0, 0, GetSize().cx, GetSize().cy, RotateAntiClockwise(dw));
+	} else if (rotate == Angle_180) {
+		Size sz(GetSize());
+		ImageDraw dw(sz);
+		Paint0(dw, sz);
+		w.DrawImage(0, 0, GetSize().cx, GetSize().cy, Rotate180(dw));
+	}
 }
 
 void ScatterCtrl::TimerCallback() {
@@ -330,29 +351,32 @@ void ScatterCtrl::ProcessPopUp(const Point &pt)
 	const Point _popPoint = popLT - popOffset;
 	const Point popPointdy(popLT.x, popLT.y + (pt.y - popLT.y)/2);
 	const Point popPointdx(popLT.x + (pt.x - popLT.x)/2, pt.y);
-	const Point popPoint = pt + popOffset;
+	Point popPoint = pt + popOffset;
 	
 	popTextBegin.SetText(_str);
 	Size sz = popTextBegin.GetSize();
-	popTextBegin.Move(this, _popPoint.x - sz.cx, _popPoint.y - sz.cy);	
+	Point p1(_popPoint.x - sz.cx, _popPoint.y - sz.cy);
+	popTextBegin.Move(this, MousePointUnrot(p1));	
 	if (!strdx.IsEmpty()) {
 		popTextHoriz.Show();
 		popTextHoriz.SetText(strdx);
 		Size sz = popTextHoriz.GetSize();
-		popTextHoriz.Move(this, popPointdx.x - sz.cx/2, popPointdx.y - sz.cy/2);	
+		Point p2(popPointdx.x - sz.cx/2, popPointdx.y - sz.cy/2);
+		popTextHoriz.Move(this, MousePointUnrot(p2));	
 	} else
 		popTextHoriz.Hide();
 	if (!strdy.IsEmpty()) {
 		popTextVert.Show();
 		popTextVert.SetText(strdy);
 		Size sz = popTextVert.GetSize();
-		popTextVert.Move(this, popPointdy.x - sz.cx/2, popPointdy.y - sz.cy/2);	
+		Point p3(popPointdy.x - sz.cx/2, popPointdy.y - sz.cy/2);
+		popTextVert.Move(this, MousePointUnrot(p3));	
 	} else
 		popTextVert.Hide();
 	if (!str.IsEmpty()) {
 		popTextEnd.Show();
-		popTextEnd.SetText(str).Move(this, popPoint.x, popPoint.y);
-	}else
+		popTextEnd.SetText(str).Move(this, MousePointUnrot(popPoint));
+	} else
 		popTextEnd.Hide();
 }
 
@@ -622,6 +646,7 @@ void ScatterCtrl::LostFocus()
 
 void ScatterCtrl::LeftDown(Point pt, dword keyFlags) 
 {
+	MousePointRot(pt);
 	if(!HasFocus()) 
 		SetFocus();
 	mouseAction = LEFT_DOWN;
@@ -631,6 +656,7 @@ void ScatterCtrl::LeftDown(Point pt, dword keyFlags)
 
 void ScatterCtrl::LeftDouble(Point pt, dword keyFlags)
 {
+	MousePointRot(pt);
 	if(!HasFocus()) 
 		SetFocus();
 	if (PointInLegend(pt))
@@ -642,6 +668,7 @@ void ScatterCtrl::LeftDouble(Point pt, dword keyFlags)
 
 void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
 {
+	MousePointRot(pt);
 	mouseAction = LEFT_UP;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, true, false, 0, false); 
 	WhenMouseClick(pt, keyFlags, mouseAction);
@@ -649,6 +676,7 @@ void ScatterCtrl::LeftUp(Point pt, dword keyFlags)
 
 void ScatterCtrl::MiddleDown(Point pt, dword keyFlags)
 {
+	MousePointRot(pt);
 	if(!HasFocus()) 
 		SetFocus();
 	mouseAction = MIDDLE_DOWN;
@@ -658,6 +686,7 @@ void ScatterCtrl::MiddleDown(Point pt, dword keyFlags)
 
 void ScatterCtrl::MiddleUp(Point pt, dword keyFlags)
 {
+	MousePointRot(pt);
 	mouseAction = MIDDLE_UP;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, true, 0, false);
 	WhenMouseClick(pt, keyFlags, mouseAction);
@@ -665,6 +694,7 @@ void ScatterCtrl::MiddleUp(Point pt, dword keyFlags)
 
 void ScatterCtrl::RightDown(Point pt, dword keyFlags) 
 {
+	MousePointRot(pt);
 	if(!HasFocus()) 
 		SetFocus();
 	mouseAction = RIGHT_DOWN;
@@ -674,6 +704,7 @@ void ScatterCtrl::RightDown(Point pt, dword keyFlags)
 
 void ScatterCtrl::RightUp(Point pt, dword keyFlags)
 {
+	MousePointRot(pt);
 	mouseAction = RIGHT_UP;
 	ProcessMouse(false, pt, keyFlags & K_CTRL, keyFlags & K_ALT, keyFlags & K_SHIFT, false, false, 0, true); 
 	WhenMouseClick(pt, keyFlags, mouseAction);
@@ -681,6 +712,7 @@ void ScatterCtrl::RightUp(Point pt, dword keyFlags)
 
 void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags) 
 {
+	MousePointRot(pt);
 	if (zdelta == 0)
 		return;
 	if(!HasFocus()) 
@@ -690,6 +722,7 @@ void ScatterCtrl::MouseWheel(Point pt, int zdelta, dword keyFlags)
 
 void ScatterCtrl::MouseMove(Point pt, dword keyFlags)
 {
+	MousePointRot(pt);
 	if (isScrolling) {
 		double factorX = 0, factorY = 0;
 		int shiftX = pt.x - butDownX;
@@ -932,6 +965,38 @@ void ScatterCtrl::CheckButtonVisible() {
 	propertiesButton.Show(showButtons && showPropDlg);
 }
 	
+inline Point &ScatterCtrl::MousePointRot(Point &pt) {
+	if (rotate == Angle_0) 
+		return pt;
+	else if (rotate == Angle_90) {
+		Swap(pt.x, pt.y);
+		pt.y = GetSize().cx - pt.y;
+	} else if (rotate == Angle_270) {
+		Swap(pt.x, pt.y);
+		pt.x = GetSize().cy - pt.x;
+	} else if (rotate == Angle_180) {
+		pt.x = GetSize().cx - pt.x;
+		pt.y = GetSize().cy - pt.y;
+	}
+	return pt;
+}
+
+inline Point &ScatterCtrl::MousePointUnrot(Point &pt) {
+	if (rotate == Angle_0) 
+		return pt;
+	else if (rotate == Angle_90) {
+		Swap(pt.x, pt.y);
+		pt.x = GetSize().cy - pt.x;
+	} else if (rotate == Angle_270) {
+		Swap(pt.x, pt.y);
+		pt.y = GetSize().cy - pt.y;
+	} else if (rotate == Angle_180) {
+		pt.x = GetSize().cx - pt.x;
+		pt.y = GetSize().cy - pt.y;
+	}
+	return pt;
+}
+
 ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
 {
 	showInfo = isScrolling = isLabelPopUp = isZoomWindow = false;
@@ -947,6 +1012,7 @@ ScatterCtrl::ScatterCtrl() : popOffset(10, 12), mouseAction(NONE)
 	showButtons = false;
 	showLoadData = showSaveData = false;
 	defaultCSVseparator = ";";
+	rotate = Angle_0;
 	Color(graphColor);	
 	BackPaint();
 	popTextBegin.SetColor(SColorFace);  
