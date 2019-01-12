@@ -650,59 +650,131 @@ private:
 	int key;
 };
 
-class TableData : public DataSourceSurf {
+double BilinearInterpolate(double x, double y, double x1, double x2, double y1, double y2, 
+									 		   double z11, double z12, double z21, double z22);
+
+class TableInterpolate {
 public:
-	enum Interpolate {NO, BILINEAR};	
-	TableData() : pdata(0), pxAxis(0), pyAxis(0), areas(false) {}
-	TableData(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-			Interpolate inter, bool areas) {Init(data, xAxis, yAxis, inter, areas);}
-	void Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-			Interpolate inter, bool areas);
-		
-	double z(double x, double y);
+	enum Interpolate {NO, BILINEAR};
 	
-	bool IsEmpty();
+protected:
+	Interpolate inter;
+};
+
+								 		       
+class TableData : public DataSourceSurf, public TableInterpolate {
+public:
+	typedef double (TableData::*Getdatafun)(int d);
 	
-	double MinX();
-	double MaxX();
-	double MinY();
-	double MaxY();
-	double MinZ();
-	double MaxZ();
-	
+	TableData() : areas(false), lendata(0), lenxAxis(0), lenyAxis(0) {};
+
 	Interpolate Inter()				{return inter;}
 	void Inter(Interpolate inter)	{this->inter = inter;}
 	
-private:
-	Vector<double> *pdata;
-	Vector<double> *pxAxis;
-	Vector<double> *pyAxis;
-	Interpolate inter;
+	double z_area(Getdatafun getdataX, Getdatafun getdataY, Getdatafun getdata, 
+					double x, double y);
+	double z_point(Getdatafun getdataX, Getdatafun getdataY, Getdatafun getdata, 
+					double x, double y);
+
+	virtual inline double x(int d)				{/*NEVER();*/	return Null;}
+	virtual inline double y(int d)				{/*NEVER();*/	return Null;}
+	virtual inline double data(int d)			{/*NEVER();*/	return Null;}
 	
-	double z_area(double x, double y);
-	double z_point(double x, double y);
+	double z(double x, double y) {
+		return z(&TableData::x, &TableData::y, &TableData::data, x, y);
+	}
+	double z(Getdatafun getdataX, Getdatafun getdataY, Getdatafun getdata, double x, double y) {
+		if (areas)
+			return z_area(getdataX, getdataY, getdata, x, y);
+		else
+			return z_point(getdataX, getdataY, getdata, x, y);
+	}
+	
+	bool IsEmpty() {
+		return lendata == 0 || lenxAxis == 0 || lenyAxis == 0;
+	}
+	
+	double MinX(Getdatafun getdata);
+	virtual double MinX() 				{return MinX(&TableData::x);}
+	double MaxX(Getdatafun getdata);
+	virtual double MaxX() 				{return MaxX(&TableData::x);}
+	double MinY(Getdatafun getdata);
+	virtual double MinY() 				{return MinY(&TableData::y);}
+	double MaxY(Getdatafun getdata);
+	virtual double MaxY() 				{return MaxY(&TableData::y);}
+	double MinZ(Getdatafun getdata);
+	virtual double MinZ() 				{return MinZ(&TableData::data);}
+	double MaxZ(Getdatafun getdata);
+	virtual double MaxZ() 				{return MaxZ(&TableData::data);}
+
+	int lendata;
+	int lenxAxis;
+	int lenyAxis;
 	
 protected:
 	bool areas;
 };
 
-class TableDataAreas : public TableData {
+class TableDataVector : public TableData {
 public:
-	TableDataAreas() : TableData() {areas = true;}
-	TableDataAreas(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, true);}
+	TableDataVector() : pdata(0), pxAxis(0), pyAxis(0) {}
+	TableDataVector(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
+			Interpolate inter, bool areas) {Init(data, xAxis, yAxis, inter, areas);}
 	void Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, true);}
+					Interpolate inter, bool areas) {
+		ASSERT(areas ?  (data.GetCount() == (xAxis.GetCount() - 1)*(yAxis.GetCount() - 1)) : true);
+		ASSERT(!areas ? (data.GetCount() == xAxis.GetCount()*yAxis.GetCount()) : true);
+		this->pdata = &data;
+		this->lendata = data.GetCount();
+		this->pxAxis = &xAxis;
+		this->lenxAxis = xAxis.GetCount();
+		this->pyAxis = &yAxis;
+		this->lenyAxis = yAxis.GetCount();
+		this->inter = inter;
+		this->areas = areas;
+	}
+	virtual inline double x(int id) 	{return (*pxAxis)[id];}
+	virtual inline double y(int id) 	{return (*pyAxis)[id];}
+	virtual inline double data(int id) 	{return (*pdata)[id];}
+	
+private:
+	Vector<double> *pdata;
+	Vector<double> *pxAxis;
+	Vector<double> *pyAxis;
 };
 
-class TableDataPoints : public TableData {
+class TableDataCArray : public TableData {
 public:
-	TableDataPoints() : TableData() {areas = false;}
-	TableDataPoints(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, false);}
-	void Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-			Interpolate inter) {TableData::Init(data, xAxis, yAxis, inter, false);}
+	TableDataCArray() : pdata(0), pxAxis(0), pyAxis(0)/*, lendata(-23), lenxAxis(0), lenyAxis(0)*/ {}
+	TableDataCArray(double *data, int lendata, double *xAxis, int lenxAxis, double *yAxis, int lenyAxis, 
+					Interpolate inter, bool areas) {Init(data, lendata, xAxis, lenxAxis, yAxis, lenyAxis, inter, areas);}
+	void Init(double *data, int lendata, double *xAxis, int lenxAxis, double *yAxis, int lenyAxis, 
+					Interpolate inter, bool areas) {
+		ASSERT(areas ?  (lendata == (lenxAxis - 1)*(lenyAxis - 1)) : true);
+		ASSERT(!areas ? (lendata == lenxAxis*lenyAxis) : true);
+		this->pdata = data;
+		this->lendata = lendata;
+		this->pxAxis = xAxis;
+		this->lenxAxis = lenxAxis;
+		this->pyAxis = yAxis;
+		this->lenyAxis = lenyAxis;
+		this->inter = inter;
+		this->areas = areas;
+	}
+	virtual inline double x(int id) 	{return pxAxis[id];}
+	virtual inline double y(int id) 	{return pyAxis[id];}
+	virtual inline double data(int id) 	{return pdata[id];}
+	
+private:
+	double *pdata;
+	//int lendata;
+	double *pxAxis;
+	//int lenxAxis;
+	double *pyAxis;
+	//int lenyAxis;
 };
+
+
 
 class ExplicitData : public DataSourceSurf {
 public:

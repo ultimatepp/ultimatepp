@@ -302,10 +302,10 @@ protected:
 	void WhenPaint(Painter &w)	{WhenPainter(w);}
 	void WhenPaint(Draw &w) 	{WhenDraw(w);}
 	
+public:	
 	template<class T>
 	void SetDrawing(T& w, bool ctrl = false);
 	
-public:	
 	Callback3<String&, int, double> cbModifFormatX;
 	Callback3<String&, int, double> cbModifFormatXGridUnits;
 	Callback3<String&, int, double> cbModifFormatDeltaX;
@@ -472,7 +472,7 @@ public:
 	ScatterDraw &AddSeries(Upp::Array<double> &xData, Upp::Array<double> &yData)
 														{return AddSeries<ArrayDouble>(yData, xData);}		
 	ScatterDraw &AddSeries(Vector<Pointf> &points)		{return AddSeries<VectorPointf>(points);}
-	ScatterDraw &AddSeries(Upp::Array<Pointf> &points)		{return AddSeries<ArrayPointf>(points);}
+	ScatterDraw &AddSeries(Upp::Array<Pointf> &points)	{return AddSeries<ArrayPointf>(points);}
 	template <class Y>
 	ScatterDraw &AddSeries(Vector<Vector <Y> > &data, int idx, int idy, 
 		Vector<int> &idsx, Vector<int> &idsy, Vector<int> &idsFixed, bool useCols = true, int beginData = 0, int numData = Null) {
@@ -1539,7 +1539,7 @@ void ScatterDraw::Plot(T& w)
 					int npix = 1;
 					for (int64 i = imin; i <= imax; ) {
 						double xx, yy;
-						if (fastViewX) {					
+						if (fastViewX && dxpix < 1) {					
 							yy = series[j].PointsData()->y(i);
 							if (IsNull(yy)) {
 								++i;

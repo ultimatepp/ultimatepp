@@ -661,18 +661,17 @@ bool DataSource::SameX(DataSource &data) {
 	return true;
 }
 
-void TableData::Init(Vector<double> &data, Vector<double> &xAxis, Vector<double> &yAxis, 
-					Interpolate inter, bool areas) {
-	ASSERT(areas ?  (data.GetCount() == (xAxis.GetCount() - 1)*(yAxis.GetCount() - 1)) : true);
-	ASSERT(!areas ? (data.GetCount() == xAxis.GetCount()*yAxis.GetCount()) : true);
-	this->pdata = &data;
-	this->pxAxis = &xAxis;
-	this->pyAxis = &yAxis;
-	this->inter = inter;
-	this->areas = areas;
-}
-
-
+// |   |        |
+// y2--z12------z22-
+// |   |        |
+// y---|---o    |
+// |   |   |    |
+// |   |   |    |
+// y1--z11-+----z21-
+// |   |   |    |
+// ----x1--x----x2--
+//
+// y11 = y(x1, y1)	y12 = y(x1, y2)	y21 = y(x2, y1)	y22 = y(x2, y2)
 double BilinearInterpolate(double x, double y, double x1, double x2, double y1, double y2, 
 									 		   double z11, double z12, double z21, double z22) {
 	double x_x1 = x - x1;
@@ -680,194 +679,6 @@ double BilinearInterpolate(double x, double y, double x1, double x2, double y1, 
 	double y_y1 = y - y1;
 	double y2_y = y2 - y;
 	return (z11*x2_x*y2_y + z21*x_x1*y2_y + z12*x2_x*y_y1 + z22*x_x1*y_y1)/(x2 - x1)/(y2 - y1);
-}
-
-double TableData::z_area(double x, double y) {
-	if (inter == NO) {
-		int ix, iy;
-		for (ix = 0; ix < pxAxis->GetCount(); ++ix) {
-			if ((*pxAxis)[ix] > x) {
-				if (ix == 0) 
-					return Null;
-				else {
-					ix--;
-					break;
-				}
-			}
-		}
-		if (ix == pxAxis->GetCount()) 
-			return Null;
-		for (iy = 0; iy < pyAxis->GetCount(); ++iy) {
-			if ((*pyAxis)[iy] > y) {
-				if (iy == 0) 
-					return Null;
-				else {
-					iy--;
-					break;
-				}
-			}
-		}
-		if (iy == pyAxis->GetCount()) 
-			return Null;
-		return (*pdata)[ix + iy*(pxAxis->GetCount() - 1)];
-	} else if (inter == BILINEAR) {
-		int ix, iy;
-		for (ix = 0; ix < pxAxis->GetCount()-1; ++ix) {
-			if ((((*pxAxis)[ix]+(*pxAxis)[ix+1])/2.) > x) {
-				if (ix == 0) 
-					return Null;
-				else {
-					ix--;
-					break;
-				}
-			}
-		}
-		if (ix == pxAxis->GetCount()-1)
-			return Null;
-		for (iy = 0; iy < pyAxis->GetCount()-1; ++iy) {
-			if ((((*pyAxis)[iy]+(*pyAxis)[iy+1])/2.) > y) {
-				if (iy == 0) 
-					return Null;
-				else {
-					iy--;
-					break;
-				}
-			}
-		}
-		if (iy == pyAxis->GetCount()-1)
-			return Null;
-		
-		int width = pxAxis->GetCount() - 1;
-		double x1 = ((*pxAxis)[ix] + (*pxAxis)[ix+1])/2.;
-		double x2 = ((*pxAxis)[ix+1] + (*pxAxis)[ix+2])/2.;
-		double y1 = ((*pyAxis)[iy] + (*pyAxis)[iy+1])/2.;
-		double y2 = ((*pyAxis)[iy+1] + (*pyAxis)[iy+2])/2.;
-		double z11 = (*pdata)[ix + iy*width];
-		double z12 = (*pdata)[ix + (iy+1)*width];
-		double z21 = (*pdata)[ix+1+ iy*width];
-		double z22 = (*pdata)[ix+1 + (iy+1)*width];
-		if (IsNull(z11) || IsNull(z12) || IsNull(z21) || IsNull(z22))
-			return Null;
-		return BilinearInterpolate(x, y, x1, x2, y1, y2, z11, z12, z21, z22);
-	} else
-		return Null;
-}
-
-double TableData::z_point(double x, double y) {
-	if (x < (*pxAxis)[0] || x > pxAxis->Top() ||
-		y < (*pyAxis)[0] || y > pyAxis->Top())
-		return Null;
-	
-	if (inter == NO) {
-		int ix, iy;
-		if (x < ((*pxAxis)[0] + (*pxAxis)[1])/2.)
-			ix = 0;
-		else if (x >= ((*pxAxis)[pxAxis->GetCount()-1] + (*pxAxis)[pxAxis->GetCount()-2])/2.)
-			ix = pxAxis->GetCount()-1;
-		else {
-			for (ix = 1; ix < pxAxis->GetCount()-1; ++ix) {
-				if (((*pxAxis)[ix] + (*pxAxis)[ix+1])/2. > x) 
-					break;
-			}
-		}
-		if (y < ((*pyAxis)[0] + (*pyAxis)[1])/2.)
-			iy = 0;
-		else if (y >= ((*pyAxis)[pyAxis->GetCount()-1] + (*pyAxis)[pyAxis->GetCount()-2])/2.)
-			iy = pyAxis->GetCount()-1;
-		else {
-			for (iy = 1; iy < pyAxis->GetCount()-1; ++iy) {
-				if (((*pyAxis)[iy] + (*pyAxis)[iy+1])/2. > y) 
-					break;
-			}
-		}
-		return (*pdata)[ix + iy*pxAxis->GetCount()];
-	} else if (inter == BILINEAR) {
-		int ix, iy;
-		for (ix = 0; ix < pxAxis->GetCount()-1; ++ix) {
-			if ((*pxAxis)[ix+1] >= x) 
-				break;
-		}
-		if (ix == pxAxis->GetCount()-1)
-			return Null;
-		for (iy = 0; iy < pyAxis->GetCount()-1; ++iy) {
-			if ((*pyAxis)[iy+1] >= y) 
-				break;
-		}
-		if (iy == pyAxis->GetCount()-1)
-			return Null;
-		int width = pxAxis->GetCount();
-		double x1 = (*pxAxis)[ix];
-		double x2 = (*pxAxis)[ix+1];
-		double y1 = (*pyAxis)[iy];
-		double y2 = (*pyAxis)[iy+1];
-		double z11 = (*pdata)[ix + iy*width];
-		double z12 = (*pdata)[ix + (iy+1)*width];
-		double z21 = (*pdata)[ix+1 + iy*width];
-		double z22 = (*pdata)[ix+1 + (iy+1)*width];
-		if (IsNull(z11) || IsNull(z12) || IsNull(z21) || IsNull(z22))
-			return Null;
-		return BilinearInterpolate(x, y, x1, x2, y1, y2, z11, z12, z21, z22);
-	} else
-		return Null;
-}
-
-double TableData::z(double x, double y) {
-	if (areas)
-		return z_area(x, y);
-	else
-		return z_point(x, y);
-}
-
-bool TableData::IsEmpty() {
-	if (!pdata || !pxAxis || !pyAxis)
-		return true;
-	return pdata->IsEmpty() || pxAxis->IsEmpty() || pyAxis->IsEmpty();
-}
-
-double TableData::MinX() {
-	return (*pxAxis)[0];
-}
-
-double TableData::MaxX() {
-	return pxAxis->Top();
-}
-
-double TableData::MinY() {
-	return (*pyAxis)[0];
-}
-
-double TableData::MaxY() {
-	return pyAxis->Top();
-}
-
-double TableData::MinZ() {
-	Vector<double> &data = *pdata;
-	double ret = -DOUBLE_NULL;
-	for (int i = 0; i < data.GetCount(); ++i) {
-		double &d = data[i];
-		if (!IsNull(d)) {
-			if (ret > d)
-				ret = d;
-		}
-	}
-	if (ret == -DOUBLE_NULL)
-		return Null;
-	return ret;
-}
-
-double TableData::MaxZ() {
-	Vector<double> &data = *pdata;
-	double ret = DOUBLE_NULL;
-	for (int i = 0; i < data.GetCount(); ++i) {
-		double &d = data[i];
-		if (!IsNull(d)) {
-			if (ret < d)
-				ret = d;
-		}
-	}
-	if (ret == DOUBLE_NULL)
-		return Null;
-	return ret;
 }
 
 void ExplicitData::Init(Function<double (double x, double y)> funz, double minX, double maxX, double minY, double maxY) {

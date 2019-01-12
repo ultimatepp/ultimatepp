@@ -251,6 +251,8 @@ void ScatterDraw::AdjustMinUnitY2() {
 }
 
 void ScatterDraw::AdjustMajorUnitX() {
+	if (xMajorUnit == 0 || IsNull(xMajorUnit))
+		return;
 	while (xRange/xMajorUnit > 1.2*xMajorUnitNum) 
 		xMajorUnit *= 2;
 	while (xRange/xMajorUnit < xMajorUnitNum/1.5) 
@@ -258,6 +260,8 @@ void ScatterDraw::AdjustMajorUnitX() {
 }
 
 void ScatterDraw::AdjustMajorUnitY() {
+	if (yMajorUnit == 0 || IsNull(yMajorUnit))
+		return;
 	while (yRange/yMajorUnit > 1.2*yMajorUnitNum) 
 		yMajorUnit *= 2;
 	while (yRange/yMajorUnit < yMajorUnitNum/1.5) 
@@ -265,6 +269,8 @@ void ScatterDraw::AdjustMajorUnitY() {
 }
 
 void ScatterDraw::AdjustMajorUnitY2() {
+	if (yMajorUnit2 == 0 || IsNull(yMajorUnit2))
+		return;
 	while (yRange2/yMajorUnit2 > 1.2*yMajorUnitNum) 
 		yMajorUnit2 *= 2;
 	while (yRange2/yMajorUnit2 < yMajorUnitNum/1.5) 
