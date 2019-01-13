@@ -176,7 +176,7 @@ void Sentinel(Stream& s, const char *txt)
 
 void Ide::Serialize(Stream& s)
 {
-	int version = 15;
+	int version = 16;
 	Sentinel(s, "before 12341234");
 	s.Magic(0x12341234);
 	Sentinel(s, "after magic");
@@ -224,6 +224,9 @@ void Ide::Serialize(Stream& s)
 	if(version >= 13) {
 		s % wordwrap_comments;
 		s % wordwrap;
+	}
+	if(version >= 16) {
+		s % setmain_newide;
 	}
 	bool dummy_force_crlf = false;
 	s % dummy_force_crlf;

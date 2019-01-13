@@ -488,6 +488,7 @@ void Ide::SetupFormat() {
 		(ide.chstyle, chstyle)
 		(ide.console, LinuxHostConsole)
 		(ide.output_per_assembly, output_per_assembly)
+		(ide.setmain_newide, setmain_newide)
 
 		(ast.BracketIndent,					astyle_BracketIndent)
 		(ast.NamespaceIndent,               astyle_NamespaceIndent)

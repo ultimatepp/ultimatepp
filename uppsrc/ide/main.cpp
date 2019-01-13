@@ -134,7 +134,7 @@ void AppMain___()
 	MainCommandLineHandler cmd_handler(CommandLine());
 	if (cmd_handler.Handle())
 		return;
-	auto arg = cmd_handler.GetArgs();
+	auto arg = clone(cmd_handler.GetArgs());
 
 	SetVppLogSizeLimit(200000000);
 	
@@ -164,6 +164,13 @@ void AppMain___()
 	if(!FileExists(BlitzBaseFile()))
 		ResetBlitz();
 
+	bool dosplash = true;
+	for(int i = 0; i < arg.GetCount(); i++)
+		if(arg[i] == "--nosplash") {
+			dosplash = false;
+			arg.Remove(i);
+			break;
+		}
 	for(int i = 0; i < arg.GetCount(); i++) {
 	#ifdef PLATFORM_WIN32
 		if(arg[i] == "!") {
@@ -259,7 +266,7 @@ void AppMain___()
 		StartEditorMode(arg, ide, clset);
 #endif
 
-		if(splash_screen && !ide.IsEditorMode()) {
+		if(splash_screen && dosplash && !ide.IsEditorMode()) {
 			ShowSplash();
 			Ctrl::ProcessEvents();
 		}

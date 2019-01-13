@@ -537,6 +537,11 @@ Ide::Ide()
 #endif
 	spellcheck_comments = LNG_ENGLISH;
 	wordwrap_comments = true;
+#ifdef PLATFORM_COCOA
+	setmain_newide = true;
+#else
+	setmain_newide = false;
+#endif
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele

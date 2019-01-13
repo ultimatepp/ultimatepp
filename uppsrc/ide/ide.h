@@ -592,6 +592,7 @@ public:
 	int       spellcheck_comments;
 	bool      wordwrap_comments;
 	bool      wordwrap;
+	bool      setmain_newide;
 	/*
 		astyle code formatter control vars
 		added 2008.01.27 by Massimo Del Fedele
