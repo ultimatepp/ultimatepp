@@ -100,16 +100,18 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 		h.gk.chr = ch;
 		h.gk.tolerance = tolerance;
 		v = cache.Get(h);
-	}
-#if 0
-	GlyphPainter chp;
-	chp.move = chp.pos = Null;
-	chp.tolerance = tolerance;
-	PaintCharacter(chp, Pointf(0, 0), ch, fnt);
-	Vector<float>& g = chp.glyph;
-#else
-	const Vector<float>& g = ValueTo< Vector<float> >(v);
+#ifdef _DEBUG
+		DLOG("==== ApproximateChar " << ch << " " << (char)ch << " " << fnt << ", tolerance: " << tolerance);
+		DDUMP(ValueTo< Vector<float> >(v));
+		GlyphPainter chp;
+		chp.move = chp.pos = Null;
+		chp.tolerance = tolerance;
+		PaintCharacter(chp, Pointf(0, 0), ch, fnt);
+		DDUMP(chp.glyph);
+		ASSERT(ValueTo< Vector<float> >(v) == chp.glyph);
 #endif
+	}
+	const Vector<float>& g = ValueTo< Vector<float> >(v);
 	int i = 0;
 	while(i < g.GetCount()) {
 		Pointf p;

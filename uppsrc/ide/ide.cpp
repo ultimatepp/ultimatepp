@@ -192,8 +192,13 @@ bool Ide::OpenMainPackage()
 
 void Ide::NewMainPackage()
 {
-	SaveCodeBase();
-	OpenMainPackage();
+	if(setmain_newide) {
+		CreateHost(false, false)->Launch(GetExeFilePath() + " --nosplash");
+	}
+	else {
+		SaveCodeBase();
+		OpenMainPackage();
+	}
 }
 
 void Ide::PackageCursor()
