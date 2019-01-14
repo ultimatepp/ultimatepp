@@ -176,7 +176,7 @@ void BoundsPainter::Finish(double width)
 	if(compute_svg_boundingbox && !IsNull(boundingbox)) {
 		Rectf h = boundingbox.Inflated(width / 2);
 		Pointf a = mtx.Top().Transform(h.TopLeft());
-		Pointf b = mtx.Top().Transform(h.BottomRight());		
+		Pointf b = mtx.Top().Transform(h.BottomRight());
 		svg_boundingbox.Union(a);
 		svg_boundingbox.Union(b);
 	}
