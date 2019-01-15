@@ -333,6 +333,7 @@ void BufferPainter::FinishPathJob()
 {
 	if(jobcount == 0)
 		return;
+
 	CoWork co;
 	co * [&] {
 		for(;;) {
