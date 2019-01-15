@@ -100,7 +100,7 @@ void ApproximateChar(LinearPathConsumer& t, Pointf at, int ch, Font fnt, double 
 		h.gk.chr = ch;
 		h.gk.tolerance = tolerance;
 		v = cache.Get(h);
-#ifdef _DEBUG
+#ifdef _DEBUG0
 		DLOG("==== ApproximateChar " << ch << " " << (char)ch << " " << fnt << ", tolerance: " << tolerance);
 		DDUMP(ValueTo< Vector<float> >(v));
 		GlyphPainter chp;
