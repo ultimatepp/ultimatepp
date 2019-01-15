@@ -533,6 +533,8 @@ void BarCtrl::Separator()
 void BarCtrl::AddCtrl(Ctrl *ctrl, Size sz)
 {
 	SizeCtrl& m = sizer.DoIndex(zii++);
+	while(m.GetFirstChild())
+		m.RemoveChild(m.GetFirstChild());
 	LogPos p = ctrl->GetPos();
 	if(p.x.IsEmpty()) {
 		if(sz.cx == INT_MAX)
