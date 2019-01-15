@@ -401,7 +401,7 @@ bool IsNormal(Font font, int chr)
 	Mutex::Lock __(sFontLock);
 	font.RealizeStd();
 	CharEntry& e = fc_cache_global[GlyphHash(font, chr) % 4093];
-	if(e.font == font.AsInt64() || e.chr == chr)
+	if(e.font == font.AsInt64() && e.chr == chr)
 		return e.info.IsNormal();
 	return GetGlyphInfoSys(font, chr).IsNormal();
 }
