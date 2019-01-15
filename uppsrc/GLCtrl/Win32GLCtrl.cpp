@@ -103,7 +103,6 @@ void GLCtrl::GLPane::State(int reason)
 LRESULT GLCtrl::GLPane::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if(message == WM_PAINT && s_openGLContext) {
-		static int i = 0;
 		PAINTSTRUCT ps;
 		HWND hwnd = GetHWND();
 		BeginPaint(hwnd, &ps);

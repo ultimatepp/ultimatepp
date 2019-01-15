@@ -94,13 +94,13 @@ oid]_()>`&_[*@3 fn])&]
 [s5;:Upp`:`:CoWork`:`:operator`*`(Upp`:`:Function`<void`(`)`>`&`&`): [_^Upp`:`:CoWork^ C
 oWork][@(0.0.255) `&]_[* operator`*]([_^Upp`:`:Function^ Function]<[@(0.0.255) void]_()>`&
 `&_[*@3 fn])&]
-[s2;%% Schedules [%-*@3 fn] to be run on all worker threads. After 
-the first thread returns from [%-*@3 fn], all other scheduled [%-*@3 fn] 
-jobs that has not started yet are unscheduled. Waits for all 
-started jobs to finish. The function also sets internal index 
-counter to zero in CoWork before starting any worker thread. 
-Worker thread should acquire job quantum in internal loop `- 
-internal CoWork index can be used for this purpose.&]
+[s2;%% Schedules [%-*@3 fn] to be run on all worker threads and on 
+calling thread. After the first thread returns from [%-*@3 fn], 
+all other scheduled [%-*@3 fn] jobs that has not started yet are 
+unscheduled. Waits for all started jobs to finish. The function 
+also sets internal index counter to zero in CoWork before starting 
+any worker thread. Worker thread should acquire job quantum in 
+internal loop `- internal CoWork index can be used for this purpose.&]
 [s3;%% &]
 [s4; &]
 [s5;:Upp`:`:CoWork`:`:Next`(`): [@(0.0.255) int]_[* Next]()&]
