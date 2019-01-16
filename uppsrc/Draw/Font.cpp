@@ -4,7 +4,7 @@
 
 namespace Upp {
 
-static StaticMutex sFontLock;
+StaticMutex sFontLock;
 
 bool Replace(Font fnt, int chr, Font& rfnt);
 
