@@ -382,7 +382,8 @@ onst]_[@(0.0.255) char]_`*[*@3 s])&]
 [* Render]([_^FontGlyphConsumer^ FontGlyphConsumer][@(0.0.255) `&]_[*@3 sw], 
 [@(0.0.255) double]_[*@3 x], [@(0.0.255) double]_[*@3 y], [@(0.0.255) int]_[*@3 ch])_[@(0.0.255) c
 onst]&]
-[s2;%% For true`-type fonts, renders the character glyph.&]
+[s2;%% For true`-type fonts, renders the character glyph lines and 
+curves.&]
 [s3;%% &]
 [s4; &]
 [s5;:Font`:`:Font`(`): [* Font]()&]
