@@ -73,22 +73,13 @@ static void Win32_GetGlyphIndices(HDC hdc, LPCWSTR s, int n, LPWORD r, DWORD fla
 		memset(r, 0, n * sizeof(WORD));
 }
 
-HDC Win32_IC()
-{
-	static HDC hdc;
-	ONCELOCK {
-		hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
-	}
-	return hdc;
-}
-
 CommonFontInfo GetFontInfoSys(Font font)
 {
 	CommonFontInfo fi;
 	memset(&fi, 0, sizeof(fi));
 	HFONT hfont = GetWin32Font(font, 0);
 	if(hfont) {
-		HDC hdc = Win32_IC();
+		HDC hdc = ::CreateIC("DISPLAY", NULL, NULL, NULL);
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		TEXTMETRIC tm;
 		::GetTextMetrics(hdc, &tm);
@@ -113,6 +104,7 @@ CommonFontInfo GetFontInfoSys(Font font)
 		else
 			fi.spacebefore = fi.spaceafter = 0;
 		::SelectObject(hdc, ohfont);
+		::DeleteDC(hdc);
 	}
 	return fi;
 }
@@ -121,22 +113,13 @@ static VectorMap<String, FaceInfo> *sList;
 
 static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dword type, LPARAM param)
 {
-#ifdef PLATFORM_WINCE
-	const wchar *facename = (const wchar *)param;
-	if(facename && _wcsicmp(logfont->lfFaceName, facename))
-		return 1;
-#else
 	const char *facename = (const char *)param;
 	if(facename && stricmp(logfont->lfFaceName, facename))
 		return 1;
-#endif
+
 	if(logfont->lfFaceName[0] == '@')
 		return 1;
 	
-#ifdef PLATFORM_WINCE
-	FontFaceInfo& f = sFontFace().GetAdd(WString(logfont->lfFaceName).ToString());
-	f.name = FromSystemCharset(logfont->lfFaceName);
-#else
 	String name = FromSystemCharset(logfont->lfFaceName);
 
 	if(FindIndex(Split("Courier New CE;Courier New CYR;Courier New Greek;"
@@ -149,7 +132,7 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 	int q = sList->Find(name);
 	FaceInfo& f = q < 0 ? sList->Add(logfont->lfFaceName) : (*sList)[q];
 	f.name = FromSystemCharset(logfont->lfFaceName);
-#endif
+
 	if(q < 0)
 		f.info = Font::SCALEABLE;
 	if((logfont->lfPitchAndFamily & 3) == FIXED_PITCH)
@@ -167,11 +150,7 @@ static int CALLBACK Win32_AddFace(const LOGFONT *logfont, const TEXTMETRIC *, dw
 
 static int Win32_EnumFace(HDC hdc, const char *face)
 {
-#ifdef PLATFORM_WINCE
-	return EnumFontFamilies(hdc, ToSystemCharset(face), Win32_AddFace, (LPARAM)~ToSystemCharset(face));
-#else
 	return EnumFontFamilies(hdc, face, Win32_AddFace, (LPARAM)face);
-#endif
 }
 
 static void Win32_ForceFace(HDC hdc, const char *face, const char *aface)
@@ -188,23 +167,13 @@ Vector<FaceInfo> GetAllFacesSys()
 	sList = &list;
 	list.Add("STDFONT").name = "STDFONT";
 	list.Top().info = 0;
-#ifdef PLATFORM_WINCE
-	HDC hdc = CreateDC(NULL, NULL, NULL, NULL);
-	Win32_ForceFace(hdc, "Tahoma", NULL);
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-	Win32_ForceFace(hdc, "Courier New", "Tahoma");
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-	Win32_ForceFace(hdc, "Tahoma", "Tahoma");
-#else
-	HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
+	HDC hdc = ::CreateIC("DISPLAY", NULL, NULL, NULL);
 	Win32_ForceFace(hdc, "Times New Roman", "Arial");
 	Win32_ForceFace(hdc, "Arial", "Arial");
 	Win32_ForceFace(hdc, "Courier New", "Arial");
 	Win32_ForceFace(hdc, "Symbol", "Arial");
 	Win32_ForceFace(hdc, "WingDings", "Arial");
 	Win32_ForceFace(hdc, "Tahoma", "Arial");
-#endif
 	Win32_EnumFace(hdc, NULL);
 	DeleteDC(hdc);
 	return list.PickValues();
@@ -248,62 +217,38 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 			memset(&n, 0, sizeof(GlyphInfo));
 			return n;
 		}
-		HDC hdc = Win32_IC();
+		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		int from = page << 8;
 		GlyphInfo *t = li[q];
-/*		if(page >= 32) {
-			wchar h[3];
-			h[0] = 'x';
-			h[1] = 'x';
-			h[2] = 'x';
-			int w0 = sGetCW(hdc, h, 2);
-			for(int i = 0; i < 256; i++) {
-				h[1] = from + i;
-				t[i].width = sGetCW(hdc, h, 3) - w0;
-				t[i].lspc = t[i].rspc = 0;
+
+		bool abca = false, abcw = false;
+		Buffer<ABC> abc(256);
+		abcw = ::GetCharABCWidthsW(hdc, from, from + 256 - 1, abc);
+		if(!abcw)
+			abca = ::GetCharABCWidthsA(hdc, from, from + 256 - 1, abc);
+		if(abcw) {
+			for(ABC *s = abc, *lim = abc + 256; s < lim; s++, t++) {
+				t->width = s->abcA + s->abcB + s->abcC;
+				t->lspc = s->abcA;
+				t->rspc = s->abcC;
 			}
 		}
-		else */{
-			bool abca = false, abcw = false;
-			Buffer<ABC> abc(256);
-			abcw = ::GetCharABCWidthsW(hdc, from, from + 256 - 1, abc);
-	#ifndef PLATFORM_WINCE
-			if(!abcw)
-				abca = ::GetCharABCWidthsA(hdc, from, from + 256 - 1, abc);
-	#endif
-			if(abcw)
-			{
-				for(ABC *s = abc, *lim = abc + 256; s < lim; s++, t++)
-				{
-					t->width = s->abcA + s->abcB + s->abcC;
-					t->lspc = s->abcA;
-					t->rspc = s->abcC;
+		else {
+			Buffer<int> wb(256);
+			::GetCharWidthW(hdc, from, from + 256 - 1, wb);
+			for(int *s = wb, *lim = wb + 256; s < lim; s++, t++) {
+				t->width = *s - GetFontInfoSys(font).overhang;
+				if(abca) {
+					ABC aa = abc[(byte)ToAscii(from++)];
+					t->lspc = aa.abcA;
+					t->rspc = aa.abcC;
 				}
-			}
-			else
-			{
-				Buffer<int> wb(256);
-	#ifdef PLATFORM_WINCE
-				::GetCharWidth32(hdc, from, from + 256 - 1, wb);
-	#else
-				::GetCharWidthW(hdc, from, from + 256 - 1, wb);
-	#endif
-				for(int *s = wb, *lim = wb + 256; s < lim; s++, t++)
-				{
-					t->width = *s - GetFontInfoSys(font).overhang;
-					if(abca)
-					{
-						ABC aa = abc[(byte)ToAscii(from++)];
-						t->lspc = aa.abcA;
-						t->rspc = aa.abcC;
-					}
-					else
-						t->lspc = t->rspc = 0;
-				}
+				else
+					t->lspc = t->rspc = 0;
 			}
 		}
-#ifndef PLATFORM_WINCE
+
 		WORD pos[256];
 		WCHAR wch[256];
 		for(int i = 0; i < 256; i++)
@@ -314,8 +259,9 @@ GlyphInfo  GetGlyphInfoSys(Font font, int chr)
 				li[q][i].width = (int16)0x8000;
 				li[q][i].lspc = li[q][i].rspc = 0;
 			}
-#endif
+
 		::SelectObject(hdc, ohfont);
+		::DeleteDC(hdc);
 	}
 	return li[q][chr & 255];
 }
@@ -326,17 +272,19 @@ String GetFontDataSys(Font font)
 	String r;
 	HFONT hfont = GetWin32Font(font, 0);
 	if(hfont) {
-		HDC hdc = Win32_IC();
+		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		DWORD size = GetFontData(hdc, 0, 0, NULL, 0);
 		if(size == GDI_ERROR) {
 			LLOG("PdfDraw::Finish: GDI_ERROR on font " << pdffont.GetKey(i));
-			return Null;
 		}
-		StringBuffer b(size);
-		GetFontData(hdc, 0, 0, b, size);
+		else {
+			StringBuffer b(size);
+			GetFontData(hdc, 0, 0, b, size);
+			r = b;
+		}
 		::SelectObject(hdc, ohfont);
-		r = b;
+		::DeleteDC(hdc);
 	}
 	return r;
 }
@@ -382,8 +330,9 @@ void RenderCharPath(const char* gbuf, unsigned total_size, FontGlyphConsumer& sw
 void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font fnt)
 {
 	HFONT hfont = GetWin32Font(fnt, 0);
+	VERIFY(hfont);
 	if(hfont) {
-		HDC hdc = Win32_IC();
+		HDC hdc = CreateIC("DISPLAY", NULL, NULL, NULL);
 		HFONT ohfont = (HFONT) ::SelectObject(hdc, hfont);
 		GLYPHMETRICS gm;
 		MAT2 m_matrix;
@@ -391,14 +340,14 @@ void RenderCharacterSys(FontGlyphConsumer& sw, double x, double y, int ch, Font 
 		m_matrix.eM11.value = 1;
 		m_matrix.eM22.value = 1;
 		int gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE|GGO_UNHINTED, &gm, 0, NULL, &m_matrix);
-		if(gsz < 0)
-			return;
-		StringBuffer gb(gsz);
-		gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE|GGO_UNHINTED, &gm, gsz, ~gb, &m_matrix);
-		if(gsz < 0)
-			return;
-		RenderCharPath(~gb, gsz, sw, x, y + fnt.GetAscent());
+		if(gsz >= 0) {
+			StringBuffer gb(gsz);
+			gsz = GetGlyphOutlineW(hdc, ch, GGO_NATIVE|GGO_UNHINTED, &gm, gsz, ~gb, &m_matrix);
+			if(gsz >= 0)
+				RenderCharPath(~gb, gsz, sw, x, y + fnt.GetAscent());
+		}
 		::SelectObject(hdc, ohfont);
+		::DeleteDC(hdc);
 	}
 }
 
