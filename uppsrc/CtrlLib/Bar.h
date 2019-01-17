@@ -297,6 +297,7 @@ public:
 	virtual void  Paint(Draw& w);
 	virtual bool  IsMenuBar() const                  { return true; }
 	virtual bool  IsEmpty() const;
+	virtual void  Separator();
 
 protected:
 	virtual Item& AddItem(Event<> cb);

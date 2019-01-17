@@ -175,6 +175,13 @@ Bar::Item& MenuBar::AddSubMenu(Event<Bar&> proc)
 	return *q;
 }
 
+void MenuBar::Separator()
+{
+	if(host_bar && !IsChild())
+		return host_bar->Separator();
+	BarCtrl::Separator();
+}
+
 void MenuBar::CloseMenu()
 {
 	LLOG("CloseMenu");
