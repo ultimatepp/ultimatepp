@@ -177,8 +177,10 @@ Bar::Item& MenuBar::AddSubMenu(Event<Bar&> proc)
 
 void MenuBar::Separator()
 {
+#ifdef PLATFORM_COCOA
 	if(host_bar && !IsChild())
 		return host_bar->Separator();
+#endif
 	BarCtrl::Separator();
 }
 
