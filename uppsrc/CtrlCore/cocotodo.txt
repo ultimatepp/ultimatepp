@@ -5,8 +5,6 @@ sooner:
 
 - Warning: Terminal '/usr/bin/xterm' not found, executing in background.
 
-- .iml D&D does not work
-
 - Topic++, menu at topics, New topic has wrong hotkey
 - New assembly - wrong hotkey (?)
 
@@ -24,7 +22,6 @@ sooner:
 * apple debugger
 
 later:
-
 
 - bool SystemDraw::IsPaintingOp(const Rect& r) const
 
@@ -72,6 +69,8 @@ later:
 
 done:
 
+
+- .iml D&D does not work
 
 - drk tyheme
 
