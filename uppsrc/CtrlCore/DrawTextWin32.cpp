@@ -18,7 +18,7 @@ void SystemDraw::DrawTextOp(int x, int y, int angle, const wchar *text, Font fon
 		LLOG("Setting text color: " << ink);
 		::SetTextColor(handle, lastTextColor = cr);
 	}
-	Mutex::Lock ___(sFontLock);
+	Mutex::Lock ___(sFontLock); // need this because of GetWin32Font
 	HGDIOBJ orgfont = ::SelectObject(handle, GetWin32Font(font, angle));
 	int ascent = font.Info().GetAscent();
 	if(angle) {

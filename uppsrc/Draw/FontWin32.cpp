@@ -44,17 +44,6 @@ HFONT GetWin32Font(Font fnt, int angle)
 
 	be.font = fnt;
 	be.angle = angle;
-#ifdef PLATFORM_WINCE
-	LOGFONT lfnt;
-	Zero(lfnt);
-	lfnt.lfHeight = fnt.GetHeight() ? -abs(fnt.GetHeight()) : -12;
-	lfnt.lfWeight = fnt.IsBold() ? FW_BOLD : FW_NORMAL;
-	lfnt.lfItalic = fnt.IsItalic();
-	lfnt.lfUnderline = fnt.IsUnderline();
-	lfnt.lfStrikeOut = fnt.IsStrikeout();
-	wcscpy(lfnt.lfFaceName, ToSystemCharset(fnt.GetFaceName()));
-	be.hfont = CreateFontIndirect(&lfnt);
-#else
 	be.hfont = CreateFont(
 		fnt.GetHeight() ? -abs(fnt.GetHeight()) : -12,
 		fnt.GetWidth(), angle, angle, fnt.IsBold() ? FW_BOLD : FW_NORMAL,
@@ -66,17 +55,11 @@ HFONT GetWin32Font(Font fnt, int angle)
 		DEFAULT_PITCH|FF_DONTCARE,
 		fnt.GetFaceName()
 	);
-#endif
+
 	cache[0] = be;
 	return be.hfont;
 }
-/*
-int sGetCW(HDC hdc, wchar *h, int n)
-{
-	SIZE sz;
-	return GetTextExtentPoint32W(hdc, h, n, &sz) ? sz.cx : 0;
-}
-*/
+
 static void Win32_GetGlyphIndices(HDC hdc, LPCWSTR s, int n, LPWORD r, DWORD flag)
 {
 	typedef DWORD (WINAPI *GGIW)(HDC, LPCWSTR, int, LPWORD, DWORD);
